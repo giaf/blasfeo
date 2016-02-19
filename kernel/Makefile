@@ -29,6 +29,9 @@ obj:
 ifeq ($(TARGET), X64_SANDY_BRIDGE)
 	( cd avx; $(MAKE) obj)
 endif
+ifeq ($(TARGET), X64_SKYLAKE)
+	( cd avx2; $(MAKE) obj)
+endif
 
 clean:
 	make -C avx clean

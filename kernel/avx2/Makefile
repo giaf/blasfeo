@@ -1,9 +1,9 @@
 ###################################################################################################
 #                                                                                                 #
-# This file is part of BLASFEO.                                                                   #
+# This file is part of HPMPC.                                                                     #
 #                                                                                                 #
-# BLASFEO -- BLAS For Embedded Optimization.                                                      #
-# Copyright (C) 2016 by Gianluca Frison. All rights reserved.                                     #
+# HPMPC -- Library for High-Performance implementation of solvers for MPC.                        #
+# Copyright (C) 2014-2015 by Technical University of Denmark. All rights reserved.                #
 #                                                                                                 #
 # HPMPC is free software; you can redistribute it and/or                                          #
 # modify it under the terms of the GNU Lesser General Public                                      #
@@ -20,72 +20,18 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  #
 #                                                                                                 #
 # Author: Gianluca Frison, giaf (at) dtu.dk                                                       #
-#                          gianluca.frison (at) imtek.uni-freiburg.de                             #
 #                                                                                                 #
 ###################################################################################################
 
-# Target architecture, currently supported (more architectures are available with the older v0.1 release):
-# X64_SANDY_BRIDGE : machine with AVX instruction set (previous generation Intel and AMD processors), 64 bit operating system, code optimized for Intel Sandy-Bridge.
-#TARGET = X64_SANDY_BRIDGE
-TARGET = X64_SKYLAKE
+include ../../Makefile.rule
 
-# Installation directory
-PREFIX = /opt
-
-# C Compiler
-CC = gcc
-#CC = /opt/gcc/bin/gcc # custom gcc
-#CC = clang
-
-# operative system
-OS = LINUX
-#OS = MAC
-#OS = WINDOWS
-
-# Common optimization/debugging flags
-COMMON_FLAGS = -O2 -fPIC
-ifeq ($(CC), /opt/gcc/bin/gcc )
-COMMON_FLAGS += -DCUSTOM_GCC 
-ifeq ($(TARGET), X64_AVX2)
-#COMMON_FLAGS += -I/opt/gcc/lib/gcc/x86_64-unknown-linux-gnu/5.2.0/include
-COMMON_FLAGS += -I/opt/gcc/lib/gcc/x86_64-pc-linux-gnu/6.0.0/include
-endif
-endif
-ifeq ($(OS), WINDOWS)
-COMMON_FLAGS += -DOS_WINDOWS
-endif
-DEBUG = #-Wall -pedantic -Wfloat-equal #-pg
-LDFLAGS =
-
-# Reference code linking to standard BLAS and LAPACK
-REF_BLAS = 0
-#REF_BLAS = OPENBLAS
-#REF_BLAS = BLIS
-#REF_BLAS = NETLIB
-#REF_BLAS = MKL
-ifeq ($(REF_BLAS), 0)
-REF_BLAS_FLAGS = 
-endif
-ifeq ($(REF_BLAS), OPENBLAS)
-REF_BLAS_FLAGS = -DREF_BLAS_OPENBLAS
-endif
-ifeq ($(REF_BLAS), BLIS)
-REF_BLAS_FLAGS = -DREF_BLAS_BLIS
-endif
-ifeq ($(REF_BLAS), NETLIB)
-REF_BLAS_FLAGS = -DREF_BLAS_NETLIB
-endif
-ifeq ($(REF_BLAS), MKL)
-REF_BLAS_FLAGS = -DREF_BLAS_MKL
-COMMON_FLAGS += -m64 -I/opt/intel/mkl/include
-endif
-
-# architecture-specific optimization flags
-ifeq ($(TARGET), X64_SANDY_BRIDGE)
-CFLAGS = $(COMMON_FLAGS) -m64 -mavx -DTARGET_X64_SANDY_BRIDGE $(REF_BLAS_FLAGS) $(DEBUG)
-endif
 ifeq ($(TARGET), X64_SKYLAKE)
-CFLAGS = $(COMMON_FLAGS) -m64 -mavx2 -mfma -DTARGET_X64_SKYLAKE $(REF_BLAS_FLAGS) $(DEBUG)
+OBJS_DOUBLE = kernel_dgemm_nt_add_4x4_lib4.o kernel_dgemm_nt_add_8x4_lib4.o
 endif
 
+obj: $(OBJS_DOUBLE)
+
+clean:
+	rm -f *.o
+	rm -f *.s
 
