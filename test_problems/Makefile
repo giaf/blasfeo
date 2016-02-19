@@ -46,8 +46,8 @@ ifneq ($(NUM_THREAD), 1)
 LIBS += -pthread 
 endif
 
-#OBJS_TEST = test_blas_d_debug.o
-OBJS_TEST = test_blas_d.o
+OBJS_TEST = test_blas_d_debug.o
+#OBJS_TEST = test_blas_d.o
 
 obj: $(OBJS_TEST)
 	$(CC) -o test.out $(OBJS_TEST) -L. libblasfeo.a $(LIBS) #-pg

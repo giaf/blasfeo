@@ -28,7 +28,7 @@ include ./Makefile.rule
 
 OBJS = 
 ifeq ($(TARGET), X64_SANDY_BRIDGE)
-OBJS += ./kernel/avx/kernel_dgemm_nt_add_4x4_lib4.o
+OBJS += ./kernel/avx/kernel_dgemm_nt_add_4x4_lib4.o ./kernel/avx/kernel_dgemm_nt_add_8x4_lib4.o
 endif
 OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o ./aux/i_aux_extern_depend_lib4.o
 OBJS += ./blas/d_blas3_lib4.o
