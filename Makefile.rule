@@ -40,7 +40,6 @@ CC = gcc
 # operative system
 OS = LINUX
 #OS = MAC
-#OS = WINDOWS
 
 # Common optimization/debugging flags
 COMMON_FLAGS = -O2 -fPIC

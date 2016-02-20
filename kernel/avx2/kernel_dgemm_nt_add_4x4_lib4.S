@@ -103,17 +103,17 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 
 	// unroll 1
 	vmovapd 64(%rdx), %ymm12 // B[8]
-	vfmadd231pd	%ymm10, %ymm1, %ymm0
+	vfmadd231pd	%ymm10, %ymm13, %ymm0
 	vshufpd $0x5, %ymm13, %ymm13, %ymm14
 
 	vperm2f128 $0x1, %ymm14, %ymm14, %ymm13
-	vfmadd231pd	%ymm10, %ymm1, %ymm1
+	vfmadd231pd	%ymm10, %ymm14, %ymm1
 	vmovapd 64(%rsi), %ymm8 // A0[8]
 
-	vfmadd231pd	%ymm10, %ymm1, %ymm3
+	vfmadd231pd	%ymm10, %ymm13, %ymm3
 	vshufpd $0x5, %ymm13, %ymm13, %ymm14
 
-	vfmadd231pd	%ymm10, %ymm1, %ymm2
+	vfmadd231pd	%ymm10, %ymm14, %ymm2
 
 	// unroll 2
 	vmovapd 96(%rdx), %ymm13 // B[12]
@@ -134,18 +134,18 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 
 	// unroll 3
 	vmovapd 0(%rdx), %ymm12 // B[0]
-	vfmadd231pd	%ymm10, %ymm1, %ymm0
+	vfmadd231pd	%ymm10, %ymm13, %ymm0
 	vshufpd $0x5, %ymm13, %ymm13, %ymm14
 
 	vperm2f128 $0x1, %ymm14, %ymm14, %ymm13
-	vfmadd231pd	%ymm10, %ymm1, %ymm1
+	vfmadd231pd	%ymm10, %ymm14, %ymm1
 	vmovapd 0(%rsi), %ymm8 // A0[0]
 	cmpl	$3, %edi
 
-	vfmadd231pd	%ymm10, %ymm1, %ymm3
+	vfmadd231pd	%ymm10, %ymm13, %ymm3
 	vshufpd $0x5, %ymm13, %ymm13, %ymm14
 
-	vfmadd231pd	%ymm10, %ymm1, %ymm2
+	vfmadd231pd	%ymm10, %ymm14, %ymm2
 
 	jg		.L001 // main loop 
 
@@ -172,17 +172,17 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 
 	// unroll 1
 	vmovapd 64(%rdx), %ymm12 // B[8]
-	vfmadd231pd	%ymm10, %ymm1, %ymm0
+	vfmadd231pd	%ymm10, %ymm13, %ymm0
 	vshufpd $0x5, %ymm13, %ymm13, %ymm14
 
 	vperm2f128 $0x1, %ymm14, %ymm14, %ymm13
-	vfmadd231pd	%ymm10, %ymm1, %ymm1
+	vfmadd231pd	%ymm10, %ymm14, %ymm1
 	vmovapd 64(%rsi), %ymm8 // A0[8]
 
-	vfmadd231pd	%ymm10, %ymm1, %ymm3
+	vfmadd231pd	%ymm10, %ymm13, %ymm3
 	vshufpd $0x5, %ymm13, %ymm13, %ymm14
 
-	vfmadd231pd	%ymm10, %ymm1, %ymm2
+	vfmadd231pd	%ymm10, %ymm14, %ymm2
 
 	// unroll 2
 	vmovapd 96(%rdx), %ymm13 // B[12]
@@ -203,18 +203,18 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 
 	// unroll 3
 //	vmovapd 0(%rdx), %ymm12 // B[0]
-	vfmadd231pd	%ymm10, %ymm1, %ymm0
+	vfmadd231pd	%ymm10, %ymm13, %ymm0
 	vshufpd $0x5, %ymm13, %ymm13, %ymm14
 
 	vperm2f128 $0x1, %ymm14, %ymm14, %ymm13
-	vfmadd231pd	%ymm10, %ymm1, %ymm1
+	vfmadd231pd	%ymm10, %ymm14, %ymm1
 //	vmovapd 0(%rsi), %ymm8 // A0[0]
 //	cmpl	$3, %edi
 
-	vfmadd231pd	%ymm10, %ymm1, %ymm3
+	vfmadd231pd	%ymm10, %ymm13, %ymm3
 	vshufpd $0x5, %ymm13, %ymm13, %ymm14
 
-	vfmadd231pd	%ymm10, %ymm1, %ymm2
+	vfmadd231pd	%ymm10, %ymm14, %ymm2
 
 
 //	jmp		.L002 // return

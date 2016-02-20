@@ -31,6 +31,13 @@
 #define D_NC 2
 #define S_NC 2
 
+#elif defined( TARGET_X64_SKYLAKE )
+
+#define D_BS 4
+#define S_BS 8
+#define D_NC 2
+#define S_NC 2
+
 #else
 #error "Unknown architecture"
 #endif

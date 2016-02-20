@@ -45,7 +45,7 @@ void dgemm_nt_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb,
 
 			i = 0;
 
-#if defined(TARGET_X64_SANDY_BRIDGE)
+#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_SKYLAKE)
 			for(; i<m-7; i+=8)
 				{
 				j = 0;
@@ -93,7 +93,7 @@ void dgemm_nt_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb,
 
 			// clean up loops definitions
 
-#if defined(TARGET_X64_SANDY_BRIDGE)
+#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_SKYLAKE)
 			left_00_8:
 			j = 0;
 			for(; j<n; j+=4)

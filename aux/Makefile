@@ -28,6 +28,9 @@ include ../Makefile.rule
 ifeq ($(TARGET), X64_SANDY_BRIDGE)
 OBJS = d_aux_lib4.o d_aux_extern_depend_lib4.o i_aux_extern_depend_lib4.o 
 endif
+ifeq ($(TARGET), X64_SKYLAKE)
+OBJS = d_aux_lib4.o d_aux_extern_depend_lib4.o i_aux_extern_depend_lib4.o 
+endif
 
 obj: $(OBJS)
 

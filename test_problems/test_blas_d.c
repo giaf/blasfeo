@@ -46,7 +46,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 3.6
+#define GHZ_MAX 3.3
 
 
 
@@ -73,7 +73,10 @@ int main()
 	printf("\n");
 
 	// maximum flops per cycle, double precision
-#if defined(TARGET_X64_SANDY_BRIDGE)
+#if defined(TARGET_X64_SKYLAKE)
+	const float flops_max = 16;
+	printf("Testing BLAS version for AVX2 and FMA instruction sets, 64 bit: theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_X64_SANDY_BRIDGE)
 	const float flops_max = 8;
 	printf("Testing BLAS version for AVX instruction set, 64 bit: theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #endif
@@ -81,7 +84,10 @@ int main()
 	FILE *f;
 	f = fopen("./test_problems/results/test_blas.m", "w"); // a
 
-#if defined(TARGET_X64_SANDY_BRIDGE)
+#if defined(TARGET_X64_SKYLAKE)
+	fprintf(f, "C = 'd_x64_skylake';\n");
+	fprintf(f, "\n");
+#elif defined(TARGET_X64_SANDY_BRIDGE)
 	fprintf(f, "C = 'd_x64_sandybridge';\n");
 	fprintf(f, "\n");
 #endif

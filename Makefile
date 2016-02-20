@@ -58,5 +58,8 @@ run:
 	./test_problems/test.out
 
 clean:
-	make -C avx clean
+	make -C aux clean
+	make -C kernel clean
+	make -C blas clean
+	make -C test_problems clean
 
