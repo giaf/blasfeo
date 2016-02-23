@@ -46,7 +46,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 3.3
+#define GHZ_MAX 3.6
 
 
 
@@ -235,7 +235,7 @@ int main()
 		/* warm up */
 		for(rep=0; rep<nrep; rep++)
 			{
-			dgemm_nt_lib(n, n, n, pA, cnd, pB, cnd, 0, 0, pC, cnd, 0, pC, cnd);
+			dgemm_ntnn_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
 			}
 
 		gettimeofday(&tv0, NULL); // stop
@@ -245,7 +245,10 @@ int main()
 
 #if defined(LOW_RANK)
 #else
-			dgemm_nt_lib(n, n, n, pA, cnd, pB, cnd, 0, 0, pC, cnd, 0, pC, cnd);
+			dgemm_ntnn_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
+//			dgemm_ntnt_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
+//			dgemm_nttn_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
+//			dgemm_nttt_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
 #endif
 			}
 	

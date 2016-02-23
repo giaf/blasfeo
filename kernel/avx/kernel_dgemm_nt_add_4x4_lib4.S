@@ -960,14 +960,14 @@ kernel_dgemm_ntnt_4x4_vs_lib4:
 	vinsertf128	$1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 	cmpl		$6, %r11d
-	vmaskmovpd	%ymm0, %ymm15,   0(%r10)
+	vmaskmovpd	%ymm0, %ymm15,   0(%r9)
 	jl			.L017 // end
 	cmpl		$7, %r11d
-	vmaskmovpd	%ymm1, %ymm15,  32(%r10)
+	vmaskmovpd	%ymm1, %ymm15,  32(%r9)
 	jl			.L017 // end
-	vmaskmovpd	%ymm2, %ymm15,  64(%r10)
+	vmaskmovpd	%ymm2, %ymm15,  64(%r9)
 	je			.L017 // end
-	vmaskmovpd	%ymm3, %ymm15,  96(%r10)
+	vmaskmovpd	%ymm3, %ymm15,  96(%r9)
 
 
 .L017:
