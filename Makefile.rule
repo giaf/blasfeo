@@ -26,8 +26,8 @@
 
 # Target architecture, currently supported (more architectures are available with the older v0.1 release):
 # X64_SANDY_BRIDGE : machine with AVX instruction set (previous generation Intel and AMD processors), 64 bit operating system, code optimized for Intel Sandy-Bridge.
+#TARGET = X64_HASWELL
 TARGET = X64_SANDY_BRIDGE
-#TARGET = X64_SKYLAKE
 
 # Installation directory
 PREFIX = /opt
@@ -80,11 +80,11 @@ COMMON_FLAGS += -m64 -I/opt/intel/mkl/include
 endif
 
 # architecture-specific optimization flags
+ifeq ($(TARGET), X64_HASWELL)
+CFLAGS = $(COMMON_FLAGS) -m64 -mavx2 -mfma -DTARGET_X64_HASWELL $(REF_BLAS_FLAGS) $(DEBUG)
+endif
 ifeq ($(TARGET), X64_SANDY_BRIDGE)
 CFLAGS = $(COMMON_FLAGS) -m64 -mavx -DTARGET_X64_SANDY_BRIDGE $(REF_BLAS_FLAGS) $(DEBUG)
-endif
-ifeq ($(TARGET), X64_SKYLAKE)
-CFLAGS = $(COMMON_FLAGS) -m64 -mavx2 -mfma -DTARGET_X64_SKYLAKE $(REF_BLAS_FLAGS) $(DEBUG)
 endif
 
 

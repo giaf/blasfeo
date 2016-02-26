@@ -26,11 +26,11 @@
 include ../Makefile.rule
 
 obj:
+ifeq ($(TARGET), X64_HASWELL)
+	( cd avx2; $(MAKE) obj)
+endif
 ifeq ($(TARGET), X64_SANDY_BRIDGE)
 	( cd avx; $(MAKE) obj)
-endif
-ifeq ($(TARGET), X64_SKYLAKE)
-	( cd avx2; $(MAKE) obj)
 endif
 
 clean:

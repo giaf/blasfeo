@@ -709,7 +709,7 @@ inner_edge_dtrmm_add_nt_lu_8x4_lib4:
 // input arguments:
 // r8d  <- alg
 // r9   <- C
-// r10d <- sdc
+// r10d <- 4*sdc*sizeof(double)
 // r15  <- dirty
 // ymm0 <- [d00 d11 d22 d33]
 // ymm1 <- [d01 d10 d23 d32]
@@ -774,8 +774,6 @@ inner_blender_nn_8x4_lib4:
 	je		.L005 // return
 
 	movq	%r9, %r15 // C1 <- C0
-	sall	$5, %r10d // 4*sdc*sizeof(double)
-	movslq	%r10d, %r10
 	addq	%r10, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
 
 	cmpl	$1, %r8d // alg
@@ -840,7 +838,7 @@ inner_blender_nn_8x4_lib4:
 // input arguments:
 // r8d  <- alg
 // r9   <- C
-// r10d <- sdc
+// r10d <- 4*sdc*sizeof(double)
 // r15  <- dirty
 // ymm0 <- [d00 d11 d22 d33]
 // ymm1 <- [d01 d10 d23 d32]
@@ -905,8 +903,6 @@ inner_blender_nt_8x4_lib4:
 	vblendpd	$0x3, %ymm11, %ymm9, %ymm7
 
 	movq	%r9, %r15 // C1 <- C0
-	sall	$5, %r10d // 4*sdc*sizeof(double)
-	movslq	%r10d, %r10
 	addq	%r10, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
 
 	cmpl	$1, %r8d // alg
@@ -1181,8 +1177,6 @@ inner_blender_tn_8x4_lib4:
 // input arguments:
 // r8d  <- alg
 // r9   <- C
-// r10d <- sdc
-// r15  <- dirty
 // ymm0 <- [d00 d11 d22 d33]
 // ymm1 <- [d01 d10 d23 d32]
 // ymm2 <- [d03 d12 d21 d30]
@@ -1200,8 +1194,6 @@ inner_blender_tn_8x4_lib4:
 // output arguments:
 // r8d  <- alg
 // r9   <- C
-// r10d <- 4*sdc*sizeof(double)
-// r15  <- dirty
 // ymm0 <- [d00 d10 d20 d30]
 // ymm1 <- [d01 d11 d21 d31]
 // ymm2 <- [d02 d12 d22 d32]
@@ -1344,6 +1336,8 @@ kernel_dgemm_ntnn_8x4_lib4:
 	// call inner blender nn
 
 	movl	STACKSIZE +  8(%rsp), %r10d // sdc
+	sall	$5, %r10d // 4*sdc*sizeof(double)
+	movslq	%r10d, %r10
 
 	call inner_blender_nn_8x4_lib4
 
@@ -1432,6 +1426,8 @@ kernel_dgemm_ntnn_8x4_vs_lib4:
 	// call inner blender nn
 
 	movl	STACKSIZE +  8(%rsp), %r10d // sdc
+	sall	$5, %r10d // 4*sdc*sizeof(double)
+	movslq	%r10d, %r10
 
 	call inner_blender_nn_8x4_lib4
 
@@ -1534,6 +1530,8 @@ kernel_dgemm_ntnt_8x4_lib4:
 	// call inner blender nn
 
 	movl	STACKSIZE +  8(%rsp), %r10d // sdc
+	sall	$5, %r10d // 4*sdc*sizeof(double)
+	movslq	%r10d, %r10
 
 	call inner_blender_nt_8x4_lib4
 
@@ -1617,6 +1615,8 @@ kernel_dgemm_ntnt_8x4_vs_lib4:
 	// call inner blender nn
 
 	movl	STACKSIZE +  8(%rsp), %r10d // sdc
+	sall	$5, %r10d // 4*sdc*sizeof(double)
+	movslq	%r10d, %r10
 
 	call inner_blender_nt_8x4_lib4
 
@@ -2073,6 +2073,8 @@ kernel_dsyrk_ntnn_l_8x4_vs_lib4:
 	// call inner blender nn
 
 	movl	STACKSIZE +  8(%rsp), %r10d // sdc
+	sall	$5, %r10d // 4*sdc*sizeof(double)
+	movslq	%r10d, %r10
 
 	call inner_blender_nn_8x4_lib4
 
@@ -2186,6 +2188,8 @@ kernel_dtrmm_ntnn_lu_8x4_lib4:
 	// call inner blender nn
 
 	movl	STACKSIZE +  8(%rsp), %r10d // sdc
+	sall	$5, %r10d // 4*sdc*sizeof(double)
+	movslq	%r10d, %r10
 
 	call inner_blender_nn_8x4_lib4
 
@@ -2279,6 +2283,8 @@ kernel_dtrmm_ntnn_lu_8x4_vs_lib4:
 	// call inner blender nn
 
 	movl	STACKSIZE +  8(%rsp), %r10d // sdc
+	sall	$5, %r10d // 4*sdc*sizeof(double)
+	movslq	%r10d, %r10
 
 	call inner_blender_nn_8x4_lib4
 
