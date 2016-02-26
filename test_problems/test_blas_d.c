@@ -30,6 +30,7 @@
 
 #include "../include/block_size.h"
 #include "../include/d_aux.h"
+#include "../include/d_blas.h"
 
 
 
@@ -245,10 +246,12 @@ int main()
 
 #if defined(LOW_RANK)
 #else
-			dgemm_ntnn_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
+//			dgemm_ntnn_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
 //			dgemm_ntnt_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
 //			dgemm_nttn_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
 //			dgemm_nttt_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
+//			dsyrk_ntnn_l_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
+			dtrmm_ntnn_lu_lib(n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
 #endif
 			}
 	
@@ -305,8 +308,8 @@ int main()
 //		float flop_operation = 2.0*m*m*n; // dgemm
 		float flop_operation = 1.0*m*m*n; // dsyrk dtrmm
 #else
-		float flop_operation = 2.0*n*n*n; // dgemm
-//		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm
+//		float flop_operation = 2.0*n*n*n; // dgemm
+		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm
 //		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv

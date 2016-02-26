@@ -26,8 +26,8 @@
 
 # Target architecture, currently supported (more architectures are available with the older v0.1 release):
 # X64_SANDY_BRIDGE : machine with AVX instruction set (previous generation Intel and AMD processors), 64 bit operating system, code optimized for Intel Sandy-Bridge.
-#TARGET = X64_SANDY_BRIDGE
-TARGET = X64_SKYLAKE
+TARGET = X64_SANDY_BRIDGE
+#TARGET = X64_SKYLAKE
 
 # Installation directory
 PREFIX = /opt
