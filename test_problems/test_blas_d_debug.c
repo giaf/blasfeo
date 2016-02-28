@@ -71,10 +71,11 @@ int main()
 	double *pD; d_zeros_align(&pD, pn, cn);
 	d_cvt_mat2pmat(n, n, D, n, 0, pD, cn);
 	
-//	kernel_dgemm_nt_4x4_lib4(3, pA, pB, -1, 0, pC, 1, pD);
-//	kernel_dgemm_nt_4x4_vs_lib4(4, pA, pB, -1, 0, pC, 0, pD, 4, 4);
-//	dgemm_nt_lib(14, 15, n, pA, cn, pB, cn, 0, 0, pC, cn, 0, pD, cn);
-//	dsyrk_ntnn_l_lib(n, n, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
+//	dgemm_ntnn_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
+//	dgemm_ntnt_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
+//	dgemm_nttn_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
+//	dgemm_nttt_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
+//	dsyrk_ntnn_l_lib(15, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
 	dtrmm_ntnn_lu_lib(15, 15, pB, cn, pA, cn, 0, pC, cn, pD, cn);
 
 	d_print_pmat(n, n, pA, n);

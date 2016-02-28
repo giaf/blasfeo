@@ -25,7 +25,8 @@
 ###################################################################################################
 
 # Target architecture, currently supported (more architectures are available with the older v0.1 release):
-# X64_SANDY_BRIDGE : machine with AVX instruction set (previous generation Intel and AMD processors), 64 bit operating system, code optimized for Intel Sandy-Bridge.
+# X64_HASWELL : machine with AVX2 and FMA instruction sets (latest generation Intel and AMD processors), 64 bit operating system, code optimized for Intel Haswell and Intel Skylake architectures.
+# X64_SANDY_BRIDGE : machine with AVX instruction set (previous generation Intel and AMD processors), 64 bit operating system, code optimized for Intel Sandy-Bridge architecture.
 #TARGET = X64_HASWELL
 TARGET = X64_SANDY_BRIDGE
 
