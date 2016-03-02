@@ -492,7 +492,7 @@ void dtrmm_ntnn_lu_lib(int m, int n, double *pA, int sda, double *pB, int sdb, i
 	int i, j;
 	
 	i = 0;
-#if 0 //defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -539,31 +539,33 @@ void dtrmm_ntnn_lu_lib(int m, int n, double *pA, int sda, double *pB, int sdb, i
 	// common return
 	return;
 
-#if 0 //defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
 	// clean up
 	left_8:
 	j = 0;
-	for(; j<n-3; j+=4)
+//	for(; j<n-3; j+=4)
+	for(; j<n; j+=4)
 		{
 		kernel_dtrmm_ntnn_lu_8x4_vs_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
 		}
-	if(j<n) // TODO specialized edge routine
-		{
-		kernel_dtrmm_ntnn_lu_8x4_vs_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
-		}
+//	if(j<n) // TODO specialized edge routine
+//		{
+//		kernel_dtrmm_ntnn_lu_8x4_vs_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
+//		}
 	return;
 #endif
 
 	left_4:
 	j = 0;
-	for(; j<n-3; j+=4)
+//	for(; j<n-3; j+=4)
+	for(; j<n; j+=4)
 		{
 		kernel_dtrmm_ntnn_lu_4x4_vs_lib4(n-j, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
 		}
-	if(j<n) // TODO specialized edge routine
-		{
-		kernel_dtrmm_ntnn_lu_4x4_vs_lib4(n-j, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
-		}
+//	if(j<n) // TODO specialized edge routine
+//		{
+//		kernel_dtrmm_ntnn_lu_4x4_vs_lib4(n-j, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
+//		}
 	return;
 
 	}

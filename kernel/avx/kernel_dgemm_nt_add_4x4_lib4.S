@@ -383,24 +383,26 @@ inner_edge_dtrmm_add_nt_lu_4x4_lib4:
 // edge for B upper triangular
 //
 // input arguments:
-// r10d  <- k, it can be only {1, 2, 3}
+// r10d  <- k
 // r11   <- A
 // r12   <- B
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
 // ymm8  <- dirty
 // ymm12 <- dirty
 // ymm15 <- dirty
 
 //
 // output arguments:
-// r10d  <- 0
+// r10d  <- max(k-4,0)
 // r11   <- A+4*4*sizeof(double)
 // r12   <- B+4*4*sizeof(double)
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
 // ymm8  <- dirty
 // ymm12 <- dirty
 // ymm15 <- dirty
@@ -563,7 +565,7 @@ inner_edge_dtrmm_sub_nt_lu_4x4_lib4:
 // edge for B upper triangular
 //
 // input arguments:
-// r10d  <- k, it can be only {1, 2, 3}
+// r10d  <- k
 // r11   <- A
 // r12   <- B
 // ymm0  <- [d00 d10 d20 d30]
@@ -575,7 +577,7 @@ inner_edge_dtrmm_sub_nt_lu_4x4_lib4:
 
 //
 // output arguments:
-// r10d  <- 0
+// r10d  <- max(k-4,0)
 // r11   <- A+4*4*sizeof(double)
 // r12   <- B+4*4*sizeof(double)
 // ymm0  <- [d00 d10 d20 d30]
