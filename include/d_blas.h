@@ -36,3 +36,4 @@ void dtrmm_ntnn_lu_lib(int m, int n, double *pA, int sda, double *pB, int sdb, i
 
 // LAPACK
 void dpotrf_ntnn_l_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);
+void dsyrk_dpotrf_ntnn_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);

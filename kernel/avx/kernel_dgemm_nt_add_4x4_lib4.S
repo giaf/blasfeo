@@ -2703,6 +2703,98 @@ kernel_dpotrf_ntnn_l_4x4_vs_lib4:
 
 
 
+//                                             edi     rsi         rdx         ecx     r8          r9          rsp+8    rsp+16     rsp+24     rsp+32              rsp+40  rsp+48
+// void kernel_dsyrk_dpotrf_ntnn_l_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, int alg, double *C, double *D, double *inv_diag_D, int km, int kn);
+
+	.p2align 4,,15
+	.globl kernel_dsyrk_dpotrf_ntnn_l_4x4_vs_lib4
+	.type kernel_dsyrk_dpotrf_ntnn_l_4x4_vs_lib4, @function
+kernel_dsyrk_dpotrf_ntnn_l_4x4_vs_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nt add
+
+	movl	%edi, %r10d // kp
+	movq	%rsi, %r11  // Ap
+	movq	%rdx, %r12  // Bp
+
+	call inner_kernel_dgemm_add_nt_4x4_lib4
+
+
+	// call inner dgemm kernel nt sub
+
+	movl	%ecx, %r10d // km
+	movq	%r8, %r11   // Am
+	movq	%r9, %r12   // Bm
+
+	call inner_kernel_dgemm_sub_nt_4x4_lib4
+
+
+	// call inner blender nn
+
+	movl	STACKSIZE +  8(%rsp), %r10d  // alg
+	movq	STACKSIZE + 16(%rsp), %r11   // C
+
+	call inner_blender_nn_4x4_lib4
+
+
+	// factorization
+
+	movq	STACKSIZE + 32(%rsp), %r10  // inv_diag_D 
+	movl	STACKSIZE + 48(%rsp), %r11d // kn 
+
+	call inner_edge_dpotrf_4x4_vs_lib4
+
+
+	// store
+
+	movq	STACKSIZE + 24(%rsp), %r10  // D 
+	movl	STACKSIZE + 40(%rsp), %r11d // km 
+	movl	STACKSIZE + 48(%rsp), %r12d // kn 
+
+	call inner_store_l_4x4_vs_lib4
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dsyrk_dpotrf_ntnn_l_4x4_vs_lib4, .-kernel_dsyrk_dpotrf_ntnn_l_4x4_vs_lib4
+
+
+
+
+
 //                                        edi    rsi        rdx        ecx      r8         r9         rsp+8      rsp+16              
 // void kernel_dtrsm_ntnn_rl_inv_4x4_lib4(int k, double *A, double *B, int alg, double *C, double *D, double *E, double *inv_diag_E);
 
@@ -2779,6 +2871,96 @@ kernel_dtrsm_ntnn_rl_inv_4x4_lib4:
 	ret
 
 	.size	kernel_dtrsm_ntnn_rl_inv_4x4_lib4, .-kernel_dtrsm_ntnn_rl_inv_4x4_lib4
+
+
+
+
+
+//                                              edi     rsi         rdx         ecx     r8          r9          rsp+8    rsp+16     rsp+24     rsp+32    rsp+40                     
+// void kernel_dgemm_dtrsm_ntnn_rl_inv_4x4_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, int alg, double *C, double *D, double *E, double *inv_diag_E);
+
+	.p2align 4,,15
+	.globl kernel_dgemm_dtrsm_ntnn_rl_inv_4x4_lib4
+	.type kernel_dgemm_dtrsm_ntnn_rl_inv_4x4_lib4, @function
+kernel_dgemm_dtrsm_ntnn_rl_inv_4x4_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nt add
+
+	movl	%edi, %r10d // kp
+	movq	%rsi, %r11  // Ap
+	movq	%rdx, %r12  // Bp
+
+	call inner_kernel_dgemm_add_nt_4x4_lib4
+
+
+	// call inner dgemm kernel nt sub
+
+	movl	%ecx, %r10d // km
+	movq	%r8, %r11   // Am
+	movq	%r9, %r12   // Bm
+
+	call inner_kernel_dgemm_sub_nt_4x4_lib4
+
+
+	// call inner blender nn
+
+	movl	STACKSIZE + 8(%rsp),  %r10d  // alg 
+	movq	STACKSIZE + 16(%rsp), %r11   // C
+
+	call inner_blender_nn_4x4_lib4
+
+
+	// solve
+
+	movq	STACKSIZE + 32(%rsp), %r10  // E 
+	movq	STACKSIZE + 40(%rsp), %r11  // inv_diag_E 
+
+	call inner_edge_dtrsm_rlt_inv_4x4_lib4
+
+
+	// store
+
+	movq	STACKSIZE + 24(%rsp), %r10   // D
+
+	call inner_store_4x4_lib4
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dgemm_dtrsm_ntnn_rl_inv_4x4_lib4, .-kernel_dgemm_dtrsm_ntnn_rl_inv_4x4_lib4
 
 
 
@@ -2863,6 +3045,99 @@ kernel_dtrsm_ntnn_rl_inv_4x4_vs_lib4:
 	ret
 
 	.size	kernel_dtrsm_ntnn_rl_inv_4x4_vs_lib4, .-kernel_dtrsm_ntnn_rl_inv_4x4_vs_lib4
+
+
+
+
+
+//                                                 edi     rsi         rdx         ecx     r8          r9          rsp+8    rsp+16     rsp+24     rsp+32     rsp+40              rsp+48  rsp+56
+// void kernel_dgemm_dtrsm_ntnn_rl_inv_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, int alg, double *C, double *D, double *E, double *inv_diag_E, int km, int kn);
+
+	.p2align 4,,15
+	.globl kernel_dgemm_dtrsm_ntnn_rl_inv_4x4_vs_lib4
+	.type kernel_dgemm_dtrsm_ntnn_rl_inv_4x4_vs_lib4, @function
+kernel_dgemm_dtrsm_ntnn_rl_inv_4x4_vs_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nt add
+
+	movl	%edi, %r10d // kp
+	movq	%rsi, %r11  // Ap
+	movq	%rdx, %r12  // Bp
+
+	call inner_kernel_dgemm_add_nt_4x4_lib4
+
+
+	// call inner dgemm kernel nt sub
+
+	movl	%ecx, %r10d // km
+	movq	%r8, %r11   // Am
+	movq	%r9, %r12   // Bm
+
+	call inner_kernel_dgemm_sub_nt_4x4_lib4
+
+
+	// call inner blender nn
+
+	movl	STACKSIZE +  8(%rsp), %r10d // alg 
+	movq	STACKSIZE + 16(%rsp), %r11  // C 
+
+	call inner_blender_nn_4x4_lib4
+
+
+	// solve
+
+	movq	STACKSIZE + 32(%rsp), %r10  // E 
+	movq	STACKSIZE + 40(%rsp), %r11  // inv_diag_E 
+	movl	STACKSIZE + 56(%rsp), %r12d // kn 
+
+	call inner_edge_dtrsm_rlt_inv_4x4_vs_lib4
+
+
+	// store
+
+	movq	STACKSIZE + 24(%rsp), %r10 // D 
+	movl	STACKSIZE + 48(%rsp), %r11d // km 
+	movl	STACKSIZE + 56(%rsp), %r12d // kn 
+
+	call inner_store_4x4_vs_lib4
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dgemm_dtrsm_ntnn_rl_inv_4x4_vs_lib4, .-kernel_dgemm_dtrsm_ntnn_rl_inv_4x4_vs_lib4
 
 
 

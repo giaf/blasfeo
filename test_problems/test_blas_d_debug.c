@@ -77,9 +77,10 @@ int main()
 //	dgemm_ntnt_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
 //	dgemm_nttn_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
 //	dgemm_nttt_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
-	dsyrk_ntnn_l_lib(16, 16, n, pA, cn, pB, cn, 1, pB, cn, pD, cn);
+//	dsyrk_ntnn_l_lib(16, 16, n, pA, cn, pB, cn, 1, pB, cn, pD, cn);
 //	dtrmm_ntnn_lu_lib(15, 15, pB, cn, pA, cn, 0, pC, cn, pD, cn);
-	dpotrf_ntnn_l_lib(16, 16, pD, cn, pC, cn, inv_diag_D);
+//	dpotrf_ntnn_l_lib(16, 16, pD, cn, pC, cn, inv_diag_D);
+	dsyrk_dpotrf_ntnn_l_lib(15, 15, n, pA, cn, pB, cn, 1, pB, cn, pD, cn, inv_diag_D);
 
 	d_print_pmat(n, n, pA, n);
 	d_print_pmat(n, n, pB, n);

@@ -252,7 +252,8 @@ int main()
 //			dgemm_nttt_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
 //			dsyrk_ntnn_l_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
 //			dtrmm_ntnn_lu_lib(n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
-			dpotrf_ntnn_l_lib(n, n, pB, cnd, pD, cnd, diag);
+//			dpotrf_ntnn_l_lib(n, n, pB, cnd, pD, cnd, diag);
+			dsyrk_dpotrf_ntnn_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd, diag);
 #endif
 			}
 	
@@ -311,13 +312,13 @@ int main()
 #else
 //		float flop_operation = 2.0*n*n*n; // dgemm
 //		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm
-		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
+//		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv
 //		float flop_operation = 1.0*n*n; // dtrmv dtrsv
 //		float flop_operation = 4.0*n*n; // dgemv_nt
 
-//		float flop_operation = 4.0/3.0*n*n*n; // dsyrk+dpotrf
+		float flop_operation = 4.0/3.0*n*n*n; // dsyrk+dpotrf
 #endif
 
 		float time_hpmpc    = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);
