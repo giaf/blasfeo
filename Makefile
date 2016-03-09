@@ -28,10 +28,10 @@ include ./Makefile.rule
 
 OBJS = 
 ifeq ($(TARGET), X64_HASWELL)
-OBJS += ./kernel/avx2/kernel_dgemm_nt_add_4x4_lib4.o ./kernel/avx2/kernel_dgemm_nt_add_8x4_lib4.o
+OBJS += ./kernel/avx2/kernel_dgemm_nt_4x4_lib4.o ./kernel/avx2/kernel_dgemm_nt_8x4_lib4.o
 endif
 ifeq ($(TARGET), X64_SANDY_BRIDGE)
-OBJS += ./kernel/avx/kernel_dgemm_nt_add_4x4_lib4.o ./kernel/avx/kernel_dgemm_nt_add_8x4_lib4.o
+OBJS += ./kernel/avx/kernel_dgemm_nt_4x4_lib4.o ./kernel/avx/kernel_dgemm_nt_8x4_lib4.o
 OBJS += ./blas/d_lapack_lib4.o
 endif
 OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o ./aux/i_aux_extern_depend_lib4.o

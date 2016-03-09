@@ -26,7 +26,7 @@
 include ../../Makefile.rule
 
 ifeq ($(TARGET), X64_SANDY_BRIDGE)
-OBJS_DOUBLE = kernel_dgemm_nt_add_4x4_lib4.o kernel_dgemm_nt_add_8x4_lib4.o
+OBJS_DOUBLE = kernel_dgemm_nt_4x4_lib4.o kernel_dgemm_nt_8x4_lib4.o
 endif
 
 obj: $(OBJS_DOUBLE)
