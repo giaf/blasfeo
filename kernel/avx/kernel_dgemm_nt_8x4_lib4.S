@@ -341,7 +341,6 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	vaddpd	%ymm6, %ymm15, %ymm6
 
 
-//	jmp		.L002 // return
 	ret
 
 

@@ -34,5 +34,10 @@ ifeq ($(TARGET), X64_SANDY_BRIDGE)
 endif
 
 clean:
+ifeq ($(TARGET), X64_HASWELL)
+	make -C avx2 clean
+endif
+ifeq ($(TARGET), X64_SANDY_BRIDGE)
 	make -C avx clean
+endif
 

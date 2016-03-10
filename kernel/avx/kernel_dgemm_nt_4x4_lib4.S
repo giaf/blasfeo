@@ -516,7 +516,6 @@ inner_kernel_dgemm_sub_nt_4x4_lib4:
 	vsubpd	%ymm15, %ymm2, %ymm2
 
 
-//	jmp		.L025 // return
 	ret
 
 
