@@ -302,18 +302,18 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 inner_kernel_dgemm_sub_nt_4x4_lib4:
 	
 	cmpl	$0, %r10d
-	jle		.L002 // return
+	jle		.L025 // return
 
 	// prefetch
 	vmovapd 0(%r11), %ymm8 // A0[0]
 	vmovapd 0(%r12), %ymm12 // B[0]
 
 	cmpl	$4, %r10d
-	jle		.L000 // consider clean-up loop
+	jle		.L023 // consider clean-up loop
 
 	// main loop
 	.p2align 3
-.L001: // main loop
+.L024: // main loop
 	
 	// unroll 0
 	vmovapd 32(%r12), %ymm13 // B[4]
@@ -376,13 +376,13 @@ inner_kernel_dgemm_sub_nt_4x4_lib4:
 
 	vfnmadd231pd	%ymm10, %ymm14, %ymm2
 
-	jg		.L001 // main loop 
+	jg		.L024 // main loop 
 
 
-.L000: // consider clean4-up
+.L023: // consider clean4-up
 	
 	cmpl	$3, %r10d
-	jle		.L004 // clean1
+	jle		.L027 // clean1
 
 	// unroll 0
 	vmovapd 32(%r12), %ymm13 // B[4]
@@ -446,17 +446,16 @@ inner_kernel_dgemm_sub_nt_4x4_lib4:
 	vfnmadd231pd	%ymm10, %ymm14, %ymm2
 
 
-//	jmp		.L002 // return
 	ret
 
 
-.L004: // consider clean1-up loop
+.L027: // consider clean1-up loop
 
 	cmpl	$0, %r10d
-	jle		.L002 // return
+	jle		.L025 // return
 
 	// clean-up loop
-.L003: // clean up loop
+.L026: // clean up loop
 	
 	vmovapd 0(%r12), %ymm12 // B[0]
 	vmovapd 0(%r11), %ymm8 // A0[0]
@@ -476,10 +475,10 @@ inner_kernel_dgemm_sub_nt_4x4_lib4:
 
 	cmpl	$0, %r10d
 
-	jg		.L003 // clean up loop 
+	jg		.L026 // clean up loop 
 
 
-.L002: // return
+.L025: // return
 
 	ret
 

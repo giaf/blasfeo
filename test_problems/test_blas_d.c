@@ -74,7 +74,7 @@ int main()
 	printf("\n");
 
 	// maximum flops per cycle, double precision
-#if defined(TARGET_X64_SKYLAKE)
+#if defined(TARGET_X64_HASWELL)
 	const float flops_max = 16;
 	printf("Testing BLAS version for AVX2 and FMA instruction sets, 64 bit: theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_X64_SANDY_BRIDGE)
@@ -85,8 +85,8 @@ int main()
 	FILE *f;
 	f = fopen("./test_problems/results/test_blas.m", "w"); // a
 
-#if defined(TARGET_X64_SKYLAKE)
-	fprintf(f, "C = 'd_x64_skylake';\n");
+#if defined(TARGET_X64_HASWELL)
+	fprintf(f, "C = 'd_x64_haswell';\n");
 	fprintf(f, "\n");
 #elif defined(TARGET_X64_SANDY_BRIDGE)
 	fprintf(f, "C = 'd_x64_sandybridge';\n");
@@ -254,6 +254,8 @@ int main()
 //			dtrmm_ntnn_lu_lib(n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
 //			dpotrf_ntnn_l_lib(n, n, pB, cnd, pD, cnd, diag);
 			dsyrk_dpotrf_ntnn_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd, diag);
+//			dsyrk_ntnn_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd);
+//			dpotrf_ntnn_l_lib(n, n, pD, cnd, pD, cnd, diag);
 #endif
 			}
 	

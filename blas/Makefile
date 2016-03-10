@@ -25,11 +25,11 @@
 
 include ../Makefile.rule
 
-ifeq ($(TARGET), X64_SANDY_BRIDGE)
+ifeq ($(TARGET), X64_HASWELL)
 OBJS_DOUBLE = d_blas3_lib4.o d_lapack_lib4.o
 endif
-ifeq ($(TARGET), X64_SKYLAKE)
-OBJS_DOUBLE = d_blas3_lib4.o
+ifeq ($(TARGET), X64_SANDY_BRIDGE)
+OBJS_DOUBLE = d_blas3_lib4.o d_lapack_lib4.o
 endif
 
 obj: $(OBJS_DOUBLE)

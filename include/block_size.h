@@ -24,14 +24,14 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#if defined( TARGET_X64_SANDY_BRIDGE )
+#if defined( TARGET_X64_HASWELL )
 
 #define D_BS 4
 #define S_BS 8
 #define D_NC 2
 #define S_NC 2
 
-#elif defined( TARGET_X64_SKYLAKE )
+#elif defined( TARGET_X64_SANDY_BRIDGE )
 
 #define D_BS 4
 #define S_BS 8
