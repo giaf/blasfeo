@@ -32,6 +32,9 @@ endif
 ifeq ($(TARGET), X64_SANDY_BRIDGE)
 	( cd avx; $(MAKE) obj)
 endif
+ifeq ($(TARGET), GENERIC)
+	( cd c99; $(MAKE) obj)
+endif
 
 clean:
 ifeq ($(TARGET), X64_HASWELL)
@@ -39,5 +42,8 @@ ifeq ($(TARGET), X64_HASWELL)
 endif
 ifeq ($(TARGET), X64_SANDY_BRIDGE)
 	make -C avx clean
+endif
+ifeq ($(TARGET), GENERIC)
+	make -C c99 clean
 endif
 
