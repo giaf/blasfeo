@@ -28,9 +28,11 @@ include ../Makefile.rule
 obj:
 ifeq ($(TARGET), X64_HASWELL)
 	( cd avx2; $(MAKE) obj)
+	( cd c99; $(MAKE) obj)
 endif
 ifeq ($(TARGET), X64_SANDY_BRIDGE)
 	( cd avx; $(MAKE) obj)
+	( cd c99; $(MAKE) obj)
 endif
 ifeq ($(TARGET), GENERIC)
 	( cd c99; $(MAKE) obj)
@@ -39,9 +41,11 @@ endif
 clean:
 ifeq ($(TARGET), X64_HASWELL)
 	make -C avx2 clean
+	make -C c99 clean
 endif
 ifeq ($(TARGET), X64_SANDY_BRIDGE)
 	make -C avx clean
+	make -C c99 clean
 endif
 ifeq ($(TARGET), GENERIC)
 	make -C c99 clean

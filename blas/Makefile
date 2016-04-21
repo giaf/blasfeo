@@ -26,13 +26,13 @@
 include ../Makefile.rule
 
 ifeq ($(TARGET), X64_HASWELL)
-OBJS_DOUBLE = d_blas3_lib4.o d_lapack_lib4.o
+OBJS_DOUBLE = d_blas3_lib4.o d_lapack_lib4.o d_blas2_lib4.o
 endif
 ifeq ($(TARGET), X64_SANDY_BRIDGE)
-OBJS_DOUBLE = d_blas3_lib4.o d_lapack_lib4.o
+OBJS_DOUBLE = d_blas3_lib4.o d_lapack_lib4.o d_blas2_lib4.o
 endif
 ifeq ($(TARGET), GENERIC)
-OBJS_DOUBLE = d_blas3_lib4.o d_lapack_lib4.o
+OBJS_DOUBLE = d_blas3_lib4.o d_lapack_lib4.o d_blas2_lib4.o
 endif
 
 obj: $(OBJS_DOUBLE)
