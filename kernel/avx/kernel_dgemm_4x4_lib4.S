@@ -156,7 +156,7 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 	vmulpd	%ymm10, %ymm14, %ymm15
 	vaddpd	%ymm1, %ymm15, %ymm1
 	vmovapd 0(%r11), %ymm8 // A0[0]
-	cmpl	$3, %r10d
+	cmpl	$4, %r10d
 
 	vmulpd	%ymm10, %ymm13, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
@@ -421,7 +421,7 @@ inner_kernel_dgemm_sub_nt_4x4_lib4:
 	vmulpd	%ymm10, %ymm14, %ymm15
 	vsubpd	%ymm15, %ymm1, %ymm1
 	vmovapd 0(%r11), %ymm8 // A0[0]
-	cmpl	$3, %r10d
+	cmpl	$4, %r10d
 
 	vmulpd	%ymm10, %ymm13, %ymm15
 	vsubpd	%ymm15, %ymm3, %ymm3
@@ -1787,24 +1787,24 @@ kernel_dgemm_ntnn_4x4_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d
-	movq	%rsi, %r11
-	movq	%rdx, %r12
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movq	%rdx, %r12  // B
 
 	call inner_kernel_dgemm_add_nt_4x4_lib4
 
 
 	// call inner blender nn
 
-	movl	%ecx, %r10d
-	movq	%r8, %r11
+	movl	%ecx, %r10d // alg
+	movq	%r8, %r11   // C
 
 	call inner_blender_nn_4x4_lib4
 
 
 	// store n
 
-	movq	%r9, %r10
+	movq	%r9, %r10 // D
 
 	call inner_store_4x4_lib4
 

@@ -57,6 +57,16 @@ int main()
 	for(ii=0; ii<n*n; ii++)
 		D[ii] = 1.0;
 	
+	double *x; d_zeros_align(&x, n, 1);
+	x[0] = 1.0;
+	x[1] = 1.0;
+	x[2] = 1.0;
+	
+	double *y; d_zeros_align(&y, n, 1);
+	for(ii=0; ii<n; ii++) y[ii] = ii;
+
+	double *z; d_zeros_align(&z, n, 1);
+
 //	d_print_mat(n, n, A, n);
 //	d_print_mat(n, n, B, n);
 
@@ -73,20 +83,24 @@ int main()
 
 	double *inv_diag_D; d_zeros(&inv_diag_D, pn, 1);
 	
-//	dgemm_ntnn_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
+//	dgemm_ntnt_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
 //	dgemm_ntnt_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
 //	dgemm_nttn_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
 //	dgemm_nttt_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
 //	dsyrk_ntnn_l_lib(16, 16, n, pA, cn, pB, cn, 1, pB, cn, pD, cn);
 //	dtrmm_ntnn_lu_lib(15, 15, pB, cn, pA, cn, 0, pC, cn, pD, cn);
 //	dpotrf_ntnn_l_lib(16, 16, pD, cn, pC, cn, inv_diag_D);
-	dsyrk_dpotrf_ntnn_l_lib(15, 15, n, pA, cn, pB, cn, 1, pB, cn, pD, cn, inv_diag_D);
+//	dsyrk_dpotrf_ntnn_l_lib(15, 15, n, pA, cn, pB, cn, 1, pB, cn, pD, cn, inv_diag_D);
+	dgemv_t_lib_b(3, 6, pA, cn, x, 0, y, z);
 
 	d_print_pmat(n, n, pA, n);
-	d_print_pmat(n, n, pB, n);
-	d_print_pmat(n, n, pC, n);
-	d_print_pmat(n, n, pD, n);
-	d_print_mat(1, n, inv_diag_D, 1);
+//	d_print_pmat(n, n, pB, n);
+//	d_print_pmat(n, n, pC, n);
+//	d_print_pmat(n, n, pD, n);
+//	d_print_mat(1, n, inv_diag_D, 1);
+	d_print_mat(1, n, x, 1);
+	d_print_mat(1, n, y, 1);
+	d_print_mat(1, n, z, 1);
 
 	d_free(A);
 	d_free(B);
@@ -95,6 +109,9 @@ int main()
 	d_free_align(pB);
 	d_free_align(pC);
 	d_free_align(pD);
+	d_free_align(x);
+	d_free_align(y);
+	d_free_align(z);
 
 	return 0;
 

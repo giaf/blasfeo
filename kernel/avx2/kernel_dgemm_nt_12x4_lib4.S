@@ -214,7 +214,7 @@ inner_kernel_dgemm_add_nt_12x4_lib4:
 
 	vshufpd 		$0x5,	%ymm15, %ymm15, %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$4, %r10d
 
 	vfmadd231pd		%ymm12, %ymm15, %ymm2
 	vmovapd 		0(%r11), %ymm12 		// A0[16]
@@ -579,7 +579,7 @@ inner_kernel_dgemm_sub_nt_12x4_lib4:
 
 	vshufpd 		$0x5,	%ymm15, %ymm15, %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$4, %r10d
 
 	vfmadd231pd		%ymm12, %ymm15, %ymm2
 	vmovapd 		0(%r11), %ymm12 		// A0[16]

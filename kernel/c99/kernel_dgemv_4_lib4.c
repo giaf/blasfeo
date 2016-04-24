@@ -26,7 +26,7 @@
 
 
 
-void kernel_dgemv_n_4_vs_lib4(int kmax, double *A, double *x, int alg, double *y, double *z, int km)
+void kernel_dgemv_n_4_vs_lib4_b(int kmax, double *A, double *x, int alg, double *y, double *z, int km)
 	{
 
 	const int bs = 4;
@@ -34,7 +34,7 @@ void kernel_dgemv_n_4_vs_lib4(int kmax, double *A, double *x, int alg, double *y
 	int k;
 
 	double
-		x_0, x_1, x_2, x_3,
+		x_0,
 		y_0=0, y_1=0, y_2=0, y_3=0;
 	
 	k=0;
@@ -102,16 +102,16 @@ void kernel_dgemv_n_4_vs_lib4(int kmax, double *A, double *x, int alg, double *y
 	
 	
 
-void kernel_dgemv_n_4_lib4(int kmax, double *A, double *x, int alg, double *y, double *z, int km)
+void kernel_dgemv_n_4_lib4_b(int kmax, double *A, double *x, int alg, double *y, double *z, int km)
 	{
 
-	kernel_dgemv_n_4_vs_lib4(kmax, A, x, alg, y, z, 4);
+	kernel_dgemv_n_4_vs_lib4_b(kmax, A, x, alg, y, z, 4);
 
 	}
 
 
 
-void kernel_dgemv_t_4_vs_lib4(int kmax, double *A, int sda, double *x, int alg, double *y, double *z, int km)
+void kernel_dgemv_t_4_vs_lib4_b(int kmax, double *A, int sda, double *x, int alg, double *y, double *z, int km)
 	{
 
 	if(kmax<=0) 
@@ -221,10 +221,10 @@ void kernel_dgemv_t_4_vs_lib4(int kmax, double *A, int sda, double *x, int alg, 
 	
 	
 	
-void kernel_dgemv_t_4_lib4(int kmax, double *A, int sda, double *x, int alg, double *y, double *z)
+void kernel_dgemv_t_4_lib4_b(int kmax, double *A, int sda, double *x, int alg, double *y, double *z)
 	{
 
-	kernel_dgemv_t_4_vs_lib4(kmax, A, sda, x, alg, y, z, 4);
+	kernel_dgemv_t_4_vs_lib4_b(kmax, A, sda, x, alg, y, z, 4);
 
 	}
 

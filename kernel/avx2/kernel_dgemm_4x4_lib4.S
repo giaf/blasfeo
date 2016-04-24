@@ -140,7 +140,7 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 	vperm2f128 $0x1, %ymm14, %ymm14, %ymm13
 	vfmadd231pd	%ymm10, %ymm14, %ymm1
 	vmovapd 0(%r11), %ymm8 // A0[0]
-	cmpl	$3, %r10d
+	cmpl	$4, %r10d
 
 	vfmadd231pd	%ymm10, %ymm13, %ymm3
 	vshufpd $0x5, %ymm13, %ymm13, %ymm14
@@ -369,7 +369,7 @@ inner_kernel_dgemm_sub_nt_4x4_lib4:
 	vperm2f128 $0x1, %ymm14, %ymm14, %ymm13
 	vfnmadd231pd	%ymm10, %ymm14, %ymm1
 	vmovapd 0(%r11), %ymm8 // A0[0]
-	cmpl	$3, %r10d
+	cmpl	$4, %r10d
 
 	vfnmadd231pd	%ymm10, %ymm13, %ymm3
 	vshufpd $0x5, %ymm13, %ymm13, %ymm14

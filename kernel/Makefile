@@ -1,9 +1,9 @@
 ###################################################################################################
 #                                                                                                 #
-# This file is part of HPMPC.                                                                     #
+# This file is part of BLASFEO.                                                                   #
 #                                                                                                 #
-# HPMPC -- Library for High-Performance implementation of solvers for MPC.                        #
-# Copyright (C) 2014-2015 by Technical University of Denmark. All rights reserved.                #
+# BLASFEO -- BLAS For Embedded Optimization.                                                      #
+# Copyright (C) 2016 by Gianluca Frison. All rights reserved.                                     #
 #                                                                                                 #
 # HPMPC is free software; you can redistribute it and/or                                          #
 # modify it under the terms of the GNU Lesser General Public                                      #
@@ -20,6 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  #
 #                                                                                                 #
 # Author: Gianluca Frison, giaf (at) dtu.dk                                                       #
+#                          gianluca.frison (at) imtek.uni-freiburg.de                             #
 #                                                                                                 #
 ###################################################################################################
 
@@ -28,26 +29,17 @@ include ../Makefile.rule
 obj:
 ifeq ($(TARGET), X64_HASWELL)
 	( cd avx2; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
+	( cd avx; $(MAKE) obj)
 endif
 ifeq ($(TARGET), X64_SANDY_BRIDGE)
 	( cd avx; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
 endif
 ifeq ($(TARGET), GENERIC)
 	( cd c99; $(MAKE) obj)
 endif
 
 clean:
-ifeq ($(TARGET), X64_HASWELL)
 	make -C avx2 clean
-	make -C c99 clean
-endif
-ifeq ($(TARGET), X64_SANDY_BRIDGE)
 	make -C avx clean
 	make -C c99 clean
-endif
-ifeq ($(TARGET), GENERIC)
-	make -C c99 clean
-endif
 

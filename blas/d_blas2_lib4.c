@@ -28,7 +28,7 @@
 
 
 
-void dgemv_n_lib(int m, int n, double *pA, int sda, double *x, int alg, double *y, double *z)
+void dgemv_n_lib_b(int m, int n, double *pA, int sda, double *x, int alg, double *y, double *z)
 	{
 
 	if(m<=0)
@@ -41,18 +41,18 @@ void dgemv_n_lib(int m, int n, double *pA, int sda, double *x, int alg, double *
 	i = 0;
 	for( ; i<m-3; i+=4)
 		{
-		kernel_dgemv_n_4_lib4(n, &pA[i*sda], x, alg, &y[i], &z[i]);
+		kernel_dgemv_n_4_lib4_b(n, &pA[i*sda], x, alg, &y[i], &z[i]);
 		}
 	if(i<m)
 		{
-		kernel_dgemv_n_4_vs_lib4(n, &pA[i*sda], x, alg, &y[i], &z[i], m-i);
+		kernel_dgemv_n_4_vs_lib4_b(n, &pA[i*sda], x, alg, &y[i], &z[i], m-i);
 		}
 	
 	}
 
 
 
-void dgemv_t_lib(int m, int n, double *pA, int sda, double *x, int alg, double *y, double *z)
+void dgemv_t_lib_b(int m, int n, double *pA, int sda, double *x, int alg, double *y, double *z)
 	{
 
 	if(n<=0)
@@ -65,11 +65,11 @@ void dgemv_t_lib(int m, int n, double *pA, int sda, double *x, int alg, double *
 	j = 0;
 	for( ; j<n-3; j+=4)
 		{
-		kernel_dgemv_t_4_lib4(m, &pA[j*bs], sda, alg, x, &y[j], &z[j]);
+		kernel_dgemv_t_4_lib4_b(m, &pA[j*bs], sda, x, alg, &y[j], &z[j]);
 		}
 	if(j<n)
 		{
-		kernel_dgemv_t_4_vs_lib4(m, &pA[j*bs], sda, alg, x, &y[j], &z[j], n-j);
+		kernel_dgemv_t_4_vs_lib4_b(m, &pA[j*bs], sda, x, alg, &y[j], &z[j], n-j);
 		}
 	
 	}

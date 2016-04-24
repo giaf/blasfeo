@@ -174,7 +174,7 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	vfmadd231pd	%ymm10, %ymm14, %ymm1
 	vmovapd 0(%r11), %ymm8 // A0[0]
 	vfmadd231pd	%ymm11, %ymm14, %ymm5
-	cmpl	$3, %r10d
+	cmpl	$4, %r10d
 
 	vmovapd 0(%r15), %ymm9 // A1[0]
 	vfmadd231pd	%ymm10, %ymm13, %ymm3
@@ -466,7 +466,7 @@ inner_kernel_dgemm_sub_nt_8x4_lib4:
 	vfnmadd231pd	%ymm10, %ymm14, %ymm1
 	vmovapd 0(%r11), %ymm8 // A0[0]
 	vfnmadd231pd	%ymm11, %ymm14, %ymm5
-	cmpl	$3, %r10d
+	cmpl	$4, %r10d
 
 	vmovapd 0(%r15), %ymm9 // A1[0]
 	vfnmadd231pd	%ymm10, %ymm13, %ymm3

@@ -1,9 +1,9 @@
 ###################################################################################################
 #                                                                                                 #
-# This file is part of HPMPC.                                                                     #
+# This file is part of BLASFEO.                                                                   #
 #                                                                                                 #
-# HPMPC -- Library for High-Performance implementation of solvers for MPC.                        #
-# Copyright (C) 2014-2015 by Technical University of Denmark. All rights reserved.                #
+# BLASFEO -- BLAS For Embedded Optimization.                                                      #
+# Copyright (C) 2016 by Gianluca Frison. All rights reserved.                                     #
 #                                                                                                 #
 # HPMPC is free software; you can redistribute it and/or                                          #
 # modify it under the terms of the GNU Lesser General Public                                      #
@@ -20,13 +20,22 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  #
 #                                                                                                 #
 # Author: Gianluca Frison, giaf (at) dtu.dk                                                       #
+#                          gianluca.frison (at) imtek.uni-freiburg.de                             #
 #                                                                                                 #
 ###################################################################################################
 
 include ../../Makefile.rule
 
+ifeq ($(TARGET), X64_HASWELL)
+OBJS_DOUBLE = 
+endif
+
+ifeq ($(TARGET), X64_SANDY_BRIDGE)
+OBJS_DOUBLE = 
+endif
+
 ifeq ($(TARGET), GENERIC)
-OBJS_DOUBLE = kernel_dgemm_nt_4x4_lib4.o 
+OBJS_DOUBLE = kernel_dgemm_4x4_lib4.o kernel_dgemv_4_lib4.o 
 endif
 
 obj: $(OBJS_DOUBLE)
