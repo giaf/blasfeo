@@ -1431,13 +1431,13 @@ inner_edge_dtrsm_rlt_inv_4x4_lib4:
 inner_edge_dtrsm_rlt_inv_4x4_vs_lib4:
 	
 	vbroadcastsd	0(%r11), %ymm13
-	cmpl			$3, %r12d
+	cmpl			$2, %r12d
 	vmulpd			%ymm0, %ymm13, %ymm0
 
 	jl				.L037 // ret
 
 	vbroadcastsd	8(%r10), %ymm13
-	cmpl			$3, %r11d
+	cmpl			$3, %r12d
 	vfnmadd231pd	%ymm0, %ymm13, %ymm1
 	vbroadcastsd	8(%r11), %ymm13
 	vmulpd			%ymm1, %ymm13, %ymm1
@@ -1445,7 +1445,7 @@ inner_edge_dtrsm_rlt_inv_4x4_vs_lib4:
 	jl				.L037 // ret
 
 	vbroadcastsd	16(%r10), %ymm13
-	cmpl			$4, %r11d
+	cmpl			$4, %r12d
 	vfnmadd231pd	%ymm0, %ymm13, %ymm2
 	vbroadcastsd	48(%r10), %ymm13
 	vfnmadd231pd	%ymm1, %ymm13, %ymm2

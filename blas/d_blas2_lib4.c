@@ -74,3 +74,92 @@ void dgemv_t_lib_b(int m, int n, double *pA, int sda, double *x, int alg, double
 	
 	}
 
+
+
+void dtrsv_ln_inv_lib_b(int m, int n, double *pA, int sda, double *inv_diag_A, double *x, double *y)
+	{
+
+	if(m<=0 || n<=0)
+		return;
+	
+	// suppose m>=n
+	if(m<n)
+		m = n;
+
+	const int bs = 4;
+
+	int i;
+
+	if(x!=y)
+		{
+		for(i=0; i<m; i++)
+			y[i] = x[i];
+		}
+	
+	i = 0;
+	for( ; i<n-3; i+=4)
+		{
+		kernel_dtrsv_ln_inv_4_lib4_b(i, &pA[i*sda], &inv_diag_A[i], x, 1, &y[i], &y[i]);
+		}
+	if(i<n)
+		{
+		kernel_dtrsv_ln_inv_4_vs_lib4_b(i, &pA[i*sda], &inv_diag_A[i], x, 1, &y[i], &y[i], m-i, n-i);
+		i+=4;
+		}
+	for( ; i<m-3; i+=4)
+		{
+		kernel_dgemv_n_4_lib4_b(n, &pA[i*sda], x, -1, &y[i], &y[i]);
+		}
+	if(i<m)
+		{
+		kernel_dgemv_n_4_vs_lib4_b(n, &pA[i*sda], x, -1, &y[i], &y[i], m-i);
+		i+=4;
+		}
+
+	}
+
+
+
+void dtrsv_lt_inv_lib_b(int m, int n, double *pA, int sda, double *inv_diag_A, double *x, double *y)
+	{
+
+	if(m<=0 || n<=0)
+		return;
+
+	if(n>m)
+		n = m;
+	
+	const int bs = 4;
+	
+	int i;
+	
+	if(x!=y)
+		for(i=0; i<m; i++)
+			y[i] = x[i];
+			
+	i=0;
+	if(n%4==1)
+		{
+		kernel_dtrsv_lt_inv_1_lib4_b(m-n+i+1, pA+(n/bs)*bs*sda+(n-i-1)*bs, sda, inv_diag_A+n-i-1, y+n-i-1, 1, y+n-i-1, y+n-i-1);
+		i++;
+		}
+	else if(n%4==2)
+		{
+		kernel_dtrsv_lt_inv_2_lib4_b(m-n+i+2, pA+(n/bs)*bs*sda+(n-i-2)*bs, sda, inv_diag_A+n-i-2, y+n-i-2, 1, y+n-i-2, y+n-i-2);
+		i+=2;
+		}
+	else if(n%4==3)
+		{
+		kernel_dtrsv_lt_inv_3_lib4_b(m-n+i+3, pA+(n/bs)*bs*sda+(n-i-3)*bs, sda, inv_diag_A+n-i-3, y+n-i-3, 1, y+n-i-3, y+n-i-3);
+		i+=3;
+		}
+	for(; i<n-3; i+=4)
+		{
+		kernel_dtrsv_lt_inv_4_lib4_b(m-n+i+4, pA+((n-i-4)/bs)*bs*sda+(n-i-4)*bs, sda, inv_diag_A+n-i-4, y+n-i-4, 1, y+n-i-4, y+n-i-4);
+		}
+
+	}
+
+
+
+

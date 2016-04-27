@@ -1962,16 +1962,14 @@ inner_edge_dpotrf_8x4_vs_lib4:
 
 	jl			.L031 // ret
 
-	vextractf128	$0x1, %ymm0, %xmm13
-	vpermilpd	$0x0, %xmm13, %xmm13
-	vperm2f128	$0x00, %ymm13, %ymm13, %ymm13
+	vpermilpd	$0x0, %ymm0, %ymm13
+	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
 	vmulpd		%ymm0, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm2, %ymm2
 	vmulpd		%ymm4, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm6, %ymm6
-	vextractf128	$0x1, %ymm1, %xmm13
-	vpermilpd	$0x0, %xmm13, %xmm13
-	vperm2f128	$0x00, %ymm13, %ymm13, %ymm13
+	vpermilpd	$0x0, %ymm1, %ymm13
+	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
 	vmulpd		%ymm1, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm2, %ymm2
 	vmulpd		%ymm5, %ymm13, %ymm12
@@ -1991,23 +1989,20 @@ inner_edge_dpotrf_8x4_vs_lib4:
 
 	jl			.L031 // ret
 
-	vextractf128	$0x1, %ymm0, %xmm13
-	vpermilpd	$0x3, %xmm13, %xmm13
-	vperm2f128	$0x00, %ymm13, %ymm13, %ymm13
+	vpermilpd	$0xc, %ymm0, %ymm13
+	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
 	vmulpd		%ymm0, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm3, %ymm3
 	vmulpd		%ymm4, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm7, %ymm7
-	vextractf128	$0x1, %ymm1, %xmm13
-	vpermilpd	$0x3, %xmm13, %xmm13
-	vperm2f128	$0x00, %ymm13, %ymm13, %ymm13
+	vpermilpd	$0xc, %ymm1, %ymm13
+	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
 	vmulpd		%ymm1, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm3, %ymm3
 	vmulpd		%ymm5, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm7, %ymm7
-	vextractf128	$0x1, %ymm2, %xmm13
-	vpermilpd	$0x3, %xmm13, %xmm13
-	vperm2f128	$0x00, %ymm13, %ymm13, %ymm13
+	vpermilpd	$0xc, %ymm2, %ymm13
+	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
 	vmulpd		%ymm2, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm3, %ymm3
 	vmulpd		%ymm6, %ymm13, %ymm12
@@ -2180,14 +2175,14 @@ inner_edge_dtrsm_rlt_inv_8x4_lib4:
 inner_edge_dtrsm_rlt_inv_8x4_vs_lib4:
 	
 	vbroadcastsd	0(%r11), %ymm13
-	cmpl			$3, %r12d
+	cmpl			$2, %r12d
 	vmulpd			%ymm0, %ymm13, %ymm0
 	vmulpd			%ymm4, %ymm13, %ymm4
 
 	jl				.L040 // ret
 
 	vbroadcastsd	8(%r10), %ymm13
-	cmpl			$3, %r11d
+	cmpl			$3, %r12d
 	vmulpd			%ymm0, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm1, %ymm1
 	vmulpd			%ymm4, %ymm13, %ymm12
@@ -2199,7 +2194,7 @@ inner_edge_dtrsm_rlt_inv_8x4_vs_lib4:
 	jl				.L040 // ret
 
 	vbroadcastsd	16(%r10), %ymm13
-	cmpl			$4, %r11d
+	cmpl			$4, %r12d
 	vmulpd			%ymm0, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm2, %ymm2
 	vmulpd			%ymm4, %ymm13, %ymm12

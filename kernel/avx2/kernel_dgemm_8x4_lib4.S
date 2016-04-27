@@ -1962,14 +1962,14 @@ inner_edge_dtrsm_rlt_inv_8x4_lib4:
 inner_edge_dtrsm_rlt_inv_8x4_vs_lib4:
 	
 	vbroadcastsd	0(%r11), %ymm13
-	cmpl			$3, %r12d
+	cmpl			$2, %r12d
 	vmulpd			%ymm0, %ymm13, %ymm0
 	vmulpd			%ymm4, %ymm13, %ymm4
 
 	jl				.L040 // ret
 
 	vbroadcastsd	8(%r10), %ymm13
-	cmpl			$3, %r11d
+	cmpl			$3, %r12d
 	vfnmadd231pd	%ymm0, %ymm13, %ymm1
 	vfnmadd231pd	%ymm4, %ymm13, %ymm5
 	vbroadcastsd	8(%r11), %ymm13
@@ -1979,7 +1979,7 @@ inner_edge_dtrsm_rlt_inv_8x4_vs_lib4:
 	jl				.L040 // ret
 
 	vbroadcastsd	16(%r10), %ymm13
-	cmpl			$4, %r11d
+	cmpl			$4, %r12d
 	vfnmadd231pd	%ymm0, %ymm13, %ymm2
 	vfnmadd231pd	%ymm4, %ymm13, %ymm6
 	vbroadcastsd	48(%r10), %ymm13

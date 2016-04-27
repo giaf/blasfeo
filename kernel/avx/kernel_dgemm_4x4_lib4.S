@@ -1383,14 +1383,12 @@ inner_edge_dpotrf_4x4_vs_lib4:
 
 	jl			.L028 // ret
 
-	vextractf128	$0x1, %ymm0, %xmm13
-	vpermilpd	$0x0, %xmm13, %xmm13
-	vperm2f128	$0x00, %ymm13, %ymm13, %ymm13
+	vpermilpd	$0x0, %ymm0, %ymm13
+	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
 	vmulpd		%ymm0, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm2, %ymm2
-	vextractf128	$0x1, %ymm1, %xmm13
-	vpermilpd	$0x0, %xmm13, %xmm13
-	vperm2f128	$0x00, %ymm13, %ymm13, %ymm13
+	vpermilpd	$0x0, %ymm1, %ymm13
+	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
 	vmulpd		%ymm1, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm2, %ymm2
 	vextractf128	$0x1, %ymm2, %xmm13
@@ -1407,19 +1405,16 @@ inner_edge_dpotrf_4x4_vs_lib4:
 
 	jl			.L028 // ret
 
-	vextractf128	$0x1, %ymm0, %xmm13
-	vpermilpd	$0x3, %xmm13, %xmm13
-	vperm2f128	$0x00, %ymm13, %ymm13, %ymm13
+	vpermilpd	$0xc, %ymm0, %ymm13
+	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
 	vmulpd		%ymm0, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm3, %ymm3
-	vextractf128	$0x1, %ymm1, %xmm13
-	vpermilpd	$0x3, %xmm13, %xmm13
-	vperm2f128	$0x00, %ymm13, %ymm13, %ymm13
+	vpermilpd	$0xc, %ymm1, %ymm13
+	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
 	vmulpd		%ymm1, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm3, %ymm3
-	vextractf128	$0x1, %ymm2, %xmm13
-	vpermilpd	$0x3, %xmm13, %xmm13
-	vperm2f128	$0x00, %ymm13, %ymm13, %ymm13
+	vpermilpd	$0xc, %ymm2, %ymm13
+	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
 	vmulpd		%ymm2, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm3, %ymm3
 	vextractf128	$0x1, %ymm3, %xmm13
@@ -1467,10 +1462,10 @@ inner_edge_dpotrf_4x4_vs_lib4:
 // input arguments:
 // r10  <- E
 // r11  <- inv_diag_E
-// ymm0 <- [d00 d11 d22 d33]
-// ymm1 <- [d01 d10 d23 d32]
-// ymm2 <- [d03 d12 d21 d30]
-// ymm3 <- [d02 d13 d20 d31]
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
 // ymm12 <- dirty
 // ymm13 <- dirty
 //
@@ -1534,10 +1529,10 @@ inner_edge_dtrsm_rlt_inv_4x4_lib4:
 // r10  <- D
 // r11  <- inv_diag_D
 // r12d <- kn
-// ymm0 <- [d00 d11 d22 d33]
-// ymm1 <- [d01 d10 d23 d32]
-// ymm2 <- [d03 d12 d21 d30]
-// ymm3 <- [d02 d13 d20 d31]
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
 // ymm12 <- dirty
 // ymm13 <- dirty
 //
@@ -1557,13 +1552,13 @@ inner_edge_dtrsm_rlt_inv_4x4_lib4:
 inner_edge_dtrsm_rlt_inv_4x4_vs_lib4:
 	
 	vbroadcastsd	0(%r11), %ymm13
-	cmpl			$3, %r12d
+	cmpl			$2, %r12d
 	vmulpd			%ymm0, %ymm13, %ymm0
 
 	jl				.L037 // ret
 
 	vbroadcastsd	8(%r10), %ymm13
-	cmpl			$3, %r11d
+	cmpl			$3, %r12d
 	vmulpd			%ymm0, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm1, %ymm1
 	vbroadcastsd	8(%r11), %ymm13
@@ -1572,7 +1567,7 @@ inner_edge_dtrsm_rlt_inv_4x4_vs_lib4:
 	jl				.L037 // ret
 
 	vbroadcastsd	16(%r10), %ymm13
-	cmpl			$4, %r11d
+	cmpl			$4, %r12d
 	vmulpd			%ymm0, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm2, %ymm2
 	vbroadcastsd	48(%r10), %ymm13
