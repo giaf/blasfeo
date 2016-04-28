@@ -140,22 +140,132 @@ void dtrsv_lt_inv_lib_b(int m, int n, double *pA, int sda, double *inv_diag_A, d
 	i=0;
 	if(n%4==1)
 		{
-		kernel_dtrsv_lt_inv_1_lib4_b(m-n+i+1, pA+(n/bs)*bs*sda+(n-i-1)*bs, sda, inv_diag_A+n-i-1, y+n-i-1, 1, y+n-i-1, y+n-i-1);
+		kernel_dtrsv_lt_inv_1_lib4_b(m-n+i+1, &pA[n/bs*bs*sda+(n-i-1)*bs], sda, &inv_diag_A[n-i-1], &y[n-i-1], 1, &y[n-i-1], &y[n-i-1]);
 		i++;
 		}
 	else if(n%4==2)
 		{
-		kernel_dtrsv_lt_inv_2_lib4_b(m-n+i+2, pA+(n/bs)*bs*sda+(n-i-2)*bs, sda, inv_diag_A+n-i-2, y+n-i-2, 1, y+n-i-2, y+n-i-2);
+		kernel_dtrsv_lt_inv_2_lib4_b(m-n+i+2, &pA[n/bs*bs*sda+(n-i-2)*bs], sda, &inv_diag_A[n-i-2], &y[n-i-2], 1, &y[n-i-2], &y[n-i-2]);
 		i+=2;
 		}
 	else if(n%4==3)
 		{
-		kernel_dtrsv_lt_inv_3_lib4_b(m-n+i+3, pA+(n/bs)*bs*sda+(n-i-3)*bs, sda, inv_diag_A+n-i-3, y+n-i-3, 1, y+n-i-3, y+n-i-3);
+		kernel_dtrsv_lt_inv_3_lib4_b(m-n+i+3, &pA[n/bs*bs*sda+(n-i-3)*bs], sda, &inv_diag_A[n-i-3], &y[n-i-3], 1, &y[n-i-3], &y[n-i-3]);
 		i+=3;
 		}
 	for(; i<n-3; i+=4)
 		{
-		kernel_dtrsv_lt_inv_4_lib4_b(m-n+i+4, pA+((n-i-4)/bs)*bs*sda+(n-i-4)*bs, sda, inv_diag_A+n-i-4, y+n-i-4, 1, y+n-i-4, y+n-i-4);
+		kernel_dtrsv_lt_inv_4_lib4_b(m-n+i+4, &pA[(n-i-4)/bs*bs*sda+(n-i-4)*bs], sda, &inv_diag_A[n-i-4], &y[n-i-4], 1, &y[n-i-4], &y[n-i-4]);
+		}
+
+	}
+
+
+
+void dtrmv_un_lib(int m, double *pA, int sda, double *x, int alg, double *y, double *z)
+	{
+
+	if(m<=0)
+		return;
+
+	const int bs = 4;
+	
+	int i;
+	
+	i=0;
+	for(; i<m-3; i+=4)
+		{
+		kernel_dtrmv_un_4_lib4(m-i, pA, x, alg, y, z);
+		pA += 4*sda+4*4;
+		x  += 4;
+		y  += 4;
+		z  += 4;
+		}
+	if(m>i)
+		{
+		if(m-i==1)
+			{
+			if(alg==0)
+				{
+				z[0] = pA[0+bs*0]*x[0];
+				}
+			else if(alg==1)
+				{
+				z[0] = y[0] + pA[0+bs*0]*x[0];
+				}
+			else
+				{
+				z[0] = y[0] - pA[0+bs*0]*x[0];
+				}
+			}
+		else if(m-i==2)
+			{
+			if(alg==0)
+				{
+				z[0] = pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1];
+				z[1] = pA[1+bs*1]*x[1];
+				}
+			else if(alg==1)
+				{
+				z[0] = y[0] + pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1];
+				z[1] = y[1] + pA[1+bs*1]*x[1];
+				}
+			else
+				{
+				z[0] = y[0] - pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1];
+				z[1] = y[1] - pA[1+bs*1]*x[1];
+				}
+			}
+		else // if(m-i==3)
+			{
+			if(alg==0)
+				{
+				z[0] = pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1] + pA[0+bs*2]*x[2];
+				z[1] = pA[1+bs*1]*x[1] + pA[1+bs*2]*x[2];
+				z[2] = pA[2+bs*2]*x[2];
+				}
+			else if(alg==1)
+				{
+				z[0] = y[0] + pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1] + pA[0+bs*2]*x[2];
+				z[1] = y[1] + pA[1+bs*1]*x[1] + pA[1+bs*2]*x[2];
+				z[2] = y[2] + pA[2+bs*2]*x[2];
+				}
+			else
+				{
+				z[0] = y[0] - pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1] + pA[0+bs*2]*x[2];
+				z[1] = y[1] - pA[1+bs*1]*x[1] + pA[1+bs*2]*x[2];
+				z[2] = y[2] - pA[2+bs*2]*x[2];
+				}
+			}
+		}
+
+	}
+
+
+
+void dtrmv_ut_lib(int m, double *pA, int sda, double *x, int alg, double *y, double *z)
+	{
+
+	if(m<=0)
+		return;
+
+	const int bs = 4;
+	
+	int i;
+	
+	double *ptrA;
+	
+	i=0;
+	for(; i<m-3; i+=4)
+		{
+		kernel_dtrmv_ut_4_lib4(i+4, pA, sda, x, alg, y, z);
+		pA += 4*bs;
+		y  += bs;
+		z  += bs;
+		}
+	if(i<m)
+		{
+		kernel_dtrmv_ut_4_vs_lib4(m, pA, sda, x, alg, y, z, m-i);
 		}
 
 	}

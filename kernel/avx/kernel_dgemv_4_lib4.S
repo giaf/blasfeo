@@ -24,7 +24,7 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-// L023
+// L026
 
 #define STACKSIZE 96
 
@@ -1042,7 +1042,7 @@ inner_edge_dtrsv_lt_inv_2_lib4:
 
 
 
-// common inner routine with file scope TODO
+// common inner routine with file scope 
 //
 // triangular substitution with vector RHS
 //
@@ -1115,6 +1115,220 @@ inner_edge_dtrsv_lt_inv_1_lib4:
 	ret
 
 	.size	inner_edge_dtrsv_lt_inv_1_lib4, .-inner_edge_dtrsv_lt_inv_1_lib4
+
+
+
+
+
+// common inner routine with file scope
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- x
+// ymm0  <- [z0 z1 z2 z3]_a
+// ymm1  <- [z0 z1 z2 z3]_b
+// ymm2  <- [z0 z1 z2 z3]_c
+// ymm3  <- [z0 z1 z2 z3]_d
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+//
+// output arguments:
+// r10d  <- k-4
+// r11   <- A+4*4*sizeof(double)
+// r12   <- x+4*sizeof(double)
+// ymm0  <- [z0 z1 z2 z3]_a
+// ymm1  <- [z0 z1 z2 z3]_b
+// ymm2  <- [z0 z1 z2 z3]_c
+// ymm3  <- [z0 z1 z2 z3]_d
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+	.p2align 4,,15
+	.type inner_edge_dtrmv_un_4_lib4, @function
+inner_edge_dtrmv_un_4_lib4:
+	
+	vxorpd			%ymm14, %ymm14, %ymm14
+
+	vmovapd			0(%r11), %ymm8
+	vblendpd		$0x1, %ymm8, %ymm14, %ymm8
+	vbroadcastsd	0(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm0, %ymm15, %ymm0
+	
+	subl			$4, %r10d
+
+	vmovapd			32(%r11), %ymm8
+	vblendpd		$0x3, %ymm8, %ymm14, %ymm8
+	vbroadcastsd	8(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm1, %ymm15, %ymm1
+	
+	vmovapd			64(%r11), %ymm8
+	vblendpd		$0x7, %ymm8, %ymm14, %ymm8
+	vbroadcastsd	16(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm2, %ymm15, %ymm2
+
+	vmovapd			96(%r11), %ymm8
+	vbroadcastsd	24(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm3, %ymm15, %ymm3
+	
+	addq			$128, %r11
+	addq			$32, %r12
+	
+	ret
+
+	.size	inner_edge_dtrmv_un_4_lib4, .-inner_edge_dtrmv_un_4_lib4
+
+
+
+
+
+// common inner routine with file scope
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- bs*sda*sizeof(double) = 32*sda
+// r13   <- x
+// ymm0  <- [z0 z1 z2 z3]_a
+// ymm1  <- [z0 z1 z2 z3]_b
+// ymm2  <- [z0 z1 z2 z3]_c
+// ymm3  <- [z0 z1 z2 z3]_d
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+4*k*sizeof(double)
+// r12   <- bs*sda*sizeof(double) = 32*sda
+// r13   <- x+k*sizeof(double)
+// ymm0  <- [z0 z1 z2 z3]_a
+// ymm1  <- [z0 z1 z2 z3]_b
+// ymm2  <- [z0 z1 z2 z3]_c
+// ymm3  <- [z0 z1 z2 z3]_d
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+	.p2align 4,,15
+	.type inner_kernel_dtrmv_ut_4_lib4, @function
+inner_kernel_dtrmv_ut_4_lib4:
+
+	cmpl	$0, %r10d
+	jle		.L025 // return
+
+	cmpl	$4, %r10d
+	jle		.L023 // clean-up loop
+
+	// main loop
+	.p2align 3
+.L024: // main loop
+	
+	vmovapd	0(%r13), %ymm12
+
+	vmovapd	0(%r11), %ymm8
+	vmulpd	%ymm8, %ymm12, %ymm15
+	vaddpd	%ymm0, %ymm15, %ymm0
+	
+	subl	$4, %r10d
+
+	vmovapd	32(%r11), %ymm8
+	vmulpd	%ymm8, %ymm12, %ymm15
+	vaddpd	%ymm1, %ymm15, %ymm1
+	
+	vmovapd	64(%r11), %ymm8
+	vmulpd	%ymm8, %ymm12, %ymm15
+	vaddpd	%ymm2, %ymm15, %ymm2
+
+	vmovapd	96(%r11), %ymm8
+	vmulpd	%ymm8, %ymm12, %ymm15
+	vaddpd	%ymm3, %ymm15, %ymm3
+	
+	addq	%r12, %r11
+	addq	$32, %r13
+	
+	cmpl	$4, %r10d
+
+	jg		.L024 // main loop 
+
+
+	// consider clean-up
+	cmpl	$0, %r10d
+	jle		.L025 // return
+
+.L023: // clean-up
+	
+//	vcvtsi2sd	%r10d, %xmm14, %xmm14
+//	vmovupd		.LC02(%rip), %ymm13
+//	vmovddup	%xmm14, %xmm14
+//	vinsertf128	$1, %xmm14, %ymm14, %ymm14
+//	vsubpd		%ymm14, %ymm13, %ymm14
+//
+//	vmaskmovpd	0(%r13), %ymm14, %ymm12
+
+	vmovapd		0(%r13), %ymm12
+
+	vxorpd		%ymm14, %ymm14, %ymm14
+
+	vmovapd		0(%r11), %ymm8
+	vblendpd	$0x1, %ymm8, %ymm14, %ymm8
+	vmulpd		%ymm8, %ymm12, %ymm15
+	vaddpd		%ymm0, %ymm15, %ymm0
+	
+	vmovapd	32(%r11), %ymm8
+	vblendpd	$0x3, %ymm8, %ymm14, %ymm8
+	vmulpd		%ymm8, %ymm12, %ymm15
+	vaddpd		%ymm1, %ymm15, %ymm1
+	
+	vmovapd		64(%r11), %ymm8
+	vblendpd	$0x7, %ymm8, %ymm14, %ymm8
+	vmulpd		%ymm8, %ymm12, %ymm15
+	vaddpd		%ymm2, %ymm15, %ymm2
+
+	vmovapd		96(%r11), %ymm8
+	vmulpd		%ymm8, %ymm12, %ymm15
+	vaddpd		%ymm3, %ymm15, %ymm3
+		
+	sall		$3, %r10d
+	movslq		%r10d, %r10
+	addq		%r10, %r11
+	addq		%r10, %r13
+	xorl		%r10d, %r10d
+	
+	
+.L025: // return
+
+	ret
+
+	.size	inner_kernel_dtrmv_ut_4_lib4, .-inner_kernel_dtrmv_ut_4_lib4
 
 
 
@@ -2004,6 +2218,234 @@ kernel_dtrsv_lt_inv_1_lib4_b:
 	ret
 
 	.size	kernel_dtrsv_lt_inv_1_lib4_b, .-kernel_dtrsv_lt_inv_1_lib4_b
+
+
+
+
+
+//                            rdi    rsi        rdx        rcx      r8         r9         
+// void kernel_dtrmv_n_4_lib4(int k, double *A, double *x, int alg, double *y, double *z);
+
+	.p2align 4,,15
+	.globl kernel_dtrmv_un_4_lib4
+	.type kernel_dtrmv_un_4_lib4, @function
+kernel_dtrmv_un_4_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dtrmv edge & dgemv kernel n
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movq	%rdx, %r12  // x
+
+	call inner_edge_dtrmv_un_4_lib4
+
+	call inner_kernel_dgemv_add_n_4_lib4
+
+
+	// call inner blender n
+
+	movl	%ecx, %r10d // alg
+	movq	%r8, %r11   // y
+
+	call inner_blender_n_4_lib4
+
+
+	// store
+
+	movq	%r9, %r10 // z
+
+	call inner_store_4_lib4
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dtrmv_un_4_lib4, .-kernel_dtrmv_un_4_lib4
+
+
+
+
+
+//                             rdi    rsi        rdx      rcx        r8       r9         rsp+8
+// void kernel_dtrmv_ut_4_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
+
+	.p2align 4,,15
+	.globl kernel_dtrmv_ut_4_lib4
+	.type kernel_dtrmv_ut_4_lib4, @function
+kernel_dtrmv_ut_4_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemv kernel n
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movslq	%r12d, %r12
+	movq	%rcx, %r13  // x
+
+	call inner_kernel_dtrmv_ut_4_lib4
+
+
+	// call inner blender t
+
+	movl	%r8d, %r10d // alg
+	movq	%r9, %r11   // y
+
+	call inner_blender_t_4_lib4
+
+
+	// store
+
+	movq	STACKSIZE +  8(%rsp), %r10 // z 
+
+	call inner_store_4_lib4
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dtrmv_ut_4_lib4, .-kernel_dtrmv_ut_4_lib4
+
+
+
+
+
+//                                rdi    rsi        rdx      rcx        r8       r9         rsp+8      rsp+16
+// void kernel_dtrmv_ut_4_vs_lib4(int k, double *A, int sda, double *x, int alg, double *C, double *D, int km);
+
+	.p2align 4,,15
+	.globl kernel_dtrmv_ut_4_vs_lib4
+	.type kernel_dtrmv_ut_4_vs_lib4, @function
+kernel_dtrmv_ut_4_vs_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemv kernel n
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movslq	%r12d, %r12
+	movq	%rcx, %r13  // x
+
+	call inner_kernel_dtrmv_ut_4_lib4
+
+
+	// call inner blender t
+
+	movl	%r8d, %r10d // alg
+	movq	%r9, %r11   // y
+
+	call inner_blender_t_4_lib4
+
+
+	// store
+
+	movq	STACKSIZE +  8(%rsp), %r10 // z 
+	movl	STACKSIZE + 16(%rsp), %r11d // km 
+
+	call inner_store_4_vs_lib4
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dtrmv_ut_4_vs_lib4, .-kernel_dtrmv_ut_4_vs_lib4
 
 
 
