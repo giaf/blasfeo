@@ -39,10 +39,22 @@ void dgemv_n_lib_b(int m, int n, double *pA, int sda, double *x, int alg, double
 	int i;
 
 	i = 0;
+#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+	for( ; i<m-7; i+=8)
+		{
+		kernel_dgemv_n_8_lib4_b(n, &pA[i*sda], sda, x, alg, &y[i], &z[i]);
+		}
+	if(i<m-3)
+		{
+		kernel_dgemv_n_4_lib4_b(n, &pA[i*sda], x, alg, &y[i], &z[i]);
+		i+=4;
+		}
+#else
 	for( ; i<m-3; i+=4)
 		{
 		kernel_dgemv_n_4_lib4_b(n, &pA[i*sda], x, alg, &y[i], &z[i]);
 		}
+#endif
 	if(i<m)
 		{
 		kernel_dgemv_n_4_vs_lib4_b(n, &pA[i*sda], x, alg, &y[i], &z[i], m-i);
@@ -60,16 +72,28 @@ void dgemv_t_lib_b(int m, int n, double *pA, int sda, double *x, int alg, double
 	
 	const int bs = 4;
 
-	int j;
+	int i;
 
-	j = 0;
-	for( ; j<n-3; j+=4)
+	i = 0;
+#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+	for( ; i<n-7; i+=8)
 		{
-		kernel_dgemv_t_4_lib4_b(m, &pA[j*bs], sda, x, alg, &y[j], &z[j]);
+		kernel_dgemv_t_8_lib4_b(m, &pA[i*bs], sda, x, alg, &y[i], &z[i]);
 		}
-	if(j<n)
+	if(i<n-3)
 		{
-		kernel_dgemv_t_4_vs_lib4_b(m, &pA[j*bs], sda, x, alg, &y[j], &z[j], n-j);
+		kernel_dgemv_t_4_lib4_b(m, &pA[i*bs], sda, x, alg, &y[i], &z[i]);
+		i+=4;
+		}
+#else
+	for( ; i<n-3; i+=4)
+		{
+		kernel_dgemv_t_4_lib4_b(m, &pA[i*bs], sda, x, alg, &y[i], &z[i]);
+		}
+#endif
+	if(i<n)
+		{
+		kernel_dgemv_t_4_vs_lib4_b(m, &pA[i*bs], sda, x, alg, &y[i], &z[i], n-i);
 		}
 	
 	}
@@ -106,10 +130,22 @@ void dtrsv_ln_inv_lib_b(int m, int n, double *pA, int sda, double *inv_diag_A, d
 		kernel_dtrsv_ln_inv_4_vs_lib4_b(i, &pA[i*sda], &inv_diag_A[i], x, 1, &y[i], &y[i], m-i, n-i);
 		i+=4;
 		}
+#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+	for( ; i<m-7; i+=8)
+		{
+		kernel_dgemv_n_8_lib4_b(n, &pA[i*sda], sda, x, -1, &y[i], &y[i]);
+		}
+	if(i<m-3)
+		{
+		kernel_dgemv_n_4_lib4_b(n, &pA[i*sda], x, -1, &y[i], &y[i]);
+		i+=4;
+		}
+#else
 	for( ; i<m-3; i+=4)
 		{
 		kernel_dgemv_n_4_lib4_b(n, &pA[i*sda], x, -1, &y[i], &y[i]);
 		}
+#endif
 	if(i<m)
 		{
 		kernel_dgemv_n_4_vs_lib4_b(n, &pA[i*sda], x, -1, &y[i], &y[i], m-i);

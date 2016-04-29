@@ -2599,20 +2599,20 @@ kernel_dgemm_ntnn_8x4_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d
-	movq	%rsi, %r11
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11 // A
 	movl	%edx, %r12d
 	sall	$5, %r12d // 4*sda*sizeof(double)
 	movslq	%r12d, %r12
-	movq	%rcx, %r13
+	movq	%rcx, %r13 // B
 
 	call inner_kernel_dgemm_add_nt_8x4_lib4
 
 
 	// call inner blender nn
 
-	movl	%r8d, %r10d
-	movq	%r9, %r11
+	movl	%r8d, %r10d // alg
+	movq	%r9, %r11 // C
 	movl	STACKSIZE +  8(%rsp), %r12d // sdc
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12

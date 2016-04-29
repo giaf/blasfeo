@@ -1520,7 +1520,7 @@ kernel_dgemv_n_4_vs_lib4_b:
 	// store
 
 	movq	%r9, %r10 // z
-	movl	STACKSIZE +  8(%rsp), %r11d // km 
+	movl	STACKSIZE + 8(%rsp), %r11d // km 
 
 	call inner_store_4_vs_lib4
 
