@@ -26,7 +26,7 @@
 
 
 
-void kernel_dgemv_n_4_vs_lib4_b(int kmax, double *A, double *x, int alg, double *y, double *z, int km)
+void kernel_dgemv_n_4_vs_lib4(int kmax, double *A, double *x, int alg, double *y, double *z, int km)
 	{
 
 	const int bs = 4;
@@ -139,16 +139,16 @@ void kernel_dgemv_n_4_vs_lib4_b(int kmax, double *A, double *x, int alg, double 
 	
 	
 
-void kernel_dgemv_n_4_lib4_b(int kmax, double *A, double *x, int alg, double *y, double *z, int km)
+void kernel_dgemv_n_4_lib4(int kmax, double *A, double *x, int alg, double *y, double *z, int km)
 	{
 
-	kernel_dgemv_n_4_vs_lib4_b(kmax, A, x, alg, y, z, 4);
+	kernel_dgemv_n_4_vs_lib4(kmax, A, x, alg, y, z, 4);
 
 	}
 
 
 
-void kernel_dgemv_t_4_vs_lib4_b(int kmax, double *A, int sda, double *x, int alg, double *y, double *z, int km)
+void kernel_dgemv_t_4_vs_lib4(int kmax, double *A, int sda, double *x, int alg, double *y, double *z, int km)
 	{
 
 	if(kmax<=0) 
@@ -258,17 +258,17 @@ void kernel_dgemv_t_4_vs_lib4_b(int kmax, double *A, int sda, double *x, int alg
 	
 	
 	
-void kernel_dgemv_t_4_lib4_b(int kmax, double *A, int sda, double *x, int alg, double *y, double *z)
+void kernel_dgemv_t_4_lib4(int kmax, double *A, int sda, double *x, int alg, double *y, double *z)
 	{
 
-	kernel_dgemv_t_4_vs_lib4_b(kmax, A, sda, x, alg, y, z, 4);
+	kernel_dgemv_t_4_vs_lib4(kmax, A, sda, x, alg, y, z, 4);
 
 	}
 
 
 
 
-void kernel_dtrsv_ln_inv_4_vs_lib4_b(int kmax, double *A, double *inv_diag_A, double *x, int alg, double *y, double *z, int km, int kn)
+void kernel_dtrsv_ln_inv_4_vs_lib4(int kmax, double *A, double *inv_diag_A, double *x, int alg, double *y, double *z, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -402,17 +402,17 @@ void kernel_dtrsv_ln_inv_4_vs_lib4_b(int kmax, double *A, double *inv_diag_A, do
 	
 
 	
-void kernel_dtrsv_ln_inv_4_lib4_b(int kmax, double *A, double *inv_diag_A, double *x, int alg, double *y, double *z)
+void kernel_dtrsv_ln_inv_4_lib4(int kmax, double *A, double *inv_diag_A, double *x, int alg, double *y, double *z)
 	{
 
-	kernel_dtrsv_ln_inv_4_vs_lib4_b(kmax, A, inv_diag_A, x, alg, y, z, 4, 4);
+	kernel_dtrsv_ln_inv_4_vs_lib4(kmax, A, inv_diag_A, x, alg, y, z, 4, 4);
 
 
 	}
 	
 	
 		
-void kernel_dtrsv_lt_inv_4_lib4_b(int kmax, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z)
+void kernel_dtrsv_lt_inv_4_lib4(int kmax, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z)
 	{
 
 	const int bs = 4;
@@ -520,7 +520,7 @@ void kernel_dtrsv_lt_inv_4_lib4_b(int kmax, double *A, int sda, double *inv_diag
 	
 	
 	
-void kernel_dtrsv_lt_inv_3_lib4_b(int kmax, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z)
+void kernel_dtrsv_lt_inv_3_lib4(int kmax, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z)
 	{
 
 	const int bs = 4;
@@ -633,7 +633,7 @@ void kernel_dtrsv_lt_inv_3_lib4_b(int kmax, double *A, int sda, double *inv_diag
 	
 	
 	
-void kernel_dtrsv_lt_inv_2_lib4_b(int kmax, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z)
+void kernel_dtrsv_lt_inv_2_lib4(int kmax, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z)
 	{
 
 	const int bs = 4;
@@ -734,7 +734,7 @@ void kernel_dtrsv_lt_inv_2_lib4_b(int kmax, double *A, int sda, double *inv_diag
 	
 	
 	
-void kernel_dtrsv_lt_inv_1_lib4_b(int kmax, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z)
+void kernel_dtrsv_lt_inv_1_lib4(int kmax, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z)
 	{
 
 	const int bs = 4;

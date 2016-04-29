@@ -260,10 +260,10 @@ inner_kernel_dgemv_sub_n_4_lib4:
 // r11   <- A
 // r12   <- bs*sda*sizeof(double) = 32*sda
 // r13   <- x
-// ymm0  <- [z0 z1 z2 z3]_a
-// ymm1  <- [z0 z1 z2 z3]_b
-// ymm2  <- [z0 z1 z2 z3]_c
-// ymm3  <- [z0 z1 z2 z3]_d
+// ymm0  <- [z0a z0b z0c z0d]
+// ymm1  <- [z1a z1b z1c z1d]
+// ymm2  <- [z2a z2b z2c z2d]
+// ymm3  <- [z3a z3b z3c z3d]
 // ymm8  <- dirty
 // ymm9  <- dirty
 // ymm10 <- dirty
@@ -279,10 +279,10 @@ inner_kernel_dgemv_sub_n_4_lib4:
 // r11   <- A+4*k*sizeof(double)
 // r12   <- bs*sda*sizeof(double) = 32*sda
 // r13   <- x+k*sizeof(double)
-// ymm0  <- [z0 z1 z2 z3]_a
-// ymm1  <- [z0 z1 z2 z3]_b
-// ymm2  <- [z0 z1 z2 z3]_c
-// ymm3  <- [z0 z1 z2 z3]_d
+// ymm0  <- [z0a z0b z0c z0d]
+// ymm1  <- [z1a z1b z1c z1d]
+// ymm2  <- [z2a z2b z2c z2d]
+// ymm3  <- [z3a z3b z3c z3d]
 // ymm8  <- dirty
 // ymm9  <- dirty
 // ymm10 <- dirty
@@ -1402,9 +1402,9 @@ inner_store_4_vs_lib4:
 // void kernel_dgemv_n_4_lib4(int k, double *A, double *x, int alg, double *y, double *z);
 
 	.p2align 4,,15
-	.globl kernel_dgemv_n_4_lib4_b
-	.type kernel_dgemv_n_4_lib4_b, @function
-kernel_dgemv_n_4_lib4_b:
+	.globl kernel_dgemv_n_4_lib4
+	.type kernel_dgemv_n_4_lib4, @function
+kernel_dgemv_n_4_lib4:
 	
 	// prologue
 
@@ -1465,7 +1465,7 @@ kernel_dgemv_n_4_lib4_b:
 
 	ret
 
-	.size	kernel_dgemv_n_4_lib4_b, .-kernel_dgemv_n_4_lib4_b
+	.size	kernel_dgemv_n_4_lib4, .-kernel_dgemv_n_4_lib4
 
 
 
@@ -1475,9 +1475,9 @@ kernel_dgemv_n_4_lib4_b:
 // void kernel_dgemv_n_4_vs_lib4(int k, double *A, double *x, int alg, double *y, double *z, int km);
 
 	.p2align 4,,15
-	.globl kernel_dgemv_n_4_vs_lib4_b
-	.type kernel_dgemv_n_4_vs_lib4_b, @function
-kernel_dgemv_n_4_vs_lib4_b:
+	.globl kernel_dgemv_n_4_vs_lib4
+	.type kernel_dgemv_n_4_vs_lib4, @function
+kernel_dgemv_n_4_vs_lib4:
 	
 	// prologue
 
@@ -1539,7 +1539,7 @@ kernel_dgemv_n_4_vs_lib4_b:
 
 	ret
 
-	.size	kernel_dgemv_n_4_vs_lib4_b, .-kernel_dgemv_n_4_vs_lib4_b
+	.size	kernel_dgemv_n_4_vs_lib4, .-kernel_dgemv_n_4_vs_lib4
 
 
 
@@ -1549,9 +1549,9 @@ kernel_dgemv_n_4_vs_lib4_b:
 // void kernel_dgemv_t_4_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
 
 	.p2align 4,,15
-	.globl kernel_dgemv_t_4_lib4_b
-	.type kernel_dgemv_t_4_lib4_b, @function
-kernel_dgemv_t_4_lib4_b:
+	.globl kernel_dgemv_t_4_lib4
+	.type kernel_dgemv_t_4_lib4, @function
+kernel_dgemv_t_4_lib4:
 	
 	// prologue
 
@@ -1615,7 +1615,7 @@ kernel_dgemv_t_4_lib4_b:
 
 	ret
 
-	.size	kernel_dgemv_t_4_lib4_b, .-kernel_dgemv_t_4_lib4_b
+	.size	kernel_dgemv_t_4_lib4, .-kernel_dgemv_t_4_lib4
 
 
 
@@ -1625,9 +1625,9 @@ kernel_dgemv_t_4_lib4_b:
 // void kernel_dgemv_t_4_vs_lib4(int k, double *A, int sda, double *x, int alg, double *C, double *D, int km);
 
 	.p2align 4,,15
-	.globl kernel_dgemv_t_4_vs_lib4_b
-	.type kernel_dgemv_t_4_vs_lib4_b, @function
-kernel_dgemv_t_4_vs_lib4_b:
+	.globl kernel_dgemv_t_4_vs_lib4
+	.type kernel_dgemv_t_4_vs_lib4, @function
+kernel_dgemv_t_4_vs_lib4:
 	
 	// prologue
 
@@ -1692,7 +1692,7 @@ kernel_dgemv_t_4_vs_lib4_b:
 
 	ret
 
-	.size	kernel_dgemv_t_4_vs_lib4_b, .-kernel_dgemv_t_4_vs_lib4_b
+	.size	kernel_dgemv_t_4_vs_lib4, .-kernel_dgemv_t_4_vs_lib4
 
 
 
@@ -1702,9 +1702,9 @@ kernel_dgemv_t_4_vs_lib4_b:
 // void kernel_dtrsv_ln_inv_4_lib4(int k, double *A, double *inv_diag_A, double *x, int alg, double *y, double *z);
 
 	.p2align 4,,15
-	.globl kernel_dtrsv_ln_inv_4_lib4_b
-	.type kernel_dtrsv_ln_inv_4_lib4_b, @function
-kernel_dtrsv_ln_inv_4_lib4_b:
+	.globl kernel_dtrsv_ln_inv_4_lib4
+	.type kernel_dtrsv_ln_inv_4_lib4, @function
+kernel_dtrsv_ln_inv_4_lib4:
 	
 	// prologue
 
@@ -1775,7 +1775,7 @@ kernel_dtrsv_ln_inv_4_lib4_b:
 
 	ret
 
-	.size	kernel_dtrsv_ln_inv_4_lib4_b, .-kernel_dtrsv_ln_inv_4_lib4_b
+	.size	kernel_dtrsv_ln_inv_4_lib4, .-kernel_dtrsv_ln_inv_4_lib4
 
 
 
@@ -1785,9 +1785,9 @@ kernel_dtrsv_ln_inv_4_lib4_b:
 // void kernel_dtrsv_ln_inv_4_vs_lib4(int k, double *A, double *inv_diag_A, double *x, int alg, double *y, double *z, int km, int kn);
 
 	.p2align 4,,15
-	.globl kernel_dtrsv_ln_inv_4_vs_lib4_b
-	.type kernel_dtrsv_ln_inv_4_vs_lib4_b, @function
-kernel_dtrsv_ln_inv_4_vs_lib4_b:
+	.globl kernel_dtrsv_ln_inv_4_vs_lib4
+	.type kernel_dtrsv_ln_inv_4_vs_lib4, @function
+kernel_dtrsv_ln_inv_4_vs_lib4:
 	
 	// prologue
 
@@ -1860,7 +1860,7 @@ kernel_dtrsv_ln_inv_4_vs_lib4_b:
 
 	ret
 
-	.size	kernel_dtrsv_ln_inv_4_vs_lib4_b, .-kernel_dtrsv_ln_inv_4_vs_lib4_b
+	.size	kernel_dtrsv_ln_inv_4_vs_lib4, .-kernel_dtrsv_ln_inv_4_vs_lib4
 
 
 
@@ -1870,9 +1870,9 @@ kernel_dtrsv_ln_inv_4_vs_lib4_b:
 // void kernel_dtrsv_lt_inv_4_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z);
 
 	.p2align 4,,15
-	.globl kernel_dtrsv_lt_inv_4_lib4_b
-	.type kernel_dtrsv_lt_inv_4_lib4_b, @function
-kernel_dtrsv_lt_inv_4_lib4_b:
+	.globl kernel_dtrsv_lt_inv_4_lib4
+	.type kernel_dtrsv_lt_inv_4_lib4, @function
+kernel_dtrsv_lt_inv_4_lib4:
 	
 	// prologue
 
@@ -1947,7 +1947,7 @@ kernel_dtrsv_lt_inv_4_lib4_b:
 
 	ret
 
-	.size	kernel_dtrsv_lt_inv_4_lib4_b, .-kernel_dtrsv_lt_inv_4_lib4_b
+	.size	kernel_dtrsv_lt_inv_4_lib4, .-kernel_dtrsv_lt_inv_4_lib4
 
 
 
@@ -1957,9 +1957,9 @@ kernel_dtrsv_lt_inv_4_lib4_b:
 // void kernel_dtrsv_lt_inv_3_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z);
 
 	.p2align 4,,15
-	.globl kernel_dtrsv_lt_inv_3_lib4_b
-	.type kernel_dtrsv_lt_inv_3_lib4_b, @function
-kernel_dtrsv_lt_inv_3_lib4_b:
+	.globl kernel_dtrsv_lt_inv_3_lib4
+	.type kernel_dtrsv_lt_inv_3_lib4, @function
+kernel_dtrsv_lt_inv_3_lib4:
 	
 	// prologue
 
@@ -2037,7 +2037,7 @@ kernel_dtrsv_lt_inv_3_lib4_b:
 
 	ret
 
-	.size	kernel_dtrsv_lt_inv_3_lib4_b, .-kernel_dtrsv_lt_inv_3_lib4_b
+	.size	kernel_dtrsv_lt_inv_3_lib4, .-kernel_dtrsv_lt_inv_3_lib4
 
 
 
@@ -2047,9 +2047,9 @@ kernel_dtrsv_lt_inv_3_lib4_b:
 // void kernel_dtrsv_lt_inv_2_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z);
 
 	.p2align 4,,15
-	.globl kernel_dtrsv_lt_inv_2_lib4_b
-	.type kernel_dtrsv_lt_inv_2_lib4_b, @function
-kernel_dtrsv_lt_inv_2_lib4_b:
+	.globl kernel_dtrsv_lt_inv_2_lib4
+	.type kernel_dtrsv_lt_inv_2_lib4, @function
+kernel_dtrsv_lt_inv_2_lib4:
 	
 	// prologue
 
@@ -2127,7 +2127,7 @@ kernel_dtrsv_lt_inv_2_lib4_b:
 
 	ret
 
-	.size	kernel_dtrsv_lt_inv_2_lib4_b, .-kernel_dtrsv_lt_inv_2_lib4_b
+	.size	kernel_dtrsv_lt_inv_2_lib4, .-kernel_dtrsv_lt_inv_2_lib4
 
 
 
@@ -2137,9 +2137,9 @@ kernel_dtrsv_lt_inv_2_lib4_b:
 // void kernel_dtrsv_lt_inv_1_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z);
 
 	.p2align 4,,15
-	.globl kernel_dtrsv_lt_inv_1_lib4_b
-	.type kernel_dtrsv_lt_inv_1_lib4_b, @function
-kernel_dtrsv_lt_inv_1_lib4_b:
+	.globl kernel_dtrsv_lt_inv_1_lib4
+	.type kernel_dtrsv_lt_inv_1_lib4, @function
+kernel_dtrsv_lt_inv_1_lib4:
 	
 	// prologue
 
@@ -2217,7 +2217,7 @@ kernel_dtrsv_lt_inv_1_lib4_b:
 
 	ret
 
-	.size	kernel_dtrsv_lt_inv_1_lib4_b, .-kernel_dtrsv_lt_inv_1_lib4_b
+	.size	kernel_dtrsv_lt_inv_1_lib4, .-kernel_dtrsv_lt_inv_1_lib4
 
 
 

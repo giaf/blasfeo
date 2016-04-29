@@ -520,9 +520,9 @@ inner_store_8_lib4:
 // void kernel_dgemv_n_8_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
 
 	.p2align 4,,15
-	.globl kernel_dgemv_n_8_lib4_b
-	.type kernel_dgemv_n_8_lib4_b, @function
-kernel_dgemv_n_8_lib4_b:
+	.globl kernel_dgemv_n_8_lib4
+	.type kernel_dgemv_n_8_lib4, @function
+kernel_dgemv_n_8_lib4:
 	
 	// prologue
 
@@ -586,7 +586,7 @@ kernel_dgemv_n_8_lib4_b:
 
 	ret
 
-	.size	kernel_dgemv_n_8_lib4_b, .-kernel_dgemv_n_8_lib4_b
+	.size	kernel_dgemv_n_8_lib4, .-kernel_dgemv_n_8_lib4
 
 
 
@@ -596,9 +596,9 @@ kernel_dgemv_n_8_lib4_b:
 // void kernel_dgemv_t_8_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
 
 	.p2align 4,,15
-	.globl kernel_dgemv_t_8_lib4_b
-	.type kernel_dgemv_t_8_lib4_b, @function
-kernel_dgemv_t_8_lib4_b:
+	.globl kernel_dgemv_t_8_lib4
+	.type kernel_dgemv_t_8_lib4, @function
+kernel_dgemv_t_8_lib4:
 	
 	// prologue
 
@@ -666,7 +666,7 @@ kernel_dgemv_t_8_lib4_b:
 
 	ret
 
-	.size	kernel_dgemv_t_8_lib4_b, .-kernel_dgemv_t_8_lib4_b
+	.size	kernel_dgemv_t_8_lib4, .-kernel_dgemv_t_8_lib4
 
 
 
