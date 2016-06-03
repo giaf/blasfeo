@@ -85,12 +85,21 @@ inner_kernel_dgemv_add_n_8_lib4:
 	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
 
 	cmpl	$4, %r10d
+
+	prefetcht0	0(%r11) // software prefetch
+	prefetcht0	0(%r15) // software prefetch
+	prefetcht0	64(%r11) // software prefetch
+	prefetcht0	64(%r15) // software prefetch
+
 	jl		.L000 // clean-up loop
 
 	// main loop
 	.p2align 3
 .L001: // main loop
 	
+	prefetcht0	128(%r11) // software prefetch
+	prefetcht0	128(%r15) // software prefetch
+
 	vbroadcastsd	0(%r13), %ymm12
 	vmovapd	0(%r11), %ymm8
 	vmulpd	%ymm8, %ymm12, %ymm15
@@ -109,6 +118,9 @@ inner_kernel_dgemv_add_n_8_lib4:
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
 	
+	prefetcht0	192(%r11) // software prefetch
+	prefetcht0	192(%r15) // software prefetch
+
 	vbroadcastsd	16(%r13), %ymm12
 	vmovapd	64(%r11), %ymm8
 	vmulpd	%ymm8, %ymm12, %ymm15
@@ -118,13 +130,13 @@ inner_kernel_dgemv_add_n_8_lib4:
 	vaddpd	%ymm1, %ymm15, %ymm1
 
 	vbroadcastsd	24(%r13), %ymm12
-	addq	$32, %r13
+	addq	$32, %r13 // x+4
 	vmovapd	96(%r11), %ymm8
-	addq	$128, %r11
+	addq	$128, %r11 // A0+4*bs
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm2, %ymm15, %ymm2
 	vmovapd	96(%r15), %ymm8
-	addq	$128, %r15
+	addq	$128, %r15 // A1+4*bs
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
 	
@@ -196,6 +208,7 @@ inner_kernel_dgemv_add_n_8_lib4:
 // r11   <- A+4*k*sizeof(double)
 // r12   <- bs*sda*sizeof(double) = 32*sda
 // r13   <- x+k*sizeof(double)
+// r14   <- dirty
 // ymm0  <- [z0a z0b z0c z0d]
 // ymm1  <- [z1a z1b z1c z1d]
 // ymm2  <- [z2a z2b z2c z2d]
@@ -221,13 +234,25 @@ inner_kernel_dgemv_add_t_8_lib4:
 	jle		.L007 // return
 
 	cmpl	$4, %r10d
+
+	prefetcht0	0(%r11) // software prefetch
+	prefetcht0	64(%r11) // software prefetch
+	prefetcht0	128(%r11) // software prefetch
+	prefetcht0	192(%r11) // software prefetch
+
 	jl		.L005 // clean-up loop
+
+	movq	%r11, %r14
+	addq	%r12, %r14 // A+bs*sda
 
 	// main loop
 	.p2align 3
 .L006: // main loop
 	
+	prefetcht0	0(%r14) // software prefetch
+
 	vmovapd	0(%r13), %ymm12
+	addq	$32, %r13 // x+4
 
 	vmovapd	0(%r11), %ymm8
 	vmulpd	%ymm8, %ymm12, %ymm15
@@ -239,6 +264,8 @@ inner_kernel_dgemv_add_t_8_lib4:
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm1, %ymm15, %ymm1
 	
+	prefetcht0	64(%r14) // software prefetch
+
 	vmovapd	64(%r11), %ymm8
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm2, %ymm15, %ymm2
@@ -246,6 +273,8 @@ inner_kernel_dgemv_add_t_8_lib4:
 	vmovapd	96(%r11), %ymm8
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
+
+	prefetcht0	128(%r14) // software prefetch
 
 	vmovapd	128(%r11), %ymm8
 	vmulpd	%ymm8, %ymm12, %ymm15
@@ -255,6 +284,8 @@ inner_kernel_dgemv_add_t_8_lib4:
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm5, %ymm15, %ymm5
 	
+	prefetcht0	192(%r14) // software prefetch
+
 	vmovapd	192(%r11), %ymm8
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm6, %ymm15, %ymm6
@@ -263,8 +294,9 @@ inner_kernel_dgemv_add_t_8_lib4:
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm7, %ymm15, %ymm7
 	
-	addq	%r12, %r11
-	addq	$32, %r13
+//	addq	%r12, %r11 // A+bs*sda
+	movq	%r14, %r11 // A+bs*sda
+	addq	%r12, %r14 // A+bs*sda+bs*sda
 	
 	cmpl	$3, %r10d
 
