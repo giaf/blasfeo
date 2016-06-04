@@ -31,7 +31,7 @@ ifeq ($(TARGET), X64_HASWELL)
 OBJS += ./kernel/avx2/kernel_dgemm_4x4_lib4.o ./kernel/avx2/kernel_dgemm_8x4_lib4.o ./kernel/avx2/kernel_dgemv_8_lib4.o ./kernel/avx/kernel_dgemv_4_lib4.o
 endif
 ifeq ($(TARGET), X64_SANDY_BRIDGE)
-OBJS += ./kernel/avx/kernel_dgemm_4x4_lib4.o ./kernel/avx/kernel_dgemm_8x4_lib4.o ./kernel/avx/kernel_dgemv_8_lib4.o  ./kernel/avx/kernel_dgemv_4_lib4.o 
+OBJS += ./kernel/avx/kernel_dgemm_4x4_lib4.o ./kernel/avx/kernel_dgemm_8x4_lib4.o ./kernel/avx/kernel_dgemv_12_lib4.o ./kernel/avx/kernel_dgemv_8_lib4.o  ./kernel/avx/kernel_dgemv_4_lib4.o 
 endif
 ifeq ($(TARGET), GENERIC)
 OBJS += ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o

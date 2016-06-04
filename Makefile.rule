@@ -37,7 +37,6 @@ PREFIX = /opt
 
 # C Compiler
 CC = gcc
-#CC = /opt/gcc/bin/gcc # custom gcc
 #CC = clang
 
 # operative system
@@ -46,20 +45,10 @@ OS = LINUX
 
 # Common optimization/debugging flags
 COMMON_FLAGS = -O2 -fPIC
-ifeq ($(CC), /opt/gcc/bin/gcc )
-COMMON_FLAGS += -DCUSTOM_GCC 
-ifeq ($(TARGET), X64_AVX2)
-#COMMON_FLAGS += -I/opt/gcc/lib/gcc/x86_64-unknown-linux-gnu/5.2.0/include
-COMMON_FLAGS += -I/opt/gcc/lib/gcc/x86_64-pc-linux-gnu/6.0.0/include
-endif
-endif
-ifeq ($(OS), WINDOWS)
-COMMON_FLAGS += -DOS_WINDOWS
-endif
 DEBUG = #-Wall -pedantic -Wfloat-equal #-pg
 LDFLAGS =
 
-# Reference code linking to standard BLAS and LAPACK
+# compare against standard BLAS and LAPACK in test problems
 REF_BLAS = 0
 #REF_BLAS = OPENBLAS
 #REF_BLAS = BLIS
@@ -90,7 +79,7 @@ ifeq ($(TARGET), X64_SANDY_BRIDGE)
 CFLAGS = $(COMMON_FLAGS) -m64 -mavx -DTARGET_X64_SANDY_BRIDGE $(REF_BLAS_FLAGS) $(DEBUG)
 endif
 ifeq ($(TARGET), GENERIC)
-CFLAGS = $(COMMON_FLAGS) -m64 -mavx -DTARGET_GENERIC $(REF_BLAS_FLAGS) $(DEBUG)
+CFLAGS = $(COMMON_FLAGS) -march=native -DTARGET_GENERIC $(REF_BLAS_FLAGS) $(DEBUG)
 endif
 
 

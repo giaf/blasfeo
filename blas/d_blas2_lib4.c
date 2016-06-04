@@ -40,6 +40,12 @@ void dgemv_n_lib(int m, int n, double *pA, int sda, double *x, int alg, double *
 
 	i = 0;
 #if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_SANDY_BRIDGE)
+	for( ; i<m-11; i+=12)
+		{
+		kernel_dgemv_n_12_lib4(n, &pA[i*sda], sda, x, alg, &y[i], &z[i]);
+		}
+#endif
 	for( ; i<m-7; i+=8)
 		{
 		kernel_dgemv_n_8_lib4(n, &pA[i*sda], sda, x, alg, &y[i], &z[i]);
@@ -76,6 +82,12 @@ void dgemv_t_lib(int m, int n, double *pA, int sda, double *x, int alg, double *
 
 	i = 0;
 #if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_SANDY_BRIDGE)
+	for( ; i<n-11; i+=12)
+		{
+		kernel_dgemv_t_12_lib4(m, &pA[i*bs], sda, x, alg, &y[i], &z[i]);
+		}
+#endif
 	for( ; i<n-7; i+=8)
 		{
 		kernel_dgemv_t_8_lib4(m, &pA[i*bs], sda, x, alg, &y[i], &z[i]);
