@@ -1081,7 +1081,7 @@ inner_edge_dtrsv_lt_inv_1_lib4:
 	jl				.L019
 
 	vmovsd			24(%r10), %xmm10
-	vblendpd		$0xe, %ymm14, %ymm8, %ymm8
+	vblendpd		$0xe, %ymm14, %ymm10, %ymm10
 	vpermilpd		$0xf, %ymm0, %ymm12
 	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm10, %ymm12, %ymm15
@@ -1090,7 +1090,7 @@ inner_edge_dtrsv_lt_inv_1_lib4:
 .L017:
 
 	vmovsd			16(%r10), %xmm9
-	vblendpd		$0xe, %ymm14, %ymm8, %ymm8
+	vblendpd		$0xe, %ymm14, %ymm9, %ymm9
 	vpermilpd		$0x0, %ymm0, %ymm12
 	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm9, %ymm12, %ymm15
@@ -1907,7 +1907,7 @@ kernel_dtrsv_lt_inv_4_lib4:
 	movq	%r8, %r13 // x
 	addq	$32, %r13 // x+4 
 
-	call inner_kernel_dgemv_add_t_4_lib4
+	call inner_kernel_dgemv_sub_t_4_lib4
 
 
 	// call inner blender t
@@ -2084,7 +2084,7 @@ kernel_dtrsv_lt_inv_2_lib4:
 	movq	%r8, %r13 // x
 	addq	$32, %r13 // x+4 
 
-	call inner_kernel_dgemv_add_t_4_lib4
+	call inner_kernel_dgemv_sub_t_4_lib4
 
 
 	// call inner blender t
@@ -2174,7 +2174,7 @@ kernel_dtrsv_lt_inv_1_lib4:
 	movq	%r8, %r13 // x
 	addq	$32, %r13 // x+4 
 
-	call inner_kernel_dgemv_add_t_4_lib4
+	call inner_kernel_dgemv_sub_t_4_lib4
 
 
 	// call inner blender t
