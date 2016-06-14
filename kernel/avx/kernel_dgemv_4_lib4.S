@@ -1698,8 +1698,8 @@ kernel_dgemv_t_4_vs_lib4:
 
 
 
-//                                 rdi    rsi        rdx                 rcx        r8       r9         rsp+8
-// void kernel_dtrsv_ln_inv_4_lib4(int k, double *A, double *inv_diag_A, double *x, int alg, double *y, double *z);
+//                                 rdi    rsi        rdx                 rcx        r8         r9  
+// void kernel_dtrsv_ln_inv_4_lib4(int k, double *A, double *inv_diag_A, double *x, double *y, double *z);
 
 	.p2align 4,,15
 	.globl kernel_dtrsv_ln_inv_4_lib4
@@ -1740,8 +1740,8 @@ kernel_dtrsv_ln_inv_4_lib4:
 
 	// call inner blender n
 
-	movl	%r8d, %r10d // alg
-	movq	%r9, %r11   // y
+	movl	$1, %r10d // alg
+	movq	%r8, %r11   // y
 
 	call inner_blender_n_4_lib4
 
@@ -1756,7 +1756,7 @@ kernel_dtrsv_ln_inv_4_lib4:
 
 	// store
 
-	movq	STACKSIZE +  8(%rsp), %r10 // z 
+	movq	%r9, %r10 // z 
 
 	call inner_store_4_lib4
 
@@ -1781,8 +1781,8 @@ kernel_dtrsv_ln_inv_4_lib4:
 
 
 
-//                                    rdi    rsi        rdx                 rcx        r8       r9         rsp+8       rsp+16  rsp+24
-// void kernel_dtrsv_ln_inv_4_vs_lib4(int k, double *A, double *inv_diag_A, double *x, int alg, double *y, double *z, int km, int kn);
+//                                    rdi    rsi        rdx                 rcx        r8         r9         rsp+8   rsp+16 
+// void kernel_dtrsv_ln_inv_4_vs_lib4(int k, double *A, double *inv_diag_A, double *x, double *y, double *z, int km, int kn);
 
 	.p2align 4,,15
 	.globl kernel_dtrsv_ln_inv_4_vs_lib4
@@ -1823,8 +1823,8 @@ kernel_dtrsv_ln_inv_4_vs_lib4:
 
 	// call inner blender n
 
-	movl	%r8d, %r10d // alg
-	movq	%r9, %r11   // y
+	movl	$1, %r10d // alg
+	movq	%r8, %r11   // y
 
 	call inner_blender_n_4_lib4
 
@@ -1833,15 +1833,15 @@ kernel_dtrsv_ln_inv_4_vs_lib4:
 
 	movq	%r13, %r10 // A+k*sizeof(double)
 	movq	%rdx, %r11 // inv_diag_A
-	movl	STACKSIZE +  24(%rsp), %r12d // kn 
+	movl	STACKSIZE +  16(%rsp), %r12d // kn 
 
 	call inner_edge_dtrsv_ln_inv_4_vs_lib4
 
 
 	// store vs
 
-	movq	STACKSIZE +  8(%rsp), %r10 // z 
-	movl	STACKSIZE +  16(%rsp), %r11d // km 
+	movq	%r9, %r10 // z 
+	movl	STACKSIZE +  8(%rsp), %r11d // km 
 
 	call inner_store_4_lib4
 
@@ -1866,8 +1866,8 @@ kernel_dtrsv_ln_inv_4_vs_lib4:
 
 
 
-//                                 rdi    rsi        rdx      rcx                 r8         r9       rsp+8      rsp+16
-// void kernel_dtrsv_lt_inv_4_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z);
+//                                 rdi    rsi        rdx      rcx                 r8         r9         rsp+8   
+// void kernel_dtrsv_lt_inv_4_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
 
 	.p2align 4,,15
 	.globl kernel_dtrsv_lt_inv_4_lib4
@@ -1912,8 +1912,8 @@ kernel_dtrsv_lt_inv_4_lib4:
 
 	// call inner blender t
 
-	movl	%r9d, %r10d // alg
-	movq	STACKSIZE +  8(%rsp), %r11 // y 
+	movl	$1, %r10d // alg
+	movq	%r9, %r11 // y 
 
 	call inner_blender_t_4_lib4
 
@@ -1928,7 +1928,7 @@ kernel_dtrsv_lt_inv_4_lib4:
 
 	// store
 
-	movq	STACKSIZE +  16(%rsp), %r10 // z 
+	movq	STACKSIZE +  8(%rsp), %r10 // z 
 
 	call inner_store_4_lib4
 
@@ -1953,8 +1953,8 @@ kernel_dtrsv_lt_inv_4_lib4:
 
 
 
-//                                 rdi    rsi        rdx      rcx                 r8         r9       rsp+8      rsp+16
-// void kernel_dtrsv_lt_inv_3_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z);
+//                                 rdi    rsi        rdx      rcx                 r8         r9         rsp+8   
+// void kernel_dtrsv_lt_inv_3_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
 
 	.p2align 4,,15
 	.globl kernel_dtrsv_lt_inv_3_lib4
@@ -1999,8 +1999,8 @@ kernel_dtrsv_lt_inv_3_lib4:
 
 	// call inner blender t
 
-	movl	%r9d, %r10d // alg
-	movq	STACKSIZE +  8(%rsp), %r11 // y 
+	movl	$1, %r10d // alg
+	movq	%r9, %r11 // y 
 
 	call inner_blender_t_4_lib4
 
@@ -2017,7 +2017,7 @@ kernel_dtrsv_lt_inv_3_lib4:
 
 	// store
 
-	movq	STACKSIZE +  16(%rsp), %r10 // z 
+	movq	STACKSIZE +  8(%rsp), %r10 // z 
 	movl	$3, %r11d
 
 	call inner_store_4_vs_lib4
@@ -2043,8 +2043,8 @@ kernel_dtrsv_lt_inv_3_lib4:
 
 
 
-//                                 rdi    rsi        rdx      rcx                 r8         r9       rsp+8      rsp+16
-// void kernel_dtrsv_lt_inv_2_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z);
+//                                 rdi    rsi        rdx      rcx                 r8         r9         rsp+8 
+// void kernel_dtrsv_lt_inv_2_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
 
 	.p2align 4,,15
 	.globl kernel_dtrsv_lt_inv_2_lib4
@@ -2089,8 +2089,8 @@ kernel_dtrsv_lt_inv_2_lib4:
 
 	// call inner blender t
 
-	movl	%r9d, %r10d // alg
-	movq	STACKSIZE +  8(%rsp), %r11 // y 
+	movl	$1, %r10d // alg
+	movq	%r9, %r11 // y 
 
 	call inner_blender_t_4_lib4
 
@@ -2107,7 +2107,7 @@ kernel_dtrsv_lt_inv_2_lib4:
 
 	// store
 
-	movq	STACKSIZE +  16(%rsp), %r10 // z 
+	movq	STACKSIZE +  8(%rsp), %r10 // z 
 	movl	$2, %r11d
 
 	call inner_store_4_vs_lib4
@@ -2133,8 +2133,8 @@ kernel_dtrsv_lt_inv_2_lib4:
 
 
 
-//                                 rdi    rsi        rdx      rcx                 r8         r9       rsp+8      rsp+16
-// void kernel_dtrsv_lt_inv_1_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z);
+//                                 rdi    rsi        rdx      rcx                 r8         r9         rsp+8 
+// void kernel_dtrsv_lt_inv_1_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
 
 	.p2align 4,,15
 	.globl kernel_dtrsv_lt_inv_1_lib4
@@ -2179,8 +2179,8 @@ kernel_dtrsv_lt_inv_1_lib4:
 
 	// call inner blender t
 
-	movl	%r9d, %r10d // alg
-	movq	STACKSIZE +  8(%rsp), %r11 // y 
+	movl	$1, %r10d // alg
+	movq	%r9, %r11 // y 
 
 	call inner_blender_t_4_lib4
 
@@ -2197,7 +2197,7 @@ kernel_dtrsv_lt_inv_1_lib4:
 
 	// store
 
-	movq	STACKSIZE +  16(%rsp), %r10 // z 
+	movq	STACKSIZE +  8(%rsp), %r10 // z 
 	movl	$1, %r11d
 
 	call inner_store_4_vs_lib4

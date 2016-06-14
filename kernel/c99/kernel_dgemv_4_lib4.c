@@ -268,7 +268,7 @@ void kernel_dgemv_t_4_lib4(int kmax, double *A, int sda, double *x, int alg, dou
 
 
 
-void kernel_dtrsv_ln_inv_4_vs_lib4(int kmax, double *A, double *inv_diag_A, double *x, int alg, double *y, double *z, int km, int kn)
+void kernel_dtrsv_ln_inv_4_vs_lib4(int kmax, double *A, double *inv_diag_A, double *x, double *y, double *z, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -313,20 +313,10 @@ void kernel_dtrsv_ln_inv_4_vs_lib4(int kmax, double *A, double *inv_diag_A, doub
 
 		}
 
-	if(alg==1)
-		{
-		y_0 = y[0] + y_0;
-		y_1 = y[1] + y_1;
-		y_2 = y[2] + y_2;
-		y_3 = y[3] + y_3;
-		}
-	else if(alg==-1)
-		{
-		y_0 = y[0] - y_0;
-		y_1 = y[1] - y_1;
-		y_2 = y[2] - y_2;
-		y_3 = y[3] - y_3;
-		}
+	y_0 = y[0] + y_0;
+	y_1 = y[1] + y_1;
+	y_2 = y[2] + y_2;
+	y_3 = y[3] + y_3;
 
 	double
 		a_00, a_10, a_20, a_30,
@@ -402,17 +392,17 @@ void kernel_dtrsv_ln_inv_4_vs_lib4(int kmax, double *A, double *inv_diag_A, doub
 	
 
 	
-void kernel_dtrsv_ln_inv_4_lib4(int kmax, double *A, double *inv_diag_A, double *x, int alg, double *y, double *z)
+void kernel_dtrsv_ln_inv_4_lib4(int kmax, double *A, double *inv_diag_A, double *x, double *y, double *z)
 	{
 
-	kernel_dtrsv_ln_inv_4_vs_lib4(kmax, A, inv_diag_A, x, alg, y, z, 4, 4);
+	kernel_dtrsv_ln_inv_4_vs_lib4(kmax, A, inv_diag_A, x, y, z, 4, 4);
 
 
 	}
 	
 	
 		
-void kernel_dtrsv_lt_inv_4_lib4(int kmax, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z)
+void kernel_dtrsv_lt_inv_4_lib4(int kmax, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z)
 	{
 
 	const int bs = 4;
@@ -478,20 +468,10 @@ void kernel_dtrsv_lt_inv_4_lib4(int kmax, double *A, int sda, double *inv_diag_A
 
 		}
 	
-	if(alg==1)
-		{
-		y_0 = y[0] + y_0;
-		y_1 = y[1] + y_1;
-		y_2 = y[2] + y_2;
-		y_3 = y[3] + y_3;
-		}
-	else if(alg==-1)
-		{
-		y_0 = y[0] - y_0;
-		y_1 = y[1] - y_1;
-		y_2 = y[2] - y_2;
-		y_3 = y[3] - y_3;
-		}
+	y_0 = y[0] + y_0;
+	y_1 = y[1] + y_1;
+	y_2 = y[2] + y_2;
+	y_3 = y[3] + y_3;
 
 	A = tA;
 	x = tx;
@@ -520,7 +500,7 @@ void kernel_dtrsv_lt_inv_4_lib4(int kmax, double *A, int sda, double *inv_diag_A
 	
 	
 	
-void kernel_dtrsv_lt_inv_3_lib4(int kmax, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z)
+void kernel_dtrsv_lt_inv_3_lib4(int kmax, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z)
 	{
 
 	const int bs = 4;
@@ -597,18 +577,9 @@ void kernel_dtrsv_lt_inv_3_lib4(int kmax, double *A, int sda, double *inv_diag_A
 
 		}
 
-	if(alg==1)
-		{
-		y_0 = y[0] + y_0;
-		y_1 = y[1] + y_1;
-		y_2 = y[2] + y_2;
-		}
-	else if(alg==-1)
-		{
-		y_0 = y[0] - y_0;
-		y_1 = y[1] - y_1;
-		y_2 = y[2] - y_2;
-		}
+	y_0 = y[0] + y_0;
+	y_1 = y[1] + y_1;
+	y_2 = y[2] + y_2;
 
 	A = tA;
 	x = tx;
@@ -633,7 +604,7 @@ void kernel_dtrsv_lt_inv_3_lib4(int kmax, double *A, int sda, double *inv_diag_A
 	
 	
 	
-void kernel_dtrsv_lt_inv_2_lib4(int kmax, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z)
+void kernel_dtrsv_lt_inv_2_lib4(int kmax, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z)
 	{
 
 	const int bs = 4;
@@ -708,16 +679,8 @@ void kernel_dtrsv_lt_inv_2_lib4(int kmax, double *A, int sda, double *inv_diag_A
 
 		}
 
-	if(alg==1)
-		{
-		y_0 = y[0] + y_0;
-		y_1 = y[1] + y_1;
-		}
-	else if(alg==-1)
-		{
-		y_0 = y[0] - y_0;
-		y_1 = y[1] - y_1;
-		}
+	y_0 = y[0] + y_0;
+	y_1 = y[1] + y_1;
 
 	A = tA;
 	x = tx;
@@ -734,7 +697,7 @@ void kernel_dtrsv_lt_inv_2_lib4(int kmax, double *A, int sda, double *inv_diag_A
 	
 	
 	
-void kernel_dtrsv_lt_inv_1_lib4(int kmax, double *A, int sda, double *inv_diag_A, double *x, int alg, double *y, double *z)
+void kernel_dtrsv_lt_inv_1_lib4(int kmax, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z)
 	{
 
 	const int bs = 4;
@@ -800,14 +763,7 @@ void kernel_dtrsv_lt_inv_1_lib4(int kmax, double *A, int sda, double *inv_diag_A
 
 		}
 
-	if(alg==1)
-		{
-		y_0 = y[0] + y_0;
-		}
-	else if(alg==-1)
-		{
-		y_0 = y[0] - y_0;
-		}
+	y_0 = y[0] + y_0;
 
 	A = tA;
 	x = tx;

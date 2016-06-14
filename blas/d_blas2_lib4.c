@@ -135,11 +135,11 @@ void dtrsv_ln_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, dou
 	i = 0;
 	for( ; i<n-3; i+=4)
 		{
-		kernel_dtrsv_ln_inv_4_lib4(i, &pA[i*sda], &inv_diag_A[i], x, 1, &y[i], &y[i]);
+		kernel_dtrsv_ln_inv_4_lib4(i, &pA[i*sda], &inv_diag_A[i], x, &y[i], &y[i]);
 		}
 	if(i<n)
 		{
-		kernel_dtrsv_ln_inv_4_vs_lib4(i, &pA[i*sda], &inv_diag_A[i], x, 1, &y[i], &y[i], m-i, n-i);
+		kernel_dtrsv_ln_inv_4_vs_lib4(i, &pA[i*sda], &inv_diag_A[i], x, &y[i], &y[i], m-i, n-i);
 		i+=4;
 		}
 #if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
@@ -188,22 +188,22 @@ void dtrsv_lt_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, dou
 	i=0;
 	if(n%4==1)
 		{
-		kernel_dtrsv_lt_inv_1_lib4(m-n+i+1, &pA[n/bs*bs*sda+(n-i-1)*bs], sda, &inv_diag_A[n-i-1], &y[n-i-1], 1, &y[n-i-1], &y[n-i-1]);
+		kernel_dtrsv_lt_inv_1_lib4(m-n+i+1, &pA[n/bs*bs*sda+(n-i-1)*bs], sda, &inv_diag_A[n-i-1], &y[n-i-1], &y[n-i-1], &y[n-i-1]);
 		i++;
 		}
 	else if(n%4==2)
 		{
-		kernel_dtrsv_lt_inv_2_lib4(m-n+i+2, &pA[n/bs*bs*sda+(n-i-2)*bs], sda, &inv_diag_A[n-i-2], &y[n-i-2], 1, &y[n-i-2], &y[n-i-2]);
+		kernel_dtrsv_lt_inv_2_lib4(m-n+i+2, &pA[n/bs*bs*sda+(n-i-2)*bs], sda, &inv_diag_A[n-i-2], &y[n-i-2], &y[n-i-2], &y[n-i-2]);
 		i+=2;
 		}
 	else if(n%4==3)
 		{
-		kernel_dtrsv_lt_inv_3_lib4(m-n+i+3, &pA[n/bs*bs*sda+(n-i-3)*bs], sda, &inv_diag_A[n-i-3], &y[n-i-3], 1, &y[n-i-3], &y[n-i-3]);
+		kernel_dtrsv_lt_inv_3_lib4(m-n+i+3, &pA[n/bs*bs*sda+(n-i-3)*bs], sda, &inv_diag_A[n-i-3], &y[n-i-3], &y[n-i-3], &y[n-i-3]);
 		i+=3;
 		}
 	for(; i<n-3; i+=4)
 		{
-		kernel_dtrsv_lt_inv_4_lib4(m-n+i+4, &pA[(n-i-4)/bs*bs*sda+(n-i-4)*bs], sda, &inv_diag_A[n-i-4], &y[n-i-4], 1, &y[n-i-4], &y[n-i-4]);
+		kernel_dtrsv_lt_inv_4_lib4(m-n+i+4, &pA[(n-i-4)/bs*bs*sda+(n-i-4)*bs], sda, &inv_diag_A[n-i-4], &y[n-i-4], &y[n-i-4], &y[n-i-4]);
 		}
 
 	}

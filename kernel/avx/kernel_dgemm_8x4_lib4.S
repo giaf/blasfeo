@@ -802,8 +802,8 @@ inner_kernel_dgemm_sub_nt_8x4_lib4:
 
 
 	.p2align 4,,15
-	.type inner_edge_dtrmm_add_nt_lu_8x4_lib4, @function
-inner_edge_dtrmm_add_nt_lu_8x4_lib4:
+	.type inner_edge_dtrmm_add_nt_ru_8x4_lib4, @function
+inner_edge_dtrmm_add_nt_ru_8x4_lib4:
 	
 	movq	%r10, %r15 // A1 <- A0
 	addq	%r11, %r15 // A1 <- A0 + 4*sda*sizeof(double)
@@ -876,7 +876,7 @@ inner_edge_dtrmm_add_nt_lu_8x4_lib4:
 
 	ret
 
-	.size	inner_edge_dtrmm_add_nt_lu_8x4_lib4, .-inner_edge_dtrmm_add_nt_lu_8x4_lib4
+	.size	inner_edge_dtrmm_add_nt_ru_8x4_lib4, .-inner_edge_dtrmm_add_nt_ru_8x4_lib4
 
 
 
@@ -925,8 +925,8 @@ inner_edge_dtrmm_add_nt_lu_8x4_lib4:
 
 
 	.p2align 4,,15
-	.type inner_edge_dtrmm_add_nt_lu_8x4_vs_lib4, @function
-inner_edge_dtrmm_add_nt_lu_8x4_vs_lib4:
+	.type inner_edge_dtrmm_add_nt_ru_8x4_vs_lib4, @function
+inner_edge_dtrmm_add_nt_ru_8x4_vs_lib4:
 	
 	movq	%r11, %r15 // A1 <- A0
 	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
@@ -1021,7 +1021,7 @@ inner_edge_dtrmm_add_nt_lu_8x4_vs_lib4:
 .L017:
 	ret
 
-	.size	inner_edge_dtrmm_add_nt_lu_8x4_vs_lib4, .-inner_edge_dtrmm_add_nt_lu_8x4_vs_lib4
+	.size	inner_edge_dtrmm_add_nt_ru_8x4_vs_lib4, .-inner_edge_dtrmm_add_nt_ru_8x4_vs_lib4
 
 
 
@@ -1068,8 +1068,8 @@ inner_edge_dtrmm_add_nt_lu_8x4_vs_lib4:
 
 
 	.p2align 4,,15
-	.type inner_edge_dtrmm_sub_nt_lu_8x4_lib4, @function
-inner_edge_dtrmm_sub_nt_lu_8x4_lib4:
+	.type inner_edge_dtrmm_sub_nt_ru_8x4_lib4, @function
+inner_edge_dtrmm_sub_nt_ru_8x4_lib4:
 	
 	movq	%r10, %r15 // A1 <- A0
 	addq	%r11, %r15 // A1 <- A0 + 4*sda*sizeof(double)
@@ -1142,7 +1142,7 @@ inner_edge_dtrmm_sub_nt_lu_8x4_lib4:
 
 	ret
 
-	.size	inner_edge_dtrmm_sub_nt_lu_8x4_lib4, .-inner_edge_dtrmm_sub_nt_lu_8x4_lib4
+	.size	inner_edge_dtrmm_sub_nt_ru_8x4_lib4, .-inner_edge_dtrmm_sub_nt_ru_8x4_lib4
 
 
 
@@ -1191,8 +1191,8 @@ inner_edge_dtrmm_sub_nt_lu_8x4_lib4:
 
 
 	.p2align 4,,15
-	.type inner_edge_dtrmm_sub_nt_lu_8x4_vs_lib4, @function
-inner_edge_dtrmm_sub_nt_lu_8x4_vs_lib4:
+	.type inner_edge_dtrmm_sub_nt_ru_8x4_vs_lib4, @function
+inner_edge_dtrmm_sub_nt_ru_8x4_vs_lib4:
 	
 	movq	%r11, %r15 // A1 <- A0
 	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
@@ -1287,7 +1287,7 @@ inner_edge_dtrmm_sub_nt_lu_8x4_vs_lib4:
 .L023:
 	ret
 
-	.size	inner_edge_dtrmm_sub_nt_lu_8x4_vs_lib4, .-inner_edge_dtrmm_sub_nt_lu_8x4_vs_lib4
+	.size	inner_edge_dtrmm_sub_nt_ru_8x4_vs_lib4, .-inner_edge_dtrmm_sub_nt_ru_8x4_vs_lib4
 
 
 
@@ -3329,12 +3329,12 @@ kernel_dsyrk_ntnn_l_8x4_vs_lib4:
 
 
 //                                    edi    rsi        rdx      ecx        r8       r9         rsp+8    rsp+16     rsp+24
-// void kernel_dtrmm_ntnn_lu_8x4_lib4(int k, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd);
+// void kernel_dtrmm_ntnn_ru_8x4_lib4(int k, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd);
 
 	.p2align 4,,15
-	.globl kernel_dtrmm_ntnn_lu_8x4_lib4
-	.type kernel_dtrmm_ntnn_lu_8x4_lib4, @function
-kernel_dtrmm_ntnn_lu_8x4_lib4:
+	.globl kernel_dtrmm_ntnn_ru_8x4_lib4
+	.type kernel_dtrmm_ntnn_ru_8x4_lib4, @function
+kernel_dtrmm_ntnn_ru_8x4_lib4:
 	
 	// prologue
 
@@ -3403,13 +3403,13 @@ kernel_dtrmm_ntnn_lu_8x4_lib4:
 	je		.L019
 
 
-	call inner_edge_dtrmm_add_nt_lu_8x4_lib4
+	call inner_edge_dtrmm_add_nt_ru_8x4_lib4
 
 	jmp		.L020
 
 .L019:
 
-	call inner_edge_dtrmm_sub_nt_lu_8x4_lib4 
+	call inner_edge_dtrmm_sub_nt_ru_8x4_lib4 
 
 .L020:
 	// store n
@@ -3436,19 +3436,19 @@ kernel_dtrmm_ntnn_lu_8x4_lib4:
 
 	ret
 
-	.size	kernel_dtrmm_ntnn_lu_8x4_lib4, .-kernel_dtrmm_ntnn_lu_8x4_lib4
+	.size	kernel_dtrmm_ntnn_ru_8x4_lib4, .-kernel_dtrmm_ntnn_ru_8x4_lib4
 
 
 
 
 
 //                                    edi    rsi        rdx      ecx        r8       r9         rsp+8    rsp+16     rsp+24   rsp+32  rsp+40
-// void kernel_dtrmm_ntnn_lu_8x4_lib4(int k, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd, int km, int kn);
+// void kernel_dtrmm_ntnn_ru_8x4_lib4(int k, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd, int km, int kn);
 
 	.p2align 4,,15
-	.globl kernel_dtrmm_ntnn_lu_8x4_vs_lib4
-	.type kernel_dtrmm_ntnn_lu_8x4_vs_lib4, @function
-kernel_dtrmm_ntnn_lu_8x4_vs_lib4:
+	.globl kernel_dtrmm_ntnn_ru_8x4_vs_lib4
+	.type kernel_dtrmm_ntnn_ru_8x4_vs_lib4, @function
+kernel_dtrmm_ntnn_ru_8x4_vs_lib4:
 	
 	// prologue
 
@@ -3518,13 +3518,13 @@ kernel_dtrmm_ntnn_lu_8x4_vs_lib4:
 	je		.L024
 
 
-	call inner_edge_dtrmm_add_nt_lu_8x4_vs_lib4
+	call inner_edge_dtrmm_add_nt_ru_8x4_vs_lib4
 
 	jmp		.L025
 
 .L024:
 
-	call inner_edge_dtrmm_sub_nt_lu_8x4_vs_lib4 
+	call inner_edge_dtrmm_sub_nt_ru_8x4_vs_lib4 
 
 .L025:
 	// store n
@@ -3554,14 +3554,14 @@ kernel_dtrmm_ntnn_lu_8x4_vs_lib4:
 
 	ret
 
-	.size	kernel_dtrmm_ntnn_lu_8x4_vs_lib4, .-kernel_dtrmm_ntnn_lu_8x4_vs_lib4
+	.size	kernel_dtrmm_ntnn_ru_8x4_vs_lib4, .-kernel_dtrmm_ntnn_ru_8x4_vs_lib4
 
 
 
 
 
-//                                    rdi    rsi        rdx      rcx        r8       r9         rsp+8    rsp+16     rsp+24   rsp+32                 rsp+40  rsp+48
-// void kernel_dpotrf_ntnn_l_8x4_vs_lib4(int k, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd, double *inv_diag_D, int km, int kn);
+//                                       rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24              rsp+32  rsp+40 
+// void kernel_dpotrf_ntnn_l_8x4_vs_lib4(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D, int km, int kn);
 
 	.p2align 4,,15
 	.globl kernel_dpotrf_ntnn_l_8x4_vs_lib4
@@ -3607,9 +3607,9 @@ kernel_dpotrf_ntnn_l_8x4_vs_lib4:
 
 	// call inner blender nn
 
-	movl	%r8d, %r10d
-	movq	%r9, %r11
-	movl	STACKSIZE +  8(%rsp), %r12d // sdc
+	movl	$1, %r10d
+	movq	%r8, %r11
+	movl	%r9d, %r12d // sdc
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12
 
@@ -3618,21 +3618,21 @@ kernel_dpotrf_ntnn_l_8x4_vs_lib4:
 
 	// factorization
 
-	movq	STACKSIZE + 32(%rsp), %r10  // inv_diag_D 
-	movl	STACKSIZE + 48(%rsp), %r11d // kn 
+	movq	STACKSIZE + 24(%rsp), %r10  // inv_diag_D 
+	movl	STACKSIZE + 40(%rsp), %r11d // kn 
 
 	call inner_edge_dpotrf_8x4_vs_lib4
 
 
 	// store n
 
-	movq	STACKSIZE + 16(%rsp), %r10 // store address D
-	movl	STACKSIZE + 24(%rsp), %r11d // sdd
+	movq	STACKSIZE + 8(%rsp), %r10 // store address D
+	movl	STACKSIZE + 16(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 	movslq	%r11d, %r11
 
-	movl	STACKSIZE +  40(%rsp), %r12d // km 
-	movl	STACKSIZE +  48(%rsp), %r13d // kn 
+	movl	STACKSIZE +  32(%rsp), %r12d // km 
+	movl	STACKSIZE +  40(%rsp), %r13d // kn 
 
 	call inner_store_l_8x4_vs_lib4
 
@@ -3722,7 +3722,7 @@ kernel_dsyrk_dpotrf_ntnn_l_8x4_vs_lib4:
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12 
 
-	call inner_blender_nn_8x4_lib4
+	call inner_blender_nn_8x4_lib4 // TODO alg has to be applied only to the add part !!!!!
 
 
 	// factorization
@@ -3766,8 +3766,8 @@ kernel_dsyrk_dpotrf_ntnn_l_8x4_vs_lib4:
 
 
 
-//                                           rdi    rsi        rdx      rcx        r8       r9         rsp+8    rsp+16     rsp+24   rsp+32     rsp+40              rsp+48  rsp+56
-// void kernel_dtrsm_ntnn_rl_inv_8x4_vs_lib4(int k, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E, int km, int kn);
+//                                           rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24     rsp+32              rsp+40  rsp+48
+// void kernel_dtrsm_ntnn_rl_inv_8x4_vs_lib4(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E, int km, int kn);
 
 	.p2align 4,,15
 	.globl kernel_dtrsm_ntnn_rl_inv_8x4_vs_lib4
@@ -3813,9 +3813,9 @@ kernel_dtrsm_ntnn_rl_inv_8x4_vs_lib4:
 
 	// call inner blender nn
 
-	movl	%r8d, %r10d
-	movq	%r9, %r11
-	movl	STACKSIZE +  8(%rsp), %r12d // sdc
+	movl	$1, %r10d
+	movq	%r8, %r11
+	movl	%r9d, %r12d // sdc
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12
 
@@ -3824,22 +3824,22 @@ kernel_dtrsm_ntnn_rl_inv_8x4_vs_lib4:
 
 	// solve
 
-	movq	STACKSIZE + 32(%rsp), %r10  // E 
-	movq	STACKSIZE + 40(%rsp), %r11  // inv_diag_E 
-	movl	STACKSIZE + 56(%rsp), %r12d // kn 
+	movq	STACKSIZE + 24(%rsp), %r10  // E 
+	movq	STACKSIZE + 32(%rsp), %r11  // inv_diag_E 
+	movl	STACKSIZE + 48(%rsp), %r12d // kn 
 
 	call inner_edge_dtrsm_rlt_inv_8x4_vs_lib4
 
 
 	// store n
 
-	movq	STACKSIZE + 16(%rsp), %r10 // store address D
-	movl	STACKSIZE + 24(%rsp), %r11d // sdd
+	movq	STACKSIZE + 8(%rsp), %r10 // store address D
+	movl	STACKSIZE + 16(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 	movslq	%r11d, %r11
 
-	movl	STACKSIZE +  48(%rsp), %r12d // km 
-	movl	STACKSIZE +  56(%rsp), %r13d // kn 
+	movl	STACKSIZE +  40(%rsp), %r12d // km 
+	movl	STACKSIZE +  48(%rsp), %r13d // kn 
 
 	call inner_store_8x4_vs_lib4
 
@@ -3929,7 +3929,7 @@ kernel_dgemm_dtrsm_ntnn_rl_inv_8x4_vs_lib4:
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12
 
-	call inner_blender_nn_8x4_lib4
+	call inner_blender_nn_8x4_lib4 // TODO alg has to be applied only to the add part !!!!!
 
 
 	// solve
@@ -3974,8 +3974,8 @@ kernel_dgemm_dtrsm_ntnn_rl_inv_8x4_vs_lib4:
 
 
 
-//                                        rdi    rsi        rdx      rcx        r8       r9         rsp+8    rsp+16     rsp+24   rsp+32     rsp+40 
-// void kernel_dtrsm_ntnn_rl_inv_8x4_lib4(int k, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
+//                                        rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24     rsp+32 
+// void kernel_dtrsm_ntnn_rl_inv_8x4_lib4(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
 
 	.p2align 4,,15
 	.globl kernel_dtrsm_ntnn_rl_inv_8x4_lib4
@@ -4021,9 +4021,9 @@ kernel_dtrsm_ntnn_rl_inv_8x4_lib4:
 
 	// call inner blender nn
 
-	movl	%r8d, %r10d
-	movq	%r9, %r11
-	movl	STACKSIZE +  8(%rsp), %r12d // sdc
+	movl	$1, %r10d
+	movq	%r8, %r11
+	movl	%r9d, %r12d // sdc
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12
 
@@ -4032,16 +4032,16 @@ kernel_dtrsm_ntnn_rl_inv_8x4_lib4:
 
 	// solve
 
-	movq	STACKSIZE + 32(%rsp), %r10  // E 
-	movq	STACKSIZE + 40(%rsp), %r11  // inv_diag_E 
+	movq	STACKSIZE + 24(%rsp), %r10  // E 
+	movq	STACKSIZE + 32(%rsp), %r11  // inv_diag_E 
 
 	call inner_edge_dtrsm_rlt_inv_8x4_lib4
 
 
 	// store n
 
-	movq	STACKSIZE + 16(%rsp), %r10 // store address D
-	movl	STACKSIZE + 24(%rsp), %r11d // sdd
+	movq	STACKSIZE + 8(%rsp), %r10 // store address D
+	movl	STACKSIZE + 16(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 	movslq	%r11d, %r11
 
@@ -4133,7 +4133,7 @@ kernel_dgemm_dtrsm_ntnn_rl_inv_8x4_lib4:
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12
 
-	call inner_blender_nn_8x4_lib4
+	call inner_blender_nn_8x4_lib4 // TODO alg has to be applied only to the add part !!!!!
 
 
 	// solve

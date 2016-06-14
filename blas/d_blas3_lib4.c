@@ -481,7 +481,8 @@ void dsyrk_ntnn_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int 
 
 
 
-void dtrmm_ntnn_lu_lib(int m, int n, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd)
+// TODO change name to ru !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (the triangular matrix is on the right)
+void dtrmm_ntnn_ru_lib(int m, int n, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd)
 	{
 
 	if(m<=0 || n<=0)
@@ -498,11 +499,11 @@ void dtrmm_ntnn_lu_lib(int m, int n, double *pA, int sda, double *pB, int sdb, i
 		j = 0;
 		for(; j<n-3; j+=4)
 			{
-			kernel_dtrmm_ntnn_lu_8x4_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd);
+			kernel_dtrmm_ntnn_ru_8x4_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd);
 			}
 		if(j<n) // TODO specialized edge routine
 			{
-			kernel_dtrmm_ntnn_lu_8x4_vs_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
+			kernel_dtrmm_ntnn_ru_8x4_vs_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
 			}
 		}
 	if(i<m)
@@ -523,11 +524,11 @@ void dtrmm_ntnn_lu_lib(int m, int n, double *pA, int sda, double *pB, int sdb, i
 		j = 0;
 		for(; j<n-3; j+=4)
 			{
-			kernel_dtrmm_ntnn_lu_4x4_lib4(n-j, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd]);
+			kernel_dtrmm_ntnn_ru_4x4_lib4(n-j, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd]);
 			}
 		if(j<n) // TODO specialized edge routine
 			{
-			kernel_dtrmm_ntnn_lu_4x4_vs_lib4(n-j, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
+			kernel_dtrmm_ntnn_ru_4x4_vs_lib4(n-j, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
 			}
 		}
 	if(i<m)
@@ -546,11 +547,11 @@ void dtrmm_ntnn_lu_lib(int m, int n, double *pA, int sda, double *pB, int sdb, i
 //	for(; j<n-3; j+=4)
 	for(; j<n; j+=4)
 		{
-		kernel_dtrmm_ntnn_lu_8x4_vs_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
+		kernel_dtrmm_ntnn_ru_8x4_vs_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
 		}
 //	if(j<n) // TODO specialized edge routine
 //		{
-//		kernel_dtrmm_ntnn_lu_8x4_vs_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
+//		kernel_dtrmm_ntnn_ru_8x4_vs_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
 //		}
 	return;
 #endif
@@ -560,11 +561,11 @@ void dtrmm_ntnn_lu_lib(int m, int n, double *pA, int sda, double *pB, int sdb, i
 //	for(; j<n-3; j+=4)
 	for(; j<n; j+=4)
 		{
-		kernel_dtrmm_ntnn_lu_4x4_vs_lib4(n-j, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
+		kernel_dtrmm_ntnn_ru_4x4_vs_lib4(n-j, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
 		}
 //	if(j<n) // TODO specialized edge routine
 //		{
-//		kernel_dtrmm_ntnn_lu_4x4_vs_lib4(n-j, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
+//		kernel_dtrmm_ntnn_ru_4x4_vs_lib4(n-j, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
 //		}
 	return;
 

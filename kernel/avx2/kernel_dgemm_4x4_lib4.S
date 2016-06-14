@@ -2487,8 +2487,8 @@ kernel_dtrmm_ntnn_lu_4x4_vs_lib4:
 
 
 
-//                                       edi    rsi        rdx        ecx      r8         r9         rsp+8               rsp+16  rsp+24
-// void kernel_dpotrf_ntnn_l_4x4_vs_lib4(int k, double *A, double *B, int alg, double *C, double *D, double *inv_diag_D, int km, int kn);
+//                                       edi    rsi        rdx        ecx        r8         r9                  rsp+8   rsp+16
+// void kernel_dpotrf_ntnn_l_4x4_vs_lib4(int k, double *A, double *B, double *C, double *D, double *inv_diag_D, int km, int kn);
 
 	.p2align 4,,15
 	.globl kernel_dpotrf_ntnn_l_4x4_vs_lib4
@@ -2527,25 +2527,25 @@ kernel_dpotrf_ntnn_l_4x4_vs_lib4:
 
 	// call inner blender nn
 
-	movl	%ecx, %r10d
-	movq	%r8, %r11
+	movl	$1, %r10d
+	movq	%rcx, %r11
 
 	call inner_blender_nn_4x4_lib4
 
 
 	// factorization
 
-	movq	STACKSIZE +  8(%rsp), %r10  // inv_diag_D 
-	movl	STACKSIZE + 24(%rsp), %r11d // kn 
+	movq	%r9, %r10  // inv_diag_D 
+	movl	STACKSIZE + 16(%rsp), %r11d // kn 
 
 	call inner_edge_dpotrf_4x4_vs_lib4
 
 
 	// store
 
-	movq	%r9, %r10 // D
-	movl	STACKSIZE + 16(%rsp), %r11d // km 
-	movl	STACKSIZE + 24(%rsp), %r12d // kn 
+	movq	%r8, %r10 // D
+	movl	STACKSIZE + 8(%rsp), %r11d // km 
+	movl	STACKSIZE + 16(%rsp), %r12d // kn 
 
 	call inner_store_l_4x4_vs_lib4
 
@@ -2622,7 +2622,7 @@ kernel_dsyrk_dpotrf_ntnn_l_4x4_vs_lib4:
 	movl	STACKSIZE +  8(%rsp), %r10d  // alg
 	movq	STACKSIZE + 16(%rsp), %r11   // C
 
-	call inner_blender_nn_4x4_lib4
+	call inner_blender_nn_4x4_lib4 // TODO alg has to be applied only to the add part !!!!!
 
 
 	// factorization
@@ -2662,8 +2662,8 @@ kernel_dsyrk_dpotrf_ntnn_l_4x4_vs_lib4:
 
 
 
-//                                        edi    rsi        rdx        ecx      r8         r9         rsp+8      rsp+16              
-// void kernel_dtrsm_ntnn_rl_inv_4x4_lib4(int k, double *A, double *B, int alg, double *C, double *D, double *E, double *inv_diag_E);
+//                                        edi    rsi        rdx        ecx        r8         r9         rsp+8  
+// void kernel_dtrsm_ntnn_rl_inv_4x4_lib4(int k, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E);
 
 	.p2align 4,,15
 	.globl kernel_dtrsm_ntnn_rl_inv_4x4_lib4
@@ -2702,23 +2702,23 @@ kernel_dtrsm_ntnn_rl_inv_4x4_lib4:
 
 	// call inner blender nn
 
-	movl	%ecx, %r10d
-	movq	%r8, %r11
+	movl	$1, %r10d
+	movq	%rcx, %r11
 
 	call inner_blender_nn_4x4_lib4
 
 
 	// solve
 
-	movq	STACKSIZE +  8(%rsp), %r10  // E 
-	movq	STACKSIZE + 16(%rsp), %r11  // inv_diag_E 
+	movq	%r9, %r10  // E 
+	movq	STACKSIZE + 8(%rsp), %r11  // inv_diag_E 
 
 	call inner_edge_dtrsm_rlt_inv_4x4_lib4
 
 
 	// store
 
-	movq	%r9, %r10 // D
+	movq	%r8, %r10 // D
 
 	call inner_store_4x4_lib4
 
@@ -2795,7 +2795,7 @@ kernel_dgemm_dtrsm_ntnn_rl_inv_4x4_lib4:
 	movl	STACKSIZE + 8(%rsp),  %r10d  // alg 
 	movq	STACKSIZE + 16(%rsp), %r11   // C
 
-	call inner_blender_nn_4x4_lib4
+	call inner_blender_nn_4x4_lib4 // TODO alg has to be applied only to the add part !!!!!
 
 
 	// solve
@@ -2833,8 +2833,8 @@ kernel_dgemm_dtrsm_ntnn_rl_inv_4x4_lib4:
 
 
 
-//                                           edi    rsi        rdx        ecx      r8         r9         rsp+8      rsp+16              rsp+24  rsp+32
-// void kernel_dtrsm_ntnn_rl_inv_4x4_vs_lib4(int k, double *A, double *B, int alg, double *C, double *D, double *E, double *inv_diag_E, int km, int kn);
+//                                           edi    rsi        rdx        ecx        r8       r9           rsp+8               rsp+16  rsp+24
+// void kernel_dtrsm_ntnn_rl_inv_4x4_vs_lib4(int k, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E, int km, int kn);
 
 	.p2align 4,,15
 	.globl kernel_dtrsm_ntnn_rl_inv_4x4_vs_lib4
@@ -2873,26 +2873,26 @@ kernel_dtrsm_ntnn_rl_inv_4x4_vs_lib4:
 
 	// call inner blender nn
 
-	movl	%ecx, %r10d
-	movq	%r8, %r11
+	movl	$1, %r10d
+	movq	%rcx, %r11
 
 	call inner_blender_nn_4x4_lib4
 
 
 	// solve
 
-	movq	STACKSIZE +  8(%rsp), %r10  // E 
-	movq	STACKSIZE + 16(%rsp), %r11  // inv_diag_E 
-	movl	STACKSIZE + 32(%rsp), %r12d // kn 
+	movq	%r9, %r10  // E 
+	movq	STACKSIZE + 8(%rsp), %r11  // inv_diag_E 
+	movl	STACKSIZE + 24(%rsp), %r12d // kn 
 
 	call inner_edge_dtrsm_rlt_inv_4x4_vs_lib4
 
 
 	// store
 
-	movq	%r9, %r10 // D
-	movl	STACKSIZE + 24(%rsp), %r11d // km 
-	movl	STACKSIZE + 32(%rsp), %r12d // kn 
+	movq	%r8, %r10 // D
+	movl	STACKSIZE + 16(%rsp), %r11d // km 
+	movl	STACKSIZE + 24(%rsp), %r12d // kn 
 
 	call inner_store_4x4_vs_lib4
 
@@ -2969,7 +2969,7 @@ kernel_dgemm_dtrsm_ntnn_rl_inv_4x4_vs_lib4:
 	movl	STACKSIZE +  8(%rsp), %r10d // alg 
 	movq	STACKSIZE + 16(%rsp), %r11  // C 
 
-	call inner_blender_nn_4x4_lib4
+	call inner_blender_nn_4x4_lib4 // TODO alg has to be applied only to the add part !!!!!
 
 
 	// solve
