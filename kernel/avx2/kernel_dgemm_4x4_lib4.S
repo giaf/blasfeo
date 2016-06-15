@@ -1239,7 +1239,7 @@ inner_edge_dpotrf_4x4_vs_lib4:
 
 	vmovsd		%xmm0, %xmm0, %xmm13
 	vucomisd	%xmm15, %xmm13 // d_00 > 0.0 ?
-	jle			.L029
+	jbe			.L029
 	vsqrtsd		%xmm13, %xmm13, %xmm13
 	vdivsd		%xmm13, %xmm14, %xmm13
 .L030:
@@ -1256,7 +1256,7 @@ inner_edge_dpotrf_4x4_vs_lib4:
 	vfnmadd231pd	%ymm0, %ymm13, %ymm1
 	vpermilpd	$0x3, %xmm1, %xmm13
 	vucomisd	%xmm15, %xmm13 // d_11 > 0.0 ?
-	jle			.L031
+	jbe			.L031
 	vsqrtsd		%xmm13, %xmm13, %xmm13
 	vdivsd		%xmm13, %xmm14, %xmm13
 .L032:
@@ -1278,7 +1278,7 @@ inner_edge_dpotrf_4x4_vs_lib4:
 	vfnmadd231pd	%ymm1, %ymm13, %ymm2
 	vextractf128	$0x1, %ymm2, %xmm13
 	vucomisd	%xmm15, %xmm13 // d_22 > 0.0 ?
-	jle			.L033
+	jbe			.L033
 	vsqrtsd		%xmm13, %xmm13, %xmm13
 	vdivsd		%xmm13, %xmm14, %xmm13
 .L034:
@@ -1305,7 +1305,7 @@ inner_edge_dpotrf_4x4_vs_lib4:
 	vextractf128	$0x1, %ymm3, %xmm13
 	vpermilpd	$0x3, %xmm13, %xmm13
 	vucomisd	%xmm15, %xmm13 // d_33 > 0.0 ?
-	jle			.L035
+	jbe			.L035
 	vsqrtsd		%xmm13, %xmm13, %xmm13
 	vdivsd		%xmm13, %xmm14, %xmm13
 .L036:
