@@ -139,7 +139,7 @@ void kernel_dgemv_n_4_vs_lib4(int kmax, double *A, double *x, int alg, double *y
 	
 	
 
-void kernel_dgemv_n_4_lib4(int kmax, double *A, double *x, int alg, double *y, double *z, int km)
+void kernel_dgemv_n_4_lib4(int kmax, double *A, double *x, int alg, double *y, double *z)
 	{
 
 	kernel_dgemv_n_4_vs_lib4(kmax, A, x, alg, y, z, 4);

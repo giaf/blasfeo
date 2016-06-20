@@ -2294,12 +2294,12 @@ kernel_dsyrk_ntnn_l_4x4_vs_lib4:
 
 
 //                                    edi    rsi        rdx        ecx      r8         r9         
-// void kernel_dtrmm_ntnn_lu_4x4_lib4(int k, double *A, double *B, int alg, double *C, double *D);
+// void kernel_dtrmm_ntnn_ru_4x4_lib4(int k, double *A, double *B, int alg, double *C, double *D);
 
 	.p2align 4,,15
-	.globl kernel_dtrmm_ntnn_lu_4x4_lib4
-	.type kernel_dtrmm_ntnn_lu_4x4_lib4, @function
-kernel_dtrmm_ntnn_lu_4x4_lib4:
+	.globl kernel_dtrmm_ntnn_ru_4x4_lib4
+	.type kernel_dtrmm_ntnn_ru_4x4_lib4, @function
+kernel_dtrmm_ntnn_ru_4x4_lib4:
 	
 	// prologue
 
@@ -2381,20 +2381,20 @@ kernel_dtrmm_ntnn_lu_4x4_lib4:
 
 	ret
 
-	.size	kernel_dtrmm_ntnn_lu_4x4_lib4, .-kernel_dtrmm_ntnn_lu_4x4_lib4
+	.size	kernel_dtrmm_ntnn_ru_4x4_lib4, .-kernel_dtrmm_ntnn_ru_4x4_lib4
 
 
 
 
 
 //                                       edi    rsi        rdx        ecx      r8         r9         rsp+8   rsp+16 
-// void kernel_dtrmm_ntnn_lu_4x4_vs_lib4(int k, double *A, double *B, int alg, double *C, double *D, int km, int kn);
+// void kernel_dtrmm_ntnn_ru_4x4_vs_lib4(int k, double *A, double *B, int alg, double *C, double *D, int km, int kn);
 // it holds k==kn !!!!!
 
 	.p2align 4,,15
-	.globl kernel_dtrmm_ntnn_lu_4x4_vs_lib4
-	.type kernel_dtrmm_ntnn_lu_4x4_vs_lib4, @function
-kernel_dtrmm_ntnn_lu_4x4_vs_lib4:
+	.globl kernel_dtrmm_ntnn_ru_4x4_vs_lib4
+	.type kernel_dtrmm_ntnn_ru_4x4_vs_lib4, @function
+kernel_dtrmm_ntnn_ru_4x4_vs_lib4:
 	
 	// prologue
 
@@ -2479,7 +2479,7 @@ kernel_dtrmm_ntnn_lu_4x4_vs_lib4:
 
 	ret
 
-	.size	kernel_dtrmm_ntnn_lu_4x4_vs_lib4, .-kernel_dtrmm_ntnn_lu_4x4_vs_lib4
+	.size	kernel_dtrmm_ntnn_ru_4x4_vs_lib4, .-kernel_dtrmm_ntnn_ru_4x4_vs_lib4
 
 
 

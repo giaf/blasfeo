@@ -3104,12 +3104,12 @@ kernel_dsyrk_ntnn_l_8x4_vs_lib4:
 
 
 //                                    edi    rsi        rdx      ecx        r8       r9         rsp+8    rsp+16     rsp+24
-// void kernel_dtrmm_ntnn_lu_8x4_lib4(int k, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd);
+// void kernel_dtrmm_ntnn_ru_8x4_lib4(int k, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd);
 
 	.p2align 4,,15
-	.globl kernel_dtrmm_ntnn_lu_8x4_lib4
-	.type kernel_dtrmm_ntnn_lu_8x4_lib4, @function
-kernel_dtrmm_ntnn_lu_8x4_lib4:
+	.globl kernel_dtrmm_ntnn_ru_8x4_lib4
+	.type kernel_dtrmm_ntnn_ru_8x4_lib4, @function
+kernel_dtrmm_ntnn_ru_8x4_lib4:
 	
 	// prologue
 
@@ -3211,7 +3211,7 @@ kernel_dtrmm_ntnn_lu_8x4_lib4:
 
 	ret
 
-	.size	kernel_dtrmm_ntnn_lu_8x4_lib4, .-kernel_dtrmm_ntnn_lu_8x4_lib4
+	.size	kernel_dtrmm_ntnn_ru_8x4_lib4, .-kernel_dtrmm_ntnn_ru_8x4_lib4
 
 
 
@@ -3221,9 +3221,9 @@ kernel_dtrmm_ntnn_lu_8x4_lib4:
 // void kernel_dtrmm_ntnn_lu_8x4_lib4(int k, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd, int km, int kn);
 
 	.p2align 4,,15
-	.globl kernel_dtrmm_ntnn_lu_8x4_vs_lib4
-	.type kernel_dtrmm_ntnn_lu_8x4_vs_lib4, @function
-kernel_dtrmm_ntnn_lu_8x4_vs_lib4:
+	.globl kernel_dtrmm_ntnn_ru_8x4_vs_lib4
+	.type kernel_dtrmm_ntnn_ru_8x4_vs_lib4, @function
+kernel_dtrmm_ntnn_ru_8x4_vs_lib4:
 	
 	// prologue
 
@@ -3329,7 +3329,7 @@ kernel_dtrmm_ntnn_lu_8x4_vs_lib4:
 
 	ret
 
-	.size	kernel_dtrmm_ntnn_lu_8x4_vs_lib4, .-kernel_dtrmm_ntnn_lu_8x4_vs_lib4
+	.size	kernel_dtrmm_ntnn_ru_8x4_vs_lib4, .-kernel_dtrmm_ntnn_ru_8x4_vs_lib4
 
 
 

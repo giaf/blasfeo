@@ -179,8 +179,8 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 	vfmadd231pd		%xmm9, %xmm12, %xmm7
 
 
-	addq	$128, %r12
 	addq	$128, %r11
+	addq	$128, %r12
 
 
 	cmpl	$4, %r10d
@@ -312,8 +312,8 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 	vfmadd231pd		%xmm8, %xmm12, %xmm6
 	vfmadd231pd	%xmm9, %xmm12, %xmm7
 
-	addq	$32, %r12
 	addq	$32, %r11
+	addq	$32, %r12
 
 	cmpl	$0, %r10d
 
@@ -795,14 +795,14 @@ inner_edge_dtrmm_add_nt_lu_4x4_vs_lib4:
 	cmpl	$0, %r10d
 	jle		.L016
 
-	vmovapd			32(%r11), %xmm8
-	vmovapd			48(%r11), %xmm9
+	vmovapd			0(%r11), %xmm8
+	vmovapd			16(%r11), %xmm9
 	subl			$1, %r10d
-	vmovddup		32(%r12), %xmm12
+	vmovddup		0(%r12), %xmm12
 	vfmadd231pd		%xmm8, %xmm12, %xmm0
 	vfmadd231pd		%xmm9, %xmm12, %xmm1
 	addq			$32, %r11
-	vmovddup		40(%r12), %xmm12
+	vmovddup		8(%r12), %xmm12
 	vfmadd231pd		%xmm8, %xmm12, %xmm2
 	vfmadd231pd		%xmm9, %xmm12, %xmm3
 	addq			$32, %r12
@@ -810,17 +810,17 @@ inner_edge_dtrmm_add_nt_lu_4x4_vs_lib4:
 	cmpl	$0, %r10d
 	jle		.L016
 
-	vmovapd			64(%r11), %xmm8
-	vmovapd			80(%r11), %xmm9
+	vmovapd			0(%r11), %xmm8
+	vmovapd			16(%r11), %xmm9
 	subl			$1, %r10d
-	vmovddup		64(%r12), %xmm12
+	vmovddup		0(%r12), %xmm12
 	vfmadd231pd		%xmm8, %xmm12, %xmm0
 	vfmadd231pd		%xmm9, %xmm12, %xmm1
-	vmovddup		72(%r12), %xmm12
+	vmovddup		8(%r12), %xmm12
 	vfmadd231pd		%xmm8, %xmm12, %xmm2
 	vfmadd231pd		%xmm9, %xmm12, %xmm3
 	addq			$32, %r11
-	vmovddup		80(%r12), %xmm12
+	vmovddup		16(%r12), %xmm12
 	vfmadd231pd		%xmm8, %xmm12, %xmm4
 	vfmadd231pd		%xmm9, %xmm12, %xmm5
 	addq			$32, %r12
@@ -828,20 +828,20 @@ inner_edge_dtrmm_add_nt_lu_4x4_vs_lib4:
 	cmpl	$0, %r10d
 	jle		.L016
 
-	vmovapd			96(%r11), %xmm8
-	vmovapd			112(%r11), %xmm9
+	vmovapd			0(%r11), %xmm8
+	vmovapd			16(%r11), %xmm9
 	subl			$1, %r10d
-	vmovddup		96(%r12), %xmm12
+	vmovddup		0(%r12), %xmm12
 	vfmadd231pd		%xmm8, %xmm12, %xmm0
 	vfmadd231pd		%xmm9, %xmm12, %xmm1
-	vmovddup		104(%r12), %xmm12
+	vmovddup		8(%r12), %xmm12
 	vfmadd231pd		%xmm8, %xmm12, %xmm2
 	vfmadd231pd		%xmm9, %xmm12, %xmm3
-	vmovddup		112(%r12), %xmm12
+	vmovddup		16(%r12), %xmm12
 	vfmadd231pd		%xmm8, %xmm12, %xmm4
 	vfmadd231pd		%xmm9, %xmm12, %xmm5
 	addq			$32, %r11
-	vmovddup		120(%r12), %xmm12
+	vmovddup		24(%r12), %xmm12
 	vfmadd231pd		%xmm8, %xmm12, %xmm6
 	vfmadd231pd		%xmm9, %xmm12, %xmm7
 	addq			$32, %r12
@@ -1149,7 +1149,7 @@ inner_blender_nn_4x4_lib4:
 	vaddpd		%xmm3, %xmm15, %xmm3
 	vmovapd		64(%r11), %xmm15
 	vaddpd		%xmm4, %xmm15, %xmm4
-	vmovapd		64(%r11), %xmm15
+	vmovapd		80(%r11), %xmm15
 	vaddpd		%xmm5, %xmm15, %xmm5
 	vmovapd		96(%r11), %xmm15
 	vaddpd		%xmm6, %xmm15, %xmm6
@@ -2854,12 +2854,12 @@ kernel_dsyrk_ntnn_l_4x4_vs_lib4:
 
 
 //                                    edi    rsi        rdx        ecx      r8         r9         
-// void kernel_dtrmm_ntnn_lu_4x4_lib4(int k, double *A, double *B, int alg, double *C, double *D);
+// void kernel_dtrmm_ntnn_ru_4x4_lib4(int k, double *A, double *B, int alg, double *C, double *D);
 
 	.p2align 4,,15
-	.globl kernel_dtrmm_ntnn_lu_4x4_lib4
-	.type kernel_dtrmm_ntnn_lu_4x4_lib4, @function
-kernel_dtrmm_ntnn_lu_4x4_lib4:
+	.globl kernel_dtrmm_ntnn_ru_4x4_lib4
+	.type kernel_dtrmm_ntnn_ru_4x4_lib4, @function
+kernel_dtrmm_ntnn_ru_4x4_lib4:
 	
 	// prologue
 
@@ -2945,20 +2945,20 @@ kernel_dtrmm_ntnn_lu_4x4_lib4:
 
 	ret
 
-	.size	kernel_dtrmm_ntnn_lu_4x4_lib4, .-kernel_dtrmm_ntnn_lu_4x4_lib4
+	.size	kernel_dtrmm_ntnn_ru_4x4_lib4, .-kernel_dtrmm_ntnn_ru_4x4_lib4
 
 
 
 
 
 //                                       edi    rsi        rdx        ecx      r8         r9         rsp+8   rsp+16 
-// void kernel_dtrmm_ntnn_lu_4x4_vs_lib4(int k, double *A, double *B, int alg, double *C, double *D, int km, int kn);
+// void kernel_dtrmm_ntnn_ru_4x4_vs_lib4(int k, double *A, double *B, int alg, double *C, double *D, int km, int kn);
 // it holds k==kn !!!!!
 
 	.p2align 4,,15
-	.globl kernel_dtrmm_ntnn_lu_4x4_vs_lib4
-	.type kernel_dtrmm_ntnn_lu_4x4_vs_lib4, @function
-kernel_dtrmm_ntnn_lu_4x4_vs_lib4:
+	.globl kernel_dtrmm_ntnn_ru_4x4_vs_lib4
+	.type kernel_dtrmm_ntnn_ru_4x4_vs_lib4, @function
+kernel_dtrmm_ntnn_ru_4x4_vs_lib4:
 	
 	// prologue
 
@@ -3047,7 +3047,7 @@ kernel_dtrmm_ntnn_lu_4x4_vs_lib4:
 
 	ret
 
-	.size	kernel_dtrmm_ntnn_lu_4x4_vs_lib4, .-kernel_dtrmm_ntnn_lu_4x4_vs_lib4
+	.size	kernel_dtrmm_ntnn_ru_4x4_vs_lib4, .-kernel_dtrmm_ntnn_ru_4x4_vs_lib4
 
 
 

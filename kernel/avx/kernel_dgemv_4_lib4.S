@@ -2224,7 +2224,7 @@ kernel_dtrsv_lt_inv_1_lib4:
 
 
 //                            rdi    rsi        rdx        rcx      r8         r9         
-// void kernel_dtrmv_n_4_lib4(int k, double *A, double *x, int alg, double *y, double *z);
+// void kernel_dtrmv_un_4_lib4(int k, double *A, double *x, int alg, double *y, double *z);
 
 	.p2align 4,,15
 	.globl kernel_dtrmv_un_4_lib4
