@@ -27,13 +27,20 @@
 include ../Makefile.rule
 
 obj:
-ifeq ($(TARGET), X64_HASWELL)
+ifeq ($(TARGET), X64_INTEL_HASWELL)
 	( cd avx2; $(MAKE) obj)
 	( cd avx; $(MAKE) obj)
 endif
-ifeq ($(TARGET), X64_SANDY_BRIDGE)
+
+ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 	( cd avx; $(MAKE) obj)
 endif
+
+ifeq ($(TARGET), X64_AMD_BULLDOZER)
+	( cd fma; $(MAKE) obj)
+	( cd c99; $(MAKE) obj)
+endif
+
 ifeq ($(TARGET), GENERIC)
 	( cd c99; $(MAKE) obj)
 endif
@@ -41,5 +48,6 @@ endif
 clean:
 	make -C avx2 clean
 	make -C avx clean
+	make -C fma clean
 	make -C c99 clean
 

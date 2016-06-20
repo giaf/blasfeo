@@ -26,11 +26,11 @@
 
 include ../../Makefile.rule
 
-ifeq ($(TARGET), X64_HASWELL)
+ifeq ($(TARGET), X64_INTEL_HASWELL)
 OBJS_DOUBLE = kernel_dgemv_4_lib4.o
 endif
 
-ifeq ($(TARGET), X64_SANDY_BRIDGE)
+ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 OBJS_DOUBLE = kernel_dgemm_4x4_lib4.o kernel_dgemm_8x4_lib4.o kernel_dgemv_12_lib4.o kernel_dgemv_8_lib4.o kernel_dgemv_4_lib4.o
 endif
 

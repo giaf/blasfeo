@@ -40,7 +40,7 @@ void dpotrf_ntnn_l_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, d
 
 	i = 0;
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -106,7 +106,7 @@ void dpotrf_ntnn_l_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, d
 
 	// clean up loops definitions
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	left_8:
 	j = 0;
 	for(; j<i && j<n-3; j+=4)
@@ -166,7 +166,7 @@ void dsyrk_dpotrf_ntnn_l_lib(int m, int n, int k, double *pA, int sda, double *p
 
 	i = 0;
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -232,7 +232,7 @@ void dsyrk_dpotrf_ntnn_l_lib(int m, int n, int k, double *pA, int sda, double *p
 
 	// clean up loops definitions
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	left_8:
 	j = 0;
 	for(; j<i && j<n-3; j+=4)
@@ -298,7 +298,7 @@ void dlauum_dpotrf_blk_ntnn_l_lib(int m, int n, int nv, int *rv, int *cv, double
 	ii = 0;
 	iii = 0;
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	for(; i<m-7; i+=8)
 		{
 
@@ -418,7 +418,7 @@ void dlauum_dpotrf_blk_ntnn_l_lib(int m, int n, int nv, int *rv, int *cv, double
 
 	// clean up loops definitions
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	left_8:
 
 	kii = cv[nv-1];

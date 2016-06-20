@@ -26,7 +26,7 @@
 
 #include <math.h>
 
-#if defined(TARGET_X64_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #include <mmintrin.h>
 #include <xmmintrin.h>  // SSE
 #include <emmintrin.h>  // SSE2
@@ -49,7 +49,7 @@ void d_cvt_mat2pmat(int row, int col, double *A, int lda, int offset, double *pA
 	double
 		*B, *pB;
 	
-#if defined(TARGET_X64_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	__m256d
 		tmp;
 #endif
@@ -79,7 +79,7 @@ void d_cvt_mat2pmat(int row, int col, double *A, int lda, int offset, double *pA
 			B  += row0;
 			pB += row0 + bs*(sda-1);
 			}
-#if defined(TARGET_X64_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		for( ; ii<row-3; ii+=4)
 			{
 			tmp = _mm256_loadu_pd( &B[0+lda*0] );
@@ -190,7 +190,7 @@ void d_cvt_tran_mat2pmat(int row, int col, double *A, int lda, int offset, doubl
 	double
 		*B, *pB;
 	
-#if defined(TARGET_X64_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	__m256d
 		v0, v1, v2, v3,
 		v4, v5, v6, v7;
@@ -222,7 +222,7 @@ void d_cvt_tran_mat2pmat(int row, int col, double *A, int lda, int offset, doubl
 		j=0;
 		B  = A + ii*lda;
 		pB = pA + ii*sda;
-#if defined(TARGET_X64_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		for(; j<row-3; j+=4)
 			{
 			v0 = _mm256_loadu_pd( &B[0+0*lda] ); // 00 10 20 30

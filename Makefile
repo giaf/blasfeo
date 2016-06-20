@@ -27,15 +27,23 @@
 include ./Makefile.rule
 
 OBJS = 
-ifeq ($(TARGET), X64_HASWELL)
+
+ifeq ($(TARGET), X64_INTEL_HASWELL)
 OBJS += ./kernel/avx2/kernel_dgemm_4x4_lib4.o ./kernel/avx2/kernel_dgemm_8x4_lib4.o ./kernel/avx2/kernel_dgemv_8_lib4.o ./kernel/avx/kernel_dgemv_4_lib4.o
 endif
-ifeq ($(TARGET), X64_SANDY_BRIDGE)
+
+ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 OBJS += ./kernel/avx/kernel_dgemm_4x4_lib4.o ./kernel/avx/kernel_dgemm_8x4_lib4.o ./kernel/avx/kernel_dgemv_12_lib4.o ./kernel/avx/kernel_dgemv_8_lib4.o  ./kernel/avx/kernel_dgemv_4_lib4.o 
 endif
+
+ifeq ($(TARGET), X64_AMD_BULLDOZER)
+OBJS += ./kernel/fma/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o
+endif
+
 ifeq ($(TARGET), GENERIC)
 OBJS += ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o
 endif
+
 OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o ./aux/i_aux_extern_depend_lib4.o
 OBJS += ./blas/d_blas3_lib4.o ./blas/d_lapack_lib4.o ./blas/d_blas2_lib4.o
 
@@ -52,14 +60,24 @@ static_library: target
 
 target:
 	touch ./include/target.h
-ifeq ($(TARGET), X64_HASWELL)
-	echo "#ifndef TARGET_X64_HASWELL" > ./include/target.h
-	echo "#define TARGET_X64_HASWELL" >> ./include/target.h
+ifeq ($(TARGET), X64_INTEL_HASWELL)
+	echo "#ifndef TARGET_X64_INTEL_HASWELL" > ./include/target.h
+	echo "#define TARGET_X64_INTEL_HASWELL" >> ./include/target.h
 	echo "#endif" >> ./include/target.h
 endif
-ifeq ($(TARGET), X64_SANDY_BRIDGE)
-	echo "#ifndef TARGET_X64_SANDY_BRIDGE" > ./include/target.h
-	echo "#define TARGET_X64_SANDY_BRIDGE" >> ./include/target.h
+ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
+	echo "#ifndef TARGET_X64_INTEL_SANDY_BRIDGE" > ./include/target.h
+	echo "#define TARGET_X64_INTEL_SANDY_BRIDGE" >> ./include/target.h
+	echo "#endif" >> ./include/target.h
+endif
+ifeq ($(TARGET), X64_AMD_BULLDOZER)
+	echo "#ifndef TARGET_X64_AMD_BULLDOZER" > ./include/target.h
+	echo "#define TARGET_X64_AMD_BULLDOZER" >> ./include/target.h
+	echo "#endif" >> ./include/target.h
+endif
+ifeq ($(TARGET), GENERIC)
+	echo "#ifndef TARGET_GENERIC" > ./include/target.h
+	echo "#define TARGET_GENERIC" >> ./include/target.h
 	echo "#endif" >> ./include/target.h
 endif
 

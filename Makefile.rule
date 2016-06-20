@@ -28,8 +28,9 @@
 # X64_HASWELL : machine with AVX2 and FMA instruction sets (latest generation Intel and AMD processors), 64 bit operating system, code optimized for Intel Haswell and Intel Skylake architectures.
 # X64_SANDY_BRIDGE : machine with AVX instruction set (previous generation Intel and AMD processors), 64 bit operating system, code optimized for Intel Sandy-Bridge architecture.
 # GENERIC : generic c99 code
-#TARGET = X64_HASWELL
-TARGET = X64_SANDY_BRIDGE
+#TARGET = X64_INTEL_HASWELL
+TARGET = X64_INTEL_SANDY_BRIDGE
+#TARGET = X64_AMD_BULLDOZER
 #TARGET = GENERIC
 
 # Installation directory
@@ -72,11 +73,14 @@ COMMON_FLAGS += -m64 -I/opt/intel/mkl/include
 endif
 
 # architecture-specific optimization flags
-ifeq ($(TARGET), X64_HASWELL)
-CFLAGS = $(COMMON_FLAGS) -m64 -mavx2 -mfma -DTARGET_X64_HASWELL $(REF_BLAS_FLAGS) $(DEBUG)
+ifeq ($(TARGET), X64_INTEL_HASWELL)
+CFLAGS = $(COMMON_FLAGS) -m64 -mavx2 -mfma -DTARGET_X64_INTEL_HASWELL $(REF_BLAS_FLAGS) $(DEBUG)
 endif
-ifeq ($(TARGET), X64_SANDY_BRIDGE)
-CFLAGS = $(COMMON_FLAGS) -m64 -mavx -DTARGET_X64_SANDY_BRIDGE $(REF_BLAS_FLAGS) $(DEBUG)
+ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
+CFLAGS = $(COMMON_FLAGS) -m64 -mavx -DTARGET_X64_INTEL_SANDY_BRIDGE $(REF_BLAS_FLAGS) $(DEBUG)
+endif
+ifeq ($(TARGET), X64_AMD_BULLDOZER)
+CFLAGS = $(COMMON_FLAGS) -m64 -mavx -mfma -DTARGET_X64_AMD_BULLDOZER $(REF_BLAS_FLAGS) $(DEBUG)
 endif
 ifeq ($(TARGET), GENERIC)
 CFLAGS = $(COMMON_FLAGS) -march=native -DTARGET_GENERIC $(REF_BLAS_FLAGS) $(DEBUG)

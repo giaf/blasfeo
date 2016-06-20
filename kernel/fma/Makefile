@@ -26,8 +26,8 @@
 
 include ../../Makefile.rule
 
-ifeq ($(TARGET), X64_INTEL_HASWELL)
-OBJS_DOUBLE = kernel_dgemm_4x4_lib4.o kernel_dgemm_8x4_lib4.o kernel_dgemv_8_lib4.o
+ifeq ($(TARGET), X64_AMD_BULLDOZER)
+OBJS_DOUBLE = kernel_dgemm_4x4_lib4.o
 endif
 
 obj: $(OBJS_DOUBLE)

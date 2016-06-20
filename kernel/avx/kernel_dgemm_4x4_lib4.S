@@ -1375,10 +1375,10 @@ inner_blender_loader_tt_4x4_lib4:
 // input arguments:
 // r10  <- inv_diag_E
 // r11d <- kn
-// ymm0 <- [d00 d11 d22 d33]
-// ymm1 <- [d01 d10 d23 d32]
-// ymm2 <- [d03 d12 d21 d30]
-// ymm3 <- [d02 d13 d20 d31]
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
 // ymm12 <- dirty
 // ymm13 <- dirty
 // ymm14 <- dirty
@@ -2051,7 +2051,6 @@ kernel_dgemm_ntnt_4x4_vs_lib4:
 	vmovapd	%ymm0, %ymm1
 	vmovapd	%ymm0, %ymm2
 	vmovapd	%ymm0, %ymm3
-	vmovapd	%ymm0, %ymm7
 
 
 	// call inner dgemm kernel nt
@@ -2127,7 +2126,6 @@ kernel_dgemm_nttn_4x4_lib4:
 	vmovapd	%ymm0, %ymm1
 	vmovapd	%ymm0, %ymm2
 	vmovapd	%ymm0, %ymm3
-	vmovapd	%ymm0, %ymm7
 
 
 	// call inner dgemm kernel nt

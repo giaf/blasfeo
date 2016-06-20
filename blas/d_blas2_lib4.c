@@ -39,8 +39,8 @@ void dgemv_n_lib(int m, int n, double *pA, int sda, double *x, int alg, double *
 	int i;
 
 	i = 0;
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
-#if defined(TARGET_X64_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for( ; i<m-11; i+=12)
 		{
 		kernel_dgemv_n_12_lib4(n, &pA[i*sda], sda, x, alg, &y[i], &z[i]);
@@ -81,8 +81,8 @@ void dgemv_t_lib(int m, int n, double *pA, int sda, double *x, int alg, double *
 	int i;
 
 	i = 0;
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
-#if defined(TARGET_X64_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for( ; i<n-11; i+=12)
 		{
 		kernel_dgemv_t_12_lib4(m, &pA[i*bs], sda, x, alg, &y[i], &z[i]);
@@ -142,7 +142,7 @@ void dtrsv_ln_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, dou
 		kernel_dtrsv_ln_inv_4_vs_lib4(i, &pA[i*sda], &inv_diag_A[i], x, &y[i], &y[i], m-i, n-i);
 		i+=4;
 		}
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	for( ; i<m-7; i+=8)
 		{
 		kernel_dgemv_n_8_lib4(n, &pA[i*sda], sda, x, -1, &y[i], &y[i]);

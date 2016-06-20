@@ -34,6 +34,10 @@ ifeq ($(TARGET), X64_SANDY_BRIDGE)
 OBJS_DOUBLE = 
 endif
 
+ifeq ($(TARGET), X64_AMD_BULLDOZER)
+OBJS_DOUBLE = kernel_dgemv_4_lib4.o 
+endif
+
 ifeq ($(TARGET), GENERIC)
 OBJS_DOUBLE = kernel_dgemm_4x4_lib4.o kernel_dgemv_4_lib4.o 
 endif

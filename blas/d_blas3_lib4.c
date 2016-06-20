@@ -40,7 +40,7 @@ void dgemm_ntnn_lib(int m, int n, int k, double *pA, int sda, double *pB, int sd
 
 	i = 0;
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -88,7 +88,7 @@ void dgemm_ntnn_lib(int m, int n, int k, double *pA, int sda, double *pB, int sd
 
 	// clean up loops definitions
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	left_8:
 	j = 0;
 	for(; j<n; j+=4)
@@ -122,7 +122,7 @@ void dgemm_ntnt_lib(int m, int n, int k, double *pA, int sda, double *pB, int sd
 
 	i = 0;
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -170,7 +170,7 @@ void dgemm_ntnt_lib(int m, int n, int k, double *pA, int sda, double *pB, int sd
 
 	// clean up loops definitions
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	left_8:
 	j = 0;
 	for(; j<n; j+=4)
@@ -204,7 +204,7 @@ void dgemm_nttn_lib(int m, int n, int k, double *pA, int sda, double *pB, int sd
 
 	i = 0;
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -252,7 +252,7 @@ void dgemm_nttn_lib(int m, int n, int k, double *pA, int sda, double *pB, int sd
 
 	// clean up loops definitions
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	left_8:
 	j = 0;
 	for(; j<n; j+=4)
@@ -285,7 +285,7 @@ void dgemm_nttt_lib(int m, int n, int k, double *pA, int sda, double *pB, int sd
 
 	i = 0;
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -333,7 +333,7 @@ void dgemm_nttt_lib(int m, int n, int k, double *pA, int sda, double *pB, int sd
 
 	// clean up loops definitions
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	left_8:
 	j = 0;
 	for(; j<n; j+=4)
@@ -367,7 +367,7 @@ void dsyrk_ntnn_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int 
 
 	i = 0;
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -433,7 +433,7 @@ void dsyrk_ntnn_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int 
 
 	// clean up loops definitions
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	left_8:
 	j = 0;
 	for(; j<i && j<n-3; j+=4)
@@ -493,7 +493,7 @@ void dtrmm_ntnn_ru_lib(int m, int n, double *pA, int sda, double *pB, int sdb, i
 	int i, j;
 	
 	i = 0;
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -540,7 +540,7 @@ void dtrmm_ntnn_ru_lib(int m, int n, double *pA, int sda, double *pB, int sdb, i
 	// common return
 	return;
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	// clean up
 	left_8:
 	j = 0;
@@ -591,7 +591,7 @@ void dlauum_blk_ntnn_l_lib(int m, int n, int nv, int *rv, int *cv, double *pA, i
 	ii = 0;
 	iii = 0;
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	for(; i<m-7; i+=8)
 		{
 
@@ -715,7 +715,7 @@ void dlauum_blk_ntnn_l_lib(int m, int n, int nv, int *rv, int *cv, double *pA, i
 
 	// clean up loops definitions
 
-#if defined(TARGET_X64_SANDY_BRIDGE) || defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	left_8:
 
 	kii = cv[nv-1];
