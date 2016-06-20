@@ -295,7 +295,7 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	addq	$32, %r11
 
 	vfmadd231pd	%ymm8, %ymm14, %ymm1
-	addq	$32, %rdx
+	addq	$32, %r13
 	vfmadd231pd	%ymm9, %ymm14, %ymm5
 
 	vperm2f128 $0x1, %ymm14, %ymm14, %ymm14
@@ -656,8 +656,8 @@ inner_kernel_dgemm_sub_nt_8x4_lib4:
 
 
 	.p2align 4,,15
-	.type inner_edge_dtrmm_add_nt_lu_8x4_lib4, @function
-inner_edge_dtrmm_add_nt_lu_8x4_lib4:
+	.type inner_edge_dtrmm_add_nt_ru_8x4_lib4, @function
+inner_edge_dtrmm_add_nt_ru_8x4_lib4:
 	
 	movq	%r10, %r15 // A1 <- A0
 	addq	%r11, %r15 // A1 <- A0 + 4*sda*sizeof(double)
@@ -718,7 +718,7 @@ inner_edge_dtrmm_add_nt_lu_8x4_lib4:
 
 	ret
 
-	.size	inner_edge_dtrmm_add_nt_lu_8x4_lib4, .-inner_edge_dtrmm_add_nt_lu_8x4_lib4
+	.size	inner_edge_dtrmm_add_nt_ru_8x4_lib4, .-inner_edge_dtrmm_add_nt_ru_8x4_lib4
 
 
 
@@ -767,8 +767,8 @@ inner_edge_dtrmm_add_nt_lu_8x4_lib4:
 
 
 	.p2align 4,,15
-	.type inner_edge_dtrmm_add_nt_lu_8x4_vs_lib4, @function
-inner_edge_dtrmm_add_nt_lu_8x4_vs_lib4:
+	.type inner_edge_dtrmm_add_nt_ru_8x4_vs_lib4, @function
+inner_edge_dtrmm_add_nt_ru_8x4_vs_lib4:
 	
 	movq	%r11, %r15 // A1 <- A0
 	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
@@ -851,7 +851,7 @@ inner_edge_dtrmm_add_nt_lu_8x4_vs_lib4:
 .L017:
 	ret
 
-	.size	inner_edge_dtrmm_add_nt_lu_8x4_vs_lib4, .-inner_edge_dtrmm_add_nt_lu_8x4_vs_lib4
+	.size	inner_edge_dtrmm_add_nt_ru_8x4_vs_lib4, .-inner_edge_dtrmm_add_nt_ru_8x4_vs_lib4
 
 
 
@@ -898,8 +898,8 @@ inner_edge_dtrmm_add_nt_lu_8x4_vs_lib4:
 
 
 	.p2align 4,,15
-	.type inner_edge_dtrmm_sub_nt_lu_8x4_lib4, @function
-inner_edge_dtrmm_sub_nt_lu_8x4_lib4:
+	.type inner_edge_dtrmm_sub_nt_ru_8x4_lib4, @function
+inner_edge_dtrmm_sub_nt_ru_8x4_lib4:
 	
 	movq	%r10, %r15 // A1 <- A0
 	addq	%r11, %r15 // A1 <- A0 + 4*sda*sizeof(double)
@@ -960,7 +960,7 @@ inner_edge_dtrmm_sub_nt_lu_8x4_lib4:
 
 	ret
 
-	.size	inner_edge_dtrmm_sub_nt_lu_8x4_lib4, .-inner_edge_dtrmm_sub_nt_lu_8x4_lib4
+	.size	inner_edge_dtrmm_sub_nt_ru_8x4_lib4, .-inner_edge_dtrmm_sub_nt_ru_8x4_lib4
 
 
 
@@ -1009,8 +1009,8 @@ inner_edge_dtrmm_sub_nt_lu_8x4_lib4:
 
 
 	.p2align 4,,15
-	.type inner_edge_dtrmm_sub_nt_lu_8x4_vs_lib4, @function
-inner_edge_dtrmm_sub_nt_lu_8x4_vs_lib4:
+	.type inner_edge_dtrmm_sub_nt_ru_8x4_vs_lib4, @function
+inner_edge_dtrmm_sub_nt_ru_8x4_vs_lib4:
 	
 	movq	%r11, %r15 // A1 <- A0
 	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
@@ -1093,7 +1093,7 @@ inner_edge_dtrmm_sub_nt_lu_8x4_vs_lib4:
 .L023:
 	ret
 
-	.size	inner_edge_dtrmm_sub_nt_lu_8x4_vs_lib4, .-inner_edge_dtrmm_sub_nt_lu_8x4_vs_lib4
+	.size	inner_edge_dtrmm_sub_nt_ru_8x4_vs_lib4, .-inner_edge_dtrmm_sub_nt_ru_8x4_vs_lib4
 
 
 
@@ -3178,13 +3178,13 @@ kernel_dtrmm_ntnn_ru_8x4_lib4:
 	je		.L019
 
 
-	call inner_edge_dtrmm_add_nt_lu_8x4_lib4
+	call inner_edge_dtrmm_add_nt_ru_8x4_lib4
 
 	jmp		.L020
 
 .L019:
 
-	call inner_edge_dtrmm_sub_nt_lu_8x4_lib4 
+	call inner_edge_dtrmm_sub_nt_ru_8x4_lib4 
 
 .L020:
 	// store n
@@ -3218,7 +3218,7 @@ kernel_dtrmm_ntnn_ru_8x4_lib4:
 
 
 //                                    edi    rsi        rdx      ecx        r8       r9         rsp+8    rsp+16     rsp+24   rsp+32  rsp+40
-// void kernel_dtrmm_ntnn_lu_8x4_lib4(int k, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd, int km, int kn);
+// void kernel_dtrmm_ntnn_ru_8x4_lib4(int k, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd, int km, int kn);
 
 	.p2align 4,,15
 	.globl kernel_dtrmm_ntnn_ru_8x4_vs_lib4
@@ -3293,13 +3293,13 @@ kernel_dtrmm_ntnn_ru_8x4_vs_lib4:
 	je		.L024
 
 
-	call inner_edge_dtrmm_add_nt_lu_8x4_vs_lib4
+	call inner_edge_dtrmm_add_nt_ru_8x4_vs_lib4
 
 	jmp		.L025
 
 .L024:
 
-	call inner_edge_dtrmm_sub_nt_lu_8x4_vs_lib4 
+	call inner_edge_dtrmm_sub_nt_ru_8x4_vs_lib4 
 
 .L025:
 	// store n

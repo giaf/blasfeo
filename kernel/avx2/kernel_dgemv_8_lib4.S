@@ -535,6 +535,10 @@ kernel_dgemv_n_8_lib4:
 	vmovapd	%ymm0, %ymm1
 	vmovapd	%ymm0, %ymm2
 	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
 
 
 	// call inner dgemv kernel n
