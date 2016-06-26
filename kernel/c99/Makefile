@@ -26,23 +26,29 @@
 
 include ../../Makefile.rule
 
-ifeq ($(TARGET), X64_HASWELL)
-OBJS_DOUBLE = 
+OBJS =
+
+ifeq ($(TARGET), X64_INTEL_HASWELL)
+OBJS += 
+OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemv_4_lib4.o 
 endif
 
-ifeq ($(TARGET), X64_SANDY_BRIDGE)
-OBJS_DOUBLE = 
+ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
+OBJS += 
+OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemv_4_lib4.o 
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
-OBJS_DOUBLE = kernel_dgemv_4_lib4.o 
+OBJS += kernel_dgemv_4_lib4.o 
+OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemv_4_lib4.o 
 endif
 
 ifeq ($(TARGET), GENERIC)
-OBJS_DOUBLE = kernel_dgemm_4x4_lib4.o kernel_dgemv_4_lib4.o 
+OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemv_4_lib4.o 
+OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemv_4_lib4.o 
 endif
 
-obj: $(OBJS_DOUBLE)
+obj: $(OBJS)
 
 clean:
 	rm -f *.o

@@ -24,24 +24,173 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
+#if 0
+#include <malloc.h>
+#endif
 
 
-// level 2 BLAS
-void dgemv_n_lib(int m, int n, double *pA, int sda, double *x, int alg, double *y, double *z);
-void dgemv_t_lib(int m, int n, double *pA, int sda, double *x, int alg, double *y, double *z);
-void dtrsv_ln_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *x, double *y);
-void dtrsv_lt_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *x, double *y);
-void dtrmv_un_lib(int m, double *pA, int sda, double *x, int alg, double *y, double *z);
-void dtrmv_ut_lib(int m, double *pA, int sda, double *x, int alg, double *y, double *z);
-	
-// level 3 BLAS
-void dgemm_ntnn_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
-void dgemm_ntnt_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
-void dgemm_nttn_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
-void dgemm_nttt_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
-void dsyrk_ntnn_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
-void dtrmm_ntnn_lu_lib(int m, int n, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
 
-// LAPACK
-void dpotrf_ntnn_l_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);
-void dsyrk_dpotrf_ntnn_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);
+/* creates a zero matrix aligned */
+void s_zeros(float **pA, int row, int col)
+	{
+	void *temp = malloc((row*col)*sizeof(float));
+	*pA = temp;
+	float *A = *pA;
+	int i;
+	for(i=0; i<row*col; i++) A[i] = 0.0;
+	}
+
+
+
+/* creates a zero matrix aligned to a cache line */
+void s_zeros_align(float **pA, int row, int col)
+	{
+#if defined(OS_WINDOWS)
+	*pA = (float *) _aligned_malloc( (row*col)*sizeof(float), 64 );
+#else
+	void *temp;
+	int err = posix_memalign(&temp, 64, (row*col)*sizeof(float));
+	if(err!=0)
+		{
+		printf("Memory allocation error");
+		exit(1);
+		}
+	*pA = temp;
+#endif
+	float *A = *pA;
+	int i;
+	for(i=0; i<row*col; i++) A[i] = 0.0;
+	}
+
+
+
+/* frees matrix */
+void s_free(float *pA)
+	{
+	free( pA );
+	}
+
+
+
+/* frees aligned matrix */
+void d_free_align(float *pA)
+	{
+#if defined(OS_WINDOWS)
+	_aligned_free( pA );
+#else
+	free( pA );
+#endif
+	}
+
+
+
+/* prints a matrix in column-major format */
+void s_print_mat(int row, int col, float *A, int lda)
+	{
+	int i, j;
+	for(i=0; i<row; i++)
+		{
+		for(j=0; j<col; j++)
+			{
+			printf("%9.5f ", A[i+lda*j]);
+			}
+		printf("\n");
+		}
+	printf("\n");
+	}	
+
+
+
+/* prints a matrix in column-major format (exponential notation) */
+void s_print_mat_e(int row, int col, float *A, int lda)
+	{
+	int i, j;
+	for(i=0; i<row; i++)
+		{
+		for(j=0; j<col; j++)
+			{
+			printf("%e\t", A[i+lda*j]);
+			}
+		printf("\n");
+		}
+	printf("\n");
+	}	
+
+
+
+/* prints a matrix in panel-major format */
+void s_print_pmat(int row, int col, float *pA, int sda)
+	{
+
+	const int bs = 4;
+
+	int ii, i, j, row2;
+
+	for(ii=0; ii<row-(bs-1); ii+=bs)
+		{
+		for(i=0; i<bs; i++)
+			{
+			for(j=0; j<col; j++)
+				{
+				printf("%9.5f ", pA[i+bs*j+sda*ii]);
+				}
+			printf("\n");
+			}
+		}
+	if(ii<row)
+		{
+		row2 = row-ii;
+		for(i=0; i<row2; i++)
+			{
+			for(j=0; j<col; j++)
+				{
+				printf("%9.5f ", pA[i+bs*j+sda*ii]);
+				}
+			printf("\n");
+			}
+		}
+	printf("\n");
+
+	}	
+
+
+
+/* prints a matrix in panel-major format (exponential notation) */
+void s_print_pmat_e(int row, int col, float *pA, int sda)
+	{
+
+	const int bs = 4;
+
+	int ii, i, j, row2;
+
+	for(ii=0; ii<row-(bs-1); ii+=bs)
+		{
+		for(i=0; i<bs; i++)
+			{
+			for(j=0; j<col; j++)
+				{
+				printf("%e\t", pA[i+bs*j+sda*ii]);
+				}
+			printf("\n");
+			}
+		}
+	if(ii<row)
+		{
+		row2 = row-ii;
+		for(i=0; i<row2; i++)
+			{
+			for(j=0; j<col; j++)
+				{
+				printf("%e\t", pA[i+bs*j+sda*ii]);
+				}
+			printf("\n");
+			}
+		}
+	printf("\n");
+
+	}	
+
+
+

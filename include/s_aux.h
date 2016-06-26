@@ -26,22 +26,18 @@
 
 
 
-// level 2 BLAS
-void dgemv_n_lib(int m, int n, double *pA, int sda, double *x, int alg, double *y, double *z);
-void dgemv_t_lib(int m, int n, double *pA, int sda, double *x, int alg, double *y, double *z);
-void dtrsv_ln_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *x, double *y);
-void dtrsv_lt_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *x, double *y);
-void dtrmv_un_lib(int m, double *pA, int sda, double *x, int alg, double *y, double *z);
-void dtrmv_ut_lib(int m, double *pA, int sda, double *x, int alg, double *y, double *z);
-	
-// level 3 BLAS
-void dgemm_ntnn_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
-void dgemm_ntnt_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
-void dgemm_nttn_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
-void dgemm_nttt_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
-void dsyrk_ntnn_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
-void dtrmm_ntnn_lu_lib(int m, int n, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
+// s_aux_extern_depend_lib
+void s_zeros(float **pA, int row, int col);
+void s_zeros_align(float **pA, int row, int col);
+void s_free(float *pA);
+void s_free_align(float *pA);
+void s_print_mat(int row, int col, float *A, int lda);
+void s_print_mat_e(int row, int col, float *A, int lda);
+void s_print_pmat(int row, int col, float *pA, int sda);
+void s_print_pmat_e(int row, int col, float *pA, int sda);
 
-// LAPACK
-void dpotrf_ntnn_l_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);
-void dsyrk_dpotrf_ntnn_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);
+// s_aux_lib
+void s_cvt_mat2pmat(int row, int col, float *A, int lda, int offset, float *pA, int sda);
+void s_cvt_tran_mat2pmat(int row, int col, float *A, int lda, int offset, float *pA, int sda);
+void s_cvt_pmat2mat(int row, int col, int offset, float *pA, int sda, float *A, int lda);
+void s_cvt_tran_pmat2mat(int row, int col, int offset, float *pA, int sda, float *A, int lda);

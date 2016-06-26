@@ -27,21 +27,22 @@
 
 
 // level 2 BLAS
-void dgemv_n_lib(int m, int n, double *pA, int sda, double *x, int alg, double *y, double *z);
-void dgemv_t_lib(int m, int n, double *pA, int sda, double *x, int alg, double *y, double *z);
-void dtrsv_ln_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *x, double *y);
-void dtrsv_lt_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *x, double *y);
-void dtrmv_un_lib(int m, double *pA, int sda, double *x, int alg, double *y, double *z);
-void dtrmv_ut_lib(int m, double *pA, int sda, double *x, int alg, double *y, double *z);
+void sgemv_n_lib(int m, int n, float *pA, int sda, float *x, int alg, float *y, float *z);
+void sgemv_t_lib(int m, int n, float *pA, int sda, float *x, int alg, float *y, float *z);
+void strsv_ln_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, float *x, float *y);
+void strsv_lt_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, float *x, float *y);
+void strmv_un_lib(int m, float *pA, int sda, float *x, int alg, float *y, float *z);
+void strmv_ut_lib(int m, float *pA, int sda, float *x, int alg, float *y, float *z);
 	
 // level 3 BLAS
-void dgemm_ntnn_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
-void dgemm_ntnt_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
-void dgemm_nttn_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
-void dgemm_nttt_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
-void dsyrk_ntnn_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
-void dtrmm_ntnn_lu_lib(int m, int n, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
+void sgemm_ntnn_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd);
+void sgemm_ntnt_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd);
+void sgemm_nttn_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd);
+void sgemm_nttt_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd);
+void ssyrk_ntnn_l_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd);
+void strmm_ntnn_lu_lib(int m, int n, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd);
 
 // LAPACK
-void dpotrf_ntnn_l_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);
-void dsyrk_dpotrf_ntnn_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);
+void spotrf_ntnn_l_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D);
+void ssyrk_spotrf_ntnn_l_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D);
+

@@ -481,7 +481,6 @@ void dsyrk_ntnn_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int 
 
 
 
-// TODO change name to ru !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (the triangular matrix is on the right)
 void dtrmm_ntnn_ru_lib(int m, int n, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd)
 	{
 

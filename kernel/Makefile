@@ -30,10 +30,12 @@ obj:
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 	( cd avx2; $(MAKE) obj)
 	( cd avx; $(MAKE) obj)
+	( cd c99; $(MAKE) obj)
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 	( cd avx; $(MAKE) obj)
+	( cd c99; $(MAKE) obj)
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
