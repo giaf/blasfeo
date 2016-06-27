@@ -24,7 +24,7 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-// L026
+// L010 L011 L012 L020 L021 L022 L026
 
 #define STACKSIZE 96
 
@@ -138,116 +138,6 @@ inner_kernel_dgemv_add_n_4_lib4:
 	ret
 
 	.size	inner_kernel_dgemv_add_n_4_lib4, .-inner_kernel_dgemv_add_n_4_lib4
-
-
-
-
-
-// common inner routine with file scope
-//
-// input arguments:
-// r10d  <- k
-// r11   <- A
-// r12   <- x
-// ymm0  <- [z0 z1 z2 z3]_a
-// ymm1  <- [z0 z1 z2 z3]_b
-// ymm2  <- [z0 z1 z2 z3]_c
-// ymm3  <- [z0 z1 z2 z3]_d
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm12 <- dirty
-// ymm13 <- dirty
-// ymm14 <- dirty
-// ymm15 <- dirty
-
-//
-// output arguments:
-// r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- x+k*sizeof(double)
-// ymm0  <- [z0 z1 z2 z3]_a
-// ymm1  <- [z0 z1 z2 z3]_b
-// ymm2  <- [z0 z1 z2 z3]_c
-// ymm3  <- [z0 z1 z2 z3]_d
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm12 <- dirty
-// ymm13 <- dirty
-// ymm14 <- dirty
-// ymm15 <- dirty
-
-	.p2align 4,,15
-	.type inner_kernel_dgemv_sub_n_4_lib4, @function
-inner_kernel_dgemv_sub_n_4_lib4:
-	
-	cmpl	$0, %r10d
-	jle		.L012 // return
-
-	cmpl	$4, %r10d
-	jl		.L010 // clean-up loop
-
-	// main loop
-	.p2align 3
-.L011: // main loop
-	
-	vmovapd	0(%r11), %ymm8
-	vbroadcastsd	0(%r12), %ymm12
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vsubpd	%ymm0, %ymm15, %ymm0
-	
-	subl	$4, %r10d
-
-	vmovapd	32(%r11), %ymm8
-	vbroadcastsd	8(%r12), %ymm12
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vsubpd	%ymm1, %ymm15, %ymm1
-	
-	vmovapd	64(%r11), %ymm8
-	vbroadcastsd	16(%r12), %ymm12
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vsubpd	%ymm2, %ymm15, %ymm2
-
-	vmovapd	96(%r11), %ymm8
-	vbroadcastsd	24(%r12), %ymm12
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vsubpd	%ymm3, %ymm15, %ymm3
-	
-	addq	$128, %r11
-	addq	$32, %r12
-	
-	cmpl	$3, %r10d
-
-	jg		.L011 // main loop 
-
-
-	// consider clean-up
-	cmpl	$0, %r10d
-	jle		.L012 // return
-
-.L010: // clean-up
-	
-	vmovapd	0(%r11), %ymm8
-	vbroadcastsd	0(%r12), %ymm12
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vsubpd	%ymm0, %ymm15, %ymm0
-	
-	addq	$32, %r11
-	addq	$8, %r12
-	
-	subl	$1, %r10d
-	cmpl	$0, %r10d
-
-	jg		.L010 // clean
-
-.L012: // return
-
-	ret
-
-	.size	inner_kernel_dgemv_sub_n_4_lib4, .-inner_kernel_dgemv_sub_n_4_lib4
 
 
 
@@ -376,134 +266,6 @@ inner_kernel_dgemv_add_t_4_lib4:
 	ret
 
 	.size	inner_kernel_dgemv_add_t_4_lib4, .-inner_kernel_dgemv_add_t_4_lib4
-
-
-
-
-
-// common inner routine with file scope
-//
-// input arguments:
-// r10d  <- k
-// r11   <- A
-// r12   <- bs*sda*sizeof(double) = 32*sda
-// r13   <- x
-// ymm0  <- [z0 z1 z2 z3]_a
-// ymm1  <- [z0 z1 z2 z3]_b
-// ymm2  <- [z0 z1 z2 z3]_c
-// ymm3  <- [z0 z1 z2 z3]_d
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm12 <- dirty
-// ymm13 <- dirty
-// ymm14 <- dirty
-// ymm15 <- dirty
-
-//
-// output arguments:
-// r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- bs*sda*sizeof(double) = 32*sda
-// r13   <- x+k*sizeof(double)
-// ymm0  <- [z0 z1 z2 z3]_a
-// ymm1  <- [z0 z1 z2 z3]_b
-// ymm2  <- [z0 z1 z2 z3]_c
-// ymm3  <- [z0 z1 z2 z3]_d
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm12 <- dirty
-// ymm13 <- dirty
-// ymm14 <- dirty
-// ymm15 <- dirty
-
-	.p2align 4,,15
-	.type inner_kernel_dgemv_sub_t_4_lib4, @function
-inner_kernel_dgemv_sub_t_4_lib4:
-
-	cmpl	$0, %r10d
-	jle		.L022 // return
-
-	cmpl	$4, %r10d
-	jl		.L020 // clean-up loop
-
-	// main loop
-	.p2align 3
-.L021: // main loop
-	
-	vmovapd	0(%r13), %ymm12
-
-	vmovapd	0(%r11), %ymm8
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vsubpd	%ymm15, %ymm0, %ymm0
-	
-	subl	$4, %r10d
-
-	vmovapd	32(%r11), %ymm8
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vsubpd	%ymm15, %ymm1, %ymm1
-	
-	vmovapd	64(%r11), %ymm8
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vsubpd	%ymm15, %ymm2, %ymm2
-
-	vmovapd	96(%r11), %ymm8
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vsubpd	%ymm15, %ymm3, %ymm3
-	
-	addq	%r12, %r11
-	addq	$32, %r13
-	
-	cmpl	$3, %r10d
-
-	jg		.L021 // main loop 
-
-
-	// consider clean-up
-	cmpl	$0, %r10d
-	jle		.L022 // return
-
-.L020: // clean-up
-	
-	vcvtsi2sd	%r10d, %xmm14, %xmm14
-	vmovupd		.LC02(%rip), %ymm13
-	vmovddup	%xmm14, %xmm14
-	vinsertf128	$1, %xmm14, %ymm14, %ymm14
-	vsubpd		%ymm14, %ymm13, %ymm14
-
-	vmaskmovpd	0(%r13), %ymm14, %ymm12
-
-	vmovapd	0(%r11), %ymm8
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vsubpd	%ymm15, %ymm0, %ymm0
-	
-	vmovapd	32(%r11), %ymm8
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vsubpd	%ymm15, %ymm1, %ymm1
-	
-	vmovapd	64(%r11), %ymm8
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vsubpd	%ymm15, %ymm2, %ymm2
-
-	vmovapd	96(%r11), %ymm8
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vsubpd	%ymm15, %ymm3, %ymm3
-		
-	sall	$3, %r10d
-	movslq	%r10d, %r10
-	addq	%r10, %r11
-	addq	%r10, %r13
-	xorl	%r10d, %r10d
-	
-	
-.L022: // return
-
-	ret
-
-	.size	inner_kernel_dgemv_sub_t_4_lib4, .-inner_kernel_dgemv_sub_t_4_lib4
 
 
 
@@ -1733,14 +1495,14 @@ kernel_dtrsv_ln_inv_4_lib4:
 	movq	%rsi, %r11  // A
 	movq	%rcx, %r12  // x
 
-	call inner_kernel_dgemv_sub_n_4_lib4
+	call inner_kernel_dgemv_add_n_4_lib4
 
 	movq	%r11, %r13 // A+k*sizeof(double)
 
 
 	// call inner blender n
 
-	movl	$1, %r10d // alg
+	movl	$-1, %r10d // alg
 	movq	%r8, %r11   // y
 
 	call inner_blender_n_4_lib4
@@ -1816,14 +1578,14 @@ kernel_dtrsv_ln_inv_4_vs_lib4:
 	movq	%rsi, %r11  // A
 	movq	%rcx, %r12  // x
 
-	call inner_kernel_dgemv_sub_n_4_lib4
+	call inner_kernel_dgemv_add_n_4_lib4
 
 	movq	%r11, %r13
 
 
 	// call inner blender n
 
-	movl	$1, %r10d // alg
+	movl	$-1, %r10d // alg
 	movq	%r8, %r11   // y
 
 	call inner_blender_n_4_lib4
@@ -1907,12 +1669,12 @@ kernel_dtrsv_lt_inv_4_lib4:
 	movq	%r8, %r13 // x
 	addq	$32, %r13 // x+4 
 
-	call inner_kernel_dgemv_sub_t_4_lib4
+	call inner_kernel_dgemv_add_t_4_lib4
 
 
 	// call inner blender t
 
-	movl	$1, %r10d // alg
+	movl	$-1, %r10d // alg
 	movq	%r9, %r11 // y 
 
 	call inner_blender_t_4_lib4
@@ -1994,12 +1756,12 @@ kernel_dtrsv_lt_inv_3_lib4:
 	movq	%r8, %r13 // x
 	addq	$32, %r13 // x+4 
 
-	call inner_kernel_dgemv_sub_t_4_lib4
+	call inner_kernel_dgemv_add_t_4_lib4
 
 
 	// call inner blender t
 
-	movl	$1, %r10d // alg
+	movl	$-1, %r10d // alg
 	movq	%r9, %r11 // y 
 
 	call inner_blender_t_4_lib4
@@ -2084,12 +1846,12 @@ kernel_dtrsv_lt_inv_2_lib4:
 	movq	%r8, %r13 // x
 	addq	$32, %r13 // x+4 
 
-	call inner_kernel_dgemv_sub_t_4_lib4
+	call inner_kernel_dgemv_add_t_4_lib4
 
 
 	// call inner blender t
 
-	movl	$1, %r10d // alg
+	movl	$-1, %r10d // alg
 	movq	%r9, %r11 // y 
 
 	call inner_blender_t_4_lib4
@@ -2174,12 +1936,12 @@ kernel_dtrsv_lt_inv_1_lib4:
 	movq	%r8, %r13 // x
 	addq	$32, %r13 // x+4 
 
-	call inner_kernel_dgemv_sub_t_4_lib4
+	call inner_kernel_dgemv_add_t_4_lib4
 
 
 	// call inner blender t
 
-	movl	$1, %r10d // alg
+	movl	$-1, %r10d // alg
 	movq	%r9, %r11 // y 
 
 	call inner_blender_t_4_lib4
