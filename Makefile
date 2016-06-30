@@ -90,26 +90,26 @@ static_library: target
 	@echo
 
 target:
-	touch ./include/target.h
+	touch ./include/blasfeo_target.h
 ifeq ($(TARGET), X64_INTEL_HASWELL)
-	echo "#ifndef TARGET_X64_INTEL_HASWELL" > ./include/target.h
-	echo "#define TARGET_X64_INTEL_HASWELL" >> ./include/target.h
-	echo "#endif" >> ./include/target.h
+	echo "#ifndef TARGET_X64_INTEL_HASWELL" > ./include/blasfeo_target.h
+	echo "#define TARGET_X64_INTEL_HASWELL" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-	echo "#ifndef TARGET_X64_INTEL_SANDY_BRIDGE" > ./include/target.h
-	echo "#define TARGET_X64_INTEL_SANDY_BRIDGE" >> ./include/target.h
-	echo "#endif" >> ./include/target.h
+	echo "#ifndef TARGET_X64_INTEL_SANDY_BRIDGE" > ./include/blasfeo_target.h
+	echo "#define TARGET_X64_INTEL_SANDY_BRIDGE" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
-	echo "#ifndef TARGET_X64_AMD_BULLDOZER" > ./include/target.h
-	echo "#define TARGET_X64_AMD_BULLDOZER" >> ./include/target.h
-	echo "#endif" >> ./include/target.h
+	echo "#ifndef TARGET_X64_AMD_BULLDOZER" > ./include/blasfeo_target.h
+	echo "#define TARGET_X64_AMD_BULLDOZER" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), GENERIC)
-	echo "#ifndef TARGET_GENERIC" > ./include/target.h
-	echo "#define TARGET_GENERIC" >> ./include/target.h
-	echo "#endif" >> ./include/target.h
+	echo "#ifndef TARGET_GENERIC" > ./include/blasfeo_target.h
+	echo "#define TARGET_GENERIC" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
 endif
 
 install_static:
