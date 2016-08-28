@@ -26,9 +26,9 @@
 
 #include <stdio.h>
 
-#include "../include/block_size.h"
-#include "../include/d_aux.h"
-#include "../include/d_blas.h"
+#include "../include/blasfeo_block_size.h"
+#include "../include/blasfeo_d_aux.h"
+#include "../include/blasfeo_d_blas.h"
 
 
 
@@ -51,13 +51,13 @@ int main()
 	
 	double *B; d_zeros(&B, n, n);
 	for(ii=0; ii<n; ii++)
-		B[ii*(n+1)] = 1.0;
-	for(ii=0; ii<n-1; ii++)
-		B[1+ii*(n+1)] = 1.0;
-	for(ii=0; ii<n-2; ii++)
-		B[2+ii*(n+1)] = 0.5;
-	for(ii=0; ii<n-3; ii++)
-		B[3+ii*(n+1)] = 0.25;
+		B[ii*(n+1)] = 2.0;
+//	for(ii=0; ii<n-1; ii++)
+//		B[1+ii*(n+1)] = 1.0;
+//	for(ii=0; ii<n-2; ii++)
+//		B[2+ii*(n+1)] = 0.5;
+//	for(ii=0; ii<n-3; ii++)
+//		B[3+ii*(n+1)] = 0.25;
 	
 	double *D; d_zeros(&D, n, n);
 	for(ii=0; ii<n*n; ii++)
@@ -93,26 +93,23 @@ int main()
 	double *inv_diag_D; d_zeros(&inv_diag_D, pn, 1);
 	for(ii=0; ii<n; ii++) inv_diag_D[ii] = 0.5;
 	
-//	dgemm_ntnt_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
-//	dgemm_ntnt_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
-//	dgemm_nttn_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
-//	dgemm_nttt_lib(14, 15, n, pA, cn, pB, cn, 0, pC, cn, pD, cn);
-//	dsyrk_ntnn_l_lib(16, 16, n, pA, cn, pB, cn, 1, pB, cn, pD, cn);
-//	dtrmm_ntnn_lu_lib(15, 15, pB, cn, pA, cn, 0, pC, cn, pD, cn);
-//	dpotrf_ntnn_l_lib(16, 16, pD, cn, pC, cn, inv_diag_D);
-//	dsyrk_dpotrf_ntnn_l_lib(15, 15, n, pA, cn, pB, cn, 1, pB, cn, pD, cn, inv_diag_D);
+//	dgemm_nt_lib(10, 16, n, pA, cn, pB, cn, 0, pA, cn, pD, cn);
+	dsyrk_nt_l_lib(15, 15, n, pA, cn, pA, cn, 1, pB, cn, pD, cn);
+//	dtrmm_nt_ru_lib(15, 15, pB, cn, pA, cn, 0, pC, cn, pD, cn);
+	dpotrf_nt_l_lib(15, 15, pD, cn, pD, cn, inv_diag_D);
+//	dsyrk_dpotrf_nt_l_lib(15, 15, n, pA, cn, pA, cn, 1, pB, cn, pD, cn, inv_diag_D);
 //	dgemv_t_lib_b(3, 6, pA, cn, x, 0, y, z);
 //	dtrsv_ln_inv_lib_b(4, 4, pB, cn, inv_diag_D, x, z);
-	dtrsv_lt_inv_lib_b(11, 3, pB, cn, inv_diag_D, x, z);
+//	dtrsv_lt_inv_lib_b(11, 3, pB, cn, inv_diag_D, x, z);
 
-//	d_print_pmat(n, n, pA, n);
+	d_print_pmat(n, n, pA, n);
 	d_print_pmat(n, n, pB, n);
-//	d_print_pmat(n, n, pC, n);
-//	d_print_pmat(n, n, pD, n);
-	d_print_mat(1, n, inv_diag_D, 1);
-	d_print_mat(1, n, x, 1);
+	d_print_pmat(n, n, pC, n);
+	d_print_pmat(n, n, pD, n);
+//	d_print_mat(1, n, inv_diag_D, 1);
+//	d_print_mat(1, n, x, 1);
 //	d_print_mat(1, n, y, 1);
-	d_print_mat(1, n, z, 1);
+//	d_print_mat(1, n, z, 1);
 
 	d_free(A);
 	d_free(B);

@@ -28,9 +28,9 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-#include "../include/block_size.h"
-#include "../include/d_aux.h"
-#include "../include/d_blas.h"
+#include "../include/blasfeo_block_size.h"
+#include "../include/blasfeo_d_aux.h"
+#include "../include/blasfeo_d_blas.h"
 
 
 
@@ -47,7 +47,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 3.6
+#define GHZ_MAX 3.3
 
 
 
@@ -74,10 +74,10 @@ int main()
 	printf("\n");
 
 	// maximum flops per cycle, double precision
-#if defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL)
 	const float flops_max = 16;
 	printf("Testing BLAS version for AVX2 and FMA instruction sets, 64 bit: theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
-#elif defined(TARGET_X64_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	const float flops_max = 8;
 	printf("Testing BLAS version for AVX instruction set, 64 bit: theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #endif
@@ -85,10 +85,10 @@ int main()
 	FILE *f;
 	f = fopen("./test_problems/results/test_blas.m", "w"); // a
 
-#if defined(TARGET_X64_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL)
 	fprintf(f, "C = 'd_x64_haswell';\n");
 	fprintf(f, "\n");
-#elif defined(TARGET_X64_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	fprintf(f, "C = 'd_x64_sandybridge';\n");
 	fprintf(f, "\n");
 #endif
@@ -236,7 +236,7 @@ int main()
 		/* warm up */
 		for(rep=0; rep<nrep; rep++)
 			{
-			dgemm_ntnn_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
+			dgemm_nt_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
 			}
 
 		gettimeofday(&tv0, NULL); // stop
@@ -246,16 +246,13 @@ int main()
 
 #if defined(LOW_RANK)
 #else
-//			dgemm_ntnn_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
-//			dgemm_ntnt_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
-//			dgemm_nttn_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
-//			dgemm_nttt_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
-//			dsyrk_ntnn_l_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
-//			dtrmm_ntnn_lu_lib(n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
-//			dpotrf_ntnn_l_lib(n, n, pB, cnd, pD, cnd, diag);
-			dsyrk_dpotrf_ntnn_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd, diag);
-//			dsyrk_ntnn_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd);
-//			dpotrf_ntnn_l_lib(n, n, pD, cnd, pD, cnd, diag);
+//			dgemm_nt_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
+//			dsyrk_nt_l_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
+//			dtrmm_nt_ru_lib(n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
+//			dpotrf_nt_l_lib(n, n, pB, cnd, pD, cnd, diag);
+			dsyrk_dpotrf_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd, diag);
+//			dsyrk_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd);
+//			dpotrf_nt_l_lib(n, n, pD, cnd, pD, cnd, diag);
 #endif
 			}
 	
