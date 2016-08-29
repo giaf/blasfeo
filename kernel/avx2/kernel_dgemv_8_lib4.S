@@ -82,22 +82,26 @@
 // ymm14 <- dirty
 // ymm15 <- dirty
 
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DGEMV_ADD_N_8_LIB4
+#else
 	.p2align 4,,15
 	.type inner_kernel_dgemv_add_n_8_lib4, @function
 inner_kernel_dgemv_add_n_8_lib4:
+#endif
 	
 	cmpl	$0, %r10d
-	jle		.L002 // return
+	jle		2f // return
 
 	movq	%r11, %r15 // A1 <- A0
 	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
 
 	cmpl	$4, %r10d
-	jl		.L000 // clean-up loop
+	jl		0f // clean-up loop
 
 	// main loop
 	.p2align 3
-.L001: // main loop
+1: // main loop
 	
 	vbroadcastsd	0(%r13), %ymm12
 	vmovapd	0(%r11), %ymm8
@@ -130,14 +134,14 @@ inner_kernel_dgemv_add_n_8_lib4:
 	
 	cmpl	$3, %r10d
 
-	jg		.L001 // main loop 
+	jg		1b // main loop 
 
 
 	// consider clean-up
 	cmpl	$0, %r10d
-	jle		.L002 // return
+	jle		2f // return
 
-.L000: // clean-up
+0: // clean-up
 	
 	vbroadcastsd	0(%r13), %ymm12
 	vmovapd	0(%r11), %ymm8
@@ -154,13 +158,17 @@ inner_kernel_dgemv_add_n_8_lib4:
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 
-	jg		.L000 // clean
+	jg		0b // clean
 
-.L002: // return
+2: // return
 
+#if MACRO_LEVEL>=2
+	.endm
+#else
 	ret
 
 	.size	inner_kernel_dgemv_add_n_8_lib4, .-inner_kernel_dgemv_add_n_8_lib4
+#endif
 
 
 
@@ -213,19 +221,23 @@ inner_kernel_dgemv_add_n_8_lib4:
 // ymm14 <- dirty
 // ymm15 <- dirty
 
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DGEMV_ADD_T_8_LIB4
+#else
 	.p2align 4,,15
 	.type inner_kernel_dgemv_add_t_8_lib4, @function
 inner_kernel_dgemv_add_t_8_lib4:
+#endif
 
 	cmpl	$0, %r10d
-	jle		.L007 // return
+	jle		2f // return
 
 	cmpl	$4, %r10d
-	jl		.L005 // clean-up loop
+	jl		0f // clean-up loop
 
 	// main loop
 	.p2align 3
-.L006: // main loop
+1: // main loop
 	
 	vmovapd	0(%r13), %ymm12
 
@@ -260,14 +272,14 @@ inner_kernel_dgemv_add_t_8_lib4:
 	
 	cmpl	$3, %r10d
 
-	jg		.L006 // main loop 
+	jg		1b // main loop 
 
 
 	// consider clean-up
 	cmpl	$0, %r10d
-	jle		.L007 // return
+	jle		2f // return
 
-.L005: // clean-up
+0: // clean-up
 	
 	vcvtsi2sd	%r10d, %xmm14, %xmm14
 	vmovupd		.LC02(%rip), %ymm13
@@ -308,11 +320,15 @@ inner_kernel_dgemv_add_t_8_lib4:
 	xorl	%r10d, %r10d
 	
 	
-.L007: // return
+2: // return
 
+#if MACRO_LEVEL>=2
+	.endm
+#else
 	ret
 
 	.size	inner_kernel_dgemv_add_t_8_lib4, .-inner_kernel_dgemv_add_t_8_lib4
+#endif
 
 
 
@@ -352,9 +368,13 @@ inner_kernel_dgemv_add_t_8_lib4:
 // ymm11 <- dirty
 // ymm15 <- dirty
 
+#if MACRO_LEVEL>=1
+	.macro INNER_BLENDER_N_8_LIB4
+#else
 	.p2align 4,,15
 	.type inner_blender_n_8_lib4, @function
 inner_blender_n_8_lib4:
+#endif
 
 	// reduction
 	vaddpd	%ymm0, %ymm2, %ymm0
@@ -365,10 +385,10 @@ inner_blender_n_8_lib4:
 	vaddpd	%ymm1, %ymm5, %ymm1
 
 	cmpl	$0, %r10d // alg
-	je		.L003 // return
+	je		0f // return
 
 	cmpl	$1, %r10d // alg
-	jne		.L004 // alg==-1
+	jne		1f // alg==-1
 
 	// alg==1
 	vmovupd		0(%r11), %ymm15
@@ -378,7 +398,7 @@ inner_blender_n_8_lib4:
 
 	ret // return
 
-.L004:
+1:
 
 	// alg==-1
 	vmovupd		0(%r11), %ymm15
@@ -386,11 +406,15 @@ inner_blender_n_8_lib4:
 	vmovupd		32(%r11), %ymm15
 	vsubpd		%ymm1, %ymm15, %ymm1
 
-.L003: // return
+0: // return
 	
 	ret
 	
+#if MACRO_LEVEL>=1
+	.endm
+#else
 	.size	inner_blender_n_8_lib4, .-inner_blender_n_8_lib4
+#endif
 
 
 
@@ -431,9 +455,13 @@ inner_blender_n_8_lib4:
 // ymm11 <- dirty
 // ymm15 <- dirty
 
+#if MACRO_LEVEL>=1
+	.macro INNER_BLENDER_T_8_LIB4
+#else
 	.p2align 4,,15
 	.type inner_blender_t_8_lib4, @function
 inner_blender_t_8_lib4:
+#endif
 
 	// reduction
 	vhaddpd	%ymm1, %ymm0, %ymm0
@@ -448,10 +476,10 @@ inner_blender_t_8_lib4:
 	vaddpd	%ymm4, %ymm5, %ymm1
 
 	cmpl	$0, %r10d // alg
-	je		.L008 // return
+	je		0f // return
 
 	cmpl	$1, %r10d // alg
-	jne		.L009 // alg==-1
+	jne		1f // alg==-1
 
 	// alg==1
 	vmovupd		0(%r11), %ymm15
@@ -461,7 +489,7 @@ inner_blender_t_8_lib4:
 
 	ret // return
 
-.L009:
+1:
 
 	// alg==-1
 	vmovupd		0(%r11), %ymm15
@@ -469,11 +497,15 @@ inner_blender_t_8_lib4:
 	vmovupd		32(%r11), %ymm15
 	vsubpd		%ymm1, %ymm15, %ymm1
 
-.L008: // return
+0: // return
 	
 	ret
 	
+#if MACRO_LEVEL>=1
+	.endm
+#else
 	.size	inner_blender_t_8_lib4, .-inner_blender_t_8_lib4
+#endif
 
 
 
@@ -493,16 +525,24 @@ inner_blender_t_8_lib4:
 // ymm0 <- [z0 z1 z2 z3]
 // ymm1 <- [z4 z5 z6 z7]
 
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_8_LIB4
+#else
 	.p2align 4,,15
 	.type inner_store_8_lib4, @function
 inner_store_8_lib4:
+#endif
 	
 	vmovupd %ymm0, 0(%r10)
 	vmovupd %ymm1, 32(%r10)
 	
 	ret
 
+#if MACRO_LEVEL>=1
+	.endm
+#else
 	.size	inner_store_8_lib4, .-inner_store_8_lib4
+#endif
 
 
 
@@ -550,7 +590,11 @@ kernel_dgemv_n_8_lib4:
 	movslq	%r12d, %r12
 	movq	%rcx, %r13  // x
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMV_ADD_N_8_LIB4
+#else
 	call inner_kernel_dgemv_add_n_8_lib4
+#endif
 
 
 	// call inner blender n
@@ -558,14 +602,22 @@ kernel_dgemv_n_8_lib4:
 	movl	%r8d, %r10d // alg
 	movq	%r9, %r11   // y
 
+#if MACRO_LEVEL>=1
+	INNER_BLENDER_N_8_LIB4
+#else
 	call inner_blender_n_8_lib4
+#endif
 
 
 	// store
 
 	movq	STACKSIZE + 8(%rsp), %r10 // z
 
+#if MACRO_LEVEL>=1
+	INNER_STORE_8_LIB4
+#else
 	call inner_store_8_lib4
+#endif
 
 
 	// epilogue
@@ -630,7 +682,11 @@ kernel_dgemv_t_8_lib4:
 	movslq	%r12d, %r12
 	movq	%rcx, %r13  // x
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMV_ADD_T_8_LIB4
+#else
 	call inner_kernel_dgemv_add_t_8_lib4
+#endif
 
 
 	// call inner blender t
@@ -638,14 +694,22 @@ kernel_dgemv_t_8_lib4:
 	movl	%r8d, %r10d // alg
 	movq	%r9, %r11   // y
 
+#if MACRO_LEVEL>=1
+	INNER_BLENDER_T_8_LIB4
+#else
 	call inner_blender_t_8_lib4
+#endif
 
 
 	// store
 
 	movq	STACKSIZE +  8(%rsp), %r10 // z 
 
+#if MACRO_LEVEL>=1
+	INNER_STORE_8_LIB4
+#else
 	call inner_store_8_lib4
+#endif
 
 
 	// epilogue
