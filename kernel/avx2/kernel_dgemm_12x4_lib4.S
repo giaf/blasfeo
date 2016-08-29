@@ -82,308 +82,15 @@
 // ymm14 <- dirty
 // ymm15 <- dirty
 
-	.p2align 4,,15
-	.type inner_kernel_dgemm_add_nt_12x4_lib4, @function
-inner_kernel_dgemm_add_nt_12x4_lib4:
-	
-	cmpl	$0, %r10d
-	jle		.L002 // return
-
-	movq	%r11, %r15 // A1 <- A0
-	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
-
-	movq	%r15, %r14 // A2 <- A1
-	addq	%r12, %r14 // A2 <- A1 + 4*sda*sizeof(double)
-
-	// prefetch
-	vmovapd 0(%r11), %ymm12 // A0[0]
-	vmovapd 0(%r13), %ymm15 // B[0]
-	vmovapd 0(%r15), %ymm13 // A1[0]
-	vmovapd 0(%r14), %ymm14 // A2[0]
-
-	cmpl	$4, %r10d
-	jle		.L000 // consider clean-up loop
-
-	// main loop
-	.p2align 3
-.L001: // main loop
-	
-	// unroll 0
-	vfmadd231pd	%ymm12, %ymm15, %ymm0
-	subl		$4, %r10d
-	vfmadd231pd	%ymm13, %ymm15, %ymm4
-	vfmadd231pd	%ymm14, %ymm15, %ymm8
-
-	vshufpd		$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm1
-	vfmadd231pd	%ymm13, %ymm15, %ymm5
-	vfmadd231pd	%ymm14, %ymm15, %ymm9
-
-	vperm2f128	$0x1, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm3
-	vfmadd231pd	%ymm13, %ymm15, %ymm7
-	vfmadd231pd	%ymm14, %ymm15, %ymm11
-
-	vshufpd		$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm2
-	vmovapd		32(%r11), %ymm12 // A0[4]
-	vfmadd231pd	%ymm13, %ymm15, %ymm6
-	vmovapd		32(%r15), %ymm13 // A1[4]
-	vfmadd231pd	%ymm14, %ymm15, %ymm10
-	vmovapd		32(%r13), %ymm15 // B[4]
-	vmovapd		32(%r14), %ymm14 // A2[4]
-
-	// unroll 1
-	vfmadd231pd	%ymm12, %ymm15, %ymm0
-	vfmadd231pd	%ymm13, %ymm15, %ymm4
-	vfmadd231pd	%ymm14, %ymm15, %ymm8
-
-	vshufpd 	$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm1
-	vfmadd231pd	%ymm13, %ymm15, %ymm5
-	vfmadd231pd	%ymm14, %ymm15, %ymm9
-
-	vperm2f128 	$0x1, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm3
-	vfmadd231pd	%ymm13, %ymm15, %ymm7
-	vfmadd231pd	%ymm14, %ymm15, %ymm11
-
-	vshufpd 	$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm2
-	vmovapd 	64(%r11), %ymm12 // A0[8]
-	vfmadd231pd	%ymm13, %ymm15, %ymm6
-	vmovapd 	64(%r15), %ymm13 // A1[8]
-	vfmadd231pd	%ymm14, %ymm15, %ymm10
-	vmovapd 	64(%r13), %ymm15 // B[8]
-	vmovapd 	64(%r14), %ymm14 // A2[8]
-
-
-	// unroll 2
-	vfmadd231pd	%ymm12, %ymm15, %ymm0
-	vfmadd231pd	%ymm13, %ymm15, %ymm4
-	vfmadd231pd	%ymm14, %ymm15, %ymm8
-
-	vshufpd 	$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm1
-	vfmadd231pd	%ymm13, %ymm15, %ymm5
-	vfmadd231pd	%ymm14, %ymm15, %ymm9
-
-	vperm2f128 	$0x1, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm3
-	vfmadd231pd	%ymm13, %ymm15, %ymm7
-	vfmadd231pd	%ymm14, %ymm15, %ymm11
-
-	vshufpd 	$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm2
-	vmovapd 	96(%r11), %ymm12 // A0[12]
-	vfmadd231pd	%ymm13, %ymm15, %ymm6
-	vmovapd 	96(%r15), %ymm13 // A1[12]
-	vfmadd231pd	%ymm14, %ymm15, %ymm10
-	vmovapd 	96(%r13), %ymm15 // B[12]
-	vmovapd 	96(%r14), %ymm14 // A2[12]
-
-
-	// unroll 3
-	vfmadd231pd	%ymm12, %ymm15, %ymm0
-	addq		$128, %r11
-	vfmadd231pd	%ymm13, %ymm15, %ymm4
-	addq		$128, %r15
-	vfmadd231pd	%ymm14, %ymm15, %ymm8
-
-	vshufpd 	$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm1
-	addq		$128, %r13
-	vfmadd231pd	%ymm13, %ymm15, %ymm5
-	addq		$128, %r14
-	vfmadd231pd	%ymm14, %ymm15, %ymm9
-
-	vperm2f128 $0x1, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm3
-	cmpl		$4, %r10d
-	vfmadd231pd	%ymm13, %ymm15, %ymm7
-	vfmadd231pd	%ymm14, %ymm15, %ymm11
-
-	vshufpd 	$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm2
-	vmovapd 	0(%r11), %ymm12 // A0[0]
-	vfmadd231pd	%ymm13, %ymm15, %ymm6
-	vmovapd 	0(%r15), %ymm13 // A1[0]
-	vfmadd231pd	%ymm14, %ymm15, %ymm10
-	vmovapd 	0(%r13), %ymm15 // B[0]
-	vmovapd 	0(%r14), %ymm14 // A2[0]
-
-
-	jg		.L001 // main loop 
-
-
-.L000: // consider clean4-up
-	
-	cmpl	$3, %r10d
-	jle		.L004 // clean1
-
-
-	// unroll 0
-	vfmadd231pd	%ymm12, %ymm15, %ymm0
-	subl		$4, %r10d
-	vfmadd231pd	%ymm13, %ymm15, %ymm4
-	vfmadd231pd	%ymm14, %ymm15, %ymm8
-
-	vshufpd		$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm1
-	vfmadd231pd	%ymm13, %ymm15, %ymm5
-	vfmadd231pd	%ymm14, %ymm15, %ymm9
-
-	vperm2f128	$0x1, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm3
-	vfmadd231pd	%ymm13, %ymm15, %ymm7
-	vfmadd231pd	%ymm14, %ymm15, %ymm11
-
-	vshufpd		$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm2
-	vmovapd		32(%r11), %ymm12 // A0[4]
-	vfmadd231pd	%ymm13, %ymm15, %ymm6
-	vmovapd		32(%r15), %ymm13 // A1[4]
-	vfmadd231pd	%ymm14, %ymm15, %ymm10
-	vmovapd		32(%r13), %ymm15 // B[4]
-	vmovapd		32(%r14), %ymm14 // A2[4]
-
-	// unroll 1
-	vfmadd231pd	%ymm12, %ymm15, %ymm0
-	vfmadd231pd	%ymm13, %ymm15, %ymm4
-	vfmadd231pd	%ymm14, %ymm15, %ymm8
-
-	vshufpd 	$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm1
-	vfmadd231pd	%ymm13, %ymm15, %ymm5
-	vfmadd231pd	%ymm14, %ymm15, %ymm9
-
-	vperm2f128 	$0x1, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm3
-	vfmadd231pd	%ymm13, %ymm15, %ymm7
-	vfmadd231pd	%ymm14, %ymm15, %ymm11
-
-	vshufpd 	$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm2
-	vmovapd 	64(%r11), %ymm12 // A0[8]
-	vfmadd231pd	%ymm13, %ymm15, %ymm6
-	vmovapd 	64(%r15), %ymm13 // A1[8]
-	vfmadd231pd	%ymm14, %ymm15, %ymm10
-	vmovapd 	64(%r13), %ymm15 // B[8]
-	vmovapd 	64(%r14), %ymm14 // A2[8]
-
-
-	// unroll 2
-	vfmadd231pd	%ymm12, %ymm15, %ymm0
-	vfmadd231pd	%ymm13, %ymm15, %ymm4
-	vfmadd231pd	%ymm14, %ymm15, %ymm8
-
-	vshufpd 	$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm1
-	vfmadd231pd	%ymm13, %ymm15, %ymm5
-	vfmadd231pd	%ymm14, %ymm15, %ymm9
-
-	vperm2f128 	$0x1, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm3
-	vfmadd231pd	%ymm13, %ymm15, %ymm7
-	vfmadd231pd	%ymm14, %ymm15, %ymm11
-
-	vshufpd 	$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm2
-	vmovapd 	96(%r11), %ymm12 // A0[12]
-	vfmadd231pd	%ymm13, %ymm15, %ymm6
-	vmovapd 	96(%r15), %ymm13 // A1[12]
-	vfmadd231pd	%ymm14, %ymm15, %ymm10
-	vmovapd 	96(%r13), %ymm15 // B[12]
-	vmovapd 	96(%r14), %ymm14 // A2[12]
-
-
-	// unroll 3
-	vfmadd231pd	%ymm12, %ymm15, %ymm0
-	addq		$128, %r11
-	vfmadd231pd	%ymm13, %ymm15, %ymm4
-	addq		$128, %r15
-	vfmadd231pd	%ymm14, %ymm15, %ymm8
-
-	vshufpd 	$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm1
-	addq		$128, %r13
-	vfmadd231pd	%ymm13, %ymm15, %ymm5
-	addq		$128, %r14
-	vfmadd231pd	%ymm14, %ymm15, %ymm9
-
-	vperm2f128 $0x1, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm3
-//	cmpl		$4, %r10d
-	vfmadd231pd	%ymm13, %ymm15, %ymm7
-	vfmadd231pd	%ymm14, %ymm15, %ymm11
-
-	vshufpd 	$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm2
-//	vmovapd 	0(%r11), %ymm12 // A0[0]
-	vfmadd231pd	%ymm13, %ymm15, %ymm6
-//	vmovapd 	0(%r15), %ymm13 // A1[0]
-	vfmadd231pd	%ymm14, %ymm15, %ymm10
-//	vmovapd 	0(%r13), %ymm15 // B[0]
-//	vmovapd 	0(%r14), %ymm14 // A2[0]
-
-
-
-	ret
-
-
-.L004: // consider clean1-up loop
-
-	cmpl	$0, %r10d
-	jle		.L002 // return
-
-	// clean-up loop
-.L003: // clean up loop
-	
-	vmovapd 	32(%r11), %ymm12 // A0[4]
-	vmovapd 	32(%r15), %ymm13 // A1[4]
-	vmovapd 	32(%r13), %ymm15 // B[4]
-	vmovapd 	32(%r14), %ymm14 // A2[4]
-	vfmadd231pd	%ymm12, %ymm15, %ymm0
-	addq		$32, %r11
-	vfmadd231pd	%ymm13, %ymm15, %ymm4
-	addq		$32, %r13
-	vfmadd231pd	%ymm14, %ymm15, %ymm8
-
-	vshufpd 	$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm1
-	addq		$32, %r15
-	vfmadd231pd	%ymm13, %ymm15, %ymm5
-	addq		$32, %r14
-	vfmadd231pd	%ymm14, %ymm15, %ymm9
-
-	vperm2f128 	$0x1, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm3
-	subl		$1, %r10d
-	vfmadd231pd	%ymm13, %ymm15, %ymm7
-	cmpl		$0, %r10d
-	vfmadd231pd	%ymm14, %ymm15, %ymm11
-
-	vshufpd 	$0x5, %ymm15, %ymm15, %ymm15
-	vfmadd231pd	%ymm12, %ymm15, %ymm2
-	vfmadd231pd	%ymm13, %ymm15, %ymm6
-	vfmadd231pd	%ymm14, %ymm15, %ymm10
-
-
-	jg		.L003 // clean up loop 
-
-
-.L002: // return
-
-	ret
-
-	.size	inner_kernel_dgemm_add_nt_12x4_lib4, .-inner_kernel_dgemm_add_nt_12x4_lib4
-
-
-
 
 
 #if MACRO_LEVEL>=2
 	.macro INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
+#else
+	.p2align 4,,15
+	.type inner_kernel_dgemm_add_nt_12x4_lib4, @function
+inner_kernel_dgemm_add_nt_12x4_lib4:
+#endif
 	
 	cmpl	$0, %r10d
 	jle		2f // return
@@ -626,7 +333,6 @@ inner_kernel_dgemm_add_nt_12x4_lib4:
 //	vmovapd 	0(%r14), %ymm14 // A2[0]
 
 
-
 	jmp		2f
 
 
@@ -673,7 +379,12 @@ inner_kernel_dgemm_add_nt_12x4_lib4:
 
 2: // return
 
+#if MACRO_LEVEL>=2
 	.endm
+#else
+	ret
+
+	.size	inner_kernel_dgemm_add_nt_12x4_lib4, .-inner_kernel_dgemm_add_nt_12x4_lib4
 #endif
 
 
@@ -731,12 +442,16 @@ inner_kernel_dgemm_add_nt_12x4_lib4:
 // ymm14 <- dirty
 // ymm15 <- dirty
 
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
+#else
 	.p2align 4,,15
 	.type inner_kernel_dgemm_sub_nt_12x4_lib4, @function
 inner_kernel_dgemm_sub_nt_12x4_lib4:
+#endif
 	
 	cmpl	$0, %r10d
-	jle		.L028 // return
+	jle		2f // return
 
 	movq	%r11, %r15 // A1 <- A0
 	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
@@ -751,11 +466,11 @@ inner_kernel_dgemm_sub_nt_12x4_lib4:
 	vmovapd 0(%r14), %ymm14 // A2[0]
 
 	cmpl	$4, %r10d
-	jle		.L026 // consider clean-up loop
+	jle		0f // consider clean-up loop
 
 	// main loop
 	.p2align 3
-.L027: // main loop
+1: // main loop
 	
 	// unroll 0
 	vfnmadd231pd	%ymm12, %ymm15, %ymm0
@@ -862,13 +577,13 @@ inner_kernel_dgemm_sub_nt_12x4_lib4:
 	vmovapd 		0(%r14), %ymm14 // A2[0]
 
 
-	jg		.L027 // main loop 
+	jg		1b // main loop 
 
 
-.L026: // consider clean4-up
+0: // consider clean4-up
 	
 	cmpl	$3, %r10d
-	jle		.L030 // clean1
+	jle		4f // clean1
 
 
 	// unroll 0
@@ -976,16 +691,16 @@ inner_kernel_dgemm_sub_nt_12x4_lib4:
 //	vmovapd 		0(%r14), %ymm14 // A2[0]
 
 
-	ret
+	jmp		2f
 
 
-.L030: // consider clean1-up loop
+4: // consider clean1-up loop
 
 	cmpl	$0, %r10d
-	jle		.L028 // return
+	jle		2f // return
 
 	// clean-up loop
-.L029: // clean up loop
+3: // clean up loop
 	
 	vmovapd 	32(%r11), %ymm12 // A0[4]
 	vmovapd 	32(%r15), %ymm13 // A1[4]
@@ -1017,14 +732,18 @@ inner_kernel_dgemm_sub_nt_12x4_lib4:
 	vfnmadd231pd	%ymm14, %ymm15, %ymm10
 
 
-	jg		.L029 // clean up loop 
+	jg		3b // clean up loop 
 
 
-.L028: // return
+2: // return
 
+#if MACRO_LEVEL>=2
+	.endm
+#else
 	ret
 
 	.size	inner_kernel_dgemm_sub_nt_12x4_lib4, .-inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 
 
 
@@ -1081,9 +800,13 @@ inner_kernel_dgemm_sub_nt_12x4_lib4:
 // ymm15 <- dirty
 
 
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRMM_ADD_NT_RU_12X4_LIB4
+#else
 	.p2align 4,,15
 	.type inner_edge_dtrmm_add_nt_ru_12x4_lib4, @function
 inner_edge_dtrmm_add_nt_ru_12x4_lib4:
+#endif
 	
 	movq	%r10, %r15 // A1 <- A0
 	addq	%r11, %r15 // A1 <- A0 + 4*sda*sizeof(double)
@@ -1127,36 +850,16 @@ inner_edge_dtrmm_add_nt_ru_12x4_lib4:
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 
-//	vbroadcastsd	96(%r12), %ymm12
-//	vmovapd			96(%r10), %ymm8
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vaddpd			%ymm0, %ymm15, %ymm0
-//	vmovapd			96(%r15), %ymm9
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vaddpd			%ymm4, %ymm15, %ymm4
-//	vbroadcastsd	104(%r12), %ymm12
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vaddpd			%ymm1, %ymm15, %ymm1
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vaddpd			%ymm5, %ymm15, %ymm5
-//	vbroadcastsd	112(%r12), %ymm12
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vaddpd			%ymm2, %ymm15, %ymm2
-//	addq			$128, %r10
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vaddpd			%ymm6, %ymm15, %ymm6
-//	vbroadcastsd	120(%r12), %ymm12
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vaddpd			%ymm3, %ymm15, %ymm3
-//	addq			$128, %r12
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vaddpd			%ymm7, %ymm15, %ymm7
 	addq			$96, %r10
 	addq			$96, %r12
 
+#if MACRO_LEVEL>=1
+	.endm
+#else
 	ret
 
 	.size	inner_edge_dtrmm_add_nt_ru_12x4_lib4, .-inner_edge_dtrmm_add_nt_ru_12x4_lib4
+#endif
 
 
 
@@ -1215,9 +918,13 @@ inner_edge_dtrmm_add_nt_ru_12x4_lib4:
 // ymm15 <- dirty
 
 
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRMM_ADD_NT_RU_12X4_VS_LIB4
+#else
 	.p2align 4,,15
 	.type inner_edge_dtrmm_add_nt_ru_12x4_vs_lib4, @function
 inner_edge_dtrmm_add_nt_ru_12x4_vs_lib4:
+#endif
 	
 	movq	%r11, %r15 // A1 <- A0
 	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
@@ -1239,7 +946,7 @@ inner_edge_dtrmm_add_nt_ru_12x4_vs_lib4:
 	addq			$32, %r14
 
 	cmpl	$0, %r10d
-	jle		.L017
+	jle		0f
 
 	vbroadcastsd	0(%r13), %ymm12
 	subl			$1, %r10d
@@ -1259,7 +966,7 @@ inner_edge_dtrmm_add_nt_ru_12x4_vs_lib4:
 	addq			$32, %r14
 
 	cmpl	$0, %r10d
-	jle		.L017
+	jle		0f
 
 	vbroadcastsd	0(%r13), %ymm12
 	subl			$1, %r10d
@@ -1282,40 +989,15 @@ inner_edge_dtrmm_add_nt_ru_12x4_vs_lib4:
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 //	addq			$32, %r14
 
-//	cmpl	$0, %r10d
-//	jle		.L017
+0:
 
-//	vbroadcastsd	0(%r13), %ymm12
-//	subl			$1, %r10d
-//	vmovapd			0(%r11), %ymm8
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vaddpd			%ymm0, %ymm15, %ymm0
-//	vmovapd			0(%r15), %ymm9
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vaddpd			%ymm4, %ymm15, %ymm4
-//	vbroadcastsd	8(%r13), %ymm12
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vaddpd			%ymm1, %ymm15, %ymm1
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vaddpd			%ymm5, %ymm15, %ymm5
-//	vbroadcastsd	16(%r13), %ymm12
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vaddpd			%ymm2, %ymm15, %ymm2
-//	addq			$32, %r11
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vaddpd			%ymm6, %ymm15, %ymm6
-//	vbroadcastsd	24(%r13), %ymm12
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vaddpd			%ymm3, %ymm15, %ymm3
-//	addq			$32, %r13
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vaddpd			%ymm7, %ymm15, %ymm7
-//	addq			$32, %r15
-
-.L017:
+#if MACRO_LEVEL>=1
+	.endm
+#else
 	ret
 
 	.size	inner_edge_dtrmm_add_nt_ru_12x4_vs_lib4, .-inner_edge_dtrmm_add_nt_ru_12x4_vs_lib4
+#endif
 
 
 
@@ -1373,9 +1055,13 @@ inner_edge_dtrmm_add_nt_ru_12x4_vs_lib4:
 // ymm15 <- dirty
 
 
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRMM_SUB_NT_RU_12X4_LIB4
+#else
 	.p2align 4,,15
 	.type inner_edge_dtrmm_sub_nt_ru_12x4_lib4, @function
 inner_edge_dtrmm_sub_nt_ru_12x4_lib4:
+#endif
 	
 	movq	%r10, %r15 // A1 <- A0
 	addq	%r11, %r15 // A1 <- A0 + 4*sda*sizeof(double)
@@ -1419,37 +1105,16 @@ inner_edge_dtrmm_sub_nt_ru_12x4_lib4:
 	vfnmadd231pd	%ymm14, %ymm12, %ymm6
 	vfnmadd231pd	%ymm15, %ymm12, %ymm10
 
-
-//	vbroadcastsd	96(%r12), %ymm12
-//	vmovapd			96(%r10), %ymm8
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vsubpd			%ymm0, %ymm15, %ymm0
-//	vmovapd			96(%r15), %ymm9
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vsubpd			%ymm4, %ymm15, %ymm4
-//	vbroadcastsd	104(%r12), %ymm12
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vsubpd			%ymm1, %ymm15, %ymm1
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vsubpd			%ymm5, %ymm15, %ymm5
-//	vbroadcastsd	112(%r12), %ymm12
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vsubpd			%ymm2, %ymm15, %ymm2
-//	addq			$128, %r10
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vsubpd			%ymm6, %ymm15, %ymm6
-//	vbroadcastsd	120(%r12), %ymm12
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vsubpd			%ymm3, %ymm15, %ymm3
-//	addq			$128, %r12
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vsubpd			%ymm7, %ymm15, %ymm7
 	addq			$96, %r10
 	addq			$96, %r12
 
+#if MACRO_LEVEL>=1
+	.endm
+#else
 	ret
 
 	.size	inner_edge_dtrmm_sub_nt_ru_12x4_lib4, .-inner_edge_dtrmm_sub_nt_ru_12x4_lib4
+#endif
 
 
 
@@ -1509,9 +1174,13 @@ inner_edge_dtrmm_sub_nt_ru_12x4_lib4:
 // ymm15 <- dirty
 
 
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRMM_SUB_NT_RU_12X4_VS_LIB4
+#else
 	.p2align 4,,15
 	.type inner_edge_dtrmm_sub_nt_ru_12x4_vs_lib4, @function
 inner_edge_dtrmm_sub_nt_ru_12x4_vs_lib4:
+#endif
 	
 	movq	%r11, %r15 // A1 <- A0
 	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
@@ -1533,7 +1202,7 @@ inner_edge_dtrmm_sub_nt_ru_12x4_vs_lib4:
 	addq			$32, %r14
 
 	cmpl	$0, %r10d
-	jle		.L023
+	jle		0f
 
 	vbroadcastsd	0(%r13), %ymm12
 	subl			$1, %r10d
@@ -1553,7 +1222,7 @@ inner_edge_dtrmm_sub_nt_ru_12x4_vs_lib4:
 	addq			$32, %r14
 
 	cmpl	$0, %r10d
-	jle		.L023
+	jle		0f
 
 	vbroadcastsd	0(%r13), %ymm12
 	subl			$1, %r10d
@@ -1576,40 +1245,15 @@ inner_edge_dtrmm_sub_nt_ru_12x4_vs_lib4:
 	vfnmadd231pd	%ymm15, %ymm12, %ymm10
 //	addq			$32, %r14
 
-//	cmpl	$0, %r10d
-//	jle		.L023
+0:
 
-//	vbroadcastsd	0(%r13), %ymm12
-//	subl			$1, %r10d
-//	vmovapd			0(%r11), %ymm8
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vsubpd			%ymm0, %ymm15, %ymm0
-//	vmovapd			0(%r15), %ymm9
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vsubpd			%ymm4, %ymm15, %ymm4
-//	vbroadcastsd	8(%r13), %ymm12
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vsubpd			%ymm1, %ymm15, %ymm1
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vsubpd			%ymm5, %ymm15, %ymm5
-//	vbroadcastsd	16(%r13), %ymm12
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vsubpd			%ymm2, %ymm15, %ymm2
-//	addq			$32, %r11
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vsubpd			%ymm6, %ymm15, %ymm6
-//	vbroadcastsd	24(%r13), %ymm12
-//	vmulpd			%ymm8, %ymm12, %ymm15
-//	vsubpd			%ymm3, %ymm15, %ymm3
-//	addq			$32, %r13
-//	vmulpd			%ymm9, %ymm12, %ymm15
-//	vsubpd			%ymm7, %ymm15, %ymm7
-//	addq			$32, %r15
-
-.L023:
+#if MACRO_LEVEL>=1
+	.endm
+#else
 	ret
 
 	.size	inner_edge_dtrmm_sub_nt_ru_12x4_vs_lib4, .-inner_edge_dtrmm_sub_nt_ru_12x4_vs_lib4
+#endif
 
 
 
@@ -1819,128 +1463,14 @@ inner_blender_scaler_nn_12x4_lib4:
 // ymm14 <- dirty
 // ymm15 <- dirty
 
+#if MACRO_LEVEL>=1
+	.macro INNER_BLENDER_NN_12X4_LIB4
+#else
 	.p2align 4,,15
 	.type inner_blender_nn_12x4_lib4, @function
 inner_blender_nn_12x4_lib4:
+#endif
 	
-
-	// tc==n
-	vblendpd	$0xa, %ymm1, %ymm0, %ymm12
-	vblendpd	$0x5, %ymm1, %ymm0, %ymm13
-	vblendpd	$0xa, %ymm3, %ymm2, %ymm14
-	vblendpd	$0x5, %ymm3, %ymm2, %ymm15
-
-	vblendpd	$0xc, %ymm14, %ymm12, %ymm0
-	vblendpd	$0x3, %ymm14, %ymm12, %ymm2
-	vblendpd	$0xc, %ymm15, %ymm13, %ymm1
-	vblendpd	$0x3, %ymm15, %ymm13, %ymm3
-
-	vblendpd	$0xa, %ymm5, %ymm4, %ymm12
-	vblendpd	$0x5, %ymm5, %ymm4, %ymm13
-	vblendpd	$0xa, %ymm7, %ymm6, %ymm14
-	vblendpd	$0x5, %ymm7, %ymm6, %ymm15
-
-	vblendpd	$0xc, %ymm14, %ymm12, %ymm4
-	vblendpd	$0x3, %ymm14, %ymm12, %ymm6
-	vblendpd	$0xc, %ymm15, %ymm13, %ymm5
-	vblendpd	$0x3, %ymm15, %ymm13, %ymm7
-
-	vblendpd	$0xa, %ymm9, %ymm8, %ymm12
-	vblendpd	$0x5, %ymm9, %ymm8, %ymm13
-	vblendpd	$0xa, %ymm11, %ymm10, %ymm14
-	vblendpd	$0x5, %ymm11, %ymm10, %ymm15
-
-	vblendpd	$0xc, %ymm14, %ymm12, %ymm8
-	vblendpd	$0x3, %ymm14, %ymm12, %ymm10
-	vblendpd	$0xc, %ymm15, %ymm13, %ymm9
-	vblendpd	$0x3, %ymm15, %ymm13, %ymm11
-
-	cmpl	$0, %r10d // alg
-	je		.L005 // return
-
-	movq	%r11, %r15 // C1 <- C0
-	addq	%r12, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
-
-	movq	%r15, %r14 // C2 <- C1
-	addq	%r12, %r14 // C2 <- C1 + 4*sdc*sizeof(double)
-
-	cmpl	$1, %r10d // alg
-	jne		.L006 // alg==-1
-
-	// alg==1
-	vmovapd		0(%r11), %ymm15
-	vaddpd		%ymm0, %ymm15, %ymm0
-	vmovapd		32(%r11), %ymm15
-	vaddpd		%ymm1, %ymm15, %ymm1
-	vmovapd		64(%r11), %ymm15
-	vaddpd		%ymm2, %ymm15, %ymm2
-	vmovapd		96(%r11), %ymm15
-	vaddpd		%ymm3, %ymm15, %ymm3
-
-	vmovapd		0(%r15), %ymm15
-	vaddpd		%ymm4, %ymm15, %ymm4
-	vmovapd		32(%r15), %ymm15
-	vaddpd		%ymm5, %ymm15, %ymm5
-	vmovapd		64(%r15), %ymm15
-	vaddpd		%ymm6, %ymm15, %ymm6
-	vmovapd		96(%r15), %ymm15
-	vaddpd		%ymm7, %ymm15, %ymm7
-
-	vmovapd		0(%r14), %ymm15
-	vaddpd		%ymm8, %ymm15, %ymm8
-	vmovapd		32(%r14), %ymm15
-	vaddpd		%ymm9, %ymm15, %ymm9
-	vmovapd		64(%r14), %ymm15
-	vaddpd		%ymm10, %ymm15, %ymm10
-	vmovapd		96(%r14), %ymm15
-	vaddpd		%ymm11, %ymm15, %ymm11
-
-	ret // return
-
-.L006: // alg==-1
-
-	// alg==-1
-	vmovapd		0(%r11), %ymm15
-	vsubpd		%ymm0, %ymm15, %ymm0
-	vmovapd		32(%r11), %ymm15
-	vsubpd		%ymm1, %ymm15, %ymm1
-	vmovapd		64(%r11), %ymm15
-	vsubpd		%ymm2, %ymm15, %ymm2
-	vmovapd		96(%r11), %ymm15
-	vsubpd		%ymm3, %ymm15, %ymm3
-
-	vmovapd		0(%r15), %ymm15
-	vsubpd		%ymm4, %ymm15, %ymm4
-	vmovapd		32(%r15), %ymm15
-	vsubpd		%ymm5, %ymm15, %ymm5
-	vmovapd		64(%r15), %ymm15
-	vsubpd		%ymm6, %ymm15, %ymm6
-	vmovapd		96(%r15), %ymm15
-	vsubpd		%ymm7, %ymm15, %ymm7
-
-	vmovapd		0(%r14), %ymm15
-	vsubpd		%ymm8, %ymm15, %ymm8
-	vmovapd		32(%r14), %ymm15
-	vsubpd		%ymm9, %ymm15, %ymm9
-	vmovapd		64(%r14), %ymm15
-	vsubpd		%ymm10, %ymm15, %ymm10
-	vmovapd		96(%r14), %ymm15
-	vsubpd		%ymm11, %ymm15, %ymm11
-
-.L005: // return
-	
-	ret
-
-	.size	inner_blender_nn_12x4_lib4, .-inner_blender_nn_12x4_lib4
-
-
-
-
-
-#if MACRO_LEVEL>=1
-	.macro INNER_BLENDER_NN_12X4_LIB4
-	
-
 	// tc==n
 	vblendpd	$0xa, %ymm1, %ymm0, %ymm12
 	vblendpd	$0x5, %ymm1, %ymm0, %ymm13
@@ -2046,7 +1576,12 @@ inner_blender_nn_12x4_lib4:
 
 2: // return
 	
+#if MACRO_LEVEL>=1
 	.endm
+#else
+	ret
+
+	.size	inner_blender_nn_12x4_lib4, .-inner_blender_nn_12x4_lib4
 #endif
 
 
@@ -2097,19 +1632,23 @@ inner_blender_nn_12x4_lib4:
 // ymm14 <- dirty
 // ymm15 <- dirty
 
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DPOTRF_12X4_VS_LIB4
+#else
 	.p2align 4,,15
 	.type inner_edge_dpotrf_12x4_vs_lib4, @function
 inner_edge_dpotrf_12x4_vs_lib4:
+#endif
 	
 	vxorpd			%ymm15, %ymm15, %ymm15 // 0.0
 	vmovsd			.LC05(%rip), %xmm14 // 1.0
 
 	vmovsd			%xmm0, %xmm0, %xmm13
 	vucomisd		%xmm15, %xmm13 // d_00 > 0.0 ?
-	jbe				.L032
+	jbe				1f
 	vsqrtsd			%xmm13, %xmm13, %xmm13
 	vdivsd			%xmm13, %xmm14, %xmm13
-.L033:
+2:
 	cmpl			$2, %r11d
 	vmovsd			%xmm13, 0(%r10)
 	vmovddup		%xmm13, %xmm13
@@ -2118,7 +1657,7 @@ inner_edge_dpotrf_12x4_vs_lib4:
 	vmulpd			%ymm4, %ymm13, %ymm4
 	vmulpd			%ymm8, %ymm13, %ymm8
 
-	jl				.L031 // ret
+	jl				0f // ret
 
 	vpermilpd		$0x3, %xmm0, %xmm13
 	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
@@ -2127,10 +1666,10 @@ inner_edge_dpotrf_12x4_vs_lib4:
 	vfnmadd231pd	%ymm8, %ymm13, %ymm9
 	vpermilpd		$0x3, %xmm1, %xmm13
 	vucomisd		%xmm15, %xmm13 // d_11 > 0.0 ?
-	jbe				.L034
+	jbe				3f
 	vsqrtsd			%xmm13, %xmm13, %xmm13
 	vdivsd			%xmm13, %xmm14, %xmm13
-.L035:
+4:
 	cmpl			$3, %r11d
 	vmovsd			%xmm13, 8(%r10)
 	vmovddup		%xmm13, %xmm13
@@ -2139,7 +1678,7 @@ inner_edge_dpotrf_12x4_vs_lib4:
 	vmulpd			%ymm5, %ymm13, %ymm5
 	vmulpd			%ymm9, %ymm13, %ymm9
 
-	jl				.L031 // ret
+	jl				0f // ret
 
 	vextractf128	$0x1, %ymm0, %xmm13
 	vpermilpd		$0x0, %xmm13, %xmm13
@@ -2155,10 +1694,10 @@ inner_edge_dpotrf_12x4_vs_lib4:
 	vfnmadd231pd	%ymm9, %ymm13, %ymm10
 	vextractf128	$0x1, %ymm2, %xmm13
 	vucomisd		%xmm15, %xmm13 // d_22 > 0.0 ?
-	jbe				.L036
+	jbe				5f
 	vsqrtsd			%xmm13, %xmm13, %xmm13
 	vdivsd			%xmm13, %xmm14, %xmm13
-.L037:
+6:
 	cmpl			$4, %r11d
 	vmovsd			%xmm13, 16(%r10)
 	vmovddup		%xmm13, %xmm13
@@ -2167,7 +1706,7 @@ inner_edge_dpotrf_12x4_vs_lib4:
 	vmulpd			%ymm6, %ymm13, %ymm6
 	vmulpd			%ymm10, %ymm13, %ymm10
 
-	jl				.L031 // ret
+	jl				0f // ret
 
 	vextractf128	$0x1, %ymm0, %xmm13
 	vpermilpd		$0x3, %xmm13, %xmm13
@@ -2190,10 +1729,10 @@ inner_edge_dpotrf_12x4_vs_lib4:
 	vextractf128	$0x1, %ymm3, %xmm13
 	vpermilpd		$0x3, %xmm13, %xmm13
 	vucomisd		%xmm15, %xmm13 // d_33 > 0.0 ?
-	jbe				.L038
+	jbe				7f
 	vsqrtsd			%xmm13, %xmm13, %xmm13
 	vdivsd			%xmm13, %xmm14, %xmm13
-.L039:
+8:
 	vmovsd			%xmm13, 24(%r10)
 	vmovddup		%xmm13, %xmm13
 	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
@@ -2201,27 +1740,33 @@ inner_edge_dpotrf_12x4_vs_lib4:
 	vmulpd			%ymm7, %ymm13, %ymm7
 	vmulpd			%ymm11, %ymm13, %ymm11
 
-.L031:
+	jmp				0f
+
+1:
+	vxorpd			%ymm13, %ymm13, %ymm13
+	jmp				2b
+
+3:
+	vxorpd			%ymm13, %ymm13, %ymm13
+	jmp				4b
+
+5:
+	vxorpd			%ymm13, %ymm13, %ymm13
+	jmp				6b
+
+7:
+	vxorpd			%ymm13, %ymm13, %ymm13
+	jmp				8
+
+0:
 	
+#if MACRO_LEVEL>=1
+	.endm
+#else
 	ret
 
-.L032:
-	vxorpd			%ymm13, %ymm13, %ymm13
-	jmp				.L033
-
-.L034:
-	vxorpd			%ymm13, %ymm13, %ymm13
-	jmp				.L035
-
-.L036:
-	vxorpd			%ymm13, %ymm13, %ymm13
-	jmp				.L037
-
-.L038:
-	vxorpd			%ymm13, %ymm13, %ymm13
-	jmp				.L039
-
 	.size	inner_edge_dpotrf_12x4_vs_lib4, .-inner_edge_dpotrf_12x4_vs_lib4
+#endif
 
 
 
@@ -2267,9 +1812,13 @@ inner_edge_dpotrf_12x4_vs_lib4:
 // ymm12 <- dirty
 // ymm13 <- dirty
 
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSM_RLT_INV_12X4_LIB4
+#else
 	.p2align 4,,15
 	.type inner_edge_dtrsm_rlt_inv_12x4_lib4, @function
 inner_edge_dtrsm_rlt_inv_12x4_lib4:
+#endif
 	
 	vbroadcastsd	0(%r11), %ymm13
 	vmulpd			%ymm0, %ymm13, %ymm0
@@ -2315,9 +1864,13 @@ inner_edge_dtrsm_rlt_inv_12x4_lib4:
 	vmulpd			%ymm7, %ymm13, %ymm7
 	vmulpd			%ymm11, %ymm13, %ymm11
 
+#if MACRO_LEVEL>=1
+	.endm
+#else
 	ret
 
 	.size	inner_edge_dtrsm_rlt_inv_12x4_lib4, .-inner_edge_dtrsm_rlt_inv_12x4_lib4
+#endif
 
 
 
@@ -2365,9 +1918,13 @@ inner_edge_dtrsm_rlt_inv_12x4_lib4:
 // ymm12 <- dirty
 // ymm13 <- dirty
 
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSM_RLT_INV_12X4_VS_LIB4
+#else
 	.p2align 4,,15
 	.type inner_edge_dtrsm_rlt_inv_12x4_vs_lib4, @function
 inner_edge_dtrsm_rlt_inv_12x4_vs_lib4:
+#endif
 	
 	vbroadcastsd	0(%r11), %ymm13
 	cmpl			$2, %r12d
@@ -2375,7 +1932,7 @@ inner_edge_dtrsm_rlt_inv_12x4_vs_lib4:
 	vmulpd			%ymm4, %ymm13, %ymm4
 	vmulpd			%ymm8, %ymm13, %ymm8
 
-	jl				.L040 // ret
+	jl				0f // ret
 
 	vbroadcastsd	8(%r10), %ymm13
 	cmpl			$3, %r12d
@@ -2387,7 +1944,7 @@ inner_edge_dtrsm_rlt_inv_12x4_vs_lib4:
 	vmulpd			%ymm5, %ymm13, %ymm5
 	vmulpd			%ymm9, %ymm13, %ymm9
 
-	jl				.L040 // ret
+	jl				0f // ret
 
 	vbroadcastsd	16(%r10), %ymm13
 	cmpl			$4, %r12d
@@ -2403,7 +1960,7 @@ inner_edge_dtrsm_rlt_inv_12x4_vs_lib4:
 	vmulpd			%ymm6, %ymm13, %ymm6
 	vmulpd			%ymm10, %ymm13, %ymm10
 
-	jl				.L040 // ret
+	jl				0f // ret
 
 	vbroadcastsd	24(%r10), %ymm13
 	vfnmadd231pd	%ymm0, %ymm13, %ymm3
@@ -2422,11 +1979,15 @@ inner_edge_dtrsm_rlt_inv_12x4_vs_lib4:
 	vmulpd			%ymm7, %ymm13, %ymm7
 	vmulpd			%ymm11, %ymm13, %ymm11
 
-.L040:
+0:
 	
+#if MACRO_LEVEL>=1
+	.endm
+#else
 	ret
 
 	.size	inner_edge_dtrsm_rlt_inv_12x4_vs_lib4, .-inner_edge_dtrsm_rlt_inv_12x4_vs_lib4
+#endif
 
 
 
@@ -2472,9 +2033,13 @@ inner_edge_dtrsm_rlt_inv_12x4_vs_lib4:
 // ymm10 <- [d82 d92 da2 db2]
 // ymm11 <- [d83 d93 da3 db3]
 
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_12X4_LIB4
+#else
 	.p2align 4,,15
 	.type inner_store_12x4_lib4, @function
 inner_store_12x4_lib4:
+#endif
 	
 	movq	%r10, %r15 // D1 <- D0
 	addq	%r11, %r15 // D1 <- D0 + 4*sdd*sizeof(double)
@@ -2497,39 +2062,12 @@ inner_store_12x4_lib4:
 	vmovapd %ymm10, 64(%r14)
 	vmovapd %ymm11, 96(%r14)
 
+#if MACRO_LEVEL>=1
+	.endm
+#else
 	ret
 
 	.size	inner_store_12x4_lib4, .-inner_store_12x4_lib4
-
-
-
-
-
-#if MACRO_LEVEL>=1
-	.macro INNER_STORE_12X4_LIB4
-	
-	movq	%r10, %r15 // D1 <- D0
-	addq	%r11, %r15 // D1 <- D0 + 4*sdd*sizeof(double)
-
-	movq	%r15, %r14 // D2 <- D1
-	addq	%r11, %r14 // D2 <- D1 + 4*sdd*sizeof(double)
-
-	vmovapd %ymm0,  0(%r10)
-	vmovapd %ymm1, 32(%r10)
-	vmovapd %ymm2, 64(%r10)
-	vmovapd %ymm3, 96(%r10)
-
-	vmovapd %ymm4,  0(%r15)
-	vmovapd %ymm5, 32(%r15)
-	vmovapd %ymm6, 64(%r15)
-	vmovapd %ymm7, 96(%r15)
-
-	vmovapd %ymm8,   0(%r14)
-	vmovapd %ymm9,  32(%r14)
-	vmovapd %ymm10, 64(%r14)
-	vmovapd %ymm11, 96(%r14)
-
-	.endm
 #endif
 
 
@@ -2584,9 +2122,13 @@ inner_store_12x4_lib4:
 // ymm14 <- dirty
 // ymm15 <- dirty
 
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_12X4_VS_LIB4
+#else
 	.p2align 4,,15
 	.type inner_store_12x4_vs_lib4, @function
 inner_store_12x4_vs_lib4:
+#endif
 	
 	movq	%r10, %r15 // D1 <- D0
 	addq	%r11, %r15 // D1 <- D0 + 4*sdd*sizeof(double)
@@ -2604,65 +2146,28 @@ inner_store_12x4_vs_lib4:
 	vmovapd		%ymm0, 0(%r10)
 	vmovapd		%ymm4, 0(%r15)
 	vmaskmovpd	%ymm8, %ymm15,  0(%r14)
-	jl			.L015 // end
+	jl			0f // end
 	cmpl		$3, %r13d
 	vmovapd		%ymm1, 32(%r10)
 	vmovapd		%ymm5, 32(%r15)
 	vmaskmovpd	%ymm9, %ymm15, 32(%r14)
-	jl			.L015 // end
+	jl			0f // end
 	vmovapd		%ymm2, 64(%r10)
 	vmovapd		%ymm6, 64(%r15)
 	vmaskmovpd	%ymm10, %ymm15, 64(%r14)
-	je			.L015 // end
+	je			0f // end
 	vmovapd		%ymm3, 96(%r10)
 	vmovapd		%ymm7, 96(%r15)
 	vmaskmovpd	%ymm11, %ymm15, 96(%r14)
 
-.L015:
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
 	ret
 
 	.size	inner_store_12x4_vs_lib4, .-inner_store_12x4_vs_lib4
-
-
-
-
-
-#if MACRO_LEVEL>=1
-	.macro INNER_STORE_12X4_VS_LIB4
-	
-	movq	%r10, %r15 // D1 <- D0
-	addq	%r11, %r15 // D1 <- D0 + 4*sdd*sizeof(double)
-
-	movq	%r15, %r14 // D2 <- D1
-	addq	%r11, %r14 // D2 <- D1 + 4*sdd*sizeof(double)
-
-	vcvtsi2sd	%r12d, %xmm15, %xmm15
-	vmovupd		.LC04(%rip), %ymm14
-	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
-	vsubpd		%ymm15, %ymm14, %ymm15
-
-	cmpl		$2, %r13d
-	vmovapd		%ymm0, 0(%r10)
-	vmovapd		%ymm4, 0(%r15)
-	vmaskmovpd	%ymm8, %ymm15,  0(%r14)
-	jl			1f // end
-	cmpl		$3, %r13d
-	vmovapd		%ymm1, 32(%r10)
-	vmovapd		%ymm5, 32(%r15)
-	vmaskmovpd	%ymm9, %ymm15, 32(%r14)
-	jl			1f // end
-	vmovapd		%ymm2, 64(%r10)
-	vmovapd		%ymm6, 64(%r15)
-	vmaskmovpd	%ymm10, %ymm15, 64(%r14)
-	je			1f // end
-	vmovapd		%ymm3, 96(%r10)
-	vmovapd		%ymm7, 96(%r15)
-	vmaskmovpd	%ymm11, %ymm15, 96(%r14)
-
-1:
-
-	.endm
 #endif
 
 
@@ -2717,9 +2222,13 @@ inner_store_12x4_vs_lib4:
 // ymm14 <- dirty
 // ymm15 <- dirty
 
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_L_12X4_VS_LIB4
+#else
 	.p2align 4,,15
 	.type inner_store_l_12x4_vs_lib4, @function
 inner_store_l_12x4_vs_lib4:
+#endif
 	
 	movq	%r10, %r15 // D1 <- D0
 	addq	%r11, %r15 // D1 <- D0 + 4*sdd*sizeof(double)
@@ -2737,79 +2246,34 @@ inner_store_l_12x4_vs_lib4:
 	vmovapd		%ymm0, 0(%r10)
 	vmovapd		%ymm4, 0(%r15)
 	vmaskmovpd	%ymm8, %ymm15,  0(%r14)
-	jl			.L018 // end
+	jl			0f // end
 	cmpl		$3, %r13d
 	vmovapd		32(%r10), %ymm14
 	vblendpd	$0x1, %ymm14, %ymm1, %ymm1	
 	vmovapd		%ymm1, 32(%r10)
 	vmovapd		%ymm5, 32(%r15)
 	vmaskmovpd	%ymm9, %ymm15, 32(%r14)
-	jl			.L018 // end
+	jl			0f // end
 	vmovapd		64(%r10), %ymm14
 	vblendpd	$0x3, %ymm14, %ymm2, %ymm2	
 	vmovapd		%ymm2, 64(%r10)
 	vmovapd		%ymm6, 64(%r15)
 	vmaskmovpd	%ymm10, %ymm15, 64(%r14)
-	je			.L018 // end
+	je			0f // end
 	vmovapd		96(%r10), %ymm14
 	vblendpd	$0x7, %ymm14, %ymm3, %ymm3	
 	vmovapd		%ymm3, 96(%r10)
 	vmovapd		%ymm7, 96(%r15)
 	vmaskmovpd	%ymm11, %ymm15, 96(%r14)
 
+0:
 
-.L018:
+#if MACRO_LEVEL>=1
+	.endm
+#else
 	ret
 
 	.size	inner_store_l_12x4_vs_lib4, .-inner_store_l_12x4_vs_lib4
-
-
-
-
-
-#if MACRO_LEVEL>=1
-	.macro INNER_STORE_L_12X4_VS_LIB4
-	
-	movq	%r10, %r15 // D1 <- D0
-	addq	%r11, %r15 // D1 <- D0 + 4*sdd*sizeof(double)
-
-	movq	%r15, %r14 // D2 <- D1
-	addq	%r11, %r14 // D2 <- D1 + 4*sdd*sizeof(double)
-
-	vcvtsi2sd	%r12d, %xmm15, %xmm15
-	vmovupd		.LC04(%rip), %ymm14
-	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
-	vsubpd		%ymm15, %ymm14, %ymm15
-
-	cmpl		$2, %r13d
-	vmovapd		%ymm0, 0(%r10)
-	vmovapd		%ymm4, 0(%r15)
-	vmaskmovpd	%ymm8, %ymm15,  0(%r14)
-	jl			1f // end
-	cmpl		$3, %r13d
-	vmovapd		32(%r10), %ymm14
-	vblendpd	$0x1, %ymm14, %ymm1, %ymm1	
-	vmovapd		%ymm1, 32(%r10)
-	vmovapd		%ymm5, 32(%r15)
-	vmaskmovpd	%ymm9, %ymm15, 32(%r14)
-	jl			1f // end
-	vmovapd		64(%r10), %ymm14
-	vblendpd	$0x3, %ymm14, %ymm2, %ymm2	
-	vmovapd		%ymm2, 64(%r10)
-	vmovapd		%ymm6, 64(%r15)
-	vmaskmovpd	%ymm10, %ymm15, 64(%r14)
-	je			1f // end
-	vmovapd		96(%r10), %ymm14
-	vblendpd	$0x7, %ymm14, %ymm3, %ymm3	
-	vmovapd		%ymm3, 96(%r10)
-	vmovapd		%ymm7, 96(%r15)
-	vmaskmovpd	%ymm11, %ymm15, 96(%r14)
-
-
-1:
-
-	.endm
 #endif
 
 
@@ -3057,7 +2521,11 @@ kernel_dgemm_nt_12x4_vs_lib4:
 	movslq	%r12d, %r12
 	movq	%rcx, %r13
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
+#else
 	call inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 
 
 	// call inner blender nn
@@ -3068,7 +2536,11 @@ kernel_dgemm_nt_12x4_vs_lib4:
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12
 
+#if MACRO_LEVEL>=1
+	INNER_BLENDER_NN_12X4_LIB4
+#else
 	call inner_blender_nn_12x4_lib4
+#endif
 
 
 	// store n
@@ -3154,7 +2626,11 @@ kernel_dsyrk_nt_l_12x4_vs_lib4:
 	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
+#else
 	call inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 
 
 	// call inner blender nn
@@ -3165,7 +2641,11 @@ kernel_dsyrk_nt_l_12x4_vs_lib4:
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12
 
+#if MACRO_LEVEL>=1
+	INNER_BLENDER_NN_12X4_LIB4
+#else
 	call inner_blender_nn_12x4_lib4
+#endif
 
 
 	// store
@@ -3257,7 +2737,11 @@ kernel_dtrmm_nt_ru_12x4_lib4:
 	addq	$96, %r13
 
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
+#else
 	call inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 
 
 	// call inner blender nn
@@ -3268,7 +2752,11 @@ kernel_dtrmm_nt_ru_12x4_lib4:
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12
 
+#if MACRO_LEVEL>=1
+	INNER_BLENDER_NN_12X4_LIB4
+#else
 	call inner_blender_nn_12x4_lib4
+#endif
 
 
 	// initial triangle
@@ -3283,13 +2771,21 @@ kernel_dtrmm_nt_ru_12x4_lib4:
 	je		.L019
 
 
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRMM_ADD_NT_RU_12X4_LIB4
+#else
 	call inner_edge_dtrmm_add_nt_ru_12x4_lib4
+#endif
 
 	jmp		.L020
 
 .L019:
 
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRMM_SUB_NT_RU_12X4_LIB4 
+#else
 	call inner_edge_dtrmm_sub_nt_ru_12x4_lib4 
+#endif
 
 .L020:
 	// store n
@@ -3379,7 +2875,11 @@ kernel_dtrmm_nt_ru_12x4_vs_lib4:
 	addq	$96, %r13
 
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
+#else
 	call inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 
 
 	// call inner blender nn
@@ -3390,7 +2890,11 @@ kernel_dtrmm_nt_ru_12x4_vs_lib4:
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12
 
+#if MACRO_LEVEL>=1
+	INNER_BLENDER_NN_12X4_LIB4
+#else
 	call inner_blender_nn_12x4_lib4
+#endif
 
 
 	// initial triangle
@@ -3406,13 +2910,21 @@ kernel_dtrmm_nt_ru_12x4_vs_lib4:
 	je		.L024
 
 
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRMM_ADD_NT_RU_12X4_VS_LIB4
+#else
 	call inner_edge_dtrmm_add_nt_ru_12x4_vs_lib4
+#endif
 
 	jmp		.L025
 
 .L024:
 
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRMM_SUB_NT_RU_12X4_VS_LIB4 
+#else
 	call inner_edge_dtrmm_sub_nt_ru_12x4_vs_lib4 
+#endif
 
 .L025:
 	// store n
@@ -3498,7 +3010,11 @@ kernel_dpotrf_nt_l_12x4_vs_lib4:
 	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
+#else
 	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 
 
 	// call inner blender nn
@@ -3509,7 +3025,11 @@ kernel_dpotrf_nt_l_12x4_vs_lib4:
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12
 
+#if MACRO_LEVEL>=1
+	INNER_BLENDER_NN_12X4_LIB4
+#else
 	call inner_blender_nn_12x4_lib4
+#endif
 
 
 	// factorization
@@ -3517,7 +3037,11 @@ kernel_dpotrf_nt_l_12x4_vs_lib4:
 	movq	STACKSIZE + 24(%rsp), %r10  // inv_diag_D 
 	movl	STACKSIZE + 40(%rsp), %r11d // kn 
 
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DPOTRF_12X4_VS_LIB4
+#else
 	call inner_edge_dpotrf_12x4_vs_lib4
+#endif
 
 
 	// store n
@@ -3603,7 +3127,11 @@ kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 	movslq	%r12d, %r12
 	movq	%rcx, %r13  // Bp
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
+#else
 	call inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 
 
 	// call inner dgemm kernel nt sub
@@ -3615,7 +3143,11 @@ kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 	movslq	%r12d, %r12
 	movq	STACKSIZE + 16(%rsp), %r13  // Bm
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
+#else
 	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 
 
 	// call inner blender nn
@@ -3626,7 +3158,11 @@ kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12 
 
+#if MACRO_LEVEL>=1
+	INNER_BLENDER_NN_12X4_LIB4
+#else
 	call inner_blender_nn_12x4_lib4 // TODO alg has to be applied only to the add part !!!!!
+#endif
 
 
 	// factorization
@@ -3634,7 +3170,11 @@ kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 	movq	STACKSIZE + 64(%rsp), %r10  // inv_diag_D 
 	movl	STACKSIZE + 80(%rsp), %r11d // kn 
 
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DPOTRF_12X4_VS_LIB4
+#else
 	call inner_edge_dpotrf_12x4_vs_lib4
+#endif
 
 
 	// store n
@@ -3720,7 +3260,11 @@ kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
+#else
 	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 
 
 	// call inner blender nn
@@ -3731,7 +3275,11 @@ kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12
 
+#if MACRO_LEVEL>=1
+	INNER_BLENDER_NN_12X4_LIB4
+#else
 	call inner_blender_nn_12x4_lib4
+#endif
 
 
 	// solve
@@ -3740,7 +3288,11 @@ kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movq	STACKSIZE + 32(%rsp), %r11  // inv_diag_E 
 	movl	STACKSIZE + 48(%rsp), %r12d // kn 
 
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RLT_INV_12X4_VS_LIB4
+#else
 	call inner_edge_dtrsm_rlt_inv_12x4_vs_lib4
+#endif
 
 
 	// store n
@@ -3826,7 +3378,11 @@ kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movslq	%r12d, %r12
 	movq	%rcx, %r13  // Bp
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
+#else
 	call inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 
 
 	// call inner dgemm kernel nt sub
@@ -3838,7 +3394,11 @@ kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movslq	%r12d, %r12
 	movq	STACKSIZE + 16(%rsp), %r13  // Bm
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
+#else
 	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 
 
 	// call inner blender nn
@@ -3849,7 +3409,11 @@ kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12
 
+#if MACRO_LEVEL>=1
+	INNER_BLENDER_NN_12X4_LIB4
+#else
 	call inner_blender_nn_12x4_lib4 // TODO alg has to be applied only to the add part !!!!!
+#endif
 
 
 	// solve
@@ -3858,7 +3422,11 @@ kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movq	STACKSIZE + 72(%rsp), %r11  // inv_diag_E 
 	movl	STACKSIZE + 88(%rsp), %r12d // kn 
 
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RLT_INV_12X4_VS_LIB4
+#else
 	call inner_edge_dtrsm_rlt_inv_12x4_vs_lib4
+#endif
 
 
 	// store n
@@ -3944,7 +3512,11 @@ kernel_dtrsm_nt_rl_inv_12x4_lib4:
 	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
+#else
 	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 
 
 	// call inner blender nn
@@ -3955,7 +3527,11 @@ kernel_dtrsm_nt_rl_inv_12x4_lib4:
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12
 
+#if MACRO_LEVEL>=1
+	INNER_BLENDER_NN_12X4_LIB4
+#else
 	call inner_blender_nn_12x4_lib4
+#endif
 
 
 	// solve
@@ -3963,7 +3539,11 @@ kernel_dtrsm_nt_rl_inv_12x4_lib4:
 	movq	STACKSIZE + 24(%rsp), %r10  // E 
 	movq	STACKSIZE + 32(%rsp), %r11  // inv_diag_E 
 
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RLT_INV_12X4_LIB4
+#else
 	call inner_edge_dtrsm_rlt_inv_12x4_lib4
+#endif
 
 
 	// store n
@@ -4046,7 +3626,11 @@ kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 	movslq	%r12d, %r12
 	movq	%rcx, %r13  // Bp
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
+#else
 	call inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 
 
 	// call inner dgemm kernel nt sub
@@ -4058,7 +3642,11 @@ kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 	movslq	%r12d, %r12
 	movq	STACKSIZE + 16(%rsp), %r13  // Bm
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
+#else
 	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 
 
 	// call inner blender nn
@@ -4069,7 +3657,11 @@ kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 	sall	$5, %r12d // 4*sdc*sizeof(double)
 	movslq	%r12d, %r12
 
+#if MACRO_LEVEL>=1
+	INNER_BLENDER_NN_12X4_LIB4
+#else
 	call inner_blender_nn_12x4_lib4 // TODO alg has to be applied only to the add part !!!!!
+#endif
 
 
 	// solve
@@ -4077,7 +3669,11 @@ kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 	movq	STACKSIZE + 64(%rsp), %r10  // E 
 	movq	STACKSIZE + 72(%rsp), %r11  // inv_diag_E 
 
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RLT_INV_12X4_LIB4
+#else
 	call inner_edge_dtrsm_rlt_inv_12x4_lib4
+#endif
 
 
 	// store n
