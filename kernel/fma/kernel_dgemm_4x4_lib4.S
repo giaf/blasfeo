@@ -1083,6 +1083,77 @@ inner_edge_dtrmm_sub_nt_lu_4x4_vs_lib4:
 
 // common inner routine with file scope
 //
+// blender for alpha = 1.0 and beta = 1.0
+//
+// input arguments:
+// r10   <- C
+// xmm0  <- [d00 d10]
+// xmm1  <- [d20 d30]
+// xmm2  <- [d01 d11]
+// xmm3  <- [d21 d31]
+// xmm0  <- [d02 d12]
+// xmm1  <- [d22 d32]
+// xmm2  <- [d03 d13]
+// xmm3  <- [d23 d33]
+// xmm8  <- dirty
+// xmm9  <- dirty
+// xmm10 <- dirty
+// xmm11 <- dirty
+// xmm12 <- dirty
+// xmm13 <- dirty
+// xmm14 <- dirty
+// xmm15 <- dirty
+
+// output arguments:
+// r10   <- C
+// xmm0  <- [d00 d10]
+// xmm1  <- [d20 d30]
+// xmm2  <- [d01 d11]
+// xmm3  <- [d21 d31]
+// xmm0  <- [d02 d12]
+// xmm1  <- [d22 d32]
+// xmm2  <- [d03 d13]
+// xmm3  <- [d23 d33]
+// xmm8  <- dirty
+// xmm9  <- dirty
+// xmm10 <- dirty
+// xmm11 <- dirty
+// xmm12 <- dirty
+// xmm13 <- dirty
+// xmm14 <- dirty
+// xmm15 <- dirty
+
+	.p2align 4,,15
+	.type inner_blender_4x4_lib4, @function
+inner_blender_4x4_lib4:
+	
+	vmovapd		0(%r10), %xmm15
+	vaddpd		%xmm0, %xmm15, %xmm0
+	vmovapd		16(%r10), %xmm15
+	vaddpd		%xmm1, %xmm15, %xmm1
+	vmovapd		32(%r10), %xmm15
+	vaddpd		%xmm2, %xmm15, %xmm2
+	vmovapd		48(%r10), %xmm15
+	vaddpd		%xmm3, %xmm15, %xmm3
+	vmovapd		64(%r10), %xmm15
+	vaddpd		%xmm4, %xmm15, %xmm4
+	vmovapd		80(%r10), %xmm15
+	vaddpd		%xmm5, %xmm15, %xmm5
+	vmovapd		96(%r10), %xmm15
+	vaddpd		%xmm6, %xmm15, %xmm6
+	vmovapd		112(%r10), %xmm15
+	vaddpd		%xmm7, %xmm15, %xmm7
+
+	ret
+
+	.size	inner_blender_4x4_lib4, .-inner_blender_4x4_lib4
+
+
+
+
+
+// common inner routine with file scope
+//
 // blender for tc==n and td==n
 //
 // input arguments:
@@ -2362,8 +2433,8 @@ kernel_dpotrf_nt_l_4x4_vs_lib4:
 
 
 
-//                                           edi     rsi         rdx         ecx     r8          r9          rsp+8    rsp+16     rsp+24     rsp+32              rsp+40  rsp+48
-// void kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, int alg, double *C, double *D, double *inv_diag_D, int km, int kn);
+//                                           edi     rsi         rdx         ecx     r8          r9          rsp+8      rsp+16     rsp+24              rsp+32  rsp+40
+// void kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *inv_diag_D, int km, int kn);
 
 	.p2align 4,,15
 	.globl kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4
@@ -2415,25 +2486,24 @@ kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4:
 
 	// call inner blender nn
 
-	movl	STACKSIZE +  8(%rsp), %r10d  // alg
-	movq	STACKSIZE + 16(%rsp), %r11   // C
+	movq	STACKSIZE + 8(%rsp), %r10   // C
 
-	call inner_blender_nn_4x4_lib4 // TODO alg has to be applied only to the add part !!!!!
+	call inner_blender_4x4_lib4
 
 
 	// factorization
 
-	movq	STACKSIZE + 32(%rsp), %r10  // inv_diag_D 
-	movl	STACKSIZE + 48(%rsp), %r11d // kn 
+	movq	STACKSIZE + 24(%rsp), %r10  // inv_diag_D 
+	movl	STACKSIZE + 40(%rsp), %r11d // kn 
 
 	call inner_edge_dpotrf_4x4_vs_lib4
 
 
 	// store
 
-	movq	STACKSIZE + 24(%rsp), %r10  // D 
-	movl	STACKSIZE + 40(%rsp), %r11d // km 
-	movl	STACKSIZE + 48(%rsp), %r12d // kn 
+	movq	STACKSIZE + 16(%rsp), %r10  // D 
+	movl	STACKSIZE + 32(%rsp), %r11d // km 
+	movl	STACKSIZE + 40(%rsp), %r12d // kn 
 
 	call inner_store_l_4x4_vs_lib4
 
@@ -2543,8 +2613,8 @@ kernel_dtrsm_nt_rl_inv_4x4_lib4:
 
 
 
-//                                            edi     rsi         rdx         ecx     r8          r9          rsp+8    rsp+16     rsp+24     rsp+32    rsp+40                     
-// void kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, int alg, double *C, double *D, double *E, double *inv_diag_E);
+//                                            edi     rsi         rdx         ecx     r8          r9          rsp+8      rsp+16     rsp+24     rsp+32
+// void kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *E, double *inv_diag_E);
 
 	.p2align 4,,15
 	.globl kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4
@@ -2596,23 +2666,22 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4:
 
 	// call inner blender nn
 
-	movl	STACKSIZE + 8(%rsp),  %r10d  // alg 
-	movq	STACKSIZE + 16(%rsp), %r11   // C
+	movq	STACKSIZE + 8(%rsp), %r10   // C
 
-	call inner_blender_nn_4x4_lib4 // TODO alg has to be applied only to the add part !!!!!
+	call inner_blender_4x4_lib4
 
 
 	// solve
 
-	movq	STACKSIZE + 32(%rsp), %r10  // E 
-	movq	STACKSIZE + 40(%rsp), %r11  // inv_diag_E 
+	movq	STACKSIZE + 24(%rsp), %r10  // E 
+	movq	STACKSIZE + 32(%rsp), %r11  // inv_diag_E 
 
 	call inner_edge_dtrsm_rlt_inv_4x4_lib4
 
 
 	// store
 
-	movq	STACKSIZE + 24(%rsp), %r10   // D
+	movq	STACKSIZE + 16(%rsp), %r10   // D
 
 	call inner_store_4x4_lib4
 
@@ -2725,8 +2794,8 @@ kernel_dtrsm_nt_rl_inv_4x4_vs_lib4:
 
 
 
-//                                               edi     rsi         rdx         ecx     r8          r9          rsp+8    rsp+16     rsp+24     rsp+32     rsp+40              rsp+48  rsp+56
-// void kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, int alg, double *C, double *D, double *E, double *inv_diag_E, int km, int kn);
+//                                               edi     rsi         rdx         ecx     r8          r9          rsp+8      rsp+16     rsp+24     rsp+32              rsp+40  rsp+48
+// void kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *E, double *inv_diag_E, int km, int kn);
 
 	.p2align 4,,15
 	.globl kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4
@@ -2778,26 +2847,25 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4:
 
 	// call inner blender nn
 
-	movl	STACKSIZE +  8(%rsp), %r10d // alg 
-	movq	STACKSIZE + 16(%rsp), %r11  // C 
+	movq	STACKSIZE + 8(%rsp), %r10  // C 
 
-	call inner_blender_nn_4x4_lib4 // TODO alg has to be applied only to the add part !!!!!
+	call inner_blender_4x4_lib4
 
 
 	// solve
 
-	movq	STACKSIZE + 32(%rsp), %r10  // E 
-	movq	STACKSIZE + 40(%rsp), %r11  // inv_diag_E 
-	movl	STACKSIZE + 56(%rsp), %r12d // kn 
+	movq	STACKSIZE + 24(%rsp), %r10  // E 
+	movq	STACKSIZE + 32(%rsp), %r11  // inv_diag_E 
+	movl	STACKSIZE + 48(%rsp), %r12d // kn 
 
 	call inner_edge_dtrsm_rlt_inv_4x4_vs_lib4
 
 
 	// store
 
-	movq	STACKSIZE + 24(%rsp), %r10 // D 
-	movl	STACKSIZE + 48(%rsp), %r11d // km 
-	movl	STACKSIZE + 56(%rsp), %r12d // kn 
+	movq	STACKSIZE + 16(%rsp), %r10 // D 
+	movl	STACKSIZE + 40(%rsp), %r11d // km 
+	movl	STACKSIZE + 48(%rsp), %r12d // kn 
 
 	call inner_store_4x4_vs_lib4
 

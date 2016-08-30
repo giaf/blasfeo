@@ -396,7 +396,7 @@ inner_blender_n_8_lib4:
 	vmovupd		32(%r11), %ymm15
 	vaddpd		%ymm1, %ymm15, %ymm1
 
-	ret // return
+	jmp		0f // return
 
 1:
 
@@ -408,11 +408,11 @@ inner_blender_n_8_lib4:
 
 0: // return
 	
-	ret
-	
 #if MACRO_LEVEL>=1
 	.endm
 #else
+	ret
+	
 	.size	inner_blender_n_8_lib4, .-inner_blender_n_8_lib4
 #endif
 
@@ -487,7 +487,7 @@ inner_blender_t_8_lib4:
 	vmovupd		32(%r11), %ymm15
 	vaddpd		%ymm1, %ymm15, %ymm1
 
-	ret // return
+	jmp		0f // return
 
 1:
 
@@ -499,11 +499,11 @@ inner_blender_t_8_lib4:
 
 0: // return
 	
-	ret
-	
 #if MACRO_LEVEL>=1
 	.endm
 #else
+	ret
+	
 	.size	inner_blender_t_8_lib4, .-inner_blender_t_8_lib4
 #endif
 
@@ -536,11 +536,11 @@ inner_store_8_lib4:
 	vmovupd %ymm0, 0(%r10)
 	vmovupd %ymm1, 32(%r10)
 	
-	ret
-
 #if MACRO_LEVEL>=1
 	.endm
 #else
+	ret
+
 	.size	inner_store_8_lib4, .-inner_store_8_lib4
 #endif
 

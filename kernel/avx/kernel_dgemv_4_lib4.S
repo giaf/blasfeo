@@ -338,7 +338,7 @@ inner_blender_n_4_lib4:
 	vmovupd		0(%r11), %ymm15
 	vaddpd		%ymm0, %ymm15, %ymm0
 
-	ret // return
+	jmp		0f // return
 
 1:
 
@@ -415,7 +415,7 @@ inner_blender_t_4_lib4:
 	vmovupd		0(%r11), %ymm15
 	vaddpd		%ymm0, %ymm15, %ymm0
 
-	ret // return
+	jmp		0f // return
 
 1:
 
@@ -499,11 +499,11 @@ inner_edge_dtrsv_ln_inv_4_lib4:
 	vmulpd			%ymm0, %ymm12, %ymm1
 	vblendpd		$0x8, %ymm1, %ymm0, %ymm0
 
-	ret
-
 #if MACRO_LEVEL>=1
 	.endm
 #else
+	ret
+
 	.size	inner_edge_dtrsv_ln_inv_4_lib4, .-inner_edge_dtrsv_ln_inv_4_lib4
 #endif
 
@@ -667,11 +667,11 @@ inner_edge_dtrsv_lt_inv_4_lib4:
 	vmulpd			%ymm12, %ymm0, %ymm1
 	vblendpd		$0x1, %ymm1, %ymm0, %ymm0
 
-	ret
-
 #if MACRO_LEVEL>=1
 	.endm
 #else
+	ret
+
 	.size	inner_edge_dtrsv_lt_inv_4_lib4, .-inner_edge_dtrsv_lt_inv_4_lib4
 #endif
 
@@ -863,11 +863,11 @@ inner_edge_dtrsv_lt_inv_2_lib4:
 	vmulpd			%ymm12, %ymm0, %ymm1
 	vblendpd		$0x1, %ymm1, %ymm0, %ymm0
 
-	ret
-
 #if MACRO_LEVEL>=1
 	.endm
 #else
+	ret
+
 	.size	inner_edge_dtrsv_lt_inv_2_lib4, .-inner_edge_dtrsv_lt_inv_2_lib4
 #endif
 
@@ -1036,11 +1036,11 @@ inner_edge_dtrmv_un_4_lib4:
 	addq			$128, %r11
 	addq			$32, %r12
 	
-	ret
-
 #if MACRO_LEVEL>=1
 	.endm
 #else
+	ret
+
 	.size	inner_edge_dtrmv_un_4_lib4, .-inner_edge_dtrmv_un_4_lib4
 #endif
 
@@ -1179,11 +1179,11 @@ inner_kernel_dtrmv_ut_4_lib4:
 	
 2: // return
 
-	ret
-
 #if MACRO_LEVEL>=1
 	.endm
 #else
+	ret
+
 	.size	inner_kernel_dtrmv_ut_4_lib4, .-inner_kernel_dtrmv_ut_4_lib4
 #endif
 
@@ -1213,11 +1213,11 @@ inner_store_4_lib4:
 	
 	vmovupd %ymm0,  0(%r10)
 	
-	ret
-
 #if MACRO_LEVEL>=1
 	.endm
 #else
+	ret
+
 	.size	inner_store_4_lib4, .-inner_store_4_lib4
 #endif
 
@@ -1259,11 +1259,11 @@ inner_store_4_vs_lib4:
 
 	vmaskmovpd	%ymm0, %ymm15,  0(%r10)
 
-	ret
-
 #if MACRO_LEVEL>=1
 	.endm
 #else
+	ret
+
 	.size	inner_store_4_vs_lib4, .-inner_store_4_vs_lib4
 #endif
 

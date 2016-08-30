@@ -1035,9 +1035,9 @@ void kernel_dpotrf_nt_l_4x4_vs_lib4(int kmax, double *A, double *B, double *C, d
 
 
 
-void kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, int alg, double *C, double *D, double *inv_diag_D, int km, int kn)
+void kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *inv_diag_D, int km, int kn)
 	{
-	kernel_dsyrk_nt_l_4x4_vs_lib4(kp, Ap, Bp, alg, C, D, km, kn);
+	kernel_dsyrk_nt_l_4x4_vs_lib4(kp, Ap, Bp, 1, C, D, km, kn);
 	kernel_dpotrf_nt_l_4x4_vs_lib4(km_, Am, Bm, D, D, inv_diag_D, km, kn);
 	}
 
@@ -1297,17 +1297,17 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib4(int k, double *A, double *B, double *C, dou
 
 
 
-void kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, int alg, double *C, double *D, double *E, double *inv_diag_E, int km, int kn)
+void kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *E, double *inv_diag_E, int km, int kn)
 	{
-	kernel_dgemm_nt_4x4_vs_lib4(kp, Ap, Bp, alg, C, D, km, kn);
+	kernel_dgemm_nt_4x4_vs_lib4(kp, Ap, Bp, 1, C, D, km, kn);
 	kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(km_, Am, Bm, D, D, E, inv_diag_E, km, kn);
 	}
 
 
 
-void kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, int alg, double *C, double *D, double *E, double *inv_diag_E)
+void kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *E, double *inv_diag_E)
 	{
-	kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4(kp, Ap, Bp, km_, Am, Bm, alg, C, D, E, inv_diag_E, 4, 4);
+	kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4(kp, Ap, Bp, km_, Am, Bm, C, D, E, inv_diag_E, 4, 4);
 	}
 
 

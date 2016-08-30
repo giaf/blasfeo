@@ -358,7 +358,8 @@ void dtrmm_nt_ru_lib(int m, int n, double *pA, int sda, double *pB, int sdb, int
 	int i, j;
 	
 	i = 0;
-#if defined(TARGET_X64_INTEL_HASWELL)
+// XXX there is a bug here !!!!!!
+#if 0//defined(TARGET_X64_INTEL_HASWELL)
 	for(; i<m-11; i+=12)
 		{
 		j = 0;
@@ -387,7 +388,7 @@ void dtrmm_nt_ru_lib(int m, int n, double *pA, int sda, double *pB, int sdb, int
 			}
 		}
 
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;

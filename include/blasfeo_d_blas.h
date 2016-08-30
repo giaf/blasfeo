@@ -26,19 +26,43 @@
 
 
 
+//
 // level 2 BLAS
+//
+
+// z <= beta * y + alpha * A * x
 void dgemv_n_lib(int m, int n, double *pA, int sda, double *x, int alg, double *y, double *z);
+// z <= beta * y + alpha * A' * x
 void dgemv_t_lib(int m, int n, double *pA, int sda, double *x, int alg, double *y, double *z);
+// y <= inv( A ) * x
 void dtrsv_ln_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *x, double *y);
+// y <= inv( A' ) * x
 void dtrsv_lt_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *x, double *y);
+// z <= beta * y + alpha * A * x ; A upper triangular
 void dtrmv_un_lib(int m, double *pA, int sda, double *x, int alg, double *y, double *z);
+// z <= beta * y + alpha * A' * x ; A upper triangular
 void dtrmv_ut_lib(int m, double *pA, int sda, double *x, int alg, double *y, double *z);
 	
+
+
+//
 // level 3 BLAS
+//
+
+// D <= beta * C + alpha * A * B'
 void dgemm_nt_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
+// D <= beta * C + alpha * A * B' ; C, D lower triangular
 void dsyrk_nt_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
+// D <= beta * C + alpha * A * B' ; B upper triangular
 void dtrmm_nt_ru_lib(int m, int n, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
 
+
+
+//
 // LAPACK
+//
+
+// D <= chol( C ) ; C, D lower triangular
 void dpotrf_nt_l_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);
-void dsyrk_dpotrf_nt_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);
+// D <= chol( C + A * B' ) ; C, D lower triangular
+void dsyrk_dpotrf_nt_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);
