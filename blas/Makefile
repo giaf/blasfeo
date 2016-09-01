@@ -38,6 +38,11 @@ OBJS += d_blas3_lib4.o d_lapack_lib4.o d_blas2_lib4.o
 OBJS += s_blas3_lib4.o s_lapack_lib4.o s_blas2_lib4.o
 endif
 
+ifeq ($(TARGET), X64_INTEL_CORE)
+OBJS += d_blas3_lib4.o d_lapack_lib4.o d_blas2_lib4.o
+OBJS += s_blas3_lib4.o s_lapack_lib4.o s_blas2_lib4.o
+endif
+
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
 OBJS += d_blas3_lib4.o d_lapack_lib4.o d_blas2_lib4.o
 OBJS += s_blas3_lib4.o s_lapack_lib4.o s_blas2_lib4.o

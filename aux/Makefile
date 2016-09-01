@@ -40,6 +40,12 @@ OBJS += s_aux_lib4.o s_aux_extern_depend_lib4.o
 OBJS += i_aux_extern_depend_lib4.o 
 endif
 
+ifeq ($(TARGET), X64_INTEL_CORE)
+OBJS += d_aux_lib4.o d_aux_extern_depend_lib4.o
+OBJS += s_aux_lib4.o s_aux_extern_depend_lib4.o
+OBJS += i_aux_extern_depend_lib4.o 
+endif
+
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
 OBJS += d_aux_lib4.o d_aux_extern_depend_lib4.o
 OBJS += s_aux_lib4.o s_aux_extern_depend_lib4.o

@@ -38,6 +38,13 @@
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
 
+#elif defined( TARGET_X64_INTEL_CORE )
+
+#define D_BS 4
+#define S_BS 4
+#define D_NC 4 // 2 // until the smaller kernel is 4x4
+#define S_NC 4 //2
+
 #elif defined( TARGET_X64_AMD_BULLDOZER )
 
 #define D_BS 4

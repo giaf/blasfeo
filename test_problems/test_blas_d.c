@@ -35,7 +35,7 @@
 
 
 #if defined(REF_BLAS_OPENBLAS)
-#include "../reference_code/blas.h"
+#include <f77blas.h>
 void openblas_set_num_threads(int n_thread);
 #endif
 #if defined(REF_BLAS_BLIS)
@@ -80,6 +80,9 @@ int main()
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	const float flops_max = 8;
 	printf("Testing BLAS version for AVX instruction set, 64 bit: theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_X64_INTEL_CORE)
+	const float flops_max = 4;
+	printf("Testing BLAS version for AVX instruction set, 64 bit: theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #endif
 	
 	FILE *f;
@@ -90,6 +93,9 @@ int main()
 	fprintf(f, "\n");
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	fprintf(f, "C = 'd_x64_sandybridge';\n");
+	fprintf(f, "\n");
+#elif defined(TARGET_X64_INTEL_CORE)
+	fprintf(f, "C = 'd_x64_core';\n");
 	fprintf(f, "\n");
 #endif
 
@@ -246,11 +252,11 @@ int main()
 
 #if defined(LOW_RANK)
 #else
-//			dgemm_nt_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
+			dgemm_nt_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
 //			dsyrk_nt_l_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
 //			dtrmm_nt_ru_lib(n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
 //			dpotrf_nt_l_lib(n, n, pB, cnd, pD, cnd, diag);
-			dsyrk_dpotrf_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd, diag);
+//			dsyrk_dpotrf_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd, diag);
 //			dsyrk_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd);
 //			dpotrf_nt_l_lib(n, n, pD, cnd, pD, cnd, diag);
 #endif
@@ -263,7 +269,7 @@ int main()
 #if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
 #if defined(LOW_RANK)
 //			dgemm_(&c_n, &c_t, &m, &m, &n, &d_1, Al, &m, Al, &m, &d_0, Cl, &m);
-			dsyrk_(&c_l, &c_n, &m, &n, &d_1, Al, &m, &d_0, Cl, &m);
+//			dsyrk_(&c_l, &c_n, &m, &n, &d_1, Al, &m, &d_0, Cl, &m);
 #else
 			dgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
 //			dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
@@ -309,7 +315,7 @@ int main()
 //		float flop_operation = 2.0*m*m*n; // dgemm
 		float flop_operation = 1.0*m*m*n; // dsyrk dtrmm
 #else
-//		float flop_operation = 2.0*n*n*n; // dgemm
+		float flop_operation = 2.0*n*n*n; // dgemm
 //		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm
 //		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
@@ -317,7 +323,7 @@ int main()
 //		float flop_operation = 1.0*n*n; // dtrmv dtrsv
 //		float flop_operation = 4.0*n*n; // dgemv_nt
 
-		float flop_operation = 4.0/3.0*n*n*n; // dsyrk+dpotrf
+//		float flop_operation = 4.0/3.0*n*n*n; // dsyrk+dpotrf
 #endif
 
 		float time_hpmpc    = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);

@@ -40,9 +40,21 @@ OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o
 OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
 endif
 
-ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 # kernel
+ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 OBJS += ./kernel/avx/kernel_dgemm_4x4_lib4.o ./kernel/avx/kernel_dgemm_8x4_lib4.o ./kernel/avx/kernel_dgemv_12_lib4.o ./kernel/avx/kernel_dgemv_8_lib4.o  ./kernel/avx/kernel_dgemv_4_lib4.o 
+OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
+# blas
+OBJS += ./blas/d_blas3_lib4.o ./blas/d_lapack_lib4.o ./blas/d_blas2_lib4.o
+OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
+#aux
+OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o 
+OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
+endif
+
+ifeq ($(TARGET), X64_INTEL_CORE)
+# kernel
+OBJS += ./kernel/sse3/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o
 OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 # blas
 OBJS += ./blas/d_blas3_lib4.o ./blas/d_lapack_lib4.o ./blas/d_blas2_lib4.o
@@ -99,6 +111,11 @@ endif
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 	echo "#ifndef TARGET_X64_INTEL_SANDY_BRIDGE" > ./include/blasfeo_target.h
 	echo "#define TARGET_X64_INTEL_SANDY_BRIDGE" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
+ifeq ($(TARGET), X64_INTEL_CORE)
+	echo "#ifndef TARGET_X64_INTEL_CORE" > ./include/blasfeo_target.h
+	echo "#define TARGET_X64_INTEL_CORE" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
