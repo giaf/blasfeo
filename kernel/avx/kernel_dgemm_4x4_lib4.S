@@ -1164,7 +1164,7 @@ inner_blender_loader_nn_4x4_lib4:
 	vmovapd		96(%r11), %ymm15
 	vaddpd		%ymm3, %ymm15, %ymm3
 
-	ret // return
+	jmp		0f // return
 
 1: // alg==-1
 

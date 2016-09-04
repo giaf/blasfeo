@@ -525,7 +525,7 @@ inner_blender_t_8_lib4:
 	vmovupd		32(%r11), %ymm15
 	vaddpd		%ymm1, %ymm15, %ymm1
 
-	ret // return
+	jmp		0f // return
 
 1:
 

@@ -804,7 +804,11 @@ kernel_dgemv_t_12_lib4:
 	movslq	%r12d, %r12
 	movq	%rcx, %r13  // x
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMV_ADD_T_12_LIB4
+#else
 	call inner_kernel_dgemv_add_t_12_lib4
+#endif
 
 
 	// call inner blender t
@@ -812,14 +816,22 @@ kernel_dgemv_t_12_lib4:
 	movl	%r8d, %r10d // alg
 	movq	%r9, %r11   // y
 
+#if MACRO_LEVEL>=1
+	INNER_BLENDER_T_12_LIB4
+#else
 	call inner_blender_t_12_lib4
+#endif
 
 
 	// store
 
 	movq	STACKSIZE +  8(%rsp), %r10 // z 
 
+#if MACRO_LEVEL>=1
+	INNER_STORE_12_LIB4
+#else
 	call inner_store_12_lib4
+#endif
 
 
 	// epilogue
