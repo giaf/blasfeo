@@ -47,7 +47,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 3.3
+#define GHZ_MAX 3.6
 
 
 
@@ -242,7 +242,7 @@ int main()
 		/* warm up */
 		for(rep=0; rep<nrep; rep++)
 			{
-			dgemm_nt_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
+			dgemm_nt_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
 			}
 
 		gettimeofday(&tv0, NULL); // stop
@@ -252,7 +252,7 @@ int main()
 
 #if defined(LOW_RANK)
 #else
-			dgemm_nt_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pC, cnd);
+			dgemm_nt_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
 //			dsyrk_nt_l_lib(n, n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
 //			dtrmm_nt_ru_lib(n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
 //			dpotrf_nt_l_lib(n, n, pB, cnd, pD, cnd, diag);
@@ -343,6 +343,7 @@ int main()
 		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max, Gflops_codegen, 100.0*Gflops_codegen/Gflops_max);
 #else
 		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
 #endif
 
 

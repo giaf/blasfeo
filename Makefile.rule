@@ -29,14 +29,14 @@
 # X64_INTEL_SANDY_BRIDGE : x86_64 architecture with AVX instruction set (64 bit operating system) code optimized for Intel Sandy-Bridge architecture.
 # X64_AMD_BULLDOZER : x86_64 architecture with AVX and FMA instruction set (64 bit operating system) code optimized for AMD Bulldozer.
 # GENERIC : generic c99 code
-TARGET = X64_INTEL_HASWELL
-#TARGET = X64_INTEL_SANDY_BRIDGE
+#TARGET = X64_INTEL_HASWELL
+TARGET = X64_INTEL_SANDY_BRIDGE
 #TARGET = X64_INTEL_CORE
 #TARGET = X64_AMD_BULLDOZER
 #TARGET = GENERIC
 
 # Macro level: 0 (no macro), 1 (all macro but gemm kernel), 2 (all macro)
-MACRO_LEVEL = 1
+MACRO_LEVEL = 0
 
 # Installation directory
 PREFIX = /opt
@@ -63,7 +63,7 @@ ASFLAGS += -DMACRO_LEVEL=2
 endif
 
 # compare against standard BLAS and LAPACK in test problems
-#REF_BLAS = 0
+REF_BLAS = 0
 #REF_BLAS = OPENBLAS
 #REF_BLAS = BLIS
 #REF_BLAS = NETLIB

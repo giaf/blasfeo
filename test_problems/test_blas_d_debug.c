@@ -93,9 +93,9 @@ int main()
 	double *inv_diag_D; d_zeros(&inv_diag_D, pn, 1);
 	for(ii=0; ii<n; ii++) inv_diag_D[ii] = 0.5;
 	
-//	dgemm_nt_lib(16, 16, 16, pA, cn, pB, cn, 0, pC, cn, pD, cn);
+	dgemm_nt_lib(11, 11, 16, 1.0, pA, cn, pB, cn, 0.0, pD, cn, pD, cn);
 //	dsyrk_nt_l_lib(16, 16, 16, pA, cn, pA, cn, 1, pB, cn, pD, cn);
-	dtrmm_nt_ru_lib(15, 15, pA, cn, pB, cn, -1, pC, cn, pD, cn);
+//	dtrmm_nt_ru_lib(15, 15, pA, cn, pB, cn, -1, pC, cn, pD, cn);
 //	dpotrf_nt_l_lib(15, 15, pD, cn, pD, cn, inv_diag_D);
 //	dsyrk_dpotrf_nt_l_lib(16, 16, 16, pA, cn, pA, cn, pB, cn, pD, cn, inv_diag_D);
 //	dgemv_t_lib_b(3, 6, pA, cn, x, 0, y, z);

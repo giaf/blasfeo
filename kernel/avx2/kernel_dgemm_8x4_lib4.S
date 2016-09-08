@@ -1043,6 +1043,130 @@ inner_edge_dtrmm_sub_nt_ru_8x4_vs_lib4:
 
 // common inner routine with file scope
 //
+// blend for generic alpha and beta
+//
+// input arguments:
+// r10   <- alpha
+// r11   <- beta
+// r12   <- C
+// r13   <- 4*sdc*sizeof(double)
+// r15   <- dirty
+// ymm0  <- [d00 d11 d22 d33]
+// ymm1  <- [d01 d10 d23 d32]
+// ymm2  <- [d03 d12 d21 d30]
+// ymm3  <- [d02 d13 d20 d31]
+// ymm4  <- [d40 d51 d62 d73]
+// ymm5  <- [d41 d50 d63 d72]
+// ymm6  <- [d43 d52 d61 d70]
+// ymm7  <- [d42 d53 d60 d71]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10   <- alpha
+// r11   <- beta
+// r12   <- C
+// r13   <- 4*sdc*sizeof(double)
+// r15   <- dirty
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm4  <- [d40 d50 d60 d70]
+// ymm5  <- [d41 d51 d61 d71]
+// ymm6  <- [d42 d52 d62 d72]
+// ymm7  <- [d43 d53 d63 d73]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_SCALE_8X4_LIB4
+#else
+	.p2align 4,,15
+	.type inner_blend_scale_8x4_lib4, @function
+inner_blend_scale_8x4_lib4:
+#endif
+	
+
+	// alpha
+	vbroadcastsd	0(%r10), %ymm15
+
+	// tc==n
+	vblendpd	$0xa, %ymm1, %ymm0, %ymm8
+	vblendpd	$0x5, %ymm1, %ymm0, %ymm9
+	vblendpd	$0xa, %ymm3, %ymm2, %ymm10
+	vblendpd	$0x5, %ymm3, %ymm2, %ymm11
+
+	vblendpd	$0xc, %ymm10, %ymm8, %ymm0
+	vblendpd	$0x3, %ymm10, %ymm8, %ymm2
+	vblendpd	$0xc, %ymm11, %ymm9, %ymm1
+	vblendpd	$0x3, %ymm11, %ymm9, %ymm3
+
+	vmulpd		%ymm0, %ymm15, %ymm0
+	vmulpd		%ymm1, %ymm15, %ymm1
+	vmulpd		%ymm2, %ymm15, %ymm2
+	vmulpd		%ymm3, %ymm15, %ymm3
+
+	vblendpd	$0xa, %ymm5, %ymm4, %ymm8
+	vblendpd	$0x5, %ymm5, %ymm4, %ymm9
+	vblendpd	$0xa, %ymm7, %ymm6, %ymm10
+	vblendpd	$0x5, %ymm7, %ymm6, %ymm11
+
+	vblendpd	$0xc, %ymm10, %ymm8, %ymm4
+	vblendpd	$0x3, %ymm10, %ymm8, %ymm6
+	vblendpd	$0xc, %ymm11, %ymm9, %ymm5
+	vblendpd	$0x3, %ymm11, %ymm9, %ymm7
+
+	vmulpd		%ymm4, %ymm15, %ymm4
+	vmulpd		%ymm5, %ymm15, %ymm5
+	vmulpd		%ymm6, %ymm15, %ymm6
+	vmulpd		%ymm7, %ymm15, %ymm7
+
+	movq	%r12, %r15 // C1 <- C0
+	addq	%r13, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
+
+	// beta
+	vbroadcastsd	0(%r11), %ymm14
+
+	// alg==1
+	vmovapd		0(%r12), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm0
+	vmovapd		32(%r12), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm1
+	vmovapd		64(%r12), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm2
+	vmovapd		96(%r12), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm3
+
+	vmovapd		0(%r15), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm4
+	vmovapd		32(%r15), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm5
+	vmovapd		64(%r15), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm6
+	vmovapd		96(%r15), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm7
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_blend_scale_8x4_lib4, .-inner_blend_scale_8x4_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // blender for alpha = 1.0 and beta = 1.0
 //
 // input arguments:
@@ -1867,8 +1991,8 @@ inner_store_l_8x4_vs_lib4:
 
 
 
-//                               rdi    rsi        rdx      rcx        r8       r9         rsp+8    rsp+16     rsp+24  
-// void kernel_dgemm_nt_8x4_lib4(int k, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd);
+//                               rdi    rsi            rdx        rcx      r8         r9            rsp+8      rsp+16   rsp+24     rsp+32
+// void kernel_dgemm_nt_8x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd);
 
 	.p2align 4,,15
 	.globl kernel_dgemm_nt_8x4_lib4
@@ -1902,12 +2026,12 @@ kernel_dgemm_nt_8x4_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d
-	movq	%rsi, %r11
-	movl	%edx, %r12d
+	movl	%edi, %r10d // k
+	movq	%rdx, %r11 // A
+	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
 	movslq	%r12d, %r12
-	movq	%rcx, %r13
+	movq	%r8, %r13 // B
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_8X4_LIB4
@@ -1916,27 +2040,28 @@ kernel_dgemm_nt_8x4_lib4:
 #endif
 
 
-	// call inner blender nn
+	// call inner blend scale
 
-	movl	%r8d, %r10d
-	movq	%r9, %r11
-	movl	STACKSIZE +  8(%rsp), %r12d // sdc
-	sall	$5, %r12d // 4*sdc*sizeof(double)
-	movslq	%r12d, %r12
+	movq	%rsi, %r10 // alpha
+	movq	%r9, %r11 // beta
+	movq	STACKSIZE +  8(%rsp), %r12 // C
+	movl	STACKSIZE +  16(%rsp), %r13d // sdc
+	sall	$5, %r13d // 4*sdc*sizeof(double)
+	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_NN_8X4_LIB4
+	INNER_BLEND_SCALE_8X4_LIB4
 #else
-	call inner_blender_nn_8x4_lib4
+	call inner_blend_scale_8x4_lib4
 #endif
 
 
 	// store n
 
-	movl	STACKSIZE + 24(%rsp), %r11d // sdd
+	movl	STACKSIZE + 32(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 	movslq	%r11d, %r11
-	movq	STACKSIZE + 16(%rsp), %r10 // store address D
+	movq	STACKSIZE + 24(%rsp), %r10 // store address D
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_LIB4
@@ -1965,8 +2090,8 @@ kernel_dgemm_nt_8x4_lib4:
 
 
 
-//                                  rdi     rsi        rdx      rcx        r8       r9         rsp+8    rsp+16     rsp+24   rsp+32    rsp+40
-// void kernel_dgemm_nt_8x4_vs_lib4(int km, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd, int km, int kn);
+//                                  rdi     rsi            rdx        rcx      r8         r9            rsp+8      rsp+16   rsp+24     rsp+32   rsp+40  rsp+48
+// void kernel_dgemm_nt_8x4_vs_lib4(int km, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, int km, int kn);
 
 	.p2align 4,,15
 	.globl kernel_dgemm_nt_8x4_vs_lib4
@@ -2000,12 +2125,12 @@ kernel_dgemm_nt_8x4_vs_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d
-	movq	%rsi, %r11
-	movl	%edx, %r12d
+	movl	%edi, %r10d // k
+	movq	%rdx, %r11 // A
+	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
 	movslq	%r12d, %r12
-	movq	%rcx, %r13
+	movq	%r8, %r13
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_8X4_LIB4
@@ -2014,30 +2139,31 @@ kernel_dgemm_nt_8x4_vs_lib4:
 #endif
 
 
-	// call inner blender nn
+	// call inner blend scale
 
-	movl	%r8d, %r10d
-	movq	%r9, %r11
-	movl	STACKSIZE +  8(%rsp), %r12d // sdc
-	sall	$5, %r12d // 4*sdc*sizeof(double)
-	movslq	%r12d, %r12
+	movq	%rsi, %r10 // alpha
+	movq	%r9, %r11 // beta
+	movq	STACKSIZE +  8(%rsp), %r12 // C
+	movl	STACKSIZE +  16(%rsp), %r13d // sdc
+	sall	$5, %r13d // 4*sdc*sizeof(double)
+	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_NN_8X4_LIB4
+	INNER_BLEND_SCALE_8X4_LIB4
 #else
-	call inner_blender_nn_8x4_lib4
+	call inner_blend_scale_8x4_lib4
 #endif
 
 
 	// store n
 
-	movq	STACKSIZE + 16(%rsp), %r10 // store address D
-	movl	STACKSIZE + 24(%rsp), %r11d // sdd
+	movq	STACKSIZE + 24(%rsp), %r10 // store address D
+	movl	STACKSIZE + 32(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 	movslq	%r11d, %r11
 
-	movl	STACKSIZE +  32(%rsp), %r12d // km 
-	movl	STACKSIZE +  40(%rsp), %r13d // kn 
+	movl	STACKSIZE +  40(%rsp), %r12d // km 
+	movl	STACKSIZE +  48(%rsp), %r13d // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_VS_LIB4

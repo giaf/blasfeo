@@ -1259,16 +1259,15 @@ inner_edge_dtrmm_sub_nt_ru_12x4_vs_lib4:
 
 
 
-#if 0
 // common inner routine with file scope
 //
-// blender-scaler for tc==n and td==n
+// blend for generic alpha and beta
 //
 // input arguments:
 // r10   <- &alpha
-// r11   <- C
-// r12   <- 4*sdc*sizeof(double)
-// r13   <- &beta
+// r11   <- &beta
+// r12   <- C
+// r13   <- 4*sdc*sizeof(double)
 // r14   <- dirty
 // r15   <- dirty
 // ymm0  <- [d00 d11 d22 d33]
@@ -1290,9 +1289,9 @@ inner_edge_dtrmm_sub_nt_ru_12x4_vs_lib4:
 //
 // output arguments:
 // r10   <- &alpha
-// r11   <- C
-// r12   <- 4*sdc*sizeof(double)
-// r13   <- &beta
+// r11   <- &beta
+// r12   <- C
+// r13   <- 4*sdc*sizeof(double)
 // r14   <- dirty
 // r15   <- dirty
 // ymm0  <- [d00 d10 d20 d30]
@@ -1312,10 +1311,14 @@ inner_edge_dtrmm_sub_nt_ru_12x4_vs_lib4:
 // ymm14 <- dirty
 // ymm15 <- dirty
 
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_SCALE_12X4_LIB4
+#else
 	.p2align 4,,15
-	.type inner_blender_scaler_nn_12x4_lib4, @function
-inner_blender_scaler_nn_12x4_lib4:
-	
+	.type inner_blend_scale_12x4_lib4, @function
+inner_blend_scale_12x4_lib4:
+#endif
+		
 
 	// tc==n
 	vblendpd	$0xa, %ymm1, %ymm0, %ymm12
@@ -1369,21 +1372,21 @@ inner_blender_scaler_nn_12x4_lib4:
 	vmulpd		%ymm10, %ymm15, %ymm10
 	vmulpd		%ymm11, %ymm15, %ymm11
 
-	movq	%r11, %r15 // C1 <- C0
-	addq	%r12, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
+	movq	%r12, %r15 // C1 <- C0
+	addq	%r13, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
 
 	movq	%r15, %r14 // C2 <- C1
-	addq	%r12, %r14 // C2 <- C1 + 4*sdc*sizeof(double)
+	addq	%r13, %r14 // C2 <- C1 + 4*sdc*sizeof(double)
 
 	vbroadcastsd 0(%r13), %ymm14 // beta
 
-	vmovapd		0(%r11), %ymm15
+	vmovapd		0(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm0
-	vmovapd		32(%r11), %ymm15
+	vmovapd		32(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm1
-	vmovapd		64(%r11), %ymm15
+	vmovapd		64(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm2
-	vmovapd		96(%r11), %ymm15
+	vmovapd		96(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm3
 
 	vmovapd		0(%r15), %ymm15
@@ -1404,9 +1407,12 @@ inner_blender_scaler_nn_12x4_lib4:
 	vmovapd		96(%r14), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm11
 
-	ret // return
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
 
-	.size	inner_blender_scaler_nn_12x4_lib4, .-inner_blender_scaler_nn_12x4_lib4
+	.size	inner_blend_scale_12x4_lib4, .-inner_blend_scale_12x4_lib4
 #endif
 
 
@@ -2411,14 +2417,13 @@ inner_store_l_12x4_vs_lib4:
 
 
 
-#if 0
-//                                 rdi    rsi            rdx      rcx        r8         r9            rsp+8      rsp+16   rsp+24     rsp+32
-// void kernel_dgemm_nt_12x4_lib4c(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd);
+//                                rdi    rsi            rdx        rcx      r8         r9            rsp+8      rsp+16   rsp+24     rsp+32
+// void kernel_dgemm_nt_12x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd);
 
 	.p2align 4,,15
-	.globl kernel_dgemm_nt_12x4_lib4_sc
-	.type kernel_dgemm_nt_12x4_lib4_sc, @function
-kernel_dgemm_nt_12x4_lib4_sc:
+	.globl kernel_dgemm_nt_12x4_lib4
+	.type kernel_dgemm_nt_12x4_lib4, @function
+kernel_dgemm_nt_12x4_lib4:
 	
 	// prologue
 
@@ -2458,19 +2463,27 @@ kernel_dgemm_nt_12x4_lib4_sc:
 	movslq	%r12d, %r12
 	movq	%r8, %r13 // B
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
+#else
 	call inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 
 
-	// call inner blender scaler nn
+	// call inner blend scale
 
 	movq	%rsi, %r10 // alpha
-	movq	STACKSIZE +  8(%rsp), %r11 // C
-	movl	STACKSIZE +  16(%rsp), %r12d // sdc
-	sall	$5, %r12d // 4*sdc*sizeof(double)
-	movslq	%r12d, %r12
-	movq	%r9, %r13 // beta
+	movq	%r9, %r11 // beta
+	movq	STACKSIZE +  8(%rsp), %r12 // C
+	movl	STACKSIZE +  16(%rsp), %r13d // sdc
+	sall	$5, %r13d // 4*sdc*sizeof(double)
+	movslq	%r13d, %r13
 
-	call inner_blender_scaler_nn_12x4_lib4
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_12X4_LIB4
+#else
+	call inner_blend_scale_12x4_lib4
+#endif
 
 
 	// store n
@@ -2479,105 +2492,6 @@ kernel_dgemm_nt_12x4_lib4_sc:
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 	movslq	%r11d, %r11
 	movq	STACKSIZE + 24(%rsp), %r10 // store address D
-
-	call inner_store_12x4_lib4
-
-
-	// epilogue
-
-	vzeroupper
-
-	movq	  (%rsp), %rbx 
-	movq	 8(%rsp), %rbp
-	movq	16(%rsp), %r12 
-	movq	24(%rsp), %r13 
-	movq	32(%rsp), %r14 
-	movq	40(%rsp), %r15 
-	addq	$STACKSIZE, %rsp
-
-	ret
-
-	.size	kernel_dgemm_nt_12x4_lib4_sc, .-kernel_dgemm_nt_12x4_lib4_sc
-#endif
-
-
-
-
-
-//                                rdi    rsi        rdx      rcx        r8       r9         rsp+8    rsp+16     rsp+24  
-// void kernel_dgemm_nt_12x4_lib4(int k, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd);
-
-	.p2align 4,,15
-	.globl kernel_dgemm_nt_12x4_lib4
-	.type kernel_dgemm_nt_12x4_lib4, @function
-kernel_dgemm_nt_12x4_lib4:
-	
-	// prologue
-
-	subq	$STACKSIZE, %rsp
-	movq	%rbx,   (%rsp)
-	movq	%rbp,  8(%rsp)
-	movq	%r12, 16(%rsp)
-	movq	%r13, 24(%rsp)
-	movq	%r14, 32(%rsp)
-	movq	%r15, 40(%rsp)
-
-	vzeroupper
-
-
-	// zero accumulation registers
-
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
-	vmovapd	%ymm0, %ymm4
-	vmovapd	%ymm0, %ymm5
-	vmovapd	%ymm0, %ymm6
-	vmovapd	%ymm0, %ymm7
-	vmovapd	%ymm0, %ymm8
-	vmovapd	%ymm0, %ymm9
-	vmovapd	%ymm0, %ymm10
-	vmovapd	%ymm0, %ymm11
-
-
-	// call inner dgemm kernel nt
-
-	movl	%edi, %r10d // k
-	movq	%rsi, %r11 // A
-	movl	%edx, %r12d // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
-	movslq	%r12d, %r12
-	movq	%rcx, %r13 // B
-
-#if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
-#else
-	call inner_kernel_dgemm_add_nt_12x4_lib4
-#endif
-
-
-	// call inner blender nn
-
-	movl	%r8d, %r10d // alg
-	movq	%r9, %r11 // C
-	movl	STACKSIZE +  8(%rsp), %r12d // sdc
-	sall	$5, %r12d // 4*sdc*sizeof(double)
-	movslq	%r12d, %r12
-
-#if MACRO_LEVEL>=1
-	INNER_BLENDER_NN_12X4_LIB4
-#else
-	call inner_blender_nn_12x4_lib4
-#endif
-
-
-	// store n
-
-	movl	STACKSIZE + 24(%rsp), %r11d // sdd
-	sall	$5, %r11d // 4*sdd*sizeof(double)
-	movslq	%r11d, %r11
-	movq	STACKSIZE + 16(%rsp), %r10 // store address D
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -2606,8 +2520,8 @@ kernel_dgemm_nt_12x4_lib4:
 
 
 
-//                                   rdi     rsi        rdx      rcx        r8       r9         rsp+8    rsp+16     rsp+24   rsp+32    rsp+40
-// void kernel_dgemm_nt_12x4_vs_lib4(int km, double *A, int sda, double *B, int alg, double *C, int sdc, double *D, int sdd, int km, int kn);
+//                                   rdi     rsi            rdx        rcx      r8         r9            rsp+8      rsp+16   rsp+24     rsp+32   rsp+40  rsp+48
+// void kernel_dgemm_nt_12x4_vs_lib4(int km, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, int km, int kn);
 
 	.p2align 4,,15
 	.globl kernel_dgemm_nt_12x4_vs_lib4
@@ -2645,12 +2559,12 @@ kernel_dgemm_nt_12x4_vs_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d
-	movq	%rsi, %r11
-	movl	%edx, %r12d
+	movl	%edi, %r10d // k
+	movq	%rdx, %r11 // A
+	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
 	movslq	%r12d, %r12
-	movq	%rcx, %r13
+	movq	%r8, %r13
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
@@ -2659,30 +2573,31 @@ kernel_dgemm_nt_12x4_vs_lib4:
 #endif
 
 
-	// call inner blender nn
+	// call inner blend scale
 
-	movl	%r8d, %r10d
-	movq	%r9, %r11
-	movl	STACKSIZE +  8(%rsp), %r12d // sdc
-	sall	$5, %r12d // 4*sdc*sizeof(double)
-	movslq	%r12d, %r12
+	movq	%rsi, %r10 // alpha
+	movq	%r9, %r11 // beta
+	movq	STACKSIZE +  8(%rsp), %r12 // C
+	movl	STACKSIZE +  16(%rsp), %r13d // sdc
+	sall	$5, %r13d // 4*sdc*sizeof(double)
+	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_NN_12X4_LIB4
+	INNER_BLEND_SCALE_12X4_LIB4
 #else
-	call inner_blender_nn_12x4_lib4
+	call inner_blend_scale_12x4_lib4
 #endif
 
 
 	// store n
 
-	movq	STACKSIZE + 16(%rsp), %r10 // store address D
-	movl	STACKSIZE + 24(%rsp), %r11d // sdd
+	movq	STACKSIZE + 24(%rsp), %r10 // store address D
+	movl	STACKSIZE + 32(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 	movslq	%r11d, %r11
 
-	movl	STACKSIZE +  32(%rsp), %r12d // km 
-	movl	STACKSIZE +  40(%rsp), %r13d // kn 
+	movl	STACKSIZE +  40(%rsp), %r12d // km 
+	movl	STACKSIZE +  48(%rsp), %r13d // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_VS_LIB4
