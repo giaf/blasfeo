@@ -1501,6 +1501,164 @@ inner_blender_nn_8x4_lib4:
 //
 // input arguments:
 // r10  <- inv_diag_E
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+// ymm4 <- [d40 d51 d62 d73]
+// ymm5 <- [d41 d50 d63 d72]
+// ymm6 <- [d43 d52 d61 d70]
+// ymm7 <- [d42 d53 d60 d71]
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10  <- inv_diag_E
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm4 <- [d40 d51 d62 d73]
+// ymm5 <- [d41 d50 d63 d72]
+// ymm6 <- [d43 d52 d61 d70]
+// ymm7 <- [d42 d53 d60 d71]
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DPOTRF_8X4_LIB4
+#else
+	.p2align 4,,15
+	.type inner_edge_dpotrf_8x4_lib4, @function
+inner_edge_dpotrf_8x4_lib4:
+#endif
+	
+	vxorpd			%ymm15, %ymm15, %ymm15 // 0.0
+	vmovsd			.LC04(%rip), %xmm14 // 1.0
+
+	vmovsd			%xmm0, %xmm0, %xmm13
+	vucomisd		%xmm15, %xmm13 // d_00 > 0.0 ?
+	jbe				1f
+	vsqrtsd			%xmm13, %xmm13, %xmm13
+	vdivsd			%xmm13, %xmm14, %xmm13
+2:
+	vmovsd			%xmm13, 0(%r10)
+	vmovddup		%xmm13, %xmm13
+	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vmulpd			%ymm0, %ymm13, %ymm0
+	vmulpd			%ymm4, %ymm13, %ymm4
+
+
+	vpermilpd		$0x3, %xmm0, %xmm13
+	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vfnmadd231pd	%ymm0, %ymm13, %ymm1
+	vfnmadd231pd	%ymm4, %ymm13, %ymm5
+	vpermilpd		$0x3, %xmm1, %xmm13
+	vucomisd		%xmm15, %xmm13 // d_11 > 0.0 ?
+	jbe				3f
+	vsqrtsd			%xmm13, %xmm13, %xmm13
+	vdivsd			%xmm13, %xmm14, %xmm13
+4:
+	vmovsd			%xmm13, 8(%r10)
+	vmovddup		%xmm13, %xmm13
+	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vmulpd			%ymm1, %ymm13, %ymm1
+	vmulpd			%ymm5, %ymm13, %ymm5
+
+
+	vextractf128	$0x1, %ymm0, %xmm13
+	vpermilpd		$0x0, %xmm13, %xmm13
+	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vfnmadd231pd	%ymm0, %ymm13, %ymm2
+	vfnmadd231pd	%ymm4, %ymm13, %ymm6
+	vextractf128	$0x1, %ymm1, %xmm13
+	vpermilpd		$0x0, %xmm13, %xmm13
+	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vfnmadd231pd	%ymm1, %ymm13, %ymm2
+	vfnmadd231pd	%ymm5, %ymm13, %ymm6
+	vextractf128	$0x1, %ymm2, %xmm13
+	vucomisd		%xmm15, %xmm13 // d_22 > 0.0 ?
+	jbe				5f
+	vsqrtsd			%xmm13, %xmm13, %xmm13
+	vdivsd			%xmm13, %xmm14, %xmm13
+6:
+	vmovsd			%xmm13, 16(%r10)
+	vmovddup		%xmm13, %xmm13
+	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vmulpd			%ymm2, %ymm13, %ymm2
+	vmulpd			%ymm6, %ymm13, %ymm6
+
+
+	vextractf128	$0x1, %ymm0, %xmm13
+	vpermilpd		$0x3, %xmm13, %xmm13
+	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vfnmadd231pd	%ymm0, %ymm13, %ymm3
+	vfnmadd231pd	%ymm4, %ymm13, %ymm7
+	vextractf128	$0x1, %ymm1, %xmm13
+	vpermilpd		$0x3, %xmm13, %xmm13
+	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vfnmadd231pd	%ymm1, %ymm13, %ymm3
+	vfnmadd231pd	%ymm5, %ymm13, %ymm7
+	vextractf128	$0x1, %ymm2, %xmm13
+	vpermilpd		$0x3, %xmm13, %xmm13
+	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vfnmadd231pd	%ymm2, %ymm13, %ymm3
+	vfnmadd231pd	%ymm6, %ymm13, %ymm7
+	vextractf128	$0x1, %ymm3, %xmm13
+	vpermilpd		$0x3, %xmm13, %xmm13
+	vucomisd		%xmm15, %xmm13 // d_33 > 0.0 ?
+	jbe				7f
+	vsqrtsd			%xmm13, %xmm13, %xmm13
+	vdivsd			%xmm13, %xmm14, %xmm13
+8:
+	vmovsd			%xmm13, 24(%r10)
+	vmovddup		%xmm13, %xmm13
+	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vmulpd			%ymm3, %ymm13, %ymm3
+	vmulpd			%ymm7, %ymm13, %ymm7
+
+	jmp				0f
+
+1:
+	vxorpd			%ymm13, %ymm13, %ymm13
+	jmp				2b
+
+3:
+	vxorpd			%ymm13, %ymm13, %ymm13
+	jmp				4b
+
+5:
+	vxorpd			%ymm13, %ymm13, %ymm13
+	jmp				6b
+
+7:
+	vxorpd			%ymm13, %ymm13, %ymm13
+	jmp				8b
+
+0:
+	
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_edge_dpotrf_8x4_lib4, .-inner_edge_dpotrf_8x4_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// cholesky factorization 
+//
+// input arguments:
+// r10  <- inv_diag_E
 // r11d <- kn
 // ymm0 <- [d00 d11 d22 d33]
 // ymm1 <- [d01 d10 d23 d32]
@@ -2923,6 +3081,114 @@ kernel_dtrmm_nt_ru_8x4_vs_lib4:
 
 
 
+//                                  rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24
+// void kernel_dpotrf_nt_l_8x4_lib4(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
+
+	.p2align 4,,15
+	.globl kernel_dpotrf_nt_l_8x4_lib4
+	.type kernel_dpotrf_nt_l_8x4_lib4, @function
+kernel_dpotrf_nt_l_8x4_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
+
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d
+	movq	%rsi, %r11
+	movl	%edx, %r12d
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movslq	%r12d, %r12
+	movq	%rcx, %r13
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_8X4_LIB4
+#else
+	call inner_kernel_dgemm_sub_nt_8x4_lib4
+#endif
+
+
+	// call inner blender nn
+
+	movq	%r8, %r10
+	movl	%r9d, %r11d // sdc
+	sall	$5, %r11d // 4*sdc*sizeof(double)
+	movslq	%r11d, %r11
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_11_8X4_LIB4
+#else
+	call inner_blend_11_8x4_lib4
+#endif
+
+
+	// factorization
+
+	movq	STACKSIZE + 24(%rsp), %r10  // inv_diag_D 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DPOTRF_8X4_LIB4
+#else
+	call inner_edge_dpotrf_8x4_lib4
+#endif
+
+
+	// store n
+
+	movq	STACKSIZE + 8(%rsp), %r10 // store address D
+	movl	STACKSIZE + 16(%rsp), %r11d // sdd
+	sall	$5, %r11d // 4*sdd*sizeof(double)
+	movslq	%r11d, %r11
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_8X4_LIB4
+#else
+	call inner_store_l_8x4_lib4
+#endif
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dpotrf_nt_l_8x4_lib4, .-kernel_dpotrf_nt_l_8x4_lib4
+
+
+
+
+
 //                                     rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24              rsp+32  rsp+40 
 // void kernel_dpotrf_nt_l_8x4_vs_lib4(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D, int km, int kn);
 
@@ -3030,6 +3296,134 @@ kernel_dpotrf_nt_l_8x4_vs_lib4:
 	ret
 
 	.size	kernel_dpotrf_nt_l_8x4_vs_lib4, .-kernel_dpotrf_nt_l_8x4_vs_lib4
+
+
+
+
+
+//                                         rdi     rsi         rdx       rcx         r8      r9          rsp+8     rsp+16      rsp+24     rsp+32   rsp+40     rsp+48   rsp+56
+// void kernel_dsyrk_dpotrf_nt_l_8x4_lib4(int kp, double *Ap, int sdap, double *Bp, int km, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
+
+	.p2align 4,,15
+	.globl kernel_dsyrk_dpotrf_nt_l_8x4_lib4
+	.type kernel_dsyrk_dpotrf_nt_l_8x4_lib4, @function
+kernel_dsyrk_dpotrf_nt_l_8x4_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
+	vmovapd	%ymm0, %ymm8
+	vmovapd	%ymm0, %ymm9
+	vmovapd	%ymm0, %ymm10
+	vmovapd	%ymm0, %ymm11
+
+
+	// call inner dgemm kernel nt add
+
+	movl	%edi, %r10d // kp
+	movq	%rsi, %r11  // Ap
+	movl	%edx, %r12d // sdap
+	sall	$5, %r12d   // 4*sdap*sizeof(double)
+	movslq	%r12d, %r12
+	movq	%rcx, %r13  // Bp
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_8X4_LIB4
+#else
+	call inner_kernel_dgemm_add_nt_8x4_lib4
+#endif
+
+
+	// call inner dgemm kernel nt sub
+
+	movl	%r8d, %r10d                 // km
+	movq	%r9, %r11                   // Am
+	movl	STACKSIZE +  8(%rsp), %r12d // sdam
+	sall	$5, %r12d                   // 4*sdam*sizeof(double)
+	movslq	%r12d, %r12
+	movq	STACKSIZE + 16(%rsp), %r13  // Bm
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_8X4_LIB4
+#else
+	call inner_kernel_dgemm_sub_nt_8x4_lib4
+#endif
+
+
+	// call inner blender nn
+
+	movq	STACKSIZE + 24(%rsp), %r10 // C
+	movl	STACKSIZE + 32(%rsp), %r11d // sdc
+	sall	$5, %r11d // 4*sdc*sizeof(double)
+	movslq	%r11d, %r11 
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_11_8X4_LIB4
+#else
+	call inner_blend_11_8x4_lib4
+#endif
+
+
+	// factorization
+
+	movq	STACKSIZE + 56(%rsp), %r10  // inv_diag_D 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DPOTRF_8X4_LIB4
+#else
+	call inner_edge_dpotrf_8x4_lib4
+#endif
+
+
+	// store n
+
+	movq	STACKSIZE + 40(%rsp), %r10 // store address D
+	movl	STACKSIZE + 48(%rsp), %r11d // sdd
+	sall	$5, %r11d // 4*sdd*sizeof(double)
+	movslq	%r11d, %r11
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_8X4_LIB4
+#else
+	call inner_store_l_8x4_lib4
+#endif
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dsyrk_dpotrf_nt_l_8x4_lib4, .-kernel_dsyrk_dpotrf_nt_l_8x4_lib4
 
 
 
