@@ -252,7 +252,8 @@ int main()
 
 #if defined(LOW_RANK)
 #else
-			dgemm_nt_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
+//			dgemm_nt_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
+			dgemm_nn_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
 //			dsyrk_nt_l_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 1.0, pC, cnd, pD, cnd);
 //			dtrmm_nt_ru_lib(n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
 //			dpotrf_nt_l_lib(n, n, pB, cnd, pD, cnd, diag);
