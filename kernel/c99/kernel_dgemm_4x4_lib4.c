@@ -216,7 +216,7 @@ void kernel_dgemm_nt_4x4_lib4(int kmax, double *alpha, double *A, double *B, dou
 	}
 
 
-void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *A, double *B, int alg, double *C, double *D, int km, int kn)
+void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -271,61 +271,25 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *A, double *B, int alg, doub
 
 		}
 	
-	if(alg==0)
-		{
-		goto store;
-		}
-	else
-		{
-		if(alg==1)
-			{
-			c_00 = C[0+bs*0] + c_00;
-			c_10 = C[1+bs*0] + c_10;
-			c_20 = C[2+bs*0] + c_20;
-			c_30 = C[3+bs*0] + c_30;
+	c_00 = beta[0]*C[0+bs*0] + alpha[0]*c_00;
+	c_10 = beta[0]*C[1+bs*0] + alpha[0]*c_10;
+	c_20 = beta[0]*C[2+bs*0] + alpha[0]*c_20;
+	c_30 = beta[0]*C[3+bs*0] + alpha[0]*c_30;
 
-//			c_01 = C[0+bs*1] + c_01;
-			c_11 = C[1+bs*1] + c_11;
-			c_21 = C[2+bs*1] + c_21;
-			c_31 = C[3+bs*1] + c_31;
+//	c_01 = beta[0]*C[0+bs*1] + alpha[0]*c_01;
+	c_11 = beta[0]*C[1+bs*1] + alpha[0]*c_11;
+	c_21 = beta[0]*C[2+bs*1] + alpha[0]*c_21;
+	c_31 = beta[0]*C[3+bs*1] + alpha[0]*c_31;
 
-//			c_02 = C[0+bs*2] + c_02;
-//			c_12 = C[1+bs*2] + c_12;
-			c_22 = C[2+bs*2] + c_22;
-			c_32 = C[3+bs*2] + c_32;
+//	c_02 = beta[0]*C[0+bs*2] + alpha[0]*c_02;
+//	c_12 = beta[0]*C[1+bs*2] + alpha[0]*c_12;
+	c_22 = beta[0]*C[2+bs*2] + alpha[0]*c_22;
+	c_32 = beta[0]*C[3+bs*2] + alpha[0]*c_32;
 
-//			c_03 = C[0+bs*3] + c_03;
-//			c_13 = C[1+bs*3] + c_13;
-//			c_23 = C[2+bs*3] + c_23;
-			c_33 = C[3+bs*3] + c_33;
-
-			goto store;
-			}
-		else
-			{
-			c_00 = C[0+bs*0] - c_00;
-			c_10 = C[1+bs*0] - c_10;
-			c_20 = C[2+bs*0] - c_20;
-			c_30 = C[3+bs*0] - c_30;
-
-//			c_01 = C[0+bs*1] - c_01;
-			c_11 = C[1+bs*1] - c_11;
-			c_21 = C[2+bs*1] - c_21;
-			c_31 = C[3+bs*1] - c_31;
-
-//			c_02 = C[0+bs*2] - c_02;
-//			c_12 = C[1+bs*2] - c_12;
-			c_22 = C[2+bs*2] - c_22;
-			c_32 = C[3+bs*2] - c_32;
-
-//			c_03 = C[0+bs*3] - c_03;
-//			c_13 = C[1+bs*3] - c_13;
-//			c_23 = C[2+bs*3] - c_23;
-			c_33 = C[3+bs*3] - c_33;
-
-			goto store;
-			}
-		}
+//	c_03 = beta[0]*C[0+bs*3] + alpha[0]*c_03;
+//	c_13 = beta[0]*C[1+bs*3] + alpha[0]*c_13;
+//	c_23 = beta[0]*C[2+bs*3] + alpha[0]*c_23;
+	c_33 = beta[0]*C[3+bs*3] + alpha[0]*c_33;
 
 	store:
 
@@ -1001,7 +965,9 @@ void kernel_dpotrf_nt_l_4x4_vs_lib4(int kmax, double *A, double *B, double *C, d
 
 void kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *inv_diag_D, int km, int kn)
 	{
-	kernel_dsyrk_nt_l_4x4_vs_lib4(kp, Ap, Bp, 1, C, D, km, kn);
+	double alpha = 1.0;
+	double beta = 1.0;
+	kernel_dsyrk_nt_l_4x4_vs_lib4(kp, &alpha, Ap, Bp, &beta, C, D, km, kn);
 	kernel_dpotrf_nt_l_4x4_vs_lib4(km_, Am, Bm, D, D, inv_diag_D, km, kn);
 	}
 

@@ -1573,6 +1573,61 @@ inner_store_4x4_vs_lib4:
 
 // common inner routine with file scope
 //
+// store n lower triangular
+//
+// input arguments:
+// r10   <- D
+// ymm0  <- [d00 d11 d22 d33]
+// ymm1  <- [d01 d10 d23 d32]
+// ymm2  <- [d03 d12 d21 d30]
+// ymm3  <- [d02 d13 d20 d31]
+// ymm14 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10   <- D
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_L_4X4_LIB4
+#else
+	.p2align 4,,15
+	.type inner_store_l_4x4_lib4, @function
+inner_store_l_4x4_lib4:
+#endif
+	
+	vmovapd		%ymm0, 0(%r10)
+	vmovapd		32(%r10), %ymm14
+	vblendpd	$0x1, %ymm14, %ymm1, %ymm1	
+	vmovapd		%ymm1, 32(%r10)
+	vmovapd		64(%r10), %ymm14
+	vblendpd	$0x3, %ymm14, %ymm2, %ymm2	
+	vmovapd		%ymm2, 64(%r10)
+	vmovapd		96(%r10), %ymm14
+	vblendpd	$0x7, %ymm14, %ymm3, %ymm3	
+	vmovapd		%ymm3, 96(%r10)
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_store_l_4x4_lib4, .-inner_store_l_4x4_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // store n vs lower triangular
 //
 // input arguments:
@@ -1899,8 +1954,96 @@ kernel_dgemm_nt_4x4_vs_lib4:
 
 
 
-//                                    rdi    rsi        rdx        rcx      r8         r9         rsp+8   rsp+16
-// void kernel_dsyrk_nt_l_4x4_vs_lib4(int k, double *A, double *B, int alg, double *C, double *D, int km, int kn);
+//                               rdi    rsi            rdx        rcx        r8            r9         rsp+8
+// void kernel_dsyrk_nt_l_4x4_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D);
+
+	.p2align 4,,15
+	.globl kernel_dsyrk_nt_l_4x4_lib4
+	.type kernel_dsyrk_nt_l_4x4_lib4, @function
+kernel_dsyrk_nt_l_4x4_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rdx, %r11  // A
+	movq	%rcx, %r12  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+#else
+	call inner_kernel_dgemm_add_nt_4x4_lib4
+#endif
+
+
+	// call inner blend 
+
+	movq	%rsi, %r10 // alpha
+	movq	%r8, %r11 // beta
+	movq	%r9, %r12   // C
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_AB_4X4_LIB4
+#else
+	call inner_blend_ab_4x4_lib4
+#endif
+
+
+	// store n
+
+	movq	STACKSIZE +  8(%rsp), %r10 // D
+
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X4_LIB4
+#else
+	call	inner_store_l_4x4_lib4
+#endif
+
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dsyrk_nt_l_4x4_lib4, .-kernel_dsyrk_nt_l_4x4_lib4
+
+
+
+
+
+//                                  rdi    rsi            rdx        rcx        r8            r9         rsp+8     rsp+16   rsp+24
+// void kernel_dsyrk_nt_l_4x4_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int km, int kn);
 
 	.p2align 4,,15
 	.globl kernel_dsyrk_nt_l_4x4_vs_lib4
@@ -1930,9 +2073,9 @@ kernel_dsyrk_nt_l_4x4_vs_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d
-	movq	%rsi, %r11
-	movq	%rdx, %r12
+	movl	%edi, %r10d // k
+	movq	%rdx, %r11  // A
+	movq	%rcx, %r12  // B
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
@@ -1941,24 +2084,26 @@ kernel_dsyrk_nt_l_4x4_vs_lib4:
 #endif
 
 
-	// call inner blender nn
+	// call inner blend 
 
-	movl	%ecx, %r10d
-	movq	%r8, %r11
+	movq	%rsi, %r10 // alpha
+	movq	%r8, %r11 // beta
+	movq	%r9, %r12   // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_NN_4X4_LIB4
+	INNER_BLEND_AB_4X4_LIB4
 #else
-	call inner_blender_nn_4x4_lib4
+	call inner_blend_ab_4x4_lib4
 #endif
 
 
-	// store
+	// store n
 
-	movq	%r9, %r10 // D
-	movl	STACKSIZE +  8(%rsp), %r11d // km 
-	movl	STACKSIZE + 16(%rsp), %r12d // kn 
-	
+	movq	STACKSIZE +  8(%rsp), %r10 // D
+	movl	STACKSIZE + 16(%rsp), %r11d // km 
+	movl	STACKSIZE + 24(%rsp), %r12d // kn 
+
+
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_4X4_VS_LIB4
 #else

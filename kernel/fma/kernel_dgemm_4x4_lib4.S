@@ -2188,8 +2188,8 @@ kernel_dgemm_nt_4x4_vs_lib4:
 
 
 
-//                                    rdi    rsi        rdx        rcx      r8         r9         rsp+8   rsp+16
-// void kernel_dsyrk_nt_l_4x4_vs_lib4(int k, double *A, double *B, int alg, double *C, double *D, int km, int kn);
+//                                    rdi    rsi            rdx        rcx        r8            r9         rsp+8     rsp+16   rsp+24
+// void kernel_dsyrk_nt_l_4x4_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int km, int kn);
 
 	.p2align 4,,15
 	.globl kernel_dsyrk_nt_l_4x4_vs_lib4
@@ -2223,28 +2223,41 @@ kernel_dsyrk_nt_l_4x4_vs_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d
-	movq	%rsi, %r11
-	movq	%rdx, %r12
+	movl	%edi, %r10d // k
+	movq	%rdx, %r11  // A
+	movq	%rcx, %r12  // B
 
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+#else
 	call inner_kernel_dgemm_add_nt_4x4_lib4
+#endif
 
 
-	// call inner blender nn
+	// call inner blend scale
 
-	movl	%ecx, %r10d
-	movq	%r8, %r11
+	movq	%rsi, %r10 // alpha
+	movq	%r8, %r11 // beta
+	movq	%r9, %r12   // C
 
-	call inner_blender_nn_4x4_lib4
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_4X4_LIB4
+#else
+	call inner_blend_scale_4x4_lib4
+#endif
 
 
-	// store
+	// store n
 
-	movq	%r9, %r10 // D
-	movl	STACKSIZE +  8(%rsp), %r11d // km 
-	movl	STACKSIZE + 16(%rsp), %r12d // kn 
-	
-	call	inner_store_l_4x4_vs_lib4
+	movq	STACKSIZE +  8(%rsp), %r10 // D
+	movl	STACKSIZE + 16(%rsp), %r11d // km 
+	movl	STACKSIZE + 24(%rsp), %r12d // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X4_VS_LIB4
+#else
+	call inner_store_l_4x4_vs_lib4
+#endif
 
 
 
