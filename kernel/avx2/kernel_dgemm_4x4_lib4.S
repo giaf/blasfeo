@@ -892,11 +892,11 @@ inner_edge_dtrmm_sub_nt_lu_4x4_vs_lib4:
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_BLEND_SCALE_4X4_LIB4
+	.macro INNER_BLEND_AB_4X4_LIB4
 #else
 	.p2align 4,,15
-	.type inner_blend_scale_4x4_lib4, @function
-inner_blend_scale_4x4_lib4:
+	.type inner_blend_ab_4x4_lib4, @function
+inner_blend_ab_4x4_lib4:
 #endif
 	
 	// alpha
@@ -934,14 +934,80 @@ inner_blend_scale_4x4_lib4:
 #else
 	ret
 
-	.size	inner_blend_scale_4x4_lib4, .-inner_blend_scale_4x4_lib4
+	.size	inner_blend_ab_4x4_lib4, .-inner_blend_ab_4x4_lib4
 #endif
 
 
 
 
 
-/ common inner routine with file scope
+// common inner routine with file scope
+//
+// blend for generic alpha and beta=0.0
+//
+// input arguments:
+// r10   <- alpha
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10   <- alpha
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_A0_4X4_LIB4
+#else
+	.p2align 4,,15
+	.type inner_blend_a0_4x4_lib4, @function
+inner_blend_a0_4x4_lib4:
+#endif
+	
+	// alpha
+	vbroadcastsd	0(%r10), %ymm15
+
+	vblendpd	$0xa, %ymm1, %ymm0, %ymm8
+	vblendpd	$0x5, %ymm1, %ymm0, %ymm9
+	vblendpd	$0xa, %ymm3, %ymm2, %ymm10
+	vblendpd	$0x5, %ymm3, %ymm2, %ymm11
+
+	vblendpd	$0xc, %ymm10, %ymm8, %ymm0
+	vblendpd	$0x3, %ymm10, %ymm8, %ymm2
+	vblendpd	$0xc, %ymm11, %ymm9, %ymm1
+	vblendpd	$0x3, %ymm11, %ymm9, %ymm3
+
+	vmulpd		%ymm0, %ymm15, %ymm0
+	vmulpd		%ymm1, %ymm15, %ymm1
+	vmulpd		%ymm2, %ymm15, %ymm2
+	vmulpd		%ymm3, %ymm15, %ymm3
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_blend_a0_4x4_lib4, .-inner_blend_a0_4x4_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
 //
 // blender for alpha = 1.0 and beta = 1.0
 //
@@ -970,11 +1036,11 @@ inner_blend_scale_4x4_lib4:
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_BLENDER_4X4_LIB4
+	.macro INNER_BLEND_11_4X4_LIB4
 #else
 	.p2align 4,,15
-	.type inner_blender_4x4_lib4, @function
-inner_blender_4x4_lib4:
+	.type inner_blend_11_4x4_lib4, @function
+inner_blend_11_4x4_lib4:
 #endif	
 
 	vblendpd	$0xa, %ymm1, %ymm0, %ymm8
@@ -1001,7 +1067,7 @@ inner_blender_4x4_lib4:
 #else
 	ret
 
-	.size	inner_blender_4x4_lib4, .-inner_blender_4x4_lib4
+	.size	inner_blend_11_4x4_lib4, .-inner_blend_11_4x4_lib4
 #endif
 
 
@@ -1575,6 +1641,90 @@ inner_store_l_4x4_vs_lib4:
 
 
 
+//                                  rdi    rsi            rdx        rcx        r8
+// void kernel_dgemm_nt_4x4_a0_lib4(int k, double *alpha, double *A, double *B, double *D);
+
+	.p2align 4,,15
+	.globl kernel_dgemm_nt_4x4_lib4
+	.type kernel_dgemm_nt_4x4_lib4, @function
+kernel_dgemm_nt_4x4_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rdx, %r11  // A
+	movq	%rcx, %r12  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+#else
+	call inner_kernel_dgemm_add_nt_4x4_lib4
+#endif
+
+
+	// call inner blend scale
+
+	movq	%rsi, %r10 // alpha
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_A0_4X4_LIB4
+#else
+	call inner_blend_a0_4x4_lib4
+#endif
+
+
+	// store n
+
+	movq	%r8, %r10 // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB4
+#else
+	call inner_store_4x4_lib4
+#endif
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dgemm_nt_4x4_lib4, .-kernel_dgemm_nt_4x4_lib4
+
+
+
+
+
 //                               rdi    rsi            rdx        rcx        r8            r9         rsp+8
 // void kernel_dgemm_nt_4x4_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D);
 
@@ -1624,9 +1774,9 @@ kernel_dgemm_nt_4x4_lib4:
 	movq	%r9, %r12   // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_4X4_LIB4
+	INNER_BLEND_AB_4X4_LIB4
 #else
-	call inner_blend_scale_4x4_lib4
+	call inner_blend_ab_4x4_lib4
 #endif
 
 
@@ -1710,9 +1860,9 @@ kernel_dgemm_nt_4x4_vs_lib4:
 	movq	%r9, %r12   // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_4X4_LIB4
+	INNER_BLEND_AB_4X4_LIB4
 #else
-	call inner_blend_scale_4x4_lib4
+	call inner_blend_ab_4x4_lib4
 #endif
 
 
@@ -2113,13 +2263,12 @@ kernel_dpotrf_nt_l_4x4_vs_lib4:
 
 	// call inner blender nn
 
-	movl	$1, %r10d
-	movq	%rcx, %r11
+	movq	%rcx, %r10
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_NN_4X4_LIB4
+	INNER_BLEND_11_4X4_LIB4
 #else
-	call inner_blender_nn_4x4_lib4
+	call inner_blend_11_4x4_lib4
 #endif
 
 
@@ -2228,9 +2377,9 @@ kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4:
 	movq	STACKSIZE + 8(%rsp), %r10   // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_4X4_LIB4
+	INNER_BLEND_11_4X4_LIB4
 #else
-	call inner_blender_4x4_lib4
+	call inner_blend_11_4x4_lib4
 #endif
 
 
@@ -2323,13 +2472,12 @@ kernel_dtrsm_nt_rl_inv_4x4_lib4:
 
 	// call inner blender nn
 
-	movl	$1, %r10d
-	movq	%rcx, %r11
+	movq	%rcx, %r10
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_NN_4X4_LIB4
+	INNER_BLEND_11_4X4_LIB4
 #else
-	call inner_blender_nn_4x4_lib4
+	call inner_blend_11_4x4_lib4
 #endif
 
 
@@ -2436,9 +2584,9 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4:
 	movq	STACKSIZE + 8(%rsp), %r10   // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_4X4_LIB4
+	INNER_BLEND_11_4X4_LIB4
 #else
-	call inner_blender_4x4_lib4
+	call inner_blend_11_4x4_lib4
 #endif
 
 
@@ -2529,13 +2677,12 @@ kernel_dtrsm_nt_rl_inv_4x4_vs_lib4:
 
 	// call inner blender nn
 
-	movl	$1, %r10d
-	movq	%rcx, %r11
+	movq	%rcx, %r10
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_NN_4X4_LIB4
+	INNER_BLEND_11_4X4_LIB4
 #else
-	call inner_blender_nn_4x4_lib4
+	call inner_blend_11_4x4_lib4
 #endif
 
 
@@ -2645,9 +2792,9 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4:
 	movq	STACKSIZE + 8(%rsp), %r10  // C 
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_4X4_LIB4
+	INNER_BLEND_11_4X4_LIB4
 #else
-	call inner_blender_4x4_lib4
+	call inner_blend_11_4x4_lib4
 #endif
 
 
