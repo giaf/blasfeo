@@ -28,7 +28,8 @@
 
 
 
-void kernel_sgemm_ntnn_4x4_vs_lib4(int kmax, float *A, float *B, int alg, float *C, float *D, int km, int kn)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
+void kernel_sgemm_nt_4x4_vs_lib4(int kmax, float *alpha, float *A, float *B, float *beta, float *C, float *D, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -43,7 +44,146 @@ void kernel_sgemm_ntnn_4x4_vs_lib4(int kmax, float *A, float *B, int alg, float 
 	
 	int k;
 
-	for(k=0; k<kmax; k++)
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[0];
+		b_1 = B[1];
+		b_2 = B[2];
+		b_3 = B[3];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_02 += a_0 * b_2;
+		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_03 += a_0 * b_3;
+		c_13 += a_1 * b_3;
+		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+
+		// k = 1
+
+		a_0 = A[4];
+		a_1 = A[5];
+		a_2 = A[6];
+		a_3 = A[7];
+
+		b_0 = B[4];
+		b_1 = B[5];
+		b_2 = B[6];
+		b_3 = B[7];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_02 += a_0 * b_2;
+		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_03 += a_0 * b_3;
+		c_13 += a_1 * b_3;
+		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+
+		// k = 2
+
+		a_0 = A[8];
+		a_1 = A[9];
+		a_2 = A[10];
+		a_3 = A[11];
+
+		b_0 = B[8];
+		b_1 = B[9];
+		b_2 = B[10];
+		b_3 = B[11];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_02 += a_0 * b_2;
+		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_03 += a_0 * b_3;
+		c_13 += a_1 * b_3;
+		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+
+		// k = 3
+
+		a_0 = A[12];
+		a_1 = A[13];
+		a_2 = A[14];
+		a_3 = A[15];
+
+		b_0 = B[12];
+		b_1 = B[13];
+		b_2 = B[14];
+		b_3 = B[15];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_02 += a_0 * b_2;
+		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_03 += a_0 * b_3;
+		c_13 += a_1 * b_3;
+		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+		A += 16;
+		B += 16;
+
+		}
+	
+	for(; k<kmax; k++)
 		{
 
 		// k = 0
@@ -83,61 +223,25 @@ void kernel_sgemm_ntnn_4x4_vs_lib4(int kmax, float *A, float *B, int alg, float 
 
 		}
 	
-	if(alg==0)
-		{
-		goto store;
-		}
-	else
-		{
-		if(alg==1)
-			{
-			c_00 = C[0+bs*0] + c_00;
-			c_10 = C[1+bs*0] + c_10;
-			c_20 = C[2+bs*0] + c_20;
-			c_30 = C[3+bs*0] + c_30;
+	c_00 = beta[0]*C[0+bs*0] + alpha[0]*c_00;
+	c_10 = beta[0]*C[1+bs*0] + alpha[0]*c_10;
+	c_20 = beta[0]*C[2+bs*0] + alpha[0]*c_20;
+	c_30 = beta[0]*C[3+bs*0] + alpha[0]*c_30;
 
-			c_01 = C[0+bs*1] + c_01;
-			c_11 = C[1+bs*1] + c_11;
-			c_21 = C[2+bs*1] + c_21;
-			c_31 = C[3+bs*1] + c_31;
+	c_01 = beta[0]*C[0+bs*1] + alpha[0]*c_01;
+	c_11 = beta[0]*C[1+bs*1] + alpha[0]*c_11;
+	c_21 = beta[0]*C[2+bs*1] + alpha[0]*c_21;
+	c_31 = beta[0]*C[3+bs*1] + alpha[0]*c_31;
 
-			c_02 = C[0+bs*2] + c_02;
-			c_12 = C[1+bs*2] + c_12;
-			c_22 = C[2+bs*2] + c_22;
-			c_32 = C[3+bs*2] + c_32;
+	c_02 = beta[0]*C[0+bs*2] + alpha[0]*c_02;
+	c_12 = beta[0]*C[1+bs*2] + alpha[0]*c_12;
+	c_22 = beta[0]*C[2+bs*2] + alpha[0]*c_22;
+	c_32 = beta[0]*C[3+bs*2] + alpha[0]*c_32;
 
-			c_03 = C[0+bs*3] + c_03;
-			c_13 = C[1+bs*3] + c_13;
-			c_23 = C[2+bs*3] + c_23;
-			c_33 = C[3+bs*3] + c_33;
-
-			goto store;
-			}
-		else
-			{
-			c_00 = C[0+bs*0] - c_00;
-			c_10 = C[1+bs*0] - c_10;
-			c_20 = C[2+bs*0] - c_20;
-			c_30 = C[3+bs*0] - c_30;
-
-			c_01 = C[0+bs*1] - c_01;
-			c_11 = C[1+bs*1] - c_11;
-			c_21 = C[2+bs*1] - c_21;
-			c_31 = C[3+bs*1] - c_31;
-
-			c_02 = C[0+bs*2] - c_02;
-			c_12 = C[1+bs*2] - c_12;
-			c_22 = C[2+bs*2] - c_22;
-			c_32 = C[3+bs*2] - c_32;
-
-			c_03 = C[0+bs*3] - c_03;
-			c_13 = C[1+bs*3] - c_13;
-			c_23 = C[2+bs*3] - c_23;
-			c_33 = C[3+bs*3] - c_33;
-
-			goto store;
-			}
-		}
+	c_03 = beta[0]*C[0+bs*3] + alpha[0]*c_03;
+	c_13 = beta[0]*C[1+bs*3] + alpha[0]*c_13;
+	c_23 = beta[0]*C[2+bs*3] + alpha[0]*c_23;
+	c_33 = beta[0]*C[3+bs*3] + alpha[0]*c_33;
 
 	store:
 
@@ -243,16 +347,21 @@ void kernel_sgemm_ntnn_4x4_vs_lib4(int kmax, float *A, float *B, int alg, float 
 		}
 
 	}
+#endif
 
 
 
-void kernel_sgemm_ntnn_4x4_lib4(int kmax, float *A, float *B, int alg, float *C, float *D)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
+void kernel_sgemm_nt_4x4_lib4(int kmax, float *alpha, float *A, float *B, float *beta, float *C, float *D)
 	{
-	kernel_sgemm_ntnn_4x4_vs_lib4(kmax, A, B, alg, C, D, 4, 4);
+	kernel_sgemm_nt_4x4_vs_lib4(kmax, alpha, A, B, beta, C, D, 4, 4);
 	}
+#endif
 
 
-void kernel_sgemm_ntnt_4x4_vs_lib4(int kmax, float *A, float *B, int alg, float *C, float *D, int km, int kn)
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
+void kernel_sgemm_nn_4x4_vs_lib4(int kmax, float *alpha, float *A, float *B, int sdb, float *beta, float *C, float *D, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -267,7 +376,7 @@ void kernel_sgemm_ntnt_4x4_vs_lib4(int kmax, float *A, float *B, int alg, float 
 	
 	int k;
 
-	for(k=0; k<kmax; k++)
+	for(k=0; k<kmax-3; k+=4)
 		{
 
 		// k = 0
@@ -278,9 +387,148 @@ void kernel_sgemm_ntnt_4x4_vs_lib4(int kmax, float *A, float *B, int alg, float 
 		a_3 = A[3];
 
 		b_0 = B[0];
-		b_1 = B[1];
-		b_2 = B[2];
-		b_3 = B[3];
+		b_1 = B[4];
+		b_2 = B[8];
+		b_3 = B[12];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_02 += a_0 * b_2;
+		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_03 += a_0 * b_3;
+		c_13 += a_1 * b_3;
+		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+
+		// k = 1
+
+		a_0 = A[4];
+		a_1 = A[5];
+		a_2 = A[6];
+		a_3 = A[7];
+
+		b_0 = B[1];
+		b_1 = B[5];
+		b_2 = B[9];
+		b_3 = B[13];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_02 += a_0 * b_2;
+		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_03 += a_0 * b_3;
+		c_13 += a_1 * b_3;
+		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+
+		// k = 2
+
+		a_0 = A[8];
+		a_1 = A[9];
+		a_2 = A[10];
+		a_3 = A[11];
+
+		b_0 = B[2];
+		b_1 = B[6];
+		b_2 = B[10];
+		b_3 = B[14];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_02 += a_0 * b_2;
+		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_03 += a_0 * b_3;
+		c_13 += a_1 * b_3;
+		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+
+		// k = 3
+
+		a_0 = A[12];
+		a_1 = A[13];
+		a_2 = A[14];
+		a_3 = A[15];
+
+		b_0 = B[3];
+		b_1 = B[7];
+		b_2 = B[11];
+		b_3 = B[15];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_02 += a_0 * b_2;
+		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_03 += a_0 * b_3;
+		c_13 += a_1 * b_3;
+		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+		A += 16;
+		B += 4*sdb;
+
+		}
+	
+	for(; k<kmax; k++)
+		{
+
+		// k = 0
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[0];
+		b_1 = B[4];
+		b_2 = B[8];
+		b_3 = B[12];
 
 		c_00 += a_0 * b_0;
 		c_10 += a_1 * b_0;
@@ -303,289 +551,29 @@ void kernel_sgemm_ntnt_4x4_vs_lib4(int kmax, float *A, float *B, int alg, float 
 		c_33 += a_3 * b_3;
 
 		A += 4;
-		B += 4;
+		B += 1;
 
 		}
 	
-	if(alg==0)
-		{
-		goto store;
-		}
-	else
-		{
-		if(alg==1)
-			{
-			c_00 = C[0+bs*0] + c_00;
-			c_10 = C[1+bs*0] + c_10;
-			c_20 = C[2+bs*0] + c_20;
-			c_30 = C[3+bs*0] + c_30;
+	c_00 = beta[0]*C[0+bs*0] + alpha[0]*c_00;
+	c_10 = beta[0]*C[1+bs*0] + alpha[0]*c_10;
+	c_20 = beta[0]*C[2+bs*0] + alpha[0]*c_20;
+	c_30 = beta[0]*C[3+bs*0] + alpha[0]*c_30;
 
-			c_01 = C[0+bs*1] + c_01;
-			c_11 = C[1+bs*1] + c_11;
-			c_21 = C[2+bs*1] + c_21;
-			c_31 = C[3+bs*1] + c_31;
+	c_01 = beta[0]*C[0+bs*1] + alpha[0]*c_01;
+	c_11 = beta[0]*C[1+bs*1] + alpha[0]*c_11;
+	c_21 = beta[0]*C[2+bs*1] + alpha[0]*c_21;
+	c_31 = beta[0]*C[3+bs*1] + alpha[0]*c_31;
 
-			c_02 = C[0+bs*2] + c_02;
-			c_12 = C[1+bs*2] + c_12;
-			c_22 = C[2+bs*2] + c_22;
-			c_32 = C[3+bs*2] + c_32;
+	c_02 = beta[0]*C[0+bs*2] + alpha[0]*c_02;
+	c_12 = beta[0]*C[1+bs*2] + alpha[0]*c_12;
+	c_22 = beta[0]*C[2+bs*2] + alpha[0]*c_22;
+	c_32 = beta[0]*C[3+bs*2] + alpha[0]*c_32;
 
-			c_03 = C[0+bs*3] + c_03;
-			c_13 = C[1+bs*3] + c_13;
-			c_23 = C[2+bs*3] + c_23;
-			c_33 = C[3+bs*3] + c_33;
-
-			goto store;
-			}
-		else
-			{
-			c_00 = C[0+bs*0] - c_00;
-			c_10 = C[1+bs*0] - c_10;
-			c_20 = C[2+bs*0] - c_20;
-			c_30 = C[3+bs*0] - c_30;
-
-			c_01 = C[0+bs*1] - c_01;
-			c_11 = C[1+bs*1] - c_11;
-			c_21 = C[2+bs*1] - c_21;
-			c_31 = C[3+bs*1] - c_31;
-
-			c_02 = C[0+bs*2] - c_02;
-			c_12 = C[1+bs*2] - c_12;
-			c_22 = C[2+bs*2] - c_22;
-			c_32 = C[3+bs*2] - c_32;
-
-			c_03 = C[0+bs*3] - c_03;
-			c_13 = C[1+bs*3] - c_13;
-			c_23 = C[2+bs*3] - c_23;
-			c_33 = C[3+bs*3] - c_33;
-
-			goto store;
-			}
-		}
-
-	store:
-	if(kn>=4)
-		{
-		D[0+bs*0] = c_00;
-		D[0+bs*1] = c_10;
-		D[0+bs*2] = c_20;
-		D[0+bs*3] = c_30;
-
-		if(km==1)
-			return;
-
-		D[1+bs*0] = c_01;
-		D[1+bs*1] = c_11;
-		D[1+bs*2] = c_21;
-		D[1+bs*3] = c_31;
-
-		if(km==2)
-			return;
-
-		D[2+bs*0] = c_02;
-		D[2+bs*1] = c_12;
-		D[2+bs*2] = c_22;
-		D[2+bs*3] = c_32;
-
-		if(km==3)
-			return;
-
-		D[3+bs*0] = c_03;
-		D[3+bs*1] = c_13;
-		D[3+bs*2] = c_23;
-		D[3+bs*3] = c_33;
-		}
-	else if(kn>=3)
-		{
-		D[0+bs*0] = c_00;
-		D[0+bs*1] = c_10;
-		D[0+bs*2] = c_20;
-
-		if(km==1)
-			return;
-
-		D[1+bs*0] = c_01;
-		D[1+bs*1] = c_11;
-		D[1+bs*2] = c_21;
-
-		if(km==2)
-			return;
-
-		D[2+bs*0] = c_02;
-		D[2+bs*1] = c_12;
-		D[2+bs*2] = c_22;
-
-		if(km==3)
-			return;
-
-		D[3+bs*0] = c_03;
-		D[3+bs*1] = c_13;
-		D[3+bs*2] = c_23;
-		}
-	else if(kn>=2)
-		{
-		D[0+bs*0] = c_00;
-		D[0+bs*1] = c_10;
-
-		if(km==1)
-			return;
-
-		D[1+bs*0] = c_01;
-		D[1+bs*1] = c_11;
-
-		if(km==2)
-			return;
-
-		D[2+bs*0] = c_02;
-		D[2+bs*1] = c_12;
-
-		if(km==3)
-			return;
-
-		D[3+bs*0] = c_03;
-		D[3+bs*1] = c_13;
-		}
-	else //if(kn>=1)
-		{
-		D[0+bs*0] = c_00;
-
-		if(km==1)
-			return;
-
-		D[1+bs*0] = c_01;
-
-		if(km==2)
-			return;
-
-		D[2+bs*0] = c_02;
-
-		if(km==3)
-			return;
-
-		D[3+bs*0] = c_03;
-		}
-
-	}
-
-
-
-void kernel_sgemm_ntnt_4x4_lib4(int kmax, float *A, float *B, int alg, float *C, float *D)
-	{
-	kernel_sgemm_ntnt_4x4_vs_lib4(kmax, A, B, alg, C, D, 4, 4);
-	}
-
-
-
-void kernel_sgemm_nttn_4x4_vs_lib4(int kmax, float *A, float *B, int alg, float *C, float *D, int km, int kn)
-	{
-
-	const int bs = 4;
-
-	float
-		a_0, a_1, a_2, a_3,
-		b_0, b_1, b_2, b_3,
-		c_00=0, c_01=0, c_02=0, c_03=0,
-		c_10=0, c_11=0, c_12=0, c_13=0,
-		c_20=0, c_21=0, c_22=0, c_23=0,
-		c_30=0, c_31=0, c_32=0, c_33=0;
-	
-	int k;
-
-	for(k=0; k<kmax; k++)
-		{
-
-		// k = 0
-
-		a_0 = A[0];
-		a_1 = A[1];
-		a_2 = A[2];
-		a_3 = A[3];
-
-		b_0 = B[0];
-		b_1 = B[1];
-		b_2 = B[2];
-		b_3 = B[3];
-
-		c_00 += a_0 * b_0;
-		c_10 += a_1 * b_0;
-		c_20 += a_2 * b_0;
-		c_30 += a_3 * b_0;
-
-		c_01 += a_0 * b_1;
-		c_11 += a_1 * b_1;
-		c_21 += a_2 * b_1;
-		c_31 += a_3 * b_1;
-
-		c_02 += a_0 * b_2;
-		c_12 += a_1 * b_2;
-		c_22 += a_2 * b_2;
-		c_32 += a_3 * b_2;
-
-		c_03 += a_0 * b_3;
-		c_13 += a_1 * b_3;
-		c_23 += a_2 * b_3;
-		c_33 += a_3 * b_3;
-
-		A += 4;
-		B += 4;
-
-		}
-	
-	if(alg==0)
-		{
-		goto store;
-		}
-	else
-		{
-		if(alg==1)
-			{
-			c_00 = C[0+bs*0] + c_00;
-			c_10 = C[0+bs*1] + c_10;
-			c_20 = C[0+bs*2] + c_20;
-			c_30 = C[0+bs*3] + c_30;
-
-			c_01 = C[1+bs*0] + c_01;
-			c_11 = C[1+bs*1] + c_11;
-			c_21 = C[1+bs*2] + c_21;
-			c_31 = C[1+bs*3] + c_31;
-
-			c_02 = C[2+bs*0] + c_02;
-			c_12 = C[2+bs*1] + c_12;
-			c_22 = C[2+bs*2] + c_22;
-			c_32 = C[2+bs*3] + c_32;
-
-			c_03 = C[3+bs*0] + c_03;
-			c_13 = C[3+bs*1] + c_13;
-			c_23 = C[3+bs*2] + c_23;
-			c_33 = C[3+bs*3] + c_33;
-
-			goto store;
-			}
-		else
-			{
-			c_00 = C[0+bs*0] - c_00;
-			c_10 = C[0+bs*1] - c_10;
-			c_20 = C[0+bs*2] - c_20;
-			c_30 = C[0+bs*3] - c_30;
-
-			c_01 = C[1+bs*0] - c_01;
-			c_11 = C[1+bs*1] - c_11;
-			c_21 = C[1+bs*2] - c_21;
-			c_31 = C[1+bs*3] - c_31;
-
-			c_02 = C[2+bs*0] - c_02;
-			c_12 = C[2+bs*1] - c_12;
-			c_22 = C[2+bs*2] - c_22;
-			c_32 = C[2+bs*3] - c_32;
-
-			c_03 = C[3+bs*0] - c_03;
-			c_13 = C[3+bs*1] - c_13;
-			c_23 = C[3+bs*2] - c_23;
-			c_33 = C[3+bs*3] - c_33;
-
-			goto store;
-			}
-		}
+	c_03 = beta[0]*C[0+bs*3] + alpha[0]*c_03;
+	c_13 = beta[0]*C[1+bs*3] + alpha[0]*c_13;
+	c_23 = beta[0]*C[2+bs*3] + alpha[0]*c_23;
+	c_33 = beta[0]*C[3+bs*3] + alpha[0]*c_33;
 
 	store:
 
@@ -691,242 +679,21 @@ void kernel_sgemm_nttn_4x4_vs_lib4(int kmax, float *A, float *B, int alg, float 
 		}
 
 	}
+#endif
 
 
 
-void kernel_sgemm_nttn_4x4_lib4(int kmax, float *A, float *B, int alg, float *C, float *D)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
+void kernel_sgemm_nn_4x4_lib4(int kmax, float *alpha, float *A, float *B, int sdb, float *beta, float *C, float *D)
 	{
-	kernel_sgemm_nttn_4x4_vs_lib4(kmax, A, B, alg, C, D, 4, 4);
+	kernel_sgemm_nn_4x4_vs_lib4(kmax, alpha, A, B, sdb, beta, C, D, 4, 4);
 	}
+#endif
 
 
 
-void kernel_sgemm_nttt_4x4_vs_lib4(int kmax, float *A, float *B, int alg, float *C, float *D, int km, int kn)
-	{
-
-	const int bs = 4;
-
-	float
-		a_0, a_1, a_2, a_3,
-		b_0, b_1, b_2, b_3,
-		c_00=0, c_01=0, c_02=0, c_03=0,
-		c_10=0, c_11=0, c_12=0, c_13=0,
-		c_20=0, c_21=0, c_22=0, c_23=0,
-		c_30=0, c_31=0, c_32=0, c_33=0;
-	
-	int k;
-
-	for(k=0; k<kmax; k++)
-		{
-
-		// k = 0
-
-		a_0 = A[0];
-		a_1 = A[1];
-		a_2 = A[2];
-		a_3 = A[3];
-
-		b_0 = B[0];
-		b_1 = B[1];
-		b_2 = B[2];
-		b_3 = B[3];
-
-		c_00 += a_0 * b_0;
-		c_10 += a_1 * b_0;
-		c_20 += a_2 * b_0;
-		c_30 += a_3 * b_0;
-
-		c_01 += a_0 * b_1;
-		c_11 += a_1 * b_1;
-		c_21 += a_2 * b_1;
-		c_31 += a_3 * b_1;
-
-		c_02 += a_0 * b_2;
-		c_12 += a_1 * b_2;
-		c_22 += a_2 * b_2;
-		c_32 += a_3 * b_2;
-
-		c_03 += a_0 * b_3;
-		c_13 += a_1 * b_3;
-		c_23 += a_2 * b_3;
-		c_33 += a_3 * b_3;
-
-		A += 4;
-		B += 4;
-
-		}
-	
-	if(alg==0)
-		{
-		goto store;
-		}
-	else
-		{
-		if(alg==1)
-			{
-			c_00 = C[0+bs*0] + c_00;
-			c_10 = C[0+bs*1] + c_10;
-			c_20 = C[0+bs*2] + c_20;
-			c_30 = C[0+bs*3] + c_30;
-
-			c_01 = C[1+bs*0] + c_01;
-			c_11 = C[1+bs*1] + c_11;
-			c_21 = C[1+bs*2] + c_21;
-			c_31 = C[1+bs*3] + c_31;
-
-			c_02 = C[2+bs*0] + c_02;
-			c_12 = C[2+bs*1] + c_12;
-			c_22 = C[2+bs*2] + c_22;
-			c_32 = C[2+bs*3] + c_32;
-
-			c_03 = C[3+bs*0] + c_03;
-			c_13 = C[3+bs*1] + c_13;
-			c_23 = C[3+bs*2] + c_23;
-			c_33 = C[3+bs*3] + c_33;
-
-			goto store;
-			}
-		else
-			{
-			c_00 = C[0+bs*0] - c_00;
-			c_10 = C[0+bs*1] - c_10;
-			c_20 = C[0+bs*2] - c_20;
-			c_30 = C[0+bs*3] - c_30;
-
-			c_01 = C[1+bs*0] - c_01;
-			c_11 = C[1+bs*1] - c_11;
-			c_21 = C[1+bs*2] - c_21;
-			c_31 = C[1+bs*3] - c_31;
-
-			c_02 = C[2+bs*0] - c_02;
-			c_12 = C[2+bs*1] - c_12;
-			c_22 = C[2+bs*2] - c_22;
-			c_32 = C[2+bs*3] - c_32;
-
-			c_03 = C[3+bs*0] - c_03;
-			c_13 = C[3+bs*1] - c_13;
-			c_23 = C[3+bs*2] - c_23;
-			c_33 = C[3+bs*3] - c_33;
-
-			goto store;
-			}
-		}
-
-	store:
-
-	if(kn>=4)
-		{
-		D[0+bs*0] = c_00;
-		D[0+bs*1] = c_10;
-		D[0+bs*2] = c_20;
-		D[0+bs*3] = c_30;
-
-		if(km==1)
-			return;
-
-		D[1+bs*0] = c_01;
-		D[1+bs*1] = c_11;
-		D[1+bs*2] = c_21;
-		D[1+bs*3] = c_31;
-
-		if(km==2)
-			return;
-
-		D[2+bs*0] = c_02;
-		D[2+bs*1] = c_12;
-		D[2+bs*2] = c_22;
-		D[2+bs*3] = c_32;
-
-		if(km==3)
-			return;
-
-		D[3+bs*0] = c_03;
-		D[3+bs*1] = c_13;
-		D[3+bs*2] = c_23;
-		D[3+bs*3] = c_33;
-		}
-	else if(kn>=3)
-		{
-		D[0+bs*0] = c_00;
-		D[0+bs*1] = c_10;
-		D[0+bs*2] = c_20;
-
-		if(km==1)
-			return;
-
-		D[1+bs*0] = c_01;
-		D[1+bs*1] = c_11;
-		D[1+bs*2] = c_21;
-
-		if(km==2)
-			return;
-
-		D[2+bs*0] = c_02;
-		D[2+bs*1] = c_12;
-		D[2+bs*2] = c_22;
-
-		if(km==3)
-			return;
-
-		D[3+bs*0] = c_03;
-		D[3+bs*1] = c_13;
-		D[3+bs*2] = c_23;
-		}
-	else if(kn>=2)
-		{
-		D[0+bs*0] = c_00;
-		D[0+bs*1] = c_10;
-
-		if(km==1)
-			return;
-
-		D[1+bs*0] = c_01;
-		D[1+bs*1] = c_11;
-
-		if(km==2)
-			return;
-
-		D[2+bs*0] = c_02;
-		D[2+bs*1] = c_12;
-
-		if(km==3)
-			return;
-
-		D[3+bs*0] = c_03;
-		D[3+bs*1] = c_13;
-		}
-	else //if(kn>=1)
-		{
-		D[0+bs*0] = c_00;
-
-		if(km==1)
-			return;
-
-		D[1+bs*0] = c_01;
-
-		if(km==2)
-			return;
-
-		D[2+bs*0] = c_02;
-
-		if(km==3)
-			return;
-
-		D[3+bs*0] = c_03;
-		}
-
-	}
-
-
-
-void kernel_sgemm_nttt_4x4_lib4(int kmax, float *A, float *B, int alg, float *C, float *D)
-	{
-	kernel_sgemm_nttt_4x4_vs_lib4(kmax, A, B, alg, C, D, 4, 4);
-	}
-
-
-
-void kernel_ssyrk_ntnn_l_4x4_vs_lib4(int kmax, float *A, float *B, int alg, float *C, float *D, int km, int kn)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
+void kernel_ssyrk_nt_l_4x4_vs_lib4(int kmax, float *alpha, float *A, float *B, float *beta, float *C, float *D, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -941,7 +708,146 @@ void kernel_ssyrk_ntnn_l_4x4_vs_lib4(int kmax, float *A, float *B, int alg, floa
 	
 	int k;
 
-	for(k=0; k<kmax; k++)
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[0];
+		b_1 = B[1];
+		b_2 = B[2];
+		b_3 = B[3];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+//		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+//		c_02 += a_0 * b_2;
+//		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+//		c_03 += a_0 * b_3;
+//		c_13 += a_1 * b_3;
+//		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+
+		// k = 1
+
+		a_0 = A[4];
+		a_1 = A[5];
+		a_2 = A[6];
+		a_3 = A[7];
+
+		b_0 = B[4];
+		b_1 = B[5];
+		b_2 = B[6];
+		b_3 = B[7];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+//		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+//		c_02 += a_0 * b_2;
+//		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+//		c_03 += a_0 * b_3;
+//		c_13 += a_1 * b_3;
+//		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+
+		// k = 2
+
+		a_0 = A[8];
+		a_1 = A[9];
+		a_2 = A[10];
+		a_3 = A[11];
+
+		b_0 = B[8];
+		b_1 = B[9];
+		b_2 = B[10];
+		b_3 = B[11];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+//		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+//		c_02 += a_0 * b_2;
+//		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+//		c_03 += a_0 * b_3;
+//		c_13 += a_1 * b_3;
+//		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+
+		// k = 3
+
+		a_0 = A[12];
+		a_1 = A[13];
+		a_2 = A[14];
+		a_3 = A[15];
+
+		b_0 = B[12];
+		b_1 = B[13];
+		b_2 = B[14];
+		b_3 = B[15];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+//		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+//		c_02 += a_0 * b_2;
+//		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+//		c_03 += a_0 * b_3;
+//		c_13 += a_1 * b_3;
+//		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+		A += 16;
+		B += 16;
+
+		}
+	
+	for(; k<kmax; k++)
 		{
 
 		// k = 0
@@ -981,61 +887,25 @@ void kernel_ssyrk_ntnn_l_4x4_vs_lib4(int kmax, float *A, float *B, int alg, floa
 
 		}
 	
-	if(alg==0)
-		{
-		goto store;
-		}
-	else
-		{
-		if(alg==1)
-			{
-			c_00 = C[0+bs*0] + c_00;
-			c_10 = C[1+bs*0] + c_10;
-			c_20 = C[2+bs*0] + c_20;
-			c_30 = C[3+bs*0] + c_30;
+	c_00 = beta[0]*C[0+bs*0] + alpha[0]*c_00;
+	c_10 = beta[0]*C[1+bs*0] + alpha[0]*c_10;
+	c_20 = beta[0]*C[2+bs*0] + alpha[0]*c_20;
+	c_30 = beta[0]*C[3+bs*0] + alpha[0]*c_30;
 
-//			c_01 = C[0+bs*1] + c_01;
-			c_11 = C[1+bs*1] + c_11;
-			c_21 = C[2+bs*1] + c_21;
-			c_31 = C[3+bs*1] + c_31;
+//	c_01 = beta[0]*C[0+bs*1] + alpha[0]*c_01;
+	c_11 = beta[0]*C[1+bs*1] + alpha[0]*c_11;
+	c_21 = beta[0]*C[2+bs*1] + alpha[0]*c_21;
+	c_31 = beta[0]*C[3+bs*1] + alpha[0]*c_31;
 
-//			c_02 = C[0+bs*2] + c_02;
-//			c_12 = C[1+bs*2] + c_12;
-			c_22 = C[2+bs*2] + c_22;
-			c_32 = C[3+bs*2] + c_32;
+//	c_02 = beta[0]*C[0+bs*2] + alpha[0]*c_02;
+//	c_12 = beta[0]*C[1+bs*2] + alpha[0]*c_12;
+	c_22 = beta[0]*C[2+bs*2] + alpha[0]*c_22;
+	c_32 = beta[0]*C[3+bs*2] + alpha[0]*c_32;
 
-//			c_03 = C[0+bs*3] + c_03;
-//			c_13 = C[1+bs*3] + c_13;
-//			c_23 = C[2+bs*3] + c_23;
-			c_33 = C[3+bs*3] + c_33;
-
-			goto store;
-			}
-		else
-			{
-			c_00 = C[0+bs*0] - c_00;
-			c_10 = C[1+bs*0] - c_10;
-			c_20 = C[2+bs*0] - c_20;
-			c_30 = C[3+bs*0] - c_30;
-
-//			c_01 = C[0+bs*1] - c_01;
-			c_11 = C[1+bs*1] - c_11;
-			c_21 = C[2+bs*1] - c_21;
-			c_31 = C[3+bs*1] - c_31;
-
-//			c_02 = C[0+bs*2] - c_02;
-//			c_12 = C[1+bs*2] - c_12;
-			c_22 = C[2+bs*2] - c_22;
-			c_32 = C[3+bs*2] - c_32;
-
-//			c_03 = C[0+bs*3] - c_03;
-//			c_13 = C[1+bs*3] - c_13;
-//			c_23 = C[2+bs*3] - c_23;
-			c_33 = C[3+bs*3] - c_33;
-
-			goto store;
-			}
-		}
+//	c_03 = beta[0]*C[0+bs*3] + alpha[0]*c_03;
+//	c_13 = beta[0]*C[1+bs*3] + alpha[0]*c_13;
+//	c_23 = beta[0]*C[2+bs*3] + alpha[0]*c_23;
+	c_33 = beta[0]*C[3+bs*3] + alpha[0]*c_33;
 
 	store:
 
@@ -1141,10 +1011,12 @@ void kernel_ssyrk_ntnn_l_4x4_vs_lib4(int kmax, float *A, float *B, int alg, floa
 		}
 
 	}
+#endif
 
 
 
-void kernel_strmm_ntnn_ru_4x4_vs_lib4(int kmax, float *A, float *B, int alg, float *C, float *D, int km, int kn)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
+void kernel_strmm_nt_ru_4x4_vs_lib4(int kmax, float *A, float *B, int alg, float *C, float *D, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -1239,6 +1111,145 @@ void kernel_strmm_ntnn_ru_4x4_vs_lib4(int kmax, float *A, float *B, int alg, flo
 		k++;
 		}
 
+	for(; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[0];
+		b_1 = B[1];
+		b_2 = B[2];
+		b_3 = B[3];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_02 += a_0 * b_2;
+		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_03 += a_0 * b_3;
+		c_13 += a_1 * b_3;
+		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+
+		// k = 1
+
+		a_0 = A[4];
+		a_1 = A[5];
+		a_2 = A[6];
+		a_3 = A[7];
+
+		b_0 = B[4];
+		b_1 = B[5];
+		b_2 = B[6];
+		b_3 = B[7];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_02 += a_0 * b_2;
+		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_03 += a_0 * b_3;
+		c_13 += a_1 * b_3;
+		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+
+		// k = 2
+
+		a_0 = A[8];
+		a_1 = A[9];
+		a_2 = A[10];
+		a_3 = A[11];
+
+		b_0 = B[8];
+		b_1 = B[9];
+		b_2 = B[10];
+		b_3 = B[11];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_02 += a_0 * b_2;
+		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_03 += a_0 * b_3;
+		c_13 += a_1 * b_3;
+		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+
+		// k = 3
+
+		a_0 = A[12];
+		a_1 = A[13];
+		a_2 = A[14];
+		a_3 = A[15];
+
+		b_0 = B[12];
+		b_1 = B[13];
+		b_2 = B[14];
+		b_3 = B[15];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_01 += a_0 * b_1;
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_02 += a_0 * b_2;
+		c_12 += a_1 * b_2;
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_03 += a_0 * b_3;
+		c_13 += a_1 * b_3;
+		c_23 += a_2 * b_3;
+		c_33 += a_3 * b_3;
+
+		A += 16;
+		B += 16;
+
+		}
+	
 	for(; k<kmax; k++)
 		{
 
@@ -1439,20 +1450,22 @@ void kernel_strmm_ntnn_ru_4x4_vs_lib4(int kmax, float *A, float *B, int alg, flo
 		}
 
 	}
+#endif
 
 
 
 
-
-
-void kernel_strmm_ntnn_ru_4x4_lib4(int k, float *A, float *B, int alg, float *C, float *D)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
+void kernel_strmm_nt_ru_4x4_lib4(int k, float *A, float *B, int alg, float *C, float *D)
 	{
-	kernel_strmm_ntnn_ru_4x4_vs_lib4(k, A, B, alg, C, D, 4, 4);
+	kernel_strmm_nt_ru_4x4_vs_lib4(k, A, B, alg, C, D, 4, 4);
 	}
+#endif
 
 
 
-void kernel_spotrf_ntnn_l_4x4_vs_lib4(int kmax, float *A, float *B, float *C, float *D, float *inv_diag_D, int km, int kn)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
+void kernel_spotrf_nt_l_4x4_vs_lib4(int kmax, float *A, float *B, float *C, float *D, float *inv_diag_D, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -1468,7 +1481,146 @@ void kernel_spotrf_ntnn_l_4x4_vs_lib4(int kmax, float *A, float *B, float *C, fl
 	
 	int k;
 
-	for(k=0; k<kmax; k++)
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[0];
+		b_1 = B[1];
+		b_2 = B[2];
+		b_3 = B[3];
+
+		c_00 -= a_0 * b_0;
+		c_10 -= a_1 * b_0;
+		c_20 -= a_2 * b_0;
+		c_30 -= a_3 * b_0;
+
+//		c_01 -= a_0 * b_1;
+		c_11 -= a_1 * b_1;
+		c_21 -= a_2 * b_1;
+		c_31 -= a_3 * b_1;
+
+//		c_02 -= a_0 * b_2;
+//		c_12 -= a_1 * b_2;
+		c_22 -= a_2 * b_2;
+		c_32 -= a_3 * b_2;
+
+//		c_03 -= a_0 * b_3;
+//		c_13 -= a_1 * b_3;
+//		c_23 -= a_2 * b_3;
+		c_33 -= a_3 * b_3;
+
+
+		// k = 1
+
+		a_0 = A[4];
+		a_1 = A[5];
+		a_2 = A[6];
+		a_3 = A[7];
+
+		b_0 = B[4];
+		b_1 = B[5];
+		b_2 = B[6];
+		b_3 = B[7];
+
+		c_00 -= a_0 * b_0;
+		c_10 -= a_1 * b_0;
+		c_20 -= a_2 * b_0;
+		c_30 -= a_3 * b_0;
+
+//		c_01 -= a_0 * b_1;
+		c_11 -= a_1 * b_1;
+		c_21 -= a_2 * b_1;
+		c_31 -= a_3 * b_1;
+
+//		c_02 -= a_0 * b_2;
+//		c_12 -= a_1 * b_2;
+		c_22 -= a_2 * b_2;
+		c_32 -= a_3 * b_2;
+
+//		c_03 -= a_0 * b_3;
+//		c_13 -= a_1 * b_3;
+//		c_23 -= a_2 * b_3;
+		c_33 -= a_3 * b_3;
+
+
+		// k = 2
+
+		a_0 = A[8];
+		a_1 = A[9];
+		a_2 = A[10];
+		a_3 = A[11];
+
+		b_0 = B[8];
+		b_1 = B[9];
+		b_2 = B[10];
+		b_3 = B[11];
+
+		c_00 -= a_0 * b_0;
+		c_10 -= a_1 * b_0;
+		c_20 -= a_2 * b_0;
+		c_30 -= a_3 * b_0;
+
+//		c_01 -= a_0 * b_1;
+		c_11 -= a_1 * b_1;
+		c_21 -= a_2 * b_1;
+		c_31 -= a_3 * b_1;
+
+//		c_02 -= a_0 * b_2;
+//		c_12 -= a_1 * b_2;
+		c_22 -= a_2 * b_2;
+		c_32 -= a_3 * b_2;
+
+//		c_03 -= a_0 * b_3;
+//		c_13 -= a_1 * b_3;
+//		c_23 -= a_2 * b_3;
+		c_33 -= a_3 * b_3;
+
+
+		// k = 3
+
+		a_0 = A[12];
+		a_1 = A[13];
+		a_2 = A[14];
+		a_3 = A[15];
+
+		b_0 = B[12];
+		b_1 = B[13];
+		b_2 = B[14];
+		b_3 = B[15];
+
+		c_00 -= a_0 * b_0;
+		c_10 -= a_1 * b_0;
+		c_20 -= a_2 * b_0;
+		c_30 -= a_3 * b_0;
+
+//		c_01 -= a_0 * b_1;
+		c_11 -= a_1 * b_1;
+		c_21 -= a_2 * b_1;
+		c_31 -= a_3 * b_1;
+
+//		c_02 -= a_0 * b_2;
+//		c_12 -= a_1 * b_2;
+		c_22 -= a_2 * b_2;
+		c_32 -= a_3 * b_2;
+
+//		c_03 -= a_0 * b_3;
+//		c_13 -= a_1 * b_3;
+//		c_23 -= a_2 * b_3;
+		c_33 -= a_3 * b_3;
+
+		A += 16;
+		B += 16;
+
+		}
+	
+	for(; k<kmax; k++)
 		{
 
 		// k = 0
@@ -1706,18 +1858,24 @@ void kernel_spotrf_ntnn_l_4x4_vs_lib4(int kmax, float *A, float *B, float *C, fl
 		}
 
 	}
+#endif
 
 
 
-void kernel_ssyrk_spotrf_ntnn_l_4x4_vs_lib4(int kp, float *Ap, float *Bp, int km_, float *Am, float *Bm, int alg, float *C, float *D, float *inv_diag_D, int km, int kn)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
+void kernel_ssyrk_spotrf_nt_l_4x4_vs_lib4(int kp, float *Ap, float *Bp, int km_, float *Am, float *Bm, float *C, float *D, float *inv_diag_D, int km, int kn)
 	{
-	kernel_ssyrk_ntnn_l_4x4_vs_lib4(kp, Ap, Bp, alg, C, D, km, kn);
-	kernel_spotrf_ntnn_l_4x4_vs_lib4(km_, Am, Bm, D, D, inv_diag_D, km, kn);
+	float alpha = 1.0;
+	float beta = 1.0;
+	kernel_ssyrk_nt_l_4x4_vs_lib4(kp, &alpha, Ap, Bp, &beta, C, D, km, kn);
+	kernel_spotrf_nt_l_4x4_vs_lib4(km_, Am, Bm, D, D, inv_diag_D, km, kn);
 	}
+#endif
 
 
 
-void kernel_strsm_ntnn_rl_inv_4x4_vs_lib4(int kmax, float *A, float *B, float *C, float *D, float *E, float *inv_diag_E, int km, int kn)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
+void kernel_strsm_nt_rl_inv_4x4_vs_lib4(int kmax, float *A, float *B, float *C, float *D, float *E, float *inv_diag_E, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -1733,7 +1891,146 @@ void kernel_strsm_ntnn_rl_inv_4x4_vs_lib4(int kmax, float *A, float *B, float *C
 	
 	int k;
 
-	for(k=0; k<kmax; k++)
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[0];
+		b_1 = B[1];
+		b_2 = B[2];
+		b_3 = B[3];
+
+		c_00 -= a_0 * b_0;
+		c_10 -= a_1 * b_0;
+		c_20 -= a_2 * b_0;
+		c_30 -= a_3 * b_0;
+
+		c_01 -= a_0 * b_1;
+		c_11 -= a_1 * b_1;
+		c_21 -= a_2 * b_1;
+		c_31 -= a_3 * b_1;
+
+		c_02 -= a_0 * b_2;
+		c_12 -= a_1 * b_2;
+		c_22 -= a_2 * b_2;
+		c_32 -= a_3 * b_2;
+
+		c_03 -= a_0 * b_3;
+		c_13 -= a_1 * b_3;
+		c_23 -= a_2 * b_3;
+		c_33 -= a_3 * b_3;
+
+
+		// k = 1
+
+		a_0 = A[4];
+		a_1 = A[5];
+		a_2 = A[6];
+		a_3 = A[7];
+
+		b_0 = B[4];
+		b_1 = B[5];
+		b_2 = B[6];
+		b_3 = B[7];
+
+		c_00 -= a_0 * b_0;
+		c_10 -= a_1 * b_0;
+		c_20 -= a_2 * b_0;
+		c_30 -= a_3 * b_0;
+
+		c_01 -= a_0 * b_1;
+		c_11 -= a_1 * b_1;
+		c_21 -= a_2 * b_1;
+		c_31 -= a_3 * b_1;
+
+		c_02 -= a_0 * b_2;
+		c_12 -= a_1 * b_2;
+		c_22 -= a_2 * b_2;
+		c_32 -= a_3 * b_2;
+
+		c_03 -= a_0 * b_3;
+		c_13 -= a_1 * b_3;
+		c_23 -= a_2 * b_3;
+		c_33 -= a_3 * b_3;
+
+
+		// k = 2
+
+		a_0 = A[8];
+		a_1 = A[9];
+		a_2 = A[10];
+		a_3 = A[11];
+
+		b_0 = B[8];
+		b_1 = B[9];
+		b_2 = B[10];
+		b_3 = B[11];
+
+		c_00 -= a_0 * b_0;
+		c_10 -= a_1 * b_0;
+		c_20 -= a_2 * b_0;
+		c_30 -= a_3 * b_0;
+
+		c_01 -= a_0 * b_1;
+		c_11 -= a_1 * b_1;
+		c_21 -= a_2 * b_1;
+		c_31 -= a_3 * b_1;
+
+		c_02 -= a_0 * b_2;
+		c_12 -= a_1 * b_2;
+		c_22 -= a_2 * b_2;
+		c_32 -= a_3 * b_2;
+
+		c_03 -= a_0 * b_3;
+		c_13 -= a_1 * b_3;
+		c_23 -= a_2 * b_3;
+		c_33 -= a_3 * b_3;
+
+
+		// k = 3
+
+		a_0 = A[12];
+		a_1 = A[13];
+		a_2 = A[14];
+		a_3 = A[15];
+
+		b_0 = B[12];
+		b_1 = B[13];
+		b_2 = B[14];
+		b_3 = B[15];
+
+		c_00 -= a_0 * b_0;
+		c_10 -= a_1 * b_0;
+		c_20 -= a_2 * b_0;
+		c_30 -= a_3 * b_0;
+
+		c_01 -= a_0 * b_1;
+		c_11 -= a_1 * b_1;
+		c_21 -= a_2 * b_1;
+		c_31 -= a_3 * b_1;
+
+		c_02 -= a_0 * b_2;
+		c_12 -= a_1 * b_2;
+		c_22 -= a_2 * b_2;
+		c_32 -= a_3 * b_2;
+
+		c_03 -= a_0 * b_3;
+		c_13 -= a_1 * b_3;
+		c_23 -= a_2 * b_3;
+		c_33 -= a_3 * b_3;
+
+		A += 16;
+		B += 16;
+
+		}
+	
+	for(; k<kmax; k++)
 		{
 
 		// k = 0
@@ -1961,28 +2258,37 @@ void kernel_strsm_ntnn_rl_inv_4x4_vs_lib4(int kmax, float *A, float *B, float *C
 		}
 
 	}
+#endif
 
 
 
-void kernel_strsm_ntnn_rl_inv_4x4_lib4(int k, float *A, float *B, float *C, float *D, float *E, float *inv_diag_E)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
+void kernel_strsm_nt_rl_inv_4x4_lib4(int k, float *A, float *B, float *C, float *D, float *E, float *inv_diag_E)
 	{
-	kernel_strsm_ntnn_rl_inv_4x4_vs_lib4(k, A, B, C, D, E, inv_diag_E, 4, 4);
+	kernel_strsm_nt_rl_inv_4x4_vs_lib4(k, A, B, C, D, E, inv_diag_E, 4, 4);
 	}
+#endif
 
 
 
-void kernel_sgemm_strsm_ntnn_rl_inv_4x4_vs_lib4(int kp, float *Ap, float *Bp, int km_, float *Am, float *Bm, int alg, float *C, float *D, float *E, float *inv_diag_E, int km, int kn)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
+void kernel_sgemm_strsm_nt_rl_inv_4x4_vs_lib4(int kp, float *Ap, float *Bp, int km_, float *Am, float *Bm, float *C, float *D, float *E, float *inv_diag_E, int km, int kn)
 	{
-	kernel_sgemm_ntnn_4x4_vs_lib4(kp, Ap, Bp, alg, C, D, km, kn);
-	kernel_strsm_ntnn_rl_inv_4x4_vs_lib4(km_, Am, Bm, D, D, E, inv_diag_E, km, kn);
+	float alpha = 1.0;
+	float beta  = 0.0;
+	kernel_sgemm_nt_4x4_vs_lib4(kp, &alpha, Ap, Bp, &beta, C, D, km, kn);
+	kernel_strsm_nt_rl_inv_4x4_vs_lib4(km_, Am, Bm, D, D, E, inv_diag_E, km, kn);
 	}
+#endif
 
 
 
-void kernel_sgemm_strsm_ntnn_rl_inv_4x4_lib4(int kp, float *Ap, float *Bp, int km_, float *Am, float *Bm, int alg, float *C, float *D, float *E, float *inv_diag_E)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
+void kernel_sgemm_strsm_nt_rl_inv_4x4_lib4(int kp, float *Ap, float *Bp, int km_, float *Am, float *Bm, float *C, float *D, float *E, float *inv_diag_E)
 	{
-	kernel_sgemm_strsm_ntnn_rl_inv_4x4_vs_lib4(kp, Ap, Bp, km_, Am, Bm, alg, C, D, E, inv_diag_E, 4, 4);
+	kernel_sgemm_strsm_nt_rl_inv_4x4_vs_lib4(kp, Ap, Bp, km_, Am, Bm, C, D, E, inv_diag_E, 4, 4);
 	}
+#endif
 
 
 

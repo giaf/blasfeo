@@ -28,7 +28,7 @@
 
 
 
-void spotrf_ntnn_l_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D)
+void spotrf_nt_l_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D)
 	{
 
 	if(m<=0 || n<=0)
@@ -45,17 +45,17 @@ void spotrf_ntnn_l_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, flo
 		j = 0;
 		for(; j<i && j<n-3; j+=4)
 			{
-			kernel_strsm_ntnn_rl_inv_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j]);
+			kernel_strsm_nt_rl_inv_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j]);
 			}
 		if(j<n)
 			{
-			if(i<j) // dgemm
+			if(i<j) // dtrsm
 				{
-				kernel_strsm_ntnn_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], 4, n-j);
+				kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
 				}
-			else // dsyrk
+			else // dpotrf
 				{
-				kernel_spotrf_ntnn_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &inv_diag_D[j], 4, n-j);
+				kernel_spotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
 				}
 			}
 		}
@@ -73,17 +73,17 @@ void spotrf_ntnn_l_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, flo
 	j = 0;
 	for(; j<i && j<n-3; j+=4)
 		{
-		kernel_strsm_ntnn_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
+		kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
 		}
 	if(j<n)
 		{
-		if(j<i) // dgemm
+		if(j<i) // dtrsm
 			{
-			kernel_strsm_ntnn_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
+			kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
 			}
-		else // dsyrk
+		else // dpotrf
 			{
-			kernel_spotrf_ntnn_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
+			kernel_spotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
 			}
 		}
 	return;
@@ -92,11 +92,13 @@ void spotrf_ntnn_l_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, flo
 
 
 
-void ssyrk_spotrf_ntnn_l_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D)
+void ssyrk_spotrf_nt_l_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D)
 	{
 
 	if(m<=0 || n<=0)
 		return;
+
+	int alg = 1; // XXX
 
 	const int bs = 4;
 
@@ -109,17 +111,17 @@ void ssyrk_spotrf_ntnn_l_lib(int m, int n, int k, float *pA, int sda, float *pB,
 		j = 0;
 		for(; j<i && j<n-3; j+=4)
 			{
-			kernel_sgemm_strsm_ntnn_rl_inv_4x4_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j]);
+			kernel_sgemm_dtrsm_nt_rl_inv_4x4_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j]);
 			}
 		if(j<n)
 			{
 			if(i<j) // dgemm
 				{
-				kernel_sgemm_strsm_ntnn_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], 4, n-j);
+				kernel_sgemm_dtrsm_nt_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
 				}
 			else // dsyrk
 				{
-				kernel_ssyrk_spotrf_ntnn_l_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], alg, &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &inv_diag_D[j], 4, n-j);
+				kernel_ssyrk_dpotrf_nt_l_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
 				}
 			}
 		}
@@ -137,21 +139,22 @@ void ssyrk_spotrf_ntnn_l_lib(int m, int n, int k, float *pA, int sda, float *pB,
 	j = 0;
 	for(; j<i && j<n-3; j+=4)
 		{
-		kernel_sgemm_strsm_ntnn_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
+		kernel_sgemm_dtrsm_nt_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
 		}
 	if(j<n)
 		{
 		if(j<i) // dgemm
 			{
-			kernel_sgemm_strsm_ntnn_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
+			kernel_sgemm_dtrsm_nt_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
 			}
 		else // dsyrk
 			{
-			kernel_ssyrk_spotrf_ntnn_l_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], alg, &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
+			kernel_ssyrk_dpotrf_nt_l_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
 			}
 		}
 	return;
 
 	}
+
 
 
