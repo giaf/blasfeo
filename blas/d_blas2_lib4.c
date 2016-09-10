@@ -221,10 +221,20 @@ void dtrmv_un_lib(int m, double *pA, int sda, double *x, int alg, double *y, dou
 	int i;
 	
 	i=0;
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; i<m-7; i+=8)
+		{
+		kernel_dtrmv_un_8_lib4(m-i, pA, sda, x, alg, y, z);
+		pA += 8*sda+8*bs;
+		x  += 8;
+		y  += 8;
+		z  += 8;
+		}
+#endif
 	for(; i<m-3; i+=4)
 		{
 		kernel_dtrmv_un_4_lib4(m-i, pA, x, alg, y, z);
-		pA += 4*sda+4*4;
+		pA += 4*sda+4*bs;
 		x  += 4;
 		y  += 4;
 		z  += 4;

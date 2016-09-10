@@ -336,6 +336,143 @@ inner_kernel_dgemv_add_t_8_lib4:
 
 // common inner routine with file scope
 //
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- 4*sda*sizeof(double)
+// r13   <- x
+// r15   <- dirty
+// ymm0  <- [z0 z1 z2 z3]_a
+// ymm1  <- [z4 z5 z6 z7]_a
+// ymm2  <- [z0 z1 z2 z3]_b
+// ymm3  <- [z4 z5 z6 z7]_b
+// ymm4  <- [z0 z1 z2 z3]_c
+// ymm5  <- [z4 z5 z6 z7]_c
+// ymm6  <- [z0 z1 z2 z3]_d
+// ymm7  <- [z4 z5 z6 z7]_d
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+//
+// output arguments:
+// r10d  <- k-4
+// r11   <- A+4*4*sizeof(double)
+// r12   <- 4*sda*sizeof(double)
+// r13   <- x+4*sizeof(double)
+// r15   <- dirty
+// ymm0  <- [z0 z1 z2 z3]_a
+// ymm1  <- [z4 z5 z6 z7]_a
+// ymm2  <- [z0 z1 z2 z3]_b
+// ymm3  <- [z4 z5 z6 z7]_b
+// ymm4  <- [z0 z1 z2 z3]_c
+// ymm5  <- [z4 z5 z6 z7]_c
+// ymm6  <- [z0 z1 z2 z3]_d
+// ymm7  <- [z4 z5 z6 z7]_d
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRMV_UN_8_LIB4
+#else
+	.p2align 4,,15
+	.type inner_edge_dtrmv_un_8_lib4, @function
+inner_edge_dtrmv_un_8_lib4:
+#endif
+	
+	movq	%r11, %r15 // A1 <- A0
+	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
+
+	vxorpd			%ymm14, %ymm14, %ymm14
+
+	// first 4 columns
+	vmovapd			0(%r11), %ymm8
+	vblendpd		$0x1, %ymm8, %ymm14, %ymm8
+	vbroadcastsd	0(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	
+	subl			$4, %r10d
+
+	vmovapd			32(%r11), %ymm8
+	vblendpd		$0x3, %ymm8, %ymm14, %ymm8
+	vbroadcastsd	8(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	
+	vmovapd			64(%r11), %ymm8
+	vblendpd		$0x7, %ymm8, %ymm14, %ymm8
+	vbroadcastsd	16(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm4
+
+	vmovapd			96(%r11), %ymm8
+	vbroadcastsd	24(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm6
+	
+	addq			$128, %r11
+	addq			$128, %r15
+	addq			$32, %r13
+
+
+
+	// last 4 columns
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			0(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			0(%r15), %ymm8
+	vblendpd		$0x1, %ymm8, %ymm14, %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	
+	subl			$4, %r10d
+
+	vbroadcastsd	8(%r13), %ymm12
+	vmovapd			32(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	vmovapd			32(%r15), %ymm8
+	vblendpd		$0x3, %ymm8, %ymm14, %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm3
+	
+	vbroadcastsd	16(%r13), %ymm12
+	vmovapd			64(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm4
+	vmovapd			64(%r15), %ymm8
+	vblendpd		$0x7, %ymm8, %ymm14, %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm5
+
+	vbroadcastsd	24(%r13), %ymm12
+	vmovapd			96(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm6
+	vmovapd			96(%r15), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm7
+	
+	addq			$128, %r11
+	addq			$128, %r15
+	addq			$32, %r13
+	
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_edge_dtrmv_un_8_lib4, .-inner_edge_dtrmv_un_8_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // blender for ta==n
 //
 // input arguments:
@@ -727,6 +864,105 @@ kernel_dgemv_t_8_lib4:
 	ret
 
 	.size	kernel_dgemv_t_8_lib4, .-kernel_dgemv_t_8_lib4
+
+
+
+
+
+//                             rdi    rsi        rdx      rcx        r8       r9         rsp+8
+// void kernel_dtrmv_un_8_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
+
+	.p2align 4,,15
+	.globl kernel_dtrmv_un_8_lib4
+	.type kernel_dtrmv_un_8_lib4, @function
+kernel_dtrmv_un_8_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
+
+
+	// call inner dtrmv edge & dgemv kernel n
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movslq	%r12d, %r12
+	movq	%rcx, %r13  // x
+
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRMV_UN_8_LIB4
+#else
+	call inner_edge_dtrmv_un_8_lib4
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMV_ADD_N_8_LIB4
+#else
+	call inner_kernel_dgemv_add_n_8_lib4
+#endif
+
+
+	// call inner blender n
+
+	movl	%r8d, %r10d // alg
+	movq	%r9, %r11   // y
+
+#if MACRO_LEVEL>=1
+	INNER_BLENDER_N_8_LIB4
+#else
+	call inner_blender_n_8_lib4
+#endif
+
+
+	// store
+
+	movq	STACKSIZE + 8(%rsp), %r10 // z
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8_LIB4
+#else
+	call inner_store_8_lib4
+#endif
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dtrmv_un_8_lib4, .-kernel_dtrmv_un_8_lib4
 
 
 

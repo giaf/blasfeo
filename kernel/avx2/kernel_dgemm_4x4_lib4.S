@@ -1056,7 +1056,7 @@ inner_edge_dtrmm_sub_nt_lu_4x4_vs_lib4:
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_BLEND_AB_4X4_LIB4
+	.macro INNER_SCALE_AB_4X4_LIB4
 #else
 	.p2align 4,,15
 	.type inner_scale_ab_4x4_lib4, @function
