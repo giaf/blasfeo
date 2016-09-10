@@ -26,23 +26,45 @@
 
 
 
+//
 // level 2 BLAS
+//
+
+// z <= beta * y + alpha * A * x
 void sgemv_n_lib(int m, int n, float *pA, int sda, float *x, int alg, float *y, float *z);
+// z <= beta * y + alpha * A' * x
 void sgemv_t_lib(int m, int n, float *pA, int sda, float *x, int alg, float *y, float *z);
+// y <= inv( A ) * x
 void strsv_ln_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, float *x, float *y);
+// y <= inv( A' ) * x
 void strsv_lt_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, float *x, float *y);
+// z <= beta * y + alpha * A * x ; A upper triangular
 void strmv_un_lib(int m, float *pA, int sda, float *x, int alg, float *y, float *z);
+// z <= beta * y + alpha * A' * x ; A upper triangular
 void strmv_ut_lib(int m, float *pA, int sda, float *x, int alg, float *y, float *z);
 	
+
+
+//
 // level 3 BLAS
-void sgemm_ntnn_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd);
-void sgemm_ntnt_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd);
-void sgemm_nttn_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd);
-void sgemm_nttt_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd);
-void ssyrk_ntnn_l_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd);
-void strmm_ntnn_lu_lib(int m, int n, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd);
+//
 
+// D <= beta * C + alpha * A * B'
+void sgemm_nt_lib(int m, int n, int k, float alpha, float *pA, int sda, float *pB, int sdb, float beta, float *pC, int sdc, float *pD, int sdd);
+// D <= beta * C + alpha * A * B
+void sgemm_nn_lib(int m, int n, int k, float alpha, float *pA, int sda, float *pB, int sdb, float beta, float *pC, int sdc, float *pD, int sdd);
+// D <= beta * C + alpha * A * B' ; C, D lower triangular
+void ssyrk_nt_l_lib(int m, int n, int k, float alpha, float *pA, int sda, float *pB, int sdb, float beta, float *pC, int sdc, float *pD, int sdd);
+// D <= beta * C + alpha * A * B' ; B upper triangular
+void strmm_nt_ru_lib(int m, int n, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd);
+
+
+
+//
 // LAPACK
-void spotrf_ntnn_l_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D);
-void ssyrk_spotrf_ntnn_l_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, int alg, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D);
+//
 
+// D <= chol( C ) ; C, D lower triangular
+void spotrf_nt_l_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D);
+// D <= chol( C + A * B' ) ; C, D lower triangular
+void ssyrk_spotrf_nt_l_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D);
