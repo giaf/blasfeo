@@ -76,26 +76,38 @@ int main()
 	// maximum flops per cycle, double precision
 #if defined(TARGET_X64_INTEL_HASWELL)
 	const float flops_max = 16;
-	printf("Testing BLAS version for AVX2 and FMA instruction sets, 64 bit: theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+	printf("Testing BLAS version for AVX2 and FMA instruction sets, 64 bit (optimized for Intel Haswell): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	const float flops_max = 8;
-	printf("Testing BLAS version for AVX instruction set, 64 bit: theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+	printf("Testing BLAS version for AVX instruction set, 64 bit (optimized for Intel Sandy Bridge): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_X64_INTEL_CORE)
 	const float flops_max = 4;
-	printf("Testing BLAS version for AVX instruction set, 64 bit: theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+	printf("Testing BLAS version for SSE3 instruction set, 64 bit (optimized for Intel Core): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_X64_AMD_BULLDOZER)
+	const float flops_max = 8;
+	printf("Testing BLAS version for SSE3 and FMA instruction set, 64 bit (optimized for AMD Bulldozer): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_GENERIC)
+	const float flops_max = 2;
+	printf("Testing BLAS version for generic scalar instruction set: theoretical peak %5.1f Gflops ???\n", flops_max*GHz_max);
 #endif
 	
 	FILE *f;
 	f = fopen("./test_problems/results/test_blas.m", "w"); // a
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-	fprintf(f, "C = 'd_x64_haswell';\n");
+	fprintf(f, "C = 'd_x64_intel_haswell';\n");
 	fprintf(f, "\n");
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	fprintf(f, "C = 'd_x64_sandybridge';\n");
+	fprintf(f, "C = 'd_x64_intel_sandybridge';\n");
 	fprintf(f, "\n");
 #elif defined(TARGET_X64_INTEL_CORE)
-	fprintf(f, "C = 'd_x64_core';\n");
+	fprintf(f, "C = 'd_x64_intel_core';\n");
+	fprintf(f, "\n");
+#elif defined(TARGET_X64_AMD_BULLDOZER)
+	fprintf(f, "C = 'd_x64_amd_bulldozer';\n");
+	fprintf(f, "\n");
+#elif defined(TARGET_GENERIC)
+	fprintf(f, "C = 'd_generic';\n");
 	fprintf(f, "\n");
 #endif
 

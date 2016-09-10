@@ -54,7 +54,7 @@ endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
 # kernel
-OBJS += ./kernel/sse3/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o
+OBJS += ./kernel/sse3/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o
 OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 # blas
 OBJS += ./blas/d_blas3_lib4.o ./blas/d_lapack_lib4.o ./blas/d_blas2_lib4.o
@@ -66,7 +66,7 @@ endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
 # kernel
-OBJS += ./kernel/fma/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o
+OBJS += ./kernel/fma/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o
 OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 # blas
 OBJS += ./blas/d_blas3_lib4.o ./blas/d_lapack_lib4.o ./blas/d_blas2_lib4.o

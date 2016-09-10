@@ -578,10 +578,11 @@ inner_kernel_dgemm_sub_nt_4x4_lib4:
 // common inner routine with file scope
 //
 // input arguments:
-// r10d   <- k
+// r10d  <- k
 // r11   <- A
 // r12   <- B
 // r13   <- 4*sdb*sizeof(double)
+// r14   <= dirty
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
@@ -601,6 +602,7 @@ inner_kernel_dgemm_sub_nt_4x4_lib4:
 // r11   <- A+4*k*sizeof(double)
 // r12   <- B+(k/4)*sdb*sizeof(double)+(k%4)
 // r13   <- 4*sdb*sizeof(double)
+// r14   <= dirty
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
@@ -625,6 +627,9 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 	cmpl	$0, %r10d
 	jle		2f // return
 
+	movq	%r12, %r14 // B_next <- B
+	addq	%r13, %r14 // B_next <- B + 4*sda*sizeof(double)
+
 	cmpl	$4, %r10d
 	jl		0f // consider clean-up loop
 
@@ -632,6 +637,9 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 	.p2align 3
 1: // main loop
 	
+	prefetcht0	0(%r14) // software prefetch
+	prefetcht0	64(%r14) // software prefetch
+
 	// unroll 0
 	vmovapd			0(%r11), %ymm12 // A[0]
 	vbroadcastsd	0(%r12), %ymm13 // B[0]
@@ -697,7 +705,9 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 	vaddpd			%ymm15, %ymm3, %ymm3
 
 	addq	$128, %r11
-	addq	%r13, %r12
+
+	mov		%r14, %r12
+	addq	%r13, %r14
 
 	cmpl	$3, %r10d
 
