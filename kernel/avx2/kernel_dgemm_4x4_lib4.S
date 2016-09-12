@@ -696,11 +696,11 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DTRMM_ADD_NT_LU_4X4_LIB4
+	.macro INNER_EDGE_DTRMM_NT_LU_4X4_LIB4
 #else
 	.p2align 4,,15
-	.type inner_edge_dtrmm_add_nt_lu_4x4_lib4, @function
-inner_edge_dtrmm_add_nt_lu_4x4_lib4:
+	.type inner_edge_dtrmm_nt_lu_4x4_lib4, @function
+inner_edge_dtrmm_nt_lu_4x4_lib4:
 #endif
 	
 	vmovapd			0(%r10), %ymm8
@@ -728,9 +728,10 @@ inner_edge_dtrmm_add_nt_lu_4x4_lib4:
 	vfmadd231pd		%ymm8, %ymm12, %ymm1
 	vbroadcastsd	112(%r11), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm2
-	addq			$128, %r10
 	vbroadcastsd	120(%r11), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm3
+
+	addq			$128, %r10
 	addq			$128, %r11
 
 #if MACRO_LEVEL>=1
@@ -738,7 +739,7 @@ inner_edge_dtrmm_add_nt_lu_4x4_lib4:
 #else
 	ret
 
-	.size	inner_edge_dtrmm_add_nt_lu_4x4_lib4, .-inner_edge_dtrmm_add_nt_lu_4x4_lib4
+	.size	inner_edge_dtrmm_nt_lu_4x4_lib4, .-inner_edge_dtrmm_nt_lu_4x4_lib4
 #endif
 
 
@@ -776,11 +777,11 @@ inner_edge_dtrmm_add_nt_lu_4x4_lib4:
 
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DTRMM_ADD_NT_LU_4X4_VS_LIB4
+	.macro INNER_EDGE_DTRMM_NT_LU_4X4_VS_LIB4
 #else
 	.p2align 4,,15
-	.type inner_edge_dtrmm_add_nt_lu_4x4_vs_lib4, @function
-inner_edge_dtrmm_add_nt_lu_4x4_vs_lib4:
+	.type inner_edge_dtrmm_nt_lu_4x4_vs_lib4, @function
+inner_edge_dtrmm_nt_lu_4x4_vs_lib4:
 #endif
 	
 	vmovapd			0(%r11), %ymm8
@@ -839,7 +840,7 @@ inner_edge_dtrmm_add_nt_lu_4x4_vs_lib4:
 #else
 	ret
 
-	.size	inner_edge_dtrmm_add_nt_lu_4x4_vs_lib4, .-inner_edge_dtrmm_add_nt_lu_4x4_vs_lib4
+	.size	inner_edge_dtrmm_nt_lu_4x4_vs_lib4, .-inner_edge_dtrmm_nt_lu_4x4_vs_lib4
 #endif
 
 
@@ -848,7 +849,7 @@ inner_edge_dtrmm_add_nt_lu_4x4_vs_lib4:
 
 // common inner routine with file scope
 //
-// edge for B upper triangular
+// edge for dlauum
 //
 // input arguments:
 // r10   <- A
@@ -875,49 +876,57 @@ inner_edge_dtrmm_add_nt_lu_4x4_vs_lib4:
 
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DTRMM_SUB_NT_LU_4X4_LIB4
+	.macro INNER_EDGE_DLAUUM_NT_4X4_LIB4
 #else
 	.p2align 4,,15
-	.type inner_edge_dtrmm_sub_nt_lu_4x4_lib4, @function
-inner_edge_dtrmm_sub_nt_lu_4x4_lib4:
+	.type inner_edge_dlauum_nt_4x4_lib4, @function
+inner_edge_dlauum_nt_4x4_lib4:
 #endif
+	
+	vxorpd			%ymm14, %ymm14, %ymm14
 
 	vmovapd			0(%r10), %ymm8
+	vblendpd		$0x1, %ymm8, %ymm14, %ymm8
 	vbroadcastsd	0(%r11), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm0
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
 
 	vmovapd			32(%r10), %ymm8
+	vblendpd		$0x3, %ymm8, %ymm14, %ymm8
 	vbroadcastsd	32(%r11), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm0
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vbroadcastsd	40(%r11), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
 
 	vmovapd			64(%r10), %ymm8
+	vblendpd		$0x7, %ymm8, %ymm14, %ymm8
 	vbroadcastsd	64(%r11), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm0
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vbroadcastsd	72(%r11), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
 	vbroadcastsd	80(%r11), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm2
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
 
 	vmovapd			96(%r10), %ymm8
 	vbroadcastsd	96(%r11), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm0
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vbroadcastsd	104(%r11), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
 	vbroadcastsd	112(%r11), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm2
-	addq			$128, %r10
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
 	vbroadcastsd	120(%r11), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm3
+	vfmadd231pd		%ymm8, %ymm12, %ymm3
+
+	addq			$128, %r10
 	addq			$128, %r11
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
 
-	.size	inner_edge_dtrmm_sub_nt_lu_4x4_lib4, .-inner_edge_dtrmm_sub_nt_lu_4x4_lib4
+	.size	inner_edge_dlauum_nt_4x4_lib4, .-inner_edge_dlauum_nt_4x4_lib4
 #endif
 
 
@@ -926,87 +935,94 @@ inner_edge_dtrmm_sub_nt_lu_4x4_lib4:
 
 // common inner routine with file scope
 //
-// edge for B upper triangular
+// edge for dlauum
 //
 // input arguments:
-// r10d  <- k
+// r10   <- k
 // r11   <- A
 // r12   <- B
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
 // ymm8  <- dirty
 // ymm12 <- dirty
 // ymm15 <- dirty
 
 //
 // output arguments:
-// r10d  <- max(k-4,0)
-// r11   <- A+4*4*sizeof(double)
-// r12   <- B+4*4*sizeof(double)
+// r10   <- 0
+// r11   <- A+4*k*sizeof(double)
+// r12   <- B+4*k*sizeof(double)
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
 // ymm8  <- dirty
 // ymm12 <- dirty
 // ymm15 <- dirty
 
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DTRMM_SUB_NT_LU_4X4_VS_LIB4
+	.macro INNER_EDGE_DLAUUM_NT_4X4_VS_LIB4
 #else
 	.p2align 4,,15
-	.type inner_edge_dtrmm_sub_nt_lu_4x4_vs_lib4, @function
-inner_edge_dtrmm_sub_nt_lu_4x4_vs_lib4:
+	.type inner_edge_dlauum_nt_4x4_vs_lib4, @function
+inner_edge_dlauum_nt_4x4_vs_lib4:
 #endif
 	
+	vxorpd			%ymm14, %ymm14, %ymm14
+
 	vmovapd			0(%r11), %ymm8
 	subl			$1, %r10d
+	vblendpd		$0x1, %ymm8, %ymm14, %ymm8
 	vbroadcastsd	0(%r12), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm0
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	addq			$32, %r11
 	addq			$32, %r12
 
-	cmpl	$0, %r10d
-	jle		0f
+	cmpl			$0, %r10d
+	jle				0f
 
 	vmovapd			0(%r11), %ymm8
 	subl			$1, %r10d
+	vblendpd		$0x3, %ymm8, %ymm14, %ymm8
 	vbroadcastsd	0(%r12), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm0
-	addq			$32, %r11
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vbroadcastsd	8(%r12), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	addq			$32, %r11
 	addq			$32, %r12
 
-	cmpl	$0, %r10d
-	jle		0f
+	cmpl			$0, %r10d
+	jle				0f
 
 	vmovapd			0(%r11), %ymm8
 	subl			$1, %r10d
+	vblendpd		$0x7, %ymm8, %ymm14, %ymm8
 	vbroadcastsd	0(%r12), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm0
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vbroadcastsd	8(%r12), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm1
-	addq			$32, %r11
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
 	vbroadcastsd	16(%r12), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm2
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	addq			$32, %r11
 	addq			$32, %r12
 
-	cmpl	$0, %r10d
-	jle		0f
+	cmpl			$0, %r10d
+	jle				0f
 
 	vmovapd			0(%r11), %ymm8
 	subl			$1, %r10d
 	vbroadcastsd	0(%r12), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm0
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vbroadcastsd	8(%r12), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
 	vbroadcastsd	16(%r12), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm2
-	addq			$32, %r11
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
 	vbroadcastsd	24(%r12), %ymm12
-	vfnmadd231pd	%ymm8, %ymm12, %ymm3
+	vfmadd231pd		%ymm8, %ymm12, %ymm3
+	addq			$32, %r11
 	addq			$32, %r12
 
 0:
@@ -1016,7 +1032,65 @@ inner_edge_dtrmm_sub_nt_lu_4x4_vs_lib4:
 #else
 	ret
 
-	.size	inner_edge_dtrmm_sub_nt_lu_4x4_vs_lib4, .-inner_edge_dtrmm_sub_nt_lu_4x4_vs_lib4
+	.size	inner_edge_dlauum_nt_4x4_vs_lib4, .-inner_edge_dlauum_nt_4x4_vs_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// blend
+//
+// input arguments:
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_4X4_LIB4
+#else
+	.p2align 4,,15
+	.type inner_blend_4x4_lib4, @function
+inner_blend_4x4_lib4:
+#endif	
+	
+
+	// tc==n
+	vblendpd	$0xa, %ymm1, %ymm0, %ymm8
+	vblendpd	$0x5, %ymm1, %ymm0, %ymm9
+	vblendpd	$0xa, %ymm3, %ymm2, %ymm10
+	vblendpd	$0x5, %ymm3, %ymm2, %ymm11
+
+	vblendpd	$0xc, %ymm10, %ymm8, %ymm0
+	vblendpd	$0x3, %ymm10, %ymm8, %ymm2
+	vblendpd	$0xc, %ymm11, %ymm9, %ymm1
+	vblendpd	$0x3, %ymm11, %ymm9, %ymm3
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_blend_4x4_lib4, .-inner_blend_4x4_lib4
 #endif
 
 
@@ -1128,11 +1202,11 @@ inner_scale_ab_4x4_lib4:
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_SCALE_BLEND_AB_4X4_LIB4
+	.macro INNER_BLEND_SCALE_AB_4X4_LIB4
 #else
 	.p2align 4,,15
-	.type inner_scale_blend_ab_4x4_lib4, @function
-inner_scale_blend_ab_4x4_lib4:
+	.type inner_blend_scale_ab_4x4_lib4, @function
+inner_blend_scale_ab_4x4_lib4:
 #endif
 	
 	// alpha
@@ -1170,7 +1244,7 @@ inner_scale_blend_ab_4x4_lib4:
 #else
 	ret
 
-	.size	inner_scale_blend_ab_4x4_lib4, .-inner_scale_blend_ab_4x4_lib4
+	.size	inner_blend_scale_ab_4x4_lib4, .-inner_blend_scale_ab_4x4_lib4
 #endif
 
 
@@ -1206,11 +1280,11 @@ inner_scale_blend_ab_4x4_lib4:
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_SCALE_BLEND_A0_4X4_LIB4
+	.macro INNER_BLEND_SCALE_A0_4X4_LIB4
 #else
 	.p2align 4,,15
-	.type inner_scale_blend_a0_4x4_lib4, @function
-inner_scale_blend_a0_4x4_lib4:
+	.type inner_blend_scale_a0_4x4_lib4, @function
+inner_blend_scale_a0_4x4_lib4:
 #endif
 	
 	// alpha
@@ -1236,7 +1310,7 @@ inner_scale_blend_a0_4x4_lib4:
 #else
 	ret
 
-	.size	inner_scale_blend_a0_4x4_lib4, .-inner_scale_blend_a0_4x4_lib4
+	.size	inner_blend_scale_a0_4x4_lib4, .-inner_blend_scale_a0_4x4_lib4
 #endif
 
 
@@ -1272,11 +1346,11 @@ inner_scale_blend_a0_4x4_lib4:
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_SCALE_BLEND_11_4X4_LIB4
+	.macro INNER_BLEND_SCALE_11_4X4_LIB4
 #else
 	.p2align 4,,15
-	.type inner_scale_blend_11_4x4_lib4, @function
-inner_scale_blend_11_4x4_lib4:
+	.type inner_blend_scale_11_4x4_lib4, @function
+inner_blend_scale_11_4x4_lib4:
 #endif	
 
 	vblendpd	$0xa, %ymm1, %ymm0, %ymm8
@@ -1303,100 +1377,7 @@ inner_scale_blend_11_4x4_lib4:
 #else
 	ret
 
-	.size	inner_scale_blend_11_4x4_lib4, .-inner_scale_blend_11_4x4_lib4
-#endif
-
-
-
-
-
-// common inner routine with file scope
-//
-// blender for tc==n and td==n
-//
-// input arguments:
-// r10d <- alg
-// r11   <- C
-// ymm0 <- [d00 d11 d22 d33]
-// ymm1 <- [d01 d10 d23 d32]
-// ymm2 <- [d03 d12 d21 d30]
-// ymm3 <- [d02 d13 d20 d31]
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm15 <- dirty
-//
-// output arguments:
-// r10d <- alg
-// r11   <- C
-// ymm0 <- [d00 d10 d20 d30]
-// ymm1 <- [d01 d11 d21 d31]
-// ymm2 <- [d02 d12 d22 d32]
-// ymm3 <- [d03 d13 d23 d33]
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm15 <- dirty
-
-#if MACRO_LEVEL>=1
-	.macro INNER_BLENDER_NN_4X4_LIB4
-#else
-	.p2align 4,,15
-	.type inner_blender_nn_4x4_lib4, @function
-inner_blender_nn_4x4_lib4:
-#endif	
-
-	// tc==n
-	vblendpd	$0xa, %ymm1, %ymm0, %ymm8
-	vblendpd	$0x5, %ymm1, %ymm0, %ymm9
-	vblendpd	$0xa, %ymm3, %ymm2, %ymm10
-	vblendpd	$0x5, %ymm3, %ymm2, %ymm11
-
-	vblendpd	$0xc, %ymm10, %ymm8, %ymm0
-	vblendpd	$0x3, %ymm10, %ymm8, %ymm2
-	vblendpd	$0xc, %ymm11, %ymm9, %ymm1
-	vblendpd	$0x3, %ymm11, %ymm9, %ymm3
-
-	cmpl	$0, %r10d // alg
-	je		0f // return
-
-	cmpl	$1, %r10d // alg
-	jne		1f // alg==-1
-
-	// alg==1
-	vmovapd		0(%r11), %ymm15
-	vaddpd		%ymm0, %ymm15, %ymm0
-	vmovapd		32(%r11), %ymm15
-	vaddpd		%ymm1, %ymm15, %ymm1
-	vmovapd		64(%r11), %ymm15
-	vaddpd		%ymm2, %ymm15, %ymm2
-	vmovapd		96(%r11), %ymm15
-	vaddpd		%ymm3, %ymm15, %ymm3
-
-	jmp		0f // return
-
-1: // alg==-1
-
-	// alg==-1
-	vmovapd		0(%r11), %ymm15
-	vsubpd		%ymm0, %ymm15, %ymm0
-	vmovapd		32(%r11), %ymm15
-	vsubpd		%ymm1, %ymm15, %ymm1
-	vmovapd		64(%r11), %ymm15
-	vsubpd		%ymm2, %ymm15, %ymm2
-	vmovapd		96(%r11), %ymm15
-	vsubpd		%ymm3, %ymm15, %ymm3
-
-0: // return
-	
-#if MACRO_LEVEL>=1
-	.endm
-#else
-	ret
-
-	.size	inner_blender_nn_4x4_lib4, .-inner_blender_nn_4x4_lib4
+	.size	inner_blend_scale_11_4x4_lib4, .-inner_blend_scale_11_4x4_lib4
 #endif
 
 
@@ -2119,9 +2100,9 @@ kernel_dgemm_nt_4x4_a0_lib4:
 	movq	%rsi, %r10 // alpha
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_BLEND_A0_4X4_LIB4
+	INNER_BLEND_SCALE_A0_4X4_LIB4
 #else
-	call inner_scale_blend_a0_4x4_lib4
+	call inner_blend_scale_a0_4x4_lib4
 #endif
 
 
@@ -2205,9 +2186,9 @@ kernel_dgemm_nt_4x4_lib4:
 	movq	%r9, %r12   // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_BLEND_AB_4X4_LIB4
+	INNER_BLEND_SCALE_AB_4X4_LIB4
 #else
-	call inner_scale_blend_ab_4x4_lib4
+	call inner_blend_scale_ab_4x4_lib4
 #endif
 
 
@@ -2291,9 +2272,9 @@ kernel_dgemm_nt_4x4_vs_lib4:
 	movq	%r9, %r12   // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_BLEND_AB_4X4_LIB4
+	INNER_BLEND_SCALE_AB_4X4_LIB4
 #else
-	call inner_scale_blend_ab_4x4_lib4
+	call inner_blend_scale_ab_4x4_lib4
 #endif
 
 
@@ -2559,9 +2540,9 @@ kernel_dsyrk_nt_l_4x4_lib4:
 	movq	%r9, %r12   // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_BLEND_AB_4X4_LIB4
+	INNER_BLEND_SCALE_AB_4X4_LIB4
 #else
-	call inner_scale_blend_ab_4x4_lib4
+	call inner_blend_scale_ab_4x4_lib4
 #endif
 
 
@@ -2647,9 +2628,9 @@ kernel_dsyrk_nt_l_4x4_vs_lib4:
 	movq	%r9, %r12   // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_BLEND_AB_4X4_LIB4
+	INNER_BLEND_SCALE_AB_4X4_LIB4
 #else
-	call inner_scale_blend_ab_4x4_lib4
+	call inner_blend_scale_ab_4x4_lib4
 #endif
 
 
@@ -2688,8 +2669,8 @@ kernel_dsyrk_nt_l_4x4_vs_lib4:
 
 
 
-//                                  edi    rsi        rdx        ecx      r8         r9         
-// void kernel_dtrmm_nt_ru_4x4_lib4(int k, double *A, double *B, int alg, double *C, double *D);
+//                                  rdi    rsi            rdx        rcx        r8            r9         rsp+8
+// void kernel_dtrmm_nt_ru_4x4_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D);
 
 	.p2align 4,,15
 	.globl kernel_dtrmm_nt_ru_4x4_lib4
@@ -2719,12 +2700,12 @@ kernel_dtrmm_nt_ru_4x4_lib4:
 
 	// call inner dgemm kernel nt after initial triangle
 
-	movl	%edi, %r10d
-	subl	$4, %r10d
-	movq	%rsi, %r11
-	addq	$128, %r11
-	movq	%rdx, %r12
-	addq	$128, %r12
+	movl	%edi, %r10d // k
+	subl	$4, %r10d // k-4
+	movq	%rdx, %r11 // A
+	addq	$128, %r11 // A+4*bs
+	movq	%rcx, %r12 // B
+	addq	$128, %r12 // B+4*bs
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
@@ -2733,47 +2714,43 @@ kernel_dtrmm_nt_ru_4x4_lib4:
 #endif
 
 
-	// call inner blender nn
-
-	movl	%ecx, %r10d
-	movq	%r8, %r11
+	// call inner blend
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_NN_4X4_LIB4
+	INNER_BLEND_4X4_LIB4
 #else
-	call inner_blender_nn_4x4_lib4
+	call inner_blend_4x4_lib4
 #endif
 
 
 	// initial triangle
 
-	movq	%rsi, %r10
-	movq	%rdx, %r11
-
-	cmpl	$-1, %ecx // alg
-	je		.L019
-
+	movq	%rdx, %r10
+	movq	%rcx, %r11
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRMM_ADD_NT_LU_4X4_LIB4
+	INNER_EDGE_DTRMM_NT_RU_4X4_LIB4
 #else
-	call inner_edge_dtrmm_add_nt_lu_4x4_lib4
+	call inner_edge_dtrmm_nt_ru_4x4_lib4
 #endif
 
-	jmp		.L020
 
-.L019:
+	// call inner scale
+
+	movq	%rsi, %r10 // alpha
+	movq	%r8, %r11 // beta
+	movq	%r9, %r12   // C
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRMM_SUB_NT_LU_4X4_LIB4 
+	INNER_SCALE_AB_4X4_LIB4
 #else
-	call inner_edge_dtrmm_sub_nt_lu_4x4_lib4 
+	call inner_scale_ab_4x4_lib4
 #endif
 
-.L020:
+
 	// store n
 
-	movq	%r9, %r10
+	movq	STACKSIZE + 8(%rsp), %r10 // D
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB4
@@ -2802,8 +2779,8 @@ kernel_dtrmm_nt_ru_4x4_lib4:
 
 
 
-//                                     edi    rsi        rdx        ecx      r8         r9         rsp+8   rsp+16 
-// void kernel_dtrmm_nt_ru_4x4_vs_lib4(int k, double *A, double *B, int alg, double *C, double *D, int km, int kn);
+//                                     rdi    rsi            rdx        rcx        r8            r9         rsp+8     rsp+16   rsp+24
+// void kernel_dtrmm_nt_ru_4x4_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int km, int kn);
 // it holds k==kn !!!!!
 
 	.p2align 4,,15
@@ -2834,12 +2811,12 @@ kernel_dtrmm_nt_ru_4x4_vs_lib4:
 
 	// call inner dgemm kernel nt after initial triangle
 
-	movl	%edi, %r10d
-	subl	$4, %r10d
-	movq	%rsi, %r11
-	addq	$128, %r11
-	movq	%rdx, %r12
-	addq	$128, %r12
+	movl	%edi, %r10d // k
+	subl	$4, %r10d // k-4
+	movq	%rdx, %r11 // A
+	addq	$128, %r11 // A+4*bs
+	movq	%rcx, %r12 // B
+	addq	$128, %r12 // B+4*bs
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
@@ -2850,48 +2827,44 @@ kernel_dtrmm_nt_ru_4x4_vs_lib4:
 
 	// call inner blender nn
 
-	movl	%ecx, %r10d
-	movq	%r8, %r11
-
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_NN_4X4_LIB4
+	INNER_BLEND_4X4_LIB4
 #else
-	call inner_blender_nn_4x4_lib4
+	call inner_blend_4x4_lib4
 #endif
 
 
 	// initial triangle
 
-	movl	%edi, %r10d
-	movq	%rsi, %r11
-	movq	%rdx, %r12
-
-	cmpl	$-1, %ecx // alg
-	je		.L021
-
+	movl	%edi, %r10d // k
+	movq	%rdx, %r11 // A
+	movq	%rcx, %r12 // B
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRMM_ADD_NT_LU_4X4_VS_LIB4
+	INNER_EDGE_DTRMM_NT_RU_4X4_VS_LIB4
 #else
-	call inner_edge_dtrmm_add_nt_lu_4x4_vs_lib4
+	call inner_edge_dtrmm_nt_ru_4x4_vs_lib4
 #endif
 
-	jmp		.L022
 
-.L021:
+	// call inner loader nn
+
+	movq	%rsi, %r10 // alpha
+	movq	%r8, %r11 // beta
+	movq	%r9, %r12   // C
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRMM_SUB_NT_LU_4X4_VS_LIB4 
+	INNER_SCALE_AB_4X4_LIB4
 #else
-	call inner_edge_dtrmm_sub_nt_lu_4x4_vs_lib4 
+	call inner_scale_ab_4x4_lib4
 #endif
 
-.L022:
+
 	// store n
 
-	movq	%r9, %r10 // D
-	movl	STACKSIZE +  8(%rsp), %r11d // km 
-	movl	STACKSIZE + 16(%rsp), %r12d // kn 
+	movq	STACKSIZE +  8(%rsp), %r10 // D
+	movl	STACKSIZE + 16(%rsp), %r11d // km 
+	movl	STACKSIZE + 24(%rsp), %r12d // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_VS_LIB4
@@ -2967,9 +2940,9 @@ kernel_dpotrf_nt_l_4x4_lib4:
 	movq	%rcx, %r10
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_BLEND_11_4X4_LIB4
+	INNER_BLEND_SCALE_11_4X4_LIB4
 #else
-	call inner_scale_blend_11_4x4_lib4
+	call inner_blend_scale_11_4x4_lib4
 #endif
 
 
@@ -3062,9 +3035,9 @@ kernel_dpotrf_nt_l_4x4_vs_lib4:
 	movq	%rcx, %r10
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_BLEND_11_4X4_LIB4
+	INNER_BLEND_SCALE_11_4X4_LIB4
 #else
-	call inner_scale_blend_11_4x4_lib4
+	call inner_blend_scale_11_4x4_lib4
 #endif
 
 
@@ -3173,9 +3146,9 @@ kernel_dsyrk_dpotrf_nt_l_4x4_lib4:
 	movq	STACKSIZE + 8(%rsp), %r10   // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_BLEND_11_4X4_LIB4
+	INNER_BLEND_SCALE_11_4X4_LIB4
 #else
-	call inner_scale_blend_11_4x4_lib4
+	call inner_blend_scale_11_4x4_lib4
 #endif
 
 
@@ -3281,9 +3254,9 @@ kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4:
 	movq	STACKSIZE + 8(%rsp), %r10   // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_BLEND_11_4X4_LIB4
+	INNER_BLEND_SCALE_11_4X4_LIB4
 #else
-	call inner_scale_blend_11_4x4_lib4
+	call inner_blend_scale_11_4x4_lib4
 #endif
 
 
@@ -3379,9 +3352,9 @@ kernel_dtrsm_nt_rl_inv_4x4_lib4:
 	movq	%rcx, %r10
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_BLEND_11_4X4_LIB4
+	INNER_BLEND_SCALE_11_4X4_LIB4
 #else
-	call inner_scale_blend_11_4x4_lib4
+	call inner_blend_scale_11_4x4_lib4
 #endif
 
 
@@ -3488,9 +3461,9 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4:
 	movq	STACKSIZE + 8(%rsp), %r10   // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_BLEND_11_4X4_LIB4
+	INNER_BLEND_SCALE_11_4X4_LIB4
 #else
-	call inner_scale_blend_11_4x4_lib4
+	call inner_blend_scale_11_4x4_lib4
 #endif
 
 
@@ -3584,9 +3557,9 @@ kernel_dtrsm_nt_rl_inv_4x4_vs_lib4:
 	movq	%rcx, %r10
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_BLEND_11_4X4_LIB4
+	INNER_BLEND_SCALE_11_4X4_LIB4
 #else
-	call inner_scale_blend_11_4x4_lib4
+	call inner_blend_scale_11_4x4_lib4
 #endif
 
 
@@ -3696,9 +3669,9 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4:
 	movq	STACKSIZE + 8(%rsp), %r10  // C 
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_BLEND_11_4X4_LIB4
+	INNER_BLEND_SCALE_11_4X4_LIB4
 #else
-	call inner_scale_blend_11_4x4_lib4
+	call inner_blend_scale_11_4x4_lib4
 #endif
 
 
@@ -3743,6 +3716,231 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4:
 	ret
 
 	.size	kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4, .-kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4
+
+
+
+
+
+//                                   rdi    rsi            rdx        rcx        r8            r9         rsp+8
+// void kernel_dlauum_nt_4x4_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D);
+
+	.p2align 4,,15
+	.globl kernel_dlauum_nt_4x4_lib4
+	.type kernel_dlauum_nt_4x4_lib4, @function
+kernel_dlauum_nt_4x4_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nt after initial triangle
+
+	movl	%edi, %r10d // k
+	subl	$4, %r10d // k-4
+	movq	%rdx, %r11 // A
+	addq	$128, %r11 // A+4*bs
+	movq	%rcx, %r12 // B
+	addq	$128, %r12 // B+4*bs
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+#else
+	call inner_kernel_dgemm_add_nt_4x4_lib4
+#endif
+
+
+	// call inner blender nn
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_4X4_LIB4
+#else
+	call inner_blend_4x4_lib4
+#endif
+
+
+	// initial triangle
+
+	movl	%edi, %r10d // k
+	movq	%rdx, %r11 // A
+	movq	%rcx, %r12 // B
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DLAUUM_NT_4X4_LIB4
+#else
+	call inner_edge_dlauum_nt_4x4_lib4
+#endif
+
+
+	// call inner loader nn
+
+	movq	%rsi, %r10 // alpha
+	movq	%r8, %r11 // beta
+	movq	%r9, %r12   // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	call inner_scale_ab_4x4_lib4
+#endif
+
+
+	// store n
+
+	movq	STACKSIZE + 8(%rsp), %r10 // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X4_LIB4
+#else
+	call inner_store_l_4x4_lib4
+#endif
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dlauum_nt_4x4_vs_lib4, .-kernel_dlauum_nt_4x4_vs_lib4
+
+
+
+
+
+//                                   rdi    rsi            rdx        rcx        r8            r9         rsp+8      rsp+16  rsp+24
+// void kernel_dlauum_nt_4x4_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int km, int kn);
+// it holds k==kn==km !!!!!
+
+	.p2align 4,,15
+	.globl kernel_dlauum_nt_4x4_vs_lib4
+	.type kernel_dlauum_nt_4x4_vs_lib4, @function
+kernel_dlauum_nt_4x4_vs_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nt after initial triangle
+
+	movl	%edi, %r10d // k
+	subl	$4, %r10d // k-4
+	movq	%rdx, %r11 // A
+	addq	$128, %r11 // A+4*bs
+	movq	%rcx, %r12 // B
+	addq	$128, %r12 // B+4*bs
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+#else
+	call inner_kernel_dgemm_add_nt_4x4_lib4
+#endif
+
+
+	// call inner blender nn
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_4X4_LIB4
+#else
+	call inner_blend_4x4_lib4
+#endif
+
+
+	// initial triangle
+
+	movl	%edi, %r10d // k
+	movq	%rdx, %r11 // A
+	movq	%rcx, %r12 // B
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DLAUUM_NT_4X4_VS_LIB4
+#else
+	call inner_edge_dlauum_nt_4x4_vs_lib4
+#endif
+
+
+	// call inner loader nn
+
+	movq	%rsi, %r10 // alpha
+	movq	%r8, %r11 // beta
+	movq	%r9, %r12   // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	call inner_scale_ab_4x4_lib4
+#endif
+
+
+	// store n
+
+	movq	STACKSIZE + 8(%rsp), %r10 // D
+	movl	STACKSIZE + 16(%rsp), %r11d // km 
+	movl	STACKSIZE + 24(%rsp), %r12d // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB4
+#else
+	call inner_store_4x4_vs_lib4
+#endif
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dlauum_nt_4x4_vs_lib4, .-kernel_dlauum_nt_4x4_vs_lib4
 
 
 

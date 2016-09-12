@@ -648,11 +648,11 @@ void dtrmm_nt_ru_lib(int m, int n, double *pA, int sda, double *pB, int sdb, int
 		j = 0;
 		for(; j<n-3; j+=4)
 			{
-			kernel_dtrmm_nt_ru_12x4_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd);
+			kernel_dtrmm_nt_ru_12x4_lib4(n-j, &alpha, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], &beta, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd);
 			}
 		if(j<n) // TODO specialized edge routine
 			{
-			kernel_dtrmm_nt_ru_12x4_vs_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
+			kernel_dtrmm_nt_ru_12x4_vs_lib4(n-j, &alpha, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], &beta, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
 			}
 		}
 	if(i<m)
@@ -677,19 +677,11 @@ void dtrmm_nt_ru_lib(int m, int n, double *pA, int sda, double *pB, int sdb, int
 		j = 0;
 		for(; j<n-3; j+=4)
 			{
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 			kernel_dtrmm_nt_ru_8x4_lib4(n-j, &alpha, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], &beta, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd);
-#else
-			kernel_dtrmm_nt_ru_8x4_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd);
-#endif
 			}
 		if(j<n) // TODO specialized edge routine
 			{
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 			kernel_dtrmm_nt_ru_8x4_vs_lib4(n-j, &alpha, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], &beta, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
-#else
-			kernel_dtrmm_nt_ru_8x4_vs_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
-#endif
 			}
 		}
 	if(i<m)
@@ -733,7 +725,7 @@ void dtrmm_nt_ru_lib(int m, int n, double *pA, int sda, double *pB, int sdb, int
 //	for(; j<n-3; j+=4)
 	for(; j<n; j+=4)
 		{
-		kernel_dtrmm_nt_ru_12x4_vs_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
+		kernel_dtrmm_nt_ru_12x4_vs_lib4(n-j, &alpha, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], &beta, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
 		}
 //	if(j<n) // TODO specialized edge routine
 //		{
@@ -749,11 +741,7 @@ void dtrmm_nt_ru_lib(int m, int n, double *pA, int sda, double *pB, int sdb, int
 //	for(; j<n-3; j+=4)
 	for(; j<n; j+=4)
 		{
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		kernel_dtrmm_nt_ru_8x4_vs_lib4(n-j, &alpha, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], &beta, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
-#else
-		kernel_dtrmm_nt_ru_8x4_vs_lib4(n-j, &pA[j*bs+i*sda], sda, &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd, m-i, n-j);
-#endif
 		}
 //	if(j<n) // TODO specialized edge routine
 //		{
@@ -767,7 +755,7 @@ void dtrmm_nt_ru_lib(int m, int n, double *pA, int sda, double *pB, int sdb, int
 //	for(; j<n-3; j+=4)
 	for(; j<n; j+=4)
 		{
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		kernel_dtrmm_nt_ru_4x4_vs_lib4(n-j, &alpha, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
 #else
 		kernel_dtrmm_nt_ru_4x4_vs_lib4(n-j, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
