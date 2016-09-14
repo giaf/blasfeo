@@ -243,8 +243,6 @@ void kernel_dgemm_nt_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B, 
 	c_23 = beta[0]*C[2+bs*3] + alpha[0]*c_23;
 	c_33 = beta[0]*C[3+bs*3] + alpha[0]*c_33;
 
-	store:
-
 	if(km>=4)
 		{
 		D[0+bs*0] = c_00;
@@ -574,8 +572,6 @@ void kernel_dgemm_nn_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B, 
 	c_13 = beta[0]*C[1+bs*3] + alpha[0]*c_13;
 	c_23 = beta[0]*C[2+bs*3] + alpha[0]*c_23;
 	c_33 = beta[0]*C[3+bs*3] + alpha[0]*c_33;
-
-	store:
 
 	if(km>=4)
 		{
@@ -907,8 +903,6 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 //	c_23 = beta[0]*C[2+bs*3] + alpha[0]*c_23;
 	c_33 = beta[0]*C[3+bs*3] + alpha[0]*c_33;
 
-	store:
-
 	if(km>=4)
 		{
 		D[0+bs*0] = c_00;
@@ -1016,7 +1010,7 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 
 
 #if defined(TARGET_GENERIC)
-void kernel_dtrmm_nt_ru_4x4_vs_lib4(int kmax, double *A, double *B, int alg, double *C, double *D, int km, int kn)
+void kernel_dtrmm_nt_ru_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -1290,63 +1284,25 @@ void kernel_dtrmm_nt_ru_4x4_vs_lib4(int kmax, double *A, double *B, int alg, dou
 
 		}
 	
-	if(alg==0)
-		{
-		goto store;
-		}
-	else
-		{
-		if(alg==1)
-			{
-			c_00 = C[0+bs*0] + c_00;
-			c_10 = C[1+bs*0] + c_10;
-			c_20 = C[2+bs*0] + c_20;
-			c_30 = C[3+bs*0] + c_30;
+	c_00 = beta[0]*C[0+bs*0] + alpha[0]*c_00;
+	c_10 = beta[0]*C[1+bs*0] + alpha[0]*c_10;
+	c_20 = beta[0]*C[2+bs*0] + alpha[0]*c_20;
+	c_30 = beta[0]*C[3+bs*0] + alpha[0]*c_30;
 
-			c_01 = C[0+bs*1] + c_01;
-			c_11 = C[1+bs*1] + c_11;
-			c_21 = C[2+bs*1] + c_21;
-			c_31 = C[3+bs*1] + c_31;
+	c_01 = beta[0]*C[0+bs*1] + alpha[0]*c_01;
+	c_11 = beta[0]*C[1+bs*1] + alpha[0]*c_11;
+	c_21 = beta[0]*C[2+bs*1] + alpha[0]*c_21;
+	c_31 = beta[0]*C[3+bs*1] + alpha[0]*c_31;
 
-			c_02 = C[0+bs*2] + c_02;
-			c_12 = C[1+bs*2] + c_12;
-			c_22 = C[2+bs*2] + c_22;
-			c_32 = C[3+bs*2] + c_32;
+	c_02 = beta[0]*C[0+bs*2] + alpha[0]*c_02;
+	c_12 = beta[0]*C[1+bs*2] + alpha[0]*c_12;
+	c_22 = beta[0]*C[2+bs*2] + alpha[0]*c_22;
+	c_32 = beta[0]*C[3+bs*2] + alpha[0]*c_32;
 
-			c_03 = C[0+bs*3] + c_03;
-			c_13 = C[1+bs*3] + c_13;
-			c_23 = C[2+bs*3] + c_23;
-			c_33 = C[3+bs*3] + c_33;
-
-			goto store;
-			}
-		else
-			{
-			c_00 = C[0+bs*0] - c_00;
-			c_10 = C[1+bs*0] - c_10;
-			c_20 = C[2+bs*0] - c_20;
-			c_30 = C[3+bs*0] - c_30;
-
-			c_01 = C[0+bs*1] - c_01;
-			c_11 = C[1+bs*1] - c_11;
-			c_21 = C[2+bs*1] - c_21;
-			c_31 = C[3+bs*1] - c_31;
-
-			c_02 = C[0+bs*2] - c_02;
-			c_12 = C[1+bs*2] - c_12;
-			c_22 = C[2+bs*2] - c_22;
-			c_32 = C[3+bs*2] - c_32;
-
-			c_03 = C[0+bs*3] - c_03;
-			c_13 = C[1+bs*3] - c_13;
-			c_23 = C[2+bs*3] - c_23;
-			c_33 = C[3+bs*3] - c_33;
-
-			goto store;
-			}
-		}
-
-	store:
+	c_03 = beta[0]*C[0+bs*3] + alpha[0]*c_03;
+	c_13 = beta[0]*C[1+bs*3] + alpha[0]*c_13;
+	c_23 = beta[0]*C[2+bs*3] + alpha[0]*c_23;
+	c_33 = beta[0]*C[3+bs*3] + alpha[0]*c_33;
 
 	if(km>=4)
 		{
@@ -1456,9 +1412,9 @@ void kernel_dtrmm_nt_ru_4x4_vs_lib4(int kmax, double *A, double *B, int alg, dou
 
 
 #if defined(TARGET_GENERIC)
-void kernel_dtrmm_nt_ru_4x4_lib4(int k, double *A, double *B, int alg, double *C, double *D)
+void kernel_dtrmm_nt_ru_4x4_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D)
 	{
-	kernel_dtrmm_nt_ru_4x4_vs_lib4(k, A, B, alg, C, D, 4, 4);
+	kernel_dtrmm_nt_ru_4x4_vs_lib4(k, alpha, A, B, beta, C, D, 4, 4);
 	}
 #endif
 

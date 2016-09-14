@@ -56,7 +56,7 @@ void dgemm_nn_lib(int m, int n, int k, double alpha, double *pA, int sda, double
 // D <= beta * C + alpha * A * B' ; C, D lower triangular
 void dsyrk_nt_l_lib(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *pC, int sdc, double *pD, int sdd);
 // D <= beta * C + alpha * A * B' ; B upper triangular
-void dtrmm_nt_ru_lib(int m, int n, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd);
+void dtrmm_nt_ru_lib(int m, int n, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *pC, int sdc, double *pD, int sdd);
 
 
 
