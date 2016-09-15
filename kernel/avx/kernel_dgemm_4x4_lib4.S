@@ -3875,6 +3875,7 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4:
 
 
 
+#if 0
 //                                   rdi    rsi            rdx        rcx        r8            r9         rsp+8
 // void kernel_dlauum_nt_4x4_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D);
 
@@ -4095,6 +4096,7 @@ kernel_dlauum_nt_4x4_vs_lib4:
 	ret
 
 	.size	kernel_dlauum_nt_4x4_vs_lib4, .-kernel_dlauum_nt_4x4_vs_lib4
+#endif
 
 
 
