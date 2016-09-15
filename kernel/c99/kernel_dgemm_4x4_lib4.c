@@ -2231,7 +2231,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib4(int k, double *A, double *B, double *C, dou
 void kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *E, double *inv_diag_E, int km, int kn)
 	{
 	double alpha = 1.0;
-	double beta  = 0.0;
+	double beta  = 1.0;
 	kernel_dgemm_nt_4x4_vs_lib4(kp, &alpha, Ap, Bp, &beta, C, D, km, kn);
 	kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(km_, Am, Bm, D, D, E, inv_diag_E, km, kn);
 	}

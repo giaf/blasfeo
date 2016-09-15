@@ -28,7 +28,7 @@
 
 
 
-void dgemv_n_lib(int m, int n, double *pA, int sda, double *x, int alg, double *y, double *z)
+void dgemv_n_lib(int m, int n, double alpha, double *pA, int sda, double *x, double beta, double *y, double *z)
 	{
 
 	if(m<=0)
@@ -43,34 +43,34 @@ void dgemv_n_lib(int m, int n, double *pA, int sda, double *x, int alg, double *
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for( ; i<m-11; i+=12)
 		{
-		kernel_dgemv_n_12_lib4(n, &pA[i*sda], sda, x, alg, &y[i], &z[i]);
+		kernel_dgemv_n_12_lib4(n, &alpha, &pA[i*sda], sda, x, &beta, &y[i], &z[i]);
 		}
 #endif
 	for( ; i<m-7; i+=8)
 		{
-		kernel_dgemv_n_8_lib4(n, &pA[i*sda], sda, x, alg, &y[i], &z[i]);
+		kernel_dgemv_n_8_lib4(n, &alpha, &pA[i*sda], sda, x, &beta, &y[i], &z[i]);
 		}
 	if(i<m-3)
 		{
-		kernel_dgemv_n_4_lib4(n, &pA[i*sda], x, alg, &y[i], &z[i]);
+		kernel_dgemv_n_4_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &z[i]);
 		i+=4;
 		}
 #else
 	for( ; i<m-3; i+=4)
 		{
-		kernel_dgemv_n_4_lib4(n, &pA[i*sda], x, alg, &y[i], &z[i]);
+		kernel_dgemv_n_4_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &z[i]);
 		}
 #endif
 	if(i<m)
 		{
-		kernel_dgemv_n_4_vs_lib4(n, &pA[i*sda], x, alg, &y[i], &z[i], m-i);
+		kernel_dgemv_n_4_vs_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &z[i], m-i);
 		}
 	
 	}
 
 
 
-void dgemv_t_lib(int m, int n, double *pA, int sda, double *x, int alg, double *y, double *z)
+void dgemv_t_lib(int m, int n, double alpha, double *pA, int sda, double *x, double beta, double *y, double *z)
 	{
 
 	if(n<=0)
@@ -85,27 +85,27 @@ void dgemv_t_lib(int m, int n, double *pA, int sda, double *x, int alg, double *
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for( ; i<n-11; i+=12)
 		{
-		kernel_dgemv_t_12_lib4(m, &pA[i*bs], sda, x, alg, &y[i], &z[i]);
+		kernel_dgemv_t_12_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i]);
 		}
 #endif
 	for( ; i<n-7; i+=8)
 		{
-		kernel_dgemv_t_8_lib4(m, &pA[i*bs], sda, x, alg, &y[i], &z[i]);
+		kernel_dgemv_t_8_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i]);
 		}
 	if(i<n-3)
 		{
-		kernel_dgemv_t_4_lib4(m, &pA[i*bs], sda, x, alg, &y[i], &z[i]);
+		kernel_dgemv_t_4_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i]);
 		i+=4;
 		}
 #else
 	for( ; i<n-3; i+=4)
 		{
-		kernel_dgemv_t_4_lib4(m, &pA[i*bs], sda, x, alg, &y[i], &z[i]);
+		kernel_dgemv_t_4_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i]);
 		}
 #endif
 	if(i<n)
 		{
-		kernel_dgemv_t_4_vs_lib4(m, &pA[i*bs], sda, x, alg, &y[i], &z[i], n-i);
+		kernel_dgemv_t_4_vs_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i], n-i);
 		}
 	
 	}
@@ -123,6 +123,9 @@ void dtrsv_ln_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, dou
 		m = n;
 
 	const int bs = 4;
+
+	double alpha = -1.0;
+	double beta = 1.0;
 
 	int i;
 
@@ -145,22 +148,22 @@ void dtrsv_ln_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, dou
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	for( ; i<m-7; i+=8)
 		{
-		kernel_dgemv_n_8_lib4(n, &pA[i*sda], sda, x, -1, &y[i], &y[i]);
+		kernel_dgemv_n_8_lib4(n, &alpha, &pA[i*sda], sda, x, &beta, &y[i], &y[i]);
 		}
 	if(i<m-3)
 		{
-		kernel_dgemv_n_4_lib4(n, &pA[i*sda], x, -1, &y[i], &y[i]);
+		kernel_dgemv_n_4_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &y[i]);
 		i+=4;
 		}
 #else
 	for( ; i<m-3; i+=4)
 		{
-		kernel_dgemv_n_4_lib4(n, &pA[i*sda], x, -1, &y[i], &y[i]);
+		kernel_dgemv_n_4_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &y[i]);
 		}
 #endif
 	if(i<m)
 		{
-		kernel_dgemv_n_4_vs_lib4(n, &pA[i*sda], x, -1, &y[i], &y[i], m-i);
+		kernel_dgemv_n_4_vs_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &y[i], m-i);
 		i+=4;
 		}
 

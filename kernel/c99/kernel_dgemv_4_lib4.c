@@ -26,7 +26,7 @@
 
 
 
-void kernel_dgemv_n_4_vs_lib4(int kmax, double *A, double *x, int alg, double *y, double *z, int km)
+void kernel_dgemv_n_4_vs_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z, int km)
 	{
 
 	const int bs = 4;
@@ -89,31 +89,11 @@ void kernel_dgemv_n_4_vs_lib4(int kmax, double *A, double *x, int alg, double *y
 
 		}
 
-	// store_vs
-	if(alg==0)
-		{
-		goto store;
-		}
-	else if(alg==1)
-		{
-		y_0 += y[0];
-		y_1 += y[1];
-		y_2 += y[2];
-		y_3 += y[3];
+	y_0 = alpha[0]*y_0 + beta[0]*y[0];
+	y_1 = alpha[0]*y_1 + beta[0]*y[1];
+	y_2 = alpha[0]*y_2 + beta[0]*y[2];
+	y_3 = alpha[0]*y_3 + beta[0]*y[3];
 
-		goto store;
-		}
-	else // alg==-1
-		{
-		y_0 = y[0] - y_0;
-		y_1 = y[1] - y_1;
-		y_2 = y[2] - y_2;
-		y_3 = y[3] - y_3;
-
-		goto store;
-		}
-
-	store:
 	if(km>=4)
 		{
 		z[0] = y_0;
@@ -139,16 +119,16 @@ void kernel_dgemv_n_4_vs_lib4(int kmax, double *A, double *x, int alg, double *y
 	
 	
 
-void kernel_dgemv_n_4_lib4(int kmax, double *A, double *x, int alg, double *y, double *z)
+void kernel_dgemv_n_4_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z)
 	{
 
-	kernel_dgemv_n_4_vs_lib4(kmax, A, x, alg, y, z, 4);
+	kernel_dgemv_n_4_vs_lib4(kmax, alpha, A, x, beta, y, z, 4);
 
 	}
 
 
 
-void kernel_dgemv_t_4_vs_lib4(int kmax, double *A, int sda, double *x, int alg, double *y, double *z, int km)
+void kernel_dgemv_t_4_vs_lib4(int kmax, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z, int km)
 	{
 
 	if(kmax<=0) 
@@ -210,30 +190,11 @@ void kernel_dgemv_t_4_vs_lib4(int kmax, double *A, int sda, double *x, int alg, 
 		
 		}
 
-	if(alg==0)
-		{
-		goto store;
-		}
-	else if(alg==1)
-		{
-		y_0 += y[0];
-		y_1 += y[1];
-		y_2 += y[2];
-		y_3 += y[3];
+	y_0 = alpha[0]*y_0 + beta[0]*y[0];
+	y_1 = alpha[0]*y_1 + beta[0]*y[1];
+	y_2 = alpha[0]*y_2 + beta[0]*y[2];
+	y_3 = alpha[0]*y_3 + beta[0]*y[3];
 
-		goto store;
-		}
-	else // alg==-1
-		{
-		y_0 = y[0] - y_0;
-		y_1 = y[1] - y_1;
-		y_2 = y[2] - y_2;
-		y_3 = y[3] - y_3;
-
-		goto store;
-		}
-
-	store:
 	if(km>=4)
 		{
 		z[0] = y_0;
@@ -258,10 +219,10 @@ void kernel_dgemv_t_4_vs_lib4(int kmax, double *A, int sda, double *x, int alg, 
 	
 	
 	
-void kernel_dgemv_t_4_lib4(int kmax, double *A, int sda, double *x, int alg, double *y, double *z)
+void kernel_dgemv_t_4_lib4(int kmax, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z)
 	{
 
-	kernel_dgemv_t_4_vs_lib4(kmax, A, sda, x, alg, y, z, 4);
+	kernel_dgemv_t_4_vs_lib4(kmax, alpha, A, sda, x, beta, y, z, 4);
 
 	}
 

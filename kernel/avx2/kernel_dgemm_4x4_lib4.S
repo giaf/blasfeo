@@ -696,11 +696,11 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DTRMM_NT_LU_4X4_LIB4
+	.macro INNER_EDGE_DTRMM_NT_RU_4X4_LIB4
 #else
 	.p2align 4,,15
-	.type inner_edge_dtrmm_nt_lu_4x4_lib4, @function
-inner_edge_dtrmm_nt_lu_4x4_lib4:
+	.type inner_edge_dtrmm_nt_ru_4x4_lib4, @function
+inner_edge_dtrmm_nt_ru_4x4_lib4:
 #endif
 	
 	vmovapd			0(%r10), %ymm8
@@ -739,7 +739,7 @@ inner_edge_dtrmm_nt_lu_4x4_lib4:
 #else
 	ret
 
-	.size	inner_edge_dtrmm_nt_lu_4x4_lib4, .-inner_edge_dtrmm_nt_lu_4x4_lib4
+	.size	inner_edge_dtrmm_nt_ru_4x4_lib4, .-inner_edge_dtrmm_nt_ru_4x4_lib4
 #endif
 
 
@@ -777,11 +777,11 @@ inner_edge_dtrmm_nt_lu_4x4_lib4:
 
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DTRMM_NT_LU_4X4_VS_LIB4
+	.macro INNER_EDGE_DTRMM_NT_RU_4X4_VS_LIB4
 #else
 	.p2align 4,,15
-	.type inner_edge_dtrmm_nt_lu_4x4_vs_lib4, @function
-inner_edge_dtrmm_nt_lu_4x4_vs_lib4:
+	.type inner_edge_dtrmm_nt_ru_4x4_vs_lib4, @function
+inner_edge_dtrmm_nt_ru_4x4_vs_lib4:
 #endif
 	
 	vmovapd			0(%r11), %ymm8
@@ -840,7 +840,7 @@ inner_edge_dtrmm_nt_lu_4x4_vs_lib4:
 #else
 	ret
 
-	.size	inner_edge_dtrmm_nt_lu_4x4_vs_lib4, .-inner_edge_dtrmm_nt_lu_4x4_vs_lib4
+	.size	inner_edge_dtrmm_nt_ru_4x4_vs_lib4, .-inner_edge_dtrmm_nt_ru_4x4_vs_lib4
 #endif
 
 

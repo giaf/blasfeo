@@ -28,17 +28,17 @@
 
 // level 2 BLAS
 // 12
-void kernel_dgemv_n_12_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
-void kernel_dgemv_t_12_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
+void kernel_dgemv_n_12_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
+void kernel_dgemv_t_12_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
 // 8
-void kernel_dgemv_n_8_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
-void kernel_dgemv_t_8_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
+void kernel_dgemv_n_8_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
+void kernel_dgemv_t_8_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
 void kernel_dtrmv_un_8_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
 // 4
-void kernel_dgemv_n_4_lib4(int k, double *A, double *x, int alg, double *y, double *z);
-void kernel_dgemv_n_4_vs_lib4(int k, double *A, double *x, int alg, double *y, double *z, int km);
-void kernel_dgemv_t_4_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
-void kernel_dgemv_t_4_vs_lib4(int k, double *A, int sda, double *x, int alg, double *C, double *D, int km);
+void kernel_dgemv_n_4_lib4(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z);
+void kernel_dgemv_n_4_vs_lib4(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int km);
+void kernel_dgemv_t_4_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
+void kernel_dgemv_t_4_vs_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *C, double *D, int km);
 void kernel_dtrsv_ln_inv_4_lib4(int k, double *A, double *inv_diag_A, double *x, double *y, double *z);
 void kernel_dtrsv_ln_inv_4_vs_lib4(int k, double *A, double *inv_diag_A, double *x, double *y, double *z, int km, int kn);
 void kernel_dtrsv_lt_inv_4_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);

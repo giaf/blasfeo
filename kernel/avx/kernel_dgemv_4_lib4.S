@@ -287,6 +287,142 @@ inner_kernel_dgemv_add_t_4_lib4:
 
 // common inner routine with file scope
 //
+// blend for ta==n, scale for generic alpha and beta
+//
+// input arguments:
+// r10  <- alpha
+// r11  <- beta
+// r12  <- y
+// ymm0 <- [z0 z1 z2 z3]_a
+// ymm1 <- [z0 z1 z2 z3]_b
+// ymm2 <- [z0 z1 z2 z3]_c
+// ymm3 <- [z0 z1 z2 z3]_d
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10  <- alpha
+// r11  <- beta
+// r12  <- y
+// ymm0 <- [z0 z1 z2 z3]
+// ymm1 <- dirty
+// ymm2 <- dirty
+// ymm3 <- dirty
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_N_SCALE_AB_4_LIB4
+#else
+	.p2align 4,,15
+	.type inner_blend_n_scale_ab_4_lib4, @function
+inner_blend_n_scale_ab_4_lib4:
+#endif
+
+	// reduction
+	vaddpd	%ymm0, %ymm1, %ymm0
+	vaddpd	%ymm2, %ymm3, %ymm2
+	vaddpd	%ymm0, %ymm2, %ymm0
+
+	// alpha
+	vbroadcastsd	0(%r10), %ymm15
+	vmulpd	%ymm0, %ymm15, %ymm0
+
+	// beta
+	vbroadcastsd	0(%r11), %ymm15
+	vmovupd		0(%r12), %ymm14
+	vmulpd		%ymm15, %ymm14, %ymm14
+	vaddpd		%ymm0, %ymm14, %ymm0
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+	
+	.size	inner_blend_n_scale_ab_4_lib4, .-inner_blend_n_scale_ab_4_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// blend for ta==t, scale for generic alpha and beta
+//
+// input arguments:
+// r10  <- alpha
+// r11  <- beta
+// r12  <- y
+// ymm0 <- [z0a z0b z0c z0d]
+// ymm1 <- [z1a z1b z1c z1d]
+// ymm2 <- [z2a z2b z2c z2d]
+// ymm3 <- [z3a z3b z3c z3d]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10  <- alpha
+// r11  <- beta
+// r12  <- y
+// ymm0 <- [z0 z1 z2 z3]
+// ymm1 <- dirty
+// ymm2 <- dirty
+// ymm3 <- dirty
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_T_SCALE_AB_4_LIB4
+#else
+	.p2align 4,,15
+	.type inner_blend_t_scale_ab_4_lib4, @function
+inner_blend_t_scale_ab_4_lib4:
+#endif
+
+	// reduction
+	vhaddpd	%ymm1, %ymm0, %ymm0
+	vhaddpd	%ymm3, %ymm2, %ymm2
+	vperm2f128	$0x2, %ymm0, %ymm2, %ymm1
+	vperm2f128	$0x13, %ymm0, %ymm2, %ymm0
+	vaddpd	%ymm0, %ymm1, %ymm0
+
+	// alpha
+	vbroadcastsd	0(%r10), %ymm15
+	vmulpd	%ymm0, %ymm15, %ymm0
+
+	// beta
+	vbroadcastsd	0(%r11), %ymm15
+	vmovupd		0(%r12), %ymm14
+	vmulpd		%ymm15, %ymm14, %ymm14
+	vaddpd		%ymm0, %ymm14, %ymm0
+	
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+	
+	.size	inner_blend_t_scale_ab_4_lib4, .-inner_blend_t_scale_ab_4_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // blender for ta==n
 //
 // input arguments:
@@ -1271,8 +1407,8 @@ inner_store_4_vs_lib4:
 
 
 
-//                            rdi    rsi        rdx        rcx      r8         r9         
-// void kernel_dgemv_n_4_lib4(int k, double *A, double *x, int alg, double *y, double *z);
+//                            rdi    rsi            rdx        rcx        r8            r9         rsp+8
+// void kernel_dgemv_n_4_lib4(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z);
 
 	.p2align 4,,15
 	.globl kernel_dgemv_n_4_lib4
@@ -1303,8 +1439,8 @@ kernel_dgemv_n_4_lib4:
 	// call inner dgemv kernel n
 
 	movl	%edi, %r10d // k
-	movq	%rsi, %r11  // A
-	movq	%rdx, %r12  // x
+	movq	%rdx, %r11  // A
+	movq	%rcx, %r12  // x
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
@@ -1313,21 +1449,22 @@ kernel_dgemv_n_4_lib4:
 #endif
 
 
-	// call inner blender n
+	// call inner blend n scale ab
 
-	movl	%ecx, %r10d // alg
-	movq	%r8, %r11   // y
+	movq	%rsi, %r10 // alpha
+	movq	%r8, %r11   // beta
+	movq	%r9, %r12   // y
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_N_4_LIB4
+	INNER_BLEND_N_SCALE_AB_4_LIB4
 #else
-	call inner_blender_n_4_lib4
+	call inner_blend_n_scale_ab_4_lib4
 #endif
 
 
 	// store
 
-	movq	%r9, %r10 // z
+	movq	STACKSIZE + 8(%rsp), %r10 // z 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
@@ -1356,8 +1493,8 @@ kernel_dgemv_n_4_lib4:
 
 
 
-//                               rdi    rsi        rdx        rcx      r8         r9         rsp+8 
-// void kernel_dgemv_n_4_vs_lib4(int k, double *A, double *x, int alg, double *y, double *z, int km);
+//                               rdi    rsi            rdx        rcx        r8            r9         rsp+8      rsp+16
+// void kernel_dgemv_n_4_vs_lib4(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int km);
 
 	.p2align 4,,15
 	.globl kernel_dgemv_n_4_vs_lib4
@@ -1388,8 +1525,8 @@ kernel_dgemv_n_4_vs_lib4:
 	// call inner dgemv kernel n
 
 	movl	%edi, %r10d // k
-	movq	%rsi, %r11  // A
-	movq	%rdx, %r12  // x
+	movq	%rdx, %r11  // A
+	movq	%rcx, %r12  // x
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
@@ -1398,22 +1535,23 @@ kernel_dgemv_n_4_vs_lib4:
 #endif
 
 
-	// call inner blender n
+	// call inner blend n scale ab
 
-	movl	%ecx, %r10d // alg
-	movq	%r8, %r11   // y
+	movq	%rsi, %r10 // alpha
+	movq	%r8, %r11   // beta
+	movq	%r9, %r12   // y
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_N_4_LIB4
+	INNER_BLEND_N_SCALE_AB_4_LIB4
 #else
-	call inner_blender_n_4_lib4
+	call inner_blend_n_scale_ab_4_lib4
 #endif
 
 
 	// store
 
-	movq	%r9, %r10 // z
-	movl	STACKSIZE + 8(%rsp), %r11d // km 
+	movq	STACKSIZE +  8(%rsp), %r10 // z 
+	movl	STACKSIZE + 16(%rsp), %r11d // km 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
@@ -1442,8 +1580,8 @@ kernel_dgemv_n_4_vs_lib4:
 
 
 
-//                            rdi    rsi        rdx      rcx        r8       r9         rsp+8
-// void kernel_dgemv_t_4_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
+//                            rdi    rsi           rdx         rcx      r8         r9            rsp+8      rsp+16
+// void kernel_dgemv_t_4_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
 
 	.p2align 4,,15
 	.globl kernel_dgemv_t_4_lib4
@@ -1474,11 +1612,11 @@ kernel_dgemv_t_4_lib4:
 	// call inner dgemv kernel n
 
 	movl	%edi, %r10d // k
-	movq	%rsi, %r11  // A
-	movl	%edx, %r12d
+	movq	%rdx, %r11  // A
+	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
 	movslq	%r12d, %r12
-	movq	%rcx, %r13  // x
+	movq	%r8, %r13  // x
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
@@ -1489,19 +1627,20 @@ kernel_dgemv_t_4_lib4:
 
 	// call inner blender t
 
-	movl	%r8d, %r10d // alg
-	movq	%r9, %r11   // y
+	movq	%rsi, %r10 // alpha
+	movq	%r9, %r11   // beta
+	movq	STACKSIZE + 8(%rsp), %r12 // y 
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_T_4_LIB4
+	INNER_BLEND_T_SCALE_AB_4_LIB4
 #else
-	call inner_blender_t_4_lib4
+	call inner_blend_t_scale_ab_4_lib4
 #endif
 
 
 	// store
 
-	movq	STACKSIZE +  8(%rsp), %r10 // z 
+	movq	STACKSIZE + 16(%rsp), %r10 // z 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
@@ -1530,8 +1669,8 @@ kernel_dgemv_t_4_lib4:
 
 
 
-//                               rdi    rsi        rdx      rcx        r8       r9         rsp+8      rsp+16
-// void kernel_dgemv_t_4_vs_lib4(int k, double *A, int sda, double *x, int alg, double *C, double *D, int km);
+//                               rdi    rsi           rdx         rcx      r8         r9            rsp+8      rsp+16     rsp+24
+// void kernel_dgemv_t_4_vs_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z, int km);
 
 	.p2align 4,,15
 	.globl kernel_dgemv_t_4_vs_lib4
@@ -1562,11 +1701,11 @@ kernel_dgemv_t_4_vs_lib4:
 	// call inner dgemv kernel n
 
 	movl	%edi, %r10d // k
-	movq	%rsi, %r11  // A
-	movl	%edx, %r12d
+	movq	%rdx, %r11  // A
+	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
 	movslq	%r12d, %r12
-	movq	%rcx, %r13  // x
+	movq	%r8, %r13  // x
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
@@ -1577,20 +1716,21 @@ kernel_dgemv_t_4_vs_lib4:
 
 	// call inner blender t
 
-	movl	%r8d, %r10d // alg
-	movq	%r9, %r11   // y
+	movq	%rsi, %r10 // alpha
+	movq	%r9, %r11   // beta
+	movq	STACKSIZE + 8(%rsp), %r12 // y 
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_T_4_LIB4
+	INNER_BLEND_T_SCALE_AB_4_LIB4
 #else
-	call inner_blender_t_4_lib4
+	call inner_blend_t_scale_ab_4_lib4
 #endif
 
 
 	// store
 
-	movq	STACKSIZE +  8(%rsp), %r10 // z 
-	movl	STACKSIZE + 16(%rsp), %r11d // km 
+	movq	STACKSIZE + 16(%rsp), %r10 // z 
+	movl	STACKSIZE + 24(%rsp), %r11d // km 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4

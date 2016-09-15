@@ -69,7 +69,11 @@ int main()
 	x[2] = 0.0;
 	x[3] = 0.0;
 	x[4] = 0.0;
-	x[5] = 1.0;
+	x[5] = 0.0;
+	x[6] = 0.0;
+	x[7] = 0.0;
+	x[8] = 0.0;
+	x[9] = 1.0;
 	
 	double *y; d_zeros_align(&y, n, 1);
 	for(ii=0; ii<n; ii++) y[ii] = ii;
@@ -94,12 +98,13 @@ int main()
 	for(ii=0; ii<n; ii++) inv_diag_D[ii] = 0.5;
 	
 //	dgemm_nt_lib(11, 11, 16, 1.0, pA, cn, pB, cn, 0.0, pD, cn, pD, cn);
-	dgemm_nn_lib(11, 11, 16, 1.0, pB, cn, pA, cn, 0.0, pC, cn, pD, cn);
+//	dgemm_nn_lib(11, 11, 16, 1.0, pB, cn, pA, cn, 0.0, pC, cn, pD, cn);
 //	dsyrk_nt_l_lib(15, 15, 16, 1.0, pA, cn, pA, cn, 1.0, pB, cn, pD, cn);
-//	dtrmm_nt_ru_lib(15, 15, pA, cn, pB, cn, -1, pC, cn, pD, cn);
+	dtrmm_nt_ru_lib(12, 12, -1.0, pA, cn, pB, cn, 1.0, pC, cn, pD, cn);
 //	dpotrf_nt_l_lib(15, 15, pD, cn, pD, cn, inv_diag_D);
 //	dsyrk_dpotrf_nt_l_lib(15, 15, 16, pA, cn, pA, cn, pB, cn, pD, cn, inv_diag_D);
-//	dgemv_t_lib_b(3, 6, pA, cn, x, 0, y, z);
+//	dgemv_t_lib(3, 6, 1.0, pA, cn, x, 0.0, y, z);
+//	dtrmv_un_lib(n, pA, cn, x, 0, y, z);
 //	dtrsv_ln_inv_lib_b(4, 4, pB, cn, inv_diag_D, x, z);
 //	dtrsv_lt_inv_lib_b(11, 3, pB, cn, inv_diag_D, x, z);
 
