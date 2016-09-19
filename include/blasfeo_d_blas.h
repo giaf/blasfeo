@@ -68,3 +68,5 @@ void dtrmm_nt_ru_lib(int m, int n, double alpha, double *pA, int sda, double *pB
 void dpotrf_nt_l_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);
 // D <= chol( C + A * B' ) ; C, D lower triangular
 void dsyrk_dpotrf_nt_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);
+// D <= lu( C ) ; no pivoting
+void dgetrf_nn_nopivot_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);

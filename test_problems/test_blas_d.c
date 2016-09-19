@@ -265,13 +265,14 @@ int main()
 #if defined(LOW_RANK)
 #else
 //			dgemm_nt_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
-			dgemm_nn_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
+//			dgemm_nn_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
 //			dsyrk_nt_l_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 1.0, pC, cnd, pD, cnd);
 //			dtrmm_nt_ru_lib(n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
 //			dpotrf_nt_l_lib(n, n, pB, cnd, pD, cnd, diag);
 //			dsyrk_dpotrf_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd, diag);
 //			dsyrk_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd);
 //			dpotrf_nt_l_lib(n, n, pD, cnd, pD, cnd, diag);
+			dgetrf_nn_nopivot_lib(n, n, pD, cnd, pD, cnd, diag);
 #endif
 			}
 	
@@ -328,10 +329,10 @@ int main()
 //		float flop_operation = 2.0*m*m*n; // dgemm
 		float flop_operation = 1.0*m*m*n; // dsyrk dtrmm
 #else
-		float flop_operation = 2.0*n*n*n; // dgemm
+//		float flop_operation = 2.0*n*n*n; // dgemm
 //		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm
 //		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
-//		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
+		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv
 //		float flop_operation = 1.0*n*n; // dtrmv dtrsv
 //		float flop_operation = 4.0*n*n; // dgemv_nt
