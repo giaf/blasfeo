@@ -749,6 +749,97 @@ void dtrmm_nt_ru_lib(int m, int n, double alpha, double *pA, int sda, double *pB
 
 
 
+// D <= A^{-1} * B , with A lower triangular with unit diagonal
+void dtrsm_nn_ll_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb, double *pD, int sdd)
+	{
+
+	if(m<=0 || n<=0)
+		return;
+	
+	const int bs = 4;
+	
+	int i, j;
+	
+	i = 0;
+
+	for( ; i<m-3; i+=4)
+		{
+		j = 0;
+		for( ; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nn_ll_one_4x4_lib4(i, pA+i*sda, pD+j*bs, sdd, pB+i*sdb+j*bs, pD+i*sdd+j*bs, pA+i*sda+i*bs);
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nn_ll_one_4x4_vs_lib4(i, pA+i*sda, pD+j*bs, sdd, pB+i*sdb+j*bs, pD+i*sdd+j*bs, pA+i*sda+i*bs, m-i, n-j);
+			}
+		}
+	if(i<m)
+		{
+		goto left_4;
+		}
+
+	// common return
+	return;
+
+	left_4:
+	j = 0;
+	for( ; j<n; j+=4)
+		{
+		kernel_dtrsm_nn_ll_one_4x4_vs_lib4(i, pA+i*sda, pD+j*bs, sdd, pB+i*sdb+j*bs, pD+i*sdd+j*bs, pA+i*sda+i*bs, m-i, n-j);
+		}
+	}
+
+
+
+// D <= A^{-1} * B , with A upper triangular with unit diagonal
+void dtrsm_nn_lu_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *pB, int sdb, double *pD, int sdd)
+	{
+
+	if(m<=0 || n<=0)
+		return;
+	
+	const int bs = 4;
+	
+	int i, j, idx;
+	double *dummy;
+	
+	i = 0;
+	int rm = m%4;
+	if(rm>0)
+		{
+		// TODO code expliticly the final case
+		idx = m-rm; // position of the part to do
+		j = 0;
+		for( ; j<n; j+=4)
+			{
+			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(0, dummy, dummy, 0, pB+idx*sdb+j*bs, pD+idx*sdd+j*bs, pA+idx*sda+idx*bs, inv_diag_A+idx, rm, n-j);
+			}
+		// TODO
+		i += rm;
+		}
+//	int em = m-rm;
+	for( ; i<m; i+=4)
+		{
+		idx = m-i; // position of already done part
+		j = 0;
+		for( ; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nn_lu_inv_4x4_lib4(i, pA+(idx-4)*sda+idx*bs, pD+idx*sdd+j*bs, sdd, pB+(idx-4)*sdb+j*bs, pD+(idx-4)*sdd+j*bs, pA+(idx-4)*sda+(idx-4)*bs, inv_diag_A+(idx-4));
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(i, pA+(idx-4)*sda+idx*bs, pD+idx*sdd+j*bs, sdd, pB+(idx-4)*sdb+j*bs, pD+(idx-4)*sdd+j*bs, pA+(idx-4)*sda+(idx-4)*bs, inv_diag_A+(idx-4), 4, n-j);
+			}
+		}
+
+	// common return
+	return;
+
+	}
+
+
+
 #if 0
 void dlauum_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd)
 	{

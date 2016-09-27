@@ -4490,9 +4490,9 @@ kernel_dtrsm_nn_ru_inv_4x4_lib4:
 	movq	%r8, %r10 // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_SCALE_11_4X4_LIB4
 #else
-	call inner_blend_scale_11_4x4_lib4
+	call inner_scale_11_4x4_lib4
 #endif
 
 
@@ -4589,9 +4589,9 @@ kernel_dtrsm_nn_ru_inv_4x4_vs_lib4:
 	movq	%r8, %r10 // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_SCALE_11_4X4_LIB4
 #else
-	call inner_blend_scale_11_4x4_lib4
+	call inner_scale_11_4x4_lib4
 #endif
 
 
@@ -4691,9 +4691,9 @@ kernel_dtrsm_nn_ll_one_4x4_lib4:
 	movq	%r8, %r10 // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_SCALE_11_4X4_LIB4
 #else
-	call inner_blend_scale_11_4x4_lib4
+	call inner_scale_11_4x4_lib4
 #endif
 
 
@@ -4789,9 +4789,9 @@ kernel_dtrsm_nn_ll_one_4x4_vs_lib4:
 	movq	%r8, %r10 // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_SCALE_11_4X4_LIB4
 #else
-	call inner_blend_scale_11_4x4_lib4
+	call inner_scale_11_4x4_lib4
 #endif
 
 

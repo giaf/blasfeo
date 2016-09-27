@@ -150,6 +150,32 @@ void dgemm_nt_libst(int m, int n, int k, double alpha, struct d_strmat *sA, int 
 	return;
 	}
 
+// dtrsm_nn_llu
+void dtrsm_nn_llu_libst(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+	{
+	if(ai!=0 | bi!=0 | di!=0)
+		{
+		printf("\nfeature not implemented yet\n\n");
+		exit(1);
+		}
+	// TODO alpha
+	dtrsm_nn_ll_one_lib(m, n, sA->pA+aj*sA->bs, sA->cn, sB->pA+bj*sB->bs, sB->cn, sD->pA+dj*sD->bs, sD->cn); 
+	return;
+	}
+
+// dtrsm_nn_lun
+void dtrsm_nn_lun_libst(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+	{
+	if(ai!=0 | bi!=0 | di!=0)
+		{
+		printf("\nfeature not implemented yet\n\n");
+		exit(1);
+		}
+	// TODO alpha
+	dtrsm_nn_lu_inv_lib(m, n, sA->pA+aj*sA->bs, sA->cn, sA->dA, sB->pA+bj*sB->bs, sB->cn, sD->pA+dj*sD->bs, sD->cn); 
+	return;
+	}
+
 // dpotrf
 void dpotrf_libst(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
@@ -163,7 +189,7 @@ void dpotrf_libst(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_st
 	return;
 	}
 
-// dgetrf
+// dgetrf without pivoting
 void dgetrf_nopivot_libst(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
 	if(ci!=0 | di!=0)
@@ -302,6 +328,46 @@ void dgemm_nt_libst(int m, int n, int k, double alpha, struct d_strmat *sA, int 
 	return;
 	}
 
+// dtrsm_nn_llu
+void dtrsm_nn_llu_libst(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+	{
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cu = 'u';
+	int i1 = 1;
+	double *pA = sA->pA+ai+aj*sA->m;
+	double *pB = sB->pA+bi+bj*sB->m;
+	double *pD = sD->pA+di+dj*sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+		}
+	dtrsm_(&cl, &cl, &cn, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	return;
+	}
+
+// dtrsm_nn_lun
+void dtrsm_nn_lun_libst(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+	{
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cu = 'u';
+	int i1 = 1;
+	double *pA = sA->pA+ai+aj*sA->m;
+	double *pB = sB->pA+bi+bj*sB->m;
+	double *pD = sD->pA+di+dj*sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+		}
+	dtrsm_(&cl, &cu, &cn, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	return;
+	}
+
 // dpotrf
 void dpotrf_libst(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
@@ -326,7 +392,14 @@ void dpotrf_libst(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_st
 	return;
 	}
 
-
+// dgetrf without pivoting
+void dgetrf_nopivot_libst(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	// TODO with custom level 2 LAPACK + level 3 BLAS
+	printf("\nfeature not implemented yet\n\n");
+	exit(1);
+	return;
+	}
 
 #endif
 
