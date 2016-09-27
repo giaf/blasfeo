@@ -30,7 +30,7 @@ ifeq ($(REF_BLAS), 0)
 LIBS = -lm 
 endif
 ifeq ($(REF_BLAS), OPENBLAS)
-LIBS = /opt/OpenBLAS/lib/libopenblas.a -pthread -lm
+LIBS = /opt/openblas/lib/libopenblas.a -pthread -lm
 endif
 ifeq ($(REF_BLAS), BLIS)
 LIBS = -lblis -lm -fopenmp
@@ -47,7 +47,8 @@ LIBS += -pthread
 endif
 
 #OBJS_TEST = test_blas_d_debug.o
-OBJS_TEST = test_blas_d.o
+#OBJS_TEST = test_blas_d.o
+OBJS_TEST = test_strmat.o
 
 obj: $(OBJS_TEST)
 	$(CC) -o test.out $(OBJS_TEST) -L. libblasfeo.a $(LIBS) #-pg

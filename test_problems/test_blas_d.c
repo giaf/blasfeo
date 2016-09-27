@@ -32,6 +32,7 @@
 #include "../include/blasfeo_d_aux.h"
 #include "../include/blasfeo_d_blas.h"
 
+#include "../strmat/d_strmat.h"
 
 
 #if defined(REF_BLAS_OPENBLAS)
@@ -42,7 +43,7 @@ void openblas_set_num_threads(int n_thread);
 #include <blis/blis.h>
 #endif
 #if defined(REF_BLAS_NETLIB)
-#include "../reference_code/blas.h"
+//#include "../reference_code/blas.h"
 #endif
 
 
@@ -244,6 +245,17 @@ int main()
 		for(i=0; i<pnd; i++) x[i] = 1;
 		for(i=0; i<pnd; i++) x2[i] = 1;
 
+		// matrix struct
+		struct d_strmat sA; d_allocate_strmat(n, n, &sA);
+		struct d_strmat sB; d_allocate_strmat(n, n, &sB);
+		struct d_strmat sC; d_allocate_strmat(n, n, &sC);
+		struct d_strmat sD; d_allocate_strmat(n, n, &sD);
+
+		d_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
+		d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
+
+
+
 		double *dummy;
 
 		int info;
@@ -264,7 +276,7 @@ int main()
 
 #if defined(LOW_RANK)
 #else
-//			dgemm_nt_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
+			dgemm_nt_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
 //			dgemm_nn_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
 //			dsyrk_nt_l_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 1.0, pC, cnd, pD, cnd);
 //			dtrmm_nt_ru_lib(n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
@@ -272,11 +284,21 @@ int main()
 //			dsyrk_dpotrf_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd, diag);
 //			dsyrk_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd);
 //			dpotrf_nt_l_lib(n, n, pD, cnd, pD, cnd, diag);
-			dgetrf_nn_nopivot_lib(n, n, pD, cnd, pD, cnd, diag);
+//			dgetrf_nn_nopivot_lib(n, n, pD, cnd, pD, cnd, diag);
 #endif
 			}
 	
 		gettimeofday(&tv1, NULL); // stop
+
+		for(rep=0; rep<nrep; rep++)
+			{
+			dgemm_nt_libst(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//			dpotrf_libst(n, n, &sD, 0, 0, &sD, 0, 0);
+			}
+
+//		d_print_strmat(n, n, &sD, 0, 0);
+
+		gettimeofday(&tv2, NULL); // stop
 
 		for(rep=0; rep<nrep; rep++)
 			{
@@ -321,7 +343,7 @@ int main()
 #endif
 			}
 
-		gettimeofday(&tv2, NULL); // stop
+		gettimeofday(&tv3, NULL); // stop
 
 		float Gflops_max = flops_max * GHz_max;
 
@@ -329,10 +351,10 @@ int main()
 //		float flop_operation = 2.0*m*m*n; // dgemm
 		float flop_operation = 1.0*m*m*n; // dsyrk dtrmm
 #else
-//		float flop_operation = 2.0*n*n*n; // dgemm
+		float flop_operation = 2.0*n*n*n; // dgemm
 //		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm
 //		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
-		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
+//		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv
 //		float flop_operation = 1.0*n*n; // dtrmv dtrsv
 //		float flop_operation = 4.0*n*n; // dgemv_nt
@@ -341,24 +363,16 @@ int main()
 #endif
 
 		float time_hpmpc    = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);
-		float time_blas     = (float) (tv2.tv_sec-tv1.tv_sec)/(nrep+0.0)+(tv2.tv_usec-tv1.tv_usec)/(nrep*1e6);
-#ifdef N_CODEGEN
-		float time_codegen  = (float) (tv3.tv_sec-tv2.tv_sec)/(nrep+0.0)+(tv3.tv_usec-tv2.tv_usec)/(nrep*1e6);
-#endif
+		float time_blasfeo  = (float) (tv2.tv_sec-tv1.tv_sec)/(nrep+0.0)+(tv2.tv_usec-tv1.tv_usec)/(nrep*1e6);
+		float time_blas     = (float) (tv3.tv_sec-tv2.tv_sec)/(nrep+0.0)+(tv3.tv_usec-tv2.tv_usec)/(nrep*1e6);
 
 		float Gflops_hpmpc    = 1e-9*flop_operation/time_hpmpc;
+		float Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
 		float Gflops_blas     = 1e-9*flop_operation/time_blas;
-#ifdef N_CODEGEN
-		float Gflops_codegen  = 1e-9*flop_operation/time_codegen;
-#endif
 
 
-#ifdef N_CODEGEN
-		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max, Gflops_codegen, 100.0*Gflops_codegen/Gflops_max);
-#else
-		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
-		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
-#endif
+		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
 
 
 		free(A);
@@ -385,6 +399,11 @@ int main()
 		free(pCl);
 #endif
 		
+		d_free_strmat(&sA);
+		d_free_strmat(&sB);
+		d_free_strmat(&sC);
+		d_free_strmat(&sD);
+
 		}
 
 	printf("\n");

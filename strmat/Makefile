@@ -24,93 +24,36 @@
 #                                                                                                 #
 ###################################################################################################
 
-# Target architecture, currently supported (more architectures are available with the older v0.1 release):
-# X64_INTEL_HASWELL : x86_64 architecture with AVX2 and FMA instruction sets (64 bit operating system) code optimized for Intel Haswell and Intel Skylake architectures.
-# X64_INTEL_SANDY_BRIDGE : x86_64 architecture with AVX instruction set (64 bit operating system) code optimized for Intel Sandy-Bridge architecture.
-# X64_AMD_BULLDOZER : x86_64 architecture with AVX and FMA instruction set (64 bit operating system) code optimized for AMD Bulldozer.
-# GENERIC : generic c99 code
-#TARGET = X64_INTEL_HASWELL
-TARGET = X64_INTEL_SANDY_BRIDGE
-#TARGET = X64_INTEL_CORE
-#TARGET = X64_AMD_BULLDOZER
-#TARGET = GENERIC
+include ../Makefile.rule
 
-# Linear Algebra library
-LA = BLASFEO
-#LA = BLAS
+OBJS = 
 
-# Macro level: 0 (no macro), 1 (all macro but gemm kernel), 2 (all macro)
-MACRO_LEVEL = 0
-
-# Installation directory
-PREFIX = /opt
-
-# C Compiler
-CC = gcc
-#CC = clang
-
-# operative system
-OS = LINUX
-#OS = MAC
-
-# Common optimization/debugging flags
-COMMON_FLAGS = -O2 -fPIC
-DEBUG = #-Wall -pedantic -Wfloat-equal #-pg
-LDFLAGS =
-
-ifeq ($(LA), BLASFEO)
-LA_FLAGS = -DBLASFEO_LA
-endif
-ifeq ($(LA), BLAS)
-LA_FLAGS = -DBLAS_LA
-endif
-
-ASFLAGS = 
-ifeq ($(MACRO_LEVEL), 1)
-ASFLAGS += -DMACRO_LEVEL=1
-endif
-ifeq ($(MACRO_LEVEL), 2)
-ASFLAGS += -DMACRO_LEVEL=2
-endif
-
-# compare against standard BLAS and LAPACK in test problems
-#REF_BLAS = 0
-REF_BLAS = OPENBLAS
-#REF_BLAS = BLIS
-#REF_BLAS = NETLIB
-#REF_BLAS = MKL
-ifeq ($(REF_BLAS), 0)
-REF_BLAS_FLAGS = 
-endif
-ifeq ($(REF_BLAS), OPENBLAS)
-REF_BLAS_FLAGS = -DREF_BLAS_OPENBLAS -I/opt/openblas/include
-endif
-ifeq ($(REF_BLAS), BLIS)
-REF_BLAS_FLAGS = -DREF_BLAS_BLIS
-endif
-ifeq ($(REF_BLAS), NETLIB)
-REF_BLAS_FLAGS = -DREF_BLAS_NETLIB
-endif
-ifeq ($(REF_BLAS), MKL)
-REF_BLAS_FLAGS = -DREF_BLAS_MKL
-COMMON_FLAGS += -m64 -I/opt/intel/mkl/include
-endif
-
-# architecture-specific optimization flags
 ifeq ($(TARGET), X64_INTEL_HASWELL)
-CFLAGS = $(COMMON_FLAGS) -m64 -mavx2 -mfma -DTARGET_X64_INTEL_HASWELL $(LA_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
+OBJS += d_strmat.o
+OBJS += 
 endif
+
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-CFLAGS = $(COMMON_FLAGS) -m64 -mavx -DTARGET_X64_INTEL_SANDY_BRIDGE $(LA_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
+OBJS += d_strmat.o
+OBJS += 
 endif
+
 ifeq ($(TARGET), X64_INTEL_CORE)
-CFLAGS = $(COMMON_FLAGS) -m64 -msse3 -DTARGET_X64_INTEL_CORE $(LA_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
+OBJS += d_strmat.o
+OBJS += 
 endif
+
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
-CFLAGS = $(COMMON_FLAGS) -m64 -mavx -mfma -DTARGET_X64_AMD_BULLDOZER $(LA_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
+OBJS += d_strmat.o
+OBJS += 
 endif
+
 ifeq ($(TARGET), GENERIC)
-CFLAGS = $(COMMON_FLAGS) -march=native -DTARGET_GENERIC $(LA_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
+OBJS += d_strmat.o
+OBJS += 
 endif
 
+obj: $(OBJS)
 
+clean:
+	rm -f *.o

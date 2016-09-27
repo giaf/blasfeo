@@ -25,24 +25,42 @@
 **************************************************************************************************/
 
 
+#if defined(BLASFEO_LA)
 
-// d_aux_extern_depend_lib
-void d_zeros(double **pA, int row, int col);
-void d_zeros_align(double **pA, int row, int col);
-void d_zeros_align_bytes(double **pA, int size);
-void d_free(double *pA);
-void d_free_align(double *pA);
-void d_print_mat(int row, int col, double *A, int lda);
-void d_print_mat_e(int row, int col, double *A, int lda);
-void d_print_pmat(int row, int col, double *pA, int sda);
-void d_print_pmat_e(int row, int col, double *pA, int sda);
-void v_zeros(void **ptrA, int size);
-void v_zeros_align(void **ptrA, int size);
-void v_free(void *ptrA);
-void v_free_align(void *ptrA);
+// matrix structure
+struct d_strmat 
+	{
+	int bs; // heigh of panels
+	int m; // rows
+	int n; // cols
+	int pm; // packed number or rows
+	int cn; // packed number or cols
+	double *pA; // pointer to a pm*pn array of doubles, the first is aligned to cache line size
+	double *dA; // pointer to a min(m,n) (or max???) array of doubles
+	int use_dA; // flag to tell if dA can be used
+	int memory_size; // size of needed memory
+	};
 
-// d_aux_lib
-void d_cvt_mat2pmat(int row, int col, double *A, int lda, int offset, double *pA, int sda);
-void d_cvt_tran_mat2pmat(int row, int col, double *A, int lda, int offset, double *pA, int sda);
-void d_cvt_pmat2mat(int row, int col, int offset, double *pA, int sda, double *A, int lda);
-void d_cvt_tran_pmat2mat(int row, int col, int offset, double *pA, int sda, double *A, int lda);
+#elif defined(BLAS_LA)
+
+// matrix structure
+struct d_strmat 
+	{
+	int m; // rows
+	int n; // cols
+	double *pA; // pointer to a m*n array of doubles
+	int memory_size; // size of needed memory
+	};
+
+#endif
+
+void d_allocate_strmat(int m, int n, struct d_strmat *sA);
+void d_free_strmat(struct d_strmat *sA);
+int d_size_strmat(int m, int n);
+void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory);
+void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj);
+void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj);
+void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj);
+void dgemm_nt_libst(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj);
+void dpotrf_libst(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj);
+void dgetrf_nopivot_libst(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj);
