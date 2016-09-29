@@ -396,8 +396,19 @@ void dpotrf_libst(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_st
 void dgetrf_nopivot_libst(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
 	// TODO with custom level 2 LAPACK + level 3 BLAS
-	printf("\nfeature not implemented yet\n\n");
-	exit(1);
+//	printf("\nfeature not implemented yet\n\n");
+//	exit(1);
+	int jj;
+	int i1 = 1;
+	double d1 = 1.0;
+	double *pC = sC->pA+ci+cj*sC->m;
+	double *pD = sD->pA+di+dj*sD->m;
+	if(!(pC==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+		}
+	dgetf2_nopivot(m, n, pD, sD->m);
 	return;
 	}
 

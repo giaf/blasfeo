@@ -39,7 +39,7 @@ OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
 OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o 
 OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
 #strmat
-OBJS += ./strmat/d_strmat.o
+OBJS += ./strmat/d_strmat.o ./strmat/dgetrf_nopivot.o
 endif
 
 # kernel
@@ -53,7 +53,7 @@ OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
 OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o 
 OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
 #strmat
-OBJS += ./strmat/d_strmat.o
+OBJS += ./strmat/d_strmat.o ./strmat/dgetrf_nopivot.o
 endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
@@ -67,7 +67,7 @@ OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
 OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o 
 OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
 #strmat
-OBJS += ./strmat/d_strmat.o
+OBJS += ./strmat/d_strmat.o ./strmat/dgetrf_nopivot.o
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
@@ -81,7 +81,7 @@ OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
 OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o 
 OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
 #strmat
-OBJS += ./strmat/d_strmat.o
+OBJS += ./strmat/d_strmat.o ./strmat/dgetrf_nopivot.o
 endif
 
 ifeq ($(TARGET), GENERIC)
@@ -95,7 +95,7 @@ OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
 OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o 
 OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
 #strmat
-OBJS += ./strmat/d_strmat.o
+OBJS += ./strmat/d_strmat.o ./strmat/dgetrf_nopivot.o
 endif
 
 OBJS += ./aux/i_aux_extern_depend_lib4.o

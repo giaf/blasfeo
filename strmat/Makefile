@@ -29,27 +29,27 @@ include ../Makefile.rule
 OBJS = 
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
-OBJS += d_strmat.o
+OBJS += d_strmat.o dgetrf_nopivot.o
 OBJS += 
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-OBJS += d_strmat.o
+OBJS += d_strmat.o dgetrf_nopivot.o
 OBJS += 
 endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
-OBJS += d_strmat.o
+OBJS += d_strmat.o dgetrf_nopivot.o
 OBJS += 
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
-OBJS += d_strmat.o
+OBJS += d_strmat.o dgetrf_nopivot.o
 OBJS += 
 endif
 
 ifeq ($(TARGET), GENERIC)
-OBJS += d_strmat.o
+OBJS += d_strmat.o dgetrf_nopivot.o
 OBJS += 
 endif
 
