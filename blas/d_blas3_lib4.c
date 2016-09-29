@@ -762,6 +762,21 @@ void dtrsm_nn_ll_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb,
 	
 	i = 0;
 
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for( ; i<m-7; i+=8)
+		{
+		j = 0;
+		for( ; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nn_ll_one_8x4_lib4(i, pA+i*sda, sda, pD+j*bs, sdd, pB+i*sdb+j*bs, sdb, pD+i*sdd+j*bs, sdd, pA+i*sda+i*bs, sda);
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nn_ll_one_4x4_vs_lib4(i, pA+i*sda, pD+j*bs, sdd, pB+i*sdb+j*bs, pD+i*sdd+j*bs, pA+i*sda+i*bs, m-i, n-j);
+			kernel_dtrsm_nn_ll_one_4x4_vs_lib4(i+4, pA+(i+4)*sda, pD+j*bs, sdd, pB+(i+4)*sdb+j*bs, pD+(i+4)*sdd+j*bs, pA+(i+4)*sda+i*bs, m-i-4, n-j);
+			}
+		}
+#endif
 	for( ; i<m-3; i+=4)
 		{
 		j = 0;
