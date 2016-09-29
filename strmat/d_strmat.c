@@ -153,7 +153,7 @@ void dgemm_nt_libst(int m, int n, int k, double alpha, struct d_strmat *sA, int 
 // dtrsm_nn_llu
 void dtrsm_nn_llu_libst(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
-	if(ai!=0 | bi!=0 | di!=0)
+	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
 		printf("\nfeature not implemented yet\n\n");
 		exit(1);
@@ -166,7 +166,7 @@ void dtrsm_nn_llu_libst(int m, int n, double alpha, struct d_strmat *sA, int ai,
 // dtrsm_nn_lun
 void dtrsm_nn_lun_libst(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
-	if(ai!=0 | bi!=0 | di!=0)
+	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
 		printf("\nfeature not implemented yet\n\n");
 		exit(1);
