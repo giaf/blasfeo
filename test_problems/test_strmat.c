@@ -50,7 +50,7 @@ int main()
 #endif
 		int ii;
 
-	int n = 8;
+	int n = 6;
 
 	//
 	// matrices in column-major format
@@ -101,9 +101,14 @@ int main()
 	dgetrf_nopivot_libst(n, n, &sD, 0, 0, &sD, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
 
-	dtrsm_nn_llu_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
+	dtrsm_llnu_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
 	d_print_strmat(n, n, &sE, 0, 0);
-	dtrsm_nn_lun_libst(n, n, 1.0, &sD, 0, 0, &sE, 0, 0, &sE, 0, 0);
+	dtrsm_lunn_libst(n, n, 1.0, &sD, 0, 0, &sE, 0, 0, &sE, 0, 0);
+	d_print_strmat(n, n, &sE, 0, 0);
+
+	dtrsm_rltu_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
+	d_print_strmat(n, n, &sE, 0, 0);
+	dtrsm_rutn_libst(n, n, 1.0, &sD, 0, 0, &sE, 0, 0, &sE, 0, 0);
 	d_print_strmat(n, n, &sE, 0, 0);
 
 //	d_print_strmat(n, n, &sA, 0, 0);

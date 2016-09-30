@@ -749,6 +749,113 @@ void dtrmm_nt_ru_lib(int m, int n, double alpha, double *pA, int sda, double *pB
 
 
 
+// D <= B * A^{-T} , with A lower triangular with unit diagonal
+void dtrsm_nt_rl_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb, double *pD, int sdd)
+	{
+
+	if(m<=0 || n<=0)
+		return;
+	
+	const int bs = 4;
+	
+	int i, j;
+	
+	i = 0;
+
+	for(; i<m-3; i+=4)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nt_rl_one_4x4_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda]);
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nt_rl_one_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda], m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		goto left_4;
+		}
+
+	// common return if i==m
+	return;
+
+	left_4:
+	j = 0;
+	for(; j<n; j+=4)
+		{
+		kernel_dtrsm_nt_rl_one_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda], m-i, n-j);
+		}
+	return;
+
+	}
+
+
+
+// D <= B * A^{-T} , with A upper triangular employing explicit inverse of diagonal
+void dtrsm_nt_ru_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *pB, int sdb, double *pD, int sdd)
+	{
+
+	if(m<=0 || n<=0)
+		return;
+	
+	const int bs = 4;
+	
+	int i, j, idx;
+
+	int rn = n%4;
+
+	double *dummy;
+	
+	i = 0;
+
+	for(; i<m-3; i+=4)
+		{
+		j = 0;
+		// clean at the end
+		if(rn>0)
+			{
+			idx = n-rn;
+			kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(0, dummy, dummy, &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, rn);
+			j += rn;
+			}
+		for(; j<n; j+=4)
+			{
+			idx = n-j-4;
+			kernel_dtrsm_nt_ru_inv_4x4_lib4(j, &pD[i*sdd+(idx+4)*bs], &pA[idx*sda+(idx+4)*bs], &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx]);
+			}
+		}
+	if(m>i)
+		{
+		goto left_4;
+		}
+
+	// common return if i==m
+	return;
+
+	left_4:
+	j = 0;
+	// TODO
+	// clean at the end
+	if(rn>0)
+		{
+		idx = n-rn;
+		kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(0, dummy, dummy, &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, rn);
+		j += rn;
+		}
+	for(; j<n; j+=4)
+		{
+		idx = n-j-4;
+		kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(j, &pD[i*sdd+(idx+4)*bs], &pA[idx*sda+(idx+4)*bs], &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, 4);
+		}
+	return;
+
+	}
+
+
+
 // D <= A^{-1} * B , with A lower triangular with unit diagonal
 void dtrsm_nn_ll_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb, double *pD, int sdd)
 	{
@@ -807,7 +914,7 @@ void dtrsm_nn_ll_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb,
 
 
 
-// D <= A^{-1} * B , with A upper triangular with unit diagonal
+// D <= A^{-1} * B , with A upper triangular employing explicit inverse of diagonal
 void dtrsm_nn_lu_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *pB, int sdb, double *pD, int sdd)
 	{
 

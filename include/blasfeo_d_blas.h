@@ -57,6 +57,14 @@ void dgemm_nn_lib(int m, int n, int k, double alpha, double *pA, int sda, double
 void dsyrk_nt_l_lib(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *pC, int sdc, double *pD, int sdd);
 // D <= beta * C + alpha * A * B' ; B upper triangular
 void dtrmm_nt_ru_lib(int m, int n, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *pC, int sdc, double *pD, int sdd);
+// D <= B * A^{-T} , with A lower triangular with unit diagonal
+void dtrsm_nt_rl_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb, double *pD, int sdd);
+// D <= B * A^{-T} , with A upper triangular employing explicit inverse of diagonal
+void dtrsm_nt_ru_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *pB, int sdb, double *pD, int sdd);
+// D <= A^{-1} * B , with A lower triangular with unit diagonal
+void dtrsm_nn_ll_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb, double *pD, int sdd);
+// D <= A^{-1} * B , with A upper triangular employing explicit inverse of diagonal
+void dtrsm_nn_lu_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *pB, int sdb, double *pD, int sdd);
 
 
 
