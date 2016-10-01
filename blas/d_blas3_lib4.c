@@ -762,7 +762,35 @@ void dtrsm_nt_rl_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb,
 	
 	i = 0;
 
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; i<m-11; i+=12)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nt_rl_one_12x4_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*bs+i*sdb], sdb, &pD[j*bs+i*sdd], sdd, &pA[j*bs+j*sda]);
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nt_rl_one_12x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*bs+i*sdb], sdb, &pD[j*bs+i*sdd], sdd, &pA[j*bs+j*sda], m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		if(m-i<=4)
+			{
+			goto left_4;
+			}
+		else if(m-i<=8)
+			{
+			goto left_8;
+			}
+		else
+			{
+			goto left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -808,7 +836,17 @@ void dtrsm_nt_rl_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb,
 	// common return if i==m
 	return;
 
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
+	left_12:
+	j = 0;
+	for(; j<n; j+=4)
+		{
+		kernel_dtrsm_nt_rl_one_12x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*bs+i*sdb], sdb, &pD[j*bs+i*sdd], sdd, &pA[j*bs+j*sda], m-i, n-j);
+		}
+	return;
+#endif
+
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	left_8:
 	j = 0;
 	for(; j<n; j+=4)
@@ -847,7 +885,39 @@ void dtrsm_nt_ru_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 	
 	i = 0;
 
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; i<m-11; i+=12)
+		{
+		j = 0;
+		// clean at the end
+		if(rn>0)
+			{
+			idx = n-rn;
+			kernel_dtrsm_nt_ru_inv_12x4_vs_lib4(0, dummy, 0, dummy, &pB[i*sdb+idx*bs], sdb, &pD[i*sdd+idx*bs], sdd, &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, rn);
+			j += rn;
+			}
+		for(; j<n; j+=4)
+			{
+			idx = n-j-4;
+			kernel_dtrsm_nt_ru_inv_12x4_lib4(j, &pD[i*sdd+(idx+4)*bs], sdd, &pA[idx*sda+(idx+4)*bs], &pB[i*sdb+idx*bs], sdb, &pD[i*sdd+idx*bs], sdd, &pA[idx*sda+idx*bs], &inv_diag_A[idx]);
+			}
+		}
+	if(m>i)
+		{
+		if(m-i<=4)
+			{
+			goto left_4;
+			}
+		else if(m-i<=8)
+			{
+			goto left_8;
+			}
+		else
+			{
+			goto left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -901,7 +971,27 @@ void dtrsm_nt_ru_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 	// common return if i==m
 	return;
 
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
+	left_12:
+	j = 0;
+	// TODO
+	// clean at the end
+	if(rn>0)
+		{
+		idx = n-rn;
+		kernel_dtrsm_nt_ru_inv_12x4_vs_lib4(0, dummy, 0, dummy, &pB[i*sdb+idx*bs], sdb, &pD[i*sdd+idx*bs], sdd, &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, rn);
+		j += rn;
+		}
+	for(; j<n; j+=4)
+		{
+		idx = n-j-4;
+		kernel_dtrsm_nt_ru_inv_12x4_vs_lib4(j, &pD[i*sdd+(idx+4)*bs], sdd, &pA[idx*sda+(idx+4)*bs], &pB[i*sdb+idx*bs], sdb, &pD[i*sdd+idx*bs], sdd, &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, 4);
+		}
+	return;
+
+#endif
+
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	left_8:
 	j = 0;
 	// TODO
