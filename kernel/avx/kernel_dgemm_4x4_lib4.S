@@ -2228,6 +2228,325 @@ inner_edge_dtrsm_rlt_inv_4x4_vs_lib4:
 //
 // triangular substitution:
 // side = right
+// uplo = lower
+// tran = transposed
+// unit diagonal
+//
+// input arguments:
+// r10  <- E
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm12 <- dirty
+// ymm13 <- dirty
+//
+// output arguments:
+// r10  <- E
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm12 <- dirty
+// ymm13 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSM_RLT_ONE_4X4_LIB4
+#else
+	.p2align 4,,15
+	.type inner_edge_dtrsm_rlt_one_4x4_lib4, @function
+inner_edge_dtrsm_rlt_one_4x4_lib4:
+#endif
+	
+	vbroadcastsd	8(%r10), %ymm13
+	vmulpd			%ymm0, %ymm13, %ymm12
+	vsubpd			%ymm12, %ymm1, %ymm1
+
+	vbroadcastsd	16(%r10), %ymm13
+	vmulpd			%ymm0, %ymm13, %ymm12
+	vsubpd			%ymm12, %ymm2, %ymm2
+	vbroadcastsd	48(%r10), %ymm13
+	vmulpd			%ymm1, %ymm13, %ymm12
+	vsubpd			%ymm12, %ymm2, %ymm2
+
+	vbroadcastsd	24(%r10), %ymm13
+	vmulpd			%ymm0, %ymm13, %ymm12
+	vsubpd			%ymm12, %ymm3, %ymm3
+	vbroadcastsd	56(%r10), %ymm13
+	vmulpd			%ymm1, %ymm13, %ymm12
+	vsubpd			%ymm12, %ymm3, %ymm3
+	vbroadcastsd	88(%r10), %ymm13
+	vmulpd			%ymm2, %ymm13, %ymm12
+	vsubpd			%ymm12, %ymm3, %ymm3
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_edge_dtrsm_rlt_one_4x4_lib4, .-inner_edge_dtrsm_rlt_one_4x4_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// triangular substitution:
+// side = right
+// uplo = lower
+// tran = transposed
+// unit diagonal
+//
+// input arguments:
+// r10  <- D
+// r11d <- kn
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm12 <- dirty
+// ymm13 <- dirty
+//
+// output arguments:
+// r10  <- D
+// r11d <- kn
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm12 <- dirty
+// ymm13 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSM_RLT_ONE_4X4_VS_LIB4
+#else
+	.p2align 4,,15
+	.type inner_edge_dtrsm_rlt_one_4x4_vs_lib4, @function
+inner_edge_dtrsm_rlt_one_4x4_vs_lib4:
+#endif
+	
+	cmpl			$2, %r11d
+
+	jl				0f // ret
+
+	vbroadcastsd	8(%r10), %ymm13
+	cmpl			$3, %r11d
+	vmulpd			%ymm0, %ymm13, %ymm12
+	vsubpd			%ymm12, %ymm1, %ymm1
+
+	jl				0f // ret
+
+	vbroadcastsd	16(%r10), %ymm13
+	cmpl			$4, %r11d
+	vmulpd			%ymm0, %ymm13, %ymm12
+	vsubpd			%ymm12, %ymm2, %ymm2
+	vbroadcastsd	48(%r10), %ymm13
+	vmulpd			%ymm1, %ymm13, %ymm12
+	vsubpd			%ymm12, %ymm2, %ymm2
+
+	jl				0f // ret
+
+	vbroadcastsd	24(%r10), %ymm13
+	vmulpd			%ymm0, %ymm13, %ymm12
+	vsubpd			%ymm12, %ymm3, %ymm3
+	vbroadcastsd	56(%r10), %ymm13
+	vmulpd			%ymm1, %ymm13, %ymm12
+	vsubpd			%ymm12, %ymm3, %ymm3
+	vbroadcastsd	88(%r10), %ymm13
+	vmulpd			%ymm2, %ymm13, %ymm12
+	vsubpd			%ymm12, %ymm3, %ymm3
+
+0:
+	
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_edge_dtrsm_rlt_one_4x4_vs_lib4, .-inner_edge_dtrsm_rlt_one_4x4_vs_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// triangular substitution:
+// side = right
+// uplo = upper
+// tran = transposed
+// requires explicit inverse of diagonal
+//
+// input arguments:
+// r10  <- E
+// r11  <- inv_diag_E
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm12 <- dirty
+// ymm13 <- dirty
+//
+// output arguments:
+// r10  <- E
+// r11  <- inv_diag_E
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm12 <- dirty
+// ymm13 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSM_RUT_INV_4X4_LIB4
+#else
+	.p2align 4,,15
+	.type inner_edge_dtrsm_rut_inv_4x4_lib4, @function
+inner_edge_dtrsm_rut_inv_4x4_lib4:
+#endif
+	
+	vbroadcastsd	24(%r11), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm3
+	vbroadcastsd	112(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm2, %ymm2
+	vbroadcastsd	104(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm1, %ymm1
+	vbroadcastsd	96(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+	vbroadcastsd	16(%r11), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm2
+	vbroadcastsd	72(%r10), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm1, %ymm1
+	vbroadcastsd	64(%r10), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+	vbroadcastsd	8(%r11), %ymm12
+	vmulpd			%ymm1, %ymm12, %ymm1
+	vbroadcastsd	32(%r10), %ymm12
+	vmulpd			%ymm1, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+	vbroadcastsd	0(%r11), %ymm12
+	vmulpd			%ymm0, %ymm12, %ymm0
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_edge_dtrsm_rut_inv_4x4_lib4, .-inner_edge_dtrsm_rut_inv_4x4_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// triangular substitution:
+// side = right
+// uplo = lower
+// tran = transposed
+// requires explicit inverse of diagonal
+//
+// input arguments:
+// r10  <- D
+// r11  <- inv_diag_D
+// r12d <- kn
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm12 <- dirty
+// ymm13 <- dirty
+//
+// output arguments:
+// r10  <- D
+// r11  <- inv_diag_D
+// r12d <- kn
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm12 <- dirty
+// ymm13 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSM_RUT_INV_4X4_VS_LIB4
+#else
+	.p2align 4,,15
+	.type inner_edge_dtrsm_rut_inv_4x4_vs_lib4, @function
+inner_edge_dtrsm_rut_inv_4x4_vs_lib4:
+#endif
+	
+	cmpl			$3, %r12d
+	jle				0f
+
+	vbroadcastsd	24(%r11), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm3
+	vbroadcastsd	112(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm2, %ymm2
+	vbroadcastsd	104(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm1, %ymm1
+	vbroadcastsd	96(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+0:
+	cmpl			$2, %r12d
+	jle				1f
+
+	vbroadcastsd	16(%r11), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm2
+	vbroadcastsd	72(%r10), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm1, %ymm1
+	vbroadcastsd	64(%r10), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+1:
+	cmpl			$1, %r12d
+	jle				2f
+
+	vbroadcastsd	8(%r11), %ymm12
+	vmulpd			%ymm1, %ymm12, %ymm1
+	vbroadcastsd	32(%r10), %ymm12
+	vmulpd			%ymm1, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+2:
+
+	vbroadcastsd	0(%r11), %ymm12
+	vmulpd			%ymm0, %ymm12, %ymm0
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_edge_dtrsm_rut_inv_4x4_vs_lib4, .-inner_edge_dtrsm_rut_inv_4x4_vs_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// triangular substitution:
+// side = right
 // uplo = up
 // tran = normal
 // requires explicit inverse of diagonal
@@ -4771,6 +5090,394 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4:
 	ret
 
 	.size	kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4, .-kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4
+
+
+
+
+
+//                                      edi    rsi        rdx        ecx        r8         r9
+// void kernel_dtrsm_nt_rl_one_4x4_lib4(int k, double *A, double *B, double *C, double *D, double *E);
+
+	.p2align 4,,15
+	.globl kernel_dtrsm_nt_rl_one_4x4_lib4
+	.type kernel_dtrsm_nt_rl_one_4x4_lib4, @function
+kernel_dtrsm_nt_rl_one_4x4_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nt 
+
+	movl	%edi, %r10d
+	movq	%rsi, %r11
+	movq	%rdx, %r12
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+#else
+	call inner_kernel_dgemm_sub_nt_4x4_lib4
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	%rcx, %r10
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_11_4X4_LIB4
+#else
+	call inner_blend_scale_11_4x4_lib4
+#endif
+
+
+	// solve
+
+	movq	%r9, %r10  // E 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RLT_ONE_4X4_LIB4
+#else
+	call inner_edge_dtrsm_rlt_one_4x4_lib4
+#endif
+
+
+	// store
+
+	movq	%r8, %r10 // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB4
+#else
+	call inner_store_4x4_lib4
+#endif
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dtrsm_nt_rl_one_4x4_lib4, .-kernel_dtrsm_nt_rl_one_4x4_lib4
+
+
+
+
+
+//                                         edi    rsi        rdx        ecx        r8         r9         rsp+8   rsp+16
+// void kernel_dtrsm_nt_rl_one_4x4_vs_lib4(int k, double *A, double *B, double *C, double *D, double *E, int km, int kn);
+
+	.p2align 4,,15
+	.globl kernel_dtrsm_nt_rl_one_4x4_vs_lib4
+	.type kernel_dtrsm_nt_rl_one_4x4_vs_lib4, @function
+kernel_dtrsm_nt_rl_one_4x4_vs_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nt 
+
+	movl	%edi, %r10d
+	movq	%rsi, %r11
+	movq	%rdx, %r12
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+#else
+	call inner_kernel_dgemm_sub_nt_4x4_lib4
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	%rcx, %r10 // C
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_11_4X4_LIB4
+#else
+	call inner_blend_scale_11_4x4_lib4
+#endif
+
+
+	// solve
+
+	movq	%r9, %r10  // E 
+	movl	STACKSIZE + 16(%rsp), %r11d // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RLT_ONE_4X4_VS_LIB4
+#else
+	call inner_edge_dtrsm_rlt_one_4x4_vs_lib4
+#endif
+
+
+	// store
+
+	movq	%r8, %r10 // D
+	movl	STACKSIZE +  8(%rsp), %r11d // km 
+	movl	STACKSIZE + 16(%rsp), %r12d // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB4
+#else
+	call inner_store_4x4_vs_lib4
+#endif
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dtrsm_nt_rl_one_4x4_vs_lib4, .-kernel_dtrsm_nt_rl_one_4x4_vs_lib4
+
+
+
+
+
+//                                      edi    rsi        rdx        ecx        r8         r9         rsp+8
+// void kernel_dtrsm_nt_ru_inv_4x4_lib4(int k, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E);
+
+	.p2align 4,,15
+	.globl kernel_dtrsm_nt_ru_inv_4x4_lib4
+	.type kernel_dtrsm_nt_ru_inv_4x4_lib4, @function
+kernel_dtrsm_nt_ru_inv_4x4_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nt 
+
+	movl	%edi, %r10d
+	movq	%rsi, %r11
+	movq	%rdx, %r12
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+#else
+	call inner_kernel_dgemm_sub_nt_4x4_lib4
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	%rcx, %r10
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_11_4X4_LIB4
+#else
+	call inner_blend_scale_11_4x4_lib4
+#endif
+
+
+	// solve
+
+	movq	%r9, %r10  // E 
+	movq	STACKSIZE +  8(%rsp), %r11 // inv_diag_E 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RUT_INV_4X4_LIB4
+#else
+	call inner_edge_dtrsm_rut_inv_4x4_lib4
+#endif
+
+
+	// store
+
+	movq	%r8, %r10 // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB4
+#else
+	call inner_store_4x4_lib4
+#endif
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dtrsm_nt_ru_inv_4x4_lib4, .-kernel_dtrsm_nt_ru_inv_4x4_lib4
+
+
+
+
+
+//                                         edi    rsi        rdx        ecx        r8         r9         rsp+8                rsp+16  rsp+24
+// void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(int k, double *A, double *B, double *C, double *D, double *E, double  *inv_diag_E, int km, int kn);
+
+	.p2align 4,,15
+	.globl kernel_dtrsm_nt_ru_inv_4x4_vs_lib4
+	.type kernel_dtrsm_nt_ru_inv_4x4_vs_lib4, @function
+kernel_dtrsm_nt_ru_inv_4x4_vs_lib4:
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nt 
+
+	movl	%edi, %r10d
+	movq	%rsi, %r11
+	movq	%rdx, %r12
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+#else
+	call inner_kernel_dgemm_sub_nt_4x4_lib4
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	%rcx, %r10 // C
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_11_4X4_LIB4
+#else
+	call inner_blend_scale_11_4x4_lib4
+#endif
+
+
+	// solve
+
+	movq	%r9, %r10  // E 
+	movq	STACKSIZE +  8(%rsp), %r11 // inv_diag_E 
+	movl	STACKSIZE + 24(%rsp), %r12d // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RUT_INV_4X4_VS_LIB4
+#else
+	call inner_edge_dtrsm_rut_inv_4x4_vs_lib4
+#endif
+
+
+	// store
+
+	movq	%r8, %r10 // D
+	movl	STACKSIZE + 16(%rsp), %r11d // km 
+	movl	STACKSIZE + 24(%rsp), %r12d // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB4
+#else
+	call inner_store_4x4_vs_lib4
+#endif
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+	.size	kernel_dtrsm_nt_ru_inv_4x4_vs_lib4, .-kernel_dtrsm_nt_ru_inv_4x4_vs_lib4
 
 
 
