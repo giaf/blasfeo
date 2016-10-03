@@ -31,6 +31,7 @@
 
 
 
+// linear algebra provided by BLASFEO
 #if defined(BLASFEO_LA)
 
 
@@ -122,6 +123,28 @@ void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA
 	int pm = sA->pm;
 	int cn = sA->cn;
 	d_cvt_tran_mat2pmat(m, n, A, lda, ai, pA+ai/bs*bs*cn+ai%bs+aj*bs, cn);
+	return;
+	}
+
+// convert a matrix structure into a matrix
+void d_cvt_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
+	{
+	int bs = sA->bs;
+	double *pA = sA->pA;
+	int pm = sA->pm;
+	int cn = sA->cn;
+	d_cvt_pmat2mat(m, n, ai, pA+ai/bs*bs*cn+ai%bs+aj*bs, cn, A, lda);
+	return;
+	}
+
+// convert and transpose a matrix structure into a matrix
+void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
+	{
+	int bs = sA->bs;
+	double *pA = sA->pA;
+	int pm = sA->pm;
+	int cn = sA->cn;
+	d_cvt_tran_pmat2mat(m, n, ai, pA+ai/bs*bs*cn+ai%bs+aj*bs, cn, A, lda);
 	return;
 	}
 
@@ -231,6 +254,7 @@ void dgetrf_nopivot_libst(int m, int n, struct d_strmat *sC, int ci, int cj, str
 
 
 
+// linear algebra provided by BLAS
 #elif defined(BLAS_LA)
 
 
@@ -314,6 +338,54 @@ void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA
 		for(; ii<m; ii++)
 			{
 			pA[jj+(ii+0)*lda2] = A[ii+0+jj*lda];
+			}
+		}
+	return;
+	}
+
+// convert a matrix structure into a matrix 
+void d_cvt_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
+	{
+	int ii, jj;
+	int lda2 = sA->m;
+	double *pA = sA->pA + ai + aj*lda2;
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			A[ii+0+jj*lda] = pA[ii+0+jj*lda2];
+			A[ii+1+jj*lda] = pA[ii+1+jj*lda2];
+			A[ii+2+jj*lda] = pA[ii+2+jj*lda2];
+			A[ii+3+jj*lda] = pA[ii+3+jj*lda2];
+			}
+		for(; ii<m; ii++)
+			{
+			A[ii+0+jj*lda] = pA[ii+0+jj*lda2];
+			}
+		}
+	return;
+	}
+
+// convert and transpose a matrix structure into a matrix 
+void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
+	{
+	int ii, jj;
+	int lda2 = sA->m;
+	double *pA = sA->pA + ai + aj*lda2;
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m; ii++)
+			{
+			A[ii+0+jj*lda] = pA[jj+(ii+0)*lda2];
+			A[ii+1+jj*lda] = pA[jj+(ii+1)*lda2];
+			A[ii+2+jj*lda] = pA[jj+(ii+2)*lda2];
+			A[ii+3+jj*lda] = pA[jj+(ii+3)*lda2];
+			}
+		for(; ii<m; ii++)
+			{
+			A[ii+0+jj*lda] = pA[jj+(ii+0)*lda2];
 			}
 		}
 	return;

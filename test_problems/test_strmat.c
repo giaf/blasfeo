@@ -50,7 +50,7 @@ int main()
 #endif
 		int ii;
 
-	int n = 6;
+	int n = 8;
 
 	//
 	// matrices in column-major format
@@ -62,6 +62,8 @@ int main()
 	double *B; d_zeros(&B, n, n);
 	for(ii=0; ii<n; ii++) B[ii*(n+1)] = 1.0;
 //	d_print_mat(n, n, B, n);
+
+	double *C; d_zeros(&C, n, n);
 
 	//
 	// matrices in matrix struct format
@@ -116,8 +118,13 @@ int main()
 //	d_print_strmat(n, n, &sD, 0, 0);
 //	d_print_strmat(n, n, &sE, 0, 0);
 
+	d_cvt_strmat2mat(n, n, &sE, 0, 0, C, n);
+	d_print_mat(n, n, C, n);
+
+	// free memory
 	free(A);
 	free(B);
+	free(C);
 //	d_free_strmat(&sA);
 //	d_free_strmat(&sB);
 //	d_free_strmat(&sD);
