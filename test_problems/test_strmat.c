@@ -48,7 +48,8 @@ int main()
 	exit(2);
 
 #endif
-		int ii;
+
+	int ii;
 
 	int n = 8;
 
@@ -120,6 +121,14 @@ int main()
 
 	d_cvt_strmat2mat(n, n, &sE, 0, 0, C, n);
 	d_print_mat(n, n, C, n);
+
+
+
+	for(ii=0; ii<sE.pm*sE.cn; ii++) sE.pA[ii] = 0.0;
+	double alpha = 0.0;
+	double beta = 1.0;
+	kernel_dgemm_nt_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 3, sA.pA, sA.cn, 0, sE.pA, sE.cn, 0, 4, 4);
+	d_print_strmat(n, n, &sE, 0, 0);
 
 	// free memory
 	free(A);
