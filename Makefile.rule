@@ -39,6 +39,10 @@ TARGET = X64_INTEL_SANDY_BRIDGE
 LA = BLASFEO
 #LA = BLAS
 
+# operative system
+OS = LINUX
+#OS = MAC
+
 # Macro level: 0 (no macro), 1 (all macro but gemm kernel), 2 (all macro)
 MACRO_LEVEL = 0
 
@@ -48,10 +52,6 @@ PREFIX = /opt
 # C Compiler
 CC = gcc
 #CC = clang
-
-# operative system
-OS = LINUX
-#OS = MAC
 
 # Common optimization/debugging flags
 COMMON_FLAGS = -O2 -fPIC
@@ -71,6 +71,15 @@ ASFLAGS += -DMACRO_LEVEL=1
 endif
 ifeq ($(MACRO_LEVEL), 2)
 ASFLAGS += -DMACRO_LEVEL=2
+endif
+
+ifeq ($(OS), LINUX)
+OS_FLAGS = -DOS_LINUX
+ASFLAGS += -DOS_LINUX
+endif
+ifeq ($(OS), MAC)
+OS_FLAGS = -DOS_MAC
+ASFLAGS += -DOS_MAC
 endif
 
 # compare against standard BLAS and LAPACK in test problems
@@ -98,19 +107,19 @@ endif
 
 # architecture-specific optimization flags
 ifeq ($(TARGET), X64_INTEL_HASWELL)
-CFLAGS = $(COMMON_FLAGS) -m64 -mavx2 -mfma -DTARGET_X64_INTEL_HASWELL $(LA_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
+CFLAGS = $(COMMON_FLAGS) -m64 -mavx2 -mfma -DTARGET_X64_INTEL_HASWELL $(LA_FLAGS) $(OS_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
 endif
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-CFLAGS = $(COMMON_FLAGS) -m64 -mavx -DTARGET_X64_INTEL_SANDY_BRIDGE $(LA_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
+CFLAGS = $(COMMON_FLAGS) -m64 -mavx -DTARGET_X64_INTEL_SANDY_BRIDGE $(LA_FLAGS) $(OS_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
 endif
 ifeq ($(TARGET), X64_INTEL_CORE)
-CFLAGS = $(COMMON_FLAGS) -m64 -msse3 -DTARGET_X64_INTEL_CORE $(LA_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
+CFLAGS = $(COMMON_FLAGS) -m64 -msse3 -DTARGET_X64_INTEL_CORE $(LA_FLAGS) $(OS_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
 endif
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
-CFLAGS = $(COMMON_FLAGS) -m64 -mavx -mfma -DTARGET_X64_AMD_BULLDOZER $(LA_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
+CFLAGS = $(COMMON_FLAGS) -m64 -mavx -mfma -DTARGET_X64_AMD_BULLDOZER $(LA_FLAGS) $(OS_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
 endif
 ifeq ($(TARGET), GENERIC)
-CFLAGS = $(COMMON_FLAGS) -march=native -DTARGET_GENERIC $(LA_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
+CFLAGS = $(COMMON_FLAGS) -march=native -DTARGET_GENERIC $(LA_FLAGS) $(OS_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
 endif
 
 
