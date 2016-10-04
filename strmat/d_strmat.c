@@ -162,16 +162,16 @@ void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
 	}
 
 // dgemm nt
-void dgemm_nt_libst(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
-	{
-	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
-		{
-		printf("\nfeature not implemented yet\n\n");
-		exit(1);
-		}
-	dgemm_nt_lib(m, n, k, alpha, sA->pA+aj*sA->bs, sA->cn, sB->pA+bj*sB->bs, sB->cn, beta, sC->pA+cj*sC->bs, sC->cn, sD->pA+dj*sD->bs, sD->cn); 
-	return;
-	}
+//void dgemm_nt_libst(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+//	{
+//	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
+//		{
+//		printf("\nfeature not implemented yet\n\n");
+//		exit(1);
+//		}
+//	dgemm_nt_lib(m, n, k, alpha, sA->pA+aj*sA->bs, sA->cn, sB->pA+bj*sB->bs, sB->cn, beta, sC->pA+cj*sC->bs, sC->cn, sD->pA+dj*sD->bs, sD->cn); 
+//	return;
+//	}
 
 // dtrsm_nn_llu
 void dtrsm_llnu_libst(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)

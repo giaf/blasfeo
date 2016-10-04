@@ -28,6 +28,10 @@
 
 
 
+/****************************
+* old interface
+****************************/
+
 void dgemm_nt_lib(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *pC, int sdc, double *pD, int sdd)
 	{
 
@@ -1390,6 +1394,150 @@ void dlauum_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *pA, int
 	}
 #endif
 
+
+
+/****************************
+* new interface
+****************************/
+
+#if defined(BLASFEO_LA)
+
+#include "../strmat/d_strmat.h"
+
+void dgemm_nt_libst(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+
+	if(m<=0 || n<=0)
+		return;
+	
+	const int bs = 4;
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	double *pA = sA->pA + aj*bs;
+	double *pB = sB->pA + bj*bs;
+	double *pC = sC->pA + cj*bs;
+	double *pD = sD->pA + dj*bs;
+
+	if(ai==0 & bi==0 & ci==0 & di==0)
+		{
+		dgemm_nt_lib(m, n, k, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd); 
+		return;
+		}
+	
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+
+// TODO bi !!!!! by adding n0 n1 to the kernel !!!!!
+
+	pA += ai/bs*bs*sda;
+	pB += bi/bs*bs*sda;
+	int ci0 = ci-ai%bs;
+	int di0 = di-ai%bs;
+	int offsetC;
+	int offsetD;
+
+	if(ci0>=0)
+		{
+		pC += ci0/bs*bs*sdd;
+		offsetC = ci0%bs;
+		}
+	else
+		{
+		pC += -4*sdc;
+		offsetC = bs+ci0;
+		}
+	if(di0>=0)
+		{
+		pD += di0/bs*bs*sdd;
+		offsetD = di0%bs;
+		}
+	else
+		{
+		pD += -4*sdd;
+		offsetD = bs+di0;
+		}
+	
+	int cj0 = cj-bi%bs;
+	int dj0 = dj-bi%bs;
+
+	if(cj0>=0)
+		{
+		pC += cj0*bs;
+//		offsetC = ci0%bs;
+		}
+	else
+		{
+//		pC += -4*bs;
+//		offsetC = bs+ci0;
+		}
+	if(dj0>=0)
+		{
+		pD += dj0*bs;
+//		offsetD = di0%bs;
+		}
+	else
+		{
+//		pD += -4*bs;
+//		offsetD = bs+di0;
+		}
+
+//	printf("\n%d %d %d %d %d %d %d %d\n", ci0, ci0/bs*bs*sdc, ci0%bs, offsetC, di0, di0/bs*bs*sdd, di0%bs, offsetD);
+
+	int i, j, l;
+
+	int idxB;
+
+	i = 0;
+	// clean up at the beginning
+	if(ai%bs!=0)
+		{
+		j = 0;
+		idxB = 0;
+		if(bi%bs!=0)
+			{
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, ai%bs, m-i, bi%bs<n-j ? bi%bs : n-j);
+			idxB += 4;
+			}
+		for(; j<n; j+=4)
+			{
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, ai%bs, m-i, n-j);
+			idxB += 4;
+			}
+		m -= bs-ai%bs;
+		pA += bs*sda;
+		pC += bs*sdc;
+		pD += bs*sdd;
+		}
+	// main loop
+	for(; i<m; i+=4)
+		{
+		j = 0;
+		if(bi%bs!=0)
+			{
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, 0, m-i, bi%bs<n-j ? bi%bs : n-j);
+			idxB += 4;
+			}
+		for(; j<n; j+=4)
+			{
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, 0, m-i, n-j);
+			idxB += 4;
+			}
+		}
+
+	return;
+
+#else
+
+		printf("\nfeature not implemented yet\n\n");
+		exit(1);
+
+#endif
+
+	}
+
+#endif
 
 
 

@@ -51,6 +51,7 @@ void dtrmv_ut_lib(int m, double *pA, int sda, double *x, int alg, double *y, dou
 
 // D <= beta * C + alpha * A * B'
 void dgemm_nt_lib(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *pC, int sdc, double *pD, int sdd);
+void dgemm_nt_libst(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj);
 // D <= beta * C + alpha * A * B
 void dgemm_nn_lib(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *pC, int sdc, double *pD, int sdd);
 // D <= beta * C + alpha * A * B' ; C, D lower triangular

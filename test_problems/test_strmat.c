@@ -51,7 +51,7 @@ int main()
 
 	int ii;
 
-	int n = 8;
+	int n = 16;
 
 	//
 	// matrices in column-major format
@@ -97,38 +97,39 @@ int main()
 	d_create_strmat(n, n, &sE, ptr_memory_strmat);
 	ptr_memory_strmat += sE.memory_size;
 
-	dgemm_nt_libst(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
+	dgemm_nt_libst(8, 8, 8, 1.0, &sA, 5, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 5, 0);
+	d_print_strmat(n, n, &sB, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
 
 //	dpotrf_libst(n, 2, &sD, 0, 0, &sD, 0, 0);
-	dgetrf_nopivot_libst(n, n, &sD, 0, 0, &sD, 0, 0);
-	d_print_strmat(n, n, &sD, 0, 0);
+//	dgetrf_nopivot_libst(n, n, &sD, 0, 0, &sD, 0, 0);
+//	d_print_strmat(n, n, &sD, 0, 0);
 
-	dtrsm_llnu_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
-	d_print_strmat(n, n, &sE, 0, 0);
-	dtrsm_lunn_libst(n, n, 1.0, &sD, 0, 0, &sE, 0, 0, &sE, 0, 0);
-	d_print_strmat(n, n, &sE, 0, 0);
+//	dtrsm_llnu_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
+//	d_print_strmat(n, n, &sE, 0, 0);
+//	dtrsm_lunn_libst(n, n, 1.0, &sD, 0, 0, &sE, 0, 0, &sE, 0, 0);
+//	d_print_strmat(n, n, &sE, 0, 0);
 
-	dtrsm_rltu_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
-	d_print_strmat(n, n, &sE, 0, 0);
-	dtrsm_rutn_libst(n, n, 1.0, &sD, 0, 0, &sE, 0, 0, &sE, 0, 0);
-	d_print_strmat(n, n, &sE, 0, 0);
+//	dtrsm_rltu_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
+//	d_print_strmat(n, n, &sE, 0, 0);
+//	dtrsm_rutn_libst(n, n, 1.0, &sD, 0, 0, &sE, 0, 0, &sE, 0, 0);
+//	d_print_strmat(n, n, &sE, 0, 0);
 
 //	d_print_strmat(n, n, &sA, 0, 0);
 //	d_print_strmat(n, n, &sB, 0, 0);
 //	d_print_strmat(n, n, &sD, 0, 0);
 //	d_print_strmat(n, n, &sE, 0, 0);
 
-	d_cvt_strmat2mat(n, n, &sE, 0, 0, C, n);
-	d_print_mat(n, n, C, n);
+//	d_cvt_strmat2mat(n, n, &sE, 0, 0, C, n);
+//	d_print_mat(n, n, C, n);
 
 
 
-	for(ii=0; ii<sE.pm*sE.cn; ii++) sE.pA[ii] = 0.0;
-	double alpha = 0.0;
-	double beta = 1.0;
-	kernel_dgemm_nt_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 3, sA.pA, sA.cn, 0, sE.pA, sE.cn, 0, 4, 4);
-	d_print_strmat(n, n, &sE, 0, 0);
+//	for(ii=0; ii<sE.pm*sE.cn; ii++) sE.pA[ii] = 0.0;
+//	double alpha = 0.0;
+//	double beta = 1.0;
+//	kernel_dgemm_nt_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 3, sA.pA, sA.cn, 0, sE.pA, sE.cn, 0, 4, 4);
+//	d_print_strmat(n, n, &sE, 0, 0);
 
 	// free memory
 	free(A);
