@@ -7987,22 +7987,28 @@ _kernel_dlauum_nt_4x4_vs_lib4:
 
 
 	// read-only data
-	.section	.rodata.cst32,"aM",@progbits,32
-#if 1
-	.align 32
 #if defined(OS_LINUX)
+	.section	.rodata.cst32,"aM",@progbits,32
+#elif defined(OS_MAC)
+	.section	__TEXT,__const
+#endif
+#if 1
+#if defined(OS_LINUX)
+	.align 32
 .LC00: // { -1 -1 -1 1 }
 #elif defined(OS_MAC)
+	.align 5
 LC00: // { -1 -1 -1 1 }
 #endif
 	.quad	-1
 	.quad	-1
 	.quad	-1
 	.quad	1
-	.align 32
 #if defined(OS_LINUX)
+	.align 32
 .LC01: // { -1 -1 -1 -1 }
 #elif defined(OS_MAC)
+	.align 5
 LC01: // { -1 -1 -1 -1 }
 #endif
 	.quad	-1
@@ -8010,10 +8016,11 @@ LC01: // { -1 -1 -1 -1 }
 	.quad	-1
 	.quad	-1
 #endif
-	.align 32
 #if defined(OS_LINUX)
+	.align 32
 .LC02: // { 3.5 2.5 1.5 0.5 }
 #elif defined(OS_MAC)
+	.align 5
 LC02: // { 3.5 2.5 1.5 0.5 }
 #endif
 	.long	0
@@ -8024,10 +8031,11 @@ LC02: // { 3.5 2.5 1.5 0.5 }
 	.long	1074003968
 	.long	0
 	.long	1074528256
-	.align 32
 #if defined(OS_LINUX)
+	.align 32
 .LC03: // { 7.5 6.5 5.5 4.5 }
 #elif defined(OS_MAC)
+	.align 5
 LC03: // { 7.5 6.5 5.5 4.5 }
 #endif
 	.long	0
@@ -8038,20 +8046,26 @@ LC03: // { 7.5 6.5 5.5 4.5 }
 	.long	1075445760
 	.long	0
 	.long	1075707904
-	.align 16
 #if defined(OS_LINUX)
+	.align 32
 .LC04: // { 1.0 1.0 }
 #elif defined(OS_MAC)
-LC04: // { 1.0 1.0 }
+	.align 5
+LC04: // { 1.0 1.0 1.0 1.0 }
 #endif
 	.long	0
 	.long	1072693248
 	.long	0
 	.long	1072693248
-	.align 32
+	.long	0
+	.long	1072693248
+	.long	0
+	.long	1072693248
 #if defined(OS_LINUX)
+	.align 32
 .LC05: // { 1.0 1.0 1.0 -1.0 }
 #elif defined(OS_MAC)
+	.align 5
 LC05: // { 1.0 1.0 1.0 -1.0 }
 #endif
 	.long	0
@@ -8062,10 +8076,11 @@ LC05: // { 1.0 1.0 1.0 -1.0 }
 	.long	1072693248
 	.long	0
 	.long	1072693248
-	.align 32
 #if defined(OS_LINUX)
+	.align 32
 .LC06: // { 1.0 1.0 -1.0 -1.0 }
 #elif defined(OS_MAC)
+	.align 5
 LC06: // { 1.0 1.0 -1.0 -1.0 }
 #endif
 	.long	0
@@ -8076,10 +8091,11 @@ LC06: // { 1.0 1.0 -1.0 -1.0 }
 	.long	1072693248
 	.long	0
 	.long	1072693248
-	.align 32
 #if defined(OS_LINUX)
+	.align 32
 .LC07: // { 1.0 -1.0 -1.0 -1.0 }
 #elif defined(OS_MAC)
+	.align 5
 LC07: // { 1.0 -1.0 -1.0 -1.0 }
 #endif
 	.long	0
@@ -8090,10 +8106,11 @@ LC07: // { 1.0 -1.0 -1.0 -1.0 }
 	.long	-1074790400
 	.long	0
 	.long	1072693248
-	.align 32
 #if defined(OS_LINUX)
+	.align 32
 .LC08: // { -1.0 -1.0 -1.0 1.0 }
 #elif defined(OS_MAC)
+	.align 5
 LC08: // { -1.0 -1.0 -1.0 1.0 }
 #endif
 	.long	0
@@ -8104,10 +8121,11 @@ LC08: // { -1.0 -1.0 -1.0 1.0 }
 	.long	-1074790400
 	.long	0
 	.long	-1074790400
-	.align 32
 #if defined(OS_LINUX)
+	.align 32
 .LC09: // { -1.0 -1.0 1.0 1.0 }
 #elif defined(OS_MAC)
+	.align 5
 LC09: // { -1.0 -1.0 1.0 1.0 }
 #endif
 	.long	0
@@ -8118,10 +8136,11 @@ LC09: // { -1.0 -1.0 1.0 1.0 }
 	.long	-1074790400
 	.long	0
 	.long	-1074790400
-	.align 32
 #if defined(OS_LINUX)
+	.align 32
 .LC10: // { -1.0 1.0 1.0 1.0 }
 #elif defined(OS_MAC)
+	.align 5
 LC10: // { -1.0 1.0 1.0 1.0 }
 #endif
 	.long	0
