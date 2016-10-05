@@ -29,7 +29,11 @@
 //.LSTR:
 //	.string	"\n%d %d %d\n"
 
+#if defined(OS_LINUX)
 	.text
+#elif defined(OS_MAC)
+	.section	__TEXT,__text,regular,pure_instructions
+#endif
 
 // common inner routine with file scope
 //
@@ -76,8 +80,12 @@
 	.macro INNER_KERNEL_DGEMV_ADD_N_8_LIB4
 #else
 	.p2align 4,,15
+#if defined(OS_LINUX)
 	.type inner_kernel_dgemv_add_n_8_lib4, @function
 inner_kernel_dgemv_add_n_8_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dgemv_add_n_8_lib4:
+#endif
 #endif
 	
 	cmpl	$0, %r10d
@@ -177,7 +185,9 @@ inner_kernel_dgemv_add_n_8_lib4:
 #else
 	ret
 
+#if defined(OS_LINUX)
 	.size	inner_kernel_dgemv_add_n_8_lib4, .-inner_kernel_dgemv_add_n_8_lib4
+#endif
 #endif
 
 
@@ -236,8 +246,12 @@ inner_kernel_dgemv_add_n_8_lib4:
 	.macro INNER_KERNEL_DGEMV_ADD_T_8_LIB4
 #else
 	.p2align 4,,15
+#if defined(OS_LINUX)
 	.type inner_kernel_dgemv_add_t_8_lib4, @function
 inner_kernel_dgemv_add_t_8_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dgemv_add_t_8_lib4:
+#endif
 #endif
 
 	cmpl	$0, %r10d
@@ -320,7 +334,11 @@ inner_kernel_dgemv_add_t_8_lib4:
 1: // clean-up
 	
 	vcvtsi2sd	%r10d, %xmm14, %xmm14
+#if defined(OS_LINUX)
 	vmovupd		.LC02(%rip), %ymm13
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %ymm13
+#endif
 	vmovddup	%xmm14, %xmm14
 	vinsertf128	$1, %xmm14, %ymm14, %ymm14
 	vsubpd		%ymm14, %ymm13, %ymm14
@@ -373,7 +391,9 @@ inner_kernel_dgemv_add_t_8_lib4:
 #else
 	ret
 
+#if defined(OS_LINUX)
 	.size	inner_kernel_dgemv_add_t_8_lib4, .-inner_kernel_dgemv_add_t_8_lib4
+#endif
 #endif
 
 
@@ -425,8 +445,12 @@ inner_kernel_dgemv_add_t_8_lib4:
 	.macro INNER_EDGE_DTRMV_UN_8_LIB4
 #else
 	.p2align 4,,15
+#if defined(OS_LINUX)
 	.type inner_edge_dtrmv_un_8_lib4, @function
 inner_edge_dtrmv_un_8_lib4:
+#elif defined(OS_MAC)
+_inner_edge_dtrmv_un_8_lib4:
+#endif
 #endif
 	
 	movq	%r11, %r15 // A1 <- A0
@@ -514,7 +538,9 @@ inner_edge_dtrmv_un_8_lib4:
 #else
 	ret
 
+#if defined(OS_LINUX)
 	.size	inner_edge_dtrmv_un_8_lib4, .-inner_edge_dtrmv_un_8_lib4
+#endif
 #endif
 
 
@@ -557,8 +583,12 @@ inner_edge_dtrmv_un_8_lib4:
 	.macro INNER_BLEND_N_SCALE_AB_8_LIB4
 #else
 	.p2align 4,,15
+#if defined(OS_LINUX)
 	.type inner_blend_n_scale_ab_8_lib4, @function
 inner_blend_n_scale_ab_8_lib4:
+#elif defined(OS_MAC)
+_inner_blend_n_scale_ab_8_lib4:
+#endif
 #endif
 
 	// reduction
@@ -584,7 +614,9 @@ inner_blend_n_scale_ab_8_lib4:
 #else
 	ret
 	
+#if defined(OS_LINUX)
 	.size	inner_blend_n_scale_ab_8_lib4, .-inner_blend_n_scale_ab_8_lib4
+#endif
 #endif
 
 
@@ -631,8 +663,12 @@ inner_blend_n_scale_ab_8_lib4:
 	.macro INNER_BLEND_T_SCALE_AB_8_LIB4
 #else
 	.p2align 4,,15
+#if defined(OS_LINUX)
 	.type inner_blend_t_scale_ab_8_lib4, @function
 inner_blend_t_scale_ab_8_lib4:
+#elif defined(OS_MAC)
+_inner_blend_t_scale_ab_8_lib4:
+#endif
 #endif
 
 	// reduction
@@ -666,7 +702,9 @@ inner_blend_t_scale_ab_8_lib4:
 #else
 	ret
 	
+#if defined(OS_LINUX)
 	.size	inner_blend_t_scale_ab_8_lib4, .-inner_blend_t_scale_ab_8_lib4
+#endif
 #endif
 
 
@@ -707,8 +745,12 @@ inner_blend_t_scale_ab_8_lib4:
 	.macro INNER_BLENDER_N_8_LIB4
 #else
 	.p2align 4,,15
+#if defined(OS_LINUX)
 	.type inner_blender_n_8_lib4, @function
 inner_blender_n_8_lib4:
+#elif defined(OS_MAC)
+_inner_blender_n_8_lib4:
+#endif
 #endif
 
 	// reduction
@@ -744,7 +786,9 @@ inner_blender_n_8_lib4:
 #else
 	ret
 	
+#if defined(OS_LINUX)
 	.size	inner_blender_n_8_lib4, .-inner_blender_n_8_lib4
+#endif
 #endif
 
 
@@ -790,8 +834,12 @@ inner_blender_n_8_lib4:
 	.macro INNER_BLENDER_T_8_LIB4
 #else
 	.p2align 4,,15
+#if defined(OS_LINUX)
 	.type inner_blender_t_8_lib4, @function
 inner_blender_t_8_lib4:
+#elif defined(OS_MAC)
+_inner_blender_t_8_lib4:
+#endif
 #endif
 
 	// reduction
@@ -835,7 +883,9 @@ inner_blender_t_8_lib4:
 #else
 	ret
 	
+#if defined(OS_LINUX)
 	.size	inner_blender_t_8_lib4, .-inner_blender_t_8_lib4
+#endif
 #endif
 
 
@@ -860,8 +910,12 @@ inner_blender_t_8_lib4:
 	.macro INNER_STORE_8_LIB4
 #else
 	.p2align 4,,15
+#if defined(OS_LINUX)
 	.type inner_store_8_lib4, @function
 inner_store_8_lib4:
+#elif defined(OS_MAC)
+_inner_store_8_lib4:
+#endif
 #endif
 	
 	vmovupd %ymm0, 0(%r10)
@@ -872,7 +926,9 @@ inner_store_8_lib4:
 #else
 	ret
 
+#if defined(OS_LINUX)
 	.size	inner_store_8_lib4, .-inner_store_8_lib4
+#endif
 #endif
 
 
@@ -883,9 +939,14 @@ inner_store_8_lib4:
 // void kernel_dgemv_n_8_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
 
 	.p2align 4,,15
+#if defined(OS_LINUX)
 	.globl kernel_dgemv_n_8_lib4
 	.type kernel_dgemv_n_8_lib4, @function
 kernel_dgemv_n_8_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dgemv_n_8_lib4
+_kernel_dgemv_n_8_lib4:
+#endif
 	
 	// prologue
 
@@ -920,7 +981,7 @@ kernel_dgemv_n_8_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_N_8_LIB4
 #else
-	call inner_kernel_dgemv_add_n_8_lib4
+	callq _inner_kernel_dgemv_add_n_8_lib4
 #endif
 
 
@@ -933,7 +994,7 @@ kernel_dgemv_n_8_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_SCALE_AB_8_LIB4
 #else
-	call inner_blend_n_scale_ab_8_lib4
+	callq _inner_blend_n_scale_ab_8_lib4
 #endif
 
 
@@ -945,7 +1006,7 @@ kernel_dgemv_n_8_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB4
 #else
-	call inner_store_8_lib4
+	callq _inner_store_8_lib4
 #endif
 
 
@@ -963,7 +1024,9 @@ kernel_dgemv_n_8_lib4:
 
 	ret
 
+#if defined(OS_LINUX)
 	.size	kernel_dgemv_n_8_lib4, .-kernel_dgemv_n_8_lib4
+#endif
 
 
 
@@ -973,9 +1036,14 @@ kernel_dgemv_n_8_lib4:
 // void kernel_dgemv_t_8_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
 
 	.p2align 4,,15
+#if defined(OS_LINUX)
 	.globl kernel_dgemv_t_8_lib4
 	.type kernel_dgemv_t_8_lib4, @function
 kernel_dgemv_t_8_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dgemv_t_8_lib4
+_kernel_dgemv_t_8_lib4:
+#endif
 	
 	// prologue
 
@@ -1014,7 +1082,7 @@ kernel_dgemv_t_8_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_T_8_LIB4
 #else
-	call inner_kernel_dgemv_add_t_8_lib4
+	callq _inner_kernel_dgemv_add_t_8_lib4
 #endif
 
 
@@ -1027,7 +1095,7 @@ kernel_dgemv_t_8_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_8_LIB4
 #else
-	call inner_blend_t_scale_ab_8_lib4
+	callq _inner_blend_t_scale_ab_8_lib4
 #endif
 
 
@@ -1038,7 +1106,7 @@ kernel_dgemv_t_8_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB4
 #else
-	call inner_store_8_lib4
+	callq _inner_store_8_lib4
 #endif
 
 
@@ -1056,7 +1124,9 @@ kernel_dgemv_t_8_lib4:
 
 	ret
 
+#if defined(OS_LINUX)
 	.size	kernel_dgemv_t_8_lib4, .-kernel_dgemv_t_8_lib4
+#endif
 
 
 
@@ -1066,9 +1136,14 @@ kernel_dgemv_t_8_lib4:
 // void kernel_dtrmv_un_8_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
 
 	.p2align 4,,15
+#if defined(OS_LINUX)
 	.globl kernel_dtrmv_un_8_lib4
 	.type kernel_dtrmv_un_8_lib4, @function
 kernel_dtrmv_un_8_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dtrmv_un_8_lib4
+_kernel_dtrmv_un_8_lib4:
+#endif
 	
 	// prologue
 
@@ -1104,13 +1179,13 @@ kernel_dtrmv_un_8_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMV_UN_8_LIB4
 #else
-	call inner_edge_dtrmv_un_8_lib4
+	callq _inner_edge_dtrmv_un_8_lib4
 #endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_N_8_LIB4
 #else
-	call inner_kernel_dgemv_add_n_8_lib4
+	callq _inner_kernel_dgemv_add_n_8_lib4
 #endif
 
 
@@ -1122,7 +1197,7 @@ kernel_dtrmv_un_8_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLENDER_N_8_LIB4
 #else
-	call inner_blender_n_8_lib4
+	callq _inner_blender_n_8_lib4
 #endif
 
 
@@ -1133,7 +1208,7 @@ kernel_dtrmv_un_8_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB4
 #else
-	call inner_store_8_lib4
+	callq _inner_store_8_lib4
 #endif
 
 
@@ -1151,30 +1226,51 @@ kernel_dtrmv_un_8_lib4:
 
 	ret
 
+#if defined(OS_LINUX)
 	.size	kernel_dtrmv_un_8_lib4, .-kernel_dtrmv_un_8_lib4
+#endif
 
 
 
 
 
 	// read-only data
+#if defined(OS_LINUX)
 	.section	.rodata.cst32,"aM",@progbits,32
+#elif defined(OS_MAC)
+	.section	__TEXT,__const
+#endif
 #if 1
+#if defined(OS_LINUX)
 	.align 32
 .LC00: // { -1 -1 -1 1 }
+#elif defined(OS_MAC)
+LC00: // { -1 -1 -1 1 }
+	.align 5
+#endif
 	.quad	-1
 	.quad	-1
 	.quad	-1
 	.quad	1
+#if defined(OS_LINUX)
 	.align 32
 .LC01: // { -1 -1 -1 -1 }
+#elif defined(OS_MAC)
+LC01: // { -1 -1 -1 -1 }
+	.align 5
+#endif
 	.quad	-1
 	.quad	-1
 	.quad	-1
 	.quad	-1
 #endif
+#if defined(OS_LINUX)
 	.align 32
 .LC02: // { 3.5 2.5 1.5 0.5 }
+#elif defined(OS_MAC)
+LC02: // { 3.5 2.5 1.5 0.5 }
+	.align 5
+#endif
 	.long	0
 	.long	1071644672
 	.long	0
@@ -1183,8 +1279,13 @@ kernel_dtrmv_un_8_lib4:
 	.long	1074003968
 	.long	0
 	.long	1074528256
+#if defined(OS_LINUX)
 	.align 32
 .LC03: // { 7.5 6.5 5.5 4.5 }
+#elif defined(OS_MAC)
+LC03: // { 7.5 6.5 5.5 4.5 }
+	.align 5
+#endif
 	.long	0
 	.long	1074921472
 	.long	0
@@ -1193,14 +1294,27 @@ kernel_dtrmv_un_8_lib4:
 	.long	1075445760
 	.long	0
 	.long	1075707904
-	.align 16
-.LC04: // { 1 }
+#if defined(OS_LINUX)
+	.align 32
+.LC04: // { 1.0 1.0 1.0 1.0 }
+#elif defined(OS_MAC)
+LC04: // { 1.0 1.0 1.0 1.0 }
+	.align 5
+#endif
 	.long	0
 	.long	1072693248
 	.long	0
+	.long	1072693248
 	.long	0
+	.long	1072693248
+	.long	0
+	.long	1072693248
 
 
 
+#if defined(OS_LINUX)
 	.section	.note.GNU-stack,"",@progbits
+#elif defined(OS_MAC)
+	.subsections_via_symbols
+#endif
 

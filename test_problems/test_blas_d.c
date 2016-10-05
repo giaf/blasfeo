@@ -28,11 +28,11 @@
 #include <stdio.h>
 #include <sys/time.h>
 
+#include "../strmat/d_strmat.h"
+
 #include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_d_aux.h"
 #include "../include/blasfeo_d_blas.h"
-
-#include "../strmat/d_strmat.h"
 
 
 #if defined(REF_BLAS_OPENBLAS)
@@ -246,10 +246,10 @@ int main()
 		for(i=0; i<pnd; i++) x2[i] = 1;
 
 		// matrix struct
-		struct d_strmat sA; d_allocate_strmat(n, n, &sA);
-		struct d_strmat sB; d_allocate_strmat(n, n, &sB);
-		struct d_strmat sC; d_allocate_strmat(n, n, &sC);
-		struct d_strmat sD; d_allocate_strmat(n, n, &sD);
+		struct d_strmat sA; d_allocate_strmat(n+4, n+4, &sA);
+		struct d_strmat sB; d_allocate_strmat(n+4, n+4, &sB);
+		struct d_strmat sC; d_allocate_strmat(n+4, n+4, &sC);
+		struct d_strmat sD; d_allocate_strmat(n+4, n+4, &sD);
 
 		d_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
 		d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
@@ -274,7 +274,7 @@ int main()
 		for(rep=0; rep<nrep; rep++)
 			{
 
-//			dgemm_nt_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
+			dgemm_nt_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
 //			dgemm_nn_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
 //			dsyrk_nt_l_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 1.0, pC, cnd, pD, cnd);
 //			dtrmm_nt_ru_lib(n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
@@ -283,19 +283,19 @@ int main()
 //			dsyrk_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd);
 //			dpotrf_nt_l_lib(n, n, pD, cnd, pD, cnd, diag);
 //			dgetrf_nn_nopivot_lib(n, n, pD, cnd, pD, cnd, diag);
-			dtrsm_nn_ll_one_lib(n, n, pD, cnd, pB, cnd, pB, cnd);
+//			dtrsm_nn_ll_one_lib(n, n, pD, cnd, pB, cnd, pB, cnd);
 			}
 	
 		gettimeofday(&tv1, NULL); // stop
 
 		for(rep=0; rep<nrep; rep++)
 			{
-//			dgemm_nt_libst(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+			dgemm_nt_libst(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dpotrf_libst(n, n, &sD, 0, 0, &sD, 0, 0);
 //			dgetrf_nopivot_libst(n, n, &sD, 0, 0, &sD, 0, 0);
 //			dtrsm_llnu_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //			dtrsm_lunn_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-			dtrsm_rltu_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//			dtrsm_rltu_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //			dtrsm_rutn_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 			}
 
@@ -306,13 +306,13 @@ int main()
 		for(rep=0; rep<nrep; rep++)
 			{
 #if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
-//			dgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
+			dgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
 //			dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
 //			dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
 //			dtrmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
 //			dpotrf_(&c_l, &n, B2, &n, &info);
 //			dgetrf_(&n, &n, B2, &n, ipiv, &info);
-			dtrsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
+//			dtrsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
 //			dtrtri_(&c_l, &c_n, &n, B2, &n, &info);
 //			dlauum_(&c_l, &n, B, &n, &info);
 //			dgemv_(&c_n, &n, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
@@ -346,12 +346,8 @@ int main()
 
 		float Gflops_max = flops_max * GHz_max;
 
-#if defined(LOW_RANK)
-//		float flop_operation = 2.0*m*m*n; // dgemm
-		float flop_operation = 1.0*m*m*n; // dsyrk dtrmm
-#else
-//		float flop_operation = 2.0*n*n*n; // dgemm
-		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
+		float flop_operation = 2.0*n*n*n; // dgemm
+//		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
 //		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv
@@ -359,7 +355,6 @@ int main()
 //		float flop_operation = 4.0*n*n; // dgemv_nt
 
 //		float flop_operation = 4.0/3.0*n*n*n; // dsyrk+dpotrf
-#endif
 
 		float time_hpmpc    = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);
 		float time_blasfeo  = (float) (tv2.tv_sec-tv1.tv_sec)/(nrep+0.0)+(tv2.tv_usec-tv1.tv_usec)/(nrep*1e6);
