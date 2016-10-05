@@ -1429,8 +1429,6 @@ void dgemm_nt_libst(int m, int n, int k, double alpha, struct d_strmat *sA, int 
 	
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 
-// TODO bi !!!!! by adding n0 n1 to the kernel !!!!!
-
 	pA += ai/bs*bs*sda;
 	pB += bi/bs*bs*sda;
 	int ci0 = ci-ai%bs;
@@ -1459,32 +1457,6 @@ void dgemm_nt_libst(int m, int n, int k, double alpha, struct d_strmat *sA, int 
 		offsetD = bs+di0;
 		}
 	
-	int cj0 = cj-bi%bs;
-	int dj0 = dj-bi%bs;
-
-	if(cj0>=0)
-		{
-		pC += cj0*bs;
-//		offsetC = ci0%bs;
-		}
-	else
-		{
-//		pC += -4*bs;
-//		offsetC = bs+ci0;
-		}
-	if(dj0>=0)
-		{
-		pD += dj0*bs;
-//		offsetD = di0%bs;
-		}
-	else
-		{
-//		pD += -4*bs;
-//		offsetD = bs+di0;
-		}
-
-//	printf("\n%d %d %d %d %d %d %d %d\n", ci0, ci0/bs*bs*sdc, ci0%bs, offsetC, di0, di0/bs*bs*sdd, di0%bs, offsetD);
-
 	int i, j, l;
 
 	int idxB;
@@ -1495,14 +1467,17 @@ void dgemm_nt_libst(int m, int n, int k, double alpha, struct d_strmat *sA, int 
 		{
 		j = 0;
 		idxB = 0;
+		// clean up at the beginning
 		if(bi%bs!=0)
 			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, ai%bs, m-i, bi%bs<n-j ? bi%bs : n-j);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, ai%bs, m-i, bi%bs, n-j);
+			j += bs-bi%bs;
 			idxB += 4;
 			}
+		// main loop
 		for(; j<n; j+=4)
 			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, ai%bs, m-i, n-j);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, ai%bs, m-i, 0, n-j);
 			idxB += 4;
 			}
 		m -= bs-ai%bs;
@@ -1514,14 +1489,18 @@ void dgemm_nt_libst(int m, int n, int k, double alpha, struct d_strmat *sA, int 
 	for(; i<m; i+=4)
 		{
 		j = 0;
+		idxB = 0;
+		// clean up at the beginning
 		if(bi%bs!=0)
 			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, 0, m-i, bi%bs<n-j ? bi%bs : n-j);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, 0, m-i, bi%bs, n-j);
+			j += bs-bi%bs;
 			idxB += 4;
 			}
+		// main loop
 		for(; j<n; j+=4)
 			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, 0, m-i, n-j);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, 0, m-i, 0, n-j);
 			idxB += 4;
 			}
 		}
