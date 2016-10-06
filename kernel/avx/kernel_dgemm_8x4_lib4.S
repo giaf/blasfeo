@@ -2369,7 +2369,7 @@ _inner_blend_scale_ab_8x4_gen_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_blend_scale_ab_8x4_lib4, .-inner_blend_scale_ab_8x4_lib4
+	.size	inner_blend_scale_ab_8x4_gen_lib4, .-inner_blend_scale_ab_8x4_gen_lib4
 #endif
 #endif
 

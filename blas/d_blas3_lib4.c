@@ -1430,7 +1430,7 @@ void dgemm_nt_libst(int m, int n, int k, double alpha, struct d_strmat *sA, int 
 		return;
 		}
 	
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 
 	pA += ai/bs*bs*sda;
 	pB += bi/bs*bs*sda;
@@ -1468,7 +1468,7 @@ void dgemm_nt_libst(int m, int n, int k, double alpha, struct d_strmat *sA, int 
 	// clean up at the beginning
 	if(ai%bs!=0)
 		{
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		if(m-i>5)
 			{
 			j = 0;
@@ -1513,14 +1513,14 @@ void dgemm_nt_libst(int m, int n, int k, double alpha, struct d_strmat *sA, int 
 			pA += bs*sda;
 			pC += bs*sdc;
 			pD += bs*sdd;
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 			// nothing more to do
 			return;
 #endif
 			}
 		}
 	// main loop
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; i<m-4; i+=8)
 		{
 		j = 0;
