@@ -30,9 +30,9 @@
 
 
 // i_aux_extern_depend_lib
-void i_zeros(int **pA, int row, int col);
-void i_zeros_align(int **pA, int row, int col);
-void i_free(int *pA);
-void i_free_align(int *pA);
-void i_print_mat(int row, int col, int *A, int lda);
+void int_zeros(int **pA, int row, int col);
+void int_zeros_align(int **pA, int row, int col);
+void int_free(int *pA);
+void int_free_align(int *pA);
+void int_print_mat(int row, int col, int *A, int lda);
 

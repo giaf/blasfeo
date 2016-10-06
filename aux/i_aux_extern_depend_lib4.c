@@ -40,7 +40,7 @@ int posix_memalign(void **memptr, size_t alignment, size_t size);
 
 
 /* creates a zero matrix aligned */
-void i_zeros(int **pA, int row, int col)
+void int_zeros(int **pA, int row, int col)
 	{
 	void *temp = malloc((row*col)*sizeof(int));
 	*pA = temp;
@@ -52,7 +52,7 @@ void i_zeros(int **pA, int row, int col)
 
 
 /* creates a zero matrix aligned to a cache line */
-void i_zeros_align(int **pA, int row, int col)
+void int_zeros_align(int **pA, int row, int col)
 	{
 #if defined(OS_WINDOWS)
 	*pA = (int *) _aligned_malloc( (row*col)*sizeof(int), 64 );
@@ -74,7 +74,7 @@ void i_zeros_align(int **pA, int row, int col)
 
 
 /* frees matrix */
-void i_free(int *pA)
+void int_free(int *pA)
 	{
 	free( pA );
 	}
@@ -82,7 +82,7 @@ void i_free(int *pA)
 
 
 /* frees aligned matrix */
-void i_free_align(int *pA)
+void int_free_align(int *pA)
 	{
 #if defined(OS_WINDOWS)
 	_aligned_free( pA );
@@ -94,7 +94,7 @@ void i_free_align(int *pA)
 
 
 /* prints a matrix in column-major format */
-void i_print_mat(int row, int col, int *A, int lda)
+void int_print_mat(int row, int col, int *A, int lda)
 	{
 	int i, j;
 	for(i=0; i<row; i++)
