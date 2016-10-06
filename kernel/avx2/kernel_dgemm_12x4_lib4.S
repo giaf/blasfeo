@@ -3261,7 +3261,11 @@ _kernel_dgemm_nt_12x4_a0_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_add_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -3272,7 +3276,11 @@ _kernel_dgemm_nt_12x4_a0_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_A0_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_a0_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_a0_12x4_lib4
+#endif
 #endif
 
 
@@ -3286,7 +3294,11 @@ _kernel_dgemm_nt_12x4_a0_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_12x4_lib4
+#endif
 #endif
 
 
@@ -3366,7 +3378,11 @@ _kernel_dgemm_nt_12x4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_add_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -3382,7 +3398,11 @@ _kernel_dgemm_nt_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_AB_SCALE_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_ab_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_ab_12x4_lib4
+#endif
 #endif
 
 
@@ -3396,7 +3416,11 @@ _kernel_dgemm_nt_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_12x4_lib4
+#endif
 #endif
 
 
@@ -3476,7 +3500,11 @@ _kernel_dgemm_nt_12x4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_add_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -3492,7 +3520,11 @@ _kernel_dgemm_nt_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_AB_SCALE_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_ab_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_ab_12x4_lib4
+#endif
 #endif
 
 
@@ -3509,7 +3541,11 @@ _kernel_dgemm_nt_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_VS_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_12x4_vs_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_12x4_vs_lib4
+#endif
 #endif
 
 
@@ -3589,7 +3625,11 @@ _kernel_dsyrk_nt_l_12x4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_add_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -3605,7 +3645,11 @@ _kernel_dsyrk_nt_l_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_AB_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_ab_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_ab_12x4_lib4
+#endif
 #endif
 
 
@@ -3619,7 +3663,11 @@ _kernel_dsyrk_nt_l_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_l_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_l_12x4_lib4
+#endif
 #endif
 
 	// epilogue
@@ -3698,7 +3746,11 @@ _kernel_dsyrk_nt_l_12x4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_add_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -3714,7 +3766,11 @@ _kernel_dsyrk_nt_l_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_AB_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_ab_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_ab_12x4_lib4
+#endif
 #endif
 
 
@@ -3731,7 +3787,11 @@ _kernel_dsyrk_nt_l_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_12X4_VS_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_l_12x4_vs_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_l_12x4_vs_lib4
+#endif
 #endif
 
 	// epilogue
@@ -3814,7 +3874,11 @@ _kernel_dtrmm_nt_ru_12x4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_add_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -3823,7 +3887,11 @@ _kernel_dtrmm_nt_ru_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_12x4_lib4
+#endif
 #endif
 
 
@@ -3838,7 +3906,11 @@ _kernel_dtrmm_nt_ru_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_edge_dtrmm_nt_ru_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_edge_dtrmm_nt_ru_12x4_lib4
+#endif
 #endif
 
 
@@ -3854,7 +3926,11 @@ _kernel_dtrmm_nt_ru_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_scale_ab_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_scale_ab_12x4_lib4
+#endif
 #endif
 
 
@@ -3868,7 +3944,11 @@ _kernel_dtrmm_nt_ru_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_12x4_lib4
+#endif
 #endif
 
 
@@ -3952,7 +4032,11 @@ _kernel_dtrmm_nt_ru_12x4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_add_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -3961,7 +4045,11 @@ _kernel_dtrmm_nt_ru_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_12x4_lib4
+#endif
 #endif
 
 
@@ -3976,7 +4064,11 @@ _kernel_dtrmm_nt_ru_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_edge_dtrmm_nt_ru_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_edge_dtrmm_nt_ru_12x4_lib4
+#endif
 #endif
 
 
@@ -3992,7 +4084,11 @@ _kernel_dtrmm_nt_ru_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_scale_ab_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_scale_ab_12x4_lib4
+#endif
 #endif
 
 
@@ -4009,7 +4105,11 @@ _kernel_dtrmm_nt_ru_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_VS_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_12x4_vs_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_12x4_vs_lib4
+#endif
 #endif
 
 
@@ -4089,7 +4189,11 @@ _kernel_dpotrf_nt_l_12x4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -4103,7 +4207,11 @@ _kernel_dpotrf_nt_l_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_11_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_11_12x4_lib4
+#endif
 #endif
 
 
@@ -4114,7 +4222,11 @@ _kernel_dpotrf_nt_l_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DPOTRF_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_edge_dpotrf_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_edge_dpotrf_12x4_lib4
+#endif
 #endif
 
 
@@ -4128,7 +4240,11 @@ _kernel_dpotrf_nt_l_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_l_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_l_12x4_lib4
+#endif
 #endif
 
 
@@ -4208,7 +4324,11 @@ _kernel_dpotrf_nt_l_12x4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -4222,7 +4342,11 @@ _kernel_dpotrf_nt_l_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_11_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_11_12x4_lib4
+#endif
 #endif
 
 
@@ -4234,7 +4358,11 @@ _kernel_dpotrf_nt_l_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DPOTRF_12X4_VS_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_edge_dpotrf_12x4_vs_lib4
+#elif defined(OS_MAC)
 	callq _inner_edge_dpotrf_12x4_vs_lib4
+#endif
 #endif
 
 
@@ -4251,7 +4379,11 @@ _kernel_dpotrf_nt_l_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_12X4_VS_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_l_12x4_vs_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_l_12x4_vs_lib4
+#endif
 #endif
 
 
@@ -4331,7 +4463,11 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_add_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -4347,7 +4483,11 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -4361,7 +4501,11 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_11_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_11_12x4_lib4
+#endif
 #endif
 
 
@@ -4372,7 +4516,11 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DPOTRF_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_edge_dpotrf_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_edge_dpotrf_12x4_lib4
+#endif
 #endif
 
 
@@ -4386,7 +4534,11 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_l_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_l_12x4_lib4
+#endif
 #endif
 
 
@@ -4466,7 +4618,11 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_add_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -4482,7 +4638,11 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -4496,7 +4656,11 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_11_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_11_12x4_lib4
+#endif
 #endif
 
 
@@ -4508,7 +4672,11 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DPOTRF_12X4_VS_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_edge_dpotrf_12x4_vs_lib4
+#elif defined(OS_MAC)
 	callq _inner_edge_dpotrf_12x4_vs_lib4
+#endif
 #endif
 
 
@@ -4525,7 +4693,11 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_12X4_VS_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_l_12x4_vs_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_l_12x4_vs_lib4
+#endif
 #endif
 
 
@@ -4605,7 +4777,11 @@ _kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -4619,7 +4795,11 @@ _kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_11_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_11_12x4_lib4
+#endif
 #endif
 
 
@@ -4632,7 +4812,11 @@ _kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_INV_12X4_VS_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_edge_dtrsm_rlt_inv_12x4_vs_lib4
+#elif defined(OS_MAC)
 	callq _inner_edge_dtrsm_rlt_inv_12x4_vs_lib4
+#endif
 #endif
 
 
@@ -4649,7 +4833,11 @@ _kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_VS_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_12x4_vs_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_12x4_vs_lib4
+#endif
 #endif
 
 
@@ -4729,7 +4917,11 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_add_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -4745,7 +4937,11 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -4759,7 +4955,11 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_11_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_11_12x4_lib4
+#endif
 #endif
 
 
@@ -4772,7 +4972,11 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_INV_12X4_VS_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_edge_dtrsm_rlt_inv_12x4_vs_lib4
+#elif defined(OS_MAC)
 	callq _inner_edge_dtrsm_rlt_inv_12x4_vs_lib4
+#endif
 #endif
 
 
@@ -4789,7 +4993,11 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_VS_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_12x4_vs_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_12x4_vs_lib4
+#endif
 #endif
 
 
@@ -4869,7 +5077,11 @@ _kernel_dtrsm_nt_rl_inv_12x4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -4883,7 +5095,11 @@ _kernel_dtrsm_nt_rl_inv_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_11_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_11_12x4_lib4
+#endif
 #endif
 
 
@@ -4895,7 +5111,11 @@ _kernel_dtrsm_nt_rl_inv_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_INV_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_edge_dtrsm_rlt_inv_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_edge_dtrsm_rlt_inv_12x4_lib4
+#endif
 #endif
 
 
@@ -4909,7 +5129,11 @@ _kernel_dtrsm_nt_rl_inv_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_12x4_lib4
+#endif
 #endif
 
 
@@ -4989,7 +5213,11 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_add_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -5005,7 +5233,11 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -5019,7 +5251,11 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_11_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_11_12x4_lib4
+#endif
 #endif
 
 
@@ -5031,7 +5267,11 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_INV_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_edge_dtrsm_rlt_inv_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_edge_dtrsm_rlt_inv_12x4_lib4
+#endif
 #endif
 
 
@@ -5045,7 +5285,11 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_12x4_lib4
+#endif
 #endif
 
 
@@ -5125,7 +5369,11 @@ _kernel_dtrsm_nt_rl_one_12x4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -5139,7 +5387,11 @@ _kernel_dtrsm_nt_rl_one_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_11_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_11_12x4_lib4
+#endif
 #endif
 
 
@@ -5150,7 +5402,11 @@ _kernel_dtrsm_nt_rl_one_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_ONE_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_edge_dtrsm_rlt_one_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_edge_dtrsm_rlt_one_12x4_lib4
+#endif
 #endif
 
 
@@ -5164,7 +5420,11 @@ _kernel_dtrsm_nt_rl_one_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_12x4_lib4
+#endif
 #endif
 
 
@@ -5244,7 +5504,11 @@ _kernel_dtrsm_nt_rl_one_12x4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -5258,7 +5522,11 @@ _kernel_dtrsm_nt_rl_one_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_11_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_11_12x4_lib4
+#endif
 #endif
 
 
@@ -5270,7 +5538,11 @@ _kernel_dtrsm_nt_rl_one_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_ONE_12X4_VS_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_edge_dtrsm_rlt_one_12x4_vs_lib4
+#elif defined(OS_MAC)
 	callq _inner_edge_dtrsm_rlt_one_12x4_vs_lib4
+#endif
 #endif
 
 
@@ -5287,7 +5559,11 @@ _kernel_dtrsm_nt_rl_one_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_VS_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_12x4_vs_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_12x4_vs_lib4
+#endif
 #endif
 
 
@@ -5367,7 +5643,11 @@ _kernel_dtrsm_nt_ru_inv_12x4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -5381,7 +5661,11 @@ _kernel_dtrsm_nt_ru_inv_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_11_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_11_12x4_lib4
+#endif
 #endif
 
 
@@ -5393,7 +5677,11 @@ _kernel_dtrsm_nt_ru_inv_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RUT_INV_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_edge_dtrsm_rut_inv_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_edge_dtrsm_rut_inv_12x4_lib4
+#endif
 #endif
 
 
@@ -5407,7 +5695,11 @@ _kernel_dtrsm_nt_ru_inv_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_12x4_lib4
+#endif
 #endif
 
 
@@ -5487,7 +5779,11 @@ _kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
 #endif
 
 
@@ -5501,7 +5797,11 @@ _kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_blend_scale_11_12x4_lib4
+#elif defined(OS_MAC)
 	callq _inner_blend_scale_11_12x4_lib4
+#endif
 #endif
 
 
@@ -5514,7 +5814,11 @@ _kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RUT_INV_12X4_VS_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_edge_dtrsm_rut_inv_12x4_vs_lib4
+#elif defined(OS_MAC)
 	callq _inner_edge_dtrsm_rut_inv_12x4_vs_lib4
+#endif
 #endif
 
 
@@ -5531,7 +5835,11 @@ _kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_VS_LIB4
 #else
+#if defined(OS_LINUX)
+	call inner_store_12x4_vs_lib4
+#elif defined(OS_MAC)
 	callq _inner_store_12x4_vs_lib4
+#endif
 #endif
 
 
@@ -5619,9 +5927,24 @@ LC03: // { 7.5 6.5 5.5 4.5 }
 	.long	1075707904
 #if defined(OS_LINUX)
 	.align 32
-.LC04: // { 1.0 1.0 1.0 1.0 }
+.LC04: // { 11.5 10.5 9.5 8.5 }
 #elif defined(OS_MAC)
-LC04: // { 1.0 1.0 1.0 1.0 }
+LC04: // { 11.5 10.5 9.5 8.5 }
+	.align 5
+#endif
+	.long	0
+	.long	1075904512
+	.long	0
+	.long	1076035584
+	.long	0
+	.long	1076166656
+ 	.long	0
+	.long	1076297728
+#if defined(OS_LINUX)
+	.align 32
+.LC05: // { 1.0 1.0 1.0 1.0 }
+#elif defined(OS_MAC)
+LC05: // { 1.0 1.0 1.0 1.0 }
 	.align 5
 #endif
 	.long	0
