@@ -3,7 +3,10 @@
 # This file is part of BLASFEO.                                                                   #
 #                                                                                                 #
 # BLASFEO -- BLAS For Embedded Optimization.                                                      #
-# Copyright (C) 2016 by Gianluca Frison. All rights reserved.                                     #
+# Copyright (C) 2016 by Gianluca Frison.                                                          #
+# Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl and at        #
+# DTU Compute (Technical University of Denmark) under the supervision of John Bagterp Jorgensen.  #
+# All rights reserved.                                                                            #
 #                                                                                                 #
 # HPMPC is free software; you can redistribute it and/or                                          #
 # modify it under the terms of the GNU Lesser General Public                                      #

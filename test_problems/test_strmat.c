@@ -3,7 +3,10 @@
 * This file is part of BLASFEO.                                                                   *
 *                                                                                                 *
 * BLASFEO -- BLAS For Embedded Optimization.                                                      *
-* Copyright (C) 2016 by Gianluca Frison. All rights reserved.                                     *
+* Copyright (C) 2016 by Gianluca Frison.                                                          *
+* Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl and at        *
+* DTU Compute (Technical University of Denmark) under the supervision of John Bagterp Jorgensen.  *
+* All rights reserved.                                                                            *
 *                                                                                                 *
 * HPMPC is free software; you can redistribute it and/or                                          *
 * modify it under the terms of the GNU Lesser General Public                                      *
@@ -97,7 +100,7 @@ int main()
 	d_create_strmat(n, n, &sE, ptr_memory_strmat);
 	ptr_memory_strmat += sE.memory_size;
 
-	dgemm_nt_libst(8, 8, 8, 1.0, &sA, 5, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 5, 0);
+	dgemm_nt_libst(8, 8, 8, 1.0, &sA, 5, 0, &sA, 5, 0, 1.0, &sB, 0, 0, &sD, 5, 2);
 	d_print_strmat(n, n, &sB, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
 
@@ -128,7 +131,7 @@ int main()
 //	for(ii=0; ii<sE.pm*sE.cn; ii++) sE.pA[ii] = 0.0;
 //	double alpha = 0.0;
 //	double beta = 1.0;
-//	kernel_dgemm_nt_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 3, sA.pA, sA.cn, 0, sE.pA, sE.cn, 0, 4, 4);
+//	kernel_dgemm_nt_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 3, sA.pA, sA.cn, 0, sE.pA, sE.cn, 0, 4, 2, 2);
 //	d_print_strmat(n, n, &sE, 0, 0);
 
 	// free memory
