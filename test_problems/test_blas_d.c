@@ -223,7 +223,7 @@ int main()
 		double *x2; d_zeros_align(&x2, pnd, 1);
 		double *y2; d_zeros_align(&y2, pnd, 1);
 		double *diag; d_zeros_align(&diag, pnd, 1);
-		int *ipiv; i_zeros(&ipiv, n, 1);
+		int *ipiv; int_zeros(&ipiv, n, 1);
 
 #if defined(LOW_RANK)
 		int pmd = ((m+bsd-1)/bsd)*bsd;	
@@ -253,6 +253,7 @@ int main()
 		struct d_strmat sB; d_allocate_strmat(n+4, n+4, &sB);
 		struct d_strmat sC; d_allocate_strmat(n+4, n+4, &sC);
 		struct d_strmat sD; d_allocate_strmat(n+4, n+4, &sD);
+		struct d_strmat sE; d_allocate_strmat(n+4, n+4, &sE);
 
 		d_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
 		d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
@@ -293,7 +294,12 @@ int main()
 
 		for(rep=0; rep<nrep; rep++)
 			{
+#if 0
+			dgemm_nt_libst(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sE, 0, 0);
+			dgecp_lib(n, n, 0, sE.pA, sE.cn, 1, sD.pA+1, sD.cn);
+#else
 			dgemm_nt_libst(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+#endif
 //			dpotrf_libst(n, n, &sD, 0, 0, &sD, 0, 0);
 //			dgetrf_nopivot_libst(n, n, &sD, 0, 0, &sD, 0, 0);
 //			dtrsm_llnu_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
@@ -400,6 +406,7 @@ int main()
 		d_free_strmat(&sB);
 		d_free_strmat(&sC);
 		d_free_strmat(&sD);
+		d_free_strmat(&sE);
 
 		}
 

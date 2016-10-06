@@ -27,61 +27,19 @@
 #                                                                                                 #
 ###################################################################################################
 
-include ../Makefile.rule
+include ../../Makefile.rule
 
 OBJS = 
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
-OBJS += d_aux_lib4.o d_aux_extern_depend_lib4.o
-OBJS += s_aux_lib4.o s_aux_extern_depend_lib4.o
-OBJS += i_aux_extern_depend_lib4.o 
+OBJS += kernel_dgecp_lib4.o 
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-OBJS += d_aux_lib4.o d_aux_extern_depend_lib4.o
-OBJS += s_aux_lib4.o s_aux_extern_depend_lib4.o
-OBJS += i_aux_extern_depend_lib4.o 
-endif
-
-ifeq ($(TARGET), X64_INTEL_CORE)
-OBJS += d_aux_lib4.o d_aux_extern_depend_lib4.o
-OBJS += s_aux_lib4.o s_aux_extern_depend_lib4.o
-OBJS += i_aux_extern_depend_lib4.o 
-endif
-
-ifeq ($(TARGET), X64_AMD_BULLDOZER)
-OBJS += d_aux_lib4.o d_aux_extern_depend_lib4.o
-OBJS += s_aux_lib4.o s_aux_extern_depend_lib4.o
-OBJS += i_aux_extern_depend_lib4.o 
-endif
-
-ifeq ($(TARGET), GENERIC)
-OBJS += d_aux_lib4.o d_aux_extern_depend_lib4.o
-OBJS += s_aux_lib4.o s_aux_extern_depend_lib4.o
-OBJS += i_aux_extern_depend_lib4.o 
+OBJS += kernel_dgecp_lib4.o kernel_dgetr_lib4.o
 endif
 
 obj: $(OBJS)
-ifeq ($(TARGET), X64_INTEL_HASWELL)
-	( cd avx2; $(MAKE) obj)
-	( cd avx; $(MAKE) obj)
-endif
-ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-	( cd avx; $(MAKE) obj)
-endif
-ifeq ($(TARGET), X64_INTEL_CORE)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), X64_AMD_BULLDOZER)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), GENERIC)
-	( cd c99; $(MAKE) obj)
-endif
-
 
 clean:
 	rm -f *.o
-	make -C avx2 clean
-	make -C avx clean
-	make -C c99 clean

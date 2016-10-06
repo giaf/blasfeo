@@ -400,3 +400,1449 @@ void d_cvt_tran_pmat2mat(int row, int col, int offset, double *pA, int sda, doub
 	}
 
 
+
+// copies a packed matrix into a packed matrix
+void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, double *B, int sdb)
+	{
+
+	if(m<=0 || n<=0)
+		return;
+
+	const int bs = 4;
+
+	int mna, ii;
+
+	int offA = offsetA%bs;
+	int offB = offsetB%bs;
+
+	// A at the beginning of the block
+	A -= offA;
+
+	// A at the beginning of the block
+	B -= offB;
+
+	// same alignment
+	if(offA==offB)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_dgecp_1_0_lib4(0, n, A+offA, B+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_dgecp_2_0_lib4(0, n, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecp_1_0_lib4(0, n, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecp_2_0_lib4(0, n, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecp_3_0_lib4(0, n, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecp_8_0_lib4(0, n, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecp_4_0_lib4(0, n, A, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecp_1_0_lib4(0, n, A, B);
+			else if(m-ii==2)
+				kernel_dgecp_2_0_lib4(0, n, A, B);
+			else // if(m-ii==3)
+				kernel_dgecp_3_0_lib4(0, n, A, B);
+			}
+		}
+	// skip one element of A
+	else if(offA==(offB+1)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_dgecp_1_0_lib4(0, n, A+offA, B+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_dgecp_2_0_lib4(0, n, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecp_1_0_lib4(0, n, A+offA, B+offB);
+				//A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecp_2_3_lib4(0, n, A, sda, B+2);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecp_3_2_lib4(0, n, A, sda, B+1);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+		for( ; ii<m-7; ii+=8)
+			{
+			kernel_dgecp_8_1_lib4(0, n, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for( ; ii<m-3; ii+=4)
+			{
+			kernel_dgecp_4_1_lib4(0, n, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecp_1_0_lib4(0, n, A+1, B);
+			else if(m-ii==2)
+				kernel_dgecp_2_0_lib4(0, n, A+1, B);
+			else // if(m-ii==3)
+				kernel_dgecp_3_0_lib4(0, n, A+1, B);
+			}
+		}
+	// skip 2 elements of A
+	else if(offA==(offB+2)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_dgecp_1_0_lib4(0, n, A+offA, B+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_dgecp_2_3_lib4(0, n, A, sda, B+1);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecp_1_0_lib4(0, n, A+1, B+3);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecp_2_0_lib4(0, n, A, B+2);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecp_3_3_lib4(0, n, A, sda, B+1);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecp_8_2_lib4(0, n, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecp_4_2_lib4(0, n, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecp_1_0_lib4(0, n, A+2, B);
+			else if(m-ii==2)
+				kernel_dgecp_2_0_lib4(0, n, A+2, B);
+			else // if(m-ii==3)
+				kernel_dgecp_3_2_lib4(0, n, A, sda, B);
+			}
+		}
+	// skip 3 elements of A
+	else // if(offA==(offB+3)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_dgecp_1_0_lib4(0, n, A+offA, B+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_dgecp_2_0_lib4(0, n, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecp_1_0_lib4(0, n, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecp_2_0_lib4(0, n, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecp_3_0_lib4(0, n, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecp_8_3_lib4(0, n, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecp_4_3_lib4(0, n, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecp_1_0_lib4(0, n, A+3, B);
+			else if(m-ii==2)
+				kernel_dgecp_2_3_lib4(0, n, A, sda, B);
+			else // if(m-ii==3)
+				kernel_dgecp_3_3_lib4(0, n, A, sda, B);
+			}
+		}
+
+	}
+
+
+
+// copies a lower triangular packed matrix into a lower triangular packed matrix
+void dtrcp_l_lib(int m, int offsetA, double *A, int sda, int offsetB, double *B, int sdb)
+	{
+
+	if(m<=0)
+		return;
+	
+	int n = m;
+
+	const int bs = 4;
+
+	int mna, ii;
+
+	int offA = offsetA%bs;
+	int offB = offsetB%bs;
+
+	// A at the beginning of the block
+	A -= offA;
+
+	// A at the beginning of the block
+	B -= offB;
+
+	// same alignment
+	if(offA==offB)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_dgecp_1_0_lib4(1, ii, A+offA, B+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_dgecp_2_0_lib4(1, ii, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecp_1_0_lib4(1, ii, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecp_2_0_lib4(1, ii, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecp_3_0_lib4(1, ii, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecp_8_0_lib4(1, ii, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecp_4_0_lib4(1, ii, A, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecp_1_0_lib4(1, ii, A, B);
+			else if(m-ii==2)
+				kernel_dgecp_2_0_lib4(1, ii, A, B);
+			else // if(m-ii==3)
+				kernel_dgecp_3_0_lib4(1, ii, A, B);
+			}
+		}
+	// skip one element of A
+	else if(offA==(offB+1)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_dgecp_1_0_lib4(1, ii, A+offA, B+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_dgecp_2_0_lib4(1, ii, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecp_1_0_lib4(1, ii, A+offA, B+offB);
+				//A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecp_2_3_lib4(1, ii, A, sda, B+2);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecp_3_2_lib4(1, ii, A, sda, B+1);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+		for( ; ii<m-7; ii+=8)
+			{
+			kernel_dgecp_8_1_lib4(1, ii, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for( ; ii<m-3; ii+=4)
+			{
+			kernel_dgecp_4_1_lib4(1, ii, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecp_1_0_lib4(1, ii, A+1, B);
+			else if(m-ii==2)
+				kernel_dgecp_2_0_lib4(1, ii, A+1, B);
+			else // if(m-ii==3)
+				kernel_dgecp_3_0_lib4(1, ii, A+1, B);
+			}
+		}
+	// skip 2 elements of A
+	else if(offA==(offB+2)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_dgecp_1_0_lib4(1, ii, A+offA, B+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_dgecp_2_3_lib4(1, ii, A, sda, B+1);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecp_1_0_lib4(1, ii, A+1, B+3);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecp_2_0_lib4(1, ii, A, B+2);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecp_3_3_lib4(1, ii, A, sda, B+1);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecp_8_2_lib4(1, ii, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecp_4_2_lib4(1, ii, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecp_1_0_lib4(1, ii, A+2, B);
+			else if(m-ii==2)
+				kernel_dgecp_2_0_lib4(1, ii, A+2, B);
+			else // if(m-ii==3)
+				kernel_dgecp_3_2_lib4(1, ii, A, sda, B);
+			}
+		}
+	// skip 3 elements of A
+	else // if(offA==(offB+3)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_dgecp_1_0_lib4(1, ii, A+offA, B+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_dgecp_2_0_lib4(1, ii, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecp_1_0_lib4(1, ii, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecp_2_0_lib4(1, ii, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecp_3_0_lib4(1, ii, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecp_8_3_lib4(1, ii, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecp_4_3_lib4(1, ii, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecp_1_0_lib4(1, ii, A+3, B);
+			else if(m-ii==2)
+				kernel_dgecp_2_3_lib4(1, ii, A, sda, B);
+			else // if(m-ii==3)
+				kernel_dgecp_3_3_lib4(1, ii, A, sda, B);
+			}
+		}
+
+	}
+
+
+
+// scaled and adds a packed matrix into a packed matrix: B = B + alpha*A
+void dgead_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb)
+	{
+
+	if(m<=0 || n<=0)
+		return;
+
+	const int bs = 4;
+
+	int mna, ii;
+
+	int offA = offsetA%bs;
+	int offB = offsetB%bs;
+
+	// A at the beginning of the block
+	A -= offA;
+
+	// A at the beginning of the block
+	B -= offB;
+
+	// same alignment
+	if(offA==offB)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_dgead_1_0_lib4(n, alpha, A+offA, B+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_dgead_2_0_lib4(n, alpha, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgead_1_0_lib4(n, alpha, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgead_2_0_lib4(n, alpha, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgead_3_0_lib4(n, alpha, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgead_8_0_lib4(n, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgead_4_0_lib4(n, alpha, A, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgead_1_0_lib4(n, alpha, A, B);
+			else if(m-ii==2)
+				kernel_dgead_2_0_lib4(n, alpha, A, B);
+			else // if(m-ii==3)
+				kernel_dgead_3_0_lib4(n, alpha, A, B);
+			}
+		}
+	// skip one element of A
+	else if(offA==(offB+1)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_dgead_1_0_lib4(n, alpha, A+offA, B+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_dgead_2_0_lib4(n, alpha, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgead_1_0_lib4(n, alpha, A+offA, B+offB);
+				//A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgead_2_3_lib4(n, alpha, A, sda, B+2);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgead_3_2_lib4(n, alpha, A, sda, B+1);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+		for( ; ii<m-7; ii+=8)
+			{
+			kernel_dgead_8_1_lib4(n, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for( ; ii<m-3; ii+=4)
+			{
+			kernel_dgead_4_1_lib4(n, alpha, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgead_1_0_lib4(n, alpha, A+1, B);
+			else if(m-ii==2)
+				kernel_dgead_2_0_lib4(n, alpha, A+1, B);
+			else // if(m-ii==3)
+				kernel_dgead_3_0_lib4(n, alpha, A+1, B);
+			}
+		}
+	// skip 2 elements of A
+	else if(offA==(offB+2)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_dgead_1_0_lib4(n, alpha, A+offA, B+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_dgead_2_3_lib4(n, alpha, A, sda, B+1);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgead_1_0_lib4(n, alpha, A+1, B+3);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgead_2_0_lib4(n, alpha, A, B+2);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgead_3_3_lib4(n, alpha, A, sda, B+1);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgead_8_2_lib4(n, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgead_4_2_lib4(n, alpha, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgead_1_0_lib4(n, alpha, A+2, B);
+			else if(m-ii==2)
+				kernel_dgead_2_0_lib4(n, alpha, A+2, B);
+			else // if(m-ii==3)
+				kernel_dgead_3_2_lib4(n, alpha, A, sda, B);
+			}
+		}
+	// skip 3 elements of A
+	else // if(offA==(offB+3)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_dgead_1_0_lib4(n, alpha, A+offA, B+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_dgead_2_0_lib4(n, alpha, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgead_1_0_lib4(n, alpha, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgead_2_0_lib4(n, alpha, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgead_3_0_lib4(n, alpha, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgead_8_3_lib4(n, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgead_4_3_lib4(n, alpha, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgead_1_0_lib4(n, alpha, A+3, B);
+			else if(m-ii==2)
+				kernel_dgead_2_3_lib4(n, alpha, A, sda, B);
+			else // if(m-ii==3)
+				kernel_dgead_3_3_lib4(n, alpha, A, sda, B);
+			}
+		}
+
+	}
+
+
+
+// transpose general matrix; m and n are referred to the original matrix
+void dgetr_lib(int m, int n, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc)
+	{
+
+/*
+
+m = 5
+n = 3
+offsetA = 1
+offsetC = 2
+
+A = 
+ x x x
+ -
+ x x x
+ x x x
+ x x x
+ x x x
+
+C =
+ x x x x x
+ x x x x x
+ -
+ x x x x x
+
+*/
+
+	if(m<=0 || n<=0)
+		return;
+
+	const int bs = 4;
+
+	int mna = (bs-offsetA%bs)%bs;
+	mna = m<mna ? m : mna;
+	int nna = (bs-offsetC%bs)%bs;
+	nna = n<nna ? n : nna;
+	
+	int ii;
+
+	ii = 0;
+
+	if(mna>0)
+		{
+		if(mna==1)
+			kernel_dgetr_1_lib4(0, n, nna, pA, pC, sdc);
+		else if(mna==2)
+			kernel_dgetr_2_lib4(0, n, nna, pA, pC, sdc);
+		else //if(mna==3)
+			kernel_dgetr_3_lib4(0, n, nna, pA, pC, sdc);
+		ii += mna;
+		pA += mna + bs*(sda-1);
+		pC += mna*bs;
+		}
+#if defined(TARGET_INTEL_HASWELL)
+	for( ; ii<m-7; ii+=8)
+		{
+		kernel_dgetr_8_lib4(0, n, nna, pA, sda, pC, sdc);
+		pA += 2*bs*sda;
+		pC += 2*bs*bs;
+		}
+#endif
+	for( ; ii<m-3; ii+=4)
+//	for( ; ii<m; ii+=4)
+		{
+		kernel_dgetr_4_lib4(0, n, nna, pA, pC, sdc);
+		pA += bs*sda;
+		pC += bs*bs;
+		}
+
+	// clean-up at the end using smaller kernels
+	if(ii==m)
+		return;
+	
+	if(m-ii==1)
+		kernel_dgetr_1_lib4(0, n, nna, pA, pC, sdc);
+	else if(m-ii==2)
+		kernel_dgetr_2_lib4(0, n, nna, pA, pC, sdc);
+	else if(m-ii==3)
+		kernel_dgetr_3_lib4(0, n, nna, pA, pC, sdc);
+		
+	return;
+	
+	}	
+
+
+
+// transpose lower triangular matrix
+void dtrtr_l_lib(int m, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc)
+	{
+
+/*
+
+A = 
+ x
+ x x
+ x x x
+ x x x x
+  
+ x x x x x
+ x x x x x x
+ x x x x x x x
+ x x x x x x x x
+
+C =
+ x x x x x x x x
+  
+   x x x x x x x
+     x x x x x x
+	   x x x x x
+	     x x x x
+
+	       x x x
+	         x x
+	           x
+
+*/
+
+	int n = m;
+
+	if(m<=0 || n<=0)
+		return;
+
+	const int bs = 4;
+
+	int mna = (bs-offsetA%bs)%bs;
+	mna = m<mna ? m : mna;
+	int nna = (bs-offsetC%bs)%bs;
+	nna = n<nna ? n : nna;
+	
+	int ii;
+
+	ii = 0;
+
+	if(mna>0)
+		{
+		if(mna==1)
+			{
+			pC[0] = pA[0];
+			}
+		else if(mna==2)
+			{
+			if(nna==1)
+				{
+				pC[0+bs*0] = pA[0+bs*0];
+				pC[0+bs*1] = pA[1+bs*0];
+				pC[1+bs*(0+sdc)] = pA[1+bs*1];
+				}
+			else
+				{
+				pC[0+bs*0] = pA[0+bs*0];
+				pC[0+bs*1] = pA[1+bs*0];
+				pC[1+bs*1] = pA[1+bs*1];
+				}
+			}
+		else //if(mna==3)
+			{
+			if(nna==1)
+				{
+				pC[0+bs*0] = pA[0+bs*0];
+				pC[0+bs*1] = pA[1+bs*0];
+				pC[0+bs*2] = pA[2+bs*0];
+				pC[1+bs*(0+sdc)] = pA[1+bs*1];
+				pC[1+bs*(1+sdc)] = pA[2+bs*1];
+				pC[2+bs*(1+sdc)] = pA[2+bs*2];
+				}
+			else if(nna==2)
+				{
+				pC[0+bs*0] = pA[0+bs*0];
+				pC[0+bs*1] = pA[1+bs*0];
+				pC[0+bs*2] = pA[2+bs*0];
+				pC[1+bs*1] = pA[1+bs*1];
+				pC[1+bs*2] = pA[2+bs*1];
+				pC[2+bs*(1+sdc)] = pA[2+bs*2];
+				}
+			else
+				{
+				pC[0+bs*0] = pA[0+bs*0];
+				pC[0+bs*1] = pA[1+bs*0];
+				pC[0+bs*2] = pA[2+bs*0];
+				pC[1+bs*1] = pA[1+bs*1];
+				pC[1+bs*2] = pA[2+bs*1];
+				pC[2+bs*2] = pA[2+bs*2];
+				}
+			}
+		ii += mna;
+		pA += mna + bs*(sda-1);
+		pC += mna*bs;
+		}
+#if 0 //defined(TARGET_INTEL_HASWELL)
+	for( ; ii<m-7; ii+=8)
+		{
+		kernel_dgetr_8_lib4(1, n, nna, pA, sda, pC, sdc);
+		pA += 2*bs*sda;
+		pC += 2*bs*bs;
+		}
+#endif
+	for( ; ii<m-3; ii+=4)
+		{
+		kernel_dgetr_4_lib4(1, ii, nna, pA, pC, sdc);
+		pA += bs*sda;
+		pC += bs*bs;
+		}
+	
+	// clean-up at the end using smaller kernels
+	if(ii==m)
+		return;
+	
+	if(m-ii==1)
+		kernel_dgetr_1_lib4(1, ii, nna, pA, pC, sdc);
+	else if(m-ii==2)
+		kernel_dgetr_2_lib4(1, ii, nna, pA, pC, sdc);
+	else if(m-ii==3)
+		kernel_dgetr_3_lib4(1, ii, nna, pA, pC, sdc);
+		
+	return;
+
+	}
+
+
+
+// transpose an aligned upper triangular matrix into an aligned lower triangular matrix
+void dtrtr_u_lib(int m, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc)
+	{
+
+/*
+
+A = 
+ x x x x x x x x
+   x x x x x x x
+
+     x x x x x x
+       x x x x x
+         x x x x
+           x x x
+             x x
+               x
+
+C = 
+ x
+
+ x x
+ x x x
+ x x x x
+ x x x x x
+ x x x x x x
+ x x x x x x x
+ x x x x x x x x
+
+*/
+
+	int n = m;
+
+	if(m<=0 || n<=0)
+		return;
+
+	const int bs = 4;
+
+	int mna = (bs-offsetA%bs)%bs;
+	mna = m<mna ? m : mna;
+	int nna = (bs-offsetC%bs)%bs;
+	nna = n<nna ? n : nna;
+	int tna = nna;
+	
+	int ii;
+
+	ii = 0;
+
+	if(mna>0)
+		{
+		if(mna==1)
+			{
+			kernel_dgetr_1_lib4(0, n, nna, pA, pC, sdc);
+			if(nna!=1)
+				{
+//				pC[0+bs*0] = pA[0+bs*0];
+				pA += 1*bs;
+				pC += 1;
+				tna = (bs-(offsetC+1)%bs)%bs;
+				}
+			else //if(nna==1)
+				{
+//				pC[0+bs*0] = pA[0+bs*0];
+				pA += 1*bs;
+				pC += 1 + (sdc-1)*bs;
+				tna = 0; //(bs-(offsetC+1)%bs)%bs;
+				}
+//			kernel_dgetr_1_lib4(0, n-1, tna, pA, pC, sdc);
+			}
+		else if(mna==2)
+			{
+			if(nna==0 || nna==3)
+				{
+				pC[0+bs*0] = pA[0+bs*0];
+				pC[1+bs*0] = pA[0+bs*1];
+				pC[1+bs*1] = pA[1+bs*1];
+				pA += 2*bs;
+				pC += 2;
+				tna = (bs-(offsetC+2)%bs)%bs;
+				kernel_dgetr_2_lib4(0, n-2, tna, pA, pC, sdc);
+				}
+			else if(nna==1)
+				{
+				pC[0+bs*0] = pA[0+bs*0];
+				pA += 1*bs;
+				pC += 1 + (sdc-1)*bs;
+//				pC[0+bs*0] = pA[0+bs*0];
+//				pC[0+bs*1] = pA[1+bs*0];
+				kernel_dgetr_2_lib4(0, n-1, 0, pA, pC, sdc);
+				pA += 1*bs;
+				pC += 1;
+				tna = 3; //(bs-(offsetC+2)%bs)%bs;
+//				kernel_dgetr_2_lib4(0, n-2, tna, pA, pC, sdc);
+				}
+			else if(nna==2)
+				{
+				pC[0+bs*0] = pA[0+bs*0];
+				pC[1+bs*0] = pA[0+bs*1];
+				pC[1+bs*1] = pA[1+bs*1];
+				pA += 2*bs;
+				pC += 2 + (sdc-1)*bs;
+				tna = 0; //(bs-(offsetC+2)%bs)%bs;
+				kernel_dgetr_2_lib4(0, n-2, tna, pA, pC, sdc);
+				}
+			}
+		else //if(mna==3)
+			{
+			if(nna==0)
+				{
+				pC[0+bs*0] = pA[0+bs*0];
+				pC[1+bs*0] = pA[0+bs*1];
+				pC[1+bs*1] = pA[1+bs*1];
+				pC[2+bs*0] = pA[0+bs*2];
+				pC[2+bs*1] = pA[1+bs*2];
+				pC[2+bs*2] = pA[2+bs*2];
+				pA += 3*bs;
+				pC += 3;
+				tna = 1;
+				kernel_dgetr_3_lib4(0, n-3, tna, pA, pC, sdc);
+				}
+			else if(nna==1)
+				{
+				pC[0+bs*0] = pA[0+bs*0];
+				pA += bs;
+				pC += 1 + (sdc-1)*bs;
+				pC[0+bs*0] = pA[0+bs*0];
+				pC[0+bs*1] = pA[1+bs*0];
+				pC[1+bs*0] = pA[0+bs*1];
+				pC[1+bs*1] = pA[1+bs*1];
+				pC[1+bs*2] = pA[2+bs*1];
+				pA += 2*bs;
+				pC += 2;
+				tna = 2;
+				kernel_dgetr_3_lib4(0, n-3, tna, pA, pC, sdc);
+				}
+			else if(nna==2)
+				{
+				pC[0+bs*0] = pA[0+bs*0];
+				pC[1+bs*0] = pA[0+bs*1];
+				pC[1+bs*1] = pA[1+bs*1];
+				pA += 2*bs;
+				pC += 2 + (sdc-1)*bs;
+//				pC[0+bs*0] = pA[0+bs*0];
+//				pC[0+bs*1] = pA[1+bs*0];
+//				pC[0+bs*2] = pA[2+bs*0];
+				kernel_dgetr_3_lib4(0, n-2, 0, pA, pC, sdc);
+				pA += 1*bs;
+				pC += 1;
+				tna = 3;
+//				kernel_dgetr_3_lib4(0, n-3, tna, pA, pC, sdc);
+				}
+			else //if(nna==3)
+				{
+				pC[0+bs*0] = pA[0+bs*0];
+				pC[1+bs*0] = pA[0+bs*1];
+				pC[1+bs*1] = pA[1+bs*1];
+				pC[2+bs*0] = pA[0+bs*2];
+				pC[2+bs*1] = pA[1+bs*2];
+				pC[2+bs*2] = pA[2+bs*2];
+				pA += 3*bs;
+				pC += 3 + (sdc-1)*bs;
+				tna = 0;
+				kernel_dgetr_3_lib4(0, n-3, tna, pA, pC, sdc);
+				}
+			}
+		ii += mna;
+		pA += mna + bs*(sda-1);
+		pC += mna*bs;
+		}
+#if 0 //defined(TARGET_X64_AVX2)
+	for( ; ii<m-7; ii+=8)
+		{
+		kernel_dgetr_8_lib4(0, n, nna, pA, sda, pC, sdc);
+		pA += 2*bs*sda;
+		pC += 2*bs*bs;
+		}
+#endif
+	for( ; ii<m-3; ii+=4)
+		{
+		if(tna==0)
+			{
+			pC[0+bs*0] = pA[0+bs*0];
+			pC[1+bs*0] = pA[0+bs*1];
+			pC[1+bs*1] = pA[1+bs*1];
+			pC[2+bs*0] = pA[0+bs*2];
+			pC[2+bs*1] = pA[1+bs*2];
+			pC[2+bs*2] = pA[2+bs*2];
+			pC[3+bs*0] = pA[0+bs*3];
+			pC[3+bs*1] = pA[1+bs*3];
+			pC[3+bs*2] = pA[2+bs*3];
+			pC[3+bs*3] = pA[3+bs*3];
+			pA += 4*bs;
+			pC += sdc*bs;
+			kernel_dgetr_4_lib4(0, n-ii-4, 0, pA, pC, sdc);
+			}
+		else if(tna==1)
+			{
+			pC[0+bs*0] = pA[0+bs*0];
+			pA += bs;
+			pC += 1 + (sdc-1)*bs;
+			pC[0+bs*0] = pA[0+bs*0];
+			pC[0+bs*1] = pA[1+bs*0];
+			pC[1+bs*0] = pA[0+bs*1];
+			pC[1+bs*1] = pA[1+bs*1];
+			pC[1+bs*2] = pA[2+bs*1];
+			pC[2+bs*0] = pA[0+bs*2];
+			pC[2+bs*1] = pA[1+bs*2];
+			pC[2+bs*2] = pA[2+bs*2];
+			pC[2+bs*3] = pA[3+bs*2];
+			pA += 3*bs;
+			pC += 3;
+			kernel_dgetr_4_lib4(0, n-ii-4, 1, pA, pC, sdc);
+			}
+		else if(tna==2)
+			{
+			pC[0+bs*0] = pA[0+bs*0];
+			pC[1+bs*0] = pA[0+bs*1];
+			pC[1+bs*1] = pA[1+bs*1];
+			pA += 2*bs;
+			pC += 2 + (sdc-1)*bs;
+			pC[0+bs*0] = pA[0+bs*0];
+			pC[0+bs*1] = pA[1+bs*0];
+			pC[0+bs*2] = pA[2+bs*0];
+			pC[1+bs*0] = pA[0+bs*1];
+			pC[1+bs*1] = pA[1+bs*1];
+			pC[1+bs*2] = pA[2+bs*1];
+			pC[1+bs*3] = pA[3+bs*1];
+			pA += 2*bs;
+			pC += 2;
+			kernel_dgetr_4_lib4(0, n-ii-4, 2, pA, pC, sdc);
+			}
+		else //if(tna==3)
+			{
+			pC[0+bs*0] = pA[0+bs*0];
+			pC[1+bs*0] = pA[0+bs*1];
+			pC[1+bs*1] = pA[1+bs*1];
+			pC[2+bs*0] = pA[0+bs*2];
+			pC[2+bs*1] = pA[1+bs*2];
+			pC[2+bs*2] = pA[2+bs*2];
+			pA += 3*bs;
+			pC += 3 + (sdc-1)*bs;
+			kernel_dgetr_4_lib4(0, n-ii-3, 0, pA, pC, sdc);
+//			pC[0+bs*0] = pA[0+bs*0];
+//			pC[0+bs*1] = pA[1+bs*0];
+//			pC[0+bs*2] = pA[2+bs*0];
+//			pC[0+bs*3] = pA[3+bs*0];
+			pA += bs;
+			pC += 1;
+//			kernel_dgetr_4_lib4(0, n-ii-4, tna, pA, pC, sdc);
+			}
+		pA += bs*sda;
+		pC += bs*bs;
+		}
+
+	// clean-up at the end
+	if(ii==m)
+		return;
+	
+	if(m-ii==1)
+		{
+		pC[0+bs*0] = pA[0+bs*0];
+		}
+	else if(m-ii==2)
+		{
+		if(tna!=1)
+			{
+			pC[0+bs*0] = pA[0+bs*0];
+			pC[1+bs*0] = pA[0+bs*1];
+			pC[1+bs*1] = pA[1+bs*1];
+			}
+		else //if(tna==1)
+			{
+			pC[0+bs*0] = pA[0+bs*0];
+			pA += bs;
+			pC += 1 + (sdc-1)*bs;
+			pC[0+bs*0] = pA[0+bs*0];
+			pC[0+bs*1] = pA[1+bs*0];
+			}
+		}
+	else if(m-ii==3)
+		{
+		if(tna==0 || tna==3)
+			{
+			pC[0+bs*0] = pA[0+bs*0];
+			pC[1+bs*0] = pA[0+bs*1];
+			pC[1+bs*1] = pA[1+bs*1];
+			pC[2+bs*0] = pA[0+bs*2];
+			pC[2+bs*1] = pA[1+bs*2];
+			pC[2+bs*2] = pA[2+bs*2];
+			}
+		else if(tna==1)
+			{
+			pC[0+bs*0] = pA[0+bs*0];
+			pA += bs;
+			pC += 1 + (sdc-1)*bs;
+			pC[0+bs*0] = pA[0+bs*0];
+			pC[0+bs*1] = pA[1+bs*0];
+			pC[1+bs*0] = pA[0+bs*0];
+			pC[1+bs*1] = pA[1+bs*1];
+			pC[1+bs*2] = pA[2+bs*1];
+			}
+		else //if(tna==2)
+			{
+			pC[0+bs*0] = pA[0+bs*0];
+			pC[1+bs*0] = pA[0+bs*1];
+			pC[1+bs*1] = pA[1+bs*1];
+			pA += 2*bs;
+			pC += 2 + (sdc-1)*bs;
+			pC[0+bs*0] = pA[0+bs*0];
+			pC[0+bs*1] = pA[1+bs*0];
+			pC[0+bs*2] = pA[2+bs*0];
+			}
+		}
+		
+	return;
+
+	}
+
+
+
+

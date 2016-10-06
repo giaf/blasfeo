@@ -58,6 +58,7 @@ endif
 clean:
 	make -C avx2 clean
 	make -C avx clean
+	make -C sse3 clean
 	make -C fma clean
 	make -C c99 clean
 

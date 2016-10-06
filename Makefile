@@ -39,7 +39,7 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 OBJS += ./blas/d_blas3_lib4.o ./blas/d_lapack_lib4.o ./blas/d_blas2_lib4.o
 OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
 #aux
-OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o 
+OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o ./aux/avx/kernel_dgecp_lib4.o ./aux/avx2/kernel_dgetr_lib4.o
 OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
 #strmat
 OBJS += ./strmat/d_strmat.o ./strmat/dgetrf_nopivot.o
@@ -53,7 +53,7 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 OBJS += ./blas/d_blas3_lib4.o ./blas/d_lapack_lib4.o ./blas/d_blas2_lib4.o
 OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
 #aux
-OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o 
+OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o ./aux/avx/kernel_dgecp_lib4.o ./aux/avx/kernel_dgetr_lib4.o 
 OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
 #strmat
 OBJS += ./strmat/d_strmat.o ./strmat/dgetrf_nopivot.o
@@ -67,7 +67,7 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 OBJS += ./blas/d_blas3_lib4.o ./blas/d_lapack_lib4.o ./blas/d_blas2_lib4.o
 OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
 #aux
-OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o 
+OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o ./aux/c99/kernel_dgecp_lib4.o ./aux/c99/kernel_dgetr_lib4.o 
 OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
 #strmat
 OBJS += ./strmat/d_strmat.o ./strmat/dgetrf_nopivot.o
@@ -81,7 +81,7 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 OBJS += ./blas/d_blas3_lib4.o ./blas/d_lapack_lib4.o ./blas/d_blas2_lib4.o
 OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
 #aux
-OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o 
+OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o ./aux/c99/kernel_dgecp_lib4.o ./aux/c99/kernel_dgetr_lib4.o 
 OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
 #strmat
 OBJS += ./strmat/d_strmat.o ./strmat/dgetrf_nopivot.o
@@ -95,7 +95,7 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 OBJS += ./blas/d_blas3_lib4.o ./blas/d_lapack_lib4.o ./blas/d_blas2_lib4.o
 OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
 #aux
-OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o 
+OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o ./aux/c99/kernel_dgecp_lib4.o ./aux/c99/kernel_dgetr_lib4.o 
 OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
 #strmat
 OBJS += ./strmat/d_strmat.o ./strmat/dgetrf_nopivot.o
