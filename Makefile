@@ -155,4 +155,5 @@ clean:
 	make -C kernel clean
 	make -C blas clean
 	make -C test_problems clean
+	make -C examples clean
 
