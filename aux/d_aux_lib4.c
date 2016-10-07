@@ -27,6 +27,7 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdio.h>
 #include <math.h>
 
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -2362,6 +2363,72 @@ void dcolad_libsp(int kmax, double alpha, int *idx, double *x, double *pD, int s
 
 
 
+// swaps two cols
+void dcolsw_lib(int kmax, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc)
+	{
+
+	const int bs = 4;
+
+	int ii;
+
+	double tmp;
+
+	if(offsetA==offsetC)
+		{
+		if(offsetA>0)
+			{
+			ii = 0;
+			for(; ii<bs-offsetA; ii++)
+				{
+				tmp = pA[0+bs*0];
+				pA[0+bs*0] = pC[0+bs*0];
+				pC[0+bs*0] = tmp;
+				pA += 1;
+				pC += 1;
+				}
+			pA += bs*(sda-1);
+			pC += bs*(sdc-1);
+			kmax -= bs-offsetA;
+			}
+		ii = 0;
+		for(; ii<kmax-3; ii+=4)
+			{
+			tmp = pA[0+bs*0];
+			pA[0+bs*0] = pC[0+bs*0];
+			pC[0+bs*0] = tmp;
+			tmp = pA[1+bs*0];
+			pA[1+bs*0] = pC[1+bs*0];
+			pC[1+bs*0] = tmp;
+			tmp = pA[2+bs*0];
+			pA[2+bs*0] = pC[2+bs*0];
+			pC[2+bs*0] = tmp;
+			tmp = pA[3+bs*0];
+			pA[3+bs*0] = pC[3+bs*0];
+			pC[3+bs*0] = tmp;
+			pA += bs*sda;
+			pC += bs*sdc;
+			}
+		for(; ii<kmax; ii++)
+			{
+			tmp = pA[0+bs*0];
+			pA[0+bs*0] = pC[0+bs*0];
+			pC[0+bs*0] = tmp;
+			pA += 1;
+			pC += 1;
+			}
+		}
+	else
+		{
+		printf("\nfeature not implemented yet\n\n");
+		exit(1);
+		}
+
+	return;
+
+	}
+
+
+
 // insert vector to vector, sparse formulation
 void dvecin_libsp(int kmax, int *idx, double *x, double *y)
 	{
@@ -2495,6 +2562,62 @@ void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, do
 
 
 
+// swap two rows of a matrix struct
+void drowsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	int bsA = sA->bs;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bsA*bsA*sda + ai%bsA + aj*bsA;
+	int bsC = sC->bs;
+	int sdc = sC->cn;
+	double *pC = sC->pA + ci/bsC*bsC*sdc + ci%bsC + cj*bsC;
+	drowsw_lib(kmax, pA, pC);
+	return;
+	}
+
+
+
+// permute the rows of a matrix struct
+void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
+	{
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		{
+		drowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+		}
+	return;
+	}
+
+
+
+// swap two cols of a matrix struct
+void dcolsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	int bsA = sA->bs;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bsA*bsA*sda + ai%bsA + aj*bsA;
+	int bsC = sC->bs;
+	int sdc = sC->cn;
+	double *pC = sC->pA + ci/bsC*bsC*sdc + ci%bsC + cj*bsC;
+	dcolsw_lib(kmax, ai%bsA, pA, sda, ci%bsC, pC, sdc);
+	return;
+	}
+
+
+
+// permute the cols of a matrix struct
+void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
+	{
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		{
+		dcolsw_libstr(sA->n, sA, 0, ii, sA, 0, ipiv[ii]);
+		}
+	return;
+	}
+
+
+
 // linear algebra provided by BLAS
 #elif defined(BLAS_LA)
 
@@ -2621,6 +2744,72 @@ void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, do
 			{
 			A[ii+0+jj*lda] = pA[jj+(ii+0)*lda2];
 			}
+		}
+	return;
+	}
+
+
+
+// swap two rows of a matrix struct
+void drowsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	int ldc = sC->m;
+	double *pC = sC->pA + ci + cj*lda;
+	int ii;
+	double tmp;
+	for(ii=0; ii<kmax; ii++)
+		{
+		tmp = pA[ii*lda];
+		pA[ii*lda] = pC[ii*ldc];
+		pC[ii*ldc] = tmp;
+		}
+	return;
+	}
+
+
+
+// permute the rows of a matrix struct
+void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
+	{
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		{
+		drowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii]-1, 0);
+		}
+	return;
+	}
+
+
+
+// swap two cols of a matrix struct
+void dcolsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	int ldc = sC->m;
+	double *pC = sC->pA + ci + cj*lda;
+	int ii;
+	double tmp;
+	for(ii=0; ii<kmax; ii++)
+		{
+		tmp = pA[ii];
+		pA[ii] = pC[ii];
+		pC[ii] = tmp;
+		}
+	return;
+	}
+
+
+
+// permute the cols of a matrix struct
+void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
+	{
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		{
+		dcolsw_libstr(sA->n, sA, 0, ii, sA, 0, ipiv[ii]-1);
 		}
 	return;
 	}

@@ -79,10 +79,15 @@ void drowin_libsp(int kmax, int *idx, double *x, double *pD);
 void drowad_libsp(int kmax, int *idx, double alpha, double *x, double *pD);
 void drowadin_libsp(int kmax, int *idx, double alpha, double *x, double *y, double *pD);
 void drowsw_lib(int kmax, double *pA, double *pC);
+void drowsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
+void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA);
 void dcolin_lib(int kmax, double *x, int offset, double *pD, int sdd);
 void dcolad_lib(int kmax, double alpha, double *x, int offset, double *pD, int sdd);
 void dcolin_libsp(int kmax, int *idx, double *x, double *pD, int sdd);
 void dcolad_libsp(int kmax, double alpha, int *idx, double *x, double *pD, int sdd);
+void dcolsw_lib(int kmax, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc);
+void dcolsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
+void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA);
 void dvecin_libsp(int kmax, int *idx, double *x, double *y);
 void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y);
 

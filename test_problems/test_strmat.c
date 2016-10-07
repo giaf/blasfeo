@@ -116,15 +116,25 @@ int main()
 	d_print_strmat(n, n, &sD, 0, 0);
 	int_print_mat(1, n, ipiv, 1);
 
-//	dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
-//	d_print_strmat(n, n, &sE, 0, 0);
-//	dtrsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sE, 0, 0, &sE, 0, 0);
-//	d_print_strmat(n, n, &sE, 0, 0);
+#if 1 // solve P L U X = P B
+	d_print_strmat(n, n, &sB, 0, 0);
+	drowpe_libstr(n, ipiv, &sB);
+	d_print_strmat(n, n, &sB, 0, 0);
 
-//	dtrsm_rltu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
-//	d_print_strmat(n, n, &sE, 0, 0);
-//	dtrsm_rutn_libstr(n, n, 1.0, &sD, 0, 0, &sE, 0, 0, &sE, 0, 0);
-//	d_print_strmat(n, n, &sE, 0, 0);
+	dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
+	d_print_strmat(n, n, &sE, 0, 0);
+	dtrsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sE, 0, 0, &sE, 0, 0);
+	d_print_strmat(n, n, &sE, 0, 0);
+#else // solve X^T (P L U)^T = B^T P^T
+	d_print_strmat(n, n, &sB, 0, 0);
+	dcolpe_libstr(n, ipiv, &sB);
+	d_print_strmat(n, n, &sB, 0, 0);
+
+	dtrsm_rltu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
+	d_print_strmat(n, n, &sE, 0, 0);
+	dtrsm_rutn_libstr(n, n, 1.0, &sD, 0, 0, &sE, 0, 0, &sE, 0, 0);
+	d_print_strmat(n, n, &sE, 0, 0);
+#endif
 
 //	d_print_strmat(n, n, &sA, 0, 0);
 //	d_print_strmat(n, n, &sB, 0, 0);
