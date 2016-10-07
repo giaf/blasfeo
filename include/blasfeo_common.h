@@ -28,32 +28,33 @@
 **************************************************************************************************/
 
 
+#if defined(BLASFEO_LA)
 
-#if defined(BLAS_LA)
-
-void dgetf2_nopivot(int m, int n, double *A, int lda)
+// matrix structure
+struct d_strmat 
 	{
+	int bs; // heigh of panels
+	int m; // rows
+	int n; // cols
+	int pm; // packed number or rows
+	int cn; // packed number or cols
+	double *pA; // pointer to a pm*pn array of doubles, the first is aligned to cache line size
+	double *dA; // pointer to a min(m,n) (or max???) array of doubles
+	int use_dA; // flag to tell if dA can be used
+	int memory_size; // size of needed memory
+	};
 
-	if(m<=0 | n<=0)
-		return;
-	
-	int i, j, itmp0, itmp1;
-	int jmax = m<n ? m : n;
-	int i1 = 1;
-	double dtmp;
-	double dm1 = -1.0;
+#elif defined(BLAS_LA)
 
-	for(j=0; j<jmax; j++)
-		{
-		itmp0 = m-j-1;
-		dtmp = 1.0/A[j+lda*j];
-		dscal_(&itmp0, &dtmp, &A[(j+1)+lda*j], &i1);
-		itmp1 = n-j-1;
-		dger_(&itmp0, &itmp1, &dm1, &A[(j+1)+lda*j], &i1, &A[j+lda*(j+1)], &lda, &A[(j+1)+lda*(j+1)], &lda);
-		}
-	
-	return;
-
-	}
+// matrix structure
+struct d_strmat 
+	{
+	int m; // rows
+	int n; // cols
+	double *pA; // pointer to a m*n array of doubles
+	int memory_size; // size of needed memory
+	};
 
 #endif
+
+

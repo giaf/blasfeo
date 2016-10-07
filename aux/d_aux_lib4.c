@@ -38,6 +38,10 @@
 #include <immintrin.h>  // AVX
 #endif
 
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_block_size.h"
+#include "../include/blasfeo_d_kernel.h"
+
 
 
 /* converts a column-major matrix into a panel-major matrix */
@@ -1844,5 +1848,243 @@ C =
 	}
 
 
+
+
+/****************************
+* new interface
+****************************/
+
+
+
+#if defined(BLASFEO_LA)
+
+
+
+// return memory size (in bytes) needed for a strmat
+int d_size_strmat(int m, int n)
+	{
+	int bs = D_BS;
+	int nc = D_NC;
+	int al = bs*nc;
+	int pm = (m+bs-1)/bs*bs;
+	int cn = (n+nc-1)/nc*nc;
+	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
+	int memory_size = (pm*cn+tmp)*sizeof(double);
+	return memory_size;
+	}
+
+
+
+// create a matrix structure for a matrix of size m*n by using memory passed by a pointer (and update it)
+void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory)
+	{
+	int bs = D_BS;
+	int nc = D_NC;
+	int al = bs*nc;
+	sA->bs = bs;
+	sA->m = m;
+	sA->n = n;
+	int pm = (m+bs-1)/bs*bs;
+	int cn = (n+nc-1)/nc*nc;
+	sA->pm = pm;
+	sA->cn = cn;
+	double *ptr = (double *) memory;
+	sA->pA = ptr;
+	ptr += pm*cn;
+	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
+	sA->dA = ptr;
+	ptr += tmp;
+	sA->use_dA = 0;
+	sA->memory_size = (pm*cn+tmp)*sizeof(double);
+	return;
+	}
+
+
+
+// convert a matrix into a matrix structure
+void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj)
+	{
+	int bs = sA->bs;
+	double *pA = sA->pA;
+	int pm = sA->pm;
+	int cn = sA->cn;
+	d_cvt_mat2pmat(m, n, A, lda, ai, pA+ai/bs*bs*cn+ai%bs+aj*bs, cn);
+	return;
+	}
+
+
+
+// convert and transpose a matrix into a matrix structure
+void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj)
+	{
+	int bs = sA->bs;
+	double *pA = sA->pA;
+	int pm = sA->pm;
+	int cn = sA->cn;
+	d_cvt_tran_mat2pmat(m, n, A, lda, ai, pA+ai/bs*bs*cn+ai%bs+aj*bs, cn);
+	return;
+	}
+
+
+
+// convert a matrix structure into a matrix
+void d_cvt_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
+	{
+	int bs = sA->bs;
+	double *pA = sA->pA;
+	int pm = sA->pm;
+	int cn = sA->cn;
+	d_cvt_pmat2mat(m, n, ai, pA+ai/bs*bs*cn+ai%bs+aj*bs, cn, A, lda);
+	return;
+	}
+
+
+
+// convert and transpose a matrix structure into a matrix
+void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
+	{
+	int bs = sA->bs;
+	double *pA = sA->pA;
+	int pm = sA->pm;
+	int cn = sA->cn;
+	d_cvt_tran_pmat2mat(m, n, ai, pA+ai/bs*bs*cn+ai%bs+aj*bs, cn, A, lda);
+	return;
+	}
+
+
+
+// linear algebra provided by BLAS
+#elif defined(BLAS_LA)
+
+
+
+// return memory size (in bytes) needed for a strmat
+int d_size_strmat(int m, int n)
+	{
+	int size = (m*n)*sizeof(double);
+	return size;
+	}
+
+
+
+// create a matrix structure for a matrix of size m*n by using memory passed by a pointer (and update it)
+void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory)
+	{
+	sA->m = m;
+	sA->n = n;
+	double *ptr = (double *) memory;
+	sA->pA = ptr;
+	ptr += m * n;
+	sA->memory_size = (m*n)*sizeof(double);
+	return;
+	}
+
+
+
+// convert a matrix into a matrix structure
+void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj)
+	{
+	int ii, jj;
+	int lda2 = sA->m;
+	double *pA = sA->pA + ai + aj*lda2;
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			pA[ii+0+jj*lda2] = A[ii+0+jj*lda];
+			pA[ii+1+jj*lda2] = A[ii+1+jj*lda];
+			pA[ii+2+jj*lda2] = A[ii+2+jj*lda];
+			pA[ii+3+jj*lda2] = A[ii+3+jj*lda];
+			}
+		for(; ii<m; ii++)
+			{
+			pA[ii+0+jj*lda2] = A[ii+0+jj*lda];
+			}
+		}
+	return;
+	}
+
+
+
+// convert and transpose a matrix into a matrix structure
+void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj)
+	{
+	int ii, jj;
+	int lda2 = sA->m;
+	double *pA = sA->pA + ai + aj*lda2;
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m; ii++)
+			{
+			pA[jj+(ii+0)*lda2] = A[ii+0+jj*lda];
+			pA[jj+(ii+1)*lda2] = A[ii+1+jj*lda];
+			pA[jj+(ii+2)*lda2] = A[ii+2+jj*lda];
+			pA[jj+(ii+3)*lda2] = A[ii+3+jj*lda];
+			}
+		for(; ii<m; ii++)
+			{
+			pA[jj+(ii+0)*lda2] = A[ii+0+jj*lda];
+			}
+		}
+	return;
+	}
+
+
+
+// convert a matrix structure into a matrix 
+void d_cvt_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
+	{
+	int ii, jj;
+	int lda2 = sA->m;
+	double *pA = sA->pA + ai + aj*lda2;
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			A[ii+0+jj*lda] = pA[ii+0+jj*lda2];
+			A[ii+1+jj*lda] = pA[ii+1+jj*lda2];
+			A[ii+2+jj*lda] = pA[ii+2+jj*lda2];
+			A[ii+3+jj*lda] = pA[ii+3+jj*lda2];
+			}
+		for(; ii<m; ii++)
+			{
+			A[ii+0+jj*lda] = pA[ii+0+jj*lda2];
+			}
+		}
+	return;
+	}
+
+
+
+// convert and transpose a matrix structure into a matrix 
+void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
+	{
+	int ii, jj;
+	int lda2 = sA->m;
+	double *pA = sA->pA + ai + aj*lda2;
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m; ii++)
+			{
+			A[ii+0+jj*lda] = pA[jj+(ii+0)*lda2];
+			A[ii+1+jj*lda] = pA[jj+(ii+1)*lda2];
+			A[ii+2+jj*lda] = pA[jj+(ii+2)*lda2];
+			A[ii+3+jj*lda] = pA[jj+(ii+3)*lda2];
+			}
+		for(; ii<m; ii++)
+			{
+			A[ii+0+jj*lda] = pA[jj+(ii+0)*lda2];
+			}
+		}
+	return;
+	}
+
+
+
+#endif
 
 

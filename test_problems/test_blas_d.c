@@ -31,10 +31,11 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-#include "../strmat/d_strmat.h"
 
+#include "../include/blasfeo_common.h"
 #include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_d_aux.h"
+#include "../include/blasfeo_i_aux.h"
 #include "../include/blasfeo_d_blas.h"
 
 
@@ -295,17 +296,17 @@ int main()
 		for(rep=0; rep<nrep; rep++)
 			{
 #if 0
-			dgemm_nt_libst(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sE, 0, 0);
+			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sE, 0, 0);
 			dgecp_lib(n, n, 0, sE.pA, sE.cn, 1, sD.pA+1, sD.cn);
 #else
-			dgemm_nt_libst(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 #endif
-//			dpotrf_libst(n, n, &sD, 0, 0, &sD, 0, 0);
-//			dgetrf_nopivot_libst(n, n, &sD, 0, 0, &sD, 0, 0);
-//			dtrsm_llnu_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//			dtrsm_lunn_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//			dtrsm_rltu_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//			dtrsm_rutn_libst(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//			dpotrf_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
+//			dgetrf_nopivot_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
+//			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//			dtrsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//			dtrsm_rltu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//			dtrsm_rutn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 			}
 
 //		d_print_strmat(n, n, &sD, 0, 0);

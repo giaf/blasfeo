@@ -27,9 +27,17 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
+
+#include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_kernel.h"
 
 
+
+/****************************
+* old interface
+****************************/
 
 void dpotrf_nt_l_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D)
 	{
@@ -874,5 +882,127 @@ void dlauum_dpotrf_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *
 #endif
 
 
+
+
+/****************************
+* new interface
+****************************/
+
+
+
+#if defined(BLASFEO_LA)
+
+
+
+// dpotrf
+void dpotrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	if(ci!=0 | di!=0)
+		{
+		printf("\nfeature not implemented yet\n\n");
+		exit(1);
+		}
+	dpotrf_nt_l_lib(m, n, sC->pA+cj*sC->bs, sD->cn, sD->pA+dj*sC->bs, sD->cn, sD->dA);
+	sC->use_dA = 1;
+	return;
+	}
+
+
+
+// dgetrf without pivoting
+void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	if(ci!=0 | di!=0)
+		{
+		printf("\nfeature not implemented yet\n\n");
+		exit(1);
+		}
+	dgetrf_nn_nopivot_lib(m, n, sC->pA+cj*sC->bs, sD->cn, sD->pA+dj*sC->bs, sD->cn, sD->dA);
+	sC->use_dA = 1;
+	return;
+	}
+
+
+
+
+#elif defined(BLAS_LA)
+
+
+
+// dpotrf
+void dpotrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	int mmn = m-n;
+	int info;
+	int i1 = 1;
+	double d1 = 1.0;
+	double *pC = sC->pA+ci+cj*sC->m;
+	double *pD = sD->pA+di+dj*sD->m;
+	if(!(pC==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+		}
+	dpotrf_(&cl, &n, pD, &(sD->m), &info);
+	dtrsm_(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
+	return;
+	}
+
+
+
+// dgetrf without pivoting
+void dgetf2_nopivot(int m, int n, double *A, int lda)
+	{
+
+	if(m<=0 | n<=0)
+		return;
+	
+	int i, j, itmp0, itmp1;
+	int jmax = m<n ? m : n;
+	int i1 = 1;
+	double dtmp;
+	double dm1 = -1.0;
+
+	for(j=0; j<jmax; j++)
+		{
+		itmp0 = m-j-1;
+		dtmp = 1.0/A[j+lda*j];
+		dscal_(&itmp0, &dtmp, &A[(j+1)+lda*j], &i1);
+		itmp1 = n-j-1;
+		dger_(&itmp0, &itmp1, &dm1, &A[(j+1)+lda*j], &i1, &A[j+lda*(j+1)], &lda, &A[(j+1)+lda*(j+1)], &lda);
+		}
+	
+	return;
+
+	}
+
+// dgetrf without pivoting
+void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	// TODO with custom level 2 LAPACK + level 3 BLAS
+//	printf("\nfeature not implemented yet\n\n");
+//	exit(1);
+	int jj;
+	int i1 = 1;
+	double d1 = 1.0;
+	double *pC = sC->pA+ci+cj*sC->m;
+	double *pD = sD->pA+di+dj*sD->m;
+	if(!(pC==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+		}
+	dgetf2_nopivot(m, n, pD, sD->m);
+	return;
+	}
+
+
+
+#endif
 
 

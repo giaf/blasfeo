@@ -43,9 +43,18 @@ void v_zeros(void **ptrA, int size);
 void v_zeros_align(void **ptrA, int size);
 void v_free(void *ptrA);
 void v_free_align(void *ptrA);
+void d_allocate_strmat(int m, int n, struct d_strmat *sA);
+void d_free_strmat(struct d_strmat *sA);
+void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj);
 
 // d_aux_lib
 void d_cvt_mat2pmat(int row, int col, double *A, int lda, int offset, double *pA, int sda);
 void d_cvt_tran_mat2pmat(int row, int col, double *A, int lda, int offset, double *pA, int sda);
 void d_cvt_pmat2mat(int row, int col, int offset, double *pA, int sda, double *A, int lda);
 void d_cvt_tran_pmat2mat(int row, int col, int offset, double *pA, int sda, double *A, int lda);
+int d_size_strmat(int m, int n);
+void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory);
+void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj);
+void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj);
+void d_cvt_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda);
+void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda);

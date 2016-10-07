@@ -109,7 +109,6 @@ static_library: target
 	( cd aux; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
-	( cd strmat; $(MAKE) obj)
 	ar rcs libblasfeo.a $(OBJS) 
 	@echo
 	@echo " libblasfeo.a static library build complete."
@@ -165,6 +164,5 @@ clean:
 	make -C aux clean
 	make -C kernel clean
 	make -C blas clean
-	make -C strmat clean
 	make -C test_problems clean
 

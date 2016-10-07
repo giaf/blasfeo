@@ -33,6 +33,10 @@
 #include <malloc.h>
 #endif
 
+#include "../include/blasfeo_common.h"
+
+
+
 #if ! defined(OS_WINDOWS)
 int posix_memalign(void **memptr, size_t alignment, size_t size);
 #endif
@@ -251,5 +255,110 @@ void v_free_align(void *pA)
 	}
 
 
+
+
+/****************************
+* new interface
+****************************/
+
+// linear algebra provided by BLASFEO
+#if defined(BLASFEO_LA)
+
+
+
+#include "../include/blasfeo_block_size.h"
+
+// create a matrix structure for a matrix of size m*n by dynamically allocating the memory
+void d_allocate_strmat(int m, int n, struct d_strmat *sA)
+	{
+	int bs = D_BS;
+	int nc = D_NC;
+	int al = bs*nc;
+	sA->bs = bs;
+	sA->m = m;
+	sA->n = n;
+	int pm = (m+bs-1)/bs*bs;
+	int cn = (n+nc-1)/nc*nc;
+	sA->pm = pm;
+	sA->cn = cn;
+	d_zeros_align(&(sA->pA), sA->pm, sA->cn);
+	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
+	d_zeros_align(&(sA->dA), tmp, 1);
+	sA->use_dA = 0;
+	sA->memory_size = (pm*cn+tmp)*sizeof(double);
+	return;
+	}
+
+
+
+// free memory of a matrix structure
+void d_free_strmat(struct d_strmat *sA)
+	{
+	free(sA->pA);
+	free(sA->dA);
+	return;
+	}
+
+
+
+// print a matrix structure
+void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
+	{
+	// TODO ai and aj
+	if(ai!=0 | aj!=0)
+		{
+		printf("\nfeature not implemented yet\n\n");
+		exit(1);
+		}
+	d_print_pmat(m, n, sA->pA, sA->cn);
+	return;
+	}
+
+
+
+// linear algebra provided by BLAS
+#elif defined(BLAS_LA)
+
+
+
+// create a matrix structure for a matrix of size m*n // TODO pass work space instead of dynamic alloc
+void d_allocate_strmat(int m, int n, struct d_strmat *sA)
+	{
+	sA->m = m;
+	sA->n = n;
+	d_zeros(&(sA->pA), sA->m, sA->n);
+	sA->memory_size = (m*n)*sizeof(double);
+	return;
+	}
+
+
+
+// free memory of a matrix structure
+void d_free_strmat(struct d_strmat *sA)
+	{
+	free(sA->pA);
+	return;
+	}
+
+
+
+// print a matrix structure
+void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
+	{
+	// TODO ai and aj
+	if(ai!=0 || aj!=0)
+		{
+		printf("\nfeature not implemented yet\n\n");
+		exit(1);
+		}
+	double *pA = sA->pA;
+	int lda = sA->m;
+	d_print_mat(m, n, pA, lda);
+	return;
+	}
+
+
+
+#endif
 
 
