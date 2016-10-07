@@ -833,8 +833,8 @@ _inner_kernel_dgemm_add_nn_4x4_lib4:
 	.type inner_kernel_dgemm_sub_nn_4x4_lib4, @function
 inner_kernel_dgemm_sub_nn_4x4_lib4:
 #elif defined(OS_MAC)
-#endif
 _inner_kernel_dgemm_sub_nn_4x4_lib4:
+#endif
 #endif
 	
 	cmpl	$0, %r10d

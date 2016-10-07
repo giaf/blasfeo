@@ -32,6 +32,7 @@
 #include <sys/time.h>
 
 #include "../include/blasfeo_common.h"
+#include "../include/blasfeo_i_aux.h"
 #include "../include/blasfeo_d_aux.h"
 #include "../include/blasfeo_d_kernel.h"
 #include "../include/blasfeo_d_blas.h"
@@ -72,6 +73,8 @@ int main()
 
 	double *C; d_zeros(&C, n, n);
 
+	int *ipiv; int_zeros(&ipiv, n, 1);
+
 	//
 	// matrices in matrix struct format
 	//
@@ -103,13 +106,15 @@ int main()
 	d_create_strmat(n, n, &sE, ptr_memory_strmat);
 	ptr_memory_strmat += sE.memory_size;
 
-	dgemm_nt_libstr(8, 8, 8, 1.0, &sA, 5, 0, &sA, 5, 0, 1.0, &sB, 0, 0, &sD, 5, 2);
-	d_print_strmat(n, n, &sB, 0, 0);
+	dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
+//	d_print_strmat(n, n, &sB, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
 
 //	dpotrf_libstr(n, 2, &sD, 0, 0, &sD, 0, 0);
 //	dgetrf_nopivot_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
-//	d_print_strmat(n, n, &sD, 0, 0);
+	dgetrf_libstr(n, n, &sD, 0, 0, &sD, 0, 0, ipiv);
+	d_print_strmat(n, n, &sD, 0, 0);
+	int_print_mat(1, n, ipiv, 1);
 
 //	dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
 //	d_print_strmat(n, n, &sE, 0, 0);
@@ -141,6 +146,7 @@ int main()
 	free(A);
 	free(B);
 	free(C);
+	free(ipiv);
 //	d_free_strmat(&sA);
 //	d_free_strmat(&sB);
 //	d_free_strmat(&sD);

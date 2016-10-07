@@ -1269,7 +1269,7 @@ _inner_scale_ab_12x4_lib4:
 	movq	%r15, %r14 // C2 <- C1
 	addq	%r13, %r14 // C2 <- C1 + 4*sdc*sizeof(double)
 
-	vbroadcastsd 0(%r13), %ymm14 // beta
+	vbroadcastsd 0(%r11), %ymm14 // beta
 
 	vmovapd		0(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm0
@@ -1435,7 +1435,7 @@ _inner_blend_scale_ab_12x4_lib4:
 	movq	%r15, %r14 // C2 <- C1
 	addq	%r13, %r14 // C2 <- C1 + 4*sdc*sizeof(double)
 
-	vbroadcastsd 0(%r13), %ymm14 // beta
+	vbroadcastsd 0(%r11), %ymm14 // beta
 
 	vmovapd		0(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm0
@@ -3372,7 +3372,7 @@ _kernel_dgemm_nt_12x4_lib4:
 	movq	%rdx, %r11 // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-	movslq	%r12d, %r12
+//	movslq	%r12d, %r12
 	movq	%r8, %r13 // B
 
 #if MACRO_LEVEL>=2
@@ -3393,7 +3393,7 @@ _kernel_dgemm_nt_12x4_lib4:
 	movq	STACKSIZE +  8(%rsp), %r12 // C
 	movl	STACKSIZE +  16(%rsp), %r13d // sdc
 	sall	$5, %r13d // 4*sdc*sizeof(double)
-	movslq	%r13d, %r13
+//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_AB_SCALE_12X4_LIB4
@@ -3411,7 +3411,7 @@ _kernel_dgemm_nt_12x4_lib4:
 	movq	STACKSIZE + 24(%rsp), %r10 // D
 	movl	STACKSIZE + 32(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-	movslq	%r11d, %r11
+//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
