@@ -1,0 +1,149 @@
+\documentclass[a4paper]{report}
+
+\usepackage[margin=3.0cm]{geometry}
+\usepackage{amsmath}
+\usepackage[pdftex]{graphicx}
+%\usepackage{graphics}
+\usepackage{subfig}
+
+
+
+\title{BLASFEO reference guide}
+\author{Gianluca Frison}
+
+
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+BLASFEO - BLAS For Embedded Optimization.
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Matrix data type}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The fundamental data type in BLASFEO is a C struct defining a matrix, called {\tt strmat}.
+Depending on the chosen linear algebra library, the struct is defined differently.
+
+
+
+\section{{\tt strmat} definition}
+
+
+\subsection{BLASFEO}
+
+\begin{verbatim}
+struct d_strmat 
+	{
+	int bs;
+	int m;
+	int n;
+	int pm;
+	int cn;
+	double *pA;
+	double *dA;
+	int use_dA;
+	int memory_size;
+	};
+\end{verbatim}
+where the struct members are
+\begin{description}
+\item[bs] height of the panel
+\item[m] number of rows
+\item[n] number of columns
+\item[pm] number of rows of the matrix as allocated in memory, used for memory alignment
+\item[cn] number of rows of the matrix as allocated in memory, used for memory alignment
+\item[pA] pointer to a pm$\times$pn array of doubles, the first element is aligned to cache line size
+\item[dA] pointer to a min(m,n) array of doubles, used e.g. to store the inverse of the diagonal of the matrix
+\item[use\_dA] flag to tell if dA contains useful information
+\item[memory\_size] size of the memory (in bytes) needed for pA and pD
+\end{description}
+
+
+\subsection{BLAS}
+
+\begin{verbatim}
+struct d_strmat 
+	{
+	int m; // rows
+	int n; // cols
+	double *pA; // pointer to a m*n array of doubles
+	int memory_size; // size of needed memory
+	};
+\end{verbatim}
+\begin{description}
+\item[m] number of rows
+\item[n] number of columns
+\item[pA] pointer to a m$\times$n array of doubles
+\item[memory\_size] size of the memory (in bytes) needed for pA
+\end{description}
+
+
+
+\section{{\tt strmat} management}
+
+\begin{verbatim}
+void d_allocate_strmat(int m, int n, struct d_strmat *sA);
+\end{verbatim}
+
+\begin{verbatim}
+void d_free_strmat(struct d_strmat *sA);
+\end{verbatim}
+
+\begin{verbatim}
+int d_size_strmat(int m, int n);
+\end{verbatim}
+
+\begin{verbatim}
+void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory);
+\end{verbatim}
+
+
+
+\section{{\tt strmat} conversion}
+
+\begin{verbatim}
+void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, 
+     int ai, int aj);
+\end{verbatim}
+
+\begin{verbatim}
+void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, 
+     int ai, int aj);
+\end{verbatim}
+
+\begin{verbatim}
+void d_cvt_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, 
+     double *A, int lda);
+\end{verbatim}
+
+\begin{verbatim}
+void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, 
+     double *A, int lda);
+\end{verbatim}
+
+
+
+\section{{\tt strmat} print}
+
+\begin{verbatim}
+void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj);
+\end{verbatim}
+
+
+
+\end{document}
