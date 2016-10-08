@@ -119,9 +119,6 @@ int main()
 	d_create_strmat(n, n, &sI, ptr_memory_strmat);
 	ptr_memory_strmat += sI.memory_size;
 	// convert from column major matrix to strmat
-	d_cvt_mat2strmat(n, n, I, n, &sI, 0, 0);
-	printf("\nI = \n");
-	d_print_strmat(n, n, &sI, 0, 0);
 
 	struct d_strmat sD;
 //	d_allocate_strmat(n, n, &sD);
@@ -144,7 +141,11 @@ int main()
 	printf("\nipiv = \n");
 	int_print_mat(1, n, ipiv, 1);
 
-#if 1 // solve P L U X = P B
+#if 0 // solve P L U X = P B
+	d_cvt_mat2strmat(n, n, I, n, &sI, 0, 0);
+	printf("\nI = \n");
+	d_print_strmat(n, n, &sI, 0, 0);
+
 	drowpe_libstr(n, ipiv, &sI);
 	printf("\nperm(I) = \n");
 	d_print_strmat(n, n, &sI, 0, 0);
@@ -159,7 +160,10 @@ int main()
 	// convert from strmat to column major matrix
 	d_cvt_strmat2mat(n, n, &sD, 0, 0, D, n);
 #else // solve X^T (P L U)^T = B^T P^T
-	d_print_strmat(n, n, &sB, 0, 0);
+	d_cvt_tran_mat2strmat(n, n, I, n, &sI, 0, 0);
+	printf("\nI' = \n");
+	d_print_strmat(n, n, &sI, 0, 0);
+
 	dcolpe_libstr(n, ipiv, &sB);
 	printf("\nperm(I') = \n");
 	d_print_strmat(n, n, &sB, 0, 0);
