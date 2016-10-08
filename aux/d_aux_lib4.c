@@ -2681,7 +2681,7 @@ void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA
 	for(jj=0; jj<n; jj++)
 		{
 		ii = 0;
-		for(; ii<m; ii++)
+		for(; ii<m-3; ii+=4)
 			{
 			pA[jj+(ii+0)*lda2] = A[ii+0+jj*lda];
 			pA[jj+(ii+1)*lda2] = A[ii+1+jj*lda];
@@ -2733,7 +2733,7 @@ void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, do
 	for(jj=0; jj<n; jj++)
 		{
 		ii = 0;
-		for(; ii<m; ii++)
+		for(; ii<m-3; ii+=4)
 			{
 			A[ii+0+jj*lda] = pA[jj+(ii+0)*lda2];
 			A[ii+1+jj*lda] = pA[jj+(ii+1)*lda2];
