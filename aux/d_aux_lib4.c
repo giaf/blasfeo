@@ -2619,6 +2619,90 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 
 
 
+// copy a generic strmat into a generic strmat
+void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	const int bs = D_BS;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	int sdc = sC->cn;
+	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
+	dgecp_lib(m, n, ai%bs, pA, sda, ci%bs, pC, sdc);
+	return;
+	}
+
+
+
+// copy a lower triangular strmat into a lower triangular strmat
+void dtrcp_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	const int bs = D_BS;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	int sdc = sC->cn;
+	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
+	dtrcp_l_lib(m, ai%bs, pA, sda, ci%bs, pC, sdc);
+	return;
+	}
+
+
+
+// scale and add a generic strmat into a generic strmat
+void dgead_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	const int bs = D_BS;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	int sdc = sC->cn;
+	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
+	dgead_lib(m, n, alpha, ai%bs, pA, sda, ci%bs, pC, sdc);
+	return;
+	}
+
+
+
+// copy and transpose a generic strmat into a generic strmat
+void dgetr_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	const int bs = D_BS;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	int sdc = sC->cn;
+	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
+	dgetr_lib(m, n, ai%bs, pA, sda, ci%bs, pC, sdc);
+	return;
+	}
+
+
+
+// copy and transpose a lower triangular strmat into an upper triangular strmat
+void dtrtr_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	const int bs = D_BS;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	int sdc = sC->cn;
+	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
+	dtrtr_l_lib(m, ai%bs, pA, sda, ci%bs, pC, sdc);
+	return;
+	}
+
+
+
+// copy and transpose an upper triangular strmat into a lower triangular strmat
+void dtrtr_u_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	const int bs = D_BS;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	int sdc = sC->cn;
+	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
+	dtrtr_u_lib(m, ai%bs, pA, sda, ci%bs, pC, sdc);
+	return;
+	}
+
+
+
 // linear algebra provided by BLAS
 #elif defined(LA_BLAS)
 
@@ -2811,6 +2895,153 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	for(ii=0; ii<kmax; ii++)
 		{
 		dcolsw_libstr(sA->n, sA, 0, ii, sA, 0, ipiv[ii]-1);
+		}
+	return;
+	}
+
+
+
+// copy a generic strmat into a generic strmat
+void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	int ldc = sC->m;
+	double *pC = sC->pA + ci + cj*ldc;
+	int ii, jj;
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
+			pC[ii+1+jj*ldc] = pA[ii+1+jj*lda];
+			pC[ii+2+jj*ldc] = pA[ii+2+jj*lda];
+			pC[ii+3+jj*ldc] = pA[ii+3+jj*lda];
+			}
+		for(; ii<m; ii++)
+			{
+			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
+			}
+		}
+	return;
+	}
+
+
+
+// copy a lower triangular strmat into a lower triangular strmat
+void dtrcp_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	int ldc = sC->m;
+	double *pC = sC->pA + ci + cj*ldc;
+	int ii, jj;
+	for(jj=0; jj<m; jj++)
+		{
+		ii = jj;
+		for(; ii<m; ii++)
+			{
+			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
+			}
+		}
+	return;
+	}
+
+
+
+// scale and add a generic strmat into a generic strmat
+void dgead_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	int ldc = sC->m;
+	double *pC = sC->pA + ci + cj*ldc;
+	int ii, jj;
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			pC[ii+0+jj*ldc] += alpha*pA[ii+0+jj*lda];
+			pC[ii+1+jj*ldc] += alpha*pA[ii+1+jj*lda];
+			pC[ii+2+jj*ldc] += alpha*pA[ii+2+jj*lda];
+			pC[ii+3+jj*ldc] += alpha*pA[ii+3+jj*lda];
+			}
+		for(; ii<m; ii++)
+			{
+			pC[ii+0+jj*ldc] += alpha*pA[ii+0+jj*lda];
+			}
+		}
+	return;
+	}
+
+
+
+// copy and transpose a generic strmat into a generic strmat
+void dgetr_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	int ldc = sC->m;
+	double *pC = sC->pA + ci + cj*ldc;
+	int ii, jj;
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
+			pC[jj+(ii+1)*ldc] = pA[ii+1+jj*lda];
+			pC[jj+(ii+2)*ldc] = pA[ii+2+jj*lda];
+			pC[jj+(ii+3)*ldc] = pA[ii+3+jj*lda];
+			}
+		for(; ii<m; ii++)
+			{
+			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
+			}
+		}
+	return;
+	}
+
+
+
+// copy and transpose a lower triangular strmat into an upper triangular strmat
+void dtrtr_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	int ldc = sC->m;
+	double *pC = sC->pA + ci + cj*ldc;
+	int ii, jj;
+	for(jj=0; jj<m; jj++)
+		{
+		ii = jj;
+		for(; ii<m; ii++)
+			{
+			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
+			}
+		}
+	return;
+	}
+
+
+
+// copy and transpose an upper triangular strmat into a lower triangular strmat
+void dtrtr_u_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	int ldc = sC->m;
+	double *pC = sC->pA + ci + cj*ldc;
+	int ii, jj;
+	for(jj=0; jj<m; jj++)
+		{
+		ii = 0;
+		for(; ii<=jj; ii++)
+			{
+			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
+			}
 		}
 	return;
 	}

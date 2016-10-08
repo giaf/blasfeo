@@ -143,6 +143,9 @@ int main()
 
 //	d_cvt_strmat2mat(n, n, &sE, 0, 0, C, n);
 //	d_print_mat(n, n, C, n);
+	
+	dtrtr_u_libstr(6, &sE, 2, 0, &sB, 1, 0);
+	d_print_strmat(n, n, &sB, 0, 0);
 
 
 
