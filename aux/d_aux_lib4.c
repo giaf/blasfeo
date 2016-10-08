@@ -2735,14 +2735,14 @@ void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, do
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			A[ii+0+jj*lda] = pA[jj+(ii+0)*lda2];
-			A[ii+1+jj*lda] = pA[jj+(ii+1)*lda2];
-			A[ii+2+jj*lda] = pA[jj+(ii+2)*lda2];
-			A[ii+3+jj*lda] = pA[jj+(ii+3)*lda2];
+			A[jj+(ii+0)*lda] = pA[ii+0+jj*lda2];
+			A[jj+(ii+1)*lda] = pA[ii+1+jj*lda2];
+			A[jj+(ii+2)*lda] = pA[ii+2+jj*lda2];
+			A[jj+(ii+3)*lda] = pA[ii+3+jj*lda2];
 			}
 		for(; ii<m; ii++)
 			{
-			A[ii+0+jj*lda] = pA[jj+(ii+0)*lda2];
+			A[jj+(ii+0)*lda] = pA[ii+0+jj*lda2];
 			}
 		}
 	return;
