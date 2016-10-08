@@ -262,7 +262,7 @@ void v_free_align(void *pA)
 ****************************/
 
 // linear algebra provided by BLASFEO
-#if defined(BLASFEO_LA)
+#if defined(LA_BLASFEO)
 
 
 
@@ -317,7 +317,7 @@ void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
 
 
 // linear algebra provided by BLAS
-#elif defined(BLAS_LA)
+#elif defined(LA_BLAS)
 
 
 

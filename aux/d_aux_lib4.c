@@ -27,6 +27,7 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 
@@ -2465,7 +2466,7 @@ void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y)
 
 
 
-#if defined(BLASFEO_LA)
+#if defined(LA_BLASFEO)
 
 
 
@@ -2619,7 +2620,7 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 
 
 // linear algebra provided by BLAS
-#elif defined(BLAS_LA)
+#elif defined(LA_BLAS)
 
 
 

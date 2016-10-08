@@ -131,6 +131,16 @@ ifeq ($(TARGET), GENERIC)
 	echo "#define TARGET_GENERIC" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
+ifeq ($(LA), BLASFEO)
+	echo "#ifndef LA_BLASFEO" >> ./include/blasfeo_target.h
+	echo "#define LA_BLASFEO" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
+ifeq ($(LA), BLAS)
+	echo "#ifndef LA_BLAS" >> ./include/blasfeo_target.h
+	echo "#define LA_BLAS" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
 
 install_static:
 	mkdir -p $(PREFIX)/blasfeo

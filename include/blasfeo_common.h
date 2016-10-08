@@ -28,7 +28,7 @@
 **************************************************************************************************/
 
 
-#if defined(BLASFEO_LA)
+#if defined(LA_BLASFEO)
 
 // matrix structure
 struct d_strmat 
@@ -44,7 +44,7 @@ struct d_strmat
 	int memory_size; // size of needed memory
 	};
 
-#elif defined(BLAS_LA)
+#elif defined(LA_BLAS)
 
 // matrix structure
 struct d_strmat 

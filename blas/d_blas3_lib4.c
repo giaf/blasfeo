@@ -1409,7 +1409,7 @@ void dlauum_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *pA, int
 
 
 
-#if defined(BLASFEO_LA)
+#if defined(LA_BLASFEO)
 
 
 
@@ -1657,7 +1657,7 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 
-#elif defined(BLAS_LA)
+#elif defined(LA_BLAS)
 
 
 

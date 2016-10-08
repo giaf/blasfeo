@@ -62,10 +62,10 @@ DEBUG = #-Wall -pedantic -Wfloat-equal #-pg
 LDFLAGS =
 
 ifeq ($(LA), BLASFEO)
-LA_FLAGS = -DBLASFEO_LA
+LA_FLAGS = -DLA_BLASFEO
 endif
 ifeq ($(LA), BLAS)
-LA_FLAGS = -DBLAS_LA
+LA_FLAGS = -DLA_BLAS
 endif
 
 ASFLAGS = 

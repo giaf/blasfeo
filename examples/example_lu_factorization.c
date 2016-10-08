@@ -43,11 +43,11 @@ int main()
 
 	printf("\nExample of LU factorization and backsolve\n\n");
 
-#if defined(BLASFEO_LA)
+#if defined(LA_BLASFEO)
 
 	printf("\nLA provided by BLASFEO\n\n");
 
-#elif defined(BLAS_LA)
+#elif defined(LA_BLASA)
 
 	printf("\nLA provided by BLAS\n\n");
 

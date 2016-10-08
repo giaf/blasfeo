@@ -1417,7 +1417,7 @@ void dlauum_dpotrf_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *
 
 
 
-#if defined(BLASFEO_LA)
+#if defined(LA_BLASFEO)
 
 
 
@@ -1468,7 +1468,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 
 
 
-#elif defined(BLAS_LA)
+#elif defined(LA_BLAS)
 
 
 
