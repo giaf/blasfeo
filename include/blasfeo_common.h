@@ -33,7 +33,6 @@
 // matrix structure
 struct d_strmat 
 	{
-	int bs; // heigh of panels
 	int m; // rows
 	int n; // cols
 	int pm; // packed number or rows

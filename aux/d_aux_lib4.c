@@ -2473,7 +2473,7 @@ void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y)
 // return memory size (in bytes) needed for a strmat
 int d_size_strmat(int m, int n)
 	{
-	int bs = D_BS;
+	const int bs = D_BS;
 	int nc = D_NC;
 	int al = bs*nc;
 	int pm = (m+bs-1)/bs*bs;
@@ -2488,10 +2488,9 @@ int d_size_strmat(int m, int n)
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer (and update it)
 void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory)
 	{
-	int bs = D_BS;
+	const int bs = D_BS;
 	int nc = D_NC;
 	int al = bs*nc;
-	sA->bs = bs;
 	sA->m = m;
 	sA->n = n;
 	int pm = (m+bs-1)/bs*bs;
@@ -2514,7 +2513,7 @@ void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory)
 // convert a matrix into a matrix structure
 void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj)
 	{
-	int bs = sA->bs;
+	const int bs = D_BS;
 	double *pA = sA->pA;
 	int pm = sA->pm;
 	int cn = sA->cn;
@@ -2527,7 +2526,7 @@ void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int
 // convert and transpose a matrix into a matrix structure
 void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj)
 	{
-	int bs = sA->bs;
+	const int bs = D_BS;
 	double *pA = sA->pA;
 	int pm = sA->pm;
 	int cn = sA->cn;
@@ -2540,7 +2539,7 @@ void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA
 // convert a matrix structure into a matrix
 void d_cvt_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
 	{
-	int bs = sA->bs;
+	const int bs = D_BS;
 	double *pA = sA->pA;
 	int pm = sA->pm;
 	int cn = sA->cn;
@@ -2553,7 +2552,7 @@ void d_cvt_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double 
 // convert and transpose a matrix structure into a matrix
 void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
 	{
-	int bs = sA->bs;
+	const int bs = D_BS;
 	double *pA = sA->pA;
 	int pm = sA->pm;
 	int cn = sA->cn;
@@ -2566,12 +2565,11 @@ void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, do
 // swap two rows of a matrix struct
 void drowsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
-	int bsA = sA->bs;
+	const int bs = D_BS;
 	int sda = sA->cn;
-	double *pA = sA->pA + ai/bsA*bsA*sda + ai%bsA + aj*bsA;
-	int bsC = sC->bs;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
-	double *pC = sC->pA + ci/bsC*bsC*sdc + ci%bsC + cj*bsC;
+	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
 	drowsw_lib(kmax, pA, pC);
 	return;
 	}
@@ -2594,13 +2592,12 @@ void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 // swap two cols of a matrix struct
 void dcolsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
-	int bsA = sA->bs;
+	const int bs = D_BS;
 	int sda = sA->cn;
-	double *pA = sA->pA + ai/bsA*bsA*sda + ai%bsA + aj*bsA;
-	int bsC = sC->bs;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
-	double *pC = sC->pA + ci/bsC*bsC*sdc + ci%bsC + cj*bsC;
-	dcolsw_lib(kmax, ai%bsA, pA, sda, ci%bsC, pC, sdc);
+	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
+	dcolsw_lib(kmax, ai%bs, pA, sda, ci%bs, pC, sdc);
 	return;
 	}
 

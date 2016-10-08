@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_aux.h"
 #include "../include/blasfeo_d_kernel.h"
@@ -1429,7 +1430,8 @@ void dpotrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		printf("\nfeature not implemented yet\n\n");
 		exit(1);
 		}
-	dpotrf_nt_l_lib(m, n, sC->pA+cj*sC->bs, sD->cn, sD->pA+dj*sC->bs, sD->cn, sD->dA);
+	const int bs = D_BS;
+	dpotrf_nt_l_lib(m, n, sC->pA+cj*bs, sD->cn, sD->pA+dj*bs, sD->cn, sD->dA);
 	sC->use_dA = 1;
 	return;
 	}
@@ -1444,7 +1446,8 @@ void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, st
 		printf("\nfeature not implemented yet\n\n");
 		exit(1);
 		}
-	dgetrf_nn_nopivot_lib(m, n, sC->pA+cj*sC->bs, sD->cn, sD->pA+dj*sC->bs, sD->cn, sD->dA);
+	const int bs = D_BS;
+	dgetrf_nn_nopivot_lib(m, n, sC->pA+cj*bs, sD->cn, sD->pA+dj*bs, sD->cn, sD->dA);
 	sC->use_dA = 1;
 	return;
 	}
@@ -1460,7 +1463,8 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		printf("\nfeature not implemented yet\n\n");
 		exit(1);
 		}
-	dgetrf_nn_lib(m, n, sC->pA+cj*sC->bs, sD->cn, sD->pA+dj*sC->bs, sD->cn, sD->dA, ipiv);
+	const int bs = D_BS;
+	dgetrf_nn_lib(m, n, sC->pA+cj*bs, sD->cn, sD->pA+dj*bs, sD->cn, sD->dA, ipiv);
 	sC->use_dA = 1;
 	return;
 	}

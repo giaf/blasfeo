@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_kernel.h"
 
@@ -1419,7 +1420,7 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	if(m<=0 || n<=0)
 		return;
 	
-	const int bs = 4;
+	const int bs = D_BS;
 
 	int sda = sA->cn;
 	int sdb = sB->cn;
@@ -1605,8 +1606,9 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		printf("\nfeature not implemented yet\n\n");
 		exit(1);
 		}
+	const int bs = D_BS;
 	// TODO alpha
-	dtrsm_nn_ll_one_lib(m, n, sA->pA+aj*sA->bs, sA->cn, sB->pA+bj*sB->bs, sB->cn, sD->pA+dj*sD->bs, sD->cn); 
+	dtrsm_nn_ll_one_lib(m, n, sA->pA+aj*bs, sA->cn, sB->pA+bj*bs, sB->cn, sD->pA+dj*bs, sD->cn); 
 	return;
 	}
 
@@ -1620,8 +1622,9 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		printf("\nfeature not implemented yet\n\n");
 		exit(1);
 		}
+	const int bs = D_BS;
 	// TODO alpha
-	dtrsm_nn_lu_inv_lib(m, n, sA->pA+aj*sA->bs, sA->cn, sA->dA, sB->pA+bj*sB->bs, sB->cn, sD->pA+dj*sD->bs, sD->cn); 
+	dtrsm_nn_lu_inv_lib(m, n, sA->pA+aj*bs, sA->cn, sA->dA, sB->pA+bj*bs, sB->cn, sD->pA+dj*bs, sD->cn); 
 	return;
 	}
 
@@ -1635,8 +1638,9 @@ void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		printf("\nfeature not implemented yet\n\n");
 		exit(1);
 		}
+	const int bs = D_BS;
 	// TODO alpha
-	dtrsm_nt_rl_one_lib(m, n, sA->pA+aj*sA->bs, sA->cn, sB->pA+bj*sB->bs, sB->cn, sD->pA+dj*sD->bs, sD->cn); 
+	dtrsm_nt_rl_one_lib(m, n, sA->pA+aj*bs, sA->cn, sB->pA+bj*bs, sB->cn, sD->pA+dj*bs, sD->cn); 
 	return;
 	}
 
@@ -1650,8 +1654,9 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		printf("\nfeature not implemented yet\n\n");
 		exit(1);
 		}
+	const int bs = D_BS;
 	// TODO alpha
-	dtrsm_nt_ru_inv_lib(m, n, sA->pA+aj*sA->bs, sA->cn, sA->dA, sB->pA+bj*sB->bs, sB->cn, sD->pA+dj*sD->bs, sD->cn); 
+	dtrsm_nt_ru_inv_lib(m, n, sA->pA+aj*bs, sA->cn, sA->dA, sB->pA+bj*bs, sB->cn, sD->pA+dj*bs, sD->cn); 
 	return;
 	}
 

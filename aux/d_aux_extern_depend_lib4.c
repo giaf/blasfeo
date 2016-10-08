@@ -271,10 +271,9 @@ void v_free_align(void *pA)
 // create a matrix structure for a matrix of size m*n by dynamically allocating the memory
 void d_allocate_strmat(int m, int n, struct d_strmat *sA)
 	{
-	int bs = D_BS;
+	const int bs = D_BS;
 	int nc = D_NC;
 	int al = bs*nc;
-	sA->bs = bs;
 	sA->m = m;
 	sA->n = n;
 	int pm = (m+bs-1)/bs*bs;
