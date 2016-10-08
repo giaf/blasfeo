@@ -115,33 +115,33 @@ _inner_kernel_dgemv_add_n_8_lib4:
 1: // main loop
 	
 	vbroadcastsd	0(%r13), %ymm12
-	vmovapd	0(%r11), %ymm8
-	vfmadd231pd	%ymm8, %ymm12, %ymm0
-	vmovapd	0(%r15), %ymm8
-	vfmadd231pd	%ymm8, %ymm12, %ymm1
+	vmovapd			0(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			0(%r15), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
 	
 	subl	$4, %r10d
 
 	vbroadcastsd	8(%r13), %ymm12
-	vmovapd	32(%r11), %ymm8
-	vfmadd231pd	%ymm8, %ymm12, %ymm2
-	vmovapd	32(%r15), %ymm8
-	vfmadd231pd	%ymm8, %ymm12, %ymm3
+	vmovapd			32(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	vmovapd			32(%r15), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm3
 	
 	vbroadcastsd	16(%r13), %ymm12
-	vmovapd	64(%r11), %ymm8
-	vfmadd231pd	%ymm8, %ymm12, %ymm4
-	vmovapd	64(%r15), %ymm8
-	vfmadd231pd	%ymm8, %ymm12, %ymm5
+	vmovapd			64(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm4
+	vmovapd			64(%r15), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm5
 
 	vbroadcastsd	24(%r13), %ymm12
-	addq	$32, %r13
-	vmovapd	96(%r11), %ymm8
-	addq	$128, %r11
-	vfmadd231pd	%ymm8, %ymm12, %ymm6
-	vmovapd	96(%r15), %ymm8
-	addq	$128, %r15
-	vfmadd231pd	%ymm8, %ymm12, %ymm7
+	addq			$32, %r13
+	vmovapd			96(%r11), %ymm8
+	addq			$128, %r11
+	vfmadd231pd		%ymm8, %ymm12, %ymm6
+	vmovapd			96(%r15), %ymm8
+	addq			$128, %r15
+	vfmadd231pd		%ymm8, %ymm12, %ymm7
 	
 	cmpl	$3, %r10d
 
@@ -155,12 +155,12 @@ _inner_kernel_dgemv_add_n_8_lib4:
 0: // clean-up
 	
 	vbroadcastsd	0(%r13), %ymm12
-	vmovapd	0(%r11), %ymm8
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vaddpd	%ymm0, %ymm15, %ymm0
-	vmovapd	0(%r15), %ymm8
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vaddpd	%ymm1, %ymm15, %ymm1
+	vmovapd			0(%r11), %ymm8
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm0, %ymm15, %ymm0
+	vmovapd			0(%r15), %ymm8
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm1, %ymm15, %ymm1
 	
 	addq	$32, %r11
 	addq	$32, %r15
@@ -512,6 +512,10 @@ _inner_edge_dtrmv_un_8_lib4:
 // ymm1 <- [z4 z5 z6 z7]_a
 // ymm2 <- [z0 z1 z2 z3]_b
 // ymm3 <- [z4 z5 z6 z7]_b
+// ymm4 <- [z0 z1 z2 z3]_c
+// ymm5 <- [z4 z5 z6 z7]_c
+// ymm6 <- [z0 z1 z2 z3]_d
+// ymm7 <- [z4 z5 z6 z7]_d
 // ymm8  <- dirty
 // ymm9  <- dirty
 // ymm10 <- dirty
@@ -547,6 +551,10 @@ _inner_blend_n_scale_ab_8_lib4:
 	// reduction
 	vaddpd	%ymm0, %ymm2, %ymm0
 	vaddpd	%ymm1, %ymm3, %ymm1
+	vaddpd	%ymm4, %ymm6, %ymm4
+	vaddpd	%ymm5, %ymm7, %ymm5
+	vaddpd	%ymm0, %ymm4, %ymm0
+	vaddpd	%ymm1, %ymm5, %ymm1
 
 	// alpha
 	vbroadcastsd	0(%r10), %ymm15
@@ -924,6 +932,10 @@ _kernel_dgemv_n_8_lib4:
 	vmovapd	%ymm0, %ymm1
 	vmovapd	%ymm0, %ymm2
 	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
 
 
 	// call inner dgemv kernel n
