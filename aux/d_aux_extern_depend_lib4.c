@@ -344,14 +344,8 @@ void d_free_strmat(struct d_strmat *sA)
 // print a matrix structure
 void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
 	{
-	// TODO ai and aj
-	if(ai!=0 || aj!=0)
-		{
-		printf("\nfeature not implemented yet\n\n");
-		exit(1);
-		}
-	double *pA = sA->pA;
 	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
 	d_print_mat(m, n, pA, lda);
 	return;
 	}
