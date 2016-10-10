@@ -1773,7 +1773,7 @@ _kernel_dgemv_t_4_lib4:
 	movq	%rdx, %r11  // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-	movslq	%r12d, %r12
+//	movslq	%r12d, %r12
 	movq	%r8, %r13  // x
 
 #if MACRO_LEVEL>=2
@@ -1881,7 +1881,7 @@ _kernel_dgemv_t_4_vs_lib4:
 	movq	%rdx, %r11  // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-	movslq	%r12d, %r12
+//	movslq	%r12d, %r12
 	movq	%r8, %r13  // x
 
 #if MACRO_LEVEL>=2
