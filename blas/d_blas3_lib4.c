@@ -1780,6 +1780,10 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 
+#else
+
+#error : wrong LA choice
+
 #endif
 
 

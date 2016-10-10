@@ -348,7 +348,7 @@ void dgemv_nt_lib(int m, int n, double alpha_n, double alpha_t, double *pA, int 
 
 	const int bs = 4;
 
-	int ii, jj;
+	int ii;
 
 	// copy and scale y_n int z_n
 	ii = 0;
@@ -362,9 +362,6 @@ void dgemv_nt_lib(int m, int n, double alpha_n, double alpha_t, double *pA, int 
 	for(; ii<m; ii++)
 		{
 		z_n[ii+0] = beta_n*y_n[ii+0];
-		z_n[ii+1] = beta_n*y_n[ii+1];
-		z_n[ii+2] = beta_n*y_n[ii+2];
-		z_n[ii+3] = beta_n*y_n[ii+3];
 		}
 	
 	ii = 0;
@@ -383,6 +380,45 @@ void dgemv_nt_lib(int m, int n, double alpha_n, double alpha_t, double *pA, int 
 
 
 
+void dsymv_l_lib(int m, int n, double alpha, double *pA, int sda, double *x, double beta, double *y, double *z)
+	{
+
+	if(m<=0 | n<=0)
+		return;
+	
+	const int bs = 0;
+
+	int ii;
+
+	// copy and scale y int z
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		z[ii+0] = beta*y[ii+0];
+		z[ii+1] = beta*y[ii+1];
+		z[ii+2] = beta*y[ii+2];
+		z[ii+3] = beta*y[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = beta*y[ii+0];
+		}
+	
+	ii = 0;
+	for(; ii<n-3; ii+=4)
+		{
+		kernel_dsymv_l_4_lib4(m, &alpha, pA+ii*bs, sda, x+ii, x, z, z+ii);
+		return;
+		}
+	if(ii<n)
+		{
+		kernel_dsymv_l_4_vs_lib4(m, &alpha, pA+ii*bs, sda, x+ii, x, z, z+ii, n-ii);
+		}
+	
+	return;
+
+	}
+	
 #if defined(LA_BLASFEO)
 
 
@@ -400,6 +436,23 @@ void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strm
 	dgemv_nt_lib(m, n, alpha_n, alpha_t, pA, sda, x_n, x_t, beta_n, beta_t, y_n, y_t, z_n, z_t);
 	return;
 	}
+
+
+
+void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z)
+	{
+	if(ai!=0)
+		{
+		printf("\nfeature not implemented yet\n");
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs; // TODO ai
+	dsymv_l_lib(m, n, alpha, pA, sda, x, beta, y, z);
+	return;
+	}
+
 
 
 #elif defined(LA_BLAS)
@@ -422,6 +475,27 @@ void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strm
 	// n
 	dcopy_(&n, y_t, &i1, z_t, &i1);
 	dgemv_(&ct, &m, &n, &alpha_t, pA, &lda, x_t, &i1, &beta_t, z_t, &i1);
+	return;
+	}
+
+
+
+void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	double d1 = 1.0;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	dcopy_(&m, y, &i1, z, &i1);
+	dsymv_(&cl, &n, &alpha, pA, &lda, x, &i1, &beta, z, &i1);
+	int tmp = m-n;
+	dgemv_(&cn, &tmp, &n, &alpha, pA+n, &lda, x, &i1, &beta, z+n, &i1);
+	dgemv_(&ct, &tmp, &n, &alpha, pA+n, &lda, x+n, &i1, &d1, z, &i1);
 	return;
 	}
 

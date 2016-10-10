@@ -75,7 +75,7 @@ int main()
 
 	double *x_n; d_zeros(&x_n, n, 1); 
 //	for(ii=0; ii<n; ii++) x_n[ii] = 1.0;
-	x_n[0] = 1.0;
+	x_n[4] = 1.0;
 	double *x_t; d_zeros(&x_t, n, 1); 
 //	for(ii=0; ii<n; ii++) x_n[ii] = 1.0;
 	x_t[0] = 1.0;
@@ -159,9 +159,10 @@ int main()
 	d_print_strmat(n, n, &sB, 0, 0);
 
 	d_print_strmat(n, n, &sA, 0, 0);
-	dgemv_nt_libstr(n, n, 1.0, 1.0, &sA, 0, 0, x_n, x_t, 0.0, 0.0, y_n, y_t, z_n, z_t);
+//	dgemv_nt_libstr(n, n, 1.0, 1.0, &sA, 0, 0, x_n, x_t, 0.0, 0.0, y_n, y_t, z_n, z_t);
+	dsymv_l_libstr(n, 4, 1.0, &sA, 0, 0, x_n, 0.0, y_n, z_n);
 	d_print_mat(1, n, z_n, 1);
-	d_print_mat(1, n, z_t, 1);
+//	d_print_mat(1, n, z_t, 1);
 
 
 
