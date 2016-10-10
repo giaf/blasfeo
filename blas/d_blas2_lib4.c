@@ -386,7 +386,7 @@ void dsymv_l_lib(int m, int n, double alpha, double *pA, int sda, double *x, dou
 	if(m<=0 | n<=0)
 		return;
 	
-	const int bs = 0;
+	const int bs = 4;
 
 	int ii;
 
@@ -407,12 +407,11 @@ void dsymv_l_lib(int m, int n, double alpha, double *pA, int sda, double *x, dou
 	ii = 0;
 	for(; ii<n-3; ii+=4)
 		{
-		kernel_dsymv_l_4_lib4(m, &alpha, pA+ii*bs, sda, x+ii, x, z, z+ii);
-		return;
+		kernel_dsymv_l_4_lib4(m-ii, &alpha, pA+ii*bs+ii*sda, sda, x+ii, x+ii, z+ii, z+ii);
 		}
 	if(ii<n)
 		{
-		kernel_dsymv_l_4_vs_lib4(m, &alpha, pA+ii*bs, sda, x+ii, x, z, z+ii, n-ii);
+		kernel_dsymv_l_4_vs_lib4(m-ii, &alpha, pA+ii*bs+ii*sda, sda, x+ii, x+ii, z+ii, z+ii, n-ii);
 		}
 	
 	return;
