@@ -73,6 +73,17 @@ int main()
 
 	double *C; d_zeros(&C, n, n);
 
+	double *x_n; d_zeros(&x_n, n, 1); 
+//	for(ii=0; ii<n; ii++) x_n[ii] = 1.0;
+	x_n[0] = 1.0;
+	double *x_t; d_zeros(&x_t, n, 1); 
+//	for(ii=0; ii<n; ii++) x_n[ii] = 1.0;
+	x_t[0] = 1.0;
+	double *y_n; d_zeros(&y_n, n, 1);
+	double *y_t; d_zeros(&y_t, n, 1);
+	double *z_n; d_zeros(&z_n, n, 1);
+	double *z_t; d_zeros(&z_t, n, 1);
+
 	int *ipiv; int_zeros(&ipiv, n, 1);
 
 	//
@@ -146,6 +157,12 @@ int main()
 	
 	dtrtr_u_libstr(6, &sE, 2, 0, &sB, 1, 0);
 	d_print_strmat(n, n, &sB, 0, 0);
+
+	d_print_strmat(n, n, &sA, 0, 0);
+	dgemv_nt_libstr(n, n, 1.0, 1.0, &sA, 0, 0, x_n, x_t, 0.0, 0.0, y_n, y_t, z_n, z_t);
+	d_print_mat(1, n, z_n, 1);
+	d_print_mat(1, n, z_t, 1);
+
 
 
 

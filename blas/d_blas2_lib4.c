@@ -27,8 +27,12 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include "../include/blasfeo_d_kernel.h"
+#include <stdlib.h>
+#include <stdio.h>
 
+#include "../include/blasfeo_block_size.h"
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_d_kernel.h"
 
 
 void dgemv_n_lib(int m, int n, double alpha, double *pA, int sda, double *x, double beta, double *y, double *z)
@@ -336,4 +340,95 @@ void dtrmv_ut_lib(int m, double *pA, int sda, double *x, int alg, double *y, dou
 
 
 
+void dgemv_nt_lib(int m, int n, double alpha_n, double alpha_t, double *pA, int sda, double *x_n, double *x_t, double beta_n, double beta_t, double *y_n, double *y_t, double *z_n, double *z_t)
+	{
 
+	if(m<=0 | n<=0)
+		return;
+
+	const int bs = 4;
+
+	int ii, jj;
+
+	// copy and scale y_n int z_n
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		z_n[ii+0] = beta_n*y_n[ii+0];
+		z_n[ii+1] = beta_n*y_n[ii+1];
+		z_n[ii+2] = beta_n*y_n[ii+2];
+		z_n[ii+3] = beta_n*y_n[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		z_n[ii+0] = beta_n*y_n[ii+0];
+		z_n[ii+1] = beta_n*y_n[ii+1];
+		z_n[ii+2] = beta_n*y_n[ii+2];
+		z_n[ii+3] = beta_n*y_n[ii+3];
+		}
+	
+	ii = 0;
+	for(; ii<n-3; ii+=4)
+		{
+		kernel_dgemv_nt_4_lib4(m, &alpha_n, &alpha_t, pA+ii*bs, sda, x_n+ii, x_t, &beta_t, y_t+ii, z_n, z_t+ii);
+		}
+	if(ii<n)
+		{
+		kernel_dgemv_nt_4_vs_lib4(m, &alpha_n, &alpha_t, pA+ii*bs, sda, x_n+ii, x_t, &beta_t, y_t+ii, z_n, z_t+ii, n-ii);
+		}
+	
+	return;
+
+	}
+
+
+
+#if defined(LA_BLASFEO)
+
+
+
+void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strmat *sA, int ai, int aj, double *x_n, double *x_t, double beta_n, double beta_t, double *y_n, double *y_t, double *z_n, double *z_t)
+	{
+	if(ai!=0)
+		{
+		printf("\nfeature not implemented yet\n");
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs; // TODO ai
+	dgemv_nt_lib(m, n, alpha_n, alpha_t, pA, sda, x_n, x_t, beta_n, beta_t, y_n, y_t, z_n, z_t);
+	return;
+	}
+
+
+#elif defined(LA_BLAS)
+
+
+
+void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strmat *sA, int ai, int aj, double *x_n, double *x_t, double beta_n, double beta_t, double *y_n, double *y_t, double *z_n, double *z_t)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	// n
+	dcopy_(&m, y_n, &i1, z_n, &i1);
+	dgemv_(&cn, &m, &n, &alpha_n, pA, &lda, x_n, &i1, &beta_n, z_n, &i1);
+	// n
+	dcopy_(&n, y_t, &i1, z_t, &i1);
+	dgemv_(&ct, &m, &n, &alpha_t, pA, &lda, x_t, &i1, &beta_t, z_t, &i1);
+	return;
+	}
+
+
+
+#else
+
+#error : wrong LA choice
+
+#endif
