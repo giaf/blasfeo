@@ -47,7 +47,7 @@ int main()
 
 	printf("\nLA provided by BLASFEO\n\n");
 
-#elif defined(LA_BLASA)
+#elif defined(LA_BLAS)
 
 	printf("\nLA provided by BLAS\n\n");
 
