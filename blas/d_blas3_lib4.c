@@ -1662,7 +1662,7 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 
-// dtrmm right upper transposed notunit
+// dtrmm_right_upper_transposed_notunit (B triangular !!!)
 void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
@@ -1683,6 +1683,28 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	return;
 	}
 
+
+
+// dsyrk_lower_nortransposed (allowing for different factors !!!)
+void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
+		{
+		printf("\nfeature not implemented yet\n\n");
+		exit(1);
+		}
+	const int bs = D_BS;
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	double *pA = sA->pA + aj*bs;
+	double *pB = sB->pA + bj*bs;
+	double *pC = sC->pA + cj*bs;
+	double *pD = sD->pA + dj*bs;
+	dsyrk_nt_l_lib(m, n, k, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd);
+	return;
+	}
 
 
 
@@ -1804,7 +1826,7 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 
-// dtrmm_right_upper_transposed_notunit
+// dtrmm_right_upper_transposed_notunit (B triangular !!!)
 void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
 	int jj;
@@ -1835,6 +1857,30 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		}
 	return;
 	}
+
+
+
+// dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
+void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	int jj;
+	char ta = 'n';
+	char tb = 't';
+	int i1 = 1;
+	double *pA = sA->pA+ai+aj*sA->m;
+	double *pB = sB->pA+bi+bj*sB->m;
+	double *pC = sC->pA+ci+cj*sC->m;
+	double *pD = sD->pA+di+dj*sD->m;
+	if(!(beta==0.0 || pC==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+		}
+	dgemm_(&ta, &tb, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	return;
+	}
+
+
 
 #else
 
