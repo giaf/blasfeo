@@ -108,7 +108,7 @@ shared_library: target
 	( cd aux; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
-	gcc -shared -o libblasfeo.so libblasfeo.a $(OBJS)
+	gcc -shared -o libblasfeo.so $(OBJS)
 	@echo
 	@echo " libblasfeo.so shared library build complete."
 	@echo
