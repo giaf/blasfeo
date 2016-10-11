@@ -52,7 +52,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 3.6
+#define GHZ_MAX 3.3
 
 
 
@@ -301,7 +301,7 @@ int main()
 #else
 //			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 #endif
-//			dpotrf_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
+//			dpotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 			dgetrf_nopivot_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 //			dgetrf_libstr(n, n, &sD, 0, 0, &sD, 0, 0, ipiv);
 //			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);

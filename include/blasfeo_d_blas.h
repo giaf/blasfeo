@@ -99,7 +99,7 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 // D <= chol( C ) ; C, D lower triangular
 void dpotrf_nt_l_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);
-void dpotrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj);
+void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj);
 // D <= chol( C + A * B' ) ; C, D lower triangular
 void dsyrk_dpotrf_nt_l_lib(int m, int n, int k, double *pA, int sda, double *pB, int sdb, double *pC, int sdc, double *pD, int sdd, double *inv_diag_D);
 // D <= lu( C ) ; no pivoting

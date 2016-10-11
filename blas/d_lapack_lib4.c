@@ -1423,7 +1423,7 @@ void dlauum_dpotrf_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *
 
 
 // dpotrf
-void dpotrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
 	if(ci!=0 | di!=0)
 		{
@@ -1477,7 +1477,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 
 
 // dpotrf
-void dpotrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
