@@ -82,7 +82,7 @@ void s_free(float *pA)
 
 
 /* frees aligned matrix */
-void d_free_align(float *pA)
+void s_free_align(float *pA)
 	{
 #if defined(OS_WINDOWS)
 	_aligned_free( pA );
