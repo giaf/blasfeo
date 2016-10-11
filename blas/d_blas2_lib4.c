@@ -365,6 +365,12 @@ void dgemv_nt_lib(int m, int n, double alpha_n, double alpha_t, double *pA, int 
 		}
 	
 	ii = 0;
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<n-5; ii+=6)
+		{
+		kernel_dgemv_nt_6_lib4(m, &alpha_n, &alpha_t, pA+ii*bs, sda, x_n+ii, x_t, &beta_t, y_t+ii, z_n, z_t+ii);
+		}
+#endif
 	for(; ii<n-3; ii+=4)
 		{
 		kernel_dgemv_nt_4_lib4(m, &alpha_n, &alpha_t, pA+ii*bs, sda, x_n+ii, x_t, &beta_t, y_t+ii, z_n, z_t+ii);

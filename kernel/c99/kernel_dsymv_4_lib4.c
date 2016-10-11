@@ -217,7 +217,7 @@ void kernel_dgemv_nt_4_vs_lib4(int kmax, double *alpha_n, double *alpha_t, doubl
 
 
 
-#if ! defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if ! ( defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL) )
 // XXX copy and scale y_n into z_n outside the kernel !!!!!
 void kernel_dgemv_nt_4_lib4(int kmax, double *alpha_n, double *alpha_t, double *A, int sda, double *x_n, double *x_t, double *beta_t, double *y_t, double *z_n, double *z_t)
 	{
@@ -588,6 +588,7 @@ void kernel_dsymv_l_4_vs_lib4(int kmax, double *alpha, double *A, int sda, doubl
 
 
 
+#if ! ( defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL) )
 // XXX copy and scale y_n into z_n outside the kernel !!!!!
 void kernel_dsymv_l_4_lib4(int kmax, double *alpha, double *A, int sda, double *x_n, double *x_t, double *z_n, double *z_t)
 	{
@@ -597,6 +598,7 @@ void kernel_dsymv_l_4_lib4(int kmax, double *alpha, double *A, int sda, double *
 	return;
 
 	}
+#endif
 
 
 
