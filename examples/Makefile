@@ -49,7 +49,8 @@ ifneq ($(NUM_THREAD), 1)
 LIBS += -pthread 
 endif
 
-OBJS_TEST = example_lu_factorization.o
+#OBJS_TEST = example_lu_factorization.o
+OBJS_TEST = tools.o example_riccati_recursion.o
 
 all: clean obj run
 
