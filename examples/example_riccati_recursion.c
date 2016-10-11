@@ -44,7 +44,7 @@ void d_back_ric_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAb, struct d
 	int n;
 	// last stage
 	dpotrf_l_libstr(nx[N]+1, nx[N], &hsRSQrq[N], 0, 0, &hsL[N], 0, 0);
-	d_print_strmat(nx[N]+1, nx[N], hsL, 0, 0);
+//	d_print_strmat(nx[N]+1, nx[N], &hsL[N], 0, 0);
 	return;
 	}
 
@@ -175,11 +175,12 @@ int main()
 	int nx[N+1];
 	nx[0] = 0;
 	for(ii=1; ii<=N; ii++)
-		nx[ii] = nx;
+		nx[ii] = nx_;
+	nx[N] = nx_;
 
 	int nu[N+1];
 	for(ii=0; ii<N; ii++)
-		nu[ii] = nu;
+		nu[ii] = nu_;
 	nu[N] = 0;
 
 /************************************************
@@ -190,7 +191,7 @@ int main()
 
 	double *B; d_zeros(&B, nx_, nu_); // inputs matrix
 
-	double *b; d_zeros_align(&b, nx_, 1); // states offset
+	double *b; d_zeros(&b, nx_, 1); // states offset
 	double *x0; d_zeros_align(&x0, nx_, 1); // initial state
 
 	double Ts = 0.5; // sampling time
@@ -208,6 +209,129 @@ int main()
 	d_print_mat(nx_, nu_, B, nx_);
 	d_print_mat(1, nx_, b, 1);
 	d_print_mat(1, nx_, x0, 1);
+
+/************************************************
+* cost function
+************************************************/	
+
+	double *R; d_zeros(&R, nu_, nu_);
+	for(ii=0; ii<nu_; ii++) R[ii*(nu_+1)] = 2.0;
+
+	double *S; d_zeros(&S, nu_, nx_);
+
+	double *Q; d_zeros(&Q, nx_, nx_);
+	for(ii=0; ii<nx_; ii++) Q[ii*(nx_+1)] = 1.0;
+
+	double *r; d_zeros(&r, nu_, 1);
+	for(ii=0; ii<nu_; ii++) r[ii] = 0.2;
+
+	double *q; d_zeros(&q, nx_, 1);
+	for(ii=0; ii<nx_; ii++) q[ii] = 0.1;
+
+	d_print_mat(nu_, nu_, R, nu_);
+	d_print_mat(nu_, nx_, S, nu_);
+	d_print_mat(nx_, nx_, Q, nx_);
+	d_print_mat(1, nu_, r, 1);
+	d_print_mat(1, nx_, q, 1);
+
+/************************************************
+* matrices as strmat
+************************************************/	
+
+	struct d_strmat sA;
+	d_allocate_strmat(nx_, nx_, &sA);
+	d_cvt_mat2strmat(nx_, nx_, A, nx_, &sA, 0, 0);
+	double *b0; d_zeros(&b0, nx_, 1); // states offset
+	dgemv_n_libstr(nx_, nx_, 1.0, &sA, 0, 0, x0, 1.0, b, b0);
+	d_print_mat(1, nx_, b0, 1);
+
+	struct d_strmat sBbt0;
+	d_allocate_strmat(nu_+nx_+1, nx_, &sBbt0);
+	d_cvt_tran_mat2strmat(nx_, nx_, B, nx_, &sBbt0, 0, 0);
+	d_cvt_tran_mat2strmat(nx_, 1, b0, nx_, &sBbt0, nu_, 0);
+	d_print_strmat(nu_+1, nx_, &sBbt0, 0, 0);
+
+	struct d_strmat sBAbt1;
+	d_allocate_strmat(nu_+nx_+1, nx_, &sBAbt1);
+	d_cvt_tran_mat2strmat(nx_, nu_, B, nx_, &sBAbt1, 0, 0);
+	d_cvt_tran_mat2strmat(nx_, nx_, A, nx_, &sBAbt1, nu_, 0);
+	d_cvt_tran_mat2strmat(nx_, 1, b, nx_, &sBAbt1, nu_+nx_, 0);
+	d_print_strmat(nu_+nx_+1, nx_, &sBAbt1, 0, 0);
+
+	struct d_strmat sRr0; // XXX no need to update r0 since S=0
+	d_allocate_strmat(nu_+1, nu_, &sRr0);
+	d_cvt_mat2strmat(nu_, nu_, R, nu_, &sRr0, 0, 0);
+	d_cvt_tran_mat2strmat(nu_, 1, r, nu_, &sRr0, nu_, 0);
+	d_print_strmat(nu_+1, nu_, &sRr0, 0, 0);
+
+	struct d_strmat sRSQrq1;
+	d_allocate_strmat(nu_+nx_+1, nu_+nx_, &sRSQrq1);
+	d_cvt_mat2strmat(nu_, nu_, R, nu_, &sRSQrq1, 0, 0);
+	d_cvt_tran_mat2strmat(nu_, nx_, S, nu_, &sRSQrq1, nu_, 0);
+	d_cvt_mat2strmat(nx_, nx_, Q, nx_, &sRSQrq1, nu_, nu_);
+	d_cvt_tran_mat2strmat(nu_, 1, r, nu_, &sRSQrq1, nu_+nx_, 0);
+	d_cvt_tran_mat2strmat(nx_, 1, q, nx_, &sRSQrq1, nu_+nx_, nu_);
+	d_print_strmat(nu_+nx_+1, nu_+nx_, &sRSQrq1, 0, 0);
+
+	struct d_strmat sQqN;
+	d_allocate_strmat(nx_+1, nx_, &sQqN);
+	d_cvt_mat2strmat(nx_, nx_, Q, nx_, &sQqN, 0, 0);
+	d_cvt_tran_mat2strmat(nx_, 1, q, nx_, &sQqN, nx_, 0);
+	d_print_strmat(nx_+1, nx_, &sQqN, 0, 0);
+
+/************************************************
+* array of matrices
+************************************************/	
+	
+	struct d_strmat hsBAbt[N];
+	struct d_strmat hsRSQrq[N+1];
+	struct d_strmat hsL[N+1];
+
+	hsRSQrq[0] = sRr0;
+	hsBAbt[0] = sBbt0;
+	d_allocate_strmat(nu_+1, nu_, &hsL[0]);
+	for(ii=1; ii<N; ii++)
+		{
+		hsRSQrq[ii] = sRSQrq1;
+		hsBAbt[ii] = sBAbt1;
+		d_allocate_strmat(nu_+nx_+1, nu_+nx_, &hsL[ii]);
+		}
+	hsRSQrq[N] = sQqN;
+	d_allocate_strmat(nx_+1, nx_, &hsL[N]);
+
+/************************************************
+* call Riccati solver
+************************************************/	
+	
+	d_back_ric_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL);
+
+/************************************************
+* free memory
+************************************************/	
+
+	d_free(A);
+	d_free(B);
+	d_free(b);
+	d_free_align(x0);
+	d_free(R);
+	d_free(S);
+	d_free(Q);
+	d_free(r);
+	d_free(q);
+	d_free(b0);
+	d_free_strmat(&sA);
+	d_free_strmat(&sBbt0);
+	d_free_strmat(&sBAbt1);
+	d_free_strmat(&sRr0);
+	d_free_strmat(&sRSQrq1);
+	d_free_strmat(&sQqN);
+	d_free_strmat(&hsL[0]);
+	for(ii=1; ii<N; ii++)
+		{
+		d_free_strmat(&hsL[ii]);
+		}
+	d_free_strmat(&hsL[N]);
+
 
 /************************************************
 * return
