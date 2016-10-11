@@ -104,6 +104,15 @@ static_library: target
 	@echo " libblasfeo.a static library build complete."
 	@echo
 
+shared_library: target
+	( cd aux; $(MAKE) obj)
+	( cd kernel; $(MAKE) obj)
+	( cd blas; $(MAKE) obj)
+	gcc -shared -o libblasfeo.so libblasfeo.a $(OBJS)
+	@echo
+	@echo " libblasfeo.so shared library build complete."
+	@echo
+
 target:
 	touch ./include/blasfeo_target.h
 ifeq ($(TARGET), X64_INTEL_HASWELL)
@@ -146,6 +155,13 @@ install_static:
 	mkdir -p $(PREFIX)/blasfeo
 	mkdir -p $(PREFIX)/blasfeo/lib
 	cp -f libblasfeo.a $(PREFIX)/blasfeo/lib/
+	mkdir -p $(PREFIX)/blasfeo/include
+	cp -f ./include/*.h $(PREFIX)/blasfeo/include/
+
+install_shared:
+	mkdir -p $(PREFIX)/blasfeo
+	mkdir -p $(PREFIX)/blasfeo/lib
+	cp -f libblasfeo.so $(PREFIX)/blasfeo/lib/
 	mkdir -p $(PREFIX)/blasfeo/include
 	cp -f ./include/*.h $(PREFIX)/blasfeo/include/
 
