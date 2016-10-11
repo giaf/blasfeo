@@ -508,7 +508,7 @@ void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 	double *pA = sA->pA + ai + aj*lda;
 	// n
 	dcopy_(&m, y, &i1, z, &i1);
-	dgemv_(&cn, &m, &n, &alpha, pA, &lda, x, &i1, &beta, z_n, &i1);
+	dgemv_(&cn, &m, &n, &alpha, pA, &lda, x, &i1, &beta, z, &i1);
 	return;
 	}
 
