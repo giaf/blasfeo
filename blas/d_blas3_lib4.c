@@ -1662,6 +1662,30 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 
+// dtrmm right upper transposed notunit
+void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
+		{
+		printf("\nfeature not implemented yet\n\n");
+		exit(1);
+		}
+	const int bs = D_BS;
+	int sda = sA->cn;
+	int sdb = sC->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	double *pA = sA->pA + aj*bs;
+	double *pB = sB->pA + bj*bs;
+	double *pC = sC->pA + cj*bs;
+	double *pD = sD->pA + dj*bs;
+	dtrmm_nt_ru_lib(m, n, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdc); 
+	return;
+	}
+
+
+
+
 #elif defined(LA_BLAS)
 
 
@@ -1779,6 +1803,38 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	}
 
 
+
+// dtrmm_right_upper_transposed_notunit
+void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	double *pA = sA->pA+ai+aj*lda;
+	double *pB = sB->pA+bi+bj*ldb;
+	double *pC = sC->pA+ci+cj*ldc;
+	double *pD = sD->pA+di+dj*ldd;
+	if(!(pA==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			dcopy_(&m, pA+jj*lda, &i1, pD+jj*ldd, &i1);
+		}
+	dtrmm_(&cr, &cu, &ct, &cn, &m, &n, &alpha, pB, &ldd, pD, &ldd);
+	if(beta!=0)
+		{
+		for(jj=0; jj<n; jj++)
+			daxpy_(&m, &beta, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+		}
+	return;
+	}
 
 #else
 
