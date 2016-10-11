@@ -43,8 +43,10 @@ void daxpy_lib(int kmax, double alpha, double *x, double *y);
 
 // z <= beta * y + alpha * A * x
 void dgemv_n_lib(int m, int n, double alpha, double *pA, int sda, double *x, double beta, double *y, double *z);
+void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z);
 // z <= beta * y + alpha * A' * x
 void dgemv_t_lib(int m, int n, double alpha, double *pA, int sda, double *x, double beta, double *y, double *z);
+void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z);
 // y <= inv( A ) * x
 void dtrsv_ln_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *x, double *y);
 // y <= inv( A' ) * x

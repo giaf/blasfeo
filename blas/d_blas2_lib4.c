@@ -428,6 +428,38 @@ void dsymv_l_lib(int m, int n, double alpha, double *pA, int sda, double *x, dou
 
 
 
+void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z)
+	{
+	if(ai!=0)
+		{
+		printf("\nfeature not implemented yet\n");
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs; // TODO ai
+	dgemv_n_lib(m, n, alpha, pA, sda, x, beta, y, z);
+	return;
+	}
+
+
+
+void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z)
+	{
+	if(ai!=0)
+		{
+		printf("\nfeature not implemented yet\n");
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs; // TODO ai
+	dgemv_t_lib(m, n, alpha, pA, sda, x, beta, y, z);
+	return;
+	}
+
+
+
 void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strmat *sA, int ai, int aj, double *x_n, double *x_t, double beta_n, double beta_t, double *y_n, double *y_t, double *z_n, double *z_t)
 	{
 	if(ai!=0)
@@ -464,6 +496,42 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 
+void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	// n
+	dcopy_(&m, y, &i1, z, &i1);
+	dgemv_(&cn, &m, &n, &alpha, pA, &lda, x, &i1, &beta, z_n, &i1);
+	return;
+	}
+
+
+
+void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	// n
+	dcopy_(&n, y, &i1, z, &i1);
+	dgemv_(&ct, &m, &n, &alpha, pA, &lda, x, &i1, &beta, z, &i1);
+	return;
+	}
+
+
+
 void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strmat *sA, int ai, int aj, double *x_n, double *x_t, double beta_n, double beta_t, double *y_n, double *y_t, double *z_n, double *z_t)
 	{
 	char cl = 'l';
@@ -477,7 +545,7 @@ void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strm
 	// n
 	dcopy_(&m, y_n, &i1, z_n, &i1);
 	dgemv_(&cn, &m, &n, &alpha_n, pA, &lda, x_n, &i1, &beta_n, z_n, &i1);
-	// n
+	// t
 	dcopy_(&n, y_t, &i1, z_t, &i1);
 	dgemv_(&ct, &m, &n, &alpha_t, pA, &lda, x_t, &i1, &beta_t, z_t, &i1);
 	return;
