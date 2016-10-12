@@ -1672,14 +1672,14 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		}
 	const int bs = D_BS;
 	int sda = sA->cn;
-	int sdb = sC->cn;
+	int sdb = sB->cn;
 	int sdc = sC->cn;
 	int sdd = sD->cn;
 	double *pA = sA->pA + aj*bs;
 	double *pB = sB->pA + bj*bs;
 	double *pC = sC->pA + cj*bs;
 	double *pD = sD->pA + dj*bs;
-	dtrmm_nt_ru_lib(m, n, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdc); 
+	dtrmm_nt_ru_lib(m, n, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd); 
 	return;
 	}
 
@@ -1849,7 +1849,7 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		for(jj=0; jj<n; jj++)
 			dcopy_(&m, pA+jj*lda, &i1, pD+jj*ldd, &i1);
 		}
-	dtrmm_(&cr, &cu, &ct, &cn, &m, &n, &alpha, pB, &ldd, pD, &ldd);
+	dtrmm_(&cr, &cu, &ct, &cn, &m, &n, &alpha, pB, &ldb, pD, &ldd);
 	if(beta!=0)
 		{
 		for(jj=0; jj<n; jj++)
