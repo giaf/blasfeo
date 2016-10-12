@@ -43,6 +43,15 @@ struct d_strmat
 	int memory_size; // size of needed memory
 	};
 
+// vector structure
+struct d_strvec 
+	{
+	int m; // size
+	int pm; // packed size
+	double *pa; // pointer to a pm array of doubles, the first is aligned to cache line size
+	int memory_size; // size of needed memory
+	};
+
 #elif defined(LA_BLAS)
 
 // matrix structure
@@ -51,6 +60,14 @@ struct d_strmat
 	int m; // rows
 	int n; // cols
 	double *pA; // pointer to a m*n array of doubles
+	int memory_size; // size of needed memory
+	};
+
+// vector structure
+struct d_strvec 
+	{
+	int m; // size
+	double *pa; // pointer to a m array of doubles, the first is aligned to cache line size
 	int memory_size; // size of needed memory
 	};
 

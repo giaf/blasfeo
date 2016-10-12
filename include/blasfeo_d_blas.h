@@ -43,10 +43,10 @@ void daxpy_lib(int kmax, double alpha, double *x, double *y);
 
 // z <= beta * y + alpha * A * x
 void dgemv_n_lib(int m, int n, double alpha, double *pA, int sda, double *x, double beta, double *y, double *z);
-void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z);
+void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi);
 // z <= beta * y + alpha * A' * x
 void dgemv_t_lib(int m, int n, double alpha, double *pA, int sda, double *x, double beta, double *y, double *z);
-void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z);
+void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi);
 // y <= inv( A ) * x
 void dtrsv_ln_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *x, double *y);
 // y <= inv( A' ) * x
@@ -58,10 +58,10 @@ void dtrmv_ut_lib(int m, double *pA, int sda, double *x, int alg, double *y, dou
 // z_n <= beta_n * y_n + alpha_n * A  * x_n
 // z_t <= beta_t * y_t + alpha_t * A' * x_t
 void dgemv_nt_lib(int m, int n, double alpha_n, double alpha_t, double *pA, int sda, double *x_n, double *x_t, double beta_n, double beta_t, double *y_n, double *y_t, double *z_n, double *z_t);
-void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strmat *sA, int ai, int aj, double *x_n, double *x_t, double beta_n, double beta_t, double *y_n, double *y_t, double *z_n, double *z_t);
+void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx_n, struct d_strvec *sx_t, int xi_n, int xi_t, double beta_n, double beta_t, struct d_strvec *sy_n, struct d_strvec *sy_t, int yi_n, int yi_t, struct d_strvec *sz_n, struct d_strvec *sz_t, int zi_n, int zi_t);
 // z <= beta * y + alpha * A * x, where A is symmetric and only the lower triangular patr of A is accessed
 void dsymv_l_lib(int m, int n, double alpha, double *pA, int sda, double *x, double beta, double *y, double *z);
-void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *pA, int ai, int aj, double *x, double beta, double *y, double *z);
+void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi);
 	
 
 

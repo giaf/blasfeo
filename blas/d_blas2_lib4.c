@@ -428,9 +428,9 @@ void dsymv_l_lib(int m, int n, double alpha, double *pA, int sda, double *x, dou
 
 
 
-void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z)
+void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
-	if(ai!=0)
+	if(ai!=0 | xi%4!=0)
 		{
 		printf("\nfeature not implemented yet\n");
 		exit(1);
@@ -438,15 +438,18 @@ void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs; // TODO ai
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
 	dgemv_n_lib(m, n, alpha, pA, sda, x, beta, y, z);
 	return;
 	}
 
 
 
-void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z)
+void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
-	if(ai!=0)
+	if(ai!=0 | xi%4!=0)
 		{
 		printf("\nfeature not implemented yet\n");
 		exit(1);
@@ -454,15 +457,18 @@ void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs; // TODO ai
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
 	dgemv_t_lib(m, n, alpha, pA, sda, x, beta, y, z);
 	return;
 	}
 
 
 
-void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strmat *sA, int ai, int aj, double *x_n, double *x_t, double beta_n, double beta_t, double *y_n, double *y_t, double *z_n, double *z_t)
+void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx_n, struct d_strvec *sx_t, int xi_n, int xi_t, double beta_n, double beta_t, struct d_strvec *sy_n, struct d_strvec *sy_t, int yi_n, int yi_t, struct d_strvec *sz_n, struct d_strvec *sz_t, int zi_n, int zi_t)
 	{
-	if(ai!=0)
+	if(ai!=0 | xi_n%4!=0 | xi_t%4!=0)
 		{
 		printf("\nfeature not implemented yet\n");
 		exit(1);
@@ -470,15 +476,21 @@ void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strm
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs; // TODO ai
+	double *x_n = sx_n->pa + xi_n;
+	double *x_t = sx_t->pa + xi_t;
+	double *y_n = sy_n->pa + yi_n;
+	double *y_t = sy_t->pa + yi_t;
+	double *z_n = sz_n->pa + zi_n;
+	double *z_t = sz_t->pa + zi_t;
 	dgemv_nt_lib(m, n, alpha_n, alpha_t, pA, sda, x_n, x_t, beta_n, beta_t, y_n, y_t, z_n, z_t);
 	return;
 	}
 
 
 
-void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z)
+void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
-	if(ai!=0)
+	if(ai!=0 | xi%4!=0)
 		{
 		printf("\nfeature not implemented yet\n");
 		exit(1);
@@ -486,6 +498,9 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs; // TODO ai
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
 	dsymv_l_lib(m, n, alpha, pA, sda, x, beta, y, z);
 	return;
 	}
@@ -496,7 +511,7 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 
-void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z)
+void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -506,6 +521,9 @@ void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 	int i1 = 1;
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
 	// n
 	dcopy_(&m, y, &i1, z, &i1);
 	dgemv_(&cn, &m, &n, &alpha, pA, &lda, x, &i1, &beta, z, &i1);
@@ -514,7 +532,7 @@ void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 
-void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z)
+void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -524,6 +542,9 @@ void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 	int i1 = 1;
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
 	// n
 	dcopy_(&n, y, &i1, z, &i1);
 	dgemv_(&ct, &m, &n, &alpha, pA, &lda, x, &i1, &beta, z, &i1);
@@ -532,7 +553,7 @@ void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 
-void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strmat *sA, int ai, int aj, double *x_n, double *x_t, double beta_n, double beta_t, double *y_n, double *y_t, double *z_n, double *z_t)
+void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx_n, struct d_strvec *sx_t, int xi_n, int xi_t, double beta_n, double beta_t, struct d_strvec *sy_n, struct d_strvec *sy_t, int yi_n, int yi_t, struct d_strvec *sz_n, struct d_strvec *sz_t, int zi_n, int zi_t)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -542,6 +563,12 @@ void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strm
 	int i1 = 1;
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
+	double *x_n = sx_n->pa + xi_n;
+	double *x_t = sx_t->pa + xi_t;
+	double *y_n = sy_n->pa + yi_n;
+	double *y_t = sy_t->pa + yi_t;
+	double *z_n = sz_n->pa + zi_n;
+	double *z_t = sz_t->pa + zi_t;
 	// n
 	dcopy_(&m, y_n, &i1, z_n, &i1);
 	dgemv_(&cn, &m, &n, &alpha_n, pA, &lda, x_n, &i1, &beta_n, z_n, &i1);
@@ -553,7 +580,7 @@ void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strm
 
 
 
-void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, double *x, double beta, double *y, double *z)
+void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -564,6 +591,9 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 	double d1 = 1.0;
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
 	dcopy_(&m, y, &i1, z, &i1);
 	dsymv_(&cl, &n, &alpha, pA, &lda, x, &i1, &beta, z, &i1);
 	int tmp = m-n;

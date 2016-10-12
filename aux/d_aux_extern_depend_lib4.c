@@ -300,16 +300,64 @@ void d_free_strmat(struct d_strmat *sA)
 
 
 
+// create a vector structure for a vector of size m by dynamically allocating the memory
+void d_allocate_strvec(int m, struct d_strvec *sa)
+	{
+	const int bs = D_BS;
+//	int nc = D_NC;
+//	int al = bs*nc;
+	sa->m = m;
+	int pm = (m+bs-1)/bs*bs;
+	sa->pm = pm;
+	d_zeros_align(&(sa->pa), sa->pm, 1);
+	sa->memory_size = pm*sizeof(double);
+	return;
+	}
+
+
+
+// free memory of a matrix structure
+void d_free_strvec(struct d_strvec *sa)
+	{
+	free(sa->pa);
+	return;
+	}
+
+
+
 // print a matrix structure
 void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
 	{
-	// TODO ai and aj
+	// TODO ai
 	if(ai!=0 | aj!=0)
 		{
 		printf("\nfeature not implemented yet\n\n");
 		exit(1);
 		}
-	d_print_pmat(m, n, sA->pA, sA->cn);
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs;
+	d_print_pmat(m, n, pA, sda);
+	return;
+	}
+
+
+
+// print a vector structure
+void d_print_strvec(int m, struct d_strvec *sa, int ai)
+	{
+	double *pa = sa->pa + ai;
+	d_print_mat(m, 1, pa, m);
+	return;
+	}
+
+
+
+// print the transposed of a vector structure
+void d_print_tran_strvec(int m, struct d_strvec *sa, int ai)
+	{
+	double *pa = sa->pa + ai;
+	d_print_mat(1, m, pa, 1);
 	return;
 	}
 
@@ -320,7 +368,7 @@ void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
 
 
 
-// create a matrix structure for a matrix of size m*n // TODO pass work space instead of dynamic alloc
+// create a matrix structure for a matrix of size m*n
 void d_allocate_strmat(int m, int n, struct d_strmat *sA)
 	{
 	sA->m = m;
@@ -341,12 +389,52 @@ void d_free_strmat(struct d_strmat *sA)
 
 
 
+// create a vector structure for a vector of size m
+void d_allocate_strvec(int m, struct d_strvec *sa)
+	{
+	sa->m = m;
+	d_zeros(&(sa->pa), sa->m, 1);
+	sa->memory_size = m*sizeof(double);
+	return;
+	}
+
+
+
+// free memory of a vector structure
+void d_free_strvec(struct d_strvec *sa)
+	{
+	free(sa->pa);
+	return;
+	}
+
+
+
 // print a matrix structure
 void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
 	d_print_mat(m, n, pA, lda);
+	return;
+	}
+
+
+
+// print a vector structure
+void d_print_strvec(int m, struct d_strvec *sa, int ai)
+	{
+	double *pa = sa->pa + ai;
+	d_print_mat(m, 1, pa, m);
+	return;
+	}
+
+
+
+// print and transpose a vector structure
+void d_print_tran_strvec(int m, struct d_strvec *sa, int ai)
+	{
+	double *pa = sa->pa + ai;
+	d_print_mat(1, m, pa, 1);
 	return;
 	}
 

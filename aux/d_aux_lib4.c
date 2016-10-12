@@ -2485,7 +2485,7 @@ int d_size_strmat(int m, int n)
 
 
 
-// create a matrix structure for a matrix of size m*n by using memory passed by a pointer (and update it)
+// create a matrix structure for a matrix of size m*n by using memory passed by a pointer
 void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory)
 	{
 	const int bs = D_BS;
@@ -2505,6 +2505,37 @@ void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory)
 	ptr += tmp;
 	sA->use_dA = 0;
 	sA->memory_size = (pm*cn+tmp)*sizeof(double);
+	return;
+	}
+
+
+
+// return memory size (in bytes) needed for a strvec
+int d_size_strvec(int m)
+	{
+	const int bs = D_BS;
+//	int nc = D_NC;
+//	int al = bs*nc;
+	int pm = (m+bs-1)/bs*bs;
+	int memory_size = pm*sizeof(double);
+	return memory_size;
+	}
+
+
+
+// create a vector structure for a vector of size m by using memory passed by a pointer
+void d_create_strvec(int m, struct d_strvec *sa, void *memory)
+	{
+	const int bs = D_BS;
+//	int nc = D_NC;
+//	int al = bs*nc;
+	sa->m = m;
+	int pm = (m+bs-1)/bs*bs;
+	sa->pm = pm;
+	double *ptr = (double *) memory;
+	sa->pa = ptr;
+//	ptr += pm;
+	sa->memory_size = pm*sizeof(double);
 	return;
 	}
 
@@ -2536,6 +2567,18 @@ void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA
 
 
 
+// convert a vector into a vector structure
+void d_cvt_vec2strvec(int m, double *a, struct d_strvec *sa, int ai)
+	{
+	double *pa = sa->pa + ai;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		pa[ii] = a[ii];
+	return;
+	}
+
+
+
 // convert a matrix structure into a matrix
 void d_cvt_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
 	{
@@ -2557,6 +2600,18 @@ void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, do
 	int pm = sA->pm;
 	int cn = sA->cn;
 	d_cvt_tran_pmat2mat(m, n, ai, pA+ai/bs*bs*cn+ai%bs+aj*bs, cn, A, lda);
+	return;
+	}
+
+
+
+// convert a vector structure into a vector 
+void d_cvt_strvec2vec(int m, struct d_strvec *sa, int ai, double *a)
+	{
+	double *pa = sa->pa + ai;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		a[ii] = pa[ii];
 	return;
 	}
 
@@ -2584,6 +2639,31 @@ void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 		{
 		drowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
 		}
+	return;
+	}
+
+
+// insert a vector into a row
+void drowin_libstr(int kmax, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
+	{
+	const int bs = D_BS;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	double *x = sx->pa + xi;
+	drowin_lib(kmax, x, pA);
+	return;
+	}
+
+
+
+// extract a row int a vector
+void drowex_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi)
+	{
+	const int bs = D_BS;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	double *x = sx->pa + xi;
+	drowex_lib(kmax, pA, x);
 	return;
 	}
 
@@ -2714,7 +2794,7 @@ int d_size_strmat(int m, int n)
 
 
 
-// create a matrix structure for a matrix of size m*n by using memory passed by a pointer (and update it)
+// create a matrix structure for a matrix of size m*n by using memory passed by a pointer
 void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory)
 	{
 	sA->m = m;
@@ -2723,6 +2803,28 @@ void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory)
 	sA->pA = ptr;
 	ptr += m * n;
 	sA->memory_size = (m*n)*sizeof(double);
+	return;
+	}
+
+
+
+// return memory size (in bytes) needed for a strvec
+int d_size_strvec(int m, int n)
+	{
+	int size = m*sizeof(double);
+	return size;
+	}
+
+
+
+// create a matrix structure for a matrix of size m*n by using memory passed by a pointer
+void d_create_strvec(int m, struct d_strvec *sA, void *memory)
+	{
+	sa->m = m;
+	double *ptr = (double *) memory;
+	sa->pa = ptr;
+//	ptr += m * n;
+	sa->memory_size = m*sizeof(double);
 	return;
 	}
 
@@ -2780,6 +2882,18 @@ void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA
 
 
 
+// convert a vector into a vector structure
+void d_cvt_vec2strvec(int m, double *a, struct d_strvec *sa, int ai)
+	{
+	double *pa = sa->pa + ai;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		pa[ii] = a[ii];
+	return;
+	}
+
+
+
 // convert a matrix structure into a matrix 
 void d_cvt_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
 	{
@@ -2827,6 +2941,46 @@ void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, do
 			A[jj+(ii+0)*lda] = pA[ii+0+jj*lda2];
 			}
 		}
+	return;
+	}
+
+
+
+// convert a vector structure into a vector 
+void d_cvt_strvec2vec(int m, struct d_strvec *sa, int ai, double *a)
+	{
+	double *pa = sa->pa + ai;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		a[ii] = pa[ii];
+	return;
+	}
+
+
+
+// extract a row into a vector
+void drowex_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double x = sx->pa + xi;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		x[ii] = pA[ii*lda];
+	return;
+	}
+
+
+
+// insert a vector  into a row
+void drowex_libstr(int kmax, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double x = sx->pa + xi;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		pA[ii*lda] = x[ii];
 	return;
 	}
 
