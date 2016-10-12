@@ -334,7 +334,7 @@ _inner_kernel_dgemv_add_t_8_lib4:
 	cmpl	$0, %r10d
 	jle		2f // return
 
-1: // clean-up
+0: // clean-up
 	
 	vcvtsi2sd	%r10d, %xmm14, %xmm14
 #if defined(OS_LINUX)
