@@ -2090,7 +2090,7 @@ void ddiaadin_libsp(int kmax, int *idx, double alpha, double *x, double *y, doub
 
 
 // insert vector to row 
-void drowin_lib(int kmax, double *x, double *pD)
+void drowin_lib(int kmax, double alpha, double *x, double *pD)
 	{
 	
 	const int bs = 4;
@@ -2099,14 +2099,14 @@ void drowin_lib(int kmax, double *x, double *pD)
 
 	for(jj=0; jj<kmax-3; jj+=4)
 		{
-		pD[(jj+0)*bs] = x[jj+0];
-		pD[(jj+1)*bs] = x[jj+1];
-		pD[(jj+2)*bs] = x[jj+2];
-		pD[(jj+3)*bs] = x[jj+3];
+		pD[(jj+0)*bs] = alpha*x[jj+0];
+		pD[(jj+1)*bs] = alpha*x[jj+1];
+		pD[(jj+2)*bs] = alpha*x[jj+2];
+		pD[(jj+3)*bs] = alpha*x[jj+3];
 		}
 	for(; jj<kmax; jj++)
 		{
-		pD[(jj)*bs] = x[jj];
+		pD[(jj)*bs] = alpha*x[jj];
 		}
 	
 	}
@@ -2114,7 +2114,7 @@ void drowin_lib(int kmax, double *x, double *pD)
 
 
 // extract row to vector
-void drowex_lib(int kmax, double *pD, double *x)
+void drowex_lib(int kmax, double alpha, double *pD, double *x)
 	{
 	
 	const int bs = 4;
@@ -2123,14 +2123,14 @@ void drowex_lib(int kmax, double *pD, double *x)
 
 	for(jj=0; jj<kmax-3; jj+=4)
 		{
-		x[jj+0] = pD[(jj+0)*bs];
-		x[jj+1] = pD[(jj+1)*bs];
-		x[jj+2] = pD[(jj+2)*bs];
-		x[jj+3] = pD[(jj+3)*bs];
+		x[jj+0] = alpha*pD[(jj+0)*bs];
+		x[jj+1] = alpha*pD[(jj+1)*bs];
+		x[jj+2] = alpha*pD[(jj+2)*bs];
+		x[jj+3] = alpha*pD[(jj+3)*bs];
 		}
 	for(; jj<kmax; jj++)
 		{
-		x[jj] = pD[(jj)*bs];
+		x[jj] = alpha*pD[(jj)*bs];
 		}
 	
 	}
@@ -2162,7 +2162,7 @@ void drowad_lib(int kmax, double alpha, double *x, double *pD)
 
 
 // insert vector to row, sparse formulation 
-void drowin_libsp(int kmax, int *idx, double *x, double *pD)
+void drowin_libsp(int kmax, double alpha, int *idx, double *x, double *pD)
 	{
 
 	const int bs = 4;
@@ -2172,7 +2172,7 @@ void drowin_libsp(int kmax, int *idx, double *x, double *pD)
 	for(jj=0; jj<kmax; jj++)
 		{
 		ii = idx[jj];
-		pD[ii*bs] = x[jj];
+		pD[ii*bs] = alpha*x[jj];
 		}
 	
 	}
@@ -2643,27 +2643,40 @@ void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	}
 
 
-// insert a vector into a row
-void drowin_libstr(int kmax, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
+// extract a row int a vector
+void drowex_libstr(int kmax, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi)
 	{
 	const int bs = D_BS;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	double *x = sx->pa + xi;
-	drowin_lib(kmax, x, pA);
+	drowex_lib(kmax, alpha, pA, x);
 	return;
 	}
 
 
 
-// extract a row int a vector
-void drowex_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi)
+// insert a vector into a row
+void drowin_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
 	{
 	const int bs = D_BS;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	double *x = sx->pa + xi;
-	drowex_lib(kmax, pA, x);
+	drowin_lib(kmax, alpha, x, pA);
+	return;
+	}
+
+
+
+// add a vector to a row
+void drowad_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
+	{
+	const int bs = D_BS;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	double *x = sx->pa + xi;
+	drowad_lib(kmax, alpha, x, pA);
 	return;
 	}
 
@@ -2705,6 +2718,19 @@ void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_st
 	int sdc = sC->cn;
 	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
 	dgecp_lib(m, n, ai%bs, pA, sda, ci%bs, pC, sdc);
+	return;
+	}
+
+
+
+// copy a strvec into a strvec
+void dveccp_libstr(int m, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci)
+	{
+	double *pa = sa->pa + ai;
+	double *pc = sc->pa + ci;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		pc[ii] = pa[ii];
 	return;
 	}
 
@@ -2959,28 +2985,42 @@ void d_cvt_strvec2vec(int m, struct d_strvec *sa, int ai, double *a)
 
 
 // extract a row into a vector
-void drowex_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi)
+void drowex_libstr(int kmax, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
 	double x = sx->pa + xi;
 	int ii;
 	for(ii=0; ii<kmax; ii++)
-		x[ii] = pA[ii*lda];
+		x[ii] = alpha*pA[ii*lda];
 	return;
 	}
 
 
 
 // insert a vector  into a row
-void drowex_libstr(int kmax, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
+void drowin_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
 	double x = sx->pa + xi;
 	int ii;
 	for(ii=0; ii<kmax; ii++)
-		pA[ii*lda] = x[ii];
+		pA[ii*lda] = alpha*x[ii];
+	return;
+	}
+
+
+
+// add a vector to a row
+void drowad_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double x = sx->pa + xi;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		pA[ii*lda] += alpha*x[ii];
 	return;
 	}
 
@@ -3075,6 +3115,19 @@ void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_st
 			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
 			}
 		}
+	return;
+	}
+
+
+
+// copy a strvec into a strvec
+void dveccp_libstr(int m, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci)
+	{
+	double *pa = sa->pa + ai;
+	double *pc = sc->pa + ci;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		pc[ii] = pa[ii];
 	return;
 	}
 

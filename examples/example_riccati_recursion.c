@@ -39,12 +39,89 @@
 
 
 
-void d_back_ric_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAb, struct d_strmat *hsRSQrq, struct d_strmat *hsL)
+void d_back_ric_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct d_strmat *hsRSQrq, struct d_strmat *hsL, struct d_strmat *hsLxt, struct d_strvec *hsux, struct d_strvec *hspi, struct d_strmat *hswork_mat, struct d_strvec *hswork_vec)
 	{
-	int n;
+
+	int nn;
+
+	// factorization and backward substitution
+//	for(nn=0; nn<N; nn++)
+//		{
+//		printf("\n%d %d\n", N, nn);
+//		d_print_strmat(nu[nn]+nx[nn]+1, nx[nn+1], &hsBAbt[nn], 0, 0);
+//		}
+//	for(nn=0; nn<N; nn++)
+//		{
+//		printf("\n%d %d\n", N, N-nn-1);
+//		d_print_strmat(nu[N-nn-1]+nx[N-nn-1]+1, nx[N-nn], &hsBAbt[N-nn-1], 0, 0);
+//		}
+//	return;
 	// last stage
 	dpotrf_l_libstr(nx[N]+1, nx[N], &hsRSQrq[N], 0, 0, &hsL[N], 0, 0);
 //	d_print_strmat(nx[N]+1, nx[N], &hsL[N], 0, 0);
+	dtrtr_l_libstr(nx[N], &hsL[N], 0, 0, &hsLxt[N], 0, 0);
+//	d_print_strmat(nx[N], nx[N], &hsLxt[N], 0, 0);
+	for(nn=0; nn<N; nn++)
+		{
+//		d_print_strmat(nu[N-nn-1]+nx[N-nn-1]+1, nx[N-nn], &hsBAbt[N-nn-1], 0, 0);
+//		d_print_strmat(nx[N-nn-1], nx[N-nn-1], &hsLxt[N-nn], 0, 0);
+		dtrmm_rutn_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hsLxt[N-nn], 0, 0, 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
+		dgead_libstr(1, nx[N-nn], 1.0, &hsL[N-nn], nu[N-nn]+nx[N-nn], nu[N-nn], &hswork_mat[0], nu[N-nn-1]+nx[N-nn-1], 0);
+//		d_print_strmat(nu[N-nn-1]+nx[N-nn-1]+1, nx[N-nn], &hswork_mat[0], 0, 0);
+		dsyrk_ln_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
+//		d_print_strmat(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0);
+		dpotrf_l_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
+//		d_print_strmat(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0);
+		dtrtr_l_libstr(nx[N-nn-1], &hsL[N-nn-1], nu[N-nn-1], nu[N-nn-1], &hsLxt[N-nn-1], 0, 0);
+//		d_print_strmat(nx[N-nn-1], nx[N-nn-1], &hsLxt[N-nn-1], 0, 0);
+		}
+	
+	// forward substitution
+	nn = 0;
+//	d_print_strmat(nu[nn]+nx[nn]+1, nu[nn]+nx[nn], &hsL[nn], 0, 0);
+	drowex_libstr(nu[nn]+nx[nn], -1.0, &hsL[nn], nu[nn]+nx[nn], 0, &hsux[nn], 0);
+//	d_print_tran_strvec(nu[nn]+nx[nn], &hsux[nn], 0);
+	dtrsv_ltn_libstr(nu[nn]+nx[nn], nu[nn]+nx[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
+//	d_print_tran_strvec(nu[nn]+nx[nn], &hsux[nn], 0);
+	drowex_libstr(nx[nn+1], 1.0, &hsBAbt[nn], nu[nn]+nx[nn], 0, &hsux[nn+1], nu[nn+1]);
+//	d_print_tran_strvec(nu[nn+1]+nx[nn+1], &hsux[nn+1], 0);
+//	d_print_strmat(nu[nn]+nx[nn]+1, nx[nn+1], &hsBAbt[nn], 0, 0);
+	dgemv_t_libstr(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsux[nn+1], nu[nn+1], &hsux[nn+1], nu[nn+1]);
+//	d_print_tran_strvec(nu[nn+1]+nx[nn+1], &hsux[nn+1], 0);
+	dveccp_libstr(nx[nn+1], &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0); // align
+//	d_print_tran_strvec(nx[nn+1], &hswork_vec[0], 0);
+//	d_print_strmat(nu[nn+1]+nx[nn+1]+1, nu[nn+1]+nx[nn+1], &hsL[nn+1], 0, 0);
+	drowex_libstr(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[1], 0);
+//	d_print_tran_strvec(nx[nn+1], &hswork_vec[1], 0);
+	dtrmv_unn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[1], 0, 1.0, &hswork_vec[0], 0, &hswork_vec[0], 0);
+//	d_print_tran_strvec(nx[nn+1], &hswork_vec[0], 0);
+	dtrmv_utn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, 0.0, &hspi[nn], 0, &hspi[nn], 0);
+//	d_print_tran_strvec(nx[nn+1], &hspi[nn], 0);
+
+	for(nn=1; nn<N; nn++)
+		{
+
+	//	d_print_strmat(nu[nn]+nx[nn]+1, nu[nn]+nx[nn], &hsL[nn], 0, 0);
+		drowex_libstr(nu[nn], -1.0, &hsL[nn], nu[nn]+nx[nn], 0, &hsux[nn], 0);
+	//	d_print_tran_strvec(nu[nn]+nx[nn], &hsux[nn], 0);
+		dtrsv_ltn_libstr(nu[nn]+nx[nn], nu[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
+	//	d_print_tran_strvec(nu[nn]+nx[nn], &hsux[nn], 0);
+		drowex_libstr(nx[nn+1], 1.0, &hsBAbt[nn], nu[nn]+nx[nn], 0, &hsux[nn+1], nu[nn+1]);
+	//	d_print_tran_strvec(nu[nn+1]+nx[nn+1], &hsux[nn+1], 0);
+	//	d_print_strmat(nu[nn]+nx[nn]+1, nx[nn+1], &hsBAbt[nn], 0, 0);
+		dgemv_t_libstr(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsux[nn+1], nu[nn+1], &hsux[nn+1], nu[nn+1]);
+	//	d_print_tran_strvec(nu[nn+1]+nx[nn+1], &hsux[nn+1], 0);
+		dveccp_libstr(nx[nn+1], &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0); // align
+	//	d_print_tran_strvec(nx[nn+1], &hswork_vec[0], 0);
+	//	d_print_strmat(nu[nn+1]+nx[nn+1]+1, nu[nn+1]+nx[nn+1], &hsL[nn+1], 0, 0);
+		drowex_libstr(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[1], 0);
+	//	d_print_tran_strvec(nx[nn+1], &hswork_vec[1], 0);
+		dtrmv_unn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[1], 0, 1.0, &hswork_vec[0], 0, &hswork_vec[0], 0);
+	//	d_print_tran_strvec(nx[nn+1], &hswork_vec[0], 0);
+		dtrmv_utn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, 0.0, &hspi[nn], 0, &hspi[nn], 0);
+	//	d_print_tran_strvec(nx[nn+1], &hspi[nn], 0);
+
+		}
 	return;
 	}
 
@@ -241,14 +318,22 @@ int main()
 	struct d_strmat sA;
 	d_allocate_strmat(nx_, nx_, &sA);
 	d_cvt_mat2strmat(nx_, nx_, A, nx_, &sA, 0, 0);
+	struct d_strvec sb;
+	d_allocate_strvec(nx_, &sb);
+	d_cvt_vec2strvec(nx_, b, &sb, 0);
+	struct d_strvec sx0;
+	d_allocate_strvec(nx_, &sx0);
+	d_cvt_vec2strvec(nx_, x0, &sx0, 0);
+	struct d_strvec sb0;
+	d_allocate_strvec(nx_, &sb0);
 	double *b0; d_zeros(&b0, nx_, 1); // states offset
-	dgemv_n_libstr(nx_, nx_, 1.0, &sA, 0, 0, x0, 1.0, b, b0);
-	d_print_mat(1, nx_, b0, 1);
+	dgemv_n_libstr(nx_, nx_, 1.0, &sA, 0, 0, &sx0, 0, 1.0, &sb, 0, &sb0, 0);
+	d_print_tran_strvec(nx_, &sb0, 0);
 
 	struct d_strmat sBbt0;
 	d_allocate_strmat(nu_+nx_+1, nx_, &sBbt0);
 	d_cvt_tran_mat2strmat(nx_, nx_, B, nx_, &sBbt0, 0, 0);
-	d_cvt_tran_mat2strmat(nx_, 1, b0, nx_, &sBbt0, nu_, 0);
+	drowin_libstr(nx_, 1.0, &sb0, 0, &sBbt0, nu_, 0);
 	d_print_strmat(nu_+1, nx_, &sBbt0, 0, 0);
 
 	struct d_strmat sBAbt1;
@@ -286,24 +371,49 @@ int main()
 	struct d_strmat hsBAbt[N];
 	struct d_strmat hsRSQrq[N+1];
 	struct d_strmat hsL[N+1];
+	struct d_strmat hsLxt[N+1];
+	struct d_strvec hsux[N+1];
+	struct d_strvec hspi[N];
+	struct d_strmat hswork_mat[1];
+	struct d_strvec hswork_vec[2];
 
 	hsRSQrq[0] = sRr0;
 	hsBAbt[0] = sBbt0;
 	d_allocate_strmat(nu_+1, nu_, &hsL[0]);
+//	d_allocate_strmat(nu_+1, nu_, &hsLxt[0]);
+	d_allocate_strvec(nx_+nu_+1, &hsux[0]);
+	d_allocate_strvec(nx_, &hspi[0]);
 	for(ii=1; ii<N; ii++)
 		{
 		hsRSQrq[ii] = sRSQrq1;
 		hsBAbt[ii] = sBAbt1;
 		d_allocate_strmat(nu_+nx_+1, nu_+nx_, &hsL[ii]);
+		d_allocate_strmat(nx_, nu_+nx_, &hsLxt[ii]);
+		d_allocate_strvec(nx_+nu_+1, &hsux[ii]);
+		d_allocate_strvec(nx_, &hspi[ii]);
 		}
 	hsRSQrq[N] = sQqN;
 	d_allocate_strmat(nx_+1, nx_, &hsL[N]);
+	d_allocate_strmat(nx_, nx_, &hsLxt[N]);
+	d_allocate_strvec(nx_+nu_+1, &hsux[N]);
+	d_allocate_strmat(nu_+nx_+1, nx_, &hswork_mat[0]);
+	d_allocate_strvec(nx_, &hswork_vec[0]);
+	d_allocate_strvec(nx_, &hswork_vec[1]);
+
+//	for(ii=0; ii<N; ii++)
+//		d_print_strmat(nu[ii]+nx[ii]+1, nx[ii+1], &hsBAbt[ii], 0, 0);
+//	return 0;
 
 /************************************************
 * call Riccati solver
 ************************************************/	
 	
-	d_back_ric_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL);
+	d_back_ric_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL, hsLxt, hsux, hspi, hswork_mat, hswork_vec);
+
+	// print sol
+	printf("\nux = \n\n");
+	for(ii=0; ii<=N; ii++)
+		d_print_tran_strvec(nu[ii]+nx[ii], &hsux[ii], 0);
 
 /************************************************
 * free memory
@@ -326,11 +436,22 @@ int main()
 	d_free_strmat(&sRSQrq1);
 	d_free_strmat(&sQqN);
 	d_free_strmat(&hsL[0]);
+//	d_free_strmat(&hsLxt[0]);
+	d_free_strvec(&hsux[0]);
+	d_free_strvec(&hspi[0]);
 	for(ii=1; ii<N; ii++)
 		{
 		d_free_strmat(&hsL[ii]);
+		d_free_strmat(&hsLxt[ii]);
+		d_free_strvec(&hsux[ii]);
+		d_free_strvec(&hspi[ii]);
 		}
 	d_free_strmat(&hsL[N]);
+	d_free_strmat(&hsLxt[N]);
+	d_free_strvec(&hsux[N]);
+	d_free_strmat(&hswork_mat[0]);
+	d_free_strvec(&hswork_vec[0]);
+	d_free_strvec(&hswork_vec[1]);
 
 
 /************************************************

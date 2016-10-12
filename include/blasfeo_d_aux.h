@@ -68,6 +68,7 @@ void d_cvt_tran_pmat2mat(int row, int col, int offset, double *pA, int sda, doub
 void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda);
 void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, double *B, int sdb);
 void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
+void dveccp_libstr(int m, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci);
 void dtrcp_l_lib(int m, int offsetA, double *A, int sda, int offsetB, double *B, int sdb);
 void dtrcp_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
 void dgead_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb);
@@ -86,11 +87,13 @@ void ddiaad_lib(int kmax, double alpha, double *x, int offset, double *pD, int s
 void ddiain_libsp(int kmax, int *idx, double *x, double *pD, int sdd);
 void ddiaad_libsp(int kmax, int *idx, double alpha, double *x, double *pD, int sdd);
 void ddiaadin_libsp(int kmax, int *idx, double alpha, double *x, double *y, double *pD, int sdd);
-void drowin_lib(int kmax, double *x, double *pD);
-void drowex_lib(int kmax, double *pD, double *x);
-void drowex_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi);
+void drowin_lib(int kmax, double alpha, double *x, double *pD);
+void drowin_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj);
+void drowex_lib(int kmax, double alpha, double *pD, double *x);
+void drowex_libstr(int kmax, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi);
 void drowad_lib(int kmax, double alpha, double *x, double *pD);
-void drowin_libsp(int kmax, int *idx, double *x, double *pD);
+void drowad_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj);
+void drowin_libsp(int kmax, double alpha, int *idx, double *x, double *pD);
 void drowad_libsp(int kmax, int *idx, double alpha, double *x, double *pD);
 void drowadin_libsp(int kmax, int *idx, double alpha, double *x, double *y, double *pD);
 void drowsw_lib(int kmax, double *pA, double *pC);

@@ -507,6 +507,112 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 
+void dtrmv_unn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+	{
+	if(ai!=0 | xi%4!=0 | m!=n)
+		{
+		printf("\nfeature not implemented yet\n");
+		exit(1);
+		}
+	int alg;
+	if(alpha==1.0 & beta==1.0)
+		{
+		alg=1;
+		}
+	else if(alpha==1.0 & beta==0.0)
+		{
+		alg=0;
+		}
+	else
+		{
+		printf("\nfeature not implemented yet\n");
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs; // TODO ai
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+	dtrmv_un_lib(m, pA, sda, x, alg, y, z);
+	return;
+	}
+
+
+
+void dtrmv_utn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+	{
+	if(ai!=0 | xi%4!=0 | m!=n)
+		{
+		printf("\nfeature not implemented yet\n");
+		exit(1);
+		}
+	int alg;
+	if(alpha==1.0 & beta==1.0)
+		{
+		alg=1;
+		}
+	else if(alpha==1.0 & beta==0.0)
+		{
+		alg=0;
+		}
+	else
+		{
+		printf("\nfeature not implemented yet\n");
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs; // TODO ai
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+	dtrmv_ut_lib(m, pA, sda, x, alg, y, z);
+	return;
+	}
+
+
+
+void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	if(ai!=0 | xi%4!=0)
+		{
+		printf("\nfeature not implemented yet\n");
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs; // TODO ai
+	double *dA = sA->dA + aj*bs; // TODO ai
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	// TODO what to do with the diagonal in case ai and aj are not zero
+	dtrsv_ln_inv_lib(m, n, pA, sda, dA, x, z);
+	return;
+	}
+
+
+
+void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	if(ai!=0 | xi%4!=0)
+		{
+		printf("\nfeature not implemented yet\n");
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs; // TODO ai
+	double *dA = sA->dA + aj*bs; // TODO ai
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	// TODO what to do with the diagonal in case ai and aj are not zero
+	dtrsv_lt_inv_lib(m, n, pA, sda, dA, x, z);
+	return;
+	}
+
+
+
 #elif defined(LA_BLAS)
 
 
@@ -600,6 +706,22 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 	dgemv_(&cn, &tmp, &n, &alpha, pA+n, &lda, x, &i1, &beta, z+n, &i1);
 	dgemv_(&ct, &tmp, &n, &alpha, pA+n, &lda, x+n, &i1, &d1, z, &i1);
 	return;
+	}
+
+
+
+void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+	}
+
+
+
+void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	printf("\nfeature not implemented yet\n");
+	exit(1);
 	}
 
 
