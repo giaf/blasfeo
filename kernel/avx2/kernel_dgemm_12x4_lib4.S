@@ -355,10 +355,10 @@ _inner_kernel_dgemm_add_nt_12x4_lib4:
 	// clean-up loop
 3: // clean up loop
 	
-	vmovapd 	32(%r11), %ymm12 // A0[4]
-	vmovapd 	32(%r15), %ymm13 // A1[4]
-	vmovapd 	32(%r13), %ymm15 // B[4]
-	vmovapd 	32(%r14), %ymm14 // A2[4]
+	vmovapd 	0(%r11), %ymm12 // A0[4]
+	vmovapd 	0(%r15), %ymm13 // A1[4]
+	vmovapd 	0(%r13), %ymm15 // B[4]
+	vmovapd 	0(%r14), %ymm14 // A2[4]
 	vfmadd231pd	%ymm12, %ymm15, %ymm0
 	addq		$32, %r11
 	vfmadd231pd	%ymm13, %ymm15, %ymm4
@@ -719,10 +719,10 @@ _inner_kernel_dgemm_sub_nt_12x4_lib4:
 	// clean-up loop
 3: // clean up loop
 	
-	vmovapd 	32(%r11), %ymm12 // A0[4]
-	vmovapd 	32(%r15), %ymm13 // A1[4]
-	vmovapd 	32(%r13), %ymm15 // B[4]
-	vmovapd 	32(%r14), %ymm14 // A2[4]
+	vmovapd 	0(%r11), %ymm12 // A0[4]
+	vmovapd 	0(%r15), %ymm13 // A1[4]
+	vmovapd 	0(%r13), %ymm15 // B[4]
+	vmovapd 	0(%r14), %ymm14 // A2[4]
 	vfnmadd231pd	%ymm12, %ymm15, %ymm0
 	addq		$32, %r11
 	vfnmadd231pd	%ymm13, %ymm15, %ymm4
