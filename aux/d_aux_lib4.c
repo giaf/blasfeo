@@ -2844,7 +2844,7 @@ int d_size_strvec(int m, int n)
 
 
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
-void d_create_strvec(int m, struct d_strvec *sA, void *memory)
+void d_create_strvec(int m, struct d_strvec *sa, void *memory)
 	{
 	sa->m = m;
 	double *ptr = (double *) memory;
@@ -2989,7 +2989,7 @@ void drowex_libstr(int kmax, double alpha, struct d_strmat *sA, int ai, int aj, 
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
-	double x = sx->pa + xi;
+	double *x = sx->pa + xi;
 	int ii;
 	for(ii=0; ii<kmax; ii++)
 		x[ii] = alpha*pA[ii*lda];
@@ -3003,7 +3003,7 @@ void drowin_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
-	double x = sx->pa + xi;
+	double *x = sx->pa + xi;
 	int ii;
 	for(ii=0; ii<kmax; ii++)
 		pA[ii*lda] = alpha*x[ii];
@@ -3017,7 +3017,7 @@ void drowad_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
-	double x = sx->pa + xi;
+	double *x = sx->pa + xi;
 	int ii;
 	for(ii=0; ii<kmax; ii++)
 		pA[ii*lda] += alpha*x[ii];

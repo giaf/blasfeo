@@ -1864,8 +1864,11 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
 	int jj;
-	char ta = 'n';
-	char tb = 't';
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
 	int i1 = 1;
 	double *pA = sA->pA+ai+aj*sA->m;
 	double *pB = sB->pA+bi+bj*sB->m;
@@ -1876,7 +1879,7 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 		for(jj=0; jj<n; jj++)
 			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 		}
-	dgemm_(&ta, &tb, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	dgemm_(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
 	return;
 	}
 

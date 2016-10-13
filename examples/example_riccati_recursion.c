@@ -70,7 +70,7 @@ void d_back_ric_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct 
 //		d_print_strmat(nu[N-nn-1]+nx[N-nn-1]+1, nx[N-nn], &hswork_mat[0], 0, 0);
 #if 0
 		dsyrk_ln_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
-//		d_print_strmat(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0);
+		d_print_strmat(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0);
 		dpotrf_l_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #else
 		dsyrk_dpotrf_ln_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
@@ -98,10 +98,11 @@ void d_back_ric_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct 
 //	d_print_strmat(nx[nn+1], nx[nn+1], &hsLxt[nn+1], 0, 0);
 	drowex_libstr(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[1], 0);
 //	d_print_tran_strvec(nx[nn+1], &hswork_vec[1], 0);
-	dtrmv_unn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, 1.0, &hswork_vec[1], 0, &hswork_vec[1], 0);
+	dtrmv_unn_libstr(nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, 1.0, &hswork_vec[1], 0, &hswork_vec[1], 0);
 //	d_print_tran_strvec(nx[nn+1], &hswork_vec[1], 0);
-	dtrmv_utn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[1], 0, 0.0, &hspi[nn], 0, &hspi[nn], 0);
+	dtrmv_utn_libstr(nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[1], 0, 0.0, &hspi[nn], 0, &hspi[nn], 0);
 //	d_print_tran_strvec(nx[nn+1], &hspi[nn], 0);
+//	exit(1);
 
 	for(nn=1; nn<N; nn++)
 		{
@@ -121,9 +122,9 @@ void d_back_ric_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct 
 	//	d_print_strmat(nu[nn+1]+nx[nn+1]+1, nu[nn+1]+nx[nn+1], &hsL[nn+1], 0, 0);
 		drowex_libstr(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[1], 0);
 	//	d_print_tran_strvec(nx[nn+1], &hswork_vec[1], 0);
-		dtrmv_unn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, 1.0, &hswork_vec[1], 0, &hswork_vec[1], 0);
+		dtrmv_unn_libstr(nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, 1.0, &hswork_vec[1], 0, &hswork_vec[1], 0);
 	//	d_print_tran_strvec(nx[nn+1], &hswork_vec[1], 0);
-		dtrmv_utn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[1], 0, 0.0, &hspi[nn], 0, &hspi[nn], 0);
+		dtrmv_utn_libstr(nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[1], 0, 0.0, &hspi[nn], 0, &hspi[nn], 0);
 	//	d_print_tran_strvec(nx[nn+1], &hspi[nn], 0);
 
 		}
@@ -249,9 +250,9 @@ int main()
 ************************************************/	
 
 	// problem size
-	int N = 10;
-	int nx_ = 30;
-	int nu_ = 5;
+	int N = 4;
+	int nx_ = 8;
+	int nu_ = 3;
 
 	// stage-wise variant size
 	int nx[N+1];

@@ -507,9 +507,9 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 
-void dtrmv_unn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+void dtrmv_unn_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
-	if(ai!=0 | xi%4!=0 | m!=n)
+	if(ai!=0 | xi%4!=0)
 		{
 		printf("\nfeature not implemented yet\n");
 		exit(1);
@@ -540,9 +540,9 @@ void dtrmv_unn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, i
 
 
 
-void dtrmv_utn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+void dtrmv_utn_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
-	if(ai!=0 | xi%4!=0 | m!=n)
+	if(ai!=0 | xi%4!=0)
 		{
 		printf("\nfeature not implemented yet\n");
 		exit(1);
@@ -710,18 +710,114 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 
+// XXX it destructs the value of x !!!!!!!!!!!!!!!!!!
+void dtrmv_unn_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	double d1 = 1.0;
+	double dm1 = -1.0;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+#if 1
+	dtrmv_(&cu, &cn, &cn, &m, pA, &lda, x, &i1);
+	dcopy_(&m, y, &i1, z, &i1);
+	dscal_(&m, &alpha, z, &i1);
+	daxpy_(&m, &beta, y, &i1, x, &i1);
+	dcopy_(&m, x, &i1, z, &i1);
+#else
+	dcopy_(&m, x, &i1, z, &i1);
+	dscal_(&m, &alpha, z, &i1);
+	dtrmv_(&cu, &cn, &cn, &m, pA, &lda, z, &i1);
+	daxpy_(&m, &beta, y, &i1, z, &i1);
+#endif
+	return;
+	}
+
+
+
+// XXX it destructs the value of x !!!!!!!!!!!!!!!!!!
+void dtrmv_utn_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	double d1 = 1.0;
+	double dm1 = -1.0;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+#if 1
+	dtrmv_(&cu, &ct, &cn, &m, pA, &lda, x, &i1);
+	dcopy_(&m, y, &i1, z, &i1);
+	dscal_(&m, &alpha, z, &i1);
+	daxpy_(&m, &beta, y, &i1, x, &i1);
+	dcopy_(&m, x, &i1, z, &i1);
+#else
+	dcopy_(&m, x, &i1, z, &i1);
+	dscal_(&m, &alpha, z, &i1);
+	dtrmv_(&cu, &ct, &cn, &m, pA, &lda, z, &i1);
+	daxpy_(&m, &beta, y, &i1, z, &i1);
+#endif
+	return;
+	}
+
+
+
 void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
-	printf("\nfeature not implemented yet\n");
-	exit(1);
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	double d1 = 1.0;
+	double dm1 = -1.0;
+	int mmn = m-n;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	dcopy_(&m, x, &i1, z, &i1);
+	dtrsv_(&cl, &cn, &cn, &n, pA, &lda, z, &i1);
+	dgemv_(&cn, &mmn, &n, &dm1, pA+n, &lda, z, &i1, &d1, z+n, &i1);
+	return;
 	}
 
 
 
 void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
-	printf("\nfeature not implemented yet\n");
-	exit(1);
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	double d1 = 1.0;
+	double dm1 = -1.0;
+	int mmn = m-n;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	dcopy_(&m, x, &i1, z, &i1);
+	dgemv_(&ct, &mmn, &n, &dm1, pA+n, &lda, z+n, &i1, &d1, z, &i1);
+	dtrsv_(&cl, &ct, &cn, &n, pA, &lda, z, &i1);
+	return;
 	}
 
 
