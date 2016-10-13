@@ -162,20 +162,20 @@ void kernel_dsyrk_dpotrf_nt_l_4x4_lib4(int kp, double *Ap, double *Bp, int km_, 
 
 
 // auxiliary routines
-void kernel_dgecp_8_0_lib4(int tri, int kmax, double *A0, int sda,  double *B0, int sdb);
-void kernel_dgecp_8_1_lib4(int tri, int kmax, double *A0, int sda, double *B0, int sdb);
-void kernel_dgecp_8_2_lib4(int tri, int kmax, double *A0, int sda, double *B0, int sdb);
-void kernel_dgecp_8_3_lib4(int tri, int kmax, double *A0, int sda, double *B0, int sdb);
-void kernel_dgecp_4_0_lib4(int tri, int kmax, double *A, double *B);
-void kernel_dgecp_4_1_lib4(int tri, int kmax, double *A0, int sda, double *B);
-void kernel_dgecp_4_2_lib4(int tri, int kmax, double *A0, int sda, double *B);
-void kernel_dgecp_4_3_lib4(int tri, int kmax, double *A0, int sda, double *B);
-void kernel_dgecp_3_0_lib4(int tri, int kmax, double *A, double *B);
-void kernel_dgecp_3_2_lib4(int tri, int kmax, double *A0, int sda, double *B);
-void kernel_dgecp_3_3_lib4(int tri, int kmax, double *A0, int sda, double *B);
-void kernel_dgecp_2_0_lib4(int tri, int kmax, double *A, double *B);
-void kernel_dgecp_2_3_lib4(int tri, int kmax, double *A0, int sda, double *B);
-void kernel_dgecp_1_0_lib4(int tri, int kmax, double *A, double *B);
+void kernel_dgecp_8_0_lib4(int tri, int kmax, double alpha, double *A0, int sda,  double *B0, int sdb);
+void kernel_dgecp_8_1_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B0, int sdb);
+void kernel_dgecp_8_2_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B0, int sdb);
+void kernel_dgecp_8_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B0, int sdb);
+void kernel_dgecp_4_0_lib4(int tri, int kmax, double alpha, double *A, double *B);
+void kernel_dgecp_4_1_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B);
+void kernel_dgecp_4_2_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B);
+void kernel_dgecp_4_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B);
+void kernel_dgecp_3_0_lib4(int tri, int kmax, double alpha, double *A, double *B);
+void kernel_dgecp_3_2_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B);
+void kernel_dgecp_3_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B);
+void kernel_dgecp_2_0_lib4(int tri, int kmax, double alpha, double *A, double *B);
+void kernel_dgecp_2_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B);
+void kernel_dgecp_1_0_lib4(int tri, int kmax, double alpha, double *A, double *B);
 void kernel_dgead_8_0_lib4(int kmax, double alpha, double *A0, int sda,  double *B0, int sdb);
 void kernel_dgead_8_1_lib4(int kmax, double alpha, double *A0, int sda, double *B0, int sdb);
 void kernel_dgead_8_2_lib4(int kmax, double alpha, double *A0, int sda, double *B0, int sdb);

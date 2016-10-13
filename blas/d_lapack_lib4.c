@@ -667,7 +667,7 @@ void dgetrf_nn_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, doubl
 
 	// needs to perform row-excanges on the yet-to-be-factorized matrix too
 	if(pC!=pD)
-		dgecp_lib(m, n, 0, pC, sdc, 0, pD, sdd);
+		dgecp_lib(m, n, 1.0, 0, pC, sdc, 0, pD, sdd);
 
 	// minimum matrix size
 	p = n<m ? n : m; // XXX

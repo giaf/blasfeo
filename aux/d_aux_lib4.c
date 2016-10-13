@@ -408,7 +408,7 @@ void d_cvt_tran_pmat2mat(int row, int col, int offset, double *pA, int sda, doub
 
 
 // copies a packed matrix into a packed matrix
-void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, double *B, int sdb)
+void dgecp_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb)
 	{
 
 	if(m<=0 || n<=0)
@@ -439,32 +439,32 @@ void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, doubl
 				{
 				if(m==1)
 					{
-					kernel_dgecp_1_0_lib4(0, n, A+offA, B+offB);
+					kernel_dgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
 					return;
 					}
 				else //if(m==2 && mna==3)
 					{
-					kernel_dgecp_2_0_lib4(0, n, A+offA, B+offB);
+					kernel_dgecp_2_0_lib4(0, n, alpha, A+offA, B+offB);
 					return;
 					}
 				}
 			if(mna==1)
 				{
-				kernel_dgecp_1_0_lib4(0, n, A+offA, B+offB);
+				kernel_dgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
 				A += 4*sda;
 				B += 4*sdb;
 				ii += 1;
 				}
 			else if(mna==2)
 				{
-				kernel_dgecp_2_0_lib4(0, n, A+offA, B+offB);
+				kernel_dgecp_2_0_lib4(0, n, alpha, A+offA, B+offB);
 				A += 4*sda;
 				B += 4*sdb;
 				ii += 2;
 				}
 			else // if(mna==3)
 				{
-				kernel_dgecp_3_0_lib4(0, n, A+offA, B+offB);
+				kernel_dgecp_3_0_lib4(0, n, alpha, A+offA, B+offB);
 				A += 4*sda;
 				B += 4*sdb;
 				ii += 3;
@@ -474,14 +474,14 @@ void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, doubl
 #if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
-			kernel_dgecp_8_0_lib4(0, n, A, sda, B, sdb);
+			kernel_dgecp_8_0_lib4(0, n, alpha, A, sda, B, sdb);
 			A += 8*sda;
 			B += 8*sdb;
 			}
 #endif
 		for(; ii<m-3; ii+=4)
 			{
-			kernel_dgecp_4_0_lib4(0, n, A, B);
+			kernel_dgecp_4_0_lib4(0, n, alpha, A, B);
 			A += 4*sda;
 			B += 4*sdb;
 			}
@@ -489,11 +489,11 @@ void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, doubl
 		if(ii<m)
 			{
 			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(0, n, A, B);
+				kernel_dgecp_1_0_lib4(0, n, alpha, A, B);
 			else if(m-ii==2)
-				kernel_dgecp_2_0_lib4(0, n, A, B);
+				kernel_dgecp_2_0_lib4(0, n, alpha, A, B);
 			else // if(m-ii==3)
-				kernel_dgecp_3_0_lib4(0, n, A, B);
+				kernel_dgecp_3_0_lib4(0, n, alpha, A, B);
 			}
 		}
 	// skip one element of A
@@ -508,32 +508,32 @@ void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, doubl
 				{
 				if(m==1)
 					{
-					kernel_dgecp_1_0_lib4(0, n, A+offA, B+offB);
+					kernel_dgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
 					return;
 					}
 				else //if(m==2 && mna==3)
 					{
-					kernel_dgecp_2_0_lib4(0, n, A+offA, B+offB);
+					kernel_dgecp_2_0_lib4(0, n, alpha, A+offA, B+offB);
 					return;
 					}
 				}
 			if(mna==1)
 				{
-				kernel_dgecp_1_0_lib4(0, n, A+offA, B+offB);
+				kernel_dgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
 				//A += 4*sda;
 				B += 4*sdb;
 				ii += 1;
 				}
 			else if(mna==2)
 				{
-				kernel_dgecp_2_3_lib4(0, n, A, sda, B+2);
+				kernel_dgecp_2_3_lib4(0, n, alpha, A, sda, B+2);
 				A += 4*sda;
 				B += 4*sdb;
 				ii += 2;
 				}
 			else // if(mna==3)
 				{
-				kernel_dgecp_3_2_lib4(0, n, A, sda, B+1);
+				kernel_dgecp_3_2_lib4(0, n, alpha, A, sda, B+1);
 				A += 4*sda;
 				B += 4*sdb;
 				ii += 3;
@@ -543,14 +543,14 @@ void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, doubl
 #if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
 		for( ; ii<m-7; ii+=8)
 			{
-			kernel_dgecp_8_1_lib4(0, n, A, sda, B, sdb);
+			kernel_dgecp_8_1_lib4(0, n, alpha, A, sda, B, sdb);
 			A += 8*sda;
 			B += 8*sdb;
 			}
 #endif
 		for( ; ii<m-3; ii+=4)
 			{
-			kernel_dgecp_4_1_lib4(0, n, A, sda, B);
+			kernel_dgecp_4_1_lib4(0, n, alpha, A, sda, B);
 			A += 4*sda;
 			B += 4*sdb;
 			}
@@ -558,11 +558,11 @@ void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, doubl
 		if(ii<m)
 			{
 			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(0, n, A+1, B);
+				kernel_dgecp_1_0_lib4(0, n, alpha, A+1, B);
 			else if(m-ii==2)
-				kernel_dgecp_2_0_lib4(0, n, A+1, B);
+				kernel_dgecp_2_0_lib4(0, n, alpha, A+1, B);
 			else // if(m-ii==3)
-				kernel_dgecp_3_0_lib4(0, n, A+1, B);
+				kernel_dgecp_3_0_lib4(0, n, alpha, A+1, B);
 			}
 		}
 	// skip 2 elements of A
@@ -577,32 +577,32 @@ void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, doubl
 				{
 				if(m==1)
 					{
-					kernel_dgecp_1_0_lib4(0, n, A+offA, B+offB);
+					kernel_dgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
 					return;
 					}
 				else // if(m==2 && mna==3)
 					{
-					kernel_dgecp_2_3_lib4(0, n, A, sda, B+1);
+					kernel_dgecp_2_3_lib4(0, n, alpha, A, sda, B+1);
 					return;
 					}
 				}
 			if(mna==1)
 				{
-				kernel_dgecp_1_0_lib4(0, n, A+1, B+3);
+				kernel_dgecp_1_0_lib4(0, n, alpha, A+1, B+3);
 				// A += 4*sda;
 				B += 4*sdb;
 				ii += 1;
 				}
 			else if(mna==2)
 				{
-				kernel_dgecp_2_0_lib4(0, n, A, B+2);
+				kernel_dgecp_2_0_lib4(0, n, alpha, A, B+2);
 				// A += 4*sda;
 				B += 4*sdb;
 				ii += 2;
 				}
 			else // if(mna==3)
 				{
-				kernel_dgecp_3_3_lib4(0, n, A, sda, B+1);
+				kernel_dgecp_3_3_lib4(0, n, alpha, A, sda, B+1);
 				A += 4*sda;
 				B += 4*sdb;
 				ii += 3;
@@ -612,14 +612,14 @@ void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, doubl
 #if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
-			kernel_dgecp_8_2_lib4(0, n, A, sda, B, sdb);
+			kernel_dgecp_8_2_lib4(0, n, alpha, A, sda, B, sdb);
 			A += 8*sda;
 			B += 8*sdb;
 			}
 #endif
 		for(; ii<m-3; ii+=4)
 			{
-			kernel_dgecp_4_2_lib4(0, n, A, sda, B);
+			kernel_dgecp_4_2_lib4(0, n, alpha, A, sda, B);
 			A += 4*sda;
 			B += 4*sdb;
 			}
@@ -627,11 +627,11 @@ void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, doubl
 		if(ii<m)
 			{
 			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(0, n, A+2, B);
+				kernel_dgecp_1_0_lib4(0, n, alpha, A+2, B);
 			else if(m-ii==2)
-				kernel_dgecp_2_0_lib4(0, n, A+2, B);
+				kernel_dgecp_2_0_lib4(0, n, alpha, A+2, B);
 			else // if(m-ii==3)
-				kernel_dgecp_3_2_lib4(0, n, A, sda, B);
+				kernel_dgecp_3_2_lib4(0, n, alpha, A, sda, B);
 			}
 		}
 	// skip 3 elements of A
@@ -646,32 +646,32 @@ void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, doubl
 				{
 				if(m==1)
 					{
-					kernel_dgecp_1_0_lib4(0, n, A+offA, B+offB);
+					kernel_dgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
 					return;
 					}
 				else // if(m==2 && mna==3)
 					{
-					kernel_dgecp_2_0_lib4(0, n, A+offA, B+offB);
+					kernel_dgecp_2_0_lib4(0, n, alpha, A+offA, B+offB);
 					return;
 					}
 				}
 			if(mna==1)
 				{
-				kernel_dgecp_1_0_lib4(0, n, A+offA, B+offB);
+				kernel_dgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
 				// A += 4*sda;
 				B += 4*sdb;
 				ii += 1;
 				}
 			else if(mna==2)
 				{
-				kernel_dgecp_2_0_lib4(0, n, A+offA, B+offB);
+				kernel_dgecp_2_0_lib4(0, n, alpha, A+offA, B+offB);
 				// A += 4*sda;
 				B += 4*sdb;
 				ii += 2;
 				}
 			else // if(mna==3)
 				{
-				kernel_dgecp_3_0_lib4(0, n, A+offA, B+offB);
+				kernel_dgecp_3_0_lib4(0, n, alpha, A+offA, B+offB);
 				// A += 4*sda;
 				B += 4*sdb;
 				ii += 3;
@@ -681,14 +681,14 @@ void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, doubl
 #if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
-			kernel_dgecp_8_3_lib4(0, n, A, sda, B, sdb);
+			kernel_dgecp_8_3_lib4(0, n, alpha, A, sda, B, sdb);
 			A += 8*sda;
 			B += 8*sdb;
 			}
 #endif
 		for(; ii<m-3; ii+=4)
 			{
-			kernel_dgecp_4_3_lib4(0, n, A, sda, B);
+			kernel_dgecp_4_3_lib4(0, n, alpha, A, sda, B);
 			A += 4*sda;
 			B += 4*sdb;
 			}
@@ -696,11 +696,11 @@ void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, doubl
 		if(ii<m)
 			{
 			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(0, n, A+3, B);
+				kernel_dgecp_1_0_lib4(0, n, alpha, A+3, B);
 			else if(m-ii==2)
-				kernel_dgecp_2_3_lib4(0, n, A, sda, B);
+				kernel_dgecp_2_3_lib4(0, n, alpha, A, sda, B);
 			else // if(m-ii==3)
-				kernel_dgecp_3_3_lib4(0, n, A, sda, B);
+				kernel_dgecp_3_3_lib4(0, n, alpha, A, sda, B);
 			}
 		}
 
@@ -709,7 +709,7 @@ void dgecp_lib(int m, int n, int offsetA, double *A, int sda, int offsetB, doubl
 
 
 // copies a lower triangular packed matrix into a lower triangular packed matrix
-void dtrcp_l_lib(int m, int offsetA, double *A, int sda, int offsetB, double *B, int sdb)
+void dtrcp_l_lib(int m, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb)
 	{
 
 	if(m<=0)
@@ -742,32 +742,32 @@ void dtrcp_l_lib(int m, int offsetA, double *A, int sda, int offsetB, double *B,
 				{
 				if(m==1)
 					{
-					kernel_dgecp_1_0_lib4(1, ii, A+offA, B+offB);
+					kernel_dgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
 					return;
 					}
 				else //if(m==2 && mna==3)
 					{
-					kernel_dgecp_2_0_lib4(1, ii, A+offA, B+offB);
+					kernel_dgecp_2_0_lib4(1, ii, alpha, A+offA, B+offB);
 					return;
 					}
 				}
 			if(mna==1)
 				{
-				kernel_dgecp_1_0_lib4(1, ii, A+offA, B+offB);
+				kernel_dgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
 				A += 4*sda;
 				B += 4*sdb;
 				ii += 1;
 				}
 			else if(mna==2)
 				{
-				kernel_dgecp_2_0_lib4(1, ii, A+offA, B+offB);
+				kernel_dgecp_2_0_lib4(1, ii, alpha, A+offA, B+offB);
 				A += 4*sda;
 				B += 4*sdb;
 				ii += 2;
 				}
 			else // if(mna==3)
 				{
-				kernel_dgecp_3_0_lib4(1, ii, A+offA, B+offB);
+				kernel_dgecp_3_0_lib4(1, ii, alpha, A+offA, B+offB);
 				A += 4*sda;
 				B += 4*sdb;
 				ii += 3;
@@ -777,14 +777,14 @@ void dtrcp_l_lib(int m, int offsetA, double *A, int sda, int offsetB, double *B,
 #if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
-			kernel_dgecp_8_0_lib4(1, ii, A, sda, B, sdb);
+			kernel_dgecp_8_0_lib4(1, ii, alpha, A, sda, B, sdb);
 			A += 8*sda;
 			B += 8*sdb;
 			}
 #endif
 		for(; ii<m-3; ii+=4)
 			{
-			kernel_dgecp_4_0_lib4(1, ii, A, B);
+			kernel_dgecp_4_0_lib4(1, ii, alpha, A, B);
 			A += 4*sda;
 			B += 4*sdb;
 			}
@@ -792,11 +792,11 @@ void dtrcp_l_lib(int m, int offsetA, double *A, int sda, int offsetB, double *B,
 		if(ii<m)
 			{
 			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(1, ii, A, B);
+				kernel_dgecp_1_0_lib4(1, ii, alpha, A, B);
 			else if(m-ii==2)
-				kernel_dgecp_2_0_lib4(1, ii, A, B);
+				kernel_dgecp_2_0_lib4(1, ii, alpha, A, B);
 			else // if(m-ii==3)
-				kernel_dgecp_3_0_lib4(1, ii, A, B);
+				kernel_dgecp_3_0_lib4(1, ii, alpha, A, B);
 			}
 		}
 	// skip one element of A
@@ -811,32 +811,32 @@ void dtrcp_l_lib(int m, int offsetA, double *A, int sda, int offsetB, double *B,
 				{
 				if(m==1)
 					{
-					kernel_dgecp_1_0_lib4(1, ii, A+offA, B+offB);
+					kernel_dgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
 					return;
 					}
 				else //if(m==2 && mna==3)
 					{
-					kernel_dgecp_2_0_lib4(1, ii, A+offA, B+offB);
+					kernel_dgecp_2_0_lib4(1, ii, alpha, A+offA, B+offB);
 					return;
 					}
 				}
 			if(mna==1)
 				{
-				kernel_dgecp_1_0_lib4(1, ii, A+offA, B+offB);
+				kernel_dgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
 				//A += 4*sda;
 				B += 4*sdb;
 				ii += 1;
 				}
 			else if(mna==2)
 				{
-				kernel_dgecp_2_3_lib4(1, ii, A, sda, B+2);
+				kernel_dgecp_2_3_lib4(1, ii, alpha, A, sda, B+2);
 				A += 4*sda;
 				B += 4*sdb;
 				ii += 2;
 				}
 			else // if(mna==3)
 				{
-				kernel_dgecp_3_2_lib4(1, ii, A, sda, B+1);
+				kernel_dgecp_3_2_lib4(1, ii, alpha, A, sda, B+1);
 				A += 4*sda;
 				B += 4*sdb;
 				ii += 3;
@@ -846,14 +846,14 @@ void dtrcp_l_lib(int m, int offsetA, double *A, int sda, int offsetB, double *B,
 #if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
 		for( ; ii<m-7; ii+=8)
 			{
-			kernel_dgecp_8_1_lib4(1, ii, A, sda, B, sdb);
+			kernel_dgecp_8_1_lib4(1, ii, alpha, A, sda, B, sdb);
 			A += 8*sda;
 			B += 8*sdb;
 			}
 #endif
 		for( ; ii<m-3; ii+=4)
 			{
-			kernel_dgecp_4_1_lib4(1, ii, A, sda, B);
+			kernel_dgecp_4_1_lib4(1, ii, alpha, A, sda, B);
 			A += 4*sda;
 			B += 4*sdb;
 			}
@@ -861,11 +861,11 @@ void dtrcp_l_lib(int m, int offsetA, double *A, int sda, int offsetB, double *B,
 		if(ii<m)
 			{
 			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(1, ii, A+1, B);
+				kernel_dgecp_1_0_lib4(1, ii, alpha, A+1, B);
 			else if(m-ii==2)
-				kernel_dgecp_2_0_lib4(1, ii, A+1, B);
+				kernel_dgecp_2_0_lib4(1, ii, alpha, A+1, B);
 			else // if(m-ii==3)
-				kernel_dgecp_3_0_lib4(1, ii, A+1, B);
+				kernel_dgecp_3_0_lib4(1, ii, alpha, A+1, B);
 			}
 		}
 	// skip 2 elements of A
@@ -880,32 +880,32 @@ void dtrcp_l_lib(int m, int offsetA, double *A, int sda, int offsetB, double *B,
 				{
 				if(m==1)
 					{
-					kernel_dgecp_1_0_lib4(1, ii, A+offA, B+offB);
+					kernel_dgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
 					return;
 					}
 				else // if(m==2 && mna==3)
 					{
-					kernel_dgecp_2_3_lib4(1, ii, A, sda, B+1);
+					kernel_dgecp_2_3_lib4(1, ii, alpha, A, sda, B+1);
 					return;
 					}
 				}
 			if(mna==1)
 				{
-				kernel_dgecp_1_0_lib4(1, ii, A+1, B+3);
+				kernel_dgecp_1_0_lib4(1, ii, alpha, A+1, B+3);
 				// A += 4*sda;
 				B += 4*sdb;
 				ii += 1;
 				}
 			else if(mna==2)
 				{
-				kernel_dgecp_2_0_lib4(1, ii, A, B+2);
+				kernel_dgecp_2_0_lib4(1, ii, alpha, A, B+2);
 				// A += 4*sda;
 				B += 4*sdb;
 				ii += 2;
 				}
 			else // if(mna==3)
 				{
-				kernel_dgecp_3_3_lib4(1, ii, A, sda, B+1);
+				kernel_dgecp_3_3_lib4(1, ii, alpha, A, sda, B+1);
 				A += 4*sda;
 				B += 4*sdb;
 				ii += 3;
@@ -915,14 +915,14 @@ void dtrcp_l_lib(int m, int offsetA, double *A, int sda, int offsetB, double *B,
 #if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
-			kernel_dgecp_8_2_lib4(1, ii, A, sda, B, sdb);
+			kernel_dgecp_8_2_lib4(1, ii, alpha, A, sda, B, sdb);
 			A += 8*sda;
 			B += 8*sdb;
 			}
 #endif
 		for(; ii<m-3; ii+=4)
 			{
-			kernel_dgecp_4_2_lib4(1, ii, A, sda, B);
+			kernel_dgecp_4_2_lib4(1, ii, alpha, A, sda, B);
 			A += 4*sda;
 			B += 4*sdb;
 			}
@@ -930,11 +930,11 @@ void dtrcp_l_lib(int m, int offsetA, double *A, int sda, int offsetB, double *B,
 		if(ii<m)
 			{
 			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(1, ii, A+2, B);
+				kernel_dgecp_1_0_lib4(1, ii, alpha, A+2, B);
 			else if(m-ii==2)
-				kernel_dgecp_2_0_lib4(1, ii, A+2, B);
+				kernel_dgecp_2_0_lib4(1, ii, alpha, A+2, B);
 			else // if(m-ii==3)
-				kernel_dgecp_3_2_lib4(1, ii, A, sda, B);
+				kernel_dgecp_3_2_lib4(1, ii, alpha, A, sda, B);
 			}
 		}
 	// skip 3 elements of A
@@ -949,32 +949,32 @@ void dtrcp_l_lib(int m, int offsetA, double *A, int sda, int offsetB, double *B,
 				{
 				if(m==1)
 					{
-					kernel_dgecp_1_0_lib4(1, ii, A+offA, B+offB);
+					kernel_dgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
 					return;
 					}
 				else // if(m==2 && mna==3)
 					{
-					kernel_dgecp_2_0_lib4(1, ii, A+offA, B+offB);
+					kernel_dgecp_2_0_lib4(1, ii, alpha, A+offA, B+offB);
 					return;
 					}
 				}
 			if(mna==1)
 				{
-				kernel_dgecp_1_0_lib4(1, ii, A+offA, B+offB);
+				kernel_dgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
 				// A += 4*sda;
 				B += 4*sdb;
 				ii += 1;
 				}
 			else if(mna==2)
 				{
-				kernel_dgecp_2_0_lib4(1, ii, A+offA, B+offB);
+				kernel_dgecp_2_0_lib4(1, ii, alpha, A+offA, B+offB);
 				// A += 4*sda;
 				B += 4*sdb;
 				ii += 2;
 				}
 			else // if(mna==3)
 				{
-				kernel_dgecp_3_0_lib4(1, ii, A+offA, B+offB);
+				kernel_dgecp_3_0_lib4(1, ii, alpha, A+offA, B+offB);
 				// A += 4*sda;
 				B += 4*sdb;
 				ii += 3;
@@ -984,14 +984,14 @@ void dtrcp_l_lib(int m, int offsetA, double *A, int sda, int offsetB, double *B,
 #if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
-			kernel_dgecp_8_3_lib4(1, ii, A, sda, B, sdb);
+			kernel_dgecp_8_3_lib4(1, ii, alpha, A, sda, B, sdb);
 			A += 8*sda;
 			B += 8*sdb;
 			}
 #endif
 		for(; ii<m-3; ii+=4)
 			{
-			kernel_dgecp_4_3_lib4(1, ii, A, sda, B);
+			kernel_dgecp_4_3_lib4(1, ii, alpha, A, sda, B);
 			A += 4*sda;
 			B += 4*sdb;
 			}
@@ -999,11 +999,11 @@ void dtrcp_l_lib(int m, int offsetA, double *A, int sda, int offsetB, double *B,
 		if(ii<m)
 			{
 			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(1, ii, A+3, B);
+				kernel_dgecp_1_0_lib4(1, ii, alpha, A+3, B);
 			else if(m-ii==2)
-				kernel_dgecp_2_3_lib4(1, ii, A, sda, B);
+				kernel_dgecp_2_3_lib4(1, ii, alpha, A, sda, B);
 			else // if(m-ii==3)
-				kernel_dgecp_3_3_lib4(1, ii, A, sda, B);
+				kernel_dgecp_3_3_lib4(1, ii, alpha, A, sda, B);
 			}
 		}
 
@@ -2710,14 +2710,14 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 
 
 // copy a generic strmat into a generic strmat
-void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dgecp_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
 	const int bs = D_BS;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
 	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	dgecp_lib(m, n, ai%bs, pA, sda, ci%bs, pC, sdc);
+	dgecp_lib(m, n, alpha, ai%bs, pA, sda, ci%bs, pC, sdc);
 	return;
 	}
 
@@ -2747,14 +2747,14 @@ void dveccp_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_st
 
 
 // copy a lower triangular strmat into a lower triangular strmat
-void dtrcp_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dtrcp_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
 	const int bs = D_BS;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
 	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	dtrcp_l_lib(m, ai%bs, pA, sda, ci%bs, pC, sdc);
+	dtrcp_l_lib(m, alpha, ai%bs, pA, sda, ci%bs, pC, sdc);
 	return;
 	}
 
@@ -3103,7 +3103,7 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 
 
 // copy a generic strmat into a generic strmat
-void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dgecp_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -3115,14 +3115,14 @@ void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_st
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
-			pC[ii+1+jj*ldc] = pA[ii+1+jj*lda];
-			pC[ii+2+jj*ldc] = pA[ii+2+jj*lda];
-			pC[ii+3+jj*ldc] = pA[ii+3+jj*lda];
+			pC[ii+0+jj*ldc] = alpha*pA[ii+0+jj*lda];
+			pC[ii+1+jj*ldc] = alpha*pA[ii+1+jj*lda];
+			pC[ii+2+jj*ldc] = alpha*pA[ii+2+jj*lda];
+			pC[ii+3+jj*ldc] = alpha*pA[ii+3+jj*lda];
 			}
 		for(; ii<m; ii++)
 			{
-			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
+			pC[ii+0+jj*ldc] = alpha*pA[ii+0+jj*lda];
 			}
 		}
 	return;
@@ -3154,7 +3154,7 @@ void dveccp_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_st
 
 
 // copy a lower triangular strmat into a lower triangular strmat
-void dtrcp_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dtrcp_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -3166,7 +3166,7 @@ void dtrcp_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat 
 		ii = jj;
 		for(; ii<m; ii++)
 			{
-			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
+			pC[ii+0+jj*ldc] = alpha*pA[ii+0+jj*lda];
 			}
 		}
 	return;
