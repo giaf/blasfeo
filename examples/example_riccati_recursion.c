@@ -92,15 +92,16 @@ void d_back_ric_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct 
 //	d_print_strmat(nu[nn]+nx[nn]+1, nx[nn+1], &hsBAbt[nn], 0, 0);
 	dgemv_t_libstr(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsux[nn+1], nu[nn+1], &hsux[nn+1], nu[nn+1]);
 //	d_print_tran_strvec(nu[nn+1]+nx[nn+1], &hsux[nn+1], 0);
-	dveccp_libstr(nx[nn+1], &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0); // align
+	dveccp_libstr(nx[nn+1], &hsux[nn+1], nu[nn+1], &hspi[nn], 0); // align
 //	d_print_tran_strvec(nx[nn+1], &hswork_vec[0], 0);
 //	d_print_strmat(nu[nn+1]+nx[nn+1]+1, nu[nn+1]+nx[nn+1], &hsL[nn+1], 0, 0);
 //	d_print_strmat(nx[nn+1], nx[nn+1], &hsLxt[nn+1], 0, 0);
 	drowex_libstr(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[1], 0);
 //	d_print_tran_strvec(nx[nn+1], &hswork_vec[1], 0);
-	dtrmv_unn_libstr(nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, 1.0, &hswork_vec[1], 0, &hswork_vec[1], 0);
+	dtrmv_unn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
+	daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[1], 0, &hspi[nn], 0);
 //	d_print_tran_strvec(nx[nn+1], &hswork_vec[1], 0);
-	dtrmv_utn_libstr(nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[1], 0, 0.0, &hspi[nn], 0, &hspi[nn], 0);
+	dtrmv_utn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
 //	d_print_tran_strvec(nx[nn+1], &hspi[nn], 0);
 //	exit(1);
 
@@ -117,14 +118,18 @@ void d_back_ric_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct 
 	//	d_print_strmat(nu[nn]+nx[nn]+1, nx[nn+1], &hsBAbt[nn], 0, 0);
 		dgemv_t_libstr(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsux[nn+1], nu[nn+1], &hsux[nn+1], nu[nn+1]);
 	//	d_print_tran_strvec(nu[nn+1]+nx[nn+1], &hsux[nn+1], 0);
-		dveccp_libstr(nx[nn+1], &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0); // align
+//		dveccp_libstr(nx[nn+1], &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0); // align
+	dveccp_libstr(nx[nn+1], &hsux[nn+1], nu[nn+1], &hspi[nn], 0); // align
 	//	d_print_tran_strvec(nx[nn+1], &hswork_vec[0], 0);
 	//	d_print_strmat(nu[nn+1]+nx[nn+1]+1, nu[nn+1]+nx[nn+1], &hsL[nn+1], 0, 0);
 		drowex_libstr(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[1], 0);
 	//	d_print_tran_strvec(nx[nn+1], &hswork_vec[1], 0);
-		dtrmv_unn_libstr(nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, 1.0, &hswork_vec[1], 0, &hswork_vec[1], 0);
+//		dtrmv_unn_libstr(nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, 1.0, &hswork_vec[1], 0, &hswork_vec[1], 0);
+	dtrmv_unn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
+	daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[1], 0, &hspi[nn], 0);
 	//	d_print_tran_strvec(nx[nn+1], &hswork_vec[1], 0);
-		dtrmv_utn_libstr(nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[1], 0, 0.0, &hspi[nn], 0, &hspi[nn], 0);
+//		dtrmv_utn_libstr(nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[1], 0, 0.0, &hspi[nn], 0, &hspi[nn], 0);
+	dtrmv_utn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
 	//	d_print_tran_strvec(nx[nn+1], &hspi[nn], 0);
 
 		}

@@ -319,21 +319,22 @@ void dtrmv_ut_lib(int m, double *pA, int sda, double *x, int alg, double *y, dou
 
 	const int bs = 4;
 	
-	int i;
+	int ii, idx;
 	
 	double *ptrA;
 	
-	i=0;
-	for(; i<m-3; i+=4)
+	ii=0;
+	idx = m/bs*bs;
+	if(m%bs!=0)
 		{
-		kernel_dtrmv_ut_4_lib4(i+4, pA, sda, x, alg, y, z);
-		pA += 4*bs;
-		y  += bs;
-		z  += bs;
+		kernel_dtrmv_ut_4_vs_lib4(m, pA+idx*bs, sda, x, alg, y+idx, z+idx, m%bs);
+		ii += m%bs;
 		}
-	if(i<m)
+	idx -= 4;
+	for(; ii<m; ii+=4)
 		{
-		kernel_dtrmv_ut_4_vs_lib4(m, pA, sda, x, alg, y, z, m-i);
+		kernel_dtrmv_ut_4_lib4(idx+4, pA+idx*bs, sda, x, alg, y+idx, z+idx);
+		idx -= 4;
 		}
 
 	}
@@ -507,23 +508,9 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 
-void dtrmv_unn_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+void dtrmv_unn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	if(ai!=0 | xi%4!=0)
-		{
-		printf("\nfeature not implemented yet\n");
-		exit(1);
-		}
-	int alg;
-	if(alpha==1.0 & beta==1.0)
-		{
-		alg=1;
-		}
-	else if(alpha==1.0 & beta==0.0)
-		{
-		alg=0;
-		}
-	else
 		{
 		printf("\nfeature not implemented yet\n");
 		exit(1);
@@ -532,31 +519,16 @@ void dtrmv_unn_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, 
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs; // TODO ai
 	double *x = sx->pa + xi;
-	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
-	dtrmv_un_lib(m, pA, sda, x, alg, y, z);
+	dtrmv_un_lib(m, pA, sda, x, 0, z, z);
 	return;
 	}
 
 
 
-void dtrmv_utn_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+void dtrmv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	if(ai!=0 | xi%4!=0)
-		{
-		printf("\nfeature not implemented yet\n");
-		exit(1);
-		}
-	int alg;
-	if(alpha==1.0 & beta==1.0)
-		{
-		alg=1;
-		}
-	else if(alpha==1.0 & beta==0.0)
-		{
-		alg=0;
-		}
-	else
 		{
 		printf("\nfeature not implemented yet\n");
 		exit(1);
@@ -565,9 +537,8 @@ void dtrmv_utn_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, 
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs; // TODO ai
 	double *x = sx->pa + xi;
-	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
-	dtrmv_ut_lib(m, pA, sda, x, alg, y, z);
+	dtrmv_ut_lib(m, pA, sda, x, 0, z, z);
 	return;
 	}
 
@@ -710,8 +681,7 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 
-// XXX it destructs the value of x !!!!!!!!!!!!!!!!!!
-void dtrmv_unn_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+void dtrmv_unn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -724,27 +694,15 @@ void dtrmv_unn_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, 
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
 	double *x = sx->pa + xi;
-	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
-#if 1
-	dtrmv_(&cu, &cn, &cn, &m, pA, &lda, x, &i1);
-	dcopy_(&m, y, &i1, z, &i1);
-	dscal_(&m, &alpha, z, &i1);
-	daxpy_(&m, &beta, y, &i1, x, &i1);
 	dcopy_(&m, x, &i1, z, &i1);
-#else
-	dcopy_(&m, x, &i1, z, &i1);
-	dscal_(&m, &alpha, z, &i1);
 	dtrmv_(&cu, &cn, &cn, &m, pA, &lda, z, &i1);
-	daxpy_(&m, &beta, y, &i1, z, &i1);
-#endif
 	return;
 	}
 
 
 
-// XXX it destructs the value of x !!!!!!!!!!!!!!!!!!
-void dtrmv_utn_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+void dtrmv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -757,20 +715,9 @@ void dtrmv_utn_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, 
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
 	double *x = sx->pa + xi;
-	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
-#if 1
-	dtrmv_(&cu, &ct, &cn, &m, pA, &lda, x, &i1);
-	dcopy_(&m, y, &i1, z, &i1);
-	dscal_(&m, &alpha, z, &i1);
-	daxpy_(&m, &beta, y, &i1, x, &i1);
 	dcopy_(&m, x, &i1, z, &i1);
-#else
-	dcopy_(&m, x, &i1, z, &i1);
-	dscal_(&m, &alpha, z, &i1);
 	dtrmv_(&cu, &ct, &cn, &m, pA, &lda, z, &i1);
-	daxpy_(&m, &beta, y, &i1, z, &i1);
-#endif
 	return;
 	}
 
