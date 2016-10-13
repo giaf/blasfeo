@@ -1437,6 +1437,31 @@ void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d
 
 
 
+// dsyrk dpotrf
+void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
+		{
+		printf("\nfeature not implemented yet\n\n");
+		exit(1);
+		}
+	const int bs = D_BS;
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	double *pA = sA->pA + aj*bs;
+	double *pB = sB->pA + bj*bs;
+	double *pC = sC->pA + cj*bs;
+	double *pD = sD->pA + dj*bs;
+	double *dD = sD->dA; // XXX what to do if di and dj are not zero
+	dsyrk_dpotrf_nt_l_lib(m, n, k, pA, sda, pB, sdb, pC, sdc, pD, sdd, dD);
+	sC->use_dA = 1;
+	return;
+	}
+
+
+
 // dgetrf without pivoting
 void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
@@ -1526,6 +1551,15 @@ void dgetf2_nopivot(int m, int n, double *A, int lda)
 	return;
 
 	}
+
+// dsyrk dpotrf
+void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	printf("\nfeature not implemented yet\n\n");
+	exit(1);
+	}
+
+
 
 // dgetrf without pivoting
 void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
