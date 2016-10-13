@@ -36,6 +36,10 @@
 #include <immintrin.h>  // AVX
 #endif
 
+#include "../include/blasfeo_block_size.h"
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_d_kernel.h"
+
 
 
 // y = y + alpha*x, with increments equal to 1
@@ -104,3 +108,33 @@ void daxpy_lib(int kmax, double alpha, double *x, double *y)
 
 
 
+#if defined(LA_BLASFEO)
+
+
+
+void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi)
+	{
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	daxpy_lib(m, alpha, x, y);
+	return;
+	}
+
+
+
+#else
+
+
+
+void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi)
+	{
+	int i1 = 1;
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	daxpy_(&m, &alpha, x, &i1, y, &i1);
+	return;
+	}
+
+
+
+#endif
