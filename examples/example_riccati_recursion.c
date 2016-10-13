@@ -70,7 +70,7 @@ void d_back_ric_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct 
 //		d_print_strmat(nu[N-nn-1]+nx[N-nn-1]+1, nx[N-nn], &hswork_mat[0], 0, 0);
 #if 0
 		dsyrk_ln_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
-		d_print_strmat(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0);
+//		d_print_strmat(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0);
 		dpotrf_l_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #else
 		dsyrk_dpotrf_ln_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
@@ -78,6 +78,7 @@ void d_back_ric_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct 
 //		d_print_strmat(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0);
 		dtrtr_l_libstr(nx[N-nn-1], &hsL[N-nn-1], nu[N-nn-1], nu[N-nn-1], &hsLxt[N-nn-1], 0, 0);
 //		d_print_strmat(nx[N-nn-1], nx[N-nn-1], &hsLxt[N-nn-1], 0, 0);
+//		exit(1);
 		}
 	
 	// forward substitution
