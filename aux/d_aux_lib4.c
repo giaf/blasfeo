@@ -2724,13 +2724,23 @@ void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_st
 
 
 // copy a strvec into a strvec
-void dveccp_libstr(int m, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci)
+void dveccp_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci)
 	{
 	double *pa = sa->pa + ai;
 	double *pc = sc->pa + ci;
 	int ii;
-	for(ii=0; ii<m; ii++)
-		pc[ii] = pa[ii];
+	ii = 0;
+	for(; ii<m-3; ii++)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
+		pc[ii+1] = alpha*pa[ii+1];
+		pc[ii+2] = alpha*pa[ii+2];
+		pc[ii+3] = alpha*pa[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
+		}
 	return;
 	}
 
@@ -3121,13 +3131,23 @@ void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_st
 
 
 // copy a strvec into a strvec
-void dveccp_libstr(int m, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci)
+void dveccp_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci)
 	{
 	double *pa = sa->pa + ai;
 	double *pc = sc->pa + ci;
 	int ii;
-	for(ii=0; ii<m; ii++)
-		pc[ii] = pa[ii];
+	ii = 0;
+	for(; ii<m-3; ii++)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
+		pc[ii+1] = alpha*pa[ii+1];
+		pc[ii+2] = alpha*pa[ii+2];
+		pc[ii+3] = alpha*pa[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
+		}
 	return;
 	}
 
