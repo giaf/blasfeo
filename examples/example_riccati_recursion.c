@@ -91,11 +91,12 @@ void d_back_ric_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct 
 	dveccp_libstr(nx[nn+1], &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0); // align
 //	d_print_tran_strvec(nx[nn+1], &hswork_vec[0], 0);
 //	d_print_strmat(nu[nn+1]+nx[nn+1]+1, nu[nn+1]+nx[nn+1], &hsL[nn+1], 0, 0);
+//	d_print_strmat(nx[nn+1], nx[nn+1], &hsLxt[nn+1], 0, 0);
 	drowex_libstr(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[1], 0);
 //	d_print_tran_strvec(nx[nn+1], &hswork_vec[1], 0);
-	dtrmv_unn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[1], 0, 1.0, &hswork_vec[0], 0, &hswork_vec[0], 0);
-//	d_print_tran_strvec(nx[nn+1], &hswork_vec[0], 0);
-	dtrmv_utn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, 0.0, &hspi[nn], 0, &hspi[nn], 0);
+	dtrmv_unn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, 1.0, &hswork_vec[1], 0, &hswork_vec[1], 0);
+//	d_print_tran_strvec(nx[nn+1], &hswork_vec[1], 0);
+	dtrmv_utn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[1], 0, 0.0, &hspi[nn], 0, &hspi[nn], 0);
 //	d_print_tran_strvec(nx[nn+1], &hspi[nn], 0);
 
 	for(nn=1; nn<N; nn++)
@@ -116,9 +117,9 @@ void d_back_ric_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct 
 	//	d_print_strmat(nu[nn+1]+nx[nn+1]+1, nu[nn+1]+nx[nn+1], &hsL[nn+1], 0, 0);
 		drowex_libstr(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[1], 0);
 	//	d_print_tran_strvec(nx[nn+1], &hswork_vec[1], 0);
-		dtrmv_unn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[1], 0, 1.0, &hswork_vec[0], 0, &hswork_vec[0], 0);
-	//	d_print_tran_strvec(nx[nn+1], &hswork_vec[0], 0);
-		dtrmv_utn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, 0.0, &hspi[nn], 0, &hspi[nn], 0);
+		dtrmv_unn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, 1.0, &hswork_vec[1], 0, &hswork_vec[1], 0);
+	//	d_print_tran_strvec(nx[nn+1], &hswork_vec[1], 0);
+		dtrmv_utn_libstr(nx[nn+1], nx[nn+1], 1.0, &hsLxt[nn+1], 0, 0, &hswork_vec[1], 0, 0.0, &hspi[nn], 0, &hspi[nn], 0);
 	//	d_print_tran_strvec(nx[nn+1], &hspi[nn], 0);
 
 		}
@@ -244,9 +245,9 @@ int main()
 ************************************************/	
 
 	// problem size
-	int N = 4;
-	int nx_ = 8;
-	int nu_ = 3;
+	int N = 10;
+	int nx_ = 2;
+	int nu_ = 1;
 
 	// stage-wise variant size
 	int nx[N+1];
@@ -408,12 +409,33 @@ int main()
 * call Riccati solver
 ************************************************/	
 	
-	d_back_ric_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL, hsLxt, hsux, hspi, hswork_mat, hswork_vec);
+	// timing 
+	struct timeval tv0, tv1, tv2, tv3;
+	int nrep = 1000;
+	int rep;
+
+	gettimeofday(&tv0, NULL); // start
+
+	for(rep=0; rep<nrep; rep++)
+		{
+		d_back_ric_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL, hsLxt, hsux, hspi, hswork_mat, hswork_vec);
+		}
+
+	gettimeofday(&tv1, NULL); // start
+
+	float time_sv = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);
 
 	// print sol
 	printf("\nux = \n\n");
 	for(ii=0; ii<=N; ii++)
 		d_print_tran_strvec(nu[ii]+nx[ii], &hsux[ii], 0);
+
+	printf("\npi = \n\n");
+	for(ii=0; ii<N; ii++)
+		d_print_tran_strvec(nx[ii+1], &hspi[ii], 0);
+
+	printf("\ntime\n");
+	printf("\n%e\n", time_sv);
 
 /************************************************
 * free memory
