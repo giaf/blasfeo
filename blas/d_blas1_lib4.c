@@ -60,10 +60,10 @@ void daxpy_lib(int kmax, double alpha, double *x, double *y)
 	v_alpha = _mm256_broadcast_sd( &alpha );
 	for( ; ii<kmax-7; ii+=8)
 		{
-		v_x0  = _mm256_load_pd( &x[ii+0] );
-		v_x1  = _mm256_load_pd( &x[ii+4] );
-		v_y0  = _mm256_load_pd( &y[ii+0] );
-		v_y1  = _mm256_load_pd( &y[ii+4] );
+		v_x0  = _mm256_loadu_pd( &x[ii+0] );
+		v_x1  = _mm256_loadu_pd( &x[ii+4] );
+		v_y0  = _mm256_loadu_pd( &y[ii+0] );
+		v_y1  = _mm256_loadu_pd( &y[ii+4] );
 #if defined(TARGET_X64_INTEL_HASWELL)
 		v_y0  = _mm256_fmadd_pd( v_alpha, v_x0, v_y0 );
 		v_y1  = _mm256_fmadd_pd( v_alpha, v_x1, v_y1 );
@@ -73,20 +73,20 @@ void daxpy_lib(int kmax, double alpha, double *x, double *y)
 		v_tmp = _mm256_mul_pd( v_alpha, v_x1 );
 		v_y1  = _mm256_add_pd( v_tmp, v_y1 );
 #endif
-		_mm256_store_pd( &y[ii+0], v_y0 );
-		_mm256_store_pd( &y[ii+4], v_y1 );
+		_mm256_storeu_pd( &y[ii+0], v_y0 );
+		_mm256_storeu_pd( &y[ii+4], v_y1 );
 		}
 	for( ; ii<kmax-3; ii+=4)
 		{
-		v_x0  = _mm256_load_pd( &x[ii] );
-		v_y0  = _mm256_load_pd( &y[ii] );
+		v_x0  = _mm256_loadu_pd( &x[ii] );
+		v_y0  = _mm256_loadu_pd( &y[ii] );
 #if defined(TARGET_X64_INTEL_HASWELL)
 		v_y0  = _mm256_fmadd_pd( v_alpha, v_x0, v_y0 );
 #else // sandy bridge
 		v_tmp = _mm256_mul_pd( v_alpha, v_x0 );
 		v_y0  = _mm256_add_pd( v_tmp, v_y0 );
 #endif
-		_mm256_store_pd( &y[ii], v_y0 );
+		_mm256_storeu_pd( &y[ii], v_y0 );
 		}
 #else
 	for( ; ii<kmax-3; ii+=4)
