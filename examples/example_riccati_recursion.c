@@ -31,6 +31,8 @@
 #include <stdio.h>
 #include <sys/time.h>
 
+#include "tools.h"
+
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_i_aux.h"
 #include "../include/blasfeo_d_aux.h"
