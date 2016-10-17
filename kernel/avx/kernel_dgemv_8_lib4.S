@@ -278,7 +278,7 @@ _inner_kernel_dgemv_add_t_8_lib4:
 	
 	prefetcht0	0(%r14) // software prefetch
 
-	vmovapd	0(%r13), %ymm12
+	vmovupd	0(%r13), %ymm12
 	addq	$32, %r13 // x+4
 
 	vmovapd	0(%r11), %ymm8

@@ -223,7 +223,7 @@ _inner_kernel_dgemv_add_t_4_lib4:
 	.p2align 3
 1: // main loop
 	
-	vmovapd	0(%r13), %ymm12
+	vmovupd	0(%r13), %ymm12
 
 	vmovapd	0(%r11), %ymm8
 	vmulpd	%ymm8, %ymm12, %ymm15
@@ -555,7 +555,7 @@ _inner_edge_dsymv_add_nt_4_lib4:
 	vmovupd		0(%r13), %ymm12
 	vmovupd		0(%r14), %ymm13
 
-	vmovapd		0(%r11), %ymm14
+	vmovupd		0(%r11), %ymm14
 	vmulpd		%ymm14, %ymm12, %ymm15
 	vaddpd		%ymm0, %ymm15, %ymm0
 	vxorpd		%ymm15, %ymm15, %ymm15
@@ -563,7 +563,7 @@ _inner_edge_dsymv_add_nt_4_lib4:
 	vmulpd		%ymm14, %ymm6, %ymm15
 	vaddpd		%ymm13, %ymm15, %ymm13
 	
-	vmovapd		32(%r11), %ymm14
+	vmovupd		32(%r11), %ymm14
 	vxorpd		%ymm15, %ymm15, %ymm15
 	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm12, %ymm15
@@ -573,7 +573,7 @@ _inner_edge_dsymv_add_nt_4_lib4:
 	vmulpd		%ymm14, %ymm7, %ymm15
 	vaddpd		%ymm13, %ymm15, %ymm13
 	
-	vmovapd		64(%r11), %ymm14
+	vmovupd		64(%r11), %ymm14
 	vxorpd		%ymm15, %ymm15, %ymm15
 	vblendpd	$0x3, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm12, %ymm15
@@ -583,7 +583,7 @@ _inner_edge_dsymv_add_nt_4_lib4:
 	vmulpd		%ymm14, %ymm8, %ymm15
 	vaddpd		%ymm13, %ymm15, %ymm13
 
-	vmovapd		96(%r11), %ymm14
+	vmovupd		96(%r11), %ymm14
 	vxorpd		%ymm15, %ymm15, %ymm15
 	vblendpd	$0x7, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm12, %ymm15
@@ -1312,7 +1312,7 @@ _inner_edge_dtrsv_lt_inv_3_lib4:
 //	vmulpd			%ymm12, %ymm0, %ymm1
 //	vblendpd		$0x8, %ymm1, %ymm0, %ymm0
 
-	vmovapd			0(%r13), %ymm12
+	vmovupd			0(%r13), %ymm12
 	vblendpd		$0x8, %ymm12, %ymm0, %ymm0
 	
 	jl				0f
@@ -1415,7 +1415,7 @@ _inner_edge_dtrsv_lt_inv_2_lib4:
 //	vmulpd			%ymm12, %ymm0, %ymm1
 //	vblendpd		$0x8, %ymm1, %ymm0, %ymm0
 
-	vmovapd			0(%r13), %ymm12
+	vmovupd			0(%r13), %ymm12
 	vblendpd		$0xc, %ymm12, %ymm0, %ymm0
 	
 	je				0f
@@ -1503,7 +1503,7 @@ _inner_edge_dtrsv_lt_inv_1_lib4:
 	
 	vxorpd			%ymm14, %ymm14, %ymm14
 
-	vmovapd			0(%r13), %ymm12
+	vmovupd			0(%r13), %ymm12
 	vblendpd		$0xe, %ymm12, %ymm0, %ymm0
 	
 	cmpl			$3, %r12d
@@ -1713,7 +1713,7 @@ _inner_kernel_dtrmv_ut_4_lib4:
 	.p2align 3
 1: // main loop
 	
-	vmovapd	0(%r13), %ymm12
+	vmovupd	0(%r13), %ymm12
 
 	vmovapd	0(%r11), %ymm8
 	vmulpd	%ymm8, %ymm12, %ymm15
@@ -1759,7 +1759,7 @@ _inner_kernel_dtrmv_ut_4_lib4:
 //
 //	vmaskmovpd	0(%r13), %ymm14, %ymm12
 
-	vmovapd		0(%r13), %ymm12
+	vmovupd		0(%r13), %ymm12
 
 	vxorpd		%ymm14, %ymm14, %ymm14
 

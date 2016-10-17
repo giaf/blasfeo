@@ -256,7 +256,7 @@ _inner_kernel_dgemv_add_t_8_lib4:
 	.p2align 3
 1: // main loop
 	
-	vmovapd	0(%r13), %ymm12
+	vmovupd	0(%r13), %ymm12
 
 	vmovapd	0(%r11), %ymm8
 	vfmadd231pd	%ymm8, %ymm12, %ymm0
