@@ -157,7 +157,7 @@ void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, str
 	// factorization
 
 	// last stage
-	d_back_ric_trf_stepN_libstr(&nx[N-nn-1], &hsRSQrq[N-nn-1], &hsL[N-nn-1], &hsLxt[N-nn-1]);
+	d_back_ric_trf_stepN_libstr(&nx[N], &hsRSQrq[N], &hsL[N], &hsLxt[N]);
 
 	// middle stages
 	for(nn=0; nn<N; nn++)
