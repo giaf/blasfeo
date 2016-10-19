@@ -3321,12 +3321,12 @@ void ddiaadin_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, in
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	int ldd = sD->m;
-	double *pD = sD->pA + di + dj*sda;
+	double *pD = sD->pA + di + dj*ldd;
 	int ii, jj;
 	for(jj=0; jj<kmax; jj++)
 		{
 		ii = idx[jj];
-		pD[ii*(lda+1)] = y[jj] + alpha * x[jj];
+		pD[ii*(ldd+1)] = y[jj] + alpha * x[jj];
 		}
 	return;
 	}
@@ -3338,12 +3338,12 @@ void drowad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 	{
 	double *x = sx->pa + xi;
 	int ldd = sD->m;
-	double *pD = sD->pA + di + dj*sda;
+	double *pD = sD->pA + di + dj*ldd;
 	int ii, jj;
 	for(jj=0; jj<kmax; jj++)
 		{
 		ii = idx[jj];
-		pD[ii*lda] += alpha * x[jj];
+		pD[ii*ldd] += alpha * x[jj];
 		}
 	return;
 	}
