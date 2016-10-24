@@ -471,7 +471,7 @@ void dgecp_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int 
 				}
 			}
 		// main loop
-#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
 			kernel_dgecp_8_0_lib4(0, n, alpha, A, sda, B, sdb);
@@ -540,7 +540,7 @@ void dgecp_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int 
 				}
 			}
 		// main loop
-#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 		for( ; ii<m-7; ii+=8)
 			{
 			kernel_dgecp_8_1_lib4(0, n, alpha, A, sda, B, sdb);
@@ -609,7 +609,7 @@ void dgecp_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int 
 				}
 			}
 		// main loop
-#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
 			kernel_dgecp_8_2_lib4(0, n, alpha, A, sda, B, sdb);
@@ -678,7 +678,7 @@ void dgecp_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int 
 				}
 			}
 		// main loop
-#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
 			kernel_dgecp_8_3_lib4(0, n, alpha, A, sda, B, sdb);
@@ -774,7 +774,7 @@ void dtrcp_l_lib(int m, double alpha, int offsetA, double *A, int sda, int offse
 				}
 			}
 		// main loop
-#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
 			kernel_dgecp_8_0_lib4(1, ii, alpha, A, sda, B, sdb);
@@ -843,7 +843,7 @@ void dtrcp_l_lib(int m, double alpha, int offsetA, double *A, int sda, int offse
 				}
 			}
 		// main loop
-#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 		for( ; ii<m-7; ii+=8)
 			{
 			kernel_dgecp_8_1_lib4(1, ii, alpha, A, sda, B, sdb);
@@ -912,7 +912,7 @@ void dtrcp_l_lib(int m, double alpha, int offsetA, double *A, int sda, int offse
 				}
 			}
 		// main loop
-#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
 			kernel_dgecp_8_2_lib4(1, ii, alpha, A, sda, B, sdb);
@@ -981,7 +981,7 @@ void dtrcp_l_lib(int m, double alpha, int offsetA, double *A, int sda, int offse
 				}
 			}
 		// main loop
-#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
 			kernel_dgecp_8_3_lib4(1, ii, alpha, A, sda, B, sdb);
@@ -1075,7 +1075,7 @@ void dgead_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int 
 				}
 			}
 		// main loop
-#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
 			kernel_dgead_8_0_lib4(n, alpha, A, sda, B, sdb);
@@ -1144,7 +1144,7 @@ void dgead_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int 
 				}
 			}
 		// main loop
-#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 		for( ; ii<m-7; ii+=8)
 			{
 			kernel_dgead_8_1_lib4(n, alpha, A, sda, B, sdb);
@@ -1213,7 +1213,7 @@ void dgead_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int 
 				}
 			}
 		// main loop
-#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
 			kernel_dgead_8_2_lib4(n, alpha, A, sda, B, sdb);
@@ -1282,7 +1282,7 @@ void dgead_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int 
 				}
 			}
 		// main loop
-#if defined(TARGET_INTEL_SANDY_BRIDGE) || defined(TARGET_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
 			kernel_dgead_8_3_lib4(n, alpha, A, sda, B, sdb);
@@ -1365,7 +1365,7 @@ C =
 		pA += mna + bs*(sda-1);
 		pC += mna*bs;
 		}
-#if defined(TARGET_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL)
 	for( ; ii<m-7; ii+=8)
 		{
 		kernel_dgetr_8_lib4(0, n, nna, pA, sda, pC, sdc);
@@ -1500,7 +1500,7 @@ C =
 		pA += mna + bs*(sda-1);
 		pC += mna*bs;
 		}
-#if 0 //defined(TARGET_INTEL_HASWELL)
+#if 0 //defined(TARGET_X64_INTEL_HASWELL)
 	for( ; ii<m-7; ii+=8)
 		{
 		kernel_dgetr_8_lib4(1, n, nna, pA, sda, pC, sdc);
