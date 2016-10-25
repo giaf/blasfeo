@@ -2,3 +2,5 @@
 *.s
 *.o
 *.out
+include/blasfeo_target.h
+libblasfeo.a
