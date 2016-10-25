@@ -114,6 +114,23 @@ void d_print_mat(int row, int col, double *A, int lda)
 
 
 
+/* prints a matrix in column-major format */
+void d_print_to_file_mat(FILE *file, int row, int col, double *A, int lda)
+	{
+	int i, j;
+	for(i=0; i<row; i++)
+		{
+		for(j=0; j<col; j++)
+			{
+			fprintf(file, "%9.5f ", A[i+lda*j]);
+			}
+		fprintf(file, "\n");
+		}
+	fprintf(file, "\n");
+	}	
+
+
+
 /* prints a matrix in column-major format (exponential notation) */
 void d_print_mat_e(int row, int col, double *A, int lda)
 	{
@@ -163,6 +180,42 @@ void d_print_pmat(int row, int col, double *pA, int sda)
 			}
 		}
 	printf("\n");
+
+	}	
+
+
+
+void d_print_to_file_pmat(FILE *file, int row, int col, double *pA, int sda)
+	{
+
+	const int bs = 4;
+
+	int ii, i, j, row2;
+
+	for(ii=0; ii<row-(bs-1); ii+=bs)
+		{
+		for(i=0; i<bs; i++)
+			{
+			for(j=0; j<col; j++)
+				{
+				fprintf(file, "%9.5f ", pA[i+bs*j+sda*ii]);
+				}
+			fprintf(file, "\n");
+			}
+		}
+	if(ii<row)
+		{
+		row2 = row-ii;
+		for(i=0; i<row2; i++)
+			{
+			for(j=0; j<col; j++)
+				{
+				fprintf(file, "%9.5f ", pA[i+bs*j+sda*ii]);
+				}
+			fprintf(file, "\n");
+			}
+		}
+	fprintf(file, "\n");
 
 	}	
 
@@ -363,6 +416,44 @@ void d_print_tran_strvec(int m, struct d_strvec *sa, int ai)
 
 
 
+// print a matrix structure
+void d_print_to_file_strmat(FILE * file, int m, int n, struct d_strmat *sA, int ai, int aj)
+	{
+	// TODO ai
+	if(ai!=0 | aj!=0)
+		{
+		printf("\nfeature not implemented yet\n\n");
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs;
+	d_print_to_file_pmat(file, m, n, pA, sda);
+	return;
+	}
+
+
+
+// print a vector structure
+void d_print_to_file_strvec(FILE * file, int m, struct d_strvec *sa, int ai)
+	{
+	double *pa = sa->pa + ai;
+	d_print_to_file_mat(file, m, 1, pa, m);
+	return;
+	}
+
+
+
+// print the transposed of a vector structure
+void d_print_tran_to_file_strvec(FILE * file, int m, struct d_strvec *sa, int ai)
+	{
+	double *pa = sa->pa + ai;
+	d_print_to_file_mat(file, 1, m, pa, 1);
+	return;
+	}
+
+
+
 // linear algebra provided by BLAS
 #elif defined(LA_BLAS)
 
@@ -435,6 +526,37 @@ void d_print_tran_strvec(int m, struct d_strvec *sa, int ai)
 	{
 	double *pa = sa->pa + ai;
 	d_print_mat(1, m, pa, 1);
+	return;
+	}
+
+
+
+// print a matrix structure
+void d_print_to_file_strmat(FILE *file, int m, int n, struct d_strmat *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	d_print_mat(file, m, n, pA, lda);
+	return;
+	}
+
+
+
+// print a vector structure
+void d_print_to_file_strvec(FILE *file, int m, struct d_strvec *sa, int ai)
+	{
+	double *pa = sa->pa + ai;
+	d_print_mat(file, m, 1, pa, m);
+	return;
+	}
+
+
+
+// print and transpose a vector structure
+void d_print_to_file_tran_strvec(FILE *file, int m, struct d_strvec *sa, int ai)
+	{
+	double *pa = sa->pa + ai;
+	d_print_mat(file, 1, m, pa, 1);
 	return;
 	}
 
