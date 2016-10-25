@@ -27,6 +27,8 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdio.h>
+
 
 
 // d_aux_extern_depend_lib
@@ -71,7 +73,7 @@ void d_cvt_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double 
 void d_cvt_strvec2vec(int m, struct d_strvec *sa, int ai, double *a);
 void d_cvt_tran_pmat2mat(int row, int col, int offset, double *pA, int sda, double *A, int lda);
 void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda);
-void dgecp_lib(int m, int n, int offsetA, double alpha, double *A, int sda, int offsetB, double *B, int sdb);
+void dgecp_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb);
 void dgecp_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
 void dveccp_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci);
 void dtrcp_l_lib(int m, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb);
