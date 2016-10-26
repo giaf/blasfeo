@@ -43,8 +43,13 @@ LA = BLASFEO
 #LA = BLAS
 
 # operative system
-OS = LINUX
-#OS = MAC
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+    OS = LINUX
+endif
+ifeq ($(UNAME_S),Darwin)
+    OS = MAC
+endif
 
 # Macro level: 0 (no macro), 1 (all macro but gemm kernel), 2 (all macro)
 MACRO_LEVEL = 0

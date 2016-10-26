@@ -32,6 +32,7 @@
 
 
 // d_aux_extern_depend_lib
+#include <stdio.h>
 void d_zeros(double **pA, int row, int col);
 void d_zeros_align(double **pA, int row, int col);
 void d_zeros_align_bytes(double **pA, int size);
@@ -118,4 +119,3 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA);
 void dvecin_libsp(int kmax, int *idx, double *x, double *y);
 void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y);
 void dvecad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi);
-
