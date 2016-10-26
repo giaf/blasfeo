@@ -32,7 +32,6 @@
 
 
 // d_aux_extern_depend_lib
-#include <stdio.h>
 void d_zeros(double **pA, int row, int col);
 void d_zeros_align(double **pA, int row, int col);
 void d_zeros_align_bytes(double **pA, int size);
