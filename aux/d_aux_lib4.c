@@ -2637,7 +2637,8 @@ void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	int ii;
 	for(ii=0; ii<kmax; ii++)
 		{
-		drowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+		if(ipiv[ii]!=ii)
+			drowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
 		}
 	return;
 	}
@@ -2702,7 +2703,8 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	int ii;
 	for(ii=0; ii<kmax; ii++)
 		{
-		dcolsw_libstr(sA->n, sA, 0, ii, sA, 0, ipiv[ii]);
+		if(ipiv[ii]!=ii)
+			dcolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
 		}
 	return;
 	}
@@ -3105,7 +3107,8 @@ void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	int ii;
 	for(ii=0; ii<kmax; ii++)
 		{
-		drowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii]-1, 0);
+		if(ipiv[ii]-1!=ii)
+			drowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii]-1, 0);
 		}
 	return;
 	}
@@ -3138,7 +3141,8 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	int ii;
 	for(ii=0; ii<kmax; ii++)
 		{
-		dcolsw_libstr(sA->n, sA, 0, ii, sA, 0, ipiv[ii]-1);
+		if(ipiv[ii]-1!=ii)
+			dcolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]-1);
 		}
 	return;
 	}
