@@ -1892,22 +1892,64 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 // dgemm nt
 void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
-	int jj;
+	int ii, jj, kk;
+	double c_ij;
 	char ta = 'n';
 	char tb = 't';
 	int i1 = 1;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pC = sC->pA+ci+cj*sC->m;
-	double *pD = sD->pA+di+dj*sD->m;
-	printf("\nfeature not implemented yet\n");
-	exit(1);
-//	if(!(beta==0.0 || pC==pD))
-//		{
-//		for(jj=0; jj<n; jj++)
-//			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
-//		}
-//	dgemm_(&ta, &tb, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *pB = sB->pA + bi + bj*ldb;
+	double *pC = sC->pA + ci + cj*ldc;
+	double *pD = sD->pA + di + dj*ldd;
+	for(jj=0; jj<n; jj++)
+		{
+		for(ii=0; ii<m; ii++)
+			{
+			c_ij = 0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_ij += pA[ii+lda*kk] * pB[jj+ldb*kk];
+				}
+			pD[ii+ldd*jj] = alpha * c_ij + beta * pC[ii+ldc*jj];
+			}
+		}
+	return;
+	}
+
+
+
+// dgemm nn
+void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	int ii, jj, kk;
+	double c_ij;
+	char ta = 'n';
+	char tb = 't';
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *pB = sB->pA + bi + bj*ldb;
+	double *pC = sC->pA + ci + cj*ldc;
+	double *pD = sD->pA + di + dj*ldd;
+	for(jj=0; jj<n; jj++)
+		{
+		for(ii=0; ii<m; ii++)
+			{
+			c_ij = pC[ii+ldc*jj];
+			for(kk=0; kk<k; kk++)
+				{
+				c_ij += pA[ii+lda*kk] * pB[kk+ldb*jj];
+				}
+			pD[ii+ldd*jj] = c_ij;
+			}
+		}
 	return;
 	}
 
@@ -2052,25 +2094,34 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 // dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
 void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
-	int jj;
+	int ii, jj, kk;
+	double c_ij;
 	char cl = 'l';
 	char cn = 'n';
 	char cr = 'r';
 	char ct = 't';
 	char cu = 'u';
 	int i1 = 1;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pC = sC->pA+ci+cj*sC->m;
-	double *pD = sD->pA+di+dj*sD->m;
-	printf("\nfeature not implemented yet\n");
-	exit(1);
-//	if(!(beta==0.0 || pC==pD))
-//		{
-//		for(jj=0; jj<n; jj++)
-//			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
-//		}
-//	dgemm_(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *pB = sB->pA + bi + bj*ldb;
+	double *pC = sC->pA + ci + cj*ldc;
+	double *pD = sD->pA + di + dj*ldd;
+	for(jj=0; jj<n; jj++)
+		{
+		for(ii=jj; ii<m; ii++)
+			{
+			c_ij = 0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_ij += pA[ii+lda*kk] * pB[jj+ldb*kk];
+				}
+			pD[ii+ldd*jj] = alpha * c_ij + beta * pC[ii+ldc*jj];
+			}
+		}
 	return;
 	}
 

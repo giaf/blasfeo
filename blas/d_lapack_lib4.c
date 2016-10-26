@@ -1672,30 +1672,6 @@ void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d
 
 
 
-// dgetrf without pivoting
-void dgetf2_nopivot(int m, int n, double *A, int lda)
-	{
-	if(m<=0 | n<=0)
-		return;
-	int i, j, itmp0, itmp1;
-	int jmax = m<n ? m : n;
-	int i1 = 1;
-	double dtmp;
-	double dm1 = -1.0;
-
-	for(j=0; j<jmax; j++)
-		{
-		itmp0 = m-j-1;
-		dtmp = 1.0/A[j+lda*j];
-		dscal_(&itmp0, &dtmp, &A[(j+1)+lda*j], &i1);
-		itmp1 = n-j-1;
-		dger_(&itmp0, &itmp1, &dm1, &A[(j+1)+lda*j], &i1, &A[j+lda*(j+1)], &lda, &A[(j+1)+lda*(j+1)], &lda);
-		}
-	
-	return;
-
-	}
-
 // dsyrk dpotrf
 void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
@@ -1729,23 +1705,58 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 
 
 // dgetrf without pivoting
+void dgetf2_nopivot(int m, int n, double *A, int lda)
+	{
+	int ii, jj, kk, itmp0, itmp1;
+	int iimax = m<n ? m : n;
+	int i1 = 1;
+	double dtmp;
+	double dm1 = -1.0;
+
+	for(ii=0; ii<iimax; ii++)
+		{
+		itmp0 = m-ii-1;
+		dtmp = 1.0/A[ii+lda*ii];
+		for(jj=0; jj<itmp0; jj++)
+			{
+			A[ii+1+jj+lda*ii] *= dtmp;
+			}
+		itmp1 = n-ii-1;
+		for(jj=0; jj<itmp1; jj++)
+			{
+			for(kk=0; kk<itmp0; kk++)
+				{
+				A[(ii+1+kk)+lda*(ii+1+jj)] -= A[(ii+1+kk)+lda*ii] * A[ii+lda*(ii+1+jj)];
+				}
+			}
+		}
+	
+	return;
+
+	}
+
+
+
+// dgetrf without pivoting
 void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
-	// TODO with custom level 2 LAPACK + level 3 BLAS
-//	printf("\nfeature not implemented yet\n\n");
-//	exit(1);
-	int jj;
+	int ii, jj;
 	int i1 = 1;
 	double d1 = 1.0;
-	double *pC = sC->pA+ci+cj*sC->m;
-	double *pD = sD->pA+di+dj*sD->m;
-	printf("\nfeature not implemented yet\n");
-	exit(1);
-//	if(!(pC==pD))
-//		{
-//		for(jj=0; jj<n; jj++)
-//			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
-//		}
+	int ldc = sC->m;
+	int ldd = sD->m;
+	double *pC = sC->pA + ci + cj*ldc;
+	double *pD = sD->pA + di + dj*ldd;
+	if(pC!=pD)
+		{
+		for(jj=0; jj<n; jj++)
+			{
+			for(ii=0; ii<m; ii++)
+				{
+				pD[ii+ldd*jj] = pC[ii+ldc*jj];
+				}
+			}
+		}
 	dgetf2_nopivot(m, n, pD, sD->m);
 	return;
 	}
@@ -1755,25 +1766,72 @@ void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, st
 // dgetrf pivoting
 void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, int *ipiv)
 	{
-	// TODO with custom level 2 LAPACK + level 3 BLAS
-//	printf("\nfeature not implemented yet\n\n");
-//	exit(1);
-	int jj;
+	int ii, jj, kk, ip, itmp0, itmp1;
+	double dtmp, dmax;
 	int i1 = 1;
 	double d1 = 1.0;
-	double *pC = sC->pA+ci+cj*sC->m;
-	double *pD = sD->pA+di+dj*sD->m;
-	printf("\nfeature not implemented yet\n");
-	exit(1);
-//	if(!(pC==pD))
-//		{
-//		for(jj=0; jj<n; jj++)
-//			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
-//		}
-//	int info;
-//	dgetrf_(&m, &n, pD, &(sD->m), ipiv, &info);
-	return;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	double *pC = sC->pA+ci+cj*ldc;
+	double *pD = sD->pA+di+dj*ldd;
+	// copy if needed
+	if(pC!=pD)
+		{
+		for(jj=0; jj<n; jj++)
+			{
+			for(ii=0; ii<m; ii++)
+				{
+				pD[ii+ldd*jj] = pC[ii+ldc*jj];
+				}
+			}
+		}
+	// factorize
+	int iimax = m<n ? m : n;
+	for(ii=0; ii<iimax; ii++)
+		{
+		dmax = (pD[ii+ldd*ii]>0 ? pD[ii+ldd*ii] : -pD[ii+ldd*ii]);
+		ip = ii;
+		for(jj=1; jj<m-ii; jj++)
+			{
+			dtmp = pD[ii+jj+ldd*ii]>0 ? pD[ii+jj+ldd*ii] : -pD[ii+jj+ldd*ii];
+			if(dtmp>dmax)
+				{
+				dmax = dtmp;
+				ip = ii+jj;
+				}
+			}
+		ipiv[ii] = ip;
+		if(ip!=ii)
+			{
+			for(jj=0; jj<n; jj++)
+				{
+				dtmp = pD[ii+jj*ldd];
+				pD[ii+jj*ldd] = pD[ip+jj*ldd];
+				pD[ip+jj*ldd] = dtmp;
+				}
+			}
+		itmp0 = m-ii-1;
+		dtmp = 1.0/pD[ii+ldd*ii];
+		for(jj=0; jj<itmp0; jj++)
+			{
+			pD[ii+1+jj+ldd*ii] *= dtmp;
+			}
+		itmp1 = n-ii-1;
+		for(jj=0; jj<itmp1; jj++)
+			{
+			for(kk=0; kk<itmp0; kk++)
+				{
+				pD[(ii+1+kk)+ldd*(ii+1+jj)] -= pD[(ii+1+kk)+ldd*ii] * pD[ii+ldd*(ii+1+jj)];
+				}
+			}
+		}
+
+	return;	
+	
 	}
+
+
+
 
 
 
