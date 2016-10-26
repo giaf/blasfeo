@@ -49,6 +49,10 @@ int main()
 
 	printf("\nLA provided by BLAS\n\n");
 
+#elif defined(LA_TRIPLE_LOOP)
+
+	printf("\nLA provided by TRIPLE_LOOP\n\n");
+
 #else
 
 	printf("\nLA provided by ???\n\n");
@@ -75,7 +79,7 @@ int main()
 
 	double *x_n; d_zeros(&x_n, n, 1); 
 //	for(ii=0; ii<n; ii++) x_n[ii] = 1.0;
-	x_n[4] = 1.0;
+	x_n[3] = 1.0;
 	double *x_t; d_zeros(&x_t, n, 1); 
 //	for(ii=0; ii<n; ii++) x_n[ii] = 1.0;
 	x_t[0] = 1.0;
@@ -116,6 +120,32 @@ int main()
 //	d_allocate_strmat(n, n, &sE);
 	d_create_strmat(n, n, &sE, ptr_memory_strmat);
 	ptr_memory_strmat += sE.memory_size;
+
+	struct d_strvec sx_n;
+	d_allocate_strvec(n, &sx_n);
+	d_cvt_vec2strvec(n, x_n, &sx_n, 0);
+
+	struct d_strvec sx_t;
+	d_allocate_strvec(n, &sx_t);
+	d_cvt_vec2strvec(n, x_t, &sx_t, 0);
+
+	struct d_strvec sy_n;
+	d_allocate_strvec(n, &sy_n);
+	d_cvt_vec2strvec(n, y_n, &sy_n, 0);
+
+	struct d_strvec sy_t;
+	d_allocate_strvec(n, &sy_t);
+	d_cvt_vec2strvec(n, y_t, &sy_t, 0);
+
+	struct d_strvec sz_n;
+	d_allocate_strvec(n, &sz_n);
+	d_cvt_vec2strvec(n, z_n, &sz_n, 0);
+
+	struct d_strvec sz_t;
+	d_allocate_strvec(n, &sz_t);
+	d_cvt_vec2strvec(n, z_t, &sz_t, 0);
+
+
 
 	dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 //	d_print_strmat(n, n, &sB, 0, 0);
@@ -159,10 +189,10 @@ int main()
 	d_print_strmat(n, n, &sB, 0, 0);
 
 	d_print_strmat(n, n, &sA, 0, 0);
-//	dgemv_nt_libstr(n, n, 1.0, 1.0, &sA, 0, 0, x_n, x_t, 0.0, 0.0, y_n, y_t, z_n, z_t);
-	dsymv_l_libstr(n, 4, 1.0, &sA, 0, 0, x_n, 0.0, y_n, z_n);
+	dgemv_nt_libstr(6, n, 1.0, 1.0, &sA, 0, 0, &sx_n, 0, &sx_t, 0, 0.0, 0.0, &sy_n, 0, &sy_t, 0, &sz_n, 0, &sz_t, 0);
+//	dsymv_l_libstr(5, 5, 1.0, &sA, 0, 0, x_n, 0.0, y_n, z_n);
 	d_print_mat(1, n, z_n, 1);
-//	d_print_mat(1, n, z_t, 1);
+	d_print_mat(1, n, z_t, 1);
 
 
 

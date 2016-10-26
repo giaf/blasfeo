@@ -27,6 +27,9 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
+
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #include <mmintrin.h>
 #include <xmmintrin.h>  // SSE
@@ -122,7 +125,7 @@ void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_str
 
 
 
-#else
+#elif defined(LA_BLAS)
 
 
 
@@ -136,5 +139,26 @@ void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_str
 	}
 
 
+
+#elif defined(LA_TRIPLE_LOOP)
+
+
+
+void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi)
+	{
+	int i1 = 1;
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	daxpy_(&m, &alpha, x, &i1, y, &i1);
+	return;
+	}
+
+
+
+#else
+
+#error : wrong LA choice
 
 #endif

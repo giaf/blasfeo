@@ -769,6 +769,207 @@ void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 
 
 
+#elif defined(LA_TRIPLE_LOOP)
+
+
+
+void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+	// n
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	dcopy_(&m, y, &i1, z, &i1);
+//	dgemv_(&cn, &m, &n, &alpha, pA, &lda, x, &i1, &beta, z, &i1);
+	return;
+	}
+
+
+
+void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+	// n
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	dcopy_(&n, y, &i1, z, &i1);
+//	dgemv_(&ct, &m, &n, &alpha, pA, &lda, x, &i1, &beta, z, &i1);
+	return;
+	}
+
+
+
+void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx_n, int xi_n, struct d_strvec *sx_t, int xi_t, double beta_n, double beta_t, struct d_strvec *sy_n, int yi_n, struct d_strvec *sy_t, int yi_t, struct d_strvec *sz_n, int zi_n, struct d_strvec *sz_t, int zi_t)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x_n = sx_n->pa + xi_n;
+	double *x_t = sx_t->pa + xi_t;
+	double *y_n = sy_n->pa + yi_n;
+	double *y_t = sy_t->pa + yi_t;
+	double *z_n = sz_n->pa + zi_n;
+	double *z_t = sz_t->pa + zi_t;
+	// n
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	dcopy_(&m, y_n, &i1, z_n, &i1);
+//	dgemv_(&cn, &m, &n, &alpha_n, pA, &lda, x_n, &i1, &beta_n, z_n, &i1);
+	// t
+//	dcopy_(&n, y_t, &i1, z_t, &i1);
+//	dgemv_(&ct, &m, &n, &alpha_t, pA, &lda, x_t, &i1, &beta_t, z_t, &i1);
+	return;
+	}
+
+
+
+void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	double d1 = 1.0;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	dcopy_(&m, y, &i1, z, &i1);
+//	dsymv_(&cl, &n, &alpha, pA, &lda, x, &i1, &beta, z, &i1);
+//	int tmp = m-n;
+//	dgemv_(&cn, &tmp, &n, &alpha, pA+n, &lda, x, &i1, &beta, z+n, &i1);
+//	dgemv_(&ct, &tmp, &n, &alpha, pA+n, &lda, x+n, &i1, &d1, z, &i1);
+	return;
+	}
+
+
+
+void dtrmv_unn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	double d1 = 1.0;
+	double dm1 = -1.0;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	dcopy_(&m, x, &i1, z, &i1);
+//	dtrmv_(&cu, &cn, &cn, &m, pA, &lda, z, &i1);
+	return;
+	}
+
+
+
+void dtrmv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	double d1 = 1.0;
+	double dm1 = -1.0;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	dcopy_(&m, x, &i1, z, &i1);
+//	dtrmv_(&cu, &ct, &cn, &m, pA, &lda, z, &i1);
+	return;
+	}
+
+
+
+void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	double d1 = 1.0;
+	double dm1 = -1.0;
+	int mmn = m-n;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	dcopy_(&m, x, &i1, z, &i1);
+//	dtrsv_(&cl, &cn, &cn, &n, pA, &lda, z, &i1);
+//	dgemv_(&cn, &mmn, &n, &dm1, pA+n, &lda, z, &i1, &d1, z+n, &i1);
+	return;
+	}
+
+
+
+void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	double d1 = 1.0;
+	double dm1 = -1.0;
+	int mmn = m-n;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	dcopy_(&m, x, &i1, z, &i1);
+//	dgemv_(&ct, &mmn, &n, &dm1, pA+n, &lda, z+n, &i1, &d1, z, &i1);
+//	dtrsv_(&cl, &ct, &cn, &n, pA, &lda, z, &i1);
+	return;
+	}
+
+
+
 #else
 
 #error : wrong LA choice

@@ -455,7 +455,7 @@ void d_print_tran_to_file_strvec(FILE * file, int m, struct d_strvec *sa, int ai
 
 
 // linear algebra provided by BLAS
-#elif defined(LA_BLAS)
+#elif defined(LA_BLAS) || defined(LA_TRIPLE_LOOP)
 
 
 
@@ -536,7 +536,7 @@ void d_print_to_file_strmat(FILE *file, int m, int n, struct d_strmat *sA, int a
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
-	d_print_mat(file, m, n, pA, lda);
+	d_print_to_file_mat(file, m, n, pA, lda);
 	return;
 	}
 
@@ -546,7 +546,7 @@ void d_print_to_file_strmat(FILE *file, int m, int n, struct d_strmat *sA, int a
 void d_print_to_file_strvec(FILE *file, int m, struct d_strvec *sa, int ai)
 	{
 	double *pa = sa->pa + ai;
-	d_print_mat(file, m, 1, pa, m);
+	d_print_to_file_mat(file, m, 1, pa, m);
 	return;
 	}
 
@@ -556,11 +556,15 @@ void d_print_to_file_strvec(FILE *file, int m, struct d_strvec *sa, int ai)
 void d_print_to_file_tran_strvec(FILE *file, int m, struct d_strvec *sa, int ai)
 	{
 	double *pa = sa->pa + ai;
-	d_print_mat(file, 1, m, pa, 1);
+	d_print_to_file_mat(file, 1, m, pa, 1);
 	return;
 	}
 
 
+
+#else
+
+#error : wrong LA choice
 
 #endif
 

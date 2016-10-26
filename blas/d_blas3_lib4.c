@@ -1885,6 +1885,197 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 
 
 
+#elif defined(LA_TRIPLE_LOOP)
+
+
+
+// dgemm nt
+void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	int jj;
+	char ta = 'n';
+	char tb = 't';
+	int i1 = 1;
+	double *pA = sA->pA+ai+aj*sA->m;
+	double *pB = sB->pA+bi+bj*sB->m;
+	double *pC = sC->pA+ci+cj*sC->m;
+	double *pD = sD->pA+di+dj*sD->m;
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	if(!(beta==0.0 || pC==pD))
+//		{
+//		for(jj=0; jj<n; jj++)
+//			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+//		}
+//	dgemm_(&ta, &tb, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	return;
+	}
+
+
+
+// dtrsm_left_lower_nottransposed_unit
+void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+	{
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cu = 'u';
+	int i1 = 1;
+	double *pA = sA->pA+ai+aj*sA->m;
+	double *pB = sB->pA+bi+bj*sB->m;
+	double *pD = sD->pA+di+dj*sD->m;
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	if(!(pB==pD))
+//		{
+//		for(jj=0; jj<n; jj++)
+//			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+//		}
+//	dtrsm_(&cl, &cl, &cn, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	return;
+	}
+
+
+
+// dtrsm_left_upper_nottransposed_notunit
+void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+	{
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cu = 'u';
+	int i1 = 1;
+	double *pA = sA->pA+ai+aj*sA->m;
+	double *pB = sB->pA+bi+bj*sB->m;
+	double *pD = sD->pA+di+dj*sD->m;
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	if(!(pB==pD))
+//		{
+//		for(jj=0; jj<n; jj++)
+//			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+//		}
+//	dtrsm_(&cl, &cu, &cn, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	return;
+	}
+
+
+
+// dtrsm_right_lower_transposed_unit
+void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+	{
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	double *pA = sA->pA+ai+aj*sA->m;
+	double *pB = sB->pA+bi+bj*sB->m;
+	double *pD = sD->pA+di+dj*sD->m;
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	if(!(pB==pD))
+//		{
+//		for(jj=0; jj<n; jj++)
+//			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+//		}
+//	dtrsm_(&cr, &cl, &ct, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	return;
+	}
+
+
+
+// dtrsm_right_upper_transposed_notunit
+void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+	{
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	double *pA = sA->pA+ai+aj*sA->m;
+	double *pB = sB->pA+bi+bj*sB->m;
+	double *pD = sD->pA+di+dj*sD->m;
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	if(!(pB==pD))
+//		{
+//		for(jj=0; jj<n; jj++)
+//			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+//		}
+//	dtrsm_(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	return;
+	}
+
+
+
+// dtrmm_right_upper_transposed_notunit (B triangular !!!)
+void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	double *pA = sA->pA+ai+aj*lda;
+	double *pB = sB->pA+bi+bj*ldb;
+	double *pC = sC->pA+ci+cj*ldc;
+	double *pD = sD->pA+di+dj*ldd;
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	if(!(pA==pD))
+//		{
+//		for(jj=0; jj<n; jj++)
+//			dcopy_(&m, pA+jj*lda, &i1, pD+jj*ldd, &i1);
+//		}
+//	dtrmm_(&cr, &cu, &ct, &cn, &m, &n, &alpha, pB, &ldb, pD, &ldd);
+//	if(beta!=0)
+//		{
+//		for(jj=0; jj<n; jj++)
+//			daxpy_(&m, &beta, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+//		}
+	return;
+	}
+
+
+
+// dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
+void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	double *pA = sA->pA+ai+aj*sA->m;
+	double *pB = sB->pA+bi+bj*sB->m;
+	double *pC = sC->pA+ci+cj*sC->m;
+	double *pD = sD->pA+di+dj*sD->m;
+	printf("\nfeature not implemented yet\n");
+	exit(1);
+//	if(!(beta==0.0 || pC==pD))
+//		{
+//		for(jj=0; jj<n; jj++)
+//			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+//		}
+//	dgemm_(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	return;
+	}
+
+
+
 #else
 
 #error : wrong LA choice

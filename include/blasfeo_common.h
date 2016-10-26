@@ -52,7 +52,7 @@ struct d_strvec
 	int memory_size; // size of needed memory
 	};
 
-#elif defined(LA_BLAS)
+#elif defined(LA_BLAS) || defined(LA_TRIPLE_LOOP)
 
 // matrix structure
 struct d_strmat 

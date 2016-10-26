@@ -2862,7 +2862,7 @@ void dvecad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 
 
 // linear algebra provided by BLAS
-#elif defined(LA_BLAS)
+#elif defined(LA_BLAS) || defined(LA_TRIPLE_LOOP)
 
 
 
