@@ -2617,6 +2617,24 @@ void d_cvt_strvec2vec(int m, struct d_strvec *sa, int ai, double *a)
 
 
 
+// cast a matrix into a matrix structure
+void d_cast_mat2strmat(double *A, struct d_strmat *sA)
+	{
+	sA->pA = A;
+	return;
+	}
+
+
+
+// cast a vector into a vector structure
+void d_cast_vec2vecmat(double *a, struct d_strmat *sa)
+	{
+	sa->pa = a;
+	return;
+	}
+
+
+
 // swap two rows of a matrix struct
 void drowsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
@@ -3034,6 +3052,24 @@ void d_cvt_strvec2vec(int m, struct d_strvec *sa, int ai, double *a)
 	int ii;
 	for(ii=0; ii<m; ii++)
 		a[ii] = pa[ii];
+	return;
+	}
+
+
+
+// cast a matrix into a matrix structure
+void d_cast_mat2strmat(double *A, struct d_strmat *sA)
+	{
+	sA->pA = A;
+	return;
+	}
+
+
+
+// cast a vector into a vector structure
+void d_cast_vec2vecmat(double *A, struct d_strmat *sA)
+	{
+	sA->pA = A;
 	return;
 	}
 
