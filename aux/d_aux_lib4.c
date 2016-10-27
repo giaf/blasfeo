@@ -3067,9 +3067,9 @@ void d_cast_mat2strmat(double *A, struct d_strmat *sA)
 
 
 // cast a vector into a vector structure
-void d_cast_vec2vecmat(double *A, struct d_strvec *sA)
+void d_cast_vec2vecmat(double *a, struct d_strvec *sa)
 	{
-	sA->pA = A;
+	sa->pa = a;
 	return;
 	}
 
