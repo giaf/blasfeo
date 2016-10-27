@@ -3137,6 +3137,7 @@ void drowsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strma
 
 
 
+#if defined(LA_BLAS)
 // permute the rows of a matrix struct
 void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	{
@@ -3148,6 +3149,19 @@ void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 		}
 	return;
 	}
+#else // LA_TRIPLE_LOOP
+// permute the rows of a matrix struct
+void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
+	{
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		{
+		if(ipiv[ii]!=ii)
+			drowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+		}
+	return;
+	}
+#endif
 
 
 
@@ -3171,6 +3185,7 @@ void dcolsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strma
 
 
 
+#if defined(LA_BLAS)
 // permute the cols of a matrix struct
 void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	{
@@ -3182,6 +3197,19 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 		}
 	return;
 	}
+#else // LA_TRIPLE_LOOP
+// permute the cols of a matrix struct
+void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
+	{
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		{
+		if(ipiv[ii]!=ii)
+			dcolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
+		}
+	return;
+	}
+#endif
 
 
 

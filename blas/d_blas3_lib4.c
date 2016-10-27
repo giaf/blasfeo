@@ -1958,22 +1958,33 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 // dtrsm_left_lower_nottransposed_unit
 void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
-	int jj;
-	char cl = 'l';
-	char cn = 'n';
-	char cu = 'u';
-	int i1 = 1;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pD = sD->pA+di+dj*sD->m;
-	printf("\nfeature not implemented yet\n");
-	exit(1);
-//	if(!(pB==pD))
-//		{
-//		for(jj=0; jj<n; jj++)
-//			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
-//		}
-//	dtrsm_(&cl, &cl, &cn, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	int ii, jj, kk;
+	double tmp0;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	double *pA = sA->pA+ai+aj*lda; // triangular
+	double *pB = sB->pA+bi+bj*ldb;
+	double *pD = sD->pA+di+dj*ldd;
+	// copy
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			for(ii=0; ii<m; ii++)
+				pD[ii+ldd*jj] = pB[ii+ldb*jj];
+		}
+	// solve
+	for(jj=0; jj<n; jj++)
+		{
+		for(ii=0; ii<m; ii++)
+			{
+			tmp0 = pD[ii+ldd*jj];
+			for(kk=ii+1; kk<m; kk++)
+				{
+				pD[kk+ldd*jj] -= pA[kk+lda*ii] * tmp0;
+				}
+			}
+		}
 	return;
 	}
 
@@ -1982,22 +1993,34 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 // dtrsm_left_upper_nottransposed_notunit
 void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
-	int jj;
-	char cl = 'l';
-	char cn = 'n';
-	char cu = 'u';
-	int i1 = 1;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pD = sD->pA+di+dj*sD->m;
-	printf("\nfeature not implemented yet\n");
-	exit(1);
-//	if(!(pB==pD))
-//		{
-//		for(jj=0; jj<n; jj++)
-//			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
-//		}
-//	dtrsm_(&cl, &cu, &cn, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	int ii, jj, kk;
+	double tmp0;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	double *pA = sA->pA+ai+aj*lda; // triangular
+	double *pB = sB->pA+bi+bj*ldb;
+	double *pD = sD->pA+di+dj*ldd;
+	// copy
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			for(ii=0; ii<m; ii++)
+				pD[ii+ldd*jj] = pB[ii+ldb*jj];
+		}
+	// solve
+	for(jj=0; jj<n; jj++)
+		{
+		for(ii=m-1; ii>=0; ii--)
+			{
+			tmp0 = pD[ii+ldd*jj] / pA[ii+lda*ii];
+			pD[ii+ldd*jj] = tmp0;
+			for(kk=0; kk<ii; kk++)
+				{
+				pD[kk+ldd*jj] -= pA[kk+lda*ii] * tmp0;
+				}
+			}
+		}
 	return;
 	}
 
