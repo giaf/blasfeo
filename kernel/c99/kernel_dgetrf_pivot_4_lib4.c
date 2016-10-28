@@ -402,7 +402,6 @@ void kernel_dgetrf_pivot_4_vs_lib4(int m, int n, double *pA, int sda, double *in
 	if(m<=0 || n<=0)
 		return;
 
-printf("\n%d %d\n", m, n);
 	const int bs = 4;
 
 	// assume m>=4
