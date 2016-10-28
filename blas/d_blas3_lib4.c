@@ -1068,7 +1068,7 @@ void dtrsm_nn_ll_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb,
 		if(j<n)
 			{
 			kernel_dtrsm_nn_ll_one_4x4_vs_lib4(i, pA+i*sda, pD+j*bs, sdd, pB+i*sdb+j*bs, pD+i*sdd+j*bs, pA+i*sda+i*bs, m-i, n-j);
-			kernel_dtrsm_nn_ll_one_4x4_vs_lib4(i+4, pA+(i+4)*sda, pD+j*bs, sdd, pB+(i+4)*sdb+j*bs, pD+(i+4)*sdd+j*bs, pA+(i+4)*sda+i*bs, m-i-4, n-j);
+			kernel_dtrsm_nn_ll_one_4x4_vs_lib4(i+4, pA+(i+4)*sda, pD+j*bs, sdd, pB+(i+4)*sdb+j*bs, pD+(i+4)*sdd+j*bs, pA+(i+4)*sda+(i+4)*bs, m-i-4, n-j);
 			}
 		}
 #endif
