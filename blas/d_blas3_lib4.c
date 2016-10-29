@@ -1965,9 +1965,9 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
-	double *pA = sA->pA+ai+aj*lda; // triangular
-	double *pB = sB->pA+bi+bj*ldb;
-	double *pD = sD->pA+di+dj*ldd;
+	double *pA = sA->pA + ai + aj*lda; // triangular
+	double *pB = sB->pA + bi + bj*ldb;
+	double *pD = sD->pA + di + dj*ldd;
 #if 1
 	// solve
 	jj = 0;
@@ -2078,14 +2078,118 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 // dtrsm_left_upper_nottransposed_notunit
 void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
-	int ii, jj, kk;
-	double tmp0;
+	int ii, jj, kk, id;
+	double
+		d_00, d_01,
+		d_10, d_11;
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
-	double *pA = sA->pA+ai+aj*lda; // triangular
-	double *pB = sB->pA+bi+bj*ldb;
-	double *pD = sD->pA+di+dj*ldd;
+	double *pA = sA->pA + ai + aj*lda; // triangular
+	double *pB = sB->pA + bi + bj*ldb;
+	double *pD = sD->pA + di + dj*ldd;
+	double *dA = sA->dA;
+	if(!(sA->use_dA==1 & ai==0 & aj==0))
+		{
+		// inverte diagonal of pA
+		for(ii=0; ii<m; ii++)
+			dA[ii] = 1.0/pA[ii+lda*ii];
+		// use only now
+		sA->use_dA = 0;
+		}
+#if 1
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			id = m-ii-2;
+			d_00 = pB[id+0+ldb*(jj+0)];
+			d_10 = pB[id+1+ldb*(jj+0)];
+			d_01 = pB[id+0+ldb*(jj+1)];
+			d_11 = pB[id+1+ldb*(jj+1)];
+			kk = id+2;
+#if 0
+			for(; kk<m-1; kk+=2)
+				{
+				d_00 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
+				d_10 -= pA[id+1+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
+				d_01 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+1)];
+				d_11 -= pA[id+1+lda*(kk+0)] * pD[kk+0+ldd*(jj+1)];
+				d_00 -= pA[id+0+lda*(kk+1)] * pD[kk+1+ldd*(jj+0)];
+				d_10 -= pA[id+1+lda*(kk+1)] * pD[kk+1+ldd*(jj+0)];
+				d_01 -= pA[id+0+lda*(kk+1)] * pD[kk+1+ldd*(jj+1)];
+				d_11 -= pA[id+1+lda*(kk+1)] * pD[kk+1+ldd*(jj+1)];
+				}
+			if(kk<m)
+#else
+			for(; kk<m; kk++)
+#endif
+				{
+				d_00 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
+				d_10 -= pA[id+1+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
+				d_01 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+1)];
+				d_11 -= pA[id+1+lda*(kk+0)] * pD[kk+0+ldd*(jj+1)];
+				}
+			d_10 *= dA[id+1];
+			d_11 *= dA[id+1];
+			d_00 -= pA[id+0+lda*(id+1)] * d_10;
+			d_01 -= pA[id+0+lda*(id+1)] * d_11;
+			d_00 *= dA[id+0];
+			d_01 *= dA[id+0];
+			pD[id+0+ldd*(jj+0)] = d_00;
+			pD[id+1+ldd*(jj+0)] = d_10;
+			pD[id+0+ldd*(jj+1)] = d_01;
+			pD[id+1+ldd*(jj+1)] = d_11;
+			}
+		for(; ii<m; ii++)
+			{
+			id = m-ii-1;
+			d_00 = pB[id+0+ldb*(jj+0)];
+			kk = id+1;
+			for(; kk<m; kk++)
+				{
+				d_00 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
+				}
+			d_00 *= dA[id+0];
+			pD[id+0+ldd*(jj+0)] = d_00;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			id = m-ii-2;
+			d_00 = pB[id+0+ldb*(jj+0)];
+			d_10 = pB[id+1+ldb*(jj+0)];
+			kk = id+2;
+			for(; kk<m; kk++)
+				{
+				d_00 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
+				d_10 -= pA[id+1+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
+				}
+			d_10 *= dA[id+1];
+			d_00 -= pA[id+0+lda*(id+1)] * d_10;
+			d_00 *= dA[id+0];
+			pD[id+0+ldd*(jj+0)] = d_00;
+			pD[id+1+ldd*(jj+0)] = d_10;
+			}
+		for(; ii<m; ii++)
+			{
+			id = m-ii-1;
+			d_00 = pB[id+0+ldb*(jj+0)];
+			kk = id+1;
+			for(; kk<m; kk++)
+				{
+				d_00 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
+				}
+			d_00 *= dA[id+0];
+			pD[id+0+ldd*(jj+0)] = d_00;
+			}
+		}
+#else
 	// copy
 	if(!(pB==pD))
 		{
@@ -2098,14 +2202,15 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		{
 		for(ii=m-1; ii>=0; ii--)
 			{
-			tmp0 = pD[ii+ldd*jj] / pA[ii+lda*ii];
-			pD[ii+ldd*jj] = tmp0;
+			d_00 = pD[ii+ldd*jj] * dA[ii];
+			pD[ii+ldd*jj] = d_00;
 			for(kk=0; kk<ii; kk++)
 				{
-				pD[kk+ldd*jj] -= pA[kk+lda*ii] * tmp0;
+				pD[kk+ldd*jj] -= pA[kk+lda*ii] * d_00;
 				}
 			}
 		}
+#endif
 	return;
 	}
 
