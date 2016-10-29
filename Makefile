@@ -150,9 +150,9 @@ ifeq ($(LA), BLAS)
 	echo "#define LA_BLAS" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
-ifeq ($(LA), TRIPLE_LOOP)
-	echo "#ifndef LA_TRIPLE_LOOP" >> ./include/blasfeo_target.h
-	echo "#define LA_TRIPLE_LOOP" >> ./include/blasfeo_target.h
+ifeq ($(LA), REFERENCE)
+	echo "#ifndef LA_REFERENCE" >> ./include/blasfeo_target.h
+	echo "#define LA_REFERENCE" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
 
