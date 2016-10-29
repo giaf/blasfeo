@@ -2485,6 +2485,19 @@ int d_size_strmat(int m, int n)
 
 
 
+// return memory size (in bytes) needed for the digonal of a strmat
+int d_size_diag_strmat(int m, int n)
+	{
+	const int bs = D_BS;
+	int nc = D_NC;
+	int al = bs*nc;
+	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
+	int memory_size = tmp*sizeof(double);
+	return memory_size;
+	}
+
+
+
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
 void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory)
 	{
@@ -2901,6 +2914,18 @@ int d_size_strmat(int m, int n)
 	int size = (m*n+tmp)*sizeof(double);
 #else
 	int size = (m*n)*sizeof(double);
+#endif
+	return size;
+	}
+
+
+
+// return memory size (in bytes) needed for the diagonal of a strmat
+int d_size_diag_strmat(int m, int n)
+	{
+#if defined(LA_REFERENCE)
+	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
+	int size = tmp*sizeof(double);
 #endif
 	return size;
 	}
