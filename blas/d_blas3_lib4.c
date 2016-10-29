@@ -1959,13 +1959,97 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
 	int ii, jj, kk;
-	double tmp0;
+	double
+		d_00, d_01,
+		d_10, d_11;
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
 	double *pA = sA->pA+ai+aj*lda; // triangular
 	double *pB = sB->pA+bi+bj*ldb;
 	double *pD = sD->pA+di+dj*ldd;
+#if 1
+	// solve
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			d_00 = pB[ii+0+ldb*(jj+0)];
+			d_10 = pB[ii+1+ldb*(jj+0)];
+			d_01 = pB[ii+0+ldb*(jj+1)];
+			d_11 = pB[ii+1+ldb*(jj+1)];
+			kk = 0;
+#if 0
+			for(; kk<ii-1; kk+=2)
+				{
+				d_00 -= pA[ii+0+lda*(kk+0)] * pD[kk+ldd*(jj+0)];
+				d_10 -= pA[ii+1+lda*(kk+0)] * pD[kk+ldd*(jj+0)];
+				d_01 -= pA[ii+0+lda*(kk+0)] * pD[kk+ldd*(jj+1)];
+				d_11 -= pA[ii+1+lda*(kk+0)] * pD[kk+ldd*(jj+1)];
+				d_00 -= pA[ii+0+lda*(kk+1)] * pD[kk+ldd*(jj+0)];
+				d_10 -= pA[ii+1+lda*(kk+1)] * pD[kk+ldd*(jj+0)];
+				d_01 -= pA[ii+0+lda*(kk+1)] * pD[kk+ldd*(jj+1)];
+				d_11 -= pA[ii+1+lda*(kk+1)] * pD[kk+ldd*(jj+1)];
+				}
+			if(kk<ii)
+#else
+			for(; kk<ii; kk++)
+#endif
+				{
+				d_00 -= pA[ii+0+lda*kk] * pD[kk+ldd*(jj+0)];
+				d_10 -= pA[ii+1+lda*kk] * pD[kk+ldd*(jj+0)];
+				d_01 -= pA[ii+0+lda*kk] * pD[kk+ldd*(jj+1)];
+				d_11 -= pA[ii+1+lda*kk] * pD[kk+ldd*(jj+1)];
+				}
+			d_10 -= pA[ii+1+lda*kk] * d_00;
+			d_11 -= pA[ii+1+lda*kk] * d_01;
+			pD[ii+0+ldd*(jj+0)] = d_00;
+			pD[ii+1+ldd*(jj+0)] = d_10;
+			pD[ii+0+ldd*(jj+1)] = d_01;
+			pD[ii+1+ldd*(jj+1)] = d_11;
+			}
+		for(; ii<m; ii++)
+			{
+			d_00 = pB[ii+ldb*(jj+0)];
+			d_01 = pB[ii+ldb*(jj+1)];
+			for(kk=0; kk<ii; kk++)
+				{
+				d_00 -= pA[ii+lda*kk] * pD[kk+ldd*(jj+0)];
+				d_01 -= pA[ii+lda*kk] * pD[kk+ldd*(jj+1)];
+				}
+			pD[ii+ldd*(jj+0)] = d_00;
+			pD[ii+ldd*(jj+1)] = d_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			d_00 = pB[ii+0+ldb*jj];
+			d_10 = pB[ii+1+ldb*jj];
+			for(kk=0; kk<ii; kk++)
+				{
+				d_00 -= pA[ii+0+lda*kk] * pD[kk+ldd*jj];
+				d_10 -= pA[ii+1+lda*kk] * pD[kk+ldd*jj];
+				}
+			d_10 -= pA[ii+1+lda*kk] * d_00;
+			pD[ii+0+ldd*jj] = d_00;
+			pD[ii+1+ldd*jj] = d_10;
+			}
+		for(; ii<m; ii++)
+			{
+			d_00 = pB[ii+ldb*jj];
+			for(kk=0; kk<ii; kk++)
+				{
+				d_00 -= pA[ii+lda*kk] * pD[kk+ldd*jj];
+				}
+			pD[ii+ldd*jj] = d_00;
+			}
+		}
+#else
 	// copy
 	if(!(pB==pD))
 		{
@@ -1973,18 +2057,19 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 			for(ii=0; ii<m; ii++)
 				pD[ii+ldd*jj] = pB[ii+ldb*jj];
 		}
-	// solve
 	for(jj=0; jj<n; jj++)
 		{
-		for(ii=0; ii<m; ii++)
+		ii = 0;
+		for(; ii<m; ii++)
 			{
-			tmp0 = pD[ii+ldd*jj];
+			d_00 = pD[ii+ldd*jj];
 			for(kk=ii+1; kk<m; kk++)
 				{
-				pD[kk+ldd*jj] -= pA[kk+lda*ii] * tmp0;
+				pD[kk+ldd*jj] -= pA[kk+lda*ii] * d_00;
 				}
 			}
 		}
+#endif
 	return;
 	}
 
