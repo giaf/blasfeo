@@ -2626,6 +2626,15 @@ void d_cast_mat2strmat(double *A, struct d_strmat *sA)
 
 
 
+// cast a matrix into the diagonal of a matrix structure
+void d_cast_diag_mat2strmat(double *dA, struct d_strmat *sA)
+	{
+	sA->dA = dA;
+	return;
+	}
+
+
+
 // cast a vector into a vector structure
 void d_cast_vec2vecmat(double *a, struct d_strvec *sa)
 	{
@@ -3074,6 +3083,17 @@ void d_cvt_strvec2vec(int m, struct d_strvec *sa, int ai, double *a)
 void d_cast_mat2strmat(double *A, struct d_strmat *sA)
 	{
 	sA->pA = A;
+	return;
+	}
+
+
+
+// cast a matrix into the diagonal of a matrix structure
+void d_cast_diag_mat2strmat(double *dA, struct d_strmat *sA)
+	{
+#if defined(LA_REFERENCE)
+	sA->dA = dA;
+#endif
 	return;
 	}
 
