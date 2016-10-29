@@ -2880,7 +2880,7 @@ void dvecad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 
 
 // linear algebra provided by BLAS
-#elif defined(LA_BLAS) || defined(LA_TRIPLE_LOOP)
+#elif defined(LA_BLAS) || defined(LA_REFERENCE)
 
 
 
@@ -3149,7 +3149,7 @@ void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 		}
 	return;
 	}
-#else // LA_TRIPLE_LOOP
+#else // LA_REFERENCE
 // permute the rows of a matrix struct
 void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	{
@@ -3197,7 +3197,7 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 		}
 	return;
 	}
-#else // LA_TRIPLE_LOOP
+#else // LA_REFERENCE
 // permute the cols of a matrix struct
 void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	{
@@ -3429,6 +3429,10 @@ void dvecad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 	}
 
 
+
+#else
+
+#error : wrong LA choice
 
 #endif
 

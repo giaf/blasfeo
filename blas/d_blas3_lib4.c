@@ -1885,7 +1885,7 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 
 
 
-#elif defined(LA_TRIPLE_LOOP)
+#elif defined(LA_REFERENCE)
 
 
 

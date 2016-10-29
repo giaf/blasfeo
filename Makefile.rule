@@ -41,7 +41,7 @@ TARGET = X64_INTEL_SANDY_BRIDGE
 # Linear Algebra library
 LA = BLASFEO
 #LA = BLAS
-#LA = TRIPLE_LOOP
+#LA = REFERENCE
 
 # operative system
 UNAME_S := $(shell uname -s)
@@ -73,8 +73,8 @@ endif
 ifeq ($(LA), BLAS)
 LA_FLAGS = -DLA_BLAS
 endif
-ifeq ($(LA), TRIPLE_LOOP)
-LA_FLAGS = -DLA_TRIPLE_LOOP
+ifeq ($(LA), REFERENCE)
+LA_FLAGS = -DLA_REFERENCE
 endif
 
 ASFLAGS = 

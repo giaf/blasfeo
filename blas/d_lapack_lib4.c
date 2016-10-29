@@ -1640,7 +1640,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 
 
 
-#elif defined(LA_TRIPLE_LOOP)
+#elif defined(LA_REFERENCE)
 
 
 

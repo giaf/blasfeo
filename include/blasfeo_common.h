@@ -52,7 +52,7 @@ struct d_strvec
 	int memory_size; // size of needed memory
 	};
 
-#elif defined(LA_BLAS) || defined(LA_TRIPLE_LOOP)
+#elif defined(LA_BLAS) || defined(LA_REFERENCE)
 
 // matrix structure
 struct d_strmat 
@@ -70,6 +70,10 @@ struct d_strvec
 	double *pa; // pointer to a m array of doubles, the first is aligned to cache line size
 	int memory_size; // size of needed memory
 	};
+
+#else
+
+#error : wrong LA choice
 
 #endif
 

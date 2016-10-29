@@ -455,7 +455,7 @@ void d_print_tran_to_file_strvec(FILE * file, int m, struct d_strvec *sa, int ai
 
 
 // linear algebra provided by BLAS
-#elif defined(LA_BLAS) || defined(LA_TRIPLE_LOOP)
+#elif defined(LA_BLAS) || defined(LA_REFERENCE)
 
 
 

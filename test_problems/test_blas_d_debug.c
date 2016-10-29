@@ -29,6 +29,7 @@
 
 #include <stdio.h>
 
+#include "../include/blasfeo_common.h"
 #include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_d_aux.h"
 #include "../include/blasfeo_d_blas.h"

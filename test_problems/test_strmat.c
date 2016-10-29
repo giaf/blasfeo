@@ -49,7 +49,7 @@ int main()
 
 	printf("\nLA provided by BLAS\n\n");
 
-#elif defined(LA_TRIPLE_LOOP)
+#elif defined(LA_REFERENCE)
 
 	printf("\nLA provided by TRIPLE_LOOP\n\n");
 
@@ -62,7 +62,7 @@ int main()
 
 	int ii;
 
-	int n = 16;
+	int n = 18;
 
 	//
 	// matrices in column-major format
@@ -102,6 +102,7 @@ int main()
 	d_create_strmat(n, n, &sA, ptr_memory_strmat);
 	ptr_memory_strmat += sA.memory_size;
 	d_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
+//	d_cast_mat2strmat(A, &sA);
 	d_print_strmat(n, n, &sA, 0, 0);
 
 	struct d_strmat sB;

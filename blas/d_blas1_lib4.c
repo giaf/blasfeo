@@ -140,7 +140,7 @@ void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_str
 
 
 
-#elif defined(LA_TRIPLE_LOOP)
+#elif defined(LA_REFERENCE)
 
 
 

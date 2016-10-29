@@ -769,7 +769,7 @@ void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 
 
 
-#elif defined(LA_TRIPLE_LOOP)
+#elif defined(LA_REFERENCE)
 
 
 
