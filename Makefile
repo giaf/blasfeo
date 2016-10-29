@@ -38,9 +38,9 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 # blas
 OBJS += ./blas/d_blas3_lib4.o ./blas/d_lapack_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas1_lib4.o
 OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
-#aux
-OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o ./aux/avx/kernel_dgecp_lib4.o ./aux/avx2/kernel_dgetr_lib4.o
-OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
+#auxiliary
+OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/d_aux_extern_depend_lib4.o ./auxiliary/avx/kernel_dgecp_lib4.o ./auxiliary/avx2/kernel_dgetr_lib4.o
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_extern_depend_lib4.o 
 endif
 
 # kernel
@@ -50,9 +50,9 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 # blas
 OBJS += ./blas/d_blas3_lib4.o ./blas/d_lapack_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas1_lib4.o
 OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
-#aux
-OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o ./aux/avx/kernel_dgecp_lib4.o ./aux/avx/kernel_dgetr_lib4.o 
-OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
+#auxiliary
+OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/d_aux_extern_depend_lib4.o ./auxiliary/avx/kernel_dgecp_lib4.o ./auxiliary/avx/kernel_dgetr_lib4.o 
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_extern_depend_lib4.o 
 endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
@@ -62,9 +62,9 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 # blas
 OBJS += ./blas/d_blas3_lib4.o ./blas/d_lapack_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas1_lib4.o
 OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
-#aux
-OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o ./aux/c99/kernel_dgecp_lib4.o ./aux/c99/kernel_dgetr_lib4.o 
-OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
+#auxiliary
+OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/d_aux_extern_depend_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o 
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_extern_depend_lib4.o 
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
@@ -74,9 +74,9 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 # blas
 OBJS += ./blas/d_blas3_lib4.o ./blas/d_lapack_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas1_lib4.o
 OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
-#aux
-OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o ./aux/c99/kernel_dgecp_lib4.o ./aux/c99/kernel_dgetr_lib4.o 
-OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
+#auxiliary
+OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/d_aux_extern_depend_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o 
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_extern_depend_lib4.o 
 endif
 
 ifeq ($(TARGET), GENERIC)
@@ -86,17 +86,17 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 # blas
 OBJS += ./blas/d_blas3_lib4.o ./blas/d_lapack_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas1_lib4.o
 OBJS += ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o ./blas/s_blas2_lib4.o
-#aux
-OBJS += ./aux/d_aux_lib4.o ./aux/d_aux_extern_depend_lib4.o ./aux/c99/kernel_dgecp_lib4.o ./aux/c99/kernel_dgetr_lib4.o 
-OBJS += ./aux/s_aux_lib4.o ./aux/s_aux_extern_depend_lib4.o 
+#auxiliary
+OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/d_aux_extern_depend_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o 
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_extern_depend_lib4.o 
 endif
 
-OBJS += ./aux/i_aux_extern_depend_lib4.o
+OBJS += ./auxiliary/i_aux_extern_depend_lib4.o
 
 all: clean static_library
 
 static_library: target
-	( cd aux; $(MAKE) obj)
+	( cd auxiliary; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
 	ar rcs libblasfeo.a $(OBJS) 
@@ -105,7 +105,7 @@ static_library: target
 	@echo
 
 shared_library: target
-	( cd aux; $(MAKE) obj)
+	( cd auxiliary; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
 	gcc -shared -o libblasfeo.so $(OBJS)
@@ -182,7 +182,7 @@ run:
 
 clean:
 	rm -f libblasfeo.a
-	make -C aux clean
+	make -C auxiliary clean
 	make -C kernel clean
 	make -C blas clean
 	make -C test_problems clean
