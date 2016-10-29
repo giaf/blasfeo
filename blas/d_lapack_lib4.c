@@ -1705,7 +1705,7 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 
 
 // dgetrf without pivoting
-void dgetf2_nopivot(int m, int n, double *A, int lda)
+void dgetf2_nopivot(int m, int n, double *A, int lda, double *dA)
 	{
 	int ii, jj, kk, itmp0, itmp1;
 	int iimax = m<n ? m : n;
@@ -1717,6 +1717,7 @@ void dgetf2_nopivot(int m, int n, double *A, int lda)
 		{
 		itmp0 = m-ii-1;
 		dtmp = 1.0/A[ii+lda*ii];
+		dA[ii] = dtmp;
 		for(jj=0; jj<itmp0; jj++)
 			{
 			A[ii+1+jj+lda*ii] *= dtmp;
@@ -1747,6 +1748,11 @@ void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, st
 	int ldd = sD->m;
 	double *pC = sC->pA + ci + cj*ldc;
 	double *pD = sD->pA + di + dj*ldd;
+	double *dD = sD->dA;
+	if(di==0 & dj==0)
+		sD->use_dA = 1;
+	else
+		sD->use_dA = 0;
 	if(pC!=pD)
 		{
 		for(jj=0; jj<n; jj++)
@@ -1757,7 +1763,7 @@ void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, st
 				}
 			}
 		}
-	dgetf2_nopivot(m, n, pD, sD->m);
+	dgetf2_nopivot(m, n, pD, ldd, dD);
 	return;
 	}
 
@@ -1774,6 +1780,11 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	int ldd = sD->m;
 	double *pC = sC->pA+ci+cj*ldc;
 	double *pD = sD->pA+di+dj*ldd;
+	double *dD = sD->dA;
+	if(di==0 & dj==0)
+		sD->use_dA = 1;
+	else
+		sD->use_dA = 0;
 	// copy if needed
 	if(pC!=pD)
 		{
@@ -1812,6 +1823,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 			}
 		itmp0 = m-ii-1;
 		dtmp = 1.0/pD[ii+ldd*ii];
+		dD[ii] = dtmp;
 		for(jj=0; jj<itmp0; jj++)
 			{
 			pD[ii+1+jj+ldd*ii] *= dtmp;

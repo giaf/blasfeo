@@ -156,6 +156,9 @@ int main()
 //	dgetrf_nopivot_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 	dgetrf_libstr(n, n, &sD, 0, 0, &sD, 0, 0, ipiv);
 	d_print_strmat(n, n, &sD, 0, 0);
+#if defined(LA_BLASFEO) | defined(LA_REFERENCE)
+	d_print_mat(1, n, sD.dA, 1);
+#endif
 	int_print_mat(1, n, ipiv, 1);
 
 #if 1 // solve P L U X = P B
