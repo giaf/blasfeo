@@ -2887,7 +2887,12 @@ void dvecad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 // return memory size (in bytes) needed for a strmat
 int d_size_strmat(int m, int n)
 	{
+#if defined(LA_REFERENCE)
+	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
+	int size = (m*n+tmp)*sizeof(double);
+#else
 	int size = (m*n)*sizeof(double);
+#endif
 	return size;
 	}
 
@@ -2900,8 +2905,16 @@ void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory)
 	sA->n = n;
 	double *ptr = (double *) memory;
 	sA->pA = ptr;
-	ptr += m * n;
+	ptr += m*n;
+#if defined(LA_REFERENCE)
+	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
+	sA->dA = ptr;
+	ptr += tmp;
+	sA->use_dA = 0;
+	sA->memory_size = (m*n+tmp)*sizeof(double);
+#else
 	sA->memory_size = (m*n)*sizeof(double);
+#endif
 	return;
 	}
 
