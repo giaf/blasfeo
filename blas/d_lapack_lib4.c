@@ -488,7 +488,86 @@ void dgetrf_nn_nopivot_lib(int m, int n, double *pC, int sdc, double *pD, int sd
 
 	// main loop
 	ii = 0;
-#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for( ; ii<m-11; ii+=12)
+		{
+		jj = 0;
+		// solve lower
+		ie = n<ii ? n : ii; // ie is multiple of 4
+		for( ; jj<ie-3; jj+=4)
+			{
+			kernel_dtrsm_nn_ru_inv_12x4_lib4(jj, &pD[ii*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], sdc, &pD[jj*bs+ii*sdd], sdd, &pD[jj*bs+jj*sdd], &inv_diag_D[jj]);
+			}
+		if(jj<ie)
+			{
+			kernel_dtrsm_nn_ru_inv_12x4_vs_lib4(jj, &pD[ii*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], sdc, &pD[jj*bs+ii*sdd], sdd, &pD[jj*bs+jj*sdd], &inv_diag_D[jj], m-ii, ie-jj);
+			jj+=4;
+			}
+		// factorize
+		if(jj<n-3)
+			{
+			kernel_dgetrf_nn_4x4_lib4(jj, &pD[ii*sdd], &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], &pD[jj*bs+ii*sdd], &inv_diag_D[jj]);
+			kernel_dtrsm_nn_ru_inv_8x4_lib4(jj, &pD[(ii+4)*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+(ii+4)*sdc], sdc, &pD[jj*bs+(ii+4)*sdd], sdd, &pD[jj*bs+jj*sdd], &inv_diag_D[jj]);
+			jj+=4;
+			}
+		else if(jj<n)
+			{
+			kernel_dgetrf_nn_4x4_vs_lib4(jj, &pD[ii*sdd], &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], &pD[jj*bs+ii*sdd], &inv_diag_D[jj], m-ii, n-jj);
+			kernel_dtrsm_nn_ru_inv_8x4_vs_lib4(jj, &pD[(ii+4)*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+(ii+4)*sdc], sdc, &pD[jj*bs+(ii+4)*sdd], sdd, &pD[jj*bs+jj*sdd], &inv_diag_D[jj], m-(ii+4), n-jj);
+			jj+=4;
+			}
+		if(jj<n-3)
+			{
+			kernel_dtrsm_nn_ll_one_4x4_lib4(ii, &pD[ii*sdd], &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], &pD[jj*bs+ii*sdd], &pD[ii*bs+ii*sdd]);
+			kernel_dgetrf_nn_4x4_lib4(jj, &pD[(ii+4)*sdd], &pD[jj*bs], sdd, &pC[jj*bs+(ii+4)*sdc], &pD[jj*bs+(ii+4)*sdd], &inv_diag_D[jj]);
+			kernel_dtrsm_nn_ru_inv_4x4_lib4(jj, &pD[(ii+8)*sdd], &pD[jj*bs], sdd, &pC[jj*bs+(ii+8)*sdc], &pD[jj*bs+(ii+8)*sdd], &pD[jj*bs+jj*sdd], &inv_diag_D[jj]);
+			jj+=4;
+			}
+		else if(jj<n)
+			{
+			kernel_dtrsm_nn_ll_one_4x4_vs_lib4(ii, &pD[ii*sdd], &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], &pD[jj*bs+ii*sdd], &pD[ii*bs+ii*sdd], m-ii, n-jj);
+			kernel_dgetrf_nn_4x4_vs_lib4(jj, &pD[(ii+4)*sdd], &pD[jj*bs], sdd, &pC[jj*bs+(ii+4)*sdc], &pD[jj*bs+(ii+4)*sdd], &inv_diag_D[jj], m-(ii+4), n-jj);
+			kernel_dtrsm_nn_ru_inv_4x4_vs_lib4(jj, &pD[(ii+8)*sdd], &pD[jj*bs], sdd, &pC[jj*bs+(ii+8)*sdc], &pD[jj*bs+(ii+8)*sdd], &pD[jj*bs+jj*sdd], &inv_diag_D[jj], m-(ii+8), n-jj);
+			jj+=4;
+			}
+		if(jj<n-3)
+			{
+			kernel_dtrsm_nn_ll_one_8x4_lib4(ii, &pD[ii*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], sdc, &pD[jj*bs+ii*sdd], sdd, &pD[ii*bs+ii*sdd], sdd);
+			kernel_dgetrf_nn_4x4_lib4(jj, &pD[(ii+8)*sdd], &pD[jj*bs], sdd, &pC[jj*bs+(ii+8)*sdc], &pD[jj*bs+(ii+8)*sdd], &inv_diag_D[jj]);
+			jj+=4;
+			}
+		else if(jj<n)
+			{
+			kernel_dtrsm_nn_ll_one_8x4_vs_lib4(ii, &pD[ii*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], sdc, &pD[jj*bs+ii*sdd], sdd, &pD[ii*bs+ii*sdd], sdd, m-ii, n-jj);
+			kernel_dgetrf_nn_4x4_vs_lib4(jj, &pD[(ii+8)*sdd], &pD[jj*bs], sdd, &pC[jj*bs+(ii+8)*sdc], &pD[jj*bs+(ii+8)*sdd], &inv_diag_D[jj], m-(ii+8), n-jj);
+			jj+=4;
+			}
+		// solve upper 
+		for( ; jj<n-3; jj+=4)
+			{
+			kernel_dtrsm_nn_ll_one_12x4_lib4(ii, &pD[ii*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], sdc, &pD[jj*bs+ii*sdd], sdd, &pD[ii*bs+ii*sdd], sdd);
+			}
+		if(jj<n)
+			{
+			kernel_dtrsm_nn_ll_one_12x4_vs_lib4(ii, &pD[ii*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], sdc, &pD[jj*bs+ii*sdd], sdd, &pD[ii*bs+ii*sdd], sdd, m-ii, n-jj);
+			}
+		}
+	if(m>ii)
+		{
+		if(m-ii<=4)
+			{
+			goto left_4;
+			}
+		else if(m-ii<=8)
+			{
+			goto left_8;
+			}
+		else 
+			{
+			goto left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for( ; ii<m-7; ii+=8)
 		{
 		jj = 0;
@@ -549,7 +628,6 @@ void dgetrf_nn_nopivot_lib(int m, int n, double *pC, int sdc, double *pD, int sd
 			goto left_8;
 			}
 		}
-
 #else
 	for( ; ii<m-3; ii+=4)
 		{
@@ -595,6 +673,44 @@ void dgetrf_nn_nopivot_lib(int m, int n, double *pC, int sdc, double *pD, int sd
 
 	// common return if i==m
 	return;
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+	left_12:
+	jj = 0;
+	// solve lower
+	ie = n<ii ? n : ii; // ie is multiple of 4
+	for( ; jj<ie; jj+=4)
+		{
+		kernel_dtrsm_nn_ru_inv_12x4_vs_lib4(jj, &pD[ii*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], sdc, &pD[jj*bs+ii*sdd], sdd, &pD[jj*bs+jj*sdd], &inv_diag_D[jj], m-ii, ie-jj);
+		}
+	// factorize
+	if(jj<n)
+		{
+		kernel_dgetrf_nn_4x4_vs_lib4(jj, &pD[ii*sdd], &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], &pD[jj*bs+ii*sdd], &inv_diag_D[jj], m-ii, n-jj);
+		kernel_dtrsm_nn_ru_inv_8x4_vs_lib4(jj, &pD[(ii+4)*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+(ii+4)*sdc], sdc, &pD[jj*bs+(ii+4)*sdd], sdd, &pD[jj*bs+jj*sdd], &inv_diag_D[jj], m-(ii+4), n-jj);
+		jj+=4;
+		}
+	if(jj<n)
+		{
+		kernel_dtrsm_nn_ll_one_4x4_vs_lib4(ii, &pD[ii*sdd], &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], &pD[jj*bs+ii*sdd], &pD[ii*bs+ii*sdd], m-ii, n-jj);
+		kernel_dgetrf_nn_4x4_vs_lib4(jj, &pD[(ii+4)*sdd], &pD[jj*bs], sdd, &pC[jj*bs+(ii+4)*sdc], &pD[jj*bs+(ii+4)*sdd], &inv_diag_D[jj], m-(ii+4), n-jj);
+		kernel_dtrsm_nn_ru_inv_4x4_vs_lib4(jj, &pD[(ii+8)*sdd], &pD[jj*bs], sdd, &pC[jj*bs+(ii+8)*sdc], &pD[jj*bs+(ii+8)*sdd], &pD[jj*bs+jj*sdd], &inv_diag_D[jj], m-(ii+8), n-jj);
+		jj+=4;
+		}
+	if(jj<n)
+		{
+		kernel_dtrsm_nn_ll_one_8x4_vs_lib4(ii, &pD[ii*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], sdc, &pD[jj*bs+ii*sdd], sdd, &pD[ii*bs+ii*sdd], sdd, m-ii, n-jj);
+		kernel_dgetrf_nn_4x4_vs_lib4(jj, &pD[(ii+8)*sdd], &pD[jj*bs], sdd, &pC[jj*bs+(ii+8)*sdc], &pD[jj*bs+(ii+8)*sdd], &inv_diag_D[jj], m-(ii+8), n-jj);
+		jj+=4;
+		}
+	// solve upper 
+	for( ; jj<n; jj+=4)
+		{
+		kernel_dtrsm_nn_ll_one_12x4_vs_lib4(ii, &pD[ii*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], sdc, &pD[jj*bs+ii*sdd], sdd, &pD[ii*bs+ii*sdd], sdd, m-ii, n-jj);
+		}
+	return;
+
+#endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	left_8:
