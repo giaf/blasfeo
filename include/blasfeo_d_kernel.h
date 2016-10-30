@@ -192,6 +192,7 @@ void kernel_dgead_2_3_lib4(int kmax, double alpha, double *A0, int sda, double *
 void kernel_dgead_1_0_lib4(int kmax, double alpha, double *A, double *B);
 void kernel_dgeset_4_lib4(int kmax, double alpha, double *A);
 void kernel_dtrset_4_lib4(int kmax, double alpha, double *A);
+void kernel_dgetr_8_lib4(int tri, int kmax, int kna, double *A, int sda, double *C, int sdc);
 void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int sdc);
 void kernel_dgetr_3_lib4(int tri, int kmax, int kna, double *A, double *C, int sdc);
 void kernel_dgetr_2_lib4(int tri, int kmax, int kna, double *A, double *C, int sdc);
