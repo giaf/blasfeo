@@ -1414,13 +1414,14 @@ void dlauum_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *pA, int
 
 
 
+// dgemm nt
 void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)
 		return;
 	
-	const int bs = D_BS;
+	const int bs = 4;
 
 	int sda = sA->cn;
 	int sdb = sB->cn;
@@ -1598,6 +1599,31 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 
 
 
+// dgemm nn
+void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	if(m<=0 || n<=0)
+		return;
+	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
+		{
+		printf("\nfeature not implemented yet\n");
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	double *pA = sA->pA + aj*bs;
+	double *pB = sB->pA + bj*bs;
+	double *pC = sC->pA + cj*bs;
+	double *pD = sD->pA + dj*bs;
+	dgemm_nn_lib(m, n, k, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd); 
+	return;
+	}
+	
+
+
 // dtrsm_nn_llu
 void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
@@ -1606,7 +1632,7 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		printf("\nfeature not implemented yet\n\n");
 		exit(1);
 		}
-	const int bs = D_BS;
+	const int bs = 4;
 	// TODO alpha
 	dtrsm_nn_ll_one_lib(m, n, sA->pA+aj*bs, sA->cn, sB->pA+bj*bs, sB->cn, sD->pA+dj*bs, sD->cn); 
 	return;
@@ -1716,8 +1742,8 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
 	int jj;
-	char ta = 'n';
-	char tb = 't';
+	char cn = 'n';
+	char ct = 't';
 	int i1 = 1;
 	double *pA = sA->pA+ai+aj*sA->m;
 	double *pB = sB->pA+bi+bj*sB->m;
@@ -1728,7 +1754,28 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 		for(jj=0; jj<n; jj++)
 			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 		}
-	dgemm_(&ta, &tb, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	dgemm_(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	return;
+	}
+
+
+
+// dgemm nn
+void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+	{
+	int jj;
+	char cn = 'n';
+	int i1 = 1;
+	double *pA = sA->pA+ai+aj*sA->m;
+	double *pB = sB->pA+bi+bj*sB->m;
+	double *pC = sC->pA+ci+cj*sC->m;
+	double *pD = sD->pA+di+dj*sD->m;
+	if(!(beta==0.0 || pC==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+		}
+	dgemm_(&cn, &cn, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
 	return;
 	}
 
