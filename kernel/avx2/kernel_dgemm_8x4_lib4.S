@@ -723,6 +723,8 @@ _inner_kernel_dgemm_add_nn_8x4_lib4:
 
 	movq	%r13, %rax // B_next <- B
 	addq	%r14, %rax // B_next <- B + 4*sda*sizeof(double)
+	movq	%rax, %rbx // B_next2 <- B_next
+	addq	%r14, %rbx // B_next2 <- B_next + 4*sda*sizeof(double)
 
 	cmpl	$4, %r10d
 	jl		0f // consider clean-up loop
@@ -731,8 +733,8 @@ _inner_kernel_dgemm_add_nn_8x4_lib4:
 	.p2align 3
 1: // main loop
 	
-//	prefetcht0	0(%rax) // software prefetch XXX needed ?????
-//	prefetcht0	64(%rax) // software prefetch XXX needed ?????
+	prefetcht0	0(%rbx) // software prefetch
+	prefetcht0	64(%rbx) // software prefetch
 
 	// unroll 0
 	vmovapd			0(%r11), %ymm12 // A0[0]
@@ -806,7 +808,8 @@ _inner_kernel_dgemm_add_nn_8x4_lib4:
 	addq	$128, %r15
 
 	mov		%rax, %r13
-	addq	%r14, %rax
+	mov		%rbx, %rax
+	addq	%r14, %rbx
 
 	cmpl	$3, %r10d
 
@@ -935,6 +938,8 @@ _inner_kernel_dgemm_sub_nn_8x4_lib4:
 
 	movq	%r13, %rax // B_next <- B
 	addq	%r14, %rax // B_next <- B + 4*sda*sizeof(double)
+	movq	%rax, %rbx // B_next2 <- B_next
+	addq	%r14, %rbx // B_next2 <- B_next + 4*sda*sizeof(double)
 
 	cmpl	$4, %r10d
 	jl		0f // consider clean-up loop
@@ -943,8 +948,8 @@ _inner_kernel_dgemm_sub_nn_8x4_lib4:
 	.p2align 3
 1: // main loop
 	
-//	prefetcht0	0(%rax) // software prefetch XXX needed ?????
-//	prefetcht0	64(%rax) // software prefetch XXX needed ?????
+	prefetcht0	0(%rbx) // software prefetch
+	prefetcht0	64(%rbx) // software prefetch
 
 	// unroll 0
 	vmovapd			0(%r11), %ymm12 // A0[0]
@@ -1018,7 +1023,8 @@ _inner_kernel_dgemm_sub_nn_8x4_lib4:
 	addq	$128, %r15
 
 	mov		%rax, %r13
-	addq	%r14, %rax
+	mov		%rbx, %rax
+	addq	%r14, %rbx
 
 	cmpl	$3, %r10d
 
