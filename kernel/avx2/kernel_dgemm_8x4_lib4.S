@@ -3360,72 +3360,57 @@ _inner_edge_dtrsm_lln_one_8x4_lib4:
 	movq	%r10, %r12 // E1 <- E0
 	addq	%r11, %r12 // E1 <- E0 + 4*sde*sizeof(double)
 
-	// solve top-left
-	vxorpd		%ymm14, %ymm14, %ymm14
+	// left block-column
 
+	vxorpd			%ymm14, %ymm14, %ymm14
 	vmovapd			0(%r10), %ymm12
 	vblendpd		$0x1, %ymm14, %ymm12, %ymm12
-	vpermpd			$0x00, %ymm0, %ymm13
-	vfnmadd231pd	%ymm12, %ymm13, %ymm0
-	vpermpd			$0x00, %ymm1, %ymm13
-	vfnmadd231pd	%ymm12, %ymm13, %ymm1
-	vpermpd			$0x00, %ymm2, %ymm13
-	vfnmadd231pd	%ymm12, %ymm13, %ymm2
-	vpermpd			$0x00, %ymm3, %ymm13
-	vfnmadd231pd	%ymm12, %ymm13, %ymm3
-
-	vmovapd			32(%r10), %ymm12
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm12
-	vpermpd			$0x55, %ymm0, %ymm13
-	vfnmadd231pd	%ymm12, %ymm13, %ymm0
-	vpermpd			$0x55, %ymm1, %ymm13
-	vfnmadd231pd	%ymm12, %ymm13, %ymm1
-	vpermpd			$0x55, %ymm2, %ymm13
-	vfnmadd231pd	%ymm12, %ymm13, %ymm2
-	vpermpd			$0x55, %ymm3, %ymm13
-	vfnmadd231pd	%ymm12, %ymm13, %ymm3
-
-	vmovapd			64(%r10), %ymm12
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm12
-	vpermpd			$0xaa, %ymm0, %ymm13
-	vfnmadd231pd	%ymm12, %ymm13, %ymm0
-	vpermpd			$0xaa, %ymm1, %ymm13
-	vfnmadd231pd	%ymm12, %ymm13, %ymm1
-	vpermpd			$0xaa, %ymm2, %ymm13
-	vfnmadd231pd	%ymm12, %ymm13, %ymm2
-	vpermpd			$0xaa, %ymm3, %ymm13
-	vfnmadd231pd	%ymm12, %ymm13, %ymm3
-
-	// correct bottom-left
-
 	vmovapd			0(%r12), %ymm14
 	vpermpd			$0x00, %ymm0, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm0
 	vfnmadd231pd	%ymm14, %ymm13, %ymm4
 	vpermpd			$0x00, %ymm1, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm1
 	vfnmadd231pd	%ymm14, %ymm13, %ymm5
 	vpermpd			$0x00, %ymm2, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm2
 	vfnmadd231pd	%ymm14, %ymm13, %ymm6
 	vpermpd			$0x00, %ymm3, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm3
 	vfnmadd231pd	%ymm14, %ymm13, %ymm7
 
+	vxorpd			%ymm14, %ymm14, %ymm14
+	vmovapd			32(%r10), %ymm12
+	vblendpd		$0x3, %ymm14, %ymm12, %ymm12
 	vmovapd			32(%r12), %ymm14
 	vpermpd			$0x55, %ymm0, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm0
 	vfnmadd231pd	%ymm14, %ymm13, %ymm4
 	vpermpd			$0x55, %ymm1, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm1
 	vfnmadd231pd	%ymm14, %ymm13, %ymm5
 	vpermpd			$0x55, %ymm2, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm2
 	vfnmadd231pd	%ymm14, %ymm13, %ymm6
 	vpermpd			$0x55, %ymm3, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm3
 	vfnmadd231pd	%ymm14, %ymm13, %ymm7
 
+	vxorpd			%ymm14, %ymm14, %ymm14
+	vmovapd			64(%r10), %ymm12
+	vblendpd		$0x7, %ymm14, %ymm12, %ymm12
 	vmovapd			64(%r12), %ymm14
 	vpermpd			$0xaa, %ymm0, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm0
 	vfnmadd231pd	%ymm14, %ymm13, %ymm4
 	vpermpd			$0xaa, %ymm1, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm1
 	vfnmadd231pd	%ymm14, %ymm13, %ymm5
 	vpermpd			$0xaa, %ymm2, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm2
 	vfnmadd231pd	%ymm14, %ymm13, %ymm6
 	vpermpd			$0xaa, %ymm3, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm3
 	vfnmadd231pd	%ymm14, %ymm13, %ymm7
 
 	vmovapd			96(%r12), %ymm14
@@ -3441,7 +3426,8 @@ _inner_edge_dtrsm_lln_one_8x4_lib4:
 	addq		$128, %r12
 
 
-	// solve top-left
+	// right block-column
+
 	vxorpd			%ymm14, %ymm14, %ymm14
 
 	vmovapd			0(%r12), %ymm12
