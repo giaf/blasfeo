@@ -3273,66 +3273,55 @@ _inner_edge_dgetrf_4x4_lib4:
 	// first column
 //	vblendpd		$0x1, %ymm0, %ymm12, %ymm12
 	vmovapd			%ymm0, %ymm12
-	vmovddup		%xmm0, %xmm13
-	vdivpd			%xmm13, %xmm14, %xmm13
-	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vdivsd			%xmm0, %xmm14, %xmm13
+	vpermpd			$0x00, %ymm13, %ymm13
 	vmovsd			%xmm13, 0(%r10)
 	vmulpd			%ymm0, %ymm13, %ymm0
 	vblendpd		$0x1, %ymm12, %ymm0, %ymm0
 
 	// second column
-	vmovddup		%xmm1, %xmm12
-	vperm2f128		$0x00, %ymm12, %ymm12, %ymm13
+	vpermpd			$0x00, %ymm1, %ymm13
 	vfnmadd231pd	%ymm0, %ymm13, %ymm1
 	vblendpd		$0x2, %ymm1, %ymm13, %ymm12
 
 	vpermilpd		$0x3, %xmm1, %xmm13
-	vdivpd			%xmm13, %xmm14, %xmm13
-	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vdivsd			%xmm13, %xmm14, %xmm13
+	vpermpd			$0x00, %ymm13, %ymm13
 	vmovsd			%xmm13, 8(%r10)
 	vmulpd			%ymm1, %ymm13, %ymm1
 	vblendpd		$0x3, %ymm12, %ymm1, %ymm1
 
 	// third column
-	vmovddup		%xmm2, %xmm13
-	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vpermpd			$0x00, %ymm2, %ymm13
 	vfnmadd231pd	%ymm0, %ymm13, %ymm2
 	vblendpd		$0x2, %ymm2, %ymm13, %ymm12
 
-	vpermilpd		$0x3, %xmm2, %xmm13
-	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vpermpd			$0x55, %ymm2, %ymm13
 	vfnmadd231pd	%ymm1, %ymm13, %ymm2
 	vblendpd		$0x4, %ymm2, %ymm12, %ymm12
 
-	vextractf128	$0x1, %ymm2, %xmm13
-	vmovddup		%xmm13, %xmm13
-	vdivpd			%xmm13, %xmm14, %xmm13
-	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vpermpd			$0xaa, %ymm2, %ymm13
+	vdivsd			%xmm13, %xmm14, %xmm13
+	vpermpd			$0x00, %ymm13, %ymm13
 	vmovsd			%xmm13, 16(%r10)
 	vmulpd			%ymm2, %ymm13, %ymm2
 	vblendpd		$0x7, %ymm12, %ymm2, %ymm2
 
 	// fourth column
-	vmovddup		%xmm3, %xmm13
-	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vpermpd			$0x00, %ymm3, %ymm13
 	vfnmadd231pd	%ymm0, %ymm13, %ymm3
-	vmulpd			%ymm0, %ymm13, %ymm15
-	vsubpd			%ymm15, %ymm3, %ymm3
 	vblendpd		$0x2, %ymm3, %ymm13, %ymm12
 
-	vpermilpd		$0x3, %xmm3, %xmm13
-	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
+	vpermpd			$0x55, %ymm3, %ymm13
 	vfnmadd231pd	%ymm1, %ymm13, %ymm3
 	vblendpd		$0x4, %ymm3, %ymm12, %ymm12
 
-	vperm2f128		$0x11, %ymm3, %ymm3, %ymm13
-	vpermilpd		$0x0, %ymm13, %ymm13
+	vpermpd			$0xaa, %ymm3, %ymm13
 	vfnmadd231pd	%ymm2, %ymm13, %ymm3
 	vblendpd		$0x8, %ymm3, %ymm12, %ymm12
 	
-	vextractf128	$0x1, %ymm3, %xmm13
-	vpermilpd		$0x3, %xmm13, %xmm13
-	vdivpd			%xmm13, %xmm14, %xmm13
+	vpermpd			$0xff, %ymm3, %ymm13
+	vdivsd			%xmm13, %xmm14, %xmm13
 //	vperm2f128		$0x00, %ymm13, %ymm13, %ymm13
 	vmovsd			%xmm13, 24(%r10)
 //	vmulpd			%ymm3, %ymm13, %ymm3
