@@ -289,9 +289,10 @@ int main()
 //			dsyrk_dpotrf_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd, diag);
 //			dsyrk_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd);
 //			dpotrf_nt_l_lib(n, n, pD, cnd, pD, cnd, diag);
-//			dgetrf_nn_nopivot_lib(n, n, pD, cnd, pD, cnd, diag);
-			dgetrf_nn_lib(n, n, pB, cnd, pD, cnd, diag, ipiv);
+//			dgetrf_nn_nopivot_lib(n, n, pB, cnd, pB, cnd, diag);
+			dgetrf_nn_lib(n, n, pB, cnd, pB, cnd, diag, ipiv);
 //			dtrsm_nn_ll_one_lib(n, n, pD, cnd, pB, cnd, pB, cnd);
+//			dtrsm_nn_lu_inv_lib(n, n, pD, cnd, diag, pB, cnd, pB, cnd);
 			}
 	
 		gettimeofday(&tv1, NULL); // stop
@@ -305,8 +306,8 @@ int main()
 //			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 #endif
 //			dpotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
-//			dgetrf_nopivot_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
-			dgetrf_libstr(n, n, &sD, 0, 0, &sE, 0, 0, ipiv);
+//			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
+			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 //			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //			dtrsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //			dtrsm_rltu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
@@ -327,6 +328,7 @@ int main()
 //			dpotrf_(&c_l, &n, B2, &n, &info);
 			dgetrf_(&n, &n, B2, &n, ipiv, &info);
 //			dtrsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
+//			dtrsm_(&c_l, &c_u, &c_n, &c_n, &n, &n, &d_1, B2, &n, B, &n);
 //			dtrtri_(&c_l, &c_n, &n, B2, &n, &info);
 //			dlauum_(&c_l, &n, B, &n, &info);
 //			dgemv_(&c_n, &n, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);

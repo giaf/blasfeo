@@ -2708,10 +2708,10 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		for(; ii<jj-1; ii+=2)
 			{
 			// correct upper
-			d_00 = pC[(ii+0)+ldc*(jj+0)];
-			d_10 = pC[(ii+1)+ldc*(jj+0)];
-			d_01 = pC[(ii+0)+ldc*(jj+1)];
-			d_11 = pC[(ii+1)+ldc*(jj+1)];
+			d_00 = pD[(ii+0)+ldd*(jj+0)];
+			d_10 = pD[(ii+1)+ldd*(jj+0)];
+			d_01 = pD[(ii+0)+ldd*(jj+1)];
+			d_11 = pD[(ii+1)+ldd*(jj+1)];
 			for(kk=0; kk<ii; kk++)
 				{
 				d_00 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*(jj+0)];
@@ -2730,8 +2730,8 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		for(; ii<jj; ii++)
 			{
 			// correct upper
-			d_00 = pC[(ii+0)+ldc*(jj+0)];
-			d_01 = pC[(ii+0)+ldc*(jj+1)];
+			d_00 = pD[(ii+0)+ldd*(jj+0)];
+			d_01 = pD[(ii+0)+ldd*(jj+1)];
 			for(kk=0; kk<ii; kk++)
 				{
 				d_00 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*(jj+0)];
@@ -2742,20 +2742,48 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 			pD[(ii+0)+ldd*(jj+1)] = d_01;
 			}
 		// correct diagonal and lower and look for pivot
-		// left column
-		i0 = ii;
+		// correct
 		ii = jj;
+		i0 = ii;
+		for(; ii<m-1; ii+=2)
+			{
+			d_00 = pD[(ii+0)+ldd*(jj+0)];
+			d_10 = pD[(ii+1)+ldd*(jj+0)];
+			d_01 = pD[(ii+0)+ldd*(jj+1)];
+			d_11 = pD[(ii+1)+ldd*(jj+1)];
+			for(kk=0; kk<jj; kk++)
+				{
+				d_00 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*(jj+0)];
+				d_10 -= pD[(ii+1)+ldd*kk] * pD[kk+ldd*(jj+0)];
+				d_01 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*(jj+1)];
+				d_11 -= pD[(ii+1)+ldd*kk] * pD[kk+ldd*(jj+1)];
+				}
+			pD[(ii+0)+ldd*(jj+0)] = d_00;
+			pD[(ii+1)+ldd*(jj+0)] = d_10;
+			pD[(ii+0)+ldd*(jj+1)] = d_01;
+			pD[(ii+1)+ldd*(jj+1)] = d_11;
+			}
+		for(; ii<m; ii++)
+			{
+			d_00 = pD[(ii+0)+ldd*(jj+0)];
+			d_01 = pD[(ii+0)+ldd*(jj+1)];
+			for(kk=0; kk<jj; kk++)
+				{
+				d_00 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*(jj+0)];
+				d_01 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*(jj+1)];
+				}
+			pD[(ii+0)+ldd*(jj+0)] = d_00;
+			pD[(ii+0)+ldd*(jj+1)] = d_01;
+			}
+		// look for pivot & solve
+		// left column
+		ii = i0;
 		dmax = 0;
 		ip = ii;
 		for(; ii<m-1; ii+=2)
 			{
 			d_00 = pD[(ii+0)+ldd*jj];
 			d_10 = pD[(ii+1)+ldd*jj];
-			for(kk=0; kk<jj; kk++)
-				{
-				d_00 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*jj];
-				d_10 -= pD[(ii+1)+ldd*kk] * pD[kk+ldd*jj];
-				}
 			dtmp = d_00>0 ? d_00 : -d_00;
 			if(dtmp>dmax)
 				{
@@ -2768,23 +2796,16 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 				dmax = dtmp;
 				ip = ii+1;
 				}
-			pD[(ii+0)+ldd*jj] = d_00;
-			pD[(ii+1)+ldd*jj] = d_10;
 			}
 		for(; ii<m; ii++)
 			{
 			d_00 = pD[(ii+0)+ldd*jj];
-			for(kk=0; kk<jj; kk++)
-				{
-				d_00 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*jj];
-				}
 			dtmp = d_00>0 ? d_00 : -d_00;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
 				ip = ii+0;
 				}
-			pD[(ii+0)+ldd*jj] = d_00;
 			}
 		// row swap
 		ii = i0;
@@ -2799,71 +2820,55 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 				}
 			}
 		// factorize diagonal
-		d_00 = pD[ii+ldd*jj];
+		d_00 = pD[(ii+0)+ldd*(jj+0)];
 		d_00_inv = 1.0/d_00;
-		pD[ii+ldd*jj] = d_00;
+		pD[(ii+0)+ldd*(jj+0)] = d_00;
 		dD[ii] = d_00_inv;
 		ii += 1;
-		for(; ii<m; ii++)
-			{
-			// correct lower
-			d_00 = pD[ii+ldd*jj];
-			// solve lower
-			d_00 *= d_00_inv;
-			pD[ii+ldd*jj] = d_00;
-			}
-		// right column
-//		i0 = ii;
-		ii = i0;
-		// correct upper
-		d_00 = pC[(ii+0)+ldc*(jj+1)];
-		for(kk=0; kk<ii; kk++)
-			{
-			d_00 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*(jj+1)];
-			}
-		// solve upper
-		pD[(ii+0)+ldd*(jj+1)] = d_00;
-		ii = (jj+1);
+		// solve & compute next pivot
 		dmax = 0;
 		ip = ii;
 		for(; ii<m-1; ii+=2)
 			{
-			d_00 = pD[(ii+0)+ldd*(jj+1)];
-			d_10 = pD[(ii+1)+ldd*(jj+1)];
-			for(kk=0; kk<(jj+1); kk++)
-				{
-				d_00 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*(jj+1)];
-				d_10 -= pD[(ii+1)+ldd*kk] * pD[kk+ldd*(jj+1)];
-				}
-			dtmp = d_00>0 ? d_00 : -d_00;
+			d_00 = pD[(ii+0)+ldd*(jj+0)];
+			d_10 = pD[(ii+1)+ldd*(jj+0)];
+			d_00 *= d_00_inv;
+			d_10 *= d_00_inv;
+			d_01 = pD[(ii+0)+ldd*(jj+1)];
+			d_11 = pD[(ii+1)+ldd*(jj+1)];
+			d_01 -= d_00 * pD[jj+ldd*(jj+1)];
+			d_11 -= d_10 * pD[jj+ldd*(jj+1)];
+			dtmp = d_01>0 ? d_01 : -d_01;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
 				ip = ii+0;
 				}
-			dtmp = d_10>0 ? d_10 : -d_10;
+			dtmp = d_11>0 ? d_11 : -d_11;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
 				ip = ii+1;
 				}
-			pD[(ii+0)+ldd*(jj+1)] = d_00;
-			pD[(ii+1)+ldd*(jj+1)] = d_10;
+			pD[(ii+0)+ldd*(jj+0)] = d_00;
+			pD[(ii+1)+ldd*(jj+0)] = d_10;
+			pD[(ii+0)+ldd*(jj+1)] = d_01;
+			pD[(ii+1)+ldd*(jj+1)] = d_11;
 			}
 		for(; ii<m; ii++)
 			{
-			d_00 = pD[(ii+0)+ldd*(jj+1)];
-			for(kk=0; kk<(jj+1); kk++)
-				{
-				d_00 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*(jj+1)];
-				}
-			dtmp = d_00>0 ? d_00 : -d_00;
+			d_00 = pD[(ii+0)+ldd*(jj+0)];
+			d_00 *= d_00_inv;
+			d_01 = pD[(ii+0)+ldd*(jj+1)];
+			d_01 -= d_00 * pD[jj+ldd*(jj+1)];
+			dtmp = d_01>0 ? d_01 : -d_01;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
 				ip = ii+0;
 				}
-			pD[(ii+0)+ldd*(jj+1)] = d_00;
+			pD[(ii+0)+ldd*(jj+0)] = d_00;
+			pD[(ii+0)+ldd*(jj+1)] = d_01;
 			}
 		// row swap
 		ii = i0+1;
@@ -2883,11 +2888,10 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		pD[ii+ldd*(jj+1)] = d_00;
 		dD[ii] = d_00_inv;
 		ii += 1;
+		// solve lower
 		for(; ii<m; ii++)
 			{
-			// correct lower
 			d_00 = pD[ii+ldd*(jj+1)];
-			// solve lower
 			d_00 *= d_00_inv;
 			pD[ii+ldd*(jj+1)] = d_00;
 			}
@@ -2898,8 +2902,8 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		for(; ii<jj-1; ii+=2)
 			{
 			// correct upper
-			d_00 = pC[(ii+0)+ldc*jj];
-			d_10 = pC[(ii+1)+ldc*jj];
+			d_00 = pD[(ii+0)+ldd*jj];
+			d_10 = pD[(ii+1)+ldd*jj];
 			for(kk=0; kk<ii; kk++)
 				{
 				d_00 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*jj];
