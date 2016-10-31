@@ -2923,9 +2923,10 @@ int d_size_strmat(int m, int n)
 // return memory size (in bytes) needed for the diagonal of a strmat
 int d_size_diag_strmat(int m, int n)
 	{
+	int size = 0;
 #if defined(LA_REFERENCE)
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
-	int size = tmp*sizeof(double);
+	size = tmp*sizeof(double);
 #endif
 	return size;
 	}
