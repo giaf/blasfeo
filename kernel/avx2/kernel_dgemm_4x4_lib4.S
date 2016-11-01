@@ -3268,7 +3268,7 @@ _inner_edge_dgetrf_4x4_lib4:
 #elif defined(OS_MAC)
 	vmovsd			LC04(%rip), %xmm14 // 1.0
 #endif
-	vmovddup		%xmm14, %xmm14
+//	vmovddup		%xmm14, %xmm14
 
 	// first column
 //	vblendpd		$0x1, %ymm0, %ymm12, %ymm12
