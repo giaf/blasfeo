@@ -30,6 +30,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#if defined(LA_BLAS)
+#include <f77blas.h>
+#endif
+
 #include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_aux.h"
