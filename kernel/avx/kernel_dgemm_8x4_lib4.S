@@ -3766,125 +3766,107 @@ _inner_edge_dtrsm_lln_one_8x4_lib4:
 	vxorpd		%ymm14, %ymm14, %ymm14
 
 	vmovapd		0(%r10), %ymm12
+	vxorpd		%ymm14, %ymm14, %ymm14
 	vblendpd	$0x1, %ymm14, %ymm12, %ymm12
+	vmovapd		0(%r12), %ymm14
 	vperm2f128	$0x00, %ymm0, %ymm0, %ymm13
 	vpermilpd	$0x0, %ymm13, %ymm13
 	vmulpd		%ymm12, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm0, %ymm0
+	vmulpd		%ymm14, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm4, %ymm4
 	vperm2f128	$0x00, %ymm1, %ymm1, %ymm13
 	vpermilpd	$0x0, %ymm13, %ymm13
 	vmulpd		%ymm12, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm1, %ymm1
+	vmulpd		%ymm14, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm5, %ymm5
 	vperm2f128	$0x00, %ymm2, %ymm2, %ymm13
 	vpermilpd	$0x0, %ymm13, %ymm13
 	vmulpd		%ymm12, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm2, %ymm2
+	vmulpd		%ymm14, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm6, %ymm6
 	vperm2f128	$0x00, %ymm3, %ymm3, %ymm13
 	vpermilpd	$0x0, %ymm13, %ymm13
 	vmulpd		%ymm12, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm3, %ymm3
+	vmulpd		%ymm14, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm7, %ymm7
 
 	vmovapd		32(%r10), %ymm12
+	vxorpd		%ymm14, %ymm14, %ymm14
 	vblendpd	$0x3, %ymm14, %ymm12, %ymm12
+	vmovapd		32(%r12), %ymm14
 	vperm2f128	$0x00, %ymm0, %ymm0, %ymm13
 	vpermilpd	$0xf, %ymm13, %ymm13
 	vmulpd		%ymm12, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm0, %ymm0
+	vmulpd		%ymm14, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm4, %ymm4
 	vperm2f128	$0x00, %ymm1, %ymm1, %ymm13
 	vpermilpd	$0xf, %ymm13, %ymm13
 	vmulpd		%ymm12, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm1, %ymm1
+	vmulpd		%ymm14, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm5, %ymm5
 	vperm2f128	$0x00, %ymm2, %ymm2, %ymm13
 	vpermilpd	$0xf, %ymm13, %ymm13
 	vmulpd		%ymm12, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm2, %ymm2
+	vmulpd		%ymm14, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm6, %ymm6
 	vperm2f128	$0x00, %ymm3, %ymm3, %ymm13
 	vpermilpd	$0xf, %ymm13, %ymm13
 	vmulpd		%ymm12, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm3, %ymm3
+	vmulpd		%ymm14, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm7, %ymm7
 
 	vmovapd		64(%r10), %ymm12
+	vxorpd		%ymm14, %ymm14, %ymm14
 	vblendpd	$0x7, %ymm14, %ymm12, %ymm12
+	vmovapd		64(%r12), %ymm14
 	vperm2f128	$0x11, %ymm0, %ymm0, %ymm13
 	vpermilpd	$0x0, %ymm13, %ymm13
 	vmulpd		%ymm12, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm0, %ymm0
+	vmulpd		%ymm14, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm4, %ymm4
 	vperm2f128	$0x11, %ymm1, %ymm1, %ymm13
 	vpermilpd	$0x0, %ymm13, %ymm13
 	vmulpd		%ymm12, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm1, %ymm1
+	vmulpd		%ymm14, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm5, %ymm5
 	vperm2f128	$0x11, %ymm2, %ymm2, %ymm13
 	vpermilpd	$0x0, %ymm13, %ymm13
 	vmulpd		%ymm12, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm2, %ymm2
+	vmulpd		%ymm14, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm6, %ymm6
 	vperm2f128	$0x11, %ymm3, %ymm3, %ymm13
 	vpermilpd	$0x0, %ymm13, %ymm13
 	vmulpd		%ymm12, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm3, %ymm3
-
-	// correct bottom-left
-
-	vmovapd		0(%r12), %ymm14
-	vperm2f128	$0x00, %ymm0, %ymm0, %ymm8
-	vpermilpd	$0x0, %ymm8, %ymm13
-	vmulpd		%ymm14, %ymm13, %ymm15
-	vsubpd		%ymm15, %ymm4, %ymm4
-	vperm2f128	$0x00, %ymm1, %ymm1, %ymm9
-	vpermilpd	$0x0, %ymm9, %ymm13
-	vmulpd		%ymm14, %ymm13, %ymm15
-	vsubpd		%ymm15, %ymm5, %ymm5
-	vperm2f128	$0x00, %ymm2, %ymm2, %ymm10
-	vpermilpd	$0x0, %ymm10, %ymm13
-	vmulpd		%ymm14, %ymm13, %ymm15
-	vsubpd		%ymm15, %ymm6, %ymm6
-	vperm2f128	$0x00, %ymm3, %ymm3, %ymm11
-	vpermilpd	$0x0, %ymm11, %ymm13
-	vmulpd		%ymm14, %ymm13, %ymm15
-	vsubpd		%ymm15, %ymm7, %ymm7
-
-	vmovapd		32(%r12), %ymm14
-	vpermilpd	$0xf, %ymm8, %ymm13
-	vmulpd		%ymm14, %ymm13, %ymm15
-	vsubpd		%ymm15, %ymm4, %ymm4
-	vpermilpd	$0xf, %ymm9, %ymm13
-	vmulpd		%ymm14, %ymm13, %ymm15
-	vsubpd		%ymm15, %ymm5, %ymm5
-	vpermilpd	$0xf, %ymm10, %ymm13
-	vmulpd		%ymm14, %ymm13, %ymm15
-	vsubpd		%ymm15, %ymm6, %ymm6
-	vpermilpd	$0xf, %ymm11, %ymm13
-	vmulpd		%ymm14, %ymm13, %ymm15
-	vsubpd		%ymm15, %ymm7, %ymm7
-
-	vmovapd		64(%r12), %ymm14
-	vperm2f128	$0x11, %ymm0, %ymm0, %ymm8
-	vpermilpd	$0x0, %ymm8, %ymm13
-	vmulpd		%ymm14, %ymm13, %ymm15
-	vsubpd		%ymm15, %ymm4, %ymm4
-	vperm2f128	$0x11, %ymm1, %ymm1, %ymm9
-	vpermilpd	$0x0, %ymm9, %ymm13
-	vmulpd		%ymm14, %ymm13, %ymm15
-	vsubpd		%ymm15, %ymm5, %ymm5
-	vperm2f128	$0x11, %ymm2, %ymm2, %ymm10
-	vpermilpd	$0x0, %ymm10, %ymm13
-	vmulpd		%ymm14, %ymm13, %ymm15
-	vsubpd		%ymm15, %ymm6, %ymm6
-	vperm2f128	$0x11, %ymm3, %ymm3, %ymm11
-	vpermilpd	$0x0, %ymm11, %ymm13
 	vmulpd		%ymm14, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm7, %ymm7
 
 	vmovapd		96(%r12), %ymm14
-	vpermilpd	$0xf, %ymm8, %ymm13
+	vperm2f128	$0x11, %ymm0, %ymm0, %ymm13
+	vpermilpd	$0xf, %ymm13, %ymm13
 	vmulpd		%ymm14, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm4, %ymm4
-	vpermilpd	$0xf, %ymm9, %ymm13
+	vperm2f128	$0x11, %ymm1, %ymm1, %ymm13
+	vpermilpd	$0xf, %ymm13, %ymm13
 	vmulpd		%ymm14, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm5, %ymm5
-	vpermilpd	$0xf, %ymm10, %ymm13
+	vperm2f128	$0x11, %ymm2, %ymm2, %ymm13
+	vpermilpd	$0xf, %ymm13, %ymm13
 	vmulpd		%ymm14, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm6, %ymm6
-	vpermilpd	$0xf, %ymm11, %ymm13
+	vperm2f128	$0x11, %ymm3, %ymm3, %ymm13
+	vpermilpd	$0xf, %ymm13, %ymm13
 	vmulpd		%ymm14, %ymm13, %ymm15
 	vsubpd		%ymm15, %ymm7, %ymm7
 
