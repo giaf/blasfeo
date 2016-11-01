@@ -2305,6 +2305,9 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		}
 	int info;
 	dgetrf_(&m, &n, pD, &(sD->m), ipiv, &info);
+	int tmp = m<n ? m : n;
+	for(jj=0; jj<tmp; jj++)
+		ipiv[jj] -= 1;
 	return;
 	}
 
