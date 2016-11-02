@@ -995,7 +995,29 @@ void dtrsm_nn_ll_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb,
 	
 	i = 0;
 
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for( ; i<m-7; i+=8)
+		{
+		j = 0;
+		for( ; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nn_ll_one_12x4_lib4(i, pA+i*sda, sda, pD+j*bs, sdd, pB+i*sdb+j*bs, sdb, pD+i*sdd+j*bs, sdd, pA+i*sda+i*bs, sda);
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nn_ll_one_12x4_vs_lib4(i, pA+i*sda, sda, pD+j*bs, sdd, pB+i*sdb+j*bs, sdb, pD+i*sdd+j*bs, sdd, pA+i*sda+i*bs, sda, m-i, n-j);
+			}
+		}
+	if(i<m)
+		{
+		if(m-i<=4)
+			goto left_4;
+		if(m-i<=8)
+			goto left_8;
+		else
+			goto left_12;
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for( ; i<m-7; i+=8)
 		{
 		j = 0;
@@ -1036,6 +1058,16 @@ void dtrsm_nn_ll_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb,
 
 	// common return
 	return;
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+	left_12:
+	j = 0;
+	for( ; j<n; j+=4)
+		{
+		kernel_dtrsm_nn_ll_one_12x4_vs_lib4(i, pA+i*sda, sda, pD+j*bs, sdd, pB+i*sdb+j*bs, sdb, pD+i*sdd+j*bs, sdd, pA+i*sda+i*bs, sda, m-i, n-j);
+		}
+	return;
+#endif
 
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 	left_8:
