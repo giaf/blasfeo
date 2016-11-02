@@ -1006,11 +1006,16 @@ void dtrsm_nn_ll_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb,
 		if(j<n)
 			{
 			kernel_dtrsm_nn_ll_one_8x4_vs_lib4(i, pA+i*sda, sda, pD+j*bs, sdd, pB+i*sdb+j*bs, sdb, pD+i*sdd+j*bs, sdd, pA+i*sda+i*bs, sda, m-i, n-j);
-//			kernel_dtrsm_nn_ll_one_4x4_vs_lib4(i, pA+i*sda, pD+j*bs, sdd, pB+i*sdb+j*bs, pD+i*sdd+j*bs, pA+i*sda+i*bs, m-i, n-j);
-//			kernel_dtrsm_nn_ll_one_4x4_vs_lib4(i+4, pA+(i+4)*sda, pD+j*bs, sdd, pB+(i+4)*sdb+j*bs, pD+(i+4)*sdd+j*bs, pA+(i+4)*sda+(i+4)*bs, m-i-4, n-j);
 			}
 		}
-#endif
+	if(i<m)
+		{
+		if(m-i<=4)
+			goto left_4;
+		else
+			goto left_8;
+		}
+#else
 	for( ; i<m-3; i+=4)
 		{
 		j = 0;
@@ -1027,9 +1032,20 @@ void dtrsm_nn_ll_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb,
 		{
 		goto left_4;
 		}
+#endif
 
 	// common return
 	return;
+
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+	left_8:
+	j = 0;
+	for( ; j<n; j+=4)
+		{
+		kernel_dtrsm_nn_ll_one_8x4_vs_lib4(i, pA+i*sda, sda, pD+j*bs, sdd, pB+i*sdb+j*bs, sdb, pD+i*sdd+j*bs, sdd, pA+i*sda+i*bs, sda, m-i, n-j);
+		}
+	return;
+#endif
 
 	left_4:
 	j = 0;
@@ -1037,6 +1053,8 @@ void dtrsm_nn_ll_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb,
 		{
 		kernel_dtrsm_nn_ll_one_4x4_vs_lib4(i, pA+i*sda, pD+j*bs, sdd, pB+i*sdb+j*bs, pD+i*sdd+j*bs, pA+i*sda+i*bs, m-i, n-j);
 		}
+	return;
+
 	}
 
 
@@ -1068,6 +1086,22 @@ void dtrsm_nn_lu_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 		i += rm;
 		}
 //	int em = m-rm;
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+	for( ; i<m-4; i+=8)
+		{
+		idx = m-i; // position of already done part
+		j = 0;
+		for( ; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nn_lu_inv_8x4_lib4(i, pA+(idx-8)*sda+idx*bs, sda, pD+idx*sdd+j*bs, sdd, pB+(idx-8)*sdb+j*bs, sdb, pD+(idx-8)*sdd+j*bs, sdd, pA+(idx-8)*sda+(idx-8)*bs, sda, inv_diag_A+(idx-8));
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(i, pA+(idx-4)*sda+idx*bs, pD+idx*sdd+j*bs, sdd, pB+(idx-4)*sdb+j*bs, pD+(idx-4)*sdd+j*bs, pA+(idx-4)*sda+(idx-4)*bs, inv_diag_A+(idx-4), 4, n-j);
+			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(i+4, pA+(idx-8)*sda+(idx-4)*bs, pD+(idx-4)*sdd+j*bs, sdd, pB+(idx-8)*sdb+j*bs, pD+(idx-8)*sdd+j*bs, pA+(idx-8)*sda+(idx-8)*bs, inv_diag_A+(idx-8), 4, n-j);
+			}
+		}
+#endif
 	for( ; i<m; i+=4)
 		{
 		idx = m-i; // position of already done part
