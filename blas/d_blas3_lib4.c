@@ -996,7 +996,7 @@ void dtrsm_nn_ll_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb,
 	i = 0;
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-	for( ; i<m-7; i+=8)
+	for( ; i<m-11; i+=12)
 		{
 		j = 0;
 		for( ; j<n-3; j+=4)
