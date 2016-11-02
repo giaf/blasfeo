@@ -4282,7 +4282,7 @@ _inner_edge_dtrsm_lun_inv_12x4_vs_lib4:
 
 	// bottom-right
 
-	cmpl	$11, %r12d
+	cmpl	$11, %r13d
 	jle		0f
 
 	vmovapd			352(%r14), %ymm13
@@ -4321,7 +4321,7 @@ _inner_edge_dtrsm_lun_inv_12x4_vs_lib4:
 	vfnmadd231pd	352(%r10), %ymm14, %ymm3
 
 0:
-	cmpl	$10, %r12d
+	cmpl	$10, %r13d
 	jle		1f
 
 	vxorpd			%ymm13, %ymm13, %ymm13 // 0.0 // ?????????????
@@ -4359,7 +4359,7 @@ _inner_edge_dtrsm_lun_inv_12x4_vs_lib4:
 	vfnmadd231pd	320(%r10), %ymm14, %ymm3
 
 1:
-	cmpl	$9, %r12d
+	cmpl	$9, %r13d
 	jle		2f
 
 	vxorpd			%ymm13, %ymm13, %ymm13 // 0.0

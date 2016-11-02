@@ -4305,7 +4305,7 @@ _inner_edge_dtrsm_lun_inv_8x4_lib4:
 // r10  <- E
 // r11  <- 4*sde*sizeof(double)
 // r12  <- inv_diag_E
-// r12  <- km
+// r13  <- km
 // ymm0 <- [d00 d10 d20 d30]
 // ymm1 <- [d01 d11 d21 d31]
 // ymm2 <- [d02 d12 d22 d32]
@@ -4323,7 +4323,7 @@ _inner_edge_dtrsm_lun_inv_8x4_lib4:
 // r10  <- E
 // r11  <- 4*sde*sizeof(double)
 // r12  <- inv_diag_E
-// r12  <- km
+// r13  <- km
 // ymm0 <- [d00 d10 d20 d30]
 // ymm1 <- [d01 d11 d21 d31]
 // ymm2 <- [d02 d12 d22 d32]
@@ -4354,7 +4354,7 @@ _inner_edge_dtrsm_lun_inv_8x4_vs_lib4:
 
 	// bottom-right
 
-	cmpl	$7, %r12d
+	cmpl	$7, %r13d
 	jle		0f
 
 	vmovapd			224(%r14), %ymm13
@@ -4400,7 +4400,7 @@ _inner_edge_dtrsm_lun_inv_8x4_vs_lib4:
 	vsubpd			%ymm15, %ymm3, %ymm3
 
 0:
-	cmpl	$6, %r12d
+	cmpl	$6, %r13d
 	jle		1f
 
 	vxorpd			%ymm13, %ymm13, %ymm13 // 0.0 // ?????????????
@@ -4445,7 +4445,7 @@ _inner_edge_dtrsm_lun_inv_8x4_vs_lib4:
 	vsubpd			%ymm15, %ymm3, %ymm3
 
 1:
-	cmpl	$5, %r12d
+	cmpl	$5, %r13d
 	jle		2f
 
 	vxorpd			%ymm13, %ymm13, %ymm13 // 0.0
