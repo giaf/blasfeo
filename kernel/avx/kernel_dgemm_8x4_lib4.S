@@ -3951,6 +3951,350 @@ _inner_edge_dtrsm_lln_one_8x4_lib4:
 
 // common inner routine with file scope
 //
+// triangular substitution:
+// side = left
+// uplo = upper
+// tran = normal
+// requires explicit inverse of diagonal
+//
+// input arguments:
+// r10  <- E
+// r11  <- 4*sde*sizeof(double)
+// r12  <- inv_diag_E
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm4 <- [d40 d50 d60 d70]
+// ymm5 <- [d41 d51 d61 d71]
+// ymm6 <- [d42 d52 d62 d72]
+// ymm7 <- [d43 d53 d63 d73]
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10  <- E
+// r11  <- 4*sde*sizeof(double)
+// r12  <- inv_diag_E
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm4 <- [d40 d50 d60 d70]
+// ymm5 <- [d41 d51 d61 d71]
+// ymm6 <- [d42 d52 d62 d72]
+// ymm7 <- [d43 d53 d63 d73]
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSM_LUN_INV_8X4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_dtrsm_lun_inv_8x4_lib4, @function
+inner_edge_dtrsm_lun_inv_8x4_lib4:
+#elif defined(OS_MAC)
+_inner_edge_dtrsm_lun_inv_8x4_lib4:
+#endif
+#endif
+	
+	movq	%r10, %r13 // E1 <- E0
+	addq	%r11, %r13 // E1 <- E0 + 4*sde*sizeof(double)
+
+	// bottom-right
+
+	vmovapd			224(%r13), %ymm13
+	vxorpd			%ymm14, %ymm14, %ymm14 // 0.0
+	vblendpd		$0x7, %ymm13, %ymm14, %ymm13
+	vbroadcastsd	56(%r12), %ymm12
+	vmovapd			224(%r10), %ymm11
+
+	vperm2f128		$0x11, %ymm4, %ymm4, %ymm14
+	vpermilpd		$0xf, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x8, %ymm14, %ymm4, %ymm4
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm4, %ymm4
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+	vperm2f128		$0x11, %ymm5, %ymm5, %ymm14
+	vpermilpd		$0xf, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x8, %ymm14, %ymm5, %ymm5
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm5, %ymm5
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm1, %ymm1
+
+	vperm2f128		$0x11, %ymm6, %ymm6, %ymm14
+	vpermilpd		$0xf, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x8, %ymm14, %ymm6, %ymm6
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm6, %ymm6
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm2, %ymm2
+
+	vperm2f128		$0x11, %ymm7, %ymm7, %ymm14
+	vpermilpd		$0xf, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x8, %ymm14, %ymm7, %ymm7
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm7, %ymm7
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm3, %ymm3
+
+
+	vxorpd			%ymm13, %ymm13, %ymm13 // 0.0 // ?????????????
+	vmovapd			192(%r13), %xmm13
+	vbroadcastsd	48(%r12), %ymm12
+	vmovapd			192(%r10), %ymm11
+
+	vperm2f128		$0x11, %ymm4, %ymm4, %ymm14
+	vpermilpd		$0x0, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x4, %ymm14, %ymm4, %ymm4
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm4, %ymm4
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+	vperm2f128		$0x11, %ymm5, %ymm5, %ymm14
+	vpermilpd		$0x0, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x4, %ymm14, %ymm5, %ymm5
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm5, %ymm5
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm1, %ymm1
+
+	vperm2f128		$0x11, %ymm6, %ymm6, %ymm14
+	vpermilpd		$0x0, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x4, %ymm14, %ymm6, %ymm6
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm6, %ymm6
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm2, %ymm2
+
+	vperm2f128		$0x11, %ymm7, %ymm7, %ymm14
+	vpermilpd		$0x0, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x4, %ymm14, %ymm7, %ymm7
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm7, %ymm7
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm3, %ymm3
+
+
+	vxorpd			%ymm13, %ymm13, %ymm13 // 0.0
+	vmovsd			160(%r13), %xmm13
+	vbroadcastsd	40(%r12), %ymm12
+	vmovapd			160(%r10), %ymm11
+
+	vperm2f128		$0x00, %ymm4, %ymm4, %ymm14
+	vpermilpd		$0xf, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x2, %ymm14, %ymm4, %ymm4
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm4, %ymm4
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+	vperm2f128		$0x00, %ymm5, %ymm5, %ymm14
+	vpermilpd		$0xf, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x2, %ymm14, %ymm5, %ymm5
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm5, %ymm5
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm1, %ymm1
+
+	vperm2f128		$0x00, %ymm6, %ymm6, %ymm14
+	vpermilpd		$0xf, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x2, %ymm14, %ymm6, %ymm6
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm6, %ymm6
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm2, %ymm2
+
+	vperm2f128		$0x00, %ymm7, %ymm7, %ymm14
+	vpermilpd		$0xf, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x2, %ymm14, %ymm7, %ymm7
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm7, %ymm7
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm3, %ymm3
+
+
+	vbroadcastsd	32(%r12), %ymm12
+	vmovapd			128(%r10), %ymm11
+
+	vperm2f128		$0x00, %ymm4, %ymm4, %ymm14
+	vpermilpd		$0x0, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x1, %ymm14, %ymm4, %ymm4
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+	vperm2f128		$0x00, %ymm5, %ymm5, %ymm14
+	vpermilpd		$0x0, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x1, %ymm14, %ymm5, %ymm5
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm1, %ymm1
+
+	vperm2f128		$0x00, %ymm6, %ymm6, %ymm14
+	vpermilpd		$0x0, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x1, %ymm14, %ymm6, %ymm6
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm2, %ymm2
+
+	vperm2f128		$0x00, %ymm7, %ymm7, %ymm14
+	vpermilpd		$0x0, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x1, %ymm14, %ymm7, %ymm7
+	vmulpd			%ymm11, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm3, %ymm3
+
+
+	// top-left
+
+	vmovapd			96(%r10), %ymm13
+	vxorpd			%ymm14, %ymm14, %ymm14 // 0.0
+	vblendpd		$0x7, %ymm13, %ymm14, %ymm13
+	vbroadcastsd	24(%r12), %ymm12
+
+	vperm2f128		$0x11, %ymm0, %ymm0, %ymm14
+	vpermilpd		$0xf, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x8, %ymm14, %ymm0, %ymm0
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+	vperm2f128		$0x11, %ymm1, %ymm1, %ymm14
+	vpermilpd		$0xf, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x8, %ymm14, %ymm1, %ymm1
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm1, %ymm1
+
+	vperm2f128		$0x11, %ymm2, %ymm2, %ymm14
+	vpermilpd		$0xf, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x8, %ymm14, %ymm2, %ymm2
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm2, %ymm2
+
+	vperm2f128		$0x11, %ymm3, %ymm3, %ymm14
+	vpermilpd		$0xf, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x8, %ymm14, %ymm3, %ymm3
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm3, %ymm3
+
+
+	vxorpd			%ymm13, %ymm13, %ymm13 // 0.0
+	vmovapd			64(%r10), %xmm13
+	vbroadcastsd	16(%r12), %ymm12
+
+	vperm2f128		$0x11, %ymm0, %ymm0, %ymm14
+	vpermilpd		$0x0, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x4, %ymm14, %ymm0, %ymm0
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+	vperm2f128		$0x11, %ymm1, %ymm1, %ymm14
+	vpermilpd		$0x0, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x4, %ymm14, %ymm1, %ymm1
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm1, %ymm1
+
+	vperm2f128		$0x11, %ymm2, %ymm2, %ymm14
+	vpermilpd		$0x0, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x4, %ymm14, %ymm2, %ymm2
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm2, %ymm2
+
+	vperm2f128		$0x11, %ymm3, %ymm3, %ymm14
+	vpermilpd		$0x0, %ymm14, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x4, %ymm14, %ymm3, %ymm3
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm3, %ymm3
+
+
+	vxorpd			%ymm13, %ymm13, %ymm13 // 0.0
+	vmovsd			32(%r10), %xmm13
+	vbroadcastsd	8(%r12), %ymm12
+
+	vpermilpd		$0xf, %ymm0, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x2, %ymm14, %ymm0, %ymm0
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+	vpermilpd		$0xf, %ymm1, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x2, %ymm14, %ymm1, %ymm1
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm1, %ymm1
+
+	vpermilpd		$0xf, %ymm2, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x2, %ymm14, %ymm2, %ymm2
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm2, %ymm2
+
+	vpermilpd		$0xf, %ymm3, %ymm14
+	vmulpd			%ymm14, %ymm12, %ymm14
+	vblendpd		$0x2, %ymm14, %ymm3, %ymm3
+	vmulpd			%ymm13, %ymm14, %ymm15
+	vsubpd			%ymm15, %ymm3, %ymm3
+
+
+	vbroadcastsd	0(%r12), %ymm12
+
+	vmulpd			%ymm0, %ymm12, %ymm14
+	vblendpd		$0x1, %ymm14, %ymm0, %ymm0
+
+	vmulpd			%ymm1, %ymm12, %ymm14
+	vblendpd		$0x1, %ymm14, %ymm1, %ymm1
+
+	vmulpd			%ymm2, %ymm12, %ymm14
+	vblendpd		$0x1, %ymm14, %ymm2, %ymm2
+
+	vmulpd			%ymm3, %ymm12, %ymm14
+	vblendpd		$0x1, %ymm14, %ymm3, %ymm3
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_dtrsm_lun_inv_8x4_lib4, .-inner_edge_dtrsm_lun_inv_8x4_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // store n
 //
 // input arguments:
@@ -8064,6 +8408,144 @@ _kernel_dtrsm_nn_ll_one_8x4_vs_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dtrsm_nn_ll_one_8x4_vs_lib4, .-kernel_dtrsm_nn_ll_one_8x4_vs_lib4
+#endif
+
+
+
+
+
+//                                      edi    rsi        rdx      ecx        r8       r9         rsp+8    rsp+16     rsp+24   rsp+32     rsp+40   rsp+48
+// void kernel_dtrsm_nn_lu_inv_8x4_lib4(int k, double *A, int sda, double *B, int sdb, double *C, int sdc, double *D, int sdd, double *E, int sde, double *inv_diag_E);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dtrsm_nn_lu_inv_8x4_lib4
+	.type kernel_dtrsm_nn_lu_inv_8x4_lib4, @function
+kernel_dtrsm_nn_lu_inv_8x4_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dtrsm_nn_lu_inv_8x4_lib4
+_kernel_dtrsm_nn_lu_inv_8x4_lib4:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
+
+
+	// call inner dgemm kernel nt 
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11 // A
+	movl	%edx, %r12d // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+//	movslq	%r12d, %r12
+	movq	%rcx, %r13 // B
+	movl	%r8d, %r14d // sda
+	sall	$5, %r14d // 4*sdb*sizeof(double)
+//	movslq	%r14d, %r14
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NN_8X4_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_sub_nn_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_sub_nn_8x4_lib4
+#endif
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	%r9, %r10 // C
+	movl	STACKSIZE +  8(%rsp), %r11d // sdc
+	sall	$5, %r11d // 4*sdc*sizeof(double)
+//	movslq	%r11d, %r11
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_11_8X4_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_scale_11_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_scale_11_8x4_lib4
+#endif
+#endif
+
+
+	// solve
+
+	movq	STACKSIZE + 32(%rsp), %r10  // E 
+	movl	STACKSIZE + 40(%rsp), %r11d // sde
+	sall	$5, %r11d // 4*sde*sizeof(double)
+//	movslq	%r11d, %r11
+	movq	STACKSIZE + 48(%rsp), %r12  // inv_diag_E 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_LUN_INV_8X4_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_edge_dtrsm_lun_inv_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dtrsm_lun_inv_8x4_lib4
+#endif
+#endif
+
+
+	// store
+
+	movq	STACKSIZE + 16(%rsp), %r10 // D
+	movl	STACKSIZE + 24(%rsp), %r11d // sdd
+	sall	$5, %r11d // 4*sdd*sizeof(double)
+	movslq	%r11d, %r11
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_store_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_8x4_lib4
+#endif
+#endif
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dtrsm_nn_lu_inv_8x4_lib4, .-kernel_dtrsm_nn_lu_inv_8x4_lib4
 #endif
 
 
