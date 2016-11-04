@@ -1888,7 +1888,7 @@ void ddiareg_lib(int kmax, double reg, int offset, double *pD, int sdd)
 
 
 // insert vector to diagonal 
-void ddiain_lib(int kmax, double *x, int offset, double *pD, int sdd)
+void ddiain_lib(int kmax, double alpha, double *x, int offset, double *pD, int sdd)
 	{
 
 	const int bs = 4;
@@ -1902,7 +1902,7 @@ void ddiain_lib(int kmax, double *x, int offset, double *pD, int sdd)
 		{
 		for(ll=0; ll<kna; ll++)
 			{
-			pD[ll+bs*ll] = x[ll];
+			pD[ll+bs*ll] = alpha*x[ll];
 			}
 		pD += kna + bs*(sdd-1) + kna*bs;
 		x  += kna;
@@ -1910,14 +1910,14 @@ void ddiain_lib(int kmax, double *x, int offset, double *pD, int sdd)
 		}
 	for(jj=0; jj<kmax-3; jj+=4)
 		{
-		pD[jj*sdd+(jj+0)*bs+0] = x[jj+0];
-		pD[jj*sdd+(jj+1)*bs+1] = x[jj+1];
-		pD[jj*sdd+(jj+2)*bs+2] = x[jj+2];
-		pD[jj*sdd+(jj+3)*bs+3] = x[jj+3];
+		pD[jj*sdd+(jj+0)*bs+0] = alpha*x[jj+0];
+		pD[jj*sdd+(jj+1)*bs+1] = alpha*x[jj+1];
+		pD[jj*sdd+(jj+2)*bs+2] = alpha*x[jj+2];
+		pD[jj*sdd+(jj+3)*bs+3] = alpha*x[jj+3];
 		}
 	for(ll=0; ll<kmax-jj; ll++)
 		{
-		pD[jj*sdd+(jj+ll)*bs+ll] = x[jj+ll];
+		pD[jj*sdd+(jj+ll)*bs+ll] = alpha*x[jj+ll];
 		}
 	
 	}
@@ -2657,6 +2657,19 @@ void d_cast_vec2vecmat(double *a, struct d_strvec *sa)
 
 
 
+// insert a vector into diagonal
+void ddiain_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
+	{
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	double *x = sx->pa + xi;
+	ddiain_lib(kmax, alpha, x, ai%bs, pA, sda);
+	return;
+	}
+
+
+
 // swap two rows of a matrix struct
 void drowsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
@@ -3129,6 +3142,21 @@ void d_cast_diag_mat2strmat(double *dA, struct d_strmat *sA)
 void d_cast_vec2vecmat(double *a, struct d_strvec *sa)
 	{
 	sa->pa = a;
+	return;
+	}
+
+
+
+// insert a vector into diagonal
+void ddiain_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
+	{
+	const int bs = 4;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		pA[ii*(lda+1)] = alpha*x[ii];
 	return;
 	}
 
