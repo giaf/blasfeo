@@ -2657,6 +2657,50 @@ void d_cast_vec2vecmat(double *a, struct d_strvec *sa)
 
 
 
+// insert element into strmat
+void dmatin1_libstr(double a, struct d_strmat *sA, int ai, int aj)
+	{
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	pA[0] = a;
+	return;
+	}
+
+
+
+// extract element from strmat
+double dmatex1_libstr(struct d_strmat *sA, int ai, int aj)
+	{
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	return pA[0];
+	}
+
+
+
+// insert element into strvec
+void dvecin1_libstr(double a, struct d_strvec *sx, int xi)
+	{
+	const int bs = 4;
+	double *x = sx->pa + xi;
+	x[0] = a;
+	return;
+	}
+
+
+
+// extract element from strvec
+double dvecex1_libstr(struct d_strvec *sx, int xi)
+	{
+	const int bs = 4;
+	double *x = sx->pa + xi;
+	return x[0];
+	}
+
+
+
 // insert a vector into diagonal
 void ddiain_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
 	{
@@ -3143,6 +3187,50 @@ void d_cast_vec2vecmat(double *a, struct d_strvec *sa)
 	{
 	sa->pa = a;
 	return;
+	}
+
+
+
+// insert element into strmat
+void dmatin1_libstr(double a, struct d_strmat *sA, int ai, int aj)
+	{
+	const int bs = 4;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	pA[0] = a;
+	return;
+	}
+
+
+
+// extract element from strmat
+double dmatex1_libstr(struct d_strmat *sA, int ai, int aj)
+	{
+	const int bs = 4;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	return pA[0];
+	}
+
+
+
+// insert element into strvec
+void dvecin1_libstr(double a, struct d_strvec *sx, int xi)
+	{
+	const int bs = 4;
+	double *x = sx->pa + xi;
+	x[0] = a;
+	return;
+	}
+
+
+
+// extract element from strvec
+double dvecex1_libstr(struct d_strvec *sx, int xi)
+	{
+	const int bs = 4;
+	double *x = sx->pa + xi;
+	return x[0];
 	}
 
 
