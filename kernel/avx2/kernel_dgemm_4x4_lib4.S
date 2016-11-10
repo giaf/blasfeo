@@ -2844,47 +2844,35 @@ _inner_edge_dtrsm_lln_one_4x4_lib4:
 
 	vmovapd			0(%r10), %ymm12
 	vblendpd		$0x1, %ymm14, %ymm12, %ymm12
-	vperm2f128		$0x00, %ymm0, %ymm0, %ymm13
-	vpermilpd		$0x0, %ymm13, %ymm13
+	vpermpd			$0x00, %ymm0, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm0
-	vperm2f128		$0x00, %ymm1, %ymm1, %ymm13
-	vpermilpd		$0x0, %ymm13, %ymm13
+	vpermpd			$0x00, %ymm1, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm1
-	vperm2f128		$0x00, %ymm2, %ymm2, %ymm13
-	vpermilpd		$0x0, %ymm13, %ymm13
+	vpermpd			$0x00, %ymm2, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm2
-	vperm2f128		$0x00, %ymm3, %ymm3, %ymm13
-	vpermilpd		$0x0, %ymm13, %ymm13
+	vpermpd			$0x00, %ymm3, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm3
 
-	vmovapd				32(%r10), %ymm12
+	vmovapd			32(%r10), %ymm12
 	vblendpd		$0x3, %ymm14, %ymm12, %ymm12
-	vperm2f128		$0x00, %ymm0, %ymm0, %ymm13
-	vpermilpd		$0xf, %ymm13, %ymm13
+	vpermpd			$0x55, %ymm0, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm0
-	vperm2f128		$0x00, %ymm1, %ymm1, %ymm13
-	vpermilpd		$0xf, %ymm13, %ymm13
+	vpermpd			$0x55, %ymm1, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm1
-	vperm2f128		$0x00, %ymm2, %ymm2, %ymm13
-	vpermilpd		$0xf, %ymm13, %ymm13
+	vpermpd			$0x55, %ymm2, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm2
-	vperm2f128		$0x00, %ymm3, %ymm3, %ymm13
-	vpermilpd		$0xf, %ymm13, %ymm13
+	vpermpd			$0x55, %ymm3, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm3
 
 	vmovapd			64(%r10), %ymm12
 	vblendpd		$0x7, %ymm14, %ymm12, %ymm12
-	vperm2f128		$0x11, %ymm0, %ymm0, %ymm13
-	vpermilpd		$0x0, %ymm13, %ymm13
+	vpermpd			$0xaa, %ymm0, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm0
-	vperm2f128		$0x11, %ymm1, %ymm1, %ymm13
-	vpermilpd		$0x0, %ymm13, %ymm13
+	vpermpd			$0xaa, %ymm1, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm1
-	vperm2f128		$0x11, %ymm2, %ymm2, %ymm13
-	vpermilpd		$0x0, %ymm13, %ymm13
+	vpermpd			$0xaa, %ymm2, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm2
-	vperm2f128		$0x11, %ymm3, %ymm3, %ymm13
-	vpermilpd		$0x0, %ymm13, %ymm13
+	vpermpd			$0xaa, %ymm3, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm3
 
 #if MACRO_LEVEL>=1
