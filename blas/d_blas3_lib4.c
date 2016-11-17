@@ -2013,7 +2013,6 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			pD[(ii+0)+ldd*(jj+1)] = alpha * c_01 + beta * pC[(ii+0)+ldc*(jj+1)];
 			}
 		}
-	jj = 0;
 	for(; jj<n; jj++)
 		{
 		ii = 0;
