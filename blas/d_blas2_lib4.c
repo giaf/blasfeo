@@ -779,22 +779,43 @@ void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 
 void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
-	char cl = 'l';
-	char cn = 'n';
-	char cr = 'r';
-	char ct = 't';
-	char cu = 'u';
-	int i1 = 1;
+	int ii, jj;
+	double 
+		x_0, x_1;
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
-	// n
-	printf("\nfeature not implemented yet\n");
-	exit(1);
-//	dcopy_(&m, y, &i1, z, &i1);
-//	dgemv_(&cn, &m, &n, &alpha, pA, &lda, x, &i1, &beta, z, &i1);
+	for(ii=0; ii<n; ii++)
+		{
+		z[ii] = beta * y[ii];
+		}
+	jj = 0;
+	for(; jj<m-1; jj+=2)
+		{
+		x_0 = alpha * x[jj+0];
+		x_1 = alpha * x[jj+1];
+		ii = 0;
+		for(; ii<n-1; ii+=2)
+			{
+			z[ii+0] += pA[ii+0+lda*(jj+0)] * x_0 + pA[ii+0+lda*(jj+1)] * x_1;
+			z[ii+1] += pA[ii+1+lda*(jj+0)] * x_0 + pA[ii+1+lda*(jj+1)] * x_1;
+			}
+		for(; ii<n; ii++)
+			{
+			z[ii] += pA[ii+lda*(jj+0)] * x_0;
+			z[ii] += pA[ii+lda*(jj+1)] * x_1;
+			}
+		}
+	for(; jj<m; jj++)
+		{
+		x_0 = alpha * x[jj+0];
+		for(ii=0; ii<n; ii++)
+			{
+			z[ii] += pA[ii+lda*(jj+0)] * x_0;
+			}
+		}
 	return;
 	}
 
@@ -802,22 +823,42 @@ void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
-	char cl = 'l';
-	char cn = 'n';
-	char cr = 'r';
-	char ct = 't';
-	char cu = 'u';
-	int i1 = 1;
+	int ii, jj;
+	double 
+		y_0, y_1;
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
-	// n
-	printf("\nfeature not implemented yet\n");
-	exit(1);
-//	dcopy_(&n, y, &i1, z, &i1);
-//	dgemv_(&ct, &m, &n, &alpha, pA, &lda, x, &i1, &beta, z, &i1);
+	jj = 0;
+	for(; jj<m-1; jj+=2)
+		{
+		y_0 = 0.0;
+		y_1 = 0.0;
+		ii = 0;
+		for(; ii<n-1; ii+=2)
+			{
+			y_0 += pA[ii+0+lda*(jj+0)] * x[ii+0] + pA[ii+1+lda*(jj+0)] * x[ii+1];
+			y_1 += pA[ii+0+lda*(jj+1)] * x[ii+0] + pA[ii+1+lda*(jj+1)] * x[ii+1];
+			}
+		for(; ii<n; ii++)
+			{
+			y_0 += pA[ii+lda*(jj+0)] * x[ii];
+			y_1 += pA[ii+lda*(jj+1)] * x[ii];
+			}
+		z[jj+0] = beta * y[jj+0] + alpha * y_0;
+		z[jj+1] = beta * y[jj+1] + alpha * y_1;
+		}
+	for(; jj<m; jj++)
+		{
+		y_0 = 0.0;
+		for(ii=0; ii<n; ii++)
+			{
+			y_0 += pA[ii+lda*(jj+0)] * x[ii];
+			}
+		z[jj+0] = beta * y[jj+0] + alpha * y_0;
+		}
 	return;
 	}
 

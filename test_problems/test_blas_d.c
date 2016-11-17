@@ -52,7 +52,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 3.3
+#define GHZ_MAX 3.6
 
 
 
@@ -250,14 +250,26 @@ int main()
 		for(i=0; i<pnd; i++) x2[i] = 1;
 
 		// matrix struct
+#if 0
 		struct d_strmat sA; d_allocate_strmat(n+4, n+4, &sA);
 		struct d_strmat sB; d_allocate_strmat(n+4, n+4, &sB);
 		struct d_strmat sC; d_allocate_strmat(n+4, n+4, &sC);
 		struct d_strmat sD; d_allocate_strmat(n+4, n+4, &sD);
 		struct d_strmat sE; d_allocate_strmat(n+4, n+4, &sE);
+#else
+		struct d_strmat sA; d_allocate_strmat(n, n, &sA);
+		struct d_strmat sB; d_allocate_strmat(n, n, &sB);
+		struct d_strmat sC; d_allocate_strmat(n, n, &sC);
+		struct d_strmat sD; d_allocate_strmat(n, n, &sD);
+		struct d_strmat sE; d_allocate_strmat(n, n, &sE);
+#endif
+		struct d_strvec sx; d_allocate_strvec(n, &sx);
+		struct d_strvec sy; d_allocate_strvec(n, &sy);
+		struct d_strvec sz; d_allocate_strvec(n, &sz);
 
 		d_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
 		d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
+		d_cvt_vec2strvec(n, x, &sx, 0);
 
 
 		// create matrix to pivot all the time
@@ -290,7 +302,7 @@ int main()
 //			dsyrk_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd);
 //			dpotrf_nt_l_lib(n, n, pD, cnd, pD, cnd, diag);
 //			dgetrf_nn_nopivot_lib(n, n, pB, cnd, pB, cnd, diag);
-			dgetrf_nn_lib(n, n, pB, cnd, pB, cnd, diag, ipiv);
+//			dgetrf_nn_lib(n, n, pB, cnd, pB, cnd, diag, ipiv);
 //			dtrsm_nn_ll_one_lib(n, n, pD, cnd, pB, cnd, pB, cnd);
 //			dtrsm_nn_lu_inv_lib(n, n, pD, cnd, diag, pB, cnd, pB, cnd);
 			}
@@ -305,13 +317,16 @@ int main()
 #else
 //			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 #endif
+//			dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dpotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 //			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
+//			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 //			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //			dtrsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //			dtrsm_rltu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //			dtrsm_rutn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//			dgemv_n_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+			dgemv_t_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
 			}
 
 //		d_print_strmat(n, n, &sD, 0, 0);
@@ -326,7 +341,7 @@ int main()
 //			dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
 //			dtrmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
 //			dpotrf_(&c_l, &n, B2, &n, &info);
-			dgetrf_(&n, &n, B2, &n, ipiv, &info);
+//			dgetrf_(&n, &n, B2, &n, ipiv, &info);
 //			dtrsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
 //			dtrsm_(&c_l, &c_u, &c_n, &c_n, &n, &n, &d_1, B2, &n, B, &n);
 //			dtrtri_(&c_l, &c_n, &n, B2, &n, &info);
@@ -365,8 +380,8 @@ int main()
 //		float flop_operation = 2.0*n*n*n; // dgemm
 //		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
 //		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
-		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
-//		float flop_operation = 2.0*n*n; // dgemv dsymv
+//		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
+		float flop_operation = 2.0*n*n; // dgemv dsymv
 //		float flop_operation = 1.0*n*n; // dtrmv dtrsv
 //		float flop_operation = 4.0*n*n; // dgemv_nt
 
@@ -414,6 +429,9 @@ int main()
 		d_free_strmat(&sC);
 		d_free_strmat(&sD);
 		d_free_strmat(&sE);
+		d_free_strvec(&sx);
+		d_free_strvec(&sy);
+		d_free_strvec(&sz);
 
 		}
 
