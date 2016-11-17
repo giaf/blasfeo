@@ -29,6 +29,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #if defined(LA_BLAS)
 #include <f77blas.h>
@@ -2312,19 +2313,125 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 // dpotrf
 void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
-	int jj;
-	char cl = 'l';
-	char cn = 'n';
-	char cr = 'r';
-	char ct = 't';
-	int i1 = 1;
-	int mmn = m-n;
-	int info;
-	double d1 = 1.0;
-	double *pC = sC->pA+ci+cj*sC->m;
-	double *pD = sD->pA+di+dj*sD->m;
-	printf("\nfeature not implemented yet\n");
-	exit(1);
+	int ii, jj, kk;
+	double
+		f_00_inv, 
+		f_10, f_11_inv,
+		c_00, c_01,
+		c_10, c_11;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	double *pC = sC->pA + ci + cj*ldc;
+	double *pD = sD->pA + di + dj*ldd;
+	double *dD = sD->dA; // XXX what to do with di and dj ???
+	if(di!=0 & dj!=0)
+		sD->use_dA = 1;
+	else
+		sD->use_dA = 0;
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		// factorize diagonal
+		c_00 = pC[jj+0+ldc*(jj+0)];;
+		c_10 = pC[jj+1+ldc*(jj+0)];;
+		c_11 = pC[jj+1+ldc*(jj+1)];;
+		for(kk=0; kk<jj; kk++)
+			{
+			c_00 -= pD[jj+0+ldd*kk] * pD[jj+0+ldd*kk];
+			c_10 -= pD[jj+1+ldd*kk] * pD[jj+0+ldd*kk];
+			c_11 -= pD[jj+1+ldd*kk] * pD[jj+1+ldd*kk];
+			}
+		if(c_00>0)
+			{
+			f_00_inv = 1.0/sqrt(c_00);
+			}
+		else
+			{
+			f_00_inv = 0.0;
+			}
+		dD[jj+0] = f_00_inv;
+		pD[jj+0+ldd*(jj+0)] = c_00 * f_00_inv;
+		f_10 = c_10 * f_00_inv;
+		pD[jj+1+ldd*(jj+0)] = f_10;
+		c_11 -= f_10 * f_10;
+		if(c_11>0)
+			{
+			f_11_inv = 1.0/sqrt(c_11);
+			}
+		else
+			{
+			f_11_inv = 0.0;
+			}
+		dD[jj+1] = f_11_inv;
+		pD[jj+1+ldd*(jj+1)] = c_11 * f_11_inv;
+		// solve lower
+		ii = jj+2;
+		for(; ii<n-1; ii+=2)
+			{
+			c_00 = pC[ii+0+ldc*(jj+0)];
+			c_10 = pC[ii+1+ldc*(jj+0)];
+			c_01 = pC[ii+0+ldc*(jj+1)];
+			c_11 = pC[ii+1+ldc*(jj+1)];
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+0+ldd*kk] * pD[jj+0+ldd*kk];
+				c_10 -= pD[ii+1+ldd*kk] * pD[jj+0+ldd*kk];
+				c_01 -= pD[ii+0+ldd*kk] * pD[jj+1+ldd*kk];
+				c_11 -= pD[ii+1+ldd*kk] * pD[jj+1+ldd*kk];
+				}
+			c_00 *= f_00_inv;
+			c_10 *= f_00_inv;
+			pD[ii+0+ldd*(jj+0)] = c_00;
+			pD[ii+1+ldd*(jj+0)] = c_10;
+			c_01 -= c_00 * f_10;
+			c_11 -= c_10 * f_10;
+			pD[ii+0+ldd*(jj+1)] = c_01 * f_11_inv;
+			pD[ii+1+ldd*(jj+1)] = c_11 * f_11_inv;
+			}
+		for(; ii<n; ii++)
+			{
+			c_00 = pC[ii+0+ldc*(jj+0)];
+			c_01 = pC[ii+0+ldc*(jj+1)];
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+0+ldd*kk] * pD[jj+0+ldd*kk];
+				c_01 -= pD[ii+0+ldd*kk] * pD[jj+1+ldd*kk];
+				}
+			c_00 *= f_00_inv;
+			pD[ii+0+ldd*(jj+0)] = c_00;
+			c_01 -= c_00 * f_10;
+			pD[ii+0+ldd*(jj+1)] = c_01 * f_11_inv;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		// factorize diagonal
+		c_00 = pC[jj+ldc*jj];;
+		for(kk=0; kk<jj; kk++)
+			{
+			c_00 -= pD[jj+ldd*kk] * pD[jj+ldd*kk];
+			}
+		if(c_00>0)
+			{
+			f_00_inv = 1.0/sqrt(c_00);
+			}
+		else
+			{
+			f_00_inv = 0.0;
+			}
+		dD[jj] = f_00_inv;
+		pD[jj+ldd*jj] = c_00 * f_00_inv;
+		// solve lower
+		for(ii=jj+1; ii<n; ii++)
+			{
+			c_00 = pC[ii+ldc*jj];
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+ldd*kk] * pD[jj+ldd*kk];
+				}
+			pD[ii+ldd*jj] = c_00 * f_00_inv;
+			}
+		}
 //	if(!(pC==pD))
 //		{
 //		for(jj=0; jj<n; jj++)
@@ -2396,9 +2503,7 @@ void dgetf2_nopivot(int m, int n, double *A, int lda, double *dA)
 				}
 			}
 		}
-	
 	return;
-
 	}
 
 
@@ -3037,9 +3142,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 			}
 		}
 #endif
-
 	return;	
-	
 	}
 
 
