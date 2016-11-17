@@ -1964,7 +1964,9 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
 	int ii, jj, kk;
-	double c_ij;
+	double 
+		c_00, c_01,
+		c_10, c_11;
 	char ta = 'n';
 	char tb = 't';
 	int i1 = 1;
@@ -1976,16 +1978,65 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	double *pB = sB->pA + bi + bj*ldb;
 	double *pC = sC->pA + ci + cj*ldc;
 	double *pD = sD->pA + di + dj*ldd;
-	for(jj=0; jj<n; jj++)
+	jj = 0;
+	for(; jj<n-1; jj+=2)
 		{
-		for(ii=0; ii<m; ii++)
+		ii = 0;
+		for(; ii<m-1; ii+=2)
 			{
-			c_ij = 0;
+			c_00 = 0;
+			c_10 = 0;
+			c_01 = 0;
+			c_11 = 0;
 			for(kk=0; kk<k; kk++)
 				{
-				c_ij += pA[ii+lda*kk] * pB[jj+ldb*kk];
+				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+				c_10 += pA[(ii+1)+lda*kk] * pB[(jj+0)+ldb*kk];
+				c_01 += pA[(ii+0)+lda*kk] * pB[(jj+1)+ldb*kk];
+				c_11 += pA[(ii+1)+lda*kk] * pB[(jj+1)+ldb*kk];
 				}
-			pD[ii+ldd*jj] = alpha * c_ij + beta * pC[ii+ldc*jj];
+			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
+			pD[(ii+1)+ldd*(jj+0)] = alpha * c_10 + beta * pC[(ii+1)+ldc*(jj+0)];
+			pD[(ii+0)+ldd*(jj+1)] = alpha * c_01 + beta * pC[(ii+0)+ldc*(jj+1)];
+			pD[(ii+1)+ldd*(jj+1)] = alpha * c_11 + beta * pC[(ii+1)+ldc*(jj+1)];
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0;
+			c_01 = 0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+				c_01 += pA[(ii+0)+lda*kk] * pB[(jj+1)+ldb*kk];
+				}
+			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
+			pD[(ii+0)+ldd*(jj+1)] = alpha * c_01 + beta * pC[(ii+0)+ldc*(jj+1)];
+			}
+		}
+	jj = 0;
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0;
+			c_10 = 0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+				c_10 += pA[(ii+1)+lda*kk] * pB[(jj+0)+ldb*kk];
+				}
+			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
+			pD[(ii+1)+ldd*(jj+0)] = alpha * c_10 + beta * pC[(ii+1)+ldc*(jj+0)];
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+				}
+			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
 			}
 		}
 	return;
@@ -1997,7 +2048,7 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
 	int ii, jj, kk;
-	double c_ij;
+	double c_00;
 	char ta = 'n';
 	char tb = 't';
 	int i1 = 1;
@@ -2013,12 +2064,12 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 		{
 		for(ii=0; ii<m; ii++)
 			{
-			c_ij = pC[ii+ldc*jj];
+			c_00 = pC[ii+ldc*jj];
 			for(kk=0; kk<k; kk++)
 				{
-				c_ij += pA[ii+lda*kk] * pB[kk+ldb*jj];
+				c_00 += pA[ii+lda*kk] * pB[kk+ldb*jj];
 				}
-			pD[ii+ldd*jj] = c_ij;
+			pD[ii+ldd*jj] = c_00;
 			}
 		}
 	return;
