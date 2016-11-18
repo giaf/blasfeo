@@ -2684,7 +2684,7 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 		pD[jj+1+ldd*(jj+1)] = beta * pC[jj+1+ldc*(jj+1)] + alpha * c_11;
 		// lower
 		ii = jj+2;
-		for(; ii<n-1; ii+=2)
+		for(; ii<m-1; ii+=2)
 			{
 			c_00 = 0.0;
 			c_10 = 0.0;
@@ -2702,7 +2702,7 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			pD[ii+0+ldd*(jj+1)] = beta * pC[ii+0+ldc*(jj+1)] + alpha * c_01;
 			pD[ii+1+ldd*(jj+1)] = beta * pC[ii+1+ldc*(jj+1)] + alpha * c_11;
 			}
-		for(; ii<n; ii++)
+		for(; ii<m; ii++)
 			{
 			c_00 = 0.0;
 			c_01 = 0.0;
@@ -2725,7 +2725,7 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			}
 		pD[jj+ldd*jj] = beta * pC[jj+ldc*jj] + alpha * c_00;
 		// lower
-		for(ii=jj+1; ii<n; ii++)
+		for(ii=jj+1; ii<m; ii++)
 			{
 			c_00 = 0.0;
 			for(kk=0; kk<jj; kk++)

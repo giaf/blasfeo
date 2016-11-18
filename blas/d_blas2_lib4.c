@@ -792,26 +792,26 @@ void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 		z[ii] = beta * y[ii];
 		}
 	jj = 0;
-	for(; jj<m-1; jj+=2)
+	for(; jj<n-1; jj+=2)
 		{
 		x_0 = alpha * x[jj+0];
 		x_1 = alpha * x[jj+1];
 		ii = 0;
-		for(; ii<n-1; ii+=2)
+		for(; ii<m-1; ii+=2)
 			{
 			z[ii+0] += pA[ii+0+lda*(jj+0)] * x_0 + pA[ii+0+lda*(jj+1)] * x_1;
 			z[ii+1] += pA[ii+1+lda*(jj+0)] * x_0 + pA[ii+1+lda*(jj+1)] * x_1;
 			}
-		for(; ii<n; ii++)
+		for(; ii<m; ii++)
 			{
 			z[ii] += pA[ii+lda*(jj+0)] * x_0;
 			z[ii] += pA[ii+lda*(jj+1)] * x_1;
 			}
 		}
-	for(; jj<m; jj++)
+	for(; jj<n; jj++)
 		{
 		x_0 = alpha * x[jj+0];
-		for(ii=0; ii<n; ii++)
+		for(ii=0; ii<m; ii++)
 			{
 			z[ii] += pA[ii+lda*(jj+0)] * x_0;
 			}
@@ -832,17 +832,17 @@ void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
 	jj = 0;
-	for(; jj<m-1; jj+=2)
+	for(; jj<n-1; jj+=2)
 		{
 		y_0 = 0.0;
 		y_1 = 0.0;
 		ii = 0;
-		for(; ii<n-1; ii+=2)
+		for(; ii<m-1; ii+=2)
 			{
 			y_0 += pA[ii+0+lda*(jj+0)] * x[ii+0] + pA[ii+1+lda*(jj+0)] * x[ii+1];
 			y_1 += pA[ii+0+lda*(jj+1)] * x[ii+0] + pA[ii+1+lda*(jj+1)] * x[ii+1];
 			}
-		for(; ii<n; ii++)
+		for(; ii<m; ii++)
 			{
 			y_0 += pA[ii+lda*(jj+0)] * x[ii];
 			y_1 += pA[ii+lda*(jj+1)] * x[ii];
@@ -850,10 +850,10 @@ void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 		z[jj+0] = beta * y[jj+0] + alpha * y_0;
 		z[jj+1] = beta * y[jj+1] + alpha * y_1;
 		}
-	for(; jj<m; jj++)
+	for(; jj<n; jj++)
 		{
 		y_0 = 0.0;
-		for(ii=0; ii<n; ii++)
+		for(ii=0; ii<m; ii++)
 			{
 			y_0 += pA[ii+lda*(jj+0)] * x[ii];
 			}
@@ -992,24 +992,29 @@ void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 
 void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
-	char cl = 'l';
-	char cn = 'n';
-	char cr = 'r';
-	char ct = 't';
-	char cu = 'u';
-	int i1 = 1;
-	double d1 = 1.0;
-	double dm1 = -1.0;
-	int mmn = m-n;
+	int ii, jj;
+	double
+		y_0;
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
+	double *dA = sA->dA;
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-	printf("\nfeature not implemented yet\n");
-	exit(1);
-//	dcopy_(&m, x, &i1, z, &i1);
-//	dgemv_(&ct, &mmn, &n, &dm1, pA+n, &lda, z+n, &i1, &d1, z, &i1);
-//	dtrsv_(&cl, &ct, &cn, &n, pA, &lda, z, &i1);
+	if(sA->use_dA!=1)
+		{
+		for(ii=0; ii<n; ii++)
+			dA[ii] = 1.0 / pA[ii+lda*ii];
+		}
+	for(jj=n-1; jj>=0; jj--)
+		{
+		y_0 = x[jj];
+		for(ii=jj+1; ii<m; ii++)
+			{
+			y_0 -= pA[ii+lda*jj] * z[ii];
+			}
+		y_0 *= dA[jj];
+		z[jj] = y_0;
+		}
 	return;
 	}
 

@@ -2366,7 +2366,7 @@ void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d
 		pD[jj+1+ldd*(jj+1)] = c_11 * f_11_inv;
 		// solve lower
 		ii = jj+2;
-		for(; ii<n-1; ii+=2)
+		for(; ii<m-1; ii+=2)
 			{
 			c_00 = pC[ii+0+ldc*(jj+0)];
 			c_10 = pC[ii+1+ldc*(jj+0)];
@@ -2388,7 +2388,7 @@ void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d
 			pD[ii+0+ldd*(jj+1)] = c_01 * f_11_inv;
 			pD[ii+1+ldd*(jj+1)] = c_11 * f_11_inv;
 			}
-		for(; ii<n; ii++)
+		for(; ii<m; ii++)
 			{
 			c_00 = pC[ii+0+ldc*(jj+0)];
 			c_01 = pC[ii+0+ldc*(jj+1)];
@@ -2422,7 +2422,7 @@ void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d
 		dD[jj] = f_00_inv;
 		pD[jj+ldd*jj] = c_00 * f_00_inv;
 		// solve lower
-		for(ii=jj+1; ii<n; ii++)
+		for(ii=jj+1; ii<m; ii++)
 			{
 			c_00 = pC[ii+ldc*jj];
 			for(kk=0; kk<jj; kk++)
@@ -2503,7 +2503,7 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 		pD[jj+1+ldd*(jj+1)] = c_11 * f_11_inv;
 		// solve lower
 		ii = jj+2;
-		for(; ii<n-1; ii+=2)
+		for(; ii<m-1; ii+=2)
 			{
 			c_00 = pC[ii+0+ldc*(jj+0)];
 			c_10 = pC[ii+1+ldc*(jj+0)];
@@ -2532,7 +2532,7 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 			pD[ii+0+ldd*(jj+1)] = c_01 * f_11_inv;
 			pD[ii+1+ldd*(jj+1)] = c_11 * f_11_inv;
 			}
-		for(; ii<n; ii++)
+		for(; ii<m; ii++)
 			{
 			c_00 = pC[ii+0+ldc*(jj+0)];
 			c_01 = pC[ii+0+ldc*(jj+1)];
@@ -2575,10 +2575,10 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 		dD[jj] = f_00_inv;
 		pD[jj+ldd*jj] = c_00 * f_00_inv;
 		// solve lower
-		for(ii=jj+1; ii<n; ii++)
+		for(ii=jj+1; ii<m; ii++)
 			{
 			c_00 = pC[ii+ldc*jj];
-			for(kk=0; kk<jj; kk++)
+			for(kk=0; kk<k; kk++)
 				{
 				c_00 += pA[ii+lda*kk] * pB[jj+ldb*kk];
 				}
