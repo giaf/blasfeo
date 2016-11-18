@@ -2479,13 +2479,9 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
 	int ii, jj, kk;
-	double c_ij;
-	char cl = 'l';
-	char cn = 'n';
-	char cr = 'r';
-	char ct = 't';
-	char cu = 'u';
-	int i1 = 1;
+	double
+		c_00, c_01,
+		c_10, c_11;
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
@@ -2494,16 +2490,73 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	double *pB = sB->pA + bi + bj*ldb;
 	double *pC = sC->pA + ci + cj*ldc;
 	double *pD = sD->pA + di + dj*ldd;
-	for(jj=0; jj<n; jj++)
+	jj = 0;
+	for(; jj<n-1; jj+=2)
 		{
-		for(ii=jj; ii<m; ii++)
+		// diagonal
+		c_00 = 0.0;
+		c_10 = 0.0;
+		c_11 = 0.0;
+		for(kk=0; kk<k; kk++)
 			{
-			c_ij = 0;
+			c_00 += pA[jj+0+lda*kk] * pB[jj+0+ldb*kk];
+			c_10 += pA[jj+1+lda*kk] * pB[jj+0+ldb*kk];
+			c_11 += pA[jj+1+lda*kk] * pB[jj+1+ldb*kk];
+			}
+		pD[jj+0+ldd*(jj+0)] = beta * pC[jj+0+ldc*(jj+0)] + alpha * c_00;
+		pD[jj+1+ldd*(jj+0)] = beta * pC[jj+1+ldc*(jj+0)] + alpha * c_10;
+		pD[jj+1+ldd*(jj+1)] = beta * pC[jj+1+ldc*(jj+1)] + alpha * c_11;
+		// lower
+		ii = jj+2;
+		for(; ii<n-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
 			for(kk=0; kk<k; kk++)
 				{
-				c_ij += pA[ii+lda*kk] * pB[jj+ldb*kk];
+				c_00 += pA[ii+0+lda*kk] * pB[jj+0+ldb*kk];
+				c_10 += pA[ii+1+lda*kk] * pB[jj+0+ldb*kk];
+				c_01 += pA[ii+0+lda*kk] * pB[jj+1+ldb*kk];
+				c_11 += pA[ii+1+lda*kk] * pB[jj+1+ldb*kk];
 				}
-			pD[ii+ldd*jj] = alpha * c_ij + beta * pC[ii+ldc*jj];
+			pD[ii+0+ldd*(jj+0)] = beta * pC[ii+0+ldc*(jj+0)] + alpha * c_00;
+			pD[ii+1+ldd*(jj+0)] = beta * pC[ii+1+ldc*(jj+0)] + alpha * c_10;
+			pD[ii+0+ldd*(jj+1)] = beta * pC[ii+0+ldc*(jj+1)] + alpha * c_01;
+			pD[ii+1+ldd*(jj+1)] = beta * pC[ii+1+ldc*(jj+1)] + alpha * c_11;
+			}
+		for(; ii<n; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[ii+0+lda*kk] * pB[jj+0+ldb*kk];
+				c_01 += pA[ii+0+lda*kk] * pB[jj+1+ldb*kk];
+				}
+			pD[ii+0+ldd*(jj+0)] = beta * pC[ii+0+ldc*(jj+0)] + alpha * c_00;
+			pD[ii+0+ldd*(jj+1)] = beta * pC[ii+0+ldc*(jj+1)] + alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		// diagonal
+		c_00 = 0.0;
+		for(kk=0; kk<k; kk++)
+			{
+			c_00 += pA[jj+lda*kk] * pB[jj+ldb*kk];
+			}
+		pD[jj+ldd*jj] = beta * pC[jj+ldc*jj] + alpha * c_00;
+		// lower
+		for(ii=jj+1; ii<n; ii++)
+			{
+			c_00 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += pA[ii+lda*kk] * pB[jj+ldb*kk];
+				}
+			pD[ii+ldd*jj] = beta * pC[ii+ldc*jj] + alpha * c_00;
 			}
 		}
 	return;
