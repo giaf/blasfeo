@@ -1967,9 +1967,6 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	double 
 		c_00, c_01,
 		c_10, c_11;
-	char ta = 'n';
-	char tb = 't';
-	int i1 = 1;
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
@@ -2442,34 +2439,93 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 // dtrmm_right_upper_transposed_notunit (B triangular !!!)
 void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
-	int jj;
-	char cl = 'l';
-	char cn = 'n';
-	char cr = 'r';
-	char ct = 't';
-	char cu = 'u';
-	int i1 = 1;
+	int ii, jj, kk;
+	double 
+		c_00, c_01,
+		c_10, c_11;
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
 	int ldd = sD->m;
-	double *pA = sA->pA+ai+aj*lda;
-	double *pB = sB->pA+bi+bj*ldb;
-	double *pC = sC->pA+ci+cj*ldc;
-	double *pD = sD->pA+di+dj*ldd;
-	printf("\nfeature not implemented yet\n");
-	exit(1);
-//	if(!(pA==pD))
-//		{
-//		for(jj=0; jj<n; jj++)
-//			dcopy_(&m, pA+jj*lda, &i1, pD+jj*ldd, &i1);
-//		}
-//	dtrmm_(&cr, &cu, &ct, &cn, &m, &n, &alpha, pB, &ldb, pD, &ldd);
-//	if(beta!=0)
-//		{
-//		for(jj=0; jj<n; jj++)
-//			daxpy_(&m, &beta, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
-//		}
+	double *pA = sA->pA + ai + aj*lda;
+	double *pB = sB->pA + bi + bj*ldb;
+	double *pC = sC->pA + ci + cj*ldc;
+	double *pD = sD->pA + di + dj*ldd;
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			kk = jj;
+			c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+			c_10 += pA[(ii+1)+lda*kk] * pB[(jj+0)+ldb*kk];
+			kk++;
+			c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+			c_10 += pA[(ii+1)+lda*kk] * pB[(jj+0)+ldb*kk];
+			c_01 += pA[(ii+0)+lda*kk] * pB[(jj+1)+ldb*kk];
+			c_11 += pA[(ii+1)+lda*kk] * pB[(jj+1)+ldb*kk];
+			kk++;
+			for(; kk<n; kk++)
+				{
+				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+				c_10 += pA[(ii+1)+lda*kk] * pB[(jj+0)+ldb*kk];
+				c_01 += pA[(ii+0)+lda*kk] * pB[(jj+1)+ldb*kk];
+				c_11 += pA[(ii+1)+lda*kk] * pB[(jj+1)+ldb*kk];
+				}
+			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
+			pD[(ii+1)+ldd*(jj+0)] = alpha * c_10 + beta * pC[(ii+1)+ldc*(jj+0)];
+			pD[(ii+0)+ldd*(jj+1)] = alpha * c_01 + beta * pC[(ii+0)+ldc*(jj+1)];
+			pD[(ii+1)+ldd*(jj+1)] = alpha * c_11 + beta * pC[(ii+1)+ldc*(jj+1)];
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			kk = jj;
+			c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+			kk++;
+			c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+			c_01 += pA[(ii+0)+lda*kk] * pB[(jj+1)+ldb*kk];
+			kk++;
+			for(; kk<n; kk++)
+				{
+				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+				c_01 += pA[(ii+0)+lda*kk] * pB[(jj+1)+ldb*kk];
+				}
+			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
+			pD[(ii+0)+ldd*(jj+1)] = alpha * c_01 + beta * pC[(ii+0)+ldc*(jj+1)];
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			for(kk=jj; kk<n; kk++)
+				{
+				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+				c_10 += pA[(ii+1)+lda*kk] * pB[(jj+0)+ldb*kk];
+				}
+			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
+			pD[(ii+1)+ldd*(jj+0)] = alpha * c_10 + beta * pC[(ii+1)+ldc*(jj+0)];
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			for(kk=jj; kk<n; kk++)
+				{
+				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+				}
+			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
+			}
+		}	
 	return;
 	}
 
