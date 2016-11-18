@@ -150,11 +150,13 @@ void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_str
 
 void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi)
 	{
-	int i1 = 1;
+	int ii;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
-	printf("\nfeature not implemented yet\n");
-	exit(1);
+	for(ii=0; ii<m; ii++)
+		y[ii] += alpha * x[ii];
+//	printf("\nfeature not implemented yet\n");
+//	exit(1);
 //	daxpy_(&m, &alpha, x, &i1, y, &i1);
 	return;
 	}
