@@ -105,6 +105,8 @@ void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, str
 
 	int nn;
 
+#if defined(LA_BLASFEO) | defined(LA_BLAS)
+
 	// factorization
 
 	// last stage
@@ -124,6 +126,27 @@ void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, str
 		dtrtr_l_libstr(nx[N-nn-1], &hsL[N-nn-1], nu[N-nn-1], nu[N-nn-1], &hsLxt[N-nn-1], 0, 0);
 		}
 	
+#elif defined(LA_REFERENCE)
+
+	// factorization
+
+	// last stage
+	dpotrf_l_libstr(nx[N], nx[N], &hsRSQrq[N], 0, 0, &hsL[N], 0, 0);
+
+	// middle stages
+	for(nn=0; nn<N; nn++)
+		{
+		dtrmm_rlnn_libstr(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hsL[N-nn], nu[N-nn], nu[N-nn], 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
+#if 1
+		dsyrk_dpotrf_ln_libstr(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
+#else
+		dsyrk_ln_libstr(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
+		dpotrf_l_libstr(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
+#endif
+		}
+
+#endif
+
 	return;
 
 	}
@@ -296,6 +319,10 @@ int main()
 
 	printf("\nLA provided by BLAS\n\n");
 
+#elif defined(LA_REFERENCE)
+
+	printf("\nLA provided by REFERENCE\n\n");
+
 #else
 
 	printf("\nLA provided by ???\n\n");
@@ -312,8 +339,8 @@ int main()
 
 	// problem size
 	int N = 4;
-	int nx_ = 8;
-	int nu_ = 3;
+	int nx_ = 4;
+	int nu_ = 1;
 
 	// stage-wise variant size
 	int nx[N+1];
@@ -505,7 +532,7 @@ int main()
 
 	for(rep=0; rep<nrep; rep++)
 		{
-		d_back_ric_sv_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL, hsLxt, hsux, hspi, hswork_mat, hswork_vec);
+//		d_back_ric_sv_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL, hsLxt, hsux, hspi, hswork_mat, hswork_vec);
 		}
 
 	gettimeofday(&tv1, NULL); // time
@@ -519,7 +546,7 @@ int main()
 
 	for(rep=0; rep<nrep; rep++)
 		{
-		d_back_ric_trs_libstr(N, nx, nu, hsBAbt, hsb, hsrq, hsL, hsLxt, hsPb, hsux, hspi, hswork_vec);
+//		d_back_ric_trs_libstr(N, nx, nu, hsBAbt, hsb, hsrq, hsL, hsLxt, hsPb, hsux, hspi, hswork_vec);
 		}
 
 	gettimeofday(&tv3, NULL); // time
@@ -536,6 +563,10 @@ int main()
 	printf("\npi = \n\n");
 	for(ii=0; ii<N; ii++)
 		d_print_tran_strvec(nx[ii+1], &hspi[ii], 0);
+
+	printf("\nL = \n\n");
+	for(ii=0; ii<=N; ii++)
+		d_print_strmat(nu[ii]+nx[ii]+1, nu[ii]+nx[ii], &hsL[ii], 0, 0);
 
 	printf("\ntime sv\t\ttime trf\t\ttime trs\n");
 	printf("\n%e\t%e\t%e\n", time_sv, time_trf, time_trs);
