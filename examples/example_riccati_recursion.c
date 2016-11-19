@@ -546,7 +546,7 @@ int main()
 
 	for(rep=0; rep<nrep; rep++)
 		{
-//		d_back_ric_trs_libstr(N, nx, nu, hsBAbt, hsb, hsrq, hsL, hsLxt, hsPb, hsux, hspi, hswork_vec);
+		d_back_ric_trs_libstr(N, nx, nu, hsBAbt, hsb, hsrq, hsL, hsLxt, hsPb, hsux, hspi, hswork_vec);
 		}
 
 	gettimeofday(&tv3, NULL); // time
@@ -564,9 +564,9 @@ int main()
 	for(ii=0; ii<N; ii++)
 		d_print_tran_strvec(nx[ii+1], &hspi[ii], 0);
 
-	printf("\nL = \n\n");
-	for(ii=0; ii<=N; ii++)
-		d_print_strmat(nu[ii]+nx[ii]+1, nu[ii]+nx[ii], &hsL[ii], 0, 0);
+//	printf("\nL = \n\n");
+//	for(ii=0; ii<=N; ii++)
+//		d_print_strmat(nu[ii]+nx[ii]+1, nu[ii]+nx[ii], &hsL[ii], 0, 0);
 
 	printf("\ntime sv\t\ttime trf\t\ttime trs\n");
 	printf("\n%e\t%e\t%e\n", time_sv, time_trf, time_trs);
