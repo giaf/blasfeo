@@ -50,12 +50,18 @@ void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, stru
 
 	// last stage
 	dpotrf_l_libstr(nx[N]+1, nx[N], &hsRSQrq[N], 0, 0, &hsL[N], 0, 0);
+#if defined(LA_BLASFEO)
 	dtrtr_l_libstr(nx[N], &hsL[N], 0, 0, &hsLxt[N], 0, 0);
+#endif
 
 	// middle stages
 	for(nn=0; nn<N; nn++)
 		{
+#if defined(LA_BLASFEO)
 		dtrmm_rutn_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hsLxt[N-nn], 0, 0, 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
+#else
+		dtrmm_rlnn_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hsL[N-nn], nu[N-nn], nu[N-nn], 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
+#endif
 		dgead_libstr(1, nx[N-nn], 1.0, &hsL[N-nn], nu[N-nn]+nx[N-nn], nu[N-nn], &hswork_mat[0], nu[N-nn-1]+nx[N-nn-1], 0);
 #if 1
 		dsyrk_dpotrf_ln_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
@@ -63,7 +69,9 @@ void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, stru
 		dsyrk_ln_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 		dpotrf_l_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #endif
+#if defined(LA_BLASFEO)
 		dtrtr_l_libstr(nx[N-nn-1], &hsL[N-nn-1], nu[N-nn-1], nu[N-nn-1], &hsLxt[N-nn-1], 0, 0);
+#endif
 		}
 	
 	// forward substitution
@@ -76,9 +84,15 @@ void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, stru
 	dgemv_t_libstr(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsux[nn+1], nu[nn+1], &hsux[nn+1], nu[nn+1]);
 	dveccp_libstr(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hspi[nn], 0);
 	drowex_libstr(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[0], 0);
+#if defined(LA_BLASFEO)
 	dtrmv_unn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
 	daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
 	dtrmv_utn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
+#else
+	dtrmv_ltn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
+	daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
+	dtrmv_lnn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
+#endif
 
 	// middle stages
 	for(nn=1; nn<N; nn++)
@@ -89,9 +103,15 @@ void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, stru
 		dgemv_t_libstr(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsux[nn+1], nu[nn+1], &hsux[nn+1], nu[nn+1]);
 		dveccp_libstr(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hspi[nn], 0);
 		drowex_libstr(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[0], 0);
+#if defined(LA_BLASFEO)
 		dtrmv_unn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
 		daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
 		dtrmv_utn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
+#else
+		dtrmv_ltn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
+		daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
+		dtrmv_lnn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
+#endif
 		}
 
 	return;
@@ -105,48 +125,34 @@ void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, str
 
 	int nn;
 
-#if defined(LA_BLASFEO) | defined(LA_BLAS)
 
 	// factorization
 
 	// last stage
 	dpotrf_l_libstr(nx[N], nx[N], &hsRSQrq[N], 0, 0, &hsL[N], 0, 0);
+#if defined(LA_BLASFEO)
 	dtrtr_l_libstr(nx[N], &hsL[N], 0, 0, &hsLxt[N], 0, 0);
+#endif
 
 	// middle stages
 	for(nn=0; nn<N; nn++)
 		{
+#if defined(LA_BLASFEO)
 		dtrmm_rutn_libstr(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hsLxt[N-nn], 0, 0, 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
+#else
+		dtrmm_rlnn_libstr(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hsL[N-nn], nu[N-nn], nu[N-nn], 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
+#endif
 #if 1
 		dsyrk_dpotrf_ln_libstr(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #else
 		dsyrk_ln_libstr(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 		dpotrf_l_libstr(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #endif
+#if defined(LA_BLASFEO)
 		dtrtr_l_libstr(nx[N-nn-1], &hsL[N-nn-1], nu[N-nn-1], nu[N-nn-1], &hsLxt[N-nn-1], 0, 0);
+#endif
 		}
 	
-#elif defined(LA_REFERENCE)
-
-	// factorization
-
-	// last stage
-	dpotrf_l_libstr(nx[N], nx[N], &hsRSQrq[N], 0, 0, &hsL[N], 0, 0);
-
-	// middle stages
-	for(nn=0; nn<N; nn++)
-		{
-		dtrmm_rlnn_libstr(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hsL[N-nn], nu[N-nn], nu[N-nn], 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
-#if 1
-		dsyrk_dpotrf_ln_libstr(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
-#else
-		dsyrk_ln_libstr(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
-		dpotrf_l_libstr(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
-#endif
-		}
-
-#endif
-
 	return;
 
 	}
@@ -167,8 +173,13 @@ void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, str
 	for(nn=0; nn<N-1; nn++)
 		{
 		// compute Pb
+#if defined(LA_BLASFEO)
 		dtrmv_unn_libstr(nx[N-nn], &hsLxt[N-nn], 0, 0, &hsb[N-nn-1], 0, &hsPb[N-nn-1], 0);
 		dtrmv_utn_libstr(nx[N-nn], &hsLxt[N-nn], 0, 0, &hsPb[N-nn-1], 0, &hsPb[N-nn-1], 0);
+#else
+		dtrmv_ltn_libstr(nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsb[N-nn-1], 0, &hsPb[N-nn-1], 0);
+		dtrmv_lnn_libstr(nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsPb[N-nn-1], 0, &hsPb[N-nn-1], 0);
+#endif
 		dveccp_libstr(nu[N-nn-1]+nx[N-nn-1], 1.0, &hsrq[N-nn-1], 0, &hsux[N-nn-1], 0);
 		dveccp_libstr(nx[N-nn], 1.0, &hsPb[N-nn-1], 0, &hswork_vec[0], 0);
 		daxpy_libstr(nx[N-nn], 1.0, &hsux[N-nn], nu[N-nn], &hswork_vec[0], 0);
@@ -178,8 +189,13 @@ void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, str
 
 	// first stage
 	nn = N-1;
+#if defined(LA_BLASFEO)
 	dtrmv_unn_libstr(nx[N-nn], &hsLxt[N-nn], 0, 0, &hsb[N-nn-1], 0, &hsPb[N-nn-1], 0);
 	dtrmv_utn_libstr(nx[N-nn], &hsLxt[N-nn], 0, 0, &hsPb[N-nn-1], 0, &hsPb[N-nn-1], 0);
+#else
+	dtrmv_ltn_libstr(nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsb[N-nn-1], 0, &hsPb[N-nn-1], 0);
+	dtrmv_lnn_libstr(nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsPb[N-nn-1], 0, &hsPb[N-nn-1], 0);
+#endif
 	dveccp_libstr(nu[N-nn-1]+nx[N-nn-1], 1.0, &hsrq[N-nn-1], 0, &hsux[N-nn-1], 0);
 	dveccp_libstr(nx[N-nn], 1.0, &hsPb[N-nn-1], 0, &hswork_vec[0], 0);
 	daxpy_libstr(nx[N-nn], 1.0, &hsux[N-nn], nu[N-nn], &hswork_vec[0], 0);
@@ -195,8 +211,13 @@ void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, str
 	dtrsv_ltn_libstr(nu[nn]+nx[nn], nu[nn]+nx[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
 	dgemv_t_libstr(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsb[nn], 0, &hsux[nn+1], nu[nn+1]);
 	dveccp_libstr(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0);
+#if defined(LA_BLASFEO)
 	dtrmv_unn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, &hswork_vec[0], 0);
 	dtrmv_utn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, &hswork_vec[0], 0);
+#else
+	dtrmv_ltn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
+	dtrmv_lnn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
+#endif
 	daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
 
 	// middle stages
@@ -207,8 +228,13 @@ void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, str
 		dtrsv_ltn_libstr(nu[nn]+nx[nn], nu[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
 		dgemv_t_libstr(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsb[nn], 0, &hsux[nn+1], nu[nn+1]);
 		dveccp_libstr(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0);
+#if defined(LA_BLASFEO)
 		dtrmv_unn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, &hswork_vec[0], 0);
 		dtrmv_utn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, &hswork_vec[0], 0);
+#else
+		dtrmv_ltn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
+		dtrmv_lnn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
+#endif
 		daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
 		}
 
