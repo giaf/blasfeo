@@ -685,6 +685,48 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 
+void dtrmv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	double d1 = 1.0;
+	double dm1 = -1.0;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	dcopy_(&m, x, &i1, z, &i1);
+	dtrmv_(&cl, &cn, &cn, &m, pA, &lda, z, &i1);
+	return;
+	}
+
+
+
+void dtrmv_ltn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	double d1 = 1.0;
+	double dm1 = -1.0;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	dcopy_(&m, x, &i1, z, &i1);
+	dtrmv_(&cl, &ct, &cn, &m, pA, &lda, z, &i1);
+	return;
+	}
+
+
+
 void dtrmv_unn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	char cl = 'l';
@@ -946,6 +988,100 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 //	int tmp = m-n;
 //	dgemv_(&cn, &tmp, &n, &alpha, pA+n, &lda, x, &i1, &beta, z+n, &i1);
 //	dgemv_(&ct, &tmp, &n, &alpha, pA+n, &lda, x+n, &i1, &d1, z, &i1);
+	return;
+	}
+
+
+
+void dtrmv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	int ii, jj;
+	double
+		y_0, y_1;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	if(m%2!=0)
+		{
+		ii = m-1;
+		y_0 = x[ii];
+		y_0 *= pA[ii+lda*ii];
+		for(jj=0; jj<ii; jj++)
+			{
+			y_0 += pA[ii+lda*jj] * x[jj];
+			}
+		z[ii] = y_0;
+		m -= 1;
+		}
+	for(ii=m-2; ii>=0; ii-=2)
+		{
+		y_0 = x[ii+0];
+		y_1 = x[ii+1];
+		y_1 *= pA[ii+1+lda*(ii+1)];
+		y_1 += pA[ii+1+lda*(ii+0)] * y_0;
+		y_0 *= pA[ii+0+lda*(ii+0)];
+		jj = 0;
+		for(; jj<ii-1; jj+=2)
+			{
+			y_0 += pA[ii+0+lda*(jj+0)] * x[jj+0] + pA[ii+0+lda*(jj+1)] * x[jj+1];
+			y_1 += pA[ii+1+lda*(jj+0)] * x[jj+0] + pA[ii+1+lda*(jj+1)] * x[jj+1];
+			}
+//	XXX there is no clean up loop !!!!!
+//		for(; jj<ii; jj++)
+//			{
+//			y_0 += pA[ii+0+lda*jj] * x[jj];
+//			y_1 += pA[ii+1+lda*jj] * x[jj];
+//			}
+		z[ii+0] = y_0;
+		z[ii+1] = y_1;
+		}
+	return;
+	}
+
+
+	
+void dtrmv_ltn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	int ii, jj;
+	double
+		y_0, y_1;
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	jj = 0;
+	for(; jj<m-1; jj+=2)
+		{
+		y_0 = x[jj+0];
+		y_1 = x[jj+1];
+		y_0 *= pA[jj+0+lda*(jj+0)];
+		y_0 += pA[jj+1+lda*(jj+0)] * y_1;
+		y_1 *= pA[jj+1+lda*(jj+1)];
+		ii = jj+2;
+		for(; ii<m-1; ii+=2)
+			{
+			y_0 += pA[ii+0+lda*(jj+0)] * x[ii+0] + pA[ii+1+lda*(jj+0)] * x[ii+1];
+			y_1 += pA[ii+0+lda*(jj+1)] * x[ii+0] + pA[ii+1+lda*(jj+1)] * x[ii+1];
+			}
+		for(; ii<m; ii++)
+			{
+			y_0 += pA[ii+lda*(jj+0)] * x[ii];
+			y_1 += pA[ii+lda*(jj+1)] * x[ii];
+			}
+		z[jj+0] = y_0;
+		z[jj+1] = y_1;
+		}
+	for(; jj<m; jj++)
+		{
+		y_0 = x[jj];
+		y_0 *= pA[jj+lda*jj];
+		for(ii=jj+1; ii<m; ii++)
+			{
+			y_0 += pA[ii+lda*jj] * x[ii];
+			}
+		z[jj] = y_0;
+		}
 	return;
 	}
 
