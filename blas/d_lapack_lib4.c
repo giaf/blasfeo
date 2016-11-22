@@ -2099,7 +2099,10 @@ void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d
 	double *pD = sD->pA + dj*bs;
 	double *dD = sD->dA; // XXX what to do if di and dj are not zero
 	dpotrf_nt_l_lib(m, n, pC, sdc, pD, sdd, dD);
-	sC->use_dA = 1;
+	if(di==0 && dj==0)
+		sD->use_dA = 1;
+	else
+		sD->use_dA = 0;
 	return;
 	}
 
@@ -2124,7 +2127,10 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 	double *pD = sD->pA + dj*bs;
 	double *dD = sD->dA; // XXX what to do if di and dj are not zero
 	dsyrk_dpotrf_nt_l_lib(m, n, k, pA, sda, pB, sdb, pC, sdc, pD, sdd, dD);
-	sC->use_dA = 1;
+	if(di==0 && dj==0)
+		sD->use_dA = 1;
+	else
+		sD->use_dA = 0;
 	return;
 	}
 
@@ -2145,7 +2151,10 @@ void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, st
 	double *pD = sD->pA + dj*bs;
 	double *dD = sD->dA; // XXX what to do if di and dj are not zero
 	dgetrf_nn_nopivot_lib(m, n, pC, sdc, pD, sdd, dD);
-	sC->use_dA = 1;
+	if(di==0 && dj==0)
+		sD->use_dA = 1;
+	else
+		sD->use_dA = 0;
 	return;
 	}
 
@@ -2167,7 +2176,10 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	double *pD = sD->pA + dj*bs;
 	double *dD = sD->dA; // XXX what to do if di and dj are not zero
 	dgetrf_nn_lib(m, n, pC, sdc, pD, sdd, dD, ipiv);
-	sC->use_dA = 1;
+	if(di==0 && dj==0)
+		sD->use_dA = 1;
+	else
+		sD->use_dA = 0;
 	return;
 	}
 
@@ -2323,8 +2335,8 @@ void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d
 	int ldd = sD->m;
 	double *pC = sC->pA + ci + cj*ldc;
 	double *pD = sD->pA + di + dj*ldd;
-	double *dD = sD->dA; // XXX what to do with di and dj ???
-	if(di!=0 & dj!=0)
+	double *dD = sD->dA;
+	if(di==0 & dj==0)
 		sD->use_dA = 1;
 	else
 		sD->use_dA = 0;
@@ -2454,8 +2466,8 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 	double *pB = sB->pA + bi + bj*ldb;
 	double *pC = sC->pA + ci + cj*ldc;
 	double *pD = sD->pA + di + dj*ldd;
-	double *dD = sD->dA; // XXX what to do with di and dj ???
-	if(di!=0 & dj!=0)
+	double *dD = sD->dA;
+	if(di==0 & dj==0)
 		sD->use_dA = 1;
 	else
 		sD->use_dA = 0;

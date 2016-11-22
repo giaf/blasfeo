@@ -37,6 +37,7 @@
 #include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_kernel.h"
+#include "../include/blasfeo_d_aux.h"
 
 
 void dgemv_n_lib(int m, int n, double alpha, double *pA, int sda, double *x, double beta, double *y, double *z)
@@ -561,7 +562,24 @@ void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 	double *dA = sA->dA + aj*bs; // TODO ai
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-	// TODO what to do with the diagonal in case ai and aj are not zero
+	int ii;
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			ddiaex_lib(n, ai, pA, sda, dA);
+			for(ii=0; ii<n; ii++)
+				dA[ii] = 1.0 / dA[ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+		ddiaex_lib(n, ai, pA, sda, dA);
+		for(ii=0; ii<n; ii++)
+			dA[ii] = 1.0 / dA[ii];
+		sA->use_dA = 0;
+		}
 	dtrsv_ln_inv_lib(m, n, pA, sda, dA, x, z);
 	return;
 	}
@@ -581,7 +599,24 @@ void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 	double *dA = sA->dA + aj*bs; // TODO ai
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-	// TODO what to do with the diagonal in case ai and aj are not zero
+	int ii;
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			ddiaex_lib(n, ai, pA, sda, dA);
+			for(ii=0; ii<n; ii++)
+				dA[ii] = 1.0 / dA[ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+		ddiaex_lib(n, ai, pA, sda, dA);
+		for(ii=0; ii<n; ii++)
+			dA[ii] = 1.0 / dA[ii];
+		sA->use_dA = 0;
+		}
 	dtrsv_lt_inv_lib(m, n, pA, sda, dA, x, z);
 	return;
 	}
@@ -1228,10 +1263,20 @@ void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 	double *dA = sA->dA;
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-	if(sA->use_dA!=1)
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			for(ii=0; ii<n; ii++)
+				dA[ii] = 1.0 / pA[ii+lda*ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
 		{
 		for(ii=0; ii<n; ii++)
 			dA[ii] = 1.0 / pA[ii+lda*ii];
+		sA->use_dA = 0;
 		}
 #if 1 // y reg version
 	ii = 0;
@@ -1344,10 +1389,20 @@ void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 	double *dA = sA->dA;
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-	if(sA->use_dA!=1)
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			for(ii=0; ii<n; ii++)
+				dA[ii] = 1.0 / pA[ii+lda*ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
 		{
 		for(ii=0; ii<n; ii++)
 			dA[ii] = 1.0 / pA[ii+lda*ii];
+		sA->use_dA = 0;
 		}
 	if(n%2!=0)
 		{
