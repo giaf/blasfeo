@@ -114,6 +114,23 @@ void d_print_mat(int row, int col, double *A, int lda)
 
 
 
+/* prints the transposed of a matrix in column-major format */
+void d_print_tran_mat(int row, int col, double *A, int lda)
+	{
+	int i, j;
+	for(j=0; j<col; j++)
+		{
+		for(i=0; i<row; i++)
+			{
+			printf("%9.5f ", A[i+lda*j]);
+			}
+		printf("\n");
+		}
+	printf("\n");
+	}	
+
+
+
 /* prints a matrix in column-major format */
 void d_print_to_file_mat(FILE *file, int row, int col, double *A, int lda)
 	{
@@ -131,6 +148,23 @@ void d_print_to_file_mat(FILE *file, int row, int col, double *A, int lda)
 
 
 
+/* prints the transposed of a matrix in column-major format */
+void d_print_tran_to_file_mat(FILE *file, int row, int col, double *A, int lda)
+	{
+	int i, j;
+	for(j=0; j<col; j++)
+		{
+		for(i=0; i<row; i++)
+			{
+			fprintf(file, "%9.5f ", A[i+lda*j]);
+			}
+		fprintf(file, "\n");
+		}
+	fprintf(file, "\n");
+	}	
+
+
+
 /* prints a matrix in column-major format (exponential notation) */
 void d_print_mat_e(int row, int col, double *A, int lda)
 	{
@@ -138,6 +172,23 @@ void d_print_mat_e(int row, int col, double *A, int lda)
 	for(i=0; i<row; i++)
 		{
 		for(j=0; j<col; j++)
+			{
+			printf("%e\t", A[i+lda*j]);
+			}
+		printf("\n");
+		}
+	printf("\n");
+	}	
+
+
+
+/* prints the transposed of a matrix in column-major format (exponential notation) */
+void d_print_tran_mat_e(int row, int col, double *A, int lda)
+	{
+	int i, j;
+	for(j=0; j<col; j++)
+		{
+		for(i=0; i<row; i++)
 			{
 			printf("%e\t", A[i+lda*j]);
 			}
