@@ -559,7 +559,7 @@ void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs; // TODO ai
-	double *dA = sA->dA + aj*bs; // TODO ai
+	double *dA = sA->dA;
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
 	int ii;
@@ -596,7 +596,7 @@ void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs; // TODO ai
-	double *dA = sA->dA + aj*bs; // TODO ai
+	double *dA = sA->dA;
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
 	int ii;
