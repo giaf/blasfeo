@@ -2674,18 +2674,69 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 // dtrsm_right_lower_transposed_unit
 void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
-	int jj;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pD = sD->pA+di+dj*sD->m;
-	printf("\nfeature not implemented yet\n");
-	exit(1);
-//	if(!(pB==pD))
-//		{
-//		for(jj=0; jj<n; jj++)
-//			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
-//		}
-//	dtrsm_(&cr, &cl, &ct, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	int ii, jj, kk;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *pB = sB->pA + bi + bj*ldb;
+	double *pD = sD->pA + di + dj*ldd;
+	double
+		f_10,
+		c_00, c_01,
+		c_10, c_11;
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		f_10 = pA[jj+1+lda*(jj+0)];
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = pB[ii+0+ldb*(jj+0)];
+			c_10 = pB[ii+1+ldb*(jj+0)];
+			c_01 = pB[ii+0+ldb*(jj+1)];
+			c_11 = pB[ii+1+ldb*(jj+1)];
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+0+ldd*kk] * pA[jj+0+lda*kk];
+				c_10 -= pD[ii+1+ldd*kk] * pA[jj+0+lda*kk];
+				c_01 -= pD[ii+0+ldd*kk] * pA[jj+1+lda*kk];
+				c_11 -= pD[ii+1+ldd*kk] * pA[jj+1+lda*kk];
+				}
+			pD[ii+0+ldd*(jj+0)] = c_00;
+			pD[ii+1+ldd*(jj+0)] = c_10;
+			c_01 -= c_00 * f_10;
+			c_11 -= c_10 * f_10;
+			pD[ii+0+ldd*(jj+1)] = c_01;
+			pD[ii+1+ldd*(jj+1)] = c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = pB[ii+0+ldb*(jj+0)];
+			c_01 = pB[ii+0+ldb*(jj+1)];
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+0+ldd*kk] * pD[jj+0+ldd*kk];
+				c_01 -= pD[ii+0+ldd*kk] * pD[jj+1+ldd*kk];
+				}
+			pD[ii+0+ldd*(jj+0)] = c_00;
+			c_01 -= c_00 * f_10;
+			pD[ii+0+ldd*(jj+1)] = c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		// factorize diagonal
+		for(ii=0; ii<m; ii++)
+			{
+			c_00 = pB[ii+ldb*jj];
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+ldd*kk] * pA[jj+lda*kk];
+				}
+			pD[ii+ldd*jj] = c_00;
+			}
+		}
 	return;
 	}
 
@@ -2780,7 +2831,7 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 				{
 				c_00 -= pD[ii+ldd*kk] * pA[jj+lda*kk];
 				}
-			c_00 *- f_00_inv;
+			c_00 *= f_00_inv;
 			pD[ii+ldd*jj] = c_00;
 			}
 		}
