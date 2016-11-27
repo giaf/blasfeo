@@ -1962,7 +1962,7 @@ void ddiain_sqrt_lib(int kmax, double *x, int offset, double *pD, int sdd)
 
 
 // extract diagonal to vector 
-void ddiaex_lib(int kmax, int offset, double *pD, int sdd, double *x)
+void ddiaex_lib(int kmax, double alpha, int offset, double *pD, int sdd, double *x)
 	{
 
 	const int bs = 4;
@@ -1976,7 +1976,7 @@ void ddiaex_lib(int kmax, int offset, double *pD, int sdd, double *x)
 		{
 		for(ll=0; ll<kna; ll++)
 			{
-			x[ll] = pD[ll+bs*ll];
+			x[ll] = alpha * pD[ll+bs*ll];
 			}
 		pD += kna + bs*(sdd-1) + kna*bs;
 		x  += kna;
@@ -1984,14 +1984,14 @@ void ddiaex_lib(int kmax, int offset, double *pD, int sdd, double *x)
 		}
 	for(jj=0; jj<kmax-3; jj+=4)
 		{
-		x[jj+0] = pD[jj*sdd+(jj+0)*bs+0];
-		x[jj+1] = pD[jj*sdd+(jj+1)*bs+1];
-		x[jj+2] = pD[jj*sdd+(jj+2)*bs+2];
-		x[jj+3] = pD[jj*sdd+(jj+3)*bs+3];
+		x[jj+0] = alpha * pD[jj*sdd+(jj+0)*bs+0];
+		x[jj+1] = alpha * pD[jj*sdd+(jj+1)*bs+1];
+		x[jj+2] = alpha * pD[jj*sdd+(jj+2)*bs+2];
+		x[jj+3] = alpha * pD[jj*sdd+(jj+3)*bs+3];
 		}
 	for(ll=0; ll<kmax-jj; ll++)
 		{
-		x[jj+ll] = pD[jj*sdd+(jj+ll)*bs+ll];
+		x[jj+ll] = alpha * pD[jj*sdd+(jj+ll)*bs+ll];
 		}
 	
 	}
@@ -2036,7 +2036,7 @@ void ddiaad_lib(int kmax, double alpha, double *x, int offset, double *pD, int s
 
 
 // insert vector to diagonal, sparse formulation 
-void ddiain_libsp(int kmax, int *idx, double *x, double *pD, int sdd)
+void ddiain_libsp(int kmax, int *idx, double alpha, double *x, double *pD, int sdd)
 	{
 
 	const int bs = 4;
@@ -2046,7 +2046,25 @@ void ddiain_libsp(int kmax, int *idx, double *x, double *pD, int sdd)
 	for(jj=0; jj<kmax; jj++)
 		{
 		ii = idx[jj];
-		pD[ii/bs*bs*sdd+ii%bs+ii*bs] = x[jj];
+		pD[ii/bs*bs*sdd+ii%bs+ii*bs] = alpha * x[jj];
+		}
+	
+	}
+
+
+
+// extract diagonal to vector, sparse formulation 
+void ddiaex_libsp(int kmax, int *idx, double alpha, double *pD, int sdd, double *x)
+	{
+
+	const int bs = 4;
+
+	int ii, jj;
+
+	for(jj=0; jj<kmax; jj++)
+		{
+		ii = idx[jj];
+		x[jj] = alpha * pD[ii/bs*bs*sdd+ii%bs+ii*bs];
 		}
 	
 	}
@@ -2470,7 +2488,7 @@ void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y)
 
 
 
-// return memory size (in bytes) needed for a strmat
+// return the memory size (in bytes) needed for a strmat
 int d_size_strmat(int m, int n)
 	{
 	const int bs = D_BS;
@@ -2485,7 +2503,7 @@ int d_size_strmat(int m, int n)
 
 
 
-// return memory size (in bytes) needed for the digonal of a strmat
+// return the memory size (in bytes) needed for the digonal of a strmat
 int d_size_diag_strmat(int m, int n)
 	{
 	const int bs = D_BS;
@@ -2910,6 +2928,42 @@ void dtrtr_u_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat 
 	int sdc = sC->cn;
 	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
 	dtrtr_u_lib(m, ai%bs, pA, sda, ci%bs, pC, sdc);
+	return;
+	}
+
+
+
+// insert a strvec to diagonal of strmat, sparse formulation 
+void ddiain_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
+	{
+	const int bs = 4;
+	double *x = sx->pa + xi;
+	int sdd = sD->cn;
+	double *pD = sD->pA;
+	int ii, jj;
+	for(jj=0; jj<kmax; jj++)
+		{
+		ii = idx[jj];
+		pD[(ii+di)/bs*bs*sdd+(ii+di)%bs+(ii+dj)*bs] = alpha * x[jj];
+		}
+	return;
+	}
+
+
+
+// extract the diagonal of a strmat to a strvec, sparse formulation 
+void ddiaex_libspstr(int kmax, int *idx, double alpha, struct d_strmat *sD, int di, int dj, struct d_strvec *sx, int xi)
+	{
+	const int bs = 4;
+	double *x = sx->pa + xi;
+	int sdd = sD->cn;
+	double *pD = sD->pA;
+	int ii, jj;
+	for(jj=0; jj<kmax; jj++)
+		{
+		ii = idx[jj];
+		x[jj] = alpha * pD[(ii+di)/bs*bs*sdd+(ii+di)%bs+(ii+dj)*bs];
+		}
 	return;
 	}
 
@@ -3524,6 +3578,40 @@ void dtrtr_u_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat 
 			{
 			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
 			}
+		}
+	return;
+	}
+
+
+
+// insert a strvec to the diagonal of a strmat, sparse formulation 
+void ddiain_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
+	{
+	double *x = sx->pa + xi;
+	int ldd = sD->m;
+	double *pD = sD->pA + di + dj*ldd;
+	int ii, jj;
+	for(jj=0; jj<kmax; jj++)
+		{
+		ii = idx[jj];
+		pD[ii*(ldd+1)] = alpha * x[jj];
+		}
+	return;
+	}
+
+
+
+// extract the diagonal of a strmat from a strvec , sparse formulation 
+void ddiaex_libspstr(int kmax, int *idx, double alpha, struct d_strmat *sD, int di, int dj, struct d_strvec *sx, int xi)
+	{
+	double *x = sx->pa + xi;
+	int ldd = sD->m;
+	double *pD = sD->pA + di + dj*ldd;
+	int ii, jj;
+	for(jj=0; jj<kmax; jj++)
+		{
+		ii = idx[jj];
+		x[jj] = alpha * pD[ii*(ldd+1)];
 		}
 	return;
 	}

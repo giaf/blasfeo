@@ -45,27 +45,38 @@ void d_print_mat(int row, int col, double *A, int lda);
 void d_print_tran_mat(int row, int col, double *A, int lda);
 void d_print_to_file_mat(FILE *file, int row, int col, double *A, int lda);
 void d_print_tran_to_file_mat(FILE *file, int row, int col, double *A, int lda);
-void d_print_mat_e(int row, int col, double *A, int lda);
-void d_print_tran_mat_e(int row, int col, double *A, int lda);
+void d_print_e_mat(int row, int col, double *A, int lda);
+void d_print_e_tran_mat(int row, int col, double *A, int lda);
 void d_print_pmat(int row, int col, double *pA, int sda);
 void d_print_to_file_pmat(FILE *file, int row, int col, double *pA, int sda);
-void d_print_pmat_e(int row, int col, double *pA, int sda);
+void d_print_e_pmat(int row, int col, double *pA, int sda);
 void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj);
+void d_print_e_strmat(int m, int n, struct d_strmat *sA, int ai, int aj);
 void d_print_to_file_strmat(FILE *file, int m, int n, struct d_strmat *sA, int ai, int aj);
 void d_print_strvec(int m, struct d_strvec *sa, int ai);
+void d_print_e_strvec(int m, struct d_strvec *sa, int ai);
 void d_print_to_file_strvec(FILE *file, int m, struct d_strvec *sa, int ai);
 void d_print_tran_strvec(int m, struct d_strvec *sa, int ai);
+void d_print_e_tran_strvec(int m, struct d_strvec *sa, int ai);
 void d_print_tran_to_file_strvec(FILE *file, int m, struct d_strvec *sa, int ai);
 void v_zeros(void **ptrA, int size);
 void v_zeros_align(void **ptrA, int size);
 void v_free(void *ptrA);
 void v_free_align(void *ptrA);
 
-// d_aux_lib
+/************************************************
+* d_aux_lib
+************************************************/
+
+// returns the memory size (in bytes) needed for a strmat
 int d_size_strmat(int m, int n);
+// returns the memory size (in bytes) needed for the diagonal of a strmat
 int d_size_diag_strmat(int m, int n);
+// returns the memory size (in bytes) needed for a strvec
 int d_size_strvec(int m, int n);
+// create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
 void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory);
+// create a strvec for a vector of size m by using memory passed by a pointer (pointer is not updated)
 void d_create_strvec(int m, struct d_strvec *sA, void *memory);
 void d_cvt_mat2pmat(int row, int col, double *A, int lda, int offset, double *pA, int sda);
 void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj);
@@ -101,9 +112,12 @@ void ddiareg_lib(int kmax, double reg, int offset, double *pD, int sdd);
 void ddiain_lib(int kmax, double alpha, double *x, int offset, double *pD, int sdd);
 void ddiain_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj);
 void ddiain_sqrt_lib(int kmax, double *x, int offset, double *pD, int sdd);
-void ddiaex_lib(int kmax, int offset, double *pD, int sdd, double *x);
+void ddiaex_lib(int kmax, double alpha, int offset, double *pD, int sdd, double *x);
 void ddiaad_lib(int kmax, double alpha, double *x, int offset, double *pD, int sdd);
-void ddiain_libsp(int kmax, int *idx, double *x, double *pD, int sdd);
+void ddiain_libsp(int kmax, int *idx, double alpha, double *x, double *pD, int sdd);
+void ddiain_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj);
+void ddiaex_libsp(int kmax, int *idx, double alpha, double *pD, int sdd, double *x);
+void ddiaex_libspstr(int kmax, int *idx, double alpha, struct d_strmat *sD, int di, int dj, struct d_strvec *sx, int xi);
 void ddiaad_libsp(int kmax, int *idx, double alpha, double *x, double *pD, int sdd);
 void ddiaadin_libsp(int kmax, int *idx, double alpha, double *x, double *y, double *pD, int sdd);
 void ddiaadin_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strmat *sD, int di, int dj);

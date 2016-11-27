@@ -166,7 +166,7 @@ void d_print_tran_to_file_mat(FILE *file, int row, int col, double *A, int lda)
 
 
 /* prints a matrix in column-major format (exponential notation) */
-void d_print_mat_e(int row, int col, double *A, int lda)
+void d_print_e_mat(int row, int col, double *A, int lda)
 	{
 	int i, j;
 	for(i=0; i<row; i++)
@@ -183,7 +183,7 @@ void d_print_mat_e(int row, int col, double *A, int lda)
 
 
 /* prints the transposed of a matrix in column-major format (exponential notation) */
-void d_print_tran_mat_e(int row, int col, double *A, int lda)
+void d_print_e_tran_mat(int row, int col, double *A, int lda)
 	{
 	int i, j;
 	for(j=0; j<col; j++)
@@ -273,7 +273,7 @@ void d_print_to_file_pmat(FILE *file, int row, int col, double *pA, int sda)
 
 
 /* prints a matrix in panel-major format (exponential notation) */
-void d_print_pmat_e(int row, int col, double *pA, int sda)
+void d_print_e_pmat(int row, int col, double *pA, int sda)
 	{
 
 	const int bs = 4;
@@ -504,6 +504,44 @@ void d_print_tran_to_file_strvec(FILE * file, int m, struct d_strvec *sa, int ai
 
 
 
+// print a matrix structure
+void d_print_e_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
+	{
+	// TODO ai
+	if(ai!=0 | aj!=0)
+		{
+		printf("\nfeature not implemented yet\n\n");
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs;
+	d_print_e_pmat(m, n, pA, sda);
+	return;
+	}
+
+
+
+// print a vector structure
+void d_print_e_strvec(int m, struct d_strvec *sa, int ai)
+	{
+	double *pa = sa->pa + ai;
+	d_print_e_mat(m, 1, pa, m);
+	return;
+	}
+
+
+
+// print the transposed of a vector structure
+void d_print_e_tran_strvec(int m, struct d_strvec *sa, int ai)
+	{
+	double *pa = sa->pa + ai;
+	d_print_e_mat(1, m, pa, 1);
+	return;
+	}
+
+
+
 #elif defined(LA_BLAS) | defined(LA_REFERENCE)
 
 
@@ -615,6 +653,37 @@ void d_print_to_file_tran_strvec(FILE *file, int m, struct d_strvec *sa, int ai)
 	{
 	double *pa = sa->pa + ai;
 	d_print_to_file_mat(file, 1, m, pa, 1);
+	return;
+	}
+
+
+
+// print a matrix structure
+void d_print_e_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	d_print_e_mat(m, n, pA, lda);
+	return;
+	}
+
+
+
+// print a vector structure
+void d_print_e_strvec(int m, struct d_strvec *sa, int ai)
+	{
+	double *pa = sa->pa + ai;
+	d_print_e_mat(m, 1, pa, m);
+	return;
+	}
+
+
+
+// print and transpose a vector structure
+void d_print_e_tran_strvec(int m, struct d_strvec *sa, int ai)
+	{
+	double *pa = sa->pa + ai;
+	d_print_e_mat(1, m, pa, 1);
 	return;
 	}
 
