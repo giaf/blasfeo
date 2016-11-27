@@ -73,7 +73,7 @@ int d_size_strmat(int m, int n);
 // returns the memory size (in bytes) needed for the diagonal of a strmat
 int d_size_diag_strmat(int m, int n);
 // returns the memory size (in bytes) needed for a strvec
-int d_size_strvec(int m, int n);
+int d_size_strvec(int m);
 // create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
 void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory);
 // create a strvec for a vector of size m by using memory passed by a pointer (pointer is not updated)

@@ -3067,7 +3067,7 @@ void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory)
 
 
 // return memory size (in bytes) needed for a strvec
-int d_size_strvec(int m, int n)
+int d_size_strvec(int m)
 	{
 	int size = m*sizeof(double);
 	return size;
