@@ -37,6 +37,7 @@
 #include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_kernel.h"
+#include "../include/blasfeo_d_aux.h"
 
 
 
@@ -791,7 +792,7 @@ void dtrsm_nt_rl_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 	j = 0;
 	for(; j<n; j+=4)
 		{
-		kernel_dtrsm_nt_rl_inv_12x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*bs+i*sdb], sdb, &pD[j*bs+i*sdd], sdd, &pA[j*bs+j*sda], m-i, n-j, &inv_diag_A[j]);
+		kernel_dtrsm_nt_rl_inv_12x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*bs+i*sdb], sdb, &pD[j*bs+i*sdd], sdd, &pA[j*bs+j*sda], &inv_diag_A[j], m-i, n-j);
 		}
 	return;
 #endif
@@ -1811,7 +1812,7 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		{
 		if(sA->use_dA!=1)
 			{
-			ddiaex_lib(n, ai, pA, sda, dA);
+			ddiaex_lib(n, 1.0, ai, pA, sda, dA);
 			for(ii=0; ii<n; ii++)
 				dA[ii] = 1.0 / dA[ii];
 			sA->use_dA = 1;
@@ -1819,7 +1820,7 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		}
 	else
 		{
-		ddiaex_lib(n, ai, pA, sda, dA);
+		ddiaex_lib(n, 1.0, ai, pA, sda, dA);
 		for(ii=0; ii<n; ii++)
 			dA[ii] = 1.0 / dA[ii];
 		sA->use_dA = 0;
@@ -1852,7 +1853,7 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		{
 		if(sA->use_dA!=1)
 			{
-			ddiaex_lib(n, ai, pA, sda, dA);
+			ddiaex_lib(n, 1.0, ai, pA, sda, dA);
 			for(ii=0; ii<n; ii++)
 				dA[ii] = 1.0 / dA[ii];
 			sA->use_dA = 1;
@@ -1860,7 +1861,7 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		}
 	else
 		{
-		ddiaex_lib(n, ai, pA, sda, dA);
+		ddiaex_lib(n, 1.0, ai, pA, sda, dA);
 		for(ii=0; ii<n; ii++)
 			dA[ii] = 1.0 / dA[ii];
 		sA->use_dA = 0;
@@ -1915,7 +1916,7 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		{
 		if(sA->use_dA!=1)
 			{
-			ddiaex_lib(n, ai, pA, sda, dA);
+			ddiaex_lib(n, 1.0, ai, pA, sda, dA);
 			for(ii=0; ii<n; ii++)
 				dA[ii] = 1.0 / dA[ii];
 			sA->use_dA = 1;
@@ -1923,7 +1924,7 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		}
 	else
 		{
-		ddiaex_lib(n, ai, pA, sda, dA);
+		ddiaex_lib(n, 1.0, ai, pA, sda, dA);
 		for(ii=0; ii<n; ii++)
 			dA[ii] = 1.0 / dA[ii];
 		sA->use_dA = 0;
