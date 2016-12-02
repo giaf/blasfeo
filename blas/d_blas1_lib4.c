@@ -40,7 +40,14 @@
 #endif
 
 #if defined(LA_BLAS)
+#if defined(LA_BLAS_OPENBLAS)
 #include <f77blas.h>
+#elif defined(LA_BLAS_BLIS)
+#elif defined(LA_BLAS_NETLIB)
+#include "d_blas.h"
+#elif defined(LA_BLAS_MKL)
+#include <mkl_blas.h>
+#endif
 #endif
 
 #include "../include/blasfeo_block_size.h"
@@ -138,7 +145,11 @@ void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_str
 	int i1 = 1;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
+#if defined(LA_BLAS_MKL)
+	daxpy(&m, &alpha, x, &i1, y, &i1);
+#else
 	daxpy_(&m, &alpha, x, &i1, y, &i1);
+#endif
 	return;
 	}
 

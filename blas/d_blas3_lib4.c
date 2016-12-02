@@ -31,7 +31,14 @@
 #include <stdio.h>
 
 #if defined(LA_BLAS)
+#if defined(LA_BLAS_OPENBLAS)
 #include <f77blas.h>
+#elif defined(LA_BLAS_BLIS)
+#elif defined(LA_BLAS_NETLIB)
+#include "d_blas.h"
+#elif defined(LA_BLAS_MKL)
+#include <mkl_blas.h>
+#endif
 #endif
 
 #include "../include/blasfeo_block_size.h"
@@ -2009,9 +2016,17 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	if(!(beta==0.0 || pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
+#if defined(LA_BLAS_MKL)
+			dcopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+#else
 			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+#endif
 		}
+#if defined(LA_BLAS_MKL)
+	dgemm(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+#else
 	dgemm_(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+#endif
 	return;
 	}
 
@@ -2030,9 +2045,17 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	if(!(beta==0.0 || pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
+#if defined(LA_BLAS_MKL)
+			dcopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+#else
 			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+#endif
 		}
+#if defined(LA_BLAS_MKL)
+	dgemm(&cn, &cn, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+#else
 	dgemm_(&cn, &cn, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+#endif
 	return;
 	}
 
@@ -2052,9 +2075,17 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
+#if defined(LA_BLAS_MKL)
+			dcopy(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+#else
 			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+#endif
 		}
+#if defined(LA_BLAS_MKL)
+	dtrsm(&cl, &cl, &cn, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+#else
 	dtrsm_(&cl, &cl, &cn, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+#endif
 	return;
 	}
 
@@ -2074,9 +2105,17 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
+#if defined(LA_BLAS_MKL)
+			dcopy(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+#else
 			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+#endif
 		}
+#if defined(LA_BLAS_MKL)
+	dtrsm(&cl, &cu, &cn, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+#else
 	dtrsm_(&cl, &cu, &cn, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+#endif
 	return;
 	}
 
@@ -2098,9 +2137,17 @@ void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
+#if defined(LA_BLAS_MKL)
+			dcopy(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+#else
 			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+#endif
 		}
+#if defined(LA_BLAS_MKL)
+	dtrsm(&cr, &cl, &ct, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+#else
 	dtrsm_(&cr, &cl, &ct, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+#endif
 	return;
 	}
 
@@ -2122,9 +2169,17 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
+#if defined(LA_BLAS_MKL)
+			dcopy(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+#else
 			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+#endif
 		}
+#if defined(LA_BLAS_MKL)
+	dtrsm(&cr, &cl, &ct, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+#else
 	dtrsm_(&cr, &cl, &ct, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+#endif
 	return;
 	}
 
@@ -2146,9 +2201,17 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
+#if defined(LA_BLAS_MKL)
+			dcopy(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+#else
 			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+#endif
 		}
+#if defined(LA_BLAS_MKL)
+	dtrsm(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+#else
 	dtrsm_(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+#endif
 	return;
 	}
 
@@ -2175,13 +2238,25 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	if(!(pA==pD))
 		{
 		for(jj=0; jj<n; jj++)
+#if defined(LA_BLAS_MKL)
+			dcopy(&m, pA+jj*lda, &i1, pD+jj*ldd, &i1);
+#else
 			dcopy_(&m, pA+jj*lda, &i1, pD+jj*ldd, &i1);
+#endif
 		}
+#if defined(LA_BLAS_MKL)
+	dtrmm(&cr, &cu, &ct, &cn, &m, &n, &alpha, pB, &ldb, pD, &ldd);
+#else
 	dtrmm_(&cr, &cu, &ct, &cn, &m, &n, &alpha, pB, &ldb, pD, &ldd);
+#endif
 	if(beta!=0)
 		{
 		for(jj=0; jj<n; jj++)
+#if defined(LA_BLAS_MKL)
+			daxpy(&m, &beta, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+#else
 			daxpy_(&m, &beta, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+#endif
 		}
 	return;
 	}
@@ -2209,13 +2284,25 @@ void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	if(!(pA==pD))
 		{
 		for(jj=0; jj<n; jj++)
+#if defined(LA_BLAS_MKL)
+			dcopy(&m, pA+jj*lda, &i1, pD+jj*ldd, &i1);
+#else
 			dcopy_(&m, pA+jj*lda, &i1, pD+jj*ldd, &i1);
+#endif
 		}
+#if defined(LA_BLAS_MKL)
+	dtrmm(&cr, &cl, &cn, &cn, &m, &n, &alpha, pB, &ldb, pD, &ldd);
+#else
 	dtrmm_(&cr, &cl, &cn, &cn, &m, &n, &alpha, pB, &ldb, pD, &ldd);
+#endif
 	if(beta!=0)
 		{
 		for(jj=0; jj<n; jj++)
+#if defined(LA_BLAS_MKL)
+			daxpy(&m, &beta, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+#else
 			daxpy_(&m, &beta, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+#endif
 		}
 	return;
 	}
@@ -2239,9 +2326,17 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	if(!(beta==0.0 || pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
+#if defined(LA_BLAS_MKL)
+			dcopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+#else
 			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+#endif
 		}
+#if defined(LA_BLAS_MKL)
+	dgemm(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+#else
 	dgemm_(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+#endif
 	return;
 	}
 
