@@ -31,15 +31,27 @@
 
 
 
-// d_aux_extern_depend_lib
+/************************************************
+* d_aux_extern_depend_lib.c
+************************************************/
+
+// dynamically allocate row*col doubles of memory and set accordingly a pointer to double; set allocated memory to zero
 void d_zeros(double **pA, int row, int col);
+// dynamically allocate row*col doubles of memory aligned to 64-byte boundaries and set accordingly a pointer to double; set allocated memory to zero
 void d_zeros_align(double **pA, int row, int col);
+// dynamically allocate size bytes of memory aligned to 64-byte boundaries and set accordingly a pointer to double; set allocated memory to zero
 void d_zeros_align_bytes(double **pA, int size);
+// create a strmat for a matrix of size m*n by dynamically allocating memory
 void d_allocate_strmat(int m, int n, struct d_strmat *sA);
+// create a strvec for a vector of size m by dynamically allocating memory
 void d_allocate_strvec(int m, struct d_strvec *sa);
+// free the memory allocated by d_zeros
 void d_free(double *pA);
+// free the memory allocated by d_zeros_align or d_zeros_align_bytes
 void d_free_align(double *pA);
+// free the memory allocated by d_allocate_strmat
 void d_free_strmat(struct d_strmat *sA);
+// free the memory allocated by d_allocate_strvec
 void d_free_strvec(struct d_strvec *sa);
 void d_print_mat(int row, int col, double *A, int lda);
 void d_print_tran_mat(int row, int col, double *A, int lda);
@@ -59,13 +71,17 @@ void d_print_to_file_strvec(FILE *file, int m, struct d_strvec *sa, int ai);
 void d_print_tran_strvec(int m, struct d_strvec *sa, int ai);
 void d_print_e_tran_strvec(int m, struct d_strvec *sa, int ai);
 void d_print_tran_to_file_strvec(FILE *file, int m, struct d_strvec *sa, int ai);
+// dynamically allocate size bytes of memory and set accordingly a pointer to void; set allocated memory to zero
 void v_zeros(void **ptrA, int size);
+// dynamically allocate size bytes of memory aligned to 64-byte boundaries and set accordingly a pointer to void; set allocated memory to zero
 void v_zeros_align(void **ptrA, int size);
+// free the memory allocated by v_zeros
 void v_free(void *ptrA);
+// free the memory allocated by v_zeros_aligned
 void v_free_align(void *ptrA);
 
 /************************************************
-* d_aux_lib
+* d_aux_lib.c
 ************************************************/
 
 // returns the memory size (in bytes) needed for a strmat
