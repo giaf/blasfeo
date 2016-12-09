@@ -2969,6 +2969,24 @@ void ddiaex_libspstr(int kmax, int *idx, double alpha, struct d_strmat *sD, int 
 
 
 
+// add scaled strvec to diagonal of strmat, sparse formulation 
+void ddiaad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
+	{
+	const int bs = 4;
+	double *x = sx->pa + xi;
+	int sdd = sD->cn;
+	double *pD = sD->pA;
+	int ii, jj;
+	for(jj=0; jj<kmax; jj++)
+		{
+		ii = idx[jj];
+		pD[(ii+di)/bs*bs*sdd+(ii+di)%bs+(ii+dj)*bs] += alpha * x[jj];
+		}
+	return;
+	}
+
+
+
 // add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation 
 void ddiaadin_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strmat *sD, int di, int dj)
 	{
@@ -3612,6 +3630,23 @@ void ddiaex_libspstr(int kmax, int *idx, double alpha, struct d_strmat *sD, int 
 		{
 		ii = idx[jj];
 		x[jj] = alpha * pD[ii*(ldd+1)];
+		}
+	return;
+	}
+
+
+
+// add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation 
+void ddiaad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
+	{
+	double *x = sx->pa + xi;
+	int ldd = sD->m;
+	double *pD = sD->pA + di + dj*ldd;
+	int ii, jj;
+	for(jj=0; jj<kmax; jj++)
+		{
+		ii = idx[jj];
+		pD[ii*(ldd+1)] += alpha * x[jj];
 		}
 	return;
 	}

@@ -135,6 +135,7 @@ void ddiain_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 void ddiaex_libsp(int kmax, int *idx, double alpha, double *pD, int sdd, double *x);
 void ddiaex_libspstr(int kmax, int *idx, double alpha, struct d_strmat *sD, int di, int dj, struct d_strvec *sx, int xi);
 void ddiaad_libsp(int kmax, int *idx, double alpha, double *x, double *pD, int sdd);
+void ddiaad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj);
 void ddiaadin_libsp(int kmax, int *idx, double alpha, double *x, double *y, double *pD, int sdd);
 void ddiaadin_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strmat *sD, int di, int dj);
 void drowin_lib(int kmax, double alpha, double *x, double *pD);
