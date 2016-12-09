@@ -2719,6 +2719,51 @@ double dvecex1_libstr(struct d_strvec *sx, int xi)
 
 
 
+// set all elements of a strmat to a value
+void dsetmat_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj)
+	{
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai%bs + ai/bs*bs*sda + aj*bs;
+	int m0 = m<(bs-ai%bs)%bs ? m : (bs-ai%bs)%bs;
+	int ii, jj;
+	if(m0>0)
+		{
+		for(ii=0; ii<m0; ii++)
+			{
+			for(jj=0; jj<n; jj++)
+				{
+				pA[jj*bs] = alpha;
+				}
+			pA += 1;
+			}
+		pA += bs*(sda-1);
+		m -= m0;
+		}
+	for(ii=0; ii<m-3; ii++)
+		{
+		for(jj=0; jj<n; jj++)
+			{
+			pA[0+jj*bs] = alpha;
+			pA[1+jj*bs] = alpha;
+			pA[2+jj*bs] = alpha;
+			pA[3+jj*bs] = alpha;
+			}
+		pA += bs*sda;
+		}
+	for( ; ii<m; ii++)
+		{
+		for(jj=0; jj<n; jj++)
+			{
+			pA[jj*bs] = alpha;
+			}
+		pA += 1;
+		}
+	return;
+	}
+
+
+
 // insert a vector into diagonal
 void ddiain_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
 	{
@@ -3266,7 +3311,6 @@ void d_cast_vec2vecmat(double *a, struct d_strvec *sa)
 // insert element into strmat
 void dmatin1_libstr(double a, struct d_strmat *sA, int ai, int aj)
 	{
-	const int bs = 4;
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
 	pA[0] = a;
@@ -3278,7 +3322,6 @@ void dmatin1_libstr(double a, struct d_strmat *sA, int ai, int aj)
 // extract element from strmat
 double dmatex1_libstr(struct d_strmat *sA, int ai, int aj)
 	{
-	const int bs = 4;
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
 	return pA[0];
@@ -3289,7 +3332,6 @@ double dmatex1_libstr(struct d_strmat *sA, int ai, int aj)
 // insert element into strvec
 void dvecin1_libstr(double a, struct d_strvec *sx, int xi)
 	{
-	const int bs = 4;
 	double *x = sx->pa + xi;
 	x[0] = a;
 	return;
@@ -3300,9 +3342,26 @@ void dvecin1_libstr(double a, struct d_strvec *sx, int xi)
 // extract element from strvec
 double dvecex1_libstr(struct d_strvec *sx, int xi)
 	{
-	const int bs = 4;
 	double *x = sx->pa + xi;
 	return x[0];
+	}
+
+
+
+// set all elements of a strmat to a value
+void dsetmat_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	int ii, jj;
+	for(jj=0; jj<n; jj++)
+		{
+		for(ii=0; ii<m; ii++)
+			{
+			pA[ii+lda*jj] = alpha;
+			}
+		}
+	return;
 	}
 
 
@@ -3310,7 +3369,6 @@ double dvecex1_libstr(struct d_strvec *sx, int xi)
 // insert a vector into diagonal
 void ddiain_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
 	{
-	const int bs = 4;
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
 	double *x = sx->pa + xi;
