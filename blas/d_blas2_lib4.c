@@ -1358,14 +1358,14 @@ void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 		jj = 0;
 		for(; jj<ii-1; jj+=2)
 			{
-			y_0 -= pA[ii+0+lda*(jj+0)] * x[jj+0] + pA[ii+0+lda*(jj+1)] * x[jj+1];
-			y_1 -= pA[ii+1+lda*(jj+0)] * x[jj+0] + pA[ii+1+lda*(jj+1)] * x[jj+1];
+			y_0 -= pA[ii+0+lda*(jj+0)] * z[jj+0] + pA[ii+0+lda*(jj+1)] * z[jj+1];
+			y_1 -= pA[ii+1+lda*(jj+0)] * z[jj+0] + pA[ii+1+lda*(jj+1)] * z[jj+1];
 			}
 //	XXX there is no clean-up loop !!!!!
 //		if(jj<ii)
 //			{
-//			y_0 -= pA[ii+0+lda*(jj+0)] * x[jj+0];
-//			y_1 -= pA[ii+1+lda*(jj+0)] * x[jj+0];
+//			y_0 -= pA[ii+0+lda*(jj+0)] * z[jj+0];
+//			y_1 -= pA[ii+1+lda*(jj+0)] * z[jj+0];
 //			}
 		y_0 *= dA[ii+0];
 		y_1 -= pA[ii+1+lda*(jj+0)] * y_0;
@@ -1378,7 +1378,7 @@ void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 		y_0 = x[ii];
 		for(jj=0; jj<ii; jj++)
 			{
-			y_0 -= pA[ii+lda*jj] * x[jj];
+			y_0 -= pA[ii+lda*jj] * z[jj];
 			}
 		y_0 *= dA[ii];
 		z[ii] = y_0;
@@ -1390,13 +1390,13 @@ void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 		jj = 0;
 		for(; jj<n-1; jj+=2)
 			{
-			y_0 -= pA[ii+0+lda*(jj+0)] * x[jj+0] + pA[ii+0+lda*(jj+1)] * x[jj+1];
-			y_1 -= pA[ii+1+lda*(jj+0)] * x[jj+0] + pA[ii+1+lda*(jj+1)] * x[jj+1];
+			y_0 -= pA[ii+0+lda*(jj+0)] * z[jj+0] + pA[ii+0+lda*(jj+1)] * z[jj+1];
+			y_1 -= pA[ii+1+lda*(jj+0)] * z[jj+0] + pA[ii+1+lda*(jj+1)] * z[jj+1];
 			}
 		if(jj<n)
 			{
-			y_0 -= pA[ii+0+lda*(jj+0)] * x[jj+0];
-			y_1 -= pA[ii+1+lda*(jj+0)] * x[jj+0];
+			y_0 -= pA[ii+0+lda*(jj+0)] * z[jj+0];
+			y_1 -= pA[ii+1+lda*(jj+0)] * z[jj+0];
 			}
 		z[ii+0] = y_0;
 		z[ii+1] = y_1;
@@ -1406,7 +1406,7 @@ void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 		y_0 = x[ii];
 		for(jj=0; jj<n; jj++)
 			{
-			y_0 -= pA[ii+lda*jj] * x[jj];
+			y_0 -= pA[ii+lda*jj] * z[jj];
 			}
 		z[ii] = y_0;
 		}
