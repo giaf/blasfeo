@@ -312,7 +312,7 @@ void d_print_e_pmat(int row, int col, double *pA, int sda)
 /* creates a zero matrix given the size in bytes */
 void v_zeros(void **ptrA, int size)
 	{
-	*ptrA = malloc(size);
+	*ptrA = (void *) malloc(size);
 	char *A = *ptrA;
 	int i;
 	for(i=0; i<size; i++) A[i] = 0;
@@ -350,6 +350,57 @@ void v_free(void *pA)
 
 /* frees aligned matrix */
 void v_free_align(void *pA)
+	{
+#if defined(OS_WINDOWS)
+	_aligned_free( pA );
+#else
+	free( pA );
+#endif
+	}
+
+
+
+/* creates a zero matrix given the size in bytes */
+void c_zeros(char **ptrA, int size)
+	{
+	*ptrA = (char *) malloc(size);
+	char *A = *ptrA;
+	int i;
+	for(i=0; i<size; i++) A[i] = 0;
+	}
+
+
+
+/* creates a zero matrix aligned to a cache line given the size in bytes */
+void c_zeros_align(char **ptrA, int size)
+	{
+#if defined(OS_WINDOWS)
+	*ptrA = _aligned_malloc( size, 64 );
+#else
+	int err = posix_memalign(ptrA, 64, size);
+	if(err!=0)
+		{
+		printf("Memory allocation error");
+		exit(1);
+		}
+#endif
+	char *A = *ptrA;
+	int i;
+	for(i=0; i<size; i++) A[i] = 0;
+	}
+
+
+
+/* frees matrix */
+void c_free(char *pA)
+	{
+	free( pA );
+	}
+
+
+
+/* frees aligned matrix */
+void c_free_align(char *pA)
 	{
 #if defined(OS_WINDOWS)
 	_aligned_free( pA );
