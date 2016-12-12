@@ -46,8 +46,7 @@ int posix_memalign(void **memptr, size_t alignment, size_t size);
 /* creates a zero matrix */
 void d_zeros(double **pA, int row, int col)
 	{
-	void *temp = malloc((row*col)*sizeof(double));
-	*pA = temp;
+	*pA = malloc((row*col)*sizeof(double));
 	double *A = *pA;
 	int i;
 	for(i=0; i<row*col; i++) A[i] = 0.0;
@@ -363,7 +362,7 @@ void v_free_align(void *pA)
 /* creates a zero matrix given the size in bytes */
 void c_zeros(char **ptrA, int size)
 	{
-	*ptrA = (char *) malloc(size);
+	*ptrA = malloc(size);
 	char *A = *ptrA;
 	int i;
 	for(i=0; i<size; i++) A[i] = 0;
@@ -377,12 +376,14 @@ void c_zeros_align(char **ptrA, int size)
 #if defined(OS_WINDOWS)
 	*ptrA = _aligned_malloc( size, 64 );
 #else
-	int err = posix_memalign(ptrA, 64, size);
+	void *temp;
+	int err = posix_memalign(&temp, 64, size);
 	if(err!=0)
 		{
 		printf("Memory allocation error");
 		exit(1);
 		}
+	*ptrA = temp;
 #endif
 	char *A = *ptrA;
 	int i;
