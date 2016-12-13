@@ -38,7 +38,7 @@
 
 
 // TODO tri !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-void kernel_dgetr_8_lib4(int tri, int kmax, int kna, double *A0, int sda, double *C, int sdc)
+void kernel_dgetr_8_lib4(int tri, int kmax, int kna, double alpha, double *A0, int sda, double *C, int sdc)
 	{
 
 	const int bs = 4;
@@ -48,8 +48,11 @@ void kernel_dgetr_8_lib4(int tri, int kmax, int kna, double *A0, int sda, double
 	int k;
 
 	__m256d
+		alph, 
 		v0, v1, v2, v3, v4, v5, v6, v7,
 		v8, v9, va, vb, vc, vd, ve, vf;
+	
+	alph = _mm256_broadcast_sd( &alpha );
 	
 	k = 0;
 
@@ -60,15 +63,15 @@ void kernel_dgetr_8_lib4(int tri, int kmax, int kna, double *A0, int sda, double
 		{
 		for( ; k<kna; k++)
 			{
-			C[0+bs*0] = A0[0+bs*0];
-			C[0+bs*1] = A0[1+bs*0];
-			C[0+bs*2] = A0[2+bs*0];
-			C[0+bs*3] = A0[3+bs*0];
+			C[0+bs*0] = alpha * A0[0+bs*0];
+			C[0+bs*1] = alpha * A0[1+bs*0];
+			C[0+bs*2] = alpha * A0[2+bs*0];
+			C[0+bs*3] = alpha * A0[3+bs*0];
 
-			C[0+bs*4] = A1[0+bs*0];
-			C[0+bs*5] = A1[1+bs*0];
-			C[0+bs*6] = A1[2+bs*0];
-			C[0+bs*7] = A1[3+bs*0];
+			C[0+bs*4] = alpha * A1[0+bs*0];
+			C[0+bs*5] = alpha * A1[1+bs*0];
+			C[0+bs*6] = alpha * A1[2+bs*0];
+			C[0+bs*7] = alpha * A1[3+bs*0];
 
 			C  += 1;
 			A0 += bs;
@@ -88,31 +91,37 @@ void kernel_dgetr_8_lib4(int tri, int kmax, int kna, double *A0, int sda, double
 		A0 += 4*bs;
 
 		v4 = _mm256_unpacklo_pd( v0, v1 ); // 00 01 02 03
-		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
-		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
-		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
-
-		v8 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[0+bs*0] ) ), _mm_load_pd( &A1[0+bs*2]) , 0x1 ); // 00 10 02 12
-		v9 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[0+bs*1] ) ), _mm_load_pd( &A1[0+bs*3]) , 0x1 ); // 01 11 03 13
-		va = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[2+bs*0] ) ), _mm_load_pd( &A1[2+bs*2]) , 0x1 ); // 20 30 22 32
-		vb = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[2+bs*1] ) ), _mm_load_pd( &A1[2+bs*3]) , 0x1 ); // 21 31 23 33
-		
-		A1 += 4*bs;
-
-		vc = _mm256_unpacklo_pd( v8, v9 ); // 00 01 02 03
-		vd = _mm256_unpackhi_pd( v8, v9 ); // 10 11 12 13
-		ve = _mm256_unpacklo_pd( va, vb ); // 20 21 22 23
-		vf = _mm256_unpackhi_pd( va, vb ); // 30 31 32 33
-
+		v4 = _mm256_mul_pd( v4, alph );
 		_mm256_store_pd( &C[0+bs*0], v4 );
+		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
+		v5 = _mm256_mul_pd( v5, alph );
 		_mm256_store_pd( &C[0+bs*1], v5 );
+		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
+		v6 = _mm256_mul_pd( v6, alph );
 		_mm256_store_pd( &C[0+bs*2], v6 );
+		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
+		v7 = _mm256_mul_pd( v7, alph );
 		_mm256_store_pd( &C[0+bs*3], v7 );
 
-		_mm256_store_pd( &C[0+bs*4], vc );
-		_mm256_store_pd( &C[0+bs*5], vd );
-		_mm256_store_pd( &C[0+bs*6], ve );
-		_mm256_store_pd( &C[0+bs*7], vf );
+		v0 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[0+bs*0] ) ), _mm_load_pd( &A1[0+bs*2]) , 0x1 ); // 00 10 02 12
+		v1 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[0+bs*1] ) ), _mm_load_pd( &A1[0+bs*3]) , 0x1 ); // 01 11 03 13
+		v2 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[2+bs*0] ) ), _mm_load_pd( &A1[2+bs*2]) , 0x1 ); // 20 30 22 32
+		v3 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[2+bs*1] ) ), _mm_load_pd( &A1[2+bs*3]) , 0x1 ); // 21 31 23 33
+
+		A1 += 4*bs;
+
+		v4 = _mm256_unpacklo_pd( v0, v1 ); // 00 01 02 03
+		v4 = _mm256_mul_pd( v4, alph );
+		_mm256_store_pd( &C[0+bs*4], v4 );
+		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
+		v5 = _mm256_mul_pd( v5, alph );
+		_mm256_store_pd( &C[0+bs*5], v5 );
+		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
+		v6 = _mm256_mul_pd( v6, alph );
+		_mm256_store_pd( &C[0+bs*6], v6 );
+		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
+		v7 = _mm256_mul_pd( v7, alph );
+		_mm256_store_pd( &C[0+bs*7], v7 );
 
 		C += sdc*bs;
 
@@ -124,31 +133,37 @@ void kernel_dgetr_8_lib4(int tri, int kmax, int kna, double *A0, int sda, double
 		A0 += 4*bs;
 
 		v4 = _mm256_unpacklo_pd( v0, v1 ); // 00 01 02 03
-		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
-		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
-		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
-
-		v8 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[0+bs*0] ) ), _mm_load_pd( &A1[0+bs*2]) , 0x1 ); // 00 10 02 12
-		v9 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[0+bs*1] ) ), _mm_load_pd( &A1[0+bs*3]) , 0x1 ); // 01 11 03 13
-		va = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[2+bs*0] ) ), _mm_load_pd( &A1[2+bs*2]) , 0x1 ); // 20 30 22 32
-		vb = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[2+bs*1] ) ), _mm_load_pd( &A1[2+bs*3]) , 0x1 ); // 21 31 23 33
-		
-		A1 += 4*bs;
-
-		vc = _mm256_unpacklo_pd( v8, v9 ); // 00 01 02 03
-		vd = _mm256_unpackhi_pd( v8, v9 ); // 10 11 12 13
-		ve = _mm256_unpacklo_pd( va, vb ); // 20 21 22 23
-		vf = _mm256_unpackhi_pd( va, vb ); // 30 31 32 33
-
+		v4 = _mm256_mul_pd( v4, alph );
 		_mm256_store_pd( &C[0+bs*0], v4 );
+		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
+		v5 = _mm256_mul_pd( v5, alph );
 		_mm256_store_pd( &C[0+bs*1], v5 );
+		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
+		v6 = _mm256_mul_pd( v6, alph );
 		_mm256_store_pd( &C[0+bs*2], v6 );
+		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
+		v7 = _mm256_mul_pd( v7, alph );
 		_mm256_store_pd( &C[0+bs*3], v7 );
 
-		_mm256_store_pd( &C[0+bs*4], vc );
-		_mm256_store_pd( &C[0+bs*5], vd );
-		_mm256_store_pd( &C[0+bs*6], ve );
-		_mm256_store_pd( &C[0+bs*7], vf );
+		v0 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[0+bs*0] ) ), _mm_load_pd( &A1[0+bs*2]) , 0x1 ); // 00 10 02 12
+		v1 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[0+bs*1] ) ), _mm_load_pd( &A1[0+bs*3]) , 0x1 ); // 01 11 03 13
+		v2 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[2+bs*0] ) ), _mm_load_pd( &A1[2+bs*2]) , 0x1 ); // 20 30 22 32
+		v3 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[2+bs*1] ) ), _mm_load_pd( &A1[2+bs*3]) , 0x1 ); // 21 31 23 33
+
+		A1 += 4*bs;
+
+		v4 = _mm256_unpacklo_pd( v0, v1 ); // 00 01 02 03
+		v4 = _mm256_mul_pd( v4, alph );
+		_mm256_store_pd( &C[0+bs*4], v4 );
+		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
+		v5 = _mm256_mul_pd( v5, alph );
+		_mm256_store_pd( &C[0+bs*5], v5 );
+		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
+		v6 = _mm256_mul_pd( v6, alph );
+		_mm256_store_pd( &C[0+bs*6], v6 );
+		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
+		v7 = _mm256_mul_pd( v7, alph );
+		_mm256_store_pd( &C[0+bs*7], v7 );
 
 		C += sdc*bs;
 
@@ -165,31 +180,37 @@ void kernel_dgetr_8_lib4(int tri, int kmax, int kna, double *A0, int sda, double
 		A0 += 4*bs;
 
 		v4 = _mm256_unpacklo_pd( v0, v1 ); // 00 01 02 03
-		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
-		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
-		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
-
-		v8 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[0+bs*0] ) ), _mm_load_pd( &A1[0+bs*2]) , 0x1 ); // 00 10 02 12
-		v9 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[0+bs*1] ) ), _mm_load_pd( &A1[0+bs*3]) , 0x1 ); // 01 11 03 13
-		va = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[2+bs*0] ) ), _mm_load_pd( &A1[2+bs*2]) , 0x1 ); // 20 30 22 32
-		vb = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[2+bs*1] ) ), _mm_load_pd( &A1[2+bs*3]) , 0x1 ); // 21 31 23 33
-		
-		A1 += 4*bs;
-
-		vc = _mm256_unpacklo_pd( v8, v9 ); // 00 01 02 03
-		vd = _mm256_unpackhi_pd( v8, v9 ); // 10 11 12 13
-		ve = _mm256_unpacklo_pd( va, vb ); // 20 21 22 23
-		vf = _mm256_unpackhi_pd( va, vb ); // 30 31 32 33
-
+		v4 = _mm256_mul_pd( v4, alph );
 		_mm256_store_pd( &C[0+bs*0], v4 );
+		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
+		v5 = _mm256_mul_pd( v5, alph );
 		_mm256_store_pd( &C[0+bs*1], v5 );
+		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
+		v6 = _mm256_mul_pd( v6, alph );
 		_mm256_store_pd( &C[0+bs*2], v6 );
+		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
+		v7 = _mm256_mul_pd( v7, alph );
 		_mm256_store_pd( &C[0+bs*3], v7 );
 
-		_mm256_store_pd( &C[0+bs*4], vc );
-		_mm256_store_pd( &C[0+bs*5], vd );
-		_mm256_store_pd( &C[0+bs*6], ve );
-		_mm256_store_pd( &C[0+bs*7], vf );
+		v0 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[0+bs*0] ) ), _mm_load_pd( &A1[0+bs*2]) , 0x1 ); // 00 10 02 12
+		v1 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[0+bs*1] ) ), _mm_load_pd( &A1[0+bs*3]) , 0x1 ); // 01 11 03 13
+		v2 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[2+bs*0] ) ), _mm_load_pd( &A1[2+bs*2]) , 0x1 ); // 20 30 22 32
+		v3 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A1[2+bs*1] ) ), _mm_load_pd( &A1[2+bs*3]) , 0x1 ); // 21 31 23 33
+
+		A1 += 4*bs;
+
+		v4 = _mm256_unpacklo_pd( v0, v1 ); // 00 01 02 03
+		v4 = _mm256_mul_pd( v4, alph );
+		_mm256_store_pd( &C[0+bs*4], v4 );
+		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
+		v5 = _mm256_mul_pd( v5, alph );
+		_mm256_store_pd( &C[0+bs*5], v5 );
+		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
+		v6 = _mm256_mul_pd( v6, alph );
+		_mm256_store_pd( &C[0+bs*6], v6 );
+		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
+		v7 = _mm256_mul_pd( v7, alph );
+		_mm256_store_pd( &C[0+bs*7], v7 );
 
 		C += sdc*bs;
 
@@ -200,15 +221,15 @@ void kernel_dgetr_8_lib4(int tri, int kmax, int kna, double *A0, int sda, double
 
 	for( ; k<kmax; k++)
 		{
-		C[0+bs*0] = A0[0+bs*0];
-		C[0+bs*1] = A0[1+bs*0];
-		C[0+bs*2] = A0[2+bs*0];
-		C[0+bs*3] = A0[3+bs*0];
+		C[0+bs*0] = alpha * A0[0+bs*0];
+		C[0+bs*1] = alpha * A0[1+bs*0];
+		C[0+bs*2] = alpha * A0[2+bs*0];
+		C[0+bs*3] = alpha * A0[3+bs*0];
 
-		C[0+bs*4] = A1[0+bs*0];
-		C[0+bs*5] = A1[1+bs*0];
-		C[0+bs*6] = A1[2+bs*0];
-		C[0+bs*7] = A1[3+bs*0];
+		C[0+bs*4] = alpha * A1[0+bs*0];
+		C[0+bs*5] = alpha * A1[1+bs*0];
+		C[0+bs*6] = alpha * A1[2+bs*0];
+		C[0+bs*7] = alpha * A1[3+bs*0];
 
 		C  += 1;
 		A0 += bs;
@@ -220,7 +241,7 @@ void kernel_dgetr_8_lib4(int tri, int kmax, int kna, double *A0, int sda, double
 
 
 // transposed of general matrices, read along panels, write across panels
-void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int sdc)
+void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double alpha, double *A, double *C, int sdc)
 	{
 
 	if(tri==1)
@@ -234,8 +255,11 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 	const int bs = 4;
 	
 	__m256d
+		alph,
 		v0, v1, v2, v3,
 		v4, v5, v6, v7;
+	
+	alph = _mm256_broadcast_sd( &alpha );
 	
 	int k;
 
@@ -248,10 +272,10 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 		{
 		for( ; k<kna; k++)
 			{
-			C[0+bs*0] = A[0+bs*0];
-			C[0+bs*1] = A[1+bs*0];
-			C[0+bs*2] = A[2+bs*0];
-			C[0+bs*3] = A[3+bs*0];
+			C[0+bs*0] = alpha * A[0+bs*0];
+			C[0+bs*1] = alpha * A[1+bs*0];
+			C[0+bs*2] = alpha * A[2+bs*0];
+			C[0+bs*3] = alpha * A[3+bs*0];
 
 			C += 1;
 			A += bs;
@@ -272,14 +296,17 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 		A += 4*bs;
 
 		v4 = _mm256_unpacklo_pd( v0, v1 ); // 00 01 02 03
+		v4 = _mm256_mul_pd( v4, alph );
+		_mm256_store_pd( &C[0+bs*4], v4 );
 		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
+		v5 = _mm256_mul_pd( v5, alph );
+		_mm256_store_pd( &C[0+bs*5], v5 );
 		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
+		v6 = _mm256_mul_pd( v6, alph );
+		_mm256_store_pd( &C[0+bs*6], v6 );
 		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
-
-		_mm256_store_pd( &C[0+bs*0], v4 );
-		_mm256_store_pd( &C[0+bs*1], v5 );
-		_mm256_store_pd( &C[0+bs*2], v6 );
-		_mm256_store_pd( &C[0+bs*3], v7 );
+		v7 = _mm256_mul_pd( v7, alph );
+		_mm256_store_pd( &C[0+bs*7], v7 );
 
 		C += sdc*bs;
 
@@ -290,19 +317,22 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 		
 		A += 4*bs;
 
-		v4 = _mm256_unpacklo_pd( v0, v1 );
-		v5 = _mm256_unpackhi_pd( v0, v1 );
-		v6 = _mm256_unpacklo_pd( v2, v3 );
-		v7 = _mm256_unpackhi_pd( v2, v3 );
-
-		_mm256_store_pd( &C[0+bs*0], v4 );
-		_mm256_store_pd( &C[0+bs*1], v5 );
-		_mm256_store_pd( &C[0+bs*2], v6 );
-		_mm256_store_pd( &C[0+bs*3], v7 );
+		v4 = _mm256_unpacklo_pd( v0, v1 ); // 00 01 02 03
+		v4 = _mm256_mul_pd( v4, alph );
+		_mm256_store_pd( &C[0+bs*4], v4 );
+		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
+		v5 = _mm256_mul_pd( v5, alph );
+		_mm256_store_pd( &C[0+bs*5], v5 );
+		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
+		v6 = _mm256_mul_pd( v6, alph );
+		_mm256_store_pd( &C[0+bs*6], v6 );
+		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
+		v7 = _mm256_mul_pd( v7, alph );
+		_mm256_store_pd( &C[0+bs*7], v7 );
 
 		C += sdc*bs;
 
-#else
+#else // TODO alpha
 
 		v0 = _mm256_load_pd( &A[0+bs*0] ); // 00 10 20 30
 		v1 = _mm256_load_pd( &A[0+bs*1] ); // 01 11 21 31
@@ -365,14 +395,17 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 		A += 4*bs;
 
 		v4 = _mm256_unpacklo_pd( v0, v1 ); // 00 01 02 03
+		v4 = _mm256_mul_pd( v4, alph );
+		_mm256_store_pd( &C[0+bs*4], v4 );
 		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
+		v5 = _mm256_mul_pd( v5, alph );
+		_mm256_store_pd( &C[0+bs*5], v5 );
 		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
+		v6 = _mm256_mul_pd( v6, alph );
+		_mm256_store_pd( &C[0+bs*6], v6 );
 		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
-
-		_mm256_store_pd( &C[0+bs*0], v4 );
-		_mm256_store_pd( &C[0+bs*1], v5 );
-		_mm256_store_pd( &C[0+bs*2], v6 );
-		_mm256_store_pd( &C[0+bs*3], v7 );
+		v7 = _mm256_mul_pd( v7, alph );
+		_mm256_store_pd( &C[0+bs*7], v7 );
 
 		C += sdc*bs;
 
@@ -408,10 +441,10 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 	for( ; k<kmax; k++)
 		{
-		C[0+bs*0] = A[0+bs*0];
-		C[0+bs*1] = A[1+bs*0];
-		C[0+bs*2] = A[2+bs*0];
-		C[0+bs*3] = A[3+bs*0];
+		C[0+bs*0] = alpha * A[0+bs*0];
+		C[0+bs*1] = alpha * A[1+bs*0];
+		C[0+bs*2] = alpha * A[2+bs*0];
+		C[0+bs*3] = alpha * A[3+bs*0];
 
 		C += 1;
 		A += bs;
@@ -424,30 +457,30 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 		if(kna==1)
 			{
-			C[0+bs*1] = A[1+bs*0];
-			C[0+bs*2] = A[2+bs*0];
-			C[0+bs*3] = A[3+bs*0];
-			C[1+bs*(sdc+1)] = A[2+bs*1];
-			C[1+bs*(sdc+2)] = A[3+bs*1];
-			C[2+bs*(sdc+2)] = A[3+bs*2];
+			C[0+bs*1] = alpha * A[1+bs*0];
+			C[0+bs*2] = alpha * A[2+bs*0];
+			C[0+bs*3] = alpha * A[3+bs*0];
+			C[1+bs*(sdc+1)] = alpha * A[2+bs*1];
+			C[1+bs*(sdc+2)] = alpha * A[3+bs*1];
+			C[2+bs*(sdc+2)] = alpha * A[3+bs*2];
 			}
 		else if(kna==2)
 			{
-			C[0+bs*1] = A[1+bs*0];
-			C[0+bs*2] = A[2+bs*0];
-			C[0+bs*3] = A[3+bs*0];
-			C[1+bs*2] = A[2+bs*1];
-			C[1+bs*3] = A[3+bs*1];
-			C[2+bs*(sdc+2)] = A[3+bs*2];
+			C[0+bs*1] = alpha * A[1+bs*0];
+			C[0+bs*2] = alpha * A[2+bs*0];
+			C[0+bs*3] = alpha * A[3+bs*0];
+			C[1+bs*2] = alpha * A[2+bs*1];
+			C[1+bs*3] = alpha * A[3+bs*1];
+			C[2+bs*(sdc+2)] = alpha * A[3+bs*2];
 			}
 		else
 			{
-			C[0+bs*1] = A[1+bs*0];
-			C[0+bs*2] = A[2+bs*0];
-			C[0+bs*3] = A[3+bs*0];
-			C[1+bs*2] = A[2+bs*1];
-			C[1+bs*3] = A[3+bs*1];
-			C[2+bs*3] = A[3+bs*2];
+			C[0+bs*1] = alpha * A[1+bs*0];
+			C[0+bs*2] = alpha * A[2+bs*0];
+			C[0+bs*3] = alpha * A[3+bs*0];
+			C[1+bs*2] = alpha * A[2+bs*1];
+			C[1+bs*3] = alpha * A[3+bs*1];
+			C[2+bs*3] = alpha * A[3+bs*2];
 			}
 		}
 
@@ -456,7 +489,7 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 
 // transposed of general matrices, read along panels, write across panels
-void kernel_dgetr_3_lib4(int tri, int kmax, int kna, double *A, double *C, int sdc)
+void kernel_dgetr_3_lib4(int tri, int kmax, int kna, double alpha, double *A, double *C, int sdc)
 	{
 
 	if(tri==1)
@@ -480,9 +513,9 @@ void kernel_dgetr_3_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 		{
 		for( ; k<kna; k++)
 			{
-			C[0+bs*0] = A[0+bs*0];
-			C[0+bs*1] = A[1+bs*0];
-			C[0+bs*2] = A[2+bs*0];
+			C[0+bs*0] = alpha * A[0+bs*0];
+			C[0+bs*1] = alpha * A[1+bs*0];
+			C[0+bs*2] = alpha * A[2+bs*0];
 
 			C += 1;
 			A += bs;
@@ -492,21 +525,21 @@ void kernel_dgetr_3_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 	
 	for( ; k<kmax-3; k+=4)
 		{
-		C[0+bs*0] = A[0+bs*0];
-		C[0+bs*1] = A[1+bs*0];
-		C[0+bs*2] = A[2+bs*0];
+		C[0+bs*0] = alpha * A[0+bs*0];
+		C[0+bs*1] = alpha * A[1+bs*0];
+		C[0+bs*2] = alpha * A[2+bs*0];
 
-		C[1+bs*0] = A[0+bs*1];
-		C[1+bs*1] = A[1+bs*1];
-		C[1+bs*2] = A[2+bs*1];
+		C[1+bs*0] = alpha * A[0+bs*1];
+		C[1+bs*1] = alpha * A[1+bs*1];
+		C[1+bs*2] = alpha * A[2+bs*1];
 
-		C[2+bs*0] = A[0+bs*2];
-		C[2+bs*1] = A[1+bs*2];
-		C[2+bs*2] = A[2+bs*2];
+		C[2+bs*0] = alpha * A[0+bs*2];
+		C[2+bs*1] = alpha * A[1+bs*2];
+		C[2+bs*2] = alpha * A[2+bs*2];
 
-		C[3+bs*0] = A[0+bs*3];
-		C[3+bs*1] = A[1+bs*3];
-		C[3+bs*2] = A[2+bs*3];
+		C[3+bs*0] = alpha * A[0+bs*3];
+		C[3+bs*1] = alpha * A[1+bs*3];
+		C[3+bs*2] = alpha * A[2+bs*3];
 
 		C += bs*sdc;
 		A += bs*bs;
@@ -516,9 +549,9 @@ void kernel_dgetr_3_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 	for( ; k<kmax; k++)
 		{
-		C[0+bs*0] = A[0+bs*0];
-		C[0+bs*1] = A[1+bs*0];
-		C[0+bs*2] = A[2+bs*0];
+		C[0+bs*0] = alpha * A[0+bs*0];
+		C[0+bs*1] = alpha * A[1+bs*0];
+		C[0+bs*2] = alpha * A[2+bs*0];
 
 		C += 1;
 		A += bs;
@@ -531,15 +564,15 @@ void kernel_dgetr_3_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 		if(kna==1)
 			{
-			C[0+bs*1] = A[1+bs*0];
-			C[0+bs*2] = A[2+bs*0];
-			C[1+bs*(sdc+1)] = A[2+bs*1];
+			C[0+bs*1] = alpha * A[1+bs*0];
+			C[0+bs*2] = alpha * A[2+bs*0];
+			C[1+bs*(sdc+1)] = alpha * A[2+bs*1];
 			}
 		else
 			{
-			C[0+bs*1] = A[1+bs*0];
-			C[0+bs*2] = A[2+bs*0];
-			C[1+bs*2] = A[2+bs*1];
+			C[0+bs*1] = alpha * A[1+bs*0];
+			C[0+bs*2] = alpha * A[2+bs*0];
+			C[1+bs*2] = alpha * A[2+bs*1];
 			}
 		}
 
@@ -548,7 +581,7 @@ void kernel_dgetr_3_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 
 // transposed of general matrices, read along panels, write across panels
-void kernel_dgetr_2_lib4(int tri, int kmax, int kna, double *A, double *C, int sdc)
+void kernel_dgetr_2_lib4(int tri, int kmax, int kna, double alpha, double *A, double *C, int sdc)
 	{
 
 	if(tri==1)
@@ -572,8 +605,8 @@ void kernel_dgetr_2_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 		{
 		for( ; k<kna; k++)
 			{
-			C[0+bs*0] = A[0+bs*0];
-			C[0+bs*1] = A[1+bs*0];
+			C[0+bs*0] = alpha * A[0+bs*0];
+			C[0+bs*1] = alpha * A[1+bs*0];
 
 			C += 1;
 			A += bs;
@@ -583,17 +616,17 @@ void kernel_dgetr_2_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 	
 	for( ; k<kmax-3; k+=4)
 		{
-		C[0+bs*0] = A[0+bs*0];
-		C[0+bs*1] = A[1+bs*0];
+		C[0+bs*0] = alpha * A[0+bs*0];
+		C[0+bs*1] = alpha * A[1+bs*0];
 
-		C[1+bs*0] = A[0+bs*1];
-		C[1+bs*1] = A[1+bs*1];
+		C[1+bs*0] = alpha * A[0+bs*1];
+		C[1+bs*1] = alpha * A[1+bs*1];
 
-		C[2+bs*0] = A[0+bs*2];
-		C[2+bs*1] = A[1+bs*2];
+		C[2+bs*0] = alpha * A[0+bs*2];
+		C[2+bs*1] = alpha * A[1+bs*2];
 
-		C[3+bs*0] = A[0+bs*3];
-		C[3+bs*1] = A[1+bs*3];
+		C[3+bs*0] = alpha * A[0+bs*3];
+		C[3+bs*1] = alpha * A[1+bs*3];
 
 		C += bs*sdc;
 		A += bs*bs;
@@ -603,8 +636,8 @@ void kernel_dgetr_2_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 	for( ; k<kmax; k++)
 		{
-		C[0+bs*0] = A[0+bs*0];
-		C[0+bs*1] = A[1+bs*0];
+		C[0+bs*0] = alpha * A[0+bs*0];
+		C[0+bs*1] = alpha * A[1+bs*0];
 
 		C += 1;
 		A += bs;
@@ -613,7 +646,7 @@ void kernel_dgetr_2_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 	if(tri==1)
 		{
 		// end 1x1 triangle
-		C[0+bs*1] = A[1+bs*0];
+		C[0+bs*1] = alpha * A[1+bs*0];
 		}
 
 	}
@@ -621,7 +654,7 @@ void kernel_dgetr_2_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 
 // transposed of general matrices, read along panels, write across panels
-void kernel_dgetr_1_lib4(int tri, int kmax, int kna, double *A, double *C, int sdc)
+void kernel_dgetr_1_lib4(int tri, int kmax, int kna, double alpha, double *A, double *C, int sdc)
 	{
 
 	if(tri==1)
@@ -645,7 +678,7 @@ void kernel_dgetr_1_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 		{
 		for( ; k<kna; k++)
 			{
-			C[0+bs*0] = A[0+bs*0];
+			C[0+bs*0] = alpha * A[0+bs*0];
 
 			C += 1;
 			A += bs;
@@ -655,13 +688,13 @@ void kernel_dgetr_1_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 	
 	for( ; k<kmax-3; k+=4)
 		{
-		C[0+bs*0] = A[0+bs*0];
+		C[0+bs*0] = alpha * A[0+bs*0];
 
-		C[1+bs*0] = A[0+bs*1];
+		C[1+bs*0] = alpha * A[0+bs*1];
 
-		C[2+bs*0] = A[0+bs*2];
+		C[2+bs*0] = alpha * A[0+bs*2];
 
-		C[3+bs*0] = A[0+bs*3];
+		C[3+bs*0] = alpha * A[0+bs*3];
 
 		C += bs*sdc;
 		A += bs*bs;
@@ -671,7 +704,7 @@ void kernel_dgetr_1_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 	for( ; k<kmax; k++)
 		{
-		C[0+bs*0] = A[0+bs*0];
+		C[0+bs*0] = alpha * A[0+bs*0];
 
 		C += 1;
 		A += bs;

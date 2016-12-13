@@ -30,7 +30,7 @@
 
 
 // transposed of general matrices, read along panels, write across panels
-void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int sdc)
+void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double alpha, double *A, double *C, int sdc)
 	{
 
 	if(tri==1)
@@ -54,10 +54,10 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 		{
 		for( ; k<kna; k++)
 			{
-			C[0+bs*0] = A[0+bs*0];
-			C[0+bs*1] = A[1+bs*0];
-			C[0+bs*2] = A[2+bs*0];
-			C[0+bs*3] = A[3+bs*0];
+			C[0+bs*0] = alpha * A[0+bs*0];
+			C[0+bs*1] = alpha * A[1+bs*0];
+			C[0+bs*2] = alpha * A[2+bs*0];
+			C[0+bs*3] = alpha * A[3+bs*0];
 
 			C += 1;
 			A += bs;
@@ -67,25 +67,25 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 	
 	for( ; k<kmax-3; k+=4)
 		{
-		C[0+bs*0] = A[0+bs*0];
-		C[0+bs*1] = A[1+bs*0];
-		C[0+bs*2] = A[2+bs*0];
-		C[0+bs*3] = A[3+bs*0];
+		C[0+bs*0] = alpha * A[0+bs*0];
+		C[0+bs*1] = alpha * A[1+bs*0];
+		C[0+bs*2] = alpha * A[2+bs*0];
+		C[0+bs*3] = alpha * A[3+bs*0];
 
-		C[1+bs*0] = A[0+bs*1];
-		C[1+bs*1] = A[1+bs*1];
-		C[1+bs*2] = A[2+bs*1];
-		C[1+bs*3] = A[3+bs*1];
+		C[1+bs*0] = alpha * A[0+bs*1];
+		C[1+bs*1] = alpha * A[1+bs*1];
+		C[1+bs*2] = alpha * A[2+bs*1];
+		C[1+bs*3] = alpha * A[3+bs*1];
 
-		C[2+bs*0] = A[0+bs*2];
-		C[2+bs*1] = A[1+bs*2];
-		C[2+bs*2] = A[2+bs*2];
-		C[2+bs*3] = A[3+bs*2];
+		C[2+bs*0] = alpha * A[0+bs*2];
+		C[2+bs*1] = alpha * A[1+bs*2];
+		C[2+bs*2] = alpha * A[2+bs*2];
+		C[2+bs*3] = alpha * A[3+bs*2];
 
-		C[3+bs*0] = A[0+bs*3];
-		C[3+bs*1] = A[1+bs*3];
-		C[3+bs*2] = A[2+bs*3];
-		C[3+bs*3] = A[3+bs*3];
+		C[3+bs*0] = alpha * A[0+bs*3];
+		C[3+bs*1] = alpha * A[1+bs*3];
+		C[3+bs*2] = alpha * A[2+bs*3];
+		C[3+bs*3] = alpha * A[3+bs*3];
 
 		C += bs*sdc;
 		A += bs*bs;
@@ -95,10 +95,10 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 	for( ; k<kmax; k++)
 		{
-		C[0+bs*0] = A[0+bs*0];
-		C[0+bs*1] = A[1+bs*0];
-		C[0+bs*2] = A[2+bs*0];
-		C[0+bs*3] = A[3+bs*0];
+		C[0+bs*0] = alpha * A[0+bs*0];
+		C[0+bs*1] = alpha * A[1+bs*0];
+		C[0+bs*2] = alpha * A[2+bs*0];
+		C[0+bs*3] = alpha * A[3+bs*0];
 
 		C += 1;
 		A += bs;
@@ -111,30 +111,30 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 		if(kna==1)
 			{
-			C[0+bs*1] = A[1+bs*0];
-			C[0+bs*2] = A[2+bs*0];
-			C[0+bs*3] = A[3+bs*0];
-			C[1+bs*(sdc+1)] = A[2+bs*1];
-			C[1+bs*(sdc+2)] = A[3+bs*1];
-			C[2+bs*(sdc+2)] = A[3+bs*2];
+			C[0+bs*1] = alpha * A[1+bs*0];
+			C[0+bs*2] = alpha * A[2+bs*0];
+			C[0+bs*3] = alpha * A[3+bs*0];
+			C[1+bs*(sdc+1)] = alpha * A[2+bs*1];
+			C[1+bs*(sdc+2)] = alpha * A[3+bs*1];
+			C[2+bs*(sdc+2)] = alpha * A[3+bs*2];
 			}
 		else if(kna==2)
 			{
-			C[0+bs*1] = A[1+bs*0];
-			C[0+bs*2] = A[2+bs*0];
-			C[0+bs*3] = A[3+bs*0];
-			C[1+bs*2] = A[2+bs*1];
-			C[1+bs*3] = A[3+bs*1];
-			C[2+bs*(sdc+2)] = A[3+bs*2];
+			C[0+bs*1] = alpha * A[1+bs*0];
+			C[0+bs*2] = alpha * A[2+bs*0];
+			C[0+bs*3] = alpha * A[3+bs*0];
+			C[1+bs*2] = alpha * A[2+bs*1];
+			C[1+bs*3] = alpha * A[3+bs*1];
+			C[2+bs*(sdc+2)] = alpha * A[3+bs*2];
 			}
 		else
 			{
-			C[0+bs*1] = A[1+bs*0];
-			C[0+bs*2] = A[2+bs*0];
-			C[0+bs*3] = A[3+bs*0];
-			C[1+bs*2] = A[2+bs*1];
-			C[1+bs*3] = A[3+bs*1];
-			C[2+bs*3] = A[3+bs*2];
+			C[0+bs*1] = alpha * A[1+bs*0];
+			C[0+bs*2] = alpha * A[2+bs*0];
+			C[0+bs*3] = alpha * A[3+bs*0];
+			C[1+bs*2] = alpha * A[2+bs*1];
+			C[1+bs*3] = alpha * A[3+bs*1];
+			C[2+bs*3] = alpha * A[3+bs*2];
 			}
 		}
 
@@ -143,7 +143,7 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 
 // transposed of general matrices, read along panels, write across panels
-void kernel_dgetr_3_lib4(int tri, int kmax, int kna, double *A, double *C, int sdc)
+void kernel_dgetr_3_lib4(int tri, int kmax, int kna, double alpha, double *A, double *C, int sdc)
 	{
 
 	if(tri==1)
@@ -167,9 +167,9 @@ void kernel_dgetr_3_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 		{
 		for( ; k<kna; k++)
 			{
-			C[0+bs*0] = A[0+bs*0];
-			C[0+bs*1] = A[1+bs*0];
-			C[0+bs*2] = A[2+bs*0];
+			C[0+bs*0] = alpha * A[0+bs*0];
+			C[0+bs*1] = alpha * A[1+bs*0];
+			C[0+bs*2] = alpha * A[2+bs*0];
 
 			C += 1;
 			A += bs;
@@ -179,21 +179,21 @@ void kernel_dgetr_3_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 	
 	for( ; k<kmax-3; k+=4)
 		{
-		C[0+bs*0] = A[0+bs*0];
-		C[0+bs*1] = A[1+bs*0];
-		C[0+bs*2] = A[2+bs*0];
+		C[0+bs*0] = alpha * A[0+bs*0];
+		C[0+bs*1] = alpha * A[1+bs*0];
+		C[0+bs*2] = alpha * A[2+bs*0];
 
-		C[1+bs*0] = A[0+bs*1];
-		C[1+bs*1] = A[1+bs*1];
-		C[1+bs*2] = A[2+bs*1];
+		C[1+bs*0] = alpha * A[0+bs*1];
+		C[1+bs*1] = alpha * A[1+bs*1];
+		C[1+bs*2] = alpha * A[2+bs*1];
 
-		C[2+bs*0] = A[0+bs*2];
-		C[2+bs*1] = A[1+bs*2];
-		C[2+bs*2] = A[2+bs*2];
+		C[2+bs*0] = alpha * A[0+bs*2];
+		C[2+bs*1] = alpha * A[1+bs*2];
+		C[2+bs*2] = alpha * A[2+bs*2];
 
-		C[3+bs*0] = A[0+bs*3];
-		C[3+bs*1] = A[1+bs*3];
-		C[3+bs*2] = A[2+bs*3];
+		C[3+bs*0] = alpha * A[0+bs*3];
+		C[3+bs*1] = alpha * A[1+bs*3];
+		C[3+bs*2] = alpha * A[2+bs*3];
 
 		C += bs*sdc;
 		A += bs*bs;
@@ -203,9 +203,9 @@ void kernel_dgetr_3_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 	for( ; k<kmax; k++)
 		{
-		C[0+bs*0] = A[0+bs*0];
-		C[0+bs*1] = A[1+bs*0];
-		C[0+bs*2] = A[2+bs*0];
+		C[0+bs*0] = alpha * A[0+bs*0];
+		C[0+bs*1] = alpha * A[1+bs*0];
+		C[0+bs*2] = alpha * A[2+bs*0];
 
 		C += 1;
 		A += bs;
@@ -218,15 +218,15 @@ void kernel_dgetr_3_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 		if(kna==1)
 			{
-			C[0+bs*1] = A[1+bs*0];
-			C[0+bs*2] = A[2+bs*0];
-			C[1+bs*(sdc+1)] = A[2+bs*1];
+			C[0+bs*1] = alpha * A[1+bs*0];
+			C[0+bs*2] = alpha * A[2+bs*0];
+			C[1+bs*(sdc+1)] = alpha * A[2+bs*1];
 			}
 		else
 			{
-			C[0+bs*1] = A[1+bs*0];
-			C[0+bs*2] = A[2+bs*0];
-			C[1+bs*2] = A[2+bs*1];
+			C[0+bs*1] = alpha * A[1+bs*0];
+			C[0+bs*2] = alpha * A[2+bs*0];
+			C[1+bs*2] = alpha * A[2+bs*1];
 			}
 		}
 
@@ -235,7 +235,7 @@ void kernel_dgetr_3_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 
 // transposed of general matrices, read along panels, write across panels
-void kernel_dgetr_2_lib4(int tri, int kmax, int kna, double *A, double *C, int sdc)
+void kernel_dgetr_2_lib4(int tri, int kmax, int kna, double alpha, double *A, double *C, int sdc)
 	{
 
 	if(tri==1)
@@ -259,8 +259,8 @@ void kernel_dgetr_2_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 		{
 		for( ; k<kna; k++)
 			{
-			C[0+bs*0] = A[0+bs*0];
-			C[0+bs*1] = A[1+bs*0];
+			C[0+bs*0] = alpha * A[0+bs*0];
+			C[0+bs*1] = alpha * A[1+bs*0];
 
 			C += 1;
 			A += bs;
@@ -270,17 +270,17 @@ void kernel_dgetr_2_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 	
 	for( ; k<kmax-3; k+=4)
 		{
-		C[0+bs*0] = A[0+bs*0];
-		C[0+bs*1] = A[1+bs*0];
+		C[0+bs*0] = alpha * A[0+bs*0];
+		C[0+bs*1] = alpha * A[1+bs*0];
 
-		C[1+bs*0] = A[0+bs*1];
-		C[1+bs*1] = A[1+bs*1];
+		C[1+bs*0] = alpha * A[0+bs*1];
+		C[1+bs*1] = alpha * A[1+bs*1];
 
-		C[2+bs*0] = A[0+bs*2];
-		C[2+bs*1] = A[1+bs*2];
+		C[2+bs*0] = alpha * A[0+bs*2];
+		C[2+bs*1] = alpha * A[1+bs*2];
 
-		C[3+bs*0] = A[0+bs*3];
-		C[3+bs*1] = A[1+bs*3];
+		C[3+bs*0] = alpha * A[0+bs*3];
+		C[3+bs*1] = alpha * A[1+bs*3];
 
 		C += bs*sdc;
 		A += bs*bs;
@@ -290,8 +290,8 @@ void kernel_dgetr_2_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 	for( ; k<kmax; k++)
 		{
-		C[0+bs*0] = A[0+bs*0];
-		C[0+bs*1] = A[1+bs*0];
+		C[0+bs*0] = alpha * A[0+bs*0];
+		C[0+bs*1] = alpha * A[1+bs*0];
 
 		C += 1;
 		A += bs;
@@ -300,7 +300,7 @@ void kernel_dgetr_2_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 	if(tri==1)
 		{
 		// end 1x1 triangle
-		C[0+bs*1] = A[1+bs*0];
+		C[0+bs*1] = alpha * A[1+bs*0];
 		}
 
 	}
@@ -308,7 +308,7 @@ void kernel_dgetr_2_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 
 // transposed of general matrices, read along panels, write across panels
-void kernel_dgetr_1_lib4(int tri, int kmax, int kna, double *A, double *C, int sdc)
+void kernel_dgetr_1_lib4(int tri, int kmax, int kna, double alpha, double *A, double *C, int sdc)
 	{
 
 	if(tri==1)
@@ -332,7 +332,7 @@ void kernel_dgetr_1_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 		{
 		for( ; k<kna; k++)
 			{
-			C[0+bs*0] = A[0+bs*0];
+			C[0+bs*0] = alpha * A[0+bs*0];
 
 			C += 1;
 			A += bs;
@@ -342,13 +342,13 @@ void kernel_dgetr_1_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 	
 	for( ; k<kmax-3; k+=4)
 		{
-		C[0+bs*0] = A[0+bs*0];
+		C[0+bs*0] = alpha * A[0+bs*0];
 
-		C[1+bs*0] = A[0+bs*1];
+		C[1+bs*0] = alpha * A[0+bs*1];
 
-		C[2+bs*0] = A[0+bs*2];
+		C[2+bs*0] = alpha * A[0+bs*2];
 
-		C[3+bs*0] = A[0+bs*3];
+		C[3+bs*0] = alpha * A[0+bs*3];
 
 		C += bs*sdc;
 		A += bs*bs;
@@ -358,7 +358,7 @@ void kernel_dgetr_1_lib4(int tri, int kmax, int kna, double *A, double *C, int s
 
 	for( ; k<kmax; k++)
 		{
-		C[0+bs*0] = A[0+bs*0];
+		C[0+bs*0] = alpha * A[0+bs*0];
 
 		C += 1;
 		A += bs;

@@ -1313,7 +1313,7 @@ void dgead_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int 
 
 
 // transpose general matrix; m and n are referred to the original matrix
-void dgetr_lib(int m, int n, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc)
+void dgetr_lib(int m, int n, double alpha, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc)
 	{
 
 /*
@@ -1356,11 +1356,11 @@ C =
 	if(mna>0)
 		{
 		if(mna==1)
-			kernel_dgetr_1_lib4(0, n, nna, pA, pC, sdc);
+			kernel_dgetr_1_lib4(0, n, nna, alpha, pA, pC, sdc);
 		else if(mna==2)
-			kernel_dgetr_2_lib4(0, n, nna, pA, pC, sdc);
+			kernel_dgetr_2_lib4(0, n, nna, alpha, pA, pC, sdc);
 		else //if(mna==3)
-			kernel_dgetr_3_lib4(0, n, nna, pA, pC, sdc);
+			kernel_dgetr_3_lib4(0, n, nna, alpha, pA, pC, sdc);
 		ii += mna;
 		pA += mna + bs*(sda-1);
 		pC += mna*bs;
@@ -1368,7 +1368,7 @@ C =
 #if defined(TARGET_X64_INTEL_HASWELL)
 	for( ; ii<m-7; ii+=8)
 		{
-		kernel_dgetr_8_lib4(0, n, nna, pA, sda, pC, sdc);
+		kernel_dgetr_8_lib4(0, n, nna, alpha, pA, sda, pC, sdc);
 		pA += 2*bs*sda;
 		pC += 2*bs*bs;
 		}
@@ -1376,7 +1376,7 @@ C =
 	for( ; ii<m-3; ii+=4)
 //	for( ; ii<m; ii+=4)
 		{
-		kernel_dgetr_4_lib4(0, n, nna, pA, pC, sdc);
+		kernel_dgetr_4_lib4(0, n, nna, alpha, pA, pC, sdc);
 		pA += bs*sda;
 		pC += bs*bs;
 		}
@@ -1386,11 +1386,11 @@ C =
 		return;
 	
 	if(m-ii==1)
-		kernel_dgetr_1_lib4(0, n, nna, pA, pC, sdc);
+		kernel_dgetr_1_lib4(0, n, nna, alpha, pA, pC, sdc);
 	else if(m-ii==2)
-		kernel_dgetr_2_lib4(0, n, nna, pA, pC, sdc);
+		kernel_dgetr_2_lib4(0, n, nna, alpha, pA, pC, sdc);
 	else if(m-ii==3)
-		kernel_dgetr_3_lib4(0, n, nna, pA, pC, sdc);
+		kernel_dgetr_3_lib4(0, n, nna, alpha, pA, pC, sdc);
 		
 	return;
 	
@@ -1399,7 +1399,7 @@ C =
 
 
 // transpose lower triangular matrix
-void dtrtr_l_lib(int m, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc)
+void dtrtr_l_lib(int m, double alpha, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc)
 	{
 
 /*
@@ -1449,51 +1449,51 @@ C =
 		{
 		if(mna==1)
 			{
-			pC[0] = pA[0];
+			pC[0] = alpha * pA[0];
 			}
 		else if(mna==2)
 			{
 			if(nna==1)
 				{
-				pC[0+bs*0] = pA[0+bs*0];
-				pC[0+bs*1] = pA[1+bs*0];
-				pC[1+bs*(0+sdc)] = pA[1+bs*1];
+				pC[0+bs*0] = alpha * pA[0+bs*0];
+				pC[0+bs*1] = alpha * pA[1+bs*0];
+				pC[1+bs*(0+sdc)] = alpha * pA[1+bs*1];
 				}
 			else
 				{
-				pC[0+bs*0] = pA[0+bs*0];
-				pC[0+bs*1] = pA[1+bs*0];
-				pC[1+bs*1] = pA[1+bs*1];
+				pC[0+bs*0] = alpha * pA[0+bs*0];
+				pC[0+bs*1] = alpha * pA[1+bs*0];
+				pC[1+bs*1] = alpha * pA[1+bs*1];
 				}
 			}
 		else //if(mna==3)
 			{
 			if(nna==1)
 				{
-				pC[0+bs*0] = pA[0+bs*0];
-				pC[0+bs*1] = pA[1+bs*0];
-				pC[0+bs*2] = pA[2+bs*0];
-				pC[1+bs*(0+sdc)] = pA[1+bs*1];
-				pC[1+bs*(1+sdc)] = pA[2+bs*1];
-				pC[2+bs*(1+sdc)] = pA[2+bs*2];
+				pC[0+bs*0] = alpha * pA[0+bs*0];
+				pC[0+bs*1] = alpha * pA[1+bs*0];
+				pC[0+bs*2] = alpha * pA[2+bs*0];
+				pC[1+bs*(0+sdc)] = alpha * pA[1+bs*1];
+				pC[1+bs*(1+sdc)] = alpha * pA[2+bs*1];
+				pC[2+bs*(1+sdc)] = alpha * pA[2+bs*2];
 				}
 			else if(nna==2)
 				{
-				pC[0+bs*0] = pA[0+bs*0];
-				pC[0+bs*1] = pA[1+bs*0];
-				pC[0+bs*2] = pA[2+bs*0];
-				pC[1+bs*1] = pA[1+bs*1];
-				pC[1+bs*2] = pA[2+bs*1];
-				pC[2+bs*(1+sdc)] = pA[2+bs*2];
+				pC[0+bs*0] = alpha * pA[0+bs*0];
+				pC[0+bs*1] = alpha * pA[1+bs*0];
+				pC[0+bs*2] = alpha * pA[2+bs*0];
+				pC[1+bs*1] = alpha * pA[1+bs*1];
+				pC[1+bs*2] = alpha * pA[2+bs*1];
+				pC[2+bs*(1+sdc)] = alpha * pA[2+bs*2];
 				}
 			else
 				{
-				pC[0+bs*0] = pA[0+bs*0];
-				pC[0+bs*1] = pA[1+bs*0];
-				pC[0+bs*2] = pA[2+bs*0];
-				pC[1+bs*1] = pA[1+bs*1];
-				pC[1+bs*2] = pA[2+bs*1];
-				pC[2+bs*2] = pA[2+bs*2];
+				pC[0+bs*0] = alpha * pA[0+bs*0];
+				pC[0+bs*1] = alpha * pA[1+bs*0];
+				pC[0+bs*2] = alpha * pA[2+bs*0];
+				pC[1+bs*1] = alpha * pA[1+bs*1];
+				pC[1+bs*2] = alpha * pA[2+bs*1];
+				pC[2+bs*2] = alpha * pA[2+bs*2];
 				}
 			}
 		ii += mna;
@@ -1503,14 +1503,14 @@ C =
 #if 0 //defined(TARGET_X64_INTEL_HASWELL)
 	for( ; ii<m-7; ii+=8)
 		{
-		kernel_dgetr_8_lib4(1, n, nna, pA, sda, pC, sdc);
+		kernel_dgetr_8_lib4(1, n, nna, alpha, pA, sda, pC, sdc);
 		pA += 2*bs*sda;
 		pC += 2*bs*bs;
 		}
 #endif
 	for( ; ii<m-3; ii+=4)
 		{
-		kernel_dgetr_4_lib4(1, ii, nna, pA, pC, sdc);
+		kernel_dgetr_4_lib4(1, ii, nna, alpha, pA, pC, sdc);
 		pA += bs*sda;
 		pC += bs*bs;
 		}
@@ -1520,11 +1520,11 @@ C =
 		return;
 	
 	if(m-ii==1)
-		kernel_dgetr_1_lib4(1, ii, nna, pA, pC, sdc);
+		kernel_dgetr_1_lib4(1, ii, nna, alpha, pA, pC, sdc);
 	else if(m-ii==2)
-		kernel_dgetr_2_lib4(1, ii, nna, pA, pC, sdc);
+		kernel_dgetr_2_lib4(1, ii, nna, alpha, pA, pC, sdc);
 	else if(m-ii==3)
-		kernel_dgetr_3_lib4(1, ii, nna, pA, pC, sdc);
+		kernel_dgetr_3_lib4(1, ii, nna, alpha, pA, pC, sdc);
 		
 	return;
 
@@ -1533,7 +1533,7 @@ C =
 
 
 // transpose an aligned upper triangular matrix into an aligned lower triangular matrix
-void dtrtr_u_lib(int m, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc)
+void dtrtr_u_lib(int m, double alpha, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc)
 	{
 
 /*
@@ -1583,117 +1583,117 @@ C =
 		{
 		if(mna==1)
 			{
-			kernel_dgetr_1_lib4(0, n, nna, pA, pC, sdc);
+			kernel_dgetr_1_lib4(0, n, nna, alpha, pA, pC, sdc);
 			if(nna!=1)
 				{
-//				pC[0+bs*0] = pA[0+bs*0];
+//				pC[0+bs*0] = alpha * pA[0+bs*0];
 				pA += 1*bs;
 				pC += 1;
 				tna = (bs-(offsetC+1)%bs)%bs;
 				}
 			else //if(nna==1)
 				{
-//				pC[0+bs*0] = pA[0+bs*0];
+//				pC[0+bs*0] = alpha * pA[0+bs*0];
 				pA += 1*bs;
 				pC += 1 + (sdc-1)*bs;
 				tna = 0; //(bs-(offsetC+1)%bs)%bs;
 				}
-//			kernel_dgetr_1_lib4(0, n-1, tna, pA, pC, sdc);
+//			kernel_dgetr_1_lib4(0, n-1, tna, alpha, pA, pC, sdc);
 			}
 		else if(mna==2)
 			{
 			if(nna==0 || nna==3)
 				{
-				pC[0+bs*0] = pA[0+bs*0];
-				pC[1+bs*0] = pA[0+bs*1];
-				pC[1+bs*1] = pA[1+bs*1];
+				pC[0+bs*0] = alpha * pA[0+bs*0];
+				pC[1+bs*0] = alpha * pA[0+bs*1];
+				pC[1+bs*1] = alpha * pA[1+bs*1];
 				pA += 2*bs;
 				pC += 2;
 				tna = (bs-(offsetC+2)%bs)%bs;
-				kernel_dgetr_2_lib4(0, n-2, tna, pA, pC, sdc);
+				kernel_dgetr_2_lib4(0, n-2, tna, alpha, pA, pC, sdc);
 				}
 			else if(nna==1)
 				{
-				pC[0+bs*0] = pA[0+bs*0];
+				pC[0+bs*0] = alpha * pA[0+bs*0];
 				pA += 1*bs;
 				pC += 1 + (sdc-1)*bs;
-//				pC[0+bs*0] = pA[0+bs*0];
-//				pC[0+bs*1] = pA[1+bs*0];
-				kernel_dgetr_2_lib4(0, n-1, 0, pA, pC, sdc);
+//				pC[0+bs*0] = alpha * pA[0+bs*0];
+//				pC[0+bs*1] = alpha * pA[1+bs*0];
+				kernel_dgetr_2_lib4(0, n-1, 0, alpha, pA, pC, sdc);
 				pA += 1*bs;
 				pC += 1;
 				tna = 3; //(bs-(offsetC+2)%bs)%bs;
-//				kernel_dgetr_2_lib4(0, n-2, tna, pA, pC, sdc);
+//				kernel_dgetr_2_lib4(0, n-2, tna, alpha, pA, pC, sdc);
 				}
 			else if(nna==2)
 				{
-				pC[0+bs*0] = pA[0+bs*0];
-				pC[1+bs*0] = pA[0+bs*1];
-				pC[1+bs*1] = pA[1+bs*1];
+				pC[0+bs*0] = alpha * pA[0+bs*0];
+				pC[1+bs*0] = alpha * pA[0+bs*1];
+				pC[1+bs*1] = alpha * pA[1+bs*1];
 				pA += 2*bs;
 				pC += 2 + (sdc-1)*bs;
 				tna = 0; //(bs-(offsetC+2)%bs)%bs;
-				kernel_dgetr_2_lib4(0, n-2, tna, pA, pC, sdc);
+				kernel_dgetr_2_lib4(0, n-2, tna, alpha, pA, pC, sdc);
 				}
 			}
 		else //if(mna==3)
 			{
 			if(nna==0)
 				{
-				pC[0+bs*0] = pA[0+bs*0];
-				pC[1+bs*0] = pA[0+bs*1];
-				pC[1+bs*1] = pA[1+bs*1];
-				pC[2+bs*0] = pA[0+bs*2];
-				pC[2+bs*1] = pA[1+bs*2];
-				pC[2+bs*2] = pA[2+bs*2];
+				pC[0+bs*0] = alpha * pA[0+bs*0];
+				pC[1+bs*0] = alpha * pA[0+bs*1];
+				pC[1+bs*1] = alpha * pA[1+bs*1];
+				pC[2+bs*0] = alpha * pA[0+bs*2];
+				pC[2+bs*1] = alpha * pA[1+bs*2];
+				pC[2+bs*2] = alpha * pA[2+bs*2];
 				pA += 3*bs;
 				pC += 3;
 				tna = 1;
-				kernel_dgetr_3_lib4(0, n-3, tna, pA, pC, sdc);
+				kernel_dgetr_3_lib4(0, n-3, tna, alpha, pA, pC, sdc);
 				}
 			else if(nna==1)
 				{
-				pC[0+bs*0] = pA[0+bs*0];
+				pC[0+bs*0] = alpha * pA[0+bs*0];
 				pA += bs;
 				pC += 1 + (sdc-1)*bs;
-				pC[0+bs*0] = pA[0+bs*0];
-				pC[0+bs*1] = pA[1+bs*0];
-				pC[1+bs*0] = pA[0+bs*1];
-				pC[1+bs*1] = pA[1+bs*1];
-				pC[1+bs*2] = pA[2+bs*1];
+				pC[0+bs*0] = alpha * pA[0+bs*0];
+				pC[0+bs*1] = alpha * pA[1+bs*0];
+				pC[1+bs*0] = alpha * pA[0+bs*1];
+				pC[1+bs*1] = alpha * pA[1+bs*1];
+				pC[1+bs*2] = alpha * pA[2+bs*1];
 				pA += 2*bs;
 				pC += 2;
 				tna = 2;
-				kernel_dgetr_3_lib4(0, n-3, tna, pA, pC, sdc);
+				kernel_dgetr_3_lib4(0, n-3, tna, alpha, pA, pC, sdc);
 				}
 			else if(nna==2)
 				{
-				pC[0+bs*0] = pA[0+bs*0];
-				pC[1+bs*0] = pA[0+bs*1];
-				pC[1+bs*1] = pA[1+bs*1];
+				pC[0+bs*0] = alpha * pA[0+bs*0];
+				pC[1+bs*0] = alpha * pA[0+bs*1];
+				pC[1+bs*1] = alpha * pA[1+bs*1];
 				pA += 2*bs;
 				pC += 2 + (sdc-1)*bs;
-//				pC[0+bs*0] = pA[0+bs*0];
-//				pC[0+bs*1] = pA[1+bs*0];
-//				pC[0+bs*2] = pA[2+bs*0];
-				kernel_dgetr_3_lib4(0, n-2, 0, pA, pC, sdc);
+//				pC[0+bs*0] = alpha * pA[0+bs*0];
+//				pC[0+bs*1] = alpha * pA[1+bs*0];
+//				pC[0+bs*2] = alpha * pA[2+bs*0];
+				kernel_dgetr_3_lib4(0, n-2, 0, alpha, pA, pC, sdc);
 				pA += 1*bs;
 				pC += 1;
 				tna = 3;
-//				kernel_dgetr_3_lib4(0, n-3, tna, pA, pC, sdc);
+//				kernel_dgetr_3_lib4(0, n-3, tna, alpha, pA, pC, sdc);
 				}
 			else //if(nna==3)
 				{
-				pC[0+bs*0] = pA[0+bs*0];
-				pC[1+bs*0] = pA[0+bs*1];
-				pC[1+bs*1] = pA[1+bs*1];
-				pC[2+bs*0] = pA[0+bs*2];
-				pC[2+bs*1] = pA[1+bs*2];
-				pC[2+bs*2] = pA[2+bs*2];
+				pC[0+bs*0] = alpha * pA[0+bs*0];
+				pC[1+bs*0] = alpha * pA[0+bs*1];
+				pC[1+bs*1] = alpha * pA[1+bs*1];
+				pC[2+bs*0] = alpha * pA[0+bs*2];
+				pC[2+bs*1] = alpha * pA[1+bs*2];
+				pC[2+bs*2] = alpha * pA[2+bs*2];
 				pA += 3*bs;
 				pC += 3 + (sdc-1)*bs;
 				tna = 0;
-				kernel_dgetr_3_lib4(0, n-3, tna, pA, pC, sdc);
+				kernel_dgetr_3_lib4(0, n-3, tna, alpha, pA, pC, sdc);
 				}
 			}
 		ii += mna;
@@ -1703,7 +1703,7 @@ C =
 #if 0 //defined(TARGET_X64_AVX2)
 	for( ; ii<m-7; ii+=8)
 		{
-		kernel_dgetr_8_lib4(0, n, nna, pA, sda, pC, sdc);
+		kernel_dgetr_8_lib4(0, n, nna, alpha, pA, sda, pC, sdc);
 		pA += 2*bs*sda;
 		pC += 2*bs*bs;
 		}
@@ -1712,74 +1712,74 @@ C =
 		{
 		if(tna==0)
 			{
-			pC[0+bs*0] = pA[0+bs*0];
-			pC[1+bs*0] = pA[0+bs*1];
-			pC[1+bs*1] = pA[1+bs*1];
-			pC[2+bs*0] = pA[0+bs*2];
-			pC[2+bs*1] = pA[1+bs*2];
-			pC[2+bs*2] = pA[2+bs*2];
-			pC[3+bs*0] = pA[0+bs*3];
-			pC[3+bs*1] = pA[1+bs*3];
-			pC[3+bs*2] = pA[2+bs*3];
-			pC[3+bs*3] = pA[3+bs*3];
+			pC[0+bs*0] = alpha * pA[0+bs*0];
+			pC[1+bs*0] = alpha * pA[0+bs*1];
+			pC[1+bs*1] = alpha * pA[1+bs*1];
+			pC[2+bs*0] = alpha * pA[0+bs*2];
+			pC[2+bs*1] = alpha * pA[1+bs*2];
+			pC[2+bs*2] = alpha * pA[2+bs*2];
+			pC[3+bs*0] = alpha * pA[0+bs*3];
+			pC[3+bs*1] = alpha * pA[1+bs*3];
+			pC[3+bs*2] = alpha * pA[2+bs*3];
+			pC[3+bs*3] = alpha * pA[3+bs*3];
 			pA += 4*bs;
 			pC += sdc*bs;
-			kernel_dgetr_4_lib4(0, n-ii-4, 0, pA, pC, sdc);
+			kernel_dgetr_4_lib4(0, n-ii-4, 0, alpha, pA, pC, sdc);
 			}
 		else if(tna==1)
 			{
-			pC[0+bs*0] = pA[0+bs*0];
+			pC[0+bs*0] = alpha * pA[0+bs*0];
 			pA += bs;
 			pC += 1 + (sdc-1)*bs;
-			pC[0+bs*0] = pA[0+bs*0];
-			pC[0+bs*1] = pA[1+bs*0];
-			pC[1+bs*0] = pA[0+bs*1];
-			pC[1+bs*1] = pA[1+bs*1];
-			pC[1+bs*2] = pA[2+bs*1];
-			pC[2+bs*0] = pA[0+bs*2];
-			pC[2+bs*1] = pA[1+bs*2];
-			pC[2+bs*2] = pA[2+bs*2];
-			pC[2+bs*3] = pA[3+bs*2];
+			pC[0+bs*0] = alpha * pA[0+bs*0];
+			pC[0+bs*1] = alpha * pA[1+bs*0];
+			pC[1+bs*0] = alpha * pA[0+bs*1];
+			pC[1+bs*1] = alpha * pA[1+bs*1];
+			pC[1+bs*2] = alpha * pA[2+bs*1];
+			pC[2+bs*0] = alpha * pA[0+bs*2];
+			pC[2+bs*1] = alpha * pA[1+bs*2];
+			pC[2+bs*2] = alpha * pA[2+bs*2];
+			pC[2+bs*3] = alpha * pA[3+bs*2];
 			pA += 3*bs;
 			pC += 3;
-			kernel_dgetr_4_lib4(0, n-ii-4, 1, pA, pC, sdc);
+			kernel_dgetr_4_lib4(0, n-ii-4, 1, alpha, pA, pC, sdc);
 			}
 		else if(tna==2)
 			{
-			pC[0+bs*0] = pA[0+bs*0];
-			pC[1+bs*0] = pA[0+bs*1];
-			pC[1+bs*1] = pA[1+bs*1];
+			pC[0+bs*0] = alpha * pA[0+bs*0];
+			pC[1+bs*0] = alpha * pA[0+bs*1];
+			pC[1+bs*1] = alpha * pA[1+bs*1];
 			pA += 2*bs;
 			pC += 2 + (sdc-1)*bs;
-			pC[0+bs*0] = pA[0+bs*0];
-			pC[0+bs*1] = pA[1+bs*0];
-			pC[0+bs*2] = pA[2+bs*0];
-			pC[1+bs*0] = pA[0+bs*1];
-			pC[1+bs*1] = pA[1+bs*1];
-			pC[1+bs*2] = pA[2+bs*1];
-			pC[1+bs*3] = pA[3+bs*1];
+			pC[0+bs*0] = alpha * pA[0+bs*0];
+			pC[0+bs*1] = alpha * pA[1+bs*0];
+			pC[0+bs*2] = alpha * pA[2+bs*0];
+			pC[1+bs*0] = alpha * pA[0+bs*1];
+			pC[1+bs*1] = alpha * pA[1+bs*1];
+			pC[1+bs*2] = alpha * pA[2+bs*1];
+			pC[1+bs*3] = alpha * pA[3+bs*1];
 			pA += 2*bs;
 			pC += 2;
-			kernel_dgetr_4_lib4(0, n-ii-4, 2, pA, pC, sdc);
+			kernel_dgetr_4_lib4(0, n-ii-4, 2, alpha, pA, pC, sdc);
 			}
 		else //if(tna==3)
 			{
-			pC[0+bs*0] = pA[0+bs*0];
-			pC[1+bs*0] = pA[0+bs*1];
-			pC[1+bs*1] = pA[1+bs*1];
-			pC[2+bs*0] = pA[0+bs*2];
-			pC[2+bs*1] = pA[1+bs*2];
-			pC[2+bs*2] = pA[2+bs*2];
+			pC[0+bs*0] = alpha * pA[0+bs*0];
+			pC[1+bs*0] = alpha * pA[0+bs*1];
+			pC[1+bs*1] = alpha * pA[1+bs*1];
+			pC[2+bs*0] = alpha * pA[0+bs*2];
+			pC[2+bs*1] = alpha * pA[1+bs*2];
+			pC[2+bs*2] = alpha * pA[2+bs*2];
 			pA += 3*bs;
 			pC += 3 + (sdc-1)*bs;
-			kernel_dgetr_4_lib4(0, n-ii-3, 0, pA, pC, sdc);
-//			pC[0+bs*0] = pA[0+bs*0];
-//			pC[0+bs*1] = pA[1+bs*0];
-//			pC[0+bs*2] = pA[2+bs*0];
-//			pC[0+bs*3] = pA[3+bs*0];
+			kernel_dgetr_4_lib4(0, n-ii-3, 0, alpha, pA, pC, sdc);
+//			pC[0+bs*0] = alpha * pA[0+bs*0];
+//			pC[0+bs*1] = alpha * pA[1+bs*0];
+//			pC[0+bs*2] = alpha * pA[2+bs*0];
+//			pC[0+bs*3] = alpha * pA[3+bs*0];
 			pA += bs;
 			pC += 1;
-//			kernel_dgetr_4_lib4(0, n-ii-4, tna, pA, pC, sdc);
+//			kernel_dgetr_4_lib4(0, n-ii-4, tna, alpha, pA, pC, sdc);
 			}
 		pA += bs*sda;
 		pC += bs*bs;
@@ -1791,57 +1791,57 @@ C =
 	
 	if(m-ii==1)
 		{
-		pC[0+bs*0] = pA[0+bs*0];
+		pC[0+bs*0] = alpha * pA[0+bs*0];
 		}
 	else if(m-ii==2)
 		{
 		if(tna!=1)
 			{
-			pC[0+bs*0] = pA[0+bs*0];
-			pC[1+bs*0] = pA[0+bs*1];
-			pC[1+bs*1] = pA[1+bs*1];
+			pC[0+bs*0] = alpha * pA[0+bs*0];
+			pC[1+bs*0] = alpha * pA[0+bs*1];
+			pC[1+bs*1] = alpha * pA[1+bs*1];
 			}
 		else //if(tna==1)
 			{
-			pC[0+bs*0] = pA[0+bs*0];
+			pC[0+bs*0] = alpha * pA[0+bs*0];
 			pA += bs;
 			pC += 1 + (sdc-1)*bs;
-			pC[0+bs*0] = pA[0+bs*0];
-			pC[0+bs*1] = pA[1+bs*0];
+			pC[0+bs*0] = alpha * pA[0+bs*0];
+			pC[0+bs*1] = alpha * pA[1+bs*0];
 			}
 		}
 	else if(m-ii==3)
 		{
 		if(tna==0 || tna==3)
 			{
-			pC[0+bs*0] = pA[0+bs*0];
-			pC[1+bs*0] = pA[0+bs*1];
-			pC[1+bs*1] = pA[1+bs*1];
-			pC[2+bs*0] = pA[0+bs*2];
-			pC[2+bs*1] = pA[1+bs*2];
-			pC[2+bs*2] = pA[2+bs*2];
+			pC[0+bs*0] = alpha * pA[0+bs*0];
+			pC[1+bs*0] = alpha * pA[0+bs*1];
+			pC[1+bs*1] = alpha * pA[1+bs*1];
+			pC[2+bs*0] = alpha * pA[0+bs*2];
+			pC[2+bs*1] = alpha * pA[1+bs*2];
+			pC[2+bs*2] = alpha * pA[2+bs*2];
 			}
 		else if(tna==1)
 			{
-			pC[0+bs*0] = pA[0+bs*0];
+			pC[0+bs*0] = alpha * pA[0+bs*0];
 			pA += bs;
 			pC += 1 + (sdc-1)*bs;
-			pC[0+bs*0] = pA[0+bs*0];
-			pC[0+bs*1] = pA[1+bs*0];
-			pC[1+bs*0] = pA[0+bs*0];
-			pC[1+bs*1] = pA[1+bs*1];
-			pC[1+bs*2] = pA[2+bs*1];
+			pC[0+bs*0] = alpha * pA[0+bs*0];
+			pC[0+bs*1] = alpha * pA[1+bs*0];
+			pC[1+bs*0] = alpha * pA[0+bs*0];
+			pC[1+bs*1] = alpha * pA[1+bs*1];
+			pC[1+bs*2] = alpha * pA[2+bs*1];
 			}
 		else //if(tna==2)
 			{
-			pC[0+bs*0] = pA[0+bs*0];
-			pC[1+bs*0] = pA[0+bs*1];
-			pC[1+bs*1] = pA[1+bs*1];
+			pC[0+bs*0] = alpha * pA[0+bs*0];
+			pC[1+bs*0] = alpha * pA[0+bs*1];
+			pC[1+bs*1] = alpha * pA[1+bs*1];
 			pA += 2*bs;
 			pC += 2 + (sdc-1)*bs;
-			pC[0+bs*0] = pA[0+bs*0];
-			pC[0+bs*1] = pA[1+bs*0];
-			pC[0+bs*2] = pA[2+bs*0];
+			pC[0+bs*0] = alpha * pA[0+bs*0];
+			pC[0+bs*1] = alpha * pA[1+bs*0];
+			pC[0+bs*2] = alpha * pA[2+bs*0];
 			}
 		}
 		
@@ -2937,42 +2937,42 @@ void dgead_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int a
 
 
 // copy and transpose a generic strmat into a generic strmat
-void dgetr_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dgetr_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
 	const int bs = D_BS;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
 	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	dgetr_lib(m, n, ai%bs, pA, sda, ci%bs, pC, sdc);
+	dgetr_lib(m, n, alpha, ai%bs, pA, sda, ci%bs, pC, sdc);
 	return;
 	}
 
 
 
 // copy and transpose a lower triangular strmat into an upper triangular strmat
-void dtrtr_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dtrtr_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
 	const int bs = D_BS;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
 	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	dtrtr_l_lib(m, ai%bs, pA, sda, ci%bs, pC, sdc);
+	dtrtr_l_lib(m, alpha, ai%bs, pA, sda, ci%bs, pC, sdc);
 	return;
 	}
 
 
 
 // copy and transpose an upper triangular strmat into a lower triangular strmat
-void dtrtr_u_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dtrtr_u_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
 	const int bs = D_BS;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
 	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	dtrtr_u_lib(m, ai%bs, pA, sda, ci%bs, pC, sdc);
+	dtrtr_u_lib(m, alpha, ai%bs, pA, sda, ci%bs, pC, sdc);
 	return;
 	}
 
@@ -3591,7 +3591,7 @@ void dgead_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int a
 
 
 // copy and transpose a generic strmat into a generic strmat
-void dgetr_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dgetr_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -3603,14 +3603,14 @@ void dgetr_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_st
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
-			pC[jj+(ii+1)*ldc] = pA[ii+1+jj*lda];
-			pC[jj+(ii+2)*ldc] = pA[ii+2+jj*lda];
-			pC[jj+(ii+3)*ldc] = pA[ii+3+jj*lda];
+			pC[jj+(ii+0)*ldc] = alpha * pA[ii+0+jj*lda];
+			pC[jj+(ii+1)*ldc] = alpha * pA[ii+1+jj*lda];
+			pC[jj+(ii+2)*ldc] = alpha * pA[ii+2+jj*lda];
+			pC[jj+(ii+3)*ldc] = alpha * pA[ii+3+jj*lda];
 			}
 		for(; ii<m; ii++)
 			{
-			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
+			pC[jj+(ii+0)*ldc] = alpha * pA[ii+0+jj*lda];
 			}
 		}
 	return;
@@ -3619,7 +3619,7 @@ void dgetr_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_st
 
 
 // copy and transpose a lower triangular strmat into an upper triangular strmat
-void dtrtr_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dtrtr_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -3631,7 +3631,7 @@ void dtrtr_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat 
 		ii = jj;
 		for(; ii<m; ii++)
 			{
-			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
+			pC[jj+(ii+0)*ldc] = alpha * pA[ii+0+jj*lda];
 			}
 		}
 	return;
@@ -3640,7 +3640,7 @@ void dtrtr_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat 
 
 
 // copy and transpose an upper triangular strmat into a lower triangular strmat
-void dtrtr_u_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dtrtr_u_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -3652,7 +3652,7 @@ void dtrtr_u_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat 
 		ii = 0;
 		for(; ii<=jj; ii++)
 			{
-			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
+			pC[jj+(ii+0)*ldc] = alpha * pA[ii+0+jj*lda];
 			}
 		}
 	return;
