@@ -782,7 +782,7 @@ void dtrsm_nt_rl_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 			}
 		if(j<n)
 			{
-			kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda], m-i, n-j, &inv_diag_A[j]);
+			kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda], &inv_diag_A[j], m-i, n-j);
 			}
 		}
 	if(m>i)
