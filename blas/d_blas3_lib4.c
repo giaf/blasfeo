@@ -3213,7 +3213,7 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 		for(ii=jj+1; ii<m; ii++)
 			{
 			c_00 = 0.0;
-			for(kk=0; kk<jj; kk++)
+			for(kk=0; kk<k; kk++)
 				{
 				c_00 += pA[ii+lda*kk] * pB[jj+ldb*kk];
 				}
