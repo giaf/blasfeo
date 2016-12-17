@@ -1569,7 +1569,7 @@ void dlauum_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *pA, int
 void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
 
-	if(m<=0 || n<=0)
+	if(m<=0 | n<=0)
 		return;
 	
 	const int bs = 4;
@@ -2349,6 +2349,8 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 // dgemm nt
 void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
+	if(m<=0 | n<=0)
+		return;
 	int ii, jj, kk;
 	double 
 		c_00, c_01,
@@ -2429,6 +2431,8 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 // dgemm nn
 void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
+	if(m<=0 | n<=0)
+		return;
 	int ii, jj, kk;
 	double 
 		c_00, c_01,
@@ -2509,6 +2513,8 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 // dtrsm_left_lower_nottransposed_unit
 void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
+	if(m<=0 | n<=0)
+		return;
 	int ii, jj, kk;
 	double
 		d_00, d_01,
@@ -2629,6 +2635,8 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 // dtrsm_left_upper_nottransposed_notunit
 void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
+	if(m<=0 | n<=0)
+		return;
 	int ii, jj, kk, id;
 	double
 		d_00, d_01,
@@ -2770,6 +2778,8 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 // dtrsm_right_lower_transposed_unit
 void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
+	if(m<=0 | n<=0)
+		return;
 	int ii, jj, kk;
 	int lda = sA->m;
 	int ldb = sB->m;
@@ -2841,6 +2851,8 @@ void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 // dtrsm_right_lower_transposed_unit
 void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
+	if(m<=0 | n<=0)
+		return;
 	int ii, jj, kk;
 	int lda = sA->m;
 	int ldb = sB->m;
@@ -2965,6 +2977,8 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 // dtrmm_right_upper_transposed_notunit (B triangular !!!)
 void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
+	if(m<=0 | n<=0)
+		return;
 	int ii, jj, kk;
 	double 
 		c_00, c_01,
@@ -3052,6 +3066,8 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 // dtrmm_right_lower_nottransposed_notunit (B triangular !!!)
 void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
+	if(m<=0 | n<=0)
+		return;
 	int ii, jj, kk;
 	double 
 		c_00, c_01,
@@ -3139,6 +3155,8 @@ void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 // dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
 void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
+	if(m<=0 | n<=0)
+		return;
 	int ii, jj, kk;
 	double
 		c_00, c_01,

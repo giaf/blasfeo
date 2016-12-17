@@ -62,7 +62,7 @@ int main()
 
 	int ii;
 
-	int n = 18;
+	int n = 8;
 
 	//
 	// matrices in column-major format
@@ -79,7 +79,10 @@ int main()
 
 	double *x_n; d_zeros(&x_n, n, 1); 
 //	for(ii=0; ii<n; ii++) x_n[ii] = 1.0;
-	x_n[3] = 1.0;
+	x_n[0] = 0.0;
+	x_n[1] = 1.0;
+	x_n[2] = 2.0;
+	x_n[3] = 3.0;
 	double *x_t; d_zeros(&x_t, n, 1); 
 //	for(ii=0; ii<n; ii++) x_n[ii] = 1.0;
 	x_t[0] = 1.0;
@@ -146,20 +149,46 @@ int main()
 	d_allocate_strvec(n, &sz_t);
 	d_cvt_vec2strvec(n, z_t, &sz_t, 0);
 
+	// tests
+	d_print_tran_strvec(n, &sx_n, 0);
+	dgemm_l_diag_libstr(n, n, 1.0, &sx_n, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//	dgemm_r_diag_libstr(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+	d_print_strmat(n, n, &sD, 0, 0);
+	exit(1);
 
+	dsetmat_libstr(n, n, 0.0, &sD, 0, 0);
+	dmatin1_libstr(2.0, &sD, 0, 0);
+	dmatin1_libstr(2.0, &sD, 1, 1);
+	dmatin1_libstr(2.0, &sD, 2, 2);
+	dmatin1_libstr(1.0, &sD, 1, 0);
+	dmatin1_libstr(1.0, &sD, 2, 1);
+	dmatin1_libstr(0.5, &sD, 2, 0);
+	d_print_strmat(n, n, &sD, 0, 0);
+	d_print_tran_strvec(n, &sx_n, 0);
+	dtrsv_lnn_libstr(n, n, &sD, 0, 0, &sx_n, 0, &sz_n, 0);
+	d_print_tran_strvec(n, &sz_n, 0);
+	exit(1);
+
+
+//	dgemv_t_libstr(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 1.0, &sy_n, 0, &sz_n, 0);
+//	d_print_tran_strvec(n, &sz_n, 0);
+//	return 0;
 
 	dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 //	d_print_strmat(n, n, &sB, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
 
-//	dpotrf_libstr(n, 2, &sD, 0, 0, &sD, 0, 0);
+	dpotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 //	dgetrf_nopivot_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
-	dgetrf_libstr(n, n, &sD, 0, 0, &sD, 0, 0, ipiv);
+//	dgetrf_libstr(n, n, &sD, 0, 0, &sD, 0, 0, ipiv);
 	d_print_strmat(n, n, &sD, 0, 0);
 #if defined(LA_BLASFEO) | defined(LA_REFERENCE)
 	d_print_mat(1, n, sD.dA, 1);
 #endif
 	int_print_mat(1, n, ipiv, 1);
+	dtrsm_rltn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
+	d_print_strmat(n, n, &sE, 0, 0);
+	return;
 
 #if 1 // solve P L U X = P B
 	d_print_strmat(n, n, &sB, 0, 0);
@@ -189,7 +218,7 @@ int main()
 //	d_cvt_strmat2mat(n, n, &sE, 0, 0, C, n);
 //	d_print_mat(n, n, C, n);
 	
-	dtrtr_u_libstr(6, &sE, 2, 0, &sB, 1, 0);
+	dtrtr_u_libstr(6, 1.0, &sE, 2, 0, &sB, 1, 0);
 	d_print_strmat(n, n, &sB, 0, 0);
 
 	d_print_strmat(n, n, &sA, 0, 0);

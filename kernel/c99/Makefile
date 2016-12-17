@@ -42,17 +42,17 @@ OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemv_4_lib4.o
 endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
-OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemv_4_lib4.o kernel_dgetrf_pivot_4_lib4.o kernel_dsymv_4_lib4.o
+OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemv_4_lib4.o kernel_dgetrf_pivot_4_lib4.o kernel_dsymv_4_lib4.o kernel_dgemm_diag_lib4.o
 OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemv_4_lib4.o 
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
-OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemv_4_lib4.o kernel_dgetrf_pivot_4_lib4.o kernel_dsymv_4_lib4.o
+OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemv_4_lib4.o kernel_dgetrf_pivot_4_lib4.o kernel_dsymv_4_lib4.o kernel_dgemm_diag_lib4.o
 OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemv_4_lib4.o 
 endif
 
 ifeq ($(TARGET), GENERIC)
-OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemv_4_lib4.o kernel_dgetrf_pivot_4_lib4.o kernel_dsymv_4_lib4.o
+OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemv_4_lib4.o kernel_dgetrf_pivot_4_lib4.o kernel_dsymv_4_lib4.o kernel_dgemm_diag_lib4.o
 OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemv_4_lib4.o 
 endif
 
