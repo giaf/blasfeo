@@ -137,7 +137,7 @@ void dgemm_r_diag_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai
 	{
 	if(m<=0 | n<=0)
 		return;
-	if(bi!=0 | ci!=0 | di!=0)
+	if(ai!=0 | ci!=0 | di!=0)
 		{
 		printf("\nfeature not implemented yet\n");
 		exit(1);
