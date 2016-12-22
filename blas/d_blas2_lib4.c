@@ -443,9 +443,9 @@ void dsymv_l_lib(int m, int n, double alpha, double *pA, int sda, double *x, dou
 
 void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
-	if(ai!=0 | xi%4!=0)
+	if(ai!=0)
 		{
-		printf("\nfeature not implemented yet\n");
+		printf("\ndgemv_n_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 	const int bs = 4;
@@ -464,7 +464,7 @@ void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 	{
 	if(ai!=0 | xi%4!=0)
 		{
-		printf("\nfeature not implemented yet\n");
+		printf("\ndgemv_t_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 	const int bs = 4;
@@ -483,7 +483,7 @@ void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strm
 	{
 	if(ai!=0 | xi_n%4!=0 | xi_t%4!=0)
 		{
-		printf("\nfeature not implemented yet\n");
+		printf("\ndgemv_nt_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 	const int bs = 4;
@@ -505,7 +505,7 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 	{
 	if(ai!=0 | xi%4!=0)
 		{
-		printf("\nfeature not implemented yet\n");
+		printf("\ndsymv_l_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 	const int bs = 4;
@@ -524,7 +524,7 @@ void dtrmv_unn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	{
 	if(ai!=0 | xi%4!=0)
 		{
-		printf("\nfeature not implemented yet\n");
+		printf("\ndtrmv_unn_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 	const int bs = 4;
@@ -542,7 +542,7 @@ void dtrmv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	{
 	if(ai!=0 | xi%4!=0)
 		{
-		printf("\nfeature not implemented yet\n");
+		printf("\ndtrmv_utn_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 	const int bs = 4;
@@ -560,7 +560,7 @@ void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 	{
 	if(ai!=0 | xi%4!=0)
 		{
-		printf("\nfeature not implemented yet\n");
+		printf("\ndtrsv_lnn_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 	const int bs = 4;
@@ -597,7 +597,7 @@ void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 	{
 	if(ai!=0 | xi%4!=0)
 		{
-		printf("\nfeature not implemented yet\n");
+		printf("\ndtrsv_ltn_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 	const int bs = 4;
