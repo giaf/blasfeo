@@ -2097,7 +2097,7 @@ void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d
 	{
 	if(ci!=0 | di!=0)
 		{
-		printf("\nfeature not implemented yet\n\n");
+		printf("\ndpotrf_l_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
 	const int bs = D_BS;
@@ -2121,7 +2121,7 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 	{
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
-		printf("\nfeature not implemented yet\n\n");
+		printf("\ndsyrk_dpotrf_ln_libstr: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
 		}
 	const int bs = D_BS;
@@ -2149,7 +2149,7 @@ void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, st
 	{
 	if(ci!=0 | di!=0)
 		{
-		printf("\nfeature not implemented yet\n\n");
+		printf("\ndgetf_nopivot_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
 	const int bs = D_BS;
@@ -2174,7 +2174,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	{
 	if(ci!=0 | di!=0)
 		{
-		printf("\nfeature not implemented yet\n\n");
+		printf("\ndgetrf_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
 	const int bs = D_BS;

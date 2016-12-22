@@ -1741,7 +1741,7 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 
 #else
 
-		printf("\nfeature not implemented yet\n\n");
+		printf("\ndgemm_nt_libstr: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
 
 #endif
@@ -1757,7 +1757,7 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 		return;
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
-		printf("\nfeature not implemented yet\n");
+		printf("\ndgemm_nn_libstr: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
 		}
 	const int bs = 4;
@@ -1780,7 +1780,7 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	{
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
-		printf("\nfeature not implemented yet\n\n");
+		printf("\ndtrsm_llnu_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
 	const int bs = 4;
@@ -1802,7 +1802,7 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	{
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
-		printf("\nfeature not implemented yet\n\n");
+		printf("\ndtrsm_lunn_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
 	const int bs = 4;
@@ -1843,7 +1843,7 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	{
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
-		printf("\nfeature not implemented yet\n\n");
+		printf("\ndtrsm_rltn_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
 	const int bs = 4;
@@ -1884,7 +1884,7 @@ void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	{
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
-		printf("\nfeature not implemented yet\n\n");
+		printf("\ndtrsm_rltu_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
 	const int bs = 4;
@@ -1906,7 +1906,7 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	{
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
-		printf("\nfeature not implemented yet\n\n");
+		printf("\ndtrsm_rutn_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
 	const int bs = D_BS;
@@ -1947,7 +1947,7 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	{
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
-		printf("\nfeature not implemented yet\n\n");
+		printf("\ndtrmm_rutn_libstr: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%df\n", ai, bi, ci, di);
 		exit(1);
 		}
 	const int bs = D_BS;
@@ -1968,7 +1968,7 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 // dtrmm_right_lower_nottransposed_notunit (B triangular !!!)
 void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
 	{
-	printf("\nfeature not implemented yet\n\n");
+	printf("\ndtrmm_rlnn_libstr: feature not implemented yet\n\n");
 	exit(1);
 	return;
 	}
@@ -1980,7 +1980,7 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	{
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
-		printf("\nfeature not implemented yet\n\n");
+		printf("\ndryrk_ln_libstr: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
 		}
 	const int bs = D_BS;

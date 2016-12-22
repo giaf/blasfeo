@@ -135,7 +135,7 @@ void dgemm_l_diag_libstr(int m, int n, double alpha, struct d_strvec *sA, int ai
 		return;
 	if(bi!=0 | ci!=0 | di!=0)
 		{
-		printf("\nfeature not implemented yet\n");
+		printf("\ndgemm_l_diag_libstr: feature not implemented yet: bi=%d, ci=%d, di=%d\n", bi, ci, di);
 		exit(1);
 		}
 	const int bs = 4;
@@ -159,7 +159,7 @@ void dgemm_r_diag_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai
 		return;
 	if(ai!=0 | ci!=0 | di!=0)
 		{
-		printf("\nfeature not implemented yet\n");
+		printf("\ndgemm_r_diag_libstr: feature not implemented yet: ai=%d, ci=%d, di=%d\n", ai, ci, di);
 		exit(1);
 		}
 	const int bs = 4;
