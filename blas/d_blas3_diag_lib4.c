@@ -51,9 +51,19 @@ void dgemm_diag_left_lib(int m, int n, double alpha, double *dA, double *pB, int
 	int ii;
 
 	ii = 0;
-	for( ; ii<m-3; ii+=4)
+	if(beta==0.0)
 		{
-		kernel_dgemm_diag_left_4_lib4(n, &alpha, &dA[ii], &pB[ii*sdb], &beta, &pC[ii*sdc], &pD[ii*sdd]);
+		for( ; ii<m-3; ii+=4)
+			{
+			kernel_dgemm_diag_left_4_a0_lib4(n, &alpha, &dA[ii], &pB[ii*sdb], &pD[ii*sdd]);
+			}
+		}
+	else
+		{
+		for( ; ii<m-3; ii+=4)
+			{
+			kernel_dgemm_diag_left_4_lib4(n, &alpha, &dA[ii], &pB[ii*sdb], &beta, &pC[ii*sdc], &pD[ii*sdd]);
+			}
 		}
 	if(m-ii>0)
 		{
@@ -80,9 +90,19 @@ void dgemm_diag_right_lib(int m, int n, double alpha, double *pA, int sda, doubl
 	int ii;
 
 	ii = 0;
-	for( ; ii<n-3; ii+=4)
+	if(beta==0.0)
 		{
-		kernel_dgemm_diag_right_4_lib4(m, &alpha, &pA[ii*bs], sda, &dB[ii], &beta, &pC[ii*bs], sdc, &pD[ii*bs], sdd);
+		for( ; ii<n-3; ii+=4)
+			{
+			kernel_dgemm_diag_right_4_a0_lib4(m, &alpha, &pA[ii*bs], sda, &dB[ii], &pD[ii*bs], sdd);
+			}
+		}
+	else
+		{
+		for( ; ii<n-3; ii+=4)
+			{
+			kernel_dgemm_diag_right_4_lib4(m, &alpha, &pA[ii*bs], sda, &dB[ii], &beta, &pC[ii*bs], sdc, &pD[ii*bs], sdd);
+			}
 		}
 	if(n-ii>0)
 		{

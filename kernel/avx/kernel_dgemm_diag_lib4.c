@@ -36,7 +36,85 @@
 
 
 
-// TODO code the special case beta=0.0 ?????
+// B is the diagonal of a matrix, beta==0.0 case
+void kernel_dgemm_diag_right_4_a0_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *D, int sdd)
+	{
+
+	if(kmax<=0)
+		return;
+	
+	const int bs = 4;
+
+	int k;
+
+	__m256d
+		alpha0,
+		mask_f,
+		sign,
+		a_00,
+		b_00, b_11, b_22, b_33,
+		d_00, d_01, d_02, d_03;
+	
+	__m256i
+		mask_i;
+	
+	alpha0 = _mm256_broadcast_sd( alpha );
+	
+	b_00 = _mm256_broadcast_sd( &B[0] );
+	b_00 = _mm256_mul_pd( b_00, alpha0 );
+	b_11 = _mm256_broadcast_sd( &B[1] );
+	b_11 = _mm256_mul_pd( b_11, alpha0 );
+	b_22 = _mm256_broadcast_sd( &B[2] );
+	b_22 = _mm256_mul_pd( b_22, alpha0 );
+	b_33 = _mm256_broadcast_sd( &B[3] );
+	b_33 = _mm256_mul_pd( b_33, alpha0 );
+	
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		a_00 = _mm256_load_pd( &A[0] );
+		d_00 = _mm256_mul_pd( a_00, b_00 );
+		a_00 = _mm256_load_pd( &A[4] );
+		d_01 = _mm256_mul_pd( a_00, b_11 );
+		a_00 = _mm256_load_pd( &A[8] );
+		d_02 = _mm256_mul_pd( a_00, b_22 );
+		a_00 = _mm256_load_pd( &A[12] );
+		d_03 = _mm256_mul_pd( a_00, b_33 );
+
+		_mm256_store_pd( &D[0], d_00 );
+		_mm256_store_pd( &D[4], d_01 );
+		_mm256_store_pd( &D[8], d_02 );
+		_mm256_store_pd( &D[12], d_03 );
+
+		A += 4*sda;
+		D += 4*sdd;
+
+		}
+	if(k<kmax)
+		{
+
+		const double mask_f[] = {0.5, 1.5, 2.5, 3.5};
+		double m_f = kmax-k;
+
+		mask_i = _mm256_castpd_si256( _mm256_sub_pd( _mm256_loadu_pd( mask_f ), _mm256_broadcast_sd( &m_f ) ) );
+
+		a_00 = _mm256_load_pd( &A[0] );
+		d_00 = _mm256_mul_pd( a_00, b_00 );
+		a_00 = _mm256_load_pd( &A[4] );
+		d_01 = _mm256_mul_pd( a_00, b_11 );
+		a_00 = _mm256_load_pd( &A[8] );
+		d_02 = _mm256_mul_pd( a_00, b_22 );
+		a_00 = _mm256_load_pd( &A[12] );
+		d_03 = _mm256_mul_pd( a_00, b_33 );
+
+		_mm256_maskstore_pd( &D[0], mask_i, d_00 );
+		_mm256_maskstore_pd( &D[4], mask_i, d_01 );
+		_mm256_maskstore_pd( &D[8], mask_i, d_02 );
+		_mm256_maskstore_pd( &D[12], mask_i, d_03 );
+
+		}
+	
+	}
 
 
 
@@ -395,6 +473,67 @@ void kernel_dgemm_diag_right_1_lib4(int kmax, double *alpha, double *A, int sda,
 
 		}
 	
+	}
+
+
+
+// A is the diagonal of a matrix, beta=0.0 case
+void kernel_dgemm_diag_left_4_a0_lib4(int kmax, double *alpha, double *A, double *B, double *D)
+	{
+
+	if(kmax<=0)
+		return;
+	
+	const int bs = 4;
+
+	int k;
+
+	__m256d
+		alpha0,
+		sign,
+		a_00,
+		b_00,
+		d_00, d_01, d_02, d_03;
+	
+	alpha0 = _mm256_broadcast_sd( alpha );
+	
+	a_00 = _mm256_load_pd( &A[0] );
+	a_00 = _mm256_mul_pd( a_00, alpha0 );
+	
+	for(k=0; k<kmax-3; k+=4)
+		{
+		
+		b_00 = _mm256_load_pd( &B[0] );
+		d_00 = _mm256_mul_pd( a_00, b_00 );
+		b_00 = _mm256_load_pd( &B[4] );
+		d_01 = _mm256_mul_pd( a_00, b_00 );
+		b_00 = _mm256_load_pd( &B[8] );
+		d_02 = _mm256_mul_pd( a_00, b_00 );
+		b_00 = _mm256_load_pd( &B[12] );
+		d_03 = _mm256_mul_pd( a_00, b_00 );
+
+		_mm256_store_pd( &D[0], d_00 );
+		_mm256_store_pd( &D[4], d_01 );
+		_mm256_store_pd( &D[8], d_02 );
+		_mm256_store_pd( &D[12], d_03 );
+
+		B += 16;
+		D += 16;
+		
+		}
+	for(; k<kmax; k++)
+		{
+		
+		b_00 = _mm256_load_pd( &B[0] );
+		d_00 = _mm256_mul_pd( a_00, b_00 );
+
+		_mm256_store_pd( &D[0], d_00 );
+
+		B += 4;
+		D += 4;
+		
+		}
+
 	}
 
 
