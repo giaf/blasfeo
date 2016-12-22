@@ -2720,7 +2720,7 @@ double dvecex1_libstr(struct d_strvec *sx, int xi)
 
 
 // set all elements of a strmat to a value
-void dsetmat_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj)
+void dmatse_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj)
 	{
 	const int bs = 4;
 	int sda = sA->cn;
@@ -2765,7 +2765,7 @@ void dsetmat_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 // set all elements of a strvec to a value
-void dsetvec_libstr(int m, double alpha, struct d_strvec *sx, int xi)
+void dvecse_libstr(int m, double alpha, struct d_strvec *sx, int xi)
 	{
 	double *x = sx->pa + xi;
 	int ii;
@@ -3361,7 +3361,7 @@ double dvecex1_libstr(struct d_strvec *sx, int xi)
 
 
 // set all elements of a strmat to a value
-void dsetmat_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj)
+void dmatse_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -3379,7 +3379,7 @@ void dsetmat_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 // set all elements of a strvec to a value
-void dsetvec_libstr(int m, double alpha, struct d_strvec *sx, int xi)
+void dvecse_libstr(int m, double alpha, struct d_strvec *sx, int xi)
 	{
 	double *x = sx->pa + xi;
 	int ii;
