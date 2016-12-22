@@ -2764,6 +2764,18 @@ void dsetmat_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 
+// set all elements of a strvec to a value
+void dsetvec_libstr(int m, double alpha, struct d_strvec *sx, int xi)
+	{
+	double *x = sx->pa + xi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		x[ii] = alpha;
+	return;
+	}
+
+
+
 // insert a vector into diagonal
 void ddiain_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
 	{
@@ -3361,6 +3373,18 @@ void dsetmat_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 			pA[ii+lda*jj] = alpha;
 			}
 		}
+	return;
+	}
+
+
+
+// set all elements of a strvec to a value
+void dsetvec_libstr(int m, double alpha, struct d_strvec *sx, int xi)
+	{
+	double *x = sx->pa + xi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		x[ii] = alpha;
 	return;
 	}
 
