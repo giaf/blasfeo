@@ -4,3 +4,5 @@
 *.out
 include/blasfeo_target.h
 libblasfeo.a
+libblasfeo.so
+octave-workspace
