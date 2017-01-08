@@ -5032,7 +5032,7 @@ _inner_store_l_8x4_vs_lib4:
 // ymm7 <- [d43 d53 d63 d73]
 
 #if MACRO_LEVEL>=1
-	.macro INNER_STORE_4X4_GEN_LIB4
+	.macro INNER_STORE_8X4_GEN_LIB4
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -5688,7 +5688,7 @@ _kernel_dgemm_nt_8x4_gen_lib4:
 	movl	STACKSIZE +  72(%rsp), %r15d // n0
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_AB_8X4_GENLIB4
+	INNER_BLEND_SCALE_AB_8X4_GEN_LIB4
 #else
 #if defined(OS_LINUX)
 	call inner_blend_scale_ab_8x4_gen_lib4
