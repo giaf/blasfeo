@@ -3191,7 +3191,7 @@ _inner_edge_dtrsm_rlt_one_12x4_vs_lib4:
 // ymm13 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DTRSM_RUT_INV_8X4_LIB4
+	.macro INNER_EDGE_DTRSM_RUT_INV_12X4_LIB4
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -5935,7 +5935,7 @@ _kernel_dgemm_nt_12x4_lib4:
 //	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_AB_SCALE_12X4_LIB4
+	INNER_BLEND_SCALE_AB_12X4_LIB4
 #else
 #if defined(OS_LINUX)
 	call inner_blend_scale_ab_12x4_lib4
@@ -6057,7 +6057,7 @@ _kernel_dgemm_nt_12x4_vs_lib4:
 	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_AB_SCALE_12X4_LIB4
+	INNER_BLEND_SCALE_AB_12X4_LIB4
 #else
 #if defined(OS_LINUX)
 	call inner_blend_scale_ab_12x4_lib4
