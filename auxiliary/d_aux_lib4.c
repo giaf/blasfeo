@@ -2483,7 +2483,7 @@ void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y)
 
 
 
-#if defined(LA_BLASFEO)
+#if defined(LA_HIGH_PERFORMANCE)
 
 
 

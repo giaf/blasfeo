@@ -416,7 +416,7 @@ void c_free_align(char *pA)
 * new interface
 ****************************/
 
-#if defined(LA_BLASFEO)
+#if defined(LA_HIGH_PERFORMANCE)
 
 
 

@@ -195,7 +195,7 @@ void daxpy_bkp_lib(int kmax, double alpha, double *x, double *y, double *z)
 
 
 
-#if defined(LA_BLASFEO)
+#if defined(LA_HIGH_PERFORMANCE)
 
 
 

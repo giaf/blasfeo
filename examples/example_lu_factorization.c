@@ -42,7 +42,7 @@ int main()
 
 	printf("\nExample of LU factorization and backsolve\n\n");
 
-#if defined(LA_BLASFEO)
+#if defined(LA_HIGH_PERFORMANCE)
 
 	printf("\nLA provided by BLASFEO\n\n");
 

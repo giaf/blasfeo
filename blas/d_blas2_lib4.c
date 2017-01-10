@@ -436,7 +436,7 @@ void dsymv_l_lib(int m, int n, double alpha, double *pA, int sda, double *x, dou
 
 	}
 	
-#if defined(LA_BLASFEO)
+#if defined(LA_HIGH_PERFORMANCE)
 
 
 

@@ -27,7 +27,7 @@
 **************************************************************************************************/
 
 
-#if defined(LA_BLASFEO)
+#if defined(LA_HIGH_PERFORMANCE)
 
 // matrix structure
 struct d_strmat 

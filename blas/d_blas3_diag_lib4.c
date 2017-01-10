@@ -123,7 +123,7 @@ void dgemm_diag_right_lib(int m, int n, double alpha, double *pA, int sda, doubl
 
 
 
-#if defined(LA_BLASFEO)
+#if defined(LA_HIGH_PERFORMANCE)
 
 
 
