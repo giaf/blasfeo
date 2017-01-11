@@ -28,15 +28,25 @@
 
 include ../../Makefile.rule
 
+OBJS = 
+
+ifeq ($(LA), HIGH_PERFORMANCE)
+
 ifeq ($(TARGET), X64_INTEL_HASWELL)
-OBJS_DOUBLE = kernel_dgemv_4_lib4.o kernel_dgemm_diag_lib4.o
+OBJS += kernel_dgemm_diag_lib4.o kernel_dgemv_4_lib4.o
+OBJS +=
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-OBJS_DOUBLE = kernel_dgemm_4x4_lib4.o kernel_dgemm_8x4_lib4.o kernel_dgemv_12_lib4.o kernel_dgemv_8_lib4.o kernel_dgemv_4_lib4.o kernel_dgetrf_pivot_4_lib4.o kernel_dsymv_6_lib4.o kernel_dgemm_diag_lib4.o
+OBJS += kernel_dgemm_8x4_lib4.o kernel_dgemm_4x4_lib4.o kernel_dgemm_diag_lib4.o kernel_dgemv_12_lib4.o kernel_dgemv_8_lib4.o kernel_dgemv_4_lib4.o kernel_dsymv_6_lib4.o kernel_dgetrf_pivot_4_lib4.o
+OBJS +=
 endif
 
-obj: $(OBJS_DOUBLE)
+else # LA_REFERENCE | LA_BLAS
+
+endif # LA choice
+
+obj: $(OBJS)
 
 clean:
 	rm -f *.o

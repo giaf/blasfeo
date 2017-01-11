@@ -29,101 +29,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_kernel.h"
 
 
 
-/****************************
-* old interface
-****************************/
-
-void dgemm_diag_left_lib(int m, int n, double alpha, double *dA, double *pB, int sdb, double beta, double *pC, int sdc, double *pD, int sdd)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-
-	const int bs = 4;
-
-	int ii;
-
-	ii = 0;
-	if(beta==0.0)
-		{
-		for( ; ii<m-3; ii+=4)
-			{
-			kernel_dgemm_diag_left_4_a0_lib4(n, &alpha, &dA[ii], &pB[ii*sdb], &pD[ii*sdd]);
-			}
-		}
-	else
-		{
-		for( ; ii<m-3; ii+=4)
-			{
-			kernel_dgemm_diag_left_4_lib4(n, &alpha, &dA[ii], &pB[ii*sdb], &beta, &pC[ii*sdc], &pD[ii*sdd]);
-			}
-		}
-	if(m-ii>0)
-		{
-		if(m-ii==1)
-			kernel_dgemm_diag_left_1_lib4(n, &alpha, &dA[ii], &pB[ii*sdb], &beta, &pC[ii*sdc], &pD[ii*sdd]);
-		else if(m-ii==2)
-			kernel_dgemm_diag_left_2_lib4(n, &alpha, &dA[ii], &pB[ii*sdb], &beta, &pC[ii*sdc], &pD[ii*sdd]);
-		else // if(m-ii==3)
-			kernel_dgemm_diag_left_3_lib4(n, &alpha, &dA[ii], &pB[ii*sdb], &beta, &pC[ii*sdc], &pD[ii*sdd]);
-		}
-	
-	}
-
-
-
-void dgemm_diag_right_lib(int m, int n, double alpha, double *pA, int sda, double *dB, double beta, double *pC, int sdc, double *pD, int sdd)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-
-	const int bs = 4;
-
-	int ii;
-
-	ii = 0;
-	if(beta==0.0)
-		{
-		for( ; ii<n-3; ii+=4)
-			{
-			kernel_dgemm_diag_right_4_a0_lib4(m, &alpha, &pA[ii*bs], sda, &dB[ii], &pD[ii*bs], sdd);
-			}
-		}
-	else
-		{
-		for( ; ii<n-3; ii+=4)
-			{
-			kernel_dgemm_diag_right_4_lib4(m, &alpha, &pA[ii*bs], sda, &dB[ii], &beta, &pC[ii*bs], sdc, &pD[ii*bs], sdd);
-			}
-		}
-	if(n-ii>0)
-		{
-		if(n-ii==1)
-			kernel_dgemm_diag_right_1_lib4(m, &alpha, &pA[ii*bs], sda, &dB[ii], &beta, &pC[ii*bs], sdc, &pD[ii*bs], sdd);
-		else if(n-ii==2)
-			kernel_dgemm_diag_right_2_lib4(m, &alpha, &pA[ii*bs], sda, &dB[ii], &beta, &pC[ii*bs], sdc, &pD[ii*bs], sdd);
-		else // if(n-ii==3)
-			kernel_dgemm_diag_right_3_lib4(m, &alpha, &pA[ii*bs], sda, &dB[ii], &beta, &pC[ii*bs], sdc, &pD[ii*bs], sdd);
-		}
-	
-	}
-
-
-
-/****************************
-* new interface
-****************************/
-
-
-
-#if defined(LA_HIGH_PERFORMANCE)
+#if defined(LA_REFERENCE) | defined(LA_BLAS) 
 
 
 
@@ -132,20 +43,59 @@ void dgemm_l_diag_libstr(int m, int n, double alpha, struct d_strvec *sA, int ai
 	{
 	if(m<=0 | n<=0)
 		return;
-	if(bi!=0 | ci!=0 | di!=0)
-		{
-		printf("\ndgemm_l_diag_libstr: feature not implemented yet: bi=%d, ci=%d, di=%d\n", bi, ci, di);
-		exit(1);
-		}
-	const int bs = 4;
-	int sdb = sB->cn;
-	int sdc = sC->cn;
-	int sdd = sD->cn;
+	int ii, jj;
+	int ldb = sB->m;
+	int ldd = sD->m;
 	double *dA = sA->pa + ai;
-	double *pB = sB->pA + bj*bs;
-	double *pC = sC->pA + cj*bs;
-	double *pD = sD->pA + dj*bs;
-	dgemm_diag_left_lib(m, n, alpha, dA, pB, sdb, beta, pC, sdc, pD, sdd);
+	double *pB = sB->pA + bi + bj*ldb;
+	double *pD = sD->pA + di + dj*ldd;
+	double a0, a1;
+	if(beta==0.0)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			a0 = alpha * dA[ii+0];
+			a1 = alpha * dA[ii+1];
+			for(jj=0; jj<n; jj++)
+				{
+				pD[ii+0+ldd*jj] = a0 * pB[ii+0+ldb*jj];
+				pD[ii+1+ldd*jj] = a1 * pB[ii+1+ldb*jj];
+				}
+			}
+		for(; ii<m; ii++)
+			{
+			a0 = alpha * dA[ii];
+			for(jj=0; jj<n; jj++)
+				{
+				pD[ii+0+ldd*jj] = a0 * pB[ii+0+ldb*jj];
+				}
+			}
+		}
+	else
+		{
+		int ldc = sC->m;
+		double *pC = sC->pA + ci + cj*ldc;
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			a0 = alpha * dA[ii+0];
+			a1 = alpha * dA[ii+1];
+			for(jj=0; jj<n; jj++)
+				{
+				pD[ii+0+ldd*jj] = a0 * pB[ii+0+ldb*jj] + beta * pC[ii+0+ldc*jj];
+				pD[ii+1+ldd*jj] = a1 * pB[ii+1+ldb*jj] + beta * pC[ii+1+ldc*jj];
+				}
+			}
+		for(; ii<m; ii++)
+			{
+			a0 = alpha * dA[ii];
+			for(jj=0; jj<n; jj++)
+				{
+				pD[ii+0+ldd*jj] = a0 * pB[ii+0+ldb*jj] + beta * pC[ii+0+ldc*jj];
+				}
+			}
+		}
 	return;
 	}
 
@@ -156,20 +106,59 @@ void dgemm_r_diag_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai
 	{
 	if(m<=0 | n<=0)
 		return;
-	if(ai!=0 | ci!=0 | di!=0)
-		{
-		printf("\ndgemm_r_diag_libstr: feature not implemented yet: ai=%d, ci=%d, di=%d\n", ai, ci, di);
-		exit(1);
-		}
-	const int bs = 4;
-	int sda = sA->cn;
-	int sdc = sC->cn;
-	int sdd = sD->cn;
-	double *pA = sA->pA + aj*bs;
+	int ii, jj;
+	int lda = sA->m;
+	int ldd = sD->m;
+	double *pA = sA->pA + ai + aj*lda;
 	double *dB = sB->pa + bi;
-	double *pC = sC->pA + cj*bs;
-	double *pD = sD->pA + dj*bs;
-	dgemm_diag_right_lib(m, n, alpha, pA, sda, dB, beta, pC, sdc, pD, sdd);
+	double *pD = sD->pA + di + dj*ldd;
+	double a0, a1;
+	if(beta==0)
+		{
+		jj = 0;
+		for(; jj<n-1; jj+=2)
+			{
+			a0 = alpha * dB[jj+0];
+			a1 = alpha * dB[jj+1];
+			for(ii=0; ii<m; ii++)
+				{
+				pD[ii+ldd*(jj+0)] = a0 * pA[ii+lda*(jj+0)];
+				pD[ii+ldd*(jj+1)] = a1 * pA[ii+lda*(jj+1)];
+				}
+			}
+		for(; jj<n; jj++)
+			{
+			a0 = alpha * dB[jj+0];
+			for(ii=0; ii<m; ii++)
+				{
+				pD[ii+ldd*(jj+0)] = a0 * pA[ii+lda*(jj+0)];
+				}
+			}
+		}
+	else
+		{
+		int ldc = sC->m;
+		double *pC = sC->pA + ci + cj*ldc;
+		jj = 0;
+		for(; jj<n-1; jj+=2)
+			{
+			a0 = alpha * dB[jj+0];
+			a1 = alpha * dB[jj+1];
+			for(ii=0; ii<m; ii++)
+				{
+				pD[ii+ldd*(jj+0)] = a0 * pA[ii+lda*(jj+0)] + beta * pC[ii+ldc*(jj+0)];
+				pD[ii+ldd*(jj+1)] = a1 * pA[ii+lda*(jj+1)] + beta * pC[ii+ldc*(jj+1)];
+				}
+			}
+		for(; jj<n; jj++)
+			{
+			a0 = alpha * dB[jj+0];
+			for(ii=0; ii<m; ii++)
+				{
+				pD[ii+ldd*(jj+0)] = a0 * pA[ii+lda*(jj+0)] + beta * pC[ii+ldc*(jj+0)];
+				}
+			}
+		}
 	return;
 	}
 
@@ -180,6 +169,7 @@ void dgemm_r_diag_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai
 #error : wrong LA choice
 
 #endif
+
 
 
 

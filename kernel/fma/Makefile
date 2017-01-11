@@ -28,9 +28,18 @@
 
 include ../../Makefile.rule
 
+OBJS = 
+
+ifeq ($(LA), HIGH_PERFORMANCE)
+
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
-OBJS_DOUBLE = kernel_dgemm_4x4_lib4.o
+OBJS += kernel_dgemm_4x4_lib4.o
+OBJS +=
 endif
+
+else # LA_REFERENCE | LA_BLAS
+
+endif # LA choice
 
 obj: $(OBJS_DOUBLE)
 

@@ -38,17 +38,6 @@
 #include <immintrin.h>  // AVX
 #endif
 
-#if defined(LA_BLAS)
-#if defined(LA_BLAS_OPENBLAS)
-#include <f77blas.h>
-#elif defined(LA_BLAS_BLIS)
-#elif defined(LA_BLAS_NETLIB)
-#include "d_blas.h"
-#elif defined(LA_BLAS_MKL)
-#include <mkl_blas.h>
-#endif
-#endif
-
 #include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_kernel.h"
@@ -209,39 +198,12 @@ void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_str
 
 
 
-#elif defined(LA_BLAS)
-
-
-
-void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi)
+void daxpy_bkp_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
-	int i1 = 1;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
-#if defined(LA_BLAS_MKL)
-	daxpy(&m, &alpha, x, &i1, y, &i1);
-#else
-	daxpy_(&m, &alpha, x, &i1, y, &i1);
-#endif
-	return;
-	}
-
-
-
-#elif defined(LA_REFERENCE)
-
-
-
-void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi)
-	{
-	int ii;
-	double *x = sx->pa + xi;
-	double *y = sy->pa + yi;
-	for(ii=0; ii<m; ii++)
-		y[ii] += alpha * x[ii];
-//	printf("\nfeature not implemented yet\n");
-//	exit(1);
-//	daxpy_(&m, &alpha, x, &i1, y, &i1);
+	double *z = sz->pa + zi;
+	daxpy_bkp_lib(m, alpha, x, y, z);
 	return;
 	}
 

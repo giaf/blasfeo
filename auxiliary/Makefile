@@ -30,35 +30,37 @@ include ../Makefile.rule
 
 OBJS = 
 
+ifeq ($(LA), HIGH_PERFORMANCE)
+
 ifeq ($(TARGET), X64_INTEL_HASWELL)
-OBJS += d_aux_lib4.o d_aux_extern_depend_lib4.o
-OBJS += s_aux_lib4.o s_aux_extern_depend_lib4.o
-OBJS += i_aux_extern_depend_lib4.o 
+OBJS += d_aux_lib4.o
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-OBJS += d_aux_lib4.o d_aux_extern_depend_lib4.o
-OBJS += s_aux_lib4.o s_aux_extern_depend_lib4.o
-OBJS += i_aux_extern_depend_lib4.o 
+OBJS += d_aux_lib4.o
 endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
-OBJS += d_aux_lib4.o d_aux_extern_depend_lib4.o
-OBJS += s_aux_lib4.o s_aux_extern_depend_lib4.o
-OBJS += i_aux_extern_depend_lib4.o 
+OBJS += d_aux_lib4.o
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
-OBJS += d_aux_lib4.o d_aux_extern_depend_lib4.o
-OBJS += s_aux_lib4.o s_aux_extern_depend_lib4.o
-OBJS += i_aux_extern_depend_lib4.o 
+OBJS += d_aux_lib4.o
 endif
 
 ifeq ($(TARGET), GENERIC)
-OBJS += d_aux_lib4.o d_aux_extern_depend_lib4.o
-OBJS += s_aux_lib4.o s_aux_extern_depend_lib4.o
-OBJS += i_aux_extern_depend_lib4.o 
+OBJS += d_aux_lib4.o
 endif
+
+else # LA_REFERENCE | LA_BLAS
+
+OBJS += d_aux_lib.o
+
+endif # LA choice
+
+OBJS += d_aux_extern_depend_lib.o
+OBJS += s_aux_lib4.o s_aux_extern_depend_lib4.o
+OBJS += i_aux_extern_depend_lib.o 
 
 obj: $(OBJS)
 ifeq ($(TARGET), X64_INTEL_HASWELL)

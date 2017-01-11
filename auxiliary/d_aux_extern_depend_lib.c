@@ -197,116 +197,6 @@ void d_print_e_tran_mat(int row, int col, double *A, int lda)
 
 
 
-/* prints a matrix in panel-major format */
-void d_print_pmat(int row, int col, double *pA, int sda)
-	{
-
-	const int bs = 4;
-
-	int ii, i, j, row2;
-
-	for(ii=0; ii<row-(bs-1); ii+=bs)
-		{
-		for(i=0; i<bs; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				printf("%9.5f ", pA[i+bs*j+sda*ii]);
-				}
-			printf("\n");
-			}
-		}
-	if(ii<row)
-		{
-		row2 = row-ii;
-		for(i=0; i<row2; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				printf("%9.5f ", pA[i+bs*j+sda*ii]);
-				}
-			printf("\n");
-			}
-		}
-	printf("\n");
-
-	}	
-
-
-
-void d_print_to_file_pmat(FILE *file, int row, int col, double *pA, int sda)
-	{
-
-	const int bs = 4;
-
-	int ii, i, j, row2;
-
-	for(ii=0; ii<row-(bs-1); ii+=bs)
-		{
-		for(i=0; i<bs; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				fprintf(file, "%9.5f ", pA[i+bs*j+sda*ii]);
-				}
-			fprintf(file, "\n");
-			}
-		}
-	if(ii<row)
-		{
-		row2 = row-ii;
-		for(i=0; i<row2; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				fprintf(file, "%9.5f ", pA[i+bs*j+sda*ii]);
-				}
-			fprintf(file, "\n");
-			}
-		}
-	fprintf(file, "\n");
-
-	}	
-
-
-
-/* prints a matrix in panel-major format (exponential notation) */
-void d_print_e_pmat(int row, int col, double *pA, int sda)
-	{
-
-	const int bs = 4;
-
-	int ii, i, j, row2;
-
-	for(ii=0; ii<row-(bs-1); ii+=bs)
-		{
-		for(i=0; i<bs; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				printf("%e\t", pA[i+bs*j+sda*ii]);
-				}
-			printf("\n");
-			}
-		}
-	if(ii<row)
-		{
-		row2 = row-ii;
-		for(i=0; i<row2; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				printf("%e\t", pA[i+bs*j+sda*ii]);
-				}
-			printf("\n");
-			}
-		}
-	printf("\n");
-
-	}	
-
-
-
 /* creates a zero matrix given the size in bytes */
 void v_zeros(void **ptrA, int size)
 	{
@@ -421,6 +311,120 @@ void c_free_align(char *pA)
 
 
 #include "../include/blasfeo_block_size.h"
+
+// old interface
+
+/* prints a matrix in panel-major format */
+void d_print_pmat(int row, int col, double *pA, int sda)
+	{
+
+	const int bs = D_BS;
+
+	int ii, i, j, row2;
+
+	for(ii=0; ii<row-(bs-1); ii+=bs)
+		{
+		for(i=0; i<bs; i++)
+			{
+			for(j=0; j<col; j++)
+				{
+				printf("%9.5f ", pA[i+bs*j+sda*ii]);
+				}
+			printf("\n");
+			}
+		}
+	if(ii<row)
+		{
+		row2 = row-ii;
+		for(i=0; i<row2; i++)
+			{
+			for(j=0; j<col; j++)
+				{
+				printf("%9.5f ", pA[i+bs*j+sda*ii]);
+				}
+			printf("\n");
+			}
+		}
+	printf("\n");
+
+	}	
+
+
+
+void d_print_to_file_pmat(FILE *file, int row, int col, double *pA, int sda)
+	{
+
+	const int bs = D_BS;
+
+	int ii, i, j, row2;
+
+	for(ii=0; ii<row-(bs-1); ii+=bs)
+		{
+		for(i=0; i<bs; i++)
+			{
+			for(j=0; j<col; j++)
+				{
+				fprintf(file, "%9.5f ", pA[i+bs*j+sda*ii]);
+				}
+			fprintf(file, "\n");
+			}
+		}
+	if(ii<row)
+		{
+		row2 = row-ii;
+		for(i=0; i<row2; i++)
+			{
+			for(j=0; j<col; j++)
+				{
+				fprintf(file, "%9.5f ", pA[i+bs*j+sda*ii]);
+				}
+			fprintf(file, "\n");
+			}
+		}
+	fprintf(file, "\n");
+
+	}	
+
+
+
+/* prints a matrix in panel-major format (exponential notation) */
+void d_print_e_pmat(int row, int col, double *pA, int sda)
+	{
+
+	const int bs = D_BS;
+
+	int ii, i, j, row2;
+
+	for(ii=0; ii<row-(bs-1); ii+=bs)
+		{
+		for(i=0; i<bs; i++)
+			{
+			for(j=0; j<col; j++)
+				{
+				printf("%e\t", pA[i+bs*j+sda*ii]);
+				}
+			printf("\n");
+			}
+		}
+	if(ii<row)
+		{
+		row2 = row-ii;
+		for(i=0; i<row2; i++)
+			{
+			for(j=0; j<col; j++)
+				{
+				printf("%e\t", pA[i+bs*j+sda*ii]);
+				}
+			printf("\n");
+			}
+		}
+	printf("\n");
+
+	}	
+
+
+
+// new interface
 
 // create a matrix structure for a matrix of size m*n by dynamically allocating the memory
 void d_allocate_strmat(int m, int n, struct d_strmat *sA)

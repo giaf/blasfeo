@@ -30,9 +30,15 @@ include ../../Makefile.rule
 
 OBJS = 
 
+ifeq ($(LA), HIGH_PERFORMANCE)
+
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 OBJS += kernel_dgetr_lib4.o
 endif
+
+else # LA_REFERENCE | LA_BLAS
+
+endif # LA choice
 
 obj: $(OBJS)
 
