@@ -63,7 +63,7 @@ CC = gcc
 
 # Common optimization/debugging flags
 COMMON_FLAGS = -O2 -fPIC
-DEBUG = -g #-Wall -pedantic -Wfloat-equal #-pg
+DEBUG = #-g #-Wall -pedantic -Wfloat-equal #-pg
 LDFLAGS =
 
 ifeq ($(LA), HIGH_PERFORMANCE)
