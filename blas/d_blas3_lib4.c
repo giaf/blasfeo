@@ -1577,8 +1577,6 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 		return;
 		}
 	
-#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-
 	pA += ai/bs*bs*sda;
 	pB += bi/bs*bs*sda;
 	int ci0 = ci-ai%bs;
@@ -1663,8 +1661,8 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 			// nothing more to do
 			return;
-#endif
 			}
+#endif
 		}
 	// main loop
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -1726,13 +1724,6 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 #endif
 
 	return;
-
-#else
-
-		printf("\ndgemm_nt_libstr: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
-		exit(1);
-
-#endif
 
 	}
 
