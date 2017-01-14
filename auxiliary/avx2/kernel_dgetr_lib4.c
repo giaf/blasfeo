@@ -296,16 +296,16 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double alpha, double *A, do
 
 		v4 = _mm256_unpacklo_pd( v0, v1 ); // 00 01 02 03
 		v4 = _mm256_mul_pd( v4, alph );
-		_mm256_store_pd( &C[0+bs*4], v4 );
+		_mm256_store_pd( &C[0+bs*0], v4 );
 		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
 		v5 = _mm256_mul_pd( v5, alph );
-		_mm256_store_pd( &C[0+bs*5], v5 );
+		_mm256_store_pd( &C[0+bs*1], v5 );
 		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
 		v6 = _mm256_mul_pd( v6, alph );
-		_mm256_store_pd( &C[0+bs*6], v6 );
+		_mm256_store_pd( &C[0+bs*2], v6 );
 		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
 		v7 = _mm256_mul_pd( v7, alph );
-		_mm256_store_pd( &C[0+bs*7], v7 );
+		_mm256_store_pd( &C[0+bs*3], v7 );
 
 		C += sdc*bs;
 
@@ -318,16 +318,16 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double alpha, double *A, do
 
 		v4 = _mm256_unpacklo_pd( v0, v1 ); // 00 01 02 03
 		v4 = _mm256_mul_pd( v4, alph );
-		_mm256_store_pd( &C[0+bs*4], v4 );
+		_mm256_store_pd( &C[0+bs*0], v4 );
 		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
 		v5 = _mm256_mul_pd( v5, alph );
-		_mm256_store_pd( &C[0+bs*5], v5 );
+		_mm256_store_pd( &C[0+bs*1], v5 );
 		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
 		v6 = _mm256_mul_pd( v6, alph );
-		_mm256_store_pd( &C[0+bs*6], v6 );
+		_mm256_store_pd( &C[0+bs*2], v6 );
 		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
 		v7 = _mm256_mul_pd( v7, alph );
-		_mm256_store_pd( &C[0+bs*7], v7 );
+		_mm256_store_pd( &C[0+bs*3], v7 );
 
 		C += sdc*bs;
 
@@ -395,16 +395,16 @@ void kernel_dgetr_4_lib4(int tri, int kmax, int kna, double alpha, double *A, do
 
 		v4 = _mm256_unpacklo_pd( v0, v1 ); // 00 01 02 03
 		v4 = _mm256_mul_pd( v4, alph );
-		_mm256_store_pd( &C[0+bs*4], v4 );
+		_mm256_store_pd( &C[0+bs*0], v4 );
 		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
 		v5 = _mm256_mul_pd( v5, alph );
-		_mm256_store_pd( &C[0+bs*5], v5 );
+		_mm256_store_pd( &C[0+bs*1], v5 );
 		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
 		v6 = _mm256_mul_pd( v6, alph );
-		_mm256_store_pd( &C[0+bs*6], v6 );
+		_mm256_store_pd( &C[0+bs*2], v6 );
 		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
 		v7 = _mm256_mul_pd( v7, alph );
-		_mm256_store_pd( &C[0+bs*7], v7 );
+		_mm256_store_pd( &C[0+bs*3], v7 );
 
 		C += sdc*bs;
 
