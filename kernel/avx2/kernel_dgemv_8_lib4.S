@@ -334,7 +334,7 @@ _inner_kernel_dgemv_add_t_8_lib4:
 	vfmadd231pd	%ymm8, %ymm12, %ymm7
 
 	sall	$3, %r10d
-	movslq	%r10d, %r10
+//	movslq	%r10d, %r10
 	addq	%r10, %r11
 	addq	%r10, %r13
 	xorl	%r10d, %r10d
@@ -943,7 +943,7 @@ _kernel_dgemv_n_8_lib4:
 	movq	%rdx, %r11  // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-	movslq	%r12d, %r12
+//	movslq	%r12d, %r12
 	movq	%r8, %r13  // x
 
 #if MACRO_LEVEL>=2
@@ -1056,7 +1056,7 @@ _kernel_dgemv_t_8_lib4:
 	movq	%rdx, %r11  // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-	movslq	%r12d, %r12
+//	movslq	%r12d, %r12
 	movq	%r8, %r13  // x
 
 #if MACRO_LEVEL>=2
@@ -1168,7 +1168,7 @@ _kernel_dtrmv_un_8_lib4:
 	movq	%rsi, %r11  // A
 	movl	%edx, %r12d
 	sall	$5, %r12d // 4*sda*sizeof(double)
-	movslq	%r12d, %r12
+//	movslq	%r12d, %r12
 	movq	%rcx, %r13  // x
 
 

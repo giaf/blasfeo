@@ -4578,7 +4578,7 @@ _kernel_dgemm_nn_4x4_lib4:
 	movq	%rcx, %r12  // B
 	movl	%r8d, %r13d // sdb
 	sall	$5, %r13d // 4*sdb*sizeof(double)
-	movslq	%r13d, %r13
+//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NN_4X4_LIB4
@@ -4686,7 +4686,7 @@ _kernel_dgemm_nn_4x4_vs_lib4:
 	movq	%rcx, %r12  // B
 	movl	%r8d, %r13d // sdb
 	sall	$5, %r13d // 4*sdb*sizeof(double)
-	movslq	%r13d, %r13
+//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NN_4X4_LIB4
@@ -6798,7 +6798,7 @@ _kernel_dtrsm_nn_ru_inv_4x4_lib4:
 	movq	%rdx, %r12  // B
 	movl	%ecx, %r13d // sdb
 	sall	$5, %r13d // 4*sdb*sizeof(double)
-	movslq	%r13d, %r13
+//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_4X4_LIB4
@@ -6920,7 +6920,7 @@ _kernel_dtrsm_nn_ru_inv_4x4_vs_lib4:
 	movq	%rdx, %r12  // B
 	movl	%ecx, %r13d // sdb
 	sall	$5, %r13d // 4*sdb*sizeof(double)
-	movslq	%r13d, %r13
+//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_4X4_LIB4
@@ -7045,7 +7045,7 @@ _kernel_dtrsm_nn_ll_one_4x4_lib4:
 	movq	%rdx, %r12  // B
 	movl	%ecx, %r13d // sdb
 	sall	$5, %r13d // 4*sdb*sizeof(double)
-	movslq	%r13d, %r13
+//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_4X4_LIB4
@@ -7166,7 +7166,7 @@ _kernel_dtrsm_nn_ll_one_4x4_vs_lib4:
 	movq	%rdx, %r12  // B
 	movl	%ecx, %r13d // sdb
 	sall	$5, %r13d // 4*sdb*sizeof(double)
-	movslq	%r13d, %r13
+//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_4X4_LIB4
@@ -7290,7 +7290,7 @@ _kernel_dtrsm_nn_lu_inv_4x4_lib4:
 	movq	%rdx, %r12  // B
 	movl	%ecx, %r13d // sdb
 	sall	$5, %r13d // 4*sdb*sizeof(double)
-	movslq	%r13d, %r13
+//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_4X4_LIB4
@@ -7412,7 +7412,7 @@ _kernel_dtrsm_nn_lu_inv_4x4_vs_lib4:
 	movq	%rdx, %r12  // B
 	movl	%ecx, %r13d // sdb
 	sall	$5, %r13d // 4*sdb*sizeof(double)
-	movslq	%r13d, %r13
+//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_4X4_LIB4
@@ -7538,7 +7538,7 @@ _kernel_dgetrf_nn_4x4_lib4:
 	movq	%rdx, %r12  // B
 	movl	%ecx, %r13d // sdb
 	sall	$5, %r13d // 4*sdb*sizeof(double)
-	movslq	%r13d, %r13
+//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_4X4_LIB4
@@ -7659,7 +7659,7 @@ _kernel_dgetrf_nn_4x4_vs_lib4:
 	movq	%rdx, %r12  // B
 	movl	%ecx, %r13d // sdb
 	sall	$5, %r13d // 4*sdb*sizeof(double)
-	movslq	%r13d, %r13
+//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_4X4_LIB4

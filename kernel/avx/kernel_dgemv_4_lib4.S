@@ -285,7 +285,7 @@ _inner_kernel_dgemv_add_t_4_lib4:
 	vaddpd	%ymm3, %ymm15, %ymm3
 		
 	sall	$3, %r10d
-	movslq	%r10d, %r10
+//	movslq	%r10d, %r10
 	addq	%r10, %r11
 	addq	%r10, %r13
 	xorl	%r10d, %r10d
@@ -470,7 +470,7 @@ _inner_kernel_dgemv_add_nt_4_lib4:
 	vmaskmovpd	%ymm13, %ymm14, 0(%r14)
 
 	sall	$3, %r10d
-	movslq	%r10d, %r10
+//	movslq	%r10d, %r10
 	addq	%r10, %r11
 	addq	%r10, %r13
 	addq	%r10, %r14
@@ -1782,7 +1782,7 @@ _inner_kernel_dtrmv_ut_4_lib4:
 	vaddpd		%ymm3, %ymm15, %ymm3
 		
 	sall		$3, %r10d
-	movslq		%r10d, %r10
+//	movslq		%r10d, %r10
 	addq		%r10, %r11
 	addq		%r10, %r13
 	xorl		%r10d, %r10d

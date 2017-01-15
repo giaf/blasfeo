@@ -445,8 +445,9 @@ _inner_kernel_dgemv_add_t_12_lib4:
 	vmovapd	352(%r11), %ymm13
 	vmulpd	%ymm13, %ymm12, %ymm15
 	vaddpd	%ymm11, %ymm15, %ymm11
-		sall	$3, %r10d
-	movslq	%r10d, %r10
+
+	sall	$3, %r10d
+//	movslq	%r10d, %r10
 	addq	%r10, %r11
 	addq	%r10, %r13
 	xorl	%r10d, %r10d
@@ -930,7 +931,7 @@ _kernel_dgemv_n_12_lib4:
 	movq	%rdx, %r11  // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-	movslq	%r12d, %r12
+//	movslq	%r12d, %r12
 	movq	%r8, %r13  // x
 
 #if MACRO_LEVEL>=2
@@ -1046,7 +1047,7 @@ _kernel_dgemv_t_12_lib4:
 	movq	%rdx, %r11  // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-	movslq	%r12d, %r12
+//	movslq	%r12d, %r12
 	movq	%r8, %r13  // x
 
 #if MACRO_LEVEL>=2
