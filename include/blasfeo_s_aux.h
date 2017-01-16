@@ -28,6 +28,12 @@
 
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
 // s_aux_extern_depend_lib
 void s_zeros(float **pA, int row, int col);
 void s_zeros_align(float **pA, int row, int col);
@@ -43,3 +49,9 @@ void s_cvt_mat2pmat(int row, int col, float *A, int lda, int offset, float *pA, 
 void s_cvt_tran_mat2pmat(int row, int col, float *A, int lda, int offset, float *pA, int sda);
 void s_cvt_pmat2mat(int row, int col, int offset, float *pA, int sda, float *A, int lda);
 void s_cvt_tran_pmat2mat(int row, int col, int offset, float *pA, int sda, float *A, int lda);
+
+
+
+#ifdef __cpluspluc
+}
+#endif

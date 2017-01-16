@@ -30,6 +30,12 @@
 
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
 /************************************************
 * d_aux_extern_depend_lib.c
 ************************************************/
@@ -170,3 +176,9 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA);
 void dvecin_libsp(int kmax, int *idx, double *x, double *y);
 void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y);
 void dvecad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi);
+
+
+
+#ifdef __cpluspluc
+}
+#endif

@@ -28,6 +28,12 @@
 
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
 //
 // level 2 BLAS
 //
@@ -70,3 +76,9 @@ void strmm_nt_ru_lib(int m, int n, float *pA, int sda, float *pB, int sdb, int a
 void spotrf_nt_l_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D);
 // D <= chol( C + A * B' ) ; C, D lower triangular
 void ssyrk_spotrf_nt_l_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D);
+
+
+
+#ifdef __cpluspluc
+}
+#endif

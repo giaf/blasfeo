@@ -28,6 +28,12 @@
 
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
 // i_aux_extern_depend_lib
 void int_zeros(int **pA, int row, int col);
 void int_zeros_align(int **pA, int row, int col);
@@ -35,3 +41,8 @@ void int_free(int *pA);
 void int_free_align(int *pA);
 void int_print_mat(int row, int col, int *A, int lda);
 
+
+
+#ifdef __cpluspluc
+}
+#endif

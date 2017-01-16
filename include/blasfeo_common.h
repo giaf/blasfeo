@@ -27,6 +27,12 @@
 **************************************************************************************************/
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
 #if defined(LA_HIGH_PERFORMANCE)
 
 // matrix structure
@@ -81,3 +87,7 @@ struct d_strvec
 #endif
 
 
+
+#ifdef __cpluspluc
+}
+#endif
