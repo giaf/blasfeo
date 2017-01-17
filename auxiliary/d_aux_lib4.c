@@ -2739,7 +2739,7 @@ void dmatse_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int 
 		pA += bs*(sda-1);
 		m -= m0;
 		}
-	for(ii=0; ii<m-3; ii++)
+	for(ii=0; ii<m-3; ii+=4)
 		{
 		for(jj=0; jj<n; jj++)
 			{
