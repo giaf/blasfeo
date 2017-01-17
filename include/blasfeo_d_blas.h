@@ -150,6 +150,6 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 
 
 
-#ifdef __cpluspluc
+#ifdef __cplusplus
 }
 #endif

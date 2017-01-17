@@ -88,6 +88,6 @@ struct d_strvec
 
 
 
-#ifdef __cpluspluc
+#ifdef __cplusplus
 }
 #endif

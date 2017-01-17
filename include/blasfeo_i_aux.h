@@ -43,6 +43,6 @@ void int_print_mat(int row, int col, int *A, int lda);
 
 
 
-#ifdef __cpluspluc
+#ifdef __cplusplus
 }
 #endif

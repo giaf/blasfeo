@@ -236,6 +236,6 @@ void kernel_dgetr_1_lib4(int tri, int kmax, int kna, double alpha, double *A, do
 
 
 
-#ifdef __cpluspluc
+#ifdef __cplusplus
 }
 #endif

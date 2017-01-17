@@ -52,6 +52,6 @@ void s_cvt_tran_pmat2mat(int row, int col, int offset, float *pA, int sda, float
 
 
 
-#ifdef __cpluspluc
+#ifdef __cplusplus
 }
 #endif

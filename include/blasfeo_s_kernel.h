@@ -83,6 +83,6 @@ void kernel_ssyrk_spotrf_nt_l_4x4_vs_lib4(int kp, float *Ap, float *Bp, int km_,
 
 
 
-#ifdef __cpluspluc
+#ifdef __cplusplus
 }
 #endif

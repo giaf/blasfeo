@@ -26,7 +26,7 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdio.h>
+//#include <stdio.h>
 
 
 
@@ -179,6 +179,6 @@ void dvecad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 
 
 
-#ifdef __cpluspluc
+#ifdef __cplusplus
 }
 #endif

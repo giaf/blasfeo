@@ -79,6 +79,6 @@ void ssyrk_spotrf_nt_l_lib(int m, int n, int k, float *pA, int sda, float *pB, i
 
 
 
-#ifdef __cpluspluc
+#ifdef __cplusplus
 }
 #endif
