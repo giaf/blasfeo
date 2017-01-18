@@ -35,47 +35,6 @@
 #include "../include/blasfeo_d_aux.h"
 
 
-void dgemv_n_lib(int m, int n, double alpha, double *pA, int sda, double *x, double beta, double *y, double *z)
-	{
-
-	if(m<=0)
-		return;
-	
-	const int bs = 4;
-
-	int i;
-
-	i = 0;
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	for( ; i<m-11; i+=12)
-		{
-		kernel_dgemv_n_12_lib4(n, &alpha, &pA[i*sda], sda, x, &beta, &y[i], &z[i]);
-		}
-#endif
-	for( ; i<m-7; i+=8)
-		{
-		kernel_dgemv_n_8_lib4(n, &alpha, &pA[i*sda], sda, x, &beta, &y[i], &z[i]);
-		}
-	if(i<m-3)
-		{
-		kernel_dgemv_n_4_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &z[i]);
-		i+=4;
-		}
-#else
-	for( ; i<m-3; i+=4)
-		{
-		kernel_dgemv_n_4_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &z[i]);
-		}
-#endif
-	if(i<m)
-		{
-		kernel_dgemv_n_4_vs_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &z[i], m-i);
-		}
-	
-	}
-
-
 
 void dgemv_t_lib(int m, int n, double alpha, double *pA, int sda, double *x, double beta, double *y, double *z)
 	{
@@ -431,18 +390,58 @@ void dsymv_l_lib(int m, int n, double alpha, double *pA, int sda, double *x, dou
 
 void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
-	if(ai!=0)
-		{
-		printf("\ndgemv_n_libstr: feature not implemented yet: ai=%d\n", ai);
-		exit(1);
-		}
+
+	if(m<0)
+		return;
+
 	const int bs = 4;
+
+	int i;
+
 	int sda = sA->cn;
-	double *pA = sA->pA + aj*bs; // TODO ai
+	double *pA = sA->pA + aj*bs + ai/bs*bs*sda;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
-	dgemv_n_lib(m, n, alpha, pA, sda, x, beta, y, z);
+
+	i = 0;
+	// clean up at the beginning
+	if(ai%bs!=0)
+		{
+		kernel_dgemv_n_4_gen_lib4(n, &alpha, pA, x, &beta, y-ai%bs, z-ai%bs, ai%bs, m+ai%bs);
+		pA += bs*sda;
+		y += 4 - ai%bs;
+		z += 4 - ai%bs;
+		m -= 4 - ai%bs;
+		}
+	// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for( ; i<m-11; i+=12)
+		{
+		kernel_dgemv_n_12_lib4(n, &alpha, &pA[i*sda], sda, x, &beta, &y[i], &z[i]);
+		}
+#endif
+	for( ; i<m-7; i+=8)
+		{
+		kernel_dgemv_n_8_lib4(n, &alpha, &pA[i*sda], sda, x, &beta, &y[i], &z[i]);
+		}
+	if(i<m-3)
+		{
+		kernel_dgemv_n_4_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &z[i]);
+		i+=4;
+		}
+#else
+	for( ; i<m-3; i+=4)
+		{
+		kernel_dgemv_n_4_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &z[i]);
+		}
+#endif
+	if(i<m)
+		{
+		kernel_dgemv_n_4_vs_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &z[i], m-i); // TODO use gen kernel and remove vs kernel ???
+		}
+		
 	return;
 	}
 
@@ -450,7 +449,8 @@ void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
-	if(ai!=0 | xi%4!=0)
+//	if(ai!=0 | xi%4!=0)
+	if(ai!=0)
 		{
 		printf("\ndgemv_t_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);

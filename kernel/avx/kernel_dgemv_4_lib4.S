@@ -1900,6 +1900,70 @@ _inner_store_4_vs_lib4:
 
 
 
+// common inner routine with file scope
+//
+// store gen
+//
+// input arguments:
+// r10   <- D
+// r11d  <- k0 : start form (inc)
+// r12d  <- k1 : up to (exc)
+// ymm0  <- [z0 z1 z2 z3]
+// ymm14 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10   <- D
+// r11d  <- k0 : start form (inc)
+// r12d  <- k1 : up to (exc)
+// ymm0  <- [z0 z1 z2 z3]
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_4_GEN_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_store_4_gen_lib4, @function
+inner_store_4_gen_lib4:
+#elif defined(OS_MAC)
+_inner_store_4_gen_lib4:
+#endif
+#endif
+	
+	// compute mask for rows
+	vcvtsi2sd	%r11d, %xmm14, %xmm14
+	vcvtsi2sd	%r12d, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovupd		.LC02(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %ymm12
+#endif
+	vmovddup	%xmm14, %xmm14
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm12, %ymm14, %ymm14
+	vsubpd		%ymm15, %ymm12, %ymm15
+	vandpd		%ymm14, %ymm15, %ymm15
+
+	vmaskmovpd	%ymm0, %ymm15,  0(%r10)
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_store_4_gen_lib4, .-inner_store_4_gen_lib4
+#endif
+#endif
+
+
+
+
+
 //                            rdi    rsi            rdx        rcx        r8            r9         rsp+8
 // void kernel_dgemv_n_4_lib4(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z);
 
@@ -2105,6 +2169,113 @@ _kernel_dgemv_n_4_vs_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dgemv_n_4_vs_lib4, .-kernel_dgemv_n_4_vs_lib4
+#endif
+
+
+
+
+
+//                                rdi    rsi            rdx        rcx        r8            r9         rsp+8      rsp+16  rsp+24
+// void kernel_dgemv_n_4_gen_lib4(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int k0, int k1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dgemv_n_4_gen_lib4
+	.type kernel_dgemv_n_4_gen_lib4, @function
+kernel_dgemv_n_4_gen_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dgemv_n_4_gen_lib4
+_kernel_dgemv_n_4_gen_lib4:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemv kernel n
+
+	movl	%edi, %r10d // k
+	movq	%rdx, %r11  // A
+	movq	%rcx, %r12  // x
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemv_add_n_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemv_add_n_4_lib4
+#endif
+#endif
+
+
+	// call inner blend n scale ab
+
+	movq	%rsi, %r10 // alpha
+	movq	%r8, %r11   // beta
+	movq	%r9, %r12   // y
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_N_SCALE_AB_4_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_blend_n_scale_ab_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_blend_n_scale_ab_4_lib4
+#endif
+#endif
+
+
+	// store
+
+	movq	STACKSIZE +  8(%rsp), %r10 // z 
+	movl	STACKSIZE + 16(%rsp), %r11d // k0 
+	movl	STACKSIZE + 24(%rsp), %r12d // k1 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_GEN_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_store_4_gen_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_4_gen_lib4
+#endif
+#endif
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dgemv_n_4_gen_lib4, .-kernel_dgemv_n_4_gen_lib4
 #endif
 
 
