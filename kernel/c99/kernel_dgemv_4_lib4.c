@@ -116,16 +116,6 @@ void kernel_dgemv_n_4_gen_lib4(int kmax, double *alpha, double *A, double *x, do
 	
 	
 
-void kernel_dgemv_n_4_vs_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z, int km)
-	{
-
-	kernel_dgemv_n_4_gen_lib4(kmax, alpha, A, x, beta, y, z, 0, km);
-
-	}
-	
-	
-	
-
 void kernel_dgemv_n_4_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z)
 	{
 

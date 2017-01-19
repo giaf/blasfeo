@@ -44,7 +44,6 @@ void kernel_dgemv_t_8_lib4(int k, double *alpha, double *A, int sda, double *x, 
 void kernel_dtrmv_un_8_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
 // 4
 void kernel_dgemv_n_4_lib4(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z);
-void kernel_dgemv_n_4_vs_lib4(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int km);
 void kernel_dgemv_n_4_gen_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z, int k0, int k1);
 void kernel_dgemv_t_4_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
 void kernel_dgemv_t_4_vs_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *C, double *D, int km);

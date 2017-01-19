@@ -129,7 +129,7 @@ void dtrsv_ln_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, dou
 #endif
 	if(i<m)
 		{
-		kernel_dgemv_n_4_vs_lib4(n, &alpha, &pA[i*sda], y, &beta, &y[i], &y[i], m-i);
+		kernel_dgemv_n_4_gen_lib4(n, &alpha, &pA[i*sda], y, &beta, &y[i], &y[i], 0, m-i);
 		i+=4;
 		}
 
@@ -439,7 +439,7 @@ void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 #endif
 	if(i<m)
 		{
-		kernel_dgemv_n_4_vs_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &z[i], m-i); // TODO use gen kernel and remove vs kernel ???
+		kernel_dgemv_n_4_gen_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &z[i], 0, m-i);
 		}
 		
 	return;
