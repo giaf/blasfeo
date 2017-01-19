@@ -36,48 +36,6 @@
 
 
 
-void dgemv_t_lib(int m, int n, double alpha, double *pA, int sda, double *x, double beta, double *y, double *z)
-	{
-
-	if(n<=0)
-		return;
-	
-	const int bs = 4;
-
-	int i;
-
-	i = 0;
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	for( ; i<n-11; i+=12)
-		{
-		kernel_dgemv_t_12_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i]);
-		}
-#endif
-	for( ; i<n-7; i+=8)
-		{
-		kernel_dgemv_t_8_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i]);
-		}
-	if(i<n-3)
-		{
-		kernel_dgemv_t_4_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i]);
-		i+=4;
-		}
-#else
-	for( ; i<n-3; i+=4)
-		{
-		kernel_dgemv_t_4_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i]);
-		}
-#endif
-	if(i<n)
-		{
-		kernel_dgemv_t_4_vs_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i], n-i);
-		}
-	
-	}
-
-
-
 void dtrsv_ln_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *x, double *y)
 	{
 
@@ -443,26 +401,68 @@ void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 		}
 		
 	return;
+
 	}
 
 
 
 void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
-//	if(ai!=0 | xi%4!=0)
-	if(ai!=0)
-		{
-		printf("\ndgemv_t_libstr: feature not implemented yet: ai=%d\n", ai);
-		exit(1);
-		}
+
+	if(n<=0)
+		return;
+	
 	const int bs = 4;
+
+	int i;
+
 	int sda = sA->cn;
-	double *pA = sA->pA + aj*bs; // TODO ai
+	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
-	dgemv_t_lib(m, n, alpha, pA, sda, x, beta, y, z);
+
+	if(ai%bs==0)
+		{
+		i = 0;
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		for( ; i<n-11; i+=12)
+			{
+			kernel_dgemv_t_12_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i]);
+			}
+#endif
+		for( ; i<n-7; i+=8)
+			{
+			kernel_dgemv_t_8_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i]);
+			}
+		if(i<n-3)
+			{
+			kernel_dgemv_t_4_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i]);
+			i+=4;
+			}
+#else
+		for( ; i<n-3; i+=4)
+			{
+			kernel_dgemv_t_4_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i]);
+			}
+#endif
+		if(i<n)
+			{
+			kernel_dgemv_t_4_gen_lib4(m, &alpha, 0, &pA[i*bs], sda, x, &beta, &y[i], &z[i], n-i);
+			}
+		}
+	else // TODO kernel 8
+		{
+		i = 0;
+		for( ; i<n; i+=4)
+			{
+			kernel_dgemv_t_4_gen_lib4(m, &alpha, ai%bs, &pA[i*bs], sda, x, &beta, &y[i], &z[i], n-i);
+			}
+		}
+	
 	return;
+
 	}
 
 

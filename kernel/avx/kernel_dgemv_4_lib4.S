@@ -497,6 +497,126 @@ _inner_kernel_dgemv_add_nt_4_lib4:
 // common inner routine with file scope
 //
 // input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- bs*sda*sizeof(double) = 32*sda
+// r13   <- x
+// r14d  <- offA
+// ymm0  <- [z0a z0b z0c z0d]
+// ymm1  <- [z1a z1b z1c z1d]
+// ymm2  <- [z2a z2b z2c z2d]
+// ymm3  <- [z3a z3b z3c z3d]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+//
+// output arguments:
+// r10d  <- 
+// r11   <- 
+// r12   <- 
+// r13   <- 
+// r14d  <- offA
+// ymm0  <- [z0a z0b z0c z0d]
+// ymm1  <- [z1a z1b z1c z1d]
+// ymm2  <- [z2a z2b z2c z2d]
+// ymm3  <- [z3a z3b z3c z3d]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=2
+	.macro INNER_EDGE_DGEMV_ADD_T_4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_dgemv_add_t_4_lib4, @function
+inner_edge_dgemv_add_t_4_lib4:
+#elif defined(OS_MAC)
+_inner_edge_dgemv_add_t_4_lib4:
+#endif
+#endif
+
+	cmpl	$0, %r14d
+	jle		0f // return
+
+	movl	%r14d, %r15d
+	sall	$3, %r15d // offA*sizeof(double)
+
+	subq	%r15, %r11 // A - offA
+	subq	%r15, %r13 // x - offA
+
+	movl	%r10d, %r15d // kmax
+	addl	%r14d, %r15d // kmax + offA
+
+	vcvtsi2sd	%r14d, %xmm14, %xmm14 // offA
+	vcvtsi2sd	%r15d, %xmm15, %xmm15 // offA + kmax
+#if defined(OS_LINUX)
+	vmovupd		.LC02(%rip), %ymm13
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %ymm13
+#endif
+	vmovddup	%xmm14, %xmm14
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm13, %ymm14, %ymm14
+	vsubpd		%ymm15, %ymm13, %ymm15
+	vandpd		%ymm15, %ymm14, %ymm14
+
+	vmaskmovpd	0(%r13), %ymm14, %ymm12
+
+	vmovapd	0(%r11), %ymm8
+	vmulpd	%ymm8, %ymm12, %ymm15
+	vaddpd	%ymm0, %ymm15, %ymm0
+	
+	vmovapd	32(%r11), %ymm8
+	vmulpd	%ymm8, %ymm12, %ymm15
+	vaddpd	%ymm1, %ymm15, %ymm1
+	
+	vmovapd	64(%r11), %ymm8
+	vmulpd	%ymm8, %ymm12, %ymm15
+	vaddpd	%ymm2, %ymm15, %ymm2
+
+	vmovapd	96(%r11), %ymm8
+	vmulpd	%ymm8, %ymm12, %ymm15
+	vaddpd	%ymm3, %ymm15, %ymm3
+
+	addq	$32, %r13 // x + 4
+	addq	%r12, %r11 // A + bs*sda
+		
+	addl	%r14d, %r10d
+	subl	$4, %r10d // kmax - (4-offA)
+	
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_dgemv_add_t_4_lib4, .-inner_edge_dgemv_add_t_4_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// input arguments:
 // r10   <- kmax
 // r11   <- A
 // r12   <- bs*sda*sizeof(double) = 32*sda
@@ -2387,6 +2507,126 @@ _kernel_dgemv_t_4_vs_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dgemv_t_4_vs_lib4, .-kernel_dgemv_t_4_vs_lib4
+#endif
+
+
+
+
+
+//                                rdi    rsi            rdx       rcx        r8       r9         rsp+8         rsp+16     rsp+24     rsp+32
+// void kernel_dgemv_t_4_gen_lib4(int k, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z, int km);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dgemv_t_4_gen_lib4
+	.type kernel_dgemv_t_4_gen_lib4, @function
+kernel_dgemv_t_4_gen_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dgemv_t_4_gen_lib4
+_kernel_dgemv_t_4_gen_lib4:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemv kernel n
+
+	movl	%edi, %r10d // k
+	movq	%rcx, %r11  // A
+	movl	%r8d, %r12d // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+//	movslq	%r12d, %r12
+	movq	%r9, %r13  // x
+	movl	%edx, %r14d // offA
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_DGEMV_ADD_T_4_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_edge_dgemv_add_t_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dgemv_add_t_4_lib4
+#endif
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemv_add_t_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemv_add_t_4_lib4
+#endif
+#endif
+
+
+	// call inner blender t
+
+	movq	%rsi, %r10 // alpha
+	movq	STACKSIZE + 8(%rsp), %r11   // beta
+	movq	STACKSIZE + 16(%rsp), %r12 // y 
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_T_SCALE_AB_4_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_blend_t_scale_ab_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_blend_t_scale_ab_4_lib4
+#endif
+#endif
+
+
+	// store
+
+	movq	STACKSIZE + 24(%rsp), %r10 // z 
+	movl	STACKSIZE + 32(%rsp), %r11d // km 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_VS_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_store_4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_4_vs_lib4
+#endif
+#endif
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dgemv_t_4_gen_lib4, .-kernel_dgemv_t_4_gen_lib4
 #endif
 
 
