@@ -1010,7 +1010,7 @@ void dtrcp_l_lib(int m, double alpha, int offsetA, double *A, int sda, int offse
 
 
 
-// scaled and adds a packed matrix into a packed matrix: B = B + alpha*A
+// scales and adds a packed matrix into a packed matrix: B = B + alpha*A
 void dgead_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb)
 	{
 
@@ -1307,6 +1307,29 @@ void dgead_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int 
 			}
 		}
 
+	}
+
+
+
+// scales and adds a strvec into a strvec
+void dvecad_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci)
+	{
+	double *pa = sa->pa + ai;
+	double *pc = sc->pa + ci;
+	int ii;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		pc[ii+0] += alpha*pa[ii+0];
+		pc[ii+1] += alpha*pa[ii+1];
+		pc[ii+2] += alpha*pa[ii+2];
+		pc[ii+3] += alpha*pa[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		pc[ii+0] += alpha*pa[ii+0];
+		}
+	return;
 	}
 
 
