@@ -170,6 +170,7 @@ static_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
 	ar rcs libblasfeo.a $(OBJS) 
+	cp libblasfeo.a ./lib/
 	@echo
 	@echo " libblasfeo.a static library build complete."
 	@echo
@@ -179,6 +180,7 @@ shared_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
 	gcc -shared -o libblasfeo.so $(OBJS)
+	cp libblasfeo.so ./lib/
 	@echo
 	@echo " libblasfeo.so shared library build complete."
 	@echo
@@ -252,6 +254,9 @@ run:
 
 clean:
 	rm -f libblasfeo.a
+	rm -f libblasfeo.so
+	rm -f ./lib/libblasfeo.a
+	rm -f ./lib/libblasfeo.so
 	make -C auxiliary clean
 	make -C kernel clean
 	make -C blas clean
