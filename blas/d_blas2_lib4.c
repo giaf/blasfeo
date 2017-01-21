@@ -137,7 +137,7 @@ void dtrsv_lt_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, dou
 
 
 
-void dtrmv_un_lib(int m, double *pA, int sda, double *x, int alg, double *y, double *z)
+void dtrmv_un_lib(int m, double *pA, int sda, double *x, double *y, double *z)
 	{
 
 	if(m<=0)
@@ -151,7 +151,7 @@ void dtrmv_un_lib(int m, double *pA, int sda, double *x, int alg, double *y, dou
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; i<m-7; i+=8)
 		{
-		kernel_dtrmv_un_8_lib4(m-i, pA, sda, x, alg, y, z);
+		kernel_dtrmv_un_8_lib4(m-i, pA, sda, x, 0, y, z);
 		pA += 8*sda+8*bs;
 		x  += 8;
 		y  += 8;
@@ -160,7 +160,7 @@ void dtrmv_un_lib(int m, double *pA, int sda, double *x, int alg, double *y, dou
 #endif
 	for(; i<m-3; i+=4)
 		{
-		kernel_dtrmv_un_4_lib4(m-i, pA, x, alg, y, z);
+		kernel_dtrmv_un_4_lib4(m-i, pA, x, 0, y, z);
 		pA += 4*sda+4*bs;
 		x  += 4;
 		y  += 4;
@@ -170,57 +170,18 @@ void dtrmv_un_lib(int m, double *pA, int sda, double *x, int alg, double *y, dou
 		{
 		if(m-i==1)
 			{
-			if(alg==0)
-				{
-				z[0] = pA[0+bs*0]*x[0];
-				}
-			else if(alg==1)
-				{
-				z[0] = y[0] + pA[0+bs*0]*x[0];
-				}
-			else
-				{
-				z[0] = y[0] - pA[0+bs*0]*x[0];
-				}
+			z[0] = pA[0+bs*0]*x[0];
 			}
 		else if(m-i==2)
 			{
-			if(alg==0)
-				{
-				z[0] = pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1];
-				z[1] = pA[1+bs*1]*x[1];
-				}
-			else if(alg==1)
-				{
-				z[0] = y[0] + pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1];
-				z[1] = y[1] + pA[1+bs*1]*x[1];
-				}
-			else
-				{
-				z[0] = y[0] - pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1];
-				z[1] = y[1] - pA[1+bs*1]*x[1];
-				}
+			z[0] = pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1];
+			z[1] = pA[1+bs*1]*x[1];
 			}
 		else // if(m-i==3)
 			{
-			if(alg==0)
-				{
-				z[0] = pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1] + pA[0+bs*2]*x[2];
-				z[1] = pA[1+bs*1]*x[1] + pA[1+bs*2]*x[2];
-				z[2] = pA[2+bs*2]*x[2];
-				}
-			else if(alg==1)
-				{
-				z[0] = y[0] + pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1] + pA[0+bs*2]*x[2];
-				z[1] = y[1] + pA[1+bs*1]*x[1] + pA[1+bs*2]*x[2];
-				z[2] = y[2] + pA[2+bs*2]*x[2];
-				}
-			else
-				{
-				z[0] = y[0] - pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1] + pA[0+bs*2]*x[2];
-				z[1] = y[1] - pA[1+bs*1]*x[1] + pA[1+bs*2]*x[2];
-				z[2] = y[2] - pA[2+bs*2]*x[2];
-				}
+			z[0] = pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1] + pA[0+bs*2]*x[2];
+			z[1] = pA[1+bs*1]*x[1] + pA[1+bs*2]*x[2];
+			z[2] = pA[2+bs*2]*x[2];
 			}
 		}
 
@@ -228,7 +189,7 @@ void dtrmv_un_lib(int m, double *pA, int sda, double *x, int alg, double *y, dou
 
 
 
-void dtrmv_ut_lib(int m, double *pA, int sda, double *x, int alg, double *y, double *z)
+void dtrmv_ut_lib(int m, double *pA, int sda, double *x, double *y, double *z)
 	{
 
 	if(m<=0)
@@ -244,13 +205,13 @@ void dtrmv_ut_lib(int m, double *pA, int sda, double *x, int alg, double *y, dou
 	idx = m/bs*bs;
 	if(m%bs!=0)
 		{
-		kernel_dtrmv_ut_4_vs_lib4(m, pA+idx*bs, sda, x, alg, y+idx, z+idx, m%bs);
+		kernel_dtrmv_ut_4_vs_lib4(m, pA+idx*bs, sda, x, 0, y+idx, z+idx, m%bs);
 		ii += m%bs;
 		}
 	idx -= 4;
 	for(; ii<m; ii+=4)
 		{
-		kernel_dtrmv_ut_4_lib4(idx+4, pA+idx*bs, sda, x, alg, y+idx, z+idx);
+		kernel_dtrmv_ut_4_lib4(idx+4, pA+idx*bs, sda, x, 0, y+idx, z+idx);
 		idx -= 4;
 		}
 
@@ -520,7 +481,7 @@ void dtrmv_unn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	double *pA = sA->pA + aj*bs; // TODO ai
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-	dtrmv_un_lib(m, pA, sda, x, 0, z, z);
+	dtrmv_un_lib(m, pA, sda, x, z, z);
 	return;
 	}
 
@@ -538,7 +499,7 @@ void dtrmv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	double *pA = sA->pA + aj*bs; // TODO ai
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-	dtrmv_ut_lib(m, pA, sda, x, 0, z, z);
+	dtrmv_ut_lib(m, pA, sda, x, z, z);
 	return;
 	}
 
