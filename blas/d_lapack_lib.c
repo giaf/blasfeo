@@ -31,12 +31,12 @@
 #include <math.h>
 
 #if defined(LA_BLAS)
-#if defined(LA_BLAS_OPENBLAS)
+#if defined(REF_BLAS_OPENBLAS)
 #include <f77blas.h>
-#elif defined(LA_BLAS_BLIS)
-#elif defined(LA_BLAS_NETLIB)
+#elif defined(REF_BLAS_BLIS)
+#elif defined(REF_BLAS_NETLIB)
 #include "d_blas.h"
-#elif defined(LA_BLAS_MKL)
+#elif defined(LREFBLAS_MKL)
 #include <mkl_blas.h>
 #include <mkl_lapack.h>
 #endif
@@ -1027,13 +1027,13 @@ void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d
 	if(!(pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 			dcopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #else
 			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 	dpotrf(&cl, &n, pD, &(sD->m), &info);
 	dtrsm(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
 #else
@@ -1060,13 +1060,13 @@ void dgetf2_nopivot(int m, int n, double *A, int lda)
 		{
 		itmp0 = m-j-1;
 		dtmp = 1.0/A[j+lda*j];
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 		dscal(&itmp0, &dtmp, &A[(j+1)+lda*j], &i1);
 #else
 		dscal_(&itmp0, &dtmp, &A[(j+1)+lda*j], &i1);
 #endif
 		itmp1 = n-j-1;
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 		dger(&itmp0, &itmp1, &dm1, &A[(j+1)+lda*j], &i1, &A[j+lda*(j+1)], &lda, &A[(j+1)+lda*(j+1)], &lda);
 #else
 		dger_(&itmp0, &itmp1, &dm1, &A[(j+1)+lda*j], &i1, &A[j+lda*(j+1)], &lda, &A[(j+1)+lda*(j+1)], &lda);
@@ -1097,13 +1097,13 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 	if(!(pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 			dcopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #else
 			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 	dgemm(&cn, &ct, &m, &n, &k, &d1, pA, &(sA->m), pB, &(sB->m), &d1, pD, &(sD->m));
 	dpotrf(&cl, &n, pD, &(sD->m), &info);
 	dtrsm(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
@@ -1131,7 +1131,7 @@ void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, st
 	if(!(pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 			dcopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #else
 			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
@@ -1157,14 +1157,14 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	if(!(pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 			dcopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #else
 			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
 	int info;
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 	dgetrf(&m, &n, pD, &(sD->m), ipiv, &info);
 #else
 	dgetrf_(&m, &n, pD, &(sD->m), ipiv, &info);

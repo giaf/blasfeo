@@ -30,12 +30,12 @@
 #include <stdio.h>
 
 #if defined(LA_BLAS)
-#if defined(LA_BLAS_OPENBLAS)
+#if defined(REF_BLAS_OPENBLAS)
 #include <f77blas.h>
-#elif defined(LA_BLAS_BLIS)
-#elif defined(LA_BLAS_NETLIB)
+#elif defined(REF_BLAS_BLIS)
+#elif defined(REF_BLAS_NETLIB)
 #include "d_blas.h"
-#elif defined(LA_BLAS_MKL)
+#elif defined(REF_BLAS_MKL)
 #include <mkl_blas.h>
 #endif
 #endif
@@ -669,7 +669,7 @@ void dgemv_n_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 	dcopy(&m, y, &i1, z, &i1);
 	dgemv(&cn, &m, &n, &alpha, pA, &lda, x, &i1, &beta, z, &i1);
 #else
@@ -694,7 +694,7 @@ void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 	dcopy(&n, y, &i1, z, &i1);
 	dgemv(&ct, &m, &n, &alpha, pA, &lda, x, &i1, &beta, z, &i1);
 #else
@@ -722,7 +722,7 @@ void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strm
 	double *y_t = sy_t->pa + yi_t;
 	double *z_n = sz_n->pa + zi_n;
 	double *z_t = sz_t->pa + zi_t;
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 	dcopy(&m, y_n, &i1, z_n, &i1);
 	dgemv(&cn, &m, &n, &alpha_n, pA, &lda, x_n, &i1, &beta_n, z_n, &i1);
 	dcopy(&n, y_t, &i1, z_t, &i1);
@@ -753,7 +753,7 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
 	int tmp = m-n;
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 	dcopy(&m, y, &i1, z, &i1);
 	dsymv(&cl, &n, &alpha, pA, &lda, x, &i1, &beta, z, &i1);
 	dgemv(&cn, &tmp, &n, &alpha, pA+n, &lda, x, &i1, &beta, z+n, &i1);
@@ -783,7 +783,7 @@ void dtrmv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	double *pA = sA->pA + ai + aj*lda;
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 	dcopy(&m, x, &i1, z, &i1);
 	dtrmv(&cl, &cn, &cn, &m, pA, &lda, z, &i1);
 #else
@@ -809,7 +809,7 @@ void dtrmv_ltn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	double *pA = sA->pA + ai + aj*lda;
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 	dcopy(&m, x, &i1, z, &i1);
 	dtrmv(&cl, &ct, &cn, &m, pA, &lda, z, &i1);
 #else
@@ -835,7 +835,7 @@ void dtrmv_unn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	double *pA = sA->pA + ai + aj*lda;
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 	dcopy(&m, x, &i1, z, &i1);
 	dtrmv(&cu, &cn, &cn, &m, pA, &lda, z, &i1);
 #else
@@ -861,7 +861,7 @@ void dtrmv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	double *pA = sA->pA + ai + aj*lda;
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 	dcopy(&m, x, &i1, z, &i1);
 	dtrmv(&cu, &ct, &cn, &m, pA, &lda, z, &i1);
 #else
@@ -888,7 +888,7 @@ void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 	double *pA = sA->pA + ai + aj*lda;
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 	dcopy(&m, x, &i1, z, &i1);
 	dtrsv(&cl, &cn, &cn, &n, pA, &lda, z, &i1);
 	dgemv(&cn, &mmn, &n, &dm1, pA+n, &lda, z, &i1, &d1, z+n, &i1);
@@ -917,7 +917,7 @@ void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 	double *pA = sA->pA + ai + aj*lda;
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 	dcopy(&m, x, &i1, z, &i1);
 	dgemv(&ct, &mmn, &n, &dm1, pA+n, &lda, z+n, &i1, &d1, z, &i1);
 	dtrsv(&cl, &ct, &cn, &n, pA, &lda, z, &i1);

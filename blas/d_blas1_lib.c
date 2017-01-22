@@ -30,12 +30,12 @@
 #include <stdio.h>
 
 #if defined(LA_BLAS)
-#if defined(LA_BLAS_OPENBLAS)
+#if defined(REF_BLAS_OPENBLAS)
 #include <f77blas.h>
-#elif defined(LA_BLAS_BLIS)
-#elif defined(LA_BLAS_NETLIB)
+#elif defined(REF_BLAS_BLIS)
+#elif defined(REF_BLAS_NETLIB)
 #include "d_blas.h"
-#elif defined(LA_BLAS_MKL)
+#elif defined(REF_BLAS_MKL)
 #include <mkl_blas.h>
 #endif
 #endif
@@ -86,7 +86,7 @@ void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_str
 	int i1 = 1;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 	daxpy(&m, &alpha, x, &i1, y, &i1);
 #else
 	daxpy_(&m, &alpha, x, &i1, y, &i1);
@@ -102,7 +102,7 @@ void daxpy_bkp_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
-#if defined(LA_BLAS_MKL)
+#if defined(REF_BLAS_MKL)
 	dcopy(&m, y, &i1, z, &i1);
 	daxpy(&m, &alpha, x, &i1, y, &i1);
 #else
