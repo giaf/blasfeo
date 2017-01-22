@@ -264,44 +264,6 @@ void dgemv_nt_lib(int m, int n, double alpha_n, double alpha_t, double *pA, int 
 	}
 
 
-
-void dsymv_l_lib(int m, int n, double alpha, double *pA, int sda, double *x, double beta, double *y, double *z)
-	{
-
-	if(m<=0 | n<=0)
-		return;
-	
-	const int bs = 4;
-
-	int ii;
-
-	// copy and scale y int z
-	ii = 0;
-	for(; ii<m-3; ii+=4)
-		{
-		z[ii+0] = beta*y[ii+0];
-		z[ii+1] = beta*y[ii+1];
-		z[ii+2] = beta*y[ii+2];
-		z[ii+3] = beta*y[ii+3];
-		}
-	for(; ii<m; ii++)
-		{
-		z[ii+0] = beta*y[ii+0];
-		}
-	
-	ii = 0;
-	for(; ii<n-3; ii+=4)
-		{
-		kernel_dsymv_l_4_lib4(m-ii, &alpha, pA+ii*bs+ii*sda, sda, x+ii, x+ii, z+ii, z+ii);
-		}
-	if(ii<n)
-		{
-		kernel_dsymv_l_4_vs_lib4(m-ii, &alpha, pA+ii*bs+ii*sda, sda, x+ii, x+ii, z+ii, z+ii, n-ii);
-		}
-	
-	return;
-
-	}
 	
 #if defined(LA_HIGH_PERFORMANCE)
 
@@ -452,18 +414,59 @@ void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strm
 
 void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
-	if(ai!=0 | xi%4!=0)
-		{
-		printf("\ndsymv_l_libstr: feature not implemented yet: ai=%d\n", ai);
-		exit(1);
-		}
+
+	if(m<=0 | n<=0)
+		return;
+	
 	const int bs = 4;
+
+	int ii, n1;
+
 	int sda = sA->cn;
-	double *pA = sA->pA + aj*bs; // TODO ai
+	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
-	dsymv_l_lib(m, n, alpha, pA, sda, x, beta, y, z);
+
+//	dsymv_l_lib(m, n, alpha, pA, sda, x, beta, y, z);
+
+	// copy and scale y int z
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		z[ii+0] = beta*y[ii+0];
+		z[ii+1] = beta*y[ii+1];
+		z[ii+2] = beta*y[ii+2];
+		z[ii+3] = beta*y[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = beta*y[ii+0];
+		}
+	
+	// clean up at the beginning
+	if(ai%bs!=0) // 1, 2, 3
+		{
+		n1 = 4-ai%bs;
+		kernel_dsymv_l_4_gen_lib4(m, &alpha, ai%bs, &pA[0], sda, &x[0], &x[0], &z[0], &z[0], n<n1 ? n : n1);
+		pA += n1 + n1*bs + (sda-1)*bs;
+		x += n1;
+		z += n1;
+		m -= n1;
+		n -= n1;
+		}
+	// main loop
+	ii = 0;
+	for(; ii<n-3; ii+=4)
+		{
+		kernel_dsymv_l_4_lib4(m-ii, &alpha, &pA[ii*bs+ii*sda], sda, &x[ii], &x[ii], &z[ii], &z[ii]);
+		}
+	// clean up at the end
+	if(ii<n)
+		{
+		kernel_dsymv_l_4_gen_lib4(m-ii, &alpha, 0, &pA[ii*bs+ii*sda], sda, &x[ii], &x[ii], &z[ii], &z[ii], n-ii);
+		}
+	
 	return;
 	}
 

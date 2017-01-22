@@ -231,7 +231,7 @@ void kernel_dgemv_nt_4_lib4(int kmax, double *alpha_n, double *alpha_t, double *
 
 
 // XXX copy and scale y_n into z_n outside the kernel !!!!!
-void kernel_dsymv_l_4_vs_lib4(int kmax, double *alpha, double *A, int sda, double *x_n, double *x_t, double *z_n, double *z_t, int km)
+void kernel_dsymv_l_4_gen_lib4(int kmax, double *alpha, int offA, double *A, int sda, double *x_n, double *x_t, double *z_n, double *z_t, int km)
 	{
 
 	if(kmax<=0) 
@@ -271,157 +271,203 @@ void kernel_dsymv_l_4_vs_lib4(int kmax, double *alpha, double *A, int sda, doubl
 	y_t_3 = 0;
 
 	k = 0;
-	if(kmax<4)
+	if(offA==0)
 		{
+		if(kmax<4)
+			{
+			// 0
+
+			x_t_0 = x_t[0];
+
+			a_00 = A[0+bs*0];
+			
+			y_t_0 += a_00 * x_t_0;
+
+			if(kmax==1)
+				goto store_t;
+
+			// 1
+
+			y_n_0 = z_n[1]; 
+			x_t_0 = x_t[1];
+
+			a_00 = A[1+bs*0];
+			a_01 = A[1+bs*1];
+			
+			y_n_0 += a_00 * x_n_0;
+			y_t_0 += a_00 * x_t_0;
+			y_t_1 += a_01 * x_t_0;
+
+			z_n[1] = y_n_0;
+
+			if(kmax==2)
+				goto store_t;
+
+			// 2
+
+			y_n_0 = z_n[2]; 
+			x_t_0 = x_t[2];
+
+			a_00 = A[2+bs*0];
+			a_01 = A[2+bs*1];
+			a_02 = A[2+bs*2];
+			
+			y_n_0 += a_00 * x_n_0;
+			y_t_0 += a_00 * x_t_0;
+			y_n_0 += a_01 * x_n_1;
+			y_t_1 += a_01 * x_t_0;
+			y_t_2 += a_02 * x_t_0;
+
+			z_n[2] = y_n_0;
+
+			goto store_t;
+			}
+		else
+			{
+
+			// 0
+
+			x_t_0 = x_t[0];
+
+			a_00 = A[0+bs*0];
+			
+			y_t_0 += a_00 * x_t_0;
+
+
+			// 1
+
+			y_n_0 = z_n[1]; 
+			x_t_0 = x_t[1];
+
+			a_00 = A[1+bs*0];
+			a_01 = A[1+bs*1];
+			
+			y_n_0 += a_00 * x_n_0;
+			y_t_0 += a_00 * x_t_0;
+			y_t_1 += a_01 * x_t_0;
+
+			z_n[1] = y_n_0;
+
+
+			// 2
+
+			y_n_0 = z_n[2]; 
+			x_t_0 = x_t[2];
+
+			a_00 = A[2+bs*0];
+			a_01 = A[2+bs*1];
+			a_02 = A[2+bs*2];
+			
+			y_n_0 += a_00 * x_n_0;
+			y_t_0 += a_00 * x_t_0;
+			y_n_0 += a_01 * x_n_1;
+			y_t_1 += a_01 * x_t_0;
+			y_t_2 += a_02 * x_t_0;
+
+			z_n[2] = y_n_0;
+
+
+			// 3
+
+			y_n_0 = z_n[3]; 
+			x_t_0 = x_t[3];
+
+			a_00 = A[3+bs*0];
+			a_01 = A[3+bs*1];
+			a_02 = A[3+bs*2];
+			a_03 = A[3+bs*3];
+			
+			y_n_0 += a_00 * x_n_0;
+			y_t_0 += a_00 * x_t_0;
+			y_n_0 += a_01 * x_n_1;
+			y_t_1 += a_01 * x_t_0;
+			y_n_0 += a_02 * x_n_2;
+			y_t_2 += a_02 * x_t_0;
+			y_t_3 += a_03 * x_t_0;
+
+			z_n[3] = y_n_0;
+
+			k += 4;
+			A += sda*bs;
+			z_n += 4;
+			x_t += 4;
+
+			}
+		}
+	else if(offA==1)
+		{
+
 		// 0
 
-//		y_n_0 = z_n[0]; 
 		x_t_0 = x_t[0];
 
 		a_00 = A[0+bs*0];
-//		a_01 = A[0+bs*1];
-//		a_02 = A[0+bs*2];
-//		a_03 = A[0+bs*3];
 		
-//		y_n_0 += a_00 * x_n_0;
 		y_t_0 += a_00 * x_t_0;
-//		y_n_0 += a_01 * x_n_1;
-//		y_t_1 += a_01 * x_t_0;
-//		y_n_0 += a_02 * x_n_2;
-//		y_t_2 += a_02 * x_t_0;
-//		y_n_0 += a_03 * x_n_3;
-//		y_t_3 += a_03 * x_t_0;
-//		z_n[0] = y_n_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
 
 		if(kmax==1)
 			goto store_t;
 
 		// 1
 
-		y_n_0 = z_n[1]; 
-		x_t_0 = x_t[1];
+		y_n_0 = z_n[0]; 
+		x_t_0 = x_t[0];
 
-		a_00 = A[1+bs*0];
-		a_01 = A[1+bs*1];
-//		a_02 = A[1+bs*2];
-//		a_03 = A[1+bs*3];
+		a_00 = A[0+bs*0];
+		a_01 = A[0+bs*1];
 		
 		y_n_0 += a_00 * x_n_0;
 		y_t_0 += a_00 * x_t_0;
-//		y_n_0 += a_01 * x_n_1;
 		y_t_1 += a_01 * x_t_0;
-//		y_n_0 += a_02 * x_n_2;
-//		y_t_2 += a_02 * x_t_0;
-//		y_n_0 += a_03 * x_n_3;
-//		y_t_3 += a_03 * x_t_0;
 
-		z_n[1] = y_n_0;
+		z_n[0] = y_n_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
 
 		if(kmax==2)
 			goto store_t;
 
 		// 2
 
-		y_n_0 = z_n[2]; 
-		x_t_0 = x_t[2];
-
-		a_00 = A[2+bs*0];
-		a_01 = A[2+bs*1];
-		a_02 = A[2+bs*2];
-//		a_03 = A[2+bs*3];
-		
-		y_n_0 += a_00 * x_n_0;
-		y_t_0 += a_00 * x_t_0;
-		y_n_0 += a_01 * x_n_1;
-		y_t_1 += a_01 * x_t_0;
-//		y_n_0 += a_02 * x_n_2;
-		y_t_2 += a_02 * x_t_0;
-//		y_n_0 += a_03 * x_n_3;
-//		y_t_3 += a_03 * x_t_0;
-
-		z_n[2] = y_n_0;
-
-		goto store_t;
-		}
-	else
-		{
-
-		// 0
-
-//		y_n_0 = z_n[0]; 
+		y_n_0 = z_n[0]; 
 		x_t_0 = x_t[0];
 
 		a_00 = A[0+bs*0];
-//		a_01 = A[0+bs*1];
-//		a_02 = A[0+bs*2];
-//		a_03 = A[0+bs*3];
-		
-//		y_n_0 += a_00 * x_n_0;
-		y_t_0 += a_00 * x_t_0;
-//		y_n_0 += a_01 * x_n_1;
-//		y_t_1 += a_01 * x_t_0;
-//		y_n_0 += a_02 * x_n_2;
-//		y_t_2 += a_02 * x_t_0;
-//		y_n_0 += a_03 * x_n_3;
-//		y_t_3 += a_03 * x_t_0;
-
-
-//		z_n[0] = y_n_0;
-
-
-		// 1
-
-		y_n_0 = z_n[1]; 
-		x_t_0 = x_t[1];
-
-		a_00 = A[1+bs*0];
-		a_01 = A[1+bs*1];
-//		a_02 = A[1+bs*2];
-//		a_03 = A[1+bs*3];
-		
-		y_n_0 += a_00 * x_n_0;
-		y_t_0 += a_00 * x_t_0;
-//		y_n_0 += a_01 * x_n_1;
-		y_t_1 += a_01 * x_t_0;
-//		y_n_0 += a_02 * x_n_2;
-//		y_t_2 += a_02 * x_t_0;
-//		y_n_0 += a_03 * x_n_3;
-//		y_t_3 += a_03 * x_t_0;
-
-		z_n[1] = y_n_0;
-
-
-		// 2
-
-		y_n_0 = z_n[2]; 
-		x_t_0 = x_t[2];
-
-		a_00 = A[2+bs*0];
-		a_01 = A[2+bs*1];
-		a_02 = A[2+bs*2];
-//		a_03 = A[2+bs*3];
+		a_01 = A[0+bs*1];
+		a_02 = A[0+bs*2];
 		
 		y_n_0 += a_00 * x_n_0;
 		y_t_0 += a_00 * x_t_0;
 		y_n_0 += a_01 * x_n_1;
 		y_t_1 += a_01 * x_t_0;
-//		y_n_0 += a_02 * x_n_2;
 		y_t_2 += a_02 * x_t_0;
-//		y_n_0 += a_03 * x_n_3;
-//		y_t_3 += a_03 * x_t_0;
 
-		z_n[2] = y_n_0;
+		z_n[0] = y_n_0;
 
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		A += (sda-1)*bs; // new panel
+
+		if(kmax==3)
+			goto store_t;
 
 		// 3
 
-		y_n_0 = z_n[3]; 
-		x_t_0 = x_t[3];
+		y_n_0 = z_n[0]; 
+		x_t_0 = x_t[0];
 
-		a_00 = A[3+bs*0];
-		a_01 = A[3+bs*1];
-		a_02 = A[3+bs*2];
-		a_03 = A[3+bs*3];
+		a_00 = A[0+bs*0];
+		a_01 = A[0+bs*1];
+		a_02 = A[0+bs*2];
+		a_03 = A[0+bs*3];
 		
 		y_n_0 += a_00 * x_n_0;
 		y_t_0 += a_00 * x_t_0;
@@ -429,15 +475,382 @@ void kernel_dsymv_l_4_vs_lib4(int kmax, double *alpha, double *A, int sda, doubl
 		y_t_1 += a_01 * x_t_0;
 		y_n_0 += a_02 * x_n_2;
 		y_t_2 += a_02 * x_t_0;
-//		y_n_0 += a_03 * x_n_3;
 		y_t_3 += a_03 * x_t_0;
 
-		z_n[3] = y_n_0;
+		z_n[0] = y_n_0;
 
-		k += 4;
-		A += sda*bs;
-		z_n += 4;
-		x_t += 4;
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		if(kmax==4)
+			goto store_t;
+
+		// 4
+
+		y_n_0 = z_n[0]; 
+		x_t_0 = x_t[0];
+
+		a_00 = A[0+bs*0];
+		a_01 = A[0+bs*1];
+		a_02 = A[0+bs*2];
+		a_03 = A[0+bs*3];
+		
+		y_n_0 += a_00 * x_n_0;
+		y_t_0 += a_00 * x_t_0;
+		y_n_0 += a_01 * x_n_1;
+		y_t_1 += a_01 * x_t_0;
+		y_n_0 += a_02 * x_n_2;
+		y_t_2 += a_02 * x_t_0;
+		y_n_0 += a_03 * x_n_3;
+		y_t_3 += a_03 * x_t_0;
+
+		z_n[0] = y_n_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		if(kmax==5)
+			goto store_t;
+
+		// 5
+
+		y_n_0 = z_n[0]; 
+		x_t_0 = x_t[0];
+
+		a_00 = A[0+bs*0];
+		a_01 = A[0+bs*1];
+		a_02 = A[0+bs*2];
+		a_03 = A[0+bs*3];
+		
+		y_n_0 += a_00 * x_n_0;
+		y_t_0 += a_00 * x_t_0;
+		y_n_0 += a_01 * x_n_1;
+		y_t_1 += a_01 * x_t_0;
+		y_n_0 += a_02 * x_n_2;
+		y_t_2 += a_02 * x_t_0;
+		y_n_0 += a_03 * x_n_3;
+		y_t_3 += a_03 * x_t_0;
+
+		z_n[0] = y_n_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		if(kmax==6)
+			goto store_t;
+
+		// 6
+
+		y_n_0 = z_n[0]; 
+		x_t_0 = x_t[0];
+
+		a_00 = A[0+bs*0];
+		a_01 = A[0+bs*1];
+		a_02 = A[0+bs*2];
+		a_03 = A[0+bs*3];
+		
+		y_n_0 += a_00 * x_n_0;
+		y_t_0 += a_00 * x_t_0;
+		y_n_0 += a_01 * x_n_1;
+		y_t_1 += a_01 * x_t_0;
+		y_n_0 += a_02 * x_n_2;
+		y_t_2 += a_02 * x_t_0;
+		y_n_0 += a_03 * x_n_3;
+		y_t_3 += a_03 * x_t_0;
+
+		z_n[0] = y_n_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		A += (sda-1)*bs; // new panel
+
+		if(kmax==7)
+			goto store_t;
+
+		k += 7;
+
+		}
+	else if(offA==2)
+		{
+
+		// 0
+
+		x_t_0 = x_t[0];
+
+		a_00 = A[0+bs*0];
+		
+		y_t_0 += a_00 * x_t_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		if(kmax==1)
+			goto store_t;
+
+		// 1
+
+		y_n_0 = z_n[0]; 
+		x_t_0 = x_t[0];
+
+		a_00 = A[0+bs*0];
+		a_01 = A[0+bs*1];
+		
+		y_n_0 += a_00 * x_n_0;
+		y_t_0 += a_00 * x_t_0;
+		y_t_1 += a_01 * x_t_0;
+
+		z_n[0] = y_n_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		A += (sda-1)*bs; // new panel
+
+		if(kmax==2)
+			goto store_t;
+
+		// 2
+
+		y_n_0 = z_n[0]; 
+		x_t_0 = x_t[0];
+
+		a_00 = A[0+bs*0];
+		a_01 = A[0+bs*1];
+		a_02 = A[0+bs*2];
+		
+		y_n_0 += a_00 * x_n_0;
+		y_t_0 += a_00 * x_t_0;
+		y_n_0 += a_01 * x_n_1;
+		y_t_1 += a_01 * x_t_0;
+		y_t_2 += a_02 * x_t_0;
+
+		z_n[0] = y_n_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		if(kmax==3)
+			goto store_t;
+
+		// 3
+
+		y_n_0 = z_n[0]; 
+		x_t_0 = x_t[0];
+
+		a_00 = A[0+bs*0];
+		a_01 = A[0+bs*1];
+		a_02 = A[0+bs*2];
+		a_03 = A[0+bs*3];
+		
+		y_n_0 += a_00 * x_n_0;
+		y_t_0 += a_00 * x_t_0;
+		y_n_0 += a_01 * x_n_1;
+		y_t_1 += a_01 * x_t_0;
+		y_n_0 += a_02 * x_n_2;
+		y_t_2 += a_02 * x_t_0;
+		y_t_3 += a_03 * x_t_0;
+
+		z_n[0] = y_n_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		if(kmax==4)
+			goto store_t;
+
+		// 4
+
+		y_n_0 = z_n[0]; 
+		x_t_0 = x_t[0];
+
+		a_00 = A[0+bs*0];
+		a_01 = A[0+bs*1];
+		a_02 = A[0+bs*2];
+		a_03 = A[0+bs*3];
+		
+		y_n_0 += a_00 * x_n_0;
+		y_t_0 += a_00 * x_t_0;
+		y_n_0 += a_01 * x_n_1;
+		y_t_1 += a_01 * x_t_0;
+		y_n_0 += a_02 * x_n_2;
+		y_t_2 += a_02 * x_t_0;
+		y_n_0 += a_03 * x_n_3;
+		y_t_3 += a_03 * x_t_0;
+
+		z_n[0] = y_n_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		if(kmax==5)
+			goto store_t;
+
+		// 5
+
+		y_n_0 = z_n[0]; 
+		x_t_0 = x_t[0];
+
+		a_00 = A[0+bs*0];
+		a_01 = A[0+bs*1];
+		a_02 = A[0+bs*2];
+		a_03 = A[0+bs*3];
+		
+		y_n_0 += a_00 * x_n_0;
+		y_t_0 += a_00 * x_t_0;
+		y_n_0 += a_01 * x_n_1;
+		y_t_1 += a_01 * x_t_0;
+		y_n_0 += a_02 * x_n_2;
+		y_t_2 += a_02 * x_t_0;
+		y_n_0 += a_03 * x_n_3;
+		y_t_3 += a_03 * x_t_0;
+
+		z_n[0] = y_n_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		A += (sda-1)*bs; // new panel
+
+		if(kmax==6)
+			goto store_t;
+
+		k += 6;
+
+		}
+	else // if(offA==3)
+		{
+
+		// 0
+
+		x_t_0 = x_t[0];
+
+		a_00 = A[0+bs*0];
+		
+		y_t_0 += a_00 * x_t_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		A += (sda-1)*bs; // new panel
+
+		if(kmax==1)
+			goto store_t;
+
+		// 1
+
+		y_n_0 = z_n[0]; 
+		x_t_0 = x_t[0];
+
+		a_00 = A[0+bs*0];
+		a_01 = A[0+bs*1];
+		
+		y_n_0 += a_00 * x_n_0;
+		y_t_0 += a_00 * x_t_0;
+		y_t_1 += a_01 * x_t_0;
+
+		z_n[0] = y_n_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		if(kmax==2)
+			goto store_t;
+
+		// 2
+
+		y_n_0 = z_n[0]; 
+		x_t_0 = x_t[0];
+
+		a_00 = A[0+bs*0];
+		a_01 = A[0+bs*1];
+		a_02 = A[0+bs*2];
+		
+		y_n_0 += a_00 * x_n_0;
+		y_t_0 += a_00 * x_t_0;
+		y_n_0 += a_01 * x_n_1;
+		y_t_1 += a_01 * x_t_0;
+		y_t_2 += a_02 * x_t_0;
+
+		z_n[0] = y_n_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		if(kmax==3)
+			goto store_t;
+
+		// 3
+
+		y_n_0 = z_n[0]; 
+		x_t_0 = x_t[0];
+
+		a_00 = A[0+bs*0];
+		a_01 = A[0+bs*1];
+		a_02 = A[0+bs*2];
+		a_03 = A[0+bs*3];
+		
+		y_n_0 += a_00 * x_n_0;
+		y_t_0 += a_00 * x_t_0;
+		y_n_0 += a_01 * x_n_1;
+		y_t_1 += a_01 * x_t_0;
+		y_n_0 += a_02 * x_n_2;
+		y_t_2 += a_02 * x_t_0;
+		y_t_3 += a_03 * x_t_0;
+
+		z_n[0] = y_n_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		if(kmax==4)
+			goto store_t;
+
+		// 4
+
+		y_n_0 = z_n[0]; 
+		x_t_0 = x_t[0];
+
+		a_00 = A[0+bs*0];
+		a_01 = A[0+bs*1];
+		a_02 = A[0+bs*2];
+		a_03 = A[0+bs*3];
+		
+		y_n_0 += a_00 * x_n_0;
+		y_t_0 += a_00 * x_t_0;
+		y_n_0 += a_01 * x_n_1;
+		y_t_1 += a_01 * x_t_0;
+		y_n_0 += a_02 * x_n_2;
+		y_t_2 += a_02 * x_t_0;
+		y_n_0 += a_03 * x_n_3;
+		y_t_3 += a_03 * x_t_0;
+
+		z_n[0] = y_n_0;
+
+		A += 1;
+		z_n += 1;
+		x_t += 1;
+
+		A += (sda-1)*bs; // new panel
+
+		if(kmax==5)
+			goto store_t;
+
+		k += 5;
 
 		}
 	for(; k<kmax-3; k+=bs)
@@ -592,7 +1005,7 @@ void kernel_dsymv_l_4_vs_lib4(int kmax, double *alpha, double *A, int sda, doubl
 void kernel_dsymv_l_4_lib4(int kmax, double *alpha, double *A, int sda, double *x_n, double *x_t, double *z_n, double *z_t)
 	{
 
-	kernel_dsymv_l_4_vs_lib4(kmax, alpha, A, sda, x_n, x_t, z_n, z_t, 4);
+	kernel_dsymv_l_4_gen_lib4(kmax, alpha, 0, A, sda, x_n, x_t, z_n, z_t, 4);
 
 	return;
 
