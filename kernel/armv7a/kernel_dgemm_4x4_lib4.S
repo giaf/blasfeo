@@ -76,32 +76,40 @@ kernel_dgemm_nt_4x4_lib4:
 
 	// inner kernel
 
+	// prefetch
+	pld		[r5, #0]
+	pld		[r6, #0]
+
 	cmp		r4, #0
 	ble		2f // return
 
-	// prefetch A even
+	// preload A even
 	fldd	d16, [r5, #0]
 	fldd	d17, [r5, #8]
 	fldd	d18, [r5, #16]
 	fldd	d19, [r5, #24]
 
-	// prefethc B even
+	// preload B even
 	fldd	d20, [r6, #0]
 	fldd	d21, [r6, #8]
 	fldd	d22, [r6, #16]
 	fldd	d23, [r6, #24]
 
-	// prefetch A odd
+	// preload A odd
 	fldd	d24, [r5, #32]
 	fldd	d25, [r5, #40]
 	fldd	d26, [r5, #48]
 	fldd	d27, [r5, #56]
 
-	// prefethc B odd
+	// preload B odd
 	fldd	d28, [r6, #32]
 	fldd	d29, [r6, #40]
 	fldd	d30, [r6, #48]
 	fldd	d31, [r6, #56]
+
+	// prefetch
+	pld		[r5, #64]
+	pld		[r6, #64]
 
 	cmp		r4, #4
 	ble		0f // consider clean up loop
@@ -109,6 +117,10 @@ kernel_dgemm_nt_4x4_lib4:
 	// main loop
 1:
 	
+	// prefetch
+	pld		[r5, #128]
+	pld		[r6, #128]
+
 	// unroll 0
 	fmacd	d0, d16, d20
 	fmacd	d1, d17, d20
@@ -166,6 +178,10 @@ kernel_dgemm_nt_4x4_lib4:
 	fmacd	d15, d27, d31
 	fldd	d27, [r5, #120] // A
 	fldd	d31, [r6, #120] // B
+
+	// prefetch
+	pld		[r5, #192]
+	pld		[r6, #192]
 
 	add		r5, r5, #128
 	add		r6, r6, #128
