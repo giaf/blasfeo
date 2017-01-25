@@ -26,44 +26,24 @@
 #                                                                                                 #
 ###################################################################################################
 
-include ../Makefile.rule
+include ../../Makefile.rule
 
-obj:
-ifeq ($(TARGET), X64_INTEL_HASWELL)
-	( cd avx2; $(MAKE) obj)
-	( cd avx; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
-endif
+OBJS = 
 
-ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-	( cd avx; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
-endif
-
-ifeq ($(TARGET), X64_INTEL_CORE)
-	( cd sse3; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
-endif
-
-ifeq ($(TARGET), X64_AMD_BULLDOZER)
-	( cd fma; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
-endif
+ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-	( cd armv7a; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
+OBJS += kernel_dgemm_4x4_lib4.o
+OBJS +=
 endif
 
-ifeq ($(TARGET), GENERIC)
-	( cd c99; $(MAKE) obj)
-endif
+else # LA_REFERENCE | LA_BLAS
+
+endif # LA choice
+
+obj: $(OBJS)
 
 clean:
-	make -C avx2 clean
-	make -C avx clean
-	make -C sse3 clean
-	make -C fma clean
-	make -C armv7a clean
-	make -C c99 clean
+	rm -f *.o
+	rm -f *.s
 

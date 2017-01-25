@@ -837,7 +837,7 @@ void kernel_dgemm_nt_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B, 
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+#if defined(TARGET_GENERIC)
 void kernel_dgemm_nt_4x4_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D)
 	{
 	kernel_dgemm_nt_4x4_vs_lib4(kmax, alpha, A, B, beta, C, D, 4, 4);

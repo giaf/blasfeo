@@ -132,6 +132,7 @@ CFLAGS = $(COMMON_FLAGS) -m64 -mavx -mfma -DTARGET_X64_AMD_BULLDOZER $(LA_FLAGS)
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 CFLAGS = $(COMMON_FLAGS) -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15 -DTARGET_ARMV7A_ARM_CORTEX_A15 $(LA_FLAGS) $(OS_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
+ASFLAGS += -mfpu=neon-vfpv4
 endif
 ifeq ($(TARGET), GENERIC)
 CFLAGS = $(COMMON_FLAGS) -march=native -DTARGET_GENERIC $(LA_FLAGS) $(OS_FLAGS) $(REF_BLAS_FLAGS) $(DEBUG)
