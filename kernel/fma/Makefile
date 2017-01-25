@@ -41,7 +41,7 @@ else # LA_REFERENCE | LA_BLAS
 
 endif # LA choice
 
-obj: $(OBJS_DOUBLE)
+obj: $(OBJS)
 
 clean:
 	rm -f *.o
