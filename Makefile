@@ -80,6 +80,18 @@ OBJS += ./blas/d_blas1_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas3_lib4.o ./blas
 OBJS +=
 endif
 
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
+# aux
+OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o 
+OBJS += 
+# kernels
+OBJS += ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_diag_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o ./kernel/c99/kernel_dsymv_4_lib4.o ./kernel/c99/kernel_dgetrf_pivot_4_lib4.o
+OBJS +=
+# blas
+OBJS += ./blas/d_blas1_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas3_lib4.o ./blas/d_blas3_diag_lib4.o ./blas/d_lapack_lib4.o
+OBJS +=
+endif
+
 ifeq ($(TARGET), GENERIC)
 # aux
 OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o 
@@ -142,6 +154,17 @@ OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_extern_depend_lib4.o
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
+# kernel
+OBJS +=
+OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
+# blas
+OBJS +=
+OBJS += ./blas/s_blas2_lib4.o ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o
+# auxiliary
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_extern_depend_lib4.o 
+endif
+
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 # kernel
 OBJS +=
 OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o

@@ -54,6 +54,13 @@
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
 
+#elif defined( TARGET_ARMV7A_ARM_CORTEX_A15 )
+
+#define D_BS 4
+#define S_BS 4
+#define D_NC 4 // 2 // until the smaller kernel is 4x4
+#define S_NC 4 //2
+
 #elif defined( TARGET_GENERIC )
 
 #define D_BS 4

@@ -48,6 +48,10 @@ ifeq ($(TARGET), X64_AMD_BULLDOZER)
 OBJS += d_aux_lib4.o
 endif
 
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
+OBJS += d_aux_lib4.o
+endif
+
 ifeq ($(TARGET), GENERIC)
 OBJS += d_aux_lib4.o
 endif
@@ -74,6 +78,9 @@ ifeq ($(TARGET), X64_INTEL_CORE)
 	( cd c99; $(MAKE) obj)
 endif
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
+	( cd c99; $(MAKE) obj)
+endif
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 	( cd c99; $(MAKE) obj)
 endif
 ifeq ($(TARGET), GENERIC)

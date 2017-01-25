@@ -48,6 +48,10 @@ ifeq ($(TARGET), X64_AMD_BULLDOZER)
 OBJS += kernel_dgecp_lib4.o kernel_dgetr_lib4.o
 endif
 
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
+OBJS += kernel_dgecp_lib4.o kernel_dgetr_lib4.o
+endif
+
 ifeq ($(TARGET), GENERIC)
 OBJS += kernel_dgecp_lib4.o kernel_dgetr_lib4.o
 endif

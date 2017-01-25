@@ -44,6 +44,9 @@ endif
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
 OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
 endif
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
+OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
+endif
 ifeq ($(TARGET), GENERIC)
 OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
 endif
