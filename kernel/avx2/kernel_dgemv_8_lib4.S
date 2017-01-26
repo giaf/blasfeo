@@ -501,6 +501,130 @@ _inner_edge_dtrmv_un_8_lib4:
 
 // common inner routine with file scope
 //
+// blend for ta==n
+//
+// input arguments:
+// ymm0 <- [z0 z1 z2 z3]_a
+// ymm1 <- [z4 z5 z6 z7]_a
+// ymm2 <- [z0 z1 z2 z3]_b
+// ymm3 <- [z4 z5 z6 z7]_b
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// ymm0 <- [z0 z1 z2 z3]
+// ymm1 <- [z4 z5 z6 z7]
+// ymm2 <- dirty
+// ymm3 <- dirty
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_N_8_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_blend_n_8_lib4, @function
+inner_blend_n_8_lib4:
+#elif defined(OS_MAC)
+_inner_blend_n_8_lib4:
+#endif
+#endif
+
+	// reduction
+	vaddpd	%ymm0, %ymm2, %ymm0
+	vaddpd	%ymm1, %ymm3, %ymm1
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+	
+#if defined(OS_LINUX)
+	.size	inner_blend_n_8_lib4, .-inner_blend_n_8_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// blend for ta==t
+//
+// input arguments:
+// ymm0 <- [z0a z0b z0c z0d]
+// ymm1 <- [z1a z1b z1c z1d]
+// ymm2 <- [z2a z2b z2c z2d]
+// ymm3 <- [z3a z3b z3c z3d]
+// ymm4 <- [z4a z4b z4c z4d]
+// ymm5 <- [z5a z5b z5c z5d]
+// ymm6 <- [z6a z6b z6c z6d]
+// ymm7 <- [z7a z7b z7c z7d]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// ymm0 <- [z0 z1 z2 z3]
+// ymm1 <- [z4 z5 z6 z7]
+// ymm2 <- dirty
+// ymm3 <- dirty
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_T_8_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_blend_t_8_lib4, @function
+inner_blend_t_8_lib4:
+#elif defined(OS_MAC)
+_inner_blend_t_8_lib4:
+#endif
+#endif
+
+	// reduction
+	vhaddpd	%ymm1, %ymm0, %ymm0
+	vhaddpd	%ymm5, %ymm4, %ymm4
+	vhaddpd	%ymm3, %ymm2, %ymm2
+	vhaddpd	%ymm7, %ymm6, %ymm6
+	vperm2f128	$0x2, %ymm0, %ymm2, %ymm3
+	vperm2f128	$0x2, %ymm4, %ymm6, %ymm5
+	vperm2f128	$0x13, %ymm0, %ymm2, %ymm0
+	vperm2f128	$0x13, %ymm4, %ymm6, %ymm4
+	vaddpd	%ymm0, %ymm3, %ymm0
+	vaddpd	%ymm4, %ymm5, %ymm1
+	
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+	
+#if defined(OS_LINUX)
+	.size	inner_blend_t_8_lib4, .-inner_blend_t_8_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // blend for ta==n, scale for generic alpha and beta
 //
 // input arguments:
@@ -1124,8 +1248,8 @@ _kernel_dgemv_t_8_lib4:
 
 
 
-//                             rdi    rsi        rdx      rcx        r8       r9         rsp+8
-// void kernel_dtrmv_un_8_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
+//                             rdi    rsi        rdx      rcx        r8
+// void kernel_dtrmv_un_8_lib4(int k, double *A, int sda, double *x, double *z);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1195,9 +1319,6 @@ _kernel_dtrmv_un_8_lib4:
 
 	// call inner blender n
 
-	movl	%r8d, %r10d // alg
-	movq	%r9, %r11   // y
-
 #if MACRO_LEVEL>=1
 	INNER_BLENDER_N_8_LIB4
 #else
@@ -1211,7 +1332,7 @@ _kernel_dtrmv_un_8_lib4:
 
 	// store
 
-	movq	STACKSIZE + 8(%rsp), %r10 // z
+	movq	%r8, %r10 // z
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB4

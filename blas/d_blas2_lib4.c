@@ -137,88 +137,6 @@ void dtrsv_lt_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, dou
 
 
 
-void dtrmv_un_lib(int m, double *pA, int sda, double *x, double *y, double *z)
-	{
-
-	if(m<=0)
-		return;
-
-	const int bs = 4;
-	
-	int i;
-	
-	i=0;
-#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	for(; i<m-7; i+=8)
-		{
-		kernel_dtrmv_un_8_lib4(m-i, pA, sda, x, 0, y, z);
-		pA += 8*sda+8*bs;
-		x  += 8;
-		y  += 8;
-		z  += 8;
-		}
-#endif
-	for(; i<m-3; i+=4)
-		{
-		kernel_dtrmv_un_4_lib4(m-i, pA, x, 0, y, z);
-		pA += 4*sda+4*bs;
-		x  += 4;
-		y  += 4;
-		z  += 4;
-		}
-	if(m>i)
-		{
-		if(m-i==1)
-			{
-			z[0] = pA[0+bs*0]*x[0];
-			}
-		else if(m-i==2)
-			{
-			z[0] = pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1];
-			z[1] = pA[1+bs*1]*x[1];
-			}
-		else // if(m-i==3)
-			{
-			z[0] = pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1] + pA[0+bs*2]*x[2];
-			z[1] = pA[1+bs*1]*x[1] + pA[1+bs*2]*x[2];
-			z[2] = pA[2+bs*2]*x[2];
-			}
-		}
-
-	}
-
-
-
-void dtrmv_ut_lib(int m, double *pA, int sda, double *x, double *y, double *z)
-	{
-
-	if(m<=0)
-		return;
-
-	const int bs = 4;
-	
-	int ii, idx;
-	
-	double *ptrA;
-	
-	ii=0;
-	idx = m/bs*bs;
-	if(m%bs!=0)
-		{
-		kernel_dtrmv_ut_4_vs_lib4(m, pA+idx*bs, sda, x, 0, y+idx, z+idx, m%bs);
-		ii += m%bs;
-		}
-	idx -= 4;
-	for(; ii<m; ii+=4)
-		{
-		kernel_dtrmv_ut_4_lib4(idx+4, pA+idx*bs, sda, x, 0, y+idx, z+idx);
-		idx -= 4;
-		}
-
-	}
-
-
-
 void dgemv_nt_lib(int m, int n, double alpha_n, double alpha_t, double *pA, int sda, double *x_n, double *x_t, double beta_n, double beta_t, double *y_n, double *y_t, double *z_n, double *z_t)
 	{
 
@@ -474,36 +392,106 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 void dtrmv_unn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
-	if(ai!=0 | xi%4!=0)
+
+	if(m<=0)
+		return;
+
+	if(ai!=0)
 		{
 		printf("\ndtrmv_unn_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
+
 	const int bs = 4;
+
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs; // TODO ai
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-	dtrmv_un_lib(m, pA, sda, x, z, z);
+
+	int i;
+	
+	i=0;
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; i<m-7; i+=8)
+		{
+		kernel_dtrmv_un_8_lib4(m-i, pA, sda, x, z);
+		pA += 8*sda+8*bs;
+		x  += 8;
+		z  += 8;
+		}
+#endif
+	for(; i<m-3; i+=4)
+		{
+		kernel_dtrmv_un_4_lib4(m-i, pA, x, z);
+		pA += 4*sda+4*bs;
+		x  += 4;
+		z  += 4;
+		}
+	if(m>i)
+		{
+		if(m-i==1)
+			{
+			z[0] = pA[0+bs*0]*x[0];
+			}
+		else if(m-i==2)
+			{
+			z[0] = pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1];
+			z[1] = pA[1+bs*1]*x[1];
+			}
+		else // if(m-i==3)
+			{
+			z[0] = pA[0+bs*0]*x[0] + pA[0+bs*1]*x[1] + pA[0+bs*2]*x[2];
+			z[1] = pA[1+bs*1]*x[1] + pA[1+bs*2]*x[2];
+			z[2] = pA[2+bs*2]*x[2];
+			}
+		}
+
 	return;
+
 	}
 
 
 
 void dtrmv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
-	if(ai!=0 | xi%4!=0)
+
+	if(m<=0)
+		return;
+
+	if(ai!=0)
 		{
 		printf("\ndtrmv_utn_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
+
 	const int bs = 4;
+
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs; // TODO ai
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-	dtrmv_ut_lib(m, pA, sda, x, z, z);
+
+	int ii, idx;
+	
+	double *ptrA;
+	
+	ii=0;
+	idx = m/bs*bs;
+	if(m%bs!=0)
+		{
+		kernel_dtrmv_ut_4_vs_lib4(m, pA+idx*bs, sda, x, z+idx, m%bs);
+		ii += m%bs;
+		}
+	idx -= 4;
+	for(; ii<m; ii+=4)
+		{
+		kernel_dtrmv_ut_4_lib4(idx+4, pA+idx*bs, sda, x, z+idx);
+		idx -= 4;
+		}
+
 	return;
+
 	}
 
 

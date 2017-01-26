@@ -33,12 +33,12 @@ OBJS =
 ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
-OBJS += kernel_dsymv_4_lib4.o
+OBJS += kernel_dgemv_4_lib4.o kernel_dsymv_4_lib4.o
 OBJS +=
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-OBJS += kernel_dsymv_4_lib4.o
+OBJS += kernel_dgemv_4_lib4.o kernel_dsymv_4_lib4.o
 OBJS +=
 endif
 

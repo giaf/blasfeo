@@ -737,6 +737,122 @@ _inner_edge_dsymv_add_nt_4_lib4:
 
 // common inner routine with file scope
 //
+// blend for ta==n
+//
+// input arguments:
+// ymm0 <- [z0 z1 z2 z3]_a
+// ymm1 <- [z0 z1 z2 z3]_b
+// ymm2 <- [z0 z1 z2 z3]_c
+// ymm3 <- [z0 z1 z2 z3]_d
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// ymm0 <- [z0 z1 z2 z3]
+// ymm1 <- dirty
+// ymm2 <- dirty
+// ymm3 <- dirty
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_N_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_blend_n_lib4, @function
+inner_blend_n_lib4:
+#elif defined(OS_MAC)
+_inner_blend_n_lib4:
+#endif
+#endif
+
+	// reduction
+	vaddpd	%ymm0, %ymm1, %ymm0
+	vaddpd	%ymm2, %ymm3, %ymm2
+	vaddpd	%ymm0, %ymm2, %ymm0
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+	
+#if defined(OS_LINUX)
+	.size	inner_blend_n_lib4, .-inner_blend_n_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// blend for ta==t
+//
+// input arguments:
+// ymm0 <- [z0a z0b z0c z0d]
+// ymm1 <- [z1a z1b z1c z1d]
+// ymm2 <- [z2a z2b z2c z2d]
+// ymm3 <- [z3a z3b z3c z3d]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// ymm0 <- [z0 z1 z2 z3]
+// ymm1 <- dirty
+// ymm2 <- dirty
+// ymm3 <- dirty
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_T_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_blend_t_lib4, @function
+inner_blend_t_lib4:
+#elif defined(OS_MAC)
+_inner_blend_t_lib4:
+#endif
+#endif
+
+	// reduction
+	vhaddpd	%ymm1, %ymm0, %ymm0
+	vhaddpd	%ymm3, %ymm2, %ymm2
+	vperm2f128	$0x2, %ymm0, %ymm2, %ymm1
+	vperm2f128	$0x13, %ymm0, %ymm2, %ymm0
+	vaddpd	%ymm0, %ymm1, %ymm0
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+	
+#if defined(OS_LINUX)
+	.size	inner_blend_t_lib4, .-inner_blend_t_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // blend for ta==n, scale for generic alpha and beta
 //
 // input arguments:
@@ -3392,8 +3508,8 @@ _kernel_dtrsv_lt_inv_1_lib4:
 
 
 
-//                            rdi    rsi        rdx        rcx      r8         r9         
-// void kernel_dtrmv_un_4_lib4(int k, double *A, double *x, int alg, double *y, double *z);
+//                            rdi    rsi        rdx        rcx
+// void kernel_dtrmv_un_4_lib4(int k, double *A, double *x, double *z);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -3453,25 +3569,22 @@ _kernel_dtrmv_un_4_lib4:
 #endif
 
 
-	// call inner blender n
-
-	movl	%ecx, %r10d // alg
-	movq	%r8, %r11   // y
+	// call inner blend n
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_N_4_LIB4
+	INNER_BLEND_N_LIB4
 #else
 #if defined(OS_LINUX)
-	call inner_blender_n_4_lib4
+	call inner_blend_n_lib4
 #elif defined(OS_MAC)
-	callq _inner_blender_n_4_lib4
+	callq _inner_blend_n_lib4
 #endif
 #endif
 
 
 	// store
 
-	movq	%r9, %r10 // z
+	movq	%rcx, %r10 // z
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
@@ -3506,8 +3619,8 @@ _kernel_dtrmv_un_4_lib4:
 
 
 
-//                             rdi    rsi        rdx      rcx        r8       r9         rsp+8
-// void kernel_dtrmv_ut_4_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
+//                             rdi    rsi        rdx      rcx        r8
+// void kernel_dtrmv_ut_4_lib4(int k, double *A, int sda, double *x, double *z);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -3560,25 +3673,22 @@ _kernel_dtrmv_ut_4_lib4:
 #endif
 
 
-	// call inner blender t
-
-	movl	%r8d, %r10d // alg
-	movq	%r9, %r11   // y
+	// call inner blend t
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_T_4_LIB4
+	INNER_BLEND_T_LIB4
 #else
 #if defined(OS_LINUX)
-	call inner_blender_t_4_lib4
+	call inner_blend_t_lib4
 #elif defined(OS_MAC)
-	callq _inner_blender_t_4_lib4
+	callq _inner_blend_t_lib4
 #endif
 #endif
 
 
 	// store
 
-	movq	STACKSIZE +  8(%rsp), %r10 // z 
+	movq	%r8, %r10 // z 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
@@ -3613,8 +3723,8 @@ _kernel_dtrmv_ut_4_lib4:
 
 
 
-//                                rdi    rsi        rdx      rcx        r8       r9         rsp+8      rsp+16
-// void kernel_dtrmv_ut_4_vs_lib4(int k, double *A, int sda, double *x, int alg, double *C, double *D, int km);
+//                                rdi    rsi        rdx      rcx        r8         r9
+// void kernel_dtrmv_ut_4_vs_lib4(int k, double *A, int sda, double *x, double *y, int km);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -3667,26 +3777,23 @@ _kernel_dtrmv_ut_4_vs_lib4:
 #endif
 
 
-	// call inner blender t
-
-	movl	%r8d, %r10d // alg
-	movq	%r9, %r11   // y
+	// call inner blend t
 
 #if MACRO_LEVEL>=1
-	INNER_BLENDER_T_4_LIB4
+	INNER_BLEND_T_LIB4
 #else
 #if defined(OS_LINUX)
-	call inner_blender_t_4_lib4
+	call inner_blend_t_lib4
 #elif defined(OS_MAC)
-	callq _inner_blender_t_4_lib4
+	callq _inner_blend_t_lib4
 #endif
 #endif
 
 
 	// store
 
-	movq	STACKSIZE +  8(%rsp), %r10 // z 
-	movl	STACKSIZE + 16(%rsp), %r11d // km 
+	movq	%r8, %r10 // z 
+	movl	%r9d, %r11d // km 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4

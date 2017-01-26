@@ -41,7 +41,7 @@ void kernel_dgemv_t_12_lib4(int k, double *alpha, double *A, int sda, double *x,
 // 8
 void kernel_dgemv_n_8_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
 void kernel_dgemv_t_8_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
-void kernel_dtrmv_un_8_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
+void kernel_dtrmv_un_8_lib4(int k, double *A, int sda, double *x, double *z);
 // 4
 void kernel_dgemv_n_4_lib4(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z);
 void kernel_dgemv_n_4_gen_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z, int k0, int k1);
@@ -53,9 +53,9 @@ void kernel_dtrsv_lt_inv_4_lib4(int k, double *A, int sda, double *inv_diag_A, d
 void kernel_dtrsv_lt_inv_3_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
 void kernel_dtrsv_lt_inv_2_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
 void kernel_dtrsv_lt_inv_1_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
-void kernel_dtrmv_un_4_lib4(int k, double *A, double *x, int alg, double *y, double *z);
-void kernel_dtrmv_ut_4_lib4(int k, double *A, int sda, double *x, int alg, double *y, double *z);
-void kernel_dtrmv_ut_4_vs_lib4(int k, double *A, int sda, double *x, int alg, double *C, double *D, int km);
+void kernel_dtrmv_un_4_lib4(int k, double *A, double *x, double *z);
+void kernel_dtrmv_ut_4_lib4(int k, double *A, int sda, double *x, double *z);
+void kernel_dtrmv_ut_4_vs_lib4(int k, double *A, int sda, double *x, double *z, int km);
 void kernel_dgemv_nt_6_lib4(int kmax, double *alpha_n, double *alpha_t, double *A, int sda, double *x_n, double *x_t, double *beta_t, double *y_t, double *z_n, double *z_t);
 void kernel_dgemv_nt_4_lib4(int kmax, double *alpha_n, double *alpha_t, double *A, int sda, double *x_n, double *x_t, double *beta_t, double *y_t, double *z_n, double *z_t);
 void kernel_dgemv_nt_4_vs_lib4(int kmax, double *alpha_n, double *alpha_t, double *A, int sda, double *x_n, double *x_t, double *beta_t, double *y_t, double *z_n, double *z_t, int km);

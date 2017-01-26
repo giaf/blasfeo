@@ -62,10 +62,8 @@ void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 void dtrsv_lt_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *x, double *y);
 void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi);
 // z <= beta * y + alpha * A * x ; A upper triangular
-void dtrmv_un_lib(int m, double *pA, int sda, double *x, double *y, double *z);
 void dtrmv_unn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi);
 // z <= beta * y + alpha * A' * x ; A upper triangular
-void dtrmv_ut_lib(int m, double *pA, int sda, double *x, double *y, double *z);
 void dtrmv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi);
 // z <= beta * y + alpha * A * x ; A lower triangular
 void dtrmv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi);
