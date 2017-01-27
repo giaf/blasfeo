@@ -282,7 +282,7 @@ void dtrmv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 
 
 	
-void dtrmv_ltn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+void dtrmv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	int ii, jj;
 	double
@@ -292,7 +292,7 @@ void dtrmv_ltn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
 	jj = 0;
-	for(; jj<m-1; jj+=2)
+	for(; jj<n-1; jj+=2)
 		{
 		y_0 = x[jj+0];
 		y_1 = x[jj+1];
@@ -313,7 +313,7 @@ void dtrmv_ltn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 		z[jj+0] = y_0;
 		z[jj+1] = y_1;
 		}
-	for(; jj<m; jj++)
+	for(; jj<n; jj++)
 		{
 		y_0 = x[jj];
 		y_0 *= pA[jj+lda*jj];
@@ -795,7 +795,7 @@ void dtrmv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 
 
 
-void dtrmv_ltn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+void dtrmv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -809,12 +809,17 @@ void dtrmv_ltn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	double *pA = sA->pA + ai + aj*lda;
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
+	int tmp = m-n;
 #if defined(REF_BLAS_MKL)
-	dcopy(&m, x, &i1, z, &i1);
-	dtrmv(&cl, &ct, &cn, &m, pA, &lda, z, &i1);
+	if(x!=z)
+		dcopy(&n, x, &i1, z, &i1);
+	dtrmv(&cl, &ct, &cn, &n, pA, &lda, z, &i1);
+	dgemv(&ct, &tmp, &n, &d1, pA+n, &lda, x+n, &i1, &d1, z, &i1);
 #else
-	dcopy_(&m, x, &i1, z, &i1);
-	dtrmv_(&cl, &ct, &cn, &m, pA, &lda, z, &i1);
+	if(x!=z)
+		dcopy_(&n, x, &i1, z, &i1);
+	dtrmv_(&cl, &ct, &cn, &n, pA, &lda, z, &i1);
+	dgemv_(&ct, &tmp, &n, &d1, pA+n, &lda, x+n, &i1, &d1, z, &i1);
 #endif
 	return;
 	}
