@@ -390,6 +390,131 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 
+// m >= n
+void dtrmv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+
+	if(m<=0)
+		return;
+
+	const int bs = 4;
+
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+
+	double xt[4];
+	double zt[4];
+
+	double alpha = 1.0;
+	double beta = 1.0;
+
+	int ii, jj, ll, ll_max;
+
+	jj = 0;
+
+	if(ai%bs!=0)
+		{
+
+		if(ai%bs==1)
+			{
+			ll_max = m-jj<3 ? m-jj : 3;
+			for(ll=0; ll<ll_max; ll++)
+				xt[ll] = x[ll];
+			for(; ll<3; ll++)
+				xt[ll] = 0.0;
+			zt[0] = pA[0+bs*0]*xt[0] + pA[1+bs*0]*xt[1] + pA[2+bs*0]*xt[2];
+			zt[1] = pA[1+bs*1]*xt[1] + pA[2+bs*1]*xt[2];
+			zt[2] = pA[2+bs*2]*xt[2];
+			pA += bs*sda - 1;
+			x += 3;
+			kernel_dgemv_t_4_lib4(m-3-jj, &alpha, pA, sda, x, &beta, zt, zt);
+			ll_max = n-jj<3 ? n-jj : 3;
+			for(ll=0; ll<ll_max; ll++)
+				z[ll] = zt[ll];
+			pA += bs*3;
+			z += 3;
+			jj += 3;
+			}
+		else if(ai%bs==2)
+			{
+			ll_max = m-jj<2 ? m-jj : 2;
+			for(ll=0; ll<ll_max; ll++)
+				xt[ll] = x[ll];
+			for(; ll<2; ll++)
+				xt[ll] = 0.0;
+			zt[0] = pA[0+bs*0]*xt[0] + pA[1+bs*0]*xt[1];
+			zt[1] = pA[1+bs*1]*xt[1];
+			pA += bs*sda - 2;
+			x += 2;
+			kernel_dgemv_t_4_lib4(m-2-jj, &alpha, pA, sda, x, &beta, zt, zt);
+			ll_max = n-jj<2 ? n-jj : 2;
+			for(ll=0; ll<ll_max; ll++)
+				z[ll] = zt[ll];
+			pA += bs*2;
+			z += 2;
+			jj += 2;
+			}
+		else // if(ai%bs==3)
+			{
+			ll_max = m-jj<1 ? m-jj : 1;
+			for(ll=0; ll<ll_max; ll++)
+				xt[ll] = x[ll];
+			for(; ll<1; ll++)
+				xt[ll] = 0.0;
+			zt[0] = pA[0+bs*0]*xt[0];
+			pA += bs*sda - 3;
+			x += 1;
+			kernel_dgemv_t_4_lib4(m-1-jj, &alpha, pA, sda, x, &beta, zt, zt);
+			ll_max = n-jj<1 ? n-jj : 1;
+			for(ll=0; ll<ll_max; ll++)
+				z[ll] = zt[ll];
+			pA += bs*1;
+			z += 1;
+			jj += 1;
+			}
+
+		}
+	
+	for(; jj<n-3; jj+=4)
+		{
+		zt[0] = pA[0+bs*0]*x[0] + pA[1+bs*0]*x[1] + pA[2+bs*0]*x[2] + pA[3+bs*0]*x[3];
+		zt[1] = pA[1+bs*1]*x[1] + pA[2+bs*1]*x[2] + pA[3+bs*1]*x[3];
+		zt[2] = pA[2+bs*2]*x[2] + pA[3+bs*2]*x[3];
+		zt[3] = pA[3+bs*3]*x[3];
+		pA += bs*sda;
+		x += 4;
+		kernel_dgemv_t_4_lib4(m-4-jj, &alpha, pA, sda, x, &beta, zt, z);
+		pA += bs*4;
+		z += 4;
+		}
+	if(jj<n)
+		{
+		ll_max = m-jj<4 ? m-jj : 4;
+		for(ll=0; ll<ll_max; ll++)
+			xt[ll] = x[ll];
+		for(; ll<4; ll++)
+			xt[ll] = 0.0;
+		zt[0] = pA[0+bs*0]*xt[0] + pA[1+bs*0]*xt[1] + pA[2+bs*0]*xt[2] + pA[3+bs*0]*xt[3];
+		zt[1] = pA[1+bs*1]*xt[1] + pA[2+bs*1]*xt[2] + pA[3+bs*1]*xt[3];
+		zt[2] = pA[2+bs*2]*xt[2] + pA[3+bs*2]*xt[3];
+		zt[3] = pA[3+bs*3]*xt[3];
+		pA += bs*sda;
+		x += 4;
+		kernel_dgemv_t_4_lib4(m-4-jj, &alpha, pA, sda, x, &beta, zt, zt);
+		for(ll=0; ll<n-jj; ll++)
+			z[ll] = zt[ll];
+//		pA += bs*4;
+//		z += 4;
+		}
+
+	return;
+
+	}
+
+
+
 void dtrmv_unn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 

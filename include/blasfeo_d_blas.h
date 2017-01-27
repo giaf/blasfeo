@@ -68,7 +68,7 @@ void dtrmv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 // z <= beta * y + alpha * A * x ; A lower triangular
 void dtrmv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi);
 // z <= beta * y + alpha * A' * x ; A lower triangular
-void dtrmv_ltn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi);
+void dtrmv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi);
 // z_n <= beta_n * y_n + alpha_n * A  * x_n
 // z_t <= beta_t * y_t + alpha_t * A' * x_t
 void dgemv_nt_lib(int m, int n, double alpha_n, double alpha_t, double *pA, int sda, double *x_n, double *x_t, double beta_n, double beta_t, double *y_n, double *y_t, double *z_n, double *z_t);
