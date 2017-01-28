@@ -236,10 +236,10 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		ii = 0;
 		for(; ii<m-1; ii+=2)
 			{
-			d_00 = pB[ii+0+ldb*(jj+0)];
-			d_10 = pB[ii+1+ldb*(jj+0)];
-			d_01 = pB[ii+0+ldb*(jj+1)];
-			d_11 = pB[ii+1+ldb*(jj+1)];
+			d_00 = alpha * pB[ii+0+ldb*(jj+0)];
+			d_10 = alpha * pB[ii+1+ldb*(jj+0)];
+			d_01 = alpha * pB[ii+0+ldb*(jj+1)];
+			d_11 = alpha * pB[ii+1+ldb*(jj+1)];
 			kk = 0;
 #if 0
 			for(; kk<ii-1; kk+=2)
@@ -272,8 +272,8 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 			}
 		for(; ii<m; ii++)
 			{
-			d_00 = pB[ii+ldb*(jj+0)];
-			d_01 = pB[ii+ldb*(jj+1)];
+			d_00 = alpha * pB[ii+ldb*(jj+0)];
+			d_01 = alpha * pB[ii+ldb*(jj+1)];
 			for(kk=0; kk<ii; kk++)
 				{
 				d_00 -= pA[ii+lda*kk] * pD[kk+ldd*(jj+0)];
@@ -288,8 +288,8 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		ii = 0;
 		for(; ii<m-1; ii+=2)
 			{
-			d_00 = pB[ii+0+ldb*jj];
-			d_10 = pB[ii+1+ldb*jj];
+			d_00 = alpha * pB[ii+0+ldb*jj];
+			d_10 = alpha * pB[ii+1+ldb*jj];
 			for(kk=0; kk<ii; kk++)
 				{
 				d_00 -= pA[ii+0+lda*kk] * pD[kk+ldd*jj];
@@ -301,7 +301,7 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 			}
 		for(; ii<m; ii++)
 			{
-			d_00 = pB[ii+ldb*jj];
+			d_00 = alpha * pB[ii+ldb*jj];
 			for(kk=0; kk<ii; kk++)
 				{
 				d_00 -= pA[ii+lda*kk] * pD[kk+ldd*jj];
@@ -315,7 +315,7 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		{
 		for(jj=0; jj<n; jj++)
 			for(ii=0; ii<m; ii++)
-				pD[ii+ldd*jj] = pB[ii+ldb*jj];
+				pD[ii+ldd*jj] = alpha * pB[ii+ldb*jj];
 		}
 	for(jj=0; jj<n; jj++)
 		{
@@ -367,10 +367,10 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		for(; ii<m-1; ii+=2)
 			{
 			id = m-ii-2;
-			d_00 = pB[id+0+ldb*(jj+0)];
-			d_10 = pB[id+1+ldb*(jj+0)];
-			d_01 = pB[id+0+ldb*(jj+1)];
-			d_11 = pB[id+1+ldb*(jj+1)];
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
+			d_10 = alpha * pB[id+1+ldb*(jj+0)];
+			d_01 = alpha * pB[id+0+ldb*(jj+1)];
+			d_11 = alpha * pB[id+1+ldb*(jj+1)];
 			kk = id+2;
 #if 0
 			for(; kk<m-1; kk+=2)
@@ -408,14 +408,18 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		for(; ii<m; ii++)
 			{
 			id = m-ii-1;
-			d_00 = pB[id+0+ldb*(jj+0)];
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
+			d_01 = alpha * pB[id+0+ldb*(jj+1)];
 			kk = id+1;
 			for(; kk<m; kk++)
 				{
 				d_00 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
+				d_01 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+1)];
 				}
 			d_00 *= dA[id+0];
+			d_01 *= dA[id+0];
 			pD[id+0+ldd*(jj+0)] = d_00;
+			pD[id+0+ldd*(jj+1)] = d_01;
 			}
 		}
 	for(; jj<n; jj++)
@@ -424,8 +428,8 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		for(; ii<m-1; ii+=2)
 			{
 			id = m-ii-2;
-			d_00 = pB[id+0+ldb*(jj+0)];
-			d_10 = pB[id+1+ldb*(jj+0)];
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
+			d_10 = alpha * pB[id+1+ldb*(jj+0)];
 			kk = id+2;
 			for(; kk<m; kk++)
 				{
@@ -441,7 +445,7 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		for(; ii<m; ii++)
 			{
 			id = m-ii-1;
-			d_00 = pB[id+0+ldb*(jj+0)];
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
 			kk = id+1;
 			for(; kk<m; kk++)
 				{
@@ -457,7 +461,7 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		{
 		for(jj=0; jj<n; jj++)
 			for(ii=0; ii<m; ii++)
-				pD[ii+ldd*jj] = pB[ii+ldb*jj];
+				pD[ii+ldd*jj] = alpha * pB[ii+ldb*jj];
 		}
 	// solve
 	for(jj=0; jj<n; jj++)
@@ -501,10 +505,10 @@ void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		ii = 0;
 		for(; ii<m-1; ii+=2)
 			{
-			c_00 = pB[ii+0+ldb*(jj+0)];
-			c_10 = pB[ii+1+ldb*(jj+0)];
-			c_01 = pB[ii+0+ldb*(jj+1)];
-			c_11 = pB[ii+1+ldb*(jj+1)];
+			c_00 = alpha * pB[ii+0+ldb*(jj+0)];
+			c_10 = alpha * pB[ii+1+ldb*(jj+0)];
+			c_01 = alpha * pB[ii+0+ldb*(jj+1)];
+			c_11 = alpha * pB[ii+1+ldb*(jj+1)];
 			for(kk=0; kk<jj; kk++)
 				{
 				c_00 -= pD[ii+0+ldd*kk] * pA[jj+0+lda*kk];
@@ -521,8 +525,8 @@ void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 			}
 		for(; ii<m; ii++)
 			{
-			c_00 = pB[ii+0+ldb*(jj+0)];
-			c_01 = pB[ii+0+ldb*(jj+1)];
+			c_00 = alpha * pB[ii+0+ldb*(jj+0)];
+			c_01 = alpha * pB[ii+0+ldb*(jj+1)];
 			for(kk=0; kk<jj; kk++)
 				{
 				c_00 -= pD[ii+0+ldd*kk] * pD[jj+0+ldd*kk];
@@ -538,7 +542,7 @@ void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		// factorize diagonal
 		for(ii=0; ii<m; ii++)
 			{
-			c_00 = pB[ii+ldb*jj];
+			c_00 = alpha * pB[ii+ldb*jj];
 			for(kk=0; kk<jj; kk++)
 				{
 				c_00 -= pD[ii+ldd*kk] * pA[jj+lda*kk];
@@ -593,10 +597,10 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		ii = 0;
 		for(; ii<m-1; ii+=2)
 			{
-			c_00 = pB[ii+0+ldb*(jj+0)];
-			c_10 = pB[ii+1+ldb*(jj+0)];
-			c_01 = pB[ii+0+ldb*(jj+1)];
-			c_11 = pB[ii+1+ldb*(jj+1)];
+			c_00 = alpha * pB[ii+0+ldb*(jj+0)];
+			c_10 = alpha * pB[ii+1+ldb*(jj+0)];
+			c_01 = alpha * pB[ii+0+ldb*(jj+1)];
+			c_11 = alpha * pB[ii+1+ldb*(jj+1)];
 			for(kk=0; kk<jj; kk++)
 				{
 				c_00 -= pD[ii+0+ldd*kk] * pA[jj+0+lda*kk];
@@ -617,8 +621,8 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 			}
 		for(; ii<m; ii++)
 			{
-			c_00 = pB[ii+0+ldb*(jj+0)];
-			c_01 = pB[ii+0+ldb*(jj+1)];
+			c_00 = alpha * pB[ii+0+ldb*(jj+0)];
+			c_01 = alpha * pB[ii+0+ldb*(jj+1)];
 			for(kk=0; kk<jj; kk++)
 				{
 				c_00 -= pD[ii+0+ldd*kk] * pD[jj+0+ldd*kk];
@@ -637,7 +641,7 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 		f_00_inv = dA[jj];
 		for(ii=0; ii<m; ii++)
 			{
-			c_00 = pB[ii+ldb*jj];
+			c_00 = alpha * pB[ii+ldb*jj];
 			for(kk=0; kk<jj; kk++)
 				{
 				c_00 -= pD[ii+ldd*kk] * pA[jj+lda*kk];
