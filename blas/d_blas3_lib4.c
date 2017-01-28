@@ -1921,30 +1921,28 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 // dtrmm_right_upper_transposed_notunit (B triangular !!!)
-void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
-	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
+	if(ai!=0 | bi!=0 | di!=0)
 		{
-		printf("\ndtrmm_rutn_libstr: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%df\n", ai, bi, ci, di);
+		printf("\ndtrmm_rutn_libstr: feature not implemented yet: ai=%d, bi=%d, di=%df\n", ai, bi, di);
 		exit(1);
 		}
-	const int bs = D_BS;
+	const int bs = 4;
 	int sda = sA->cn;
 	int sdb = sB->cn;
-	int sdc = sC->cn;
 	int sdd = sD->cn;
 	double *pA = sA->pA + aj*bs;
 	double *pB = sB->pA + bj*bs;
-	double *pC = sC->pA + cj*bs;
 	double *pD = sD->pA + dj*bs;
-	dtrmm_nt_ru_lib(m, n, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd); 
+	dtrmm_nt_ru_lib(m, n, alpha, pA, sda, pB, sdb, 0.0, pD, sdd, pD, sdd); 
 	return;
 	}
 
 
 
 // dtrmm_right_lower_nottransposed_notunit (B triangular !!!)
-void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
 	printf("\ndtrmm_rlnn_libstr: feature not implemented yet\n\n");
 	exit(1);
