@@ -234,7 +234,7 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 
-void dtrmv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+void dtrmv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	int ii, jj;
 	double
@@ -243,9 +243,13 @@ void dtrmv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	double *pA = sA->pA + ai + aj*lda;
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
-	if(m%2!=0)
+	if(m-n>0)
 		{
-		ii = m-1;
+		dgemv_n_libstr(m-n, n, 1.0, sA, ai+n, aj, sx, xi, 0.0, sz, zi+n, sz, zi+n);
+		}
+	if(n%2!=0)
+		{
+		ii = n-1;
 		y_0 = x[ii];
 		y_0 *= pA[ii+lda*ii];
 		for(jj=0; jj<ii; jj++)
@@ -253,9 +257,9 @@ void dtrmv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 			y_0 += pA[ii+lda*jj] * x[jj];
 			}
 		z[ii] = y_0;
-		m -= 1;
+		n -= 1;
 		}
-	for(ii=m-2; ii>=0; ii-=2)
+	for(ii=n-2; ii>=0; ii-=2)
 		{
 		y_0 = x[ii+0];
 		y_1 = x[ii+1];
@@ -769,7 +773,7 @@ void dsymv_l_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 
 
-void dtrmv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+void dtrmv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -778,17 +782,23 @@ void dtrmv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	char cu = 'u';
 	int i1 = 1;
 	double d1 = 1.0;
+	double d0 = 0.0;
 	double dm1 = -1.0;
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
+	int tmp = m-n;
 #if defined(REF_BLAS_MKL)
-	dcopy(&m, x, &i1, z, &i1);
-	dtrmv(&cl, &cn, &cn, &m, pA, &lda, z, &i1);
+	if(x!=z)
+		dcopy(&n, x, &i1, z, &i1);
+	dgemv(&cn, &tmp, &n, &d1, pA+n, &lda, x, &i1, &d0, z+n, &i1);
+	dtrmv(&cl, &cn, &cn, &n, pA, &lda, z, &i1);
 #else
-	dcopy_(&m, x, &i1, z, &i1);
-	dtrmv_(&cl, &cn, &cn, &m, pA, &lda, z, &i1);
+	if(x!=z)
+		dcopy_(&n, x, &i1, z, &i1);
+	dgemv_(&cn, &tmp, &n, &d1, pA+n, &lda, x, &i1, &d0, z+n, &i1);
+	dtrmv_(&cl, &cn, &cn, &n, pA, &lda, z, &i1);
 #endif
 	return;
 	}
