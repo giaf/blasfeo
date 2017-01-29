@@ -1582,7 +1582,6 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	int di0 = di-ai%bs;
 	int offsetC;
 	int offsetD;
-
 	if(ci0>=0)
 		{
 		pC += ci0/bs*bs*sdd;
@@ -1620,7 +1619,7 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			// clean up at the beginning
 			if(bi%bs!=0)
 				{
-				kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, ai%bs, m-i, bi%bs, n-j);
+				kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*bs+i*sdc]-bi%bs*bs, sdc, offsetD, &pD[j*bs+i*sdd]-bi%bs*bs, sdd, ai%bs, m-i, bi%bs, n-j);
 				j += bs-bi%bs;
 				idxB += 4;
 				}
@@ -1643,7 +1642,7 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			// clean up at the beginning
 			if(bi%bs!=0)
 				{
-				kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, ai%bs, m-i, bi%bs, n-j);
+				kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*bs+i*sdc]-bi%bs*bs, sdc, offsetD, &pD[j*bs+i*sdd]-bi%bs*bs, sdd, ai%bs, m-i, bi%bs, n-j);
 				j += bs-bi%bs;
 				idxB += 4;
 				}
@@ -1672,7 +1671,7 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 		// clean up at the beginning
 		if(bi%bs!=0)
 			{
-			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, 0, m-i, bi%bs, n-j);
+			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*bs+i*sdc]-bi%bs*bs, sdc, offsetD, &pD[j*bs+i*sdd]-bi%bs*bs, sdd, 0, m-i, bi%bs, n-j);
 			j += bs-bi%bs;
 			idxB += 4;
 			}
@@ -1690,7 +1689,7 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 		// clean up at the beginning
 		if(bi%bs!=0)
 			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, 0, m-i, bi%bs, n-j);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*bs+i*sdc]-bi%bs*bs, sdc, offsetD, &pD[j*bs+i*sdd]-bi%bs*bs, sdd, 0, m-i, bi%bs, n-j);
 			j += bs-bi%bs;
 			idxB += 4;
 			}
@@ -1709,7 +1708,7 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 		// clean up at the beginning
 		if(bi%bs!=0)
 			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*bs+i*sdc], sdc, offsetD, &pD[j*bs+i*sdd], sdd, 0, m-i, bi%bs, n-j);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*bs+i*sdc]-bi%bs*bs, sdc, offsetD, &pD[j*bs+i*sdd]-bi%bs*bs, sdd, 0, m-i, bi%bs, n-j);
 			j += bs-bi%bs;
 			idxB += 4;
 			}
@@ -1925,7 +1924,7 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	{
 	if(ai!=0 | bi!=0 | di!=0)
 		{
-		printf("\ndtrmm_rutn_libstr: feature not implemented yet: ai=%d, bi=%d, di=%df\n", ai, bi, di);
+		printf("\ndtrmm_rutn_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d\n", ai, bi, di);
 		exit(1);
 		}
 	const int bs = 4;
@@ -1944,8 +1943,82 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 // dtrmm_right_lower_nottransposed_notunit (B triangular !!!)
 void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
-	printf("\ndtrmm_rlnn_libstr: feature not implemented yet\n\n");
-	exit(1);
+//	printf("\ndtrmm_rlnn_libstr: feature not implemented yet\n\n");
+//	exit(1);
+	const int bs = 4;
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdd = sD->cn;
+	double *pA = sA->pA + aj*bs;
+	double *pB = sB->pA + bj*bs;
+	double *pD = sD->pA + dj*bs;
+
+	pA += ai/bs*bs*sda;
+	pB += bi/bs*bs*sdb;
+	int offsetB = bi%bs;
+	int di0 = di-ai%bs;
+	int offsetD;
+	if(di0>=0)
+		{
+		pD += di0/bs*bs*sdd;
+		offsetD = di0%bs;
+		}
+	else
+		{
+		pD += -4*sdd;
+		offsetD = bs+di0;
+		}
+	
+	int ii, jj;
+
+	ii = 0;
+	if(ai%bs!=0)
+		{
+//		printf("\ndtrmm_rlnn_libstr: feature not implemented yet: ai=%d\n\n", ai);
+//		exit(1);
+		jj = 0;
+		for(; jj<n; jj+=4)
+			{
+			kernel_dtrmm_nn_rl_4x4_gen_lib4(n-jj, &alpha, &pA[ii*sda+jj*bs], offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, ai%bs, m-ii, 0, n-jj);
+			}
+		m -= bs-ai%bs;
+		pA += bs*sda;
+		pD += bs*sdd;
+		}
+	if(offsetD==0)
+		{
+		for(; ii<m-3; ii+=4)
+			{
+			jj = 0;
+			for(; jj<n-5; jj+=4)
+				{
+				kernel_dtrmm_nn_rl_4x4_lib4(n-jj, &alpha, &pA[ii*sda+jj*bs], offsetB, &pB[jj*sdb+jj*bs], sdb, &pD[ii*sdd+jj*bs]);
+				}
+			for(; jj<n; jj+=4)
+				{
+				kernel_dtrmm_nn_rl_4x4_gen_lib4(n-jj, &alpha, &pA[ii*sda+jj*bs], offsetB, &pB[jj*sdb+jj*bs], sdb, 0, &pD[ii*sdd+jj*bs], sdd, 0, 4, 0, n-jj);
+				}
+			}
+		if(ii<m)
+			{
+			jj = 0;
+			for(; jj<n; jj+=4)
+				{
+				kernel_dtrmm_nn_rl_4x4_gen_lib4(n-jj, &alpha, &pA[ii*sda+jj*bs], offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, 0, m-ii, 0, n-jj);
+				}
+			}
+		}
+	else
+		{
+		for(; ii<m; ii+=4)
+			{
+			jj = 0;
+			for(; jj<n; jj+=4)
+				{
+				kernel_dtrmm_nn_rl_4x4_gen_lib4(n-jj, &alpha, &pA[ii*sda+jj*bs], offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, 0, m-ii, 0, n-jj);
+				}
+			}
+		}
 	return;
 	}
 
