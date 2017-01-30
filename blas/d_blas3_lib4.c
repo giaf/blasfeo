@@ -1919,8 +1919,8 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 
-// dtrmm_right_upper_transposed_notunit (B triangular !!!)
-void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+// dtrmm_right_upper_transposed_notunit (B, i.e. the first matrix, is triangular !!!)
+void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sB, int bi, int bj, struct d_strmat *sA, int ai, int aj, struct d_strmat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | di!=0)
 		{
@@ -1940,8 +1940,8 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 
-// dtrmm_right_lower_nottransposed_notunit (B triangular !!!)
-void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+// dtrmm_right_lower_nottransposed_notunit (B, i.e. the first matrix, is triangular !!!)
+void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sB, int bi, int bj, struct d_strmat *sA, int ai, int aj, struct d_strmat *sD, int di, int dj)
 	{
 
 	const int bs = 4;

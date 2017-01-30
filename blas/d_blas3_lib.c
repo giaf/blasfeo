@@ -681,7 +681,7 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 
-// dtrmm_right_upper_transposed_notunit (B triangular !!!)
+// dtrmm_right_upper_transposed_notunit (A triangular !!!)
 void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
@@ -707,15 +707,15 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 			c_01 = 0.0;
 			c_11 = 0.0;
 			kk = jj;
-			c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
-			c_10 += pA[(ii+1)+lda*kk] * pB[(jj+0)+ldb*kk];
+			c_00 += pB[(ii+0)+ldb*kk] * pA[(jj+0)+lda*kk];
+			c_10 += pB[(ii+1)+ldb*kk] * pA[(jj+0)+lda*kk];
 			kk++;
 			for(; kk<n; kk++)
 				{
-				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
-				c_10 += pA[(ii+1)+lda*kk] * pB[(jj+0)+ldb*kk];
-				c_01 += pA[(ii+0)+lda*kk] * pB[(jj+1)+ldb*kk];
-				c_11 += pA[(ii+1)+lda*kk] * pB[(jj+1)+ldb*kk];
+				c_00 += pB[(ii+0)+ldb*kk] * pA[(jj+0)+lda*kk];
+				c_10 += pB[(ii+1)+ldb*kk] * pA[(jj+0)+lda*kk];
+				c_01 += pB[(ii+0)+ldb*kk] * pA[(jj+1)+lda*kk];
+				c_11 += pB[(ii+1)+ldb*kk] * pA[(jj+1)+lda*kk];
 				}
 			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00;
 			pD[(ii+1)+ldd*(jj+0)] = alpha * c_10;
@@ -727,12 +727,12 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 			c_00 = 0.0;
 			c_01 = 0.0;
 			kk = jj;
-			c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+			c_00 += pB[(ii+0)+ldb*kk] * pA[(jj+0)+lda*kk];
 			kk++;
 			for(; kk<n; kk++)
 				{
-				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
-				c_01 += pA[(ii+0)+lda*kk] * pB[(jj+1)+ldb*kk];
+				c_00 += pB[(ii+0)+ldb*kk] * pA[(jj+0)+lda*kk];
+				c_01 += pB[(ii+0)+ldb*kk] * pA[(jj+1)+lda*kk];
 				}
 			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00;
 			pD[(ii+0)+ldd*(jj+1)] = alpha * c_01;
@@ -747,8 +747,8 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 			c_10 = 0.0;
 			for(kk=jj; kk<n; kk++)
 				{
-				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
-				c_10 += pA[(ii+1)+lda*kk] * pB[(jj+0)+ldb*kk];
+				c_00 += pB[(ii+0)+ldb*kk] * pA[(jj+0)+lda*kk];
+				c_10 += pB[(ii+1)+ldb*kk] * pA[(jj+0)+lda*kk];
 				}
 			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00;
 			pD[(ii+1)+ldd*(jj+0)] = alpha * c_10;
@@ -758,7 +758,7 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 			c_00 = 0.0;
 			for(kk=jj; kk<n; kk++)
 				{
-				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+				c_00 += pB[(ii+0)+ldb*kk] * pA[(jj+0)+lda*kk];
 				}
 			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00;
 			}
@@ -768,7 +768,7 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 
-// dtrmm_right_lower_nottransposed_notunit (B triangular !!!)
+// dtrmm_right_lower_nottransposed_notunit (A triangular !!!)
 void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
@@ -794,15 +794,15 @@ void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 			c_01 = 0.0; ;
 			c_11 = 0.0; ;
 			kk = jj;
-			c_00 += pA[(ii+0)+lda*kk] * pB[kk+ldb*(jj+0)];
-			c_10 += pA[(ii+1)+lda*kk] * pB[kk+ldb*(jj+0)];
+			c_00 += pB[(ii+0)+ldb*kk] * pA[kk+lda*(jj+0)];
+			c_10 += pB[(ii+1)+ldb*kk] * pA[kk+lda*(jj+0)];
 			kk++;
 			for(; kk<n; kk++)
 				{
-				c_00 += pA[(ii+0)+lda*kk] * pB[kk+ldb*(jj+0)];
-				c_10 += pA[(ii+1)+lda*kk] * pB[kk+ldb*(jj+0)];
-				c_01 += pA[(ii+0)+lda*kk] * pB[kk+ldb*(jj+1)];
-				c_11 += pA[(ii+1)+lda*kk] * pB[kk+ldb*(jj+1)];
+				c_00 += pB[(ii+0)+ldb*kk] * pA[kk+lda*(jj+0)];
+				c_10 += pB[(ii+1)+ldb*kk] * pA[kk+lda*(jj+0)];
+				c_01 += pB[(ii+0)+ldb*kk] * pA[kk+lda*(jj+1)];
+				c_11 += pB[(ii+1)+ldb*kk] * pA[kk+lda*(jj+1)];
 				}
 			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00;
 			pD[(ii+1)+ldd*(jj+0)] = alpha * c_10;
@@ -814,12 +814,12 @@ void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 			c_00 = 0.0; ;
 			c_01 = 0.0; ;
 			kk = jj;
-			c_00 += pA[(ii+0)+lda*kk] * pB[kk+ldb*(jj+0)];
+			c_00 += pB[(ii+0)+ldb*kk] * pA[kk+lda*(jj+0)];
 			kk++;
 			for(; kk<n; kk++)
 				{
-				c_00 += pA[(ii+0)+lda*kk] * pB[kk+ldb*(jj+0)];
-				c_01 += pA[(ii+0)+lda*kk] * pB[kk+ldb*(jj+1)];
+				c_00 += pB[(ii+0)+ldb*kk] * pA[kk+lda*(jj+0)];
+				c_01 += pB[(ii+0)+ldb*kk] * pA[kk+lda*(jj+1)];
 				}
 			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00;
 			pD[(ii+0)+ldd*(jj+1)] = alpha * c_01;
@@ -834,8 +834,8 @@ void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 			c_10 = 0.0; ;
 			for(kk=jj; kk<n; kk++)
 				{
-				c_00 += pA[(ii+0)+lda*kk] * pB[kk+ldb*(jj+0)];
-				c_10 += pA[(ii+1)+lda*kk] * pB[kk+ldb*(jj+0)];
+				c_00 += pB[(ii+0)+ldb*kk] * pA[kk+lda*(jj+0)];
+				c_10 += pB[(ii+1)+ldb*kk] * pA[kk+lda*(jj+0)];
 				}
 			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00;
 			pD[(ii+1)+ldd*(jj+0)] = alpha * c_10;
@@ -845,7 +845,7 @@ void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 			c_00 = 0.0; ;
 			for(kk=jj; kk<n; kk++)
 				{
-				c_00 += pA[(ii+0)+lda*kk] * pB[kk+ldb*(jj+0)];
+				c_00 += pB[(ii+0)+ldb*kk] * pA[kk+lda*(jj+0)];
 				}
 			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00;
 			}
@@ -1165,7 +1165,7 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 
-// dtrmm_right_upper_transposed_notunit (B triangular !!!)
+// dtrmm_right_upper_transposed_notunit (A triangular !!!)
 void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
 	int jj;
@@ -1181,26 +1181,26 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	double *pA = sA->pA+ai+aj*lda;
 	double *pB = sB->pA+bi+bj*ldb;
 	double *pD = sD->pA+di+dj*ldd;
-	if(!(pA==pD))
+	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pA+jj*lda, &i1, pD+jj*ldd, &i1);
+			dcopy(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 #else
-			dcopy_(&m, pA+jj*lda, &i1, pD+jj*ldd, &i1);
+			dcopy_(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 #endif
 		}
 #if defined(REF_BLAS_MKL)
-	dtrmm(&cr, &cu, &ct, &cn, &m, &n, &alpha, pB, &ldb, pD, &ldd);
+	dtrmm(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
 #else
-	dtrmm_(&cr, &cu, &ct, &cn, &m, &n, &alpha, pB, &ldb, pD, &ldd);
+	dtrmm_(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
 #endif
 	return;
 	}
 
 
 
-// dtrmm_right_lower_nottransposed_notunit (B triangular !!!)
+// dtrmm_right_lower_nottransposed_notunit (A triangular !!!)
 void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
 	int jj;
@@ -1216,19 +1216,19 @@ void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	double *pA = sA->pA+ai+aj*lda;
 	double *pB = sB->pA+bi+bj*ldb;
 	double *pD = sD->pA+di+dj*ldd;
-	if(!(pA==pD))
+	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pA+jj*lda, &i1, pD+jj*ldd, &i1);
+			dcopy(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 #else
-			dcopy_(&m, pA+jj*lda, &i1, pD+jj*ldd, &i1);
+			dcopy_(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 #endif
 		}
 #if defined(REF_BLAS_MKL)
-	dtrmm(&cr, &cl, &cn, &cn, &m, &n, &alpha, pB, &ldb, pD, &ldd);
+	dtrmm(&cr, &cl, &cn, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
 #else
-	dtrmm_(&cr, &cl, &cn, &cn, &m, &n, &alpha, pB, &ldb, pD, &ldd);
+	dtrmm_(&cr, &cl, &cn, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
 #endif
 	return;
 	}
