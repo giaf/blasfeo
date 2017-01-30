@@ -51,7 +51,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 3.6
+#define GHZ_MAX 3.3
 
 
 
@@ -249,7 +249,7 @@ int main()
 		for(i=0; i<pnd; i++) x2[i] = 1;
 
 		// matrix struct
-#if 0
+#if 1
 		struct d_strmat sA; d_allocate_strmat(n+4, n+4, &sA);
 		struct d_strmat sB; d_allocate_strmat(n+4, n+4, &sB);
 		struct d_strmat sC; d_allocate_strmat(n+4, n+4, &sC);
@@ -320,6 +320,8 @@ int main()
 //			dpotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 //			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
+			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+//			dtrmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //			dtrsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //			dtrsm_rltu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
@@ -327,7 +329,7 @@ int main()
 //			dgemv_n_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
 //			dgemv_t_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
 //			dsymv_l_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-			dgemv_nt_libstr(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
+//			dgemv_nt_libstr(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
 			}
 
 //		d_print_strmat(n, n, &sD, 0, 0);
@@ -379,12 +381,12 @@ int main()
 		float Gflops_max = flops_max * GHz_max;
 
 //		float flop_operation = 2.0*n*n*n; // dgemm
-//		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
+		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
 //		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv
 //		float flop_operation = 1.0*n*n; // dtrmv dtrsv
-		float flop_operation = 4.0*n*n; // dgemv_nt
+//		float flop_operation = 4.0*n*n; // dgemv_nt
 
 //		float flop_operation = 4.0/3.0*n*n*n; // dsyrk+dpotrf
 
