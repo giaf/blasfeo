@@ -179,56 +179,54 @@ _inner_kernel_dgemv_add_nt_6_lib4:
 	vmaskmovpd	0(%r13), %ymm14, %ymm12
 	vmaskmovpd	0(%r14), %ymm14, %ymm13
 
-	vmovapd	0(%r11), %ymm14
+	vmovupd	%ymm14, -32(%rsp) // spill mask to stack
+
+//	vmaskmovpd	-32(%rsp), %ymm14
+	vmaskmovpd	0(%r11), %ymm14, %ymm14
 	vmulpd	%ymm14, %ymm12, %ymm15
 	vaddpd	%ymm0, %ymm15, %ymm0
 	vmulpd	%ymm14, %ymm6, %ymm15
 	vaddpd	%ymm13, %ymm15, %ymm13
 	
-	vmovapd	32(%r11), %ymm14
+	vmovupd	-32(%rsp), %ymm14 // load mask form stack
+	vmaskmovpd	32(%r11), %ymm14, %ymm14
 	vmulpd	%ymm14, %ymm12, %ymm15
 	vaddpd	%ymm1, %ymm15, %ymm1
 	vmulpd	%ymm14, %ymm7, %ymm15
 	vaddpd	%ymm13, %ymm15, %ymm13
 	
-	vmovapd	64(%r11), %ymm14
+	vmovupd	-32(%rsp), %ymm14 // load mask form stack
+	vmaskmovpd	64(%r11), %ymm14, %ymm14
 	vmulpd	%ymm14, %ymm12, %ymm15
 	vaddpd	%ymm2, %ymm15, %ymm2
 	vmulpd	%ymm14, %ymm8, %ymm15
 	vaddpd	%ymm13, %ymm15, %ymm13
 
-	vmovapd	96(%r11), %ymm14
+	vmovupd	-32(%rsp), %ymm14 // load mask form stack
+	vmaskmovpd	96(%r11), %ymm14, %ymm14
 	vmulpd	%ymm14, %ymm12, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
 	vmulpd	%ymm14, %ymm9, %ymm15
 	vaddpd	%ymm13, %ymm15, %ymm13
 		
-	vmovapd	128(%r11), %ymm14
+	vmovupd	-32(%rsp), %ymm14 // load mask form stack
+	vmaskmovpd	128(%r11), %ymm14, %ymm14
 	vmulpd	%ymm14, %ymm12, %ymm15
 	vaddpd	%ymm4, %ymm15, %ymm4
 	vmulpd	%ymm14, %ymm10, %ymm15
 	vaddpd	%ymm13, %ymm15, %ymm13
 	
-	vmovapd	160(%r11), %ymm14
+	vmovupd	-32(%rsp), %ymm14 // load mask form stack
+	vmaskmovpd	160(%r11), %ymm14, %ymm14
 	vmulpd	%ymm14, %ymm12, %ymm15
 	vaddpd	%ymm5, %ymm15, %ymm5
 	vmulpd	%ymm14, %ymm11, %ymm15
 	vaddpd	%ymm13, %ymm15, %ymm13
 	
-	vcvtsi2sd	%r10d, %xmm14, %xmm14
-#if defined(OS_LINUX)
-	vmovupd		.LC02(%rip), %ymm15
-#elif defined(OS_MAC)
-	vmovupd		LC02(%rip), %ymm15
-#endif
-	vmovddup	%xmm14, %xmm14
-	vinsertf128	$1, %xmm14, %ymm14, %ymm14
-	vsubpd		%ymm14, %ymm15, %ymm14
-
+	vmovupd	-32(%rsp), %ymm14 // load mask form stack
 	vmaskmovpd	%ymm13, %ymm14, 0(%r14)
 
 	sall	$3, %r10d
-//	movslq	%r10d, %r10
 	addq	%r10, %r11
 	addq	%r10, %r13
 	addq	%r10, %r14
