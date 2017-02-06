@@ -115,8 +115,8 @@ OBJS +=
 
 endif # LA choice
 
-OBJS += ./auxiliary/d_aux_extern_depend_lib.o
-OBJS += ./auxiliary/i_aux_extern_depend_lib.o
+OBJS += ./auxiliary/d_aux_ext_dep_lib.o
+OBJS += ./auxiliary/i_aux_ext_dep_lib.o
 
 
 
@@ -128,7 +128,7 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 OBJS +=
 OBJS += ./blas/s_blas2_lib4.o ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o
 # auxiliary
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_extern_depend_lib4.o 
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_ext_dep_lib4.o 
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
@@ -139,7 +139,7 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 OBJS += 
 OBJS += ./blas/s_blas2_lib4.o ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o
 # auxiliary
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_extern_depend_lib4.o 
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_ext_dep_lib4.o 
 endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
@@ -150,7 +150,7 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 OBJS +=
 OBJS += ./blas/s_blas2_lib4.o ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o
 # auxiliary
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_extern_depend_lib4.o 
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_ext_dep_lib4.o 
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
@@ -161,7 +161,7 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 OBJS +=
 OBJS += ./blas/s_blas2_lib4.o ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o
 # auxiliary
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_extern_depend_lib4.o 
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_ext_dep_lib4.o 
 endif
 
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
@@ -172,7 +172,7 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 OBJS +=
 OBJS += ./blas/s_blas2_lib4.o ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o
 # auxiliary
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_extern_depend_lib4.o 
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_ext_dep_lib4.o 
 endif
 
 ifeq ($(TARGET), GENERIC)
@@ -183,7 +183,7 @@ OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o
 OBJS +=
 OBJS += ./blas/s_blas2_lib4.o ./blas/s_blas3_lib4.o ./blas/s_lapack_lib4.o
 # auxiliary
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_extern_depend_lib4.o 
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/s_aux_ext_dep_lib4.o 
 endif
 
 all: clean static_library

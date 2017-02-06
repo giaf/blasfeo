@@ -62,9 +62,9 @@ OBJS += d_aux_lib.o
 
 endif # LA choice
 
-OBJS += d_aux_extern_depend_lib.o
-OBJS += s_aux_lib4.o s_aux_extern_depend_lib4.o
-OBJS += i_aux_extern_depend_lib.o 
+OBJS += d_aux_ext_dep_lib.o
+OBJS += s_aux_lib4.o s_aux_ext_dep_lib4.o
+OBJS += i_aux_ext_dep_lib.o 
 
 obj: $(OBJS)
 ifeq ($(TARGET), X64_INTEL_HASWELL)
