@@ -33,6 +33,12 @@ extern "C" {
 
 
 
+#ifndef BLASFEO_COMMON
+#define BLASFEO_COMMON
+#endif
+
+
+
 #if defined(LA_HIGH_PERFORMANCE)
 
 // matrix structure
