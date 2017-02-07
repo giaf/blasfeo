@@ -165,7 +165,14 @@ void dpotrf_nt_l_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, dou
 				}
 			else // dpotrf
 				{
-				kernel_dpotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
+				if(j<n-3)
+					{
+					kernel_dpotrf_nt_l_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &inv_diag_D[j]);
+					}
+				else
+					{
+					kernel_dpotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
+					}
 				}
 			}
 		}
