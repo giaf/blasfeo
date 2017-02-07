@@ -26,62 +26,42 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#if defined(OS_LINUX)
 	.text
+#elif defined(OS_MAC)
+	.section	__TEXT,__text,regular,pure_instructions
+#endif
 
-//                               r0        r1             r2         r3         sp+0        sp+4     sp+8
-// void kernel_dgemm_nt_4x4_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D)
 
-	.global	kernel_dgemm_nt_4x4_lib4
-	.type	kernel_dgemm_nt_4x4_lib4, %function
-kernel_dgemm_nt_4x4_lib4:
 
-	// save GP registers
-	stmdb	sp!, {r4 - r10, fp, lr} // save registers
-	add		fp, sp, #36 // fp to old sp position
+// common inner routine with file scope
+//
+// input arguments:
+// r4   <- k
+// r5   <- A
+// r6   <- B
+//
+// output arguments:
 
-	// save FP registers
-	fstmfdd	sp!, {d8-d15}
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+#else
+//	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dgemm_add_nt_4x4_lib4, %function
+inner_kernel_dgemm_add_nt_4x4_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dgemm_add_nt_4x4_lib4:
+#endif
+#endif
 
-	// zero accumulation registers
-	fldd	d0, .LC00
-	fcpyd	d1, d0
-	fcpyd	d2, d0
-	fcpyd	d3, d0
-	fcpyd	d4, d0
-	fcpyd	d5, d0
-	fcpyd	d6, d0
-	fcpyd	d7, d0
-	fcpyd	d8, d0
-	fcpyd	d9, d0
-	fcpyd	d10, d0
-	fcpyd	d11, d0
-	fcpyd	d12, d0
-	fcpyd	d13, d0
-	fcpyd	d14, d0
-	fcpyd	d15, d0
-
-	b		0f
-
-	.align 3
-.LC00: // { 0 }
-	.word 0
-	.word 0
-
-0:
-
-	// prepare inner kernel
-	mov		r4, r0 // kmax
-	mov		r5, r2 // A
-	mov		r6, r3 // B
-
-	// inner kernel
+	// early return
+	cmp		r4, #0
+	ble		2f // return
 
 	// prefetch
 	pld		[r5, #0]
 	pld		[r6, #0]
-
-	cmp		r4, #0
-	ble		2f // return
 
 	// preload A even
 	fldd	d16, [r5, #0]
@@ -421,14 +401,42 @@ kernel_dgemm_nt_4x4_lib4:
 
 2: // return
 
+	
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	mov		pc, lr // return
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dgemm_add_nt_4x4_lib4, .-inner_kernel_dgemm_add_nt_4x4_lib4
+#endif
+#endif
 
 
-	// prepare inner blend
-	mov		r4, r1 // alpha
-	ldr		r5, [fp, #0] // beta
-	ldr		r6, [fp, #4] // C
 
-	// inner blend
+
+
+// common inner routine with file scope
+//
+// input arguments:
+// r4   <- k
+// r5   <- A
+// r6   <- B
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_BLEND_SCALE_AB_4X4_LIB4
+#else
+//	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_blend_scale_ab_4x4_lib4, %function
+inner_blend_scale_ab_4x4_lib4:
+#elif defined(OS_MAC)
+_inner_blend_scale_ab_4x4_lib4:
+#endif
+#endif
+
 	fldd	d16, [r4, #0] // alpha
 
 	fmuld	d0, d0, d16
@@ -490,11 +498,41 @@ kernel_dgemm_nt_4x4_lib4:
 	fmacd	d15, d16, d17
 
 
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	mov		pc, lr // return
 
-	// prepare inner store
-	ldr		r4, [fp, #8] // D
+#if defined(OS_LINUX)
+	.size	inner_blend_scale_ab_4x4_lib4, .-inner_blend_scale_ab_4x4_lib4
+#endif
+#endif
 
-	// inner store
+
+
+
+
+// common inner routine with file scope
+//
+// input arguments:
+// r4   <- k
+// r5   <- A
+// r6   <- B
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_STORE_4X4_LIB4
+#else
+//	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_store_4x4_lib4, %function
+inner_store_4x4_lib4:
+#elif defined(OS_MAC)
+_inner_store_4x4_lib4:
+#endif
+#endif
+
 	fstd	d0, [r4, #0]
 	fstd	d1, [r4, #8]
 	fstd	d2, [r4, #16]
@@ -515,7 +553,113 @@ kernel_dgemm_nt_4x4_lib4:
 	fstd	d14, [r4, #112]
 	fstd	d15, [r4, #120]
 
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	mov		pc, lr // return
 
+#if defined(OS_LINUX)
+	.size	inner_store_4x4_lib4, .-inner_store_4x4_lib4
+#endif
+#endif
+
+
+
+
+
+//                               r0        r1             r2         r3         sp+0        sp+4     sp+8
+// void kernel_dgemm_nt_4x4_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D)
+
+#if defined(OS_LINUX)
+	.global	kernel_dgemm_nt_4x4_lib4
+	.type	kernel_dgemm_nt_4x4_lib4, %function
+kernel_dgemm_nt_4x4_lib4:
+#elif defined(OS_MAC)
+	.global	kernel_dgemm_nt_4x4_lib4
+_kernel_dgemm_nt_4x4_lib4:
+#endif
+
+	// prologue
+
+	// save GP registers
+	stmdb	sp!, {r4 - r10, fp, lr} // save registers
+	add		fp, sp, #36 // fp to old sp position
+
+	// save FP registers
+	fstmfdd	sp!, {d8-d15}
+
+
+
+	// zero accumulation registers
+	fldd	d0, .LC00
+	fcpyd	d1, d0
+	fcpyd	d2, d0
+	fcpyd	d3, d0
+	fcpyd	d4, d0
+	fcpyd	d5, d0
+	fcpyd	d6, d0
+	fcpyd	d7, d0
+	fcpyd	d8, d0
+	fcpyd	d9, d0
+	fcpyd	d10, d0
+	fcpyd	d11, d0
+	fcpyd	d12, d0
+	fcpyd	d13, d0
+	fcpyd	d14, d0
+	fcpyd	d15, d0
+
+
+
+	// call inner kernel dgemm nt
+	mov		r4, r0 // kmax
+	mov		r5, r2 // A
+	mov		r6, r3 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl	inner_kernel_dgemm_add_nt_4x4_lib4
+#elif defined(OS_MAC)
+	bl	_inner_kernel_dgemm_add_nt_4x4_lib4
+#endif
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		r4, r1 // alpha
+	ldr		r5, [fp, #0] // beta
+	ldr		r6, [fp, #4] // C
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_AB_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl inner_blend_scale_ab_4x4_lib4
+#elif defined(OS_MAC)
+	bl _inner_blend_scale_ab_4x4_lib4
+#endif
+#endif
+
+
+
+	// store n
+	ldr		r4, [fp, #8] // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl inner_store_4x4_lib4
+#elif defined(OS_MAC)
+	bl _inner_store_4x4_lib4
+#endif
+#endif
+
+
+
+	// epilogue
 
 	// load FP registers
 	fldmfdd	sp!, {d8-d15}
@@ -525,7 +669,14 @@ kernel_dgemm_nt_4x4_lib4:
 //	mov		pc, lr // return
 	ldmia	sp!, {r4 - r10, fp, pc} // load registers and return
 
+#if defined(OS_LINUX)
 	.size	kernel_dgemm_nt_4x4_lib4, .-kernel_dgemm_nt_4x4_lib4
+#endif
+
+	.align 3
+.LC00: // { 0 }
+	.word 0
+	.word 0
 
 
 
