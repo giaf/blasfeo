@@ -1504,9 +1504,9 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 
 
 #if defined(TARGET_GENERIC)
-void kernel_dsyrk_nt_l_4x4_lib4(int kmax, double *alpha, double *A, double *B, int sdb, double *beta, double *C, double *D)
+void kernel_dsyrk_nt_l_4x4_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D)
 	{
-	kernel_dsyrk_nt_l_4x4_vs_lib4(kmax, alpha, A, B, sdb, beta, C, D, 4, 4);
+	kernel_dsyrk_nt_l_4x4_vs_lib4(kmax, alpha, A, B, beta, C, D, 4, 4);
 	}
 #endif
 
@@ -3297,8 +3297,8 @@ void kernel_dpotrf_nt_l_4x4_vs_lib4(int kmax, double *A, double *B, double *C, d
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
-void kernel_dpotrf_nt_l_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *inv_diag_D, int km, int kn)
+#if defined(TARGET_GENERIC)
+void kernel_dpotrf_nt_l_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *inv_diag_D)
 	{
 	kernel_dpotrf_nt_l_4x4_vs_lib4(kmax, A, B, C, D, inv_diag_D, 4, 4);
 	}
