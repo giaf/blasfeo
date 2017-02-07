@@ -2944,6 +2944,144 @@ _kernel_dpotrf_nt_l_4x4_vs_lib4:
 
 
 
+//                                        edi     rsi         rdx         ecx     r8          r9          rsp+8      rsp+16     rsp+24
+// void kernel_dsyrk_dpotrf_nt_l_4x4_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *inv_diag_D);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dsyrk_dpotrf_nt_l_4x4_lib4
+	.type kernel_dsyrk_dpotrf_nt_l_4x4_lib4, @function
+kernel_dsyrk_dpotrf_nt_l_4x4_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dsyrk_dpotrf_nt_l_4x4_lib4
+_kernel_dsyrk_dpotrf_nt_l_4x4_lib4:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+
+
+	// zero accumulation registers
+
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
+	movapd	%xmm0, %xmm4
+	movapd	%xmm0, %xmm5
+	movapd	%xmm0, %xmm6
+	movapd	%xmm0, %xmm7
+
+
+	// call inner dgemm kernel nt add
+
+	movl	%edi, %r10d // kp
+	movq	%rsi, %r11  // Ap
+	movq	%rdx, %r12  // Bp
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_add_nt_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_add_nt_4x4_lib4
+#endif
+#endif
+
+
+	// call inner dgemm kernel nt sub
+
+	movl	%ecx, %r10d // km
+	movq	%r8, %r11   // Am
+	movq	%r9, %r12   // Bm
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_dgemm_sub_nt_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_sub_nt_4x4_lib4
+#endif
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	STACKSIZE + 8(%rsp), %r10   // C
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_11_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_blend_scale_11_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_blend_scale_11_4x4_lib4
+#endif
+#endif
+
+
+	// factorization
+
+	movq	STACKSIZE + 24(%rsp), %r10  // inv_diag_D 
+	movl	STACKSIZE + 40(%rsp), %r11d // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DPOTRF_4X4_VS_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_edge_dpotrf_4x4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dpotrf_4x4_vs_lib4
+#endif
+#endif
+
+
+	// store
+
+	movq	STACKSIZE + 16(%rsp), %r10  // D 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X4_VS_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_store_l_4x4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_l_4x4_vs_lib4
+#endif
+#endif
+
+
+	// epilogue
+
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dsyrk_dpotrf_nt_l_4x4_lib4, .-kernel_dsyrk_dpotrf_nt_l_4x4_lib4
+#endif
+
+
+
+
+
 //                                           edi     rsi         rdx         ecx     r8          r9          rsp+8      rsp+16     rsp+24              rsp+32  rsp+40
 // void kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *inv_diag_D, int km, int kn);
 

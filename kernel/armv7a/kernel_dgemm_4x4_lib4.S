@@ -2222,7 +2222,7 @@ _kernel_dtrsm_nt_rl_inv_4x4_lib4:
 	ldmia	sp!, {r4 - r10, fp, pc} // load registers and return
 
 #if defined(OS_LINUX)
-	.size	kernel_dpotrf_nt_l_4x4_lib4, .-kernel_dpotrf_nt_l_4x4_lib4
+	.size	kernel_dtrsm_nt_rl_inv_4x4_lib4, .-kernel_dtrsm_nt_rl_inv_4x4_lib4
 #endif
 
 
@@ -2346,6 +2346,287 @@ _kernel_dpotrf_nt_l_4x4_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dpotrf_nt_l_4x4_lib4, .-kernel_dpotrf_nt_l_4x4_lib4
+#endif
+
+
+
+
+//                                            r0      r1          r2          r3      sp+0        sp+4        sp+8       sp+12      sp+16      sp+20
+// void kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *E, double *inv_diag_E);
+
+//	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4
+	.type kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4, %function
+kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4
+_kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4:
+#endif
+
+	// prologue
+
+	// save GP registers
+	stmdb	sp!, {r4 - r10, fp, lr} // save registers
+	add		fp, sp, #36 // fp to old sp position
+
+	// save FP registers
+	fstmfdd	sp!, {d8-d15}
+
+
+
+	// zero accumulation registers
+	fldd	d0, .LC00
+	fcpyd	d1, d0
+	fcpyd	d2, d0
+	fcpyd	d3, d0
+	fcpyd	d4, d0
+	fcpyd	d5, d0
+	fcpyd	d6, d0
+	fcpyd	d7, d0
+	fcpyd	d8, d0
+	fcpyd	d9, d0
+	fcpyd	d10, d0
+	fcpyd	d11, d0
+	fcpyd	d12, d0
+	fcpyd	d13, d0
+	fcpyd	d14, d0
+	fcpyd	d15, d0
+
+
+
+	// call inner kernel dsyrk l nt add
+	mov		r4, r0 // kp
+	mov		r5, r1 // Ap
+	mov		r6, r2 // Bp
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl	inner_kernel_dgemm_add_nt_4x4_lib4
+#elif defined(OS_MAC)
+	bl	_inner_kernel_dgemm_add_nt_4x4_lib4
+#endif
+#endif
+
+
+
+	// call inner kernel dsyrk l nt sub
+	mov		r4, r3 // kmax
+	ldr		r5, [fp, #0] // Am
+	ldr		r6, [fp, #4] // Bm
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl	inner_kernel_dgemm_sub_nt_4x4_lib4
+#elif defined(OS_MAC)
+	bl	_inner_kernel_dgemm_sub_nt_4x4_lib4
+#endif
+#endif
+
+
+
+	// call inner blend for alpha=1.0 and beta=1.0
+	ldr		r4, [fp, #8] // C
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_11_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl inner_blend_scale_11_4x4_lib4
+#elif defined(OS_MAC)
+	bl _inner_blend_scale_11_4x4_lib4
+#endif
+#endif
+
+
+
+	// factorization
+	ldr		r4, [fp, #16] // E
+	ldr		r5, [fp, #20] // inv_diag_E
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RLT_INV_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl inner_edge_dtrsm_rlt_inv_4x4_lib4
+#elif defined(OS_MAC)
+	bl _inner_edge_dtrsm_rlt_inv_4x4_lib4
+#endif
+#endif
+
+
+
+	// store l
+	ldr		r4, [fp, #12] // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl inner_store_4x4_lib4
+#elif defined(OS_MAC)
+	bl _inner_store_4x4_lib4
+#endif
+#endif
+
+
+
+	// epilogue
+
+	// load FP registers
+	fldmfdd	sp!, {d8-d15}
+
+	// load GP registers and return
+//	ldmia	sp!, {r4 - r10, fp, lr} // load registers
+//	mov		pc, lr // return
+	ldmia	sp!, {r4 - r10, fp, pc} // load registers and return
+
+#if defined(OS_LINUX)
+	.size	kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4, .-kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4
+#endif
+
+
+
+
+//                                        r0      r1          r2          r3      sp+0        sp+4        sp+8       sp+12      sp+16
+// void kernel_dsyrk_dpotrf_nt_l_4x4_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *inv_diag_D);
+
+//	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dsyrk_dpotrf_nt_l_4x4_lib4
+	.type kernel_dsyrk_dpotrf_nt_l_4x4_lib4, %function
+kernel_dsyrk_dpotrf_nt_l_4x4_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dpotrf_nt_l_4x4_lib4
+_kernel_dsyrk_dpotrf_nt_l_4x4_lib4:
+#endif
+
+	// prologue
+
+	// save GP registers
+	stmdb	sp!, {r4 - r10, fp, lr} // save registers
+	add		fp, sp, #36 // fp to old sp position
+
+	// save FP registers
+	fstmfdd	sp!, {d8-d15}
+
+
+
+	// zero accumulation registers
+	fldd	d0, .LC00
+	fcpyd	d1, d0
+	fcpyd	d2, d0
+	fcpyd	d3, d0
+	fcpyd	d4, d0
+	fcpyd	d5, d0
+	fcpyd	d6, d0
+	fcpyd	d7, d0
+	fcpyd	d8, d0
+	fcpyd	d9, d0
+	fcpyd	d10, d0
+	fcpyd	d11, d0
+	fcpyd	d12, d0
+	fcpyd	d13, d0
+	fcpyd	d14, d0
+	fcpyd	d15, d0
+
+
+
+	// call inner kernel dsyrk l nt
+	mov		r4, r0 // kp
+	mov		r5, r1 // Ap
+	mov		r6, r2 // Bp
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DSYRK_L_ADD_NT_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl	inner_kernel_dsyrk_l_add_nt_4x4_lib4
+#elif defined(OS_MAC)
+	bl	_inner_kernel_dsyrk_l_add_nt_4x4_lib4
+#endif
+#endif
+
+
+
+	// call inner kernel dsyrk l nt sub
+	mov		r4, r3 // kmax
+	ldr		r5, [fp, #0] // Am
+	ldr		r6, [fp, #4] // Bm
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DSYRK_L_SUB_NT_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl	inner_kernel_dsyrk_l_sub_nt_4x4_lib4
+#elif defined(OS_MAC)
+	bl	_inner_kernel_dsyrk_l_sub_nt_4x4_lib4
+#endif
+#endif
+
+
+
+	// call inner blend for alpha=1.0 and beta=1.0
+	ldr		r4, [fp, #8] // C
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_11_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl inner_blend_scale_11_4x4_lib4
+#elif defined(OS_MAC)
+	bl _inner_blend_scale_11_4x4_lib4
+#endif
+#endif
+
+
+
+	// factorization
+	ldr		r4, [fp, #16] // inv_diag_D
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DPOTRF_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl inner_edge_dpotrf_4x4_lib4
+#elif defined(OS_MAC)
+	bl _inner_edge_dpotrf_4x4_lib4
+#endif
+#endif
+
+
+
+	// store l
+	ldr		r4, [fp, #12] // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl inner_store_l_4x4_lib4
+#elif defined(OS_MAC)
+	bl _inner_store_l_4x4_lib4
+#endif
+#endif
+
+
+
+	// epilogue
+
+	// load FP registers
+	fldmfdd	sp!, {d8-d15}
+
+	// load GP registers and return
+//	ldmia	sp!, {r4 - r10, fp, lr} // load registers
+//	mov		pc, lr // return
+	ldmia	sp!, {r4 - r10, fp, pc} // load registers and return
+
+#if defined(OS_LINUX)
+	.size	kernel_dsyrk_dpotrf_nt_l_4x4_lib4, .-kernel_dsyrk_dpotrf_nt_l_4x4_lib4
 #endif
 
 
