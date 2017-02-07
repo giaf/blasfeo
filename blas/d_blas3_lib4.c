@@ -465,7 +465,14 @@ void dsyrk_nt_l_lib(int m, int n, int k, double alpha, double *pA, int sda, doub
 				}
 			else // dsyrk
 				{
-				kernel_dsyrk_nt_l_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
+				if(j<n-3)
+					{
+					kernel_dsyrk_nt_l_4x4_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd]);
+					}
+				else
+					{
+					kernel_dsyrk_nt_l_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
+					}
 				}
 			}
 		}

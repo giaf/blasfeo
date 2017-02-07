@@ -90,6 +90,9 @@ int main()
 #elif defined(TARGET_X64_AMD_BULLDOZER)
 	const float flops_max = 8;
 	printf("Testing BLAS version for SSE3 and FMA instruction set, 64 bit (optimized for AMD Bulldozer): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+	const float flops_max = 2;
+	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A15): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_GENERIC)
 	const float flops_max = 2;
 	printf("Testing BLAS version for generic scalar instruction set: theoretical peak %5.1f Gflops ???\n", flops_max*GHz_max);
@@ -109,6 +112,9 @@ int main()
 	fprintf(f, "\n");
 #elif defined(TARGET_X64_AMD_BULLDOZER)
 	fprintf(f, "C = 'd_x64_amd_bulldozer';\n");
+	fprintf(f, "\n");
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+	fprintf(f, "C = 'd_armv7a_arm_cortex_a15';\n");
 	fprintf(f, "\n");
 #elif defined(TARGET_GENERIC)
 	fprintf(f, "C = 'd_generic';\n");
@@ -314,13 +320,13 @@ int main()
 			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sE, 0, 0);
 			dgecp_lib(n, n, 0, sE.pA, sE.cn, 1, sD.pA+1, sD.cn);
 #else
-//			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 #endif
 //			dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dpotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 //			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
-			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+//			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //			dtrsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
@@ -339,7 +345,7 @@ int main()
 		for(rep=0; rep<nrep; rep++)
 			{
 #if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
-//			dgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
+			dgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
 //			dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
 //			dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
 //			dtrmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
@@ -380,8 +386,8 @@ int main()
 
 		float Gflops_max = flops_max * GHz_max;
 
-//		float flop_operation = 2.0*n*n*n; // dgemm
-		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
+		float flop_operation = 2.0*n*n*n; // dgemm
+//		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
 //		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv
@@ -399,8 +405,10 @@ int main()
 		float Gflops_blas     = 1e-9*flop_operation/time_blas;
 
 
-		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
-		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+//		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+//		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
 
 
 		free(A);
