@@ -43,10 +43,10 @@ int posix_memalign(void **memptr, size_t alignment, size_t size);
 
 
 /* creates a zero matrix */
-void d_zeros(double **pA, int row, int col)
+void s_zeros(float **pA, int row, int col)
 	{
-	*pA = malloc((row*col)*sizeof(double));
-	double *A = *pA;
+	*pA = malloc((row*col)*sizeof(float));
+	float *A = *pA;
 	int i;
 	for(i=0; i<row*col; i++) A[i] = 0.0;
 	}
@@ -54,13 +54,13 @@ void d_zeros(double **pA, int row, int col)
 
 
 /* creates a zero matrix aligned to a cache line */
-void d_zeros_align(double **pA, int row, int col)
+void s_zeros_align(float **pA, int row, int col)
 	{
 #if defined(OS_WINDOWS)
-	*pA = (double *) _aligned_malloc( (row*col)*sizeof(double), 64 );
+	*pA = (float *) _aligned_malloc( (row*col)*sizeof(float), 64 );
 #else
 	void *temp;
-	int err = posix_memalign(&temp, 64, (row*col)*sizeof(double));
+	int err = posix_memalign(&temp, 64, (row*col)*sizeof(float));
 	if(err!=0)
 		{
 		printf("Memory allocation error");
@@ -68,7 +68,7 @@ void d_zeros_align(double **pA, int row, int col)
 		}
 	*pA = temp;
 #endif
-	double *A = *pA;
+	float *A = *pA;
 	int i;
 	for(i=0; i<row*col; i++) A[i] = 0.0;
 	}
@@ -76,7 +76,7 @@ void d_zeros_align(double **pA, int row, int col)
 
 
 /* frees matrix */
-void d_free(double *pA)
+void s_free(float *pA)
 	{
 	free( pA );
 	}
@@ -84,7 +84,7 @@ void d_free(double *pA)
 
 
 /* frees aligned matrix */
-void d_free_align(double *pA)
+void s_free_align(float *pA)
 	{
 #if defined(OS_WINDOWS)
 	_aligned_free( pA );
@@ -96,7 +96,7 @@ void d_free_align(double *pA)
 
 
 /* prints a matrix in column-major format */
-void d_print_mat(int row, int col, double *A, int lda)
+void s_print_mat(int row, int col, float *A, int lda)
 	{
 	int i, j;
 	for(i=0; i<row; i++)
@@ -113,7 +113,7 @@ void d_print_mat(int row, int col, double *A, int lda)
 
 
 /* prints the transposed of a matrix in column-major format */
-void d_print_tran_mat(int row, int col, double *A, int lda)
+void s_print_tran_mat(int row, int col, float *A, int lda)
 	{
 	int i, j;
 	for(j=0; j<col; j++)
@@ -130,7 +130,7 @@ void d_print_tran_mat(int row, int col, double *A, int lda)
 
 
 /* prints a matrix in column-major format */
-void d_print_to_file_mat(FILE *file, int row, int col, double *A, int lda)
+void s_print_to_file_mat(FILE *file, int row, int col, float *A, int lda)
 	{
 	int i, j;
 	for(i=0; i<row; i++)
@@ -147,7 +147,7 @@ void d_print_to_file_mat(FILE *file, int row, int col, double *A, int lda)
 
 
 /* prints the transposed of a matrix in column-major format */
-void d_print_tran_to_file_mat(FILE *file, int row, int col, double *A, int lda)
+void s_print_tran_to_file_mat(FILE *file, int row, int col, float *A, int lda)
 	{
 	int i, j;
 	for(j=0; j<col; j++)
@@ -164,7 +164,7 @@ void d_print_tran_to_file_mat(FILE *file, int row, int col, double *A, int lda)
 
 
 /* prints a matrix in column-major format (exponential notation) */
-void d_print_e_mat(int row, int col, double *A, int lda)
+void s_print_e_mat(int row, int col, float *A, int lda)
 	{
 	int i, j;
 	for(i=0; i<row; i++)
@@ -181,7 +181,7 @@ void d_print_e_mat(int row, int col, double *A, int lda)
 
 
 /* prints the transposed of a matrix in column-major format (exponential notation) */
-void d_print_e_tran_mat(int row, int col, double *A, int lda)
+void s_print_e_tran_mat(int row, int col, float *A, int lda)
 	{
 	int i, j;
 	for(j=0; j<col; j++)
@@ -210,7 +210,7 @@ void d_print_e_tran_mat(int row, int col, double *A, int lda)
 // old interface
 
 /* prints a matrix in panel-major format */
-void d_print_pmat(int row, int col, double *pA, int sda)
+void s_print_pmat(int row, int col, float *pA, int sda)
 	{
 
 	const int bs = D_BS;
@@ -246,7 +246,7 @@ void d_print_pmat(int row, int col, double *pA, int sda)
 
 
 
-void d_print_to_file_pmat(FILE *file, int row, int col, double *pA, int sda)
+void s_print_to_file_pmat(FILE *file, int row, int col, float *pA, int sda)
 	{
 
 	const int bs = D_BS;
@@ -283,7 +283,7 @@ void d_print_to_file_pmat(FILE *file, int row, int col, double *pA, int sda)
 
 
 /* prints a matrix in panel-major format (exponential notation) */
-void d_print_e_pmat(int row, int col, double *pA, int sda)
+void s_print_e_pmat(int row, int col, float *pA, int sda)
 	{
 
 	const int bs = D_BS;
@@ -322,7 +322,7 @@ void d_print_e_pmat(int row, int col, double *pA, int sda)
 // new interface
 
 // create a matrix structure for a matrix of size m*n by dynamically allocating the memory
-void d_allocate_strmat(int m, int n, struct d_strmat *sA)
+void s_allocate_strmat(int m, int n, struct s_strmat *sA)
 	{
 	const int bs = D_BS;
 	int nc = D_NC;
@@ -333,18 +333,18 @@ void d_allocate_strmat(int m, int n, struct d_strmat *sA)
 	int cn = (n+nc-1)/nc*nc;
 	sA->pm = pm;
 	sA->cn = cn;
-	d_zeros_align(&(sA->pA), sA->pm, sA->cn);
+	s_zeros_align(&(sA->pA), sA->pm, sA->cn);
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
-	d_zeros_align(&(sA->dA), tmp, 1);
+	s_zeros_align(&(sA->dA), tmp, 1);
 	sA->use_dA = 0;
-	sA->memory_size = (pm*cn+tmp)*sizeof(double);
+	sA->memory_size = (pm*cn+tmp)*sizeof(float);
 	return;
 	}
 
 
 
 // free memory of a matrix structure
-void d_free_strmat(struct d_strmat *sA)
+void s_free_strmat(struct s_strmat *sA)
 	{
 	free(sA->pA);
 	free(sA->dA);
@@ -354,7 +354,7 @@ void d_free_strmat(struct d_strmat *sA)
 
 
 // create a vector structure for a vector of size m by dynamically allocating the memory
-void d_allocate_strvec(int m, struct d_strvec *sa)
+void s_allocate_strvec(int m, struct s_strvec *sa)
 	{
 	const int bs = D_BS;
 //	int nc = D_NC;
@@ -362,15 +362,15 @@ void d_allocate_strvec(int m, struct d_strvec *sa)
 	sa->m = m;
 	int pm = (m+bs-1)/bs*bs;
 	sa->pm = pm;
-	d_zeros_align(&(sa->pa), sa->pm, 1);
-	sa->memory_size = pm*sizeof(double);
+	s_zeros_align(&(sa->pa), sa->pm, 1);
+	sa->memory_size = pm*sizeof(float);
 	return;
 	}
 
 
 
 // free memory of a matrix structure
-void d_free_strvec(struct d_strvec *sa)
+void s_free_strvec(struct s_strvec *sa)
 	{
 	free(sa->pa);
 	return;
@@ -379,114 +379,114 @@ void d_free_strvec(struct d_strvec *sa)
 
 
 // print a matrix structure
-void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
+void s_print_strmat(int m, int n, struct s_strmat *sA, int ai, int aj)
 	{
 	// TODO ai
 	if(ai!=0)
 		{
-		printf("\nd_print_strmat: feature not implemented yet: ai=%d\n\n", ai);
+		printf("\ns_print_strmat: feature not implemented yet: ai=%d\n\n", ai);
 		exit(1);
 		}
 	const int bs = 4;
 	int sda = sA->cn;
-	double *pA = sA->pA + aj*bs;
-	d_print_pmat(m, n, pA, sda);
+	float *pA = sA->pA + aj*bs;
+	s_print_pmat(m, n, pA, sda);
 	return;
 	}
 
 
 
 // print a vector structure
-void d_print_strvec(int m, struct d_strvec *sa, int ai)
+void s_print_strvec(int m, struct s_strvec *sa, int ai)
 	{
-	double *pa = sa->pa + ai;
-	d_print_mat(m, 1, pa, m);
+	float *pa = sa->pa + ai;
+	s_print_mat(m, 1, pa, m);
 	return;
 	}
 
 
 
 // print the transposed of a vector structure
-void d_print_tran_strvec(int m, struct d_strvec *sa, int ai)
+void s_print_tran_strvec(int m, struct s_strvec *sa, int ai)
 	{
-	double *pa = sa->pa + ai;
-	d_print_mat(1, m, pa, 1);
+	float *pa = sa->pa + ai;
+	s_print_mat(1, m, pa, 1);
 	return;
 	}
 
 
 
 // print a matrix structure
-void d_print_to_file_strmat(FILE * file, int m, int n, struct d_strmat *sA, int ai, int aj)
+void s_print_to_file_strmat(FILE * file, int m, int n, struct s_strmat *sA, int ai, int aj)
 	{
 	// TODO ai
 	if(ai!=0)
 		{
-		printf("\nd_print_to_file_strmat: feature not implemented yet: ai=%d\n\n", ai);
+		printf("\ns_print_to_file_strmat: feature not implemented yet: ai=%d\n\n", ai);
 		exit(1);
 		}
 	const int bs = 4;
 	int sda = sA->cn;
-	double *pA = sA->pA + aj*bs;
-	d_print_to_file_pmat(file, m, n, pA, sda);
+	float *pA = sA->pA + aj*bs;
+	s_print_to_file_pmat(file, m, n, pA, sda);
 	return;
 	}
 
 
 
 // print a vector structure
-void d_print_to_file_strvec(FILE * file, int m, struct d_strvec *sa, int ai)
+void s_print_to_file_strvec(FILE * file, int m, struct s_strvec *sa, int ai)
 	{
-	double *pa = sa->pa + ai;
-	d_print_to_file_mat(file, m, 1, pa, m);
+	float *pa = sa->pa + ai;
+	s_print_to_file_mat(file, m, 1, pa, m);
 	return;
 	}
 
 
 
 // print the transposed of a vector structure
-void d_print_tran_to_file_strvec(FILE * file, int m, struct d_strvec *sa, int ai)
+void s_print_tran_to_file_strvec(FILE * file, int m, struct s_strvec *sa, int ai)
 	{
-	double *pa = sa->pa + ai;
-	d_print_to_file_mat(file, 1, m, pa, 1);
+	float *pa = sa->pa + ai;
+	s_print_to_file_mat(file, 1, m, pa, 1);
 	return;
 	}
 
 
 
 // print a matrix structure
-void d_print_e_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
+void s_print_e_strmat(int m, int n, struct s_strmat *sA, int ai, int aj)
 	{
 	// TODO ai
 	if(ai!=0)
 		{
-		printf("\nd_print_e_strmat: feature not implemented yet: ai=%d\n\n", ai);
+		printf("\ns_print_e_strmat: feature not implemented yet: ai=%d\n\n", ai);
 		exit(1);
 		}
 	const int bs = 4;
 	int sda = sA->cn;
-	double *pA = sA->pA + aj*bs;
-	d_print_e_pmat(m, n, pA, sda);
+	float *pA = sA->pA + aj*bs;
+	s_print_e_pmat(m, n, pA, sda);
 	return;
 	}
 
 
 
 // print a vector structure
-void d_print_e_strvec(int m, struct d_strvec *sa, int ai)
+void s_print_e_strvec(int m, struct s_strvec *sa, int ai)
 	{
-	double *pa = sa->pa + ai;
-	d_print_e_mat(m, 1, pa, m);
+	float *pa = sa->pa + ai;
+	s_print_e_mat(m, 1, pa, m);
 	return;
 	}
 
 
 
 // print the transposed of a vector structure
-void d_print_e_tran_strvec(int m, struct d_strvec *sa, int ai)
+void s_print_e_tran_strvec(int m, struct s_strvec *sa, int ai)
 	{
-	double *pa = sa->pa + ai;
-	d_print_e_mat(1, m, pa, 1);
+	float *pa = sa->pa + ai;
+	s_print_e_mat(1, m, pa, 1);
 	return;
 	}
 
@@ -497,17 +497,17 @@ void d_print_e_tran_strvec(int m, struct d_strvec *sa, int ai)
 
 
 // create a matrix structure for a matrix of size m*n
-void d_allocate_strmat(int m, int n, struct d_strmat *sA)
+void s_allocate_strmat(int m, int n, struct s_strmat *sA)
 	{
 	sA->m = m;
 	sA->n = n;
-	d_zeros(&(sA->pA), sA->m, sA->n);
+	s_zeros(&(sA->pA), sA->m, sA->n);
 #if defined(LA_REFERENCE)
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
-	d_zeros(&(sA->dA), tmp, 1);
-	sA->memory_size = (m*n+tmp)*sizeof(double);
+	s_zeros(&(sA->dA), tmp, 1);
+	sA->memory_size = (m*n+tmp)*sizeof(float);
 #else
-	sA->memory_size = (m*n)*sizeof(double);
+	sA->memory_size = (m*n)*sizeof(float);
 #endif
 	return;
 	}
@@ -515,7 +515,7 @@ void d_allocate_strmat(int m, int n, struct d_strmat *sA)
 
 
 // free memory of a matrix structure
-void d_free_strmat(struct d_strmat *sA)
+void s_free_strmat(struct s_strmat *sA)
 	{
 	free(sA->pA);
 #if defined(LA_REFERENCE)
@@ -527,18 +527,18 @@ void d_free_strmat(struct d_strmat *sA)
 
 
 // create a vector structure for a vector of size m
-void d_allocate_strvec(int m, struct d_strvec *sa)
+void s_allocate_strvec(int m, struct s_strvec *sa)
 	{
 	sa->m = m;
-	d_zeros(&(sa->pa), sa->m, 1);
-	sa->memory_size = m*sizeof(double);
+	s_zeros(&(sa->pa), sa->m, 1);
+	sa->memory_size = m*sizeof(float);
 	return;
 	}
 
 
 
 // free memory of a vector structure
-void d_free_strvec(struct d_strvec *sa)
+void s_free_strvec(struct s_strvec *sa)
 	{
 	free(sa->pa);
 	return;
@@ -547,93 +547,93 @@ void d_free_strvec(struct d_strvec *sa)
 
 
 // print a matrix structure
-void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
+void s_print_strmat(int m, int n, struct s_strmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
-	double *pA = sA->pA + ai + aj*lda;
-	d_print_mat(m, n, pA, lda);
+	float *pA = sA->pA + ai + aj*lda;
+	s_print_mat(m, n, pA, lda);
 	return;
 	}
 
 
 
 // print a vector structure
-void d_print_strvec(int m, struct d_strvec *sa, int ai)
+void s_print_strvec(int m, struct s_strvec *sa, int ai)
 	{
-	double *pa = sa->pa + ai;
-	d_print_mat(m, 1, pa, m);
+	float *pa = sa->pa + ai;
+	s_print_mat(m, 1, pa, m);
 	return;
 	}
 
 
 
 // print and transpose a vector structure
-void d_print_tran_strvec(int m, struct d_strvec *sa, int ai)
+void s_print_tran_strvec(int m, struct s_strvec *sa, int ai)
 	{
-	double *pa = sa->pa + ai;
-	d_print_mat(1, m, pa, 1);
+	float *pa = sa->pa + ai;
+	s_print_mat(1, m, pa, 1);
 	return;
 	}
 
 
 
 // print a matrix structure
-void d_print_to_file_strmat(FILE *file, int m, int n, struct d_strmat *sA, int ai, int aj)
+void s_print_to_file_strmat(FILE *file, int m, int n, struct s_strmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
-	double *pA = sA->pA + ai + aj*lda;
-	d_print_to_file_mat(file, m, n, pA, lda);
+	float *pA = sA->pA + ai + aj*lda;
+	s_print_to_file_mat(file, m, n, pA, lda);
 	return;
 	}
 
 
 
 // print a vector structure
-void d_print_to_file_strvec(FILE *file, int m, struct d_strvec *sa, int ai)
+void s_print_to_file_strvec(FILE *file, int m, struct s_strvec *sa, int ai)
 	{
-	double *pa = sa->pa + ai;
-	d_print_to_file_mat(file, m, 1, pa, m);
+	float *pa = sa->pa + ai;
+	s_print_to_file_mat(file, m, 1, pa, m);
 	return;
 	}
 
 
 
 // print and transpose a vector structure
-void d_print_to_file_tran_strvec(FILE *file, int m, struct d_strvec *sa, int ai)
+void s_print_to_file_tran_strvec(FILE *file, int m, struct s_strvec *sa, int ai)
 	{
-	double *pa = sa->pa + ai;
-	d_print_to_file_mat(file, 1, m, pa, 1);
+	float *pa = sa->pa + ai;
+	s_print_to_file_mat(file, 1, m, pa, 1);
 	return;
 	}
 
 
 
 // print a matrix structure
-void d_print_e_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
+void s_print_e_strmat(int m, int n, struct s_strmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
-	double *pA = sA->pA + ai + aj*lda;
-	d_print_e_mat(m, n, pA, lda);
+	float *pA = sA->pA + ai + aj*lda;
+	s_print_e_mat(m, n, pA, lda);
 	return;
 	}
 
 
 
 // print a vector structure
-void d_print_e_strvec(int m, struct d_strvec *sa, int ai)
+void s_print_e_strvec(int m, struct s_strvec *sa, int ai)
 	{
-	double *pa = sa->pa + ai;
-	d_print_e_mat(m, 1, pa, m);
+	float *pa = sa->pa + ai;
+	s_print_e_mat(m, 1, pa, m);
 	return;
 	}
 
 
 
 // print and transpose a vector structure
-void d_print_e_tran_strvec(int m, struct d_strvec *sa, int ai)
+void s_print_e_tran_strvec(int m, struct s_strvec *sa, int ai)
 	{
-	double *pa = sa->pa + ai;
-	d_print_e_mat(1, m, pa, 1);
+	float *pa = sa->pa + ai;
+	s_print_e_mat(1, m, pa, 1);
 	return;
 	}
 
@@ -644,5 +644,6 @@ void d_print_e_tran_strvec(int m, struct d_strvec *sa, int ai)
 #error : wrong LA choice
 
 #endif
+
 
 

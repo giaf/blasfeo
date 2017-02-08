@@ -26,113 +26,113 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-
-#ifdef __cplusplus
-extern "C" {
+#include <stdlib.h>
+#include <stdio.h>
+#if 0
+#include <malloc.h>
 #endif
 
 
 
-#ifndef BLASFEO_COMMON
-#define BLASFEO_COMMON
-#endif
-
-
-
-#if defined(LA_HIGH_PERFORMANCE)
-
-// matrix structure
-struct d_strmat 
+/* creates a zero matrix given the size in bytes */
+void v_zeros(void **ptrA, int size)
 	{
-	int m; // rows
-	int n; // cols
-	int pm; // packed number or rows
-	int cn; // packed number or cols
-	double *pA; // pointer to a pm*pn array of doubles, the first is aligned to cache line size
-	double *dA; // pointer to a min(m,n) (or max???) array of doubles
-	int use_dA; // flag to tell if dA can be used
-	int memory_size; // size of needed memory
-	};
+	*ptrA = (void *) malloc(size);
+	char *A = *ptrA;
+	int i;
+	for(i=0; i<size; i++) A[i] = 0;
+	}
 
-struct s_strmat 
+
+
+/* creates a zero matrix aligned to a cache line given the size in bytes */
+void v_zeros_align(void **ptrA, int size)
 	{
-	int m; // rows
-	int n; // cols
-	int pm; // packed number or rows
-	int cn; // packed number or cols
-	float *pA; // pointer to a pm*pn array of floats, the first is aligned to cache line size
-	float *dA; // pointer to a min(m,n) (or max???) array of floats
-	int use_dA; // flag to tell if dA can be used
-	int memory_size; // size of needed memory
-	};
-
-// vector structure
-struct d_strvec 
-	{
-	int m; // size
-	int pm; // packed size
-	double *pa; // pointer to a pm array of doubles, the first is aligned to cache line size
-	int memory_size; // size of needed memory
-	};
-
-struct s_strvec 
-	{
-	int m; // size
-	int pm; // packed size
-	float *pa; // pointer to a pm array of floats, the first is aligned to cache line size
-	int memory_size; // size of needed memory
-	};
-
-#elif defined(LA_BLAS) | defined(LA_REFERENCE)
-
-// matrix structure
-struct d_strmat 
-	{
-	int m; // rows
-	int n; // cols
-	double *pA; // pointer to a m*n array of doubles
-#if defined(LA_REFERENCE)
-	double *dA; // pointer to a min(m,n) (or max???) array of doubles
-	int use_dA; // flag to tell if dA can be used
-#endif
-	int memory_size; // size of needed memory
-	};
-
-struct s_strmat 
-	{
-	int m; // rows
-	int n; // cols
-	float *pA; // pointer to a m*n array of floats
-#if defined(LA_REFERENCE)
-	float *dA; // pointer to a min(m,n) (or max???) array of floats
-	int use_dA; // flag to tell if dA can be used
-#endif
-	int memory_size; // size of needed memory
-	};
-
-// vector structure
-struct d_strvec 
-	{
-	int m; // size
-	double *pa; // pointer to a m array of doubles, the first is aligned to cache line size
-	int memory_size; // size of needed memory
-	};
-
-struct s_strvec 
-	{
-	int m; // size
-	float *pa; // pointer to a m array of floats, the first is aligned to cache line size
-	int memory_size; // size of needed memory
-	};
-
+#if defined(OS_WINDOWS)
+	*ptrA = _aligned_malloc( size, 64 );
 #else
-
-#error : wrong LA choice
-
+	int err = posix_memalign(ptrA, 64, size);
+	if(err!=0)
+		{
+		printf("Memory allocation error");
+		exit(1);
+		}
 #endif
+	char *A = *ptrA;
+	int i;
+	for(i=0; i<size; i++) A[i] = 0;
+	}
 
 
 
-#ifdef __cplusplus
-}
+/* frees matrix */
+void v_free(void *pA)
+	{
+	free( pA );
+	}
+
+
+
+/* frees aligned matrix */
+void v_free_align(void *pA)
+	{
+#if defined(OS_WINDOWS)
+	_aligned_free( pA );
+#else
+	free( pA );
 #endif
+	}
+
+
+
+/* creates a zero matrix given the size in bytes */
+void c_zeros(char **ptrA, int size)
+	{
+	*ptrA = malloc(size);
+	char *A = *ptrA;
+	int i;
+	for(i=0; i<size; i++) A[i] = 0;
+	}
+
+
+
+/* creates a zero matrix aligned to a cache line given the size in bytes */
+void c_zeros_align(char **ptrA, int size)
+	{
+#if defined(OS_WINDOWS)
+	*ptrA = _aligned_malloc( size, 64 );
+#else
+	void *temp;
+	int err = posix_memalign(&temp, 64, size);
+	if(err!=0)
+		{
+		printf("Memory allocation error");
+		exit(1);
+		}
+	*ptrA = temp;
+#endif
+	char *A = *ptrA;
+	int i;
+	for(i=0; i<size; i++) A[i] = 0;
+	}
+
+
+
+/* frees matrix */
+void c_free(char *pA)
+	{
+	free( pA );
+	}
+
+
+
+/* frees aligned matrix */
+void c_free_align(char *pA)
+	{
+#if defined(OS_WINDOWS)
+	_aligned_free( pA );
+#else
+	free( pA );
+#endif
+	}
+

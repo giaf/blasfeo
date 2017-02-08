@@ -35,7 +35,7 @@
 #include <f77blas.h>
 #elif defined(REF_BLAS_BLIS)
 #elif defined(REF_BLAS_NETLIB)
-#include "d_blas.h"
+#include "s_blas.h"
 #elif defined(LREFBLAS_MKL)
 #include <mkl_blas.h>
 #include <mkl_lapack.h>
@@ -43,7 +43,7 @@
 #endif
 
 #include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
+#include "../include/blasfeo_s_aux.h"
 
 
 
@@ -52,19 +52,19 @@
 
 
 // dpotrf
-void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void spotrf_l_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
 	int ii, jj, kk;
-	double
+	float
 		f_00_inv, 
 		f_10, f_11_inv,
 		c_00, c_01,
 		c_10, c_11;
 	int ldc = sC->m;
 	int ldd = sD->m;
-	double *pC = sC->pA + ci + cj*ldc;
-	double *pD = sD->pA + di + dj*ldd;
-	double *dD = sD->dA;
+	float *pC = sC->pA + ci + cj*ldc;
+	float *pD = sD->pA + di + dj*ldd;
+	float *dD = sD->dA;
 	if(di==0 & dj==0)
 		sD->use_dA = 1;
 	else
@@ -179,10 +179,10 @@ void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d
 
 
 // dsyrk dpotrf
-void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void ssyrk_spotrf_ln_libstr(int m, int n, int k, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
 	int ii, jj, kk;
-	double
+	float
 		f_00_inv, 
 		f_10, f_11_inv,
 		c_00, c_01,
@@ -191,11 +191,11 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 	int ldb = sB->m;
 	int ldc = sC->m;
 	int ldd = sD->m;
-	double *pA = sA->pA + ai + aj*lda;
-	double *pB = sB->pA + bi + bj*ldb;
-	double *pC = sC->pA + ci + cj*ldc;
-	double *pD = sD->pA + di + dj*ldd;
-	double *dD = sD->dA;
+	float *pA = sA->pA + ai + aj*lda;
+	float *pB = sB->pA + bi + bj*ldb;
+	float *pC = sC->pA + ci + cj*ldc;
+	float *pD = sD->pA + di + dj*ldd;
+	float *dD = sD->dA;
 	if(di==0 & dj==0)
 		sD->use_dA = 1;
 	else
@@ -336,13 +336,13 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 
 
 // dgetrf without pivoting
-void dgetf2_nopivot(int m, int n, double *A, int lda, double *dA)
+void sgetf2_nopivot(int m, int n, float *A, int lda, float *dA)
 	{
 	int ii, jj, kk, itmp0, itmp1;
 	int iimax = m<n ? m : n;
 	int i1 = 1;
-	double dtmp;
-	double dm1 = -1.0;
+	float dtmp;
+	float dm1 = -1.0;
 
 	for(ii=0; ii<iimax; ii++)
 		{
@@ -368,20 +368,20 @@ void dgetf2_nopivot(int m, int n, double *A, int lda, double *dA)
 
 
 // dgetrf without pivoting
-void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void sgetrf_nopivot_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
 	int ii, jj, kk;
 //	int i1 = 1;
-//	double d1 = 1.0;
-	double
+//	float d1 = 1.0;
+	float
 		d_00_inv, d_11_inv,
 		d_00, d_01,
 		d_10, d_11;
 	int ldc = sC->m;
 	int ldd = sD->m;
-	double *pC = sC->pA + ci + cj*ldc;
-	double *pD = sD->pA + di + dj*ldd;
-	double *dD = sD->dA;
+	float *pC = sC->pA + ci + cj*ldc;
+	float *pD = sD->pA + di + dj*ldd;
+	float *dD = sD->dA;
 	if(di==0 & dj==0)
 		sD->use_dA = 1;
 	else
@@ -632,21 +632,21 @@ void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, st
 
 
 // dgetrf pivoting
-void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, int *ipiv)
+void sgetrf_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj, int *ipiv)
 	{
 	int ii, i0, jj, kk, ip, itmp0, itmp1;
-	double dtmp, dmax;
-	double
+	float dtmp, dmax;
+	float
 		d_00_inv, d_11_inv,
 		d_00, d_01,
 		d_10, d_11;
 	int i1 = 1;
-	double d1 = 1.0;
+	float d1 = 1.0;
 	int ldc = sC->m;
 	int ldd = sD->m;
-	double *pC = sC->pA+ci+cj*ldc;
-	double *pD = sD->pA+di+dj*ldd;
-	double *dD = sD->dA;
+	float *pC = sC->pA+ci+cj*ldc;
+	float *pD = sD->pA+di+dj*ldd;
+	float *dD = sD->dA;
 	if(di==0 & dj==0)
 		sD->use_dA = 1;
 	else
@@ -1011,7 +1011,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 
 
 // dpotrf
-void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void spotrf_l_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1021,24 +1021,24 @@ void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d
 	int i1 = 1;
 	int mmn = m-n;
 	int info;
-	double d1 = 1.0;
-	double *pC = sC->pA+ci+cj*sC->m;
-	double *pD = sD->pA+di+dj*sD->m;
+	float d1 = 1.0;
+	float *pC = sC->pA+ci+cj*sC->m;
+	float *pD = sD->pA+di+dj*sD->m;
 	if(!(pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			scopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #else
-			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			scopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
 #if defined(REF_BLAS_MKL)
-	dpotrf(&cl, &n, pD, &(sD->m), &info);
-	dtrsm(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
+	spotrf(&cl, &n, pD, &(sD->m), &info);
+	strsm(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
 #else
-	dpotrf_(&cl, &n, pD, &(sD->m), &info);
-	dtrsm_(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
+	spotrf_(&cl, &n, pD, &(sD->m), &info);
+	strsm_(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
 #endif
 	return;
 	}
@@ -1046,30 +1046,30 @@ void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d
 
 
 // dgetrf without pivoting
-void dgetf2_nopivot(int m, int n, double *A, int lda)
+void sgetf2_nopivot(int m, int n, float *A, int lda)
 	{
 	if(m<=0 | n<=0)
 		return;
 	int i, j, itmp0, itmp1;
 	int jmax = m<n ? m : n;
 	int i1 = 1;
-	double dtmp;
-	double dm1 = -1.0;
+	float dtmp;
+	float dm1 = -1.0;
 
 	for(j=0; j<jmax; j++)
 		{
 		itmp0 = m-j-1;
 		dtmp = 1.0/A[j+lda*j];
 #if defined(REF_BLAS_MKL)
-		dscal(&itmp0, &dtmp, &A[(j+1)+lda*j], &i1);
+		sscal(&itmp0, &dtmp, &A[(j+1)+lda*j], &i1);
 #else
-		dscal_(&itmp0, &dtmp, &A[(j+1)+lda*j], &i1);
+		sscal_(&itmp0, &dtmp, &A[(j+1)+lda*j], &i1);
 #endif
 		itmp1 = n-j-1;
 #if defined(REF_BLAS_MKL)
-		dger(&itmp0, &itmp1, &dm1, &A[(j+1)+lda*j], &i1, &A[j+lda*(j+1)], &lda, &A[(j+1)+lda*(j+1)], &lda);
+		sger(&itmp0, &itmp1, &dm1, &A[(j+1)+lda*j], &i1, &A[j+lda*(j+1)], &lda, &A[(j+1)+lda*(j+1)], &lda);
 #else
-		dger_(&itmp0, &itmp1, &dm1, &A[(j+1)+lda*j], &i1, &A[j+lda*(j+1)], &lda, &A[(j+1)+lda*(j+1)], &lda);
+		sger_(&itmp0, &itmp1, &dm1, &A[(j+1)+lda*j], &i1, &A[j+lda*(j+1)], &lda, &A[(j+1)+lda*(j+1)], &lda);
 #endif
 		}
 	
@@ -1078,7 +1078,7 @@ void dgetf2_nopivot(int m, int n, double *A, int lda)
 	}
 
 // dsyrk dpotrf
-void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void ssyrk_spotrf_ln_libstr(int m, int n, int k, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1087,31 +1087,31 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 	char ct = 't';
 	char cu = 'u';
 	int i1 = 1;
-	double d1 = 1.0;
+	float d1 = 1.0;
 	int mmn = m-n;
 	int info;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pC = sC->pA+ci+cj*sC->m;
-	double *pD = sD->pA+di+dj*sD->m;
+	float *pA = sA->pA+ai+aj*sA->m;
+	float *pB = sB->pA+bi+bj*sB->m;
+	float *pC = sC->pA+ci+cj*sC->m;
+	float *pD = sD->pA+di+dj*sD->m;
 	if(!(pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			scopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #else
-			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			scopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
 	// TODO call ssyrk if A==B
 #if defined(REF_BLAS_MKL)
-	dgemm(&cn, &ct, &m, &n, &k, &d1, pA, &(sA->m), pB, &(sB->m), &d1, pD, &(sD->m));
-	dpotrf(&cl, &n, pD, &(sD->m), &info);
-	dtrsm(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
+	sgemm(&cn, &ct, &m, &n, &k, &d1, pA, &(sA->m), pB, &(sB->m), &d1, pD, &(sD->m));
+	spotrf(&cl, &n, pD, &(sD->m), &info);
+	strsm(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
 #else
-	dgemm_(&cn, &ct, &m, &n, &k, &d1, pA, &(sA->m), pB, &(sB->m), &d1, pD, &(sD->m));
-	dpotrf_(&cl, &n, pD, &(sD->m), &info);
-	dtrsm_(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
+	sgemm_(&cn, &ct, &m, &n, &k, &d1, pA, &(sA->m), pB, &(sB->m), &d1, pD, &(sD->m));
+	spotrf_(&cl, &n, pD, &(sD->m), &info);
+	strsm_(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
 #endif
 	return;
 	}
@@ -1119,56 +1119,56 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 
 
 // dgetrf without pivoting
-void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void sgetrf_nopivot_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
 	// TODO with custom level 2 LAPACK + level 3 BLAS
 //	printf("\nfeature not implemented yet\n\n");
 //	exit(1);
 	int jj;
 	int i1 = 1;
-	double d1 = 1.0;
-	double *pC = sC->pA+ci+cj*sC->m;
-	double *pD = sD->pA+di+dj*sD->m;
+	float d1 = 1.0;
+	float *pC = sC->pA+ci+cj*sC->m;
+	float *pD = sD->pA+di+dj*sD->m;
 	if(!(pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			scopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #else
-			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			scopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
-	dgetf2_nopivot(m, n, pD, sD->m);
+	sgetf2_nopivot(m, n, pD, sD->m);
 	return;
 	}
 
 
 
 // dgetrf pivoting
-void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, int *ipiv)
+void sgetrf_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj, int *ipiv)
 	{
 	// TODO with custom level 2 LAPACK + level 3 BLAS
 //	printf("\nfeature not implemented yet\n\n");
 //	exit(1);
 	int jj;
 	int i1 = 1;
-	double d1 = 1.0;
-	double *pC = sC->pA+ci+cj*sC->m;
-	double *pD = sD->pA+di+dj*sD->m;
+	float d1 = 1.0;
+	float *pC = sC->pA+ci+cj*sC->m;
+	float *pD = sD->pA+di+dj*sD->m;
 	if(!(pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			scopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #else
-			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			scopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
 	int info;
 #if defined(REF_BLAS_MKL)
-	dgetrf(&m, &n, pD, &(sD->m), ipiv, &info);
+	sgetrf(&m, &n, pD, &(sD->m), ipiv, &info);
 #else
-	dgetrf_(&m, &n, pD, &(sD->m), ipiv, &info);
+	sgetrf_(&m, &n, pD, &(sD->m), ipiv, &info);
 #endif
 	int tmp = m<n ? m : n;
 	for(jj=0; jj<tmp; jj++)
@@ -1183,6 +1183,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 #error : wrong LA choice
 
 #endif
+
 
 
 

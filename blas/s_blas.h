@@ -26,113 +26,26 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+// headers to reference BLAS and LAPACK routines employed
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// level 1
+void scopy_(int *m, float *x, int *incx, float *y, int *incy);
+void saxpy_(int *m, float *alpha, float *x, int *incx, float *y, int *incy);
+void sscal_(int *m, float *alpha, float *x, int *incx);
 
+// level 2
+void sgemv_(char *ta, int *m, int *n, float *alpha, float *A, int *lda, float *x, int *incx, float *beta, float *y, int *incy);
+void ssymv_(char *uplo, int *m, float *alpha, float *A, int *lda, float *x, int *incx, float *beta, float *y, int *incy);
+void strmv_(char *uplo, char *trans, char *diag, int *n, float *A, int *lda, float *x, int *incx);
+void strsv_(char *uplo, char *trans, char *diag, int *n, float *A, int *lda, float *x, int *incx);
+void sger_(int *m, int *n, float *alpha, float *x, int *incx, float *y, int *incy, float *A, int *lda);
 
+// level 3
+void sgemm_(char *ta, char *tb, int *m, int *n, int *k, float *alpha, float *A, int *lda, float *B, int *ldb, float *beta, float *C, int *ldc);
+void strmm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, float *alpha, float *A, int *lda, float *B, int *ldb);
+void strsm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, float *alpha, float *A, int *lda, float *B, int *ldb);
 
-#ifndef BLASFEO_COMMON
-#define BLASFEO_COMMON
-#endif
+// lapack
+int spotrf_(char *uplo, int *m, float *A, int *lda, int *info);
+int sgetrf_(int *m, int *n, float *A, int *lda, int *ipiv, int *info);
 
-
-
-#if defined(LA_HIGH_PERFORMANCE)
-
-// matrix structure
-struct d_strmat 
-	{
-	int m; // rows
-	int n; // cols
-	int pm; // packed number or rows
-	int cn; // packed number or cols
-	double *pA; // pointer to a pm*pn array of doubles, the first is aligned to cache line size
-	double *dA; // pointer to a min(m,n) (or max???) array of doubles
-	int use_dA; // flag to tell if dA can be used
-	int memory_size; // size of needed memory
-	};
-
-struct s_strmat 
-	{
-	int m; // rows
-	int n; // cols
-	int pm; // packed number or rows
-	int cn; // packed number or cols
-	float *pA; // pointer to a pm*pn array of floats, the first is aligned to cache line size
-	float *dA; // pointer to a min(m,n) (or max???) array of floats
-	int use_dA; // flag to tell if dA can be used
-	int memory_size; // size of needed memory
-	};
-
-// vector structure
-struct d_strvec 
-	{
-	int m; // size
-	int pm; // packed size
-	double *pa; // pointer to a pm array of doubles, the first is aligned to cache line size
-	int memory_size; // size of needed memory
-	};
-
-struct s_strvec 
-	{
-	int m; // size
-	int pm; // packed size
-	float *pa; // pointer to a pm array of floats, the first is aligned to cache line size
-	int memory_size; // size of needed memory
-	};
-
-#elif defined(LA_BLAS) | defined(LA_REFERENCE)
-
-// matrix structure
-struct d_strmat 
-	{
-	int m; // rows
-	int n; // cols
-	double *pA; // pointer to a m*n array of doubles
-#if defined(LA_REFERENCE)
-	double *dA; // pointer to a min(m,n) (or max???) array of doubles
-	int use_dA; // flag to tell if dA can be used
-#endif
-	int memory_size; // size of needed memory
-	};
-
-struct s_strmat 
-	{
-	int m; // rows
-	int n; // cols
-	float *pA; // pointer to a m*n array of floats
-#if defined(LA_REFERENCE)
-	float *dA; // pointer to a min(m,n) (or max???) array of floats
-	int use_dA; // flag to tell if dA can be used
-#endif
-	int memory_size; // size of needed memory
-	};
-
-// vector structure
-struct d_strvec 
-	{
-	int m; // size
-	double *pa; // pointer to a m array of doubles, the first is aligned to cache line size
-	int memory_size; // size of needed memory
-	};
-
-struct s_strvec 
-	{
-	int m; // size
-	float *pa; // pointer to a m array of floats, the first is aligned to cache line size
-	int memory_size; // size of needed memory
-	};
-
-#else
-
-#error : wrong LA choice
-
-#endif
-
-
-
-#ifdef __cplusplus
-}
-#endif

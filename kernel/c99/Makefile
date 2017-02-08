@@ -34,67 +34,37 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 OBJS += kernel_dgemv_4_lib4.o kernel_dsymv_4_lib4.o
-OBJS +=
+OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemm_diag_lib4.o kernel_sgemv_4_lib4.o kernel_ssymv_4_lib4.o kernel_sgetrf_pivot_4_lib4.o
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 OBJS += kernel_dgemv_4_lib4.o kernel_dsymv_4_lib4.o
-OBJS +=
+OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemm_diag_lib4.o kernel_sgemv_4_lib4.o kernel_ssymv_4_lib4.o kernel_sgetrf_pivot_4_lib4.o
 endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
 OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemm_diag_lib4.o kernel_dgemv_4_lib4.o kernel_dsymv_4_lib4.o kernel_dgetrf_pivot_4_lib4.o
-OBJS +=
+OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemm_diag_lib4.o kernel_sgemv_4_lib4.o kernel_ssymv_4_lib4.o kernel_sgetrf_pivot_4_lib4.o
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
 OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemm_diag_lib4.o kernel_dgemv_4_lib4.o kernel_dsymv_4_lib4.o kernel_dgetrf_pivot_4_lib4.o
-OBJS +=
+OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemm_diag_lib4.o kernel_sgemv_4_lib4.o kernel_ssymv_4_lib4.o kernel_sgetrf_pivot_4_lib4.o
 endif
 
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemm_diag_lib4.o kernel_dgemv_4_lib4.o kernel_dsymv_4_lib4.o kernel_dgetrf_pivot_4_lib4.o
-OBJS +=
+OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemm_diag_lib4.o kernel_sgemv_4_lib4.o kernel_ssymv_4_lib4.o kernel_sgetrf_pivot_4_lib4.o
 endif
 
 ifeq ($(TARGET), GENERIC)
 OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemm_diag_lib4.o kernel_dgemv_4_lib4.o kernel_dsymv_4_lib4.o kernel_dgetrf_pivot_4_lib4.o
-OBJS +=
+OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemm_diag_lib4.o kernel_sgemv_4_lib4.o kernel_ssymv_4_lib4.o kernel_sgetrf_pivot_4_lib4.o
 endif
 
 else # LA_REFERENCE | LA_BLAS
 
 endif # LA choice
-
-ifeq ($(TARGET), X64_INTEL_HASWELL)
-OBJS +=
-OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemv_4_lib4.o 
-endif
-
-ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-OBJS +=
-OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemv_4_lib4.o 
-endif
-
-ifeq ($(TARGET), X64_INTEL_CORE)
-OBJS +=
-OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemv_4_lib4.o 
-endif
-
-ifeq ($(TARGET), X64_AMD_BULLDOZER)
-OBJS +=
-OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemv_4_lib4.o 
-endif
-
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-OBJS +=
-OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemv_4_lib4.o 
-endif
-
-ifeq ($(TARGET), GENERIC)
-OBJS +=
-OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemv_4_lib4.o 
-endif
 
 obj: $(OBJS)
 

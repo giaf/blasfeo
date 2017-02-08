@@ -28,7 +28,8 @@
 
 
 
-void kernel_sgemv_n_4_vs_lib4(int kmax, float *A, float *x, int alg, float *y, float *z, int km)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+void kernel_sgemv_n_4_gen_lib4(int kmax, float *alpha, float *A, float *x, float *beta, float *y, float *z, int k0, int k1)
 	{
 
 	const int bs = 4;
@@ -91,32 +92,12 @@ void kernel_sgemv_n_4_vs_lib4(int kmax, float *A, float *x, int alg, float *y, f
 
 		}
 
-	// store_vs
-	if(alg==0)
-		{
-		goto store;
-		}
-	else if(alg==1)
-		{
-		y_0 += y[0];
-		y_1 += y[1];
-		y_2 += y[2];
-		y_3 += y[3];
+	y_0 = alpha[0]*y_0 + beta[0]*y[0];
+	y_1 = alpha[0]*y_1 + beta[0]*y[1];
+	y_2 = alpha[0]*y_2 + beta[0]*y[2];
+	y_3 = alpha[0]*y_3 + beta[0]*y[3];
 
-		goto store;
-		}
-	else // alg==-1
-		{
-		y_0 = y[0] - y_0;
-		y_1 = y[1] - y_1;
-		y_2 = y[2] - y_2;
-		y_3 = y[3] - y_3;
-
-		goto store;
-		}
-
-	store:
-	if(km>=4)
+	if(k0<=0 & k1>3)
 		{
 		z[0] = y_0;
 		z[1] = y_1;
@@ -125,32 +106,31 @@ void kernel_sgemv_n_4_vs_lib4(int kmax, float *A, float *x, int alg, float *y, f
 		}
 	else
 		{
-		z[0] = y_0;
-		if(km>=2)
-			{
-			z[1] = y_1;
-			if(km>2)
-				{
-				z[2] = y_2;
-				}
-			}
+		if(k0<=0 & k1>0) z[0] = y_0;
+		if(k0<=1 & k1>1) z[1] = y_1;
+		if(k0<=2 & k1>2) z[2] = y_2;
+		if(k0<=3 & k1>3) z[3] = y_3;
 		}
 
 	}
+#endif
 	
 	
 	
 
-void kernel_sgemv_n_4_lib4(int kmax, float *A, float *x, int alg, float *y, float *z)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+void kernel_sgemv_n_4_lib4(int kmax, float *alpha, float *A, float *x, float *beta, float *y, float *z)
 	{
 
-	kernel_sgemv_n_4_vs_lib4(kmax, A, x, alg, y, z, 4);
+	kernel_sgemv_n_4_gen_lib4(kmax, alpha, A, x, beta, y, z, 0, 4);
 
 	}
+#endif
 
 
 
-void kernel_sgemv_t_4_vs_lib4(int kmax, float *A, int sda, float *x, int alg, float *y, float *z, int km)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+void kernel_sgemv_t_4_gen_lib4(int kmax, float *alpha, int offA, float *A, int sda, float *x, float *beta, float *y, float *z, int km)
 	{
 
 	if(kmax<=0) 
@@ -158,13 +138,32 @@ void kernel_sgemv_t_4_vs_lib4(int kmax, float *A, int sda, float *x, int alg, fl
 	
 	const int bs  = 4;
 	
-	int k;
+	int k, kend;
 	
 	float
 		x_0, x_1, x_2, x_3,
 		y_0=0, y_1=0, y_2=0, y_3=0;
 	
 	k=0;
+	if(offA!=0) // 1, 2, 3
+		{
+		kend = 4-offA<kmax ? 4-offA : kmax;
+		for(; k<kend; k++)
+			{
+			
+			x_0 = x[0];
+		
+			y_0 += A[0+bs*0] * x_0;
+			y_1 += A[0+bs*1] * x_0;
+			y_2 += A[0+bs*2] * x_0;
+			y_3 += A[0+bs*3] * x_0;
+		
+			A += 1;
+			x += 1;
+			
+			}
+		A += bs*(sda-1);
+		}
 	for(; k<kmax-bs+1; k+=bs)
 		{
 		
@@ -212,30 +211,11 @@ void kernel_sgemv_t_4_vs_lib4(int kmax, float *A, int sda, float *x, int alg, fl
 		
 		}
 
-	if(alg==0)
-		{
-		goto store;
-		}
-	else if(alg==1)
-		{
-		y_0 += y[0];
-		y_1 += y[1];
-		y_2 += y[2];
-		y_3 += y[3];
+	y_0 = alpha[0]*y_0 + beta[0]*y[0];
+	y_1 = alpha[0]*y_1 + beta[0]*y[1];
+	y_2 = alpha[0]*y_2 + beta[0]*y[2];
+	y_3 = alpha[0]*y_3 + beta[0]*y[3];
 
-		goto store;
-		}
-	else // alg==-1
-		{
-		y_0 = y[0] - y_0;
-		y_1 = y[1] - y_1;
-		y_2 = y[2] - y_2;
-		y_3 = y[3] - y_3;
-
-		goto store;
-		}
-
-	store:
 	if(km>=4)
 		{
 		z[0] = y_0;
@@ -257,19 +237,23 @@ void kernel_sgemv_t_4_vs_lib4(int kmax, float *A, int sda, float *x, int alg, fl
 		}
 
 	}
+#endif
 	
 	
 	
-void kernel_sgemv_t_4_lib4(int kmax, float *A, int sda, float *x, int alg, float *y, float *z)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+void kernel_sgemv_t_4_lib4(int kmax, float *alpha, float *A, int sda, float *x, float *beta, float *y, float *z)
 	{
 
-	kernel_sgemv_t_4_vs_lib4(kmax, A, sda, x, alg, y, z, 4);
+	kernel_sgemv_t_4_gen_lib4(kmax, alpha, 0, A, sda, x, beta, y, z, 4);
 
 	}
+#endif
 
 
 
 
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 void kernel_strsv_ln_inv_4_vs_lib4(int kmax, float *A, float *inv_diag_A, float *x, float *y, float *z, int km, int kn)
 	{
 
@@ -391,9 +375,11 @@ void kernel_strsv_ln_inv_4_vs_lib4(int kmax, float *A, float *inv_diag_A, float 
 	z[3] = y_3;
 
 	}
+#endif
 	
 
 	
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 void kernel_strsv_ln_inv_4_lib4(int kmax, float *A, float *inv_diag_A, float *x, float *y, float *z)
 	{
 
@@ -401,9 +387,11 @@ void kernel_strsv_ln_inv_4_lib4(int kmax, float *A, float *inv_diag_A, float *x,
 
 
 	}
+#endif
 	
 	
 		
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 void kernel_strsv_lt_inv_4_lib4(int kmax, float *A, int sda, float *inv_diag_A, float *x, float *y, float *z)
 	{
 
@@ -499,9 +487,11 @@ void kernel_strsv_lt_inv_4_lib4(int kmax, float *A, int sda, float *inv_diag_A, 
 	z[0] = y_0;
 
 	}
+#endif
 	
 	
 	
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 void kernel_strsv_lt_inv_3_lib4(int kmax, float *A, int sda, float *inv_diag_A, float *x, float *y, float *z)
 	{
 
@@ -603,9 +593,11 @@ void kernel_strsv_lt_inv_3_lib4(int kmax, float *A, int sda, float *inv_diag_A, 
 	z[0] = y_0;
 
 	}
+#endif
 	
 	
 	
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 void kernel_strsv_lt_inv_2_lib4(int kmax, float *A, int sda, float *inv_diag_A, float *x, float *y, float *z)
 	{
 
@@ -696,9 +688,11 @@ void kernel_strsv_lt_inv_2_lib4(int kmax, float *A, int sda, float *inv_diag_A, 
 	z[0] = y_0;
 
 	}
+#endif
 	
 	
 	
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 void kernel_strsv_lt_inv_1_lib4(int kmax, float *A, int sda, float *inv_diag_A, float *x, float *y, float *z)
 	{
 
@@ -775,10 +769,12 @@ void kernel_strsv_lt_inv_1_lib4(int kmax, float *A, int sda, float *inv_diag_A, 
 	z[0] = y_0;
 
 	}
+#endif
 	
 	
 	
-void kernel_strmv_un_4_lib4(int kmax, float *A, float *x, int alg, float *y, float *z)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+void kernel_strmv_un_4_lib4(int kmax, float *A, float *x, float *z)
 	{
 
 	const int bs = 4;
@@ -866,33 +862,18 @@ void kernel_strmv_un_4_lib4(int kmax, float *A, float *x, int alg, float *y, flo
 
 		}
 
-	if(alg==0)
-		{
-		z[0] = y_0;
-		z[1] = y_1;
-		z[2] = y_2;
-		z[3] = y_3;
-		}
-	else if(alg==1)
-		{
-		z[0] = y[0] + y_0;
-		z[1] = y[1] + y_1;
-		z[2] = y[2] + y_2;
-		z[3] = y[3] + y_3;
-		}
-	else // alg==-1
-		{
-		z[0] = y[0] - y_0;
-		z[1] = y[1] - y_1;
-		z[2] = y[2] - y_2;
-		z[3] = y[3] - y_3;
-		}
+	z[0] = y_0;
+	z[1] = y_1;
+	z[2] = y_2;
+	z[3] = y_3;
 
 	}
+#endif
 	
 	
 	
-void kernel_strmv_ut_4_vs_lib4(int kmax, float *A, int sda, float *x, int alg, float *y, float *z, int km)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+void kernel_strmv_ut_4_vs_lib4(int kmax, float *A, int sda, float *x, float *z, int km)
 	{
 
 	const int bs  = 4;
@@ -967,29 +948,6 @@ void kernel_strmv_ut_4_vs_lib4(int kmax, float *A, int sda, float *x, int alg, f
 //	x += 4;
 
 	// store_vs
-	if(alg==0)
-		{
-		goto store;
-		}
-	else if(alg==1)
-		{
-		y_0 += y[0];
-		y_1 += y[1];
-		y_2 += y[2];
-		y_3 += y[3];
-
-		goto store;
-		}
-	else // alg==-1
-		{
-		y_0 = y[0] - y_0;
-		y_1 = y[1] - y_1;
-		y_2 = y[2] - y_2;
-		y_3 = y[3] - y_3;
-
-		goto store;
-		}
-
 	store:
 	if(km>=4)
 		{
@@ -1012,15 +970,19 @@ void kernel_strmv_ut_4_vs_lib4(int kmax, float *A, int sda, float *x, int alg, f
 		}
 
 	}
+#endif
 	
 	
 	
-void kernel_strmv_ut_4_lib4(int kmax, float *A, int sda, float *x, int alg, float *y, float *z)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+void kernel_strmv_ut_4_lib4(int kmax, float *A, int sda, float *x, float *z)
 	{
 	
-	kernel_strmv_ut_4_vs_lib4(kmax, A, sda, x, alg, y, z, 4);
+	kernel_strmv_ut_4_vs_lib4(kmax, A, sda, x, z, 4);
 
 	}
+#endif
+
 
 
 

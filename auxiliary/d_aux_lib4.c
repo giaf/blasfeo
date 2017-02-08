@@ -2460,7 +2460,7 @@ void dcolsw_lib(int kmax, int offsetA, double *pA, int sda, int offsetC, double 
 		}
 	else
 		{
-		printf("\nfeature not implemented yet\n\n");
+		printf("\ndcolsw: feature not implemented yet: offsetA!=offsetC\n\n");
 		exit(1);
 		}
 

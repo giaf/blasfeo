@@ -26,177 +26,38 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdlib.h>
 #include <stdio.h>
-#if 0
-#include <malloc.h>
+
+
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#if ! defined(OS_WINDOWS)
-int posix_memalign(void **memptr, size_t alignment, size_t size);
+
+
+/************************************************
+* d_aux_extern_depend_lib.c
+************************************************/
+
+void v_zeros(void **ptrA, int size);
+// dynamically allocate size bytes of memory aligned to 64-byte boundaries and set accordingly a pointer to void; set allocated memory to zero
+void v_zeros_align(void **ptrA, int size);
+// free the memory allocated by v_zeros
+void v_free(void *ptrA);
+// free the memory allocated by v_zeros_aligned
+void v_free_align(void *ptrA);
+// dynamically allocate size bytes of memory and set accordingly a pointer to char; set allocated memory to zero
+void c_zeros(char **ptrA, int size);
+// dynamically allocate size bytes of memory aligned to 64-byte boundaries and set accordingly a pointer to char; set allocated memory to zero
+void c_zeros_align(char **ptrA, int size);
+// free the memory allocated by c_zeros
+void c_free(char *ptrA);
+// free the memory allocated by c_zeros_aligned
+void c_free_align(char *ptrA);
+
+
+
+#ifdef __cplusplus
+}
 #endif
-
-
-
-/* creates a zero matrix aligned */
-void s_zeros(float **pA, int row, int col)
-	{
-	void *temp = malloc((row*col)*sizeof(float));
-	*pA = temp;
-	float *A = *pA;
-	int i;
-	for(i=0; i<row*col; i++) A[i] = 0.0;
-	}
-
-
-
-/* creates a zero matrix aligned to a cache line */
-void s_zeros_align(float **pA, int row, int col)
-	{
-#if defined(OS_WINDOWS)
-	*pA = (float *) _aligned_malloc( (row*col)*sizeof(float), 64 );
-#else
-	void *temp;
-	int err = posix_memalign(&temp, 64, (row*col)*sizeof(float));
-	if(err!=0)
-		{
-		printf("Memory allocation error");
-		exit(1);
-		}
-	*pA = temp;
-#endif
-	float *A = *pA;
-	int i;
-	for(i=0; i<row*col; i++) A[i] = 0.0;
-	}
-
-
-
-/* frees matrix */
-void s_free(float *pA)
-	{
-	free( pA );
-	}
-
-
-
-/* frees aligned matrix */
-void s_free_align(float *pA)
-	{
-#if defined(OS_WINDOWS)
-	_aligned_free( pA );
-#else
-	free( pA );
-#endif
-	}
-
-
-
-/* prints a matrix in column-major format */
-void s_print_mat(int row, int col, float *A, int lda)
-	{
-	int i, j;
-	for(i=0; i<row; i++)
-		{
-		for(j=0; j<col; j++)
-			{
-			printf("%9.5f ", A[i+lda*j]);
-			}
-		printf("\n");
-		}
-	printf("\n");
-	}	
-
-
-
-/* prints a matrix in column-major format (exponential notation) */
-void s_print_mat_e(int row, int col, float *A, int lda)
-	{
-	int i, j;
-	for(i=0; i<row; i++)
-		{
-		for(j=0; j<col; j++)
-			{
-			printf("%e\t", A[i+lda*j]);
-			}
-		printf("\n");
-		}
-	printf("\n");
-	}	
-
-
-
-/* prints a matrix in panel-major format */
-void s_print_pmat(int row, int col, float *pA, int sda)
-	{
-
-	const int bs = 4;
-
-	int ii, i, j, row2;
-
-	for(ii=0; ii<row-(bs-1); ii+=bs)
-		{
-		for(i=0; i<bs; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				printf("%9.5f ", pA[i+bs*j+sda*ii]);
-				}
-			printf("\n");
-			}
-		}
-	if(ii<row)
-		{
-		row2 = row-ii;
-		for(i=0; i<row2; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				printf("%9.5f ", pA[i+bs*j+sda*ii]);
-				}
-			printf("\n");
-			}
-		}
-	printf("\n");
-
-	}	
-
-
-
-/* prints a matrix in panel-major format (exponential notation) */
-void s_print_pmat_e(int row, int col, float *pA, int sda)
-	{
-
-	const int bs = 4;
-
-	int ii, i, j, row2;
-
-	for(ii=0; ii<row-(bs-1); ii+=bs)
-		{
-		for(i=0; i<bs; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				printf("%e\t", pA[i+bs*j+sda*ii]);
-				}
-			printf("\n");
-			}
-		}
-	if(ii<row)
-		{
-		row2 = row-ii;
-		for(i=0; i<row2; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				printf("%e\t", pA[i+bs*j+sda*ii]);
-				}
-			printf("\n");
-			}
-		}
-	printf("\n");
-
-	}	
-
-
-

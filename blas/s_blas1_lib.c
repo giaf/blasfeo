@@ -26,104 +26,93 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
 
-#ifdef __cplusplus
-extern "C" {
+#if defined(LA_BLAS)
+#if defined(REF_BLAS_OPENBLAS)
+#include <f77blas.h>
+#elif defined(REF_BLAS_BLIS)
+#elif defined(REF_BLAS_NETLIB)
+#include "s_blas.h"
+#elif defined(REF_BLAS_MKL)
+#include <mkl_blas.h>
+#endif
 #endif
 
-
-
-#ifndef BLASFEO_COMMON
-#define BLASFEO_COMMON
-#endif
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_s_kernel.h"
 
 
 
-#if defined(LA_HIGH_PERFORMANCE)
-
-// matrix structure
-struct d_strmat 
-	{
-	int m; // rows
-	int n; // cols
-	int pm; // packed number or rows
-	int cn; // packed number or cols
-	double *pA; // pointer to a pm*pn array of doubles, the first is aligned to cache line size
-	double *dA; // pointer to a min(m,n) (or max???) array of doubles
-	int use_dA; // flag to tell if dA can be used
-	int memory_size; // size of needed memory
-	};
-
-struct s_strmat 
-	{
-	int m; // rows
-	int n; // cols
-	int pm; // packed number or rows
-	int cn; // packed number or cols
-	float *pA; // pointer to a pm*pn array of floats, the first is aligned to cache line size
-	float *dA; // pointer to a min(m,n) (or max???) array of floats
-	int use_dA; // flag to tell if dA can be used
-	int memory_size; // size of needed memory
-	};
-
-// vector structure
-struct d_strvec 
-	{
-	int m; // size
-	int pm; // packed size
-	double *pa; // pointer to a pm array of doubles, the first is aligned to cache line size
-	int memory_size; // size of needed memory
-	};
-
-struct s_strvec 
-	{
-	int m; // size
-	int pm; // packed size
-	float *pa; // pointer to a pm array of floats, the first is aligned to cache line size
-	int memory_size; // size of needed memory
-	};
-
-#elif defined(LA_BLAS) | defined(LA_REFERENCE)
-
-// matrix structure
-struct d_strmat 
-	{
-	int m; // rows
-	int n; // cols
-	double *pA; // pointer to a m*n array of doubles
 #if defined(LA_REFERENCE)
-	double *dA; // pointer to a min(m,n) (or max???) array of doubles
-	int use_dA; // flag to tell if dA can be used
+
+
+
+void saxpy_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi)
+	{
+	int ii;
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+	for(ii=0; ii<m; ii++)
+		y[ii] += alpha * x[ii];
+	return;
+	}
+
+
+
+void saxpy_bkp_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+	{
+	int ii;
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+	float *z = sz->pa + zi;
+	for(ii=0; ii<m; ii++)
+		{
+		z[ii] = y[ii];
+		y[ii] += alpha * x[ii];
+		}
+	return;
+	}
+
+
+
+#elif defined(LA_BLAS)
+
+
+
+void saxpy_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi)
+	{
+	int i1 = 1;
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+#if defined(REF_BLAS_MKL)
+	saxpy(&m, &alpha, x, &i1, y, &i1);
+#else
+	saxpy_(&m, &alpha, x, &i1, y, &i1);
 #endif
-	int memory_size; // size of needed memory
-	};
+	return;
+	}
 
-struct s_strmat 
+
+
+void saxpy_bkp_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
 	{
-	int m; // rows
-	int n; // cols
-	float *pA; // pointer to a m*n array of floats
-#if defined(LA_REFERENCE)
-	float *dA; // pointer to a min(m,n) (or max???) array of floats
-	int use_dA; // flag to tell if dA can be used
+	int i1 = 1;
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+	float *z = sz->pa + zi;
+#if defined(REF_BLAS_MKL)
+	scopy(&m, y, &i1, z, &i1);
+	saxpy(&m, &alpha, x, &i1, y, &i1);
+#else
+	scopy_(&m, y, &i1, z, &i1);
+	saxpy_(&m, &alpha, x, &i1, y, &i1);
 #endif
-	int memory_size; // size of needed memory
-	};
+	return;
+	}
 
-// vector structure
-struct d_strvec 
-	{
-	int m; // size
-	double *pa; // pointer to a m array of doubles, the first is aligned to cache line size
-	int memory_size; // size of needed memory
-	};
 
-struct s_strvec 
-	{
-	int m; // size
-	float *pa; // pointer to a m array of floats, the first is aligned to cache line size
-	int memory_size; // size of needed memory
-	};
 
 #else
 
@@ -132,7 +121,3 @@ struct s_strvec
 #endif
 
 
-
-#ifdef __cplusplus
-}
-#endif

@@ -30,7 +30,7 @@
 
 // B is the diagonal of a matrix, case beta=0.0
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-void kernel_dgemm_diag_right_4_a0_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *D, int sdd)
+void kernel_sgemm_diag_right_4_a0_lib4(int kmax, float *alpha, float *A, int sda, float *B, float *D, int sdd)
 	{
 
 	if(kmax<=0)
@@ -40,7 +40,7 @@ void kernel_dgemm_diag_right_4_a0_lib4(int kmax, double *alpha, double *A, int s
 
 	int k;
 
-	double
+	float
 		alpha0,
 		a_0, a_1, a_2, a_3,
 		b_0, b_1, b_2, b_3,
@@ -166,7 +166,7 @@ void kernel_dgemm_diag_right_4_a0_lib4(int kmax, double *alpha, double *A, int s
 
 // B is the diagonal of a matrix
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-void kernel_dgemm_diag_right_4_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd)
+void kernel_sgemm_diag_right_4_lib4(int kmax, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd)
 	{
 
 	if(kmax<=0)
@@ -176,7 +176,7 @@ void kernel_dgemm_diag_right_4_lib4(int kmax, double *alpha, double *A, int sda,
 
 	int k;
 
-	double
+	float
 		alpha0, beta0,
 		a_0, a_1, a_2, a_3,
 		b_0, b_1, b_2, b_3,
@@ -305,7 +305,7 @@ void kernel_dgemm_diag_right_4_lib4(int kmax, double *alpha, double *A, int sda,
 
 // B is the diagonal of a matrix
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-void kernel_dgemm_diag_right_3_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd)
+void kernel_sgemm_diag_right_3_lib4(int kmax, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd)
 	{
 
 	if(kmax<=0)
@@ -315,7 +315,7 @@ void kernel_dgemm_diag_right_3_lib4(int kmax, double *alpha, double *A, int sda,
 
 	int k;
 
-	double
+	float
 		alpha0, beta0,
 		a_0, a_1, a_2, a_3,
 		b_0, b_1, b_2,
@@ -421,7 +421,7 @@ void kernel_dgemm_diag_right_3_lib4(int kmax, double *alpha, double *A, int sda,
 
 // B is the diagonal of a matrix
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-void kernel_dgemm_diag_right_2_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd)
+void kernel_sgemm_diag_right_2_lib4(int kmax, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd)
 	{
 
 	if(kmax<=0)
@@ -431,7 +431,7 @@ void kernel_dgemm_diag_right_2_lib4(int kmax, double *alpha, double *A, int sda,
 
 	int k;
 
-	double
+	float
 		alpha0, beta0,
 		a_0, a_1, a_2, a_3,
 		b_0, b_1,
@@ -513,7 +513,7 @@ void kernel_dgemm_diag_right_2_lib4(int kmax, double *alpha, double *A, int sda,
 
 // B is the diagonal of a matrix
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-void kernel_dgemm_diag_right_1_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd)
+void kernel_sgemm_diag_right_1_lib4(int kmax, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd)
 	{
 
 	if(kmax<=0)
@@ -523,7 +523,7 @@ void kernel_dgemm_diag_right_1_lib4(int kmax, double *alpha, double *A, int sda,
 
 	int k;
 
-	double
+	float
 		alpha0, beta0,
 		a_0, a_1, a_2, a_3,
 		b_0,
@@ -581,7 +581,7 @@ void kernel_dgemm_diag_right_1_lib4(int kmax, double *alpha, double *A, int sda,
 
 // A is the diagonal of a matrix, case beta=0.0
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-void kernel_dgemm_diag_left_4_a0_lib4(int kmax, double *alpha, double *A, double *B, double *D, int alg)
+void kernel_sgemm_diag_left_4_a0_lib4(int kmax, float *alpha, float *A, float *B, float *D, int alg)
 	{
 
 	if(kmax<=0)
@@ -591,7 +591,7 @@ void kernel_dgemm_diag_left_4_a0_lib4(int kmax, double *alpha, double *A, double
 
 	int k;
 
-	double
+	float
 		alpha0,
 		a_0, a_1, a_2, a_3,
 		b_0, b_1, b_2, b_3,
@@ -704,7 +704,7 @@ void kernel_dgemm_diag_left_4_a0_lib4(int kmax, double *alpha, double *A, double
 
 // A is the diagonal of a matrix
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-void kernel_dgemm_diag_left_4_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D, int alg)
+void kernel_sgemm_diag_left_4_lib4(int kmax, float *alpha, float *A, float *B, float *beta, float *C, float *D, int alg)
 	{
 
 	if(kmax<=0)
@@ -714,7 +714,7 @@ void kernel_dgemm_diag_left_4_lib4(int kmax, double *alpha, double *A, double *B
 
 	int k;
 
-	double
+	float
 		alpha0, beta0,
 		a_0, a_1, a_2, a_3,
 		b_0, b_1, b_2, b_3,
@@ -830,7 +830,7 @@ void kernel_dgemm_diag_left_4_lib4(int kmax, double *alpha, double *A, double *B
 
 // A is the diagonal of a matrix
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-void kernel_dgemm_diag_left_3_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D)
+void kernel_sgemm_diag_left_3_lib4(int kmax, float *alpha, float *A, float *B, float *beta, float *C, float *D)
 	{
 	
 	if(kmax<=0)
@@ -840,7 +840,7 @@ void kernel_dgemm_diag_left_3_lib4(int kmax, double *alpha, double *A, double *B
 
 	int k;
 
-	double
+	float
 		alpha0, beta0,
 		a_0, a_1, a_2,
 		b_0, b_1, b_2,
@@ -940,7 +940,7 @@ void kernel_dgemm_diag_left_3_lib4(int kmax, double *alpha, double *A, double *B
 
 // A is the diagonal of a matrix
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-void kernel_dgemm_diag_left_2_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D)
+void kernel_sgemm_diag_left_2_lib4(int kmax, float *alpha, float *A, float *B, float *beta, float *C, float *D)
 	{
 	
 	if(kmax<=0)
@@ -950,7 +950,7 @@ void kernel_dgemm_diag_left_2_lib4(int kmax, double *alpha, double *A, double *B
 
 	int k;
 
-	double
+	float
 		alpha0, beta0,
 		a_0, a_1,
 		b_0, b_1,
@@ -1034,7 +1034,7 @@ void kernel_dgemm_diag_left_2_lib4(int kmax, double *alpha, double *A, double *B
 
 // A is the diagonal of a matrix
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-void kernel_dgemm_diag_left_1_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D)
+void kernel_sgemm_diag_left_1_lib4(int kmax, float *alpha, float *A, float *B, float *beta, float *C, float *D)
 	{
 	
 	if(kmax<=0)
@@ -1044,7 +1044,7 @@ void kernel_dgemm_diag_left_1_lib4(int kmax, double *alpha, double *A, double *B
 
 	int k;
 
-	double
+	float
 		alpha0, beta0,
 		a_0,
 		b_0,
@@ -1107,5 +1107,6 @@ void kernel_dgemm_diag_left_1_lib4(int kmax, double *alpha, double *A, double *B
 		
 	}
 #endif
+
 
 

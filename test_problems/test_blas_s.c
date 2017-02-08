@@ -33,9 +33,9 @@
 
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_block_size.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_i_aux.h"
-#include "../include/blasfeo_d_blas.h"
+#include "../include/blasfeo_s_aux_ext_dep.h"
+#include "../include/blasfeo_i_aux_ext_dep.h"
+#include "../include/blasfeo_s_blas.h"
 
 
 #if defined(REF_BLAS_OPENBLAS)
@@ -69,7 +69,7 @@ int main()
 	printf("\n");
 	printf("\n");
 
-	printf("BLAS performance test - double precision\n");
+	printf("BLAS performance test - float precision\n");
 	printf("\n");
 
 	// maximum frequency of the processor
@@ -77,21 +77,21 @@ int main()
 	printf("Frequency used to compute theoretical peak: %5.1f GHz (edit test_param.h to modify this value).\n", GHz_max);
 	printf("\n");
 
-	// maximum flops per cycle, double precision
+	// maximum flops per cycle, float precision
 #if defined(TARGET_X64_INTEL_HASWELL)
-	const float flops_max = 16;
+	const float flops_max = 32;
 	printf("Testing BLAS version for AVX2 and FMA instruction sets, 64 bit (optimized for Intel Haswell): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	const float flops_max = 8;
+	const float flops_max = 16;
 	printf("Testing BLAS version for AVX instruction set, 64 bit (optimized for Intel Sandy Bridge): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_X64_INTEL_CORE)
-	const float flops_max = 4;
+	const float flops_max = 8;
 	printf("Testing BLAS version for SSE3 instruction set, 64 bit (optimized for Intel Core): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_X64_AMD_BULLDOZER)
-	const float flops_max = 8;
+	const float flops_max = 16;
 	printf("Testing BLAS version for SSE3 and FMA instruction set, 64 bit (optimized for AMD Bulldozer): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-	const float flops_max = 2;
+	const float flops_max = 8;
 	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A15): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_GENERIC)
 	const float flops_max = 2;
@@ -102,22 +102,22 @@ int main()
 	f = fopen("./test_problems/results/test_blas.m", "w"); // a
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-	fprintf(f, "C = 'd_x64_intel_haswell';\n");
+	fprintf(f, "C = 's_x64_intel_haswell';\n");
 	fprintf(f, "\n");
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	fprintf(f, "C = 'd_x64_intel_sandybridge';\n");
+	fprintf(f, "C = 's_x64_intel_sandybridge';\n");
 	fprintf(f, "\n");
 #elif defined(TARGET_X64_INTEL_CORE)
-	fprintf(f, "C = 'd_x64_intel_core';\n");
+	fprintf(f, "C = 's_x64_intel_core';\n");
 	fprintf(f, "\n");
 #elif defined(TARGET_X64_AMD_BULLDOZER)
-	fprintf(f, "C = 'd_x64_amd_bulldozer';\n");
+	fprintf(f, "C = 's_x64_amd_bulldozer';\n");
 	fprintf(f, "\n");
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-	fprintf(f, "C = 'd_armv7a_arm_cortex_a15';\n");
+	fprintf(f, "C = 's_armv7a_arm_cortex_a15';\n");
 	fprintf(f, "\n");
 #elif defined(TARGET_GENERIC)
-	fprintf(f, "C = 'd_generic';\n");
+	fprintf(f, "C = 's_generic';\n");
 	fprintf(f, "\n");
 #endif
 
@@ -130,13 +130,13 @@ int main()
 
 	int i, j, rep, ll;
 	
-	const int bsd = D_BS;
-	const int ncd = D_NC;
+	const int bss = S_BS;
+	const int ncs = S_NC;
 
 /*	int info = 0;*/
 	
-	printf("\nn\t  dgemm_blasfeo\t  dgemm_blas\n");
-	printf("\nn\t Gflops\t    %%\t Gflops\n\n");
+	printf("\nn\t  sgemm_blasfeo\t  sgemm_blas\n");
+	printf("\nn\t Gflops\t    %%\t Gflops\t    %%\n\n");
 	
 #if 1
 	int nn[] = {4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 148, 152, 156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224, 228, 232, 236, 240, 244, 248, 252, 256, 260, 264, 268, 272, 276, 280, 284, 288, 292, 296, 300, 304, 308, 312, 316, 320, 324, 328, 332, 336, 340, 344, 348, 352, 356, 360, 364, 368, 372, 376, 380, 384, 388, 392, 396, 400, 404, 408, 412, 416, 420, 424, 428, 432, 436, 440, 444, 448, 452, 456, 460, 500, 550, 600, 650, 700};
@@ -166,10 +166,10 @@ int main()
 		f77_int n77 = n;
 #endif
 	
-		double *A; d_zeros(&A, n, n);
-		double *B; d_zeros(&B, n, n);
-		double *C; d_zeros(&C, n, n);
-		double *M; d_zeros(&M, n, n);
+		float *A; d_zeros(&A, n, n);
+		float *B; d_zeros(&B, n, n);
+		float *C; d_zeros(&C, n, n);
+		float *M; d_zeros(&M, n, n);
 
 		char c_n = 'n';
 		char c_l = 'l';
@@ -181,8 +181,8 @@ int main()
 #if defined(REF_BLAS_BLIS)
 		f77_int i77_1 = i_1;
 #endif
-		double d_1 = 1;
-		double d_0 = 0;
+		float d_1 = 1;
+		float d_0 = 0;
 	
 		for(i=0; i<n*n; i++)
 			A[i] = i;
@@ -194,21 +194,21 @@ int main()
 			M[i] = 1;
 	
 		int n2 = n*n;
-		double *B2; d_zeros(&B2, n, n);
+		float *B2; d_zeros(&B2, n, n);
 		for(i=0; i<n*n; i++)
 			B2[i] = 1e-15;
 		for(i=0; i<n; i++)
 			B2[i*(n+1)] = 1;
 
-		int pnd = ((n+bsd-1)/bsd)*bsd;	
-		int cnd = ((n+ncd-1)/ncd)*ncd;	
-		int cnd2 = 2*((n+ncd-1)/ncd)*ncd;	
+		int pnd = ((n+bss-1)/bss)*bss;	
+		int cnd = ((n+ncs-1)/ncs)*ncs;	
+		int cnd2 = 2*((n+ncs-1)/ncs)*ncs;	
 
-		double *x; d_zeros_align(&x, pnd, 1);
-		double *y; d_zeros_align(&y, pnd, 1);
-		double *x2; d_zeros_align(&x2, pnd, 1);
-		double *y2; d_zeros_align(&y2, pnd, 1);
-		double *diag; d_zeros_align(&diag, pnd, 1);
+		float *x; d_zeros_align(&x, pnd, 1);
+		float *y; d_zeros_align(&y, pnd, 1);
+		float *x2; d_zeros_align(&x2, pnd, 1);
+		float *y2; d_zeros_align(&y2, pnd, 1);
+		float *diag; d_zeros_align(&diag, pnd, 1);
 		int *ipiv; int_zeros(&ipiv, n, 1);
 
 		for(i=0; i<pnd; i++) x[i] = 1;
@@ -216,31 +216,31 @@ int main()
 
 		// matrix struct
 #if 1
-		struct d_strmat sA; d_allocate_strmat(n+4, n+4, &sA);
-		struct d_strmat sB; d_allocate_strmat(n+4, n+4, &sB);
-		struct d_strmat sC; d_allocate_strmat(n+4, n+4, &sC);
-		struct d_strmat sD; d_allocate_strmat(n+4, n+4, &sD);
-		struct d_strmat sE; d_allocate_strmat(n+4, n+4, &sE);
+		struct s_strmat sA; d_allocate_strmat(n+4, n+4, &sA);
+		struct s_strmat sB; d_allocate_strmat(n+4, n+4, &sB);
+		struct s_strmat sC; d_allocate_strmat(n+4, n+4, &sC);
+		struct s_strmat sD; d_allocate_strmat(n+4, n+4, &sD);
+		struct s_strmat sE; d_allocate_strmat(n+4, n+4, &sE);
 #else
-		struct d_strmat sA; d_allocate_strmat(n, n, &sA);
-		struct d_strmat sB; d_allocate_strmat(n, n, &sB);
-		struct d_strmat sC; d_allocate_strmat(n, n, &sC);
-		struct d_strmat sD; d_allocate_strmat(n, n, &sD);
-		struct d_strmat sE; d_allocate_strmat(n, n, &sE);
+		struct s_strmat sA; d_allocate_strmat(n, n, &sA);
+		struct s_strmat sB; d_allocate_strmat(n, n, &sB);
+		struct s_strmat sC; d_allocate_strmat(n, n, &sC);
+		struct s_strmat sD; d_allocate_strmat(n, n, &sD);
+		struct s_strmat sE; d_allocate_strmat(n, n, &sE);
 #endif
-		struct d_strvec sx; d_allocate_strvec(n, &sx);
-		struct d_strvec sy; d_allocate_strvec(n, &sy);
-		struct d_strvec sz; d_allocate_strvec(n, &sz);
+		struct s_strvec sx; d_allocate_strvec(n, &sx);
+		struct s_strvec sy; d_allocate_strvec(n, &sy);
+		struct s_strvec sz; d_allocate_strvec(n, &sz);
 
-		d_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
-		d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
-		d_cvt_vec2strvec(n, x, &sx, 0);
+		s_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
+		s_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
+		s_cvt_vec2strvec(n, x, &sx, 0);
 
 
 		// create matrix to pivot all the time
-		dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
+		sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 
-		double *dummy;
+		float *dummy;
 
 		int info;
 
@@ -250,7 +250,7 @@ int main()
 		/* warm up */
 		for(rep=0; rep<nrep; rep++)
 			{
-			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 			}
 
 		gettimeofday(&tv0, NULL); // stop
@@ -258,39 +258,39 @@ int main()
 		for(rep=0; rep<nrep; rep++)
 			{
 
-//			dgemm_nt_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
-//			dgemm_nn_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
-//			dsyrk_nt_l_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 1.0, pC, cnd, pD, cnd);
-//			dtrmm_nt_ru_lib(n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
-//			dpotrf_nt_l_lib(n, n, pB, cnd, pD, cnd, diag);
-//			dsyrk_dpotrf_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd, diag);
-//			dsyrk_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd);
-//			dpotrf_nt_l_lib(n, n, pD, cnd, pD, cnd, diag);
-//			dgetrf_nn_nopivot_lib(n, n, pB, cnd, pB, cnd, diag);
-//			dgetrf_nn_lib(n, n, pB, cnd, pB, cnd, diag, ipiv);
-//			dtrsm_nn_ll_one_lib(n, n, pD, cnd, pB, cnd, pB, cnd);
-//			dtrsm_nn_lu_inv_lib(n, n, pD, cnd, diag, pB, cnd, pB, cnd);
+//			sgemm_nt_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
+//			sgemm_nn_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
+//			ssyrk_nt_l_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 1.0, pC, cnd, pD, cnd);
+//			strmm_nt_ru_lib(n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
+//			spotrf_nt_l_lib(n, n, pB, cnd, pD, cnd, diag);
+//			ssyrk_dpotrf_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd, diag);
+//			ssyrk_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd);
+//			spotrf_nt_l_lib(n, n, pD, cnd, pD, cnd, diag);
+//			sgetrf_nn_nopivot_lib(n, n, pB, cnd, pB, cnd, diag);
+//			sgetrf_nn_lib(n, n, pB, cnd, pB, cnd, diag, ipiv);
+//			strsm_nn_ll_one_lib(n, n, pD, cnd, pB, cnd, pB, cnd);
+//			strsm_nn_lu_inv_lib(n, n, pD, cnd, diag, pB, cnd, pB, cnd);
 			}
 	
 		gettimeofday(&tv1, NULL); // stop
 
 		for(rep=0; rep<nrep; rep++)
 			{
-			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-//			dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-//			dpotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
-//			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-//			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
-//			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
-//			dtrmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
-//			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//			dtrsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//			dtrsm_rltu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//			dtrsm_rutn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//			dgemv_n_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-//			dgemv_t_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-//			dsymv_l_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-//			dgemv_nt_libstr(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
+			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//			sgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//			spotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
+//			sgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
+//			sgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
+//			strmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+//			strmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+//			strsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//			strsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//			strsm_rltu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//			strsm_rutn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//			sgemv_n_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+//			sgemv_t_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+//			ssymv_l_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+//			sgemv_nt_libstr(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
 			}
 
 //		d_print_strmat(n, n, &sD, 0, 0);
@@ -300,40 +300,40 @@ int main()
 		for(rep=0; rep<nrep; rep++)
 			{
 #if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
-			dgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
-//			dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
-//			dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
-//			dtrmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
-//			dpotrf_(&c_l, &n, B2, &n, &info);
-//			dgetrf_(&n, &n, B2, &n, ipiv, &info);
-//			dtrsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
-//			dtrsm_(&c_l, &c_u, &c_n, &c_n, &n, &n, &d_1, B2, &n, B, &n);
-//			dtrtri_(&c_l, &c_n, &n, B2, &n, &info);
-//			dlauum_(&c_l, &n, B, &n, &info);
-//			dgemv_(&c_n, &n, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
-//			dgemv_(&c_t, &n, &n, &d_1, A, &n, x2, &i_1, &d_0, y2, &i_1);
-//			dtrmv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
-//			dtrsv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
-//			dsymv_(&c_l, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
+			sgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
+//			sgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
+//			ssyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
+//			strmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
+//			spotrf_(&c_l, &n, B2, &n, &info);
+//			sgetrf_(&n, &n, B2, &n, ipiv, &info);
+//			strsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
+//			strsm_(&c_l, &c_u, &c_n, &c_n, &n, &n, &d_1, B2, &n, B, &n);
+//			strtri_(&c_l, &c_n, &n, B2, &n, &info);
+//			slauum_(&c_l, &n, B, &n, &info);
+//			sgemv_(&c_n, &n, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
+//			sgemv_(&c_t, &n, &n, &d_1, A, &n, x2, &i_1, &d_0, y2, &i_1);
+//			strmv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
+//			strsv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
+//			ssymv_(&c_l, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
 
 //			for(i=0; i<n; i++)
 //				{
 //				i_t = n-i;
-//				dcopy_(&i_t, &B[i*(n+1)], &i_1, &C[i*(n+1)], &i_1);
+//				scopy_(&i_t, &B[i*(n+1)], &i_1, &C[i*(n+1)], &i_1);
 //				}
-//			dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, C, &n);
-//			dpotrf_(&c_l, &n, C, &n, &info);
+//			ssyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, C, &n);
+//			spotrf_(&c_l, &n, C, &n, &info);
 
 #endif
 
 #if defined(REF_BLAS_BLIS)
-//			dgemm_(&c_n, &c_t, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
-//			dgemm_(&c_n, &c_n, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
-//			dsyrk_(&c_l, &c_n, &n77, &n77, &d_1, A, &n77, &d_0, C, &n77);
-//			dtrmm_(&c_r, &c_u, &c_t, &c_n, &n77, &n77, &d_1, A, &n77, C, &n77);
-//			dpotrf_(&c_l, &n77, B, &n77, &info);
-//			dtrtri_(&c_l, &c_n, &n77, B, &n77, &info);
-//			dlauum_(&c_l, &n77, B, &n77, &info);
+//			sgemm_(&c_n, &c_t, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
+//			sgemm_(&c_n, &c_n, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
+//			ssyrk_(&c_l, &c_n, &n77, &n77, &d_1, A, &n77, &d_0, C, &n77);
+//			strmm_(&c_r, &c_u, &c_t, &c_n, &n77, &n77, &d_1, A, &n77, C, &n77);
+//			spotrf_(&c_l, &n77, B, &n77, &info);
+//			strtri_(&c_l, &c_n, &n77, B, &n77, &info);
+//			slauum_(&c_l, &n77, B, &n77, &info);
 #endif
 			}
 
@@ -360,8 +360,6 @@ int main()
 		float Gflops_blas     = 1e-9*flop_operation/time_blas;
 
 
-//		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
-//		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
 		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
 		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
 
@@ -376,14 +374,14 @@ int main()
 		free(y2);
 		free(ipiv);
 		
-		d_free_strmat(&sA);
-		d_free_strmat(&sB);
-		d_free_strmat(&sC);
-		d_free_strmat(&sD);
-		d_free_strmat(&sE);
-		d_free_strvec(&sx);
-		d_free_strvec(&sy);
-		d_free_strvec(&sz);
+		s_free_strmat(&sA);
+		s_free_strmat(&sB);
+		s_free_strmat(&sC);
+		s_free_strmat(&sD);
+		s_free_strmat(&sE);
+		s_free_strvec(&sx);
+		s_free_strvec(&sy);
+		s_free_strvec(&sz);
 
 		}
 
@@ -395,3 +393,4 @@ int main()
 	return 0;
 	
 	}
+

@@ -42,65 +42,65 @@ extern "C" {
 
 /* column-major matrices */
 
-// dynamically allocate row*col doubles of memory and set accordingly a pointer to double; set allocated memory to zero
-void d_zeros(double **pA, int row, int col);
-// dynamically allocate row*col doubles of memory aligned to 64-byte boundaries and set accordingly a pointer to double; set allocated memory to zero
-void d_zeros_align(double **pA, int row, int col);
-// dynamically allocate size bytes of memory aligned to 64-byte boundaries and set accordingly a pointer to double; set allocated memory to zero
-void d_zeros_align_bytes(double **pA, int size);
+// dynamically allocate row*col floats of memory and set accordingly a pointer to float; set allocated memory to zero
+void s_zeros(float **pA, int row, int col);
+// dynamically allocate row*col floats of memory aligned to 64-byte boundaries and set accordingly a pointer to float; set allocated memory to zero
+void s_zeros_align(float **pA, int row, int col);
+// dynamically allocate size bytes of memory aligned to 64-byte boundaries and set accordingly a pointer to float; set allocated memory to zero
+void s_zeros_align_bytes(float **pA, int size);
 // free the memory allocated by d_zeros
-void d_free(double *pA);
+void s_free(float *pA);
 // free the memory allocated by d_zeros_align or d_zeros_align_bytes
-void d_free_align(double *pA);
+void s_free_align(float *pA);
 // print a column-major matrix
-void d_print_mat(int row, int col, double *A, int lda);
+void s_print_mat(int row, int col, float *A, int lda);
 // print the transposed of a column-major matrix
-void d_print_tran_mat(int row, int col, double *A, int lda);
+void s_print_tran_mat(int row, int col, float *A, int lda);
 // print to file a column-major matrix
-void d_print_to_file_mat(FILE *file, int row, int col, double *A, int lda);
+void s_print_to_file_mat(FILE *file, int row, int col, float *A, int lda);
 // print to file the transposed of a column-major matrix
-void d_print_tran_to_file_mat(FILE *file, int row, int col, double *A, int lda);
+void s_print_tran_to_file_mat(FILE *file, int row, int col, float *A, int lda);
 // print in exponential notation a column-major matrix
-void d_print_e_mat(int row, int col, double *A, int lda);
+void s_print_e_mat(int row, int col, float *A, int lda);
 // print in exponential notation the transposed of a column-major matrix
-void d_print_e_tran_mat(int row, int col, double *A, int lda);
+void s_print_e_tran_mat(int row, int col, float *A, int lda);
 // print a panel-major matrix
-void d_print_pmat(int row, int col, double *pA, int sda);
+void s_print_pmat(int row, int col, float *pA, int sda);
 // print to file a panel-major matrix
-void d_print_to_file_pmat(FILE *file, int row, int col, double *pA, int sda);
+void s_print_to_file_pmat(FILE *file, int row, int col, float *pA, int sda);
 // print in exponential notation a panel-major matrix
-void d_print_e_pmat(int row, int col, double *pA, int sda);
+void s_print_e_pmat(int row, int col, float *pA, int sda);
 // dynamically allocate size bytes of memory and set accordingly a pointer to void; set allocated memory to zero
 
 /* strmat and strvec */
 
 #ifdef BLASFEO_COMMON
 // create a strmat for a matrix of size m*n by dynamically allocating memory
-void d_allocate_strmat(int m, int n, struct d_strmat *sA);
+void s_allocate_strmat(int m, int n, struct s_strmat *sA);
 // create a strvec for a vector of size m by dynamically allocating memory
-void d_allocate_strvec(int m, struct d_strvec *sa);
+void s_allocate_strvec(int m, struct s_strvec *sa);
 // free the memory allocated by d_allocate_strmat
-void d_free_strmat(struct d_strmat *sA);
+void s_free_strmat(struct s_strmat *sA);
 // free the memory allocated by d_allocate_strvec
-void d_free_strvec(struct d_strvec *sa);
+void s_free_strvec(struct s_strvec *sa);
 // print a strmat
-void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj);
+void s_print_strmat(int m, int n, struct s_strmat *sA, int ai, int aj);
 // print in exponential notation a strmat
-void d_print_e_strmat(int m, int n, struct d_strmat *sA, int ai, int aj);
+void s_print_e_strmat(int m, int n, struct s_strmat *sA, int ai, int aj);
 // print to file a strmat
-void d_print_to_file_strmat(FILE *file, int m, int n, struct d_strmat *sA, int ai, int aj);
+void s_print_to_file_strmat(FILE *file, int m, int n, struct s_strmat *sA, int ai, int aj);
 // print a strvec
-void d_print_strvec(int m, struct d_strvec *sa, int ai);
+void s_print_strvec(int m, struct s_strvec *sa, int ai);
 // print in exponential notation a strvec
-void d_print_e_strvec(int m, struct d_strvec *sa, int ai);
+void s_print_e_strvec(int m, struct s_strvec *sa, int ai);
 // print to file a strvec
-void d_print_to_file_strvec(FILE *file, int m, struct d_strvec *sa, int ai);
+void s_print_to_file_strvec(FILE *file, int m, struct s_strvec *sa, int ai);
 // print the transposed of a strvec
-void d_print_tran_strvec(int m, struct d_strvec *sa, int ai);
+void s_print_tran_strvec(int m, struct s_strvec *sa, int ai);
 // print in exponential notation the transposed of a strvec
-void d_print_e_tran_strvec(int m, struct d_strvec *sa, int ai);
+void s_print_e_tran_strvec(int m, struct s_strvec *sa, int ai);
 // print to file the transposed of a strvec
-void d_print_tran_to_file_strvec(FILE *file, int m, struct d_strvec *sa, int ai);
+void s_print_tran_to_file_strvec(FILE *file, int m, struct s_strvec *sa, int ai);
 #endif
 
 
@@ -108,3 +108,4 @@ void d_print_tran_to_file_strvec(FILE *file, int m, struct d_strvec *sa, int ai)
 #ifdef __cplusplus
 }
 #endif
+

@@ -34,14 +34,14 @@
 #include <f77blas.h>
 #elif defined(REF_BLAS_BLIS)
 #elif defined(REF_BLAS_NETLIB)
-#include "d_blas.h"
+#include "s_blas.h"
 #elif defined(REF_BLAS_MKL)
 #include <mkl_blas.h>
 #endif
 #endif
 
 #include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
+#include "../include/blasfeo_s_aux.h"
 
 
 
@@ -50,22 +50,22 @@
 
 
 // dgemm nt
-void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
 	int ii, jj, kk;
-	double 
+	float 
 		c_00, c_01,
 		c_10, c_11;
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
 	int ldd = sD->m;
-	double *pA = sA->pA + ai + aj*lda;
-	double *pB = sB->pA + bi + bj*ldb;
-	double *pC = sC->pA + ci + cj*ldc;
-	double *pD = sD->pA + di + dj*ldd;
+	float *pA = sA->pA + ai + aj*lda;
+	float *pB = sB->pA + bi + bj*ldb;
+	float *pC = sC->pA + ci + cj*ldc;
+	float *pD = sD->pA + di + dj*ldd;
 	jj = 0;
 	for(; jj<n-1; jj+=2)
 		{
@@ -132,22 +132,22 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 
 
 // dgemm nn
-void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void sgemm_nn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
 	int ii, jj, kk;
-	double 
+	float 
 		c_00, c_01,
 		c_10, c_11;
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
 	int ldd = sD->m;
-	double *pA = sA->pA + ai + aj*lda;
-	double *pB = sB->pA + bi + bj*ldb;
-	double *pC = sC->pA + ci + cj*ldc;
-	double *pD = sD->pA + di + dj*ldd;
+	float *pA = sA->pA + ai + aj*lda;
+	float *pB = sB->pA + bi + bj*ldb;
+	float *pC = sC->pA + ci + cj*ldc;
+	float *pD = sD->pA + di + dj*ldd;
 	jj = 0;
 	for(; jj<n-1; jj+=2)
 		{
@@ -214,20 +214,20 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 
 
 // dtrsm_left_lower_nottransposed_unit
-void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+void strsm_llnu_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
 	int ii, jj, kk;
-	double
+	float
 		d_00, d_01,
 		d_10, d_11;
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
-	double *pA = sA->pA + ai + aj*lda; // triangular
-	double *pB = sB->pA + bi + bj*ldb;
-	double *pD = sD->pA + di + dj*ldd;
+	float *pA = sA->pA + ai + aj*lda; // triangular
+	float *pB = sB->pA + bi + bj*ldb;
+	float *pD = sD->pA + di + dj*ldd;
 #if 1
 	// solve
 	jj = 0;
@@ -336,21 +336,21 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 // dtrsm_left_upper_nottransposed_notunit
-void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+void strsm_lunn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
 	int ii, jj, kk, id;
-	double
+	float
 		d_00, d_01,
 		d_10, d_11;
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
-	double *pA = sA->pA + ai + aj*lda; // triangular
-	double *pB = sB->pA + bi + bj*ldb;
-	double *pD = sD->pA + di + dj*ldd;
-	double *dA = sA->dA;
+	float *pA = sA->pA + ai + aj*lda; // triangular
+	float *pB = sB->pA + bi + bj*ldb;
+	float *pD = sD->pA + di + dj*ldd;
+	float *dA = sA->dA;
 	if(!(sA->use_dA==1 & ai==0 & aj==0))
 		{
 		// inverte diagonal of pA
@@ -483,7 +483,7 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 // dtrsm_right_lower_transposed_unit
-void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+void strsm_rltu_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -491,10 +491,10 @@ void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
-	double *pA = sA->pA + ai + aj*lda;
-	double *pB = sB->pA + bi + bj*ldb;
-	double *pD = sD->pA + di + dj*ldd;
-	double
+	float *pA = sA->pA + ai + aj*lda;
+	float *pB = sB->pA + bi + bj*ldb;
+	float *pD = sD->pA + di + dj*ldd;
+	float
 		f_10,
 		c_00, c_01,
 		c_10, c_11;
@@ -556,7 +556,7 @@ void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 // dtrsm_right_lower_transposed_unit
-void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+void strsm_rltn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -564,10 +564,10 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
-	double *pA = sA->pA + ai + aj*lda;
-	double *pB = sB->pA + bi + bj*ldb;
-	double *pD = sD->pA + di + dj*ldd;
-	double *dA = sA->dA;
+	float *pA = sA->pA + ai + aj*lda;
+	float *pB = sB->pA + bi + bj*ldb;
+	float *pD = sD->pA + di + dj*ldd;
+	float *dA = sA->dA;
 	if(ai==0 & aj==0)
 		{
 		if(sA->use_dA!=1)
@@ -583,7 +583,7 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 			dA[ii] = 1.0 / pA[ii+lda*ii];
 		sA->use_dA = 0;
 		}
-	double
+	float
 		f_00_inv, 
 		f_10, f_11_inv,
 		c_00, c_01,
@@ -656,7 +656,7 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 // dtrsm_right_upper_transposed_notunit
-void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+void strsm_rutn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -665,10 +665,10 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	char ct = 't';
 	char cu = 'u';
 	int i1 = 1;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pD = sD->pA+di+dj*sD->m;
-	printf("\ndtrsm_rutn_libstr: feature not implemented yet\n");
+	float *pA = sA->pA+ai+aj*sA->m;
+	float *pB = sB->pA+bi+bj*sB->m;
+	float *pD = sD->pA+di+dj*sD->m;
+	printf("\nstrsm_rutn_libstr: feature not implemented yet\n");
 	exit(1);
 //	if(!(pB==pD))
 //		{
@@ -682,20 +682,20 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 // dtrmm_right_upper_transposed_notunit (A triangular !!!)
-void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+void strmm_rutn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
 	int ii, jj, kk;
-	double 
+	float 
 		c_00, c_01,
 		c_10, c_11;
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
-	double *pA = sA->pA + ai + aj*lda;
-	double *pB = sB->pA + bi + bj*ldb;
-	double *pD = sD->pA + di + dj*ldd;
+	float *pA = sA->pA + ai + aj*lda;
+	float *pB = sB->pA + bi + bj*ldb;
+	float *pD = sD->pA + di + dj*ldd;
 	jj = 0;
 	for(; jj<n-1; jj+=2)
 		{
@@ -769,20 +769,20 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 // dtrmm_right_lower_nottransposed_notunit (A triangular !!!)
-void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+void strmm_rlnn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
 	int ii, jj, kk;
-	double 
+	float 
 		c_00, c_01,
 		c_10, c_11;
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
-	double *pA = sA->pA + ai + aj*lda;
-	double *pB = sB->pA + bi + bj*ldb;
-	double *pD = sD->pA + di + dj*ldd;
+	float *pA = sA->pA + ai + aj*lda;
+	float *pB = sB->pA + bi + bj*ldb;
+	float *pD = sD->pA + di + dj*ldd;
 	jj = 0;
 	for(; jj<n-1; jj+=2)
 		{
@@ -856,22 +856,22 @@ void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 // dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
-void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void ssyrk_ln_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
 	int ii, jj, kk;
-	double
+	float
 		c_00, c_01,
 		c_10, c_11;
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
 	int ldd = sD->m;
-	double *pA = sA->pA + ai + aj*lda;
-	double *pB = sB->pA + bi + bj*ldb;
-	double *pC = sC->pA + ci + cj*ldc;
-	double *pD = sD->pA + di + dj*ldd;
+	float *pA = sA->pA + ai + aj*lda;
+	float *pB = sB->pA + bi + bj*ldb;
+	float *pC = sC->pA + ci + cj*ldc;
+	float *pD = sD->pA + di + dj*ldd;
 	jj = 0;
 	for(; jj<n-1; jj+=2)
 		{
@@ -951,29 +951,29 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 
 
 // dgemm nt
-void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
 	int jj;
 	char cn = 'n';
 	char ct = 't';
 	int i1 = 1;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pC = sC->pA+ci+cj*sC->m;
-	double *pD = sD->pA+di+dj*sD->m;
+	float *pA = sA->pA+ai+aj*sA->m;
+	float *pB = sB->pA+bi+bj*sB->m;
+	float *pC = sC->pA+ci+cj*sC->m;
+	float *pD = sD->pA+di+dj*sD->m;
 	if(!(beta==0.0 || pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			scopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #else
-			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			scopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
 #if defined(REF_BLAS_MKL)
-	dgemm(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	sgemm(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
 #else
-	dgemm_(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	sgemm_(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
 #endif
 	return;
 	}
@@ -981,28 +981,28 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 
 
 // dgemm nn
-void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void sgemm_nn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
 	int jj;
 	char cn = 'n';
 	int i1 = 1;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pC = sC->pA+ci+cj*sC->m;
-	double *pD = sD->pA+di+dj*sD->m;
+	float *pA = sA->pA+ai+aj*sA->m;
+	float *pB = sB->pA+bi+bj*sB->m;
+	float *pC = sC->pA+ci+cj*sC->m;
+	float *pD = sD->pA+di+dj*sD->m;
 	if(!(beta==0.0 || pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			scopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #else
-			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			scopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
 #if defined(REF_BLAS_MKL)
-	dgemm(&cn, &cn, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	sgemm(&cn, &cn, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
 #else
-	dgemm_(&cn, &cn, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	sgemm_(&cn, &cn, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
 #endif
 	return;
 	}
@@ -1010,29 +1010,29 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 
 
 // dtrsm_left_lower_nottransposed_unit
-void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+void strsm_llnu_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
 	char cn = 'n';
 	char cu = 'u';
 	int i1 = 1;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pD = sD->pA+di+dj*sD->m;
+	float *pA = sA->pA+ai+aj*sA->m;
+	float *pB = sB->pA+bi+bj*sB->m;
+	float *pD = sD->pA+di+dj*sD->m;
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+			scopy(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
 #else
-			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+			scopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
 #if defined(REF_BLAS_MKL)
-	dtrsm(&cl, &cl, &cn, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	strsm(&cl, &cl, &cn, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
 #else
-	dtrsm_(&cl, &cl, &cn, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	strsm_(&cl, &cl, &cn, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
 #endif
 	return;
 	}
@@ -1040,29 +1040,29 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 // dtrsm_left_upper_nottransposed_notunit
-void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+void strsm_lunn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
 	char cn = 'n';
 	char cu = 'u';
 	int i1 = 1;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pD = sD->pA+di+dj*sD->m;
+	float *pA = sA->pA+ai+aj*sA->m;
+	float *pB = sB->pA+bi+bj*sB->m;
+	float *pD = sD->pA+di+dj*sD->m;
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+			scopy(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
 #else
-			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+			scopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
 #if defined(REF_BLAS_MKL)
-	dtrsm(&cl, &cu, &cn, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	strsm(&cl, &cu, &cn, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
 #else
-	dtrsm_(&cl, &cu, &cn, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	strsm_(&cl, &cu, &cn, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
 #endif
 	return;
 	}
@@ -1070,7 +1070,7 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 // dtrsm_right_lower_transposed_unit
-void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+void strsm_rltu_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1079,22 +1079,22 @@ void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	char ct = 't';
 	char cu = 'u';
 	int i1 = 1;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pD = sD->pA+di+dj*sD->m;
+	float *pA = sA->pA+ai+aj*sA->m;
+	float *pB = sB->pA+bi+bj*sB->m;
+	float *pD = sD->pA+di+dj*sD->m;
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+			scopy(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
 #else
-			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+			scopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
 #if defined(REF_BLAS_MKL)
-	dtrsm(&cr, &cl, &ct, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	strsm(&cr, &cl, &ct, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
 #else
-	dtrsm_(&cr, &cl, &ct, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	strsm_(&cr, &cl, &ct, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
 #endif
 	return;
 	}
@@ -1102,7 +1102,7 @@ void dtrsm_rltu_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 // dtrsm_right_lower_transposed_notunit
-void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+void strsm_rltn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1111,22 +1111,22 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	char ct = 't';
 	char cu = 'u';
 	int i1 = 1;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pD = sD->pA+di+dj*sD->m;
+	float *pA = sA->pA+ai+aj*sA->m;
+	float *pB = sB->pA+bi+bj*sB->m;
+	float *pD = sD->pA+di+dj*sD->m;
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+			scopy(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
 #else
-			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+			scopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
 #if defined(REF_BLAS_MKL)
-	dtrsm(&cr, &cl, &ct, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	strsm(&cr, &cl, &ct, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
 #else
-	dtrsm_(&cr, &cl, &ct, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	strsm_(&cr, &cl, &ct, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
 #endif
 	return;
 	}
@@ -1134,7 +1134,7 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 // dtrsm_right_upper_transposed_notunit
-void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+void strsm_rutn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1143,22 +1143,22 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	char ct = 't';
 	char cu = 'u';
 	int i1 = 1;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pD = sD->pA+di+dj*sD->m;
+	float *pA = sA->pA+ai+aj*sA->m;
+	float *pB = sB->pA+bi+bj*sB->m;
+	float *pD = sD->pA+di+dj*sD->m;
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+			scopy(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
 #else
-			dcopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+			scopy_(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
 #if defined(REF_BLAS_MKL)
-	dtrsm(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	strsm(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
 #else
-	dtrsm_(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	strsm_(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
 #endif
 	return;
 	}
@@ -1166,7 +1166,7 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 // dtrmm_right_upper_transposed_notunit (A triangular !!!)
-void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+void strmm_rutn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1178,22 +1178,22 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
-	double *pA = sA->pA+ai+aj*lda;
-	double *pB = sB->pA+bi+bj*ldb;
-	double *pD = sD->pA+di+dj*ldd;
+	float *pA = sA->pA+ai+aj*lda;
+	float *pB = sB->pA+bi+bj*ldb;
+	float *pD = sD->pA+di+dj*ldd;
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+			scopy(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 #else
-			dcopy_(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+			scopy_(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 #endif
 		}
 #if defined(REF_BLAS_MKL)
-	dtrmm(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
+	strmm(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
 #else
-	dtrmm_(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
+	strmm_(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
 #endif
 	return;
 	}
@@ -1201,7 +1201,7 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 // dtrmm_right_lower_nottransposed_notunit (A triangular !!!)
-void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
+void strmm_rlnn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1213,22 +1213,22 @@ void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
-	double *pA = sA->pA+ai+aj*lda;
-	double *pB = sB->pA+bi+bj*ldb;
-	double *pD = sD->pA+di+dj*ldd;
+	float *pA = sA->pA+ai+aj*lda;
+	float *pB = sB->pA+bi+bj*ldb;
+	float *pD = sD->pA+di+dj*ldd;
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+			scopy(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 #else
-			dcopy_(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+			scopy_(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 #endif
 		}
 #if defined(REF_BLAS_MKL)
-	dtrmm(&cr, &cl, &cn, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
+	strmm(&cr, &cl, &cn, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
 #else
-	dtrmm_(&cr, &cl, &cn, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
+	strmm_(&cr, &cl, &cn, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
 #endif
 	return;
 	}
@@ -1236,7 +1236,7 @@ void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 
 
 // dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
-void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void ssyrk_ln_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1245,23 +1245,23 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	char ct = 't';
 	char cu = 'u';
 	int i1 = 1;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pC = sC->pA+ci+cj*sC->m;
-	double *pD = sD->pA+di+dj*sD->m;
+	float *pA = sA->pA+ai+aj*sA->m;
+	float *pB = sB->pA+bi+bj*sB->m;
+	float *pC = sC->pA+ci+cj*sC->m;
+	float *pD = sD->pA+di+dj*sD->m;
 	if(!(beta==0.0 || pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			scopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #else
-			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			scopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
 #if defined(REF_BLAS_MKL)
-	dgemm(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	sgemm(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
 #else
-	dgemm_(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	sgemm_(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
 #endif
 	return;
 	}
@@ -1271,6 +1271,7 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 #error : wrong LA choice
 
 #endif
+
 
 
 
