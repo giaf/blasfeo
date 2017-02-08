@@ -747,13 +747,13 @@ void sgetrf_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_s
 			{
 			d_00 = pD[(ii+0)+ldd*jj];
 			d_10 = pD[(ii+1)+ldd*jj];
-			dtmp = d_00>0 ? d_00 : -d_00;
+			dtmp = d_00>0.0 ? d_00 : -d_00;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
 				ip = ii+0;
 				}
-			dtmp = d_10>0 ? d_10 : -d_10;
+			dtmp = d_10>0.0 ? d_10 : -d_10;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
@@ -763,7 +763,7 @@ void sgetrf_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_s
 		for(; ii<m; ii++)
 			{
 			d_00 = pD[(ii+0)+ldd*jj];
-			dtmp = d_00>0 ? d_00 : -d_00;
+			dtmp = d_00>0.0 ? d_00 : -d_00;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
@@ -801,13 +801,13 @@ void sgetrf_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_s
 			d_11 = pD[(ii+1)+ldd*(jj+1)];
 			d_01 -= d_00 * pD[jj+ldd*(jj+1)];
 			d_11 -= d_10 * pD[jj+ldd*(jj+1)];
-			dtmp = d_01>0 ? d_01 : -d_01;
+			dtmp = d_01>0.0 ? d_01 : -d_01;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
 				ip = ii+0;
 				}
-			dtmp = d_11>0 ? d_11 : -d_11;
+			dtmp = d_11>0.0 ? d_11 : -d_11;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
@@ -902,13 +902,13 @@ void sgetrf_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_s
 				d_00 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*jj];
 				d_10 -= pD[(ii+1)+ldd*kk] * pD[kk+ldd*jj];
 				}
-			dtmp = d_00>0 ? d_00 : -d_00;
+			dtmp = d_00>0.0 ? d_00 : -d_00;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
 				ip = ii+0;
 				}
-			dtmp = d_10>0 ? d_10 : -d_10;
+			dtmp = d_10>0.0 ? d_10 : -d_10;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
@@ -924,7 +924,7 @@ void sgetrf_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_s
 				{
 				d_00 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*jj];
 				}
-			dtmp = d_00>0 ? d_00 : -d_00;
+			dtmp = d_00>0.0 ? d_00 : -d_00;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
@@ -1090,10 +1090,14 @@ void ssyrk_spotrf_ln_libstr(int m, int n, int k, struct s_strmat *sA, int ai, in
 	float d1 = 1.0;
 	int mmn = m-n;
 	int info;
-	float *pA = sA->pA+ai+aj*sA->m;
-	float *pB = sB->pA+bi+bj*sB->m;
-	float *pC = sC->pA+ci+cj*sC->m;
-	float *pD = sD->pA+di+dj*sD->m;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	float *pA = sA->pA + ai + aj*lda;
+	float *pB = sB->pA + bi + bj*ldb;
+	float *pC = sC->pA + ci + cj*ldc;
+	float *pD = sD->pA + di + dj*ldd;
 	if(!(pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
@@ -1103,16 +1107,32 @@ void ssyrk_spotrf_ln_libstr(int m, int n, int k, struct s_strmat *sA, int ai, in
 			scopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
-	// TODO call ssyrk if A==B
+	if(pA==pB)
+		{
 #if defined(REF_BLAS_MKL)
-	sgemm(&cn, &ct, &m, &n, &k, &d1, pA, &(sA->m), pB, &(sB->m), &d1, pD, &(sD->m));
-	spotrf(&cl, &n, pD, &(sD->m), &info);
-	strsm(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
+		ssyrk(&cl, &cn, &n, &k, &d1, pA, &lda, &d1, pD, &ldd);
+		sgemm(&cn, &ct, &mmn, &n, &k, &d1, pA+n, &lda, pB, &ldb, &d1, pD+n, &ldd);
+		spotrf(&cl, &n, pD, &ldd, &info);
+		strsm(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &ldd, pD+n, &ldd);
 #else
-	sgemm_(&cn, &ct, &m, &n, &k, &d1, pA, &(sA->m), pB, &(sB->m), &d1, pD, &(sD->m));
-	spotrf_(&cl, &n, pD, &(sD->m), &info);
-	strsm_(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
+		ssyrk_(&cl, &cn, &n, &k, &d1, pA, &lda, &d1, pD, &ldd);
+		sgemm_(&cn, &ct, &mmn, &n, &k, &d1, pA+n, &lda, pB, &ldb, &d1, pD+n, &ldd);
+		spotrf_(&cl, &n, pD, &ldd, &info);
+		strsm_(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &ldd, pD+n, &ldd);
 #endif
+		}
+	else
+		{
+#if defined(REF_BLAS_MKL)
+		sgemm(&cn, &ct, &m, &n, &k, &d1, pA, &lda, pB, &ldb, &d1, pD, &ldd);
+		spotrf(&cl, &n, pD, &ldd, &info);
+		strsm(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &ldd, pD+n, &ldd);
+#else
+		sgemm_(&cn, &ct, &m, &n, &k, &d1, pA, &lda, pB, &ldb, &d1, pD, &ldd);
+		spotrf_(&cl, &n, pD, &ldd, &info);
+		strsm_(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &ldd, pD+n, &ldd);
+#endif
+		}
 	return;
 	}
 

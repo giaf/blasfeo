@@ -747,13 +747,13 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 			{
 			d_00 = pD[(ii+0)+ldd*jj];
 			d_10 = pD[(ii+1)+ldd*jj];
-			dtmp = d_00>0 ? d_00 : -d_00;
+			dtmp = d_00>0.0 ? d_00 : -d_00;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
 				ip = ii+0;
 				}
-			dtmp = d_10>0 ? d_10 : -d_10;
+			dtmp = d_10>0.0 ? d_10 : -d_10;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
@@ -763,7 +763,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		for(; ii<m; ii++)
 			{
 			d_00 = pD[(ii+0)+ldd*jj];
-			dtmp = d_00>0 ? d_00 : -d_00;
+			dtmp = d_00>0.0 ? d_00 : -d_00;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
@@ -801,13 +801,13 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 			d_11 = pD[(ii+1)+ldd*(jj+1)];
 			d_01 -= d_00 * pD[jj+ldd*(jj+1)];
 			d_11 -= d_10 * pD[jj+ldd*(jj+1)];
-			dtmp = d_01>0 ? d_01 : -d_01;
+			dtmp = d_01>0.0 ? d_01 : -d_01;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
 				ip = ii+0;
 				}
-			dtmp = d_11>0 ? d_11 : -d_11;
+			dtmp = d_11>0.0 ? d_11 : -d_11;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
@@ -824,7 +824,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 			d_00 *= d_00_inv;
 			d_01 = pD[(ii+0)+ldd*(jj+1)];
 			d_01 -= d_00 * pD[jj+ldd*(jj+1)];
-			dtmp = d_01>0 ? d_01 : -d_01;
+			dtmp = d_01>0.0 ? d_01 : -d_01;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
@@ -902,13 +902,13 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 				d_00 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*jj];
 				d_10 -= pD[(ii+1)+ldd*kk] * pD[kk+ldd*jj];
 				}
-			dtmp = d_00>0 ? d_00 : -d_00;
+			dtmp = d_00>0.0 ? d_00 : -d_00;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
 				ip = ii+0;
 				}
-			dtmp = d_10>0 ? d_10 : -d_10;
+			dtmp = d_10>0.0 ? d_10 : -d_10;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
@@ -924,7 +924,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 				{
 				d_00 -= pD[(ii+0)+ldd*kk] * pD[kk+ldd*jj];
 				}
-			dtmp = d_00>0 ? d_00 : -d_00;
+			dtmp = d_00>0.0 ? d_00 : -d_00;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
@@ -1090,29 +1090,49 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 	double d1 = 1.0;
 	int mmn = m-n;
 	int info;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pC = sC->pA+ci+cj*sC->m;
-	double *pD = sD->pA+di+dj*sD->m;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *pB = sB->pA + bi + bj*ldb;
+	double *pC = sC->pA + ci + cj*ldc;
+	double *pD = sD->pA + di + dj*ldd;
 	if(!(pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
 #if defined(REF_BLAS_MKL)
-			dcopy(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			dcopy(&m, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
 #else
-			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			dcopy_(&m, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
 #endif
 		}
-	// TODO call ssyrk if A==B
+	if(pA==pB)
+		{
 #if defined(REF_BLAS_MKL)
-	dgemm(&cn, &ct, &m, &n, &k, &d1, pA, &(sA->m), pB, &(sB->m), &d1, pD, &(sD->m));
-	dpotrf(&cl, &n, pD, &(sD->m), &info);
-	dtrsm(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
+		dsyrk(&cl, &cn, &n, &k, &d1, pA, &lda, &d1, pD, &ldd);
+		dgemm(&cn, &ct, &mmn, &n, &k, &d1, pA+n, &lda, pB, &ldb, &d1, pD+n, &ldd);
+		dpotrf(&cl, &n, pD, &ldd, &info);
+		dtrsm(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &ldd, pD+n, &ldd);
 #else
-	dgemm_(&cn, &ct, &m, &n, &k, &d1, pA, &(sA->m), pB, &(sB->m), &d1, pD, &(sD->m));
-	dpotrf_(&cl, &n, pD, &(sD->m), &info);
-	dtrsm_(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
+		dsyrk_(&cl, &cn, &n, &k, &d1, pA, &lda, &d1, pD, &ldd);
+		dgemm_(&cn, &ct, &mmn, &n, &k, &d1, pA+n, &lda, pB, &ldb, &d1, pD+n, &ldd);
+		dpotrf_(&cl, &n, pD, &ldd, &info);
+		dtrsm_(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &ldd, pD+n, &ldd);
 #endif
+		}
+	else
+		{
+#if defined(REF_BLAS_MKL)
+		dgemm(&cn, &ct, &m, &n, &k, &d1, pA, &lda, pB, &ldb, &d1, pD, &ldd);
+		dpotrf(&cl, &n, pD, &ldd, &info);
+		dtrsm(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &ldd, pD+n, &ldd);
+#else
+		dgemm_(&cn, &ct, &m, &n, &k, &d1, pA, &lda, pB, &ldb, &d1, pD, &ldd);
+		dpotrf_(&cl, &n, pD, &ldd, &info);
+		dtrsm_(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &ldd, pD+n, &ldd);
+#endif
+		}
 	return;
 	}
 

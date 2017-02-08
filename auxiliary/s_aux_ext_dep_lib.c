@@ -213,7 +213,7 @@ void s_print_e_tran_mat(int row, int col, float *A, int lda)
 void s_print_pmat(int row, int col, float *pA, int sda)
 	{
 
-	const int bs = D_BS;
+	const int bs = S_BS;
 
 	int ii, i, j, row2;
 
@@ -249,7 +249,7 @@ void s_print_pmat(int row, int col, float *pA, int sda)
 void s_print_to_file_pmat(FILE *file, int row, int col, float *pA, int sda)
 	{
 
-	const int bs = D_BS;
+	const int bs = S_BS;
 
 	int ii, i, j, row2;
 
@@ -286,7 +286,7 @@ void s_print_to_file_pmat(FILE *file, int row, int col, float *pA, int sda)
 void s_print_e_pmat(int row, int col, float *pA, int sda)
 	{
 
-	const int bs = D_BS;
+	const int bs = S_BS;
 
 	int ii, i, j, row2;
 
@@ -324,8 +324,8 @@ void s_print_e_pmat(int row, int col, float *pA, int sda)
 // create a matrix structure for a matrix of size m*n by dynamically allocating the memory
 void s_allocate_strmat(int m, int n, struct s_strmat *sA)
 	{
-	const int bs = D_BS;
-	int nc = D_NC;
+	const int bs = S_BS;
+	int nc = S_NC;
 	int al = bs*nc;
 	sA->m = m;
 	sA->n = n;
@@ -356,8 +356,8 @@ void s_free_strmat(struct s_strmat *sA)
 // create a vector structure for a vector of size m by dynamically allocating the memory
 void s_allocate_strvec(int m, struct s_strvec *sa)
 	{
-	const int bs = D_BS;
-//	int nc = D_NC;
+	const int bs = S_BS;
+//	int nc = S_NC;
 //	int al = bs*nc;
 	sa->m = m;
 	int pm = (m+bs-1)/bs*bs;

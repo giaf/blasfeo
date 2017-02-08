@@ -133,9 +133,6 @@ void kernel_dgemv_n_4_lib4(int kmax, double *alpha, double *A, double *x, double
 void kernel_dgemv_t_4_gen_lib4(int kmax, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z, int km)
 	{
 
-	if(kmax<=0) 
-		return;
-	
 	const int bs  = 4;
 	
 	int k, kend;

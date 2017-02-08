@@ -2364,18 +2364,18 @@ _inner_store_l_4x4_lib4:
 #endif
 #endif
 	
-	vmovapd		%xmm0,   0(%r10)
-	vmovapd		%xmm1,  16(%r10)
-	vmovsd		32(%r10), %xmm15
-	vmovsd		%xmm15, %xmm2, %xmm2
-	vmovapd		%xmm2,  32(%r10)
-	vmovapd		%xmm3,  48(%r10)
-//	vmovapd		%xmm4,  64(%r10)
-	vmovapd		%xmm5,  80(%r10)
-//	vmovapd		%xmm6,  96(%r10)
-	vmovsd		112(%r10), %xmm15
-	vmovsd		%xmm15, %xmm7, %xmm7
-	vmovapd		%xmm7, 112(%r10)
+	movapd		%xmm0,   0(%r10)
+	movapd		%xmm4,  16(%r10)
+	movsd		32(%r10), %xmm15
+	movsd		%xmm15, %xmm1
+	movapd		%xmm1,  32(%r10)
+	movapd		%xmm5,  48(%r10)
+//	movapd		%xmm2,  64(%r10)
+	movapd		%xmm6,  80(%r10)
+//	movapd		%xmm3,  96(%r10)
+	movsd		112(%r10), %xmm15
+	movsd		%xmm15, %xmm7
+	movapd		%xmm7, 112(%r10)
 
 #if MACRO_LEVEL>=1
 	.endm

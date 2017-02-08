@@ -1245,10 +1245,15 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	char ct = 't';
 	char cu = 'u';
 	int i1 = 1;
-	double *pA = sA->pA+ai+aj*sA->m;
-	double *pB = sB->pA+bi+bj*sB->m;
-	double *pC = sC->pA+ci+cj*sC->m;
-	double *pD = sD->pA+di+dj*sD->m;
+	int mmn = m-n;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *pB = sB->pA + bi + bj*ldb;
+	double *pC = sC->pA + ci + cj*ldc;
+	double *pD = sD->pA + di + dj*ldd;
 	if(!(beta==0.0 || pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
@@ -1258,11 +1263,24 @@ void dsyrk_ln_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			dcopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
+	if(pA==pB)
+		{
 #if defined(REF_BLAS_MKL)
-	dgemm(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+		dsyrk(&cl, &cn, &n, &k, &alpha, pA, &lda, &beta, pD, &ldd);
+		dgemm(&cn, &ct, &mmn, &n, &k, &alpha, pA+n, &lda, pB, &ldb, &beta, pD+n, &ldd);
 #else
-	dgemm_(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+		dsyrk_(&cl, &cn, &n, &k, &alpha, pA, &lda, &beta, pD, &ldd);
+		dgemm_(&cn, &ct, &mmn, &n, &k, &alpha, pA+n, &lda, pB, &ldb, &beta, pD+n, &ldd);
 #endif
+		}
+	else
+		{
+#if defined(REF_BLAS_MKL)
+		dgemm(&cn, &ct, &m, &n, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+#else
+		dgemm_(&cn, &ct, &m, &n, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+#endif
+		}
 	return;
 	}
 

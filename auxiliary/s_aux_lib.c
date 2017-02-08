@@ -419,7 +419,7 @@ void srowpe_libstr(int kmax, int *ipiv, struct s_strmat *sA)
 	for(ii=0; ii<kmax; ii++)
 		{
 		if(ipiv[ii]!=ii)
-			drowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+			srowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
 		}
 	return;
 	}
@@ -453,7 +453,7 @@ void scolpe_libstr(int kmax, int *ipiv, struct s_strmat *sA)
 	for(ii=0; ii<kmax; ii++)
 		{
 		if(ipiv[ii]!=ii)
-			dcolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
+			scolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
 		}
 	return;
 	}

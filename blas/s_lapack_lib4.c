@@ -280,7 +280,7 @@ void sgetrf_nn_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *
 
 	// needs to perform row-excanges on the yet-to-be-factorized matrix too
 	if(pC!=pD)
-		dgecp_lib(m, n, 1.0, 0, pC, sdc, 0, pD, sdd);
+		sgecp_lib(m, n, 1.0, 0, pC, sdc, 0, pD, sdd);
 
 	// minimum matrix size
 	p = n<m ? n : m; // XXX
@@ -485,7 +485,7 @@ void spotrf_l_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s
 		printf("\nspotrf_l_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
-	const int bs = D_BS;
+	const int bs = S_BS;
 	int sdc = sC->cn;
 	int sdd = sD->cn;
 	float *pC = sC->pA + cj*bs;
@@ -502,14 +502,14 @@ void spotrf_l_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s
 
 
 // dsyrk dpotrf
-void ssyrk_dpotrf_ln_libstr(int m, int n, int k, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+void ssyrk_spotrf_ln_libstr(int m, int n, int k, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
 		printf("\nssyrk_spotrf_ln_libstr: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
 		}
-	const int bs = D_BS;
+	const int bs = S_BS;
 	int sda = sA->cn;
 	int sdb = sB->cn;
 	int sdc = sC->cn;
@@ -537,7 +537,7 @@ void sgetrf_nopivot_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, st
 		printf("\nsgetf_nopivot_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
-	const int bs = D_BS;
+	const int bs = S_BS;
 	int sdc = sC->cn;
 	int sdd = sD->cn;
 	float *pC = sC->pA + cj*bs;
@@ -562,7 +562,7 @@ void sgetrf_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_s
 		printf("\nsgetrf_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
-	const int bs = D_BS;
+	const int bs = S_BS;
 	int sdc = sC->cn;
 	int sdd = sD->cn;
 	float *pC = sC->pA + cj*bs;

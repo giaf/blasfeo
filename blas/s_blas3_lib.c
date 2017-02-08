@@ -1245,10 +1245,15 @@ void ssyrk_ln_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 	char ct = 't';
 	char cu = 'u';
 	int i1 = 1;
-	float *pA = sA->pA+ai+aj*sA->m;
-	float *pB = sB->pA+bi+bj*sB->m;
-	float *pC = sC->pA+ci+cj*sC->m;
-	float *pD = sD->pA+di+dj*sD->m;
+	int mmn = m-n;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	float *pA = sA->pA + ai + aj*lda;
+	float *pB = sB->pA + bi + bj*ldb;
+	float *pC = sC->pA + ci + cj*ldc;
+	float *pD = sD->pA + di + dj*ldd;
 	if(!(beta==0.0 || pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
@@ -1258,11 +1263,24 @@ void ssyrk_ln_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 			scopy_(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
 #endif
 		}
+	if(pA==pB)
+		{
 #if defined(REF_BLAS_MKL)
-	sgemm(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+		ssyrk(&cl, &cn, &n, &k, &alpha, pA, &lda, &beta, pD, &ldd);
+		sgemm(&cn, &ct, &mmn, &n, &k, &alpha, pA+n, &lda, pB, &ldb, &beta, pD+n, &ldd);
 #else
-	sgemm_(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+		ssyrk_(&cl, &cn, &n, &k, &alpha, pA, &lda, &beta, pD, &ldd);
+		sgemm_(&cn, &ct, &mmn, &n, &k, &alpha, pA+n, &lda, pB, &ldb, &beta, pD+n, &ldd);
 #endif
+		}
+	else
+		{
+#if defined(REF_BLAS_MKL)
+		sgemm(&cn, &ct, &m, &n, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+#else
+		sgemm_(&cn, &ct, &m, &n, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+#endif
+		}
 	return;
 	}
 

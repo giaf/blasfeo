@@ -133,9 +133,6 @@ void kernel_sgemv_n_4_lib4(int kmax, float *alpha, float *A, float *x, float *be
 void kernel_sgemv_t_4_gen_lib4(int kmax, float *alpha, int offA, float *A, int sda, float *x, float *beta, float *y, float *z, int km)
 	{
 
-	if(kmax<=0) 
-		return;
-	
 	const int bs  = 4;
 	
 	int k, kend;

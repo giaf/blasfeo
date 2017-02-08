@@ -33,14 +33,15 @@
 #include "tools.h"
 
 #include "../include/blasfeo_common.h"
-#include "../include/blasfeo_i_aux.h"
+#include "../include/blasfeo_i_aux_ext_dep.h"
+#include "../include/blasfeo_d_aux_ext_dep.h"
 #include "../include/blasfeo_d_aux.h"
 #include "../include/blasfeo_d_kernel.h"
 #include "../include/blasfeo_d_blas.h"
 
 
 
-void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct d_strmat *hsRSQrq, struct d_strmat *hsL, struct d_strmat *hsLxt, struct d_strvec *hsux, struct d_strvec *hspi, struct d_strmat *hswork_mat, struct d_strvec *hswork_vec)
+static void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct d_strmat *hsRSQrq, struct d_strmat *hsL, struct d_strvec *hsux, struct d_strvec *hspi, struct d_strmat *hswork_mat, struct d_strvec *hswork_vec)
 	{
 
 	int nn;
@@ -49,27 +50,17 @@ void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, stru
 
 	// last stage
 	dpotrf_l_libstr(nx[N]+1, nx[N], &hsRSQrq[N], 0, 0, &hsL[N], 0, 0);
-#if defined(LA_HIGH_PERFORMANCE)
-	dtrtr_l_libstr(nx[N], &hsL[N], 0, 0, &hsLxt[N], 0, 0);
-#endif
 
 	// middle stages
 	for(nn=0; nn<N; nn++)
 		{
-#if defined(LA_HIGH_PERFORMANCE)
-		dtrmm_rutn_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hsLxt[N-nn], 0, 0, 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
-#else
-		dtrmm_rlnn_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hsL[N-nn], nu[N-nn], nu[N-nn], 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
-#endif
+		dtrmm_rlnn_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nx[N-nn], 1.0, &hsL[N-nn], nu[N-nn], nu[N-nn], &hsBAbt[N-nn-1], 0, 0, &hswork_mat[0], 0, 0);
 		dgead_libstr(1, nx[N-nn], 1.0, &hsL[N-nn], nu[N-nn]+nx[N-nn], nu[N-nn], &hswork_mat[0], nu[N-nn-1]+nx[N-nn-1], 0);
 #if 1
 		dsyrk_dpotrf_ln_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #else
 		dsyrk_ln_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 		dpotrf_l_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
-#endif
-#if defined(LA_HIGH_PERFORMANCE)
-		dtrtr_l_libstr(nx[N-nn-1], &hsL[N-nn-1], nu[N-nn-1], nu[N-nn-1], &hsLxt[N-nn-1], 0, 0);
 #endif
 		}
 	
@@ -83,15 +74,9 @@ void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, stru
 	dgemv_t_libstr(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsux[nn+1], nu[nn+1], &hsux[nn+1], nu[nn+1]);
 	dveccp_libstr(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hspi[nn], 0);
 	drowex_libstr(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[0], 0);
-#if defined(LA_HIGH_PERFORMANCE)
-	dtrmv_unn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
+	dtrmv_ltn_libstr(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
 	daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
-	dtrmv_utn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
-#else
-	dtrmv_ltn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
-	daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
-	dtrmv_lnn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
-#endif
+	dtrmv_lnn_libstr(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
 
 	// middle stages
 	for(nn=1; nn<N; nn++)
@@ -102,15 +87,9 @@ void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, stru
 		dgemv_t_libstr(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsux[nn+1], nu[nn+1], &hsux[nn+1], nu[nn+1]);
 		dveccp_libstr(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hspi[nn], 0);
 		drowex_libstr(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[0], 0);
-#if defined(LA_HIGH_PERFORMANCE)
-		dtrmv_unn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
+		dtrmv_ltn_libstr(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
 		daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
-		dtrmv_utn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
-#else
-		dtrmv_ltn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
-		daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
-		dtrmv_lnn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
-#endif
+		dtrmv_lnn_libstr(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
 		}
 
 	return;
@@ -119,36 +98,25 @@ void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, stru
 
 
 
-void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct d_strmat *hsRSQrq, struct d_strmat *hsL, struct d_strmat *hsLxt, struct d_strmat *hswork_mat)
+static void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct d_strmat *hsRSQrq, struct d_strmat *hsL, struct d_strmat *hswork_mat)
 	{
 
 	int nn;
-
 
 	// factorization
 
 	// last stage
 	dpotrf_l_libstr(nx[N], nx[N], &hsRSQrq[N], 0, 0, &hsL[N], 0, 0);
-#if defined(LA_HIGH_PERFORMANCE)
-	dtrtr_l_libstr(nx[N], &hsL[N], 0, 0, &hsLxt[N], 0, 0);
-#endif
 
 	// middle stages
 	for(nn=0; nn<N; nn++)
 		{
-#if defined(LA_HIGH_PERFORMANCE)
-		dtrmm_rutn_libstr(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hsLxt[N-nn], 0, 0, 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
-#else
-		dtrmm_rlnn_libstr(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hsL[N-nn], nu[N-nn], nu[N-nn], 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
-#endif
+		dtrmm_rlnn_libstr(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hsL[N-nn], nu[N-nn], nu[N-nn], &hsBAbt[N-nn-1], 0, 0, &hswork_mat[0], 0, 0);
 #if 1
 		dsyrk_dpotrf_ln_libstr(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #else
 		dsyrk_ln_libstr(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 		dpotrf_l_libstr(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
-#endif
-#if defined(LA_HIGH_PERFORMANCE)
-		dtrtr_l_libstr(nx[N-nn-1], &hsL[N-nn-1], nu[N-nn-1], nu[N-nn-1], &hsLxt[N-nn-1], 0, 0);
 #endif
 		}
 	
@@ -158,7 +126,7 @@ void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, str
 
 
 
-void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct d_strvec *hsb, struct d_strvec *hsrq, struct d_strmat *hsL, struct d_strmat *hsLxt, struct d_strvec *hsPb, struct d_strvec *hsux, struct d_strvec *hspi, struct d_strvec *hswork_vec)
+static void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct d_strvec *hsb, struct d_strvec *hsrq, struct d_strmat *hsL, struct d_strvec *hsPb, struct d_strvec *hsux, struct d_strvec *hspi, struct d_strvec *hswork_vec)
 	{
 
 	int nn;
@@ -172,13 +140,8 @@ void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, str
 	for(nn=0; nn<N-1; nn++)
 		{
 		// compute Pb
-#if defined(LA_HIGH_PERFORMANCE)
-		dtrmv_unn_libstr(nx[N-nn], &hsLxt[N-nn], 0, 0, &hsb[N-nn-1], 0, &hsPb[N-nn-1], 0);
-		dtrmv_utn_libstr(nx[N-nn], &hsLxt[N-nn], 0, 0, &hsPb[N-nn-1], 0, &hsPb[N-nn-1], 0);
-#else
-		dtrmv_ltn_libstr(nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsb[N-nn-1], 0, &hsPb[N-nn-1], 0);
-		dtrmv_lnn_libstr(nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsPb[N-nn-1], 0, &hsPb[N-nn-1], 0);
-#endif
+		dtrmv_ltn_libstr(nx[N-nn], nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsb[N-nn-1], 0, &hsPb[N-nn-1], 0);
+		dtrmv_lnn_libstr(nx[N-nn], nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsPb[N-nn-1], 0, &hsPb[N-nn-1], 0);
 		dveccp_libstr(nu[N-nn-1]+nx[N-nn-1], 1.0, &hsrq[N-nn-1], 0, &hsux[N-nn-1], 0);
 		dveccp_libstr(nx[N-nn], 1.0, &hsPb[N-nn-1], 0, &hswork_vec[0], 0);
 		daxpy_libstr(nx[N-nn], 1.0, &hsux[N-nn], nu[N-nn], &hswork_vec[0], 0);
@@ -188,13 +151,8 @@ void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, str
 
 	// first stage
 	nn = N-1;
-#if defined(LA_HIGH_PERFORMANCE)
-	dtrmv_unn_libstr(nx[N-nn], &hsLxt[N-nn], 0, 0, &hsb[N-nn-1], 0, &hsPb[N-nn-1], 0);
-	dtrmv_utn_libstr(nx[N-nn], &hsLxt[N-nn], 0, 0, &hsPb[N-nn-1], 0, &hsPb[N-nn-1], 0);
-#else
-	dtrmv_ltn_libstr(nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsb[N-nn-1], 0, &hsPb[N-nn-1], 0);
-	dtrmv_lnn_libstr(nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsPb[N-nn-1], 0, &hsPb[N-nn-1], 0);
-#endif
+	dtrmv_ltn_libstr(nx[N-nn], nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsb[N-nn-1], 0, &hsPb[N-nn-1], 0);
+	dtrmv_lnn_libstr(nx[N-nn], nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsPb[N-nn-1], 0, &hsPb[N-nn-1], 0);
 	dveccp_libstr(nu[N-nn-1]+nx[N-nn-1], 1.0, &hsrq[N-nn-1], 0, &hsux[N-nn-1], 0);
 	dveccp_libstr(nx[N-nn], 1.0, &hsPb[N-nn-1], 0, &hswork_vec[0], 0);
 	daxpy_libstr(nx[N-nn], 1.0, &hsux[N-nn], nu[N-nn], &hswork_vec[0], 0);
@@ -210,13 +168,8 @@ void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, str
 	dtrsv_ltn_libstr(nu[nn]+nx[nn], nu[nn]+nx[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
 	dgemv_t_libstr(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsb[nn], 0, &hsux[nn+1], nu[nn+1]);
 	dveccp_libstr(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0);
-#if defined(LA_HIGH_PERFORMANCE)
-	dtrmv_unn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, &hswork_vec[0], 0);
-	dtrmv_utn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, &hswork_vec[0], 0);
-#else
-	dtrmv_ltn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
-	dtrmv_lnn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
-#endif
+	dtrmv_ltn_libstr(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
+	dtrmv_lnn_libstr(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
 	daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
 
 	// middle stages
@@ -227,13 +180,8 @@ void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, str
 		dtrsv_ltn_libstr(nu[nn]+nx[nn], nu[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
 		dgemv_t_libstr(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsb[nn], 0, &hsux[nn+1], nu[nn+1]);
 		dveccp_libstr(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0);
-#if defined(LA_HIGH_PERFORMANCE)
-		dtrmv_unn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, &hswork_vec[0], 0);
-		dtrmv_utn_libstr(nx[nn+1], &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, &hswork_vec[0], 0);
-#else
-		dtrmv_ltn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
-		dtrmv_lnn_libstr(nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
-#endif
+		dtrmv_ltn_libstr(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
+		dtrmv_lnn_libstr(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
 		daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
 		}
 
@@ -246,7 +194,7 @@ void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, str
 /************************************************ 
 Mass-spring system: nx/2 masses connected each other with springs (in a row), and the first and the last one to walls. nu (<=nx) controls act on the first nu masses. The system is sampled with sampling time Ts. 
 ************************************************/
-void mass_spring_system(double Ts, int nx, int nu, int N, double *A, double *B, double *b, double *x0)
+static void d_mass_spring_system(double Ts, int nx, int nu, int N, double *A, double *B, double *b, double *x0)
 	{
 
 	int nx2 = nx*nx;
@@ -388,10 +336,10 @@ int main()
 	double *B; d_zeros(&B, nx_, nu_); // inputs matrix
 
 	double *b; d_zeros(&b, nx_, 1); // states offset
-	double *x0; d_zeros_align(&x0, nx_, 1); // initial state
+	double *x0; d_zeros(&x0, nx_, 1); // initial state
 
 	double Ts = 0.5; // sampling time
-	mass_spring_system(Ts, nx_, nu_, N, A, B, b, x0);
+	d_mass_spring_system(Ts, nx_, nu_, N, A, B, b, x0);
 	
 	for(ii=0; ii<nx_; ii++)
 		b[ii] = 0.1;
@@ -504,7 +452,6 @@ int main()
 	struct d_strmat hsRSQrq[N+1];
 	struct d_strvec hsrq[N+1];
 	struct d_strmat hsL[N+1];
-	struct d_strmat hsLxt[N+1];
 	struct d_strvec hsPb[N];
 	struct d_strvec hsux[N+1];
 	struct d_strvec hspi[N];
@@ -516,7 +463,6 @@ int main()
 	hsRSQrq[0] = sRr0;
 	hsrq[0] = sr0;
 	d_allocate_strmat(nu_+1, nu_, &hsL[0]);
-//	d_allocate_strmat(nu_+1, nu_, &hsLxt[0]);
 	d_allocate_strvec(nx_, &hsPb[0]);
 	d_allocate_strvec(nx_+nu_+1, &hsux[0]);
 	d_allocate_strvec(nx_, &hspi[0]);
@@ -527,7 +473,6 @@ int main()
 		hsRSQrq[ii] = sRSQrq1;
 		hsrq[ii] = srq1;
 		d_allocate_strmat(nu_+nx_+1, nu_+nx_, &hsL[ii]);
-		d_allocate_strmat(nx_, nu_+nx_, &hsLxt[ii]);
 		d_allocate_strvec(nx_, &hsPb[ii]);
 		d_allocate_strvec(nx_+nu_+1, &hsux[ii]);
 		d_allocate_strvec(nx_, &hspi[ii]);
@@ -535,7 +480,6 @@ int main()
 	hsRSQrq[N] = sQqN;
 	hsrq[N] = sqN;
 	d_allocate_strmat(nx_+1, nx_, &hsL[N]);
-	d_allocate_strmat(nx_, nx_, &hsLxt[N]);
 	d_allocate_strvec(nx_+nu_+1, &hsux[N]);
 	d_allocate_strmat(nu_+nx_+1, nx_, &hswork_mat[0]);
 	d_allocate_strvec(nx_, &hswork_vec[0]);
@@ -557,21 +501,21 @@ int main()
 
 	for(rep=0; rep<nrep; rep++)
 		{
-		d_back_ric_sv_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL, hsLxt, hsux, hspi, hswork_mat, hswork_vec);
+		d_back_ric_sv_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL, hsux, hspi, hswork_mat, hswork_vec);
 		}
 
 	gettimeofday(&tv1, NULL); // time
 
 	for(rep=0; rep<nrep; rep++)
 		{
-		d_back_ric_trf_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL, hsLxt, hswork_mat);
+		d_back_ric_trf_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL, hswork_mat);
 		}
 
 	gettimeofday(&tv2, NULL); // time
 
 	for(rep=0; rep<nrep; rep++)
 		{
-		d_back_ric_trs_libstr(N, nx, nu, hsBAbt, hsb, hsrq, hsL, hsLxt, hsPb, hsux, hspi, hswork_vec);
+		d_back_ric_trs_libstr(N, nx, nu, hsBAbt, hsb, hsrq, hsL, hsPb, hsux, hspi, hswork_vec);
 		}
 
 	gettimeofday(&tv3, NULL); // time
@@ -604,7 +548,7 @@ int main()
 	d_free(A);
 	d_free(B);
 	d_free(b);
-	d_free_align(x0);
+	d_free(x0);
 	d_free(R);
 	d_free(S);
 	d_free(Q);
@@ -623,20 +567,17 @@ int main()
 	d_free_strmat(&sQqN);
 	d_free_strvec(&sqN);
 	d_free_strmat(&hsL[0]);
-//	d_free_strmat(&hsLxt[0]);
 	d_free_strvec(&hsPb[0]);
 	d_free_strvec(&hsux[0]);
 	d_free_strvec(&hspi[0]);
 	for(ii=1; ii<N; ii++)
 		{
 		d_free_strmat(&hsL[ii]);
-		d_free_strmat(&hsLxt[ii]);
 		d_free_strvec(&hsPb[ii]);
 		d_free_strvec(&hsux[ii]);
 		d_free_strvec(&hspi[ii]);
 		}
 	d_free_strmat(&hsL[N]);
-	d_free_strmat(&hsLxt[N]);
 	d_free_strvec(&hsux[N]);
 	d_free_strmat(&hswork_mat[0]);
 	d_free_strvec(&hswork_vec[0]);
