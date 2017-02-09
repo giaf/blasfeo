@@ -171,7 +171,7 @@ void d_print_e_mat(int m, int n, double *A, int lda)
 		{
 		for(j=0; j<n; j++)
 			{
-			printf("%e ", A[i+lda*j]);
+			printf("%e\t", A[i+lda*j]);
 			}
 		printf("\n");
 		}
@@ -188,7 +188,7 @@ void d_print_e_tran_mat(int row, int col, double *A, int lda)
 		{
 		for(i=0; i<row; i++)
 			{
-			printf("%e ", A[i+lda*j]);
+			printf("%e\t", A[i+lda*j]);
 			}
 		printf("\n");
 		}
@@ -426,7 +426,7 @@ void d_print_e_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
 			{
 			for(j=0; j<n; j++)
 				{
-				printf("%e ", pA[i+bs*j]);
+				printf("%e\t", pA[i+bs*j]);
 				}
 			printf("\n");
 			}
@@ -439,7 +439,7 @@ void d_print_e_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
 			{
 			for(j=0; j<n; j++)
 				{
-				printf("%e ", pA[i+bs*j+sda*ii]);
+				printf("%e\t", pA[i+bs*j+sda*ii]);
 				}
 			printf("\n");
 			}
@@ -451,7 +451,7 @@ void d_print_e_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
 			{
 			for(j=0; j<n; j++)
 				{
-				printf("%e ", pA[i+bs*j+sda*ii]);
+				printf("%e\t", pA[i+bs*j+sda*ii]);
 				}
 			printf("\n");
 			}

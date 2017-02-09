@@ -426,7 +426,7 @@ void s_print_e_strmat(int m, int n, struct s_strmat *sA, int ai, int aj)
 			{
 			for(j=0; j<n; j++)
 				{
-				printf("%e ", pA[i+bs*j]);
+				printf("%e\t", pA[i+bs*j]);
 				}
 			printf("\n");
 			}
@@ -439,7 +439,7 @@ void s_print_e_strmat(int m, int n, struct s_strmat *sA, int ai, int aj)
 			{
 			for(j=0; j<n; j++)
 				{
-				printf("%e ", pA[i+bs*j+sda*ii]);
+				printf("%e\t", pA[i+bs*j+sda*ii]);
 				}
 			printf("\n");
 			}
@@ -451,7 +451,7 @@ void s_print_e_strmat(int m, int n, struct s_strmat *sA, int ai, int aj)
 			{
 			for(j=0; j<n; j++)
 				{
-				printf("%e ", pA[i+bs*j+sda*ii]);
+				printf("%e\t", pA[i+bs*j+sda*ii]);
 				}
 			printf("\n");
 			}
