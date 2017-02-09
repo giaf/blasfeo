@@ -167,27 +167,27 @@ _inner_kernel_dgemv_add_nt_6_lib4:
 	vmaskmovpd	0(%r13), %ymm15, %ymm12
 	vmaskmovpd	0(%r14), %ymm15, %ymm13
 
-	vmaskmovdp	0(%r11), %ymm15, %ymm14
+	vmaskmovpd	0(%r11), %ymm15, %ymm14
 	vfmadd231pd	%ymm14, %ymm12, %ymm0
 	vfmadd231pd	%ymm14, %ymm6, %ymm13
 	
-	vmaskmovdp	32(%r11), %ymm15, %ymm14
+	vmaskmovpd	32(%r11), %ymm15, %ymm14
 	vfmadd231pd	%ymm14, %ymm12, %ymm1
 	vfmadd231pd	%ymm14, %ymm7, %ymm13
 	
-	vmaskmovdp	64(%r11), %ymm15, %ymm14
+	vmaskmovpd	64(%r11), %ymm15, %ymm14
 	vfmadd231pd	%ymm14, %ymm12, %ymm2
 	vfmadd231pd	%ymm14, %ymm8, %ymm13
 
-	vmaskmovdp	96(%r11), %ymm15, %ymm14
+	vmaskmovpd	96(%r11), %ymm15, %ymm14
 	vfmadd231pd	%ymm14, %ymm12, %ymm3
 	vfmadd231pd	%ymm14, %ymm9, %ymm13
 	
-	vmaskmovdp	128(%r11), %ymm15, %ymm14
+	vmaskmovpd	128(%r11), %ymm15, %ymm14
 	vfmadd231pd	%ymm14, %ymm12, %ymm4
 	vfmadd231pd	%ymm14, %ymm10, %ymm13
 	
-	vmaskmovdp	160(%r11), %ymm15, %ymm14
+	vmaskmovpd	160(%r11), %ymm15, %ymm14
 	vfmadd231pd	%ymm14, %ymm12, %ymm5
 	vfmadd231pd	%ymm14, %ymm11, %ymm13
 	
