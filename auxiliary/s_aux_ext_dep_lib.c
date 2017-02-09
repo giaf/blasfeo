@@ -96,12 +96,12 @@ void s_free_align(float *pA)
 
 
 /* prints a matrix in column-major format */
-void s_print_mat(int row, int col, float *A, int lda)
+void s_print_mat(int m, int n, float *A, int lda)
 	{
 	int i, j;
-	for(i=0; i<row; i++)
+	for(i=0; i<m; i++)
 		{
-		for(j=0; j<col; j++)
+		for(j=0; j<n; j++)
 			{
 			printf("%9.5f ", A[i+lda*j]);
 			}
@@ -164,12 +164,12 @@ void s_print_tran_to_file_mat(FILE *file, int row, int col, float *A, int lda)
 
 
 /* prints a matrix in column-major format (exponential notation) */
-void s_print_e_mat(int row, int col, float *A, int lda)
+void s_print_e_mat(int m, int n, float *A, int lda)
 	{
 	int i, j;
-	for(i=0; i<row; i++)
+	for(i=0; i<m; i++)
 		{
-		for(j=0; j<col; j++)
+		for(j=0; j<n; j++)
 			{
 			printf("%e\t", A[i+lda*j]);
 			}
@@ -207,119 +207,7 @@ void s_print_e_tran_mat(int row, int col, float *A, int lda)
 
 #include "../include/blasfeo_block_size.h"
 
-// old interface
 
-/* prints a matrix in panel-major format */
-void s_print_pmat(int row, int col, float *pA, int sda)
-	{
-
-	const int bs = S_BS;
-
-	int ii, i, j, row2;
-
-	for(ii=0; ii<row-(bs-1); ii+=bs)
-		{
-		for(i=0; i<bs; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				printf("%9.5f ", pA[i+bs*j+sda*ii]);
-				}
-			printf("\n");
-			}
-		}
-	if(ii<row)
-		{
-		row2 = row-ii;
-		for(i=0; i<row2; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				printf("%9.5f ", pA[i+bs*j+sda*ii]);
-				}
-			printf("\n");
-			}
-		}
-	printf("\n");
-
-	}	
-
-
-
-void s_print_to_file_pmat(FILE *file, int row, int col, float *pA, int sda)
-	{
-
-	const int bs = S_BS;
-
-	int ii, i, j, row2;
-
-	for(ii=0; ii<row-(bs-1); ii+=bs)
-		{
-		for(i=0; i<bs; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				fprintf(file, "%9.5f ", pA[i+bs*j+sda*ii]);
-				}
-			fprintf(file, "\n");
-			}
-		}
-	if(ii<row)
-		{
-		row2 = row-ii;
-		for(i=0; i<row2; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				fprintf(file, "%9.5f ", pA[i+bs*j+sda*ii]);
-				}
-			fprintf(file, "\n");
-			}
-		}
-	fprintf(file, "\n");
-
-	}	
-
-
-
-/* prints a matrix in panel-major format (exponential notation) */
-void s_print_e_pmat(int row, int col, float *pA, int sda)
-	{
-
-	const int bs = S_BS;
-
-	int ii, i, j, row2;
-
-	for(ii=0; ii<row-(bs-1); ii+=bs)
-		{
-		for(i=0; i<bs; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				printf("%e\t", pA[i+bs*j+sda*ii]);
-				}
-			printf("\n");
-			}
-		}
-	if(ii<row)
-		{
-		row2 = row-ii;
-		for(i=0; i<row2; i++)
-			{
-			for(j=0; j<col; j++)
-				{
-				printf("%e\t", pA[i+bs*j+sda*ii]);
-				}
-			printf("\n");
-			}
-		}
-	printf("\n");
-
-	}	
-
-
-
-// new interface
 
 // create a matrix structure for a matrix of size m*n by dynamically allocating the memory
 void s_allocate_strmat(int m, int n, struct s_strmat *sA)
@@ -381,16 +269,50 @@ void s_free_strvec(struct s_strvec *sa)
 // print a matrix structure
 void s_print_strmat(int m, int n, struct s_strmat *sA, int ai, int aj)
 	{
-	// TODO ai
-	if(ai!=0)
-		{
-		printf("\ns_print_strmat: feature not implemented yet: ai=%d\n\n", ai);
-		exit(1);
-		}
-	const int bs = 4;
+	const int bs = S_BS;
 	int sda = sA->cn;
-	float *pA = sA->pA + aj*bs;
-	s_print_pmat(m, n, pA, sda);
+	float *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	int ii, i, j, tmp;
+	ii = 0;
+	if(ai%bs>0)
+		{
+		tmp = bs-ai%bs;
+		tmp = m<tmp ? m : tmp;
+		for(i=0; i<tmp; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				printf("%9.5f ", pA[i+bs*j]);
+				}
+			printf("\n");
+			}
+		pA += tmp + bs*(sda-1);
+		m -= tmp;
+		}
+	for( ; ii<m-(bs-1); ii+=bs)
+		{
+		for(i=0; i<bs; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				printf("%9.5f ", pA[i+bs*j+sda*ii]);
+				}
+			printf("\n");
+			}
+		}
+	if(ii<m)
+		{
+		tmp = m-ii;
+		for(i=0; i<tmp; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				printf("%9.5f ", pA[i+bs*j+sda*ii]);
+				}
+			printf("\n");
+			}
+		}
+	printf("\n");
 	return;
 	}
 
@@ -419,16 +341,50 @@ void s_print_tran_strvec(int m, struct s_strvec *sa, int ai)
 // print a matrix structure
 void s_print_to_file_strmat(FILE * file, int m, int n, struct s_strmat *sA, int ai, int aj)
 	{
-	// TODO ai
-	if(ai!=0)
-		{
-		printf("\ns_print_to_file_strmat: feature not implemented yet: ai=%d\n\n", ai);
-		exit(1);
-		}
-	const int bs = 4;
+	const int bs = S_BS;
 	int sda = sA->cn;
-	float *pA = sA->pA + aj*bs;
-	s_print_to_file_pmat(file, m, n, pA, sda);
+	float *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	int ii, i, j, tmp;
+	ii = 0;
+	if(ai%bs>0)
+		{
+		tmp = bs-ai%bs;
+		tmp = m<tmp ? m : tmp;
+		for(i=0; i<tmp; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				fprintf(file, "%9.5f ", pA[i+bs*j]);
+				}
+			fprintf(file, "\n");
+			}
+		pA += tmp + bs*(sda-1);
+		m -= tmp;
+		}
+	for( ; ii<m-(bs-1); ii+=bs)
+		{
+		for(i=0; i<bs; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				fprintf(file, "%9.5f ", pA[i+bs*j+sda*ii]);
+				}
+			fprintf(file, "\n");
+			}
+		}
+	if(ii<m)
+		{
+		tmp = m-ii;
+		for(i=0; i<tmp; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				fprintf(file, "%9.5f ", pA[i+bs*j+sda*ii]);
+				}
+			fprintf(file, "\n");
+			}
+		}
+	fprintf(file, "\n");
 	return;
 	}
 
@@ -457,16 +413,50 @@ void s_print_tran_to_file_strvec(FILE * file, int m, struct s_strvec *sa, int ai
 // print a matrix structure
 void s_print_e_strmat(int m, int n, struct s_strmat *sA, int ai, int aj)
 	{
-	// TODO ai
-	if(ai!=0)
-		{
-		printf("\ns_print_e_strmat: feature not implemented yet: ai=%d\n\n", ai);
-		exit(1);
-		}
-	const int bs = 4;
+	const int bs = S_BS;
 	int sda = sA->cn;
-	float *pA = sA->pA + aj*bs;
-	s_print_e_pmat(m, n, pA, sda);
+	float *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	int ii, i, j, tmp;
+	ii = 0;
+	if(ai%bs>0)
+		{
+		tmp = bs-ai%bs;
+		tmp = m<tmp ? m : tmp;
+		for(i=0; i<tmp; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				printf("%e ", pA[i+bs*j]);
+				}
+			printf("\n");
+			}
+		pA += tmp + bs*(sda-1);
+		m -= tmp;
+		}
+	for( ; ii<m-(bs-1); ii+=bs)
+		{
+		for(i=0; i<bs; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				printf("%e ", pA[i+bs*j+sda*ii]);
+				}
+			printf("\n");
+			}
+		}
+	if(ii<m)
+		{
+		tmp = m-ii;
+		for(i=0; i<tmp; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				printf("%e ", pA[i+bs*j+sda*ii]);
+				}
+			printf("\n");
+			}
+		}
+	printf("\n");
 	return;
 	}
 

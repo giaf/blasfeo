@@ -53,7 +53,7 @@ void d_free(double *pA);
 // free the memory allocated by d_zeros_align or d_zeros_align_bytes
 void d_free_align(double *pA);
 // print a column-major matrix
-void d_print_mat(int row, int col, double *A, int lda);
+void d_print_mat(int m, int n, double *A, int lda);
 // print the transposed of a column-major matrix
 void d_print_tran_mat(int row, int col, double *A, int lda);
 // print to file a column-major matrix
@@ -61,16 +61,9 @@ void d_print_to_file_mat(FILE *file, int row, int col, double *A, int lda);
 // print to file the transposed of a column-major matrix
 void d_print_tran_to_file_mat(FILE *file, int row, int col, double *A, int lda);
 // print in exponential notation a column-major matrix
-void d_print_e_mat(int row, int col, double *A, int lda);
+void d_print_e_mat(int m, int n, double *A, int lda);
 // print in exponential notation the transposed of a column-major matrix
 void d_print_e_tran_mat(int row, int col, double *A, int lda);
-// print a panel-major matrix
-void d_print_pmat(int row, int col, double *pA, int sda);
-// print to file a panel-major matrix
-void d_print_to_file_pmat(FILE *file, int row, int col, double *pA, int sda);
-// print in exponential notation a panel-major matrix
-void d_print_e_pmat(int row, int col, double *pA, int sda);
-// dynamically allocate size bytes of memory and set accordingly a pointer to void; set allocated memory to zero
 
 /* strmat and strvec */
 
