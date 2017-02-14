@@ -116,6 +116,9 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA);
 void dvecin_libsp(int kmax, int *idx, double *x, double *y);
 void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y);
 void dvecad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi);
+void dvecad_sp_libstr(int m, double alpha, struct d_strvec *sx, int xi, int *idx, struct d_strvec *sz, int zi);
+void dvecin_sp_libstr(int m, double alpha, struct d_strvec *sx, int xi, int *idx, struct d_strvec *sz, int zi);
+void dvecex_sp_libstr(int m, double alpha, int *idx, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi);
 
 
 

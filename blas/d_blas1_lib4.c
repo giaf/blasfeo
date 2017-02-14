@@ -115,6 +115,54 @@ void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_str
 
 
 
+// multiply two vectors and compute dot product
+double dvecmuldot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+	{
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+	int ii;
+	double dot = 0.0;
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	__m128d
+		u_tmp, u_dot;
+	__m256d
+		v_tmp,
+		v_x0, v_y0, v_z0;
+	
+	v_tmp = _mm256_setzero_pd();
+#endif
+
+	ii = 0;
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<m-3; ii+=4)
+		{
+		v_x0 = _mm256_loadu_pd( &x[ii+0] );
+		v_y0 = _mm256_loadu_pd( &y[ii+0] );
+		v_z0 = _mm256_mul_pd( v_x0, v_y0 );
+		_mm256_storeu_pd( &z[ii+0], v_z0 );
+		v_tmp = _mm256_add_pd( v_tmp, v_z0 );
+		}
+#endif
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = x[ii+0] * y[ii+0];
+		dot += z[ii+0];
+		}
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	// dot product
+	u_tmp = _mm_add_pd( _mm256_castpd256_pd128( v_tmp ), _mm256_extractf128_pd( v_tmp, 0x1 ) );
+	u_tmp = _mm_hadd_pd( u_tmp, u_tmp);
+	u_dot = _mm_load_sd( &dot );
+	u_dot = _mm_add_sd( u_dot, u_tmp );
+	_mm_store_sd( &dot, u_dot );
+#endif
+	return dot;
+	}
+
+
+
 #else
 
 #error : wrong LA choice

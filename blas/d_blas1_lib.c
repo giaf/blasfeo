@@ -62,6 +62,25 @@ void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_str
 
 
 
+// multiply two vectors and reduce the result
+double dvecmulred_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+	{
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+	int ii;
+	double red = 0.0;
+	ii = 0;
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = x[ii+0] * y[ii+0];
+		red += z[ii+0];
+		}
+	return red;
+	}
+
+
+
 #elif defined(LA_BLAS)
 
 
@@ -84,6 +103,25 @@ void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_str
 	daxpy_(&m, &alpha, x, &i1, z, &i1);
 #endif
 	return;
+	}
+
+
+
+// multiply two vectors and compute dot product
+double dvecmuldot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+	{
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+	int ii;
+	double dot = 0.0;
+	ii = 0;
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = x[ii+0] * y[ii+0];
+		dot += z[ii+0];
+		}
+	return dot;
 	}
 
 

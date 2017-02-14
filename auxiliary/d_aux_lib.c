@@ -740,6 +740,7 @@ void drowad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 
 
 
+// TODO remove !!!!!!!!!!!!!!!!!!!
 // adds strvec to strvec, sparse formulation
 void dvecad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi)
 	{
@@ -751,6 +752,42 @@ void dvecad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 		{
 		y[idx[jj]] += alpha * x[jj];
 		}
+	return;
+	}
+
+
+
+void dvecad_sp_libstr(int m, double alpha, struct d_strvec *sx, int xi, int *idx, struct d_strvec *sz, int zi)
+	{
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		z[idx[ii]] += alpha * x[ii];
+	return;
+	}
+
+
+
+void dvecin_sp_libstr(int m, double alpha, struct d_strvec *sx, int xi, int *idx, struct d_strvec *sz, int zi)
+	{
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		z[idx[ii]] = alpha * x[ii];
+	return;
+	}
+
+
+
+void dvecex_sp_libstr(int m, double alpha, int *idx, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		z[ii] = alpha * x[idx[ii]];
 	return;
 	}
 

@@ -40,6 +40,8 @@ extern "C" {
 
 // y = y + alpha*x
 void daxpy_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi);
+// z = x .* y, return sum(z) = x^T * y
+double dvecmuldot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi);
 
 
 
