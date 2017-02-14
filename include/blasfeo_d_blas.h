@@ -39,11 +39,7 @@ extern "C" {
 //
 
 // y = y + alpha*x
-void daxpy_lib(int kmax, double alpha, double *x, double *y);
-void daxpy_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi);
-// z = y, y = y + alpha*x
-void daxpy_bkp_lib(int kmax, double alpha, double *x, double *y, double *z);
-void daxpy_bkp_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi);
+void daxpy_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi);
 
 
 

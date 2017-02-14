@@ -49,29 +49,14 @@
 
 
 
-void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi)
-	{
-	int ii;
-	double *x = sx->pa + xi;
-	double *y = sy->pa + yi;
-	for(ii=0; ii<m; ii++)
-		y[ii] += alpha * x[ii];
-	return;
-	}
-
-
-
-void daxpy_bkp_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
 	int ii;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
 	for(ii=0; ii<m; ii++)
-		{
-		z[ii] = y[ii];
-		y[ii] += alpha * x[ii];
-		}
+		z[ii] = y[ii] + alpha*x[ii];
 	return;
 	}
 
@@ -81,33 +66,22 @@ void daxpy_bkp_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d
 
 
 
-void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi)
-	{
-	int i1 = 1;
-	double *x = sx->pa + xi;
-	double *y = sy->pa + yi;
-#if defined(REF_BLAS_MKL)
-	daxpy(&m, &alpha, x, &i1, y, &i1);
-#else
-	daxpy_(&m, &alpha, x, &i1, y, &i1);
-#endif
-	return;
-	}
-
-
-
-void daxpy_bkp_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
 	int i1 = 1;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
+	if(y!=z)
 #if defined(REF_BLAS_MKL)
-	dcopy(&m, y, &i1, z, &i1);
-	daxpy(&m, &alpha, x, &i1, y, &i1);
+		dcopy(&m, y, &i1, z, &i1);
 #else
-	dcopy_(&m, y, &i1, z, &i1);
-	daxpy_(&m, &alpha, x, &i1, y, &i1);
+		dcopy_(&m, y, &i1, z, &i1);
+#endif
+#if defined(REF_BLAS_MKL)
+	daxpy(&m, &alpha, x, &i1, z, &i1);
+#else
+	daxpy_(&m, &alpha, x, &i1, z, &i1);
 #endif
 	return;
 	}

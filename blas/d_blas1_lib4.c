@@ -44,166 +44,72 @@
 
 
 
-// y = y + alpha*x, with increments equal to 1
-void daxpy_lib(int kmax, double alpha, double *x, double *y)
-	{
-
-	int ii;
-
-#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	__m256d
-		v_alpha, v_tmp,
-		v_x0, v_y0,
-		v_x1, v_y1;
-#endif
-
-	ii = 0;
-#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	v_alpha = _mm256_broadcast_sd( &alpha );
-	for( ; ii<kmax-7; ii+=8)
-		{
-		v_x0  = _mm256_loadu_pd( &x[ii+0] );
-		v_x1  = _mm256_loadu_pd( &x[ii+4] );
-		v_y0  = _mm256_loadu_pd( &y[ii+0] );
-		v_y1  = _mm256_loadu_pd( &y[ii+4] );
-#if defined(TARGET_X64_INTEL_HASWELL)
-		v_y0  = _mm256_fmadd_pd( v_alpha, v_x0, v_y0 );
-		v_y1  = _mm256_fmadd_pd( v_alpha, v_x1, v_y1 );
-#else // sandy bridge
-		v_tmp = _mm256_mul_pd( v_alpha, v_x0 );
-		v_y0  = _mm256_add_pd( v_tmp, v_y0 );
-		v_tmp = _mm256_mul_pd( v_alpha, v_x1 );
-		v_y1  = _mm256_add_pd( v_tmp, v_y1 );
-#endif
-		_mm256_storeu_pd( &y[ii+0], v_y0 );
-		_mm256_storeu_pd( &y[ii+4], v_y1 );
-		}
-	for( ; ii<kmax-3; ii+=4)
-		{
-		v_x0  = _mm256_loadu_pd( &x[ii] );
-		v_y0  = _mm256_loadu_pd( &y[ii] );
-#if defined(TARGET_X64_INTEL_HASWELL)
-		v_y0  = _mm256_fmadd_pd( v_alpha, v_x0, v_y0 );
-#else // sandy bridge
-		v_tmp = _mm256_mul_pd( v_alpha, v_x0 );
-		v_y0  = _mm256_add_pd( v_tmp, v_y0 );
-#endif
-		_mm256_storeu_pd( &y[ii], v_y0 );
-		}
-#else
-	for( ; ii<kmax-3; ii+=4)
-		{
-		y[ii+0] = y[ii+0] + alpha*x[ii+0];
-		y[ii+1] = y[ii+1] + alpha*x[ii+1];
-		y[ii+2] = y[ii+2] + alpha*x[ii+2];
-		y[ii+3] = y[ii+3] + alpha*x[ii+3];
-		}
-#endif
-	for( ; ii<kmax; ii++)
-		{
-		y[ii+0] = y[ii+0] + alpha*x[ii+0];
-		}
-
-	return;
-
-	}
-
-
-
-// z = y, y = y + alpha*x, with increments equal to 1
-void daxpy_bkp_lib(int kmax, double alpha, double *x, double *y, double *z)
-	{
-
-	int ii;
-
-#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	__m256d
-		v_alpha, v_tmp,
-		v_x0, v_y0,
-		v_x1, v_y1;
-#endif
-
-	ii = 0;
-#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	v_alpha = _mm256_broadcast_sd( &alpha );
-	for( ; ii<kmax-7; ii+=8)
-		{
-		v_y0  = _mm256_loadu_pd( &y[ii+0] );
-		v_y1  = _mm256_loadu_pd( &y[ii+4] );
-		v_x0  = _mm256_loadu_pd( &x[ii+0] );
-		v_x1  = _mm256_loadu_pd( &x[ii+4] );
-		_mm256_storeu_pd( &z[ii+0], v_y0 );
-		_mm256_storeu_pd( &z[ii+4], v_y1 );
-#if defined(TARGET_X64_INTEL_HASWELL)
-		v_y0  = _mm256_fmadd_pd( v_alpha, v_x0, v_y0 );
-		v_y1  = _mm256_fmadd_pd( v_alpha, v_x1, v_y1 );
-#else // sandy_bridge
-		v_tmp = _mm256_mul_pd( v_alpha, v_x0 );
-		v_y0  = _mm256_add_pd( v_tmp, v_y0 );
-		v_tmp = _mm256_mul_pd( v_alpha, v_x1 );
-		v_y1  = _mm256_add_pd( v_tmp, v_y1 );
-#endif
-		_mm256_storeu_pd( &y[ii+0], v_y0 );
-		_mm256_storeu_pd( &y[ii+4], v_y1 );
-		}
-	for( ; ii<kmax-3; ii+=4)
-		{
-		v_y0  = _mm256_loadu_pd( &y[ii] );
-		v_x0  = _mm256_loadu_pd( &x[ii] );
-		_mm256_storeu_pd( &z[ii], v_y0 );
-#if defined(TARGET_X64_INTEL_HASWELL)
-		v_y0  = _mm256_fmadd_pd( v_alpha, v_x0, v_y0 );
-#else // sandy_bridge
-		v_tmp = _mm256_mul_pd( v_alpha, v_x0 );
-		v_y0  = _mm256_add_pd( v_tmp, v_y0 );
-#endif
-		_mm256_storeu_pd( &y[ii], v_y0 );
-		}
-#else
-	for( ; ii<kmax-3; ii+=4)
-		{
-		z[ii+0] = y[ii+0];
-		y[ii+0] = y[ii+0] + alpha*x[ii+0];
-		z[ii+1] = y[ii+1];
-		y[ii+1] = y[ii+1] + alpha*x[ii+1];
-		z[ii+2] = y[ii+2];
-		y[ii+2] = y[ii+2] + alpha*x[ii+2];
-		z[ii+3] = y[ii+3];
-		y[ii+3] = y[ii+3] + alpha*x[ii+3];
-		}
-#endif
-	for( ; ii<kmax; ii++)
-		{
-		z[ii+0] = y[ii+0];
-		y[ii+0] = y[ii+0] + alpha*x[ii+0];
-		}
-
-	return;
-
-	}
-
-
-
 #if defined(LA_HIGH_PERFORMANCE)
 
 
 
-void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi)
-	{
-	double *x = sx->pa + xi;
-	double *y = sy->pa + yi;
-	daxpy_lib(m, alpha, x, y);
-	return;
-	}
-
-
-
-void daxpy_bkp_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
-	daxpy_bkp_lib(m, alpha, x, y, z);
+
+	int ii;
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	__m256d
+		v_alpha, v_tmp,
+		v_x0, v_y0,
+		v_x1, v_y1;
+#endif
+
+	ii = 0;
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	v_alpha = _mm256_broadcast_sd( &alpha );
+	for( ; ii<m-7; ii+=8)
+		{
+		v_x0  = _mm256_loadu_pd( &x[ii+0] );
+		v_x1  = _mm256_loadu_pd( &x[ii+4] );
+		v_y0  = _mm256_loadu_pd( &y[ii+0] );
+		v_y1  = _mm256_loadu_pd( &y[ii+4] );
+#if defined(TARGET_X64_INTEL_HASWELL)
+		v_y0  = _mm256_fmadd_pd( v_alpha, v_x0, v_y0 );
+		v_y1  = _mm256_fmadd_pd( v_alpha, v_x1, v_y1 );
+#else // sandy bridge
+		v_tmp = _mm256_mul_pd( v_alpha, v_x0 );
+		v_y0  = _mm256_add_pd( v_tmp, v_y0 );
+		v_tmp = _mm256_mul_pd( v_alpha, v_x1 );
+		v_y1  = _mm256_add_pd( v_tmp, v_y1 );
+#endif
+		_mm256_storeu_pd( &z[ii+0], v_y0 );
+		_mm256_storeu_pd( &z[ii+4], v_y1 );
+		}
+	for( ; ii<m-3; ii+=4)
+		{
+		v_x0  = _mm256_loadu_pd( &x[ii] );
+		v_y0  = _mm256_loadu_pd( &y[ii] );
+#if defined(TARGET_X64_INTEL_HASWELL)
+		v_y0  = _mm256_fmadd_pd( v_alpha, v_x0, v_y0 );
+#else // sandy bridge
+		v_tmp = _mm256_mul_pd( v_alpha, v_x0 );
+		v_y0  = _mm256_add_pd( v_tmp, v_y0 );
+#endif
+		_mm256_storeu_pd( &z[ii], v_y0 );
+		}
+#else
+	for( ; ii<m-3; ii+=4)
+		{
+		z[ii+0] = y[ii+0] + alpha*x[ii+0];
+		z[ii+1] = y[ii+1] + alpha*x[ii+1];
+		z[ii+2] = y[ii+2] + alpha*x[ii+2];
+		z[ii+3] = y[ii+3] + alpha*x[ii+3];
+		}
+#endif
+	for( ; ii<m; ii++)
+		{
+		z[ii+0] = y[ii+0] + alpha*x[ii+0];
+		}
+
 	return;
 	}
 
