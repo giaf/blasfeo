@@ -163,6 +163,88 @@ double dvecmuldot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy
 
 
 
+// compute dot product of two vectors
+double ddot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi)
+	{
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	int ii;
+	double dot = 0.0;
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	__m128d
+		u_dot0, u_x0, u_y0, u_tmp;
+	__m256d
+		v_dot0, v_dot1, v_x0, v_x1, v_y0, v_y1, v_tmp;
+	
+	v_dot0 = _mm256_setzero_pd();
+	v_dot1 = _mm256_setzero_pd();
+	u_dot0 = _mm_setzero_pd();
+
+	ii = 0;
+	for(; ii<m-7; ii+=8)
+		{
+		v_x0 = _mm256_loadu_pd( &x[ii+0] );
+		v_x1 = _mm256_loadu_pd( &x[ii+4] );
+		v_y0 = _mm256_loadu_pd( &y[ii+0] );
+		v_y1 = _mm256_loadu_pd( &y[ii+4] );
+#if defined(TARGET_X64_INTEL_HASWELL)
+		v_dot0  = _mm256_fmadd_pd( v_x0, v_y0, v_dot0 );
+		v_dot1  = _mm256_fmadd_pd( v_x1, v_y1, v_dot1 );
+#else // sandy bridge
+		v_tmp = _mm256_mul_pd( v_x0, v_y0 );
+		v_dot0 = _mm256_add_pd( v_dot0, v_tmp );
+		v_tmp = _mm256_mul_pd( v_x1, v_y1 );
+		v_dot1 = _mm256_add_pd( v_dot1, v_tmp );
+#endif
+		}
+	for(; ii<m-3; ii+=4)
+		{
+		v_x0 = _mm256_loadu_pd( &x[ii+0] );
+		v_y0 = _mm256_loadu_pd( &y[ii+0] );
+#if defined(TARGET_X64_INTEL_HASWELL)
+		v_dot0  = _mm256_fmadd_pd( v_x0, v_y0, v_dot0 );
+#else // sandy bridge
+		v_tmp = _mm256_mul_pd( v_x0, v_y0 );
+		v_dot0 = _mm256_add_pd( v_dot0, v_tmp );
+#endif
+		}
+	for(; ii<m; ii++)
+		{
+		u_x0 = _mm_load_sd( &x[ii+0] );
+		u_y0 = _mm_load_sd( &y[ii+0] );
+#if defined(TARGET_X64_INTEL_HASWELL)
+		u_dot0  = _mm_fmadd_sd( u_x0, u_y0, u_dot0 );
+#else // sandy bridge
+		u_tmp = _mm_mul_sd( u_x0, u_y0 );
+		u_dot0 = _mm_add_sd( u_dot0, u_tmp );
+#endif
+		}
+	// reduce
+	v_dot0 = _mm256_add_pd( v_dot0, v_dot1 );
+	u_tmp = _mm_add_pd( _mm256_castpd256_pd128( v_dot0 ), _mm256_extractf128_pd( v_dot0, 0x1 ) );
+	u_tmp = _mm_hadd_pd( u_tmp, u_tmp);
+	u_dot0 = _mm_add_sd( u_dot0, u_tmp );
+	_mm_store_sd( &dot, u_dot0 );
+#else // no haswell, no sandy bridge
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		dot += x[ii+0] * y[ii+0];
+		dot += x[ii+1] * y[ii+1];
+		dot += x[ii+2] * y[ii+2];
+		dot += x[ii+3] * y[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		dot += x[ii+0] * y[ii+0];
+		}
+#endif // haswell, sandy bridge
+	return dot;
+	}
+
+
+
 #else
 
 #error : wrong LA choice
