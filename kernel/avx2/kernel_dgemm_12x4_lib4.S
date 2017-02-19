@@ -1259,6 +1259,271 @@ _inner_kernel_dgemm_sub_nn_12x4_lib4:
 
 // common inner routine with file scope
 //
+// edge for B unaligned
+//
+// input arguments:
+// r10   <- k
+// r11   <- A
+// r12   <- bs*sda*sizeof(double)
+// r13   <- B
+// r14   <- bs*sdb*sizeof(double)
+// r15   <- offB
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm8  <- dirty
+// ymm12 <- dirty
+// ymm15 <- dirty
+
+//
+// output arguments:
+// r10   <- k-(4-offB)
+// r11   <- A+(4-offB)*bs*sizeof(double)
+// r12   <- bs*sda*sizeof(double)
+// r13   <- B-offB+bs*sdb*sizeof(double)
+// r14   <- bs*sdb*sizeof(double)
+// r15   <- offB
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm8  <- dirty
+// ymm12 <- dirty
+// ymm15 <- dirty
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DGEMM_ADD_NN_12X4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_dgemm_add_nn_12x4_lib4, @function
+inner_edge_dgemm_add_nn_12x4_lib4:
+#elif defined(OS_MAC)
+_inner_edge_dgemm_add_nn_12x4_lib4:
+#endif
+#endif
+	
+	cmpl			$0, %r10d
+	jle				2f // end
+
+	movq			%r11, %rax // A1 <- A0
+	addq			%r12, %rax // A1 <- A0 + 4*sda*sizeof(double)
+	movq			%rax, %rbx // A2 <- A1
+	addq			%r12, %rbx // A2 <- A1 + 4*sda*sizeof(double)
+
+	cmpl			$1, %r15d
+	jl				2f // end
+	jg				0f // offB>1
+
+	// offB==1
+
+	addq			$8, %r13 // B+1*sizeof(double)
+
+	vmovapd			0(%r11), %ymm12 // A0[0]
+	vmovapd			0(%rax), %ymm14 // A1[0]
+	vmovapd			0(%rbx), %ymm15 // A2[0]
+	vbroadcastsd	0(%r13), %ymm13 // B[0]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm0
+	vfnmadd231pd	%ymm14, %ymm13, %ymm4
+	vfnmadd231pd	%ymm15, %ymm13, %ymm8
+	vbroadcastsd	32(%r13), %ymm13 // B[1]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm1
+	vfnmadd231pd	%ymm14, %ymm13, %ymm5
+	vfnmadd231pd	%ymm15, %ymm13, %ymm9
+	vbroadcastsd	64(%r13), %ymm13 // B[2]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm2
+	vfnmadd231pd	%ymm14, %ymm13, %ymm6
+	vfnmadd231pd	%ymm15, %ymm13, %ymm10
+	vbroadcastsd	96(%r13), %ymm13 // B[3]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm3
+	vfnmadd231pd	%ymm14, %ymm13, %ymm7
+	vfnmadd231pd	%ymm15, %ymm13, %ymm11
+
+	subl			$1, %r10d // k-1
+	addq			$32, %r11 // A+1*bs*sizeof(double)
+	addq			$32, %rax // A+1*bs*sizeof(double)
+	addq			$32, %rbx // A+1*bs*sizeof(double)
+	addq			$8, %r13 // B+1*sizeof(double)
+
+	cmpl			$0, %r10d
+	jle				2f // end
+
+	vmovapd			0(%r11), %ymm12 // A0[0]
+	vmovapd			0(%rax), %ymm14 // A1[0]
+	vmovapd			0(%rbx), %ymm15 // A2[0]
+	vbroadcastsd	0(%r13), %ymm13 // B[0]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm0
+	vfnmadd231pd	%ymm14, %ymm13, %ymm4
+	vfnmadd231pd	%ymm15, %ymm13, %ymm8
+	vbroadcastsd	32(%r13), %ymm13 // B[1]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm1
+	vfnmadd231pd	%ymm14, %ymm13, %ymm5
+	vfnmadd231pd	%ymm15, %ymm13, %ymm9
+	vbroadcastsd	64(%r13), %ymm13 // B[2]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm2
+	vfnmadd231pd	%ymm14, %ymm13, %ymm6
+	vfnmadd231pd	%ymm15, %ymm13, %ymm10
+	vbroadcastsd	96(%r13), %ymm13 // B[3]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm3
+	vfnmadd231pd	%ymm14, %ymm13, %ymm7
+	vfnmadd231pd	%ymm15, %ymm13, %ymm11
+
+	subl			$1, %r10d // k-1
+	addq			$32, %r11 // A+1*bs*sizeof(double)
+	addq			$32, %rax // A+1*bs*sizeof(double)
+	addq			$32, %rbx // A+1*bs*sizeof(double)
+	addq			$8, %r13 // B+1*sizeof(double)
+
+	cmpl			$0, %r10d
+	jle				2f // end
+
+	vmovapd			0(%r11), %ymm12 // A0[0]
+	vmovapd			0(%rax), %ymm14 // A1[0]
+	vmovapd			0(%rbx), %ymm15 // A2[0]
+	vbroadcastsd	0(%r13), %ymm13 // B[0]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm0
+	vfnmadd231pd	%ymm14, %ymm13, %ymm4
+	vfnmadd231pd	%ymm15, %ymm13, %ymm8
+	vbroadcastsd	32(%r13), %ymm13 // B[1]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm1
+	vfnmadd231pd	%ymm14, %ymm13, %ymm5
+	vfnmadd231pd	%ymm15, %ymm13, %ymm9
+	vbroadcastsd	64(%r13), %ymm13 // B[2]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm2
+	vfnmadd231pd	%ymm14, %ymm13, %ymm6
+	vfnmadd231pd	%ymm15, %ymm13, %ymm10
+	vbroadcastsd	96(%r13), %ymm13 // B[3]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm3
+	vfnmadd231pd	%ymm14, %ymm13, %ymm7
+	vfnmadd231pd	%ymm15, %ymm13, %ymm11
+
+	subl			$1, %r10d // k-1
+	addq			$32, %r11 // A+1*bs*sizeof(double)
+//	addq			$32, %rax // A+1*bs*sizeof(double)
+//	addq			$32, %rbx // A+1*bs*sizeof(double)
+	addq			%r14, %r13
+	subq			$24, %r13 // B+bs*sdb*sizeof(double)-(bs-1)*sizeof(double)
+
+	jmp				2f // end
+
+0:
+	cmpl			$2, %r15d
+	jg				1f // offB>2
+
+	// offB==2
+
+	addq			$16, %r13 // B+2*sizeof(double)
+
+	vmovapd			0(%r11), %ymm12 // A0[0]
+	vmovapd			0(%rax), %ymm14 // A1[0]
+	vmovapd			0(%rbx), %ymm15 // A2[0]
+	vbroadcastsd	0(%r13), %ymm13 // B[0]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm0
+	vfnmadd231pd	%ymm14, %ymm13, %ymm4
+	vfnmadd231pd	%ymm15, %ymm13, %ymm8
+	vbroadcastsd	32(%r13), %ymm13 // B[1]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm1
+	vfnmadd231pd	%ymm14, %ymm13, %ymm5
+	vfnmadd231pd	%ymm15, %ymm13, %ymm9
+	vbroadcastsd	64(%r13), %ymm13 // B[2]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm2
+	vfnmadd231pd	%ymm14, %ymm13, %ymm6
+	vfnmadd231pd	%ymm15, %ymm13, %ymm10
+	vbroadcastsd	96(%r13), %ymm13 // B[3]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm3
+	vfnmadd231pd	%ymm14, %ymm13, %ymm7
+	vfnmadd231pd	%ymm15, %ymm13, %ymm11
+
+	subl			$1, %r10d // k-1
+	addq			$32, %r11 // A+1*bs*sizeof(double)
+	addq			$32, %rax // A+1*bs*sizeof(double)
+	addq			$32, %rbx // A+1*bs*sizeof(double)
+	addq			$8, %r13 // B+1*sizeof(double)
+
+	cmpl			$0, %r10d
+	jle				2f // end
+
+	vmovapd			0(%r11), %ymm12 // A0[0]
+	vmovapd			0(%rax), %ymm14 // A1[0]
+	vmovapd			0(%rbx), %ymm15 // A2[0]
+	vbroadcastsd	0(%r13), %ymm13 // B[0]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm0
+	vfnmadd231pd	%ymm14, %ymm13, %ymm4
+	vfnmadd231pd	%ymm15, %ymm13, %ymm8
+	vbroadcastsd	32(%r13), %ymm13 // B[1]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm1
+	vfnmadd231pd	%ymm14, %ymm13, %ymm5
+	vfnmadd231pd	%ymm15, %ymm13, %ymm9
+	vbroadcastsd	64(%r13), %ymm13 // B[2]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm2
+	vfnmadd231pd	%ymm14, %ymm13, %ymm6
+	vfnmadd231pd	%ymm15, %ymm13, %ymm10
+	vbroadcastsd	96(%r13), %ymm13 // B[3]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm3
+	vfnmadd231pd	%ymm14, %ymm13, %ymm7
+	vfnmadd231pd	%ymm15, %ymm13, %ymm11
+
+	subl			$1, %r10d // k-2
+	addq			$32, %r11 // A+2*bs*sizeof(double)
+//	addq			$32, %rax // A+1*bs*sizeof(double)
+//	addq			$32, %rnx // A+1*bs*sizeof(double)
+	addq			%r14, %r13
+	subq			$24, %r13 // B+bs*sdb*sizeof(double)-(bs-1)*sizeof(double)
+
+	jmp				2f
+
+1:
+	// offB==3
+
+	addq			$24, %r13 // B+3*sizeof(double)
+
+	vmovapd			0(%r11), %ymm12 // A0[0]
+	vmovapd			0(%rax), %ymm14 // A1[0]
+	vmovapd			0(%rbx), %ymm15 // A2[0]
+	vbroadcastsd	0(%r13), %ymm13 // B[0]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm0
+	vfnmadd231pd	%ymm14, %ymm13, %ymm4
+	vfnmadd231pd	%ymm15, %ymm13, %ymm8
+	vbroadcastsd	32(%r13), %ymm13 // B[1]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm1
+	vfnmadd231pd	%ymm14, %ymm13, %ymm5
+	vfnmadd231pd	%ymm15, %ymm13, %ymm9
+	vbroadcastsd	64(%r13), %ymm13 // B[2]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm2
+	vfnmadd231pd	%ymm14, %ymm13, %ymm6
+	vfnmadd231pd	%ymm15, %ymm13, %ymm10
+	vbroadcastsd	96(%r13), %ymm13 // B[3]
+	vfnmadd231pd	%ymm12, %ymm13, %ymm3
+	vfnmadd231pd	%ymm14, %ymm13, %ymm7
+	vfnmadd231pd	%ymm15, %ymm13, %ymm11
+
+	subl			$1, %r10d // k-1
+	addq			$32, %r11 // A+1*bs*sizeof(double)
+//	addq			$32, %rax // A+1*bs*sizeof(double)
+//	addq			$32, %rbx // A+1*bs*sizeof(double)
+	addq			%r14, %r13
+	subq			$24, %r13 // B+bs*sdb*sizeof(double)-(bs-1)*sizeof(double)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_dgemm_add_nn_12x4_lib4, .-inner_edge_dgemm_add_nn_12x4_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // edge for B upper triangular
 //
 // input arguments:
@@ -2284,6 +2549,11 @@ _inner_scale_ab_12x4_lib4:
 
 	vbroadcastsd 0(%r11), %ymm14 // beta
 
+	vxorpd		%ymm15, %ymm15, %ymm15 // 0.0
+
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			0f // end
+
 	vmovapd		0(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm0
 	vmovapd		32(%r12), %ymm15
@@ -2310,6 +2580,8 @@ _inner_scale_ab_12x4_lib4:
 	vfmadd231pd	%ymm14, %ymm15, %ymm10
 	vmovapd		96(%r14), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm11
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -2486,7 +2758,7 @@ _inner_blend_scale_ab_12x4_lib4:
 	vblendpd	$0xc, %ymm15, %ymm13, %ymm1
 	vblendpd	$0x3, %ymm15, %ymm13, %ymm3
 
-	vbroadcastsd 0(%r10), %ymm15 // beta
+	vbroadcastsd 0(%r10), %ymm15 // alpha
 
 	vmulpd		%ymm0, %ymm15, %ymm0
 	vmulpd		%ymm1, %ymm15, %ymm1
@@ -2503,7 +2775,7 @@ _inner_blend_scale_ab_12x4_lib4:
 	vblendpd	$0xc, %ymm15, %ymm13, %ymm5
 	vblendpd	$0x3, %ymm15, %ymm13, %ymm7
 
-	vbroadcastsd 0(%r10), %ymm15 // beta
+	vbroadcastsd 0(%r10), %ymm15 // alpha
 
 	vmulpd		%ymm4, %ymm15, %ymm4
 	vmulpd		%ymm5, %ymm15, %ymm5
@@ -2520,7 +2792,7 @@ _inner_blend_scale_ab_12x4_lib4:
 	vblendpd	$0xc, %ymm15, %ymm13, %ymm9
 	vblendpd	$0x3, %ymm15, %ymm13, %ymm11
 
-	vbroadcastsd 0(%r10), %ymm15 // beta
+	vbroadcastsd 0(%r10), %ymm15 // alpha
 
 	vmulpd		%ymm8, %ymm15, %ymm8
 	vmulpd		%ymm9, %ymm15, %ymm9
@@ -2534,6 +2806,11 @@ _inner_blend_scale_ab_12x4_lib4:
 	addq	%r13, %r14 // C2 <- C1 + 4*sdc*sizeof(double)
 
 	vbroadcastsd 0(%r11), %ymm14 // beta
+
+	vxorpd		%ymm15, %ymm15, %ymm15 // 0.0
+
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			0f // end
 
 	vmovapd		0(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm0
@@ -2562,6 +2839,8 @@ _inner_blend_scale_ab_12x4_lib4:
 	vmovapd		96(%r14), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm11
 
+0:
+
 #if MACRO_LEVEL>=1
 	.endm
 #else
@@ -2569,127 +2848,6 @@ _inner_blend_scale_ab_12x4_lib4:
 
 #if defined(OS_LINUX)
 	.size	inner_blend_scale_ab_12x4_lib4, .-inner_blend_scale_ab_12x4_lib4
-#endif
-#endif
-
-
-
-
-
-// common inner routine with file scope
-//
-// blend for generic alpha and beta=0.0
-//
-// input arguments:
-// r10   <- &alpha
-// ymm0  <- [d00 d11 d22 d33]
-// ymm1  <- [d01 d10 d23 d32]
-// ymm2  <- [d03 d12 d21 d30]
-// ymm3  <- [d02 d13 d20 d31]
-// ymm4  <- [d40 d51 d62 d73]
-// ymm5  <- [d41 d50 d63 d72]
-// ymm6  <- [d43 d52 d61 d70]
-// ymm7  <- [d42 d53 d60 d71]
-// ymm8  <- [d80 d91 da2 db3]
-// ymm9  <- [d81 d90 da3 db2]
-// ymm10 <- [d83 d92 da1 db0]
-// ymm11 <- [d82 d93 da0 db1]
-// ymm12 <- dirty
-// ymm13 <- dirty
-// ymm14 <- dirty
-// ymm15 <- dirty
-//
-// output arguments:
-// r10   <- &alpha
-// ymm0  <- [d00 d10 d20 d30]
-// ymm1  <- [d01 d11 d21 d31]
-// ymm2  <- [d02 d12 d22 d32]
-// ymm3  <- [d03 d13 d23 d33]
-// ymm4  <- [d40 d50 d60 d70]
-// ymm5  <- [d41 d51 d61 d71]
-// ymm6  <- [d42 d52 d62 d72]
-// ymm7  <- [d43 d53 d63 d73]
-// ymm8  <- [d80 d90 da0 db0]
-// ymm9  <- [d81 d91 da1 db1]
-// ymm10 <- [d82 d92 da2 db2]
-// ymm11 <- [d83 d93 da3 db3]
-// ymm12 <- dirty
-// ymm13 <- dirty
-// ymm14 <- dirty
-// ymm15 <- dirty
-
-#if MACRO_LEVEL>=1
-	.macro INNER_BLEND_SCALE_A0_12X4_LIB4
-#else
-	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_blend_scale_a0_12x4_lib4, @function
-inner_blend_scale_a0_12x4_lib4:
-#elif defined(OS_MAC)
-_inner_blend_scale_a0_12x4_lib4:
-#endif
-#endif
-		
-
-	// tc==n
-	vblendpd	$0xa, %ymm1, %ymm0, %ymm12
-	vblendpd	$0x5, %ymm1, %ymm0, %ymm13
-	vblendpd	$0xa, %ymm3, %ymm2, %ymm14
-	vblendpd	$0x5, %ymm3, %ymm2, %ymm15
-
-	vblendpd	$0xc, %ymm14, %ymm12, %ymm0
-	vblendpd	$0x3, %ymm14, %ymm12, %ymm2
-	vblendpd	$0xc, %ymm15, %ymm13, %ymm1
-	vblendpd	$0x3, %ymm15, %ymm13, %ymm3
-
-	vbroadcastsd 0(%r10), %ymm15 // alpha
-
-	vmulpd		%ymm0, %ymm15, %ymm0
-	vmulpd		%ymm1, %ymm15, %ymm1
-	vmulpd		%ymm2, %ymm15, %ymm2
-	vmulpd		%ymm3, %ymm15, %ymm3
-
-	vblendpd	$0xa, %ymm5, %ymm4, %ymm12
-	vblendpd	$0x5, %ymm5, %ymm4, %ymm13
-	vblendpd	$0xa, %ymm7, %ymm6, %ymm14
-	vblendpd	$0x5, %ymm7, %ymm6, %ymm15
-
-	vblendpd	$0xc, %ymm14, %ymm12, %ymm4
-	vblendpd	$0x3, %ymm14, %ymm12, %ymm6
-	vblendpd	$0xc, %ymm15, %ymm13, %ymm5
-	vblendpd	$0x3, %ymm15, %ymm13, %ymm7
-
-	vbroadcastsd 0(%r10), %ymm15 // alpha
-
-	vmulpd		%ymm4, %ymm15, %ymm4
-	vmulpd		%ymm5, %ymm15, %ymm5
-	vmulpd		%ymm6, %ymm15, %ymm6
-	vmulpd		%ymm7, %ymm15, %ymm7
-
-	vblendpd	$0xa, %ymm9, %ymm8, %ymm12
-	vblendpd	$0x5, %ymm9, %ymm8, %ymm13
-	vblendpd	$0xa, %ymm11, %ymm10, %ymm14
-	vblendpd	$0x5, %ymm11, %ymm10, %ymm15
-
-	vblendpd	$0xc, %ymm14, %ymm12, %ymm8
-	vblendpd	$0x3, %ymm14, %ymm12, %ymm10
-	vblendpd	$0xc, %ymm15, %ymm13, %ymm9
-	vblendpd	$0x3, %ymm15, %ymm13, %ymm11
-
-	vbroadcastsd 0(%r10), %ymm15 // alpha
-
-	vmulpd		%ymm8, %ymm15, %ymm8
-	vmulpd		%ymm9, %ymm15, %ymm9
-	vmulpd		%ymm10, %ymm15, %ymm10
-	vmulpd		%ymm11, %ymm15, %ymm11
-
-#if MACRO_LEVEL>=1
-	.endm
-#else
-	ret
-
-#if defined(OS_LINUX)
-	.size	inner_blend_scale_a0_12x4_lib4, .-inner_blend_scale_a0_12x4_lib4
 #endif
 #endif
 
@@ -6250,123 +6408,6 @@ _inner_store_l_12x4_vs_lib4:
 
 
 
-//                                   rdi    rsi            rdx        rcx      r8         r9         rsp+8
-// 12oid kernel_dgemm_nt_12x4_a0_lib4(int k, double *alpha, double *A, int sda, double *B, double *D, int sdd);
-
-	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dgemm_nt_12x4_a0_lib4
-	.type kernel_dgemm_nt_12x4_a0_lib4, @function
-kernel_dgemm_nt_12x4_a0_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dgemm_nt_12x4_a0_lib4
-_kernel_dgemm_nt_12x4_a0_lib4:
-#endif
-	
-	// prologue
-
-	subq	$STACKSIZE, %rsp
-	movq	%rbx,   (%rsp)
-	movq	%rbp,  8(%rsp)
-	movq	%r12, 16(%rsp)
-	movq	%r13, 24(%rsp)
-	movq	%r14, 32(%rsp)
-	movq	%r15, 40(%rsp)
-
-	vzeroupper
-
-
-	// zero accumulation registers
-
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
-	vmovapd	%ymm0, %ymm4
-	vmovapd	%ymm0, %ymm5
-	vmovapd	%ymm0, %ymm6
-	vmovapd	%ymm0, %ymm7
-	vmovapd	%ymm0, %ymm8
-	vmovapd	%ymm0, %ymm9
-	vmovapd	%ymm0, %ymm10
-	vmovapd	%ymm0, %ymm11
-
-
-	// call inner dgemm kernel nt
-
-	movl	%edi, %r10d // k
-	movq	%rdx, %r11 // A
-	movl	%ecx, %r12d // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
-	movq	%r8, %r13 // B
-
-#if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
-#else
-#if defined(OS_LINUX)
-	call inner_kernel_dgemm_add_nt_12x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nt_12x4_lib4
-#endif
-#endif
-
-
-	// call inner blend scale
-
-	movq	%rsi, %r10 // alpha
-
-#if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_A0_12X4_LIB4
-#else
-#if defined(OS_LINUX)
-	call inner_blend_scale_a0_12x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_blend_scale_a0_12x4_lib4
-#endif
-#endif
-
-
-	// store n
-
-	movq	%r9, %r10 // D
-	movl	STACKSIZE + 8(%rsp), %r11d // sdd
-	sall	$5, %r11d // 4*sdd*sizeof(double)
-	movslq	%r11d, %r11
-
-#if MACRO_LEVEL>=1
-	INNER_STORE_12X4_LIB4
-#else
-#if defined(OS_LINUX)
-	call inner_store_12x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_store_12x4_lib4
-#endif
-#endif
-
-
-	// epilogue
-
-	vzeroupper
-
-	movq	  (%rsp), %rbx 
-	movq	 8(%rsp), %rbp
-	movq	16(%rsp), %r12 
-	movq	24(%rsp), %r13 
-	movq	32(%rsp), %r14 
-	movq	40(%rsp), %r15 
-	addq	$STACKSIZE, %rsp
-
-	ret
-
-#if defined(OS_LINUX)
-	.size	kernel_dgemm_nt_12x4_a0_lib4, .-kernel_dgemm_nt_12x4_a0_lib4
-#endif
-
-
-
-
-
 //                                rdi    rsi            rdx        rcx      r8         r9            rsp+8      rsp+16   rsp+24     rsp+32
 // void kernel_dgemm_nt_12x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd);
 
@@ -6415,7 +6456,6 @@ _kernel_dgemm_nt_12x4_lib4:
 	movq	%rdx, %r11 // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%r8, %r13 // B
 
 #if MACRO_LEVEL>=2
@@ -6436,7 +6476,6 @@ _kernel_dgemm_nt_12x4_lib4:
 	movq	STACKSIZE +  8(%rsp), %r12 // C
 	movl	STACKSIZE +  16(%rsp), %r13d // sdc
 	sall	$5, %r13d // 4*sdc*sizeof(double)
-//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_AB_12X4_LIB4
@@ -6454,7 +6493,6 @@ _kernel_dgemm_nt_12x4_lib4:
 	movq	STACKSIZE + 24(%rsp), %r10 // D
 	movl	STACKSIZE + 32(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -6537,7 +6575,6 @@ _kernel_dgemm_nt_12x4_vs_lib4:
 	movq	%rdx, %r11 // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%r8, %r13
 
 #if MACRO_LEVEL>=2
@@ -6558,7 +6595,6 @@ _kernel_dgemm_nt_12x4_vs_lib4:
 	movq	STACKSIZE +  8(%rsp), %r12 // C
 	movl	STACKSIZE +  16(%rsp), %r13d // sdc
 	sall	$5, %r13d // 4*sdc*sizeof(double)
-//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_AB_12X4_LIB4
@@ -6576,7 +6612,6 @@ _kernel_dgemm_nt_12x4_vs_lib4:
 	movq	STACKSIZE + 24(%rsp), %r10 // D
 	movl	STACKSIZE + 32(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-	movslq	%r11d, %r11
 
 	movl	STACKSIZE +  40(%rsp), %r12d // km 
 	movl	STACKSIZE +  48(%rsp), %r13d // kn 
@@ -6614,8 +6649,8 @@ _kernel_dgemm_nt_12x4_vs_lib4:
 
 
 
-//                                rdi    rsi            rdx        rcx      r8         r9       rsp+8         rsp+16     rsp+24   rsp+32     rsp_40
-// void kernel_dgemm_nn_12x4_lib4(int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd);
+//                                rdi    rsi            rdx        rcx      r8           r9         rsp+8    rsp+16        rsp+24     rsp+32   rsp+40     rsp+48
+// void kernel_dgemm_nn_12x4_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -6662,11 +6697,20 @@ _kernel_dgemm_nn_12x4_lib4:
 	movq	%rdx, %r11 // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
-	movq	%r8, %r13 // B
-	movl	%r9d, %r14d // sda
+	movq	%r9, %r13 // B
+	movl	STACKSIZE +  8(%rsp), %r14d // sda
 	sall	$5, %r14d // 4*sdb*sizeof(double)
-//	movslq	%r14d, %r14
+	movl	%r8d, %r15d // offsetB
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGEMM_ADD_NN_12X4_LIB4
+#else
+#if defined(OS_LINUX)
+	call inner_edge_dgemm_add_nn_12x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dgemm_add_nn_12x4_lib4
+#endif
+#endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NN_12X4_LIB4
@@ -6682,11 +6726,10 @@ _kernel_dgemm_nn_12x4_lib4:
 	// call inner scale
 
 	movq	%rsi, %r10 // alpha
-	movq	STACKSIZE +  8(%rsp), %r11 // beta
-	movq	STACKSIZE +  16(%rsp), %r12 // C
-	movl	STACKSIZE +  24(%rsp), %r13d // sdc
+	movq	STACKSIZE +  16(%rsp), %r11 // beta
+	movq	STACKSIZE +  24(%rsp), %r12 // C
+	movl	STACKSIZE +  32(%rsp), %r13d // sdc
 	sall	$5, %r13d // 4*sdc*sizeof(double)
-//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -6701,10 +6744,9 @@ _kernel_dgemm_nn_12x4_lib4:
 
 	// store n
 
-	movq	STACKSIZE + 32(%rsp), %r10 // D
-	movl	STACKSIZE + 40(%rsp), %r11d // sdd
+	movq	STACKSIZE + 40(%rsp), %r10 // D
+	movl	STACKSIZE + 48(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -6787,11 +6829,9 @@ _kernel_dgemm_nn_12x4_vs_lib4:
 	movq	%rdx, %r11 // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%r8, %r13 // B
 	movl	%r9d, %r14d // sda
 	sall	$5, %r14d // 4*sda*sizeof(double)
-//	movslq	%r14d, %r14
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NN_12X4_LIB4
@@ -6811,7 +6851,6 @@ _kernel_dgemm_nn_12x4_vs_lib4:
 	movq	STACKSIZE +  16(%rsp), %r12 // C
 	movl	STACKSIZE +  24(%rsp), %r13d // sdc
 	sall	$5, %r13d // 4*sdc*sizeof(double)
-//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -6829,7 +6868,6 @@ _kernel_dgemm_nn_12x4_vs_lib4:
 	movq	STACKSIZE + 32(%rsp), %r10 // store address D
 	movl	STACKSIZE + 40(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 	movl	STACKSIZE +  48(%rsp), %r12d // km 
 	movl	STACKSIZE +  56(%rsp), %r13d // kn 
@@ -6915,7 +6953,6 @@ _kernel_dsyrk_nt_l_12x4_lib4:
 	movq	%rdx, %r11 // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%r8, %r13
 
 #if MACRO_LEVEL>=2
@@ -6936,7 +6973,6 @@ _kernel_dsyrk_nt_l_12x4_lib4:
 	movq	STACKSIZE +  8(%rsp), %r12 // C
 	movl	STACKSIZE +  16(%rsp), %r13d // sdc
 	sall	$5, %r13d // 4*sdc*sizeof(double)
-//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_AB_12X4_LIB4
@@ -6954,7 +6990,6 @@ _kernel_dsyrk_nt_l_12x4_lib4:
 	movq	STACKSIZE + 24(%rsp), %r10 // D
 	movl	STACKSIZE + 32(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_12X4_LIB4
@@ -7036,7 +7071,6 @@ _kernel_dsyrk_nt_l_12x4_vs_lib4:
 	movq	%rdx, %r11 // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%r8, %r13
 
 #if MACRO_LEVEL>=2
@@ -7057,7 +7091,6 @@ _kernel_dsyrk_nt_l_12x4_vs_lib4:
 	movq	STACKSIZE +  8(%rsp), %r12 // C
 	movl	STACKSIZE +  16(%rsp), %r13d // sdc
 	sall	$5, %r13d // 4*sdc*sizeof(double)
-//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_AB_12X4_LIB4
@@ -7075,7 +7108,6 @@ _kernel_dsyrk_nt_l_12x4_vs_lib4:
 	movq	STACKSIZE + 24(%rsp), %r10 // D
 	movl	STACKSIZE + 32(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 	movl	STACKSIZE +  40(%rsp), %r12d // km 
 	movl	STACKSIZE +  48(%rsp), %r13d // kn 
@@ -7292,7 +7324,6 @@ _kernel_dtrmm_nt_ru_12x4_lib4:
 	addq	$128, %r11 // A+4*bs
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%r8, %r13 // B
 	addq	$128, %r13 // B+4*bs
 
@@ -7326,7 +7357,6 @@ _kernel_dtrmm_nt_ru_12x4_lib4:
 	movq	%rdx, %r10 // A
 	movl	%ecx, %r11d // sda
 	sall	$5, %r11d // 4*sda*sizeof(double)
-//	movslq	%r11d, %r11
 	movq	%r8, %r12 // B
 
 #if MACRO_LEVEL>=1
@@ -7347,7 +7377,6 @@ _kernel_dtrmm_nt_ru_12x4_lib4:
 	movq	STACKSIZE +  8(%rsp), %r12 // C
 	movl	STACKSIZE +  16(%rsp), %r13d // sdc
 	sall	$5, %r13d // 4*sdc*sizeof(double)
-//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -7365,7 +7394,6 @@ _kernel_dtrmm_nt_ru_12x4_lib4:
 	movq	STACKSIZE + 24(%rsp), %r10 // D
 	movl	STACKSIZE + 32(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -7450,7 +7478,6 @@ _kernel_dtrmm_nt_ru_12x4_vs_lib4:
 	addq	$128, %r11 // A+4*bs
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%r8, %r13 // B
 	addq	$128, %r13 // B+4*bs
 
@@ -7484,7 +7511,6 @@ _kernel_dtrmm_nt_ru_12x4_vs_lib4:
 	movq	%rdx, %r10 // A
 	movl	%ecx, %r11d // sda
 	sall	$5, %r11d // 4*sda*sizeof(double)
-//	movslq	%r11d, %r11
 	movq	%r8, %r12 // B
 
 #if MACRO_LEVEL>=1
@@ -7505,7 +7531,6 @@ _kernel_dtrmm_nt_ru_12x4_vs_lib4:
 	movq	STACKSIZE +  8(%rsp), %r12 // C
 	movl	STACKSIZE +  16(%rsp), %r13d // sdc
 	sall	$5, %r13d // 4*sdc*sizeof(double)
-//	movslq	%r13d, %r13
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -7523,7 +7548,6 @@ _kernel_dtrmm_nt_ru_12x4_vs_lib4:
 	movq	STACKSIZE + 24(%rsp), %r10 // D
 	movl	STACKSIZE + 32(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 	movl	STACKSIZE +  40(%rsp), %r12d // km 
 	movl	STACKSIZE +  48(%rsp), %r13d // kn 
@@ -7609,7 +7633,6 @@ _kernel_dpotrf_nt_l_12x4_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 
 #if MACRO_LEVEL>=2
@@ -7628,7 +7651,6 @@ _kernel_dpotrf_nt_l_12x4_lib4:
 	movq	%r8, %r10 // C
 	movl	%r9d, %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
@@ -7661,7 +7683,6 @@ _kernel_dpotrf_nt_l_12x4_lib4:
 	movq	STACKSIZE + 8(%rsp), %r10 // D
 	movl	STACKSIZE + 16(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_12X4_LIB4
@@ -7744,7 +7765,6 @@ _kernel_dpotrf_nt_l_12x4_vs_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 
 #if MACRO_LEVEL>=2
@@ -7763,7 +7783,6 @@ _kernel_dpotrf_nt_l_12x4_vs_lib4:
 	movq	%r8, %r10 // C
 	movl	%r9d, %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
@@ -7797,7 +7816,6 @@ _kernel_dpotrf_nt_l_12x4_vs_lib4:
 	movq	STACKSIZE + 8(%rsp), %r10 // D
 	movl	STACKSIZE + 16(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 	movl	STACKSIZE +  32(%rsp), %r12d // km 
 	movl	STACKSIZE +  40(%rsp), %r13d // kn 
@@ -7883,7 +7901,6 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_lib4:
 	movq	%rsi, %r11  // Ap
 	movl	%edx, %r12d // sdap
 	sall	$5, %r12d   // 4*sdap*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13  // Bp
 
 #if MACRO_LEVEL>=2
@@ -7903,7 +7920,6 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_lib4:
 	movq	%r9, %r11                   // Am
 	movl	STACKSIZE +  8(%rsp), %r12d // sdam
 	sall	$5, %r12d                   // 4*sdam*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	STACKSIZE + 16(%rsp), %r13  // Bm
 
 #if MACRO_LEVEL>=2
@@ -7922,7 +7938,6 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_lib4:
 	movq	STACKSIZE + 24(%rsp), %r10 // C
 	movl	STACKSIZE + 32(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11 
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
@@ -7955,7 +7970,6 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_lib4:
 	movq	STACKSIZE + 40(%rsp), %r10 // D
 	movl	STACKSIZE + 48(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_12X4_LIB4
@@ -8038,7 +8052,6 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 	movq	%rsi, %r11  // Ap
 	movl	%edx, %r12d // sdap
 	sall	$5, %r12d   // 4*sdap*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13  // Bp
 
 #if MACRO_LEVEL>=2
@@ -8058,7 +8071,6 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 	movq	%r9, %r11                   // Am
 	movl	STACKSIZE +  8(%rsp), %r12d // sdam
 	sall	$5, %r12d                   // 4*sdam*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	STACKSIZE + 16(%rsp), %r13  // Bm
 
 #if MACRO_LEVEL>=2
@@ -8077,7 +8089,6 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 	movq	STACKSIZE + 24(%rsp), %r10 // C
 	movl	STACKSIZE + 32(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11 
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
@@ -8111,7 +8122,6 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 	movq	STACKSIZE + 40(%rsp), %r10 // D
 	movl	STACKSIZE + 48(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 	movl	STACKSIZE +  64(%rsp), %r12d // km 
 	movl	STACKSIZE +  72(%rsp), %r13d // kn 
@@ -8197,7 +8207,6 @@ _kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 
 #if MACRO_LEVEL>=2
@@ -8216,7 +8225,6 @@ _kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movq	%r8, %r10 // C
 	movl	%r9d, %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
@@ -8251,7 +8259,6 @@ _kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movq	STACKSIZE + 8(%rsp), %r10 // D
 	movl	STACKSIZE + 16(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 	movl	STACKSIZE +  40(%rsp), %r12d // km 
 	movl	STACKSIZE +  48(%rsp), %r13d // kn 
@@ -8337,7 +8344,6 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movq	%rsi, %r11  // Ap
 	movl	%edx, %r12d // sdap
 	sall	$5, %r12d   // 4*sdap*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13  // Bp
 
 #if MACRO_LEVEL>=2
@@ -8357,7 +8363,6 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movq	%r9, %r11                   // Am
 	movl	STACKSIZE +  8(%rsp), %r12d // sdam
 	sall	$5, %r12d                   // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	STACKSIZE + 16(%rsp), %r13  // Bm
 
 #if MACRO_LEVEL>=2
@@ -8376,7 +8381,6 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movq	STACKSIZE + 24(%rsp), %r10  // C
 	movl	STACKSIZE + 32(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
@@ -8411,7 +8415,6 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movq	STACKSIZE + 40(%rsp), %r10 // D
 	movl	STACKSIZE + 48(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 	movl	STACKSIZE +  72(%rsp), %r12d // km 
 	movl	STACKSIZE +  80(%rsp), %r13d // kn 
@@ -8497,7 +8500,6 @@ _kernel_dtrsm_nt_rl_inv_12x4_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 
 #if MACRO_LEVEL>=2
@@ -8516,7 +8518,6 @@ _kernel_dtrsm_nt_rl_inv_12x4_lib4:
 	movq	%r8, %r10
 	movl	%r9d, %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
@@ -8550,7 +8551,6 @@ _kernel_dtrsm_nt_rl_inv_12x4_lib4:
 	movq	STACKSIZE + 8(%rsp), %r10 // store address D
 	movl	STACKSIZE + 16(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -8633,7 +8633,6 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 	movq	%rsi, %r11  // Ap
 	movl	%edx, %r12d // sdap
 	sall	$5, %r12d   // 4*sdap*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13  // Bp
 
 #if MACRO_LEVEL>=2
@@ -8653,7 +8652,6 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 	movq	%r9, %r11                   // Am
 	movl	STACKSIZE +  8(%rsp), %r12d // sdam
 	sall	$5, %r12d                   // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	STACKSIZE + 16(%rsp), %r13  // Bm
 
 #if MACRO_LEVEL>=2
@@ -8672,7 +8670,6 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 	movq	STACKSIZE + 24(%rsp), %r10  // C
 	movl	STACKSIZE + 32(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
@@ -8706,7 +8703,6 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 	movq	STACKSIZE + 40(%rsp), %r10 // store address D
 	movl	STACKSIZE + 48(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -8789,7 +8785,6 @@ _kernel_dtrsm_nt_rl_one_12x4_lib4:
 	movq	%rsi, %r11
 	movl	%edx, %r12d
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13
 
 #if MACRO_LEVEL>=2
@@ -8808,7 +8803,6 @@ _kernel_dtrsm_nt_rl_one_12x4_lib4:
 	movq	%r8, %r10
 	movl	%r9d, %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
@@ -8841,7 +8835,6 @@ _kernel_dtrsm_nt_rl_one_12x4_lib4:
 	movq	STACKSIZE + 8(%rsp), %r10 // store address D
 	movl	STACKSIZE + 16(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -8924,7 +8917,6 @@ _kernel_dtrsm_nt_rl_one_12x4_vs_lib4:
 	movq	%rsi, %r11
 	movl	%edx, %r12d
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13
 
 #if MACRO_LEVEL>=2
@@ -8943,7 +8935,6 @@ _kernel_dtrsm_nt_rl_one_12x4_vs_lib4:
 	movq	%r8, %r10
 	movl	%r9d, %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
@@ -8977,7 +8968,6 @@ _kernel_dtrsm_nt_rl_one_12x4_vs_lib4:
 	movq	STACKSIZE + 8(%rsp), %r10 // store address D
 	movl	STACKSIZE + 16(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 	movl	STACKSIZE +  32(%rsp), %r12d // km 
 	movl	STACKSIZE +  40(%rsp), %r13d // kn 
@@ -9063,7 +9053,6 @@ _kernel_dtrsm_nt_ru_inv_12x4_lib4:
 	movq	%rsi, %r11
 	movl	%edx, %r12d
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13
 
 #if MACRO_LEVEL>=2
@@ -9082,7 +9071,6 @@ _kernel_dtrsm_nt_ru_inv_12x4_lib4:
 	movq	%r8, %r10
 	movl	%r9d, %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
@@ -9116,7 +9104,6 @@ _kernel_dtrsm_nt_ru_inv_12x4_lib4:
 	movq	STACKSIZE + 8(%rsp), %r10 // store address D
 	movl	STACKSIZE + 16(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -9199,7 +9186,6 @@ _kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
 	movq	%rsi, %r11
 	movl	%edx, %r12d
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13
 
 #if MACRO_LEVEL>=2
@@ -9218,7 +9204,6 @@ _kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
 	movq	%r8, %r10
 	movl	%r9d, %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_12X4_LIB4
@@ -9253,7 +9238,6 @@ _kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
 	movq	STACKSIZE + 8(%rsp), %r10 // store address D
 	movl	STACKSIZE + 16(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 	movl	STACKSIZE +  40(%rsp), %r12d // km 
 	movl	STACKSIZE +  48(%rsp), %r13d // kn 
@@ -9339,11 +9323,9 @@ _kernel_dtrsm_nn_ru_inv_12x4_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 	movl	%r8d, %r14d // sda
 	sall	$5, %r14d // 4*sdb*sizeof(double)
-//	movslq	%r14d, %r14
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_12X4_LIB4
@@ -9361,7 +9343,6 @@ _kernel_dtrsm_nn_ru_inv_12x4_lib4:
 	movq	%r9, %r10 // C
 	movl	STACKSIZE +  8(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_12X4_LIB4
@@ -9395,7 +9376,6 @@ _kernel_dtrsm_nn_ru_inv_12x4_lib4:
 	movq	STACKSIZE + 16(%rsp), %r10 // D
 	movl	STACKSIZE + 24(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -9478,11 +9458,9 @@ _kernel_dtrsm_nn_ru_inv_12x4_vs_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 	movl	%r8d, %r14d // sda
 	sall	$5, %r14d // 4*sdb*sizeof(double)
-//	movslq	%r14d, %r14
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_12X4_LIB4
@@ -9500,7 +9478,6 @@ _kernel_dtrsm_nn_ru_inv_12x4_vs_lib4:
 	movq	%r9, %r10 // C
 	movl	STACKSIZE +  8(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_12X4_LIB4
@@ -9534,7 +9511,6 @@ _kernel_dtrsm_nn_ru_inv_12x4_vs_lib4:
 	movq	STACKSIZE + 16(%rsp), %r10 // D
 	movl	STACKSIZE + 24(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 	movl	STACKSIZE + 48(%rsp), %r12d // km
 	movl	STACKSIZE + 56(%rsp), %r13d // kn
@@ -9620,11 +9596,9 @@ _kernel_dtrsm_nn_ll_one_12x4_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 	movl	%r8d, %r14d // sda
 	sall	$5, %r14d // 4*sdb*sizeof(double)
-//	movslq	%r14d, %r14
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_12X4_LIB4
@@ -9642,7 +9616,6 @@ _kernel_dtrsm_nn_ll_one_12x4_lib4:
 	movq	%r9, %r10 // C
 	movl	STACKSIZE +  8(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_12X4_LIB4
@@ -9660,7 +9633,6 @@ _kernel_dtrsm_nn_ll_one_12x4_lib4:
 	movq	STACKSIZE + 32(%rsp), %r10  // E 
 	movl	STACKSIZE + 40(%rsp), %r11d // sde
 	sall	$5, %r11d // 4*sde*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_LLN_ONE_12X4_LIB4
@@ -9678,7 +9650,6 @@ _kernel_dtrsm_nn_ll_one_12x4_lib4:
 	movq	STACKSIZE + 16(%rsp), %r10 // D
 	movl	STACKSIZE + 24(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -9761,11 +9732,9 @@ _kernel_dtrsm_nn_ll_one_12x4_vs_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 	movl	%r8d, %r14d // sda
 	sall	$5, %r14d // 4*sdb*sizeof(double)
-//	movslq	%r14d, %r14
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_12X4_LIB4
@@ -9783,7 +9752,6 @@ _kernel_dtrsm_nn_ll_one_12x4_vs_lib4:
 	movq	%r9, %r10 // C
 	movl	STACKSIZE +  8(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_12X4_LIB4
@@ -9801,7 +9769,6 @@ _kernel_dtrsm_nn_ll_one_12x4_vs_lib4:
 	movq	STACKSIZE + 32(%rsp), %r10  // E 
 	movl	STACKSIZE + 40(%rsp), %r11d // sde
 	sall	$5, %r11d // 4*sde*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_LLN_ONE_12X4_LIB4
@@ -9819,7 +9786,6 @@ _kernel_dtrsm_nn_ll_one_12x4_vs_lib4:
 	movq	STACKSIZE + 16(%rsp), %r10 // D
 	movl	STACKSIZE + 24(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 	movl	STACKSIZE + 48(%rsp), %r12d // km
 	movl	STACKSIZE + 56(%rsp), %r13d // kn
@@ -9905,11 +9871,9 @@ _kernel_dtrsm_nn_lu_inv_12x4_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 	movl	%r8d, %r14d // sda
 	sall	$5, %r14d // 4*sdb*sizeof(double)
-//	movslq	%r14d, %r14
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_12X4_LIB4
@@ -9927,7 +9891,6 @@ _kernel_dtrsm_nn_lu_inv_12x4_lib4:
 	movq	%r9, %r10 // C
 	movl	STACKSIZE +  8(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_12X4_LIB4
@@ -9945,7 +9908,6 @@ _kernel_dtrsm_nn_lu_inv_12x4_lib4:
 	movq	STACKSIZE + 32(%rsp), %r10  // E 
 	movl	STACKSIZE + 40(%rsp), %r11d // sde
 	sall	$5, %r11d // 4*sde*sizeof(double)
-//	movslq	%r11d, %r11
 	movq	STACKSIZE + 48(%rsp), %r12  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
@@ -9964,7 +9926,6 @@ _kernel_dtrsm_nn_lu_inv_12x4_lib4:
 	movq	STACKSIZE + 16(%rsp), %r10 // D
 	movl	STACKSIZE + 24(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -10047,11 +10008,9 @@ _kernel_dtrsm_nn_lu_inv_12x4_vs_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 	movl	%r8d, %r14d // sda
 	sall	$5, %r14d // 4*sdb*sizeof(double)
-//	movslq	%r14d, %r14
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_12X4_LIB4
@@ -10069,7 +10028,6 @@ _kernel_dtrsm_nn_lu_inv_12x4_vs_lib4:
 	movq	%r9, %r10 // C
 	movl	STACKSIZE +  8(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_12X4_LIB4
@@ -10087,7 +10045,6 @@ _kernel_dtrsm_nn_lu_inv_12x4_vs_lib4:
 	movq	STACKSIZE + 32(%rsp), %r10  // E 
 	movl	STACKSIZE + 40(%rsp), %r11d // sde
 	sall	$5, %r11d // 4*sde*sizeof(double)
-//	movslq	%r11d, %r11
 	movq	STACKSIZE + 48(%rsp), %r12  // inv_diag_E 
 	movl	STACKSIZE + 56(%rsp), %r13d  // km 
 
@@ -10107,7 +10064,6 @@ _kernel_dtrsm_nn_lu_inv_12x4_vs_lib4:
 	movq	STACKSIZE + 16(%rsp), %r10 // D
 	movl	STACKSIZE + 24(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 	movl	STACKSIZE + 56(%rsp), %r12d  // km 
 	movl	STACKSIZE + 64(%rsp), %r13d  // kn 
 
@@ -10192,11 +10148,9 @@ _kernel_dgetrf_nn_l_12x4_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 	movl	%r8d, %r14d // sda
 	sall	$5, %r14d // 4*sdb*sizeof(double)
-//	movslq	%r14d, %r14
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_12X4_LIB4
@@ -10214,7 +10168,6 @@ _kernel_dgetrf_nn_l_12x4_lib4:
 	movq	%r9, %r10 // C
 	movl	STACKSIZE +  8(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_12X4_LIB4
@@ -10247,7 +10200,6 @@ _kernel_dgetrf_nn_l_12x4_lib4:
 	movq	STACKSIZE + 16(%rsp), %r10 // D
 	movl	STACKSIZE + 24(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -10330,11 +10282,9 @@ _kernel_dgetrf_nn_l_12x4_vs_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 	movl	%r8d, %r14d // sda
 	sall	$5, %r14d // 4*sdb*sizeof(double)
-//	movslq	%r14d, %r14
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_12X4_LIB4
@@ -10352,7 +10302,6 @@ _kernel_dgetrf_nn_l_12x4_vs_lib4:
 	movq	%r9, %r10 // C
 	movl	STACKSIZE +  8(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_12X4_LIB4
@@ -10385,7 +10334,6 @@ _kernel_dgetrf_nn_l_12x4_vs_lib4:
 	movq	STACKSIZE + 16(%rsp), %r10 // D
 	movl	STACKSIZE + 24(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 	movl	STACKSIZE + 40(%rsp), %r12d  // km
 	movl	STACKSIZE + 48(%rsp), %r13d  // km
 
@@ -10470,11 +10418,9 @@ _kernel_dgetrf_nn_m_12x4_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 	movl	%r8d, %r14d // sda
 	sall	$5, %r14d // 4*sdb*sizeof(double)
-//	movslq	%r14d, %r14
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_12X4_LIB4
@@ -10492,7 +10438,6 @@ _kernel_dgetrf_nn_m_12x4_lib4:
 	movq	%r9, %r10 // C
 	movl	STACKSIZE +  8(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_12X4_LIB4
@@ -10529,7 +10474,6 @@ _kernel_dgetrf_nn_m_12x4_lib4:
 	movq	STACKSIZE + 16(%rsp), %r10 // D
 	movl	STACKSIZE + 24(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -10612,11 +10556,9 @@ _kernel_dgetrf_nn_m_12x4_vs_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 	movl	%r8d, %r14d // sda
 	sall	$5, %r14d // 4*sdb*sizeof(double)
-//	movslq	%r14d, %r14
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_12X4_LIB4
@@ -10634,7 +10576,6 @@ _kernel_dgetrf_nn_m_12x4_vs_lib4:
 	movq	%r9, %r10 // C
 	movl	STACKSIZE +  8(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_12X4_LIB4
@@ -10671,7 +10612,6 @@ _kernel_dgetrf_nn_m_12x4_vs_lib4:
 	movq	STACKSIZE + 16(%rsp), %r10 // D
 	movl	STACKSIZE + 24(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 	movl	STACKSIZE + 40(%rsp), %r12d  // km
 	movl	STACKSIZE + 48(%rsp), %r13d  // km
 
@@ -10756,11 +10696,9 @@ _kernel_dgetrf_nn_r_12x4_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 	movl	%r8d, %r14d // sda
 	sall	$5, %r14d // 4*sdb*sizeof(double)
-//	movslq	%r14d, %r14
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_12X4_LIB4
@@ -10778,7 +10716,6 @@ _kernel_dgetrf_nn_r_12x4_lib4:
 	movq	%r9, %r10 // C
 	movl	STACKSIZE +  8(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_12X4_LIB4
@@ -10815,7 +10752,6 @@ _kernel_dgetrf_nn_r_12x4_lib4:
 	movq	STACKSIZE + 16(%rsp), %r10 // D
 	movl	STACKSIZE + 24(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -10898,11 +10834,9 @@ _kernel_dgetrf_nn_r_12x4_vs_lib4:
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
 	movq	%rcx, %r13 // B
 	movl	%r8d, %r14d // sda
 	sall	$5, %r14d // 4*sdb*sizeof(double)
-//	movslq	%r14d, %r14
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NN_12X4_LIB4
@@ -10920,7 +10854,6 @@ _kernel_dgetrf_nn_r_12x4_vs_lib4:
 	movq	%r9, %r10 // C
 	movl	STACKSIZE +  8(%rsp), %r11d // sdc
 	sall	$5, %r11d // 4*sdc*sizeof(double)
-//	movslq	%r11d, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_12X4_LIB4
@@ -10957,7 +10890,6 @@ _kernel_dgetrf_nn_r_12x4_vs_lib4:
 	movq	STACKSIZE + 16(%rsp), %r10 // D
 	movl	STACKSIZE + 24(%rsp), %r11d // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-//	movslq	%r11d, %r11
 	movl	STACKSIZE + 40(%rsp), %r12d  // km
 	movl	STACKSIZE + 48(%rsp), %r13d  // km
 
