@@ -36,6 +36,10 @@ extern "C" {
 // lib8
 //
 
+// 8x8
+void kernel_sgemm_nt_8x8_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D);
+
+// 8x4
 void kernel_sgemm_nt_8x4_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D);
 void kernel_sgemm_nt_8x4_gen_lib8(int k, float *alpha, float *A, float *B, float *beta, int offsetC, float *C, int sdc, int offsetD, float *D, int sdd, int m0, int m1, int n0, int n1);
 
