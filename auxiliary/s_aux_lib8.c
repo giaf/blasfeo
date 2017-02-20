@@ -122,7 +122,7 @@ void sdiareg_lib(int kmax, float reg, int offset, float *pD, int sdd)
 	int kna = (bs-offset%bs)%bs;
 	kna = kmax<kna ? kmax : kna;
 
-	double *pD2;
+	float *pD2;
 
 	int jj, ll;
 
@@ -166,7 +166,7 @@ void sdiain_lib(int kmax, float alpha, float *x, int offset, float *pD, int sdd)
 	int kna = (bs-offset%bs)%bs;
 	kna = kmax<kna ? kmax : kna;
 
-	double *pD2, *x2;
+	float *pD2, *x2;
 
 	int jj, ll;
 
@@ -213,7 +213,7 @@ void sdiain_sqrt_lib(int kmax, float *x, int offset, float *pD, int sdd)
 	int kna = (bs-offset%bs)%bs;
 	kna = kmax<kna ? kmax : kna;
 
-	double *pD2, *x2;
+	float *pD2, *x2;
 
 	int jj, ll;
 
@@ -260,7 +260,7 @@ void sdiaex_lib(int kmax, float alpha, int offset, float *pD, int sdd, float *x)
 	int kna = (bs-offset%bs)%bs;
 	kna = kmax<kna ? kmax : kna;
 
-	double *pD2, *x2;
+	float *pD2, *x2;
 
 	int jj, ll;
 
@@ -307,7 +307,7 @@ void sdiaad_lib(int kmax, float alpha, float *x, int offset, float *pD, int sdd)
 	int kna = (bs-offset%bs)%bs;
 	kna = kmax<kna ? kmax : kna;
 
-	double *pD2, *x2;
+	float *pD2, *x2;
 
 	int jj, ll;
 

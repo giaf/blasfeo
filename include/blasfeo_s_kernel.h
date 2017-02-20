@@ -32,6 +32,19 @@
 extern "C" {
 #endif
 
+//
+// lib8
+//
+
+void kernel_sgemm_nt_8x4_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D);
+void kernel_sgemm_nt_8x4_gen_lib8(int k, float *alpha, float *A, float *B, float *beta, int offsetC, float *C, int sdc, int offsetD, float *D, int sdd, int m0, int m1, int n0, int n1);
+
+
+
+//
+// lib4
+//
+
 
 
 // level 2 BLAS
@@ -59,7 +72,6 @@ void kernel_ssymv_l_4_gen_lib4(int kmax, float *alpha, int offA, float *A, int s
 
 // level 3 BLAS
 // 4x4
-void kernel_sgemm_nt_4x4_a0_lib4(int k, float *alpha, float *A, float *B, float *D); //
 void kernel_sgemm_nt_4x4_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D); //
 void kernel_sgemm_nt_4x4_vs_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D, int km, int kn); //
 void kernel_sgemm_nt_4x4_gen_lib4(int k, float *alpha, float *A, float *B, float *beta, int offsetC, float *C, int sdc, int offsetD, float *D, int sdd, int m0, int m1, int k0, int k1);

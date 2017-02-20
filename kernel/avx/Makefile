@@ -39,7 +39,7 @@ endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 OBJS += kernel_dgemm_8x4_lib4.o kernel_dgemm_4x4_lib4.o kernel_dgemm_diag_lib4.o kernel_dgemv_12_lib4.o kernel_dgemv_8_lib4.o kernel_dgemv_4_lib4.o kernel_dsymv_6_lib4.o kernel_dgetrf_pivot_4_lib4.o
-OBJS +=
+OBJS += kernel_sgemm_8x4_lib8.o
 endif
 
 else # LA_REFERENCE | LA_BLAS

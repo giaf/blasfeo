@@ -26,49 +26,101 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#if defined( TARGET_X64_INTEL_HASWELL )
+#include <stdlib.h>
+#include <stdio.h>
+#include <sys/time.h>
 
-#define D_BS 4
-#define S_BS 4 //8
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_i_aux_ext_dep.h"
+#include "../include/blasfeo_s_aux_ext_dep.h"
+#include "../include/blasfeo_s_aux.h"
+#include "../include/blasfeo_s_kernel.h"
+#include "../include/blasfeo_s_blas.h"
 
-#elif defined( TARGET_X64_INTEL_SANDY_BRIDGE )
 
-#define D_BS 4
-#define S_BS 8 //4 //8
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+int main()
+	{
 
-#elif defined( TARGET_X64_INTEL_CORE )
+#if defined(LA_HIGH_PERFORMANCE)
 
-#define D_BS 4
-#define S_BS 4
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+	printf("\nLA provided by HIGH_PERFORMANCE\n\n");
 
-#elif defined( TARGET_X64_AMD_BULLDOZER )
+#elif defined(LA_REFERENCE)
 
-#define D_BS 4
-#define S_BS 4
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+	printf("\nLA provided by REFERENCE\n\n");
 
-#elif defined( TARGET_ARMV7A_ARM_CORTEX_A15 )
+#elif defined(LA_BLAS)
 
-#define D_BS 4
-#define S_BS 4
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
-
-#elif defined( TARGET_GENERIC )
-
-#define D_BS 4
-#define S_BS 4
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+	printf("\nLA provided by BLAS\n\n");
 
 #else
-#error "Unknown architecture"
+
+	printf("\nLA provided by ???\n\n");
+	exit(2);
+
 #endif
 
+	int ii, jj;
+
+	int n = 16;
+
+	//
+	// matrices in column-major format
+	//
+	float *A; s_zeros(&A, n, n);
+	for(ii=0; ii<n*n; ii++) A[ii] = ii;
+//	for(jj=0; jj<n; jj++)
+//		for(ii=0; ii<jj; ii++)
+//			A[ii+n*jj] = 0.0/0.0;
+//	s_print_mat(n, n, A, n);
+
+	float *B; s_zeros(&B, n, n);
+	for(ii=0; ii<n; ii++) B[ii*(n+1)] = 1.0;
+//	s_print_mat(n, n, B, n);
+
+	float *D; s_zeros(&D, n, n);
+	for(ii=0; ii<n*n; ii++) D[ii] = -1.0;
+//	s_print_mat(n, n, B, n);
+
+
+	//
+	// matrices in matrix struct format
+	//
+
+	struct s_strmat sA;
+	s_allocate_strmat(n, n, &sA);
+	s_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
+	s_print_strmat(n, n, &sA, 0, 0);
+
+	struct s_strmat sB;
+	s_allocate_strmat(n, n, &sB);
+	s_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
+	s_print_strmat(n, n, &sB, 0, 0);
+
+	struct s_strmat sD;
+	s_allocate_strmat(n, n, &sD);
+	s_cvt_mat2strmat(n, n, D, n, &sD, 0, 0);
+
+	//
+	// tests
+	//
+
+	sgemm_nt_libstr(15, 10, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+	s_print_strmat(n, n, &sD, 0, 0);
+
+
+
+	//
+	// free memory
+	//
+
+	free(A);
+	free(B);
+	free(D);
+	s_free_strmat(&sA);
+	s_free_strmat(&sB);
+	s_free_strmat(&sD);
+
+	return 0;
+	
+	}

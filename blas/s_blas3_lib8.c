@@ -26,49 +26,86 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#if defined( TARGET_X64_INTEL_HASWELL )
+#include <stdlib.h>
+#include <stdio.h>
 
-#define D_BS 4
-#define S_BS 4 //8
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+#include "../include/blasfeo_block_size.h"
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_s_kernel.h"
+#include "../include/blasfeo_s_aux.h"
 
-#elif defined( TARGET_X64_INTEL_SANDY_BRIDGE )
 
-#define D_BS 4
-#define S_BS 8 //4 //8
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
 
-#elif defined( TARGET_X64_INTEL_CORE )
+void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+	{
 
-#define D_BS 4
-#define S_BS 4
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+	if(m<=0 || n<=0)
+		return;
+	
+	const int bs = 8;
 
-#elif defined( TARGET_X64_AMD_BULLDOZER )
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	float *pA = sA->pA + aj*bs;
+	float *pB = sB->pA + bj*bs;
+	float *pC = sC->pA + cj*bs;
+	float *pD = sD->pA + dj*bs;
 
-#define D_BS 4
-#define S_BS 4
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+	int i, j, l;
 
-#elif defined( TARGET_ARMV7A_ARM_CORTEX_A15 )
+	i = 0;
 
-#define D_BS 4
-#define S_BS 4
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+	for(; i<m-7; i+=8)
+		{
+		j = 0;
+		for(; j<n-7; j+=8)
+			{
+			kernel_sgemm_nt_8x4_lib8(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd]);
+			kernel_sgemm_nt_8x4_lib8(k, &alpha, &pA[i*sda], &pB[4+j*sdb], &beta, &pC[(j+4)*bs+i*sdc], &pD[(j+4)*bs+i*sdd]);
+			}
+		if(j<n)
+			{
+			if(j<n-3)
+				{
+				kernel_sgemm_nt_8x4_lib8(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd]);
+				if(j<n-4)
+					{
+					kernel_sgemm_nt_8x4_gen_lib8(k, &alpha, &pA[i*sda], &pB[4+j*sdb], &beta, 0, &pC[(j+4)*bs+i*sdc], sdc, 0, &pD[(j+4)*bs+i*sdd], sdd, 0, 8, 0, n-(j+4));
+					}
+				}
+			else
+				{
+				kernel_sgemm_nt_8x4_gen_lib8(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, 8, 0, n-j);
+				}
+			}
+		}
+	if(m>i)
+		{
+		goto left_8;
+		}
 
-#elif defined( TARGET_GENERIC )
+	// common return if i==m
+	return;
 
-#define D_BS 4
-#define S_BS 4
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+	// clean up loops definitions
 
-#else
-#error "Unknown architecture"
-#endif
+	left_8:
+	j = 0;
+	for(; j<n-4; j+=8)
+		{
+		kernel_sgemm_nt_8x4_gen_lib8(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, m-i, 0, 4);
+		kernel_sgemm_nt_8x4_gen_lib8(k, &alpha, &pA[i*sda], &pB[4+j*sdb], &beta, 0, &pC[(j+4)*bs+i*sdc], sdc, 0, &pD[(j+4)*bs+i*sdd], sdd, 0, m-i, 0, n-(j+4));
+		}
+	if(j<n)
+		{
+		kernel_sgemm_nt_8x4_gen_lib8(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, m-i, 0, n-j);
+		}
+	return;
+
+	}
+
+
+
 

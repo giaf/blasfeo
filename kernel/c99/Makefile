@@ -39,7 +39,8 @@ endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 OBJS += kernel_dgemv_4_lib4.o kernel_dsymv_4_lib4.o
-OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemm_diag_lib4.o kernel_sgemv_4_lib4.o kernel_ssymv_4_lib4.o kernel_sgetrf_pivot_4_lib4.o
+#OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemm_diag_lib4.o kernel_sgemv_4_lib4.o kernel_ssymv_4_lib4.o kernel_sgetrf_pivot_4_lib4.o
+OBJS +=
 endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
