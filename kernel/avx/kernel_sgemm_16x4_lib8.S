@@ -101,11 +101,11 @@ _inner_kernel_sgemm_add_nt_16x4_lib8:
 	movq	%r11, %r15 // A1 <- A0
 	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(float)
 
-	// prefetch
-	vbroadcastf128	0(%r13), %ymm14 // B
-	vmovaps			0(%r11), %ymm12 // A0
-	vmovaps			0(%r15), %ymm13 // A1
-	vbroadcastf128	32(%r13), %ymm15 // B
+	// preload
+	vbroadcastf128	0(%r13), %ymm12 // B
+	vmovaps			0(%r11), %ymm8 // A0
+	vmovaps			0(%r15), %ymm9 // A1
+	vshufps			$0x00, %ymm12, %ymm12, %ymm14
 
 	cmpl	$4, %r10d
 	jle		0f // consider clean-up loop
@@ -113,121 +113,134 @@ _inner_kernel_sgemm_add_nt_16x4_lib8:
 	// main loop
 	.p2align 3
 1: // main loop
+
+//  8 A0
+//  9 A1
+// 10 A0+
+// 11 A1+
+// 12 B
+// 13 B+
+// 14 Bt
+// 15 tmp
 	
 	// unroll 0
-	vmulps			%ymm12, %ymm14, %ymm11
-	vaddps			%ymm11, %ymm0, %ymm0
-	vmulps			%ymm13, %ymm14, %ymm11
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14 // 10 11 00 01
-	vaddps			%ymm11, %ymm4, %ymm4
+	vmulps			%ymm8, %ymm14, %ymm15
+	vbroadcastf128	32(%r13), %ymm13 // B
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0x55, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm4, %ymm4
 
-	vmulps			%ymm12, %ymm14, %ymm11
-	vaddps			%ymm11, %ymm1, %ymm1
-	vmulps			%ymm13, %ymm14, %ymm11
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14 // 01 00 11 10
-	vaddps			%ymm11, %ymm5, %ymm5
+	subl	$4, %r10d
+	vmulps			%ymm8, %ymm14, %ymm15
+	vmovaps			32(%r11), %ymm10 // A0
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0xaa, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm5, %ymm5
 
-	vmulps			%ymm12, %ymm14, %ymm11
-	vaddps			%ymm11, %ymm2, %ymm2
-	vmulps			%ymm13, %ymm14, %ymm11
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14 // 10 11 00 01
-	vaddps			%ymm11, %ymm6, %ymm6
+	vmulps			%ymm8, %ymm14, %ymm15
+	vmovaps			32(%r15), %ymm11 // A1
+	vaddps			%ymm15, %ymm2, %ymm2
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0xff, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm6, %ymm6
 
-	vmulps			%ymm12, %ymm14, %ymm11
-	vmovaps			32(%r11), %ymm12 // A0
-	vaddps			%ymm11, %ymm3, %ymm3
-	vmulps			%ymm13, %ymm14, %ymm11
-	vmovaps			32(%r15), %ymm13 // A1
-	vaddps			%ymm11, %ymm7, %ymm7
-	vbroadcastf128	64(%r13), %ymm14 // B
+	vmulps			%ymm8, %ymm14, %ymm15
+	vaddps			%ymm15, %ymm3, %ymm3
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0x00, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm7, %ymm7
 
 
 	// unroll 1
-	vmulps			%ymm12, %ymm15, %ymm11
-	vaddps			%ymm11, %ymm0, %ymm0
-	vmulps			%ymm13, %ymm15, %ymm11
-	vshufps			$0xb1, %ymm15, %ymm15, %ymm15 // 10 11 00 01
-	vaddps			%ymm11, %ymm4, %ymm4
+	vmulps			%ymm10, %ymm14, %ymm15
+	vbroadcastf128	64(%r13), %ymm12 // B
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm11, %ymm14, %ymm15
+	vshufps			$0x55, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm4, %ymm4
 
-	vmulps			%ymm12, %ymm15, %ymm11
-	vaddps			%ymm11, %ymm1, %ymm1
-	vmulps			%ymm13, %ymm15, %ymm11
-	vshufps			$0x4e, %ymm15, %ymm15, %ymm15 // 01 00 11 10
-	vaddps			%ymm11, %ymm5, %ymm5
+	vmulps			%ymm10, %ymm14, %ymm15
+	vmovaps			64(%r11), %ymm8 // A0
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm11, %ymm14, %ymm15
+	vshufps			$0xaa, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm5, %ymm5
 
-	vmulps			%ymm12, %ymm15, %ymm11
-	vaddps			%ymm11, %ymm2, %ymm2
-	vmulps			%ymm13, %ymm15, %ymm11
-	vshufps			$0xb1, %ymm15, %ymm15, %ymm15 // 10 11 00 01
-	vaddps			%ymm11, %ymm6, %ymm6
+	vmulps			%ymm10, %ymm14, %ymm15
+	vmovaps			64(%r15), %ymm9 // A1
+	vaddps			%ymm15, %ymm2, %ymm2
+	vmulps			%ymm11, %ymm14, %ymm15
+	vshufps			$0xff, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm6, %ymm6
 
-	vmulps			%ymm12, %ymm15, %ymm11
-	vmovaps			64(%r11), %ymm12 // A0
-	vaddps			%ymm11, %ymm3, %ymm3
-	vmulps			%ymm13, %ymm15, %ymm11
-	vmovaps			64(%r15), %ymm13 // A1
-	vaddps			%ymm11, %ymm7, %ymm7
-	vbroadcastf128	96(%r13), %ymm15 // B
+	vmulps			%ymm10, %ymm14, %ymm15
+	vaddps			%ymm15, %ymm3, %ymm3
+	vmulps			%ymm11, %ymm14, %ymm15
+	vshufps			$0x00, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm7, %ymm7
 
 
 	// unroll 2
-	vmulps			%ymm12, %ymm14, %ymm11
-	vaddps			%ymm11, %ymm0, %ymm0
-	vmulps			%ymm13, %ymm14, %ymm11
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14 // 10 11 00 01
-	vaddps			%ymm11, %ymm4, %ymm4
+	vmulps			%ymm8, %ymm14, %ymm15
+	vbroadcastf128	96(%r13), %ymm13 // B
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0x55, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm4, %ymm4
 
-	subl	$4, %r10d
-	vmulps			%ymm12, %ymm14, %ymm11
-	vaddps			%ymm11, %ymm1, %ymm1
-	vmulps			%ymm13, %ymm14, %ymm11
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14 // 01 00 11 10
-	vaddps			%ymm11, %ymm5, %ymm5
+	addq	$128, %r13
+	vmulps			%ymm8, %ymm14, %ymm15
+	vmovaps			96(%r11), %ymm10 // A0
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0xaa, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm5, %ymm5
 
-	vmulps			%ymm12, %ymm14, %ymm11
-	vaddps			%ymm11, %ymm2, %ymm2
-	vmulps			%ymm13, %ymm14, %ymm11
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14 // 10 11 00 01
-	vaddps			%ymm11, %ymm6, %ymm6
+	addq	$128, %r11
+	vmulps			%ymm8, %ymm14, %ymm15
+	vmovaps			96(%r15), %ymm11 // A1
+	vaddps			%ymm15, %ymm2, %ymm2
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0xff, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm6, %ymm6
 
-	vmulps			%ymm12, %ymm14, %ymm11
-	vmovaps			96(%r11), %ymm12 // A0
-	vaddps			%ymm11, %ymm3, %ymm3
-	vmulps			%ymm13, %ymm14, %ymm11
-	vmovaps			96(%r15), %ymm13 // A1
-	vaddps			%ymm11, %ymm7, %ymm7
-	vbroadcastf128	128(%r13), %ymm14 // B
+	addq	$128, %r15
+	vmulps			%ymm8, %ymm14, %ymm15
+	vaddps			%ymm15, %ymm3, %ymm3
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0x00, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm7, %ymm7
 
 
 	// unroll 3
-	addq	$128, %r11
-	vmulps			%ymm12, %ymm15, %ymm11
-	vaddps			%ymm11, %ymm0, %ymm0
-	vmulps			%ymm13, %ymm15, %ymm11
-	vshufps			$0xb1, %ymm15, %ymm15, %ymm15 // 10 11 00 01
-	vaddps			%ymm11, %ymm4, %ymm4
+	vmulps			%ymm10, %ymm14, %ymm15
+	vbroadcastf128	0(%r13), %ymm12 // B
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm11, %ymm14, %ymm15
+	vshufps			$0x55, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm4, %ymm4
 
-	addq	$128, %r13
-	vmulps			%ymm12, %ymm15, %ymm11
-	vaddps			%ymm11, %ymm1, %ymm1
-	vmulps			%ymm13, %ymm15, %ymm11
-	vshufps			$0x4e, %ymm15, %ymm15, %ymm15 // 01 00 11 10
-	vaddps			%ymm11, %ymm5, %ymm5
+	vmulps			%ymm10, %ymm14, %ymm15
+	vmovaps			0(%r11), %ymm8 // A0
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm11, %ymm14, %ymm15
+	vshufps			$0xaa, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm5, %ymm5
 
-	addq	$128, %r15
-	vmulps			%ymm12, %ymm15, %ymm11
-	vaddps			%ymm11, %ymm2, %ymm2
-	vmulps			%ymm13, %ymm15, %ymm11
-	vshufps			$0xb1, %ymm15, %ymm15, %ymm15 // 10 11 00 01
-	vaddps			%ymm11, %ymm6, %ymm6
+	vmulps			%ymm10, %ymm14, %ymm15
+	vmovaps			0(%r15), %ymm9 // A1
+	vaddps			%ymm15, %ymm2, %ymm2
+	vmulps			%ymm11, %ymm14, %ymm15
+	vshufps			$0xff, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm6, %ymm6
 
-	vmulps			%ymm12, %ymm15, %ymm11
-	vmovaps			0(%r11), %ymm12 // A0
-	vaddps			%ymm11, %ymm3, %ymm3
-	vmulps			%ymm13, %ymm15, %ymm11
-	vmovaps			0(%r15), %ymm13 // A1
-	vaddps			%ymm11, %ymm7, %ymm7
-	vbroadcastf128	32(%r13), %ymm15 // B
+	vmulps			%ymm10, %ymm14, %ymm15
+	vaddps			%ymm15, %ymm3, %ymm3
+	vmulps			%ymm11, %ymm14, %ymm15
+	vshufps			$0x00, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm7, %ymm7
 
 
 	cmpl	$4, %r10d
@@ -241,119 +254,123 @@ _inner_kernel_sgemm_add_nt_16x4_lib8:
 
 
 	// unroll 0
-	vmulps			%ymm12, %ymm14, %ymm11
-	vaddps			%ymm11, %ymm0, %ymm0
-	vmulps			%ymm13, %ymm14, %ymm11
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14 // 10 11 00 01
-	vaddps			%ymm11, %ymm4, %ymm4
+	vmulps			%ymm8, %ymm14, %ymm15
+	vbroadcastf128	32(%r13), %ymm13 // B
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0x55, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm4, %ymm4
 
-	vmulps			%ymm12, %ymm14, %ymm11
-	vaddps			%ymm11, %ymm1, %ymm1
-	vmulps			%ymm13, %ymm14, %ymm11
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14 // 01 00 11 10
-	vaddps			%ymm11, %ymm5, %ymm5
+	subl	$4, %r10d
+	vmulps			%ymm8, %ymm14, %ymm15
+	vmovaps			32(%r11), %ymm10 // A0
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0xaa, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm5, %ymm5
 
-	vmulps			%ymm12, %ymm14, %ymm11
-	vaddps			%ymm11, %ymm2, %ymm2
-	vmulps			%ymm13, %ymm14, %ymm11
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14 // 10 11 00 01
-	vaddps			%ymm11, %ymm6, %ymm6
+	vmulps			%ymm8, %ymm14, %ymm15
+	vmovaps			32(%r15), %ymm11 // A1
+	vaddps			%ymm15, %ymm2, %ymm2
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0xff, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm6, %ymm6
 
-	vmulps			%ymm12, %ymm14, %ymm11
-	vmovaps			32(%r11), %ymm12 // A0
-	vaddps			%ymm11, %ymm3, %ymm3
-	vmulps			%ymm13, %ymm14, %ymm11
-	vmovaps			32(%r15), %ymm13 // A1
-	vaddps			%ymm11, %ymm7, %ymm7
-	vbroadcastf128	64(%r13), %ymm14 // B
+	vmulps			%ymm8, %ymm14, %ymm15
+	vaddps			%ymm15, %ymm3, %ymm3
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0x00, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm7, %ymm7
 
 
 	// unroll 1
-	vmulps			%ymm12, %ymm15, %ymm11
-	vaddps			%ymm11, %ymm0, %ymm0
-	vmulps			%ymm13, %ymm15, %ymm11
-	vshufps			$0xb1, %ymm15, %ymm15, %ymm15 // 10 11 00 01
-	vaddps			%ymm11, %ymm4, %ymm4
+	vmulps			%ymm10, %ymm14, %ymm15
+	vbroadcastf128	64(%r13), %ymm12 // B
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm11, %ymm14, %ymm15
+	vshufps			$0x55, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm4, %ymm4
 
-	vmulps			%ymm12, %ymm15, %ymm11
-	vaddps			%ymm11, %ymm1, %ymm1
-	vmulps			%ymm13, %ymm15, %ymm11
-	vshufps			$0x4e, %ymm15, %ymm15, %ymm15 // 01 00 11 10
-	vaddps			%ymm11, %ymm5, %ymm5
+	vmulps			%ymm10, %ymm14, %ymm15
+	vmovaps			64(%r11), %ymm8 // A0
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm11, %ymm14, %ymm15
+	vshufps			$0xaa, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm5, %ymm5
 
-	vmulps			%ymm12, %ymm15, %ymm11
-	vaddps			%ymm11, %ymm2, %ymm2
-	vmulps			%ymm13, %ymm15, %ymm11
-	vshufps			$0xb1, %ymm15, %ymm15, %ymm15 // 10 11 00 01
-	vaddps			%ymm11, %ymm6, %ymm6
+	vmulps			%ymm10, %ymm14, %ymm15
+	vmovaps			64(%r15), %ymm9 // A1
+	vaddps			%ymm15, %ymm2, %ymm2
+	vmulps			%ymm11, %ymm14, %ymm15
+	vshufps			$0xff, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm6, %ymm6
 
-	vmulps			%ymm12, %ymm15, %ymm11
-	vmovaps			64(%r11), %ymm12 // A0
-	vaddps			%ymm11, %ymm3, %ymm3
-	vmulps			%ymm13, %ymm15, %ymm11
-	vmovaps			64(%r15), %ymm13 // A1
-	vaddps			%ymm11, %ymm7, %ymm7
-	vbroadcastf128	96(%r13), %ymm15 // B
+	vmulps			%ymm10, %ymm14, %ymm15
+	vaddps			%ymm15, %ymm3, %ymm3
+	vmulps			%ymm11, %ymm14, %ymm15
+	vshufps			$0x00, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm7, %ymm7
 
 
 	// unroll 2
-	vmulps			%ymm12, %ymm14, %ymm11
-	vaddps			%ymm11, %ymm0, %ymm0
-	vmulps			%ymm13, %ymm14, %ymm11
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14 // 10 11 00 01
-	vaddps			%ymm11, %ymm4, %ymm4
+	vmulps			%ymm8, %ymm14, %ymm15
+	vbroadcastf128	96(%r13), %ymm13 // B
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0x55, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm4, %ymm4
 
-	subl	$4, %r10d
-	vmulps			%ymm12, %ymm14, %ymm11
-	vaddps			%ymm11, %ymm1, %ymm1
-	vmulps			%ymm13, %ymm14, %ymm11
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14 // 01 00 11 10
-	vaddps			%ymm11, %ymm5, %ymm5
+	addq	$128, %r13
+	vmulps			%ymm8, %ymm14, %ymm15
+	vmovaps			96(%r11), %ymm10 // A0
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0xaa, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm5, %ymm5
 
-	vmulps			%ymm12, %ymm14, %ymm11
-	vaddps			%ymm11, %ymm2, %ymm2
-	vmulps			%ymm13, %ymm14, %ymm11
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14 // 10 11 00 01
-	vaddps			%ymm11, %ymm6, %ymm6
+	addq	$128, %r11
+	vmulps			%ymm8, %ymm14, %ymm15
+	vmovaps			96(%r15), %ymm11 // A1
+	vaddps			%ymm15, %ymm2, %ymm2
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0xff, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm6, %ymm6
 
-	vmulps			%ymm12, %ymm14, %ymm11
-	vmovaps			96(%r11), %ymm12 // A0
-	vaddps			%ymm11, %ymm3, %ymm3
-	vmulps			%ymm13, %ymm14, %ymm11
-	vmovaps			96(%r15), %ymm13 // A1
-	vaddps			%ymm11, %ymm7, %ymm7
-//	vbroadcastf128	128(%r13), %ymm14 // B
+	addq	$128, %r15
+	vmulps			%ymm8, %ymm14, %ymm15
+	vaddps			%ymm15, %ymm3, %ymm3
+	vmulps			%ymm9, %ymm14, %ymm15
+	vshufps			$0x00, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm7, %ymm7
 
 
 	// unroll 3
-	addq	$128, %r11
-	vmulps			%ymm12, %ymm15, %ymm11
-	vaddps			%ymm11, %ymm0, %ymm0
-	vmulps			%ymm13, %ymm15, %ymm11
-	vshufps			$0xb1, %ymm15, %ymm15, %ymm15 // 10 11 00 01
-	vaddps			%ymm11, %ymm4, %ymm4
+	vmulps			%ymm10, %ymm14, %ymm15
+//	vbroadcastf128	0(%r13), %ymm12 // B
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm11, %ymm14, %ymm15
+	vshufps			$0x55, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm4, %ymm4
 
-	addq	$128, %r13
-	vmulps			%ymm12, %ymm15, %ymm11
-	vaddps			%ymm11, %ymm1, %ymm1
-	vmulps			%ymm13, %ymm15, %ymm11
-	vshufps			$0x4e, %ymm15, %ymm15, %ymm15 // 01 00 11 10
-	vaddps			%ymm11, %ymm5, %ymm5
+	vmulps			%ymm10, %ymm14, %ymm15
+//	vmovaps			0(%r11), %ymm8 // A0
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm11, %ymm14, %ymm15
+	vshufps			$0xaa, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm5, %ymm5
 
-//	addq	$128, %r15
-	vmulps			%ymm12, %ymm15, %ymm11
-	vaddps			%ymm11, %ymm2, %ymm2
-	vmulps			%ymm13, %ymm15, %ymm11
-	vshufps			$0xb1, %ymm15, %ymm15, %ymm15 // 10 11 00 01
-	vaddps			%ymm11, %ymm6, %ymm6
+	vmulps			%ymm10, %ymm14, %ymm15
+//	vmovaps			0(%r15), %ymm9 // A1
+	vaddps			%ymm15, %ymm2, %ymm2
+	vmulps			%ymm11, %ymm14, %ymm15
+	vshufps			$0xff, %ymm13, %ymm13, %ymm14
+	vaddps			%ymm15, %ymm6, %ymm6
 
-	vmulps			%ymm12, %ymm15, %ymm11
-//	vmovaps			0(%r11), %ymm12 // A0
-	vaddps			%ymm11, %ymm3, %ymm3
-	vmulps			%ymm13, %ymm15, %ymm11
-//	vmovaps			0(%r15), %ymm13 // A1
-	vaddps			%ymm11, %ymm7, %ymm7
-//	vbroadcastf128	32(%r13), %ymm15 // B
+	vmulps			%ymm10, %ymm14, %ymm15
+	vaddps			%ymm15, %ymm3, %ymm3
+	vmulps			%ymm11, %ymm14, %ymm15
+//	vshufps			$0x00, %ymm12, %ymm12, %ymm14
+	vaddps			%ymm15, %ymm7, %ymm7
 
 
 //	cmpl	$4, %r10d
@@ -413,6 +430,300 @@ _inner_kernel_sgemm_add_nt_16x4_lib8:
 
 #if defined(OS_LINUX)
 	.size	inner_kernel_sgemm_add_nt_16x4_lib8, .-inner_kernel_sgemm_add_nt_16x4_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// scale for generic alpha and beta
+//
+// input arguments:
+// r10   <- alpha
+// r11   <- beta
+// r12   <- C
+// r13   <- 4*sdc*sizeof(float)
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10   <- alpha
+// r11   <- beta
+// r12   <- C
+// r13   <- 4*sdc*sizeof(float)
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_AB_16X4_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_ab_16x4_lib8, @function
+inner_scale_ab_16x4_lib8:
+#elif defined(OS_MAC)
+_inner_scale_ab_16x4_lib8:
+#endif
+#endif
+	
+	// alpha
+	vbroadcastss	0(%r10), %ymm11
+
+	vmulps		%ymm0, %ymm11, %ymm0
+	vmulps		%ymm1, %ymm11, %ymm1
+	vmulps		%ymm2, %ymm11, %ymm2
+	vmulps		%ymm3, %ymm11, %ymm3
+
+	vmulps		%ymm4, %ymm11, %ymm4
+	vmulps		%ymm5, %ymm11, %ymm5
+	vmulps		%ymm6, %ymm11, %ymm6
+	vmulps		%ymm7, %ymm11, %ymm7
+
+	// beta
+	vbroadcastss	0(%r11), %ymm14
+
+	vxorps		%ymm15, %ymm15, %ymm15 // 0.0
+
+	vucomiss	%xmm15, %xmm14 // beta==0.0 ?
+	je			0f // end
+
+	movq	%r12, %r15 // C1 <- C0
+	addq	%r13, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
+
+	vmovaps		0(%r12), %ymm15
+	vmulps		%ymm15, %ymm14, %ymm15
+	vaddps		%ymm0, %ymm15, %ymm0
+	vmovaps		32(%r12), %ymm15
+	vmulps		%ymm15, %ymm14, %ymm15
+	vaddps		%ymm1, %ymm15, %ymm1
+	vmovaps		64(%r12), %ymm15
+	vmulps		%ymm15, %ymm14, %ymm15
+	vaddps		%ymm2, %ymm15, %ymm2
+	vmovaps		96(%r12), %ymm15
+	vmulps		%ymm15, %ymm14, %ymm15
+	vaddps		%ymm3, %ymm15, %ymm3
+
+	vmovaps		0(%r15), %ymm15
+	vmulps		%ymm15, %ymm14, %ymm15
+	vaddps		%ymm4, %ymm15, %ymm4
+	vmovaps		32(%r15), %ymm15
+	vmulps		%ymm15, %ymm14, %ymm15
+	vaddps		%ymm5, %ymm15, %ymm5
+	vmovaps		64(%r15), %ymm15
+	vmulps		%ymm15, %ymm14, %ymm15
+	vaddps		%ymm6, %ymm15, %ymm6
+	vmovaps		96(%r15), %ymm15
+	vmulps		%ymm15, %ymm14, %ymm15
+	vaddps		%ymm7, %ymm15, %ymm7
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_scale_ab_16x4_lib8, .-inner_scale_ab_16x4_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// scale for generic alpha and beta
+//
+// input arguments:
+// r10   <- alpha
+// r11   <- beta
+// r12  <- offset
+// r13   <- C
+// r14  <- 4*sdc*sizeof(double)
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10   <- alpha
+// r11   <- beta
+// r12  <- offset
+// r13   <- C
+// r14  <- 4*sdc*sizeof(double)
+// r15  <- n0 // col index: start from (inc)
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_AB_16X4_GEN_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_ab_16x4_gen_lib8, @function
+inner_scale_ab_16x4_gen_lib8:
+#elif defined(OS_MAC)
+_inner_scale_ab_16x4_gen_lib8:
+#endif
+#endif
+	
+	// alpha
+	vbroadcastss	0(%r10), %ymm11
+
+	vmulps		%ymm0, %ymm11, %ymm0
+	vmulps		%ymm1, %ymm11, %ymm1
+	vmulps		%ymm2, %ymm11, %ymm2
+	vmulps		%ymm3, %ymm11, %ymm3
+
+	vmulps		%ymm4, %ymm11, %ymm4
+	vmulps		%ymm5, %ymm11, %ymm5
+	vmulps		%ymm6, %ymm11, %ymm6
+	vmulps		%ymm7, %ymm11, %ymm7
+
+	// beta
+	vbroadcastss	0(%r11), %ymm15
+
+	vxorps		%ymm14, %ymm14, %ymm14 // 0.0
+
+	vucomiss	%xmm15, %xmm14 // beta==0.0 ?
+	je			3f // end
+
+	movq	%r13, %rax // C1 <- C0
+	addq	%r14, %rax // C1 <- C0 + 4*sdc*sizeof(double)
+
+	cmpl	$0, %r12d
+	jg		0f
+
+	// offset==0
+
+	vmovaps		0(%r13), %ymm12
+	vmulps		%ymm12, %ymm15, %ymm12
+	vaddps		%ymm0, %ymm12, %ymm0
+	vmovaps		32(%r13), %ymm12
+	vmulps		%ymm12, %ymm15, %ymm12
+	vaddps		%ymm1, %ymm12, %ymm1
+	vmovaps		64(%r13), %ymm12
+	vmulps		%ymm12, %ymm15, %ymm12
+	vaddps		%ymm2, %ymm12, %ymm2
+	vmovaps		96(%r13), %ymm12
+	vmulps		%ymm12, %ymm15, %ymm12
+	vaddps		%ymm3, %ymm12, %ymm3
+
+	vmovaps		0(%rax), %ymm14
+	vmulps		%ymm14, %ymm15, %ymm14
+	vaddps		%ymm4, %ymm14, %ymm4
+	vmovaps		32(%rax), %ymm14
+	vmulps		%ymm14, %ymm15, %ymm14
+	vaddps		%ymm5, %ymm14, %ymm5
+	vmovaps		64(%rax), %ymm14
+	vmulps		%ymm14, %ymm15, %ymm14
+	vaddps		%ymm6, %ymm14, %ymm6
+	vmovaps		96(%rax), %ymm14
+	vmulps		%ymm14, %ymm15, %ymm14
+	vaddps		%ymm7, %ymm14, %ymm7
+
+	jmp		7f
+
+0:
+
+	// offset > 0
+	// 1 2 3 4 5 6 7
+	
+	movq	%rax, %rbx // C1
+	addq	%r14, %rbx // C2 <- C1 + 4*sdc*sizeof(double)
+
+	cmpl	$4, %r10d
+	jl		1f
+	jg		2f
+
+	// offset==4
+	// TODO
+	jmp		7f
+
+1:
+	// 1 2 3
+
+	cmpl	$2, %r10d
+	jl		3f
+	jg		4f
+
+	// offset==2
+	// TODO
+	jmp		7f
+
+3:
+	// offset==1
+	// TODO
+	jmp		7f
+
+4:
+	// offset==3
+	// TODO
+	jmp		7f
+
+2:
+	// 5 6 7
+
+	cmpl	$6, %r10d
+	jl		5f
+	jg		6f
+
+	// offset==6
+	// TODO
+	jmp		7f
+
+5:
+	// offset==5
+	// TODO
+	jmp		7f
+
+6:
+	// offset==7
+	// TODO
+	jmp		7f
+
+	// end
+7:
+
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_scale_ab_16x4_gen_lib8, .-inner_scale_ab_16x4_gen_lib8
 #endif
 #endif
 
@@ -1077,12 +1388,12 @@ _kernel_sgemm_nt_16x4_lib8:
 	sall	$5, %r13d // 8*sdc*sizeof(float)
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_AB_16X4_LIB8
+	INNER_SCALE_AB_16X4_LIB8
 #else
 #if defined(OS_LINUX)
-	call inner_blend_scale_ab_16x4_lib8
+	call inner_scale_ab_16x4_lib8
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_ab_16x4_lib8
+	callq _inner_scale_ab_16x4_lib8
 #endif
 #endif
 
@@ -1193,12 +1504,12 @@ _kernel_sgemm_nt_16x4_gen_lib8:
 	sall	$5, %r14d // 8*sdc*sizeof(float)
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_AB_16X4_GEN_LIB8
+	INNER_SCALE_AB_16X4_GEN_LIB8
 #else
 #if defined(OS_LINUX)
-	call inner_blend_scale_ab_16x4_gen_lib8
+	call inner_scale_ab_16x4_gen_lib8
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_ab_16x4_gen_lib8
+	callq _inner_scale_ab_16x4_gen_lib8
 #endif
 #endif
 
