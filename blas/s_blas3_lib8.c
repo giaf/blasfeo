@@ -58,6 +58,7 @@ void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 	i = 0;
 
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if 1
 	for(; i<m-15; i+=16)
 		{
 		j = 0;
@@ -93,8 +94,7 @@ void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 			goto left_16;
 			}
 		}
-#endif
-#if 0
+#else
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -123,6 +123,7 @@ void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 		goto left_8;
 		}
 #endif
+#endif
 
 	// common return if i==m
 	return;
@@ -146,9 +147,7 @@ void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 	j = 0;
 	for(; j<n-4; j+=8)
 		{
-//		kernel_sgemm_nt_8x8_lib8(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd]);
-		kernel_sgemm_nt_8x4_gen_lib8(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, m-i, 0, 4);
-		kernel_sgemm_nt_8x4_gen_lib8(k, &alpha, &pA[i*sda], &pB[4+j*sdb], &beta, 0, &pC[(j+4)*bs+i*sdc], sdc, 0, &pD[(j+4)*bs+i*sdd], sdd, 0, m-i, 0, n-(j+4));
+		kernel_sgemm_nt_8x8_gen_lib8(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, m-i, 0, n-j);
 		}
 	if(j<n)
 		{

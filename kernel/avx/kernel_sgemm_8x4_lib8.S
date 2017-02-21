@@ -738,11 +738,11 @@ _inner_store_8x4_gen_lib8:
 	jg		0f
 
 	// offset==0
-	cmpl		$2, %r15d
 	vmaskmovps	%ymm0, %ymm15,  0(%r11)
+	cmpl		$2, %r15d
 	jl			7f // end
-	cmpl		$3, %r15d
 	vmaskmovps	%ymm1, %ymm15, 32(%r11)
+	cmpl		$3, %r15d
 	jl			7f // end
 	vmaskmovps	%ymm2, %ymm15, 64(%r11)
 	je			7f // end

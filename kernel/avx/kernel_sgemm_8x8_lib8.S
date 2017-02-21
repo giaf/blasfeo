@@ -486,6 +486,10 @@ _inner_kernel_sgemm_add_nt_8x8_lib8:
 // ymm1 <- []
 // ymm2 <- []
 // ymm3 <- []
+// ymm4 <- []
+// ymm5 <- []
+// ymm6 <- []
+// ymm7 <- []
 // ymm8  <- dirty
 // ymm9  <- dirty
 // ymm10 <- dirty
@@ -500,6 +504,10 @@ _inner_kernel_sgemm_add_nt_8x8_lib8:
 // ymm1 <- []
 // ymm2 <- []
 // ymm3 <- []
+// ymm4 <- []
+// ymm5 <- []
+// ymm6 <- []
+// ymm7 <- []
 // ymm8  <- dirty
 // ymm9  <- dirty
 // ymm10 <- dirty
@@ -518,37 +526,38 @@ _inner_blend_scale_ab_8x8_lib8:
 #endif
 #endif
 	
-	vblendps	$0xaa, %ymm1, %ymm0, %ymm8 // 1010 1010
-	vblendps	$0x55, %ymm1, %ymm0, %ymm9 // 0101 0101
-	vblendps	$0xaa, %ymm3, %ymm2, %ymm10
-	vblendps	$0x55, %ymm3, %ymm2, %ymm11
+	// alpha
+	vbroadcastss	0(%r10), %ymm11
+
+	vblendps	$0xaa, %ymm1, %ymm0, %ymm12 // 1010 1010
+	vblendps	$0x55, %ymm1, %ymm0, %ymm13 // 0101 0101
+	vblendps	$0xaa, %ymm3, %ymm2, %ymm14
+	vblendps	$0x55, %ymm3, %ymm2, %ymm15
+
+	vblendps	$0xcc, %ymm15, %ymm12, %ymm0 // 1100 1100
+	vblendps	$0x33, %ymm15, %ymm12, %ymm2 // 0011 0011
+	vblendps	$0xcc, %ymm14, %ymm13, %ymm1
+	vblendps	$0x33, %ymm14, %ymm13, %ymm3
+
+	vmulps		%ymm0, %ymm11, %ymm0
+	vmulps		%ymm1, %ymm11, %ymm1
+	vmulps		%ymm2, %ymm11, %ymm2
+	vmulps		%ymm3, %ymm11, %ymm3
 
 	vblendps	$0xaa, %ymm5, %ymm4, %ymm12
 	vblendps	$0x55, %ymm5, %ymm4, %ymm13
 	vblendps	$0xaa, %ymm7, %ymm6, %ymm14
 	vblendps	$0x55, %ymm7, %ymm6, %ymm15
 
-	vblendps	$0xcc, %ymm11, %ymm8, %ymm0 // 1100 1100
-	vblendps	$0x33, %ymm11, %ymm8, %ymm2 // 0011 0011
-	vblendps	$0xcc, %ymm10, %ymm9, %ymm1
-	vblendps	$0x33, %ymm10, %ymm9, %ymm3
-
 	vblendps	$0xcc, %ymm15, %ymm12, %ymm4
 	vblendps	$0x33, %ymm15, %ymm12, %ymm6
 	vblendps	$0xcc, %ymm14, %ymm13, %ymm5
 	vblendps	$0x33, %ymm14, %ymm13, %ymm7
 
-	// alpha
-	vbroadcastss	0(%r10), %ymm15
-
-	vmulps		%ymm0, %ymm15, %ymm0
-	vmulps		%ymm1, %ymm15, %ymm1
-	vmulps		%ymm2, %ymm15, %ymm2
-	vmulps		%ymm3, %ymm15, %ymm3
-	vmulps		%ymm4, %ymm15, %ymm4
-	vmulps		%ymm5, %ymm15, %ymm5
-	vmulps		%ymm6, %ymm15, %ymm6
-	vmulps		%ymm7, %ymm15, %ymm7
+	vmulps		%ymm4, %ymm11, %ymm4
+	vmulps		%ymm5, %ymm11, %ymm5
+	vmulps		%ymm6, %ymm11, %ymm6
+	vmulps		%ymm7, %ymm11, %ymm7
 
 	// beta
 	vbroadcastss	0(%r11), %ymm14
@@ -592,6 +601,212 @@ _inner_blend_scale_ab_8x8_lib8:
 
 #if defined(OS_LINUX)
 	.size	inner_blend_scale_ab_8x8_lib8, .-inner_blend_scale_ab_8x8_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// blend scale for generic alpha and beta
+//
+// input arguments:
+// r10   <- alpha
+// r11   <- beta
+// r12  <- offset
+// r13   <- C
+// r14  <- 4*sdc*sizeof(double)
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm4 <- []
+// ymm5 <- []
+// ymm6 <- []
+// ymm7 <- []
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10   <- alpha
+// r11   <- beta
+// r12  <- offset
+// r13   <- C
+// r14  <- 4*sdc*sizeof(double)
+// r15  <- n0 // col index: start from (inc)
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm4 <- []
+// ymm5 <- []
+// ymm6 <- []
+// ymm7 <- []
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_SCALE_AB_8X8_GEN_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_blend_scale_ab_8x8_gen_lib8, @function
+inner_blend_scale_ab_8x8_gen_lib8:
+#elif defined(OS_MAC)
+_inner_blend_scale_ab_8x8_gen_lib8:
+#endif
+#endif
+	
+	// alpha
+	vbroadcastss	0(%r10), %ymm11
+
+	vblendps	$0xaa, %ymm1, %ymm0, %ymm12 // 1010 1010
+	vblendps	$0x55, %ymm1, %ymm0, %ymm13 // 0101 0101
+	vblendps	$0xaa, %ymm3, %ymm2, %ymm14
+	vblendps	$0x55, %ymm3, %ymm2, %ymm15
+
+	vblendps	$0xcc, %ymm15, %ymm12, %ymm0 // 1100 1100
+	vblendps	$0x33, %ymm15, %ymm12, %ymm2 // 0011 0011
+	vblendps	$0xcc, %ymm14, %ymm13, %ymm1
+	vblendps	$0x33, %ymm14, %ymm13, %ymm3
+
+	vmulps		%ymm0, %ymm11, %ymm0
+	vmulps		%ymm1, %ymm11, %ymm1
+	vmulps		%ymm2, %ymm11, %ymm2
+	vmulps		%ymm3, %ymm11, %ymm3
+
+	vblendps	$0xaa, %ymm5, %ymm4, %ymm12
+	vblendps	$0x55, %ymm5, %ymm4, %ymm13
+	vblendps	$0xaa, %ymm7, %ymm6, %ymm14
+	vblendps	$0x55, %ymm7, %ymm6, %ymm15
+
+	vblendps	$0xcc, %ymm15, %ymm12, %ymm4
+	vblendps	$0x33, %ymm15, %ymm12, %ymm6
+	vblendps	$0xcc, %ymm14, %ymm13, %ymm5
+	vblendps	$0x33, %ymm14, %ymm13, %ymm7
+
+	vmulps		%ymm4, %ymm11, %ymm4
+	vmulps		%ymm5, %ymm11, %ymm5
+	vmulps		%ymm6, %ymm11, %ymm6
+	vmulps		%ymm7, %ymm11, %ymm7
+
+	// beta
+	vbroadcastss	0(%r11), %ymm15
+
+	vxorps		%ymm14, %ymm14, %ymm14 // 0.0
+
+	vucomiss	%xmm15, %xmm14 // beta==0.0 ?
+	je			3f // end
+
+	cmpl	$0, %r12d
+	jg		0f
+
+	// offset==0
+
+	vmovaps		0(%r13), %ymm12
+	vmulps		%ymm12, %ymm15, %ymm12
+	vaddps		%ymm0, %ymm12, %ymm0
+	vmovaps		32(%r13), %ymm12
+	vmulps		%ymm12, %ymm15, %ymm12
+	vaddps		%ymm1, %ymm12, %ymm1
+	vmovaps		64(%r13), %ymm12
+	vmulps		%ymm12, %ymm15, %ymm12
+	vaddps		%ymm2, %ymm12, %ymm2
+	vmovaps		96(%r13), %ymm12
+	vmulps		%ymm12, %ymm15, %ymm12
+	vaddps		%ymm3, %ymm12, %ymm3
+	vmovaps		128(%r13), %ymm15
+	vmulps		%ymm15, %ymm14, %ymm15
+	vaddps		%ymm4, %ymm15, %ymm4
+	vmovaps		160(%r13), %ymm15
+	vmulps		%ymm15, %ymm14, %ymm15
+	vaddps		%ymm5, %ymm15, %ymm5
+	vmovaps		192(%r13), %ymm15
+	vmulps		%ymm15, %ymm14, %ymm15
+	vaddps		%ymm6, %ymm15, %ymm6
+	vmovaps		224(%r13), %ymm15
+	vmulps		%ymm15, %ymm14, %ymm15
+	vaddps		%ymm7, %ymm15, %ymm7
+
+	jmp		7f
+
+0:
+
+	// offset > 0
+	// 1 2 3 4 5 6 7
+	
+	movq	%r13, %r15 // C0
+	addq	%r14, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
+
+	cmpl	$4, %r10d
+	jl		1f
+	jg		2f
+
+	// offset==4
+	// TODO
+	jmp		7f
+
+1:
+	// 1 2 3
+
+	cmpl	$2, %r10d
+	jl		3f
+	jg		4f
+
+	// offset==2
+	// TODO
+	jmp		7f
+
+3:
+	// offset==1
+	// TODO
+	jmp		7f
+
+4:
+	// offset==3
+	// TODO
+	jmp		7f
+
+2:
+	// 5 6 7
+
+	cmpl	$6, %r10d
+	jl		5f
+	jg		6f
+
+	// offset==6
+	// TODO
+	jmp		7f
+
+5:
+	// offset==5
+	// TODO
+	jmp		7f
+
+6:
+	// offset==7
+	// TODO
+	jmp		7f
+
+	// end
+7:
+
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_blend_scale_ab_8x8_gen_lib8, .-inner_blend_scale_ab_8x8_gen_lib8
 #endif
 #endif
 
@@ -645,6 +860,211 @@ _inner_store_8x8_lib8:
 
 #if defined(OS_LINUX)
 	.size	inner_store_8x8_lib8, .-inner_store_8x8_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// store n generalized
+//
+// input arguments:
+// r10  <- offset
+// r11  <- D
+// r12  <- 4*sdd*sizeof(double)
+// r13  <- m0 // row index: start from (inc)
+// r14  <- m1 // row index: up to (exc)
+// r15  <- n0 // col index: start from (inc)
+// rax  <- n1 // col index: up to (exc)
+// rbx  <- dirty
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm4 <- []
+// ymm5 <- []
+// ymm6 <- []
+// ymm7 <- []
+//
+// output arguments:
+// r10  <- offset
+// r11  <- D
+// r12  <- 4*sdd*sizeof(double)
+// r13  <- m0 // row index: start from (inc)
+// r14  <- m1 // row index: up to (exc)
+// r15  <- n1-n0
+// rax  <- n1-n0
+// rbx  <- dirty
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm4 <- []
+// ymm5 <- []
+// ymm6 <- []
+// ymm7 <- []
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_8X8_GEN_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_store_8x8_gen_lib8, @function
+inner_store_8x8_gen_lib8:
+#elif defined(OS_MAC)
+_inner_store_8x8_gen_lib8:
+#endif
+#endif
+	
+	// compute mask for rows
+	vcvtsi2ss	%r13d, %xmm14, %xmm14
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm14, %xmm14, %xmm14
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm12, %ymm14, %ymm14
+	vsubps		%ymm15, %ymm12, %ymm15
+	vandps		%ymm14, %ymm15, %ymm15
+
+	// shift D and sol for cols
+	cmpl	$0, %r15d
+	jle		0f
+
+	vmovaps		%ymm1, %ymm0
+	vmovaps		%ymm2, %ymm1
+	vmovaps		%ymm3, %ymm2
+	vmovaps		%ymm4, %ymm3
+	vmovaps		%ymm5, %ymm4
+	vmovaps		%ymm6, %ymm5
+	vmovaps		%ymm7, %ymm6
+	addq		$32, %r11
+
+	cmpl	$1, %r15d
+	jle		0f
+
+	vmovaps		%ymm1, %ymm0
+	vmovaps		%ymm2, %ymm1
+	vmovaps		%ymm3, %ymm2
+	vmovaps		%ymm4, %ymm3
+	vmovaps		%ymm5, %ymm4
+	vmovaps		%ymm6, %ymm5
+	addq		$32, %r11
+
+	cmpl	$2, %r15d
+	jle		0f
+
+	vmovaps		%ymm1, %ymm0
+	vmovaps		%ymm3, %ymm2
+	vmovaps		%ymm4, %ymm3
+	vmovaps		%ymm5, %ymm4
+	addq		$32, %r11
+
+0:
+
+	// compute number of cols
+	cmpl	$8, %eax
+	jle		0f
+	movl	$8, %eax
+0:
+	subl	%r15d, %eax
+	movl	%eax, %r15d
+
+	cmpl	$0, %r10d
+	jg		0f
+
+	// offset==0
+	vmaskmovps	%ymm0, %ymm15,  0(%r11)
+	vmaskmovps	%ymm1, %ymm15,  32(%r11)
+	vmaskmovps	%ymm2, %ymm15,  64(%r11)
+	vmaskmovps	%ymm3, %ymm15,  96(%r11)
+	vmaskmovps	%ymm4, %ymm15,  128(%r11)
+	cmpl		$6, %r15d
+	jl			7f // end
+	vmaskmovps	%ymm5, %ymm15, 160(%r11)
+	cmpl		$7, %r15d
+	jl			7f // end
+	vmaskmovps	%ymm6, %ymm15, 192(%r11)
+	je			7f // end
+	vmaskmovps	%ymm7, %ymm15, 224(%r11)
+	//
+	jmp		7f
+
+0:
+	// offset > 0
+	// 1 2 3 4 5 6 7
+	
+	movq	%r11, %rbx // D0
+	addq	%r12, %rbx // D1 <- D0 + 4*sdd*sizeof(double)
+
+	cmpl	$4, %r10d
+	jl		1f
+	jg		2f
+
+	// offset==4
+	// TODO
+	jmp		7f
+
+1:
+	// 1 2 3
+
+	cmpl	$2, %r10d
+	jl		3f
+	jg		4f
+
+	// offset==2
+	// TODO
+	jmp		7f
+
+3:
+	// offset==1
+	// TODO
+	jmp		7f
+
+4:
+	// offset==3
+	// TODO
+	jmp		7f
+
+2:
+	// 5 6 7
+
+	cmpl	$6, %r10d
+	jl		5f
+	jg		6f
+
+	// offset==6
+	// TODO
+	jmp		7f
+
+5:
+	// offset==5
+	// TODO
+	jmp		7f
+
+6:
+	// offset==7
+	// TODO
+	jmp		7f
+
+	// end
+7:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_store_8x8_gen_lib8, .-inner_store_8x8_gen_lib8
 #endif
 #endif
 
@@ -755,6 +1175,125 @@ _kernel_sgemm_nt_8x8_lib8:
 
 #if defined(OS_LINUX)
 	.size	kernel_sgemm_nt_8x8_lib8, .-kernel_sgemm_nt_8x8_lib8
+#endif
+
+
+
+
+
+//                                   rdi    rsi           rdx       rcx       r8           r9           rsp+8     rsp+16   rsp+24       rsp+32    rsp+40   rsp+48  rsp+56  rsp+64  rsp+72
+// void kernel_sgemm_nt_8x8_gen_lib8(int k, float *alpha, float *A, float *B, float *beta, int offsetC, float *C, int sdc, int offsetD, float *D, int sdd, int m0, int m1, int n0, int n1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgemm_nt_8x8_gen_lib8
+	.type kernel_sgemm_nt_8x8_gen_lib8, @function
+kernel_sgemm_nt_8x8_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgemm_nt_8x8_gen_lib8
+_kernel_sgemm_nt_8x8_gen_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
+
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rdx, %r11  // A
+	movq	%rcx, %r12  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGEMM_ADD_NT_8X8_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgemm_add_nt_8x8_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgemm_add_nt_8x8_lib8
+#endif
+#endif
+
+
+	// call inner blend scale
+
+	movq	%rsi, %r10 // alpha
+	movq	%r8, %r11 // beta
+	movl	%r9d, %r12d // offsetC
+	movq	STACKSIZE +  8(%rsp), %r13 // C
+	movl	STACKSIZE + 16(%rsp), %r14d // sdc
+	sall	$5, %r14d // 8*sdc*sizeof(float)
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_AB_8X8_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_blend_scale_ab_8x8_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_blend_scale_ab_8x8_gen_lib8
+#endif
+#endif
+
+
+	// store n gen
+
+	movq	STACKSIZE + 24(%rsp), %r10 // offsetD
+	movq	STACKSIZE + 32(%rsp), %r11 // D
+	movl	STACKSIZE + 40(%rsp), %r12d // sdd
+	sall	$5, %r12d // 8*sdb*sizeof(float)
+	movl	STACKSIZE + 48(%rsp), %r13d // m0
+	movl	STACKSIZE + 56(%rsp), %r14d // m1
+	movl	STACKSIZE + 64(%rsp), %r15d // n0
+	movl	STACKSIZE + 72(%rsp), %eax // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X8_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_store_8x8_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_store_8x8_gen_lib8
+#endif
+#endif
+
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgemm_nt_8x8_gen_lib8, .-kernel_sgemm_nt_8x8_gen_lib8
 #endif
 
 
