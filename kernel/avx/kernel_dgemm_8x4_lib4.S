@@ -193,8 +193,8 @@ _inner_kernel_dgemm_add_nt_8x4_lib4:
 	addq	$128, %r13
 	vmulpd	%ymm9, %ymm12, %ymm15
 	vaddpd	%ymm7, %ymm15, %ymm7
-	addq	$128, %r11
 
+	addq	$128, %r11
 	vmulpd	%ymm8, %ymm14, %ymm15
 	vaddpd	%ymm2, %ymm15, %ymm2
 	addq	$128, %r15
@@ -216,7 +216,6 @@ _inner_kernel_dgemm_add_nt_8x4_lib4:
 	vmovapd 0(%r11), %ymm8 // A0[0]
 	vmulpd	%ymm11, %ymm14, %ymm15
 	vaddpd	%ymm5, %ymm15, %ymm5
-	cmpl	$4, %r10d
 
 	vmovapd 0(%r15), %ymm9 // A1[0]
 	vmulpd	%ymm10, %ymm13, %ymm15
@@ -230,6 +229,7 @@ _inner_kernel_dgemm_add_nt_8x4_lib4:
 	vmulpd	%ymm11, %ymm14, %ymm15
 	vaddpd	%ymm6, %ymm15, %ymm6
 
+	cmpl	$4, %r10d
 	jg		1b // main loop 
 
 
@@ -338,7 +338,6 @@ _inner_kernel_dgemm_add_nt_8x4_lib4:
 //	vmovapd 0(%r11), %ymm8 // A0[0]
 	vmulpd	%ymm11, %ymm14, %ymm15
 	vaddpd	%ymm5, %ymm15, %ymm5
-//	cmpl	$3, %r10d
 
 //	vmovapd 0(%r15), %ymm9 // A1[0]
 	vmulpd	%ymm10, %ymm13, %ymm15
@@ -353,6 +352,7 @@ _inner_kernel_dgemm_add_nt_8x4_lib4:
 	vaddpd	%ymm6, %ymm15, %ymm6
 
 
+//	cmpl	$3, %r10d
 	jmp		2f
 
 
@@ -395,7 +395,6 @@ _inner_kernel_dgemm_add_nt_8x4_lib4:
 	vaddpd	%ymm6, %ymm15, %ymm6
 
 	cmpl	$0, %r10d
-
 	jg		3b // clean up loop 
 
 
@@ -3623,9 +3622,6 @@ _inner_blend_scale_ab_8x4_lib4:
 	vmulpd		%ymm6, %ymm15, %ymm6
 	vmulpd		%ymm7, %ymm15, %ymm7
 
-	movq	%r12, %r15 // C1 <- C0
-	addq	%r13, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
-
 	// beta
 	vbroadcastsd	0(%r11), %ymm14
 
@@ -3633,6 +3629,9 @@ _inner_blend_scale_ab_8x4_lib4:
 
 	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
 	je			0f // end
+
+	movq	%r12, %r15 // C1 <- C0
+	addq	%r13, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
 
 	// alg==1
 	vmovapd		0(%r12), %ymm15
@@ -3770,9 +3769,6 @@ _inner_blend_scale_ab_8x4_gen_lib4:
 	vmulpd		%ymm6, %ymm15, %ymm6
 	vmulpd		%ymm7, %ymm15, %ymm7
 
-	movq	%r13, %rax // C1 <- C0
-	addq	%r14, %rax // C1 <- C0 + 4*sdc*sizeof(double)
-
 	// beta
 	vbroadcastsd	0(%r11), %ymm15
 
@@ -3780,6 +3776,9 @@ _inner_blend_scale_ab_8x4_gen_lib4:
 
 	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
 	je			3f // end
+
+	movq	%r13, %rax // C1 <- C0
+	addq	%r14, %rax // C1 <- C0 + 4*sdc*sizeof(double)
 
 	cmpl	$0, %r12d
 	jg		0f

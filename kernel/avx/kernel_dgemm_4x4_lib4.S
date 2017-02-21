@@ -152,10 +152,10 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 	vaddpd	%ymm3, %ymm15, %ymm3
 	vshufpd $0x5, %ymm12, %ymm12, %ymm14
 	addq	$128, %r12
-	addq	$128, %r11
 
 	vmulpd	%ymm8, %ymm14, %ymm15
 	vaddpd	%ymm2, %ymm15, %ymm2
+	addq	$128, %r11
 
 
 	// unroll 3
@@ -168,7 +168,6 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 	vmulpd	%ymm10, %ymm14, %ymm15
 	vaddpd	%ymm1, %ymm15, %ymm1
 	vmovapd 0(%r11), %ymm8 // A0[0]
-	cmpl	$4, %r10d
 
 	vmulpd	%ymm10, %ymm13, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
@@ -177,6 +176,7 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 	vmulpd	%ymm10, %ymm14, %ymm15
 	vaddpd	%ymm2, %ymm15, %ymm2
 
+	cmpl	$4, %r10d
 	jg		1b // main loop 
 
 
@@ -237,10 +237,10 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 	vaddpd	%ymm3, %ymm15, %ymm3
 	vshufpd $0x5, %ymm12, %ymm12, %ymm14
 	addq	$128, %r12
-	addq	$128, %r11
 
 	vmulpd	%ymm8, %ymm14, %ymm15
 	vaddpd	%ymm2, %ymm15, %ymm2
+	addq	$128, %r11
 
 
 	// unroll 3
@@ -253,7 +253,6 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 	vmulpd	%ymm10, %ymm14, %ymm15
 	vaddpd	%ymm1, %ymm15, %ymm1
 //	vmovapd 0(%r11), %ymm8 // A0[0]
-//	cmpl	$3, %r10d
 
 	vmulpd	%ymm10, %ymm13, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
@@ -263,6 +262,7 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 	vaddpd	%ymm2, %ymm15, %ymm2
 
 
+//	cmpl	$3, %r10d
 	jmp		2f // return
 
 
@@ -288,14 +288,13 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 	vperm2f128 $0x1, %ymm14, %ymm14, %ymm14
 	vmulpd	%ymm8, %ymm14, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
+	subl	$1, %r10d
 
 	vshufpd $0x5, %ymm14, %ymm14, %ymm14
 	vmulpd	%ymm8, %ymm14, %ymm15
 	vaddpd	%ymm2, %ymm15, %ymm2
-	subl	$1, %r10d
 
 	cmpl	$0, %r10d
-
 	jg		3b // clean up loop 
 
 
