@@ -31,7 +31,9 @@
 #include <sys/time.h>
 
 #include "../include/blasfeo_common.h"
-#include "../include/blasfeo_i_aux.h"
+#include "../include/blasfeo_i_aux_ext_dep.h"
+#include "../include/blasfeo_d_aux_ext_dep.h"
+#include "../include/blasfeo_v_aux_ext_dep.h"
 #include "../include/blasfeo_d_aux.h"
 #include "../include/blasfeo_d_kernel.h"
 #include "../include/blasfeo_d_blas.h"
@@ -61,7 +63,7 @@ int main()
 
 	int ii;
 
-	int n = 16;
+	int n = 8;
 
 	//
 	// matrices in column-major format
@@ -76,13 +78,13 @@ int main()
 
 	double *C; d_zeros(&C, n, n);
 
-	double *x_n; d_zeros(&x_n, n, 1); 
+	double *x_n; d_zeros(&x_n, n, 1);
 //	for(ii=0; ii<n; ii++) x_n[ii] = 1.0;
 	x_n[1] = 1.0;
 //	x_n[1] = 1.0;
 //	x_n[2] = 2.0;
 //	x_n[3] = 3.0;
-	double *x_t; d_zeros(&x_t, n, 1); 
+	double *x_t; d_zeros(&x_t, n, 1);
 //	for(ii=0; ii<n; ii++) x_n[ii] = 1.0;
 	x_t[0] = 1.0;
 	double *y_n; d_zeros(&y_n, n, 1);
@@ -182,6 +184,17 @@ int main()
 	struct d_strvec sz9; d_allocate_strvec(n, &sz9);
 
 	// tests
+	dmatse_libstr(n, n, 100.0, &sD, 0, 0);
+
+	for(ii=0; ii<n; ii++)
+		dvecin1_libstr(ii+1, &sx_n, ii);
+	d_print_tran_strvec(n, &sx_n, 0);
+	d_print_strmat(n, n, &sD, 0, 0);
+	// ddiain_libstr(4, -1.0, &sx_n, 1, &sD, 3, 2);
+	ddiaad_libstr(4, -1.0, &sx_n, 1, &sD, 3, 2);
+	d_print_strmat(n, n, &sD, 0, 0);
+	return 0;
+
 //	d_print_tran_strvec(n, &sx_n, 0);
 //	dgemm_l_diag_libstr(n, n, 1.0, &sx_n, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //	dgemm_r_diag_libstr(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
@@ -284,7 +297,7 @@ int main()
 
 //	d_cvt_strmat2mat(n, n, &sE, 0, 0, C, n);
 //	d_print_mat(n, n, C, n);
-	
+
 	dtrtr_u_libstr(6, 1.0, &sE, 2, 0, &sB, 1, 0);
 	d_print_strmat(n, n, &sB, 0, 0);
 
@@ -314,5 +327,5 @@ int main()
 	v_free_align(memory_strmat);
 
 	return 0;
-	
+
 	}

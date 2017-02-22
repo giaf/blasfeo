@@ -352,7 +352,7 @@ void dtrcp_l_lib(int m, double alpha, int offsetA, double *A, int sda, int offse
 
 	if(m<=0)
 		return;
-	
+
 	int n = m;
 
 	const int bs = 4;
@@ -984,7 +984,7 @@ n = 3
 offsetA = 1
 offsetC = 2
 
-A = 
+A =
  x x x
  -
  x x x
@@ -1009,7 +1009,7 @@ C =
 	mna = m<mna ? m : mna;
 	int nna = (bs-offsetC%bs)%bs;
 	nna = n<nna ? n : nna;
-	
+
 	int ii;
 
 	ii = 0;
@@ -1045,17 +1045,17 @@ C =
 	// clean-up at the end using smaller kernels
 	if(ii==m)
 		return;
-	
+
 	if(m-ii==1)
 		kernel_dgetr_1_lib4(0, n, nna, alpha, pA, pC, sdc);
 	else if(m-ii==2)
 		kernel_dgetr_2_lib4(0, n, nna, alpha, pA, pC, sdc);
 	else if(m-ii==3)
 		kernel_dgetr_3_lib4(0, n, nna, alpha, pA, pC, sdc);
-		
+
 	return;
-	
-	}	
+
+	}
 
 
 
@@ -1065,12 +1065,12 @@ void dtrtr_l_lib(int m, double alpha, int offsetA, double *pA, int sda, int offs
 
 /*
 
-A = 
+A =
  x
  x x
  x x x
  x x x x
-  
+
  x x x x x
  x x x x x x
  x x x x x x x
@@ -1078,7 +1078,7 @@ A =
 
 C =
  x x x x x x x x
-  
+
    x x x x x x x
      x x x x x x
 	   x x x x x
@@ -1101,7 +1101,7 @@ C =
 	mna = m<mna ? m : mna;
 	int nna = (bs-offsetC%bs)%bs;
 	nna = n<nna ? n : nna;
-	
+
 	int ii;
 
 	ii = 0;
@@ -1175,18 +1175,18 @@ C =
 		pA += bs*sda;
 		pC += bs*bs;
 		}
-	
+
 	// clean-up at the end using smaller kernels
 	if(ii==m)
 		return;
-	
+
 	if(m-ii==1)
 		kernel_dgetr_1_lib4(1, ii, nna, alpha, pA, pC, sdc);
 	else if(m-ii==2)
 		kernel_dgetr_2_lib4(1, ii, nna, alpha, pA, pC, sdc);
 	else if(m-ii==3)
 		kernel_dgetr_3_lib4(1, ii, nna, alpha, pA, pC, sdc);
-		
+
 	return;
 
 	}
@@ -1199,7 +1199,7 @@ void dtrtr_u_lib(int m, double alpha, int offsetA, double *pA, int sda, int offs
 
 /*
 
-A = 
+A =
  x x x x x x x x
    x x x x x x x
 
@@ -1210,7 +1210,7 @@ A =
              x x
                x
 
-C = 
+C =
  x
 
  x x
@@ -1235,7 +1235,7 @@ C =
 	int nna = (bs-offsetC%bs)%bs;
 	nna = n<nna ? n : nna;
 	int tna = nna;
-	
+
 	int ii;
 
 	ii = 0;
@@ -1449,7 +1449,7 @@ C =
 	// clean-up at the end
 	if(ii==m)
 		return;
-	
+
 	if(m-ii==1)
 		{
 		pC[0+bs*0] = alpha * pA[0+bs*0];
@@ -1505,14 +1505,14 @@ C =
 			pC[0+bs*2] = alpha * pA[2+bs*0];
 			}
 		}
-		
+
 	return;
 
 	}
 
 
 
-// regularize diagonal 
+// regularize diagonal
 void ddiareg_lib(int kmax, double reg, int offset, double *pD, int sdd)
 	{
 
@@ -1543,49 +1543,12 @@ void ddiareg_lib(int kmax, double reg, int offset, double *pD, int sdd)
 		{
 		pD[jj*sdd+(jj+ll)*bs+ll] += reg;
 		}
-	
+
 	}
 
 
 
-// insert vector to diagonal 
-void ddiain_lib(int kmax, double alpha, double *x, int offset, double *pD, int sdd)
-	{
-
-	const int bs = 4;
-
-	int kna = (bs-offset%bs)%bs;
-	kna = kmax<kna ? kmax : kna;
-
-	int jj, ll;
-
-	if(kna>0)
-		{
-		for(ll=0; ll<kna; ll++)
-			{
-			pD[ll+bs*ll] = alpha*x[ll];
-			}
-		pD += kna + bs*(sdd-1) + kna*bs;
-		x  += kna;
-		kmax -= kna;
-		}
-	for(jj=0; jj<kmax-3; jj+=4)
-		{
-		pD[jj*sdd+(jj+0)*bs+0] = alpha*x[jj+0];
-		pD[jj*sdd+(jj+1)*bs+1] = alpha*x[jj+1];
-		pD[jj*sdd+(jj+2)*bs+2] = alpha*x[jj+2];
-		pD[jj*sdd+(jj+3)*bs+3] = alpha*x[jj+3];
-		}
-	for(ll=0; ll<kmax-jj; ll++)
-		{
-		pD[jj*sdd+(jj+ll)*bs+ll] = alpha*x[jj+ll];
-		}
-	
-	}
-
-
-
-// insert sqrt of vector to diagonal 
+// insert sqrt of vector to diagonal
 void ddiain_sqrt_lib(int kmax, double *x, int offset, double *pD, int sdd)
 	{
 
@@ -1617,12 +1580,12 @@ void ddiain_sqrt_lib(int kmax, double *x, int offset, double *pD, int sdd)
 		{
 		pD[jj*sdd+(jj+ll)*bs+ll] = sqrt(x[jj+ll]);
 		}
-	
+
 	}
 
 
 
-// extract diagonal to vector 
+// extract diagonal to vector
 void ddiaex_lib(int kmax, double alpha, int offset, double *pD, int sdd, double *x)
 	{
 
@@ -1654,12 +1617,12 @@ void ddiaex_lib(int kmax, double alpha, int offset, double *pD, int sdd, double 
 		{
 		x[jj+ll] = alpha * pD[jj*sdd+(jj+ll)*bs+ll];
 		}
-	
+
 	}
 
 
 
-// add scaled vector to diagonal 
+// add scaled vector to diagonal
 void ddiaad_lib(int kmax, double alpha, double *x, int offset, double *pD, int sdd)
 	{
 
@@ -1691,12 +1654,12 @@ void ddiaad_lib(int kmax, double alpha, double *x, int offset, double *pD, int s
 		{
 		pD[jj*sdd+(jj+ll)*bs+ll] += alpha * x[jj+ll];
 		}
-	
+
 	}
 
 
 
-// insert vector to diagonal, sparse formulation 
+// insert vector to diagonal, sparse formulation
 void ddiain_libsp(int kmax, int *idx, double alpha, double *x, double *pD, int sdd)
 	{
 
@@ -1709,12 +1672,12 @@ void ddiain_libsp(int kmax, int *idx, double alpha, double *x, double *pD, int s
 		ii = idx[jj];
 		pD[ii/bs*bs*sdd+ii%bs+ii*bs] = alpha * x[jj];
 		}
-	
+
 	}
 
 
 
-// extract diagonal to vector, sparse formulation 
+// extract diagonal to vector, sparse formulation
 void ddiaex_libsp(int kmax, int *idx, double alpha, double *pD, int sdd, double *x)
 	{
 
@@ -1727,12 +1690,12 @@ void ddiaex_libsp(int kmax, int *idx, double alpha, double *pD, int sdd, double 
 		ii = idx[jj];
 		x[jj] = alpha * pD[ii/bs*bs*sdd+ii%bs+ii*bs];
 		}
-	
+
 	}
 
 
 
-// add scaled vector to diagonal, sparse formulation 
+// add scaled vector to diagonal, sparse formulation
 void ddiaad_libsp(int kmax, int *idx, double alpha, double *x, double *pD, int sdd)
 	{
 
@@ -1745,12 +1708,12 @@ void ddiaad_libsp(int kmax, int *idx, double alpha, double *x, double *pD, int s
 		ii = idx[jj];
 		pD[ii/bs*bs*sdd+ii%bs+ii*bs] += alpha * x[jj];
 		}
-	
+
 	}
 
 
 
-// add scaled vector to another vector and insert to diagonal, sparse formulation 
+// add scaled vector to another vector and insert to diagonal, sparse formulation
 void ddiaadin_libsp(int kmax, int *idx, double alpha, double *x, double *y, double *pD, int sdd)
 	{
 
@@ -1763,15 +1726,15 @@ void ddiaadin_libsp(int kmax, int *idx, double alpha, double *x, double *y, doub
 		ii = idx[jj];
 		pD[ii/bs*bs*sdd+ii%bs+ii*bs] = y[jj] + alpha * x[jj];
 		}
-	
+
 	}
 
 
 
-// insert vector to row 
+// insert vector to row
 void drowin_lib(int kmax, double alpha, double *x, double *pD)
 	{
-	
+
 	const int bs = 4;
 
 	int jj, ll;
@@ -1787,7 +1750,7 @@ void drowin_lib(int kmax, double alpha, double *x, double *pD)
 		{
 		pD[(jj)*bs] = alpha*x[jj];
 		}
-	
+
 	}
 
 
@@ -1795,7 +1758,7 @@ void drowin_lib(int kmax, double alpha, double *x, double *pD)
 // extract row to vector
 void drowex_lib(int kmax, double alpha, double *pD, double *x)
 	{
-	
+
 	const int bs = 4;
 
 	int jj, ll;
@@ -1811,12 +1774,12 @@ void drowex_lib(int kmax, double alpha, double *pD, double *x)
 		{
 		x[jj] = alpha*pD[(jj)*bs];
 		}
-	
+
 	}
 
 
 
-// add scaled vector to row 
+// add scaled vector to row
 void drowad_lib(int kmax, double alpha, double *x, double *pD)
 	{
 
@@ -1835,12 +1798,12 @@ void drowad_lib(int kmax, double alpha, double *x, double *pD)
 		{
 		pD[(jj)*bs] += alpha * x[jj];
 		}
-	
+
 	}
 
 
 
-// insert vector to row, sparse formulation 
+// insert vector to row, sparse formulation
 void drowin_libsp(int kmax, double alpha, int *idx, double *x, double *pD)
 	{
 
@@ -1853,12 +1816,12 @@ void drowin_libsp(int kmax, double alpha, int *idx, double *x, double *pD)
 		ii = idx[jj];
 		pD[ii*bs] = alpha*x[jj];
 		}
-	
+
 	}
 
 
 
-// add scaled vector to row, sparse formulation 
+// add scaled vector to row, sparse formulation
 void drowad_libsp(int kmax, int *idx, double alpha, double *x, double *pD)
 	{
 
@@ -1871,12 +1834,12 @@ void drowad_libsp(int kmax, int *idx, double alpha, double *x, double *pD)
 		ii = idx[jj];
 		pD[ii*bs] += alpha * x[jj];
 		}
-	
+
 	}
 
 
 
-// add scaled vector to another vector and insert to row, sparse formulation 
+// add scaled vector to another vector and insert to row, sparse formulation
 void drowadin_libsp(int kmax, int *idx, double alpha, double *x, double *y, double *pD)
 	{
 
@@ -1889,7 +1852,7 @@ void drowadin_libsp(int kmax, int *idx, double alpha, double *x, double *y, doub
 		ii = idx[jj];
 		pD[ii*bs] = y[jj] + alpha * x[jj];
 		}
-	
+
 	}
 
 
@@ -1928,12 +1891,12 @@ void drowsw_lib(int kmax, double *pA, double *pC)
 		pA += 1*bs;
 		pC += 1*bs;
 		}
-	
+
 	}
 
 
 
-// insert vector to column 
+// insert vector to column
 void dcolin_lib(int kmax, double *x, int offset, double *pD, int sdd)
 	{
 
@@ -1965,12 +1928,12 @@ void dcolin_lib(int kmax, double *x, int offset, double *pD, int sdd)
 		{
 		pD[jj*sdd+ll] = x[jj+ll];
 		}
-	
+
 	}
 
 
 
-// add scaled vector to column 
+// add scaled vector to column
 void dcolad_lib(int kmax, double alpha, double *x, int offset, double *pD, int sdd)
 	{
 
@@ -2002,12 +1965,12 @@ void dcolad_lib(int kmax, double alpha, double *x, int offset, double *pD, int s
 		{
 		pD[jj*sdd+ll] += alpha * x[jj+ll];
 		}
-	
+
 	}
 
 
 
-// insert vector to diagonal, sparse formulation 
+// insert vector to diagonal, sparse formulation
 void dcolin_libsp(int kmax, int *idx, double *x, double *pD, int sdd)
 	{
 
@@ -2020,12 +1983,12 @@ void dcolin_libsp(int kmax, int *idx, double *x, double *pD, int sdd)
 		ii = idx[jj];
 		pD[ii/bs*bs*sdd+ii%bs] = x[jj];
 		}
-	
+
 	}
 
 
 
-// add scaled vector to diagonal, sparse formulation 
+// add scaled vector to diagonal, sparse formulation
 void dcolad_libsp(int kmax, double alpha, int *idx, double *x, double *pD, int sdd)
 	{
 
@@ -2038,7 +2001,7 @@ void dcolad_libsp(int kmax, double alpha, int *idx, double *x, double *pD, int s
 		ii = idx[jj];
 		pD[ii/bs*bs*sdd+ii%bs] += alpha * x[jj];
 		}
-	
+
 	}
 
 
@@ -2119,7 +2082,7 @@ void dvecin_libsp(int kmax, int *idx, double *x, double *y)
 		{
 		y[idx[jj]] = x[jj];
 		}
-	
+
 	}
 
 
@@ -2134,7 +2097,7 @@ void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y)
 		{
 		y[idx[jj]] += alpha * x[jj];
 		}
-	
+
 	}
 
 
@@ -2413,7 +2376,7 @@ void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA
 			v3 = _mm256_loadu_pd( &B[0+3*lda] ); // 03 13 23 33
 			v6 = _mm256_unpacklo_pd( v2, v3 ); // 02 03 22 23
 			v7 = _mm256_unpackhi_pd( v2, v3 ); // 12 13 32 33
-			
+
 			B += 4;
 
 			v0 = _mm256_permute2f128_pd( v4, v6, 0x20 ); // 00 01 02 03
@@ -2694,7 +2657,7 @@ void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, do
 
 
 
-// convert a vector structure into a vector 
+// convert a vector structure into a vector
 void d_cvt_strvec2vec(int m, struct d_strvec *sa, int ai, double *a)
 	{
 	double *pa = sa->pa + ai;
@@ -2841,7 +2804,34 @@ void ddiain_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	double *x = sx->pa + xi;
-	ddiain_lib(kmax, alpha, x, ai%bs, pA, sda);
+	int offsetA = ai%bs;
+
+	int kna = (bs-offsetA%bs)%bs;
+	kna = kmax<kna ? kmax : kna;
+
+	int jj, ll;
+
+	if(kna>0)
+		{
+		for(ll=0; ll<kna; ll++)
+			{
+			pA[ll+bs*ll] = alpha*x[ll];
+			}
+		pA += kna + bs*(sda-1) + kna*bs;
+		x  += kna;
+		kmax -= kna;
+		}
+	for(jj=0; jj<kmax-3; jj+=4)
+		{
+		pA[jj*sda+(jj+0)*bs+0] = alpha*x[jj+0];
+		pA[jj*sda+(jj+1)*bs+1] = alpha*x[jj+1];
+		pA[jj*sda+(jj+2)*bs+2] = alpha*x[jj+2];
+		pA[jj*sda+(jj+3)*bs+3] = alpha*x[jj+3];
+		}
+	for(ll=0; ll<kmax-jj; ll++)
+		{
+		pA[jj*sda+(jj+ll)*bs+ll] = alpha*x[jj+ll];
+		}
 	return;
 	}
 
@@ -3048,7 +3038,7 @@ void dtrtr_u_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, st
 
 
 
-// insert a strvec to diagonal of strmat, sparse formulation 
+// insert a strvec to diagonal of strmat, sparse formulation
 void ddiain_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
 	{
 	const int bs = 4;
@@ -3066,7 +3056,7 @@ void ddiain_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 
 
 
-// extract the diagonal of a strmat to a strvec, sparse formulation 
+// extract the diagonal of a strmat to a strvec, sparse formulation
 void ddiaex_libspstr(int kmax, int *idx, double alpha, struct d_strmat *sD, int di, int dj, struct d_strvec *sx, int xi)
 	{
 	const int bs = 4;
@@ -3084,7 +3074,47 @@ void ddiaex_libspstr(int kmax, int *idx, double alpha, struct d_strmat *sD, int 
 
 
 
-// add scaled strvec to diagonal of strmat, sparse formulation 
+// add a vector to diagonal
+void ddiaad_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
+	{
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	double *x = sx->pa + xi;
+	int offsetA = ai%bs;
+
+	int kna = (bs-offsetA%bs)%bs;
+	kna = kmax<kna ? kmax : kna;
+
+	int jj, ll;
+
+	if(kna>0)
+		{
+		for(ll=0; ll<kna; ll++)
+			{
+			pA[ll+bs*ll] += alpha*x[ll];
+			}
+		pA += kna + bs*(sda-1) + kna*bs;
+		x  += kna;
+		kmax -= kna;
+		}
+	for(jj=0; jj<kmax-3; jj+=4)
+		{
+		pA[jj*sda+(jj+0)*bs+0] += alpha*x[jj+0];
+		pA[jj*sda+(jj+1)*bs+1] += alpha*x[jj+1];
+		pA[jj*sda+(jj+2)*bs+2] += alpha*x[jj+2];
+		pA[jj*sda+(jj+3)*bs+3] += alpha*x[jj+3];
+		}
+	for(ll=0; ll<kmax-jj; ll++)
+		{
+		pA[jj*sda+(jj+ll)*bs+ll] += alpha*x[jj+ll];
+		}
+	return;
+	}
+
+
+
+// add scaled strvec to diagonal of strmat, sparse formulation
 void ddiaad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
 	{
 	const int bs = 4;
@@ -3102,7 +3132,7 @@ void ddiaad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 
 
 
-// add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation 
+// add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation
 void ddiaadin_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strmat *sD, int di, int dj)
 	{
 	const int bs = 4;
@@ -3121,7 +3151,7 @@ void ddiaadin_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, in
 
 
 
-// add scaled strvec to row of strmat, sparse formulation 
+// add scaled strvec to row of strmat, sparse formulation
 void drowad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
 	{
 	const int bs = 4;
@@ -3187,5 +3217,3 @@ void dvecex_sp_libstr(int m, double alpha, int *idx, struct d_strvec *sx, int xi
 #error : wrong LA choice
 
 #endif
-
-

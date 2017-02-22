@@ -35,14 +35,13 @@ extern "C" {
 
 #ifndef BLASFEO_COMMON
 #define BLASFEO_COMMON
-#endif
 
 
 
 #if defined(LA_HIGH_PERFORMANCE)
 
 // matrix structure
-struct d_strmat 
+struct d_strmat
 	{
 	int m; // rows
 	int n; // cols
@@ -54,7 +53,7 @@ struct d_strmat
 	int memory_size; // size of needed memory
 	};
 
-struct s_strmat 
+struct s_strmat
 	{
 	int m; // rows
 	int n; // cols
@@ -67,7 +66,7 @@ struct s_strmat
 	};
 
 // vector structure
-struct d_strvec 
+struct d_strvec
 	{
 	int m; // size
 	int pm; // packed size
@@ -75,7 +74,7 @@ struct d_strvec
 	int memory_size; // size of needed memory
 	};
 
-struct s_strvec 
+struct s_strvec
 	{
 	int m; // size
 	int pm; // packed size
@@ -86,7 +85,7 @@ struct s_strvec
 #elif defined(LA_BLAS) | defined(LA_REFERENCE)
 
 // matrix structure
-struct d_strmat 
+struct d_strmat
 	{
 	int m; // rows
 	int n; // cols
@@ -98,7 +97,7 @@ struct d_strmat
 	int memory_size; // size of needed memory
 	};
 
-struct s_strmat 
+struct s_strmat
 	{
 	int m; // rows
 	int n; // cols
@@ -111,14 +110,14 @@ struct s_strmat
 	};
 
 // vector structure
-struct d_strvec 
+struct d_strvec
 	{
 	int m; // size
 	double *pa; // pointer to a m array of doubles, the first is aligned to cache line size
 	int memory_size; // size of needed memory
 	};
 
-struct s_strvec 
+struct s_strvec
 	{
 	int m; // size
 	float *pa; // pointer to a m array of floats, the first is aligned to cache line size
@@ -131,6 +130,7 @@ struct s_strvec
 
 #endif
 
+#endif  // BLASFEO_COMMON
 
 
 #ifdef __cplusplus

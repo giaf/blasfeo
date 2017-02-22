@@ -80,7 +80,6 @@ void dtrtr_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, st
 void dtrtr_u_lib(int m, double alpha, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc);
 void dtrtr_u_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
 void ddiareg_lib(int kmax, double reg, int offset, double *pD, int sdd);
-void ddiain_lib(int kmax, double alpha, double *x, int offset, double *pD, int sdd);
 void ddiain_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj);
 void ddiain_sqrt_lib(int kmax, double *x, int offset, double *pD, int sdd);
 void ddiaex_lib(int kmax, double alpha, int offset, double *pD, int sdd, double *x);
@@ -89,6 +88,7 @@ void ddiain_libsp(int kmax, int *idx, double alpha, double *x, double *pD, int s
 void ddiain_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj);
 void ddiaex_libsp(int kmax, int *idx, double alpha, double *pD, int sdd, double *x);
 void ddiaex_libspstr(int kmax, int *idx, double alpha, struct d_strmat *sD, int di, int dj, struct d_strvec *sx, int xi);
+void ddiaad_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj);
 void ddiaad_libsp(int kmax, int *idx, double alpha, double *x, double *pD, int sdd);
 void ddiaad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj);
 void ddiaadin_libsp(int kmax, int *idx, double alpha, double *x, double *y, double *pD, int sdd);

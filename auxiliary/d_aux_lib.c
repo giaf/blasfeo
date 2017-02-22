@@ -173,7 +173,7 @@ void d_cvt_vec2strvec(int m, double *a, struct d_strvec *sa, int ai)
 
 
 
-// convert a matrix structure into a matrix 
+// convert a matrix structure into a matrix
 void d_cvt_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
 	{
 	int ii, jj;
@@ -199,7 +199,7 @@ void d_cvt_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double 
 
 
 
-// convert and transpose a matrix structure into a matrix 
+// convert and transpose a matrix structure into a matrix
 void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
 	{
 	int ii, jj;
@@ -225,7 +225,7 @@ void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, do
 
 
 
-// convert a vector structure into a vector 
+// convert a vector structure into a vector
 void d_cvt_strvec2vec(int m, struct d_strvec *sa, int ai, double *a)
 	{
 	double *pa = sa->pa + ai;
@@ -653,7 +653,7 @@ void dtrtr_u_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, st
 
 
 
-// insert a strvec to the diagonal of a strmat, sparse formulation 
+// insert a strvec to the diagonal of a strmat, sparse formulation
 void ddiain_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
 	{
 	double *x = sx->pa + xi;
@@ -670,7 +670,7 @@ void ddiain_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 
 
 
-// extract the diagonal of a strmat from a strvec , sparse formulation 
+// extract the diagonal of a strmat from a strvec , sparse formulation
 void ddiaex_libspstr(int kmax, int *idx, double alpha, struct d_strmat *sD, int di, int dj, struct d_strvec *sx, int xi)
 	{
 	double *x = sx->pa + xi;
@@ -687,7 +687,21 @@ void ddiaex_libspstr(int kmax, int *idx, double alpha, struct d_strmat *sD, int 
 
 
 
-// add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation 
+// add a vector to diagonal
+void ddiaad_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		pA[ii*(lda+1)] += alpha*x[ii];
+	return;
+	}
+
+
+
+// add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation
 void ddiaad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
 	{
 	double *x = sx->pa + xi;
@@ -704,7 +718,7 @@ void ddiaad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 
 
 
-// add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation 
+// add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation
 void ddiaadin_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strmat *sD, int di, int dj)
 	{
 	double *x = sx->pa + xi;
@@ -722,7 +736,7 @@ void ddiaadin_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, in
 
 
 
-// add scaled strvec to row of strmat, sparse formulation 
+// add scaled strvec to row of strmat, sparse formulation
 void drowad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
 	{
 	double *x = sx->pa + xi;
@@ -798,6 +812,3 @@ void dvecex_sp_libstr(int m, double alpha, int *idx, struct d_strvec *sx, int xi
 #error : wrong LA choice
 
 #endif
-
-
-

@@ -51,7 +51,7 @@
 void sgemv_n_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
 	{
 	int ii, jj;
-	float 
+	float
 		y_0, y_1, y_2, y_3,
 		x_0, x_1;
 	int lda = sA->m;
@@ -127,7 +127,7 @@ void sgemv_n_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 void sgemv_t_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
 	{
 	int ii, jj;
-	float 
+	float
 		y_0, y_1;
 	int lda = sA->m;
 	float *pA = sA->pA + ai + aj*lda;
@@ -245,7 +245,7 @@ void strmv_lnn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct 
 	float *z = sz->pa + zi;
 	if(m-n>0)
 		{
-		dgemv_n_libstr(m-n, n, 1.0, sA, ai+n, aj, sx, xi, 0.0, sz, zi+n, sz, zi+n);
+		sgemv_n_libstr(m-n, n, 1.0, sA, ai+n, aj, sx, xi, 0.0, sz, zi+n, sz, zi+n);
 		}
 	if(n%2!=0)
 		{
@@ -285,7 +285,7 @@ void strmv_lnn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct 
 	}
 
 
-	
+
 void strmv_ltn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
 	{
 	int ii, jj;
@@ -951,5 +951,3 @@ void strsv_ltn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct 
 #error : wrong LA choice
 
 #endif
-
-
