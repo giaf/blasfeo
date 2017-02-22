@@ -35,6 +35,7 @@
 #include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_s_aux_ext_dep.h"
 #include "../include/blasfeo_i_aux_ext_dep.h"
+#include "../include/blasfeo_s_aux.h"
 #include "../include/blasfeo_s_blas.h"
 
 
@@ -51,7 +52,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 3.6
+#define GHZ_MAX 3.3
 
 
 
@@ -166,10 +167,10 @@ int main()
 		f77_int n77 = n;
 #endif
 	
-		float *A; d_zeros(&A, n, n);
-		float *B; d_zeros(&B, n, n);
-		float *C; d_zeros(&C, n, n);
-		float *M; d_zeros(&M, n, n);
+		float *A; s_zeros(&A, n, n);
+		float *B; s_zeros(&B, n, n);
+		float *C; s_zeros(&C, n, n);
+		float *M; s_zeros(&M, n, n);
 
 		char c_n = 'n';
 		char c_l = 'l';
@@ -194,7 +195,7 @@ int main()
 			M[i] = 1;
 	
 		int n2 = n*n;
-		float *B2; d_zeros(&B2, n, n);
+		float *B2; s_zeros(&B2, n, n);
 		for(i=0; i<n*n; i++)
 			B2[i] = 1e-15;
 		for(i=0; i<n; i++)
@@ -204,11 +205,11 @@ int main()
 		int cnd = ((n+ncs-1)/ncs)*ncs;	
 		int cnd2 = 2*((n+ncs-1)/ncs)*ncs;	
 
-		float *x; d_zeros_align(&x, pnd, 1);
-		float *y; d_zeros_align(&y, pnd, 1);
-		float *x2; d_zeros_align(&x2, pnd, 1);
-		float *y2; d_zeros_align(&y2, pnd, 1);
-		float *diag; d_zeros_align(&diag, pnd, 1);
+		float *x; s_zeros_align(&x, pnd, 1);
+		float *y; s_zeros_align(&y, pnd, 1);
+		float *x2; s_zeros_align(&x2, pnd, 1);
+		float *y2; s_zeros_align(&y2, pnd, 1);
+		float *diag; s_zeros_align(&diag, pnd, 1);
 		int *ipiv; int_zeros(&ipiv, n, 1);
 
 		for(i=0; i<pnd; i++) x[i] = 1;
@@ -216,21 +217,21 @@ int main()
 
 		// matrix struct
 #if 1
-		struct s_strmat sA; d_allocate_strmat(n+4, n+4, &sA);
-		struct s_strmat sB; d_allocate_strmat(n+4, n+4, &sB);
-		struct s_strmat sC; d_allocate_strmat(n+4, n+4, &sC);
-		struct s_strmat sD; d_allocate_strmat(n+4, n+4, &sD);
-		struct s_strmat sE; d_allocate_strmat(n+4, n+4, &sE);
+		struct s_strmat sA; s_allocate_strmat(n+4, n+4, &sA);
+		struct s_strmat sB; s_allocate_strmat(n+4, n+4, &sB);
+		struct s_strmat sC; s_allocate_strmat(n+4, n+4, &sC);
+		struct s_strmat sD; s_allocate_strmat(n+4, n+4, &sD);
+		struct s_strmat sE; s_allocate_strmat(n+4, n+4, &sE);
 #else
-		struct s_strmat sA; d_allocate_strmat(n, n, &sA);
-		struct s_strmat sB; d_allocate_strmat(n, n, &sB);
-		struct s_strmat sC; d_allocate_strmat(n, n, &sC);
-		struct s_strmat sD; d_allocate_strmat(n, n, &sD);
-		struct s_strmat sE; d_allocate_strmat(n, n, &sE);
+		struct s_strmat sA; s_allocate_strmat(n, n, &sA);
+		struct s_strmat sB; s_allocate_strmat(n, n, &sB);
+		struct s_strmat sC; s_allocate_strmat(n, n, &sC);
+		struct s_strmat sD; s_allocate_strmat(n, n, &sD);
+		struct s_strmat sE; s_allocate_strmat(n, n, &sE);
 #endif
-		struct s_strvec sx; d_allocate_strvec(n, &sx);
-		struct s_strvec sy; d_allocate_strvec(n, &sy);
-		struct s_strvec sz; d_allocate_strvec(n, &sz);
+		struct s_strvec sx; s_allocate_strvec(n, &sx);
+		struct s_strvec sy; s_allocate_strvec(n, &sy);
+		struct s_strvec sz; s_allocate_strvec(n, &sz);
 
 		s_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
 		s_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);

@@ -57,7 +57,6 @@ void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 
 	i = 0;
 
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #if 1
 	for(; i<m-15; i+=16)
 		{
@@ -122,7 +121,6 @@ void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 		{
 		goto left_8;
 		}
-#endif
 #endif
 
 	// common return if i==m

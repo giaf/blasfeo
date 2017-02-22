@@ -34,7 +34,8 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
+#OBJS += s_aux_lib4.o
+OBJS += s_aux_lib8.o
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)

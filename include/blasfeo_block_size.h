@@ -29,14 +29,14 @@
 #if defined( TARGET_X64_INTEL_HASWELL )
 
 #define D_BS 4
-#define S_BS 4 //8
+#define S_BS 8
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
 
 #elif defined( TARGET_X64_INTEL_SANDY_BRIDGE )
 
 #define D_BS 4
-#define S_BS 8 //4 //8
+#define S_BS 8
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
 
