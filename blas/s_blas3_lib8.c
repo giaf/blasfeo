@@ -157,4 +157,76 @@ void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 
 
 
+void sgemm_nn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+	{
+
+	if(m<=0 || n<=0)
+		return;
+	
+	const int bs = 8;
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	float *pA = sA->pA + aj*bs;
+	float *pB = sB->pA + bj*bs + bi/bs*bs*sdb;
+	float *pC = sC->pA + cj*bs;
+	float *pD = sD->pA + dj*bs;
+
+	int offsetB = bi%bs;
+
+	int i, j, l;
+
+	i = 0;
+
+	for(; i<m-7; i+=8)
+		{
+		j = 0;
+		for(; j<n-7; j+=8)
+			{
+			kernel_sgemm_nn_8x4_lib8(k, &alpha, &pA[i*sda], offsetB, &pB[(j+0)*bs], sdb, &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd]);
+			kernel_sgemm_nn_8x4_lib8(k, &alpha, &pA[i*sda], offsetB, &pB[(j+4)*bs], sdb, &beta, &pC[(j+4)*bs+i*sdc], &pD[(j+4)*bs+i*sdd]);
+			}
+		if(j<n)
+			{
+			if(j<n-3)
+				{
+				kernel_sgemm_nn_8x4_lib8(k, &alpha, &pA[i*sda], offsetB, &pB[(j+0)*bs], sdb, &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd]);
+				if(j<n-4)
+					{
+					kernel_sgemm_nn_8x4_gen_lib8(k, &alpha, &pA[i*sda], offsetB, &pB[(j+4)*bs], sdb, &beta, 0, &pC[(j+4)*bs+i*sdc], sdc, 0, &pD[(j+4)*bs+i*sdd], sdd, 0, 8, 0, n-(j+4));
+					}
+				}
+			else
+				{
+				kernel_sgemm_nn_8x4_gen_lib8(k, &alpha, &pA[i*sda], offsetB, &pB[(j+0)*bs], sdb, &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, 8, 0, n-j);
+				}
+			}
+		}
+	if(m>i)
+		{
+		goto left_8;
+		}
+
+	// common return if i==m
+	return;
+
+	left_8:
+	j = 0;
+	for(; j<n-4; j+=8)
+		{
+		kernel_sgemm_nn_8x4_gen_lib8(k, &alpha, &pA[i*sda], offsetB, &pB[(j+0)*bs], sdb, &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, m-i, 0, n-j);
+		kernel_sgemm_nn_8x4_gen_lib8(k, &alpha, &pA[i*sda], offsetB, &pB[(j+4)*bs], sdb, &beta, 0, &pC[(j+4)*bs+i*sdc], sdc, 0, &pD[(j+4)*bs+i*sdd], sdd, 0, m-i, 0, n-(j+4));
+		}
+	if(j<n)
+		{
+		kernel_sgemm_nn_8x4_gen_lib8(k, &alpha, &pA[i*sda], offsetB, &pB[(j+0)*bs], sdb, &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, m-i, 0, n-j);
+		}
+	return;
+
+	}
+
+
+
 
