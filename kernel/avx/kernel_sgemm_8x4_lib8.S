@@ -863,6 +863,257 @@ _inner_kernel_sgemm_add_nn_8x4_lib8:
 
 // common inner routine with file scope
 //
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 4*sdb*sizeof(double)
+// r14   <= dirty
+// ymm0  <- []
+// ymm1  <- []
+// ymm2  <- []
+// ymm3  <- []
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+4*k*sizeof(double)
+// r12   <- B+(k/4)*sdb*sizeof(double)+(k%4)
+// r13   <- 4*sdb*sizeof(double)
+// r14   <= dirty
+// ymm0  <- []
+// ymm1  <- []
+// ymm2  <- []
+// ymm3  <- []
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_SGEMM_SUB_NN_8X4_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_sgemm_sub_nn_8x4_lib8, @function
+inner_kernel_sgemm_sub_nn_8x4_lib8:
+#elif defined(OS_MAC)
+_inner_kernel_sgemm_sub_nn_8x4_lib8:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		2f // return
+
+	movq	%r12, %r14 // B_next <- B
+	addq	%r13, %r14 // B_next <- B + 4*sda*sizeof(double)
+
+	cmpl	$8, %r10d
+	jl		0f // consider clean-up loop
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	prefetcht0	0(%r14) // software prefetch
+	prefetcht0	64(%r14) // software prefetch
+
+	// unroll 0
+	vmovaps			0(%r11), %ymm12 // A[0]
+	vbroadcastss	0(%r12), %ymm13 // B[0]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	32(%r12), %ymm13 // B[1]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm1, %ymm1
+	vbroadcastss	64(%r12), %ymm13 // B[2]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm2, %ymm2
+	vbroadcastss	96(%r12), %ymm13 // B[3]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm3, %ymm3
+
+
+	// unroll 1
+	vmovaps			32(%r11), %ymm12 // A[0]
+	vbroadcastss	4(%r12), %ymm13 // B[0]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	36(%r12), %ymm13 // B[1]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm1, %ymm1
+	vbroadcastss	68(%r12), %ymm13 // B[2]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm2, %ymm2
+	vbroadcastss	100(%r12), %ymm13 // B[3]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm3, %ymm3
+
+
+	// unroll 2
+	vmovaps			64(%r11), %ymm12 // A[0]
+	vbroadcastss	8(%r12), %ymm13 // B[0]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	40(%r12), %ymm13 // B[1]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm1, %ymm1
+	vbroadcastss	72(%r12), %ymm13 // B[2]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm2, %ymm2
+	vbroadcastss	104(%r12), %ymm13 // B[3]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm3, %ymm3
+
+
+	// unroll 3
+	vmovaps			96(%r11), %ymm12 // A[0]
+	vbroadcastss	12(%r12), %ymm13 // B[0]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	44(%r12), %ymm13 // B[1]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm1, %ymm1
+	vbroadcastss	76(%r12), %ymm13 // B[2]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm2, %ymm2
+	vbroadcastss	108(%r12), %ymm13 // B[3]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm3, %ymm3
+
+
+	// unroll 4
+	vmovaps			128(%r11), %ymm12 // A[0]
+	vbroadcastss	16(%r12), %ymm13 // B[0]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	48(%r12), %ymm13 // B[1]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm1, %ymm1
+	vbroadcastss	80(%r12), %ymm13 // B[2]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm2, %ymm2
+	vbroadcastss	112(%r12), %ymm13 // B[3]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm3, %ymm3
+
+
+	// unroll 5
+	vmovaps			160(%r11), %ymm12 // A[0]
+	vbroadcastss	20(%r12), %ymm13 // B[0]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	52(%r12), %ymm13 // B[1]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm1, %ymm1
+	vbroadcastss	84(%r12), %ymm13 // B[2]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm2, %ymm2
+	vbroadcastss	116(%r12), %ymm13 // B[3]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm3, %ymm3
+
+
+	// unroll 6
+	vmovaps			192(%r11), %ymm12 // A[0]
+	vbroadcastss	24(%r12), %ymm13 // B[0]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	56(%r12), %ymm13 // B[1]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm1, %ymm1
+	vbroadcastss	88(%r12), %ymm13 // B[2]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm2, %ymm2
+	vbroadcastss	120(%r12), %ymm13 // B[3]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm3, %ymm3
+
+
+	// unroll 7
+	vmovaps			224(%r11), %ymm12 // A[0]
+	vbroadcastss	28(%r12), %ymm13 // B[0]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	60(%r12), %ymm13 // B[1]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm1, %ymm1
+	vbroadcastss	92(%r12), %ymm13 // B[2]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm2, %ymm2
+	vbroadcastss	124(%r12), %ymm13 // B[3]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm3, %ymm3
+
+	subl	$8, %r10d
+	addq	$256, %r11
+
+	mov		%r14, %r12
+	addq	%r13, %r14
+
+	cmpl	$7, %r10d
+	jg		1b // main loop 
+
+
+0: // consider clean1-up loop
+	
+	cmpl	$0, %r10d
+	jle		2f // return
+
+3: // clean1-up loop
+	
+	vmovaps			0(%r11), %ymm12 // A[0]
+	vbroadcastss	0(%r12), %ymm13 // B[0]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	32(%r12), %ymm13 // B[1]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm1, %ymm1
+	vbroadcastss	64(%r12), %ymm13 // B[2]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm2, %ymm2
+	vbroadcastss	96(%r12), %ymm13 // B[3]
+	vmulps			%ymm12, %ymm13, %ymm15
+	vsubps			%ymm15, %ymm3, %ymm3
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$4, %r12
+
+	cmpl	$0, %r10d
+	jg		3b // clean up loop 
+
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_sgemm_sub_nn_8x4_lib8, .-inner_kernel_sgemm_sub_nn_8x4_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // edge for B unaligned
 //
 // input arguments:

@@ -99,7 +99,12 @@ void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 		j = 0;
 		for(; j<n-7; j+=8)
 			{
+#if 1
 			kernel_sgemm_nt_8x8_lib8(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd]);
+#else
+			kernel_sgemm_nt_8x4_lib8(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd]);
+			kernel_sgemm_nt_8x4_lib8(k, &alpha, &pA[i*sda], &pB[4+j*sdb], &beta, &pC[(j+4)*bs+i*sdc], &pD[(j+4)*bs+i*sdd]);
+#endif
 			}
 		if(j<n)
 			{
