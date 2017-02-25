@@ -240,13 +240,95 @@ void sgemm_nn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 
 	i = 0;
 
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; i<m-23; i+=24)
+		{
+		j = 0;
+		for(; j<n-7; j+=8)
+			{
+			kernel_sgemm_nn_24x4_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+0)*bs], sdb, &beta, &pC[(j+0)*bs+i*sdc], sdc, &pD[(j+0)*bs+i*sdd], sdd);
+			kernel_sgemm_nn_24x4_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+4)*bs], sdb, &beta, &pC[(j+4)*bs+i*sdc], sdc, &pD[(j+4)*bs+i*sdd], sdd);
+			}
+		if(j<n)
+			{
+			if(j<n-3)
+				{
+				kernel_sgemm_nn_24x4_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+0)*bs], sdb, &beta, &pC[(j+0)*bs+i*sdc], sdc, &pD[(j+0)*bs+i*sdd], sdd);
+				if(j<n-4)
+					{
+					kernel_sgemm_nn_24x4_gen_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+4)*bs], sdb, &beta, 0, &pC[(j+4)*bs+i*sdc], sdc, 0, &pD[(j+4)*bs+i*sdd], sdd, 0, 16, 0, n-(j+4));
+					}
+				}
+			else
+				{
+				kernel_sgemm_nn_24x4_gen_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+0)*bs], sdb, &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, 16, 0, n-j);
+				}
+			}
+		}
+	if(m>i)
+		{
+		if(m-i<=8)
+			{
+			goto left_8;
+			}
+		else if(m-i<=16)
+			{
+			goto left_16;
+			}
+		else
+			{
+			goto left_24;
+			}
+		}
+#else
+#if 1
+	for(; i<m-15; i+=16)
+		{
+		j = 0;
+		for(; j<n-7; j+=8)
+			{
+			kernel_sgemm_nn_16x4_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+0)*bs], sdb, &beta, &pC[(j+0)*bs+i*sdc], sdc, &pD[(j+0)*bs+i*sdd], sdd);
+			kernel_sgemm_nn_16x4_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+4)*bs], sdb, &beta, &pC[(j+4)*bs+i*sdc], sdc, &pD[(j+4)*bs+i*sdd], sdd);
+			}
+		if(j<n)
+			{
+			if(j<n-3)
+				{
+				kernel_sgemm_nn_16x4_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+0)*bs], sdb, &beta, &pC[(j+0)*bs+i*sdc], sdc, &pD[(j+0)*bs+i*sdd], sdd);
+				if(j<n-4)
+					{
+					kernel_sgemm_nn_16x4_gen_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+4)*bs], sdb, &beta, 0, &pC[(j+4)*bs+i*sdc], sdc, 0, &pD[(j+4)*bs+i*sdd], sdd, 0, 16, 0, n-(j+4));
+					}
+				}
+			else
+				{
+				kernel_sgemm_nn_16x4_gen_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+0)*bs], sdb, &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, 16, 0, n-j);
+				}
+			}
+		}
+	if(m>i)
+		{
+		if(m-i<=8)
+			{
+			goto left_8;
+			}
+		else
+			{
+			goto left_16;
+			}
+		}
+#else
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
 		for(; j<n-7; j+=8)
 			{
+#if 1
+			kernel_sgemm_nn_8x8_lib8(k, &alpha, &pA[i*sda], offsetB, &pB[(j+0)*bs], sdb, &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd]);
+#else
 			kernel_sgemm_nn_8x4_lib8(k, &alpha, &pA[i*sda], offsetB, &pB[(j+0)*bs], sdb, &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd]);
 			kernel_sgemm_nn_8x4_lib8(k, &alpha, &pA[i*sda], offsetB, &pB[(j+4)*bs], sdb, &beta, &pC[(j+4)*bs+i*sdc], &pD[(j+4)*bs+i*sdd]);
+#endif
 			}
 		if(j<n)
 			{
@@ -268,16 +350,50 @@ void sgemm_nn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 		{
 		goto left_8;
 		}
+#endif
+#endif
 
 	// common return if i==m
+	return;
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+	left_24:
+	j = 0;
+	for(; j<n-4; j+=8)
+		{
+		kernel_sgemm_nn_24x4_gen_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+0)*bs], sdb, &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, m-i, 0, n-j);
+		kernel_sgemm_nn_24x4_gen_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+4)*bs], sdb, &beta, 0, &pC[(j+4)*bs+i*sdc], sdc, 0, &pD[(j+4)*bs+i*sdd], sdd, 0, m-i, 0, n-(j+4));
+		}
+	if(j<n)
+		{
+		kernel_sgemm_nn_24x4_gen_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+0)*bs], sdb, &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, m-i, 0, n-j);
+		}
+	return;
+#endif
+
+	left_16:
+	j = 0;
+	for(; j<n-4; j+=8)
+		{
+		kernel_sgemm_nn_16x4_gen_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+0)*bs], sdb, &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, m-i, 0, n-j);
+		kernel_sgemm_nn_16x4_gen_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+4)*bs], sdb, &beta, 0, &pC[(j+4)*bs+i*sdc], sdc, 0, &pD[(j+4)*bs+i*sdd], sdd, 0, m-i, 0, n-(j+4));
+		}
+	if(j<n)
+		{
+		kernel_sgemm_nn_16x4_gen_lib8(k, &alpha, &pA[i*sda], sda, offsetB, &pB[(j+0)*bs], sdb, &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, m-i, 0, n-j);
+		}
 	return;
 
 	left_8:
 	j = 0;
 	for(; j<n-4; j+=8)
 		{
+#if 1
+		kernel_sgemm_nn_8x8_gen_lib8(k, &alpha, &pA[i*sda], offsetB, &pB[(j+0)*bs], sdb, &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, m-i, 0, n-j);
+#else
 		kernel_sgemm_nn_8x4_gen_lib8(k, &alpha, &pA[i*sda], offsetB, &pB[(j+0)*bs], sdb, &beta, 0, &pC[(j+0)*bs+i*sdc], sdc, 0, &pD[(j+0)*bs+i*sdd], sdd, 0, m-i, 0, n-j);
 		kernel_sgemm_nn_8x4_gen_lib8(k, &alpha, &pA[i*sda], offsetB, &pB[(j+4)*bs], sdb, &beta, 0, &pC[(j+4)*bs+i*sdc], sdc, 0, &pD[(j+4)*bs+i*sdd], sdd, 0, m-i, 0, n-(j+4));
+#endif
 		}
 	if(j<n)
 		{
