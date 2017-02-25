@@ -27,7 +27,9 @@
 **************************************************************************************************/
 
 #include <stdlib.h>
+#if defined(DIM_CHECK)
 #include <stdio.h>
+#endif
 
 #include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_common.h"
@@ -42,6 +44,21 @@ void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 	if(m<=0 || n<=0)
 		return;
 	
+#if defined(DIM_CHECK)
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** sgemm_nt_libstr : ai+m > row(A) : %d+%d > %d *****\n\n", ai, m, sA->m);
+	if(aj+k > sA->n) printf("\n***** sgemm_nt_libstr : aj+k > col(A) : %d+%d > %d *****\n\n", aj, k, sA->n);
+	// B: n x k
+	if(bi+n > sB->m) printf("\n***** sgemm_nt_libstr : bi+n > row(B) : %d+%d > %d *****\n\n", bi, n, sB->m);
+	if(bj+k > sB->n) printf("\n***** sgemm_nt_libstr : bj+k > col(B) : %d+%d > %d *****\n\n", bj, k, sB->n);
+	// C: m x n
+	if(ci+m > sC->m) printf("\n***** sgemm_nt_libstr : ci+m > row(C) : %d+%d > %d *****\n\n", ci, n, sC->m);
+	if(cj+n > sC->n) printf("\n***** sgemm_nt_libstr : cj+n > col(C) : %d+%d > %d *****\n\n", cj, k, sC->n);
+	// D: m x n
+	if(di+m > sD->m) printf("\n***** sgemm_nt_libstr : di+m > row(D) : %d+%d > %d *****\n\n", di, n, sD->m);
+	if(dj+n > sD->n) printf("\n***** sgemm_nt_libstr : dj+n > col(D) : %d+%d > %d *****\n\n", dj, k, sD->n);
+#endif
+
 	const int bs = 8;
 
 	int sda = sA->cn;
@@ -223,6 +240,21 @@ void sgemm_nn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 	if(m<=0 || n<=0)
 		return;
 	
+#if defined(DIM_CHECK)
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** sgemm_nn_libstr : ai+m > row(A) : %d+%d > %d *****\n\n", ai, m, sA->m);
+	if(aj+k > sA->n) printf("\n***** sgemm_nn_libstr : aj+k > col(A) : %d+%d > %d *****\n\n", aj, k, sA->n);
+	// B: k x n
+	if(bi+k > sB->m) printf("\n***** sgemm_nn_libstr : bi+k > row(B) : %d+%d > %d *****\n\n", bi, k, sB->m);
+	if(bj+n > sB->n) printf("\n***** sgemm_nn_libstr : bj+n > col(B) : %d+%d > %d *****\n\n", bj, n, sB->n);
+	// C: m x n
+	if(ci+m > sC->m) printf("\n***** sgemm_nn_libstr : ci+m > row(C) : %d+%d > %d *****\n\n", ci, n, sC->m);
+	if(cj+n > sC->n) printf("\n***** sgemm_nn_libstr : cj+n > col(C) : %d+%d > %d *****\n\n", cj, k, sC->n);
+	// D: m x n
+	if(di+m > sD->m) printf("\n***** sgemm_nn_libstr : di+m > row(D) : %d+%d > %d *****\n\n", di, n, sD->m);
+	if(dj+n > sD->n) printf("\n***** sgemm_nn_libstr : dj+n > col(D) : %d+%d > %d *****\n\n", dj, k, sD->n);
+#endif
+
 	const int bs = 8;
 
 	int sda = sA->cn;
