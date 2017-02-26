@@ -60,6 +60,9 @@ void kernel_sgemm_nt_8x4_gen_lib8(int k, float *alpha, float *A, float *B, float
 void kernel_sgemm_nn_8x4_lib8(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *beta, float *C, float *D);
 void kernel_sgemm_nn_8x4_gen_lib8(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *beta, int offsetC, float *C, int sdc, int offsetD, float *D, int sdd, int m0, int m1, int n0, int n1);
 
+// aux
+void kernel_sgecp_8_0_0_lib8(int m, float *A, float *B);
+void kernel_sgecp_8_0_0_gen_lib8(int m, float *A, float *B, int m0, int m1);
 
 
 //

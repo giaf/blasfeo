@@ -52,7 +52,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 3.3
+#define GHZ_MAX 3.6
 
 
 
@@ -78,24 +78,31 @@ int main()
 	printf("Frequency used to compute theoretical peak: %5.1f GHz (edit test_param.h to modify this value).\n", GHz_max);
 	printf("\n");
 
-	// maximum flops per cycle, float precision
+	// maximum flops per cycle, single precision
+	// maxumum memops (sustained load->store of floats) per cycle, single precision
 #if defined(TARGET_X64_INTEL_HASWELL)
 	const float flops_max = 32;
+	const float memops_max = 16; // 2x256 bit load + 1x256 bit store
 	printf("Testing BLAS version for AVX2 and FMA instruction sets, 64 bit (optimized for Intel Haswell): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	const float flops_max = 16;
+	const float memops_max = 8; // 1x256 bit load + 1x64 bit store
 	printf("Testing BLAS version for AVX instruction set, 64 bit (optimized for Intel Sandy Bridge): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_X64_INTEL_CORE)
 	const float flops_max = 8;
+	const float memops_max = 4; // ???
 	printf("Testing BLAS version for SSE3 instruction set, 64 bit (optimized for Intel Core): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_X64_AMD_BULLDOZER)
 	const float flops_max = 16;
+	const float memops_max = 8; // ???
 	printf("Testing BLAS version for SSE3 and FMA instruction set, 64 bit (optimized for AMD Bulldozer): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	const float flops_max = 8;
+	const float memops_max = 4; // ???
 	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A15): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_GENERIC)
 	const float flops_max = 2;
+	const float memops_max = 1; // ???
 	printf("Testing BLAS version for generic scalar instruction set: theoretical peak %5.1f Gflops ???\n", flops_max*GHz_max);
 #endif
 	
@@ -150,6 +157,7 @@ int main()
 		{
 
 		int n = nn[ll];
+		int n2 = n*n;
 		int nrep = nnrep[ll];
 
 #else
@@ -194,7 +202,6 @@ int main()
 		for(i=0; i<n*n; i++)
 			M[i] = 1;
 	
-		int n2 = n*n;
 		float *B2; s_zeros(&B2, n, n);
 		for(i=0; i<n*n; i++)
 			B2[i] = 1e-15;
@@ -277,8 +284,9 @@ int main()
 
 		for(rep=0; rep<nrep; rep++)
 			{
-			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			sgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+			sgecp_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0);
 //			spotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 //			sgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			sgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
@@ -301,8 +309,9 @@ int main()
 		for(rep=0; rep<nrep; rep++)
 			{
 #if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
-			sgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
+//			sgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
 //			sgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
+			scopy_(&n2, A, &i_1, B, &i_1);
 //			ssyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
 //			strmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
 //			spotrf_(&c_l, &n, B2, &n, &info);
@@ -340,29 +349,56 @@ int main()
 
 		gettimeofday(&tv3, NULL); // stop
 
-		float Gflops_max = flops_max * GHz_max;
+		// flops
+		if(0)
+			{
 
-		float flop_operation = 2.0*n*n*n; // dgemm
-//		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
-//		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
-//		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
-//		float flop_operation = 2.0*n*n; // dgemv dsymv
-//		float flop_operation = 1.0*n*n; // dtrmv dtrsv
-//		float flop_operation = 4.0*n*n; // dgemv_nt
+			float Gflops_max = flops_max * GHz_max;
 
-//		float flop_operation = 4.0/3.0*n*n*n; // dsyrk+dpotrf
+			float flop_operation = 2.0*n*n*n; // dgemm
+	//		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
+	//		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
+	//		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
+	//		float flop_operation = 2.0*n*n; // dgemv dsymv
+	//		float flop_operation = 1.0*n*n; // dtrmv dtrsv
+	//		float flop_operation = 4.0*n*n; // dgemv_nt
 
-		float time_hpmpc    = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);
-		float time_blasfeo  = (float) (tv2.tv_sec-tv1.tv_sec)/(nrep+0.0)+(tv2.tv_usec-tv1.tv_usec)/(nrep*1e6);
-		float time_blas     = (float) (tv3.tv_sec-tv2.tv_sec)/(nrep+0.0)+(tv3.tv_usec-tv2.tv_usec)/(nrep*1e6);
+	//		float flop_operation = 4.0/3.0*n*n*n; // dsyrk+dpotrf
 
-		float Gflops_hpmpc    = 1e-9*flop_operation/time_hpmpc;
-		float Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
-		float Gflops_blas     = 1e-9*flop_operation/time_blas;
+			float time_hpmpc    = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);
+			float time_blasfeo  = (float) (tv2.tv_sec-tv1.tv_sec)/(nrep+0.0)+(tv2.tv_usec-tv1.tv_usec)/(nrep*1e6);
+			float time_blas     = (float) (tv3.tv_sec-tv2.tv_sec)/(nrep+0.0)+(tv3.tv_usec-tv2.tv_usec)/(nrep*1e6);
+
+			float Gflops_hpmpc    = 1e-9*flop_operation/time_hpmpc;
+			float Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
+			float Gflops_blas     = 1e-9*flop_operation/time_blas;
 
 
-		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
-		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+			printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+			fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+
+			}
+		// memops
+		else
+			{
+
+			float Gmemops_max = flops_max * GHz_max;
+
+			float memop_operation = 1.0*n*n; // dgecp
+
+			float time_hpmpc    = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);
+			float time_blasfeo  = (float) (tv2.tv_sec-tv1.tv_sec)/(nrep+0.0)+(tv2.tv_usec-tv1.tv_usec)/(nrep*1e6);
+			float time_blas     = (float) (tv3.tv_sec-tv2.tv_sec)/(nrep+0.0)+(tv3.tv_usec-tv2.tv_usec)/(nrep*1e6);
+
+			float Gmemops_hpmpc    = 1e-9*memop_operation/time_hpmpc;
+			float Gmemops_blasfeo  = 1e-9*memop_operation/time_blasfeo;
+			float Gmemops_blas     = 1e-9*memop_operation/time_blas;
+
+
+			printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gmemops_blasfeo, 100.0*Gmemops_blasfeo/Gmemops_max, Gmemops_blas, 100.0*Gmemops_blas/Gmemops_max);
+			fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gmemops_blasfeo, 100.0*Gmemops_blasfeo/Gmemops_max, Gmemops_blas, 100.0*Gmemops_blas/Gmemops_max);
+
+			}
 
 
 		free(A);

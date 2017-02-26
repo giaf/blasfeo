@@ -41,22 +41,36 @@
 void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
 
-	if(m<=0 || n<=0)
+	if(m==0 | n==0)
 		return;
 	
 #if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** sgemm_nt_libstr : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** sgemm_nt_libstr : n<0 : %d<0 *****\n", n);
+	if(k<0) printf("\n****** sgemm_nt_libstr : k<0 : %d<0 *****\n", k);
+	// non-negative offset
+	if(ai<0) printf("\n****** sgemm_nt_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** sgemm_nt_libstr : aj<0 : %d<0 *****\n", aj);
+	if(bi<0) printf("\n****** sgemm_nt_libstr : bi<0 : %d<0 *****\n", bi);
+	if(bj<0) printf("\n****** sgemm_nt_libstr : bj<0 : %d<0 *****\n", bj);
+	if(ci<0) printf("\n****** sgemm_nt_libstr : ci<0 : %d<0 *****\n", ci);
+	if(cj<0) printf("\n****** sgemm_nt_libstr : cj<0 : %d<0 *****\n", cj);
+	if(di<0) printf("\n****** sgemm_nt_libstr : di<0 : %d<0 *****\n", di);
+	if(dj<0) printf("\n****** sgemm_nt_libstr : dj<0 : %d<0 *****\n", dj);
+	// inside matrix
 	// A: m x k
-	if(ai+m > sA->m) printf("\n***** sgemm_nt_libstr : ai+m > row(A) : %d+%d > %d *****\n\n", ai, m, sA->m);
-	if(aj+k > sA->n) printf("\n***** sgemm_nt_libstr : aj+k > col(A) : %d+%d > %d *****\n\n", aj, k, sA->n);
+	if(ai+m > sA->m) printf("\n***** sgemm_nt_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+k > sA->n) printf("\n***** sgemm_nt_libstr : aj+k > col(A) : %d+%d > %d *****\n", aj, k, sA->n);
 	// B: n x k
-	if(bi+n > sB->m) printf("\n***** sgemm_nt_libstr : bi+n > row(B) : %d+%d > %d *****\n\n", bi, n, sB->m);
-	if(bj+k > sB->n) printf("\n***** sgemm_nt_libstr : bj+k > col(B) : %d+%d > %d *****\n\n", bj, k, sB->n);
+	if(bi+n > sB->m) printf("\n***** sgemm_nt_libstr : bi+n > row(B) : %d+%d > %d *****\n", bi, n, sB->m);
+	if(bj+k > sB->n) printf("\n***** sgemm_nt_libstr : bj+k > col(B) : %d+%d > %d *****\n", bj, k, sB->n);
 	// C: m x n
-	if(ci+m > sC->m) printf("\n***** sgemm_nt_libstr : ci+m > row(C) : %d+%d > %d *****\n\n", ci, n, sC->m);
-	if(cj+n > sC->n) printf("\n***** sgemm_nt_libstr : cj+n > col(C) : %d+%d > %d *****\n\n", cj, k, sC->n);
+	if(ci+m > sC->m) printf("\n***** sgemm_nt_libstr : ci+m > row(C) : %d+%d > %d *****\n", ci, n, sC->m);
+	if(cj+n > sC->n) printf("\n***** sgemm_nt_libstr : cj+n > col(C) : %d+%d > %d *****\n", cj, k, sC->n);
 	// D: m x n
-	if(di+m > sD->m) printf("\n***** sgemm_nt_libstr : di+m > row(D) : %d+%d > %d *****\n\n", di, n, sD->m);
-	if(dj+n > sD->n) printf("\n***** sgemm_nt_libstr : dj+n > col(D) : %d+%d > %d *****\n\n", dj, k, sD->n);
+	if(di+m > sD->m) printf("\n***** sgemm_nt_libstr : di+m > row(D) : %d+%d > %d *****\n", di, n, sD->m);
+	if(dj+n > sD->n) printf("\n***** sgemm_nt_libstr : dj+n > col(D) : %d+%d > %d *****\n", dj, k, sD->n);
 #endif
 
 	const int bs = 8;
@@ -237,10 +251,24 @@ void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 void sgemm_nn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
 
-	if(m<=0 || n<=0)
+	if(m==0 | n==0)
 		return;
 	
 #if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** sgemm_nt_libstr : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** sgemm_nt_libstr : n<0 : %d<0 *****\n", n);
+	if(k<0) printf("\n****** sgemm_nt_libstr : k<0 : %d<0 *****\n", k);
+	// non-negative offset
+	if(ai<0) printf("\n****** sgemm_nt_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** sgemm_nt_libstr : aj<0 : %d<0 *****\n", aj);
+	if(bi<0) printf("\n****** sgemm_nt_libstr : bi<0 : %d<0 *****\n", bi);
+	if(bj<0) printf("\n****** sgemm_nt_libstr : bj<0 : %d<0 *****\n", bj);
+	if(ci<0) printf("\n****** sgemm_nt_libstr : ci<0 : %d<0 *****\n", ci);
+	if(cj<0) printf("\n****** sgemm_nt_libstr : cj<0 : %d<0 *****\n", cj);
+	if(di<0) printf("\n****** sgemm_nt_libstr : di<0 : %d<0 *****\n", di);
+	if(dj<0) printf("\n****** sgemm_nt_libstr : dj<0 : %d<0 *****\n", dj);
+	// inside matrix
 	// A: m x k
 	if(ai+m > sA->m) printf("\n***** sgemm_nn_libstr : ai+m > row(A) : %d+%d > %d *****\n\n", ai, m, sA->m);
 	if(aj+k > sA->n) printf("\n***** sgemm_nn_libstr : aj+k > col(A) : %d+%d > %d *****\n\n", aj, k, sA->n);

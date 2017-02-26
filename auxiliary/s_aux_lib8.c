@@ -36,15 +36,6 @@
 
 
 
-// copies a packed matrix into a packed matrix
-void sgecp_lib(int m, int n, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb)
-	{
-	printf("\nsgecp_lib: feature not implemented yet\n");
-	exit(1);
-	}
-
-
-
 // copies a lower triangular packed matrix into a lower triangular packed matrix
 void strcp_l_lib(int m, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb)
 	{
@@ -1652,15 +1643,82 @@ void scolpe_libstr(int kmax, int *ipiv, struct s_strmat *sA)
 
 
 // copy a generic strmat into a generic strmat
-void sgecp_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
+void sgecp_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj)
 	{
+
+	// early return
+	if(m==0 | n==0)
+		return;
+	
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** sgecp_libstr : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** sgecp_libstr : n<0 : %d<0 *****\n", n);
+	// non-negative offset
+	if(ai<0) printf("\n****** sgecp_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** sgecp_libstr : aj<0 : %d<0 *****\n", aj);
+	if(bi<0) printf("\n****** sgecp_libstr : bi<0 : %d<0 *****\n", bi);
+	if(bj<0) printf("\n****** sgecp_libstr : bj<0 : %d<0 *****\n", bj);
+	// inside matrix
+	// A: m x n
+	if(ai+m > sA->m) printf("\n***** sgecp_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** sgecp_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+	// B: m x n
+	if(bi+m > sB->m) printf("\n***** sgecp_libstr : bi+m > row(B) : %d+%d > %d *****\n", bi, m, sB->m);
+	if(bj+n > sB->n) printf("\n***** sgecp_libstr : bj+n > col(B) : %d+%d > %d *****\n", bj, n, sB->n);
+#endif
+
 	const int bs = 8;
+
 	int sda = sA->cn;
-	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	int sdc = sC->cn;
-	float *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	sgecp_lib(m, n, alpha, ai%bs, pA, sda, ci%bs, pC, sdc);
+	int sdb = sB->cn;
+	float *pA = sA->pA + ai/bs*bs*sda + aj*bs;
+	float *pB = sB->pA + bi/bs*bs*sdb + bj*bs;
+	int offsetA = ai%bs;
+	int offsetB = bi%bs;
+
+	int ii, mna;
+
+	// same alignment
+	if(offsetA==offsetB)
+		{
+		if(alpha==1.0)
+			{
+			if(offsetA>0)
+				{
+				mna = bs-offsetA;
+				mna = m<mna ? m : mna;
+				kernel_sgecp_8_0_0_gen_lib8(n, pA, pB, offsetB, offsetB+mna);
+				m -= mna;
+				pA += 8*sda;
+				pB += 8*sdb;
+				}
+			ii = 0;
+			for( ; ii<m-7; ii+=8)
+				{
+				kernel_sgecp_8_0_0_lib8(n, pA, pB);
+				pA += 8*sda;
+				pB += 8*sdb;
+				}
+			if(ii<m)
+				{
+				kernel_sgecp_8_0_0_gen_lib8(n, pA, pB, 0, m-ii);
+				}
+			return;
+			}
+		else
+			{
+			// TODO
+			}
+		}
+	// different alignment: search tree ???
+	else
+		{
+		// TODO
+		}
+	
 	return;
+
 	}
 
 

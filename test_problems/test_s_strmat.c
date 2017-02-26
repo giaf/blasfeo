@@ -105,7 +105,8 @@ int main()
 	// tests
 	//
 
-	sgemm_nn_libstr(10, 6, n, 1.0, &sB, 0, 0, &sA, 2, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//	sgemm_nt_libstr(n, n, n, 1.0, &sB, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+	sgecp_libstr(10, n, 1.0, &sA, 1, 0, &sD, 1, 0);
 	s_print_strmat(n, n, &sD, 0, 0);
 
 

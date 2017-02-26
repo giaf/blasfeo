@@ -52,6 +52,10 @@ REF_BLAS = 0
 #REF_BLAS = MKL
 #REF_BLAS = BLIS
 
+# enable on-line checks for matrix and vector dimensions
+DIM_CHECK = 0
+#DIM_CHECK = 1
+
 # operative system
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
@@ -92,6 +96,10 @@ CFLAGS  += -DLA_REFERENCE
 endif
 ifeq ($(LA), BLAS)
 CFLAGS  += -DLA_BLAS
+endif
+
+ifeq ($(DIM_CHECK), 1)
+CFLAGS += -DDIM_CHECK
 endif
 
 ifeq ($(MACRO_LEVEL), 1)
