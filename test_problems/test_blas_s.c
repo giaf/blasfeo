@@ -52,7 +52,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 3.6
+#define GHZ_MAX 3.3
 
 
 
@@ -81,27 +81,27 @@ int main()
 	// maximum flops per cycle, single precision
 	// maxumum memops (sustained load->store of floats) per cycle, single precision
 #if defined(TARGET_X64_INTEL_HASWELL)
-	const float flops_max = 32;
-	const float memops_max = 16; // 2x256 bit load + 1x256 bit store
+	const float flops_max = 32; // 2x256 bit fma
+	const float memops_max = 8; // 2x256 bit load + 1x256 bit store
 	printf("Testing BLAS version for AVX2 and FMA instruction sets, 64 bit (optimized for Intel Haswell): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	const float flops_max = 16;
-	const float memops_max = 8; // 1x256 bit load + 1x64 bit store
+	const float flops_max = 16; // 1x256 bit mul + 1x256 bit add
+	const float memops_max = 4; // 1x256 bit load + 1x128 bit store
 	printf("Testing BLAS version for AVX instruction set, 64 bit (optimized for Intel Sandy Bridge): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_X64_INTEL_CORE)
-	const float flops_max = 8;
-	const float memops_max = 4; // ???
+	const float flops_max = 8; // 1x128 bit mul + 1x128 bit add
+	const float memops_max = 4; // 1x128 bit load + 1x128 bit store;
 	printf("Testing BLAS version for SSE3 instruction set, 64 bit (optimized for Intel Core): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_X64_AMD_BULLDOZER)
-	const float flops_max = 16;
-	const float memops_max = 8; // ???
+	const float flops_max = 16; // 2x128 bit fma
+	const float memops_max = 4; // 1x256 bit load + 1x128 bit store
 	printf("Testing BLAS version for SSE3 and FMA instruction set, 64 bit (optimized for AMD Bulldozer): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-	const float flops_max = 8;
+	const float flops_max = 8; // 1x128 bit fma
 	const float memops_max = 4; // ???
 	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A15): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_GENERIC)
-	const float flops_max = 2;
+	const float flops_max = 2; // 1x32 bit mul + 1x32 bit add ???
 	const float memops_max = 1; // ???
 	printf("Testing BLAS version for generic scalar instruction set: theoretical peak %5.1f Gflops ???\n", flops_max*GHz_max);
 #endif
@@ -382,7 +382,7 @@ int main()
 		else
 			{
 
-			float Gmemops_max = flops_max * GHz_max;
+			float Gmemops_max = memops_max * GHz_max;
 
 			float memop_operation = 1.0*n*n; // dgecp
 

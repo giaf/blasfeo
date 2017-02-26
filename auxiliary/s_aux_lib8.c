@@ -1697,6 +1697,7 @@ void sgecp_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 			for( ; ii<m-7; ii+=8)
 				{
 				kernel_sgecp_8_0_0_lib8(n, pA, pB);
+//				kernel_sgecp_8_0_0_gen_lib8(n, pA, pB, 0, bs);
 				pA += 8*sda;
 				pB += 8*sdb;
 				}

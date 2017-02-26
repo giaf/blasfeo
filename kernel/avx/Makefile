@@ -34,7 +34,7 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 OBJS += kernel_dgemm_diag_lib4.o kernel_dgemv_4_lib4.o
-OBJS +=
+OBJS += kernel_sgecp_lib8.o
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
