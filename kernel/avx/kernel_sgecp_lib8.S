@@ -208,6 +208,1644 @@ _inner_kernel_sgecp_8_0_0_gen_lib8:
 
 
 
+// subroutine
+//
+// input arguments:
+// r10d   <- k
+// r11    <- alpha
+// r12    <- A
+// r13    <- B
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_SGECP_8_0_A_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_sgecp_8_0_a_lib8, @function
+inner_kernel_sgecp_8_0_a_lib8:
+#elif defined(OS_MAC)
+_inner_kernel_sgecp_8_0_a_lib8:
+#endif
+#endif
+	
+	vbroadcastss	0(%r11), %ymm15
+
+	cmpl	$3, %r10d
+	jle		0f // consider clean-up
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	vmovaps		0(%r12), %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	subl		$4, %r10d
+
+	vmovaps		32(%r12), %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 32(%r13)
+	addq		$128, %r12
+
+	vmovaps		-64(%r12), %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 64(%r13)
+	addq		$128, %r13
+
+	vmovaps		-32(%r12), %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, -32(%r13)
+
+	cmpl		$4, %r10d
+	jg			1b // main loop 
+
+0: // consider clean-up
+	cmpl	$0, %r10d
+	jle		2f // return
+
+3: // clean-up loop
+
+	vmovaps		0(%r12), %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	subl		$1, %r10d
+	addq		$32, %r12
+	addq		$32, %r13
+
+	cmpl		$0, %r10d
+	jg			3b // clean-up loop 
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_sgecp_8_0_a_lib8, .-inner_kernel_sgecp_8_0_a_lib8
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r10d   <- k
+// r11    <- alpha
+// r12    <- A
+// r13    <- B
+// r14d   <- m0
+// r15d   <- m1
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_SGECP_8_0_A_GEN_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_sgecp_8_0_a_gen_lib8, @function
+inner_kernel_sgecp_8_0_a_gen_lib8:
+#elif defined(OS_MAC)
+_inner_kernel_sgecp_8_0_a_gen_lib8:
+#endif
+#endif
+	
+	// compute mask for rows
+	vcvtsi2ss	%r14d, %xmm14, %xmm14
+	vcvtsi2ss	%r15d, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm14, %xmm14, %xmm14
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm12, %ymm14, %ymm14
+	vsubps		%ymm15, %ymm12, %ymm15
+	vandps		%ymm14, %ymm15, %ymm15
+
+	vbroadcastss	0(%r11), %ymm14
+
+	cmpl	$3, %r10d
+	jle		0f // consider clean-up
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	vmovaps		0(%r12), %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15,  0(%r13)
+	subl		$4, %r10d
+
+	vmovaps		32(%r12), %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15,  32(%r13)
+	addq		$128, %r12
+
+	vmovaps		-64(%r12), %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15,  64(%r13)
+	addq		$128, %r13
+
+	vmovaps		-32(%r12), %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15,  -32(%r13)
+
+	cmpl		$4, %r10d
+	jg			1b // main loop 
+
+0: // consider clean-up
+	cmpl	$0, %r10d
+	jle		2f // return
+
+3: // clean-up loop
+
+	vmovaps		0(%r12), %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15,  0(%r13)
+	subl		$1, %r10d
+	addq		$32, %r12
+	addq		$32, %r13
+
+	cmpl		$0, %r10d
+	jg			3b // clean-up loop 
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_sgecp_8_0_a_lib8, .-inner_kernel_sgecp_8_0_a_lib8
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r10d   <- k
+// r11    <- A
+// r12d   <- 8*sda*sizeof(float)
+// r13    <- B
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_SGECP_8_1_0_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_sgecp_8_1_0_lib8, @function
+inner_kernel_sgecp_8_1_0_lib8:
+#elif defined(OS_MAC)
+_inner_kernel_sgecp_8_1_0_lib8:
+#endif
+#endif
+	
+	movq	%r11, %rax // A1 <- A0
+	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
+
+	cmpl	$3, %r10d
+	jle		0f // consider clean-up
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+#if 0
+	vmovaps		0(%r11), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	subl		$4, %r10d
+
+	vmovaps		32(%r11), %ymm0
+	vmovaps		32(%rax), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmovaps		%ymm0, 32(%r13)
+	addq		$128, %r11
+	addq		$128, %rax
+
+	vmovaps		-64(%r11), %ymm0
+	vmovaps		-64(%rax), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmovaps		%ymm0, 64(%r13)
+	addq		$128, %r13
+
+	vmovaps		-32(%r11), %ymm0
+	vmovaps		-32(%rax), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmovaps		%ymm0, -32(%r13)
+#else
+	vmovups		4(%r11), %ymm0
+	vmovups		-28(%rax), %ymm1
+	vblendps	$0x80, %ymm1, %ymm0, %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	subl		$4, %r10d
+
+	vmovups		36(%r11), %ymm0
+	vmovups		4(%rax), %ymm1
+	vblendps	$0x80, %ymm1, %ymm0, %ymm0
+	vmovaps		%ymm0, 32(%r13)
+	addq		$128, %r11
+	addq		$128, %rax
+
+	vmovups		-60(%r11), %ymm0
+	vmovups		-92(%rax), %ymm1
+	vblendps	$0x80, %ymm1, %ymm0, %ymm0
+	vmovaps		%ymm0, 64(%r13)
+	addq		$128, %r13
+
+	vmovups		-28(%r11), %ymm0
+	vmovups		-60(%rax), %ymm1
+	vblendps	$0x80, %ymm1, %ymm0, %ymm0
+	vmovaps		%ymm0, -32(%r13)
+#endif
+
+	cmpl		$4, %r10d
+	jg			1b // main loop 
+
+0: // consider clean-up
+	cmpl	$0, %r10d
+	jle		2f // return
+
+3: // clean-up loop
+
+	vmovaps		0(%r11), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	subl		$1, %r10d
+	addq		$32, %r11
+	addq		$32, %rax
+	addq		$32, %r13
+
+	cmpl		$0, %r10d
+	jg			3b // clean-up loop 
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_sgecp_8_1_0_lib8, .-inner_kernel_sgecp_8_1_0_lib8
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r10d   <- k
+// r11    <- A
+// r12d   <- 8*sda*sizeof(float)
+// r13    <- B
+// r14d   <- m0
+// r15d   <- m1
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_SGECP_8_1_0_GEN_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_sgecp_8_1_0_gen_lib8, @function
+inner_kernel_sgecp_8_1_0_gen_lib8:
+#elif defined(OS_MAC)
+_inner_kernel_sgecp_8_1_0_gen_lib8:
+#endif
+#endif
+	
+	// compute mask for rows
+	vcvtsi2ss	%r14d, %xmm14, %xmm14
+	vcvtsi2ss	%r15d, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm14, %xmm14, %xmm14
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm12, %ymm14, %ymm14
+	vsubps		%ymm15, %ymm12, %ymm15
+	vandps		%ymm14, %ymm15, %ymm15
+
+	movq	%r11, %rax // A1 <- A0
+	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
+
+	cmpl	$3, %r10d
+	jle		0f // consider clean-up
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	vmovaps		0(%r11), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 0(%r13)
+	subl		$4, %r10d
+
+	vmovaps		32(%r11), %ymm0
+	vmovaps		32(%rax), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 32(%r13)
+	addq		$128, %r11
+	addq		$128, %rax
+
+	vmovaps		-64(%r11), %ymm0
+	vmovaps		-64(%rax), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 64(%r13)
+	addq		$128, %r13
+
+	vmovaps		-32(%r11), %ymm0
+	vmovaps		-32(%rax), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmaskmovps	%ymm0, %ymm15, -32(%r13)
+
+	cmpl		$4, %r10d
+	jg			1b // main loop 
+
+0: // consider clean-up
+	cmpl	$0, %r10d
+	jle		2f // return
+
+3: // clean-up loop
+
+	vmovaps		0(%r11), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 0(%r13)
+	subl		$1, %r10d
+	addq		$32, %r11
+	addq		$32, %rax
+	addq		$32, %r13
+
+	cmpl		$0, %r10d
+	jg			3b // clean-up loop 
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_sgecp_8_1_0_gen_lib8, .-inner_kernel_sgecp_8_1_0_gen_lib8
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r10d   <- k
+// r11    <- alpha
+// r12    <- A
+// r13d   <- 8*sda*sizeof(float)
+// r14    <- B
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_SGECP_8_1_A_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_sgecp_8_1_a_lib8, @function
+inner_kernel_sgecp_8_1_a_lib8:
+#elif defined(OS_MAC)
+_inner_kernel_sgecp_8_1_a_lib8:
+#endif
+#endif
+	
+	vbroadcastss	0(%r11), %ymm15
+
+	movq	%r12, %rax // A1 <- A0
+	addq	%r13, %rax // A1 <- A0 + 4*sda*sizeof(float)
+
+	cmpl	$3, %r10d
+	jle		0f // consider clean-up
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	vmovaps		0(%r12), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 0(%r14)
+	subl		$4, %r10d
+
+	vmovaps		32(%r12), %ymm0
+	vmovaps		32(%rax), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 32(%r14)
+	addq		$128, %r12
+	addq		$128, %rax
+
+	vmovaps		-64(%r12), %ymm0
+	vmovaps		-64(%rax), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 64(%r14)
+	addq		$128, %r14
+
+	vmovaps		-32(%r12), %ymm0
+	vmovaps		-32(%rax), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, -32(%r14)
+
+	cmpl		$4, %r10d
+	jg			1b // main loop 
+
+0: // consider clean-up
+	cmpl	$0, %r10d
+	jle		2f // return
+
+3: // clean-up loop
+
+	vmovaps		0(%r12), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 0(%r14)
+	subl		$1, %r10d
+	addq		$32, %r12
+	addq		$32, %rax
+	addq		$32, %r14
+
+	cmpl		$0, %r10d
+	jg			3b // clean-up loop 
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_sgecp_8_1_0_lib8, .-inner_kernel_sgecp_8_1_0_lib8
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r10d   <- k
+// r11    <- alpha
+// r12    <- A
+// r13d   <- 8*sda*sizeof(float)
+// r14    <- B
+// r15d   <- m0
+// eax    <- m1
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_SGECP_8_1_a_GEN_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_sgecp_8_1_a_gen_lib8, @function
+inner_kernel_sgecp_8_1_a_gen_lib8:
+#elif defined(OS_MAC)
+_inner_kernel_sgecp_8_1_a_gen_lib8:
+#endif
+#endif
+	
+	// compute mask for rows
+	vcvtsi2ss	%r15d, %xmm14, %xmm14
+	vcvtsi2ss	%eax, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm14, %xmm14, %xmm14
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm12, %ymm14, %ymm14
+	vsubps		%ymm15, %ymm12, %ymm15
+	vandps		%ymm14, %ymm15, %ymm15
+
+	vbroadcastss	0(%r11), %ymm14
+
+	movq	%r12, %rbx // A1 <- A0
+	addq	%r13, %rbx // A1 <- A0 + 4*sda*sizeof(float)
+
+	cmpl	$3, %r10d
+	jle		0f // consider clean-up
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	vmovaps		0(%r12), %ymm0
+	vmovaps		0(%rbx), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 0(%r14)
+	subl		$4, %r10d
+
+	vmovaps		32(%r12), %ymm0
+	vmovaps		32(%rbx), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 32(%r14)
+	addq		$128, %r12
+	addq		$128, %rbx
+
+	vmovaps		-64(%r12), %ymm0
+	vmovaps		-64(%rbx), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 64(%r14)
+	addq		$128, %r14
+
+	vmovaps		-32(%r12), %ymm0
+	vmovaps		-32(%rbx), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15, -32(%r14)
+
+	cmpl		$4, %r10d
+	jg			1b // main loop 
+
+0: // consider clean-up
+	cmpl	$0, %r10d
+	jle		2f // return
+
+3: // clean-up loop
+
+	vmovaps		0(%r12), %ymm0
+	vmovaps		0(%rbx), %ymm1
+	vblendps	$0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x39, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 0(%r14)
+	subl		$1, %r10d
+	addq		$32, %r12
+	addq		$32, %rbx
+	addq		$32, %r14
+
+	cmpl		$0, %r10d
+	jg			3b // clean-up loop 
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_sgecp_8_1_a_gen_lib8, .-inner_kernel_sgecp_8_1_a_gen_lib8
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r10d   <- k
+// r11    <- A
+// r12d   <- 8*sda*sizeof(float)
+// r13    <- B
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_SGECP_8_2_0_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_sgecp_8_2_0_lib8, @function
+inner_kernel_sgecp_8_2_0_lib8:
+#elif defined(OS_MAC)
+_inner_kernel_sgecp_8_2_0_lib8:
+#endif
+#endif
+	
+	movq	%r11, %rax // A1 <- A0
+	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
+
+	cmpl	$3, %r10d
+	jle		0f // consider clean-up
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	vmovaps		0(%r11), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	subl		$4, %r10d
+
+	vmovaps		32(%r11), %ymm0
+	vmovaps		32(%rax), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmovaps		%ymm0, 32(%r13)
+	addq		$128, %r11
+	addq		$128, %rax
+
+	vmovaps		-64(%r11), %ymm0
+	vmovaps		-64(%rax), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmovaps		%ymm0, 64(%r13)
+	addq		$128, %r13
+
+	vmovaps		-32(%r11), %ymm0
+	vmovaps		-32(%rax), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmovaps		%ymm0, -32(%r13)
+
+	cmpl		$4, %r10d
+	jg			1b // main loop 
+
+0: // consider clean-up
+	cmpl	$0, %r10d
+	jle		2f // return
+
+3: // clean-up loop
+
+	vmovaps		0(%r11), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	subl		$1, %r10d
+	addq		$32, %r11
+	addq		$32, %rax
+	addq		$32, %r13
+
+	cmpl		$0, %r10d
+	jg			3b // clean-up loop 
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_sgecp_8_2_0_lib8, .-inner_kernel_sgecp_8_2_0_lib8
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r10d   <- k
+// r11    <- A
+// r12d   <- 8*sda*sizeof(float)
+// r13    <- B
+// r14d   <- m0
+// r15d   <- m1
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_SGECP_8_2_0_GEN_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_sgecp_8_2_0_gen_lib8, @function
+inner_kernel_sgecp_8_2_0_gen_lib8:
+#elif defined(OS_MAC)
+_inner_kernel_sgecp_8_2_0_gen_lib8:
+#endif
+#endif
+	
+	// compute mask for rows
+	vcvtsi2ss	%r14d, %xmm14, %xmm14
+	vcvtsi2ss	%r15d, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm14, %xmm14, %xmm14
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm12, %ymm14, %ymm14
+	vsubps		%ymm15, %ymm12, %ymm15
+	vandps		%ymm14, %ymm15, %ymm15
+
+	movq	%r11, %rax // A1 <- A0
+	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
+
+	cmpl	$3, %r10d
+	jle		0f // consider clean-up
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	vmovaps		0(%r11), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 0(%r13)
+	subl		$4, %r10d
+
+	vmovaps		32(%r11), %ymm0
+	vmovaps		32(%rax), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 32(%r13)
+	addq		$128, %r11
+	addq		$128, %rax
+
+	vmovaps		-64(%r11), %ymm0
+	vmovaps		-64(%rax), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 64(%r13)
+	addq		$128, %r13
+
+	vmovaps		-32(%r11), %ymm0
+	vmovaps		-32(%rax), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmaskmovps	%ymm0, %ymm15, -32(%r13)
+
+	cmpl		$4, %r10d
+	jg			1b // main loop 
+
+0: // consider clean-up
+	cmpl	$0, %r10d
+	jle		2f // return
+
+3: // clean-up loop
+
+	vmovaps		0(%r11), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 0(%r13)
+	subl		$1, %r10d
+	addq		$32, %r11
+	addq		$32, %rax
+	addq		$32, %r13
+
+	cmpl		$0, %r10d
+	jg			3b // clean-up loop 
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_sgecp_8_2_0_gen_lib8, .-inner_kernel_sgecp_8_2_0_gen_lib8
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r10d   <- k
+// r11    <- alpha
+// r12    <- A
+// r13d   <- 8*sda*sizeof(float)
+// r14    <- B
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_SGECP_8_2_A_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_sgecp_8_2_a_lib8, @function
+inner_kernel_sgecp_8_2_a_lib8:
+#elif defined(OS_MAC)
+_inner_kernel_sgecp_8_2_a_lib8:
+#endif
+#endif
+	
+	vbroadcastss	0(%r11), %ymm15
+
+	movq	%r12, %rax // A1 <- A0
+	addq	%r13, %rax // A1 <- A0 + 4*sda*sizeof(float)
+
+	cmpl	$3, %r10d
+	jle		0f // consider clean-up
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	vmovaps		0(%r12), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 0(%r14)
+	subl		$4, %r10d
+
+	vmovaps		32(%r12), %ymm0
+	vmovaps		32(%rax), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 32(%r14)
+	addq		$128, %r12
+	addq		$128, %rax
+
+	vmovaps		-64(%r12), %ymm0
+	vmovaps		-64(%rax), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 64(%r14)
+	addq		$128, %r14
+
+	vmovaps		-32(%r12), %ymm0
+	vmovaps		-32(%rax), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, -32(%r14)
+
+	cmpl		$4, %r10d
+	jg			1b // main loop 
+
+0: // consider clean-up
+	cmpl	$0, %r10d
+	jle		2f // return
+
+3: // clean-up loop
+
+	vmovaps		0(%r12), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 0(%r14)
+	subl		$1, %r10d
+	addq		$32, %r12
+	addq		$32, %rax
+	addq		$32, %r14
+
+	cmpl		$0, %r10d
+	jg			3b // clean-up loop 
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_sgecp_8_2_0_lib8, .-inner_kernel_sgecp_8_2_0_lib8
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r10d   <- k
+// r11    <- alpha
+// r12    <- A
+// r13d   <- 8*sda*sizeof(float)
+// r14    <- B
+// r15d   <- m0
+// eax    <- m1
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_SGECP_8_2_a_GEN_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_sgecp_8_2_a_gen_lib8, @function
+inner_kernel_sgecp_8_2_a_gen_lib8:
+#elif defined(OS_MAC)
+_inner_kernel_sgecp_8_2_a_gen_lib8:
+#endif
+#endif
+	
+	// compute mask for rows
+	vcvtsi2ss	%r15d, %xmm14, %xmm14
+	vcvtsi2ss	%eax, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm14, %xmm14, %xmm14
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm12, %ymm14, %ymm14
+	vsubps		%ymm15, %ymm12, %ymm15
+	vandps		%ymm14, %ymm15, %ymm15
+
+	vbroadcastss	0(%r11), %ymm14
+
+	movq	%r12, %rbx // A1 <- A0
+	addq	%r13, %rbx // A1 <- A0 + 4*sda*sizeof(float)
+
+	cmpl	$3, %r10d
+	jle		0f // consider clean-up
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	vmovaps		0(%r12), %ymm0
+	vmovaps		0(%rbx), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 0(%r14)
+	subl		$4, %r10d
+
+	vmovaps		32(%r12), %ymm0
+	vmovaps		32(%rbx), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 32(%r14)
+	addq		$128, %r12
+	addq		$128, %rbx
+
+	vmovaps		-64(%r12), %ymm0
+	vmovaps		-64(%rbx), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 64(%r14)
+	addq		$128, %r14
+
+	vmovaps		-32(%r12), %ymm0
+	vmovaps		-32(%rbx), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15, -32(%r14)
+
+	cmpl		$4, %r10d
+	jg			1b // main loop 
+
+0: // consider clean-up
+	cmpl	$0, %r10d
+	jle		2f // return
+
+3: // clean-up loop
+
+	vmovaps		0(%r12), %ymm0
+	vmovaps		0(%rbx), %ymm1
+	vblendps	$0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x4e, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 0(%r14)
+	subl		$1, %r10d
+	addq		$32, %r12
+	addq		$32, %rbx
+	addq		$32, %r14
+
+	cmpl		$0, %r10d
+	jg			3b // clean-up loop 
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_sgecp_8_2_a_gen_lib8, .-inner_kernel_sgecp_8_2_a_gen_lib8
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r10d   <- k
+// r11    <- A
+// r12d   <- 8*sda*sizeof(float)
+// r13    <- B
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_SGECP_8_3_0_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_sgecp_8_3_0_lib8, @function
+inner_kernel_sgecp_8_3_0_lib8:
+#elif defined(OS_MAC)
+_inner_kernel_sgecp_8_3_0_lib8:
+#endif
+#endif
+	
+	movq	%r11, %rax // A1 <- A0
+	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
+
+	cmpl	$3, %r10d
+	jle		0f // consider clean-up
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	vmovaps		0(%r11), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	subl		$4, %r10d
+
+	vmovaps		32(%r11), %ymm0
+	vmovaps		32(%rax), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmovaps		%ymm0, 32(%r13)
+	addq		$128, %r11
+	addq		$128, %rax
+
+	vmovaps		-64(%r11), %ymm0
+	vmovaps		-64(%rax), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmovaps		%ymm0, 64(%r13)
+	addq		$128, %r13
+
+	vmovaps		-32(%r11), %ymm0
+	vmovaps		-32(%rax), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmovaps		%ymm0, -32(%r13)
+
+	cmpl		$4, %r10d
+	jg			1b // main loop 
+
+0: // consider clean-up
+	cmpl	$0, %r10d
+	jle		2f // return
+
+3: // clean-up loop
+
+	vmovaps		0(%r11), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x03, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	subl		$1, %r10d
+	addq		$32, %r11
+	addq		$32, %rax
+	addq		$32, %r13
+
+	cmpl		$0, %r10d
+	jg			3b // clean-up loop 
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_sgecp_8_3_0_lib8, .-inner_kernel_sgecp_8_3_0_lib8
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r10d   <- k
+// r11    <- A
+// r12d   <- 8*sda*sizeof(float)
+// r13    <- B
+// r14d   <- m0
+// r15d   <- m1
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_SGECP_8_3_0_GEN_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_sgecp_8_3_0_gen_lib8, @function
+inner_kernel_sgecp_8_3_0_gen_lib8:
+#elif defined(OS_MAC)
+_inner_kernel_sgecp_8_3_0_gen_lib8:
+#endif
+#endif
+	
+	// compute mask for rows
+	vcvtsi2ss	%r14d, %xmm14, %xmm14
+	vcvtsi2ss	%r15d, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm14, %xmm14, %xmm14
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm12, %ymm14, %ymm14
+	vsubps		%ymm15, %ymm12, %ymm15
+	vandps		%ymm14, %ymm15, %ymm15
+
+	movq	%r11, %rax // A1 <- A0
+	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
+
+	cmpl	$3, %r10d
+	jle		0f // consider clean-up
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	vmovaps		0(%r11), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 0(%r13)
+	subl		$4, %r10d
+
+	vmovaps		32(%r11), %ymm0
+	vmovaps		32(%rax), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 32(%r13)
+	addq		$128, %r11
+	addq		$128, %rax
+
+	vmovaps		-64(%r11), %ymm0
+	vmovaps		-64(%rax), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 64(%r13)
+	addq		$128, %r13
+
+	vmovaps		-32(%r11), %ymm0
+	vmovaps		-32(%rax), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmaskmovps	%ymm0, %ymm15, -32(%r13)
+
+	cmpl		$4, %r10d
+	jg			1b // main loop 
+
+0: // consider clean-up
+	cmpl	$0, %r10d
+	jle		2f // return
+
+3: // clean-up loop
+
+	vmovaps		0(%r11), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 0(%r13)
+	subl		$1, %r10d
+	addq		$32, %r11
+	addq		$32, %rax
+	addq		$32, %r13
+
+	cmpl		$0, %r10d
+	jg			3b // clean-up loop 
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_sgecp_8_3_0_gen_lib8, .-inner_kernel_sgecp_8_3_0_gen_lib8
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r10d   <- k
+// r11    <- alpha
+// r12    <- A
+// r13d   <- 8*sda*sizeof(float)
+// r14    <- B
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_SGECP_8_3_A_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_sgecp_8_3_a_lib8, @function
+inner_kernel_sgecp_8_3_a_lib8:
+#elif defined(OS_MAC)
+_inner_kernel_sgecp_8_3_a_lib8:
+#endif
+#endif
+	
+	vbroadcastss	0(%r11), %ymm15
+
+	movq	%r12, %rax // A1 <- A0
+	addq	%r13, %rax // A1 <- A0 + 4*sda*sizeof(float)
+
+	cmpl	$3, %r10d
+	jle		0f // consider clean-up
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	vmovaps		0(%r12), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 0(%r14)
+	subl		$4, %r10d
+
+	vmovaps		32(%r12), %ymm0
+	vmovaps		32(%rax), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 32(%r14)
+	addq		$128, %r12
+	addq		$128, %rax
+
+	vmovaps		-64(%r12), %ymm0
+	vmovaps		-64(%rax), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 64(%r14)
+	addq		$128, %r14
+
+	vmovaps		-32(%r12), %ymm0
+	vmovaps		-32(%rax), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, -32(%r14)
+
+	cmpl		$4, %r10d
+	jg			1b // main loop 
+
+0: // consider clean-up
+	cmpl	$0, %r10d
+	jle		2f // return
+
+3: // clean-up loop
+
+	vmovaps		0(%r12), %ymm0
+	vmovaps		0(%rax), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm15, %ymm0, %ymm0
+	vmovaps		%ymm0, 0(%r14)
+	subl		$1, %r10d
+	addq		$32, %r12
+	addq		$32, %rax
+	addq		$32, %r14
+
+	cmpl		$0, %r10d
+	jg			3b // clean-up loop 
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_sgecp_8_3_0_lib8, .-inner_kernel_sgecp_8_3_0_lib8
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r10d   <- k
+// r11    <- alpha
+// r12    <- A
+// r13d   <- 8*sda*sizeof(float)
+// r14    <- B
+// r15d   <- m0
+// eax    <- m1
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_SGECP_8_3_a_GEN_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_sgecp_8_3_a_gen_lib8, @function
+inner_kernel_sgecp_8_3_a_gen_lib8:
+#elif defined(OS_MAC)
+_inner_kernel_sgecp_8_3_a_gen_lib8:
+#endif
+#endif
+	
+	// compute mask for rows
+	vcvtsi2ss	%r15d, %xmm14, %xmm14
+	vcvtsi2ss	%eax, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm14, %xmm14, %xmm14
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm12, %ymm14, %ymm14
+	vsubps		%ymm15, %ymm12, %ymm15
+	vandps		%ymm14, %ymm15, %ymm15
+
+	vbroadcastss	0(%r11), %ymm14
+
+	movq	%r12, %rbx // A1 <- A0
+	addq	%r13, %rbx // A1 <- A0 + 4*sda*sizeof(float)
+
+	cmpl	$3, %r10d
+	jle		0f // consider clean-up
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	vmovaps		0(%r12), %ymm0
+	vmovaps		0(%rbx), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 0(%r14)
+	subl		$4, %r10d
+
+	vmovaps		32(%r12), %ymm0
+	vmovaps		32(%rbx), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 32(%r14)
+	addq		$128, %r12
+	addq		$128, %rbx
+
+	vmovaps		-64(%r12), %ymm0
+	vmovaps		-64(%rbx), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 64(%r14)
+	addq		$128, %r14
+
+	vmovaps		-32(%r12), %ymm0
+	vmovaps		-32(%rbx), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15, -32(%r14)
+
+	cmpl		$4, %r10d
+	jg			1b // main loop 
+
+0: // consider clean-up
+	cmpl	$0, %r10d
+	jle		2f // return
+
+3: // clean-up loop
+
+	vmovaps		0(%r12), %ymm0
+	vmovaps		0(%rbx), %ymm1
+	vblendps	$0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$0x93, %ymm0, %ymm0
+	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vmulps		%ymm14, %ymm0, %ymm0
+	vmaskmovps	%ymm0, %ymm15, 0(%r14)
+	subl		$1, %r10d
+	addq		$32, %r12
+	addq		$32, %rbx
+	addq		$32, %r14
+
+	cmpl		$0, %r10d
+	jg			3b // clean-up loop 
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_sgecp_8_3_a_gen_lib8, .-inner_kernel_sgecp_8_3_a_gen_lib8
+#endif
+#endif
+
+
+
+
+
 //                              rdi    rsi       rdx
 // void kernel_sgecp_8_0_0_lib8(int k, float *A, float *B);
 
@@ -330,6 +1968,934 @@ _kernel_sgecp_8_0_0_gen_lib8:
 
 #if defined(OS_LINUX)
 	.size	kernel_sgecp_8_0_0_gen_lib8, .-kernel_sgecp_8_0_0_gen_lib8
+#endif
+
+
+
+
+
+//                              rdi    rsi           rdx       rcx
+// void kernel_sgecp_8_0_a_lib8(int k, float *alpha, float *A, float *B);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgecp_8_0_a_lib8
+	.type kernel_sgecp_8_0_a_lib8, @function
+kernel_sgecp_8_0_a_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgecp_8_0_a_lib8
+_kernel_sgecp_8_0_a_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // alpha
+	movq	%rdx, %r12  // A
+	movq	%rcx, %r13  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGECP_8_0_A_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgecp_8_0_a_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgecp_8_0_a_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgecp_8_0_a_lib8, .-kernel_sgecp_8_0_a_lib8
+#endif
+
+
+
+
+
+//                                  rdi    rsi           rdx       rcx       r8      r9
+// void kernel_sgecp_8_0_0_gen_lib8(int k, float *alpha, float *A, float *B, int m0, int m1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgecp_8_0_a_gen_lib8
+	.type kernel_sgecp_8_0_a_gen_lib8, @function
+kernel_sgecp_8_0_a_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgecp_8_0_a_gen_lib8
+_kernel_sgecp_8_0_a_gen_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // alpha
+	movq	%rdx, %r12  // A
+	movq	%rcx, %r13  // B
+	movl	%r8d, %r14d // m0
+	movl	%r9d, %r15d // m1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGECP_8_0_A_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgecp_8_0_a_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgecp_8_0_a_gen_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgecp_8_0_a_gen_lib8, .-kernel_sgecp_8_0_a_gen_lib8
+#endif
+
+
+
+
+
+//                              rdi    rsi       rdx      rcx
+// void kernel_sgecp_8_1_0_lib8(int k, float *A, int sda, float *B);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgecp_8_1_0_lib8
+	.type kernel_sgecp_8_1_0_lib8, @function
+kernel_sgecp_8_1_0_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgecp_8_1_0_lib8
+_kernel_sgecp_8_1_0_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d  // 8*sda*sizeof(float)
+	sall	$5, %r12d
+	movq	%rcx, %r13  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGECP_8_1_0_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgecp_8_1_0_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgecp_8_1_0_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgecp_8_1_0_lib8, .-kernel_sgecp_8_1_0_lib8
+#endif
+
+
+
+
+
+//                                  rdi    rsi       rdx      rcx       r8      r9
+// void kernel_sgecp_8_1_0_gen_lib8(int k, float *A, int sda, float *B, int m0, int m1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgecp_8_1_0_gen_lib8
+	.type kernel_sgecp_8_1_0_gen_lib8, @function
+kernel_sgecp_8_1_0_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgecp_8_1_0_gen_lib8
+_kernel_sgecp_8_1_0_gen_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d  // 8*sda*sizeof(float)
+	sall	$5, %r12d
+	movq	%rcx, %r13  // B
+	movl	%r8d, %r14d // m0
+	movl	%r9d, %r15d // m1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGECP_8_1_0_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgecp_8_1_0_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgecp_8_1_0_gen_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgecp_8_1_0_gen_lib8, .-kernel_sgecp_8_1_0_gen_lib8
+#endif
+
+
+
+
+
+//                              rdi    rsi           rdx       rcx      r8
+// void kernel_sgecp_8_1_a_lib8(int k, float *alpha, float *A, int sda, float *B);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgecp_8_1_a_lib8
+	.type kernel_sgecp_8_1_a_lib8, @function
+kernel_sgecp_8_1_a_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgecp_8_1_a_lib8
+_kernel_sgecp_8_1_a_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // alpha
+	movq	%rdx, %r12  // A
+	movl	%ecx, %r13d  // 8*sda*sizeof(float)
+	sall	$5, %r13d
+	movq	%r8, %r14  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGECP_8_1_A_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgecp_8_1_a_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgecp_8_1_a_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgecp_8_1_a_lib8, .-kernel_sgecp_8_1_a_lib8
+#endif
+
+
+
+
+
+//                                  rdi    rsi           rdx       rcx      r8        r9      rsp+8
+// void kernel_sgecp_8_1_a_gen_lib8(int k, float *alpha, float *A, int sda, float *B, int m0, int m1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgecp_8_1_a_gen_lib8
+	.type kernel_sgecp_8_1_a_gen_lib8, @function
+kernel_sgecp_8_1_a_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgecp_8_1_a_gen_lib8
+_kernel_sgecp_8_1_a_gen_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // alpha
+	movq	%rdx, %r12  // A
+	movl	%ecx, %r13d  // 8*sda*sizeof(float)
+	sall	$5, %r13d
+	movq	%r8, %r14  // B
+	movl	%r9d, %r15d // m0
+	movl	STACKSIZE +  8(%rsp), %eax // m1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGECP_8_1_A_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgecp_8_1_a_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgecp_8_1_a_gen_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgecp_8_1_a_gen_lib8, .-kernel_sgecp_8_1_a_gen_lib8
+#endif
+
+
+
+
+
+//                              rdi    rsi       rdx      rcx
+// void kernel_sgecp_8_2_0_lib8(int k, float *A, int sda, float *B);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgecp_8_2_0_lib8
+	.type kernel_sgecp_8_2_0_lib8, @function
+kernel_sgecp_8_2_0_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgecp_8_2_0_lib8
+_kernel_sgecp_8_2_0_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d  // 8*sda*sizeof(float)
+	sall	$5, %r12d
+	movq	%rcx, %r13  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGECP_8_2_0_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgecp_8_2_0_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgecp_8_2_0_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgecp_8_2_0_lib8, .-kernel_sgecp_8_2_0_lib8
+#endif
+
+
+
+
+
+//                                  rdi    rsi       rdx      rcx       r8      r9
+// void kernel_sgecp_8_2_0_gen_lib8(int k, float *A, int sda, float *B, int m0, int m1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgecp_8_2_0_gen_lib8
+	.type kernel_sgecp_8_2_0_gen_lib8, @function
+kernel_sgecp_8_2_0_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgecp_8_2_0_gen_lib8
+_kernel_sgecp_8_2_0_gen_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d  // 8*sda*sizeof(float)
+	sall	$5, %r12d
+	movq	%rcx, %r13  // B
+	movl	%r8d, %r14d // m0
+	movl	%r9d, %r15d // m1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGECP_8_2_0_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgecp_8_2_0_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgecp_8_2_0_gen_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgecp_8_2_0_gen_lib8, .-kernel_sgecp_8_2_0_gen_lib8
+#endif
+
+
+
+
+
+//                              rdi    rsi           rdx       rcx      r8
+// void kernel_sgecp_8_2_a_lib8(int k, float *alpha, float *A, int sda, float *B);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgecp_8_2_a_lib8
+	.type kernel_sgecp_8_2_a_lib8, @function
+kernel_sgecp_8_2_a_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgecp_8_2_a_lib8
+_kernel_sgecp_8_2_a_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // alpha
+	movq	%rdx, %r12  // A
+	movl	%ecx, %r13d  // 8*sda*sizeof(float)
+	sall	$5, %r13d
+	movq	%r8, %r14  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGECP_8_2_A_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgecp_8_2_a_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgecp_8_2_a_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgecp_8_2_a_lib8, .-kernel_sgecp_8_2_a_lib8
+#endif
+
+
+
+
+
+//                                  rdi    rsi           rdx       rcx      r8        r9      rsp+8
+// void kernel_sgecp_8_2_a_gen_lib8(int k, float *alpha, float *A, int sda, float *B, int m0, int m1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgecp_8_2_a_gen_lib8
+	.type kernel_sgecp_8_2_a_gen_lib8, @function
+kernel_sgecp_8_2_a_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgecp_8_2_a_gen_lib8
+_kernel_sgecp_8_2_a_gen_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // alpha
+	movq	%rdx, %r12  // A
+	movl	%ecx, %r13d  // 8*sda*sizeof(float)
+	sall	$5, %r13d
+	movq	%r8, %r14  // B
+	movl	%r9d, %r15d // m0
+	movl	STACKSIZE +  8(%rsp), %eax // m1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGECP_8_2_A_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgecp_8_2_a_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgecp_8_2_a_gen_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgecp_8_2_a_gen_lib8, .-kernel_sgecp_8_2_a_gen_lib8
+#endif
+
+
+
+
+
+//                              rdi    rsi       rdx      rcx
+// void kernel_sgecp_8_3_0_lib8(int k, float *A, int sda, float *B);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgecp_8_3_0_lib8
+	.type kernel_sgecp_8_3_0_lib8, @function
+kernel_sgecp_8_3_0_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgecp_8_3_0_lib8
+_kernel_sgecp_8_3_0_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d  // 8*sda*sizeof(float)
+	sall	$5, %r12d
+	movq	%rcx, %r13  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGECP_8_3_0_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgecp_8_3_0_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgecp_8_3_0_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgecp_8_3_0_lib8, .-kernel_sgecp_8_3_0_lib8
+#endif
+
+
+
+
+
+//                                  rdi    rsi       rdx      rcx       r8      r9
+// void kernel_sgecp_8_3_0_gen_lib8(int k, float *A, int sda, float *B, int m0, int m1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgecp_8_3_0_gen_lib8
+	.type kernel_sgecp_8_3_0_gen_lib8, @function
+kernel_sgecp_8_3_0_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgecp_8_3_0_gen_lib8
+_kernel_sgecp_8_3_0_gen_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d  // 8*sda*sizeof(float)
+	sall	$5, %r12d
+	movq	%rcx, %r13  // B
+	movl	%r8d, %r14d // m0
+	movl	%r9d, %r15d // m1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGECP_8_3_0_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgecp_8_3_0_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgecp_8_3_0_gen_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgecp_8_3_0_gen_lib8, .-kernel_sgecp_8_3_0_gen_lib8
+#endif
+
+
+
+
+
+//                              rdi    rsi           rdx       rcx      r8
+// void kernel_sgecp_8_3_a_lib8(int k, float *alpha, float *A, int sda, float *B);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgecp_8_3_a_lib8
+	.type kernel_sgecp_8_3_a_lib8, @function
+kernel_sgecp_8_3_a_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgecp_8_3_a_lib8
+_kernel_sgecp_8_3_a_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // alpha
+	movq	%rdx, %r12  // A
+	movl	%ecx, %r13d  // 8*sda*sizeof(float)
+	sall	$5, %r13d
+	movq	%r8, %r14  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGECP_8_3_A_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgecp_8_3_a_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgecp_8_3_a_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgecp_8_3_a_lib8, .-kernel_sgecp_8_3_a_lib8
+#endif
+
+
+
+
+
+//                                  rdi    rsi           rdx       rcx      r8        r9      rsp+8
+// void kernel_sgecp_8_3_a_gen_lib8(int k, float *alpha, float *A, int sda, float *B, int m0, int m1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgecp_8_3_a_gen_lib8
+	.type kernel_sgecp_8_3_a_gen_lib8, @function
+kernel_sgecp_8_3_a_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgecp_8_3_a_gen_lib8
+_kernel_sgecp_8_3_a_gen_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // alpha
+	movq	%rdx, %r12  // A
+	movl	%ecx, %r13d  // 8*sda*sizeof(float)
+	sall	$5, %r13d
+	movq	%r8, %r14  // B
+	movl	%r9d, %r15d // m0
+	movl	STACKSIZE +  8(%rsp), %eax // m1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGECP_8_3_A_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgecp_8_3_a_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgecp_8_3_a_gen_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgecp_8_3_a_gen_lib8, .-kernel_sgecp_8_3_a_gen_lib8
 #endif
 
 
