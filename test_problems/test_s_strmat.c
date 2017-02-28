@@ -62,7 +62,7 @@ int main()
 
 	int ii, jj;
 
-	int n = 16;
+	int n = 24;
 
 	//
 	// matrices in column-major format
@@ -106,7 +106,9 @@ int main()
 	//
 
 //	sgemm_nt_libstr(n, n, n, 1.0, &sB, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-	sgecp_libstr(10, n, 1.0, &sA, 1, 0, &sD, 1, 0);
+	sgecp_libstr(16, 9, &sA, 7, 0, &sD, 0, 0);
+	s_print_strmat(n, n, &sD, 0, 0);
+	sgesc_libstr(16, 9, 2.0, &sD, 0, 0);
 	s_print_strmat(n, n, &sD, 0, 0);
 
 

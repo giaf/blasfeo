@@ -63,18 +63,25 @@ void smatin1_libstr(float a, struct s_strmat *sA, int ai, int aj);
 float smatex1_libstr(struct s_strmat *sA, int ai, int aj);
 void svecin1_libstr(float a, struct s_strvec *sx, int xi);
 float svecex1_libstr(struct s_strvec *sx, int xi);
-void smatse_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj);
-void svecse_libstr(int m, float alpha, struct s_strvec *sx, int xi);
-void sgecp_lib(int m, int n, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb);
-void sgecp_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
-void sveccp_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci);
-void strcp_l_lib(int m, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb);
-void strcp_l_libstr(int m, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
-void sgead_lib(int m, int n, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb);
-void sgead_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
-void svecad_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci);
-void sgetr_lib(int m, int n, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc);
-void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
+// A <= alpha
+void sgese_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj);
+// a <= alpha
+void svese_libstr(int m, float alpha, struct s_strvec *sx, int xi);
+// A <= alpha*A
+void sgesc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj);
+// a <= alpha*a
+void svesc_libstr(int m, float alpha, struct s_strvec *sa, int ai);
+// B <= A
+void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj);
+// b <= a
+void svecp_libstr(int m, struct s_strvec *sa, int ai, struct s_strvec *sb, int bi);
+// B <= A, A lower triangular
+void strcp_l_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj);
+// B += alpha*A;
+void sgead_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj);
+// b += alpha*a;
+void svead_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_strvec *sb, int bi);
+void sgetr_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
 void strtr_l_lib(int m, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc);
 void strtr_l_libstr(int m, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
 void strtr_u_lib(int m, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc);
