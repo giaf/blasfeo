@@ -238,7 +238,7 @@ _inner_kernel_sgecp_8_1_lib8:
 	.p2align 3
 1: // main loop
 
-#if 0
+#if 1
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
 	vblendps	$0x01, %ymm1, %ymm0, %ymm0

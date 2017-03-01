@@ -770,12 +770,13 @@ _inner_edge_sgemm_add_nn_24x4_lib8:
 	cmpl			$0, %r10d // k==0
 	jle				2f // end
 
-	movl			$8, %r15d
-	subl			%r15d, %r15d // 8-offsetB
-	cmpl			%r10d, %r15d
-	jle				0f
-	movl			%r10d, %r15d // min(k,8-offsetB)
-0:
+	movl			$8, %ebx
+	subl			%r15d, %ebx // 8-offsetB
+	cmpl			%r10d, %ebx
+//	jle				0f
+//	movl			%r10d, %ebx // kend=min(k,8-offsetB)
+//0:
+	cmovgl			%r10d, %ebx // kend=min(k,8-offsetB)
 
 	movl			%r15d, %eax
 	sall			$2, %eax // offsetB*sizeof(float)
@@ -810,13 +811,13 @@ _inner_edge_sgemm_add_nn_24x4_lib8:
 	vfmadd231ps		%ymm14, %ymm15, %ymm11
 
 	subl			$1, %r10d // k-1
-	subl			$1, %r15d // min(k,8-offsetB)-1
+	subl			$1, %ebx // kend-1
 	addq			$32, %r11 // A+1*bs*sizeof(float)
 	addq			$32, %rax // A+1*bs*sizeof(float)
 	addq			$32, %rbx // A+1*bs*sizeof(float)
 	addq			$4, %r13 // B+1*sizeof(float)
 
-	cmpl			$0, %r15d
+	cmpl			$0, %ebx
 	jg				1b
 
 	cmpl			$0, %r10d

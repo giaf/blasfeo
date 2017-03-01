@@ -1344,188 +1344,28 @@ _inner_edge_dgemm_add_nn_8x4_lib4:
 #endif
 #endif
 	
-	cmpl			$0, %r10d
+	cmpl			$0, %r15d // offset==0
 	jle				2f // end
+
+	cmpl			$0, %r10d // k==0
+	jle				2f // end
+
+	movl			$4, %ebx
+	subl			%r15d, %ebx // 4-offsetB
+	cmpl			%r10d, %ebx
+//	jle				0f
+//	movl			%r10d, %ebx // kend=min(k,4-offsetB)
+//0:
+	cmovgl			%r10d, %ebx // kend=min(k,4-offsetB)
+
+	movl			%r15d, %eax
+	sall			$3, %eax // offsetB*sizeof(double)
+	addq			%rax, %r13 // B+offsetB*sizeof(double)
 
 	movq			%r11, %rax // A1 <- A0
 	addq			%r12, %rax // A1 <- A0 + 4*sda*sizeof(double)
 
-	cmpl			$1, %r15d
-	jl				2f // end
-	jg				0f // offB>1
-
-	// offB==1
-
-	addq			$8, %r13 // B+1*sizeof(double)
-
-	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
-	vbroadcastsd	0(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm0, %ymm0
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm4, %ymm4
-	vbroadcastsd	32(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm1, %ymm1
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm5, %ymm5
-	vbroadcastsd	64(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm2, %ymm2
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm6, %ymm6
-	vbroadcastsd	96(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm3, %ymm3
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm7, %ymm7
-
-	subl			$1, %r10d // k-1
-	addq			$32, %r11 // A+1*bs*sizeof(double)
-	addq			$32, %rax // A+1*bs*sizeof(double)
-	addq			$8, %r13 // B+1*sizeof(double)
-
-	cmpl			$0, %r10d
-	jle				2f // end
-
-	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
-	vbroadcastsd	0(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm0, %ymm0
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm4, %ymm4
-	vbroadcastsd	32(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm1, %ymm1
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm5, %ymm5
-	vbroadcastsd	64(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm2, %ymm2
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm6, %ymm6
-	vbroadcastsd	96(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm3, %ymm3
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm7, %ymm7
-
-	subl			$1, %r10d // k-1
-	addq			$32, %r11 // A+1*bs*sizeof(double)
-	addq			$32, %rax // A+1*bs*sizeof(double)
-	addq			$8, %r13 // B+1*sizeof(double)
-
-	cmpl			$0, %r10d
-	jle				2f // end
-
-	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
-	vbroadcastsd	0(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm0, %ymm0
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm4, %ymm4
-	vbroadcastsd	32(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm1, %ymm1
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm5, %ymm5
-	vbroadcastsd	64(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm2, %ymm2
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm6, %ymm6
-	vbroadcastsd	96(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm3, %ymm3
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm7, %ymm7
-
-	subl			$1, %r10d // k-1
-	addq			$32, %r11 // A+1*bs*sizeof(double)
-//	addq			$32, %rax // A+1*bs*sizeof(double)
-	addq			%r14, %r13
-	subq			$24, %r13 // B+bs*sdb*sizeof(double)-(bs-1)*sizeof(double)
-
-	jmp				2f // end
-
-0:
-	cmpl			$2, %r15d
-	jg				1f // offB>2
-
-	// offB==2
-
-	addq			$16, %r13 // B+2*sizeof(double)
-
-	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
-	vbroadcastsd	0(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm0, %ymm0
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm4, %ymm4
-	vbroadcastsd	32(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm1, %ymm1
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm5, %ymm5
-	vbroadcastsd	64(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm2, %ymm2
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm6, %ymm6
-	vbroadcastsd	96(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm3, %ymm3
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm7, %ymm7
-
-	subl			$1, %r10d // k-1
-	addq			$32, %r11 // A+1*bs*sizeof(double)
-	addq			$32, %rax // A+1*bs*sizeof(double)
-	addq			$8, %r13 // B+1*sizeof(double)
-
-	cmpl			$0, %r10d
-	jle				2f // end
-
-	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
-	vbroadcastsd	0(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm0, %ymm0
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm4, %ymm4
-	vbroadcastsd	32(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm1, %ymm1
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm5, %ymm5
-	vbroadcastsd	64(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm2, %ymm2
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm6, %ymm6
-	vbroadcastsd	96(%r13), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm3, %ymm3
-	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm7, %ymm7
-
-	subl			$1, %r10d // k-2
-	addq			$32, %r11 // A+2*bs*sizeof(double)
-//	addq			$32, %rax // A+1*bs*sizeof(double)
-	addq			%r14, %r13
-	subq			$24, %r13 // B+bs*sdb*sizeof(double)-(bs-1)*sizeof(double)
-
-	jmp				2f
-
 1:
-	// offB==3
-
-	addq			$24, %r13 // B+3*sizeof(double)
-
 	vmovapd			0(%r11), %ymm8
 	vmovapd			0(%rax), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
@@ -1550,10 +1390,19 @@ _inner_edge_dgemm_add_nn_8x4_lib4:
 	vaddpd			%ymm15, %ymm7, %ymm7
 
 	subl			$1, %r10d // k-1
-	addq			$32, %r11 // A+1*bs*sizeof(double)
-//	addq			$32, %rax // A+1*bs*sizeof(double)
+	subl			$1, %ebx // kend-1
+	addq			$32, %r11 // A0+1*bs*sizeof(float)
+	addq			$32, %rax // A1+1*bs*sizeof(float)
+	addq			$8, %r13 // B+1*sizeof(float)
+
+	cmpl			$0, %ebx
+	jg				1b
+
+	cmpl			$0, %r10d
+	jle				2f // end
+
 	addq			%r14, %r13
-	subq			$24, %r13 // B+bs*sdb*sizeof(double)-(bs-1)*sizeof(double)
+	subq			$32, %r13 // B+bs*(sdb-1)*sizeof(double)
 
 2:
 
