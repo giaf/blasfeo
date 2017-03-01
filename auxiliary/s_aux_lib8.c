@@ -1642,8 +1642,62 @@ void scolpe_libstr(int kmax, int *ipiv, struct s_strmat *sA)
 
 
 
+// scale a generic strmat
+void sgesc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj)
+	{
+
+	// early return
+	if(m==0 | n==0)
+		return;
+	
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** sgesc_libstr : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** sgesc_libstr : n<0 : %d<0 *****\n", n);
+	// non-negative offset
+	if(ai<0) printf("\n****** sgesc_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** sgesc_libstr : aj<0 : %d<0 *****\n", aj);
+	// inside matrix
+	// A: m x n
+	if(ai+m > sA->m) printf("\n***** sgesc_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** sgesc_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+#endif
+
+	const int bs = 8;
+
+	int sda = sA->cn;
+	float *pA = sA->pA + ai/bs*bs*sda + aj*bs;
+	int offsetA = ai%bs;
+
+	int ii, mna;
+
+	if(offsetA>0)
+		{
+		mna = bs-offsetA;
+		mna = m<mna ? m : mna;
+		kernel_sgesc_8_gen_lib8(n, &alpha, pA, offsetA, offsetA+mna);
+		m -= mna;
+		pA += 8*sda;
+		}
+	ii = 0;
+	for( ; ii<m-7; ii+=8)
+		{
+		kernel_sgesc_8_lib8(n, &alpha, pA);
+		pA += 8*sda;
+		}
+	if(ii<m)
+		{
+		kernel_sgesc_8_gen_lib8(n, &alpha, pA, 0, m-ii);
+		}
+
+	return;
+
+	}
+
+
+
 // copy a generic strmat into a generic strmat
-void sgecp_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj)
+void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj)
 	{
 
 	// early return
@@ -1682,213 +1736,203 @@ void sgecp_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 	// same alignment
 	if(offsetA==offsetB)
 		{
-		if(alpha==1.0)
+		if(offsetB>0)
 			{
-			if(offsetB>0)
-				{
-				mna = bs-offsetB;
-				mna = m<mna ? m : mna;
-				kernel_sgecp_8_0_0_gen_lib8(n, pA, pB, offsetB, offsetB+mna);
-				m -= mna;
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			ii = 0;
-			for( ; ii<m-7; ii+=8)
-				{
-				kernel_sgecp_8_0_0_lib8(n, pA, pB);
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			if(ii<m)
-				{
-				kernel_sgecp_8_0_0_gen_lib8(n, pA, pB, 0, m-ii);
-				}
-			return;
+			mna = bs-offsetB;
+			mna = m<mna ? m : mna;
+			kernel_sgecp_8_0_gen_lib8(n, pA, pB, offsetB, offsetB+mna);
+			m -= mna;
+			pA += 8*sda;
+			pB += 8*sdb;
 			}
-		else
+		ii = 0;
+		for( ; ii<m-7; ii+=8)
 			{
-			if(offsetB>0)
-				{
-				mna = bs-offsetB;
-				mna = m<mna ? m : mna;
-				kernel_sgecp_8_0_a_gen_lib8(n, &alpha, pA, pB, offsetB, offsetB+mna);
-				m -= mna;
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			ii = 0;
-			for( ; ii<m-7; ii+=8)
-				{
-				kernel_sgecp_8_0_a_lib8(n, &alpha, pA, pB);
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			if(ii<m)
-				{
-				kernel_sgecp_8_0_a_gen_lib8(n, &alpha, pA, pB, 0, m-ii);
-				}
-			return;
+			kernel_sgecp_8_0_lib8(n, pA, pB);
+			pA += 8*sda;
+			pB += 8*sdb;
 			}
+		if(ii<m)
+			{
+			kernel_sgecp_8_0_gen_lib8(n, pA, pB, 0, m-ii);
+			}
+		return;
 		}
 	// XXX different alignment: search tree ???
 	// skip one element of A
 	else if(offsetA==(offsetB+1)%bs)
 		{
-		if(alpha==1.0)
+		if(offsetB>0)
 			{
-			if(offsetB>0)
-				{
-				mna = bs-offsetB;
-				mna = m<mna ? m : mna;
-				kernel_sgecp_8_1_0_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
-				m -= mna;
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			ii = 0;
-			for( ; ii<m-7; ii+=8)
-				{
-				kernel_sgecp_8_1_0_lib8(n, pA, sda, pB);
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			if(ii<m)
-				{
-				kernel_sgecp_8_1_0_gen_lib8(n, pA, sda, pB, 0, m-ii);
-				}
-			return;
+			mna = bs-offsetB;
+			mna = m<mna ? m : mna;
+			kernel_sgecp_8_1_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
+			m -= mna;
+			pA += 8*sda;
+			pB += 8*sdb;
 			}
-		else
+		ii = 0;
+		for( ; ii<m-7; ii+=8)
 			{
-			if(offsetB>0)
-				{
-				mna = bs-offsetB;
-				mna = m<mna ? m : mna;
-				kernel_sgecp_8_1_a_gen_lib8(n, &alpha, pA, sda, pB, offsetB, offsetB+mna);
-				m -= mna;
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			ii = 0;
-			for( ; ii<m-7; ii+=8)
-				{
-				kernel_sgecp_8_1_a_lib8(n,&alpha,  pA, sda, pB);
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			if(ii<m)
-				{
-				kernel_sgecp_8_1_a_gen_lib8(n, &alpha, pA, sda, pB, 0, m-ii);
-				}
-			return;
+			kernel_sgecp_8_1_lib8(n, pA, sda, pB);
+			pA += 8*sda;
+			pB += 8*sdb;
+			}
+		if(ii<m)
+			{
+			kernel_sgecp_8_1_gen_lib8(n, pA, sda, pB, 0, m-ii);
 			}
 		}
 	// skip two elements of A
 	else if(offsetA==(offsetB+2)%bs)
 		{
-		if(alpha==1.0)
+		if(offsetB>0)
 			{
-			if(offsetB>0)
-				{
-				mna = bs-offsetB;
-				mna = m<mna ? m : mna;
-				kernel_sgecp_8_2_0_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
-				m -= mna;
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			ii = 0;
-			for( ; ii<m-7; ii+=8)
-				{
-				kernel_sgecp_8_2_0_lib8(n, pA, sda, pB);
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			if(ii<m)
-				{
-				kernel_sgecp_8_2_0_gen_lib8(n, pA, sda, pB, 0, m-ii);
-				}
-			return;
+			mna = bs-offsetB;
+			mna = m<mna ? m : mna;
+			kernel_sgecp_8_2_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
+			m -= mna;
+			pA += 8*sda;
+			pB += 8*sdb;
 			}
-		else
+		ii = 0;
+		for( ; ii<m-7; ii+=8)
 			{
-			if(offsetB>0)
-				{
-				mna = bs-offsetB;
-				mna = m<mna ? m : mna;
-				kernel_sgecp_8_2_a_gen_lib8(n, &alpha, pA, sda, pB, offsetB, offsetB+mna);
-				m -= mna;
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			ii = 0;
-			for( ; ii<m-7; ii+=8)
-				{
-				kernel_sgecp_8_2_a_lib8(n,&alpha,  pA, sda, pB);
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			if(ii<m)
-				{
-				kernel_sgecp_8_2_a_gen_lib8(n, &alpha, pA, sda, pB, 0, m-ii);
-				}
-			return;
+			kernel_sgecp_8_2_lib8(n, pA, sda, pB);
+			pA += 8*sda;
+			pB += 8*sdb;
 			}
+		if(ii<m)
+			{
+			kernel_sgecp_8_2_gen_lib8(n, pA, sda, pB, 0, m-ii);
+			}
+		return;
 		}
 	// skip three elements of A
 	else if(offsetA==(offsetB+3)%bs)
 		{
-		if(alpha==1.0)
+		if(offsetB>0)
 			{
-			if(offsetB>0)
-				{
-				mna = bs-offsetB;
-				mna = m<mna ? m : mna;
-				kernel_sgecp_8_3_0_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
-				m -= mna;
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			ii = 0;
-			for( ; ii<m-7; ii+=8)
-				{
-				kernel_sgecp_8_3_0_lib8(n, pA, sda, pB);
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			if(ii<m)
-				{
-				kernel_sgecp_8_3_0_gen_lib8(n, pA, sda, pB, 0, m-ii);
-				}
-			return;
+			mna = bs-offsetB;
+			mna = m<mna ? m : mna;
+			kernel_sgecp_8_3_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
+			m -= mna;
+			pA += 8*sda;
+			pB += 8*sdb;
 			}
-		else
+		ii = 0;
+		for( ; ii<m-7; ii+=8)
 			{
-			if(offsetB>0)
-				{
-				mna = bs-offsetB;
-				mna = m<mna ? m : mna;
-				kernel_sgecp_8_3_a_gen_lib8(n, &alpha, pA, sda, pB, offsetB, offsetB+mna);
-				m -= mna;
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			ii = 0;
-			for( ; ii<m-7; ii+=8)
-				{
-				kernel_sgecp_8_3_a_lib8(n,&alpha,  pA, sda, pB);
-				pA += 8*sda;
-				pB += 8*sdb;
-				}
-			if(ii<m)
-				{
-				kernel_sgecp_8_3_a_gen_lib8(n, &alpha, pA, sda, pB, 0, m-ii);
-				}
-			return;
+			kernel_sgecp_8_3_lib8(n, pA, sda, pB);
+			pA += 8*sda;
+			pB += 8*sdb;
 			}
+		if(ii<m)
+			{
+			kernel_sgecp_8_3_gen_lib8(n, pA, sda, pB, 0, m-ii);
+			}
+		return;
 		}
-	// TODO
+	// skip four elements of A
+	else if(offsetA==(offsetB+4)%bs)
+		{
+		if(offsetB>0)
+			{
+			mna = bs-offsetB;
+			mna = m<mna ? m : mna;
+			kernel_sgecp_8_4_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
+			m -= mna;
+			pA += 8*sda;
+			pB += 8*sdb;
+			}
+		ii = 0;
+		for( ; ii<m-7; ii+=8)
+			{
+			kernel_sgecp_8_4_lib8(n, pA, sda, pB);
+			pA += 8*sda;
+			pB += 8*sdb;
+			}
+		if(ii<m)
+			{
+			kernel_sgecp_8_4_gen_lib8(n, pA, sda, pB, 0, m-ii);
+			}
+		return;
+		}
+	// skip five elements of A
+	else if(offsetA==(offsetB+5)%bs)
+		{
+		if(offsetB>0)
+			{
+			mna = bs-offsetB;
+			mna = m<mna ? m : mna;
+			kernel_sgecp_8_5_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
+			m -= mna;
+			pA += 8*sda;
+			pB += 8*sdb;
+			}
+		ii = 0;
+		for( ; ii<m-7; ii+=8)
+			{
+			kernel_sgecp_8_5_lib8(n, pA, sda, pB);
+			pA += 8*sda;
+			pB += 8*sdb;
+			}
+		if(ii<m)
+			{
+			kernel_sgecp_8_5_gen_lib8(n, pA, sda, pB, 0, m-ii);
+			}
+		return;
+		}
+	// skip six elements of A
+	else if(offsetA==(offsetB+6)%bs)
+		{
+		if(offsetB>0)
+			{
+			mna = bs-offsetB;
+			mna = m<mna ? m : mna;
+			kernel_sgecp_8_6_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
+			m -= mna;
+			pA += 8*sda;
+			pB += 8*sdb;
+			}
+		ii = 0;
+		for( ; ii<m-7; ii+=8)
+			{
+			kernel_sgecp_8_6_lib8(n, pA, sda, pB);
+			pA += 8*sda;
+			pB += 8*sdb;
+			}
+		if(ii<m)
+			{
+			kernel_sgecp_8_6_gen_lib8(n, pA, sda, pB, 0, m-ii);
+			}
+		return;
+		}
+	// skip seven elements of A
+	else //if(offsetA==(offsetB+7)%bs)
+		{
+		if(offsetB>0)
+			{
+			mna = bs-offsetB;
+			mna = m<mna ? m : mna;
+			kernel_sgecp_8_7_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
+			m -= mna;
+			pA += 8*sda;
+			pB += 8*sdb;
+			}
+		ii = 0;
+		for( ; ii<m-7; ii+=8)
+			{
+			kernel_sgecp_8_7_lib8(n, pA, sda, pB);
+			pA += 8*sda;
+			pB += 8*sdb;
+			}
+		if(ii<m)
+			{
+			kernel_sgecp_8_7_gen_lib8(n, pA, sda, pB, 0, m-ii);
+			}
+		return;
+		}
 	
 	return;
 

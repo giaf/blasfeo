@@ -460,30 +460,103 @@ void scolpe_libstr(int kmax, int *ipiv, struct s_strmat *sA)
 
 
 
-// copy a generic strmat into a generic strmat
-void sgecp_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
+// scale a generic strmat
+void sgesc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj)
 	{
+
+	if(m<=0 | n<=0)
+		return;
+
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** sgesc_libstr : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** sgesc_libstr : n<0 : %d<0 *****\n", n);
+	// non-negative offset
+	if(ai<0) printf("\n****** sgesc_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** sgesc_libstr : aj<0 : %d<0 *****\n", aj);
+	// inside matrix
+	// A: m x n
+	if(ai+m > sA->m) printf("\n***** sgesc_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** sgesc_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+#endif
+
 	int lda = sA->m;
 	float *pA = sA->pA + ai + aj*lda;
-	int ldc = sC->m;
-	float *pC = sC->pA + ci + cj*ldc;
+	
 	int ii, jj;
+
 	for(jj=0; jj<n; jj++)
 		{
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			pC[ii+0+jj*ldc] = alpha*pA[ii+0+jj*lda];
-			pC[ii+1+jj*ldc] = alpha*pA[ii+1+jj*lda];
-			pC[ii+2+jj*ldc] = alpha*pA[ii+2+jj*lda];
-			pC[ii+3+jj*ldc] = alpha*pA[ii+3+jj*lda];
+			pA[ii+0+jj*lda] *= alpha;
+			pA[ii+1+jj*lda] *= alpha;
+			pA[ii+2+jj*lda] *= alpha;
+			pA[ii+3+jj*lda] *= alpha;
 			}
 		for(; ii<m; ii++)
 			{
-			pC[ii+0+jj*ldc] = alpha*pA[ii+0+jj*lda];
+			pA[ii+0+jj*lda] *= alpha;
 			}
 		}
+
 	return;
+
+	}
+
+
+
+// copy a generic strmat into a generic strmat
+void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
+	{
+
+	if(m<=0 | n<=0)
+		return;
+
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** sgecp_libstr : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** sgecp_libstr : n<0 : %d<0 *****\n", n);
+	// non-negative offset
+	if(ai<0) printf("\n****** sgecp_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** sgecp_libstr : aj<0 : %d<0 *****\n", aj);
+	if(bi<0) printf("\n****** sgecp_libstr : bi<0 : %d<0 *****\n", bi);
+	if(bj<0) printf("\n****** sgecp_libstr : bj<0 : %d<0 *****\n", bj);
+	// inside matrix
+	// A: m x n
+	if(ai+m > sA->m) printf("\n***** sgecp_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** sgecp_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+	// B: m x n
+	if(bi+m > sB->m) printf("\n***** sgecp_libstr : bi+m > row(B) : %d+%d > %d *****\n", bi, m, sB->m);
+	if(bj+n > sB->n) printf("\n***** sgecp_libstr : bj+n > col(B) : %d+%d > %d *****\n", bj, n, sB->n);
+#endif
+
+	int lda = sA->m;
+	int ldc = sC->m;
+	float *pA = sA->pA + ai + aj*lda;
+	float *pC = sC->pA + ci + cj*ldc;
+
+	int ii, jj;
+
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
+			pC[ii+1+jj*ldc] = pA[ii+1+jj*lda];
+			pC[ii+2+jj*ldc] = pA[ii+2+jj*lda];
+			pC[ii+3+jj*ldc] = pA[ii+3+jj*lda];
+			}
+		for(; ii<m; ii++)
+			{
+			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
+			}
+		}
+
+	return;
+
 	}
 
 

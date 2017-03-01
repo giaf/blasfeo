@@ -286,7 +286,7 @@ int main()
 			{
 //			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			sgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-			sgecp_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0);
+			sgecp_libstr(n, n, &sA, 1, 0, &sB, 0, 0);
 //			spotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 //			sgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			sgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);

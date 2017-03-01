@@ -36,818 +36,10 @@
 
 
 
-// copies a packed matrix into a packed matrix
-void sgecp_lib(int m, int n, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-
-	const int bs = 4;
-
-	int mna, ii;
-
-	int offA = offsetA%bs;
-	int offB = offsetB%bs;
-
-	// A at the beginning of the block
-	A -= offA;
-
-	// A at the beginning of the block
-	B -= offB;
-
-	// same alignment
-	if(offA==offB)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
-				{
-				if(m==1)
-					{
-					kernel_sgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
-					return;
-					}
-				else //if(m==2 && mna==3)
-					{
-					kernel_sgecp_2_0_lib4(0, n, alpha, A+offA, B+offB);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_sgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_sgecp_2_0_lib4(0, n, alpha, A+offA, B+offB);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_sgecp_3_0_lib4(0, n, alpha, A+offA, B+offB);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-		for(; ii<m-3; ii+=4)
-			{
-			kernel_sgecp_4_0_lib4(0, n, alpha, A, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_sgecp_1_0_lib4(0, n, alpha, A, B);
-			else if(m-ii==2)
-				kernel_sgecp_2_0_lib4(0, n, alpha, A, B);
-			else // if(m-ii==3)
-				kernel_sgecp_3_0_lib4(0, n, alpha, A, B);
-			}
-		}
-	// skip one element of A
-	else if(offA==(offB+1)%bs)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
-				{
-				if(m==1)
-					{
-					kernel_sgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
-					return;
-					}
-				else //if(m==2 && mna==3)
-					{
-					kernel_sgecp_2_0_lib4(0, n, alpha, A+offA, B+offB);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_sgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
-				//A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_sgecp_2_3_lib4(0, n, alpha, A, sda, B+2);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_sgecp_3_2_lib4(0, n, alpha, A, sda, B+1);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-		for( ; ii<m-3; ii+=4)
-			{
-			kernel_sgecp_4_1_lib4(0, n, alpha, A, sda, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_sgecp_1_0_lib4(0, n, alpha, A+1, B);
-			else if(m-ii==2)
-				kernel_sgecp_2_0_lib4(0, n, alpha, A+1, B);
-			else // if(m-ii==3)
-				kernel_sgecp_3_0_lib4(0, n, alpha, A+1, B);
-			}
-		}
-	// skip 2 elements of A
-	else if(offA==(offB+2)%bs)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna)
-				{
-				if(m==1)
-					{
-					kernel_sgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
-					return;
-					}
-				else // if(m==2 && mna==3)
-					{
-					kernel_sgecp_2_3_lib4(0, n, alpha, A, sda, B+1);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_sgecp_1_0_lib4(0, n, alpha, A+1, B+3);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_sgecp_2_0_lib4(0, n, alpha, A, B+2);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_sgecp_3_3_lib4(0, n, alpha, A, sda, B+1);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-		for(; ii<m-3; ii+=4)
-			{
-			kernel_sgecp_4_2_lib4(0, n, alpha, A, sda, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_sgecp_1_0_lib4(0, n, alpha, A+2, B);
-			else if(m-ii==2)
-				kernel_sgecp_2_0_lib4(0, n, alpha, A+2, B);
-			else // if(m-ii==3)
-				kernel_sgecp_3_2_lib4(0, n, alpha, A, sda, B);
-			}
-		}
-	// skip 3 elements of A
-	else // if(offA==(offB+3)%bs)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna)
-				{
-				if(m==1)
-					{
-					kernel_sgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
-					return;
-					}
-				else // if(m==2 && mna==3)
-					{
-					kernel_sgecp_2_0_lib4(0, n, alpha, A+offA, B+offB);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_sgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_sgecp_2_0_lib4(0, n, alpha, A+offA, B+offB);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_sgecp_3_0_lib4(0, n, alpha, A+offA, B+offB);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-		for(; ii<m-3; ii+=4)
-			{
-			kernel_sgecp_4_3_lib4(0, n, alpha, A, sda, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_sgecp_1_0_lib4(0, n, alpha, A+3, B);
-			else if(m-ii==2)
-				kernel_sgecp_2_3_lib4(0, n, alpha, A, sda, B);
-			else // if(m-ii==3)
-				kernel_sgecp_3_3_lib4(0, n, alpha, A, sda, B);
-			}
-		}
-
-	}
-
-
-
-// copies a lower triangular packed matrix into a lower triangular packed matrix
-void strcp_l_lib(int m, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb)
-	{
-
-	if(m<=0)
-		return;
-	
-	int n = m;
-
-	const int bs = 4;
-
-	int mna, ii;
-
-	int offA = offsetA%bs;
-	int offB = offsetB%bs;
-
-	// A at the beginning of the block
-	A -= offA;
-
-	// A at the beginning of the block
-	B -= offB;
-
-	// same alignment
-	if(offA==offB)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
-				{
-				if(m==1)
-					{
-					kernel_sgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
-					return;
-					}
-				else //if(m==2 && mna==3)
-					{
-					kernel_sgecp_2_0_lib4(1, ii, alpha, A+offA, B+offB);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_sgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_sgecp_2_0_lib4(1, ii, alpha, A+offA, B+offB);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_sgecp_3_0_lib4(1, ii, alpha, A+offA, B+offB);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-		for(; ii<m-3; ii+=4)
-			{
-			kernel_sgecp_4_0_lib4(1, ii, alpha, A, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_sgecp_1_0_lib4(1, ii, alpha, A, B);
-			else if(m-ii==2)
-				kernel_sgecp_2_0_lib4(1, ii, alpha, A, B);
-			else // if(m-ii==3)
-				kernel_sgecp_3_0_lib4(1, ii, alpha, A, B);
-			}
-		}
-	// skip one element of A
-	else if(offA==(offB+1)%bs)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
-				{
-				if(m==1)
-					{
-					kernel_sgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
-					return;
-					}
-				else //if(m==2 && mna==3)
-					{
-					kernel_sgecp_2_0_lib4(1, ii, alpha, A+offA, B+offB);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_sgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
-				//A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_sgecp_2_3_lib4(1, ii, alpha, A, sda, B+2);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_sgecp_3_2_lib4(1, ii, alpha, A, sda, B+1);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-		for( ; ii<m-3; ii+=4)
-			{
-			kernel_sgecp_4_1_lib4(1, ii, alpha, A, sda, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_sgecp_1_0_lib4(1, ii, alpha, A+1, B);
-			else if(m-ii==2)
-				kernel_sgecp_2_0_lib4(1, ii, alpha, A+1, B);
-			else // if(m-ii==3)
-				kernel_sgecp_3_0_lib4(1, ii, alpha, A+1, B);
-			}
-		}
-	// skip 2 elements of A
-	else if(offA==(offB+2)%bs)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna)
-				{
-				if(m==1)
-					{
-					kernel_sgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
-					return;
-					}
-				else // if(m==2 && mna==3)
-					{
-					kernel_sgecp_2_3_lib4(1, ii, alpha, A, sda, B+1);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_sgecp_1_0_lib4(1, ii, alpha, A+1, B+3);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_sgecp_2_0_lib4(1, ii, alpha, A, B+2);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_sgecp_3_3_lib4(1, ii, alpha, A, sda, B+1);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-		for(; ii<m-3; ii+=4)
-			{
-			kernel_sgecp_4_2_lib4(1, ii, alpha, A, sda, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_sgecp_1_0_lib4(1, ii, alpha, A+2, B);
-			else if(m-ii==2)
-				kernel_sgecp_2_0_lib4(1, ii, alpha, A+2, B);
-			else // if(m-ii==3)
-				kernel_sgecp_3_2_lib4(1, ii, alpha, A, sda, B);
-			}
-		}
-	// skip 3 elements of A
-	else // if(offA==(offB+3)%bs)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna)
-				{
-				if(m==1)
-					{
-					kernel_sgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
-					return;
-					}
-				else // if(m==2 && mna==3)
-					{
-					kernel_sgecp_2_0_lib4(1, ii, alpha, A+offA, B+offB);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_sgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_sgecp_2_0_lib4(1, ii, alpha, A+offA, B+offB);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_sgecp_3_0_lib4(1, ii, alpha, A+offA, B+offB);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-		for(; ii<m-3; ii+=4)
-			{
-			kernel_sgecp_4_3_lib4(1, ii, alpha, A, sda, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_sgecp_1_0_lib4(1, ii, alpha, A+3, B);
-			else if(m-ii==2)
-				kernel_sgecp_2_3_lib4(1, ii, alpha, A, sda, B);
-			else // if(m-ii==3)
-				kernel_sgecp_3_3_lib4(1, ii, alpha, A, sda, B);
-			}
-		}
-
-	}
-
-
-
-// scales and adds a packed matrix into a packed matrix: B = B + alpha*A
-void sgead_lib(int m, int n, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-
-	const int bs = 4;
-
-	int mna, ii;
-
-	int offA = offsetA%bs;
-	int offB = offsetB%bs;
-
-	// A at the beginning of the block
-	A -= offA;
-
-	// A at the beginning of the block
-	B -= offB;
-
-	// same alignment
-	if(offA==offB)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
-				{
-				if(m==1)
-					{
-					kernel_sgead_1_0_lib4(n, alpha, A+offA, B+offB);
-					return;
-					}
-				else //if(m==2 && mna==3)
-					{
-					kernel_sgead_2_0_lib4(n, alpha, A+offA, B+offB);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_sgead_1_0_lib4(n, alpha, A+offA, B+offB);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_sgead_2_0_lib4(n, alpha, A+offA, B+offB);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_sgead_3_0_lib4(n, alpha, A+offA, B+offB);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-		for(; ii<m-3; ii+=4)
-			{
-			kernel_sgead_4_0_lib4(n, alpha, A, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_sgead_1_0_lib4(n, alpha, A, B);
-			else if(m-ii==2)
-				kernel_sgead_2_0_lib4(n, alpha, A, B);
-			else // if(m-ii==3)
-				kernel_sgead_3_0_lib4(n, alpha, A, B);
-			}
-		}
-	// skip one element of A
-	else if(offA==(offB+1)%bs)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
-				{
-				if(m==1)
-					{
-					kernel_sgead_1_0_lib4(n, alpha, A+offA, B+offB);
-					return;
-					}
-				else //if(m==2 && mna==3)
-					{
-					kernel_sgead_2_0_lib4(n, alpha, A+offA, B+offB);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_sgead_1_0_lib4(n, alpha, A+offA, B+offB);
-				//A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_sgead_2_3_lib4(n, alpha, A, sda, B+2);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_sgead_3_2_lib4(n, alpha, A, sda, B+1);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-		for( ; ii<m-3; ii+=4)
-			{
-			kernel_sgead_4_1_lib4(n, alpha, A, sda, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_sgead_1_0_lib4(n, alpha, A+1, B);
-			else if(m-ii==2)
-				kernel_sgead_2_0_lib4(n, alpha, A+1, B);
-			else // if(m-ii==3)
-				kernel_sgead_3_0_lib4(n, alpha, A+1, B);
-			}
-		}
-	// skip 2 elements of A
-	else if(offA==(offB+2)%bs)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna)
-				{
-				if(m==1)
-					{
-					kernel_sgead_1_0_lib4(n, alpha, A+offA, B+offB);
-					return;
-					}
-				else // if(m==2 && mna==3)
-					{
-					kernel_sgead_2_3_lib4(n, alpha, A, sda, B+1);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_sgead_1_0_lib4(n, alpha, A+1, B+3);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_sgead_2_0_lib4(n, alpha, A, B+2);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_sgead_3_3_lib4(n, alpha, A, sda, B+1);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-		for(; ii<m-3; ii+=4)
-			{
-			kernel_sgead_4_2_lib4(n, alpha, A, sda, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_sgead_1_0_lib4(n, alpha, A+2, B);
-			else if(m-ii==2)
-				kernel_sgead_2_0_lib4(n, alpha, A+2, B);
-			else // if(m-ii==3)
-				kernel_sgead_3_2_lib4(n, alpha, A, sda, B);
-			}
-		}
-	// skip 3 elements of A
-	else // if(offA==(offB+3)%bs)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna)
-				{
-				if(m==1)
-					{
-					kernel_sgead_1_0_lib4(n, alpha, A+offA, B+offB);
-					return;
-					}
-				else // if(m==2 && mna==3)
-					{
-					kernel_sgead_2_0_lib4(n, alpha, A+offA, B+offB);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_sgead_1_0_lib4(n, alpha, A+offA, B+offB);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_sgead_2_0_lib4(n, alpha, A+offA, B+offB);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_sgead_3_0_lib4(n, alpha, A+offA, B+offB);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-		for(; ii<m-3; ii+=4)
-			{
-			kernel_sgead_4_3_lib4(n, alpha, A, sda, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_sgead_1_0_lib4(n, alpha, A+3, B);
-			else if(m-ii==2)
-				kernel_sgead_2_3_lib4(n, alpha, A, sda, B);
-			else // if(m-ii==3)
-				kernel_sgead_3_3_lib4(n, alpha, A, sda, B);
-			}
-		}
-
-	}
-
-
-
 // scales and adds a strvec into a strvec
-void svecad_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
+void svead_libstr(int m, float *alphap, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
 	{
+	float alpha = alphap[0];
 	float *pa = sa->pa + ai;
 	float *pc = sc->pa + ci;
 	int ii;
@@ -2596,7 +1788,7 @@ float svecex1_libstr(struct s_strvec *sx, int xi)
 
 
 // set all elements of a strmat to a value
-void smatse_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj)
+void sgese_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj)
 	{
 	const int bs = 4;
 	int sda = sA->cn;
@@ -2641,7 +1833,7 @@ void smatse_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int a
 
 
 // set all elements of a strvec to a value
-void svecse_libstr(int m, float alpha, struct s_strvec *sx, int xi)
+void svese_libstr(int m, float alpha, struct s_strvec *sx, int xi)
 	{
 	float *x = sx->pa + xi;
 	int ii;
@@ -2759,22 +1951,406 @@ void scolpe_libstr(int kmax, int *ipiv, struct s_strmat *sA)
 
 
 
-// copy a generic strmat into a generic strmat
-void sgecp_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
+// scale a generic strmat
+void sgesc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj)
 	{
-	const int bs = S_BS;
+
+	if(m<=0 | n<=0)
+		return;
+
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** sgesc_libstr : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** sgesc_libstr : n<0 : %d<0 *****\n", n);
+	// non-negative offset
+	if(ai<0) printf("\n****** sgesc_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** sgesc_libstr : aj<0 : %d<0 *****\n", aj);
+	// inside matrix
+	// A: m x n
+	if(ai+m > sA->m) printf("\n***** sgesc_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** sgesc_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+#endif
+
+	const int bs = 4;
+
+	int mna, ii;
+
 	int sda = sA->cn;
-	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	int sdc = sC->cn;
-	float *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	sgecp_lib(m, n, alpha, ai%bs, pA, sda, ci%bs, pC, sdc);
+	float *pA = sA->pA + ai/bs*bs*sda + aj*bs;
+	int offA = ai%bs;
+
+	// same alignment
+	ii = 0;
+	// clean up at the beginning
+	mna = (4-offA)%bs;
+	if(mna>0)
+		{
+		if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+			{
+			if(m==1)
+				{
+				kernel_sgesc_1_lib4(n, &alpha, pA+offA);
+				return;
+				}
+			else //if(m==2 && mna==3)
+				{
+				kernel_sgesc_2_lib4(n, &alpha, pA+offA);
+				return;
+				}
+			}
+		if(mna==1)
+			{
+			kernel_sgesc_1_lib4(n, &alpha, pA+offA);
+			pA += 4*sda;
+			ii += 1;
+			}
+		else if(mna==2)
+			{
+			kernel_sgesc_2_lib4(n, &alpha, pA+offA);
+			pA += 4*sda;
+			ii += 2;
+			}
+		else // if(mna==3)
+			{
+			kernel_sgesc_3_lib4(n, &alpha, pA+offA);
+			pA += 4*sda;
+			ii += 3;
+			}
+		}
+	// main loop
+	for(; ii<m-3; ii+=4)
+		{
+		kernel_sgesc_4_lib4(n, &alpha, pA);
+		pA += 4*sda;
+		}
+	// clean up at the end
+	if(ii<m)
+		{
+		if(m-ii==1)
+			kernel_sgesc_1_lib4(n, &alpha, pA);
+		else if(m-ii==2)
+			kernel_sgesc_2_lib4(n, &alpha, pA);
+		else // if(m-ii==3)
+			kernel_sgesc_3_lib4(n, &alpha, pA);
+		}
+
+	return;
+
+	}
+
+
+
+// copy a generic strmat into a generic strmat
+void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj)
+	{
+
+	if(m<=0 | n<=0)
+		return;
+
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** sgecp_libstr : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** sgecp_libstr : n<0 : %d<0 *****\n", n);
+	// non-negative offset
+	if(ai<0) printf("\n****** sgecp_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** sgecp_libstr : aj<0 : %d<0 *****\n", aj);
+	if(bi<0) printf("\n****** sgecp_libstr : bi<0 : %d<0 *****\n", bi);
+	if(bj<0) printf("\n****** sgecp_libstr : bj<0 : %d<0 *****\n", bj);
+	// inside matrix
+	// A: m x n
+	if(ai+m > sA->m) printf("\n***** sgecp_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** sgecp_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+	// B: m x n
+	if(bi+m > sB->m) printf("\n***** sgecp_libstr : bi+m > row(B) : %d+%d > %d *****\n", bi, m, sB->m);
+	if(bj+n > sB->n) printf("\n***** sgecp_libstr : bj+n > col(B) : %d+%d > %d *****\n", bj, n, sB->n);
+#endif
+
+	const int bs = 4;
+
+	int mna, ii;
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	float *pA = sA->pA + ai/bs*bs*sda + aj*bs;
+	float *pB = sB->pA + bi/bs*bs*sdb + bj*bs;
+	int offA = ai%bs;
+	int offB = bi%bs;
+
+	// same alignment
+	if(offA==offB)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_sgecp_1_0_lib4(n, pA+offA, pB+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_sgecp_2_0_lib4(n, pA+offA, pB+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_sgecp_1_0_lib4(n, pA+offA, pB+offB);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_sgecp_2_0_lib4(n, pA+offA, pB+offB);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_sgecp_3_0_lib4(n, pA+offA, pB+offB);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_sgecp_4_0_lib4(n, pA, pB);
+			pA += 4*sda;
+			pB += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_sgecp_1_0_lib4(n, pA, pB);
+			else if(m-ii==2)
+				kernel_sgecp_2_0_lib4(n, pA, pB);
+			else // if(m-ii==3)
+				kernel_sgecp_3_0_lib4(n, pA, pB);
+			}
+		}
+	// skip one element of pA
+	else if(offA==(offB+1)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_sgecp_1_0_lib4(n, pA+offA, pB+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_sgecp_2_0_lib4(n, pA+offA, pB+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_sgecp_1_0_lib4(n, pA+offA, pB+offB);
+				//pA += 4*sda;
+				pB += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_sgecp_2_3_lib4(n, pA, sda, pB+2);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_sgecp_3_2_lib4(n, pA, sda, pB+1);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+		for( ; ii<m-3; ii+=4)
+			{
+			kernel_sgecp_4_1_lib4(n, pA, sda, pB);
+			pA += 4*sda;
+			pB += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_sgecp_1_0_lib4(n, pA+1, pB);
+			else if(m-ii==2)
+				kernel_sgecp_2_0_lib4(n, pA+1, pB);
+			else // if(m-ii==3)
+				kernel_sgecp_3_0_lib4(n, pA+1, pB);
+			}
+		}
+	// skip 2 elements of pA
+	else if(offA==(offB+2)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_sgecp_1_0_lib4(n, pA+offA, pB+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_sgecp_2_3_lib4(n, pA, sda, pB+1);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_sgecp_1_0_lib4(n, pA+1, pB+3);
+				// pA += 4*sda;
+				pB += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_sgecp_2_0_lib4(n, pA, pB+2);
+				// pA += 4*sda;
+				pB += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_sgecp_3_3_lib4(n, pA, sda, pB+1);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_sgecp_4_2_lib4(n, pA, sda, pB);
+			pA += 4*sda;
+			pB += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_sgecp_1_0_lib4(n, pA+2, pB);
+			else if(m-ii==2)
+				kernel_sgecp_2_0_lib4(n, pA+2, pB);
+			else // if(m-ii==3)
+				kernel_sgecp_3_2_lib4(n, pA, sda, pB);
+			}
+		}
+	// skip 3 elements of pA
+	else // if(offA==(offB+3)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_sgecp_1_0_lib4(n, pA+offA, pB+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_sgecp_2_0_lib4(n, pA+offA, pB+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_sgecp_1_0_lib4(n, pA+offA, pB+offB);
+				// pA += 4*sda;
+				pB += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_sgecp_2_0_lib4(n, pA+offA, pB+offB);
+				// pA += 4*sda;
+				pB += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_sgecp_3_0_lib4(n, pA+offA, pB+offB);
+				// pA += 4*sda;
+				pB += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_sgecp_4_3_lib4(n, pA, sda, pB);
+			pA += 4*sda;
+			pB += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_sgecp_1_0_lib4(n, pA+3, pB);
+			else if(m-ii==2)
+				kernel_sgecp_2_3_lib4(n, pA, sda, pB);
+			else // if(m-ii==3)
+				kernel_sgecp_3_3_lib4(n, pA, sda, pB);
+			}
+		}
+
+	return;
+
+	}
+
+
+
+// scale a strvec
+void svesc_libstr(int m, float alpha, struct s_strvec *sa, int ai)
+	{
+	float *pa = sa->pa + ai;
+	int ii;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		pa[ii+0] *= alpha;
+		pa[ii+1] *= alpha;
+		pa[ii+2] *= alpha;
+		pa[ii+3] *= alpha;
+		}
+	for(; ii<m; ii++)
+		{
+		pa[ii+0] *= alpha;
+		}
 	return;
 	}
 
 
 
 // copy a strvec into a strvec
-void sveccp_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
+void svecp_libstr(int m, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
 	{
 	float *pa = sa->pa + ai;
 	float *pc = sc->pa + ci;
@@ -2782,14 +2358,14 @@ void sveccp_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_str
 	ii = 0;
 	for(; ii<m-3; ii+=4)
 		{
-		pc[ii+0] = alpha*pa[ii+0];
-		pc[ii+1] = alpha*pa[ii+1];
-		pc[ii+2] = alpha*pa[ii+2];
-		pc[ii+3] = alpha*pa[ii+3];
+		pc[ii+0] = pa[ii+0];
+		pc[ii+1] = pa[ii+1];
+		pc[ii+2] = pa[ii+2];
+		pc[ii+3] = pa[ii+3];
 		}
 	for(; ii<m; ii++)
 		{
-		pc[ii+0] = alpha*pa[ii+0];
+		pc[ii+0] = pa[ii+0];
 		}
 	return;
 	}
@@ -2797,29 +2373,538 @@ void sveccp_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_str
 
 
 // copy a lower triangular strmat into a lower triangular strmat
-void strcp_l_libstr(int m, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
+void strcp_l_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj)
 	{
-	const int bs = S_BS;
+
+	if(m<=0)
+		return;
+
+	const int bs = 4;
+
 	int sda = sA->cn;
-	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	int sdc = sC->cn;
-	float *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	strcp_l_lib(m, alpha, ai%bs, pA, sda, ci%bs, pC, sdc);
+	int sdb = sB->cn;
+	float *pA = sA->pA + ai/bs*bs*sda + aj*bs;
+	float *pB = sB->pA + bi/bs*bs*sdb + bj*bs;
+	int offA = ai%bs;
+	int offB = bi%bs;
+
+	int ii, mna;
+
+	// same alignment
+	if(offA==offB)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_strcp_l_1_0_lib4(ii, pA+offA, pB+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_strcp_l_2_0_lib4(ii, pA+offA, pB+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_strcp_l_1_0_lib4(ii, pA+offA, pB+offB);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_strcp_l_2_0_lib4(ii, pA+offA, pB+offB);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_strcp_l_3_0_lib4(ii, pA+offA, pB+offB);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_strcp_l_4_0_lib4(ii, pA, pB);
+			pA += 4*sda;
+			pB += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_strcp_l_1_0_lib4(ii, pA, pB);
+			else if(m-ii==2)
+				kernel_strcp_l_2_0_lib4(ii, pA, pB);
+			else // if(m-ii==3)
+				kernel_strcp_l_3_0_lib4(ii, pA, pB);
+			}
+		}
+	// skip one element of pA
+	else if(offA==(offB+1)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_strcp_l_1_0_lib4(ii, pA+offA, pB+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_strcp_l_2_0_lib4(ii, pA+offA, pB+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_strcp_l_1_0_lib4(ii, pA+offA, pB+offB);
+				//pA += 4*sda;
+				pB += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_strcp_l_2_3_lib4(ii, pA, sda, pB+2);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_strcp_l_3_2_lib4(ii, pA, sda, pB+1);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+		for( ; ii<m-3; ii+=4)
+			{
+			kernel_strcp_l_4_1_lib4(ii, pA, sda, pB);
+			pA += 4*sda;
+			pB += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_strcp_l_1_0_lib4(ii, pA+1, pB);
+			else if(m-ii==2)
+				kernel_strcp_l_2_0_lib4(ii, pA+1, pB);
+			else // if(m-ii==3)
+				kernel_strcp_l_3_0_lib4(ii, pA+1, pB);
+			}
+		}
+	// skip 2 elements of pA
+	else if(offA==(offB+2)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_strcp_l_1_0_lib4(ii, pA+offA, pB+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_strcp_l_2_3_lib4(ii, pA, sda, pB+1);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_strcp_l_1_0_lib4(ii, pA+1, pB+3);
+				// pA += 4*sda;
+				pB += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_strcp_l_2_0_lib4(ii, pA, pB+2);
+				// pA += 4*sda;
+				pB += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_strcp_l_3_3_lib4(ii, pA, sda, pB+1);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_strcp_l_4_2_lib4(ii, pA, sda, pB);
+			pA += 4*sda;
+			pB += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_strcp_l_1_0_lib4(ii, pA+2, pB);
+			else if(m-ii==2)
+				kernel_strcp_l_2_0_lib4(ii, pA+2, pB);
+			else // if(m-ii==3)
+				kernel_strcp_l_3_2_lib4(ii, pA, sda, pB);
+			}
+		}
+	// skip 3 elements of pA
+	else // if(offA==(offB+3)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_strcp_l_1_0_lib4(ii, pA+offA, pB+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_strcp_l_2_0_lib4(ii, pA+offA, pB+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_strcp_l_1_0_lib4(ii, pA+offA, pB+offB);
+				// pA += 4*sda;
+				pB += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_strcp_l_2_0_lib4(ii, pA+offA, pB+offB);
+				// pA += 4*sda;
+				pB += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_strcp_l_3_0_lib4(ii, pA+offA, pB+offB);
+				// pA += 4*sda;
+				pB += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_strcp_l_4_3_lib4(ii, pA, sda, pB);
+			pA += 4*sda;
+			pB += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_strcp_l_1_0_lib4(ii, pA+3, pB);
+			else if(m-ii==2)
+				kernel_strcp_l_2_3_lib4(ii, pA, sda, pB);
+			else // if(m-ii==3)
+				kernel_strcp_l_3_3_lib4(ii, pA, sda, pB);
+			}
+		}
+
 	return;
+
 	}
 
 
 
 // scale and add a generic strmat into a generic strmat
-void sgead_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
+void sgead_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj)
 	{
-	const int bs = S_BS;
+
+	if(m<=0 || n<=0)
+		return;
+	const int bs = 4;
+
 	int sda = sA->cn;
-	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	int sdc = sC->cn;
-	float *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	sgead_lib(m, n, alpha, ai%bs, pA, sda, ci%bs, pC, sdc);
+	int sdb = sB->cn;
+	float *pA = sA->pA + ai/bs*bs*sda + aj*bs;
+	float *pB = sB->pA + bi/bs*bs*sdb + bj*bs;
+	int offA = ai%bs;
+	int offB = bi%bs;
+
+	int ii, mna;
+
+	// same alignment
+	if(offA==offB)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_sgead_1_0_lib4(n, &alpha, pA+offA, pB+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_sgead_2_0_lib4(n, &alpha, pA+offA, pB+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_sgead_1_0_lib4(n, &alpha, pA+offA, pB+offB);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_sgead_2_0_lib4(n, &alpha, pA+offA, pB+offB);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_sgead_3_0_lib4(n, &alpha, pA+offA, pB+offB);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_sgead_4_0_lib4(n, &alpha, pA, pB);
+			pA += 4*sda;
+			pB += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_sgead_1_0_lib4(n, &alpha, pA, pB);
+			else if(m-ii==2)
+				kernel_sgead_2_0_lib4(n, &alpha, pA, pB);
+			else // if(m-ii==3)
+				kernel_sgead_3_0_lib4(n, &alpha, pA, pB);
+			}
+		}
+	// skip one element of pA
+	else if(offA==(offB+1)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_sgead_1_0_lib4(n, &alpha, pA+offA, pB+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_sgead_2_0_lib4(n, &alpha, pA+offA, pB+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_sgead_1_0_lib4(n, &alpha, pA+offA, pB+offB);
+				//pA += 4*sda;
+				pB += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_sgead_2_3_lib4(n, &alpha, pA, sda, pB+2);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_sgead_3_2_lib4(n, &alpha, pA, sda, pB+1);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+		for( ; ii<m-3; ii+=4)
+			{
+			kernel_sgead_4_1_lib4(n, &alpha, pA, sda, pB);
+			pA += 4*sda;
+			pB += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_sgead_1_0_lib4(n, &alpha, pA+1, pB);
+			else if(m-ii==2)
+				kernel_sgead_2_0_lib4(n, &alpha, pA+1, pB);
+			else // if(m-ii==3)
+				kernel_sgead_3_0_lib4(n, &alpha, pA+1, pB);
+			}
+		}
+	// skip 2 elements of pA
+	else if(offA==(offB+2)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_sgead_1_0_lib4(n, &alpha, pA+offA, pB+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_sgead_2_3_lib4(n, &alpha, pA, sda, pB+1);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_sgead_1_0_lib4(n, &alpha, pA+1, pB+3);
+				// pA += 4*sda;
+				pB += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_sgead_2_0_lib4(n, &alpha, pA, pB+2);
+				// pA += 4*sda;
+				pB += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_sgead_3_3_lib4(n, &alpha, pA, sda, pB+1);
+				pA += 4*sda;
+				pB += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_sgead_4_2_lib4(n, &alpha, pA, sda, pB);
+			pA += 4*sda;
+			pB += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_sgead_1_0_lib4(n, &alpha, pA+2, pB);
+			else if(m-ii==2)
+				kernel_sgead_2_0_lib4(n, &alpha, pA+2, pB);
+			else // if(m-ii==3)
+				kernel_sgead_3_2_lib4(n, &alpha, pA, sda, pB);
+			}
+		}
+	// skip 3 elements of pA
+	else // if(offA==(offB+3)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_sgead_1_0_lib4(n, &alpha, pA+offA, pB+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_sgead_2_0_lib4(n, &alpha, pA+offA, pB+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_sgead_1_0_lib4(n, &alpha, pA+offA, pB+offB);
+				// pA += 4*sda;
+				pB += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_sgead_2_0_lib4(n, &alpha, pA+offA, pB+offB);
+				// pA += 4*sda;
+				pB += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_sgead_3_0_lib4(n, &alpha, pA+offA, pB+offB);
+				// pA += 4*sda;
+				pB += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_sgead_4_3_lib4(n, &alpha, pA, sda, pB);
+			pA += 4*sda;
+			pB += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_sgead_1_0_lib4(n, &alpha, pA+3, pB);
+			else if(m-ii==2)
+				kernel_sgead_2_3_lib4(n, &alpha, pA, sda, pB);
+			else // if(m-ii==3)
+				kernel_sgead_3_3_lib4(n, &alpha, pA, sda, pB);
+			}
+		}
+
 	return;
+
 	}
 
 

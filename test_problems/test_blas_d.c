@@ -33,8 +33,9 @@
 
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_block_size.h"
+#include "../include/blasfeo_d_aux_ext_dep.h"
 #include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_i_aux.h"
+#include "../include/blasfeo_i_aux_ext_dep.h"
 #include "../include/blasfeo_d_blas.h"
 
 
@@ -51,7 +52,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 3.6
+#define GHZ_MAX 2.3
 
 
 

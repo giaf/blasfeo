@@ -34,32 +34,32 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 OBJS += 
-OBJS += kernel_sgecp_lib4.o kernel_sgetr_lib4.o
+OBJS += kernel_sgetr_lib4.o
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 OBJS += 
-OBJS += kernel_sgecp_lib4.o kernel_sgetr_lib4.o
+OBJS += kernel_sgetr_lib4.o
 endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
 OBJS += kernel_dgecp_lib4.o kernel_dgetr_lib4.o
-OBJS += kernel_sgecp_lib4.o kernel_sgetr_lib4.o
+OBJS += kernel_sgetr_lib4.o
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
 OBJS += kernel_dgecp_lib4.o kernel_dgetr_lib4.o
-OBJS += kernel_sgecp_lib4.o kernel_sgetr_lib4.o
+OBJS += kernel_sgetr_lib4.o
 endif
 
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 OBJS += kernel_dgecp_lib4.o kernel_dgetr_lib4.o
-OBJS += kernel_sgecp_lib4.o kernel_sgetr_lib4.o
+OBJS += kernel_sgetr_lib4.o
 endif
 
 ifeq ($(TARGET), GENERIC)
 OBJS += kernel_dgecp_lib4.o kernel_dgetr_lib4.o
-OBJS += kernel_sgecp_lib4.o kernel_sgetr_lib4.o
+OBJS += kernel_sgetr_lib4.o
 endif
 
 else # LA_REFERENCE | LA_BLAS

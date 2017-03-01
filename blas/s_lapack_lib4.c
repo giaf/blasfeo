@@ -278,9 +278,9 @@ void sgetrf_nn_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *
 	float d1 = 1.0;
 	float dm1 = -1.0;
 
-	// needs to perform row-excanges on the yet-to-be-factorized matrix too
-	if(pC!=pD)
-		sgecp_lib(m, n, 1.0, 0, pC, sdc, 0, pD, sdd);
+//	// needs to perform row-excanges on the yet-to-be-factorized matrix too
+//	if(pC!=pD)
+//		sgecp_lib(m, n, 1.0, 0, pC, sdc, 0, pD, sdd);
 
 	// minimum matrix size
 	p = n<m ? n : m; // XXX
@@ -568,6 +568,9 @@ void sgetrf_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_s
 	float *pC = sC->pA + cj*bs;
 	float *pD = sD->pA + dj*bs;
 	float *dD = sD->dA; // XXX what to do if di and dj are not zero
+	// needs to perform row-excanges on the yet-to-be-factorized matrix too
+	if(pC!=pD)
+		sgecp_libstr(m, n, sC, ci, cj, sD, di, dj);
 	sgetrf_nn_lib(m, n, pC, sdc, pD, sdd, dD, ipiv);
 	if(di==0 && dj==0)
 		sD->use_dA = 1;
