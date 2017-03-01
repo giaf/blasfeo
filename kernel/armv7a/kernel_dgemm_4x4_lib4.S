@@ -97,13 +97,11 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 	// main loop
 1:
 	
-	// prefetch
-	pld		[r5, #128]
-	pld		[r6, #128]
-
 	// unroll 0
 	fmacd	d0, d16, d20
+	pld		[r5, #128] // prefetch
 	fmacd	d1, d17, d20
+	pld		[r6, #128] // prefetch
 	fmacd	d2, d18, d20
 	fmacd	d3, d19, d20
 	fldd	d20, [r6, #64] // B
@@ -159,22 +157,21 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 	fldd	d27, [r5, #120] // A
 	fldd	d31, [r6, #120] // B
 
-	// prefetch
-	pld		[r5, #192]
-	pld		[r6, #192]
 
-	add		r5, r5, #128
-	add		r6, r6, #128
 
 	// unroll 2
 	fmacd	d0, d16, d20
+	pld		[r6, #192] // prefetch
 	fmacd	d1, d17, d20
+	add		r6, r6, #128
 	fmacd	d2, d18, d20
 	fmacd	d3, d19, d20
 	fldd	d20, [r6, #0] // B
 
 	fmacd	d4, d16, d21
+	pld		[r5, #192] // prefetch
 	fmacd	d5, d17, d21
+	add		r5, r5, #128
 	fmacd	d6, d18, d21
 	fmacd	d7, d19, d21
 	fldd	d21, [r6, #8] // B
@@ -209,6 +206,7 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 	fldd	d29, [r6, #40] // B
 
 	fmacd	d8, d24, d30
+	sub		r4, r4, #4
 	fmacd	d9, d25, d30
 	fmacd	d10, d26, d30
 	fmacd	d11, d27, d30
@@ -224,7 +222,6 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 	fldd	d27, [r5, #56] // A
 	fldd	d31, [r6, #56] // B
 
-	sub		r4, r4, #4
 	cmp		r4, #4
 	bgt		1b
 
@@ -429,6 +426,7 @@ _inner_kernel_dgemm_add_nn_4x4_lib4:
 	// prefetch
 	pld		[r5, #0]
 	pld		[r6, #0]
+	pld		[r6, #64]
 
 	// preload A even
 	fldd	d16, [r5, #0]
@@ -456,7 +454,6 @@ _inner_kernel_dgemm_add_nn_4x4_lib4:
 
 	// prefetch
 	pld		[r5, #64]
-	pld		[r6, #64]
 
 	// B next
 	add		r9, r7, r6
@@ -467,14 +464,13 @@ _inner_kernel_dgemm_add_nn_4x4_lib4:
 	// main loop
 1:
 	
-	// prefetch
-	pld		[r5, #128]
-	pld		[r9, #0]
-
 	// unroll 0
 	fmacd	d0, d16, d20
+	pld		[r5, #128] // prefetch
 	fmacd	d1, d17, d20
+	pld		[r9, #0]
 	fmacd	d2, d18, d20
+	pld		[r9, #64]
 	fmacd	d3, d19, d20
 	fldd	d20, [r6, #16] // B
 
@@ -529,28 +525,24 @@ _inner_kernel_dgemm_add_nn_4x4_lib4:
 	fldd	d27, [r5, #120] // A
 	fldd	d31, [r6, #120] // B
 
-	// prefetch
-	pld		[r5, #192]
-	pld		[r9, #64]
-
-	mov		r6, r9
-	add		r5, r5, #128
-	add		r9, r9, r7
-
 	// unroll 2
 	fmacd	d0, d16, d20
+	pld		[r5, #192] // prefetch
 	fmacd	d1, d17, d20
+	mov		r6, r9
 	fmacd	d2, d18, d20
 	fmacd	d3, d19, d20
 	fldd	d20, [r6, #0] // B
 
 	fmacd	d4, d16, d21
+	add		r5, r5, #128
 	fmacd	d5, d17, d21
 	fmacd	d6, d18, d21
 	fmacd	d7, d19, d21
 	fldd	d21, [r6, #32] // B
 
 	fmacd	d8, d16, d22
+	add		r9, r9, r7
 	fmacd	d9, d17, d22
 	fmacd	d10, d18, d22
 	fmacd	d11, d19, d22
@@ -574,6 +566,7 @@ _inner_kernel_dgemm_add_nn_4x4_lib4:
 	fldd	d28, [r6, #8] // B
 
 	fmacd	d4, d24, d29
+	sub		r4, r4, #4
 	fmacd	d5, d25, d29
 	fmacd	d6, d26, d29
 	fmacd	d7, d27, d29
@@ -595,7 +588,6 @@ _inner_kernel_dgemm_add_nn_4x4_lib4:
 	fldd	d27, [r5, #56] // A
 	fldd	d31, [r6, #104] // B
 
-	sub		r4, r4, #4
 	cmp		r4, #4
 	bgt		1b
 
@@ -755,7 +747,6 @@ _inner_kernel_dgemm_add_nn_4x4_lib4:
 	bgt		3b
 
 2: // return
-
 	
 #if MACRO_LEVEL>=2
 	.endm
@@ -1763,6 +1754,103 @@ _inner_kernel_dsyrk_l_sub_nt_4x4_lib4:
 
 // subroutine
 //
+// input arguments:
+// r4   <- k
+// r5   <- A
+// r6   <- B
+// r7   <- bs*sdb*sizeof(double)
+// r8   <- offsetB
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DGEMM_ADD_NN_4X4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_dgemm_add_nn_4x4_lib4, %function
+inner_edge_dgemm_add_nn_4x4_lib4:
+#elif defined(OS_MAC)
+_inner_edge_dgemm_add_nn_4x4_lib4:
+#endif
+#endif
+
+	cmp		r8, #0
+	ble		2f // return
+
+	cmp		r4, #0
+	ble		2f // return
+
+	rsb		r9, r8, #4 // 4-offsetB
+	cmp		r9, r4
+//	ble		0f
+//	mov		r9, r4 // kend=min(k,4-offsetB(
+//0:
+	movgt	r9, r4 // kend=min(k,4-offsetB(
+	
+//	lsl		r10, r8, #3 // offsetB*sizeof(double)
+	add		r6, r6, r8, LSL #3 // B + offsetB*sizeof(double)
+
+1:
+	fldd	d16, [r5, #0] // A
+	fldd	d17, [r5, #8] // A
+	fldd	d18, [r5, #16] // A
+	fldd	d19, [r5, #24] // A
+
+	fldd	d20, [r6, #0] // B
+	fmacd	d0, d16, d20
+	fmacd	d1, d17, d20
+	fmacd	d2, d18, d20
+	fmacd	d3, d19, d20
+
+	fldd	d21, [r6, #32] // B
+	fmacd	d4, d16, d21
+	fmacd	d5, d17, d21
+	fmacd	d6, d18, d21
+	fmacd	d7, d19, d21
+
+	fldd	d22, [r6, #64] // B
+	fmacd	d8, d16, d22
+	fmacd	d9, d17, d22
+	fmacd	d10, d18, d22
+	fmacd	d11, d19, d22
+
+	fldd	d23, [r6, #96] // B
+	fmacd	d12, d16, d23
+	fmacd	d13, d17, d23
+	fmacd	d14, d18, d23
+	fmacd	d15, d19, d23
+
+	sub		r4, r4, #1
+	sub		r9, r9, #1
+	add		r5, r5, #32
+	add		r6, r6, #8
+
+	cmp		r9, #0
+	bgt		1b
+
+	cmp		r4, #0
+	ble		2f // return
+
+	add		r6, r6, r7
+	sub		r6, r6, #32
+
+2: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	mov		pc, lr // return
+
+#if defined(OS_LINUX)
+	.size	inner_edge_dgemm_add_nn_4x4_lib4, .-inner_edge_dgemm_add_nn_4x4_lib4
+#endif
+#endif
+	
+
+
+
+
+// subroutine
+//
 // triangular substitution:
 // side = right
 // uplo = lower
@@ -2364,7 +2452,6 @@ _kernel_dgemm_nt_4x4_lib4:
 
 
 
-#if 0
 //                               r0        r1             r2         r3           sp+0       sp+4     sp+8          sp+12      sp+16
 // void kernel_dgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D)
 
@@ -2417,7 +2504,15 @@ _kernel_dgemm_nn_4x4_lib4:
 	lsl		r7, r7, #5 // 4*sizeof(double)*sdb
 	mov		r8, r3 // offsetB
 
-	// TODO edge
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGEMM_ADD_NN_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl	inner_edge_dgemm_add_nn_4x4_lib4
+#elif defined(OS_MAC)
+	bl	_inner_edge_dgemm_add_nn_4x4_lib4
+#endif
+#endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NN_4X4_LIB4
@@ -2475,7 +2570,6 @@ _kernel_dgemm_nn_4x4_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dgemm_nn_4x4_lib4, .-kernel_dgemm_nn_4x4_lib4
-#endif
 #endif
 
 
