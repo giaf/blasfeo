@@ -86,7 +86,7 @@ OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary
 OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o 
 # kernels
 OBJS += ./kernel/armv7a/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_diag_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o ./kernel/c99/kernel_dsymv_4_lib4.o ./kernel/c99/kernel_dgetrf_pivot_4_lib4.o
-OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemm_diag_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o ./kernel/c99/kernel_ssymv_4_lib4.o ./kernel/c99/kernel_sgetrf_pivot_4_lib4.o ./kernel/c99/kernel_sgecp_lib4.o
+OBJS += ./kernel/armv7a/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemm_diag_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o ./kernel/c99/kernel_ssymv_4_lib4.o ./kernel/c99/kernel_sgetrf_pivot_4_lib4.o ./kernel/c99/kernel_sgecp_lib4.o
 # blas
 OBJS += ./blas/d_blas1_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas3_lib4.o ./blas/d_blas3_diag_lib4.o ./blas/d_lapack_lib4.o
 OBJS += ./blas/s_blas1_lib4.o ./blas/s_blas2_lib4.o ./blas/s_blas3_lib4.o ./blas/s_blas3_diag_lib4.o ./blas/s_lapack_lib4.o

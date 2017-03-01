@@ -2073,21 +2073,23 @@ _inner_edge_dpotrf_4x4_lib4:
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_BLEND_SCALE_AB_4X4_LIB4
+	.macro INNER_SCALE_AB_4X4_LIB4
 #else
 //	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_blend_scale_ab_4x4_lib4, %function
-inner_blend_scale_ab_4x4_lib4:
+	.type inner_scale_ab_4x4_lib4, %function
+inner_scale_ab_4x4_lib4:
 #elif defined(OS_MAC)
-_inner_blend_scale_ab_4x4_lib4:
+_inner_scale_ab_4x4_lib4:
 #endif
 #endif
 
 	fldd	d16, [r4, #0] // alpha
 
 	fmuld	d0, d0, d16
+	fldd	d18, [r5, #0] // beta
 	fmuld	d1, d1, d16
+	fldd	d17, .LC01 // 0.0
 	fmuld	d2, d2, d16
 	fmuld	d3, d3, d16
 
@@ -2097,53 +2099,56 @@ _inner_blend_scale_ab_4x4_lib4:
 	fmuld	d7, d7, d16
 
 	fmuld	d8, d8, d16
+	fcmped	d18, d17
 	fmuld	d9, d9, d16
 	fmuld	d10, d10, d16
 	fmuld	d11, d11, d16
 
 	fmuld	d12, d12, d16
+	fmstat
 	fmuld	d13, d13, d16
 	fmuld	d14, d14, d16
 	fmuld	d15, d15, d16
 
-	fldd	d16, [r5, #0] // beta
+	beq		0f // end
 
 	fldd	d17, [r6, #0] // C
-	fmacd	d0, d16, d17
+	fmacd	d0, d18, d17
 	fldd	d17, [r6, #8] // C
-	fmacd	d1, d16, d17
+	fmacd	d1, d18, d17
 	fldd	d17, [r6, #16] // C
-	fmacd	d2, d16, d17
+	fmacd	d2, d18, d17
 	fldd	d17, [r6, #24] // C
-	fmacd	d3, d16, d17
+	fmacd	d3, d18, d17
 
 	fldd	d17, [r6, #32] // C
-	fmacd	d4, d16, d17
+	fmacd	d4, d18, d17
 	fldd	d17, [r6, #40] // C
-	fmacd	d5, d16, d17
+	fmacd	d5, d18, d17
 	fldd	d17, [r6, #48] // C
-	fmacd	d6, d16, d17
+	fmacd	d6, d18, d17
 	fldd	d17, [r6, #56] // C
-	fmacd	d7, d16, d17
+	fmacd	d7, d18, d17
 
 	fldd	d17, [r6, #64] // C
-	fmacd	d8, d16, d17
+	fmacd	d8, d18, d17
 	fldd	d17, [r6, #72] // C
-	fmacd	d9, d16, d17
+	fmacd	d9, d18, d17
 	fldd	d17, [r6, #80] // C
-	fmacd	d10, d16, d17
+	fmacd	d10, d18, d17
 	fldd	d17, [r6, #88] // C
-	fmacd	d11, d16, d17
+	fmacd	d11, d18, d17
 
 	fldd	d17, [r6, #96] // C
-	fmacd	d12, d16, d17
+	fmacd	d12, d18, d17
 	fldd	d17, [r6, #104] // C
-	fmacd	d13, d16, d17
+	fmacd	d13, d18, d17
 	fldd	d17, [r6, #112] // C
-	fmacd	d14, d16, d17
+	fmacd	d14, d18, d17
 	fldd	d17, [r6, #120] // C
-	fmacd	d15, d16, d17
+	fmacd	d15, d18, d17
 
+0:
 
 #if MACRO_LEVEL>=2
 	.endm
@@ -2151,7 +2156,7 @@ _inner_blend_scale_ab_4x4_lib4:
 	mov		pc, lr // return
 
 #if defined(OS_LINUX)
-	.size	inner_blend_scale_ab_4x4_lib4, .-inner_blend_scale_ab_4x4_lib4
+	.size	inner_scale_ab_4x4_lib4, .-inner_scale_ab_4x4_lib4
 #endif
 #endif
 
@@ -2167,14 +2172,14 @@ _inner_blend_scale_ab_4x4_lib4:
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_BLEND_SCALE_11_4X4_LIB4
+	.macro INNER_SCALE_11_4X4_LIB4
 #else
 //	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_blend_scale_11_4x4_lib4, %function
-inner_blend_scale_11_4x4_lib4:
+	.type inner_scale_11_4x4_lib4, %function
+inner_scale_11_4x4_lib4:
 #elif defined(OS_MAC)
-_inner_blend_scale_11_4x4_lib4:
+_inner_scale_11_4x4_lib4:
 #endif
 #endif
 
@@ -2221,7 +2226,7 @@ _inner_blend_scale_11_4x4_lib4:
 	mov		pc, lr // return
 
 #if defined(OS_LINUX)
-	.size	inner_blend_scale_11_4x4_lib4, .-inner_blend_scale_11_4x4_lib4
+	.size	inner_scale_11_4x4_lib4, .-inner_scale_11_4x4_lib4
 #endif
 #endif
 
@@ -2408,12 +2413,12 @@ _kernel_dgemm_nt_4x4_lib4:
 	ldr		r6, [fp, #4] // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_AB_4X4_LIB4
+	INNER_SCALE_AB_4X4_LIB4
 #else
 #if defined(OS_LINUX)
-	bl inner_blend_scale_ab_4x4_lib4
+	bl inner_scale_ab_4x4_lib4
 #elif defined(OS_MAC)
-	bl _inner_blend_scale_ab_4x4_lib4
+	bl _inner_scale_ab_4x4_lib4
 #endif
 #endif
 
@@ -2532,12 +2537,12 @@ _kernel_dgemm_nn_4x4_lib4:
 	ldr		r6, [fp, #12] // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_AB_4X4_LIB4
+	INNER_SCALE_AB_4X4_LIB4
 #else
 #if defined(OS_LINUX)
-	bl inner_blend_scale_ab_4x4_lib4
+	bl inner_scale_ab_4x4_lib4
 #elif defined(OS_MAC)
-	bl _inner_blend_scale_ab_4x4_lib4
+	bl _inner_scale_ab_4x4_lib4
 #endif
 #endif
 
@@ -2643,12 +2648,12 @@ _kernel_dsyrk_nt_l_4x4_lib4:
 	ldr		r6, [fp, #4] // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_AB_4X4_LIB4
+	INNER_SCALE_AB_4X4_LIB4
 #else
 #if defined(OS_LINUX)
-	bl inner_blend_scale_ab_4x4_lib4
+	bl inner_scale_ab_4x4_lib4
 #elif defined(OS_MAC)
-	bl _inner_blend_scale_ab_4x4_lib4
+	bl _inner_scale_ab_4x4_lib4
 #endif
 #endif
 
@@ -2752,12 +2757,12 @@ _kernel_dtrsm_nt_rl_inv_4x4_lib4:
 	mov		r4, r3 // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_SCALE_11_4X4_LIB4
 #else
 #if defined(OS_LINUX)
-	bl inner_blend_scale_11_4x4_lib4
+	bl inner_scale_11_4x4_lib4
 #elif defined(OS_MAC)
-	bl _inner_blend_scale_11_4x4_lib4
+	bl _inner_scale_11_4x4_lib4
 #endif
 #endif
 
@@ -2876,12 +2881,12 @@ _kernel_dpotrf_nt_l_4x4_lib4:
 	mov		r4, r3 // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_SCALE_11_4X4_LIB4
 #else
 #if defined(OS_LINUX)
-	bl inner_blend_scale_11_4x4_lib4
+	bl inner_scale_11_4x4_lib4
 #elif defined(OS_MAC)
-	bl _inner_blend_scale_11_4x4_lib4
+	bl _inner_scale_11_4x4_lib4
 #endif
 #endif
 
@@ -3016,12 +3021,12 @@ _kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4:
 	ldr		r4, [fp, #8] // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_SCALE_11_4X4_LIB4
 #else
 #if defined(OS_LINUX)
-	bl inner_blend_scale_11_4x4_lib4
+	bl inner_scale_11_4x4_lib4
 #elif defined(OS_MAC)
-	bl _inner_blend_scale_11_4x4_lib4
+	bl _inner_scale_11_4x4_lib4
 #endif
 #endif
 
@@ -3157,12 +3162,12 @@ _kernel_dsyrk_dpotrf_nt_l_4x4_lib4:
 	ldr		r4, [fp, #8] // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_SCALE_11_4X4_LIB4
 #else
 #if defined(OS_LINUX)
-	bl inner_blend_scale_11_4x4_lib4
+	bl inner_scale_11_4x4_lib4
 #elif defined(OS_MAC)
-	bl _inner_blend_scale_11_4x4_lib4
+	bl _inner_scale_11_4x4_lib4
 #endif
 #endif
 
