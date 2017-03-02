@@ -40,6 +40,8 @@
 
 
 
+
+
 // subroutine
 //
 // input arguments:
@@ -81,7 +83,7 @@ _inner_kernel_sgecp_8_0_lib8:
 	vmovaps		-32(%r11), %ymm0
 	vmovaps		%ymm0, -32(%r12)
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up
@@ -174,7 +176,7 @@ _inner_kernel_sgecp_8_0_gen_lib8:
 	vmovaps		-32(%r11), %ymm0
 	vmaskmovps	%ymm0, %ymm15,  -32(%r12)
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up
@@ -300,7 +302,7 @@ _inner_kernel_sgecp_8_1_lib8:
 	vmovaps		%ymm0, -32(%r13)
 #endif
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up
@@ -424,7 +426,7 @@ _inner_kernel_sgecp_8_1_gen_lib8:
 	vblendps	$0x77, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up
@@ -530,7 +532,7 @@ _inner_kernel_sgecp_8_2_lib8:
 	vblendps	$0x33, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, -32(%r13)
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up
@@ -654,7 +656,7 @@ _inner_kernel_sgecp_8_2_gen_lib8:
 	vblendps	$0x33, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up
@@ -760,7 +762,7 @@ _inner_kernel_sgecp_8_3_lib8:
 	vblendps	$0x11, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, -32(%r13)
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up
@@ -884,7 +886,7 @@ _inner_kernel_sgecp_8_3_gen_lib8:
 	vblendps	$0x11, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up
@@ -978,7 +980,7 @@ _inner_kernel_sgecp_8_4_lib8:
 	vmovaps		%ymm0, 96(%r13)
 	addq		$128, %r13
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up
@@ -1087,7 +1089,7 @@ _inner_kernel_sgecp_8_4_gen_lib8:
 	vmaskmovps	%ymm0, %ymm15, 96(%r13)
 	addq		$128, %r13
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up
@@ -1190,7 +1192,7 @@ _inner_kernel_sgecp_8_5_lib8:
 	vblendps	$0x88, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, -32(%r13)
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up
@@ -1314,7 +1316,7 @@ _inner_kernel_sgecp_8_5_gen_lib8:
 	vblendps	$0x88, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up
@@ -1420,7 +1422,7 @@ _inner_kernel_sgecp_8_6_lib8:
 	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, -32(%r13)
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up
@@ -1544,7 +1546,7 @@ _inner_kernel_sgecp_8_6_gen_lib8:
 	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up
@@ -1650,7 +1652,7 @@ _inner_kernel_sgecp_8_7_lib8:
 	vblendps	$0xee, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, -32(%r13)
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up
@@ -1774,7 +1776,7 @@ _inner_kernel_sgecp_8_7_gen_lib8:
 	vblendps	$0xee, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
-	cmpl		$4, %r10d
+	cmpl		$3, %r10d
 	jg			1b // main loop 
 
 0: // consider clean-up

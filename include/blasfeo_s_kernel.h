@@ -79,6 +79,7 @@ void kernel_sgecp_8_7_lib8(int m, float *A, int sda, float *B);
 void kernel_sgecp_8_7_gen_lib8(int m, float *A, int sda, float *B, int m0, int m1);
 void kernel_sgesc_8_lib8(int m, float *alpha, float *A);
 void kernel_sgesc_8_gen_lib8(int m, float *alpha, float *A, int m0, int m1);
+void kernel_sgetr_8_lib8(int m, int offsetA, float *A, int sda, float *B);
 
 
 //

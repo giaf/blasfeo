@@ -38,7 +38,7 @@ OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/avx/kernel_dgecp_lib4.o ./auxiliary
 OBJS += ./auxiliary/s_aux_lib8.o
 # kernels
 OBJS += ./kernel/avx2/kernel_dgemm_12x4_lib4.o ./kernel/avx2/kernel_dgemm_8x4_lib4.o ./kernel/avx2/kernel_dgemm_4x4_lib4.o ./kernel/avx/kernel_dgemm_diag_lib4.o ./kernel/avx2/kernel_dgemv_8_lib4.o ./kernel/avx/kernel_dgemv_4_lib4.o ./kernel/avx2/kernel_dsymv_6_lib4.o ./kernel/c99/kernel_dsymv_4_lib4.o ./kernel/avx2/kernel_dgetrf_pivot_4_lib4.o
-OBJS += ./kernel/avx2/kernel_sgemm_24x4_lib8.o ./kernel/avx2/kernel_sgemm_16x4_lib8.o ./kernel/avx2/kernel_sgemm_8x8_lib8.o ./kernel/avx2/kernel_sgemm_8x4_lib8.o ./kernel/avx/kernel_sgecp_lib8.o ./kernel/avx/kernel_sgesc_lib8.o
+OBJS += ./kernel/avx2/kernel_sgemm_24x4_lib8.o ./kernel/avx2/kernel_sgemm_16x4_lib8.o ./kernel/avx2/kernel_sgemm_8x8_lib8.o ./kernel/avx2/kernel_sgemm_8x4_lib8.o ./kernel/avx/kernel_sgecp_lib8.o ./kernel/avx/kernel_sgetr_lib8.o ./kernel/avx/kernel_sgesc_lib8.o
 # blas
 OBJS += ./blas/d_blas1_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas3_lib4.o ./blas/d_blas3_diag_lib4.o ./blas/d_lapack_lib4.o
 OBJS += ./blas/s_blas3_lib8.o
@@ -50,7 +50,7 @@ OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/avx/kernel_dgecp_lib4.o ./auxiliary
 OBJS += ./auxiliary/s_aux_lib8.o
 # kernels
 OBJS += ./kernel/avx/kernel_dgemm_8x4_lib4.o ./kernel/avx/kernel_dgemm_4x4_lib4.o ./kernel/avx/kernel_dgemm_diag_lib4.o ./kernel/avx/kernel_dgemv_12_lib4.o ./kernel/avx/kernel_dgemv_8_lib4.o ./kernel/avx/kernel_dgemv_4_lib4.o ./kernel/avx/kernel_dsymv_6_lib4.o ./kernel/c99/kernel_dsymv_4_lib4.o ./kernel/avx/kernel_dgetrf_pivot_4_lib4.o
-OBJS += ./kernel/avx/kernel_sgemm_16x4_lib8.o ./kernel/avx/kernel_sgemm_8x8_lib8.o ./kernel/avx/kernel_sgemm_8x4_lib8.o ./kernel/avx/kernel_sgecp_lib8.o ./kernel/avx/kernel_sgesc_lib8.o
+OBJS += ./kernel/avx/kernel_sgemm_16x4_lib8.o ./kernel/avx/kernel_sgemm_8x8_lib8.o ./kernel/avx/kernel_sgemm_8x4_lib8.o ./kernel/avx/kernel_sgecp_lib8.o ./kernel/avx/kernel_sgetr_lib8.o ./kernel/avx/kernel_sgesc_lib8.o
 # blas
 OBJS += ./blas/d_blas1_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas3_lib4.o ./blas/d_blas3_diag_lib4.o ./blas/d_lapack_lib4.o
 OBJS += ./blas/s_blas3_lib8.o

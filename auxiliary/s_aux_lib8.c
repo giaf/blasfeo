@@ -77,15 +77,6 @@ void svecad_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_str
 
 
 
-// transpose general matrix; m and n are referred to the original matrix
-void sgetr_lib(int m, int n, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc)
-	{
-	printf("\nsgetr_lib: feature not implemented yet\n");
-	exit(1);
-	}
-
-
-
 // transpose lower triangular matrix
 void strtr_l_lib(int m, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc)
 	{
@@ -1994,15 +1985,36 @@ void sgead_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 
 
 // copy and transpose a generic strmat into a generic strmat
-void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
+void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj)
 	{
+
 	const int bs = 8;
+
 	int sda = sA->cn;
-	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	int sdc = sC->cn;
-	float *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	sgetr_lib(m, n, alpha, ai%bs, pA, sda, ci%bs, pC, sdc);
+	int sdb = sB->cn;
+	float *pA = sA->pA + ai/bs*bs*sda + aj*bs;
+	float *pB = sB->pA + bi/bs*bs*sdb + bj*bs;
+	int offsetA = ai%bs;
+	int offsetB = bi%bs;
+
+	int ii;
+
+	ii = 0;
+	if(offsetB>0)
+		{
+		// TODO
+		}
+	for( ; ii<n-7; ii+=8)
+		{
+		kernel_sgetr_8_lib8(m, offsetA, &pA[ii*bs], sda, &pB[ii*sdb]);
+		}
+	if(ii<n)
+		{
+		// TODO
+		}
+
 	return;
+
 	}
 
 
