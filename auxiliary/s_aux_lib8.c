@@ -1988,6 +1988,28 @@ void sgead_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj)
 	{
 
+	// early return
+	if(m==0 | n==0)
+		return;
+	
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** sgecp_libstr : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** sgecp_libstr : n<0 : %d<0 *****\n", n);
+	// non-negative offset
+	if(ai<0) printf("\n****** sgecp_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** sgecp_libstr : aj<0 : %d<0 *****\n", aj);
+	if(bi<0) printf("\n****** sgecp_libstr : bi<0 : %d<0 *****\n", bi);
+	if(bj<0) printf("\n****** sgecp_libstr : bj<0 : %d<0 *****\n", bj);
+	// inside matrix
+	// A: m x n
+	if(ai+m > sA->m) printf("\n***** sgecp_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** sgecp_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+	// B: n x m
+	if(bi+n > sB->m) printf("\n***** sgecp_libstr : bi+n > row(B) : %d+%d > %d *****\n", bi, n, sB->m);
+	if(bj+m > sB->n) printf("\n***** sgecp_libstr : bj+m > col(B) : %d+%d > %d *****\n", bj, m, sB->n);
+#endif
+
 	const int bs = 8;
 
 	int sda = sA->cn;
@@ -1999,18 +2021,134 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 
 	int ii;
 
-	ii = 0;
-	if(offsetB>0)
+	if(offsetA==0)
 		{
-		// TODO
+		ii = 0;
+		if(offsetB>0)
+			{
+			// TODO
+			}
+		for( ; ii<n-7; ii+=8)
+			{
+			kernel_sgetr_8_0_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb]);
+			}
+		if(ii<n)
+			{
+			kernel_sgetr_8_0_gen_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb], 0, n-ii);
+			}
 		}
-	for( ; ii<n-7; ii+=8)
+	// TODO log serach for offsetA>0 ???
+	else if(offsetA==1)
 		{
-		kernel_sgetr_8_lib8(m, offsetA, &pA[ii*bs], sda, &pB[ii*sdb]);
+		ii = 0;
+		if(offsetB>0)
+			{
+			// TODO
+			}
+		for( ; ii<n-7; ii+=8)
+			{
+			kernel_sgetr_8_1_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb]);
+			}
+		if(ii<n)
+			{
+			// TODO
+			}
 		}
-	if(ii<n)
+	else if(offsetA==2)
 		{
-		// TODO
+		ii = 0;
+		if(offsetB>0)
+			{
+			// TODO
+			}
+		for( ; ii<n-7; ii+=8)
+			{
+			kernel_sgetr_8_2_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb]);
+			}
+		if(ii<n)
+			{
+			// TODO
+			}
+		}
+	else if(offsetA==3)
+		{
+		ii = 0;
+		if(offsetB>0)
+			{
+			// TODO
+			}
+		for( ; ii<n-7; ii+=8)
+			{
+			kernel_sgetr_8_3_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb]);
+			}
+		if(ii<n)
+			{
+			// TODO
+			}
+		}
+	else if(offsetA==4)
+		{
+		ii = 0;
+		if(offsetB>0)
+			{
+			// TODO
+			}
+		for( ; ii<n-7; ii+=8)
+			{
+			kernel_sgetr_8_4_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb]);
+			}
+		if(ii<n)
+			{
+			// TODO
+			}
+		}
+	else if(offsetA==5)
+		{
+		ii = 0;
+		if(offsetB>0)
+			{
+			// TODO
+			}
+		for( ; ii<n-7; ii+=8)
+			{
+			kernel_sgetr_8_5_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb]);
+			}
+		if(ii<n)
+			{
+			// TODO
+			}
+		}
+	else if(offsetA==6)
+		{
+		ii = 0;
+		if(offsetB>0)
+			{
+			// TODO
+			}
+		for( ; ii<n-7; ii+=8)
+			{
+			kernel_sgetr_8_6_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb]);
+			}
+		if(ii<n)
+			{
+			// TODO
+			}
+		}
+	else if(offsetA==7)
+		{
+		ii = 0;
+		if(offsetB>0)
+			{
+			// TODO
+			}
+		for( ; ii<n-7; ii+=8)
+			{
+			kernel_sgetr_8_7_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb]);
+			}
+		if(ii<n)
+			{
+			// TODO
+			}
 		}
 
 	return;
