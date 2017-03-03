@@ -1994,20 +1994,20 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 	
 #if defined(DIM_CHECK)
 	// non-negative size
-	if(m<0) printf("\n****** sgecp_libstr : m<0 : %d<0 *****\n", m);
-	if(n<0) printf("\n****** sgecp_libstr : n<0 : %d<0 *****\n", n);
+	if(m<0) printf("\n****** sgetr_libstr : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** sgetr_libstr : n<0 : %d<0 *****\n", n);
 	// non-negative offset
-	if(ai<0) printf("\n****** sgecp_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** sgecp_libstr : aj<0 : %d<0 *****\n", aj);
-	if(bi<0) printf("\n****** sgecp_libstr : bi<0 : %d<0 *****\n", bi);
-	if(bj<0) printf("\n****** sgecp_libstr : bj<0 : %d<0 *****\n", bj);
+	if(ai<0) printf("\n****** sgetr_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** sgetr_libstr : aj<0 : %d<0 *****\n", aj);
+	if(bi<0) printf("\n****** sgetr_libstr : bi<0 : %d<0 *****\n", bi);
+	if(bj<0) printf("\n****** sgetr_libstr : bj<0 : %d<0 *****\n", bj);
 	// inside matrix
 	// A: m x n
-	if(ai+m > sA->m) printf("\n***** sgecp_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+n > sA->n) printf("\n***** sgecp_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+	if(ai+m > sA->m) printf("\n***** sgetr_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** sgetr_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
 	// B: n x m
-	if(bi+n > sB->m) printf("\n***** sgecp_libstr : bi+n > row(B) : %d+%d > %d *****\n", bi, n, sB->m);
-	if(bj+m > sB->n) printf("\n***** sgecp_libstr : bj+m > col(B) : %d+%d > %d *****\n", bj, m, sB->n);
+	if(bi+n > sB->m) printf("\n***** sgetr_libstr : bi+n > row(B) : %d+%d > %d *****\n", bi, n, sB->m);
+	if(bj+m > sB->n) printf("\n***** sgetr_libstr : bj+m > col(B) : %d+%d > %d *****\n", bj, m, sB->n);
 #endif
 
 	const int bs = 8;
@@ -2019,39 +2019,47 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 	int offsetA = ai%bs;
 	int offsetB = bi%bs;
 
-	int ii;
+	int ii, nna;
 
 	if(offsetA==0)
 		{
-		ii = 0;
 		if(offsetB>0)
 			{
-			// TODO
+			nna = bs-offsetB;
+			nna = n<nna ? n : nna;
+			kernel_sgetr_8_0_gen_lib8(m, &pA[0], sda, &pB[offsetB], nna);
+			n -= nna;
+			pA += nna*bs;
+			pB += 8*sdb;
 			}
-		for( ; ii<n-7; ii+=8)
+		for(ii=0; ii<n-7; ii+=8)
 			{
 			kernel_sgetr_8_0_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb]);
 			}
 		if(ii<n)
 			{
-			kernel_sgetr_8_0_gen_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb], 0, n-ii);
+			kernel_sgetr_8_0_gen_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb], n-ii);
 			}
 		}
 	// TODO log serach for offsetA>0 ???
 	else if(offsetA==1)
 		{
-		ii = 0;
 		if(offsetB>0)
 			{
-			// TODO
+			nna = bs-offsetB;
+			nna = n<nna ? n : nna;
+			kernel_sgetr_8_1_gen_lib8(m, &pA[0], sda, &pB[offsetB], nna);
+			n -= nna;
+			pA += nna*bs;
+			pB += 8*sdb;
 			}
-		for( ; ii<n-7; ii+=8)
+		for(ii=0; ii<n-7; ii+=8)
 			{
 			kernel_sgetr_8_1_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb]);
 			}
 		if(ii<n)
 			{
-			// TODO
+			kernel_sgetr_8_1_gen_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb], n-ii);
 			}
 		}
 	else if(offsetA==2)
@@ -2059,7 +2067,12 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 		ii = 0;
 		if(offsetB>0)
 			{
-			// TODO
+			nna = bs-offsetB;
+			nna = n<nna ? n : nna;
+			kernel_sgetr_8_2_gen_lib8(m, &pA[0], sda, &pB[offsetB], nna);
+			n -= nna;
+			pA += nna*bs;
+			pB += 8*sdb;
 			}
 		for( ; ii<n-7; ii+=8)
 			{
@@ -2067,7 +2080,7 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 			}
 		if(ii<n)
 			{
-			// TODO
+			kernel_sgetr_8_2_gen_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb], n-ii);
 			}
 		}
 	else if(offsetA==3)
@@ -2075,7 +2088,12 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 		ii = 0;
 		if(offsetB>0)
 			{
-			// TODO
+			nna = bs-offsetB;
+			nna = n<nna ? n : nna;
+			kernel_sgetr_8_3_gen_lib8(m, &pA[0], sda, &pB[offsetB], nna);
+			n -= nna;
+			pA += nna*bs;
+			pB += 8*sdb;
 			}
 		for( ; ii<n-7; ii+=8)
 			{
@@ -2083,7 +2101,7 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 			}
 		if(ii<n)
 			{
-			// TODO
+			kernel_sgetr_8_3_gen_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb], n-ii);
 			}
 		}
 	else if(offsetA==4)
@@ -2091,7 +2109,12 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 		ii = 0;
 		if(offsetB>0)
 			{
-			// TODO
+			nna = bs-offsetB;
+			nna = n<nna ? n : nna;
+			kernel_sgetr_8_4_gen_lib8(m, &pA[0], sda, &pB[offsetB], nna);
+			n -= nna;
+			pA += nna*bs;
+			pB += 8*sdb;
 			}
 		for( ; ii<n-7; ii+=8)
 			{
@@ -2099,7 +2122,7 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 			}
 		if(ii<n)
 			{
-			// TODO
+			kernel_sgetr_8_4_gen_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb], n-ii);
 			}
 		}
 	else if(offsetA==5)
@@ -2107,7 +2130,12 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 		ii = 0;
 		if(offsetB>0)
 			{
-			// TODO
+			nna = bs-offsetB;
+			nna = n<nna ? n : nna;
+			kernel_sgetr_8_5_gen_lib8(m, &pA[0], sda, &pB[offsetB], nna);
+			n -= nna;
+			pA += nna*bs;
+			pB += 8*sdb;
 			}
 		for( ; ii<n-7; ii+=8)
 			{
@@ -2115,7 +2143,7 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 			}
 		if(ii<n)
 			{
-			// TODO
+			kernel_sgetr_8_5_gen_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb], n-ii);
 			}
 		}
 	else if(offsetA==6)
@@ -2123,7 +2151,12 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 		ii = 0;
 		if(offsetB>0)
 			{
-			// TODO
+			nna = bs-offsetB;
+			nna = n<nna ? n : nna;
+			kernel_sgetr_8_6_gen_lib8(m, &pA[0], sda, &pB[offsetB], nna);
+			n -= nna;
+			pA += nna*bs;
+			pB += 8*sdb;
 			}
 		for( ; ii<n-7; ii+=8)
 			{
@@ -2131,7 +2164,7 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 			}
 		if(ii<n)
 			{
-			// TODO
+			kernel_sgetr_8_6_gen_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb], n-ii);
 			}
 		}
 	else if(offsetA==7)
@@ -2139,7 +2172,12 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 		ii = 0;
 		if(offsetB>0)
 			{
-			// TODO
+			nna = bs-offsetB;
+			nna = n<nna ? n : nna;
+			kernel_sgetr_8_7_gen_lib8(m, &pA[0], sda, &pB[offsetB], nna);
+			n -= nna;
+			pA += nna*bs;
+			pB += 8*sdb;
 			}
 		for( ; ii<n-7; ii+=8)
 			{
@@ -2147,7 +2185,7 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 			}
 		if(ii<n)
 			{
-			// TODO
+			kernel_sgetr_8_7_gen_lib8(m, &pA[ii*bs], sda, &pB[ii*sdb], n-ii);
 			}
 		}
 

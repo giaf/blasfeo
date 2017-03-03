@@ -222,8 +222,7 @@ _inner_kernel_sgetr_8_lib8:
 // r11    <- A
 // r12    <- 8*sda*sizeof(float)
 // r13    <- B
-// r14d   <- m0
-// r15d   <- m1
+// r14d   <- m1
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGETR_8_GEN_LIB8
@@ -239,23 +238,6 @@ _inner_kernel_sgetr_8_gen_lib8:
 	
 	cmpl	$0, %r10d
 	jle		2f // return
-
-	// compute mask for rows
-	vcvtsi2ss	%r14d, %xmm14, %xmm14
-	vcvtsi2ss	%r15d, %xmm15, %xmm15
-#if defined(OS_LINUX)
-	vmovups		.LC00(%rip), %ymm12
-#elif defined(OS_MAC)
-	vmovups		LC00(%rip), %ymm12
-#endif
-	vshufps		$0x00, %xmm14, %xmm14, %xmm14
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
-	vsubps		%ymm12, %ymm14, %ymm14
-	vsubps		%ymm15, %ymm12, %ymm15
-	vandps		%ymm14, %ymm15, %ymm15
-	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
 
 	cmpl	$7, %r10d
 	jle		0f // consider clean-up
@@ -418,19 +400,78 @@ _inner_kernel_sgetr_8_gen_lib8:
 // r11    <- A
 // r12    <- 8*sda*sizeof(float)
 // r13    <- B
+// r14d   <- m1
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_SGETR_8_1_LIB8
+	.macro INNER_EDGE_SGETR_8_0_GEN_LIB8
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_edge_sgetr_8_1_lib8, @function
-inner_edge_sgetr_8_1_lib8:
+	.type inner_edge_sgetr_8_0_gen_lib8, @function
+inner_edge_sgetr_8_0_gen_lib8:
 #elif defined(OS_MAC)
-_inner_edge_sgetr_8_1_lib8:
+_inner_edge_sgetr_8_0_gen_lib8:
 #endif
 #endif
 	
+	// compute mask for rows
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm15, %ymm12, %ymm15
+	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_sgetr_8_0_gen_lib8, .-inner_edge_sgetr_8_0_gen_lib8
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r10d   <- k
+// r11    <- A
+// r12    <- 8*sda*sizeof(float)
+// r13    <- B
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_SGETR_8_1_GEN_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_sgetr_8_1_gen_lib8, @function
+inner_edge_sgetr_8_1_gen_lib8:
+#elif defined(OS_MAC)
+_inner_edge_sgetr_8_1_gen_lib8:
+#endif
+#endif
+	
+	// compute mask for rows
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm15, %ymm12, %ymm15
+	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
@@ -460,46 +501,48 @@ _inner_edge_sgetr_8_1_lib8:
 	vshufps		$0xee, %ymm11, %ymm9, %ymm6
 	vshufps		$0xee, %ymm15, %ymm13, %ymm7
 
+	vmovupd		-32(%rsp), %ymm9
+
 	// 0
 	// 1
 	vperm2f128	$0x20, %ymm3, %ymm2, %ymm8
-	vmovaps		%ymm8, 0(%r13)
+	vmaskmovps	%ymm8, %ymm9, 0(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 2
 	vperm2f128	$0x20, %ymm5, %ymm4, %ymm8
-	vmovaps		%ymm8, 32(%r13)
+	vmaskmovps	%ymm8, %ymm9, 32(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 3
 	vperm2f128	$0x20, %ymm7, %ymm6, %ymm8
-	vmovaps		%ymm8, 64(%r13)
+	vmaskmovps	%ymm8, %ymm9, 64(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 4
 	vperm2f128	$0x31, %ymm1, %ymm0, %ymm8
-	vmovaps		%ymm8, 96(%r13)
+	vmaskmovps	%ymm8, %ymm9, 96(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 5
 	vperm2f128	$0x31, %ymm3, %ymm2, %ymm8
-	vmovaps		%ymm8, 128(%r13)
+	vmaskmovps	%ymm8, %ymm9, 128(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 6
 	vperm2f128	$0x31, %ymm5, %ymm4, %ymm8
-	vmovaps		%ymm8, 160(%r13)
+	vmaskmovps	%ymm8, %ymm9, 160(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 7
 	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
-	vmovaps		%ymm8, 192(%r13)
+	vmaskmovps	%ymm8, %ymm9, 192(%r13)
 	subl	$1, %r10d
 
 	addq	%r12, %r11 // A+bs*sda*sizeof(float)
@@ -523,7 +566,7 @@ _inner_edge_sgetr_8_1_lib8:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_sgetr_8_1_lib8, .-inner_edge_sgetr_8_1_lib8
+	.size	inner_edge_sgetr_8_1_gen_lib8, .-inner_edge_sgetr_8_1_gen_lib8
 #endif
 #endif
 
@@ -540,17 +583,29 @@ _inner_edge_sgetr_8_1_lib8:
 // r13    <- B
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_SGETR_8_2_LIB8
+	.macro INNER_EDGE_SGETR_8_2_GEN_LIB8
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_edge_sgetr_8_2_lib8, @function
-inner_edge_sgetr_8_2_lib8:
+	.type inner_edge_sgetr_8_2_gen_lib8, @function
+inner_edge_sgetr_8_2_gen_lib8:
 #elif defined(OS_MAC)
-_inner_edge_sgetr_8_2_lib8:
+_inner_edge_sgetr_8_2_gen_lib8:
 #endif
 #endif
 	
+	// compute mask for rows
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm15, %ymm12, %ymm15
+	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
@@ -580,41 +635,43 @@ _inner_edge_sgetr_8_2_lib8:
 	vshufps		$0xee, %ymm11, %ymm9, %ymm6
 	vshufps		$0xee, %ymm15, %ymm13, %ymm7
 
+	vmovupd		-32(%rsp), %ymm9
+
 	// 0
 	// 1
 	// 2
 	vperm2f128	$0x20, %ymm5, %ymm4, %ymm8
-	vmovaps		%ymm8, 0(%r13)
+	vmaskmovps	%ymm8, %ymm9, 0(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 3
 	vperm2f128	$0x20, %ymm7, %ymm6, %ymm8
-	vmovaps		%ymm8, 32(%r13)
+	vmaskmovps	%ymm8, %ymm9, 32(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 4
 	vperm2f128	$0x31, %ymm1, %ymm0, %ymm8
-	vmovaps		%ymm8, 64(%r13)
+	vmaskmovps	%ymm8, %ymm9, 64(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 5
 	vperm2f128	$0x31, %ymm3, %ymm2, %ymm8
-	vmovaps		%ymm8, 96(%r13)
+	vmaskmovps	%ymm8, %ymm9, 96(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 6
 	vperm2f128	$0x31, %ymm5, %ymm4, %ymm8
-	vmovaps		%ymm8, 128(%r13)
+	vmaskmovps	%ymm8, %ymm9, 128(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 7
 	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
-	vmovaps		%ymm8, 160(%r13)
+	vmaskmovps	%ymm8, %ymm9, 160(%r13)
 	subl	$1, %r10d
 
 	addq	%r12, %r11 // A+bs*sda*sizeof(float)
@@ -638,7 +695,7 @@ _inner_edge_sgetr_8_2_lib8:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_sgetr_8_2_lib8, .-inner_edge_sgetr_8_2_lib8
+	.size	inner_edge_sgetr_8_2_gen_lib8, .-inner_edge_sgetr_8_2_gen_lib8
 #endif
 #endif
 
@@ -655,17 +712,29 @@ _inner_edge_sgetr_8_2_lib8:
 // r13    <- B
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_SGETR_8_3_LIB8
+	.macro INNER_EDGE_SGETR_8_3_GEN_LIB8
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_edge_sgetr_8_3_lib8, @function
-inner_edge_sgetr_8_3_lib8:
+	.type inner_edge_sgetr_8_3_gen_lib8, @function
+inner_edge_sgetr_8_3_gen_lib8:
 #elif defined(OS_MAC)
-_inner_edge_sgetr_8_3_lib8:
+_inner_edge_sgetr_8_3_gen_lib8:
 #endif
 #endif
 	
+	// compute mask for rows
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm15, %ymm12, %ymm15
+	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
@@ -695,36 +764,38 @@ _inner_edge_sgetr_8_3_lib8:
 	vshufps		$0xee, %ymm11, %ymm9, %ymm6
 	vshufps		$0xee, %ymm15, %ymm13, %ymm7
 
+	vmovupd		-32(%rsp), %ymm9
+
 	// 0
 	// 1
 	// 2
 	// 3
 	vperm2f128	$0x20, %ymm7, %ymm6, %ymm8
-	vmovaps		%ymm8, 0(%r13)
+	vmaskmovps	%ymm8, %ymm9, 0(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 4
 	vperm2f128	$0x31, %ymm1, %ymm0, %ymm8
-	vmovaps		%ymm8, 32(%r13)
+	vmaskmovps	%ymm8, %ymm9, 32(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 5
 	vperm2f128	$0x31, %ymm3, %ymm2, %ymm8
-	vmovaps		%ymm8, 64(%r13)
+	vmaskmovps	%ymm8, %ymm9, 64(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 6
 	vperm2f128	$0x31, %ymm5, %ymm4, %ymm8
-	vmovaps		%ymm8, 96(%r13)
+	vmaskmovps	%ymm8, %ymm9, 96(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 7
 	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
-	vmovaps		%ymm8, 128(%r13)
+	vmaskmovps	%ymm8, %ymm9, 128(%r13)
 	subl	$1, %r10d
 
 	addq	%r12, %r11 // A+bs*sda*sizeof(float)
@@ -748,7 +819,7 @@ _inner_edge_sgetr_8_3_lib8:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_sgetr_8_3_lib8, .-inner_edge_sgetr_8_3_lib8
+	.size	inner_edge_sgetr_8_3_gen_lib8, .-inner_edge_sgetr_8_3_gen_lib8
 #endif
 #endif
 
@@ -765,17 +836,29 @@ _inner_edge_sgetr_8_3_lib8:
 // r13    <- B
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_SGETR_8_4_LIB8
+	.macro INNER_EDGE_SGETR_8_4_GEN_LIB8
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_edge_sgetr_8_4_lib8, @function
-inner_edge_sgetr_8_4_lib8:
+	.type inner_edge_sgetr_8_4_gen_lib8, @function
+inner_edge_sgetr_8_4_gen_lib8:
 #elif defined(OS_MAC)
-_inner_edge_sgetr_8_4_lib8:
+_inner_edge_sgetr_8_4_gen_lib8:
 #endif
 #endif
 	
+	// compute mask for rows
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm15, %ymm12, %ymm15
+	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
@@ -805,31 +888,33 @@ _inner_edge_sgetr_8_4_lib8:
 	vshufps		$0xee, %ymm11, %ymm9, %ymm6
 	vshufps		$0xee, %ymm15, %ymm13, %ymm7
 
+	vmovupd		-32(%rsp), %ymm9
+
 	// 0
 	// 1
 	// 2
 	// 3
 	// 4
 	vperm2f128	$0x31, %ymm1, %ymm0, %ymm8
-	vmovaps		%ymm8, 0(%r13)
+	vmaskmovps	%ymm8, %ymm9, 0(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 5
 	vperm2f128	$0x31, %ymm3, %ymm2, %ymm8
-	vmovaps		%ymm8, 32(%r13)
+	vmaskmovps	%ymm8, %ymm9, 32(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 6
 	vperm2f128	$0x31, %ymm5, %ymm4, %ymm8
-	vmovaps		%ymm8, 64(%r13)
+	vmaskmovps	%ymm8, %ymm9, 64(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 7
 	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
-	vmovaps		%ymm8, 96(%r13)
+	vmaskmovps	%ymm8, %ymm9, 96(%r13)
 	subl	$1, %r10d
 
 	addq	%r12, %r11 // A+bs*sda*sizeof(float)
@@ -853,7 +938,7 @@ _inner_edge_sgetr_8_4_lib8:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_sgetr_8_4_lib8, .-inner_edge_sgetr_8_4_lib8
+	.size	inner_edge_sgetr_8_4_gen_lib8, .-inner_edge_sgetr_8_4_gen_lib8
 #endif
 #endif
 
@@ -870,17 +955,29 @@ _inner_edge_sgetr_8_4_lib8:
 // r13    <- B
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_SGETR_8_5_LIB8
+	.macro INNER_EDGE_SGETR_8_5_GEN_LIB8
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_edge_sgetr_8_5_lib8, @function
-inner_edge_sgetr_8_5_lib8:
+	.type inner_edge_sgetr_8_5_gen_lib8, @function
+inner_edge_sgetr_8_5_gen_lib8:
 #elif defined(OS_MAC)
-_inner_edge_sgetr_8_5_lib8:
+_inner_edge_sgetr_8_5_gen_lib8:
 #endif
 #endif
 	
+	// compute mask for rows
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm15, %ymm12, %ymm15
+	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
@@ -910,6 +1007,8 @@ _inner_edge_sgetr_8_5_lib8:
 	vshufps		$0xee, %ymm11, %ymm9, %ymm6
 	vshufps		$0xee, %ymm15, %ymm13, %ymm7
 
+	vmovupd		-32(%rsp), %ymm9
+
 	// 0
 	// 1
 	// 2
@@ -917,19 +1016,19 @@ _inner_edge_sgetr_8_5_lib8:
 	// 4
 	// 5
 	vperm2f128	$0x31, %ymm3, %ymm2, %ymm8
-	vmovaps		%ymm8, 0(%r13)
+	vmaskmovps	%ymm8, %ymm9, 0(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 6
 	vperm2f128	$0x31, %ymm5, %ymm4, %ymm8
-	vmovaps		%ymm8, 32(%r13)
+	vmaskmovps	%ymm8, %ymm9, 32(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 7
 	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
-	vmovaps		%ymm8, 64(%r13)
+	vmaskmovps	%ymm8, %ymm9, 64(%r13)
 	subl	$1, %r10d
 
 	addq	%r12, %r11 // A+bs*sda*sizeof(float)
@@ -953,7 +1052,7 @@ _inner_edge_sgetr_8_5_lib8:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_sgetr_8_5_lib8, .-inner_edge_sgetr_8_5_lib8
+	.size	inner_edge_sgetr_8_5_gen_lib8, .-inner_edge_sgetr_8_5_gen_lib8
 #endif
 #endif
 
@@ -970,17 +1069,29 @@ _inner_edge_sgetr_8_5_lib8:
 // r13    <- B
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_SGETR_8_6_LIB8
+	.macro INNER_EDGE_SGETR_8_6_GEN_LIB8
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_edge_sgetr_8_6_lib8, @function
-inner_edge_sgetr_8_6_lib8:
+	.type inner_edge_sgetr_8_6_gen_lib8, @function
+inner_edge_sgetr_8_6_gen_lib8:
 #elif defined(OS_MAC)
-_inner_edge_sgetr_8_6_lib8:
+_inner_edge_sgetr_8_6_gen_lib8:
 #endif
 #endif
 	
+	// compute mask for rows
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm15, %ymm12, %ymm15
+	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
@@ -1010,6 +1121,8 @@ _inner_edge_sgetr_8_6_lib8:
 	vshufps		$0xee, %ymm11, %ymm9, %ymm6
 	vshufps		$0xee, %ymm15, %ymm13, %ymm7
 
+	vmovupd		-32(%rsp), %ymm9
+
 	// 0
 	// 1
 	// 2
@@ -1018,13 +1131,13 @@ _inner_edge_sgetr_8_6_lib8:
 	// 5
 	// 6
 	vperm2f128	$0x31, %ymm5, %ymm4, %ymm8
-	vmovaps		%ymm8, 0(%r13)
+	vmaskmovps	%ymm8, %ymm9, 0(%r13)
 	subl	$1, %r10d
 	cmpl	$0, %r10d
 	jle		3f
 	// 7
 	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
-	vmovaps		%ymm8, 32(%r13)
+	vmaskmovps	%ymm8, %ymm9, 32(%r13)
 	subl	$1, %r10d
 
 	addq	%r12, %r11 // A+bs*sda*sizeof(float)
@@ -1048,7 +1161,7 @@ _inner_edge_sgetr_8_6_lib8:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_sgetr_8_6_lib8, .-inner_edge_sgetr_8_6_lib8
+	.size	inner_edge_sgetr_8_6_gen_lib8, .-inner_edge_sgetr_8_6_gen_lib8
 #endif
 #endif
 
@@ -1065,17 +1178,29 @@ _inner_edge_sgetr_8_6_lib8:
 // r13    <- B
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_SGETR_8_7_LIB8
+	.macro INNER_EDGE_SGETR_8_7_GEN_LIB8
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_edge_sgetr_8_7_lib8, @function
-inner_edge_sgetr_8_7_lib8:
+	.type inner_edge_sgetr_8_7_gen_lib8, @function
+inner_edge_sgetr_8_7_gen_lib8:
 #elif defined(OS_MAC)
-_inner_edge_sgetr_8_7_lib8:
+_inner_edge_sgetr_8_7_gen_lib8:
 #endif
 #endif
 	
+	// compute mask for rows
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
+#if defined(OS_LINUX)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm15, %ymm12, %ymm15
+	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
@@ -1105,6 +1230,8 @@ _inner_edge_sgetr_8_7_lib8:
 	vshufps		$0xee, %ymm11, %ymm9, %ymm6
 	vshufps		$0xee, %ymm15, %ymm13, %ymm7
 
+	vmovupd		-32(%rsp), %ymm9
+
 	// 0
 	// 1
 	// 2
@@ -1114,7 +1241,7 @@ _inner_edge_sgetr_8_7_lib8:
 	// 6
 	// 7
 	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
-	vmovaps		%ymm8, 0(%r13)
+	vmaskmovps	%ymm8, %ymm9, 0(%r13)
 	subl	$1, %r10d
 
 	addq	%r12, %r11 // A+bs*sda*sizeof(float)
@@ -1138,7 +1265,7 @@ _inner_edge_sgetr_8_7_lib8:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_sgetr_8_7_lib8, .-inner_edge_sgetr_8_7_lib8
+	.size	inner_edge_sgetr_8_7_gen_lib8, .-inner_edge_sgetr_8_7_gen_lib8
 #endif
 #endif
 
@@ -1213,8 +1340,8 @@ _kernel_sgetr_8_0_lib8:
 
 
 
-//                                rdi    rsi       rdx      rcx       r8      r9
-// void kernel_sgetr_8_0_gen_lib8(int k, float *A, int sda, float *B, int m0, int m1);
+//                                rdi    rsi       rdx      rcx       r8
+// void kernel_sgetr_8_0_gen_lib8(int k, float *A, int sda, float *B, int m1);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1245,10 +1372,19 @@ _kernel_sgetr_8_0_gen_lib8:
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 8*sda*sizeof(float)
 	movq	%rcx, %r13  // B
-	movl	%r8d, %r14d  // m0
-	movl	%r9d, %r15d  // m1
+	movl	%r8d, %r14d  // m1
 
-	// offsetA==0: no edge
+	// offsetA==0: edge to compute mask
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_SGETR_8_0_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_edge_sgetr_8_0_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_sgetr_8_0_gen_lib8
+#endif
+#endif
 
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_GEN_LIB8
@@ -1314,16 +1450,17 @@ _kernel_sgetr_8_1_lib8:
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 8*sda*sizeof(float)
 	movq	%rcx, %r13  // B
+	movl	$8, %r14d  // m1
 
 	// offsetA==1
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_SGETR_8_1_LIB8
+	INNER_EDGE_SGETR_8_1_GEN_LIB8
 #else
 #if defined(OS_LINUX)
-	call inner_edge_sgetr_8_1_lib8
+	call inner_edge_sgetr_8_1_gen_lib8
 #elif defined(OS_MAC)
-	callq _inner_edge_sgetr_8_1_lib8
+	callq _inner_edge_sgetr_8_1_gen_lib8
 #endif
 #endif
 
@@ -1353,6 +1490,84 @@ _kernel_sgetr_8_1_lib8:
 
 #if defined(OS_LINUX)
 	.size	kernel_sgetr_8_1_lib8, .-kernel_sgetr_8_1_lib8
+#endif
+
+
+
+
+
+//                                rdi    rsi       rdx      rcx       r8
+// void kernel_sgetr_8_1_gen_lib8(int k, float *A, int sda, float *B, int m1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgetr_8_1_gen_lib8
+	.type kernel_sgetr_8_1_gen_lib8, @function
+kernel_sgetr_8_1_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgetr_8_1_gen_lib8
+_kernel_sgetr_8_1_gen_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d // sda
+	sall	$5, %r12d // 8*sda*sizeof(float)
+	movq	%rcx, %r13  // B
+	movl	%r8d, %r14d  // m1
+
+	// offsetA==1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_SGETR_8_1_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_edge_sgetr_8_1_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_sgetr_8_1_gen_lib8
+#endif
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SGETR_8_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgetr_8_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgetr_8_gen_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgetr_8_1_gen_lib8, .-kernel_sgetr_8_1_gen_lib8
 #endif
 
 
@@ -1391,16 +1606,17 @@ _kernel_sgetr_8_2_lib8:
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 8*sda*sizeof(float)
 	movq	%rcx, %r13  // B
+	movl	$8, %r14d  // m1
 
 	// offsetA==1
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_SGETR_8_2_LIB8
+	INNER_EDGE_SGETR_8_2_GEN_LIB8
 #else
 #if defined(OS_LINUX)
-	call inner_edge_sgetr_8_2_lib8
+	call inner_edge_sgetr_8_2_gen_lib8
 #elif defined(OS_MAC)
-	callq _inner_edge_sgetr_8_2_lib8
+	callq _inner_edge_sgetr_8_2_gen_lib8
 #endif
 #endif
 
@@ -1430,6 +1646,84 @@ _kernel_sgetr_8_2_lib8:
 
 #if defined(OS_LINUX)
 	.size	kernel_sgetr_8_2_lib8, .-kernel_sgetr_8_2_lib8
+#endif
+
+
+
+
+
+//                                rdi    rsi       rdx      rcx       r8
+// void kernel_sgetr_8_2_gen_lib8(int k, float *A, int sda, float *B, int m1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgetr_8_2_gen_lib8
+	.type kernel_sgetr_8_2_gen_lib8, @function
+kernel_sgetr_8_2_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgetr_8_2_gen_lib8
+_kernel_sgetr_8_2_gen_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d // sda
+	sall	$5, %r12d // 8*sda*sizeof(float)
+	movq	%rcx, %r13  // B
+	movl	%r8d, %r14d  // m1
+
+	// offsetA==1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_SGETR_8_2_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_edge_sgetr_8_2_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_sgetr_8_2_gen_lib8
+#endif
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SGETR_8_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgetr_8_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgetr_8_gen_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgetr_8_2_gen_lib8, .-kernel_sgetr_8_2_gen_lib8
 #endif
 
 
@@ -1468,16 +1762,17 @@ _kernel_sgetr_8_3_lib8:
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 8*sda*sizeof(float)
 	movq	%rcx, %r13  // B
+	movl	$8, %r14d  // m1
 
 	// offsetA==1
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_SGETR_8_3_LIB8
+	INNER_EDGE_SGETR_8_3_GEN_LIB8
 #else
 #if defined(OS_LINUX)
-	call inner_edge_sgetr_8_3_lib8
+	call inner_edge_sgetr_8_3_gen_lib8
 #elif defined(OS_MAC)
-	callq _inner_edge_sgetr_8_3_lib8
+	callq _inner_edge_sgetr_8_3_gen_lib8
 #endif
 #endif
 
@@ -1507,6 +1802,84 @@ _kernel_sgetr_8_3_lib8:
 
 #if defined(OS_LINUX)
 	.size	kernel_sgetr_8_3_lib8, .-kernel_sgetr_8_3_lib8
+#endif
+
+
+
+
+
+//                                rdi    rsi       rdx      rcx       r8
+// void kernel_sgetr_8_3_gen_lib8(int k, float *A, int sda, float *B, int m1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgetr_8_3_gen_lib8
+	.type kernel_sgetr_8_3_gen_lib8, @function
+kernel_sgetr_8_3_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgetr_8_3_gen_lib8
+_kernel_sgetr_8_3_gen_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d // sda
+	sall	$5, %r12d // 8*sda*sizeof(float)
+	movq	%rcx, %r13  // B
+	movl	%r8d, %r14d  // m1
+
+	// offsetA==1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_SGETR_8_3_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_edge_sgetr_8_3_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_sgetr_8_3_gen_lib8
+#endif
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SGETR_8_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgetr_8_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgetr_8_gen_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgetr_8_3_gen_lib8, .-kernel_sgetr_8_3_gen_lib8
 #endif
 
 
@@ -1545,16 +1918,17 @@ _kernel_sgetr_8_4_lib8:
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 8*sda*sizeof(float)
 	movq	%rcx, %r13  // B
+	movl	$8, %r14d  // m1
 
 	// offsetA==1
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_SGETR_8_4_LIB8
+	INNER_EDGE_SGETR_8_4_GEN_LIB8
 #else
 #if defined(OS_LINUX)
-	call inner_edge_sgetr_8_4_lib8
+	call inner_edge_sgetr_8_4_gen_lib8
 #elif defined(OS_MAC)
-	callq _inner_edge_sgetr_8_4_lib8
+	callq _inner_edge_sgetr_8_4_gen_lib8
 #endif
 #endif
 
@@ -1584,6 +1958,84 @@ _kernel_sgetr_8_4_lib8:
 
 #if defined(OS_LINUX)
 	.size	kernel_sgetr_8_4_lib8, .-kernel_sgetr_8_4_lib8
+#endif
+
+
+
+
+
+//                                rdi    rsi       rdx      rcx       r8
+// void kernel_sgetr_8_4_gen_lib8(int k, float *A, int sda, float *B, int m1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgetr_8_4_gen_lib8
+	.type kernel_sgetr_8_4_gen_lib8, @function
+kernel_sgetr_8_4_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgetr_8_4_gen_lib8
+_kernel_sgetr_8_4_gen_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d // sda
+	sall	$5, %r12d // 8*sda*sizeof(float)
+	movq	%rcx, %r13  // B
+	movl	%r8d, %r14d  // m1
+
+	// offsetA==1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_SGETR_8_4_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_edge_sgetr_8_4_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_sgetr_8_4_gen_lib8
+#endif
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SGETR_8_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgetr_8_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgetr_8_gen_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgetr_8_4_gen_lib8, .-kernel_sgetr_8_4_gen_lib8
 #endif
 
 
@@ -1622,16 +2074,17 @@ _kernel_sgetr_8_5_lib8:
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 8*sda*sizeof(float)
 	movq	%rcx, %r13  // B
+	movl	$8, %r14d  // m1
 
 	// offsetA==1
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_SGETR_8_5_LIB8
+	INNER_EDGE_SGETR_8_5_GEN_LIB8
 #else
 #if defined(OS_LINUX)
-	call inner_edge_sgetr_8_5_lib8
+	call inner_edge_sgetr_8_5_gen_lib8
 #elif defined(OS_MAC)
-	callq _inner_edge_sgetr_8_5_lib8
+	callq _inner_edge_sgetr_8_5_gen_lib8
 #endif
 #endif
 
@@ -1661,6 +2114,84 @@ _kernel_sgetr_8_5_lib8:
 
 #if defined(OS_LINUX)
 	.size	kernel_sgetr_8_5_lib8, .-kernel_sgetr_8_5_lib8
+#endif
+
+
+
+
+
+//                                rdi    rsi       rdx      rcx       r8
+// void kernel_sgetr_8_5_gen_lib8(int k, float *A, int sda, float *B, int m1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgetr_8_5_gen_lib8
+	.type kernel_sgetr_8_5_gen_lib8, @function
+kernel_sgetr_8_5_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgetr_8_5_gen_lib8
+_kernel_sgetr_8_5_gen_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d // sda
+	sall	$5, %r12d // 8*sda*sizeof(float)
+	movq	%rcx, %r13  // B
+	movl	%r8d, %r14d  // m1
+
+	// offsetA==1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_SGETR_8_5_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_edge_sgetr_8_5_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_sgetr_8_5_gen_lib8
+#endif
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SGETR_8_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgetr_8_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgetr_8_gen_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgetr_8_5_gen_lib8, .-kernel_sgetr_8_5_gen_lib8
 #endif
 
 
@@ -1699,16 +2230,17 @@ _kernel_sgetr_8_6_lib8:
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 8*sda*sizeof(float)
 	movq	%rcx, %r13  // B
+	movl	$8, %r14d  // m1
 
 	// offsetA==1
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_SGETR_8_6_LIB8
+	INNER_EDGE_SGETR_8_6_GEN_LIB8
 #else
 #if defined(OS_LINUX)
-	call inner_edge_sgetr_8_6_lib8
+	call inner_edge_sgetr_8_6_gen_lib8
 #elif defined(OS_MAC)
-	callq _inner_edge_sgetr_8_6_lib8
+	callq _inner_edge_sgetr_8_6_gen_lib8
 #endif
 #endif
 
@@ -1738,6 +2270,84 @@ _kernel_sgetr_8_6_lib8:
 
 #if defined(OS_LINUX)
 	.size	kernel_sgetr_8_6_lib8, .-kernel_sgetr_8_6_lib8
+#endif
+
+
+
+
+
+//                                rdi    rsi       rdx      rcx       r8
+// void kernel_sgetr_8_6_gen_lib8(int k, float *A, int sda, float *B, int m1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgetr_8_6_gen_lib8
+	.type kernel_sgetr_8_6_gen_lib8, @function
+kernel_sgetr_8_6_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgetr_8_6_gen_lib8
+_kernel_sgetr_8_6_gen_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d // sda
+	sall	$5, %r12d // 8*sda*sizeof(float)
+	movq	%rcx, %r13  // B
+	movl	%r8d, %r14d  // m1
+
+	// offsetA==1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_SGETR_8_6_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_edge_sgetr_8_6_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_sgetr_8_6_gen_lib8
+#endif
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SGETR_8_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgetr_8_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgetr_8_gen_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgetr_8_6_gen_lib8, .-kernel_sgetr_8_6_gen_lib8
 #endif
 
 
@@ -1776,16 +2386,17 @@ _kernel_sgetr_8_7_lib8:
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 8*sda*sizeof(float)
 	movq	%rcx, %r13  // B
+	movl	$8, %r14d  // m1
 
 	// offsetA==1
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_SGETR_8_7_LIB8
+	INNER_EDGE_SGETR_8_7_GEN_LIB8
 #else
 #if defined(OS_LINUX)
-	call inner_edge_sgetr_8_7_lib8
+	call inner_edge_sgetr_8_7_gen_lib8
 #elif defined(OS_MAC)
-	callq _inner_edge_sgetr_8_7_lib8
+	callq _inner_edge_sgetr_8_7_gen_lib8
 #endif
 #endif
 
@@ -1815,6 +2426,84 @@ _kernel_sgetr_8_7_lib8:
 
 #if defined(OS_LINUX)
 	.size	kernel_sgetr_8_7_lib8, .-kernel_sgetr_8_7_lib8
+#endif
+
+
+
+
+
+//                                rdi    rsi       rdx      rcx       r8
+// void kernel_sgetr_8_7_gen_lib8(int k, float *A, int sda, float *B, int m1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgetr_8_7_gen_lib8
+	.type kernel_sgetr_8_7_gen_lib8, @function
+kernel_sgetr_8_7_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgetr_8_7_gen_lib8
+_kernel_sgetr_8_7_gen_lib8:
+#endif
+	
+	// prologue
+
+	subq	$STACKSIZE, %rsp
+	movq	%rbx,   (%rsp)
+	movq	%rbp,  8(%rsp)
+	movq	%r12, 16(%rsp)
+	movq	%r13, 24(%rsp)
+	movq	%r14, 32(%rsp)
+	movq	%r15, 40(%rsp)
+
+	vzeroupper
+
+	// call inner dgemm kernel nt
+
+	movl	%edi, %r10d // k
+	movq	%rsi, %r11  // A
+	movl	%edx, %r12d // sda
+	sall	$5, %r12d // 8*sda*sizeof(float)
+	movq	%rcx, %r13  // B
+	movl	%r8d, %r14d  // m1
+
+	// offsetA==1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_SGETR_8_7_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_edge_sgetr_8_7_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_sgetr_8_7_gen_lib8
+#endif
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SGETR_8_GEN_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgetr_8_gen_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgetr_8_gen_lib8
+#endif
+#endif
+
+	// epilogue
+
+	vzeroupper
+
+	movq	  (%rsp), %rbx 
+	movq	 8(%rsp), %rbp
+	movq	16(%rsp), %r12 
+	movq	24(%rsp), %r13 
+	movq	32(%rsp), %r14 
+	movq	40(%rsp), %r15 
+	addq	$STACKSIZE, %rsp
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgetr_8_7_gen_lib8, .-kernel_sgetr_8_7_gen_lib8
 #endif
 
 
