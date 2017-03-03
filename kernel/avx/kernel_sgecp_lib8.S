@@ -161,20 +161,20 @@ _inner_kernel_sgecp_8_0_gen_lib8:
 	.p2align 3
 1: // main loop
 
-	vmovaps		0(%r11), %ymm0
-	vmaskmovps	%ymm0, %ymm15,  0(%r12)
+	vmovups		0(%r11), %ymm0
+	vmaskmovps	%ymm0, %ymm15, 0(%r12)
 	subl		$4, %r10d
 
-	vmovaps		32(%r11), %ymm0
-	vmaskmovps	%ymm0, %ymm15,  32(%r12)
+	vmovups		32(%r11), %ymm0
+	vmaskmovps	%ymm0, %ymm15, 32(%r12)
 	addq		$128, %r11
 
-	vmovaps		-64(%r11), %ymm0
-	vmaskmovps	%ymm0, %ymm15,  64(%r12)
+	vmovups		-64(%r11), %ymm0
+	vmaskmovps	%ymm0, %ymm15, 64(%r12)
 	addq		$128, %r12
 
-	vmovaps		-32(%r11), %ymm0
-	vmaskmovps	%ymm0, %ymm15,  -32(%r12)
+	vmovups		-32(%r11), %ymm0
+	vmaskmovps	%ymm0, %ymm15, -32(%r12)
 
 	cmpl		$3, %r10d
 	jg			1b // main loop 
@@ -185,8 +185,8 @@ _inner_kernel_sgecp_8_0_gen_lib8:
 
 3: // clean-up loop
 
-	vmovaps		0(%r11), %ymm0
-	vmaskmovps	%ymm0, %ymm15,  0(%r12)
+	vmovups		0(%r11), %ymm0
+	vmaskmovps	%ymm0, %ymm15, 0(%r12)
 	subl		$1, %r10d
 	addq		$32, %r11
 	addq		$32, %r12

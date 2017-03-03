@@ -1755,12 +1755,25 @@ void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_st
 		{
 		if(offsetB>0)
 			{
-			mna = bs-offsetB;
-			mna = m<mna ? m : mna;
-			kernel_sgecp_8_1_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
-			m -= mna;
-			pA += 8*sda;
-			pB += 8*sdb;
+			if(offsetB>offsetA)
+				{
+				mna = bs-offsetB;
+				mna = m<mna ? m : mna;
+				kernel_sgecp_8_0_gen_lib8(n, &pA[offsetA], &pB[offsetB], 0, mna);
+				m -= mna;
+				//pA += 8*sda;
+				pB += 8*sdb;
+				}
+			else
+				{
+				mna = bs-offsetB;
+				mna = m<mna ? m : mna;
+				kernel_sgecp_8_1_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
+//				kernel_sgecp_8_2_gen_lib8(n, pA, sda, pB+offsetB, 0, 0+mna);
+				m -= mna;
+				pA += 8*sda;
+				pB += 8*sdb;
+				}
 			}
 		ii = 0;
 		for( ; ii<m-7; ii+=8)
@@ -1779,12 +1792,24 @@ void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_st
 		{
 		if(offsetB>0)
 			{
-			mna = bs-offsetB;
-			mna = m<mna ? m : mna;
-			kernel_sgecp_8_2_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
-			m -= mna;
-			pA += 8*sda;
-			pB += 8*sdb;
+			if(offsetB>offsetA)
+				{
+				mna = bs-offsetB;
+				mna = m<mna ? m : mna;
+				kernel_sgecp_8_0_gen_lib8(n, &pA[offsetA], &pB[offsetB], 0, mna);
+				m -= mna;
+				//pA += 8*sda;
+				pB += 8*sdb;
+				}
+			else
+				{
+				mna = bs-offsetB;
+				mna = m<mna ? m : mna;
+				kernel_sgecp_8_2_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
+				m -= mna;
+				pA += 8*sda;
+				pB += 8*sdb;
+				}
 			}
 		ii = 0;
 		for( ; ii<m-7; ii+=8)
@@ -1804,12 +1829,24 @@ void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_st
 		{
 		if(offsetB>0)
 			{
-			mna = bs-offsetB;
-			mna = m<mna ? m : mna;
-			kernel_sgecp_8_3_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
-			m -= mna;
-			pA += 8*sda;
-			pB += 8*sdb;
+			if(offsetB>offsetA)
+				{
+				mna = bs-offsetB;
+				mna = m<mna ? m : mna;
+				kernel_sgecp_8_0_gen_lib8(n, &pA[offsetA], &pB[offsetB], 0, mna);
+				m -= mna;
+				//pA += 8*sda;
+				pB += 8*sdb;
+				}
+			else
+				{
+				mna = bs-offsetB;
+				mna = m<mna ? m : mna;
+				kernel_sgecp_8_3_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
+				m -= mna;
+				pA += 8*sda;
+				pB += 8*sdb;
+				}
 			}
 		ii = 0;
 		for( ; ii<m-7; ii+=8)
@@ -1829,12 +1866,24 @@ void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_st
 		{
 		if(offsetB>0)
 			{
-			mna = bs-offsetB;
-			mna = m<mna ? m : mna;
-			kernel_sgecp_8_4_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
-			m -= mna;
-			pA += 8*sda;
-			pB += 8*sdb;
+			if(offsetB>offsetA)
+				{
+				mna = bs-offsetB;
+				mna = m<mna ? m : mna;
+				kernel_sgecp_8_0_gen_lib8(n, &pA[offsetA], &pB[offsetB], 0, mna);
+				m -= mna;
+				//pA += 8*sda;
+				pB += 8*sdb;
+				}
+			else
+				{
+				mna = bs-offsetB;
+				mna = m<mna ? m : mna;
+				kernel_sgecp_8_4_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
+				m -= mna;
+				pA += 8*sda;
+				pB += 8*sdb;
+				}
 			}
 		ii = 0;
 		for( ; ii<m-7; ii+=8)
@@ -1854,12 +1903,24 @@ void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_st
 		{
 		if(offsetB>0)
 			{
-			mna = bs-offsetB;
-			mna = m<mna ? m : mna;
-			kernel_sgecp_8_5_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
-			m -= mna;
-			pA += 8*sda;
-			pB += 8*sdb;
+			if(offsetB>offsetA)
+				{
+				mna = bs-offsetB;
+				mna = m<mna ? m : mna;
+				kernel_sgecp_8_0_gen_lib8(n, &pA[offsetA], &pB[offsetB], 0, mna);
+				m -= mna;
+				//pA += 8*sda;
+				pB += 8*sdb;
+				}
+			else
+				{
+				mna = bs-offsetB;
+				mna = m<mna ? m : mna;
+				kernel_sgecp_8_5_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
+				m -= mna;
+				pA += 8*sda;
+				pB += 8*sdb;
+				}
 			}
 		ii = 0;
 		for( ; ii<m-7; ii+=8)
@@ -1879,12 +1940,24 @@ void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_st
 		{
 		if(offsetB>0)
 			{
-			mna = bs-offsetB;
-			mna = m<mna ? m : mna;
-			kernel_sgecp_8_6_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
-			m -= mna;
-			pA += 8*sda;
-			pB += 8*sdb;
+			if(offsetB>offsetA)
+				{
+				mna = bs-offsetB;
+				mna = m<mna ? m : mna;
+				kernel_sgecp_8_0_gen_lib8(n, &pA[offsetA], &pB[offsetB], 0, mna);
+				m -= mna;
+				//pA += 8*sda;
+				pB += 8*sdb;
+				}
+			else
+				{
+				mna = bs-offsetB;
+				mna = m<mna ? m : mna;
+				kernel_sgecp_8_6_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
+				m -= mna;
+				pA += 8*sda;
+				pB += 8*sdb;
+				}
 			}
 		ii = 0;
 		for( ; ii<m-7; ii+=8)
@@ -1904,12 +1977,24 @@ void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_st
 		{
 		if(offsetB>0)
 			{
-			mna = bs-offsetB;
-			mna = m<mna ? m : mna;
-			kernel_sgecp_8_7_gen_lib8(n, pA, sda, pB, offsetB, offsetB+mna);
-			m -= mna;
-			pA += 8*sda;
-			pB += 8*sdb;
+			if(offsetB>offsetA)
+				{
+				mna = bs-offsetB;
+				mna = m<mna ? m : mna;
+				kernel_sgecp_8_0_gen_lib8(n, &pA[offsetA], &pB[offsetB], 0, mna);
+				m -= mna;
+				//pA += 8*sda;
+				pB += 8*sdb;
+				}
+			else
+				{
+				mna = bs-offsetB;
+				mna = m<mna ? m : mna;
+				kernel_sgecp_8_7_gen_lib8(n, &pA[0], sda, pB, offsetB, offsetB+mna);
+				m -= mna;
+				pA += 8*sda;
+				pB += 8*sdb;
+				}
 			}
 		ii = 0;
 		for( ; ii<m-7; ii+=8)
