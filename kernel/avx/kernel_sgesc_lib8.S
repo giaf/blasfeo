@@ -126,8 +126,7 @@ _inner_kernel_sgesc_8_lib8:
 // r10d   <- k
 // r11    <- alpha
 // r12    <- A
-// r13d   <- m0
-// r14d   <- m1
+// r13d   <- m1
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGESC_8_GEN_LIB8
@@ -142,20 +141,15 @@ _inner_kernel_sgesc_8_gen_lib8:
 #endif
 	
 	// compute mask for rows
-	vcvtsi2ss	%r13d, %xmm14, %xmm14
-	vcvtsi2ss	%r14d, %xmm15, %xmm15
+	vcvtsi2ss	%r13d, %xmm15, %xmm15
 #if defined(OS_LINUX)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm14, %xmm14, %xmm14
 	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
 	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
-	vsubps		%ymm12, %ymm14, %ymm14
 	vsubps		%ymm15, %ymm12, %ymm15
-	vandps		%ymm14, %ymm15, %ymm15
 
 	vbroadcastss	0(%r11), %ymm14
 
@@ -281,8 +275,8 @@ _kernel_sgesc_8_lib8:
 
 
 
-//                              rdi    rsi           rdx       rcx     r8
-// void kernel_sgecp_8_gen_lib8(int k, float *alpha, float *A, int m0, int m1);
+//                              rdi    rsi           rdx       rcx
+// void kernel_sgecp_8_gen_lib8(int k, float *alpha, float *A, int m1);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -311,8 +305,7 @@ _kernel_sgesc_8_gen_lib8:
 	movl	%edi, %r10d // k
 	movq	%rsi, %r11  // alpha
 	movq	%rdx, %r12  // A
-	movl	%ecx, %r14d // m0
-	movl	%r8d, %r15d // m1
+	movl	%ecx, %r14d // m1
 
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGESC_8_GEN_LIB8

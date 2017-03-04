@@ -1666,19 +1666,19 @@ void sgesc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 		{
 		mna = bs-offsetA;
 		mna = m<mna ? m : mna;
-		kernel_sgesc_8_gen_lib8(n, &alpha, pA, offsetA, offsetA+mna);
+		kernel_sgesc_8_gen_lib8(n, &alpha, &pA[offsetA], mna);
 		m -= mna;
 		pA += 8*sda;
 		}
 	ii = 0;
 	for( ; ii<m-7; ii+=8)
 		{
-		kernel_sgesc_8_lib8(n, &alpha, pA);
+		kernel_sgesc_8_lib8(n, &alpha, &pA[0]);
 		pA += 8*sda;
 		}
 	if(ii<m)
 		{
-		kernel_sgesc_8_gen_lib8(n, &alpha, pA, 0, m-ii);
+		kernel_sgesc_8_gen_lib8(n, &alpha, &pA[0], m-ii);
 		}
 
 	return;
