@@ -62,7 +62,7 @@ int main()
 
 	int ii, jj;
 
-	int n = 24;
+	int n = 8;
 
 	//
 	// matrices in column-major format
@@ -101,15 +101,25 @@ int main()
 	s_allocate_strmat(n, n, &sD);
 	s_cvt_mat2strmat(n, n, D, n, &sD, 0, 0);
 
+	struct s_strvec sx;
+	s_allocate_strvec(n, &sx);
+
 	//
 	// tests
 	//
 
-//	sgemm_nt_libstr(n, n, n, 1.0, &sB, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-	sgecp_libstr(16, 9, &sA, 7, 0, &sD, 0, 0);
+//	sgemm_nt_libstr(n, n, n, 0.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
+	float alpha = 1.0;
+	float beta = 1.0;
+	kernel_ssyrk_nt_l_8x8_lib8(n, &alpha, sA.pA, sA.pA, &beta, sB.pA, sD.pA);
+//	sgecp_libstr(16, 16, &sA, 2, 0, &sD, 1, 0);
+//	sgetr_libstr(16, 16, &sA, 2, 0, &sD, 2, 0);
 	s_print_strmat(n, n, &sD, 0, 0);
-	sgesc_libstr(16, 9, 2.0, &sD, 0, 0);
+//	sgesc_libstr(16, 9, 2.0, &sD, 0, 0);
+//	s_print_strmat(n, n, &sD, 0, 0);
+	kernel_spotrf_nt_l_8x8_lib8(0, sD.pA, sD.pA, sD.pA, sD.pA, sx.pa);
 	s_print_strmat(n, n, &sD, 0, 0);
+	s_print_tran_strvec(n, &sx, 0);
 
 
 
