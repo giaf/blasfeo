@@ -123,8 +123,7 @@ _inner_kernel_sgecp_8_0_lib8:
 // r10d   <- k
 // r11    <- A
 // r12    <- B
-// r13d   <- m0
-// r14d   <- m1
+// r13d   <- m1
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGECP_8_0_GEN_LIB8
@@ -139,20 +138,15 @@ _inner_kernel_sgecp_8_0_gen_lib8:
 #endif
 	
 	// compute mask for rows
-	vcvtsi2ss	%r13d, %xmm14, %xmm14
-	vcvtsi2ss	%r14d, %xmm15, %xmm15
+	vcvtsi2ss	%r13d, %xmm15, %xmm15
 #if defined(OS_LINUX)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm14, %xmm14, %xmm14
 	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
 	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
-	vsubps		%ymm12, %ymm14, %ymm14
 	vsubps		%ymm15, %ymm12, %ymm15
-	vandps		%ymm14, %ymm15, %ymm15
 
 	cmpl	$3, %r10d
 	jle		0f // consider clean-up
@@ -349,8 +343,7 @@ _inner_kernel_sgecp_8_1_lib8:
 // r11    <- A
 // r12d   <- 8*sda*sizeof(float)
 // r13    <- B
-// r14d   <- m0
-// r15d   <- m1
+// r14d   <- m1
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGECP_8_1_GEN_LIB8
@@ -365,20 +358,15 @@ _inner_kernel_sgecp_8_1_gen_lib8:
 #endif
 	
 	// compute mask for rows
-	vcvtsi2ss	%r14d, %xmm14, %xmm14
-	vcvtsi2ss	%r15d, %xmm15, %xmm15
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm14, %xmm14, %xmm14
 	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
 	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
-	vsubps		%ymm12, %ymm14, %ymm14
 	vsubps		%ymm15, %ymm12, %ymm15
-	vandps		%ymm14, %ymm15, %ymm15
 
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
@@ -579,8 +567,7 @@ _inner_kernel_sgecp_8_2_lib8:
 // r11    <- A
 // r12d   <- 8*sda*sizeof(float)
 // r13    <- B
-// r14d   <- m0
-// r15d   <- m1
+// r14d   <- m1
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGECP_8_2_GEN_LIB8
@@ -595,20 +582,15 @@ _inner_kernel_sgecp_8_2_gen_lib8:
 #endif
 	
 	// compute mask for rows
-	vcvtsi2ss	%r14d, %xmm14, %xmm14
-	vcvtsi2ss	%r15d, %xmm15, %xmm15
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm14, %xmm14, %xmm14
 	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
 	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
-	vsubps		%ymm12, %ymm14, %ymm14
 	vsubps		%ymm15, %ymm12, %ymm15
-	vandps		%ymm14, %ymm15, %ymm15
 
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
@@ -809,8 +791,7 @@ _inner_kernel_sgecp_8_3_lib8:
 // r11    <- A
 // r12d   <- 8*sda*sizeof(float)
 // r13    <- B
-// r14d   <- m0
-// r15d   <- m1
+// r14d   <- m1
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGECP_8_3_GEN_LIB8
@@ -825,20 +806,15 @@ _inner_kernel_sgecp_8_3_gen_lib8:
 #endif
 	
 	// compute mask for rows
-	vcvtsi2ss	%r14d, %xmm14, %xmm14
-	vcvtsi2ss	%r15d, %xmm15, %xmm15
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm14, %xmm14, %xmm14
 	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
 	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
-	vsubps		%ymm12, %ymm14, %ymm14
 	vsubps		%ymm15, %ymm12, %ymm15
-	vandps		%ymm14, %ymm15, %ymm15
 
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
@@ -1024,8 +1000,7 @@ _inner_kernel_sgecp_8_4_lib8:
 // r11    <- A
 // r12d   <- 8*sda*sizeof(float)
 // r13    <- B
-// r14d   <- m0
-// r15d   <- m1
+// r14d   <- m1
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGECP_8_4_GEN_LIB8
@@ -1040,20 +1015,15 @@ _inner_kernel_sgecp_8_4_gen_lib8:
 #endif
 	
 	// compute mask for rows
-	vcvtsi2ss	%r14d, %xmm14, %xmm14
-	vcvtsi2ss	%r15d, %xmm15, %xmm15
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm14, %xmm14, %xmm14
 	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
 	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
-	vsubps		%ymm12, %ymm14, %ymm14
 	vsubps		%ymm15, %ymm12, %ymm15
-	vandps		%ymm14, %ymm15, %ymm15
 
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
@@ -1239,8 +1209,7 @@ _inner_kernel_sgecp_8_5_lib8:
 // r11    <- A
 // r12d   <- 8*sda*sizeof(float)
 // r13    <- B
-// r14d   <- m0
-// r15d   <- m1
+// r14d   <- m1
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGECP_8_5_GEN_LIB8
@@ -1255,20 +1224,15 @@ _inner_kernel_sgecp_8_5_gen_lib8:
 #endif
 	
 	// compute mask for rows
-	vcvtsi2ss	%r14d, %xmm14, %xmm14
-	vcvtsi2ss	%r15d, %xmm15, %xmm15
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm14, %xmm14, %xmm14
 	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
 	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
-	vsubps		%ymm12, %ymm14, %ymm14
 	vsubps		%ymm15, %ymm12, %ymm15
-	vandps		%ymm14, %ymm15, %ymm15
 
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
@@ -1469,8 +1433,7 @@ _inner_kernel_sgecp_8_6_lib8:
 // r11    <- A
 // r12d   <- 8*sda*sizeof(float)
 // r13    <- B
-// r14d   <- m0
-// r15d   <- m1
+// r14d   <- m1
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGECP_8_6_GEN_LIB8
@@ -1485,20 +1448,15 @@ _inner_kernel_sgecp_8_6_gen_lib8:
 #endif
 	
 	// compute mask for rows
-	vcvtsi2ss	%r14d, %xmm14, %xmm14
-	vcvtsi2ss	%r15d, %xmm15, %xmm15
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm14, %xmm14, %xmm14
 	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
 	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
-	vsubps		%ymm12, %ymm14, %ymm14
 	vsubps		%ymm15, %ymm12, %ymm15
-	vandps		%ymm14, %ymm15, %ymm15
 
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
@@ -1699,8 +1657,7 @@ _inner_kernel_sgecp_8_7_lib8:
 // r11    <- A
 // r12d   <- 8*sda*sizeof(float)
 // r13    <- B
-// r14d   <- m0
-// r15d   <- m1
+// r14d   <- m1
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGECP_8_7_GEN_LIB8
@@ -1715,20 +1672,15 @@ _inner_kernel_sgecp_8_7_gen_lib8:
 #endif
 	
 	// compute mask for rows
-	vcvtsi2ss	%r14d, %xmm14, %xmm14
-	vcvtsi2ss	%r15d, %xmm15, %xmm15
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm14, %xmm14, %xmm14
 	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
 	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
-	vsubps		%ymm12, %ymm14, %ymm14
 	vsubps		%ymm15, %ymm12, %ymm15
-	vandps		%ymm14, %ymm15, %ymm15
 
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
@@ -1879,8 +1831,8 @@ _kernel_sgecp_8_0_lib8:
 
 
 
-//                                  rdi    rsi       rdx       rcx     r8
-// void kernel_sgecp_8_0_gen_lib8(int k, float *A, float *B, int m0, int m1);
+//                                  rdi    rsi       rdx       rcx
+// void kernel_sgecp_8_0_gen_lib8(int k, float *A, float *B, int m1);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1909,8 +1861,7 @@ _kernel_sgecp_8_0_gen_lib8:
 	movl	%edi, %r10d // k
 	movq	%rsi, %r11  // A
 	movq	%rdx, %r12  // B
-	movl	%ecx, %r13d // m0
-	movl	%r8d, %r14d // m1
+	movl	%ecx, %r13d // m1
 
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_0_GEN_LIB8
@@ -2009,8 +1960,8 @@ _kernel_sgecp_8_1_lib8:
 
 
 
-//                                  rdi    rsi       rdx      rcx       r8      r9
-// void kernel_sgecp_8_1_gen_lib8(int k, float *A, int sda, float *B, int m0, int m1);
+//                                  rdi    rsi       rdx      rcx       r8
+// void kernel_sgecp_8_1_gen_lib8(int k, float *A, int sda, float *B, int m0);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2041,8 +1992,7 @@ _kernel_sgecp_8_1_gen_lib8:
 	movl	%edx, %r12d  // 8*sda*sizeof(float)
 	sall	$5, %r12d
 	movq	%rcx, %r13  // B
-	movl	%r8d, %r14d // m0
-	movl	%r9d, %r15d // m1
+	movl	%r8d, %r14d // m1
 
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_1_GEN_LIB8
@@ -2141,8 +2091,8 @@ _kernel_sgecp_8_2_lib8:
 
 
 
-//                                  rdi    rsi       rdx      rcx       r8      r9
-// void kernel_sgecp_8_2_gen_lib8(int k, float *A, int sda, float *B, int m0, int m1);
+//                                  rdi    rsi       rdx      rcx       r8
+// void kernel_sgecp_8_2_gen_lib8(int k, float *A, int sda, float *B, int m0);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2173,8 +2123,7 @@ _kernel_sgecp_8_2_gen_lib8:
 	movl	%edx, %r12d  // 8*sda*sizeof(float)
 	sall	$5, %r12d
 	movq	%rcx, %r13  // B
-	movl	%r8d, %r14d // m0
-	movl	%r9d, %r15d // m1
+	movl	%r8d, %r14d // m1
 
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_2_GEN_LIB8
@@ -2273,8 +2222,8 @@ _kernel_sgecp_8_3_lib8:
 
 
 
-//                                  rdi    rsi       rdx      rcx       r8      r9
-// void kernel_sgecp_8_3_gen_lib8(int k, float *A, int sda, float *B, int m0, int m1);
+//                                  rdi    rsi       rdx      rcx       r8
+// void kernel_sgecp_8_3_gen_lib8(int k, float *A, int sda, float *B, int m0);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2305,8 +2254,7 @@ _kernel_sgecp_8_3_gen_lib8:
 	movl	%edx, %r12d  // 8*sda*sizeof(float)
 	sall	$5, %r12d
 	movq	%rcx, %r13  // B
-	movl	%r8d, %r14d // m0
-	movl	%r9d, %r15d // m1
+	movl	%r8d, %r14d // m1
 
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_3_GEN_LIB8
@@ -2405,8 +2353,8 @@ _kernel_sgecp_8_4_lib8:
 
 
 
-//                                  rdi    rsi       rdx      rcx       r8      r9
-// void kernel_sgecp_8_4_gen_lib8(int k, float *A, int sda, float *B, int m0, int m1);
+//                                  rdi    rsi       rdx      rcx       r8
+// void kernel_sgecp_8_4_gen_lib8(int k, float *A, int sda, float *B, int m0);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2437,8 +2385,7 @@ _kernel_sgecp_8_4_gen_lib8:
 	movl	%edx, %r12d  // 8*sda*sizeof(float)
 	sall	$5, %r12d
 	movq	%rcx, %r13  // B
-	movl	%r8d, %r14d // m0
-	movl	%r9d, %r15d // m1
+	movl	%r8d, %r14d // m1
 
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_4_GEN_LIB8
@@ -2537,8 +2484,8 @@ _kernel_sgecp_8_5_lib8:
 
 
 
-//                                  rdi    rsi       rdx      rcx       r8      r9
-// void kernel_sgecp_8_5_gen_lib8(int k, float *A, int sda, float *B, int m0, int m1);
+//                                  rdi    rsi       rdx      rcx       r8
+// void kernel_sgecp_8_5_gen_lib8(int k, float *A, int sda, float *B, int m0);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2569,8 +2516,7 @@ _kernel_sgecp_8_5_gen_lib8:
 	movl	%edx, %r12d  // 8*sda*sizeof(float)
 	sall	$5, %r12d
 	movq	%rcx, %r13  // B
-	movl	%r8d, %r14d // m0
-	movl	%r9d, %r15d // m1
+	movl	%r8d, %r14d // m1
 
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_5_GEN_LIB8
@@ -2669,8 +2615,8 @@ _kernel_sgecp_8_6_lib8:
 
 
 
-//                                  rdi    rsi       rdx      rcx       r8      r9
-// void kernel_sgecp_8_6_gen_lib8(int k, float *A, int sda, float *B, int m0, int m1);
+//                                  rdi    rsi       rdx      rcx       r8
+// void kernel_sgecp_8_6_gen_lib8(int k, float *A, int sda, float *B, int m0);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2701,8 +2647,7 @@ _kernel_sgecp_8_6_gen_lib8:
 	movl	%edx, %r12d  // 8*sda*sizeof(float)
 	sall	$5, %r12d
 	movq	%rcx, %r13  // B
-	movl	%r8d, %r14d // m0
-	movl	%r9d, %r15d // m1
+	movl	%r8d, %r14d // m1
 
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_6_GEN_LIB8
@@ -2801,8 +2746,8 @@ _kernel_sgecp_8_7_lib8:
 
 
 
-//                                  rdi    rsi       rdx      rcx       r8      r9
-// void kernel_sgecp_8_7_gen_lib8(int k, float *A, int sda, float *B, int m0, int m1);
+//                                  rdi    rsi       rdx      rcx       r8
+// void kernel_sgecp_8_7_gen_lib8(int k, float *A, int sda, float *B, int m0);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2833,8 +2778,7 @@ _kernel_sgecp_8_7_gen_lib8:
 	movl	%edx, %r12d  // 8*sda*sizeof(float)
 	sall	$5, %r12d
 	movq	%rcx, %r13  // B
-	movl	%r8d, %r14d // m0
-	movl	%r9d, %r15d // m1
+	movl	%r8d, %r14d // m1
 
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_7_GEN_LIB8
