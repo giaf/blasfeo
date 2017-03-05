@@ -121,8 +121,8 @@ void dpotrf_nt_l_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, dou
 				}
 			else // dpotrf
 				{
-//				if(j<n-7)
-				if(0)
+				if(j<n-7)
+//				if(0)
 					{
 					kernel_dpotrf_nt_l_8x4_lib4(j, &pD[i*sdd], sdd, &pD[j*sdd], &pC[j*bs+j*sdc], sdc, &pD[j*bs+j*sdd], sdd, &inv_diag_D[j]);
 					kernel_dpotrf_nt_l_4x4_lib4(j+4, &pD[(i+4)*sdd], &pD[(j+4)*sdd], &pC[(j+4)*bs+(i+4)*sdc], &pD[(j+4)*bs+(i+4)*sdd], &inv_diag_D[j+4]);
