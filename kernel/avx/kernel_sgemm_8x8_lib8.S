@@ -1460,12 +1460,31 @@ _inner_edge_spotrf_8x8_lib8:
 	vpermilps	$0x00, %xmm13, %xmm13
 	vinsertf128	$0x1, %xmm13, %ymm13, %ymm13
 	vmulps		%ymm0, %ymm13, %ymm0
-
-
-	vpermilps	$0x55, %xmm0, %xmm13
-	vinsertf128	$0x1, %xmm13, %ymm13, %ymm13
+	vperm2f128	$0x00, %ymm0, %ymm0, %ymm11
+	vpermilps	$0x55, %ymm11, %ymm13
 	vmulps		%ymm0, %ymm13, %ymm12
 	vsubps		%ymm12, %ymm1, %ymm1
+	vpermilps	$0xaa, %ymm11, %ymm13
+	vmulps		%ymm0, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm2, %ymm2
+	vpermilps	$0xff, %ymm11, %ymm13
+	vmulps		%ymm0, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm3, %ymm3
+	vperm2f128	$0x11, %ymm0, %ymm0, %ymm11
+	vpermilps	$0x00, %ymm11, %ymm13
+	vmulps		%ymm0, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm4, %ymm4
+	vpermilps	$0x55, %ymm11, %ymm13
+	vmulps		%ymm0, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm5, %ymm5
+	vpermilps	$0xaa, %ymm11, %ymm13
+	vmulps		%ymm0, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm6, %ymm6
+	vpermilps	$0xff, %ymm11, %ymm13
+	vmulps		%ymm0, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm7, %ymm7
+
+
 	vpermilps	$0x55, %xmm1, %xmm13
 	vucomiss	%xmm15, %xmm13 // d_11 > 0.0 ?
 	jbe			3f
@@ -1476,16 +1495,28 @@ _inner_edge_spotrf_8x8_lib8:
 	vpermilps	$0x00, %xmm13, %xmm13
 	vinsertf128	$0x1, %xmm13, %ymm13, %ymm13
 	vmulps		%ymm1, %ymm13, %ymm1
-
-
-	vpermilps	$0xaa, %xmm0, %xmm13
-	vinsertf128	$0x1, %xmm13, %ymm13, %ymm13
-	vmulps		%ymm0, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm2, %ymm2
-	vpermilps	$0xaa, %xmm1, %xmm13
-	vinsertf128	$0x1, %xmm13, %ymm13, %ymm13
+	vperm2f128	$0x00, %ymm1, %ymm1, %ymm11
+	vpermilps	$0xaa, %ymm11, %ymm13
 	vmulps		%ymm1, %ymm13, %ymm12
 	vsubps		%ymm12, %ymm2, %ymm2
+	vpermilps	$0xff, %ymm11, %ymm13
+	vmulps		%ymm1, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm3, %ymm3
+	vperm2f128	$0x11, %ymm1, %ymm1, %ymm11
+	vpermilps	$0x00, %ymm11, %ymm13
+	vmulps		%ymm1, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm4, %ymm4
+	vpermilps	$0x55, %ymm11, %ymm13
+	vmulps		%ymm1, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm5, %ymm5
+	vpermilps	$0xaa, %ymm11, %ymm13
+	vmulps		%ymm1, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm6, %ymm6
+	vpermilps	$0xff, %ymm11, %ymm13
+	vmulps		%ymm1, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm7, %ymm7
+
+
 	vpermilps	$0xaa, %xmm2, %xmm13
 	vucomiss	%xmm15, %xmm13 // d_22 > 0.0 ?
 	jbe			5f
@@ -1496,20 +1527,25 @@ _inner_edge_spotrf_8x8_lib8:
 	vpermilps	$0x00, %xmm13, %xmm13
 	vinsertf128	$0x1, %xmm13, %ymm13, %ymm13
 	vmulps		%ymm2, %ymm13, %ymm2
-
-
-	vpermilps	$0xff, %xmm0, %xmm13
-	vinsertf128	$0x1, %xmm13, %ymm13, %ymm13
-	vmulps		%ymm0, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm3, %ymm3
-	vpermilps	$0xff, %xmm1, %xmm13
-	vinsertf128	$0x1, %xmm13, %ymm13, %ymm13
-	vmulps		%ymm1, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm3, %ymm3
-	vpermilps	$0xff, %xmm2, %xmm13
-	vinsertf128	$0x1, %xmm13, %ymm13, %ymm13
+	vperm2f128	$0x00, %ymm2, %ymm2, %ymm11
+	vpermilps	$0xff, %ymm11, %ymm13
 	vmulps		%ymm2, %ymm13, %ymm12
 	vsubps		%ymm12, %ymm3, %ymm3
+	vperm2f128	$0x11, %ymm2, %ymm2, %ymm11
+	vpermilps	$0x00, %ymm11, %ymm13
+	vmulps		%ymm2, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm4, %ymm4
+	vpermilps	$0x55, %ymm11, %ymm13
+	vmulps		%ymm2, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm5, %ymm5
+	vpermilps	$0xaa, %ymm11, %ymm13
+	vmulps		%ymm2, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm6, %ymm6
+	vpermilps	$0xff, %ymm11, %ymm13
+	vmulps		%ymm2, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm7, %ymm7
+
+
 	vpermilps	$0xff, %xmm3, %xmm13
 	vucomiss	%xmm15, %xmm13 // d_33 > 0.0 ?
 	jbe			7f
@@ -1520,40 +1556,21 @@ _inner_edge_spotrf_8x8_lib8:
 	vpermilps	$0x00, %xmm13, %xmm13
 	vinsertf128	$0x1, %xmm13, %ymm13, %ymm13
 	vmulps		%ymm3, %ymm13, %ymm3
-
-
-	// TODO more efficient (ILP) to correct all block at once ???
-	vperm2f128	$0x11, %ymm0, %ymm0, %ymm13
-	vpermilps	$0x00, %ymm13, %ymm12
-	vmulps		%ymm0, %ymm12, %ymm12
+	vperm2f128	$0x11, %ymm3, %ymm3, %ymm11
+	vpermilps	$0x00, %ymm11, %ymm13
+	vmulps		%ymm3, %ymm13, %ymm12
 	vsubps		%ymm12, %ymm4, %ymm4
-	vpermilps	$0x55, %ymm13, %ymm12
-	vmulps		%ymm0, %ymm12, %ymm12
+	vpermilps	$0x55, %ymm11, %ymm13
+	vmulps		%ymm3, %ymm13, %ymm12
 	vsubps		%ymm12, %ymm5, %ymm5
-	vpermilps	$0xaa, %ymm13, %ymm12
-	vmulps		%ymm0, %ymm12, %ymm12
+	vpermilps	$0xaa, %ymm11, %ymm13
+	vmulps		%ymm3, %ymm13, %ymm12
 	vsubps		%ymm12, %ymm6, %ymm6
-	vpermilps	$0xff, %ymm13, %ymm12
-	vmulps		%ymm0, %ymm12, %ymm12
+	vpermilps	$0xff, %ymm11, %ymm13
+	vmulps		%ymm3, %ymm13, %ymm12
 	vsubps		%ymm12, %ymm7, %ymm7
 
 
-//	vpermilps	$0x00, %ymm0, %ymm13
-//	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-//	vmulps		%ymm0, %ymm13, %ymm12
-//	vsubps		%ymm12, %ymm4, %ymm4
-	vpermilps	$0x00, %ymm1, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-	vmulps		%ymm1, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm4, %ymm4
-	vpermilps	$0x00, %ymm2, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-	vmulps		%ymm2, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm4, %ymm4
-	vpermilps	$0x00, %ymm3, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-	vmulps		%ymm3, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm4, %ymm4
 	vextractf128	$0x1, %ymm4, %xmm13
 //	vpermilps	$0x00, %xmm13, %xmm13
 	vucomiss	%xmm15, %xmm13 // d_33 > 0.0 ?
@@ -1565,28 +1582,18 @@ _inner_edge_spotrf_8x8_lib8:
 	vpermilps	$0x00, %xmm13, %xmm13
 	vinsertf128	$0x1, %xmm13, %ymm13, %ymm13
 	vmulps		%ymm4, %ymm13, %ymm4
-
-
-//	vpermilps	$0x55, %ymm0, %ymm13
-//	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-//	vmulps		%ymm0, %ymm13, %ymm12
-//	vsubps		%ymm12, %ymm5, %ymm5
-	vpermilps	$0x55, %ymm1, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-	vmulps		%ymm1, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm5, %ymm5
-	vpermilps	$0x55, %ymm2, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-	vmulps		%ymm2, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm5, %ymm5
-	vpermilps	$0x55, %ymm3, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-	vmulps		%ymm3, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm5, %ymm5
-	vpermilps	$0x55, %ymm4, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
+	vperm2f128	$0x11, %ymm4, %ymm4, %ymm11
+	vpermilps	$0x55, %ymm11, %ymm13
 	vmulps		%ymm4, %ymm13, %ymm12
 	vsubps		%ymm12, %ymm5, %ymm5
+	vpermilps	$0xaa, %ymm11, %ymm13
+	vmulps		%ymm4, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm6, %ymm6
+	vpermilps	$0xff, %ymm11, %ymm13
+	vmulps		%ymm4, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm7, %ymm7
+
+
 	vextractf128	$0x1, %ymm5, %xmm13
 	vpermilps	$0x55, %xmm13, %xmm13
 	vucomiss	%xmm15, %xmm13 // d_33 > 0.0 ?
@@ -1598,32 +1605,15 @@ _inner_edge_spotrf_8x8_lib8:
 	vpermilps	$0x00, %xmm13, %xmm13
 	vinsertf128	$0x1, %xmm13, %ymm13, %ymm13
 	vmulps		%ymm5, %ymm13, %ymm5
-
-
-//	vpermilps	$0xaa, %ymm0, %ymm13
-//	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-//	vmulps		%ymm0, %ymm13, %ymm12
-//	vsubps		%ymm12, %ymm6, %ymm6
-	vpermilps	$0xaa, %ymm1, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-	vmulps		%ymm1, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm6, %ymm6
-	vpermilps	$0xaa, %ymm2, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-	vmulps		%ymm2, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm6, %ymm6
-	vpermilps	$0xaa, %ymm3, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-	vmulps		%ymm3, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm6, %ymm6
-	vpermilps	$0xaa, %ymm4, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-	vmulps		%ymm4, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm6, %ymm6
-	vpermilps	$0xaa, %ymm5, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
+	vperm2f128	$0x11, %ymm5, %ymm5, %ymm11
+	vpermilps	$0xaa, %ymm11, %ymm13
 	vmulps		%ymm5, %ymm13, %ymm12
 	vsubps		%ymm12, %ymm6, %ymm6
+	vpermilps	$0xff, %ymm11, %ymm13
+	vmulps		%ymm5, %ymm13, %ymm12
+	vsubps		%ymm12, %ymm7, %ymm7
+
+
 	vextractf128	$0x1, %ymm6, %xmm13
 	vpermilps	$0xaa, %xmm13, %xmm13
 	vucomiss	%xmm15, %xmm13 // d_33 > 0.0 ?
@@ -1635,36 +1625,12 @@ _inner_edge_spotrf_8x8_lib8:
 	vpermilps	$0x00, %xmm13, %xmm13
 	vinsertf128	$0x1, %xmm13, %ymm13, %ymm13
 	vmulps		%ymm6, %ymm13, %ymm6
-
-
-//	vpermilps	$0xff, %ymm0, %ymm13
-//	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-//	vmulps		%ymm0, %ymm13, %ymm12
-//	vsubps		%ymm12, %ymm7, %ymm7
-	vpermilps	$0xff, %ymm1, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-	vmulps		%ymm1, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm7, %ymm7
-	vpermilps	$0xff, %ymm2, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-	vmulps		%ymm2, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm7, %ymm7
-	vpermilps	$0xff, %ymm3, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-	vmulps		%ymm3, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm7, %ymm7
-	vpermilps	$0xff, %ymm4, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-	vmulps		%ymm4, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm7, %ymm7
-	vpermilps	$0xff, %ymm5, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
-	vmulps		%ymm5, %ymm13, %ymm12
-	vsubps		%ymm12, %ymm7, %ymm7
-	vpermilps	$0xff, %ymm6, %ymm13
-	vperm2f128	$0x11, %ymm13, %ymm13, %ymm13
+	vperm2f128	$0x11, %ymm6, %ymm6, %ymm11
+	vpermilps	$0xff, %ymm11, %ymm13
 	vmulps		%ymm6, %ymm13, %ymm12
 	vsubps		%ymm12, %ymm7, %ymm7
+
+
 	vextractf128	$0x1, %ymm7, %xmm13
 	vpermilps	$0xff, %xmm13, %xmm13
 	vucomiss	%xmm15, %xmm13 // d_33 > 0.0 ?
