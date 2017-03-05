@@ -3437,31 +3437,31 @@ _inner_edge_dtrsm_rlt_inv_4x4_lib4:
 	
 	vbroadcastsd	0(%r11), %ymm13
 	vmulpd			%ymm0, %ymm13, %ymm0
-
 	vbroadcastsd	8(%r10), %ymm13
 	vmulpd			%ymm0, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm1, %ymm1
-	vbroadcastsd	8(%r11), %ymm13
-	vmulpd			%ymm1, %ymm13, %ymm1
-
 	vbroadcastsd	16(%r10), %ymm13
 	vmulpd			%ymm0, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm2, %ymm2
-	vbroadcastsd	48(%r10), %ymm13
-	vmulpd			%ymm1, %ymm13, %ymm12
-	vsubpd			%ymm12, %ymm2, %ymm2
-	vbroadcastsd	16(%r11), %ymm13
-	vmulpd			%ymm2, %ymm13, %ymm2
-
 	vbroadcastsd	24(%r10), %ymm13
 	vmulpd			%ymm0, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm3, %ymm3
+
+	vbroadcastsd	8(%r11), %ymm13
+	vmulpd			%ymm1, %ymm13, %ymm1
+	vbroadcastsd	48(%r10), %ymm13
+	vmulpd			%ymm1, %ymm13, %ymm12
+	vsubpd			%ymm12, %ymm2, %ymm2
 	vbroadcastsd	56(%r10), %ymm13
 	vmulpd			%ymm1, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm3, %ymm3
+
+	vbroadcastsd	16(%r11), %ymm13
+	vmulpd			%ymm2, %ymm13, %ymm2
 	vbroadcastsd	88(%r10), %ymm13
 	vmulpd			%ymm2, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm3, %ymm3
+
 	vbroadcastsd	24(%r11), %ymm13
 	vmulpd			%ymm3, %ymm13, %ymm3
 
@@ -3522,41 +3522,41 @@ _inner_edge_dtrsm_rlt_inv_4x4_vs_lib4:
 #endif
 	
 	vbroadcastsd	0(%r11), %ymm13
-	cmpl			$2, %r12d
 	vmulpd			%ymm0, %ymm13, %ymm0
-
-	jl				0f // ret
-
 	vbroadcastsd	8(%r10), %ymm13
-	cmpl			$3, %r12d
 	vmulpd			%ymm0, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm1, %ymm1
-	vbroadcastsd	8(%r11), %ymm13
-	vmulpd			%ymm1, %ymm13, %ymm1
-
-	jl				0f // ret
-
 	vbroadcastsd	16(%r10), %ymm13
-	cmpl			$4, %r12d
 	vmulpd			%ymm0, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm2, %ymm2
-	vbroadcastsd	48(%r10), %ymm13
-	vmulpd			%ymm1, %ymm13, %ymm12
-	vsubpd			%ymm12, %ymm2, %ymm2
-	vbroadcastsd	16(%r11), %ymm13
-	vmulpd			%ymm2, %ymm13, %ymm2
-
-	jl				0f // ret
-
 	vbroadcastsd	24(%r10), %ymm13
 	vmulpd			%ymm0, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm3, %ymm3
+
+	cmpl			$2, %r12d
+	jl				0f // ret
+
+	vbroadcastsd	8(%r11), %ymm13
+	vmulpd			%ymm1, %ymm13, %ymm1
+	vbroadcastsd	48(%r10), %ymm13
+	vmulpd			%ymm1, %ymm13, %ymm12
+	vsubpd			%ymm12, %ymm2, %ymm2
 	vbroadcastsd	56(%r10), %ymm13
 	vmulpd			%ymm1, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm3, %ymm3
+
+	cmpl			$3, %r12d
+	jl				0f // ret
+
+	vbroadcastsd	16(%r11), %ymm13
+	vmulpd			%ymm2, %ymm13, %ymm2
 	vbroadcastsd	88(%r10), %ymm13
 	vmulpd			%ymm2, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm3, %ymm3
+
+	cmpl			$4, %r12d
+	jl				0f // ret
+
 	vbroadcastsd	24(%r11), %ymm13
 	vmulpd			%ymm3, %ymm13, %ymm3
 
