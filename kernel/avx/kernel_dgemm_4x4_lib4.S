@@ -3295,6 +3295,8 @@ _inner_edge_dpotrf_4x4_vs_lib4:
 	vmovddup	%xmm13, %xmm13
 	vperm2f128	$0x00, %ymm13, %ymm13, %ymm13
 	vmulpd		%ymm0, %ymm13, %ymm0
+	cmpl		$2, %r11d
+	jl			0f // ret
 	vperm2f128	$0x00, %ymm0, %ymm0, %ymm11
 	vpermilpd	$0xf, %ymm11, %ymm13
 	vmulpd		%ymm0, %ymm13, %ymm12
@@ -3307,8 +3309,6 @@ _inner_edge_dpotrf_4x4_vs_lib4:
 	vmulpd		%ymm0, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm3, %ymm3
 
-	cmpl		$2, %r11d
-	jl			0f // ret
 
 	vpermilpd	$0x3, %xmm1, %xmm13
 	vucomisd	%xmm15, %xmm13 // d_11 > 0.0 ?
@@ -3320,6 +3320,8 @@ _inner_edge_dpotrf_4x4_vs_lib4:
 	vmovddup	%xmm13, %xmm13
 	vperm2f128	$0x00, %ymm13, %ymm13, %ymm13
 	vmulpd		%ymm1, %ymm13, %ymm1
+	cmpl		$3, %r11d
+	jl			0f // ret
 	vperm2f128	$0x11, %ymm1, %ymm1, %ymm11
 	vpermilpd	$0x0, %ymm11, %ymm13
 	vmulpd		%ymm1, %ymm13, %ymm12
@@ -3328,8 +3330,6 @@ _inner_edge_dpotrf_4x4_vs_lib4:
 	vmulpd		%ymm1, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm3, %ymm3
 
-	cmpl		$3, %r11d
-	jl			0f // ret
 
 	vextractf128	$0x1, %ymm2, %xmm13
 	vucomisd	%xmm15, %xmm13 // d_22 > 0.0 ?
@@ -3341,13 +3341,13 @@ _inner_edge_dpotrf_4x4_vs_lib4:
 	vmovddup	%xmm13, %xmm13
 	vperm2f128	$0x00, %ymm13, %ymm13, %ymm13
 	vmulpd		%ymm2, %ymm13, %ymm2
+	cmpl		$4, %r11d
+	jl			0f // ret
 	vperm2f128	$0x11, %ymm2, %ymm2, %ymm11
 	vpermilpd	$0xf, %ymm11, %ymm13
 	vmulpd		%ymm2, %ymm13, %ymm12
 	vsubpd		%ymm12, %ymm3, %ymm3
 
-	cmpl		$4, %r11d
-	jl			0f // ret
 
 	vextractf128	$0x1, %ymm3, %xmm13
 	vpermilpd	$0x3, %xmm13, %xmm13
@@ -3523,6 +3523,8 @@ _inner_edge_dtrsm_rlt_inv_4x4_vs_lib4:
 	
 	vbroadcastsd	0(%r11), %ymm13
 	vmulpd			%ymm0, %ymm13, %ymm0
+	cmpl			$2, %r12d
+	jl				0f // ret
 	vbroadcastsd	8(%r10), %ymm13
 	vmulpd			%ymm0, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm1, %ymm1
@@ -3533,11 +3535,11 @@ _inner_edge_dtrsm_rlt_inv_4x4_vs_lib4:
 	vmulpd			%ymm0, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm3, %ymm3
 
-	cmpl			$2, %r12d
-	jl				0f // ret
 
 	vbroadcastsd	8(%r11), %ymm13
 	vmulpd			%ymm1, %ymm13, %ymm1
+	cmpl			$3, %r12d
+	jl				0f // ret
 	vbroadcastsd	48(%r10), %ymm13
 	vmulpd			%ymm1, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm2, %ymm2
@@ -3545,17 +3547,15 @@ _inner_edge_dtrsm_rlt_inv_4x4_vs_lib4:
 	vmulpd			%ymm1, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm3, %ymm3
 
-	cmpl			$3, %r12d
-	jl				0f // ret
 
 	vbroadcastsd	16(%r11), %ymm13
 	vmulpd			%ymm2, %ymm13, %ymm2
+	cmpl			$4, %r12d
+	jl				0f // ret
 	vbroadcastsd	88(%r10), %ymm13
 	vmulpd			%ymm2, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm3, %ymm3
 
-	cmpl			$4, %r12d
-	jl				0f // ret
 
 	vbroadcastsd	24(%r11), %ymm13
 	vmulpd			%ymm3, %ymm13, %ymm3
@@ -4837,13 +4837,13 @@ _inner_store_l_4x4_vs_lib4:
 	vinsertf128	$1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
-	cmpl		$2, %r12d
 	vmaskmovpd	%ymm0, %ymm15,  0(%r10)
+	cmpl		$2, %r12d
 	jl			0f // end
-	cmpl		$3, %r12d
 	vmovapd		32(%r10), %ymm14
 	vblendpd	$0x1, %ymm14, %ymm1, %ymm1	
 	vmaskmovpd	%ymm1, %ymm15, 32(%r10)
+	cmpl		$3, %r12d
 	jl			0f // end
 	vmovapd		64(%r10), %ymm14
 	vblendpd	$0x3, %ymm14, %ymm2, %ymm2	
@@ -7250,7 +7250,7 @@ _kernel_dtrsm_nt_rl_inv_4x4_vs_lib4:
 #endif
 
 
-	// call inner blender_loader nn
+	// call inner blender_loader nn // TODO scale gen
 
 	movq	%rcx, %r10 // C
 

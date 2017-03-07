@@ -2106,11 +2106,11 @@ void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d
 	double *pC = sC->pA + cj*bs;
 	double *pD = sD->pA + dj*bs;
 	double *dD = sD->dA; // XXX what to do if di and dj are not zero
-	dpotrf_nt_l_lib(m, n, pC, sdc, pD, sdd, dD);
 	if(di==0 && dj==0)
 		sD->use_dA = 1;
 	else
 		sD->use_dA = 0;
+	dpotrf_nt_l_lib(m, n, pC, sdc, pD, sdd, dD);
 	return;
 	}
 

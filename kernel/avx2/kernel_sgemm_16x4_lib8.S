@@ -313,17 +313,18 @@ _inner_kernel_sgemm_add_nt_16x4_lib8:
 3: // clean up loop
 	
 	// unroll 0
-	vbroadcastf128	0(%r13), %ymm14 // B
-	vmovaps			0(%r11), %ymm12 // A0
-	vmovaps			0(%r15), %ymm13 // A1
+	vbroadcastf128	0(%r13), %ymm12 // B
+	vmovaps			0(%r11), %ymm8 // A0
+	vmovaps			0(%r15), %ymm9 // A1
+	vshufps			$0x00, %ymm12, %ymm12, %ymm14
 	vfmadd231ps		%ymm8, %ymm14, %ymm0
 	vfmadd231ps		%ymm9, %ymm14, %ymm4
 
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$0x55, %ymm12, %ymm12, %ymm14
 	vfmadd231ps		%ymm8, %ymm14, %ymm1
 	vfmadd231ps		%ymm9, %ymm14, %ymm5
 
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$0xaa, %ymm12, %ymm12, %ymm14
 	vfmadd231ps		%ymm8, %ymm14, %ymm2
 	vfmadd231ps		%ymm9, %ymm14, %ymm6
 
@@ -332,7 +333,7 @@ _inner_kernel_sgemm_add_nt_16x4_lib8:
 	addq	$32, %r13
 	addq	$32, %r15
 
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$0xff, %ymm12, %ymm12, %ymm14
 	vfmadd231ps		%ymm8, %ymm14, %ymm3
 	vfmadd231ps		%ymm9, %ymm14, %ymm7
 

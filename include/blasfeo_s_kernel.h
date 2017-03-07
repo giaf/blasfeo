@@ -47,18 +47,24 @@ void kernel_sgemm_nt_16x4_lib8(int k, float *alpha, float *A, int sda, float *B,
 void kernel_sgemm_nt_16x4_gen_lib8(int k, float *alpha, float *A, int sda, float *B, float *beta, int offsetC, float *C, int sdc, int offsetD, float *D, int sdd, int m0, int m1, int n0, int n1);
 void kernel_sgemm_nn_16x4_lib8(int k, float *alpha, float *A, int sda, int offsetB, float *B, int sdb, float *beta, float *C, int sdc, float *D, int sdd);
 void kernel_sgemm_nn_16x4_gen_lib8(int k, float *alpha, float *A, int sda, int offsetB, float *B, int sdb, float *beta, int offsetC, float *C, int sdc, int offsetD, float *D, int sdd, int m0, int m1, int n0, int n1);
+void kernel_spotrf_nt_l_16x4_lib8(int k, float *A, int sda, float *B, float *C, int sdc, float *D, int sdd, float *inv_diag_D);
+void kernel_spotrf_nt_l_16x4_vs_lib8(int k, float *A, int sda, float *B, float *C, int sdc, float *D, int sdd, float *inv_diag_D, int km, int kn);
 
 // 8x8
 void kernel_sgemm_nt_8x8_lib8(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D);
 void kernel_sgemm_nt_8x8_gen_lib8(int k, float *alpha, float *A, float *B, float *beta, int offsetC, float *C, int sdc, int offsetD, float *D, int sdd, int m0, int m1, int n0, int n1);
 void kernel_sgemm_nn_8x8_lib8(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *beta, float *C, float *D);
 void kernel_sgemm_nn_8x8_gen_lib8(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *beta, int offsetC, float *C, int sdc, int offsetD, float *D, int sdd, int m0, int m1, int n0, int n1);
+void kernel_spotrf_nt_l_8x8_lib8(int k, float *A, float *B, float *C, float *D, float *inv_diag_D);
+void kernel_spotrf_nt_l_8x8_vs_lib8(int k, float *A, float *B, float *C, float *D, float *inv_diag_D, int km, int kn);
 
 // 8x4
 void kernel_sgemm_nt_8x4_lib8(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D);
 void kernel_sgemm_nt_8x4_gen_lib8(int k, float *alpha, float *A, float *B, float *beta, int offsetC, float *C, int sdc, int offsetD, float *D, int sdd, int m0, int m1, int n0, int n1);
 void kernel_sgemm_nn_8x4_lib8(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *beta, float *C, float *D);
 void kernel_sgemm_nn_8x4_gen_lib8(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *beta, int offsetC, float *C, int sdc, int offsetD, float *D, int sdd, int m0, int m1, int n0, int n1);
+void kernel_spotrf_nt_l_8x4_lib8(int k, float *A, float *B, float *C, float *D, float *inv_diag_D);
+void kernel_spotrf_nt_l_8x4_vs_lib8(int k, float *A, float *B, float *C, float *D, float *inv_diag_D, int km, int kn);
 
 // aux
 void kernel_sgecp_8_0_lib8(int m, float *A, float *B);
