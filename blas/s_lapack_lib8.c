@@ -64,7 +64,7 @@ void spotrf_l_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s
 		sD->use_dA = 0;
 
 	i = 0;
-#if 0
+#if 1
 	for(; i<m-15; i+=16)
 		{
 		j = 0;
