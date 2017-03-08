@@ -52,7 +52,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 3.3
+#define GHZ_MAX 3.6
 
 
 
@@ -286,8 +286,8 @@ int main()
 			{
 //			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			sgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-			sgecp_libstr(n, n, &sA, 1, 0, &sB, 0, 0);
-//			spotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
+//			sgetr_libstr(n, n, &sA, 0, 0, &sB, 0, 0);
+			spotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 //			sgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			sgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 //			strmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
@@ -311,10 +311,10 @@ int main()
 #if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
 //			sgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
 //			sgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
-			scopy_(&n2, A, &i_1, B, &i_1);
+//			scopy_(&n2, A, &i_1, B, &i_1);
 //			ssyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
 //			strmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
-//			spotrf_(&c_l, &n, B2, &n, &info);
+			spotrf_(&c_l, &n, B2, &n, &info);
 //			sgetrf_(&n, &n, B2, &n, ipiv, &info);
 //			strsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
 //			strsm_(&c_l, &c_u, &c_n, &c_n, &n, &n, &d_1, B2, &n, B, &n);
@@ -350,15 +350,15 @@ int main()
 		gettimeofday(&tv3, NULL); // stop
 
 		// flops
-		if(0)
+		if(1)
 			{
 
 			float Gflops_max = flops_max * GHz_max;
 
-			float flop_operation = 2.0*n*n*n; // dgemm
+//			float flop_operation = 2.0*n*n*n; // dgemm
 	//		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
-	//		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
-	//		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
+			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
+//			float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 	//		float flop_operation = 2.0*n*n; // dgemv dsymv
 	//		float flop_operation = 1.0*n*n; // dtrmv dtrsv
 	//		float flop_operation = 4.0*n*n; // dgemv_nt
