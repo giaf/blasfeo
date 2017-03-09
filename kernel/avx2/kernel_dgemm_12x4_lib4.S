@@ -3214,7 +3214,7 @@ _inner_edge_dpotrf_12x4_vs_lib4:
 
 7:
 	vxorpd			%ymm13, %ymm13, %ymm13
-	jmp				8
+	jmp				8b
 
 0:
 	

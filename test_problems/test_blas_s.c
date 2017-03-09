@@ -52,7 +52,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 3.6
+#define GHZ_MAX 3.3
 
 
 
@@ -223,7 +223,7 @@ int main()
 		for(i=0; i<pnd; i++) x2[i] = 1;
 
 		// matrix struct
-#if 1
+#if 0
 		struct s_strmat sA; s_allocate_strmat(n+4, n+4, &sA);
 		struct s_strmat sB; s_allocate_strmat(n+4, n+4, &sB);
 		struct s_strmat sC; s_allocate_strmat(n+4, n+4, &sC);
@@ -286,8 +286,8 @@ int main()
 			{
 //			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			sgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+			spotrf_l_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			sgetr_libstr(n, n, &sA, 0, 0, &sB, 0, 0);
-			spotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 //			sgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			sgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 //			strmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
@@ -314,7 +314,7 @@ int main()
 //			scopy_(&n2, A, &i_1, B, &i_1);
 //			ssyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
 //			strmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
-			spotrf_(&c_l, &n, B2, &n, &info);
+//			spotrf_(&c_l, &n, B2, &n, &info);
 //			sgetrf_(&n, &n, B2, &n, ipiv, &info);
 //			strsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
 //			strsm_(&c_l, &c_u, &c_n, &c_n, &n, &n, &d_1, B2, &n, B, &n);

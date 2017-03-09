@@ -52,7 +52,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 2.3
+#define GHZ_MAX 3.3
 
 
 
@@ -216,7 +216,7 @@ int main()
 		for(i=0; i<pnd; i++) x2[i] = 1;
 
 		// matrix struct
-#if 1
+#if 0
 		struct d_strmat sA; d_allocate_strmat(n+4, n+4, &sA);
 		struct d_strmat sB; d_allocate_strmat(n+4, n+4, &sB);
 		struct d_strmat sC; d_allocate_strmat(n+4, n+4, &sC);
@@ -251,7 +251,7 @@ int main()
 		/* warm up */
 		for(rep=0; rep<nrep; rep++)
 			{
-			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 1.0, &sC, 0, 0, &sD, 0, 0);
 			}
 
 		gettimeofday(&tv0, NULL); // stop
@@ -277,9 +277,9 @@ int main()
 
 		for(rep=0; rep<nrep; rep++)
 			{
-			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-//			dpotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
+			dpotrf_l_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 //			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
@@ -301,11 +301,11 @@ int main()
 		for(rep=0; rep<nrep; rep++)
 			{
 #if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
-			dgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
+//			dgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
+//			dpotrf_(&c_l, &n, B2, &n, &info);
 //			dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
 //			dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
 //			dtrmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
-//			dpotrf_(&c_l, &n, B2, &n, &info);
 //			dgetrf_(&n, &n, B2, &n, ipiv, &info);
 //			dtrsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
 //			dtrsm_(&c_l, &c_u, &c_n, &c_n, &n, &n, &d_1, B2, &n, B, &n);
@@ -342,9 +342,9 @@ int main()
 
 		float Gflops_max = flops_max * GHz_max;
 
-		float flop_operation = 2.0*n*n*n; // dgemm
+//		float flop_operation = 2.0*n*n*n; // dgemm
 //		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
-//		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
+		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv
 //		float flop_operation = 1.0*n*n; // dtrmv dtrsv
