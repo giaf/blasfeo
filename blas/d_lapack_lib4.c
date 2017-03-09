@@ -121,8 +121,8 @@ void dpotrf_nt_l_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, dou
 				}
 			else // dpotrf
 				{
-//				if(j<n-7)
-				if(0)
+				if(j<n-7)
+//				if(0)
 					{
 					kernel_dpotrf_nt_l_8x4_lib4(j, &pD[i*sdd], sdd, &pD[j*sdd], &pC[j*bs+j*sdc], sdc, &pD[j*bs+j*sdd], sdd, &inv_diag_D[j]);
 					kernel_dpotrf_nt_l_4x4_lib4(j+4, &pD[(i+4)*sdd], &pD[(j+4)*sdd], &pC[(j+4)*bs+(i+4)*sdc], &pD[(j+4)*bs+(i+4)*sdd], &inv_diag_D[j+4]);
@@ -2106,11 +2106,11 @@ void dpotrf_l_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d
 	double *pC = sC->pA + cj*bs;
 	double *pD = sD->pA + dj*bs;
 	double *dD = sD->dA; // XXX what to do if di and dj are not zero
-	dpotrf_nt_l_lib(m, n, pC, sdc, pD, sdd, dD);
 	if(di==0 && dj==0)
 		sD->use_dA = 1;
 	else
 		sD->use_dA = 0;
+	dpotrf_nt_l_lib(m, n, pC, sdc, pD, sdd, dD);
 	return;
 	}
 
