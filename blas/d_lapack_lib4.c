@@ -494,7 +494,7 @@ void dgetrf_nn_nopivot_lib(int m, int n, double *pC, int sdc, double *pD, int sd
 
 	if(m<=0 || n<=0)
 		return;
-	
+
 	const int bs = 4;
 
 	int ii, jj, ie;
@@ -547,7 +547,7 @@ void dgetrf_nn_nopivot_lib(int m, int n, double *pC, int sdc, double *pD, int sd
 			kernel_dgetrf_nn_r_12x4_vs_lib4(ii, &pD[ii*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], sdc, &pD[jj*bs+ii*sdd], sdd, &inv_diag_D[jj], m-ii, n-jj);
 			jj+=4;
 			}
-		// solve upper 
+		// solve upper
 		for( ; jj<n-3; jj+=4)
 			{
 			kernel_dtrsm_nn_ll_one_12x4_lib4(ii, &pD[ii*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], sdc, &pD[jj*bs+ii*sdd], sdd, &pD[ii*bs+ii*sdd], sdd);
@@ -567,7 +567,7 @@ void dgetrf_nn_nopivot_lib(int m, int n, double *pC, int sdc, double *pD, int sd
 			{
 			goto left_8;
 			}
-		else 
+		else
 			{
 			goto left_12;
 			}
@@ -612,7 +612,7 @@ void dgetrf_nn_nopivot_lib(int m, int n, double *pC, int sdc, double *pD, int sd
 			kernel_dgetrf_nn_4x4_vs_lib4(jj, &pD[(ii+4)*sdd], &pD[jj*bs], sdd, &pC[jj*bs+(ii+4)*sdc], &pD[jj*bs+(ii+4)*sdd], &inv_diag_D[jj], m-(ii+4), n-jj);
 			jj+=4;
 			}
-		// solve upper 
+		// solve upper
 		for( ; jj<n-3; jj+=4)
 			{
 			kernel_dtrsm_nn_ll_one_8x4_lib4(ii, &pD[ii*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], sdc, &pD[jj*bs+ii*sdd],sdd,  &pD[ii*bs+ii*sdd], sdd);
@@ -659,7 +659,7 @@ void dgetrf_nn_nopivot_lib(int m, int n, double *pC, int sdc, double *pD, int sd
 			kernel_dgetrf_nn_4x4_vs_lib4(jj, &pD[ii*sdd], &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], &pD[jj*bs+ii*sdd], &inv_diag_D[jj], m-ii, n-jj);
 			jj+=4;
 			}
-		// solve upper 
+		// solve upper
 		for( ; jj<n-3; jj+=4)
 			{
 			kernel_dtrsm_nn_ll_one_4x4_lib4(ii, &pD[ii*sdd], &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], &pD[jj*bs+ii*sdd], &pD[ii*bs+ii*sdd]);
@@ -704,7 +704,7 @@ void dgetrf_nn_nopivot_lib(int m, int n, double *pC, int sdc, double *pD, int sd
 		kernel_dgetrf_nn_r_12x4_vs_lib4(ii, &pD[ii*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], sdc, &pD[jj*bs+ii*sdd], sdd, &inv_diag_D[jj], m-ii, n-jj);
 		jj+=4;
 		}
-	// solve upper 
+	// solve upper
 	for( ; jj<n; jj+=4)
 		{
 		kernel_dtrsm_nn_ll_one_12x4_vs_lib4(ii, &pD[ii*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], sdc, &pD[jj*bs+ii*sdd], sdd, &pD[ii*bs+ii*sdd], sdd, m-ii, n-jj);
@@ -739,7 +739,7 @@ void dgetrf_nn_nopivot_lib(int m, int n, double *pC, int sdc, double *pD, int sd
 		kernel_dgetrf_nn_4x4_vs_lib4(jj, &pD[(ii+4)*sdd], &pD[jj*bs], sdd, &pC[jj*bs+(ii+4)*sdc], &pD[jj*bs+(ii+4)*sdd], &inv_diag_D[jj], m-(ii+4), n-jj);
 		jj+=4;
 		}
-	// solve upper 
+	// solve upper
 	for( ; jj<n; jj+=4)
 		{
 		kernel_dtrsm_nn_ll_one_8x4_vs_lib4(ii, &pD[ii*sdd], sdd, &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], sdc, &pD[jj*bs+ii*sdd], sdd, &pD[ii*bs+ii*sdd], sdd, m-ii, n-jj);
@@ -762,7 +762,7 @@ void dgetrf_nn_nopivot_lib(int m, int n, double *pC, int sdc, double *pD, int sd
 		kernel_dgetrf_nn_4x4_vs_lib4(jj, &pD[ii*sdd], &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], &pD[jj*bs+ii*sdd], &inv_diag_D[jj], m-ii, n-jj);
 		jj+=4;
 		}
-	// solve upper 
+	// solve upper
 	for( ; jj<n; jj+=4)
 		{
 		kernel_dtrsm_nn_ll_one_4x4_vs_lib4(ii, &pD[ii*sdd], &pD[jj*bs], sdd, &pC[jj*bs+ii*sdc], &pD[jj*bs+ii*sdd], &pD[ii*bs+ii*sdd], m-ii, n-jj);
@@ -778,7 +778,7 @@ void dgetrf_nn_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, doubl
 
 	if(m<=0)
 		return;
-	
+
 	const int bs = 4;
 
 	int ii, jj, i0, i1, j0, ll, p;
@@ -946,7 +946,7 @@ void dgetrf_nn_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, doubl
 			drowsw_lib(n-jj-12, pD+(i1+3)/bs*bs*sdd+(i1+3)%bs+(jj+12)*bs, pD+(ipiv[i1+3])/bs*bs*sdd+(ipiv[i1+3])%bs+(jj+12)*bs);
 			}
 
-		// solve upper 
+		// solve upper
 //		i0 -= 8; // 4 ???
 		ll = jj+12;
 		for( ; ll<n-3; ll+=4)
@@ -1121,7 +1121,7 @@ void dgetrf_nn_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, doubl
 			drowsw_lib(n-jj-8, pD+(i0+3)/bs*bs*sdd+(i0+3)%bs+(jj+8)*bs, pD+(ipiv[i0+3])/bs*bs*sdd+(ipiv[i0+3])%bs+(jj+8)*bs);
 			}
 
-		// solve upper 
+		// solve upper
 		i0 -= 4;
 		ll = jj+8;
 		for( ; ll<n-3; ll+=4)
@@ -1208,7 +1208,7 @@ void dgetrf_nn_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, doubl
 			}
 		if(m-ii>0)
 			{
-			kernel_dgemm_nn_4x4_vs_lib4(jj, &dm1, &pD[ii*sdd], 0, &pD[jj*bs], sdd, &d1, 0, &pD[jj*bs+ii*sdd], sdd, 0, &pD[jj*bs+ii*sdd], sdd, 0, m-ii, 0, 4);
+			kernel_dgemm_nn_4x4_gen_lib4(jj, &dm1, &pD[ii*sdd], 0, &pD[jj*bs], sdd, &d1, 0, &pD[jj*bs+ii*sdd], sdd, 0, &pD[jj*bs+ii*sdd], sdd, 0, m-ii, 0, 4);
 			}
 #endif
 		kernel_dgetrf_pivot_4_lib4(m-i0, &pD[jj*bs+i0*sdd], sdd, &inv_diag_D[jj], &ipiv[i0]);
@@ -1418,7 +1418,7 @@ void dgetrf_nn_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, doubl
 			}
 		}
 
-	// solve upper 
+	// solve upper
 	// there is no upper
 	return;
 #endif
@@ -1538,7 +1538,7 @@ void dgetrf_nn_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, doubl
 			}
 		}
 
-	// solve upper 
+	// solve upper
 //	i0 -= 8;
 	ll = jj+12;
 	for( ; ll<n; ll+=4)
@@ -1638,7 +1638,7 @@ void dgetrf_nn_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, doubl
 			}
 		}
 
-	// solve upper 
+	// solve upper
 	// there is no upper
 	return;
 #endif
@@ -1718,7 +1718,7 @@ void dgetrf_nn_lib(int m, int n, double *pC, int sdc, double *pD, int sdd, doubl
 			}
 		}
 
-	// solve upper 
+	// solve upper
 	i0 -= 4;
 	ll = jj+8;
 	for( ; ll<n; ll+=4)
@@ -1855,7 +1855,7 @@ void dlauum_dpotrf_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *
 
 	if(m<=0 || n<=0)
 		return;
-	
+
 	// TODO remove
 	int k = cv[nv-1];
 
@@ -2198,5 +2198,3 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 #error : wrong LA choice
 
 #endif
-
-
