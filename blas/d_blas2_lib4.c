@@ -722,11 +722,11 @@ void dtrmv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 
 
 
-void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+void dtrsv_lnn_ns_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	if(ai!=0 | xi%4!=0)
 		{
-		printf("\ndtrsv_lnn_libstr: feature not implemented yet: ai=%d\n", ai);
+		printf("\ndtrsv_lnn_ns_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 	const int bs = 4;
@@ -759,11 +759,11 @@ void dtrsv_lnn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 
 
 
-void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+void dtrsv_ltn_ns_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	if(ai!=0 | xi%4!=0)
 		{
-		printf("\ndtrsv_ltn_libstr: feature not implemented yet: ai=%d\n", ai);
+		printf("\ndtrsv_ltn_ns_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 	const int bs = 4;
@@ -791,6 +791,80 @@ void dtrsv_ltn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct 
 		sA->use_dA = 0;
 		}
 	dtrsv_lt_inv_lib(m, n, pA, sda, dA, x, z);
+	return;
+	}
+
+
+
+void dtrsv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	if(ai!=0 | xi%4!=0)
+		{
+		printf("\ndtrsv_lnn_libstr: feature not implemented yet: ai=%d\n", ai);
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs; // TODO ai
+	double *dA = sA->dA;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	int ii;
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			ddiaex_lib(m, 1.0, ai, pA, sda, dA);
+			for(ii=0; ii<m; ii++)
+				dA[ii] = 1.0 / dA[ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+		ddiaex_lib(m, 1.0, ai, pA, sda, dA);
+		for(ii=0; ii<m; ii++)
+			dA[ii] = 1.0 / dA[ii];
+		sA->use_dA = 0;
+		}
+	dtrsv_ln_inv_lib(m, m, pA, sda, dA, x, z);
+	return;
+	}
+
+
+
+void dtrsv_ltn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	if(ai!=0 | xi%4!=0)
+		{
+		printf("\ndtrsv_ltn_libstr: feature not implemented yet: ai=%d\n", ai);
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs; // TODO ai
+	double *dA = sA->dA;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	int ii;
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			ddiaex_lib(m, 1.0, ai, pA, sda, dA);
+			for(ii=0; ii<m; ii++)
+				dA[ii] = 1.0 / dA[ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+		ddiaex_lib(m, 1.0, ai, pA, sda, dA);
+		for(ii=0; ii<m; ii++)
+			dA[ii] = 1.0 / dA[ii];
+		sA->use_dA = 0;
+		}
+	dtrsv_lt_inv_lib(m, m, pA, sda, dA, x, z);
 	return;
 	}
 
