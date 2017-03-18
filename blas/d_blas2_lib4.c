@@ -722,11 +722,11 @@ void dtrmv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 
 
 
-void dtrsv_lnn_ns_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+void dtrsv_lnn_mn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	if(ai!=0 | xi%4!=0)
 		{
-		printf("\ndtrsv_lnn_ns_libstr: feature not implemented yet: ai=%d\n", ai);
+		printf("\ndtrsv_lnn_mn_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 	const int bs = 4;
@@ -759,11 +759,11 @@ void dtrsv_lnn_ns_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, stru
 
 
 
-void dtrsv_ltn_ns_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+void dtrsv_ltn_mn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	if(ai!=0 | xi%4!=0)
 		{
-		printf("\ndtrsv_ltn_ns_libstr: feature not implemented yet: ai=%d\n", ai);
+		printf("\ndtrsv_ltn_mn_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 	const int bs = 4;

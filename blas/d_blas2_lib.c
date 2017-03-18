@@ -462,7 +462,7 @@ void dtrmv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 
 
 
-void dtrsv_lnn_ns_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+void dtrsv_lnn_mn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	int ii, jj, j1;
 	double
@@ -589,7 +589,7 @@ void dtrsv_lnn_ns_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, stru
 
 
 
-void dtrsv_ltn_ns_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+void dtrsv_ltn_mn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	int ii, jj;
 	double
@@ -1009,7 +1009,7 @@ void dtrmv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 
 
 
-void dtrsv_lnn_ns_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+void dtrsv_lnn_mn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1038,7 +1038,7 @@ void dtrsv_lnn_ns_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, stru
 
 
 
-void dtrsv_ltn_ns_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+void dtrsv_ltn_mn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
