@@ -64,10 +64,12 @@ endif
 ifeq ($(UNAME_S),Darwin)
     OS = MAC
 endif
+#OS = WINDOWS
 
 # C Compiler
 CC = gcc
 #CC = clang
+#CC = x86_64-w64-mingw32-gcc
 
 # Installation directory
 PREFIX = /opt
@@ -116,6 +118,10 @@ endif
 ifeq ($(OS), MAC)
 CFLAGS  += -DOS_MAC
 ASFLAGS += -DOS_MAC
+endif
+ifeq ($(OS), WINDOWS)
+CFLAGS  += -DOS_WINDOWS
+ASFLAGS += -DOS_WINDOWS
 endif
 
 ifeq ($(REF_BLAS), 0)
