@@ -724,6 +724,26 @@ void dtrmv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 
 void dtrsv_lnn_mn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
+	if(m==0 | n==0)
+		return;
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** dtrsv_lnn_mn_libstr : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** dtrsv_lnn_mn_libstr : n<0 : %d<0 *****\n", n);
+	// non-negative offset
+	if(ai<0) printf("\n****** dtrsv_lnn_mn_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** dtrsv_lnn_mn_libstr : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** dtrsv_lnn_mn_libstr : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** dtrsv_lnn_mn_libstr : zi<0 : %d<0 *****\n", zi);
+	// inside matrix
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** dtrsv_lnn_mn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** dtrsv_lnn_mn_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+	// x: m
+	if(xi+m > sx->m) printf("\n***** dtrsv_lnn_mn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	// z: m
+	if(zi+m > sz->m) printf("\n***** dtrsv_lnn_mn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
 	if(ai!=0 | xi%4!=0)
 		{
 		printf("\ndtrsv_lnn_mn_libstr: feature not implemented yet: ai=%d\n", ai);
@@ -761,6 +781,26 @@ void dtrsv_lnn_mn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, stru
 
 void dtrsv_ltn_mn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
+	if(m==0)
+		return;
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** dtrsv_ltn_mn_libstr : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** dtrsv_ltn_mn_libstr : n<0 : %d<0 *****\n", n);
+	// non-negative offset
+	if(ai<0) printf("\n****** dtrsv_ltn_mn_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** dtrsv_ltn_mn_libstr : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** dtrsv_ltn_mn_libstr : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** dtrsv_ltn_mn_libstr : zi<0 : %d<0 *****\n", zi);
+	// inside matrix
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** dtrsv_ltn_mn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** dtrsv_ltn_mn_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+	// x: m
+	if(xi+m > sx->m) printf("\n***** dtrsv_ltn_mn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	// z: m
+	if(zi+m > sz->m) printf("\n***** dtrsv_ltn_mn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
 	if(ai!=0 | xi%4!=0)
 		{
 		printf("\ndtrsv_ltn_mn_libstr: feature not implemented yet: ai=%d\n", ai);
@@ -798,6 +838,25 @@ void dtrsv_ltn_mn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, stru
 
 void dtrsv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
+	if(m==0)
+		return;
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** dtrsv_lnn_libstr : m<0 : %d<0 *****\n", m);
+	// non-negative offset
+	if(ai<0) printf("\n****** dtrsv_lnn_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** dtrsv_lnn_libstr : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** dtrsv_lnn_libstr : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** dtrsv_lnn_libstr : zi<0 : %d<0 *****\n", zi);
+	// inside matrix
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** dtrsv_lnn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+m > sA->n) printf("\n***** dtrsv_lnn_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
+	// x: m
+	if(xi+m > sx->m) printf("\n***** dtrsv_lnn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	// z: m
+	if(zi+m > sz->m) printf("\n***** dtrsv_lnn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
 	if(ai!=0 | xi%4!=0)
 		{
 		printf("\ndtrsv_lnn_libstr: feature not implemented yet: ai=%d\n", ai);
@@ -833,8 +892,54 @@ void dtrsv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 
 
 
+void dtrsv_lnu_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	if(m==0)
+		return;
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** dtrsv_lnu_libstr : m<0 : %d<0 *****\n", m);
+	// non-negative offset
+	if(ai<0) printf("\n****** dtrsv_lnu_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** dtrsv_lnu_libstr : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** dtrsv_lnu_libstr : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** dtrsv_lnu_libstr : zi<0 : %d<0 *****\n", zi);
+	// inside matrix
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** dtrsv_lnu_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+m > sA->n) printf("\n***** dtrsv_lnu_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
+	// x: m
+	if(xi+m > sx->m) printf("\n***** dtrsv_lnu_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	// z: m
+	if(zi+m > sz->m) printf("\n***** dtrsv_lnu_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
+	printf("\n***** dtrsv_lnu_libstr : feature not implemented yet *****\n");
+	exit(1);
+	}
+
+
+
 void dtrsv_ltn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
+	if(m==0)
+		return;
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** dtrsv_ltn_libstr : m<0 : %d<0 *****\n", m);
+	// non-negative offset
+	if(ai<0) printf("\n****** dtrsv_ltn_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** dtrsv_ltn_libstr : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** dtrsv_ltn_libstr : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** dtrsv_ltn_libstr : zi<0 : %d<0 *****\n", zi);
+	// inside matrix
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** dtrsv_ltn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+m > sA->n) printf("\n***** dtrsv_ltn_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
+	// x: m
+	if(xi+m > sx->m) printf("\n***** dtrsv_ltn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	// z: m
+	if(zi+m > sz->m) printf("\n***** dtrsv_ltn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
 	if(ai!=0 | xi%4!=0)
 		{
 		printf("\ndtrsv_ltn_libstr: feature not implemented yet: ai=%d\n", ai);
@@ -866,6 +971,87 @@ void dtrsv_ltn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 		}
 	dtrsv_lt_inv_lib(m, m, pA, sda, dA, x, z);
 	return;
+	}
+
+
+
+void dtrsv_ltu_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	if(m==0)
+		return;
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** dtrsv_ltu_libstr : m<0 : %d<0 *****\n", m);
+	// non-negative offset
+	if(ai<0) printf("\n****** dtrsv_ltu_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** dtrsv_ltu_libstr : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** dtrsv_ltu_libstr : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** dtrsv_ltu_libstr : zi<0 : %d<0 *****\n", zi);
+	// inside matrix
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** dtrsv_ltu_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+m > sA->n) printf("\n***** dtrsv_ltu_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
+	// x: m
+	if(xi+m > sx->m) printf("\n***** dtrsv_ltu_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	// z: m
+	if(zi+m > sz->m) printf("\n***** dtrsv_ltu_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
+	printf("\n***** dtrsv_ltu_libstr : feature not implemented yet *****\n");
+	exit(1);
+	}
+
+
+
+void dtrsv_unn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	if(m==0)
+		return;
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** dtrsv_unn_libstr : m<0 : %d<0 *****\n", m);
+	// non-negative offset
+	if(ai<0) printf("\n****** dtrsv_unn_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** dtrsv_unn_libstr : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** dtrsv_unn_libstr : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** dtrsv_unn_libstr : zi<0 : %d<0 *****\n", zi);
+	// inside matrix
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** dtrsv_unn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+m > sA->n) printf("\n***** dtrsv_unn_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
+	// x: m
+	if(xi+m > sx->m) printf("\n***** dtrsv_unn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	// z: m
+	if(zi+m > sz->m) printf("\n***** dtrsv_unn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
+	printf("\n***** dtrsv_unn_libstr : feature not implemented yet *****\n");
+	exit(1);
+	}
+
+
+
+void dtrsv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+	{
+	if(m==0)
+		return;
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** dtrsv_utn_libstr : m<0 : %d<0 *****\n", m);
+	// non-negative offset
+	if(ai<0) printf("\n****** dtrsv_utn_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** dtrsv_utn_libstr : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** dtrsv_utn_libstr : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** dtrsv_utn_libstr : zi<0 : %d<0 *****\n", zi);
+	// inside matrix
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** dtrsv_utn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+m > sA->n) printf("\n***** dtrsv_utn_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
+	// x: m
+	if(xi+m > sx->m) printf("\n***** dtrsv_utn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	// z: m
+	if(zi+m > sz->m) printf("\n***** dtrsv_utn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
+	printf("\n***** dtrsv_utn_libstr : feature not implemented yet *****\n");
+	exit(1);
 	}
 
 
