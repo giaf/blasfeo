@@ -534,7 +534,7 @@ inner_edge_sgetr_8_0_gen_lib8:
 	
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
@@ -583,7 +583,7 @@ inner_edge_sgetr_8_1_gen_lib8:
 	
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
@@ -720,7 +720,7 @@ inner_edge_sgetr_8_2_gen_lib8:
 	
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
@@ -852,7 +852,7 @@ inner_edge_sgetr_8_3_gen_lib8:
 	
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
@@ -979,7 +979,7 @@ inner_edge_sgetr_8_4_gen_lib8:
 	
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
@@ -1101,7 +1101,7 @@ inner_edge_sgetr_8_5_gen_lib8:
 	
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
@@ -1218,7 +1218,7 @@ inner_edge_sgetr_8_6_gen_lib8:
 	
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
@@ -1330,7 +1330,7 @@ inner_edge_sgetr_8_7_gen_lib8:
 	
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
@@ -2402,7 +2402,7 @@ kernel_sgetr_8_7_gen_lib8:
 	.section .rdata,"dr"
 #endif
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC00: // { 7.5 6.5 5.5 4.5 3.5 2.5 1.5 0.5 }
 #elif defined(OS_MAC)
@@ -2418,7 +2418,7 @@ LC00: // { 7.5 6.5 5.5 4.5 3.5 2.5 1.5 0.5 }
 	.long	1087373312
 	.long	1089470464
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC01: // { 15.5 14.5 13.5 12.5 11.5 10.5 9.5 8.5 }
 #elif defined(OS_MAC)
@@ -2434,7 +2434,7 @@ LC01: // { 15.5 14.5 13.5 12.5 11.5 10.5 9.5 8.5 }
 	.long	1097334784
 	.long	1098383360
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC02: // { 23.5 22.5 21.5 20.5 19.5 18.5 17.5 16.5 }
 #elif defined(OS_MAC)
@@ -2450,7 +2450,7 @@ LC02: // { 23.5 22.5 21.5 20.5 19.5 18.5 17.5 16.5 }
 	.long	1102315520
 	.long	1102839808
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC03: // { -1.0 -1.0 1.0 1.0 1.0 1.0 1.0 1.0 }
 #elif defined(OS_MAC)

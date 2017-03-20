@@ -1585,7 +1585,7 @@ inner_edge_spotrf_8x4_lib8:
 #endif
 
 	vxorps	%ymm15, %ymm15, %ymm15 // 0.0
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovss	.LC03(%rip), %xmm14 // 1.0
 #elif defined(OS_MAC)
 	vmovss	LC03(%rip), %xmm14 // 1.0
@@ -1746,7 +1746,7 @@ inner_edge_spotrf_8x4_gen_lib8:
 #endif
 
 	vxorps	%ymm15, %ymm15, %ymm15 // 0.0
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovss	.LC03(%rip), %xmm14 // 1.0
 #elif defined(OS_MAC)
 	vmovss	LC03(%rip), %xmm14 // 1.0
@@ -2717,7 +2717,7 @@ inner_store_8x4_gen_lib8:
 	// compute mask for rows
 	vcvtsi2ss	%r13d, %xmm14, %xmm14
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
@@ -2962,7 +2962,7 @@ inner_store_l_8x4_gen_lib8:
 	// compute mask for rows
 	vcvtsi2ss	%r13d, %xmm14, %xmm14
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
@@ -3933,7 +3933,7 @@ kernel_spotrf_nt_l_8x4_vs_lib8:
 	.section .rdata,"dr"
 #endif
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC00: // { 7.5 6.5 5.5 4.5 3.5 2.5 1.5 0.5 }
 #elif defined(OS_MAC)
@@ -3949,7 +3949,7 @@ LC00: // { 7.5 6.5 5.5 4.5 3.5 2.5 1.5 0.5 }
 	.long	1087373312
 	.long	1089470464
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC01: // { 15.5 14.5 13.5 12.5 11.5 10.5 9.5 8.5 }
 #elif defined(OS_MAC)
@@ -3965,7 +3965,7 @@ LC01: // { 15.5 14.5 13.5 12.5 11.5 10.5 9.5 8.5 }
 	.long	1097334784
 	.long	1098383360
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC02: // { 23.5 22.5 21.5 20.5 19.5 18.5 17.5 16.5 }
 #elif defined(OS_MAC)
@@ -3981,7 +3981,7 @@ LC02: // { 23.5 22.5 21.5 20.5 19.5 18.5 17.5 16.5 }
 	.long	1102315520
 	.long	1102839808
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC03: // { -1.0 -1.0 1.0 1.0 1.0 1.0 1.0 1.0 }
 #elif defined(OS_MAC)

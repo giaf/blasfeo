@@ -4184,7 +4184,7 @@ inner_edge_dpotrf_8x4_lib4:
 #endif
 	
 	vxorpd	%ymm15, %ymm15, %ymm15 // 0.0
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd	.LC04(%rip), %xmm14 // 1.0
 #elif defined(OS_MAC)
 	vmovsd	LC04(%rip), %xmm14 // 1.0
@@ -4361,7 +4361,7 @@ inner_edge_dpotrf_8x4_vs_lib4:
 #endif
 	
 	vxorpd	%ymm15, %ymm15, %ymm15 // 0.0
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd	.LC04(%rip), %xmm14 // 1.0
 #elif defined(OS_MAC)
 	vmovsd	LC04(%rip), %xmm14 // 1.0
@@ -6362,7 +6362,7 @@ inner_store_8x4_vs_lib4:
 	addq	%r11, %r15 // D1 <- D0 + 4*sdd*sizeof(double)
 
 	vcvtsi2sd	%r12d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC03(%rip), %ymm14
 #elif defined(OS_MAC)
 	vmovupd		LC03(%rip), %ymm14
@@ -6542,7 +6542,7 @@ inner_store_l_8x4_vs_lib4:
 	addq	%r11, %r15 // D1 <- D0 + 4*sdd*sizeof(double)
 
 	vcvtsi2sd	%r12d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC03(%rip), %ymm14
 #elif defined(OS_MAC)
 	vmovupd		LC03(%rip), %ymm14
@@ -6646,7 +6646,7 @@ inner_store_8x4_gen_lib4:
 	// compute mask for rows
 	vcvtsi2sd	%r13d, %xmm14, %xmm14
 	vcvtsi2sd	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC02(%rip), %ymm12
 	vmovupd		.LC03(%rip), %ymm13
 #elif defined(OS_MAC)
@@ -6762,7 +6762,7 @@ inner_store_8x4_gen_lib4:
 	vperm2f128	$0x01, %ymm14, %ymm14, %ymm12
 	vshufpd		$0x5, %ymm14, %ymm12, %ymm14
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC08(%rip), %ymm12
 	vmovupd		.LC05(%rip), %ymm13
 #elif defined(OS_MAC)
@@ -6802,7 +6802,7 @@ inner_store_8x4_gen_lib4:
 	vperm2f128	$0x01, %ymm14, %ymm14, %ymm14
 	vperm2f128	$0x01, %ymm15, %ymm15, %ymm15
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC09(%rip), %ymm12
 	vmovupd		.LC06(%rip), %ymm13
 #elif defined(OS_MAC)
@@ -6849,7 +6849,7 @@ inner_store_8x4_gen_lib4:
 	vperm2f128	$0x01, %ymm15, %ymm15, %ymm12
 	vshufpd		$0x5, %ymm12, %ymm15, %ymm15
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC10(%rip), %ymm12
 	vmovupd		.LC07(%rip), %ymm13
 #elif defined(OS_MAC)
@@ -10264,7 +10264,7 @@ kernel_dtrsm_nn_lu_inv_8x4_vs_lib4:
 	.section .rdata,"dr"
 #endif
 #if 1
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC00: // { -1 -1 -1 1 }
 #elif defined(OS_MAC)
@@ -10275,7 +10275,7 @@ LC00: // { -1 -1 -1 1 }
 	.quad	-1
 	.quad	-1
 	.quad	1
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC01: // { -1 -1 -1 -1 }
 #elif defined(OS_MAC)
@@ -10287,7 +10287,7 @@ LC01: // { -1 -1 -1 -1 }
 	.quad	-1
 	.quad	-1
 #endif
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC02: // { 3.5 2.5 1.5 0.5 }
 #elif defined(OS_MAC)
@@ -10302,7 +10302,7 @@ LC02: // { 3.5 2.5 1.5 0.5 }
 	.long	1074003968
 	.long	0
 	.long	1074528256
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC03: // { 7.5 6.5 5.5 4.5 }
 #elif defined(OS_MAC)
@@ -10317,7 +10317,7 @@ LC03: // { 7.5 6.5 5.5 4.5 }
 	.long	1075445760
 	.long	0
 	.long	1075707904
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC04: // { 1.0 1.0 1.0 1.0 }
 #elif defined(OS_MAC)
@@ -10332,7 +10332,7 @@ LC04: // { 1.0 1.0 1.0 1.0 }
 	.long	1072693248
 	.long	0
 	.long	1072693248
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC05: // { 1.0 1.0 1.0 -1.0 }
 #elif defined(OS_MAC)
@@ -10347,7 +10347,7 @@ LC05: // { 1.0 1.0 1.0 -1.0 }
 	.long	1072693248
 	.long	0
 	.long	1072693248
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC06: // { 1.0 1.0 -1.0 -1.0 }
 #elif defined(OS_MAC)
@@ -10362,7 +10362,7 @@ LC06: // { 1.0 1.0 -1.0 -1.0 }
 	.long	1072693248
 	.long	0
 	.long	1072693248
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC07: // { 1.0 -1.0 -1.0 -1.0 }
 #elif defined(OS_MAC)
@@ -10377,7 +10377,7 @@ LC07: // { 1.0 -1.0 -1.0 -1.0 }
 	.long	-1074790400
 	.long	0
 	.long	1072693248
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC08: // { -1.0 -1.0 -1.0 1.0 }
 #elif defined(OS_MAC)
@@ -10392,7 +10392,7 @@ LC08: // { -1.0 -1.0 -1.0 1.0 }
 	.long	-1074790400
 	.long	0
 	.long	-1074790400
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC09: // { -1.0 -1.0 1.0 1.0 }
 #elif defined(OS_MAC)
@@ -10407,7 +10407,7 @@ LC09: // { -1.0 -1.0 1.0 1.0 }
 	.long	-1074790400
 	.long	0
 	.long	-1074790400
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC10: // { -1.0 1.0 1.0 1.0 }
 #elif defined(OS_MAC)

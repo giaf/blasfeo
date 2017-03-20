@@ -234,8 +234,8 @@ void d_allocate_strmat(int m, int n, struct d_strmat *sA)
 // free memory of a matrix structure
 void d_free_strmat(struct d_strmat *sA)
 	{
-	free(sA->pA);
-	free(sA->dA);
+	d_free_align(sA->pA);
+	d_free_align(sA->dA);
 	return;
 	}
 
@@ -260,7 +260,7 @@ void d_allocate_strvec(int m, struct d_strvec *sa)
 // free memory of a matrix structure
 void d_free_strvec(struct d_strvec *sa)
 	{
-	free(sa->pa);
+	d_free_align(sa->pa);
 	return;
 	}
 
