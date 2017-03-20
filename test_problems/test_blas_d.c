@@ -367,15 +367,15 @@ int main()
 		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
 
 
-		free(A);
-		free(B);
-		free(B2);
-		free(M);
-		free(x);
-		free(y);
-		free(x2);
-		free(y2);
-		free(ipiv);
+		d_free(A);
+		d_free(B);
+		d_free(B2);
+		d_free(M);
+		d_free_align(x);
+		d_free_align(y);
+		d_free_align(x2);
+		d_free_align(y2);
+		int_free(ipiv);
 		
 		d_free_strmat(&sA);
 		d_free_strmat(&sB);
