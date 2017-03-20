@@ -26,12 +26,60 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#define STACKSIZE 96
+#if defined(OS_LINUX) | defined(OS_MAC)
 
-//.LSTR:
-//	.string	"\n%d %d %d\n"
+//#define STACKSIZE 96
+#define STACKSIZE 64
+#define ARG1  %rdi
+#define ARG2  %rsi
+#define ARG3  %rdx
+#define ARG4  %rcx
+#define ARG5  %r8
+#define ARG6  %r9
+#define ARG7  STACKSIZE +  8(%rsp)
+#define ARG8  STACKSIZE + 16(%rsp)
+#define ARG9  STACKSIZE + 24(%rsp)
+#define ARG10 STACKSIZE + 32(%rsp)
+#define ARG11 STACKSIZE + 40(%rsp)
+#define ARG12 STACKSIZE + 48(%rsp)
+#define ARG13 STACKSIZE + 56(%rsp)
+#define ARG14 STACKSIZE + 64(%rsp)
+#define ARG15 STACKSIZE + 72(%rsp)
+#define ARG16 STACKSIZE + 80(%rsp)
+#define ARG17 STACKSIZE + 88(%rsp)
+#define ARG18 STACKSIZE + 96(%rsp)
 
-#if defined(OS_LINUX)
+#elif defined(OS_WINDOWS)
+
+#define STACKSIZE 256
+#define ARG1  %rcx
+#define ARG2  %rdx
+#define ARG3  %r8
+#define ARG4  %r9
+#define ARG5  STACKSIZE + 40(%rsp)
+#define ARG6  STACKSIZE + 48(%rsp)
+#define ARG7  STACKSIZE + 56(%rsp)
+#define ARG8  STACKSIZE + 64(%rsp)
+#define ARG9  STACKSIZE + 72(%rsp)
+#define ARG10 STACKSIZE + 80(%rsp)
+#define ARG11 STACKSIZE + 88(%rsp)
+#define ARG12 STACKSIZE + 96(%rsp)
+#define ARG13 STACKSIZE + 104(%rsp)
+#define ARG14 STACKSIZE + 112(%rsp)
+#define ARG15 STACKSIZE + 120(%rsp)
+#define ARG16 STACKSIZE + 128(%rsp)
+#define ARG17 STACKSIZE + 136(%rsp)
+#define ARG18 STACKSIZE + 144(%rsp)
+
+#else
+
+#error wrong OS
+
+#endif
+
+
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.text
 #elif defined(OS_MAC)
 	.section	__TEXT,__text,regular,pure_instructions
@@ -99,6 +147,9 @@
 inner_kernel_dgemm_add_nt_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_kernel_dgemm_add_nt_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dgemm_add_nt_12x4_lib4; .scl 2; .type 32; .endef
+inner_kernel_dgemm_add_nt_12x4_lib4:
 #endif
 #endif
 	
@@ -463,6 +514,9 @@ _inner_kernel_dgemm_add_nt_12x4_lib4:
 inner_kernel_dgemm_sub_nt_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_kernel_dgemm_sub_nt_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dgemm_sub_nt_12x4_lib4; .scl 2; .type 32; .endef
+inner_kernel_dgemm_sub_nt_12x4_lib4:
 #endif
 #endif
 	
@@ -831,6 +885,9 @@ _inner_kernel_dgemm_sub_nt_12x4_lib4:
 inner_kernel_dgemm_add_nn_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_kernel_dgemm_add_nn_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dgemm_add_nn_12x4_lib4; .scl 2; .type 32; .endef
+inner_kernel_dgemm_add_nn_12x4_lib4:
 #endif
 #endif
 	
@@ -1076,6 +1133,9 @@ _inner_kernel_dgemm_add_nn_12x4_lib4:
 inner_kernel_dgemm_sub_nn_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_kernel_dgemm_sub_nn_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dgemm_sub_nn_12x4_lib4; .scl 2; .type 32; .endef
+inner_kernel_dgemm_sub_nn_12x4_lib4:
 #endif
 #endif
 	
@@ -1302,6 +1362,9 @@ _inner_kernel_dgemm_sub_nn_12x4_lib4:
 inner_edge_dgemm_add_nn_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dgemm_add_nn_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dgemm_add_nn_12x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dgemm_add_nn_12x4_lib4:
 #endif
 #endif
 	
@@ -1443,6 +1506,9 @@ _inner_edge_dgemm_add_nn_12x4_lib4:
 inner_edge_dtrmm_nt_ru_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dtrmm_nt_ru_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrmm_nt_ru_12x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrmm_nt_ru_12x4_lib4:
 #endif
 #endif
 	
@@ -1588,6 +1654,9 @@ _inner_edge_dtrmm_nt_ru_12x4_lib4:
 inner_edge_dtrmm_nt_ru_12x4_vs_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dtrmm_nt_ru_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrmm_nt_ru_12x4_vs_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrmm_nt_ru_12x4_vs_lib4:
 #endif
 #endif
 	
@@ -1758,6 +1827,9 @@ _inner_edge_dtrmm_nt_ru_12x4_vs_lib4:
 inner_edge_dtrmm_nn_rl_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dtrmm_nn_rl_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrmm_nn_rl_12x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrmm_nn_rl_12x4_lib4:
 #endif
 #endif
 	
@@ -2166,6 +2238,9 @@ _inner_edge_dtrmm_nn_rl_12x4_lib4:
 inner_blend_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_blend_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_blend_12x4_lib4; .scl 2; .type 32; .endef
+inner_blend_12x4_lib4:
 #endif
 #endif
 	
@@ -2270,6 +2345,9 @@ _inner_blend_12x4_lib4:
 inner_scale_11_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_scale_11_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_11_12x4_lib4; .scl 2; .type 32; .endef
+inner_scale_11_12x4_lib4:
 #endif
 #endif
 	
@@ -2381,6 +2459,9 @@ _inner_scale_11_12x4_lib4:
 inner_scale_ab_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_scale_ab_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_ab_12x4_lib4; .scl 2; .type 32; .endef
+inner_scale_ab_12x4_lib4:
 #endif
 #endif
 		
@@ -2508,6 +2589,9 @@ _inner_scale_ab_12x4_lib4:
 inner_scale_a0_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_scale_a0_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_a0_12x4_lib4; .scl 2; .type 32; .endef
+inner_scale_a0_12x4_lib4:
 #endif
 #endif
 		
@@ -2603,6 +2687,9 @@ _inner_scale_a0_12x4_lib4:
 inner_blend_scale_ab_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_blend_scale_ab_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_blend_scale_ab_12x4_lib4; .scl 2; .type 32; .endef
+inner_blend_scale_ab_12x4_lib4:
 #endif
 #endif
 		
@@ -2772,6 +2859,9 @@ _inner_blend_scale_ab_12x4_lib4:
 inner_blend_scale_11_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_blend_scale_11_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_blend_scale_11_12x4_lib4; .scl 2; .type 32; .endef
+inner_blend_scale_11_12x4_lib4:
 #endif
 #endif
 	
@@ -2903,6 +2993,9 @@ _inner_blend_scale_11_12x4_lib4:
 inner_edge_dpotrf_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dpotrf_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dpotrf_12x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dpotrf_12x4_lib4:
 #endif
 #endif
 	
@@ -3091,6 +3184,9 @@ _inner_edge_dpotrf_12x4_lib4:
 inner_edge_dpotrf_12x4_vs_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dpotrf_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dpotrf_12x4_vs_lib4; .scl 2; .type 32; .endef
+inner_edge_dpotrf_12x4_vs_lib4:
 #endif
 #endif
 	
@@ -3281,6 +3377,9 @@ _inner_edge_dpotrf_12x4_vs_lib4:
 inner_edge_dtrsm_rlt_inv_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dtrsm_rlt_inv_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsm_rlt_inv_12x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrsm_rlt_inv_12x4_lib4:
 #endif
 #endif
 	
@@ -3393,6 +3492,9 @@ _inner_edge_dtrsm_rlt_inv_12x4_lib4:
 inner_edge_dtrsm_rlt_inv_12x4_vs_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dtrsm_rlt_inv_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsm_rlt_inv_12x4_vs_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrsm_rlt_inv_12x4_vs_lib4:
 #endif
 #endif
 	
@@ -3516,6 +3618,9 @@ _inner_edge_dtrsm_rlt_inv_12x4_vs_lib4:
 inner_edge_dtrsm_rlt_one_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dtrsm_rlt_one_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsm_rlt_one_12x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrsm_rlt_one_12x4_lib4:
 #endif
 #endif
 	
@@ -3613,6 +3718,9 @@ _inner_edge_dtrsm_rlt_one_12x4_lib4:
 inner_edge_dtrsm_rlt_one_12x4_vs_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dtrsm_rlt_one_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsm_rlt_one_12x4_vs_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrsm_rlt_one_12x4_vs_lib4:
 #endif
 #endif
 	
@@ -3721,6 +3829,9 @@ _inner_edge_dtrsm_rlt_one_12x4_vs_lib4:
 inner_edge_dtrsm_rut_inv_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dtrsm_rut_inv_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsm_rut_inv_12x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrsm_rut_inv_12x4_lib4:
 #endif
 #endif
 	
@@ -3839,6 +3950,9 @@ _inner_edge_dtrsm_rut_inv_12x4_lib4:
 inner_edge_dtrsm_run_inv_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dtrsm_run_inv_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsm_run_inv_12x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrsm_run_inv_12x4_lib4:
 #endif
 #endif
 
@@ -3959,6 +4073,9 @@ _inner_edge_dtrsm_run_inv_12x4_lib4:
 inner_edge_dtrsm_rut_inv_12x4_vs_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dtrsm_rut_inv_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsm_rut_inv_12x4_vs_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrsm_rut_inv_12x4_vs_lib4:
 #endif
 #endif
 	
@@ -4090,6 +4207,9 @@ _inner_edge_dtrsm_rut_inv_12x4_vs_lib4:
 inner_edge_dtrsm_lln_one_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dtrsm_lln_one_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsm_lln_one_12x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrsm_lln_one_12x4_lib4:
 #endif
 #endif
 
@@ -4364,6 +4484,9 @@ _inner_edge_dtrsm_lln_one_12x4_lib4:
 inner_edge_dtrsm_lun_inv_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dtrsm_lun_inv_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsm_lun_inv_12x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrsm_lun_inv_12x4_lib4:
 #endif
 #endif
 	
@@ -4793,6 +4916,9 @@ _inner_edge_dtrsm_lun_inv_12x4_lib4:
 inner_edge_dtrsm_lun_inv_12x4_vs_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dtrsm_lun_inv_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsm_lun_inv_12x4_vs_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrsm_lun_inv_12x4_vs_lib4:
 #endif
 #endif
 	
@@ -5223,6 +5349,9 @@ _inner_edge_dtrsm_lun_inv_12x4_vs_lib4:
 inner_edge_dgetrf_l_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dgetrf_l_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dgetrf_l_12x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dgetrf_l_12x4_lib4:
 #endif
 #endif
 	
@@ -5380,6 +5509,9 @@ _inner_edge_dgetrf_l_12x4_lib4:
 inner_edge_dgetrf_m_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dgetrf_m_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dgetrf_m_12x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dgetrf_m_12x4_lib4:
 #endif
 #endif
 	
@@ -5618,6 +5750,9 @@ _inner_edge_dgetrf_m_12x4_lib4:
 inner_edge_dgetrf_r_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_edge_dgetrf_r_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dgetrf_r_12x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dgetrf_r_12x4_lib4:
 #endif
 #endif
 	
@@ -5905,6 +6040,9 @@ _inner_edge_dgetrf_r_12x4_lib4:
 inner_store_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_store_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_store_12x4_lib4; .scl 2; .type 32; .endef
+inner_store_12x4_lib4:
 #endif
 #endif
 	
@@ -6000,6 +6138,9 @@ _inner_store_12x4_lib4:
 inner_store_12x4_vs_lib4:
 #elif defined(OS_MAC)
 _inner_store_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_store_12x4_vs_lib4; .scl 2; .type 32; .endef
+inner_store_12x4_vs_lib4:
 #endif
 #endif
 	
@@ -6106,6 +6247,9 @@ _inner_store_12x4_vs_lib4:
 inner_store_l_12x4_lib4:
 #elif defined(OS_MAC)
 _inner_store_l_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_store_l_12x4_lib4; .scl 2; .type 32; .endef
+inner_store_l_12x4_lib4:
 #endif
 #endif
 	
@@ -6209,6 +6353,9 @@ _inner_store_l_12x4_lib4:
 inner_store_l_12x4_vs_lib4:
 #elif defined(OS_MAC)
 _inner_store_l_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_store_l_12x4_vs_lib4; .scl 2; .type 32; .endef
+inner_store_l_12x4_vs_lib4:
 #endif
 #endif
 	
@@ -6279,6 +6426,10 @@ kernel_dgemm_nt_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dgemm_nt_12x4_lib4
 _kernel_dgemm_nt_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgemm_nt_12x4_lib4
+	.def kernel_dgemm_nt_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dgemm_nt_12x4_lib4:
 #endif
 	
 	// prologue
@@ -6290,6 +6441,20 @@ _kernel_dgemm_nt_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -6312,7 +6477,7 @@ _kernel_dgemm_nt_12x4_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rdx, %r11 // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -6375,6 +6540,20 @@ _kernel_dgemm_nt_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -6398,6 +6577,10 @@ kernel_dgemm_nt_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dgemm_nt_12x4_vs_lib4
 _kernel_dgemm_nt_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgemm_nt_12x4_vs_lib4
+	.def kernel_dgemm_nt_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dgemm_nt_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -6409,6 +6592,20 @@ _kernel_dgemm_nt_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -6431,7 +6628,7 @@ _kernel_dgemm_nt_12x4_vs_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rdx, %r11 // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -6497,6 +6694,20 @@ _kernel_dgemm_nt_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -6520,6 +6731,10 @@ kernel_dgemm_nn_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dgemm_nn_12x4_lib4
 _kernel_dgemm_nn_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgemm_nn_12x4_lib4
+	.def kernel_dgemm_nn_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dgemm_nn_12x4_lib4:
 #endif
 	
 	// prologue
@@ -6531,6 +6746,20 @@ _kernel_dgemm_nn_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -6553,7 +6782,7 @@ _kernel_dgemm_nn_12x4_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rdx, %r11 // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -6629,6 +6858,20 @@ _kernel_dgemm_nn_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -6652,6 +6895,10 @@ kernel_dgemm_nn_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dgemm_nn_12x4_vs_lib4
 _kernel_dgemm_nn_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgemm_nn_12x4_vs_lib4
+	.def kernel_dgemm_nn_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dgemm_nn_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -6663,6 +6910,20 @@ _kernel_dgemm_nn_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -6685,7 +6946,7 @@ _kernel_dgemm_nn_12x4_vs_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rdx, %r11 // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -6753,6 +7014,20 @@ _kernel_dgemm_nn_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -6776,6 +7051,10 @@ kernel_dsyrk_nt_l_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dsyrk_nt_l_12x4_lib4
 _kernel_dsyrk_nt_l_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dsyrk_nt_l_12x4_lib4
+	.def kernel_dsyrk_nt_l_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dsyrk_nt_l_12x4_lib4:
 #endif
 	
 	// prologue
@@ -6787,6 +7066,20 @@ _kernel_dsyrk_nt_l_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -6809,7 +7102,7 @@ _kernel_dsyrk_nt_l_12x4_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rdx, %r11 // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -6871,6 +7164,20 @@ _kernel_dsyrk_nt_l_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -6894,6 +7201,10 @@ kernel_dsyrk_nt_l_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dsyrk_nt_l_12x4_vs_lib4
 _kernel_dsyrk_nt_l_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dsyrk_nt_l_12x4_vs_lib4
+	.def kernel_dsyrk_nt_l_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dsyrk_nt_l_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -6905,6 +7216,20 @@ _kernel_dsyrk_nt_l_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -6927,7 +7252,7 @@ _kernel_dsyrk_nt_l_12x4_vs_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rdx, %r11 // A
 	movl	%ecx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -6992,6 +7317,20 @@ _kernel_dsyrk_nt_l_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -7015,6 +7354,10 @@ kernel_dtrmm_nn_rl_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dtrmm_nn_rl_12x4_lib4
 _kernel_dtrmm_nn_rl_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrmm_nn_rl_12x4_lib4
+	.def kernel_dtrmm_nn_rl_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dtrmm_nn_rl_12x4_lib4:
 #endif
 	
 	// prologue
@@ -7026,6 +7369,20 @@ _kernel_dtrmm_nn_rl_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -7048,7 +7405,7 @@ _kernel_dtrmm_nn_rl_12x4_lib4:
 
 	// initial triangle
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rdx, %r11 // A
 	movl	%ecx, %r12d // sdb
 	sall	$5, %r12d // 4*sdb*sizeof(double)
@@ -7122,6 +7479,20 @@ _kernel_dtrmm_nn_rl_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -7145,6 +7516,10 @@ kernel_dtrmm_nt_ru_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dtrmm_nt_ru_12x4_lib4
 _kernel_dtrmm_nt_ru_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrmm_nt_ru_12x4_lib4
+	.def kernel_dtrmm_nt_ru_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dtrmm_nt_ru_12x4_lib4:
 #endif
 	
 	// prologue
@@ -7156,6 +7531,20 @@ _kernel_dtrmm_nt_ru_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -7178,7 +7567,7 @@ _kernel_dtrmm_nt_ru_12x4_lib4:
 
 	// call inner dgemm kernel nt after initial triangle
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	subl	$4, %r10d //k-4
 	movq	%rdx, %r11 // A
 	addq	$128, %r11 // A+4*bs
@@ -7276,6 +7665,20 @@ _kernel_dtrmm_nt_ru_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -7299,6 +7702,10 @@ kernel_dtrmm_nt_ru_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dtrmm_nt_ru_12x4_vs_lib4
 _kernel_dtrmm_nt_ru_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrmm_nt_ru_12x4_vs_lib4
+	.def kernel_dtrmm_nt_ru_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dtrmm_nt_ru_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -7310,6 +7717,20 @@ _kernel_dtrmm_nt_ru_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -7332,7 +7753,7 @@ _kernel_dtrmm_nt_ru_12x4_vs_lib4:
 
 	// call inner dgemm kernel nt after initial triangle
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	subl	$4, %r10d //k-4
 	movq	%rdx, %r11 // A
 	addq	$128, %r11 // A+4*bs
@@ -7433,6 +7854,20 @@ _kernel_dtrmm_nt_ru_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -7456,6 +7891,10 @@ kernel_dpotrf_nt_l_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dpotrf_nt_l_12x4_lib4
 _kernel_dpotrf_nt_l_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dpotrf_nt_l_12x4_lib4
+	.def kernel_dpotrf_nt_l_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dpotrf_nt_l_12x4_lib4:
 #endif
 	
 	// prologue
@@ -7467,6 +7906,20 @@ _kernel_dpotrf_nt_l_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -7489,7 +7942,7 @@ _kernel_dpotrf_nt_l_12x4_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -7565,6 +8018,20 @@ _kernel_dpotrf_nt_l_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -7588,6 +8055,10 @@ kernel_dpotrf_nt_l_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dpotrf_nt_l_12x4_vs_lib4
 _kernel_dpotrf_nt_l_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dpotrf_nt_l_12x4_vs_lib4
+	.def kernel_dpotrf_nt_l_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dpotrf_nt_l_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -7599,6 +8070,20 @@ _kernel_dpotrf_nt_l_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -7621,7 +8106,7 @@ _kernel_dpotrf_nt_l_12x4_vs_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -7701,6 +8186,20 @@ _kernel_dpotrf_nt_l_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -7724,6 +8223,10 @@ kernel_dsyrk_dpotrf_nt_l_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dsyrk_dpotrf_nt_l_12x4_lib4
 _kernel_dsyrk_dpotrf_nt_l_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dsyrk_dpotrf_nt_l_12x4_lib4
+	.def kernel_dsyrk_dpotrf_nt_l_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dsyrk_dpotrf_nt_l_12x4_lib4:
 #endif
 	
 	// prologue
@@ -7735,6 +8238,20 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -7757,7 +8274,7 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_lib4:
 
 	// call inner dgemm kernel nt add
 
-	movl	%edi, %r10d // kp
+	movq	ARG1, %r10 // kp
 	movq	%rsi, %r11  // Ap
 	movl	%edx, %r12d // sdap
 	sall	$5, %r12d   // 4*sdap*sizeof(double)
@@ -7852,6 +8369,20 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -7875,6 +8406,10 @@ kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4
 _kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4
+	.def kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -7886,6 +8421,20 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -7908,7 +8457,7 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 
 	// call inner dgemm kernel nt add
 
-	movl	%edi, %r10d // kp
+	movq	ARG1, %r10 // kp
 	movq	%rsi, %r11  // Ap
 	movl	%edx, %r12d // sdap
 	sall	$5, %r12d   // 4*sdap*sizeof(double)
@@ -8007,6 +8556,20 @@ _kernel_dsyrk_dpotrf_nt_l_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -8030,6 +8593,10 @@ kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dtrsm_nt_rl_inv_12x4_vs_lib4
 _kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nt_rl_inv_12x4_vs_lib4
+	.def kernel_dtrsm_nt_rl_inv_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -8041,6 +8608,20 @@ _kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -8063,7 +8644,7 @@ _kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -8144,6 +8725,20 @@ _kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -8167,6 +8762,10 @@ kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4
 _kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4
+	.def kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -8178,6 +8777,20 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -8200,7 +8813,7 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 
 	// call inner dgemm kernel nt add
 
-	movl	%edi, %r10d // kp
+	movq	ARG1, %r10 // kp
 	movq	%rsi, %r11  // Ap
 	movl	%edx, %r12d // sdap
 	sall	$5, %r12d   // 4*sdap*sizeof(double)
@@ -8300,6 +8913,20 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -8323,6 +8950,10 @@ kernel_dtrsm_nt_rl_inv_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dtrsm_nt_rl_inv_12x4_lib4
 _kernel_dtrsm_nt_rl_inv_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nt_rl_inv_12x4_lib4
+	.def kernel_dtrsm_nt_rl_inv_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_rl_inv_12x4_lib4:
 #endif
 	
 	// prologue
@@ -8334,6 +8965,20 @@ _kernel_dtrsm_nt_rl_inv_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -8356,7 +9001,7 @@ _kernel_dtrsm_nt_rl_inv_12x4_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -8433,6 +9078,20 @@ _kernel_dtrsm_nt_rl_inv_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -8456,6 +9115,10 @@ kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4
 _kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4
+	.def kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 #endif
 	
 	// prologue
@@ -8467,6 +9130,20 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -8489,7 +9166,7 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 
 	// call inner dgemm kernel nt add
 
-	movl	%edi, %r10d // kp
+	movq	ARG1, %r10 // kp
 	movq	%rsi, %r11  // Ap
 	movl	%edx, %r12d // sdap
 	sall	$5, %r12d   // 4*sdap*sizeof(double)
@@ -8585,6 +9262,20 @@ _kernel_dgemm_dtrsm_nt_rl_inv_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -8608,6 +9299,10 @@ kernel_dtrsm_nt_rl_one_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dtrsm_nt_rl_one_12x4_lib4
 _kernel_dtrsm_nt_rl_one_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nt_rl_one_12x4_lib4
+	.def kernel_dtrsm_nt_rl_one_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_rl_one_12x4_lib4:
 #endif
 	
 	// prologue
@@ -8619,6 +9314,20 @@ _kernel_dtrsm_nt_rl_one_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -8641,7 +9350,7 @@ _kernel_dtrsm_nt_rl_one_12x4_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d
+	movq	ARG1, %r10
 	movq	%rsi, %r11
 	movl	%edx, %r12d
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -8717,6 +9426,20 @@ _kernel_dtrsm_nt_rl_one_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -8740,6 +9463,10 @@ kernel_dtrsm_nt_rl_one_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dtrsm_nt_rl_one_12x4_vs_lib4
 _kernel_dtrsm_nt_rl_one_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nt_rl_one_12x4_vs_lib4
+	.def kernel_dtrsm_nt_rl_one_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_rl_one_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -8751,6 +9478,20 @@ _kernel_dtrsm_nt_rl_one_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -8773,7 +9514,7 @@ _kernel_dtrsm_nt_rl_one_12x4_vs_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d
+	movq	ARG1, %r10
 	movq	%rsi, %r11
 	movl	%edx, %r12d
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -8853,6 +9594,20 @@ _kernel_dtrsm_nt_rl_one_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -8876,6 +9631,10 @@ kernel_dtrsm_nt_ru_inv_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dtrsm_nt_ru_inv_12x4_lib4
 _kernel_dtrsm_nt_ru_inv_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nt_ru_inv_12x4_lib4
+	.def kernel_dtrsm_nt_ru_inv_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_ru_inv_12x4_lib4:
 #endif
 	
 	// prologue
@@ -8887,6 +9646,20 @@ _kernel_dtrsm_nt_ru_inv_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -8909,7 +9682,7 @@ _kernel_dtrsm_nt_ru_inv_12x4_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d
+	movq	ARG1, %r10
 	movq	%rsi, %r11
 	movl	%edx, %r12d
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -8986,6 +9759,20 @@ _kernel_dtrsm_nt_ru_inv_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -9009,6 +9796,10 @@ kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dtrsm_nt_ru_inv_12x4_vs_lib4
 _kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nt_ru_inv_12x4_vs_lib4
+	.def kernel_dtrsm_nt_ru_inv_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -9020,6 +9811,20 @@ _kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -9042,7 +9847,7 @@ _kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d
+	movq	ARG1, %r10
 	movq	%rsi, %r11
 	movl	%edx, %r12d
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -9123,6 +9928,20 @@ _kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -9146,6 +9965,10 @@ kernel_dtrsm_nn_ru_inv_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dtrsm_nn_ru_inv_12x4_lib4
 _kernel_dtrsm_nn_ru_inv_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nn_ru_inv_12x4_lib4
+	.def kernel_dtrsm_nn_ru_inv_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nn_ru_inv_12x4_lib4:
 #endif
 	
 	// prologue
@@ -9157,6 +9980,20 @@ _kernel_dtrsm_nn_ru_inv_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -9179,7 +10016,7 @@ _kernel_dtrsm_nn_ru_inv_12x4_lib4:
 
 	// call inner dgemm kernel nt 
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -9258,6 +10095,20 @@ _kernel_dtrsm_nn_ru_inv_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -9281,6 +10132,10 @@ kernel_dtrsm_nn_ru_inv_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dtrsm_nn_ru_inv_12x4_vs_lib4
 _kernel_dtrsm_nn_ru_inv_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nn_ru_inv_12x4_vs_lib4
+	.def kernel_dtrsm_nn_ru_inv_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nn_ru_inv_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -9292,6 +10147,20 @@ _kernel_dtrsm_nn_ru_inv_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -9314,7 +10183,7 @@ _kernel_dtrsm_nn_ru_inv_12x4_vs_lib4:
 
 	// call inner dgemm kernel nt 
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -9396,6 +10265,20 @@ _kernel_dtrsm_nn_ru_inv_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -9419,6 +10302,10 @@ kernel_dtrsm_nn_ll_one_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dtrsm_nn_ll_one_12x4_lib4
 _kernel_dtrsm_nn_ll_one_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nn_ll_one_12x4_lib4
+	.def kernel_dtrsm_nn_ll_one_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nn_ll_one_12x4_lib4:
 #endif
 	
 	// prologue
@@ -9430,6 +10317,20 @@ _kernel_dtrsm_nn_ll_one_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -9452,7 +10353,7 @@ _kernel_dtrsm_nn_ll_one_12x4_lib4:
 
 	// call inner dgemm kernel nt 
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -9532,6 +10433,20 @@ _kernel_dtrsm_nn_ll_one_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -9555,6 +10470,10 @@ kernel_dtrsm_nn_ll_one_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dtrsm_nn_ll_one_12x4_vs_lib4
 _kernel_dtrsm_nn_ll_one_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nn_ll_one_12x4_vs_lib4
+	.def kernel_dtrsm_nn_ll_one_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nn_ll_one_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -9566,6 +10485,20 @@ _kernel_dtrsm_nn_ll_one_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -9588,7 +10521,7 @@ _kernel_dtrsm_nn_ll_one_12x4_vs_lib4:
 
 	// call inner dgemm kernel nt 
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -9671,6 +10604,20 @@ _kernel_dtrsm_nn_ll_one_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -9694,6 +10641,10 @@ kernel_dtrsm_nn_lu_inv_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dtrsm_nn_lu_inv_12x4_lib4
 _kernel_dtrsm_nn_lu_inv_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nn_lu_inv_12x4_lib4
+	.def kernel_dtrsm_nn_lu_inv_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nn_lu_inv_12x4_lib4:
 #endif
 	
 	// prologue
@@ -9705,6 +10656,20 @@ _kernel_dtrsm_nn_lu_inv_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -9727,7 +10692,7 @@ _kernel_dtrsm_nn_lu_inv_12x4_lib4:
 
 	// call inner dgemm kernel nt 
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -9808,6 +10773,20 @@ _kernel_dtrsm_nn_lu_inv_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -9831,6 +10810,10 @@ kernel_dtrsm_nn_lu_inv_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dtrsm_nn_lu_inv_12x4_vs_lib4
 _kernel_dtrsm_nn_lu_inv_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nn_lu_inv_12x4_vs_lib4
+	.def kernel_dtrsm_nn_lu_inv_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nn_lu_inv_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -9842,6 +10825,20 @@ _kernel_dtrsm_nn_lu_inv_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -9864,7 +10861,7 @@ _kernel_dtrsm_nn_lu_inv_12x4_vs_lib4:
 
 	// call inner dgemm kernel nt 
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -9948,6 +10945,20 @@ _kernel_dtrsm_nn_lu_inv_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -9971,6 +10982,10 @@ kernel_dgetrf_nn_l_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dgetrf_nn_l_12x4_lib4
 _kernel_dgetrf_nn_l_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgetrf_nn_l_12x4_lib4
+	.def kernel_dgetrf_nn_l_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dgetrf_nn_l_12x4_lib4:
 #endif
 	
 	// prologue
@@ -9982,6 +10997,20 @@ _kernel_dgetrf_nn_l_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -10004,7 +11033,7 @@ _kernel_dgetrf_nn_l_12x4_lib4:
 
 	// call inner dgemm kernel nn
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -10082,6 +11111,20 @@ _kernel_dgetrf_nn_l_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -10105,6 +11148,10 @@ kernel_dgetrf_nn_l_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dgetrf_nn_l_12x4_vs_lib4
 _kernel_dgetrf_nn_l_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgetrf_nn_l_12x4_vs_lib4
+	.def kernel_dgetrf_nn_l_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dgetrf_nn_l_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -10116,6 +11163,20 @@ _kernel_dgetrf_nn_l_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -10138,7 +11199,7 @@ _kernel_dgetrf_nn_l_12x4_vs_lib4:
 
 	// call inner dgemm kernel nn
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -10218,6 +11279,20 @@ _kernel_dgetrf_nn_l_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -10241,6 +11316,10 @@ kernel_dgetrf_nn_m_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dgetrf_nn_m_12x4_lib4
 _kernel_dgetrf_nn_m_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgetrf_nn_m_12x4_lib4
+	.def kernel_dgetrf_nn_m_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dgetrf_nn_m_12x4_lib4:
 #endif
 	
 	// prologue
@@ -10252,6 +11331,20 @@ _kernel_dgetrf_nn_m_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -10274,7 +11367,7 @@ _kernel_dgetrf_nn_m_12x4_lib4:
 
 	// call inner dgemm kernel nn
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -10356,6 +11449,20 @@ _kernel_dgetrf_nn_m_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -10379,6 +11486,10 @@ kernel_dgetrf_nn_m_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dgetrf_nn_m_12x4_vs_lib4
 _kernel_dgetrf_nn_m_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgetrf_nn_m_12x4_vs_lib4
+	.def kernel_dgetrf_nn_m_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dgetrf_nn_m_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -10390,6 +11501,20 @@ _kernel_dgetrf_nn_m_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -10412,7 +11537,7 @@ _kernel_dgetrf_nn_m_12x4_vs_lib4:
 
 	// call inner dgemm kernel nn
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -10496,6 +11621,20 @@ _kernel_dgetrf_nn_m_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -10519,6 +11658,10 @@ kernel_dgetrf_nn_r_12x4_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dgetrf_nn_r_12x4_lib4
 _kernel_dgetrf_nn_r_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgetrf_nn_r_12x4_lib4
+	.def kernel_dgetrf_nn_r_12x4_lib4; .scl 2; .type 32; .endef
+kernel_dgetrf_nn_r_12x4_lib4:
 #endif
 	
 	// prologue
@@ -10530,6 +11673,20 @@ _kernel_dgetrf_nn_r_12x4_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -10552,7 +11709,7 @@ _kernel_dgetrf_nn_r_12x4_lib4:
 
 	// call inner dgemm kernel nn
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -10634,6 +11791,20 @@ _kernel_dgetrf_nn_r_12x4_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret
@@ -10657,6 +11828,10 @@ kernel_dgetrf_nn_r_12x4_vs_lib4:
 #elif defined(OS_MAC)
 	.globl _kernel_dgetrf_nn_r_12x4_vs_lib4
 _kernel_dgetrf_nn_r_12x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgetrf_nn_r_12x4_vs_lib4
+	.def kernel_dgetrf_nn_r_12x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dgetrf_nn_r_12x4_vs_lib4:
 #endif
 	
 	// prologue
@@ -10668,6 +11843,20 @@ _kernel_dgetrf_nn_r_12x4_vs_lib4:
 	movq	%r13, 24(%rsp)
 	movq	%r14, 32(%rsp)
 	movq	%r15, 40(%rsp)
+#if defined(OS_WINDOWS)
+	movq	%rdi, 48(%rsp)
+	movq	%rsi, 56(%rsp)
+	vmovups	%xmm6, 64(%rsp)
+	vmovups	%xmm7, 80(%rsp)
+	vmovups	%xmm8, 96(%rsp)
+	vmovups	%xmm9, 112(%rsp)
+	vmovups	%xmm10, 128(%rsp)
+	vmovups	%xmm11, 144(%rsp)
+	vmovups	%xmm12, 160(%rsp)
+	vmovups	%xmm13, 176(%rsp)
+	vmovups	%xmm14, 192(%rsp)
+	vmovups	%xmm15, 208(%rsp)
+#endif
 
 	vzeroupper
 
@@ -10690,7 +11879,7 @@ _kernel_dgetrf_nn_r_12x4_vs_lib4:
 
 	// call inner dgemm kernel nn
 
-	movl	%edi, %r10d // k
+	movq	ARG1, %r10 // k
 	movq	%rsi, %r11 // A
 	movl	%edx, %r12d // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
@@ -10774,6 +11963,20 @@ _kernel_dgetrf_nn_r_12x4_vs_lib4:
 	movq	24(%rsp), %r13 
 	movq	32(%rsp), %r14 
 	movq	40(%rsp), %r15 
+#if defined(OS_WINDOWS)
+	movq	48(%rsp), %rdi
+	movq	56(%rsp), %rsi
+	vmovups	64(%rsp), %xmm6
+	vmovups	80(%rsp), %xmm7
+	vmovups	96(%rsp), %xmm8
+	vmovups	112(%rsp), %xmm9
+	vmovups	128(%rsp), %xmm10
+	vmovups	144(%rsp), %xmm11
+	vmovups	160(%rsp), %xmm12
+	vmovups	176(%rsp), %xmm13
+	vmovups	192(%rsp), %xmm14
+	vmovups	208(%rsp), %xmm15
+#endif
 	addq	$STACKSIZE, %rsp
 
 	ret

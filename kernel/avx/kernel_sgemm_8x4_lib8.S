@@ -26,11 +26,120 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#define STACKSIZE 96
+#if defined(OS_LINUX) | defined(OS_MAC)
+
+//#define STACKSIZE 96
+#define STACKSIZE 64
+#define ARG1  %rdi
+#define ARG2  %rsi
+#define ARG3  %rdx
+#define ARG4  %rcx
+#define ARG5  %r8
+#define ARG6  %r9
+#define ARG7  STACKSIZE +  8(%rsp)
+#define ARG8  STACKSIZE + 16(%rsp)
+#define ARG9  STACKSIZE + 24(%rsp)
+#define ARG10 STACKSIZE + 32(%rsp)
+#define ARG11 STACKSIZE + 40(%rsp)
+#define ARG12 STACKSIZE + 48(%rsp)
+#define ARG13 STACKSIZE + 56(%rsp)
+#define ARG14 STACKSIZE + 64(%rsp)
+#define ARG15 STACKSIZE + 72(%rsp)
+#define ARG16 STACKSIZE + 80(%rsp)
+#define ARG17 STACKSIZE + 88(%rsp)
+#define ARG18 STACKSIZE + 96(%rsp)
+#define PROLOGUE \
+	subq	$STACKSIZE, %rsp; \
+	movq	%rbx,   (%rsp); \
+	movq	%rbp,  8(%rsp); \
+	movq	%r12, 16(%rsp); \
+	movq	%r13, 24(%rsp); \
+	movq	%r14, 32(%rsp); \
+	movq	%r15, 40(%rsp); \
+	vzeroupper;
+#define EPILOGUE \
+	vzeroupper; \
+	movq	  (%rsp), %rbx; \
+	movq	 8(%rsp), %rbp; \
+	movq	16(%rsp), %r12; \
+	movq	24(%rsp), %r13; \
+	movq	32(%rsp), %r14; \
+	movq	40(%rsp), %r15; \
+	addq	$STACKSIZE, %rsp;
+
+#elif defined(OS_WINDOWS)
+
+#define STACKSIZE 256
+#define ARG1  %rcx
+#define ARG2  %rdx
+#define ARG3  %r8
+#define ARG4  %r9
+#define ARG5  STACKSIZE + 40(%rsp)
+#define ARG6  STACKSIZE + 48(%rsp)
+#define ARG7  STACKSIZE + 56(%rsp)
+#define ARG8  STACKSIZE + 64(%rsp)
+#define ARG9  STACKSIZE + 72(%rsp)
+#define ARG10 STACKSIZE + 80(%rsp)
+#define ARG11 STACKSIZE + 88(%rsp)
+#define ARG12 STACKSIZE + 96(%rsp)
+#define ARG13 STACKSIZE + 104(%rsp)
+#define ARG14 STACKSIZE + 112(%rsp)
+#define ARG15 STACKSIZE + 120(%rsp)
+#define ARG16 STACKSIZE + 128(%rsp)
+#define ARG17 STACKSIZE + 136(%rsp)
+#define ARG18 STACKSIZE + 144(%rsp)
+#define PROLOGUE \
+	subq	$STACKSIZE, %rsp; \
+	movq	%rbx,   (%rsp); \
+	movq	%rbp,  8(%rsp); \
+	movq	%r12, 16(%rsp); \
+	movq	%r13, 24(%rsp); \
+	movq	%r14, 32(%rsp); \
+	movq	%r15, 40(%rsp); \
+	movq	%rdi, 48(%rsp); \
+	movq	%rsi, 56(%rsp); \
+	vmovups	%xmm6, 64(%rsp); \
+	vmovups	%xmm7, 80(%rsp); \
+	vmovups	%xmm8, 96(%rsp); \
+	vmovups	%xmm9, 112(%rsp); \
+	vmovups	%xmm10, 128(%rsp); \
+	vmovups	%xmm11, 144(%rsp); \
+	vmovups	%xmm12, 160(%rsp); \
+	vmovups	%xmm13, 176(%rsp); \
+	vmovups	%xmm14, 192(%rsp); \
+	vmovups	%xmm15, 208(%rsp); \
+	vzeroupper;
+#define EPILOGUE \
+	vzeroupper; \
+	movq	  (%rsp), %rbx; \
+	movq	 8(%rsp), %rbp; \
+	movq	16(%rsp), %r12; \
+	movq	24(%rsp), %r13; \
+	movq	32(%rsp), %r14; \
+	movq	40(%rsp), %r15; \
+	movq	48(%rsp), %rdi; \
+	movq	56(%rsp), %rsi; \
+	vmovups	64(%rsp), %xmm6; \
+	vmovups	80(%rsp), %xmm7; \
+	vmovups	96(%rsp), %xmm8; \
+	vmovups	112(%rsp), %xmm9; \
+	vmovups	128(%rsp), %xmm10; \
+	vmovups	144(%rsp), %xmm11; \
+	vmovups	160(%rsp), %xmm12; \
+	vmovups	176(%rsp), %xmm13; \
+	vmovups	192(%rsp), %xmm14; \
+	vmovups	208(%rsp), %xmm15; \
+	addq	$STACKSIZE, %rsp;
+
+#else
+
+#error wrong OS
+
+#endif
 
 
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.text
 #elif defined(OS_MAC)
 	.section	__TEXT,__text,regular,pure_instructions
@@ -82,6 +191,9 @@
 inner_kernel_sgemm_add_nt_8x4_lib8:
 #elif defined(OS_MAC)
 _inner_kernel_sgemm_add_nt_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_sgemm_add_nt_8x4_lib8; .scl 2; .type 32; .endef
+inner_kernel_sgemm_add_nt_8x4_lib8:
 #endif
 #endif
 	
@@ -369,6 +481,9 @@ _inner_kernel_sgemm_add_nt_8x4_lib8:
 inner_kernel_sgemm_sub_nt_8x4_lib8:
 #elif defined(OS_MAC)
 _inner_kernel_sgemm_sub_nt_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_sgemm_sub_nt_8x4_lib8; .scl 2; .type 32; .endef
+inner_kernel_sgemm_sub_nt_8x4_lib8:
 #endif
 #endif
 	
@@ -660,6 +775,9 @@ _inner_kernel_sgemm_sub_nt_8x4_lib8:
 inner_kernel_sgemm_add_nn_8x4_lib8:
 #elif defined(OS_MAC)
 _inner_kernel_sgemm_add_nn_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_sgemm_add_nn_8x4_lib8; .scl 2; .type 32; .endef
+inner_kernel_sgemm_add_nn_8x4_lib8:
 #endif
 #endif
 	
@@ -911,6 +1029,9 @@ _inner_kernel_sgemm_add_nn_8x4_lib8:
 inner_kernel_sgemm_sub_nn_8x4_lib8:
 #elif defined(OS_MAC)
 _inner_kernel_sgemm_sub_nn_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_sgemm_sub_nn_8x4_lib8; .scl 2; .type 32; .endef
+inner_kernel_sgemm_sub_nn_8x4_lib8:
 #endif
 #endif
 	
@@ -1155,6 +1276,9 @@ _inner_kernel_sgemm_sub_nn_8x4_lib8:
 inner_edge_sgemm_add_nn_8x4_lib8:
 #elif defined(OS_MAC)
 _inner_edge_sgemm_add_nn_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_sgemm_add_nn_8x4_lib8; .scl 2; .type 32; .endef
+inner_edge_sgemm_add_nn_8x4_lib8:
 #endif
 #endif
 	
@@ -1260,6 +1384,9 @@ _inner_edge_sgemm_add_nn_8x4_lib8:
 inner_edge_strsm_rlt_inv_8x4_lib8:
 #elif defined(OS_MAC)
 _inner_edge_strsm_rlt_inv_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_strsm_rlt_inv_8x4_lib8; .scl 2; .type 32; .endef
+inner_edge_strsm_rlt_inv_8x4_lib8:
 #endif
 #endif
 
@@ -1350,6 +1477,9 @@ _inner_edge_strsm_rlt_inv_8x4_lib8:
 inner_edge_strsm_rlt_inv_8x4_gen_lib8:
 #elif defined(OS_MAC)
 _inner_edge_strsm_rlt_inv_8x4_gen_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_strsm_rlt_inv_8x4_gen_lib8; .scl 2; .type 32; .endef
+inner_edge_strsm_rlt_inv_8x4_gen_lib8:
 #endif
 #endif
 
@@ -1448,6 +1578,9 @@ _inner_edge_strsm_rlt_inv_8x4_gen_lib8:
 inner_edge_spotrf_8x4_lib8:
 #elif defined(OS_MAC)
 _inner_edge_spotrf_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_spotrf_8x4_lib8; .scl 2; .type 32; .endef
+inner_edge_spotrf_8x4_lib8:
 #endif
 #endif
 
@@ -1606,6 +1739,9 @@ _inner_edge_spotrf_8x4_lib8:
 inner_edge_spotrf_8x4_gen_lib8:
 #elif defined(OS_MAC)
 _inner_edge_spotrf_8x4_gen_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_spotrf_8x4_gen_lib8; .scl 2; .type 32; .endef
+inner_edge_spotrf_8x4_gen_lib8:
 #endif
 #endif
 
@@ -1766,6 +1902,9 @@ _inner_edge_spotrf_8x4_gen_lib8:
 inner_scale_ab_8x4_lib8:
 #elif defined(OS_MAC)
 _inner_scale_ab_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_ab_8x4_lib8; .scl 2; .type 32; .endef
+inner_scale_ab_8x4_lib8:
 #endif
 #endif
 	
@@ -1860,6 +1999,9 @@ _inner_scale_ab_8x4_lib8:
 inner_scale_ab_8x4_gen_lib8:
 #elif defined(OS_MAC)
 _inner_scale_ab_8x4_gen_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_ab_8x4_gen_lib8; .scl 2; .type 32; .endef
+inner_scale_ab_8x4_gen_lib8:
 #endif
 #endif
 	
@@ -2016,6 +2158,9 @@ _inner_scale_ab_8x4_gen_lib8:
 inner_blend_scale_ab_8x4_lib8:
 #elif defined(OS_MAC)
 _inner_blend_scale_ab_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_blend_scale_ab_8x4_lib8; .scl 2; .type 32; .endef
+inner_blend_scale_ab_8x4_lib8:
 #endif
 #endif
 	
@@ -2120,6 +2265,9 @@ _inner_blend_scale_ab_8x4_lib8:
 inner_blend_scale_ab_8x4_gen_lib8:
 #elif defined(OS_MAC)
 _inner_blend_scale_ab_8x4_gen_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_blend_scale_ab_8x4_gen_lib8; .scl 2; .type 32; .endef
+inner_blend_scale_ab_8x4_gen_lib8:
 #endif
 #endif
 	
@@ -2282,6 +2430,9 @@ _inner_blend_scale_ab_8x4_gen_lib8:
 inner_blend_scale_11_8x4_lib8:
 #elif defined(OS_MAC)
 _inner_blend_scale_11_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_blend_scale_11_8x4_lib8; .scl 2; .type 32; .endef
+inner_blend_scale_11_8x4_lib8:
 #endif
 #endif
 	
@@ -2359,6 +2510,9 @@ _inner_blend_scale_11_8x4_lib8:
 inner_blend_scale_11_8x4_gen_lib8:
 #elif defined(OS_MAC)
 _inner_blend_scale_11_8x4_gen_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_blend_scale_11_8x4_gen_lib8; .scl 2; .type 32; .endef
+inner_blend_scale_11_8x4_gen_lib8:
 #endif
 #endif
 	
@@ -2488,6 +2642,9 @@ _inner_blend_scale_11_8x4_gen_lib8:
 inner_store_8x4_lib8:
 #elif defined(OS_MAC)
 _inner_store_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_store_8x4_lib8; .scl 2; .type 32; .endef
+inner_store_8x4_lib8:
 #endif
 #endif
 	
@@ -2551,6 +2708,9 @@ _inner_store_8x4_lib8:
 inner_store_8x4_gen_lib8:
 #elif defined(OS_MAC)
 _inner_store_8x4_gen_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_store_8x4_gen_lib8; .scl 2; .type 32; .endef
+inner_store_8x4_gen_lib8:
 #endif
 #endif
 	
@@ -2719,6 +2879,9 @@ _inner_store_8x4_gen_lib8:
 inner_store_l_8x4_lib8:
 #elif defined(OS_MAC)
 _inner_store_l_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_store_l_8x4_lib8; .scl 2; .type 32; .endef
+inner_store_l_8x4_lib8:
 #endif
 #endif
 	
@@ -2790,6 +2953,9 @@ _inner_store_l_8x4_lib8:
 inner_store_l_8x4_gen_lib8:
 #elif defined(OS_MAC)
 _inner_store_l_8x4_gen_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_store_l_8x4_gen_lib8; .scl 2; .type 32; .endef
+inner_store_l_8x4_gen_lib8:
 #endif
 #endif
 	
@@ -2948,20 +3114,13 @@ kernel_sgemm_nt_8x4_lib8:
 #elif defined(OS_MAC)
 	.globl _kernel_sgemm_nt_8x4_lib8
 _kernel_sgemm_nt_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_sgemm_nt_8x4_lib8
+	.def kernel_sgemm_nt_8x4_lib8; .scl 2; .type 32; .endef
+kernel_sgemm_nt_8x4_lib8:
 #endif
 	
-	// prologue
-
-	subq	$STACKSIZE, %rsp
-	movq	%rbx,   (%rsp)
-	movq	%rbp,  8(%rsp)
-	movq	%r12, 16(%rsp)
-	movq	%r13, 24(%rsp)
-	movq	%r14, 32(%rsp)
-	movq	%r15, 40(%rsp)
-
-	vzeroupper
-
+	PROLOGUE
 
 	// zero accumulation registers
 
@@ -2973,9 +3132,9 @@ _kernel_sgemm_nt_8x4_lib8:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d // k
-	movq	%rdx, %r11  // A
-	movq	%rcx, %r12  // B
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12  // B
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_ADD_NT_8X4_LIB8
@@ -2990,9 +3149,9 @@ _kernel_sgemm_nt_8x4_lib8:
 
 	// call inner scale
 
-	movq	%rsi, %r10 // alpha
-	movq	%r8, %r11 // beta
-	movq	%r9, %r12   // C
+	movq	ARG2, %r10 // alpha
+	movq	ARG5, %r11 // beta
+	movq	ARG6, %r12   // C
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_AB_8X4_LIB8
@@ -3007,7 +3166,7 @@ _kernel_sgemm_nt_8x4_lib8:
 
 	// store n
 
-	movq	STACKSIZE + 8(%rsp), %r10 // D
+	movq	ARG7, %r10 // D
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_LIB8
@@ -3020,17 +3179,7 @@ _kernel_sgemm_nt_8x4_lib8:
 #endif
 
 
-	// epilogue
-
-	vzeroupper
-
-	movq	  (%rsp), %rbx 
-	movq	 8(%rsp), %rbp
-	movq	16(%rsp), %r12 
-	movq	24(%rsp), %r13 
-	movq	32(%rsp), %r14 
-	movq	40(%rsp), %r15 
-	addq	$STACKSIZE, %rsp
+	EPILOGUE
 
 	ret
 
@@ -3053,20 +3202,13 @@ kernel_sgemm_nt_8x4_gen_lib8:
 #elif defined(OS_MAC)
 	.globl _kernel_sgemm_nt_8x4_gen_lib8
 _kernel_sgemm_nt_8x4_gen_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_sgemm_nt_8x4_gen_lib8
+	.def kernel_sgemm_nt_8x4_gen_lib8; .scl 2; .type 32; .endef
+kernel_sgemm_nt_8x4_gen_lib8:
 #endif
 	
-	// prologue
-
-	subq	$STACKSIZE, %rsp
-	movq	%rbx,   (%rsp)
-	movq	%rbp,  8(%rsp)
-	movq	%r12, 16(%rsp)
-	movq	%r13, 24(%rsp)
-	movq	%r14, 32(%rsp)
-	movq	%r15, 40(%rsp)
-
-	vzeroupper
-
+	PROLOGUE
 
 	// zero accumulation registers
 
@@ -3078,9 +3220,9 @@ _kernel_sgemm_nt_8x4_gen_lib8:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d // k
-	movq	%rdx, %r11  // A
-	movq	%rcx, %r12  // B
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12  // B
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_ADD_NT_8X4_LIB8
@@ -3095,11 +3237,11 @@ _kernel_sgemm_nt_8x4_gen_lib8:
 
 	// call inner blend scale
 
-	movq	%rsi, %r10 // alpha
-	movq	%r8, %r11 // beta
-	movl	%r9d, %r12d // offsetC
-	movq	STACKSIZE +  8(%rsp), %r13 // C
-	movl	STACKSIZE + 16(%rsp), %r14d // sdc
+	movq	ARG2, %r10 // alpha
+	movq	ARG5, %r11 // beta
+	movq	ARG6, %r12 // offsetC
+	movq	ARG7, %r13 // C
+	movq	ARG8, %r14 // sdc
 	sall	$5, %r14d // 8*sdc*sizeof(float)
 
 #if MACRO_LEVEL>=1
@@ -3115,14 +3257,14 @@ _kernel_sgemm_nt_8x4_gen_lib8:
 
 	// store n gen
 
-	movq	STACKSIZE + 24(%rsp), %r10 // offsetD
-	movq	STACKSIZE + 32(%rsp), %r11 // D
-	movl	STACKSIZE + 40(%rsp), %r12d // sdd
+	movq	ARG9, %r10 // offsetD
+	movq	ARG10, %r11 // D
+	movq	ARG11, %r12 // sdd
 	sall	$5, %r12d // 8*sdb*sizeof(float)
-	movl	STACKSIZE + 48(%rsp), %r13d // m0
-	movl	STACKSIZE + 56(%rsp), %r14d // m1
-	movl	STACKSIZE + 64(%rsp), %r15d // n0
-	movl	STACKSIZE + 72(%rsp), %eax // n1
+	movq	ARG12, %r13 // m0
+	movq	ARG13, %r14 // m1
+	movq	ARG14, %r15 // n0
+	movq	ARG15, %rax // n1
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_GEN_LIB8
@@ -3135,17 +3277,7 @@ _kernel_sgemm_nt_8x4_gen_lib8:
 #endif
 
 
-	// epilogue
-
-	vzeroupper
-
-	movq	  (%rsp), %rbx 
-	movq	 8(%rsp), %rbp
-	movq	16(%rsp), %r12 
-	movq	24(%rsp), %r13 
-	movq	32(%rsp), %r14 
-	movq	40(%rsp), %r15 
-	addq	$STACKSIZE, %rsp
+	EPILOGUE
 
 	ret
 
@@ -3168,20 +3300,13 @@ kernel_sgemm_nn_8x4_lib8:
 #elif defined(OS_MAC)
 	.globl _kernel_sgemm_nn_8x4_lib8
 _kernel_sgemm_nn_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_sgemm_nn_8x4_lib8
+	.def kernel_sgemm_nn_8x4_lib8; .scl 2; .type 32; .endef
+kernel_sgemm_nn_8x4_lib8:
 #endif
 	
-	// prologue
-
-	subq	$STACKSIZE, %rsp
-	movq	%rbx,   (%rsp)
-	movq	%rbp,  8(%rsp)
-	movq	%r12, 16(%rsp)
-	movq	%r13, 24(%rsp)
-	movq	%r14, 32(%rsp)
-	movq	%r15, 40(%rsp)
-
-	vzeroupper
-
+	PROLOGUE
 
 	// zero accumulation registers
 
@@ -3193,12 +3318,12 @@ _kernel_sgemm_nn_8x4_lib8:
 
 	// call inner dgemm kernel nn
 
-	movl	%edi, %r10d // k
-	movq	%rdx, %r11  // A
-	movq	%r8, %r12  // B
-	movl	%r9d, %r13d // sdb
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG5, %r12  // B
+	movq	ARG6, %r13 // sdb
 	sall	$5, %r13d // 4*sdb*sizeof(double)
-	movl	%ecx, %r14d // offsetB
+	movq	ARG4, %r14 // offsetB
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGEMM_ADD_NN_8X4_LIB8
@@ -3223,9 +3348,9 @@ _kernel_sgemm_nn_8x4_lib8:
 
 	// call inner blend 
 
-	movq	%rsi, %r10 // alpha
-	movq	STACKSIZE + 8(%rsp), %r11 // beta
-	movq	STACKSIZE + 16(%rsp), %r12   // C
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X4_LIB8
@@ -3240,7 +3365,7 @@ _kernel_sgemm_nn_8x4_lib8:
 
 	// store n
 
-	movq	STACKSIZE + 24(%rsp), %r10 // D
+	movq	ARG9, %r10 // D
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_LIB8
@@ -3253,17 +3378,7 @@ _kernel_sgemm_nn_8x4_lib8:
 #endif
 
 
-	// epilogue
-
-	vzeroupper
-
-	movq	  (%rsp), %rbx 
-	movq	 8(%rsp), %rbp
-	movq	16(%rsp), %r12 
-	movq	24(%rsp), %r13 
-	movq	32(%rsp), %r14 
-	movq	40(%rsp), %r15 
-	addq	$STACKSIZE, %rsp
+	EPILOGUE
 
 	ret
 
@@ -3286,20 +3401,13 @@ kernel_sgemm_nn_8x4_gen_lib8:
 #elif defined(OS_MAC)
 	.globl _kernel_sgemm_nn_8x4_gen_lib8
 _kernel_sgemm_nn_8x4_gen_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_sgemm_nn_8x4_gen_lib8
+	.def kernel_sgemm_nn_8x4_gen_lib8; .scl 2; .type 32; .endef
+kernel_sgemm_nn_8x4_gen_lib8:
 #endif
 	
-	// prologue
-
-	subq	$STACKSIZE, %rsp
-	movq	%rbx,   (%rsp)
-	movq	%rbp,  8(%rsp)
-	movq	%r12, 16(%rsp)
-	movq	%r13, 24(%rsp)
-	movq	%r14, 32(%rsp)
-	movq	%r15, 40(%rsp)
-
-	vzeroupper
-
+	PROLOGUE
 
 	// zero accumulation registers
 
@@ -3311,12 +3419,12 @@ _kernel_sgemm_nn_8x4_gen_lib8:
 
 	// call inner dgemm kernel nn
 
-	movl	%edi, %r10d // k
-	movq	%rdx, %r11  // A
-	movq	%r8, %r12  // B
-	movl	%r9d, %r13d // sdb
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG5, %r12  // B
+	movq	ARG6, %r13 // sdb
 	sall	$5, %r13d // 4*sdb*sizeof(double)
-	movl	%ecx, %r14d // offsetB
+	movq	ARG4, %r14 // offsetB
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGEMM_ADD_NN_8X4_LIB8
@@ -3341,11 +3449,11 @@ _kernel_sgemm_nn_8x4_gen_lib8:
 
 	// call inner blend scale
 
-	movq	%rsi, %r10 // alpha
-	movq	STACKSIZE +  8(%rsp), %r11 // beta
-	movl	STACKSIZE + 16(%rsp), %r12d // offsetC
-	movq	STACKSIZE + 24(%rsp), %r13 // C
-	movl	STACKSIZE + 32(%rsp), %r14d // sdc
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12 // offsetC
+	movq	ARG9, %r13 // C
+	movq	ARG10, %r14 // sdc
 	sall	$5, %r14d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
@@ -3361,14 +3469,14 @@ _kernel_sgemm_nn_8x4_gen_lib8:
 
 	// store n gen
 
-	movq	STACKSIZE + 40(%rsp), %r10 // offsetD
-	movq	STACKSIZE + 48(%rsp), %r11 // D
-	movl	STACKSIZE + 56(%rsp), %r12d // sdd
+	movq	ARG11, %r10 // offsetD
+	movq	ARG12, %r11 // D
+	movq	ARG13, %r12 // sdd
 	sall	$5, %r12d // 4*sdb*sizeof(double)
-	movl	STACKSIZE + 64(%rsp), %r13d // m0
-	movl	STACKSIZE + 72(%rsp), %r14d // m1
-	movl	STACKSIZE + 80(%rsp), %r15d // n0
-	movl	STACKSIZE + 88(%rsp), %eax // n1
+	movq	ARG14, %r13 // m0
+	movq	ARG15, %r14 // m1
+	movq	ARG16, %r15 // n0
+	movq	ARG17, %rax // n1
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_GEN_LIB8
@@ -3381,17 +3489,7 @@ _kernel_sgemm_nn_8x4_gen_lib8:
 #endif
 
 
-	// epilogue
-
-	vzeroupper
-
-	movq	  (%rsp), %rbx 
-	movq	 8(%rsp), %rbp
-	movq	16(%rsp), %r12 
-	movq	24(%rsp), %r13 
-	movq	32(%rsp), %r14 
-	movq	40(%rsp), %r15 
-	addq	$STACKSIZE, %rsp
+	EPILOGUE
 
 	ret
 
@@ -3414,20 +3512,13 @@ kernel_strsm_nt_rl_inv_8x4_lib8:
 #elif defined(OS_MAC)
 	.globl _kernel_strsm_nt_rl_inv_8x4_lib8
 _kernel_strsm_nt_rl_inv_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_strsm_nt_rl_inv_8x4_lib8
+	.def kernel_strsm_nt_rl_inv_8x4_lib8; .scl 2; .type 32; .endef
+kernel_strsm_nt_rl_inv_8x4_lib8:
 #endif
 	
-	// prologue
-
-	subq	$STACKSIZE, %rsp
-	movq	%rbx,   (%rsp)
-	movq	%rbp,  8(%rsp)
-	movq	%r12, 16(%rsp)
-	movq	%r13, 24(%rsp)
-	movq	%r14, 32(%rsp)
-	movq	%r15, 40(%rsp)
-
-	vzeroupper
-
+	PROLOGUE
 
 	// zero accumulation registers
 
@@ -3438,9 +3529,9 @@ _kernel_strsm_nt_rl_inv_8x4_lib8:
 
 	// call inner dgemm kernel nt 
 
-	movl	%edi, %r10d
-	movq	%rsi, %r11
-	movq	%rdx, %r12
+	movq	ARG1, %r10
+	movq	ARG2, %r11
+	movq	ARG3, %r12
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_SUB_NT_8X4_LIB8
@@ -3455,7 +3546,7 @@ _kernel_strsm_nt_rl_inv_8x4_lib8:
 
 	// call inner blender_loader nn
 
-	movq	%rcx, %r10
+	movq	ARG4, %r10
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_8X4_LIB4
@@ -3470,8 +3561,8 @@ _kernel_strsm_nt_rl_inv_8x4_lib8:
 
 	// solve
 
-	movq	%r9, %r10  // E 
-	movq	STACKSIZE + 8(%rsp), %r11  // inv_diag_E 
+	movq	ARG6, %r10  // E 
+	movq	ARG7, %r11  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_STRSM_RLT_INV_8X4_LIB8
@@ -3486,7 +3577,7 @@ _kernel_strsm_nt_rl_inv_8x4_lib8:
 
 	// store
 
-	movq	%r8, %r10 // D
+	movq	ARG5, %r10 // D
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_LIB8
@@ -3499,17 +3590,7 @@ _kernel_strsm_nt_rl_inv_8x4_lib8:
 #endif
 
 
-	// epilogue
-
-	vzeroupper
-
-	movq	  (%rsp), %rbx 
-	movq	 8(%rsp), %rbp
-	movq	16(%rsp), %r12 
-	movq	24(%rsp), %r13 
-	movq	32(%rsp), %r14 
-	movq	40(%rsp), %r15 
-	addq	$STACKSIZE, %rsp
+	EPILOGUE
 
 	ret
 
@@ -3532,20 +3613,13 @@ kernel_strsm_nt_rl_inv_8x4_vs_lib8:
 #elif defined(OS_MAC)
 	.globl _kernel_strsm_nt_rl_inv_8x4_vs_lib8
 _kernel_strsm_nt_rl_inv_8x4_vs_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_strsm_nt_rl_inv_8x4_vs_lib8
+	.def kernel_strsm_nt_rl_inv_8x4_vs_lib8; .scl 2; .type 32; .endef
+kernel_strsm_nt_rl_inv_8x4_vs_lib8:
 #endif
 	
-	// prologue
-
-	subq	$STACKSIZE, %rsp
-	movq	%rbx,   (%rsp)
-	movq	%rbp,  8(%rsp)
-	movq	%r12, 16(%rsp)
-	movq	%r13, 24(%rsp)
-	movq	%r14, 32(%rsp)
-	movq	%r15, 40(%rsp)
-
-	vzeroupper
-
+	PROLOGUE
 
 	// zero accumulation registers
 
@@ -3557,9 +3631,9 @@ _kernel_strsm_nt_rl_inv_8x4_vs_lib8:
 
 	// call inner dgemm kernel nt 
 
-	movl	%edi, %r10d
-	movq	%rsi, %r11
-	movq	%rdx, %r12
+	movq	ARG1, %r10
+	movq	ARG2, %r11
+	movq	ARG3, %r12
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_SUB_NT_8X4_LIB8
@@ -3574,9 +3648,9 @@ _kernel_strsm_nt_rl_inv_8x4_vs_lib8:
 
 	// call inner blender_loader nn // TODO scale gen
 
-	movl	$0, %r10d // offsetC
-	movq	%rcx, %r11 // C
-	movl	$0, %r12d // sdc
+	movq	$0, %r10 // offsetC
+	movq	ARG4, %r11 // C
+	movq	$0, %r12 // sdc
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_8X4_GEN_LIB8
@@ -3591,9 +3665,9 @@ _kernel_strsm_nt_rl_inv_8x4_vs_lib8:
 
 	// solve
 
-	movq	%r9, %r10  // E 
-	movq	STACKSIZE + 8(%rsp), %r11  // inv_diag_E 
-	movl	STACKSIZE + 24(%rsp), %r12d // kn 
+	movq	ARG6, %r10  // E 
+	movq	ARG7, %r11  // inv_diag_E 
+	movq	ARG9, %r12 // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_STRSM_RLT_INV_8X4_GEN_LIB8
@@ -3608,13 +3682,13 @@ _kernel_strsm_nt_rl_inv_8x4_vs_lib8:
 
 	// store
 
-	movl	$0, %r10d // offsetD
-	movq	%r8, %r11 // D
-	movl	$0, %r12d // sdd
-	movl	$0, %r13d // m0
-	movl	STACKSIZE + 16(%rsp), %r14d // km 
-	movl	$0, %r15d // n0
-	movl	STACKSIZE + 24(%rsp), %eax // kn 
+	movq	$0, %r10 // offsetD
+	movq	ARG5, %r11 // D
+	movq	$0, %r12 // sdd
+	movq	$0, %r13 // m0
+	movq	ARG8, %r14 // km 
+	movq	$0, %r15 // n0
+	movq	ARG9, %rax // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_GEN_LIB8
@@ -3627,17 +3701,7 @@ _kernel_strsm_nt_rl_inv_8x4_vs_lib8:
 #endif
 
 
-	// epilogue
-
-	vzeroupper
-
-	movq	  (%rsp), %rbx 
-	movq	 8(%rsp), %rbp
-	movq	16(%rsp), %r12 
-	movq	24(%rsp), %r13 
-	movq	32(%rsp), %r14 
-	movq	40(%rsp), %r15 
-	addq	$STACKSIZE, %rsp
+	EPILOGUE
 
 	ret
 
@@ -3660,20 +3724,13 @@ kernel_spotrf_nt_l_8x4_lib8:
 #elif defined(OS_MAC)
 	.globl _kernel_spotrf_nt_l_8x4_lib8
 _kernel_spotrf_nt_l_8x4_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_spotrf_nt_l_8x4_lib8
+	.def kernel_spotrf_nt_l_8x4_lib8; .scl 2; .type 32; .endef
+kernel_spotrf_nt_l_8x4_lib8:
 #endif
 	
-	// prologue
-
-	subq	$STACKSIZE, %rsp
-	movq	%rbx,   (%rsp)
-	movq	%rbp,  8(%rsp)
-	movq	%r12, 16(%rsp)
-	movq	%r13, 24(%rsp)
-	movq	%r14, 32(%rsp)
-	movq	%r15, 40(%rsp)
-
-	vzeroupper
-
+	PROLOGUE
 
 	// zero accumulation registers
 
@@ -3685,9 +3742,9 @@ _kernel_spotrf_nt_l_8x4_lib8:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d
-	movq	%rsi, %r11
-	movq	%rdx, %r12
+	movq	ARG1, %r10
+	movq	ARG2, %r11
+	movq	ARG3, %r12
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_SUB_NT_8X4_LIB8
@@ -3702,7 +3759,7 @@ _kernel_spotrf_nt_l_8x4_lib8:
 
 	// call inner blender_loader nn
 
-	movq	%rcx, %r10 // C
+	movq	ARG4, %r10 // C
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_8X4_LIB8
@@ -3717,7 +3774,7 @@ _kernel_spotrf_nt_l_8x4_lib8:
 
 	// factorization
 
-	movq	%r9, %r10  // inv_diag_D 
+	movq	ARG6, %r10  // inv_diag_D 
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SPOTRF_8X4_LIB8
@@ -3732,7 +3789,7 @@ _kernel_spotrf_nt_l_8x4_lib8:
 
 	// store
 
-	movq	%r8, %r10 // D
+	movq	ARG5, %r10 // D
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_8X4_LIB8
@@ -3745,17 +3802,7 @@ _kernel_spotrf_nt_l_8x4_lib8:
 #endif
 
 
-	// epilogue
-
-	vzeroupper
-
-	movq	  (%rsp), %rbx 
-	movq	 8(%rsp), %rbp
-	movq	16(%rsp), %r12 
-	movq	24(%rsp), %r13 
-	movq	32(%rsp), %r14 
-	movq	40(%rsp), %r15 
-	addq	$STACKSIZE, %rsp
+	EPILOGUE
 
 	ret
 
@@ -3778,20 +3825,13 @@ kernel_spotrf_nt_l_8x4_vs_lib8:
 #elif defined(OS_MAC)
 	.globl _kernel_spotrf_nt_l_8x4_vs_lib8
 _kernel_spotrf_nt_l_8x4_vs_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_spotrf_nt_l_8x4_vs_lib8
+	.def kernel_spotrf_nt_l_8x4_vs_lib8; .scl 2; .type 32; .endef
+kernel_spotrf_nt_l_8x4_vs_lib8:
 #endif
 	
-	// prologue
-
-	subq	$STACKSIZE, %rsp
-	movq	%rbx,   (%rsp)
-	movq	%rbp,  8(%rsp)
-	movq	%r12, 16(%rsp)
-	movq	%r13, 24(%rsp)
-	movq	%r14, 32(%rsp)
-	movq	%r15, 40(%rsp)
-
-	vzeroupper
-
+	PROLOGUE
 
 	// zero accumulation registers
 
@@ -3803,9 +3843,9 @@ _kernel_spotrf_nt_l_8x4_vs_lib8:
 
 	// call inner dgemm kernel nt
 
-	movl	%edi, %r10d
-	movq	%rsi, %r11
-	movq	%rdx, %r12
+	movq	ARG1, %r10
+	movq	ARG2, %r11
+	movq	ARG3, %r12
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_SUB_NT_8X4_LIB8
@@ -3820,9 +3860,9 @@ _kernel_spotrf_nt_l_8x4_vs_lib8:
 
 	// call inner blender_loader nn
 
-	movl	$0, %r10d // offsetC
-	movq	%rcx, %r11 // C
-	movl	$0, %r12d // sdc
+	movq	$0, %r10 // offsetC
+	movq	ARG4, %r11 // C
+	movq	$0, %r12 // sdc
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_8X4_GEN_LIB8
@@ -3837,8 +3877,8 @@ _kernel_spotrf_nt_l_8x4_vs_lib8:
 
 	// factorization
 
-	movq	%r9, %r10  // inv_diag_D 
-	movl	STACKSIZE + 16(%rsp), %r11d // kn 
+	movq	ARG6, %r10  // inv_diag_D 
+	movq	ARG8, %r11 // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SPOTRF_8X4_GEN_LIB8
@@ -3853,13 +3893,13 @@ _kernel_spotrf_nt_l_8x4_vs_lib8:
 
 	// store
 
-	movl	$0, %r10d // offsetD
-	movq	%r8, %r11 // D
-	movl	$0, %r12d // sdd
-	movl	$0, %r13d // m0
-	movl	STACKSIZE + 8(%rsp), %r14d // m1 
-	movl	$0, %r15d // n0
-	movl	STACKSIZE + 16(%rsp), %eax // n1 
+	movq	$0, %r10 // offsetD
+	movq	ARG5, %r11 // D
+	movq	$0, %r12 // sdd
+	movq	$0, %r13 // m0
+	movq	ARG7, %r14 // m1 
+	movq	$0, %r15 // n0
+	movq	ARG8, %rax // n1 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_8X4_GEN_LIB8
@@ -3872,17 +3912,7 @@ _kernel_spotrf_nt_l_8x4_vs_lib8:
 #endif
 
 
-	// epilogue
-
-	vzeroupper
-
-	movq	  (%rsp), %rbx 
-	movq	 8(%rsp), %rbp
-	movq	16(%rsp), %r12 
-	movq	24(%rsp), %r13 
-	movq	32(%rsp), %r14 
-	movq	40(%rsp), %r15 
-	addq	$STACKSIZE, %rsp
+	EPILOGUE
 
 	ret
 
