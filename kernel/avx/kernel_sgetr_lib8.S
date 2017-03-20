@@ -1444,7 +1444,7 @@ kernel_sgetr_8_0_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgetr_8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgetr_8_lib8
@@ -1496,7 +1496,7 @@ kernel_sgetr_8_0_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGETR_8_0_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgetr_8_0_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgetr_8_0_gen_lib8
@@ -1529,7 +1529,7 @@ kernel_sgetr_8_0_gen_lib8:
 // void kernel_sgetr_8_1_lib8(int k, float *A, int sda, float *B);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.globl kernel_sgetr_8_1_lib8
 	.type kernel_sgetr_8_1_lib8, @function
 kernel_sgetr_8_1_lib8:
@@ -1568,7 +1568,7 @@ kernel_sgetr_8_1_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgetr_8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgetr_8_lib8
@@ -1620,7 +1620,7 @@ kernel_sgetr_8_1_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGETR_8_1_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgetr_8_1_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgetr_8_1_gen_lib8
@@ -1630,7 +1630,7 @@ kernel_sgetr_8_1_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgetr_8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgetr_8_gen_lib8
@@ -1682,7 +1682,7 @@ kernel_sgetr_8_2_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGETR_8_2_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgetr_8_2_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgetr_8_2_gen_lib8
@@ -1692,7 +1692,7 @@ kernel_sgetr_8_2_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgetr_8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgetr_8_lib8
@@ -1744,7 +1744,7 @@ kernel_sgetr_8_2_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGETR_8_2_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgetr_8_2_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgetr_8_2_gen_lib8
@@ -1754,7 +1754,7 @@ kernel_sgetr_8_2_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgetr_8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgetr_8_gen_lib8
@@ -1806,7 +1806,7 @@ kernel_sgetr_8_3_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGETR_8_3_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgetr_8_3_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgetr_8_3_gen_lib8
@@ -1816,7 +1816,7 @@ kernel_sgetr_8_3_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgetr_8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgetr_8_lib8
@@ -1868,7 +1868,7 @@ kernel_sgetr_8_3_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGETR_8_3_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgetr_8_3_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgetr_8_3_gen_lib8
@@ -1878,7 +1878,7 @@ kernel_sgetr_8_3_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgetr_8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgetr_8_gen_lib8
@@ -1930,7 +1930,7 @@ kernel_sgetr_8_4_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGETR_8_4_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgetr_8_4_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgetr_8_4_gen_lib8
@@ -1940,7 +1940,7 @@ kernel_sgetr_8_4_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgetr_8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgetr_8_lib8
@@ -1992,7 +1992,7 @@ kernel_sgetr_8_4_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGETR_8_4_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgetr_8_4_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgetr_8_4_gen_lib8
@@ -2002,7 +2002,7 @@ kernel_sgetr_8_4_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgetr_8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgetr_8_gen_lib8
@@ -2054,7 +2054,7 @@ kernel_sgetr_8_5_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGETR_8_5_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgetr_8_5_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgetr_8_5_gen_lib8
@@ -2064,7 +2064,7 @@ kernel_sgetr_8_5_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgetr_8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgetr_8_lib8
@@ -2116,7 +2116,7 @@ kernel_sgetr_8_5_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGETR_8_5_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgetr_8_5_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgetr_8_5_gen_lib8
@@ -2126,7 +2126,7 @@ kernel_sgetr_8_5_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgetr_8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgetr_8_gen_lib8
@@ -2178,7 +2178,7 @@ kernel_sgetr_8_6_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGETR_8_6_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgetr_8_6_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgetr_8_6_gen_lib8
@@ -2188,7 +2188,7 @@ kernel_sgetr_8_6_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgetr_8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgetr_8_lib8
@@ -2240,7 +2240,7 @@ kernel_sgetr_8_6_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGETR_8_6_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgetr_8_6_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgetr_8_6_gen_lib8
@@ -2250,7 +2250,7 @@ kernel_sgetr_8_6_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgetr_8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgetr_8_gen_lib8
@@ -2302,7 +2302,7 @@ kernel_sgetr_8_7_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGETR_8_7_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgetr_8_7_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgetr_8_7_gen_lib8
@@ -2312,7 +2312,7 @@ kernel_sgetr_8_7_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgetr_8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgetr_8_lib8
@@ -2364,7 +2364,7 @@ kernel_sgetr_8_7_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGETR_8_7_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgetr_8_7_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgetr_8_7_gen_lib8
@@ -2374,7 +2374,7 @@ kernel_sgetr_8_7_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGETR_8_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgetr_8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgetr_8_gen_lib8
@@ -2398,6 +2398,8 @@ kernel_sgetr_8_7_gen_lib8:
 	.section	.rodata.cst32,"aM",@progbits,32
 #elif defined(OS_MAC)
 	.section	__TEXT,__const
+#elif defined(OS_WINDOWS)
+	.section .rdata,"dr"
 #endif
 
 #if defined(OS_LINUX)

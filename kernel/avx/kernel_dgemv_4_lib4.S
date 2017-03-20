@@ -2409,7 +2409,7 @@ kernel_dgemv_n_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_n_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_n_4_lib4
@@ -2426,7 +2426,7 @@ kernel_dgemv_n_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_SCALE_AB_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_n_scale_ab_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_blend_n_scale_ab_4_lib4
@@ -2441,7 +2441,7 @@ kernel_dgemv_n_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_lib4
@@ -2497,7 +2497,7 @@ kernel_dgemv_n_4_gen_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_n_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_n_4_lib4
@@ -2514,7 +2514,7 @@ kernel_dgemv_n_4_gen_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_SCALE_AB_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_n_scale_ab_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_blend_n_scale_ab_4_lib4
@@ -2531,7 +2531,7 @@ kernel_dgemv_n_4_gen_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_GEN_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_gen_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_gen_lib4
@@ -2590,7 +2590,7 @@ kernel_dgemv_t_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_t_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_t_4_lib4
@@ -2607,7 +2607,7 @@ kernel_dgemv_t_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_t_scale_ab_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_blend_t_scale_ab_4_lib4
@@ -2622,7 +2622,7 @@ kernel_dgemv_t_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_lib4
@@ -2681,7 +2681,7 @@ kernel_dgemv_t_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_t_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_t_4_lib4
@@ -2698,7 +2698,7 @@ kernel_dgemv_t_4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_t_scale_ab_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_blend_t_scale_ab_4_lib4
@@ -2714,7 +2714,7 @@ kernel_dgemv_t_4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_vs_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_vs_lib4
@@ -2774,7 +2774,7 @@ kernel_dgemv_t_4_gen_lib4:
 #if MACRO_LEVEL>=2
 	INNER_EDGE_DGEMV_ADD_T_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_dgemv_add_t_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_edge_dgemv_add_t_4_lib4
@@ -2784,7 +2784,7 @@ kernel_dgemv_t_4_gen_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_t_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_t_4_lib4
@@ -2801,7 +2801,7 @@ kernel_dgemv_t_4_gen_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_t_scale_ab_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_blend_t_scale_ab_4_lib4
@@ -2817,7 +2817,7 @@ kernel_dgemv_t_4_gen_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_vs_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_vs_lib4
@@ -2873,7 +2873,7 @@ kernel_dtrsv_ln_inv_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_n_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_n_4_lib4
@@ -2891,7 +2891,7 @@ kernel_dtrsv_ln_inv_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLENDER_N_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blender_n_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_blender_n_4_lib4
@@ -2907,7 +2907,7 @@ kernel_dtrsv_ln_inv_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSV_LN_INV_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_dtrsv_ln_inv_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_edge_dtrsv_ln_inv_4_lib4
@@ -2922,7 +2922,7 @@ kernel_dtrsv_ln_inv_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_lib4
@@ -2978,7 +2978,7 @@ kernel_dtrsv_ln_inv_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_n_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_n_4_lib4
@@ -2996,7 +2996,7 @@ kernel_dtrsv_ln_inv_4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLENDER_N_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blender_n_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_blender_n_4_lib4
@@ -3013,7 +3013,7 @@ kernel_dtrsv_ln_inv_4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSV_LN_INV_4_VS_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_dtrsv_ln_inv_4_vs_lib4
 #elif defined(OS_MAC)
 	callq _inner_edge_dtrsv_ln_inv_4_vs_lib4
@@ -3029,7 +3029,7 @@ kernel_dtrsv_ln_inv_4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_lib4
@@ -3091,7 +3091,7 @@ kernel_dtrsv_lt_inv_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_t_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_t_4_lib4
@@ -3107,7 +3107,7 @@ kernel_dtrsv_lt_inv_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLENDER_T_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blender_t_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_blender_t_4_lib4
@@ -3123,7 +3123,7 @@ kernel_dtrsv_lt_inv_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSV_LT_INV_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_dtrsv_lt_inv_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_edge_dtrsv_lt_inv_4_lib4
@@ -3138,7 +3138,7 @@ kernel_dtrsv_lt_inv_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_lib4
@@ -3200,7 +3200,7 @@ kernel_dtrsv_lt_inv_3_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_t_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_t_4_lib4
@@ -3216,7 +3216,7 @@ kernel_dtrsv_lt_inv_3_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLENDER_T_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blender_t_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_blender_t_4_lib4
@@ -3234,7 +3234,7 @@ kernel_dtrsv_lt_inv_3_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSV_LT_INV_3_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_dtrsv_lt_inv_3_lib4
 #elif defined(OS_MAC)
 	callq _inner_edge_dtrsv_lt_inv_3_lib4
@@ -3250,7 +3250,7 @@ kernel_dtrsv_lt_inv_3_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_vs_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_vs_lib4
@@ -3312,7 +3312,7 @@ kernel_dtrsv_lt_inv_2_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_t_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_t_4_lib4
@@ -3328,7 +3328,7 @@ kernel_dtrsv_lt_inv_2_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLENDER_T_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blender_t_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_blender_t_4_lib4
@@ -3346,7 +3346,7 @@ kernel_dtrsv_lt_inv_2_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSV_LT_INV_2_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_dtrsv_lt_inv_2_lib4
 #elif defined(OS_MAC)
 	callq _inner_edge_dtrsv_lt_inv_2_lib4
@@ -3362,7 +3362,7 @@ kernel_dtrsv_lt_inv_2_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_vs_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_vs_lib4
@@ -3424,7 +3424,7 @@ kernel_dtrsv_lt_inv_1_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_t_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_t_4_lib4
@@ -3440,7 +3440,7 @@ kernel_dtrsv_lt_inv_1_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLENDER_T_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blender_t_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_blender_t_4_lib4
@@ -3458,7 +3458,7 @@ kernel_dtrsv_lt_inv_1_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSV_LT_INV_1_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_dtrsv_lt_inv_1_lib4
 #elif defined(OS_MAC)
 	callq _inner_edge_dtrsv_lt_inv_1_lib4
@@ -3474,7 +3474,7 @@ kernel_dtrsv_lt_inv_1_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_vs_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_vs_lib4
@@ -3530,7 +3530,7 @@ kernel_dtrmv_un_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMV_UN_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_dtrmv_un_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_edge_dtrmv_un_4_lib4
@@ -3540,7 +3540,7 @@ kernel_dtrmv_un_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_n_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_n_4_lib4
@@ -3553,7 +3553,7 @@ kernel_dtrmv_un_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_n_lib4
 #elif defined(OS_MAC)
 	callq _inner_blend_n_lib4
@@ -3568,7 +3568,7 @@ kernel_dtrmv_un_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_lib4
@@ -3627,7 +3627,7 @@ kernel_dtrmv_ut_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_DTRMV_UT_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dtrmv_ut_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dtrmv_ut_4_lib4
@@ -3640,7 +3640,7 @@ kernel_dtrmv_ut_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_t_lib4
 #elif defined(OS_MAC)
 	callq _inner_blend_t_lib4
@@ -3655,7 +3655,7 @@ kernel_dtrmv_ut_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_lib4
@@ -3714,7 +3714,7 @@ kernel_dtrmv_ut_4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_DTRMV_UT_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dtrmv_ut_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dtrmv_ut_4_lib4
@@ -3727,7 +3727,7 @@ kernel_dtrmv_ut_4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_t_lib4
 #elif defined(OS_MAC)
 	callq _inner_blend_t_lib4
@@ -3743,7 +3743,7 @@ kernel_dtrmv_ut_4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_vs_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_vs_lib4
@@ -3818,7 +3818,7 @@ kernel_dgemv_nt_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_NT_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_nt_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_nt_4_lib4
@@ -3835,7 +3835,7 @@ kernel_dgemv_nt_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_t_scale_ab_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_blend_t_scale_ab_4_lib4
@@ -3850,7 +3850,7 @@ kernel_dgemv_nt_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_lib4
@@ -3925,7 +3925,7 @@ kernel_dsymv_l_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_EDGE_DSYMV_ADD_NT_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_dsymv_add_nt_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_edge_dsymv_add_nt_4_lib4
@@ -3935,7 +3935,7 @@ kernel_dsymv_l_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_NT_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_nt_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_nt_4_lib4
@@ -3951,7 +3951,7 @@ kernel_dsymv_l_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_A1_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_t_scale_a1_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_blend_t_scale_a1_4_lib4
@@ -3966,7 +3966,7 @@ kernel_dsymv_l_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_4_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_4_lib4
@@ -3991,6 +3991,8 @@ kernel_dsymv_l_4_lib4:
 	.section	.rodata.cst32,"aM",@progbits,32
 #elif defined(OS_MAC)
 	.section	__TEXT,__const
+#elif defined(OS_WINDOWS)
+	.section .rdata,"dr"
 #endif
 #if 1
 #if defined(OS_LINUX)

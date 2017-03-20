@@ -3539,7 +3539,7 @@ kernel_sgemm_nt_8x8_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_ADD_NT_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgemm_add_nt_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgemm_add_nt_8x8_lib8
@@ -3556,7 +3556,7 @@ kernel_sgemm_nt_8x8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_AB_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_scale_ab_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_blend_scale_ab_8x8_lib8
@@ -3571,7 +3571,7 @@ kernel_sgemm_nt_8x8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_store_8x8_lib8
@@ -3631,7 +3631,7 @@ kernel_sgemm_nt_8x8_gen_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_ADD_NT_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgemm_add_nt_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgemm_add_nt_8x8_lib8
@@ -3651,7 +3651,7 @@ kernel_sgemm_nt_8x8_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_AB_8X8_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_scale_ab_8x8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_blend_scale_ab_8x8_gen_lib8
@@ -3673,7 +3673,7 @@ kernel_sgemm_nt_8x8_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X8_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_8x8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_store_8x8_gen_lib8
@@ -3736,7 +3736,7 @@ kernel_sgemm_nn_8x8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGEMM_ADD_NN_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgemm_add_nn_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgemm_add_nn_8x8_lib8
@@ -3746,7 +3746,7 @@ kernel_sgemm_nn_8x8_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_ADD_NN_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgemm_add_nn_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgemm_add_nn_8x8_lib8
@@ -3763,7 +3763,7 @@ kernel_sgemm_nn_8x8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_scale_ab_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_scale_ab_8x8_lib8
@@ -3778,7 +3778,7 @@ kernel_sgemm_nn_8x8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_store_8x8_lib8
@@ -3841,7 +3841,7 @@ kernel_sgemm_nn_8x8_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGEMM_ADD_NN_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgemm_add_nn_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgemm_add_nn_8x8_lib8
@@ -3851,7 +3851,7 @@ kernel_sgemm_nn_8x8_gen_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_ADD_NN_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgemm_add_nn_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgemm_add_nn_8x8_lib8
@@ -3871,7 +3871,7 @@ kernel_sgemm_nn_8x8_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X8_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_scale_ab_8x8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_scale_ab_8x8_gen_lib8
@@ -3893,7 +3893,7 @@ kernel_sgemm_nn_8x8_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X8_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_8x8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_store_8x8_gen_lib8
@@ -3953,7 +3953,7 @@ kernel_ssyrk_nt_l_8x8_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_ADD_NT_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgemm_add_nt_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgemm_add_nt_8x8_lib8
@@ -3970,7 +3970,7 @@ kernel_ssyrk_nt_l_8x8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_AB_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_scale_ab_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_blend_scale_ab_8x8_lib8
@@ -3985,7 +3985,7 @@ kernel_ssyrk_nt_l_8x8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_l_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_store_l_8x8_lib8
@@ -4045,7 +4045,7 @@ kernel_strsm_nt_rl_inv_8x8_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_SUB_NT_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgemm_sub_nt_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgemm_sub_nt_8x8_lib8
@@ -4060,7 +4060,7 @@ kernel_strsm_nt_rl_inv_8x8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_8X8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_scale_11_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_blend_scale_11_8x8_lib8
@@ -4077,7 +4077,7 @@ kernel_strsm_nt_rl_inv_8x8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_STRSM_RLT_INV_8X8_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_strsm_rlt_inv_8x8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_strsm_rlt_inv_8x8_gen_lib8
@@ -4092,7 +4092,7 @@ kernel_strsm_nt_rl_inv_8x8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_store_8x8_lib8
@@ -4152,7 +4152,7 @@ kernel_strsm_nt_rl_inv_8x8_vs_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_SUB_NT_8X4_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgemm_sub_nt_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgemm_sub_nt_8x8_lib8
@@ -4169,7 +4169,7 @@ kernel_strsm_nt_rl_inv_8x8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_8X4_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_scale_11_8x8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_blend_scale_11_8x8_gen_lib8
@@ -4186,7 +4186,7 @@ kernel_strsm_nt_rl_inv_8x8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_STRSM_RLT_INV_8X4_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_strsm_rlt_inv_8x8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_strsm_rlt_inv_8x8_gen_lib8
@@ -4207,7 +4207,7 @@ kernel_strsm_nt_rl_inv_8x8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_8x8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_store_8x8_gen_lib8
@@ -4267,7 +4267,7 @@ kernel_spotrf_nt_l_8x8_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_SUB_NT_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgemm_sub_nt_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgemm_sub_nt_8x8_lib8
@@ -4282,7 +4282,7 @@ kernel_spotrf_nt_l_8x8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_scale_11_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_blend_scale_11_8x8_lib8
@@ -4298,7 +4298,7 @@ kernel_spotrf_nt_l_8x8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SPOTRF_8X8_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_spotrf_8x8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_spotrf_8x8_gen_lib8
@@ -4313,7 +4313,7 @@ kernel_spotrf_nt_l_8x8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_8X8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_l_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_store_l_8x8_lib8
@@ -4373,7 +4373,7 @@ kernel_spotrf_nt_l_8x8_vs_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_SUB_NT_8X4_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgemm_sub_nt_8x8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgemm_sub_nt_8x8_lib8
@@ -4390,7 +4390,7 @@ kernel_spotrf_nt_l_8x8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_8X4_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_scale_11_8x8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_blend_scale_11_8x8_gen_lib8
@@ -4406,7 +4406,7 @@ kernel_spotrf_nt_l_8x8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SPOTRF_8X4_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_spotrf_8x8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_spotrf_8x8_gen_lib8
@@ -4427,7 +4427,7 @@ kernel_spotrf_nt_l_8x8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_8X4_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_l_8x8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_store_l_8x8_gen_lib8
@@ -4452,6 +4452,8 @@ kernel_spotrf_nt_l_8x8_vs_lib8:
 	.section	.rodata.cst32,"aM",@progbits,32
 #elif defined(OS_MAC)
 	.section	__TEXT,__const
+#elif defined(OS_WINDOWS)
+	.section .rdata,"dr"
 #endif
 
 #if defined(OS_LINUX)

@@ -1953,7 +1953,7 @@ kernel_sgecp_8_0_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_0_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_0_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_0_lib8
@@ -2001,7 +2001,7 @@ kernel_sgecp_8_0_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_0_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_0_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_0_gen_lib8
@@ -2050,7 +2050,7 @@ kernel_sgecp_8_1_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_1_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_1_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_1_lib8
@@ -2100,7 +2100,7 @@ kernel_sgecp_8_1_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_1_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_1_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_1_gen_lib8
@@ -2149,7 +2149,7 @@ kernel_sgecp_8_2_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_2_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_2_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_2_lib8
@@ -2199,7 +2199,7 @@ kernel_sgecp_8_2_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_2_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_2_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_2_gen_lib8
@@ -2248,7 +2248,7 @@ kernel_sgecp_8_3_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_3_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_3_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_3_lib8
@@ -2298,7 +2298,7 @@ kernel_sgecp_8_3_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_3_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_3_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_3_gen_lib8
@@ -2347,7 +2347,7 @@ kernel_sgecp_8_4_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_4_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_4_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_4_lib8
@@ -2397,7 +2397,7 @@ kernel_sgecp_8_4_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_4_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_4_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_4_gen_lib8
@@ -2446,7 +2446,7 @@ kernel_sgecp_8_5_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_5_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_5_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_5_lib8
@@ -2496,7 +2496,7 @@ kernel_sgecp_8_5_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_5_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_5_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_5_gen_lib8
@@ -2545,7 +2545,7 @@ kernel_sgecp_8_6_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_6_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_6_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_6_lib8
@@ -2595,7 +2595,7 @@ kernel_sgecp_8_6_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_6_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_6_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_6_gen_lib8
@@ -2644,7 +2644,7 @@ kernel_sgecp_8_7_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_7_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_7_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_7_lib8
@@ -2694,7 +2694,7 @@ kernel_sgecp_8_7_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_7_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgecp_8_7_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgecp_8_7_gen_lib8
@@ -2718,6 +2718,8 @@ kernel_sgecp_8_7_gen_lib8:
 	.section	.rodata.cst32,"aM",@progbits,32
 #elif defined(OS_MAC)
 	.section	__TEXT,__const
+#elif defined(OS_WINDOWS)
+	.section .rdata,"dr"
 #endif
 
 #if defined(OS_LINUX)

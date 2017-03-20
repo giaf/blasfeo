@@ -1238,7 +1238,7 @@ kernel_dgemv_n_8_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_N_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_n_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_n_8_lib4
@@ -1255,7 +1255,7 @@ kernel_dgemv_n_8_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_SCALE_AB_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_n_scale_ab_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_blend_n_scale_ab_8_lib4
@@ -1271,7 +1271,7 @@ kernel_dgemv_n_8_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_8_lib4
@@ -1334,7 +1334,7 @@ kernel_dgemv_t_8_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_T_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_t_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_t_8_lib4
@@ -1351,7 +1351,7 @@ kernel_dgemv_t_8_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_t_scale_ab_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_blend_t_scale_ab_8_lib4
@@ -1366,7 +1366,7 @@ kernel_dgemv_t_8_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_8_lib4
@@ -1426,7 +1426,7 @@ kernel_dtrmv_un_8_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMV_UN_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_dtrmv_un_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_edge_dtrmv_un_8_lib4
@@ -1436,7 +1436,7 @@ kernel_dtrmv_un_8_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_N_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_n_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_n_8_lib4
@@ -1449,7 +1449,7 @@ kernel_dtrmv_un_8_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLENDER_N_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_n_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_blend_n_8_lib4
@@ -1464,7 +1464,7 @@ kernel_dtrmv_un_8_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_8_lib4
@@ -1489,6 +1489,8 @@ kernel_dtrmv_un_8_lib4:
 	.section	.rodata.cst32,"aM",@progbits,32
 #elif defined(OS_MAC)
 	.section	__TEXT,__const
+#elif defined(OS_WINDOWS)
+	.section .rdata,"dr"
 #endif
 #if 1
 #if defined(OS_LINUX)

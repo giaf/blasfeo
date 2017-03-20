@@ -355,7 +355,7 @@ kernel_sgesc_8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGESC_8_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgesc_8_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgesc_8_lib8
@@ -403,7 +403,7 @@ kernel_sgesc_8_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGESC_8_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgesc_8_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_kernel_sgesc_8_gen_lib8
@@ -428,6 +428,8 @@ kernel_sgesc_8_gen_lib8:
 	.section	.rodata.cst32,"aM",@progbits,32
 #elif defined(OS_MAC)
 	.section	__TEXT,__const
+#elif defined(OS_WINDOWS)
+	.section .rdata,"dr"
 #endif
 
 #if defined(OS_LINUX)
