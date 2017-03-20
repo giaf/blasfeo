@@ -1529,7 +1529,7 @@ kernel_sgetr_8_0_gen_lib8:
 // void kernel_sgetr_8_1_lib8(int k, float *A, int sda, float *B);
 
 	.p2align 4,,15
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
+#if defined(OS_LINUX)
 	.globl kernel_sgetr_8_1_lib8
 	.type kernel_sgetr_8_1_lib8, @function
 kernel_sgetr_8_1_lib8:
@@ -1558,7 +1558,7 @@ kernel_sgetr_8_1_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGETR_8_1_GEN_LIB8
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_sgetr_8_1_gen_lib8
 #elif defined(OS_MAC)
 	callq _inner_edge_sgetr_8_1_gen_lib8
