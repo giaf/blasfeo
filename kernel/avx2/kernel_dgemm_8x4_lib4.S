@@ -9804,7 +9804,7 @@ kernel_dgetrf_nn_l_8x4_vs_lib4:
 #elif defined(OS_WINDOWS)
 	.section .rdata,"dr"
 #endif
-#if 1
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC00: // { -1 -1 -1 1 }
@@ -9816,6 +9816,7 @@ LC00: // { -1 -1 -1 1 }
 	.quad	-1
 	.quad	-1
 	.quad	1
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC01: // { -1 -1 -1 -1 }
@@ -9827,7 +9828,7 @@ LC01: // { -1 -1 -1 -1 }
 	.quad	-1
 	.quad	-1
 	.quad	-1
-#endif
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC02: // { 3.5 2.5 1.5 0.5 }
@@ -9843,6 +9844,7 @@ LC02: // { 3.5 2.5 1.5 0.5 }
 	.long	1074003968
 	.long	0
 	.long	1074528256
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC03: // { 7.5 6.5 5.5 4.5 }
@@ -9858,6 +9860,7 @@ LC03: // { 7.5 6.5 5.5 4.5 }
 	.long	1075445760
 	.long	0
 	.long	1075707904
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC04: // { 1.0 1.0 1.0 1.0 }
@@ -9873,6 +9876,7 @@ LC04: // { 1.0 1.0 1.0 1.0 }
 	.long	1072693248
 	.long	0
 	.long	1072693248
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC05: // { 1.0 1.0 1.0 -1.0 }
@@ -9888,6 +9892,7 @@ LC05: // { 1.0 1.0 1.0 -1.0 }
 	.long	1072693248
 	.long	0
 	.long	1072693248
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC06: // { 1.0 1.0 -1.0 -1.0 }
@@ -9903,6 +9908,7 @@ LC06: // { 1.0 1.0 -1.0 -1.0 }
 	.long	1072693248
 	.long	0
 	.long	1072693248
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC07: // { 1.0 -1.0 -1.0 -1.0 }
@@ -9918,6 +9924,7 @@ LC07: // { 1.0 -1.0 -1.0 -1.0 }
 	.long	-1074790400
 	.long	0
 	.long	1072693248
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC08: // { -1.0 -1.0 -1.0 1.0 }
@@ -9933,6 +9940,7 @@ LC08: // { -1.0 -1.0 -1.0 1.0 }
 	.long	-1074790400
 	.long	0
 	.long	-1074790400
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC09: // { -1.0 -1.0 1.0 1.0 }
@@ -9948,6 +9956,7 @@ LC09: // { -1.0 -1.0 1.0 1.0 }
 	.long	-1074790400
 	.long	0
 	.long	-1074790400
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC10: // { -1.0 1.0 1.0 1.0 }

@@ -1460,7 +1460,7 @@ kernel_dtrmv_un_8_lib4:
 #elif defined(OS_WINDOWS)
 	.section .rdata,"dr"
 #endif
-#if 1
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC00: // { -1 -1 -1 1 }
@@ -1472,6 +1472,7 @@ LC00: // { -1 -1 -1 1 }
 	.quad	-1
 	.quad	-1
 	.quad	1
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC01: // { -1 -1 -1 -1 }
@@ -1483,7 +1484,7 @@ LC01: // { -1 -1 -1 -1 }
 	.quad	-1
 	.quad	-1
 	.quad	-1
-#endif
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC02: // { 3.5 2.5 1.5 0.5 }
@@ -1499,6 +1500,7 @@ LC02: // { 3.5 2.5 1.5 0.5 }
 	.long	1074003968
 	.long	0
 	.long	1074528256
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC03: // { 7.5 6.5 5.5 4.5 }
@@ -1514,6 +1516,7 @@ LC03: // { 7.5 6.5 5.5 4.5 }
 	.long	1075445760
 	.long	0
 	.long	1075707904
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC04: // { 1.0 1.0 1.0 1.0 }
