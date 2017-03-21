@@ -1171,6 +1171,8 @@ inner_scale_ab_4x4_lib4:
 #endif
 #endif
 	
+	// XXX nothing to blend
+
 	// alpha
 	movddup	0(%r10), %xmm15
 
@@ -1184,21 +1186,21 @@ inner_scale_ab_4x4_lib4:
 	movddup	0(%r11), %xmm14
 
 
-	vmovapd		0(%r10), %xmm15
+	vmovapd		0(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm0
-	vmovapd		16(%r10), %xmm15
+	vmovapd		16(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm1
-	vmovapd		32(%r10), %xmm15
+	vmovapd		32(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm2
-	vmovapd		48(%r10), %xmm15
+	vmovapd		48(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm3
-	vmovapd		64(%r10), %xmm15
+	vmovapd		64(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm4
-	vmovapd		80(%r10), %xmm15
+	vmovapd		80(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm5
-	vmovapd		96(%r10), %xmm15
+	vmovapd		96(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm6
-	vmovapd		112(%r10), %xmm15
+	vmovapd		112(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm7
 
 #if MACRO_LEVEL>=1
@@ -1285,21 +1287,21 @@ inner_blend_scale_ab_4x4_lib4:
 	movddup	0(%r11), %xmm14
 
 
-	vmovapd		0(%r10), %xmm15
+	vmovapd		0(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm0
-	vmovapd		16(%r10), %xmm15
+	vmovapd		16(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm1
-	vmovapd		32(%r10), %xmm15
+	vmovapd		32(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm2
-	vmovapd		48(%r10), %xmm15
+	vmovapd		48(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm3
-	vmovapd		64(%r10), %xmm15
+	vmovapd		64(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm4
-	vmovapd		80(%r10), %xmm15
+	vmovapd		80(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm5
-	vmovapd		96(%r10), %xmm15
+	vmovapd		96(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm6
-	vmovapd		112(%r10), %xmm15
+	vmovapd		112(%r12), %xmm15
 	vfmadd231pd	%xmm14, %xmm15, %xmm7
 
 #if MACRO_LEVEL>=1
