@@ -48,6 +48,24 @@
 #define ARG16 STACKSIZE + 80(%rsp)
 #define ARG17 STACKSIZE + 88(%rsp)
 #define ARG18 STACKSIZE + 96(%rsp)
+#define PROLOGUE \
+	subq	$STACKSIZE, %rsp; \
+	movq	%rbx,   (%rsp); \
+	movq	%rbp,  8(%rsp); \
+	movq	%r12, 16(%rsp); \
+	movq	%r13, 24(%rsp); \
+	movq	%r14, 32(%rsp); \
+	movq	%r15, 40(%rsp); \
+	vzeroupper;
+#define EPILOGUE \
+	vzeroupper; \
+	movq	  (%rsp), %rbx; \
+	movq	 8(%rsp), %rbp; \
+	movq	16(%rsp), %r12; \
+	movq	24(%rsp), %r13; \
+	movq	32(%rsp), %r14; \
+	movq	40(%rsp), %r15; \
+	addq	$STACKSIZE, %rsp;
 
 #elif defined(OS_WINDOWS)
 
@@ -70,6 +88,48 @@
 #define ARG16 STACKSIZE + 128(%rsp)
 #define ARG17 STACKSIZE + 136(%rsp)
 #define ARG18 STACKSIZE + 144(%rsp)
+#define PROLOGUE \
+	subq	$STACKSIZE, %rsp; \
+	movq	%rbx,   (%rsp); \
+	movq	%rbp,  8(%rsp); \
+	movq	%r12, 16(%rsp); \
+	movq	%r13, 24(%rsp); \
+	movq	%r14, 32(%rsp); \
+	movq	%r15, 40(%rsp); \
+	movq	%rdi, 48(%rsp); \
+	movq	%rsi, 56(%rsp); \
+	vmovups	%xmm6, 64(%rsp); \
+	vmovups	%xmm7, 80(%rsp); \
+	vmovups	%xmm8, 96(%rsp); \
+	vmovups	%xmm9, 112(%rsp); \
+	vmovups	%xmm10, 128(%rsp); \
+	vmovups	%xmm11, 144(%rsp); \
+	vmovups	%xmm12, 160(%rsp); \
+	vmovups	%xmm13, 176(%rsp); \
+	vmovups	%xmm14, 192(%rsp); \
+	vmovups	%xmm15, 208(%rsp); \
+	vzeroupper;
+#define EPILOGUE \
+	vzeroupper; \
+	movq	  (%rsp), %rbx; \
+	movq	 8(%rsp), %rbp; \
+	movq	16(%rsp), %r12; \
+	movq	24(%rsp), %r13; \
+	movq	32(%rsp), %r14; \
+	movq	40(%rsp), %r15; \
+	movq	48(%rsp), %rdi; \
+	movq	56(%rsp), %rsi; \
+	vmovups	64(%rsp), %xmm6; \
+	vmovups	80(%rsp), %xmm7; \
+	vmovups	96(%rsp), %xmm8; \
+	vmovups	112(%rsp), %xmm9; \
+	vmovups	128(%rsp), %xmm10; \
+	vmovups	144(%rsp), %xmm11; \
+	vmovups	160(%rsp), %xmm12; \
+	vmovups	176(%rsp), %xmm13; \
+	vmovups	192(%rsp), %xmm14; \
+	vmovups	208(%rsp), %xmm15; \
+	addq	$STACKSIZE, %rsp;
 
 #else
 
@@ -1116,32 +1176,7 @@ _kernel_dgemv_n_8_lib4:
 kernel_dgemv_n_8_lib4:
 #endif
 	
-	// prologue
-
-	subq	$STACKSIZE, %rsp
-	movq	%rbx,   (%rsp)
-	movq	%rbp,  8(%rsp)
-	movq	%r12, 16(%rsp)
-	movq	%r13, 24(%rsp)
-	movq	%r14, 32(%rsp)
-	movq	%r15, 40(%rsp)
-#if defined(OS_WINDOWS)
-	movq	%rdi, 48(%rsp)
-	movq	%rsi, 56(%rsp)
-	vmovups	%xmm6, 64(%rsp)
-	vmovups	%xmm7, 80(%rsp)
-	vmovups	%xmm8, 96(%rsp)
-	vmovups	%xmm9, 112(%rsp)
-	vmovups	%xmm10, 128(%rsp)
-	vmovups	%xmm11, 144(%rsp)
-	vmovups	%xmm12, 160(%rsp)
-	vmovups	%xmm13, 176(%rsp)
-	vmovups	%xmm14, 192(%rsp)
-	vmovups	%xmm15, 208(%rsp)
-#endif
-
-	vzeroupper
-
+	PROLOGUE
 
 	// zero accumulation registers
 
@@ -1149,25 +1184,21 @@ kernel_dgemv_n_8_lib4:
 	vmovapd	%ymm0, %ymm1
 	vmovapd	%ymm0, %ymm2
 	vmovapd	%ymm0, %ymm3
-	vmovapd	%ymm0, %ymm4
-	vmovapd	%ymm0, %ymm5
-	vmovapd	%ymm0, %ymm6
-	vmovapd	%ymm0, %ymm7
 
 
 	// call inner dgemv kernel n
 
 	movq	ARG1, %r10 // k
-	movq	%rdx, %r11  // A
-	movl	%ecx, %r12d // sda
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
-	movq	%r8, %r13  // x
+	movq	ARG5, %r13  // x
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_N_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_n_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_n_8_lib4
@@ -1177,14 +1208,14 @@ kernel_dgemv_n_8_lib4:
 
 	// call inner blend n scale ab
 
-	movq	%rsi, %r10 // alpha
-	movq	%r9, %r11   // beta
-	movq	STACKSIZE + 8(%rsp), %r12 // y
+	movq	ARG2, %r10 // alpha
+	movq	ARG6, %r11   // beta
+	movq	ARG7, %r12 // y
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_SCALE_AB_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_n_scale_ab_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_blend_n_scale_ab_8_lib4
@@ -1195,12 +1226,12 @@ kernel_dgemv_n_8_lib4:
 
 	// store
 
-	movq	STACKSIZE + 16(%rsp), %r10 // z
+	movq	ARG8, %r10 // z
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_8_lib4
@@ -1208,31 +1239,7 @@ kernel_dgemv_n_8_lib4:
 #endif
 
 
-	// epilogue
-
-	vzeroupper
-
-	movq	  (%rsp), %rbx 
-	movq	 8(%rsp), %rbp
-	movq	16(%rsp), %r12 
-	movq	24(%rsp), %r13 
-	movq	32(%rsp), %r14 
-	movq	40(%rsp), %r15 
-#if defined(OS_WINDOWS)
-	movq	48(%rsp), %rdi
-	movq	56(%rsp), %rsi
-	vmovups	64(%rsp), %xmm6
-	vmovups	80(%rsp), %xmm7
-	vmovups	96(%rsp), %xmm8
-	vmovups	112(%rsp), %xmm9
-	vmovups	128(%rsp), %xmm10
-	vmovups	144(%rsp), %xmm11
-	vmovups	160(%rsp), %xmm12
-	vmovups	176(%rsp), %xmm13
-	vmovups	192(%rsp), %xmm14
-	vmovups	208(%rsp), %xmm15
-#endif
-	addq	$STACKSIZE, %rsp
+	EPILOGUE
 
 	ret
 
@@ -1261,32 +1268,7 @@ _kernel_dgemv_t_8_lib4:
 kernel_dgemv_t_8_lib4:
 #endif
 	
-	// prologue
-
-	subq	$STACKSIZE, %rsp
-	movq	%rbx,   (%rsp)
-	movq	%rbp,  8(%rsp)
-	movq	%r12, 16(%rsp)
-	movq	%r13, 24(%rsp)
-	movq	%r14, 32(%rsp)
-	movq	%r15, 40(%rsp)
-#if defined(OS_WINDOWS)
-	movq	%rdi, 48(%rsp)
-	movq	%rsi, 56(%rsp)
-	vmovups	%xmm6, 64(%rsp)
-	vmovups	%xmm7, 80(%rsp)
-	vmovups	%xmm8, 96(%rsp)
-	vmovups	%xmm9, 112(%rsp)
-	vmovups	%xmm10, 128(%rsp)
-	vmovups	%xmm11, 144(%rsp)
-	vmovups	%xmm12, 160(%rsp)
-	vmovups	%xmm13, 176(%rsp)
-	vmovups	%xmm14, 192(%rsp)
-	vmovups	%xmm15, 208(%rsp)
-#endif
-
-	vzeroupper
-
+	PROLOGUE
 
 	// zero accumulation registers
 
@@ -1303,16 +1285,16 @@ kernel_dgemv_t_8_lib4:
 	// call inner dgemv kernel n
 
 	movq	ARG1, %r10 // k
-	movq	%rdx, %r11  // A
-	movl	%ecx, %r12d // sda
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
-	movq	%r8, %r13  // x
+	movq	ARG5, %r13  // x
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_T_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_t_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_t_8_lib4
@@ -1322,14 +1304,14 @@ kernel_dgemv_t_8_lib4:
 
 	// call inner blender t
 
-	movq	%rsi, %r10 // alpha
-	movq	%r9, %r11   // beta
-	movq	STACKSIZE + 8(%rsp), %r12 // y 
+	movq	ARG2, %r10 // alpha
+	movq	ARG6, %r11   // beta
+	movq	ARG7, %r12 // y 
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_t_scale_ab_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_blend_t_scale_ab_8_lib4
@@ -1339,12 +1321,12 @@ kernel_dgemv_t_8_lib4:
 
 	// store
 
-	movq	STACKSIZE + 16(%rsp), %r10 // z 
+	movq	ARG8, %r10 // z 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_8_lib4
@@ -1352,31 +1334,7 @@ kernel_dgemv_t_8_lib4:
 #endif
 
 
-	// epilogue
-
-	vzeroupper
-
-	movq	  (%rsp), %rbx 
-	movq	 8(%rsp), %rbp
-	movq	16(%rsp), %r12 
-	movq	24(%rsp), %r13 
-	movq	32(%rsp), %r14 
-	movq	40(%rsp), %r15 
-#if defined(OS_WINDOWS)
-	movq	48(%rsp), %rdi
-	movq	56(%rsp), %rsi
-	vmovups	64(%rsp), %xmm6
-	vmovups	80(%rsp), %xmm7
-	vmovups	96(%rsp), %xmm8
-	vmovups	112(%rsp), %xmm9
-	vmovups	128(%rsp), %xmm10
-	vmovups	144(%rsp), %xmm11
-	vmovups	160(%rsp), %xmm12
-	vmovups	176(%rsp), %xmm13
-	vmovups	192(%rsp), %xmm14
-	vmovups	208(%rsp), %xmm15
-#endif
-	addq	$STACKSIZE, %rsp
+	EPILOGUE
 
 	ret
 
@@ -1405,32 +1363,7 @@ _kernel_dtrmv_un_8_lib4:
 kernel_dtrmv_un_8_lib4:
 #endif
 	
-	// prologue
-
-	subq	$STACKSIZE, %rsp
-	movq	%rbx,   (%rsp)
-	movq	%rbp,  8(%rsp)
-	movq	%r12, 16(%rsp)
-	movq	%r13, 24(%rsp)
-	movq	%r14, 32(%rsp)
-	movq	%r15, 40(%rsp)
-#if defined(OS_WINDOWS)
-	movq	%rdi, 48(%rsp)
-	movq	%rsi, 56(%rsp)
-	vmovups	%xmm6, 64(%rsp)
-	vmovups	%xmm7, 80(%rsp)
-	vmovups	%xmm8, 96(%rsp)
-	vmovups	%xmm9, 112(%rsp)
-	vmovups	%xmm10, 128(%rsp)
-	vmovups	%xmm11, 144(%rsp)
-	vmovups	%xmm12, 160(%rsp)
-	vmovups	%xmm13, 176(%rsp)
-	vmovups	%xmm14, 192(%rsp)
-	vmovups	%xmm15, 208(%rsp)
-#endif
-
-	vzeroupper
-
+	PROLOGUE
 
 	// zero accumulation registers
 
@@ -1438,26 +1371,22 @@ kernel_dtrmv_un_8_lib4:
 	vmovapd	%ymm0, %ymm1
 	vmovapd	%ymm0, %ymm2
 	vmovapd	%ymm0, %ymm3
-	vmovapd	%ymm0, %ymm4
-	vmovapd	%ymm0, %ymm5
-	vmovapd	%ymm0, %ymm6
-	vmovapd	%ymm0, %ymm7
 
 
 	// call inner dtrmv edge & dgemv kernel n
 
 	movq	ARG1, %r10 // k
-	movq	%rsi, %r11  // A
-	movl	%edx, %r12d
+	movq	ARG2, %r11  // A
+	movq	ARG3, %r12
 	sall	$5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
-	movq	%rcx, %r13  // x
+	movq	ARG4, %r13  // x
 
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMV_UN_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_dtrmv_un_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_edge_dtrmv_un_8_lib4
@@ -1467,7 +1396,7 @@ kernel_dtrmv_un_8_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_N_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemv_add_n_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemv_add_n_8_lib4
@@ -1480,22 +1409,22 @@ kernel_dtrmv_un_8_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLENDER_N_8_LIB4
 #else
-#if defined(OS_LINUX)
-	call inner_blender_n_8_lib4
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_n_8_lib4
 #elif defined(OS_MAC)
-	callq _inner_blender_n_8_lib4
+	callq _inner_blend_n_8_lib4
 #endif
 #endif
 
 
 	// store
 
-	movq	%r8, %r10 // z
+	movq	ARG5, %r10 // z
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB4
 #else
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_8_lib4
 #elif defined(OS_MAC)
 	callq _inner_store_8_lib4
@@ -1503,31 +1432,7 @@ kernel_dtrmv_un_8_lib4:
 #endif
 
 
-	// epilogue
-
-	vzeroupper
-
-	movq	  (%rsp), %rbx 
-	movq	 8(%rsp), %rbp
-	movq	16(%rsp), %r12 
-	movq	24(%rsp), %r13 
-	movq	32(%rsp), %r14 
-	movq	40(%rsp), %r15 
-#if defined(OS_WINDOWS)
-	movq	48(%rsp), %rdi
-	movq	56(%rsp), %rsi
-	vmovups	64(%rsp), %xmm6
-	vmovups	80(%rsp), %xmm7
-	vmovups	96(%rsp), %xmm8
-	vmovups	112(%rsp), %xmm9
-	vmovups	128(%rsp), %xmm10
-	vmovups	144(%rsp), %xmm11
-	vmovups	160(%rsp), %xmm12
-	vmovups	176(%rsp), %xmm13
-	vmovups	192(%rsp), %xmm14
-	vmovups	208(%rsp), %xmm15
-#endif
-	addq	$STACKSIZE, %rsp
+	EPILOGUE
 
 	ret
 
@@ -1544,9 +1449,11 @@ kernel_dtrmv_un_8_lib4:
 	.section	.rodata.cst32,"aM",@progbits,32
 #elif defined(OS_MAC)
 	.section	__TEXT,__const
+#elif defined(OS_WINDOWS)
+	.section .rdata,"dr"
 #endif
 #if 1
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC00: // { -1 -1 -1 1 }
 #elif defined(OS_MAC)
@@ -1557,7 +1464,7 @@ LC00: // { -1 -1 -1 1 }
 	.quad	-1
 	.quad	-1
 	.quad	1
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC01: // { -1 -1 -1 -1 }
 #elif defined(OS_MAC)
@@ -1569,7 +1476,7 @@ LC01: // { -1 -1 -1 -1 }
 	.quad	-1
 	.quad	-1
 #endif
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC02: // { 3.5 2.5 1.5 0.5 }
 #elif defined(OS_MAC)
@@ -1584,7 +1491,7 @@ LC02: // { 3.5 2.5 1.5 0.5 }
 	.long	1074003968
 	.long	0
 	.long	1074528256
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC03: // { 7.5 6.5 5.5 4.5 }
 #elif defined(OS_MAC)
@@ -1599,7 +1506,7 @@ LC03: // { 7.5 6.5 5.5 4.5 }
 	.long	1075445760
 	.long	0
 	.long	1075707904
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC04: // { 1.0 1.0 1.0 1.0 }
 #elif defined(OS_MAC)
