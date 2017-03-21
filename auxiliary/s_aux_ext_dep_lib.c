@@ -260,7 +260,7 @@ void s_allocate_strvec(int m, struct s_strvec *sa)
 // free memory of a matrix structure
 void s_free_strvec(struct s_strvec *sa)
 	{
-	d_free_align(sa->pa);
+	s_free_align(sa->pa);
 	return;
 	}
 

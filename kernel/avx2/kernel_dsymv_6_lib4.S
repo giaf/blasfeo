@@ -266,7 +266,7 @@ inner_kernel_dgemv_add_nt_6_lib4:
 0: // clean-up
 	
 	vcvtsi2sd	%r10d, %xmm14, %xmm14
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC02(%rip), %ymm13
 #elif defined(OS_MAC)
 	vmovupd		LC02(%rip), %ymm13

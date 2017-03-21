@@ -3645,7 +3645,7 @@ inner_edge_dpotrf_8x4_lib4:
 #endif
 	
 	vxorpd			%ymm15, %ymm15, %ymm15 // 0.0
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC04(%rip), %xmm14 // 1.0
 #elif defined(OS_MAC)
 	vmovsd			LC04(%rip), %xmm14 // 1.0
@@ -3818,7 +3818,7 @@ inner_edge_dpotrf_8x4_vs_lib4:
 #endif
 	
 	vxorpd			%ymm15, %ymm15, %ymm15 // 0.0
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC04(%rip), %xmm14 // 1.0
 #elif defined(OS_MAC)
 	vmovsd			LC04(%rip), %xmm14 // 1.0
@@ -5454,7 +5454,7 @@ inner_edge_dgetrf_l_8x4_lib4:
 #endif
 #endif
 	
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC04(%rip), %xmm14 // 1.0
 #elif defined(OS_MAC)
 	vmovsd			LC04(%rip), %xmm14 // 1.0
@@ -5671,7 +5671,7 @@ inner_store_8x4_vs_lib4:
 	addq	%r11, %r15 // D1 <- D0 + 4*sdd*sizeof(double)
 
 	vcvtsi2sd	%r12d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC03(%rip), %ymm14
 #elif defined(OS_MAC)
 	vmovupd		LC03(%rip), %ymm14
@@ -5851,7 +5851,7 @@ inner_store_l_8x4_vs_lib4:
 	addq	%r11, %r15 // D1 <- D0 + 4*sdd*sizeof(double)
 
 	vcvtsi2sd	%r12d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC03(%rip), %ymm14
 #elif defined(OS_MAC)
 	vmovupd		LC03(%rip), %ymm14
@@ -5957,7 +5957,7 @@ inner_store_8x4_gen_lib4:
 	// compute mask for rows
 	vcvtsi2sd	%r13d, %xmm14, %xmm14
 	vcvtsi2sd	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC02(%rip), %ymm12
 	vmovupd		.LC03(%rip), %ymm13
 #elif defined(OS_MAC)
@@ -6073,7 +6073,7 @@ inner_store_8x4_gen_lib4:
 	vperm2f128	$0x01, %ymm14, %ymm14, %ymm12
 	vshufpd		$0x5, %ymm14, %ymm12, %ymm14
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC08(%rip), %ymm12
 	vmovupd		.LC05(%rip), %ymm13
 #elif defined(OS_MAC)
@@ -6113,7 +6113,7 @@ inner_store_8x4_gen_lib4:
 	vperm2f128	$0x01, %ymm14, %ymm14, %ymm14
 	vperm2f128	$0x01, %ymm15, %ymm15, %ymm15
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC09(%rip), %ymm12
 	vmovupd		.LC06(%rip), %ymm13
 #elif defined(OS_MAC)
@@ -6160,7 +6160,7 @@ inner_store_8x4_gen_lib4:
 	vperm2f128	$0x01, %ymm15, %ymm15, %ymm12
 	vshufpd		$0x5, %ymm12, %ymm15, %ymm15
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC10(%rip), %ymm12
 	vmovupd		.LC07(%rip), %ymm13
 #elif defined(OS_MAC)

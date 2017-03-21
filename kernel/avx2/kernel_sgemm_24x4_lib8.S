@@ -2578,7 +2578,7 @@ inner_store_24x4_gen_lib8:
 	// compute mask for rows
 	vcvtsi2ss	%r13d, %xmm14, %xmm14
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovups		.LC00(%rip), %ymm12
 	vmovups		.LC02(%rip), %ymm13
 #elif defined(OS_MAC)

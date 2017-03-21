@@ -410,7 +410,7 @@ inner_kernel_dgemv_add_t_8_lib4:
 0: // clean-up
 	
 	vcvtsi2sd	%r10d, %xmm14, %xmm14
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC02(%rip), %ymm13
 #elif defined(OS_MAC)
 	vmovupd		LC02(%rip), %ymm13
@@ -1184,6 +1184,10 @@ kernel_dgemv_n_8_lib4:
 	vmovapd	%ymm0, %ymm1
 	vmovapd	%ymm0, %ymm2
 	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
 
 
 	// call inner dgemv kernel n
@@ -1371,6 +1375,10 @@ kernel_dtrmv_un_8_lib4:
 	vmovapd	%ymm0, %ymm1
 	vmovapd	%ymm0, %ymm2
 	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
 
 
 	// call inner dtrmv edge & dgemv kernel n

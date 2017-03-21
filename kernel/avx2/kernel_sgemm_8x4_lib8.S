@@ -1497,7 +1497,7 @@ inner_edge_spotrf_8x4_lib8:
 #endif
 
 	vxorps	%ymm15, %ymm15, %ymm15 // 0.0
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovss	.LC03(%rip), %xmm14 // 1.0
 #elif defined(OS_MAC)
 	vmovss	LC03(%rip), %xmm14 // 1.0
@@ -1658,7 +1658,7 @@ inner_edge_spotrf_8x4_gen_lib8:
 #endif
 
 	vxorps	%ymm15, %ymm15, %ymm15 // 0.0
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovss	.LC03(%rip), %xmm14 // 1.0
 #elif defined(OS_MAC)
 	vmovss	LC03(%rip), %xmm14 // 1.0
@@ -2629,7 +2629,7 @@ inner_store_8x4_gen_lib8:
 	// compute mask for rows
 	vcvtsi2ss	%r13d, %xmm14, %xmm14
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
@@ -2874,7 +2874,7 @@ inner_store_l_8x4_gen_lib8:
 	// compute mask for rows
 	vcvtsi2ss	%r13d, %xmm14, %xmm14
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovups		.LC00(%rip), %ymm12
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
