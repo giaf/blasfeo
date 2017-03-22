@@ -212,12 +212,13 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	cmpl	$0, %r10d
 	jle		2f // return
 
-	movq	%r11, %r15 // A1 <- A0
-	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
+//	movq	%r11, %r15 // A1 <- A0
+//	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
 
 	// prefetch
 	vmovapd 0(%r11), %ymm8 // A0[0]
-	vmovapd 0(%r15), %ymm9 // A1[0]
+//	vmovapd 0(%r15), %ymm9 // A1[0]
+	vmovapd 0(%r11, %r12, 1), %ymm9 // A1[0]
 	vmovapd 0(%r13), %ymm12 // B[0]
 
 	cmpl	$4, %r10d
@@ -242,7 +243,8 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	vmulpd	%ymm9, %ymm14, %ymm15
 	vaddpd	%ymm5, %ymm15, %ymm5
 
-	vmovapd 32(%r15), %ymm11 // A1[4]
+//	vmovapd 32(%r15), %ymm11 // A1[4]
+	vmovapd 32(%r11, %r12, 1), %ymm11 // A1[4]
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
 	vshufpd $0x5, %ymm12, %ymm12, %ymm14
@@ -270,7 +272,8 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	vmulpd	%ymm11, %ymm14, %ymm15
 	vaddpd	%ymm5, %ymm15, %ymm5
 
-	vmovapd 64(%r15), %ymm9 // A1[8]
+//	vmovapd 64(%r15), %ymm9 // A1[8]
+	vmovapd 64(%r11, %r12, 1), %ymm9 // A1[8]
 	vmulpd	%ymm10, %ymm13, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
 	vshufpd $0x5, %ymm13, %ymm13, %ymm14
@@ -297,7 +300,8 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	vmulpd	%ymm9, %ymm14, %ymm15
 	vaddpd	%ymm5, %ymm15, %ymm5
 
-	vmovapd 96(%r15), %ymm11 // A1[12]
+//	vmovapd 96(%r15), %ymm11 // A1[12]
+	vmovapd 96(%r11, %r12, 1), %ymm11 // A1[12]
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
 	vshufpd $0x5, %ymm12, %ymm12, %ymm14
@@ -328,7 +332,8 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	vmulpd	%ymm11, %ymm14, %ymm15
 	vaddpd	%ymm5, %ymm15, %ymm5
 
-	vmovapd 0(%r15), %ymm9 // A1[0]
+//	vmovapd 0(%r15), %ymm9 // A1[0]
+	vmovapd 0(%r11, %r12, 1), %ymm9 // A1[0]
 	vmulpd	%ymm10, %ymm13, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
 	vshufpd $0x5, %ymm13, %ymm13, %ymm14
@@ -364,7 +369,8 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	vmulpd	%ymm9, %ymm14, %ymm15
 	vaddpd	%ymm5, %ymm15, %ymm5
 
-	vmovapd 32(%r15), %ymm11 // A1[4]
+//	vmovapd 32(%r15), %ymm11 // A1[4]
+	vmovapd 32(%r11, %r12, 1), %ymm11 // A1[4]
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
 	vshufpd $0x5, %ymm12, %ymm12, %ymm14
@@ -392,7 +398,8 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	vmulpd	%ymm11, %ymm14, %ymm15
 	vaddpd	%ymm5, %ymm15, %ymm5
 
-	vmovapd 64(%r15), %ymm9 // A1[8]
+//	vmovapd 64(%r15), %ymm9 // A1[8]
+	vmovapd 64(%r11, %r12, 1), %ymm9 // A1[8]
 	vmulpd	%ymm10, %ymm13, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
 	vshufpd $0x5, %ymm13, %ymm13, %ymm14
@@ -419,7 +426,8 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	vmulpd	%ymm9, %ymm14, %ymm15
 	vaddpd	%ymm5, %ymm15, %ymm5
 
-	vmovapd 96(%r15), %ymm11 // A1[12]
+//	vmovapd 96(%r15), %ymm11 // A1[12]
+	vmovapd 96(%r11, %r12, 1), %ymm11 // A1[12]
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
 	vshufpd $0x5, %ymm12, %ymm12, %ymm14
@@ -430,7 +438,7 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 
 	vmulpd	%ymm8, %ymm14, %ymm15
 	vaddpd	%ymm2, %ymm15, %ymm2
-	addq	$128, %r15
+//	addq	$128, %r15
 	vmulpd	%ymm9, %ymm14, %ymm15
 	vaddpd	%ymm6, %ymm15, %ymm6
 
@@ -451,6 +459,7 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	vaddpd	%ymm5, %ymm15, %ymm5
 
 //	vmovapd 0(%r15), %ymm9 // A1[0]
+//	vmovapd 0(%r11, %r12, 1), %ymm9 // A1[0]
 	vmulpd	%ymm10, %ymm13, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
 	vshufpd $0x5, %ymm13, %ymm13, %ymm14
@@ -477,7 +486,8 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	
 	vmovapd 0(%r13), %ymm12 // B[0]
 	vmovapd 0(%r11), %ymm8 // A0[0]
-	vmovapd 0(%r15), %ymm9 // A1[0]
+//	vmovapd 0(%r15), %ymm9 // A1[0]
+	vmovapd 0(%r11, %r12, 1), %ymm9 // A1[0]
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm0, %ymm15, %ymm0
 	vshufpd $0x5, %ymm12, %ymm12, %ymm14
@@ -494,7 +504,7 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	vperm2f128 $0x1, %ymm14, %ymm14, %ymm14
 	vmulpd	%ymm8, %ymm14, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
-	addq	$32, %r15
+//	addq	$32, %r15
 	vmulpd	%ymm9, %ymm14, %ymm15
 	vaddpd	%ymm7, %ymm15, %ymm7
 
