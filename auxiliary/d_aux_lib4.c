@@ -3225,7 +3225,7 @@ void dveccl_mask_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *s
 
 	__m256d
 		xm0, x0, xp0, z0, mask0, tmp0, tmp1, ones, mones, mask1, mask2;
-	
+
 	ones = _mm256_set_pd( 1.0, 1.0, 1.0, 1.0 );
 	mones = _mm256_set_pd( -1.0, -1.0, -1.0, -1.0 );
 
@@ -3284,8 +3284,8 @@ void dveccl_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *sx, in
 	double d0;
 
 	__m256d
-		xm0, x0, xp0, z0, mask0, tmp0, tmp1, ones, mones, mask1, mask2;
-	
+		xm0, x0, xp0, z0, tmp0, tmp1, ones, mones, mask1, mask2;
+
 	ones = _mm256_set_pd( 1.0, 1.0, 1.0, 1.0 );
 	mones = _mm256_set_pd( -1.0, -1.0, -1.0, -1.0 );
 
@@ -3295,7 +3295,6 @@ void dveccl_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *sx, in
 
 	for(ii=0; ii<m-3; ii+=4)
 		{
-		mask0 = _mm256_setzero_pd();
 		x0  = _mm256_loadu_pd( &x[ii] );
 		xp0 = _mm256_loadu_pd( &xp[ii] );
 		xm0 = _mm256_loadu_pd( &xm[ii] );
@@ -3310,7 +3309,6 @@ void dveccl_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *sx, in
 		d0 = (double) m-ii;
 		mask2 = _mm256_broadcast_sd( &d0 );
 		mask2 = _mm256_sub_pd( mask1, mask2 );
-		mask0 = _mm256_setzero_pd();
 		x0  = _mm256_loadu_pd( &x[ii] );
 		xp0 = _mm256_loadu_pd( &xp[ii] );
 		xm0 = _mm256_loadu_pd( &xm[ii] );
@@ -3326,6 +3324,51 @@ void dveccl_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *sx, in
 	}
 
 
+
+void dvecze_libstr(int m, struct d_strvec *sm, int mi, struct d_strvec *sv, int vi, struct d_strvec *se, int ei)
+	{
+	double *mask = sm->pa + mi;
+	double *v = sv->pa + vi;
+	double *e = se->pa + ei;
+
+	double d0;
+
+	__m256d
+		mask0, mask1, mask2, mask3, fives, zeros, e0, v0;
+
+	fives = _mm256_set_pd( 0.5, 0.5, 0.5, 0.5 );
+	zeros = _mm256_setzero_pd();
+	mask3 = _mm256_set_pd( 3.5, 2.5, 1.5, 0.5 );
+
+	int ii;
+
+	for(ii=0; ii<m-3; ii+=4)
+		{
+		v0 = _mm256_loadu_pd( &v[ii] );
+		mask0 = _mm256_loadu_pd( &mask[ii] );
+		mask1 = mask0;
+		mask0 = _mm256_sub_pd( mask0, fives);
+		mask1 = _mm256_add_pd( mask1, fives);
+		mask0 = _mm256_xor_pd( mask0, mask1);
+		e0 = _mm256_blendv_pd( zeros, v0, mask0 );
+		_mm256_storeu_pd( &e[ii], e0 );
+		}
+		if(ii<m)
+			{
+			d0 = (double) m-ii;
+			mask2 = _mm256_broadcast_sd( &d0 );
+			mask2 = _mm256_sub_pd( mask3, mask2 );
+			v0 = _mm256_loadu_pd( &v[ii] );
+			mask0 = _mm256_loadu_pd( &mask[ii] );
+			mask1 = mask0;
+			mask0 = _mm256_sub_pd( mask0, fives);
+			mask1 = _mm256_add_pd( mask1, fives);
+			mask0 = _mm256_xor_pd( mask0, mask1);
+			e0 = _mm256_blendv_pd( zeros, v0, mask0 );
+			_mm256_maskstore_pd( &e[ii], _mm256_castpd_si256( mask2 ), e0 );
+			}
+
+	}
 
 #else
 

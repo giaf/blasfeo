@@ -63,7 +63,7 @@ int main()
 
 	int ii;
 
-	int n = 11;
+	int n = 7;
 
 	//
 	// matrices in column-major format
@@ -188,27 +188,36 @@ int main()
 	double *vp; d_zeros(&vp, n, 1);
 	double *vm; d_zeros(&vm, n, 1);
 	double *m; d_zeros(&m, n, 1);
+	double *r; d_zeros(&r, n, 1);
+
 	for(ii=0; ii<n; ii++) v[ii] = ii; // x
 	for(ii=0; ii<n; ii++) vp[ii] = 8.0; // upper
 	for(ii=0; ii<n; ii++) vm[ii] = 3.0; // lower
+	for(ii=0; ii<n; ii++) r[ii] = 2*ii+1; // x
+
 	d_print_mat(1, n, v, 1);
 	d_print_mat(1, n, vp, 1);
 	d_print_mat(1, n, vm, 1);
+	d_print_mat(1, n, r, 1);
 
 	struct d_strvec sv; d_create_strvec(n, &sv, v);
 	struct d_strvec svp; d_create_strvec(n, &svp, vp);
 	struct d_strvec svm; d_create_strvec(n, &svm, vm);
 	struct d_strvec sm; d_create_strvec(n, &sm, m);
+	struct d_strvec sr; d_create_strvec(n, &sr, r);
+
 	d_print_tran_strvec(n, &sv, 0);
 	d_print_tran_strvec(n, &svp, 0);
 	d_print_tran_strvec(n, &svm, 0);
 	d_print_tran_strvec(n, &sm, 0);
+	d_print_tran_strvec(n, &sr, 0);
 
-//	dveccl_mask_libstr(n, &svm, 0, &sv, 0, &svp, 0, &sv, 0, &sm, 0);
-	dveccl_libstr(n, &svm, 0, &sv, 0, &svp, 0, &sv, 0);
+	dveccl_mask_libstr(n, &svm, 0, &sv, 0, &svp, 0, &sv, 0, &sm, 0);
+	// dveccl_libstr(n, &svm, 0, &sv, 0, &svp, 0, &sv, 0);
 	d_print_tran_strvec(12, &sv, 0);
 	d_print_tran_strvec(12, &sm, 0);
-
+	dvecup_elim_libstr(n, &sm, 0, &sr, 0, &sr, 0);
+	d_print_tran_strvec(12, &sr, 0);
 
 	return 0;
 

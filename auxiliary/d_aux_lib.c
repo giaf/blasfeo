@@ -865,7 +865,26 @@ void dveccl_mask_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *s
 	}
 
 
-
+// zero out components using mask
+void dvecze_libstr(int m, struct d_strvec *sm, int mi, struct d_strvec *sv, int vi, struct d_strvec *se, int ei)
+	{
+	double *mask = sm->pa + mi;
+	double *v = sv->pa + vi;
+	double *e = se->pa + ei;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		if(mask[ii]==0)
+			{
+			e[ii] = v[ii];
+			}
+		else
+			{
+			e[ii] = 0;
+			}
+		}
+	return;
+	}
 #else
 
 #error : wrong LA choice
