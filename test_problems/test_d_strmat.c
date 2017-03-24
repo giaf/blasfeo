@@ -63,7 +63,7 @@ int main()
 
 	int ii;
 
-	int n = 7;
+	int n = 12;
 
 	//
 	// matrices in column-major format
@@ -212,16 +212,13 @@ int main()
 	d_print_tran_strvec(n, &sm, 0);
 	d_print_tran_strvec(n, &sr, 0);
 
-	dveccl_mask_libstr(n, &svm, 0, &sv, 0, &svp, 0, &sv, 0, &sm, 0);
-	// dveccl_libstr(n, &svm, 0, &sv, 0, &svp, 0, &sv, 0);
-	d_print_tran_strvec(12, &sv, 0);
-	d_print_tran_strvec(12, &sm, 0);
-	dvecze_libstr(n, &sm, 0, &sr, 0, &sr, 0);
-	d_print_tran_strvec(12, &sr, 0);
-
-	return 0;
-
-
+//	dveccl_mask_libstr(n, &svm, 0, &sv, 0, &svp, 0, &sv, 0, &sm, 0);
+//	veccl_libstr(n, &svm, 0, &sv, 0, &svp, 0, &sv, 0);
+//	d_print_tran_strvec(12, &sv, 0);
+//	d_print_tran_strvec(12, &sm, 0);
+//	dvecze_libstr(n, &sm, 0, &sr, 0, &sr, 0);
+//	d_print_tran_strvec(12, &sr, 0);
+//	return 0;
 
 //	d_print_strmat(n, n, &sA, 0, 0);
 //	dtrsv_unn_libstr(n, &sA, 1, 0, &sx0, 0, &sz0, 0);
@@ -234,7 +231,7 @@ int main()
 //	d_print_tran_strvec(n, &sz3, 0);
 //	return 0;
 
-	dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
+	dgemm_nt_libstr(8, 8, 8, 1.0, &sA, 1, 2, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 2, 3);
 	d_print_strmat(n, n, &sD, 0, 0);
 //	dpotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 //	d_print_strmat(n, n, &sD, 0, 0);
