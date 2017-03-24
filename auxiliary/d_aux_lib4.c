@@ -3212,6 +3212,121 @@ void dvecex_sp_libstr(int m, double alpha, int *idx, struct d_strvec *sx, int xi
 
 
 
+void dveccl_mask_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *sx, int xi, struct d_strvec *sxp, int xip, struct d_strvec *sz, int zi, struct d_strvec *sm, int mi)
+	{
+
+	double *xm = sxm->pa + xim;
+	double *x  = sx->pa + xi;
+	double *xp = sxp->pa + xip;
+	double *z  = sz->pa + zi;
+	double *mask  = sm->pa + mi;
+
+	double d0;
+
+	__m256d
+		xm0, x0, xp0, z0, mask0, tmp0, tmp1, ones, mones, mask1, mask2;
+	
+	ones = _mm256_set_pd( 1.0, 1.0, 1.0, 1.0 );
+	mones = _mm256_set_pd( -1.0, -1.0, -1.0, -1.0 );
+
+	mask1 = _mm256_set_pd( 3.5, 2.5, 1.5, 0.5 );
+
+	int ii;
+
+	for(ii=0; ii<m-3; ii+=4)
+		{
+		mask0 = _mm256_setzero_pd();
+		x0  = _mm256_loadu_pd( &x[ii] );
+		xp0 = _mm256_loadu_pd( &xp[ii] );
+		xm0 = _mm256_loadu_pd( &xm[ii] );
+		tmp0 = _mm256_cmp_pd( xp0, x0, 0x2 );
+		tmp1 = _mm256_cmp_pd( x0, xm0, 0x2 );
+		z0 = _mm256_blendv_pd( x0, xp0, tmp0 );
+		z0 = _mm256_blendv_pd( z0, xm0, tmp1 );
+		mask0 = _mm256_blendv_pd( mask0, ones, tmp0 );
+		mask0 = _mm256_blendv_pd( mask0, mones, tmp1 );
+		_mm256_storeu_pd( &z[ii], z0 );
+		_mm256_storeu_pd( &mask[ii], mask0 );
+		}
+	if(ii<m)
+		{
+		d0 = (double) m-ii;
+		mask2 = _mm256_broadcast_sd( &d0 );
+		mask2 = _mm256_sub_pd( mask1, mask2 );
+		mask0 = _mm256_setzero_pd();
+		x0  = _mm256_loadu_pd( &x[ii] );
+		xp0 = _mm256_loadu_pd( &xp[ii] );
+		xm0 = _mm256_loadu_pd( &xm[ii] );
+		tmp0 = _mm256_cmp_pd( xp0, x0, 0x2 );
+		tmp1 = _mm256_cmp_pd( x0, xm0, 0x2 );
+		z0 = _mm256_blendv_pd( x0, xp0, tmp0 );
+		z0 = _mm256_blendv_pd( z0, xm0, tmp1 );
+		mask0 = _mm256_blendv_pd( mask0, ones, tmp0 );
+		mask0 = _mm256_blendv_pd( mask0, mones, tmp1 );
+		_mm256_maskstore_pd( &z[ii], _mm256_castpd_si256( mask2 ), z0 );
+		_mm256_maskstore_pd( &mask[ii], _mm256_castpd_si256( mask2 ), mask0 );
+		}
+
+	return;
+
+	}
+
+
+
+void dveccl_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *sx, int xi, struct d_strvec *sxp, int xip, struct d_strvec *sz, int zi)
+	{
+
+	double *xm = sxm->pa + xim;
+	double *x  = sx->pa + xi;
+	double *xp = sxp->pa + xip;
+	double *z  = sz->pa + zi;
+
+	double d0;
+
+	__m256d
+		xm0, x0, xp0, z0, mask0, tmp0, tmp1, ones, mones, mask1, mask2;
+	
+	ones = _mm256_set_pd( 1.0, 1.0, 1.0, 1.0 );
+	mones = _mm256_set_pd( -1.0, -1.0, -1.0, -1.0 );
+
+	mask1 = _mm256_set_pd( 3.5, 2.5, 1.5, 0.5 );
+
+	int ii;
+
+	for(ii=0; ii<m-3; ii+=4)
+		{
+		mask0 = _mm256_setzero_pd();
+		x0  = _mm256_loadu_pd( &x[ii] );
+		xp0 = _mm256_loadu_pd( &xp[ii] );
+		xm0 = _mm256_loadu_pd( &xm[ii] );
+		tmp0 = _mm256_cmp_pd( xp0, x0, 0x2 );
+		tmp1 = _mm256_cmp_pd( x0, xm0, 0x2 );
+		z0 = _mm256_blendv_pd( x0, xp0, tmp0 );
+		z0 = _mm256_blendv_pd( z0, xm0, tmp1 );
+		_mm256_storeu_pd( &z[ii], z0 );
+		}
+	if(ii<m)
+		{
+		d0 = (double) m-ii;
+		mask2 = _mm256_broadcast_sd( &d0 );
+		mask2 = _mm256_sub_pd( mask1, mask2 );
+		mask0 = _mm256_setzero_pd();
+		x0  = _mm256_loadu_pd( &x[ii] );
+		xp0 = _mm256_loadu_pd( &xp[ii] );
+		xm0 = _mm256_loadu_pd( &xm[ii] );
+		tmp0 = _mm256_cmp_pd( xp0, x0, 0x2 );
+		tmp1 = _mm256_cmp_pd( x0, xm0, 0x2 );
+		z0 = _mm256_blendv_pd( x0, xp0, tmp0 );
+		z0 = _mm256_blendv_pd( z0, xm0, tmp1 );
+		_mm256_maskstore_pd( &z[ii], _mm256_castpd_si256( mask2 ), z0 );
+		}
+
+	return;
+
+	}
+
+
+
 #else
 
 #error : wrong LA choice

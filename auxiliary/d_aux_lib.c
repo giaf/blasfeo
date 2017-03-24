@@ -806,6 +806,65 @@ void dvecex_sp_libstr(int m, double alpha, int *idx, struct d_strvec *sx, int xi
 	}
 
 
+// clip without mask return
+void dveccl_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *sx, int xi, struct d_strvec *sxp, int xip, struct d_strvec *sz, int zi)
+	{
+	double *xm = sxm->pa + xim;
+	double *x  = sx->pa + xi;
+	double *xp = sxp->pa + xip;
+	double *z  = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		if(x[ii]>=xp[ii])
+			{
+			z[ii] = xp[ii];
+			}
+		else if(x[ii]<=xm[ii])
+			{
+			z[ii] = xm[ii];
+			}
+		else
+			{
+			z[ii] = x[ii];
+			}
+		}
+	return;
+	}
+
+
+
+// clip with mask return
+void dveccl_mask_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *sx, int xi, struct d_strvec *sxp, int xip, struct d_strvec *sz, int zi, struct d_strvec *sm, int mi)
+	{
+	double *xm = sxm->pa + xim;
+	double *x  = sx->pa + xi;
+	double *xp = sxp->pa + xip;
+	double *z  = sz->pa + zi;
+	double *mask  = sm->pa + mi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		if(x[ii]>=xp[ii])
+			{
+			z[ii] = xp[ii];
+			mask[ii] = 1.0;
+			}
+		else if(x[ii]<=xm[ii])
+			{
+			z[ii] = xm[ii];
+			mask[ii] = -1.0;
+			}
+		else
+			{
+			z[ii] = x[ii];
+			mask[ii] = 0.0;
+			}
+		}
+	return;
+	}
+
+
 
 #else
 
