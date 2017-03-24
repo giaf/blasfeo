@@ -885,6 +885,9 @@ void dvecze_libstr(int m, struct d_strvec *sm, int mi, struct d_strvec *sv, int 
 		}
 	return;
 	}
+
+
+
 #else
 
 #error : wrong LA choice

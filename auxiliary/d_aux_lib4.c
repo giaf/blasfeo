@@ -3212,6 +3212,75 @@ void dvecex_sp_libstr(int m, double alpha, int *idx, struct d_strvec *sx, int xi
 
 
 
+void dveccl_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *sx, int xi, struct d_strvec *sxp, int xip, struct d_strvec *sz, int zi)
+	{
+
+	double *xm = sxm->pa + xim;
+	double *x  = sx->pa + xi;
+	double *xp = sxp->pa + xip;
+	double *z  = sz->pa + zi;
+
+	int ii;
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	double d0;
+
+	__m256d
+		xm0, x0, xp0, z0, tmp0, tmp1, ones, mones, mask1, mask2;
+
+	ones = _mm256_set_pd( 1.0, 1.0, 1.0, 1.0 );
+	mones = _mm256_set_pd( -1.0, -1.0, -1.0, -1.0 );
+	mask1 = _mm256_set_pd( 3.5, 2.5, 1.5, 0.5 );
+
+	for(ii=0; ii<m-3; ii+=4)
+		{
+		x0  = _mm256_loadu_pd( &x[ii] );
+		xp0 = _mm256_loadu_pd( &xp[ii] );
+		xm0 = _mm256_loadu_pd( &xm[ii] );
+		tmp0 = _mm256_cmp_pd( xp0, x0, 0x2 );
+		tmp1 = _mm256_cmp_pd( x0, xm0, 0x2 );
+		z0 = _mm256_blendv_pd( x0, xp0, tmp0 );
+		z0 = _mm256_blendv_pd( z0, xm0, tmp1 );
+		_mm256_storeu_pd( &z[ii], z0 );
+		}
+	if(ii<m)
+		{
+		d0 = (double) m-ii;
+		mask2 = _mm256_broadcast_sd( &d0 );
+		mask2 = _mm256_sub_pd( mask1, mask2 );
+		x0  = _mm256_loadu_pd( &x[ii] );
+		xp0 = _mm256_loadu_pd( &xp[ii] );
+		xm0 = _mm256_loadu_pd( &xm[ii] );
+		tmp0 = _mm256_cmp_pd( xp0, x0, 0x2 );
+		tmp1 = _mm256_cmp_pd( x0, xm0, 0x2 );
+		z0 = _mm256_blendv_pd( x0, xp0, tmp0 );
+		z0 = _mm256_blendv_pd( z0, xm0, tmp1 );
+		_mm256_maskstore_pd( &z[ii], _mm256_castpd_si256( mask2 ), z0 );
+		}
+#else
+	for(ii=0; ii<m; ii++)
+		{
+		if(x[ii]>=xp[ii])
+			{
+			z[ii] = xp[ii];
+			}
+		else if(x[ii]<=xm[ii])
+			{
+			z[ii] = xm[ii];
+			}
+		else
+			{
+			z[ii] = x[ii];
+			}
+		}
+#endif
+
+	return;
+
+	}
+
+
+
 void dveccl_mask_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *sx, int xi, struct d_strvec *sxp, int xip, struct d_strvec *sz, int zi, struct d_strvec *sm, int mi)
 	{
 
@@ -3221,6 +3290,9 @@ void dveccl_mask_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *s
 	double *z  = sz->pa + zi;
 	double *mask  = sm->pa + mi;
 
+	int ii;
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	double d0;
 
 	__m256d
@@ -3228,10 +3300,7 @@ void dveccl_mask_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *s
 
 	ones = _mm256_set_pd( 1.0, 1.0, 1.0, 1.0 );
 	mones = _mm256_set_pd( -1.0, -1.0, -1.0, -1.0 );
-
 	mask1 = _mm256_set_pd( 3.5, 2.5, 1.5, 0.5 );
-
-	int ii;
 
 	for(ii=0; ii<m-3; ii+=4)
 		{
@@ -3266,58 +3335,26 @@ void dveccl_mask_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *s
 		_mm256_maskstore_pd( &z[ii], _mm256_castpd_si256( mask2 ), z0 );
 		_mm256_maskstore_pd( &mask[ii], _mm256_castpd_si256( mask2 ), mask0 );
 		}
-
-	return;
-
-	}
-
-
-
-void dveccl_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *sx, int xi, struct d_strvec *sxp, int xip, struct d_strvec *sz, int zi)
-	{
-
-	double *xm = sxm->pa + xim;
-	double *x  = sx->pa + xi;
-	double *xp = sxp->pa + xip;
-	double *z  = sz->pa + zi;
-
-	double d0;
-
-	__m256d
-		xm0, x0, xp0, z0, tmp0, tmp1, ones, mones, mask1, mask2;
-
-	ones = _mm256_set_pd( 1.0, 1.0, 1.0, 1.0 );
-	mones = _mm256_set_pd( -1.0, -1.0, -1.0, -1.0 );
-
-	mask1 = _mm256_set_pd( 3.5, 2.5, 1.5, 0.5 );
-
-	int ii;
-
-	for(ii=0; ii<m-3; ii+=4)
+#else
+	for(ii=0; ii<m; ii++)
 		{
-		x0  = _mm256_loadu_pd( &x[ii] );
-		xp0 = _mm256_loadu_pd( &xp[ii] );
-		xm0 = _mm256_loadu_pd( &xm[ii] );
-		tmp0 = _mm256_cmp_pd( xp0, x0, 0x2 );
-		tmp1 = _mm256_cmp_pd( x0, xm0, 0x2 );
-		z0 = _mm256_blendv_pd( x0, xp0, tmp0 );
-		z0 = _mm256_blendv_pd( z0, xm0, tmp1 );
-		_mm256_storeu_pd( &z[ii], z0 );
+		if(x[ii]>=xp[ii])
+			{
+			z[ii] = xp[ii];
+			mask[ii] = 1.0;
+			}
+		else if(x[ii]<=xm[ii])
+			{
+			z[ii] = xm[ii];
+			mask[ii] = -1.0;
+			}
+		else
+			{
+			z[ii] = x[ii];
+			mask[ii] = 0.0;
+			}
 		}
-	if(ii<m)
-		{
-		d0 = (double) m-ii;
-		mask2 = _mm256_broadcast_sd( &d0 );
-		mask2 = _mm256_sub_pd( mask1, mask2 );
-		x0  = _mm256_loadu_pd( &x[ii] );
-		xp0 = _mm256_loadu_pd( &xp[ii] );
-		xm0 = _mm256_loadu_pd( &xm[ii] );
-		tmp0 = _mm256_cmp_pd( xp0, x0, 0x2 );
-		tmp1 = _mm256_cmp_pd( x0, xm0, 0x2 );
-		z0 = _mm256_blendv_pd( x0, xp0, tmp0 );
-		z0 = _mm256_blendv_pd( z0, xm0, tmp1 );
-		_mm256_maskstore_pd( &z[ii], _mm256_castpd_si256( mask2 ), z0 );
-		}
+#endif
 
 	return;
 
@@ -3331,6 +3368,9 @@ void dvecze_libstr(int m, struct d_strvec *sm, int mi, struct d_strvec *sv, int 
 	double *v = sv->pa + vi;
 	double *e = se->pa + ei;
 
+	int ii;
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	double d0;
 
 	__m256d
@@ -3339,8 +3379,6 @@ void dvecze_libstr(int m, struct d_strvec *sm, int mi, struct d_strvec *sv, int 
 	fives = _mm256_set_pd( 0.5, 0.5, 0.5, 0.5 );
 	zeros = _mm256_setzero_pd();
 	mask3 = _mm256_set_pd( 3.5, 2.5, 1.5, 0.5 );
-
-	int ii;
 
 	for(ii=0; ii<m-3; ii+=4)
 		{
@@ -3353,22 +3391,37 @@ void dvecze_libstr(int m, struct d_strvec *sm, int mi, struct d_strvec *sv, int 
 		e0 = _mm256_blendv_pd( zeros, v0, mask0 );
 		_mm256_storeu_pd( &e[ii], e0 );
 		}
-		if(ii<m)
+	if(ii<m)
+		{
+		d0 = (double) m-ii;
+		mask2 = _mm256_broadcast_sd( &d0 );
+		mask2 = _mm256_sub_pd( mask3, mask2 );
+		v0 = _mm256_loadu_pd( &v[ii] );
+		mask0 = _mm256_loadu_pd( &mask[ii] );
+		mask1 = mask0;
+		mask0 = _mm256_sub_pd( mask0, fives);
+		mask1 = _mm256_add_pd( mask1, fives);
+		mask0 = _mm256_xor_pd( mask0, mask1);
+		e0 = _mm256_blendv_pd( zeros, v0, mask0 );
+		_mm256_maskstore_pd( &e[ii], _mm256_castpd_si256( mask2 ), e0 );
+		}
+#else
+	for(ii=0; ii<m; ii++)
+		{
+		if(mask[ii]==0)
 			{
-			d0 = (double) m-ii;
-			mask2 = _mm256_broadcast_sd( &d0 );
-			mask2 = _mm256_sub_pd( mask3, mask2 );
-			v0 = _mm256_loadu_pd( &v[ii] );
-			mask0 = _mm256_loadu_pd( &mask[ii] );
-			mask1 = mask0;
-			mask0 = _mm256_sub_pd( mask0, fives);
-			mask1 = _mm256_add_pd( mask1, fives);
-			mask0 = _mm256_xor_pd( mask0, mask1);
-			e0 = _mm256_blendv_pd( zeros, v0, mask0 );
-			_mm256_maskstore_pd( &e[ii], _mm256_castpd_si256( mask2 ), e0 );
+			e[ii] = v[ii];
 			}
+		else
+			{
+			e[ii] = 0;
+			}
+		}
+#endif
 
 	}
+
+
 
 #else
 

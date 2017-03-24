@@ -216,7 +216,7 @@ int main()
 	// dveccl_libstr(n, &svm, 0, &sv, 0, &svp, 0, &sv, 0);
 	d_print_tran_strvec(12, &sv, 0);
 	d_print_tran_strvec(12, &sm, 0);
-	dvecup_elim_libstr(n, &sm, 0, &sr, 0, &sr, 0);
+	dvecze_libstr(n, &sm, 0, &sr, 0, &sr, 0);
 	d_print_tran_strvec(12, &sr, 0);
 
 	return 0;
