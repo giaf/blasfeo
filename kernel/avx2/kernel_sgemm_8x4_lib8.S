@@ -3461,7 +3461,7 @@ kernel_strsm_nt_rl_inv_8x4_lib8:
 	movq	ARG4, %r10
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_8X4_LIB4
+	INNER_BLEND_SCALE_11_8X4_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_scale_11_8x4_lib8

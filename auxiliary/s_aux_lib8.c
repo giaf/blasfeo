@@ -997,7 +997,7 @@ void s_cvt_mat2strmat(int m, int n, float *A, int lda, struct s_strmat *sA, int 
 			B  += m0;
 			pB += m0 + bs*(sda-1);
 			}
-		for( ; ii<m-3; ii+=4)
+		for( ; ii<m-7; ii+=8)
 			{
 			// col 0
 			pB[0+bs*0] = B[0+lda*0];

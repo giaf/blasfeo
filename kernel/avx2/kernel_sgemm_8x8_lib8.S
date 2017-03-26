@@ -3739,7 +3739,7 @@ kernel_strsm_nt_rl_inv_8x8_lib8:
 	movq	ARG4, %r10
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_8X8_LIB4
+	INNER_BLEND_SCALE_11_8X8_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_scale_11_8x8_lib8
@@ -3831,7 +3831,7 @@ kernel_strsm_nt_rl_inv_8x8_vs_lib8:
 	movq	ARG3, %r12
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_SGEMM_SUB_NT_8X4_LIB8
+	INNER_KERNEL_SGEMM_SUB_NT_8X8_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgemm_sub_nt_8x8_lib8
@@ -3848,7 +3848,7 @@ kernel_strsm_nt_rl_inv_8x8_vs_lib8:
 	movq	$0, %r12 // sdc
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_8X4_GEN_LIB8
+	INNER_BLEND_SCALE_11_8X8_GEN_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_scale_11_8x8_gen_lib8
@@ -3865,7 +3865,7 @@ kernel_strsm_nt_rl_inv_8x8_vs_lib8:
 	movq	ARG9, %r12 // kn 
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_STRSM_RLT_INV_8X4_GEN_LIB8
+	INNER_EDGE_STRSM_RLT_INV_8X8_GEN_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_strsm_rlt_inv_8x8_gen_lib8
@@ -3886,7 +3886,7 @@ kernel_strsm_nt_rl_inv_8x8_vs_lib8:
 	movq	ARG9, %rax // n1 
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_8X4_GEN_LIB8
+	INNER_STORE_8X8_GEN_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_8x8_gen_lib8
@@ -4052,7 +4052,7 @@ kernel_spotrf_nt_l_8x8_vs_lib8:
 	movq	ARG3, %r12
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_SGEMM_SUB_NT_8X4_LIB8
+	INNER_KERNEL_SGEMM_SUB_NT_8X8_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_sgemm_sub_nt_8x8_lib8
@@ -4069,7 +4069,7 @@ kernel_spotrf_nt_l_8x8_vs_lib8:
 	movq	$0, %r12 // sdc
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_8X4_GEN_LIB8
+	INNER_BLEND_SCALE_11_8X8_GEN_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_scale_11_8x8_gen_lib8
@@ -4085,7 +4085,7 @@ kernel_spotrf_nt_l_8x8_vs_lib8:
 	movq	ARG8, %r11 // kn 
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_SPOTRF_8X4_GEN_LIB8
+	INNER_EDGE_SPOTRF_8X8_GEN_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_spotrf_8x8_gen_lib8
@@ -4106,7 +4106,7 @@ kernel_spotrf_nt_l_8x8_vs_lib8:
 	movq	ARG8, %rax // n1 
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_L_8X4_GEN_LIB8
+	INNER_STORE_L_8X8_GEN_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_l_8x8_gen_lib8
