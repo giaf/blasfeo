@@ -1,3 +1,4 @@
+
 /**************************************************************************************************
 *                                                                                                 *
 * This file is part of BLASFEO.                                                                   *
@@ -30,147 +31,19 @@
 #include <stdio.h>
 
 #include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_kernel.h"
+#include "../include/blasfeo_d_kernel.h"
 
 
 
-#if defined(LA_REFERENCE) | defined(LA_BLAS) 
+#define REAL float
+
+#define STRMAT s_strmat
+#define STRVEC s_strvec
+
+#define GEMM_L_DIAG_LIBSTR sgemm_l_diag_libstr
+#define GEMM_R_DIAG_LIBSTR sgemm_r_diag_libstr
 
 
 
-// dgemm with A diagonal matrix (stored as strvec)
-void sgemm_l_diag_libstr(int m, int n, float alpha, struct s_strvec *sA, int ai, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
-	{
-	if(m<=0 | n<=0)
-		return;
-	int ii, jj;
-	int ldb = sB->m;
-	int ldd = sD->m;
-	float *dA = sA->pa + ai;
-	float *pB = sB->pA + bi + bj*ldb;
-	float *pD = sD->pA + di + dj*ldd;
-	float a0, a1;
-	if(beta==0.0)
-		{
-		ii = 0;
-		for(; ii<m-1; ii+=2)
-			{
-			a0 = alpha * dA[ii+0];
-			a1 = alpha * dA[ii+1];
-			for(jj=0; jj<n; jj++)
-				{
-				pD[ii+0+ldd*jj] = a0 * pB[ii+0+ldb*jj];
-				pD[ii+1+ldd*jj] = a1 * pB[ii+1+ldb*jj];
-				}
-			}
-		for(; ii<m; ii++)
-			{
-			a0 = alpha * dA[ii];
-			for(jj=0; jj<n; jj++)
-				{
-				pD[ii+0+ldd*jj] = a0 * pB[ii+0+ldb*jj];
-				}
-			}
-		}
-	else
-		{
-		int ldc = sC->m;
-		float *pC = sC->pA + ci + cj*ldc;
-		ii = 0;
-		for(; ii<m-1; ii+=2)
-			{
-			a0 = alpha * dA[ii+0];
-			a1 = alpha * dA[ii+1];
-			for(jj=0; jj<n; jj++)
-				{
-				pD[ii+0+ldd*jj] = a0 * pB[ii+0+ldb*jj] + beta * pC[ii+0+ldc*jj];
-				pD[ii+1+ldd*jj] = a1 * pB[ii+1+ldb*jj] + beta * pC[ii+1+ldc*jj];
-				}
-			}
-		for(; ii<m; ii++)
-			{
-			a0 = alpha * dA[ii];
-			for(jj=0; jj<n; jj++)
-				{
-				pD[ii+0+ldd*jj] = a0 * pB[ii+0+ldb*jj] + beta * pC[ii+0+ldc*jj];
-				}
-			}
-		}
-	return;
-	}
-
-
-
-// dgemm with B diagonal matrix (stored as strvec)
-void sgemm_r_diag_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sB, int bi, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
-	{
-	if(m<=0 | n<=0)
-		return;
-	int ii, jj;
-	int lda = sA->m;
-	int ldd = sD->m;
-	float *pA = sA->pA + ai + aj*lda;
-	float *dB = sB->pa + bi;
-	float *pD = sD->pA + di + dj*ldd;
-	float a0, a1;
-	if(beta==0)
-		{
-		jj = 0;
-		for(; jj<n-1; jj+=2)
-			{
-			a0 = alpha * dB[jj+0];
-			a1 = alpha * dB[jj+1];
-			for(ii=0; ii<m; ii++)
-				{
-				pD[ii+ldd*(jj+0)] = a0 * pA[ii+lda*(jj+0)];
-				pD[ii+ldd*(jj+1)] = a1 * pA[ii+lda*(jj+1)];
-				}
-			}
-		for(; jj<n; jj++)
-			{
-			a0 = alpha * dB[jj+0];
-			for(ii=0; ii<m; ii++)
-				{
-				pD[ii+ldd*(jj+0)] = a0 * pA[ii+lda*(jj+0)];
-				}
-			}
-		}
-	else
-		{
-		int ldc = sC->m;
-		float *pC = sC->pA + ci + cj*ldc;
-		jj = 0;
-		for(; jj<n-1; jj+=2)
-			{
-			a0 = alpha * dB[jj+0];
-			a1 = alpha * dB[jj+1];
-			for(ii=0; ii<m; ii++)
-				{
-				pD[ii+ldd*(jj+0)] = a0 * pA[ii+lda*(jj+0)] + beta * pC[ii+ldc*(jj+0)];
-				pD[ii+ldd*(jj+1)] = a1 * pA[ii+lda*(jj+1)] + beta * pC[ii+ldc*(jj+1)];
-				}
-			}
-		for(; jj<n; jj++)
-			{
-			a0 = alpha * dB[jj+0];
-			for(ii=0; ii<m; ii++)
-				{
-				pD[ii+ldd*(jj+0)] = a0 * pA[ii+lda*(jj+0)] + beta * pC[ii+ldc*(jj+0)];
-				}
-			}
-		}
-	return;
-	}
-
-
-
-#else
-
-#error : wrong LA choice
-
-#endif
-
-
-
-
+#include "x_blas3_diag_lib.c"
 

@@ -26,7 +26,13 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-// headers to reference BLAS and LAPACK routines employed
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
+// headers to reference BLAS and LAPACK routines employed in BLASFEO WR
 
 // level 1
 void dcopy_(int *m, double *x, int *incx, double *y, int *incy);
@@ -42,9 +48,16 @@ void dger_(int *m, int *n, double *alpha, double *x, int *incx, double *y, int *
 
 // level 3
 void dgemm_(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
-void dtrmm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
-void dtrsm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
+void dsyrk_(char *uplo, char *trans, int *n, int *k, double *alpha, double *A, int *lda, double *beta, double *C, int *ldc);
+void dtrmm_(char *side, char *uplo, char *trans, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
+void dtrsm_(char *side, char *uplo, char *trans, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
 
 // lapack
 int dpotrf_(char *uplo, int *m, double *A, int *lda, int *info);
 int dgetrf_(int *m, int *n, double *A, int *lda, int *ipiv, int *info);
+
+
+
+#ifdef __cplusplus
+}
+#endif

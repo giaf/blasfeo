@@ -26,39 +26,141 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#if defined(LA_BLAS)
-#include "d_blas.h"
+
+#if defined(LA_REFERENCE)
+
+
+
+void AXPY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+	{
+	int ii;
+	REAL *x = sx->pa + xi;
+	REAL *y = sy->pa + yi;
+	REAL *z = sz->pa + zi;
+	for(ii=0; ii<m; ii++)
+		z[ii] = y[ii] + alpha*x[ii];
+	return;
+	}
+
+
+
+// multiply two vectors and compute dot product
+REAL VECMULDOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+	{
+	REAL *x = sx->pa + xi;
+	REAL *y = sy->pa + yi;
+	REAL *z = sz->pa + zi;
+	int ii;
+	REAL dot = 0.0;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		z[ii+0] = x[ii+0] * y[ii+0];
+		z[ii+1] = x[ii+1] * y[ii+1];
+		z[ii+2] = x[ii+2] * y[ii+2];
+		z[ii+3] = x[ii+3] * y[ii+3];
+		dot += z[ii+0] + z[ii+1] + z[ii+2] + z[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = x[ii+0] * y[ii+0];
+		dot += z[ii+0];
+		}
+	return dot;
+	}
+
+
+
+// compute dot product of two vectors
+REAL DOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi)
+	{
+	REAL *x = sx->pa + xi;
+	REAL *y = sy->pa + yi;
+	int ii;
+	REAL dot = 0.0;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		dot += x[ii+0] * y[ii+0];
+		dot += x[ii+1] * y[ii+1];
+		dot += x[ii+2] * y[ii+2];
+		dot += x[ii+3] * y[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		dot += x[ii+0] * y[ii+0];
+		}
+	return dot;
+	}
+
+
+
+#elif defined(LA_BLAS)
+
+
+
+void AXPY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+	{
+	int i1 = 1;
+	REAL *x = sx->pa + xi;
+	REAL *y = sy->pa + yi;
+	REAL *z = sz->pa + zi;
+	if(y!=z)
+		COPY(&m, y, &i1, z, &i1);
+	AXPY(&m, &alpha, x, &i1, z, &i1);
+	return;
+	}
+
+
+
+// multiply two vectors and compute dot product
+REAL VECMULDOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+	{
+	REAL *x = sx->pa + xi;
+	REAL *y = sy->pa + yi;
+	REAL *z = sz->pa + zi;
+	int ii;
+	REAL dot = 0.0;
+	ii = 0;
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = x[ii+0] * y[ii+0];
+		dot += z[ii+0];
+		}
+	return dot;
+	}
+
+
+
+// compute dot product of two vectors
+REAL DOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi)
+	{
+	REAL *x = sx->pa + xi;
+	REAL *y = sy->pa + yi;
+	int ii;
+	REAL dot = 0.0;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		dot += x[ii+0] * y[ii+0];
+		dot += x[ii+1] * y[ii+1];
+		dot += x[ii+2] * y[ii+2];
+		dot += x[ii+3] * y[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		dot += x[ii+0] * y[ii+0];
+		}
+	return dot;
+	}
+
+
+
+#else
+
+#error : wrong LA choice
+
 #endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
 
-
-
-#define REAL double
-
-#define STRMAT d_strmat
-
-#define GEMM_NN_LIBSTR dgemm_nn_libstr
-#define GEMM_NT_LIBSTR dgemm_nt_libstr
-#define SYRK_LN_LIBSTR dsyrk_ln_libstr
-#define TRMM_RLNN_LIBSTR dtrmm_rlnn_libstr
-#define TRMM_RUTN_LIBSTR dtrmm_rutn_libstr
-#define TRSM_LLNU_LIBSTR dtrsm_llnu_libstr
-#define TRSM_LUNN_LIBSTR dtrsm_lunn_libstr
-#define TRSM_RLTN_LIBSTR dtrsm_rltn_libstr
-#define TRSM_RLTU_LIBSTR dtrsm_rltu_libstr
-#define TRSM_RUTN_LIBSTR dtrsm_rutn_libstr
-
-#define COPY dcopy_
-#define GEMM dgemm_
-#define SYRK dsyrk_
-#define TRMM dtrmm_
-#define TRSM dtrsm_
-
-
-
-#include "x_blas3_lib.c"
