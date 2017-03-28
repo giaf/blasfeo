@@ -2437,6 +2437,273 @@ inner_store_16x4_gen_lib8:
 // ymm3 <- []
 
 #if MACRO_LEVEL>=1
+	.macro INNER_STORE_L_16X4_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_store_l_16x4_lib8, @function
+inner_store_l_16x4_lib8:
+#elif defined(OS_MAC)
+_inner_store_l_16x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_store_l_16x4_lib8; .scl 2; .type 32; .endef
+inner_store_l_16x4_lib8:
+#endif
+#endif
+	
+	vmovaps		32(%r10), %ymm12
+	vmovaps		64(%r10), %ymm13
+	vmovaps		96(%r10), %ymm14
+
+	vblendps	$0x01, %ymm12, %ymm1, %ymm1
+	vblendps	$0x03, %ymm13, %ymm2, %ymm2
+	vblendps	$0x07, %ymm14, %ymm3, %ymm3
+
+	vmovaps 	%ymm0,  0(%r10)
+	vmovaps 	%ymm1, 32(%r10)
+	vmovaps 	%ymm2, 64(%r10)
+	vmovaps		%ymm3, 96(%r10)
+
+	vmovaps 	%ymm4,  0(%r10, %r11, 1)
+	vmovaps 	%ymm5, 32(%r10, %r11, 1)
+	vmovaps 	%ymm6, 64(%r10, %r11, 1)
+	vmovaps 	%ymm7, 96(%r10, %r11, 1)
+
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_store_l_16x4_lib8, .-inner_store_l_16x4_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// store n generalized
+//
+// input arguments:
+// r10  <- offset
+// r11  <- D
+// r12  <- 4*sdd*sizeof(double)
+// r13  <- m0 // row index: start from (inc)
+// r14  <- m1 // row index: up to (exc)
+// r15  <- n0 // col index: start from (inc)
+// rax  <- n1 // col index: up to (exc)
+// rbx  <- dirty
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+//
+// output arguments:
+// r10  <- offset
+// r11  <- D
+// r12  <- 4*sdd*sizeof(double)
+// r13  <- m0 // row index: start from (inc)
+// r14  <- m1 // row index: up to (exc)
+// r15  <- n1-n0
+// rax  <- n1-n0
+// rbx  <- dirty
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_L_16X4_GEN_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_store_l_16x4_gen_lib8, @function
+inner_store_l_16x4_gen_lib8:
+#elif defined(OS_MAC)
+_inner_store_l_16x4_gen_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_store_l_16x4_gen_lib8; .scl 2; .type 32; .endef
+inner_store_l_16x4_gen_lib8:
+#endif
+#endif
+	
+	// compute mask for rows
+	vcvtsi2ss	%r13d, %xmm14, %xmm14
+	vcvtsi2ss	%r14d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovups		.LC00(%rip), %ymm12
+	vmovups		.LC01(%rip), %ymm13
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+	vmovups		LC01(%rip), %ymm13
+#endif
+	vshufps		$0x00, %xmm14, %xmm14, %xmm14
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm12, %ymm14, %ymm14
+	vsubps		%ymm15, %ymm13, %ymm15
+
+	// shift D and sol for cols
+	cmpl	$0, %r15d
+	jle		0f
+
+	vmovaps		%ymm1, %ymm0
+	vmovaps		%ymm5, %ymm4
+	vmovaps		%ymm2, %ymm1
+	vmovaps		%ymm6, %ymm5
+	vmovaps		%ymm3, %ymm2
+	vmovaps		%ymm7, %ymm6
+	addq		$32, %r11
+
+	cmpl	$1, %r15d
+	jle		0f
+
+	vmovaps		%ymm1, %ymm0
+	vmovaps		%ymm5, %ymm4
+	vmovaps		%ymm2, %ymm1
+	vmovaps		%ymm6, %ymm5
+	addq		$32, %r11
+
+	cmpl	$2, %r15d
+	jle		0f
+
+	vmovaps		%ymm1, %ymm0
+	vmovaps		%ymm5, %ymm4
+	addq		$32, %r11
+
+0:
+
+	// compute number of cols
+	cmpl	$4, %eax
+	jle		0f
+	movl	$4, %eax
+0:
+	subl	%r15d, %eax
+	movl	%eax, %r15d
+
+	cmpl	$0, %r10d
+	jg		0f
+
+	// offset==0
+	vmaskmovps	%ymm0, %ymm14,  0(%r11)
+	vmaskmovps	%ymm4, %ymm15,  0(%r11, %r12, 1)
+	cmpl		$2, %r15d
+	jl			7f // end
+	vmovaps		32(%r11), %ymm12
+	vblendps	$0x01, %ymm12, %ymm1, %ymm1
+	vmaskmovps	%ymm1, %ymm14, 32(%r11)
+	vmaskmovps	%ymm5, %ymm15, 32(%r11, %r12, 1)
+	cmpl		$3, %r15d
+	jl			7f // end
+	vmovaps		64(%r11), %ymm12
+	vblendps	$0x03, %ymm12, %ymm2, %ymm2
+	vmaskmovps	%ymm2, %ymm14, 64(%r11)
+	vmaskmovps	%ymm6, %ymm15, 64(%r11, %r12, 1)
+	je			7f // end
+	vmovaps		96(%r11), %ymm12
+	vblendps	$0x07, %ymm12, %ymm3, %ymm3
+	vmaskmovps	%ymm3, %ymm14, 96(%r11)
+	vmaskmovps	%ymm7, %ymm15, 96(%r11, %r12, 1)
+	//
+	jmp		7f
+
+0:
+	// offset > 0
+	// 1 2 3 4 5 6 7
+	
+	cmpl	$4, %r10d
+	jl		1f
+	jg		2f
+
+	// offset==4
+	// TODO
+	jmp		7f
+
+1:
+	// 1 2 3
+
+	cmpl	$2, %r10d
+	jl		3f
+	jg		4f
+
+	// offset==2
+	// TODO
+	jmp		7f
+
+3:
+	// offset==1
+	// TODO
+	jmp		7f
+
+4:
+	// offset==3
+	// TODO
+	jmp		7f
+
+2:
+	// 5 6 7
+
+	cmpl	$6, %r10d
+	jl		5f
+	jg		6f
+
+	// offset==6
+	// TODO
+	jmp		7f
+
+5:
+	// offset==5
+	// TODO
+	jmp		7f
+
+6:
+	// offset==7
+	// TODO
+	jmp		7f
+
+	// end
+7:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_store_l_16x4_gen_lib8, .-inner_store_l_16x4_gen_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// store n
+//
+// input arguments:
+// r10  <- D
+// r11  <- 4*sdd*sizeof(float)
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+//
+// output arguments:
+// r10  <- D
+// r11  <- 4*sdd*sizeof(float)
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_L_12X4_LIB8
 #else
 	.p2align 4,,15
@@ -2479,74 +2746,6 @@ inner_store_l_12x4_lib8:
 
 #if defined(OS_LINUX)
 	.size	inner_store_l_12x4_lib8, .-inner_store_l_12x4_lib8
-#endif
-#endif
-
-
-
-
-
-// common inner routine with file scope
-//
-// store n
-//
-// input arguments:
-// r10  <- D
-// r11  <- 4*sdd*sizeof(float)
-// ymm0 <- []
-// ymm1 <- []
-// ymm2 <- []
-// ymm3 <- []
-//
-// output arguments:
-// r10  <- D
-// r11  <- 4*sdd*sizeof(float)
-// ymm0 <- []
-// ymm1 <- []
-// ymm2 <- []
-// ymm3 <- []
-
-#if MACRO_LEVEL>=1
-	.macro INNER_STORE_L_16X4_LIB8
-#else
-	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_store_l_16x4_lib8, @function
-inner_store_l_16x4_lib8:
-#elif defined(OS_MAC)
-_inner_store_l_16x4_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_store_l_16x4_lib8; .scl 2; .type 32; .endef
-inner_store_l_16x4_lib8:
-#endif
-#endif
-	
-	vmovaps		32(%r10), %ymm12
-	vmovaps		64(%r10), %ymm13
-	vmovaps		96(%r10), %ymm14
-
-	vblendps	$0x01, %ymm12, %ymm1, %ymm1
-	vblendps	$0x03, %ymm13, %ymm2, %ymm2
-	vblendps	$0x07, %ymm14, %ymm3, %ymm3
-
-	vmovaps 	%ymm0,  0(%r10)
-	vmovaps 	%ymm1, 32(%r10)
-	vmovaps 	%ymm2, 64(%r10)
-	vmovaps		%ymm3, 96(%r10)
-
-	vmovaps 	%ymm4,  0(%r10, %r11, 1)
-	vmovaps 	%ymm5, 32(%r10, %r11, 1)
-	vmovaps 	%ymm6, 64(%r10, %r11, 1)
-	vmovaps 	%ymm7, 96(%r10, %r11, 1)
-
-
-#if MACRO_LEVEL>=1
-	.endm
-#else
-	ret
-
-#if defined(OS_LINUX)
-	.size	inner_store_l_16x4_lib8, .-inner_store_l_16x4_lib8
 #endif
 #endif
 
@@ -2748,205 +2947,6 @@ inner_store_l_12x4_gen_lib8:
 
 #if defined(OS_LINUX)
 	.size	inner_store_l_12x4_gen_lib8, .-inner_store_l_12x4_gen_lib8
-#endif
-#endif
-
-
-
-
-
-// common inner routine with file scope
-//
-// store n generalized
-//
-// input arguments:
-// r10  <- offset
-// r11  <- D
-// r12  <- 4*sdd*sizeof(double)
-// r13  <- m0 // row index: start from (inc)
-// r14  <- m1 // row index: up to (exc)
-// r15  <- n0 // col index: start from (inc)
-// rax  <- n1 // col index: up to (exc)
-// rbx  <- dirty
-// ymm0 <- []
-// ymm1 <- []
-// ymm2 <- []
-// ymm3 <- []
-//
-// output arguments:
-// r10  <- offset
-// r11  <- D
-// r12  <- 4*sdd*sizeof(double)
-// r13  <- m0 // row index: start from (inc)
-// r14  <- m1 // row index: up to (exc)
-// r15  <- n1-n0
-// rax  <- n1-n0
-// rbx  <- dirty
-// ymm0 <- []
-// ymm1 <- []
-// ymm2 <- []
-// ymm3 <- []
-
-#if MACRO_LEVEL>=1
-	.macro INNER_STORE_L_16X4_GEN_LIB8
-#else
-	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_store_l_16x4_gen_lib8, @function
-inner_store_l_16x4_gen_lib8:
-#elif defined(OS_MAC)
-_inner_store_l_16x4_gen_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_store_l_16x4_gen_lib8; .scl 2; .type 32; .endef
-inner_store_l_16x4_gen_lib8:
-#endif
-#endif
-	
-	// compute mask for rows
-	vcvtsi2ss	%r13d, %xmm14, %xmm14
-	vcvtsi2ss	%r14d, %xmm15, %xmm15
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovups		.LC00(%rip), %ymm12
-	vmovups		.LC01(%rip), %ymm13
-#elif defined(OS_MAC)
-	vmovups		LC00(%rip), %ymm12
-	vmovups		LC01(%rip), %ymm13
-#endif
-	vshufps		$0x00, %xmm14, %xmm14, %xmm14
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
-	vsubps		%ymm12, %ymm14, %ymm14
-	vsubps		%ymm15, %ymm13, %ymm15
-
-	// shift D and sol for cols
-	cmpl	$0, %r15d
-	jle		0f
-
-	vmovaps		%ymm1, %ymm0
-	vmovaps		%ymm5, %ymm4
-	vmovaps		%ymm2, %ymm1
-	vmovaps		%ymm6, %ymm5
-	vmovaps		%ymm3, %ymm2
-	vmovaps		%ymm7, %ymm6
-	addq		$32, %r11
-
-	cmpl	$1, %r15d
-	jle		0f
-
-	vmovaps		%ymm1, %ymm0
-	vmovaps		%ymm5, %ymm4
-	vmovaps		%ymm2, %ymm1
-	vmovaps		%ymm6, %ymm5
-	addq		$32, %r11
-
-	cmpl	$2, %r15d
-	jle		0f
-
-	vmovaps		%ymm1, %ymm0
-	vmovaps		%ymm5, %ymm4
-	addq		$32, %r11
-
-0:
-
-	// compute number of cols
-	cmpl	$4, %eax
-	jle		0f
-	movl	$4, %eax
-0:
-	subl	%r15d, %eax
-	movl	%eax, %r15d
-
-	cmpl	$0, %r10d
-	jg		0f
-
-	// offset==0
-	vmaskmovps	%ymm0, %ymm14,  0(%r11)
-	vmaskmovps	%ymm4, %ymm15,  0(%r11, %r12, 1)
-	cmpl		$2, %r15d
-	jl			7f // end
-	vmovaps		32(%r11), %ymm12
-	vblendps	$0x01, %ymm12, %ymm1, %ymm1
-	vmaskmovps	%ymm1, %ymm14, 32(%r11)
-	vmaskmovps	%ymm5, %ymm15, 32(%r11, %r12, 1)
-	cmpl		$3, %r15d
-	jl			7f // end
-	vmovaps		64(%r11), %ymm12
-	vblendps	$0x03, %ymm12, %ymm2, %ymm2
-	vmaskmovps	%ymm2, %ymm14, 64(%r11)
-	vmaskmovps	%ymm6, %ymm15, 64(%r11, %r12, 1)
-	je			7f // end
-	vmovaps		96(%r11), %ymm12
-	vblendps	$0x07, %ymm12, %ymm3, %ymm3
-	vmaskmovps	%ymm3, %ymm14, 96(%r11)
-	vmaskmovps	%ymm7, %ymm15, 96(%r11, %r12, 1)
-	//
-	jmp		7f
-
-0:
-	// offset > 0
-	// 1 2 3 4 5 6 7
-	
-	cmpl	$4, %r10d
-	jl		1f
-	jg		2f
-
-	// offset==4
-	// TODO
-	jmp		7f
-
-1:
-	// 1 2 3
-
-	cmpl	$2, %r10d
-	jl		3f
-	jg		4f
-
-	// offset==2
-	// TODO
-	jmp		7f
-
-3:
-	// offset==1
-	// TODO
-	jmp		7f
-
-4:
-	// offset==3
-	// TODO
-	jmp		7f
-
-2:
-	// 5 6 7
-
-	cmpl	$6, %r10d
-	jl		5f
-	jg		6f
-
-	// offset==6
-	// TODO
-	jmp		7f
-
-5:
-	// offset==5
-	// TODO
-	jmp		7f
-
-6:
-	// offset==7
-	// TODO
-	jmp		7f
-
-	// end
-7:
-
-#if MACRO_LEVEL>=1
-	.endm
-#else
-	ret
-
-#if defined(OS_LINUX)
-	.size	inner_store_l_16x4_gen_lib8, .-inner_store_l_16x4_gen_lib8
 #endif
 #endif
 

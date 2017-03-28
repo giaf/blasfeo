@@ -4072,7 +4072,7 @@ kernel_strsm_nt_rl_inv_8x8_lib8:
 
 	movq	ARG6, %r10  // E 
 	movq	ARG7, %r11  // inv_diag_E 
-	movq	$4, %r12 // n1
+	movl	$8, %r12d // n1
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_STRSM_RLT_INV_8X8_GEN_LIB8
@@ -4162,9 +4162,9 @@ kernel_strsm_nt_rl_inv_8x8_vs_lib8:
 
 	// call inner blender_loader nn // TODO scale gen
 
-	movq	$0, %r10 // offsetC
+	movl	$0, %r10d // offsetC
 	movq	ARG4, %r11 // C
-	movq	$0, %r12 // sdc
+	movl	$0, %r12d // sdc
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_8X4_GEN_LIB8
@@ -4196,12 +4196,12 @@ kernel_strsm_nt_rl_inv_8x8_vs_lib8:
 
 	// store
 
-	movq	$0, %r10 // offsetD
+	movl	$0, %r10d // offsetD
 	movq	ARG5, %r11 // D
-	movq	$0, %r12 // sdd
-	movq	$0, %r13 // m0
+	movl	$0, %r12d // sdd
+	movl	$0, %r13d // m0
 	movq	ARG8, %r14 // m1 
-	movq	$0, %r15 // n0
+	movl	$0, %r15d // n0
 	movq	ARG9, %rax // n1 
 
 #if MACRO_LEVEL>=1
@@ -4293,7 +4293,7 @@ kernel_spotrf_nt_l_8x8_lib8:
 	// factorization
 
 	movq	ARG6, %r10  // inv_diag_D 
-	movq	$4, %r11 // n1
+	movl	$8, %r11d // n1
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SPOTRF_8X8_GEN_LIB8
@@ -4383,9 +4383,9 @@ kernel_spotrf_nt_l_8x8_vs_lib8:
 
 	// call inner blender_loader nn
 
-	movq	$0, %r10 // offsetC
+	movl	$0, %r10d // offsetC
 	movq	ARG4, %r11 // C
-	movq	$0, %r12 // sdc
+	movl	$0, %r12d // sdc
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_11_8X4_GEN_LIB8
@@ -4416,12 +4416,12 @@ kernel_spotrf_nt_l_8x8_vs_lib8:
 
 	// store
 
-	movq	$0, %r10 // offsetD
+	movl	$0, %r10d // offsetD
 	movq	ARG5, %r11 // D
-	movq	$0, %r12 // sdd
-	movq	$0, %r13 // m0
+	movl	$0, %r12d // sdd
+	movl	$0, %r13d // m0
 	movq	ARG7, %r14 // m1 
-	movq	$0, %r15 // n0
+	movl	$0, %r15d // n0
 	movq	ARG8, %rax // n1 
 
 #if MACRO_LEVEL>=1
