@@ -52,6 +52,21 @@ void sgemm_nt_lib(int m, int n, int k, float alpha, float *pA, int sda, float *p
 
 	i = 0;
 
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+	for(; i<m-7; i+=8)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_sgemm_nt_8x4_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], &beta, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd);
+			}
+		if(j<n)
+			{
+			kernel_sgemm_nt_4x4_vs_lib4(k, &alpha, &pA[(i+0)*sda], &pB[j*sdb], &beta, &pC[j*bs+(i+0)*sdc], &pD[j*bs+(i+0)*sdd], m-(i+0), n-j);
+			kernel_sgemm_nt_4x4_vs_lib4(k, &alpha, &pA[(i+4)*sda], &pB[j*sdb], &beta, &pC[j*bs+(i+4)*sdc], &pD[j*bs+(i+4)*sdd], m-(i+4), n-j);
+			}
+		}
+#endif
 	for(; i<m-3; i+=4)
 		{
 		j = 0;
