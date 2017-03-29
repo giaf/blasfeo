@@ -7707,8 +7707,8 @@ kernel_dpotrf_nt_l_12x4_vs_lib4:
 	movq	ARG8, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
-	movq	ARG9, %r12 // km 
-	movq	ARG10, %r13 // kn 
+	movq	ARG10, %r12 // km 
+	movq	ARG11, %r13 // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_12X4_VS_LIB4
