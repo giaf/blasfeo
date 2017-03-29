@@ -64,8 +64,8 @@ _inner_kernel_gemm_add_nt_4x4_lib4:
 	pld		[r6, #0]
 
 	// preload A
-	vld1.64		{d0, d1}, [r6:128]! // B
-	vld1.64		{d2, d3}, [r5:128]! // A
+	vld1.64		{d0, d1}, [r5:128]! // A
+	vld1.64		{d4, d5}, [r6:128]! // B
 
 	cmp		r4, #4
 	ble		0f // consider clean up loop
@@ -78,36 +78,36 @@ _inner_kernel_gemm_add_nt_4x4_lib4:
 	pld		[r6, #64]
 
 	// unroll 0
-	vmla.f32	q4, q1, d0[0]
-	vld1.64		{d4, d5}, [r6:128]! // B
-	vmla.f32	q5, q1, d0[1]
-	vld1.64		{d6, d7}, [r5:128]! // A
-	vmla.f32	q6, q1, d1[0]
-	vmla.f32	q7, q1, d1[1]
+	vmla.f32	q4, q0, d4[0]
+	vld1.64		{d2, d3}, [r5:128]! // A
+	vmla.f32	q5, q0, d4[1]
+	vld1.64		{d6, d7}, [r6:128]! // B
+	vmla.f32	q6, q0, d5[0]
+	vmla.f32	q7, q0, d5[1]
 
 	// unroll 1
-	vmla.f32	q4, q3, d4[0]
-	vld1.64		{d0, d1}, [r6:128]! // B
-	vmla.f32	q5, q3, d4[1]
-	vld1.64		{d2, d3}, [r5:128]! // A
-	vmla.f32	q6, q3, d5[0]
-	vmla.f32	q7, q3, d5[1]
+	vmla.f32	q4, q1, d6[0]
+	vld1.64		{d0, d1}, [r5:128]! // A
+	vmla.f32	q5, q1, d6[1]
+	vld1.64		{d4, d5}, [r6:128]! // B
+	vmla.f32	q6, q1, d7[0]
+	vmla.f32	q7, q1, d7[1]
 
 	// unroll 2
-	vmla.f32	q4, q1, d0[0]
-	vld1.64		{d4, d5}, [r6:128]! // B
-	vmla.f32	q5, q1, d0[1]
-	vld1.64		{d6, d7}, [r5:128]! // A
-	vmla.f32	q6, q1, d1[0]
-	vmla.f32	q7, q1, d1[1]
+	vmla.f32	q4, q0, d4[0]
+	vld1.64		{d2, d3}, [r5:128]! // A
+	vmla.f32	q5, q0, d4[1]
+	vld1.64		{d6, d7}, [r6:128]! // B
+	vmla.f32	q6, q0, d5[0]
+	vmla.f32	q7, q0, d5[1]
 
 	// unroll 3
-	vmla.f32	q4, q3, d4[0]
-	vld1.64		{d0, d1}, [r6:128]! // B
-	vmla.f32	q5, q3, d4[1]
-	vld1.64		{d2, d3}, [r5:128]! // A
-	vmla.f32	q6, q3, d5[0]
-	vmla.f32	q7, q3, d5[1]
+	vmla.f32	q4, q1, d6[0]
+	vld1.64		{d0, d1}, [r5:128]! // A
+	vmla.f32	q5, q1, d6[1]
+	vld1.64		{d4, d5}, [r6:128]! // B
+	vmla.f32	q6, q1, d7[0]
+	vmla.f32	q7, q1, d7[1]
 
 	sub		r4, r4, #4
 
@@ -120,34 +120,36 @@ _inner_kernel_gemm_add_nt_4x4_lib4:
 	ble		4f
 
 	// unroll 0
-	vmla.f32	q4, q1, d0[0]
-	vld1.64		{d4, d5}, [r6:128]! // B
-	vmla.f32	q5, q1, d0[1]
-	vld1.64		{d6, d7}, [r5:128]! // A
-	vmla.f32	q6, q1, d1[0]
-	vmla.f32	q7, q1, d1[1]
+	vmla.f32	q4, q0, d4[0]
+	vld1.64		{d2, d3}, [r5:128]! // A
+	vmla.f32	q5, q0, d4[1]
+	vld1.64		{d6, d7}, [r6:128]! // B
+	vmla.f32	q6, q0, d5[0]
+	vmla.f32	q7, q0, d5[1]
 
 	// unroll 1
-	vmla.f32	q4, q3, d4[0]
-	vld1.64		{d0, d1}, [r6:128]! // B
-	vmla.f32	q5, q3, d4[1]
-	vld1.64		{d2, d3}, [r5:128]! // A
-	vmla.f32	q6, q3, d5[0]
-	vmla.f32	q7, q3, d5[1]
+	vmla.f32	q4, q1, d6[0]
+	vld1.64		{d0, d1}, [r5:128]! // A
+	vmla.f32	q5, q1, d6[1]
+	vld1.64		{d4, d5}, [r6:128]! // B
+	vmla.f32	q6, q1, d7[0]
+	vmla.f32	q7, q1, d7[1]
 
 	// unroll 2
-	vmla.f32	q4, q1, d0[0]
-	vld1.64		{d4, d5}, [r6:128]! // B
-	vmla.f32	q5, q1, d0[1]
-	vld1.64		{d6, d7}, [r5:128]! // A
-	vmla.f32	q6, q1, d1[0]
-	vmla.f32	q7, q1, d1[1]
+	vmla.f32	q4, q0, d4[0]
+	vld1.64		{d2, d3}, [r5:128]! // A
+	vmla.f32	q5, q0, d4[1]
+	vld1.64		{d6, d7}, [r6:128]! // B
+	vmla.f32	q6, q0, d5[0]
+	vmla.f32	q7, q0, d5[1]
 
 	// unroll 3
-	vmla.f32	q4, q3, d4[0]
-	vmla.f32	q5, q3, d4[1]
-	vmla.f32	q6, q3, d5[0]
-	vmla.f32	q7, q3, d5[1]
+	vmla.f32	q4, q1, d6[0]
+//	vld1.64		{d0, d1}, [r5:128]! // A
+	vmla.f32	q5, q1, d6[1]
+//	vld1.64		{d4, d5}, [r6:128]! // B
+	vmla.f32	q6, q1, d7[0]
+	vmla.f32	q7, q1, d7[1]
 
 	sub		r4, r4, #4
 
@@ -164,12 +166,12 @@ _inner_kernel_gemm_add_nt_4x4_lib4:
 3: // clean1-up loop
 
 	// unroll 0
-	vld1.64		{d0, d1}, [r6:128]! // B
-	vld1.64		{d2, d3}, [r5:128]! // A
-	vmla.f32	q4, q1, d0[0]
-	vmla.f32	q5, q1, d0[1]
-	vmla.f32	q6, q1, d1[0]
-	vmla.f32	q7, q1, d1[1]
+	vld1.64		{d0, d1}, [r5:128]! // A
+	vld1.64		{d4, d5}, [r6:128]! // B
+	vmla.f32	q4, q0, d4[0]
+	vmla.f32	q5, q0, d4[1]
+	vmla.f32	q6, q0, d5[0]
+	vmla.f32	q7, q0, d5[1]
 
 	sub		r4, r4, #1
 	cmp		r4, #0
@@ -185,6 +187,183 @@ _inner_kernel_gemm_add_nt_4x4_lib4:
 
 #if defined(OS_LINUX)
 	.size	inner_kernel_gemm_add_nt_4x4_lib4, .-inner_kernel_gemm_add_nt_4x4_lib4
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r4   <- k
+// r5   <- A
+// r6   <- B
+// r7   <- 4*sdb*sizeof(float)
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+#else
+//	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_gemm_add_nn_4x4_lib4, %function
+inner_kernel_gemm_add_nn_4x4_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_gemm_add_nn_4x4_lib4:
+#endif
+#endif
+
+	// early return
+	cmp		r4, #0
+	ble		2f // return
+
+	// prefetch
+	pld		[r5, #0]
+	pld		[r6, #0]
+
+	// preload A
+	vld1.64		{d0, d1}, [r5:128]! // A
+	vldr		d4, [r6, #0]   // B[0,1]
+	vldr		d5, [r6, #16]  // B[4,5]
+	vldr		d6, [r6, #32]  // B[8,9]
+	vldr		d7, [r6, #48]  // B[12,13]
+
+	cmp		r4, #4
+	ble		0f // consider clean up loop
+
+	// main loop
+1:
+	
+	// prefetch
+	pld		[r5, #64]
+	pld		[r6, r7]
+
+	// unroll 0
+	vmla.f32	q4, q0, d4[0]
+	vld1.64		{d2, d3}, [r5:128]! // A
+	vmla.f32	q5, q0, d5[0]
+	vmla.f32	q6, q0, d6[0]
+	vmla.f32	q7, q0, d7[0]
+
+	// unroll 1
+	vld1.64		{d0, d1}, [r5:128]! // A
+	vmla.f32	q4, q1, d4[1]
+	vldr		d4, [r6, #8]  // B[2,3]
+	vmla.f32	q5, q1, d5[1]
+	vldr		d5, [r6, #24] // B[6,7]
+	vmla.f32	q6, q1, d6[1]
+	vldr		d6, [r6, #40] // B[10,11]
+	vmla.f32	q7, q1, d7[1]
+	vldr		d7, [r6, #56] // B[14,15]
+
+	// unroll 2
+	vmla.f32	q4, q0, d4[0]
+	vld1.64		{d2, d3}, [r5:128]! // A
+	vmla.f32	q5, q0, d5[0]
+	add		r6, r6, r7
+	vmla.f32	q6, q0, d6[0]
+	vmla.f32	q7, q0, d7[0]
+
+	// unroll 3
+	vld1.64		{d0, d1}, [r5:128]! // A
+	vmla.f32	q4, q1, d4[1]
+	vldr		d4, [r6, #0]   // B[0,1]
+	vmla.f32	q5, q1, d5[1]
+	vldr		d5, [r6, #16]  // B[4,5]
+	vmla.f32	q6, q1, d6[1]
+	vldr		d6, [r6, #32]  // B[8,9]
+	vmla.f32	q7, q1, d7[1]
+	vldr		d7, [r6, #48]  // B[12,13]
+
+	sub		r4, r4, #4
+
+	cmp		r4, #4
+	bgt		1b
+
+0:
+
+	cmp		r4, #3
+	ble		4f
+
+	// unroll 0
+	vmla.f32	q4, q0, d4[0]
+	vld1.64		{d2, d3}, [r5:128]! // A
+	vmla.f32	q5, q0, d5[0]
+	vmla.f32	q6, q0, d6[0]
+	vmla.f32	q7, q0, d7[0]
+
+	// unroll 1
+	vld1.64		{d0, d1}, [r5:128]! // A
+	vmla.f32	q4, q1, d4[1]
+	vldr		d4, [r6, #8]  // B[2,3]
+	vmla.f32	q5, q1, d5[1]
+	vldr		d5, [r6, #24] // B[6,7]
+	vmla.f32	q6, q1, d6[1]
+	vldr		d6, [r6, #40] // B[10,11]
+	vmla.f32	q7, q1, d7[1]
+	vldr		d7, [r6, #56] // B[14,15]
+
+	// unroll 2
+	vmla.f32	q4, q0, d4[0]
+	vld1.64		{d2, d3}, [r5:128]! // A
+	vmla.f32	q5, q0, d5[0]
+	add		r6, r6, r7
+	vmla.f32	q6, q0, d6[0]
+	vmla.f32	q7, q0, d7[0]
+
+	// unroll 3
+//	vld1.64		{d0, d1}, [r5:128]! // A
+	vmla.f32	q4, q1, d4[1]
+//	vldr		d4, [r6, #0]   // B[0,1]
+	vmla.f32	q5, q1, d5[1]
+//	vldr		d5, [r6, #16]  // B[4,5]
+	vmla.f32	q6, q1, d6[1]
+//	vldr		d6, [r6, #32]  // B[8,9]
+	vmla.f32	q7, q1, d7[1]
+//	vldr		d7, [r6, #48]  // B[12,13]
+
+	sub		r4, r4, #4
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		r4, #0
+	ble		2f // return
+
+	sub		r5, r5, #16
+
+3: // clean1-up loop
+
+	// unroll 0
+	vld1.64		{d0, d1}, [r5:128]! // A
+	vldr		s8, [r6, #0]  // B[0]
+	vmla.f32	q4, q0, d4[0]
+	vldr		s8, [r6, #16] // B[4]
+	vmla.f32	q5, q0, d4[0]
+	vldr		s8, [r6, #32] // B[8]
+	vmla.f32	q6, q0, d4[0]
+	vldr		s8, [r6, #48] // B[12]
+	vmla.f32	q7, q0, d4[0]
+
+	sub		r4, r4, #1
+	add		r6, r6, #4
+	cmp		r4, #0
+	bgt		3b
+
+2: // return
+
+	
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	mov		pc, lr // return
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_gemm_add_nn_4x4_lib4, .-inner_kernel_gemm_add_nn_4x4_lib4
 #endif
 #endif
 
@@ -387,6 +566,106 @@ _kernel_sgemm_nt_4x4_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_sgemm_nt_4x4_lib4, .-kernel_sgemm_nt_4x4_lib4
+#endif
+
+
+
+//                               r0        r1             r2         r3         sp+0     sp+4          sp+8       sp+12
+// void kernel_sgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, double *B, int sdb, double *beta, double *C, double *D)
+
+//	.p2align 4,,15
+#if defined(OS_LINUX)
+	.global	kernel_sgemm_nn_4x4_lib4
+	.type	kernel_sgemm_nn_4x4_lib4, %function
+kernel_sgemm_nn_4x4_lib4:
+#elif defined(OS_MAC)
+	.global	kernel_sgemm_nn_4x4_lib4
+_kernel_sgemm_nn_4x4_lib4:
+#endif
+
+	// prologue
+
+	// save GP registers
+	stmdb	sp!, {r4 - r10, fp, lr} // save registers
+	add		fp, sp, #36 // fp to old sp position
+
+	// save FP registers
+	fstmfdd	sp!, {d8-d15}
+
+
+
+	// zero accumulation registers
+	vldr	d8, .LC00
+	vldr	d9, .LC00+8
+	vmov	q5, q4
+	vmov	q6, q4
+	vmov	q7, q4
+
+
+
+	// call inner kernel dgemm nt
+	mov		r4, r0 // kmax
+	mov		r5, r2 // A
+	mov		r6, r3 // B
+	ldr		r7, [fp, #0] // sdb
+	lsl		r7, r7, #4 // 4*sizeof(float)*sdb
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl	inner_kernel_gemm_add_nn_4x4_lib4
+#elif defined(OS_MAC)
+	bl	_inner_kernel_gemm_add_nn_4x4_lib4
+#endif
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		r4, r1 // alpha
+	ldr		r5, [fp, #4] // beta
+	ldr		r6, [fp, #8] // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl inner_scale_ab_4x4_lib4
+#elif defined(OS_MAC)
+	bl _inner_scale_ab_4x4_lib4
+#endif
+#endif
+
+
+
+	// store n
+	ldr		r4, [fp, #12] // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl inner_store_4x4_lib4
+#elif defined(OS_MAC)
+	bl _inner_store_4x4_lib4
+#endif
+#endif
+
+
+
+	// epilogue
+
+	// load FP registers
+	fldmfdd	sp!, {d8-d15}
+
+	// load GP registers and return
+//	ldmia	sp!, {r4 - r10, fp, lr} // load registers
+//	mov		pc, lr // return
+	ldmia	sp!, {r4 - r10, fp, pc} // load registers and return
+
+#if defined(OS_LINUX)
+	.size	kernel_sgemm_nn_4x4_lib4, .-kernel_sgemm_nn_4x4_lib4
 #endif
 
 
