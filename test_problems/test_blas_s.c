@@ -150,15 +150,18 @@ int main()
 	int nn[] = {4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 148, 152, 156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224, 228, 232, 236, 240, 244, 248, 252, 256, 260, 264, 268, 272, 276, 280, 284, 288, 292, 296, 300, 304, 308, 312, 316, 320, 324, 328, 332, 336, 340, 344, 348, 352, 356, 360, 364, 368, 372, 376, 380, 384, 388, 392, 396, 400, 404, 408, 412, 416, 420, 424, 428, 432, 436, 440, 444, 448, 452, 456, 460, 500, 550, 600, 650, 700};
 	int nnrep[] = {10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 400, 400, 400, 400, 400, 200, 200, 200, 200, 200, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20, 20, 20, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 4, 4, 4, 4, 4};
 	
-	for(ll=0; ll<75; ll++)
+	for(ll=0; ll<24; ll++)
+//	for(ll=0; ll<75; ll++)
 //	for(ll=0; ll<115; ll++)
 //	for(ll=0; ll<120; ll++)
 
 		{
 
-		int n = nn[ll];
+//		int n = nn[ll];
+//		int nrep = nnrep[ll];
+		int n = ll+1;
+		int nrep = nnrep[0];
 		int n2 = n*n;
-		int nrep = nnrep[ll];
 
 #else
 	int nn[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
@@ -208,19 +211,15 @@ int main()
 		for(i=0; i<n; i++)
 			B2[i*(n+1)] = 1;
 
-		int pnd = ((n+bss-1)/bss)*bss;	
-		int cnd = ((n+ncs-1)/ncs)*ncs;	
-		int cnd2 = 2*((n+ncs-1)/ncs)*ncs;	
-
-		float *x; s_zeros_align(&x, pnd, 1);
-		float *y; s_zeros_align(&y, pnd, 1);
-		float *x2; s_zeros_align(&x2, pnd, 1);
-		float *y2; s_zeros_align(&y2, pnd, 1);
-		float *diag; s_zeros_align(&diag, pnd, 1);
+		float *x; s_zeros(&x, n, 1);
+		float *y; s_zeros(&y, n, 1);
+		float *x2; s_zeros(&x2, n, 1);
+		float *y2; s_zeros(&y2, n, 1);
+		float *diag; s_zeros(&diag, n, 1);
 		int *ipiv; int_zeros(&ipiv, n, 1);
 
-		for(i=0; i<pnd; i++) x[i] = 1;
-		for(i=0; i<pnd; i++) x2[i] = 1;
+//		for(i=0; i<n; i++) x[i] = 1;
+//		for(i=0; i<n; i++) x2[i] = 1;
 
 		// matrix struct
 #if 0
@@ -246,7 +245,7 @@ int main()
 
 
 		// create matrix to pivot all the time
-		sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
+//		sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 
 		float *dummy;
 
@@ -263,30 +262,14 @@ int main()
 
 		gettimeofday(&tv0, NULL); // stop
 
-		for(rep=0; rep<nrep; rep++)
-			{
-
-//			sgemm_nt_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
-//			sgemm_nn_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
-//			ssyrk_nt_l_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 1.0, pC, cnd, pD, cnd);
-//			strmm_nt_ru_lib(n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
-//			spotrf_nt_l_lib(n, n, pB, cnd, pD, cnd, diag);
-//			ssyrk_dpotrf_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd, diag);
-//			ssyrk_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd);
-//			spotrf_nt_l_lib(n, n, pD, cnd, pD, cnd, diag);
-//			sgetrf_nn_nopivot_lib(n, n, pB, cnd, pB, cnd, diag);
-//			sgetrf_nn_lib(n, n, pB, cnd, pB, cnd, diag, ipiv);
-//			strsm_nn_ll_one_lib(n, n, pD, cnd, pB, cnd, pB, cnd);
-//			strsm_nn_lu_inv_lib(n, n, pD, cnd, diag, pB, cnd, pB, cnd);
-			}
-	
 		gettimeofday(&tv1, NULL); // stop
 
 		for(rep=0; rep<nrep; rep++)
 			{
 //			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			sgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-			spotrf_l_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
+//			spotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
+			spotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
 //			sgetr_libstr(n, n, &sA, 0, 0, &sB, 0, 0);
 //			sgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			sgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
@@ -294,6 +277,7 @@ int main()
 //			strmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			strsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //			strsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//			strsm_rltn_libstr(n, n, 1.0, &sB, 0, 0, &sD, 0, 0, &sD, 0, 0);
 //			strsm_rltu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //			strsm_rutn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //			sgemv_n_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
@@ -356,10 +340,10 @@ int main()
 			float Gflops_max = flops_max * GHz_max;
 
 //			float flop_operation = 2.0*n*n*n; // dgemm
-	//		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
+//			float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
 			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //			float flop_operation = 2.0/3.0*n*n*n; // dgetrf
-	//		float flop_operation = 2.0*n*n; // dgemv dsymv
+//			float flop_operation = 2.0*n*n; // dgemv dsymv
 	//		float flop_operation = 1.0*n*n; // dtrmv dtrsv
 	//		float flop_operation = 4.0*n*n; // dgemv_nt
 

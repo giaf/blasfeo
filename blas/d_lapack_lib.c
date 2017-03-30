@@ -45,8 +45,10 @@
 #define STRVEC d_strvec
 
 #define GETF2_NOPIVOT dgetf2_nopivot
+#define GETRF_NOPIVOT_LIBSTR dgetrf_nopivot_libstr
 #define GETRF_LIBSTR dgetrf_libstr
 #define POTRF_L_LIBSTR dpotrf_l_libstr
+#define POTRF_L_MN_LIBSTR dpotrf_l_mn_libstr
 #define SYRK_POTRF_LN_LIBSTR dsyrk_dpotrf_ln_libstr
 
 #define COPY dcopy_

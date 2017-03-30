@@ -41,77 +41,6 @@
 * old interface
 ****************************/
 
-void spotrf_nt_l_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-
-	const int bs = 4;
-
-	int i, j, l;
-
-	i = 0;
-
-	for(; i<m-3; i+=4)
-		{
-		j = 0;
-		for(; j<i && j<n-3; j+=4)
-			{
-			kernel_strsm_nt_rl_inv_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j]);
-			}
-		if(j<n)
-			{
-			if(i<j) // dtrsm
-				{
-				kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
-				}
-			else // dpotrf
-				{
-				if(j<n-3)
-					{
-					kernel_spotrf_nt_l_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &inv_diag_D[j]);
-					}
-				else
-					{
-					kernel_spotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
-					}
-				}
-			}
-		}
-	if(m>i)
-		{
-		goto left_4;
-		}
-
-	// common return if i==m
-	return;
-
-	// clean up loops definitions
-
-	left_4:
-	j = 0;
-	for(; j<i && j<n-3; j+=4)
-		{
-		kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
-		}
-	if(j<n)
-		{
-		if(j<i) // dtrsm
-			{
-			kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
-			}
-		else // dpotrf
-			{
-			kernel_spotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
-			}
-		}
-	return;
-
-	}
-
-
-
 void ssyrk_spotrf_nt_l_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D)
 	{
 
@@ -478,24 +407,149 @@ void sgetrf_nn_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *
 
 
 // dpotrf
-void spotrf_l_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+void spotrf_l_libstr(int m, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
+
+	if(m<=0)
+		return;
+
 	if(ci!=0 | di!=0)
 		{
 		printf("\nspotrf_l_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
-	const int bs = S_BS;
+
+	const int bs = 4;
+
 	int sdc = sC->cn;
 	int sdd = sD->cn;
 	float *pC = sC->pA + cj*bs;
 	float *pD = sD->pA + dj*bs;
-	float *dD = sD->dA; // XXX what to do if di and dj are not zero
-	spotrf_nt_l_lib(m, n, pC, sdc, pD, sdd, dD);
-	if(di==0 && dj==0)
+	float *dD = sD->dA;
+	if(di==0 && dj==0) // XXX what to do if di and dj are not zero
 		sD->use_dA = 1;
 	else
 		sD->use_dA = 0;
+
+	int i, j, l;
+
+	i = 0;
+	for(; i<m-3; i+=4)
+		{
+		j = 0;
+		for(; j<i; j+=4)
+			{
+			kernel_strsm_nt_rl_inv_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &dD[j]);
+			}
+		kernel_spotrf_nt_l_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &dD[j]);
+		}
+	if(m>i)
+		{
+		goto left_4;
+		}
+
+	// common return if i==m
+	return;
+
+	// clean up loops definitions
+
+	left_4: // 1 - 3
+	j = 0;
+	for(; j<i; j+=4)
+		{
+		kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &dD[j], m-i, m-j);
+		}
+	kernel_spotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &dD[j], m-i, m-j);
+	return;
+
+	return;
+	}
+
+
+
+// dpotrf
+void spotrf_l_mn_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+	{
+
+	if(m<=0 || n<=0)
+		return;
+
+	if(ci!=0 | di!=0)
+		{
+		printf("\nspotrf_l_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+		exit(1);
+		}
+
+	const int bs = 4;
+
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	float *pC = sC->pA + cj*bs;
+	float *pD = sD->pA + dj*bs;
+	float *dD = sD->dA;
+	if(di==0 && dj==0) // XXX what to do if di and dj are not zero
+		sD->use_dA = 1;
+	else
+		sD->use_dA = 0;
+
+	int i, j, l;
+
+	i = 0;
+	for(; i<m-3; i+=4)
+		{
+		j = 0;
+		for(; j<i && j<n-3; j+=4)
+			{
+			kernel_strsm_nt_rl_inv_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &dD[j]);
+			}
+		if(j<n)
+			{
+			if(i<j) // dtrsm
+				{
+				kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &dD[j], m-i, n-j);
+				}
+			else // dpotrf
+				{
+				if(j<n-3)
+					{
+					kernel_spotrf_nt_l_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &dD[j]);
+					}
+				else
+					{
+					kernel_spotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &dD[j], m-i, n-j);
+					}
+				}
+			}
+		}
+	if(m>i)
+		{
+		goto left_4;
+		}
+
+	// common return if i==m
+	return;
+
+	// clean up loops definitions
+
+	left_4:
+	j = 0;
+	for(; j<i && j<n-3; j+=4)
+		{
+		kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &dD[j], m-i, n-j);
+		}
+	if(j<n)
+		{
+		if(j<i) // dtrsm
+			{
+			kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &dD[j], m-i, n-j);
+			}
+		else // dpotrf
+			{
+			kernel_spotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &dD[j], m-i, n-j);
+			}
+		}
+	return;
+
 	return;
 	}
 

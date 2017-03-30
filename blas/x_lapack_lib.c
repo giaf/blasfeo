@@ -33,8 +33,139 @@
 
 
 // dpotrf
-void POTRF_L_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void POTRF_L_LIBSTR(int m, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
+	if(m<=0)
+		return;
+	int ii, jj, kk;
+	REAL
+		f_00_inv, 
+		f_10, f_11_inv,
+		c_00, c_01,
+		c_10, c_11;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	REAL *pC = sC->pA + ci + cj*ldc;
+	REAL *pD = sD->pA + di + dj*ldd;
+	REAL *dD = sD->dA;
+	if(di==0 & dj==0)
+		sD->use_dA = 1;
+	else
+		sD->use_dA = 0;
+	jj = 0;
+	for(; jj<m-1; jj+=2)
+		{
+		// factorize diagonal
+		c_00 = pC[jj+0+ldc*(jj+0)];;
+		c_10 = pC[jj+1+ldc*(jj+0)];;
+		c_11 = pC[jj+1+ldc*(jj+1)];;
+		for(kk=0; kk<jj; kk++)
+			{
+			c_00 -= pD[jj+0+ldd*kk] * pD[jj+0+ldd*kk];
+			c_10 -= pD[jj+1+ldd*kk] * pD[jj+0+ldd*kk];
+			c_11 -= pD[jj+1+ldd*kk] * pD[jj+1+ldd*kk];
+			}
+		if(c_00>0)
+			{
+			f_00_inv = 1.0/sqrt(c_00);
+			}
+		else
+			{
+			f_00_inv = 0.0;
+			}
+		dD[jj+0] = f_00_inv;
+		pD[jj+0+ldd*(jj+0)] = c_00 * f_00_inv;
+		f_10 = c_10 * f_00_inv;
+		pD[jj+1+ldd*(jj+0)] = f_10;
+		c_11 -= f_10 * f_10;
+		if(c_11>0)
+			{
+			f_11_inv = 1.0/sqrt(c_11);
+			}
+		else
+			{
+			f_11_inv = 0.0;
+			}
+		dD[jj+1] = f_11_inv;
+		pD[jj+1+ldd*(jj+1)] = c_11 * f_11_inv;
+		// solve lower
+		ii = jj+2;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = pC[ii+0+ldc*(jj+0)];
+			c_10 = pC[ii+1+ldc*(jj+0)];
+			c_01 = pC[ii+0+ldc*(jj+1)];
+			c_11 = pC[ii+1+ldc*(jj+1)];
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+0+ldd*kk] * pD[jj+0+ldd*kk];
+				c_10 -= pD[ii+1+ldd*kk] * pD[jj+0+ldd*kk];
+				c_01 -= pD[ii+0+ldd*kk] * pD[jj+1+ldd*kk];
+				c_11 -= pD[ii+1+ldd*kk] * pD[jj+1+ldd*kk];
+				}
+			c_00 *= f_00_inv;
+			c_10 *= f_00_inv;
+			pD[ii+0+ldd*(jj+0)] = c_00;
+			pD[ii+1+ldd*(jj+0)] = c_10;
+			c_01 -= c_00 * f_10;
+			c_11 -= c_10 * f_10;
+			pD[ii+0+ldd*(jj+1)] = c_01 * f_11_inv;
+			pD[ii+1+ldd*(jj+1)] = c_11 * f_11_inv;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = pC[ii+0+ldc*(jj+0)];
+			c_01 = pC[ii+0+ldc*(jj+1)];
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+0+ldd*kk] * pD[jj+0+ldd*kk];
+				c_01 -= pD[ii+0+ldd*kk] * pD[jj+1+ldd*kk];
+				}
+			c_00 *= f_00_inv;
+			pD[ii+0+ldd*(jj+0)] = c_00;
+			c_01 -= c_00 * f_10;
+			pD[ii+0+ldd*(jj+1)] = c_01 * f_11_inv;
+			}
+		}
+	for(; jj<m; jj++)
+		{
+		// factorize diagonal
+		c_00 = pC[jj+ldc*jj];;
+		for(kk=0; kk<jj; kk++)
+			{
+			c_00 -= pD[jj+ldd*kk] * pD[jj+ldd*kk];
+			}
+		if(c_00>0)
+			{
+			f_00_inv = 1.0/sqrt(c_00);
+			}
+		else
+			{
+			f_00_inv = 0.0;
+			}
+		dD[jj] = f_00_inv;
+		pD[jj+ldd*jj] = c_00 * f_00_inv;
+		// solve lower
+//		for(ii=jj+1; ii<m; ii++)
+//			{
+//			c_00 = pC[ii+ldc*jj];
+//			for(kk=0; kk<jj; kk++)
+//				{
+//				c_00 -= pD[ii+ldd*kk] * pD[jj+ldd*kk];
+//				}
+//			pD[ii+ldd*jj] = c_00 * f_00_inv;
+//			}
+		}
+	return;
+	}
+
+
+
+// dpotrf
+void POTRF_L_MN_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
 	int ii, jj, kk;
 	REAL
 		f_00_inv, 
@@ -349,7 +480,7 @@ void GETF2_NOPIVOT(int m, int n, REAL *A, int lda, REAL *dA)
 
 
 // dgetrf without pivoting
-void dgetrf_nopivot_libstr(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GETRF_NOPIVOT_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	int ii, jj, kk;
 //	int i1 = 1;
@@ -992,8 +1123,40 @@ void GETRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 
 
 // dpotrf
-void POTRF_L_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void POTRF_L_LIBSTR(int m, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
+	if(m<=0)
+		return;
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	int i1 = 1;
+	int info;
+	int tmp;
+	REAL d1 = 1.0;
+	REAL *pC = sC->pA+ci+cj*sC->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	if(!(pC==pD))
+		{
+		for(jj=0; jj<m; jj++)
+			{
+			tmp = m-jj;
+			COPY(&tmp, pC+jj*sC->m+jj, &i1, pD+jj*sD->m+jj, &i1);
+			}
+		}
+	POTRF(&cl, &m, pD, &(sD->m), &info);
+	return;
+	}
+
+
+
+// dpotrf
+void POTRF_L_MN_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
 	int jj;
 	char cl = 'l';
 	char cn = 'n';
@@ -1002,13 +1165,17 @@ void POTRF_L_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRM
 	int i1 = 1;
 	int mmn = m-n;
 	int info;
+	int tmp;
 	REAL d1 = 1.0;
 	REAL *pC = sC->pA+ci+cj*sC->m;
 	REAL *pD = sD->pA+di+dj*sD->m;
 	if(!(pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
-			COPY(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			{
+			tmp = m-jj;
+			COPY(&tmp, pC+jj*sC->m+jj, &i1, pD+jj*sD->m+jj, &i1);
+			}
 		}
 	POTRF(&cl, &n, pD, &(sD->m), &info);
 	TRSM(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &(sD->m), pD+n, &(sD->m));
@@ -1086,7 +1253,7 @@ void SYRK_POTRF_LN_LIBSTR(int m, int n, int k, struct STRMAT *sA, int ai, int aj
 
 
 // dgetrf without pivoting
-void dgetrf_nopivot_libstr(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GETRF_NOPIVOT_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	// TODO with custom level 2 LAPACK + level 3 BLAS
 //	printf("\nfeature not implemented yet\n\n");

@@ -130,8 +130,8 @@ void sgemm_r_diag_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai,
 //
 
 // D <= chol( C ) ; C, D lower triangular
-void spotrf_nt_l_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D);
-void spotrf_l_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj);
+void spotrf_l_libstr(int m, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj);
+void spotrf_l_mn_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj);
 // D <= chol( C + A * B' ) ; C, D lower triangular
 void ssyrk_dpotrf_nt_l_lib(int m, int n, int k, float *pA, int sda, float *pB, int sdb, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D);
 void ssyrk_dpotrf_ln_libstr(int m, int n, int k, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj);

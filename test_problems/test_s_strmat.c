@@ -62,7 +62,7 @@ int main()
 
 	int ii, jj;
 
-	int n = 32;
+	int n = 24;
 
 	//
 	// matrices in column-major format
@@ -75,7 +75,7 @@ int main()
 //	s_print_mat(n, n, A, n);
 
 	float *B; s_zeros(&B, n, n);
-	for(ii=0; ii<n; ii++) B[ii*(n+1)] = 100.0;
+	for(ii=0; ii<n; ii++) B[ii*(n+1)] = 1000.0;
 //	s_print_mat(n, n, B, n);
 
 	float *D; s_zeros(&D, n, n);
@@ -127,7 +127,8 @@ int main()
 //	kernel_strsm_nt_rl_inv_8x8_lib8(0, sD.pA, sD.pA, sD.pA+8*sD.cn, sD.pA+8*sD.cn, sD.pA, sx.pa);
 //	s_print_strmat(n, n, &sD, 0, 0);
 //	kernel_spotrf_nt_l_8x8_lib8(8, sD.pA+8*sD.cn, sD.pA+8*sD.cn, sD.pA+8*sD.cn+8*8, sD.pA+8*sD.cn+8*8, sx.pa+8);
-	spotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
+//	spotrf_l_mn_libstr(23, 17, &sD, 0, 0, &sD, 0, 0);
+	spotrf_l_libstr(23, &sD, 0, 0, &sD, 0, 0);
 	s_print_strmat(n, n, &sD, 0, 0);
 
 
