@@ -159,10 +159,10 @@ int main()
 		{
 
 		int n = nn[ll];
-		n = n<8 ? 8 : n;
 		int nrep = nnrep[ll];
 //		int n = ll+1;
 //		int nrep = nnrep[0];
+		n = n<8 ? 8 : n;
 
 #else
 	int nn[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
@@ -266,6 +266,9 @@ int main()
 			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 1.0, &sC, 0, 0, &sD, 0, 0);
 			}
 
+		double alpha = 1.0;
+		double beta = 0.0;
+
 		gettimeofday(&tv0, NULL); // stop
 
 		for(rep=0; rep<nrep; rep++)
@@ -287,8 +290,6 @@ int main()
 	
 		gettimeofday(&tv1, NULL); // stop
 
-		double alpha = 1.0;
-		double beta = 0.0;
 		for(rep=0; rep<nrep; rep++)
 			{
 //			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);

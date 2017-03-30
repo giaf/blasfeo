@@ -52,7 +52,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 3.3
+#define GHZ_MAX 2.3
 
 
 
@@ -150,17 +150,19 @@ int main()
 	int nn[] = {4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 148, 152, 156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224, 228, 232, 236, 240, 244, 248, 252, 256, 260, 264, 268, 272, 276, 280, 284, 288, 292, 296, 300, 304, 308, 312, 316, 320, 324, 328, 332, 336, 340, 344, 348, 352, 356, 360, 364, 368, 372, 376, 380, 384, 388, 392, 396, 400, 404, 408, 412, 416, 420, 424, 428, 432, 436, 440, 444, 448, 452, 456, 460, 500, 550, 600, 650, 700};
 	int nnrep[] = {10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 400, 400, 400, 400, 400, 200, 200, 200, 200, 200, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20, 20, 20, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 4, 4, 4, 4, 4};
 	
-	for(ll=0; ll<24; ll++)
-//	for(ll=0; ll<75; ll++)
+//	for(ll=0; ll<24; ll++)
+	for(ll=0; ll<75; ll++)
 //	for(ll=0; ll<115; ll++)
 //	for(ll=0; ll<120; ll++)
 
 		{
 
-//		int n = nn[ll];
-//		int nrep = nnrep[ll];
-		int n = ll+1;
-		int nrep = nnrep[0];
+		int n = nn[ll];
+		int nrep = nnrep[ll];
+//		int n = ll+1;
+//		int nrep = nnrep[0];
+//		n = n<12 ? 12 : n;
+
 		int n2 = n*n;
 
 #else
@@ -260,16 +262,22 @@ int main()
 			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 			}
 
+		double alpha = 1.0;
+		double beta = 0.0;
+
 		gettimeofday(&tv0, NULL); // stop
 
 		gettimeofday(&tv1, NULL); // stop
 
 		for(rep=0; rep<nrep; rep++)
 			{
-//			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//			kernel_sgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//			kernel_sgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//			kernel_sgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			sgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			spotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-			spotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
+//			spotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
 //			sgetr_libstr(n, n, &sA, 0, 0, &sB, 0, 0);
 //			sgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			sgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
@@ -339,15 +347,19 @@ int main()
 
 			float Gflops_max = flops_max * GHz_max;
 
-//			float flop_operation = 2.0*n*n*n; // dgemm
+//			float flop_operation = 3*16.0*2*n; // kernel 12x4
+//			float flop_operation = 2*16.0*2*n; // kernel 8x4
+//			float flop_operation = 1*16.0*2*n; // kernel 4x4
+			float flop_operation = 2.0*n*n*n; // dgemm
 //			float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
-			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
+//			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //			float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //			float flop_operation = 2.0*n*n; // dgemv dsymv
-	//		float flop_operation = 1.0*n*n; // dtrmv dtrsv
-	//		float flop_operation = 4.0*n*n; // dgemv_nt
+//			float flop_operation = 1.0*n*n; // dtrmv dtrsv
+//			float flop_operation = 4.0*n*n; // dgemv_nt
+//			float flop_operation = 3*16.0*2*n; // kernel 12x4
 
-	//		float flop_operation = 4.0/3.0*n*n*n; // dsyrk+dpotrf
+//			float flop_operation = 4.0/3.0*n*n*n; // dsyrk+dpotrf
 
 			float time_hpmpc    = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);
 			float time_blasfeo  = (float) (tv2.tv_sec-tv1.tv_sec)/(nrep+0.0)+(tv2.tv_usec-tv1.tv_usec)/(nrep*1e6);

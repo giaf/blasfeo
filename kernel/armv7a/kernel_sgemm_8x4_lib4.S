@@ -66,13 +66,19 @@ _inner_kernel_gemm_add_nt_8x4_lib4:
 	pld		[r5, #0]
 	pld		[r7, #0]
 	pld		[r8, #0]
+	pld		[r7, #64]
 
 	// preload
+	vld1.64		{d0, d1}, [r7:128]! // B // TODO preload B in d0-d3 too ?????
+	vld1.64		{d2, d3}, [r7:128]! // B
 	vld1.64		{d4, d5}, [r7:128]! // B // TODO preload B in d0-d3 too ?????
 	vld1.64		{d6, d7}, [r7:128]! // B
 	vld1.64		{d24, d25}, [r5:128]! // A0
-	vld1.64		{d26, d27}, [r8:128] // A1
 	vld1.64		{d28, d29}, [r5:128]! // A0
+	vld1.64		{d26, d27}, [r8:128] // A1
+
+	sub		r7, r7, #64
+	sub		r5, r5, #32
 
 	cmp		r4, #4
 	ble		0f // consider clean up loop
@@ -81,39 +87,40 @@ _inner_kernel_gemm_add_nt_8x4_lib4:
 1:
 	
 	// unroll 0
-	pld		[r5, #32] // A0
-	vmla.f32	q4, q12, d4[0]
+	pld		[r5, #64] // A0
+	vmla.f32	q4, q12, d0[0]
 	vldr		d30, [r8, #16] // A1
-	vmla.f32	q5, q12, d4[1]
+	vmla.f32	q5, q12, d0[1]
 	vldr		d31, [r8, #24] // A1
-	vmla.f32	q6, q12, d5[0]
-	pld		[r7, #32] // B
-	vmla.f32	q7, q12, d5[1]
-	vldr		d24, [r5, #0]
-	vmla.f32	q8, q13, d4[0]
-	vldr		d25, [r5, #8]
-	vmla.f32	q9, q13, d4[1]
-	vldr		d4, [r7, #0]
-	vmla.f32	q10, q13, d5[0]
+	vmla.f32	q6, q12, d1[0]
+	pld		[r7, #128] // B
+	vmla.f32	q7, q12, d1[1]
+	vldr		d24, [r5, #32]
+	vmla.f32	q8, q13, d0[0]
+	vldr		d25, [r5, #40]
+	vmla.f32	q9, q13, d0[1]
+	vldr		d0, [r7, #64]
+	vmla.f32	q10, q13, d1[0]
 	pld		[r8, #64] // A1
-	vmla.f32	q11, q13, d5[1]
-	vldr		d5, [r7, #8]
+	vmla.f32	q11, q13, d1[1]
+	vldr		d1, [r7, #72]
 
 	// unroll 1
-	vmla.f32	q4, q14, d6[0]
+	vmla.f32	q4, q14, d2[0]
 	vldr		d26, [r8, #32] // A1
-	vmla.f32	q5, q14, d6[1]
+	vmla.f32	q5, q14, d2[1]
 	vldr		d27, [r8, #40] // A1
-	vmla.f32	q6, q14, d7[0]
-	vmla.f32	q7, q14, d7[1]
-	vldr		d28, [r5, #16]
-	vmla.f32	q8, q15, d6[0]
-	vldr		d29, [r5, #24]
-	vmla.f32	q9, q15, d6[1]
-	vldr		d6, [r7, #16]
-	vmla.f32	q10, q15, d7[0]
-	vmla.f32	q11, q15, d7[1]
-	vldr		d7, [r7, #24]
+	vmla.f32	q6, q14, d3[0]
+	vmla.f32	q7, q14, d3[1]
+	vldr		d28, [r5, #48]
+	vmla.f32	q8, q15, d2[0]
+	vldr		d29, [r5, #56]
+	vmla.f32	q9, q15, d2[1]
+	vldr		d2, [r7, #80]
+	vmla.f32	q10, q15, d3[0]
+	add		r5, r5, #64
+	vmla.f32	q11, q15, d3[1]
+	vldr		d3, [r7, #88]
 
 	// unroll 2
 	vmla.f32	q4, q12, d4[0]
@@ -121,10 +128,11 @@ _inner_kernel_gemm_add_nt_8x4_lib4:
 	vmla.f32	q5, q12, d4[1]
 	vldr		d31, [r8, #56] // A1
 	vmla.f32	q6, q12, d5[0]
+	add		r7, r7, #64
 	vmla.f32	q7, q12, d5[1]
-	vldr		d24, [r5, #32]
+	vldr		d24, [r5, #0]
 	vmla.f32	q8, q13, d4[0]
-	vldr		d25, [r5, #40]
+	vldr		d25, [r5, #8]
 	vmla.f32	q9, q13, d4[1]
 	vldr		d4, [r7, #32]
 	vmla.f32	q10, q13, d5[0]
@@ -140,16 +148,14 @@ _inner_kernel_gemm_add_nt_8x4_lib4:
 	vmla.f32	q6, q14, d7[0]
 	sub		r4, r4, #4
 	vmla.f32	q7, q14, d7[1]
-	vldr		d28, [r5, #48]
+	vldr		d28, [r5, #16]
 	vmla.f32	q8, q15, d6[0]
-	vldr		d29, [r5, #56]
+	vldr		d29, [r5, #24]
 	vmla.f32	q9, q15, d6[1]
 	vldr		d6, [r7, #48]
 	vmla.f32	q10, q15, d7[0]
-	add		r5, r5, #64
 	vmla.f32	q11, q15, d7[1]
 	vldr		d7, [r7, #56]
-	add		r7, r7, #64
 
 	cmp		r4, #4
 	bgt		1b
@@ -161,36 +167,37 @@ _inner_kernel_gemm_add_nt_8x4_lib4:
 
 
 	// unroll 0
-	vmla.f32	q4, q12, d4[0]
+	vmla.f32	q4, q12, d0[0]
 	vldr		d30, [r8, #16] // A1
-	vmla.f32	q5, q12, d4[1]
+	vmla.f32	q5, q12, d0[1]
 	vldr		d31, [r8, #24] // A1
-	vmla.f32	q6, q12, d5[0]
-	vmla.f32	q7, q12, d5[1]
-	vldr		d24, [r5, #0]
-	vmla.f32	q8, q13, d4[0]
-	vldr		d25, [r5, #8]
-	vmla.f32	q9, q13, d4[1]
-	vldr		d4, [r7, #0]
-	vmla.f32	q10, q13, d5[0]
-	vmla.f32	q11, q13, d5[1]
-	vldr		d5, [r7, #8]
+	vmla.f32	q6, q12, d1[0]
+	vmla.f32	q7, q12, d1[1]
+	vldr		d24, [r5, #32]
+	vmla.f32	q8, q13, d0[0]
+	vldr		d25, [r5, #40]
+	vmla.f32	q9, q13, d0[1]
+//	vldr		d4, [r7, #64]
+	vmla.f32	q10, q13, d1[0]
+	vmla.f32	q11, q13, d1[1]
+//	vldr		d5, [r7, #72]
 
 	// unroll 1
-	vmla.f32	q4, q14, d6[0]
+	vmla.f32	q4, q14, d2[0]
 	vldr		d26, [r8, #32] // A1
-	vmla.f32	q5, q14, d6[1]
+	vmla.f32	q5, q14, d2[1]
 	vldr		d27, [r8, #40] // A1
-	vmla.f32	q6, q14, d7[0]
-	vmla.f32	q7, q14, d7[1]
-	vldr		d28, [r5, #16]
-	vmla.f32	q8, q15, d6[0]
-	vldr		d29, [r5, #24]
-	vmla.f32	q9, q15, d6[1]
-	vldr		d6, [r7, #16]
-	vmla.f32	q10, q15, d7[0]
-	vmla.f32	q11, q15, d7[1]
-	vldr		d7, [r7, #24]
+	vmla.f32	q6, q14, d3[0]
+	vmla.f32	q7, q14, d3[1]
+	vldr		d28, [r5, #48]
+	vmla.f32	q8, q15, d2[0]
+	vldr		d29, [r5, #56]
+	vmla.f32	q9, q15, d2[1]
+//	vldr		d6, [r7, #80]
+	vmla.f32	q10, q15, d3[0]
+//	add		r5, r5, #64
+	vmla.f32	q11, q15, d3[1]
+//	vldr		d7, [r7, #88]
 
 	// unroll 2
 	vmla.f32	q4, q12, d4[0]
@@ -198,10 +205,11 @@ _inner_kernel_gemm_add_nt_8x4_lib4:
 	vmla.f32	q5, q12, d4[1]
 	vldr		d31, [r8, #56] // A1
 	vmla.f32	q6, q12, d5[0]
+//	add		r7, r7, #64
 	vmla.f32	q7, q12, d5[1]
-//	vldr		d24, [r5, #32]
+//	vldr		d24, [r5, #0]
 	vmla.f32	q8, q13, d4[0]
-//	vldr		d25, [r5, #40]
+//	vldr		d25, [r5, #8]
 	vmla.f32	q9, q13, d4[1]
 //	vldr		d4, [r7, #32]
 	vmla.f32	q10, q13, d5[0]
@@ -215,19 +223,17 @@ _inner_kernel_gemm_add_nt_8x4_lib4:
 	vmla.f32	q5, q14, d6[1]
 //	vldr		d27, [r8, #8] // A1
 	vmla.f32	q6, q14, d7[0]
+	sub		r4, r4, #4
 	vmla.f32	q7, q14, d7[1]
-//	vldr		d28, [r5, #48]
+//	vldr		d28, [r5, #16]
 	vmla.f32	q8, q15, d6[0]
-//	vldr		d29, [r5, #56]
+//	vldr		d29, [r5, #24]
 	vmla.f32	q9, q15, d6[1]
 //	vldr		d6, [r7, #48]
 	vmla.f32	q10, q15, d7[0]
 	vmla.f32	q11, q15, d7[1]
 //	vldr		d7, [r7, #56]
 
-//	add		r5, r5, #64
-//	add		r7, r7, #64
-	sub		r4, r4, #4
 
 	b		2f // return
 
@@ -236,8 +242,8 @@ _inner_kernel_gemm_add_nt_8x4_lib4:
 	cmp		r4, #0
 	ble		2f // return
 
-	sub		r5, r5, #32 // A0
-	sub		r7, r7, #32 // B
+//	sub		r5, r5, #32 // A0
+//	sub		r7, r7, #32 // B
 //	sub		r8, r8, #16 // A1
 
 3: // clean1-up loop

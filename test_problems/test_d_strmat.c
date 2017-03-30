@@ -231,7 +231,7 @@ int main()
 //	d_print_tran_strvec(n, &sz3, 0);
 //	return 0;
 
-	dgemm_nt_libstr(8, 8, 8, 1.0, &sA, 1, 2, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 2, 3);
+	dgemm_nt_libstr(8, 8, 8, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
 //	dpotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 //	d_print_strmat(n, n, &sD, 0, 0);
@@ -311,7 +311,7 @@ int main()
 	d_print_strmat(n, n, &sD, 0, 0);
 	exit(1);
 
-	dpotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
+	dpotrf_l_libstr(n, &sD, 0, 0, &sD, 0, 0);
 //	dgetrf_nopivot_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 //	dgetrf_libstr(n, n, &sD, 0, 0, &sD, 0, 0, ipiv);
 	d_print_strmat(n, n, &sD, 0, 0);
