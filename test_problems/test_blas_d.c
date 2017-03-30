@@ -36,6 +36,7 @@
 #include "../include/blasfeo_d_aux_ext_dep.h"
 #include "../include/blasfeo_d_aux.h"
 #include "../include/blasfeo_i_aux_ext_dep.h"
+#include "../include/blasfeo_d_kernel.h"
 #include "../include/blasfeo_d_blas.h"
 
 
@@ -158,6 +159,7 @@ int main()
 		{
 
 		int n = nn[ll];
+		n = n<8 ? 8 : n;
 		int nrep = nnrep[ll];
 //		int n = ll+1;
 //		int nrep = nnrep[0];
@@ -249,7 +251,7 @@ int main()
 
 
 		// create matrix to pivot all the time
-		dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
+//		dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 
 		double *dummy;
 
@@ -285,12 +287,14 @@ int main()
 	
 		gettimeofday(&tv1, NULL); // stop
 
+		double alpha = 1.0;
+		double beta = 0.0;
 		for(rep=0; rep<nrep; rep++)
 			{
 //			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dpotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-			dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
+//			dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 //			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
@@ -304,6 +308,10 @@ int main()
 //			dgemv_t_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
 //			dsymv_l_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
 //			dgemv_nt_libstr(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
+			kernel_dgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//			kernel_dgemm_nt_8x8_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//			kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//			kernel_dgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
 			}
 
 //		d_print_strmat(n, n, &sD, 0, 0);
@@ -356,11 +364,14 @@ int main()
 
 //		float flop_operation = 2.0*n*n*n; // dgemm
 //		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
-		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
+//		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv
 //		float flop_operation = 1.0*n*n; // dtrmv dtrsv
 //		float flop_operation = 4.0*n*n; // dgemv_nt
+		float flop_operation = 3*16.0*2*n; // kernel 12x4
+//		float flop_operation = 2*16.0*2*n; // kernel 8x4
+//		float flop_operation = 1*16.0*2*n; // kernel 4x4
 
 //		float flop_operation = 4.0/3.0*n*n*n; // dsyrk+dpotrf
 
