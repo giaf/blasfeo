@@ -79,10 +79,10 @@ _inner_kernel_gemm_add_nt_12x4_lib4:
 	ble		0f // consider clean up loop
 
 	// prefetch
-//	pld			[r5, #64] // A0
-//	pld			[r7, #64] // B
-//	pld			[r8, #64] // A1
-//	pld			[r9, #64] // A2
+	pld			[r5, #64] // A0
+	pld			[r7, #64] // B
+	pld			[r8, #64] // A1
+	pld			[r9, #64] // A2
 
 	// main loop
 1:
@@ -93,15 +93,15 @@ _inner_kernel_gemm_add_nt_12x4_lib4:
 	vmla.f32	q5, q1, d0[1]
 	vldr		d7, [r9, #8] // A2
 	vmla.f32	q6, q1, d1[0]
-	pld			[r7, #64]
+	pld			[r7, #128]
 	vmla.f32	q7, q1, d1[1]
 	vldr		d2, [r5, #16] // A0
 	vmla.f32	q8, q2, d0[0]
 	vldr		d3, [r5, #24] // A0
 	vmla.f32	q9, q2, d0[1]
-	pld			[r5, #64]
+	pld			[r5, #128]
 	vmla.f32	q10, q2, d1[0]
-	pld			[r8, #64]
+	pld			[r8, #128]
 	vmla.f32	q11, q2, d1[1]
 	vldr		d4, [r7, #16] // B
 	vmla.f32	q12, q3, d0[0]
@@ -109,7 +109,7 @@ _inner_kernel_gemm_add_nt_12x4_lib4:
 	vmla.f32	q13, q3, d0[1]
 	vldr		d0, [r8, #16] // A1
 	vmla.f32	q14, q3, d1[0]
-	pld			[r9, #64]
+	pld			[r9, #128]
 	vmla.f32	q15, q3, d1[1]
 	vldr		d1, [r8, #24] // A1
 

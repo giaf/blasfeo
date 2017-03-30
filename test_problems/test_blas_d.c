@@ -56,7 +56,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 3.3
+#define GHZ_MAX 2.3
 
 
 
@@ -159,10 +159,10 @@ int main()
 		{
 
 		int n = nn[ll];
-		int nrep = nnrep[ll];
+		int nrep = nnrep[ll]/10;
 //		int n = ll+1;
 //		int nrep = nnrep[0];
-		n = n<8 ? 8 : n;
+//		n = n<8 ? 8 : n;
 
 #else
 	int nn[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
@@ -292,7 +292,7 @@ int main()
 
 		for(rep=0; rep<nrep; rep++)
 			{
-//			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dpotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
@@ -309,7 +309,7 @@ int main()
 //			dgemv_t_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
 //			dsymv_l_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
 //			dgemv_nt_libstr(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
-			kernel_dgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//			kernel_dgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //			kernel_dgemm_nt_8x8_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //			kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //			kernel_dgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
@@ -363,16 +363,16 @@ int main()
 
 		float Gflops_max = flops_max * GHz_max;
 
-//		float flop_operation = 2.0*n*n*n; // dgemm
+//		float flop_operation = 3*16.0*2*n; // kernel 12x4
+//		float flop_operation = 2*16.0*2*n; // kernel 8x4
+//		float flop_operation = 1*16.0*2*n; // kernel 4x4
+		float flop_operation = 2.0*n*n*n; // dgemm
 //		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
 //		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv
 //		float flop_operation = 1.0*n*n; // dtrmv dtrsv
 //		float flop_operation = 4.0*n*n; // dgemv_nt
-		float flop_operation = 3*16.0*2*n; // kernel 12x4
-//		float flop_operation = 2*16.0*2*n; // kernel 8x4
-//		float flop_operation = 1*16.0*2*n; // kernel 4x4
 
 //		float flop_operation = 4.0/3.0*n*n*n; // dsyrk+dpotrf
 
