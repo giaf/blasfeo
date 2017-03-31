@@ -1047,136 +1047,222 @@ inner_kernel_dgemm_add_nn_8x4_lib4:
 	cmpl	$0, %r10d
 	jle		2f // return
 
-	movq	%r11, %r15 // A1 <- A0
-	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
-
-	movq	%r13, %rax // B_next <- B
-	addq	%r14, %rax // B_next <- B + 4*sda*sizeof(double)
-	movq	%rax, %rbx // B_next2 <- B_next
-	addq	%r14, %rbx // B_next2 <- B_next + 4*sda*sizeof(double)
+	// preload
+	vmovapd 0(%r11), %ymm8 // A0[0]
+	vmovapd 0(%r11, %r12, 1), %ymm9 // A1[0]
 
 	cmpl	$4, %r10d
-	jl		0f // consider clean-up loop
+	jle		0f // consider clean-up loop
 
 	// main loop
 	.p2align 3
 1: // main loop
-	
-	prefetcht0	0(%rbx) // software prefetch
-	prefetcht0	64(%rbx) // software prefetch
+
+	prefetcht0	0(%r13, %r14, 2) // software prefetch
+	prefetcht0	64(%r13, %r14, 2) // software prefetch
 
 	// unroll 0
-	vmovapd			0(%r11), %ymm12 // A0[0]
-	vmovapd			0(%r15), %ymm14 // A1[0]
-	vbroadcastsd	0(%r13), %ymm13 // B[0]
-	vfmadd231pd		%ymm12, %ymm13, %ymm0
-	vfmadd231pd		%ymm14, %ymm13, %ymm4
-	vbroadcastsd	32(%r13), %ymm13 // B[1]
-	vfmadd231pd		%ymm12, %ymm13, %ymm1
-	vfmadd231pd		%ymm14, %ymm13, %ymm5
-	vbroadcastsd	64(%r13), %ymm13 // B[2]
-	vfmadd231pd		%ymm12, %ymm13, %ymm2
-	vfmadd231pd		%ymm14, %ymm13, %ymm6
-	vbroadcastsd	96(%r13), %ymm13 // B[3]
-	vfmadd231pd		%ymm12, %ymm13, %ymm3
-	vfmadd231pd		%ymm14, %ymm13, %ymm7
+	vbroadcastsd	0(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vmovapd			32(%r11), %ymm10 // A0
 
+	vbroadcastsd	32(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	vmovapd			32(%r11, %r12, 1), %ymm11 // A1
+
+	vbroadcastsd	64(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	vfmadd231pd		%ymm9, %ymm12, %ymm6
+
+	vbroadcastsd	96(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm3
+	vfmadd231pd		%ymm9, %ymm12, %ymm7
 	subl	$4, %r10d
 
 	// unroll 1
-	vmovapd			32(%r11), %ymm12 // A0[0]
-	vmovapd			32(%r15), %ymm14 // A1[0]
-	vbroadcastsd	8(%r13), %ymm13 // B[0]
-	vfmadd231pd		%ymm12, %ymm13, %ymm0
-	vfmadd231pd		%ymm14, %ymm13, %ymm4
-	vbroadcastsd	40(%r13), %ymm13 // B[1]
-	vfmadd231pd		%ymm12, %ymm13, %ymm1
-	vfmadd231pd		%ymm14, %ymm13, %ymm5
-	vbroadcastsd	72(%r13), %ymm13 // B[2]
-	vfmadd231pd		%ymm12, %ymm13, %ymm2
-	vfmadd231pd		%ymm14, %ymm13, %ymm6
-	vbroadcastsd	104(%r13), %ymm13 // B[3]
-	vfmadd231pd		%ymm12, %ymm13, %ymm3
-	vfmadd231pd		%ymm14, %ymm13, %ymm7
+	vbroadcastsd	8(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm0
+	vfmadd231pd		%ymm11, %ymm12, %ymm4
+	vmovapd			64(%r11), %ymm8 // A0
 
+	vbroadcastsd	40(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm1
+	vfmadd231pd		%ymm11, %ymm12, %ymm5
+	vmovapd			64(%r11, %r12, 1), %ymm9 // A1
+
+	vbroadcastsd	72(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm2
+	vfmadd231pd		%ymm11, %ymm12, %ymm6
+
+	vbroadcastsd	104(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm3
+	vfmadd231pd		%ymm11, %ymm12, %ymm7
 
 	// unroll 2
-	vmovapd			64(%r11), %ymm12 // A0[0]
-	vmovapd			64(%r15), %ymm14 // A1[0]
-	vbroadcastsd	16(%r13), %ymm13 // B[0]
-	vfmadd231pd		%ymm12, %ymm13, %ymm0
-	vfmadd231pd		%ymm14, %ymm13, %ymm4
-	vbroadcastsd	48(%r13), %ymm13 // B[1]
-	vfmadd231pd		%ymm12, %ymm13, %ymm1
-	vfmadd231pd		%ymm14, %ymm13, %ymm5
-	vbroadcastsd	80(%r13), %ymm13 // B[2]
-	vfmadd231pd		%ymm12, %ymm13, %ymm2
-	vfmadd231pd		%ymm14, %ymm13, %ymm6
-	vbroadcastsd	112(%r13), %ymm13 // B[3]
-	vfmadd231pd		%ymm12, %ymm13, %ymm3
-	vfmadd231pd		%ymm14, %ymm13, %ymm7
+	vbroadcastsd	16(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vmovapd			96(%r11), %ymm10 // A0
 
+	vbroadcastsd	48(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	vmovapd			96(%r11, %r12, 1), %ymm11 // A1
+
+	vbroadcastsd	80(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	vfmadd231pd		%ymm9, %ymm12, %ymm6
+
+	vbroadcastsd	112(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm3
+	vfmadd231pd		%ymm9, %ymm12, %ymm7
+	addq	$128, %r11
 
 	// unroll 3
-	vmovapd			96(%r11), %ymm12 // A0[0]
-	vmovapd			96(%r15), %ymm14 // A1[0]
-	vbroadcastsd	24(%r13), %ymm13 // B[0]
-	vfmadd231pd		%ymm12, %ymm13, %ymm0
-	vfmadd231pd		%ymm14, %ymm13, %ymm4
-	vbroadcastsd	56(%r13), %ymm13 // B[1]
-	vfmadd231pd		%ymm12, %ymm13, %ymm1
-	vfmadd231pd		%ymm14, %ymm13, %ymm5
-	vbroadcastsd	88(%r13), %ymm13 // B[2]
-	vfmadd231pd		%ymm12, %ymm13, %ymm2
-	vfmadd231pd		%ymm14, %ymm13, %ymm6
-	vbroadcastsd	120(%r13), %ymm13 // B[3]
-	vfmadd231pd		%ymm12, %ymm13, %ymm3
-	vfmadd231pd		%ymm14, %ymm13, %ymm7
+	vbroadcastsd	24(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm0
+	vfmadd231pd		%ymm11, %ymm12, %ymm4
+	vmovapd			0(%r11), %ymm8 // A0
 
-	addq	$128, %r11
-	addq	$128, %r15
+	vbroadcastsd	56(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm1
+	vfmadd231pd		%ymm11, %ymm12, %ymm5
+	vmovapd			0(%r11, %r12, 1), %ymm9 // A1
 
-	mov		%rax, %r13
-	mov		%rbx, %rax
-	addq	%r14, %rbx
+	vbroadcastsd	88(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm2
+	vfmadd231pd		%ymm11, %ymm12, %ymm6
 
-	cmpl	$3, %r10d
+	vbroadcastsd	120(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm3
+	addq	%r14, %r13
+	vfmadd231pd		%ymm11, %ymm12, %ymm7
 
+
+	cmpl	$4, %r10d
 	jg		1b // main loop 
 
-
-0: // consider clean1-up loop
+0: // consider clean4-up
 	
+	cmpl	$3, %r10d
+	jle		4f // clean1
+
+	// unroll 0
+	vbroadcastsd	0(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vmovapd			32(%r11), %ymm10 // A0
+
+	vbroadcastsd	32(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	vmovapd			32(%r11, %r12, 1), %ymm11 // A1
+
+	vbroadcastsd	64(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	vfmadd231pd		%ymm9, %ymm12, %ymm6
+
+	vbroadcastsd	96(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm3
+	vfmadd231pd		%ymm9, %ymm12, %ymm7
+	subl	$4, %r10d
+
+	// unroll 1
+	vbroadcastsd	8(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm0
+	vfmadd231pd		%ymm11, %ymm12, %ymm4
+	vmovapd			64(%r11), %ymm8 // A0
+
+	vbroadcastsd	40(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm1
+	vfmadd231pd		%ymm11, %ymm12, %ymm5
+	vmovapd			64(%r11, %r12, 1), %ymm9 // A1
+
+	vbroadcastsd	72(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm2
+	vfmadd231pd		%ymm11, %ymm12, %ymm6
+
+	vbroadcastsd	104(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm3
+	vfmadd231pd		%ymm11, %ymm12, %ymm7
+
+	// unroll 2
+	vbroadcastsd	16(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vmovapd			96(%r11), %ymm10 // A0
+
+	vbroadcastsd	48(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	vmovapd			96(%r11, %r12, 1), %ymm11 // A1
+
+	vbroadcastsd	80(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	vfmadd231pd		%ymm9, %ymm12, %ymm6
+
+	vbroadcastsd	112(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm3
+	vfmadd231pd		%ymm9, %ymm12, %ymm7
+	addq	$128, %r11
+
+	// unroll 3
+	vbroadcastsd	24(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm0
+	vfmadd231pd		%ymm11, %ymm12, %ymm4
+//	vmovapd			0(%r11), %ymm8 // A0
+
+	vbroadcastsd	56(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm1
+	vfmadd231pd		%ymm11, %ymm12, %ymm5
+//	vmovapd			0(%r11, %r12, 1), %ymm9 // A1
+
+	vbroadcastsd	88(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm2
+	vfmadd231pd		%ymm11, %ymm12, %ymm6
+
+	vbroadcastsd	120(%r13), %ymm12
+	vfmadd231pd		%ymm10, %ymm12, %ymm3
+	addq	%r14, %r13
+	vfmadd231pd		%ymm11, %ymm12, %ymm7
+
+
+	jmp		2f
+
+
+4: // consider clean1-up loop
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
-3: // clean1-up loop
+	// clean-up loop
+3: // clean up loop
 	
-	vmovapd			0(%r11), %ymm12 // A0[0]
-	vmovapd			0(%r15), %ymm14 // A1[0]
-	vbroadcastsd	0(%r13), %ymm13 // B[0]
-	vfmadd231pd		%ymm12, %ymm13, %ymm0
-	vfmadd231pd		%ymm14, %ymm13, %ymm4
-	vbroadcastsd	32(%r13), %ymm13 // B[1]
-	vfmadd231pd		%ymm12, %ymm13, %ymm1
-	vfmadd231pd		%ymm14, %ymm13, %ymm5
-	vbroadcastsd	64(%r13), %ymm13 // B[2]
-	vfmadd231pd		%ymm12, %ymm13, %ymm2
-	vfmadd231pd		%ymm14, %ymm13, %ymm6
-	vbroadcastsd	96(%r13), %ymm13 // B[3]
-	vfmadd231pd		%ymm12, %ymm13, %ymm3
-	vfmadd231pd		%ymm14, %ymm13, %ymm7
+	vmovapd			0(%r11), %ymm8 // A0[0]
+	vmovapd 		0(%r11, %r12, 1), %ymm9 // A1[0]
+	vbroadcastsd	0(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
 
+	vbroadcastsd	32(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	addq	$32, %r11
+
+	vbroadcastsd	64(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	vfmadd231pd		%ymm9, %ymm12, %ymm6
 	subl	$1, %r10d
 
-	addq	$32, %r11
-	addq	$32, %r15
+	vbroadcastsd	96(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm3
+	vfmadd231pd		%ymm9, %ymm12, %ymm7
 	addq	$8, %r13
 
 	cmpl	$0, %r10d
-
 	jg		3b // clean up loop 
-
 
 2: // return
 
@@ -1265,136 +1351,222 @@ inner_kernel_dgemm_sub_nn_8x4_lib4:
 	cmpl	$0, %r10d
 	jle		2f // return
 
-	movq	%r11, %r15 // A1 <- A0
-	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
-
-	movq	%r13, %rax // B_next <- B
-	addq	%r14, %rax // B_next <- B + 4*sda*sizeof(double)
-	movq	%rax, %rbx // B_next2 <- B_next
-	addq	%r14, %rbx // B_next2 <- B_next + 4*sda*sizeof(double)
+	// preload
+	vmovapd 0(%r11), %ymm8 // A0[0]
+	vmovapd 0(%r11, %r12, 1), %ymm9 // A1[0]
 
 	cmpl	$4, %r10d
-	jl		0f // consider clean-up loop
+	jle		0f // consider clean-up loop
 
 	// main loop
 	.p2align 3
 1: // main loop
-	
-	prefetcht0	0(%rbx) // software prefetch
-	prefetcht0	64(%rbx) // software prefetch
+
+	prefetcht0	0(%r13, %r14, 2) // software prefetch
+	prefetcht0	64(%r13, %r14, 2) // software prefetch
 
 	// unroll 0
-	vmovapd			0(%r11), %ymm12 // A0[0]
-	vmovapd			0(%r15), %ymm14 // A1[0]
-	vbroadcastsd	0(%r13), %ymm13 // B[0]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm0
-	vfnmadd231pd	%ymm14, %ymm13, %ymm4
-	vbroadcastsd	32(%r13), %ymm13 // B[1]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm1
-	vfnmadd231pd	%ymm14, %ymm13, %ymm5
-	vbroadcastsd	64(%r13), %ymm13 // B[2]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm2
-	vfnmadd231pd	%ymm14, %ymm13, %ymm6
-	vbroadcastsd	96(%r13), %ymm13 // B[3]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm3
-	vfnmadd231pd	%ymm14, %ymm13, %ymm7
+	vbroadcastsd	0(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm0
+	vfnmadd231pd	%ymm9, %ymm12, %ymm4
+	vmovapd			32(%r11), %ymm10 // A0
 
+	vbroadcastsd	32(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm1
+	vfnmadd231pd	%ymm9, %ymm12, %ymm5
+	vmovapd			32(%r11, %r12, 1), %ymm11 // A1
+
+	vbroadcastsd	64(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm2
+	vfnmadd231pd	%ymm9, %ymm12, %ymm6
+
+	vbroadcastsd	96(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm3
+	vfnmadd231pd	%ymm9, %ymm12, %ymm7
 	subl	$4, %r10d
 
 	// unroll 1
-	vmovapd			32(%r11), %ymm12 // A0[0]
-	vmovapd			32(%r15), %ymm14 // A1[0]
-	vbroadcastsd	8(%r13), %ymm13 // B[0]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm0
-	vfnmadd231pd	%ymm14, %ymm13, %ymm4
-	vbroadcastsd	40(%r13), %ymm13 // B[1]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm1
-	vfnmadd231pd	%ymm14, %ymm13, %ymm5
-	vbroadcastsd	72(%r13), %ymm13 // B[2]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm2
-	vfnmadd231pd	%ymm14, %ymm13, %ymm6
-	vbroadcastsd	104(%r13), %ymm13 // B[3]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm3
-	vfnmadd231pd	%ymm14, %ymm13, %ymm7
+	vbroadcastsd	8(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm0
+	vfnmadd231pd	%ymm11, %ymm12, %ymm4
+	vmovapd			64(%r11), %ymm8 // A0
 
+	vbroadcastsd	40(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm1
+	vfnmadd231pd	%ymm11, %ymm12, %ymm5
+	vmovapd			64(%r11, %r12, 1), %ymm9 // A1
+
+	vbroadcastsd	72(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm2
+	vfnmadd231pd	%ymm11, %ymm12, %ymm6
+
+	vbroadcastsd	104(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm3
+	vfnmadd231pd	%ymm11, %ymm12, %ymm7
 
 	// unroll 2
-	vmovapd			64(%r11), %ymm12 // A0[0]
-	vmovapd			64(%r15), %ymm14 // A1[0]
-	vbroadcastsd	16(%r13), %ymm13 // B[0]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm0
-	vfnmadd231pd	%ymm14, %ymm13, %ymm4
-	vbroadcastsd	48(%r13), %ymm13 // B[1]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm1
-	vfnmadd231pd	%ymm14, %ymm13, %ymm5
-	vbroadcastsd	80(%r13), %ymm13 // B[2]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm2
-	vfnmadd231pd	%ymm14, %ymm13, %ymm6
-	vbroadcastsd	112(%r13), %ymm13 // B[3]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm3
-	vfnmadd231pd	%ymm14, %ymm13, %ymm7
+	vbroadcastsd	16(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm0
+	vfnmadd231pd	%ymm9, %ymm12, %ymm4
+	vmovapd			96(%r11), %ymm10 // A0
 
+	vbroadcastsd	48(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm1
+	vfnmadd231pd	%ymm9, %ymm12, %ymm5
+	vmovapd			96(%r11, %r12, 1), %ymm11 // A1
+
+	vbroadcastsd	80(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm2
+	vfnmadd231pd	%ymm9, %ymm12, %ymm6
+
+	vbroadcastsd	112(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm3
+	vfnmadd231pd	%ymm9, %ymm12, %ymm7
+	addq	$128, %r11
 
 	// unroll 3
-	vmovapd			96(%r11), %ymm12 // A0[0]
-	vmovapd			96(%r15), %ymm14 // A1[0]
-	vbroadcastsd	24(%r13), %ymm13 // B[0]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm0
-	vfnmadd231pd	%ymm14, %ymm13, %ymm4
-	vbroadcastsd	56(%r13), %ymm13 // B[1]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm1
-	vfnmadd231pd	%ymm14, %ymm13, %ymm5
-	vbroadcastsd	88(%r13), %ymm13 // B[2]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm2
-	vfnmadd231pd	%ymm14, %ymm13, %ymm6
-	vbroadcastsd	120(%r13), %ymm13 // B[3]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm3
-	vfnmadd231pd	%ymm14, %ymm13, %ymm7
+	vbroadcastsd	24(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm0
+	vfnmadd231pd	%ymm11, %ymm12, %ymm4
+	vmovapd			0(%r11), %ymm8 // A0
 
-	addq	$128, %r11
-	addq	$128, %r15
+	vbroadcastsd	56(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm1
+	vfnmadd231pd	%ymm11, %ymm12, %ymm5
+	vmovapd			0(%r11, %r12, 1), %ymm9 // A1
 
-	mov		%rax, %r13
-	mov		%rbx, %rax
-	addq	%r14, %rbx
+	vbroadcastsd	88(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm2
+	vfnmadd231pd	%ymm11, %ymm12, %ymm6
 
-	cmpl	$3, %r10d
+	vbroadcastsd	120(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm3
+	addq	%r14, %r13
+	vfnmadd231pd	%ymm11, %ymm12, %ymm7
 
+
+	cmpl	$4, %r10d
 	jg		1b // main loop 
 
-
-0: // consider clean1-up loop
+0: // consider clean4-up
 	
+	cmpl	$3, %r10d
+	jle		4f // clean1
+
+	// unroll 0
+	vbroadcastsd	0(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm0
+	vfnmadd231pd	%ymm9, %ymm12, %ymm4
+	vmovapd			32(%r11), %ymm10 // A0
+
+	vbroadcastsd	32(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm1
+	vfnmadd231pd	%ymm9, %ymm12, %ymm5
+	vmovapd			32(%r11, %r12, 1), %ymm11 // A1
+
+	vbroadcastsd	64(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm2
+	vfnmadd231pd	%ymm9, %ymm12, %ymm6
+
+	vbroadcastsd	96(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm3
+	vfnmadd231pd	%ymm9, %ymm12, %ymm7
+	subl	$4, %r10d
+
+	// unroll 1
+	vbroadcastsd	8(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm0
+	vfnmadd231pd	%ymm11, %ymm12, %ymm4
+	vmovapd			64(%r11), %ymm8 // A0
+
+	vbroadcastsd	40(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm1
+	vfnmadd231pd	%ymm11, %ymm12, %ymm5
+	vmovapd			64(%r11, %r12, 1), %ymm9 // A1
+
+	vbroadcastsd	72(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm2
+	vfnmadd231pd	%ymm11, %ymm12, %ymm6
+
+	vbroadcastsd	104(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm3
+	vfnmadd231pd	%ymm11, %ymm12, %ymm7
+
+	// unroll 2
+	vbroadcastsd	16(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm0
+	vfnmadd231pd	%ymm9, %ymm12, %ymm4
+	vmovapd			96(%r11), %ymm10 // A0
+
+	vbroadcastsd	48(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm1
+	vfnmadd231pd	%ymm9, %ymm12, %ymm5
+	vmovapd			96(%r11, %r12, 1), %ymm11 // A1
+
+	vbroadcastsd	80(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm2
+	vfnmadd231pd	%ymm9, %ymm12, %ymm6
+
+	vbroadcastsd	112(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm3
+	vfnmadd231pd	%ymm9, %ymm12, %ymm7
+	addq	$128, %r11
+
+	// unroll 3
+	vbroadcastsd	24(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm0
+	vfnmadd231pd	%ymm11, %ymm12, %ymm4
+//	vmovapd			0(%r11), %ymm8 // A0
+
+	vbroadcastsd	56(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm1
+	vfnmadd231pd	%ymm11, %ymm12, %ymm5
+//	vmovapd			0(%r11, %r12, 1), %ymm9 // A1
+
+	vbroadcastsd	88(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm2
+	vfnmadd231pd	%ymm11, %ymm12, %ymm6
+
+	vbroadcastsd	120(%r13), %ymm12
+	vfnmadd231pd	%ymm10, %ymm12, %ymm3
+	addq	%r14, %r13
+	vfnmadd231pd	%ymm11, %ymm12, %ymm7
+
+
+	jmp		2f
+
+
+4: // consider clean1-up loop
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
-3: // clean1-up loop
+	// clean-up loop
+3: // clean up loop
 	
-	vmovapd			0(%r11), %ymm12 // A0[0]
-	vmovapd			0(%r15), %ymm14 // A1[0]
-	vbroadcastsd	0(%r13), %ymm13 // B[0]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm0
-	vfnmadd231pd	%ymm14, %ymm13, %ymm4
-	vbroadcastsd	32(%r13), %ymm13 // B[1]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm1
-	vfnmadd231pd	%ymm14, %ymm13, %ymm5
-	vbroadcastsd	64(%r13), %ymm13 // B[2]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm2
-	vfnmadd231pd	%ymm14, %ymm13, %ymm6
-	vbroadcastsd	96(%r13), %ymm13 // B[3]
-	vfnmadd231pd	%ymm12, %ymm13, %ymm3
-	vfnmadd231pd	%ymm14, %ymm13, %ymm7
+	vmovapd			0(%r11), %ymm8 // A0[0]
+	vmovapd 		0(%r11, %r12, 1), %ymm9 // A1[0]
+	vbroadcastsd	0(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm0
+	vfnmadd231pd	%ymm9, %ymm12, %ymm4
 
+	vbroadcastsd	32(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm1
+	vfnmadd231pd	%ymm9, %ymm12, %ymm5
+	addq	$32, %r11
+
+	vbroadcastsd	64(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm2
+	vfnmadd231pd	%ymm9, %ymm12, %ymm6
 	subl	$1, %r10d
 
-	addq	$32, %r11
-	addq	$32, %r15
+	vbroadcastsd	96(%r13), %ymm12
+	vfnmadd231pd	%ymm8, %ymm12, %ymm3
+	vfnmadd231pd	%ymm9, %ymm12, %ymm7
 	addq	$8, %r13
 
 	cmpl	$0, %r10d
-
 	jg		3b // clean up loop 
-
 
 2: // return
 
