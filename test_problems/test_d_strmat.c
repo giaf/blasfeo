@@ -63,7 +63,7 @@ int main()
 
 	int ii;
 
-	int n = 12;
+	int n = 16;
 
 	//
 	// matrices in column-major format
@@ -231,9 +231,13 @@ int main()
 //	d_print_tran_strvec(n, &sz3, 0);
 //	return 0;
 
-	dgemm_nt_libstr(8, 8, 8, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
+	double alpha = 1.0;
+	double beta = 1.0;
+//	kernel_dgemm_nt_4x12_vs_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sD.pA, sD.pA, 3, 10);
+//	kernel_dgemm_nt_8x8u_vs_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn, 7, 6);
+	dgemm_nt_libstr(8, 12, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
-//	dpotrf_l_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
+//	dpotrf_l_libstr(n, &sD, 0, 0, &sD, 0, 0);
 //	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;;
 

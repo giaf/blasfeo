@@ -198,7 +198,7 @@ inner_kernel_sgemm_add_nt_8x4_lib8:
 #endif
 	
 	cmpl	$0, %r10d
-	jle		2f // return
+	jle		5f // return
 
 	// preload
 	vbroadcastf128	0(%r12), %ymm14 // B
@@ -392,12 +392,14 @@ inner_kernel_sgemm_add_nt_8x4_lib8:
 	jg		3b // clean up loop 
 
 
-2: // return
+2: // reduce
 
 	vaddps			%ymm4, %ymm0, %ymm0
 	vaddps			%ymm5, %ymm1, %ymm1
 	vaddps			%ymm6, %ymm2, %ymm2
 	vaddps			%ymm7, %ymm3, %ymm3
+
+5: // return
 
 #if MACRO_LEVEL>=2
 	.endm
@@ -466,7 +468,7 @@ inner_kernel_sgemm_sub_nt_8x4_lib8:
 #endif
 	
 	cmpl	$0, %r10d
-	jle		2f // return
+	jle		5f // return
 
 	// preload
 	vbroadcastf128	0(%r12), %ymm14 // B
@@ -660,12 +662,14 @@ inner_kernel_sgemm_sub_nt_8x4_lib8:
 	jg		3b // clean up loop 
 
 
-2: // return
+2: // reduce
 
 	vaddps			%ymm4, %ymm0, %ymm0
 	vaddps			%ymm5, %ymm1, %ymm1
 	vaddps			%ymm6, %ymm2, %ymm2
 	vaddps			%ymm7, %ymm3, %ymm3
+
+5: // return
 
 #if MACRO_LEVEL>=2
 	.endm

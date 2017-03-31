@@ -52,7 +52,7 @@ void openblas_set_num_threads(int n_thread);
 
 
 
-#define GHZ_MAX 2.3
+#define GHZ_MAX 3.3
 
 
 
@@ -161,7 +161,7 @@ int main()
 		int nrep = nnrep[ll];
 //		int n = ll+1;
 //		int nrep = nnrep[0];
-//		n = n<12 ? 12 : n;
+		n = n<12 ? 12 : n;
 
 		int n2 = n*n;
 
@@ -271,10 +271,11 @@ int main()
 
 		for(rep=0; rep<nrep; rep++)
 			{
+			kernel_sgemm_nt_8x4_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
 //			kernel_sgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //			kernel_sgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //			kernel_sgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
-			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			sgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			spotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			spotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
@@ -348,9 +349,9 @@ int main()
 			float Gflops_max = flops_max * GHz_max;
 
 //			float flop_operation = 3*16.0*2*n; // kernel 12x4
-//			float flop_operation = 2*16.0*2*n; // kernel 8x4
+			float flop_operation = 2*16.0*2*n; // kernel 8x4
 //			float flop_operation = 1*16.0*2*n; // kernel 4x4
-			float flop_operation = 2.0*n*n*n; // dgemm
+//			float flop_operation = 2.0*n*n*n; // dgemm
 //			float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
 //			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //			float flop_operation = 2.0/3.0*n*n*n; // dgetrf
