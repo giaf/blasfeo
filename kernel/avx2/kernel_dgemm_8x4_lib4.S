@@ -9469,6 +9469,7 @@ kernel_dtrsm_nt_rl_inv_4x8_vs_lib4:
 	movq	ARG8, %r11  // sde 
 	sall	$5, %r11d // 4*sde*sizeof(double)
 	movq	ARG9, %r12  // inv_diag_E 
+	movq	ARG11, %r13 // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_INV_4X8_VS_LIB4
