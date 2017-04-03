@@ -2028,8 +2028,7 @@ void dpotrf_l_libstr(int m, struct d_strmat *sC, int ci, int cj, struct d_strmat
 		}
 	kernel_dpotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &dD[j], m-i, m-j);
 	return;
-#endif
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#else
 	left_4:
 	j = 0;
 	for(; j<i; j+=4)
