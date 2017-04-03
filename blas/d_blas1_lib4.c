@@ -50,6 +50,10 @@
 
 void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
+
+	if(m<=0)
+		return;
+
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
@@ -118,6 +122,10 @@ void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_str
 // multiply two vectors and compute dot product
 double dvecmuldot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{
+
+	if(m<=0)
+		return;
+
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
@@ -166,6 +174,10 @@ double dvecmuldot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy
 // compute dot product of two vectors
 double ddot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi)
 	{
+
+	if(m<=0)
+		return;
+
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	int ii;

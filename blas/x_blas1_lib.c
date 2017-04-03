@@ -34,6 +34,8 @@
 
 void AXPY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
 	{
+	if(m<=0)
+		return;
 	int ii;
 	REAL *x = sx->pa + xi;
 	REAL *y = sy->pa + yi;
@@ -48,6 +50,8 @@ void AXPY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, int xi, struct STRVEC *sy
 // multiply two vectors and compute dot product
 REAL VECMULDOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
 	{
+	if(m<=0)
+		return 0.0;
 	REAL *x = sx->pa + xi;
 	REAL *y = sy->pa + yi;
 	REAL *z = sz->pa + zi;
@@ -75,6 +79,8 @@ REAL VECMULDOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int y
 // compute dot product of two vectors
 REAL DOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi)
 	{
+	if(m<=0)
+		return 0.0;
 	REAL *x = sx->pa + xi;
 	REAL *y = sy->pa + yi;
 	int ii;
@@ -102,6 +108,8 @@ REAL DOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi)
 
 void AXPY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
 	{
+	if(m<=0)
+		return;
 	int i1 = 1;
 	REAL *x = sx->pa + xi;
 	REAL *y = sy->pa + yi;
@@ -117,6 +125,8 @@ void AXPY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, int xi, struct STRVEC *sy
 // multiply two vectors and compute dot product
 REAL VECMULDOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
 	{
+	if(m<=0)
+		return 0.0;
 	REAL *x = sx->pa + xi;
 	REAL *y = sy->pa + yi;
 	REAL *z = sz->pa + zi;
@@ -136,6 +146,8 @@ REAL VECMULDOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int y
 // compute dot product of two vectors
 REAL DOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi)
 	{
+	if(m<=0)
+		return 0.0;
 	REAL *x = sx->pa + xi;
 	REAL *y = sy->pa + yi;
 	int ii;
