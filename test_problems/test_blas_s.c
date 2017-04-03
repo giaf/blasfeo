@@ -36,6 +36,7 @@
 #include "../include/blasfeo_s_aux_ext_dep.h"
 #include "../include/blasfeo_i_aux_ext_dep.h"
 #include "../include/blasfeo_s_aux.h"
+#include "../include/blasfeo_s_kernel.h"
 #include "../include/blasfeo_s_blas.h"
 
 
@@ -161,7 +162,7 @@ int main()
 		int nrep = nnrep[ll];
 //		int n = ll+1;
 //		int nrep = nnrep[0];
-		n = n<12 ? 12 : n;
+//		n = n<16 ? 16 : n;
 
 		int n2 = n*n;
 
@@ -262,8 +263,8 @@ int main()
 			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 			}
 
-		double alpha = 1.0;
-		double beta = 0.0;
+		float alpha = 1.0;
+		float beta = 0.0;
 
 		gettimeofday(&tv0, NULL); // stop
 
@@ -271,14 +272,24 @@ int main()
 
 		for(rep=0; rep<nrep; rep++)
 			{
-			kernel_sgemm_nt_8x4_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+//			kernel_sgemm_nt_24x4_lib8(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//			kernel_sgemm_nt_16x4_lib8(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//			kernel_sgemm_nt_8x8_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+//			kernel_sgemm_nt_8x4_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+//			kernel_sgemm_nt_4x8_gen_lib8(n, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 4, 0, 8);
+//			kernel_sgemm_nt_4x8_vs_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA, 4, 8);
+//			kernel_sgemm_nt_4x8_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
 //			kernel_sgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //			kernel_sgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //			kernel_sgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+//			kernel_sgemm_nn_16x4_lib8(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//			kernel_sgemm_nn_8x8_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+//			kernel_sgemm_nn_8x4_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+
 //			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			sgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			spotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-//			spotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
+			spotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
 //			sgetr_libstr(n, n, &sA, 0, 0, &sB, 0, 0);
 //			sgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			sgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
@@ -348,12 +359,15 @@ int main()
 
 			float Gflops_max = flops_max * GHz_max;
 
+//			float flop_operation = 6*16.0*2*n; // kernel 24x4
+//			float flop_operation = 4*16.0*2*n; // kernel 16x4
 //			float flop_operation = 3*16.0*2*n; // kernel 12x4
-			float flop_operation = 2*16.0*2*n; // kernel 8x4
+//			float flop_operation = 2*16.0*2*n; // kernel 8x4
 //			float flop_operation = 1*16.0*2*n; // kernel 4x4
+
 //			float flop_operation = 2.0*n*n*n; // dgemm
 //			float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
-//			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
+			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //			float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //			float flop_operation = 2.0*n*n; // dgemv dsymv
 //			float flop_operation = 1.0*n*n; // dtrmv dtrsv

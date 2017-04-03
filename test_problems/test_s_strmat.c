@@ -75,7 +75,7 @@ int main()
 //	s_print_mat(n, n, A, n);
 
 	float *B; s_zeros(&B, n, n);
-	for(ii=0; ii<n; ii++) B[ii*(n+1)] = 1.0;
+	for(ii=0; ii<n; ii++) B[ii*(n+1)] = 100.0;
 //	s_print_mat(n, n, B, n);
 
 	float *D; s_zeros(&D, n, n);
@@ -108,13 +108,19 @@ int main()
 	// tests
 	//
 
-	float alpha = 0.0;
-	float beta = 1.0;
-//	kernel_sgemm_nt_8x4_lib8(8, &alpha, sB.pA, sA.pA, &beta, sA.pA, sD.pA);
+	float alpha = 1.0;
+	float beta = 0.0;
+//	kernel_sgemm_nt_24x4_lib8(4, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//	kernel_sgemm_nt_16x4_lib8(4, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//	kernel_sgemm_nt_8x8_lib8(5, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+//	kernel_sgemm_nt_8x4_lib8(5, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+//	kernel_sgemm_nt_4x8_gen_lib8(8, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 4, 0, 8);
+//	kernel_sgemm_nt_8x4_vs_lib8(8, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA, 7, 4);
 //	kernel_sgemm_nt_8x4_lib8(8, &alpha, sB.pA, sA.pA+4, &beta, sA.pA+4*8, sD.pA+4*8);
+//	kernel_sgemm_nn_16x4_lib8(4, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //	s_print_strmat(n, n, &sD, 0, 0);
 //	return 0;
-	sgemm_nt_libstr(n, n, 9, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
+	sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 //	kernel_ssyrk_nt_l_8x8_lib8(n, &alpha, sA.pA, sA.pA, &beta, sB.pA, sD.pA);
 //	sgecp_libstr(16, 16, &sA, 2, 0, &sD, 1, 0);
 //	sgetr_libstr(16, 16, &sA, 2, 0, &sD, 2, 0);
@@ -128,8 +134,8 @@ int main()
 //	s_print_strmat(n, n, &sD, 0, 0);
 //	kernel_spotrf_nt_l_8x8_lib8(8, sD.pA+8*sD.cn, sD.pA+8*sD.cn, sD.pA+8*sD.cn+8*8, sD.pA+8*sD.cn+8*8, sx.pa+8);
 //	spotrf_l_mn_libstr(23, 17, &sD, 0, 0, &sD, 0, 0);
-//	spotrf_l_libstr(23, &sD, 0, 0, &sD, 0, 0);
-//	s_print_strmat(n, n, &sD, 0, 0);
+	spotrf_l_libstr(n, &sD, 0, 0, &sD, 0, 0);
+	s_print_strmat(n, n, &sD, 0, 0);
 
 
 

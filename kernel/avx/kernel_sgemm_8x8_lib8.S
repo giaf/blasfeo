@@ -1561,17 +1561,17 @@ inner_edge_sgemm_add_nn_8x8_lib8:
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_STRSM_RLT_INV_8X8_GEN_LIB8
+	.macro INNER_EDGE_STRSM_RLT_INV_8X8_VS_LIB8
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_edge_strsm_rlt_inv_8x8_gen_lib8, @function
-inner_edge_strsm_rlt_inv_8x8_gen_lib8:
+	.type inner_edge_strsm_rlt_inv_8x8_vs_lib8, @function
+inner_edge_strsm_rlt_inv_8x8_vs_lib8:
 #elif defined(OS_MAC)
-_inner_edge_strsm_rlt_inv_8x8_gen_lib8:
+_inner_edge_strsm_rlt_inv_8x8_vs_lib8:
 #elif defined(OS_WINDOWS)
-	.def inner_edge_strsm_rlt_inv_8x8_gen_lib8; .scl 2; .type 32; .endef
-inner_edge_strsm_rlt_inv_8x8_gen_lib8:
+	.def inner_edge_strsm_rlt_inv_8x8_vs_lib8; .scl 2; .type 32; .endef
+inner_edge_strsm_rlt_inv_8x8_vs_lib8:
 #endif
 #endif
 
@@ -1697,7 +1697,7 @@ inner_edge_strsm_rlt_inv_8x8_gen_lib8:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_strsm_rlt_inv_8x8_gen_lib8, .-inner_edge_strsm_rlt_inv_8x8_gen_lib8
+	.size	inner_edge_strsm_rlt_inv_8x8_vs_lib8, .-inner_edge_strsm_rlt_inv_8x8_vs_lib8
 #endif
 #endif
 
@@ -1742,17 +1742,17 @@ inner_edge_strsm_rlt_inv_8x8_gen_lib8:
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_SPOTRF_8X8_GEN_LIB8
+	.macro INNER_EDGE_SPOTRF_8X8_VS_LIB8
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_edge_spotrf_8x8_gen_lib8, @function
-inner_edge_spotrf_8x8_gen_lib8:
+	.type inner_edge_spotrf_8x8_vs_lib8, @function
+inner_edge_spotrf_8x8_vs_lib8:
 #elif defined(OS_MAC)
-_inner_edge_spotrf_8x8_gen_lib8:
+_inner_edge_spotrf_8x8_vs_lib8:
 #elif defined(OS_WINDOWS)
-	.def inner_edge_spotrf_8x8_gen_lib8; .scl 2; .type 32; .endef
-inner_edge_spotrf_8x8_gen_lib8:
+	.def inner_edge_spotrf_8x8_vs_lib8; .scl 2; .type 32; .endef
+inner_edge_spotrf_8x8_vs_lib8:
 #endif
 #endif
 
@@ -2006,7 +2006,7 @@ inner_edge_spotrf_8x8_gen_lib8:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_spotrf_8x8_gen_lib8, .-inner_edge_spotrf_8x8_gen_lib8
+	.size	inner_edge_spotrf_8x8_vs_lib8, .-inner_edge_spotrf_8x8_vs_lib8
 #endif
 #endif
 
@@ -3001,6 +3001,92 @@ inner_store_8x8_lib8:
 
 // common inner routine with file scope
 //
+// store n vs
+//
+// input arguments:
+// r10  <- D
+// r11  <- km
+// r12  <- kn
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm4 <- []
+// ymm5 <- []
+// ymm6 <- []
+// ymm7 <- []
+//
+// output arguments:
+// r10  <- D
+// r11  <- km
+// r12  <- kn
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm4 <- []
+// ymm5 <- []
+// ymm6 <- []
+// ymm7 <- []
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_8X8_VS_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_store_8x8_vs_lib8, @function
+inner_store_8x8_vs_lib8:
+#elif defined(OS_MAC)
+_inner_store_8x8_vs_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_store_8x8_vs_lib8; .scl 2; .type 32; .endef
+inner_store_8x8_vs_lib8:
+#endif
+#endif
+	
+	// compute mask for rows
+	vcvtsi2ss	%r11d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm15, %ymm12, %ymm15
+
+	vmaskmovps	%ymm0, %ymm15,  0(%r10)
+	vmaskmovps	%ymm1, %ymm15,  32(%r10)
+	vmaskmovps	%ymm2, %ymm15,  64(%r10)
+	vmaskmovps	%ymm3, %ymm15,  96(%r10)
+	vmaskmovps	%ymm4, %ymm15,  128(%r10)
+	cmpl		$6, %r12d
+	jl			0f // end
+	vmaskmovps	%ymm5, %ymm15, 160(%r10)
+	cmpl		$7, %r12d
+	jl			0f // end
+	vmaskmovps	%ymm6, %ymm15, 192(%r10)
+	je			0f // end
+	vmaskmovps	%ymm7, %ymm15, 224(%r10)
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_store_8x8_vs_lib8, .-inner_store_8x8_vs_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // store n generalized
 //
 // input arguments:
@@ -3270,6 +3356,107 @@ inner_store_l_8x8_lib8:
 
 #if defined(OS_LINUX)
 	.size	inner_store_l_8x8_lib8, .-inner_store_l_8x8_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// store lower vs
+//
+// input arguments:
+// r10  <- D
+// r11  <- km
+// r12  <- kn
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm4 <- []
+// ymm5 <- []
+// ymm6 <- []
+// ymm7 <- []
+//
+// output arguments:
+// r10  <- D
+// r11  <- km
+// r12  <- kn
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm4 <- []
+// ymm5 <- []
+// ymm6 <- []
+// ymm7 <- []
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_L_8X8_VS_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_store_l_8x8_vs_lib8, @function
+inner_store_l_8x8_vs_lib8:
+#elif defined(OS_MAC)
+_inner_store_l_8x8_vs_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_store_l_8x8_vs_lib8; .scl 2; .type 32; .endef
+inner_store_l_8x8_vs_lib8:
+#endif
+#endif
+	
+	// compute mask for rows
+	vcvtsi2ss	%r11d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovups		.LC00(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm12
+#endif
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm15, %ymm12, %ymm15
+
+	// offset==0
+	vmaskmovps	%ymm0, %ymm15,  0(%r10)
+	vmovaps 	32(%r10), %ymm12
+	vblendps	$0x01, %ymm12, %ymm1, %ymm1
+	vmaskmovps	%ymm1, %ymm15,  32(%r10)
+	vmovaps 	64(%r10), %ymm12
+	vblendps	$0x03, %ymm12, %ymm2, %ymm2
+	vmaskmovps	%ymm2, %ymm15,  64(%r10)
+	vmovaps 	96(%r10), %ymm12
+	vblendps	$0x07, %ymm12, %ymm3, %ymm3
+	vmaskmovps	%ymm3, %ymm15,  96(%r10)
+	vmovaps 	128(%r10), %ymm12
+	vblendps	$0x0f, %ymm12, %ymm4, %ymm4
+	vmaskmovps	%ymm4, %ymm15,  128(%r10)
+	cmpl		$6, %r12d
+	jl			0f // end
+	vmovaps 	160(%r10), %ymm12
+	vblendps	$0x1f, %ymm12, %ymm5, %ymm5
+	vmaskmovps	%ymm5, %ymm15, 160(%r10)
+	cmpl		$7, %r12d
+	jl			0f // end
+	vmovaps 	192(%r10), %ymm12
+	vblendps	$0x3f, %ymm12, %ymm6, %ymm6
+	vmaskmovps	%ymm6, %ymm15, 192(%r10)
+	je			0f // end
+	vmovaps 	224(%r10), %ymm12
+	vblendps	$0x7f, %ymm12, %ymm7, %ymm7
+	vmaskmovps	%ymm7, %ymm15, 224(%r10)
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_store_8x8_vs_lib8, .-inner_store_8x8_vs_lib8
 #endif
 #endif
 
@@ -3591,6 +3778,100 @@ kernel_sgemm_nt_8x8_lib8:
 
 
 
+//                                  1      2             3         4         5            6         7         8       9
+// void kernel_sgemm_nt_8x8_vs)lib8(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D, int km, int kn);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgemm_nt_8x8_vs_lib8
+	.type kernel_sgemm_nt_8x8_vs_lib8, @function
+kernel_sgemm_nt_8x8_vs_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgemm_nt_8x8_vs_lib8
+_kernel_sgemm_nt_8x8_vs_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_sgemm_nt_8x8_vs_lib8
+	.def kernel_sgemm_nt_8x8_vs_lib8; .scl 2; .type 32; .endef
+kernel_sgemm_nt_8x8_vs_lib8:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGEMM_ADD_NT_8X8_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_sgemm_add_nt_8x8_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgemm_add_nt_8x8_lib8
+#endif
+#endif
+
+
+	// call inner scale
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG5, %r11 // beta
+	movq	ARG6, %r12   // C
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_AB_8X8_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_scale_ab_8x8_lib8
+#elif defined(OS_MAC)
+	callq _inner_blend_scale_ab_8x8_lib8
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG7, %r10 // D
+	movq	ARG8, %r11 // D
+	movq	ARG9, %r12 // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X8_VS_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_8x8_vs_lib8
+#elif defined(OS_MAC)
+	callq _inner_store_8x8_vs_lib8
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgemm_nt_8x8_vs_lib8, .-kernel_sgemm_nt_8x8_vs_lib8
+#endif
+
+
+
+
+
 //                                   rdi    rsi           rdx       rcx       r8           r9           rsp+8     rsp+16   rsp+24       rsp+32    rsp+40   rsp+48  rsp+56  rsp+64  rsp+72
 // void kernel_sgemm_nt_8x8_gen_lib8(int k, float *alpha, float *A, float *B, float *beta, int offsetC, float *C, int sdc, int offsetD, float *D, int sdd, int m0, int m1, int n0, int n1);
 
@@ -3792,6 +4073,113 @@ kernel_sgemm_nn_8x8_lib8:
 
 #if defined(OS_LINUX)
 	.size	kernel_sgemm_nn_8x8_lib8, .-kernel_sgemm_nn_8x8_lib8
+#endif
+
+
+
+
+
+//                               1      2             3         4            5         6        7            8         9         10      11
+// void kernel_sgemm_nn_8x8_lib8(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *beta, float *C, float *D, int km, int kn);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_sgemm_nn_8x8_vs_lib8
+	.type kernel_sgemm_nn_8x8_vs_lib8, @function
+kernel_sgemm_nn_8x8_vs_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_sgemm_nn_8x8_vs_lib8
+_kernel_sgemm_nn_8x8_vs_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_sgemm_nn_8x8_vs_lib8
+	.def kernel_sgemm_nn_8x8_vs_lib8; .scl 2; .type 32; .endef
+kernel_sgemm_nn_8x8_vs_lib8:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
+	vmovaps	%ymm0, %ymm4
+	vmovaps	%ymm0, %ymm5
+	vmovaps	%ymm0, %ymm6
+	vmovaps	%ymm0, %ymm7
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG5, %r12  // B
+	movq	ARG6, %r13 // sdb
+	sall	$5, %r13d // 4*sdb*sizeof(double)
+	movq	ARG4, %r14 // offsetB
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_SGEMM_ADD_NN_8X8_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_sgemm_add_nn_8x8_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_sgemm_add_nn_8x8_lib8
+#endif
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGEMM_ADD_NN_8X8_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_sgemm_add_nn_8x8_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgemm_add_nn_8x8_lib8
+#endif
+#endif
+
+
+	// call inner blend 
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X8_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_scale_ab_8x8_lib8
+#elif defined(OS_MAC)
+	callq _inner_scale_ab_8x8_lib8
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // D
+	movq	ARG11, %r12 // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X8_VS_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_8x8_vs_lib8
+#elif defined(OS_MAC)
+	callq _inner_store_8x8_vs_lib8
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_sgemm_nn_8x8_vs_lib8, .-kernel_sgemm_nn_8x8_vs_lib8
 #endif
 
 
@@ -4075,12 +4463,12 @@ kernel_strsm_nt_rl_inv_8x8_lib8:
 	movl	$8, %r12d // n1
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_STRSM_RLT_INV_8X8_GEN_LIB8
+	INNER_EDGE_STRSM_RLT_INV_8X8_VS_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_strsm_rlt_inv_8x8_gen_lib8
+	call inner_edge_strsm_rlt_inv_8x8_vs_lib8
 #elif defined(OS_MAC)
-	callq _inner_edge_strsm_rlt_inv_8x8_gen_lib8
+	callq _inner_edge_strsm_rlt_inv_8x8_vs_lib8
 #endif
 #endif
 
@@ -4162,17 +4550,15 @@ kernel_strsm_nt_rl_inv_8x8_vs_lib8:
 
 	// call inner blender_loader nn // TODO scale gen
 
-	movl	$0, %r10d // offsetC
-	movq	ARG4, %r11 // C
-	movl	$0, %r12d // sdc
+	movq	ARG4, %r10 // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_8X4_GEN_LIB8
+	INNER_BLEND_SCALE_11_8X4_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_11_8x8_gen_lib8
+	call inner_blend_scale_11_8x8_lib8
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_11_8x8_gen_lib8
+	callq _inner_blend_scale_11_8x8_lib8
 #endif
 #endif
 
@@ -4184,33 +4570,29 @@ kernel_strsm_nt_rl_inv_8x8_vs_lib8:
 	movq	ARG9, %r12 // kn 
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_STRSM_RLT_INV_8X4_GEN_LIB8
+	INNER_EDGE_STRSM_RLT_INV_8X4_VS_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_strsm_rlt_inv_8x8_gen_lib8
+	call inner_edge_strsm_rlt_inv_8x8_vs_lib8
 #elif defined(OS_MAC)
-	callq _inner_edge_strsm_rlt_inv_8x8_gen_lib8
+	callq _inner_edge_strsm_rlt_inv_8x8_vs_lib8
 #endif
 #endif
 
 
 	// store
 
-	movl	$0, %r10d // offsetD
-	movq	ARG5, %r11 // D
-	movl	$0, %r12d // sdd
-	movl	$0, %r13d // m0
-	movq	ARG8, %r14 // m1 
-	movl	$0, %r15d // n0
-	movq	ARG9, %rax // n1 
+	movq	ARG5, %r10 // D
+	movq	ARG8, %r11 // m1 
+	movq	ARG9, %r12 // n1 
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_8X4_GEN_LIB8
+	INNER_STORE_8X4_VS_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_8x8_gen_lib8
+	call inner_store_8x8_vs_lib8
 #elif defined(OS_MAC)
-	callq _inner_store_8x8_gen_lib8
+	callq _inner_store_8x8_vs_lib8
 #endif
 #endif
 
@@ -4296,12 +4678,12 @@ kernel_spotrf_nt_l_8x8_lib8:
 	movl	$8, %r11d // n1
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_SPOTRF_8X8_GEN_LIB8
+	INNER_EDGE_SPOTRF_8X8_VS_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_spotrf_8x8_gen_lib8
+	call inner_edge_spotrf_8x8_vs_lib8
 #elif defined(OS_MAC)
-	callq _inner_edge_spotrf_8x8_gen_lib8
+	callq _inner_edge_spotrf_8x8_vs_lib8
 #endif
 #endif
 
@@ -4383,17 +4765,15 @@ kernel_spotrf_nt_l_8x8_vs_lib8:
 
 	// call inner blender_loader nn
 
-	movl	$0, %r10d // offsetC
-	movq	ARG4, %r11 // C
-	movl	$0, %r12d // sdc
+	movq	ARG4, %r10 // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_8X4_GEN_LIB8
+	INNER_BLEND_SCALE_11_8X4_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_11_8x8_gen_lib8
+	call inner_blend_scale_11_8x8_lib8
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_11_8x8_gen_lib8
+	callq _inner_blend_scale_11_8x8_lib8
 #endif
 #endif
 
@@ -4404,33 +4784,29 @@ kernel_spotrf_nt_l_8x8_vs_lib8:
 	movq	ARG8, %r11 // kn 
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_SPOTRF_8X4_GEN_LIB8
+	INNER_EDGE_SPOTRF_8X4_VS_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_spotrf_8x8_gen_lib8
+	call inner_edge_spotrf_8x8_vs_lib8
 #elif defined(OS_MAC)
-	callq _inner_edge_spotrf_8x8_gen_lib8
+	callq _inner_edge_spotrf_8x8_vs_lib8
 #endif
 #endif
 
 
 	// store
 
-	movl	$0, %r10d // offsetD
-	movq	ARG5, %r11 // D
-	movl	$0, %r12d // sdd
-	movl	$0, %r13d // m0
-	movq	ARG7, %r14 // m1 
-	movl	$0, %r15d // n0
-	movq	ARG8, %rax // n1 
+	movq	ARG5, %r10 // D
+	movq	ARG7, %r11 // m1 
+	movq	ARG8, %r12 // n1 
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_L_8X4_GEN_LIB8
+	INNER_STORE_L_8X4_VS_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_l_8x8_gen_lib8
+	call inner_store_l_8x8_vs_lib8
 #elif defined(OS_MAC)
-	callq _inner_store_l_8x8_gen_lib8
+	callq _inner_store_l_8x8_vs_lib8
 #endif
 #endif
 
