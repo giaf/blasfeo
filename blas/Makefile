@@ -72,3 +72,8 @@ clean:
 	rm -f *.o
 	rm -f *.s
 
+d_blas1_lib.o: d_blas1_lib.c x_blas1_lib.c
+d_blas2_lib.o: d_blas2_lib.c x_blas2_lib.c
+d_blas3_lib.o: d_blas3_lib.c x_blas3_lib.c
+d_blas3_diag_lib.o: d_blas3_diag_lib.c x_blas3_diag_lib.c
+d_lapack_lib.o: d_lapack_lib.c x_lapack_lib.c
