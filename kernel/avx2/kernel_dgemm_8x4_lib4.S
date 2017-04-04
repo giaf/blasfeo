@@ -4198,9 +4198,9 @@ inner_tran_scale_11_4x8_lib4:
 	vperm2f128	$0x31, %ymm15, %ymm13, %ymm7
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovapd		.LC04, %ymm14 // beta=1.0
+	vmovapd		.LC04(%rip), %ymm14 // beta=1.0
 #else
-	vmovapd		LC04, %ymm14 // beta=1.0
+	vmovapd		LC04(%rip), %ymm14 // beta=1.0
 #endif
 
 	vmovapd		0(%r10), %ymm15

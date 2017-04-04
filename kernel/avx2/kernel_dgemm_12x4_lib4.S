@@ -2863,9 +2863,9 @@ inner_scale_11_12x4_lib4:
 	
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovapd		.LC05, %ymm14 // beta=1.0
+	vmovapd		.LC05(%rip), %ymm14 // beta=1.0
 #else
-	vmovapd		LC05, %ymm14 // beta=1.0
+	vmovapd		LC05(%rip), %ymm14 // beta=1.0
 #endif
 
 	vmovapd		0(%r10), %ymm15
@@ -3568,9 +3568,9 @@ inner_blend_scale_11_12x4_lib4:
 	vblendpd	$0x3, %ymm15, %ymm13, %ymm11
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovapd		.LC05, %ymm14 // beta=1.0
+	vmovapd		.LC05(%rip), %ymm14 // beta=1.0
 #else
-	vmovapd		LC05, %ymm14 // beta=1.0
+	vmovapd		LC05(%rip), %ymm14 // beta=1.0
 #endif
 
 	vmovapd		0(%r10), %ymm15
@@ -3702,9 +3702,9 @@ inner_tran_scale_11_4x12_lib4:
 	vperm2f128	$0x31, %ymm15, %ymm13, %ymm11
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovapd		.LC05, %ymm14 // beta=1.0
+	vmovapd		.LC05(%rip), %ymm14 // beta=1.0
 #else
-	vmovapd		LC05, %ymm14 // beta=1.0
+	vmovapd		LC05(%rip), %ymm14 // beta=1.0
 #endif
 
 	vmovapd		0(%r10), %ymm15

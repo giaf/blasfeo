@@ -2614,9 +2614,9 @@ inner_scale_11_8x4_lib8:
 #endif
 	
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovaps		.LC03, %ymm14
+	vmovaps		.LC03(%rip), %ymm14
 #elif defined(OS_MAC)
-	vmovaps		LC03, %ymm14
+	vmovaps		LC03(%rip), %ymm14
 #endif
 
 	vmovaps		0(%r10), %ymm15
@@ -2702,9 +2702,9 @@ inner_tran_scale_11_4x8_lib8:
 	vextractf128 $0x1, %ymm3, %xmm7
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovaps		.LC03, %ymm14
+	vmovaps		.LC03(%rip), %ymm14
 #elif defined(OS_MAC)
-	vmovaps		LC03, %ymm14
+	vmovaps		LC03(%rip), %ymm14
 #endif
 
 	vmovaps		0(%r10), %xmm15
@@ -2792,9 +2792,9 @@ inner_scale_11_8x4_gen_lib8:
 	// offset==0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovaps		.LC03, %ymm14
+	vmovaps		.LC03(%rip), %ymm14
 #elif defined(OS_MAC)
-	vmovaps		LC03, %ymm14
+	vmovaps		LC03(%rip), %ymm14
 #endif
 
 	vmovaps		0(%r11), %ymm15
