@@ -6237,12 +6237,12 @@ kernel_dpotrf_nt_l_4x4_lib4:
 	movl	$4, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DPOTRF_4X4_LIB4
+	INNER_EDGE_DPOTRF_4X4_VS_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_dpotrf_4x4_vs_lib4
 #elif defined(OS_MAC)
-	callq _inner_edge_dpotrf_4x4_lib4
+	callq _inner_edge_dpotrf_4x4_vs_lib4
 #endif
 #endif
 
@@ -6460,12 +6460,12 @@ kernel_dsyrk_dpotrf_nt_l_4x4_lib4:
 	movl	$4, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DPOTRF_4X4_LIB4
+	INNER_EDGE_DPOTRF_4X4_VS_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_dpotrf_4x4_vs_lib4
 #elif defined(OS_MAC)
-	callq _inner_edge_dpotrf_4x4_lib4
+	callq _inner_edge_dpotrf_4x4_vs_lib4
 #endif
 #endif
 

@@ -124,7 +124,7 @@ double dvecmuldot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy
 	{
 
 	if(m<=0)
-		return;
+		return 0.0;
 
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
@@ -176,7 +176,7 @@ double ddot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int 
 	{
 
 	if(m<=0)
-		return;
+		return 0.0;
 
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
