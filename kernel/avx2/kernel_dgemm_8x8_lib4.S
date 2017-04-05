@@ -3692,7 +3692,7 @@ _kernel_dgemm_nt_8x8u_vs_lib4:
 #elif defined(OS_WINDOWS)
 	.globl kernel_dgemm_nt_8x8u_vs_lib4
 	.def kernel_dgemm_nt_8x8u_vs_lib4; .scl 2; .type 32; .endef
-kernel_dgemm_nt_8x8l_vs_lib4:
+kernel_dgemm_nt_8x8u_vs_lib4:
 #endif
 	
 	PROLOGUE
