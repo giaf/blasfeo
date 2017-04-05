@@ -31,7 +31,11 @@
 #include <math.h>
 
 #if defined(LA_BLAS)
+#if defined(REF_BLAS_BLIS)
+#include "d_blas_64.h"
+#else
 #include "d_blas.h"
+#endif
 #endif
 
 #include "../include/blasfeo_common.h"

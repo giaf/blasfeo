@@ -40,15 +40,15 @@
 #include "../include/blasfeo_s_blas.h"
 
 
+
 #if defined(REF_BLAS_OPENBLAS)
-#include <f77blas.h>
-void openblas_set_num_threads(int n_thread);
+void openblas_set_num_threads(int num_threads);
 #endif
 #if defined(REF_BLAS_BLIS)
-#include <blis/blis.h>
+void omp_set_num_threads(int num_threads);
 #endif
-#if defined(REF_BLAS_NETLIB)
-//#include "../reference_code/blas.h"
+#if defined(REF_BLAS_MKL)
+#include "mkl.h"
 #endif
 
 
@@ -65,6 +65,9 @@ int main()
 #endif
 #if defined(REF_BLAS_BLIS)
 	omp_set_num_threads(1);
+#endif
+#if defined(REF_BLAS_MKL)
+	mkl_set_num_threads(1);
 #endif
 
 	printf("\n");
@@ -177,10 +180,6 @@ int main()
 		int nrep = 40000; //nnrep[ll];
 #endif
 
-#if defined(REF_BLAS_BLIS)
-		f77_int n77 = n;
-#endif
-	
 		float *A; s_zeros(&A, n, n);
 		float *B; s_zeros(&B, n, n);
 		float *C; s_zeros(&C, n, n);
@@ -193,9 +192,6 @@ int main()
 		char c_u = 'u';
 		int i_1 = 1;
 		int i_t;
-#if defined(REF_BLAS_BLIS)
-		f77_int i77_1 = i_1;
-#endif
 		float d_1 = 1;
 		float d_0 = 0;
 	

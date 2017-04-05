@@ -939,17 +939,38 @@ void GEMM_NT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 	int jj;
 	char cn = 'n';
 	char ct = 't';
-	int i1 = 1;
 	REAL *pA = sA->pA+ai+aj*sA->m;
 	REAL *pB = sB->pA+bi+bj*sB->m;
 	REAL *pC = sC->pA+ci+cj*sC->m;
 	REAL *pD = sD->pA+di+dj*sD->m;
+#if defined(REF_BLAS_BLIS)
+	long long i1 = 1;
+	long long mm = m;
+	long long nn = n;
+	long long kk = k;
+	long long lda = sA->m;
+	long long ldb = sB->m;
+	long long ldc = sC->m;
+	long long ldd = sD->m;
 	if(!(beta==0.0 || pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
-			COPY(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			COPY(&mm, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
 		}
-	GEMM(&cn, &ct, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	GEMM(&cn, &ct, &mm, &nn, &kk, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+#else
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(beta==0.0 || pC==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+		}
+	GEMM(&cn, &ct, &m, &n, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+#endif
 	return;
 	}
 
@@ -960,17 +981,38 @@ void GEMM_NN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 	{
 	int jj;
 	char cn = 'n';
-	int i1 = 1;
 	REAL *pA = sA->pA+ai+aj*sA->m;
 	REAL *pB = sB->pA+bi+bj*sB->m;
 	REAL *pC = sC->pA+ci+cj*sC->m;
 	REAL *pD = sD->pA+di+dj*sD->m;
+#if defined(REF_BLAS_BLIS)
+	long long i1 = 1;
+	long long mm = m;
+	long long nn = n;
+	long long kk = k;
+	long long lda = sA->m;
+	long long ldb = sB->m;
+	long long ldc = sC->m;
+	long long ldd = sD->m;
 	if(!(beta==0.0 || pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
-			COPY(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+			COPY(&mm, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
 		}
-	GEMM(&cn, &cn, &m, &n, &k, &alpha, pA, &(sA->m), pB, &(sB->m), &beta, pD, &(sD->m));
+	GEMM(&cn, &cn, &mm, &nn, &kk, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+#else
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(beta==0.0 || pC==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+		}
+	GEMM(&cn, &cn, &m, &n, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+#endif
 	return;
 	}
 
@@ -983,16 +1025,34 @@ void TRSM_LLNU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	char cl = 'l';
 	char cn = 'n';
 	char cu = 'u';
-	int i1 = 1;
 	REAL *pA = sA->pA+ai+aj*sA->m;
 	REAL *pB = sB->pA+bi+bj*sB->m;
 	REAL *pD = sD->pA+di+dj*sD->m;
+#if defined(REF_BLAS_BLIS)
+	long long i1 = 1;
+	long long mm = m;
+	long long nn = n;
+	long long lda = sA->m;
+	long long ldb = sB->m;
+	long long ldd = sD->m;
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
-			COPY(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+			COPY(&mm, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 		}
-	TRSM(&cl, &cl, &cn, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	TRSM(&cl, &cl, &cn, &cu, &mm, &nn, &alpha, pA, &lda, pD, &ldd);
+#else
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*sD->m, &i1);
+		}
+	TRSM(&cl, &cl, &cn, &cu, &m, &n, &alpha, pA, &lda, pD, &ldd);
+#endif
 	return;
 	}
 
@@ -1005,16 +1065,34 @@ void TRSM_LUNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	char cl = 'l';
 	char cn = 'n';
 	char cu = 'u';
-	int i1 = 1;
 	REAL *pA = sA->pA+ai+aj*sA->m;
 	REAL *pB = sB->pA+bi+bj*sB->m;
 	REAL *pD = sD->pA+di+dj*sD->m;
+#if defined(REF_BLAS_BLIS)
+	long long i1 = 1;
+	long long mm = m;
+	long long nn = n;
+	long long lda = sA->m;
+	long long ldb = sB->m;
+	long long ldd = sD->m;
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
-			COPY(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+			COPY(&mm, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 		}
-	TRSM(&cl, &cu, &cn, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	TRSM(&cl, &cu, &cn, &cn, &mm, &nn, &alpha, pA, &lda, pD, &ldd);
+#else
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+		}
+	TRSM(&cl, &cu, &cn, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
+#endif
 	return;
 	}
 
@@ -1029,16 +1107,34 @@ void TRSM_RLTU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	char cr = 'r';
 	char ct = 't';
 	char cu = 'u';
-	int i1 = 1;
 	REAL *pA = sA->pA+ai+aj*sA->m;
 	REAL *pB = sB->pA+bi+bj*sB->m;
 	REAL *pD = sD->pA+di+dj*sD->m;
+#if defined(REF_BLAS_BLIS)
+	long long i1 = 1;
+	long long mm = m;
+	long long nn = n;
+	long long lda = sA->m;
+	long long ldb = sB->m;
+	long long ldd = sD->m;
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
-			COPY(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+			COPY(&mm, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 		}
-	TRSM(&cr, &cl, &ct, &cu, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	TRSM(&cr, &cl, &ct, &cu, &mm, &nn, &alpha, pA, &lda, pD, &ldd);
+#else
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+		}
+	TRSM(&cr, &cl, &ct, &cu, &m, &n, &alpha, pA, &lda, pD, &ldd);
+#endif
 	return;
 	}
 
@@ -1053,16 +1149,34 @@ void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	char cr = 'r';
 	char ct = 't';
 	char cu = 'u';
-	int i1 = 1;
 	REAL *pA = sA->pA+ai+aj*sA->m;
 	REAL *pB = sB->pA+bi+bj*sB->m;
 	REAL *pD = sD->pA+di+dj*sD->m;
+#if defined(REF_BLAS_BLIS)
+	long long i1 = 1;
+	long long mm = m;
+	long long nn = n;
+	long long lda = sA->m;
+	long long ldb = sB->m;
+	long long ldd = sD->m;
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
-			COPY(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+			COPY(&mm, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 		}
-	TRSM(&cr, &cl, &ct, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	TRSM(&cr, &cl, &ct, &cn, &mm, &nn, &alpha, pA, &lda, pD, &ldd);
+#else
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+		}
+	TRSM(&cr, &cl, &ct, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
+#endif
 	return;
 	}
 
@@ -1077,16 +1191,34 @@ void TRSM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	char cr = 'r';
 	char ct = 't';
 	char cu = 'u';
-	int i1 = 1;
 	REAL *pA = sA->pA+ai+aj*sA->m;
 	REAL *pB = sB->pA+bi+bj*sB->m;
 	REAL *pD = sD->pA+di+dj*sD->m;
+#if defined(REF_BLAS_BLIS)
+	long long i1 = 1;
+	long long mm = m;
+	long long nn = n;
+	long long lda = sA->m;
+	long long ldb = sB->m;
+	long long ldd = sD->m;
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
-			COPY(&m, pB+jj*sB->m, &i1, pD+jj*sD->m, &i1);
+			COPY(&mm, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 		}
-	TRSM(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &(sA->m), pD, &(sD->m));
+	TRSM(&cr, &cu, &ct, &cn, &mm, &nn, &alpha, pA, &lda, pD, &ldd);
+#else
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+		}
+	TRSM(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
+#endif
 	return;
 	}
 
@@ -1101,19 +1233,34 @@ void TRMM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	char cr = 'r';
 	char ct = 't';
 	char cu = 'u';
+	REAL *pA = sA->pA+ai+aj*sA->m;
+	REAL *pB = sB->pA+bi+bj*sB->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+#if defined(REF_BLAS_BLIS)
+	long long i1 = 1;
+	long long mm = m;
+	long long nn = n;
+	long long lda = sA->m;
+	long long ldb = sB->m;
+	long long ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&mm, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+		}
+	TRMM(&cr, &cu, &ct, &cn, &mm, &nn, &alpha, pA, &lda, pD, &ldd);
+#else
 	int i1 = 1;
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
-	REAL *pA = sA->pA+ai+aj*lda;
-	REAL *pB = sB->pA+bi+bj*ldb;
-	REAL *pD = sD->pA+di+dj*ldd;
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
 			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 		}
 	TRMM(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
+#endif
 	return;
 	}
 
@@ -1128,19 +1275,34 @@ void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	char cr = 'r';
 	char ct = 't';
 	char cu = 'u';
+	REAL *pA = sA->pA+ai+aj*sA->m;
+	REAL *pB = sB->pA+bi+bj*sB->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+#if defined(REF_BLAS_BLIS)
+	long long i1 = 1;
+	long long mm = m;
+	long long nn = n;
+	long long lda = sA->m;
+	long long ldb = sB->m;
+	long long ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&mm, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+		}
+	TRMM(&cr, &cl, &cn, &cn, &mm, &nn, &alpha, pA, &lda, pD, &ldd);
+#else
 	int i1 = 1;
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
-	REAL *pA = sA->pA+ai+aj*lda;
-	REAL *pB = sB->pA+bi+bj*ldb;
-	REAL *pD = sD->pA+di+dj*ldd;
 	if(!(pB==pD))
 		{
 		for(jj=0; jj<n; jj++)
 			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 		}
 	TRMM(&cr, &cl, &cn, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
+#endif
 	return;
 	}
 
@@ -1155,16 +1317,41 @@ void SYRK_LN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 	char cr = 'r';
 	char ct = 't';
 	char cu = 'u';
+	REAL *pA = sA->pA + ai + aj*sA->m;
+	REAL *pB = sB->pA + bi + bj*sB->m;
+	REAL *pC = sC->pA + ci + cj*sC->m;
+	REAL *pD = sD->pA + di + dj*sD->m;
+#if defined(REF_BLAS_BLIS)
+	long long i1 = 1;
+	long long mm = m;
+	long long nn = n;
+	long long kk = k;
+	long long mmn = mm-nn;
+	long long lda = sA->m;
+	long long ldb = sB->m;
+	long long ldc = sC->m;
+	long long ldd = sD->m;
+	if(!(beta==0.0 || pC==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&mm, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+		}
+	if(pA==pB)
+		{
+		SYRK(&cl, &cn, &nn, &kk, &alpha, pA, &lda, &beta, pD, &ldd);
+		GEMM(&cn, &ct, &mmn, &nn, &kk, &alpha, pA+n, &lda, pB, &ldb, &beta, pD+n, &ldd);
+		}
+	else
+		{
+		GEMM(&cn, &ct, &mm, &nn, &kk, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+		}
+#else
 	int i1 = 1;
 	int mmn = m-n;
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
 	int ldd = sD->m;
-	REAL *pA = sA->pA + ai + aj*lda;
-	REAL *pB = sB->pA + bi + bj*ldb;
-	REAL *pC = sC->pA + ci + cj*ldc;
-	REAL *pD = sD->pA + di + dj*ldd;
 	if(!(beta==0.0 || pC==pD))
 		{
 		for(jj=0; jj<n; jj++)
@@ -1179,6 +1366,7 @@ void SYRK_LN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 		{
 		GEMM(&cn, &ct, &m, &n, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
 		}
+#endif
 	return;
 	}
 

@@ -26,43 +26,38 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
-
-#if defined(LA_BLAS)
-#if defined(REF_BLAS_BLIS)
-#include "d_blas_64.h"
-#else
-#include "d_blas.h"
-#endif
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
+
+
+// headers to reference BLAS and LAPACK routines employed in BLASFEO WR
+
+// level 1
+void scopy_(long long *m, float *x, long long *incx, float *y, long long *incy);
+void saxpy_(long long *m, float *alpha, float *x, long long *incx, float *y, long long *incy);
+void sscal_(long long *m, float *alpha, float *x, long long *incx);
+
+// level 2
+void sgemv_(char *ta, long long *m, long long *n, float *alpha, float *A, long long *lda, float *x, long long *incx, float *beta, float *y, long long *incy);
+void ssymv_(char *uplo, long long *m, float *alpha, float *A, long long *lda, float *x, long long *incx, float *beta, float *y, long long *incy);
+void strmv_(char *uplo, char *trans, char *diag, long long *n, float *A, long long *lda, float *x, long long *incx);
+void strsv_(char *uplo, char *trans, char *diag, long long *n, float *A, long long *lda, float *x, long long *incx);
+void sger_(long long *m, long long *n, float *alpha, float *x, long long *incx, float *y, long long *incy, float *A, long long *lda);
+
+// level 3
+void sgemm_(char *ta, char *tb, long long *m, long long *n, long long *k, float *alpha, float *A, long long *lda, float *B, long long *ldb, float *beta, float *C, long long *ldc);
+void ssyrk_(char *uplo, char *trans, long long *n, long long *k, float *alpha, float *A, long long *lda, float *beta, float *C, long long *ldc);
+void strmm_(char *side, char *uplo, char *transa, char *diag, long long *m, long long *n, float *alpha, float *A, long long *lda, float *B, long long *ldb);
+void strsm_(char *side, char *uplo, char *transa, char *diag, long long *m, long long *n, float *alpha, float *A, long long *lda, float *B, long long *ldb);
+
+// lapack
+long long spotrf_(char *uplo, long long *m, float *A, long long *lda, long long *info);
+long long sgetrf_(long long *m, long long *n, float *A, long long *lda, long long *ipiv, long long *info);
 
 
 
-#define REAL double
-
-#define STRMAT d_strmat
-
-#define GEMM_NN_LIBSTR dgemm_nn_libstr
-#define GEMM_NT_LIBSTR dgemm_nt_libstr
-#define SYRK_LN_LIBSTR dsyrk_ln_libstr
-#define TRMM_RLNN_LIBSTR dtrmm_rlnn_libstr
-#define TRMM_RUTN_LIBSTR dtrmm_rutn_libstr
-#define TRSM_LLNU_LIBSTR dtrsm_llnu_libstr
-#define TRSM_LUNN_LIBSTR dtrsm_lunn_libstr
-#define TRSM_RLTN_LIBSTR dtrsm_rltn_libstr
-#define TRSM_RLTU_LIBSTR dtrsm_rltu_libstr
-#define TRSM_RUTN_LIBSTR dtrsm_rutn_libstr
-
-#define COPY dcopy_
-#define GEMM dgemm_
-#define SYRK dsyrk_
-#define TRMM dtrmm_
-#define TRSM dtrsm_
-
-
-
-#include "x_blas3_lib.c"
+#ifdef __cplusplus
+}
+#endif

@@ -35,7 +35,7 @@ ifeq ($(REF_BLAS), OPENBLAS)
 LIBS = /opt/openblas/lib/libopenblas.a -pthread -lm
 endif
 ifeq ($(REF_BLAS), BLIS)
-LIBS = -lblis -lm -fopenmp
+LIBS = /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -lgfortran -lm -fopenmp
 endif
 ifeq ($(REF_BLAS), NETLIB)
 LIBS = /opt/netlib/liblapack.a /opt/netlib/libblas.a -lgfortran -lm
@@ -48,11 +48,11 @@ ifneq ($(NUM_THREAD), 1)
 LIBS += -pthread 
 endif
 
-#OBJS_TEST = test_blas_d.o
+OBJS_TEST = test_blas_d.o
 #OBJS_TEST = test_blas_s.o
 #OBJS_TEST = test_d_strmat.o
 #OBJS_TEST = test_s_strmat.o
-OBJS_TEST = kernel_assembly.o test_assembly.o
+#OBJS_TEST = kernel_assembly.o test_assembly.o
 
 obj: $(OBJS_TEST)
 	$(CC) -o test.out $(OBJS_TEST) -L. libblasfeo.a $(LIBS) #-pg

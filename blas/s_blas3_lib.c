@@ -30,7 +30,11 @@
 #include <stdio.h>
 
 #if defined(LA_BLAS)
+#if defined(REF_BLAS_BLIS)
+#include "s_blas_64.h"
+#else
 #include "s_blas.h"
+#endif
 #endif
 
 #include "../include/blasfeo_common.h"
@@ -42,8 +46,6 @@
 
 #define STRMAT s_strmat
 
-
-
 #define GEMM_NN_LIBSTR sgemm_nn_libstr
 #define GEMM_NT_LIBSTR sgemm_nt_libstr
 #define SYRK_LN_LIBSTR ssyrk_ln_libstr
@@ -54,8 +56,6 @@
 #define TRSM_RLTN_LIBSTR strsm_rltn_libstr
 #define TRSM_RLTU_LIBSTR strsm_rltu_libstr
 #define TRSM_RUTN_LIBSTR strsm_rutn_libstr
-
-
 
 #define COPY scopy_
 #define GEMM sgemm_
