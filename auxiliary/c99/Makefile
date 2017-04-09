@@ -52,6 +52,11 @@ OBJS += kernel_dgecp_lib4.o kernel_dgetr_lib4.o
 OBJS += kernel_sgetr_lib4.o
 endif
 
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
+OBJS += kernel_dgecp_lib4.o kernel_dgetr_lib4.o
+OBJS += kernel_sgetr_lib4.o
+endif
+
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 OBJS += kernel_dgecp_lib4.o kernel_dgetr_lib4.o
 OBJS += kernel_sgetr_lib4.o

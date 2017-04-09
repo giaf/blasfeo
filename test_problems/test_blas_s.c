@@ -53,7 +53,7 @@ void omp_set_num_threads(int num_threads);
 
 
 
-#define GHZ_MAX 3.3
+#define GHZ_MAX 2.15
 
 
 
@@ -100,6 +100,10 @@ int main()
 	const float flops_max = 16; // 2x128 bit fma
 	const float memops_max = 4; // 1x256 bit load + 1x128 bit store
 	printf("Testing BLAS version for SSE3 and FMA instruction set, 64 bit (optimized for AMD Bulldozer): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	const float flops_max = 8; // 1x128 bit fma
+	const float memops_max = 4; // ???
+	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A15): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	const float flops_max = 8; // 1x128 bit fma
 	const float memops_max = 4; // ???
@@ -124,6 +128,9 @@ int main()
 	fprintf(f, "\n");
 #elif defined(TARGET_X64_AMD_BULLDOZER)
 	fprintf(f, "C = 's_x64_amd_bulldozer';\n");
+	fprintf(f, "\n");
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	fprintf(f, "C = 's_armv7a_arm_cortex_a15';\n");
 	fprintf(f, "\n");
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	fprintf(f, "C = 's_armv7a_arm_cortex_a15';\n");
@@ -282,10 +289,10 @@ int main()
 //			kernel_sgemm_nn_8x8_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 //			kernel_sgemm_nn_8x4_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 
-//			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			sgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			spotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-			spotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
+//			spotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
 //			sgetr_libstr(n, n, &sA, 0, 0, &sB, 0, 0);
 //			sgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			sgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
@@ -361,9 +368,9 @@ int main()
 //			float flop_operation = 2*16.0*2*n; // kernel 8x4
 //			float flop_operation = 1*16.0*2*n; // kernel 4x4
 
-//			float flop_operation = 2.0*n*n*n; // dgemm
+			float flop_operation = 2.0*n*n*n; // dgemm
 //			float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
-			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
+//			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //			float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //			float flop_operation = 2.0*n*n; // dgemv dsymv
 //			float flop_operation = 1.0*n*n; // dtrmv dtrsv
