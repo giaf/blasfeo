@@ -51,6 +51,7 @@ REF_BLAS = 0
 #REF_BLAS = NETLIB
 #REF_BLAS = MKL
 #REF_BLAS = BLIS
+#REF_BLAS = ATLAS
 
 # enable on-line checks for matrix and vector dimensions
 DIM_CHECK = 0
@@ -140,6 +141,9 @@ CFLAGS  += -DREF_BLAS_NETLIB
 endif
 ifeq ($(REF_BLAS), MKL)
 CFLAGS  += -DREF_BLAS_MKL -m64 -I/opt/intel/mkl/include
+endif
+ifeq ($(REF_BLAS), ATLAS)
+CFLAGS  += -DREF_BLAS_ATLAS
 endif
 
 # architecture-specific flags
