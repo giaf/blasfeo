@@ -53,7 +53,7 @@ void omp_set_num_threads(int num_threads);
 
 
 
-#define GHZ_MAX 3.3
+#define GHZ_MAX 2.15
 
 
 
@@ -95,6 +95,9 @@ int main()
 #elif defined(TARGET_X64_AMD_BULLDOZER)
 	const float flops_max = 8;
 	printf("Testing BLAS version for SSE3 and FMA instruction set, 64 bit (optimized for AMD Bulldozer): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	const float flops_max = 4;
+	printf("Testing BLAS version for NEONv2 instruction set, 64 bit (optimized for ARM Cortex A57): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	const float flops_max = 2;
 	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A15): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
@@ -117,6 +120,9 @@ int main()
 	fprintf(f, "\n");
 #elif defined(TARGET_X64_AMD_BULLDOZER)
 	fprintf(f, "C = 'd_x64_amd_bulldozer';\n");
+	fprintf(f, "\n");
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	fprintf(f, "C = 'd_armv8a_arm_cortex_a57';\n");
 	fprintf(f, "\n");
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	fprintf(f, "C = 'd_armv7a_arm_cortex_a15';\n");

@@ -26,90 +26,24 @@
 #                                                                                                 #
 ###################################################################################################
 
-include ../Makefile.rule
+include ../../Makefile.rule
 
 OBJS = 
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 
-ifeq ($(TARGET), X64_INTEL_HASWELL)
-OBJS += d_aux_lib4.o
-#OBJS += s_aux_lib4.o
-OBJS += s_aux_lib8.o
-endif
-
-ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-OBJS += d_aux_lib4.o
-#OBJS += s_aux_lib4.o
-OBJS += s_aux_lib8.o
-endif
-
-ifeq ($(TARGET), X64_INTEL_CORE)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-endif
-
-ifeq ($(TARGET), X64_AMD_BULLDOZER)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-endif
-
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-endif
-
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-endif
-
-ifeq ($(TARGET), GENERIC)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
+OBJS += #kernel_dgemm_4x4_lib4.o
+OBJS += #kernel_sgemm_12x4_lib4.o kernel_sgemm_8x4_lib4.o kernel_sgemm_4x4_lib4.o
 endif
 
 else # LA_REFERENCE | LA_BLAS
 
-OBJS += d_aux_lib.o
-OBJS += s_aux_lib.o
-
 endif # LA choice
 
-OBJS += d_aux_ext_dep_lib.o
-OBJS += s_aux_ext_dep_lib.o
-OBJS += v_aux_ext_dep_lib.o
-OBJS += i_aux_ext_dep_lib.o 
-
 obj: $(OBJS)
-ifeq ($(TARGET), X64_INTEL_HASWELL)
-	( cd avx2; $(MAKE) obj)
-	( cd avx; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-	( cd avx; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), X64_INTEL_CORE)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), X64_AMD_BULLDOZER)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), GENERIC)
-	( cd c99; $(MAKE) obj)
-endif
-
 
 clean:
 	rm -f *.o
-	make -C avx2 clean
-	make -C avx clean
-	make -C c99 clean
+	rm -f *.s
+
