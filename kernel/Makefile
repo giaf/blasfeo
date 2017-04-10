@@ -69,6 +69,7 @@ clean:
 	make -C avx clean
 	make -C sse3 clean
 	make -C fma clean
+	make -C armv8a clean
 	make -C armv7a clean
 	make -C c99 clean
 
