@@ -41,12 +41,8 @@
 // return memory size (in bytes) needed for a strmat
 int s_size_strmat(int m, int n)
 	{
-#if defined(LA_REFERENCE)
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
 	int size = (m*n+tmp)*sizeof(float);
-#else
-	int size = (m*n)*sizeof(float);
-#endif
 	return size;
 	}
 
@@ -56,10 +52,8 @@ int s_size_strmat(int m, int n)
 int s_size_diag_strmat(int m, int n)
 	{
 	int size = 0;
-#if defined(LA_REFERENCE)
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
 	size = tmp*sizeof(float);
-#endif
 	return size;
 	}
 
@@ -73,15 +67,11 @@ void s_create_strmat(int m, int n, struct s_strmat *sA, void *memory)
 	float *ptr = (float *) memory;
 	sA->pA = ptr;
 	ptr += m*n;
-#if defined(LA_REFERENCE)
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
 	sA->dA = ptr;
 	ptr += tmp;
 	sA->use_dA = 0;
 	sA->memory_size = (m*n+tmp)*sizeof(float);
-#else
-	sA->memory_size = (m*n)*sizeof(float);
-#endif
 	return;
 	}
 
@@ -249,9 +239,7 @@ void s_cast_mat2strmat(float *A, struct s_strmat *sA)
 // cast a matrix into the diagonal of a matrix structure
 void s_cast_diag_mat2strmat(float *dA, struct s_strmat *sA)
 	{
-#if defined(LA_REFERENCE)
 	sA->dA = dA;
-#endif
 	return;
 	}
 

@@ -492,13 +492,9 @@ void d_allocate_strmat(int m, int n, struct d_strmat *sA)
 	sA->m = m;
 	sA->n = n;
 	d_zeros(&(sA->pA), sA->m, sA->n);
-#if defined(LA_REFERENCE)
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
 	d_zeros(&(sA->dA), tmp, 1);
 	sA->memory_size = (m*n+tmp)*sizeof(double);
-#else
-	sA->memory_size = (m*n)*sizeof(double);
-#endif
 	return;
 	}
 
@@ -508,9 +504,7 @@ void d_allocate_strmat(int m, int n, struct d_strmat *sA)
 void d_free_strmat(struct d_strmat *sA)
 	{
 	free(sA->pA);
-#if defined(LA_REFERENCE)
 	free(sA->dA);
-#endif
 	return;
 	}
 

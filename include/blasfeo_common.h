@@ -90,10 +90,8 @@ struct d_strmat
 	int m; // rows
 	int n; // cols
 	double *pA; // pointer to a m*n array of doubles
-#if defined(LA_REFERENCE)
 	double *dA; // pointer to a min(m,n) (or max???) array of doubles
 	int use_dA; // flag to tell if dA can be used
-#endif
 	int memory_size; // size of needed memory
 	};
 
@@ -102,10 +100,8 @@ struct s_strmat
 	int m; // rows
 	int n; // cols
 	float *pA; // pointer to a m*n array of floats
-#if defined(LA_REFERENCE)
 	float *dA; // pointer to a min(m,n) (or max???) array of floats
 	int use_dA; // flag to tell if dA can be used
-#endif
 	int memory_size; // size of needed memory
 	};
 
