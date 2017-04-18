@@ -255,7 +255,7 @@ void s_cast_vec2vecmat(float *a, struct s_strvec *sa)
 
 
 // insert element into strmat
-void smatin1_libstr(float a, struct s_strmat *sA, int ai, int aj)
+void sgein1_libstr(float a, struct s_strmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	float *pA = sA->pA + ai + aj*lda;
@@ -266,7 +266,7 @@ void smatin1_libstr(float a, struct s_strmat *sA, int ai, int aj)
 
 
 // extract element from strmat
-float smatex1_libstr(struct s_strmat *sA, int ai, int aj)
+float sgeex1_libstr(struct s_strmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	float *pA = sA->pA + ai + aj*lda;
@@ -295,7 +295,7 @@ float svecex1_libstr(struct s_strvec *sx, int xi)
 
 
 // set all elements of a strmat to a value
-void smatse_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj)
+void sgese_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	float *pA = sA->pA + ai + aj*lda;

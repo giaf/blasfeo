@@ -40,6 +40,8 @@ extern "C" {
 
 #if defined(LA_HIGH_PERFORMANCE)
 
+#include "blasfeo_block_size.h"
+
 // matrix structure
 struct d_strmat
 	{
@@ -82,6 +84,11 @@ struct s_strvec
 	int memory_size; // size of needed memory
 	};
 
+#define DMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[(ai-(ai&(D_PS-1)))*(sA)->cn+aj*D_PS+(ai&(D_PS-1))])
+#define SMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[(ai-(ai&(S_PS-1)))*(sA)->cn+aj*S_PS+(ai&(S_PS-1))])
+#define DVECEL_LIBSTR(sa,ai) ((sa)->pa[ai])
+#define SVECEL_LIBSTR(sa,ai) ((sa)->pa[ai])
+
 #elif defined(LA_BLAS) | defined(LA_REFERENCE)
 
 // matrix structure
@@ -119,6 +126,11 @@ struct s_strvec
 	float *pa; // pointer to a m array of floats, the first is aligned to cache line size
 	int memory_size; // size of needed memory
 	};
+
+#define DMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[ai+aj*(sA)->m])
+#define SMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[ai+aj*(sA)->m])
+#define DVECEL_LIBSTR(sa,ai) ((sa)->pa[ai])
+#define SVECEL_LIBSTR(sa,ai) ((sa)->pa[ai])
 
 #else
 

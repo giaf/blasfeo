@@ -26,52 +26,57 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#ifndef BLASFEO_BLOCK_SIZE
+#define BLASFEO_BLOCK_SIZE
+
+
+
 #if defined( TARGET_X64_INTEL_HASWELL )
 
-#define D_BS 4
-#define S_BS 8
+#define D_PS 4
+#define S_PS 8
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
 
 #elif defined( TARGET_X64_INTEL_SANDY_BRIDGE )
 
-#define D_BS 4
-#define S_BS 8
+#define D_PS 4
+#define S_PS 8
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
 
 #elif defined( TARGET_X64_INTEL_CORE )
 
-#define D_BS 4
-#define S_BS 4
+#define D_PS 4
+#define S_PS 4
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
 
 #elif defined( TARGET_X64_AMD_BULLDOZER )
 
-#define D_BS 4
-#define S_BS 4
+#define D_PS 4
+#define S_PS 4
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
 
 #elif defined( TARGET_ARMV8A_ARM_CORTEX_A57 )
 
-#define D_BS 4
-#define S_BS 4
+#define D_PS 4
+#define S_PS 4
 #define D_NC 4
 #define S_NC 4
 
 #elif defined( TARGET_ARMV7A_ARM_CORTEX_A15 )
 
-#define D_BS 4
-#define S_BS 4
+#define D_PS 4
+#define S_PS 4
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
 
 #elif defined( TARGET_GENERIC )
 
-#define D_BS 4
-#define S_BS 4
+#define D_PS 4
+#define S_PS 4
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
 
@@ -79,3 +84,5 @@
 #error "Unknown architecture"
 #endif
 
+
+#endif  // BLASFEO_BLOCK_SIZE

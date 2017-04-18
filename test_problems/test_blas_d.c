@@ -32,7 +32,6 @@
 
 
 #include "../include/blasfeo_common.h"
-#include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_d_aux_ext_dep.h"
 #include "../include/blasfeo_d_aux.h"
 #include "../include/blasfeo_i_aux_ext_dep.h"
@@ -53,7 +52,7 @@ void omp_set_num_threads(int num_threads);
 
 
 
-#define GHZ_MAX 2.15
+#include "cpu_freq.h"
 
 
 
@@ -141,7 +140,7 @@ int main()
 
 	int i, j, rep, ll;
 	
-	const int bsd = D_BS;
+	const int bsd = D_PS;
 	const int ncd = D_NC;
 
 /*	int info = 0;*/
@@ -245,6 +244,8 @@ int main()
 		d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
 		d_cvt_vec2strvec(n, x, &sx, 0);
 
+//		int qr_work_size = dgeqrf_work_size_libstr(n, n);
+//		double *qr_work = (double *) malloc(qr_work_size);
 
 		// create matrix to pivot all the time
 //		dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
@@ -259,7 +260,7 @@ int main()
 		/* warm up */
 		for(rep=0; rep<nrep; rep++)
 			{
-			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 1.0, &sC, 0, 0, &sD, 0, 0);
+			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sC, 0, 0);
 			}
 
 		double alpha = 1.0;
@@ -300,6 +301,7 @@ int main()
 //			dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
+//			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
 //			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
@@ -370,6 +372,7 @@ int main()
 //		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
 //		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
+//		float flop_operation = 4.0/3.0*n*n*n; // dgeqrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv
 //		float flop_operation = 1.0*n*n; // dtrmv dtrsv
 //		float flop_operation = 4.0*n*n; // dgemv_nt
@@ -400,6 +403,7 @@ int main()
 		d_free_align(x2);
 		d_free_align(y2);
 		int_free(ipiv);
+//		free(qr_work);
 		
 		d_free_strmat(&sA);
 		d_free_strmat(&sB);

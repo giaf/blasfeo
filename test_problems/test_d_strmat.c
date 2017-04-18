@@ -108,7 +108,7 @@ int main()
 	//
 	// matrices in matrix struct format
 	//
-	int size_strmat = 4*d_size_strmat(n, n);
+	int size_strmat = 5*d_size_strmat(n, n);
 	void *memory_strmat; v_zeros_align(&memory_strmat, size_strmat);
 	char *ptr_memory_strmat = (char *) memory_strmat;
 
@@ -126,6 +126,11 @@ int main()
 	ptr_memory_strmat += sB.memory_size;
 	d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
 	d_print_strmat(n, n, &sB, 0, 0);
+
+	struct d_strmat sC;
+//	d_allocate_strmat(n, n, &sC);
+	d_create_strmat(n, n, &sC, ptr_memory_strmat);
+	ptr_memory_strmat += sC.memory_size;
 
 	struct d_strmat sD;
 //	d_allocate_strmat(n, n, &sD);
@@ -211,6 +216,36 @@ int main()
 	d_print_tran_strvec(n, &svm, 0);
 	d_print_tran_strvec(n, &sm, 0);
 	d_print_tran_strvec(n, &sr, 0);
+
+//	d_print_tran_strvec(n, &sm, 0);
+//	DVECEL_LIBSTR(&sm, 0) = 0.0;
+//	DVECEL_LIBSTR(&sm, 1) = 1.0;
+//	DVECEL_LIBSTR(&sm, 2) = 2.0;
+//	d_print_tran_strvec(n, &sm, 0);
+//	return 0;
+
+	dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sC, 0, 0);
+	dgese_libstr(n, n, 0.0, &sA, 0, 0);
+//	d_print_strmat(n, n, &sA, 0, 0);
+//	dgein1_libstr(12.0, &sA, 0, 0);
+	DMATEL_LIBSTR(&sA, 0, 0) =   12.0;
+	DMATEL_LIBSTR(&sA, 1, 0) =    6.0;
+	DMATEL_LIBSTR(&sA, 2, 0) = -  4.0;
+	DMATEL_LIBSTR(&sA, 0, 1) = - 51.0;
+	DMATEL_LIBSTR(&sA, 1, 1) =  167.0;
+	DMATEL_LIBSTR(&sA, 2, 1) =   24.0;
+	DMATEL_LIBSTR(&sA, 0, 2) =    4.0;
+	DMATEL_LIBSTR(&sA, 1, 2) = - 68.0;
+	DMATEL_LIBSTR(&sA, 2, 2) = - 41.0;
+	d_print_strmat(n, n, &sA, 0, 0);
+//	d_print_strmat(n, n, &sC, 0, 0);
+//	printf("\n%f\n", DGEEL_LIBSTR(&sA, 0, 0));
+//	int qr_work_size = dgeqrf_work_size_libstr(n, n);
+//	double *qr_work = (double *) malloc(qr_work_size);
+//	dgeqrf_libstr(8, 8, &sC, 0, 0, &sD, 0, 0, qr_work);
+//	d_print_strmat(n, n, &sD, 0, 0);
+//	free(qr_work);
+	return 0;
 
 //	dveccl_mask_libstr(n, &svm, 0, &sv, 0, &svp, 0, &sv, 0, &sm, 0);
 //	veccl_libstr(n, &svm, 0, &sv, 0, &svp, 0, &sv, 0);

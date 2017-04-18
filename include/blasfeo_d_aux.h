@@ -59,11 +59,13 @@ void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, do
 void d_cast_mat2strmat(double *A, struct d_strmat *sA);
 void d_cast_diag_mat2strmat(double *dA, struct d_strmat *sA);
 void d_cast_vec2vecmat(double *a, struct d_strvec *sa);
-void dmatin1_libstr(double a, struct d_strmat *sA, int ai, int aj);
-double dmatex1_libstr(struct d_strmat *sA, int ai, int aj);
+void dgein1_libstr(double a, struct d_strmat *sA, int ai, int aj);
+double dgeex1_libstr(struct d_strmat *sA, int ai, int aj);
 void dvecin1_libstr(double a, struct d_strvec *sx, int xi);
 double dvecex1_libstr(struct d_strvec *sx, int xi);
-void dmatse_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj);
+// A <= alpha
+void dgese_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj);
+// a <= alpha
 void dvecse_libstr(int m, double alpha, struct d_strvec *sx, int xi);
 void dgecp_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb);
 void dgecp_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);

@@ -2115,7 +2115,7 @@ void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y)
 // return the memory size (in bytes) needed for a strmat
 int d_size_strmat(int m, int n)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 	int nc = D_NC;
 	int al = bs*nc;
 	int pm = (m+bs-1)/bs*bs;
@@ -2130,7 +2130,7 @@ int d_size_strmat(int m, int n)
 // return the memory size (in bytes) needed for the digonal of a strmat
 int d_size_diag_strmat(int m, int n)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 	int nc = D_NC;
 	int al = bs*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
@@ -2143,7 +2143,7 @@ int d_size_diag_strmat(int m, int n)
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
 void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 	int nc = D_NC;
 	int al = bs*nc;
 	sA->m = m;
@@ -2168,7 +2168,7 @@ void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory)
 // return memory size (in bytes) needed for a strvec
 int d_size_strvec(int m)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 //	int nc = D_NC;
 //	int al = bs*nc;
 	int pm = (m+bs-1)/bs*bs;
@@ -2181,7 +2181,7 @@ int d_size_strvec(int m)
 // create a vector structure for a vector of size m by using memory passed by a pointer
 void d_create_strvec(int m, struct d_strvec *sa, void *memory)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 //	int nc = D_NC;
 //	int al = bs*nc;
 	sa->m = m;
@@ -2697,7 +2697,7 @@ void d_cast_vec2vecmat(double *a, struct d_strvec *sa)
 
 
 // insert element into strmat
-void dmatin1_libstr(double a, struct d_strmat *sA, int ai, int aj)
+void dgein1_libstr(double a, struct d_strmat *sA, int ai, int aj)
 	{
 	const int bs = 4;
 	int sda = sA->cn;
@@ -2709,7 +2709,7 @@ void dmatin1_libstr(double a, struct d_strmat *sA, int ai, int aj)
 
 
 // extract element from strmat
-double dmatex1_libstr(struct d_strmat *sA, int ai, int aj)
+double dgeex1_libstr(struct d_strmat *sA, int ai, int aj)
 	{
 	const int bs = 4;
 	int sda = sA->cn;
@@ -2741,7 +2741,7 @@ double dvecex1_libstr(struct d_strvec *sx, int xi)
 
 
 // set all elements of a strmat to a value
-void dmatse_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj)
+void dgese_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj)
 	{
 	const int bs = 4;
 	int sda = sA->cn;
@@ -2840,7 +2840,7 @@ void ddiain_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d
 // swap two rows of a matrix struct
 void drowsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
@@ -2867,7 +2867,7 @@ void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 // extract a row int a vector
 void drowex_libstr(int kmax, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	double *x = sx->pa + xi;
@@ -2880,7 +2880,7 @@ void drowex_libstr(int kmax, double alpha, struct d_strmat *sA, int ai, int aj, 
 // insert a vector into a row
 void drowin_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	double *x = sx->pa + xi;
@@ -2893,7 +2893,7 @@ void drowin_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d
 // add a vector to a row
 void drowad_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	double *x = sx->pa + xi;
@@ -2906,7 +2906,7 @@ void drowad_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d
 // swap two cols of a matrix struct
 void dcolsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
@@ -2934,7 +2934,7 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 // copy a generic strmat into a generic strmat
 void dgecp_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
@@ -2971,7 +2971,7 @@ void dveccp_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_st
 // copy a lower triangular strmat into a lower triangular strmat
 void dtrcp_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
@@ -2985,7 +2985,7 @@ void dtrcp_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, st
 // scale and add a generic strmat into a generic strmat
 void dgead_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
@@ -2999,7 +2999,7 @@ void dgead_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int a
 // copy and transpose a generic strmat into a generic strmat
 void dgetr_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
@@ -3013,7 +3013,7 @@ void dgetr_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int a
 // copy and transpose a lower triangular strmat into an upper triangular strmat
 void dtrtr_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
@@ -3027,7 +3027,7 @@ void dtrtr_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, st
 // copy and transpose an upper triangular strmat into a lower triangular strmat
 void dtrtr_u_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
-	const int bs = D_BS;
+	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;

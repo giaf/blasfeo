@@ -32,7 +32,6 @@
 
 
 #include "../include/blasfeo_common.h"
-#include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_s_aux_ext_dep.h"
 #include "../include/blasfeo_i_aux_ext_dep.h"
 #include "../include/blasfeo_s_aux.h"
@@ -53,7 +52,7 @@ void omp_set_num_threads(int num_threads);
 
 
 
-#define GHZ_MAX 2.15
+#include "cpu_freq.h"
 
 
 
@@ -149,7 +148,7 @@ int main()
 
 	int i, j, rep, ll;
 	
-	const int bss = S_BS;
+	const int bss = S_PS;
 	const int ncs = S_NC;
 
 /*	int info = 0;*/
