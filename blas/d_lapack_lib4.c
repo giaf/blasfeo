@@ -30,7 +30,6 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_aux.h"
 #include "../include/blasfeo_d_kernel.h"
@@ -2354,6 +2353,26 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		sD->use_dA = 1;
 	else
 		sD->use_dA = 0;
+	return;
+	}
+
+
+
+int dgeqrf_work_size_libstr(int m, int n)
+	{
+	printf("\ndgeqrf_work_size_libstr: feature not implemented yet\n");
+	exit(1);
+	return 0;
+	}
+
+
+
+void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, void *work)
+	{
+	if(m<=0 | n<=0)
+		return;
+	printf("\ndgeqrf_libstr: feature not implemented yet\n");
+	exit(1);
 	return;
 	}
 

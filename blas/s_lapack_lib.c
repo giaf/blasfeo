@@ -48,6 +48,8 @@
 #define STRMAT s_strmat
 #define STRVEC s_strvec
 
+#define GEQRF_LIBSTR sgeqrf_libstr
+#define GEQRF_WORK_SIZE_LIBSTR sgeqrf_work_size_libstr
 #define GETF2_NOPIVOT sgetf2_nopivot
 #define GETRF_NOPIVOT_LIBSTR sgetrf_nopivot_libstr
 #define GETRF_LIBSTR sgetrf_libstr
@@ -56,13 +58,15 @@
 #define SYRK_POTRF_LN_LIBSTR ssyrk_spotrf_ln_libstr
 
 #define COPY scopy_
-#define GER sger_
-#define SCAL sscal_
 #define GEMM sgemm_
-#define SYRK ssyrk_
-#define TRSM strsm_
+#define GER sger_
+#define GEQRF sgeqrf_
+#define GEQR2 sgeqr2_
 #define GETRF sgetrf_
 #define POTRF spotrf_
+#define SCAL sscal_
+#define SYRK ssyrk_
+#define TRSM strsm_
 
 
 #include "x_lapack_lib.c"

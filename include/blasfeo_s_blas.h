@@ -141,6 +141,9 @@ void sgetrf_nopivot_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, st
 // D <= lu( C ) ; pivoting
 void sgetrf_nn_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *inv_diag_D, int *ipiv);
 void sgetrf_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj, int *ipiv);
+// D <= qr( C )
+void sgeqrf_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj, void *work);
+int sgeqrf_work_size_libstr(int m, int n); // in bytes
 
 
 

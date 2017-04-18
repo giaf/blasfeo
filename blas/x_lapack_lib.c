@@ -1118,6 +1118,104 @@ void GETRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 
 
 
+int GEQRF_WORK_SIZE_LIBSTR(int m, int n)
+	{
+//	return m<n ? m*sizeof(double) : n*sizeof(double);
+	return 0;
+	}
+
+
+
+void GEQRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, void *work)
+	{
+	if(m<=0 | n<=0)
+		return;
+	int ii, jj, kk;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	REAL *pC = sC->pA+ci+cj*ldc;
+	REAL *pD = sD->pA+di+dj*ldd;
+	REAL *dD = sD->dA+di;
+	REAL *dwork = (REAL *) work;
+	REAL alpha, beta, tmp, y0, y1;
+	REAL *pT, *pt;
+	int imax, jmax, kmax;
+	for(jj=0; jj<n; jj++)
+		for(ii=0; ii<m; ii++)
+			pD[ii+ldd*jj] = pC[ii+ldc*jj];
+	imax = m<n ? m : n;
+	for(ii=0; ii<imax; ii++)
+		{
+		beta = 0.0;
+		for(jj=1; jj<m-ii; jj++)
+			{
+			tmp = pD[(ii+jj)+ldd*ii];
+			beta += tmp*tmp;
+			}
+		if(beta==0.0)
+			{
+			dD[ii] = 0.0;
+			}
+		else
+			{
+			pT = &pD[ii+ldd*ii];
+			alpha = pT[0+ldd*0];
+			beta += alpha*alpha;
+			beta = sqrt(beta);
+			if(alpha>0)
+				beta = -beta;
+			dD[ii] = (beta-alpha) / beta;
+			tmp = 1.0 / (alpha-beta);
+			for(jj=1; jj<m-ii; jj++)
+				pT[jj+ldd*0] *= tmp;
+			pT[0+ldd*0] = 1.0;
+			if(ii<n) // dlarf( left, m-i+1, n-i, a(i,i), 1, tau(i), a(i,i+1), lda, work)
+				{
+				// gemv_t & ger
+				pT = &pD[ii+ldd*(ii+1)];
+				pt = &pD[ii+ldd*ii];
+				jmax = n-ii-1;
+				kmax = m-ii;
+				jj = 0;
+				for(; jj<jmax-1; jj+=2)
+					{
+					y0 = 0.0;
+					y1 = 0.0;
+					for(kk=0; kk<kmax; kk++)
+						{
+						y0 += pT[kk+ldd*(jj+0)] * pt[kk];
+						y1 += pT[kk+ldd*(jj+1)] * pt[kk];
+						}
+					y0 = - dD[ii] * y0;
+					y1 = - dD[ii] * y1;
+					for(kk=0; kk<kmax; kk++)
+						{
+						pT[kk+ldd*(jj+0)] += y0 * pt[kk];
+						pT[kk+ldd*(jj+1)] += y1 * pt[kk];
+						}
+					}
+				for(; jj<jmax; jj++)
+					{
+					y0 = 0.0;
+					for(kk=0; kk<kmax; kk++)
+						{
+						y0 += pT[kk+ldd*jj] * pt[kk];
+						}
+					y0 = - dD[ii] * y0;
+					for(kk=0; kk<kmax; kk++)
+						{
+						pT[kk+ldd*jj] += y0 * pt[kk];
+						}
+					}
+				}
+			pD[ii+ldd*ii] = beta;
+			}
+		}
+	return;
+	}
+
+
+
 #elif defined(LA_BLAS)
 
 
@@ -1428,6 +1526,76 @@ void GETRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 	GETRF(&m, &n, pD, &ldd, ipiv, &info);
 	for(jj=0; jj<tmp; jj++)
 		ipiv[jj] -= 1;
+#endif
+	return;
+	}
+
+
+
+int GEQRF_WORK_SIZE_LIBSTR(int m, int n)
+	{
+	REAL dwork;
+	REAL *pD, *dD;
+#if defined(REF_BLAS_BLIS)
+	long long mm = m;
+	long long nn = n;
+	long long lwork = -1;
+	long long info;
+	long long ldd = mm;
+	GEQRF(&mm, &nn, pD, &ldd, dD, &dwork, &lwork, &info);
+#else
+	int lwork = -1;
+	int info;
+	int ldd = m;
+	GEQRF(&m, &n, pD, &ldd, dD, &dwork, &lwork, &info);
+#endif
+	int size = dwork;
+	return size*sizeof(REAL);
+	}
+
+
+
+void GEQRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, void *work)
+	{
+	if(m<=0 | n<=0)
+		return;
+	int jj;
+	REAL *pC = sC->pA+ci+cj*sC->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	REAL *dD = sD->dA+di;
+	REAL *dwork = (REAL *) work;
+#if defined(REF_BLAS_BLIS)
+	long long i1 = 1;
+	long long info = -1;
+	long long mm = m;
+	long long nn = n;
+	long long ldc = sC->m;
+	long long ldd = sD->m;
+	if(!(pC==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&mm, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+		}
+//	GEQR2(&mm, &nn, pD, &ldd, dD, dwork, &info);
+	long long lwork = -1;
+	GEQRF(&mm, &nn, pD, &ldd, dD, dwork, &lwork, &info);
+	lwork = dwork[0];
+	GEQRF(&mm, &nn, pD, &ldd, dD, dwork, &lwork, &info);
+#else
+	int i1 = 1;
+	int info = -1;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(pC==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+		}
+//	GEQR2(&m, &n, pD, &ldd, dD, dwork, &info);
+	int lwork = -1;
+	GEQRF(&m, &n, pD, &ldd, dD, dwork, &lwork, &info);
+	lwork = dwork[0];
+	GEQRF(&m, &n, pD, &ldd, dD, dwork, &lwork, &info);
 #endif
 	return;
 	}
