@@ -38,6 +38,13 @@
 #include "../include/blasfeo_s_kernel.h"
 #include "../include/blasfeo_s_blas.h"
 
+#ifndef S_PS
+#define S_PS 1
+#endif
+#ifndef S_NC
+#define S_NC 1
+#endif
+
 
 
 #if defined(REF_BLAS_OPENBLAS)

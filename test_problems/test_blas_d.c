@@ -38,6 +38,13 @@
 #include "../include/blasfeo_d_kernel.h"
 #include "../include/blasfeo_d_blas.h"
 
+#ifndef D_PS
+#define D_PS 1
+#endif
+#ifndef D_NC
+#define D_NC 1
+#endif
+
 
 
 #if defined(REF_BLAS_OPENBLAS)
@@ -244,8 +251,8 @@ int main()
 		d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
 		d_cvt_vec2strvec(n, x, &sx, 0);
 
-//		int qr_work_size = dgeqrf_work_size_libstr(n, n);
-//		double *qr_work = (double *) malloc(qr_work_size);
+		int qr_work_size = dgeqrf_work_size_libstr(n, n);
+		double *qr_work = (double *) malloc(qr_work_size);
 
 		// create matrix to pivot all the time
 //		dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
@@ -295,13 +302,13 @@ int main()
 //			kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //			kernel_dgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
 
-			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dpotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
-//			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
+			dgeqrf_libstr(n, n, &sB, 0, 0, &sD, 0, 0, qr_work);
 //			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
@@ -368,11 +375,11 @@ int main()
 //		float flop_operation = 2*16.0*2*n; // kernel 8x4
 //		float flop_operation = 1*16.0*2*n; // kernel 4x4
 
-		float flop_operation = 2.0*n*n*n; // dgemm
+//		float flop_operation = 2.0*n*n*n; // dgemm
 //		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
 //		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
-//		float flop_operation = 4.0/3.0*n*n*n; // dgeqrf
+		float flop_operation = 4.0/3.0*n*n*n; // dgeqrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv
 //		float flop_operation = 1.0*n*n; // dtrmv dtrsv
 //		float flop_operation = 4.0*n*n; // dgemv_nt
@@ -403,7 +410,7 @@ int main()
 		d_free_align(x2);
 		d_free_align(y2);
 		int_free(ipiv);
-//		free(qr_work);
+		free(qr_work);
 		
 		d_free_strmat(&sA);
 		d_free_strmat(&sB);
