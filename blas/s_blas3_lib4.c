@@ -817,7 +817,7 @@ void strsm_rutn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, i
 		printf("\nstrsm_rutn_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
-	const int bs = S_BS;
+	const int bs = 4;
 	// TODO alpha
 	int sda = sA->cn;
 	int sdb = sB->cn;
@@ -970,7 +970,7 @@ void ssyrk_ln_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 		printf("\nsryrk_ln_libstr: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
 		}
-	const int bs = S_BS;
+	const int bs = 4;
 	int sda = sA->cn;
 	int sdb = sB->cn;
 	int sdc = sC->cn;

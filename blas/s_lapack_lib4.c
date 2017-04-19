@@ -562,7 +562,7 @@ void ssyrk_spotrf_ln_libstr(int m, int n, int k, struct s_strmat *sA, int ai, in
 		printf("\nssyrk_spotrf_ln_libstr: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
 		}
-	const int bs = S_BS;
+	const int bs = 4;
 	int sda = sA->cn;
 	int sdb = sB->cn;
 	int sdc = sC->cn;
@@ -590,7 +590,7 @@ void sgetrf_nopivot_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, st
 		printf("\nsgetf_nopivot_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
-	const int bs = S_BS;
+	const int bs = 4;
 	int sdc = sC->cn;
 	int sdd = sD->cn;
 	float *pC = sC->pA + cj*bs;
@@ -615,7 +615,7 @@ void sgetrf_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_s
 		printf("\nsgetrf_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
-	const int bs = S_BS;
+	const int bs = 4;
 	int sdc = sC->cn;
 	int sdd = sD->cn;
 	float *pC = sC->pA + cj*bs;
