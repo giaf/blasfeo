@@ -2365,6 +2365,7 @@ int dgeqrf_work_size_libstr(int m, int n)
 
 
 
+#if defined(TARGET_GENERIC)
 void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
@@ -2393,6 +2394,7 @@ void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		}
 	return;
 	}
+#endif
 
 
 
