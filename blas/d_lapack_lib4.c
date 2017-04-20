@@ -2360,8 +2360,6 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 
 int dgeqrf_work_size_libstr(int m, int n)
 	{
-	printf("\ndgeqrf_work_size_libstr: feature not implemented yet\n");
-	exit(1);
 	return 0;
 	}
 
@@ -2371,8 +2369,28 @@ void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	{
 	if(m<=0 | n<=0)
 		return;
-	printf("\ndgeqrf_libstr: feature not implemented yet\n");
-	exit(1);
+	const int ps = 4;
+	if(ci%ps!=0 | di%ps!=0)
+		{
+		printf("\ndgeqrf_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+		exit(1);
+		}
+//	printf("\ndgeqrf_libstr: feature not implemented yet\n");
+//	exit(1);
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	double *pC = &(DMATEL_LIBSTR(sC,ci,cj));
+	double *pD = &(DMATEL_LIBSTR(sD,di,dj));
+	double *dD = sD->dA + di;
+	double *dummy;
+	if(pC!=pD)
+		dgecp_lib(m, n, 1.0, 0, pC, sdc, 0, pD, sdd);
+	int ii;
+	int imax = m<n ? m : n;
+	for(ii=0; ii<imax; ii+=4)
+		{
+		kernel_dgeqrf_4_lib4(m-ii, n-ii-4, pD+ii*sdd+ii*ps, sdd, dD+ii, dummy);
+		}
 	return;
 	}
 

@@ -1289,7 +1289,7 @@ void GEQRF_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT
 			{
 			// compute W = T * V^T * C
 			pW[0+ldw*0] = pC00[0+ldd*(jj+0+2)] + pC00[1+ldd*(jj+0+2)] * pv0[1];
-			pW[0+ldw*1] =                      pC00[1+ldd*(jj+0+2)];
+			pW[0+ldw*1] =                        pC00[1+ldd*(jj+0+2)];
 			for(kk=2; kk<kmax; kk++)
 				{
 				tmp = pC00[kk+ldd*(jj+0+2)];

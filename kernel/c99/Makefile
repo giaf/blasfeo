@@ -64,7 +64,7 @@ OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemm_diag_lib4.o kernel_sgemv_4_lib4.o k
 endif
 
 ifeq ($(TARGET), GENERIC)
-OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemm_diag_lib4.o kernel_dgemv_4_lib4.o kernel_dsymv_4_lib4.o kernel_dgetrf_pivot_4_lib4.o
+OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemm_diag_lib4.o kernel_dgemv_4_lib4.o kernel_dsymv_4_lib4.o kernel_dgetrf_pivot_4_lib4.o kernel_dgeqrf_4_lib4.o
 OBJS += kernel_sgemm_4x4_lib4.o kernel_sgemm_diag_lib4.o kernel_sgemv_4_lib4.o kernel_ssymv_4_lib4.o kernel_sgetrf_pivot_4_lib4.o kernel_sgecp_lib4.o
 endif
 

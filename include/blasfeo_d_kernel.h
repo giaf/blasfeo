@@ -200,6 +200,7 @@ void kernel_dgetrf_nn_4x4_lib4(int k, double *A, double *B, int sdb, double *C, 
 void kernel_dgetrf_nn_4x4_vs_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *inv_diag_D, int km, int kn);
 void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv);
 void kernel_dgetrf_pivot_4_vs_lib4(int m, int n, double *pA, int sda, double *inv_diag_A, int* ipiv);
+void kernel_dgeqrf_4_lib4(int m, int n, double *pD, int sdd, double *dD, double *pV);
 
 
 
