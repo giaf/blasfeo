@@ -225,7 +225,7 @@ int main()
 //	return 0;
 
 	dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sC, 0, 0);
-//	dgese_libstr(n, n, 0.0, &sA, 0, 0);
+	dgese_libstr(n, n, 0.0/0.0, &sD, 0, 0);
 //	d_print_strmat(n, n, &sA, 0, 0);
 //	dgein1_libstr(12.0, &sA, 0, 0);
 //	DMATEL_LIBSTR(&sA, 0, 0) =   12.0;
@@ -241,9 +241,12 @@ int main()
 	d_print_strmat(n, n, &sC, 0, 0);
 //	printf("\n%f\n", DGEEL_LIBSTR(&sA, 0, 0));
 	int qr_work_size = dgeqrf_work_size_libstr(n, n);
-	double *qr_work = (double *) malloc(qr_work_size);
-	dgeqrf_libstr(8, 8, &sC, 0, 0, &sD, 0, 0, qr_work);
-	d_print_strmat(n, n, &sD, 0, 0);
+	void *qr_work;
+	v_zeros_align(&qr_work, qr_work_size);
+	dgeqrf_libstr(16, 16, &sC, 0, 0, &sD, 0, 0, qr_work);
+//	dgecp_libstr(16, 16, 1.0, &sC, 0, 0, &sD, 0, 0);
+//	kernel_dgeqrf_4_lib4(16, 12, sD.pA, sD.cn, sD.dA, qr_work);
+	d_print_strmat(n, 16, &sD, 0, 0);
 	free(qr_work);
 	return 0;
 

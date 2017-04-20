@@ -30,6 +30,9 @@
 #include <stdio.h>
 #include <sys/time.h>
 
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#include <xmmintrin.h> // needed to flush to zero sub-normals with _MM_SET_FLUSH_ZERO_MODE (_MM_FLUSH_ZERO_ON); in the main()
+#endif
 
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_aux_ext_dep.h"
@@ -74,6 +77,10 @@ int main()
 #endif
 #if defined(REF_BLAS_MKL)
 	mkl_set_num_threads(1);
+#endif
+
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON); // flush to zero subnormals !!! works only with one thread !!!
 #endif
 
 	printf("\n");
@@ -252,7 +259,8 @@ int main()
 		d_cvt_vec2strvec(n, x, &sx, 0);
 
 		int qr_work_size = dgeqrf_work_size_libstr(n, n);
-		double *qr_work = (double *) malloc(qr_work_size);
+		void *qr_work;
+		v_zeros_align(&qr_work, qr_work_size);
 
 		// create matrix to pivot all the time
 //		dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
@@ -308,7 +316,7 @@ int main()
 //			dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
-			dgeqrf_libstr(n, n, &sB, 0, 0, &sD, 0, 0, qr_work);
+			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
 //			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
