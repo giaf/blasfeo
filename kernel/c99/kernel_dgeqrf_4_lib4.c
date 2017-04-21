@@ -648,7 +648,7 @@ void kernel_dlarf_4_lib4(int m, int n, double *pD, int sdd, double *dD, double *
 			pC[3+jj*sdc+ps*0] -= d0*pW[0+ldw*0] + d1*pW[0+ldw*1] + d2*pW[0+ldw*2] + d3*pW[0+ldw*3];
 			pC[3+jj*sdc+ps*1] -= d0*pW[1+ldw*0] + d1*pW[1+ldw*1] + d2*pW[1+ldw*2] + d3*pW[1+ldw*3];
 			}
-		for(ll=0; ll<m-ii; ll++)
+		for(ll=0; ll<m-jj; ll++)
 			{
 			d0 = pD[ll+jj*sdd+ps*0];
 			d1 = pD[ll+jj*sdd+ps*1];
@@ -732,7 +732,7 @@ void kernel_dlarf_4_lib4(int m, int n, double *pD, int sdd, double *dD, double *
 			pC[2+jj*sdc+ps*0] -= pD[2+jj*sdd+ps*0]*pW[0+ldw*0] + pD[2+jj*sdd+ps*1]*pW[0+ldw*1] + pD[2+jj*sdd+ps*2]*pW[0+ldw*2] + pD[2+jj*sdd+ps*3]*pW[0+ldw*3];
 			pC[3+jj*sdc+ps*0] -= pD[3+jj*sdd+ps*0]*pW[0+ldw*0] + pD[3+jj*sdd+ps*1]*pW[0+ldw*1] + pD[3+jj*sdd+ps*2]*pW[0+ldw*2] + pD[3+jj*sdd+ps*3]*pW[0+ldw*3];
 			}
-		for(ll=0; ll<m-ii; ll++)
+		for(ll=0; ll<m-jj; ll++)
 			{
 			pC[ll+jj*sdc+ps*0] -= pD[ll+jj*sdd+ps*0]*pW[0+ldw*0] + pD[ll+jj*sdd+ps*1]*pW[0+ldw*1] + pD[ll+jj*sdd+ps*2]*pW[0+ldw*2] + pD[ll+jj*sdd+ps*3]*pW[0+ldw*3];
 			}
@@ -1098,7 +1098,7 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 			pC[2+jj*sdc+ps*1] = c21;
 			pC[3+jj*sdc+ps*1] = c31;
 			}
-		for(ll=0; ll<m-ii; ll++)
+		for(ll=0; ll<m-jj; ll++)
 			{
 			// load
 			c00 = pC[ll+jj*sdc+ps*0];
@@ -1310,7 +1310,7 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 			pC[2+jj*sdc+ps*0] = c20;
 			pC[3+jj*sdc+ps*0] = c30;
 			}
-		for(ll=0; ll<m-ii; ll++)
+		for(ll=0; ll<m-jj; ll++)
 			{
 			// load
 			c00 = pC[ll+jj*sdc+ps*0];

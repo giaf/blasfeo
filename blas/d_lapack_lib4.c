@@ -2396,7 +2396,9 @@ void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	for(ii=0; ii<imax; ii+=4)
 		{
 		kernel_dgeqrf_4_lib4(m-ii, pD+ii*sdd+ii*ps, sdd, dD+ii);
-//		kernel_dlarf_4_lib4(m-ii, n-ii-4, pD+ii*sdd+ii*ps, sdd, dD+ii, pD+ii*sdd+(ii+4)*ps, sdd);
+#if 0
+		kernel_dlarf_4_lib4(m-ii, n-ii-4, pD+ii*sdd+ii*ps, sdd, dD+ii, pD+ii*sdd+(ii+4)*ps, sdd);
+#else
 		kernel_dgetr_4_0_lib4(m-ii, pD+ii*sdd+ii*ps, sdd, pVt);
 		pVt[0+ps*0] = 1.0;
 		pVt[1+ps*0] = 0.0;
@@ -2410,6 +2412,7 @@ void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		pVt[3+ps*3] = 1.0;
 //		d_print_mat(4, m, pVt, 4);
 		kernel_dlarf_t_4_lib4(m-ii, n-ii-4, pD+ii*sdd+ii*ps, sdd, pVt, dD+ii, pD+ii*sdd+(ii+4)*ps, sdd);
+#endif
 //		return;
 		}
 	return;
