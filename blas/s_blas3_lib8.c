@@ -44,6 +44,7 @@ void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 		return;
 	
 #if defined(DIM_CHECK)
+	// TODO check that sA=!sD or that if sA==sD then they do not overlap (same for sB)
 	// non-negative size
 	if(m<0) printf("\n****** sgemm_nt_libstr : m<0 : %d<0 *****\n", m);
 	if(n<0) printf("\n****** sgemm_nt_libstr : n<0 : %d<0 *****\n", n);
