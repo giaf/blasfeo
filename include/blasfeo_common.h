@@ -84,8 +84,8 @@ struct s_strvec
 	int memory_size; // size of needed memory
 	};
 
-#define DMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[(ai-(ai&(D_PS-1)))*(sA)->cn+aj*D_PS+(ai&(D_PS-1))])
-#define SMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[(ai-(ai&(S_PS-1)))*(sA)->cn+aj*S_PS+(ai&(S_PS-1))])
+#define DMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[((ai)-((ai)&(D_PS-1)))*(sA)->cn+(aj)*D_PS+((ai)&(D_PS-1))])
+#define SMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[((ai)-((ai)&(S_PS-1)))*(sA)->cn+(aj)*S_PS+((ai)&(S_PS-1))])
 #define DVECEL_LIBSTR(sa,ai) ((sa)->pa[ai])
 #define SVECEL_LIBSTR(sa,ai) ((sa)->pa[ai])
 
@@ -127,8 +127,8 @@ struct s_strvec
 	int memory_size; // size of needed memory
 	};
 
-#define DMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[ai+aj*(sA)->m])
-#define SMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[ai+aj*(sA)->m])
+#define DMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
+#define SMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
 #define DVECEL_LIBSTR(sa,ai) ((sa)->pa[ai])
 #define SVECEL_LIBSTR(sa,ai) ((sa)->pa[ai])
 
