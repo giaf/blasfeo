@@ -744,12 +744,12 @@ void kernel_dgetr_4_0_lib4(int kmax, double *A, int sda, double *B)
 		{
 		//
 		B[0+ps*0] = A[0+ps*0];
-		B[0+ps*1] = A[1+ps*0];
-		B[0+ps*2] = A[2+ps*0];
-		B[0+ps*3] = A[3+ps*0];
+		B[1+ps*0] = A[0+ps*1];
+		B[2+ps*0] = A[0+ps*2];
+		B[3+ps*0] = A[0+ps*3];
 
-		A += ps;
-		B += 1;
+		A += 1;
+		B += ps;
 		}
 	return;
 	}

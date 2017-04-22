@@ -2373,16 +2373,16 @@ void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	if(m<=0 | n<=0)
 		return;
 	const int ps = 4;
-	if(n%4!=0)
-		{
-		printf("\ndgeqrf_libstr: feature not implemented yet: n=%d\n", n);
-		exit(1);
-		}
-	if(ci%ps!=0 | di%ps!=0)
-		{
-		printf("\ndgeqrf_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
-		exit(1);
-		}
+//	if(n%4!=0)
+//		{
+//		printf("\ndgeqrf_libstr: feature not implemented yet: n=%d\n", n);
+//		exit(1);
+//		}
+//	if(ci%ps!=0 | di%ps!=0)
+//		{
+//		printf("\ndgeqrf_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+//		exit(1);
+//		}
 	int sdc = sC->cn;
 	int sdd = sD->cn;
 	double *pC = &(DMATEL_LIBSTR(sC,ci,cj));
@@ -2390,10 +2390,21 @@ void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	double *dD = sD->dA + di;
 	double *pVt = (double *) work;
 	if(pC!=pD)
-		dgecp_lib(m, n, 1.0, 0, pC, sdc, 0, pD, sdd);
+		dgecp_lib(m, n, 1.0, ci&(ps-1), pC, sdc, di&(ps-1), pD, sdd);
 	int ii;
+	int imax0 = (ps-(di&(ps-1)))&(ps-1);
 	int imax = m<n ? m : n;
-	for(ii=0; ii<imax; ii+=4)
+	imax0 = imax<imax0 ? imax : imax0;
+	if(imax0>0)
+		{
+		kernel_dgeqrf_vs_lib4(m, n, imax0, di&(ps-1), pD, sdd, dD);
+		pD += imax0-ps+ps*sdd+imax0*ps;
+		dD += imax0;
+		m -= imax0;
+		n -= imax0;
+		imax -= imax0;
+		}
+	for(ii=0; ii<imax-3; ii+=4)
 		{
 		kernel_dgeqrf_4_lib4(m-ii, pD+ii*sdd+ii*ps, sdd, dD+ii);
 #if 0
@@ -2410,10 +2421,12 @@ void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		pVt[2+ps*2] = 1.0;
 		pVt[3+ps*2] = 0.0;
 		pVt[3+ps*3] = 1.0;
-//		d_print_mat(4, m, pVt, 4);
 		kernel_dlarf_t_4_lib4(m-ii, n-ii-4, pD+ii*sdd+ii*ps, sdd, pVt, dD+ii, pD+ii*sdd+(ii+4)*ps, sdd);
 #endif
-//		return;
+		}
+	if(ii<imax)
+		{
+		kernel_dgeqrf_vs_lib4(m-ii, n-ii, imax-ii, ii&(ps-1), pD+ii*sdd+ii*ps, sdd, dD+ii);
 		}
 	return;
 	}
