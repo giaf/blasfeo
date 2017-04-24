@@ -30,9 +30,9 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-#include <xmmintrin.h> // needed to flush to zero sub-normals with _MM_SET_FLUSH_ZERO_MODE (_MM_FLUSH_ZERO_ON); in the main()
-#endif
+//#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+//#include <xmmintrin.h> // needed to flush to zero sub-normals with _MM_SET_FLUSH_ZERO_MODE (_MM_FLUSH_ZERO_ON); in the main()
+//#endif
 
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_aux_ext_dep.h"
@@ -79,9 +79,9 @@ int main()
 	mkl_set_num_threads(1);
 #endif
 
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON); // flush to zero subnormals !!! works only with one thread !!!
-#endif
+//#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+//	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON); // flush to zero subnormals !!! works only with one thread !!!
+//#endif
 
 	printf("\n");
 	printf("\n");
@@ -309,6 +309,9 @@ int main()
 //			kernel_dsyrk_nt_l_8x8_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //			kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //			kernel_dgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+//			kernel_dger4_12_sub_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+//			kernel_dger4_8_sub_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+//			kernel_dger4_4_sub_lib4(n, sA.pA, sB.pA, sD.pA);
 
 //			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);

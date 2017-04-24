@@ -224,6 +224,14 @@ int main()
 //	d_print_tran_strvec(n, &sm, 0);
 //	return 0;
 
+	d_print_strmat(n, n, &sC, 0, 0);
+	dgese_libstr(n, n, 1.0, &sB, 0, 0);
+	kernel_dger4_4_sub_lib4(6, sB.pA, sA.pA, sC.pA);
+//	kernel_dger4_8_sub_lib4(5, sB.pA, sB.cn, sA.pA, sC.pA, sC.cn);
+//	kernel_dger4_12_sub_lib4(5, sB.pA, sB.cn, sA.pA, sC.pA, sC.cn);
+	d_print_strmat(n, n, &sC, 0, 0);
+	return 0;
+
 #if 1
 	dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sC, 0, 0);
 #else

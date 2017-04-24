@@ -166,6 +166,10 @@ void kernel_dgemm_diag_left_4_lib4(int kmax, double *alpha, double *A, double *B
 void kernel_dgemm_diag_left_3_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D);
 void kernel_dgemm_diag_left_2_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D);
 void kernel_dgemm_diag_left_1_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D);
+// low rank update
+void kernel_dger4_12_sub_lib4(int k, double *A, int sda, double *B, double *C, int sdc);
+void kernel_dger4_8_sub_lib4(int k, double *A, int sda, double *B, double *C, int sdc);
+void kernel_dger4_4_sub_lib4(int n, double *A, double *B, double *C);
 
 
 
