@@ -1592,6 +1592,406 @@ void kernel_dgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, int offsetB, d
 
 
 
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+void kernel_dsyrk_nt_l_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B, double *beta, int offsetC, double *C0, int sdc, int offsetD, double *D0, int sdd, int m0, int m1, int n0, int n1)
+	{
+
+	const int bs = 4;
+
+	double
+		a_0, a_1, a_2, a_3,
+		b_0, b_1, b_2, b_3,
+		c_00=0,
+		c_10=0, c_11=0,
+		c_20=0, c_21=0, c_22=0,
+		c_30=0, c_31=0, c_32=0, c_33=0;
+	
+	double
+		*C1, *D1;
+	
+	int k;
+
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[0];
+		b_1 = B[1];
+		b_2 = B[2];
+		b_3 = B[3];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_33 += a_3 * b_3;
+
+
+		// k = 1
+
+		a_0 = A[4];
+		a_1 = A[5];
+		a_2 = A[6];
+		a_3 = A[7];
+
+		b_0 = B[4];
+		b_1 = B[5];
+		b_2 = B[6];
+		b_3 = B[7];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_33 += a_3 * b_3;
+
+
+		// k = 2
+
+		a_0 = A[8];
+		a_1 = A[9];
+		a_2 = A[10];
+		a_3 = A[11];
+
+		b_0 = B[8];
+		b_1 = B[9];
+		b_2 = B[10];
+		b_3 = B[11];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_33 += a_3 * b_3;
+
+
+		// k = 3
+
+		a_0 = A[12];
+		a_1 = A[13];
+		a_2 = A[14];
+		a_3 = A[15];
+
+		b_0 = B[12];
+		b_1 = B[13];
+		b_2 = B[14];
+		b_3 = B[15];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_33 += a_3 * b_3;
+
+		A += 16;
+		B += 16;
+
+		}
+	
+	for(; k<kmax; k++)
+		{
+
+		// k = 0
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[0];
+		b_1 = B[1];
+		b_2 = B[2];
+		b_3 = B[3];
+
+		c_00 += a_0 * b_0;
+		c_10 += a_1 * b_0;
+		c_20 += a_2 * b_0;
+		c_30 += a_3 * b_0;
+
+		c_11 += a_1 * b_1;
+		c_21 += a_2 * b_1;
+		c_31 += a_3 * b_1;
+
+		c_22 += a_2 * b_2;
+		c_32 += a_3 * b_2;
+
+		c_33 += a_3 * b_3;
+
+		A += 4;
+		B += 4;
+
+		}
+	
+	if(offsetC==0)
+		{
+		c_00 = beta[0]*C0[0+bs*0] + alpha[0]*c_00;
+		c_10 = beta[0]*C0[1+bs*0] + alpha[0]*c_10;
+		c_20 = beta[0]*C0[2+bs*0] + alpha[0]*c_20;
+		c_30 = beta[0]*C0[3+bs*0] + alpha[0]*c_30;
+
+		c_11 = beta[0]*C0[1+bs*1] + alpha[0]*c_11;
+		c_21 = beta[0]*C0[2+bs*1] + alpha[0]*c_21;
+		c_31 = beta[0]*C0[3+bs*1] + alpha[0]*c_31;
+
+		c_22 = beta[0]*C0[2+bs*2] + alpha[0]*c_22;
+		c_32 = beta[0]*C0[3+bs*2] + alpha[0]*c_32;
+
+		c_33 = beta[0]*C0[3+bs*3] + alpha[0]*c_33;
+		}
+	else if(offsetC==1)
+		{
+		C1 = C0 + sdc*bs;
+
+		c_00 = beta[0]*C0[1+bs*0] + alpha[0]*c_00;
+		c_10 = beta[0]*C0[2+bs*0] + alpha[0]*c_10;
+		c_20 = beta[0]*C0[3+bs*0] + alpha[0]*c_20;
+		c_30 = beta[0]*C1[0+bs*0] + alpha[0]*c_30;
+
+		c_11 = beta[0]*C0[2+bs*1] + alpha[0]*c_11;
+		c_21 = beta[0]*C0[3+bs*1] + alpha[0]*c_21;
+		c_31 = beta[0]*C1[0+bs*1] + alpha[0]*c_31;
+
+		c_22 = beta[0]*C0[3+bs*2] + alpha[0]*c_22;
+		c_32 = beta[0]*C1[0+bs*2] + alpha[0]*c_32;
+
+		c_33 = beta[0]*C1[0+bs*3] + alpha[0]*c_33;
+		}
+	else if(offsetC==2)
+		{
+		C1 = C0 + sdc*bs;
+
+		c_00 = beta[0]*C0[2+bs*0] + alpha[0]*c_00;
+		c_10 = beta[0]*C0[3+bs*0] + alpha[0]*c_10;
+		c_20 = beta[0]*C1[0+bs*0] + alpha[0]*c_20;
+		c_30 = beta[0]*C1[1+bs*0] + alpha[0]*c_30;
+
+		c_11 = beta[0]*C0[3+bs*1] + alpha[0]*c_11;
+		c_21 = beta[0]*C1[0+bs*1] + alpha[0]*c_21;
+		c_31 = beta[0]*C1[1+bs*1] + alpha[0]*c_31;
+
+		c_22 = beta[0]*C1[0+bs*2] + alpha[0]*c_22;
+		c_32 = beta[0]*C1[1+bs*2] + alpha[0]*c_32;
+
+		c_33 = beta[0]*C1[1+bs*3] + alpha[0]*c_33;
+		}
+	else //if(offsetC==3)
+		{
+		C1 = C0 + sdc*bs;
+
+		c_00 = beta[0]*C0[3+bs*0] + alpha[0]*c_00;
+		c_10 = beta[0]*C1[0+bs*0] + alpha[0]*c_10;
+		c_20 = beta[0]*C1[1+bs*0] + alpha[0]*c_20;
+		c_30 = beta[0]*C1[2+bs*0] + alpha[0]*c_30;
+
+		c_11 = beta[0]*C1[0+bs*1] + alpha[0]*c_11;
+		c_21 = beta[0]*C1[1+bs*1] + alpha[0]*c_21;
+		c_31 = beta[0]*C1[2+bs*1] + alpha[0]*c_31;
+
+		c_22 = beta[0]*C1[1+bs*2] + alpha[0]*c_22;
+		c_32 = beta[0]*C1[2+bs*2] + alpha[0]*c_32;
+
+		c_33 = beta[0]*C1[2+bs*3] + alpha[0]*c_33;
+		}
+	
+	// shift sol for cols
+	if(n0>0)
+		{
+		if(n0==1)
+			{
+			c_10 = c_11;
+			c_20 = c_21;
+			c_30 = c_31;
+
+			c_21 = c_22;
+			c_31 = c_32;
+
+			c_32 = c_33;
+
+			D0 += 1*bs;
+			}
+		else if(n0==2)
+			{
+			c_20 = c_22;
+			c_30 = c_32;
+
+			c_31 = c_33;
+
+			D0 += 2*bs;
+			}
+		else //if(n0==3)
+			{
+			c_30 = c_33;
+
+			D0 += 3*bs;
+			}
+		}
+
+	int kn = n1 - n0;
+
+	if(offsetD==0)
+		{
+		if(kn<=0)
+			return;
+
+		if(m0<=0 & m1>0) D0[0+bs*0] = c_00;
+		if(m0<=1 & m1>1) D0[1+bs*0] = c_10;
+		if(m0<=2 & m1>2) D0[2+bs*0] = c_20;
+		if(m0<=3 & m1>3) D0[3+bs*0] = c_30;
+
+		if(kn<=1)
+			return;
+
+		if(m0<=1 & m1>1) D0[1+bs*1] = c_11;
+		if(m0<=2 & m1>2) D0[2+bs*1] = c_21;
+		if(m0<=3 & m1>3) D0[3+bs*1] = c_31;
+
+		if(kn<=2)
+			return;
+
+		if(m0<=2 & m1>2) D0[2+bs*2] = c_22;
+		if(m0<=3 & m1>3) D0[3+bs*2] = c_32;
+
+		if(kn<=3)
+			return;
+
+		if(m0<=3 & m1>3) D0[3+bs*3] = c_33;
+		}
+	else if(offsetD==1)
+		{
+		D1 = D0 + sdd*bs;
+
+		if(kn<=0)
+			return;
+
+		if(m0<=0 & m1>0) D0[1+bs*0] = c_00;
+		if(m0<=1 & m1>1) D0[2+bs*0] = c_10;
+		if(m0<=2 & m1>2) D0[3+bs*0] = c_20;
+		if(m0<=3 & m1>3) D1[0+bs*0] = c_30;
+
+		if(kn<=1)
+			return;
+
+		if(m0<=1 & m1>1) D0[2+bs*1] = c_11;
+		if(m0<=2 & m1>2) D0[3+bs*1] = c_21;
+		if(m0<=3 & m1>3) D1[0+bs*1] = c_31;
+
+		if(kn<=2)
+			return;
+
+		if(m0<=2 & m1>2) D0[3+bs*2] = c_22;
+		if(m0<=3 & m1>3) D1[0+bs*2] = c_32;
+
+		if(kn<=3)
+			return;
+
+		if(m0<=3 & m1>3) D1[0+bs*3] = c_33;
+		}
+	else if(offsetD==2)
+		{
+		D1 = D0 + sdd*bs;
+
+		if(kn<=0)
+			return;
+
+		if(m0<=0 & m1>0) D0[2+bs*0] = c_00;
+		if(m0<=1 & m1>1) D0[3+bs*0] = c_10;
+		if(m0<=2 & m1>2) D1[0+bs*0] = c_20;
+		if(m0<=3 & m1>3) D1[1+bs*0] = c_30;
+
+		if(kn<=1)
+			return;
+
+		if(m0<=1 & m1>1) D0[3+bs*1] = c_11;
+		if(m0<=2 & m1>2) D1[0+bs*1] = c_21;
+		if(m0<=3 & m1>3) D1[1+bs*1] = c_31;
+
+		if(kn<=2)
+			return;
+
+		if(m0<=2 & m1>2) D1[0+bs*2] = c_22;
+		if(m0<=3 & m1>3) D1[1+bs*2] = c_32;
+
+		if(kn<=3)
+			return;
+
+		if(m0<=3 & m1>3) D1[1+bs*3] = c_33;
+		}
+	else //if(offsetD==3)
+		{
+		D1 = D0 + sdd*bs;
+
+		if(kn<=0)
+			return;
+
+		if(m0<=0 & m1>0) D0[3+bs*0] = c_00;
+		if(m0<=1 & m1>1) D1[0+bs*0] = c_10;
+		if(m0<=2 & m1>2) D1[1+bs*0] = c_20;
+		if(m0<=3 & m1>3) D1[2+bs*0] = c_30;
+
+		if(kn<=1)
+			return;
+
+		if(m0<=1 & m1>1) D1[0+bs*1] = c_11;
+		if(m0<=2 & m1>2) D1[1+bs*1] = c_21;
+		if(m0<=3 & m1>3) D1[2+bs*1] = c_31;
+
+		if(kn<=2)
+			return;
+
+		if(m0<=2 & m1>2) D1[1+bs*2] = c_22;
+		if(m0<=3 & m1>3) D1[2+bs*2] = c_32;
+
+		if(kn<=3)
+			return;
+
+		if(m0<=3 & m1>3) D1[2+bs*3] = c_33;
+		}
+
+	return;
+
+	}
+#endif
+
+
+
 #if defined(TARGET_GENERIC) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D, int km, int kn)
 	{
