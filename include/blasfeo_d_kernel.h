@@ -90,6 +90,7 @@ void kernel_dtrsm_nn_lu_inv_12x4_vs_lib4(int kmax, double *A, int sda, double *B
 // 4x12
 void kernel_dgemm_nt_4x12_lib4(int k, double *alpha, double *A, double *B, int sdb, double *beta, double *C, double *D); //
 void kernel_dgemm_nt_4x12_vs_lib4(int k, double *alpha, double *A, double *B, int sdb, double *beta, double *C, double *D, int km, int kn); //
+void kernel_dgemm_nn_4x12_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D); //
 void kernel_dtrsm_nt_rl_inv_4x12_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *E, int sed, double *inv_diag_E);
 void kernel_dtrsm_nt_rl_inv_4x12_vs_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *E, int sed, double *inv_diag_E, int km, int kn);
 // 8x8
@@ -130,6 +131,7 @@ void kernel_dtrsm_nn_lu_inv_8x4_vs_lib4(int kmax, double *A, int sda, double *B,
 // 4x8
 void kernel_dgemm_nt_4x8_lib4(int k, double *alpha, double *A, double *B, int sdb, double *beta, double *C, double *D); //
 void kernel_dgemm_nt_4x8_vs_lib4(int k, double *alpha, double *A, double *B, int sdb, double *beta, double *C, double *D, int km, int kn); //
+void kernel_dgemm_nn_4x8_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D); //
 void kernel_dtrsm_nt_rl_inv_4x8_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *E, int sed, double *inv_diag_E);
 void kernel_dtrsm_nt_rl_inv_4x8_vs_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *E, int sed, double *inv_diag_E, int km, int kn);
 // 4x4
@@ -169,9 +171,12 @@ void kernel_dgemm_diag_left_3_lib4(int kmax, double *alpha, double *A, double *B
 void kernel_dgemm_diag_left_2_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D);
 void kernel_dgemm_diag_left_1_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D);
 // low rank update
-void kernel_dger4_12_sub_lib4(int k, double *A, int sda, double *B, double *C, int sdc);
-void kernel_dger4_8_sub_lib4(int k, double *A, int sda, double *B, double *C, int sdc);
-void kernel_dger4_4_sub_lib4(int n, double *A, double *B, double *C);
+void kernel_dger4_sub_12_lib4(int k, double *A, int sda, double *B, double *C, int sdc);
+void kernel_dger4_sub_12_vs_lib4(int k, double *A, int sda, double *B, double *C, int sdc, int km);
+void kernel_dger4_sub_8_lib4(int k, double *A, int sda, double *B, double *C, int sdc);
+void kernel_dger4_sub_8_vs_lib4(int k, double *A, int sda, double *B, double *C, int sdc, int km);
+void kernel_dger4_sub_4_lib4(int n, double *A, double *B, double *C);
+void kernel_dger4_sub_4_vs_lib4(int n, double *A, double *B, double *C, int km);
 
 
 
@@ -209,7 +214,7 @@ void kernel_dgetrf_pivot_4_vs_lib4(int m, int n, double *pA, int sda, double *in
 void kernel_dgeqrf_4_lib4(int m, double *pD, int sdd, double *dD);
 void kernel_dgeqrf_vs_lib4(int m, int n, int k, int offD, double *pD, int sdd, double *dD);
 void kernel_dlarf_4_lib4(int m, int n, double *pV, int sdv, double *tau, double *pC, int sdc); // rank-4 reflector
-void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, double *dD, double *pC0, int sdc);
+void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, double *dD, double *pC0, int sdc, double *pW);
 
 
 

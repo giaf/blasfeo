@@ -2362,7 +2362,8 @@ int dgeqrf_work_size_libstr(int m, int n)
 	{
 	const int ps = 4;
 	int cm = (m+ps-1)/ps*ps;
-	return ps*cm*sizeof(double);
+	int cn = (n+ps-1)/ps*ps;
+	return ps*(cm+cn)*sizeof(double);
 //	return 0;
 	}
 
@@ -2388,7 +2389,12 @@ void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	double *pC = &(DMATEL_LIBSTR(sC,ci,cj));
 	double *pD = &(DMATEL_LIBSTR(sD,di,dj));
 	double *dD = sD->dA + di;
+	int cm = (m+ps-1)/ps*ps;
+	int cn = (n+ps-1)/ps*ps;
 	double *pVt = (double *) work;
+	work += ps*cm*sizeof(double);
+	double *pW = (double *) work;
+	work += ps*cn*sizeof(double);
 	if(pC!=pD)
 		dgecp_lib(m, n, 1.0, ci&(ps-1), pC, sdc, di&(ps-1), pD, sdd);
 	int ii;
@@ -2421,7 +2427,7 @@ void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		pVt[2+ps*2] = 1.0;
 		pVt[3+ps*2] = 0.0;
 		pVt[3+ps*3] = 1.0;
-		kernel_dlarf_t_4_lib4(m-ii, n-ii-4, pD+ii*sdd+ii*ps, sdd, pVt, dD+ii, pD+ii*sdd+(ii+4)*ps, sdd);
+		kernel_dlarf_t_4_lib4(m-ii, n-ii-4, pD+ii*sdd+ii*ps, sdd, pVt, dD+ii, pD+ii*sdd+(ii+4)*ps, sdd, pW);
 #endif
 		}
 	if(ii<imax)

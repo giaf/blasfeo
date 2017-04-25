@@ -38,6 +38,7 @@
 
 #include "../../include/blasfeo_common.h"
 #include "../../include/blasfeo_d_aux.h"
+#include "../../include/blasfeo_d_kernel.h"
 
 
 
@@ -1027,7 +1028,7 @@ void kernel_dlarf_4_lib4(int m, int n, double *pD, int sdd, double *dD, double *
 
 
 
-void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, double *dD, double *pC0, int sdc)
+void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, double *dD, double *pC0, int sdc, double *pW0)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1042,11 +1043,9 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 	       c30, c31;
 	double a0, a1, a2, a3, b0, b1;
 	double tmp, d0, d1, d2, d3;
-	double *pC;
+	double *pC, *pW;
 	double pT[16];// = {};
 	int ldt = 4;
-	double pW[16];// = {};
-	int ldw = 4;
 	// dot product of v
 	v10 = 0.0;
 	v20 = 0.0;
@@ -1123,9 +1122,32 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 	// downgrade matrix
 	__m256d
 		_w0, _w1, _w2, _w3, _d0, _t0, _tp, _c0, _c1, _c2, _c3, _a0, _b0;
+
 	ii = 0;
+#if 0
+	double alpha = 1.0;
+	double beta = 0.0;
+	for( ; ii<n-11; ii+=12)
+		{
+		kernel_dgemm_nn_4x12_lib4(m, &alpha, &pVt[0+ps*0], 0, &pC0[0+ps*ii], sdc, &beta, &pW0[0+ps*ii], &pW0[0+ps*ii]);
+		}
+	for( ; ii<n-7; ii+=8)
+		{
+		kernel_dgemm_nn_4x8_lib4(m, &alpha, &pVt[0+ps*0], 0, &pC0[0+ps*ii], sdc, &beta, &pW0[0+ps*ii], &pW0[0+ps*ii]);
+		}
 	for( ; ii<n-3; ii+=4)
 		{
+		kernel_dgemm_nn_4x4_lib4(m, &alpha, &pVt[0+ps*0], 0, &pC0[0+ps*ii], sdc, &beta, &pW0[0+ps*ii], &pW0[0+ps*ii]);
+		}
+	if(ii<n)
+		{
+//		kernel_dgemm_nn_4x4_vs_lib4(m, &alpha, &pVt[0+ps*0], 0, &pC0[0+ps*ii], sdc, &beta, &pW0[0+ps*ii], &pW0[0+ps*ii], 4, n-ii);
+		kernel_dgemm_nn_4x4_gen_lib4(m, &alpha, &pVt[0+ps*0], 0, &pC0[0+ps*ii], sdc, &beta, 0, &pW0[0+ps*ii], 0, 0, &pW0[0+ps*ii], 0, 0, 4, 0, n-ii);
+		}
+#else
+	for( ; ii<n-3; ii+=4)
+		{
+		pW = pW0+ii*ps;
 		pC = pC0+ii*ps;
 		// compute W^T = C^T * V
 		_w0 = _mm256_setzero_pd();
@@ -1208,27 +1230,142 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 			_w3 = _mm256_add_pd( _w3, _tp );
 			}
 		// TODO mask store
-		_mm256_storeu_pd( &pW[0+ldw*0], _w0 );
-		_mm256_storeu_pd( &pW[0+ldw*1], _w1 );
-		_mm256_storeu_pd( &pW[0+ldw*2], _w2 );
-		_mm256_storeu_pd( &pW[0+ldw*3], _w3 );
+		_mm256_storeu_pd( &pW[0+ps*0], _w0 );
+		_mm256_storeu_pd( &pW[0+ps*1], _w1 );
+		_mm256_storeu_pd( &pW[0+ps*2], _w2 );
+		_mm256_storeu_pd( &pW[0+ps*3], _w3 );
+		}
+	for( ; ii<n; ii++)
+		{
+		pW = pW0+ii*ps;
+		pC = pC0+ii*ps;
+		// compute W^T = C^T * V
+		tmp = pC[0+ps*0];
+		pW[0+ps*0] = tmp;
+		if(m>1)
+			{
+			d0 = pVt[0+ps*1];
+			tmp = pC[1+ps*0];
+			pW[0+ps*0] += d0 * tmp;
+			pW[1+ps*0] = tmp;
+			if(m>2)
+				{
+				d0 = pVt[0+ps*2];
+				d1 = pVt[1+ps*2];
+				tmp = pC[2+ps*0];
+				pW[0+ps*0] += d0 * tmp;
+				pW[1+ps*0] += d1 * tmp;
+				pW[2+ps*0] = tmp;
+				if(m>3)
+					{
+					d0 = pVt[0+ps*3];
+					d1 = pVt[1+ps*3];
+					d2 = pVt[2+ps*3];
+					tmp = pC[3+ps*0];
+					pW[0+ps*0] += d0 * tmp;
+					pW[1+ps*0] += d1 * tmp;
+					pW[2+ps*0] += d2 * tmp;
+					pW[3+ps*0] = tmp;
+					}
+				}
+			}
+		for(jj=4; jj<m-3; jj+=4)
+			{
+			//
+			d0 = pVt[0+ps*(0+jj)];
+			d1 = pVt[1+ps*(0+jj)];
+			d2 = pVt[2+ps*(0+jj)];
+			d3 = pVt[3+ps*(0+jj)];
+			tmp = pC[0+jj*sdc+ps*0];
+			pW[0+ps*0] += d0 * tmp;
+			pW[1+ps*0] += d1 * tmp;
+			pW[2+ps*0] += d2 * tmp;
+			pW[3+ps*0] += d3 * tmp;
+			//
+			d0 = pVt[0+ps*(1+jj)];
+			d1 = pVt[1+ps*(1+jj)];
+			d2 = pVt[2+ps*(1+jj)];
+			d3 = pVt[3+ps*(1+jj)];
+			tmp = pC[1+jj*sdc+ps*0];
+			pW[0+ps*0] += d0 * tmp;
+			pW[1+ps*0] += d1 * tmp;
+			pW[2+ps*0] += d2 * tmp;
+			pW[3+ps*0] += d3 * tmp;
+			//
+			d0 = pVt[0+ps*(2+jj)];
+			d1 = pVt[1+ps*(2+jj)];
+			d2 = pVt[2+ps*(2+jj)];
+			d3 = pVt[3+ps*(2+jj)];
+			tmp = pC[2+jj*sdc+ps*0];
+			pW[0+ps*0] += d0 * tmp;
+			pW[1+ps*0] += d1 * tmp;
+			pW[2+ps*0] += d2 * tmp;
+			pW[3+ps*0] += d3 * tmp;
+			//
+			d0 = pVt[0+ps*(3+jj)];
+			d1 = pVt[1+ps*(3+jj)];
+			d2 = pVt[2+ps*(3+jj)];
+			d3 = pVt[3+ps*(3+jj)];
+			tmp = pC[3+jj*sdc+ps*0];
+			pW[0+ps*0] += d0 * tmp;
+			pW[1+ps*0] += d1 * tmp;
+			pW[2+ps*0] += d2 * tmp;
+			pW[3+ps*0] += d3 * tmp;
+			}
+		for(ll=0; ll<m-jj; ll++)
+			{
+			d0 = pVt[0+ps*(ll+jj)];
+			d1 = pVt[1+ps*(ll+jj)];
+			d2 = pVt[2+ps*(ll+jj)];
+			d3 = pVt[3+ps*(ll+jj)];
+			tmp = pC[ll+jj*sdc+ps*0];
+			pW[0+ps*0] += d0 * tmp;
+			pW[1+ps*0] += d1 * tmp;
+			pW[2+ps*0] += d2 * tmp;
+			pW[3+ps*0] += d3 * tmp;
+			}
+		}
+#endif
+
+	ii = 0;
+	for( ; ii<n-3; ii+=4)
+		{
+		pW = pW0+ii*ps;
+		pC = pC0+ii*ps;
 		// compute W^T *= T
-		pW[3+ldw*0] = pT[3+ldt*0]*pW[0+ldw*0] + pT[3+ldt*1]*pW[1+ldw*0] + pT[3+ldt*2]*pW[2+ldw*0] + pT[3+ldt*3]*pW[3+ldw*0];
-		pW[3+ldw*1] = pT[3+ldt*0]*pW[0+ldw*1] + pT[3+ldt*1]*pW[1+ldw*1] + pT[3+ldt*2]*pW[2+ldw*1] + pT[3+ldt*3]*pW[3+ldw*1];
-		pW[3+ldw*2] = pT[3+ldt*0]*pW[0+ldw*2] + pT[3+ldt*1]*pW[1+ldw*2] + pT[3+ldt*2]*pW[2+ldw*2] + pT[3+ldt*3]*pW[3+ldw*2];
-		pW[3+ldw*3] = pT[3+ldt*0]*pW[0+ldw*3] + pT[3+ldt*1]*pW[1+ldw*3] + pT[3+ldt*2]*pW[2+ldw*3] + pT[3+ldt*3]*pW[3+ldw*3];
-		pW[2+ldw*0] = pT[2+ldt*0]*pW[0+ldw*0] + pT[2+ldt*1]*pW[1+ldw*0] + pT[2+ldt*2]*pW[2+ldw*0];
-		pW[2+ldw*1] = pT[2+ldt*0]*pW[0+ldw*1] + pT[2+ldt*1]*pW[1+ldw*1] + pT[2+ldt*2]*pW[2+ldw*1];
-		pW[2+ldw*2] = pT[2+ldt*0]*pW[0+ldw*2] + pT[2+ldt*1]*pW[1+ldw*2] + pT[2+ldt*2]*pW[2+ldw*2];
-		pW[2+ldw*3] = pT[2+ldt*0]*pW[0+ldw*3] + pT[2+ldt*1]*pW[1+ldw*3] + pT[2+ldt*2]*pW[2+ldw*3];
-		pW[1+ldw*0] = pT[1+ldt*0]*pW[0+ldw*0] + pT[1+ldt*1]*pW[1+ldw*0];
-		pW[1+ldw*1] = pT[1+ldt*0]*pW[0+ldw*1] + pT[1+ldt*1]*pW[1+ldw*1];
-		pW[1+ldw*2] = pT[1+ldt*0]*pW[0+ldw*2] + pT[1+ldt*1]*pW[1+ldw*2];
-		pW[1+ldw*3] = pT[1+ldt*0]*pW[0+ldw*3] + pT[1+ldt*1]*pW[1+ldw*3];
-		pW[0+ldw*0] = pT[0+ldt*0]*pW[0+ldw*0];
-		pW[0+ldw*1] = pT[0+ldt*0]*pW[0+ldw*1];
-		pW[0+ldw*2] = pT[0+ldt*0]*pW[0+ldw*2];
-		pW[0+ldw*3] = pT[0+ldt*0]*pW[0+ldw*3];
+		pW[3+ps*0] = pT[3+ldt*0]*pW[0+ps*0] + pT[3+ldt*1]*pW[1+ps*0] + pT[3+ldt*2]*pW[2+ps*0] + pT[3+ldt*3]*pW[3+ps*0];
+		pW[3+ps*1] = pT[3+ldt*0]*pW[0+ps*1] + pT[3+ldt*1]*pW[1+ps*1] + pT[3+ldt*2]*pW[2+ps*1] + pT[3+ldt*3]*pW[3+ps*1];
+		pW[3+ps*2] = pT[3+ldt*0]*pW[0+ps*2] + pT[3+ldt*1]*pW[1+ps*2] + pT[3+ldt*2]*pW[2+ps*2] + pT[3+ldt*3]*pW[3+ps*2];
+		pW[3+ps*3] = pT[3+ldt*0]*pW[0+ps*3] + pT[3+ldt*1]*pW[1+ps*3] + pT[3+ldt*2]*pW[2+ps*3] + pT[3+ldt*3]*pW[3+ps*3];
+		pW[2+ps*0] = pT[2+ldt*0]*pW[0+ps*0] + pT[2+ldt*1]*pW[1+ps*0] + pT[2+ldt*2]*pW[2+ps*0];
+		pW[2+ps*1] = pT[2+ldt*0]*pW[0+ps*1] + pT[2+ldt*1]*pW[1+ps*1] + pT[2+ldt*2]*pW[2+ps*1];
+		pW[2+ps*2] = pT[2+ldt*0]*pW[0+ps*2] + pT[2+ldt*1]*pW[1+ps*2] + pT[2+ldt*2]*pW[2+ps*2];
+		pW[2+ps*3] = pT[2+ldt*0]*pW[0+ps*3] + pT[2+ldt*1]*pW[1+ps*3] + pT[2+ldt*2]*pW[2+ps*3];
+		pW[1+ps*0] = pT[1+ldt*0]*pW[0+ps*0] + pT[1+ldt*1]*pW[1+ps*0];
+		pW[1+ps*1] = pT[1+ldt*0]*pW[0+ps*1] + pT[1+ldt*1]*pW[1+ps*1];
+		pW[1+ps*2] = pT[1+ldt*0]*pW[0+ps*2] + pT[1+ldt*1]*pW[1+ps*2];
+		pW[1+ps*3] = pT[1+ldt*0]*pW[0+ps*3] + pT[1+ldt*1]*pW[1+ps*3];
+		pW[0+ps*0] = pT[0+ldt*0]*pW[0+ps*0];
+		pW[0+ps*1] = pT[0+ldt*0]*pW[0+ps*1];
+		pW[0+ps*2] = pT[0+ldt*0]*pW[0+ps*2];
+		pW[0+ps*3] = pT[0+ldt*0]*pW[0+ps*3];
+		}
+	for( ; ii<n; ii++)
+		{
+		pW = pW0+ii*ps;
+		pC = pC0+ii*ps;
+		// compute W^T *= T
+		pW[3+ps*0] = pT[3+ldt*0]*pW[0+ps*0] + pT[3+ldt*1]*pW[1+ps*0] + pT[3+ldt*2]*pW[2+ps*0] + pT[3+ldt*3]*pW[3+ps*0];
+		pW[2+ps*0] = pT[2+ldt*0]*pW[0+ps*0] + pT[2+ldt*1]*pW[1+ps*0] + pT[2+ldt*2]*pW[2+ps*0];
+		pW[1+ps*0] = pT[1+ldt*0]*pW[0+ps*0] + pT[1+ldt*1]*pW[1+ps*0];
+		pW[0+ps*0] = pT[0+ldt*0]*pW[0+ps*0];
+		}
+
+	ii = 0;
+	for( ; ii<n-3; ii+=4)
+		{
+		pW = pW0+ii*ps;
+		pC = pC0+ii*ps;
 		// compute C -= V * W^T
 		jj = 0;
 		// load
@@ -1244,12 +1381,12 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 		a1 = pD[1+jj*sdd+ps*0];
 		a2 = pD[2+jj*sdd+ps*0];
 		a3 = pD[3+jj*sdd+ps*0];
-		b0 = pW[0+ldw*0];
+		b0 = pW[0+ps*0];
 		c00 -= b0;
 		c10 -= a1*b0;
 		c20 -= a2*b0;
 		c30 -= a3*b0;
-		b1 = pW[0+ldw*1];
+		b1 = pW[0+ps*1];
 		c01 -= b1;
 		c11 -= a1*b1;
 		c21 -= a2*b1;
@@ -1257,27 +1394,27 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 		// rank2
 		a2 = pD[2+jj*sdd+ps*1];
 		a3 = pD[3+jj*sdd+ps*1];
-		b0 = pW[1+ldw*0];
+		b0 = pW[1+ps*0];
 		c10 -= b0;
 		c20 -= a2*b0;
 		c30 -= a3*b0;
-		b1 = pW[1+ldw*1];
+		b1 = pW[1+ps*1];
 		c11 -= b1;
 		c21 -= a2*b1;
 		c31 -= a3*b1;
 		// rank3
 		a3 = pD[3+jj*sdd+ps*2];
-		b0 = pW[2+ldw*0];
+		b0 = pW[2+ps*0];
 		c20 -= b0;
 		c30 -= a3*b0;
-		b1 = pW[2+ldw*1];
+		b1 = pW[2+ps*1];
 		c21 -= b1;
 		c31 -= a3*b1;
 		// rank4
 		a3 = pD[3+jj*sdd+ps*3];
-		b0 = pW[3+ldw*0];
+		b0 = pW[3+ps*0];
 		c30 -= b0;
-		b1 = pW[3+ldw*1];
+		b1 = pW[3+ps*1];
 		c31 -= b1;
 		// store
 		pC[0+jj*sdc+ps*0] = c00;
@@ -1310,12 +1447,12 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 		a1 = pD[1+jj*sdd+ps*0];
 		a2 = pD[2+jj*sdd+ps*0];
 		a3 = pD[3+jj*sdd+ps*0];
-		b0 = pW[0+ldw*2];
+		b0 = pW[0+ps*2];
 		c00 -= b0;
 		c10 -= a1*b0;
 		c20 -= a2*b0;
 		c30 -= a3*b0;
-		b1 = pW[0+ldw*3];
+		b1 = pW[0+ps*3];
 		c01 -= b1;
 		c11 -= a1*b1;
 		c21 -= a2*b1;
@@ -1323,27 +1460,27 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 		// rank2
 		a2 = pD[2+jj*sdd+ps*1];
 		a3 = pD[3+jj*sdd+ps*1];
-		b0 = pW[1+ldw*2];
+		b0 = pW[1+ps*2];
 		c10 -= b0;
 		c20 -= a2*b0;
 		c30 -= a3*b0;
-		b1 = pW[1+ldw*3];
+		b1 = pW[1+ps*3];
 		c11 -= b1;
 		c21 -= a2*b1;
 		c31 -= a3*b1;
 		// rank3
 		a3 = pD[3+jj*sdd+ps*2];
-		b0 = pW[2+ldw*2];
+		b0 = pW[2+ps*2];
 		c20 -= b0;
 		c30 -= a3*b0;
-		b1 = pW[2+ldw*3];
+		b1 = pW[2+ps*3];
 		c21 -= b1;
 		c31 -= a3*b1;
 		// rank4
 		a3 = pD[3+jj*sdd+ps*3];
-		b0 = pW[3+ldw*2];
+		b0 = pW[3+ps*2];
 		c30 -= b0;
-		b1 = pW[3+ldw*3];
+		b1 = pW[3+ps*3];
 		c31 -= b1;
 		// store
 		pC[0+jj*sdc+ps*2] = c00;
@@ -1363,232 +1500,11 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 					}
 				}
 			}
-		for(jj=4; jj<m-3; jj+=4)
-			{
-			// load
-			_c0 = _mm256_load_pd( &pC[0+jj*sdc+ps*0] );
-			_c1 = _mm256_load_pd( &pC[0+jj*sdc+ps*1] );
-			_c2 = _mm256_load_pd( &pC[0+jj*sdc+ps*2] );
-			_c3 = _mm256_load_pd( &pC[0+jj*sdc+ps*3] );
-			//
-			_a0 = _mm256_load_pd( &pD[0+jj*sdd+ps*0] );
-			_b0 = _mm256_broadcast_sd( &pW[0+ldw*0] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c0 = _mm256_sub_pd( _c0, _tp );
-			_b0 = _mm256_broadcast_sd( &pW[0+ldw*1] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c1 = _mm256_sub_pd( _c1, _tp );
-			_b0 = _mm256_broadcast_sd( &pW[0+ldw*2] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c2 = _mm256_sub_pd( _c2, _tp );
-			_b0 = _mm256_broadcast_sd( &pW[0+ldw*3] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c3 = _mm256_sub_pd( _c3, _tp );
-			//
-			_a0 = _mm256_load_pd( &pD[0+jj*sdd+ps*1] );
-			_b0 = _mm256_broadcast_sd( &pW[1+ldw*0] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c0 = _mm256_sub_pd( _c0, _tp );
-			_b0 = _mm256_broadcast_sd( &pW[1+ldw*1] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c1 = _mm256_sub_pd( _c1, _tp );
-			_b0 = _mm256_broadcast_sd( &pW[1+ldw*2] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c2 = _mm256_sub_pd( _c2, _tp );
-			_b0 = _mm256_broadcast_sd( &pW[1+ldw*3] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c3 = _mm256_sub_pd( _c3, _tp );
-			//
-			_a0 = _mm256_load_pd( &pD[0+jj*sdd+ps*2] );
-			_b0 = _mm256_broadcast_sd( &pW[2+ldw*0] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c0 = _mm256_sub_pd( _c0, _tp );
-			_b0 = _mm256_broadcast_sd( &pW[2+ldw*1] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c1 = _mm256_sub_pd( _c1, _tp );
-			_b0 = _mm256_broadcast_sd( &pW[2+ldw*2] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c2 = _mm256_sub_pd( _c2, _tp );
-			_b0 = _mm256_broadcast_sd( &pW[2+ldw*3] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c3 = _mm256_sub_pd( _c3, _tp );
-			//
-			_a0 = _mm256_load_pd( &pD[0+jj*sdd+ps*3] );
-			_b0 = _mm256_broadcast_sd( &pW[3+ldw*0] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c0 = _mm256_sub_pd( _c0, _tp );
-			_b0 = _mm256_broadcast_sd( &pW[3+ldw*1] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c1 = _mm256_sub_pd( _c1, _tp );
-			_b0 = _mm256_broadcast_sd( &pW[3+ldw*2] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c2 = _mm256_sub_pd( _c2, _tp );
-			_b0 = _mm256_broadcast_sd( &pW[3+ldw*3] );
-			_tp = _mm256_mul_pd( _a0, _b0 );
-			_c3 = _mm256_sub_pd( _c3, _tp );
-			// store
-			_mm256_store_pd( &pC[0+jj*sdc+ps*0], _c0 );
-			_mm256_store_pd( &pC[0+jj*sdc+ps*1], _c1 );
-			_mm256_store_pd( &pC[0+jj*sdc+ps*2], _c2 );
-			_mm256_store_pd( &pC[0+jj*sdc+ps*3], _c3 );
-			}
-		for(ll=0; ll<m-jj; ll++)
-			{
-			// load
-			c00 = pC[ll+jj*sdc+ps*0];
-			c01 = pC[ll+jj*sdc+ps*1];
-			//
-			a0 = pD[ll+jj*sdd+ps*0];
-			b0 = pW[0+ldw*0];
-			c00 -= a0*b0;
-			b1 = pW[0+ldw*1];
-			c01 -= a0*b1;
-			//
-			a0 = pD[ll+jj*sdd+ps*1];
-			b0 = pW[1+ldw*0];
-			c00 -= a0*b0;
-			b1 = pW[1+ldw*1];
-			c01 -= a0*b1;
-			//
-			a0 = pD[ll+jj*sdd+ps*2];
-			b0 = pW[2+ldw*0];
-			c00 -= a0*b0;
-			b1 = pW[2+ldw*1];
-			c01 -= a0*b1;
-			//
-			a0 = pD[ll+jj*sdd+ps*3];
-			b0 = pW[3+ldw*0];
-			c00 -= a0*b0;
-			b1 = pW[3+ldw*1];
-			c01 -= a0*b1;
-			// store
-			pC[ll+jj*sdc+ps*0] = c00;
-			pC[ll+jj*sdc+ps*1] = c01;
-			// load
-			c00 = pC[ll+jj*sdc+ps*2];
-			c01 = pC[ll+jj*sdc+ps*3];
-			//
-			a0 = pD[ll+jj*sdd+ps*0];
-			b0 = pW[0+ldw*2];
-			c00 -= a0*b0;
-			b1 = pW[0+ldw*3];
-			c01 -= a0*b1;
-			//
-			a0 = pD[ll+jj*sdd+ps*1];
-			b0 = pW[1+ldw*2];
-			c00 -= a0*b0;
-			b1 = pW[1+ldw*3];
-			c01 -= a0*b1;
-			//
-			a0 = pD[ll+jj*sdd+ps*2];
-			b0 = pW[2+ldw*2];
-			c00 -= a0*b0;
-			b1 = pW[2+ldw*3];
-			c01 -= a0*b1;
-			//
-			a0 = pD[ll+jj*sdd+ps*3];
-			b0 = pW[3+ldw*2];
-			c00 -= a0*b0;
-			b1 = pW[3+ldw*3];
-			c01 -= a0*b1;
-			// store
-			pC[ll+jj*sdc+ps*2] = c00;
-			pC[ll+jj*sdc+ps*3] = c01;
-			}
 		}
 	for( ; ii<n; ii++)
 		{
+		pW = pW0+ii*ps;
 		pC = pC0+ii*ps;
-		// compute W^T = C^T * V
-		tmp = pC[0+ps*0];
-		pW[0+ldw*0] = tmp;
-		if(m>1)
-			{
-			d0 = pVt[0+ps*1];
-			tmp = pC[1+ps*0];
-			pW[0+ldw*0] += d0 * tmp;
-			pW[1+ldw*0] = tmp;
-			if(m>2)
-				{
-				d0 = pVt[0+ps*2];
-				d1 = pVt[1+ps*2];
-				tmp = pC[2+ps*0];
-				pW[0+ldw*0] += d0 * tmp;
-				pW[1+ldw*0] += d1 * tmp;
-				pW[2+ldw*0] = tmp;
-				if(m>3)
-					{
-					d0 = pVt[0+ps*3];
-					d1 = pVt[1+ps*3];
-					d2 = pVt[2+ps*3];
-					tmp = pC[3+ps*0];
-					pW[0+ldw*0] += d0 * tmp;
-					pW[1+ldw*0] += d1 * tmp;
-					pW[2+ldw*0] += d2 * tmp;
-					pW[3+ldw*0] = tmp;
-					}
-				}
-			}
-		for(jj=4; jj<m-3; jj+=4)
-			{
-			//
-			d0 = pVt[0+ps*(0+jj)];
-			d1 = pVt[1+ps*(0+jj)];
-			d2 = pVt[2+ps*(0+jj)];
-			d3 = pVt[3+ps*(0+jj)];
-			tmp = pC[0+jj*sdc+ps*0];
-			pW[0+ldw*0] += d0 * tmp;
-			pW[1+ldw*0] += d1 * tmp;
-			pW[2+ldw*0] += d2 * tmp;
-			pW[3+ldw*0] += d3 * tmp;
-			//
-			d0 = pVt[0+ps*(1+jj)];
-			d1 = pVt[1+ps*(1+jj)];
-			d2 = pVt[2+ps*(1+jj)];
-			d3 = pVt[3+ps*(1+jj)];
-			tmp = pC[1+jj*sdc+ps*0];
-			pW[0+ldw*0] += d0 * tmp;
-			pW[1+ldw*0] += d1 * tmp;
-			pW[2+ldw*0] += d2 * tmp;
-			pW[3+ldw*0] += d3 * tmp;
-			//
-			d0 = pVt[0+ps*(2+jj)];
-			d1 = pVt[1+ps*(2+jj)];
-			d2 = pVt[2+ps*(2+jj)];
-			d3 = pVt[3+ps*(2+jj)];
-			tmp = pC[2+jj*sdc+ps*0];
-			pW[0+ldw*0] += d0 * tmp;
-			pW[1+ldw*0] += d1 * tmp;
-			pW[2+ldw*0] += d2 * tmp;
-			pW[3+ldw*0] += d3 * tmp;
-			//
-			d0 = pVt[0+ps*(3+jj)];
-			d1 = pVt[1+ps*(3+jj)];
-			d2 = pVt[2+ps*(3+jj)];
-			d3 = pVt[3+ps*(3+jj)];
-			tmp = pC[3+jj*sdc+ps*0];
-			pW[0+ldw*0] += d0 * tmp;
-			pW[1+ldw*0] += d1 * tmp;
-			pW[2+ldw*0] += d2 * tmp;
-			pW[3+ldw*0] += d3 * tmp;
-			}
-		for(ll=0; ll<m-jj; ll++)
-			{
-			d0 = pVt[0+ps*(ll+jj)];
-			d1 = pVt[1+ps*(ll+jj)];
-			d2 = pVt[2+ps*(ll+jj)];
-			d3 = pVt[3+ps*(ll+jj)];
-			tmp = pC[ll+jj*sdc+ps*0];
-			pW[0+ldw*0] += d0 * tmp;
-			pW[1+ldw*0] += d1 * tmp;
-			pW[2+ldw*0] += d2 * tmp;
-			pW[3+ldw*0] += d3 * tmp;
-			}
-		// compute W^T *= T
-		pW[3+ldw*0] = pT[3+ldt*0]*pW[0+ldw*0] + pT[3+ldt*1]*pW[1+ldw*0] + pT[3+ldt*2]*pW[2+ldw*0] + pT[3+ldt*3]*pW[3+ldw*0];
-		pW[2+ldw*0] = pT[2+ldt*0]*pW[0+ldw*0] + pT[2+ldt*1]*pW[1+ldw*0] + pT[2+ldt*2]*pW[2+ldw*0];
-		pW[1+ldw*0] = pT[1+ldt*0]*pW[0+ldw*0] + pT[1+ldt*1]*pW[1+ldw*0];
-		pW[0+ldw*0] = pT[0+ldt*0]*pW[0+ldw*0];
 		// compute C -= V * W^T
 		jj = 0;
 		// load
@@ -1600,7 +1516,7 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 		a1 = pD[1+jj*sdd+ps*0];
 		a2 = pD[2+jj*sdd+ps*0];
 		a3 = pD[3+jj*sdd+ps*0];
-		b0 = pW[0+ldw*0];
+		b0 = pW[0+ps*0];
 		c00 -= b0;
 		c10 -= a1*b0;
 		c20 -= a2*b0;
@@ -1608,18 +1524,18 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 		// rank2
 		a2 = pD[2+jj*sdd+ps*1];
 		a3 = pD[3+jj*sdd+ps*1];
-		b0 = pW[1+ldw*0];
+		b0 = pW[1+ps*0];
 		c10 -= b0;
 		c20 -= a2*b0;
 		c30 -= a3*b0;
 		// rank3
 		a3 = pD[3+jj*sdd+ps*2];
-		b0 = pW[2+ldw*0];
+		b0 = pW[2+ps*0];
 		c20 -= b0;
 		c30 -= a3*b0;
 		// rank4
 		a3 = pD[3+jj*sdd+ps*3];
-		b0 = pW[3+ldw*0];
+		b0 = pW[3+ps*0];
 		c30 -= b0;
 		// store
 		pC[0+jj*sdc+ps*0] = c00;
@@ -1635,6 +1551,171 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 					}
 				}
 			}
+		}
+
+#if 0
+	jj = 4;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; jj<m-11; jj+=12)
+		{
+		kernel_dger4_sub_12_lib4(n, &pD[jj*sdd], sdd, &pW0[0], &pC0[jj*sdc], sdc);
+		}
+	for(; jj<m-7; jj+=8)
+		{
+		kernel_dger4_sub_8_lib4(n, &pD[jj*sdd], sdd, &pW0[0], &pC0[jj*sdc], sdc);
+		}
+#endif
+	for(; jj<m-3; jj+=4)
+		{
+		kernel_dger4_sub_4_lib4(n, &pD[jj*sdd], &pW0[0], &pC0[jj*sdc]);
+		}
+	if(jj<m)
+		{
+		kernel_dger4_sub_4_vs_lib4(n, &pD[jj*sdd], &pW0[0], &pC0[jj*sdc], m-jj);
+		}
+#else
+	ii = 0;
+	for( ; ii<n-3; ii+=4)
+		{
+		pW = pW0+ii*ps;
+		pC = pC0+ii*ps;
+		for(jj=4; jj<m-3; jj+=4)
+			{
+			// load
+			_c0 = _mm256_load_pd( &pC[0+jj*sdc+ps*0] );
+			_c1 = _mm256_load_pd( &pC[0+jj*sdc+ps*1] );
+			_c2 = _mm256_load_pd( &pC[0+jj*sdc+ps*2] );
+			_c3 = _mm256_load_pd( &pC[0+jj*sdc+ps*3] );
+			//
+			_a0 = _mm256_load_pd( &pD[0+jj*sdd+ps*0] );
+			_b0 = _mm256_broadcast_sd( &pW[0+ps*0] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c0 = _mm256_sub_pd( _c0, _tp );
+			_b0 = _mm256_broadcast_sd( &pW[0+ps*1] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c1 = _mm256_sub_pd( _c1, _tp );
+			_b0 = _mm256_broadcast_sd( &pW[0+ps*2] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c2 = _mm256_sub_pd( _c2, _tp );
+			_b0 = _mm256_broadcast_sd( &pW[0+ps*3] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c3 = _mm256_sub_pd( _c3, _tp );
+			//
+			_a0 = _mm256_load_pd( &pD[0+jj*sdd+ps*1] );
+			_b0 = _mm256_broadcast_sd( &pW[1+ps*0] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c0 = _mm256_sub_pd( _c0, _tp );
+			_b0 = _mm256_broadcast_sd( &pW[1+ps*1] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c1 = _mm256_sub_pd( _c1, _tp );
+			_b0 = _mm256_broadcast_sd( &pW[1+ps*2] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c2 = _mm256_sub_pd( _c2, _tp );
+			_b0 = _mm256_broadcast_sd( &pW[1+ps*3] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c3 = _mm256_sub_pd( _c3, _tp );
+			//
+			_a0 = _mm256_load_pd( &pD[0+jj*sdd+ps*2] );
+			_b0 = _mm256_broadcast_sd( &pW[2+ps*0] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c0 = _mm256_sub_pd( _c0, _tp );
+			_b0 = _mm256_broadcast_sd( &pW[2+ps*1] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c1 = _mm256_sub_pd( _c1, _tp );
+			_b0 = _mm256_broadcast_sd( &pW[2+ps*2] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c2 = _mm256_sub_pd( _c2, _tp );
+			_b0 = _mm256_broadcast_sd( &pW[2+ps*3] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c3 = _mm256_sub_pd( _c3, _tp );
+			//
+			_a0 = _mm256_load_pd( &pD[0+jj*sdd+ps*3] );
+			_b0 = _mm256_broadcast_sd( &pW[3+ps*0] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c0 = _mm256_sub_pd( _c0, _tp );
+			_b0 = _mm256_broadcast_sd( &pW[3+ps*1] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c1 = _mm256_sub_pd( _c1, _tp );
+			_b0 = _mm256_broadcast_sd( &pW[3+ps*2] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c2 = _mm256_sub_pd( _c2, _tp );
+			_b0 = _mm256_broadcast_sd( &pW[3+ps*3] );
+			_tp = _mm256_mul_pd( _a0, _b0 );
+			_c3 = _mm256_sub_pd( _c3, _tp );
+			// store
+			_mm256_store_pd( &pC[0+jj*sdc+ps*0], _c0 );
+			_mm256_store_pd( &pC[0+jj*sdc+ps*1], _c1 );
+			_mm256_store_pd( &pC[0+jj*sdc+ps*2], _c2 );
+			_mm256_store_pd( &pC[0+jj*sdc+ps*3], _c3 );
+			}
+		for(ll=0; ll<m-jj; ll++)
+			{
+			// load
+			c00 = pC[ll+jj*sdc+ps*0];
+			c01 = pC[ll+jj*sdc+ps*1];
+			//
+			a0 = pD[ll+jj*sdd+ps*0];
+			b0 = pW[0+ps*0];
+			c00 -= a0*b0;
+			b1 = pW[0+ps*1];
+			c01 -= a0*b1;
+			//
+			a0 = pD[ll+jj*sdd+ps*1];
+			b0 = pW[1+ps*0];
+			c00 -= a0*b0;
+			b1 = pW[1+ps*1];
+			c01 -= a0*b1;
+			//
+			a0 = pD[ll+jj*sdd+ps*2];
+			b0 = pW[2+ps*0];
+			c00 -= a0*b0;
+			b1 = pW[2+ps*1];
+			c01 -= a0*b1;
+			//
+			a0 = pD[ll+jj*sdd+ps*3];
+			b0 = pW[3+ps*0];
+			c00 -= a0*b0;
+			b1 = pW[3+ps*1];
+			c01 -= a0*b1;
+			// store
+			pC[ll+jj*sdc+ps*0] = c00;
+			pC[ll+jj*sdc+ps*1] = c01;
+			// load
+			c00 = pC[ll+jj*sdc+ps*2];
+			c01 = pC[ll+jj*sdc+ps*3];
+			//
+			a0 = pD[ll+jj*sdd+ps*0];
+			b0 = pW[0+ps*2];
+			c00 -= a0*b0;
+			b1 = pW[0+ps*3];
+			c01 -= a0*b1;
+			//
+			a0 = pD[ll+jj*sdd+ps*1];
+			b0 = pW[1+ps*2];
+			c00 -= a0*b0;
+			b1 = pW[1+ps*3];
+			c01 -= a0*b1;
+			//
+			a0 = pD[ll+jj*sdd+ps*2];
+			b0 = pW[2+ps*2];
+			c00 -= a0*b0;
+			b1 = pW[2+ps*3];
+			c01 -= a0*b1;
+			//
+			a0 = pD[ll+jj*sdd+ps*3];
+			b0 = pW[3+ps*2];
+			c00 -= a0*b0;
+			b1 = pW[3+ps*3];
+			c01 -= a0*b1;
+			// store
+			pC[ll+jj*sdc+ps*2] = c00;
+			pC[ll+jj*sdc+ps*3] = c01;
+			}
+		}
+	for( ; ii<n; ii++)
+		{
+		pW = pW0+ii*ps;
+		pC = pC0+ii*ps;
 		for(jj=4; jj<m-3; jj+=4)
 			{
 			// load
@@ -1647,7 +1728,7 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 			a1 = pD[1+jj*sdd+ps*0];
 			a2 = pD[2+jj*sdd+ps*0];
 			a3 = pD[3+jj*sdd+ps*0];
-			b0 = pW[0+ldw*0];
+			b0 = pW[0+ps*0];
 			c00 -= a0*b0;
 			c10 -= a1*b0;
 			c20 -= a2*b0;
@@ -1657,7 +1738,7 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 			a1 = pD[1+jj*sdd+ps*1];
 			a2 = pD[2+jj*sdd+ps*1];
 			a3 = pD[3+jj*sdd+ps*1];
-			b0 = pW[1+ldw*0];
+			b0 = pW[1+ps*0];
 			c00 -= a0*b0;
 			c10 -= a1*b0;
 			c20 -= a2*b0;
@@ -1667,7 +1748,7 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 			a1 = pD[1+jj*sdd+ps*2];
 			a2 = pD[2+jj*sdd+ps*2];
 			a3 = pD[3+jj*sdd+ps*2];
-			b0 = pW[2+ldw*0];
+			b0 = pW[2+ps*0];
 			c00 -= a0*b0;
 			c10 -= a1*b0;
 			c20 -= a2*b0;
@@ -1677,7 +1758,7 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 			a1 = pD[1+jj*sdd+ps*3];
 			a2 = pD[2+jj*sdd+ps*3];
 			a3 = pD[3+jj*sdd+ps*3];
-			b0 = pW[3+ldw*0];
+			b0 = pW[3+ps*0];
 			c00 -= a0*b0;
 			c10 -= a1*b0;
 			c20 -= a2*b0;
@@ -1694,24 +1775,25 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 			c00 = pC[ll+jj*sdc+ps*0];
 			//
 			a0 = pD[ll+jj*sdd+ps*0];
-			b0 = pW[0+ldw*0];
+			b0 = pW[0+ps*0];
 			c00 -= a0*b0;
 			//
 			a0 = pD[ll+jj*sdd+ps*1];
-			b0 = pW[1+ldw*0];
+			b0 = pW[1+ps*0];
 			c00 -= a0*b0;
 			//
 			a0 = pD[ll+jj*sdd+ps*2];
-			b0 = pW[2+ldw*0];
+			b0 = pW[2+ps*0];
 			c00 -= a0*b0;
 			//
 			a0 = pD[ll+jj*sdd+ps*3];
-			b0 = pW[3+ldw*0];
+			b0 = pW[3+ps*0];
 			c00 -= a0*b0;
 			// store
 			pC[ll+jj*sdc+ps*0] = c00;
 			}
 		}
+#endif
 
 	return;
 	}

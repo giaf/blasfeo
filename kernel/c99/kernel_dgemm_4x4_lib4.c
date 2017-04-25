@@ -2001,9 +2001,9 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 	double
 		a_0, a_1, a_2, a_3,
 		b_0, b_1, b_2, b_3,
-		c_00=0, //c_01=0, c_02=0, c_03=0,
-		c_10=0, c_11=0, //c_12=0, c_13=0,
-		c_20=0, c_21=0, c_22=0, //c_23=0,
+		c_00=0,
+		c_10=0, c_11=0,
+		c_20=0, c_21=0, c_22=0,
 		c_30=0, c_31=0, c_32=0, c_33=0;
 	
 	int k;
@@ -2028,19 +2028,13 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 		c_20 += a_2 * b_0;
 		c_30 += a_3 * b_0;
 
-//		c_01 += a_0 * b_1;
 		c_11 += a_1 * b_1;
 		c_21 += a_2 * b_1;
 		c_31 += a_3 * b_1;
 
-//		c_02 += a_0 * b_2;
-//		c_12 += a_1 * b_2;
 		c_22 += a_2 * b_2;
 		c_32 += a_3 * b_2;
 
-//		c_03 += a_0 * b_3;
-//		c_13 += a_1 * b_3;
-//		c_23 += a_2 * b_3;
 		c_33 += a_3 * b_3;
 
 
@@ -2061,19 +2055,13 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 		c_20 += a_2 * b_0;
 		c_30 += a_3 * b_0;
 
-//		c_01 += a_0 * b_1;
 		c_11 += a_1 * b_1;
 		c_21 += a_2 * b_1;
 		c_31 += a_3 * b_1;
 
-//		c_02 += a_0 * b_2;
-//		c_12 += a_1 * b_2;
 		c_22 += a_2 * b_2;
 		c_32 += a_3 * b_2;
 
-//		c_03 += a_0 * b_3;
-//		c_13 += a_1 * b_3;
-//		c_23 += a_2 * b_3;
 		c_33 += a_3 * b_3;
 
 
@@ -2094,19 +2082,13 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 		c_20 += a_2 * b_0;
 		c_30 += a_3 * b_0;
 
-//		c_01 += a_0 * b_1;
 		c_11 += a_1 * b_1;
 		c_21 += a_2 * b_1;
 		c_31 += a_3 * b_1;
 
-//		c_02 += a_0 * b_2;
-//		c_12 += a_1 * b_2;
 		c_22 += a_2 * b_2;
 		c_32 += a_3 * b_2;
 
-//		c_03 += a_0 * b_3;
-//		c_13 += a_1 * b_3;
-//		c_23 += a_2 * b_3;
 		c_33 += a_3 * b_3;
 
 
@@ -2127,19 +2109,13 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 		c_20 += a_2 * b_0;
 		c_30 += a_3 * b_0;
 
-//		c_01 += a_0 * b_1;
 		c_11 += a_1 * b_1;
 		c_21 += a_2 * b_1;
 		c_31 += a_3 * b_1;
 
-//		c_02 += a_0 * b_2;
-//		c_12 += a_1 * b_2;
 		c_22 += a_2 * b_2;
 		c_32 += a_3 * b_2;
 
-//		c_03 += a_0 * b_3;
-//		c_13 += a_1 * b_3;
-//		c_23 += a_2 * b_3;
 		c_33 += a_3 * b_3;
 
 		A += 16;
@@ -2167,19 +2143,13 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 		c_20 += a_2 * b_0;
 		c_30 += a_3 * b_0;
 
-//		c_01 += a_0 * b_1;
 		c_11 += a_1 * b_1;
 		c_21 += a_2 * b_1;
 		c_31 += a_3 * b_1;
 
-//		c_02 += a_0 * b_2;
-//		c_12 += a_1 * b_2;
 		c_22 += a_2 * b_2;
 		c_32 += a_3 * b_2;
 
-//		c_03 += a_0 * b_3;
-//		c_13 += a_1 * b_3;
-//		c_23 += a_2 * b_3;
 		c_33 += a_3 * b_3;
 
 		A += 4;
@@ -2192,19 +2162,13 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 	c_20 = beta[0]*C[2+bs*0] + alpha[0]*c_20;
 	c_30 = beta[0]*C[3+bs*0] + alpha[0]*c_30;
 
-//	c_01 = beta[0]*C[0+bs*1] + alpha[0]*c_01;
 	c_11 = beta[0]*C[1+bs*1] + alpha[0]*c_11;
 	c_21 = beta[0]*C[2+bs*1] + alpha[0]*c_21;
 	c_31 = beta[0]*C[3+bs*1] + alpha[0]*c_31;
 
-//	c_02 = beta[0]*C[0+bs*2] + alpha[0]*c_02;
-//	c_12 = beta[0]*C[1+bs*2] + alpha[0]*c_12;
 	c_22 = beta[0]*C[2+bs*2] + alpha[0]*c_22;
 	c_32 = beta[0]*C[3+bs*2] + alpha[0]*c_32;
 
-//	c_03 = beta[0]*C[0+bs*3] + alpha[0]*c_03;
-//	c_13 = beta[0]*C[1+bs*3] + alpha[0]*c_13;
-//	c_23 = beta[0]*C[2+bs*3] + alpha[0]*c_23;
 	c_33 = beta[0]*C[3+bs*3] + alpha[0]*c_33;
 
 	if(km>=4)
@@ -2217,7 +2181,6 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 		if(kn==1)
 			return;
 
-//		D[0+bs*1] = c_01;
 		D[1+bs*1] = c_11;
 		D[2+bs*1] = c_21;
 		D[3+bs*1] = c_31;
@@ -2225,17 +2188,12 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 		if(kn==2)
 			return;
 
-//		D[0+bs*2] = c_02;
-//		D[1+bs*2] = c_12;
 		D[2+bs*2] = c_22;
 		D[3+bs*2] = c_32;
 
 		if(kn==3)
 			return;
 
-//		D[0+bs*3] = c_03;
-//		D[1+bs*3] = c_13;
-//		D[2+bs*3] = c_23;
 		D[3+bs*3] = c_33;
 		}
 	else if(km>=3)
@@ -2247,23 +2205,13 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 		if(kn==1)
 			return;
 
-//		D[0+bs*1] = c_01;
 		D[1+bs*1] = c_11;
 		D[2+bs*1] = c_21;
 
 		if(kn==2)
 			return;
 
-//		D[0+bs*2] = c_02;
-//		D[1+bs*2] = c_12;
 		D[2+bs*2] = c_22;
-
-//		if(kn==3)
-//			return;
-
-//		D[0+bs*3] = c_03;
-//		D[1+bs*3] = c_13;
-//		D[2+bs*3] = c_23;
 		}
 	else if(km>=2)
 		{
@@ -2273,39 +2221,11 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 		if(kn==1)
 			return;
 
-//		D[0+bs*1] = c_01;
 		D[1+bs*1] = c_11;
-
-//		if(kn==2)
-//			return;
-
-//		D[0+bs*2] = c_02;
-//		D[1+bs*2] = c_12;
-
-//		if(kn==3)
-//			return;
-
-//		D[0+bs*3] = c_03;
-//		D[1+bs*3] = c_13;
 		}
 	else //if(km>=1)
 		{
 		D[0+bs*0] = c_00;
-
-//		if(kn==1)
-//			return;
-
-//		D[0+bs*1] = c_01;
-
-//		if(kn==2)
-//			return;
-
-//		D[0+bs*2] = c_02;
-
-//		if(kn==3)
-//			return;
-
-//		D[0+bs*3] = c_03;
 		}
 
 	}
