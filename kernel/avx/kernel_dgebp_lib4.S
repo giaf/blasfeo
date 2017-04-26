@@ -148,8 +148,8 @@
 
 
 
-//                              1      2          3        4          5
-// void kernel_dger4_sub_8_lib4(int k, double *A, int sda, double *B, double *C)
+//                               1      2          3        4          5
+// void kernel_dger4_sub_8r_lib4(int k, double *A, int sda, double *B, double *C)
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -571,8 +571,8 @@ kernel_dger4_sub_8r_vs_lib4:
 
 
 
-//                              1      2          3          4
-// void kernel_dger4_sub_4_lib4(int n, double *A, double *B, double *C)
+//                               1      2          3          4
+// void kernel_dger4_sub_4r_lib4(int n, double *A, double *B, double *C)
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
