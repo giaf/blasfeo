@@ -324,8 +324,8 @@ int main()
 //			dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
-			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
-//			dgelqf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
+//			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
+			dgelqf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
 //			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);

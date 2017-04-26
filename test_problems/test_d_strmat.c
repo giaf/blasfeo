@@ -234,18 +234,18 @@ int main()
 //	d_print_strmat(n, n, &sD, 0, 0);
 //	return 0;
 
-	d_print_strmat(n, n, &sC, 0, 0);
-	dgese_libstr(n, n, 1.0, &sB, 0, 0);
+//	d_print_strmat(n, n, &sC, 0, 0);
+//	dgese_libstr(n, n, 1.0, &sB, 0, 0);
 //	kernel_dger4_sub_4_lib4(6, sB.pA, sA.pA, sC.pA);
 //	kernel_dger4_sub_4_vs_lib4(6, sB.pA, sA.pA, sC.pA, 1);
 //	kernel_dger4_sub_8_lib4(5, sB.pA, sB.cn, sA.pA, sC.pA, sC.cn);
 //	kernel_dger4_sub_8_vs_lib4(5, sB.pA, sB.cn, sA.pA, sC.pA, sC.cn, 5);
 //	kernel_dger4_sub_12_lib4(5, sB.pA, sB.cn, sA.pA, sC.pA, sC.cn);
 //	kernel_dger4_sub_12_vs_lib4(5, sB.pA, sB.cn, sA.pA, sC.pA, sC.cn, 9);
-	kernel_dger4_sub_8c_lib4(9, sB.pA, sA.cn, sA.pA, sC.pA, sC.cn);
+//	kernel_dger4_sub_8c_lib4(9, sB.pA, sA.cn, sA.pA, sC.pA, sC.cn);
 //	kernel_dger4_sub_4c_lib4(9, sB.pA, sA.cn, sA.pA, sC.pA, sC.cn);
-	d_print_strmat(n, n, &sC, 0, 0);
-	return 0;
+//	d_print_strmat(n, n, &sC, 0, 0);
+//	return 0;
 
 #if 1
 	dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sC, 0, 0);
@@ -278,14 +278,17 @@ int main()
 //	d_print_strmat(n, n, &sA, 0, 0);
 	d_print_strmat(n, n, &sC, 0, 0);
 //	printf("\n%f\n", DGEEL_LIBSTR(&sA, 0, 0));
-	int qr_work_size = dgeqrf_work_size_libstr(n, n);
+//	int qr_work_size = dgeqrf_work_size_libstr(n, n);
+	int qr_work_size = dgelqf_work_size_libstr(n, n);
 	void *qr_work;
 	v_zeros_align(&qr_work, qr_work_size);
-	dgeqrf_libstr(10, 9, &sC, 0, 0, &sD, 0, 0, qr_work);
-//	dgecp_libstr(16, 16, 1.0, &sC, 0, 0, &sD, 0, 0);
+//	dgeqrf_libstr(10, 10, &sC, 0, 0, &sD, 0, 0, qr_work);
+	dgelqf_libstr(10, 10, &sC, 0, 0, &sD, 0, 0, qr_work);
+//	dgecp_libstr(10, 10, 1.0, &sC, 0, 0, &sD, 0, 0);
 //	kernel_dgeqrf_4_lib4(16, 12, sD.pA, sD.cn, sD.dA, qr_work);
 //	d_print_strmat(n, n, &sA, 0, 0);
 //	kernel_dgeqrf_vs_lib4(10, 16, 0, sD.pA+0, sD.cn, sD.dA);
+//	kernel_dgelqf_vs_lib4(10, 10, 10, 0, sD.pA+0, sD.cn, sD.dA);
 	d_print_strmat(n, n, &sD, 0, 0);
 	free(qr_work);
 	return 0;

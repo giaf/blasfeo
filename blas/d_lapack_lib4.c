@@ -2374,16 +2374,6 @@ void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	if(m<=0 | n<=0)
 		return;
 	const int ps = 4;
-//	if(n%4!=0)
-//		{
-//		printf("\ndgeqrf_libstr: feature not implemented yet: n=%d\n", n);
-//		exit(1);
-//		}
-//	if(ci%ps!=0 | di%ps!=0)
-//		{
-//		printf("\ndgeqrf_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
-//		exit(1);
-//		}
 	int sdc = sC->cn;
 	int sdd = sD->cn;
 	double *pC = &(DMATEL_LIBSTR(sC,ci,cj));
@@ -2434,6 +2424,77 @@ void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		{
 		kernel_dgeqrf_vs_lib4(m-ii, n-ii, imax-ii, ii&(ps-1), pD+ii*sdd+ii*ps, sdd, dD+ii);
 		}
+	return;
+	}
+
+
+
+int dgelqf_work_size_libstr(int m, int n)
+	{
+	return 0;
+	}
+
+
+
+void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, void *work)
+	{
+	if(m<=0 | n<=0)
+		return;
+	const int ps = 4;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	double *pC = &(DMATEL_LIBSTR(sC,ci,cj));
+	double *pD = &(DMATEL_LIBSTR(sD,di,dj));
+	double *dD = sD->dA + di;
+	int cm = (m+ps-1)/ps*ps;
+	int cn = (n+ps-1)/ps*ps;
+	double *pVt = (double *) work;
+	work += ps*cm*sizeof(double);
+	double *pW = (double *) work;
+	work += ps*cn*sizeof(double);
+	if(pC!=pD)
+		dgecp_lib(m, n, 1.0, ci&(ps-1), pC, sdc, di&(ps-1), pD, sdd);
+	int ii;
+	int imax0 = (ps-(di&(ps-1)))&(ps-1);
+	int imax = m<n ? m : n;
+#if 1
+	kernel_dgelqf_vs_lib4(m, n, imax, di&(ps-1), pD, sdd, dD);
+#else
+	imax0 = imax<imax0 ? imax : imax0;
+	if(imax0>0)
+		{
+		kernel_dgeqrf_vs_lib4(m, n, imax0, di&(ps-1), pD, sdd, dD);
+		pD += imax0-ps+ps*sdd+imax0*ps;
+		dD += imax0;
+		m -= imax0;
+		n -= imax0;
+		imax -= imax0;
+		}
+	for(ii=0; ii<imax-3; ii+=4)
+		{
+		kernel_dgeqrf_4_lib4(m-ii, pD+ii*sdd+ii*ps, sdd, dD+ii);
+#if 0
+		kernel_dlarf_4_lib4(m-ii, n-ii-4, pD+ii*sdd+ii*ps, sdd, dD+ii, pD+ii*sdd+(ii+4)*ps, sdd);
+#else
+		kernel_dgetr_4_0_lib4(m-ii, pD+ii*sdd+ii*ps, sdd, pVt);
+		pVt[0+ps*0] = 1.0;
+		pVt[1+ps*0] = 0.0;
+		pVt[2+ps*0] = 0.0;
+		pVt[3+ps*0] = 0.0;
+		pVt[1+ps*1] = 1.0;
+		pVt[2+ps*1] = 0.0;
+		pVt[3+ps*1] = 0.0;
+		pVt[2+ps*2] = 1.0;
+		pVt[3+ps*2] = 0.0;
+		pVt[3+ps*3] = 1.0;
+		kernel_dlarf_t_4_lib4(m-ii, n-ii-4, pD+ii*sdd+ii*ps, sdd, pVt, dD+ii, pD+ii*sdd+(ii+4)*ps, sdd, pW);
+#endif
+		}
+	if(ii<imax)
+		{
+		kernel_dgeqrf_vs_lib4(m-ii, n-ii, imax-ii, ii&(ps-1), pD+ii*sdd+ii*ps, sdd, dD+ii);
+		}
+#endif
 	return;
 	}
 
