@@ -1663,20 +1663,20 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 #if defined(TARGET_X64_INTEL_HASWELL)
 	for(; jj<m-11; jj+=12)
 		{
-		kernel_dger4_sub_12_lib4(n, &pD[jj*sdd], sdd, &pW0[0], &pC0[jj*sdc], sdc);
+		kernel_dger4_sub_12r_lib4(n, &pD[jj*sdd], sdd, &pW0[0], &pC0[jj*sdc], sdc);
 		}
 #endif
 	for(; jj<m-7; jj+=8)
 		{
-		kernel_dger4_sub_8_lib4(n, &pD[jj*sdd], sdd, &pW0[0], &pC0[jj*sdc], sdc);
+		kernel_dger4_sub_8r_lib4(n, &pD[jj*sdd], sdd, &pW0[0], &pC0[jj*sdc], sdc);
 		}
 	for(; jj<m-3; jj+=4)
 		{
-		kernel_dger4_sub_4_lib4(n, &pD[jj*sdd], &pW0[0], &pC0[jj*sdc]);
+		kernel_dger4_sub_4r_lib4(n, &pD[jj*sdd], &pW0[0], &pC0[jj*sdc]);
 		}
 	if(jj<m)
 		{
-		kernel_dger4_sub_4_vs_lib4(n, &pD[jj*sdd], &pW0[0], &pC0[jj*sdc], m-jj);
+		kernel_dger4_sub_4r_vs_lib4(n, &pD[jj*sdd], &pW0[0], &pC0[jj*sdc], m-jj);
 		}
 #else
 	ii = 0;

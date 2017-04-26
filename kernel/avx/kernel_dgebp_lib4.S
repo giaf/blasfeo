@@ -153,16 +153,16 @@
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dger4_sub_8_lib4
-	.type kernel_dger4_sub_8_lib4, @function
-kernel_dger4_sub_8_lib4:
+	.globl kernel_dger4_sub_8r_lib4
+	.type kernel_dger4_sub_8r_lib4, @function
+kernel_dger4_sub_8r_lib4:
 #elif defined(OS_MAC)
-	.globl _kernel_dger4_sub_8_lib4
-_kernel_dger4_sub_8_lib4:
+	.globl _kernel_dger4_sub_8r_lib4
+_kernel_dger4_sub_8r_lib4:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dger4_sub_8_lib4
-	.def kernel_dger4_sub_8_lib4; .scl 2; .type 32; .endef
-kernel_dger4_sub_8_lib4:
+	.globl kernel_dger4_sub_8r_lib4
+	.def kernel_dger4_sub_8r_lib4; .scl 2; .type 32; .endef
+kernel_dger4_sub_8r_lib4:
 #endif
 	
 	PROLOGUE
@@ -347,7 +347,7 @@ kernel_dger4_sub_8_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dger4_sub_8_lib4, .-kernel_dger4_sub_8_lib4
+	.size	kernel_dger4_sub_8r_lib4, .-kernel_dger4_sub_8r_lib4
 #endif
 
 
@@ -359,16 +359,16 @@ kernel_dger4_sub_8_lib4:
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dger4_sub_8_vs_lib4
-	.type kernel_dger4_sub_8_vs_lib4, @function
-kernel_dger4_sub_8_vs_lib4:
+	.globl kernel_dger4_sub_8r_vs_lib4
+	.type kernel_dger4_sub_8r_vs_lib4, @function
+kernel_dger4_sub_8r_vs_lib4:
 #elif defined(OS_MAC)
-	.globl _kernel_dger4_sub_8_vs_lib4
-_kernel_dger4_sub_8_vs_lib4:
+	.globl _kernel_dger4_sub_8r_vs_lib4
+_kernel_dger4_sub_8r_vs_lib4:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dger4_sub_8_vs_lib4
-	.def kernel_dger4_sub_8_vs_lib4; .scl 2; .type 32; .endef
-kernel_dger4_sub_8_vs_lib4:
+	.globl kernel_dger4_sub_8r_vs_lib4
+	.def kernel_dger4_sub_8r_vs_lib4; .scl 2; .type 32; .endef
+kernel_dger4_sub_8r_vs_lib4:
 #endif
 	
 	PROLOGUE
@@ -564,7 +564,7 @@ kernel_dger4_sub_8_vs_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dger4_sub_8_vs_lib4, .-kernel_dger4_sub_8_vs_lib4
+	.size	kernel_dger4_sub_8r_vs_lib4, .-kernel_dger4_sub_8r_vs_lib4
 #endif
 
 
@@ -576,16 +576,16 @@ kernel_dger4_sub_8_vs_lib4:
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dger4_sub_4_lib4
-	.type kernel_dger4_sub_4_lib4, @function
-kernel_dger4_sub_4_lib4:
+	.globl kernel_dger4_sub_4r_lib4
+	.type kernel_dger4_sub_4r_lib4, @function
+kernel_dger4_sub_4r_lib4:
 #elif defined(OS_MAC)
-	.globl _kernel_dger4_sub_4_lib4
-_kernel_dger4_sub_4_lib4:
+	.globl _kernel_dger4_sub_4r_lib4
+_kernel_dger4_sub_4r_lib4:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dger4_sub_4_lib4
-	.def kernel_dger4_sub_4_lib4; .scl 2; .type 32; .endef
-kernel_dger4_sub_4_lib4:
+	.globl kernel_dger4_sub_4r_lib4
+	.def kernel_dger4_sub_4r_lib4; .scl 2; .type 32; .endef
+kernel_dger4_sub_4r_lib4:
 #endif
 	
 	PROLOGUE
@@ -711,7 +711,7 @@ kernel_dger4_sub_4_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dger4_sub_4_lib4, .-kernel_dger4_sub_4_lib4
+	.size	kernel_dger4_sub_4r_lib4, .-kernel_dger4_sub_4r_lib4
 #endif
 
 
@@ -723,16 +723,16 @@ kernel_dger4_sub_4_lib4:
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dger4_sub_4_vs_lib4
-	.type kernel_dger4_sub_4_vs_lib4, @function
-kernel_dger4_sub_4_vs_lib4:
+	.globl kernel_dger4_sub_4r_vs_lib4
+	.type kernel_dger4_sub_4r_vs_lib4, @function
+kernel_dger4_sub_4r_vs_lib4:
 #elif defined(OS_MAC)
-	.globl _kernel_dger4_sub_4_vs_lib4
-_kernel_dger4_sub_4_vs_lib4:
+	.globl _kernel_dger4_sub_4r_vs_lib4
+_kernel_dger4_sub_4r_vs_lib4:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dger4_sub_4_vs_lib4
-	.def kernel_dger4_sub_4_vs_lib4; .scl 2; .type 32; .endef
-kernel_dger4_sub_4_vs_lib4:
+	.globl kernel_dger4_sub_4r_vs_lib4
+	.def kernel_dger4_sub_4r_vs_lib4; .scl 2; .type 32; .endef
+kernel_dger4_sub_4r_vs_lib4:
 #endif
 	
 	PROLOGUE
@@ -869,7 +869,7 @@ kernel_dger4_sub_4_vs_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dger4_sub_4_vs_lib4, .-kernel_dger4_sub_4_vs_lib4
+	.size	kernel_dger4_sub_4r_vs_lib4, .-kernel_dger4_sub_4r_vs_lib4
 #endif
 
 
