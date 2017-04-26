@@ -5149,7 +5149,11 @@ inner_store_l_4x4_gen_lib4:
 	jg		0f
 
 	// offset==0
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd		.LC04(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovapd		LC04(%rip), %ymm14
+#endif
 
 	vmaskmovpd	%ymm0, %ymm15,  0(%r11)
 	cmpl		$2, %r15d
@@ -5198,7 +5202,11 @@ inner_store_l_4x4_gen_lib4:
 	vandpd		%ymm12, %ymm15, %ymm12
 	vandpd		%ymm13, %ymm15, %ymm13
 
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd		.LC04(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovapd		LC04(%rip), %ymm14
+#endif
 
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
@@ -5246,7 +5254,11 @@ inner_store_l_4x4_gen_lib4:
 	vandpd		%ymm12, %ymm15, %ymm12
 	vandpd		%ymm13, %ymm15, %ymm13
 
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd		.LC04(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovapd		LC04(%rip), %ymm14
+#endif
 
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
@@ -5296,7 +5308,11 @@ inner_store_l_4x4_gen_lib4:
 	vandpd		%ymm12, %ymm15, %ymm12
 	vandpd		%ymm13, %ymm15, %ymm13
 
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd		.LC04(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovapd		LC04(%rip), %ymm14
+#endif
 
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
