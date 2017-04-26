@@ -155,6 +155,9 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 // D <= qr( C )
 void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, void *work);
 int dgeqrf_work_size_libstr(int m, int n); // in bytes
+// D <= lq( C )
+void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, void *work);
+int dgelqf_work_size_libstr(int m, int n); // in bytes
 
 
 

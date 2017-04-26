@@ -49,6 +49,7 @@
 #define STRVEC s_strvec
 
 #define GELQF_LIBSTR sgelqf_libstr
+#define GELQF_WORK_SIZE_LIBSTR sgelqf_work_size_libstr
 #define GEQRF_LIBSTR sgeqrf_libstr
 #define GEQRF_WORK_SIZE_LIBSTR sgeqrf_work_size_libstr
 #define GETF2_NOPIVOT sgetf2_nopivot
