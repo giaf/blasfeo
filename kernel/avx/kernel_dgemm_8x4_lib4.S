@@ -7085,7 +7085,7 @@ inner_store_l_8x4_gen_lib4:
 	jg		0f
 
 	// offset==0
-	vmovapd		.LC04, %ymm13
+	vmovapd		.LC04(%rip), %ymm13
 
 	vmaskmovpd	%ymm0, %ymm14,  0(%r11)
 	vmaskmovpd	%ymm4, %ymm15,  0(%r11, %r12, 1)
@@ -7154,7 +7154,7 @@ inner_store_l_8x4_gen_lib4:
 
 	vblendpd	$0x1, %ymm14, %ymm15, %ymm14
 
-	vmovapd		.LC04, %ymm15
+	vmovapd		.LC04(%rip), %ymm15
 
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm4, %ymm14, 0(%r11, %r12, 1)
@@ -7217,7 +7217,7 @@ inner_store_l_8x4_gen_lib4:
 
 	vblendpd	$0x3, %ymm14, %ymm15, %ymm14
 
-	vmovapd		.LC04, %ymm15
+	vmovapd		.LC04(%rip), %ymm15
 
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm4, %ymm14, 0(%r11, %r12, 1)
@@ -7287,7 +7287,7 @@ inner_store_l_8x4_gen_lib4:
 
 	vblendpd	$0x7, %ymm14, %ymm15, %ymm14
 
-	vmovapd		.LC04, %ymm15
+	vmovapd		.LC04(%rip), %ymm15
 
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm4, %ymm14, 0(%r11, %r12, 1)
@@ -7318,7 +7318,7 @@ inner_store_l_8x4_gen_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_store_8x4_gen_lib4, .-inner_store_8x4_gen_lib4
+	.size	inner_store_l_8x4_gen_lib4, .-inner_store_l_8x4_gen_lib4
 #endif
 #endif
 
