@@ -178,7 +178,7 @@ int main()
 //		int n = ll+1;
 //		int nrep = nnrep[0];
 //		n = n<12 ? 12 : n;
-		n = n<8 ? 8 : n;
+//		n = n<8 ? 8 : n;
 
 #else
 	int nn[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
@@ -313,7 +313,7 @@ int main()
 //			kernel_dger4_sub_8r_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
 //			kernel_dger4_sub_4r_lib4(n, sA.pA, sB.pA, sD.pA);
 //			kernel_dger4_sub_8c_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
-			kernel_dger4_sub_4c_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+//			kernel_dger4_sub_4c_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
 //			kernel_dgemm_nn_4x12_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 //			kernel_dgemm_nn_4x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 //			kernel_dgemm_nn_4x4_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
@@ -324,7 +324,8 @@ int main()
 //			dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
-//			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
+			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
+//			dgelqf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
 //			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
@@ -389,13 +390,13 @@ int main()
 //		float flop_operation = 4*16.0*2*n; // kernel 12x4
 //		float flop_operation = 3*16.0*2*n; // kernel 12x4
 //		float flop_operation = 2*16.0*2*n; // kernel 8x4
-		float flop_operation = 1*16.0*2*n; // kernel 4x4
+//		float flop_operation = 1*16.0*2*n; // kernel 4x4
 
 //		float flop_operation = 2.0*n*n*n; // dgemm
 //		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
 //		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
-//		float flop_operation = 4.0/3.0*n*n*n; // dgeqrf
+		float flop_operation = 4.0/3.0*n*n*n; // dgeqrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv
 //		float flop_operation = 1.0*n*n; // dtrmv dtrsv
 //		float flop_operation = 4.0*n*n; // dgemv_nt

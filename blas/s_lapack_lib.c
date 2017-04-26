@@ -48,6 +48,7 @@
 #define STRMAT s_strmat
 #define STRVEC s_strvec
 
+#define GELQF_LIBSTR sgelqf_libstr
 #define GEQRF_LIBSTR sgeqrf_libstr
 #define GEQRF_WORK_SIZE_LIBSTR sgeqrf_work_size_libstr
 #define GETF2_NOPIVOT sgetf2_nopivot
@@ -58,6 +59,7 @@
 #define SYRK_POTRF_LN_LIBSTR ssyrk_spotrf_ln_libstr
 
 #define COPY scopy_
+#define GELQF sgelqf_
 #define GEMM sgemm_
 #define GER sger_
 #define GEQRF sgeqrf_

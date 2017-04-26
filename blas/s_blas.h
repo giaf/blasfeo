@@ -57,6 +57,7 @@ int spotrf_(char *uplo, int *m, float *A, int *lda, int *info);
 int sgetrf_(int *m, int *n, float *A, int *lda, int *ipiv, int *info);
 void sgeqrf_(int *m, int *n, float *A, int *lda, float *tau, float *work, int *lwork, int *info);
 void sgeqr2_(int *m, int *n, float *A, int *lda, float *tau, float *work, int *info);
+void sgelqf_(int *m, int *n, float *A, int *lda, float *tau, float *work, int *lwork, int *info);
 
 
 

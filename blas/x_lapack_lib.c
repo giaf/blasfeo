@@ -1768,6 +1768,53 @@ void GEQRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 
 
 
+void GELQF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, void *work)
+	{
+	if(m<=0 | n<=0)
+		return;
+	int jj;
+	REAL *pC = sC->pA+ci+cj*sC->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	REAL *dD = sD->dA+di;
+	REAL *dwork = (REAL *) work;
+#if defined(REF_BLAS_BLIS)
+	long long i1 = 1;
+	long long info = -1;
+	long long mm = m;
+	long long nn = n;
+	long long ldc = sC->m;
+	long long ldd = sD->m;
+	if(!(pC==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&mm, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+		}
+//	GEQR2(&mm, &nn, pD, &ldd, dD, dwork, &info);
+	long long lwork = -1;
+	GELQF(&mm, &nn, pD, &ldd, dD, dwork, &lwork, &info);
+	lwork = dwork[0];
+	GELQF(&mm, &nn, pD, &ldd, dD, dwork, &lwork, &info);
+#else
+	int i1 = 1;
+	int info = -1;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(pC==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+		}
+//	GEQR2(&m, &n, pD, &ldd, dD, dwork, &info);
+	int lwork = -1;
+	GELQF(&m, &n, pD, &ldd, dD, dwork, &lwork, &info);
+	lwork = dwork[0];
+	GELQF(&m, &n, pD, &ldd, dD, dwork, &lwork, &info);
+#endif
+	return;
+	}
+
+
+
 #else
 
 #error : wrong LA choice
