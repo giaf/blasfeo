@@ -32,7 +32,7 @@ ifeq ($(REF_BLAS), 0)
 LIBS = -lm 
 endif
 ifeq ($(REF_BLAS), OPENBLAS)
-LIBS = /opt/openblas/lib/libopenblas.a -pthread -lm
+LIBS = /opt/openblas/lib/libopenblas.a -pthread -lgfortran -lm
 endif
 ifeq ($(REF_BLAS), BLIS)
 LIBS = /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -lgfortran -lm -fopenmp

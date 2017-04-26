@@ -1124,13 +1124,15 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 		_w0, _w1, _w2, _w3, _d0, _t0, _tp, _c0, _c1, _c2, _c3, _a0, _b0, _tz;
 
 	ii = 0;
-#if 0
+#if 1
 	double alpha = 1.0;
 	double beta = 0.0;
+#if defined(TARGET_X64_INTEL_HASWELL)
 	for( ; ii<n-11; ii+=12)
 		{
 		kernel_dgemm_nn_4x12_lib4(m, &alpha, &pVt[0+ps*0], 0, &pC0[0+ps*ii], sdc, &beta, &pW0[0+ps*ii], &pW0[0+ps*ii]);
 		}
+#endif
 	for( ; ii<n-7; ii+=8)
 		{
 		kernel_dgemm_nn_4x8_lib4(m, &alpha, &pVt[0+ps*0], 0, &pC0[0+ps*ii], sdc, &beta, &pW0[0+ps*ii], &pW0[0+ps*ii]);
@@ -1656,18 +1658,18 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 			}
 		}
 
-#if 0
+#if 1
 	jj = 4;
 #if defined(TARGET_X64_INTEL_HASWELL)
 	for(; jj<m-11; jj+=12)
 		{
 		kernel_dger4_sub_12_lib4(n, &pD[jj*sdd], sdd, &pW0[0], &pC0[jj*sdc], sdc);
 		}
+#endif
 	for(; jj<m-7; jj+=8)
 		{
 		kernel_dger4_sub_8_lib4(n, &pD[jj*sdd], sdd, &pW0[0], &pC0[jj*sdc], sdc);
 		}
-#endif
 	for(; jj<m-3; jj+=4)
 		{
 		kernel_dger4_sub_4_lib4(n, &pD[jj*sdd], &pW0[0], &pC0[jj*sdc]);
