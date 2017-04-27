@@ -632,127 +632,6 @@ void kernel_dgeqrf_vs_lib4(int m, int n, int k, int offD, double *pD, int sdd, d
 
 
 
-// unblocked algorithm
-void kernel_dgelqf_vs_lib4(int m, int n, int k, int offD, double *pD, int sdd, double *dD)
-	{
-	if(m<=0 | n<=0)
-		return;
-	int ii, jj, kk, ll, imax, jmax, jmax0, kmax, kmax0;
-	const int ps = 4;
-	imax = k;//m<n ? m : n;
-	double alpha, beta, tmp, w0, w1, w2, w3;
-	double *pC00, *pC10, *pC01, *pC11;
-	int offset;
-	double *pD0 = pD-offD;
-	for(ii=0; ii<imax; ii++)
-		{
-		pC00 = &pD0[((offD+ii)&(ps-1))+((offD+ii)-((offD+ii)&(ps-1)))*sdd+ii*ps];
-		beta = 0.0;
-		for(jj=1; jj<n-ii; jj++)
-			{
-			tmp = pC00[0+ps*jj];
-			beta += tmp*tmp;
-			}
-		if(beta==0.0)
-			{
-			dD[ii] = 0.0;
-			}
-		else
-			{
-			alpha = pC00[0];
-			beta += alpha*alpha;
-			beta = sqrt(beta);
-			if(alpha>0)
-				beta = -beta;
-			dD[ii] = (beta-alpha) / beta;
-			tmp = 1.0 / (alpha-beta);
-			for(jj=1; jj<n-ii; jj++)
-				pC00[0+ps*jj] *= tmp;
-			pC00[0] = beta;
-			}
-		if(ii<n)
-			{
-			kmax = n-ii;
-			jmax = m-ii-1;
-			jmax0 = (ps-((ii+1+offD)&(ps-1)))&(ps-1);
-			jmax0 = jmax<jmax0 ? jmax : jmax0;
-			jj = 0;
-			double *pC10a = &pD0[((offD+ii+1)&(ps-1))+((offD+ii+1)-((offD+ii+1)&(ps-1)))*sdd+ii*ps];
-			offset = 0;
-			if(jmax0>0)
-				{
-				for( ; jj<jmax0; jj++)
-					{
-					pC10 = pC10a+offset;
-					w0 = pC10[0+ps*0];
-					for(kk=1; kk<kmax; kk++)
-						{
-						w0 += pC10[0+ps*kk] * pC00[0+ps*kk];
-						}
-					w0 = - dD[ii] * w0;
-					pC10[0+ps*0] += w0;
-					for(kk=1; kk<kmax; kk++)
-						{
-						pC10[0+ps*kk] += w0 * pC00[0+ps*kk];
-						}
-					offset += 1;
-					}
-				offset += -ps+ps*sdd;
-				}
-			for( ; jj<jmax-3; jj+=4)
-				{
-				pC10 = pC10a+offset;
-				w0 = pC10[0+ps*0];
-				w1 = pC10[1+ps*0];
-				w2 = pC10[2+ps*0];
-				w3 = pC10[3+ps*0];
-				for(kk=1; kk<kmax; kk++)
-					{
-					w0 += pC10[0+ps*kk] * pC00[0+ps*kk];
-					w1 += pC10[1+ps*kk] * pC00[0+ps*kk];
-					w2 += pC10[2+ps*kk] * pC00[0+ps*kk];
-					w3 += pC10[3+ps*kk] * pC00[0+ps*kk];
-					}
-				w0 = - dD[ii] * w0;
-				w1 = - dD[ii] * w1;
-				w2 = - dD[ii] * w2;
-				w3 = - dD[ii] * w3;
-				pC10[0+ps*0] += w0;
-				pC10[1+ps*0] += w1;
-				pC10[2+ps*0] += w2;
-				pC10[3+ps*0] += w3;
-				for(kk=1; kk<kmax; kk++)
-					{
-					pC10[0+ps*kk] += w0 * pC00[0+ps*kk];
-					pC10[1+ps*kk] += w1 * pC00[0+ps*kk];
-					pC10[2+ps*kk] += w2 * pC00[0+ps*kk];
-					pC10[3+ps*kk] += w3 * pC00[0+ps*kk];
-					}
-				offset += ps*sdd;
-				}
-			for(ll=0; ll<jmax-jj; ll++)
-				{
-				pC10 = pC10a+offset;
-				w0 = pC10[0+ps*0];
-				for(kk=1; kk<kmax; kk++)
-					{
-					w0 += pC10[0+ps*kk] * pC00[0+ps*kk];
-					}
-				w0 = - dD[ii] * w0;
-				pC10[0+ps*0] += w0;
-				for(kk=1; kk<kmax; kk++)
-					{
-					pC10[0+ps*kk] += w0 * pC00[0+ps*kk];
-					}
-				offset += 1;
-				}
-			}
-		}
-	return;
-	}
-
-
-
 void kernel_dlarf_4_lib4(int m, int n, double *pD, int sdd, double *dD, double *pC0, int sdc)
 	{
 	if(m<=0 | n<=0)
@@ -1782,3 +1661,303 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 
 	return;
 	}
+
+
+
+// unblocked algorithm
+void kernel_dgelqf_vs_lib4(int m, int n, int k, int offD, double *pD, int sdd, double *dD)
+	{
+	if(m<=0 | n<=0)
+		return;
+	int ii, jj, kk, ll, imax, jmax, jmax0, kmax, kmax0;
+	const int ps = 4;
+	imax = k;//m<n ? m : n;
+	double alpha, beta, tmp;
+	double w00, w01,
+		   w10, w11,
+		   w20, w21,
+		   w30, w31;
+	double *pC00, *pC10, *pC10a, *pC20, *pC20a, *pC01, *pC11;
+	double pT[4];
+	int ldt = 2;
+	double *pD0 = pD-offD;
+	ii = 0;
+#if 1
+	for(; ii<imax-1; ii+=2)
+		{
+		// first row
+		pC00 = &pD0[((offD+ii)&(ps-1))+((offD+ii)-((offD+ii)&(ps-1)))*sdd+ii*ps];
+		beta = 0.0;
+		for(jj=1; jj<n-ii; jj++)
+			{
+			tmp = pC00[0+ps*jj];
+			beta += tmp*tmp;
+			}
+		if(beta==0.0)
+			{
+			dD[ii] = 0.0;
+			}
+		else
+			{
+			alpha = pC00[0];
+			beta += alpha*alpha;
+			beta = sqrt(beta);
+			if(alpha>0)
+				beta = -beta;
+			dD[ii] = (beta-alpha) / beta;
+			tmp = 1.0 / (alpha-beta);
+			pC00[0] = beta;
+			for(jj=1; jj<n-ii; jj++)
+				pC00[0+ps*jj] *= tmp;
+			}
+		pC10 = &pD0[((offD+ii+1)&(ps-1))+((offD+ii+1)-((offD+ii+1)&(ps-1)))*sdd+ii*ps];
+		kmax = n-ii;
+		w00 = pC10[0+ps*0]; // pC00[0+ps*0] = 1.0
+		for(kk=1; kk<kmax; kk++)
+			{
+			w00 += pC10[0+ps*kk] * pC00[0+ps*kk];
+			}
+		w00 = - w00*dD[ii];
+		pC10[0+ps*0] += w00; // pC00[0+ps*0] = 1.0
+		for(kk=1; kk<kmax; kk++)
+			{
+			pC10[0+ps*kk] += w00 * pC00[0+ps*kk];
+			}
+		// second row
+		pC11 = pC10+ps*1;
+		beta = 0.0;
+		for(jj=1; jj<n-(ii+1); jj++)
+			{
+			tmp = pC11[0+ps*jj];
+			beta += tmp*tmp;
+			}
+		if(beta==0.0)
+			{
+			dD[(ii+1)] = 0.0;
+			}
+		else
+			{
+			alpha = pC11[0+ps*0];
+			beta += alpha*alpha;
+			beta = sqrt(beta);
+			if(alpha>0)
+				beta = -beta;
+			dD[(ii+1)] = (beta-alpha) / beta;
+			tmp = 1.0 / (alpha-beta);
+			pC11[0+ps*0] = beta;
+			for(jj=1; jj<n-(ii+1); jj++)
+				pC11[0+ps*jj] *= tmp;
+			}
+		// compute T
+		kmax = n-ii;
+		tmp = 1.0*0.0 + pC00[0+ps*1]*1.0;
+		for(kk=2; kk<kmax; kk++)
+			tmp += pC00[0+ps*kk]*pC10[0+ps*kk];
+		pT[0+ldt*0] = dD[ii+0];
+		pT[0+ldt*1] = - dD[ii+1] * tmp * dD[ii+0];
+		pT[1+ldt*1] = dD[ii+1];
+		// downgrade
+		kmax = n-ii;
+		jmax = m-ii-2;
+		jmax0 = (ps-((ii+2+offD)&(ps-1)))&(ps-1);
+		jmax0 = jmax<jmax0 ? jmax : jmax0;
+		jj = 0;
+		pC20a = &pD0[((offD+ii+2)&(ps-1))+((offD+ii+2)-((offD+ii+2)&(ps-1)))*sdd+ii*ps];
+		pC20 = pC20a;
+		if(jmax0>0)
+			{
+			for( ; jj<jmax0; jj++)
+				{
+				w00 = pC20[0+ps*0]*1.0 + pC20[0+ps*1]*pC00[0+ps*1];
+				w01 = pC20[0+ps*0]*0.0 + pC20[0+ps*1]*1.0;
+				for(kk=2; kk<kmax; kk++)
+					{
+					w00 += pC20[0+ps*kk]*pC00[0+ps*kk];
+					w01 += pC20[0+ps*kk]*pC10[0+ps*kk];
+					}
+				w01 = - w00*pT[0+ldt*1] - w01*pT[1+ldt*1];
+				w00 = - w00*pT[0+ldt*0];
+				pC20[0+ps*0] += w00*1.0          + w01*0.0;
+				pC20[0+ps*1] += w00*pC00[0+ps*1] + w01*1.0;
+				for(kk=2; kk<kmax; kk++)
+					{
+					pC20[0+ps*kk] += w00*pC00[0+ps*kk] + w01*pC10[0+ps*kk];
+					}
+				pC20 += 1;
+				}
+			pC20 += -ps+ps*sdd;
+			}
+		for( ; jj<jmax-3; jj+=4)
+			{
+			w00 = pC20[0+ps*0]*1.0 + pC20[0+ps*1]*pC00[0+ps*1];
+			w10 = pC20[1+ps*0]*1.0 + pC20[1+ps*1]*pC00[0+ps*1];
+			w20 = pC20[2+ps*0]*1.0 + pC20[2+ps*1]*pC00[0+ps*1];
+			w30 = pC20[3+ps*0]*1.0 + pC20[3+ps*1]*pC00[0+ps*1];
+			w01 = pC20[0+ps*0]*0.0 + pC20[0+ps*1]*1.0;
+			w11 = pC20[1+ps*0]*0.0 + pC20[1+ps*1]*1.0;
+			w21 = pC20[2+ps*0]*0.0 + pC20[2+ps*1]*1.0;
+			w31 = pC20[3+ps*0]*0.0 + pC20[3+ps*1]*1.0;
+			for(kk=2; kk<kmax; kk++)
+				{
+				w00 += pC20[0+ps*kk]*pC00[0+ps*kk];
+				w10 += pC20[1+ps*kk]*pC00[0+ps*kk];
+				w20 += pC20[2+ps*kk]*pC00[0+ps*kk];
+				w30 += pC20[3+ps*kk]*pC00[0+ps*kk];
+				w01 += pC20[0+ps*kk]*pC10[0+ps*kk];
+				w11 += pC20[1+ps*kk]*pC10[0+ps*kk];
+				w21 += pC20[2+ps*kk]*pC10[0+ps*kk];
+				w31 += pC20[3+ps*kk]*pC10[0+ps*kk];
+				}
+			w01 = - w00*pT[0+ldt*1] - w01*pT[1+ldt*1];
+			w11 = - w10*pT[0+ldt*1] - w11*pT[1+ldt*1];
+			w21 = - w20*pT[0+ldt*1] - w21*pT[1+ldt*1];
+			w31 = - w30*pT[0+ldt*1] - w31*pT[1+ldt*1];
+			w00 = - w00*pT[0+ldt*0];
+			w10 = - w10*pT[0+ldt*0];
+			w20 = - w20*pT[0+ldt*0];
+			w30 = - w30*pT[0+ldt*0];
+			pC20[0+ps*0] += w00*1.0          + w01*0.0;
+			pC20[1+ps*0] += w10*1.0          + w11*0.0;
+			pC20[2+ps*0] += w20*1.0          + w21*0.0;
+			pC20[3+ps*0] += w30*1.0          + w31*0.0;
+			pC20[0+ps*1] += w00*pC00[0+ps*1] + w01*1.0;
+			pC20[1+ps*1] += w10*pC00[0+ps*1] + w11*1.0;
+			pC20[2+ps*1] += w20*pC00[0+ps*1] + w21*1.0;
+			pC20[3+ps*1] += w30*pC00[0+ps*1] + w31*1.0;
+			for(kk=2; kk<kmax; kk++)
+				{
+				pC20[0+ps*kk] += w00*pC00[0+ps*kk] + w01*pC10[0+ps*kk];
+				pC20[1+ps*kk] += w10*pC00[0+ps*kk] + w11*pC10[0+ps*kk];
+				pC20[2+ps*kk] += w20*pC00[0+ps*kk] + w21*pC10[0+ps*kk];
+				pC20[3+ps*kk] += w30*pC00[0+ps*kk] + w31*pC10[0+ps*kk];
+				}
+			pC20 += ps*sdd;
+			}
+		for(ll=0; ll<jmax-jj; ll++)
+			{
+			w00 = pC20[0+ps*0]*1.0 + pC20[0+ps*1]*pC00[0+ps*1];
+			w01 = pC20[0+ps*0]*0.0 + pC20[0+ps*1]*1.0;
+			for(kk=2; kk<kmax; kk++)
+				{
+				w00 += pC20[0+ps*kk]*pC00[0+ps*kk];
+				w01 += pC20[0+ps*kk]*pC10[0+ps*kk];
+				}
+			w01 = - w00*pT[0+ldt*1] - w01*pT[1+ldt*1];
+			w00 = - w00*pT[0+ldt*0];
+			pC20[0+ps*0] += w00*1.0          + w01*0.0;
+			pC20[0+ps*1] += w00*pC00[0+ps*1] + w01*1.0;
+			for(kk=2; kk<kmax; kk++)
+				{
+				pC20[0+ps*kk] += w00*pC00[0+ps*kk] + w01*pC10[0+ps*kk];
+				}
+			pC20 += 1;
+			}
+		}
+#endif
+	for(; ii<imax; ii++)
+		{
+		pC00 = &pD0[((offD+ii)&(ps-1))+((offD+ii)-((offD+ii)&(ps-1)))*sdd+ii*ps];
+		beta = 0.0;
+		for(jj=1; jj<n-ii; jj++)
+			{
+			tmp = pC00[0+ps*jj];
+			beta += tmp*tmp;
+			}
+		if(beta==0.0)
+			{
+			dD[ii] = 0.0;
+			}
+		else
+			{
+			alpha = pC00[0];
+			beta += alpha*alpha;
+			beta = sqrt(beta);
+			if(alpha>0)
+				beta = -beta;
+			dD[ii] = (beta-alpha) / beta;
+			tmp = 1.0 / (alpha-beta);
+			pC00[0] = beta;
+			for(jj=1; jj<n-ii; jj++)
+				pC00[0+ps*jj] *= tmp;
+			}
+		if(ii<n)
+			{
+			kmax = n-ii;
+			jmax = m-ii-1;
+			jmax0 = (ps-((ii+1+offD)&(ps-1)))&(ps-1);
+			jmax0 = jmax<jmax0 ? jmax : jmax0;
+			jj = 0;
+			pC10a = &pD0[((offD+ii+1)&(ps-1))+((offD+ii+1)-((offD+ii+1)&(ps-1)))*sdd+ii*ps];
+			pC10 = pC10a;
+			if(jmax0>0)
+				{
+				for( ; jj<jmax0; jj++)
+					{
+					w00 = pC10[0+ps*0];
+					for(kk=1; kk<kmax; kk++)
+						{
+						w00 += pC10[0+ps*kk] * pC00[0+ps*kk];
+						}
+					w00 = - w00*dD[ii];
+					pC10[0+ps*0] += w00;
+					for(kk=1; kk<kmax; kk++)
+						{
+						pC10[0+ps*kk] += w00 * pC00[0+ps*kk];
+						}
+					pC10 += 1;
+					}
+				pC10 += -ps+ps*sdd;
+				}
+			for( ; jj<jmax-3; jj+=4)
+				{
+				w00 = pC10[0+ps*0];
+				w10 = pC10[1+ps*0];
+				w20 = pC10[2+ps*0];
+				w30 = pC10[3+ps*0];
+				for(kk=1; kk<kmax; kk++)
+					{
+					w00 += pC10[0+ps*kk]*pC00[0+ps*kk];
+					w10 += pC10[1+ps*kk]*pC00[0+ps*kk];
+					w20 += pC10[2+ps*kk]*pC00[0+ps*kk];
+					w30 += pC10[3+ps*kk]*pC00[0+ps*kk];
+					}
+				w00 = - w00*dD[ii];
+				w10 = - w10*dD[ii];
+				w20 = - w20*dD[ii];
+				w30 = - w30*dD[ii];
+				pC10[0+ps*0] += w00;
+				pC10[1+ps*0] += w10;
+				pC10[2+ps*0] += w20;
+				pC10[3+ps*0] += w30;
+				for(kk=1; kk<kmax; kk++)
+					{
+					pC10[0+ps*kk] += w00*pC00[0+ps*kk];
+					pC10[1+ps*kk] += w10*pC00[0+ps*kk];
+					pC10[2+ps*kk] += w20*pC00[0+ps*kk];
+					pC10[3+ps*kk] += w30*pC00[0+ps*kk];
+					}
+				pC10 += ps*sdd;
+				}
+			for(ll=0; ll<jmax-jj; ll++)
+				{
+				w00 = pC10[0+ps*0];
+				for(kk=1; kk<kmax; kk++)
+					{
+					w00 += pC10[0+ps*kk] * pC00[0+ps*kk];
+					}
+				w00 = - w00*dD[ii];
+				pC10[0+ps*0] += w00;
+				for(kk=1; kk<kmax; kk++)
+					{
+					pC10[0+ps*kk] += w00 * pC00[0+ps*kk];
+					}
+				pC10 += 1;
+				}
+			}
+		}
+	return;
+	}
+
+
+
+

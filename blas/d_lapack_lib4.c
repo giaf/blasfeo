@@ -2463,13 +2463,14 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	imax0 = imax<imax0 ? imax : imax0;
 	if(imax0>0)
 		{
-		kernel_dgeqrf_vs_lib4(m, n, imax0, di&(ps-1), pD, sdd, dD);
+		kernel_dgelqf_vs_lib4(m, n, imax0, di&(ps-1), pD, sdd, dD);
 		pD += imax0-ps+ps*sdd+imax0*ps;
 		dD += imax0;
 		m -= imax0;
 		n -= imax0;
 		imax -= imax0;
 		}
+	return;
 	for(ii=0; ii<imax-3; ii+=4)
 		{
 		kernel_dgeqrf_4_lib4(m-ii, pD+ii*sdd+ii*ps, sdd, dD+ii);

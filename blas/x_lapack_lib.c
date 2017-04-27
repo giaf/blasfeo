@@ -1466,7 +1466,7 @@ void GELQF_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT
 			{
 			pC10[0+ldd*kk] += w0 * pv0[0+ldd*kk];
 			}
-		// second column
+		// second row
 		pC11 = &pD[(ii+1)+ldd*(ii+1)];
 		beta = 0.0;
 		for(jj=1; jj<n-(ii+1); jj++)
@@ -1504,6 +1504,7 @@ void GELQF_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT
 		pT[0+ldb*0] = dD[ii+0];
 		pT[1+ldb*0] = - dD[ii+1] * tmp * dD[ii+0];
 		pT[1+ldb*1] = dD[ii+1];
+		// downgrade
 		jmax = m-ii-2;
 		jj = 0;
 		for(; jj<jmax-1; jj+=2)
