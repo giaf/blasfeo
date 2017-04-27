@@ -1960,4 +1960,218 @@ void kernel_dgelqf_vs_lib4(int m, int n, int k, int offD, double *pD, int sdd, d
 
 
 
+// assume kmax>=4
+void kernel_dlarft_4_lib4(int kmax, double *pD, double *dD, double *pT)
+	{
+	const int ps = 4;
+	int kk;
+	double v10,
+	       v20, v21,
+		   v30, v31, v32;
+	// 0
+	// 1
+	v10 =  pD[0+ps*1];
+	// 2
+	v10 += pD[1+ps*2]*pD[0+ps*2];
+	v20 =  pD[0+ps*2];
+	v21 =  pD[1+ps*2];
+	// 3
+	v10 += pD[1+ps*3]*pD[0+ps*3];
+	v20 += pD[2+ps*3]*pD[0+ps*3];
+	v21 += pD[2+ps*3]*pD[1+ps*3];
+	v30 =  pD[0+ps*3];
+	v31 =  pD[1+ps*3];
+	v32 =  pD[2+ps*3];
+	//
+	for(kk=4; kk<kmax; kk++)
+		{
+		v10 += pD[1+ps*kk]*pD[0+ps*kk];
+		v20 += pD[2+ps*kk]*pD[0+ps*kk];
+		v30 += pD[3+ps*kk]*pD[0+ps*kk];
+		v21 += pD[2+ps*kk]*pD[1+ps*kk];
+		v31 += pD[3+ps*kk]*pD[1+ps*kk];
+		v32 += pD[3+ps*kk]*pD[2+ps*kk];
+		}
+	pT[0+ps*0] = - dD[0];
+	pT[1+ps*1] = - dD[1];
+	pT[2+ps*2] = - dD[2];
+	pT[3+ps*3] = - dD[3];
+	pT[0+ps*1] = - dD[1] * (v10*pT[0+ps*0]);
+	pT[1+ps*2] = - dD[2] * (v21*pT[1+ps*1]);
+	pT[2+ps*3] = - dD[3] * (v32*pT[2+ps*2]);
+	pT[0+ps*2] = - dD[2] * (v20*pT[0+ps*0] + v21*pT[0+ps*1]);
+	pT[1+ps*3] = - dD[3] * (v31*pT[1+ps*1] + v32*pT[1+ps*2]);
+	pT[0+ps*3] = - dD[3] * (v30*pT[0+ps*0] + v31*pT[0+ps*1] + v32*pT[0+ps*2]);
+	return;
+	}
 
+
+
+void kernel_dlarfb_r_4_lib4(int kmax, double *pV, double *pT, double *pD, int sdd, double *pW)
+	{
+	const int ps = 4;
+	int kk;
+	// 0
+	pW[0+ps*0] = pD[0+ps*0];
+	pW[1+ps*0] = pD[1+ps*0];
+	pW[2+ps*0] = pD[2+ps*0];
+	pW[3+ps*0] = pD[3+ps*0];
+	// 1
+	pW[0+ps*0] += pD[0+ps*1]*pV[0+ps*1];
+	pW[1+ps*0] += pD[1+ps*1]*pV[0+ps*1];
+	pW[2+ps*0] += pD[2+ps*1]*pV[0+ps*1];
+	pW[3+ps*0] += pD[3+ps*1]*pV[0+ps*1];
+	pW[0+ps*1] = pD[0+ps*1];
+	pW[1+ps*1] = pD[1+ps*1];
+	pW[2+ps*1] = pD[2+ps*1];
+	pW[3+ps*1] = pD[3+ps*1];
+	// 2
+	pW[0+ps*0] += pD[0+ps*2]*pV[0+ps*2];
+	pW[1+ps*0] += pD[1+ps*2]*pV[0+ps*2];
+	pW[2+ps*0] += pD[2+ps*2]*pV[0+ps*2];
+	pW[3+ps*0] += pD[3+ps*2]*pV[0+ps*2];
+	pW[0+ps*1] += pD[0+ps*2]*pV[1+ps*2];
+	pW[1+ps*1] += pD[1+ps*2]*pV[1+ps*2];
+	pW[2+ps*1] += pD[2+ps*2]*pV[1+ps*2];
+	pW[3+ps*1] += pD[3+ps*2]*pV[1+ps*2];
+	pW[0+ps*2] = pD[0+ps*2];
+	pW[1+ps*2] = pD[1+ps*2];
+	pW[2+ps*2] = pD[2+ps*2];
+	pW[3+ps*2] = pD[3+ps*2];
+	// 3
+	pW[0+ps*0] += pD[0+ps*3]*pV[0+ps*3];
+	pW[1+ps*0] += pD[1+ps*3]*pV[0+ps*3];
+	pW[2+ps*0] += pD[2+ps*3]*pV[0+ps*3];
+	pW[3+ps*0] += pD[3+ps*3]*pV[0+ps*3];
+	pW[0+ps*1] += pD[0+ps*3]*pV[1+ps*3];
+	pW[1+ps*1] += pD[1+ps*3]*pV[1+ps*3];
+	pW[2+ps*1] += pD[2+ps*3]*pV[1+ps*3];
+	pW[3+ps*1] += pD[3+ps*3]*pV[1+ps*3];
+	pW[0+ps*2] += pD[0+ps*3]*pV[2+ps*3];
+	pW[1+ps*2] += pD[1+ps*3]*pV[2+ps*3];
+	pW[2+ps*2] += pD[2+ps*3]*pV[2+ps*3];
+	pW[3+ps*2] += pD[3+ps*3]*pV[2+ps*3];
+	pW[0+ps*3] = pD[0+ps*3];
+	pW[1+ps*3] = pD[1+ps*3];
+	pW[2+ps*3] = pD[2+ps*3];
+	pW[3+ps*3] = pD[3+ps*3];
+	//
+	for(kk=4; kk<kmax; kk++)
+		{
+		pW[0+ps*0] += pD[0+ps*kk]*pV[0+ps*kk];
+		pW[1+ps*0] += pD[1+ps*kk]*pV[0+ps*kk];
+		pW[2+ps*0] += pD[2+ps*kk]*pV[0+ps*kk];
+		pW[3+ps*0] += pD[3+ps*kk]*pV[0+ps*kk];
+		pW[0+ps*1] += pD[0+ps*kk]*pV[1+ps*kk];
+		pW[1+ps*1] += pD[1+ps*kk]*pV[1+ps*kk];
+		pW[2+ps*1] += pD[2+ps*kk]*pV[1+ps*kk];
+		pW[3+ps*1] += pD[3+ps*kk]*pV[1+ps*kk];
+		pW[0+ps*2] += pD[0+ps*kk]*pV[2+ps*kk];
+		pW[1+ps*2] += pD[1+ps*kk]*pV[2+ps*kk];
+		pW[2+ps*2] += pD[2+ps*kk]*pV[2+ps*kk];
+		pW[3+ps*2] += pD[3+ps*kk]*pV[2+ps*kk];
+		pW[0+ps*3] += pD[0+ps*kk]*pV[3+ps*kk];
+		pW[1+ps*3] += pD[1+ps*kk]*pV[3+ps*kk];
+		pW[2+ps*3] += pD[2+ps*kk]*pV[3+ps*kk];
+		pW[3+ps*3] += pD[3+ps*kk]*pV[3+ps*kk];
+		}
+	//
+	pW[0+ps*3] = pW[0+ps*0]*pT[0+ps*3] + pW[0+ps*1]*pT[1+ps*3] + pW[0+ps*2]*pT[2+ps*3] + pW[0+ps*3]*pT[3+ps*3];
+	pW[1+ps*3] = pW[1+ps*0]*pT[0+ps*3] + pW[1+ps*1]*pT[1+ps*3] + pW[1+ps*2]*pT[2+ps*3] + pW[1+ps*3]*pT[3+ps*3];
+	pW[2+ps*3] = pW[2+ps*0]*pT[0+ps*3] + pW[2+ps*1]*pT[1+ps*3] + pW[2+ps*2]*pT[2+ps*3] + pW[2+ps*3]*pT[3+ps*3];
+	pW[3+ps*3] = pW[3+ps*0]*pT[0+ps*3] + pW[3+ps*1]*pT[1+ps*3] + pW[3+ps*2]*pT[2+ps*3] + pW[3+ps*3]*pT[3+ps*3];
+	//
+	pW[0+ps*2] = pW[0+ps*0]*pT[0+ps*2] + pW[0+ps*1]*pT[1+ps*2] + pW[0+ps*2]*pT[2+ps*2];
+	pW[1+ps*2] = pW[1+ps*0]*pT[0+ps*2] + pW[1+ps*1]*pT[1+ps*2] + pW[1+ps*2]*pT[2+ps*2];
+	pW[2+ps*2] = pW[2+ps*0]*pT[0+ps*2] + pW[2+ps*1]*pT[1+ps*2] + pW[2+ps*2]*pT[2+ps*2];
+	pW[3+ps*2] = pW[3+ps*0]*pT[0+ps*2] + pW[3+ps*1]*pT[1+ps*2] + pW[3+ps*2]*pT[2+ps*2];
+	//
+	pW[0+ps*1] = pW[0+ps*0]*pT[0+ps*1] + pW[0+ps*1]*pT[1+ps*1];
+	pW[1+ps*1] = pW[1+ps*0]*pT[0+ps*1] + pW[1+ps*1]*pT[1+ps*1];
+	pW[2+ps*1] = pW[2+ps*0]*pT[0+ps*1] + pW[2+ps*1]*pT[1+ps*1];
+	pW[3+ps*1] = pW[3+ps*0]*pT[0+ps*1] + pW[3+ps*1]*pT[1+ps*1];
+	//
+	pW[0+ps*0] = pW[0+ps*0]*pT[0+ps*0];
+	pW[1+ps*0] = pW[1+ps*0]*pT[0+ps*0];
+	pW[2+ps*0] = pW[2+ps*0]*pT[0+ps*0];
+	pW[3+ps*0] = pW[3+ps*0]*pT[0+ps*0];
+	//
+	pD[0+ps*0] += pW[0+ps*0];
+	pD[1+ps*0] += pW[1+ps*0];
+	pD[2+ps*0] += pW[2+ps*0];
+	pD[3+ps*0] += pW[3+ps*0];
+	//
+	pD[0+ps*1] += pW[0+ps*0]*pV[0+ps*1] + pW[0+ps*1];
+	pD[1+ps*1] += pW[1+ps*0]*pV[0+ps*1] + pW[1+ps*1];
+	pD[2+ps*1] += pW[2+ps*0]*pV[0+ps*1] + pW[2+ps*1];
+	pD[3+ps*1] += pW[3+ps*0]*pV[0+ps*1] + pW[3+ps*1];
+	//
+	pD[0+ps*2] += pW[0+ps*0]*pV[0+ps*2] + pW[0+ps*1]*pV[1+ps*2] + pW[0+ps*2];
+	pD[1+ps*2] += pW[1+ps*0]*pV[0+ps*2] + pW[1+ps*1]*pV[1+ps*2] + pW[1+ps*2];
+	pD[2+ps*2] += pW[2+ps*0]*pV[0+ps*2] + pW[2+ps*1]*pV[1+ps*2] + pW[2+ps*2];
+	pD[3+ps*2] += pW[3+ps*0]*pV[0+ps*2] + pW[3+ps*1]*pV[1+ps*2] + pW[3+ps*2];
+	//
+	pD[0+ps*3] += pW[0+ps*0]*pV[0+ps*3] + pW[0+ps*1]*pV[1+ps*3] + pW[0+ps*2]*pV[2+ps*3] + pW[0+ps*3];
+	pD[1+ps*3] += pW[1+ps*0]*pV[0+ps*3] + pW[1+ps*1]*pV[1+ps*3] + pW[1+ps*2]*pV[2+ps*3] + pW[1+ps*3];
+	pD[2+ps*3] += pW[2+ps*0]*pV[0+ps*3] + pW[2+ps*1]*pV[1+ps*3] + pW[2+ps*2]*pV[2+ps*3] + pW[2+ps*3];
+	pD[3+ps*3] += pW[3+ps*0]*pV[0+ps*3] + pW[3+ps*1]*pV[1+ps*3] + pW[3+ps*2]*pV[2+ps*3] + pW[3+ps*3];
+	for(kk=4; kk<kmax; kk++)
+		{
+		pD[0+ps*kk] += pW[0+ps*0]*pV[0+ps*kk] + pW[0+ps*1]*pV[1+ps*kk] + pW[0+ps*2]*pV[2+ps*kk] + pW[0+ps*3]*pV[3+ps*kk];
+		pD[1+ps*kk] += pW[1+ps*0]*pV[0+ps*kk] + pW[1+ps*1]*pV[1+ps*kk] + pW[1+ps*2]*pV[2+ps*kk] + pW[1+ps*3]*pV[3+ps*kk];
+		pD[2+ps*kk] += pW[2+ps*0]*pV[0+ps*kk] + pW[2+ps*1]*pV[1+ps*kk] + pW[2+ps*2]*pV[2+ps*kk] + pW[2+ps*3]*pV[3+ps*kk];
+		pD[3+ps*kk] += pW[3+ps*0]*pV[0+ps*kk] + pW[3+ps*1]*pV[1+ps*kk] + pW[3+ps*2]*pV[2+ps*kk] + pW[3+ps*3]*pV[3+ps*kk];
+		}
+	return;
+	}
+
+
+
+void kernel_dlarfb_r_1_lib4(int kmax, double *pV, double *pT, double *pD, int sdd, double *pW)
+	{
+	const int ps = 4;
+	int kk;
+	// 0
+	pW[0+ps*0] = pD[0+ps*0];
+	// 1
+	pW[0+ps*0] += pD[0+ps*1]*pV[0+ps*1];
+	pW[0+ps*1] = pD[0+ps*1];
+	// 2
+	pW[0+ps*0] += pD[0+ps*2]*pV[0+ps*2];
+	pW[0+ps*1] += pD[0+ps*2]*pV[1+ps*2];
+	pW[0+ps*2] = pD[0+ps*2];
+	// 3
+	pW[0+ps*0] += pD[0+ps*3]*pV[0+ps*3];
+	pW[0+ps*1] += pD[0+ps*3]*pV[1+ps*3];
+	pW[0+ps*2] += pD[0+ps*3]*pV[2+ps*3];
+	pW[0+ps*3] = pD[0+ps*3];
+	//
+	for(kk=4; kk<kmax; kk++)
+		{
+		pW[0+ps*0] += pD[0+ps*kk]*pV[0+ps*kk];
+		pW[0+ps*1] += pD[0+ps*kk]*pV[1+ps*kk];
+		pW[0+ps*2] += pD[0+ps*kk]*pV[2+ps*kk];
+		pW[0+ps*3] += pD[0+ps*kk]*pV[3+ps*kk];
+		}
+	//
+	pW[0+ps*3] = pW[0+ps*0]*pT[0+ps*3] + pW[0+ps*1]*pT[1+ps*3] + pW[0+ps*2]*pT[2+ps*3] + pW[0+ps*3]*pT[3+ps*3];
+	//
+	pW[0+ps*2] = pW[0+ps*0]*pT[0+ps*2] + pW[0+ps*1]*pT[1+ps*2] + pW[0+ps*2]*pT[2+ps*2];
+	//
+	pW[0+ps*1] = pW[0+ps*0]*pT[0+ps*1] + pW[0+ps*1]*pT[1+ps*1];
+	//
+	pW[0+ps*0] = pW[0+ps*0]*pT[0+ps*0];
+	//
+	pD[0+ps*0] += pW[0+ps*0];
+	//
+	pD[0+ps*1] += pW[0+ps*0]*pV[0+ps*1] + pW[0+ps*1];
+	//
+	pD[0+ps*2] += pW[0+ps*0]*pV[0+ps*2] + pW[0+ps*1]*pV[1+ps*2] + pW[0+ps*2];
+	//
+	pD[0+ps*3] += pW[0+ps*0]*pV[0+ps*3] + pW[0+ps*1]*pV[1+ps*3] + pW[0+ps*2]*pV[2+ps*3] + pW[0+ps*3];
+	for(kk=4; kk<kmax; kk++)
+		{
+		pD[0+ps*kk] += pW[0+ps*0]*pV[0+ps*kk] + pW[0+ps*1]*pV[1+ps*kk] + pW[0+ps*2]*pV[2+ps*kk] + pW[0+ps*3]*pV[3+ps*kk];
+		}
+	return;
+	}

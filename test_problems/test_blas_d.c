@@ -262,6 +262,10 @@ int main()
 		void *qr_work;
 		v_zeros_align(&qr_work, qr_work_size);
 
+		int lq_work_size = dgelqf_work_size_libstr(n, n);
+		void *lq_work;
+		v_zeros_align(&lq_work, lq_work_size);
+
 		// create matrix to pivot all the time
 //		dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 
@@ -325,7 +329,7 @@ int main()
 //			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 //			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
-			dgelqf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
+			dgelqf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, lq_work);
 //			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
@@ -428,6 +432,7 @@ int main()
 		d_free_align(y2);
 		int_free(ipiv);
 		free(qr_work);
+		free(lq_work);
 		
 		d_free_strmat(&sA);
 		d_free_strmat(&sB);

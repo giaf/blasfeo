@@ -213,9 +213,12 @@ void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 void kernel_dgetrf_pivot_4_vs_lib4(int m, int n, double *pA, int sda, double *inv_diag_A, int* ipiv);
 void kernel_dgeqrf_4_lib4(int m, double *pD, int sdd, double *dD);
 void kernel_dgeqrf_vs_lib4(int m, int n, int k, int offD, double *pD, int sdd, double *dD);
-void kernel_dgelqf_vs_lib4(int m, int n, int k, int offD, double *pD, int sdd, double *dD);
 void kernel_dlarf_4_lib4(int m, int n, double *pV, int sdv, double *tau, double *pC, int sdc); // rank-4 reflector
 void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, double *dD, double *pC0, int sdc, double *pW);
+void kernel_dgelqf_vs_lib4(int m, int n, int k, int offD, double *pD, int sdd, double *dD);
+void kernel_dlarft_4_lib4(int kmax, double *pD, double *dD, double *pT);
+void kernel_dlarfb_r_4_lib4(int kmax, double *pV, double *pT, double *pD, int sdd, double *pW);
+void kernel_dlarfb_r_1_lib4(int kmax, double *pV, double *pT, double *pD, int sdd, double *pW);
 
 
 
