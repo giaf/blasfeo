@@ -283,13 +283,13 @@ int main()
 	void *qr_work;
 	v_zeros_align(&qr_work, qr_work_size);
 //	dgeqrf_libstr(10, 10, &sC, 0, 0, &sD, 0, 0, qr_work);
-	dgelqf_libstr(13, 13, &sC, 0, 0, &sD, 1, 0, qr_work);
+	dgelqf_libstr(17, 17, &sC, 0, 0, &sD, 1, 0, qr_work);
 //	dgecp_libstr(10, 10, 1.0, &sC, 0, 0, &sD, 0, 0);
 //	kernel_dgeqrf_4_lib4(16, 12, sD.pA, sD.cn, sD.dA, qr_work);
 //	d_print_strmat(n, n, &sA, 0, 0);
 //	kernel_dgeqrf_vs_lib4(10, 16, 0, sD.pA+0, sD.cn, sD.dA);
 //	kernel_dgelqf_vs_lib4(10, 10, 10, 0, sD.pA+0, sD.cn, sD.dA);
-	d_print_strmat(n, 16, &sD, 0, 0);
+	d_print_strmat(n, n, &sD, 0, 0);
 	free(qr_work);
 	return 0;
 

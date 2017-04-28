@@ -12193,7 +12193,7 @@ kernel_dlarfb_r_8_lib4:
 	vaddpd			%ymm15, %ymm4, %ymm4
 	//
 	vmovapd			64(%r11), %ymm12
-	vmovapd			64(%r11, %r12), %ymm14
+	vmovapd			64(%r11, %r12, 1), %ymm14
 	vaddpd			%ymm12, %ymm2, %ymm2
 	vaddpd			%ymm14, %ymm6, %ymm6
 	vbroadcastsd	64(%r13), %ymm13
