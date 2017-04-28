@@ -1266,20 +1266,20 @@ inner_kernel_dgemm_sub_nn_4x4_lib4:
 // r10d  <- k
 // r11   <- B
 // r12   <- C
-// ymm0  <- [d00 d10 d20 d30]
-// ymm1  <- [d01 d11 d21 d31]
-// ymm2  <- [d02 d12 d22 d32]
-// ymm3  <- [d03 d13 d23 d33]
+// ymm0  <- [a00 a10 a20 a30]
+// ymm1  <- [a01 a11 a21 a31]
+// ymm2  <- [a02 a12 a22 a32]
+// ymm3  <- [a03 a13 a23 a33]
 
 //
 // output arguments:
 // r10d  <- 0
 // r11   <- ?
 // r12   <- ?
-// ymm0  <- [d00 d10 d20 d30]
-// ymm1  <- [d01 d11 d21 d31]
-// ymm2  <- [d02 d12 d22 d32]
-// ymm3  <- [d03 d13 d23 d33]
+// ymm0  <- [a00 a10 a20 a30]
+// ymm1  <- [a01 a11 a21 a31]
+// ymm2  <- [a02 a12 a22 a32]
+// ymm3  <- [a03 a13 a23 a33]
 
 #if MACRO_LEVEL>=2
 	.macro INNER_KERNEL_DGEBP_ADD_NN_4X4_LIB4

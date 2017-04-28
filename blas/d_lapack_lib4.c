@@ -2469,7 +2469,14 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		{
 		kernel_dgelqf_vs_lib4(4, n-ii, 4, 0, pD+ii*sdd+ii*ps, sdd, dD+ii);
 		kernel_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
-		for(jj=ii+4; jj<m-3; jj+=4)
+		jj = ii+4;
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		for(; jj<m-7; jj+=8)
+			{
+			kernel_dlarfb_r_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+			}
+#endif
+		for(; jj<m-3; jj+=4)
 			{
 			kernel_dlarfb_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
 			}

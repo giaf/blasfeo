@@ -9433,7 +9433,6 @@ kernel_dlarfb_r_4_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11 // D
 	movq	ARG2, %r12 // V
-	movq	ARG3, %r13 // T
 
 	subl	$4, %r10d
 	addq	$128, %r11
@@ -9462,7 +9461,6 @@ kernel_dlarfb_r_4_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11 // D
 	movq	ARG2, %r12 // V
-	movq	ARG3, %r13 // T
 
 	//
 	vmovapd			0(%r11), %ymm12
@@ -9495,35 +9493,37 @@ kernel_dlarfb_r_4_lib4:
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm2, %ymm2
 
+	movq	ARG3, %r10 // T
+
 	//
-	vbroadcastsd	120(%r13), %ymm12
+	vbroadcastsd	120(%r10), %ymm12
 	vmulpd			%ymm3, %ymm12, %ymm3
-	vbroadcastsd	112(%r13), %ymm12
+	//
+	vbroadcastsd	112(%r10), %ymm12
 	vmulpd			%ymm2, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm3, %ymm3
-	vbroadcastsd	104(%r13), %ymm12
-	vmulpd			%ymm1, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm3, %ymm3
-	vbroadcastsd	96(%r13), %ymm12
-	vmulpd			%ymm0, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm3, %ymm3
-	//
-	vbroadcastsd	80(%r13), %ymm12
+	vbroadcastsd	80(%r10), %ymm12
 	vmulpd			%ymm2, %ymm12, %ymm2
-	vbroadcastsd	72(%r13), %ymm12
+	//
+	vbroadcastsd	104(%r10), %ymm12
+	vmulpd			%ymm1, %ymm12, %ymm15
+	vaddpd			%ymm15, %ymm3, %ymm3
+	vbroadcastsd	72(%r10), %ymm12
 	vmulpd			%ymm1, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm2, %ymm2
-	vbroadcastsd	64(%r13), %ymm12
+	vbroadcastsd	40(%r10), %ymm12
+	vmulpd			%ymm1, %ymm12, %ymm1
+	//
+	vbroadcastsd	96(%r10), %ymm12
+	vmulpd			%ymm0, %ymm12, %ymm15
+	vaddpd			%ymm15, %ymm3, %ymm3
+	vbroadcastsd	64(%r10), %ymm12
 	vmulpd			%ymm0, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm2, %ymm2
-	//
-	vbroadcastsd	40(%r13), %ymm12
-	vmulpd			%ymm1, %ymm12, %ymm1
-	vbroadcastsd	32(%r13), %ymm12
+	vbroadcastsd	32(%r10), %ymm12
 	vmulpd			%ymm0, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm1, %ymm1
-	//
-	vbroadcastsd	0(%r13), %ymm12
+	vbroadcastsd	0(%r10), %ymm12
 	vmulpd			%ymm0, %ymm12, %ymm0
 
 	movq	ARG1, %r10 // k

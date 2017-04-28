@@ -217,6 +217,7 @@ void kernel_dlarf_4_lib4(int m, int n, double *pV, int sdv, double *tau, double 
 void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, double *dD, double *pC0, int sdc, double *pW);
 void kernel_dgelqf_vs_lib4(int m, int n, int k, int offD, double *pD, int sdd, double *dD);
 void kernel_dlarft_4_lib4(int kmax, double *pD, double *dD, double *pT);
+void kernel_dlarfb_r_8_lib4(int kmax, double *pV, double *pT, double *pD, int sdd);
 void kernel_dlarfb_r_4_lib4(int kmax, double *pV, double *pT, double *pD);
 void kernel_dlarfb_r_1_lib4(int kmax, double *pV, double *pT, double *pD);
 
