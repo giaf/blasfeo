@@ -2255,7 +2255,7 @@ void kernel_dlarft_4_lib4(int kmax, double *pD, double *dD, double *pT)
 
 
 
-#if ! defined(TARGET_X64_INTEL_HASWELL)
+#if 0
 void kernel_dlarfb_r_4_lib4(int kmax, double *pV, double *pT, double *pD)
 	{
 	const int ps = 4;
