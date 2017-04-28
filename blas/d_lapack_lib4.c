@@ -2447,7 +2447,6 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	double *pD = &(DMATEL_LIBSTR(sD,di,dj));
 	double *dD = sD->dA + di;
 	double pT[16];
-	double pW[16];
 	if(pC!=pD)
 		dgecp_lib(m, n, 1.0, ci&(ps-1), pC, sdc, di&(ps-1), pD, sdd);
 	int ii, jj, ll;
@@ -2472,11 +2471,11 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		kernel_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
 		for(jj=ii+4; jj<m-3; jj+=4)
 			{
-			kernel_dlarfb_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd, pW);
+			kernel_dlarfb_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
 			}
 		for(ll=0; ll<m-jj; ll++)
 			{
-			kernel_dlarfb_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps, sdd, pW);
+			kernel_dlarfb_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
 			}
 		}
 	if(ii<imax)

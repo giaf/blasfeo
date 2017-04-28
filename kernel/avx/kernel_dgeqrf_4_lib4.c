@@ -2255,9 +2255,11 @@ void kernel_dlarft_4_lib4(int kmax, double *pD, double *dD, double *pT)
 
 
 
-void kernel_dlarfb_r_4_lib4(int kmax, double *pV, double *pT, double *pD, int sdd, double *pW)
+#if ! defined(TARGET_X64_INTEL_HASWELL)
+void kernel_dlarfb_r_4_lib4(int kmax, double *pV, double *pT, double *pD)
 	{
 	const int ps = 4;
+	double pW[16];
 	int kk;
 	// 0
 	pW[0+ps*0] = pD[0+ps*0];
@@ -2372,12 +2374,14 @@ void kernel_dlarfb_r_4_lib4(int kmax, double *pV, double *pT, double *pD, int sd
 		}
 	return;
 	}
+#endif
 
 
 
-void kernel_dlarfb_r_1_lib4(int kmax, double *pV, double *pT, double *pD, int sdd, double *pW)
+void kernel_dlarfb_r_1_lib4(int kmax, double *pV, double *pT, double *pD)
 	{
 	const int ps = 4;
+	double pW[16];
 	int kk;
 	// 0
 	pW[0+ps*0] = pD[0+ps*0];
