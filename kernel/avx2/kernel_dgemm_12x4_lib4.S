@@ -13034,57 +13034,45 @@ kernel_dlarfb_r_12_lib4:
 	movq	ARG2, %r13 // V
 
 	//
-	vmovapd			0(%r11), %ymm12
-	vmovapd			0(%r11, %r12, 1), %ymm14
-	vmovapd			0(%r11, %r12, 2), %ymm15
-	vaddpd			%ymm12, %ymm0, %ymm0
-	vaddpd			%ymm14, %ymm4, %ymm4
-	vaddpd			%ymm15, %ymm8, %ymm8
+	vmovapd			0(%r11), %ymm0
+	vmovapd			0(%r11, %r12, 1), %ymm4
+	vmovapd			0(%r11, %r12, 2), %ymm8
 	//
-	vmovapd			32(%r11), %ymm12
-	vmovapd			32(%r11, %r12, 1), %ymm14
-	vmovapd			32(%r11, %r12, 2), %ymm15
-	vaddpd			%ymm12, %ymm1, %ymm1
-	vaddpd			%ymm14, %ymm5, %ymm5
-	vaddpd			%ymm15, %ymm9, %ymm9
+	vmovapd			32(%r11), %ymm1
+	vmovapd			32(%r11, %r12, 1), %ymm5
+	vmovapd			32(%r11, %r12, 2), %ymm9
 	vbroadcastsd	32(%r13), %ymm13
-	vfmadd231pd		%ymm13, %ymm12, %ymm0
-	vfmadd231pd		%ymm13, %ymm14, %ymm4
-	vfmadd231pd		%ymm13, %ymm15, %ymm8
+	vfmadd231pd		%ymm13, %ymm1, %ymm0
+	vfmadd231pd		%ymm13, %ymm5, %ymm4
+	vfmadd231pd		%ymm13, %ymm9, %ymm8
 	//
-	vmovapd			64(%r11), %ymm12
-	vmovapd			64(%r11, %r12, 1), %ymm14
-	vmovapd			64(%r11, %r12, 2), %ymm15
-	vaddpd			%ymm12, %ymm2, %ymm2
-	vaddpd			%ymm14, %ymm6, %ymm6
-	vaddpd			%ymm15, %ymm10, %ymm10
+	vmovapd			64(%r11), %ymm2
+	vmovapd			64(%r11, %r12, 1), %ymm6
+	vmovapd			64(%r11, %r12, 2), %ymm10
 	vbroadcastsd	64(%r13), %ymm13
-	vfmadd231pd		%ymm13, %ymm12, %ymm0
-	vfmadd231pd		%ymm13, %ymm14, %ymm4
-	vfmadd231pd		%ymm13, %ymm15, %ymm8
+	vfmadd231pd		%ymm13, %ymm2, %ymm0
+	vfmadd231pd		%ymm13, %ymm6, %ymm4
+	vfmadd231pd		%ymm13, %ymm10, %ymm8
 	vbroadcastsd	72(%r13), %ymm13
-	vfmadd231pd		%ymm13, %ymm12, %ymm1
-	vfmadd231pd		%ymm13, %ymm14, %ymm5
-	vfmadd231pd		%ymm13, %ymm15, %ymm9
+	vfmadd231pd		%ymm13, %ymm2, %ymm1
+	vfmadd231pd		%ymm13, %ymm6, %ymm5
+	vfmadd231pd		%ymm13, %ymm10, %ymm9
 	//
-	vmovapd			96(%r11), %ymm12
-	vmovapd			96(%r11, %r12, 1), %ymm14
-	vmovapd			96(%r11, %r12, 2), %ymm15
-	vaddpd			%ymm12, %ymm3, %ymm3
-	vaddpd			%ymm14, %ymm7, %ymm7
-	vaddpd			%ymm14, %ymm11, %ymm11
+	vmovapd			96(%r11), %ymm3
+	vmovapd			96(%r11, %r12, 1), %ymm7
+	vmovapd			96(%r11, %r12, 2), %ymm11
 	vbroadcastsd	96(%r13), %ymm13
-	vfmadd231pd		%ymm13, %ymm12, %ymm0
-	vfmadd231pd		%ymm13, %ymm14, %ymm4
-	vfmadd231pd		%ymm13, %ymm15, %ymm8
+	vfmadd231pd		%ymm13, %ymm3, %ymm0
+	vfmadd231pd		%ymm13, %ymm7, %ymm4
+	vfmadd231pd		%ymm13, %ymm11, %ymm8
 	vbroadcastsd	104(%r13), %ymm13
-	vfmadd231pd		%ymm13, %ymm12, %ymm1
-	vfmadd231pd		%ymm13, %ymm14, %ymm5
-	vfmadd231pd		%ymm13, %ymm15, %ymm9
+	vfmadd231pd		%ymm13, %ymm3, %ymm1
+	vfmadd231pd		%ymm13, %ymm7, %ymm5
+	vfmadd231pd		%ymm13, %ymm11, %ymm9
 	vbroadcastsd	112(%r13), %ymm13
-	vfmadd231pd		%ymm13, %ymm12, %ymm2
-	vfmadd231pd		%ymm13, %ymm14, %ymm6
-	vfmadd231pd		%ymm13, %ymm15, %ymm10
+	vfmadd231pd		%ymm13, %ymm3, %ymm2
+	vfmadd231pd		%ymm13, %ymm7, %ymm6
+	vfmadd231pd		%ymm13, %ymm11, %ymm10
 
 	subl	$4, %r10d
 	addq	$128, %r11

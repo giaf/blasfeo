@@ -177,7 +177,7 @@ int main()
 		int nrep = nnrep[ll];
 //		int n = ll+1;
 //		int nrep = nnrep[0];
-//		n = n<12 ? 12 : n;
+		n = n<12 ? 12 : n;
 //		n = n<8 ? 8 : n;
 
 #else
@@ -312,10 +312,14 @@ int main()
 //			kernel_dgemm_nt_8x8_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //			kernel_dsyrk_nt_l_8x8_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //			kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+			kernel_dgemm_nt_4x8_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 //			kernel_dgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
 //			kernel_dger4_12_sub_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+//			kernel_dger4_sub_12r_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
 //			kernel_dger4_sub_8r_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+//			kernel_dger8_add_4r_lib4(n, sA.pA, sB.pA, sB.cn, sD.pA);
 //			kernel_dger4_sub_4r_lib4(n, sA.pA, sB.pA, sD.pA);
+//			kernel_dger2_sub_4r_lib4(n, sA.pA, sB.pA, sD.pA);
 //			kernel_dger4_sub_8c_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
 //			kernel_dger4_sub_4c_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
 //			kernel_dgemm_nn_4x12_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
@@ -329,7 +333,7 @@ int main()
 //			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 //			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
-			dgelqf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, lq_work);
+//			dgelqf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, lq_work);
 //			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
@@ -393,14 +397,15 @@ int main()
 
 //		float flop_operation = 4*16.0*2*n; // kernel 12x4
 //		float flop_operation = 3*16.0*2*n; // kernel 12x4
-//		float flop_operation = 2*16.0*2*n; // kernel 8x4
+		float flop_operation = 2*16.0*2*n; // kernel 8x4
 //		float flop_operation = 1*16.0*2*n; // kernel 4x4
+//		float flop_operation = 0.5*16.0*2*n; // kernel 2x4
 
 //		float flop_operation = 2.0*n*n*n; // dgemm
 //		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
 //		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
-		float flop_operation = 4.0/3.0*n*n*n; // dgeqrf
+//		float flop_operation = 4.0/3.0*n*n*n; // dgeqrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv
 //		float flop_operation = 1.0*n*n; // dtrmv dtrsv
 //		float flop_operation = 4.0*n*n; // dgemv_nt
