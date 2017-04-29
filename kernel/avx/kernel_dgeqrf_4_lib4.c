@@ -1905,6 +1905,7 @@ void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, doubl
 
 
 
+// assume n>=4
 void kernel_dgelqf_4_lib4(int n, double *pD, double *dD)
 	{
 	int ii, jj, ll;
@@ -1919,236 +1920,193 @@ void kernel_dgelqf_4_lib4(int n, double *pD, double *dD)
 		}
 	if(beta==0.0)
 		{
-		// tau
 		dD[0] = 0.0;
+		tmp = 0.0;
+		goto col2;
 		}
-	else
-		{
-		alpha = pD[0+ps*0];
-		beta += alpha*alpha;
-		beta = sqrt(beta);
-		if(alpha>0)
-			beta = -beta;
-		// tau0
-		dD[0] = (beta-alpha) / beta;
-		tmp = 1.0 / (alpha-beta);
-		// compute v0
-		pD[0+ps*0] = beta;
-		for(ii=1; ii<n; ii++)
-			{
-			pD[0+ps*ii] *= tmp;
-			}
-		}
-	// gemv_t & ger
+	alpha = pD[0+ps*0];
+	beta += alpha*alpha;
+	beta = sqrt(beta);
+	if(alpha>0)
+		beta = -beta;
+	dD[0] = (beta-alpha) / beta;
+	tmp = 1.0 / (alpha-beta);
+	//
+	pD[0+ps*0] = beta;
 	w1 = pD[1+ps*0];
 	w2 = pD[2+ps*0];
 	w3 = pD[3+ps*0];
-	if(n>1)
-		{
-		w1 += pD[1+ps*1] * pD[0+ps*1];
-		w2 += pD[2+ps*1] * pD[0+ps*1];
-		w3 += pD[3+ps*1] * pD[0+ps*1];
-		if(n>2)
-			{
-			w1 += pD[1+ps*2] * pD[0+ps*2];
-			w2 += pD[2+ps*2] * pD[0+ps*2];
-			w3 += pD[3+ps*2] * pD[0+ps*2];
-				{
-				if(n>3)
-				w1 += pD[1+ps*3] * pD[0+ps*3];
-				w2 += pD[2+ps*3] * pD[0+ps*3];
-				w3 += pD[3+ps*3] * pD[0+ps*3];
-				}
-			}
-		}
+	//
+	pD[0+ps*1] *= tmp;
+	w1 += pD[1+ps*1] * pD[0+ps*1];
+	w2 += pD[2+ps*1] * pD[0+ps*1];
+	w3 += pD[3+ps*1] * pD[0+ps*1];
+	//
+	pD[0+ps*2] *= tmp;
+	w1 += pD[1+ps*2] * pD[0+ps*2];
+	w2 += pD[2+ps*2] * pD[0+ps*2];
+	w3 += pD[3+ps*2] * pD[0+ps*2];
+	//
+	pD[0+ps*3] *= tmp;
+	w1 += pD[1+ps*3] * pD[0+ps*3];
+	w2 += pD[2+ps*3] * pD[0+ps*3];
+	w3 += pD[3+ps*3] * pD[0+ps*3];
+	//
 	for(ii=4; ii<n; ii++)
 		{
+		pD[0+ps*ii] *= tmp;
 		w1 += pD[1+ps*ii] * pD[0+ps*ii];
 		w2 += pD[2+ps*ii] * pD[0+ps*ii];
 		w3 += pD[3+ps*ii] * pD[0+ps*ii];
 		}
+	//
 	w1 = - dD[0] * w1;
 	w2 = - dD[0] * w2;
 	w3 = - dD[0] * w3;
+	//
 	pD[1+ps*0] += w1;
 	pD[2+ps*0] += w2;
 	pD[3+ps*0] += w3;
-	if(n>1)
-		{
-		pD[1+ps*1] += w1 * pD[0+ps*1];
-		pD[2+ps*1] += w2 * pD[0+ps*1];
-		pD[3+ps*1] += w3 * pD[0+ps*1];
-		if(n>2)
-			{
-			pD[1+ps*2] += w1 * pD[0+ps*2];
-			pD[2+ps*2] += w2 * pD[0+ps*2];
-			pD[3+ps*2] += w3 * pD[0+ps*2];
-			if(n>3)
-				{
-				pD[1+ps*3] += w1 * pD[0+ps*3];
-				pD[2+ps*3] += w2 * pD[0+ps*3];
-				pD[3+ps*3] += w3 * pD[0+ps*3];
-				}
-			}
-		}
+	//
+	pD[1+ps*1] += w1 * pD[0+ps*1];
+	pD[2+ps*1] += w2 * pD[0+ps*1];
+	pD[3+ps*1] += w3 * pD[0+ps*1];
+	//
+	pD[1+ps*2] += w1 * pD[0+ps*2];
+	pD[2+ps*2] += w2 * pD[0+ps*2];
+	pD[3+ps*2] += w3 * pD[0+ps*2];
+	beta = pD[1+ps*2] * pD[1+ps*2];
+	//
+	pD[1+ps*3] += w1 * pD[0+ps*3];
+	pD[2+ps*3] += w2 * pD[0+ps*3];
+	pD[3+ps*3] += w3 * pD[0+ps*3];
+	beta += pD[1+ps*3] * pD[1+ps*3];
+	//
 	for(ii=4; ii<n; ii++)
 		{
 		pD[1+ps*ii] += w1 * pD[0+ps*ii];
 		pD[2+ps*ii] += w2 * pD[0+ps*ii];
 		pD[3+ps*ii] += w3 * pD[0+ps*ii];
+		beta += pD[1+ps*ii] * pD[1+ps*ii];
 		}
-	if(n==1)
-		return;
 	// second column
-	beta = 0.0;
-	for(ii=2; ii<n; ii++)
-		{
-		tmp = pD[1+ps*ii];
-		beta += tmp*tmp;
-		}
+col2:
 	if(beta==0.0)
 		{
-		// tau
 		dD[1] = 0.0;
+		tmp = 0.0;
+		goto col3;
 		}
-	else
-		{
-		alpha = pD[1+ps*1];
-		beta += alpha*alpha;
-		beta = sqrt(beta);
-		if(alpha>0)
-			beta = -beta;
-		// tau0
-		dD[1] = (beta-alpha) / beta;
-		tmp = 1.0 / (alpha-beta);
-		// compute v0
-		pD[1+ps*1] = beta;
-		for(ii=2; ii<n; ii++)
-			{
-			pD[1+ps*ii] *= tmp;
-			}
-		}
-	// gemv_t & ger
+	alpha = pD[1+ps*1];
+	beta += alpha*alpha;
+	beta = sqrt(beta);
+	if(alpha>0)
+		beta = -beta;
+	dD[1] = (beta-alpha) / beta;
+	tmp = 1.0 / (alpha-beta);
+	//
+	pD[1+ps*1] = beta;
 	w2 = pD[2+ps*1];
 	w3 = pD[3+ps*1];
-	if(n>2)
-		{
-		w2 += pD[2+ps*2] * pD[1+ps*2];
-		w3 += pD[3+ps*2] * pD[1+ps*2];
-		if(n>3)
-			{
-			w2 += pD[2+ps*3] * pD[1+ps*3];
-			w3 += pD[3+ps*3] * pD[1+ps*3];
-			}
-		}
+	//
+	pD[1+ps*2] *= tmp;
+	w2 += pD[2+ps*2] * pD[1+ps*2];
+	w3 += pD[3+ps*2] * pD[1+ps*2];
+	//
+	pD[1+ps*3] *= tmp;
+	w2 += pD[2+ps*3] * pD[1+ps*3];
+	w3 += pD[3+ps*3] * pD[1+ps*3];
+	//
 	for(ii=4; ii<n; ii++)
 		{
+		pD[1+ps*ii] *= tmp;
 		w2 += pD[2+ps*ii] * pD[1+ps*ii];
 		w3 += pD[3+ps*ii] * pD[1+ps*ii];
 		}
+	//
 	w2 = - dD[1] * w2;
 	w3 = - dD[1] * w3;
+	//
 	pD[2+ps*1] += w2;
 	pD[3+ps*1] += w3;
-	if(n>2)
-		{
-		pD[2+ps*2] += w2 * pD[1+ps*2];
-		pD[3+ps*2] += w3 * pD[1+ps*2];
-		if(n>3)
-			{
-			pD[2+ps*3] += w2 * pD[1+ps*3];
-			pD[3+ps*3] += w3 * pD[1+ps*3];
-			}
-		}
+	//
+	pD[2+ps*2] += w2 * pD[1+ps*2];
+	pD[3+ps*2] += w3 * pD[1+ps*2];
+	//
+	pD[2+ps*3] += w2 * pD[1+ps*3];
+	pD[3+ps*3] += w3 * pD[1+ps*3];
+	beta = pD[2+ps*3] * pD[2+ps*3];
+	//
 	for(ii=4; ii<n; ii++)
 		{
 		pD[2+ps*ii] += w2 * pD[1+ps*ii];
 		pD[3+ps*ii] += w3 * pD[1+ps*ii];
+		beta += pD[2+ps*ii] * pD[2+ps*ii];
 		}
-	if(n==2)
-		return;
 	// third column
-	beta = 0.0;
-	for(ii=3; ii<n; ii++)
-		{
-		tmp = pD[2+ps*ii];
-		beta += tmp*tmp;
-		}
+col3:
 	if(beta==0.0)
 		{
-		// tau
 		dD[2] = 0.0;
+		tmp = 0.0;
+		goto col4;
 		}
-	else
-		{
-		alpha = pD[2+ps*2];
-		beta += alpha*alpha;
-		beta = sqrt(beta);
-		if(alpha>0)
-			beta = -beta;
-		// tau0
-		dD[2] = (beta-alpha) / beta;
-		tmp = 1.0 / (alpha-beta);
-		// compute v0
-		pD[2+ps*2] = beta;
-		for(ii=3; ii<n; ii++)
-			{
-			pD[2+ps*ii] *= tmp;
-			}
-		}
-	// gemv_t & ger
+	alpha = pD[2+ps*2];
+	beta += alpha*alpha;
+	beta = sqrt(beta);
+	if(alpha>0)
+		beta = -beta;
+	dD[2] = (beta-alpha) / beta;
+	tmp = 1.0 / (alpha-beta);
+	//
+	pD[2+ps*2] = beta;
 	w3 = pD[3+ps*2];
-	if(n>3)
-		{
-		w3 += pD[3+ps*3] * pD[2+ps*3];
-		}
+	//
+	pD[2+ps*3] *= tmp;
+	w3 += pD[3+ps*3] * pD[2+ps*3];
+	//
 	for(ii=4; ii<n; ii++)
 		{
+		pD[2+ps*ii] *= tmp;
 		w3 += pD[3+ps*ii] * pD[2+ps*ii];
 		}
+	//
 	w3 = - dD[2] * w3;
+	//
 	pD[3+ps*2] += w3;
-	if(n>3)
-		{
-		pD[3+ps*3] += w3 * pD[2+ps*3];
-		}
+	//
+	pD[3+ps*3] += w3 * pD[2+ps*3];
+	//
+	beta = 0.0;
 	for(ii=4; ii<n; ii++)
 		{
 		pD[3+ps*ii] += w3 * pD[2+ps*ii];
+		beta += pD[3+ps*ii] * pD[3+ps*ii];
 		}
-	if(n==3)
-		return;
 	// fourth column
-	beta = 0.0;
-	for(ii=4; ii<n; ii++)
-		{
-		tmp = pD[3+ps*ii];
-		beta += tmp*tmp;
-		}
+col4:
 	if(beta==0.0)
 		{
-		// tau
 		dD[3] = 0.0;
+		tmp = 0.0;
+		return;
 		}
-	else
+	alpha = pD[3+ps*3];
+	beta += alpha*alpha;
+	beta = sqrt(beta);
+	if(alpha>0)
+		beta = -beta;
+	dD[3] = (beta-alpha) / beta;
+	tmp = 1.0 / (alpha-beta);
+	//
+	pD[3+ps*3] = beta;
+	for(ii=4; ii<n; ii++)
 		{
-		alpha = pD[3+ps*3];
-		beta += alpha*alpha;
-		beta = sqrt(beta);
-		if(alpha>0)
-			beta = -beta;
-		// tau0
-		dD[3] = (beta-alpha) / beta;
-		tmp = 1.0 / (alpha-beta);
-		// compute v0
-		pD[3+ps*3] = beta;
-		for(ii=4; ii<n; ii++)
-			{
-			pD[3+ps*ii] *= tmp;
-			}
+		pD[3+ps*ii] *= tmp;
 		}
 	return;
 	}
+
 
 
 // unblocked algorithm
@@ -2498,6 +2456,243 @@ void kernel_dlarft_4_lib4(int kmax, double *pD, double *dD, double *pT)
 	pT[0+ps*3] = - dD[3] * (v30*pT[0+ps*0] + v31*pT[0+ps*1] + v32*pT[0+ps*2]);
 	return;
 	}
+
+
+
+// assume n>=4
+#if ! defined(TARGET_X64_INTEL_HASWELL)
+void kernel_dgelqf_dlarft_4_lib4(int n, double *pD, double *dD, double *pT)
+	{
+	int ii, jj, ll;
+	double alpha, beta, tmp, w0, w1, w2, w3;
+	const int ps = 4;
+	// zero tau matrix
+	for(ii=0; ii<16; ii++)
+		pT[ii] = 0.0;
+	// first column
+	beta = 0.0;
+	for(ii=1; ii<n; ii++)
+		{
+		tmp = pD[0+ps*ii];
+		beta += tmp*tmp;
+		}
+	if(beta==0.0)
+		{
+		dD[0] = 0.0;
+		tmp = 0.0;
+		goto col2;
+		}
+	alpha = pD[0+ps*0];
+	beta += alpha*alpha;
+	beta = sqrt(beta);
+	if(alpha>0)
+		beta = -beta;
+	dD[0] = (beta-alpha) / beta;
+	pT[0+ps*0] = - dD[0];
+	tmp = 1.0 / (alpha-beta);
+	//
+	pD[0+ps*0] = beta;
+	w1 = pD[1+ps*0];
+	w2 = pD[2+ps*0];
+	w3 = pD[3+ps*0];
+	//
+	pD[0+ps*1] *= tmp;
+	w1 += pD[1+ps*1] * pD[0+ps*1];
+	w2 += pD[2+ps*1] * pD[0+ps*1];
+	w3 += pD[3+ps*1] * pD[0+ps*1];
+	//
+	pD[0+ps*2] *= tmp;
+	w1 += pD[1+ps*2] * pD[0+ps*2];
+	w2 += pD[2+ps*2] * pD[0+ps*2];
+	w3 += pD[3+ps*2] * pD[0+ps*2];
+	//
+	pD[0+ps*3] *= tmp;
+	w1 += pD[1+ps*3] * pD[0+ps*3];
+	w2 += pD[2+ps*3] * pD[0+ps*3];
+	w3 += pD[3+ps*3] * pD[0+ps*3];
+	//
+	for(ii=4; ii<n; ii++)
+		{
+		pD[0+ps*ii] *= tmp;
+		w1 += pD[1+ps*ii] * pD[0+ps*ii];
+		w2 += pD[2+ps*ii] * pD[0+ps*ii];
+		w3 += pD[3+ps*ii] * pD[0+ps*ii];
+		}
+	//
+	w1 = - dD[0] * w1;
+	w2 = - dD[0] * w2;
+	w3 = - dD[0] * w3;
+	//
+	pD[1+ps*0] += w1;
+	pD[2+ps*0] += w2;
+	pD[3+ps*0] += w3;
+	//
+	pD[1+ps*1] += w1 * pD[0+ps*1];
+	pD[2+ps*1] += w2 * pD[0+ps*1];
+	pD[3+ps*1] += w3 * pD[0+ps*1];
+	//
+	pD[1+ps*2] += w1 * pD[0+ps*2];
+	pD[2+ps*2] += w2 * pD[0+ps*2];
+	pD[3+ps*2] += w3 * pD[0+ps*2];
+	beta = pD[1+ps*2] * pD[1+ps*2];
+	//
+	pD[1+ps*3] += w1 * pD[0+ps*3];
+	pD[2+ps*3] += w2 * pD[0+ps*3];
+	pD[3+ps*3] += w3 * pD[0+ps*3];
+	beta += pD[1+ps*3] * pD[1+ps*3];
+	//
+	for(ii=4; ii<n; ii++)
+		{
+		pD[1+ps*ii] += w1 * pD[0+ps*ii];
+		pD[2+ps*ii] += w2 * pD[0+ps*ii];
+		pD[3+ps*ii] += w3 * pD[0+ps*ii];
+		beta += pD[1+ps*ii] * pD[1+ps*ii];
+		}
+	// second column
+col2:
+	if(beta==0.0)
+		{
+		dD[1] = 0.0;
+		tmp = 0.0;
+		goto col3;
+		}
+	alpha = pD[1+ps*1];
+	beta += alpha*alpha;
+	beta = sqrt(beta);
+	if(alpha>0)
+		beta = -beta;
+	dD[1] = (beta-alpha) / beta;
+	pT[1+ps*1] = - dD[1];
+	tmp = 1.0 / (alpha-beta);
+	//
+	pD[1+ps*1] = beta;
+	w0 = pD[0+ps*1]; //
+	w2 = pD[2+ps*1];
+	w3 = pD[3+ps*1];
+	//
+	pD[1+ps*2] *= tmp;
+	w0 += pD[0+ps*2] * pD[1+ps*2]; //
+	w2 += pD[2+ps*2] * pD[1+ps*2];
+	w3 += pD[3+ps*2] * pD[1+ps*2];
+	//
+	pD[1+ps*3] *= tmp;
+	w0 += pD[0+ps*3] * pD[1+ps*3]; //
+	w2 += pD[2+ps*3] * pD[1+ps*3];
+	w3 += pD[3+ps*3] * pD[1+ps*3];
+	//
+	for(ii=4; ii<n; ii++)
+		{
+		pD[1+ps*ii] *= tmp;
+		w0 += pD[0+ps*ii] * pD[1+ps*ii]; //
+		w2 += pD[2+ps*ii] * pD[1+ps*ii];
+		w3 += pD[3+ps*ii] * pD[1+ps*ii];
+		}
+	//
+	pT[0+ps*1] = - dD[1] * (w0*pT[0+ps*0]);
+	w2 = - dD[1] * w2;
+	w3 = - dD[1] * w3;
+	//
+	pD[2+ps*1] += w2;
+	pD[3+ps*1] += w3;
+	//
+	pD[2+ps*2] += w2 * pD[1+ps*2];
+	pD[3+ps*2] += w3 * pD[1+ps*2];
+	//
+	pD[2+ps*3] += w2 * pD[1+ps*3];
+	pD[3+ps*3] += w3 * pD[1+ps*3];
+	beta = pD[2+ps*3] * pD[2+ps*3];
+	//
+	for(ii=4; ii<n; ii++)
+		{
+		pD[2+ps*ii] += w2 * pD[1+ps*ii];
+		pD[3+ps*ii] += w3 * pD[1+ps*ii];
+		beta += pD[2+ps*ii] * pD[2+ps*ii];
+		}
+	// third column
+col3:
+	if(beta==0.0)
+		{
+		dD[2] = 0.0;
+		tmp = 0.0;
+		goto col4;
+		}
+	alpha = pD[2+ps*2];
+	beta += alpha*alpha;
+	beta = sqrt(beta);
+	if(alpha>0)
+		beta = -beta;
+	dD[2] = (beta-alpha) / beta;
+	pT[2+ps*2] = - dD[2];
+	tmp = 1.0 / (alpha-beta);
+	//
+	pD[2+ps*2] = beta;
+	w0 = pD[0+ps*2];
+	w1 = pD[1+ps*2];
+	w3 = pD[3+ps*2];
+	//
+	pD[2+ps*3] *= tmp;
+	w0 += pD[0+ps*3] * pD[2+ps*3];
+	w1 += pD[1+ps*3] * pD[2+ps*3];
+	w3 += pD[3+ps*3] * pD[2+ps*3];
+	//
+	for(ii=4; ii<n; ii++)
+		{
+		pD[2+ps*ii] *= tmp;
+		w0 += pD[0+ps*ii] * pD[2+ps*ii];
+		w1 += pD[1+ps*ii] * pD[2+ps*ii];
+		w3 += pD[3+ps*ii] * pD[2+ps*ii];
+		}
+	//
+	pT[1+ps*2] = - dD[2] * (w1*pT[1+ps*1]);
+	pT[0+ps*2] = - dD[2] * (w0*pT[0+ps*0] + w1*pT[0+ps*1]);
+	w3 = - dD[2] * w3;
+	//
+	pD[3+ps*2] += w3;
+	//
+	pD[3+ps*3] += w3 * pD[2+ps*3];
+	//
+	beta = 0.0;
+	for(ii=4; ii<n; ii++)
+		{
+		pD[3+ps*ii] += w3 * pD[2+ps*ii];
+		beta += pD[3+ps*ii] * pD[3+ps*ii];
+		}
+	// fourth column
+col4:
+	if(beta==0.0)
+		{
+		dD[3] = 0.0;
+		tmp = 0.0;
+		return;
+		}
+	alpha = pD[3+ps*3];
+	beta += alpha*alpha;
+	beta = sqrt(beta);
+	if(alpha>0)
+		beta = -beta;
+	dD[3] = (beta-alpha) / beta;
+	pT[3+ps*3] = - dD[3];
+	tmp = 1.0 / (alpha-beta);
+	//
+	pD[3+ps*3] = beta;
+	w0 =  pD[0+ps*3];
+	w1 =  pD[1+ps*3];
+	w2 =  pD[2+ps*3];
+	//
+	for(ii=4; ii<n; ii++)
+		{
+		pD[3+ps*ii] *= tmp;
+		w0 += pD[0+ps*ii] * pD[3+ps*ii];
+		w1 += pD[1+ps*ii] * pD[3+ps*ii];
+		w2 += pD[2+ps*ii] * pD[3+ps*ii];
+		}
+	//
+	pT[2+ps*3] = - dD[3] * (w2*pT[2+ps*2]);
+	pT[1+ps*3] = - dD[3] * (w1*pT[1+ps*1] + w2*pT[1+ps*2]);
+	pT[0+ps*3] = - dD[3] * (w0*pT[0+ps*0] + w1*pT[0+ps*1] + w2*pT[0+ps*2]);
+	return;
+	}
+#endif
 
 
 

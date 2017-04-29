@@ -1,0 +1,347 @@
+/**************************************************************************************************
+*                                                                                                 *
+* This file is part of BLASFEO.                                                                   *
+*                                                                                                 *
+* BLASFEO -- BLAS For Embedded Optimization.                                                      *
+* Copyright (C) 2016-2017 by Gianluca Frison.                                                     *
+* Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              *
+* All rights reserved.                                                                            *
+*                                                                                                 *
+* HPMPC is free software; you can redistribute it and/or                                          *
+* modify it under the terms of the GNU Lesser General Public                                      *
+* License as published by the Free Software Foundation; either                                    *
+* version 2.1 of the License, or (at your option) any later version.                              *
+*                                                                                                 *
+* HPMPC is distributed in the hope that it will be useful,                                        *
+* but WITHOUT ANY WARRANTY; without even the implied warranty of                                  *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                                            *
+* See the GNU Lesser General Public License for more details.                                     *
+*                                                                                                 *
+* You should have received a copy of the GNU Lesser General Public                                *
+* License along with HPMPC; if not, write to the Free Software                                    *
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  *
+*                                                                                                 *
+* Author: Gianluca Frison, giaf (at) dtu.dk                                                       *
+*                          gianluca.frison (at) imtek.uni-freiburg.de                             *
+*                                                                                                 *
+**************************************************************************************************/
+
+#include <math.h>
+#include <stdio.h>
+
+#include <mmintrin.h>
+#include <xmmintrin.h>  // SSE
+#include <emmintrin.h>  // SSE2
+#include <pmmintrin.h>  // SSE3
+#include <smmintrin.h>  // SSE4
+#include <immintrin.h>  // AVX
+
+#include "../../include/blasfeo_common.h"
+#include "../../include/blasfeo_d_aux.h"
+#include "../../include/blasfeo_d_kernel.h"
+
+
+
+// assume n>=4
+void kernel_dgelqf_dlarft_4_lib4(int n, double *pD, double *dD, double *pT)
+	{
+	int ii, jj, ll;
+	double alpha, beta, tmp, w0, w1, w2, w3;
+	__m256d
+		_w0, _a0, _b0, _z0, _beta;
+	_z0 = _mm256_setzero_pd( );
+	const int ps = 4;
+	// zero tau matrix
+	for(ii=0; ii<16; ii++)
+		pT[ii] = 0.0;
+	// first column
+	beta = 0.0;
+	for(ii=1; ii<n; ii++)
+		{
+		tmp = pD[0+ps*ii];
+		beta += tmp*tmp;
+		}
+	if(beta==0.0)
+		{
+		dD[0] = 0.0;
+		tmp = 0.0;
+		goto col2;
+		}
+	alpha = pD[0+ps*0];
+	beta += alpha*alpha;
+	beta = sqrt(beta);
+	if(alpha>0)
+		beta = -beta;
+	dD[0] = (beta-alpha) / beta;
+	pT[0+ps*0] = - dD[0];
+	tmp = 1.0 / (alpha-beta);
+	//
+#if 0
+	pD[0+ps*0] = beta;
+	_w0 = _mm256_load_pd( &pD[0+ps*0] );
+	//
+	pD[0+ps*1] *= tmp;
+	_a0 = _mm256_load_pd( &pD[0+ps*1] );
+	_b0 = _mm256_broadcast_sd( &pD[0+ps*1] );
+	_w0 = _mm256_fmadd_pd( _a0, _b0, _w0 );
+	//
+	pD[0+ps*2] *= tmp;
+	_a0 = _mm256_load_pd( &pD[0+ps*2] );
+	_b0 = _mm256_broadcast_sd( &pD[0+ps*2] );
+	_w0 = _mm256_fmadd_pd( _a0, _b0, _w0 );
+	//
+	pD[0+ps*3] *= tmp;
+	_a0 = _mm256_load_pd( &pD[0+ps*3] );
+	_b0 = _mm256_broadcast_sd( &pD[0+ps*3] );
+	_w0 = _mm256_fmadd_pd( _a0, _b0, _w0 );
+	//
+	for(ii=4; ii<n; ii++)
+		{
+		pD[0+ps*ii] *= tmp;
+		_a0 = _mm256_load_pd( &pD[0+ps*ii] );
+		_b0 = _mm256_broadcast_sd( &pD[0+ps*ii] );
+		_w0 = _mm256_fmadd_pd( _a0, _b0, _w0 );
+		}
+	//
+	_b0 = _mm256_broadcast_sd( &pT[0+ps*0] );
+	_w0 = _mm256_mul_pd( _w0, _b0 );
+	_w0 = _mm256_blend_pd( _w0, _z0, 0x1 );
+	//
+	_a0 = _mm256_load_pd( &pD[0+ps*0] );
+	_a0 = _mm256_add_pd( _a0, _w0 );
+	_mm256_store_pd( &pD[0+ps*0], _a0 );
+	//
+	_a0 = _mm256_load_pd( &pD[0+ps*1] );
+	_b0 = _mm256_broadcast_sd( &pD[0+ps*1] );
+	_a0 = _mm256_fmadd_pd( _w0, _b0, _a0 );
+	_mm256_store_pd( &pD[0+ps*1], _a0 );
+	//
+	_a0 = _mm256_load_pd( &pD[0+ps*2] );
+	_b0 = _mm256_broadcast_sd( &pD[0+ps*2] );
+	_a0 = _mm256_fmadd_pd( _w0, _b0, _a0 );
+	_mm256_store_pd( &pD[0+ps*2], _a0 );
+	_beta = _mm256_mul_pd( _a0, _a0 );
+	//
+	_a0 = _mm256_load_pd( &pD[0+ps*3] );
+	_b0 = _mm256_broadcast_sd( &pD[0+ps*3] );
+	_a0 = _mm256_fmadd_pd( _w0, _b0, _a0 );
+	_mm256_store_pd( &pD[0+ps*3], _a0 );
+	_beta = _mm256_fmadd_pd( _a0, _a0, _beta );
+	//
+	for(ii=4; ii<n; ii++)
+		{
+		_a0 = _mm256_load_pd( &pD[0+ps*ii] );
+		_b0 = _mm256_broadcast_sd( &pD[0+ps*ii] );
+		_a0 = _mm256_fmadd_pd( _w0, _b0, _a0 );
+		_mm256_store_pd( &pD[0+ps*ii], _a0 );
+		_beta = _mm256_fmadd_pd( _a0, _a0, _beta );
+		}
+	_beta = _mm256_permute4x64_pd( _beta, 0x1 );
+	_mm_store_sd( &beta, _mm256_castpd256_pd128( _beta ) );
+#else
+	pD[0+ps*0] = beta;
+	w1 = pD[1+ps*0];
+	w2 = pD[2+ps*0];
+	w3 = pD[3+ps*0];
+	//
+	pD[0+ps*1] *= tmp;
+	w1 += pD[1+ps*1] * pD[0+ps*1];
+	w2 += pD[2+ps*1] * pD[0+ps*1];
+	w3 += pD[3+ps*1] * pD[0+ps*1];
+	//
+	pD[0+ps*2] *= tmp;
+	w1 += pD[1+ps*2] * pD[0+ps*2];
+	w2 += pD[2+ps*2] * pD[0+ps*2];
+	w3 += pD[3+ps*2] * pD[0+ps*2];
+	//
+	pD[0+ps*3] *= tmp;
+	w1 += pD[1+ps*3] * pD[0+ps*3];
+	w2 += pD[2+ps*3] * pD[0+ps*3];
+	w3 += pD[3+ps*3] * pD[0+ps*3];
+	//
+	for(ii=4; ii<n; ii++)
+		{
+		pD[0+ps*ii] *= tmp;
+		w1 += pD[1+ps*ii] * pD[0+ps*ii];
+		w2 += pD[2+ps*ii] * pD[0+ps*ii];
+		w3 += pD[3+ps*ii] * pD[0+ps*ii];
+		}
+	//
+	w1 = - dD[0] * w1;
+	w2 = - dD[0] * w2;
+	w3 = - dD[0] * w3;
+	//
+	pD[1+ps*0] += w1;
+	pD[2+ps*0] += w2;
+	pD[3+ps*0] += w3;
+	//
+	pD[1+ps*1] += w1 * pD[0+ps*1];
+	pD[2+ps*1] += w2 * pD[0+ps*1];
+	pD[3+ps*1] += w3 * pD[0+ps*1];
+	//
+	pD[1+ps*2] += w1 * pD[0+ps*2];
+	pD[2+ps*2] += w2 * pD[0+ps*2];
+	pD[3+ps*2] += w3 * pD[0+ps*2];
+	beta = pD[1+ps*2] * pD[1+ps*2];
+	//
+	pD[1+ps*3] += w1 * pD[0+ps*3];
+	pD[2+ps*3] += w2 * pD[0+ps*3];
+	pD[3+ps*3] += w3 * pD[0+ps*3];
+	beta += pD[1+ps*3] * pD[1+ps*3];
+	//
+	for(ii=4; ii<n; ii++)
+		{
+		pD[1+ps*ii] += w1 * pD[0+ps*ii];
+		pD[2+ps*ii] += w2 * pD[0+ps*ii];
+		pD[3+ps*ii] += w3 * pD[0+ps*ii];
+		beta += pD[1+ps*ii] * pD[1+ps*ii];
+		}
+#endif
+	// second column
+col2:
+	if(beta==0.0)
+		{
+		dD[1] = 0.0;
+		tmp = 0.0;
+		goto col3;
+		}
+	alpha = pD[1+ps*1];
+	beta += alpha*alpha;
+	beta = sqrt(beta);
+	if(alpha>0)
+		beta = -beta;
+	dD[1] = (beta-alpha) / beta;
+	pT[1+ps*1] = - dD[1];
+	tmp = 1.0 / (alpha-beta);
+	//
+	pD[1+ps*1] = beta;
+	w0 = pD[0+ps*1]; //
+	w2 = pD[2+ps*1];
+	w3 = pD[3+ps*1];
+	//
+	pD[1+ps*2] *= tmp;
+	w0 += pD[0+ps*2] * pD[1+ps*2]; //
+	w2 += pD[2+ps*2] * pD[1+ps*2];
+	w3 += pD[3+ps*2] * pD[1+ps*2];
+	//
+	pD[1+ps*3] *= tmp;
+	w0 += pD[0+ps*3] * pD[1+ps*3]; //
+	w2 += pD[2+ps*3] * pD[1+ps*3];
+	w3 += pD[3+ps*3] * pD[1+ps*3];
+	//
+	for(ii=4; ii<n; ii++)
+		{
+		pD[1+ps*ii] *= tmp;
+		w0 += pD[0+ps*ii] * pD[1+ps*ii]; //
+		w2 += pD[2+ps*ii] * pD[1+ps*ii];
+		w3 += pD[3+ps*ii] * pD[1+ps*ii];
+		}
+	//
+	pT[0+ps*1] = - dD[1] * (w0*pT[0+ps*0]);
+	w2 = - dD[1] * w2;
+	w3 = - dD[1] * w3;
+	//
+	pD[2+ps*1] += w2;
+	pD[3+ps*1] += w3;
+	//
+	pD[2+ps*2] += w2 * pD[1+ps*2];
+	pD[3+ps*2] += w3 * pD[1+ps*2];
+	//
+	pD[2+ps*3] += w2 * pD[1+ps*3];
+	pD[3+ps*3] += w3 * pD[1+ps*3];
+	beta = pD[2+ps*3] * pD[2+ps*3];
+	//
+	for(ii=4; ii<n; ii++)
+		{
+		pD[2+ps*ii] += w2 * pD[1+ps*ii];
+		pD[3+ps*ii] += w3 * pD[1+ps*ii];
+		beta += pD[2+ps*ii] * pD[2+ps*ii];
+		}
+	// third column
+col3:
+	if(beta==0.0)
+		{
+		dD[2] = 0.0;
+		tmp = 0.0;
+		goto col4;
+		}
+	alpha = pD[2+ps*2];
+	beta += alpha*alpha;
+	beta = sqrt(beta);
+	if(alpha>0)
+		beta = -beta;
+	dD[2] = (beta-alpha) / beta;
+	pT[2+ps*2] = - dD[2];
+	tmp = 1.0 / (alpha-beta);
+	//
+	pD[2+ps*2] = beta;
+	w0 = pD[0+ps*2];
+	w1 = pD[1+ps*2];
+	w3 = pD[3+ps*2];
+	//
+	pD[2+ps*3] *= tmp;
+	w0 += pD[0+ps*3] * pD[2+ps*3];
+	w1 += pD[1+ps*3] * pD[2+ps*3];
+	w3 += pD[3+ps*3] * pD[2+ps*3];
+	//
+	for(ii=4; ii<n; ii++)
+		{
+		pD[2+ps*ii] *= tmp;
+		w0 += pD[0+ps*ii] * pD[2+ps*ii];
+		w1 += pD[1+ps*ii] * pD[2+ps*ii];
+		w3 += pD[3+ps*ii] * pD[2+ps*ii];
+		}
+	//
+	pT[1+ps*2] = - dD[2] * (w1*pT[1+ps*1]);
+	pT[0+ps*2] = - dD[2] * (w0*pT[0+ps*0] + w1*pT[0+ps*1]);
+	w3 = - dD[2] * w3;
+	//
+	pD[3+ps*2] += w3;
+	//
+	pD[3+ps*3] += w3 * pD[2+ps*3];
+	//
+	beta = 0.0;
+	for(ii=4; ii<n; ii++)
+		{
+		pD[3+ps*ii] += w3 * pD[2+ps*ii];
+		beta += pD[3+ps*ii] * pD[3+ps*ii];
+		}
+	// fourth column
+col4:
+	if(beta==0.0)
+		{
+		dD[3] = 0.0;
+		tmp = 0.0;
+		return;
+		}
+	alpha = pD[3+ps*3];
+	beta += alpha*alpha;
+	beta = sqrt(beta);
+	if(alpha>0)
+		beta = -beta;
+	dD[3] = (beta-alpha) / beta;
+	pT[3+ps*3] = - dD[3];
+	tmp = 1.0 / (alpha-beta);
+	//
+	pD[3+ps*3] = beta;
+	w0 =  pD[0+ps*3];
+	w1 =  pD[1+ps*3];
+	w2 =  pD[2+ps*3];
+	//
+	for(ii=4; ii<n; ii++)
+		{
+		pD[3+ps*ii] *= tmp;
+		w0 += pD[0+ps*ii] * pD[3+ps*ii];
+		w1 += pD[1+ps*ii] * pD[3+ps*ii];
+		w2 += pD[2+ps*ii] * pD[3+ps*ii];
+		}
+	//
+	pT[2+ps*3] = - dD[3] * (w2*pT[2+ps*2]);
+	pT[1+ps*3] = - dD[3] * (w1*pT[1+ps*1] + w2*pT[1+ps*2]);
+	pT[0+ps*3] = - dD[3] * (w0*pT[0+ps*0] + w1*pT[0+ps*1] + w2*pT[0+ps*2]);
+	return;
+	}
+
+
+
+

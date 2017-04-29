@@ -2469,11 +2469,12 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		n -= imax0;
 		imax -= imax0;
 		}
-	for(ii=0; ii<imax-3; ii+=4)
+	for(ii=0; ii<imax-4; ii+=4)
 		{
 //		kernel_dgelqf_vs_lib4(4, n-ii, 4, 0, pD+ii*sdd+ii*ps, sdd, dD+ii);
-		kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
-		kernel_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+//		kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+		kernel_dgelqf_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+//		kernel_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
 		jj = ii+4;
 #if defined(TARGET_X64_INTEL_HASWELL)
 		for(; jj<m-11; jj+=12)
@@ -2498,7 +2499,14 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		}
 	if(ii<imax)
 		{
-		kernel_dgelqf_vs_lib4(m-ii, n-ii, imax-ii, ii&(ps-1), pD+ii*sdd+ii*ps, sdd, dD+ii);
+		if(ii==imax-4)
+			{
+			kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+			}
+		else
+			{
+			kernel_dgelqf_vs_lib4(m-ii, n-ii, imax-ii, ii&(ps-1), pD+ii*sdd+ii*ps, sdd, dD+ii);
+			}
 		}
 #endif
 	return;
