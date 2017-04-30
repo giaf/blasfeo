@@ -2446,11 +2446,11 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	double *pC = &(DMATEL_LIBSTR(sC,ci,cj));
 	double *pD = &(DMATEL_LIBSTR(sD,di,dj));
 	double *dD = sD->dA + di;
-	double pT[16] = {};
-	pT[0] = 1.0;
-	pT[5] = 1.0;
-	pT[10] = 1.0;
-	pT[15] = 1.0;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	double pT[16] __attribute__ ((aligned (64))) ;
+#else
+	double pT[16];
+#endif
 	if(pC!=pD)
 		dgecp_lib(m, n, 1.0, ci&(ps-1), pC, sdc, di&(ps-1), pD, sdd);
 	int ii, jj, ll;
@@ -2473,8 +2473,8 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		{
 //		kernel_dgelqf_vs_lib4(4, n-ii, 4, 0, pD+ii*sdd+ii*ps, sdd, dD+ii);
 //		kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
-		kernel_dgelqf_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
 //		kernel_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		kernel_dgelqf_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
 		jj = ii+4;
 #if defined(TARGET_X64_INTEL_HASWELL)
 		for(; jj<m-11; jj+=12)
