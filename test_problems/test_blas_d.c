@@ -317,6 +317,7 @@ int main()
 //			kernel_dger4_12_sub_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
 //			kernel_dger4_sub_12r_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
 //			kernel_dger4_sub_8r_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+//			kernel_dger12_add_4r_lib4(n, sA.pA, sB.pA, sB.cn, sD.pA);
 //			kernel_dger8_add_4r_lib4(n, sA.pA, sB.pA, sB.cn, sD.pA);
 //			kernel_dger4_sub_4r_lib4(n, sA.pA, sB.pA, sD.pA);
 //			kernel_dger2_sub_4r_lib4(n, sA.pA, sB.pA, sD.pA);
