@@ -2447,11 +2447,11 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	double *pD = &(DMATEL_LIBSTR(sD,di,dj));
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_HASWELL)
-	double pT[144] __attribute__ ((aligned (64))) ;
-	double pK[96] __attribute__ ((aligned (64))) ;
+	double pT[144] __attribute__ ((aligned (64))) = {};
+	double pK[96] __attribute__ ((aligned (64))) = {};
 #else
-	double pT[144];
-	double pK[96];
+	double pT[144] = {};
+	double pK[96] = {};
 #endif
 	if(pC!=pD)
 		dgecp_lib(m, n, 1.0, ci&(ps-1), pC, sdc, di&(ps-1), pD, sdd);
@@ -2497,23 +2497,24 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	for(; ii<imax-11; ii+=12)
 		{
 		kernel_dgelqf_dlarft_12_12_lib4(n-(ii+0), pD+(ii+0)*sdd+(ii+0)*ps, sdd, dD+(ii+0), &pT[0+0*12+0*ps]);
-//		d_print_mat(4, 12, &pT[0*12], 4);
-//		d_print_mat(4, 12, &pT[4*12], 4);
-//		d_print_mat(4, 12, &pT[8*12], 4);
+		d_print_mat(4, 12, &pT[0*12], 4);
+		d_print_mat(4, 12, &pT[4*12], 4);
+		d_print_mat(4, 12, &pT[8*12], 4);
 		double alpha = 0.0;
 		double beta = 0.0;
 		jj = ii+12;
 		for(; jj<m-3; jj+=4)
 			{
 			// make initial triangle !!!!
-			kernel_dgemm_nt_4x12_lib4(n-ii, &alpha, pD+jj*sdd+ii*ps, pD+ii*sdd+ii*ps, sdd, &beta, pK, pK);
-//			d_print_mat(4, 12, pK, 4);
+			kernel_dlarfb12_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, pT, pD+jj*sdd+ii*ps, pK);
+//			kernel_dgemm_nt_4x12_lib4(n-ii, &alpha, pD+jj*sdd+ii*ps, pD+ii*sdd+ii*ps, sdd, &beta, pK, pK);
+			d_print_mat(4, 12, pK, 4);
 			kernel_dlarfb_12_lib4(pK, pT);
-//			d_print_mat(4, 12, pK, 4);
+			d_print_mat(4, 12, pK, 4);
 			// make initial triangle !!!!
 			kernel_dger12_add_4r_lib4(n-ii, pK, pD+ii*sdd+ii*ps, sdd, pD+jj*sdd+ii*ps);
 			}
-//		return;
+		return;
 		}
 #endif
 	for(; ii<imax-11; ii+=4)
