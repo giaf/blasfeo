@@ -414,6 +414,20 @@ void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 
 
 
+// insert a vector  into a rcol
+void dcolin_libstr(int kmax, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		pA[ii] = x[ii];
+	return;
+	}
+
+
+
 // swap two cols of a matrix struct
 void dcolsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{

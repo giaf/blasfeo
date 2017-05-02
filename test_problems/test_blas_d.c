@@ -246,6 +246,8 @@ int main()
 #else
 		struct d_strmat sA; d_allocate_strmat(n, n, &sA);
 		struct d_strmat sB; d_allocate_strmat(n, n, &sB);
+		struct d_strmat sB2; d_allocate_strmat(n, n, &sB2);
+		struct d_strmat sB3; d_allocate_strmat(n, n, &sB3);
 		struct d_strmat sC; d_allocate_strmat(n, n, &sC);
 		struct d_strmat sD; d_allocate_strmat(n, n, &sD);
 		struct d_strmat sE; d_allocate_strmat(n, n, &sE);
@@ -256,7 +258,18 @@ int main()
 
 		d_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
 		d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
+		d_cvt_mat2strmat(n, n, B2, n, &sB2, 0, 0);
 		d_cvt_vec2strvec(n, x, &sx, 0);
+		int ii;
+		for(ii=0; ii<n; ii++)
+			{
+			DMATEL_LIBSTR(&sB3, ii, ii) = 1.0;
+//			DMATEL_LIBSTR(&sB3, n-1, ii) = 1.0;
+			DMATEL_LIBSTR(&sB3, ii, n-1) = 1.0;
+			DVECEL_LIBSTR(&sx, ii) = 1.0;
+			}
+//		d_print_strmat(n, n, &sB3, 0, 0);
+//		if(n==20) return;
 
 		int qr_work_size = dgeqrf_work_size_libstr(n, n);
 		void *qr_work;
@@ -334,7 +347,8 @@ int main()
 //			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 //			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
-			dgelqf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, lq_work);
+			dcolin_libstr(n, &sx, 0, &sB3, 0, n-1);
+			dgelqf_libstr(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
 //			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
@@ -442,6 +456,8 @@ int main()
 		
 		d_free_strmat(&sA);
 		d_free_strmat(&sB);
+		d_free_strmat(&sB2);
+		d_free_strmat(&sB3);
 		d_free_strmat(&sC);
 		d_free_strmat(&sD);
 		d_free_strmat(&sE);

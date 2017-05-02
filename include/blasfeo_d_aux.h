@@ -109,6 +109,7 @@ void drowsw_lib(int kmax, double *pA, double *pC);
 void drowsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
 void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA);
 void dcolin_lib(int kmax, double *x, int offset, double *pD, int sdd);
+void dcolin_libstr(int kmax, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj);
 void dcolad_lib(int kmax, double alpha, double *x, int offset, double *pD, int sdd);
 void dcolin_libsp(int kmax, int *idx, double *x, double *pD, int sdd);
 void dcolad_libsp(int kmax, double alpha, int *idx, double *x, double *pD, int sdd);

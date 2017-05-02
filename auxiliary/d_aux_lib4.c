@@ -2931,6 +2931,20 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 
 
 
+// insert as vector as a column
+void dcolin_libstr(int kmax, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
+	{
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	double *x = sx->pa + xi;
+	dcolin_lib(kmax, x, ai%bs, pA, sda);
+	return;
+	}
+
+
+
+
 // copy a generic strmat into a generic strmat
 void dgecp_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
