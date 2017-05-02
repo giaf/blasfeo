@@ -2214,7 +2214,7 @@ void kernel_dlarft_4_lib4(int kmax, double *pD, double *dD, double *pT)
 
 
 // assume n>=4
-void kernel_dgelqf_dlarft_4_lib4(int n, double *pD, double *dD, double *pT)
+void kernel_dgelqf_dlarft4_4_lib4(int n, double *pD, double *dD, double *pT)
 	{
 	int ii, jj, ll;
 	double alpha, beta, tmp, w0, w1, w2, w3;
@@ -2448,7 +2448,7 @@ col4:
 
 
 
-void kernel_dlarfb_r_4_lib4(int kmax, double *pV, double *pT, double *pD)
+void kernel_dlarfb4_r_4_lib4(int kmax, double *pV, double *pT, double *pD)
 	{
 	const int ps = 4;
 	double pW[16];
@@ -2569,7 +2569,7 @@ void kernel_dlarfb_r_4_lib4(int kmax, double *pV, double *pT, double *pD)
 
 
 
-void kernel_dlarfb_r_1_lib4(int kmax, double *pV, double *pT, double *pD)
+void kernel_dlarfb4_r_1_lib4(int kmax, double *pV, double *pT, double *pD)
 	{
 	const int ps = 4;
 	double pW[16];

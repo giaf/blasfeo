@@ -2473,93 +2473,59 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 		}
 	ii = 0;
 #if defined(TARGET_X64_INTEL_HASWELL)
-#if 0
-	for(; ii<imax-7; ii+=8)
+//	for(; ii<imax-11; ii+=12)
+	for(; ii<imax-127; ii+=12) // crossover point ~ ii=128
 		{
-		kernel_dgelqf_dlarft_8_lib4(n-(ii+0), pD+(ii+0)*sdd+(ii+0)*ps, sdd, dD+(ii+0), &pT[0+0*12+0*ps]);
-		kernel_dgelqf_dlarft_4_lib4(n-(ii+4), pD+(ii+4)*sdd+(ii+4)*ps, dD+(ii+4), &pT[0+4*12+4*ps]);
-//		d_print_mat(4, 12, &pT[0*12], 4);
-//		d_print_mat(4, 12, &pT[4*12], 4);
-//		d_print_mat(4, 12, &pT[8*12], 4);
-		double alpha = 0.0;
-		double beta = 0.0;
+		kernel_dgelqf_dlarft12_12_lib4(n-(ii+0), pD+(ii+0)*sdd+(ii+0)*ps, sdd, dD+(ii+0), &pT[0+0*12+0*ps]);
 		jj = ii+12;
-		for(; jj<m-3; jj+=4)
+		for(; jj<m; jj+=4)
 			{
-			kernel_dgemm_nt_4x8_lib4(n-ii, &alpha, pD+jj*sdd+ii*ps, pD+ii*sdd+ii*ps, sdd, &beta, pK, pK);
-//			d_print_mat(4, 12, pK, 4);
-			kernel_dger8_add_4r_lib4(n-ii, pK, pD+ii*sdd+ii*ps, sdd, pD+jj*sdd+ii*ps);
+			kernel_dlarfb12_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, pT, pD+jj*sdd+ii*ps, pK, m-jj);
 			}
-//		return;
 		}
-#endif
-#if 0
-	for(; ii<imax-11; ii+=12)
-		{
-		kernel_dgelqf_dlarft_12_12_lib4(n-(ii+0), pD+(ii+0)*sdd+(ii+0)*ps, sdd, dD+(ii+0), &pT[0+0*12+0*ps]);
-		d_print_mat(4, 12, &pT[0*12], 4);
-		d_print_mat(4, 12, &pT[4*12], 4);
-		d_print_mat(4, 12, &pT[8*12], 4);
-		double alpha = 0.0;
-		double beta = 0.0;
-		jj = ii+12;
-		for(; jj<m-3; jj+=4)
-			{
-			// make initial triangle !!!!
-			kernel_dlarfb12_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, pT, pD+jj*sdd+ii*ps, pK);
-//			kernel_dgemm_nt_4x12_lib4(n-ii, &alpha, pD+jj*sdd+ii*ps, pD+ii*sdd+ii*ps, sdd, &beta, pK, pK);
-			d_print_mat(4, 12, pK, 4);
-			kernel_dlarfb_12_lib4(pK, pT);
-			d_print_mat(4, 12, pK, 4);
-			// make initial triangle !!!!
-			kernel_dger12_add_4r_lib4(n-ii, pK, pD+ii*sdd+ii*ps, sdd, pD+jj*sdd+ii*ps);
-			}
-		return;
-		}
-#endif
 	for(; ii<imax-11; ii+=4)
 		{
-		kernel_dgelqf_dlarft_12_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, dD+ii, pT);
+		kernel_dgelqf_dlarft4_12_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, dD+ii, pT);
 		jj = ii+12;
 		for(; jj<m-11; jj+=12)
 			{
-			kernel_dlarfb_r_12_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+			kernel_dlarfb4_r_12_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
 			}
 		for(; jj<m-7; jj+=8)
 			{
-			kernel_dlarfb_r_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+			kernel_dlarfb4_r_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
 			}
 		for(; jj<m-3; jj+=4)
 			{
-			kernel_dlarfb_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+			kernel_dlarfb4_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
 			}
 		for(ll=0; ll<m-jj; ll++)
 			{
-			kernel_dlarfb_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
+			kernel_dlarfb4_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
 			}
 		}
 	// 8 9 10 11
 	if(ii<imax-7)
 		{
-		kernel_dgelqf_dlarft_8_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, dD+ii, pT);
+		kernel_dgelqf_dlarft4_8_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, dD+ii, pT);
 		jj = ii+8;
 		if(jj<m)
 			{
 			for(; jj<m-11; jj+=12)
 				{
-				kernel_dlarfb_r_12_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+				kernel_dlarfb4_r_12_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
 				}
 			for(; jj<m-7; jj+=8)
 				{
-				kernel_dlarfb_r_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+				kernel_dlarfb4_r_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
 				}
 			for(; jj<m-3; jj+=4)
 				{
-				kernel_dlarfb_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+				kernel_dlarfb4_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
 				}
 			for(ll=0; ll<m-jj; ll++)
 				{
-				kernel_dlarfb_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
+				kernel_dlarfb4_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
 				}
 			}
 		ii += 4;
@@ -2567,25 +2533,25 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	// 4 5 6 7
 	if(ii<imax-3)
 		{
-		kernel_dgelqf_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		kernel_dgelqf_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
 		jj = ii+4;
 		if(jj<m)
 			{
 			for(; jj<m-11; jj+=12)
 				{
-				kernel_dlarfb_r_12_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+				kernel_dlarfb4_r_12_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
 				}
 			for(; jj<m-7; jj+=8)
 				{
-				kernel_dlarfb_r_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+				kernel_dlarfb4_r_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
 				}
 			for(; jj<m-3; jj+=4)
 				{
-				kernel_dlarfb_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+				kernel_dlarfb4_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
 				}
 			for(ll=0; ll<m-jj; ll++)
 				{
-				kernel_dlarfb_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
+				kernel_dlarfb4_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
 				}
 			}
 		ii += 4;
@@ -2601,15 +2567,15 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 //		kernel_dgelqf_vs_lib4(4, n-ii, 4, 0, pD+ii*sdd+ii*ps, sdd, dD+ii);
 //		kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
 //		kernel_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
-		kernel_dgelqf_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		kernel_dgelqf_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
 		jj = ii+4;
 		for(; jj<m-3; jj+=4)
 			{
-			kernel_dlarfb_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+			kernel_dlarfb4_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
 			}
 		for(ll=0; ll<m-jj; ll++)
 			{
-			kernel_dlarfb_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
+			kernel_dlarfb4_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
 			}
 		}
 	if(ii<imax)

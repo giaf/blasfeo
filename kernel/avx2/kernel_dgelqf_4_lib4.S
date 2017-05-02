@@ -150,20 +150,20 @@
 
 
 //                                   1      2           3        4           5
-// void kernel_dgelqf_dlarft_12_12_lib4(int n, double *pD, int sdd, double *dD, double *pT)
+// void kernel_dgelqf_dlarft12_12_lib4(int n, double *pD, int sdd, double *dD, double *pT)
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dgelqf_dlarft_12_12_lib4
-	.type kernel_dgelqf_dlarft_12_12_lib4, @function
-kernel_dgelqf_dlarft_12_12_lib4:
+	.globl kernel_dgelqf_dlarft12_12_lib4
+	.type kernel_dgelqf_dlarft12_12_lib4, @function
+kernel_dgelqf_dlarft12_12_lib4:
 #elif defined(OS_MAC)
-	.globl _kernel_dgelqf_dlarft_12_12_lib4
-_kernel_dgelqf_dlarft_12_12_lib4:
+	.globl _kernel_dgelqf_dlarft12_12_lib4
+_kernel_dgelqf_dlarft12_12_lib4:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dgelqf_dlarft_12_12_lib4
-	.def kernel_dgelqf_dlarft_12_12_lib4; .scl 2; .type 32; .endef
-kernel_dgelqf_dlarft_12_12_lib4:
+	.globl kernel_dgelqf_dlarft12_12_lib4
+	.def kernel_dgelqf_dlarft12_12_lib4; .scl 2; .type 32; .endef
+kernel_dgelqf_dlarft12_12_lib4:
 #endif
 	
 	PROLOGUE
@@ -2665,7 +2665,7 @@ kernel_dgelqf_dlarft_12_12_lib4:
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	vmovapd			288(%r13, %r15, 2), %ymm14
 	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vmulpd			%ymm14, %ymm13, %ymm10
+	vfmadd231pd		%ymm14, %ymm13, %ymm10
 	//
 	vbroadcastsd	336(%r13, %r15, 2), %ymm14
 	vmulpd			%ymm14, %ymm15, %ymm15
@@ -2903,7 +2903,7 @@ kernel_dgelqf_dlarft_12_12_lib4:
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	vmovapd			288(%r13, %r15, 2), %ymm14
 	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vmulpd			%ymm14, %ymm13, %ymm10
+	vfmadd231pd		%ymm14, %ymm13, %ymm10
 	//
 	vpermpd			$0xaa, %ymm2, %ymm13
 	vmovapd			320(%r13), %ymm14
@@ -2912,7 +2912,7 @@ kernel_dgelqf_dlarft_12_12_lib4:
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	vmovapd			320(%r13, %r15, 2), %ymm14
 	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
-	vmulpd			%ymm14, %ymm13, %ymm10
+	vfmadd231pd		%ymm14, %ymm13, %ymm10
 	//
 	vbroadcastsd	376(%r13, %r15, 2), %ymm14
 	vmulpd			%ymm14, %ymm15, %ymm15
@@ -2932,7 +2932,7 @@ kernel_dgelqf_dlarft_12_12_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dgelqf_dlarft_12_12_lib4, .-kernel_dgelqf_dlarft_12_12_lib4
+	.size	kernel_dgelqf_dlarft12_12_lib4, .-kernel_dgelqf_dlarft12_12_lib4
 #endif
 
 
@@ -2940,20 +2940,20 @@ kernel_dgelqf_dlarft_12_12_lib4:
 
 
 //                                   1      2           3        4           5
-// void kernel_dgelqf_dlarft_12_lib4(int n, double *pD, int sdd, double *dD, double *pT)
+// void kernel_dgelqf_dlarft4_12_lib4(int n, double *pD, int sdd, double *dD, double *pT)
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dgelqf_dlarft_12_lib4
-	.type kernel_dgelqf_dlarft_12_lib4, @function
-kernel_dgelqf_dlarft_12_lib4:
+	.globl kernel_dgelqf_dlarft4_12_lib4
+	.type kernel_dgelqf_dlarft4_12_lib4, @function
+kernel_dgelqf_dlarft4_12_lib4:
 #elif defined(OS_MAC)
-	.globl _kernel_dgelqf_dlarft_12_lib4
-_kernel_dgelqf_dlarft_12_lib4:
+	.globl _kernel_dgelqf_dlarft4_12_lib4
+_kernel_dgelqf_dlarft4_12_lib4:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dgelqf_dlarft_12_lib4
-	.def kernel_dgelqf_dlarft_12_lib4; .scl 2; .type 32; .endef
-kernel_dgelqf_dlarft_12_lib4:
+	.globl kernel_dgelqf_dlarft4_12_lib4
+	.def kernel_dgelqf_dlarft4_12_lib4; .scl 2; .type 32; .endef
+kernel_dgelqf_dlarft4_12_lib4:
 #endif
 	
 	PROLOGUE
@@ -3838,7 +3838,7 @@ kernel_dgelqf_dlarft_12_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dgelqf_dlarft_12_lib4, .-kernel_dgelqf_dlarft_12_lib4
+	.size	kernel_dgelqf_dlarft4_12_lib4, .-kernel_dgelqf_dlarft4_12_lib4
 #endif
 
 
@@ -3846,20 +3846,20 @@ kernel_dgelqf_dlarft_12_lib4:
 
 
 //                                  1      2           3        4           5
-// void kernel_dgelqf_dlarft_8_lib4(int n, double *pD, int sdd, double *dD, double *pT)
+// void kernel_dgelqf_dlarft4_8_lib4(int n, double *pD, int sdd, double *dD, double *pT)
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dgelqf_dlarft_8_lib4
-	.type kernel_dgelqf_dlarft_8_lib4, @function
-kernel_dgelqf_dlarft_8_lib4:
+	.globl kernel_dgelqf_dlarft4_8_lib4
+	.type kernel_dgelqf_dlarft4_8_lib4, @function
+kernel_dgelqf_dlarft4_8_lib4:
 #elif defined(OS_MAC)
-	.globl _kernel_dgelqf_dlarft_8_lib4
-_kernel_dgelqf_dlarft_8_lib4:
+	.globl _kernel_dgelqf_dlarft4_8_lib4
+_kernel_dgelqf_dlarft4_8_lib4:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dgelqf_dlarft_8_lib4
-	.def kernel_dgelqf_dlarft_8_lib4; .scl 2; .type 32; .endef
-kernel_dgelqf_dlarft_8_lib4:
+	.globl kernel_dgelqf_dlarft4_8_lib4
+	.def kernel_dgelqf_dlarft4_8_lib4; .scl 2; .type 32; .endef
+kernel_dgelqf_dlarft4_8_lib4:
 #endif
 	
 	PROLOGUE
@@ -4620,7 +4620,7 @@ kernel_dgelqf_dlarft_8_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dgelqf_dlarft_8_lib4, .-kernel_dgelqf_dlarft_8_lib4
+	.size	kernel_dgelqf_dlarft4_8_lib4, .-kernel_dgelqf_dlarft4_8_lib4
 #endif
 
 
@@ -4628,20 +4628,20 @@ kernel_dgelqf_dlarft_8_lib4:
 
 
 //                                  1      2           3           4
-// void kernel_dgelqf_dlarft_4_lib4(int n, double *pD, double *dD, double *pT, double *beta)
+// void kernel_dgelqf_dlarft4_4_lib4(int n, double *pD, double *dD, double *pT, double *beta)
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dgelqf_dlarft_4_lib4
-	.type kernel_dgelqf_dlarft_4_lib4, @function
-kernel_dgelqf_dlarft_4_lib4:
+	.globl kernel_dgelqf_dlarft4_4_lib4
+	.type kernel_dgelqf_dlarft4_4_lib4, @function
+kernel_dgelqf_dlarft4_4_lib4:
 #elif defined(OS_MAC)
-	.globl _kernel_dgelqf_dlarft_4_lib4
-_kernel_dgelqf_dlarft_4_lib4:
+	.globl _kernel_dgelqf_dlarft4_4_lib4
+_kernel_dgelqf_dlarft4_4_lib4:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dgelqf_dlarft_4_lib4
-	.def kernel_dgelqf_dlarft_4_lib4; .scl 2; .type 32; .endef
-kernel_dgelqf_dlarft_4_lib4:
+	.globl kernel_dgelqf_dlarft4_4_lib4
+	.def kernel_dgelqf_dlarft4_4_lib4; .scl 2; .type 32; .endef
+kernel_dgelqf_dlarft4_4_lib4:
 #endif
 	
 	PROLOGUE
@@ -5223,7 +5223,7 @@ kernel_dgelqf_dlarft_4_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dgelqf_dlarft_4_lib4, .-kernel_dgelqf_dlarft_4_lib4
+	.size	kernel_dgelqf_dlarft4_4_lib4, .-kernel_dgelqf_dlarft4_4_lib4
 #endif
 
 
