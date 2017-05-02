@@ -11235,21 +11235,21 @@ kernel_dtrsm_nt_rl_inv_12x4_vs_lib4:
 
 
 
-//                                       1      2          3          4        5          6          7          8        9
-// void kernel_dtrsm_nt_rl_inv_4x12_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *E, int sde, double *inv_diag_E);
+//                                          1      2          3          4        5          6          7          8        9                   10      11
+// void kernel_dtrsm_nt_rl_inv_4x12_vs_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *E, int sde, double *inv_diag_E, int km, int kn);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dtrsm_nt_rl_inv_4x12_lib4
-	.type kernel_dtrsm_nt_rl_inv_4x12_lib4, @function
-kernel_dtrsm_nt_rl_inv_4x12_lib4:
+	.globl kernel_dtrsm_nt_rl_inv_4x12_vs_lib4
+	.type kernel_dtrsm_nt_rl_inv_4x12_vs_lib4, @function
+kernel_dtrsm_nt_rl_inv_4x12_vs_lib4:
 #elif defined(OS_MAC)
-	.globl _kernel_dtrsm_nt_rl_inv_4x12_lib4
-_kernel_dtrsm_nt_rl_inv_4x12_lib4:
+	.globl _kernel_dtrsm_nt_rl_inv_4x12_vs_lib4
+_kernel_dtrsm_nt_rl_inv_4x12_vs_lib4:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dtrsm_nt_rl_inv_4x12_lib4
-	.def kernel_dtrsm_nt_rl_inv_4x12_lib4; .scl 2; .type 32; .endef
-kernel_dtrsm_nt_rl_inv_4x12_lib4:
+	.globl kernel_dtrsm_nt_rl_inv_4x12_vs_lib4
+	.def kernel_dtrsm_nt_rl_inv_4x12_vs_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_rl_inv_4x12_vs_lib4:
 #endif
 	
 	PROLOGUE
@@ -11272,11 +11272,11 @@ kernel_dtrsm_nt_rl_inv_4x12_lib4:
 
 	// call inner dgemm kernel nt
 
-	movq	ARG1, %r10
-	movq	ARG3, %r11
-	movq	ARG4, %r12
-	sall	$5, %r12d // 4*sda*sizeof(double)
-	movq	ARG2, %r13
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11 // B
+	movq	ARG4, %r12 // sdb
+	sall	$5, %r12d // 32*sdb
+	movq	ARG2, %r13 // A
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
@@ -11310,14 +11310,15 @@ kernel_dtrsm_nt_rl_inv_4x12_lib4:
 	movq	ARG8, %r11  // sde 
 	sall	$5, %r11d // 4*sde*sizeof(double)
 	movq	ARG9, %r12  // inv_diag_E 
+	movq	ARG11, %r13 // kn 
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRSM_RLT_INV_4X12_LIB4
+	INNER_EDGE_DTRSM_RLT_INV_4X12_VS_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dtrsm_rlt_inv_4x12_lib4
+	call inner_edge_dtrsm_rlt_inv_4x12_vs_lib4
 #elif defined(OS_MAC)
-	callq _inner_edge_dtrsm_rlt_inv_4x12_lib4
+	callq _inner_edge_dtrsm_rlt_inv_4x12_vs_lib4
 #endif
 #endif
 
@@ -11325,14 +11326,16 @@ kernel_dtrsm_nt_rl_inv_4x12_lib4:
 	// store n
 
 	movq	ARG6, %r10 // store address D
+	movq	ARG10, %r11 // km 
+	movq	ARG11, %r12 // kn 
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_4X12_LIB4
+	INNER_STORE_4X12_VS_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_4x12_lib4
+	call inner_store_4x12_vs_lib4
 #elif defined(OS_MAC)
-	callq _inner_store_4x12_lib4
+	callq _inner_store_4x12_vs_lib4
 #endif
 #endif
 
@@ -11342,14 +11345,14 @@ kernel_dtrsm_nt_rl_inv_4x12_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dtrsm_nt_rl_inv_4x12_lib4, .-kernel_dtrsm_nt_rl_inv_4x12_lib4
+	.size	kernel_dtrsm_nt_rl_inv_4x12_vs_lib4, .-kernel_dtrsm_nt_rl_inv_4x12_vs_lib4
 #endif
 
 
 
 
 
-//                                                rdi     rsi         rdx       rcx          r8     r9          rsp+8     rsp+16      rsp+24     rsp+32   rsp+40     rsp+48   rsp+56     rsp+64              rsp+72  rsp+80
+//                                                1       2           3         4           5       6           7         8           9          10       11         12       13         14                  15      16
 // void kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4(int kp, double *Ap, int sdap, double *Bp, int km, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E, int km, int kn);
 
 	.p2align 4,,15
@@ -11488,6 +11491,142 @@ kernel_dgemm_dtrsm_nt_rl_inv_12x4_vs_lib4:
 
 
 
+//                                                1       2           3           4         5       6           7           8         9          10         11         12       13                 14       15
+// void kernel_dgemm_dtrsm_nt_rl_inv_4x12_vs_lib4(int kp, double *Ap, double *Bp, int sdbp, int km, double *Am, double *Bm, int sdbm, double *C, double *D, double *E, int sde, double *inv_diag_E, int km, int kn);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dgemm_dtrsm_nt_rl_inv_4x12_vs_lib4
+	.type kernel_dgemm_dtrsm_nt_rl_inv_4x12_vs_lib4, @function
+kernel_dgemm_dtrsm_nt_rl_inv_4x12_vs_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dgemm_dtrsm_nt_rl_inv_4x12_vs_lib4
+_kernel_dgemm_dtrsm_nt_rl_inv_4x12_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgemm_dtrsm_nt_rl_inv_4x12_vs_lib4
+	.def kernel_dgemm_dtrsm_nt_rl_inv_4x12_vs_lib4; .scl 2; .type 32; .endef
+kernel_dgemm_dtrsm_nt_rl_inv_4x12_vs_lib4:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
+	vmovapd	%ymm0, %ymm8
+	vmovapd	%ymm0, %ymm9
+	vmovapd	%ymm0, %ymm10
+	vmovapd	%ymm0, %ymm11
+
+
+	// call inner dgemm kernel nt add
+
+	movq	ARG1, %r10 // kp
+	movq	ARG3, %r11  // Bp
+	movq	ARG4, %r12 // sdbp
+	sall	$5, %r12d   // 32*sdbp
+	movq	ARG2, %r13  // Ap
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_add_nt_12x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_add_nt_12x4_lib4
+#endif
+#endif
+
+
+	// call inner dgemm kernel nt sub
+
+	movq	ARG5, %r10 // km
+	movq	ARG7, %r11 // Bm
+	movq	ARG8, %r12 // sdbm
+	sall	$5, %r12d // 32*sdbm
+	movq	ARG6, %r13 // Am
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_12X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_sub_nt_12x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_sub_nt_12x4_lib4
+#endif
+#endif
+
+
+	// call inner blender nn
+
+	movq	ARG9, %r10
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_SCALE_11_4X12_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_tran_scale_11_4x12_lib4
+#elif defined(OS_MAC)
+	callq _inner_tran_scale_11_4x12_lib4
+#endif
+#endif
+
+
+	// solve
+
+	movq	ARG11, %r10  // E 
+	movq	ARG12, %r11  // sde 
+	sall	$5, %r11d // 4*sde*sizeof(double)
+	movq	ARG13, %r12  // inv_diag_E 
+	movq	ARG15, %r13 // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RLT_INV_4X12_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dtrsm_rlt_inv_4x12_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dtrsm_rlt_inv_4x12_vs_lib4
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // store address D
+	movq	ARG14, %r11 // km 
+	movq	ARG15, %r12 // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X12_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_4x12_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_4x12_vs_lib4
+#endif
+#endif
+
+
+	EPILOGUE
+	
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dgemm_dtrsm_nt_rl_inv_4x12_vs_lib4, .-kernel_dgemm_dtrsm_nt_rl_inv_4x12_vs_lib4
+#endif
+
+
+
+
+
 //                                       rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24     rsp+32  
 // void kernel_dtrsm_nt_rl_inv_12x4_lib4(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
 
@@ -11604,21 +11743,21 @@ kernel_dtrsm_nt_rl_inv_12x4_lib4:
 
 
 
-//                                          1      2          3          4        5          6          7          8        9                   10      11
-// void kernel_dtrsm_nt_rl_inv_4x12_vs_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *E, int sde, double *inv_diag_E, int km, int kn);
+//                                       1      2          3          4        5          6          7          8        9
+// void kernel_dtrsm_nt_rl_inv_4x12_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *E, int sde, double *inv_diag_E);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dtrsm_nt_rl_inv_4x12_vs_lib4
-	.type kernel_dtrsm_nt_rl_inv_4x12_vs_lib4, @function
-kernel_dtrsm_nt_rl_inv_4x12_vs_lib4:
+	.globl kernel_dtrsm_nt_rl_inv_4x12_lib4
+	.type kernel_dtrsm_nt_rl_inv_4x12_lib4, @function
+kernel_dtrsm_nt_rl_inv_4x12_lib4:
 #elif defined(OS_MAC)
-	.globl _kernel_dtrsm_nt_rl_inv_4x12_vs_lib4
-_kernel_dtrsm_nt_rl_inv_4x12_vs_lib4:
+	.globl _kernel_dtrsm_nt_rl_inv_4x12_lib4
+_kernel_dtrsm_nt_rl_inv_4x12_lib4:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dtrsm_nt_rl_inv_4x12_vs_lib4
-	.def kernel_dtrsm_nt_rl_inv_4x12_vs_lib4; .scl 2; .type 32; .endef
-kernel_dtrsm_nt_rl_inv_4x12_vs_lib4:
+	.globl kernel_dtrsm_nt_rl_inv_4x12_lib4
+	.def kernel_dtrsm_nt_rl_inv_4x12_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_rl_inv_4x12_lib4:
 #endif
 	
 	PROLOGUE
@@ -11679,15 +11818,14 @@ kernel_dtrsm_nt_rl_inv_4x12_vs_lib4:
 	movq	ARG8, %r11  // sde 
 	sall	$5, %r11d // 4*sde*sizeof(double)
 	movq	ARG9, %r12  // inv_diag_E 
-	movq	ARG11, %r13 // kn 
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRSM_RLT_INV_4X12_VS_LIB4
+	INNER_EDGE_DTRSM_RLT_INV_4X12_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dtrsm_rlt_inv_4x12_vs_lib4
+	call inner_edge_dtrsm_rlt_inv_4x12_lib4
 #elif defined(OS_MAC)
-	callq _inner_edge_dtrsm_rlt_inv_4x12_vs_lib4
+	callq _inner_edge_dtrsm_rlt_inv_4x12_lib4
 #endif
 #endif
 
@@ -11695,16 +11833,14 @@ kernel_dtrsm_nt_rl_inv_4x12_vs_lib4:
 	// store n
 
 	movq	ARG6, %r10 // store address D
-	movq	ARG10, %r11 // km 
-	movq	ARG11, %r12 // kn 
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_4X12_VS_LIB4
+	INNER_STORE_4X12_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_4x12_vs_lib4
+	call inner_store_4x12_lib4
 #elif defined(OS_MAC)
-	callq _inner_store_4x12_vs_lib4
+	callq _inner_store_4x12_lib4
 #endif
 #endif
 
@@ -11714,7 +11850,7 @@ kernel_dtrsm_nt_rl_inv_4x12_vs_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dtrsm_nt_rl_inv_4x12_vs_lib4, .-kernel_dtrsm_nt_rl_inv_4x12_vs_lib4
+	.size	kernel_dtrsm_nt_rl_inv_4x12_lib4, .-kernel_dtrsm_nt_rl_inv_4x12_lib4
 #endif
 
 

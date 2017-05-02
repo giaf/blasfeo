@@ -2903,6 +2903,20 @@ void drowad_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d
 
 
 
+// insert as vector as a column
+void dcolin_libstr(int kmax, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
+	{
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	double *x = sx->pa + xi;
+	dcolin_lib(kmax, x, ai%bs, pA, sda);
+	return;
+	}
+
+
+
+
 // swap two cols of a matrix struct
 void dcolsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
@@ -2928,20 +2942,6 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 		}
 	return;
 	}
-
-
-
-// insert as vector as a column
-void dcolin_libstr(int kmax, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
-	{
-	const int bs = 4;
-	int sda = sA->cn;
-	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	double *x = sx->pa + xi;
-	dcolin_lib(kmax, x, ai%bs, pA, sda);
-	return;
-	}
-
 
 
 
