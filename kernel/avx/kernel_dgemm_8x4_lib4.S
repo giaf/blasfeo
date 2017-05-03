@@ -12111,20 +12111,20 @@ kernel_dgetrf_nn_l_8x4_vs_lib4:
 
 
 //                             1         2           3           4           5
-// void kernel_dlarfb_r_8_lib4(int kmax, double *pV, double *pT, double *pD, int sdd);
+// void kernel_dlarfb4_r_8_lib4(int kmax, double *pV, double *pT, double *pD, int sdd);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dlarfb_r_8_lib4
-	.type kernel_dlarfb_r_8_lib4, @function
-kernel_dlarfb_r_8_lib4:
+	.globl kernel_dlarfb4_r_8_lib4
+	.type kernel_dlarfb4_r_8_lib4, @function
+kernel_dlarfb4_r_8_lib4:
 #elif defined(OS_MAC)
-	.globl _kernel_dlarfb_r_8_lib4
-_kernel_dlarfb_r_8_lib4:
+	.globl _kernel_dlarfb4_r_8_lib4
+_kernel_dlarfb4_r_8_lib4:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dlarfb_r_8_lib4
-	.def kernel_dlarfb_r_8_lib4; .scl 2; .type 32; .endef
-kernel_dlarfb_r_8_lib4:
+	.globl kernel_dlarfb4_r_8_lib4
+	.def kernel_dlarfb4_r_8_lib4; .scl 2; .type 32; .endef
+kernel_dlarfb4_r_8_lib4:
 #endif
 	
 	PROLOGUE
@@ -12360,7 +12360,7 @@ kernel_dlarfb_r_8_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dlarfb_r_8_lib4, .-kernel_dlarfb_r_8_lib4
+	.size	kernel_dlarfb4_r_8_lib4, .-kernel_dlarfb4_r_8_lib4
 #endif
 
 
