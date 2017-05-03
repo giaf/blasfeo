@@ -75,11 +75,11 @@
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_DGEMM_ADD_NT_8X4_LIB4
+	.macro INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4
 #else
 	.align	4
-	.type inner_kernel_dgemm_add_nt_8x4_lib4, %function
-inner_kernel_dgemm_add_nt_8x4_lib4:
+	.type inner_kernel_gemm_add_nt_8x4_lib4, %function
+inner_kernel_gemm_add_nt_8x4_lib4:
 #endif
 
 // TODO more aggressive preload of A !!!
@@ -341,7 +341,7 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 #else
 	ret
 
-	.size	inner_kernel_dgemm_add_nt_8x4_lib4, .-inner_kernel_dgemm_add_nt_8x4_lib4
+	.size	inner_kernel_gemm_add_nt_8x4_lib4, .-inner_kernel_gemm_add_nt_8x4_lib4
 #endif
 
 
@@ -494,7 +494,7 @@ kernel_dgemm_nt_8x4_lib4:
 
 
 
-	// call inner kernel dgemm nt
+	// call inner kernel gemm nt
 	mov		w8, w0 // kmax
 	mov		x9, x2 // A
 	mov		w10, w3 // sda
@@ -502,9 +502,9 @@ kernel_dgemm_nt_8x4_lib4:
 	mov		x11, x4 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_8X4_LIB4
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4
 #else
-	bl	inner_kernel_dgemm_add_nt_8x4_lib4
+	bl	inner_kernel_gemm_add_nt_8x4_lib4
 #endif
 
 

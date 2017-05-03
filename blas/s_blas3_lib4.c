@@ -66,6 +66,8 @@ void sgemm_nt_lib(int m, int n, int k, float alpha, float *pA, int sda, float *p
 			kernel_sgemm_nt_4x4_vs_lib4(k, &alpha, &pA[(i+8)*sda], &pB[j*sdb], &beta, &pC[j*bs+(i+8)*sdc], &pD[j*bs+(i+8)*sdd], m-(i+8), n-j);
 			}
 		}
+#endif
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
