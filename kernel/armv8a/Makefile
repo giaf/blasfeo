@@ -34,7 +34,7 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
 OBJS += kernel_dgemm_8x4_lib4.o kernel_dgemm_4x4_lib4.o
-OBJS += #kernel_sgemm_12x4_lib4.o kernel_sgemm_8x4_lib4.o kernel_sgemm_4x4_lib4.o
+OBJS += kernel_sgemm_4x4_lib4.o
 endif
 
 else # LA_REFERENCE | LA_BLAS

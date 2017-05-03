@@ -75,7 +75,7 @@ int main()
 //	s_print_mat(n, n, A, n);
 
 	float *B; s_zeros(&B, n, n);
-	for(ii=0; ii<n; ii++) B[ii*(n+1)] = 100.0;
+	for(ii=0; ii<n; ii++) B[ii*(n+1)] = 1.0;
 //	s_print_mat(n, n, B, n);
 
 	float *D; s_zeros(&D, n, n);
@@ -120,11 +120,12 @@ int main()
 //	kernel_sgemm_nn_16x4_lib8(4, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //	s_print_strmat(n, n, &sD, 0, 0);
 //	return 0;
-	sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
+	sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
 //	kernel_ssyrk_nt_l_8x8_lib8(n, &alpha, sA.pA, sA.pA, &beta, sB.pA, sD.pA);
 //	sgecp_libstr(16, 16, &sA, 2, 0, &sD, 1, 0);
 //	sgetr_libstr(16, 16, &sA, 2, 0, &sD, 2, 0);
 	s_print_strmat(n, n, &sD, 0, 0);
+	return 0;
 //	sgesc_libstr(16, 9, 2.0, &sD, 0, 0);
 //	s_print_strmat(n, n, &sD, 0, 0);
 //	kernel_spotrf_nt_l_8x8_lib8(0, sD.pA, sD.pA, sD.pA, sD.pA, sx.pa);
