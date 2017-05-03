@@ -114,13 +114,13 @@ int main()
 //	kernel_sgemm_nt_16x4_lib8(4, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //	kernel_sgemm_nt_8x8_lib8(5, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
 //	kernel_sgemm_nt_8x4_lib8(5, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
-//	kernel_sgemm_nt_4x8_gen_lib8(8, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 4, 0, 8);
+	kernel_sgemm_nt_4x8_gen_lib8(8, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 4, 0, 8);
 //	kernel_sgemm_nt_8x4_vs_lib8(8, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA, 7, 4);
 //	kernel_sgemm_nt_8x4_lib8(8, &alpha, sB.pA, sA.pA+4, &beta, sA.pA+4*8, sD.pA+4*8);
 //	kernel_sgemm_nn_16x4_lib8(4, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //	s_print_strmat(n, n, &sD, 0, 0);
 //	return 0;
-	sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
+//	sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
 //	kernel_ssyrk_nt_l_8x8_lib8(n, &alpha, sA.pA, sA.pA, &beta, sB.pA, sD.pA);
 //	sgecp_libstr(16, 16, &sA, 2, 0, &sD, 1, 0);
 //	sgetr_libstr(16, 16, &sA, 2, 0, &sD, 2, 0);

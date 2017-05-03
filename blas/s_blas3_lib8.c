@@ -168,9 +168,17 @@ void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 		}
 	if(m-i>0)
 		{
-		if(m-i<=8)
+		if(m-i<=4)
+			{
+			goto left_4;
+			}
+		else if(m-i<=8)
 			{
 			goto left_8;
+			}
+		else if(m-i<=12)
+			{
+			goto left_12;
 			}
 		else
 			{
@@ -261,8 +269,8 @@ void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 		}
 	return;
 
-#if defined(TARGET_X64_INTEL_HASWELL)
-	left_12:
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+left_12:
 	j = 0;
 	for(; j<n-4; j+=8)
 		{
@@ -289,7 +297,7 @@ void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 		}
 	return;
 
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	left_4:
 	j = 0;
 	for(; j<n; j+=8)

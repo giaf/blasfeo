@@ -218,6 +218,18 @@ void dgemm_nt_lib(int m, int n, int k, double alpha, double *pA, int sda, double
 		kernel_dgemm_nt_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
 		}
 	return;
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	left_4:
+	j = 0;
+	for(; j<n-4; j+=8)
+		{
+		kernel_dgemm_nt_4x8_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+		}
+	if(j<n)
+		{
+		kernel_dgemm_nt_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+		}
+	return;
 #else
 	left_4:
 	j = 0;

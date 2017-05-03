@@ -340,15 +340,15 @@ int main()
 //			kernel_dgemm_nn_4x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 //			kernel_dgemm_nn_4x4_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 
-//			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dpotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 //			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
-			dcolin_libstr(n, &sx, 0, &sB3, 0, n-1);
-			dgelqf_libstr(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
+//			dcolin_libstr(n, &sx, 0, &sB3, 0, n-1);
+//			dgelqf_libstr(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
 //			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
@@ -416,11 +416,11 @@ int main()
 //		float flop_operation = 1*16.0*2*n; // kernel 4x4
 //		float flop_operation = 0.5*16.0*2*n; // kernel 2x4
 
-//		float flop_operation = 2.0*n*n*n; // dgemm
+		float flop_operation = 2.0*n*n*n; // dgemm
 //		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
 //		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
-		float flop_operation = 4.0/3.0*n*n*n; // dgeqrf
+//		float flop_operation = 4.0/3.0*n*n*n; // dgeqrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv
 //		float flop_operation = 1.0*n*n; // dtrmv dtrsv
 //		float flop_operation = 4.0*n*n; // dgemv_nt

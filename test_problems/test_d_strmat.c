@@ -224,15 +224,16 @@ int main()
 //	d_print_tran_strvec(n, &sm, 0);
 //	return 0;
 
-//	double alpha = 1.0;
-//	double beta = 0.0;
+	double alpha = 1.0;
+	double beta = 0.0;
 //	dgese_libstr(n, n, 0.0/0.0, &sD, 0, 0);
+	kernel_dgemm_nt_4x8_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sC.pA, sD.pA);
 //	kernel_dgemm_nn_4x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sC.pA, sD.pA);
 //	kernel_dsyrk_nt_l_4x4_gen_lib4(n, &alpha, sA.pA, sB.pA, &beta, 0, sC.pA, sC.cn, 3, sD.pA, sD.cn, 0, 4, 0, 4);
 //	kernel_dsyrk_nt_l_8x4_gen_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, 0, sC.pA, sC.cn, 3, sD.pA, sD.cn, 0, 8, 0, 8);
 //	dsyrk_ln_libstr(10, 10, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 1, 0);
-//	d_print_strmat(n, n, &sD, 0, 0);
-//	return 0;
+	d_print_strmat(n, n, &sD, 0, 0);
+	return 0;
 
 //	d_print_strmat(n, n, &sC, 0, 0);
 //	dgese_libstr(n, n, 1.0, &sB, 0, 0);
