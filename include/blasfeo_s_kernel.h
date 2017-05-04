@@ -162,6 +162,12 @@ void kernel_ssymv_l_4_gen_lib4(int kmax, float *alpha, int offA, float *A, int s
 
 
 // level 3 BLAS
+// 12x4
+void kernel_sgemm_nt_12x4_lib4(int k, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd); //
+// 8x8
+void kernel_sgemm_nt_8x8_lib4(int k, float *alpha, float *A, int sda, float *B, int sdb, float *beta, float *C, int sdc, float *D, int sdd); //
+// 8x4
+void kernel_sgemm_nt_8x4_lib4(int k, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd); //
 // 4x4
 void kernel_sgemm_nt_4x4_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D); //
 void kernel_sgemm_nt_4x4_vs_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D, int km, int kn); //

@@ -271,11 +271,11 @@ int main()
 //		d_print_strmat(n, n, &sB3, 0, 0);
 //		if(n==20) return;
 
-		int qr_work_size = dgeqrf_work_size_libstr(n, n);
+		int qr_work_size = 0;//dgeqrf_work_size_libstr(n, n);
 		void *qr_work;
 		v_zeros_align(&qr_work, qr_work_size);
 
-		int lq_work_size = dgelqf_work_size_libstr(n, n);
+		int lq_work_size = 0;//dgelqf_work_size_libstr(n, n);
 		void *lq_work;
 		v_zeros_align(&lq_work, lq_work_size);
 

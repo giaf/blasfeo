@@ -75,28 +75,31 @@
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4
+	.macro INNER_KERNEL_GEMM_ADD_NT_8X8_LIB4
 #else
 	.align	4
-	.type inner_kernel_gemm_add_nt_8x4_lib4, %function
-inner_kernel_gemm_add_nt_8x4_lib4:
+	.type inner_kernel_gemm_add_nt_8x8_lib4, %function
+inner_kernel_gemm_add_nt_8x8_lib4:
 #endif
 
 	// early return
 	cmp		w8, #0
 	ble		2f // return
 
-	add		x12, x9, x10
+	add		x13, x9, x10
+	add		x14, x11, x12
 
 	// prefetch
 	prfm	PLDL1KEEP, [x11, #0]
 	prfm	PLDL1KEEP, [x9, #0]
-	prfm	PLDL1KEEP, [x12, #0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
 
 	// preload
 	ld1		{v24.4s, v25.4s}, [x9], #32
 	ld1		{v28.4s, v29.4s}, [x11], #32
-	ld1		{v20.4s, v21.4s}, [x12], #32
+	ld1		{v20.4s, v21.4s}, [x13], #32
+	ld1		{v16.4s, v17.4s}, [x14], #32
 
 	cmp		w8, #4
 	ble		0f // consider clean up loop
@@ -104,7 +107,8 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	// prefetch
 	prfm	PLDL1KEEP, [x11, #32]
 	prfm	PLDL1KEEP, [x9, #32]
-	prfm	PLDL1KEEP, [x12, #32]
+	prfm	PLDL1KEEP, [x13, #32]
+	prfm	PLDL1KEEP, [x14, #32]
 
 	// main loop
 1:
@@ -115,15 +119,25 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	fmla	v1.4s, v24.4s, v28.4s[1]
 	ld1		{v30.4s, v31.4s}, [x11], #32
 	fmla	v2.4s, v24.4s, v28.4s[2]
-	ld1		{v22.4s, v23.4s}, [x12], #32
+	ld1		{v22.4s, v23.4s}, [x13], #32
 	fmla	v3.4s, v24.4s, v28.4s[3]
-	prfm	PLDL1KEEP, [x11, #64]
+	ld1		{v18.4s, v19.4s}, [x14], #32
 	fmla	v4.4s, v20.4s, v28.4s[0]
-	prfm	PLDL1KEEP, [x9, #64]
+	prfm	PLDL1KEEP, [x11, #64]
 	fmla	v5.4s, v20.4s, v28.4s[1]
-	prfm	PLDL1KEEP, [x12, #64]
+	prfm	PLDL1KEEP, [x9, #64]
 	fmla	v6.4s, v20.4s, v28.4s[2]
+	prfm	PLDL1KEEP, [x13, #64]
 	fmla	v7.4s, v20.4s, v28.4s[3]
+	prfm	PLDL1KEEP, [x14, #64]
+	fmla	v8.4s, v24.4s, v16.4s[0]
+	fmla	v9.4s, v24.4s, v16.4s[1]
+	fmla	v10.4s, v24.4s, v16.4s[2]
+	fmla	v11.4s, v24.4s, v16.4s[3]
+	fmla	v12.4s, v20.4s, v16.4s[0]
+	fmla	v13.4s, v20.4s, v16.4s[1]
+	fmla	v14.4s, v20.4s, v16.4s[2]
+	fmla	v15.4s, v20.4s, v16.4s[3]
 	sub		w8, w8, #4
 
 	// unroll 1
@@ -135,6 +149,14 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	fmla	v5.4s, v21.4s, v29.4s[1]
 	fmla	v6.4s, v21.4s, v29.4s[2]
 	fmla	v7.4s, v21.4s, v29.4s[3]
+	fmla	v8.4s, v25.4s, v17.4s[0]
+	fmla	v9.4s, v25.4s, v17.4s[1]
+	fmla	v10.4s, v25.4s, v17.4s[2]
+	fmla	v11.4s, v25.4s, v17.4s[3]
+	fmla	v12.4s, v21.4s, v17.4s[0]
+	fmla	v13.4s, v21.4s, v17.4s[1]
+	fmla	v14.4s, v21.4s, v17.4s[2]
+	fmla	v15.4s, v21.4s, v17.4s[3]
 	cmp		w8, #4
 
 	// unroll 2
@@ -143,12 +165,21 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	fmla	v1.4s, v26.4s, v30.4s[1]
 	ld1		{v28.4s, v29.4s}, [x11], #32
 	fmla	v2.4s, v26.4s, v30.4s[2]
-	ld1		{v20.4s, v21.4s}, [x12], #32
+	ld1		{v20.4s, v21.4s}, [x13], #32
 	fmla	v3.4s, v26.4s, v30.4s[3]
+	ld1		{v16.4s, v17.4s}, [x14], #32
 	fmla	v4.4s, v22.4s, v30.4s[0]
 	fmla	v5.4s, v22.4s, v30.4s[1]
 	fmla	v6.4s, v22.4s, v30.4s[2]
 	fmla	v7.4s, v22.4s, v30.4s[3]
+	fmla	v8.4s, v26.4s, v18.4s[0]
+	fmla	v9.4s, v26.4s, v18.4s[1]
+	fmla	v10.4s, v26.4s, v18.4s[2]
+	fmla	v11.4s, v26.4s, v18.4s[3]
+	fmla	v12.4s, v22.4s, v18.4s[0]
+	fmla	v13.4s, v22.4s, v18.4s[1]
+	fmla	v14.4s, v22.4s, v18.4s[2]
+	fmla	v15.4s, v22.4s, v18.4s[3]
 
 	// unroll 3
 	fmla	v0.4s, v27.4s, v31.4s[0]
@@ -159,6 +190,14 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	fmla	v5.4s, v23.4s, v31.4s[1]
 	fmla	v6.4s, v23.4s, v31.4s[2]
 	fmla	v7.4s, v23.4s, v31.4s[3]
+	fmla	v8.4s, v27.4s, v19.4s[0]
+	fmla	v9.4s, v27.4s, v19.4s[1]
+	fmla	v10.4s, v27.4s, v19.4s[2]
+	fmla	v11.4s, v27.4s, v19.4s[3]
+	fmla	v12.4s, v23.4s, v19.4s[0]
+	fmla	v13.4s, v23.4s, v19.4s[1]
+	fmla	v14.4s, v23.4s, v19.4s[2]
+	fmla	v15.4s, v23.4s, v19.4s[3]
 
 	bgt		1b
 
@@ -173,15 +212,25 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	fmla	v1.4s, v24.4s, v28.4s[1]
 	ld1		{v30.4s, v31.4s}, [x11], #32
 	fmla	v2.4s, v24.4s, v28.4s[2]
-	ld1		{v22.4s, v23.4s}, [x12], #32
+	ld1		{v22.4s, v23.4s}, [x13], #32
 	fmla	v3.4s, v24.4s, v28.4s[3]
-//	prfm	PLDL1KEEP, [x11, #64]
+	ld1		{v18.4s, v19.4s}, [x14], #32
 	fmla	v4.4s, v20.4s, v28.4s[0]
-//	prfm	PLDL1KEEP, [x9, #64]
+//	prfm	PLDL1KEEP, [x11, #64]
 	fmla	v5.4s, v20.4s, v28.4s[1]
-//	prfm	PLDL1KEEP, [x12, #64]
+//	prfm	PLDL1KEEP, [x9, #64]
 	fmla	v6.4s, v20.4s, v28.4s[2]
+//	prfm	PLDL1KEEP, [x13, #64]
 	fmla	v7.4s, v20.4s, v28.4s[3]
+//	prfm	PLDL1KEEP, [x14, #64]
+	fmla	v8.4s, v24.4s, v16.4s[0]
+	fmla	v9.4s, v24.4s, v16.4s[1]
+	fmla	v10.4s, v24.4s, v16.4s[2]
+	fmla	v11.4s, v24.4s, v16.4s[3]
+	fmla	v12.4s, v20.4s, v16.4s[0]
+	fmla	v13.4s, v20.4s, v16.4s[1]
+	fmla	v14.4s, v20.4s, v16.4s[2]
+	fmla	v15.4s, v20.4s, v16.4s[3]
 	sub		w8, w8, #4
 
 	// unroll 1
@@ -193,6 +242,14 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	fmla	v5.4s, v21.4s, v29.4s[1]
 	fmla	v6.4s, v21.4s, v29.4s[2]
 	fmla	v7.4s, v21.4s, v29.4s[3]
+	fmla	v8.4s, v25.4s, v17.4s[0]
+	fmla	v9.4s, v25.4s, v17.4s[1]
+	fmla	v10.4s, v25.4s, v17.4s[2]
+	fmla	v11.4s, v25.4s, v17.4s[3]
+	fmla	v12.4s, v21.4s, v17.4s[0]
+	fmla	v13.4s, v21.4s, v17.4s[1]
+	fmla	v14.4s, v21.4s, v17.4s[2]
+	fmla	v15.4s, v21.4s, v17.4s[3]
 //	cmp		w8, #4
 
 	// unroll 2
@@ -201,13 +258,22 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	fmla	v1.4s, v26.4s, v30.4s[1]
 //	ld1		{v28.4s, v29.4s}, [x11], #32
 	fmla	v2.4s, v26.4s, v30.4s[2]
-//	ld1		{v20.4s, v21.4s}, [x12], #32
+//	ld1		{v20.4s, v21.4s}, [x13], #32
 	fmla	v3.4s, v26.4s, v30.4s[3]
 //	ld1		{v16.4s, v17.4s}, [x13], #32
 	fmla	v4.4s, v22.4s, v30.4s[0]
+//	ld1		{v16.4s, v17.4s}, [x14], #32
 	fmla	v5.4s, v22.4s, v30.4s[1]
 	fmla	v6.4s, v22.4s, v30.4s[2]
 	fmla	v7.4s, v22.4s, v30.4s[3]
+	fmla	v8.4s, v26.4s, v18.4s[0]
+	fmla	v9.4s, v26.4s, v18.4s[1]
+	fmla	v10.4s, v26.4s, v18.4s[2]
+	fmla	v11.4s, v26.4s, v18.4s[3]
+	fmla	v12.4s, v22.4s, v18.4s[0]
+	fmla	v13.4s, v22.4s, v18.4s[1]
+	fmla	v14.4s, v22.4s, v18.4s[2]
+	fmla	v15.4s, v22.4s, v18.4s[3]
 
 	// unroll 3
 	fmla	v0.4s, v27.4s, v31.4s[0]
@@ -218,6 +284,14 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	fmla	v5.4s, v23.4s, v31.4s[1]
 	fmla	v6.4s, v23.4s, v31.4s[2]
 	fmla	v7.4s, v23.4s, v31.4s[3]
+	fmla	v8.4s, v27.4s, v19.4s[0]
+	fmla	v9.4s, v27.4s, v19.4s[1]
+	fmla	v10.4s, v27.4s, v19.4s[2]
+	fmla	v11.4s, v27.4s, v19.4s[3]
+	fmla	v12.4s, v23.4s, v19.4s[0]
+	fmla	v13.4s, v23.4s, v19.4s[1]
+	fmla	v14.4s, v23.4s, v19.4s[2]
+	fmla	v15.4s, v23.4s, v19.4s[3]
 
 	b		2f // return
 
@@ -227,8 +301,9 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	ble		2f // return
 
 	sub		x9, x9, #32
-	sub		x12, x12, #32
+	sub		x13, x13, #32
 	sub		x11, x11, #32
+	sub		x14, x14, #32
 
 3: // clean1-up loop
 
@@ -240,11 +315,20 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	fmla	v1.4s, v24.4s, v28.4s[1]
 	fmla	v2.4s, v24.4s, v28.4s[2]
 	fmla	v3.4s, v24.4s, v28.4s[3]
-	ld1		{v20.4s}, [x12], #16
+	ld1		{v20.4s}, [x13], #16
 	fmla	v4.4s, v20.4s, v28.4s[0]
 	fmla	v5.4s, v20.4s, v28.4s[1]
 	fmla	v6.4s, v20.4s, v28.4s[2]
 	fmla	v7.4s, v20.4s, v28.4s[3]
+	ld1		{v16.4s}, [x14], #16
+	fmla	v8.4s, v24.4s, v16.4s[0]
+	fmla	v9.4s, v24.4s, v16.4s[1]
+	fmla	v10.4s, v24.4s, v16.4s[2]
+	fmla	v11.4s, v24.4s, v16.4s[3]
+	fmla	v12.4s, v20.4s, v16.4s[0]
+	fmla	v13.4s, v20.4s, v16.4s[1]
+	fmla	v14.4s, v20.4s, v16.4s[2]
+	fmla	v15.4s, v20.4s, v16.4s[3]
 
 	sub		w8, w8, #1
 	cmp		w8, #0
@@ -257,7 +341,7 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 #else
 	ret
 
-	.size	inner_kernel_gemm_add_nt_8x4_lib4, .-inner_kernel_gemm_add_nt_8x4_lib4
+	.size	inner_kernel_gemm_add_nt_8x8_lib4, .-inner_kernel_gemm_add_nt_8x8_lib4
 #endif
 
 
@@ -275,11 +359,11 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_SCALE_AB_8X4_LIB4
+	.macro INNER_SCALE_AB_8X8_LIB4
 #else
 	.align	4
-	.type inner_scale_ab_8x4_lib4, %function
-inner_scale_ab_8x4_lib4:
+	.type inner_scale_ab_8x8_lib4, %function
+inner_scale_ab_8x8_lib4:
 #endif
 
 	ld1		{v28.4s}, [x8]
@@ -292,6 +376,14 @@ inner_scale_ab_8x4_lib4:
 	fmul	v5.4s, v5.4s, v28.4s[0]
 	fmul	v6.4s, v6.4s, v28.4s[0]
 	fmul	v7.4s, v7.4s, v28.4s[0]
+	fmul	v8.4s, v8.4s, v28.4s[0]
+	fmul	v9.4s, v9.4s, v28.4s[0]
+	fmul	v10.4s, v10.4s, v28.4s[0]
+	fmul	v11.4s, v11.4s, v28.4s[0]
+	fmul	v12.4s, v12.4s, v28.4s[0]
+	fmul	v13.4s, v13.4s, v28.4s[0]
+	fmul	v14.4s, v14.4s, v28.4s[0]
+	fmul	v15.4s, v15.4s, v28.4s[0]
 
 	ld1		{v28.4s}, [x9]
 
@@ -309,12 +401,24 @@ inner_scale_ab_8x4_lib4:
 	fmla	v6.4s, v26.4s, v28.4s[0]
 	fmla	v7.4s, v27.4s, v28.4s[0]
 
+	ld1		{v24.4s, v25.4s, v26.4s, v27.4s}, [x10], #64
+	fmla	v8.4s, v24.4s, v28.4s[0]
+	fmla	v9.4s, v25.4s, v28.4s[0]
+	fmla	v10.4s, v26.4s, v28.4s[0]
+	fmla	v11.4s, v27.4s, v28.4s[0]
+
+	ld1		{v24.4s, v25.4s, v26.4s, v27.4s}, [x12], #64
+	fmla	v12.4s, v24.4s, v28.4s[0]
+	fmla	v13.4s, v25.4s, v28.4s[0]
+	fmla	v14.4s, v26.4s, v28.4s[0]
+	fmla	v15.4s, v27.4s, v28.4s[0]
+
 #if MACRO_LEVEL>=2
 	.endm
 #else
 	ret
 
-	.size	inner_scale_ab_8x4_lib4, .-inner_scale_ab_8x4_lib4
+	.size	inner_scale_ab_8x8_lib4, .-inner_scale_ab_8x8_lib4
 #endif
 
 
@@ -330,37 +434,39 @@ inner_scale_ab_8x4_lib4:
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_STORE_8X4_LIB4
+	.macro INNER_STORE_8X8_LIB4
 #else
 	.align 4
-	.type inner_store_8x4_lib4, %function
-inner_store_8x4_lib4:
+	.type inner_store_8x8_lib4, %function
+inner_store_8x8_lib4:
 #endif
 
 	add		x10, x8, x9
 
 	st1		{v0.4s, v1.4s, v2.4s, v3.4s}, [x8], #64
 	st1		{v4.4s, v5.4s, v6.4s, v7.4s}, [x10], #64
+	st1		{v8.4s, v9.4s, v10.4s, v11.4s}, [x8], #64
+	st1		{v12.4s, v13.4s, v14.4s, v15.4s}, [x10], #64
 
 #if MACRO_LEVEL>=2
 	.endm
 #else
 	ret
 
-	.size	inner_store_8x4_lib4, .-inner_store_8x4_lib4
+	.size	inner_store_8x8_lib4, .-inner_store_8x8_lib4
 #endif
 
 
 
 
 
-//                               w0        x1             x2         w3       x4         x5            x6         w7       sp+0       sp+8
-// void kernel_sgemm_nt_8x4_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd)
+//                               w0        x1             x2         w3       x4         w5       x6             x7        sp+0     sp+8       sp+16
+// void kernel_sgemm_nt_8x4_lib4(int kmax, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd)
 
 	.align	4
-	.global	kernel_sgemm_nt_8x4_lib4
-	.type	kernel_sgemm_nt_8x4_lib4, %function
-kernel_sgemm_nt_8x4_lib4:
+	.global	kernel_sgemm_nt_8x8_lib4
+	.type	kernel_sgemm_nt_8x8_lib4, %function
+kernel_sgemm_nt_8x8_lib4:
 	
 
 
@@ -377,6 +483,14 @@ kernel_sgemm_nt_8x4_lib4:
 	fmov    d5, d0
 	fmov    d6, d0
 	fmov    d7, d0
+	fmov    d8, d0
+	fmov    d9, d0
+	fmov    d10, d0
+	fmov    d11, d0
+	fmov    d12, d0
+	fmov    d13, d0
+	fmov    d14, d0
+	fmov    d15, d0
 
 
 
@@ -386,39 +500,41 @@ kernel_sgemm_nt_8x4_lib4:
 	mov		w10, w3 // sda
 	lsl		w10, w10, #4 // 16*sda
 	mov		x11, x4 // B
+	mov		w12, w5 // sdb
+	lsl		w12, w12, #4 // 16*sdb
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4
+	INNER_KERNEL_GEMM_ADD_NT_8X8_LIB4
 #else
-	bl	inner_kernel_gemm_add_nt_8x4_lib4
+	bl	inner_kernel_gemm_add_nt_8x8_lib4
 #endif
 
 
 
 	// call inner blend for generic alpha and beta
 	mov		x8, x1 // alpha
-	mov		x9, x5 // beta
-	mov		x10, x6 // C
-	mov		w11, w7 // C
+	mov		x9, x6 // beta
+	mov		x10, x7 // C
+	ldr		w11, [sp, #(STACKSIZE + 0)] // D
 	lsl		w11, w11, #4 // 16*sdc
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_8X4_LIB4
+	INNER_SCALE_AB_8X8_LIB4
 #else
-	bl inner_scale_ab_8x4_lib4
+	bl inner_scale_ab_8x8_lib4
 #endif
 
 
 
 	// store n
-	ldr		x8, [sp, #(STACKSIZE + 0)] // D
-	ldr		w9, [sp, #(STACKSIZE + 8)] // sdd
+	ldr		x8, [sp, #(STACKSIZE + 8)] // D
+	ldr		w9, [sp, #(STACKSIZE + 16)] // sdd
 	lsl		w9, w9, #4 // 16*sdd
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_8X4_LIB4
+	INNER_STORE_8X8_LIB4
 #else
-	bl inner_store_8x4_lib4
+	bl inner_store_8x8_lib4
 #endif
 
 
@@ -428,6 +544,7 @@ kernel_sgemm_nt_8x4_lib4:
 	mov	x0, #0
 
 	ret
+
 
 
 
