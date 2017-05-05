@@ -119,10 +119,10 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	ldp		d30, d31, [x11], #16
 	fmla	v2.2d, v16.2d, v25.2d[0]
 	fmla	v3.2d, v17.2d, v25.2d[0]
-	ldp		q18, q19, [x9], #32
+	ldr		q18, [x9], #16
 	fmla	v4.2d, v16.2d, v26.2d[0]
 	fmla	v5.2d, v17.2d, v26.2d[0]
-	ldp		q22, q23, [x12], #32
+	ldr		q19, [x9], #16
 	fmla	v6.2d, v16.2d, v27.2d[0]
 	fmla	v7.2d, v17.2d, v27.2d[0]
 	prfm	PLDL1KEEP, [x11, #64]
@@ -131,10 +131,10 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	prfm	PLDL1KEEP, [x9, #64]
 	fmla	v10.2d, v20.2d, v25.2d[0]
 	fmla	v11.2d, v21.2d, v25.2d[0]
-	prfm	PLDL1KEEP, [x12, #64]
+	ldp		q22, q23, [x12], #32
 	fmla	v12.2d, v20.2d, v26.2d[0]
 	fmla	v13.2d, v21.2d, v26.2d[0]
-	sub		w8, w8, #4
+	prfm	PLDL1KEEP, [x12, #64]
 	fmla	v14.2d, v20.2d, v27.2d[0]
 	fmla	v15.2d, v21.2d, v27.2d[0]
 
@@ -145,16 +145,19 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	ldp		d26, d27, [x11], #16
 	fmla	v2.2d, v18.2d, v29.2d[0]
 	fmla	v3.2d, v19.2d, v29.2d[0]
-	ldp		q16, q17, [x9], #32
+	ldr		q16, [x9], #16
 	fmla	v4.2d, v18.2d, v30.2d[0]
 	fmla	v5.2d, v19.2d, v30.2d[0]
-	ldp		q20, q21, [x12], #32
+	ldr		q17, [x9], #16
 	fmla	v6.2d, v18.2d, v31.2d[0]
 	fmla	v7.2d, v19.2d, v31.2d[0]
+	ldr		q20, [x12], #16
 	fmla	v8.2d, v22.2d, v28.2d[0]
 	fmla	v9.2d, v23.2d, v28.2d[0]
+	ldr		q21, [x12], #16
 	fmla	v10.2d, v22.2d, v29.2d[0]
 	fmla	v11.2d, v23.2d, v29.2d[0]
+	sub		w8, w8, #4
 	fmla	v12.2d, v22.2d, v30.2d[0]
 	fmla	v13.2d, v23.2d, v30.2d[0]
 	fmla	v14.2d, v22.2d, v31.2d[0]
@@ -167,10 +170,10 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	ldp		d30, d31, [x11], #16
 	fmla	v2.2d, v16.2d, v25.2d[0]
 	fmla	v3.2d, v17.2d, v25.2d[0]
-	ldp		q18, q19, [x9], #32
+	ldr		q18, [x9], #16
 	fmla	v4.2d, v16.2d, v26.2d[0]
 	fmla	v5.2d, v17.2d, v26.2d[0]
-	ldp		q22, q23, [x12], #32
+	ldr		q19, [x9], #16
 	fmla	v6.2d, v16.2d, v27.2d[0]
 	fmla	v7.2d, v17.2d, v27.2d[0]
 	prfm	PLDL1KEEP, [x11, #64]
@@ -179,10 +182,10 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	prfm	PLDL1KEEP, [x9, #64]
 	fmla	v10.2d, v20.2d, v25.2d[0]
 	fmla	v11.2d, v21.2d, v25.2d[0]
-	prfm	PLDL1KEEP, [x12, #64]
+	ldp		q22, q23, [x12], #32
 	fmla	v12.2d, v20.2d, v26.2d[0]
 	fmla	v13.2d, v21.2d, v26.2d[0]
-	cmp		w8, #4
+	prfm	PLDL1KEEP, [x12, #64]
 	fmla	v14.2d, v20.2d, v27.2d[0]
 	fmla	v15.2d, v21.2d, v27.2d[0]
 
@@ -193,16 +196,19 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	ldp		d26, d27, [x11], #16
 	fmla	v2.2d, v18.2d, v29.2d[0]
 	fmla	v3.2d, v19.2d, v29.2d[0]
-	ldp		q16, q17, [x9], #32
+	ldr		q16, [x9], #16
 	fmla	v4.2d, v18.2d, v30.2d[0]
 	fmla	v5.2d, v19.2d, v30.2d[0]
-	ldp		q20, q21, [x12], #32
+	ldr		q17, [x9], #16
 	fmla	v6.2d, v18.2d, v31.2d[0]
 	fmla	v7.2d, v19.2d, v31.2d[0]
+	ldr		q20, [x12], #16
 	fmla	v8.2d, v22.2d, v28.2d[0]
 	fmla	v9.2d, v23.2d, v28.2d[0]
+	ldr		q21, [x12], #16
 	fmla	v10.2d, v22.2d, v29.2d[0]
 	fmla	v11.2d, v23.2d, v29.2d[0]
+	cmp		w8, #4
 	fmla	v12.2d, v22.2d, v30.2d[0]
 	fmla	v13.2d, v23.2d, v30.2d[0]
 	fmla	v14.2d, v22.2d, v31.2d[0]
@@ -215,6 +221,7 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	cmp		w8, #3
 	ble		4f
 
+	
 	// unroll 0
 	ldp		d28, d29, [x11], #16
 	fmla	v0.2d, v16.2d, v24.2d[0]
@@ -222,10 +229,10 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	ldp		d30, d31, [x11], #16
 	fmla	v2.2d, v16.2d, v25.2d[0]
 	fmla	v3.2d, v17.2d, v25.2d[0]
-	ldp		q18, q19, [x9], #32
+	ldr		q18, [x9], #16
 	fmla	v4.2d, v16.2d, v26.2d[0]
 	fmla	v5.2d, v17.2d, v26.2d[0]
-	ldp		q22, q23, [x12], #32
+	ldr		q19, [x9], #16
 	fmla	v6.2d, v16.2d, v27.2d[0]
 	fmla	v7.2d, v17.2d, v27.2d[0]
 	prfm	PLDL1KEEP, [x11, #64]
@@ -234,10 +241,10 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	prfm	PLDL1KEEP, [x9, #64]
 	fmla	v10.2d, v20.2d, v25.2d[0]
 	fmla	v11.2d, v21.2d, v25.2d[0]
-	prfm	PLDL1KEEP, [x12, #64]
+	ldp		q22, q23, [x12], #32
 	fmla	v12.2d, v20.2d, v26.2d[0]
 	fmla	v13.2d, v21.2d, v26.2d[0]
-	sub		w8, w8, #4
+	prfm	PLDL1KEEP, [x12, #64]
 	fmla	v14.2d, v20.2d, v27.2d[0]
 	fmla	v15.2d, v21.2d, v27.2d[0]
 
@@ -248,16 +255,19 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	ldp		d26, d27, [x11], #16
 	fmla	v2.2d, v18.2d, v29.2d[0]
 	fmla	v3.2d, v19.2d, v29.2d[0]
-	ldp		q16, q17, [x9], #32
+	ldr		q16, [x9], #16
 	fmla	v4.2d, v18.2d, v30.2d[0]
 	fmla	v5.2d, v19.2d, v30.2d[0]
-	ldp		q20, q21, [x12], #32
+	ldr		q17, [x9], #16
 	fmla	v6.2d, v18.2d, v31.2d[0]
 	fmla	v7.2d, v19.2d, v31.2d[0]
+	ldr		q20, [x12], #16
 	fmla	v8.2d, v22.2d, v28.2d[0]
 	fmla	v9.2d, v23.2d, v28.2d[0]
+	ldr		q21, [x12], #16
 	fmla	v10.2d, v22.2d, v29.2d[0]
 	fmla	v11.2d, v23.2d, v29.2d[0]
+	sub		w8, w8, #4
 	fmla	v12.2d, v22.2d, v30.2d[0]
 	fmla	v13.2d, v23.2d, v30.2d[0]
 	fmla	v14.2d, v22.2d, v31.2d[0]
@@ -270,10 +280,10 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	ldp		d30, d31, [x11], #16
 	fmla	v2.2d, v16.2d, v25.2d[0]
 	fmla	v3.2d, v17.2d, v25.2d[0]
-	ldp		q18, q19, [x9], #32
+	ldr		q18, [x9], #16
 	fmla	v4.2d, v16.2d, v26.2d[0]
 	fmla	v5.2d, v17.2d, v26.2d[0]
-	ldp		q22, q23, [x12], #32
+	ldr		q19, [x9], #16
 	fmla	v6.2d, v16.2d, v27.2d[0]
 	fmla	v7.2d, v17.2d, v27.2d[0]
 //	prfm	PLDL1KEEP, [x11, #64]
@@ -282,10 +292,10 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 //	prfm	PLDL1KEEP, [x9, #64]
 	fmla	v10.2d, v20.2d, v25.2d[0]
 	fmla	v11.2d, v21.2d, v25.2d[0]
-//	prfm	PLDL1KEEP, [x12, #64]
+	ldp		q22, q23, [x12], #32
 	fmla	v12.2d, v20.2d, v26.2d[0]
 	fmla	v13.2d, v21.2d, v26.2d[0]
-//	cmp		w8, #4
+//	prfm	PLDL1KEEP, [x12, #64]
 	fmla	v14.2d, v20.2d, v27.2d[0]
 	fmla	v15.2d, v21.2d, v27.2d[0]
 
@@ -296,16 +306,19 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 //	ldp		d26, d27, [x11], #16
 	fmla	v2.2d, v18.2d, v29.2d[0]
 	fmla	v3.2d, v19.2d, v29.2d[0]
-//	ldp		q16, q17, [x9], #32
+//	ldr		q16, [x9], #16
 	fmla	v4.2d, v18.2d, v30.2d[0]
 	fmla	v5.2d, v19.2d, v30.2d[0]
-//	ldp		q20, q21, [x12], #32
+//	ldr		q17, [x9], #16
 	fmla	v6.2d, v18.2d, v31.2d[0]
 	fmla	v7.2d, v19.2d, v31.2d[0]
+//	ldr		q20, [x12], #16
 	fmla	v8.2d, v22.2d, v28.2d[0]
 	fmla	v9.2d, v23.2d, v28.2d[0]
+//	ldr		q21, [x12], #16
 	fmla	v10.2d, v22.2d, v29.2d[0]
 	fmla	v11.2d, v23.2d, v29.2d[0]
+//	cmp		w8, #4
 	fmla	v12.2d, v22.2d, v30.2d[0]
 	fmla	v13.2d, v23.2d, v30.2d[0]
 	fmla	v14.2d, v22.2d, v31.2d[0]

@@ -114,70 +114,78 @@ inner_kernel_gemm_add_nt_8x8_lib4:
 1:
 
 	// unroll 0
+	ld1		{v26.4s}, [x9], #16
 	fmla	v0.4s, v24.4s, v28.4s[0]
-	ld1		{v26.4s, v27.4s}, [x9], #32
 	fmla	v1.4s, v24.4s, v28.4s[1]
-	ld1		{v30.4s, v31.4s}, [x11], #32
+	ld1		{v27.4s}, [x9], #16
 	fmla	v2.4s, v24.4s, v28.4s[2]
-	ld1		{v22.4s, v23.4s}, [x13], #32
 	fmla	v3.4s, v24.4s, v28.4s[3]
-	ld1		{v18.4s, v19.4s}, [x14], #32
+	ld1		{v30.4s}, [x11], #16
 	fmla	v4.4s, v20.4s, v28.4s[0]
-	prfm	PLDL1KEEP, [x11, #64]
 	fmla	v5.4s, v20.4s, v28.4s[1]
-	prfm	PLDL1KEEP, [x9, #64]
+	ld1		{v31.4s}, [x11], #16
 	fmla	v6.4s, v20.4s, v28.4s[2]
-	prfm	PLDL1KEEP, [x13, #64]
 	fmla	v7.4s, v20.4s, v28.4s[3]
-	prfm	PLDL1KEEP, [x14, #64]
+	ld1		{v22.4s}, [x13], #16
 	fmla	v8.4s, v24.4s, v16.4s[0]
 	fmla	v9.4s, v24.4s, v16.4s[1]
+	ld1		{v23.4s}, [x13], #16
 	fmla	v10.4s, v24.4s, v16.4s[2]
 	fmla	v11.4s, v24.4s, v16.4s[3]
+	ld1		{v18.4s}, [x14], #16
 	fmla	v12.4s, v20.4s, v16.4s[0]
 	fmla	v13.4s, v20.4s, v16.4s[1]
+	ld1		{v19.4s}, [x14], #16
 	fmla	v14.4s, v20.4s, v16.4s[2]
 	fmla	v15.4s, v20.4s, v16.4s[3]
-	sub		w8, w8, #4
 
 	// unroll 1
+	prfm	PLDL1KEEP, [x11, #64]
 	fmla	v0.4s, v25.4s, v29.4s[0]
 	fmla	v1.4s, v25.4s, v29.4s[1]
+	prfm	PLDL1KEEP, [x9, #64]
 	fmla	v2.4s, v25.4s, v29.4s[2]
 	fmla	v3.4s, v25.4s, v29.4s[3]
+	prfm	PLDL1KEEP, [x13, #64]
 	fmla	v4.4s, v21.4s, v29.4s[0]
 	fmla	v5.4s, v21.4s, v29.4s[1]
+	prfm	PLDL1KEEP, [x14, #64]
 	fmla	v6.4s, v21.4s, v29.4s[2]
 	fmla	v7.4s, v21.4s, v29.4s[3]
+	sub		w8, w8, #4
 	fmla	v8.4s, v25.4s, v17.4s[0]
 	fmla	v9.4s, v25.4s, v17.4s[1]
 	fmla	v10.4s, v25.4s, v17.4s[2]
 	fmla	v11.4s, v25.4s, v17.4s[3]
 	fmla	v12.4s, v21.4s, v17.4s[0]
 	fmla	v13.4s, v21.4s, v17.4s[1]
+	cmp		w8, #4
 	fmla	v14.4s, v21.4s, v17.4s[2]
 	fmla	v15.4s, v21.4s, v17.4s[3]
-	cmp		w8, #4
 
 	// unroll 2
+	ld1		{v24.4s}, [x9], #16
 	fmla	v0.4s, v26.4s, v30.4s[0]
-	ld1		{v24.4s, v25.4s}, [x9], #32
 	fmla	v1.4s, v26.4s, v30.4s[1]
-	ld1		{v28.4s, v29.4s}, [x11], #32
+	ld1		{v25.4s}, [x9], #16
 	fmla	v2.4s, v26.4s, v30.4s[2]
-	ld1		{v20.4s, v21.4s}, [x13], #32
 	fmla	v3.4s, v26.4s, v30.4s[3]
-	ld1		{v16.4s, v17.4s}, [x14], #32
+	ld1		{v28.4s}, [x11], #16
 	fmla	v4.4s, v22.4s, v30.4s[0]
 	fmla	v5.4s, v22.4s, v30.4s[1]
+	ld1		{v29.4s}, [x11], #16
 	fmla	v6.4s, v22.4s, v30.4s[2]
 	fmla	v7.4s, v22.4s, v30.4s[3]
+	ld1		{v20.4s}, [x13], #16
 	fmla	v8.4s, v26.4s, v18.4s[0]
 	fmla	v9.4s, v26.4s, v18.4s[1]
+	ld1		{v21.4s}, [x13], #16
 	fmla	v10.4s, v26.4s, v18.4s[2]
 	fmla	v11.4s, v26.4s, v18.4s[3]
+	ld1		{v16.4s}, [x14], #16
 	fmla	v12.4s, v22.4s, v18.4s[0]
 	fmla	v13.4s, v22.4s, v18.4s[1]
+	ld1		{v17.4s}, [x14], #16
 	fmla	v14.4s, v22.4s, v18.4s[2]
 	fmla	v15.4s, v22.4s, v18.4s[3]
 
@@ -207,71 +215,78 @@ inner_kernel_gemm_add_nt_8x8_lib4:
 	ble		4f
 
 	// unroll 0
+	ld1		{v26.4s}, [x9], #16
 	fmla	v0.4s, v24.4s, v28.4s[0]
-	ld1		{v26.4s, v27.4s}, [x9], #32
 	fmla	v1.4s, v24.4s, v28.4s[1]
-	ld1		{v30.4s, v31.4s}, [x11], #32
+	ld1		{v27.4s}, [x9], #16
 	fmla	v2.4s, v24.4s, v28.4s[2]
-	ld1		{v22.4s, v23.4s}, [x13], #32
 	fmla	v3.4s, v24.4s, v28.4s[3]
-	ld1		{v18.4s, v19.4s}, [x14], #32
+	ld1		{v30.4s}, [x11], #16
 	fmla	v4.4s, v20.4s, v28.4s[0]
-//	prfm	PLDL1KEEP, [x11, #64]
 	fmla	v5.4s, v20.4s, v28.4s[1]
-//	prfm	PLDL1KEEP, [x9, #64]
+	ld1		{v31.4s}, [x11], #16
 	fmla	v6.4s, v20.4s, v28.4s[2]
-//	prfm	PLDL1KEEP, [x13, #64]
 	fmla	v7.4s, v20.4s, v28.4s[3]
-//	prfm	PLDL1KEEP, [x14, #64]
+	ld1		{v22.4s}, [x13], #16
 	fmla	v8.4s, v24.4s, v16.4s[0]
 	fmla	v9.4s, v24.4s, v16.4s[1]
+	ld1		{v23.4s}, [x13], #16
 	fmla	v10.4s, v24.4s, v16.4s[2]
 	fmla	v11.4s, v24.4s, v16.4s[3]
+	ld1		{v18.4s}, [x14], #16
 	fmla	v12.4s, v20.4s, v16.4s[0]
 	fmla	v13.4s, v20.4s, v16.4s[1]
+	ld1		{v19.4s}, [x14], #16
 	fmla	v14.4s, v20.4s, v16.4s[2]
 	fmla	v15.4s, v20.4s, v16.4s[3]
-	sub		w8, w8, #4
 
 	// unroll 1
+//	prfm	PLDL1KEEP, [x11, #64]
 	fmla	v0.4s, v25.4s, v29.4s[0]
 	fmla	v1.4s, v25.4s, v29.4s[1]
+//	prfm	PLDL1KEEP, [x9, #64]
 	fmla	v2.4s, v25.4s, v29.4s[2]
 	fmla	v3.4s, v25.4s, v29.4s[3]
+//	prfm	PLDL1KEEP, [x13, #64]
 	fmla	v4.4s, v21.4s, v29.4s[0]
 	fmla	v5.4s, v21.4s, v29.4s[1]
+//	prfm	PLDL1KEEP, [x14, #64]
 	fmla	v6.4s, v21.4s, v29.4s[2]
 	fmla	v7.4s, v21.4s, v29.4s[3]
+	sub		w8, w8, #4
 	fmla	v8.4s, v25.4s, v17.4s[0]
 	fmla	v9.4s, v25.4s, v17.4s[1]
 	fmla	v10.4s, v25.4s, v17.4s[2]
 	fmla	v11.4s, v25.4s, v17.4s[3]
 	fmla	v12.4s, v21.4s, v17.4s[0]
 	fmla	v13.4s, v21.4s, v17.4s[1]
+	cmp		w8, #4
 	fmla	v14.4s, v21.4s, v17.4s[2]
 	fmla	v15.4s, v21.4s, v17.4s[3]
-//	cmp		w8, #4
 
 	// unroll 2
+//	ld1		{v24.4s}, [x9], #16
 	fmla	v0.4s, v26.4s, v30.4s[0]
-//	ld1		{v24.4s, v25.4s}, [x9], #32
 	fmla	v1.4s, v26.4s, v30.4s[1]
-//	ld1		{v28.4s, v29.4s}, [x11], #32
+//	ld1		{v25.4s}, [x9], #16
 	fmla	v2.4s, v26.4s, v30.4s[2]
-//	ld1		{v20.4s, v21.4s}, [x13], #32
 	fmla	v3.4s, v26.4s, v30.4s[3]
-//	ld1		{v16.4s, v17.4s}, [x13], #32
+//	ld1		{v28.4s}, [x11], #16
 	fmla	v4.4s, v22.4s, v30.4s[0]
-//	ld1		{v16.4s, v17.4s}, [x14], #32
 	fmla	v5.4s, v22.4s, v30.4s[1]
+//	ld1		{v29.4s}, [x11], #16
 	fmla	v6.4s, v22.4s, v30.4s[2]
 	fmla	v7.4s, v22.4s, v30.4s[3]
+//	ld1		{v20.4s}, [x13], #16
 	fmla	v8.4s, v26.4s, v18.4s[0]
 	fmla	v9.4s, v26.4s, v18.4s[1]
+//	ld1		{v21.4s}, [x13], #16
 	fmla	v10.4s, v26.4s, v18.4s[2]
 	fmla	v11.4s, v26.4s, v18.4s[3]
+//	ld1		{v16.4s}, [x14], #16
 	fmla	v12.4s, v22.4s, v18.4s[0]
 	fmla	v13.4s, v22.4s, v18.4s[1]
+//	ld1		{v17.4s}, [x14], #16
 	fmla	v14.4s, v22.4s, v18.4s[2]
 	fmla	v15.4s, v22.4s, v18.4s[3]
 
