@@ -2603,22 +2603,19 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 #endif
 #endif
 	
-	movq	%r11, %rax // A1 <- A0
-	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(double)
-
 	cmpl	$0, %r15d
 	jg		0f
 
 	// offB==0
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
 
 	vmovapd			32(%r11), %ymm8
-	vmovapd			32(%rax), %ymm9
+	vmovapd			32(%r11, %r12, 1), %ymm9
 	vbroadcastsd	8(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -2627,7 +2624,7 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 	vfmadd231pd		%ymm9, %ymm12, %ymm5
 
 	vmovapd			64(%r11), %ymm8
-	vmovapd			64(%rax), %ymm9
+	vmovapd			64(%r11, %r12, 1), %ymm9
 	vbroadcastsd	16(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -2639,7 +2636,7 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 	vfmadd231pd		%ymm9, %ymm12, %ymm6
 
 	vmovapd			96(%r11), %ymm8
-	vmovapd			96(%rax), %ymm9
+	vmovapd			96(%r11, %r12, 1), %ymm9
 	vbroadcastsd	24(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -2655,7 +2652,6 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 
 	subl			$4, %r10d // k-4
 	addq			$128, %r11 // A0+4*bs*sizeof(double)
-	addq			$128, %rax // A1+4*bs*sizeof(double)
 	addq			%r14, %r13 // B+bs*sdb*sizeof(double)
 
 	jmp		3f
@@ -2669,13 +2665,13 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 	addq			$8, %r13 // B+1*sizeof(double)
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
 
 	vmovapd			32(%r11), %ymm8
-	vmovapd			32(%rax), %ymm9
+	vmovapd			32(%r11, %r12, 1), %ymm9
 	vbroadcastsd	8(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -2684,7 +2680,7 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 	vfmadd231pd		%ymm9, %ymm12, %ymm5
 
 	vmovapd			64(%r11), %ymm8
-	vmovapd			64(%rax), %ymm9
+	vmovapd			64(%r11, %r12, 1), %ymm9
 	vbroadcastsd	16(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -2697,7 +2693,6 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 
 	subl			$3, %r10d // k-3
 	addq			$96, %r11 // A0+3*bs*sizeof(double)
-	addq			$96, %rax // A1+3*bs*sizeof(double)
 	addq			%r14, %r13
 	subq			$8, %r13 // B+bs*sdb*sizeof(double)-1
 
@@ -2712,13 +2707,13 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 	addq			$16, %r13 // B+2*sizeof(double)
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
 
 	vmovapd			32(%r11), %ymm8
-	vmovapd			32(%rax), %ymm9
+	vmovapd			32(%r11, %r12, 1), %ymm9
 	vbroadcastsd	8(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -2728,12 +2723,11 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 
 	subl			$2, %r10d // k-2
 	addq			$64, %r11 // A0+2*bs*sizeof(double)
-	addq			$64, %rax // A1+2*bs*sizeof(double)
 	addq			%r14, %r13
 	subq			$16, %r13 // B+bs*sdb*sizeof(double)-2
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -2745,7 +2739,7 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 	vfmadd231pd		%ymm9, %ymm12, %ymm6
 
 	vmovapd			32(%r11), %ymm8
-	vmovapd			32(%rax), %ymm9
+	vmovapd			32(%r11, %r12, 1), %ymm9
 	vbroadcastsd	8(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -2760,7 +2754,7 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 	vfmadd231pd		%ymm9, %ymm12, %ymm7
 
 	vmovapd			64(%r11), %ymm8
-	vmovapd			64(%rax), %ymm9
+	vmovapd			64(%r11, %r12, 1), %ymm9
 	vbroadcastsd	16(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -2775,7 +2769,7 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 	vfmadd231pd		%ymm9, %ymm12, %ymm7
 
 	vmovapd			96(%r11), %ymm8
-	vmovapd			96(%rax), %ymm9
+	vmovapd			96(%r11, %r12, 1), %ymm9
 	vbroadcastsd	24(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -2791,7 +2785,6 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 
 	subl			$4, %r10d // k-4
 	addq			$128, %r11 // A0+4*bs*sizeof(double)
-	addq			$128, %rax // A1+4*bs*sizeof(double)
 	addq			%r14, %r13 // B+bs*sdb*sizeof(double)
 
 	jmp		3f
@@ -2802,19 +2795,18 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 	addq			$24, %r13 // B+3*sizeof(double)
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			%r14, %r13
 	subq			$24, %r13 // B+bs*sdb*sizeof(double)-3
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -2823,7 +2815,7 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 	vfmadd231pd		%ymm9, %ymm12, %ymm5
 
 	vmovapd			32(%r11), %ymm8
-	vmovapd			32(%rax), %ymm9
+	vmovapd			32(%r11, %r12, 1), %ymm9
 	vbroadcastsd	8(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -2835,7 +2827,7 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 	vfmadd231pd		%ymm9, %ymm12, %ymm6
 
 	vmovapd			64(%r11), %ymm8
-	vmovapd			64(%rax), %ymm9
+	vmovapd			64(%r11, %r12, 1), %ymm9
 	vbroadcastsd	16(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -2850,7 +2842,7 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 	vfmadd231pd		%ymm9, %ymm12, %ymm7
 
 	vmovapd			96(%r11), %ymm8
-	vmovapd			96(%rax), %ymm9
+	vmovapd			96(%r11, %r12, 1), %ymm9
 	vbroadcastsd	24(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -2866,7 +2858,6 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 
 	subl			$4, %r10d // k-4
 	addq			$128, %r11 // A0+4*bs*sizeof(double)
-	addq			$128, %rax // A1+4*bs*sizeof(double)
 	addq			%r14, %r13 // B+bs*sdb*sizeof(double)
 
 3:
@@ -2933,25 +2924,22 @@ inner_edge_dtrmm_nn_rl_8x4_lib4:
 
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DTRMM_NN_RL_8X4_GEN_LIB4
+	.macro INNER_EDGE_DTRMM_NN_RL_8X4_VS_LIB4
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_edge_dtrmm_nn_rl_8x4_gen_lib4, @function
-inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
+	.type inner_edge_dtrmm_nn_rl_8x4_vs_lib4, @function
+inner_edge_dtrmm_nn_rl_8x4_vs_lib4:
 #elif defined(OS_MAC)
-_inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
+_inner_edge_dtrmm_nn_rl_8x4_vs_lib4:
 #elif defined(OS_WINDOWS)
-	.def inner_edge_dtrmm_nn_rl_8x4_gen_lib4; .scl 2; .type 32; .endef
-inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
+	.def inner_edge_dtrmm_nn_rl_8x4_vs_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrmm_nn_rl_8x4_vs_lib4:
 #endif
 #endif
 	
 	cmpl			$0, %r10d
 	jle				3f // end
-
-	movq			%r11, %rax // A1 <- A0
-	addq			%r12, %rax // A1 <- A0 + 4*sda*sizeof(double)
 
 	cmpl			$0, %r15d
 	jg				0f // offB>0
@@ -2959,21 +2947,20 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 	// offB==0
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			$8, %r13 // B+1*sizeof(double)
 
 	cmpl			$0, %r10d
 	jle				3f // end
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -2983,14 +2970,13 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			$8, %r13 // B+1*sizeof(double)
 
 	cmpl			$0, %r10d
 	jle				3f // end
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -3003,14 +2989,13 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			$8, %r13 // B+1*sizeof(double)
 
 	cmpl			$0, %r10d
 	jle				3f // end
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -3026,7 +3011,6 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			%r14, %r13
 	subq			$24, %r13 // B+bs*sdb*sizeof(double)-(bs-1)*sizeof(double)
 
@@ -3041,21 +3025,20 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 	addq			$8, %r13 // B+1*sizeof(double)
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			$8, %r13 // B+1*sizeof(double)
 
 	cmpl			$0, %r10d
 	jle				3f // end
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -3065,14 +3048,13 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			$8, %r13 // B+1*sizeof(double)
 
 	cmpl			$0, %r10d
 	jle				3f // end
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -3085,7 +3067,6 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			%r14, %r13
 	subq			$24, %r13 // B+bs*sdb*sizeof(double)-(bs-1)*sizeof(double)
 
@@ -3100,21 +3081,20 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 	addq			$16, %r13 // B+2*sizeof(double)
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			$8, %r13 // B+1*sizeof(double)
 
 	cmpl			$0, %r10d
 	jle				3f // end
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -3124,12 +3104,11 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 
 	subl			$1, %r10d // k-2
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			%r14, %r13
 	subq			$24, %r13 // B+bs*sdb*sizeof(double)-(bs-1)*sizeof(double)
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -3142,14 +3121,13 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			$8, %r13 // B+1*sizeof(double)
 
 	cmpl			$0, %r10d
 	jle				3f // end
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -3165,14 +3143,13 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			$8, %r13 // B+1*sizeof(double)
 
 	cmpl			$0, %r10d
 	jle				3f // end
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -3188,14 +3165,13 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			$8, %r13 // B+1*sizeof(double)
 
 	cmpl			$0, %r10d
 	jle				3f // end
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -3211,7 +3187,6 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			%r14, %r13
 	subq			$24, %r13 // B+bs*sdb*sizeof(double)-(bs-1)*sizeof(double)
 
@@ -3223,14 +3198,13 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 	addq			$24, %r13 // B+3*sizeof(double)
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			%r14, %r13
 	subq			$24, %r13 // B+bs*sdb*sizeof(double)-(bs-1)*sizeof(double)
 
@@ -3238,7 +3212,7 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 	jle				3f // end
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -3248,14 +3222,13 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			$8, %r13 // B+1*sizeof(double)
 
 	cmpl			$0, %r10d
 	jle				3f // end
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -3268,14 +3241,13 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			$8, %r13 // B+1*sizeof(double)
 
 	cmpl			$0, %r10d
 	jle				3f // end
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -3291,14 +3263,13 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 
 	subl			$1, %r10d // k-1
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			$8, %r13 // B+1*sizeof(double)
 
 	cmpl			$0, %r10d
 	jle				3f // end
 
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%rax), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
@@ -3314,7 +3285,6 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 
 	subl			$1, %r10d // k-4
 	addq			$32, %r11 // A0+1*bs*sizeof(double)
-	addq			$32, %rax // A1+1*bs*sizeof(double)
 	addq			%r14, %r13
 	subq			$24, %r13 // B+bs*sdb*sizeof(double)-(bs-1)*sizeof(double)
 
@@ -3326,7 +3296,7 @@ inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_dtrmm_nn_rl_8x4_gen_lib4, .-inner_edge_dtrmm_nn_rl_8x4_gen_lib4
+	.size	inner_edge_dtrmm_nn_rl_8x4_vs_lib4, .-inner_edge_dtrmm_nn_rl_8x4_vs_lib4
 #endif
 #endif
 
@@ -9423,7 +9393,118 @@ kernel_dtrmm_nn_rl_8x4_lib4:
 
 
 
-//                                      rdi    rsi            rdx        rcx      r8           r9         rsp+8    rsp+16       rsp+24     rsp+32   rsp+40  rsp+48  rsp+56  rsp+64
+//                                     1      2              3          4        5            6          7        8          9        10      11
+// void kernel_dtrmm_nn_rl_8x4_vs_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *D, int sdd, int km, int kn);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dtrmm_nn_rl_8x4_vs_lib4
+	.type kernel_dtrmm_nn_rl_8x4_vs_lib4, @function
+kernel_dtrmm_nn_rl_8x4_vs_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dtrmm_nn_rl_8x4_vs_lib4
+_kernel_dtrmm_nn_rl_8x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrmm_nn_rl_8x4_vs_lib4
+	.def kernel_dtrmm_nn_rl_8x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dtrmm_nn_rl_8x4_vs_lib4:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
+
+
+	// initial triangle
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sdb
+	sall	$5, %r12d // 4*sdb*sizeof(double)
+	movq	ARG6, %r13 // B
+	movq	ARG7, %r14 // sdb
+	sall	$5, %r14d // 4*sdb*sizeof(double)
+	movq	ARG5, %r15 // offsetB
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRMM_NN_RL_8X4_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dtrmm_nn_rl_8x4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dtrmm_nn_rl_8x4_vs_lib4
+#endif
+#endif
+
+	// call inner dgemm kernel nt after initial triangle
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NN_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_add_nn_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_add_nn_8x4_lib4
+#endif
+#endif
+
+
+	// call inner scale
+
+	movq	ARG2, %r10 // alpha
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_A0_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_scale_a0_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_scale_a0_8x4_lib4
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG8, %r10 // D
+	movq	ARG9, %r11 // sdd
+	sall	$5, %r11d // 4*sdb*sizeof(double)
+	movq	ARG10, %r12 // km
+	movq	ARG11, %r13 // kn
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_8x4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_8x4_vs_lib4
+#endif
+#endif
+
+
+	EPILOGUE
+	
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dtrmm_nn_rl_8x4_vs_lib4, .-kernel_dtrmm_nn_rl_8x4_vs_lib4
+#endif
+
+
+
+
+
+//                                      1      2              3          4        5            6          7        8            9          10       11      12      13      14
 // void kernel_dtrmm_nn_rl_8x4_gen_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, int offsetD, double *D, int sdd, int m0, int m1, int n0, int n1);
 
 	.p2align 4,,15
@@ -9466,12 +9547,12 @@ kernel_dtrmm_nn_rl_8x4_gen_lib4:
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRMM_NN_RL_8X4_GEN_LIB4
+	INNER_EDGE_DTRMM_NN_RL_8X4_VS_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dtrmm_nn_rl_8x4_gen_lib4
+	call inner_edge_dtrmm_nn_rl_8x4_vs_lib4
 #elif defined(OS_MAC)
-	callq _inner_edge_dtrmm_nn_rl_8x4_gen_lib4
+	callq _inner_edge_dtrmm_nn_rl_8x4_vs_lib4
 #endif
 #endif
 
