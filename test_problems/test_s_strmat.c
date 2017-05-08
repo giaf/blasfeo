@@ -62,7 +62,7 @@ int main()
 
 	int ii, jj;
 
-	int n = 12;
+	int n = 24;
 
 	//
 	// matrices in column-major format
@@ -123,7 +123,9 @@ int main()
 //	kernel_sgemm_nt_8x4_lib4(2, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //	s_print_strmat(n, n, &sD, 0, 0);
 //	return 0;
-	sgemm_nt_libstr(n, n, 5, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
+//	sgemm_nt_libstr(n, n, 5, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
+	ssyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
+//	ssyrk_ln_mn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
 //	kernel_ssyrk_nt_l_8x8_lib8(n, &alpha, sA.pA, sA.pA, &beta, sB.pA, sD.pA);
 //	sgecp_libstr(16, 16, &sA, 2, 0, &sD, 1, 0);
 //	sgetr_libstr(16, 16, &sA, 2, 0, &sD, 2, 0);

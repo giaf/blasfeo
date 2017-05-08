@@ -4031,6 +4031,113 @@ kernel_dsyrk_nt_l_8x8_lib4:
 
 
 
+//                                  1      2              3          4        5          6        7             8          9        10         11       12      13
+// void kernel_dsyrk_nt_8x8_vs_lib4(int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, int km, int kn);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dsyrk_nt_l_8x8_vs_lib4
+	.type kernel_dsyrk_nt_l_8x8_vs_lib4, @function
+kernel_dsyrk_nt_l_8x8_vs_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dsyrk_nt_l_8x8_vs_lib4
+_kernel_dsyrk_nt_l_8x8_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dsyrk_nt_l_8x8_vs_lib4
+	.def kernel_dsyrk_nt_l_8x8_vs_lib4; .scl 2; .type 32; .endef
+kernel_dsyrk_nt_l_8x8_vs_lib4:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
+	vmovapd	%ymm0, %ymm8
+	vmovapd	%ymm0, %ymm9
+	vmovapd	%ymm0, %ymm10
+	vmovapd	%ymm0, %ymm11
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movq	ARG5, %r13 // B
+	movq	ARG6, %r14 // sdb
+	sall	$5, %r14d // 4*sdb*sizeof(double)
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_8X8_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_add_nt_8x8_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_add_nt_8x8_lib4
+#endif
+#endif
+
+
+	// call inner blend scale
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12 // C
+	movq	ARG9, %r13 // sdc
+	sall	$5, %r13d // 4*sdc*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X8_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_scale_ab_8x8_lib4
+#elif defined(OS_MAC)
+	callq _inner_scale_ab_8x8_lib4
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // sdd
+	sall	$5, %r11d // 4*sdd*sizeof(double)
+	movq	ARG12, %r12 // D
+	movq	ARG13, %r13 // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_8X8_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_l_8x8_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_l_8x8_vs_lib4
+#endif
+#endif
+
+
+	EPILOGUE
+	
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dsyrk_nt_l_8x8_vs_lib4, .-kernel_dsyrk_nt_l_8x8_vs_lib4
+#endif
+
+
+
+
+
+
 //                                  1      2          3        4          5        6          7        8          9        10
 // void kernel_dpotrf_nt_l_8x8_lib4(int k, double *A, int sda, double *B, int sdb, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
 

@@ -226,7 +226,11 @@ int main()
 
 	double alpha = 1.0;
 	double beta = 0.0;
-	dgemm_nt_libstr(n, n, 8, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//	dgemm_nt_libstr(n, n, 8, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//	dsyrk_ln_libstr(n, 15, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
+//	dpotrf_l_mn_libstr(n, 15, &sD, 0, 0, &sD, 0, 0);
+//	dsyrk_dpotrf_ln_libstr(n, 15, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+	dtrmm_rlnn_libstr(n, n, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //	dgese_libstr(n, n, 0.0/0.0, &sD, 0, 0);
 //	kernel_dgemm_nt_4x8_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sC.pA, sD.pA);
 //	kernel_dgemm_nn_4x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sC.pA, sD.pA);

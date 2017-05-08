@@ -49,6 +49,7 @@
 #define GEMM_NN_LIBSTR sgemm_nn_libstr
 #define GEMM_NT_LIBSTR sgemm_nt_libstr
 #define SYRK_LN_LIBSTR ssyrk_ln_libstr
+#define SYRK_LN_MN_LIBSTR ssyrk_ln_mn_libstr
 #define TRMM_RLNN_LIBSTR strmm_rlnn_libstr
 #define TRMM_RUTN_LIBSTR strmm_rutn_libstr
 #define TRSM_LLNU_LIBSTR strsm_llnu_libstr

@@ -204,77 +204,6 @@ void sgemm_nn_lib(int m, int n, int k, float alpha, float *pA, int sda, float *p
 
 
 
-void ssyrk_nt_l_lib(int m, int n, int k, float alpha, float *pA, int sda, float *pB, int sdb, float beta, float *pC, int sdc, float *pD, int sdd)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-
-	const int bs = 4;
-
-	int i, j, l;
-
-	i = 0;
-
-	for(; i<m-3; i+=4)
-		{
-		j = 0;
-		for(; j<i && j<n-3; j+=4)
-			{
-			kernel_sgemm_nt_4x4_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd]);
-			}
-		if(j<n)
-			{
-			if(i<j) // dgemm
-				{
-				kernel_sgemm_nt_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
-				}
-			else // dsyrk
-				{
-				if(j<n-3)
-					{
-					kernel_ssyrk_nt_l_4x4_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd]);
-					}
-				else
-					{
-					kernel_ssyrk_nt_l_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
-					}
-				}
-			}
-		}
-	if(m>i)
-		{
-		goto left_4;
-		}
-
-	// common return if i==m
-	return;
-
-	// clean up loops definitions
-
-	left_4:
-	j = 0;
-	for(; j<i && j<n-3; j+=4)
-		{
-		kernel_sgemm_nt_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
-		}
-	if(j<n)
-		{
-		if(j<i) // dgemm
-			{
-			kernel_sgemm_nt_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
-			}
-		else // dsyrk
-			{
-			kernel_ssyrk_nt_l_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
-			}
-		}
-	return;
-
-	}
-
-
-
 void strmm_nt_ru_lib(int m, int n, float alpha, float *pA, int sda, float *pB, int sdb, float beta, float *pC, int sdc, float *pD, int sdd)
 	{
 
@@ -987,15 +916,20 @@ void strmm_rlnn_libstr(int m, int n, float alpha, struct s_strmat *sB, int bi, i
 
 
 
-// dsyrk_lower_nortransposed (allowing for different factors !!!)
-void ssyrk_ln_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+void ssyrk_ln_libstr(int m, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
 	{
+
+	if(m<=0)
+		return;
+
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
 		printf("\nsryrk_ln_libstr: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
 		}
+
 	const int bs = 4;
+
 	int sda = sA->cn;
 	int sdb = sB->cn;
 	int sdc = sC->cn;
@@ -1004,8 +938,122 @@ void ssyrk_ln_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 	float *pB = sB->pA + bj*bs;
 	float *pC = sC->pA + cj*bs;
 	float *pD = sD->pA + dj*bs;
-	ssyrk_nt_l_lib(m, n, k, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd);
+
+//	ssyrk_nt_l_lib(m, n, k, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd);
+
+	int i, j, l;
+
+	i = 0;
+
+	for(; i<m-3; i+=4)
+		{
+		j = 0;
+		for(; j<i; j+=4)
+			{
+			kernel_sgemm_nt_4x4_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd]);
+			}
+		kernel_ssyrk_nt_l_4x4_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd]);
+		}
+	if(m>i)
+		{
+		goto left_4;
+		}
+
+	// common return if i==m
 	return;
+
+	// clean up loops definitions
+
+	left_4:
+	j = 0;
+	for(; j<i; j+=4)
+		{
+		kernel_sgemm_nt_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, m-j);
+		}
+	kernel_ssyrk_nt_l_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, m-j);
+	return;
+
+	}
+
+
+
+void ssyrk_ln_mn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+	{
+
+	if(m<=0 || n<=0)
+		return;
+
+	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
+		{
+		printf("\nsryrk_ln_libstr: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
+		exit(1);
+		}
+
+	const int bs = 4;
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	float *pA = sA->pA + aj*bs;
+	float *pB = sB->pA + bj*bs;
+	float *pC = sC->pA + cj*bs;
+	float *pD = sD->pA + dj*bs;
+
+//	ssyrk_nt_l_lib(m, n, k, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd);
+
+	int i, j, l;
+
+	i = 0;
+
+	for(; i<m-3; i+=4)
+		{
+		j = 0;
+		for(; j<i && j<n-3; j+=4)
+			{
+			kernel_sgemm_nt_4x4_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd]);
+			}
+		if(j<n)
+			{
+			if(i<j) // dgemm
+				{
+				kernel_sgemm_nt_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
+				}
+			else // dsyrk
+				{
+				if(j<n-3)
+					{
+					kernel_ssyrk_nt_l_4x4_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd]);
+					}
+				else
+					{
+					kernel_ssyrk_nt_l_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
+					}
+				}
+			}
+		}
+	if(m>i)
+		{
+		goto left_4;
+		}
+
+	// common return if i==m
+	return;
+
+	// clean up loops definitions
+
+	left_4:
+	j = 0;
+	for(; j<i && j<n; j+=4)
+		{
+		kernel_sgemm_nt_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
+		}
+	if(j<n)
+		{
+		kernel_ssyrk_nt_l_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
+		}
+	return;
+
 	}
 
 

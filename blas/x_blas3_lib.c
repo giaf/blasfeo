@@ -839,7 +839,99 @@ void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
-void SYRK_LN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+	{
+	if(m<=0)
+		return;
+	int ii, jj, kk;
+	int n = m; // TODO optimize for this case !!!!!!!!!
+	REAL
+		c_00, c_01,
+		c_10, c_11;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pC = sC->pA + ci + cj*ldc;
+	REAL *pD = sD->pA + di + dj*ldd;
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		// diagonal
+		c_00 = 0.0;
+		c_10 = 0.0;
+		c_11 = 0.0;
+		for(kk=0; kk<k; kk++)
+			{
+			c_00 += pA[jj+0+lda*kk] * pB[jj+0+ldb*kk];
+			c_10 += pA[jj+1+lda*kk] * pB[jj+0+ldb*kk];
+			c_11 += pA[jj+1+lda*kk] * pB[jj+1+ldb*kk];
+			}
+		pD[jj+0+ldd*(jj+0)] = beta * pC[jj+0+ldc*(jj+0)] + alpha * c_00;
+		pD[jj+1+ldd*(jj+0)] = beta * pC[jj+1+ldc*(jj+0)] + alpha * c_10;
+		pD[jj+1+ldd*(jj+1)] = beta * pC[jj+1+ldc*(jj+1)] + alpha * c_11;
+		// lower
+		ii = jj+2;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[ii+0+lda*kk] * pB[jj+0+ldb*kk];
+				c_10 += pA[ii+1+lda*kk] * pB[jj+0+ldb*kk];
+				c_01 += pA[ii+0+lda*kk] * pB[jj+1+ldb*kk];
+				c_11 += pA[ii+1+lda*kk] * pB[jj+1+ldb*kk];
+				}
+			pD[ii+0+ldd*(jj+0)] = beta * pC[ii+0+ldc*(jj+0)] + alpha * c_00;
+			pD[ii+1+ldd*(jj+0)] = beta * pC[ii+1+ldc*(jj+0)] + alpha * c_10;
+			pD[ii+0+ldd*(jj+1)] = beta * pC[ii+0+ldc*(jj+1)] + alpha * c_01;
+			pD[ii+1+ldd*(jj+1)] = beta * pC[ii+1+ldc*(jj+1)] + alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[ii+0+lda*kk] * pB[jj+0+ldb*kk];
+				c_01 += pA[ii+0+lda*kk] * pB[jj+1+ldb*kk];
+				}
+			pD[ii+0+ldd*(jj+0)] = beta * pC[ii+0+ldc*(jj+0)] + alpha * c_00;
+			pD[ii+0+ldd*(jj+1)] = beta * pC[ii+0+ldc*(jj+1)] + alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		// diagonal
+		c_00 = 0.0;
+		for(kk=0; kk<k; kk++)
+			{
+			c_00 += pA[jj+lda*kk] * pB[jj+ldb*kk];
+			}
+		pD[jj+ldd*jj] = beta * pC[jj+ldc*jj] + alpha * c_00;
+		// lower
+		for(ii=jj+1; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[ii+lda*kk] * pB[jj+ldb*kk];
+				}
+			pD[ii+ldd*jj] = beta * pC[ii+ldc*jj] + alpha * c_00;
+			}
+		}
+	return;
+	}
+
+
+
+// dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
+void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1309,7 +1401,64 @@ void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
-void SYRK_LN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+	{
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA + ai + aj*sA->m;
+	REAL *pB = sB->pA + bi + bj*sB->m;
+	REAL *pC = sC->pA + ci + cj*sC->m;
+	REAL *pD = sD->pA + di + dj*sD->m;
+#if defined(REF_BLAS_BLIS)
+	long long i1 = 1;
+	long long mm = m;
+	long long kk = k;
+	long long lda = sA->m;
+	long long ldb = sB->m;
+	long long ldc = sC->m;
+	long long ldd = sD->m;
+	if(!(beta==0.0 || pC==pD))
+		{
+		for(jj=0; jj<m; jj++)
+			COPY(&mm, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+		}
+	if(pA==pB)
+		{
+		SYRK(&cl, &cn, &mm, &kk, &alpha, pA, &lda, &beta, pD, &ldd);
+		}
+	else
+		{
+		GEMM(&cn, &ct, &mm, &mm, &kk, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+		}
+#else
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(beta==0.0 || pC==pD))
+		{
+		for(jj=0; jj<m; jj++)
+			COPY(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+		}
+	if(pA==pB)
+		{
+		SYRK(&cl, &cn, &m, &k, &alpha, pA, &lda, &beta, pD, &ldd);
+		}
+	else
+		{
+		GEMM(&cn, &ct, &m, &m, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+		}
+#endif
+	return;
+	}
+
+// dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
+void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
