@@ -503,125 +503,6 @@ void dtrmm_nt_ru_lib(int m, int n, double alpha, double *pA, int sda, double *pB
 
 
 
-// D <= B * A^{-T} , with A lower triangular employeing explicit inverse of diagonal
-void dtrsm_nt_rl_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *pB, int sdb, double *pD, int sdd)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-	
-	const int ps = 4;
-	
-	int i, j;
-	
-	i = 0;
-
-#if defined(TARGET_X64_INTEL_HASWELL)
-	for(; i<m-11; i+=12)
-		{
-		j = 0;
-		for(; j<n-3; j+=4)
-			{
-			kernel_dtrsm_nt_rl_inv_12x4_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &inv_diag_A[j]);
-			}
-		if(j<n)
-			{
-			kernel_dtrsm_nt_rl_inv_12x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &inv_diag_A[j], m-i, n-j);
-			}
-		}
-	if(m>i)
-		{
-		if(m-i<=4)
-			{
-			goto left_4;
-			}
-		else if(m-i<=8)
-			{
-			goto left_8;
-			}
-		else
-			{
-			goto left_12;
-			}
-		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	for(; i<m-7; i+=8)
-		{
-		j = 0;
-		for(; j<n-3; j+=4)
-			{
-			kernel_dtrsm_nt_rl_inv_8x4_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &inv_diag_A[j]);
-			}
-		if(j<n)
-			{
-			kernel_dtrsm_nt_rl_inv_8x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &inv_diag_A[j], m-i, n-j);
-			}
-		}
-	if(m>i)
-		{
-		if(m-i<=4)
-			{
-			goto left_4;
-			}
-		else
-			{
-			goto left_8;
-			}
-		}
-#else
-	for(; i<m-3; i+=4)
-		{
-		j = 0;
-		for(; j<n-3; j+=4)
-			{
-			kernel_dtrsm_nt_rl_inv_4x4_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], &inv_diag_A[j]);
-			}
-		if(j<n)
-			{
-			kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], &inv_diag_A[j], m-i, n-j);
-			}
-		}
-	if(m>i)
-		{
-		goto left_4;
-		}
-#endif
-
-	// common return if i==m
-	return;
-
-#if defined(TARGET_X64_INTEL_HASWELL)
-	left_12:
-	j = 0;
-	for(; j<n; j+=4)
-		{
-		kernel_dtrsm_nt_rl_inv_12x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &inv_diag_A[j], m-i, n-j);
-		}
-	return;
-#endif
-
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-	left_8:
-	j = 0;
-	for(; j<n; j+=4)
-		{
-		kernel_dtrsm_nt_rl_inv_8x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &inv_diag_A[j], m-i, n-j);
-		}
-	return;
-#endif
-
-	left_4:
-	j = 0;
-	for(; j<n; j+=4)
-		{
-		kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], &inv_diag_A[j], m-i, n-j);
-		}
-	return;
-
-	}
-
-
-
 // D <= B * A^{-T} , with A lower triangular with unit diagonal
 void dtrsm_nt_rl_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb, double *pD, int sdd)
 	{
@@ -1829,13 +1710,20 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 // dtrsm_right_lower_transposed_notunit
 void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sD, int di, int dj)
 	{
+
+	if(m<=0 || n<=0)
+		return;
+	
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
 		printf("\ndtrsm_rltn_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
+
 	const int ps = 4;
-	// TODO alpha
+
+	// TODO alpha !!!!!
+
 	int sda = sA->cn;
 	int sdb = sB->cn;
 	int sdd = sD->cn;
@@ -1843,26 +1731,171 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, 
 	double *pB = sB->pA + bj*ps;
 	double *pD = sD->pA + dj*ps;
 	double *dA = sA->dA;
-	int ii;
+
+	int i, j;
+
 	if(ai==0 & aj==0)
 		{
 		if(sA->use_dA!=1)
 			{
 			ddiaex_lib(n, 1.0, ai, pA, sda, dA);
-			for(ii=0; ii<n; ii++)
-				dA[ii] = 1.0 / dA[ii];
+			for(i=0; i<n; i++)
+				dA[i] = 1.0 / dA[i];
 			sA->use_dA = 1;
 			}
 		}
 	else
 		{
 		ddiaex_lib(n, 1.0, ai, pA, sda, dA);
-		for(ii=0; ii<n; ii++)
-			dA[ii] = 1.0 / dA[ii];
+		for(i=0; i<n; i++)
+			dA[i] = 1.0 / dA[i];
 		sA->use_dA = 0;
 		}
-	dtrsm_nt_rl_inv_lib(m, n, pA, sda, dA, pB, sdb, pD, sdd); 
+
+//	dtrsm_nt_rl_inv_lib(m, n, pA, sda, dA, pB, sdb, pD, sdd); 
+	i = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; i<m-11; i+=12)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nt_rl_inv_12x4_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j]);
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nt_rl_inv_12x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		if(m-i<=4)
+			{
+			goto left_4;
+			}
+		else if(m-i<=8)
+			{
+			goto left_8;
+			}
+		else
+			{
+			goto left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; i<m-7; i+=8)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nt_rl_inv_8x4_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j]);
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nt_rl_inv_8x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		if(m-i<=4)
+			{
+			goto left_4;
+			}
+		else
+			{
+			goto left_8;
+			}
+		}
+#else
+	for(; i<m-3; i+=4)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nt_rl_inv_4x4_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], &dA[j]);
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		goto left_4;
+		}
+#endif
+
+	// common return if i==m
 	return;
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+	left_12:
+	j = 0;
+	for(; j<n; j+=4)
+		{
+		kernel_dtrsm_nt_rl_inv_12x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+		}
+	return;
+#endif
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+	left_8:
+	j = 0;
+	for(; j<n-8; j+=12)
+		{
+		kernel_dtrsm_nt_rl_inv_8x8l_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], sda, &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], sda, &dA[j], m-i, n-j);
+		kernel_dtrsm_nt_rl_inv_8x8u_vs_lib4((j+4), &pD[i*sdd], sdd, &pA[(j+4)*sda], sda, &pB[(j+4)*ps+i*sdb], sdb, &pD[(j+4)*ps+i*sdd], sdd, &pA[(j+4)*ps+(j+4)*sda], sda, &dA[(j+4)], m-i, n-(j+4));
+		}
+	if(j<n-4)
+		{
+		kernel_dtrsm_nt_rl_inv_8x8l_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], sda, &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], sda, &dA[j], m-i, n-j);
+		kernel_dtrsm_nt_rl_inv_4x4_vs_lib4((j+4), &pD[i*sdd], &pA[(j+4)*sda], &pB[(j+4)*ps+i*sdb], &pD[(j+4)*ps+i*sdd], &pA[(j+4)*ps+(j+4)*sda], &dA[(j+4)], m-i, n-(j+4));
+		j += 8;
+		}
+	else if(j<n)
+		{
+		kernel_dtrsm_nt_rl_inv_8x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+		j += 4;
+		}
+	return;
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	left_8:
+	j = 0;
+	for(; j<n; j+=4)
+		{
+		kernel_dtrsm_nt_rl_inv_8x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+		}
+	return;
+#endif
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+	left_4:
+	j = 0;
+	for(; j<n-8; j+=12)
+		{
+		kernel_dtrsm_nt_rl_inv_4x12_vs_lib4(j, &pD[i*sdd], &pA[j*sda], sda, &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], sda, &dA[j], m-i, n-j);
+		}
+	if(j<n-4)
+		{
+		kernel_dtrsm_nt_rl_inv_4x8_vs_lib4(j, &pD[i*sdd], &pA[j*sda], sda, &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], sda, &dA[j], m-i, n-j);
+		j += 8;
+		}
+	else if(j<n)
+		{
+		kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+		j += 4;
+		}
+	return;
+#else
+	left_4:
+	j = 0;
+	for(; j<n; j+=4)
+		{
+		kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+		}
+	return;
+#endif
+
 	}
 
 
