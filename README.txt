@@ -13,10 +13,11 @@ The currently supported compter architectures (TARGET) are:
 - X64_INTEL_SANDY_BRIDGE: Intel Sandy-Bridge architecture or newer, AVX ISA, 64-bit OS.
 - X64_INTEL_CORE: Intel Core architecture or newer, SSE3 ISA, 64-bit OS.
 - X64_AMD_BULLDOZER: AMD Bulldozer architecture, AVX and FMA ISAs, 64-bit OS.
+- ARMV78_ARM_CORTEX_A57: ARMv78 architecture, VFPv4 and NEONv2 ISAs, 64-bit OS.
 - ARMV7A_ARM_CORTEX_A15: ARMv7A architecture, VFPv3 and NEON ISAs, 32-bit OS.
 - GENERIC: generic target, coded in C, giving better performance if the architecture provides more than 16 scalar FP registers (e.g. many RISC such as ARM).
 
-The optimized linear algebra kernels are currently provided for OS_LINUX (x86_64 64-bit, ARMv7A 32-bit), OS_WINDOWS (x86_64 64-bit) and OS_MAC (x86_64 64-bit).
+The optimized linear algebra kernels are currently provided for OS_LINUX (x86_64 64-bit, ARMv8A 64-bit, ARMv7A 32-bit), OS_WINDOWS (x86_64 64-bit) and OS_MAC (x86_64 64-bit).
 
 BLASFEO employes structures to describe matrices (d_strmat) and vectors (d_strvec), defined in include/blasfeo_common.h.
 The actual implementation of d_strmat and d_strvec depends on the LA and TARGET choice.
