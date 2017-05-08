@@ -559,18 +559,26 @@ void ssyrk_ln_libstr(int m, int k, float alpha, struct s_strmat *sA, int ai, int
 		j = 0;
 		for(; j<i; j+=8)
 			{
-//			kernel_strsm_nt_rl_inv_16x4_lib8(j+0, &pD[i*sdd], sdd, &pD[0+j*sdd], &pC[(j+0)*bs+i*sdc], sdc, &pD[(j+0)*bs+i*sdd], sdd, &pD[0+(j+0)*bs+(j+0)*sdd], &dD[j+0]);
-//			kernel_strsm_nt_rl_inv_16x4_lib8(j+4, &pD[i*sdd], sdd, &pD[4+j*sdd], &pC[(j+4)*bs+i*sdc], sdc, &pD[(j+4)*bs+i*sdd], sdd, &pD[4+(j+4)*bs+(j+0)*sdd], &dD[j+4]);
+			kernel_sgemm_nt_16x4_lib8(k, &alpha, &pA[i*sda], sda, &pB[0+j*sdb], &beta, &pC[(j+0)*bs+i*sdc], sdc, &pD[(j+0)*bs+i*sdd], sdd);
+			kernel_sgemm_nt_16x4_lib8(k, &alpha, &pA[i*sda], sda, &pB[4+j*sdb], &beta, &pC[(j+4)*bs+i*sdc], sdc, &pD[(j+4)*bs+i*sdd], sdd);
 			}
-//		kernel_spotrf_nt_l_16x4_lib8(j+0, &pD[i*sdd], sdd, &pD[0+j*sdd], &pC[(j+0)*bs+(j+0)*sdc], sdc, &pD[(j+0)*bs+(j+0)*sdd], sdd, &dD[j+0]);
-//		kernel_spotrf_nt_l_12x4_lib8(j+4, &pD[i*sdd], sdd, &pD[4+j*sdd], &pC[(j+4)*bs+(j+0)*sdc], sdc, &pD[(j+4)*bs+(j+0)*sdd], sdd, &dD[j+4]);
-//		kernel_spotrf_nt_l_8x8_lib8((j+8), &pD[(i+8)*sdd], &pD[(j+8)*sdd], &pC[(j+8)*bs+(j+8)*sdc], &pD[(j+8)*bs+(j+8)*sdd], &dD[j+8]);
+		kernel_ssyrk_nt_l_16x4_lib8(k, &alpha, &pA[(j+0)*sda], sda, &pB[0+(j+0)*sdb], &beta, &pC[(j+0)*bs+(j+0)*sdc], sdc, &pD[(j+0)*bs+(j+0)*sdd], sdd);
+		kernel_ssyrk_nt_l_12x4_lib8(k, &alpha, &pA[(j+0)*sda], sda, &pB[4+(j+0)*sdb], &beta, &pC[(j+4)*bs+(j+0)*sdc], sdc, &pD[(j+4)*bs+(j+0)*sdd], sdd);
+		kernel_ssyrk_nt_l_8x8_lib8(k, &alpha, &pA[(j+8)*sda], &pB[0+(j+8)*sdb], &beta, &pC[(j+8)*bs+(j+8)*sdc], &pD[(j+8)*bs+(j+8)*sdd]);
 		}
 	if(m>i)
 		{
-		if(m-i<=8)
+		if(m-i<=4)
+			{
+			goto left_4;
+			}
+		else if(m-i<=8)
 			{
 			goto left_8;
+			}
+		else if(m-i<=12)
+			{
+			goto left_12;
 			}
 		else
 			{
@@ -626,13 +634,12 @@ void ssyrk_ln_libstr(int m, int k, float alpha, struct s_strmat *sA, int ai, int
 		}
 	return;
 
-#if defined(TARGET_X64_INTEL_HASWELL)
 	left_12: // 9 <= m <= 12
 	j = 0;
 	for(; j<i; j+=8)
 		{
-		kernel_sgemm_nt_8x8_vs_lib8(k, &alpha, &pA[(j+0)*sda], &pB[0+(j+0)*sdb], &beta, &pC[(j+0)*bs+(j+0)*sdc], &pD[(j+0)*bs+(j+0)*sdd], m-(i+8), m-(j+0));
-		kernel_sgemm_nt_4x8_vs_lib8(k, &alpha, &pA[(j+8)*sda], &pB[0+(j+0)*sdb], &beta, &pC[(j+0)*bs+(j+8)*sdc], &pD[(j+0)*bs+(j+8)*sdd], m-(i+8), m-(j+0));
+		kernel_sgemm_nt_8x8_vs_lib8(k, &alpha, &pA[(i+0)*sda], &pB[0+(j+0)*sdb], &beta, &pC[(j+0)*bs+(i+0)*sdc], &pD[(j+0)*bs+(i+0)*sdd], m-(i+0), m-(j+0));
+		kernel_sgemm_nt_4x8_vs_lib8(k, &alpha, &pA[(i+8)*sda], &pB[0+(j+0)*sdb], &beta, &pC[(j+0)*bs+(i+8)*sdc], &pD[(j+0)*bs+(i+8)*sdd], m-(i+0), m-(j+0));
 		}
 	kernel_ssyrk_nt_l_8x8_vs_lib8(k, &alpha, &pA[(j+0)*sda], &pB[0+(j+0)*sdb], &beta, &pC[(j+0)*bs+(j+0)*sdc], &pD[(j+0)*bs+(j+0)*sdd], m-(i+0), m-(j+0));
 	kernel_sgemm_nt_4x8_vs_lib8(k, &alpha, &pA[(j+8)*sda], &pB[0+(j+0)*sdb], &beta, &pC[(j+0)*bs+(j+8)*sdc], &pD[(j+0)*bs+(j+8)*sdd], m-(i+8), m-(j+0));
@@ -641,13 +648,12 @@ void ssyrk_ln_libstr(int m, int k, float alpha, struct s_strmat *sA, int ai, int
 		kernel_ssyrk_nt_l_8x4_vs_lib8(k, &alpha, &pA[(j+8)*sda], &pB[0+(j+8)*sdb], &beta, &pC[(j+8)*bs+(j+8)*sdc], &pD[(j+8)*bs+(j+8)*sdd], m-(i+8), m-(j+8));
 		}
 	return;
-#endif
 
 	left_8: // 5 <= m <= 8
 	j = 0;
 	for(; j<i; j+=8)
 		{
-		kernel_sgemm_nt_8x8_vs_lib8(k, &alpha, &pA[(j+0)*sda], &pB[0+(j+0)*sdb], &beta, &pC[(j+0)*bs+(j+0)*sdc], &pD[(j+0)*bs+(j+0)*sdd], m-(i+8), m-(j+0));
+		kernel_sgemm_nt_8x8_vs_lib8(k, &alpha, &pA[(i+0)*sda], &pB[0+(j+0)*sdb], &beta, &pC[(j+0)*bs+(i+0)*sdc], &pD[(j+0)*bs+(i+0)*sdd], m-(i+0), m-(j+0));
 		}
 	if(j<m-4) // 5 - 8
 		{
@@ -659,16 +665,14 @@ void ssyrk_ln_libstr(int m, int k, float alpha, struct s_strmat *sA, int ai, int
 		}
 	return;
 
-#if defined(TARGET_X64_INTEL_HASWELL)
 	left_4: // 1 <= m <= 4
 	j = 0;
 	for(; j<i; j+=8)
 		{
-		kernel_sgemm_nt_4x8_vs_lib8(k, &alpha, &pA[(j+0)*sda], &pB[0+(j+0)*sdb], &beta, &pC[(j+0)*bs+(j+0)*sdc], &pD[(j+0)*bs+(j+0)*sdd], m-(i+8), m-(j+0));
+		kernel_sgemm_nt_4x8_vs_lib8(k, &alpha, &pA[(i+0)*sda], &pB[0+(j+0)*sdb], &beta, &pC[(j+0)*bs+(i+0)*sdc], &pD[(j+0)*bs+(i+0)*sdd], m-(i+0), m-(j+0));
 		}
 	kernel_ssyrk_nt_l_8x4_vs_lib8(k, &alpha, &pA[(j+0)*sda], &pB[0+(j+0)*sdb], &beta, &pC[(j+0)*bs+(j+0)*sdc], &pD[(j+0)*bs+(j+0)*sdd], m-(i+0), m-(j+0));
 	return;
-#endif
 
 	}
 

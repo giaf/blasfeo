@@ -4334,6 +4334,394 @@ kernel_sgemm_nn_16x4_gen_lib8:
 
 
 
+//                                  1      2             3         4        5         6            7         8        9         10
+// void kernel_ssyrk_nt_l_16x4_lib8(int k, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_ssyrk_nt_l_16x4_lib8
+	.type kernel_ssyrk_nt_l_16x4_lib8, @function
+kernel_ssyrk_nt_l_16x4_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_ssyrk_nt_l_16x4_lib8
+_kernel_ssyrk_nt_l_16x4_lib8:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorps		%ymm0, %ymm0, %ymm0
+	vmovaps		%ymm0, %ymm1
+	vmovaps		%ymm0, %ymm2
+	vmovaps		%ymm0, %ymm3
+	vmovaps		%ymm0, %ymm4
+	vmovaps		%ymm0, %ymm5
+	vmovaps		%ymm0, %ymm6
+	vmovaps		%ymm0, %ymm7
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 8*sda*sizeof(float)
+	movq	ARG5, %r13  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGEMM_ADD_NT_16X4_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgemm_add_nt_16x4_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgemm_add_nt_16x4_lib8
+#endif
+#endif
+
+
+	// call inner scale
+
+	movq	%rsi, %r10 // alpha
+	movq	ARG6, %r11 // beta
+	movq	ARG7, %r12   // C
+	movl	ARG8, %r13d // sdc
+	sall	$5, %r13d // 8*sdc*sizeof(float)
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_16X4_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_scale_ab_16x4_lib8
+#elif defined(OS_MAC)
+	callq _inner_scale_ab_16x4_lib8
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG9, %r10 // D
+	movl	ARG10, %r11d // sdd
+	sall	$5, %r11d // 8*sdd*sizeof(float)
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_16X4_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_store_l_16x4_lib8
+#elif defined(OS_MAC)
+	callq _inner_store_l_16x4_lib8
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_ssyrk_nt_l_16x4_lib8, .-kernel_ssyrk_nt_l_16x4_lib8
+#endif
+
+
+
+
+
+//                                   1      2             3         4        5         6            7         8        9         10       12      13
+// void kernel_ssyrk_nt_l_16x4_vs_lib8(int k, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd, int km, int kn);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_ssyrk_nt_l_16x4_vs_lib8
+	.type kernel_ssyrk_nt_l_16x4_vs_lib8, @function
+kernel_ssyrk_nt_l_16x4_vs_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_ssyrk_nt_l_16x4_vs_lib8
+_kernel_ssyrk_nt_l_16x4_vs_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_ssyrk_nt_l_16x4_vs_lib8
+	.def kernel_ssyrk_nt_l_16x4_vs_lib8; .scl 2; .type 32; .endef
+kernel_ssyrk_nt_l_16x4_vs_lib8:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorps		%ymm0, %ymm0, %ymm0
+	vmovaps		%ymm0, %ymm1
+	vmovaps		%ymm0, %ymm2
+	vmovaps		%ymm0, %ymm3
+	vmovaps		%ymm0, %ymm4
+	vmovaps		%ymm0, %ymm5
+	vmovaps		%ymm0, %ymm6
+	vmovaps		%ymm0, %ymm7
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 8*sda*sizeof(float)
+	movq	ARG5, %r13  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGEMM_ADD_NT_16X4_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgemm_add_nt_16x4_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgemm_add_nt_16x4_lib8
+#endif
+#endif
+
+
+	// call inner scale
+
+	movq	%rsi, %r10 // alpha
+	movq	ARG6, %r11 // beta
+	movq	ARG7, %r12   // C
+	movl	ARG8, %r13d // sdc
+	sall	$5, %r13d // 8*sdc*sizeof(float)
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_16X4_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_scale_ab_16x4_lib8
+#elif defined(OS_MAC)
+	callq _inner_scale_ab_16x4_lib8
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG9, %r10 // D
+	movl	ARG10, %r11d // sdd
+	sall	$5, %r11d // 8*sdd*sizeof(float)
+	movq	ARG11, %r12 // km
+	movq	ARG12, %r13 // kn
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_16X4_VS_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_store_l_16x4_vs_lib8
+#elif defined(OS_MAC)
+	callq _inner_store_l_16x4_vs_lib8
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_ssyrk_nt_l_16x4_vs_lib8, .-kernel_ssyrk_nt_l_16x4_vs_lib8
+#endif
+
+
+
+
+
+//                                  1      2             3         4        5         6            7         8        9         10
+// void kernel_ssyrk_nt_l_12x4_lib8(int k, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_ssyrk_nt_l_12x4_lib8
+	.type kernel_ssyrk_nt_l_12x4_lib8, @function
+kernel_ssyrk_nt_l_12x4_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_ssyrk_nt_l_12x4_lib8
+_kernel_ssyrk_nt_l_12x4_lib8:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorps		%ymm0, %ymm0, %ymm0
+	vmovaps		%ymm0, %ymm1
+	vmovaps		%ymm0, %ymm2
+	vmovaps		%ymm0, %ymm3
+	vmovaps		%ymm0, %ymm4
+	vmovaps		%ymm0, %ymm5
+	vmovaps		%ymm0, %ymm6
+	vmovaps		%ymm0, %ymm7
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 8*sda*sizeof(float)
+	movq	ARG5, %r13  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGEMM_ADD_NT_16X4_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgemm_add_nt_16x4_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgemm_add_nt_16x4_lib8
+#endif
+#endif
+
+
+	// call inner scale
+
+	movq	%rsi, %r10 // alpha
+	movq	ARG6, %r11 // beta
+	movq	ARG7, %r12   // C
+	movl	ARG8, %r13d // sdc
+	sall	$5, %r13d // 8*sdc*sizeof(float)
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_16X4_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_scale_ab_16x4_lib8
+#elif defined(OS_MAC)
+	callq _inner_scale_ab_16x4_lib8
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG9, %r10 // D
+	movl	ARG10, %r11d // sdd
+	sall	$5, %r11d // 8*sdd*sizeof(float)
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_12X4_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_store_l_12x4_lib8
+#elif defined(OS_MAC)
+	callq _inner_store_l_12x4_lib8
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_ssyrk_nt_l_12x4_lib8, .-kernel_ssyrk_nt_l_12x4_lib8
+#endif
+
+
+
+
+
+//                                   1      2             3         4        5         6            7         8        9         10       12      13
+// void kernel_ssyrk_nt_l_12x4_vs_lib8(int k, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd, int km, int kn);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_ssyrk_nt_l_12x4_vs_lib8
+	.type kernel_ssyrk_nt_l_12x4_vs_lib8, @function
+kernel_ssyrk_nt_l_12x4_vs_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_ssyrk_nt_l_12x4_vs_lib8
+_kernel_ssyrk_nt_l_12x4_vs_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_ssyrk_nt_l_12x4_vs_lib8
+	.def kernel_ssyrk_nt_l_12x4_vs_lib8; .scl 2; .type 32; .endef
+kernel_ssyrk_nt_l_12x4_vs_lib8:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorps		%ymm0, %ymm0, %ymm0
+	vmovaps		%ymm0, %ymm1
+	vmovaps		%ymm0, %ymm2
+	vmovaps		%ymm0, %ymm3
+	vmovaps		%ymm0, %ymm4
+	vmovaps		%ymm0, %ymm5
+	vmovaps		%ymm0, %ymm6
+	vmovaps		%ymm0, %ymm7
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 8*sda*sizeof(float)
+	movq	ARG5, %r13  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_SGEMM_ADD_NT_16X4_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_kernel_sgemm_add_nt_16x4_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_sgemm_add_nt_16x4_lib8
+#endif
+#endif
+
+
+	// call inner scale
+
+	movq	%rsi, %r10 // alpha
+	movq	ARG6, %r11 // beta
+	movq	ARG7, %r12   // C
+	movl	ARG8, %r13d // sdc
+	sall	$5, %r13d // 8*sdc*sizeof(float)
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_16X4_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_scale_ab_16x4_lib8
+#elif defined(OS_MAC)
+	callq _inner_scale_ab_16x4_lib8
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG9, %r10 // D
+	movl	ARG10, %r11d // sdd
+	sall	$5, %r11d // 8*sdd*sizeof(float)
+	movq	ARG11, %r12 // km
+	movq	ARG12, %r13 // kn
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_12X4_VS_LIB8
+#else
+#if defined(OS_LINUX)
+	call inner_store_l_12x4_vs_lib8
+#elif defined(OS_MAC)
+	callq _inner_store_l_12x4_vs_lib8
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_ssyrk_nt_l_12x4_vs_lib8, .-kernel_ssyrk_nt_l_12x4_vs_lib8
+#endif
+
+
+
+
+
 //                                       rdi    rsi       rdx      rcx       r8        r9       rsp+8     rsp+16   rsp+24    rsp+32 
 // void kernel_strsm_nt_rl_inv_16x4_lib8(int k, float *A, int sda, float *B, float *C, int sdc, float *D, int sdd, float *E, float *inv_diag_E);
 
