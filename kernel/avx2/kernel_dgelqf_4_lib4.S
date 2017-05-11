@@ -211,13 +211,21 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			0(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 0(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -448,13 +456,21 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			40(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 40(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -530,7 +546,11 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jg		105b
 104:
 
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm12
+#else
+	vmovapd			LC02(%rip), %ymm12
+#endif
 	vmovapd			0(%r13), %ymm14
 	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
@@ -671,13 +691,21 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			80(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 80(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -882,13 +910,21 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			120(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 120(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -1103,13 +1139,21 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			0(%r11, %r14, 1), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 0(%r11, %r14, 1) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -1342,13 +1386,21 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			40(%r11, %r14, 1), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 40(%r11, %r14, 1) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -1575,13 +1627,21 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			80(%r11, %r14, 1), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 80(%r11, %r14, 1) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -1802,13 +1862,21 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			120(%r11, %r14, 1), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 120(%r11, %r14, 1) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -2030,13 +2098,21 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			0(%r11, %r14, 2), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 0(%r11, %r14, 2) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -2278,13 +2354,21 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			40(%r11, %r14, 2), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 40(%r11, %r14, 2) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -2524,13 +2608,21 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			80(%r11, %r14, 2), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 80(%r11, %r14, 2) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -2768,13 +2860,21 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			120(%r11, %r14, 2), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 120(%r11, %r14, 2) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -3000,13 +3100,21 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovsd			0(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 0(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -3237,13 +3345,21 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovsd			40(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 40(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -3319,7 +3435,11 @@ kernel_dgelqf_dlarft4_12_lib4:
 	jg		105b
 104:
 
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm12
+#else
+	vmovapd			LC02(%rip), %ymm12
+#endif
 	vmovapd			0(%r13), %ymm14
 	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
@@ -3460,13 +3580,21 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovsd			80(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 80(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -3670,13 +3798,21 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovsd			120(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 120(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -3906,13 +4042,21 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmovsd			0(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 0(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -4106,13 +4250,21 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmovsd			40(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 40(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -4180,7 +4332,11 @@ kernel_dgelqf_dlarft4_8_lib4:
 	jg		105b
 104:
 
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm12
+#else
+	vmovapd			LC02(%rip), %ymm12
+#endif
 	vmovapd			0(%r13), %ymm14
 	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
@@ -4296,13 +4452,21 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmovsd			80(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 80(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -4477,13 +4641,21 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmovsd			120(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 120(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -4686,13 +4858,21 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovsd			0(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 0(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -4840,13 +5020,21 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovsd			40(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 40(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -4906,7 +5094,11 @@ kernel_dgelqf_dlarft4_4_lib4:
 	jg		105b
 104:
 
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm12
+#else
+	vmovapd			LC02(%rip), %ymm12
+#endif
 	vmovapd			0(%r13), %ymm14
 	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
@@ -4990,13 +5182,21 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovsd			80(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 80(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14
@@ -5136,13 +5336,21 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovsd			120(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC00(%rip), %xmm13 // mask
+#else
+	vmovsd			LC00(%rip), %xmm13 // mask
+#endif
 	vandpd			%xmm13, %xmm14, %xmm12
 	vxorpd			%xmm13, %xmm12, %xmm12
 	vxorpd			%xmm12, %xmm15, %xmm15 // beta
 	vmovsd			%xmm15, 120(%r11) // pD[0+ps*0]
 	vsubsd			%xmm14, %xmm15, %xmm14 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC01(%rip), %xmm12
+#else
+	vmovapd			LC01(%rip), %xmm12
+#endif
 	vmovsd			%xmm14, %xmm12, %xmm12
 	vmovddup		%xmm14, %xmm14
 	vmovsd			%xmm15, %xmm14, %xmm14

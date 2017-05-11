@@ -14729,7 +14729,7 @@ kernel_dlarfb12_r_4_lib4:
 
 #if MACRO_LEVEL>=2
 	INNER_TRAN_12X4_LIB4
-	INNER_KERNEL_DGEMM_ADD_NT_4X12_LIB4
+	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
 	INNER_TRAN_12X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -14738,7 +14738,7 @@ kernel_dlarfb12_r_4_lib4:
 	call inner_tran_12x4_lib4
 #elif defined(OS_MAC)
 	callq _inner_tran_12x4_lib4
-	callq _inner_kernel_dgemm_add_nt_4x12_lib4
+	callq _inner_kernel_dgemm_add_nt_12x4_lib4
 	callq _inner_tran_12x4_lib4
 #endif
 #endif
