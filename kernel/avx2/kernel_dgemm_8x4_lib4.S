@@ -12624,7 +12624,7 @@ _kernel_dlarfb4_r_8_lib4:
 #elif defined(OS_WINDOWS)
 	.globl kernel_dlarfb4_r_8_lib4
 	.def kernel_dlarfb4_r_8_lib4; .scl 2; .type 32; .endef
-kernel_dlarf4b_r_8_lib4:
+kernel_dlarfb4_r_8_lib4:
 #endif
 	
 	PROLOGUE
