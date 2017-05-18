@@ -463,7 +463,7 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 
 
 // copy a generic strmat into a generic strmat
-void dgecp_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -475,14 +475,40 @@ void dgecp_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int a
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			pC[ii+0+jj*ldc] = alpha*pA[ii+0+jj*lda];
-			pC[ii+1+jj*ldc] = alpha*pA[ii+1+jj*lda];
-			pC[ii+2+jj*ldc] = alpha*pA[ii+2+jj*lda];
-			pC[ii+3+jj*ldc] = alpha*pA[ii+3+jj*lda];
+			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
+			pC[ii+1+jj*ldc] = pA[ii+1+jj*lda];
+			pC[ii+2+jj*ldc] = pA[ii+2+jj*lda];
+			pC[ii+3+jj*ldc] = pA[ii+3+jj*lda];
 			}
 		for(; ii<m; ii++)
 			{
-			pC[ii+0+jj*ldc] = alpha*pA[ii+0+jj*lda];
+			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
+			}
+		}
+	return;
+	}
+
+
+
+// scale a generic strmat
+void dgesc_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	int ii, jj;
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			pA[ii+0+jj*lda] *= alpha;
+			pA[ii+1+jj*lda] *= alpha;
+			pA[ii+2+jj*lda] *= alpha;
+			pA[ii+3+jj*lda] *= alpha;
+			}
+		for(; ii<m; ii++)
+			{
+			pA[ii+0+jj*lda] *= alpha;
 			}
 		}
 	return;
@@ -491,7 +517,7 @@ void dgecp_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int a
 
 
 // copy a strvec into a strvec
-void dveccp_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci)
+void dveccp_libstr(int m, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci)
 	{
 	double *pa = sa->pa + ai;
 	double *pc = sc->pa + ci;
@@ -499,14 +525,36 @@ void dveccp_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_st
 	ii = 0;
 	for(; ii<m-3; ii+=4)
 		{
-		pc[ii+0] = alpha*pa[ii+0];
-		pc[ii+1] = alpha*pa[ii+1];
-		pc[ii+2] = alpha*pa[ii+2];
-		pc[ii+3] = alpha*pa[ii+3];
+		pc[ii+0] = pa[ii+0];
+		pc[ii+1] = pa[ii+1];
+		pc[ii+2] = pa[ii+2];
+		pc[ii+3] = pa[ii+3];
 		}
 	for(; ii<m; ii++)
 		{
-		pc[ii+0] = alpha*pa[ii+0];
+		pc[ii+0] = pa[ii+0];
+		}
+	return;
+	}
+
+
+
+// scale a strvec
+void dvecsc_libstr(int m, double alpha, struct d_strvec *sa, int ai)
+	{
+	double *pa = sa->pa + ai;
+	int ii;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		pa[ii+0] *= alpha;
+		pa[ii+1] *= alpha;
+		pa[ii+2] *= alpha;
+		pa[ii+3] *= alpha;
+		}
+	for(; ii<m; ii++)
+		{
+		pa[ii+0] *= alpha;
 		}
 	return;
 	}
@@ -514,7 +562,7 @@ void dveccp_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_st
 
 
 // copy a lower triangular strmat into a lower triangular strmat
-void dtrcp_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dtrcp_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -526,7 +574,7 @@ void dtrcp_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, st
 		ii = jj;
 		for(; ii<m; ii++)
 			{
-			pC[ii+0+jj*ldc] = alpha*pA[ii+0+jj*lda];
+			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
 			}
 		}
 	return;

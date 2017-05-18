@@ -68,10 +68,12 @@ void dgese_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int a
 // a <= alpha
 void dvecse_libstr(int m, double alpha, struct d_strvec *sx, int xi);
 void dgecp_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb);
-void dgecp_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
-void dveccp_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci);
+void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
+void dgesc_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj);
+void dveccp_libstr(int m, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci);
+void dvecsc_libstr(int m, double alpha, struct d_strvec *sa, int ai);
 void dtrcp_l_lib(int m, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb);
-void dtrcp_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
+void dtrcp_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
 void dgead_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb);
 void dgead_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
 void dvecad_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci);
