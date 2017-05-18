@@ -37,7 +37,7 @@
 
 
 // scales and adds a strvec into a strvec
-void svead_libstr(int m, float *alphap, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
+void svecad_libstr(int m, float *alphap, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
 	{
 	float alpha = alphap[0];
 	float *pa = sa->pa + ai;
@@ -1833,7 +1833,7 @@ void sgese_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 
 
 // set all elements of a strvec to a value
-void svese_libstr(int m, float alpha, struct s_strvec *sx, int xi)
+void svecse_libstr(int m, float alpha, struct s_strvec *sx, int xi)
 	{
 	float *x = sx->pa + xi;
 	int ii;
@@ -2328,7 +2328,7 @@ void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_st
 
 
 // scale a strvec
-void svesc_libstr(int m, float alpha, struct s_strvec *sa, int ai)
+void svecsc_libstr(int m, float alpha, struct s_strvec *sa, int ai)
 	{
 	float *pa = sa->pa + ai;
 	int ii;
@@ -2350,7 +2350,7 @@ void svesc_libstr(int m, float alpha, struct s_strvec *sa, int ai)
 
 
 // copy a strvec into a strvec
-void svecp_libstr(int m, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
+void sveccp_libstr(int m, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
 	{
 	float *pa = sa->pa + ai;
 	float *pc = sc->pa + ci;
