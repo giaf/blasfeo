@@ -127,10 +127,13 @@ OBJS += ./blas/s_blas1_lib.o ./blas/s_blas2_lib.o ./blas/s_blas3_lib.o ./blas/s_
 
 endif # LA choice
 
+ifeq ($(EXT_DEP), 1)
+# ext dep
 OBJS += ./auxiliary/d_aux_ext_dep_lib.o
 OBJS += ./auxiliary/s_aux_ext_dep_lib.o
 OBJS += ./auxiliary/v_aux_ext_dep_lib.o
 OBJS += ./auxiliary/i_aux_ext_dep_lib.o
+endif
 
 
 

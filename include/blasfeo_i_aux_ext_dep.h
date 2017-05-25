@@ -28,6 +28,14 @@
 
 
 
+#if defined(EXT_DEP)
+
+
+
+#include <stdio.h>
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -46,3 +54,7 @@ void int_print_mat(int row, int col, int *A, int lda);
 #ifdef __cplusplus
 }
 #endif
+
+
+
+#endif // EXT_DEP

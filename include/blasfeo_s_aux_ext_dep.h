@@ -26,6 +26,10 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#if defined(EXT_DEP)
+
+
+
 #include <stdio.h>
 
 
@@ -102,3 +106,6 @@ void s_print_tran_to_file_strvec(FILE *file, int m, struct s_strvec *sa, int ai)
 }
 #endif
 
+
+
+#endif // EXT_DEP

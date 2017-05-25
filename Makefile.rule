@@ -54,11 +54,15 @@ REF_BLAS = 0
 #REF_BLAS = BLIS
 #REF_BLAS = ATLAS
 
-# enable on-line checks for matrix and vector dimensions
+# Compile auxiliary functions with external dependencies (for memory allocation and printing)
+#EXT_DEP = 0
+EXT_DEP = 1
+
+# Enable on-line checks for matrix and vector dimensions
 DIM_CHECK = 0
 #DIM_CHECK = 1
 
-# operative system
+# Operating system
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
     OS = LINUX
@@ -86,14 +90,14 @@ CFLAGS  =
 ASFLAGS = 
 LDFLAGS =
 
-# optimization flags
+# Optimization flags
 CFLAGS += -O2 -fPIC
 
-# debugging flags
+# Debugging flags
 #CFLAGS  += -g #-Wall -pedantic -Wfloat-equal #-pg
 #ASFLAGS += -g
 
-# definirions
+# Definirions
 ifeq ($(LA), HIGH_PERFORMANCE)
 CFLAGS  += -DLA_HIGH_PERFORMANCE
 endif
@@ -106,6 +110,10 @@ endif
 
 ifeq ($(DIM_CHECK), 1)
 CFLAGS += -DDIM_CHECK
+endif
+
+ifeq ($(EXT_DEP), 1)
+CFLAGS += -DEXT_DEP
 endif
 
 ifeq ($(MACRO_LEVEL), 1)
@@ -147,7 +155,7 @@ ifeq ($(REF_BLAS), ATLAS)
 CFLAGS  += -DREF_BLAS_ATLAS
 endif
 
-# architecture-specific flags
+# Architecture-specific flags
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 CFLAGS  += -m64 -mavx2 -mfma -DTARGET_X64_INTEL_HASWELL
 endif

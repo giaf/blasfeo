@@ -26,6 +26,10 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#if defined(EXT_DEP)
+
+
+
 #include <stdio.h>
 
 
@@ -61,3 +65,7 @@ void c_free_align(char *ptrA);
 #ifdef __cplusplus
 }
 #endif
+
+
+
+#endif // EXT_DEP
