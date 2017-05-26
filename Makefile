@@ -206,6 +206,11 @@ ifeq ($(LA), REFERENCE)
 	echo "#define LA_REFERENCE" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
+ifeq ($(EXT_DEP), 1)
+	echo "#ifndef EXT_DEP" >> ./include/blasfeo_target.h
+	echo "#define EXT_DEP" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
 
 install_static:
 	mkdir -p $(PREFIX)/blasfeo

@@ -645,7 +645,7 @@ void svecad_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_str
 
 
 // copy and transpose a generic strmat into a generic strmat
-void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
+void sgetr_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	float *pA = sA->pA + ai + aj*lda;
@@ -657,14 +657,14 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			pC[jj+(ii+0)*ldc] = alpha * pA[ii+0+jj*lda];
-			pC[jj+(ii+1)*ldc] = alpha * pA[ii+1+jj*lda];
-			pC[jj+(ii+2)*ldc] = alpha * pA[ii+2+jj*lda];
-			pC[jj+(ii+3)*ldc] = alpha * pA[ii+3+jj*lda];
+			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
+			pC[jj+(ii+1)*ldc] = pA[ii+1+jj*lda];
+			pC[jj+(ii+2)*ldc] = pA[ii+2+jj*lda];
+			pC[jj+(ii+3)*ldc] = pA[ii+3+jj*lda];
 			}
 		for(; ii<m; ii++)
 			{
-			pC[jj+(ii+0)*ldc] = alpha * pA[ii+0+jj*lda];
+			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
 			}
 		}
 	return;
@@ -673,7 +673,7 @@ void sgetr_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 
 
 // copy and transpose a lower triangular strmat into an upper triangular strmat
-void strtr_l_libstr(int m, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
+void strtr_l_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	float *pA = sA->pA + ai + aj*lda;
@@ -685,7 +685,7 @@ void strtr_l_libstr(int m, float alpha, struct s_strmat *sA, int ai, int aj, str
 		ii = jj;
 		for(; ii<m; ii++)
 			{
-			pC[jj+(ii+0)*ldc] = alpha * pA[ii+0+jj*lda];
+			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
 			}
 		}
 	return;
@@ -694,7 +694,7 @@ void strtr_l_libstr(int m, float alpha, struct s_strmat *sA, int ai, int aj, str
 
 
 // copy and transpose an upper triangular strmat into a lower triangular strmat
-void strtr_u_libstr(int m, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
+void strtr_u_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	float *pA = sA->pA + ai + aj*lda;
@@ -706,7 +706,7 @@ void strtr_u_libstr(int m, float alpha, struct s_strmat *sA, int ai, int aj, str
 		ii = 0;
 		for(; ii<=jj; ii++)
 			{
-			pC[jj+(ii+0)*ldc] = alpha * pA[ii+0+jj*lda];
+			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
 			}
 		}
 	return;

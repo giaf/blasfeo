@@ -634,7 +634,7 @@ void dvecad_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_st
 
 
 // copy and transpose a generic strmat into a generic strmat
-void dgetr_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dgetr_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -646,14 +646,14 @@ void dgetr_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int a
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			pC[jj+(ii+0)*ldc] = alpha * pA[ii+0+jj*lda];
-			pC[jj+(ii+1)*ldc] = alpha * pA[ii+1+jj*lda];
-			pC[jj+(ii+2)*ldc] = alpha * pA[ii+2+jj*lda];
-			pC[jj+(ii+3)*ldc] = alpha * pA[ii+3+jj*lda];
+			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
+			pC[jj+(ii+1)*ldc] = pA[ii+1+jj*lda];
+			pC[jj+(ii+2)*ldc] = pA[ii+2+jj*lda];
+			pC[jj+(ii+3)*ldc] = pA[ii+3+jj*lda];
 			}
 		for(; ii<m; ii++)
 			{
-			pC[jj+(ii+0)*ldc] = alpha * pA[ii+0+jj*lda];
+			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
 			}
 		}
 	return;
@@ -662,7 +662,7 @@ void dgetr_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int a
 
 
 // copy and transpose a lower triangular strmat into an upper triangular strmat
-void dtrtr_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dtrtr_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -674,7 +674,7 @@ void dtrtr_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, st
 		ii = jj;
 		for(; ii<m; ii++)
 			{
-			pC[jj+(ii+0)*ldc] = alpha * pA[ii+0+jj*lda];
+			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
 			}
 		}
 	return;
@@ -683,7 +683,7 @@ void dtrtr_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, st
 
 
 // copy and transpose an upper triangular strmat into a lower triangular strmat
-void dtrtr_u_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dtrtr_u_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -695,7 +695,7 @@ void dtrtr_u_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, st
 		ii = 0;
 		for(; ii<=jj; ii++)
 			{
-			pC[jj+(ii+0)*ldc] = alpha * pA[ii+0+jj*lda];
+			pC[jj+(ii+0)*ldc] = pA[ii+0+jj*lda];
 			}
 		}
 	return;
