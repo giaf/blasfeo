@@ -2242,7 +2242,7 @@ void strtr_u_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strmat 
 
 
 // insert a strvec to diagonal of strmat, sparse formulation 
-void sdiain_sp_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, struct s_strmat *sD, int di, int dj)
+void sdiain_sp_libstr(int kmax, float alpha, int *idx, struct s_strvec *sx, int xi, struct s_strmat *sD, int di, int dj)
 	{
 	const int bs = 8;
 	float *x = sx->pa + xi;
