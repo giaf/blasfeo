@@ -93,13 +93,13 @@ void sdiain_sqrt_lib(int kmax, float *x, int offset, float *pD, int sdd);
 void sdiaex_lib(int kmax, float alpha, int offset, float *pD, int sdd, float *x);
 void sdiaad_lib(int kmax, float alpha, float *x, int offset, float *pD, int sdd);
 void sdiain_libsp(int kmax, int *idx, float alpha, float *x, float *pD, int sdd);
-void sdiain_libspstr(int kmax, int *idx, float alpha, struct s_strvec *sx, int xi, struct s_strmat *sD, int di, int dj);
+void sdiain_sp_libstr(int kmax, float alpha, int *idx, struct s_strvec *sx, int xi, struct s_strmat *sD, int di, int dj);
 void sdiaex_libsp(int kmax, int *idx, float alpha, float *pD, int sdd, float *x);
-void sdiaex_libspstr(int kmax, int *idx, float alpha, struct s_strmat *sD, int di, int dj, struct s_strvec *sx, int xi);
+void sdiaex_sp_libstr(int kmax, float alpha, struct s_strmat *sD, int di, int dj, int *idx, struct s_strvec *sx, int xi);
 void sdiaad_libsp(int kmax, int *idx, float alpha, float *x, float *pD, int sdd);
-void sdiaad_libspstr(int kmax, int *idx, float alpha, struct s_strvec *sx, int xi, struct s_strmat *sD, int di, int dj);
+void sdiaad_sp_libstr(int kmax, float alpha, int *idx, struct s_strvec *sx, int xi, struct s_strmat *sD, int di, int dj);
 void sdiaadin_libsp(int kmax, int *idx, float alpha, float *x, float *y, float *pD, int sdd);
-void sdiaadin_libspstr(int kmax, int *idx, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strmat *sD, int di, int dj);
+void sdiaadin_sp_libstr(int kmax, float alpha, int *idx, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strmat *sD, int di, int dj);
 void srowin_lib(int kmax, float alpha, float *x, float *pD);
 void srowin_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, struct s_strmat *sA, int ai, int aj);
 void srowex_lib(int kmax, float alpha, float *pD, float *x);
@@ -108,7 +108,7 @@ void srowad_lib(int kmax, float alpha, float *x, float *pD);
 void srowad_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, struct s_strmat *sA, int ai, int aj);
 void srowin_libsp(int kmax, float alpha, int *idx, float *x, float *pD);
 void srowad_libsp(int kmax, int *idx, float alpha, float *x, float *pD);
-void srowad_libspstr(int kmax, int *idx, float alpha, struct s_strvec *sx, int xi, struct s_strmat *sD, int di, int dj);
+void srowad_sp_libstr(int kmax, float alpha, int *idx, struct s_strvec *sx, int xi, struct s_strmat *sD, int di, int dj);
 void srowadin_libsp(int kmax, int *idx, float alpha, float *x, float *y, float *pD);
 void srowsw_lib(int kmax, float *pA, float *pC);
 void srowsw_libstr(int kmax, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
@@ -122,7 +122,7 @@ void scolsw_libstr(int kmax, struct s_strmat *sA, int ai, int aj, struct s_strma
 void scolpe_libstr(int kmax, int *ipiv, struct s_strmat *sA);
 void svecin_libsp(int kmax, int *idx, float *x, float *y);
 void svecad_libsp(int kmax, int *idx, float alpha, float *x, float *y);
-void svecad_libspstr(int kmax, int *idx, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi);
+void svecad_sp_libstr(int kmax, float alpha, int *idx, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi);
 
 
 

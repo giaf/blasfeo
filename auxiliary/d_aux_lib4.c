@@ -3088,7 +3088,7 @@ void dtrtr_u_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat 
 
 
 // insert a strvec to diagonal of strmat, sparse formulation
-void ddiain_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
+void ddiain_sp_libstr(int kmax, double alpha, int *idx, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
 	{
 	const int bs = 4;
 	double *x = sx->pa + xi;
@@ -3106,7 +3106,7 @@ void ddiain_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 
 
 // extract the diagonal of a strmat to a strvec, sparse formulation
-void ddiaex_libspstr(int kmax, int *idx, double alpha, struct d_strmat *sD, int di, int dj, struct d_strvec *sx, int xi)
+void ddiaex_sp_libstr(int kmax, double alpha, struct d_strmat *sD, int di, int dj, int *idx, struct d_strvec *sx, int xi)
 	{
 	const int bs = 4;
 	double *x = sx->pa + xi;
@@ -3164,7 +3164,7 @@ void ddiaad_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d
 
 
 // add scaled strvec to diagonal of strmat, sparse formulation
-void ddiaad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
+void ddiaad_sp_libstr(int kmax, double alpha, int *idx, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
 	{
 	const int bs = 4;
 	double *x = sx->pa + xi;
@@ -3182,7 +3182,7 @@ void ddiaad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 
 
 // add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation
-void ddiaadin_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strmat *sD, int di, int dj)
+void ddiaadin_sp_libstr(int kmax, double alpha, int *idx, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strmat *sD, int di, int dj)
 	{
 	const int bs = 4;
 	double *x = sx->pa + xi;
@@ -3201,7 +3201,7 @@ void ddiaadin_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, in
 
 
 // add scaled strvec to row of strmat, sparse formulation
-void drowad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
+void drowad_sp_libstr(int kmax, double alpha, int *idx, struct d_strvec *sx, int xi, struct d_strmat *sD, int di, int dj)
 	{
 	const int bs = 4;
 	double *x = sx->pa + xi;
@@ -3213,19 +3213,7 @@ void drowad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int 
 
 
 
-// TODO remove !!!!!!!!!!!!!!!!!!!
-// adds strvec to strvec, sparse formulation
-void dvecad_libspstr(int kmax, int *idx, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi)
-	{
-	double *x = sx->pa + xi;
-	double *y = sy->pa + yi;
-	dvecad_libsp(kmax, idx, alpha, x, y);
-	return;
-	}
-
-
-
-void dvecad_sp_libstr(int m, double alpha, struct d_strvec *sx, int xi, int *idx, struct d_strvec *sz, int zi)
+void dvecad_sp_libstr(int m, double alpha, int *idx, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
@@ -3237,7 +3225,7 @@ void dvecad_sp_libstr(int m, double alpha, struct d_strvec *sx, int xi, int *idx
 
 
 
-void dvecin_sp_libstr(int m, double alpha, struct d_strvec *sx, int xi, int *idx, struct d_strvec *sz, int zi)
+void dvecin_sp_libstr(int m, double alpha, int *idx, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
 	{
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
@@ -3249,7 +3237,7 @@ void dvecin_sp_libstr(int m, double alpha, struct d_strvec *sx, int xi, int *idx
 
 
 
-void dvecex_sp_libstr(int m, double alpha, int *idx, struct d_strvec *sx, int xi, struct d_strvec *sz, int zi)
+void dvecex_sp_libstr(int m, double alpha, struct d_strvec *sx, int xi, int *idx, struct d_strvec *sz, int zi)
 	{
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
