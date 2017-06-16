@@ -1682,8 +1682,6 @@ inner_edge_dtrsv_lt_inv_3_lib4:
 	
 	vxorpd			%ymm14, %ymm14, %ymm14
 
-	cmpl			$4, %r12d
-
 	vmovapd			16(%r10), %xmm12
 	vmovapd			48(%r10), %xmm13
 	vunpcklpd		%xmm13, %xmm12, %xmm9
@@ -1702,15 +1700,14 @@ inner_edge_dtrsv_lt_inv_3_lib4:
 	vmovupd			0(%r13), %ymm12
 	vblendpd		$0x8, %ymm12, %ymm0, %ymm0
 	
+	cmpl			$4, %r12d
 	jl				0f
 
 	vpermilpd		$0xf, %ymm0, %ymm12
 	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm10, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
-
 0:
-
 	vbroadcastsd	16(%r11), %ymm12
 	vmulpd			%ymm12, %ymm0, %ymm1
 	vblendpd		$0x4, %ymm1, %ymm0, %ymm0
@@ -1719,7 +1716,6 @@ inner_edge_dtrsv_lt_inv_3_lib4:
 	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
-
 	vbroadcastsd	8(%r11), %ymm12
 	vmulpd			%ymm12, %ymm0, %ymm1
 	vblendpd		$0x2, %ymm1, %ymm0, %ymm0
@@ -1729,7 +1725,6 @@ inner_edge_dtrsv_lt_inv_3_lib4:
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 //	vbroadcastsd	8(%r11), %ymm12
-
 	vmovsd			0(%r11), %xmm12
 	vmulpd			%ymm12, %ymm0, %ymm1
 	vblendpd		$0x1, %ymm1, %ymm0, %ymm0
@@ -2942,7 +2937,7 @@ kernel_dtrsv_ln_inv_4_lib4:
 
 
 
-//                                    rdi    rsi        rdx                 rcx        r8         r9         rsp+8   rsp+16 
+//                                    1      2          3                   4          5          6          7       8
 // void kernel_dtrsv_ln_inv_4_vs_lib4(int k, double *A, double *inv_diag_A, double *x, double *y, double *z, int km, int kn);
 
 	.p2align 4,,15
@@ -3027,12 +3022,12 @@ kernel_dtrsv_ln_inv_4_vs_lib4:
 	movq	ARG7, %r11 // km 
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_4_LIB4
+	INNER_STORE_4_VS_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_4_lib4
+	call inner_store_4_vs_lib4
 #elif defined(OS_MAC)
-	callq _inner_store_4_lib4
+	callq _inner_store_4_vs_lib4
 #endif
 #endif
 
@@ -3192,7 +3187,6 @@ kernel_dtrsv_lt_inv_3_lib4:
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12
 	sall	$5, %r12d // 4*sda*sizeof(double)
-	movslq	%r12d, %r12
 	addq	%r12, %r11 // A+4*sda*sizeof(double)
 	movq	ARG5, %r13 // x
 	addq	$32, %r13 // x+4 
