@@ -163,7 +163,7 @@ void s_cvt_vec2strvec(int m, float *a, struct s_strvec *sa, int ai)
 
 
 
-// convert a matrix structure into a matrix 
+// convert a matrix structure into a matrix
 void s_cvt_strmat2mat(int m, int n, struct s_strmat *sA, int ai, int aj, float *A, int lda)
 	{
 	int ii, jj;
@@ -189,7 +189,7 @@ void s_cvt_strmat2mat(int m, int n, struct s_strmat *sA, int ai, int aj, float *
 
 
 
-// convert and transpose a matrix structure into a matrix 
+// convert and transpose a matrix structure into a matrix
 void s_cvt_tran_strmat2mat(int m, int n, struct s_strmat *sA, int ai, int aj, float *A, int lda)
 	{
 	int ii, jj;
@@ -215,7 +215,7 @@ void s_cvt_tran_strmat2mat(int m, int n, struct s_strmat *sA, int ai, int aj, fl
 
 
 
-// convert a vector structure into a vector 
+// convert a vector structure into a vector
 void s_cvt_strvec2vec(int m, struct s_strvec *sa, int ai, float *a)
 	{
 	float *pa = sa->pa + ai;
@@ -414,6 +414,20 @@ void srowpe_libstr(int kmax, int *ipiv, struct s_strmat *sA)
 
 
 
+// insert a vector  into a rcol
+void scolin_libstr(int kmax, struct s_strvec *sx, int xi, struct s_strmat *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	float *pA = sA->pA + ai + aj*lda;
+	float *x = sx->pa + xi;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		pA[ii] = x[ii];
+	return;
+	}
+
+
+
 // swap two cols of a matrix struct
 void scolsw_libstr(int kmax, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
 	{
@@ -448,85 +462,14 @@ void scolpe_libstr(int kmax, int *ipiv, struct s_strmat *sA)
 
 
 
-// scale a generic strmat
-void sgesc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj)
-	{
-
-	if(m<=0 | n<=0)
-		return;
-
-#if defined(DIM_CHECK)
-	// non-negative size
-	if(m<0) printf("\n****** sgesc_libstr : m<0 : %d<0 *****\n", m);
-	if(n<0) printf("\n****** sgesc_libstr : n<0 : %d<0 *****\n", n);
-	// non-negative offset
-	if(ai<0) printf("\n****** sgesc_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** sgesc_libstr : aj<0 : %d<0 *****\n", aj);
-	// inside matrix
-	// A: m x n
-	if(ai+m > sA->m) printf("\n***** sgesc_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+n > sA->n) printf("\n***** sgesc_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
-#endif
-
-	int lda = sA->m;
-	float *pA = sA->pA + ai + aj*lda;
-	
-	int ii, jj;
-
-	for(jj=0; jj<n; jj++)
-		{
-		ii = 0;
-		for(; ii<m-3; ii+=4)
-			{
-			pA[ii+0+jj*lda] *= alpha;
-			pA[ii+1+jj*lda] *= alpha;
-			pA[ii+2+jj*lda] *= alpha;
-			pA[ii+3+jj*lda] *= alpha;
-			}
-		for(; ii<m; ii++)
-			{
-			pA[ii+0+jj*lda] *= alpha;
-			}
-		}
-
-	return;
-
-	}
-
-
-
 // copy a generic strmat into a generic strmat
 void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
 	{
-
-	if(m<=0 | n<=0)
-		return;
-
-#if defined(DIM_CHECK)
-	// non-negative size
-	if(m<0) printf("\n****** sgecp_libstr : m<0 : %d<0 *****\n", m);
-	if(n<0) printf("\n****** sgecp_libstr : n<0 : %d<0 *****\n", n);
-	// non-negative offset
-	if(ai<0) printf("\n****** sgecp_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** sgecp_libstr : aj<0 : %d<0 *****\n", aj);
-	if(bi<0) printf("\n****** sgecp_libstr : bi<0 : %d<0 *****\n", bi);
-	if(bj<0) printf("\n****** sgecp_libstr : bj<0 : %d<0 *****\n", bj);
-	// inside matrix
-	// A: m x n
-	if(ai+m > sA->m) printf("\n***** sgecp_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+n > sA->n) printf("\n***** sgecp_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
-	// B: m x n
-	if(bi+m > sB->m) printf("\n***** sgecp_libstr : bi+m > row(B) : %d+%d > %d *****\n", bi, m, sB->m);
-	if(bj+n > sB->n) printf("\n***** sgecp_libstr : bj+n > col(B) : %d+%d > %d *****\n", bj, n, sB->n);
-#endif
-
 	int lda = sA->m;
-	int ldc = sC->m;
 	float *pA = sA->pA + ai + aj*lda;
+	int ldc = sC->m;
 	float *pC = sC->pA + ci + cj*ldc;
-
 	int ii, jj;
-
 	for(jj=0; jj<n; jj++)
 		{
 		ii = 0;
@@ -542,15 +485,39 @@ void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_st
 			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
 			}
 		}
-
 	return;
+	}
 
+
+
+// scale a generic strmat
+void sgesc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	float *pA = sA->pA + ai + aj*lda;
+	int ii, jj;
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			pA[ii+0+jj*lda] *= alpha;
+			pA[ii+1+jj*lda] *= alpha;
+			pA[ii+2+jj*lda] *= alpha;
+			pA[ii+3+jj*lda] *= alpha;
+			}
+		for(; ii<m; ii++)
+			{
+			pA[ii+0+jj*lda] *= alpha;
+			}
+		}
+	return;
 	}
 
 
 
 // copy a strvec into a strvec
-void sveccp_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
+void sveccp_libstr(int m, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
 	{
 	float *pa = sa->pa + ai;
 	float *pc = sc->pa + ci;
@@ -558,14 +525,36 @@ void sveccp_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_str
 	ii = 0;
 	for(; ii<m-3; ii+=4)
 		{
-		pc[ii+0] = alpha*pa[ii+0];
-		pc[ii+1] = alpha*pa[ii+1];
-		pc[ii+2] = alpha*pa[ii+2];
-		pc[ii+3] = alpha*pa[ii+3];
+		pc[ii+0] = pa[ii+0];
+		pc[ii+1] = pa[ii+1];
+		pc[ii+2] = pa[ii+2];
+		pc[ii+3] = pa[ii+3];
 		}
 	for(; ii<m; ii++)
 		{
-		pc[ii+0] = alpha*pa[ii+0];
+		pc[ii+0] = pa[ii+0];
+		}
+	return;
+	}
+
+
+
+// scale a strvec
+void svecsc_libstr(int m, float alpha, struct s_strvec *sa, int ai)
+	{
+	float *pa = sa->pa + ai;
+	int ii;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		pa[ii+0] *= alpha;
+		pa[ii+1] *= alpha;
+		pa[ii+2] *= alpha;
+		pa[ii+3] *= alpha;
+		}
+	for(; ii<m; ii++)
+		{
+		pa[ii+0] *= alpha;
 		}
 	return;
 	}
@@ -573,7 +562,7 @@ void sveccp_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_str
 
 
 // copy a lower triangular strmat into a lower triangular strmat
-void strcp_l_libstr(int m, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
+void strcp_l_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	float *pA = sA->pA + ai + aj*lda;
@@ -585,7 +574,7 @@ void strcp_l_libstr(int m, float alpha, struct s_strmat *sA, int ai, int aj, str
 		ii = jj;
 		for(; ii<m; ii++)
 			{
-			pC[ii+0+jj*ldc] = alpha*pA[ii+0+jj*lda];
+			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
 			}
 		}
 	return;
@@ -714,7 +703,7 @@ void strtr_u_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strmat 
 
 
 
-// insert a strvec to the diagonal of a strmat, sparse formulation 
+// insert a strvec to the diagonal of a strmat, sparse formulation
 void sdiain_sp_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, int *idx, struct s_strmat *sD, int di, int dj)
 	{
 	float *x = sx->pa + xi;
@@ -731,7 +720,7 @@ void sdiain_sp_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, int *i
 
 
 
-// extract the diagonal of a strmat from a strvec , sparse formulation 
+// extract the diagonal of a strmat from a strvec , sparse formulation
 void sdiaex_sp_libstr(int kmax, float alpha, int *idx, struct s_strmat *sD, int di, int dj, struct s_strvec *sx, int xi)
 	{
 	float *x = sx->pa + xi;
@@ -748,7 +737,21 @@ void sdiaex_sp_libstr(int kmax, float alpha, int *idx, struct s_strmat *sD, int 
 
 
 
-// add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation 
+// add a vector to diagonal
+void sdiaad_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, struct s_strmat *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	float *pA = sA->pA + ai + aj*lda;
+	float *x = sx->pa + xi;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		pA[ii*(lda+1)] += alpha*x[ii];
+	return;
+	}
+
+
+
+// add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation
 void sdiaad_sp_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, int *idx, struct s_strmat *sD, int di, int dj)
 	{
 	float *x = sx->pa + xi;
@@ -765,7 +768,7 @@ void sdiaad_sp_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, int *i
 
 
 
-// add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation 
+// add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation
 void sdiaadin_sp_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, int *idx, struct s_strmat *sD, int di, int dj)
 	{
 	float *x = sx->pa + xi;
@@ -783,7 +786,7 @@ void sdiaadin_sp_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, stru
 
 
 
-// add scaled strvec to row of strmat, sparse formulation 
+// add scaled strvec to row of strmat, sparse formulation
 void srowad_sp_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, int *idx, struct s_strmat *sD, int di, int dj)
 	{
 	float *x = sx->pa + xi;
@@ -801,16 +804,117 @@ void srowad_sp_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, int *i
 
 
 
-// adds strvec to strvec, sparse formulation
-void svecad_sp_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, int *idx, struct s_strvec *sy, int yi)
+void svecad_sp_libstr(int m, float alpha, struct s_strvec *sx, int xi, int *idx, struct s_strvec *sz, int zi)
 	{
-	int jj;
 	float *x = sx->pa + xi;
-	float *y = sy->pa + yi;
-//	svecad_libsp(kmax, idx, alpha, x, y);
-	for(jj=0; jj<kmax; jj++)
+	float *z = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		z[idx[ii]] += alpha * x[ii];
+	return;
+	}
+
+
+
+void svecin_sp_libstr(int m, float alpha, struct s_strvec *sx, int xi, int *idx, struct s_strvec *sz, int zi)
+	{
+	float *x = sx->pa + xi;
+	float *z = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		z[idx[ii]] = alpha * x[ii];
+	return;
+	}
+
+
+
+void svecex_sp_libstr(int m, float alpha, int *idx, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+	{
+	float *x = sx->pa + xi;
+	float *z = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		z[ii] = alpha * x[idx[ii]];
+	return;
+	}
+
+
+// clip without mask return
+void sveccl_libstr(int m, struct s_strvec *sxm, int xim, struct s_strvec *sx, int xi, struct s_strvec *sxp, int xip, struct s_strvec *sz, int zi)
+	{
+	float *xm = sxm->pa + xim;
+	float *x  = sx->pa + xi;
+	float *xp = sxp->pa + xip;
+	float *z  = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
 		{
-		y[idx[jj]] += alpha * x[jj];
+		if(x[ii]>=xp[ii])
+			{
+			z[ii] = xp[ii];
+			}
+		else if(x[ii]<=xm[ii])
+			{
+			z[ii] = xm[ii];
+			}
+		else
+			{
+			z[ii] = x[ii];
+			}
+		}
+	return;
+	}
+
+
+
+// clip with mask return
+void sveccl_mask_libstr(int m, struct s_strvec *sxm, int xim, struct s_strvec *sx, int xi, struct s_strvec *sxp, int xip, struct s_strvec *sz, int zi, struct s_strvec *sm, int mi)
+	{
+	float *xm = sxm->pa + xim;
+	float *x  = sx->pa + xi;
+	float *xp = sxp->pa + xip;
+	float *z  = sz->pa + zi;
+	float *mask  = sm->pa + mi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		if(x[ii]>=xp[ii])
+			{
+			z[ii] = xp[ii];
+			mask[ii] = 1.0;
+			}
+		else if(x[ii]<=xm[ii])
+			{
+			z[ii] = xm[ii];
+			mask[ii] = -1.0;
+			}
+		else
+			{
+			z[ii] = x[ii];
+			mask[ii] = 0.0;
+			}
+		}
+	return;
+	}
+
+
+// zero out components using mask
+void svecze_libstr(int m, struct s_strvec *sm, int mi, struct s_strvec *sv, int vi, struct s_strvec *se, int ei)
+	{
+	float *mask = sm->pa + mi;
+	float *v = sv->pa + vi;
+	float *e = se->pa + ei;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		if(mask[ii]==0)
+			{
+			e[ii] = v[ii];
+			}
+		else
+			{
+			e[ii] = 0;
+			}
 		}
 	return;
 	}
@@ -822,7 +926,4 @@ void svecad_sp_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, int *i
 #error : wrong LA choice
 
 #endif
-
-
-
 

@@ -39,7 +39,7 @@
 
 
 // z = y + alpha*x, with increments equal to 1
-void saxpy_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *zy, int zi)
+void saxpy_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
 	{
 	float *x = sx->pa + xi;
 	float *y = sy->pa + yi;
@@ -95,4 +95,5 @@ void saxpy_bkp_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_
 #error : wrong LA choice
 
 #endif
+
 

@@ -41,7 +41,7 @@ OBJS += ./kernel/avx2/kernel_dgemm_12x4_lib4.o ./kernel/avx2/kernel_dgemm_8x8_li
 OBJS += ./kernel/avx2/kernel_sgemm_24x4_lib8.o ./kernel/avx2/kernel_sgemm_16x4_lib8.o ./kernel/avx2/kernel_sgemm_8x8_lib8.o ./kernel/avx2/kernel_sgemm_8x4_lib8.o ./kernel/avx/kernel_sgecp_lib8.o ./kernel/avx/kernel_sgetr_lib8.o ./kernel/avx/kernel_sgesc_lib8.o
 # blas
 OBJS += ./blas/d_blas1_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas3_lib4.o ./blas/d_blas3_diag_lib4.o ./blas/d_lapack_lib4.o
-OBJS += ./blas/s_blas3_lib8.o ./blas/s_lapack_lib8.o
+OBJS += ./blas/s_blas1_lib8.o ./blas/s_blas3_lib8.o ./blas/s_lapack_lib8.o
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
@@ -53,7 +53,7 @@ OBJS += ./kernel/avx/kernel_dgemm_8x4_lib4.o ./kernel/avx/kernel_dgemm_4x4_lib4.
 OBJS += ./kernel/avx/kernel_sgemm_16x4_lib8.o ./kernel/avx/kernel_sgemm_8x8_lib8.o ./kernel/avx/kernel_sgemm_8x4_lib8.o ./kernel/avx/kernel_sgecp_lib8.o ./kernel/avx/kernel_sgetr_lib8.o ./kernel/avx/kernel_sgesc_lib8.o
 # blas
 OBJS += ./blas/d_blas1_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas3_lib4.o ./blas/d_blas3_diag_lib4.o ./blas/d_lapack_lib4.o
-OBJS += ./blas/s_blas3_lib8.o ./blas/s_lapack_lib8.o
+OBJS += ./blas/s_blas1_lib8.o ./blas/s_blas3_lib8.o ./blas/s_lapack_lib8.o
 endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
