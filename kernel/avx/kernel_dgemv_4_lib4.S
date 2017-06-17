@@ -2460,7 +2460,96 @@ kernel_dgemv_n_4_lib4:
 
 
 
-//                                rdi    rsi            rdx        rcx        r8            r9         rsp+8      rsp+16  rsp+24
+//                               1      2              3          4          5             6          7          8
+// void kernel_dgemv_n_4_vs_lib4(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int k1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dgemv_n_4_vs_lib4
+	.type kernel_dgemv_n_4_vs_lib4, @function
+kernel_dgemv_n_4_vs_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dgemv_n_4_vs_lib4
+_kernel_dgemv_n_4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgemv_n_4_vs_lib4
+	.def kernel_dgemv_n_4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dgemv_n_4_vs_lib4:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemv kernel n
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12  // x
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemv_add_n_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemv_add_n_4_lib4
+#endif
+#endif
+
+
+	// call inner blend n scale ab
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG5, %r11   // beta
+	movq	ARG6, %r12   // y
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_N_SCALE_AB_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_n_scale_ab_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_blend_n_scale_ab_4_lib4
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG7, %r10 // z 
+	movq	ARG8, %r11 // k1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_4_vs_lib4
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dgemv_n_4_vs_lib4, .-kernel_dgemv_n_4_vs_lib4
+#endif
+
+
+
+
+
+//                                1      2              3          4          5             6          7          8       9
 // void kernel_dgemv_n_4_gen_lib4(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int k0, int k1);
 
 	.p2align 4,,15
@@ -2550,7 +2639,7 @@ kernel_dgemv_n_4_gen_lib4:
 
 
 
-//                            rdi    rsi           rdx         rcx      r8         r9            rsp+8      rsp+16
+//                            1      2              3          4        5          6             7         8
 // void kernel_dgemv_t_4_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
 
 	.p2align 4,,15
@@ -2641,7 +2730,7 @@ kernel_dgemv_t_4_lib4:
 
 
 
-//                               rdi    rsi           rdx         rcx      r8         r9            rsp+8      rsp+16     rsp+24
+//                               1      2              3          4        5          6             7         8           9
 // void kernel_dgemv_t_4_vs_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z, int km);
 
 	.p2align 4,,15
@@ -2733,7 +2822,7 @@ kernel_dgemv_t_4_vs_lib4:
 
 
 
-//                                rdi    rsi            rdx       rcx        r8       r9         rsp+8         rsp+16     rsp+24     rsp+32
+//                                1      2              3         4          5        6          7             8          9          10
 // void kernel_dgemv_t_4_gen_lib4(int k, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z, int km);
 
 	.p2align 4,,15

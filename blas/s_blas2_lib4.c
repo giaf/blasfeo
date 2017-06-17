@@ -201,7 +201,7 @@ void sgemv_n_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 		}
 	if(i<m)
 		{
-		kernel_sgemv_n_4_gen_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &z[i], 0, m-i);
+		kernel_sgemv_n_4_vs_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &z[i], m-i);
 		}
 		
 	return;
@@ -235,7 +235,7 @@ void sgemv_t_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 			}
 		if(i<n)
 			{
-			kernel_sgemv_t_4_gen_lib4(m, &alpha, 0, &pA[i*bs], sda, x, &beta, &y[i], &z[i], n-i);
+			kernel_sgemv_t_4_vs_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i], n-i);
 			}
 		}
 	else // TODO kernel 8

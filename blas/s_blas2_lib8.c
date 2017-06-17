@@ -81,6 +81,49 @@ void sgemv_n_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 
 
 
+void sgemv_t_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+	{
+
+	if(n<=0)
+		return;
+	
+	const int bs = 8;
+
+	int i;
+
+	int sda = sA->cn;
+	float *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+	float *z = sz->pa + zi;
+
+	if(ai%bs==0)
+		{
+		i = 0;
+		for( ; i<n-7; i+=8)
+			{
+			kernel_sgemv_t_8_lib8(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i]);
+			}
+		if(i<n)
+			{
+			kernel_sgemv_t_8_vs_lib8(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i], n-i);
+			}
+		}
+	else
+		{
+		i = 0;
+		for( ; i<n; i+=8)
+			{
+			kernel_sgemv_t_8_gen_lib8(m, &alpha, ai%bs, &pA[i*bs], sda, x, &beta, &y[i], &z[i], n-i);
+			}
+		}
+	
+	return;
+
+	}
+
+
+
 #else
 
 #error : wrong LA choice
