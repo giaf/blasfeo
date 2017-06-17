@@ -39,7 +39,7 @@
 
 
 // z = y + alpha*x, with increments equal to 1
-void saxpy_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *zy, int zi)
+void saxpy_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
 	{
 	float *x = sx->pa + xi;
 	float *y = sy->pa + yi;
@@ -86,6 +86,31 @@ void saxpy_bkp_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_
 		y[ii+0] = y[ii+0] + alpha*x[ii+0];
 		}
 	return;
+	}
+
+
+
+// multiply two vectors and compute dot product
+float svecmuldot_libstr(int m, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+	{
+
+	if(m<=0)
+		return 0.0;
+
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+	float *z = sz->pa + zi;
+	int ii;
+	float dot = 0.0;
+
+	ii = 0;
+
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = x[ii+0] * y[ii+0];
+		dot += z[ii+0];
+		}
+	return dot;
 	}
 
 

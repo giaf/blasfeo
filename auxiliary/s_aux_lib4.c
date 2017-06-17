@@ -3048,6 +3048,30 @@ void svecad_sp_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, int *i
 
 
 
+void svecin_sp_libstr(int m, float alpha, struct s_strvec *sx, int xi, int *idx, struct s_strvec *sz, int zi)
+	{
+	float *x = sx->pa + xi;
+	float *z = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		z[idx[ii]] = alpha * x[ii];
+	return;
+	}
+
+
+
+void svecex_sp_libstr(int m, float alpha, int *idx, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+	{
+	float *x = sx->pa + xi;
+	float *z = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		z[ii] = alpha * x[idx[ii]];
+	return;
+	}
+
+
+
 #else
 
 #error : wrong LA choice
