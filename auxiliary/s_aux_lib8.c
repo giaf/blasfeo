@@ -37,7 +37,7 @@
 
 
 // copies a lower triangular packed matrix into a lower triangular packed matrix
-void strcp_l_lib(int m, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb)
+void strcp_l_lib(int m, int offsetA, float *A, int sda, int offsetB, float *B, int sdb)
 	{
 	printf("\nstrcp_;l_lib: feature not implemented yet\n");
 	exit(1);
@@ -1949,25 +1949,45 @@ void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_st
 
 
 
-// copy a strvec into a strvec
-void sveccp_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
+// scale a strvec
+void svecsc_libstr(int m, float alpha, struct s_strvec *sa, int ai)
 	{
 	float *pa = sa->pa + ai;
-	float *pc = sc->pa + ci;
-	int ii, jj;
+	int ii;
 	ii = 0;
 	for(; ii<m-3; ii+=4)
 		{
-		pc[0] = alpha * pa[0];
-		pc[1] = alpha * pa[1];
-		pc[2] = alpha * pa[2];
-		pc[3] = alpha * pa[3];
-		pa += 4;
-		pc += 4;
+		pa[ii+0] *= alpha;
+		pa[ii+1] *= alpha;
+		pa[ii+2] *= alpha;
+		pa[ii+3] *= alpha;
 		}
-	for(jj=0; jj<m-ii; jj++)
+	for(; ii<m; ii++)
 		{
-		pc[jj] = alpha*pa[jj];
+		pa[ii+0] *= alpha;
+		}
+	return;
+	}
+
+
+
+// copy a strvec into a strvec
+void sveccp_libstr(int m, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
+	{
+	float *pa = sa->pa + ai;
+	float *pc = sc->pa + ci;
+	int ii;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		pc[ii+0] = pa[ii+0];
+		pc[ii+1] = pa[ii+1];
+		pc[ii+2] = pa[ii+2];
+		pc[ii+3] = pa[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		pc[ii+0] = pa[ii+0];
 		}
 	return;
 	}
@@ -1975,14 +1995,14 @@ void sveccp_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_str
 
 
 // copy a lower triangular strmat into a lower triangular strmat
-void strcp_l_libstr(int m, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
+void strcp_l_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj)
 	{
 	const int bs = 8;
 	int sda = sA->cn;
 	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
 	float *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	strcp_l_lib(m, alpha, ai%bs, pA, sda, ci%bs, pC, sdc);
+	strcp_l_lib(m, ai%bs, pA, sda, ci%bs, pC, sdc);
 	return;
 	}
 
@@ -2333,6 +2353,30 @@ void svecad_sp_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, int *i
 	float *x = sx->pa + xi;
 	float *y = sy->pa + yi;
 	svecad_libsp(kmax, idx, alpha, x, y);
+	return;
+	}
+
+
+
+void svecin_sp_libstr(int m, float alpha, struct s_strvec *sx, int xi, int *idx, struct s_strvec *sz, int zi)
+	{
+	float *x = sx->pa + xi;
+	float *z = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		z[idx[ii]] = alpha * x[ii];
+	return;
+	}
+
+
+
+void svecex_sp_libstr(int m, float alpha, int *idx, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+	{
+	float *x = sx->pa + xi;
+	float *z = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		z[ii] = alpha * x[idx[ii]];
 	return;
 	}
 
