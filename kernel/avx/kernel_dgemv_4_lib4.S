@@ -145,6 +145,10 @@
 	.section	__TEXT,__text,regular,pure_instructions
 #endif
 
+
+
+
+
 // common inner routine with file scope
 //
 // input arguments:
@@ -2368,7 +2372,7 @@ inner_store_4_gen_lib4:
 
 
 
-//                            rdi    rsi            rdx        rcx        r8            r9         rsp+8
+//                            1      2              3          4          5             6          7
 // void kernel_dgemv_n_4_lib4(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z);
 
 	.p2align 4,,15

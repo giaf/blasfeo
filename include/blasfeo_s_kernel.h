@@ -107,6 +107,11 @@ void kernel_sgemm_nt_4x8_gen_lib8(int k, float *alpha, float *A, float *B, float
 void kernel_strsm_nt_rl_inv_4x8_lib8(int k, float *A, float *B, float *C, float *D, float *E, float *inv_diag_E);
 void kernel_strsm_nt_rl_inv_4x8_vs_lib8(int k, float *A, float *B, float *C, float *D, float *E, float *inv_diag_E, int km, int kn);
 
+// 8
+void kernel_sgemv_n_8_lib8(int k, float *alpha, float *A, float *x, float *beta, float *y, float *z);
+void kernel_sgemv_n_8_vs_lib8(int k, float *alpha, float *A, float *x, float *beta, float *y, float *z, int k1);
+void kernel_sgemv_n_8_gen_lib8(int kmax, float *alpha, float *A, float *x, float *beta, float *y, float *z, int k0, int k1);
+
 // aux
 void kernel_sgecp_8_0_lib8(int m, float *A, float *B);
 void kernel_sgecp_8_0_gen_lib8(int m, float *A, float *B, int m1);
