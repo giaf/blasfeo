@@ -120,36 +120,36 @@ int main()
 	printf("Testing BLAS version for generic scalar instruction set: theoretical peak %5.1f Gflops ???\n", flops_max*GHz_max);
 #endif
 	
-	FILE *f;
-	f = fopen("./test_problems/results/test_blas.m", "w"); // a
+//	FILE *f;
+//	f = fopen("./test_problems/results/test_blas.m", "w"); // a
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-	fprintf(f, "C = 's_x64_intel_haswell';\n");
-	fprintf(f, "\n");
+//	fprintf(f, "C = 's_x64_intel_haswell';\n");
+//	fprintf(f, "\n");
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	fprintf(f, "C = 's_x64_intel_sandybridge';\n");
-	fprintf(f, "\n");
+//	fprintf(f, "C = 's_x64_intel_sandybridge';\n");
+//	fprintf(f, "\n");
 #elif defined(TARGET_X64_INTEL_CORE)
-	fprintf(f, "C = 's_x64_intel_core';\n");
-	fprintf(f, "\n");
+//	fprintf(f, "C = 's_x64_intel_core';\n");
+//	fprintf(f, "\n");
 #elif defined(TARGET_X64_AMD_BULLDOZER)
-	fprintf(f, "C = 's_x64_amd_bulldozer';\n");
-	fprintf(f, "\n");
+//	fprintf(f, "C = 's_x64_amd_bulldozer';\n");
+//	fprintf(f, "\n");
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	fprintf(f, "C = 's_armv7a_arm_cortex_a15';\n");
-	fprintf(f, "\n");
+//	fprintf(f, "C = 's_armv7a_arm_cortex_a15';\n");
+//	fprintf(f, "\n");
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-	fprintf(f, "C = 's_armv7a_arm_cortex_a15';\n");
-	fprintf(f, "\n");
+//	fprintf(f, "C = 's_armv7a_arm_cortex_a15';\n");
+//	fprintf(f, "\n");
 #elif defined(TARGET_GENERIC)
-	fprintf(f, "C = 's_generic';\n");
-	fprintf(f, "\n");
+//	fprintf(f, "C = 's_generic';\n");
+//	fprintf(f, "\n");
 #endif
 
-	fprintf(f, "A = [%f %f];\n", GHz_max, flops_max);
-	fprintf(f, "\n");
+//	fprintf(f, "A = [%f %f];\n", GHz_max, flops_max);
+//	fprintf(f, "\n");
 
-	fprintf(f, "B = [\n");
+//	fprintf(f, "B = [\n");
 	
 
 
@@ -297,9 +297,9 @@ int main()
 
 //			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			sgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-			ssyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//			ssyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			spotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-//			spotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
+			spotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
 //			sgetr_libstr(n, n, &sA, 0, 0, &sB, 0, 0);
 //			sgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			sgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
@@ -376,8 +376,8 @@ int main()
 //			float flop_operation = 1*16.0*2*n; // kernel 4x4
 
 //			float flop_operation = 2.0*n*n*n; // dgemm
-			float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
-//			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
+//			float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
+			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //			float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //			float flop_operation = 2.0*n*n; // dgemv dsymv
 //			float flop_operation = 1.0*n*n; // dtrmv dtrsv
@@ -396,7 +396,7 @@ int main()
 
 
 			printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
-			fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+//			fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
 
 			}
 		// memops
@@ -417,7 +417,7 @@ int main()
 
 
 			printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gmemops_blasfeo, 100.0*Gmemops_blasfeo/Gmemops_max, Gmemops_blas, 100.0*Gmemops_blas/Gmemops_max);
-			fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gmemops_blasfeo, 100.0*Gmemops_blasfeo/Gmemops_max, Gmemops_blas, 100.0*Gmemops_blas/Gmemops_max);
+//			fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gmemops_blasfeo, 100.0*Gmemops_blasfeo/Gmemops_max, Gmemops_blas, 100.0*Gmemops_blas/Gmemops_max);
 
 			}
 
@@ -445,8 +445,8 @@ int main()
 
 	printf("\n");
 
-	fprintf(f, "];\n");
-	fclose(f);
+//	fprintf(f, "];\n");
+//	fclose(f);
 
 	return 0;
 	

@@ -59,8 +59,8 @@ REF_BLAS = 0
 EXT_DEP = 1
 
 # Enable on-line checks for matrix and vector dimensions
-DIM_CHECK = 0
-#DIM_CHECK = 1
+RUNTIME_CHECKS = 0
+#RUNTIME_CHECKS = 1
 
 # Operating system
 UNAME_S := $(shell uname -s)
@@ -108,7 +108,7 @@ ifeq ($(LA), BLAS)
 CFLAGS  += -DLA_BLAS
 endif
 
-ifeq ($(DIM_CHECK), 1)
+ifeq ($(RUNTIME_CHECKS), 1)
 CFLAGS += -DDIM_CHECK
 endif
 

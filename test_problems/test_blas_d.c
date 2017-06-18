@@ -38,6 +38,7 @@
 #include "../include/blasfeo_d_aux_ext_dep.h"
 #include "../include/blasfeo_d_aux.h"
 #include "../include/blasfeo_i_aux_ext_dep.h"
+#include "../include/blasfeo_v_aux_ext_dep.h"
 #include "../include/blasfeo_d_kernel.h"
 #include "../include/blasfeo_d_blas.h"
 
@@ -119,36 +120,36 @@ int main()
 	printf("Testing BLAS version for generic scalar instruction set: theoretical peak %5.1f Gflops ???\n", flops_max*GHz_max);
 #endif
 	
-	FILE *f;
-	f = fopen("./test_problems/results/test_blas.m", "w"); // a
+//	FILE *f;
+//	f = fopen("./test_problems/results/test_blas.m", "w"); // a
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-	fprintf(f, "C = 'd_x64_intel_haswell';\n");
-	fprintf(f, "\n");
+//	fprintf(f, "C = 'd_x64_intel_haswell';\n");
+//	fprintf(f, "\n");
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	fprintf(f, "C = 'd_x64_intel_sandybridge';\n");
-	fprintf(f, "\n");
+//	fprintf(f, "C = 'd_x64_intel_sandybridge';\n");
+//	fprintf(f, "\n");
 #elif defined(TARGET_X64_INTEL_CORE)
-	fprintf(f, "C = 'd_x64_intel_core';\n");
-	fprintf(f, "\n");
+//	fprintf(f, "C = 'd_x64_intel_core';\n");
+//	fprintf(f, "\n");
 #elif defined(TARGET_X64_AMD_BULLDOZER)
-	fprintf(f, "C = 'd_x64_amd_bulldozer';\n");
-	fprintf(f, "\n");
+//	fprintf(f, "C = 'd_x64_amd_bulldozer';\n");
+//	fprintf(f, "\n");
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	fprintf(f, "C = 'd_armv8a_arm_cortex_a57';\n");
-	fprintf(f, "\n");
+//	fprintf(f, "C = 'd_armv8a_arm_cortex_a57';\n");
+//	fprintf(f, "\n");
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-	fprintf(f, "C = 'd_armv7a_arm_cortex_a15';\n");
-	fprintf(f, "\n");
+//	fprintf(f, "C = 'd_armv7a_arm_cortex_a15';\n");
+//	fprintf(f, "\n");
 #elif defined(TARGET_GENERIC)
-	fprintf(f, "C = 'd_generic';\n");
-	fprintf(f, "\n");
+//	fprintf(f, "C = 'd_generic';\n");
+//	fprintf(f, "\n");
 #endif
 
-	fprintf(f, "A = [%f %f];\n", GHz_max, flops_max);
-	fprintf(f, "\n");
+//	fprintf(f, "A = [%f %f];\n", GHz_max, flops_max);
+//	fprintf(f, "\n");
 
-	fprintf(f, "B = [\n");
+//	fprintf(f, "B = [\n");
 	
 
 
@@ -340,9 +341,9 @@ int main()
 //			kernel_dgemm_nn_4x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 //			kernel_dgemm_nn_4x4_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 
-//			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-			dsyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//			dsyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dsyrk_ln_mn_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //			dpotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //			dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
@@ -418,8 +419,8 @@ int main()
 //		float flop_operation = 1*16.0*2*n; // kernel 4x4
 //		float flop_operation = 0.5*16.0*2*n; // kernel 2x4
 
-//		float flop_operation = 2.0*n*n*n; // dgemm
-		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
+		float flop_operation = 2.0*n*n*n; // dgemm
+//		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
 //		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //		float flop_operation = 4.0/3.0*n*n*n; // dgeqrf
@@ -441,7 +442,7 @@ int main()
 //		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
 //		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_hpmpc, 100.0*Gflops_hpmpc/Gflops_max, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
 		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
-		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+//		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
 
 
 		d_free(A);
@@ -471,8 +472,8 @@ int main()
 
 	printf("\n");
 
-	fprintf(f, "];\n");
-	fclose(f);
+//	fprintf(f, "];\n");
+//	fclose(f);
 
 	return 0;
 	

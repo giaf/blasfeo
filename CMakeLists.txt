@@ -1,0 +1,535 @@
+###################################################################################################
+#                                                                                                 #
+# This file is part of HPIPM.                                                                     #
+#                                                                                                 #
+# HPIPM -- High Performance Interior Point Method.                                                #
+# Copyright (C) 2017 by Gianluca Frison.                                                          #
+# Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              #
+# All rights reserved.                                                                            #
+#                                                                                                 #
+# HPMPC is free software; you can redistribute it and/or                                          #
+# modify it under the terms of the GNU Lesser General Public                                      #
+# License as published by the Free Software Foundation; either                                    #
+# version 2.1 of the License, or (at your option) any later version.                              #
+#                                                                                                 #
+# HPMPC is distributed in the hope that it will be useful,                                        #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of                                  #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                                            #
+# See the GNU Lesser General Public License for more details.                                     #
+#                                                                                                 #
+# You should have received a copy of the GNU Lesser General Public                                #
+# License along with HPMPC; if not, write to the Free Software                                    #
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  #
+#                                                                                                 #
+# Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             #
+#                                                                                                 #
+###################################################################################################
+
+cmake_minimum_required(VERSION 2.8.11)
+
+project(blasfeo)
+
+enable_language(C ASM)
+
+# Target architecture
+#set(TARGET X64_INTEL_HASWELL)
+set(TARGET X64_INTEL_SANDY_BRIDGE)
+#set(TARGET X64_INTEL_CORE)
+#set(TARGET X64_AMD_BULLDOZER)
+#set(TARGET ARMV8A_ARM_CORTEX_A57)
+#set(TARGET ARMV7A_ARM_CORTEX_A15)
+#set(TARGET GENERIC)
+
+# Linear Algebra library
+set(LA HIGH_PERFORMANCE)
+#set(LA REFERENCE)
+#set(LA BLAS)
+
+# BLAS and LAPACK version (for LA=BLAS in BLASFEO)
+set(REF_BLAS 0)
+#set(REF_BLAS OPENBLAS)
+#set(REF_BLAS NETLIB)
+#set(REF_BLAS MKL)
+#set(REF_BLAS BLIS)
+#set(REF_BLAS ATLAS)
+
+# Compile auxiliary functions with external dependencies (for memory allocation and printing)
+#set(EXT_DEP 0)
+set(EXT_DEP 1)
+
+# operating system
+set(OS LINUX)
+#set(OS MAC)
+#set(OS WINDOWS)
+
+# C Compiler
+set(CC_COMPILER gcc)
+#set(CC_COMPILER clang)
+#set(CC_COMPILER x86_64-w64-mingw32-gcc)
+
+# installation directory
+set(PREFIX /opt)
+
+# Macro level (code size vs performance in assembly kernels): 0 (no macro), 1 (all macro but gemm kernel), 2 (all macro)
+set(MACRO_LEVEL 0)
+
+# enable runtine checks
+set(RUNTIME_CHECKS 0)
+#set(RUNTIME_CHECKS 0)
+
+# compiler flags
+set(CMAKE_C_FLAGS "")
+set(CMAKE_ASM_FLAGS "")
+
+# optimization flags
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -fPIC")
+
+# debugging flags
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
+#set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -g")
+
+# search directories
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${BLASFEO_PATH}/include") XXX
+
+#
+if(${LA} MATCHES HIGH_PERFORMANCE)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_HIGH_PERFORMANCE")
+endif(${LA} MATCHES HIGH_PERFORMANCE)
+if(${LA} MATCHES REFERENCE)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_REFERENCE")
+endif(${LA} MATCHES REFERENCE)
+if(${LA} MATCHES BLAS)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_BLAS")
+endif(${LA} MATCHES BLAS)
+
+#
+if(${RUNTIME_CHECKS} MATCHES 1)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDIM_CHECK")
+endif(${RUNTIME_CHECKS} MATCHES 1)
+
+#
+if(${EXT_DEP} MATCHES 1)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DEXT_DEP")
+endif(${EXT_DEP} MATCHES 1)
+
+#
+if(${MACRO_LEVEL} MATCHES 1)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMACRO_LEVEL=1")
+endif(${MACRO_LEVEL} MATCHES 1)
+if(${MACRO_LEVEL} MATCHES 2)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMACRO_LEVEL=2")
+endif(${MACRO_LEVEL} MATCHES 2)
+
+#
+if(${OS} MATCHES LINUX)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOS_LINUX")
+	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DOS_LINUX")
+endif(${OS} MATCHES LINUX)
+if(${OS} MATCHES MAC)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOS_MAC")
+	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DOS_MAC")
+endif(${OS} MATCHES MAC)
+if(${OS} MATCHES WINDOWS)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOS_WINDOWS")
+	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DOS_WINDOWS")
+endif(${OS} MATCHES WINDOWS)
+
+#
+if(${REF_BLAS} MATCHES 0)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ")
+endif(${REF_BLAS} MATCHES 0)
+if(${REF_BLAS} MATCHES OPENBLAS)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_OPENBLAS -I/opt/openblas/include")
+endif(${REF_BLAS} MATCHES OPENBLAS)
+if(${REF_BLAS} MATCHES BLIS)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_BLIS -std=c99")
+endif(${REF_BLAS} MATCHES BLIS)
+if(${REF_BLAS} MATCHES NETLIB)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_NETLIB")
+endif(${REF_BLAS} MATCHES NETLIB)
+if(${REF_BLAS} MATCHES MKL)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_MKL -m64 -I/opt/intel/mkl/include")
+endif(${REF_BLAS} MATCHES MKL)
+if(${REF_BLAS} MATCHES ATLAS)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_ATLAS")
+endif(${REF_BLAS} MATCHES ATLAS)
+
+# architecture-specific flags
+if(${TARGET} MATCHES X64_INTEL_HASWELL)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx2 -mfma -DTARGET_X64_INTEL_HASWELL")
+endif(${TARGET} MATCHES X64_INTEL_HASWELL)
+if(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx -DTARGET_X64_INTEL_SANDY_BRIDGE")
+endif(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
+if(${TARGET} MATCHES X64_INTEL_CORE)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -msse3 -DTARGET_X64_INTEL_CORE")
+endif(${TARGET} MATCHES X64_INTEL_CORE)
+if(${TARGET} MATCHES X64_AMD_BULLDOZER)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx -mfma -DTARGET_X64_AMD_BULLDOZER")
+endif(${TARGET} MATCHES X64_AMD_BULLDOZER)
+if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc+crypto+fp+simd -DTARGET_ARMV8A_ARM_CORTEX_A57")
+	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV8A_ARM_CORTEX_A57")
+endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
+if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15 -DTARGET_ARMV7A_ARM_CORTEX_A15")
+	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -mfpu=neon-vfpv4 -DTARGET_ARMV7A_ARM_CORTEX_A15")
+endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
+if(${TARGET} MATCHES GENERIC)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_GENERIC")
+endif(${TARGET} MATCHES GENERIC)
+
+
+
+# source files
+
+if(${LA} MATCHES HIGH_PERFORMANCE)
+
+	if(${TARGET} MATCHES X64_INTEL_HASWELL)
+
+		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/avx/kernel_dgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/avx2/kernel_dgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib8.c
+			)
+
+		file(GLOB KERNEL_SRC
+			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_12x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_8x8_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_8x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemv_8_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dsymv_6_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgetrf_pivot_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgebp_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgelqf_4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_24x4_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_16x4_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_8x8_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_8x4_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecp_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgesc_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_8_lib8.S
+			)
+
+		file(GLOB BLAS_SRC
+			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib8.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib8.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib8.c
+			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib8.c
+			)
+
+	endif(${TARGET} MATCHES X64_INTEL_HASWELL)
+
+	if(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
+
+		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/avx/kernel_dgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/avx/kernel_dgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib8.c
+			)
+
+		file(GLOB KERNEL_SRC
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_8x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_12_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_8_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dsymv_6_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetrf_pivot_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgebp_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgelqf_4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_16x4_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x8_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x4_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecp_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgesc_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_8_lib8.S
+			)
+
+		file(GLOB BLAS_SRC
+			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib8.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib8.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib8.c
+			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib8.c
+			)
+
+	endif(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
+
+	if(${TARGET} MATCHES X64_INTEL_CORE)
+	
+		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgetr_lib4.c 
+			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_sgetr_lib4.c
+			)
+
+		file(GLOB KERNEL_SRC
+			${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_dgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemm_4x4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemm_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetrf_pivot_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_4x4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_ssymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgetrf_pivot_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgecp_lib4.c
+			)
+
+		file(GLOB BLAS_SRC
+			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
+			)
+
+	endif(${TARGET} MATCHES X64_INTEL_CORE)
+
+	if(${TARGET} MATCHES X64_AMD_BULLDOZER)
+	
+		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgetr_lib4.c 
+			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_sgetr_lib4.c
+			)
+
+		file(GLOB KERNEL_SRC
+			${PROJECT_SOURCE_DIR}/kernel/fma/kernel_dgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemm_4x4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemm_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetrf_pivot_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_4x4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_ssymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgetrf_pivot_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgecp_lib4.c
+			)
+
+		file(GLOB BLAS_SRC
+			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
+			)
+
+	endif(${TARGET} MATCHES X64_AMD_BULLDOZER)
+
+	if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
+	
+		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgetr_lib4.c 
+			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_sgetr_lib4.c
+			)
+
+		file(GLOB KERNEL_SRC
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_8x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemm_4x4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemm_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetrf_pivot_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_16x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_12x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x8_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_4x4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_ssymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgetrf_pivot_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgecp_lib4.c
+			)
+
+		file(GLOB BLAS_SRC
+			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
+			)
+
+	endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
+
+	if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
+	
+		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgetr_lib4.c 
+			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_sgetr_lib4.c
+			)
+
+		file(GLOB KERNEL_SRC
+			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_dgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemm_4x4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemm_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetrf_pivot_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_12x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_4x4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_ssymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgetrf_pivot_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgecp_lib4.c
+			)
+
+		file(GLOB BLAS_SRC
+			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
+			)
+
+	endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
+
+	if(${TARGET} MATCHES GENERIC)
+	
+		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgetr_lib4.c 
+			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_sgetr_lib4.c
+			)
+
+		file(GLOB KERNEL_SRC
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemm_4x4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemm_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetrf_pivot_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_4x4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_ssymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgetrf_pivot_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgecp_lib4.c
+			)
+
+		file(GLOB BLAS_SRC
+			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
+			)
+
+	endif(${TARGET} MATCHES GENERIC)
+
+else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
+
+	file(GLOB AUX_SRC
+		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib.c
+		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib.c
+		)
+
+	file(GLOB BLAS_SRC
+		${PROJECT_SOURCE_DIR}/blas/d_blas1_lib.c
+		${PROJECT_SOURCE_DIR}/blas/d_blas2_lib.c
+		${PROJECT_SOURCE_DIR}/blas/d_blas3_lib.c
+		${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib.c
+		${PROJECT_SOURCE_DIR}/blas/d_lapack_lib.c
+		${PROJECT_SOURCE_DIR}/blas/s_blas1_lib.c
+		${PROJECT_SOURCE_DIR}/blas/s_blas2_lib.c
+		${PROJECT_SOURCE_DIR}/blas/s_blas3_lib.c
+		${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib.c
+		${PROJECT_SOURCE_DIR}/blas/s_lapack_lib.c
+		)
+
+endif(${LA} MATCHES HIGH_PERFORMANCE)
+
+if(${EXT_DEP} MATCHES 1)
+
+	file(GLOB EXT_SRC
+		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_lib.c
+		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_lib.c
+		${PROJECT_SOURCE_DIR}/auxiliary/v_aux_ext_dep_lib.c
+		${PROJECT_SOURCE_DIR}/auxiliary/i_aux_ext_dep_lib.c
+		)
+
+endif(${EXT_DEP} MATCHES 1)
+
+set(BLASFEO_SRC ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
+
+# add library
+add_library(blasfeo ${BLASFEO_SRC})
+#add_library(blasfeo SHARED ${BLASFEO})
+
+#target_link_libraries(hpipm)
+
+# test problems
+add_subdirectory(test_problems)
