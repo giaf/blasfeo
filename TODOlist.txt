@@ -1,0 +1,3 @@
+- syrk_potrf_ln_mn
+- alpha for trsm
+- kernels and _mn_ version of trmv
