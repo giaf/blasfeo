@@ -333,7 +333,7 @@ inner_kernel_gemv_add_t_8_lib8:
 	cmpl	$0, %r10d
 	jle		2f // return
 
-	cmpl	$4, %r10d
+	cmpl	$8, %r10d
 	jl		0f // clean-up loop
 
 	// main loop
@@ -346,7 +346,7 @@ inner_kernel_gemv_add_t_8_lib8:
 	vmulps		%ymm8, %ymm12, %ymm15
 	vaddps		%ymm0, %ymm15, %ymm0
 	
-	subl	$4, %r10d
+	subl	$8, %r10d
 
 	vmovaps		32(%r11), %ymm8
 	vmulps		%ymm8, %ymm12, %ymm15
@@ -379,7 +379,7 @@ inner_kernel_gemv_add_t_8_lib8:
 	addq	%r12, %r11
 	addq	$32, %r13
 	
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 
 	jg		1b // main loop 
 
@@ -396,7 +396,7 @@ inner_kernel_gemv_add_t_8_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm13
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vshufps		$0x00, %xmm14, %xmm14, %xmm14
 	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
 	vsubps		%ymm14, %ymm13, %ymm14
 
