@@ -502,6 +502,188 @@ void strmv_ltn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct 
 
 
 
+void strsv_lnn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+	{
+
+	if(m==0)
+		return;
+
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** strsv_lnn_libstr : m<0 : %d<0 *****\n", m);
+	// non-negative offset
+	if(ai<0) printf("\n****** strsv_lnn_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** strsv_lnn_libstr : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** strsv_lnn_libstr : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** strsv_lnn_libstr : zi<0 : %d<0 *****\n", zi);
+	// inside matrix
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** strsv_lnn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+m > sA->n) printf("\n***** strsv_lnn_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
+	// x: m
+	if(xi+m > sx->m) printf("\n***** strsv_lnn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	// z: m
+	if(zi+m > sz->m) printf("\n***** strsv_lnn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
+
+	if(ai!=0)
+		{
+		printf("\nstrsv_lnn_libstr: feature not implemented yet: ai=%d\n", ai);
+		exit(1);
+		}
+
+	const int bs = 8;
+
+	int sda = sA->cn;
+	float *pA = sA->pA + aj*bs; // TODO ai
+	float *dA = sA->dA;
+	float *x = sx->pa + xi;
+	float *z = sz->pa + zi;
+
+	int ii;
+
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			sdiaex_lib(m, 1.0, ai, pA, sda, dA);
+			for(ii=0; ii<m; ii++)
+				dA[ii] = 1.0 / dA[ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+		sdiaex_lib(m, 1.0, ai, pA, sda, dA);
+		for(ii=0; ii<m; ii++)
+			dA[ii] = 1.0 / dA[ii];
+		sA->use_dA = 0;
+		}
+
+	int i;
+
+	if(x!=z)
+		{
+		for(i=0; i<m; i++)
+			z[i] = x[i];
+		}
+	
+	i = 0;
+	for( ; i<m-7; i+=8)
+		{
+		kernel_strsv_ln_inv_8_lib8(i, &pA[i*sda], &dA[i], z, &z[i], &z[i]);
+		}
+	if(i<m)
+		{
+		kernel_strsv_ln_inv_8_vs_lib8(i, &pA[i*sda], &dA[i], z, &z[i], &z[i], m-i, m-i);
+		i+=8;
+		}
+
+	return;
+
+	}
+
+
+
+void strsv_lnn_mn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+	{
+
+	if(m==0 | n==0)
+		return;
+
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** strsv_lnn_mn_libstr : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** strsv_lnn_mn_libstr : n<0 : %d<0 *****\n", n);
+	// non-negative offset
+	if(ai<0) printf("\n****** strsv_lnn_mn_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** strsv_lnn_mn_libstr : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** strsv_lnn_mn_libstr : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** strsv_lnn_mn_libstr : zi<0 : %d<0 *****\n", zi);
+	// inside matrix
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** strsv_lnn_mn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** strsv_lnn_mn_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+	// x: m
+	if(xi+m > sx->m) printf("\n***** strsv_lnn_mn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	// z: m
+	if(zi+m > sz->m) printf("\n***** strsv_lnn_mn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
+
+	if(ai!=0)
+		{
+		printf("\nstrsv_lnn_mn_libstr: feature not implemented yet: ai=%d\n", ai);
+		exit(1);
+		}
+
+	const int bs = 8;
+
+	int sda = sA->cn;
+	float *pA = sA->pA + aj*bs; // TODO ai
+	float *dA = sA->dA;
+	float *x = sx->pa + xi;
+	float *z = sz->pa + zi;
+
+	int ii;
+
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			sdiaex_lib(n, 1.0, ai, pA, sda, dA);
+			for(ii=0; ii<n; ii++)
+				dA[ii] = 1.0 / dA[ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+		sdiaex_lib(n, 1.0, ai, pA, sda, dA);
+		for(ii=0; ii<n; ii++)
+			dA[ii] = 1.0 / dA[ii];
+		sA->use_dA = 0;
+		}
+
+	if(m<n)
+		m = n;
+
+	float alpha = -1.0;
+	float beta = 1.0;
+
+	int i;
+
+	if(x!=z)
+		{
+		for(i=0; i<m; i++)
+			z[i] = x[i];
+		}
+	
+	i = 0;
+	for( ; i<n-7; i+=8)
+		{
+		kernel_strsv_ln_inv_8_lib8(i, &pA[i*sda], &dA[i], z, &z[i], &z[i]);
+		}
+	if(i<n)
+		{
+		kernel_strsv_ln_inv_8_vs_lib8(i, &pA[i*sda], &dA[i], z, &z[i], &z[i], m-i, n-i);
+		i+=8;
+		}
+	for( ; i<m-7; i+=8)
+		{
+		kernel_sgemv_n_8_lib8(n, &alpha, &pA[i*sda], z, &beta, &z[i], &z[i]);
+		}
+	if(i<m)
+		{
+		kernel_sgemv_n_8_vs_lib8(n, &alpha, &pA[i*sda], z, &beta, &z[i], &z[i], m-i);
+		i+=8;
+		}
+
+	return;
+
+	}
+
+
+
 #else
 
 #error : wrong LA choice

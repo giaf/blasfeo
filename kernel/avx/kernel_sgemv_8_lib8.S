@@ -219,22 +219,22 @@ inner_kernel_gemv_add_n_8_lib8:
 	subl	$4, %r10d
 
 	vmovaps			32(%r11), %ymm8
-	vbroadcastss	8(%r12), %ymm12
+	vbroadcastss	4(%r12), %ymm12
 	vmulps			%ymm8, %ymm12, %ymm15
 	vaddps			%ymm1, %ymm15, %ymm1
 	
 	vmovaps			64(%r11), %ymm8
-	vbroadcastss	16(%r12), %ymm12
+	vbroadcastss	8(%r12), %ymm12
 	vmulps			%ymm8, %ymm12, %ymm15
 	vaddps			%ymm2, %ymm15, %ymm2
 
 	vmovaps			96(%r11), %ymm8
-	vbroadcastss	24(%r12), %ymm12
+	vbroadcastss	12(%r12), %ymm12
 	vmulps			%ymm8, %ymm12, %ymm15
 	vaddps			%ymm3, %ymm15, %ymm3
 	
 	addq	$128, %r11
-	addq	$32, %r12
+	addq	$16, %r12
 	
 	cmpl	$3, %r10d
 
@@ -253,7 +253,7 @@ inner_kernel_gemv_add_n_8_lib8:
 	vaddps			%ymm0, %ymm15, %ymm0
 	
 	addq	$32, %r11
-	addq	$8, %r12
+	addq	$4, %r12
 	
 	subl	$1, %r10d
 	cmpl	$0, %r10d
@@ -597,6 +597,277 @@ inner_edge_gemv_add_t_8_lib8:
 
 // common inner routine with file scope
 //
+// triangular substitution with vector RHS
+//
+// input arguments:
+// r10  <- E
+// r11  <- inv_diag_E
+// ymm0 <- [z0 z1 z2 z3]
+// ymm12 <- dirty
+// ymm13 <- dirty
+//
+// output arguments:
+// r10  <- E
+// r11  <- inv_diag_E
+// ymm0 <- [z0 z1 z2 z3]
+// ymm12 <- dirty
+// ymm13 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRSV_LN_INV_8_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_trsv_ln_inv_8_lib8, @function
+inner_edge_trsv_ln_inv_8_lib8:
+#elif defined(OS_MAC)
+_inner_edge_trsv_ln_inv_8_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_trsv_ln_inv_8_lib8; .scl 2; .type 32; .endef
+inner_edge_trsv_ln_inv_8_lib8:
+#endif
+#endif
+	
+	vxorps			%ymm14, %ymm14, %ymm14
+
+	vbroadcastss	0(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x01, %ymm1, %ymm0, %ymm0
+
+	vmovaps			0(%r10), %ymm13
+	vblendps		$0x01, %ymm14, %ymm13, %ymm13
+	vpermilps		$0x00, %ymm0, %ymm12
+	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vmulps			%ymm13, %ymm12, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	4(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x02, %ymm1, %ymm0, %ymm0
+
+	vmovaps			32(%r10), %ymm13
+	vblendps		$0x03, %ymm14, %ymm13, %ymm13
+	vpermilps		$0x55, %ymm0, %ymm12
+	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vmulps			%ymm13, %ymm12, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	8(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x04, %ymm1, %ymm0, %ymm0
+
+	vmovaps			64(%r10), %ymm13
+	vblendps		$0x07, %ymm14, %ymm13, %ymm13
+	vpermilps		$0xaa, %ymm0, %ymm12
+	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vmulps			%ymm13, %ymm12, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	12(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x08, %ymm1, %ymm0, %ymm0
+
+	vmovaps			96(%r10), %ymm13
+	vblendps		$0x0f, %ymm14, %ymm13, %ymm13
+	vpermilps		$0xff, %ymm0, %ymm12
+	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vmulps			%ymm13, %ymm12, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	16(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x10, %ymm1, %ymm0, %ymm0
+
+	vmovaps			128(%r10), %ymm13
+	vblendps		$0x1f, %ymm14, %ymm13, %ymm13
+	vpermilps		$0x00, %ymm0, %ymm12
+	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vmulps			%ymm13, %ymm12, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	20(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x20, %ymm1, %ymm0, %ymm0
+
+	vmovaps			160(%r10), %ymm13
+	vblendps		$0x3f, %ymm14, %ymm13, %ymm13
+	vpermilps		$0x55, %ymm0, %ymm12
+	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vmulps			%ymm13, %ymm12, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	24(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x40, %ymm1, %ymm0, %ymm0
+
+	vmovaps			192(%r10), %ymm13
+	vblendps		$0x7f, %ymm14, %ymm13, %ymm13
+	vpermilps		$0xaa, %ymm0, %ymm12
+	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vmulps			%ymm13, %ymm12, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+	vbroadcastss	28(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x80, %ymm1, %ymm0, %ymm0
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_trsv_ln_inv_8_lib8, .-inner_edge_trsv_ln_inv_8_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// triangular substitution with vector RHS
+//
+// input arguments:
+// r10  <- E
+// r11  <- inv_diag_E
+// r12d <- kn
+// ymm0 <- [z0 z1 z2 z3]
+// ymm12 <- dirty
+// ymm13 <- dirty
+//
+// output arguments:
+// r10  <- E
+// r11  <- inv_diag_E
+// r12d <- kn
+// ymm0 <- [z0 z1 z2 z3]
+// ymm12 <- dirty
+// ymm13 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRSV_LN_INV_8_VS_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_trsv_ln_inv_8_vs_lib8, @function
+inner_edge_trsv_ln_inv_8_vs_lib8:
+#elif defined(OS_MAC)
+_inner_edge_trsv_ln_inv_8_vs_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_trsv_ln_inv_8_vs_lib8; .scl 2; .type 32; .endef
+inner_edge_trsv_ln_inv_8_vs_lib8:
+#endif
+#endif
+	
+	vxorps			%ymm14, %ymm14, %ymm14
+
+	vbroadcastss	0(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x01, %ymm1, %ymm0, %ymm0
+	vmovaps			0(%r10), %ymm13
+	vblendps		$0x01, %ymm14, %ymm13, %ymm13
+	vpermilps		$0x00, %ymm0, %ymm12
+	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vmulps			%ymm13, %ymm12, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+
+	cmpl			$2, %r12d
+	jl				0f // ret
+
+	vbroadcastss	4(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x02, %ymm1, %ymm0, %ymm0
+	vmovaps			32(%r10), %ymm13
+	vblendps		$0x03, %ymm14, %ymm13, %ymm13
+	vpermilps		$0x55, %ymm0, %ymm12
+	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vmulps			%ymm13, %ymm12, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+
+	cmpl			$3, %r12d
+	jl				0f // ret
+
+	vbroadcastss	8(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x04, %ymm1, %ymm0, %ymm0
+	vmovaps			64(%r10), %ymm13
+	vblendps		$0x07, %ymm14, %ymm13, %ymm13
+	vpermilps		$0xaa, %ymm0, %ymm12
+	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vmulps			%ymm13, %ymm12, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+
+	cmpl			$4, %r12d
+	jl				0f // ret
+
+	vbroadcastss	12(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x08, %ymm1, %ymm0, %ymm0
+	vmovaps			96(%r10), %ymm13
+	vblendps		$0x0f, %ymm14, %ymm13, %ymm13
+	vpermilps		$0xff, %ymm0, %ymm12
+	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vmulps			%ymm13, %ymm12, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+
+	cmpl			$5, %r12d
+	jl				0f // ret
+
+	vbroadcastss	16(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x10, %ymm1, %ymm0, %ymm0
+	vmovaps			128(%r10), %ymm13
+	vblendps		$0x1f, %ymm14, %ymm13, %ymm13
+	vpermilps		$0x00, %ymm0, %ymm12
+	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vmulps			%ymm13, %ymm12, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+
+	cmpl			$6, %r12d
+	jl				0f // ret
+
+	vbroadcastss	20(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x20, %ymm1, %ymm0, %ymm0
+	vmovaps			160(%r10), %ymm13
+	vblendps		$0x3f, %ymm14, %ymm13, %ymm13
+	vpermilps		$0x55, %ymm0, %ymm12
+	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vmulps			%ymm13, %ymm12, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+
+	cmpl			$7, %r12d
+	jl				0f // ret
+
+	vbroadcastss	24(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x40, %ymm1, %ymm0, %ymm0
+	vmovaps			192(%r10), %ymm13
+	vblendps		$0x7f, %ymm14, %ymm13, %ymm13
+	vpermilps		$0xaa, %ymm0, %ymm12
+	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vmulps			%ymm13, %ymm12, %ymm15
+	vsubps			%ymm15, %ymm0, %ymm0
+
+	cmpl			$8, %r12d
+	jl				0f // ret
+
+	vbroadcastss	28(%r11), %ymm12
+	vmulps			%ymm0, %ymm12, %ymm1
+	vblendps		$0x80, %ymm1, %ymm0, %ymm0
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_trsv_ln_inv_8_vs_lib8, .-inner_edge_trsv_ln_inv_8_vs_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // blend for ta==n, scale for generic alpha and beta
 //
 // input arguments:
@@ -673,6 +944,72 @@ inner_blend_n_scale_ab_8_lib8:
 
 // common inner routine with file scope
 //
+// blend for ta==n, scale for alpha=-1.0 and beta=1.0
+//
+// input arguments:
+// r10  <- y
+// ymm0 <- [z0 z1 z2 z3]_a
+// ymm1 <- [z0 z1 z2 z3]_b
+// ymm2 <- [z0 z1 z2 z3]_c
+// ymm3 <- [z0 z1 z2 z3]_d
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10  <- y
+// ymm0 <- [z0 z1 z2 z3]
+// ymm1 <- dirty
+// ymm2 <- dirty
+// ymm3 <- dirty
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_N_SCALE_M11_8_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_blend_n_scale_m11_8_lib8, @function
+inner_blend_n_scale_m11_8_lib8:
+#elif defined(OS_MAC)
+_inner_blend_n_scale_m11_8_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_blend_n_scale_m11_8_lib8; .scl 2; .type 32; .endef
+inner_blend_n_scale_m11_8_lib8:
+#endif
+#endif
+
+	// reduction
+	vaddps	%ymm0, %ymm1, %ymm0
+	vaddps	%ymm2, %ymm3, %ymm2
+	vaddps	%ymm0, %ymm2, %ymm0
+
+	// beta
+	vmovups		0(%r10), %ymm14
+	vsubps		%ymm0, %ymm14, %ymm0
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+	
+#if defined(OS_LINUX)
+	.size	inner_blend_n_scale_m11_8_lib8, .-inner_blend_n_scale_m11_8_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // blend for ta==t, scale for generic alpha and beta
 //
 // input arguments:
@@ -730,7 +1067,7 @@ inner_blend_t_scale_ab_8_lib8:
 	vperm2f128		$0x20, %ymm4, %ymm0, %ymm1
 	vperm2f128		$0x13, %ymm4, %ymm0, %ymm0
 
-	vaddpd			%ymm0, %ymm1, %ymm0
+	vaddps			%ymm0, %ymm1, %ymm0
 
 	// alpha
 	vbroadcastss	0(%r10), %ymm15
@@ -1481,6 +1818,224 @@ kernel_sgemv_t_8_gen_lib8:
 
 #if defined(OS_LINUX)
 	.size	kernel_sgemv_t_8_gen_lib8, .-kernel_sgemv_t_8_gen_lib8
+#endif
+
+
+
+
+
+//                                 1      2          3                   4          5          6
+// void kernel_strsv_ln_inv_8_lib8(int k, double *A, double *inv_diag_A, double *x, double *y, double *z);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_strsv_ln_inv_8_lib8
+	.type kernel_strsv_ln_inv_8_lib8, @function
+kernel_strsv_ln_inv_8_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_strsv_ln_inv_8_lib8
+_kernel_strsv_ln_inv_8_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_strsv_ln_inv_8_lib8
+	.def kernel_strsv_ln_inv_8_lib8; .scl 2; .type 32; .endef
+kernel_strsv_ln_inv_8_lib8:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
+	vmovaps	%ymm0, %ymm4
+	vmovaps	%ymm0, %ymm5
+	vmovaps	%ymm0, %ymm6
+	vmovaps	%ymm0, %ymm7
+
+
+	// call inner dgemv kernel n
+
+	movq	ARG1, %r10 // k
+	movq	ARG2, %r11  // A
+	movq	ARG4, %r12  // x
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_ADD_N_8_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_gemv_add_n_8_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_gemv_add_n_8_lib8
+#endif
+#endif
+
+	movq	%r11, %r13 // A+k*sizeof(double)
+
+
+	// call inner blender n
+
+	movq	ARG5, %r10   // y
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_N_SCALE_M11_8_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_n_scale_m11_8_lib8
+#elif defined(OS_MAC)
+	callq _inner_blenr_n_scale_m11_8_lib8
+#endif
+#endif
+
+
+	// solution
+
+	movq	%r13, %r10 // A+k*sizeof(double)
+	movq	ARG3, %r11 // inv_diag_A
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRSV_LN_INV_8_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_trsv_ln_inv_8_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_trsv_ln_inv_8_lib8
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG6, %r10 // z 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_8_lib8
+#elif defined(OS_MAC)
+	callq _inner_store_8_lib8
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_strsv_ln_inv_8_lib8, .-kernel_strsv_ln_inv_8_lib8
+#endif
+
+
+
+
+
+//                                    1      2          3                   4          5          6          7       8
+// void kernel_strsv_ln_inv_8_vs_lib8(int k, double *A, double *inv_diag_A, double *x, double *y, double *z, int km, int kn);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_strsv_ln_inv_8_vs_lib8
+	.type kernel_strsv_ln_inv_8_vs_lib8, @function
+kernel_strsv_ln_inv_8_vs_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_strsv_ln_inv_8_vs_lib8
+_kernel_strsv_ln_inv_8_vs_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_strsv_ln_inv_8_vs_lib8
+	.def kernel_strsv_ln_inv_8_vs_lib8; .scl 2; .type 32; .endef
+kernel_strsv_ln_inv_8_vs_lib8:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
+	vmovaps	%ymm0, %ymm4
+	vmovaps	%ymm0, %ymm5
+	vmovaps	%ymm0, %ymm6
+	vmovaps	%ymm0, %ymm7
+
+
+	// call inner dgemv kernel n
+
+	movq	ARG1, %r10 // k
+	movq	ARG2, %r11  // A
+	movq	ARG4, %r12  // x
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_ADD_N_8_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_gemv_add_n_8_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_gemv_add_n_8_lib8
+#endif
+#endif
+
+	movq	%r11, %r13 // A+k*sizeof(double)
+
+
+	// call inner blender n
+
+	movq	ARG5, %r10   // y
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_N_SCALE_M11_8_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_n_scale_m11_8_lib8
+#elif defined(OS_MAC)
+	callq _inner_blenr_n_scale_m11_8_lib8
+#endif
+#endif
+
+
+	// solution
+
+	movq	%r13, %r10 // A+k*sizeof(double)
+	movq	ARG3, %r11 // inv_diag_A
+	movq	ARG8, %r12 // kn
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRSV_LN_INV_8_VS_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_trsv_ln_inv_8_vs_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_trsv_ln_inv_8_vs_lib8
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG6, %r10 // z 
+	movq	ARG7, %r11 // km
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8_VS_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_8_vs_lib8
+#elif defined(OS_MAC)
+	callq _inner_store_8_vs_lib8
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_strsv_ln_inv_8_vs_lib8, .-kernel_strsv_ln_inv_8_vs_lib8
 #endif
 
 

@@ -35,95 +35,6 @@
 
 
 
-void strsv_ln_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, float *x, float *y)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-	
-	// suppose m>=n
-	if(m<n)
-		m = n;
-
-	const int bs = 4;
-
-	float alpha = -1.0;
-	float beta = 1.0;
-
-	int i;
-
-	if(x!=y)
-		{
-		for(i=0; i<m; i++)
-			y[i] = x[i];
-		}
-	
-	i = 0;
-	for( ; i<n-3; i+=4)
-		{
-		kernel_strsv_ln_inv_4_lib4(i, &pA[i*sda], &inv_diag_A[i], y, &y[i], &y[i]);
-		}
-	if(i<n)
-		{
-		kernel_strsv_ln_inv_4_vs_lib4(i, &pA[i*sda], &inv_diag_A[i], y, &y[i], &y[i], m-i, n-i);
-		i+=4;
-		}
-	for( ; i<m-3; i+=4)
-		{
-		kernel_sgemv_n_4_lib4(n, &alpha, &pA[i*sda], y, &beta, &y[i], &y[i]);
-		}
-	if(i<m)
-		{
-		kernel_sgemv_n_4_gen_lib4(n, &alpha, &pA[i*sda], y, &beta, &y[i], &y[i], 0, m-i);
-		i+=4;
-		}
-
-	}
-
-
-
-void strsv_lt_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, float *x, float *y)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-
-	if(n>m)
-		n = m;
-	
-	const int bs = 4;
-	
-	int i;
-	
-	if(x!=y)
-		for(i=0; i<m; i++)
-			y[i] = x[i];
-			
-	i=0;
-	if(n%4==1)
-		{
-		kernel_strsv_lt_inv_1_lib4(m-n+i+1, &pA[n/bs*bs*sda+(n-i-1)*bs], sda, &inv_diag_A[n-i-1], &y[n-i-1], &y[n-i-1], &y[n-i-1]);
-		i++;
-		}
-	else if(n%4==2)
-		{
-		kernel_strsv_lt_inv_2_lib4(m-n+i+2, &pA[n/bs*bs*sda+(n-i-2)*bs], sda, &inv_diag_A[n-i-2], &y[n-i-2], &y[n-i-2], &y[n-i-2]);
-		i+=2;
-		}
-	else if(n%4==3)
-		{
-		kernel_strsv_lt_inv_3_lib4(m-n+i+3, &pA[n/bs*bs*sda+(n-i-3)*bs], sda, &inv_diag_A[n-i-3], &y[n-i-3], &y[n-i-3], &y[n-i-3]);
-		i+=3;
-		}
-	for(; i<n-3; i+=4)
-		{
-		kernel_strsv_lt_inv_4_lib4(m-n+i+4, &pA[(n-i-4)/bs*bs*sda+(n-i-4)*bs], sda, &inv_diag_A[n-i-4], &y[n-i-4], &y[n-i-4], &y[n-i-4]);
-		}
-
-	}
-
-
-
 void sgemv_nt_lib(int m, int n, float alpha_n, float alpha_t, float *pA, int sda, float *x_n, float *x_t, float beta_n, float beta_t, float *y_n, float *y_t, float *z_n, float *z_t)
 	{
 
@@ -658,10 +569,95 @@ void strmv_utn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strve
 
 
 
+void strsv_lnn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+	{
+
+	if(m==0)
+		return;
+
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** strsv_lnn_libstr : m<0 : %d<0 *****\n", m);
+	// non-negative offset
+	if(ai<0) printf("\n****** strsv_lnn_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** strsv_lnn_libstr : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** strsv_lnn_libstr : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** strsv_lnn_libstr : zi<0 : %d<0 *****\n", zi);
+	// inside matrix
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** strsv_lnn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+m > sA->n) printf("\n***** strsv_lnn_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
+	// x: m
+	if(xi+m > sx->m) printf("\n***** strsv_lnn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	// z: m
+	if(zi+m > sz->m) printf("\n***** strsv_lnn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
+
+	if(ai!=0)
+		{
+		printf("\nstrsv_lnn_libstr: feature not implemented yet: ai=%d\n", ai);
+		exit(1);
+		}
+
+	const int bs = 4;
+
+	int sda = sA->cn;
+	float *pA = sA->pA + aj*bs; // TODO ai
+	float *dA = sA->dA;
+	float *x = sx->pa + xi;
+	float *z = sz->pa + zi;
+
+	int ii;
+
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			sdiaex_lib(m, 1.0, ai, pA, sda, dA);
+			for(ii=0; ii<m; ii++)
+				dA[ii] = 1.0 / dA[ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+		sdiaex_lib(m, 1.0, ai, pA, sda, dA);
+		for(ii=0; ii<m; ii++)
+			dA[ii] = 1.0 / dA[ii];
+		sA->use_dA = 0;
+		}
+
+	int i;
+
+	if(x!=z)
+		{
+		for(i=0; i<m; i++)
+			z[i] = x[i];
+		}
+	
+	i = 0;
+	for( ; i<m-3; i+=4)
+		{
+		kernel_strsv_ln_inv_4_lib4(i, &pA[i*sda], &dA[i], z, &z[i], &z[i]);
+		}
+	if(i<m)
+		{
+		kernel_strsv_ln_inv_4_vs_lib4(i, &pA[i*sda], &dA[i], z, &z[i], &z[i], m-i, m-i);
+		i+=4;
+		}
+
+	return;
+
+	}
+
+
+
 void strsv_lnn_mn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
 	{
+
 	if(m==0 | n==0)
 		return;
+
 #if defined(DIM_CHECK)
 	// non-negative size
 	if(m<0) printf("\n****** strsv_lnn_mn_libstr : m<0 : %d<0 *****\n", m);
@@ -680,18 +676,23 @@ void strsv_lnn_mn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, stru
 	// z: m
 	if(zi+m > sz->m) printf("\n***** strsv_lnn_mn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	if(ai!=0 | xi%4!=0)
+
+	if(ai!=0)
 		{
 		printf("\nstrsv_lnn_mn_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
+
 	const int bs = 4;
+
 	int sda = sA->cn;
 	float *pA = sA->pA + aj*bs; // TODO ai
 	float *dA = sA->dA;
 	float *x = sx->pa + xi;
 	float *z = sz->pa + zi;
+
 	int ii;
+
 	if(ai==0 & aj==0)
 		{
 		if(sA->use_dA!=1)
@@ -709,16 +710,144 @@ void strsv_lnn_mn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, stru
 			dA[ii] = 1.0 / dA[ii];
 		sA->use_dA = 0;
 		}
-	strsv_ln_inv_lib(m, n, pA, sda, dA, x, z);
+
+	if(m<n)
+		m = n;
+
+	float alpha = -1.0;
+	float beta = 1.0;
+
+	int i;
+
+	if(x!=z)
+		{
+		for(i=0; i<m; i++)
+			z[i] = x[i];
+		}
+	
+	i = 0;
+	for( ; i<n-3; i+=4)
+		{
+		kernel_strsv_ln_inv_4_lib4(i, &pA[i*sda], &dA[i], z, &z[i], &z[i]);
+		}
+	if(i<n)
+		{
+		kernel_strsv_ln_inv_4_vs_lib4(i, &pA[i*sda], &dA[i], z, &z[i], &z[i], m-i, n-i);
+		i+=4;
+		}
+	for( ; i<m-3; i+=4)
+		{
+		kernel_sgemv_n_4_lib4(n, &alpha, &pA[i*sda], z, &beta, &z[i], &z[i]);
+		}
+	if(i<m)
+		{
+		kernel_sgemv_n_4_vs_lib4(n, &alpha, &pA[i*sda], z, &beta, &z[i], &z[i], m-i);
+		i+=4;
+		}
+
 	return;
+
+	}
+
+
+
+void strsv_ltn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+	{
+
+	if(m==0)
+		return;
+
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** strsv_ltn_libstr : m<0 : %d<0 *****\n", m);
+	// non-negative offset
+	if(ai<0) printf("\n****** strsv_ltn_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** strsv_ltn_libstr : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** strsv_ltn_libstr : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** strsv_ltn_libstr : zi<0 : %d<0 *****\n", zi);
+	// inside matrix
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** strsv_ltn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+m > sA->n) printf("\n***** strsv_ltn_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
+	// x: m
+	if(xi+m > sx->m) printf("\n***** strsv_ltn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	// z: m
+	if(zi+m > sz->m) printf("\n***** strsv_ltn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
+
+	if(ai!=0)
+		{
+		printf("\nstrsv_ltn_libstr: feature not implemented yet: ai=%d\n", ai);
+		exit(1);
+		}
+
+	const int bs = 4;
+
+	int sda = sA->cn;
+	float *pA = sA->pA + aj*bs; // TODO ai
+	float *dA = sA->dA;
+	float *x = sx->pa + xi;
+	float *z = sz->pa + zi;
+
+	int ii;
+
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			sdiaex_lib(m, 1.0, ai, pA, sda, dA);
+			for(ii=0; ii<m; ii++)
+				dA[ii] = 1.0 / dA[ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+		sdiaex_lib(m, 1.0, ai, pA, sda, dA);
+		for(ii=0; ii<m; ii++)
+			dA[ii] = 1.0 / dA[ii];
+		sA->use_dA = 0;
+		}
+
+	int i;
+	
+	if(x!=z)
+		for(i=0; i<m; i++)
+			z[i] = x[i];
+			
+	i=0;
+	if(m%4==1)
+		{
+		kernel_strsv_lt_inv_1_lib4(i+1, &pA[m/bs*bs*sda+(m-i-1)*bs], sda, &dA[m-i-1], &z[m-i-1], &z[m-i-1], &z[m-i-1]);
+		i++;
+		}
+	else if(m%4==2)
+		{
+		kernel_strsv_lt_inv_2_lib4(i+2, &pA[m/bs*bs*sda+(m-i-2)*bs], sda, &dA[m-i-2], &z[m-i-2], &z[m-i-2], &z[m-i-2]);
+		i+=2;
+		}
+	else if(m%4==3)
+		{
+		kernel_strsv_lt_inv_3_lib4(i+3, &pA[m/bs*bs*sda+(m-i-3)*bs], sda, &dA[m-i-3], &z[m-i-3], &z[m-i-3], &z[m-i-3]);
+		i+=3;
+		}
+	for(; i<m-3; i+=4)
+		{
+		kernel_strsv_lt_inv_4_lib4(i+4, &pA[(m-i-4)/bs*bs*sda+(m-i-4)*bs], sda, &dA[m-i-4], &z[m-i-4], &z[m-i-4], &z[m-i-4]);
+		}
+
+	return;
+
 	}
 
 
 
 void strsv_ltn_mn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
 	{
+
 	if(m==0)
 		return;
+
 #if defined(DIM_CHECK)
 	// non-negative size
 	if(m<0) printf("\n****** strsv_ltn_mn_libstr : m<0 : %d<0 *****\n", m);
@@ -737,18 +866,23 @@ void strsv_ltn_mn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, stru
 	// z: m
 	if(zi+m > sz->m) printf("\n***** strsv_ltn_mn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	if(ai!=0 | xi%4!=0)
+
+	if(ai!=0)
 		{
 		printf("\nstrsv_ltn_mn_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
+
 	const int bs = 4;
+
 	int sda = sA->cn;
 	float *pA = sA->pA + aj*bs; // TODO ai
 	float *dA = sA->dA;
 	float *x = sx->pa + xi;
 	float *z = sz->pa + zi;
+
 	int ii;
+
 	if(ai==0 & aj==0)
 		{
 		if(sA->use_dA!=1)
@@ -766,64 +900,39 @@ void strsv_ltn_mn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, stru
 			dA[ii] = 1.0 / dA[ii];
 		sA->use_dA = 0;
 		}
-	strsv_lt_inv_lib(m, n, pA, sda, dA, x, z);
+
+	if(n>m)
+		n = m;
+	
+	int i;
+	
+	if(x!=z)
+		for(i=0; i<m; i++)
+			z[i] = x[i];
+			
+	i=0;
+	if(n%4==1)
+		{
+		kernel_strsv_lt_inv_1_lib4(m-n+i+1, &pA[n/bs*bs*sda+(n-i-1)*bs], sda, &dA[n-i-1], &z[n-i-1], &z[n-i-1], &z[n-i-1]);
+		i++;
+		}
+	else if(n%4==2)
+		{
+		kernel_strsv_lt_inv_2_lib4(m-n+i+2, &pA[n/bs*bs*sda+(n-i-2)*bs], sda, &dA[n-i-2], &z[n-i-2], &z[n-i-2], &z[n-i-2]);
+		i+=2;
+		}
+	else if(n%4==3)
+		{
+		kernel_strsv_lt_inv_3_lib4(m-n+i+3, &pA[n/bs*bs*sda+(n-i-3)*bs], sda, &dA[n-i-3], &z[n-i-3], &z[n-i-3], &z[n-i-3]);
+		i+=3;
+		}
+	for(; i<n-3; i+=4)
+		{
+		kernel_strsv_lt_inv_4_lib4(m-n+i+4, &pA[(n-i-4)/bs*bs*sda+(n-i-4)*bs], sda, &dA[n-i-4], &z[n-i-4], &z[n-i-4], &z[n-i-4]);
+		}
+
 	return;
-	}
 
-
-
-void strsv_lnn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
-	{
-	if(m==0)
-		return;
-#if defined(DIM_CHECK)
-	// non-negative size
-	if(m<0) printf("\n****** strsv_lnn_libstr : m<0 : %d<0 *****\n", m);
-	// non-negative offset
-	if(ai<0) printf("\n****** strsv_lnn_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** strsv_lnn_libstr : aj<0 : %d<0 *****\n", aj);
-	if(xi<0) printf("\n****** strsv_lnn_libstr : xi<0 : %d<0 *****\n", xi);
-	if(zi<0) printf("\n****** strsv_lnn_libstr : zi<0 : %d<0 *****\n", zi);
-	// inside matrix
-	// A: m x k
-	if(ai+m > sA->m) printf("\n***** strsv_lnn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+m > sA->n) printf("\n***** strsv_lnn_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
-	// x: m
-	if(xi+m > sx->m) printf("\n***** strsv_lnn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
-	// z: m
-	if(zi+m > sz->m) printf("\n***** strsv_lnn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
-#endif
-	if(ai!=0 | xi%4!=0)
-		{
-		printf("\nstrsv_lnn_libstr: feature not implemented yet: ai=%d\n", ai);
-		exit(1);
-		}
-	const int bs = 4;
-	int sda = sA->cn;
-	float *pA = sA->pA + aj*bs; // TODO ai
-	float *dA = sA->dA;
-	float *x = sx->pa + xi;
-	float *z = sz->pa + zi;
-	int ii;
-	if(ai==0 & aj==0)
-		{
-		if(sA->use_dA!=1)
-			{
-			sdiaex_lib(m, 1.0, ai, pA, sda, dA);
-			for(ii=0; ii<m; ii++)
-				dA[ii] = 1.0 / dA[ii];
-			sA->use_dA = 1;
-			}
-		}
-	else
-		{
-		sdiaex_lib(m, 1.0, ai, pA, sda, dA);
-		for(ii=0; ii<m; ii++)
-			dA[ii] = 1.0 / dA[ii];
-		sA->use_dA = 0;
-		}
-	strsv_ln_inv_lib(m, m, pA, sda, dA, x, z);
-	return;
 	}
 
 
@@ -851,62 +960,6 @@ void strsv_lnu_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strve
 #endif
 	printf("\n***** strsv_lnu_libstr : feature not implemented yet *****\n");
 	exit(1);
-	}
-
-
-
-void strsv_ltn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
-	{
-	if(m==0)
-		return;
-#if defined(DIM_CHECK)
-	// non-negative size
-	if(m<0) printf("\n****** strsv_ltn_libstr : m<0 : %d<0 *****\n", m);
-	// non-negative offset
-	if(ai<0) printf("\n****** strsv_ltn_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** strsv_ltn_libstr : aj<0 : %d<0 *****\n", aj);
-	if(xi<0) printf("\n****** strsv_ltn_libstr : xi<0 : %d<0 *****\n", xi);
-	if(zi<0) printf("\n****** strsv_ltn_libstr : zi<0 : %d<0 *****\n", zi);
-	// inside matrix
-	// A: m x k
-	if(ai+m > sA->m) printf("\n***** strsv_ltn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+m > sA->n) printf("\n***** strsv_ltn_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
-	// x: m
-	if(xi+m > sx->m) printf("\n***** strsv_ltn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
-	// z: m
-	if(zi+m > sz->m) printf("\n***** strsv_ltn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
-#endif
-	if(ai!=0 | xi%4!=0)
-		{
-		printf("\nstrsv_ltn_libstr: feature not implemented yet: ai=%d\n", ai);
-		exit(1);
-		}
-	const int bs = 4;
-	int sda = sA->cn;
-	float *pA = sA->pA + aj*bs; // TODO ai
-	float *dA = sA->dA;
-	float *x = sx->pa + xi;
-	float *z = sz->pa + zi;
-	int ii;
-	if(ai==0 & aj==0)
-		{
-		if(sA->use_dA!=1)
-			{
-			sdiaex_lib(m, 1.0, ai, pA, sda, dA);
-			for(ii=0; ii<m; ii++)
-				dA[ii] = 1.0 / dA[ii];
-			sA->use_dA = 1;
-			}
-		}
-	else
-		{
-		sdiaex_lib(m, 1.0, ai, pA, sda, dA);
-		for(ii=0; ii<m; ii++)
-			dA[ii] = 1.0 / dA[ii];
-		sA->use_dA = 0;
-		}
-	strsv_lt_inv_lib(m, m, pA, sda, dA, x, z);
-	return;
 	}
 
 
