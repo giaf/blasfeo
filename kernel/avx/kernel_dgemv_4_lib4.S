@@ -3100,7 +3100,7 @@ kernel_dtrsv_ln_inv_4_vs_lib4:
 
 
 
-//                                 rdi    rsi        rdx      rcx                 r8         r9         rsp+8   
+//                                 1      2          3        4                   5          6          7
 // void kernel_dtrsv_lt_inv_4_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
 
 	.p2align 4,,15
@@ -3134,7 +3134,6 @@ kernel_dtrsv_lt_inv_4_lib4:
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12
 	sall	$5, %r12d // 4*sda*sizeof(double)
-	movslq	%r12d, %r12
 	addq	%r12, %r11 // A+4*sda*sizeof(double)
 	movq	ARG5, %r13 // x
 	addq	$32, %r13 // x+4 

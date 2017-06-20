@@ -116,6 +116,8 @@ void kernel_sgemv_t_8_vs_lib8(int k, float *alpha, float *A, int sda, float *x, 
 void kernel_sgemv_t_8_gen_lib8(int k, float *alpha, int offA, float *A, int sda, float *x, float *beta, float *C, float *D, int km);
 void kernel_strsv_ln_inv_8_lib8(int k, float *A, float *inv_diag_A, float *x, float *y, float *z);
 void kernel_strsv_ln_inv_8_vs_lib8(int k, float *A, float *inv_diag_A, float *x, float *y, float *z, int km, int kn);
+void kernel_strsv_lt_inv_8_lib8(int k, float *A, int sda, float *inv_diag_A, float *x, float *y, float *z);
+void kernel_strsv_lt_inv_8_vs_lib8(int k, float *A, int sda, float *inv_diag_A, float *x, float *y, float *z, int k1);
 
 // aux
 void kernel_sgecp_8_0_lib8(int m, float *A, float *B);

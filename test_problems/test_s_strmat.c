@@ -62,7 +62,7 @@ int main()
 
 	int ii, jj;
 
-	int n = 24;
+	int n = 16;
 
 	//
 	// matrices in column-major format
@@ -103,7 +103,7 @@ int main()
 
 	struct s_strvec sx;
 	s_allocate_strvec(n, &sx);
-	sx.pa[1] = 1.0;
+	sx.pa[11] = 1.0;
 	s_print_tran_strvec(n, &sx, 0);
 
 	struct s_strvec sz;
@@ -140,7 +140,12 @@ int main()
 //	strmv_lnn_libstr(6, 6, &sA, 1, 0, &sx, 0, &sz, 0);
 //	strmv_ltn_libstr(10, 10, &sA, 1, 0, &sx, 0, &sz, 0);
 	sA.pA[0] = 1.0;
-	strsv_lnn_libstr(10, &sA, 0, 0, &sx, 0, &sz, 0);
+//	strsv_lnn_libstr(10, &sA, 0, 0, &sx, 0, &sz, 0);
+//	for(ii=0; ii<8; ii++) sA.dA[ii] = 1.0/sgeex1_libstr(&sA, ii, ii);
+//	kernel_strsv_lt_inv_8_lib8(0, sA.pA, sA.cn, sA.dA, sx.pa, sx.pa, sz.pa);
+//	kernel_strsv_lt_inv_8_vs_lib8(0, sA.pA, sA.cn, sA.dA, sx.pa, sx.pa, sz.pa, 3);
+//	s_print_strmat(8, 8, &sA, 0, 0);
+	strsv_ltn_libstr(12, &sA, 0, 0, &sx, 0, &sz, 0);
 	s_print_tran_strvec(n, &sz, 0);
 	return 0;
 //	sgesc_libstr(16, 9, 2.0, &sD, 0, 0);
