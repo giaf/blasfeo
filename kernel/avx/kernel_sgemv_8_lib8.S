@@ -1030,7 +1030,8 @@ inner_edge_trsv_lt_inv_8_lib8:
 // input arguments:
 // r10  <- E
 // r11  <- inv_diag_E
-// r12  <- k1
+// r12  <- km
+// r13  <- kn
 // ymm0 <- [z0 z1 z2 z3]
 // ymm12 <- dirty
 // ymm13 <- dirty
@@ -1038,7 +1039,8 @@ inner_edge_trsv_lt_inv_8_lib8:
 // output arguments:
 // r10  <- E
 // r11  <- inv_diag_E
-// r12  <- k1
+// r12  <- km
+// r13  <- kn
 // ymm0 <- [z0 z1 z2 z3]
 // ymm12 <- dirty
 // ymm13 <- dirty
@@ -1062,13 +1064,19 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 
 	vmovaps			0(%r10), %ymm12
 	vblendps		$0x01, %ymm14, %ymm12, %ymm12
+	cmpl	$2, %r13d
+	jl		1f
 	vmovaps			32(%r10), %ymm13
 	vblendps		$0x03, %ymm14, %ymm13, %ymm13
 	vunpcklps		%ymm13, %ymm12, %ymm8
 	vunpckhps		%ymm13, %ymm12, %ymm9
 
+	cmpl	$3, %r13d
+	jl		2f
 	vmovaps			64(%r10), %ymm12
 	vblendps		$0x07, %ymm14, %ymm12, %ymm12
+	cmpl	$4, %r13d
+	jl		3f
 	vmovaps			96(%r10), %ymm13
 	vblendps		$0x0f, %ymm14, %ymm13, %ymm13
 	vunpcklps		%ymm13, %ymm12, %ymm10
@@ -1083,15 +1091,23 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	vextractf128	$0x1, %ymm5, %xmm9
 	vextractf128	$0x1, %ymm6, %xmm10
 
+	cmpl	$5, %r13d
+	jl		4f
 	vmovaps			144(%r10), %xmm12
 	vblendps		$0x01, %xmm14, %xmm12, %xmm12
+	cmpl	$6, %r13d
+	jl		5f
 	vmovaps			176(%r10), %xmm13
 	vblendps		$0x03, %xmm14, %xmm13, %xmm13
 	vunpcklps		%xmm13, %xmm12, %xmm1
 	vunpckhps		%xmm13, %xmm12, %xmm2
 
+	cmpl	$7, %r13d
+	jl		6f
 	vmovaps			208(%r10), %xmm12
 	vblendps		$0x07, %xmm14, %xmm12, %xmm12
+	cmpl	$8, %r13d
+	jl		7f
 	vmovaps			240(%r10), %xmm13
 	vblendps		$0x0f, %xmm14, %xmm13, %xmm13
 	vunpcklps		%xmm13, %xmm12, %xmm3
@@ -1101,7 +1117,59 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	vshufps			$0x44, %xmm15, %xmm2, %xmm12
 	vshufps			$0xee, %xmm15, %xmm2, %xmm13
 
+	jmp		0f
 
+
+
+	vmovaps			%ymm14, %ymm12
+1:
+	vmovaps			%ymm14, %ymm13
+	vunpcklps		%ymm13, %ymm12, %ymm8
+	vunpckhps		%ymm13, %ymm12, %ymm9
+
+2:
+	vmovaps			%ymm14, %ymm12
+3:
+	vmovaps			%ymm14, %ymm13
+	vunpcklps		%ymm13, %ymm12, %ymm10
+	vunpckhps		%ymm13, %ymm12, %ymm11
+
+	vshufps			$0x44, %ymm10, %ymm8, %ymm7
+	vshufps			$0xee, %ymm10, %ymm8, %ymm4
+	vshufps			$0x44, %ymm11, %ymm9, %ymm5
+	vshufps			$0xee, %ymm11, %ymm9, %ymm6
+	vextractf128	$0x1, %ymm7, %xmm7
+	vextractf128	$0x1, %ymm4, %xmm8
+	vextractf128	$0x1, %ymm5, %xmm9
+	vextractf128	$0x1, %ymm6, %xmm10
+
+	jmp		8f
+
+4:
+	vmovaps			%xmm14, %xmm12
+5:
+	vmovaps			%xmm14, %xmm13
+	vunpcklps		%xmm13, %xmm12, %xmm1
+	vunpckhps		%xmm13, %xmm12, %xmm2
+
+6:
+	vmovaps			%xmm14, %xmm12
+7:
+	vmovaps			%xmm14, %xmm13
+	vunpcklps		%xmm13, %xmm12, %xmm3
+	vunpckhps		%xmm13, %xmm12, %xmm15
+
+	vshufps			$0xee, %xmm3, %xmm1, %xmm11
+	vshufps			$0x44, %xmm15, %xmm2, %xmm12
+	vshufps			$0xee, %xmm15, %xmm2, %xmm13
+
+8:
+	
+	vmovaps			%xmm14, %xmm11
+	vmovaps			%xmm14, %xmm12
+	vmovaps			%xmm14, %xmm13
+
+0:
 	vxorps			%ymm14, %ymm14, %ymm14
 
 	vextractf128	$0x1, %ymm0, %xmm1
@@ -1120,7 +1188,7 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 
 0:
 	cmpl	$7, %r12d
-	jl		1f
+	jl		0f
 
 	vshufps			$0xaa, %xmm1, %xmm1, %xmm2
 	vbroadcastss	24(%r11), %xmm15
@@ -1131,9 +1199,9 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	vmulps			%xmm12, %xmm2, %xmm15
 	vsubps			%xmm15, %xmm1, %xmm1
 
-1:
+0:
 	cmpl	$6, %r12d
-	jl		2f
+	jl		0f
 
 	vshufps			$0x55, %xmm1, %xmm1, %xmm2
 	vbroadcastss	20(%r11), %xmm15
@@ -1144,9 +1212,9 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	vmulps			%xmm11, %xmm2, %xmm15
 	vsubps			%xmm15, %xmm1, %xmm1
 
-2:
+0:
 	cmpl	$5, %r12d
-	jl		3f
+	jl		0f
 
 	vshufps			$0x00, %xmm1, %xmm1, %xmm2
 	vbroadcastss	16(%r11), %xmm15
@@ -1155,9 +1223,9 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	vmulps			%xmm7, %xmm2, %xmm15
 	vsubps			%xmm15, %xmm0, %xmm0
 
-3:
+0:
 	cmpl	$4, %r12d
-	jl		4f
+	jl		0f
 
 	vshufps			$0xff, %xmm0, %xmm0, %xmm2
 	vbroadcastss	12(%r11), %xmm15
@@ -1166,9 +1234,9 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	vmulps			%xmm6, %xmm2, %xmm15
 	vsubps			%xmm15, %xmm0, %xmm0
 
-4:
+0:
 	cmpl	$3, %r12d
-	jl		5f
+	jl		0f
 
 	vshufps			$0xaa, %xmm0, %xmm0, %xmm2
 	vbroadcastss	8(%r11), %xmm15
@@ -1177,9 +1245,9 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	vmulps			%xmm5, %xmm2, %xmm15
 	vsubps			%xmm15, %xmm0, %xmm0
 
-5:
+0:
 	cmpl	$2, %r12d
-	jl		6f
+	jl		0f
 
 	vshufps			$0x55, %xmm0, %xmm0, %xmm2
 	vbroadcastss	4(%r11), %xmm15
@@ -1188,16 +1256,16 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	vmulps			%xmm4, %xmm2, %xmm15
 	vsubps			%xmm15, %xmm0, %xmm0
 
-6:
+0:
 	cmpl	$1, %r12d
-	jl		7f
+	jl		0f
 
 	vshufps			$0x00, %xmm0, %xmm0, %xmm2
 	vbroadcastss	0(%r11), %xmm15
 	vmulps			%xmm2, %xmm15, %xmm2
 	vblendps		$0x01, %xmm2, %xmm0, %xmm0
 
-7:
+0:
 
 	vinsertf128		$0x1, %xmm1, %ymm0, %ymm0
 
@@ -2577,8 +2645,8 @@ kernel_strsv_lt_inv_8_lib8:
 
 
 
-//                                    1      2          3        4                   5          6          7          8
-// void kernel_strsv_lt_inv_8_vs_lib8(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z, int k1);
+//                                    1      2          3        4                   5          6          7          8      9
+// void kernel_strsv_lt_inv_8_vs_lib8(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z, int km, int kn);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2649,7 +2717,8 @@ kernel_strsv_lt_inv_8_vs_lib8:
 
 	movq	ARG2, %r10 // A
 	movq	ARG4, %r11 // inv_diag_A
-	movq	ARG8, %r12 // k1
+	movq	ARG8, %r12 // km
+	movq	ARG9, %r13 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSV_LT_INV_8_VS_LIB8
@@ -2665,7 +2734,7 @@ kernel_strsv_lt_inv_8_vs_lib8:
 	// store
 
 	movq	ARG7, %r10 // z 
-	movq	ARG8, %r11 // k1 
+	movq	ARG8, %r11 // km 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_VS_LIB8

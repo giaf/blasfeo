@@ -752,12 +752,98 @@ void strsv_ltn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strve
 	i1 = m%8;
 	if(i1!=0)
 		{
-		kernel_strsv_lt_inv_8_vs_lib8(i+i1, &pA[m/bs*bs*sda+(m-i-i1)*bs], sda, &dA[m-i-i1], &z[m-i-i1], &z[m-i-i1], &z[m-i-i1], i1);
+		kernel_strsv_lt_inv_8_vs_lib8(i+i1, &pA[m/bs*bs*sda+(m-i-i1)*bs], sda, &dA[m-i-i1], &z[m-i-i1], &z[m-i-i1], &z[m-i-i1], i1, i1);
 		i += i1;
 		}
 	for(; i<m-7; i+=8)
 		{
 		kernel_strsv_lt_inv_8_lib8(i+8, &pA[(m-i-8)/bs*bs*sda+(m-i-8)*bs], sda, &dA[m-i-8], &z[m-i-8], &z[m-i-8], &z[m-i-8]);
+		}
+
+	return;
+
+	}
+
+
+
+void strsv_ltn_mn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+	{
+
+	if(m==0)
+		return;
+
+#if defined(DIM_CHECK)
+	// non-negative size
+	if(m<0) printf("\n****** strsv_ltn_mn_libstr : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** strsv_ltn_mn_libstr : n<0 : %d<0 *****\n", n);
+	// non-negative offset
+	if(ai<0) printf("\n****** strsv_ltn_mn_libstr : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** strsv_ltn_mn_libstr : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** strsv_ltn_mn_libstr : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** strsv_ltn_mn_libstr : zi<0 : %d<0 *****\n", zi);
+	// inside matrix
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** strsv_ltn_mn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** strsv_ltn_mn_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+	// x: m
+	if(xi+m > sx->m) printf("\n***** strsv_ltn_mn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	// z: m
+	if(zi+m > sz->m) printf("\n***** strsv_ltn_mn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
+
+	if(ai!=0)
+		{
+		printf("\nstrsv_ltn_mn_libstr: feature not implemented yet: ai=%d\n", ai);
+		exit(1);
+		}
+
+	const int bs = 8;
+
+	int sda = sA->cn;
+	float *pA = sA->pA + aj*bs; // TODO ai
+	float *dA = sA->dA;
+	float *x = sx->pa + xi;
+	float *z = sz->pa + zi;
+
+	int ii;
+
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			sdiaex_lib(n, 1.0, ai, pA, sda, dA);
+			for(ii=0; ii<n; ii++)
+				dA[ii] = 1.0 / dA[ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+		sdiaex_lib(n, 1.0, ai, pA, sda, dA);
+		for(ii=0; ii<n; ii++)
+			dA[ii] = 1.0 / dA[ii];
+		sA->use_dA = 0;
+		}
+
+	if(n>m)
+		n = m;
+	
+	int i, i1;
+	
+	if(x!=z)
+		for(i=0; i<m; i++)
+			z[i] = x[i];
+			
+	i=0;
+	i1 = n%4;
+	if(i1!=0)
+		{
+		kernel_strsv_lt_inv_8_vs_lib8(m-n+i+i1, &pA[n/bs*bs*sda+(n-i-i1)*bs], sda, &dA[n-i-i1], &z[n-i-i1], &z[n-i-i1], &z[n-i-i1], m-n+ii+i1, i1);
+		i += i1;
+		}
+	for(; i<n-7; i+=8)
+		{
+		kernel_strsv_lt_inv_8_lib8(m-n+i+8, &pA[(n-i-8)/bs*bs*sda+(n-i-8)*bs], sda, &dA[n-i-8], &z[n-i-8], &z[n-i-8], &z[n-i-8]);
 		}
 
 	return;

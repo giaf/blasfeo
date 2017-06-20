@@ -145,7 +145,8 @@ int main()
 //	kernel_strsv_lt_inv_8_lib8(0, sA.pA, sA.cn, sA.dA, sx.pa, sx.pa, sz.pa);
 //	kernel_strsv_lt_inv_8_vs_lib8(0, sA.pA, sA.cn, sA.dA, sx.pa, sx.pa, sz.pa, 3);
 //	s_print_strmat(8, 8, &sA, 0, 0);
-	strsv_ltn_libstr(12, &sA, 0, 0, &sx, 0, &sz, 0);
+//	strsv_ltn_libstr(12, &sA, 0, 0, &sx, 0, &sz, 0);
+	strsv_ltn_mn_libstr(12, 2, &sA, 0, 0, &sx, 0, &sz, 0);
 	s_print_tran_strvec(n, &sz, 0);
 	return 0;
 //	sgesc_libstr(16, 9, 2.0, &sD, 0, 0);
