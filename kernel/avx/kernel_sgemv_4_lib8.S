@@ -1030,6 +1030,251 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 
 // common inner routine with file scope
 //
+// input arguments:
+// r10   <- kmax
+// r11   <- A
+// r12   <- bs*sda*sizeof(double) = 32*sda
+// r13   <- x_t
+// r14   <- z_n
+// r15   <- offA
+// ymm0  <- [z_t_0a z_t_0b z_t_0c z_t_0d]
+// ymm1  <- [z_t_1a z_t_1b z_t_1c z_t_1d]
+// ymm2  <- [z_t_2a z_t_2b z_t_2c z_t_2d]
+// ymm3  <- [z_t_3a z_t_3b z_t_3c z_t_3d]
+// ymm6  <- x_n_0
+// ymm7  <- x_n_1
+// ymm8  <- x_n_2
+// ymm9  <- x_n_3
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+//
+// output arguments:
+// r10   <- kmax-4
+// r11   <- A+4*k*sizeof(double)
+// r12   <- bs*sda*sizeof(double) = 32*sda
+// r13   <- x_t+k*sizeof(double)
+// r14   <- z_n+k*sizeof(double)
+// r15   <- offA
+// ymm0  <- [z_t_0a z_t_0b z_t_0c z_t_0d]
+// ymm1  <- [z_t_1a z_t_1b z_t_1c z_t_1d]
+// ymm2  <- [z_t_2a z_t_2b z_t_2c z_t_2d]
+// ymm3  <- [z_t_3a z_t_3b z_t_3c z_t_3d]
+// ymm6  <- x_n_0
+// ymm7  <- x_n_1
+// ymm8  <- x_n_2
+// ymm9  <- x_n_3
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm12 <- dirty
+// ymm13 <- dirty
+// ymm14 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=2
+	.macro INNER_EDGE_SYMV_ADD_NT_4L_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_symv_add_nt_4l_lib8, @function
+inner_edge_symv_add_nt_4l_lib8:
+#elif defined(OS_MAC)
+_inner_edge_symv_add_nt_4l_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_symv_add_nt_4l_lib8; .scl 2; .type 32; .endef
+inner_edge_symv_add_nt_4l_lib8:
+#endif
+#endif
+
+	movl	$8, %eax
+	cmpl	%eax, %r10d
+	jge		0f
+	movl	%r10d, %eax
+0:
+	subl	%r15d, %eax
+
+	vcvtsi2ss	%eax, %xmm14, %xmm14
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovups		.LC00(%rip), %ymm13
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm13
+#endif
+	vshufps		$0x0, %xmm14, %xmm14, %xmm14
+	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
+	vsubps		%ymm14, %ymm13, %ymm11
+
+	vmaskmovps	0(%r13), %ymm11, %ymm12
+	vmaskmovps	0(%r14), %ymm11, %ymm13
+
+	vmaskmovps	0(%r11), %ymm11, %ymm14
+	vmulps		%ymm14, %ymm12, %ymm15
+	vaddps		%ymm0, %ymm15, %ymm0
+	vxorps		%ymm15, %ymm15, %ymm15
+	vblendps	$0x01, %ymm15, %ymm14, %ymm14
+	vmulps		%ymm14, %ymm6, %ymm15
+	vaddps		%ymm13, %ymm15, %ymm13
+	
+	vmaskmovps	32(%r11), %ymm11, %ymm14
+	vxorps		%ymm15, %ymm15, %ymm15
+	vblendps	$0x01, %ymm15, %ymm14, %ymm14
+	vmulps		%ymm14, %ymm12, %ymm15
+	vaddps		%ymm1, %ymm15, %ymm1
+	vxorps		%ymm15, %ymm15, %ymm15
+	vblendps	$0x03, %ymm15, %ymm14, %ymm14
+	vmulps		%ymm14, %ymm7, %ymm15
+	vaddps		%ymm13, %ymm15, %ymm13
+	
+	vmaskmovps	64(%r11), %ymm11, %ymm14
+	vxorps		%ymm15, %ymm15, %ymm15
+	vblendps	$0x03, %ymm15, %ymm14, %ymm14
+	vmulps		%ymm14, %ymm12, %ymm15
+	vaddps		%ymm2, %ymm15, %ymm2
+	vxorps		%ymm15, %ymm15, %ymm15
+	vblendps	$0x07, %ymm15, %ymm14, %ymm14
+	vmulps		%ymm14, %ymm8, %ymm15
+	vaddps		%ymm13, %ymm15, %ymm13
+
+	vmaskmovps	96(%r11), %ymm11, %ymm14
+	vxorps		%ymm15, %ymm15, %ymm15
+	vblendps	$0x07, %ymm15, %ymm14, %ymm14
+	vmulps		%ymm14, %ymm12, %ymm15
+	vaddps		%ymm3, %ymm15, %ymm3
+	vxorps		%ymm15, %ymm15, %ymm15
+	vblendps	$0x0f, %ymm15, %ymm14, %ymm14
+	vmulps		%ymm14, %ymm9, %ymm15
+	vaddps		%ymm13, %ymm15, %ymm13
+	
+	vmaskmovps	%ymm13, %ymm11, 0(%r14)
+
+	subl	%eax, %r10d
+
+	salq	$2, %rax // *sizeof(float)
+	addq	%rax, %r11
+	subq	$32, %r11
+	addq	%r12, %r11
+	addq	%rax, %r13
+	addq	%rax, %r14
+	
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_symv_add_nt_4l_lib8, .-inner_edge_symv_add_nt_4l_lib8
+#endif
+#endif
+
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_EDGE_SYMV_ADD_NT_4R_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_symv_add_nt_4r_lib8, @function
+inner_edge_symv_add_nt_4r_lib8:
+#elif defined(OS_MAC)
+_inner_edge_symv_add_nt_4r_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_symv_add_nt_4r_lib8; .scl 2; .type 32; .endef
+inner_edge_symv_add_nt_4r_lib8:
+#endif
+#endif
+
+	movl	$4, %eax
+	cmpl	%eax, %r10d
+	jge		0f
+	movl	%r10d, %eax
+0:
+	subl	%r15d, %eax
+
+	vcvtsi2ss	%eax, %xmm14, %xmm14
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovups		.LC00(%rip), %xmm13
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %xmm13
+#endif
+	vshufps		$0x0, %xmm14, %xmm14, %xmm14
+//	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
+	vsubps		%xmm14, %xmm13, %xmm11
+
+	vmaskmovps	0(%r13), %xmm11, %xmm12
+	vmaskmovps	0(%r14), %xmm11, %xmm13
+
+	vmaskmovps	0(%r11), %xmm11, %xmm14
+	vmulps		%xmm14, %xmm12, %xmm15
+	vaddps		%xmm0, %xmm15, %xmm0
+	vxorps		%xmm15, %xmm15, %xmm15
+	vblendps	$0x01, %xmm15, %xmm14, %xmm14
+	vmulps		%xmm14, %xmm6, %xmm15
+	vaddps		%xmm13, %xmm15, %xmm13
+	
+	vmaskmovps	32(%r11), %xmm11, %xmm14
+	vxorps		%xmm15, %xmm15, %xmm15
+	vblendps	$0x01, %xmm15, %xmm14, %xmm14
+	vmulps		%xmm14, %xmm12, %xmm15
+	vaddps		%xmm1, %xmm15, %xmm1
+	vxorps		%xmm15, %xmm15, %xmm15
+	vblendps	$0x03, %xmm15, %xmm14, %xmm14
+	vmulps		%xmm14, %xmm7, %xmm15
+	vaddps		%xmm13, %xmm15, %xmm13
+	
+	vmaskmovps	64(%r11), %xmm11, %xmm14
+	vxorps		%xmm15, %xmm15, %xmm15
+	vblendps	$0x03, %xmm15, %xmm14, %xmm14
+	vmulps		%xmm14, %xmm12, %xmm15
+	vaddps		%xmm2, %xmm15, %xmm2
+	vxorps		%xmm15, %xmm15, %xmm15
+	vblendps	$0x07, %xmm15, %xmm14, %xmm14
+	vmulps		%xmm14, %xmm8, %xmm15
+	vaddps		%xmm13, %xmm15, %xmm13
+
+	vmaskmovps	96(%r11), %xmm11, %xmm14
+	vxorps		%xmm15, %xmm15, %xmm15
+	vblendps	$0x07, %xmm15, %xmm14, %xmm14
+	vmulps		%xmm14, %xmm12, %xmm15
+	vaddps		%xmm3, %xmm15, %xmm3
+//	vxorps		%xmm15, %xmm15, %xmm15
+//	vblendps	$0x0f, %xmm15, %xmm14, %xmm14
+//	vmulps		%xmm14, %xmm9, %xmm15
+//	vaddps		%xmm13, %xmm15, %xmm13
+	
+	vmaskmovps	%xmm13, %xmm11, 0(%r14)
+
+	subl	%eax, %r10d
+
+	salq	$2, %rax // *sizeof(float)
+	addq	%rax, %r11
+	subq	$32, %r11
+	addq	%r12, %r11
+	addq	%rax, %r13
+	addq	%rax, %r14
+	
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_symv_add_nt_4r_lib8, .-inner_edge_symv_add_nt_4r_lib8
+#endif
+#endif
+
+
+
+
+
+
+// common inner routine with file scope
+//
 // blend for ta==t, scale for generic alpha and beta
 //
 // input arguments:
@@ -1102,6 +1347,83 @@ inner_blend_t_scale_ab_4_lib8:
 	
 #if defined(OS_LINUX)
 	.size	inner_blend_t_scale_ab_4_lib8, .-inner_blend_t_scale_ab_4_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// blend for ta==t, scale for generic alpha and beta=1.0
+//
+// input arguments:
+// r10  <- alpha
+// r11  <- y
+// ymm0 <- [z0a z0b z0c z0d]
+// ymm1 <- [z1a z1b z1c z1d]
+// ymm2 <- [z2a z2b z2c z2d]
+// ymm3 <- [z3a z3b z3c z3d]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10  <- alpha
+// r11  <- y
+// ymm0 <- [z0 z1 z2 z3]
+// ymm1 <- dirty
+// ymm2 <- dirty
+// ymm3 <- dirty
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_T_SCALE_A1_4_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_blend_t_scale_a1_4_lib8, @function
+inner_blend_t_scale_a1_4_lib8:
+#elif defined(OS_MAC)
+_inner_blend_t_scale_a1_4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_blend_t_scale_a1_4_lib8; .scl 2; .type 32; .endef
+inner_blend_t_scale_a1_4_lib8:
+#endif
+#endif
+
+	// reduction
+	vhaddps			%ymm1, %ymm0, %ymm0
+	vhaddps			%ymm3, %ymm2, %ymm2
+
+	vhaddps			%ymm2, %ymm0, %ymm0
+
+	vextractf128	$0x1, %ymm0, %xmm1
+
+	vaddps			%xmm0, %xmm1, %xmm0
+
+	// alpha
+	vbroadcastss	0(%r10), %xmm15
+	vmulps			%xmm0, %xmm15, %xmm0
+
+	// beta
+	vmovups			0(%r11), %xmm14
+	vaddps			%xmm0, %xmm14, %xmm0
+	
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+	
+#if defined(OS_LINUX)
+	.size	inner_blend_t_scale_a1_4_lib8, .-inner_blend_t_scale_a1_4_lib8
 #endif
 #endif
 
@@ -2082,6 +2404,494 @@ kernel_sgemv_nt_4_vs_lib8:
 
 #if defined(OS_LINUX)
 	.size	kernel_sgemv_nt_4_vs_lib8, .-kernel_sgemv_nt_4_vs_lib8
+#endif
+
+
+
+
+
+//                             1      2              3          4        5          6
+// void kernel_dsymv_l_4l_lib4(int k, double *alpha, double *A, int sda, double *x, double *z);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_ssymv_l_4l_lib8
+	.type kernel_ssymv_l_4l_lib8, @function
+kernel_ssymv_l_4l_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_ssymv_l_4l_lib8
+_kernel_ssymv_l_4l_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_ssymv_l_4l_lib8
+	.def kernel_ssymv_l_4l_lib8; .scl 2; .type 32; .endef
+kernel_ssymv_l_4l_lib8:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers y_t
+
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
+
+	// initialize x_n
+	movq	ARG2, %r10 // alpha
+	vbroadcastss 0(%r10), %ymm15
+
+	movq	ARG5, %r10 // x_n
+
+	vbroadcastss 0(%r10), %ymm6
+	vmulps		%ymm15, %ymm6, %ymm6
+	vbroadcastss 4(%r10), %ymm7
+	vmulps		%ymm15, %ymm7, %ymm7
+	vbroadcastss 8(%r10), %ymm8
+	vmulps		%ymm15, %ymm8, %ymm8
+	vbroadcastss 12(%r10), %ymm9
+	vmulps		%ymm15, %ymm9, %ymm9
+
+
+	// inner edge dsyrk & kernel dgemv nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 8*sda*sizeof(float)
+	movq	ARG5, %r13  // x_t
+	movq	ARG6, %r14  // z_n
+	movq	$0, %r15 // offA
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_SYMV_ADD_NT_4L_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_symv_add_nt_4l_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_symv_add_nt_4l_lib8
+#endif
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_ADD_NT_4_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_gemv_add_nt_4_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_gemv_add_nt_4_lib8
+#endif
+#endif
+
+
+	// call inner blend n scale ab
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG6, %r11   // z_t
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_T_SCALE_A1_4_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_t_scale_a1_4_lib8
+#elif defined(OS_MAC)
+	callq _inner_blend_t_scale_a1_4_lib8
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG6, %r10 // z_t 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_4_lib8
+#elif defined(OS_MAC)
+	callq _inner_store_4_lib8
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_ssymv_l_4l_lib8, .-kernel_ssymv_l_4l_lib8
+#endif
+
+
+
+
+
+//                             1      2              3          4        5          6
+// void kernel_dsymv_l_4r_lib4(int k, double *alpha, double *A, int sda, double *x, double *z);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_ssymv_l_4r_lib8
+	.type kernel_ssymv_l_4r_lib8, @function
+kernel_ssymv_l_4r_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_ssymv_l_4r_lib8
+_kernel_ssymv_l_4r_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_ssymv_l_4r_lib8
+	.def kernel_ssymv_l_4r_lib8; .scl 2; .type 32; .endef
+kernel_ssymv_l_4r_lib8:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers y_t
+
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
+
+	// initialize x_n
+	movq	ARG2, %r10 // alpha
+	vbroadcastss 0(%r10), %ymm15
+
+	movq	ARG5, %r10 // x_n
+
+	vbroadcastss 0(%r10), %ymm6
+	vmulps		%ymm15, %ymm6, %ymm6
+	vbroadcastss 4(%r10), %ymm7
+	vmulps		%ymm15, %ymm7, %ymm7
+	vbroadcastss 8(%r10), %ymm8
+	vmulps		%ymm15, %ymm8, %ymm8
+	vbroadcastss 12(%r10), %ymm9
+	vmulps		%ymm15, %ymm9, %ymm9
+
+
+	// inner edge dsyrk & kernel dgemv nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 8*sda*sizeof(float)
+	movq	ARG5, %r13  // x_t
+	movq	ARG6, %r14  // z_n
+	movq	$0, %r15 // offA
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_SYMV_ADD_NT_4R_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_symv_add_nt_4r_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_symv_add_nt_4r_lib8
+#endif
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_ADD_NT_4_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_gemv_add_nt_4_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_gemv_add_nt_4_lib8
+#endif
+#endif
+
+
+	// call inner blend n scale ab
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG6, %r11   // z_t
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_T_SCALE_A1_4_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_t_scale_a1_4_lib8
+#elif defined(OS_MAC)
+	callq _inner_blend_t_scale_a1_4_lib8
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG6, %r10 // z_t 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_4_lib8
+#elif defined(OS_MAC)
+	callq _inner_store_4_lib8
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_ssymv_l_4r_lib8, .-kernel_ssymv_l_4r_lib8
+#endif
+
+
+
+
+
+//                                1      2              3          4          5        6          7          8
+// void kernel_dsymv_l_4l_gen_lib4(int k, double *alpha, int offA, double *A, int sda, double *x, double *z, int km);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_ssymv_l_4l_gen_lib8
+	.type kernel_ssymv_l_4l_gen_lib8, @function
+kernel_ssymv_l_4l_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_ssymv_l_4l_gen_lib8
+_kernel_ssymv_l_4l_gen_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_ssymv_l_4l_gen_lib8
+	.def kernel_ssymv_l_4l_gen_lib8; .scl 2; .type 32; .endef
+kernel_ssymv_l_4l_gen_lib8:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers y_t
+
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
+
+	vmovaps	%ymm0, %ymm6
+	vmovaps	%ymm0, %ymm7
+	vmovaps	%ymm0, %ymm8
+	vmovaps	%ymm0, %ymm9
+
+	// initialize x_n
+	movq	ARG2, %r10 // alpha
+	vbroadcastss 0(%r10), %ymm15
+
+	movq	ARG6, %r10 // x_n
+	movq	ARG8, %r11 // km
+
+	vbroadcastss 0(%r10), %ymm6
+	vmulps		%ymm15, %ymm6, %ymm6
+	cmpl	$2, %r11d
+	jl		0f
+	vbroadcastss 4(%r10), %ymm7
+	vmulps		%ymm15, %ymm7, %ymm7
+	cmpl	$3, %r11d
+	jl		0f
+	vbroadcastss 8(%r10), %ymm8
+	vmulps		%ymm15, %ymm8, %ymm8
+	je		0f
+	vbroadcastss 12(%r10), %ymm9
+	vmulps		%ymm15, %ymm9, %ymm9
+0:
+
+	// inner edge dsyrk & kernel dgemv nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG4, %r11  // A
+	movq	ARG5, %r12 // sda
+	sall	$5, %r12d // 8*sda*sizeof(float)
+	movq	ARG6, %r13  // x_t
+	movq	ARG7, %r14  // z_n
+	movq	ARG3, %r15 // offA
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_SYMV_ADD_NT_4L_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_symv_add_nt_4l_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_symv_add_nt_4l_lib8
+#endif
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_ADD_NT_4_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_gemv_add_nt_4_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_gemv_add_nt_4_lib8
+#endif
+#endif
+
+
+	// call inner blend n scale ab
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11   // z_t
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_T_SCALE_A1_4_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_t_scale_a1_4_lib8
+#elif defined(OS_MAC)
+	callq _inner_blend_t_scale_a1_4_lib8
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG7, %r10 // z_t 
+	movq	ARG8, %r11 // km
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_VS_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_4_vs_lib8
+#elif defined(OS_MAC)
+	callq _inner_store_4_vs_lib8
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_ssymv_l_4l_gen_lib8, .-kernel_ssymv_l_4l_gen_lib8
+#endif
+
+
+
+
+
+//                                1      2              3          4          5        6          7          8
+// void kernel_dsymv_l_4r_gen_lib4(int k, double *alpha, int offA, double *A, int sda, double *x, double *z, int km);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_ssymv_l_4r_gen_lib8
+	.type kernel_ssymv_l_4r_gen_lib8, @function
+kernel_ssymv_l_4r_gen_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_ssymv_l_4r_gen_lib8
+_kernel_ssymv_l_4r_gen_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_ssymv_l_4r_gen_lib8
+	.def kernel_ssymv_l_4r_gen_lib8; .scl 2; .type 32; .endef
+kernel_ssymv_l_4r_gen_lib8:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers y_t
+
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
+
+	vmovaps	%ymm0, %ymm6
+	vmovaps	%ymm0, %ymm7
+	vmovaps	%ymm0, %ymm8
+	vmovaps	%ymm0, %ymm9
+
+	// initialize x_n
+	movq	ARG2, %r10 // alpha
+	vbroadcastss 0(%r10), %ymm15
+
+	movq	ARG6, %r10 // x_n
+	movq	ARG8, %r11 // km
+
+	vbroadcastss 0(%r10), %ymm6
+	vmulps		%ymm15, %ymm6, %ymm6
+	cmpl	$2, %r11d
+	jl		0f
+	vbroadcastss 4(%r10), %ymm7
+	vmulps		%ymm15, %ymm7, %ymm7
+	cmpl	$3, %r11d
+	jl		0f
+	vbroadcastss 8(%r10), %ymm8
+	vmulps		%ymm15, %ymm8, %ymm8
+	je		0f
+	vbroadcastss 12(%r10), %ymm9
+	vmulps		%ymm15, %ymm9, %ymm9
+0:
+
+	// inner edge dsyrk & kernel dgemv nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG4, %r11  // A
+	movq	ARG5, %r12 // sda
+	sall	$5, %r12d // 8*sda*sizeof(float)
+	movq	ARG6, %r13  // x_t
+	movq	ARG7, %r14  // z_n
+	movq	ARG3, %r15 // offA
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_SYMV_ADD_NT_4R_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_symv_add_nt_4r_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_symv_add_nt_4r_lib8
+#endif
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_ADD_NT_4_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_gemv_add_nt_4_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_gemv_add_nt_4_lib8
+#endif
+#endif
+
+
+	// call inner blend n scale ab
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11   // z_t
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_T_SCALE_A1_4_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_t_scale_a1_4_lib8
+#elif defined(OS_MAC)
+	callq _inner_blend_t_scale_a1_4_lib8
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG7, %r10 // z_t 
+	movq	ARG8, %r11 // km
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_VS_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_4_vs_lib8
+#elif defined(OS_MAC)
+	callq _inner_store_4_vs_lib8
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_ssymv_l_4r_gen_lib8, .-kernel_ssymv_l_4r_gen_lib8
 #endif
 
 

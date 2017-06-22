@@ -29,7 +29,7 @@
 
 
 // XXX copy and scale y_n into z_n outside the kernel !!!!!
-#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 void kernel_sgemv_nt_4_vs_lib4(int kmax, float *alpha_n, float *alpha_t, float *A, int sda, float *x_n, float *x_t, float *beta_t, float *y_t, float *z_n, float *z_t, int km)
 	{
 
@@ -219,7 +219,7 @@ void kernel_sgemv_nt_4_vs_lib4(int kmax, float *alpha_n, float *alpha_t, float *
 
 
 // XXX copy and scale y_n into z_n outside the kernel !!!!!
-#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 void kernel_sgemv_nt_4_lib4(int kmax, float *alpha_n, float *alpha_t, float *A, int sda, float *x_n, float *x_t, float *beta_t, float *y_t, float *z_n, float *z_t)
 	{
 
@@ -233,13 +233,16 @@ void kernel_sgemv_nt_4_lib4(int kmax, float *alpha_n, float *alpha_t, float *A, 
 
 
 // XXX copy and scale y_n into z_n outside the kernel !!!!!
-#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-void kernel_ssymv_l_4_gen_lib4(int kmax, float *alpha, int offA, float *A, int sda, float *x_n, float *x_t, float *z_n, float *z_t, int km)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+void kernel_ssymv_l_4_gen_lib4(int kmax, float *alpha, int offA, float *A, int sda, float *x_n, float *z_n, int km)
 	{
 
 	if(kmax<=0) 
 		return;
 	
+	float *x_t = x_n;
+	float *z_t = z_n;
+
 	const int bs = 4;
 
 	int k;
@@ -1005,11 +1008,11 @@ void kernel_ssymv_l_4_gen_lib4(int kmax, float *alpha, int offA, float *A, int s
 
 
 // XXX copy and scale y_n into z_n outside the kernel !!!!!
-#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-void kernel_ssymv_l_4_lib4(int kmax, float *alpha, float *A, int sda, float *x_n, float *x_t, float *z_n, float *z_t)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+void kernel_ssymv_l_4_lib4(int kmax, float *alpha, float *A, int sda, float *x_n, float *z_n)
 	{
 
-	kernel_ssymv_l_4_gen_lib4(kmax, alpha, 0, A, sda, x_n, x_t, z_n, z_t, 4);
+	kernel_ssymv_l_4_gen_lib4(kmax, alpha, 0, A, sda, x_n, z_n, 4);
 
 	return;
 

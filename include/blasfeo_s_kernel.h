@@ -123,6 +123,10 @@ void kernel_strsv_lt_inv_8_lib8(int k, float *A, int sda, float *inv_diag_A, flo
 void kernel_strsv_lt_inv_8_vs_lib8(int k, float *A, int sda, float *inv_diag_A, float *x, float *y, float *z, int km, int kn);
 void kernel_sgemv_nt_4_lib8(int kmax, float *alpha_n, float *alpha_t, float *A, int sda, float *x_n, float *x_t, float *beta_t, float *y_t, float *z_n, float *z_t);
 void kernel_sgemv_nt_4_vs_lib8(int kmax, float *alpha_n, float *alpha_t, float *A, int sda, float *x_n, float *x_t, float *beta_t, float *y_t, float *z_n, float *z_t, int km);
+void kernel_ssymv_l_4l_lib8(int kmax, float *alpha, float *A, int sda, float *x, float *z);
+void kernel_ssymv_l_4r_lib8(int kmax, float *alpha, float *A, int sda, float *x, float *z);
+void kernel_ssymv_l_4l_gen_lib8(int kmax, float *alpha, int offA, float *A, int sda, float *x, float *z, int km);
+void kernel_ssymv_l_4r_gen_lib8(int kmax, float *alpha, int offA, float *A, int sda, float *x, float *z, int km);
 
 // aux
 void kernel_sgecp_8_0_lib8(int m, float *A, float *B);
@@ -187,8 +191,8 @@ void kernel_strmv_ut_4_vs_lib4(int k, float *A, int sda, float *x, float *z, int
 void kernel_sgemv_nt_6_lib4(int kmax, float *alpha_n, float *alpha_t, float *A, int sda, float *x_n, float *x_t, float *beta_t, float *y_t, float *z_n, float *z_t);
 void kernel_sgemv_nt_4_lib4(int kmax, float *alpha_n, float *alpha_t, float *A, int sda, float *x_n, float *x_t, float *beta_t, float *y_t, float *z_n, float *z_t);
 void kernel_sgemv_nt_4_vs_lib4(int kmax, float *alpha_n, float *alpha_t, float *A, int sda, float *x_n, float *x_t, float *beta_t, float *y_t, float *z_n, float *z_t, int km);
-void kernel_ssymv_l_4_lib4(int kmax, float *alpha, float *A, int sda, float *x_n, float *x_t, float *z_n, float *z_t);
-void kernel_ssymv_l_4_gen_lib4(int kmax, float *alpha, int offA, float *A, int sda, float *x_n, float *x_t, float *z_n, float *z_t, int km);
+void kernel_ssymv_l_4_lib4(int kmax, float *alpha, float *A, int sda, float *x_n, float *z_n);
+void kernel_ssymv_l_4_gen_lib4(int kmax, float *alpha, int offA, float *A, int sda, float *x_n, float *z_n, int km);
 
 
 

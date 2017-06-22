@@ -63,7 +63,7 @@ int main()
 
 	int ii;
 
-	int n = 20;
+	int n = 16;
 
 	//
 	// matrices in column-major format
@@ -211,11 +211,11 @@ int main()
 	struct d_strvec sm; d_create_strvec(n, &sm, m);
 	struct d_strvec sr; d_create_strvec(n, &sr, r);
 
-	d_print_tran_strvec(n, &sv, 0);
-	d_print_tran_strvec(n, &svp, 0);
-	d_print_tran_strvec(n, &svm, 0);
-	d_print_tran_strvec(n, &sm, 0);
-	d_print_tran_strvec(n, &sr, 0);
+//	d_print_tran_strvec(n, &sv, 0);
+//	d_print_tran_strvec(n, &svp, 0);
+//	d_print_tran_strvec(n, &svm, 0);
+//	d_print_tran_strvec(n, &sm, 0);
+//	d_print_tran_strvec(n, &sr, 0);
 
 //	d_print_tran_strvec(n, &sm, 0);
 //	DVECEL_LIBSTR(&sm, 0) = 0.0;
@@ -230,14 +230,40 @@ int main()
 //	dsyrk_ln_libstr(n, 15, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 //	dpotrf_l_mn_libstr(n, 15, &sD, 0, 0, &sD, 0, 0);
 //	dsyrk_dpotrf_ln_libstr(n, 15, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
-	dtrmm_rlnn_libstr(n, n, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+//	dtrmm_rlnn_libstr(n, n, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //	dgese_libstr(n, n, 0.0/0.0, &sD, 0, 0);
 //	kernel_dgemm_nt_4x8_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sC.pA, sD.pA);
 //	kernel_dgemm_nn_4x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sC.pA, sD.pA);
 //	kernel_dsyrk_nt_l_4x4_gen_lib4(n, &alpha, sA.pA, sB.pA, &beta, 0, sC.pA, sC.cn, 3, sD.pA, sD.cn, 0, 4, 0, 4);
 //	kernel_dsyrk_nt_l_8x4_gen_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, 0, sC.pA, sC.cn, 3, sD.pA, sD.cn, 0, 8, 0, 8);
 //	dsyrk_ln_libstr(10, 10, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 1, 0);
-	d_print_strmat(n, n, &sD, 0, 0);
+//	d_print_strmat(n, n, &sD, 0, 0);
+	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx0, 0, beta, &sz0, 0, &sz0, 0);
+	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx1, 0, beta, &sz1, 0, &sz1, 0);
+	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx2, 0, beta, &sz2, 0, &sz2, 0);
+	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx3, 0, beta, &sz3, 0, &sz3, 0);
+	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx4, 0, beta, &sz4, 0, &sz4, 0);
+	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx5, 0, beta, &sz5, 0, &sz5, 0);
+	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx6, 0, beta, &sz6, 0, &sz6, 0);
+	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx7, 0, beta, &sz7, 0, &sz7, 0);
+	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx8, 0, beta, &sz8, 0, &sz8, 0);
+	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx9, 0, beta, &sz9, 0, &sz9, 0);
+	d_print_tran_strvec(n, &sz0, 0);
+	d_print_tran_strvec(n, &sz1, 0);
+	d_print_tran_strvec(n, &sz2, 0);
+	d_print_tran_strvec(n, &sz3, 0);
+	d_print_tran_strvec(n, &sz4, 0);
+	d_print_tran_strvec(n, &sz5, 0);
+	d_print_tran_strvec(n, &sz6, 0);
+	d_print_tran_strvec(n, &sz7, 0);
+	d_print_tran_strvec(n, &sz8, 0);
+	d_print_tran_strvec(n, &sz9, 0);
+	return 0;
+
+//	d_print_strmat(n, n, &sC, 0, 0);
+//	dgese_libstr(n, n, 1.0, &sB, 0, 0);
+//	kernel_dger4_sub_4_lib4(6, sB.pA, sA.pA, sC.pA);
+//	kernel_dger4_sub_4_vs_lib4(6, sB.pA, sA.pA, sC.pA, 1);
 	return 0;
 
 //	d_print_strmat(n, n, &sC, 0, 0);
@@ -290,7 +316,7 @@ int main()
 	v_zeros_align(&qr_work, qr_work_size);
 //	dgeqrf_libstr(10, 10, &sC, 0, 0, &sD, 0, 0, qr_work);
 	dgelqf_libstr(17, 17, &sC, 0, 0, &sD, 0, 0, qr_work);
-//	dgecp_libstr(10, 10, 1.0, &sC, 0, 0, &sD, 0, 0);
+//	dgecp_libstr(10, 10, &sC, 0, 0, &sD, 0, 0);
 //	kernel_dgeqrf_4_lib4(16, 12, sD.pA, sD.cn, sD.dA, qr_work);
 //	d_print_strmat(n, n, &sA, 0, 0);
 //	kernel_dgeqrf_vs_lib4(10, 16, 0, sD.pA+0, sD.cn, sD.dA);
@@ -442,7 +468,7 @@ int main()
 //	d_cvt_strmat2mat(n, n, &sE, 0, 0, C, n);
 //	d_print_mat(n, n, C, n);
 
-	dtrtr_u_libstr(6, 1.0, &sE, 2, 0, &sB, 1, 0);
+	dtrtr_u_libstr(6, &sE, 2, 0, &sB, 1, 0);
 	d_print_strmat(n, n, &sB, 0, 0);
 
 	d_print_strmat(n, n, &sA, 0, 0);

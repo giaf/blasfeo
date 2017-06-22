@@ -939,6 +939,68 @@ void sgemv_nt_libstr(int m, int n, float alpha_n, float alpha_t, struct s_strmat
 
 
 
+void ssymv_l_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+	{
+
+//	if(m<=0 | n<=0)
+//		return;
+	
+	const int bs = 8;
+
+	int ii, n1, n2;
+
+	int sda = sA->cn;
+	float *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+	float *z = sz->pa + zi;
+
+	// copy and scale y int z
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		z[ii+0] = beta*y[ii+0];
+		z[ii+1] = beta*y[ii+1];
+		z[ii+2] = beta*y[ii+2];
+		z[ii+3] = beta*y[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = beta*y[ii+0];
+		}
+	
+	// clean up at the beginning
+	if(ai%bs!=0) // 1, 2, 3
+		{
+		n1 = 8-ai%bs;
+		n2 = n<n1 ? n : n1;
+		kernel_ssymv_l_4l_gen_lib8(m-0, &alpha, ai%bs, &pA[0+(0)*bs], sda, &x[0], &z[0], n2-0);
+		kernel_ssymv_l_4r_gen_lib8(m-4, &alpha, ai%bs, &pA[4+(4)*bs], sda, &x[4], &z[4], n2-4);
+		pA += n1 + n1*bs + (sda-1)*bs;
+		x += n1;
+		z += n1;
+		m -= n1;
+		n -= n1;
+		}
+	// main loop
+	ii = 0;
+	for(; ii<n-7; ii+=8)
+		{
+		kernel_ssymv_l_4l_lib8(m-ii-0, &alpha, &pA[0+(ii+0)*bs+ii*sda], sda, &x[ii+0], &z[ii+0]);
+		kernel_ssymv_l_4r_lib8(m-ii-4, &alpha, &pA[4+(ii+4)*bs+ii*sda], sda, &x[ii+4], &z[ii+4]);
+		}
+	// clean up at the end
+	if(ii<n)
+		{
+		kernel_ssymv_l_4l_gen_lib8(m-ii-0, &alpha, 0, &pA[0+(ii+0)*bs+ii*sda], sda, &x[ii+0], &z[ii+0], n-ii-0);
+		kernel_ssymv_l_4r_gen_lib8(m-ii-4, &alpha, 0, &pA[4+(ii+4)*bs+ii*sda], sda, &x[ii+4], &z[ii+4], n-ii-4);
+		}
+	
+	return;
+	}
+
+
+
 #else
 
 #error : wrong LA choice

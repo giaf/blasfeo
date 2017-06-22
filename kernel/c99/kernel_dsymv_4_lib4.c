@@ -233,12 +233,16 @@ void kernel_dgemv_nt_4_lib4(int kmax, double *alpha_n, double *alpha_t, double *
 
 
 // XXX copy and scale y_n into z_n outside the kernel !!!!!
-void kernel_dsymv_l_4_gen_lib4(int kmax, double *alpha, int offA, double *A, int sda, double *x_n, double *x_t, double *z_n, double *z_t, int km)
+#if ! ( defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL) )
+void kernel_dsymv_l_4_gen_lib4(int kmax, double *alpha, int offA, double *A, int sda, double *x_n, double *z_n, int km)
 	{
 
 	if(kmax<=0) 
 		return;
 	
+	double *x_t = x_n;
+	double *z_t = z_n;
+
 	const int bs = 4;
 
 	int k;
@@ -999,15 +1003,16 @@ void kernel_dsymv_l_4_gen_lib4(int kmax, double *alpha, int offA, double *A, int
 	return;
 
 	}
+#endif
 
 
 
 #if ! ( defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL) )
 // XXX copy and scale y_n into z_n outside the kernel !!!!!
-void kernel_dsymv_l_4_lib4(int kmax, double *alpha, double *A, int sda, double *x_n, double *x_t, double *z_n, double *z_t)
+void kernel_dsymv_l_4_lib4(int kmax, double *alpha, double *A, int sda, double *x_n, double *z_n)
 	{
 
-	kernel_dsymv_l_4_gen_lib4(kmax, alpha, 0, A, sda, x_n, x_t, z_n, z_t, 4);
+	kernel_dsymv_l_4_gen_lib4(kmax, alpha, 0, A, sda, x_n, z_n, 4);
 
 	return;
 

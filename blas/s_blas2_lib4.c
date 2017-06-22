@@ -197,8 +197,6 @@ void ssymv_l_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 	float *y = sy->pa + yi;
 	float *z = sz->pa + zi;
 
-//	dsymv_l_lib(m, n, alpha, pA, sda, x, beta, y, z);
-
 	// copy and scale y int z
 	ii = 0;
 	for(; ii<m-3; ii+=4)
@@ -217,7 +215,7 @@ void ssymv_l_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 	if(ai%bs!=0) // 1, 2, 3
 		{
 		n1 = 4-ai%bs;
-		kernel_ssymv_l_4_gen_lib4(m, &alpha, ai%bs, &pA[0], sda, &x[0], &x[0], &z[0], &z[0], n<n1 ? n : n1);
+		kernel_ssymv_l_4_gen_lib4(m, &alpha, ai%bs, &pA[0], sda, &x[0], &z[0], n<n1 ? n : n1);
 		pA += n1 + n1*bs + (sda-1)*bs;
 		x += n1;
 		z += n1;
@@ -228,12 +226,12 @@ void ssymv_l_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 	ii = 0;
 	for(; ii<n-3; ii+=4)
 		{
-		kernel_ssymv_l_4_lib4(m-ii, &alpha, &pA[ii*bs+ii*sda], sda, &x[ii], &x[ii], &z[ii], &z[ii]);
+		kernel_ssymv_l_4_lib4(m-ii, &alpha, &pA[ii*bs+ii*sda], sda, &x[ii], &z[ii]);
 		}
 	// clean up at the end
 	if(ii<n)
 		{
-		kernel_ssymv_l_4_gen_lib4(m-ii, &alpha, 0, &pA[ii*bs+ii*sda], sda, &x[ii], &x[ii], &z[ii], &z[ii], n-ii);
+		kernel_ssymv_l_4_gen_lib4(m-ii, &alpha, 0, &pA[ii*bs+ii*sda], sda, &x[ii], &z[ii], n-ii);
 		}
 	
 	return;

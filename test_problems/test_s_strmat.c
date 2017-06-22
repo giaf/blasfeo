@@ -103,7 +103,7 @@ int main()
 
 	struct s_strvec sx;
 	s_allocate_strvec(n, &sx);
-	sx.pa[1] = 1.0;
+	sx.pa[6] = 1.0;
 	s_print_tran_strvec(n, &sx, 0);
 
 	struct s_strvec sz0;
@@ -152,7 +152,8 @@ int main()
 //	strsv_ltn_mn_libstr(12, 2, &sA, 0, 0, &sx, 0, &sz0, 0);
 //	kernel_sgemv_nt_4_lib8(n, &alpha, &alpha, sA.pA, sA.cn, sx.pa, sx.pa, &beta, sz1.pa, sz0.pa, sz1.pa);
 //	kernel_sgemv_nt_4_vs_lib8(n, &alpha, &alpha, sA.pA, sA.cn, sx.pa, sx.pa, &beta, sz1.pa, sz0.pa, sz1.pa, 3);
-	sgemv_nt_libstr(5, 2, alpha, alpha, &sA, 0, 0, &sx, 0, &sx, 0, beta, beta, &sz0, 0, &sz1, 0, &sz0, 0, &sz1, 0);
+//	sgemv_nt_libstr(5, 2, alpha, alpha, &sA, 0, 0, &sx, 0, &sx, 0, beta, beta, &sz0, 0, &sz1, 0, &sz0, 0, &sz1, 0);
+	ssymv_l_libstr(10, 10, alpha, &sA, 1, 0, &sx, 0, beta, &sz0, 0, &sz1, 0);
 	s_print_tran_strvec(n, &sz0, 0);
 	s_print_tran_strvec(n, &sz1, 0);
 	return 0;
