@@ -1,3 +1,5 @@
 - syrk_potrf_ln_mn
 - alpha for trsm
 - kernels and _mn_ version of trmv
+- kernel dsymv dgemv_nt 4 avx
+- remove n from trmv

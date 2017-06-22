@@ -2033,7 +2033,7 @@ kernel_sgemv_t_8_lib8:
 	.globl _kernel_sgemv_t_8_lib8
 _kernel_sgemv_t_8_lib8:
 #elif defined(OS_WINDOWS)
-	.globl kernel_sgemv_8_8_lib8
+	.globl kernel_sgemv_t_8_lib8
 	.def kernel_sgemv_t_8_lib8; .scl 2; .type 32; .endef
 kernel_sgemv_t_8_lib8:
 #endif
@@ -2127,7 +2127,7 @@ kernel_sgemv_t_8_vs_lib8:
 	.globl _kernel_sgemv_t_8_vs_lib8
 _kernel_sgemv_t_8_vs_lib8:
 #elif defined(OS_WINDOWS)
-	.globl kernel_sgemv_8_8_vs_lib8
+	.globl kernel_sgemv_t_8_vs_lib8
 	.def kernel_sgemv_t_8_vs_lib8; .scl 2; .type 32; .endef
 kernel_sgemv_t_8_vs_lib8:
 #endif

@@ -587,7 +587,7 @@ inner_kernel_dgemv_add_nt_4_lib4:
 //	vmovupd	-32(%rsp), %ymm14 // load mask form stack
 	vmaskmovpd	%ymm13, %ymm11, 0(%r14)
 
-	sall	$3, %r10d
+	sall	$3, %r10d // *sizeof(double)
 	addq	%r10, %r11
 	addq	%r10, %r13
 	addq	%r10, %r14
@@ -3808,7 +3808,7 @@ kernel_dtrmv_ut_4_vs_lib4:
 
 
 
-//                             rdi    rsi              rdx              rcx        r8       r9           rsp+8        rsp+16          rsp+24       rsp_32       rsp_40
+//                             1      2                3                4          5        6            7            8               9            10           11
 // void kernel_dgemv_nt_4_lib4(int k, double *alpha_n, double *alpha_t, double *A, int sda, double *x_n, double *x_t, double *beta_t, double *y_t, double *z_n, double *z_t);
 
 	.p2align 4,,15

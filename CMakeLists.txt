@@ -216,6 +216,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgesc_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_8_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_4_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_ssymv_4_lib8.c
 			)
 
 		file(GLOB BLAS_SRC
@@ -261,6 +263,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgesc_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_8_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_4_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_ssymv_4_lib8.c
 			)
 
 		file(GLOB BLAS_SRC

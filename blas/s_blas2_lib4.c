@@ -35,46 +35,7 @@
 
 
 
-void sgemv_nt_lib(int m, int n, float alpha_n, float alpha_t, float *pA, int sda, float *x_n, float *x_t, float beta_n, float beta_t, float *y_n, float *y_t, float *z_n, float *z_t)
-	{
 
-	if(m<=0 | n<=0)
-		return;
-
-	const int bs = 4;
-
-	int ii;
-
-	// copy and scale y_n int z_n
-	ii = 0;
-	for(; ii<m-3; ii+=4)
-		{
-		z_n[ii+0] = beta_n*y_n[ii+0];
-		z_n[ii+1] = beta_n*y_n[ii+1];
-		z_n[ii+2] = beta_n*y_n[ii+2];
-		z_n[ii+3] = beta_n*y_n[ii+3];
-		}
-	for(; ii<m; ii++)
-		{
-		z_n[ii+0] = beta_n*y_n[ii+0];
-		}
-	
-	ii = 0;
-	for(; ii<n-3; ii+=4)
-		{
-		kernel_sgemv_nt_4_lib4(m, &alpha_n, &alpha_t, pA+ii*bs, sda, x_n+ii, x_t, &beta_t, y_t+ii, z_n, z_t+ii);
-		}
-	if(ii<n)
-		{
-		kernel_sgemv_nt_4_vs_lib4(m, &alpha_n, &alpha_t, pA+ii*bs, sda, x_n+ii, x_t, &beta_t, y_t+ii, z_n, z_t+ii, n-ii);
-		}
-	
-	return;
-
-	}
-
-
-	
 #if defined(LA_HIGH_PERFORMANCE)
 
 
@@ -166,12 +127,15 @@ void sgemv_t_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 
 void sgemv_nt_libstr(int m, int n, float alpha_n, float alpha_t, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx_n, int xi_n, struct s_strvec *sx_t, int xi_t, float beta_n, float beta_t, struct s_strvec *sy_n, int yi_n, struct s_strvec *sy_t, int yi_t, struct s_strvec *sz_n, int zi_n, struct s_strvec *sz_t, int zi_t)
 	{
-	if(ai!=0 | xi_n%4!=0 | xi_t%4!=0)
+
+	if(ai!=0)
 		{
 		printf("\nsgemv_nt_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
+
 	const int bs = 4;
+
 	int sda = sA->cn;
 	float *pA = sA->pA + aj*bs; // TODO ai
 	float *x_n = sx_n->pa + xi_n;
@@ -180,8 +144,39 @@ void sgemv_nt_libstr(int m, int n, float alpha_n, float alpha_t, struct s_strmat
 	float *y_t = sy_t->pa + yi_t;
 	float *z_n = sz_n->pa + zi_n;
 	float *z_t = sz_t->pa + zi_t;
-	sgemv_nt_lib(m, n, alpha_n, alpha_t, pA, sda, x_n, x_t, beta_n, beta_t, y_n, y_t, z_n, z_t);
-	return;
+
+//	sgemv_nt_lib(m, n, alpha_n, alpha_t, pA, sda, x_n, x_t, beta_n, beta_t, y_n, y_t, z_n, z_t);
+
+//	if(m<=0 | n<=0)
+//		return;
+
+	int ii;
+
+	// copy and scale y_n int z_n
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		z_n[ii+0] = beta_n*y_n[ii+0];
+		z_n[ii+1] = beta_n*y_n[ii+1];
+		z_n[ii+2] = beta_n*y_n[ii+2];
+		z_n[ii+3] = beta_n*y_n[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		z_n[ii+0] = beta_n*y_n[ii+0];
+		}
+	
+	ii = 0;
+	for(; ii<n-3; ii+=4)
+		{
+		kernel_sgemv_nt_4_lib4(m, &alpha_n, &alpha_t, pA+ii*bs, sda, x_n+ii, x_t, &beta_t, y_t+ii, z_n, z_t+ii);
+		}
+	if(ii<n)
+		{
+		kernel_sgemv_nt_4_vs_lib4(m, &alpha_n, &alpha_t, pA+ii*bs, sda, x_n+ii, x_t, &beta_t, y_t+ii, z_n, z_t+ii, n-ii);
+		}
+	
+		return;
 	}
 
 

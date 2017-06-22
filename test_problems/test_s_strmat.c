@@ -103,11 +103,14 @@ int main()
 
 	struct s_strvec sx;
 	s_allocate_strvec(n, &sx);
-	sx.pa[11] = 1.0;
+	sx.pa[1] = 1.0;
 	s_print_tran_strvec(n, &sx, 0);
 
-	struct s_strvec sz;
-	s_allocate_strvec(n, &sz);
+	struct s_strvec sz0;
+	s_allocate_strvec(n, &sz0);
+
+	struct s_strvec sz1;
+	s_allocate_strvec(n, &sz1);
 
 	//
 	// tests
@@ -135,19 +138,23 @@ int main()
 //	sgecp_libstr(16, 16, &sA, 2, 0, &sD, 1, 0);
 //	sgetr_libstr(16, 16, &sA, 2, 0, &sD, 2, 0);
 //	s_print_strmat(n, n, &sD, 0, 0);
-//	sgemv_n_libstr(6, 6, 1.0, &sA, 1, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
-//	sgemv_t_libstr(6, 6, 1.0, &sA, 1, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
-//	strmv_lnn_libstr(6, 6, &sA, 1, 0, &sx, 0, &sz, 0);
-//	strmv_ltn_libstr(10, 10, &sA, 1, 0, &sx, 0, &sz, 0);
-	sA.pA[0] = 1.0;
-//	strsv_lnn_libstr(10, &sA, 0, 0, &sx, 0, &sz, 0);
+//	sgemv_n_libstr(6, 6, 1.0, &sA, 1, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);
+//	sgemv_t_libstr(4, 4, 1.0, &sA, 1, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);
+//	strmv_lnn_libstr(6, 6, &sA, 1, 0, &sx, 0, &sz0, 0);
+//	strmv_ltn_libstr(10, 10, &sA, 1, 0, &sx, 0, &sz0, 0);
+//	sA.pA[0] = 1.0;
+//	strsv_lnn_libstr(10, &sA, 0, 0, &sx, 0, &sz0, 0);
 //	for(ii=0; ii<8; ii++) sA.dA[ii] = 1.0/sgeex1_libstr(&sA, ii, ii);
-//	kernel_strsv_lt_inv_8_lib8(0, sA.pA, sA.cn, sA.dA, sx.pa, sx.pa, sz.pa);
-//	kernel_strsv_lt_inv_8_vs_lib8(0, sA.pA, sA.cn, sA.dA, sx.pa, sx.pa, sz.pa, 3);
+//	kernel_strsv_lt_inv_8_lib8(0, sA.pA, sA.cn, sA.dA, sx.pa, sx.pa, sz0.pa);
+//	kernel_strsv_lt_inv_8_vs_lib8(0, sA.pA, sA.cn, sA.dA, sx.pa, sx.pa, sz0.pa, 3);
 //	s_print_strmat(8, 8, &sA, 0, 0);
-//	strsv_ltn_libstr(12, &sA, 0, 0, &sx, 0, &sz, 0);
-	strsv_ltn_mn_libstr(12, 2, &sA, 0, 0, &sx, 0, &sz, 0);
-	s_print_tran_strvec(n, &sz, 0);
+//	strsv_ltn_libstr(12, &sA, 0, 0, &sx, 0, &sz0, 0);
+//	strsv_ltn_mn_libstr(12, 2, &sA, 0, 0, &sx, 0, &sz0, 0);
+//	kernel_sgemv_nt_4_lib8(n, &alpha, &alpha, sA.pA, sA.cn, sx.pa, sx.pa, &beta, sz1.pa, sz0.pa, sz1.pa);
+//	kernel_sgemv_nt_4_vs_lib8(n, &alpha, &alpha, sA.pA, sA.cn, sx.pa, sx.pa, &beta, sz1.pa, sz0.pa, sz1.pa, 3);
+	sgemv_nt_libstr(5, 2, alpha, alpha, &sA, 0, 0, &sx, 0, &sx, 0, beta, beta, &sz0, 0, &sz1, 0, &sz0, 0, &sz1, 0);
+	s_print_tran_strvec(n, &sz0, 0);
+	s_print_tran_strvec(n, &sz1, 0);
 	return 0;
 //	sgesc_libstr(16, 9, 2.0, &sD, 0, 0);
 //	s_print_strmat(n, n, &sD, 0, 0);
