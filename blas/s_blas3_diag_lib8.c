@@ -34,64 +34,8 @@
 
 
 
+
 #if defined(LA_HIGH_PERFORMANCE)
-
-
-
-// dgemm with A diagonal matrix (stored as strvec)
-void sgemm_l_diag_libstr(int m, int n, float alpha, struct s_strvec *sA, int ai, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
-	{
-
-	if(m<=0 | n<=0)
-		return;
-
-	if(bi!=0 | ci!=0 | di!=0)
-		{
-		printf("\nsgemm_l_diag_libstr: feature not implemented yet: bi=%d, ci=%d, di=%d\n", bi, ci, di);
-		exit(1);
-		}
-
-	const int bs = 4;
-
-	int sdb = sB->cn;
-	int sdc = sC->cn;
-	int sdd = sD->cn;
-	float *dA = sA->pa + ai;
-	float *pB = sB->pA + bj*bs;
-	float *pC = sC->pA + cj*bs;
-	float *pD = sD->pA + dj*bs;
-
-//	sgemm_diag_left_lib(m, n, alpha, dA, pB, sdb, beta, pC, sdc, pD, sdd);
-	int ii;
-
-	ii = 0;
-	if(beta==0.0)
-		{
-		for( ; ii<m-3; ii+=4)
-			{
-			kernel_sgemm_diag_left_4_a0_lib4(n, &alpha, &dA[ii], &pB[ii*sdb], &pD[ii*sdd]);
-			}
-		}
-	else
-		{
-		for( ; ii<m-3; ii+=4)
-			{
-			kernel_sgemm_diag_left_4_lib4(n, &alpha, &dA[ii], &pB[ii*sdb], &beta, &pC[ii*sdc], &pD[ii*sdd]);
-			}
-		}
-	if(m-ii>0)
-		{
-		if(m-ii==1)
-			kernel_sgemm_diag_left_1_lib4(n, &alpha, &dA[ii], &pB[ii*sdb], &beta, &pC[ii*sdc], &pD[ii*sdd]);
-		else if(m-ii==2)
-			kernel_sgemm_diag_left_2_lib4(n, &alpha, &dA[ii], &pB[ii*sdb], &beta, &pC[ii*sdc], &pD[ii*sdd]);
-		else // if(m-ii==3)
-			kernel_sgemm_diag_left_3_lib4(n, &alpha, &dA[ii], &pB[ii*sdb], &beta, &pC[ii*sdc], &pD[ii*sdd]);
-		}
-	
-	return;
-
-	}
 
 
 
@@ -108,7 +52,7 @@ void sgemm_r_diag_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai,
 		exit(1);
 		}
 
-	const int bs = 4;
+	const int bs = 8;
 
 	int sda = sA->cn;
 	int sdc = sC->cn;

@@ -2003,6 +2003,8 @@ void strcp_l_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strmat 
 	int sdc = sC->cn;
 	float *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
 	strcp_l_lib(m, ai%bs, pA, sda, ci%bs, pC, sdc);
+	// XXX uses full matrix copy !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//	sgecp_libstr(m, m, sA, ai, aj, sC, ci, cj);
 	return;
 	}
 
