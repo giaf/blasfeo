@@ -1466,7 +1466,7 @@ float svecex1_libstr(struct s_strvec *sx, int xi)
 
 
 // set all elements of a strmat to a value
-void smatse_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj)
+void sgese_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj)
 	{
 	const int bs = 8;
 	int sda = sA->cn;
