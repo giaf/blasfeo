@@ -864,4 +864,93 @@ void strmm_rlnn_libstr(int m, int n, float alpha, struct s_strmat *sB, int bi, i
 
 
 
+// dtrsm_right_lower_transposed_notunit
+void strsm_rltn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
+	{
+
+	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
+		{
+		printf("\nstrsm_rltn_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
+		exit(1);
+		}
+
+	const int bs = 8;
+
+	// TODO alpha
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdd = sD->cn;
+	float *pA = sA->pA + aj*bs;
+	float *pB = sB->pA + bj*bs;
+	float *pD = sD->pA + dj*bs;
+	float *dA = sA->dA;
+
+	int i, j;
+	
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			sdiaex_lib(n, 1.0, ai, pA, sda, dA);
+			for(i=0; i<n; i++)
+				dA[i] = 1.0 / dA[i];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+		sdiaex_lib(n, 1.0, ai, pA, sda, dA);
+		for(i=0; i<n; i++)
+			dA[i] = 1.0 / dA[i];
+		sA->use_dA = 0;
+		}
+
+	if(m<=0 || n<=0)
+		return;
+	
+	i = 0;
+
+	for(; i<m-7; i+=8)
+		{
+		j = 0;
+		for(; j<n-7; j+=8)
+			{
+			kernel_strsm_nt_rl_inv_8x4_lib8(j+0, &pD[i*sdd], &pA[0+j*sda], &pB[(j+0)*bs+i*sdb], &pD[(j+0)*bs+i*sdd], &pA[0+(j+0)*bs+j*sda], &dA[j+0]);
+			kernel_strsm_nt_rl_inv_8x4_lib8(j+4, &pD[i*sdd], &pA[4+j*sda], &pB[(j+4)*bs+i*sdb], &pD[(j+4)*bs+i*sdd], &pA[4+(j+4)*bs+j*sda], &dA[j+0]);
+			}
+		if(n-j>0)
+			{
+			kernel_strsm_nt_rl_inv_8x4_vs_lib8(j+0, &pD[i*sdd], &pA[0+j*sda], &pB[(j+0)*bs+i*sdb], &pD[(j+0)*bs+i*sdd], &pA[0+(j+0)*bs+j*sda], &dA[j+0], m-i, n-j-0);
+			if(n-j>4)
+				{
+				kernel_strsm_nt_rl_inv_8x4_vs_lib8(j+4, &pD[i*sdd], &pA[4+j*sda], &pB[(j+4)*bs+i*sdb], &pD[(j+4)*bs+i*sdd], &pA[4+(j+4)*bs+j*sda], &dA[j+4], m-i, n-j-4);
+				}
+			}
+		}
+	if(m>i)
+		{
+		goto left_8;
+		}
+
+	// common return if i==m
+	return;
+
+	left_8:
+	j = 0;
+	for(; j<n-4; j+=8)
+		{
+		kernel_strsm_nt_rl_inv_8x4_vs_lib8(j+0, &pD[i*sdd], &pA[0+j*sda], &pB[(j+0)*bs+i*sdb], &pD[(j+0)*bs+i*sdd], &pA[0+(j+0)*bs+j*sda], &dA[j+0], m-i, n-j-0);
+		kernel_strsm_nt_rl_inv_8x4_vs_lib8(j+4, &pD[i*sdd], &pA[4+j*sda], &pB[(j+4)*bs+i*sdb], &pD[(j+4)*bs+i*sdd], &pA[4+(j+4)*bs+j*sda], &dA[j+4], m-i, n-j-4);
+		}
+	if(n-j>0)
+		{
+		kernel_strsm_nt_rl_inv_8x4_vs_lib8(j+0, &pD[i*sdd], &pA[0+j*sda], &pB[(j+0)*bs+i*sdb], &pD[(j+0)*bs+i*sdd], &pA[0+(j+0)*bs+j*sda], &dA[j+0], m-i, n-j-0);
+		}
+	return;
+
+	}
+
+
+
 

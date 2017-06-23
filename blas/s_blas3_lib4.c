@@ -252,51 +252,6 @@ void strmm_nt_ru_lib(int m, int n, float alpha, float *pA, int sda, float *pB, i
 
 
 
-// D <= B * A^{-T} , with A lower triangular employeing explicit inverse of diagonal
-void strsm_nt_rl_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, float *pB, int sdb, float *pD, int sdd)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-	
-	const int bs = 4;
-	
-	int i, j;
-	
-	i = 0;
-
-	for(; i<m-3; i+=4)
-		{
-		j = 0;
-		for(; j<n-3; j+=4)
-			{
-			kernel_strsm_nt_rl_inv_4x4_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda], &inv_diag_A[j]);
-			}
-		if(j<n)
-			{
-			kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda], &inv_diag_A[j], m-i, n-j);
-			}
-		}
-	if(m>i)
-		{
-		goto left_4;
-		}
-
-	// common return if i==m
-	return;
-
-	left_4:
-	j = 0;
-	for(; j<n; j+=4)
-		{
-		kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda], &inv_diag_A[j], m-i, n-j);
-		}
-	return;
-
-	}
-
-
-
 // D <= B * A^{-T} , with A lower triangular with unit diagonal
 void strsm_nt_rl_one_lib(int m, int n, float *pA, int sda, float *pB, int sdb, float *pD, int sdd)
 	{
@@ -703,13 +658,17 @@ void strsm_lunn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, i
 // dtrsm_right_lower_transposed_notunit
 void strsm_rltn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
 	{
+
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
 		printf("\nstrsm_rltn_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
+
 	const int bs = 4;
+
 	// TODO alpha
+
 	int sda = sA->cn;
 	int sdb = sB->cn;
 	int sdd = sD->cn;
@@ -717,26 +676,60 @@ void strsm_rltn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, i
 	float *pB = sB->pA + bj*bs;
 	float *pD = sD->pA + dj*bs;
 	float *dA = sA->dA;
-	int ii;
+
+	int i, j;
+	
 	if(ai==0 & aj==0)
 		{
 		if(sA->use_dA!=1)
 			{
 			sdiaex_lib(n, 1.0, ai, pA, sda, dA);
-			for(ii=0; ii<n; ii++)
-				dA[ii] = 1.0 / dA[ii];
+			for(i=0; i<n; i++)
+				dA[i] = 1.0 / dA[i];
 			sA->use_dA = 1;
 			}
 		}
 	else
 		{
 		sdiaex_lib(n, 1.0, ai, pA, sda, dA);
-		for(ii=0; ii<n; ii++)
-			dA[ii] = 1.0 / dA[ii];
+		for(i=0; i<n; i++)
+			dA[i] = 1.0 / dA[i];
 		sA->use_dA = 0;
 		}
-	strsm_nt_rl_inv_lib(m, n, pA, sda, dA, pB, sdb, pD, sdd); 
+
+	if(m<=0 || n<=0)
+		return;
+	
+	i = 0;
+
+	for(; i<m-3; i+=4)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_strsm_nt_rl_inv_4x4_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda], &dA[j]);
+			}
+		if(j<n)
+			{
+			kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda], &dA[j], m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		goto left_4;
+		}
+
+	// common return if i==m
 	return;
+
+	left_4:
+	j = 0;
+	for(; j<n; j+=4)
+		{
+		kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda], &dA[j], m-i, n-j);
+		}
+	return;
+
 	}
 
 
