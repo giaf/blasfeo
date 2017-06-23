@@ -6908,7 +6908,7 @@ kernel_dpotrf_nt_l_4x4_vs_lib4:
 
 
 
-//                                        edi     rsi         rdx         ecx     r8          r9          rsp+8      rsp+16     rsp+24
+//                                        1       2           3           4       5           6           7          8          9
 // void kernel_dsyrk_dpotrf_nt_l_4x4_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *inv_diag_D);
 
 	.p2align 4,,15
