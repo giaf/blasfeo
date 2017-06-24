@@ -5131,7 +5131,7 @@ kernel_ssyrk_spotrf_nt_l_8x8_lib8:
 	// factorization
 
 	movq	ARG9, %r10  // inv_diag_D 
-	movl	$4, %r11d
+	movl	$8, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_POTRF_8X8_VS_LIB8
