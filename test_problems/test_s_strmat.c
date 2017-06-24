@@ -103,7 +103,7 @@ int main()
 
 	struct s_strvec sx;
 	s_allocate_strvec(n, &sx);
-	sx.pa[6] = 1.0;
+	sx.pa[7] = 1.0;
 	s_print_tran_strvec(n, &sx, 0);
 
 	struct s_strvec sz0;
@@ -139,7 +139,7 @@ int main()
 //	sgetr_libstr(16, 16, &sA, 2, 0, &sD, 2, 0);
 //	s_print_strmat(n, n, &sD, 0, 0);
 //	sgemv_n_libstr(6, 6, 1.0, &sA, 1, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);
-//	sgemv_t_libstr(4, 4, 1.0, &sA, 1, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);
+	sgemv_t_libstr(11, 8, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);
 //	strmv_lnn_libstr(6, 6, &sA, 1, 0, &sx, 0, &sz0, 0);
 //	strmv_ltn_libstr(10, 10, &sA, 1, 0, &sx, 0, &sz0, 0);
 //	sA.pA[0] = 1.0;
@@ -147,14 +147,15 @@ int main()
 //	for(ii=0; ii<8; ii++) sA.dA[ii] = 1.0/sgeex1_libstr(&sA, ii, ii);
 //	kernel_strsv_lt_inv_8_lib8(0, sA.pA, sA.cn, sA.dA, sx.pa, sx.pa, sz0.pa);
 //	kernel_strsv_lt_inv_8_vs_lib8(0, sA.pA, sA.cn, sA.dA, sx.pa, sx.pa, sz0.pa, 3);
-//	s_print_strmat(8, 8, &sA, 0, 0);
+//	s_print_strmat(n, n, &sA, 0, 0);
 //	strsv_ltn_libstr(12, &sA, 0, 0, &sx, 0, &sz0, 0);
-//	strsv_ltn_mn_libstr(12, 2, &sA, 0, 0, &sx, 0, &sz0, 0);
+//	strsv_ltn_mn_libstr(11, 3, &sA, 0, 0, &sx, 0, &sz0, 0);
+//	s_print_strmat(n, n, &sA, 0, 0);
 //	kernel_sgemv_nt_4_lib8(n, &alpha, &alpha, sA.pA, sA.cn, sx.pa, sx.pa, &beta, sz1.pa, sz0.pa, sz1.pa);
 //	kernel_sgemv_nt_4_vs_lib8(n, &alpha, &alpha, sA.pA, sA.cn, sx.pa, sx.pa, &beta, sz1.pa, sz0.pa, sz1.pa, 3);
 //	sgemv_nt_libstr(5, 2, alpha, alpha, &sA, 0, 0, &sx, 0, &sx, 0, beta, beta, &sz0, 0, &sz1, 0, &sz0, 0, &sz1, 0);
 //	ssymv_l_libstr(10, 10, alpha, &sA, 1, 0, &sx, 0, beta, &sz0, 0, &sz1, 0);
-//	s_print_tran_strvec(n, &sz0, 0);
+	s_print_tran_strvec(n, &sz0, 0);
 //	s_print_tran_strvec(n, &sz1, 0);
 //	return 0;
 //	sgesc_libstr(16, 9, 2.0, &sD, 0, 0);
@@ -168,8 +169,8 @@ int main()
 //	spotrf_l_mn_libstr(23, 17, &sD, 0, 0, &sD, 0, 0);
 //	spotrf_l_libstr(n, &sD, 0, 0, &sD, 0, 0);
 //	kernel_strmm_nn_rl_8x4_lib8(3, &alpha, sB.pA, 7, sA.pA, sA.cn, sD.pA);
-	strmm_rlnn_libstr(12, 11, 1.0, &sA, 5, 0, &sB, 0, 0, &sD, 0, 0);
-	s_print_strmat(n, n, &sD, 0, 0);
+//	strmm_rlnn_libstr(12, 11, 1.0, &sA, 5, 0, &sB, 0, 0, &sD, 0, 0);
+//	s_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 
 

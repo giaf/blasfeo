@@ -34,12 +34,12 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 OBJS += kernel_dgemm_diag_lib4.o kernel_dgemv_4_lib4.o kernel_dgeqrf_4_lib4.o
-OBJS += kernel_sgemm_diag_lib8.o kernel_sgecp_lib8.o kernel_sgetr_lib8.o kernel_sgesc_lib8.o kernel_sgemv_8_lib8.o kernel_sgemv_4_lib8.o
+OBJS += kernel_sgemm_diag_lib8.o kernel_sgecp_lib8.o kernel_sgetr_lib8.o kernel_sgead_lib8.o kernel_sgesc_lib8.o kernel_sgemv_8_lib8.o kernel_sgemv_4_lib8.o
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 OBJS += kernel_dgemm_8x4_lib4.o kernel_dgemm_4x4_lib4.o kernel_dgemm_diag_lib4.o kernel_dgemv_12_lib4.o kernel_dgemv_8_lib4.o kernel_dgemv_4_lib4.o kernel_dsymv_6_lib4.o kernel_dgetrf_pivot_4_lib4.o kernel_dgeqrf_4_lib4.o kernel_dgebp_lib4.o
-OBJS += kernel_sgemm_16x4_lib8.o kernel_sgemm_8x8_lib8.o kernel_sgemm_8x4_lib8.o kernel_sgemm_diag_lib8.o kernel_sgecp_lib8.o kernel_sgetr_lib8.o kernel_sgesc_lib8.o kernel_sgemv_8_lib8.o kernel_sgemv_4_lib8.o
+OBJS += kernel_sgemm_16x4_lib8.o kernel_sgemm_8x8_lib8.o kernel_sgemm_8x4_lib8.o kernel_sgemm_diag_lib8.o kernel_sgecp_lib8.o kernel_sgetr_lib8.o kernel_sgead_lib8.o kernel_sgetr_lib8.o kernel_sgesc_lib8.o kernel_sgemv_8_lib8.o kernel_sgemv_4_lib8.o
 endif
 
 else # LA_REFERENCE | LA_BLAS

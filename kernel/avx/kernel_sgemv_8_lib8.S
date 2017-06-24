@@ -1032,6 +1032,7 @@ inner_edge_trsv_lt_inv_8_lib8:
 // r11  <- inv_diag_E
 // r12  <- km
 // r13  <- kn
+// r14  <- x
 // ymm0 <- [z0 z1 z2 z3]
 // ymm12 <- dirty
 // ymm13 <- dirty
@@ -1041,6 +1042,7 @@ inner_edge_trsv_lt_inv_8_lib8:
 // r11  <- inv_diag_E
 // r12  <- km
 // r13  <- kn
+// r14  <- x
 // ymm0 <- [z0 z1 z2 z3]
 // ymm12 <- dirty
 // ymm13 <- dirty
@@ -1060,6 +1062,21 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 #endif
 #endif
 	
+	vcvtsi2ss	%r13d, %xmm14, %xmm14
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovups		.LC00(%rip), %ymm13
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm13
+#endif
+	vshufps		$0x00, %xmm14, %xmm14, %xmm14
+	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
+	vsubps		%ymm14, %ymm13, %ymm14
+
+	vmovups		0(%r14), %ymm15
+	vblendvps	%ymm14, %ymm0, %ymm15, %ymm0
+
+
+
 	vxorps			%ymm14, %ymm14, %ymm14
 
 	vmovaps			0(%r10), %ymm12
@@ -1178,9 +1195,12 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	jl		0f
 
 	vshufps			$0xff, %xmm1, %xmm1, %xmm2
+	cmpl	$8, %r13d
+	jl		1f
 	vbroadcastss	28(%r11), %xmm15
 	vmulps			%xmm2, %xmm15, %xmm2
 	vblendps		$0x08, %xmm2, %xmm1, %xmm1
+1:
 	vmulps			%xmm10, %xmm2, %xmm15
 	vsubps			%xmm15, %xmm0, %xmm0
 	vmulps			%xmm13, %xmm2, %xmm15
@@ -1191,9 +1211,12 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	jl		0f
 
 	vshufps			$0xaa, %xmm1, %xmm1, %xmm2
+	cmpl	$7, %r13d
+	jl		1f
 	vbroadcastss	24(%r11), %xmm15
 	vmulps			%xmm2, %xmm15, %xmm2
 	vblendps		$0x04, %xmm2, %xmm1, %xmm1
+1:
 	vmulps			%xmm9, %xmm2, %xmm15
 	vsubps			%xmm15, %xmm0, %xmm0
 	vmulps			%xmm12, %xmm2, %xmm15
@@ -1204,9 +1227,12 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	jl		0f
 
 	vshufps			$0x55, %xmm1, %xmm1, %xmm2
+	cmpl	$6, %r13d
+	jl		1f
 	vbroadcastss	20(%r11), %xmm15
 	vmulps			%xmm2, %xmm15, %xmm2
 	vblendps		$0x02, %xmm2, %xmm1, %xmm1
+1:
 	vmulps			%xmm8, %xmm2, %xmm15
 	vsubps			%xmm15, %xmm0, %xmm0
 	vmulps			%xmm11, %xmm2, %xmm15
@@ -1217,9 +1243,12 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	jl		0f
 
 	vshufps			$0x00, %xmm1, %xmm1, %xmm2
+	cmpl	$5, %r13d
+	jl		1f
 	vbroadcastss	16(%r11), %xmm15
 	vmulps			%xmm2, %xmm15, %xmm2
 	vblendps		$0x01, %xmm2, %xmm1, %xmm1
+1:
 	vmulps			%xmm7, %xmm2, %xmm15
 	vsubps			%xmm15, %xmm0, %xmm0
 
@@ -1228,9 +1257,12 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	jl		0f
 
 	vshufps			$0xff, %xmm0, %xmm0, %xmm2
+	cmpl	$4, %r13d
+	jl		1f
 	vbroadcastss	12(%r11), %xmm15
 	vmulps			%xmm2, %xmm15, %xmm2
 	vblendps		$0x08, %xmm2, %xmm0, %xmm0
+1:
 	vmulps			%xmm6, %xmm2, %xmm15
 	vsubps			%xmm15, %xmm0, %xmm0
 
@@ -1239,9 +1271,12 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	jl		0f
 
 	vshufps			$0xaa, %xmm0, %xmm0, %xmm2
+	cmpl	$3, %r13d
+	jl		1f
 	vbroadcastss	8(%r11), %xmm15
 	vmulps			%xmm2, %xmm15, %xmm2
 	vblendps		$0x04, %xmm2, %xmm0, %xmm0
+1:
 	vmulps			%xmm5, %xmm2, %xmm15
 	vsubps			%xmm15, %xmm0, %xmm0
 
@@ -1250,9 +1285,12 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	jl		0f
 
 	vshufps			$0x55, %xmm0, %xmm0, %xmm2
+	cmpl	$2, %r13d
+	jl		1f
 	vbroadcastss	4(%r11), %xmm15
 	vmulps			%xmm2, %xmm15, %xmm2
 	vblendps		$0x02, %xmm2, %xmm0, %xmm0
+1:
 	vmulps			%xmm4, %xmm2, %xmm15
 	vsubps			%xmm15, %xmm0, %xmm0
 
@@ -1261,9 +1299,12 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	jl		0f
 
 	vshufps			$0x00, %xmm0, %xmm0, %xmm2
+	cmpl	$1, %r13d
+	jl		1f
 	vbroadcastss	0(%r11), %xmm15
 	vmulps			%xmm2, %xmm15, %xmm2
 	vblendps		$0x01, %xmm2, %xmm0, %xmm0
+1:
 
 0:
 
@@ -1482,7 +1523,7 @@ inner_blend_t_scale_ab_8_lib8:
 	vhaddps			%ymm6, %ymm4, %ymm4
 
 	vperm2f128		$0x20, %ymm4, %ymm0, %ymm1
-	vperm2f128		$0x13, %ymm4, %ymm0, %ymm0
+	vperm2f128		$0x13, %ymm0, %ymm4, %ymm0
 
 	vaddps			%ymm0, %ymm1, %ymm0
 
@@ -1563,7 +1604,7 @@ inner_blend_t_scale_m11_8_lib8:
 	vhaddps			%ymm6, %ymm4, %ymm4
 
 	vperm2f128		$0x20, %ymm4, %ymm0, %ymm1
-	vperm2f128		$0x13, %ymm4, %ymm0, %ymm0
+	vperm2f128		$0x13, %ymm0, %ymm4, %ymm0
 
 	vaddps			%ymm0, %ymm1, %ymm0
 
@@ -2719,6 +2760,7 @@ kernel_strsv_lt_inv_8_vs_lib8:
 	movq	ARG4, %r11 // inv_diag_A
 	movq	ARG8, %r12 // km
 	movq	ARG9, %r13 // kn
+	movq	ARG5, %r14 // x
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSV_LT_INV_8_VS_LIB8
@@ -2734,7 +2776,7 @@ kernel_strsv_lt_inv_8_vs_lib8:
 	// store
 
 	movq	ARG7, %r10 // z 
-	movq	ARG8, %r11 // km 
+	movq	ARG9, %r11 // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_VS_LIB8

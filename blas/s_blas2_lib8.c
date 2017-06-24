@@ -167,7 +167,7 @@ void strmv_lnn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct 
 
 	ii = 0;
 
-	if(ai%4!=0)
+	if(ai%bs!=0)
 		{
 		pA2 += sda*bs - ai%bs;
 		z2 += bs-ai%bs;
@@ -196,7 +196,7 @@ void strmv_lnn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct 
 		for(jj=0; jj<m2%bs; jj++)
 			z2[jj] = zt[jj];
 		}
-	for(; ii<m2-3; ii+=4)
+	for(; ii<m2-7; ii+=8)
 		{
 		pA2 -= bs*sda;
 		z2 -= 8;
@@ -213,7 +213,7 @@ void strmv_lnn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct 
 		z2[0] = pA3[0+bs*0]*x3[0];
 		kernel_sgemv_n_8_lib8(n2, &alpha, pA2, x, &beta, z2, z2);
 		}
-	if(ai%8!=0)
+	if(ai%bs!=0)
 		{
 		if(ai%bs==1)
 			{
@@ -469,14 +469,14 @@ void strmv_ltn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct 
 	
 	for(; jj<n-7; jj+=8)
 		{
-		zt[0] = pA[0+bs*0]*xt[0] + pA[1+bs*0]*xt[1] + pA[2+bs*0]*xt[2] + pA[3+bs*0]*xt[3] + pA[4+bs*0]*xt[4] + pA[5+bs*0]*xt[5] + pA[6+bs*0]*xt[6] + pA[7+bs*0]*xt[7];
-		zt[1] = pA[1+bs*1]*xt[1] + pA[2+bs*1]*xt[2] + pA[3+bs*1]*xt[3] + pA[4+bs*1]*xt[4] + pA[5+bs*1]*xt[5] + pA[6+bs*1]*xt[6] + pA[7+bs*1]*xt[7];
-		zt[2] = pA[2+bs*2]*xt[2] + pA[3+bs*2]*xt[3] + pA[4+bs*2]*xt[4] + pA[5+bs*2]*xt[5] + pA[6+bs*2]*xt[6] + pA[7+bs*2]*xt[7];
-		zt[3] = pA[3+bs*3]*xt[3] + pA[4+bs*3]*xt[4] + pA[5+bs*3]*xt[5] + pA[6+bs*3]*xt[6] + pA[7+bs*3]*xt[7];
-		zt[4] = pA[4+bs*4]*xt[4] + pA[5+bs*4]*xt[5] + pA[6+bs*4]*xt[6] + pA[7+bs*4]*xt[7];
-		zt[5] = pA[5+bs*5]*xt[5] + pA[6+bs*5]*xt[6] + pA[7+bs*5]*xt[7];
-		zt[6] = pA[6+bs*6]*xt[6] + pA[7+bs*6]*xt[7];
-		zt[7] = pA[7+bs*7]*xt[7];
+		zt[0] = pA[0+bs*0]*x[0] + pA[1+bs*0]*x[1] + pA[2+bs*0]*x[2] + pA[3+bs*0]*x[3] + pA[4+bs*0]*x[4] + pA[5+bs*0]*x[5] + pA[6+bs*0]*x[6] + pA[7+bs*0]*x[7];
+		zt[1] = pA[1+bs*1]*x[1] + pA[2+bs*1]*x[2] + pA[3+bs*1]*x[3] + pA[4+bs*1]*x[4] + pA[5+bs*1]*x[5] + pA[6+bs*1]*x[6] + pA[7+bs*1]*x[7];
+		zt[2] = pA[2+bs*2]*x[2] + pA[3+bs*2]*x[3] + pA[4+bs*2]*x[4] + pA[5+bs*2]*x[5] + pA[6+bs*2]*x[6] + pA[7+bs*2]*x[7];
+		zt[3] = pA[3+bs*3]*x[3] + pA[4+bs*3]*x[4] + pA[5+bs*3]*x[5] + pA[6+bs*3]*x[6] + pA[7+bs*3]*x[7];
+		zt[4] = pA[4+bs*4]*x[4] + pA[5+bs*4]*x[5] + pA[6+bs*4]*x[6] + pA[7+bs*4]*x[7];
+		zt[5] = pA[5+bs*5]*x[5] + pA[6+bs*5]*x[6] + pA[7+bs*5]*x[7];
+		zt[6] = pA[6+bs*6]*x[6] + pA[7+bs*6]*x[7];
+		zt[7] = pA[7+bs*7]*x[7];
 		pA += bs*sda;
 		x += 8;
 		kernel_sgemv_t_8_lib8(m-8-jj, &alpha, pA, sda, x, &beta, zt, z);
@@ -868,10 +868,10 @@ void strsv_ltn_mn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, stru
 			z[i] = x[i];
 			
 	i=0;
-	i1 = n%4;
+	i1 = n%8;
 	if(i1!=0)
 		{
-		kernel_strsv_lt_inv_8_vs_lib8(m-n+i+i1, &pA[n/bs*bs*sda+(n-i-i1)*bs], sda, &dA[n-i-i1], &z[n-i-i1], &z[n-i-i1], &z[n-i-i1], m-n+ii+i1, i1);
+		kernel_strsv_lt_inv_8_vs_lib8(m-n+i1, &pA[n/bs*bs*sda+(n-i1)*bs], sda, &dA[n-i1], &z[n-i1], &z[n-i1], &z[n-i1], m-n+i1, i1);
 		i += i1;
 		}
 	for(; i<n-7; i+=8)

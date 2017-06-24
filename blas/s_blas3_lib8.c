@@ -838,7 +838,7 @@ void strmm_rlnn_libstr(int m, int n, float alpha, struct s_strmat *sB, int bi, i
 		for(; jj<n-4; jj+=8)
 			{
 			kernel_strmm_nn_rl_8x4_gen_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, 0, m-ii, 0, n-jj);
-			kernel_strmm_nn_rl_8x4_gen_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], offsetB4, &pB[(jj+8)*sdb+(jj+4)*bs], sdb, offsetD, &pD[ii*sdd+(jj+4)*bs], sdd, 0, m-ii, 0, n-jj-4);
+			kernel_strmm_nn_rl_8x4_gen_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], offsetB4, &pB[jj*sdb+(jj+4)*bs], sdb, offsetD, &pD[ii*sdd+(jj+4)*bs], sdd, 0, m-ii, 0, n-jj-4);
 			}
 		if(n-jj>0)
 			{
