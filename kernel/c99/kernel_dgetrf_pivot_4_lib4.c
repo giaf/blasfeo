@@ -35,7 +35,7 @@
 
 
 // C numbering, starting from 0
-void idamax_lib4(int n, int offset, double *pA, int sda, int *p_idamax, double *p_amax)
+void didamax_lib4(int n, int offset, double *pA, int sda, int *p_idamax, double *p_amax)
 	{
 
 	int idamax, ii;
@@ -138,7 +138,7 @@ void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 		k, idamax;
 	
 	// first column
-	idamax_lib4(m-0, 0, &pA[0+bs*0], sda, &idamax, &tmp0);
+	didamax_lib4(m-0, 0, &pA[0+bs*0], sda, &idamax, &tmp0);
 	ipiv[0] = idamax;
 	if(tmp0!=0.0)
 		{
@@ -206,7 +206,7 @@ void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 		pB += 1;
 		}
 
-	idamax_lib4(m-1, 1, &pA[1+bs*1], sda, &idamax, &tmp1);
+	didamax_lib4(m-1, 1, &pA[1+bs*1], sda, &idamax, &tmp1);
 	ipiv[1] = idamax+1;
 	if(tmp1!=0)
 		{
@@ -280,7 +280,7 @@ void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 		pB += 1;
 		}
 
-	idamax_lib4(m-2, 2, &pA[2+bs*2], sda, &idamax, &tmp2);
+	didamax_lib4(m-2, 2, &pA[2+bs*2], sda, &idamax, &tmp2);
 	ipiv[2] = idamax+2;
 	if(tmp2!=0)
 		{
@@ -359,7 +359,7 @@ void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 		pB += 1;
 		}
 
-	idamax_lib4(m-3, 3, &pA[3+bs*3], sda, &idamax, &tmp3);
+	didamax_lib4(m-3, 3, &pA[3+bs*3], sda, &idamax, &tmp3);
 	ipiv[3] = idamax+3;
 	if(tmp3!=0)
 		{
@@ -422,7 +422,7 @@ void kernel_dgetrf_pivot_4_vs_lib4(int m, int n, double *pA, int sda, double *in
 	// first column
 
 	// find pivot & scale
-	idamax_lib4(m-0, 0, &pA[0+bs*0], sda, &idamax, &tmp0);
+	didamax_lib4(m-0, 0, &pA[0+bs*0], sda, &idamax, &tmp0);
 	ipiv[0] = idamax;
 	if(tmp0!=0.0)
 		{
@@ -524,7 +524,7 @@ void kernel_dgetrf_pivot_4_vs_lib4(int m, int n, double *pA, int sda, double *in
 		}
 
 	// find pivot & scale
-	idamax_lib4(m-1, 1, &pA[1+bs*1], sda, &idamax, &tmp1);
+	didamax_lib4(m-1, 1, &pA[1+bs*1], sda, &idamax, &tmp1);
 	ipiv[1] = idamax+1;
 	if(tmp1!=0)
 		{
@@ -631,7 +631,7 @@ void kernel_dgetrf_pivot_4_vs_lib4(int m, int n, double *pA, int sda, double *in
 	// find pivot & scale
 	if(m>2)
 		{
-		idamax_lib4(m-2, 2, &pA[2+bs*2], sda, &idamax, &tmp2);
+		didamax_lib4(m-2, 2, &pA[2+bs*2], sda, &idamax, &tmp2);
 		ipiv[2] = idamax+2;
 		if(tmp2!=0)
 			{
@@ -739,7 +739,7 @@ void kernel_dgetrf_pivot_4_vs_lib4(int m, int n, double *pA, int sda, double *in
 	if(m>3)
 		{
 		// find pivot & scale
-		idamax_lib4(m-3, 3, &pA[3+bs*3], sda, &idamax, &tmp3);
+		didamax_lib4(m-3, 3, &pA[3+bs*3], sda, &idamax, &tmp3);
 		ipiv[3] = idamax+3;
 		if(tmp3!=0)
 			{
