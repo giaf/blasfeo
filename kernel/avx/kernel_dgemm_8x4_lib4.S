@@ -8722,7 +8722,7 @@ inner_store_l_8x4_gen_lib4:
 
 
 
-//                               rdi    rsi            rdx        rcx      r8         r9            rsp+8      rsp+16   rsp+24     rsp+32
+//                               1      2              3          4        5          6             7          8        9          10
 // void kernel_dgemm_nt_8x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd);
 
 	.p2align 4,,15

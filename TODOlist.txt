@@ -5,3 +5,4 @@
 - remove n from trmv
 - store_gen in single precision
 - large strmm kernels
+- clean target.h and create it also from cmake (see "file")

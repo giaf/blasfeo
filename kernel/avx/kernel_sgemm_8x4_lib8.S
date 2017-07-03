@@ -1950,15 +1950,15 @@ inner_edge_potrf_8x4_lib8:
 	jmp		2b
 
 3:
-	vxorpd	%ymm13, %ymm13, %ymm13
+	vxorps	%ymm13, %ymm13, %ymm13
 	jmp		4b
 
 5:
-	vxorpd	%ymm13, %ymm13, %ymm13
+	vxorps	%ymm13, %ymm13, %ymm13
 	jmp		6b
 
 7:
-	vxorpd	%ymm13, %ymm13, %ymm13
+	vxorps	%ymm13, %ymm13, %ymm13
 	jmp		8b
 
 0:
@@ -2117,15 +2117,15 @@ inner_edge_potrf_8x4_vs_lib8:
 	jmp		2b
 
 3:
-	vxorpd	%ymm13, %ymm13, %ymm13
+	vxorps	%ymm13, %ymm13, %ymm13
 	jmp		4b
 
 5:
-	vxorpd	%ymm13, %ymm13, %ymm13
+	vxorps	%ymm13, %ymm13, %ymm13
 	jmp		6b
 
 7:
-	vxorpd	%ymm13, %ymm13, %ymm13
+	vxorps	%ymm13, %ymm13, %ymm13
 	jmp		8b
 
 0:
@@ -5199,10 +5199,10 @@ kernel_ssyrk_nt_l_8x4_lib8:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
 
 
 	// call inner dgemm kernel nt
@@ -5287,10 +5287,10 @@ kernel_ssyrk_nt_l_8x4_vs_lib8:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
 
 
 	// call inner dgemm kernel nt
@@ -5377,10 +5377,10 @@ kernel_strsm_nt_rl_inv_8x4_lib8:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
 
 	// call inner dgemm kernel nt 
 
@@ -5478,10 +5478,10 @@ kernel_strsm_nt_rl_inv_8x4_vs_lib8:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
 
 
 	// call inner dgemm kernel nt 
@@ -5583,7 +5583,7 @@ kernel_sgemm_strsm_nt_rl_inv_8x4_lib8:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
+	vxorps	%ymm0, %ymm0, %ymm0
 	vmovaps	%ymm0, %ymm1
 	vmovaps	%ymm0, %ymm2
 	vmovaps	%ymm0, %ymm3
@@ -5702,7 +5702,7 @@ kernel_sgemm_strsm_nt_rl_inv_8x4_vs_lib8:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
+	vxorps	%ymm0, %ymm0, %ymm0
 	vmovaps	%ymm0, %ymm1
 	vmovaps	%ymm0, %ymm2
 	vmovaps	%ymm0, %ymm3
@@ -5824,10 +5824,10 @@ kernel_spotrf_nt_l_8x4_lib8:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
 
 
 	// call inner dgemm kernel nt
@@ -5925,10 +5925,10 @@ kernel_spotrf_nt_l_8x4_vs_lib8:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
 
 
 	// call inner dgemm kernel nt
@@ -6148,7 +6148,7 @@ kernel_ssyrk_spotrf_nt_l_8x4_vs_lib8:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
+	vxorps	%ymm0, %ymm0, %ymm0
 	vmovaps	%ymm0, %ymm1
 	vmovaps	%ymm0, %ymm2
 	vmovaps	%ymm0, %ymm3
@@ -6269,10 +6269,10 @@ kernel_strmm_nn_rl_8x4_lib8:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
 
 
 	// initial triangle
@@ -6380,10 +6380,10 @@ kernel_strmm_nn_rl_8x4_vs_lib8:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
 
 
 	// initial triangle
@@ -6493,10 +6493,10 @@ kernel_strmm_nn_rl_8x4_gen_lib8:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
 
 
 	// initial triangle

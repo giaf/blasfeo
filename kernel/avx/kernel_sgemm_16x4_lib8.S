@@ -1620,6 +1620,354 @@ inner_edge_gemm_add_nn_16x4_lib8:
 
 // common inner routine with file scope
 //
+// edge for B lower triangular
+//
+// input arguments:
+// r10   <- k
+// r11   <- A
+// r12   <- bs*sda*sizeof(double)
+// r13   <- B
+// r14   <- bs*sdb*sizeof(double)
+// r15   <- offB
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm8  <- dirty
+// ymm12 <- dirty
+// ymm15 <- dirty
+
+//
+// output arguments:
+// r10   <- k-(4-offB)
+// r11   <- A+(4-offB)*bs*sizeof(double)
+// r12   <- bs*sda*sizeof(double)
+// r13   <- B-offB+bs*sdb*sizeof(double)
+// r14   <- bs*sdb*sizeof(double)
+// r15   <- offB
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm8  <- dirty
+// ymm12 <- dirty
+// ymm15 <- dirty
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRMM_NN_RL_16X4_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_trmm_nn_rl_16x4_lib8, @function
+inner_edge_trmm_nn_rl_16x4_lib8:
+#elif defined(OS_MAC)
+_inner_edge_trmm_nn_rl_16x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_trmm_nn_rl_16x4_lib8; .scl 2; .type 32; .endef
+inner_edge_trmm_nn_rl_16x4_lib8:
+#endif
+#endif
+	
+	cmpl		$0, %r10d
+	jle			0f // end
+
+	movl		%r15d, %eax
+	sall		$2, %eax // offsetB*sizeof(float)
+	movq		%r13, %rbx // B
+	addq		%rax, %rbx // B+offsetB*sizeof(float)
+
+
+	cmpl	$4, %r15d
+	jg		1f
+
+	// offB==0, 1, 2, 3, 4
+
+	vmovaps			0(%r11), %ymm8
+	vmovaps			0(%r11, %r12, 1), %ymm9
+	vbroadcastss	0(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm4, %ymm4
+
+	subl		$1, %r10d // k-1
+	addq		$32, %r11 // A+1*bs*sizeof(float)
+	addl		$1, %r15d // offsetB+1
+
+	cmpl		$0, %r10d
+	jle			0f // end
+
+	vmovaps			0(%r11), %ymm8
+	vmovaps			0(%r11, %r12, 1), %ymm9
+	vbroadcastss	4(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm4, %ymm4
+	vbroadcastss	36(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm5, %ymm5
+
+//TODO
+	subl		$1, %r10d // k-1
+	addq		$32, %r11 // A+1*bs*sizeof(float)
+	addl		$1, %r15d // offsetB+1
+
+	cmpl		$0, %r10d
+	jle			0f // end
+
+	vmovaps			0(%r11), %ymm8
+	vmovaps			0(%r11, %r12, 1), %ymm9
+	vbroadcastss	8(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm4, %ymm4
+	vbroadcastss	40(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm5, %ymm5
+	vbroadcastss	72(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm2, %ymm2
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm5, %ymm6
+
+	subl		$1, %r10d // k-1
+	addq		$32, %r11 // A+1*bs*sizeof(float)
+	addl		$1, %r15d // offsetB+1
+
+	jmp			0f // end
+
+
+1:
+	cmpl	$5, %r15d
+	jg		1f
+
+	// offB==5
+
+	vmovaps			0(%r11), %ymm8
+	vmovaps			0(%r11, %r12, 1), %ymm9
+	vbroadcastss	0(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm4, %ymm4
+
+	subl		$1, %r10d // k-1
+	addq		$32, %r11 // A+1*bs*sizeof(float)
+	addl		$1, %r15d // offsetB+1
+
+	cmpl		$0, %r10d
+	jle			0f // end
+
+	vmovaps			0(%r11), %ymm8
+	vmovaps			0(%r11, %r12, 1), %ymm9
+	vbroadcastss	4(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm4, %ymm4
+	vbroadcastss	36(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm5, %ymm5
+
+	subl		$1, %r10d // k-1
+	addq		$32, %r11 // A+1*bs*sizeof(float)
+	addl		$1, %r15d // offsetB+1
+
+	cmpl		$0, %r10d
+	jle			0f // end
+
+	vmovaps			0(%r11), %ymm8
+	vmovaps			0(%r11, %r12, 1), %ymm9
+	vbroadcastss	8(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm4, %ymm4
+	vbroadcastss	40(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm5, %ymm5
+	vbroadcastss	72(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm2, %ymm2
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm5, %ymm6
+
+	subl		$1, %r10d // k-1
+	addq		$32, %r11 // A+1*bs*sizeof(float)
+	addq		%r14, %r13 // B+8*sdb*sizeof(float)
+	movl		$0, %r15d // offsetB=0
+
+	jmp			0f // end
+
+
+1:
+	cmpl	$6, %r15d
+	jg		1f
+
+	// offB==6
+
+	vmovaps			0(%r11), %ymm8
+	vmovaps			0(%r11, %r12, 1), %ymm9
+	vbroadcastss	0(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm4, %ymm4
+
+	subl		$1, %r10d // k-1
+	addq		$32, %r11 // A+1*bs*sizeof(float)
+	addl		$1, %r15d // offsetB+1
+
+	cmpl		$0, %r10d
+	jle			0f // end
+
+	vmovaps			0(%r11), %ymm8
+	vmovaps			0(%r11, %r12, 1), %ymm9
+	vbroadcastss	4(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm4, %ymm4
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm5, %ymm5
+	vbroadcastss	36(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm5, %ymm6
+
+	subl		$1, %r10d // k-1
+	addq		$32, %r11 // A+1*bs*sizeof(float)
+	addq		%r14, %r13 // B+8*sdb*sizeof(float)
+	movq		%r13, %rbx // B
+	movl		$0, %r15d // offsetB=0
+
+	cmpl		$0, %r10d
+	jle			0f // end
+
+	vmovaps			0(%r11), %ymm8
+	vmovaps			0(%r11, %r12, 1), %ymm9
+	vbroadcastss	0(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm4, %ymm4
+	vbroadcastss	32(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm5, %ymm5
+	vbroadcastss	64(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm2, %ymm2
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm5, %ymm6
+
+	subl		$1, %r10d // k-1
+	addq		$32, %r11 // A+1*bs*sizeof(float)
+	addl		$1, %r15d // offsetB+1
+
+	jmp			0f // end
+
+
+1:
+//	cmpl	$7, %r15d
+//	jg		0f
+
+	// offB==6
+
+	vmovaps			0(%r11), %ymm8
+	vmovaps			0(%r11, %r12, 1), %ymm9
+	vbroadcastss	0(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm4, %ymm4
+
+	subl		$1, %r10d // k-1
+	addq		$32, %r11 // A+1*bs*sizeof(float)
+	addq		%r14, %r13 // B+8*sdb*sizeof(float)
+	movq		%r13, %rbx // B
+	movl		$0, %r15d // offsetB=0
+
+	cmpl		$0, %r10d
+	jle			0f // end
+
+	vmovaps			0(%r11), %ymm8
+	vmovaps			0(%r11, %r12, 1), %ymm9
+	vbroadcastss	0(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm4, %ymm4
+	vbroadcastss	32(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm5, %ymm5
+
+	subl		$1, %r10d // k-1
+	addq		$32, %r11 // A+1*bs*sizeof(float)
+	addl		$1, %r15d // offsetB+1
+
+	cmpl		$0, %r10d
+	jle			0f // end
+
+	vmovaps			0(%r11), %ymm8
+	vmovaps			0(%r11, %r12, 1), %ymm9
+	vbroadcastss	4(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm0, %ymm0
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm4, %ymm4
+	vbroadcastss	36(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm1, %ymm1
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm5, %ymm5
+	vbroadcastss	68(%rbx), %ymm12
+	vmulps			%ymm8, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm2, %ymm2
+	vmulps			%ymm9, %ymm12, %ymm15
+	vaddps			%ymm15, %ymm5, %ymm6
+
+	subl		$1, %r10d // k-1
+	addq		$32, %r11 // A+1*bs*sizeof(float)
+	addl		$1, %r15d // offsetB+1
+
+//	jmp			0f // end
+
+
+	// end
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_trmm_nn_rl_16x4_lib8, .-inner_edge_trmm_nn_rl_16x4_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // strsm
 // right
 // lower
@@ -2398,6 +2746,76 @@ inner_scale_ab_16x4_gen_lib8:
 
 #if defined(OS_LINUX)
 	.size	inner_scale_ab_16x4_gen_lib8, .-inner_scale_ab_16x4_gen_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// scale for generic alpha and beta=0
+//
+// input arguments:
+// r10   <- alpha
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10   <- alpha
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_A0_16X4_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_a0_16x4_lib8, @function
+inner_scale_a0_16x4_lib8:
+#elif defined(OS_MAC)
+_inner_scale_a0_16x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_a0_16x4_lib8; .scl 2; .type 32; .endef
+inner_scale_a0_16x4_lib8:
+#endif
+#endif
+	
+	// alpha
+	vbroadcastss	0(%r10), %ymm11
+
+	vmulps		%ymm0, %ymm11, %ymm0
+	vmulps		%ymm1, %ymm11, %ymm1
+	vmulps		%ymm2, %ymm11, %ymm2
+	vmulps		%ymm3, %ymm11, %ymm3
+
+	vmulps		%ymm4, %ymm11, %ymm4
+	vmulps		%ymm5, %ymm11, %ymm5
+	vmulps		%ymm6, %ymm11, %ymm6
+	vmulps		%ymm7, %ymm11, %ymm7
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_scale_a0_16x4_lib8, .-inner_scale_a0_16x4_lib8
 #endif
 #endif
 
@@ -4028,8 +4446,8 @@ kernel_sgemm_nn_16x4_lib8:
 
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
-	movq	ARG4, %r12 // sdb
-	sall	$5, %r12d // 4*sdb*sizeof(double)
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13  // B
 	movq	ARG7, %r14 // sdb
 	sall	$5, %r14d // 4*sdb*sizeof(double)
@@ -6192,6 +6610,125 @@ kernel_ssyrk_spotrf_nt_l_16x4_vs_lib8:
 
 #if defined(OS_LINUX)
 	.size	kernel_ssyrk_spotrf_nt_l_16x4_vs_lib8, .-kernel_ssyrk_spotrf_nt_l_16x4_vs_lib8
+#endif
+
+
+
+
+
+//                                   1      2             3         4        5            6         7        8         9
+// void kernel_strmm_nn_rl_16x4_lib8(int k, float *alpha, float *A, int sda, int offsetB, float *B, int sdb, float *D, int sdd);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_strmm_nn_rl_16x4_lib8
+	.type kernel_strmm_nn_rl_16x4_lib8, @function
+kernel_strmm_nn_rl_16x4_lib8:
+#elif defined(OS_MAC)
+	.globl _kernel_strmm_nn_rl_16x4_lib8
+_kernel_strmm_nn_rl_16x4_lib8:
+#elif defined(OS_WINDOWS)
+	.globl kernel_strmm_nn_rl_16x4_lib8
+	.def kernel_strmm_nn_rl_16x4_lib8; .scl 2; .type 32; .endef
+kernel_strmm_nn_rl_16x4_lib8:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorps	%ymm0, %ymm0, %ymm0
+	vmovaps	%ymm0, %ymm1
+	vmovaps	%ymm0, %ymm2
+	vmovaps	%ymm0, %ymm3
+	vmovaps	%ymm0, %ymm4
+	vmovaps	%ymm0, %ymm5
+	vmovaps	%ymm0, %ymm6
+	vmovaps	%ymm0, %ymm7
+
+
+	// initial triangle
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sdb
+	sall	$5, %r12d // 4*sdb*sizeof(double)
+	movq	ARG6, %r13 // B
+	movq	ARG7, %r14 // sdb
+	sall	$5, %r13d // 4*sdb*sizeof(double)
+	movq	ARG5, %r15 // offsetB
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRMM_NN_RL_16X4_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_trmm_nn_rl_16x4_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_trmm_nn_rl_16x4_lib8
+#endif
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_GEMM_ADD_NN_16X4_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_gemm_add_nn_16x4_lib8
+#elif defined(OS_MAC)
+	callq _inner_edge_gemm_add_nn_16x4_lib8
+#endif
+#endif
+
+	// call inner dgemm kernel nt after initial triangle
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_16X4_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_gemm_add_nn_16x4_lib8
+#elif defined(OS_MAC)
+	callq _inner_kernel_gemm_add_nn_16x4_lib8
+#endif
+#endif
+
+
+	// call inner scale
+
+	movq	ARG2, %r10 // alpha
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_A0_16X4_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_scale_a0_16x4_lib8
+#elif defined(OS_MAC)
+	callq _inner_scale_a0_16x4_lib8
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG8, %r10 // D
+	movq	ARG9, %r11 // sdd
+	sall	$5, %r11d // 4*sdd*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_16X4_LIB8
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_16x4_lib8
+#elif defined(OS_MAC)
+	callq _inner_store_16x4_lib8
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_strmm_nn_rl_16x4_lib8, .-kernel_strmm_nn_rl_16x4_lib8
 #endif
 
 

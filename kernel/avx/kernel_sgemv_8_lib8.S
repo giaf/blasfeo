@@ -2417,7 +2417,7 @@ kernel_strsv_ln_inv_8_lib8:
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_n_scale_m11_8_lib8
 #elif defined(OS_MAC)
-	callq _inner_blenr_n_scale_m11_8_lib8
+	callq _inner_blend_n_scale_m11_8_lib8
 #endif
 #endif
 
@@ -2525,7 +2525,7 @@ kernel_strsv_ln_inv_8_vs_lib8:
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_n_scale_m11_8_lib8
 #elif defined(OS_MAC)
-	callq _inner_blenr_n_scale_m11_8_lib8
+	callq _inner_blend_n_scale_m11_8_lib8
 #endif
 #endif
 
