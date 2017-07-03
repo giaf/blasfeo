@@ -3092,7 +3092,7 @@ kernel_dtrsv_ln_inv_4_lib4:
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_n_scale_m11_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_blenr_n_scale_m11_4_lib4
+	callq _inner_blend_n_scale_m11_4_lib4
 #endif
 #endif
 
