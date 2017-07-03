@@ -1759,7 +1759,7 @@ inner_edge_trsm_rlt_inv_8x4_lib8:
 	.type inner_edge_trsm_rlt_inv_8x4_vs_lib8, @function
 inner_edge_trsm_rlt_inv_8x4_vs_lib8:
 #elif defined(OS_MAC)
-_inner_edge_trsm_rlt_inv_8x4_gen_lib8:
+_inner_edge_trsm_rlt_inv_8x4_vs_lib8:
 #elif defined(OS_WINDOWS)
 	.def inner_edge_trsm_rlt_inv_8x4_vs_lib8; .scl 2; .type 32; .endef
 inner_edge_trsm_rlt_inv_8x4_vs_lib8:
@@ -2021,7 +2021,7 @@ inner_edge_potrf_8x4_lib8:
 	.type inner_edge_potrf_8x4_vs_lib8, @function
 inner_edge_potrf_8x4_vs_lib8:
 #elif defined(OS_MAC)
-_inner_edge_potrf_8x4_gen_lib8:
+_inner_edge_potrf_8x4_vs_lib8:
 #elif defined(OS_WINDOWS)
 	.def inner_edge_potrf_8x4_vs_lib8; .scl 2; .type 32; .endef
 inner_edge_potrf_8x4_vs_lib8:
@@ -2276,7 +2276,7 @@ inner_scale_ab_8x4_lib8:
 	.type inner_tran_scale_ab_4x8_lib8, @function
 inner_tran_scale_ab_4x8_lib8:
 #elif defined(OS_MAC)
-_inner_tran_scale_ab_8x4_lib8:
+_inner_tran_scale_ab_4x8_lib8:
 #elif defined(OS_WINDOWS)
 	.def inner_tran_scale_ab_4x8_lib8; .scl 2; .type 32; .endef
 inner_tran_scale_ab_4x8_lib8:

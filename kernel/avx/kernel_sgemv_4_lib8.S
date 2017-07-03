@@ -2301,7 +2301,7 @@ kernel_sgemv_nt_4_lib8:
 kernel_sgemv_nt_4_vs_lib8:
 #elif defined(OS_MAC)
 	.globl _kernel_sgemv_nt_4_vs_lib8
-_kernel_sgemv_nt_4_vs_lib4:
+_kernel_sgemv_nt_4_vs_lib8:
 #elif defined(OS_WINDOWS)
 	.globl kernel_sgemv_nt_4_vs_lib8
 	.def kernel_sgemv_nt_4_vs_lib8; .scl 2; .type 32; .endef
@@ -2411,7 +2411,7 @@ kernel_sgemv_nt_4_vs_lib8:
 
 
 //                             1      2              3          4        5          6
-// void kernel_dsymv_l_4l_lib4(int k, double *alpha, double *A, int sda, double *x, double *z);
+// void kernel_dsymv_l_4l_lib8(int k, double *alpha, double *A, int sda, double *x, double *z);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2527,7 +2527,7 @@ kernel_ssymv_l_4l_lib8:
 
 
 //                             1      2              3          4        5          6
-// void kernel_dsymv_l_4r_lib4(int k, double *alpha, double *A, int sda, double *x, double *z);
+// void kernel_dsymv_l_4r_lib8(int k, double *alpha, double *A, int sda, double *x, double *z);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2643,7 +2643,7 @@ kernel_ssymv_l_4r_lib8:
 
 
 //                                1      2              3          4          5        6          7          8
-// void kernel_dsymv_l_4l_gen_lib4(int k, double *alpha, int offA, double *A, int sda, double *x, double *z, int km);
+// void kernel_dsymv_l_4l_gen_lib8(int k, double *alpha, int offA, double *A, int sda, double *x, double *z, int km);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2771,7 +2771,7 @@ kernel_ssymv_l_4l_gen_lib8:
 
 
 //                                1      2              3          4          5        6          7          8
-// void kernel_dsymv_l_4r_gen_lib4(int k, double *alpha, int offA, double *A, int sda, double *x, double *z, int km);
+// void kernel_dsymv_l_4r_gen_lib8(int k, double *alpha, int offA, double *A, int sda, double *x, double *z, int km);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)

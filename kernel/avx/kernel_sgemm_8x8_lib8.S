@@ -1436,7 +1436,7 @@ inner_kernel_gemm_add_nn_8x8_lib8:
 	.type inner_edge_gemm_add_nn_8x8_lib8, @function
 inner_edge_gemm_add_nn_8x8_lib8:
 #elif defined(OS_MAC)
-_inner_edge_gemm_add_nn_8x4_lib8:
+_inner_edge_gemm_add_nn_8x8_lib8:
 #elif defined(OS_WINDOWS)
 	.def inner_edge_gemm_add_nn_8x8_lib8; .scl 2; .type 32; .endef
 inner_edge_gemm_add_nn_8x8_lib8:
