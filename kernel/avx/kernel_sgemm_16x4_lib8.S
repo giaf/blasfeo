@@ -1446,25 +1446,25 @@ inner_kernel_gemm_add_nn_16x4_lib8:
 	// unroll 0
 	vmovaps			0(%r11), %ymm12 // A0
 	vmovaps			0(%r11, %r12, 1), %ymm13 // A1
-	vbroadcastss	0(%r13), %ymm15 // B[0]
-	vmulps			%ymm12, %ymm15, %ymm15
+	vbroadcastss	0(%r13), %ymm14 // B[0]
+	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm15, %ymm0, %ymm0
-	vmulps			%ymm13, %ymm15, %ymm15
+	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm15, %ymm4, %ymm4
-	vbroadcastss	32(%r13), %ymm15 // B[1]
-	vmulps			%ymm12, %ymm15, %ymm15
+	vbroadcastss	32(%r13), %ymm14 // B[1]
+	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm15, %ymm1, %ymm1
-	vmulps			%ymm13, %ymm15, %ymm15
+	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm15, %ymm5, %ymm5
-	vbroadcastss	64(%r13), %ymm15 // B[2]
-	vmulps			%ymm12, %ymm15, %ymm15
+	vbroadcastss	64(%r13), %ymm14 // B[2]
+	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm15, %ymm2, %ymm2
-	vmulps			%ymm13, %ymm15, %ymm15
+	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm15, %ymm6, %ymm6
-	vbroadcastss	96(%r13), %ymm15 // B[3]
-	vmulps			%ymm12, %ymm15, %ymm15
+	vbroadcastss	96(%r13), %ymm14 // B[3]
+	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm15, %ymm3, %ymm3
-	vmulps			%ymm13, %ymm15, %ymm15
+	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm15, %ymm7, %ymm7
 
 	subl	$1, %r10d
@@ -1560,13 +1560,10 @@ inner_edge_gemm_add_nn_16x4_lib8:
 	sall			$2, %eax // offsetB*sizeof(float)
 	addq			%rax, %r13 // B+offsetB*sizeof(float)
 
-	movq			%r11, %rax // A1 <- A0
-	addq			%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
-
 1:
 	// unroll 0
 	vmovaps			0(%r11), %ymm12 // A0
-	vmovaps			0(%rax), %ymm13 // A1
+	vmovaps			0(%r11, %r12, 1), %ymm13 // A1
 	vbroadcastss	0(%r13), %ymm15 // B[0]
 	vmulps			%ymm12, %ymm15, %ymm14
 	vaddps			%ymm14, %ymm0, %ymm0
@@ -1591,7 +1588,6 @@ inner_edge_gemm_add_nn_16x4_lib8:
 	subl			$1, %r10d // k-1
 	subl			$1, %ebx // end-1
 	addq			$32, %r11 // A+1*bs*sizeof(float)
-	addq			$32, %rax // A+1*bs*sizeof(float)
 	addq			$4, %r13 // B+1*sizeof(float)
 
 	cmpl			$0, %ebx
