@@ -69,8 +69,67 @@ void m_cvt_s2d_strvec(int m, struct s_strvec *vs, int vsi, struct d_strvec *vd, 
 
 void m_cvt_d2s_strmat(int m, int n, struct d_strmat *Md, int mid, int nid, struct s_strmat *Ms, int mis, int nis)
 	{
-	printf("\nm_cvt_d2s_strmat: feature not implmeneted yet\n\n");
-	exit(1);
+//	printf("\nm_cvt_d2s_strmat: feature not implmeneted yet\n\n");
+//	exit(1);
+	if(mid!=0 | mis!=0)
+		{
+		printf("\nm_cvt_d2s_strmat: feature not implmeneted yet: mid=%d, mis=%d\n\n", mid, mis);
+		exit(1);
+		}
+	const int psd = 4;
+	const int pss = 8;
+	const int sdd = Md->cn;
+	double *D0 = Md->pA + nid*psd;
+	double *D1;
+	const int sds = Ms->cn;
+	float *S = Ms->pA + nis*pss;
+	int ii, jj, ll;
+	for(ii=0; ii<m-7; ii+=8)
+		{
+		D1 = D0 + psd*sdd;
+		for(jj=0; jj<n; jj++)
+			{
+			S[0+jj*pss] = (float) D0[0+jj*psd];
+			S[1+jj*pss] = (float) D0[1+jj*psd];
+			S[2+jj*pss] = (float) D0[2+jj*psd];
+			S[3+jj*pss] = (float) D0[3+jj*psd];
+			S[4+jj*pss] = (float) D1[0+jj*psd];
+			S[5+jj*pss] = (float) D1[1+jj*psd];
+			S[6+jj*pss] = (float) D1[2+jj*psd];
+			S[7+jj*pss] = (float) D1[3+jj*psd];
+			}
+		D0 += 8*sdd;
+		S  += 8*sds;
+		}
+	if(m-ii>0)
+		{
+		if(m-ii<4)
+			{
+			for(jj=0; jj<n; jj++)
+				{
+				for(ll=0; ll<m-ii; ll++)
+					{
+					S[ll+jj*pss] = (float) D0[ll+jj*psd];
+					}
+				}
+			return;
+			}
+		else
+			{
+			D1 = D0 + psd*sdd;
+			for(jj=0; jj<n; jj++)
+				{
+				S[0+jj*pss] = (float) D0[0+jj*psd];
+				S[1+jj*pss] = (float) D0[1+jj*psd];
+				S[2+jj*pss] = (float) D0[2+jj*psd];
+				S[3+jj*pss] = (float) D0[3+jj*psd];
+				for(ll=0; ll<m-ii-4; ll++)
+					{
+					S[4+ll+jj*pss] = (float) D1[ll+jj*psd];
+					}
+				}
+			}
+		}
 	return;
 	}
 
