@@ -195,6 +195,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/auxiliary/avx/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/avx2/kernel_dgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib8.c
+			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib48.c
 			)
 
 		file(GLOB KERNEL_SRC
@@ -247,6 +248,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/auxiliary/avx/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/avx/kernel_dgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib8.c
+			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib48.c
 			)
 
 		file(GLOB KERNEL_SRC
@@ -298,6 +300,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgetr_lib4.c 
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_sgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
 			)
 
 		file(GLOB KERNEL_SRC
@@ -339,6 +342,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgetr_lib4.c 
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_sgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
 			)
 
 		file(GLOB KERNEL_SRC
@@ -380,6 +384,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgetr_lib4.c 
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_sgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
 			)
 
 		file(GLOB KERNEL_SRC
@@ -427,6 +432,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgetr_lib4.c 
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_sgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
 			)
 
 		file(GLOB KERNEL_SRC
@@ -471,6 +477,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgetr_lib4.c 
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_sgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
 			)
 
 		file(GLOB KERNEL_SRC
@@ -508,6 +515,7 @@ else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 	file(GLOB AUX_SRC
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib.c
 		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib.c
+		${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib.c
 		)
 
 	file(GLOB BLAS_SRC
