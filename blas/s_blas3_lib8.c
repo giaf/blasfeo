@@ -729,43 +729,48 @@ void strmm_rlnn_libstr(int m, int n, float alpha, struct s_strmat *sB, int bi, i
 			}
 		if(offsetD==0)
 			{
-			for(; ii<m-7; ii+=8)
+			for(; ii<m-15; ii+=16)
 				{
 				jj = 0;
 				for(; jj<n-7; jj+=8)
 					{
-					kernel_strmm_nn_rl_8x4_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], offsetB, &pB[jj*sdb+jj*bs], sdb, &pD[ii*sdd+jj*bs]);
-					kernel_strmm_nn_rl_8x4_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], offsetB4, &pB[jj*sdb+(jj+4)*bs], sdb, &pD[ii*sdd+(jj+4)*bs]);
+					kernel_strmm_nn_rl_16x4_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], sda, offsetB, &pB[jj*sdb+jj*bs], sdb, &pD[ii*sdd+jj*bs], sdd);
+					kernel_strmm_nn_rl_16x4_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], sda, offsetB4, &pB[jj*sdb+(jj+4)*bs], sdb, &pD[ii*sdd+(jj+4)*bs], sdd);
 					}
 				if(n-jj>0)
 					{
-					kernel_strmm_nn_rl_8x4_vs_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], offsetB, &pB[jj*sdb+jj*bs], sdb, &pD[ii*sdd+jj*bs], 8, n-jj);
+					kernel_strmm_nn_rl_16x4_vs_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], sda, offsetB, &pB[jj*sdb+jj*bs], sdb, &pD[ii*sdd+jj*bs], sdd, 16, n-jj);
 					if(n-jj>4)
 						{
-						kernel_strmm_nn_rl_8x4_vs_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], offsetB4, &pB[jj*sdb+(jj+4)*bs], sdb, &pD[ii*sdd+(jj+4)*bs], 8, n-jj-4);
+						kernel_strmm_nn_rl_16x4_vs_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], sda, offsetB4, &pB[jj*sdb+(jj+4)*bs], sdb, &pD[ii*sdd+(jj+4)*bs], sdd, 16, n-jj-4);
 						}
 					}
 				}
-			if(ii<m)
+			if(m-ii>0)
 				{
-				goto left_8;
+				if(m-ii<=8)
+					goto left_8;
+				else
+					goto left_16;
 				}
 			}
 		else
 			{
-			for(; ii<m; ii+=8)
+			for(; ii<m-8; ii+=16)
 				{
 				jj = 0;
 				for(; jj<n-4; jj+=8)
 					{
-					kernel_strmm_nn_rl_8x4_gen_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, 0, m-ii, 0, n-jj);
-					kernel_strmm_nn_rl_8x4_gen_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], offsetB4, &pB[jj*sdb+(jj+4)*bs], sdb, offsetD, &pD[ii*sdd+(jj+4)*bs], sdd, 0, m-ii, 0, n-jj-4);
+					kernel_strmm_nn_rl_16x4_gen_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], sda, offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, 0, m-ii, 0, n-jj);
+					kernel_strmm_nn_rl_16x4_gen_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], sda, offsetB4, &pB[jj*sdb+(jj+4)*bs], sdb, offsetD, &pD[ii*sdd+(jj+4)*bs], sdd, 0, m-ii, 0, n-jj-4);
 					}
 				if(n-jj>0)
 					{
-					kernel_strmm_nn_rl_8x4_gen_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, 0, m-ii, 0, n-jj);
+					kernel_strmm_nn_rl_16x4_gen_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], sda, offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, 0, m-ii, 0, n-jj);
 					}
 				}
+			if(m-ii>0)
+				goto left_8;
 			}
 		}
 	else
@@ -786,43 +791,48 @@ void strmm_rlnn_libstr(int m, int n, float alpha, struct s_strmat *sB, int bi, i
 			}
 		if(offsetD==0)
 			{
-			for(; ii<m-7; ii+=8)
+			for(; ii<m-15; ii+=16)
 				{
 				jj = 0;
 				for(; jj<n-7; jj+=8)
 					{
-					kernel_strmm_nn_rl_8x4_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], offsetB, &pB[jj*sdb+jj*bs], sdb, &pD[ii*sdd+jj*bs]);
-					kernel_strmm_nn_rl_8x4_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], offsetB4, &pB[(jj+8)*sdb+(jj+4)*bs], sdb, &pD[ii*sdd+(jj+4)*bs]);
+					kernel_strmm_nn_rl_16x4_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], sda, offsetB, &pB[jj*sdb+jj*bs], sdb, &pD[ii*sdd+jj*bs], sdd);
+					kernel_strmm_nn_rl_16x4_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], sda, offsetB4, &pB[(jj+8)*sdb+(jj+4)*bs], sdb, &pD[ii*sdd+(jj+4)*bs], sdd);
 					}
 				if(n-jj>0)
 					{
-					kernel_strmm_nn_rl_8x4_vs_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], offsetB, &pB[jj*sdb+jj*bs], sdb, &pD[ii*sdd+jj*bs], 8, n-jj);
+					kernel_strmm_nn_rl_16x4_vs_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], sda, offsetB, &pB[jj*sdb+jj*bs], sdb, &pD[ii*sdd+jj*bs], sdd, 8, n-jj);
 					if(n-jj>4)
 						{
-						kernel_strmm_nn_rl_8x4_vs_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], offsetB4, &pB[(jj+8)*sdb+(jj+4)*bs], sdb, &pD[ii*sdd+(jj+4)*bs], 8, n-jj-4);
+						kernel_strmm_nn_rl_16x4_vs_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], sda, offsetB4, &pB[(jj+8)*sdb+(jj+4)*bs], sdb, &pD[ii*sdd+(jj+4)*bs], sdd, 8, n-jj-4);
 						}
 					}
 				}
-			if(ii<m)
+			if(m-ii>0)
 				{
-				goto left_8;
+				if(m-ii<=8)
+					goto left_8;
+				else
+					goto left_16;
 				}
 			}
 		else
 			{
-			for(; ii<m; ii+=8)
+			for(; ii<m-8; ii+=16)
 				{
 				jj = 0;
 				for(; jj<n-4; jj+=8)
 					{
-					kernel_strmm_nn_rl_8x4_gen_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, 0, m-ii, 0, n-jj);
-					kernel_strmm_nn_rl_8x4_gen_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], offsetB4, &pB[(jj+8)*sdb+(jj+4)*bs], sdb, offsetD, &pD[ii*sdd+(jj+4)*bs], sdd, 0, m-ii, 0, n-jj-4);
+					kernel_strmm_nn_rl_16x4_gen_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], sda, offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, 0, m-ii, 0, n-jj);
+					kernel_strmm_nn_rl_16x4_gen_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], sda, offsetB4, &pB[(jj+8)*sdb+(jj+4)*bs], sdb, offsetD, &pD[ii*sdd+(jj+4)*bs], sdd, 0, m-ii, 0, n-jj-4);
 					}
 				if(n-jj>0)
 					{
-					kernel_strmm_nn_rl_8x4_gen_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, 0, m-ii, 0, n-jj);
+					kernel_strmm_nn_rl_16x4_gen_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], sda, offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, 0, m-ii, 0, n-jj);
 					}
 				}
+			if(m-ii>0)
+				goto left_8;
 			}
 		}
 
@@ -830,6 +840,35 @@ void strmm_rlnn_libstr(int m, int n, float alpha, struct s_strmat *sB, int bi, i
 	return;
 
 	// clean up loops definitions
+
+	left_16:
+	if(offsetB<4)
+		{
+		jj = 0;
+		for(; jj<n-4; jj+=8)
+			{
+			kernel_strmm_nn_rl_16x4_gen_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], sda, offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, 0, m-ii, 0, n-jj);
+			kernel_strmm_nn_rl_16x4_gen_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], sda, offsetB4, &pB[jj*sdb+(jj+4)*bs], sdb, offsetD, &pD[ii*sdd+(jj+4)*bs], sdd, 0, m-ii, 0, n-jj-4);
+			}
+		if(n-jj>0)
+			{
+			kernel_strmm_nn_rl_16x4_gen_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], sda, offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, 0, m-ii, 0, n-jj);
+			}
+		}
+	else
+		{
+		jj = 0;
+		for(; jj<n-4; jj+=8)
+			{
+			kernel_strmm_nn_rl_16x4_gen_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], sda, offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, 0, m-ii, 0, n-jj);
+			kernel_strmm_nn_rl_16x4_gen_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], sda, offsetB4, &pB[(jj+8)*sdb+(jj+4)*bs], sdb, offsetD, &pD[ii*sdd+(jj+4)*bs], sdd, 0, m-ii, 0, n-jj-4);
+			}
+		if(n-jj>0)
+			{
+			kernel_strmm_nn_rl_16x4_gen_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], sda, offsetB, &pB[jj*sdb+jj*bs], sdb, offsetD, &pD[ii*sdd+jj*bs], sdd, 0, m-ii, 0, n-jj);
+			}
+		}
+	return;
 
 	left_8:
 	if(offsetB<4)

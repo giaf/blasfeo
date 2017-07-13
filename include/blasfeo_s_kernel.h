@@ -83,6 +83,9 @@ void kernel_ssyrk_spotrf_nt_l_12x4_vs_lib8(int kp, float *Ap, int sdap, float *B
 void kernel_ssyrk_spotrf_nt_l_12x4_lib8(int kp, float *Ap, int sdap, float *Bp, int km_, float *Am, int sdam, float *Bm, float *C, int sdc, float *D, int sdd, float *inv_diag_D);
 void kernel_ssyrk_spotrf_nt_l_16x4_vs_lib8(int kp, float *Ap, int sdap, float *Bp, int km_, float *Am, int sdam, float *Bm, float *C, int sdc, float *D, int sdd, float *inv_diag_D, int km, int kn);
 void kernel_ssyrk_spotrf_nt_l_16x4_lib8(int kp, float *Ap, int sdap, float *Bp, int km_, float *Am, int sdam, float *Bm, float *C, int sdc, float *D, int sdd, float *inv_diag_D);
+void kernel_strmm_nn_rl_16x4_lib8(int k, float *alpha, float *A, int sda, int offsetB, float *B, int sdb, float *D, int sdd);
+void kernel_strmm_nn_rl_16x4_vs_lib8(int k, float *alpha, float *A, int sda, int offsetB, float *B, int sdb, float *D, int sdd, int km, int kn);
+void kernel_strmm_nn_rl_16x4_gen_lib8(int k, float *alpha, float *A, int sda, int offsetB, float *B, int sdb, int offsetD, float *D, int sdd, int m0, int m1, int n0, int n1);
 
 // 8x8
 void kernel_sgemm_nt_8x8_lib8(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D);
