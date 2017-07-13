@@ -215,6 +215,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_16x4_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_8x8_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_8x4_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgead_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecp_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgesc_lib8.S
@@ -262,6 +263,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_16x4_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x8_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x4_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgead_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecp_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgesc_lib8.S
