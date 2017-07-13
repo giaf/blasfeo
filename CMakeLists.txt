@@ -54,8 +54,11 @@ set(REF_BLAS 0 CACHE STRING "Reference blas to use")
 #set(REF_BLAS ATLAS)
 
 # Compile auxiliary functions with external dependencies (for memory allocation and printing)
-#set(EXT_DEP 0)
-set(EXT_DEP 1)
+#set(EXT_DEP "")
+set(EXT_DEP "EXT_DEP")
+
+configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
+	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
 
 # operating system
 set(OS LINUX CACHE STRING "Operating system")
@@ -108,9 +111,9 @@ if(${RUNTIME_CHECKS} MATCHES 1)
 endif(${RUNTIME_CHECKS} MATCHES 1)
 
 #
-if(${EXT_DEP} MATCHES 1)
+if(${EXT_DEP})
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DEXT_DEP")
-endif(${EXT_DEP} MATCHES 1)
+endif()
 
 #
 if(${MACRO_LEVEL} MATCHES 1)
@@ -516,7 +519,7 @@ else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 
 endif(${LA} MATCHES HIGH_PERFORMANCE)
 
-if(${EXT_DEP} MATCHES 1)
+if(${EXT_DEP})
 
 	file(GLOB EXT_SRC
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_lib.c
@@ -525,7 +528,7 @@ if(${EXT_DEP} MATCHES 1)
 		${PROJECT_SOURCE_DIR}/auxiliary/i_aux_ext_dep_lib.c
 		)
 
-endif(${EXT_DEP} MATCHES 1)
+endif()
 
 set(BLASFEO_SRC ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
 
