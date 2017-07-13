@@ -41,12 +41,12 @@ set(TARGET X64_INTEL_SANDY_BRIDGE)
 #set(TARGET GENERIC)
 
 # Linear Algebra library
-set(LA HIGH_PERFORMANCE)
+set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra optimization level")
 #set(LA REFERENCE)
 #set(LA BLAS)
 
 # BLAS and LAPACK version (for LA=BLAS in BLASFEO)
-set(REF_BLAS 0)
+set(REF_BLAS 0 CACHE STRING "Reference blas to use")
 #set(REF_BLAS OPENBLAS)
 #set(REF_BLAS NETLIB)
 #set(REF_BLAS MKL)
@@ -58,12 +58,12 @@ set(REF_BLAS 0)
 set(EXT_DEP 1)
 
 # operating system
-set(OS LINUX)
+set(OS LINUX CACHE STRING "Operating system")
 #set(OS MAC)
 #set(OS WINDOWS)
 
 # C Compiler
-set(CC_COMPILER gcc)
+set(CC_COMPILER gcc CACHE STRING "compiler")
 #set(CC_COMPILER clang)
 #set(CC_COMPILER x86_64-w64-mingw32-gcc)
 
