@@ -230,6 +230,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib8.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib8.c
 			)
 
@@ -278,6 +279,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib8.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib8.c
 			)
 
