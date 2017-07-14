@@ -548,4 +548,4 @@ add_library(blasfeo ${BLASFEO_SRC})
 #target_link_libraries(hpipm)
 
 # test problems
-add_subdirectory(test_problems)
+# add_subdirectory(test_problems)
