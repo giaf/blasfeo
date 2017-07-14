@@ -33,7 +33,9 @@ enable_language(C ASM)
 
 # Target architecture
 #set(TARGET X64_INTEL_HASWELL)
-set(TARGET X64_INTEL_SANDY_BRIDGE)
+message(STATUS "${TARGET}")
+set(TARGET X64_INTEL_SANDY_BRIDGE CACHE STRING "Target architecture")
+message(FATAL_ERROR "${TARGET}")
 #set(TARGET X64_INTEL_CORE)
 #set(TARGET X64_AMD_BULLDOZER)
 #set(TARGET ARMV8A_ARM_CORTEX_A57)
@@ -60,13 +62,8 @@ set(EXT_DEP "EXT_DEP")
 configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
 
-# operating system
-set(OS LINUX CACHE STRING "Operating system")
-#set(OS MAC)
-#set(OS WINDOWS)
-
 # C Compiler
-set(CC_COMPILER gcc CACHE STRING "compiler")
+# set(CC_COMPILER gcc CACHE STRING "compiler")
 #set(CC_COMPILER clang)
 #set(CC_COMPILER x86_64-w64-mingw32-gcc)
 
@@ -124,18 +121,18 @@ if(${MACRO_LEVEL} MATCHES 2)
 endif(${MACRO_LEVEL} MATCHES 2)
 
 #
-if(${OS} MATCHES LINUX)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOS_LINUX")
 	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DOS_LINUX")
-endif(${OS} MATCHES LINUX)
-if(${OS} MATCHES MAC)
+endif()
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOS_MAC")
 	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DOS_MAC")
-endif(${OS} MATCHES MAC)
-if(${OS} MATCHES WINDOWS)
+endif()
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOS_WINDOWS")
 	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DOS_WINDOWS")
-endif(${OS} MATCHES WINDOWS)
+endif()
 
 #
 if(${REF_BLAS} MATCHES 0)
