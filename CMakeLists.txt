@@ -33,9 +33,7 @@ enable_language(C ASM)
 
 # Target architecture
 #set(TARGET X64_INTEL_HASWELL)
-message(STATUS "${TARGET}")
 set(TARGET X64_INTEL_SANDY_BRIDGE CACHE STRING "Target architecture")
-message(FATAL_ERROR "${TARGET}")
 #set(TARGET X64_INTEL_CORE)
 #set(TARGET X64_AMD_BULLDOZER)
 #set(TARGET ARMV8A_ARM_CORTEX_A57)
