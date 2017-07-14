@@ -80,7 +80,10 @@ set(CMAKE_C_FLAGS "")
 set(CMAKE_ASM_FLAGS "")
 
 # optimization flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -fPIC")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
+if(CMAKE_COMPILER_ID MATCHES "GNU" OR CMAKE_COMPILER_ID MATCHES "Clang")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+endif()
 
 # debugging flags
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
