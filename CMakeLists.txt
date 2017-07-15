@@ -33,7 +33,7 @@ enable_language(C ASM)
 
 # Target architecture
 #set(TARGET X64_INTEL_HASWELL)
-set(TARGET X64_INTEL_SANDY_BRIDGE)
+set(TARGET X64_INTEL_SANDY_BRIDGE CACHE STRING "Target architecture")
 #set(TARGET X64_INTEL_CORE)
 #set(TARGET X64_AMD_BULLDOZER)
 #set(TARGET ARMV8A_ARM_CORTEX_A57)
@@ -54,16 +54,14 @@ set(REF_BLAS 0 CACHE STRING "Reference blas to use")
 #set(REF_BLAS ATLAS)
 
 # Compile auxiliary functions with external dependencies (for memory allocation and printing)
-#set(EXT_DEP 0)
-set(EXT_DEP 1)
+#set(EXT_DEP "")
+set(EXT_DEP "EXT_DEP")
 
-# operating system
-set(OS LINUX CACHE STRING "Operating system")
-#set(OS MAC)
-#set(OS WINDOWS)
+configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
+	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
 
 # C Compiler
-set(CC_COMPILER gcc CACHE STRING "compiler")
+# set(CC_COMPILER gcc CACHE STRING "compiler")
 #set(CC_COMPILER clang)
 #set(CC_COMPILER x86_64-w64-mingw32-gcc)
 
@@ -82,7 +80,10 @@ set(CMAKE_C_FLAGS "")
 set(CMAKE_ASM_FLAGS "")
 
 # optimization flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -fPIC")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
+if(CMAKE_COMPILER_ID MATCHES "GNU" OR CMAKE_COMPILER_ID MATCHES "Clang")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+endif()
 
 # debugging flags
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
@@ -108,9 +109,9 @@ if(${RUNTIME_CHECKS} MATCHES 1)
 endif(${RUNTIME_CHECKS} MATCHES 1)
 
 #
-if(${EXT_DEP} MATCHES 1)
+if(${EXT_DEP})
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DEXT_DEP")
-endif(${EXT_DEP} MATCHES 1)
+endif()
 
 #
 if(${MACRO_LEVEL} MATCHES 1)
@@ -121,18 +122,18 @@ if(${MACRO_LEVEL} MATCHES 2)
 endif(${MACRO_LEVEL} MATCHES 2)
 
 #
-if(${OS} MATCHES LINUX)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOS_LINUX")
 	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DOS_LINUX")
-endif(${OS} MATCHES LINUX)
-if(${OS} MATCHES MAC)
+endif()
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOS_MAC")
 	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DOS_MAC")
-endif(${OS} MATCHES MAC)
-if(${OS} MATCHES WINDOWS)
+endif()
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOS_WINDOWS")
 	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DOS_WINDOWS")
-endif(${OS} MATCHES WINDOWS)
+endif()
 
 #
 if(${REF_BLAS} MATCHES 0)
@@ -530,7 +531,7 @@ else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 
 endif(${LA} MATCHES HIGH_PERFORMANCE)
 
-if(${EXT_DEP} MATCHES 1)
+if(${EXT_DEP})
 
 	file(GLOB EXT_SRC
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_lib.c
@@ -539,7 +540,7 @@ if(${EXT_DEP} MATCHES 1)
 		${PROJECT_SOURCE_DIR}/auxiliary/i_aux_ext_dep_lib.c
 		)
 
-endif(${EXT_DEP} MATCHES 1)
+endif()
 
 set(BLASFEO_SRC ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
 
@@ -550,4 +551,4 @@ add_library(blasfeo ${BLASFEO_SRC})
 #target_link_libraries(hpipm)
 
 # test problems
-add_subdirectory(test_problems)
+# add_subdirectory(test_problems)
