@@ -171,7 +171,7 @@ void d_print_e_mat(int m, int n, double *A, int lda)
 		{
 		for(j=0; j<n; j++)
 			{
-			printf("%e\t", A[i+lda*j]);
+			printf("%1.15e\t", A[i+lda*j]);
 			}
 		printf("\n");
 		}
