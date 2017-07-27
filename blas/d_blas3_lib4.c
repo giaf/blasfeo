@@ -1258,7 +1258,7 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	int air = ai & (ps-1);
 	int bir = bi & (ps-1);
 	double *pA = sA->pA + aj*ps + (ai-air)*sda;
-	double *pB = sB->pA + bj*ps + (bi-bir)*sda;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
 	double *pC = sC->pA + cj*ps;
 	double *pD = sD->pA + dj*ps;
 
@@ -1433,7 +1433,7 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	int air = ai & (ps-1);
 	int bir = bi & (ps-1);
 	double *pA = sA->pA + aj*ps + (ai-air)*sda;
-	double *pB = sB->pA + bj*ps + (bi-bir)*sda;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
 	double *pC = sC->pA + cj*ps;
 	double *pD = sD->pA + dj*ps;
 
@@ -1997,7 +1997,7 @@ void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sB, int bi, 
 	int air = ai & (ps-1);
 	int bir = bi & (ps-1);
 	double *pA = sA->pA + aj*ps + (ai-air)*sda;
-	double *pB = sB->pA + bj*ps + (bi-bir)*sda;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
 	double *pD = sD->pA + dj*ps;
 
 	int offsetB = bir;
