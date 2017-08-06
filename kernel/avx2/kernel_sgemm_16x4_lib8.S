@@ -2495,6 +2495,76 @@ inner_scale_ab_16x4_gen_lib8:
 
 // common inner routine with file scope
 //
+// scale for generic alpha and beta=0
+//
+// input arguments:
+// r10   <- alpha
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10   <- alpha
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_A0_16X4_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_a0_16x4_lib8, @function
+inner_scale_a0_16x4_lib8:
+#elif defined(OS_MAC)
+_inner_scale_a0_16x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_a0_16x4_lib8; .scl 2; .type 32; .endef
+inner_scale_a0_16x4_lib8:
+#endif
+#endif
+	
+	// alpha
+	vbroadcastss	0(%r10), %ymm11
+
+	vmulps		%ymm0, %ymm11, %ymm0
+	vmulps		%ymm1, %ymm11, %ymm1
+	vmulps		%ymm2, %ymm11, %ymm2
+	vmulps		%ymm3, %ymm11, %ymm3
+
+	vmulps		%ymm4, %ymm11, %ymm4
+	vmulps		%ymm5, %ymm11, %ymm5
+	vmulps		%ymm6, %ymm11, %ymm6
+	vmulps		%ymm7, %ymm11, %ymm7
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_scale_a0_16x4_lib8, .-inner_scale_a0_16x4_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // scale for generic alpha=1.0 and beta=1.0
 //
 // input arguments:
