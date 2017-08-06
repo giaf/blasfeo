@@ -1039,6 +1039,26 @@ void strmm_rlnn_libstr(int m, int n, float alpha, struct s_strmat *sB, int bi, i
 			}
 		if(offsetD==0)
 			{
+#if defined(TARGET_X64_INTEL_HASWELL)
+			// XXX create left_24 once the _gen_ kernel exist !!!
+			for(; ii<m-23; ii+=24)
+				{
+				jj = 0;
+				for(; jj<n-7; jj+=8)
+					{
+					kernel_strmm_nn_rl_24x4_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], sda, offsetB, &pB[jj*sdb+jj*bs], sdb, &pD[ii*sdd+jj*bs], sdd);
+					kernel_strmm_nn_rl_24x4_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], sda, offsetB4, &pB[jj*sdb+(jj+4)*bs], sdb, &pD[ii*sdd+(jj+4)*bs], sdd);
+					}
+				if(n-jj>0)
+					{
+					kernel_strmm_nn_rl_24x4_vs_lib8(n-jj, &alpha, &pA[ii*sda+jj*bs], sda, offsetB, &pB[jj*sdb+jj*bs], sdb, &pD[ii*sdd+jj*bs], sdd, 24, n-jj);
+					if(n-jj>4)
+						{
+						kernel_strmm_nn_rl_24x4_vs_lib8(n-jj-4, &alpha, &pA[ii*sda+(jj+4)*bs], sda, offsetB4, &pB[jj*sdb+(jj+4)*bs], sdb, &pD[ii*sdd+(jj+4)*bs], sdd, 24, n-jj-4);
+						}
+					}
+				}
+#endif
 			for(; ii<m-15; ii+=16)
 				{
 				jj = 0;

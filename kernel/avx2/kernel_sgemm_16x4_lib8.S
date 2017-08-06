@@ -1410,13 +1410,10 @@ inner_edge_gemm_add_nn_16x4_lib8:
 	sall			$2, %eax // offsetB*sizeof(float)
 	addq			%rax, %r13 // B+offsetB*sizeof(float)
 
-	movq			%r11, %rax // A1 <- A0
-	addq			%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
-
 1:
 	// unroll 0
 	vmovaps			0(%r11), %ymm12 // A0
-	vmovaps			0(%rax), %ymm13 // A1
+	vmovaps			0(%r11, %r12, 1), %ymm13 // A1
 	vbroadcastss	0(%r13), %ymm15 // B[0]
 	vfmadd231ps		%ymm12, %ymm15, %ymm0
 	vfmadd231ps		%ymm13, %ymm15, %ymm4
@@ -1433,7 +1430,6 @@ inner_edge_gemm_add_nn_16x4_lib8:
 	subl			$1, %r10d // k-1
 	subl			$1, %ebx // kend-1
 	addq			$32, %r11 // A+1*bs*sizeof(float)
-	addq			$32, %rax // A+1*bs*sizeof(float)
 	addq			$4, %r13 // B+1*sizeof(float)
 
 	cmpl			$0, %ebx
