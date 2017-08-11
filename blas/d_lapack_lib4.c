@@ -2430,8 +2430,9 @@ int dgeqrf_work_size_libstr(int m, int n)
 
 
 
-void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, void *work)
+void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, void *v_work)
 	{
+	char *work = (char *) v_work;
 	if(m<=0 | n<=0)
 		return;
 	const int ps = 4;
@@ -2508,11 +2509,11 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	double *pD = &(DMATEL_LIBSTR(sD,di,dj));
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_HASWELL)
-	double pT[144] __attribute__ ((aligned (64))) = {};
-	double pK[96] __attribute__ ((aligned (64))) = {};
+	double pT[144] __attribute__ ((aligned (64))) = {0};
+	double pK[96] __attribute__ ((aligned (64))) = {0};
 #else
-	double pT[144] = {};
-	double pK[96] = {};
+	double pT[144] = {0};
+	double pK[96] = {0};
 #endif
 	if(pC!=pD)
 		dgecp_lib(m, n, 1.0, ci&(ps-1), pC, sdc, di&(ps-1), pD, sdd);

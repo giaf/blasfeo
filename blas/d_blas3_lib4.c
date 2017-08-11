@@ -1258,7 +1258,7 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	int air = ai & (ps-1);
 	int bir = bi & (ps-1);
 	double *pA = sA->pA + aj*ps + (ai-air)*sda;
-	double *pB = sB->pA + bj*ps + (bi-bir)*sda;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
 	double *pC = sC->pA + cj*ps;
 	double *pD = sD->pA + dj*ps;
 
@@ -1297,26 +1297,25 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 
 	int idxB;
 
-	i = 0;
 	// clean up at the beginning
 	if(air!=0)
 		{
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-		if(m-i>5)
+		if(m>5)
 			{
 			j = 0;
 			idxB = 0;
 			// clean up at the beginning
 			if(bir!=0)
 				{
-				kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, air, m-i, bir, n-j);
+				kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[0], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, n-j);
 				j += ps-bir;
 				idxB += 4;
 				}
 			// main loop
 			for(; j<n; j+=4)
 				{
-				kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, air, m-i, 0, n-j);
+				kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[0], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
 				idxB += 4;
 				}
 			m -= 2*ps-air;
@@ -1324,7 +1323,7 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			pC += 2*ps*sdc;
 			pD += 2*ps*sdd;
 			}
-		else // m-i<=4
+		else // m<=4
 			{
 #endif
 			j = 0;
@@ -1332,14 +1331,14 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			// clean up at the beginning
 			if(bir!=0)
 				{
-				kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, air, m-i, bir, n-j);
+				kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[0], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, n-j);
 				j += ps-bir;
 				idxB += 4;
 				}
 			// main loop
 			for(; j<n; j+=4)
 				{
-				kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, air, m-i, 0, n-j);
+				kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[0], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
 				idxB += 4;
 				}
 			m -= ps-air;
@@ -1352,6 +1351,7 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			}
 #endif
 		}
+	i = 0;
 	// main loop
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; i<m-4; i+=8)
@@ -1430,16 +1430,17 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	int sdb = sB->cn;
 	int sdc = sC->cn;
 	int sdd = sD->cn;
-
-	double *pA = sA->pA + aj*ps + ai/ps*ps*sda;
-	double *pB = sB->pA + bj*ps + bi/ps*ps*sdb;
+	int air = ai & (ps-1);
+	int bir = bi & (ps-1);
+	double *pA = sA->pA + aj*ps + (ai-air)*sda;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
 	double *pC = sC->pA + cj*ps;
 	double *pD = sD->pA + dj*ps;
 
-	int offsetB = bi%ps;
+	int offsetB = bir;
 
-	int ci0 = ci-ai%ps;
-	int di0 = di-ai%ps;
+	int ci0 = ci-air;
+	int di0 = di-air;
 	int offsetC;
 	int offsetD;
 	if(ci0>=0)
@@ -1466,7 +1467,7 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	int i, j, l;
 
 	// clean up at the beginning
-	if(ai%ps!=0)
+	if(air!=0)
 		{
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 		if(m>5)
@@ -1474,9 +1475,9 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			j = 0;
 			for(; j<n; j+=4)
 				{
-				kernel_dgemm_nn_8x4_gen_lib4(k, &alpha, &pA[0], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, ai%ps, m, 0, n-j);
+				kernel_dgemm_nn_8x4_gen_lib4(k, &alpha, &pA[0], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
 				}
-			m -= 2*ps-ai%ps;
+			m -= 2*ps-air;
 			pA += 2*ps*sda;
 			pC += 2*ps*sda;
 			pD += 2*ps*sda;
@@ -1487,9 +1488,9 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			j = 0;
 			for(; j<n; j+=4)
 				{
-				kernel_dgemm_nn_4x4_gen_lib4(k, &alpha, &pA[0], offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, ai%ps, m, 0, n-j);
+				kernel_dgemm_nn_4x4_gen_lib4(k, &alpha, &pA[0], offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
 				}
-			m -= 2*ps-ai%ps;
+			m -= 2*ps-air;
 			pA += 2*ps*sda;
 			pC += 2*ps*sda;
 			pD += 2*ps*sda;
@@ -1993,13 +1994,15 @@ void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sB, int bi, 
 	int sda = sA->cn;
 	int sdb = sB->cn;
 	int sdd = sD->cn;
-	double *pA = sA->pA + aj*ps + ai/ps*ps*sda;
-	double *pB = sB->pA + bj*ps + bi/ps*ps*sdb;
+	int air = ai & (ps-1);
+	int bir = bi & (ps-1);
+	double *pA = sA->pA + aj*ps + (ai-air)*sda;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
 	double *pD = sD->pA + dj*ps;
 
-	int offsetB = bi%ps;
+	int offsetB = bir;
 
-	int di0 = di-ai%ps;
+	int di0 = di-air;
 	int offsetD;
 	if(di0>=0)
 		{
@@ -2014,18 +2017,18 @@ void dtrmm_rlnn_libstr(int m, int n, double alpha, struct d_strmat *sB, int bi, 
 	
 	int ii, jj;
 
-	ii = 0;
-	if(ai%ps!=0)
+	if(air!=0)
 		{
 		jj = 0;
 		for(; jj<n; jj+=4)
 			{
-			kernel_dtrmm_nn_rl_4x4_gen_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, offsetD, &pD[ii*sdd+jj*ps], sdd, ai%ps, m-ii, 0, n-jj);
+			kernel_dtrmm_nn_rl_4x4_gen_lib4(n-jj, &alpha, &pA[jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, offsetD, &pD[jj*ps], sdd, air, air+m, 0, n-jj);
 			}
-		m -= ps-ai%ps;
+		m -= ps-air;
 		pA += ps*sda;
 		pD += ps*sdd;
 		}
+	ii = 0;
 	if(offsetD==0)
 		{
 #if defined(TARGET_X64_INTEL_HASWELL)

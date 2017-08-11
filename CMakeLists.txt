@@ -54,8 +54,7 @@ set(REF_BLAS 0 CACHE STRING "Reference blas to use")
 #set(REF_BLAS ATLAS)
 
 # Compile auxiliary functions with external dependencies (for memory allocation and printing)
-#set(EXT_DEP "")
-set(EXT_DEP "EXT_DEP")
+set(EXT_DEP ON CACHE BOOL "Compile external dependencies in BLASFEO")
 
 message(STATUS "EXT_DEP=${EXT_DEP}")
 
@@ -82,7 +81,10 @@ set(CMAKE_C_FLAGS "")
 set(CMAKE_ASM_FLAGS "")
 
 # optimization flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -fPIC")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
+if(CMAKE_COMPILER_ID MATCHES "GNU" OR CMAKE_COMPILER_ID MATCHES "Clang")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+endif()
 
 # debugging flags
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
@@ -550,4 +552,4 @@ add_library(blasfeo ${BLASFEO_SRC})
 #target_link_libraries(hpipm)
 
 # test problems
-add_subdirectory(test_problems)
+# add_subdirectory(test_problems)

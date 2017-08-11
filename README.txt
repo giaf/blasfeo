@@ -21,3 +21,5 @@ The optimized linear algebra kernels are currently provided for OS_LINUX (x86_64
 
 BLASFEO employes structures to describe matrices (d_strmat) and vectors (d_strvec), defined in include/blasfeo_common.h.
 The actual implementation of d_strmat and d_strvec depends on the LA and TARGET choice.
+
+More information about BLASFEO can be found in the ArXiv paper at https://arxiv.org/abs/1704.02457
