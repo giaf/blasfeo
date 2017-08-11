@@ -54,8 +54,7 @@ set(REF_BLAS 0 CACHE STRING "Reference blas to use")
 #set(REF_BLAS ATLAS)
 
 # Compile auxiliary functions with external dependencies (for memory allocation and printing)
-#set(EXT_DEP "")
-set(EXT_DEP "EXT_DEP")
+set(EXT_DEP ON CACHE BOOL "Compile external dependencies in BLASFEO")
 
 configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
