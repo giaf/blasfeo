@@ -1410,13 +1410,10 @@ inner_edge_gemm_add_nn_16x4_lib8:
 	sall			$2, %eax // offsetB*sizeof(float)
 	addq			%rax, %r13 // B+offsetB*sizeof(float)
 
-	movq			%r11, %rax // A1 <- A0
-	addq			%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
-
 1:
 	// unroll 0
 	vmovaps			0(%r11), %ymm12 // A0
-	vmovaps			0(%rax), %ymm13 // A1
+	vmovaps			0(%r11, %r12, 1), %ymm13 // A1
 	vbroadcastss	0(%r13), %ymm15 // B[0]
 	vfmadd231ps		%ymm12, %ymm15, %ymm0
 	vfmadd231ps		%ymm13, %ymm15, %ymm4
@@ -1433,7 +1430,6 @@ inner_edge_gemm_add_nn_16x4_lib8:
 	subl			$1, %r10d // k-1
 	subl			$1, %ebx // kend-1
 	addq			$32, %r11 // A+1*bs*sizeof(float)
-	addq			$32, %rax // A+1*bs*sizeof(float)
 	addq			$4, %r13 // B+1*sizeof(float)
 
 	cmpl			$0, %ebx
@@ -2486,6 +2482,76 @@ inner_scale_ab_16x4_gen_lib8:
 
 #if defined(OS_LINUX)
 	.size	inner_scale_ab_16x4_gen_lib8, .-inner_scale_ab_16x4_gen_lib8
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// scale for generic alpha and beta=0
+//
+// input arguments:
+// r10   <- alpha
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10   <- alpha
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_A0_16X4_LIB8
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_a0_16x4_lib8, @function
+inner_scale_a0_16x4_lib8:
+#elif defined(OS_MAC)
+_inner_scale_a0_16x4_lib8:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_a0_16x4_lib8; .scl 2; .type 32; .endef
+inner_scale_a0_16x4_lib8:
+#endif
+#endif
+	
+	// alpha
+	vbroadcastss	0(%r10), %ymm11
+
+	vmulps		%ymm0, %ymm11, %ymm0
+	vmulps		%ymm1, %ymm11, %ymm1
+	vmulps		%ymm2, %ymm11, %ymm2
+	vmulps		%ymm3, %ymm11, %ymm3
+
+	vmulps		%ymm4, %ymm11, %ymm4
+	vmulps		%ymm5, %ymm11, %ymm5
+	vmulps		%ymm6, %ymm11, %ymm6
+	vmulps		%ymm7, %ymm11, %ymm7
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_scale_a0_16x4_lib8, .-inner_scale_a0_16x4_lib8
 #endif
 #endif
 

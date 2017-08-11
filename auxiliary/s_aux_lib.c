@@ -324,6 +324,20 @@ void svecse_libstr(int m, float alpha, struct s_strvec *sx, int xi)
 
 
 
+// extract diagonal to vector
+void sdiaex_libstr(int kmax, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi)
+	{
+	int lda = sA->m;
+	float *pA = sA->pA + ai + aj*lda;
+	float *x = sx->pa + xi;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		x[ii] = alpha*pA[ii*(lda+1)];
+	return;
+	}
+
+
+
 // insert a vector into diagonal
 void sdiain_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, struct s_strmat *sA, int ai, int aj)
 	{
