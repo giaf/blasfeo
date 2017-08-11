@@ -6,6 +6,6 @@
 #define LA_@LA@
 #endif
 
-#ifndef @EXT_DEP@
-#define @EXT_DEP@
+#ifndef EXT_DEP
+#cmakedefine EXT_DEP @EXT_DEP@
 #endif

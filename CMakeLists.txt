@@ -57,6 +57,8 @@ set(REF_BLAS 0 CACHE STRING "Reference blas to use")
 #set(EXT_DEP "")
 set(EXT_DEP "EXT_DEP")
 
+message(STATUS "EXT_DEP=${EXT_DEP}")
+
 configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
 
