@@ -33,38 +33,38 @@ OBJS =
 ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
-OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
-OBJS += s_blas1_lib8.o s_blas2_lib8.o s_blas3_lib8.o s_blas3_diag_lib8.o s_lapack_lib8.o
+OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
+OBJS += s_blas1_lib8.o s_blas2_lib8.o s_blas2_diag_lib.o s_blas3_lib8.o s_blas3_diag_lib8.o s_lapack_lib8.o
 endif
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
-OBJS += s_blas1_lib8.o s_blas2_lib8.o s_blas3_lib8.o s_blas3_diag_lib8.o s_lapack_lib8.o
+OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
+OBJS += s_blas1_lib8.o s_blas2_lib8.o s_blas2_diag_lib.o s_blas3_lib8.o s_blas3_diag_lib8.o s_lapack_lib8.o
 endif
 ifeq ($(TARGET), X64_INTEL_CORE)
-OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
-OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
+OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
+OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
 endif
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
-OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
-OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
+OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
+OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
 endif
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
-OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
-OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
+OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
+OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
-OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
+OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
+OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
 endif
 ifeq ($(TARGET), GENERIC)
-OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
-OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
+OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
+OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
 endif
 
 else # LA_REFERENCE | LA_BLAS
 
-OBJS += d_blas1_lib.o d_blas2_lib.o d_blas3_lib.o d_blas3_diag_lib.o d_lapack_lib.o
-OBJS += s_blas1_lib.o s_blas2_lib.o s_blas3_lib.o s_blas3_diag_lib.o s_lapack_lib.o
+OBJS += d_blas1_lib.o d_blas2_lib.o d_blas2_diag_lib.o d_blas3_lib.o d_blas3_diag_lib.o d_lapack_lib.o
+OBJS += s_blas1_lib.o s_blas2_lib.o s_blas2_diag_lib.o s_blas3_lib.o s_blas3_diag_lib.o s_lapack_lib.o
 
 endif # LA choice
 
@@ -75,7 +75,14 @@ clean:
 	rm -f *.s
 
 d_blas1_lib.o: d_blas1_lib.c x_blas1_lib.c
+s_blas1_lib.o: s_blas1_lib.c x_blas1_lib.c
 d_blas2_lib.o: d_blas2_lib.c x_blas2_lib.c
+s_blas2_lib.o: s_blas2_lib.c x_blas2_lib.c
+d_blas2_diag_lib.o: d_blas2_diag_lib.c x_blas2_diag_lib.c
+s_blas2_diag_lib.o: s_blas2_diag_lib.c x_blas2_diag_lib.c
 d_blas3_lib.o: d_blas3_lib.c x_blas3_lib.c
+s_blas3_lib.o: s_blas3_lib.c x_blas3_lib.c
 d_blas3_diag_lib.o: d_blas3_diag_lib.c x_blas3_diag_lib.c
+s_blas3_diag_lib.o: s_blas3_diag_lib.c x_blas3_diag_lib.c
 d_lapack_lib.o: d_lapack_lib.c x_lapack_lib.c
+s_lapack_lib.o: s_lapack_lib.c x_lapack_lib.c

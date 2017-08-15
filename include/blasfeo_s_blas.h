@@ -51,6 +51,8 @@ float sdot_libstr(int m, struct s_strvec *sx, int xi, struct s_strvec *sy, int y
 // level 2 BLAS
 //
 
+// dense
+
 // z <= beta * y + alpha * A * x
 void sgemv_n_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi);
 // z <= beta * y + alpha * A' * x
@@ -84,6 +86,11 @@ void strmv_ltn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct 
 void sgemv_nt_libstr(int m, int n, float alpha_n, float alpha_t, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx_n, int xi_n, struct s_strvec *sx_t, int xi_t, float beta_n, float beta_t, struct s_strvec *sy_n, int yi_n, struct s_strvec *sy_t, int yi_t, struct s_strvec *sz_n, int zi_n, struct s_strvec *sz_t, int zi_t);
 // z <= beta * y + alpha * A * x, where A is symmetric and only the lower triangular patr of A is accessed
 void ssymv_l_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi);
+
+// diagonal
+
+// z <= beta * y + alpha * A * x, A diagonal
+void dgemv_diag_libstr(int m, float alpha, struct s_strvec *sA, int ai, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi);
 
 
 
