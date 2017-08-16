@@ -90,7 +90,7 @@ void ssymv_l_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 // diagonal
 
 // z <= beta * y + alpha * A * x, A diagonal
-void dgemv_diag_libstr(int m, float alpha, struct s_strvec *sA, int ai, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi);
+void sgemv_diag_libstr(int m, float alpha, struct s_strvec *sA, int ai, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi);
 
 
 
