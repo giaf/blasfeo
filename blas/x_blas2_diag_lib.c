@@ -37,7 +37,8 @@ void GEMV_DIAG_LIBSTR(int m, REAL alpha, struct STRVEC *sA, int ai, struct STRVE
 	REAL *z = sz->pa + zi;
 	if(alpha==1.0 & beta==1.0)
 		{
-		z[ii] = a[ii]*x[ii] + y[ii];
+		for(ii=0; ii<m; ii++)
+			z[ii] = a[ii]*x[ii] + y[ii];
 		}
 	else
 		{
