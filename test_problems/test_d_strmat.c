@@ -78,6 +78,9 @@ int main()
 
 	double *C; d_zeros(&C, n, n);
 
+	double *D; d_zeros(&D, n, n);
+	for(ii=0; ii<n*n; ii++) D[ii] = -1;
+
 	double *x_n; d_zeros(&x_n, n, 1);
 //	for(ii=0; ii<n; ii++) x_n[ii] = 1.0;
 	x_n[1] = 1.0;
@@ -136,6 +139,7 @@ int main()
 //	d_allocate_strmat(n, n, &sD);
 	d_create_strmat(n, n, &sD, ptr_memory_strmat);
 	ptr_memory_strmat += sD.memory_size;
+	d_cvt_mat2strmat(n, n, D, n, &sD, 0, 0);
 
 	struct d_strmat sE;
 //	d_allocate_strmat(n, n, &sE);
@@ -226,7 +230,10 @@ int main()
 
 	double alpha = 1.0;
 	double beta = 0.0;
-//	dgemm_nt_libstr(n, n, 8, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//	dtrmm_rlnn_libstr(7, 8, alpha, &sB, 6, 6, &sA, 0, 0, &sD, 0, 0);
+	dgemm_nn_libstr(8, 8, 8, alpha, &sB, 0, 0, &sA, 1, 0, beta, &sD, 0, 0, &sD, 0, 0);
+	d_print_strmat(n, n, &sD, 0, 0);
+	return 0;
 //	dsyrk_ln_libstr(n, 15, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 //	dpotrf_l_mn_libstr(n, 15, &sD, 0, 0, &sD, 0, 0);
 //	dsyrk_dpotrf_ln_libstr(n, 15, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
@@ -490,6 +497,7 @@ int main()
 	free(A);
 	free(B);
 	free(C);
+	free(D);
 	free(ipiv);
 //	d_free_strmat(&sA);
 //	d_free_strmat(&sB);

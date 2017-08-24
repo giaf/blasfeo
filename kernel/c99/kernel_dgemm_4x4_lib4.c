@@ -1583,7 +1583,7 @@ void kernel_dgemm_nn_4x4_gen_lib4(int kmax, double *alpha, double *A, int offset
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 void kernel_dgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D)
 	{
 	kernel_dgemm_nn_4x4_gen_lib4(kmax, alpha, A, offsetB, B, sdb, beta, 0, C, 0, 0, D, 0, 0, 4, 0, 4);
