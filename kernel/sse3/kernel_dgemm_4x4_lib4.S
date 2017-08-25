@@ -1097,29 +1097,32 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 	.p2align 3
 1: // main loop
 
+	prefetcht0	0(%r12, %r13, 2) // software prefetch
+	prefetcht0	64(%r12, %r13, 2) // software prefetch
+
 	// unroll 0
-	movapd		0(%r12), %xmm10 // B[0]
+	movddup		0(%r12), %xmm10 // B[0]
 	addpd		%xmm14, %xmm2
 	addpd		%xmm11, %xmm6
 	movapd		%xmm10, %xmm11
 	mulpd		%xmm8, %xmm10
 	mulpd		%xmm9, %xmm11
 
-	movapd		32(%r12), %xmm15 // B[4]
+	movddup		32(%r12), %xmm15 // B[4]
 	addpd		%xmm12, %xmm3
 	addpd		%xmm13, %xmm7
 	movapd		%xmm15, %xmm13
 	mulpd		%xmm8, %xmm15
 	mulpd		%xmm9, %xmm13
 
-	movapd		64(%r12), %xmm14 // B[8]
+	movddup		64(%r12), %xmm14 // B[8]
 	addpd		%xmm10, %xmm0
 	addpd		%xmm11, %xmm4
 	movapd		%xmm14, %xmm11
 	mulpd		%xmm8, %xmm14
 	mulpd		%xmm9, %xmm11
 
-	movapd		96(%r12), %xmm12 // B[12]
+	movddup		96(%r12), %xmm12 // B[12]
 	addpd		%xmm15, %xmm1
 	addpd		%xmm13, %xmm5
 	movapd		%xmm12, %xmm13
@@ -1130,28 +1133,28 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 
 
 	// unroll 1
-	movapd		8(%r12), %xmm10 // B[1]
+	movddup		8(%r12), %xmm10 // B[1]
 	addpd		%xmm14, %xmm2
 	addpd		%xmm11, %xmm6
 	movapd		%xmm10, %xmm11
 	mulpd		%xmm8, %xmm10
 	mulpd		%xmm9, %xmm11
 
-	movapd		40(%r12), %xmm15 // B[5]
+	movddup		40(%r12), %xmm15 // B[5]
 	addpd		%xmm12, %xmm3
 	addpd		%xmm13, %xmm7
 	movapd		%xmm15, %xmm13
 	mulpd		%xmm8, %xmm15
 	mulpd		%xmm9, %xmm13
 
-	movapd		72(%r12), %xmm14 // B[9]
+	movddup		72(%r12), %xmm14 // B[9]
 	addpd		%xmm10, %xmm0
 	addpd		%xmm11, %xmm4
 	movapd		%xmm14, %xmm11
 	mulpd		%xmm8, %xmm14
 	mulpd		%xmm9, %xmm11
 
-	movapd		104(%r12), %xmm12 // B[13]
+	movddup		104(%r12), %xmm12 // B[13]
 	addpd		%xmm15, %xmm1
 	addpd		%xmm13, %xmm5
 	movapd		%xmm12, %xmm13
@@ -1162,7 +1165,7 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 
 
 	// unroll 2
-	movapd		16(%r12), %xmm10 // B[2]
+	movddup		16(%r12), %xmm10 // B[2]
 	addpd		%xmm14, %xmm2
 	addpd		%xmm11, %xmm6
 	movapd		%xmm10, %xmm11
@@ -1170,21 +1173,21 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 	mulpd		%xmm9, %xmm11
 	subl		$4, %r10d
 
-	movapd		48(%r12), %xmm15 // B[6]
+	movddup		48(%r12), %xmm15 // B[6]
 	addpd		%xmm12, %xmm3
 	addpd		%xmm13, %xmm7
 	movapd		%xmm15, %xmm13
 	mulpd		%xmm8, %xmm15
 	mulpd		%xmm9, %xmm13
 
-	movapd		80(%r12), %xmm14 // B[10]
+	movddup		80(%r12), %xmm14 // B[10]
 	addpd		%xmm10, %xmm0
 	addpd		%xmm11, %xmm4
 	movapd		%xmm14, %xmm11
 	mulpd		%xmm8, %xmm14
 	mulpd		%xmm9, %xmm11
 
-	movapd		112(%r12), %xmm12 // B[14]
+	movddup		112(%r12), %xmm12 // B[14]
 	addpd		%xmm15, %xmm1
 	addpd		%xmm13, %xmm5
 	movapd		%xmm12, %xmm13
@@ -1195,14 +1198,14 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 	
 
 	// unroll 3
-	movapd		24(%r12), %xmm10 // B[3]
+	movddup		24(%r12), %xmm10 // B[3]
 	addpd		%xmm14, %xmm2
 	addpd		%xmm11, %xmm6
 	movapd		%xmm10, %xmm11
 	mulpd		%xmm8, %xmm10
 	mulpd		%xmm9, %xmm11
 
-	movapd		56(%r12), %xmm15 // B[7]
+	movddup		56(%r12), %xmm15 // B[7]
 	addpd		%xmm12, %xmm3
 	addpd		%xmm13, %xmm7
 	movapd		%xmm15, %xmm13
@@ -1210,14 +1213,14 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 	mulpd		%xmm9, %xmm13
 	addq		$128, %r11 // A += 16
 
-	movapd		88(%r12), %xmm14 // B[11]
+	movddup		88(%r12), %xmm14 // B[11]
 	addpd		%xmm10, %xmm0
 	addpd		%xmm11, %xmm4
 	movapd		%xmm14, %xmm11
 	mulpd		%xmm8, %xmm14
 	mulpd		%xmm9, %xmm11
 
-	movapd		120(%r12), %xmm12 // B[15]
+	movddup		120(%r12), %xmm12 // B[15]
 	addpd		%xmm15, %xmm1
 	addpd		%xmm13, %xmm5
 	movapd		%xmm12, %xmm13
@@ -1239,28 +1242,28 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 
 
 	// unroll 0
-	movapd		0(%r12), %xmm10 // B[0]
+	movddup		0(%r12), %xmm10 // B[0]
 	addpd		%xmm14, %xmm2
 	addpd		%xmm11, %xmm6
 	movapd		%xmm10, %xmm11
 	mulpd		%xmm8, %xmm10
 	mulpd		%xmm9, %xmm11
 
-	movapd		32(%r12), %xmm15 // B[4]
+	movddup		32(%r12), %xmm15 // B[4]
 	addpd		%xmm12, %xmm3
 	addpd		%xmm13, %xmm7
 	movapd		%xmm15, %xmm13
 	mulpd		%xmm8, %xmm15
 	mulpd		%xmm9, %xmm13
 
-	movapd		64(%r12), %xmm14 // B[8]
+	movddup		64(%r12), %xmm14 // B[8]
 	addpd		%xmm10, %xmm0
 	addpd		%xmm11, %xmm4
 	movapd		%xmm14, %xmm11
 	mulpd		%xmm8, %xmm14
 	mulpd		%xmm9, %xmm11
 
-	movapd		96(%r12), %xmm12 // B[12]
+	movddup		96(%r12), %xmm12 // B[12]
 	addpd		%xmm15, %xmm1
 	addpd		%xmm13, %xmm5
 	movapd		%xmm12, %xmm13
@@ -1271,28 +1274,28 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 
 
 	// unroll 1
-	movapd		8(%r12), %xmm10 // B[1]
+	movddup		8(%r12), %xmm10 // B[1]
 	addpd		%xmm14, %xmm2
 	addpd		%xmm11, %xmm6
 	movapd		%xmm10, %xmm11
 	mulpd		%xmm8, %xmm10
 	mulpd		%xmm9, %xmm11
 
-	movapd		40(%r12), %xmm15 // B[5]
+	movddup		40(%r12), %xmm15 // B[5]
 	addpd		%xmm12, %xmm3
 	addpd		%xmm13, %xmm7
 	movapd		%xmm15, %xmm13
 	mulpd		%xmm8, %xmm15
 	mulpd		%xmm9, %xmm13
 
-	movapd		72(%r12), %xmm14 // B[9]
+	movddup		72(%r12), %xmm14 // B[9]
 	addpd		%xmm10, %xmm0
 	addpd		%xmm11, %xmm4
 	movapd		%xmm14, %xmm11
 	mulpd		%xmm8, %xmm14
 	mulpd		%xmm9, %xmm11
 
-	movapd		104(%r12), %xmm12 // B[13]
+	movddup		104(%r12), %xmm12 // B[13]
 	addpd		%xmm15, %xmm1
 	addpd		%xmm13, %xmm5
 	movapd		%xmm12, %xmm13
@@ -1303,7 +1306,7 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 
 
 	// unroll 2
-	movapd		16(%r12), %xmm10 // B[2]
+	movddup		16(%r12), %xmm10 // B[2]
 	addpd		%xmm14, %xmm2
 	addpd		%xmm11, %xmm6
 	movapd		%xmm10, %xmm11
@@ -1311,21 +1314,21 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 	mulpd		%xmm9, %xmm11
 	subl		$4, %r10d
 
-	movapd		48(%r12), %xmm15 // B[6]
+	movddup		48(%r12), %xmm15 // B[6]
 	addpd		%xmm12, %xmm3
 	addpd		%xmm13, %xmm7
 	movapd		%xmm15, %xmm13
 	mulpd		%xmm8, %xmm15
 	mulpd		%xmm9, %xmm13
 
-	movapd		80(%r12), %xmm14 // B[10]
+	movddup		80(%r12), %xmm14 // B[10]
 	addpd		%xmm10, %xmm0
 	addpd		%xmm11, %xmm4
 	movapd		%xmm14, %xmm11
 	mulpd		%xmm8, %xmm14
 	mulpd		%xmm9, %xmm11
 
-	movapd		112(%r12), %xmm12 // B[14]
+	movddup		112(%r12), %xmm12 // B[14]
 	addpd		%xmm15, %xmm1
 	addpd		%xmm13, %xmm5
 	movapd		%xmm12, %xmm13
@@ -1336,14 +1339,14 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 	
 
 	// unroll 3
-	movapd		24(%r12), %xmm10 // B[3]
+	movddup		24(%r12), %xmm10 // B[3]
 	addpd		%xmm14, %xmm2
 	addpd		%xmm11, %xmm6
 	movapd		%xmm10, %xmm11
 	mulpd		%xmm8, %xmm10
 	mulpd		%xmm9, %xmm11
 
-	movapd		56(%r12), %xmm15 // B[7]
+	movddup		56(%r12), %xmm15 // B[7]
 	addpd		%xmm12, %xmm3
 	addpd		%xmm13, %xmm7
 	movapd		%xmm15, %xmm13
@@ -1351,14 +1354,14 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 	mulpd		%xmm9, %xmm13
 	addq		$128, %r11 // A += 16
 
-	movapd		88(%r12), %xmm14 // B[11]
+	movddup		88(%r12), %xmm14 // B[11]
 	addpd		%xmm10, %xmm0
 	addpd		%xmm11, %xmm4
 	movapd		%xmm14, %xmm11
 	mulpd		%xmm8, %xmm14
 	mulpd		%xmm9, %xmm11
 
-	movapd		120(%r12), %xmm12 // B[15]
+	movddup		120(%r12), %xmm12 // B[15]
 	addpd		%xmm15, %xmm1
 	addpd		%xmm13, %xmm5
 	movapd		%xmm12, %xmm13
@@ -1392,7 +1395,7 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 	movapd 		0(%r11), %xmm8 // A[0]
 	movapd 		16(%r11), %xmm9 // A[2]
 
-	movapd		0(%r12), %xmm10 // B[0]
+	movddup		0(%r12), %xmm10 // B[0]
 	addpd		%xmm14, %xmm2
 	addpd		%xmm11, %xmm6
 	movapd		%xmm10, %xmm11
@@ -1400,14 +1403,14 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 	mulpd		%xmm9, %xmm11
 	subl	$1, %r10d
 
-	movapd		32(%r12), %xmm15 // B[4]
+	movddup		32(%r12), %xmm15 // B[4]
 	addpd		%xmm12, %xmm3
 	addpd		%xmm13, %xmm7
 	movapd		%xmm15, %xmm13
 	mulpd		%xmm8, %xmm15
 	mulpd		%xmm9, %xmm13
 
-	movapd		64(%r12), %xmm14 // B[8]
+	movddup		64(%r12), %xmm14 // B[8]
 	addpd		%xmm10, %xmm0
 	addpd		%xmm11, %xmm4
 	movapd		%xmm14, %xmm11
@@ -1415,7 +1418,7 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 	mulpd		%xmm9, %xmm11
 	addq	$32, %r11
 
-	movapd		96(%r12), %xmm12 // B[12]
+	movddup		96(%r12), %xmm12 // B[12]
 	addpd		%xmm15, %xmm1
 	addpd		%xmm13, %xmm5
 	movapd		%xmm12, %xmm13
@@ -1521,28 +1524,28 @@ inner_edge_dgemm_add_nn_4x4_lib4:
 	movapd 		0(%r11), %xmm8 // A[0]
 	movapd 		16(%r11), %xmm9 // A[2]
 
-	movapd		0(%r12), %xmm10 // B[0]
+	movddup		0(%r12), %xmm10 // B[0]
 	movapd		%xmm10, %xmm11
 	mulpd		%xmm8, %xmm10
 	mulpd		%xmm9, %xmm11
 	addpd		%xmm10, %xmm0
 	addpd		%xmm11, %xmm4
 
-	movapd		32(%r12), %xmm15 // B[4]
+	movddup		32(%r12), %xmm15 // B[4]
 	movapd		%xmm15, %xmm13
 	mulpd		%xmm8, %xmm15
 	mulpd		%xmm9, %xmm13
 	addpd		%xmm15, %xmm1
 	addpd		%xmm13, %xmm5
 
-	movapd		64(%r12), %xmm14 // B[8]
+	movddup		64(%r12), %xmm14 // B[8]
 	movapd		%xmm14, %xmm11
 	mulpd		%xmm8, %xmm14
 	mulpd		%xmm9, %xmm11
 	addpd		%xmm14, %xmm2
 	addpd		%xmm11, %xmm6
 
-	movapd		96(%r12), %xmm12 // B[12]
+	movddup		96(%r12), %xmm12 // B[12]
 	movapd		%xmm12, %xmm13
 	mulpd		%xmm8, %xmm12
 	mulpd		%xmm9, %xmm13
