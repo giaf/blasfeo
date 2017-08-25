@@ -309,7 +309,7 @@ void dgemv_t_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 
 void dgemv_nt_libstr(int m, int n, double alpha_n, double alpha_t, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx_n, int xi_n, struct d_strvec *sx_t, int xi_t, double beta_n, double beta_t, struct d_strvec *sy_n, int yi_n, struct d_strvec *sy_t, int yi_t, struct d_strvec *sz_n, int zi_n, struct d_strvec *sz_t, int zi_t)
 	{
-	if(ai!=0 | xi_n%4!=0 | xi_t%4!=0)
+	if(ai!=0)
 		{
 		printf("\ndgemv_nt_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
