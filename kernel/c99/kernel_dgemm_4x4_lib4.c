@@ -3620,7 +3620,7 @@ void kernel_dtrmm_nn_rl_4x4_gen_lib4(int kmax, double *alpha, double *A, int off
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_GENERIC)  || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 void kernel_dtrmm_nn_rl_4x4_lib4(int kmax, double *alpha, double *A, int offsetB, double *B, int sdb, double *D)
 	{
 	kernel_dtrmm_nn_rl_4x4_gen_lib4(kmax, alpha, A, offsetB, B, sdb, 0, D, 0, 0, 4, 0, 4);

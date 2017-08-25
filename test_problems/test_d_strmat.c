@@ -230,8 +230,8 @@ int main()
 
 	double alpha = 1.0;
 	double beta = 0.0;
-//	dtrmm_rlnn_libstr(7, 8, alpha, &sB, 6, 6, &sA, 0, 0, &sD, 0, 0);
-	dgemm_nn_libstr(8, 8, 8, alpha, &sB, 0, 0, &sA, 1, 0, beta, &sD, 0, 0, &sD, 0, 0);
+	dtrmm_rlnn_libstr(8, 8, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+//	dgemm_nn_libstr(8, 8, 8, alpha, &sB, 0, 0, &sA, 1, 0, beta, &sA, 0, 0, &sD, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 //	dsyrk_ln_libstr(n, 15, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);

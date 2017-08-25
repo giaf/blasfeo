@@ -6689,7 +6689,7 @@ kernel_dsyrk_nt_l_4x4_gen_lib4:
 
 
 
-//                                  rdi    rsi            rdx        rcx          r8         r9       rsp+8
+//                                  1      2              3          4            5          6        7
 // void kernel_dtrmm_nn_rl_4x4_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *D);
 
 	.p2align 4,,15
