@@ -338,6 +338,19 @@ void ddiain_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d
 
 
 
+// add scalar to diagonal
+void ddiare_libstr(int kmax, double alpha, struct d_strmat *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		pA[ii*(lda+1)] += alpha;
+	return;
+	}
+
+
+
 // extract a row into a vector
 void drowex_libstr(int kmax, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi)
 	{
@@ -409,6 +422,20 @@ void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 		if(ipiv[ii]!=ii)
 			drowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
 		}
+	return;
+	}
+
+
+
+// extract vector from column
+void dcolex_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		x[ii] = pA[ii];
 	return;
 	}
 

@@ -1897,6 +1897,43 @@ void drowsw_lib(int kmax, double *pA, double *pC)
 
 
 
+// extract vector from column
+void dcolex_lib(int kmax, int offset, double *pD, int sdd, double *x)
+	{
+
+	const int bs = 4;
+
+	int kna = (bs-offset%bs)%bs;
+	kna = kmax<kna ? kmax : kna;
+
+	int jj, ll;
+
+	if(kna>0)
+		{
+		for(ll=0; ll<kna; ll++)
+			{
+			x[ll] = pD[ll];
+			}
+		pD += kna + bs*(sdd-1);
+		x  += kna;
+		kmax -= kna;
+		}
+	for(jj=0; jj<kmax-3; jj+=4)
+		{
+		x[jj+0] = pD[jj*sdd+0];
+		x[jj+1] = pD[jj*sdd+1];
+		x[jj+2] = pD[jj*sdd+2];
+		x[jj+3] = pD[jj*sdd+3];
+		}
+	for(ll=0; ll<kmax-jj; ll++)
+		{
+		x[jj+ll] = pD[jj*sdd+ll];
+		}
+
+	}
+
+
+
 // insert vector to column
 void dcolin_lib(int kmax, double *x, int offset, double *pD, int sdd)
 	{
@@ -2838,6 +2875,44 @@ void ddiain_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d
 
 
 
+// add scalar to diagonal
+void ddiare_libstr(int kmax, double alpha, struct d_strmat *sA, int ai, int aj)
+	{
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	int offsetA = ai%bs;
+
+	int kna = (bs-offsetA%bs)%bs;
+	kna = kmax<kna ? kmax : kna;
+
+	int jj, ll;
+
+	if(kna>0)
+		{
+		for(ll=0; ll<kna; ll++)
+			{
+			pA[ll+bs*ll] += alpha;
+			}
+		pA += kna + bs*(sda-1) + kna*bs;
+		kmax -= kna;
+		}
+	for(jj=0; jj<kmax-3; jj+=4)
+		{
+		pA[jj*sda+(jj+0)*bs+0] += alpha;
+		pA[jj*sda+(jj+1)*bs+1] += alpha;
+		pA[jj*sda+(jj+2)*bs+2] += alpha;
+		pA[jj*sda+(jj+3)*bs+3] += alpha;
+		}
+	for(ll=0; ll<kmax-jj; ll++)
+		{
+		pA[jj*sda+(jj+ll)*bs+ll] += alpha;
+		}
+	return;
+	}
+
+
+
 // swap two rows of a matrix struct
 void drowsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{
@@ -2901,6 +2976,20 @@ void drowad_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d
 	drowad_lib(kmax, alpha, x, pA);
 	return;
 	}
+
+
+
+// extract vector from column
+void dcolex_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi)
+	{
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	double *x = sx->pa + xi;
+	dcolex_lib(kmax, ai%bs, pA, sda, x);
+	return;
+	}
+
 
 
 

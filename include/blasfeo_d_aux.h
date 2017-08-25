@@ -84,6 +84,7 @@ void dtrtr_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat 
 void dtrtr_u_lib(int m, double alpha, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc);
 void dtrtr_u_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
 void ddiareg_lib(int kmax, double reg, int offset, double *pD, int sdd);
+void ddiare_libstr(int kmax, double alpha, struct d_strmat *sA, int ai, int aj);
 void ddiain_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj);
 void ddiain_sqrt_lib(int kmax, double *x, int offset, double *pD, int sdd);
 void ddiaex_lib(int kmax, double alpha, int offset, double *pD, int sdd, double *x);
@@ -110,6 +111,7 @@ void drowadin_libsp(int kmax, int *idx, double alpha, double *x, double *y, doub
 void drowsw_lib(int kmax, double *pA, double *pC);
 void drowsw_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
 void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA);
+void dcolex_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi);
 void dcolin_lib(int kmax, double *x, int offset, double *pD, int sdd);
 void dcolin_libstr(int kmax, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj);
 void dcolad_lib(int kmax, double alpha, double *x, int offset, double *pD, int sdd);
