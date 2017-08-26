@@ -1992,11 +1992,11 @@ inner_edge_dtrmm_nn_rl_4x4_lib4:
 	movapd 		16(%r11), %xmm9 // A[2]
 
 	movddup		0(%r12), %xmm10 // B[0]
-	addpd		%xmm14, %xmm2
-	addpd		%xmm11, %xmm6
 	movapd		%xmm10, %xmm11
 	mulpd		%xmm8, %xmm10
 	mulpd		%xmm9, %xmm11
+	addpd		%xmm10, %xmm0
+	addpd		%xmm11, %xmm4
 
 	subl	$1, %r10d // k-1
 	addq	$32, %r11 // A+1*bs*sizeof(double)
