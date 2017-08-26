@@ -5468,11 +5468,11 @@ inner_store_4x4_gen_lib4:
 
 	// offset==0
 
-	cmpl		$2, %r15d
 	vmaskmovpd	%ymm0, %ymm15,  0(%r11)
+	cmpl		$2, %r15d
 	jl			3f // end
-	cmpl		$3, %r15d
 	vmaskmovpd	%ymm1, %ymm15, 32(%r11)
+	cmpl		$3, %r15d
 	jl			3f // end
 	vmaskmovpd	%ymm2, %ymm15, 64(%r11)
 	je			3f // end
@@ -6099,7 +6099,7 @@ kernel_dgemm_nt_4x4_vs_lib4:
 
 
 
-//                                   rdi    rsi            rdx        rcx        r8            r9           rsp+8      rsp+16   rsp+24       rsp+32     rsp+40   rsp+48  rsp+56  rsp+64  rsp+72
+//                                   1      2              3          4          5             6            7          8        9            10         11       12      13      14      15
 // void kernel_dgemm_nt_4x4_gen_lib4(int k, double *alpha, double *A, double *B, double *beta, int offsetC, double *C, int sdc, int offsetD, double *D, int sdd, int m0, int m1, int n0, int n1);
 
 	.p2align 4,,15

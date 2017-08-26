@@ -230,7 +230,10 @@ int main()
 
 	double alpha = 1.0;
 	double beta = 0.0;
-	dtrmm_rlnn_libstr(8, 8, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+	kernel_dgemm_nt_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sA.cn, 0, sD.pA, sE.cn, 1, 3, 1, 3);
+	d_print_strmat(n, n, &sD, 0, 0);
+	return 0;
+	dtrmm_rlnn_libstr(8, 8, alpha, &sA, 3, 0, &sB, 0, 0, &sD, 0, 0);
 //	dgemm_nn_libstr(8, 8, 8, alpha, &sB, 0, 0, &sA, 1, 0, beta, &sA, 0, 0, &sD, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
