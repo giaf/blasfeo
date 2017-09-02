@@ -487,7 +487,7 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 	pshufd		$0x4e, %xmm14, %xmm12
 	mulpd		%xmm8, %xmm14
 	mulpd		%xmm9, %xmm11
-	cmpl		$4, %r10d
+//	cmpl		$4, %r10d
 
 	addpd		%xmm15, %xmm0
 	addpd		%xmm13, %xmm4
@@ -922,7 +922,7 @@ inner_kernel_dgemm_sub_nt_4x4_lib4:
 	pshufd		$0x4e, %xmm14, %xmm12
 	mulpd		%xmm8, %xmm14
 	mulpd		%xmm9, %xmm11
-	cmpl		$4, %r10d
+//	cmpl		$4, %r10d
 
 	subpd		%xmm15, %xmm0
 	subpd		%xmm13, %xmm4
