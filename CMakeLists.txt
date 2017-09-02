@@ -64,8 +64,16 @@ configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 #set(CC_COMPILER clang)
 #set(CC_COMPILER x86_64-w64-mingw32-gcc)
 
+# build shared library
+#set(BUILD_SHARED_LIBS ON CACHE STRING "Build shared libraries")
+
 # installation directory
-set(PREFIX /opt)
+if(CMAKE_INSTALL_PREFIX MATCHES "/usr/local")
+	set(CMAKE_INSTALL_PREFIX "/opt/blasfeo")
+endif()
+
+# headers installation directory
+set(BLASFEO_HEADERS_INSTALLATION_DIRECTORY "include" CACHE STRING "Headers local installation directory")
 
 # Macro level (code size vs performance in assembly kernels): 0 (no macro), 1 (all macro but gemm kernel), 2 (all macro)
 set(MACRO_LEVEL 0)
@@ -75,18 +83,18 @@ set(RUNTIME_CHECKS 0)
 #set(RUNTIME_CHECKS 0)
 
 # compiler flags
-set(CMAKE_C_FLAGS "")
-set(CMAKE_ASM_FLAGS "")
-
-# optimization flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
-if(CMAKE_COMPILER_ID MATCHES "GNU" OR CMAKE_COMPILER_ID MATCHES "Clang")
+if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+	set(CMAKE_C_FLAGS "")
+	set(CMAKE_ASM_FLAGS "")
+	set(CMAKE_C_FLAGS_RELEASE "")
+	set(CMAKE_ASM_FLAGS_RELEASE "")
+	# optimization flags
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+	# debugging flags
+	#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
+	#set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -g")
 endif()
-
-# debugging flags
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
-#set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -g")
 
 # search directories
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${BLASFEO_PATH}/include") XXX
@@ -94,18 +102,18 @@ endif()
 #
 if(${LA} MATCHES HIGH_PERFORMANCE)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_HIGH_PERFORMANCE")
-endif(${LA} MATCHES HIGH_PERFORMANCE)
+endif()
 if(${LA} MATCHES REFERENCE)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_REFERENCE")
-endif(${LA} MATCHES REFERENCE)
+endif()
 if(${LA} MATCHES BLAS)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_BLAS")
-endif(${LA} MATCHES BLAS)
+endif()
 
 #
 if(${RUNTIME_CHECKS} MATCHES 1)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDIM_CHECK")
-endif(${RUNTIME_CHECKS} MATCHES 1)
+endif()
 
 #
 if(${EXT_DEP})
@@ -115,10 +123,10 @@ endif()
 #
 if(${MACRO_LEVEL} MATCHES 1)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMACRO_LEVEL=1")
-endif(${MACRO_LEVEL} MATCHES 1)
+endif()
 if(${MACRO_LEVEL} MATCHES 2)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMACRO_LEVEL=2")
-endif(${MACRO_LEVEL} MATCHES 2)
+endif()
 
 #
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -156,28 +164,53 @@ endif(${REF_BLAS} MATCHES ATLAS)
 
 # architecture-specific flags
 if(${TARGET} MATCHES X64_INTEL_HASWELL)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx2 -mfma -DTARGET_X64_INTEL_HASWELL")
-endif(${TARGET} MATCHES X64_INTEL_HASWELL)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_INTEL_HASWELL")
+	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+		set()
+	endif()
+endif()
+
 if(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx -DTARGET_X64_INTEL_SANDY_BRIDGE")
-endif(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_INTEL_SANDY_BRIDGE")
+	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx")
+	endif()
+endif()
+
 if(${TARGET} MATCHES X64_INTEL_CORE)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -msse3 -DTARGET_X64_INTEL_CORE")
-endif(${TARGET} MATCHES X64_INTEL_CORE)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_INTEL_CORE")
+	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -msse3")
+	endif()
+endif()
+
 if(${TARGET} MATCHES X64_AMD_BULLDOZER)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx -mfma -DTARGET_X64_AMD_BULLDOZER")
-endif(${TARGET} MATCHES X64_AMD_BULLDOZER)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_AMD_BULLDOZER")
+	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx -mfma")
+	endif()
+endif()
+
 if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc+crypto+fp+simd -DTARGET_ARMV8A_ARM_CORTEX_A57")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV8A_ARM_CORTEX_A57")
 	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV8A_ARM_CORTEX_A57")
-endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
+	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc+crypto+fp+simd")
+	endif()
+endif()
+
 if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15 -DTARGET_ARMV7A_ARM_CORTEX_A15")
-	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -mfpu=neon-vfpv4 -DTARGET_ARMV7A_ARM_CORTEX_A15")
-endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV7A_ARM_CORTEX_A15")
+	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV7A_ARM_CORTEX_A15")
+	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15")
+		set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -mfpu=neon-vfpv4")
+	endif()
+endif()
+
 if(${TARGET} MATCHES GENERIC)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_GENERIC")
-endif(${TARGET} MATCHES GENERIC)
+endif()
 
 
 
@@ -545,9 +578,14 @@ set(BLASFEO_SRC ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
 
 # add library
 add_library(blasfeo ${BLASFEO_SRC})
-#add_library(blasfeo SHARED ${BLASFEO})
 
-#target_link_libraries(hpipm)
+install(TARGETS blasfeo
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
+	RUNTIME DESTINATION bin)
+
+file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
+install(FILES ${BLASFEO_HEADERS} DESTINATION ${BLASFEO_HEADERS_INSTALLATION_DIRECTORY})
 
 # test problems
 # add_subdirectory(test_problems)
