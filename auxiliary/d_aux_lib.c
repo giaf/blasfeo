@@ -948,6 +948,19 @@ void dvecze_libstr(int m, struct d_strvec *sm, int mi, struct d_strvec *sv, int 
 
 
 
+void dvecnrm_inf_libstr(int m, struct d_strvec *sx, int xi, double *ptr_norm)
+	{
+	int ii;
+	double *x = sx->pa + xi;
+	double norm = 0.0;
+	for(ii=0; ii<m; ii++)
+		norm = fmax(norm, fabs(x[ii]));
+	*ptr_norm = norm;
+	return;
+	}
+
+
+
 #else
 
 #error : wrong LA choice

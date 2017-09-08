@@ -3085,6 +3085,18 @@ void svecex_sp_libstr(int m, float alpha, int *idx, struct s_strvec *sx, int xi,
 
 
 
+void svecnrm_inf_libstr(int m, struct s_strvec *sx, int xi, float *ptr_norm)
+	{
+	int ii;
+	float *x = sx->pa + xi;
+	float norm = 0.0;
+	for(ii=0; ii<m; ii++)
+		norm = fmax(norm, fabs(x[ii]));
+	*ptr_norm = norm;
+	return;
+	}
+
+
 #else
 
 #error : wrong LA choice
