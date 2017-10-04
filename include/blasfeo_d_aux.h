@@ -92,6 +92,7 @@ void ddiaad_lib(int kmax, double alpha, double *x, int offset, double *pD, int s
 void ddiain_libsp(int kmax, int *idx, double alpha, double *x, double *pD, int sdd);
 void ddiain_sp_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, int *idx, struct d_strmat *sD, int di, int dj);
 void ddiaex_libsp(int kmax, int *idx, double alpha, double *pD, int sdd, double *x);
+void ddiaex_libstr(int kmax, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi);
 void ddiaex_sp_libstr(int kmax, double alpha, int *idx, struct d_strmat *sD, int di, int dj, struct d_strvec *sx, int xi);
 void ddiaad_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj);
 void ddiaad_libsp(int kmax, int *idx, double alpha, double *x, double *pD, int sdd);

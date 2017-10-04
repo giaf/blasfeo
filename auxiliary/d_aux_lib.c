@@ -747,6 +747,20 @@ void ddiain_sp_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, int *
 
 
 
+// extract a vector from diagonal
+void ddiaex_libstr(int kmax, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi)
+	{
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		x[ii] = alpha*pA[ii*(lda+1)];
+	return;
+	}
+
+
+
 // extract the diagonal of a strmat from a strvec , sparse formulation
 void ddiaex_sp_libstr(int kmax, double alpha, int *idx, struct d_strmat *sD, int di, int dj, struct d_strvec *sx, int xi)
 	{
