@@ -265,13 +265,13 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		file(GLOB BLAS_SRC
 			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib8.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib8.c
@@ -318,13 +318,13 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		file(GLOB BLAS_SRC
 			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib8.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib8.c
@@ -362,13 +362,13 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		file(GLOB BLAS_SRC
 			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
@@ -406,13 +406,13 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		file(GLOB BLAS_SRC
 			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
@@ -456,13 +456,13 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		file(GLOB BLAS_SRC
 			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
@@ -503,13 +503,13 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		file(GLOB BLAS_SRC
 			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
@@ -546,13 +546,13 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		file(GLOB BLAS_SRC
 			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
@@ -571,13 +571,13 @@ else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 	file(GLOB BLAS_SRC
 		${PROJECT_SOURCE_DIR}/blas/d_blas1_lib.c
 		${PROJECT_SOURCE_DIR}/blas/d_blas2_lib.c
-		${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib4.c
+		${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 		${PROJECT_SOURCE_DIR}/blas/d_blas3_lib.c
 		${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib.c
 		${PROJECT_SOURCE_DIR}/blas/d_lapack_lib.c
 		${PROJECT_SOURCE_DIR}/blas/s_blas1_lib.c
 		${PROJECT_SOURCE_DIR}/blas/s_blas2_lib.c
-		${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib4.c
+		${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 		${PROJECT_SOURCE_DIR}/blas/s_blas3_lib.c
 		${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib.c
 		${PROJECT_SOURCE_DIR}/blas/s_lapack_lib.c
