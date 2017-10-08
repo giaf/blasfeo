@@ -518,6 +518,9 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 	
 
 	// unroll 0
+	movapd		0(%r11), %xmm8 // A[0]
+	movapd 		16(%r11), %xmm9 // A[2]
+	movapd		0(%r12), %xmm10 // B[0]
 	addpd		%xmm14, %xmm3
 	movapd		16(%r12), %xmm14 // B[2]
 	addpd		%xmm11, %xmm7
@@ -535,7 +538,6 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 	addq	$32, %r12
 
 	addpd		%xmm10, %xmm1
-	movapd		32(%r12), %xmm10 // B[0]
 	addpd		%xmm11, %xmm5
 	movapd		%xmm14, %xmm11
 	pshufd		$0x4e, %xmm14, %xmm12
@@ -547,12 +549,9 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 	addpd		%xmm13, %xmm4
 	movapd		%xmm12, %xmm13
 	mulpd		%xmm8, %xmm12
-	movapd 		32(%r11), %xmm8 // A[0]
 	mulpd		%xmm9, %xmm13
-	movapd 		48(%r11), %xmm9 // A[2]
 
 	cmpl	$0, %r10d
-
 	jg		3b // clean up loop 
 
 
@@ -953,6 +952,9 @@ inner_kernel_dgemm_sub_nt_4x4_lib4:
 	
 
 	// unroll 0
+	movapd		0(%r11), %xmm8 // A[0]
+	movapd 		16(%r11), %xmm9 // A[2]
+	movapd		0(%r12), %xmm10 // B[0]
 	subpd		%xmm14, %xmm3
 	movapd		16(%r12), %xmm14 // B[2]
 	subpd		%xmm11, %xmm7
@@ -970,7 +972,6 @@ inner_kernel_dgemm_sub_nt_4x4_lib4:
 	addq	$32, %r12
 
 	subpd		%xmm10, %xmm1
-	movapd		32(%r12), %xmm10 // B[0]
 	subpd		%xmm11, %xmm5
 	movapd		%xmm14, %xmm11
 	pshufd		$0x4e, %xmm14, %xmm12
@@ -982,12 +983,9 @@ inner_kernel_dgemm_sub_nt_4x4_lib4:
 	subpd		%xmm13, %xmm4
 	movapd		%xmm12, %xmm13
 	mulpd		%xmm8, %xmm12
-	movapd 		32(%r11), %xmm8 // A[0]
 	mulpd		%xmm9, %xmm13
-	movapd 		48(%r11), %xmm9 // A[2]
 
 	cmpl	$0, %r10d
-
 	jg		3b // clean up loop 
 
 
