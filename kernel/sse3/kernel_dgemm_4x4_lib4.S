@@ -2868,6 +2868,253 @@ inner_blend_scale_ab_4x4_lib4:
 
 // common inner routine with file scope
 //
+// blend for generic alpha and beta
+//
+// input arguments:
+// r10   <- alpha
+// r11   <- beta
+// r12  <- offset
+// r13   <- C
+// r14  <- 4*sdc*sizeof(double)
+// xmm0  <- [d00 d10]
+// xmm1  <- [d20 d30]
+// xmm2  <- [d01 d11]
+// xmm3  <- [d21 d31]
+// xmm0  <- [d02 d12]
+// xmm1  <- [d22 d32]
+// xmm2  <- [d03 d13]
+// xmm3  <- [d23 d33]
+//
+// output arguments:
+// r10   <- alpha
+// r11   <- beta
+// r12  <- offset
+// r13   <- C
+// r14  <- 4*sdc*sizeof(double)
+// r15  <- n0 // col index: start from (inc)
+// xmm0  <- [d00 d10]
+// xmm1  <- [d20 d30]
+// xmm2  <- [d01 d11]
+// xmm3  <- [d21 d31]
+// xmm0  <- [d02 d12]
+// xmm1  <- [d22 d32]
+// xmm2  <- [d03 d13]
+// xmm3  <- [d23 d33]
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_SCALE_AB_4X4_GEN_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_blend_scale_ab_4x4_gen_lib4, @function
+inner_blend_scale_ab_4x4_gen_lib4:
+#elif defined(OS_MAC)
+_inner_blend_scale_ab_4x4_gen_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_blend_scale_ab_4x4_gen_lib4; .scl 2; .type 32; .endef
+inner_blend_scale_ab_4x4_gen_lib4:
+#endif
+#endif
+	
+	movapd	%xmm0, %xmm8
+	movsd	%xmm1, %xmm0
+	movsd	%xmm8, %xmm1
+
+	movapd	%xmm2, %xmm8
+	movsd	%xmm3, %xmm2
+	movsd	%xmm8, %xmm3
+
+	movapd	%xmm4, %xmm8
+	movsd	%xmm5, %xmm4
+	movsd	%xmm8, %xmm5
+
+	movapd	%xmm6, %xmm8
+	movsd	%xmm7, %xmm6
+	movsd	%xmm8, %xmm7
+
+	// alpha
+	movddup	0(%r10), %xmm15
+
+	mulpd	%xmm15, %xmm0
+	mulpd	%xmm15, %xmm1
+	mulpd	%xmm15, %xmm2
+	mulpd	%xmm15, %xmm3
+	mulpd	%xmm15, %xmm4
+	mulpd	%xmm15, %xmm5
+	mulpd	%xmm15, %xmm6
+	mulpd	%xmm15, %xmm7
+
+
+	// beta
+	movddup	0(%r11), %xmm14
+
+	xorpd		%xmm15, %xmm15 // 0.0
+
+	ucomisd		%xmm14, %xmm15 // beta==0.0 ?
+	je			3f // end
+
+	cmpl	$0, %r12d
+	jg		0f
+
+	// offset==0
+
+	movapd		0(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm0
+	movapd		16(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm4
+	movapd		32(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm1
+	movapd		48(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm5
+	movapd		64(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm2
+	movapd		80(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm6
+	movapd		96(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm3
+	movapd		112(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm7
+
+
+	jmp		3f
+
+0:
+
+	movq	%r13, %r15 // C0
+	addq	%r14, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
+
+	cmpl	$1, %r12d
+	jg		1f
+
+	// offset==1
+
+	movupd		8(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm0
+	movlpd		24(%r13), %xmm15
+	movhpd		0(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm4
+	movupd		40(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm1
+	movlpd		56(%r13), %xmm15
+	movhpd		32(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm5
+	movupd		72(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm2
+	movlpd		88(%r13), %xmm15
+	movhpd		64(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm6
+	movupd		104(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm3
+	movlpd		120(%r13), %xmm15
+	movhpd		96(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm7
+
+	jmp		3f
+
+1:
+
+	cmpl	$2, %r12d
+	jg		2f
+
+	// offset==2
+
+	movapd		16(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm0
+	movapd		0(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm4
+	movapd		48(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm1
+	movapd		32(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm5
+	movapd		80(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm2
+	movapd		64(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm6
+	movapd		112(%r13), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm3
+	movapd		96(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm7
+
+
+	jmp		3f
+
+2:
+
+	// offset==3
+
+	// TODO
+	movlpd		24(%r13), %xmm15
+	movhpd		0(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm0
+	movupd		8(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm4
+	movlpd		56(%r13), %xmm15
+	movhpd		32(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm1
+	movupd		40(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm5
+	movlpd		88(%r13), %xmm15
+	movhpd		64(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm2
+	movupd		72(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm6
+	movlpd		120(%r13), %xmm15
+	movhpd		96(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm3
+	movupd		104(%r15), %xmm15
+	mulpd		%xmm14, %xmm15
+	addpd		%xmm15, %xmm7
+
+
+3:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_blend_scale_ab_4x4_gen_lib4, .-inner_blend_scale_ab_4x4_gen_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // blender for alpha = 1.0 and beta = 1.0
 //
 // input arguments:
@@ -4719,7 +4966,6 @@ kernel_dgemm_nt_4x4_vs_lib4:
 
 
 
-#if 0
 
 //                                   1      2              3          4          5             6            7          8        9            10         11       12      13      14      15
 // void kernel_dgemm_nt_4x4_gen_lib4(int k, double *alpha, double *A, double *B, double *beta, int offsetC, double *C, int sdc, int offsetD, double *D, int sdd, int m0, int m1, int n0, int n1);
@@ -4771,8 +5017,6 @@ kernel_dgemm_nt_4x4_gen_lib4:
 
 	// call inner blend scale
 
-#if 0 //
-
 	movq	ARG2, %r10 // alpha
 	movq	ARG5, %r11 // beta
 	movq	ARG6, %r12 // offsetC
@@ -4789,24 +5033,6 @@ kernel_dgemm_nt_4x4_gen_lib4:
 	callq _inner_blend_scale_ab_4x4_gen_lib4
 #endif
 #endif
-
-#else //
-
-	movq	ARG2, %r10 // alpha
-	movq	ARG5, %r11 // beta
-	movq	ARG7, %r12   // C
-
-#if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_AB_4X4_LIB4
-#else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_ab_4x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_blend_scale_ab_4x4_lib4
-#endif
-#endif
-
-#endif //
 
 	// store n gen
 
@@ -4836,8 +5062,6 @@ kernel_dgemm_nt_4x4_gen_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dgemm_nt_4x4_gen_lib4, .-kernel_dgemm_nt_4x4_gen_lib4
-#endif
-
 #endif
 
 
