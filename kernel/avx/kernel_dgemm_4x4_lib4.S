@@ -6790,7 +6790,7 @@ kernel_dtrmm_nn_rl_4x4_lib4:
 
 
 
-//                                      rdi    rsi            rdx        rcx          r8         r9       rsp+8        rsp+16     rsp+24   rsp+32  rsp+40  rsp+48  rsp+56
+//                                      1      2              3          4            5          6        7            8          9        10      11      12      13
 // void kernel_dtrmm_nn_rl_4x4_gen_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, int offsetD, double *D, int sdd, int m0, int m1, int n0, int n1);
 
 	.p2align 4,,15
