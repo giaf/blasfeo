@@ -3747,14 +3747,10 @@ inner_store_4x4_gen_lib4:
 	cmpl	$1, %r13d
 	jg		5f
 
-	movsd	0(%r11), %xmm8
-	movsd	%xmm8, %xmm0
-	movsd	32(%r11), %xmm8
-	movsd	%xmm8, %xmm1
-	movsd	64(%r11), %xmm8
-	movsd	%xmm8, %xmm2
-	movsd	96(%r11), %xmm8
-	movsd	%xmm8, %xmm3
+	movlpd	0(%r11), %xmm0
+	movlpd	32(%r11), %xmm1
+	movlpd	64(%r11), %xmm2
+	movlpd	96(%r11), %xmm3
 
 	jmp		4f
 
@@ -3776,22 +3772,19 @@ inner_store_4x4_gen_lib4:
 	jg		5f
 
 	movapd	0(%r11), %xmm0
-	movsd	16(%r11), %xmm8
-	movsd	%xmm8, %xmm4
+	movlpd	16(%r11), %xmm4
 	movapd	32(%r11), %xmm1
-	movsd	48(%r11), %xmm8
-	movsd	%xmm8, %xmm5
+	movlpd	48(%r11), %xmm5
 	movapd	64(%r11), %xmm2
-	movsd	80(%r11), %xmm8
-	movsd	%xmm8, %xmm6
+	movlpd	80(%r11), %xmm6
 	movapd	96(%r11), %xmm3
-	movsd	112(%r11), %xmm8
-	movsd	%xmm8, %xmm7
+	movlpd	112(%r11), %xmm7
 
 	jmp		4f
 
 5:
 
+	// XXX needed ???
 	movapd	0(%r11), %xmm0
 	movapd	16(%r11), %xmm4
 	movapd	32(%r11), %xmm1
@@ -3884,7 +3877,136 @@ inner_store_4x4_gen_lib4:
 	// offset==1 //
 	///////////////
 
-	// TODO
+	cmpl	$0, %r13d
+	jle		4f
+
+	cmpl	$1, %r13d
+	jg		5f
+
+	movlpd	8(%r11), %xmm0
+	movlpd	40(%r11), %xmm1
+	movlpd	72(%r11), %xmm2
+	movlpd	104(%r11), %xmm3
+
+	jmp		4f
+
+5:
+
+	cmpl	$2, %r13d
+	jg		5f
+
+	movupd	8(%r11), %xmm0
+	movupd	40(%r11), %xmm1
+	movupd	72(%r11), %xmm2
+	movupd	104(%r11), %xmm3
+
+	jmp		4f
+
+5:
+
+	cmpl	$3, %r13d
+	jg		5f
+
+	movupd	8(%r11), %xmm0
+	movupd	40(%r11), %xmm1
+	movupd	72(%r11), %xmm2
+	movupd	104(%r11), %xmm3
+	movlpd	24(%r11), %xmm4
+	movlpd	56(%r11), %xmm5
+	movlpd	88(%r11), %xmm6
+	movlpd	120(%r11), %xmm7
+
+	jmp		4f
+
+5:
+
+	// XXX needed ???
+	movupd	8(%r11), %xmm0
+	movupd	40(%r11), %xmm1
+	movupd	72(%r11), %xmm2
+	movupd	104(%r11), %xmm3
+	movlpd	24(%r11), %xmm4
+	movlpd	56(%r11), %xmm5
+	movlpd	88(%r11), %xmm6
+	movlpd	120(%r11), %xmm7
+	movhpd	0(%rbx), %xmm4
+	movhpd	32(%rbx), %xmm5
+	movhpd	64(%rbx), %xmm6
+	movhpd	96(%rbx), %xmm7
+
+4:
+	cmpl		$2, %r14d
+	jg			5f
+	je			4f
+
+	// km==1
+	movsd		%xmm0,   8(%r11)
+	cmpl		$2, %r15d
+	jl			3f // end
+	movsd		%xmm1,  40(%r11)
+	cmpl		$3, %r15d
+	jl			3f // end
+	movsd		%xmm2,  72(%r11)
+	je			3f // end
+	movsd		%xmm3, 104(%r11)
+
+	jmp		3f
+
+4:
+	// km==2
+	movupd		%xmm0,   8(%r11)
+	cmpl		$2, %r15d
+	jl			3f // end
+	movupd		%xmm1,  40(%r11)
+	cmpl		$3, %r15d
+	jl			3f // end
+	movupd		%xmm2,  72(%r11)
+	je			3f // end
+	movupd		%xmm3, 104(%r11)
+
+	jmp		3f
+
+5:
+	cmpl		$3, %r14d
+	jg			6f
+
+	// km==3
+	movupd		%xmm0,   8(%r11)
+	movsd		%xmm4,  24(%r11)
+	cmpl		$2, %r15d
+	jl			3f // end
+	movupd		%xmm1,  40(%r11)
+	movsd		%xmm5,  56(%r11)
+	cmpl		$3, %r15d
+	jl			3f // end
+	movupd		%xmm2,  72(%r11)
+	movsd		%xmm6,  88(%r11)
+	je			3f // end
+	movupd		%xmm3, 104(%r11)
+	movsd		%xmm7, 120(%r11)
+
+	jmp		3f
+
+6:
+	// km==4
+	movupd		%xmm0,   8(%r11)
+	movsd		%xmm4,  24(%r11)
+	movhpd		%xmm4,   0(%rbx)
+	cmpl		$2, %r15d
+	jl			3f // end
+	movupd		%xmm1,  40(%r11)
+	movsd		%xmm5,  56(%r11)
+	movhpd		%xmm5,  32(%rbx)
+	cmpl		$3, %r15d
+	jl			3f // end
+	movupd		%xmm2,  72(%r11)
+	movsd		%xmm6,  88(%r11)
+	movhpd		%xmm6,  64(%rbx)
+	je			3f // end
+	movupd		%xmm3, 104(%r11)
+	movsd		%xmm7, 120(%r11)
+	movhpd		%xmm7,  96(%rbx)
+
 
 	jmp		3f
 
@@ -3897,7 +4019,128 @@ inner_store_4x4_gen_lib4:
 	// offset==2 //
 	///////////////
 
-	// TODO
+	cmpl	$0, %r13d
+	jle		4f
+
+	cmpl	$1, %r13d
+	jg		5f
+
+	movlpd	16(%r11), %xmm0
+	movlpd	48(%r11), %xmm1
+	movlpd	80(%r11), %xmm2
+	movlpd	112(%r11), %xmm3
+
+	jmp		4f
+
+5:
+
+	cmpl	$2, %r13d
+	jg		5f
+
+	movapd	16(%r11), %xmm0
+	movapd	48(%r11), %xmm1
+	movapd	80(%r11), %xmm2
+	movapd	112(%r11), %xmm3
+
+	jmp		4f
+
+5:
+
+	cmpl	$3, %r13d
+	jg		5f
+
+	movapd	16(%r11), %xmm0
+	movlpd	0(%rbx), %xmm4
+	movapd	48(%r11), %xmm1
+	movlpd	32(%rbx), %xmm5
+	movapd	80(%r11), %xmm2
+	movlpd	64(%rbx), %xmm6
+	movapd	112(%r11), %xmm3
+	movlpd	96(%rbx), %xmm7
+
+	jmp		4f
+
+5:
+
+	// XXX needed ???
+	movapd	16(%r11), %xmm0
+	movapd	0(%rbx), %xmm4
+	movapd	48(%r11), %xmm1
+	movapd	32(%rbx), %xmm5
+	movapd	80(%r11), %xmm2
+	movapd	64(%rbx), %xmm6
+	movapd	112(%r11), %xmm3
+	movapd	96(%rbx), %xmm7
+
+4:
+	cmpl		$2, %r14d
+	jg			5f
+	je			4f
+
+	// km==1
+	movsd		%xmm0, 16(%r11)
+	cmpl		$2, %r15d
+	jl			3f // end
+	movsd		%xmm1, 48(%r11)
+	cmpl		$3, %r15d
+	jl			3f // end
+	movsd		%xmm2, 80(%r11)
+	je			3f // end
+	movsd		%xmm3, 112(%r11)
+
+	jmp		3f
+
+4:
+	// km==2
+	movapd		%xmm0, 16(%r11)
+	cmpl		$2, %r15d
+	jl			3f // end
+	movapd		%xmm1, 48(%r11)
+	cmpl		$3, %r15d
+	jl			3f // end
+	movapd		%xmm2, 80(%r11)
+	je			3f // end
+	movapd		%xmm3, 112(%r11)
+
+	jmp		3f
+
+5:
+	cmpl		$3, %r14d
+	jg			6f
+
+	// km==3
+	movapd		%xmm0,  16(%r11)
+	movsd		%xmm4,   0(%rbx)
+	cmpl		$2, %r15d
+	jl			3f // end
+	movapd		%xmm1,  48(%r11)
+	movsd		%xmm5,  32(%rbx)
+	cmpl		$3, %r15d
+	jl			3f // end
+	movapd		%xmm2,  80(%r11)
+	movsd		%xmm6,  64(%rbx)
+	je			3f // end
+	movapd		%xmm3, 112(%r11)
+	movsd		%xmm7,  96(%rbx)
+
+	jmp		3f
+
+6:
+	// km==4
+	movapd		%xmm0,  16(%r11)
+	movapd		%xmm4,   0(%rbx)
+	cmpl		$2, %r15d
+	jl			3f // end
+	movapd		%xmm1,  48(%r11)
+	movapd		%xmm5,  32(%rbx)
+	cmpl		$3, %r15d
+	jl			3f // end
+	movapd		%xmm2,  80(%r11)
+	movapd		%xmm6,  64(%rbx)
+	je			3f // end
+	movapd		%xmm3, 112(%r11)
+	movapd		%xmm7,  96(%rbx)
+
 
 	jmp		3f
 
@@ -3907,7 +4150,151 @@ inner_store_4x4_gen_lib4:
 	// offset==3 //
 	///////////////
 
-	// TODO
+	cmpl	$0, %r13d
+	jle		4f
+
+	cmpl	$1, %r13d
+	jg		5f
+
+	movlpd	24(%r11), %xmm0
+	movlpd	56(%r11), %xmm1
+	movlpd	88(%r11), %xmm2
+	movlpd	120(%r11), %xmm3
+
+	jmp		4f
+
+5:
+
+	cmpl	$2, %r13d
+	jg		5f
+
+	movlpd	24(%r11), %xmm0
+	movlpd	56(%r11), %xmm1
+	movlpd	88(%r11), %xmm2
+	movlpd	120(%r11), %xmm3
+	movhpd	0(%rbx), %xmm0
+	movhpd	32(%rbx), %xmm1
+	movhpd	64(%rbx), %xmm2
+	movhpd	96(%rbx), %xmm3
+
+	jmp		4f
+
+5:
+
+	cmpl	$3, %r13d
+	jg		5f
+
+	movlpd	24(%r11), %xmm0
+	movlpd	56(%r11), %xmm1
+	movlpd	88(%r11), %xmm2
+	movlpd	120(%r11), %xmm3
+	movhpd	0(%rbx), %xmm0
+	movhpd	32(%rbx), %xmm1
+	movhpd	64(%rbx), %xmm2
+	movhpd	96(%rbx), %xmm3
+	movlpd	8(%r11), %xmm4
+	movlpd	40(%r11), %xmm5
+	movlpd	72(%r11), %xmm6
+	movlpd	104(%r11), %xmm7
+
+	jmp		4f
+
+5:
+
+	movlpd	24(%r11), %xmm0
+	movlpd	56(%r11), %xmm1
+	movlpd	88(%r11), %xmm2
+	movlpd	120(%r11), %xmm3
+	movhpd	0(%rbx), %xmm0
+	movhpd	32(%rbx), %xmm1
+	movhpd	64(%rbx), %xmm2
+	movhpd	96(%rbx), %xmm3
+	movupd	8(%r11), %xmm4
+	movupd	40(%r11), %xmm5
+	movupd	72(%r11), %xmm6
+	movupd	104(%r11), %xmm7
+
+4:
+	cmpl		$2, %r14d
+	jg			5f
+	je			4f
+
+	// km==1
+	movsd		%xmm0,  24(%r11)
+	cmpl		$2, %r15d
+	jl			3f // end
+	movsd		%xmm1,  56(%r11)
+	cmpl		$3, %r15d
+	jl			3f // end
+	movsd		%xmm2,  88(%r11)
+	je			3f // end
+	movsd		%xmm3, 120(%r11)
+
+	jmp		3f
+
+4:
+	// km==2
+	movsd		%xmm0,  24(%r11)
+	movhpd		%xmm0,   0(%rbx)
+	cmpl		$2, %r15d
+	jl			3f // end
+	movsd		%xmm1,  56(%r11)
+	movhpd		%xmm1,  32(%rbx)
+	cmpl		$3, %r15d
+	jl			3f // end
+	movsd		%xmm2,  88(%r11)
+	movhpd		%xmm2,  64(%rbx)
+	je			3f // end
+	movsd		%xmm3, 120(%r11)
+	movhpd		%xmm3,  96(%rbx)
+
+	jmp		3f
+
+5:
+	cmpl		$3, %r14d
+	jg			6f
+
+	// km==3
+	movsd		%xmm0,  24(%r11)
+	movhpd		%xmm0,   0(%rbx)
+	movsd		%xmm4,   8(%rbx)
+	cmpl		$2, %r15d
+	jl			3f // end
+	movsd		%xmm1,  56(%r11)
+	movhpd		%xmm1,  32(%rbx)
+	movsd		%xmm5,  40(%rbx)
+	cmpl		$3, %r15d
+	jl			3f // end
+	movsd		%xmm2,  88(%r11)
+	movhpd		%xmm2,  64(%rbx)
+	movsd		%xmm6,  72(%rbx)
+	je			3f // end
+	movsd		%xmm3, 120(%r11)
+	movhpd		%xmm3,  96(%rbx)
+	movsd		%xmm7, 104(%rbx)
+
+	jmp		3f
+
+6:
+	// km==4
+	movsd		%xmm0,  24(%r11)
+	movhpd		%xmm0,   0(%rbx)
+	movupd		%xmm4,   8(%rbx)
+	cmpl		$2, %r15d
+	jl			3f // end
+	movsd		%xmm1,  56(%r11)
+	movhpd		%xmm1,  32(%rbx)
+	movupd		%xmm5,  40(%rbx)
+	cmpl		$3, %r15d
+	jl			3f // end
+	movsd		%xmm2,  88(%r11)
+	movhpd		%xmm2,  64(%rbx)
+	movupd		%xmm6,  72(%rbx)
+	je			3f // end
+	movsd		%xmm3, 120(%r11)
+	movhpd		%xmm3,  96(%rbx)
+	movupd		%xmm7, 104(%rbx)
+
 
 3:
 
