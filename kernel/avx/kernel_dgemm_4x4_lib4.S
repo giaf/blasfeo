@@ -6591,7 +6591,7 @@ kernel_dsyrk_nt_l_4x4_vs_lib4:
 
 
 
-//                                     rdi    rsi            rdx        rcx        r8            r9           rsp+8      rsp+16   rsp+24       rsp+32     rsp+40   rsp+48  rsp+56  rsp+64  rsp+72
+//                                     1      2              3          4          5             6            7          8        9            10         11       12      13      14      15
 // void kernel_dsyrk_nt_l_4x4_gen_lib4(int k, double *alpha, double *A, double *B, double *beta, int offsetC, double *C, int sdc, int offsetD, double *D, int sdd, int m0, int m1, int n0, int n1);
 
 	.p2align 4,,15
