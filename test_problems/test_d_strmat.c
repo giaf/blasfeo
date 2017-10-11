@@ -234,7 +234,8 @@ int main()
 //	kernel_dsyrk_nt_l_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sD.cn, 3, sD.pA, sD.cn, 0, 4, 0, 4);
 //	kernel_dtrmm_nn_rl_4x4_gen_lib4(4, &alpha, sB.pA, 3, sA.pA, sB.cn, 0, sD.pA, sD.cn, 0, 4, 0, 4);
 	d_print_strmat(n, n, &sD, 0, 0);
-	kernel_dgemv_n_4_lib4(4, &alpha, sA.pA, sx1.pa, &beta, sx0.pa, sz0.pa);
+//	kernel_dgemv_n_4_lib4(4, &alpha, sA.pA, sx0.pa, &beta, sx0.pa, sz0.pa);
+	kernel_dgemv_t_4_lib4(3, &alpha, sA.pA, sA.cn, sx2.pa, &beta, sx0.pa, sz0.pa);
 	d_print_tran_strvec(n, &sz0, 0);
 	return 0;
 	dtrmm_rlnn_libstr(8, 8, alpha, &sA, 3, 0, &sB, 0, 0, &sD, 0, 0);

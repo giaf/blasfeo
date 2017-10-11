@@ -249,7 +249,7 @@ void kernel_dgemv_t_4_gen_lib4(int kmax, double *alpha, int offA, double *A, int
 	
 	
 	
-#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 void kernel_dgemv_t_4_lib4(int kmax, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z)
 	{
 
