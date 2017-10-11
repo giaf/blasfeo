@@ -33,7 +33,7 @@ OBJS =
 ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), X64_INTEL_CORE)
-OBJS += kernel_dgemm_4x4_lib4.o
+OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemv_4_lib4.o
 OBJS +=
 endif
 
