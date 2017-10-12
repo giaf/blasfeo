@@ -598,6 +598,73 @@ inner_store_4_lib4:
 
 
 
+// common inner routine with file scope
+//
+// store vs
+//
+// input arguments:
+// r10   <- D
+// r11d   <- km
+// xmm0 <- [z0 z1]
+// xmm1 <- [z2 z3]
+//
+// output arguments:
+// r10   <- D
+// r11d   <- km
+// xmm0 <- [z0 z1]
+// xmm1 <- [z2 z3]
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_4_VS_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_store_4_vs_lib4, @function
+inner_store_4_vs_lib4:
+#elif defined(OS_MAC)
+_inner_store_4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_store_4_vs_lib4; .scl 2; .type 32; .endef
+inner_store_4_vs_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r11d
+	jle		0f // return
+
+	movsd 	%xmm0, 0(%r10)
+
+	cmpl	$1, %r11d
+	jle		0f // return
+
+	movhpd 	%xmm0, 8(%r10)
+
+	cmpl	$2, %r11d
+	jle		0f // return
+
+	movsd 	%xmm1, 16(%r10)
+
+	cmpl	$3, %r11d
+	jle		0f // return
+
+	movhpd 	%xmm1, 24(%r10)
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_store_4_vs_lib4, .-inner_store_4_vs_lib4
+#endif
+#endif
+
+
+
+
+
 //                            1      2              3          4          5             6          7
 // void kernel_dgemv_n_4_lib4(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z);
 
@@ -680,6 +747,95 @@ kernel_dgemv_n_4_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dgemv_n_4_lib4, .-kernel_dgemv_n_4_lib4
+#endif
+
+
+
+
+
+//                               1      2              3          4          5             6          7          8
+// void kernel_dgemv_n_4_vs_lib4(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int k1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dgemv_n_4_vs_lib4
+	.type kernel_dgemv_n_4_vs_lib4, @function
+kernel_dgemv_n_4_vs_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dgemv_n_4_vs_lib4
+_kernel_dgemv_n_4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgemv_n_4_vs_lib4
+	.def kernel_dgemv_n_4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dgemv_n_4_vs_lib4:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
+
+
+	// call inner dgemv kernel n
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12  // x
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemv_add_n_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemv_add_n_4_lib4
+#endif
+#endif
+
+
+	// call inner blend n scale ab
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG5, %r11   // beta
+	movq	ARG6, %r12   // y
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_N_SCALE_AB_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_n_scale_ab_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_blend_n_scale_ab_4_lib4
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG7, %r10 // z 
+	movq	ARG8, %r11 // k1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_4_vs_lib4
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dgemv_n_4_vs_lib4, .-kernel_dgemv_n_4_vs_lib4
 #endif
 
 
