@@ -933,4 +933,96 @@ kernel_dgemv_t_4_lib4:
 
 
 
+//                               1      2              3          4        5          6             7         8           9
+// void kernel_dgemv_t_4_vs_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z, int km);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dgemv_t_4_vs_lib4
+	.type kernel_dgemv_t_4_vs_lib4, @function
+kernel_dgemv_t_4_vs_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dgemv_t_4_vs_lib4
+_kernel_dgemv_t_4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgemv_t_4_vs_lib4
+	.def kernel_dgemv_t_4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dgemv_t_4_vs_lib4:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
+
+
+	// call inner dgemv kernel n
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+//	movslq	%r12d, %r12
+	movq	ARG5, %r13  // x
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemv_add_t_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemv_add_t_4_lib4
+#endif
+#endif
+
+
+	// call inner blender t
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG6, %r11   // beta
+	movq	ARG7, %r12 // y 
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_T_SCALE_AB_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_t_scale_ab_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_blend_t_scale_ab_4_lib4
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG8, %r10 // z 
+	movq	ARG9, %r11 // km 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_4_vs_lib4
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dgemv_t_4_vs_lib4, .-kernel_dgemv_t_4_vs_lib4
+#endif
+
+
+
+
+
 
