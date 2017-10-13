@@ -610,6 +610,155 @@ inner_kernel_dgemv_add_nt_4_lib4:
 
 
 
+// common inner routine with file scope
+//
+// input arguments:
+// r10   <- kmax
+// r11   <- A
+// r12   <- bs*sda*sizeof(double) = 32*sda
+// r13   <- x_t
+// r14   <- z_n
+// xmm0  <- [z_t_0a z_t_0b]
+// xmm1  <- [z_t_1a z_t_1b]
+// xmm2  <- [z_t_2a z_t_2b]
+// xmm3  <- [z_t_3a z_t_3b]
+// xmm4  <- x_n_0
+// xmm5  <- x_n_1
+// xmm6  <- x_n_2
+// xmm7  <- x_n_3
+
+//
+// output arguments:
+// r10   <- kmax-4
+// r11   <- A+4*k*sizeof(double)
+// r12   <- bs*sda*sizeof(double) = 32*sda
+// r13   <- x_t+k*sizeof(double)
+// r14   <- z_n+k*sizeof(double)
+// xmm0  <- [z_t_0a z_t_0b]
+// xmm1  <- [z_t_1a z_t_1b]
+// xmm2  <- [z_t_2a z_t_2b]
+// xmm3  <- [z_t_3a z_t_3b]
+// xmm4  <- x_n_0
+// xmm5  <- x_n_1
+// xmm6  <- x_n_2
+// xmm7  <- x_n_3
+
+#if MACRO_LEVEL>=2
+	.macro INNER_EDGE_DSYMV_ADD_NT_4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_dsymv_add_nt_4_lib4, @function
+inner_edge_dsymv_add_nt_4_lib4:
+#elif defined(OS_MAC)
+_inner_edge_dsymv_add_nt_4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dsymv_add_nt_4_lib4; .scl 2; .type 32; .endef
+inner_edge_dsymv_add_nt_4_lib4:
+#endif
+#endif
+
+	xorpd	%xmm13, %xmm13
+
+	movupd	0(%r13), %xmm9
+	movupd	16(%r13), %xmm10
+	movupd	0(%r14), %xmm11
+	movupd	16(%r14), %xmm12
+
+	// 0
+	movapd	0(%r11), %xmm14
+	movapd	%xmm14, %xmm15
+	mulpd	%xmm9, %xmm14
+	addpd	%xmm14, %xmm0
+	movsd	%xmm13, %xmm15 //
+	mulpd	%xmm4, %xmm15
+	addpd	%xmm15, %xmm11
+
+	movapd	16(%r11), %xmm14
+	movapd	%xmm14, %xmm15
+	mulpd	%xmm10, %xmm14
+	addpd	%xmm14, %xmm0
+	mulpd	%xmm4, %xmm15
+	addpd	%xmm15, %xmm12
+
+	// 1
+	movapd	32(%r11), %xmm14
+	movapd	%xmm14, %xmm15
+	movsd	%xmm13, %xmm14 //
+	mulpd	%xmm9, %xmm14
+	addpd	%xmm14, %xmm1
+//	movapd	%xmm13, %xmm15 //
+//	mulpd	%xmm5, %xmm15
+//	addpd	%xmm15, %xmm11
+
+	movapd	48(%r11), %xmm14
+	movapd	%xmm14, %xmm15
+	mulpd	%xmm10, %xmm14
+	addpd	%xmm14, %xmm1
+	mulpd	%xmm5, %xmm15
+	addpd	%xmm15, %xmm12
+
+	// 2
+//	movapd	64(%r11), %xmm14
+//	movapd	%xmm14, %xmm15
+//	movapd	%xmm13, %xmm14 //
+//	mulpd	%xmm9, %xmm14
+//	addpd	%xmm14, %xmm2
+//	movapd	%xmm13, %xmm15 //
+//	mulpd	%xmm6, %xmm15
+//	addpd	%xmm15, %xmm11
+
+	movapd	80(%r11), %xmm14
+	movapd	%xmm14, %xmm15
+	mulpd	%xmm10, %xmm14
+	addpd	%xmm14, %xmm2
+	movsd	%xmm13, %xmm15 //
+	mulpd	%xmm6, %xmm15
+	addpd	%xmm15, %xmm12
+
+	// 3
+//	movapd	96(%r11), %xmm14
+//	movapd	%xmm14, %xmm15
+//	movapd	%xmm13, %xmm14 //
+//	mulpd	%xmm9, %xmm14
+//	addpd	%xmm14, %xmm3
+//	movapd	%xmm13, %xmm15 //
+//	mulpd	%xmm7, %xmm15
+//	addpd	%xmm15, %xmm11
+
+	movapd	112(%r11), %xmm14
+	movapd	%xmm14, %xmm15
+	movsd	%xmm13, %xmm14 //
+	mulpd	%xmm10, %xmm14
+	addpd	%xmm14, %xmm3
+//	movapd	%xmm13, %xmm15 //
+//	mulpd	%xmm7, %xmm15
+//	addpd	%xmm15, %xmm12
+
+	movupd	%xmm11, 0(%r14) 
+	movupd	%xmm12, 16(%r14) 
+
+	addq	%r12, %r11
+	addq	$32, %r13
+	addq	$32, %r14
+	
+	subq	$4, %r10
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_dsymv_add_nt_4_lib4, .-inner_edge_dsymv_add_nt_4_lib4
+#endif
+#endif
+
+
+
+
+
+
 #if 0
 
 // common inner routine with file scope
@@ -822,6 +971,69 @@ inner_blend_t_scale_ab_4_lib4:
 	
 #if defined(OS_LINUX)
 	.size	inner_blend_t_scale_ab_4_lib4, .-inner_blend_t_scale_ab_4_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// blend for ta==t, scale for generic alpha and beta=1.0
+//
+// input arguments:
+// r10  <- alpha
+// r11  <- y
+// xmm0 <- [z0a z0b]
+// xmm1 <- [z1a z1b]
+// xmm2 <- [z2a z2b]
+// xmm3 <- [z3a z3b]
+//
+// output arguments:
+// r10  <- alpha
+// r11  <- y
+// xmm0 <- [z0 z1]
+// xmm1 <- [z2 z3]
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_T_SCALE_A1_4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_blend_t_scale_a1_4_lib4, @function
+inner_blend_t_scale_a1_4_lib4:
+#elif defined(OS_MAC)
+_inner_blend_t_scale_a1_4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_blend_t_scale_a1_4_lib4; .scl 2; .type 32; .endef
+inner_blend_t_scale_a1_4_lib4:
+#endif
+#endif
+
+	// reduction
+	haddpd	%xmm1, %xmm0
+	haddpd	%xmm3, %xmm2
+	movapd	%xmm2, %xmm1
+
+	// alpha
+	movddup	0(%r10), %xmm15
+	mulpd	%xmm15, %xmm0
+	mulpd	%xmm15, %xmm1
+
+	// beta
+	movupd	0(%r11), %xmm14
+	addpd	%xmm14, %xmm0
+	movupd	16(%r11), %xmm14
+	addpd	%xmm14, %xmm1
+	
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+	
+#if defined(OS_LINUX)
+	.size	inner_blend_t_scale_a1_4_lib4, .-inner_blend_t_scale_a1_4_lib4
 #endif
 #endif
 
@@ -1403,6 +1615,240 @@ kernel_dgemv_nt_4_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dgemv_nt_4_lib4, .-kernel_dgemv_nt_4_lib4
+#endif
+
+
+
+
+
+//                                1      2                3                4          5        6            7            8               9            10           11           12
+// void kernel_dgemv_nt_4_vs_lib4(int k, double *alpha_n, double *alpha_t, double *A, int sda, double *x_n, double *x_t, double *beta_t, double *y_t, double *z_n, double *z_t, int km);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dgemv_nt_4_vs_lib4
+	.type kernel_dgemv_nt_4_vs_lib4, @function
+kernel_dgemv_nt_4_vs_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dgemv_nt_4_vs_lib4
+_kernel_dgemv_nt_4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgemv_nt_4_vs_lib4
+	.def kernel_dgemv_nt_4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dgemv_nt_4_vs_lib4:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers y_t
+
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
+
+	movapd	%xmm0, %xmm4
+	movapd	%xmm0, %xmm5
+	movapd	%xmm0, %xmm6
+	movapd	%xmm0, %xmm7
+
+	// initialize x_n
+	movq	ARG2, %r10 // alpha_n
+	movddup 0(%r10), %xmm15
+
+	movq	ARG6, %r10 // x_n
+	movq	ARG12, %r11 // km
+
+	movddup 0(%r10), %xmm4
+	mulpd	%xmm15, %xmm4
+	cmpl	$2, %r11d
+	jl		0f
+	movddup 8(%r10), %xmm5
+	mulpd	%xmm15, %xmm5
+	cmpl	$3, %r11d
+	jl		0f
+	movddup 16(%r10), %xmm6
+	mulpd	%xmm15, %xmm6
+	je		0f
+	movddup 24(%r10), %xmm7
+	mulpd	%xmm15, %xmm7
+0:
+
+	// inner kernel dgemv nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG4, %r11  // A
+	movq	ARG5, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+//	movslq	%r12d, %r12
+	movq	ARG7, %r13  // x_t
+	movq	ARG10, %r14  // z_n
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMV_ADD_NT_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemv_add_nt_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemv_add_nt_4_lib4
+#endif
+#endif
+
+
+	// inner blend n scale ab
+
+	movq	ARG3, %r10 // alpha_t
+	movq	ARG8, %r11   // beta_t
+	movq	ARG9, %r12   // y_t
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_T_SCALE_AB_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_t_scale_ab_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_blend_t_scale_ab_4_lib4
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG11, %r10 // z_t 
+	movq	ARG12, %r11 // km 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_4_vs_lib4
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dgemv_nt_4_vs_lib4, .-kernel_dgemv_nt_4_vs_lib4
+#endif
+
+
+
+
+
+//                            1      2              3          4        5           6
+// void kernel_dsymv_l_4_lib4(int k, double *alpha, double *A, int sda, double *x, double *z);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dsymv_l_4_lib4
+	.type kernel_dsymv_l_4_lib4, @function
+kernel_dsymv_l_4_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dsymv_l_4_lib4
+_kernel_dsymv_l_4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dsymv_l_4_lib4
+	.def kernel_dsymv_l_4_lib4; .scl 2; .type 32; .endef
+kernel_dsymv_l_4_lib4:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers y_t
+
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
+
+	// initialize x_n
+	movq	ARG2, %r10 // alpha
+	movddup 0(%r10), %xmm15
+
+	movq	ARG5, %r10 // x_n
+
+	movddup 0(%r10), %xmm4
+	mulpd	%xmm15, %xmm4
+	movddup 8(%r10), %xmm5
+	mulpd	%xmm15, %xmm5
+	movddup 16(%r10), %xmm6
+	mulpd	%xmm15, %xmm6
+	movddup 24(%r10), %xmm7
+	mulpd	%xmm15, %xmm7
+
+
+	// inner edge dsyrk & kernel dgemv nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movq	ARG5, %r13  // x_t
+	movq	ARG6, %r14  // z_n
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_DSYMV_ADD_NT_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dsymv_add_nt_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dsymv_add_nt_4_lib4
+#endif
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMV_ADD_NT_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemv_add_nt_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemv_add_nt_4_lib4
+#endif
+#endif
+
+
+	// call inner blend n scale ab
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG6, %r11   // z_t
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_T_SCALE_A1_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_t_scale_a1_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_blend_t_scale_a1_4_lib4
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG6, %r10 // z_t 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_4_lib4
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dsymv_l_4_lib4, .-kernel_dsymv_l_4_lib4
 #endif
 
 
