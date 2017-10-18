@@ -1347,7 +1347,7 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			pD += ps*sdd;
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 			// nothing more to do
-			return;
+//			return;
 			}
 #endif
 		}
@@ -1496,7 +1496,7 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			pD += 2*ps*sda;
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 			// nothing more to do
-			return;
+//			return;
 			}
 #endif
 		}
