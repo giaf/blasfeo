@@ -595,10 +595,12 @@ set(BLASFEO_SRC ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
 # add library
 add_library(blasfeo ${BLASFEO_SRC})
 
-install(TARGETS blasfeo
+install(TARGETS blasfeo EXPORT blasfeoConfig
 	LIBRARY DESTINATION lib
 	ARCHIVE DESTINATION lib
 	RUNTIME DESTINATION bin)
+
+install(EXPORT blasfeoConfig DESTINATION cmake)
 
 file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
 install(FILES ${BLASFEO_HEADERS} DESTINATION ${BLASFEO_HEADERS_INSTALLATION_DIRECTORY})
