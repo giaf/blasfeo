@@ -171,7 +171,7 @@ void d_print_e_mat(int m, int n, double *A, int lda)
 		{
 		for(j=0; j<n; j++)
 			{
-			printf("%1.15e\t", A[i+lda*j]);
+			printf("%e\t", A[i+lda*j]);
 			}
 		printf("\n");
 		}
@@ -198,7 +198,7 @@ void d_print_e_tran_mat(int row, int col, double *A, int lda)
 
 
 /****************************
-* new interface
+* strmat interface
 ****************************/
 
 #if defined(LA_HIGH_PERFORMANCE)
@@ -212,12 +212,12 @@ void d_print_e_tran_mat(int row, int col, double *A, int lda)
 // create a matrix structure for a matrix of size m*n by dynamically allocating the memory
 void d_allocate_strmat(int m, int n, struct d_strmat *sA)
 	{
-	const int bs = D_PS;
+	const int ps = D_PS;
 	int nc = D_NC;
-	int al = bs*nc;
+	int al = ps*nc;
 	sA->m = m;
 	sA->n = n;
-	int pm = (m+bs-1)/bs*bs;
+	int pm = (m+ps-1)/ps*ps;
 	int cn = (n+nc-1)/nc*nc;
 	sA->pm = pm;
 	sA->cn = cn;
@@ -244,11 +244,11 @@ void d_free_strmat(struct d_strmat *sA)
 // create a vector structure for a vector of size m by dynamically allocating the memory
 void d_allocate_strvec(int m, struct d_strvec *sa)
 	{
-	const int bs = D_PS;
+	const int ps = D_PS;
 //	int nc = D_NC;
-//	int al = bs*nc;
+//	int al = ps*nc;
 	sa->m = m;
-	int pm = (m+bs-1)/bs*bs;
+	int pm = (m+ps-1)/ps*ps;
 	sa->pm = pm;
 	d_zeros_align(&(sa->pa), sa->pm, 1);
 	sa->memory_size = pm*sizeof(double);
@@ -269,33 +269,33 @@ void d_free_strvec(struct d_strvec *sa)
 // print a matrix structure
 void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
 	{
-	const int bs = D_PS;
+	const int ps = D_PS;
 	int sda = sA->cn;
-	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	double *pA = sA->pA + aj*ps + ai/ps*ps*sda + ai%ps;
 	int ii, i, j, tmp;
 	ii = 0;
-	if(ai%bs>0)
+	if(ai%ps>0)
 		{
-		tmp = bs-ai%bs;
+		tmp = ps-ai%ps;
 		tmp = m<tmp ? m : tmp;
 		for(i=0; i<tmp; i++)
 			{
 			for(j=0; j<n; j++)
 				{
-				printf("%9.5f ", pA[i+bs*j]);
+				printf("%9.5f ", pA[i+ps*j]);
 				}
 			printf("\n");
 			}
-		pA += tmp + bs*(sda-1);
+		pA += tmp + ps*(sda-1);
 		m -= tmp;
 		}
-	for( ; ii<m-(bs-1); ii+=bs)
+	for( ; ii<m-(ps-1); ii+=ps)
 		{
-		for(i=0; i<bs; i++)
+		for(i=0; i<ps; i++)
 			{
 			for(j=0; j<n; j++)
 				{
-				printf("%9.5f ", pA[i+bs*j+sda*ii]);
+				printf("%9.5f ", pA[i+ps*j+sda*ii]);
 				}
 			printf("\n");
 			}
@@ -307,7 +307,7 @@ void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
 			{
 			for(j=0; j<n; j++)
 				{
-				printf("%9.5f ", pA[i+bs*j+sda*ii]);
+				printf("%9.5f ", pA[i+ps*j+sda*ii]);
 				}
 			printf("\n");
 			}
@@ -341,33 +341,33 @@ void d_print_tran_strvec(int m, struct d_strvec *sa, int ai)
 // print a matrix structure
 void d_print_to_file_strmat(FILE * file, int m, int n, struct d_strmat *sA, int ai, int aj)
 	{
-	const int bs = D_PS;
+	const int ps = D_PS;
 	int sda = sA->cn;
-	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	double *pA = sA->pA + aj*ps + ai/ps*ps*sda + ai%ps;
 	int ii, i, j, tmp;
 	ii = 0;
-	if(ai%bs>0)
+	if(ai%ps>0)
 		{
-		tmp = bs-ai%bs;
+		tmp = ps-ai%ps;
 		tmp = m<tmp ? m : tmp;
 		for(i=0; i<tmp; i++)
 			{
 			for(j=0; j<n; j++)
 				{
-				fprintf(file, "%9.5f ", pA[i+bs*j]);
+				fprintf(file, "%9.5f ", pA[i+ps*j]);
 				}
 			fprintf(file, "\n");
 			}
-		pA += tmp + bs*(sda-1);
+		pA += tmp + ps*(sda-1);
 		m -= tmp;
 		}
-	for( ; ii<m-(bs-1); ii+=bs)
+	for( ; ii<m-(ps-1); ii+=ps)
 		{
-		for(i=0; i<bs; i++)
+		for(i=0; i<ps; i++)
 			{
 			for(j=0; j<n; j++)
 				{
-				fprintf(file, "%9.5f ", pA[i+bs*j+sda*ii]);
+				fprintf(file, "%9.5f ", pA[i+ps*j+sda*ii]);
 				}
 			fprintf(file, "\n");
 			}
@@ -379,7 +379,7 @@ void d_print_to_file_strmat(FILE * file, int m, int n, struct d_strmat *sA, int 
 			{
 			for(j=0; j<n; j++)
 				{
-				fprintf(file, "%9.5f ", pA[i+bs*j+sda*ii]);
+				fprintf(file, "%9.5f ", pA[i+ps*j+sda*ii]);
 				}
 			fprintf(file, "\n");
 			}
@@ -413,33 +413,33 @@ void d_print_tran_to_file_strvec(FILE * file, int m, struct d_strvec *sa, int ai
 // print a matrix structure
 void d_print_e_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
 	{
-	const int bs = D_PS;
+	const int ps = D_PS;
 	int sda = sA->cn;
-	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	double *pA = sA->pA + aj*ps + ai/ps*ps*sda + ai%ps;
 	int ii, i, j, tmp;
 	ii = 0;
-	if(ai%bs>0)
+	if(ai%ps>0)
 		{
-		tmp = bs-ai%bs;
+		tmp = ps-ai%ps;
 		tmp = m<tmp ? m : tmp;
 		for(i=0; i<tmp; i++)
 			{
 			for(j=0; j<n; j++)
 				{
-				printf("%e\t", pA[i+bs*j]);
+				printf("%e\t", pA[i+ps*j]);
 				}
 			printf("\n");
 			}
-		pA += tmp + bs*(sda-1);
+		pA += tmp + ps*(sda-1);
 		m -= tmp;
 		}
-	for( ; ii<m-(bs-1); ii+=bs)
+	for( ; ii<m-(ps-1); ii+=ps)
 		{
-		for(i=0; i<bs; i++)
+		for(i=0; i<ps; i++)
 			{
 			for(j=0; j<n; j++)
 				{
-				printf("%e\t", pA[i+bs*j+sda*ii]);
+				printf("%e\t", pA[i+ps*j+sda*ii]);
 				}
 			printf("\n");
 			}
@@ -451,7 +451,7 @@ void d_print_e_strmat(int m, int n, struct d_strmat *sA, int ai, int aj)
 			{
 			for(j=0; j<n; j++)
 				{
-				printf("%e\t", pA[i+bs*j+sda*ii]);
+				printf("%e\t", pA[i+ps*j+sda*ii]);
 				}
 			printf("\n");
 			}

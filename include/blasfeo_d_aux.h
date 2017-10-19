@@ -37,11 +37,29 @@ extern "C" {
 
 
 /************************************************
+* old
+************************************************/
+
+void dgecp_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb);
+void dtrcp_l_lib(int m, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb);
+void dgead_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb);
+// TODO remove ???
+void ddiain_sqrt_lib(int kmax, double *x, int offset, double *pD, int sdd);
+// TODO ddiaad1
+void ddiareg_lib(int kmax, double reg, int offset, double *pD, int sdd);
+
+/************************************************
 * d_aux_lib.c
 ************************************************/
 
+// 1) d(double) / s(single)
+// 2) ge(general) / tr(triangular) / vec(vector) / row(row) / col(column) / dia(diagonal)
+// 3) se(set) / cp(copy) / sc(scale) / ad(add) / tr(transpose) / in(insert) / ex(extract) / pe(premute) / sw(swap)
+// 4) _l(lower) / _u(upper)
+// 5) _sp(sparse)
+
 // returns the memory size (in bytes) needed for a strmat
-int d_size_strmat(int m, int n);
+int d_size_strmat(int m, int n); // TODO d_memsize_strmat
 // returns the memory size (in bytes) needed for the diagonal of a strmat
 int d_size_diag_strmat(int m, int n);
 // returns the memory size (in bytes) needed for a strvec
@@ -67,15 +85,21 @@ double dvecex1_libstr(struct d_strvec *sx, int xi);
 void dgese_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj);
 // a <= alpha
 void dvecse_libstr(int m, double alpha, struct d_strvec *sx, int xi);
-void dgecp_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb);
+// B <= A
 void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
+// A <= alpha*A
 void dgesc_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj);
+// A <= alpha*B
+void dgecpsc_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj); // TODO
+// y <= x
 void dveccp_libstr(int m, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci);
+// x <= alpha*x
 void dvecsc_libstr(int m, double alpha, struct d_strvec *sa, int ai);
-void dtrcp_l_lib(int m, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb);
+// B <= A, A lower triangular
 void dtrcp_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
-void dgead_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb);
+// B <= B + alpha*A
 void dgead_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
+// y <= y + alpha*x
 void dvecad_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci);
 void dgetr_lib(int m, int n, double alpha, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc);
 void dgetr_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
@@ -83,10 +107,8 @@ void dtrtr_l_lib(int m, double alpha, int offsetA, double *pA, int sda, int offs
 void dtrtr_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
 void dtrtr_u_lib(int m, double alpha, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc);
 void dtrtr_u_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
-void ddiareg_lib(int kmax, double reg, int offset, double *pD, int sdd);
 void ddiare_libstr(int kmax, double alpha, struct d_strmat *sA, int ai, int aj);
 void ddiain_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj);
-void ddiain_sqrt_lib(int kmax, double *x, int offset, double *pD, int sdd);
 void ddiaex_lib(int kmax, double alpha, int offset, double *pD, int sdd, double *x);
 void ddiaad_lib(int kmax, double alpha, double *x, int offset, double *pD, int sdd);
 void ddiain_libsp(int kmax, int *idx, double alpha, double *x, double *pD, int sdd);

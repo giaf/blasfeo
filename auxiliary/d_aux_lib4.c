@@ -2141,7 +2141,7 @@ void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y)
 
 
 /****************************
-* new interface
+* struct interface
 ****************************/
 
 
