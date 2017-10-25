@@ -494,33 +494,33 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	}
 
 
+// ---------------------- Copy&Scale
 
 // copy a generic strmat into a generic strmat
-void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
-	int ldc = sC->m;
-	double *pC = sC->pA + ci + cj*ldc;
+	int ldb = sB->m;
+	double *pB = sB->pA + bi + bj*ldb;
 	int ii, jj;
 	for(jj=0; jj<n; jj++)
 		{
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
-			pC[ii+1+jj*ldc] = pA[ii+1+jj*lda];
-			pC[ii+2+jj*ldc] = pA[ii+2+jj*lda];
-			pC[ii+3+jj*ldc] = pA[ii+3+jj*lda];
+			pB[ii+0+jj*ldb] = pA[ii+0+jj*lda];
+			pB[ii+1+jj*ldb] = pA[ii+1+jj*lda];
+			pB[ii+2+jj*ldb] = pA[ii+2+jj*lda];
+			pB[ii+3+jj*ldb] = pA[ii+3+jj*lda];
 			}
 		for(; ii<m; ii++)
 			{
-			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
+			pB[ii+0+jj*ldb] = pA[ii+0+jj*lda];
 			}
 		}
 	return;
 	}
-
 
 
 // scale a generic strmat
@@ -548,6 +548,36 @@ void dgesc_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int a
 	}
 
 
+// scale an generic strmat and copy into generic strmat
+void dgecpsc_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj)
+	{
+
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+
+	int ldb = sB->m;
+	double *pB = sB->pA + bi + bj*ldb;
+
+	int ii, jj;
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			pB[ii+0+jj*ldb] = pA[ii+0+jj*lda] * alpha;
+			pB[ii+1+jj*ldb] = pA[ii+1+jj*lda] * alpha;
+			pB[ii+2+jj*ldb] = pA[ii+2+jj*lda] * alpha;
+			pB[ii+3+jj*ldb] = pA[ii+3+jj*lda] * alpha;
+			}
+		for(; ii<m; ii++)
+			{
+			pB[ii+0+jj*ldb] = pA[ii+0+jj*lda] * alpha;
+			}
+		}
+	return;
+	}
+
+// --- vector
 
 // copy a strvec into a strvec
 void dveccp_libstr(int m, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci)
@@ -569,8 +599,6 @@ void dveccp_libstr(int m, struct d_strvec *sa, int ai, struct d_strvec *sc, int 
 		}
 	return;
 	}
-
-
 
 // scale a strvec
 void dvecsc_libstr(int m, double alpha, struct d_strvec *sa, int ai)
@@ -986,3 +1014,4 @@ void dvecnrm_inf_libstr(int m, struct d_strvec *sx, int xi, double *ptr_norm)
 #error : wrong LA choice
 
 #endif
+

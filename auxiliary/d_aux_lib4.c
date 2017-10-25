@@ -64,9 +64,8 @@
  * ----------- Copy&Scale
  */
 
-// copies a packed matrix into a packed matrix
-// TODO remove alha !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-void dgecp_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb)
+// copies and scale a packed matrix into a packed matrix
+void dgecpsc_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb)
 	{
 
 	if(m<=0 || n<=0)
@@ -3058,14 +3057,16 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 
 
 // copy a generic strmat into a generic strmat
-void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj)
 	{
 	const int bs = 4;
+
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	int sdc = sC->cn;
-	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	dgecp_lib(m, n, 1.0, ai%bs, pA, sda, ci%bs, pC, sdc);
+	int sdb = sB->cn;
+	double *pB = sB->pA + bi/bs*bs*sdb + bi%bs + bj*bs;
+
+	dgecpsc_lib(m, n, 1.0, ai%bs, pA, sda, bi%bs, pB, sdb);
 	return;
 	}
 
@@ -3075,12 +3076,29 @@ void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_st
 void dgesc_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj)
 	{
 	const int bs = 4;
+
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	dgecp_lib(m, n, alpha, ai%bs, pA, sda, ai%bs, pA, sda);
+
+	dgecpsc_lib(m, n, alpha, ai%bs, pA, sda, ai%bs, pA, sda);
 	return;
 	}
 
+
+
+// scale a generic strmat and copy to a generic strmat
+void dgecpsc_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj)
+	{
+	const int bs = 4;
+
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	int sdb = sB->cn;
+	double *pB = sB->pA + bi/bs*bs*sdb + bi%bs + bj*bs;
+
+	dgecpsc_lib(m, n, alpha, ai%bs, pA, sda, bi%bs, pB, sdb);
+	return;
+	}
 
 
 // copy a strvec into a strvec
