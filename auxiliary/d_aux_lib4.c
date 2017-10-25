@@ -26,6 +26,13 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+/*
+ * auxiliary functions for LA:HIGH_PERFORMANCE PS_4 (panel major)
+ *
+ * auxiliary/d_aux_lib*.c
+ *
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -43,7 +50,19 @@
 #include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_d_kernel.h"
 
+/*
+ * Auxiliary functions for PS:4 (panel-major)
+ *
+ * auxiliary/d_aux_lib4.c
+ *
+ */
 
+/*
+ * ---------------------- _lib (Spefic Interface)
+ * TOMOVE *_lib()
+ *
+ * ----------- Copy&Scale
+ */
 
 // copies a packed matrix into a packed matrix
 // TODO remove alha !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -973,6 +992,7 @@ void dvecad_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_st
 	}
 
 
+// --------- Transpose
 
 // transpose general matrix; m and n are referred to the original matrix
 void dgetr_lib(int m, int n, double alpha, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc)
@@ -1000,6 +1020,7 @@ C =
  x x x x x
 
 */
+
 
 	if(m<=0 || n<=0)
 		return;
@@ -2146,6 +2167,9 @@ void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y)
 
 
 
+// ---------------------- STRMAT (General to specific interface)
+
+
 #if defined(LA_HIGH_PERFORMANCE)
 
 
@@ -2202,7 +2226,6 @@ void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory)
 	}
 
 
-
 // return memory size (in bytes) needed for a strvec
 int d_size_strvec(int m)
 	{
@@ -2213,7 +2236,6 @@ int d_size_strvec(int m)
 	int memory_size = pm*sizeof(double);
 	return memory_size;
 	}
-
 
 
 // create a vector structure for a vector of size m by using memory passed by a pointer

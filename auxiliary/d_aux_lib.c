@@ -26,6 +26,13 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+/*
+ * auxiliary functions for LA:REFERENCE (column major)
+ *
+ * auxiliary/d_aux_lib*.c
+ *
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -272,7 +279,6 @@ double dgeex1_libstr(struct d_strmat *sA, int ai, int aj)
 	double *pA = sA->pA + ai + aj*lda;
 	return pA[0];
 	}
-
 
 
 // insert element into strvec
