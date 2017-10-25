@@ -28,7 +28,7 @@
 
 include ./Makefile.rule
 
-OBJS = 
+OBJS =
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 
@@ -47,7 +47,7 @@ endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 # aux
-OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/avx/kernel_dgecp_lib4.o ./auxiliary/avx/kernel_dgetr_lib4.o 
+OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/avx/kernel_dgecp_lib4.o ./auxiliary/avx/kernel_dgetr_lib4.o
 OBJS += ./auxiliary/s_aux_lib8.o
 OBJS += ./auxiliary/m_aux_lib48.o
 # kernels
@@ -60,8 +60,8 @@ endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
 # aux
-OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o 
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o 
+OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o
 OBJS += ./auxiliary/m_aux_lib44.o
 # kernels
 OBJS += ./kernel/sse3/kernel_dgemm_4x4_lib4.o ./kernel/sse3/kernel_dgemv_4_lib4.o ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_diag_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o ./kernel/c99/kernel_dsymv_4_lib4.o ./kernel/c99/kernel_dgetrf_pivot_4_lib4.o ./kernel/c99/kernel_dgeqrf_4_lib4.o
@@ -73,8 +73,8 @@ endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
 # aux
-OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o 
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o 
+OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o
 OBJS += ./auxiliary/m_aux_lib44.o
 # kernels
 OBJS += ./kernel/fma/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_diag_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o ./kernel/c99/kernel_dsymv_4_lib4.o ./kernel/c99/kernel_dgetrf_pivot_4_lib4.o ./kernel/c99/kernel_dgeqrf_4_lib4.o
@@ -86,8 +86,8 @@ endif
 
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
 # aux
-OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o 
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o 
+OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o
 OBJS += ./auxiliary/m_aux_lib44.o
 # kernels
 OBJS += ./kernel/armv8a/kernel_dgemm_8x4_lib4.o ./kernel/armv8a/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_diag_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o ./kernel/c99/kernel_dsymv_4_lib4.o ./kernel/c99/kernel_dgetrf_pivot_4_lib4.o ./kernel/c99/kernel_dgeqrf_4_lib4.o
@@ -99,8 +99,8 @@ endif
 
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 # aux
-OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o 
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o 
+OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o
 OBJS += ./auxiliary/m_aux_lib44.o
 # kernels
 OBJS += ./kernel/armv7a/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_diag_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o ./kernel/c99/kernel_dsymv_4_lib4.o ./kernel/c99/kernel_dgetrf_pivot_4_lib4.o ./kernel/c99/kernel_dgeqrf_4_lib4.o
@@ -112,8 +112,8 @@ endif
 
 ifeq ($(TARGET), GENERIC)
 # aux
-OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o 
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o 
+OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o
+OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o
 OBJS += ./auxiliary/m_aux_lib44.o
 # kernels
 OBJS += ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_diag_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o ./kernel/c99/kernel_dsymv_4_lib4.o ./kernel/c99/kernel_dgetrf_pivot_4_lib4.o ./kernel/c99/kernel_dgeqrf_4_lib4.o
@@ -151,7 +151,7 @@ static_library: target
 	( cd auxiliary; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
-	ar rcs libblasfeo.a $(OBJS) 
+	ar rcs libblasfeo.a $(OBJS)
 	cp libblasfeo.a ./lib/
 	@echo
 	@echo " libblasfeo.a static library build complete."
@@ -235,8 +235,9 @@ install_shared:
 	cp -f ./include/*.h $(PREFIX)/blasfeo/include/
 
 test_problem:
-	cp libblasfeo.a ./test_problems/libblasfeo.a
-	make -C test_problems obj
+	mkdir -p ./test_problems/out/$(LA)/$(TARGET)
+	cp libblasfeo.a ./test_problems/out/$(LA)/$(TARGET)/libblasfeo.a
+	make -C test_problems run_short
 	@echo
 	@echo " Test problem build complete."
 	@echo
@@ -252,6 +253,8 @@ clean:
 	make -C auxiliary clean
 	make -C kernel clean
 	make -C blas clean
-	make -C test_problems clean
 	make -C examples clean
+
+clean_test_problems:
+	make -C test_problems clean
 

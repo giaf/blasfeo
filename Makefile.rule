@@ -33,8 +33,8 @@
 # X64_AMD_BULLDOZER : x86_64 architecture with AVX and FMA ISA (64 bit OS) code optimized for AMD Bulldozer.
 # ARMV7A_ARM_CORTEX_A15 : ARMv7A architecture with NEON-VFPv4 ISA (32 bit OS) code optimized for ARM Cortex A15.
 # GENERIC : generic c99 code
-TARGET = X64_INTEL_HASWELL
-#TARGET = X64_INTEL_SANDY_BRIDGE
+# TARGET = X64_INTEL_HASWELL
+TARGET = X64_INTEL_SANDY_BRIDGE
 #TARGET = X64_INTEL_CORE
 #TARGET = X64_AMD_BULLDOZER
 #TARGET = ARMV8A_ARM_CORTEX_A57
@@ -43,8 +43,8 @@ TARGET = X64_INTEL_HASWELL
 
 # Linear Algebra library
 LA = HIGH_PERFORMANCE
-#LA = REFERENCE
-#LA = BLAS
+# LA = REFERENCE
+# LA = BLAS
 
 # BLAS and LAPACK version (for LA=BLAS)
 REF_BLAS = 0
@@ -86,8 +86,8 @@ PREFIX = /opt
 MACRO_LEVEL = 0
 
 # compiler / assembler / linker flags
-CFLAGS  = 
-ASFLAGS = 
+CFLAGS  =
+ASFLAGS =
 LDFLAGS =
 
 # Optimization flags
@@ -137,7 +137,7 @@ ASFLAGS += -DOS_WINDOWS
 endif
 
 ifeq ($(REF_BLAS), 0)
-CFLAGS  += 
+CFLAGS  +=
 endif
 ifeq ($(REF_BLAS), OPENBLAS)
 CFLAGS  += -DREF_BLAS_OPENBLAS -I/opt/openblas/include
