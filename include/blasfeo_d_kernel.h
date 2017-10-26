@@ -268,7 +268,11 @@ void kernel_dgecp_8_0_lib4(int tri, int kmax, double alpha, double *A0, int sda,
 void kernel_dgecp_8_1_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B0, int sdb);
 void kernel_dgecp_8_2_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B0, int sdb);
 void kernel_dgecp_8_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B0, int sdb);
+
 void kernel_dgecp_4_0_lib4(int tri, int kmax, double alpha, double *A, double *B);
+// TODO better names cpcp -> cp , cp -> cpsc
+void kernel_dgecpcp_4_0_lib4(int tri, int kmax, double *A, double *B);
+
 void kernel_dgecp_4_1_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B);
 void kernel_dgecp_4_2_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B);
 void kernel_dgecp_4_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B);
