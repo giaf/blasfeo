@@ -594,6 +594,8 @@ set(BLASFEO_SRC ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
 
 # add library
 add_library(blasfeo ${BLASFEO_SRC})
+target_include_directories(blasfeo
+	PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
 install(TARGETS blasfeo EXPORT blasfeoConfig
 	LIBRARY DESTINATION lib
