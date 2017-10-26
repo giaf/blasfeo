@@ -144,6 +144,7 @@ OBJS += ./auxiliary/i_aux_ext_dep_lib.o
 endif
 
 
+# Define targets
 
 all: clean static_library
 
@@ -166,6 +167,9 @@ shared_library: target
 	@echo
 	@echo " libblasfeo.so shared library build complete."
 	@echo
+
+
+# Generate headers
 
 target:
 	touch ./include/blasfeo_target.h
