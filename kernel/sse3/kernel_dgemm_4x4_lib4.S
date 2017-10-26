@@ -96,16 +96,16 @@
 	movq	%r15, 40(%rsp); \
 	movq	%rdi, 48(%rsp); \
 	movq	%rsi, 56(%rsp); \
-	vmovups	%xmm6, 64(%rsp); \
-	vmovups	%xmm7, 80(%rsp); \
-	vmovups	%xmm8, 96(%rsp); \
-	vmovups	%xmm9, 112(%rsp); \
-	vmovups	%xmm10, 128(%rsp); \
-	vmovups	%xmm11, 144(%rsp); \
-	vmovups	%xmm12, 160(%rsp); \
-	vmovups	%xmm13, 176(%rsp); \
-	vmovups	%xmm14, 192(%rsp); \
-	vmovups	%xmm15, 208(%rsp);
+	movups	%xmm6, 64(%rsp); \
+	movups	%xmm7, 80(%rsp); \
+	movups	%xmm8, 96(%rsp); \
+	movups	%xmm9, 112(%rsp); \
+	movups	%xmm10, 128(%rsp); \
+	movups	%xmm11, 144(%rsp); \
+	movups	%xmm12, 160(%rsp); \
+	movups	%xmm13, 176(%rsp); \
+	movups	%xmm14, 192(%rsp); \
+	movups	%xmm15, 208(%rsp);
 #define EPILOGUE \
 	movq	  (%rsp), %rbx; \
 	movq	 8(%rsp), %rbp; \
@@ -115,16 +115,16 @@
 	movq	40(%rsp), %r15; \
 	movq	48(%rsp), %rdi; \
 	movq	56(%rsp), %rsi; \
-	vmovups	64(%rsp), %xmm6; \
-	vmovups	80(%rsp), %xmm7; \
-	vmovups	96(%rsp), %xmm8; \
-	vmovups	112(%rsp), %xmm9; \
-	vmovups	128(%rsp), %xmm10; \
-	vmovups	144(%rsp), %xmm11; \
-	vmovups	160(%rsp), %xmm12; \
-	vmovups	176(%rsp), %xmm13; \
-	vmovups	192(%rsp), %xmm14; \
-	vmovups	208(%rsp), %xmm15; \
+	movups	64(%rsp), %xmm6; \
+	movups	80(%rsp), %xmm7; \
+	movups	96(%rsp), %xmm8; \
+	movups	112(%rsp), %xmm9; \
+	movups	128(%rsp), %xmm10; \
+	movups	144(%rsp), %xmm11; \
+	movups	160(%rsp), %xmm12; \
+	movups	176(%rsp), %xmm13; \
+	movups	192(%rsp), %xmm14; \
+	movups	208(%rsp), %xmm15; \
 	addq	$STACKSIZE, %rsp;
 
 #else
@@ -4768,28 +4768,28 @@ inner_store_4x4_gen_lib4:
 	cmpl	$0, %r15d
 	jle		0f
 
-	vmovapd		%xmm1, %xmm0
-	vmovapd		%xmm5, %xmm4
-	vmovapd		%xmm2, %xmm1
-	vmovapd		%xmm6, %xmm5
-	vmovapd		%xmm3, %xmm2
-	vmovapd		%xmm7, %xmm6
+	movapd		%xmm1, %xmm0
+	movapd		%xmm5, %xmm4
+	movapd		%xmm2, %xmm1
+	movapd		%xmm6, %xmm5
+	movapd		%xmm3, %xmm2
+	movapd		%xmm7, %xmm6
 	addq		$32, %r11
 
 	cmpl	$1, %r15d
 	jle		0f
 
-	vmovapd		%xmm1, %xmm0
-	vmovapd		%xmm5, %xmm4
-	vmovapd		%xmm2, %xmm1
-	vmovapd		%xmm6, %xmm5
+	movapd		%xmm1, %xmm0
+	movapd		%xmm5, %xmm4
+	movapd		%xmm2, %xmm1
+	movapd		%xmm6, %xmm5
 	addq		$32, %r11
 
 	cmpl	$2, %r15d
 	jle		0f
 
-	vmovapd		%xmm1, %xmm0
-	vmovapd		%xmm5, %xmm4
+	movapd		%xmm1, %xmm0
+	movapd		%xmm5, %xmm4
 	addq		$32, %r11
 
 0:
@@ -5637,28 +5637,28 @@ inner_store_l_4x4_gen_lib4:
 	cmpl	$0, %r15d
 	jle		0f
 
-	vmovapd		%xmm1, %xmm0
-	vmovapd		%xmm5, %xmm4
-	vmovapd		%xmm2, %xmm1
-	vmovapd		%xmm6, %xmm5
-	vmovapd		%xmm3, %xmm2
-	vmovapd		%xmm7, %xmm6
+	movapd		%xmm1, %xmm0
+	movapd		%xmm5, %xmm4
+	movapd		%xmm2, %xmm1
+	movapd		%xmm6, %xmm5
+	movapd		%xmm3, %xmm2
+	movapd		%xmm7, %xmm6
 	addq		$32, %r11
 
 	cmpl	$1, %r15d
 	jle		0f
 
-	vmovapd		%xmm1, %xmm0
-	vmovapd		%xmm5, %xmm4
-	vmovapd		%xmm2, %xmm1
-	vmovapd		%xmm6, %xmm5
+	movapd		%xmm1, %xmm0
+	movapd		%xmm5, %xmm4
+	movapd		%xmm2, %xmm1
+	movapd		%xmm6, %xmm5
 	addq		$32, %r11
 
 	cmpl	$2, %r15d
 	jle		0f
 
-	vmovapd		%xmm1, %xmm0
-	vmovapd		%xmm5, %xmm4
+	movapd		%xmm1, %xmm0
+	movapd		%xmm5, %xmm4
 	addq		$32, %r11
 
 0:

@@ -98,16 +98,16 @@
 	movq	%r15, 40(%rsp); \
 	movq	%rdi, 48(%rsp); \
 	movq	%rsi, 56(%rsp); \
-	vmovups	%xmm6, 64(%rsp); \
-	vmovups	%xmm7, 80(%rsp); \
-	vmovups	%xmm8, 96(%rsp); \
-	vmovups	%xmm9, 112(%rsp); \
-	vmovups	%xmm10, 128(%rsp); \
-	vmovups	%xmm11, 144(%rsp); \
-	vmovups	%xmm12, 160(%rsp); \
-	vmovups	%xmm13, 176(%rsp); \
-	vmovups	%xmm14, 192(%rsp); \
-	vmovups	%xmm15, 208(%rsp); \
+	movups	%xmm6, 64(%rsp); \
+	movups	%xmm7, 80(%rsp); \
+	movups	%xmm8, 96(%rsp); \
+	movups	%xmm9, 112(%rsp); \
+	movups	%xmm10, 128(%rsp); \
+	movups	%xmm11, 144(%rsp); \
+	movups	%xmm12, 160(%rsp); \
+	movups	%xmm13, 176(%rsp); \
+	movups	%xmm14, 192(%rsp); \
+	movups	%xmm15, 208(%rsp); \
 	vzeroupper;
 #define EPILOGUE \
 	vzeroupper; \
@@ -119,16 +119,16 @@
 	movq	40(%rsp), %r15; \
 	movq	48(%rsp), %rdi; \
 	movq	56(%rsp), %rsi; \
-	vmovups	64(%rsp), %xmm6; \
-	vmovups	80(%rsp), %xmm7; \
-	vmovups	96(%rsp), %xmm8; \
-	vmovups	112(%rsp), %xmm9; \
-	vmovups	128(%rsp), %xmm10; \
-	vmovups	144(%rsp), %xmm11; \
-	vmovups	160(%rsp), %xmm12; \
-	vmovups	176(%rsp), %xmm13; \
-	vmovups	192(%rsp), %xmm14; \
-	vmovups	208(%rsp), %xmm15; \
+	movups	64(%rsp), %xmm6; \
+	movups	80(%rsp), %xmm7; \
+	movups	96(%rsp), %xmm8; \
+	movups	112(%rsp), %xmm9; \
+	movups	128(%rsp), %xmm10; \
+	movups	144(%rsp), %xmm11; \
+	movups	160(%rsp), %xmm12; \
+	movups	176(%rsp), %xmm13; \
+	movups	192(%rsp), %xmm14; \
+	movups	208(%rsp), %xmm15; \
 	addq	$STACKSIZE, %rsp;
 
 #else
