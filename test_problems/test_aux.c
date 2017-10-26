@@ -138,8 +138,27 @@ int main()
 	printf("Scale A by 0.3, print A:\n\n");
 	d_print_strmat(n, n, &sA, 0, 0);
 
-	dgecp_libstr(n, n, &sA, 0, 0, &sB, 0, 0);
-	printf("Copy A in B, print B:\n\n");
+	dgecp_libstr(5, 5, &sA, 3, 3, &sB, 0, 0);
+	printf("Copy submatrix A[3:5, 3:5] in B[0:5, 0:5], print B:\n\n");
 	d_print_strmat(n, n, &sB, 0, 0);
+
+#if defined(LA_HIGH_PERFORMANCE)
+
+	printf("\nLA provided by HIGH_PERFORMANCE\n\n");
+
+#elif defined(LA_REFERENCE)
+
+	printf("\nLA provided by REFERENCE\n\n");
+
+#elif defined(LA_BLAS)
+
+	printf("\nLA provided by BLAS\n\n");
+
+#else
+
+	printf("\nLA provided by ???\n\n");
+	exit(2);
+
+#endif
 
 	}
