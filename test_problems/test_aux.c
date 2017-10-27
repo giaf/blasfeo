@@ -10,29 +10,22 @@
 #include "../include/blasfeo_d_kernel.h"
 #include "../include/blasfeo_d_blas.h"
 
-
+#define STR(x) #x
+#define SHOW_DEFINE(x) printf("%s=%s\n", #x, STR(x));
 
 int main()
 	{
 
-#if defined(LA_HIGH_PERFORMANCE)
-
-	printf("\nLA provided by HIGH_PERFORMANCE\n\n");
-
-#elif defined(LA_REFERENCE)
-
-	printf("\nLA provided by REFERENCE\n\n");
-
-#elif defined(LA_BLAS)
-
-	printf("\nLA provided by BLAS\n\n");
-
-#else
-
-	printf("\nLA provided by ???\n\n");
-	exit(2);
-
+#ifndef LA
+	#error LA undefined
 #endif
+
+#ifndef TARGET
+	#error TARGET undefined
+#endif
+
+SHOW_DEFINE(LA)
+SHOW_DEFINE(TARGET)
 
 	int ii;
 
@@ -142,23 +135,11 @@ int main()
 	printf("Copy submatrix A[3:5, 3:5] in B[0:5, 0:5], print B:\n\n");
 	d_print_strmat(n, n, &sB, 0, 0);
 
-#if defined(LA_HIGH_PERFORMANCE)
-
-	printf("\nLA provided by HIGH_PERFORMANCE\n\n");
-
-#elif defined(LA_REFERENCE)
-
-	printf("\nLA provided by REFERENCE\n\n");
-
-#elif defined(LA_BLAS)
-
-	printf("\nLA provided by BLAS\n\n");
-
-#else
-
-	printf("\nLA provided by ???\n\n");
-	exit(2);
-
+#if defined(LA)
 #endif
+#if defined(TARGET)
+#endif
+SHOW_DEFINE(LA)
+SHOW_DEFINE(TARGET)
 
 	}

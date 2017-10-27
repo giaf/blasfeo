@@ -432,46 +432,55 @@ ifeq ($(TARGET), X64_INTEL_HASWELL)
 	echo "#ifndef TARGET_X64_INTEL_HASWELL" > ./include/blasfeo_target.h
 	echo "#define TARGET_X64_INTEL_HASWELL" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
+	echo "#define TARGET X64_INTEL_HASWELL" >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 	echo "#ifndef TARGET_X64_INTEL_SANDY_BRIDGE" > ./include/blasfeo_target.h
 	echo "#define TARGET_X64_INTEL_SANDY_BRIDGE" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
+	echo "#define TARGET X64_INTEL_SANDY_BRIDGE" >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), X64_INTEL_CORE)
 	echo "#ifndef TARGET_X64_INTEL_CORE" > ./include/blasfeo_target.h
 	echo "#define TARGET_X64_INTEL_CORE" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
+	echo "#define TARGET X64_INTEL_CORE" >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
 	echo "#ifndef TARGET_X64_AMD_BULLDOZER" > ./include/blasfeo_target.h
 	echo "#define TARGET_X64_AMD_BULLDOZER" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
+	echo "#define TARGET X64_AMD_BULLDOZER" >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), GENERIC)
 	echo "#ifndef TARGET_GENERIC" > ./include/blasfeo_target.h
 	echo "#define TARGET_GENERIC" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
+	echo "#define TARGET GENERIC" >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 	echo "#ifndef TARGET_ARMV7A_ARM_CORTEX_A15" > ./include/blasfeo_target.h
 	echo "#define TARGET_ARMV7A_ARM_CORTEX_A15" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
+	echo "#define TARGET ARMV7A_ARM_CORTEX_A15" >> ./include/blasfeo_target.h
 endif
 ifeq ($(LA), HIGH_PERFORMANCE)
 	echo "#ifndef LA_HIGH_PERFORMANCE" >> ./include/blasfeo_target.h
 	echo "#define LA_HIGH_PERFORMANCE" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
+	echo "#define LA HIGH_PERFORMANCE" >> ./include/blasfeo_target.h
 endif
 ifeq ($(LA), BLAS)
 	echo "#ifndef LA_BLAS" >> ./include/blasfeo_target.h
 	echo "#define LA_BLAS" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
+	echo "#define LA BLAS" >> ./include/blasfeo_target.h
 endif
 ifeq ($(LA), REFERENCE)
 	echo "#ifndef LA_REFERENCE" >> ./include/blasfeo_target.h
 	echo "#define LA_REFERENCE" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
+	echo "#define LA REFERENCE" >> ./include/blasfeo_target.h
 endif
 ifeq ($(EXT_DEP), 1)
 	echo "#ifndef EXT_DEP" >> ./include/blasfeo_target.h
