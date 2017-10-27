@@ -56,9 +56,7 @@
 	movq	%r13, 24(%rsp); \
 	movq	%r14, 32(%rsp); \
 	movq	%r15, 40(%rsp); \
-	vzeroupper;
 #define EPILOGUE \
-	vzeroupper; \
 	movq	  (%rsp), %rbx; \
 	movq	 8(%rsp), %rbp; \
 	movq	16(%rsp), %r12; \
@@ -108,9 +106,7 @@
 	movups	%xmm13, 176(%rsp); \
 	movups	%xmm14, 192(%rsp); \
 	movups	%xmm15, 208(%rsp); \
-	vzeroupper;
 #define EPILOGUE \
-	vzeroupper; \
 	movq	  (%rsp), %rbx; \
 	movq	 8(%rsp), %rbp; \
 	movq	16(%rsp), %r12; \
