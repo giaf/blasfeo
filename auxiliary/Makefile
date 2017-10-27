@@ -28,7 +28,7 @@
 
 include ../Makefile.rule
 
-OBJS = 
+OBJS =
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 
@@ -87,7 +87,7 @@ ifeq ($(EXT_DEP), 1)
 OBJS += d_aux_ext_dep_lib.o
 OBJS += s_aux_ext_dep_lib.o
 OBJS += v_aux_ext_dep_lib.o
-OBJS += i_aux_ext_dep_lib.o 
+OBJS += i_aux_ext_dep_lib.o
 endif
 
 obj: $(OBJS)
