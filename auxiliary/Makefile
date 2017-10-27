@@ -94,26 +94,9 @@ obj: $(OBJS)
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 	( cd avx2; $(MAKE) obj)
 	( cd avx; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
 endif
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 	( cd avx; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), X64_INTEL_CORE)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), X64_AMD_BULLDOZER)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), GENERIC)
-	( cd c99; $(MAKE) obj)
 endif
 
 

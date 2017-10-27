@@ -60,12 +60,32 @@ endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
 # aux
-OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o
-OBJS += ./auxiliary/m_aux_lib44.o
+OBJS += \
+		auxiliary/d_aux_lib4.o \
+		auxiliary/s_aux_lib4.o \
+		auxiliary/m_aux_lib44.o \
+
 # kernels
-OBJS += ./kernel/sse3/kernel_dgemm_4x4_lib4.o ./kernel/sse3/kernel_dgemv_4_lib4.o ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_diag_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o ./kernel/c99/kernel_dsymv_4_lib4.o ./kernel/c99/kernel_dgetrf_pivot_4_lib4.o ./kernel/c99/kernel_dgeqrf_4_lib4.o
-OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemm_diag_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o ./kernel/c99/kernel_ssymv_4_lib4.o ./kernel/c99/kernel_sgetrf_pivot_4_lib4.o ./kernel/c99/kernel_sgecp_lib4.o
+OBJS += \
+		kernel/sse3/kernel_dgemm_4x4_lib4.o \
+		kernel/sse3/kernel_dgemv_4_lib4.o \
+		kernel/c99/kernel_dgemm_4x4_lib4.o \
+		kernel/c99/kernel_dgemm_diag_lib4.o \
+		kernel/c99/kernel_dgemv_4_lib4.o \
+		kernel/c99/kernel_dsymv_4_lib4.o \
+		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_dgeqrf_4_lib4.o \
+		kernel/c99/kernel_dgecp_lib4.o \
+		kernel/c99/kernel_dgetr_lib4.o \
+		\
+		kernel/c99/kernel_sgemm_4x4_lib4.o \
+		kernel/c99/kernel_sgemm_diag_lib4.o \
+		kernel/c99/kernel_sgemv_4_lib4.o \
+		kernel/c99/kernel_ssymv_4_lib4.o \
+		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_sgecp_lib4.o \
+		kernel/c99/kernel_sgetr_lib4.o \
+
 # blas
 OBJS += ./blas/d_blas1_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas2_diag_lib.o ./blas/d_blas3_lib4.o ./blas/d_blas3_diag_lib4.o ./blas/d_lapack_lib4.o
 OBJS += ./blas/s_blas1_lib4.o ./blas/s_blas2_lib4.o ./blas/s_blas2_diag_lib.o ./blas/s_blas3_lib4.o ./blas/s_blas3_diag_lib4.o ./blas/s_lapack_lib4.o
@@ -73,12 +93,31 @@ endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
 # aux
-OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o
-OBJS += ./auxiliary/m_aux_lib44.o
+OBJS += \
+		auxiliarn/d_aux_lib4.o \
+		kernel/c99/kernel_dgecp_lib4.o \
+		kernel/c99/kernel_dgetr_lib4.o \
+		auxiliary/s_aux_lib4.o \
+		kernel/c99/kernel_sgetr_lib4.o \
+		auxiliary/m_aux_lib44.o
+
 # kernels
-OBJS += ./kernel/fma/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_diag_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o ./kernel/c99/kernel_dsymv_4_lib4.o ./kernel/c99/kernel_dgetrf_pivot_4_lib4.o ./kernel/c99/kernel_dgeqrf_4_lib4.o
-OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemm_diag_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o ./kernel/c99/kernel_ssymv_4_lib4.o ./kernel/c99/kernel_sgetrf_pivot_4_lib4.o ./kernel/c99/kernel_sgecp_lib4.o
+OBJS += \
+		kernel/fma/kernel_dgemm_4x4_lib4.o \
+		kernel/c99/kernel_dgemm_4x4_lib4.o \
+		kernel/c99/kernel_dgemm_diag_lib4.o \
+		kernel/c99/kernel_dgemv_4_lib4.o \
+		kernel/c99/kernel_dsymv_4_lib4.o \
+		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_dgeqrf_4_lib4.o
+		\
+		kernel/c99/kernel_sgemm_4x4_lib4.o \
+		kernel/c99/kernel_sgemm_diag_lib4.o \
+		kernel/c99/kernel_sgemv_4_lib4.o \
+		kernel/c99/kernel_ssymv_4_lib4.o \
+		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_sgecp_lib4.o
+
 # blas
 OBJS += ./blas/d_blas1_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas2_diag_lib.o ./blas/d_blas3_lib4.o ./blas/d_blas3_diag_lib4.o ./blas/d_lapack_lib4.o
 OBJS += ./blas/s_blas1_lib4.o ./blas/s_blas2_lib4.o ./blas/s_blas2_diag_lib.o ./blas/s_blas3_lib4.o ./blas/s_blas3_diag_lib4.o ./blas/s_lapack_lib4.o
@@ -86,12 +125,37 @@ endif
 
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
 # aux
-OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o
-OBJS += ./auxiliary/m_aux_lib44.o
+OBJS += \
+		auxiliary/d_aux_lib4.o \
+		kernel/c99/kernel_dgecp_lib4.o \
+		kernel/c99/kernel_dgetr_lib4.o \
+		auxiliary/s_aux_lib4.o \
+		kernel/c99/kernel_sgetr_lib4.o \
+		auxiliary/m_aux_lib44.o
+
 # kernels
-OBJS += ./kernel/armv8a/kernel_dgemm_8x4_lib4.o ./kernel/armv8a/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_diag_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o ./kernel/c99/kernel_dsymv_4_lib4.o ./kernel/c99/kernel_dgetrf_pivot_4_lib4.o ./kernel/c99/kernel_dgeqrf_4_lib4.o
-OBJS += ./kernel/armv8a/kernel_sgemm_16x4_lib4.o ./kernel/armv8a/kernel_sgemm_12x4_lib4.o ./kernel/armv8a/kernel_sgemm_8x8_lib4.o ./kernel/armv8a/kernel_sgemm_8x4_lib4.o ./kernel/armv8a/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemm_diag_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o ./kernel/c99/kernel_ssymv_4_lib4.o ./kernel/c99/kernel_sgetrf_pivot_4_lib4.o ./kernel/c99/kernel_sgecp_lib4.o
+OBJS += \
+		kernel/armv8a/kernel_dgemm_8x4_lib4.o \
+		kernel/armv8a/kernel_dgemm_4x4_lib4.o \
+		kernel/c99/kernel_dgemm_4x4_lib4.o \
+		kernel/c99/kernel_dgemm_diag_lib4.o \
+		kernel/c99/kernel_dgemv_4_lib4.o \
+		kernel/c99/kernel_dsymv_4_lib4.o \
+		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_dgeqrf_4_lib4.o
+		\
+		kernel/armv8a/kernel_sgemm_16x4_lib4.o \
+		kernel/armv8a/kernel_sgemm_12x4_lib4.o \
+		kernel/armv8a/kernel_sgemm_8x8_lib4.o \
+		kernel/armv8a/kernel_sgemm_8x4_lib4.o \
+		kernel/armv8a/kernel_sgemm_4x4_lib4.o \
+		kernel/c99/kernel_sgemm_4x4_lib4.o \
+		kernel/c99/kernel_sgemm_diag_lib4.o \
+		kernel/c99/kernel_sgemv_4_lib4.o \
+		kernel/c99/kernel_ssymv_4_lib4.o \
+		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_sgecp_lib4.o
+
 # blas
 OBJS += ./blas/d_blas1_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas2_diag_lib.o ./blas/d_blas3_lib4.o ./blas/d_blas3_diag_lib4.o ./blas/d_lapack_lib4.o
 OBJS += ./blas/s_blas1_lib4.o ./blas/s_blas2_lib4.o ./blas/s_blas2_diag_lib.o ./blas/s_blas3_lib4.o ./blas/s_blas3_diag_lib4.o ./blas/s_lapack_lib4.o
@@ -99,12 +163,34 @@ endif
 
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 # aux
-OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o
-OBJS += ./auxiliary/m_aux_lib44.o
+OBJS += \
+		auxiliary/d_aux_lib4.o \
+		kernel/c99/kernel_dgecp_lib4.o \
+		kernel/c99/kernel_dgetr_lib4.o \
+		auxiliary/s_aux_lib4.o \
+		kernel/c99/kernel_sgetr_lib4.o \
+		auxiliary/m_aux_lib44.o
+
 # kernels
-OBJS += ./kernel/armv7a/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_diag_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o ./kernel/c99/kernel_dsymv_4_lib4.o ./kernel/c99/kernel_dgetrf_pivot_4_lib4.o ./kernel/c99/kernel_dgeqrf_4_lib4.o
-OBJS += ./kernel/armv7a/kernel_sgemm_12x4_lib4.o ./kernel/armv7a/kernel_sgemm_8x4_lib4.o ./kernel/armv7a/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemm_diag_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o ./kernel/c99/kernel_ssymv_4_lib4.o ./kernel/c99/kernel_sgetrf_pivot_4_lib4.o ./kernel/c99/kernel_sgecp_lib4.o
+OBJS += \
+		kernel/armv7a/kernel_dgemm_4x4_lib4.o \
+		kernel/c99/kernel_dgemm_4x4_lib4.o \
+		kernel/c99/kernel_dgemm_diag_lib4.o \
+		kernel/c99/kernel_dgemv_4_lib4.o \
+		kernel/c99/kernel_dsymv_4_lib4.o \
+		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_dgeqrf_4_lib4.o \
+		\
+		kernel/armv7a/kernel_sgemm_12x4_lib4.o \
+		kernel/armv7a/kernel_sgemm_8x4_lib4.o \
+		kernel/armv7a/kernel_sgemm_4x4_lib4.o \
+		kernel/c99/kernel_sgemm_4x4_lib4.o \
+		kernel/c99/kernel_sgemm_diag_lib4.o \
+		kernel/c99/kernel_sgemv_4_lib4.o \
+		kernel/c99/kernel_ssymv_4_lib4.o \
+		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_sgecp_lib4.o
+
 # blas
 OBJS += ./blas/d_blas1_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas2_diag_lib.o ./blas/d_blas3_lib4.o ./blas/d_blas3_diag_lib4.o ./blas/d_lapack_lib4.o
 OBJS += ./blas/s_blas1_lib4.o ./blas/s_blas2_lib4.o ./blas/s_blas2_diag_lib.o ./blas/s_blas3_lib4.o ./blas/s_blas3_diag_lib4.o ./blas/s_lapack_lib4.o
@@ -112,12 +198,30 @@ endif
 
 ifeq ($(TARGET), GENERIC)
 # aux
-OBJS += ./auxiliary/d_aux_lib4.o ./auxiliary/c99/kernel_dgecp_lib4.o ./auxiliary/c99/kernel_dgetr_lib4.o
-OBJS += ./auxiliary/s_aux_lib4.o ./auxiliary/c99/kernel_sgetr_lib4.o
-OBJS += ./auxiliary/m_aux_lib44.o
+OBJS += \
+		auxiliary/d_aux_lib4.o \
+		auxiliary/s_aux_lib4.o \
+		auxiliary/m_aux_lib44.o \
+		\
+		kernel/c99/kernel_sgetr_lib4.o \
+		kernel/c99/kernel_dgecp_lib4.o \
+		kernel/c99/kernel_dgetr_lib4.o \
+
 # kernels
-OBJS += ./kernel/c99/kernel_dgemm_4x4_lib4.o ./kernel/c99/kernel_dgemm_diag_lib4.o ./kernel/c99/kernel_dgemv_4_lib4.o ./kernel/c99/kernel_dsymv_4_lib4.o ./kernel/c99/kernel_dgetrf_pivot_4_lib4.o ./kernel/c99/kernel_dgeqrf_4_lib4.o
-OBJS += ./kernel/c99/kernel_sgemm_4x4_lib4.o ./kernel/c99/kernel_sgemm_diag_lib4.o ./kernel/c99/kernel_sgemv_4_lib4.o ./kernel/c99/kernel_ssymv_4_lib4.o ./kernel/c99/kernel_sgetrf_pivot_4_lib4.o ./kernel/c99/kernel_sgecp_lib4.o
+OBJS += \
+		kernel/c99/kernel_dgemm_4x4_lib4.o \
+		kernel/c99/kernel_dgemm_diag_lib4.o \
+		kernel/c99/kernel_dgemv_4_lib4.o \
+		kernel/c99/kernel_dsymv_4_lib4.o \
+		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_dgeqrf_4_lib4.o \
+		kernel/c99/kernel_sgemm_4x4_lib4.o \
+		kernel/c99/kernel_sgemm_diag_lib4.o \
+		kernel/c99/kernel_sgemv_4_lib4.o \
+		kernel/c99/kernel_ssymv_4_lib4.o \
+		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_sgecp_lib4.o
+
 # blas
 OBJS += ./blas/d_blas1_lib4.o ./blas/d_blas2_lib4.o ./blas/d_blas2_diag_lib.o ./blas/d_blas3_lib4.o ./blas/d_blas3_diag_lib4.o ./blas/d_lapack_lib4.o
 OBJS += ./blas/s_blas1_lib4.o ./blas/s_blas2_lib4.o ./blas/s_blas2_diag_lib.o ./blas/s_blas3_lib4.o ./blas/s_blas3_diag_lib4.o ./blas/s_lapack_lib4.o
