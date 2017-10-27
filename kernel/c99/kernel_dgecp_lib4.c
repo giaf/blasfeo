@@ -27,86 +27,13 @@
 **************************************************************************************************/
 
 
-
-// both A and B are aligned to 256-bit boundaries
-void kernel_dgecp_4_0_lib4(int tri, int kmax, double alpha, double *A, double *B)
-	{
-
-	if(tri==1)
-		{
-		// A and C are lower triangular
-		// kmax+1 4-wide + end 3x3 triangle
-
-		kmax += 1;
-		}
-
-	if(kmax<=0)
-		return;
-
-	const int bs = 4;
-
-	int k;
-
-	for(k=0; k<kmax-3; k+=4)
-		{
-		B[0+bs*0] = alpha*A[0+bs*0];
-		B[1+bs*0] = alpha*A[1+bs*0];
-		B[2+bs*0] = alpha*A[2+bs*0];
-		B[3+bs*0] = alpha*A[3+bs*0];
-
-		B[0+bs*1] = alpha*A[0+bs*1];
-		B[1+bs*1] = alpha*A[1+bs*1];
-		B[2+bs*1] = alpha*A[2+bs*1];
-		B[3+bs*1] = alpha*A[3+bs*1];
-
-		B[0+bs*2] = alpha*A[0+bs*2];
-		B[1+bs*2] = alpha*A[1+bs*2];
-		B[2+bs*2] = alpha*A[2+bs*2];
-		B[3+bs*2] = alpha*A[3+bs*2];
-
-		B[0+bs*3] = alpha*A[0+bs*3];
-		B[1+bs*3] = alpha*A[1+bs*3];
-		B[2+bs*3] = alpha*A[2+bs*3];
-		B[3+bs*3] = alpha*A[3+bs*3];
-
-		A += 16;
-		B += 16;
-
-		}
-	for(; k<kmax; k++)
-		{
-
-		B[0+bs*0] = alpha*A[0+bs*0];
-		B[1+bs*0] = alpha*A[1+bs*0];
-		B[2+bs*0] = alpha*A[2+bs*0];
-		B[3+bs*0] = alpha*A[3+bs*0];
-
-		A += 4;
-		B += 4;
-
-		}
-	
-	if(tri==1)
-		{
-		// 3x3 triangle
-
-		B[1+bs*0] = alpha*A[1+bs*0];
-		B[2+bs*0] = alpha*A[2+bs*0];
-		B[3+bs*0] = alpha*A[3+bs*0];
-
-		B[2+bs*1] = alpha*A[2+bs*1];
-		B[3+bs*1] = alpha*A[3+bs*1];
-
-		B[3+bs*2] = alpha*A[3+bs*2];
-
-		}
-
-	}
-
+/*
+ * Copy only
+ */
 
 
 // both A and B are aligned to 256-bit boundaries
-void kernel_dgecpcp_4_0_lib4(int tri, int kmax, double *A, double *B)
+void kernel_dgecp_4_0_lib4(int tri, int kmax, double *A, double *B)
 	{
 
 	if(tri==1)
@@ -182,8 +109,90 @@ void kernel_dgecpcp_4_0_lib4(int tri, int kmax, double *A, double *B)
 
 
 
+/*
+ * Copy and Scale
+ */
+
+
+// both.o A and B are aligned to 256-bit boundaries
+void kernel_dgecpsc_4_0_lib4(int tri, int kmax, double alpha, double *A, double *B)
+	{
+
+	if(tri==1)
+		{
+		// A and C are lower triangular
+		// kmax+1 4-wide + end 3x3 triangle
+
+		kmax += 1;
+		}
+
+	if(kmax<=0)
+		return;
+
+	const int bs = 4;
+
+	int k;
+
+	for(k=0; k<kmax-3; k+=4)
+		{
+		B[0+bs*0] = alpha*A[0+bs*0];
+		B[1+bs*0] = alpha*A[1+bs*0];
+		B[2+bs*0] = alpha*A[2+bs*0];
+		B[3+bs*0] = alpha*A[3+bs*0];
+
+		B[0+bs*1] = alpha*A[0+bs*1];
+		B[1+bs*1] = alpha*A[1+bs*1];
+		B[2+bs*1] = alpha*A[2+bs*1];
+		B[3+bs*1] = alpha*A[3+bs*1];
+
+		B[0+bs*2] = alpha*A[0+bs*2];
+		B[1+bs*2] = alpha*A[1+bs*2];
+		B[2+bs*2] = alpha*A[2+bs*2];
+		B[3+bs*2] = alpha*A[3+bs*2];
+
+		B[0+bs*3] = alpha*A[0+bs*3];
+		B[1+bs*3] = alpha*A[1+bs*3];
+		B[2+bs*3] = alpha*A[2+bs*3];
+		B[3+bs*3] = alpha*A[3+bs*3];
+
+		A += 16;
+		B += 16;
+
+		}
+	for(; k<kmax; k++)
+		{
+
+		B[0+bs*0] = alpha*A[0+bs*0];
+		B[1+bs*0] = alpha*A[1+bs*0];
+		B[2+bs*0] = alpha*A[2+bs*0];
+		B[3+bs*0] = alpha*A[3+bs*0];
+
+		A += 4;
+		B += 4;
+
+		}
+	
+	if(tri==1)
+		{
+		// 3x3 triangle
+
+		B[1+bs*0] = alpha*A[1+bs*0];
+		B[2+bs*0] = alpha*A[2+bs*0];
+		B[3+bs*0] = alpha*A[3+bs*0];
+
+		B[2+bs*1] = alpha*A[2+bs*1];
+		B[3+bs*1] = alpha*A[3+bs*1];
+
+		B[3+bs*2] = alpha*A[3+bs*2];
+
+		}
+
+	}
+
+
+
 // both A and B are aligned to 256-bit boundaries, 1 element of A must be skipped
-void kernel_dgecp_4_1_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B)
+void kernel_dgecpsc_4_1_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B)
 	{
 
 	if(tri==1)
@@ -265,7 +274,7 @@ void kernel_dgecp_4_1_lib4(int tri, int kmax, double alpha, double *A0, int sda,
 
 
 // both A and B are aligned to 256-bit boundaries, 2 elements of A must be skipped
-void kernel_dgecp_4_2_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B)
+void kernel_dgecpsc_4_2_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B)
 	{
 
 	if(tri==1)
@@ -347,7 +356,7 @@ void kernel_dgecp_4_2_lib4(int tri, int kmax, double alpha, double *A0, int sda,
 
 
 // both A and B are aligned to 256-bit boundaries, 3 elements of A must be skipped
-void kernel_dgecp_4_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B)
+void kernel_dgecpsc_4_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B)
 	{
 
 	if(tri==1)
@@ -429,7 +438,7 @@ void kernel_dgecp_4_3_lib4(int tri, int kmax, double alpha, double *A0, int sda,
 
 
 // both A and B are aligned to 64-bit boundaries
-void kernel_dgecp_3_0_lib4(int tri, int kmax, double alpha, double *A, double *B)
+void kernel_dgecpsc_3_0_lib4(int tri, int kmax, double alpha, double *A, double *B)
 	{
 
 	if(tri==1)
@@ -496,7 +505,7 @@ void kernel_dgecp_3_0_lib4(int tri, int kmax, double alpha, double *A, double *B
 
 
 // both A and B are aligned to 256-bit boundaries, 2 elements of A must be skipped
-void kernel_dgecp_3_2_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B)
+void kernel_dgecpsc_3_2_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B)
 	{
 
 	if(tri==1)
@@ -569,7 +578,7 @@ void kernel_dgecp_3_2_lib4(int tri, int kmax, double alpha, double *A0, int sda,
 
 
 // both A and B are aligned to 256-bit boundaries, 3 elements of A must be skipped
-void kernel_dgecp_3_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B)
+void kernel_dgecpsc_3_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B)
 	{
 
 	if(tri==1)
@@ -642,7 +651,7 @@ void kernel_dgecp_3_3_lib4(int tri, int kmax, double alpha, double *A0, int sda,
 
 
 // both A and B are aligned to 64-bit boundaries
-void kernel_dgecp_2_0_lib4(int tri, int kmax, double alpha, double *A, double *B)
+void kernel_dgecpsc_2_0_lib4(int tri, int kmax, double alpha, double *A, double *B)
 	{
 
 	if(tri==1)
@@ -702,7 +711,7 @@ void kernel_dgecp_2_0_lib4(int tri, int kmax, double alpha, double *A, double *B
 
 
 // both A and B are aligned to 128-bit boundaries, 3 elements of A must be skipped
-void kernel_dgecp_2_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B)
+void kernel_dgecpsc_2_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B)
 	{
 
 	if(tri==1)
@@ -767,7 +776,7 @@ void kernel_dgecp_2_3_lib4(int tri, int kmax, double alpha, double *A0, int sda,
 
 
 // both A and B are aligned 64-bit boundaries
-void kernel_dgecp_1_0_lib4(int tri, int kmax, double alpha, double *A, double *B)
+void kernel_dgecpsc_1_0_lib4(int tri, int kmax, double alpha, double *A, double *B)
 	{
 
 	if(tri==1)
@@ -1330,7 +1339,3 @@ void kernel_dgead_1_0_lib4(int kmax, double alpha, double *A, double *B)
 		}
 
 	}
-
-
-
-
