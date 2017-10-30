@@ -169,7 +169,7 @@ int main()
 //	spotrf_l_mn_libstr(23, 17, &sD, 0, 0, &sD, 0, 0);
 //	spotrf_l_libstr(n, &sD, 0, 0, &sD, 0, 0);
 //	kernel_strmm_nn_rl_8x4_lib8(3, &alpha, sB.pA, 7, sA.pA, sA.cn, sD.pA);
-	strmm_rlnn_libstr(12, 8, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+	strmm_rlnn_libstr(16, 12, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 	s_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 

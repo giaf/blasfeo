@@ -230,6 +230,7 @@ int main()
 
 	double alpha = 1.0;
 	double beta = 0.0;
+	dgemm_nt_libstr(4, 4, 4, alpha, &sA, 2, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	kernel_dgemm_nt_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 4, 0, 4);
 //	kernel_dsyrk_nt_l_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sD.cn, 3, sD.pA, sD.cn, 0, 4, 0, 4);
 //	kernel_dtrmm_nn_rl_4x4_gen_lib4(4, &alpha, sB.pA, 3, sA.pA, sB.cn, 0, sD.pA, sD.cn, 0, 4, 0, 4);
@@ -239,9 +240,9 @@ int main()
 //	kernel_dgemv_t_4_lib4(3, &alpha, sA.pA, sA.cn, sx2.pa, &beta, sx0.pa, sz0.pa);
 //	kernel_dgemv_t_4_vs_lib4(3, &alpha, sA.pA, sA.cn, sx2.pa, &beta, sx0.pa, sz0.pa, 3);
 //	kernel_dgemv_nt_4_lib4(4, &alpha, &alpha, sA.pA+4, sA.cn, sx0.pa, sx0.pa, &beta, sz0.pa, sz0.pa, sz1.pa);
-	kernel_dsymv_l_4_lib4(4, &alpha, sA.pA+0, sA.cn, sx3.pa, sz0.pa);
-	d_print_tran_strvec(n, &sz0, 0);
-	d_print_tran_strvec(n, &sz1, 0);
+//	kernel_dsymv_l_4_lib4(4, &alpha, sA.pA+0, sA.cn, sx3.pa, sz0.pa);
+//	d_print_tran_strvec(n, &sz0, 0);
+//	d_print_tran_strvec(n, &sz1, 0);
 	return 0;
 	dtrmm_rlnn_libstr(8, 8, alpha, &sA, 3, 0, &sB, 0, 0, &sD, 0, 0);
 //	dgemm_nn_libstr(8, 8, 8, alpha, &sB, 0, 0, &sA, 1, 0, beta, &sA, 0, 0, &sD, 0, 0);
