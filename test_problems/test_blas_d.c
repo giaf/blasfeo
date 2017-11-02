@@ -312,8 +312,8 @@ int main()
 //			dsyrk_dpotrf_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd, diag);
 //			dsyrk_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd);
 //			dpotrf_nt_l_lib(n, n, pD, cnd, pD, cnd, diag);
-//			dgetrf_nn_nopivot_lib(n, n, pB, cnd, pB, cnd, diag);
-//			dgetrf_nn_lib(n, n, pB, cnd, pB, cnd, diag, ipiv);
+//			dgetrf_nn_nopivot_lib(n, n, pB, cnd, pB, cnd, diag); //TODO
+//			dgetrf_nn_lib(n, n, pB, cnd, pB, cnd, diag, ipiv); //TODO
 //			dtrsm_nn_ll_one_lib(n, n, pD, cnd, pB, cnd, pB, cnd);
 //			dtrsm_nn_lu_inv_lib(n, n, pD, cnd, diag, pB, cnd, pB, cnd);
 			}
