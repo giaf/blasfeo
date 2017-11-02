@@ -33,30 +33,6 @@
  *
  */
 
-/*
- * ----------- Naming conventions
- *
- * 1) d(double)
- *    s(single)
- *
- * 2) ge(general)
- *    tr(triangular) / vec(vector) / row(row) / col(column) / dia(diagonal)
- *
- * 3) se(set)
- *    cp(copy)
- *    sc(scale)
- *    ad(add)
- *    tr(transpose)
- *    in(insert)
- *    ex(extract)
- *    pe(premute)
- *    sw(swap)
- *
- * 4) _l(lower) / _u(upper)
- *
- * 5) _sp(sparse)
- */
-
 #ifdef __cplusplus
 extern "C" {
 #endif
