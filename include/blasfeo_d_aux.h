@@ -137,11 +137,27 @@ void dvecsc_libstr(int m, double alpha, struct d_strvec *sa, int ai);
 void dveccpsc_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci);
 
 // B <= A, A lower triangular
-void dtrcp_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
+void dtrcp_l_libstr(int m,
+					struct d_strmat *sA, int ai, int aj,
+					struct d_strmat *sB, int bi, int bj);
+
+void dtrcpsc_l_libstr(int m, double alpha,
+					struct d_strmat *sA, int ai, int aj,
+					struct d_strmat *sB, int bi, int bj);
+
+void dtrsc_l_libstr(int m, double alpha,
+					struct d_strmat *sA, int ai, int aj);
+
+
 // B <= B + alpha*A
-void dgead_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj);
+void dgead_libstr(int m, int n, double alpha,
+					struct d_strmat *sA, int ai, int aj,
+					struct d_strmat *sC, int ci, int cj);
+
 // y <= y + alpha*x
-void dvecad_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci);
+void dvecad_libstr(int m, double alpha,
+					struct d_strvec *sa, int ai,
+					struct d_strvec *sc, int ci);
 
 // --- traspositions
 void dgetr_lib(int m, int n, double alpha, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc);
