@@ -44,6 +44,10 @@ SHOW_DEFINE(TARGET)
 	d_zeros(&B, n, n);
 	for(ii=0; ii<n*n; ii++) B[ii] = 2*ii;
 
+	double *C;
+	// standard column major allocation (malloc)
+	d_zeros(&C, n, n);
+
 	// -------- instantiate d_strmat
 
 	// compute memory size
@@ -78,7 +82,7 @@ SHOW_DEFINE(TARGET)
 
 	// covert mat to strmat
 	d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
-	d_cvt_mat2strmat(n, n, A, n, &sC, 0, 0);
+	d_cvt_mat2strmat(n, n, C, n, &sC, 0, 0);
 
 	// -------- instantiate d_strmat
 
@@ -134,6 +138,24 @@ SHOW_DEFINE(TARGET)
 	dgecp_libstr(5, 5, &sA, 3, 3, &sB, 0, 0);
 	printf("Copy submatrix A[3:5, 3:5] in B[0:5, 0:5], print B:\n\n");
 	d_print_strmat(n, n, &sB, 0, 0);
+
+
+	/* ----------- copy scale tringular */
+	printf("----------- Copy&Scale\n\n");
+
+	dgecp_libstr(n, n, &sC, 0, 0, &sB, 0, 0);
+	dtrcpsc_l_libstr(n, 0.1, &sA, 0, 0, &sB, 0, 0);
+	printf("Scale trl A by 0.1 and copy in B, print B:\n\n");
+	d_print_strmat(n, n, &sB, 0, 0);
+
+	dtrcp_l_libstr(5, &sA, 3, 3, &sB, 0, 0);
+	printf("Copy trl submatrix A[3:5, 3:5] in B[0:5, 0:5], print B:\n\n");
+	d_print_strmat(n, n, &sB, 0, 0);
+
+	dtrsc_l_libstr(n, 0.3, &sB, 0, 0);
+	printf("Scale trl B by 0.3, print B:\n\n");
+	d_print_strmat(n, n, &sB, 0, 0);
+
 
 #if defined(LA)
 #endif
