@@ -29,9 +29,11 @@
 # ----------- Include
 include ../Makefile.rule
 
+BINARY_DIR = out/$(LA)/$(TARGET)
+
 # ----------- Envs
 
-LIBS = -L. out/$(LA)/$(TARGET)/libblasfeo.a
+LIBS = -L. $(BINARY_DIR)/libblasfeo.a
 
 ifeq ($(REF_BLAS), 0)
 LIBS += -lm
@@ -60,16 +62,14 @@ endif
 #endif
 
 # OBJS_TEST = test_*.o
-OBJS_TEST = test_blas_d.o
+# OBJS_TEST = test_blas_d.o
 #OBJS_TEST = test_blas_s.o
 #OBJS_TEST = test_d_strmat.o
 #OBJS_TEST = test_s_strmat.o
 #OBJS_TEST = kernel_assembly.o test_assembly.o
 
-# %.o: %.c
-	# $(CC) -c $< -o $@
-	#
-	#
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
 
 # ----------- Targets
 
@@ -79,18 +79,19 @@ obj: aux blas
 
 aux: test_aux.o
 	# write object in specific folder
-	mkdir -p out/$(LA)/$(TARGET)/
-	$(CC) -o out/$(LA)/$(TARGET)/test_aux.out test_aux.o $(LIBS)
+	mkdir -p $(BINARY_DIR)/
+	$(CC) $(CFLAG) -o $(BINARY_DIR)/test_aux.out $(BINARY_DIR)/test_aux.o $(LIBS)
+	$(CC) $(CFLAG) -o $(BINARY_DIR)/test_aux.out $(BINARY_DIR)/test_aux.o $(LIBS)
 
 blas: test_blas_d.o
-	mkdir -p out/$(LA)/$(TARGET)/
-	$(CC) -o out/$(LA)/$(TARGET)/test_blas_d.out test_blas_d.o $(LIBS)
+	mkdir -p $(BINARY_DIR)/
+	$(CC) $(CFLAG) -o $(BINARY_DIR)/test_blas_d.out $(BINARY_DIR)/test_blas_d.o $(LIBS)
 
-run_short: obj
-	./out/$(LA)/$(TARGET)/test_aux.out
+run_short: aux
+	./$(BINARY_DIR)/test_aux.out
 
 run_all: run_short
-	./out/$(LA)/$(TARGET)/test_blas_d.out
+	./$(BINARY_DIR)/test_blas_d.out
 
 clean_tests:
 	rm -rf out/*
