@@ -27,9 +27,15 @@
 **************************************************************************************************/
 
 
+
+
+
 /*
  * Copy only
  */
+
+
+
 
 
 // both A and B are aligned to 256-bit boundaries
@@ -109,9 +115,17 @@ void kernel_dgecp_4_0_lib4(int tri, int kmax, double *A, double *B)
 
 
 
+
+
+
 /*
  * Copy and Scale
+ *
+ * Used by: dge dtr
  */
+
+
+
 
 
 // both.o A and B are aligned to 256-bit boundaries
@@ -797,11 +811,8 @@ void kernel_dgecpsc_1_0_lib4(int tri, int kmax, double alpha, double *A, double 
 	for(k=0; k<kmax-3; k+=4)
 		{
 		B[0+bs*0] = alpha*A[0+bs*0];
-
 		B[0+bs*1] = alpha*A[0+bs*1];
-
 		B[0+bs*2] = alpha*A[0+bs*2];
-
 		B[0+bs*3] = alpha*A[0+bs*3];
 
 		A += 16;
@@ -819,6 +830,16 @@ void kernel_dgecpsc_1_0_lib4(int tri, int kmax, double alpha, double *A, double 
 		}
 
 	}
+
+
+
+
+
+/*
+ * Add and scale
+ *
+ */
+
 
 
 
