@@ -91,17 +91,6 @@ OBJS += i_aux_ext_dep_lib.o
 endif
 
 obj: $(OBJS)
-ifeq ($(TARGET), X64_INTEL_HASWELL)
-	( cd avx2; $(MAKE) obj)
-	( cd avx; $(MAKE) obj)
-endif
-ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-	( cd avx; $(MAKE) obj)
-endif
-
 
 clean:
 	rm -f *.o
-	make -C avx2 clean
-	make -C avx clean
-	make -C c99 clean

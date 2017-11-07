@@ -36,10 +36,8 @@ ifeq ($(TARGET), X64_INTEL_HASWELL)
 
 # aux
 OBJS += auxiliary/d_aux_lib4.o \
-		auxiliary/avx/kernel_dgecp_lib4.o \
-		auxiliary/avx2/kernel_dgetr_lib4.o \
 		auxiliary/s_aux_lib8.o \
-		auxiliary/m_aux_lib48.o
+		auxiliary/m_aux_lib48.o \
 
 # kernels
 OBJS += \
@@ -55,18 +53,20 @@ OBJS += \
 		kernel/avx/kernel_dgeqrf_4_lib4.o \
 		kernel/avx2/kernel_dgebp_lib4.o \
 		kernel/avx2/kernel_dgelqf_4_lib4.o \
+		kernel/avx2/kernel_dgetr_lib4.o \
+		kernel/avx/kernel_dgecp_lib4.o \
 		\
 		kernel/avx2/kernel_sgemm_24x4_lib8.o \
 		kernel/avx2/kernel_sgemm_16x4_lib8.o \
 		kernel/avx2/kernel_sgemm_8x8_lib8.o \
 		kernel/avx2/kernel_sgemm_8x4_lib8.o \
 		kernel/avx/kernel_sgemm_diag_lib8.o \
+		kernel/avx/kernel_sgemv_8_lib8.o \
+		kernel/avx/kernel_sgemv_4_lib8.o \
 		kernel/avx/kernel_sgecp_lib8.o \
+		kernel/avx/kernel_sgesc_lib8.o \
 		kernel/avx/kernel_sgetr_lib8.o \
 		kernel/avx/kernel_sgead_lib8.o \
-		kernel/avx/kernel_sgesc_lib8.o \
-		kernel/avx/kernel_sgemv_8_lib8.o \
-		kernel/avx/kernel_sgemv_4_lib8.o
 
 # blas
 OBJS += \
@@ -82,17 +82,16 @@ OBJS += \
 		blas/s_blas2_diag_lib.o \
 		blas/s_blas3_lib8.o \
 		blas/s_blas3_diag_lib8.o \
-		blas/s_lapack_lib8.o
+		blas/s_lapack_lib8.o \
+
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 # aux
 OBJS += \
 		auxiliary/d_aux_lib4.o \
-		auxiliary/avx/kernel_dgecp_lib4.o \
-		auxiliary/avx/kernel_dgetr_lib4.o \
 		auxiliary/s_aux_lib8.o \
-		auxiliary/m_aux_lib48.o
+		auxiliary/m_aux_lib48.o \
 
 # kernels
 OBJS += \
@@ -106,17 +105,19 @@ OBJS += \
 		kernel/avx/kernel_dgetrf_pivot_4_lib4.o \
 		kernel/avx/kernel_dgeqrf_4_lib4.o \
 		kernel/avx/kernel_dgebp_lib4.o \
+		kernel/avx/kernel_dgecp_lib4.o \
+		kernel/avx/kernel_dgetr_lib4.o \
 		\
 		kernel/avx/kernel_sgemm_16x4_lib8.o \
 		kernel/avx/kernel_sgemm_8x8_lib8.o \
 		kernel/avx/kernel_sgemm_8x4_lib8.o \
-		kernel/avx/kernel_sgecp_lib8.o \
 		kernel/avx/kernel_sgemm_diag_lib8.o \
+		kernel/avx/kernel_sgemv_8_lib8.o \
+		kernel/avx/kernel_sgemv_4_lib8.o \
+		kernel/avx/kernel_sgecp_lib8.o \
+		kernel/avx/kernel_sgesc_lib8.o \
 		kernel/avx/kernel_sgetr_lib8.o \
 		kernel/avx/kernel_sgead_lib8.o \
-		kernel/avx/kernel_sgesc_lib8.o \
-		kernel/avx/kernel_sgemv_8_lib8.o \
-		kernel/avx/kernel_sgemv_4_lib8.o
 
 # blas
 OBJS  += \
@@ -131,7 +132,8 @@ OBJS  += \
 		blas/s_blas2_diag_lib.o \
 		blas/s_blas3_lib8.o \
 		blas/s_blas3_diag_lib8.o \
-		blas/s_lapack_lib8.o
+		blas/s_lapack_lib8.o \
+
 endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
@@ -176,7 +178,8 @@ OBJS += \
 		blas/s_blas2_diag_lib.o \
 		blas/s_blas3_lib4.o \
 		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o
+		blas/s_lapack_lib4.o \
+
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
@@ -184,11 +187,8 @@ ifeq ($(TARGET), X64_AMD_BULLDOZER)
 # aux
 OBJS += \
 		auxiliarn/d_aux_lib4.o \
-		kernel/c99/kernel_dgecp_lib4.o \
-		kernel/c99/kernel_dgetr_lib4.o \
 		auxiliary/s_aux_lib4.o \
-		kernel/c99/kernel_sgetr_lib4.o \
-		auxiliary/m_aux_lib44.o
+		auxiliary/m_aux_lib44.o \
 
 # kernels
 OBJS += \
@@ -198,14 +198,17 @@ OBJS += \
 		kernel/c99/kernel_dgemv_4_lib4.o \
 		kernel/c99/kernel_dsymv_4_lib4.o \
 		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_dgeqrf_4_lib4.o
+		kernel/c99/kernel_dgeqrf_4_lib4.o \
+		kernel/c99/kernel_dgecp_lib4.o \
+		kernel/c99/kernel_dgetr_lib4.o \
 		\
 		kernel/c99/kernel_sgemm_4x4_lib4.o \
 		kernel/c99/kernel_sgemm_diag_lib4.o \
 		kernel/c99/kernel_sgemv_4_lib4.o \
 		kernel/c99/kernel_ssymv_4_lib4.o \
 		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_sgecp_lib4.o
+		kernel/c99/kernel_sgecp_lib4.o \
+		kernel/c99/kernel_sgetr_lib4.o \
 
 # blas
 OBJS += \
@@ -221,7 +224,8 @@ OBJS += \
 		blas/s_blas2_diag_lib.o \
 		blas/s_blas3_lib4.o \
 		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o
+		blas/s_lapack_lib4.o \
+
 endif
 
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
@@ -229,11 +233,8 @@ ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
 # aux
 OBJS += \
 		auxiliary/d_aux_lib4.o \
-		kernel/c99/kernel_dgecp_lib4.o \
-		kernel/c99/kernel_dgetr_lib4.o \
 		auxiliary/s_aux_lib4.o \
-		kernel/c99/kernel_sgetr_lib4.o \
-		auxiliary/m_aux_lib44.o
+		auxiliary/m_aux_lib44.o \
 
 # kernels
 OBJS += \
@@ -244,7 +245,9 @@ OBJS += \
 		kernel/c99/kernel_dgemv_4_lib4.o \
 		kernel/c99/kernel_dsymv_4_lib4.o \
 		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_dgeqrf_4_lib4.o
+		kernel/c99/kernel_dgeqrf_4_lib4.o \
+		kernel/c99/kernel_dgecp_lib4.o \
+		kernel/c99/kernel_dgetr_lib4.o \
 		\
 		kernel/armv8a/kernel_sgemm_16x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_12x4_lib4.o \
@@ -256,7 +259,8 @@ OBJS += \
 		kernel/c99/kernel_sgemv_4_lib4.o \
 		kernel/c99/kernel_ssymv_4_lib4.o \
 		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_sgecp_lib4.o
+		kernel/c99/kernel_sgecp_lib4.o \
+		kernel/c99/kernel_sgetr_lib4.o \
 
 # blas
 OBJS += \
@@ -265,25 +269,23 @@ OBJS += \
 		blas/d_blas2_diag_lib.o \
 		blas/d_blas3_lib4.o \
 		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o
+		blas/d_lapack_lib4.o \
 		\
 		blas/s_blas1_lib4.o \
 		blas/s_blas2_lib4.o \
 		blas/s_blas2_diag_lib.o \
 		blas/s_blas3_lib4.o \
 		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o
+		blas/s_lapack_lib4.o \
+
 endif
 
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 # aux
 OBJS += \
 		auxiliary/d_aux_lib4.o \
-		kernel/c99/kernel_dgecp_lib4.o \
-		kernel/c99/kernel_dgetr_lib4.o \
 		auxiliary/s_aux_lib4.o \
-		kernel/c99/kernel_sgetr_lib4.o \
-		auxiliary/m_aux_lib44.o
+		auxiliary/m_aux_lib44.o \
 
 # kernels
 OBJS += \
@@ -294,6 +296,8 @@ OBJS += \
 		kernel/c99/kernel_dsymv_4_lib4.o \
 		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
+		kernel/c99/kernel_dgecp_lib4.o \
+		kernel/c99/kernel_dgetr_lib4.o \
 		\
 		kernel/armv7a/kernel_sgemm_12x4_lib4.o \
 		kernel/armv7a/kernel_sgemm_8x4_lib4.o \
@@ -303,7 +307,8 @@ OBJS += \
 		kernel/c99/kernel_sgemv_4_lib4.o \
 		kernel/c99/kernel_ssymv_4_lib4.o \
 		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_sgecp_lib4.o
+		kernel/c99/kernel_sgecp_lib4.o \
+		kernel/c99/kernel_sgetr_lib4.o \
 
 # blas
 OBJS += \
@@ -318,7 +323,8 @@ OBJS += \
 		blas/s_blas2_diag_lib.o \
 		blas/s_blas3_lib4.o \
 		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o
+		blas/s_lapack_lib4.o \
+
 endif
 
 ifeq ($(TARGET), GENERIC)
@@ -328,10 +334,6 @@ OBJS += \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
-		\
-		kernel/c99/kernel_sgetr_lib4.o \
-		kernel/c99/kernel_dgecp_lib4.o \
-		kernel/c99/kernel_dgetr_lib4.o \
 
 # kernels
 OBJS += \
@@ -339,14 +341,18 @@ OBJS += \
 		kernel/c99/kernel_dgemm_diag_lib4.o \
 		kernel/c99/kernel_dgemv_4_lib4.o \
 		kernel/c99/kernel_dsymv_4_lib4.o \
+		kernel/c99/kernel_dgecp_lib4.o \
+		kernel/c99/kernel_dgetr_lib4.o \
 		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
+		\
 		kernel/c99/kernel_sgemm_4x4_lib4.o \
 		kernel/c99/kernel_sgemm_diag_lib4.o \
 		kernel/c99/kernel_sgemv_4_lib4.o \
 		kernel/c99/kernel_ssymv_4_lib4.o \
 		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_sgecp_lib4.o
+		kernel/c99/kernel_sgecp_lib4.o \
+		kernel/c99/kernel_sgetr_lib4.o \
 
 # blas
 OBJS += \
@@ -361,16 +367,17 @@ OBJS += \
 		blas/s_blas2_diag_lib.o \
 		blas/s_blas3_lib4.o \
 		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o
+		blas/s_lapack_lib4.o \
 
 endif
 
 else # LA_REFERENCE | LA_BLAS
 
 # aux
-OBJS += auxiliary/d_aux_lib.o
-OBJS += auxiliary/s_aux_lib.o
-OBJS += auxiliary/m_aux_lib.o
+OBJS += \
+		auxiliary/d_aux_lib.o \
+		auxiliary/s_aux_lib.o \
+		auxiliary/m_aux_lib.o \
 
 # blas
 OBJS += \
@@ -379,23 +386,25 @@ OBJS += \
 		blas/d_blas2_diag_lib.o \
 		blas/d_blas3_lib.o \
 		blas/d_blas3_diag_lib.o \
-		blas/d_lapack_lib.o
+		blas/d_lapack_lib.o \
 		\
 		blas/s_blas1_lib.o \
 		blas/s_blas2_lib.o \
 		blas/s_blas2_diag_lib.o \
 		blas/s_blas3_lib.o \
 		blas/s_blas3_diag_lib.o \
-		blas/s_lapack_lib.o
+		blas/s_lapack_lib.o \
 
 endif # LA choice
 
 ifeq ($(EXT_DEP), 1)
 # ext dep
-OBJS += auxiliary/d_aux_ext_dep_lib.o
-OBJS += auxiliary/s_aux_ext_dep_lib.o
-OBJS += auxiliary/v_aux_ext_dep_lib.o
-OBJS += auxiliary/i_aux_ext_dep_lib.o
+OBJS += \
+		auxiliary/d_aux_ext_dep_lib.o \
+		auxiliary/s_aux_ext_dep_lib.o \
+		auxiliary/v_aux_ext_dep_lib.o \
+		auxiliary/i_aux_ext_dep_lib.o \
+
 endif
 
 
@@ -404,8 +413,8 @@ endif
 all: clean static_library
 
 static_library: target
-	( cd auxiliary; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
+	( cd auxiliary; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
 	ar rcs libblasfeo.a $(OBJS)
 	cp libblasfeo.a ./lib/
@@ -502,7 +511,7 @@ install_shared:
 	mkdir -p $(PREFIX)/blasfeo/include
 	cp -f ./include/*.h $(PREFIX)/blasfeo/include/
 
-test_problem:
+test_problems: all
 	mkdir -p ./test_problems/out/$(LA)/$(TARGET)
 	cp libblasfeo.a ./test_problems/out/$(LA)/$(TARGET)/libblasfeo.a
 	make -C test_problems run_short
@@ -510,8 +519,8 @@ test_problem:
 	@echo " Test problem build complete."
 	@echo
 
-run:
-	./test_problems/test.out
+run: test_problems
+	make -C test_problems run_short
 
 clean:
 	rm -f libblasfeo.a

@@ -33,8 +33,23 @@ OBJS =
 ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
-OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemm_8x4_lib4.o kernel_dgemm_8x8_lib4.o kernel_dgemm_12x4_lib4.o kernel_dgemv_8_lib4.o kernel_dsymv_6_lib4.o kernel_dgetrf_pivot_4_lib4.o kernel_dgebp_lib4.o kernel_dgelqf_4_lib4.o
-OBJS += kernel_sgemm_24x4_lib8.o kernel_sgemm_16x4_lib8.o kernel_sgemm_8x8_lib8.o kernel_sgemm_8x4_lib8.o
+OBJS += \
+		kernel_dgemm_4x4_lib4.o \
+		kernel_dgemm_8x4_lib4.o \
+		kernel_dgemm_8x8_lib4.o \
+		kernel_dgemm_12x4_lib4.o \
+		kernel_dgemv_8_lib4.o \
+		kernel_dsymv_6_lib4.o \
+		kernel_dgetrf_pivot_4_lib4.o \
+		kernel_dgebp_lib4.o \
+		kernel_dgelqf_4_lib4.o
+		kernel_dgetr_lib4.o \
+		\
+		kernel_sgemm_24x4_lib8.o \
+		kernel_sgemm_16x4_lib8.o \
+		kernel_sgemm_8x8_lib8.o \
+		kernel_sgemm_8x4_lib8.o \
+
 endif
 
 else # LA_REFERENCE | LA_BLAS
