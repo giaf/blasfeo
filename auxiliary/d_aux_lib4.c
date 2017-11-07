@@ -2523,7 +2523,7 @@ void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_st
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
-			kernel_dgecpsc_8_0_lib4(0, n, alpha, A, sda, B, sdb);
+			kernel_dgecp_8_0_lib4(0, n, A, sda, B, sdb);
 			A += 8*sda;
 			B += 8*sdb;
 			}
@@ -2834,7 +2834,7 @@ void dtrcp_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat 
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 		for(; ii<m-7; ii+=8)
 			{
-			kernel_dgecp_8_0_lib4(1, ii, alpha, A, sda, B, sdb);
+			kernel_dgecp_8_0_lib4(1, ii, A, sda, B, sdb);
 			A += 8*sda;
 			B += 8*sdb;
 			}

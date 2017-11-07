@@ -279,18 +279,24 @@ void kernel_dgecpsc_8_0_lib4(int tri, int kmax, double alpha, double *A0, int sd
 void kernel_dgecpsc_8_1_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B0, int sdb);
 void kernel_dgecpsc_8_2_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B0, int sdb);
 void kernel_dgecpsc_8_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B0, int sdb);
+
 void kernel_dgecpsc_4_0_lib4(int tri, int kmax, double alpha, double *A, double *B);
 void kernel_dgecpsc_4_1_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B);
 void kernel_dgecpsc_4_2_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B);
 void kernel_dgecpsc_4_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B);
+
 void kernel_dgecpsc_3_0_lib4(int tri, int kmax, double alpha, double *A, double *B);
 void kernel_dgecpsc_3_2_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B);
 void kernel_dgecpsc_3_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B);
+
 void kernel_dgecpsc_2_0_lib4(int tri, int kmax, double alpha, double *A, double *B);
 void kernel_dgecpsc_2_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B);
+
 void kernel_dgecpsc_1_0_lib4(int tri, int kmax, double alpha, double *A, double *B);
 
 // copy only
+void kernel_dgecp_8_0_lib4(int tri, int kmax, double *A, int sda, double *B, int sdb);
+
 void kernel_dgecp_4_0_lib4(int tri, int kmax, double *A, double *B);
 
 // add
