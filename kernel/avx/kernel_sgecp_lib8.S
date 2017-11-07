@@ -172,7 +172,7 @@ _inner_kernel_sgecp_8_0_lib8:
 inner_kernel_sgecp_8_0_lib8:
 #endif
 #endif
-	
+
 	cmpl	$3, %r10d
 	jle		0f // consider clean-up
 
@@ -196,7 +196,7 @@ inner_kernel_sgecp_8_0_lib8:
 	vmovaps		%ymm0, -32(%r12)
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -211,7 +211,7 @@ inner_kernel_sgecp_8_0_lib8:
 	addq		$32, %r12
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -251,7 +251,7 @@ _inner_kernel_sgecp_8_0_gen_lib8:
 inner_kernel_sgecp_8_0_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r13d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -264,7 +264,7 @@ inner_kernel_sgecp_8_0_gen_lib8:
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	cmpl	$3, %r10d
-	jle		0f // consider clean-up
+	jle		0f // conhider clean-up
 
 	// main loop
 	.p2align 3
@@ -286,7 +286,7 @@ inner_kernel_sgecp_8_0_gen_lib8:
 	vmaskmovps	%ymm0, %ymm15, -32(%r12)
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -301,7 +301,7 @@ inner_kernel_sgecp_8_0_gen_lib8:
 	addq		$32, %r12
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -341,7 +341,7 @@ _inner_kernel_sgecp_8_1_lib8:
 inner_kernel_sgecp_8_1_lib8:
 #endif
 #endif
-	
+
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
 
@@ -415,7 +415,7 @@ inner_kernel_sgecp_8_1_lib8:
 #endif
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -436,7 +436,7 @@ inner_kernel_sgecp_8_1_lib8:
 	addq		$32, %r13
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -477,7 +477,7 @@ _inner_kernel_sgecp_8_1_gen_lib8:
 inner_kernel_sgecp_8_1_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -536,7 +536,7 @@ inner_kernel_sgecp_8_1_gen_lib8:
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -557,7 +557,7 @@ inner_kernel_sgecp_8_1_gen_lib8:
 	addq		$32, %r13
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -597,7 +597,7 @@ _inner_kernel_sgecp_8_2_lib8:
 inner_kernel_sgecp_8_2_lib8:
 #endif
 #endif
-	
+
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
 
@@ -645,7 +645,7 @@ inner_kernel_sgecp_8_2_lib8:
 	vmovaps		%ymm0, -32(%r13)
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -666,7 +666,7 @@ inner_kernel_sgecp_8_2_lib8:
 	addq		$32, %r13
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -707,7 +707,7 @@ _inner_kernel_sgecp_8_2_gen_lib8:
 inner_kernel_sgecp_8_2_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -766,7 +766,7 @@ inner_kernel_sgecp_8_2_gen_lib8:
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -787,7 +787,7 @@ inner_kernel_sgecp_8_2_gen_lib8:
 	addq		$32, %r13
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -827,7 +827,7 @@ _inner_kernel_sgecp_8_3_lib8:
 inner_kernel_sgecp_8_3_lib8:
 #endif
 #endif
-	
+
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
 
@@ -875,7 +875,7 @@ inner_kernel_sgecp_8_3_lib8:
 	vmovaps		%ymm0, -32(%r13)
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -896,7 +896,7 @@ inner_kernel_sgecp_8_3_lib8:
 	addq		$32, %r13
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -937,7 +937,7 @@ _inner_kernel_sgecp_8_3_gen_lib8:
 inner_kernel_sgecp_8_3_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -996,7 +996,7 @@ inner_kernel_sgecp_8_3_gen_lib8:
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -1017,7 +1017,7 @@ inner_kernel_sgecp_8_3_gen_lib8:
 	addq		$32, %r13
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -1057,7 +1057,7 @@ _inner_kernel_sgecp_8_4_lib8:
 inner_kernel_sgecp_8_4_lib8:
 #endif
 #endif
-	
+
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
 
@@ -1093,7 +1093,7 @@ inner_kernel_sgecp_8_4_lib8:
 	addq		$128, %r13
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -1111,7 +1111,7 @@ inner_kernel_sgecp_8_4_lib8:
 	addq		$32, %r13
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -1152,7 +1152,7 @@ _inner_kernel_sgecp_8_4_gen_lib8:
 inner_kernel_sgecp_8_4_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -1199,7 +1199,7 @@ inner_kernel_sgecp_8_4_gen_lib8:
 	addq		$128, %r13
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -1217,7 +1217,7 @@ inner_kernel_sgecp_8_4_gen_lib8:
 	addq		$32, %r13
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -1257,7 +1257,7 @@ _inner_kernel_sgecp_8_5_lib8:
 inner_kernel_sgecp_8_5_lib8:
 #endif
 #endif
-	
+
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
 
@@ -1305,7 +1305,7 @@ inner_kernel_sgecp_8_5_lib8:
 	vmovaps		%ymm0, -32(%r13)
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -1326,7 +1326,7 @@ inner_kernel_sgecp_8_5_lib8:
 	addq		$32, %r13
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -1367,7 +1367,7 @@ _inner_kernel_sgecp_8_5_gen_lib8:
 inner_kernel_sgecp_8_5_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -1426,7 +1426,7 @@ inner_kernel_sgecp_8_5_gen_lib8:
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -1447,7 +1447,7 @@ inner_kernel_sgecp_8_5_gen_lib8:
 	addq		$32, %r13
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -1487,7 +1487,7 @@ _inner_kernel_sgecp_8_6_lib8:
 inner_kernel_sgecp_8_6_lib8:
 #endif
 #endif
-	
+
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
 
@@ -1535,7 +1535,7 @@ inner_kernel_sgecp_8_6_lib8:
 	vmovaps		%ymm0, -32(%r13)
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -1556,7 +1556,7 @@ inner_kernel_sgecp_8_6_lib8:
 	addq		$32, %r13
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -1597,7 +1597,7 @@ _inner_kernel_sgecp_8_6_gen_lib8:
 inner_kernel_sgecp_8_6_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -1656,7 +1656,7 @@ inner_kernel_sgecp_8_6_gen_lib8:
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -1677,7 +1677,7 @@ inner_kernel_sgecp_8_6_gen_lib8:
 	addq		$32, %r13
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -1717,7 +1717,7 @@ _inner_kernel_sgecp_8_7_lib8:
 inner_kernel_sgecp_8_7_lib8:
 #endif
 #endif
-	
+
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 4*sda*sizeof(float)
 
@@ -1765,7 +1765,7 @@ inner_kernel_sgecp_8_7_lib8:
 	vmovaps		%ymm0, -32(%r13)
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -1786,7 +1786,7 @@ inner_kernel_sgecp_8_7_lib8:
 	addq		$32, %r13
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -1827,7 +1827,7 @@ _inner_kernel_sgecp_8_7_gen_lib8:
 inner_kernel_sgecp_8_7_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -1886,7 +1886,7 @@ inner_kernel_sgecp_8_7_gen_lib8:
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
 	cmpl		$3, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -1907,7 +1907,7 @@ inner_kernel_sgecp_8_7_gen_lib8:
 	addq		$32, %r13
 
 	cmpl		$0, %r10d
-	jg			3b // clean-up loop 
+	jg			3b // clean-up loop
 
 2: // return
 
@@ -1925,7 +1925,7 @@ inner_kernel_sgecp_8_7_gen_lib8:
 
 
 
-//                              rdi    rsi       rdx
+//                            1      2         3
 // void kernel_sgecp_8_0_lib8(int k, float *A, float *B);
 
 	.p2align 4,,15
@@ -1941,7 +1941,7 @@ _kernel_sgecp_8_0_lib8:
 	.def kernel_sgecp_8_0_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_0_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -1988,7 +1988,7 @@ _kernel_sgecp_8_0_gen_lib8:
 	.def kernel_sgecp_8_0_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_0_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2036,7 +2036,7 @@ _kernel_sgecp_8_1_lib8:
 	.def kernel_sgecp_8_1_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_1_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2085,7 +2085,7 @@ _kernel_sgecp_8_1_gen_lib8:
 	.def kernel_sgecp_8_1_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_1_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2135,7 +2135,7 @@ _kernel_sgecp_8_2_lib8:
 	.def kernel_sgecp_8_2_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_2_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2184,7 +2184,7 @@ _kernel_sgecp_8_2_gen_lib8:
 	.def kernel_sgecp_8_2_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_2_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2234,7 +2234,7 @@ _kernel_sgecp_8_3_lib8:
 	.def kernel_sgecp_8_3_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_3_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2283,7 +2283,7 @@ _kernel_sgecp_8_3_gen_lib8:
 	.def kernel_sgecp_8_3_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_3_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2333,7 +2333,7 @@ _kernel_sgecp_8_4_lib8:
 	.def kernel_sgecp_8_4_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_4_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2382,7 +2382,7 @@ _kernel_sgecp_8_4_gen_lib8:
 	.def kernel_sgecp_8_4_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_4_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2432,7 +2432,7 @@ _kernel_sgecp_8_5_lib8:
 	.def kernel_sgecp_8_5_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_5_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2481,7 +2481,7 @@ _kernel_sgecp_8_5_gen_lib8:
 	.def kernel_sgecp_8_5_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_5_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2531,7 +2531,7 @@ _kernel_sgecp_8_6_lib8:
 	.def kernel_sgecp_8_6_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_6_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2580,7 +2580,7 @@ _kernel_sgecp_8_6_gen_lib8:
 	.def kernel_sgecp_8_6_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_6_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2630,7 +2630,7 @@ _kernel_sgecp_8_7_lib8:
 	.def kernel_sgecp_8_7_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_7_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2679,7 +2679,7 @@ _kernel_sgecp_8_7_gen_lib8:
 	.def kernel_sgecp_8_7_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgecp_8_7_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
