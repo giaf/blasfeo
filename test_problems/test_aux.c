@@ -158,10 +158,10 @@ SHOW_DEFINE(TARGET)
 
 
 #if defined(LA)
+SHOW_DEFINE(LA)
 #endif
 #if defined(TARGET)
-#endif
-SHOW_DEFINE(LA)
 SHOW_DEFINE(TARGET)
+#endif
 
 	}
