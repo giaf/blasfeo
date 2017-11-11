@@ -3602,6 +3602,26 @@ void dvecnrm_inf_libstr(int m, struct d_strvec *sx, int xi, double *ptr_norm)
 
 
 
+// permute elements of a vector struct
+void dvecpe_libstr(int kmax, int *ipiv, struct d_strvec *sx, int xi)
+	{
+	int ii;
+	double tmp;
+	double *x = sx->pa + xi;
+	for(ii=0; ii<kmax; ii++)
+		{
+		if(ipiv[ii]!=ii)
+			{
+			tmp = x[ipiv[ii]];
+			x[ipiv[ii]] = x[ii];
+			x[ii] = tmp;
+			}
+		}
+	return;
+	}
+
+
+
 #else
 
 #error : wrong LA choice

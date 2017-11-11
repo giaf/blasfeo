@@ -2636,6 +2636,26 @@ void svecex_sp_libstr(int m, float alpha, int *idx, struct s_strvec *sx, int xi,
 
 
 
+// permute elements of a vector struct
+void svecpe_libstr(int kmax, int *ipiv, struct s_strvec *sx, int xi)
+	{
+	int ii;
+	float tmp;
+	float *x = sx->pa + xi;
+	for(ii=0; ii<kmax; ii++)
+		{
+		if(ipiv[ii]!=ii)
+			{
+			tmp = x[ipiv[ii]];
+			x[ipiv[ii]] = x[ii];
+			x[ii] = tmp;
+			}
+		}
+	return;
+	}
+
+
+
 #else
 
 #error : wrong LA choice
