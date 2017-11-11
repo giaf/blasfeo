@@ -741,7 +741,7 @@ void dtrsv_lnn_mn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, stru
 	// z: m
 	if(zi+m > sz->m) printf("\n***** dtrsv_lnn_mn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	if(ai!=0 | xi%4!=0)
+	if(ai!=0)
 		{
 		printf("\ndtrsv_lnn_mn_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
@@ -798,7 +798,7 @@ void dtrsv_ltn_mn_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, stru
 	// z: m
 	if(zi+m > sz->m) printf("\n***** dtrsv_ltn_mn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	if(ai!=0 | xi%4!=0)
+	if(ai!=0)
 		{
 		printf("\ndtrsv_ltn_mn_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
@@ -854,7 +854,7 @@ void dtrsv_lnn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	// z: m
 	if(zi+m > sz->m) printf("\n***** dtrsv_lnn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	if(ai!=0 | xi%4!=0)
+	if(ai!=0)
 		{
 		printf("\ndtrsv_lnn_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
@@ -910,8 +910,36 @@ void dtrsv_lnu_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	// z: m
 	if(zi+m > sz->m) printf("\n***** dtrsv_lnu_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	printf("\n***** dtrsv_lnu_libstr : feature not implemented yet *****\n");
-	exit(1);
+//	printf("\n***** dtrsv_lnu_libstr : feature not implemented yet *****\n");
+//	exit(1);
+	if(ai!=0)
+		{
+		printf("\ndtrsv_lnn_libstr: feature not implemented yet: ai=%d\n", ai);
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs; // TODO ai
+	double *dA = sA->dA;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	int ii;
+	if(x!=z)
+		{
+		for(ii=0; ii<m; ii++)
+			z[ii] = x[ii];
+		}
+	ii = 0;
+	for( ; ii<m-3; ii+=4)
+		{
+		kernel_dtrsv_ln_one_4_lib4(ii, &pA[ii*sda], z, &z[ii], &z[ii]);
+		}
+	if(ii<m)
+		{
+		kernel_dtrsv_ln_one_4_vs_lib4(ii, &pA[ii*sda], z, &z[ii], &z[ii], m-ii, m-ii);
+		ii+=4;
+		}
+	return;
 	}
 
 
