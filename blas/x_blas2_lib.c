@@ -947,8 +947,65 @@ void TRSV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 	// z: m
 	if(zi+m > sz->m) printf("\n***** trsv_unn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	printf("\n***** trsv_unn_libstr : feature not implemented yet *****\n");
-	exit(1);
+//	printf("\n***** trsv_unn_libstr : feature not implemented yet *****\n");
+//	exit(1);
+	int ii, jj;
+	REAL
+		y_0, y_1;
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *dA = sA->dA;
+	REAL *x = sx->pa + xi;
+	REAL *z = sz->pa + zi;
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			for(ii=0; ii<m; ii++)
+				dA[ii] = 1.0 / pA[ii+lda*ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			dA[ii] = 1.0 / pA[ii+lda*ii];
+		sA->use_dA = 0;
+		}
+	if(m%2!=0)
+		{
+		jj = m-1;
+		y_0 = x[jj];
+		y_0 *= dA[jj];
+		z[jj] = y_0;
+		jj -= 2;
+		}
+	else
+		{
+		jj = m-2;
+		}
+	for(; jj>=0; jj-=2)
+		{
+		y_0 = x[jj+0];
+		y_1 = x[jj+1];
+		ii = jj+2;
+		for(; ii<m-1; ii+=2)
+			{
+			y_0 -= pA[jj+0+lda*(ii+0)] * z[ii+0] + pA[jj+1+lda*(ii+0)] * z[ii+1];
+			y_1 -= pA[jj+0+lda*(ii+1)] * z[ii+0] + pA[jj+1+lda*(ii+1)] * z[ii+1];
+			}
+		if(ii<m)
+			{
+			y_0 -= pA[jj+lda*(ii+0)] * z[ii];
+			y_1 -= pA[jj+lda*(ii+1)] * z[ii];
+			}
+		y_1 *= dA[jj+1];
+		y_0 -= pA[jj+1+lda*(jj+0)] * y_1;
+		y_0 *= dA[jj+0];
+		z[jj+0] = y_0;
+		z[jj+1] = y_1;
+		}
+	return;
 	}
 
 
