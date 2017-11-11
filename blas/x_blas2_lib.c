@@ -778,8 +778,6 @@ void TRSV_LNU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 	// z: m
 	if(zi+m > sz->m) printf("\n***** trsv_lnu_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-//	printf("\n***** trsv_lnu_libstr : feature not implemented yet *****\n");
-//	exit(1);
 	int ii, jj, j1;
 	REAL
 		y_0, y_1,
@@ -947,8 +945,6 @@ void TRSV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 	// z: m
 	if(zi+m > sz->m) printf("\n***** trsv_unn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-//	printf("\n***** trsv_unn_libstr : feature not implemented yet *****\n");
-//	exit(1);
 	int ii, jj;
 	REAL
 		y_0, y_1;

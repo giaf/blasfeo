@@ -128,6 +128,7 @@ void sveccl_libstr(int m, struct s_strvec *sxm, int xim, struct s_strvec *sx, in
 void sveccl_mask_libstr(int m, struct s_strvec *sxm, int xim, struct s_strvec *sx, int xi, struct s_strvec *sxp, int xip, struct s_strvec *sz, int zi, struct s_strvec *sm, int mi);
 void svecze_libstr(int m, struct s_strvec *sm, int mi, struct s_strvec *sv, int vi, struct s_strvec *se, int ei);
 void svecnrm_inf_libstr(int m, struct s_strvec *sx, int xi, float *ptr_norm);
+void svecpe_libstr(int kmax, int *ipiv, struct s_strvec *sx, int xi);
 
 
 

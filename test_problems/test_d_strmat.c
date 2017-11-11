@@ -63,7 +63,7 @@ int main()
 
 	int ii;
 
-	int n = 16;
+	int n = 8;
 
 	//
 	// matrices in column-major format
@@ -103,8 +103,8 @@ int main()
 	double *x5; d_zeros(&x5, n, 1); x5[5] = 1.0;
 	double *x6; d_zeros(&x6, n, 1); x6[6] = 1.0;
 	double *x7; d_zeros(&x7, n, 1); x7[7] = 1.0;
-	double *x8; d_zeros(&x8, n, 1); x8[8] = 1.0;
-	double *x9; d_zeros(&x9, n, 1); x9[9] = 1.0;
+//	double *x8; d_zeros(&x8, n, 1); x8[8] = 1.0;
+//	double *x9; d_zeros(&x9, n, 1); x9[9] = 1.0;
 
 	int *ipiv; int_zeros(&ipiv, n, 1);
 
@@ -178,8 +178,8 @@ int main()
 	struct d_strvec sx5; d_create_strvec(n, &sx5, x5);
 	struct d_strvec sx6; d_create_strvec(n, &sx6, x6);
 	struct d_strvec sx7; d_create_strvec(n, &sx7, x7);
-	struct d_strvec sx8; d_create_strvec(n, &sx8, x8);
-	struct d_strvec sx9; d_create_strvec(n, &sx9, x9);
+//	struct d_strvec sx8; d_create_strvec(n, &sx8, x8);
+//	struct d_strvec sx9; d_create_strvec(n, &sx9, x9);
 
 	struct d_strvec sz0; d_allocate_strvec(n, &sz0);
 	struct d_strvec sz1; d_allocate_strvec(n, &sz1);
@@ -189,8 +189,8 @@ int main()
 	struct d_strvec sz5; d_allocate_strvec(n, &sz5);
 	struct d_strvec sz6; d_allocate_strvec(n, &sz6);
 	struct d_strvec sz7; d_allocate_strvec(n, &sz7);
-	struct d_strvec sz8; d_allocate_strvec(n, &sz8);
-	struct d_strvec sz9; d_allocate_strvec(n, &sz9);
+//	struct d_strvec sz8; d_allocate_strvec(n, &sz8);
+//	struct d_strvec sz9; d_allocate_strvec(n, &sz9);
 
 	// tests
 	double *v; d_zeros(&v, n, 1);
@@ -229,8 +229,51 @@ int main()
 //	return 0;
 
 	double alpha = 1.0;
-	double beta = 0.0;
-	dgemm_nt_libstr(4, 4, 4, alpha, &sA, 2, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
+	double beta = 1.0;
+	dgemm_nt_libstr(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+	d_print_strmat(n, n, &sD, 0, 0);
+//	dgetrf_nopivot_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
+	dgetrf_libstr(n, n, &sD, 0, 0, &sD, 0, 0, ipiv);
+	d_print_strmat(n, n, &sD, 0, 0);
+	//
+#if 1
+	dvecpe_libstr(n, ipiv, &sx0, 0);
+	dvecpe_libstr(n, ipiv, &sx1, 0);
+	dvecpe_libstr(n, ipiv, &sx2, 0);
+	dvecpe_libstr(n, ipiv, &sx3, 0);
+	dvecpe_libstr(n, ipiv, &sx4, 0);
+	dvecpe_libstr(n, ipiv, &sx5, 0);
+	dvecpe_libstr(n, ipiv, &sx6, 0);
+	dvecpe_libstr(n, ipiv, &sx7, 0);
+#endif
+	//
+	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx0, 0, &sz0, 0);
+	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx1, 0, &sz1, 0);
+	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx2, 0, &sz2, 0);
+	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx3, 0, &sz3, 0);
+	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx4, 0, &sz4, 0);
+	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx5, 0, &sz5, 0);
+	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx6, 0, &sz6, 0);
+	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx7, 0, &sz7, 0);
+	//
+	dtrsv_unn_libstr(n, &sD, 0, 0, &sz0, 0, &sz0, 0);
+	dtrsv_unn_libstr(n, &sD, 0, 0, &sz1, 0, &sz1, 0);
+	dtrsv_unn_libstr(n, &sD, 0, 0, &sz2, 0, &sz2, 0);
+	dtrsv_unn_libstr(n, &sD, 0, 0, &sz3, 0, &sz3, 0);
+	dtrsv_unn_libstr(n, &sD, 0, 0, &sz4, 0, &sz4, 0);
+	dtrsv_unn_libstr(n, &sD, 0, 0, &sz5, 0, &sz5, 0);
+	dtrsv_unn_libstr(n, &sD, 0, 0, &sz6, 0, &sz6, 0);
+	dtrsv_unn_libstr(n, &sD, 0, 0, &sz7, 0, &sz7, 0);
+	//
+	d_print_tran_strvec(n, &sz0, 0);
+	d_print_tran_strvec(n, &sz1, 0);
+	d_print_tran_strvec(n, &sz2, 0);
+	d_print_tran_strvec(n, &sz3, 0);
+	d_print_tran_strvec(n, &sz4, 0);
+	d_print_tran_strvec(n, &sz5, 0);
+	d_print_tran_strvec(n, &sz6, 0);
+	d_print_tran_strvec(n, &sz7, 0);
+	return 0;
 //	kernel_dgemm_nt_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 4, 0, 4);
 //	kernel_dsyrk_nt_l_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sD.cn, 3, sD.pA, sD.cn, 0, 4, 0, 4);
 //	kernel_dtrmm_nn_rl_4x4_gen_lib4(4, &alpha, sB.pA, 3, sA.pA, sB.cn, 0, sD.pA, sD.cn, 0, 4, 0, 4);
@@ -267,8 +310,8 @@ int main()
 	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx5, 0, beta, &sz5, 0, &sz5, 0);
 	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx6, 0, beta, &sz6, 0, &sz6, 0);
 	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx7, 0, beta, &sz7, 0, &sz7, 0);
-	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx8, 0, beta, &sz8, 0, &sz8, 0);
-	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx9, 0, beta, &sz9, 0, &sz9, 0);
+//	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx8, 0, beta, &sz8, 0, &sz8, 0);
+//	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx9, 0, beta, &sz9, 0, &sz9, 0);
 	d_print_tran_strvec(n, &sz0, 0);
 	d_print_tran_strvec(n, &sz1, 0);
 	d_print_tran_strvec(n, &sz2, 0);
@@ -277,8 +320,8 @@ int main()
 	d_print_tran_strvec(n, &sz5, 0);
 	d_print_tran_strvec(n, &sz6, 0);
 	d_print_tran_strvec(n, &sz7, 0);
-	d_print_tran_strvec(n, &sz8, 0);
-	d_print_tran_strvec(n, &sz9, 0);
+//	d_print_tran_strvec(n, &sz8, 0);
+//	d_print_tran_strvec(n, &sz9, 0);
 	return 0;
 
 //	d_print_strmat(n, n, &sC, 0, 0);
@@ -426,8 +469,8 @@ int main()
 	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx5, 0, &sx5, 0);
 	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx6, 0, &sx6, 0);
 	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx7, 0, &sx7, 0);
-	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx8, 0, &sx8, 0);
-	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx9, 0, &sx9, 0);
+//	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx8, 0, &sx8, 0);
+//	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx9, 0, &sx9, 0);
 	d_print_tran_strvec(n, &sx0, 0);
 	d_print_tran_strvec(n, &sx1, 0);
 	d_print_tran_strvec(n, &sx2, 0);
@@ -436,8 +479,8 @@ int main()
 	d_print_tran_strvec(n, &sx5, 0);
 	d_print_tran_strvec(n, &sx6, 0);
 	d_print_tran_strvec(n, &sx7, 0);
-	d_print_tran_strvec(n, &sx8, 0);
-	d_print_tran_strvec(n, &sx9, 0);
+//	d_print_tran_strvec(n, &sx8, 0);
+//	d_print_tran_strvec(n, &sx9, 0);
 	return 0;
 
 	dgemv_t_libstr(2, 8, 1.0, &sA, 2, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
