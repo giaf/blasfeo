@@ -991,16 +991,16 @@ void TRSV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		ii = jj+2;
 		for(; ii<m-1; ii+=2)
 			{
-			y_0 -= pA[jj+0+lda*(ii+0)] * z[ii+0] + pA[jj+1+lda*(ii+0)] * z[ii+1];
-			y_1 -= pA[jj+0+lda*(ii+1)] * z[ii+0] + pA[jj+1+lda*(ii+1)] * z[ii+1];
+			y_0 -= pA[jj+0+lda*(ii+0)] * z[ii+0] + pA[jj+0+lda*(ii+1)] * z[ii+1];
+			y_1 -= pA[jj+1+lda*(ii+0)] * z[ii+0] + pA[jj+1+lda*(ii+1)] * z[ii+1];
 			}
 		if(ii<m)
 			{
-			y_0 -= pA[jj+lda*(ii+0)] * z[ii];
-			y_1 -= pA[jj+lda*(ii+1)] * z[ii];
+			y_0 -= pA[jj+0+lda*(ii+0)] * z[ii];
+			y_1 -= pA[jj+1+lda*(ii+0)] * z[ii];
 			}
 		y_1 *= dA[jj+1];
-		y_0 -= pA[jj+1+lda*(jj+0)] * y_1;
+		y_0 -= pA[jj+0+lda*(jj+1)] * y_1;
 		y_0 *= dA[jj+0];
 		z[jj+0] = y_0;
 		z[jj+1] = y_1;
