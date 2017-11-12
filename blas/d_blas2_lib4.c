@@ -1048,8 +1048,66 @@ void dtrsv_unn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	// z: m
 	if(zi+m > sz->m) printf("\n***** dtrsv_unn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	printf("\n***** dtrsv_unn_libstr : feature not implemented yet *****\n");
-	exit(1);
+//	printf("\n***** dtrsv_unn_libstr : feature not implemented yet *****\n");
+//	exit(1);
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs; // TODO ai
+	double *dA = sA->dA;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	int ii;
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			ddiaex_lib(m, 1.0, ai, pA, sda, dA);
+			for(ii=0; ii<m; ii++)
+				dA[ii] = 1.0 / dA[ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+		ddiaex_lib(m, 1.0, ai, pA, sda, dA);
+		for(ii=0; ii<m; ii++)
+			dA[ii] = 1.0 / dA[ii];
+		sA->use_dA = 0;
+		}
+	if(x!=z)
+		{
+		for(ii=0; ii<m; ii++)
+			z[ii] = x[ii];
+		}
+	ii = 0;
+	if(m%4==1)
+		{
+		z[m-ii-1] *= dA[m-ii-1];
+		ii+=1;
+		}
+	else if(m%4==2)
+		{
+		z[m-ii-1] *= dA[m-ii-1];
+		z[m-ii-2] -= pA[m/bs*bs*sda+(m-ii-1)*bs]*z[m-ii-1];
+		z[m-ii-2] *= dA[m-ii-2];
+		ii+=2;
+		}
+	else if(m%4==3)
+		{
+		z[m-ii-1] *= dA[m-ii-1];
+		z[m-ii-2] -= pA[1+m/bs*bs*sda+(m-ii-1)*bs]*z[m-ii-1];
+		z[m-ii-2] *= dA[m-ii-2];
+		z[m-ii-3] -= pA[m/bs*bs*sda+(m-ii-2)*bs]*z[m-ii-2];
+		z[m-ii-3] -= pA[m/bs*bs*sda+(m-ii-1)*bs]*z[m-ii-1];
+		z[m-ii-3] *= dA[m-ii-3];
+		ii+=3;
+		}
+	for(; ii<m-3; ii+=4)
+		{
+		// TODO
+		kernel_dtrsv_un_inv_4_lib4(ii+4, &pA[(m-ii-4)/bs*bs*sda+(m-ii-4)*bs], &dA[m-ii-4], &z[m-ii-4], &z[m-ii-4], &z[m-ii-4]);
+		}
+	return;
 	}
 
 

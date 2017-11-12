@@ -2203,6 +2203,85 @@ inner_edge_dtrsv_lt_inv_1_lib4:
 
 // common inner routine with file scope
 //
+// triangular substitution with vector RHS
+//
+// input arguments:
+// r10  <- E
+// r11  <- inv_diag_E
+// ymm0 <- [z0 z1 z2 z3]
+//
+// output arguments:
+// r10  <- E
+// r11  <- inv_diag_E
+// ymm0 <- [z0 z1 z2 z3]
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSV_UN_INV_4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_dtrsv_un_inv_4_lib4, @function
+inner_edge_dtrsv_un_inv_4_lib4:
+#elif defined(OS_MAC)
+_inner_edge_dtrsv_un_inv_4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsv_un_inv_4_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrsv_un_inv_4_lib4:
+#endif
+#endif
+	
+	vxorpd			%ymm14, %ymm14, %ymm14
+
+	vpermilpd		$0xf, %ymm0, %ymm12
+	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vbroadcastsd	24(%r11), %ymm13
+	vmulpd			%ymm13, %ymm12, %ymm12
+	vblendpd		$0x8, %ymm12, %ymm0, %ymm0
+	vmovapd			96(%r10), %ymm13
+	vblendpd		$0x8, %ymm14, %ymm13, %ymm13
+	vmulpd			%ymm12, %ymm13, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+	vpermilpd		$0x0, %ymm0, %ymm12
+	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vbroadcastsd	16(%r11), %ymm13
+	vmulpd			%ymm13, %ymm12, %ymm12
+	vblendpd		$0x4, %ymm12, %ymm0, %ymm0
+	vmovapd			64(%r10), %ymm13
+	vblendpd		$0xc, %ymm14, %ymm13, %ymm13
+	vmulpd			%ymm12, %ymm13, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+	vpermilpd		$0xf, %ymm0, %ymm12
+//	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vbroadcastsd	8(%r11), %ymm13
+	vmulpd			%ymm13, %ymm12, %ymm12
+	vblendpd		$0x2, %ymm12, %ymm0, %ymm0
+	vmovapd			32(%r10), %ymm13
+	vblendpd		$0xe, %ymm14, %ymm13, %ymm13
+	vmulpd			%ymm12, %ymm13, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+
+	vmovsd			(%r11), %xmm13
+	vmulsd			%xmm13, %xmm0, %xmm12
+	vblendpd		$0x1, %ymm12, %ymm0, %ymm0
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_dtrsv_un_inv_4_lib4, .-inner_edge_dtrsv_un_inv_4_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // input arguments:
 // r10d  <- k
 // r11   <- A
@@ -4026,6 +4105,111 @@ kernel_dtrsv_lt_inv_1_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dtrsv_lt_inv_1_lib4, .-kernel_dtrsv_lt_inv_1_lib4
+#endif
+
+
+
+
+
+//                                 1      2          3                   4          5          6
+// void kernel_dtrsv_un_inv_4_lib4(int k, double *A, double *inv_diag_A, double *x, double *y, double *z);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dtrsv_un_inv_4_lib4
+	.type kernel_dtrsv_un_inv_4_lib4, @function
+kernel_dtrsv_un_inv_4_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dtrsv_un_inv_4_lib4
+_kernel_dtrsv_un_inv_4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsv_un_inv_4_lib4
+	.def kernel_dtrsv_un_inv_4_lib4; .scl 2; .type 32; .endef
+kernel_dtrsv_un_inv_4_lib4:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemv kernel n
+
+	movq	ARG1, %r10 // k
+	subl	$4, %r10d
+	movq	ARG2, %r11 // A
+	addq	$128, %r11 // A+4*ps*sizeof(double)
+	movq	ARG4, %r12 // x
+	addq	$32, %r12 // x+4 
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemv_add_n_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemv_add_n_4_lib4
+#endif
+#endif
+
+
+	// call inner blender t
+
+	movq	ARG5, %r10 // y 
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_N_SCALE_M11_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_n_scale_m11_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_blend_n_scale_m11_4_lib4
+#endif
+#endif
+
+
+	// solution
+
+	movq	ARG2, %r10 // A
+	movq	ARG3, %r11 // inv_diag_A
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSV_UN_INV_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dtrsv_un_inv_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dtrsv_un_inv_4_lib4
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG6, %r10 // z 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_4_lib4
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dtrsv_un_inv_4_lib4, .-kernel_dtrsv_un_inv_4_lib4
 #endif
 
 

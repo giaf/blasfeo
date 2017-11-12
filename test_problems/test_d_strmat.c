@@ -256,6 +256,15 @@ int main()
 	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx6, 0, &sz6, 0);
 	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx7, 0, &sz7, 0);
 	//
+	d_print_tran_strvec(n, &sz0, 0);
+	d_print_tran_strvec(n, &sz1, 0);
+	d_print_tran_strvec(n, &sz2, 0);
+	d_print_tran_strvec(n, &sz3, 0);
+	d_print_tran_strvec(n, &sz4, 0);
+	d_print_tran_strvec(n, &sz5, 0);
+	d_print_tran_strvec(n, &sz6, 0);
+	d_print_tran_strvec(n, &sz7, 0);
+	//
 	dtrsv_unn_libstr(n, &sD, 0, 0, &sz0, 0, &sz0, 0);
 	dtrsv_unn_libstr(n, &sD, 0, 0, &sz1, 0, &sz1, 0);
 	dtrsv_unn_libstr(n, &sD, 0, 0, &sz2, 0, &sz2, 0);

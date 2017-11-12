@@ -931,6 +931,109 @@ void kernel_dtrsv_lt_inv_1_lib4(int kmax, double *A, int sda, double *inv_diag_A
 	
 	
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+void kernel_dtrsv_un_inv_4_lib4(int kmax, double *A, double *inv_diag_A, double *x, double *y, double *z)
+	{
+
+	const int bs = 4;
+	
+	int
+		k;
+	
+	double *tA, *tx;
+	tA = A;
+	tx = x;
+
+	double
+		x_0, x_1, x_2, x_3,
+		y_0=0, y_1=0, y_2=0, y_3=0;
+	
+	k=4;
+	A += 4*bs;
+	x += 4;
+	for(; k<kmax-3; k+=4)
+		{
+		
+		x_0 = x[0];
+
+		y_0 -= A[0+bs*0] * x_0;
+		y_1 -= A[1+bs*0] * x_0;
+		y_2 -= A[2+bs*0] * x_0;
+		y_3 -= A[3+bs*0] * x_0;
+		
+		x_0 = x[1];
+
+		y_0 -= A[0+bs*1] * x_0;
+		y_1 -= A[1+bs*1] * x_0;
+		y_2 -= A[2+bs*1] * x_0;
+		y_3 -= A[3+bs*1] * x_0;
+		
+		x_0 = x[2];
+
+		y_0 -= A[0+bs*2] * x_0;
+		y_1 -= A[1+bs*2] * x_0;
+		y_2 -= A[2+bs*2] * x_0;
+		y_3 -= A[3+bs*2] * x_0;
+		
+		x_0 = x[3];
+
+		y_0 -= A[0+bs*3] * x_0;
+		y_1 -= A[1+bs*3] * x_0;
+		y_2 -= A[2+bs*3] * x_0;
+		y_3 -= A[3+bs*3] * x_0;
+		
+		A += 4*bs;
+		x += 4;
+
+		}
+	for(; k<kmax; k++)
+		{
+		
+		x_0 = x[0];
+
+		y_0 -= A[0+bs*0] * x_0;
+		y_1 -= A[1+bs*0] * x_0;
+		y_2 -= A[2+bs*0] * x_0;
+		y_3 -= A[3+bs*0] * x_0;
+		
+		A += 1*bs;
+		x += 1;
+
+		}
+	
+	y_0 = y[0] + y_0;
+	y_1 = y[1] + y_1;
+	y_2 = y[2] + y_2;
+	y_3 = y[3] + y_3;
+
+	A = tA;
+	x = tx;
+
+	// bottom trinagle
+	y_3 *= inv_diag_A[3];
+	z[3] = y_3;
+
+	y_2 -= A[2+bs*3] * y_3;
+	y_2 *= inv_diag_A[2];
+	z[2] = y_2;
+
+	// square
+	y_0 -= A[0+bs*2]*y_2 + A[0+bs*3]*y_3;
+	y_1 -= A[1+bs*2]*y_2 + A[1+bs*3]*y_3;
+		
+	// top trinagle
+	y_1 *= inv_diag_A[1];
+	z[1] = y_1;
+
+	y_0 -= A[0+bs*1] * y_1;
+	y_0 *= inv_diag_A[0];
+	z[0] = y_0;
+
+	}
+#endif
+	
+	
+	
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 void kernel_dtrmv_un_4_lib4(int kmax, double *A, double *x, double *z)
 	{
 
