@@ -153,6 +153,7 @@ void dveccl_mask_libstr(int m, struct d_strvec *sxm, int xim, struct d_strvec *s
 void dvecze_libstr(int m, struct d_strvec *sm, int mi, struct d_strvec *sv, int vi, struct d_strvec *se, int ei);
 void dvecnrm_inf_libstr(int m, struct d_strvec *sx, int xi, double *ptr_norm);
 void dvecpe_libstr(int kmax, int *ipiv, struct d_strvec *sx, int xi);
+void dvecpei_libstr(int kmax, int *ipiv, struct d_strvec *sx, int xi);
 
 
 

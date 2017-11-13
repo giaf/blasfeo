@@ -107,6 +107,9 @@ int main()
 //	double *x9; d_zeros(&x9, n, 1); x9[9] = 1.0;
 
 	int *ipiv; int_zeros(&ipiv, n, 1);
+	int *ipiv_tmp; int_zeros(&ipiv_tmp, n, 1);
+	int *ipiv_inv; int_zeros(&ipiv_inv, n, 1);
+	double d_tmp;
 
 	//
 	// matrices in matrix struct format
@@ -234,8 +237,11 @@ int main()
 	d_print_strmat(n, n, &sD, 0, 0);
 //	dgetrf_nopivot_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 	dgetrf_libstr(n, n, &sD, 0, 0, &sD, 0, 0, ipiv);
+	int_print_mat(1, n, ipiv, 1);
 	d_print_strmat(n, n, &sD, 0, 0);
 	//
+#if 0
+	// N scheme
 #if 1
 	dvecpe_libstr(n, ipiv, &sx0, 0);
 	dvecpe_libstr(n, ipiv, &sx1, 0);
@@ -246,7 +252,6 @@ int main()
 	dvecpe_libstr(n, ipiv, &sx6, 0);
 	dvecpe_libstr(n, ipiv, &sx7, 0);
 #endif
-	//
 	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx0, 0, &sz0, 0);
 	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx1, 0, &sz1, 0);
 	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx2, 0, &sz2, 0);
@@ -282,6 +287,55 @@ int main()
 	d_print_tran_strvec(n, &sz5, 0);
 	d_print_tran_strvec(n, &sz6, 0);
 	d_print_tran_strvec(n, &sz7, 0);
+#else
+	// T scheme
+	dtrsv_utn_libstr(n, &sD, 0, 0, &sx0, 0, &sz0, 0);
+	dtrsv_utn_libstr(n, &sD, 0, 0, &sx1, 0, &sz1, 0);
+	dtrsv_utn_libstr(n, &sD, 0, 0, &sx2, 0, &sz2, 0);
+	dtrsv_utn_libstr(n, &sD, 0, 0, &sx3, 0, &sz3, 0);
+	dtrsv_utn_libstr(n, &sD, 0, 0, &sx4, 0, &sz4, 0);
+	dtrsv_utn_libstr(n, &sD, 0, 0, &sx5, 0, &sz5, 0);
+	dtrsv_utn_libstr(n, &sD, 0, 0, &sx6, 0, &sz6, 0);
+	dtrsv_utn_libstr(n, &sD, 0, 0, &sx7, 0, &sz7, 0);
+	//
+	d_print_tran_strvec(n, &sz0, 0);
+	d_print_tran_strvec(n, &sz1, 0);
+	d_print_tran_strvec(n, &sz2, 0);
+	d_print_tran_strvec(n, &sz3, 0);
+	d_print_tran_strvec(n, &sz4, 0);
+	d_print_tran_strvec(n, &sz5, 0);
+	d_print_tran_strvec(n, &sz6, 0);
+	d_print_tran_strvec(n, &sz7, 0);
+	//
+	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz0, 0, &sz0, 0);
+	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz1, 0, &sz1, 0);
+	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz2, 0, &sz2, 0);
+	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz3, 0, &sz3, 0);
+	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz4, 0, &sz4, 0);
+	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz5, 0, &sz5, 0);
+	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz6, 0, &sz6, 0);
+	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz7, 0, &sz7, 0);
+	//
+#if 1
+	dvecpei_libstr(n, ipiv, &sz0, 0);
+	dvecpei_libstr(n, ipiv, &sz1, 0);
+	dvecpei_libstr(n, ipiv, &sz2, 0);
+	dvecpei_libstr(n, ipiv, &sz3, 0);
+	dvecpei_libstr(n, ipiv, &sz4, 0);
+	dvecpei_libstr(n, ipiv, &sz5, 0);
+	dvecpei_libstr(n, ipiv, &sz6, 0);
+	dvecpei_libstr(n, ipiv, &sz7, 0);
+#endif
+	//
+	d_print_tran_strvec(n, &sz0, 0);
+	d_print_tran_strvec(n, &sz1, 0);
+	d_print_tran_strvec(n, &sz2, 0);
+	d_print_tran_strvec(n, &sz3, 0);
+	d_print_tran_strvec(n, &sz4, 0);
+	d_print_tran_strvec(n, &sz5, 0);
+	d_print_tran_strvec(n, &sz6, 0);
+	d_print_tran_strvec(n, &sz7, 0);
+#endif
 	return 0;
 //	kernel_dgemm_nt_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 4, 0, 4);
 //	kernel_dsyrk_nt_l_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sD.cn, 3, sD.pA, sD.cn, 0, 4, 0, 4);

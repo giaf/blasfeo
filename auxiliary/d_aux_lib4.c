@@ -3622,6 +3622,26 @@ void dvecpe_libstr(int kmax, int *ipiv, struct d_strvec *sx, int xi)
 
 
 
+// inverse permute elements of a vector struct
+void dvecpei_libstr(int kmax, int *ipiv, struct d_strvec *sx, int xi)
+	{
+	int ii;
+	double tmp;
+	double *x = sx->pa + xi;
+	for(ii=kmax-1; ii>=0; ii--)
+		{
+		if(ipiv[ii]!=ii)
+			{
+			tmp = x[ipiv[ii]];
+			x[ipiv[ii]] = x[ii];
+			x[ii] = tmp;
+			}
+		}
+	return;
+	}
+
+
+
 #else
 
 #error : wrong LA choice
