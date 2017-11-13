@@ -918,8 +918,44 @@ void TRSV_LTU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 	// z: m
 	if(zi+m > sz->m) printf("\n***** trsv_ltu_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	printf("\n***** trsv_ltu_libstr : feature not implemented yet *****\n");
-	exit(1);
+	int ii, jj;
+	REAL
+		y_0, y_1;
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *x = sx->pa + xi;
+	REAL *z = sz->pa + zi;
+	if(m%2!=0)
+		{
+		jj = m-1;
+		y_0 = x[jj];
+		z[jj] = y_0;
+		jj -= 2;
+		}
+	else
+		{
+		jj = m-2;
+		}
+	for(; jj>=0; jj-=2)
+		{
+		y_0 = x[jj+0];
+		y_1 = x[jj+1];
+		ii = jj+2;
+		for(; ii<m-1; ii+=2)
+			{
+			y_0 -= pA[ii+0+lda*(jj+0)] * z[ii+0] + pA[ii+1+lda*(jj+0)] * z[ii+1];
+			y_1 -= pA[ii+0+lda*(jj+1)] * z[ii+0] + pA[ii+1+lda*(jj+1)] * z[ii+1];
+			}
+		if(ii<m)
+			{
+			y_0 -= pA[ii+lda*(jj+0)] * z[ii];
+			y_1 -= pA[ii+lda*(jj+1)] * z[ii];
+			}
+		y_0 -= pA[jj+1+lda*(jj+0)] * y_1;
+		z[jj+0] = y_0;
+		z[jj+1] = y_1;
+		}
+	return;
 	}
 
 
