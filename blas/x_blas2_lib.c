@@ -1063,8 +1063,58 @@ void TRSV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 	// z: m
 	if(zi+m > sz->m) printf("\n***** trsv_utn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	printf("\n***** trsv_utn_libstr : feature not implemented yet *****\n");
-	exit(1);
+	int ii, jj, j1;
+	REAL
+		y_0, y_1,
+		x_0, x_1;
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *dA = sA->dA;
+	REAL *x = sx->pa + xi;
+	REAL *z = sz->pa + zi;
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			for(ii=0; ii<m; ii++)
+				dA[ii] = 1.0 / pA[ii+lda*ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			dA[ii] = 1.0 / pA[ii+lda*ii];
+		sA->use_dA = 0;
+		}
+	ii = 0;
+	for(; ii<m-1; ii+=2)
+		{
+		y_0 = x[ii+0];
+		y_1 = x[ii+1];
+		jj = 0;
+		for(; jj<ii-1; jj+=2)
+			{
+			y_0 -= pA[jj+0+lda*(ii+0)] * z[jj+0] + pA[jj+1+lda*(ii+0)] * z[jj+1];
+			y_1 -= pA[jj+0+lda*(ii+1)] * z[jj+0] + pA[jj+1+lda*(ii+1)] * z[jj+1];
+			}
+		y_0 *= dA[ii+0];
+		y_1 -= pA[jj+0+lda*(ii+1)] * y_0;
+		y_1 *= dA[ii+1];
+		z[ii+0] = y_0;
+		z[ii+1] = y_1;
+		}
+	for(; ii<m; ii++)
+		{
+		y_0 = x[ii];
+		for(jj=0; jj<ii; jj++)
+			{
+			y_0 -= pA[jj+lda*ii] * z[jj];
+			}
+		y_0 *= dA[ii];
+		z[ii] = y_0;
+		}
+	return;
 	}
 
 
