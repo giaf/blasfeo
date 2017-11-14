@@ -46,6 +46,8 @@
 #define AXPY_LIBSTR daxpy_libstr
 #define VECMULDOT_LIBSTR dvecmuldot_libstr
 #define DOT_LIBSTR ddot_libstr
+#define COLROT_LIBSTR dcolrot_libstr
+#define ROWROT_LIBSTR drowrot_libstr
 
 #define AXPY daxpy_
 #define COPY dcopy_

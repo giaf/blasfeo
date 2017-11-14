@@ -40,11 +40,14 @@
 
 #define REAL float
 
+#define STRMAT s_strmat
 #define STRVEC s_strvec
 
 #define AXPY_LIBSTR saxpy_libstr
 #define VECMULDOT_LIBSTR svecmuldot_libstr
 #define DOT_LIBSTR sdot_libstr
+#define COLROT_LIBSTR scolrot_libstr
+#define ROWROT_LIBSTR srowrot_libstr
 
 #define AXPY saxpy_
 #define COPY scopy_
