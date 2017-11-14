@@ -51,6 +51,7 @@
 
 #define AXPY saxpy_
 #define COPY scopy_
+#define ROT srot_
 
 
 #include "x_blas1_lib.c"
