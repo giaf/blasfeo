@@ -44,10 +44,12 @@ void saxpy_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, struct s_s
 float svecmuldot_libstr(int m, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi);
 // return x^T * y
 float sdot_libstr(int m, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi);
+// construct givens plane rotation
+void srotg_libstr(float a, float b, float *c, float *s);
 // apply plane rotation [a b] [c -s; s; c] to two consecutive columns of A
-void dcolrot_libstr(int m, struct s_strmat *sA, int ai, int aj, float c, float s);
+void scolrot_libstr(int m, struct s_strmat *sA, int ai, int aj, float c, float s);
 // apply plane rotation [c s; -s c] [a; b] to two consecutive rows of A
-void drowrot_libstr(int m, struct s_strmat *sA, int ai, int aj, float c, float s);
+void srowrot_libstr(int m, struct s_strmat *sA, int ai, int aj, float c, float s);
 
 
 

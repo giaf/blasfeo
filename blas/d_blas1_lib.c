@@ -28,6 +28,10 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
+
+#define FABS fabs
+#define SQRT sqrt
 
 #if defined(LA_BLAS)
 #include "d_blas.h"
@@ -46,12 +50,14 @@
 #define AXPY_LIBSTR daxpy_libstr
 #define VECMULDOT_LIBSTR dvecmuldot_libstr
 #define DOT_LIBSTR ddot_libstr
+#define ROTG_LIBSTR drotg_libstr
 #define COLROT_LIBSTR dcolrot_libstr
 #define ROWROT_LIBSTR drowrot_libstr
 
 #define AXPY daxpy_
 #define COPY dcopy_
 #define ROT drot_
+#define ROTG drotg_
 
 
 #include "x_blas1_lib.c"
