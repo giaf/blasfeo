@@ -44,6 +44,8 @@ void daxpy_libstr(int kmax, double alpha, struct d_strvec *sx, int xi, struct d_
 double dvecmuldot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi);
 // return x^T * y
 double ddot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi);
+// construct givens plane rotation
+void drotg_libstr(double a, double b, double *c, double *s);
 // apply plane rotation [a b] [c -s; s; c] to two consecutive columns of A
 void dcolrot_libstr(int m, struct d_strmat *sA, int ai, int aj, double c, double s);
 // apply plane rotation [c s; -s c] [a; b] to two consecutive rows of A

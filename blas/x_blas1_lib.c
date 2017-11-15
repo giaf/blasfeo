@@ -110,6 +110,32 @@ REAL DOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi)
 
 
 
+// construct givens plane rotation
+void ROTG_LIBSTR(REAL a, REAL b, REAL *c, REAL *s)
+	{
+	REAL aa = FABS(a);
+	REAL bb = FABS(b);
+	REAL roe = (aa >= bb) ? a : b;
+	REAL scale = aa + bb;
+	REAL r;
+	if (scale == 0)
+		{
+		*c = 1.0;
+		*s = 0.0;
+		}
+	else
+		{
+		aa = a/scale; bb = b/scale;
+		r = scale * SQRT(aa*aa + bb*bb);
+		r = r * (roe >= 0 ? 1 : -1);
+		*c = a / r;
+		*s = b / r;	
+		}
+	return;
+	}
+
+
+
 // apply plane rotation to two consecutive columns of A
 void COLROT_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, REAL c, REAL s)
 	{
@@ -211,6 +237,15 @@ REAL DOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi)
 		dot += x[ii+0] * y[ii+0];
 		}
 	return dot;
+	}
+
+
+
+// construct givens plane rotation
+void ROTG_LIBSTR(REAL a, REAL b, REAL *c, REAL *s)
+	{
+	ROTG(&a, &b, c, s);
+	return;
 	}
 
 
