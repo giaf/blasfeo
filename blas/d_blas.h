@@ -39,6 +39,7 @@ void dcopy_(int *m, double *x, int *incx, double *y, int *incy);
 void daxpy_(int *m, double *alpha, double *x, int *incx, double *y, int *incy);
 void dscal_(int *m, double *alpha, double *x, int *incx);
 void drot_(int *m, double *x, int *incx, double *y, int *incy, double *c, double *s);
+void drotg_(double *a, double *b, double *c, double *s);
 
 // level 2
 void dgemv_(char *ta, int *m, int *n, double *alpha, double *A, int *lda, double *x, int *incx, double *beta, double *y, int *incy);

@@ -39,6 +39,7 @@ void scopy_(int *m, float *x, int *incx, float *y, int *incy);
 void saxpy_(int *m, float *alpha, float *x, int *incx, float *y, int *incy);
 void sscal_(int *m, float *alpha, float *x, int *incx);
 void srot_(int *m, float *x, int *incx, float *y, int *incy, float *c, float *s);
+void srotg_(float *a, float *b, float *c, float *s);
 
 // level 2
 void sgemv_(char *ta, int *m, int *n, float *alpha, float *A, int *lda, float *x, int *incx, float *beta, float *y, int *incy);
