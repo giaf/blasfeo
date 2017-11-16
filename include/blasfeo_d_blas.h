@@ -46,10 +46,10 @@ double dvecmuldot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy
 double ddot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi);
 // construct givens plane rotation
 void drotg_libstr(double a, double b, double *c, double *s);
-// apply plane rotation [a b] [c -s; s; c] to two consecutive columns of A
-void dcolrot_libstr(int m, struct d_strmat *sA, int ai, int aj, double c, double s);
-// apply plane rotation [c s; -s c] [a; b] to two consecutive rows of A
-void drowrot_libstr(int m, struct d_strmat *sA, int ai, int aj, double c, double s);
+// apply plane rotation [a b] [c -s; s; c] to the aj0 and aj1 columns of A at row index ai
+void dcolrot_libstr(int m, struct d_strmat *sA, int ai, int aj0, int aj1, double c, double s);
+// apply plane rotation [c s; -s c] [a; b] to the ai0 and ai1 rows of A at column index aj
+void drowrot_libstr(int m, struct d_strmat *sA, int ai0, int ai1, int aj, double c, double s);
 
 
 

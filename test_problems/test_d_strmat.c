@@ -268,20 +268,22 @@ int main()
 	//
 	aa = DMATEL_LIBSTR(&sD, 0, 0);
 	bb = DMATEL_LIBSTR(&sD, 1, 0);
-	c = aa/sqrt(aa*aa+bb*bb);
-	s = bb/sqrt(aa*aa+bb*bb);
-	drowrot_libstr(3, &sD, 0, 0, c, s);
-	drowrot_libstr(3, &sD, 0, 5, c, s);
-	dcolrot_libstr(3, &sD, 5, 5, c, s);
+//	c = aa/sqrt(aa*aa+bb*bb);
+//	s = bb/sqrt(aa*aa+bb*bb);
+	drotg_libstr(aa, bb, &c, &s);
+	drowrot_libstr(3, &sD, 0, 1, 0, c, s);
+	drowrot_libstr(3, &sD, 0, 1, 5, c, s);
+	dcolrot_libstr(3, &sD, 5, 5, 6, c, s);
 	d_print_strmat(n, n, &sD, 0, 0);
 	//
 	aa = DMATEL_LIBSTR(&sD, 1, 1);
 	bb = DMATEL_LIBSTR(&sD, 2, 1);
-	c = aa/sqrt(aa*aa+bb*bb);
-	s = bb/sqrt(aa*aa+bb*bb);
-	drowrot_libstr(2, &sD, 1, 1, c, s);
-	drowrot_libstr(3, &sD, 1, 5, c, s);
-	dcolrot_libstr(3, &sD, 5, 6, c, s);
+//	c = aa/sqrt(aa*aa+bb*bb);
+//	s = bb/sqrt(aa*aa+bb*bb);
+	drotg_libstr(aa, bb, &c, &s);
+	drowrot_libstr(2, &sD, 1, 2, 1, c, s);
+	drowrot_libstr(3, &sD, 1, 2, 5, c, s);
+	dcolrot_libstr(3, &sD, 5, 6, 7, c, s);
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 #endif
@@ -302,7 +304,7 @@ int main()
 	bb = DMATEL_LIBSTR(&sD, 1, 0);
 	c =  bb/sqrt(aa*aa+bb*bb);
 	s = -aa/sqrt(aa*aa+bb*bb);
-	drowrot_libstr(3, &sD, 0, 0, c, s);
+	drowrot_libstr(3, &sD, 0, 1, 0, c, s);
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 #endif
@@ -323,7 +325,7 @@ int main()
 	bb = DMATEL_LIBSTR(&sD, 0, 1);
 	c =  bb/sqrt(aa*aa+bb*bb);
 	s = -aa/sqrt(aa*aa+bb*bb);
-	dcolrot_libstr(3, &sD, 0, 0, c, s);
+	dcolrot_libstr(3, &sD, 0, 0, 1, c, s);
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 #endif
@@ -362,20 +364,22 @@ int main()
 	//
 	aa = DMATEL_LIBSTR(&sD, 0, 0);
 	bb = DMATEL_LIBSTR(&sD, 0, 1);
-	c = aa/sqrt(aa*aa+bb*bb);
-	s = bb/sqrt(aa*aa+bb*bb);
-	dcolrot_libstr(3, &sD, 0, 0, c, s);
-	dcolrot_libstr(3, &sD, 0, 5, c, s);
-	drowrot_libstr(3, &sD, 5, 5, c, s);
+//	c = aa/sqrt(aa*aa+bb*bb);
+//	s = bb/sqrt(aa*aa+bb*bb);
+	drotg_libstr(aa, bb, &c, &s);
+	dcolrot_libstr(3, &sD, 0, 0, 1, c, s);
+	dcolrot_libstr(3, &sD, 0, 5, 6, c, s);
+	drowrot_libstr(3, &sD, 5, 6, 5, c, s);
 	d_print_strmat(n, n, &sD, 0, 0);
 	//
 	aa = DMATEL_LIBSTR(&sD, 1, 1);
 	bb = DMATEL_LIBSTR(&sD, 1, 2);
-	c = aa/sqrt(aa*aa+bb*bb);
-	s = bb/sqrt(aa*aa+bb*bb);
-	dcolrot_libstr(2, &sD, 1, 1, c, s);
-	dcolrot_libstr(3, &sD, 0, 6, c, s);
-	drowrot_libstr(3, &sD, 6, 5, c, s);
+//	c = aa/sqrt(aa*aa+bb*bb);
+//	s = bb/sqrt(aa*aa+bb*bb);
+	drotg_libstr(aa, bb, &c, &s);
+	dcolrot_libstr(2, &sD, 1, 1, 2, c, s);
+	dcolrot_libstr(3, &sD, 0, 6, 7, c, s);
+	drowrot_libstr(3, &sD, 6, 7, 5, c, s);
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 #endif
@@ -389,7 +393,7 @@ int main()
 	int_print_mat(1, n, ipiv, 1);
 	d_print_strmat(n, n, &sD, 0, 0);
 	//
-#if 1
+#if 0
 	// N scheme
 #if 1
 	dvecpe_libstr(n, ipiv, &sx0, 0);

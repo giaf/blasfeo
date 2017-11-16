@@ -136,12 +136,12 @@ void ROTG_LIBSTR(REAL a, REAL b, REAL *c, REAL *s)
 
 
 
-// apply plane rotation to two consecutive columns of A
-void COLROT_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, REAL c, REAL s)
+// apply plane rotation to the aj0 and aj1 columns of A at row index ai
+void COLROT_LIBSTR(int m, struct STRMAT *sA, int ai, int aj0, int aj1, REAL c, REAL s)
 	{
 	int lda = sA->m;
-	REAL *px = sA->pA + ai+0 + (aj+0)*lda;
-	REAL *py = sA->pA + ai+0 + (aj+1)*lda;
+	REAL *px = sA->pA + ai + aj0*lda;
+	REAL *py = sA->pA + ai + aj1*lda;
 	int ii;
 	REAL d_tmp;
 	for(ii=0; ii<m; ii++)
@@ -155,12 +155,12 @@ void COLROT_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, REAL c, REAL s)
 
 
 
-// apply plane rotation to two consecutive rows of A
-void ROWROT_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, REAL c, REAL s)
+// apply plane rotation to the ai0 and ai1 rows of A at column index aj
+void ROWROT_LIBSTR(int m, struct STRMAT *sA, int ai0, int ai1, int aj, REAL c, REAL s)
 	{
 	int lda = sA->m;
-	REAL *px = sA->pA + ai+0 + (aj+0)*lda;
-	REAL *py = sA->pA + ai+1 + (aj+0)*lda;
+	REAL *px = sA->pA + ai0 + aj*lda;
+	REAL *py = sA->pA + ai1 + aj*lda;
 	int ii;
 	REAL d_tmp;
 	for(ii=0; ii<m; ii++)
@@ -250,42 +250,26 @@ void ROTG_LIBSTR(REAL a, REAL b, REAL *c, REAL *s)
 
 
 
-// apply plane rotation to two consecutive columns of A
-void COLROT_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, REAL c, REAL s)
+// apply plane rotation to the aj0 and aj1 columns of A at row index ai
+void COLROT_LIBSTR(int m, struct STRMAT *sA, int ai, int aj0, int aj1, REAL c, REAL s)
 	{
 	int lda = sA->m;
-	REAL *px = sA->pA + ai+0 + (aj+0)*lda;
-	REAL *py = sA->pA + ai+0 + (aj+1)*lda;
+	REAL *px = sA->pA + ai + aj0*lda;
+	REAL *py = sA->pA + ai + aj1*lda;
 	int i1 = 1;
 	ROT(&m, px, &i1, py, &i1, &c, &s);
-//	int ii;
-//	REAL d_tmp;
-//	for(ii=0; ii<m; ii++)
-//		{
-//		d_tmp  = c*px[ii] + s*py[ii];
-//		py[ii] = c*py[ii] - s*px[ii];
-//		px[ii] = d_tmp;
-//		}
 	return;
 	}
 
 
 
-// apply plane rotation to two consecutive rows of A
-void ROWROT_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, REAL c, REAL s)
+// apply plane rotation to the ai0 and ai1 rows of A at column index aj
+void ROWROT_LIBSTR(int m, struct STRMAT *sA, int ai0, int ai1, int aj, REAL c, REAL s)
 	{
 	int lda = sA->m;
-	REAL *px = sA->pA + ai+0 + (aj+0)*lda;
-	REAL *py = sA->pA + ai+1 + (aj+0)*lda;
+	REAL *px = sA->pA + ai0 + aj*lda;
+	REAL *py = sA->pA + ai1 + aj*lda;
 	ROT(&m, px, &lda, py, &lda, &c, &s);
-//	int ii;
-//	REAL d_tmp;
-//	for(ii=0; ii<m; ii++)
-//		{
-//		d_tmp  = c*px[ii*lda] + s*py[ii*lda];
-//		py[ii*lda] = c*py[ii*lda] - s*px[ii*lda];
-//		px[ii*lda] = d_tmp;
-//		}
 	return;
 	}
 

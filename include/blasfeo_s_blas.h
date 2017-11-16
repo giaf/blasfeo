@@ -46,10 +46,10 @@ float svecmuldot_libstr(int m, struct s_strvec *sx, int xi, struct s_strvec *sy,
 float sdot_libstr(int m, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi);
 // construct givens plane rotation
 void srotg_libstr(float a, float b, float *c, float *s);
-// apply plane rotation [a b] [c -s; s; c] to two consecutive columns of A
-void scolrot_libstr(int m, struct s_strmat *sA, int ai, int aj, float c, float s);
-// apply plane rotation [c s; -s c] [a; b] to two consecutive rows of A
-void srowrot_libstr(int m, struct s_strmat *sA, int ai, int aj, float c, float s);
+// apply plane rotation [a b] [c -s; s; c] to the aj0 and aj1 columns of A at row index ai
+void scolrot_libstr(int m, struct s_strmat *sA, int ai, int aj0, int aj1, float c, float s);
+// apply plane rotation [c s; -s c] [a; b] to the ai0 and ai1 rows of A at column index aj
+void srowrot_libstr(int m, struct s_strmat *sA, int ai0, int ai1, int aj, float c, float s);
 
 
 
