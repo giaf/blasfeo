@@ -28,19 +28,29 @@
 
 # Target architecture list
 
-# X64_INTEL_HASWELL : x86_64 architecture with AVX2 and FMA ISA (64 bit OS) code optimized for Intel Haswell and Intel Skylake architectures.
-# X64_INTEL_SANDY_BRIDGE : x86_64 architecture with AVX ISA (64 bit OS) code optimized for Intel Sandy-Bridge architecture.
-# X64_INTEL_CORE : x86_64 architecture with SSE3 (64 bit OS) code optimized for Intel Core archiecture.
-# X64_AMD_BULLDOZER : x86_64 architecture with AVX and FMA ISA (64 bit OS) code optimized for AMD Bulldozer.
-# ARMV7A_ARM_CORTEX_A15 : ARMv7A architecture with NEON-VFPv4 ISA (32 bit OS) code optimized for ARM Cortex A15.
+# X64_INTEL_HASWELL: x86_64 architecture with AVX2 and FMA ISA (64 bit OS)
+# code optimized for Intel Haswell and Intel Skylake architectures.
+#
+# X64_INTEL_SANDY_BRIDGE : x86_64 architecture with AVX ISA (64 bit OS)
+# code optimized for Intel Sandy-Bridge architecture.
+#
+# X64_INTEL_CORE : x86_64 architecture with SSE3 (64 bit OS)
+# code optimized for Intel Core archiecture.
+#
+# X64_AMD_BULLDOZER : x86_64 architecture with AVX and FMA ISA (64 bit OS)
+# code optimized for AMD Bulldozer.
+#
+# ARMV7A_ARM_CORTEX_A15 : ARMv7A architecture with NEON-VFPv4 ISA (32 bit OS)
+# code optimized for ARM Cortex A15.
+#
 # ARMV8A_ARM_CORTEX_A57
 # GENERIC : generic c99 code
 
 # Select target architecture
 
 # TARGET = X64_INTEL_HASWELL
-# TARGET = X64_INTEL_SANDY_BRIDGE
-TARGET = X64_INTEL_CORE
+TARGET = X64_INTEL_SANDY_BRIDGE
+# TARGET = X64_INTEL_CORE
 #
 # TARGET = X64_AMD_BULLDOZER
 #
@@ -91,7 +101,8 @@ CC = gcc
 # Installation directory
 PREFIX = /opt
 
-# Macro level (code size vs performance in assembly kernels): 0 (no macro), 1 (all macro but gemm kernel), 2 (all macro)
+# Macro level (code size vs performance in assembly kernels):
+# 0 (no macro), 1 (all macro but gemm kernel), 2 (all macro)
 MACRO_LEVEL = 0
 
 # compiler / assembler / linker flags
