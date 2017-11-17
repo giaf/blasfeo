@@ -1326,10 +1326,12 @@ void dcolex_lib(int kmax, int offset, double *pD, int sdd, double *x)
 			{
 			x[ll] = pD[ll];
 			}
+
 		pD += kna + bs*(sdd-1);
 		x  += kna;
 		kmax -= kna;
 		}
+
 	for(jj=0; jj<kmax-3; jj+=4)
 		{
 		x[jj+0] = pD[jj*sdd+0];
