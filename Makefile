@@ -509,9 +509,23 @@ install_shared:
 	mkdir -p $(PREFIX)/blasfeo/include
 	cp -f ./include/*.h $(PREFIX)/blasfeo/include/
 
+
+# test problems
+
+BINARY_DIR = build/$(LA)/$(TARGET)
+
+test_problems_shared: shared_library
+	mkdir -p ./test_problems/$(BINARY_DIR)
+	cp libblasfeo.so ./test_problems/$(BINARY_DIR)/libblasfeo.so
+	make -C test_problems run_short_shared
+	@echo
+	@echo " Test problem build complete."
+	@echo
+
+
 test_problems: all
-	mkdir -p ./test_problems/out/$(LA)/$(TARGET)
-	cp libblasfeo.a ./test_problems/out/$(LA)/$(TARGET)/libblasfeo.a
+	mkdir -p ./test_problems/$(BINARY_DIR)
+	cp libblasfeo.a ./test_problems/$(BINARY_DIR)/libblasfeo.a
 	make -C test_problems run_short
 	@echo
 	@echo " Test problem build complete."
