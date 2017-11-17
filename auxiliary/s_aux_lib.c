@@ -530,6 +530,37 @@ void sgesc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 
 
 
+// scale an generic strmat and copy into generic strmat
+void sgecpsc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj)
+	{
+
+	int lda = sA->m;
+	float *pA = sA->pA + ai + aj*lda;
+
+	int ldb = sB->m;
+	float *pB = sB->pA + bi + bj*ldb;
+
+	int ii, jj;
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			pB[ii+0+jj*ldb] = pA[ii+0+jj*lda] * alpha;
+			pB[ii+1+jj*ldb] = pA[ii+1+jj*lda] * alpha;
+			pB[ii+2+jj*ldb] = pA[ii+2+jj*lda] * alpha;
+			pB[ii+3+jj*ldb] = pA[ii+3+jj*lda] * alpha;
+			}
+		for(; ii<m; ii++)
+			{
+			pB[ii+0+jj*ldb] = pA[ii+0+jj*lda] * alpha;
+			}
+		}
+	return;
+	}
+
+
+
 // copy a strvec into a strvec
 void sveccp_libstr(int m, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
 	{

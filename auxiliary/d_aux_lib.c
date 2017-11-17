@@ -577,6 +577,8 @@ void dgecpsc_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int
 	return;
 	}
 
+
+
 // --- vector
 
 // copy a strvec into a strvec
