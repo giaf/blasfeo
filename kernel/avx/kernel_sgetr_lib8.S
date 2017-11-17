@@ -139,8 +139,6 @@
 
 #endif
 
-
-
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.text
 #elif defined(OS_MAC)
@@ -148,10 +146,7 @@
 #endif
 
 
-
-
-
-// subroutine
+// void INNER_KERNEL_SGETR_8_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -173,7 +168,7 @@ _inner_kernel_sgetr_8_lib8:
 inner_kernel_sgetr_8_lib8:
 #endif
 #endif
-	
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
@@ -231,7 +226,7 @@ inner_kernel_sgetr_8_lib8:
 	addq		$256, %r13
 
 	cmpl		$7, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -322,12 +317,9 @@ inner_kernel_sgetr_8_lib8:
 	.size	inner_kernel_sgetr_8_lib8, .-inner_kernel_sgetr_8_lib8
 #endif
 #endif
+// end
 
-
-
-
-
-// subroutine
+// void INNER_KERNEL_SGETR_8_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -350,7 +342,7 @@ _inner_kernel_sgetr_8_gen_lib8:
 inner_kernel_sgetr_8_gen_lib8:
 #endif
 #endif
-	
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
@@ -410,7 +402,7 @@ inner_kernel_sgetr_8_gen_lib8:
 	addq		$256, %r13
 
 	cmpl		$7, %r10d
-	jg			1b // main loop 
+	jg			1b // main loop
 
 0: // consider clean-up
 	cmpl	$0, %r10d
@@ -504,11 +496,10 @@ inner_kernel_sgetr_8_gen_lib8:
 #endif
 #endif
 
+// end
 
 
-
-
-// subroutine
+// void KERNEL_INNER_EDGE_SGETR_8_0_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -531,7 +522,7 @@ _inner_edge_sgetr_8_0_gen_lib8:
 inner_edge_sgetr_8_0_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -558,7 +549,9 @@ inner_edge_sgetr_8_0_gen_lib8:
 
 
 
-// subroutine
+// end
+
+// void KERNEL_INNER_EDGE_SGETR_8_1_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -580,7 +573,7 @@ _inner_edge_sgetr_8_1_gen_lib8:
 inner_edge_sgetr_8_1_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -695,7 +688,9 @@ inner_edge_sgetr_8_1_gen_lib8:
 
 
 
-// subroutine
+// end
+
+// void KERNEL_INNER_EDGE_SGETR_8_2_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -717,7 +712,7 @@ _inner_edge_sgetr_8_2_gen_lib8:
 inner_edge_sgetr_8_2_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -827,7 +822,9 @@ inner_edge_sgetr_8_2_gen_lib8:
 
 
 
-// subroutine
+// end
+
+// void KERNEL_INNER_EDGE_SGETR_8_3_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -849,7 +846,7 @@ _inner_edge_sgetr_8_3_gen_lib8:
 inner_edge_sgetr_8_3_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -954,7 +951,9 @@ inner_edge_sgetr_8_3_gen_lib8:
 
 
 
-// subroutine
+// end
+
+// void KERNEL_INNER_EDGE_SGETR_8_4_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -976,7 +975,7 @@ _inner_edge_sgetr_8_4_gen_lib8:
 inner_edge_sgetr_8_4_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -1076,7 +1075,9 @@ inner_edge_sgetr_8_4_gen_lib8:
 
 
 
-// subroutine
+// end
+
+// void KERNEL_INNER_EDGE_SGETR_8_5_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -1098,7 +1099,7 @@ _inner_edge_sgetr_8_5_gen_lib8:
 inner_edge_sgetr_8_5_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -1193,7 +1194,9 @@ inner_edge_sgetr_8_5_gen_lib8:
 
 
 
-// subroutine
+// end
+
+// void KERNEL_INNER_EDGE_SGETR_8_6_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -1215,7 +1218,7 @@ _inner_edge_sgetr_8_6_gen_lib8:
 inner_edge_sgetr_8_6_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -1305,7 +1308,9 @@ inner_edge_sgetr_8_6_gen_lib8:
 
 
 
-// subroutine
+// end
+
+// void KERNEL_INNER_EDGE_SGETR_8_7_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -1327,7 +1332,7 @@ _inner_edge_sgetr_8_7_gen_lib8:
 inner_edge_sgetr_8_7_gen_lib8:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2ss	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -1408,12 +1413,12 @@ inner_edge_sgetr_8_7_gen_lib8:
 #endif
 #endif
 
+// end
 
 
 
-
-//                            rdi    rsi       rdx      rcx
 // void kernel_sgetr_8_0_lib8(int k, float *A, int sda, float *B);
+//                            rdi    rsi       rdx      rcx
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1428,7 +1433,7 @@ _kernel_sgetr_8_0_lib8:
 	.def kernel_sgetr_8_0_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_0_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -1459,12 +1464,10 @@ kernel_sgetr_8_0_lib8:
 	.size	kernel_sgetr_8_0_lib8, .-kernel_sgetr_8_0_lib8
 #endif
 
+// end
 
-
-
-
-//                                rdi    rsi       rdx      rcx       r8
 // void kernel_sgetr_8_0_gen_lib8(int k, float *A, int sda, float *B, int m1);
+//                                rdi    rsi       rdx      rcx       r8
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1479,7 +1482,7 @@ _kernel_sgetr_8_0_gen_lib8:
 	.def kernel_sgetr_8_0_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_0_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -1521,12 +1524,11 @@ kernel_sgetr_8_0_gen_lib8:
 	.size	kernel_sgetr_8_0_gen_lib8, .-kernel_sgetr_8_0_gen_lib8
 #endif
 
+// end
 
 
-
-
-//                            rdi    rsi       rdx      rcx
 // void kernel_sgetr_8_1_lib8(int k, float *A, int sda, float *B);
+//                            rdi    rsi       rdx      rcx
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1541,7 +1543,7 @@ _kernel_sgetr_8_1_lib8:
 	.def kernel_sgetr_8_1_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_1_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -1584,11 +1586,10 @@ kernel_sgetr_8_1_lib8:
 #endif
 
 
+// end
 
-
-
-//                                rdi    rsi       rdx      rcx       r8
 // void kernel_sgetr_8_1_gen_lib8(int k, float *A, int sda, float *B, int m1);
+//                                rdi    rsi       rdx      rcx       r8
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1603,7 +1604,7 @@ _kernel_sgetr_8_1_gen_lib8:
 	.def kernel_sgetr_8_1_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_1_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -1645,12 +1646,11 @@ kernel_sgetr_8_1_gen_lib8:
 	.size	kernel_sgetr_8_1_gen_lib8, .-kernel_sgetr_8_1_gen_lib8
 #endif
 
+// end
 
 
-
-
-//                            rdi    rsi       rdx      rcx
 // void kernel_sgetr_8_2_lib8(int k, float *A, int sda, float *B);
+//                            rdi    rsi       rdx      rcx
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1665,7 +1665,7 @@ _kernel_sgetr_8_2_lib8:
 	.def kernel_sgetr_8_2_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_2_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -1707,12 +1707,10 @@ kernel_sgetr_8_2_lib8:
 	.size	kernel_sgetr_8_2_lib8, .-kernel_sgetr_8_2_lib8
 #endif
 
+// end
 
-
-
-
-//                                rdi    rsi       rdx      rcx       r8
 // void kernel_sgetr_8_2_gen_lib8(int k, float *A, int sda, float *B, int m1);
+//                                rdi    rsi       rdx      rcx       r8
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1727,7 +1725,7 @@ _kernel_sgetr_8_2_gen_lib8:
 	.def kernel_sgetr_8_2_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_2_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -1769,12 +1767,11 @@ kernel_sgetr_8_2_gen_lib8:
 	.size	kernel_sgetr_8_2_gen_lib8, .-kernel_sgetr_8_2_gen_lib8
 #endif
 
+// end
 
 
-
-
-//                            rdi    rsi       rdx      rcx
 // void kernel_sgetr_8_3_lib8(int k, float *A, int sda, float *B);
+//                            rdi    rsi       rdx      rcx
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1789,7 +1786,7 @@ _kernel_sgetr_8_3_lib8:
 	.def kernel_sgetr_8_3_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_3_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -1831,12 +1828,10 @@ kernel_sgetr_8_3_lib8:
 	.size	kernel_sgetr_8_3_lib8, .-kernel_sgetr_8_3_lib8
 #endif
 
+// end
 
-
-
-
-//                                rdi    rsi       rdx      rcx       r8
 // void kernel_sgetr_8_3_gen_lib8(int k, float *A, int sda, float *B, int m1);
+//                                rdi    rsi       rdx      rcx       r8
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1851,7 +1846,7 @@ _kernel_sgetr_8_3_gen_lib8:
 	.def kernel_sgetr_8_3_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_3_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -1894,11 +1889,11 @@ kernel_sgetr_8_3_gen_lib8:
 #endif
 
 
+// end
 
 
-
-//                            rdi    rsi       rdx      rcx
 // void kernel_sgetr_8_4_lib8(int k, float *A, int sda, float *B);
+//                            rdi    rsi       rdx      rcx
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1913,7 +1908,7 @@ _kernel_sgetr_8_4_lib8:
 	.def kernel_sgetr_8_4_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_4_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -1956,11 +1951,10 @@ kernel_sgetr_8_4_lib8:
 #endif
 
 
+// end
 
-
-
-//                                rdi    rsi       rdx      rcx       r8
 // void kernel_sgetr_8_4_gen_lib8(int k, float *A, int sda, float *B, int m1);
+//                                rdi    rsi       rdx      rcx       r8
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1975,7 +1969,7 @@ _kernel_sgetr_8_4_gen_lib8:
 	.def kernel_sgetr_8_4_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_4_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2017,12 +2011,11 @@ kernel_sgetr_8_4_gen_lib8:
 	.size	kernel_sgetr_8_4_gen_lib8, .-kernel_sgetr_8_4_gen_lib8
 #endif
 
+// end
 
 
-
-
-//                            rdi    rsi       rdx      rcx
 // void kernel_sgetr_8_5_lib8(int k, float *A, int sda, float *B);
+//                            rdi    rsi       rdx      rcx
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2037,7 +2030,7 @@ _kernel_sgetr_8_5_lib8:
 	.def kernel_sgetr_8_5_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_5_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2079,12 +2072,10 @@ kernel_sgetr_8_5_lib8:
 	.size	kernel_sgetr_8_5_lib8, .-kernel_sgetr_8_5_lib8
 #endif
 
+// end
 
-
-
-
-//                                rdi    rsi       rdx      rcx       r8
 // void kernel_sgetr_8_5_gen_lib8(int k, float *A, int sda, float *B, int m1);
+//                                rdi    rsi       rdx      rcx       r8
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2099,7 +2090,7 @@ _kernel_sgetr_8_5_gen_lib8:
 	.def kernel_sgetr_8_5_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_5_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2141,12 +2132,11 @@ kernel_sgetr_8_5_gen_lib8:
 	.size	kernel_sgetr_8_5_gen_lib8, .-kernel_sgetr_8_5_gen_lib8
 #endif
 
+// end
 
 
-
-
-//                            rdi    rsi       rdx      rcx
 // void kernel_sgetr_8_6_lib8(int k, float *A, int sda, float *B);
+//                            rdi    rsi       rdx      rcx
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2161,7 +2151,7 @@ _kernel_sgetr_8_6_lib8:
 	.def kernel_sgetr_8_6_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_6_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2204,11 +2194,10 @@ kernel_sgetr_8_6_lib8:
 #endif
 
 
+// end
 
-
-
-//                                rdi    rsi       rdx      rcx       r8
 // void kernel_sgetr_8_6_gen_lib8(int k, float *A, int sda, float *B, int m1);
+//                                rdi    rsi       rdx      rcx       r8
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2223,7 +2212,7 @@ _kernel_sgetr_8_6_gen_lib8:
 	.def kernel_sgetr_8_6_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_6_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2265,12 +2254,11 @@ kernel_sgetr_8_6_gen_lib8:
 	.size	kernel_sgetr_8_6_gen_lib8, .-kernel_sgetr_8_6_gen_lib8
 #endif
 
+// end
 
 
-
-
-//                            rdi    rsi       rdx      rcx
 // void kernel_sgetr_8_7_lib8(int k, float *A, int sda, float *B);
+//                            rdi    rsi       rdx      rcx
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2285,7 +2273,7 @@ _kernel_sgetr_8_7_lib8:
 	.def kernel_sgetr_8_7_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_7_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2327,12 +2315,10 @@ kernel_sgetr_8_7_lib8:
 	.size	kernel_sgetr_8_7_lib8, .-kernel_sgetr_8_7_lib8
 #endif
 
+// end
 
-
-
-
-//                                rdi    rsi       rdx      rcx       r8
 // void kernel_sgetr_8_7_gen_lib8(int k, float *A, int sda, float *B, int m1);
+//                                rdi    rsi       rdx      rcx       r8
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2347,7 +2333,7 @@ _kernel_sgetr_8_7_gen_lib8:
 	.def kernel_sgetr_8_7_gen_lib8; .scl 2; .type 32; .endef
 kernel_sgetr_8_7_gen_lib8:
 #endif
-	
+
 	PROLOGUE
 
 	// call inner dgemm kernel nt
@@ -2389,7 +2375,7 @@ kernel_sgetr_8_7_gen_lib8:
 	.size	kernel_sgetr_8_7_gen_lib8, .-kernel_sgetr_8_7_gen_lib8
 #endif
 
-
+// end
 
 
 
@@ -2474,3 +2460,4 @@ LC03: // { -1.0 -1.0 1.0 1.0 1.0 1.0 1.0 1.0 }
 	.subsections_via_symbols
 #endif
 
+//EOF

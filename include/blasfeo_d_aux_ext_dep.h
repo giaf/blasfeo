@@ -26,6 +26,17 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+/*
+ * auxiliary algebra operation external dependancies header
+ *
+ * include/blasfeo_d_aux_ext_dep.h
+ *
+ * - dynamic memory allocation
+ * - print
+ *
+ */
+
+
 #if defined(EXT_DEP)
 
 
@@ -38,11 +49,6 @@
 extern "C" {
 #endif
 
-
-
-/************************************************
-* d_aux_extern_depend_lib.c
-************************************************/
 
 /* column-major matrices */
 

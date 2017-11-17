@@ -27,116 +27,37 @@
 **************************************************************************************************/
 
 
+// ---- ge
 
-
-// both A and B are aligned to 256-bit boundaries
-void kernel_sgesc_4_lib4(int kmax, float *alphap, float *A)
-	{
-
-	if(kmax<=0)
-		return;
-
-	const int bs = 4;
-
-	float alpha = alphap[0];
-
-	int k;
-
-	for(k=0; k<kmax; k++)
-		{
-
-		A[0+bs*0] *= alpha;
-		A[1+bs*0] *= alpha;
-		A[2+bs*0] *= alpha;
-		A[3+bs*0] *= alpha;
-
-		A += 4;
-
-		}
-	
-	}
-
-
-
-void kernel_sgesc_3_lib4(int kmax, float *alphap, float *A)
-	{
-
-	if(kmax<=0)
-		return;
-
-	const int bs = 4;
-
-	float alpha = alphap[0];
-
-	int k;
-
-	for(k=0; k<kmax; k++)
-		{
-
-		A[0+bs*0] *= alpha;
-		A[1+bs*0] *= alpha;
-		A[2+bs*0] *= alpha;
-
-		A += 4;
-
-		}
-	
-	}
-
-
-
-void kernel_sgesc_2_lib4(int kmax, float *alphap, float *A)
-	{
-
-	if(kmax<=0)
-		return;
-
-	const int bs = 4;
-
-	float alpha = alphap[0];
-
-	int k;
-
-	for(k=0; k<kmax; k++)
-		{
-
-		A[0+bs*0] *= alpha;
-		A[1+bs*0] *= alpha;
-
-		A += 4;
-
-		}
-	
-	}
-
-
-
-void kernel_sgesc_1_lib4(int kmax, float *alphap, float *A)
-	{
-
-	if(kmax<=0)
-		return;
-
-	const int bs = 4;
-
-	float alpha = alphap[0];
-
-	int k;
-
-	for(k=0; k<kmax; k++)
-		{
-
-		A[0+bs*0] *= alpha;
-
-		A += 4;
-
-		}
-	
-	}
-
-
+// 4
 
 // both A and B are aligned to 256-bit boundaries
+void kernel_sgecpsc_4_0_lib4(int kmax, float *alphap, float *A, float *B)
+	{
+
+	if(kmax<=0)
+		return;
+
+	const int bs = 4;
+	float alpha = alphap[0];
+
+	int k;
+
+	for(k=0; k<kmax; k++)
+		{
+
+		B[0+bs*0] = alpha * A[0+bs*0];
+		B[1+bs*0] = alpha * A[1+bs*0];
+		B[2+bs*0] = alpha * A[2+bs*0];
+		B[3+bs*0] = alpha * A[3+bs*0];
+
+		A += 4;
+		B += 4;
+
+		}
+
+	}
+
 void kernel_sgecp_4_0_lib4(int kmax, float *A, float *B)
 	{
 
@@ -159,10 +80,39 @@ void kernel_sgecp_4_0_lib4(int kmax, float *A, float *B)
 		B += 4;
 
 		}
-	
+
 	}
 
+// both A and B are aligned to 256-bit boundaries, 1 element of A must be skipped
+void kernel_sgecpsc_4_1_lib4(int kmax, float *alphap, float *A0, int sda, float *B)
+	{
 
+	if(kmax<=0)
+		return;
+
+	const int bs = 4;
+
+	float *A1 = A0 + bs*sda;
+	float alpha = alphap[0];
+
+	int k;
+
+	for(k=0; k<kmax; k++)
+		{
+
+		B[0+bs*0] = alpha * A0[1+bs*0];
+		B[1+bs*0] = alpha * A0[2+bs*0];
+		B[2+bs*0] = alpha * A0[3+bs*0];
+
+		B[3+bs*0] = alpha * A1[0+bs*0];
+
+		A0 += 4;
+		A1 += 4;
+		B  += 4;
+
+		}
+
+	}
 
 // both A and B are aligned to 256-bit boundaries, 1 element of A must be skipped
 void kernel_sgecp_4_1_lib4(int kmax, float *A0, int sda, float *B)
@@ -183,6 +133,7 @@ void kernel_sgecp_4_1_lib4(int kmax, float *A0, int sda, float *B)
 		B[0+bs*0] = A0[1+bs*0];
 		B[1+bs*0] = A0[2+bs*0];
 		B[2+bs*0] = A0[3+bs*0];
+
 		B[3+bs*0] = A1[0+bs*0];
 
 		A0 += 4;
@@ -190,12 +141,41 @@ void kernel_sgecp_4_1_lib4(int kmax, float *A0, int sda, float *B)
 		B  += 4;
 
 		}
-	
+
 	}
 
+// both A and B are aligned to 256-bit boundaries, 2 element of A must be skipped
+void kernel_sgecpsc_4_2_lib4(int kmax, float *alphap, float *A0, int sda, float *B)
+	{
 
+	if(kmax<=0)
+		return;
 
-// both A and B are aligned to 256-bit boundaries, 2 elements of A must be skipped
+	const int bs = 4;
+
+	float *A1 = A0 + bs*sda;
+	float alpha = alphap[0];
+
+	int k;
+
+	for(k=0; k<kmax; k++)
+		{
+
+		B[0+bs*0] = alpha * A0[2+bs*0];
+		B[1+bs*0] = alpha * A0[3+bs*0];
+
+		B[2+bs*0] = alpha * A1[0+bs*0];
+		B[3+bs*0] = alpha * A1[1+bs*0];
+
+		A0 += 4;
+		A1 += 4;
+		B  += 4;
+
+		}
+
+	}
+
+// both A and B are aligned to 256-bit boundaries, 2 element of A must be skipped
 void kernel_sgecp_4_2_lib4(int kmax, float *A0, int sda, float *B)
 	{
 
@@ -213,20 +193,51 @@ void kernel_sgecp_4_2_lib4(int kmax, float *A0, int sda, float *B)
 
 		B[0+bs*0] = A0[2+bs*0];
 		B[1+bs*0] = A0[3+bs*0];
+
 		B[2+bs*0] = A1[0+bs*0];
 		B[3+bs*0] = A1[1+bs*0];
+
 
 		A0 += 4;
 		A1 += 4;
 		B  += 4;
 
 		}
-	
+
 	}
 
+// both A and B are aligned to 256-bit boundaries, 3 element of A must be skipped
+void kernel_sgecpsc_4_3_lib4(int kmax, float *alphap, float *A0, int sda, float *B)
+	{
 
+	if(kmax<=0)
+		return;
 
-// both A and B are aligned to 256-bit boundaries, 3 elements of A must be skipped
+	const int bs = 4;
+
+	float *A1 = A0 + bs*sda;
+	float alpha = alphap[0];
+
+	int k;
+
+	for(k=0; k<kmax; k++)
+		{
+
+		B[0+bs*0] = alpha * A0[3+bs*0];
+
+		B[1+bs*0] = alpha * A1[0+bs*0];
+		B[2+bs*0] = alpha * A1[1+bs*0];
+		B[3+bs*0] = alpha * A1[2+bs*0];
+
+		A0 += 4;
+		A1 += 4;
+		B  += 4;
+
+		}
+
+	}
+
+// both A and B are aligned to 256-bit boundaries, 3 element of A must be skipped
 void kernel_sgecp_4_3_lib4(int kmax, float *A0, int sda, float *B)
 	{
 
@@ -243,21 +254,48 @@ void kernel_sgecp_4_3_lib4(int kmax, float *A0, int sda, float *B)
 		{
 
 		B[0+bs*0] = A0[3+bs*0];
+
 		B[1+bs*0] = A1[0+bs*0];
 		B[2+bs*0] = A1[1+bs*0];
 		B[3+bs*0] = A1[2+bs*0];
+
 
 		A0 += 4;
 		A1 += 4;
 		B  += 4;
 
 		}
-	
+
 	}
 
+// 3
 
+void kernel_sgecpsc_3_0_lib4(int kmax, float *alphap, float *A, float *B)
+	{
 
-// both A and B are aligned to 64-bit boundaries
+	if(kmax<=0)
+		return;
+
+	const int bs = 4;
+
+	float alpha = alphap[0];
+
+	int k;
+
+	for(k=0; k<kmax; k++)
+		{
+
+		B[0+bs*0] = alpha * A[0+bs*0];
+		B[1+bs*0] = alpha * A[1+bs*0];
+		B[2+bs*0] = alpha * A[2+bs*0];
+
+		A += 4;
+		B += 4;
+
+		}
+
+	}
+
 void kernel_sgecp_3_0_lib4(int kmax, float *A, float *B)
 	{
 
@@ -279,10 +317,38 @@ void kernel_sgecp_3_0_lib4(int kmax, float *A, float *B)
 		B += 4;
 
 		}
-	
+
 	}
 
+// both A and B are aligned to 256-bit boundaries, 2 elements of A must be skipped
+void kernel_sgecpsc_3_2_lib4(int kmax, float *alphap, float *A0, int sda, float *B)
+	{
 
+	if(kmax<=0)
+		return;
+
+	const int bs = 4;
+
+	float *A1 = A0 + bs*sda;
+	float alpha = alphap[0];
+
+	int k;
+
+	for(k=0; k<kmax; k++)
+		{
+
+		B[0+bs*0] = alpha * A0[2+bs*0];
+		B[1+bs*0] = alpha * A0[3+bs*0];
+
+		B[2+bs*0] = alpha * A1[0+bs*0];
+
+		A0 += 4;
+		A1 += 4;
+		B  += 4;
+
+		}
+
+	}
 
 // both A and B are aligned to 256-bit boundaries, 2 elements of A must be skipped
 void kernel_sgecp_3_2_lib4(int kmax, float *A0, int sda, float *B)
@@ -301,6 +367,7 @@ void kernel_sgecp_3_2_lib4(int kmax, float *A0, int sda, float *B)
 		{
 
 		B[0+bs*0] = A0[2+bs*0];
+
 		B[1+bs*0] = A0[3+bs*0];
 		B[2+bs*0] = A1[0+bs*0];
 
@@ -309,10 +376,38 @@ void kernel_sgecp_3_2_lib4(int kmax, float *A0, int sda, float *B)
 		B  += 4;
 
 		}
-	
+
 	}
 
+// both A and B are aligned to 256-bit boundaries, 3 elements of A must be skipped
+void kernel_sgecpsc_3_3_lib4(int kmax, float *alphap, float *A0, int sda, float *B)
+	{
 
+	if(kmax<=0)
+		return;
+
+	const int bs = 4;
+
+	float *A1 = A0 + bs*sda;
+	float alpha = *alphap;
+
+	int k;
+
+	for(k=0; k<kmax; k++)
+		{
+
+		B[0+bs*0] = A0[3+bs*0];
+
+		B[1+bs*0] = A1[0+bs*0];
+		B[2+bs*0] = A1[1+bs*0];
+
+		A0 += 4;
+		A1 += 4;
+		B  += 4;
+
+		}
+
+	}
 
 // both A and B are aligned to 256-bit boundaries, 3 elements of A must be skipped
 void kernel_sgecp_3_3_lib4(int kmax, float *A0, int sda, float *B)
@@ -331,6 +426,7 @@ void kernel_sgecp_3_3_lib4(int kmax, float *A0, int sda, float *B)
 		{
 
 		B[0+bs*0] = A0[3+bs*0];
+
 		B[1+bs*0] = A1[0+bs*0];
 		B[2+bs*0] = A1[1+bs*0];
 
@@ -339,12 +435,35 @@ void kernel_sgecp_3_3_lib4(int kmax, float *A0, int sda, float *B)
 		B  += 4;
 
 		}
-	
+
 	}
 
+// 2
 
+void kernel_sgecpsc_2_0_lib4(int kmax, float *alphap, float *A, float *B)
+	{
 
-// both A and B are aligned to 64-bit boundaries
+	if(kmax<=0)
+		return;
+
+	const int bs = 4;
+	float alpha = alphap[0];
+
+	int k;
+
+	for(k=0; k<kmax; k++)
+		{
+
+		B[0+bs*0] = A[0+bs*0] * alpha;
+		B[1+bs*0] = A[1+bs*0] * alpha;
+
+		A += 4;
+		B += 4;
+
+		}
+
+	}
+
 void kernel_sgecp_2_0_lib4(int kmax, float *A, float *B)
 	{
 
@@ -365,10 +484,35 @@ void kernel_sgecp_2_0_lib4(int kmax, float *A, float *B)
 		B += 4;
 
 		}
-	
+
 	}
 
+// both A and B are aligned to 128-bit boundaries, 3 elements of A must be skipped
+void kernel_sgecpsc_2_3_lib4(int kmax, float *alphap, float *A0, int sda, float *B)
+	{
 
+	if(kmax<=0)
+		return;
+
+	const int bs = 4;
+	float alpha = alphap[0];
+	float *A1 = A0 + bs*sda;
+
+	int k;
+
+	for(k=0; k<kmax; k++)
+		{
+
+		B[0+bs*0] = A0[3+bs*0];
+		B[1+bs*0] = A1[0+bs*0];
+
+		A0 += 4;
+		A1 += 4;
+		B  += 4;
+
+		}
+
+	}
 
 // both A and B are aligned to 128-bit boundaries, 3 elements of A must be skipped
 void kernel_sgecp_2_3_lib4(int kmax, float *A0, int sda, float *B)
@@ -394,12 +538,35 @@ void kernel_sgecp_2_3_lib4(int kmax, float *A0, int sda, float *B)
 		B  += 4;
 
 		}
-	
+
 	}
 
+// 1
 
+void kernel_sgecpsc_1_0_lib4(int kmax, float *alphap, float *A, float *B)
+	{
 
-// both A and B are aligned 64-bit boundaries
+	if(kmax<=0)
+		return;
+
+	const int bs = 4;
+
+	float alpha = alphap[0];
+
+	int k;
+
+	for(k=0; k<kmax; k++)
+		{
+
+		B[0+bs*0] = alpha * A[0+bs*0];
+
+		A += 4;
+		B += 4;
+
+		}
+
+	}
+
 void kernel_sgecp_1_0_lib4(int kmax, float *A, float *B)
 	{
 
@@ -423,6 +590,8 @@ void kernel_sgecp_1_0_lib4(int kmax, float *A, float *B)
 	}
 
 
+
+// ---- tr
 
 // both A and B are aligned to 256-bit boundaries
 void kernel_strcp_l_4_0_lib4(int kmax, float *A, float *B)
@@ -452,7 +621,7 @@ void kernel_strcp_l_4_0_lib4(int kmax, float *A, float *B)
 		B += 4;
 
 		}
-	
+
 	// 3x3 triangle
 
 	B[1+bs*0] = A[1+bs*0];
@@ -499,7 +668,7 @@ void kernel_strcp_l_4_1_lib4(int kmax, float *A0, int sda, float *B)
 		B  += 4;
 
 		}
-	
+
 	// 3x3 triangle
 
 	B[1+0*bs] = A0[2+0*bs];
@@ -546,7 +715,7 @@ void kernel_strcp_l_4_2_lib4(int kmax, float *A0, int sda, float *B)
 		B  += 4;
 
 		}
-	
+
 	// 3x3 triangle}
 
 	B[1+bs*0] = A0[3+bs*0];
@@ -593,7 +762,7 @@ void kernel_strcp_l_4_3_lib4(int kmax, float *A0, int sda, float *B)
 		B  += 4;
 
 		}
-	
+
 	// 3x3 triangle
 
 	B[1+bs*0] = A1[0+bs*0];
@@ -636,7 +805,7 @@ void kernel_strcp_l_3_0_lib4(int kmax, float *A, float *B)
 		B += 4;
 
 		}
-	
+
 	// 2x2 triangle
 
 	B[1+bs*0] = A[1+bs*0];
@@ -678,7 +847,7 @@ void kernel_strcp_l_3_2_lib4(int kmax, float *A0, int sda, float *B)
 		B  += 4;
 
 		}
-	
+
 	// 2x2 triangle
 
 	B[1+bs*0] = A0[3+bs*0];
@@ -720,7 +889,7 @@ void kernel_strcp_l_3_3_lib4(int kmax, float *A0, int sda, float *B)
 		B  += 4;
 
 		}
-	
+
 	// 2x2 triangle
 
 	B[1+bs*0] = A1[0+bs*0];
@@ -758,7 +927,7 @@ void kernel_strcp_l_2_0_lib4(int kmax, float alpha, float *A, float *B)
 		B += 4;
 
 		}
-	
+
 	// 1x1 triangle
 
 	B[1+bs*0] = A[1+bs*0];
@@ -796,7 +965,7 @@ void kernel_strcp_l_2_3_lib4(int kmax, float *A0, int sda, float *B)
 		B  += 4;
 
 		}
-	
+
 	// 1x1 triangle
 
 	B[1+bs*0] = A1[0+bs*0];
@@ -834,7 +1003,7 @@ void kernel_strcp_l_1_0_lib4(int kmax, float *A, float *B)
 	}
 
 
-
+// --- add
 
 // both A and B are aligned to 256-bit boundaries
 void kernel_sgead_4_0_lib4(int kmax, float *alphap, float *A, float *B)

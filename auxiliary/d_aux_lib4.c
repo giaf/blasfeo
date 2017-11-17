@@ -26,6 +26,13 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+/*
+ * auxiliary functions for LA:HIGH_PERFORMANCE PS_4 (panel major)
+ *
+ * auxiliary/d_aux_lib*.c
+ *
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -43,610 +50,13 @@
 #include "../include/blasfeo_block_size.h"
 #include "../include/blasfeo_d_kernel.h"
 
-
-
-// copies a packed matrix into a packed matrix
-// TODO remove alha !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-void dgecp_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-
-	const int bs = 4;
-
-	int mna, ii;
-
-	int offA = offsetA%bs;
-	int offB = offsetB%bs;
-
-	// A at the beginning of the block
-	A -= offA;
-
-	// A at the beginning of the block
-	B -= offB;
-
-	// same alignment
-	if(offA==offB)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
-				{
-				if(m==1)
-					{
-					kernel_dgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
-					return;
-					}
-				else //if(m==2 && mna==3)
-					{
-					kernel_dgecp_2_0_lib4(0, n, alpha, A+offA, B+offB);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_dgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_dgecp_2_0_lib4(0, n, alpha, A+offA, B+offB);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_dgecp_3_0_lib4(0, n, alpha, A+offA, B+offB);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-		for(; ii<m-7; ii+=8)
-			{
-			kernel_dgecp_8_0_lib4(0, n, alpha, A, sda, B, sdb);
-			A += 8*sda;
-			B += 8*sdb;
-			}
-#endif
-		for(; ii<m-3; ii+=4)
-			{
-			kernel_dgecp_4_0_lib4(0, n, alpha, A, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(0, n, alpha, A, B);
-			else if(m-ii==2)
-				kernel_dgecp_2_0_lib4(0, n, alpha, A, B);
-			else // if(m-ii==3)
-				kernel_dgecp_3_0_lib4(0, n, alpha, A, B);
-			}
-		}
-	// skip one element of A
-	else if(offA==(offB+1)%bs)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
-				{
-				if(m==1)
-					{
-					kernel_dgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
-					return;
-					}
-				else //if(m==2 && mna==3)
-					{
-					kernel_dgecp_2_0_lib4(0, n, alpha, A+offA, B+offB);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_dgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
-				//A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_dgecp_2_3_lib4(0, n, alpha, A, sda, B+2);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_dgecp_3_2_lib4(0, n, alpha, A, sda, B+1);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-		for( ; ii<m-7; ii+=8)
-			{
-			kernel_dgecp_8_1_lib4(0, n, alpha, A, sda, B, sdb);
-			A += 8*sda;
-			B += 8*sdb;
-			}
-#endif
-		for( ; ii<m-3; ii+=4)
-			{
-			kernel_dgecp_4_1_lib4(0, n, alpha, A, sda, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(0, n, alpha, A+1, B);
-			else if(m-ii==2)
-				kernel_dgecp_2_0_lib4(0, n, alpha, A+1, B);
-			else // if(m-ii==3)
-				kernel_dgecp_3_0_lib4(0, n, alpha, A+1, B);
-			}
-		}
-	// skip 2 elements of A
-	else if(offA==(offB+2)%bs)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna)
-				{
-				if(m==1)
-					{
-					kernel_dgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
-					return;
-					}
-				else // if(m==2 && mna==3)
-					{
-					kernel_dgecp_2_3_lib4(0, n, alpha, A, sda, B+1);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_dgecp_1_0_lib4(0, n, alpha, A+1, B+3);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_dgecp_2_0_lib4(0, n, alpha, A, B+2);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_dgecp_3_3_lib4(0, n, alpha, A, sda, B+1);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-		for(; ii<m-7; ii+=8)
-			{
-			kernel_dgecp_8_2_lib4(0, n, alpha, A, sda, B, sdb);
-			A += 8*sda;
-			B += 8*sdb;
-			}
-#endif
-		for(; ii<m-3; ii+=4)
-			{
-			kernel_dgecp_4_2_lib4(0, n, alpha, A, sda, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(0, n, alpha, A+2, B);
-			else if(m-ii==2)
-				kernel_dgecp_2_0_lib4(0, n, alpha, A+2, B);
-			else // if(m-ii==3)
-				kernel_dgecp_3_2_lib4(0, n, alpha, A, sda, B);
-			}
-		}
-	// skip 3 elements of A
-	else // if(offA==(offB+3)%bs)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna)
-				{
-				if(m==1)
-					{
-					kernel_dgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
-					return;
-					}
-				else // if(m==2 && mna==3)
-					{
-					kernel_dgecp_2_0_lib4(0, n, alpha, A+offA, B+offB);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_dgecp_1_0_lib4(0, n, alpha, A+offA, B+offB);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_dgecp_2_0_lib4(0, n, alpha, A+offA, B+offB);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_dgecp_3_0_lib4(0, n, alpha, A+offA, B+offB);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-		for(; ii<m-7; ii+=8)
-			{
-			kernel_dgecp_8_3_lib4(0, n, alpha, A, sda, B, sdb);
-			A += 8*sda;
-			B += 8*sdb;
-			}
-#endif
-		for(; ii<m-3; ii+=4)
-			{
-			kernel_dgecp_4_3_lib4(0, n, alpha, A, sda, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(0, n, alpha, A+3, B);
-			else if(m-ii==2)
-				kernel_dgecp_2_3_lib4(0, n, alpha, A, sda, B);
-			else // if(m-ii==3)
-				kernel_dgecp_3_3_lib4(0, n, alpha, A, sda, B);
-			}
-		}
-
-	}
-
-
-
-// copies a lower triangular packed matrix into a lower triangular packed matrix
-void dtrcp_l_lib(int m, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb)
-	{
-
-	if(m<=0)
-		return;
-
-	int n = m;
-
-	const int bs = 4;
-
-	int mna, ii;
-
-	int offA = offsetA%bs;
-	int offB = offsetB%bs;
-
-	// A at the beginning of the block
-	A -= offA;
-
-	// A at the beginning of the block
-	B -= offB;
-
-	// same alignment
-	if(offA==offB)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
-				{
-				if(m==1)
-					{
-					kernel_dgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
-					return;
-					}
-				else //if(m==2 && mna==3)
-					{
-					kernel_dgecp_2_0_lib4(1, ii, alpha, A+offA, B+offB);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_dgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_dgecp_2_0_lib4(1, ii, alpha, A+offA, B+offB);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_dgecp_3_0_lib4(1, ii, alpha, A+offA, B+offB);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-		for(; ii<m-7; ii+=8)
-			{
-			kernel_dgecp_8_0_lib4(1, ii, alpha, A, sda, B, sdb);
-			A += 8*sda;
-			B += 8*sdb;
-			}
-#endif
-		for(; ii<m-3; ii+=4)
-			{
-			kernel_dgecp_4_0_lib4(1, ii, alpha, A, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(1, ii, alpha, A, B);
-			else if(m-ii==2)
-				kernel_dgecp_2_0_lib4(1, ii, alpha, A, B);
-			else // if(m-ii==3)
-				kernel_dgecp_3_0_lib4(1, ii, alpha, A, B);
-			}
-		}
-	// skip one element of A
-	else if(offA==(offB+1)%bs)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
-				{
-				if(m==1)
-					{
-					kernel_dgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
-					return;
-					}
-				else //if(m==2 && mna==3)
-					{
-					kernel_dgecp_2_0_lib4(1, ii, alpha, A+offA, B+offB);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_dgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
-				//A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_dgecp_2_3_lib4(1, ii, alpha, A, sda, B+2);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_dgecp_3_2_lib4(1, ii, alpha, A, sda, B+1);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-		for( ; ii<m-7; ii+=8)
-			{
-			kernel_dgecp_8_1_lib4(1, ii, alpha, A, sda, B, sdb);
-			A += 8*sda;
-			B += 8*sdb;
-			}
-#endif
-		for( ; ii<m-3; ii+=4)
-			{
-			kernel_dgecp_4_1_lib4(1, ii, alpha, A, sda, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(1, ii, alpha, A+1, B);
-			else if(m-ii==2)
-				kernel_dgecp_2_0_lib4(1, ii, alpha, A+1, B);
-			else // if(m-ii==3)
-				kernel_dgecp_3_0_lib4(1, ii, alpha, A+1, B);
-			}
-		}
-	// skip 2 elements of A
-	else if(offA==(offB+2)%bs)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna)
-				{
-				if(m==1)
-					{
-					kernel_dgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
-					return;
-					}
-				else // if(m==2 && mna==3)
-					{
-					kernel_dgecp_2_3_lib4(1, ii, alpha, A, sda, B+1);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_dgecp_1_0_lib4(1, ii, alpha, A+1, B+3);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_dgecp_2_0_lib4(1, ii, alpha, A, B+2);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_dgecp_3_3_lib4(1, ii, alpha, A, sda, B+1);
-				A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-		for(; ii<m-7; ii+=8)
-			{
-			kernel_dgecp_8_2_lib4(1, ii, alpha, A, sda, B, sdb);
-			A += 8*sda;
-			B += 8*sdb;
-			}
-#endif
-		for(; ii<m-3; ii+=4)
-			{
-			kernel_dgecp_4_2_lib4(1, ii, alpha, A, sda, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(1, ii, alpha, A+2, B);
-			else if(m-ii==2)
-				kernel_dgecp_2_0_lib4(1, ii, alpha, A+2, B);
-			else // if(m-ii==3)
-				kernel_dgecp_3_2_lib4(1, ii, alpha, A, sda, B);
-			}
-		}
-	// skip 3 elements of A
-	else // if(offA==(offB+3)%bs)
-		{
-		ii = 0;
-		// clean up at the beginning
-		mna = (4-offB)%bs;
-		if(mna>0)
-			{
-			if(m<mna)
-				{
-				if(m==1)
-					{
-					kernel_dgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
-					return;
-					}
-				else // if(m==2 && mna==3)
-					{
-					kernel_dgecp_2_0_lib4(1, ii, alpha, A+offA, B+offB);
-					return;
-					}
-				}
-			if(mna==1)
-				{
-				kernel_dgecp_1_0_lib4(1, ii, alpha, A+offA, B+offB);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 1;
-				}
-			else if(mna==2)
-				{
-				kernel_dgecp_2_0_lib4(1, ii, alpha, A+offA, B+offB);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 2;
-				}
-			else // if(mna==3)
-				{
-				kernel_dgecp_3_0_lib4(1, ii, alpha, A+offA, B+offB);
-				// A += 4*sda;
-				B += 4*sdb;
-				ii += 3;
-				}
-			}
-		// main loop
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-		for(; ii<m-7; ii+=8)
-			{
-			kernel_dgecp_8_3_lib4(1, ii, alpha, A, sda, B, sdb);
-			A += 8*sda;
-			B += 8*sdb;
-			}
-#endif
-		for(; ii<m-3; ii+=4)
-			{
-			kernel_dgecp_4_3_lib4(1, ii, alpha, A, sda, B);
-			A += 4*sda;
-			B += 4*sdb;
-			}
-		// clean up at the end
-		if(ii<m)
-			{
-			if(m-ii==1)
-				kernel_dgecp_1_0_lib4(1, ii, alpha, A+3, B);
-			else if(m-ii==2)
-				kernel_dgecp_2_3_lib4(1, ii, alpha, A, sda, B);
-			else // if(m-ii==3)
-				kernel_dgecp_3_3_lib4(1, ii, alpha, A, sda, B);
-			}
-		}
-
-	}
+/*
+ * Auxiliary functions for PS:4 (panel-major)
+ *
+ * auxiliary/d_aux_lib4.c
+ * TOFIX: move inside str* interface
+ *
+ */
 
 
 
@@ -973,6 +383,7 @@ void dvecad_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_st
 	}
 
 
+// --------- Transpose
 
 // transpose general matrix; m and n are referred to the original matrix
 void dgetr_lib(int m, int n, double alpha, int offsetA, double *pA, int sda, int offsetC, double *pC, int sdc)
@@ -1000,6 +411,7 @@ C =
  x x x x x
 
 */
+
 
 	if(m<=0 || n<=0)
 		return;
@@ -1914,10 +1326,12 @@ void dcolex_lib(int kmax, int offset, double *pD, int sdd, double *x)
 			{
 			x[ll] = pD[ll];
 			}
+
 		pD += kna + bs*(sdd-1);
 		x  += kna;
 		kmax -= kna;
 		}
+
 	for(jj=0; jj<kmax-3; jj+=4)
 		{
 		x[jj+0] = pD[jj*sdd+0];
@@ -2140,11 +1554,10 @@ void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y)
 
 
 
-/****************************
-* struct interface
-****************************/
-
-
+/*
+ * STRMAT interface (General to specific interface)
+ *
+ */
 
 #if defined(LA_HIGH_PERFORMANCE)
 
@@ -2237,6 +1650,12 @@ void d_create_strvec(int m, struct d_strvec *sa, void *memory)
 // convert a matrix into a matrix structure
 void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj)
 	{
+
+	if (m==1)
+		{
+		return;
+		}
+
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
@@ -2992,7 +2411,6 @@ void dcolex_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strve
 
 
 
-
 // insert as vector as a column
 void dcolin_libstr(int kmax, struct d_strvec *sx, int xi, struct d_strmat *sA, int ai, int aj)
 	{
@@ -3003,7 +2421,6 @@ void dcolin_libstr(int kmax, struct d_strvec *sx, int xi, struct d_strmat *sA, i
 	dcolin_lib(kmax, x, ai%bs, pA, sda);
 	return;
 	}
-
 
 
 
@@ -3036,14 +2453,1241 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 
 
 // copy a generic strmat into a generic strmat
-void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
+void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj)
+	{
+	const int bs = 4;
+	const double alpha = 1.0;
+
+	// get submatrices
+	int sda = sA->cn;
+	double *A = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	int sdb = sB->cn;
+	double *B = sB->pA + bi/bs*bs*sdb + bi%bs + bj*bs;
+
+	if(m<=0 || n<=0)
+		return;
+
+	int mna, ii;
+
+	// compute offset from closest panels
+	int offA = ai%bs;
+	int offB = bi%bs;
+
+	// A at the beginning of the block
+	A -= offA;
+	// A at the beginning of the block
+	B -= offB;
+
+	// same alignment
+	if(offA==offB)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(0, n, alpha, A+offA, B+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_0_lib4(0, n, alpha, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_0_lib4(0, n, alpha, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_0_lib4(0, n, alpha, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecp_8_0_lib4(0, n, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecp_4_0_lib4(0, n, A, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_0_lib4(0, n, alpha, A, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_0_lib4(0, n, alpha, A, B);
+			}
+		}
+	// skip one element of A
+	else if(offA==(offB+1)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(0, n, alpha, A+offA, B+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_0_lib4(0, n, alpha, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A+offA, B+offB);
+				//A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_3_lib4(0, n, alpha, A, sda, B+2);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_2_lib4(0, n, alpha, A, sda, B+1);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for( ; ii<m-7; ii+=8)
+			{
+			kernel_dgecpsc_8_1_lib4(0, n, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for( ; ii<m-3; ii+=4)
+			{
+			kernel_dgecpsc_4_1_lib4(0, n, alpha, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A+1, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_0_lib4(0, n, alpha, A+1, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_0_lib4(0, n, alpha, A+1, B);
+			}
+		}
+	// skip 2 elements of A
+	else if(offA==(offB+2)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(0, n, alpha, A+offA, B+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_3_lib4(0, n, alpha, A, sda, B+1);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A+1, B+3);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_0_lib4(0, n, alpha, A, B+2);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_3_lib4(0, n, alpha, A, sda, B+1);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecpsc_8_2_lib4(0, n, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecpsc_4_2_lib4(0, n, alpha, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A+2, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_0_lib4(0, n, alpha, A+2, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_2_lib4(0, n, alpha, A, sda, B);
+			}
+		}
+	// skip 3 elements of A
+	else // if(offA==(offB+3)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(0, n, alpha, A+offA, B+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_0_lib4(0, n, alpha, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_0_lib4(0, n, alpha, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_0_lib4(0, n, alpha, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecpsc_8_3_lib4(0, n, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecpsc_4_3_lib4(0, n, alpha, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A+3, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_3_lib4(0, n, alpha, A, sda, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_3_lib4(0, n, alpha, A, sda, B);
+			}
+		}
+
+	return;
+	}
+
+
+
+// copy a lower triangular strmat into a lower triangular strmat
+void dtrcp_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj)
+	{
+
+	const int bs = 4;
+	const double alpha = 1;
+
+	// get submatrices
+	int sda = sA->cn;
+	double *A = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	int sdb = sB->cn;
+	double *B = sB->pA + bi/bs*bs*sdb + bi%bs + bj*bs;
+
+	if(m<=0)
+		return;
+
+	int n = m;
+
+	int mna, ii;
+
+	int offA = ai%bs;
+	int offB = bi%bs;
+
+	// A at the beginning of the block
+	A -= offA;
+
+	// A at the beginning of the block
+	B -= offB;
+
+	// same alignment
+	if(offA==offB)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+offA, B+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_0_lib4(1, ii, alpha, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_0_lib4(1, ii, alpha, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_0_lib4(1, ii, alpha, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecp_8_0_lib4(1, ii, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecp_4_0_lib4(1, ii, A, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_0_lib4(1, ii, alpha, A, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_0_lib4(1, ii, alpha, A, B);
+			}
+		}
+	// skip one element of A
+	else if(offA==(offB+1)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+offA, B+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_0_lib4(1, ii, alpha, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+offA, B+offB);
+				//A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_3_lib4(1, ii, alpha, A, sda, B+2);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_2_lib4(1, ii, alpha, A, sda, B+1);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for( ; ii<m-7; ii+=8)
+			{
+			kernel_dgecpsc_8_1_lib4(1, ii, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for( ; ii<m-3; ii+=4)
+			{
+			kernel_dgecpsc_4_1_lib4(1, ii, alpha, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+1, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_0_lib4(1, ii, alpha, A+1, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_0_lib4(1, ii, alpha, A+1, B);
+			}
+		}
+	// skip 2 elements of A
+	else if(offA==(offB+2)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+offA, B+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_3_lib4(1, ii, alpha, A, sda, B+1);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+1, B+3);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_0_lib4(1, ii, alpha, A, B+2);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_3_lib4(1, ii, alpha, A, sda, B+1);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecpsc_8_2_lib4(1, ii, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecpsc_4_2_lib4(1, ii, alpha, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+2, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_0_lib4(1, ii, alpha, A+2, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_2_lib4(1, ii, alpha, A, sda, B);
+			}
+		}
+	// skip 3 elements of A
+	else // if(offA==(offB+3)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+offA, B+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_0_lib4(1, ii, alpha, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_0_lib4(1, ii, alpha, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_0_lib4(1, ii, alpha, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecpsc_8_3_lib4(1, ii, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecpsc_4_3_lib4(1, ii, alpha, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+3, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_3_lib4(1, ii, alpha, A, sda, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_3_lib4(1, ii, alpha, A, sda, B);
+			}
+		}
+
+	/* } */
+	return;
+	}
+
+
+
+// copy and scale a generic strmat into a generic strmat
+void dgecpsc_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj)
+	{
+	const int bs = 4;
+
+	// extract dimension
+	int sda = sA->cn;
+	int sdb = sB->cn;
+
+	// extract submatrix
+	double *A = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	double *B = sB->pA + bi/bs*bs*sdb + bi%bs + bj*bs;
+
+	if(m<=0 || n<=0)
+		return;
+
+	int mna, ii;
+
+	int offA = ai%bs;
+	int offB = bi%bs;
+
+	// A at the beginning of the block
+	A -= offA;
+
+	// A at the beginning of the block
+	B -= offB;
+
+	// same alignment
+	if(offA==offB)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(0, n, alpha, A+offA, B+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_0_lib4(0, n, alpha, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_0_lib4(0, n, alpha, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_0_lib4(0, n, alpha, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecpsc_8_0_lib4(0, n, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecpsc_4_0_lib4(0, n, alpha, A, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_0_lib4(0, n, alpha, A, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_0_lib4(0, n, alpha, A, B);
+			}
+		}
+	// skip one element of A
+	else if(offA==(offB+1)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(0, n, alpha, A+offA, B+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_0_lib4(0, n, alpha, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A+offA, B+offB);
+				//A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_3_lib4(0, n, alpha, A, sda, B+2);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_2_lib4(0, n, alpha, A, sda, B+1);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for( ; ii<m-7; ii+=8)
+			{
+			kernel_dgecpsc_8_1_lib4(0, n, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for( ; ii<m-3; ii+=4)
+			{
+			kernel_dgecpsc_4_1_lib4(0, n, alpha, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A+1, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_0_lib4(0, n, alpha, A+1, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_0_lib4(0, n, alpha, A+1, B);
+			}
+		}
+	// skip 2 elements of A
+	else if(offA==(offB+2)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(0, n, alpha, A+offA, B+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_3_lib4(0, n, alpha, A, sda, B+1);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A+1, B+3);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_0_lib4(0, n, alpha, A, B+2);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_3_lib4(0, n, alpha, A, sda, B+1);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecpsc_8_2_lib4(0, n, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecpsc_4_2_lib4(0, n, alpha, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A+2, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_0_lib4(0, n, alpha, A+2, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_2_lib4(0, n, alpha, A, sda, B);
+			}
+		}
+	// skip 3 elements of A
+	else // if(offA==(offB+3)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(0, n, alpha, A+offA, B+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_0_lib4(0, n, alpha, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_0_lib4(0, n, alpha, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_0_lib4(0, n, alpha, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecpsc_8_3_lib4(0, n, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecpsc_4_3_lib4(0, n, alpha, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(0, n, alpha, A+3, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_3_lib4(0, n, alpha, A, sda, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_3_lib4(0, n, alpha, A, sda, B);
+			}
+		}
+	return;
+	}
+
+
+
+// copy  and scale a lower triangular strmat into a lower triangular strmat
+void dtrcpsc_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj)
 	{
 	const int bs = 4;
 	int sda = sA->cn;
-	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	int sdc = sC->cn;
-	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	dgecp_lib(m, n, 1.0, ai%bs, pA, sda, ci%bs, pC, sdc);
+	double *A = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	int sdb = sB->cn;
+	double *B = sB->pA + bi/bs*bs*sdb + bi%bs + bj*bs;
+
+	/* dtrcp_l_lib(m, 1.0, ai%bs, pA, sda, ci%bs, pC, sdc); */
+	/* // copies a lower triangular packed matrix into a lower triangular packed matrix */
+	/* void dtrcp_l_lib(int m, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb) */
+	/* { */
+
+	if(m<=0)
+		return;
+
+	int n = m;
+
+	int mna, ii;
+
+	int offA = ai%bs;
+	int offB = bi%bs;
+
+	// A at the beginning of the block
+	A -= offA;
+
+	// A at the beginning of the block
+	B -= offB;
+
+	// same alignment
+	if(offA==offB)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+offA, B+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_0_lib4(1, ii, alpha, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_0_lib4(1, ii, alpha, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_0_lib4(1, ii, alpha, A+offA, B+offB);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecpsc_8_0_lib4(1, ii, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecpsc_4_0_lib4(1, ii, alpha, A, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_0_lib4(1, ii, alpha, A, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_0_lib4(1, ii, alpha, A, B);
+			}
+		}
+	// skip one element of A
+	else if(offA==(offB+1)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna) // mna<=3  ==>  m = { 1, 2 }
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+offA, B+offB);
+					return;
+					}
+				else //if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_0_lib4(1, ii, alpha, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+offA, B+offB);
+				//A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_3_lib4(1, ii, alpha, A, sda, B+2);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_2_lib4(1, ii, alpha, A, sda, B+1);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for( ; ii<m-7; ii+=8)
+			{
+			kernel_dgecpsc_8_1_lib4(1, ii, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for( ; ii<m-3; ii+=4)
+			{
+			kernel_dgecpsc_4_1_lib4(1, ii, alpha, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+1, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_0_lib4(1, ii, alpha, A+1, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_0_lib4(1, ii, alpha, A+1, B);
+			}
+		}
+	// skip 2 elements of A
+	else if(offA==(offB+2)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+offA, B+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_3_lib4(1, ii, alpha, A, sda, B+1);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+1, B+3);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_0_lib4(1, ii, alpha, A, B+2);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_3_lib4(1, ii, alpha, A, sda, B+1);
+				A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecpsc_8_2_lib4(1, ii, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecpsc_4_2_lib4(1, ii, alpha, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+2, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_0_lib4(1, ii, alpha, A+2, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_2_lib4(1, ii, alpha, A, sda, B);
+			}
+		}
+	// skip 3 elements of A
+	else // if(offA==(offB+3)%bs)
+		{
+		ii = 0;
+		// clean up at the beginning
+		mna = (4-offB)%bs;
+		if(mna>0)
+			{
+			if(m<mna)
+				{
+				if(m==1)
+					{
+					kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+offA, B+offB);
+					return;
+					}
+				else // if(m==2 && mna==3)
+					{
+					kernel_dgecpsc_2_0_lib4(1, ii, alpha, A+offA, B+offB);
+					return;
+					}
+				}
+			if(mna==1)
+				{
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 1;
+				}
+			else if(mna==2)
+				{
+				kernel_dgecpsc_2_0_lib4(1, ii, alpha, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 2;
+				}
+			else // if(mna==3)
+				{
+				kernel_dgecpsc_3_0_lib4(1, ii, alpha, A+offA, B+offB);
+				// A += 4*sda;
+				B += 4*sdb;
+				ii += 3;
+				}
+			}
+		// main loop
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_dgecpsc_8_3_lib4(1, ii, alpha, A, sda, B, sdb);
+			A += 8*sda;
+			B += 8*sdb;
+			}
+#endif
+		for(; ii<m-3; ii+=4)
+			{
+			kernel_dgecpsc_4_3_lib4(1, ii, alpha, A, sda, B);
+			A += 4*sda;
+			B += 4*sdb;
+			}
+		// clean up at the end
+		if(ii<m)
+			{
+			if(m-ii==1)
+				kernel_dgecpsc_1_0_lib4(1, ii, alpha, A+3, B);
+			else if(m-ii==2)
+				kernel_dgecpsc_2_3_lib4(1, ii, alpha, A, sda, B);
+			else // if(m-ii==3)
+				kernel_dgecpsc_3_3_lib4(1, ii, alpha, A, sda, B);
+			}
+		}
+
+	/* } */
 	return;
 	}
 
@@ -3052,11 +3696,15 @@ void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_st
 // scale a generic strmat
 void dgesc_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj)
 	{
-	const int bs = 4;
-	int sda = sA->cn;
-	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	dgecp_lib(m, n, alpha, ai%bs, pA, sda, ai%bs, pA, sda);
-	return;
+	dgecpsc_libstr(m, n, alpha, sA, ai, aj, sA, ai, aj);
+	}
+
+
+
+// scale a triangular strmat
+void dtrsc_l_libstr(int m, double alpha, struct d_strmat *sA, int ai, int aj)
+	{
+	dtrcpsc_l_libstr(m, alpha, sA, ai, aj, sA, ai, aj);
 	}
 
 
@@ -3101,20 +3749,6 @@ void dvecsc_libstr(int m, double alpha, struct d_strvec *sa, int ai)
 		{
 		pa[ii+0] *= alpha;
 		}
-	return;
-	}
-
-
-
-// copy a lower triangular strmat into a lower triangular strmat
-void dtrcp_l_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
-	{
-	const int bs = 4;
-	int sda = sA->cn;
-	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	int sdc = sC->cn;
-	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	dtrcp_l_lib(m, 1.0, ai%bs, pA, sda, ci%bs, pC, sdc);
 	return;
 	}
 
@@ -3647,3 +4281,4 @@ void dvecpei_libstr(int kmax, int *ipiv, struct d_strvec *sx, int xi)
 #error : wrong LA choice
 
 #endif
+

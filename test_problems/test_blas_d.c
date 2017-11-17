@@ -69,7 +69,7 @@ void omp_set_num_threads(int num_threads);
 
 int main()
 	{
-		
+
 #if defined(REF_BLAS_OPENBLAS)
 	openblas_set_num_threads(1);
 #endif
@@ -119,7 +119,7 @@ int main()
 	const float flops_max = 2;
 	printf("Testing BLAS version for generic scalar instruction set: theoretical peak %5.1f Gflops ???\n", flops_max*GHz_max);
 #endif
-	
+
 //	FILE *f;
 //	f = fopen("./test_problems/results/test_blas.m", "w"); // a
 
@@ -150,23 +150,23 @@ int main()
 //	fprintf(f, "\n");
 
 //	fprintf(f, "B = [\n");
-	
+
 
 
 	int i, j, rep, ll;
-	
+
 	const int bsd = D_PS;
 	const int ncd = D_NC;
 
 /*	int info = 0;*/
-	
+
 	printf("\nn\t  dgemm_blasfeo\t  dgemm_blas\n");
 	printf("\nn\t Gflops\t    %%\t Gflops\n\n");
-	
+
 #if 1
 	int nn[] = {4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 148, 152, 156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224, 228, 232, 236, 240, 244, 248, 252, 256, 260, 264, 268, 272, 276, 280, 284, 288, 292, 296, 300, 304, 308, 312, 316, 320, 324, 328, 332, 336, 340, 344, 348, 352, 356, 360, 364, 368, 372, 376, 380, 384, 388, 392, 396, 400, 404, 408, 412, 416, 420, 424, 428, 432, 436, 440, 444, 448, 452, 456, 460, 500, 550, 600, 650, 700};
 	int nnrep[] = {10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 400, 400, 400, 400, 400, 200, 200, 200, 200, 200, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20, 20, 20, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 4, 4, 4, 4, 4};
-	
+
 //	for(ll=0; ll<24; ll++)
 	for(ll=0; ll<75; ll++)
 //	for(ll=0; ll<115; ll++)
@@ -183,7 +183,7 @@ int main()
 
 #else
 	int nn[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
-	
+
 	for(ll=0; ll<24; ll++)
 
 		{
@@ -206,16 +206,16 @@ int main()
 		int i_t;
 		double d_1 = 1;
 		double d_0 = 0;
-	
+
 		for(i=0; i<n*n; i++)
 			A[i] = i;
-	
+
 		for(i=0; i<n; i++)
 			B[i*(n+1)] = 1;
-	
+
 		for(i=0; i<n*n; i++)
 			M[i] = 1;
-	
+
 		int n2 = n*n;
 		double *B2; d_zeros(&B2, n, n);
 		for(i=0; i<n*n; i++)
@@ -223,9 +223,9 @@ int main()
 		for(i=0; i<n; i++)
 			B2[i*(n+1)] = 1;
 
-		int pnd = ((n+bsd-1)/bsd)*bsd;	
-		int cnd = ((n+ncd-1)/ncd)*ncd;	
-		int cnd2 = 2*((n+ncd-1)/ncd)*ncd;	
+		int pnd = ((n+bsd-1)/bsd)*bsd;
+		int cnd = ((n+ncd-1)/ncd)*ncd;
+		int cnd2 = 2*((n+ncd-1)/ncd)*ncd;
 
 		double *x; d_zeros_align(&x, pnd, 1);
 		double *y; d_zeros_align(&y, pnd, 1);
@@ -312,12 +312,12 @@ int main()
 //			dsyrk_dpotrf_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd, diag);
 //			dsyrk_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd);
 //			dpotrf_nt_l_lib(n, n, pD, cnd, pD, cnd, diag);
-//			dgetrf_nn_nopivot_lib(n, n, pB, cnd, pB, cnd, diag);
-//			dgetrf_nn_lib(n, n, pB, cnd, pB, cnd, diag, ipiv);
+//			dgetrf_nn_nopivot_lib(n, n, pB, cnd, pB, cnd, diag); //TODO
+//			dgetrf_nn_lib(n, n, pB, cnd, pB, cnd, diag, ipiv); //TODO
 //			dtrsm_nn_ll_one_lib(n, n, pD, cnd, pB, cnd, pB, cnd);
 //			dtrsm_nn_lu_inv_lib(n, n, pD, cnd, diag, pB, cnd, pB, cnd);
 			}
-	
+
 		gettimeofday(&tv1, NULL); // stop
 
 		for(rep=0; rep<nrep; rep++)
@@ -372,7 +372,7 @@ int main()
 		for(rep=0; rep<nrep; rep++)
 			{
 #if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
-//			dgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
+			dgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
 //			dpotrf_(&c_l, &n, B2, &n, &info);
 //			dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
 //			dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
@@ -456,7 +456,7 @@ int main()
 		int_free(ipiv);
 		free(qr_work);
 		free(lq_work);
-		
+
 		d_free_strmat(&sA);
 		d_free_strmat(&sB);
 		d_free_strmat(&sB2);
@@ -476,5 +476,5 @@ int main()
 //	fclose(f);
 
 	return 0;
-	
+
 	}

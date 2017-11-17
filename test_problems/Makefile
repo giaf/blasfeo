@@ -26,42 +26,94 @@
 #                                                                                                 #
 ###################################################################################################
 
+# ----------- Include
 include ../Makefile.rule
 
+BINARY_DIR = build/$(LA)/$(TARGET)
+
+# ----------- Envs
+
+LIBS = -L. $(BINARY_DIR)/libblasfeo.a
+# SHARED_LIBS = -L. $(BINARY_DIR)/libblasfeo.so
+SHARED_LIBS = -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
+
 ifeq ($(REF_BLAS), 0)
-LIBS = -lm 
+LIBS += -lm
+SHARED_LIBS += -lm
 endif
+
 ifeq ($(REF_BLAS), OPENBLAS)
-LIBS = /opt/openblas/lib/libopenblas.a -pthread -lgfortran -lm
+LIBS += /opt/openblas/lib/libopenblas.a -pthread -lgfortran -lm
 endif
+
 ifeq ($(REF_BLAS), BLIS)
-LIBS = /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -lgfortran -lm -fopenmp
+LIBS += /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -lgfortran -lm -fopenmp
 endif
+
 ifeq ($(REF_BLAS), NETLIB)
-LIBS = /opt/netlib/liblapack.a /opt/netlib/libblas.a -lgfortran -lm
+LIBS += /opt/netlib/liblapack.a /opt/netlib/libblas.a -lgfortran -lm
 endif
+
 ifeq ($(REF_BLAS), MKL)
-LIBS = -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/mkl/lib/intel64/libmkl_core.a /opt/intel/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm
+LIBS += -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a
+		/opt/intel/mkl/lib/intel64/libmkl_core.a /opt/intel/mkl/lib/intel64/libmkl_sequential.a
+		-Wl,--end-group -ldl -lpthread -lm
 endif
+
 ifeq ($(REF_BLAS), ATLAS)
-LIBS = /opt/atlas/lib/liblapack.a /opt/atlas/lib/libcblas.a /opt/atlas/lib/libf77blas.a /opt/atlas/lib/libatlas.a -lgfortran -lm
+LIBS += /opt/atlas/lib/liblapack.a /opt/atlas/lib/libcblas.a /opt/atlas/lib/libf77blas.a
+		/opt/atlas/lib/libatlas.a -lgfortran -lm
 endif
 
 #ifneq ($(NUM_THREAD), 1)
-#LIBS += -pthread 
+#LIBS += -pthread
 #endif
 
-OBJS_TEST = test_blas_d.o
-#OBJS_TEST = test_blas_s.o
-#OBJS_TEST = test_d_strmat.o
-#OBJS_TEST = test_s_strmat.o
-#OBJS_TEST = kernel_assembly.o test_assembly.o
+OBJS =
+# OBJS = test_*.o
+# OBJS = test_d_strmat.o
+# OBJS = test_s_strmat.o
+# OBJS = kernel_assembly.o test_assembly.o
 
-obj: $(OBJS_TEST)
-	$(CC) -o test.out $(OBJS_TEST) -L. libblasfeo.a $(LIBS) #-pg
+BLAS_OBJS =
+BLAS_OBJS += test_blas_d.o
+BLAS_OBJS += test_blas_s.o
+
+
+AUX_OBJS =
+AUX_OBJS += test_aux_s.o
+AUX_OBJS += test_aux_d.o
+
+
+%.o: %.c
+	# build obj
+	#
+	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
+	$(CC) $(CFLAGS) -o $(BINARY_DIR)/$@.out $(BINARY_DIR)/$@ $(LIBS)
+	#
+
+# ----------- Targets
+
+default: obj
+
+obj: aux blas
+
+bin_dir:
+	# create bin folder if not existent
+	mkdir -p $(BINARY_DIR)/
+
+gen: bin_dir $(OBJS)
+
+aux: gen $(AUX_OBJS)
+
+blas: gen $(BLAS_OBJS)
+
+run_aux_short:
+	./$(BINARY_DIR)/test_aux_d.o.out
+	./$(BINARY_DIR)/test_aux_s.o.out
+
+run: run_aux_short
+	./$(BINARY_DIR)/test_blas_d.out
 
 clean:
-	rm -f *.o
-	rm -f test.out
-	rm -f libblasfeo.a
-
+	rm -rf build/*

@@ -28,7 +28,7 @@
 
 include ../Makefile.rule
 
-OBJS = 
+OBJS =
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 
@@ -87,38 +87,10 @@ ifeq ($(EXT_DEP), 1)
 OBJS += d_aux_ext_dep_lib.o
 OBJS += s_aux_ext_dep_lib.o
 OBJS += v_aux_ext_dep_lib.o
-OBJS += i_aux_ext_dep_lib.o 
+OBJS += i_aux_ext_dep_lib.o
 endif
 
 obj: $(OBJS)
-ifeq ($(TARGET), X64_INTEL_HASWELL)
-	( cd avx2; $(MAKE) obj)
-	( cd avx; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-	( cd avx; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), X64_INTEL_CORE)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), X64_AMD_BULLDOZER)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-	( cd c99; $(MAKE) obj)
-endif
-ifeq ($(TARGET), GENERIC)
-	( cd c99; $(MAKE) obj)
-endif
-
 
 clean:
 	rm -f *.o
-	make -C avx2 clean
-	make -C avx clean
-	make -C c99 clean

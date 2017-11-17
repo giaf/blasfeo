@@ -108,7 +108,7 @@ void d_print_mat(int m, int n, double *A, int lda)
 		printf("\n");
 		}
 	printf("\n");
-	}	
+	}
 
 
 
@@ -125,7 +125,7 @@ void d_print_tran_mat(int row, int col, double *A, int lda)
 		printf("\n");
 		}
 	printf("\n");
-	}	
+	}
 
 
 
@@ -142,7 +142,7 @@ void d_print_to_file_mat(FILE *file, int row, int col, double *A, int lda)
 		fprintf(file, "\n");
 		}
 	fprintf(file, "\n");
-	}	
+	}
 
 
 
@@ -159,7 +159,7 @@ void d_print_tran_to_file_mat(FILE *file, int row, int col, double *A, int lda)
 		fprintf(file, "\n");
 		}
 	fprintf(file, "\n");
-	}	
+	}
 
 
 
@@ -176,7 +176,7 @@ void d_print_e_mat(int m, int n, double *A, int lda)
 		printf("\n");
 		}
 	printf("\n");
-	}	
+	}
 
 
 
@@ -193,7 +193,7 @@ void d_print_e_tran_mat(int row, int col, double *A, int lda)
 		printf("\n");
 		}
 	printf("\n");
-	}	
+	}
 
 
 

@@ -26,25 +26,43 @@
 #                                                                                                 #
 ###################################################################################################
 
-# Target architecture
-# X64_INTEL_HASWELL : x86_64 architecture with AVX2 and FMA ISA (64 bit OS) code optimized for Intel Haswell and Intel Skylake architectures.
-# X64_INTEL_SANDY_BRIDGE : x86_64 architecture with AVX ISA (64 bit OS) code optimized for Intel Sandy-Bridge architecture.
-# X64_INTEL_CORE : x86_64 architecture with SSE3 (64 bit OS) code optimized for Intel Core archiecture.
-# X64_AMD_BULLDOZER : x86_64 architecture with AVX and FMA ISA (64 bit OS) code optimized for AMD Bulldozer.
-# ARMV7A_ARM_CORTEX_A15 : ARMv7A architecture with NEON-VFPv4 ISA (32 bit OS) code optimized for ARM Cortex A15.
+# Target architecture list
+
+# X64_INTEL_HASWELL: x86_64 architecture with AVX2 and FMA ISA (64 bit OS)
+# code optimized for Intel Haswell and Intel Skylake architectures.
+#
+# X64_INTEL_SANDY_BRIDGE : x86_64 architecture with AVX ISA (64 bit OS)
+# code optimized for Intel Sandy-Bridge architecture.
+#
+# X64_INTEL_CORE : x86_64 architecture with SSE3 (64 bit OS)
+# code optimized for Intel Core archiecture.
+#
+# X64_AMD_BULLDOZER : x86_64 architecture with AVX and FMA ISA (64 bit OS)
+# code optimized for AMD Bulldozer.
+#
+# ARMV7A_ARM_CORTEX_A15 : ARMv7A architecture with NEON-VFPv4 ISA (32 bit OS)
+# code optimized for ARM Cortex A15.
+#
+# ARMV8A_ARM_CORTEX_A57
 # GENERIC : generic c99 code
-TARGET = X64_INTEL_HASWELL
-#TARGET = X64_INTEL_SANDY_BRIDGE
-#TARGET = X64_INTEL_CORE
-#TARGET = X64_AMD_BULLDOZER
-#TARGET = ARMV8A_ARM_CORTEX_A57
-#TARGET = ARMV7A_ARM_CORTEX_A15
-#TARGET = GENERIC
+
+# Select target architecture
+
+# TARGET = X64_INTEL_HASWELL
+TARGET = X64_INTEL_SANDY_BRIDGE
+# TARGET = X64_INTEL_CORE
+#
+# TARGET = X64_AMD_BULLDOZER
+#
+# TARGET = ARMV8A_ARM_CORTEX_A57
+# TARGET = ARMV7A_ARM_CORTEX_A15
+#
+# TARGET = GENERIC
 
 # Linear Algebra library
 LA = HIGH_PERFORMANCE
-#LA = REFERENCE
-#LA = BLAS
+# LA = REFERENCE
+# LA = BLAS
 
 # BLAS and LAPACK version (for LA=BLAS)
 REF_BLAS = 0
@@ -70,24 +88,26 @@ endif
 ifeq ($(UNAME_S),Darwin)
     OS = MAC
 endif
-#OS = LINUX
-#OS = MAC
-#OS = WINDOWS
+
+# OS = LINUX
+# OS = MAC
+# OS = WINDOWS
 
 # C Compiler
 CC = gcc
-#CC = clang
-#CC = x86_64-w64-mingw32-gcc
+# CC = clang
+# CC = x86_64-w64-mingw32-gcc
 
 # Installation directory
 PREFIX = /opt
 
-# Macro level (code size vs performance in assembly kernels): 0 (no macro), 1 (all macro but gemm kernel), 2 (all macro)
+# Macro level (code size vs performance in assembly kernels):
+# 0 (no macro), 1 (all macro but gemm kernel), 2 (all macro)
 MACRO_LEVEL = 0
 
 # compiler / assembler / linker flags
-CFLAGS  = 
-ASFLAGS = 
+CFLAGS  =
+ASFLAGS =
 LDFLAGS =
 
 # Optimization flags
@@ -107,6 +127,8 @@ endif
 ifeq ($(LA), BLAS)
 CFLAGS  += -DLA_BLAS
 endif
+
+CFLAGS  += -DLA=$(LA)
 
 ifeq ($(RUNTIME_CHECKS), 1)
 CFLAGS += -DDIM_CHECK
@@ -137,7 +159,7 @@ ASFLAGS += -DOS_WINDOWS
 endif
 
 ifeq ($(REF_BLAS), 0)
-CFLAGS  += 
+CFLAGS  +=
 endif
 ifeq ($(REF_BLAS), OPENBLAS)
 CFLAGS  += -DREF_BLAS_OPENBLAS -I/opt/openblas/include
@@ -154,6 +176,8 @@ endif
 ifeq ($(REF_BLAS), ATLAS)
 CFLAGS  += -DREF_BLAS_ATLAS
 endif
+
+CFLAGS  += -DREF_BLAS=$(REF_BLAS)
 
 # Architecture-specific flags
 ifeq ($(TARGET), X64_INTEL_HASWELL)
@@ -180,4 +204,4 @@ ifeq ($(TARGET), GENERIC)
 CFLAGS  += -DTARGET_GENERIC
 endif
 
-
+CFLAGS  += -DTARGET=$(TARGET)
