@@ -41,10 +41,9 @@ OBJS += \
 		kernel_dgetr_lib4.o \
 		\
 		kernel_sgemm_diag_lib8.o \
-		kernel_sgecp_lib8.o \
 		kernel_sgetr_lib8.o \
 		kernel_sgead_lib8.o \
-		kernel_sgesc_lib8.o \
+		kernel_sgecpsc_lib8.o \
 		kernel_sgemv_8_lib8.o \
 		kernel_sgemv_4_lib8.o \
 
@@ -69,11 +68,10 @@ OBJS += \
 		kernel_sgemm_8x8_lib8.o \
 		kernel_sgemm_8x4_lib8.o \
 		kernel_sgemm_diag_lib8.o \
-		kernel_sgecp_lib8.o \
+		kernel_sgecpsc_lib8.o \
 		kernel_sgetr_lib8.o \
 		kernel_sgead_lib8.o \
 		kernel_sgetr_lib8.o \
-		kernel_sgesc_lib8.o \
 		kernel_sgemv_8_lib8.o \
 		kernel_sgemv_4_lib8.o \
 

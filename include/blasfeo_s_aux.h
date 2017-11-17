@@ -63,26 +63,37 @@ void sgein1_libstr(float a, struct s_strmat *sA, int ai, int aj);
 float sgeex1_libstr(struct s_strmat *sA, int ai, int aj);
 void svecin1_libstr(float a, struct s_strvec *sx, int xi);
 float svecex1_libstr(struct s_strvec *sx, int xi);
+
 // A <= alpha
 void sgese_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj);
 // a <= alpha
 void svecse_libstr(int m, float alpha, struct s_strvec *sx, int xi);
-void sgecp_lib(int m, int n, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb);
+
+// copy and scale
+// void sgecp_lib(int m, int n, int offsetA, float *A, int sda, int offsetB, float *B, int sdb);
+//
+void sgecpsc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
 void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
 void sgesc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj);
+
 void sveccp_libstr(int m, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci);
 void svecsc_libstr(int m, float alpha, struct s_strvec *sa, int ai);
+
 void strcp_l_lib(int m, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb);
 void strcp_l_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
+
 void sgead_lib(int m, int n, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb);
 void sgead_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
 void svecad_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci);
+
 void sgetr_lib(int m, int n, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc);
 void sgetr_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
+
 void strtr_l_lib(int m, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc);
 void strtr_l_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
 void strtr_u_lib(int m, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc);
 void strtr_u_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
+
 void sdiareg_lib(int kmax, float reg, int offset, float *pD, int sdd);
 void sdiaex_libstr(int kmax, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi);
 void sdiain_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, struct s_strmat *sA, int ai, int aj);

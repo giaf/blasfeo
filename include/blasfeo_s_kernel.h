@@ -156,25 +156,54 @@ void kernel_ssymv_l_4r_lib8(int kmax, float *alpha, float *A, int sda, float *x,
 void kernel_ssymv_l_4l_gen_lib8(int kmax, float *alpha, int offA, float *A, int sda, float *x, float *z, int km);
 void kernel_ssymv_l_4r_gen_lib8(int kmax, float *alpha, int offA, float *A, int sda, float *x, float *z, int km);
 
-// aux
+// ---- aux
+
+// copy
+//
 void kernel_sgecp_8_0_lib8(int m, float *A, float *B);
 void kernel_sgecp_8_0_gen_lib8(int m, float *A, float *B, int m1);
+void kernel_sgesc_8_0_lib8(int m, float *alpha, float *A);
+void kernel_sgesc_8_0_gen_lib8(int m, float *alpha, float *A, int m1);
+void kernel_sgecpsc_8_0_lib8(int m, float alpha, float *A, float *B);
+void kernel_sgecpsc_8_0_gen_lib8(int m, float alpha, float *A, float *B, int m1);
+
 void kernel_sgecp_8_1_lib8(int m, float *A, int sda, float *B);
 void kernel_sgecp_8_1_gen_lib8(int m, float *A, int sda, float *B, int m1);
+void kernel_sgecpsc_8_1_lib8(int m, float alpha, float *A, int sda, float *B);
+void kernel_sgecpsc_8_1_gen_lib8(int m, float alpha, float *A, int sda, float *B, int m1);
+
 void kernel_sgecp_8_2_lib8(int m, float *A, int sda, float *B);
 void kernel_sgecp_8_2_gen_lib8(int m, float *A, int sda, float *B, int m1);
+void kernel_sgecpsc_8_2_lib8(int m, float alpha, float *A, int sda, float *B);
+void kernel_sgecpsc_8_2_gen_lib8(int m, float alpha, float *A, int sda, float *B, int m1);
+
 void kernel_sgecp_8_3_lib8(int m, float *A, int sda, float *B);
 void kernel_sgecp_8_3_gen_lib8(int m, float *A, int sda, float *B, int m1);
+void kernel_sgecpsc_8_3_lib8(int m, float alpha, float *A, int sda, float *B);
+void kernel_sgecpsc_8_3_gen_lib8(int m, float alpha, float *A, int sda, float *B, int m1);
+
 void kernel_sgecp_8_4_lib8(int m, float *A, int sda, float *B);
 void kernel_sgecp_8_4_gen_lib8(int m, float *A, int sda, float *B, int m1);
+void kernel_sgecpsc_8_4_lib8(int m, float alpha, float *A, int sda, float *B);
+void kernel_sgecpsc_8_4_gen_lib8(int m, float alpha, float *A, int sda, float *B, int m1);
+
 void kernel_sgecp_8_5_lib8(int m, float *A, int sda, float *B);
 void kernel_sgecp_8_5_gen_lib8(int m, float *A, int sda, float *B, int m1);
+void kernel_sgecpsc_8_5_lib8(int m, float alpha, float *A, int sda, float *B);
+void kernel_sgecpsc_8_5_gen_lib8(int m, float alpha, float *A, int sda, float *B, int m1);
+
 void kernel_sgecp_8_6_lib8(int m, float *A, int sda, float *B);
 void kernel_sgecp_8_6_gen_lib8(int m, float *A, int sda, float *B, int m1);
+void kernel_sgecpsc_8_6_lib8(int m, float alpha, float *A, int sda, float *B);
+void kernel_sgecpsc_8_6_gen_lib8(int m, float alpha, float *A, int sda, float *B, int m1);
+
 void kernel_sgecp_8_7_lib8(int m, float *A, int sda, float *B);
 void kernel_sgecp_8_7_gen_lib8(int m, float *A, int sda, float *B, int m1);
-void kernel_sgesc_8_lib8(int m, float *alpha, float *A);
-void kernel_sgesc_8_gen_lib8(int m, float *alpha, float *A, int m1);
+void kernel_sgecpsc_8_7_lib8(int m, float alpha, float *A, int sda, float *B);
+void kernel_sgecpsc_8_7_gen_lib8(int m, float alpha, float *A, int sda, float *B, int m1);
+
+// transpose
+//
 void kernel_sgetr_8_0_lib8(int m, float *A, int sda, float *B);
 void kernel_sgetr_8_0_gen_lib8(int m, float *A, int sda, float *B, int m1);
 void kernel_sgetr_8_1_lib8(int m, float *A, int sda, float *B);
@@ -191,6 +220,9 @@ void kernel_sgetr_8_6_lib8(int m, float *A, int sda, float *B);
 void kernel_sgetr_8_6_gen_lib8(int m, float *A, int sda, float *B, int m1);
 void kernel_sgetr_8_7_lib8(int m, float *A, int sda, float *B);
 void kernel_sgetr_8_7_gen_lib8(int m, float *A, int sda, float *B, int m1);
+
+// add
+//
 void kernel_sgead_8_0_lib8(int m, float *alpha, float *A, float *B);
 void kernel_sgead_8_0_gen_lib8(int m, float *alpha, float *A, float *B, int m1);
 void kernel_sgead_8_1_lib8(int m, float *alpha, float *A, int sda, float *B);
