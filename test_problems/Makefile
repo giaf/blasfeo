@@ -69,11 +69,10 @@ endif
 #LIBS += -pthread
 #endif
 
-OBJS =
-# OBJS = test_*.o
-# OBJS = test_d_strmat.o
-# OBJS = test_s_strmat.o
-# OBJS = kernel_assembly.o test_assembly.o
+#OBJS = test_*.o
+OBJS = test_d_strmat.o
+#OBJS = test_s_strmat.o
+#OBJS = kernel_assembly.o test_assembly.o
 
 BLAS_OBJS =
 BLAS_OBJS += test_blas_d.o
@@ -104,16 +103,16 @@ bin_dir:
 
 gen: bin_dir $(OBJS)
 
-aux: gen $(AUX_OBJS)
+aux: bin_dir $(AUX_OBJS)
 
-blas: gen $(BLAS_OBJS)
+blas: bin_dir $(BLAS_OBJS)
+
+run:
+	./$(BINARY_DIR)/$(OBJS).out
 
 run_aux_short:
 	./$(BINARY_DIR)/test_aux_d.o.out
 	./$(BINARY_DIR)/test_aux_s.o.out
-
-run: run_aux_short
-	./$(BINARY_DIR)/test_blas_d.out
 
 clean:
 	rm -rf build/*

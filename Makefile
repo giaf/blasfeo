@@ -523,6 +523,17 @@ BINARY_DIR = build/$(LA)/$(TARGET)
 	# @echo
 
 
+test:
+	mkdir -p ./test_problems/$(BINARY_DIR)
+	cp libblasfeo.a ./test_problems/$(BINARY_DIR)/libblasfeo.a
+	make -C test_problems gen
+	@echo
+	@echo " Test problem build complete."
+	@echo
+
+run_test:
+	make -C test_problems run
+
 test_aux:
 	mkdir -p ./test_problems/$(BINARY_DIR)
 	cp libblasfeo.a ./test_problems/$(BINARY_DIR)/libblasfeo.a
@@ -547,3 +558,4 @@ clean:
 clean_test_problems:
 	make -C test_problems clean
 
+deep_clean: clean clean_test_problems
