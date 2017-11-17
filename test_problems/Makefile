@@ -69,17 +69,20 @@ endif
 #LIBS += -pthread
 #endif
 
-# OBJS_TEST = test_*.o
-# OBJS_TEST = test_blas_d.o
-# OBJS_TEST = test_blas_s.o
-# OBJS_TEST = test_d_strmat.o
-# OBJS_TEST = test_s_strmat.o
-# OBJS_TEST = kernel_assembly.o test_assembly.o
-
-
 OBJS =
-OBJS += test_aux_s.o
-OBJS += test_aux_d.o
+# OBJS = test_*.o
+# OBJS = test_d_strmat.o
+# OBJS = test_s_strmat.o
+# OBJS = kernel_assembly.o test_assembly.o
+
+BLAS_OBJS =
+BLAS_OBJS += test_blas_d.o
+BLAS_OBJS += test_blas_s.o
+
+
+AUX_OBJS =
+AUX_OBJS += test_aux_s.o
+AUX_OBJS += test_aux_d.o
 
 
 %.o: %.c
@@ -94,32 +97,23 @@ OBJS += test_aux_d.o
 default: obj
 
 obj: aux blas
+
+bin_dir:
+	# create bin folder if not existent
 	mkdir -p $(BINARY_DIR)/
 
+gen: bin_dir $(OBJS)
 
-aux_shared: test_aux.o
-	# write object in specific folder
-	mkdir -p $(BINARY_DIR)/
-	$(CC) $(CFLAG) -o $(BINARY_DIR)/test_aux.out $(BINARY_DIR)/test_aux.o $(SHARED_LIBS)
+aux: gen $(AUX_OBJS)
 
-aux: $(OBJS)
+blas: gen $(BLAS_OBJS)
 
-blas: test_blas_d.o
-	mkdir -p $(BINARY_DIR)/
-	$(CC) $(CFLAG) -o $(BINARY_DIR)/test_blas_d.out $(BINARY_DIR)/test_blas_d.o $(LIBS)
-
-run_short_shared: aux_shared
-	./$(BINARY_DIR)/test_aux.out
-
-run_short: aux
+run_aux_short:
 	./$(BINARY_DIR)/test_aux_d.o.out
 	./$(BINARY_DIR)/test_aux_s.o.out
 
-run_all: run_short
+run: run_aux_short
 	./$(BINARY_DIR)/test_blas_d.out
 
 clean:
-	rm -Rf build/*/*/!(libblasfeo.*)
-
-clean_all:
 	rm -rf build/*

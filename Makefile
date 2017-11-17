@@ -514,25 +514,25 @@ install_shared:
 
 BINARY_DIR = build/$(LA)/$(TARGET)
 
-test_problems_shared: shared_library
-	mkdir -p ./test_problems/$(BINARY_DIR)
-	cp libblasfeo.so ./test_problems/$(BINARY_DIR)/libblasfeo.so
-	make -C test_problems run_short_shared
-	@echo
-	@echo " Test problem build complete."
-	@echo
+# test_aux_shared:
+	# mkdir -p ./test_problems/$(BINARY_DIR)
+	# cp libblasfeo.so ./test_problems/$(BINARY_DIR)/libblasfeo.so
+	# make -C test_problems run_short_shared
+	# @echo
+	# @echo " Test problem build complete."
+	# @echo
 
 
-test_problems: all
+test_aux:
 	mkdir -p ./test_problems/$(BINARY_DIR)
 	cp libblasfeo.a ./test_problems/$(BINARY_DIR)/libblasfeo.a
-	make -C test_problems run_short
+	make -C test_problems aux
 	@echo
 	@echo " Test problem build complete."
 	@echo
 
-run: test_problems
-	make -C test_problems run_short
+run_test_aux:
+	make -C test_problems run_aux_short
 
 clean:
 	rm -f libblasfeo.a
