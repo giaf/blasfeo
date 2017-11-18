@@ -38,7 +38,7 @@ extern "C" {
 // level 1 BLAS
 //
 
-// y = y + alpha*x
+// z = y + alpha*x
 void saxpy_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi);
 // z = x .* y, return sum(z) = x^T * y
 float svecmuldot_libstr(int m, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi);
@@ -63,21 +63,21 @@ void srowrot_libstr(int m, struct s_strmat *sA, int ai0, int ai1, int aj, float 
 void sgemv_n_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi);
 // z <= beta * y + alpha * A' * x
 void sgemv_t_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi);
-// y <= inv( A ) * x, A (m)x(n)
+// z <= inv( A ) * x, A (m)x(n)
 void strsv_lnn_mn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi);
-// y <= inv( A' ) * x, A (m)x(n)
+// z <= inv( A' ) * x, A (m)x(n)
 void strsv_ltn_mn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi);
-// y <= inv( A ) * x, A (m)x(m) lower, not_transposed, not_unit
+// z <= inv( A ) * x, A (m)x(m) lower, not_transposed, not_unit
 void strsv_lnn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi);
-// y <= inv( A ) * x, A (m)x(m) lower, not_transposed, unit
+// z <= inv( A ) * x, A (m)x(m) lower, not_transposed, unit
 void strsv_lnu_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi);
-// y <= inv( A' ) * x, A (m)x(m) lower, transposed, not_unit
+// z <= inv( A' ) * x, A (m)x(m) lower, transposed, not_unit
 void strsv_ltn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi);
-// y <= inv( A' ) * x, A (m)x(m) lower, transposed, unit
+// z <= inv( A' ) * x, A (m)x(m) lower, transposed, unit
 void strsv_ltu_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi);
-// y <= inv( A' ) * x, A (m)x(m) upper, not_transposed, not_unit
+// z <= inv( A' ) * x, A (m)x(m) upper, not_transposed, not_unit
 void strsv_unn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi);
-// y <= inv( A' ) * x, A (m)x(m) upper, transposed, not_unit
+// z <= inv( A' ) * x, A (m)x(m) upper, transposed, not_unit
 void strsv_utn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi);
 // z <= beta * y + alpha * A * x ; A upper triangular
 void strmv_unn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi);
