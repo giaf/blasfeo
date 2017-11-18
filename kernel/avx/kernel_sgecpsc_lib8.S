@@ -4055,7 +4055,7 @@ kernel_sgecpsc_8_0_lib8:
 
 
 // void kernel_sgecp_8_0_lib8(int k, float *A, float *B);
-//                          1      3         4
+//                            1      2         3
 	.p2align 4,,15
 #if defined(OS_LINUX)
 	.globl kernel_sgecp_8_0_lib8
@@ -4075,9 +4075,8 @@ kernel_sgecp_8_0_lib8:
 	// call inner dgemm kernel nt
 
 	movq	ARG1, %r10 // k
-	movq	ARG2, %r11 // alpha
-	movq	ARG3, %r12 // A
-	movq	ARG4, %r13 // B
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // B
 
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECP_8_0_LIB8
@@ -4104,7 +4103,7 @@ kernel_sgecp_8_0_lib8:
 
 
 // void kernel_sgesc_8_0_lib8(int k, float *alpha, float *A);
-//                          1      2             3
+//                            1      2             3
 	.p2align 4,,15
 #if defined(OS_LINUX)
 	.globl kernel_sgesc_8_0_lib8
@@ -5033,8 +5032,8 @@ kernel_sgesc_8_0_gen_lib8:
 
 
 
-// void kernel_sgecpsc_8_1_gen_lib8(int k, float *alpha, float *A, float *B, int m1);
-//                                  1      2             3         4         5
+// void kernel_sgecpsc_8_1_gen_lib8(int k, float *alpha, float *A, int sda, float *B, int m1);
+//                                  1      2             3         4        5         6
 	.p2align 4,,15
 #if defined(OS_LINUX)
 	.globl kernel_sgecpsc_8_1_gen_lib8
@@ -5056,8 +5055,10 @@ kernel_sgecpsc_8_1_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11 // alpha
 	movq	ARG3, %r12 // A
-	movq	ARG4, %r13 // B
-	movq	ARG4, %r14 // m1
+	movq	ARG4, %r13 // sda
+	sall	$5, %r13d  // sda *= 32
+	movq	ARG5, %r14 // B
+	movq	ARG6, %r15 // m1
 
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_SGECPSC_8_1_GEN_LIB8
