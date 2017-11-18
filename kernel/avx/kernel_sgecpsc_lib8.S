@@ -139,11 +139,18 @@
 
 #endif
 
+
+
+
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.text
 #elif defined(OS_MAC)
 	.section	__TEXT,__text,regular,pure_instructions
 #endif
+
+
+
 
 
 // --- Inner kernels
@@ -237,6 +244,10 @@ inner_kernel_sgecpsc_8_0_lib8:
 //
 // end static subroutine
 
+
+
+
+
 // void INNER_KERNEL_SGECP_8_0_LIB8
 //
 // input arguments:
@@ -315,6 +326,10 @@ inner_kernel_sgecp_8_0_lib8:
 #endif
 //
 // end
+
+
+
+
 
 // src matrix not aligned
 
@@ -446,6 +461,10 @@ inner_kernel_sgecpsc_8_1_lib8:
 #endif
 
 // end
+
+
+
+
 
 // void INNER_KERNEL_SGECP_8_1_LIB8
 //
@@ -591,6 +610,9 @@ inner_kernel_sgecp_8_1_lib8:
 // end
 
 
+
+
+
 // void INNER_KERNEL_SGECPSC_8_2_LIB8
 //
 // input arguments:
@@ -601,7 +623,7 @@ inner_kernel_sgecp_8_1_lib8:
 // r14    <- B
 
 #if MACRO_LEVEL>=1
-	.macro INNER_KERNEL_SGECP_8_2_LIB8
+	.macro INNER_KERNEL_SGECPSC_8_2_LIB8
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -720,6 +742,10 @@ inner_kernel_sgecpsc_8_2_lib8:
 
 // end
 
+
+
+
+
 // void INNER_KERNEL_SGECP_8_2_LIB8
 //
 // input arguments:
@@ -828,6 +854,9 @@ inner_kernel_sgecp_8_2_lib8:
 // end
 
 
+
+
+
 // void INNER_KERNEL_SGECPSC_8_3_LIB8
 //
 // input arguments:
@@ -838,7 +867,7 @@ inner_kernel_sgecp_8_2_lib8:
 // r14    <- B
 
 #if MACRO_LEVEL>=1
-	.macro INNER_KERNEL_SGECP_8_3_LIB8
+	.macro INNER_KERNEL_SGECPSC_8_3_LIB8
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -957,6 +986,10 @@ inner_kernel_sgecpsc_8_2_lib8:
 
 // end
 
+
+
+
+
 // void INNER_KERNEL_SGECP_8_3_LIB8
 //
 // input arguments:
@@ -1065,6 +1098,9 @@ inner_kernel_sgecp_8_3_lib8:
 // end
 
 
+
+
+
 // void INNER_KERNEL_SGECPSC_8_4_LIB8
 //
 // input arguments:
@@ -1075,7 +1111,7 @@ inner_kernel_sgecp_8_3_lib8:
 // r14    <- B
 
 #if MACRO_LEVEL>=1
-	.macro INNER_KERNEL_SGECP_8_4_LIB8
+	.macro INNER_KERNEL_SGECPSC_8_4_LIB8
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1168,6 +1204,10 @@ inner_kernel_sgecpsc_8_2_lib8:
 #endif
 
 // end
+
+
+
+
 
 // void INNER_KERNEL_SGECP_8_4_LIB8
 // subroutine
@@ -1267,6 +1307,9 @@ inner_kernel_sgecp_8_4_lib8:
 // end
 
 
+
+
+
 // void INNER_KERNEL_SGECPSC_8_5_LIB8
 //
 // input arguments:
@@ -1277,7 +1320,7 @@ inner_kernel_sgecp_8_4_lib8:
 // r14    <- B
 
 #if MACRO_LEVEL>=1
-	.macro INNER_KERNEL_SGECP_8_5_LIB8
+	.macro INNER_KERNEL_SGECPSC_8_5_LIB8
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1396,6 +1439,10 @@ inner_kernel_sgecpsc_8_5_lib8:
 
 // end
 
+
+
+
+
 // void INNER_KERNEL_SGECP_8_5_LIB8
 //
 // input arguments:
@@ -1504,6 +1551,9 @@ inner_kernel_sgecp_8_5_lib8:
 // end
 
 
+
+
+
 // void INNER_KERNEL_SGECPSC_8_6_LIB8
 //
 // input arguments:
@@ -1514,7 +1564,7 @@ inner_kernel_sgecp_8_5_lib8:
 // r14    <- B
 
 #if MACRO_LEVEL>=1
-	.macro INNER_KERNEL_SGECP_8_6_LIB8
+	.macro INNER_KERNEL_SGECPSC_8_6_LIB8
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1633,6 +1683,10 @@ inner_kernel_sgecpsc_8_2_lib8:
 
 // end
 
+
+
+
+
 // void INNER_KERNEL_SGECP_8_6_LIB8
 // subroutine
 //
@@ -1742,6 +1796,9 @@ inner_kernel_sgecp_8_6_lib8:
 // end
 
 
+
+
+
 // void INNER_KERNEL_SGECPSC_8_7_LIB8
 //
 // input arguments:
@@ -1752,7 +1809,7 @@ inner_kernel_sgecp_8_6_lib8:
 // r14    <- B
 
 #if MACRO_LEVEL>=1
-	.macro INNER_KERNEL_SGECP_8_7_LIB8
+	.macro INNER_KERNEL_SGECPSC_8_7_LIB8
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1871,6 +1928,10 @@ inner_kernel_sgecpsc_8_2_lib8:
 
 // end
 
+
+
+
+
 // void INNER_KERNEL_SGECP_8_7_LIB8
 // subroutine
 //
@@ -1979,6 +2040,10 @@ inner_kernel_sgecp_8_7_lib8:
 
 // end
 
+
+
+
+
 // Variable number of rows
 
 // src matrix aligned
@@ -2082,6 +2147,10 @@ inner_kernel_sgecpsc_8_0_gen_lib8:
 //
 // end static subroutine
 
+
+
+
+
 // void INNER_KERNEL_SGECP_8_0_GEN_LIB8
 //
 // input arguments:
@@ -2172,6 +2241,10 @@ inner_kernel_sgecp_8_0_gen_lib8:
 #endif
 //
 // end static subroutine
+
+
+
+
 
 // src matrix not aligned
 
@@ -2304,6 +2377,10 @@ inner_kernel_sgecpsc_8_1_gen_lib8:
 
 // end
 
+
+
+
+
 // void INNER_KERNEL_SGECP_8_1_GEN_LIB8
 //
 // input arguments:
@@ -2424,6 +2501,9 @@ inner_kernel_sgecp_8_1_gen_lib8:
 // end
 
 
+
+
+
 // void INNER_KERNEL_SGECPSC_8_2_GEN_LIB8
 //
 // input arguments:
@@ -2433,7 +2513,6 @@ inner_kernel_sgecp_8_1_gen_lib8:
 // r13d   <- 8*sda*sizeof(float)
 // r14    <- B
 // r15d   <- m1
-
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGECPSC_8_2_GEN_LIB8
@@ -2551,6 +2630,10 @@ inner_kernel_sgecpsc_8_2_gen_lib8:
 #endif
 
 // end
+
+
+
+
 
 // void INNER_KERNEL_SGECP_8_2_GEN_LIB8
 //
@@ -2672,6 +2755,9 @@ inner_kernel_sgecp_8_2_gen_lib8:
 // end
 
 
+
+
+
 // void INNER_KERNEL_SGECPSC_8_3_GEN_LIB8
 //
 // input arguments:
@@ -2681,7 +2767,6 @@ inner_kernel_sgecp_8_2_gen_lib8:
 // r13d   <- 8*sda*sizeof(float)
 // r14    <- B
 // r15d   <- m1
-
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGECPSC_8_3_GEN_LIB8
@@ -2798,6 +2883,10 @@ inner_kernel_sgecpsc_8_3_gen_lib8:
 #endif
 
 // end
+
+
+
+
 
 // void INNER_KERNEL_SGECP_8_3_GEN_LIB8
 // subroutine
@@ -2920,6 +3009,9 @@ inner_kernel_sgecp_8_3_gen_lib8:
 // end
 
 
+
+
+
 // void INNER_KERNEL_SGECPSC_8_4_GEN_LIB8
 //
 // input arguments:
@@ -2929,7 +3021,6 @@ inner_kernel_sgecp_8_3_gen_lib8:
 // r13d   <- 8*sda*sizeof(float)
 // r14    <- B
 // r15d   <- m1
-
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGECPSC_8_4_GEN_LIB8
@@ -3031,6 +3122,10 @@ inner_kernel_sgecpsc_8_4_gen_lib8:
 #endif
 
 // end
+
+
+
+
 
 // void INNER_KERNEL_SGECP_8_4_GEN_LIB8
 // subroutine
@@ -3138,6 +3233,9 @@ inner_kernel_sgecp_8_4_gen_lib8:
 // end
 
 
+
+
+
 // void INNER_KERNEL_SGECPSC_8_5_GEN_LIB8
 //
 // input arguments:
@@ -3147,7 +3245,6 @@ inner_kernel_sgecp_8_4_gen_lib8:
 // r13d   <- 8*sda*sizeof(float)
 // r14    <- B
 // r15d   <- m1
-
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGECPSC_8_5_GEN_LIB8
@@ -3264,6 +3361,10 @@ inner_kernel_sgecpsc_8_5_gen_lib8:
 #endif
 
 // end
+
+
+
+
 
 // void INNER_KERNEL_SGECP_8_5_GEN_LIB8
 // subroutine
@@ -3386,6 +3487,9 @@ inner_kernel_sgecp_8_5_gen_lib8:
 // end
 
 
+
+
+
 // void INNER_KERNEL_SGECPSC_8_6_GEN_LIB8
 //
 // input arguments:
@@ -3395,7 +3499,6 @@ inner_kernel_sgecp_8_5_gen_lib8:
 // r13d   <- 8*sda*sizeof(float)
 // r14    <- B
 // r15d   <- m1
-
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGECPSC_8_6_GEN_LIB8
@@ -3513,6 +3616,10 @@ inner_kernel_sgecpsc_8_6_gen_lib8:
 #endif
 
 // end
+
+
+
+
 
 // void INNER_KERNEL_SGECP_8_6_GEN_LIB8
 // subroutine
@@ -3635,6 +3742,9 @@ inner_kernel_sgecp_8_6_gen_lib8:
 // end
 
 
+
+
+
 // void INNER_KERNEL_SGECPSC_8_7_GEN_LIB8
 //
 // input arguments:
@@ -3644,7 +3754,6 @@ inner_kernel_sgecp_8_6_gen_lib8:
 // r13d   <- 8*sda*sizeof(float)
 // r14    <- B
 // r15d   <- m1
-
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_SGECPSC_8_7_GEN_LIB8
@@ -3761,6 +3870,10 @@ inner_kernel_sgecpsc_8_7_gen_lib8:
 #endif
 
 // end
+
+
+
+
 
 // void INNER_KERNEL_SGECP_8_7_GEN_LIB8
 // subroutine
@@ -3883,6 +3996,9 @@ inner_kernel_sgecp_8_7_gen_lib8:
 // end
 
 
+
+
+
 // --- Public functions
 
 // All 8 rows
@@ -3934,6 +4050,10 @@ kernel_sgecpsc_8_0_lib8:
 //
 // end public fun
 
+
+
+
+
 // void kernel_sgecp_8_0_lib8(int k, float *A, float *B);
 //                          1      3         4
 	.p2align 4,,15
@@ -3979,6 +4099,10 @@ kernel_sgecp_8_0_lib8:
 //
 // end
 
+
+
+
+
 // void kernel_sgesc_8_0_lib8(int k, float *alpha, float *A);
 //                          1      2             3
 	.p2align 4,,15
@@ -4023,6 +4147,10 @@ kernel_sgesc_8_0_lib8:
 #endif
 //
 // end public fun
+
+
+
+
 
 // src matrix not aligned
 
@@ -4075,6 +4203,10 @@ kernel_sgecpsc_8_1_lib8:
 
 // end
 
+
+
+
+
 // void kernel_sgecp_8_1_lib8(int k, float *A, int sda, float *B);
 //                            1      2         3        4
 
@@ -4121,6 +4253,9 @@ kernel_sgecp_8_1_lib8:
 #endif
 
 // end
+
+
+
 
 
 // void kernel_sgecpsc_8_2_lib8(int k, float alpha, float *A, int sda, float *B);
@@ -4173,6 +4308,9 @@ kernel_sgecpsc_8_2_lib8:
 
 // end
 
+
+
+
 // void kernel_sgecp_8_2_lib8(int k, float *A, int sda, float *B);
 //                            1      2         3        4
 
@@ -4219,6 +4357,9 @@ kernel_sgecp_8_2_lib8:
 #endif
 
 // end
+
+
+
 
 
 // void kernel_sgecpsc_8_3_lib8(int k, float alpha, float *A, int sda, float *B);
@@ -4270,6 +4411,10 @@ kernel_sgecpsc_8_3_lib8:
 
 // end
 
+
+
+	
+
 // void kernel_sgecp_8_3_lib8(int k, float *A, int sda, float *B);
 //                            1      2         3        4
 
@@ -4316,6 +4461,9 @@ kernel_sgecp_8_3_lib8:
 #endif
 
 // end
+
+
+
 
 
 // void kernel_sgecpsc_8_4_lib8(int k, float alpha, float *A, int sda, float *B);
@@ -4367,6 +4515,10 @@ kernel_sgecpsc_8_4_lib8:
 
 // end
 
+
+
+
+
 // void kernel_sgecp_8_4_lib8(int k, float *A, int sda, float *B);
 //                            1      2         3        4
 	.p2align 4,,15
@@ -4412,6 +4564,9 @@ kernel_sgecp_8_4_lib8:
 #endif
 //
 // end
+
+
+
 
 
 // void kernel_sgecpsc_8_5_lib8(int k, float alpha, float *A, int sda, float *B);
@@ -4463,6 +4618,10 @@ kernel_sgecpsc_8_5_lib8:
 
 // end
 
+
+
+
+
 // void kernel_sgecp_8_5_lib8(int k, float *A, int sda, float *B);
 //                            1      2         3        4
 	.p2align 4,,15
@@ -4508,6 +4667,9 @@ kernel_sgecp_8_5_lib8:
 #endif
 //
 // end
+
+
+
 
 
 // void kernel_sgecpsc_8_6_lib8(int k, float alpha, float *A, int sda, float *B);
@@ -4559,6 +4721,10 @@ kernel_sgecpsc_8_6_lib8:
 
 // end
 
+
+
+
+
 // void kernel_sgecp_8_6_lib8(int k, float *A, int sda, float *B);
 //                            1      2         3        4
 
@@ -4605,6 +4771,9 @@ kernel_sgecp_8_6_lib8:
 #endif
 //
 // end
+
+
+
 
 
 // void kernel_sgecpsc_8_7_lib8(int k, float alpha, float *A, int sda, float *B);
@@ -4655,6 +4824,10 @@ kernel_sgecpsc_8_7_lib8:
 #endif
 
 // end
+
+
+
+
 
 // void kernel_sgecp_8_7_lib8(int k, float *A, int sda, float *B);
 //                            1      2         3        4
@@ -4707,6 +4880,10 @@ kernel_sgecp_8_7_lib8:
 
 // src matrix aligned
 
+
+
+
+
 // void kernel_sgecpsc_8_0_gen_lib8(int k, float *alpha, float *A, float *B, int m1);
 //                                1      2             3         4         5
 	.p2align 4,,15
@@ -4753,6 +4930,10 @@ kernel_sgecpsc_8_0_gen_lib8:
 //
 // end
 
+
+
+
+
 // void kernel_sgecp_8_0_gen_lib8(int k, float *A, float *B, int m1);
 //                              1      2         3         4
 	.p2align 4,,15
@@ -4797,6 +4978,10 @@ kernel_sgecp_8_0_gen_lib8:
 #endif
 //
 // end
+
+
+
+
 
 // void kernel_sgesc_8_0_gen_lib8(int k, float *alpha, float *A, int m1);
 //                              1      2             3         4
@@ -4844,6 +5029,10 @@ kernel_sgesc_8_0_gen_lib8:
 
 // src matrix not aligned
 
+
+
+
+
 // void kernel_sgecpsc_8_1_gen_lib8(int k, float *alpha, float *A, float *B, int m1);
 //                                  1      2             3         4         5
 	.p2align 4,,15
@@ -4889,6 +5078,10 @@ kernel_sgecpsc_8_1_gen_lib8:
 #endif
 //
 // end
+
+
+
+
 
 // void kernel_sgecp_8_1_gen_lib8(int k, float *A, int sda, float *B, int m0);
 //                                1      2         3        4         5
@@ -4939,6 +5132,9 @@ kernel_sgecp_8_1_gen_lib8:
 // end
 
 
+
+
+
 // void kernel_sgecpsc_8_2_gen_lib8(int k, float *alpha, float *A, float *B, int m1);
 //                                  1      2             3         4         5
 	.p2align 4,,15
@@ -4984,6 +5180,10 @@ kernel_sgecpsc_8_2_gen_lib8:
 #endif
 //
 // end
+
+
+
+
 
 // void kernel_sgecp_8_2_gen_lib8(int k, float *A, int sda, float *B, int m0);
 //                                1      2         3        4         5
@@ -5034,6 +5234,9 @@ kernel_sgecp_8_2_gen_lib8:
 // end
 
 
+
+
+
 // void kernel_sgecpsc_8_3_gen_lib8(int k, float *alpha, float *A, float *B, int m1);
 //                                  1      2             3         4         5
 	.p2align 4,,15
@@ -5079,6 +5282,10 @@ kernel_sgecpsc_8_3_gen_lib8:
 #endif
 //
 // end
+
+
+
+
 
 // void kernel_sgecp_8_3_gen_lib8(int k, float *A, int sda, float *B, int m0);
 //                                1      2         3        4         5
@@ -5129,6 +5336,9 @@ kernel_sgecp_8_3_gen_lib8:
 // end
 
 
+
+
+
 // void kernel_sgecpsc_8_4_gen_lib8(int k, float *alpha, float *A, float *B, int m1);
 //                                  1      2             3         4         5
 	.p2align 4,,15
@@ -5174,6 +5384,10 @@ kernel_sgecpsc_8_4_gen_lib8:
 #endif
 //
 // end
+
+
+
+
 
 // void kernel_sgecp_8_4_gen_lib8(int k, float *A, int sda, float *B, int m0);
 //                                1      2         3        4         5
@@ -5223,6 +5437,9 @@ kernel_sgecp_8_4_gen_lib8:
 // end
 
 
+
+
+
 // void kernel_sgecpsc_8_5_gen_lib8(int k, float *alpha, float *A, float *B, int m1);
 //                                  1      2             3         4         5
 	.p2align 4,,15
@@ -5268,6 +5485,10 @@ kernel_sgecpsc_8_5_gen_lib8:
 #endif
 //
 // end
+
+
+
+
 
 // void kernel_sgecp_8_5_gen_lib8(int k, float *A, int sda, float *B, int m0);
 //                                1      2         3        4         5
@@ -5317,6 +5538,9 @@ kernel_sgecp_8_5_gen_lib8:
 // end
 
 
+
+
+
 // void kernel_sgecpsc_8_6_gen_lib8(int k, float *alpha, float *A, float *B, int m1);
 //                                  1      2             3         4         5
 	.p2align 4,,15
@@ -5362,6 +5586,10 @@ kernel_sgecpsc_8_6_gen_lib8:
 #endif
 //
 // end
+
+
+
+
 
 // void kernel_sgecp_8_6_gen_lib8(int k, float *A, int sda, float *B, int m0);
 //                                1      2         3        4         5
@@ -5412,6 +5640,9 @@ kernel_sgecp_8_6_gen_lib8:
 // end
 
 
+
+
+
 // void kernel_sgecpsc_8_7_gen_lib8(int k, float *alpha, float *A, float *B, int m1);
 //                                  1      2             3         4         5
 	.p2align 4,,15
@@ -5457,6 +5688,10 @@ kernel_sgecpsc_8_7_gen_lib8:
 #endif
 //
 // end
+
+
+
+
 
 // void kernel_sgecp_8_7_gen_lib8(int k, float *A, int sda, float *B, int m0);
 //                                1      2         3        4         5
@@ -5504,6 +5739,8 @@ kernel_sgecp_8_7_gen_lib8:
 #endif
 //
 // end
+
+
 
 
 
