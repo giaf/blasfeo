@@ -116,6 +116,14 @@ int main()
 	// tests
 	//
 
+	// copy scale
+#if 1
+	s_print_strmat(n, n, &sA, 0, 0);
+	sgecpsc_libstr(10, 10, 0.1, &sA, 1, 0, &sD, 0, 0);
+	s_print_strmat(n, n, &sD, 0, 0);
+	return 0;
+#endif
+
 	float alpha = 1.0;
 	float beta = 0.0;
 //	kernel_sgemm_nt_24x4_lib8(4, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);

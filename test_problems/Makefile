@@ -69,9 +69,8 @@ endif
 #LIBS += -pthread
 #endif
 
-#OBJS = test_*.o
-OBJS = test_d_strmat.o
-#OBJS = test_s_strmat.o
+#OBJS = test_d_strmat.o
+OBJS = test_s_strmat.o
 #OBJS = kernel_assembly.o test_assembly.o
 
 BLAS_OBJS =

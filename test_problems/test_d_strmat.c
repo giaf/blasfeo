@@ -232,6 +232,14 @@ int main()
 //	d_print_tran_strvec(n, &sm, 0);
 //	return 0;
 
+	// copy scale
+#if 1
+	d_print_strmat(n, n, &sA, 0, 0);
+	dgecpsc_libstr(5, 5, 0.1, &sA, 3, 0, &sD, 3, 0);
+	d_print_strmat(n, n, &sD, 0, 0);
+	return 0;
+#endif
+
 	// givens rotations
 #if 1
 	DMATEL_LIBSTR(&sD, 0, 0) = 6.0;
