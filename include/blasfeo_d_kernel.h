@@ -147,6 +147,9 @@ void kernel_dtrsm_nt_rl_inv_4x8_vs_lib4(int k, double *A, double *B, int sdb, do
 // 8x2
 void kernel_dgemm_nn_8x2_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd); //
 void kernel_dgemm_nn_8x2_vs_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1); //
+// 2x8
+void kernel_dgemm_nn_2x8_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D); //
+void kernel_dgemm_nn_2x8_vs_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1); //
 // 4x4
 void kernel_dgemm_nt_4x4_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D); //
 void kernel_dgemm_nt_4x4_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int km, int kn); //

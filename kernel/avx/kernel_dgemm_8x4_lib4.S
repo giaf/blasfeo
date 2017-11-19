@@ -7850,6 +7850,8 @@ inner_store_4x8_vs_lib4:
 	je			0f // end
 	vmaskmovpd	%ymm7, %ymm15, 224(%r10)
 
+0:
+
 #if MACRO_LEVEL>=1
 	.endm
 #else
