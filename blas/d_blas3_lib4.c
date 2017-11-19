@@ -1653,9 +1653,14 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	left_4:
 	j = 0;
-	for(; j<n; j+=4)
+	for(; j<n-4; j+=8)
+		{
+		kernel_dgemm_nn_4x8_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+		}
+	if(j<n)
 		{
 		kernel_dgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+//		j += 4;
 		}
 	return;
 #endif
