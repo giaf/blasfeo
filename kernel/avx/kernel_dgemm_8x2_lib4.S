@@ -579,37 +579,37 @@ inner_kernel_dgemm_add_nn_2x8_lib4:
 	vmovapd			32(%r12), %ymm14
 	vblendpd		$0x3, %ymm13, %ymm14, %ymm14
 	vshufpd			$0x0, %ymm14, %ymm14, %ymm13
-	vmulpd			%ymm9, %ymm13, %ymm15
+	vmulpd			%ymm11, %ymm13, %ymm15
 	vaddpd			%ymm0, %ymm15, %ymm0
 	vshufpd			$0xf, %ymm14, %ymm14, %ymm13
-	vmulpd			%ymm10, %ymm13, %ymm15
+	vmulpd			%ymm12, %ymm13, %ymm15
 	vaddpd			%ymm1, %ymm15, %ymm1
 	vmovupd			80(%r12), %ymm13
 	vmovapd			96(%r12), %ymm14
 	vblendpd		$0x3, %ymm13, %ymm14, %ymm14
 	vshufpd			$0x0, %ymm14, %ymm14, %ymm13
-	vmulpd			%ymm9, %ymm13, %ymm15
+	vmulpd			%ymm11, %ymm13, %ymm15
 	vaddpd			%ymm2, %ymm15, %ymm2
 	vshufpd			$0xf, %ymm14, %ymm14, %ymm13
-	vmulpd			%ymm10, %ymm13, %ymm15
+	vmulpd			%ymm12, %ymm13, %ymm15
 	vaddpd			%ymm3, %ymm15, %ymm3
 	vmovupd			144(%r12), %ymm13
 	vmovapd			160(%r12), %ymm14
 	vblendpd		$0x3, %ymm13, %ymm14, %ymm14
 	vshufpd			$0x0, %ymm14, %ymm14, %ymm13
-	vmulpd			%ymm9, %ymm13, %ymm15
+	vmulpd			%ymm11, %ymm13, %ymm15
 	vaddpd			%ymm4, %ymm15, %ymm4
 	vshufpd			$0xf, %ymm14, %ymm14, %ymm13
-	vmulpd			%ymm10, %ymm13, %ymm15
+	vmulpd			%ymm12, %ymm13, %ymm15
 	vaddpd			%ymm5, %ymm15, %ymm5
 	vmovupd			208(%r12), %ymm13
 	vmovapd			224(%r12), %ymm14
 	vblendpd		$0x3, %ymm13, %ymm14, %ymm14
 	vshufpd			$0x0, %ymm14, %ymm14, %ymm13
-	vmulpd			%ymm9, %ymm13, %ymm15
+	vmulpd			%ymm11, %ymm13, %ymm15
 	vaddpd			%ymm6, %ymm15, %ymm6
 	vshufpd			$0xf, %ymm14, %ymm14, %ymm13
-	vmulpd			%ymm10, %ymm13, %ymm15
+	vmulpd			%ymm12, %ymm13, %ymm15
 	vaddpd			%ymm7, %ymm15, %ymm7
 
 	subl	$4, %r10d
