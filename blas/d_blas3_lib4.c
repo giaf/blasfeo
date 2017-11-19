@@ -1523,15 +1523,15 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			{
 			if(m-i<=4)
 				{
-				goto left_4;
+				goto left_4_g;
 				}
 			else if(m-i<=8)
 				{
-				goto left_8;
+				goto left_8_g;
 				}
 			else
 				{
-				goto left_12;
+				goto left_12_g;
 				}
 			}
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -1544,18 +1544,18 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 				}
 			if(j<n)
 				{
-				kernel_dgemm_nn_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, 0, &pC[j*ps+i*sdc], sdc, 0, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+				kernel_dgemm_nn_8x4_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
 				}
 			}
 		if(m>i)
 			{
 			if(m-i<=4)
 				{
-				goto left_4;
+				goto left_4_g;
 				}
 			else
 				{
-				goto left_8;
+				goto left_8_g;
 				}
 			}
 #else
@@ -1573,7 +1573,7 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			}
 		if(m>i)
 			{
-			goto left_4;
+			goto left_4_g;
 			}
 #endif
 		}
@@ -1591,7 +1591,7 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			}
 		if(m>i)
 			{
-			goto left_4;
+			goto left_4_g;
 			}
 #else
 		for(; i<m; i+=4)
@@ -1611,7 +1611,7 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	// clean up loops definitions
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-	left_12:
+	left_12_g:
 	j = 0;
 	for(; j<n; j+=4)
 		{
@@ -1623,7 +1623,7 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 #endif
 
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-	left_8:
+	left_8_g:
 	j = 0;
 	for(; j<n; j+=4)
 		{
@@ -1632,7 +1632,17 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 	return;
 #endif
 
-	left_4:
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	left_8:
+	j = 0;
+	for(; j<n; j+=4)
+		{
+		kernel_dgemm_nn_8x4_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
+		}
+	return;
+#endif
+
+	left_4_g:
 	j = 0;
 	for(; j<n; j+=4)
 		{
