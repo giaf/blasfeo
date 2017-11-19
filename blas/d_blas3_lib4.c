@@ -1551,11 +1551,11 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 			{
 			if(m-i<=4)
 				{
-				goto left_4_g;
+				goto left_4;
 				}
 			else
 				{
-				goto left_8_g;
+				goto left_8;
 				}
 			}
 #else
@@ -1649,6 +1649,16 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct d_strmat *sA, int
 		kernel_dgemm_nn_4x4_gen_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
 		}
 	return;
+
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	left_4:
+	j = 0;
+	for(; j<n; j+=4)
+		{
+		kernel_dgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+		}
+	return;
+#endif
 
 	return;
 	}
