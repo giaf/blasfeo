@@ -52,6 +52,7 @@ endif
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 OBJS += \
 		kernel_dgemm_8x4_lib4.o \
+		kernel_dgemm_8x2_lib4.o \
 		kernel_dgemm_4x4_lib4.o \
 		kernel_dgemm_diag_lib4.o \
 		kernel_dgemv_12_lib4.o \
