@@ -1,10 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/time.h>
+#include <assert.h>
 
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_s_aux_ext_dep.h"
 #include "../include/blasfeo_s_aux.h"
+#include "../include/blasfeo_s_aux_test.h"
 #include "../include/blasfeo_i_aux_ext_dep.h"
 #include "../include/blasfeo_v_aux_ext_dep.h"
 #include "../include/blasfeo_s_kernel.h"
@@ -12,6 +14,10 @@
 
 #define STR(x) #x
 #define SHOW_DEFINE(x) printf("%s=%s\n", #x, STR(x));
+
+#include "test_s_common.h"
+#include "test_x_common.c"
+
 
 int main()
 	{
@@ -27,9 +33,12 @@ int main()
 SHOW_DEFINE(LA)
 SHOW_DEFINE(TARGET)
 
-	int ii;
 
-	int n = 9;
+	int ii, jj;
+
+	int n = 25;
+	int p_n = 16;
+	int N = 10;
 
 	//
 	// matrices in column-major format
@@ -50,20 +59,24 @@ SHOW_DEFINE(TARGET)
 
 	struct s_strmat sD;
 
-	s_allocate_strmat(6, 6, &sD);
+	s_allocate_strmat(n-1, n-1, &sD);
 
 	// -------- instantiate s_strmat
 
 	// compute memory size
-	int size_strmat = 5*s_size_strmat(n, n);
+	int size_strmat = N*s_size_strmat(n, n);
 	// inizilize void pointer
 	void *memory_strmat;
+
 	// initialize pointer
+	// memory allocation
 	v_zeros_align(&memory_strmat, size_strmat);
+
 	// get point to strmat
 	char *ptr_memory_strmat = (char *) memory_strmat;
 
 	// -------- instantiate s_strmat
+	printf("\nInstantiate matrices\n\n");
 
 	// instantiate s_strmat depend on compilation flag LA_BLAS || LA_REFERENCE
 	struct s_strmat sA;
@@ -85,6 +98,19 @@ SHOW_DEFINE(TARGET)
 	s_create_strmat(n, n, &sC, ptr_memory_strmat);
 	ptr_memory_strmat += sC.memory_size;
 	s_cvt_mat2strmat(n, n, C, n, &sC, 0, 0);
+
+	// reference matrices
+
+	struct s_strmat rA;
+	s_create_strmat(n, n, &rA, ptr_memory_strmat);
+	ptr_memory_strmat += rA.memory_size;
+	test_s_cvt_mat2strmat(n, n, A, n, &rA, 0, 0);
+
+	struct s_strmat rB;
+	s_create_strmat(n, n, &rB, ptr_memory_strmat);
+	ptr_memory_strmat += sB.memory_size;
+	test_s_cvt_mat2strmat(n, n, B, n, &rB, 0, 0);
+
 
 	// -------- instantiate s_strmat
 
@@ -129,22 +155,52 @@ SHOW_DEFINE(TARGET)
 	/* ----------- copy and scale */
 	printf("----------- Copy&Scale\n\n");
 
-	float alpha = 0.1;
-	printf("Scale A by %f and copy in B, print B:\n\n", alpha);
+	float alpha;
+	alpha = 4;
+	int ret, ni, mi;
+	ni = 12;
+	mi = 12;
 
+	printf("Compute different combinations of submatrix offsets\n\n");
+
+	// loop over A offset
+	for (ii = 0; ii < 8; ii++)
+		{
+		// loop over B offset
+		printf("A, B offset");
+		for (jj = 0; jj < 8; jj++)
+			{
+
+			sgecpsc_libstr(ni, mi, alpha, &sA, ii, 0, &sB, jj, 0);
+
+			// compute rA with reference routine
+			test_sgecpsc_libstr(ni, mi, alpha, &rA, ii, 0, &rB, jj, 0);
+
+			// check against blas with blasfeo REF
+			printf(", %d_%d", ii, jj);
+			assert(sgecmp_libstr(n, n, &sB, &rB));
+
+
+			}
+			printf("\n");
+		}
+		printf("\n");
+	printf("-------\n\n\n");
+
+	printf("Scale A by %f and copy in B, print B:\n\n", alpha);
 	sgecpsc_libstr(n, n, alpha, &sA, 0, 0, &sB, 0, 0);
-	s_print_strmat(n, n, &sB, 0, 0);
+	s_print_strmat(p_n, p_n, &sB, 0, 0);
 
 	printf("----------- Scale\n\n");
 	alpha = 0.3;
 	printf("Scale A by %f, print A:\n\n", alpha);
 	sgesc_libstr(n, n, alpha, &sA, 0, 0);
-	s_print_strmat(n, n, &sA, 0, 0);
+	s_print_strmat(p_n, p_n, &sA, 0, 0);
 
 	printf("----------- Copy\n\n");
 	printf("Copy submatrix A[3:5, 3:5] in B[0:5, 0:5], print B:\n\n");
 	sgecp_libstr(5, 5, &sA, 3, 3, &sB, 0, 0);
-	s_print_strmat(n, n, &sB, 0, 0);
+	s_print_strmat(p_n, p_n, &sB, 0, 0);
 
 
 	/* ----------- copy scale tringular */
