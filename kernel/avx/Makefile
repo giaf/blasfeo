@@ -55,6 +55,7 @@ OBJS += \
 		kernel_dgemm_8x2_lib4.o \
 		kernel_dgemm_4x4_lib4.o \
 		kernel_dgemm_4x2_lib4.o \
+		kernel_dgemm_10xX_lib4.o \
 		kernel_dgemm_6xX_lib4.o \
 		kernel_dgemm_diag_lib4.o \
 		kernel_dgemv_12_lib4.o \
