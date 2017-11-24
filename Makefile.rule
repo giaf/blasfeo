@@ -49,7 +49,7 @@
 # Select target architecture
 
 # TARGET = X64_INTEL_HASWELL
-TARGET = X64_INTEL_SANDY_BRIDGE
+ TARGET = X64_INTEL_SANDY_BRIDGE
 # TARGET = X64_INTEL_CORE
 #
 # TARGET = X64_AMD_BULLDOZER
@@ -60,9 +60,9 @@ TARGET = X64_INTEL_SANDY_BRIDGE
 # TARGET = GENERIC
 
 # Linear Algebra library
-#LA = HIGH_PERFORMANCE
-LA = REFERENCE
-#LA = BLAS
+ LA = HIGH_PERFORMANCE
+# LA = REFERENCE
+# LA = BLAS
 
 # BLAS and LAPACK version (for LA=BLAS)
 REF_BLAS = 0
@@ -103,7 +103,11 @@ PREFIX = /opt
 
 # Macro level (code size vs performance in assembly kernels):
 # 0 (no macro), 1 (all macro but gemm kernel), 2 (all macro)
-MACRO_LEVEL = 0
+MACRO_LEVEL = 2
+
+# Minimum size of the computation kernel in level 3 routines
+MIN_KERNEL_SIZE = 2x2
+#MIN_KERNEL_SIZE = 4x4
 
 # compiler / assembler / linker flags
 CFLAGS  =
@@ -114,10 +118,16 @@ LDFLAGS =
 CFLAGS += -O2 -fPIC
 
 # Debugging flags
-#CFLAGS  += -g #-Wall -pedantic -Wfloat-equal #-pg
-#ASFLAGS += -g
+CFLAGS  += #-g #-Wall -pedantic -Wfloat-equal #-pg
+ASFLAGS += #-g
+
+
+
+
+
 
 # Definirions
+
 ifeq ($(LA), HIGH_PERFORMANCE)
 CFLAGS  += -DLA_HIGH_PERFORMANCE
 endif
@@ -143,6 +153,14 @@ ASFLAGS += -DMACRO_LEVEL=1
 endif
 ifeq ($(MACRO_LEVEL), 2)
 ASFLAGS += -DMACRO_LEVEL=2
+endif
+
+ifeq ($(MIN_KERNEL_SIZE), 2x2)
+CFLAGS += -DMIN_KERNEL_SIZE=2
+ASFLAGS += -DMIN_KERNEL_SIZE=2
+else
+CFLAGS += -DMIN_KERNEL_SIZE=4
+ASFLAGS += -DMIN_KERNEL_SIZE=4
 endif
 
 ifeq ($(OS), LINUX)
@@ -171,7 +189,7 @@ ifeq ($(REF_BLAS), NETLIB)
 CFLAGS  += -DREF_BLAS_NETLIB
 endif
 ifeq ($(REF_BLAS), MKL)
-CFLAGS  += -DREF_BLAS_MKL -m64 -I/opt/intel/mkl/include
+CFLAGS  += -DREF_BLAS_MKL -m64 -I/opt/intel/mkl/include -DMKL_DIRECT_CALL_SEQ
 endif
 ifeq ($(REF_BLAS), ATLAS)
 CFLAGS  += -DREF_BLAS_ATLAS
