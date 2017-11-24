@@ -67,6 +67,46 @@ void omp_set_num_threads(int num_threads);
 
 
 
+void dgemm_nn_4_4_4(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_4x4_lib4(4, &alpha, A, 0, B, sdb, &beta, C, D);
+	return;
+	}
+
+void dgemm_nn_8_8_8(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_8x4_lib4(8, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_8x4_lib4(8, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	return;
+	}
+
+void dgemm_nn_12_12_12(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_12x4_lib4(12, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_12x4_lib4(12, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	kernel_dgemm_nn_12x4_lib4(12, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
+//	kernel_dgemm_nn_8x4_lib4(12, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+//	kernel_dgemm_nn_8x4_lib4(12, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+//	kernel_dgemm_nn_8x4_lib4(12, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
+//	kernel_dgemm_nn_4x8_lib4(12, &alpha, A+8*sda, 0, B, sdb, &beta, C+8*sdd, D+8*sdd);
+//	kernel_dgemm_nn_4x4_lib4(12, &alpha, A+8*sda, 0, B+8*4, sdb, &beta, C+8*sdd+8*4, D+8*sdd+8*4);
+	return;
+	}
+
+void dgemm_nn_16_16_16(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_8x4_lib4(16, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_8x4_lib4(16, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(16, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(16, &alpha, A, sda, 0, B+12*4, sdb, &beta, C+12*4, sdd, D+12*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(16, &alpha, A+8*sda, sda, 0, B, sdb, &beta, C+8*sdd, sdd, D+8*sdd, sdd);
+	kernel_dgemm_nn_8x4_lib4(16, &alpha, A+8*sda, sda, 0, B+4*4, sdb, &beta, C+8*sdd+4*4, sdd, D+8*sdd+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(16, &alpha, A+8*sda, sda, 0, B+8*4, sdb, &beta, C+8*sdd+8*4, sdd, D+8*sdd+8*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(16, &alpha, A+8*sda, sda, 0, B+12*4, sdb, &beta, C+8*sdd+12*4, sdd, D+8*sdd+12*4, sdd);
+	return;
+	}
+
+
 int main()
 	{
 
@@ -163,7 +203,7 @@ int main()
 	printf("\nn\t  dgemm_blasfeo\t  dgemm_blas\n");
 	printf("\nn\t Gflops\t    %%\t Gflops\n\n");
 
-#if 1
+#if 0
 	int nn[] = {4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 148, 152, 156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224, 228, 232, 236, 240, 244, 248, 252, 256, 260, 264, 268, 272, 276, 280, 284, 288, 292, 296, 300, 304, 308, 312, 316, 320, 324, 328, 332, 336, 340, 344, 348, 352, 356, 360, 364, 368, 372, 376, 380, 384, 388, 392, 396, 400, 404, 408, 412, 416, 420, 424, 428, 432, 436, 440, 444, 448, 452, 456, 460, 500, 550, 600, 650, 700};
 	int nnrep[] = {10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 400, 400, 400, 400, 400, 200, 200, 200, 200, 200, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20, 20, 20, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 4, 4, 4, 4, 4};
 
@@ -181,7 +221,7 @@ int main()
 //		n = n<12 ? 12 : n;
 //		n = n<8 ? 8 : n;
 
-#else
+#elif 1
 	int nn[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
 
 	for(ll=0; ll<24; ll++)
@@ -190,7 +230,19 @@ int main()
 
 		int n = nn[ll];
 		int nrep = 40000; //nnrep[ll];
+#else
+// TODO  ll<1 !!!!!
+
+	for(ll=0; ll<1; ll++)
+
+		{
+
+		int n = 12;
+		int nrep = 40000; //nnrep[ll];
 #endif
+
+		int rep_in;
+		int nrep_in = 10;
 
 		double *A; d_zeros(&A, n, n);
 		double *B; d_zeros(&B, n, n);
@@ -299,121 +351,144 @@ int main()
 		double alpha = 1.0;
 		double beta = 0.0;
 
-		gettimeofday(&tv0, NULL); // stop
+		float time_hpmpc    = 1e15;
+		float time_blasfeo  = 1e15;
+		float time_blas     = 1e15;
 
-		for(rep=0; rep<nrep; rep++)
+		int sda = sA.cn;
+		int sdb = sB.cn;
+		int sdd = sD.cn;
+
+		for(rep_in=0; rep_in<nrep_in; rep_in++)
 			{
 
-//			dgemm_nt_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
-//			dgemm_nn_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 0.0, pC, cnd, pC, cnd);
-//			dsyrk_nt_l_lib(n, n, n, 1.0, pA, cnd, pB, cnd, 1.0, pC, cnd, pD, cnd);
-//			dtrmm_nt_ru_lib(n, n, pA, cnd, pB, cnd, 0, pC, cnd, pD, cnd);
-//			dpotrf_nt_l_lib(n, n, pB, cnd, pD, cnd, diag);
-//			dsyrk_dpotrf_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd, diag);
-//			dsyrk_nt_l_lib(n, n, n, pA, cnd, pA, cnd, 1, pB, cnd, pD, cnd);
-//			dpotrf_nt_l_lib(n, n, pD, cnd, pD, cnd, diag);
-//			dgetrf_nn_nopivot_lib(n, n, pB, cnd, pB, cnd, diag); //TODO
-//			dgetrf_nn_lib(n, n, pB, cnd, pB, cnd, diag, ipiv); //TODO
-//			dtrsm_nn_ll_one_lib(n, n, pD, cnd, pB, cnd, pB, cnd);
-//			dtrsm_nn_lu_inv_lib(n, n, pD, cnd, diag, pB, cnd, pB, cnd);
-			}
+			gettimeofday(&tv0, NULL); // stop
 
-		gettimeofday(&tv1, NULL); // stop
+			for(rep=0; rep<nrep; rep++)
+				{
+	//			kernel_dgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+	//			kernel_dgemm_nt_8x8_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+	//			kernel_dsyrk_nt_l_8x8_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+	//			kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+	//			kernel_dgemm_nt_4x8_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+	//			kernel_dgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+	//			kernel_dger4_12_sub_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+	//			kernel_dger4_sub_12r_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+	//			kernel_dger4_sub_8r_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+	//			kernel_dger12_add_4r_lib4(n, sA.pA, sB.pA, sB.cn, sD.pA);
+	//			kernel_dger8_add_4r_lib4(n, sA.pA, sB.pA, sB.cn, sD.pA);
+	//			kernel_dger4_sub_4r_lib4(n, sA.pA, sB.pA, sD.pA);
+	//			kernel_dger2_sub_4r_lib4(n, sA.pA, sB.pA, sD.pA);
+	//			kernel_dger4_sub_8c_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+	//			kernel_dger4_sub_4c_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+	//			kernel_dgemm_nn_4x12_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+	//			kernel_dgemm_nn_4x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+	//			kernel_dgemm_nn_2x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+	//			kernel_dgemm_nn_4x4_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+//				kernel_dgemm_nn_12x4_lib4(n, &alpha, sA.pA, 0, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 
-		for(rep=0; rep<nrep; rep++)
-			{
-//			kernel_dgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-//			kernel_dgemm_nt_8x8_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-//			kernel_dsyrk_nt_l_8x8_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-//			kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-//			kernel_dgemm_nt_4x8_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
-//			kernel_dgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
-//			kernel_dger4_12_sub_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
-//			kernel_dger4_sub_12r_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
-//			kernel_dger4_sub_8r_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
-//			kernel_dger12_add_4r_lib4(n, sA.pA, sB.pA, sB.cn, sD.pA);
-//			kernel_dger8_add_4r_lib4(n, sA.pA, sB.pA, sB.cn, sD.pA);
-//			kernel_dger4_sub_4r_lib4(n, sA.pA, sB.pA, sD.pA);
-//			kernel_dger2_sub_4r_lib4(n, sA.pA, sB.pA, sD.pA);
-//			kernel_dger4_sub_8c_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
-//			kernel_dger4_sub_4c_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
-//			kernel_dgemm_nn_4x12_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
-//			kernel_dgemm_nn_4x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
-//			kernel_dgemm_nn_4x4_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+				// 4
+#if 0
+				dgemm_nn_4_4_4(alpha, sA.pA, sA.cn, sB.pA, sB.cn, beta, sC.pA, sC.cn, sD.pA, sD.cn);
+#endif
+				// 8
+#if 0
+				dgemm_nn_8_8_8(alpha, sA.pA, sA.cn, sB.pA, sB.cn, beta, sC.pA, sC.cn, sD.pA, sD.cn);
+#endif
+				// 12
+#if 0
+//				dgemm_nn_12_12_12(alpha, sA.pA, sA.cn, sB.pA, sB.cn, beta, sC.pA, sC.cn, sD.pA, sD.cn);
+	kernel_dgemm_nn_12x4_lib4(12, &alpha, sA.pA, sda, 0, sB.pA, sdb, &beta, sD.pA, sdd, sD.pA, sdd);
+	kernel_dgemm_nn_12x4_lib4(12, &alpha, sA.pA, sda, 0, sB.pA+4*4, sdb, &beta, sD.pA+4*4, sdd, sD.pA+4*4, sdd);
+	kernel_dgemm_nn_12x4_lib4(12, &alpha, sA.pA, sda, 0, sB.pA+8*4, sdb, &beta, sD.pA+8*4, sdd, sD.pA+8*4, sdd);
+#endif
+#if 0
+				dgemm_nn_16_16_16(alpha, sA.pA, sA.cn, sB.pA, sB.cn, beta, sC.pA, sC.cn, sD.pA, sD.cn);
+#endif
 
-			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-//			dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-//			dsyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-//			dsyrk_ln_mn_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-//			dpotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-//			dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
-//			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-//			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
-//			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
-//			dcolin_libstr(n, &sx, 0, &sB3, 0, n-1);
-//			dgelqf_libstr(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
-//			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sD, 0, 0, &sD, 0, 0); //
-//			dtrmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
-//			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//			dtrsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//			dtrsm_rltn_libstr(n, n, 1.0, &sB2, 0, 0, &sD, 0, 0, &sD, 0, 0); //
-//			dtrsm_rltu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//			dtrsm_rutn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//			dgemv_n_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-//			dgemv_t_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-//			dsymv_l_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-//			dgemv_nt_libstr(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
+	//			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+				dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+	//			dsyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+	//			dsyrk_ln_mn_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+	//			dpotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
+	//			dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
+	//			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
+	//			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
+	//			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
+	//			dcolin_libstr(n, &sx, 0, &sB3, 0, n-1);
+	//			dgelqf_libstr(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
+	//			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sD, 0, 0, &sD, 0, 0); //
+	//			dtrmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+	//			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+	//			dtrsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+	//			dtrsm_rltn_libstr(n, n, 1.0, &sB2, 0, 0, &sD, 0, 0, &sD, 0, 0); //
+	//			dtrsm_rltu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+	//			dtrsm_rutn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+	//			dgemv_n_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+	//			dgemv_t_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+	//			dsymv_l_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+	//			dgemv_nt_libstr(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
+				}
+
+	//		d_print_strmat(n, n, &sD, 0, 0);
+
+			gettimeofday(&tv1, NULL); // stop
+
+			for(rep=0; rep<nrep; rep++)
+				{
+	#if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
+				dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, B, &n, &d_0, C, &n);
+	//			dpotrf_(&c_l, &n, B2, &n, &info);
+	//			dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
+	//			dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
+	//			dtrmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
+	//			dgetrf_(&n, &n, B2, &n, ipiv, &info);
+	//			dtrsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
+	//			dtrsm_(&c_l, &c_u, &c_n, &c_n, &n, &n, &d_1, B2, &n, B, &n);
+	//			dtrtri_(&c_l, &c_n, &n, B2, &n, &info);
+	//			dlauum_(&c_l, &n, B, &n, &info);
+	//			dgemv_(&c_n, &n, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
+	//			dgemv_(&c_t, &n, &n, &d_1, A, &n, x2, &i_1, &d_0, y2, &i_1);
+	//			dtrmv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
+	//			dtrsv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
+	//			dsymv_(&c_l, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
+
+	//			for(i=0; i<n; i++)
+	//				{
+	//				i_t = n-i;
+	//				dcopy_(&i_t, &B[i*(n+1)], &i_1, &C[i*(n+1)], &i_1);
+	//				}
+	//			dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, C, &n);
+	//			dpotrf_(&c_l, &n, C, &n, &info);
+
+	#endif
+
+	#if defined(REF_BLAS_BLIS)
+	//			dgemm_(&c_n, &c_t, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
+	//			dgemm_(&c_n, &c_n, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
+	//			dsyrk_(&c_l, &c_n, &n77, &n77, &d_1, A, &n77, &d_0, C, &n77);
+	//			dtrmm_(&c_r, &c_u, &c_t, &c_n, &n77, &n77, &d_1, A, &n77, C, &n77);
+	//			dpotrf_(&c_l, &n77, B, &n77, &info);
+	//			dtrtri_(&c_l, &c_n, &n77, B, &n77, &info);
+	//			dlauum_(&c_l, &n77, B, &n77, &info);
+	#endif
+				}
+
+			gettimeofday(&tv2, NULL); // stop
+
+			float tmp_blasfeo  = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);
+			float tmp_blas     = (float) (tv2.tv_sec-tv1.tv_sec)/(nrep+0.0)+(tv2.tv_usec-tv1.tv_usec)/(nrep*1e6);
+
+			time_blasfeo = tmp_blasfeo<time_blasfeo ? tmp_blasfeo : time_blasfeo;
+			time_blas = tmp_blas<time_blas ? tmp_blas : time_blas;
+
 			}
 
 //		d_print_strmat(n, n, &sD, 0, 0);
 
-		gettimeofday(&tv2, NULL); // stop
-
-		for(rep=0; rep<nrep; rep++)
-			{
-#if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
-			dgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
-//			dpotrf_(&c_l, &n, B2, &n, &info);
-//			dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
-//			dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
-//			dtrmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
-//			dgetrf_(&n, &n, B2, &n, ipiv, &info);
-//			dtrsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
-//			dtrsm_(&c_l, &c_u, &c_n, &c_n, &n, &n, &d_1, B2, &n, B, &n);
-//			dtrtri_(&c_l, &c_n, &n, B2, &n, &info);
-//			dlauum_(&c_l, &n, B, &n, &info);
-//			dgemv_(&c_n, &n, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
-//			dgemv_(&c_t, &n, &n, &d_1, A, &n, x2, &i_1, &d_0, y2, &i_1);
-//			dtrmv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
-//			dtrsv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
-//			dsymv_(&c_l, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
-
-//			for(i=0; i<n; i++)
-//				{
-//				i_t = n-i;
-//				dcopy_(&i_t, &B[i*(n+1)], &i_1, &C[i*(n+1)], &i_1);
-//				}
-//			dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, C, &n);
-//			dpotrf_(&c_l, &n, C, &n, &info);
-
-#endif
-
-#if defined(REF_BLAS_BLIS)
-//			dgemm_(&c_n, &c_t, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
-//			dgemm_(&c_n, &c_n, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
-//			dsyrk_(&c_l, &c_n, &n77, &n77, &d_1, A, &n77, &d_0, C, &n77);
-//			dtrmm_(&c_r, &c_u, &c_t, &c_n, &n77, &n77, &d_1, A, &n77, C, &n77);
-//			dpotrf_(&c_l, &n77, B, &n77, &info);
-//			dtrtri_(&c_l, &c_n, &n77, B, &n77, &info);
-//			dlauum_(&c_l, &n77, B, &n77, &info);
-#endif
-			}
-
-		gettimeofday(&tv3, NULL); // stop
-
 		float Gflops_max = flops_max * GHz_max;
 
-//		float flop_operation = 4*16.0*2*n; // kernel 12x4
+//		float flop_operation = 4*16.0*2*n; // kernel 16x4
 //		float flop_operation = 3*16.0*2*n; // kernel 12x4
 //		float flop_operation = 2*16.0*2*n; // kernel 8x4
 //		float flop_operation = 1*16.0*2*n; // kernel 4x4
@@ -430,11 +505,6 @@ int main()
 
 //		float flop_operation = 4.0/3.0*n*n*n; // dsyrk+dpotrf
 
-		float time_hpmpc    = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);
-		float time_blasfeo  = (float) (tv2.tv_sec-tv1.tv_sec)/(nrep+0.0)+(tv2.tv_usec-tv1.tv_usec)/(nrep*1e6);
-		float time_blas     = (float) (tv3.tv_sec-tv2.tv_sec)/(nrep+0.0)+(tv3.tv_usec-tv2.tv_usec)/(nrep*1e6);
-
-		float Gflops_hpmpc    = 1e-9*flop_operation/time_hpmpc;
 		float Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
 		float Gflops_blas     = 1e-9*flop_operation/time_blas;
 

@@ -1273,9 +1273,9 @@ inner_store_8x2_vs_lib4:
 	vinsertf128	$1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
-	cmpl		$2, %r13d
 	vmovapd		%ymm0, 0(%r10)
 	vmaskmovpd	%ymm2, %ymm15,  0(%r10, %r11, 1)
+	cmpl		$2, %r13d
 	jl			0f // end
 	vmovapd		%ymm1, 32(%r10)
 	vmaskmovpd	%ymm3, %ymm15, 32(%r10, %r11, 1)

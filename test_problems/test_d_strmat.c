@@ -402,7 +402,8 @@ int main()
 //	kernel_dgemm_nn_2x8_lib4(3, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 //	kernel_dgemm_nn_6x8_vs_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn, 6, 8);
 //	kernel_dgemm_nn_10x4_vs_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn, 10, 4);
-	kernel_dgemm_nn_10x2_vs_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn, 8, 1);
+//	kernel_dgemm_nn_10x2_vs_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn, 8, 1);
+	kernel_dgemm_nn_12x4_lib4(2, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn);
 //	dgemm_nn_libstr(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
 //	dgemm_nt_libstr(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
