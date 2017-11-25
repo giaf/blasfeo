@@ -67,9 +67,47 @@ void omp_set_num_threads(int num_threads);
 
 
 
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+void dgemm_nn_1_1_1(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_4x2_vs_lib4(1, &alpha, A, 0, B, sdb, &beta, C, D, 1, 1);
+	return;
+	}
+
+void dgemm_nn_2_2_2(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_2x2_lib4(2, &alpha, A, 0, B, sdb, &beta, C, D);
+	return;
+	}
+
+void dgemm_nn_3_3_3(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_4x4_vs_lib4(3, &alpha, A, 0, B, sdb, &beta, C, D, 3, 3);
+	return;
+	}
+
 void dgemm_nn_4_4_4(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
 	{
 	kernel_dgemm_nn_4x4_lib4(4, &alpha, A, 0, B, sdb, &beta, C, D);
+	return;
+	}
+
+void dgemm_nn_5_5_5(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_6x6_vs_lib4(5, &alpha, A, sda, 0, B, sdb, &beta, C, sdc, D, sdd, 5, 5);
+	return;
+	}
+
+void dgemm_nn_6_6_6(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_6x6_lib4(6, &alpha, A, sda, 0, B, sdb, &beta, C, sdc, D, sdd);
+	return;
+	}
+
+void dgemm_nn_7_7_7(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_8x4_vs_lib4(7, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd, 7, 4);
+	kernel_dgemm_nn_8x4_vs_lib4(7, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd, 7, 3);
 	return;
 	}
 
@@ -80,16 +118,71 @@ void dgemm_nn_8_8_8(double alpha, double *A, int sda, double *B, int sdb, double
 	return;
 	}
 
+void dgemm_nn_9_9_9(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_10x4_vs_lib4(9, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd, 9, 4);
+	kernel_dgemm_nn_10x4_vs_lib4(9, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd, 9, 4);
+	kernel_dgemm_nn_10x2_vs_lib4(9, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd, 9, 1);
+	return;
+	}
+
+void dgemm_nn_10_10_10(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_10x4_lib4(10, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_10x4_lib4(10, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	kernel_dgemm_nn_10x2_lib4(10, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
+	return;
+	}
+
+void dgemm_nn_11_11_11(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_12x4_vs_lib4(11, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd, 11, 4);
+	kernel_dgemm_nn_12x4_vs_lib4(11, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd, 11, 4);
+	kernel_dgemm_nn_12x4_vs_lib4(11, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd, 11, 3);
+	return;
+	}
+
 void dgemm_nn_12_12_12(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
 	{
 	kernel_dgemm_nn_12x4_lib4(12, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
 	kernel_dgemm_nn_12x4_lib4(12, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
 	kernel_dgemm_nn_12x4_lib4(12, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
-//	kernel_dgemm_nn_8x4_lib4(12, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
-//	kernel_dgemm_nn_8x4_lib4(12, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
-//	kernel_dgemm_nn_8x4_lib4(12, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
-//	kernel_dgemm_nn_4x8_lib4(12, &alpha, A+8*sda, 0, B, sdb, &beta, C+8*sdd, D+8*sdd);
-//	kernel_dgemm_nn_4x4_lib4(12, &alpha, A+8*sda, 0, B+8*4, sdb, &beta, C+8*sdd+8*4, D+8*sdd+8*4);
+	return;
+	}
+
+void dgemm_nn_13_13_13(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_8x4_lib4(13, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_8x4_lib4(13, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	kernel_dgemm_nn_8x6_vs_lib4(13, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd, 8, 5);
+
+	kernel_dgemm_nn_6x8_vs_lib4(13, &alpha, A+8*sda, sda, 0, B, sdb, &beta, C+8*sdc, sdd, D+8*sdd, sdd, 5, 8);
+	kernel_dgemm_nn_6x6_vs_lib4(13, &alpha, A+8*sda, sda, 0, B+8*4, sdb, &beta, C+8*sdc+8*4, sdd, D+8*sdd+8*4, sdd, 5, 5);
+	return;
+	}
+
+void dgemm_nn_14_14_14(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_8x4_lib4(14, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_8x4_lib4(14, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	kernel_dgemm_nn_8x6_lib4(14, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
+
+	kernel_dgemm_nn_6x8_lib4(14, &alpha, A+8*sda, sda, 0, B, sdb, &beta, C+8*sdc, sdd, D+8*sdd, sdd);
+	kernel_dgemm_nn_6x6_lib4(14, &alpha, A+8*sda, sda, 0, B+8*4, sdb, &beta, C+8*sdc+8*4, sdd, D+8*sdd+8*4, sdd);
+	return;
+	}
+
+void dgemm_nn_15_15_15(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_8x4_lib4(15, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_8x4_lib4(15, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(15, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
+	kernel_dgemm_nn_8x4_vs_lib4(15, &alpha, A, sda, 0, B+12*4, sdb, &beta, C+12*4, sdd, D+12*4, sdd, 8, 3);
+
+	kernel_dgemm_nn_8x4_vs_lib4(15, &alpha, A+8*sda, sda, 0, B, sdb, &beta, C+8*sdd, sdd, D+8*sdd, sdd, 7, 4);
+	kernel_dgemm_nn_8x4_vs_lib4(15, &alpha, A+8*sda, sda, 0, B+4*4, sdb, &beta, C+8*sdd+4*4, sdd, D+8*sdd+4*4, sdd, 7, 4);
+	kernel_dgemm_nn_8x4_vs_lib4(15, &alpha, A+8*sda, sda, 0, B+8*4, sdb, &beta, C+8*sdd+8*4, sdd, D+8*sdd+8*4, sdd, 7, 4);
+	kernel_dgemm_nn_8x4_vs_lib4(15, &alpha, A+8*sda, sda, 0, B+12*4, sdb, &beta, C+8*sdd+12*4, sdd, D+8*sdd+12*4, sdd, 7, 3);
 	return;
 	}
 
@@ -99,12 +192,182 @@ void dgemm_nn_16_16_16(double alpha, double *A, int sda, double *B, int sdb, dou
 	kernel_dgemm_nn_8x4_lib4(16, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
 	kernel_dgemm_nn_8x4_lib4(16, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
 	kernel_dgemm_nn_8x4_lib4(16, &alpha, A, sda, 0, B+12*4, sdb, &beta, C+12*4, sdd, D+12*4, sdd);
+
 	kernel_dgemm_nn_8x4_lib4(16, &alpha, A+8*sda, sda, 0, B, sdb, &beta, C+8*sdd, sdd, D+8*sdd, sdd);
 	kernel_dgemm_nn_8x4_lib4(16, &alpha, A+8*sda, sda, 0, B+4*4, sdb, &beta, C+8*sdd+4*4, sdd, D+8*sdd+4*4, sdd);
 	kernel_dgemm_nn_8x4_lib4(16, &alpha, A+8*sda, sda, 0, B+8*4, sdb, &beta, C+8*sdd+8*4, sdd, D+8*sdd+8*4, sdd);
 	kernel_dgemm_nn_8x4_lib4(16, &alpha, A+8*sda, sda, 0, B+12*4, sdb, &beta, C+8*sdd+12*4, sdd, D+8*sdd+12*4, sdd);
 	return;
 	}
+
+void dgemm_nn_17_17_17(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_8x4_lib4(17, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_8x4_lib4(17, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(17, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
+	kernel_dgemm_nn_8x6_vs_lib4(17, &alpha, A, sda, 0, B+12*4, sdb, &beta, C+12*4, sdd, D+12*4, sdd, 8, 5);
+
+	kernel_dgemm_nn_10x4_vs_lib4(17, &alpha, A+8*sda, sda, 0, B, sdb, &beta, C+8*sdd, sdd, D+8*sdd, sdd, 9, 4);
+	kernel_dgemm_nn_10x4_vs_lib4(17, &alpha, A+8*sda, sda, 0, B+4*4, sdb, &beta, C+8*sdd+4*4, sdd, D+8*sdd+4*4, sdd, 9, 4);
+	kernel_dgemm_nn_10x4_vs_lib4(17, &alpha, A+8*sda, sda, 0, B+8*4, sdb, &beta, C+8*sdd+8*4, sdd, D+8*sdd+8*4, sdd, 9, 4);
+	kernel_dgemm_nn_10x4_vs_lib4(17, &alpha, A+8*sda, sda, 0, B+12*4, sdb, &beta, C+8*sdd+12*4, sdd, D+8*sdd+12*4, sdd, 9, 4);
+	kernel_dgemm_nn_10x2_vs_lib4(17, &alpha, A+8*sda, sda, 0, B+16*4, sdb, &beta, C+8*sdd+16*4, sdd, D+8*sdd+16*4, sdd, 9, 1);
+	return;
+	}
+
+void dgemm_nn_18_18_18(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_8x4_lib4(18, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_8x4_lib4(18, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(18, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
+	kernel_dgemm_nn_8x6_lib4(18, &alpha, A, sda, 0, B+12*4, sdb, &beta, C+12*4, sdd, D+12*4, sdd);
+
+	kernel_dgemm_nn_10x4_lib4(18, &alpha, A+8*sda, sda, 0, B, sdb, &beta, C+8*sdd, sdd, D+8*sdd, sdd);
+	kernel_dgemm_nn_10x4_lib4(18, &alpha, A+8*sda, sda, 0, B+4*4, sdb, &beta, C+8*sdd+4*4, sdd, D+8*sdd+4*4, sdd);
+	kernel_dgemm_nn_10x4_lib4(18, &alpha, A+8*sda, sda, 0, B+8*4, sdb, &beta, C+8*sdd+8*4, sdd, D+8*sdd+8*4, sdd);
+	kernel_dgemm_nn_10x4_lib4(18, &alpha, A+8*sda, sda, 0, B+12*4, sdb, &beta, C+8*sdd+12*4, sdd, D+8*sdd+12*4, sdd);
+	kernel_dgemm_nn_10x2_lib4(18, &alpha, A+8*sda, sda, 0, B+16*4, sdb, &beta, C+8*sdd+16*4, sdd, D+8*sdd+16*4, sdd);
+	return;
+	}
+
+void dgemm_nn_19_19_19(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_8x4_lib4(19, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_8x4_lib4(19, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(19, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(19, &alpha, A, sda, 0, B+12*4, sdb, &beta, C+12*4, sdd, D+12*4, sdd);
+	kernel_dgemm_nn_8x4_vs_lib4(19, &alpha, A, sda, 0, B+16*4, sdb, &beta, C+16*4, sdd, D+16*4, sdd, 8, 3);
+
+	kernel_dgemm_nn_12x4_vs_lib4(19, &alpha, A+8*sda, sda, 0, B, sdb, &beta, C+8*sdd, sdd, D+8*sdd, sdd, 11, 4);
+	kernel_dgemm_nn_12x4_vs_lib4(19, &alpha, A+8*sda, sda, 0, B+4*4, sdb, &beta, C+8*sdd+4*4, sdd, D+8*sdd+4*4, sdd, 11, 4);
+	kernel_dgemm_nn_12x4_vs_lib4(19, &alpha, A+8*sda, sda, 0, B+8*4, sdb, &beta, C+8*sdd+8*4, sdd, D+8*sdd+8*4, sdd, 11, 4);
+	kernel_dgemm_nn_12x4_vs_lib4(19, &alpha, A+8*sda, sda, 0, B+12*4, sdb, &beta, C+8*sdd+12*4, sdd, D+8*sdd+12*4, sdd, 11, 4);
+	kernel_dgemm_nn_12x4_vs_lib4(19, &alpha, A+8*sda, sda, 0, B+16*4, sdb, &beta, C+8*sdd+16*4, sdd, D+8*sdd+16*4, sdd, 11, 3);
+	return;
+	}
+
+void dgemm_nn_20_20_20(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_8x4_lib4(20, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_8x4_lib4(20, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(20, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(20, &alpha, A, sda, 0, B+12*4, sdb, &beta, C+12*4, sdd, D+12*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(20, &alpha, A, sda, 0, B+16*4, sdb, &beta, C+16*4, sdd, D+16*4, sdd);
+
+	kernel_dgemm_nn_12x4_lib4(20, &alpha, A+8*sda, sda, 0, B, sdb, &beta, C+8*sdd, sdd, D+8*sdd, sdd);
+	kernel_dgemm_nn_12x4_lib4(20, &alpha, A+8*sda, sda, 0, B+4*4, sdb, &beta, C+8*sdd+4*4, sdd, D+8*sdd+4*4, sdd);
+	kernel_dgemm_nn_12x4_lib4(20, &alpha, A+8*sda, sda, 0, B+8*4, sdb, &beta, C+8*sdd+8*4, sdd, D+8*sdd+8*4, sdd);
+	kernel_dgemm_nn_12x4_lib4(20, &alpha, A+8*sda, sda, 0, B+12*4, sdb, &beta, C+8*sdd+12*4, sdd, D+8*sdd+12*4, sdd);
+	kernel_dgemm_nn_12x4_lib4(20, &alpha, A+8*sda, sda, 0, B+16*4, sdb, &beta, C+8*sdd+16*4, sdd, D+8*sdd+16*4, sdd);
+	return;
+	}
+
+void dgemm_nn_21_21_21(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_8x4_lib4(21, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_8x4_lib4(21, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(21, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(21, &alpha, A, sda, 0, B+12*4, sdb, &beta, C+12*4, sdd, D+12*4, sdd);
+	kernel_dgemm_nn_8x6_vs_lib4(21, &alpha, A, sda, 0, B+16*4, sdb, &beta, C+16*4, sdd, D+16*4, sdd, 8, 5);
+
+	kernel_dgemm_nn_8x4_lib4(21, &alpha, A+8*sda, sda, 0, B, sdb, &beta, C+8*sdd, sdd, D+8*sdd, sdd);
+	kernel_dgemm_nn_8x4_lib4(21, &alpha, A+8*sda, sda, 0, B+4*4, sdb, &beta, C+8*sdd+4*4, sdd, D+8*sdd+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(21, &alpha, A+8*sda, sda, 0, B+8*4, sdb, &beta, C+8*sdd+8*4, sdd, D+8*sdd+8*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(21, &alpha, A+8*sda, sda, 0, B+12*4, sdb, &beta, C+8*sdd+12*4, sdd, D+8*sdd+12*4, sdd);
+	kernel_dgemm_nn_8x6_vs_lib4(21, &alpha, A+8*sda, sda, 0, B+16*4, sdb, &beta, C+8*sdd+16*4, sdd, D+8*sdd+16*4, sdd, 8, 5);
+
+	kernel_dgemm_nn_6x8_vs_lib4(21, &alpha, A+16*sda, sda, 0, B, sdb, &beta, C+16*sdd, sdd, D+16*sdd, sdd, 5, 8);
+	kernel_dgemm_nn_6x8_vs_lib4(21, &alpha, A+16*sda, sda, 0, B+8*4, sdb, &beta, C+16*sdd+8*4, sdd, D+16*sdd+8*4, sdd, 5, 8);
+	kernel_dgemm_nn_6x6_vs_lib4(21, &alpha, A+16*sda, sda, 0, B+16*4, sdb, &beta, C+16*sdd+16*4, sdd, D+16*sdd+16*4, sdd, 5, 5);
+	return;
+	}
+
+void dgemm_nn_22_22_22(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_8x4_lib4(22, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_8x4_lib4(22, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(22, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(22, &alpha, A, sda, 0, B+12*4, sdb, &beta, C+12*4, sdd, D+12*4, sdd);
+	kernel_dgemm_nn_8x6_lib4(22, &alpha, A, sda, 0, B+16*4, sdb, &beta, C+16*4, sdd, D+16*4, sdd);
+
+	kernel_dgemm_nn_8x4_lib4(22, &alpha, A+8*sda, sda, 0, B, sdb, &beta, C+8*sdd, sdd, D+8*sdd, sdd);
+	kernel_dgemm_nn_8x4_lib4(22, &alpha, A+8*sda, sda, 0, B+4*4, sdb, &beta, C+8*sdd+4*4, sdd, D+8*sdd+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(22, &alpha, A+8*sda, sda, 0, B+8*4, sdb, &beta, C+8*sdd+8*4, sdd, D+8*sdd+8*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(22, &alpha, A+8*sda, sda, 0, B+12*4, sdb, &beta, C+8*sdd+12*4, sdd, D+8*sdd+12*4, sdd);
+	kernel_dgemm_nn_8x6_lib4(22, &alpha, A+8*sda, sda, 0, B+16*4, sdb, &beta, C+8*sdd+16*4, sdd, D+8*sdd+16*4, sdd);
+
+	kernel_dgemm_nn_6x8_lib4(22, &alpha, A+16*sda, sda, 0, B, sdb, &beta, C+16*sdd, sdd, D+16*sdd, sdd);
+	kernel_dgemm_nn_6x8_lib4(22, &alpha, A+16*sda, sda, 0, B+8*4, sdb, &beta, C+16*sdd+8*4, sdd, D+16*sdd+8*4, sdd);
+	kernel_dgemm_nn_6x6_lib4(22, &alpha, A+16*sda, sda, 0, B+16*4, sdb, &beta, C+16*sdd+16*4, sdd, D+16*sdd+16*4, sdd);
+	return;
+	}
+
+void dgemm_nn_23_23_23(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+	kernel_dgemm_nn_8x4_lib4(23, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_8x4_lib4(23, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(23, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(23, &alpha, A, sda, 0, B+12*4, sdb, &beta, C+12*4, sdd, D+12*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(23, &alpha, A, sda, 0, B+16*4, sdb, &beta, C+16*4, sdd, D+16*4, sdd);
+	kernel_dgemm_nn_8x4_vs_lib4(23, &alpha, A, sda, 0, B+20*4, sdb, &beta, C+20*4, sdd, D+20*4, sdd, 8, 3);
+
+	kernel_dgemm_nn_8x4_lib4(23, &alpha, A+8*sda, sda, 0, B, sdb, &beta, C+8*sdd, sdd, D+8*sdd, sdd);
+	kernel_dgemm_nn_8x4_lib4(23, &alpha, A+8*sda, sda, 0, B+4*4, sdb, &beta, C+8*sdd+4*4, sdd, D+8*sdd+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(23, &alpha, A+8*sda, sda, 0, B+8*4, sdb, &beta, C+8*sdd+8*4, sdd, D+8*sdd+8*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(23, &alpha, A+8*sda, sda, 0, B+12*4, sdb, &beta, C+8*sdd+12*4, sdd, D+8*sdd+12*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(23, &alpha, A+8*sda, sda, 0, B+16*4, sdb, &beta, C+8*sdd+16*4, sdd, D+8*sdd+16*4, sdd);
+	kernel_dgemm_nn_8x4_vs_lib4(23, &alpha, A+8*sda, sda, 0, B+20*4, sdb, &beta, C+8*sdd+20*4, sdd, D+8*sdd+20*4, sdd, 8, 3);
+
+	kernel_dgemm_nn_8x4_vs_lib4(23, &alpha, A+16*sda, sda, 0, B, sdb, &beta, C+16*sdd, sdd, D+16*sdd, sdd, 7, 4);
+	kernel_dgemm_nn_8x4_vs_lib4(23, &alpha, A+16*sda, sda, 0, B+4*4, sdb, &beta, C+16*sdd+4*4, sdd, D+16*sdd+4*4, sdd, 7, 4);
+	kernel_dgemm_nn_8x4_vs_lib4(23, &alpha, A+16*sda, sda, 0, B+8*4, sdb, &beta, C+16*sdd+8*4, sdd, D+16*sdd+8*4, sdd, 7, 4);
+	kernel_dgemm_nn_8x4_vs_lib4(23, &alpha, A+16*sda, sda, 0, B+12*4, sdb, &beta, C+16*sdd+12*4, sdd, D+16*sdd+12*4, sdd, 7, 4);
+	kernel_dgemm_nn_8x4_vs_lib4(23, &alpha, A+16*sda, sda, 0, B+16*4, sdb, &beta, C+16*sdd+16*4, sdd, D+16*sdd+16*4, sdd, 7, 4);
+	kernel_dgemm_nn_8x4_vs_lib4(23, &alpha, A+16*sda, sda, 0, B+20*4, sdb, &beta, C+16*sdd+20*4, sdd, D+16*sdd+20*4, sdd, 7, 3);
+	return;
+	}
+
+void dgemm_nn_24_24_24(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
+	{
+#if 1
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A, sda, 0, B+12*4, sdb, &beta, C+12*4, sdd, D+12*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A, sda, 0, B+16*4, sdb, &beta, C+16*4, sdd, D+16*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A, sda, 0, B+20*4, sdb, &beta, C+20*4, sdd, D+20*4, sdd);
+
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A+8*sda, sda, 0, B, sdb, &beta, C+8*sdd, sdd, D+8*sdd, sdd);
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A+8*sda, sda, 0, B+4*4, sdb, &beta, C+8*sdd+4*4, sdd, D+8*sdd+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A+8*sda, sda, 0, B+8*4, sdb, &beta, C+8*sdd+8*4, sdd, D+8*sdd+8*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A+8*sda, sda, 0, B+12*4, sdb, &beta, C+8*sdd+12*4, sdd, D+8*sdd+12*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A+8*sda, sda, 0, B+16*4, sdb, &beta, C+8*sdd+16*4, sdd, D+8*sdd+16*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A+8*sda, sda, 0, B+20*4, sdb, &beta, C+8*sdd+20*4, sdd, D+8*sdd+20*4, sdd);
+
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A+16*sda, sda, 0, B, sdb, &beta, C+16*sdd, sdd, D+16*sdd, sdd);
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A+16*sda, sda, 0, B+4*4, sdb, &beta, C+16*sdd+4*4, sdd, D+16*sdd+4*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A+16*sda, sda, 0, B+8*4, sdb, &beta, C+16*sdd+8*4, sdd, D+16*sdd+8*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A+16*sda, sda, 0, B+12*4, sdb, &beta, C+16*sdd+12*4, sdd, D+16*sdd+12*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A+16*sda, sda, 0, B+16*4, sdb, &beta, C+16*sdd+16*4, sdd, D+16*sdd+16*4, sdd);
+	kernel_dgemm_nn_8x4_lib4(24, &alpha, A+16*sda, sda, 0, B+20*4, sdb, &beta, C+16*sdd+20*4, sdd, D+16*sdd+20*4, sdd);
+#else
+	kernel_dgemm_nn_12x4_lib4(24, &alpha, A, sda, 0, B, sdb, &beta, C, sdd, D, sdd);
+	kernel_dgemm_nn_12x4_lib4(24, &alpha, A, sda, 0, B+4*4, sdb, &beta, C+4*4, sdd, D+4*4, sdd);
+	kernel_dgemm_nn_12x4_lib4(24, &alpha, A, sda, 0, B+8*4, sdb, &beta, C+8*4, sdd, D+8*4, sdd);
+	kernel_dgemm_nn_12x4_lib4(24, &alpha, A, sda, 0, B+12*4, sdb, &beta, C+12*4, sdd, D+12*4, sdd);
+	kernel_dgemm_nn_12x4_lib4(24, &alpha, A, sda, 0, B+16*4, sdb, &beta, C+16*4, sdd, D+16*4, sdd);
+	kernel_dgemm_nn_12x4_lib4(24, &alpha, A, sda, 0, B+20*4, sdb, &beta, C+20*4, sdd, D+20*4, sdd);
+
+	kernel_dgemm_nn_12x4_lib4(24, &alpha, A+12*sda, sda, 0, B, sdb, &beta, C+12*sdd, sdd, D+12*sdd, sdd);
+	kernel_dgemm_nn_12x4_lib4(24, &alpha, A+12*sda, sda, 0, B+4*4, sdb, &beta, C+12*sdd+4*4, sdd, D+12*sdd+4*4, sdd);
+	kernel_dgemm_nn_12x4_lib4(24, &alpha, A+12*sda, sda, 0, B+8*4, sdb, &beta, C+12*sdd+8*4, sdd, D+12*sdd+8*4, sdd);
+	kernel_dgemm_nn_12x4_lib4(24, &alpha, A+12*sda, sda, 0, B+12*4, sdb, &beta, C+12*sdd+12*4, sdd, D+12*sdd+12*4, sdd);
+	kernel_dgemm_nn_12x4_lib4(24, &alpha, A+12*sda, sda, 0, B+16*4, sdb, &beta, C+12*sdd+16*4, sdd, D+12*sdd+16*4, sdd);
+	kernel_dgemm_nn_12x4_lib4(24, &alpha, A+12*sda, sda, 0, B+20*4, sdb, &beta, C+12*sdd+20*4, sdd, D+12*sdd+20*4, sdd);
+#endif
+	return;
+	}
+#endif
 
 
 int main()
@@ -237,7 +500,7 @@ int main()
 
 		{
 
-		int n = 12;
+		int n = 21;
 		int nrep = 40000; //nnrep[ll];
 #endif
 
@@ -369,7 +632,7 @@ int main()
 	//			kernel_dgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 	//			kernel_dgemm_nt_8x8_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 	//			kernel_dsyrk_nt_l_8x8_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-	//			kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//				kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 	//			kernel_dgemm_nt_4x8_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 	//			kernel_dgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
 	//			kernel_dger4_12_sub_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
@@ -386,24 +649,11 @@ int main()
 	//			kernel_dgemm_nn_2x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 	//			kernel_dgemm_nn_4x4_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 //				kernel_dgemm_nn_12x4_lib4(n, &alpha, sA.pA, 0, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//				kernel_dgemm_nn_8x4_lib4(n, &alpha, sA.pA, 0, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//				kernel_dgemm_nn_8x6_lib4(n, &alpha, sA.pA, 0, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 
-				// 4
 #if 0
-				dgemm_nn_4_4_4(alpha, sA.pA, sA.cn, sB.pA, sB.cn, beta, sC.pA, sC.cn, sD.pA, sD.cn);
-#endif
-				// 8
-#if 0
-				dgemm_nn_8_8_8(alpha, sA.pA, sA.cn, sB.pA, sB.cn, beta, sC.pA, sC.cn, sD.pA, sD.cn);
-#endif
-				// 12
-#if 0
-//				dgemm_nn_12_12_12(alpha, sA.pA, sA.cn, sB.pA, sB.cn, beta, sC.pA, sC.cn, sD.pA, sD.cn);
-	kernel_dgemm_nn_12x4_lib4(12, &alpha, sA.pA, sda, 0, sB.pA, sdb, &beta, sD.pA, sdd, sD.pA, sdd);
-	kernel_dgemm_nn_12x4_lib4(12, &alpha, sA.pA, sda, 0, sB.pA+4*4, sdb, &beta, sD.pA+4*4, sdd, sD.pA+4*4, sdd);
-	kernel_dgemm_nn_12x4_lib4(12, &alpha, sA.pA, sda, 0, sB.pA+8*4, sdb, &beta, sD.pA+8*4, sdd, sD.pA+8*4, sdd);
-#endif
-#if 0
-				dgemm_nn_16_16_16(alpha, sA.pA, sA.cn, sB.pA, sB.cn, beta, sC.pA, sC.cn, sD.pA, sD.cn);
+				dgemm_nn_21_21_21(alpha, sA.pA, sA.cn, sB.pA, sB.cn, beta, sC.pA, sC.cn, sD.pA, sD.cn);
 #endif
 
 	//			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
