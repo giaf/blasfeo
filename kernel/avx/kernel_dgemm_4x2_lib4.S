@@ -1007,6 +1007,56 @@ inner_store_2x4_lib4:
 
 // common inner routine with file scope
 //
+// store n
+//
+// input arguments:
+// r10   <- D
+// ymm0  <- [d00 d10]
+// ymm1  <- [d01 d11]
+// ymm2  <- [d02 d12]
+// ymm3  <- [d03 d13]
+//
+// output arguments:
+// r10   <- D
+// ymm0  <- [d00 d10]
+// ymm1  <- [d01 d11]
+// ymm2  <- [d02 d12]
+// ymm3  <- [d03 d13]
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_2X2_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_store_2x2_lib4, @function
+inner_store_2x2_lib4:
+#elif defined(OS_MAC)
+_inner_store_2x2_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_store_2x2_lib4; .scl 2; .type 32; .endef
+inner_store_2x2_lib4:
+#endif
+#endif
+	
+	vmovapd %xmm0,   0(%r10)
+	vmovapd %xmm1,  32(%r10)
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_store_2x2_lib4, .-inner_store_2x2_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // store n vs
 //
 // input arguments:
@@ -1562,6 +1612,107 @@ kernel_dgemm_nn_2x4_vs_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dgemm_nn_2x4_vs_lib4, .-kernel_dgemm_nn_2x4_vs_lib4
+#endif
+
+
+
+
+
+//                               1      2              3          4            5          6        7             8          9
+// void kernel_dgemm_nn_2x2_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dgemm_nn_2x2_lib4
+	.type kernel_dgemm_nn_2x2_lib4, @function
+kernel_dgemm_nn_2x2_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dgemm_nn_2x2_lib4
+_kernel_dgemm_nn_2x2_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dgemm_nn_2x2_lib4
+	.def kernel_dgemm_nn_2x2_lib4; .scl 2; .type 32; .endef
+kernel_dgemm_nn_2x2_lib4:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG5, %r12  // B
+	movq	ARG6, %r13 // sdb
+	sall	$5, %r13d // 4*sdb*sizeof(double)
+	movq	ARG4, %r14 // offsetB
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGEMM_ADD_NN_4X2_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dgemm_add_nn_4x2_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dgemm_add_nn_4x2_lib4
+#endif
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NN_4X2_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_add_nn_4x2_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_add_nn_4x2_lib4
+#endif
+#endif
+
+
+	// call inner blend 
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X2_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_scale_ab_4x2_lib4
+#elif defined(OS_MAC)
+	callq _inner_scale_ab_4x2_lib4
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG9, %r10 // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_2X2_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_2x2_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_2x2_lib4
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dgemm_nn_2x2_lib4, .-kernel_dgemm_nn_2x2_lib4
 #endif
 
 
