@@ -55,9 +55,15 @@ void kernel_dtrsv_lt_inv_4_lib4(int k, double *A, int sda, double *inv_diag_A, d
 void kernel_dtrsv_lt_inv_3_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
 void kernel_dtrsv_lt_inv_2_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
 void kernel_dtrsv_lt_inv_1_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
+void kernel_dtrsv_lt_one_4_lib4(int k, double *A, int sda, double *x, double *y, double *z);
+void kernel_dtrsv_lt_one_3_lib4(int k, double *A, int sda, double *x, double *y, double *z);
+void kernel_dtrsv_lt_one_2_lib4(int k, double *A, int sda, double *x, double *y, double *z);
+void kernel_dtrsv_lt_one_1_lib4(int k, double *A, int sda, double *x, double *y, double *z);
 void kernel_dtrsv_ln_one_4_vs_lib4(int kmax, double *A, double *x, double *y, double *z, int km, int kn);
 void kernel_dtrsv_ln_one_4_lib4(int kmax, double *A, double *x, double *y, double *z);
 void kernel_dtrsv_un_inv_4_lib4(int kmax, double *A, double *inv_diag_A, double *x, double *y, double *z);
+void kernel_dtrsv_ut_inv_4_lib4(int kmax, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
+void kernel_dtrsv_ut_inv_4_vs_lib4(int kmax, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z, int m1, int n1);
 void kernel_dtrmv_un_4_lib4(int k, double *A, double *x, double *z);
 void kernel_dtrmv_ut_4_lib4(int k, double *A, int sda, double *x, double *z);
 void kernel_dtrmv_ut_4_vs_lib4(int k, double *A, int sda, double *x, double *z, int km);

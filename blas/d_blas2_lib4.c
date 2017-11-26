@@ -1021,8 +1021,39 @@ void dtrsv_ltu_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	// z: m
 	if(zi+m > sz->m) printf("\n***** dtrsv_ltu_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	printf("\n***** dtrsv_ltu_libstr : feature not implemented yet *****\n");
-	exit(1);
+//	printf("\n***** dtrsv_ltu_libstr : feature not implemented yet *****\n");
+//	exit(1);
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs; // TODO ai
+	double *dA = sA->dA;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	int ii;
+	if(x!=z)
+		for(ii=0; ii<m; ii++)
+			z[ii] = x[ii];
+	ii=0;
+	if(m%4==1)
+		{
+		kernel_dtrsv_lt_one_1_lib4(1, &pA[m/bs*bs*sda+(m-1)*bs], sda, &z[m-1], &z[m-1], &z[m-1]);
+		ii++;
+		}
+	else if(m%4==2)
+		{
+		kernel_dtrsv_lt_one_2_lib4(2, &pA[m/bs*bs*sda+(m-2)*bs], sda, &z[m-2], &z[m-2], &z[m-2]);
+		ii+=2;
+		}
+	else if(m%4==3)
+		{
+		kernel_dtrsv_lt_one_3_lib4(3, &pA[m/bs*bs*sda+(m-3)*bs], sda, &z[m-3], &z[m-3], &z[m-3]);
+		ii+=3;
+		}
+	for(; ii<m-3; ii+=4)
+		{
+		kernel_dtrsv_lt_one_4_lib4(ii+4, &pA[(m-ii-4)/bs*bs*sda+(m-ii-4)*bs], sda, &z[m-ii-4], &z[m-ii-4], &z[m-ii-4]);
+		}
+	return;
 	}
 
 
@@ -1133,8 +1164,48 @@ void dtrsv_utn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	// z: m
 	if(zi+m > sz->m) printf("\n***** dtrsv_utn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	printf("\n***** dtrsv_utn_libstr : feature not implemented yet *****\n");
-	exit(1);
+//	printf("\n***** dtrsv_utn_libstr : feature not implemented yet *****\n");
+//	exit(1);
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs; // TODO ai
+	double *dA = sA->dA;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	int ii;
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+			ddiaex_lib(m, 1.0, ai, pA, sda, dA);
+			for(ii=0; ii<m; ii++)
+				dA[ii] = 1.0 / dA[ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+		ddiaex_lib(m, 1.0, ai, pA, sda, dA);
+		for(ii=0; ii<m; ii++)
+			dA[ii] = 1.0 / dA[ii];
+		sA->use_dA = 0;
+		}
+	if(x!=z)
+		{
+		for(ii=0; ii<m; ii++)
+			z[ii] = x[ii];
+		}
+	ii = 0;
+	for( ; ii<m-3; ii+=4)
+		{
+		kernel_dtrsv_ut_inv_4_lib4(ii, &pA[ii*bs], sda, &dA[ii], z, &z[ii], &z[ii]);
+		}
+	if(ii<m)
+		{
+		kernel_dtrsv_ut_inv_4_vs_lib4(ii, &pA[ii*bs], sda, &dA[ii], z, &z[ii], &z[ii], m-ii, m-ii);
+		ii+=4;
+		}
+	return;
 	}
 
 

@@ -48,6 +48,7 @@ OBJS += \
 		kernel/avx/kernel_dgemm_diag_lib4.o \
 		kernel/avx2/kernel_dgemv_8_lib4.o \
 		kernel/avx/kernel_dgemv_4_lib4.o \
+		kernel/c99/kernel_dgemv_4_lib4.o \
 		kernel/avx2/kernel_dsymv_6_lib4.o \
 		kernel/avx2/kernel_dgetrf_pivot_4_lib4.o \
 		kernel/avx/kernel_dgeqrf_4_lib4.o \
@@ -105,6 +106,7 @@ OBJS += \
 		kernel/avx/kernel_dgemv_12_lib4.o \
 		kernel/avx/kernel_dgemv_8_lib4.o \
 		kernel/avx/kernel_dgemv_4_lib4.o \
+		kernel/c99/kernel_dgemv_4_lib4.o \
 		kernel/avx/kernel_dsymv_6_lib4.o \
 		kernel/avx/kernel_dgetrf_pivot_4_lib4.o \
 		kernel/avx/kernel_dgeqrf_4_lib4.o \
