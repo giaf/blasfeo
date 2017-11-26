@@ -7510,7 +7510,7 @@ inner_edge_dgetrf_l_8x4_lib4:
 	vblendpd		$0x8, %ymm3, %ymm12, %ymm12
 	
 //	vpermpd			$0xff, %ymm3, %ymm13
-//	vperm2f128		$0x11, %ymm3, %ymm3, %ymm11
+	vperm2f128		$0x11, %ymm3, %ymm3, %ymm11
 	vpermilpd		$0xf, %ymm11, %ymm13
 	vdivsd			%xmm13, %xmm14, %xmm13
 //	vpermpd			$0x00, %ymm13, %ymm13
