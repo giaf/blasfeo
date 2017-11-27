@@ -10273,7 +10273,7 @@ kernel_dgemm_nn_12x4_lib4:
 
 
 
-//                                rdi    rsi            rdx        rcx          r8         r9       rsp+8         rsp+16     rsp+24
+//                                1      2              3          4            5          6        7             8          9
 // void kernel_dgemm_nn_4x12_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D);
 
 	.p2align 4,,15
@@ -14738,9 +14738,11 @@ kernel_dlarfb12_r_4_lib4:
 	movq	%r13, %r12
 	movq	%r14, %r13
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB4
+#if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
+#endif
 	INNER_TRAN_12X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)

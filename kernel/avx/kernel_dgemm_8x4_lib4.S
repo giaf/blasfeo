@@ -9521,8 +9521,8 @@ kernel_dgemm_nn_8x4_vs_lib4:
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-	movq	ARG11, %r12 // km 
-	movq	ARG12, %r13 // kn 
+	movq	ARG12, %r12 // km 
+	movq	ARG13, %r13 // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_VS_LIB4
