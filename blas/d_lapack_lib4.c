@@ -1374,7 +1374,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 			{
 			if(m-ii>8)
 				{
-				kernel_dgemm_nn_12x4_vs_lib4(jj, &dm1, &pD[ii*sdd], sdd, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], sdd, &pD[jj*ps+ii*sdd], sdd, m-ii, 4);
+				kernel_dgemm_nn_12x4_vs_lib4(jj, &dm1, &pD[ii*sdd], sdd, 0, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], sdd, &pD[jj*ps+ii*sdd], sdd, m-ii, 4);
 				}
 			else if(m-ii>4)
 				{
@@ -1423,7 +1423,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 			{
 			if(m-ii>8)
 				{
-				kernel_dgemm_nn_12x4_vs_lib4((jj+4), &dm1, &pD[ii*sdd], sdd, &pD[(jj+4)*ps], sdd, &d1, &pD[(jj+4)*ps+ii*sdd], sdd, &pD[(jj+4)*ps+ii*sdd], sdd, m-ii, 4);
+				kernel_dgemm_nn_12x4_vs_lib4((jj+4), &dm1, &pD[ii*sdd], sdd, 0, &pD[(jj+4)*ps], sdd, &d1, &pD[(jj+4)*ps+ii*sdd], sdd, &pD[(jj+4)*ps+ii*sdd], sdd, m-ii, 4);
 				}
 			else if(m-ii>4)
 				{
@@ -1472,7 +1472,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 			{
 			if(m-ii>8)
 				{
-				kernel_dgemm_nn_12x4_vs_lib4((jj+8), &dm1, &pD[ii*sdd], sdd, &pD[(jj+8)*ps], sdd, &d1, &pD[(jj+8)*ps+ii*sdd], sdd, &pD[(jj+8)*ps+ii*sdd], sdd, m-ii, 4);
+				kernel_dgemm_nn_12x4_vs_lib4((jj+8), &dm1, &pD[ii*sdd], sdd, 0, &pD[(jj+8)*ps], sdd, &d1, &pD[(jj+8)*ps+ii*sdd], sdd, &pD[(jj+8)*ps+ii*sdd], sdd, m-ii, 4);
 				}
 			else if(m-ii>4)
 				{
@@ -1563,7 +1563,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 			{
 			if(m-ii>8)
 				{
-				kernel_dgemm_nn_12x4_vs_lib4(jj, &dm1, &pD[ii*sdd], sdd, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], sdd, &pD[jj*ps+ii*sdd], sdd, m-ii, 4);
+				kernel_dgemm_nn_12x4_vs_lib4(jj, &dm1, &pD[ii*sdd], sdd, 0, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], sdd, &pD[jj*ps+ii*sdd], sdd, m-ii, 4);
 				}
 			else if(m-ii>4)
 				{
@@ -1630,7 +1630,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 			{
 			if(m-ii>8)
 				{
-				kernel_dgemm_nn_12x4_vs_lib4((jj+4), &dm1, &pD[ii*sdd], sdd, &pD[(jj+4)*ps], sdd, &d1, &pD[(jj+4)*ps+ii*sdd], sdd, &pD[(jj+4)*ps+ii*sdd], sdd, m-ii, 4);
+				kernel_dgemm_nn_12x4_vs_lib4((jj+4), &dm1, &pD[ii*sdd], sdd, 0, &pD[(jj+4)*ps], sdd, &d1, &pD[(jj+4)*ps+ii*sdd], sdd, &pD[(jj+4)*ps+ii*sdd], sdd, m-ii, 4);
 				}
 			else if(m-ii>4)
 				{
@@ -1737,7 +1737,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 			{
 			if(m-ii>8)
 				{
-				kernel_dgemm_nn_12x4_vs_lib4(jj, &dm1, &pD[ii*sdd], sdd, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], sdd, &pD[jj*ps+ii*sdd], sdd, m-ii, 4);
+				kernel_dgemm_nn_12x4_vs_lib4(jj, &dm1, &pD[ii*sdd], sdd, 0, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], sdd, &pD[jj*ps+ii*sdd], sdd, m-ii, 4);
 				}
 			else if(m-ii>4)
 				{
@@ -1841,7 +1841,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	i0 = ii;
 	for( ; ii<m-8; ii+=12)
 		{
-		kernel_dgemm_nn_12x4_vs_lib4(jj, &dm1, &pD[ii*sdd], sdd, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], sdd, &pD[jj*ps+ii*sdd], sdd, m-ii, 4);
+		kernel_dgemm_nn_12x4_vs_lib4(jj, &dm1, &pD[ii*sdd], sdd, 0, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], sdd, &pD[jj*ps+ii*sdd], sdd, m-ii, 4);
 		}
 	if(m-ii>4)
 		{
@@ -1885,7 +1885,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	i1 = ii;
 	for( ; ii<m-8; ii+=12)
 		{
-		kernel_dgemm_nn_12x4_vs_lib4((jj+4), &dm1, &pD[ii*sdd], sdd, &pD[(jj+4)*ps], sdd, &d1, &pD[(jj+4)*ps+ii*sdd], sdd, &pD[(jj+4)*ps+ii*sdd], sdd, m-ii, n-jj-4);
+		kernel_dgemm_nn_12x4_vs_lib4((jj+4), &dm1, &pD[ii*sdd], sdd, 0, &pD[(jj+4)*ps], sdd, &d1, &pD[(jj+4)*ps+ii*sdd], sdd, &pD[(jj+4)*ps+ii*sdd], sdd, m-ii, n-jj-4);
 		}
 	if(m-ii>4)
 		{
@@ -1936,7 +1936,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	i1 = ii;
 	for( ; ii<m-8; ii+=12)
 		{
-		kernel_dgemm_nn_12x4_vs_lib4((jj+8), &dm1, &pD[ii*sdd], sdd, &pD[(jj+8)*ps], sdd, &d1, &pD[(jj+8)*ps+ii*sdd], sdd, &pD[(jj+8)*ps+ii*sdd], sdd, m-ii, n-jj-8);
+		kernel_dgemm_nn_12x4_vs_lib4((jj+8), &dm1, &pD[ii*sdd], sdd, 0, &pD[(jj+8)*ps], sdd, &d1, &pD[(jj+8)*ps+ii*sdd], sdd, &pD[(jj+8)*ps+ii*sdd], sdd, m-ii, n-jj-8);
 		}
 	if(m-ii>4)
 		{
@@ -1994,7 +1994,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	// left block-column
 	ii = jj;
 	i0 = ii;
-	kernel_dgemm_nn_12x4_vs_lib4(jj, &dm1, &pD[ii*sdd], sdd, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], sdd, &pD[jj*ps+ii*sdd], sdd, m-ii, 4);
+	kernel_dgemm_nn_12x4_vs_lib4(jj, &dm1, &pD[ii*sdd], sdd, 0, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], sdd, &pD[jj*ps+ii*sdd], sdd, m-ii, 4);
 	kernel_dgetrf_pivot_4_lib4(m-i0, &pD[jj*ps+i0*sdd], sdd, &inv_diag_D[jj], &ipiv[i0]);
 	ipiv[i0+0] += i0;
 	if(ipiv[i0+0]!=i0+0)
