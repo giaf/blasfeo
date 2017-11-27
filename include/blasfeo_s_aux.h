@@ -59,6 +59,7 @@ void s_cvt_tran_strmat2mat(int m, int n, struct s_strmat *sA, int ai, int aj, fl
 void s_cast_mat2strmat(float *A, struct s_strmat *sA);
 void s_cast_diag_mat2strmat(float *dA, struct s_strmat *sA);
 void s_cast_vec2vecmat(float *a, struct s_strvec *sa);
+
 void sgein1_libstr(float a, struct s_strmat *sA, int ai, int aj);
 float sgeex1_libstr(struct s_strmat *sA, int ai, int aj);
 void svecin1_libstr(float a, struct s_strvec *sx, int xi);

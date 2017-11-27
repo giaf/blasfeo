@@ -408,6 +408,15 @@ OBJS += \
 
 endif
 
+ifeq ($(TESTING), 1)
+# reference routine for testing
+# aux
+OBJS += \
+		auxiliary/d_aux_lib.o \
+		auxiliary/s_aux_lib.o \
+
+endif
+
 
 # Define targets
 
