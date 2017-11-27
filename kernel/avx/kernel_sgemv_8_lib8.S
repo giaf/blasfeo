@@ -2302,7 +2302,7 @@ kernel_sgemv_t_8_gen_lib8:
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMV_ADD_T_8_LIB4
+	INNER_KERNEL_GEMV_ADD_T_8_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_gemv_add_t_8_lib8
@@ -2319,7 +2319,7 @@ kernel_sgemv_t_8_gen_lib8:
 	movq	ARG8, %r12 // y 
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_SCALE_AB_8_LIB4
+	INNER_BLEND_T_SCALE_AB_8_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_t_scale_ab_8_lib8
@@ -2335,7 +2335,7 @@ kernel_sgemv_t_8_gen_lib8:
 	movq	ARG10, %r11 // km 
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_8_VS_LIB4
+	INNER_STORE_8_VS_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_store_8_vs_lib8

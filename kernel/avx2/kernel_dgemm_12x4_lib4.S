@@ -10158,7 +10158,7 @@ kernel_dgemm_nt_4x12_vs_lib4:
 
 
 
-//                                rdi    rsi            rdx        rcx      r8           r9         rsp+8    rsp+16        rsp+24     rsp+32   rsp+40     rsp+48
+//                                1      2              3          4        5            6          7        8             9          10       11         12
 // void kernel_dgemm_nn_12x4_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd);
 
 	.p2align 4,,15
@@ -10273,7 +10273,7 @@ kernel_dgemm_nn_12x4_lib4:
 
 
 
-//                                rdi    rsi            rdx        rcx          r8         r9       rsp+8         rsp+16     rsp+24
+//                                1      2              3          4            5          6        7             8          9
 // void kernel_dgemm_nn_4x12_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D);
 
 	.p2align 4,,15
@@ -10382,8 +10382,8 @@ kernel_dgemm_nn_4x12_lib4:
 
 
 
-//                                   rdi     rsi            rdx        rcx      r8         r9       rsp+8         rsp+16     rsp+24   rsp+32     rsp+40   rsp+48  rsp+56
-// void kernel_dgemm_nn_12x4_vs_lib4(int km, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, int km, int kn);
+//                                   1      2              3          4        5            6          7        8             9          10       11         12       13      14
+// void kernel_dgemm_nn_12x4_vs_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -10423,9 +10423,20 @@ kernel_dgemm_nn_12x4_vs_lib4:
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-	movq	ARG5, %r13 // B
-	movq	ARG6, %r14 // sda
+	movq	ARG6, %r13 // B
+	movq	ARG7, %r14 // sda
 	sall	$5, %r14d // 4*sda*sizeof(double)
+	movq	ARG5, %r15 // offsetB
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGEMM_ADD_NN_12X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dgemm_add_nn_12x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dgemm_add_nn_12x4_lib4
+#endif
+#endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NN_12X4_LIB4
@@ -10441,9 +10452,9 @@ kernel_dgemm_nn_12x4_vs_lib4:
 	// call inner scale
 
 	movq	ARG2, %r10 // alpha
-	movq	ARG7, %r11 // beta
-	movq	ARG8, %r12 // C
-	movq	ARG9, %r13 // sdc
+	movq	ARG8, %r11 // beta
+	movq	ARG9, %r12 // C
+	movq	ARG10, %r13 // sdc
 	sall	$5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
@@ -10459,12 +10470,12 @@ kernel_dgemm_nn_12x4_vs_lib4:
 
 	// store n
 
-	movq	ARG10, %r10 // store address D
-	movq	ARG11, %r11 // sdd
+	movq	ARG11, %r10 // store address D
+	movq	ARG12, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
-	movq	ARG12, %r12 // km 
-	movq	ARG13, %r13 // kn 
+	movq	ARG13, %r12 // km 
+	movq	ARG14, %r13 // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_VS_LIB4
@@ -14727,9 +14738,11 @@ kernel_dlarfb12_r_4_lib4:
 	movq	%r13, %r12
 	movq	%r14, %r13
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB4
+#if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4
+#endif
 	INNER_TRAN_12X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)

@@ -5304,7 +5304,7 @@ kernel_strsm_nt_rl_inv_16x4_vs_lib8:
 	sall	$5, %r11d // 8*sdc*sizeof(float)
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_16X4_LIB8
+	INNER_SCALE_11_16X4_LIB8
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_scale_11_16x4_lib8

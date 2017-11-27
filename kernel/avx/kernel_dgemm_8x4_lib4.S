@@ -145,6 +145,10 @@
 	.section	__TEXT,__text,regular,pure_instructions
 #endif
 
+
+
+
+
 // common inner routine with file scope
 //
 // input arguments:
@@ -7506,7 +7510,7 @@ inner_edge_dgetrf_l_8x4_lib4:
 	vblendpd		$0x8, %ymm3, %ymm12, %ymm12
 	
 //	vpermpd			$0xff, %ymm3, %ymm13
-//	vperm2f128		$0x11, %ymm3, %ymm3, %ymm11
+	vperm2f128		$0x11, %ymm3, %ymm3, %ymm11
 	vpermilpd		$0xf, %ymm11, %ymm13
 	vdivsd			%xmm13, %xmm14, %xmm13
 //	vpermpd			$0x00, %ymm13, %ymm13
@@ -7849,6 +7853,8 @@ inner_store_4x8_vs_lib4:
 	vmaskmovpd	%ymm6, %ymm15, 192(%r10)
 	je			0f // end
 	vmaskmovpd	%ymm7, %ymm15, 224(%r10)
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -9515,8 +9521,8 @@ kernel_dgemm_nn_8x4_vs_lib4:
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-	movq	ARG11, %r12 // km 
-	movq	ARG12, %r13 // kn 
+	movq	ARG12, %r12 // km 
+	movq	ARG13, %r13 // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_VS_LIB4

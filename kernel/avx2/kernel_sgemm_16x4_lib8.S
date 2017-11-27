@@ -6044,7 +6044,7 @@ kernel_ssyrk_nt_l_16x4_lib8:
 	sall	$5, %r11d // 8*sdd*sizeof(float)
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_L16X4_LIB8
+	INNER_STORE_L_16X4_LIB8
 #else
 #if defined(OS_LINUX)
 	call inner_store_l_16x4_lib8
@@ -6242,7 +6242,7 @@ kernel_ssyrk_nt_l_12x4_lib8:
 	sall	$5, %r11d // 8*sdd*sizeof(float)
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_L12X4_LIB8
+	INNER_STORE_L_12X4_LIB8
 #else
 #if defined(OS_LINUX)
 	call inner_store_l_12x4_lib8
