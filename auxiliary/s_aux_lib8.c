@@ -1817,6 +1817,7 @@ void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_st
 				pB += 8*sdb;
 				}
 			}
+		}
 
 	// same alignment
 	if(offsetA==offsetB)
