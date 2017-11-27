@@ -1,20 +1,50 @@
-
 // 1 to 1 comparison of every element
-int GECMP_LIBSTR(int n, int m, struct STRMAT *sA, struct STRMAT *rA)
+int GECMP_LIBSTR(int n, int m,
+				 struct STRMAT *sB, struct STRMAT *rB,
+				 struct STRMAT *sA, struct STRMAT *rA
+				 )
 	{
 	int ii, jj;
+	const int offset = 8;
 
-	for(ii = 0; ii <= n; ii++)
+	for(ii = 0; ii < m; ii++)
 		{
-		for(jj = 0; jj <= m; jj++)
+		for(jj = 0; jj < n; jj++)
 			{
 
-			REAL sai = MATEL_LIBSTR(sA, ii, jj);
-			REAL rai = MATEL_LIB(rA, ii, jj);
+			// strtucture mat
+			REAL sbi = MATEL_LIBSTR(sB, ii, jj);
+			// reference mat
+			REAL rbi = MATEL_LIB(rB, ii, jj);
 
-			if ( (sai != rai) & (fabs(sai-rai) > 1e-10*(fabs(sai) + fabs(rai))))
+			if ( (sbi != rbi) & ( fabs(sbi-rbi) > 1e-10*(fabs(sbi)+fabs(rbi)) ) )
 				{
-					printf("\n\nFailed at index %d,%d, %f != %f\n\n", ii, jj, sai, rai);
+					printf("\n\nFailed at index %d,%d, (HP) %f != %f (RF)\n\n", ii, jj, sbi, rbi);
+
+					printf("\nPrint B HP:\n\n");
+					PRINT_STRMAT(ii+offset, jj+offset, sB, 0, 0);
+
+					printf("\nPrint B REF:\n\n");
+					TEST_PRINT_STRMAT(ii+offset, jj+offset, rB, 0, 0);
+
+					printf("\nPrint A HP:\n\n");
+					PRINT_STRMAT(ii+offset, jj+offset, sA, 0, 0);
+
+					printf("\nPrint A REF:\n\n");
+					TEST_PRINT_STRMAT(ii+offset, jj+offset, rA, 0, 0);
+
+					#if defined(LA)
+					SHOW_DEFINE(LA)
+					#endif
+
+					#if defined(TARGET)
+					SHOW_DEFINE(TARGET)
+					#endif
+
+					#if defined(PRECISION)
+					SHOW_DEFINE(PRECISION)
+					#endif
+
 					return 0;
 				}
 			}

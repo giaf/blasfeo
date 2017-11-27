@@ -1,17 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/time.h>
-#include <assert.h>
-
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux_ext_dep.h"
-#include "../include/blasfeo_s_aux.h"
-#include "../include/blasfeo_s_aux_test.h"
-#include "../include/blasfeo_i_aux_ext_dep.h"
-#include "../include/blasfeo_v_aux_ext_dep.h"
-#include "../include/blasfeo_s_kernel.h"
-#include "../include/blasfeo_s_blas.h"
-
 #define STR(x) #x
 #define SHOW_DEFINE(x) printf("%s=%s\n", #x, STR(x));
 
@@ -31,7 +17,7 @@ int main()
 #endif
 
 
-	printf("\n\n\n--------------- Single Precision --------------------\n\n\n");
+	printf("\n\n\n--------------- TYPE_NAME Precision --------------------\n\n\n");
 
 SHOW_DEFINE(LA)
 SHOW_DEFINE(TARGET)
@@ -43,26 +29,18 @@ SHOW_DEFINE(TARGET)
 	int p_n = 15;
 	int N = 10;
 
+	// initialized matrices in column-major format
 	//
-	// matrices in column-major format
-	//
-	float *A;
+	REAL *A;
 	// standard column major allocation (malloc)
 	s_zeros(&A, n, n);
 	for(ii=0; ii<n*n; ii++) A[ii] = ii;
 
-	float *B;
+	REAL *B;
 	// standard column major allocation (malloc)
 	s_zeros(&B, n, n);
 	for(ii=0; ii<n*n; ii++) B[ii] = 2*ii;
 
-	// standard column major allocation (malloc)
-	float *C;
-	s_zeros(&C, n, n);
-
-	// using blasfeo allocate
-	/* struct s_strmat sD;                          */
-	/* s_allocate_strmat(n-1, n-1, &sD);            */
 
 	/* -------- instantiate s_strmat */
 
@@ -152,20 +130,20 @@ SHOW_DEFINE(TARGET)
 	/* int aj = 1; */
 
 	// ---- strmat
-	/* float ex_val = sgeex1_libstr(&sA, ai, aj); */
+	/* REAL ex_val = sgeex1_libstr(&sA, ai, aj); */
 	/* printf("Extract %d,%d for A: %f\n\n", ai, aj, ex_val); */
 
 	/* ---- column major */
 	/* struct s_strmat* ssA = &sA; */
 	/* int lda = (&sA)->m; */
-	/* float pointer + n_rows + n_col*leading_dimension; */
-	/* float *pA = (&sA)->pA + ai + aj*lda; */
-	/* float val = pA[0]; */
+	/* REAL pointer + n_rows + n_col*leading_dimension; */
+	/* REAL *pA = (&sA)->pA + ai + aj*lda; */
+	/* REAL val = pA[0]; */
 
 	/* ----------- copy and scale */
 	printf("\n\n----------- TEST Copy&Scale\n\n");
 
-	float alpha;
+	REAL alpha;
 	alpha = 1.5;
 	int ret, ni, mi;
 	ni = 12;
@@ -177,7 +155,6 @@ SHOW_DEFINE(TARGET)
 	for (ii = 0; ii < 8; ii++)
 		{
 
-
 		// ---- Scale
 		//
 		printf("Scale A[%d:%d,%d:%d] by %f\n",
@@ -186,7 +163,10 @@ SHOW_DEFINE(TARGET)
 		sgesc_libstr(     ni, mi, alpha, &sA, ii, 0);
 		test_sgesc_libstr(ni, mi, alpha, &rA, ii, 0);
 
-		assert(sgecmp_libstr(n, n, &sA, &rA, &sA, &rA));
+		/* printf("value 0,1: %f", MATEL_LIBSTR(&sA, 0,1)); */
+		/* printf("PS:%d", PS); */
+
+		assert(sgecmp_libstr(n, n, &sA, &rA));
 
 		// loop over B offset
 		for (jj = 0; jj < 8; jj++)
@@ -203,7 +183,7 @@ SHOW_DEFINE(TARGET)
 			// REF submatrix copy&scale
 			test_sgecpsc_libstr(ni, mi, alpha, &rA, ii, 0, &rB, jj, 0);
 			// check against blas with blasfeo REF
-			assert(sgecmp_libstr(n, n, &sB, &rB, &sA, &rA));
+			assert(sgecmp_libstr(n, n, &sB, &rB));
 
 			// ---- Copy
 			//
@@ -212,7 +192,7 @@ SHOW_DEFINE(TARGET)
 
 			sgecp_libstr(     ni, mi, &sA, ii, 0, &sB, jj, 0);
 			test_sgecp_libstr(ni, mi, &rA, ii, 0, &rB, jj, 0);
-			assert(sgecmp_libstr(n, n, &sB, &rB, &sA, &rA));
+			assert(sgecmp_libstr(n, n, &sB, &rB));
 
 			printf("\n");
 			}
@@ -227,9 +207,6 @@ SHOW_DEFINE(LA)
 #endif
 #if defined(TARGET)
 SHOW_DEFINE(TARGET)
-#endif
-#if defined(PRECISION)
-SHOW_DEFINE(PRECISION)
 #endif
 
 	}

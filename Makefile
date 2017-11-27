@@ -526,15 +526,6 @@ install_shared:
 
 BINARY_DIR = build/$(LA)/$(TARGET)
 
-# test_aux_shared:
-	# mkdir -p ./test_problems/$(BINARY_DIR)
-	# cp libblasfeo.so ./test_problems/$(BINARY_DIR)/libblasfeo.so
-	# make -C test_problems run_short_shared
-	# @echo
-	# @echo " Test problem build complete."
-	# @echo
-
-
 test:
 	mkdir -p ./test_problems/$(BINARY_DIR)
 	cp libblasfeo.a ./test_problems/$(BINARY_DIR)/libblasfeo.a
@@ -543,19 +534,48 @@ test:
 	@echo " Test problem build complete."
 	@echo
 
+
 run_test:
 	make -C test_problems run
 
-test_aux:
+
+deploy_to_test:
 	mkdir -p ./test_problems/$(BINARY_DIR)
 	cp libblasfeo.a ./test_problems/$(BINARY_DIR)/libblasfeo.a
+
+
+build_test_aux:
 	make -C test_problems aux
 	@echo
 	@echo " Test problem build complete."
 	@echo
 
-run_test_aux:
-	make -C test_problems run_aux_short
+# copy library
+# build test
+test_aux: deploy_to_test build_test_aux
+
+# deep build library (take into account flags changes)
+# copy library
+# build test
+test_aux_clean: clean static_library test_aux
+
+# build test
+# run test
+run_test_aux: build_test_aux
+	make -C test_problems run_aux
+
+# build library
+# copy library
+# build test
+# run test
+run_test_aux_build: static_library test_aux
+	make -C test_problems run_aux
+
+# deep build library (take into account flags changes)
+# copy library
+# build test
+# run test
+run_test_aux_clean: test_aux_clean run_test_aux
 
 clean:
 	rm -f libblasfeo.a

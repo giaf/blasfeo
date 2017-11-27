@@ -20,4 +20,4 @@
 
 
 
-int GECMP_LIBSTR(int n, int m, struct STRMAT *sA, struct STRMAT *rA);
+int GECMP_LIBSTR(int n, int m, struct STRMAT *sB, struct STRMAT *rB, struct STRMAT *sA, struct STRMAT *rA);
