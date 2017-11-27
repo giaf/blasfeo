@@ -1671,10 +1671,11 @@ void sgesc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 		{
 		mna = bs-offsetA;
 		mna = m<mna ? m : mna;
-		kernel_sgesc_8_0_gen_lib8(n, &alpha, &pA[offsetA], mna);
+		kernel_sgesc_8_0_gen_u_lib8(n, &alpha, &pA[offsetA], mna);
 		m -= mna;
 		pA += 8*sda;
 		}
+
 	ii = 0;
 	// main loop
 	for( ; ii<m-7; ii+=8)
@@ -1731,16 +1732,14 @@ void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_st
 
 	int ii, mna;
 
-#if 1
 	if(offsetB>0)
 		{
 		if(offsetB>offsetA)
 			{
 			mna = bs-offsetB;
 			mna = m<mna ? m : mna;
-			kernel_sgecp_8_0_gen_lib8(n, &pA[offsetA], &pB[offsetB], mna);
+			kernel_sgecp_8_0_gen_u_lib8(n, &pA[offsetA], &pB[offsetB], mna);
 			m -= mna;
-			//pA += 8*sda;
 			pB += 8*sdb;
 			}
 		else
@@ -1818,8 +1817,6 @@ void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_st
 				pB += 8*sdb;
 				}
 			}
-		}
-#endif
 
 	// same alignment
 	if(offsetA==offsetB)
@@ -1993,16 +1990,14 @@ void sgecpsc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 
 	int ii, mna;
 
-#if 1
 	if(offsetB>0)
 		{
 		if(offsetB>offsetA)
 			{
 			mna = bs-offsetB;
 			mna = m<mna ? m : mna;
-			kernel_sgecpsc_8_0_gen_lib8(n, &alpha, &pA[offsetA], &pB[offsetB], mna);
+			kernel_sgecpsc_8_0_gen_u_lib8(n, &alpha, &pA[offsetA], &pB[offsetB], mna);
 			m -= mna;
-			//pA += 8*sda;
 			pB += 8*sdb;
 			}
 		else
@@ -2081,7 +2076,6 @@ void sgecpsc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 				}
 			}
 		}
-#endif
 
 	// same alignment
 	if(offsetA==offsetB)
