@@ -125,7 +125,8 @@ void ROTG_LIBSTR(REAL a, REAL b, REAL *c, REAL *s)
 		}
 	else
 		{
-		aa = a/scale; bb = b/scale;
+		aa = a/scale;
+		bb = b/scale;
 		r = scale * SQRT(aa*aa + bb*bb);
 		r = r * (roe >= 0 ? 1 : -1);
 		*c = a / r;
