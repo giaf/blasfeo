@@ -26,59 +26,162 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include "../include/blasfeo_common.h"
-
-
-#define REAL float
-#define STRMAT s_strmat
-#define STRVEC s_strvec
-#define PS S_PS
-
-
-#define ZEROS s_zeros
-#define ZEROS_ALIGN s_zeros_align
-
-#define FREE s_free
-#define FREE_ALIGN s_free_align
-
-#define PRINT_MAT s_print_mat
-#define PRINT_TO_FILE_MAT s_print_to_file_mat
-
-#define PRINT_TRAN_MAT s_print_tran_mat
-#define PRINT_TO_FILE_TRAN_MAT s_print_to_file_tran_mat
-
-#define PRINT_E_MAT s_print_e_mat
-#define PRINT_E_TRAN_MAT s_print_e_tran_mat
-
-#include "x_aux_ext_dep_lib.c"
-
-
-#if defined(TESTING) | defined(LA_BLAS) | defined(LA_REFERENCE)
-
-
-#define ALLOCATE_STRMAT test_s_allocate_strmat
-#define ALLOCATE_STRVEC test_s_allocate_strvec
-
-#define FREE_STRMAT test_s_free_strmat
-#define FREE_STRVEC test_s_free_strvec
-
-#define PRINT_STRMAT test_s_print_strmat
-#define PRINT_STRVEC test_s_print_strvec
-#define PRINT_TRAN_STRVEC test_s_print_tran_strvec
-
-#define PRINT_TO_FILE_STRMAT test_s_print_to_file_strmat
-#define PRINT_TO_FILE_STRVEC test_s_print_to_file_strvec
-#define PRINT_TO_FILE_TRAN_STRVEC test_s_print_to_file_tran_strvec
-
-#define PRINT_E_STRMAT test_s_print_e_strmat
-#define PRINT_E_STRVEC test_s_print_e_strvec
-#define PRINT_E_TRAN_STRVEC test_s_print_e_tran_strvec
-
-
-#include "x_aux_ext_dep_lib0.c"
-
+#if ! defined(OS_WINDOWS)
+int posix_memalign(void **memptr, size_t alignment, size_t size);
 #endif
 
+
+
+/* creates a zero matrix */
+void ZEROS(REAL **pA, int row, int col)
+	{
+	*pA = malloc((row*col)*sizeof(REAL));
+	REAL *A = *pA;
+	int i;
+	for(i=0; i<row*col; i++) A[i] = 0.0;
+	}
+
+
+
+/* creates a zero matrix aligned to a cache line */
+void ZEROS_ALIGN(REAL **pA, int row, int col)
+	{
+#if defined(OS_WINDOWS)
+	*pA = (REAL *) _aligneMALLOC( (row*col)*sizeof(REAL), 64 );
+#else
+	void *temp;
+	int err = posix_memalign(&temp, 64, (row*col)*sizeof(REAL));
+	if(err!=0)
+		{
+		printf("Memory allocation error");
+		exit(1);
+		}
+	*pA = temp;
+#endif
+	REAL *A = *pA;
+	int i;
+	for(i=0; i<row*col; i++) A[i] = 0.0;
+	}
+
+
+
+/* frees matrix */
+void FREE(REAL *pA)
+	{
+	free( pA );
+	}
+
+
+
+/* frees aligned matrix */
+void FREE_ALIGN(REAL *pA)
+	{
+#if defined(OS_WINDOWS)
+	_aligneFREE( pA );
+#else
+	free( pA );
+#endif
+	}
+
+
+
+/* prints a matrix in column-major format */
+void PRINT_MAT(int m, int n, REAL *A, int lda)
+	{
+	int i, j;
+	for(i=0; i<m; i++)
+		{
+		for(j=0; j<n; j++)
+			{
+			printf("%9.5f ", A[i+lda*j]);
+			}
+		printf("\n");
+		}
+	return;
+	}
+
+
+
+/* prints the transposed of a matrix in column-major format */
+void PRINT_TRAN_MAT(int row, int col, REAL *A, int lda)
+	{
+	int i, j;
+	for(j=0; j<col; j++)
+		{
+		for(i=0; i<row; i++)
+			{
+			printf("%9.5f ", A[i+lda*j]);
+			}
+		printf("\n");
+		}
+	printf("\n");
+	}
+
+
+
+/* prints a matrix in column-major format */
+void PRINT_TO_FILE_MAT(FILE *file, int row, int col, REAL *A, int lda)
+	{
+	int i, j;
+	for(i=0; i<row; i++)
+		{
+		for(j=0; j<col; j++)
+			{
+			fprintf(file, "%9.5f ", A[i+lda*j]);
+			}
+		fprintf(file, "\n");
+		}
+	fprintf(file, "\n");
+	}
+
+
+
+/* prints the transposed of a matrix in column-major format */
+void PRINT_TO_FILE_TRAN_MAT(FILE *file, int row, int col, REAL *A, int lda)
+	{
+	int i, j;
+	for(j=0; j<col; j++)
+		{
+		for(i=0; i<row; i++)
+			{
+			fprintf(file, "%9.5f ", A[i+lda*j]);
+			}
+		fprintf(file, "\n");
+		}
+	fprintf(file, "\n");
+	}
+
+
+
+/* prints a matrix in column-major format (exponential notation) */
+void PRINT_E_MAT(int m, int n, REAL *A, int lda)
+	{
+	int i, j;
+	for(i=0; i<m; i++)
+		{
+		for(j=0; j<n; j++)
+			{
+			printf("%e\t", A[i+lda*j]);
+			}
+		printf("\n");
+		}
+	printf("\n");
+	}
+
+
+
+/* prints the transposed of a matrix in column-major format (exponential notation) */
+void PRINT_E_TRAN_MAT(int row, int col, REAL *A, int lda)
+	{
+	int i, j;
+	for(j=0; j<col; j++)
+		{
+		for(i=0; i<row; i++)
+			{
+			printf("%e\t", A[i+lda*j]);
+			}
+		printf("\n");
+		}
+	printf("\n");
+	}

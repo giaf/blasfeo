@@ -85,7 +85,9 @@ endif # LA choice
 ifeq ($(EXT_DEP), 1)
 #ext dep
 OBJS += d_aux_ext_dep_lib.o
+OBJS += d_aux_ext_dep_lib4.o
 OBJS += s_aux_ext_dep_lib.o
+OBJS += s_aux_ext_dep_lib4.o
 OBJS += v_aux_ext_dep_lib.o
 OBJS += i_aux_ext_dep_lib.o
 endif

@@ -30,55 +30,51 @@
 #include <stdio.h>
 
 #include "../include/blasfeo_common.h"
+#include "../include/blasfeo_d_aux_ext_dep.h"
 
 
-#define REAL float
-#define STRMAT s_strmat
-#define STRVEC s_strvec
-#define PS S_PS
+#define REAL double
+#define STRMAT d_strmat
+#define STRVEC d_strvec
+#define PS D_PS
 
+#if defined(LA_HIGH_PERFORMANCE)
 
-#define ZEROS s_zeros
-#define ZEROS_ALIGN s_zeros_align
+#include "../include/blasfeo_block_size.h"
 
-#define FREE s_free
-#define FREE_ALIGN s_free_align
+#define ZEROS d_zeros
+#define ZEROS_ALIGN d_zeros_align
 
-#define PRINT_MAT s_print_mat
-#define PRINT_TO_FILE_MAT s_print_to_file_mat
+#define FREE d_free
+#define FREE_ALIGN d_free_align
 
-#define PRINT_TRAN_MAT s_print_tran_mat
-#define PRINT_TO_FILE_TRAN_MAT s_print_to_file_tran_mat
+#define PRINT_MAT d_print_mat
+#define PRINT_TRAN_MAT d_print_tran_mat
 
-#define PRINT_E_MAT s_print_e_mat
-#define PRINT_E_TRAN_MAT s_print_e_tran_mat
+#define PRINT_TO_FILE_MAT d_print_to_file_mat
+#define PRINT_TO_FILE_TRAN_MAT d_print_to_file_tran_mat
 
-#include "x_aux_ext_dep_lib.c"
+#define PRINT_E_MAT d_print_e_mat
+#define PRINT_E_TRAN_MAT d_print_e_tran_mat
 
+#define ALLOCATE_STRMAT d_allocate_strmat
+#define ALLOCATE_STRVEC d_allocate_strvec
 
-#if defined(TESTING) | defined(LA_BLAS) | defined(LA_REFERENCE)
+#define FREE_STRMAT d_free_strmat
+#define FREE_STRVEC d_free_strvec
 
+#define PRINT_STRMAT d_print_strmat
+#define PRINT_STRVEC d_print_strvec
+#define PRINT_TRAN_STRVEC d_print_tran_strvec
 
-#define ALLOCATE_STRMAT test_s_allocate_strmat
-#define ALLOCATE_STRVEC test_s_allocate_strvec
+#define PRINT_TO_FILE_STRMAT d_print_to_file_strmat
+#define PRINT_TO_FILE_STRVEC d_print_to_file_strvec
+#define PRINT_TO_FILE_TRAN_STRVEC d_print_to_file_tran_strvec
 
-#define FREE_STRMAT test_s_free_strmat
-#define FREE_STRVEC test_s_free_strvec
+#define PRINT_E_STRMAT d_print_e_strmat
+#define PRINT_E_STRVEC d_print_e_strvec
+#define PRINT_E_TRAN_STRVEC d_print_e_tran_strvec
 
-#define PRINT_STRMAT test_s_print_strmat
-#define PRINT_STRVEC test_s_print_strvec
-#define PRINT_TRAN_STRVEC test_s_print_tran_strvec
-
-#define PRINT_TO_FILE_STRMAT test_s_print_to_file_strmat
-#define PRINT_TO_FILE_STRVEC test_s_print_to_file_strvec
-#define PRINT_TO_FILE_TRAN_STRVEC test_s_print_to_file_tran_strvec
-
-#define PRINT_E_STRMAT test_s_print_e_strmat
-#define PRINT_E_STRVEC test_s_print_e_strvec
-#define PRINT_E_TRAN_STRVEC test_s_print_e_tran_strvec
-
-
-#include "x_aux_ext_dep_lib0.c"
+#include "x_aux_ext_dep_lib4.c"
 
 #endif
-

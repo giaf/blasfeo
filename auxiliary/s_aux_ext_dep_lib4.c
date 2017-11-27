@@ -30,6 +30,7 @@
 #include <stdio.h>
 
 #include "../include/blasfeo_common.h"
+#include "../include/blasfeo_s_aux_ext_dep.h"
 
 
 #define REAL float
@@ -37,10 +38,12 @@
 #define STRVEC s_strvec
 #define PS S_PS
 
+#if defined(LA_HIGH_PERFORMANCE)
+
+#include "../include/blasfeo_block_size.h"
 
 #define ZEROS s_zeros
 #define ZEROS_ALIGN s_zeros_align
-
 #define FREE s_free
 #define FREE_ALIGN s_free_align
 
@@ -53,32 +56,25 @@
 #define PRINT_E_MAT s_print_e_mat
 #define PRINT_E_TRAN_MAT s_print_e_tran_mat
 
-#include "x_aux_ext_dep_lib.c"
+#define ALLOCATE_STRMAT s_allocate_strmat
+#define ALLOCATE_STRVEC s_allocate_strvec
 
+#define FREE_STRMAT s_free_strmat
+#define FREE_STRVEC s_free_strvec
 
-#if defined(TESTING) | defined(LA_BLAS) | defined(LA_REFERENCE)
+#define PRINT_STRMAT s_print_strmat
+#define PRINT_STRVEC s_print_strvec
+#define PRINT_TRAN_STRVEC s_print_tran_strvec
 
+#define PRINT_TO_FILE_STRMAT s_print_to_file_strmat
+#define PRINT_TO_FILE_STRVEC s_print_to_file_strvec
+#define PRINT_TO_FILE_TRAN_STRVEC s_print_to_file_tran_strvec
 
-#define ALLOCATE_STRMAT test_s_allocate_strmat
-#define ALLOCATE_STRVEC test_s_allocate_strvec
+#define PRINT_E_STRMAT s_print_e_strmat
+#define PRINT_E_STRVEC s_print_e_strvec
+#define PRINT_E_TRAN_STRVEC s_print_e_tran_strvec
 
-#define FREE_STRMAT test_s_free_strmat
-#define FREE_STRVEC test_s_free_strvec
-
-#define PRINT_STRMAT test_s_print_strmat
-#define PRINT_STRVEC test_s_print_strvec
-#define PRINT_TRAN_STRVEC test_s_print_tran_strvec
-
-#define PRINT_TO_FILE_STRMAT test_s_print_to_file_strmat
-#define PRINT_TO_FILE_STRVEC test_s_print_to_file_strvec
-#define PRINT_TO_FILE_TRAN_STRVEC test_s_print_to_file_tran_strvec
-
-#define PRINT_E_STRMAT test_s_print_e_strmat
-#define PRINT_E_STRVEC test_s_print_e_strvec
-#define PRINT_E_TRAN_STRVEC test_s_print_e_tran_strvec
-
-
-#include "x_aux_ext_dep_lib0.c"
+#include "x_aux_ext_dep_lib4.c"
 
 #endif
 

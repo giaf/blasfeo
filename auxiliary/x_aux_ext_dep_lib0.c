@@ -26,59 +26,147 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include "../include/blasfeo_common.h"
+#if defined(LA_BLAS) | defined(LA_REFERENCE) | defined(TESTING)
 
 
-#define REAL float
-#define STRMAT s_strmat
-#define STRVEC s_strvec
-#define PS S_PS
+
+// create a matrix structure for a matrix of size m*n
+void ALLOCATE_STRMAT(int m, int n, struct STRMAT *sA)
+	{
+	sA->m = m;
+	sA->n = n;
+	ZEROS(&(sA->pA), sA->m, sA->n);
+	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
+	ZEROS(&(sA->dA), tmp, 1);
+	sA->memory_size = (m*n+tmp)*sizeof(REAL);
+	return;
+	}
 
 
-#define ZEROS s_zeros
-#define ZEROS_ALIGN s_zeros_align
 
-#define FREE s_free
-#define FREE_ALIGN s_free_align
-
-#define PRINT_MAT s_print_mat
-#define PRINT_TO_FILE_MAT s_print_to_file_mat
-
-#define PRINT_TRAN_MAT s_print_tran_mat
-#define PRINT_TO_FILE_TRAN_MAT s_print_to_file_tran_mat
-
-#define PRINT_E_MAT s_print_e_mat
-#define PRINT_E_TRAN_MAT s_print_e_tran_mat
-
-#include "x_aux_ext_dep_lib.c"
+// free memory of a matrix structure
+void FREE_STRMAT(struct STRMAT *sA)
+	{
+	free(sA->pA);
+	free(sA->dA);
+	return;
+	}
 
 
-#if defined(TESTING) | defined(LA_BLAS) | defined(LA_REFERENCE)
+
+// create a vector structure for a vector of size m
+void ALLOCATE_STRVEC(int m, struct STRVEC *sa)
+	{
+	sa->m = m;
+	ZEROS(&(sa->pa), sa->m, 1);
+	sa->memory_size = m*sizeof(REAL);
+	return;
+	}
 
 
-#define ALLOCATE_STRMAT test_s_allocate_strmat
-#define ALLOCATE_STRVEC test_s_allocate_strvec
 
-#define FREE_STRMAT test_s_free_strmat
-#define FREE_STRVEC test_s_free_strvec
-
-#define PRINT_STRMAT test_s_print_strmat
-#define PRINT_STRVEC test_s_print_strvec
-#define PRINT_TRAN_STRVEC test_s_print_tran_strvec
-
-#define PRINT_TO_FILE_STRMAT test_s_print_to_file_strmat
-#define PRINT_TO_FILE_STRVEC test_s_print_to_file_strvec
-#define PRINT_TO_FILE_TRAN_STRVEC test_s_print_to_file_tran_strvec
-
-#define PRINT_E_STRMAT test_s_print_e_strmat
-#define PRINT_E_STRVEC test_s_print_e_strvec
-#define PRINT_E_TRAN_STRVEC test_s_print_e_tran_strvec
+// free memory of a vector structure
+void FREE_STRVEC(struct STRVEC *sa)
+	{
+	free(sa->pa);
+	return;
+	}
 
 
-#include "x_aux_ext_dep_lib0.c"
+
+// print a matrix structure
+void PRINT_STRMAT(int m, int n, struct STRMAT *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	PRINT_MAT(m, n, pA, lda);
+	return;
+	}
+
+
+
+// print a vector structure
+void PRINT_STRVEC(int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_MAT(m, 1, pa, m);
+	return;
+	}
+
+
+
+// print and transpose a vector structure
+void PRINT_TRAN_STRVEC(int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_MAT(1, m, pa, 1);
+	return;
+	}
+
+
+
+// print a matrix structure
+void PRINT_TO_FILE_STRMAT(FILE *file, int m, int n, struct STRMAT *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	PRINT_TO_FILE_MAT(file, m, n, pA, lda);
+	return;
+	}
+
+
+
+// print a vector structure
+void PRINT_TO_FILE_STRVEC(FILE *file, int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_TO_FILE_MAT(file, m, 1, pa, m);
+	return;
+	}
+
+
+
+// print and transpose a vector structure
+void PRINT_TO_FILE_TRAN_STRVEC(FILE *file, int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_TO_FILE_MAT(file, 1, m, pa, 1);
+	return;
+	}
+
+
+
+// print a matrix structure
+void PRINT_E_STRMAT(int m, int n, struct STRMAT *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	PRINT_E_MAT(m, n, pA, lda);
+	return;
+	}
+
+
+
+// print a vector structure
+void PRINT_E_STRVEC(int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_E_MAT(m, 1, pa, m);
+	return;
+	}
+
+
+
+// print and transpose a vector structure
+void PRINT_E_TRAN_STRVEC(int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_E_MAT(1, m, pa, 1);
+	return;
+	}
+
 
 #endif
+
 

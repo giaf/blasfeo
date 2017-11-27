@@ -86,6 +86,7 @@ OBJS += \
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
+
 # aux
 OBJS += \
 		auxiliary/d_aux_lib4.o \
@@ -399,7 +400,9 @@ ifeq ($(EXT_DEP), 1)
 # ext dep
 OBJS += \
 		auxiliary/d_aux_ext_dep_lib.o \
+		auxiliary/d_aux_ext_dep_lib4.o \
 		auxiliary/s_aux_ext_dep_lib.o \
+		auxiliary/s_aux_ext_dep_lib4.o \
 		auxiliary/v_aux_ext_dep_lib.o \
 		auxiliary/i_aux_ext_dep_lib.o \
 
