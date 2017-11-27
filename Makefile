@@ -549,38 +549,41 @@ test:
 run_test:
 	make -C test_problems run
 
-
+# copy library into test path
 deploy_to_test:
 	mkdir -p ./test_problems/$(BINARY_DIR)
 	cp libblasfeo.a ./test_problems/$(BINARY_DIR)/libblasfeo.a
 
-
+# build tests
 build_test_aux:
 	make -C test_problems aux
 	@echo
 	@echo " Test problem build complete."
 	@echo
 
+# run tests
+run_test_aux:
+	make -C test_problems run_aux
+
 # copy library
-# build test
+# build tests
 test_aux: deploy_to_test build_test_aux
 
 # deep build library (take into account flags changes)
 # copy library
-# build test
+# build tests
 test_aux_clean: clean static_library test_aux
 
-# build test
-# run test
-run_test_aux: build_test_aux
+# build tests (use existing library)
+# run tests
+rerun_test_aux: build_test_aux
 	make -C test_problems run_aux
 
 # build library
 # copy library
 # build test
 # run test
-run_test_aux_build: static_library test_aux
-	make -C test_problems run_aux
+run_test_aux_build: static_library test_aux run_test_aux
 
 # deep build library (take into account flags changes)
 # copy library

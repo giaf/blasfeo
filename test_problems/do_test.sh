@@ -7,6 +7,10 @@ declare -a TARGETS=(
 # arm
 # amd
 
+echo "Cleaning .."
+make -C .. clean
+make clean
+
 DONE=0
 TOTAL=${#TARGETS[@]}
 
@@ -14,7 +18,7 @@ TOTAL=${#TARGETS[@]}
 for TARGET in "${TARGETS[@]}"
 do
 	echo "Testing $TARGET"
-	TESTING=1 TARGET=$TARGET make -C .. -e run_test_aux
+	TESTING=1 TARGET=$TARGET make -C .. -e run_test_aux_clean
 	status=$?
 	let "DONE+=1"
 
