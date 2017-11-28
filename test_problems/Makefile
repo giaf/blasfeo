@@ -69,6 +69,7 @@ endif
 #OBJS = test_d_strmat.o
 #OBJS = test_s_strmat.o
 OBJS = test_blas_d.o
+#OBJS = test_blas_s.o
 #OBJS = kernel_assembly.o test_assembly.o
 
 BLAS_OBJS =

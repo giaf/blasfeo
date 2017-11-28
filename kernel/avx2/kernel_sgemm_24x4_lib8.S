@@ -210,7 +210,7 @@ inner_kernel_gemm_add_nt_24x4_lib8:
 #endif
 	
 // broadcast scheme
-#if 1
+#if 0
 
 	cmpl	$0, %r10d
 	jle		2f // return
