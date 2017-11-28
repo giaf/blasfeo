@@ -1050,6 +1050,38 @@ void dvecpei_libstr(int kmax, int *ipiv, struct d_strvec *sx, int xi)
 	}
 
 
+// 1 norm, lower triangular, non-unit
+#if 0
+double dtrcon_1ln_libstr(int n, struct d_strmat *sA, int ai, int aj, double *work, int *iwork)
+	{
+	if(n<=0)
+		return 1.0;
+	int ii, jj;
+	int lda = sA.m;
+	double *pA = sA->pA + ai + aj*lda;
+	double a00, sum;
+	double rcond = 0.0;
+	// compute norm 1 of A
+	double anorm = 0.0;
+	for(jj=0; jj<n; jj++)
+		{
+		sum = 0.0;
+		for(ii=jj; ii<n; ii++)
+			{
+			sum += abs(pA[ii+lda*jj]);
+			}
+		anorm = sum>anorm ? sum : anorm;
+		}
+	if(anorm>0)
+		{
+		// estimate norm 1 of inv(A)
+		ainorm = 0.0;
+		}
+	return rcond;
+	}
+#endif
+
+
 
 #else
 
