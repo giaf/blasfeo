@@ -965,7 +965,7 @@ void dtrsv_ltn_libstr(int m, struct d_strmat *sA, int ai, int aj, struct d_strve
 	// z: m
 	if(zi+m > sz->m) printf("\n***** dtrsv_ltn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	if(ai!=0 | xi%4!=0)
+	if(ai!=0)
 		{
 		printf("\ndtrsv_ltn_libstr: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
