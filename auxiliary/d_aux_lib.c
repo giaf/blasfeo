@@ -809,28 +809,6 @@ double dtrcon_1ln_libstr(int n, struct d_strmat *sA, int ai, int aj, double *wor
 #endif
 
 
-#elif defined(TESTING)
-
-#define SIZE_STRMAT test_d_size_strmat
-#define SIZE_DIAG_STRMAT test_d_size_diag_strmat
-#define SIZE_STRVEC test_d_size_strvec
-
-#define CREATE_STRMAT test_d_create_strmat
-#define CREATE_STRVEC test_d_create_strvec
-
-#define CVT_MAT2STRMAT test_d_cvt_mat2strmat
-#define CVT_TRAN_MAT2STRMAT test_d_cvt_tran_mat2strmat
-#define CVT_VEC2STRVEC test_d_cvt_vec2strvec
-#define CVT_STRMAT2MAT test_d_cvt_strmat2mat
-#define CVT_TRAN_STRMAT2MAT test_d_cvt_tran_strmat2mat
-#define CVT_STRVEC2VEC test_d_cvt_strvec2vec
-#define CAST_MAT2STRMAT test_d_cast_mat2strmat
-#define CAST_DIAG_MAT2STRMAT test_d_cast_diag_mat2strmat
-#define CAST_VEC2VECMAT test_d_cast_vec2vecmat
-
-#define GECP_LIBSTR test_dgecp_libstr
-#define GESC_LIBSTR test_dgesc_libstr
-#define GECPSC_LIBSTR test_dgecpsc_libstr
 
 #else
 
@@ -838,5 +816,5 @@ double dtrcon_1ln_libstr(int n, struct d_strmat *sA, int ai, int aj, double *wor
 
 #endif
 
-// TESTING | LA_REFERENCE | LA_BLAS
+// LA_REFERENCE | LA_BLAS
 #include "x_aux_lib.c"

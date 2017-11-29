@@ -7,6 +7,10 @@
 #define TEST_PRINT_STRMAT test_d_print_strmat
 #define PRINT_STRMAT d_print_strmat
 
+#define STRMAT_REF d_strmat_ref
+#define STRVEC_REF d_strvec_ref
+#define PRINT_STRMAT_REF blasfeo_d_print_strmat_ref
+
 #include "test_x_common.h"
 #include "../include/blasfeo_d_aux.h"
 #include "../include/blasfeo_d_aux_test.h"

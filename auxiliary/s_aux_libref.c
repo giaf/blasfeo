@@ -26,58 +26,50 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+/*
+ * auxiliary functions for LA:REFERENCE (column major)
+ *
+ * auxiliary/d_aux_lib*.c
+ *
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #include "../include/blasfeo_common.h"
 
 
-#define REAL double
-#define STRMAT d_strmat
-#define STRVEC d_strvec
-#define PS D_PS
+#define REAL float
+#define STRMAT s_strmat_ref
+#define STRVEC s_strvec_ref
 
 
-#define ZEROS d_zeros
-#define ZEROS_ALIGN d_zeros_align
-
-#define FREE d_free
-#define FREE_ALIGN d_free_align
-
-#define PRINT_MAT d_print_mat
-#define PRINT_TO_FILE_MAT d_print_to_file_mat
-
-#define PRINT_TRAN_MAT d_print_tran_mat
-#define PRINT_TO_FILE_TRAN_MAT d_print_to_file_tran_mat
-
-#define PRINT_E_MAT d_print_e_mat
-#define PRINT_E_TRAN_MAT d_print_e_tran_mat
-
-#include "x_aux_ext_dep_lib.c"
 
 
-#if defined(LA_BLAS) | defined(LA_REFERENCE)
+#define SIZE_STRMAT blasfeo_s_memsize_strmat_ref
+#define SIZE_DIAG_STRMAT blasfeo_s_memsize_diag_strmat_ref
+#define SIZE_STRVEC blasfeo_s_memsize_strvec_ref
+
+#define CREATE_STRMAT blasfeo_s_create_strmat_ref
+#define CREATE_STRVEC blasfeo_s_create_strvec_ref
+
+#define CVT_MAT2STRMAT blasfeo_s_cvt_mat2strmat_ref
+#define CVT_TRAN_MAT2STRMAT blasfeo_s_cvt_tran_mat2strmat_ref
+#define CVT_VEC2STRVEC blasfeo_s_cvt_vec2strvec_ref
+#define CVT_STRMAT2MAT blasfeo_s_cvt_strmat2mat_ref
+#define CVT_TRAN_STRMAT2MAT blasfeo_s_cvt_tran_strmat2mat_ref
+#define CVT_STRVEC2VEC blasfeo_s_cvt_strvec2vec_ref
+#define CAST_MAT2STRMAT blasfeo_s_cast_mat2strmat_ref
+#define CAST_DIAG_MAT2STRMAT blasfeo_s_cast_diag_mat2strmat_ref
+#define CAST_VEC2VECMAT blasfeo_s_cast_vec2vecmat_ref
+
+#define GECP_LIBSTR blasfeo_sgecp_ref
+#define GESC_LIBSTR blasfeo_sgesc_ref
+#define GECPSC_LIBSTR blasfeo_sgecpsc_ref
 
 
-#define ALLOCATE_STRMAT d_allocate_strmat
-#define ALLOCATE_STRVEC d_allocate_strvec
 
-#define FREE_STRMAT d_free_strmat
-#define FREE_STRVEC d_free_strvec
-
-#define PRINT_STRMAT d_print_strmat
-#define PRINT_STRVEC d_print_strvec
-#define PRINT_TRAN_STRVEC d_print_tran_strvec
-
-#define PRINT_TO_FILE_STRMAT d_print_to_file_strmat
-#define PRINT_TO_FILE_STRVEC d_print_to_file_strvec
-#define PRINT_TO_FILE_TRAN_STRVEC d_print_to_file_tran_strvec
-
-#define PRINT_E_STRMAT d_print_e_strmat
-#define PRINT_E_STRVEC d_print_e_strvec
-#define PRINT_E_TRAN_STRVEC d_print_e_tran_strvec
-
-#include "x_aux_ext_dep_lib0.c"
-
-#endif
+// TESTING
+#include "x_aux_lib.c"
 

@@ -95,15 +95,15 @@ SHOW_DEFINE(TARGET)
 	// Testing comparison
 	// reference matrices, column major
 
-	struct d_strmat rA;
-	test_d_create_strmat(n, n, &rA, ptr_memory_strmat);
+	struct d_strmat_ref rA;
+	blasfeo_d_create_strmat_ref(n, n, &rA, ptr_memory_strmat);
 	ptr_memory_strmat += rA.memory_size;
-	test_d_cvt_mat2strmat(n, n, A, n, &rA, 0, 0);
+	blasfeo_d_cvt_mat2strmat_ref(n, n, A, n, &rA, 0, 0);
 
-	struct d_strmat rB;
-	test_d_create_strmat(n, n, &rB, ptr_memory_strmat);
+	struct d_strmat_ref rB;
+	blasfeo_d_create_strmat_ref(n, n, &rB, ptr_memory_strmat);
 	ptr_memory_strmat += sB.memory_size;
-	test_d_cvt_mat2strmat(n, n, B, n, &rB, 0, 0);
+	blasfeo_d_cvt_mat2strmat_ref(n, n, B, n, &rB, 0, 0);
 
 
 	// -------- instantiate d_strmat
@@ -112,13 +112,13 @@ SHOW_DEFINE(TARGET)
 	d_print_strmat(p_n, p_n, &sA, 0, 0);
 
 	printf("\nPrint strmat REF A:\n\n");
-	test_d_print_strmat(p_n, p_n, &rA, 0, 0);
+	blasfeo_d_print_strmat_ref(p_n, p_n, &rA, 0, 0);
 
 	printf("\nPrint strmat HP B:\n\n");
 	d_print_strmat(p_n, p_n, &sB, 0, 0);
 
 	printf("\nPrint strmat REF B:\n\n");
-	test_d_print_strmat(p_n, p_n, &rB, 0, 0);
+	blasfeo_d_print_strmat_ref(p_n, p_n, &rB, 0, 0);
 
 	printf("\n\n----------- TEST Copy&Scale\n\n");
 
@@ -141,7 +141,7 @@ SHOW_DEFINE(TARGET)
 						ii,ni, 0,mi,    alpha);
 
 		dgesc_libstr(     ni, mi, alpha, &sA, ii, 0);
-		test_dgesc_libstr(ni, mi, alpha, &rA, ii, 0);
+		blasfeo_dgesc_ref(ni, mi, alpha, &rA, ii, 0);
 
 		/* printf("value 0,1: %f", MATEL_LIBSTR(&sA, 0,1)); */
 		/* printf("PS:%d", PS); */
@@ -161,7 +161,7 @@ SHOW_DEFINE(TARGET)
 			// HP submatrix copy&scale
 			dgecpsc_libstr(ni, mi, alpha, &sA, ii, 0, &sB, jj, 0);
 			// REF submatrix copy&scale
-			test_dgecpsc_libstr(ni, mi, alpha, &rA, ii, 0, &rB, jj, 0);
+			blasfeo_dgecpsc_ref(ni, mi, alpha, &rA, ii, 0, &rB, jj, 0);
 			// check against blas with blasfeo REF
 			assert(dgecmp_libstr(n, n, &sB, &rB, &sA, &rA));
 
@@ -171,7 +171,7 @@ SHOW_DEFINE(TARGET)
 							ii,ni, 0,mi,     jj,ni, 0,mi);
 
 			dgecp_libstr(     ni, mi, &sA, ii, 0, &sB, jj, 0);
-			test_dgecp_libstr(ni, mi, &rA, ii, 0, &rB, jj, 0);
+			blasfeo_dgecp_ref(ni, mi, &rA, ii, 0, &rB, jj, 0);
 			assert(dgecmp_libstr(n, n, &sB, &rB, &sA, &rA));
 
 			printf("\n");

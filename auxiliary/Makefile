@@ -85,19 +85,26 @@ endif # LA choice
 ifeq ($(TESTING), 1)
 #testing against reference
 #avoid naming clash with 'test_' prefix
-OBJS += d_aux_lib.o
-OBJS += s_aux_lib.o
+OBJS += d_aux_libref.o
+OBJS += s_aux_libref.o
 endif
 
 
-ifeq ($(EXT_DEP), 1)
 #ext dep
+ifeq ($(EXT_DEP), 1)
+
 OBJS += d_aux_ext_dep_lib.o
 OBJS += d_aux_ext_dep_lib4.o
 OBJS += s_aux_ext_dep_lib.o
 OBJS += s_aux_ext_dep_lib4.o
 OBJS += v_aux_ext_dep_lib.o
 OBJS += i_aux_ext_dep_lib.o
+
+ifeq ($(TESTING), 1)
+OBJS += d_aux_ext_dep_libref.o
+OBJS += s_aux_ext_dep_libref.o
+endif
+
 endif
 
 

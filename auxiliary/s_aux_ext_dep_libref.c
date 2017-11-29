@@ -30,54 +30,48 @@
 #include <stdio.h>
 
 #include "../include/blasfeo_common.h"
+#include "../include/blasfeo_s_aux_ext_dep.h"
 
 
-#define REAL double
-#define STRMAT d_strmat
-#define STRVEC d_strvec
-#define PS D_PS
+#define ZEROS s_zeros
+#define ZEROS_ALIGN s_zeros_align
+
+#define FREE s_free
+#define FREE_ALIGN s_free_align
+
+#define PRINT_MAT s_print_mat
+#define PRINT_TO_FILE_MAT s_print_to_file_mat
+
+#define PRINT_TRAN_MAT s_print_tran_mat
+#define PRINT_TO_FILE_TRAN_MAT s_print_to_file_tran_mat
+
+#define PRINT_E_MAT s_print_e_mat
+#define PRINT_E_TRAN_MAT s_print_e_tran_mat
 
 
-#define ZEROS d_zeros
-#define ZEROS_ALIGN d_zeros_align
 
-#define FREE d_free
-#define FREE_ALIGN d_free_align
-
-#define PRINT_MAT d_print_mat
-#define PRINT_TO_FILE_MAT d_print_to_file_mat
-
-#define PRINT_TRAN_MAT d_print_tran_mat
-#define PRINT_TO_FILE_TRAN_MAT d_print_to_file_tran_mat
-
-#define PRINT_E_MAT d_print_e_mat
-#define PRINT_E_TRAN_MAT d_print_e_tran_mat
-
-#include "x_aux_ext_dep_lib.c"
+#define REAL float
+#define STRMAT s_strmat_ref
+#define STRVEC s_strvec_ref
 
 
-#if defined(LA_BLAS) | defined(LA_REFERENCE)
+#define ALLOCATE_STRMAT blasfeo_s_allocate_strmat_ref
+#define ALLOCATE_STRVEC blasfeo_s_allocate_strvec_ref
 
+#define FREE_STRMAT blasfeo_s_free_strmat_ref
+#define FREE_STRVEC blasfeo_s_free_strvec_ref
 
-#define ALLOCATE_STRMAT d_allocate_strmat
-#define ALLOCATE_STRVEC d_allocate_strvec
+#define PRINT_STRMAT blasfeo_s_print_strmat_ref
+#define PRINT_STRVEC blasfeo_s_print_strvec_ref
+#define PRINT_TRAN_STRVEC blasfeo_s_print_tran_strvec_ref
 
-#define FREE_STRMAT d_free_strmat
-#define FREE_STRVEC d_free_strvec
+#define PRINT_TO_FILE_STRMAT blasfeo_s_print_to_file_strmat_ref
+#define PRINT_TO_FILE_STRVEC blasfeo_s_print_to_file_strvec_ref
+#define PRINT_TO_FILE_TRAN_STRVEC blasfeo_s_print_to_file_tran_strvec_ref
 
-#define PRINT_STRMAT d_print_strmat
-#define PRINT_STRVEC d_print_strvec
-#define PRINT_TRAN_STRVEC d_print_tran_strvec
-
-#define PRINT_TO_FILE_STRMAT d_print_to_file_strmat
-#define PRINT_TO_FILE_STRVEC d_print_to_file_strvec
-#define PRINT_TO_FILE_TRAN_STRVEC d_print_to_file_tran_strvec
-
-#define PRINT_E_STRMAT d_print_e_strmat
-#define PRINT_E_STRVEC d_print_e_strvec
-#define PRINT_E_TRAN_STRVEC d_print_e_tran_strvec
+#define PRINT_E_STRMAT blasfeo_s_print_e_strmat_ref
+#define PRINT_E_STRVEC blasfeo_s_print_e_strvec_ref
+#define PRINT_E_TRAN_STRVEC blasfeo_s_print_e_tran_strvec_ref
 
 #include "x_aux_ext_dep_lib0.c"
-
-#endif
 

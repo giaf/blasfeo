@@ -419,13 +419,18 @@ OBJS += \
 
 endif
 
+
+
 ifeq ($(TESTING), 1)
 # reference routine for testing
+OBJS_REF =
 # aux
-OBJS += \
-		auxiliary/d_aux_lib.o \
-		auxiliary/s_aux_lib.o \
-
+OBJS_REF += \
+		auxiliary/d_aux_libref.o \
+		auxiliary/s_aux_libref.o \
+		auxiliary/d_aux_ext_dep_libref.o \
+		auxiliary/s_aux_ext_dep_libref.o \
+#
 endif
 
 
@@ -442,6 +447,10 @@ static_library: target
 	( cd blas; $(MAKE) obj)
 	ar rcs libblasfeo.a $(OBJS)
 	mv libblasfeo.a ./lib/
+ifeq ($(TESTING), 1)
+	ar rcs libblasfeo_ref.a $(OBJS_REF)
+	mv libblasfeo_ref.a ./lib/
+endif
 	@echo
 	@echo " libblasfeo.a static library build complete."
 	@echo
@@ -454,6 +463,10 @@ shared_library: target
 	( cd blas; $(MAKE) obj)
 	gcc -shared -o libblasfeo.so $(OBJS)
 	mv libblasfeo.so ./lib/
+ifeq ($(TESTING), 1)
+	gcc -shared -o libblasfeo_ref.so $(OBJS_REF)
+	mv libblasfeo_ref.so ./lib/
+endif
 	@echo
 	@echo " libblasfeo.so shared library build complete."
 	@echo
@@ -570,7 +583,10 @@ BINARY_DIR = build/$(LA)/$(TARGET)
 # copy static library into test path
 deploy_to_test:
 	mkdir -p ./test_problems/$(BINARY_DIR)
-	cp ./lib/libblasfeo.a ./test_problems/$(BINARY_DIR)/libblasfeo.a
+	cp ./lib/libblasfeo.a ./test_problems/$(BINARY_DIR)/
+ifeq ($(TESTING), 1)
+	cp ./lib/libblasfeo_ref.a ./test_problems/$(BINARY_DIR)/
+endif
 
 
 # one single test

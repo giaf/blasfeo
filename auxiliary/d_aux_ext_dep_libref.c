@@ -30,12 +30,7 @@
 #include <stdio.h>
 
 #include "../include/blasfeo_common.h"
-
-
-#define REAL double
-#define STRMAT d_strmat
-#define STRVEC d_strvec
-#define PS D_PS
+#include "../include/blasfeo_d_aux_ext_dep.h"
 
 
 #define ZEROS d_zeros
@@ -53,31 +48,30 @@
 #define PRINT_E_MAT d_print_e_mat
 #define PRINT_E_TRAN_MAT d_print_e_tran_mat
 
-#include "x_aux_ext_dep_lib.c"
 
 
-#if defined(LA_BLAS) | defined(LA_REFERENCE)
+#define REAL double
+#define STRMAT d_strmat_ref
+#define STRVEC d_strvec_ref
 
 
-#define ALLOCATE_STRMAT d_allocate_strmat
-#define ALLOCATE_STRVEC d_allocate_strvec
+#define ALLOCATE_STRMAT blasfeo_d_allocate_strmat_ref
+#define ALLOCATE_STRVEC blasfeo_d_allocate_strvec_ref
 
-#define FREE_STRMAT d_free_strmat
-#define FREE_STRVEC d_free_strvec
+#define FREE_STRMAT blasfeo_d_free_strmat_ref
+#define FREE_STRVEC blasfeo_d_free_strvec_ref
 
-#define PRINT_STRMAT d_print_strmat
-#define PRINT_STRVEC d_print_strvec
-#define PRINT_TRAN_STRVEC d_print_tran_strvec
+#define PRINT_STRMAT blasfeo_d_print_strmat_ref
+#define PRINT_STRVEC blasfeo_d_print_strvec_ref
+#define PRINT_TRAN_STRVEC blasfeo_d_print_tran_strvec_ref
 
-#define PRINT_TO_FILE_STRMAT d_print_to_file_strmat
-#define PRINT_TO_FILE_STRVEC d_print_to_file_strvec
-#define PRINT_TO_FILE_TRAN_STRVEC d_print_to_file_tran_strvec
+#define PRINT_TO_FILE_STRMAT blasfeo_d_print_to_file_strmat_ref
+#define PRINT_TO_FILE_STRVEC blasfeo_d_print_to_file_strvec_ref
+#define PRINT_TO_FILE_TRAN_STRVEC blasfeo_d_print_to_file_tran_strvec_ref
 
-#define PRINT_E_STRMAT d_print_e_strmat
-#define PRINT_E_STRVEC d_print_e_strvec
-#define PRINT_E_TRAN_STRVEC d_print_e_tran_strvec
+#define PRINT_E_STRMAT blasfeo_d_print_e_strmat_ref
+#define PRINT_E_STRVEC blasfeo_d_print_e_strvec_ref
+#define PRINT_E_TRAN_STRVEC blasfeo_d_print_e_tran_strvec_ref
 
 #include "x_aux_ext_dep_lib0.c"
-
-#endif
 

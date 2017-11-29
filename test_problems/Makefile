@@ -33,9 +33,15 @@ BINARY_DIR = build/$(LA)/$(TARGET)
 
 # ----------- Envs
 
-LIBS = -L. $(BINARY_DIR)/libblasfeo.a
+LIBS = 
+SHARED_LIBS = 
+ifeq ($(TESTING), 1)
+LIBS += $(BINARY_DIR)/libblasfeo_ref.a
+SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo_ref
+endif
+LIBS += $(BINARY_DIR)/libblasfeo.a
 # SHARED_LIBS = -L. $(BINARY_DIR)/libblasfeo.so
-SHARED_LIBS = -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
+SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
 
 ifeq ($(REF_BLAS), 0)
 LIBS += -lm
@@ -77,8 +83,8 @@ OBJS = test_d_blas.o
 
 # auxiliary test
 AUX_OBJS =
-AUX_OBJS += test_s_aux.o
 AUX_OBJS += test_d_aux.o
+AUX_OBJS += test_s_aux.o
 
 # blas test
 BLAS_OBJS =

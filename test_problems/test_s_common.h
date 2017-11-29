@@ -7,7 +7,9 @@
 #define TEST_PRINT_STRMAT test_s_print_strmat
 #define PRINT_STRMAT s_print_strmat
 
-// touch
+#define STRMAT_REF s_strmat_ref
+#define STRVEC_REF s_strvec_ref
+#define PRINT_STRMAT_REF blasfeo_s_print_strmat_ref
 
 #include "test_x_common.h"
 #include "../include/blasfeo_s_aux.h"

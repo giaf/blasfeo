@@ -102,6 +102,11 @@ void s_print_tran_to_file_strvec(FILE *file, int m, struct s_strvec *sa, int ai)
 
 
 
+// reference for testing
+void blasfeo_s_print_strmat_ref(int m, int n, struct s_strmat_ref *sA, int ai, int aj);
+
+
+
 #ifdef __cplusplus
 }
 #endif

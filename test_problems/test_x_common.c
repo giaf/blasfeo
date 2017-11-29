@@ -1,7 +1,7 @@
 // 1 to 1 comparison of every element
 int GECMP_LIBSTR(int n, int m,
-				 struct STRMAT *sB, struct STRMAT *rB,
-				 struct STRMAT *sA, struct STRMAT *rA
+				 struct STRMAT *sB, struct STRMAT_REF *rB,
+				 struct STRMAT *sA, struct STRMAT_REF *rA
 				 )
 	{
 	int ii, jj;
@@ -15,7 +15,7 @@ int GECMP_LIBSTR(int n, int m,
 			// strtucture mat
 			REAL sbi = MATEL_LIBSTR(sB, ii, jj);
 			// reference mat
-			REAL rbi = MATEL_LIB(rB, ii, jj);
+			REAL rbi = MATEL_REF(rB, ii, jj);
 
 			if ( (sbi != rbi) & ( fabs(sbi-rbi) > 1e-10*(fabs(sbi)+fabs(rbi)) ) )
 				{
@@ -25,13 +25,13 @@ int GECMP_LIBSTR(int n, int m,
 					PRINT_STRMAT(ii+offset, jj+offset, sB, 0, 0);
 
 					printf("\nPrint B REF:\n\n");
-					TEST_PRINT_STRMAT(ii+offset, jj+offset, rB, 0, 0);
+					PRINT_STRMAT_REF(ii+offset, jj+offset, rB, 0, 0);
 
 					printf("\nPrint A HP:\n\n");
 					PRINT_STRMAT(ii+offset, jj+offset, sA, 0, 0);
 
 					printf("\nPrint A REF:\n\n");
-					TEST_PRINT_STRMAT(ii+offset, jj+offset, rA, 0, 0);
+					PRINT_STRMAT_REF(ii+offset, jj+offset, rA, 0, 0);
 
 					#if defined(LA)
 					SHOW_DEFINE(LA)
