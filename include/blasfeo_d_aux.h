@@ -136,6 +136,7 @@ void dvecsc_libstr(int m, double alpha, struct d_strvec *sa, int ai);
 // x <= alpha*x
 void dveccpsc_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci);
 
+
 // B <= A, A lower triangular
 void dtrcp_l_libstr(int m,
 					struct d_strmat *sA, int ai, int aj,

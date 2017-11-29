@@ -73,12 +73,17 @@ REF_BLAS = 0
 #REF_BLAS = ATLAS
 
 # Compile auxiliary functions with external dependencies (for memory allocation and printing)
-#EXT_DEP = 0
+# EXT_DEP = 0
 EXT_DEP = 1
+
+# Compile reference implementations with test_ prefix
+# in order to check HIGH_PERFORMANCE routines against reference
+TESTING = 0
+# TESTING = 1
 
 # Enable on-line checks for matrix and vector dimensions
 RUNTIME_CHECKS = 0
-#RUNTIME_CHECKS = 1
+# RUNTIME_CHECKS = 1
 
 # Operating system
 UNAME_S := $(shell uname -s)
@@ -126,7 +131,7 @@ ASFLAGS += #-g
 
 
 
-# Definirions
+# Definitions
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 CFLAGS  += -DLA_HIGH_PERFORMANCE
@@ -143,9 +148,11 @@ CFLAGS  += -DLA=$(LA)
 ifeq ($(RUNTIME_CHECKS), 1)
 CFLAGS += -DDIM_CHECK
 endif
-
 ifeq ($(EXT_DEP), 1)
 CFLAGS += -DEXT_DEP
+endif
+ifeq ($(TESTING), 1)
+CFLAGS += -DTESTING
 endif
 
 ifeq ($(MACRO_LEVEL), 1)

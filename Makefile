@@ -91,6 +91,7 @@ OBJS += \
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
+
 # aux
 OBJS += \
 		auxiliary/d_aux_lib4.o \
@@ -410,9 +411,20 @@ ifeq ($(EXT_DEP), 1)
 # ext dep
 OBJS += \
 		auxiliary/d_aux_ext_dep_lib.o \
+		auxiliary/d_aux_ext_dep_lib4.o \
 		auxiliary/s_aux_ext_dep_lib.o \
+		auxiliary/s_aux_ext_dep_lib4.o \
 		auxiliary/v_aux_ext_dep_lib.o \
 		auxiliary/i_aux_ext_dep_lib.o \
+
+endif
+
+ifeq ($(TESTING), 1)
+# reference routine for testing
+# aux
+OBJS += \
+		auxiliary/d_aux_lib.o \
+		auxiliary/s_aux_lib.o \
 
 endif
 
@@ -525,36 +537,59 @@ install_shared:
 
 BINARY_DIR = build/$(LA)/$(TARGET)
 
-# test_aux_shared:
-	# mkdir -p ./test_problems/$(BINARY_DIR)
-	# cp libblasfeo.so ./test_problems/$(BINARY_DIR)/libblasfeo.so
-	# make -C test_problems run_short_shared
-	# @echo
-	# @echo " Test problem build complete."
-	# @echo
-
-
 test:
 	mkdir -p ./test_problems/$(BINARY_DIR)
 	cp libblasfeo.a ./test_problems/$(BINARY_DIR)/libblasfeo.a
-	make -C test_problems gen
+	make -C test_problems debug
 	@echo
 	@echo " Test problem build complete."
 	@echo
 
+
 run_test:
 	make -C test_problems run
 
-test_aux:
+# copy library into test path
+deploy_to_test:
 	mkdir -p ./test_problems/$(BINARY_DIR)
 	cp libblasfeo.a ./test_problems/$(BINARY_DIR)/libblasfeo.a
+
+# build tests
+build_test_aux:
 	make -C test_problems aux
 	@echo
 	@echo " Test problem build complete."
 	@echo
 
+# run tests
 run_test_aux:
-	make -C test_problems run_aux_short
+	make -C test_problems run_aux
+
+# copy library
+# build tests
+test_aux: deploy_to_test build_test_aux
+
+# deep build library (take into account flags changes)
+# copy library
+# build tests
+test_aux_clean: clean static_library test_aux
+
+# build tests (use existing library)
+# run tests
+rerun_test_aux: build_test_aux
+	make -C test_problems run_aux
+
+# build library
+# copy library
+# build test
+# run test
+run_test_aux_build: static_library test_aux run_test_aux
+
+# deep build library (take into account flags changes)
+# copy library
+# build test
+# run test
+run_test_aux_clean: test_aux_clean run_test_aux
 
 clean:
 	rm -f libblasfeo.a

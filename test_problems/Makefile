@@ -68,25 +68,31 @@ endif
 
 #OBJS = test_d_strmat.o
 #OBJS = test_s_strmat.o
-OBJS = test_blas_d.o
-#OBJS = test_blas_s.o
+OBJS = test_d_blas.o
+#OBJS = test_s_blas.o
 #OBJS = kernel_assembly.o test_assembly.o
 
+
+# debug test
+DEBUG_OBJS =
+DEBUG_OBJS = test_d_strmat.o
+DEBUG_OBJS = test_s_strmat.o
+
+# blas test
 BLAS_OBJS =
-BLAS_OBJS += test_blas_d.o
-BLAS_OBJS += test_blas_s.o
+BLAS_OBJS += test_d_blas.o
+BLAS_OBJS += test_s_blas.o
 
-
+# auxiliary test
 AUX_OBJS =
-AUX_OBJS += test_aux_s.o
-AUX_OBJS += test_aux_d.o
-
+AUX_OBJS += test_s_aux.o
+AUX_OBJS += test_d_aux.o
 
 %.o: %.c
 	# build obj
 	#
 	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
-	$(CC) $(CFLAGS) -o $(BINARY_DIR)/$@.out $(BINARY_DIR)/$@ $(LIBS)
+	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ -o $(BINARY_DIR)/$@.out $(LIBS)
 	#
 
 # ----------- Targets
@@ -99,18 +105,26 @@ bin_dir:
 	# create bin folder if not existent
 	mkdir -p $(BINARY_DIR)/
 
-gen: bin_dir $(OBJS)
+common: bin_dir
 
-aux: bin_dir $(AUX_OBJS)
-
-blas: bin_dir $(BLAS_OBJS)
+debug: common $(DEBUG_OBJS)
+aux: common $(AUX_OBJS)
+blas: common $(BLAS_OBJS)
 
 run:
 	./$(BINARY_DIR)/$(OBJS).out
 
-run_aux_short:
-	./$(BINARY_DIR)/test_aux_d.o.out
-	./$(BINARY_DIR)/test_aux_s.o.out
+run_debug:
+	./$(BINARY_DIR)/test_d_strmat.o.out
+	./$(BINARY_DIR)/test_s_strmat.o.out
+
+run_aux:
+	./$(BINARY_DIR)/test_d_aux.o.out
+	./$(BINARY_DIR)/test_s_aux.o.out
+
+run_blas:
+	./$(BINARY_DIR)/test_d_blas.o.out
+	./$(BINARY_DIR)/test_s_blas.o.out
 
 clean:
 	rm -rf build/*

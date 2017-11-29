@@ -41,7 +41,7 @@ extern "C" {
 
 
 /************************************************
-* d_aux_extern_depend_lib.c
+* s_aux_extern_depend_lib.c
 ************************************************/
 
 /* column-major matrices */

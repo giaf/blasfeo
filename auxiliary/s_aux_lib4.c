@@ -2280,8 +2280,10 @@ void sgecpsc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 		ii = 0;
 		// clean up at the beginning
 		mna = (4-offB)%bs;
+
 		if(mna>0)
 			{
+
 			if(m<mna)
 				{
 				if(m==1)
@@ -2295,6 +2297,7 @@ void sgecpsc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 					return;
 					}
 				}
+
 			if(mna==1)
 				{
 				kernel_sgecpsc_1_0_lib4(n, &alpha, pA+offA, pB+offB);
@@ -2316,14 +2319,18 @@ void sgecpsc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 				pB += 4*sdb;
 				ii += 3;
 				}
+
 			}
+
 		// main loop
+
 		for(; ii<m-3; ii+=4)
 			{
 			kernel_sgecpsc_4_3_lib4(n, &alpha, pA, sda, pB);
 			pA += 4*sda;
 			pB += 4*sdb;
 			}
+
 		// clean up at the end
 		if(ii<m)
 			{
