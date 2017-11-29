@@ -66,27 +66,24 @@ endif
 #LIBS += -pthread
 #endif
 
-#OBJS = test_d_strmat.o
-#OBJS = test_s_strmat.o
+
+# select one single test
+#OBJS = test_d_debug.o
+#OBJS = test_s_debug.o
 OBJS = test_d_blas.o
 #OBJS = test_s_blas.o
 #OBJS = kernel_assembly.o test_assembly.o
 
 
-# debug test
-DEBUG_OBJS =
-DEBUG_OBJS = test_d_strmat.o
-DEBUG_OBJS = test_s_strmat.o
+# auxiliary test
+AUX_OBJS =
+AUX_OBJS += test_s_aux.o
+AUX_OBJS += test_d_aux.o
 
 # blas test
 BLAS_OBJS =
 BLAS_OBJS += test_d_blas.o
 BLAS_OBJS += test_s_blas.o
-
-# auxiliary test
-AUX_OBJS =
-AUX_OBJS += test_s_aux.o
-AUX_OBJS += test_d_aux.o
 
 %.o: %.c
 	# build obj
@@ -106,17 +103,16 @@ bin_dir:
 	mkdir -p $(BINARY_DIR)/
 
 common: bin_dir
+	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
 
-debug: common $(DEBUG_OBJS)
+one_test: common $(OBJS)
+
 aux: common $(AUX_OBJS)
+
 blas: common $(BLAS_OBJS)
 
 run:
 	./$(BINARY_DIR)/$(OBJS).out
-
-run_debug:
-	./$(BINARY_DIR)/test_d_strmat.o.out
-	./$(BINARY_DIR)/test_s_strmat.o.out
 
 run_aux:
 	./$(BINARY_DIR)/test_d_aux.o.out

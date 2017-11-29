@@ -431,31 +431,35 @@ endif
 
 # Define targets
 
+
 all: clean static_library
 
+
+# compile static library
 static_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd auxiliary; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
 	ar rcs libblasfeo.a $(OBJS)
-	cp libblasfeo.a ./lib/
+	mv libblasfeo.a ./lib/
 	@echo
 	@echo " libblasfeo.a static library build complete."
 	@echo
 
+
+# compile shared library
 shared_library: target
 	( cd auxiliary; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
 	gcc -shared -o libblasfeo.so $(OBJS)
-	cp libblasfeo.so ./lib/
+	mv libblasfeo.so ./lib/
 	@echo
 	@echo " libblasfeo.so shared library build complete."
 	@echo
 
 
-# Generate headers
-
+# generate target header
 target:
 	touch ./include/blasfeo_target.h
 ifeq ($(TARGET), X64_INTEL_HASWELL)
@@ -518,56 +522,95 @@ ifeq ($(EXT_DEP), 1)
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
 
+
+# install static library & headers
 install_static:
 	mkdir -p $(PREFIX)/blasfeo
 	mkdir -p $(PREFIX)/blasfeo/lib
-	cp -f libblasfeo.a $(PREFIX)/blasfeo/lib/
+	cp -f ./lib/libblasfeo.a $(PREFIX)/blasfeo/lib/
 	mkdir -p $(PREFIX)/blasfeo/include
 	cp -f ./include/*.h $(PREFIX)/blasfeo/include/
 
+
+# install share library & headers
 install_shared:
 	mkdir -p $(PREFIX)/blasfeo
 	mkdir -p $(PREFIX)/blasfeo/lib
-	cp -f libblasfeo.so $(PREFIX)/blasfeo/lib/
+	cp -f ./lib/libblasfeo.so $(PREFIX)/blasfeo/lib/
 	mkdir -p $(PREFIX)/blasfeo/include
 	cp -f ./include/*.h $(PREFIX)/blasfeo/include/
+
+
+# clean .o files
+clean:
+	make -C auxiliary clean
+	make -C kernel clean
+	make -C blas clean
+	make -C examples clean
+
+
+# clean test problems
+clean_test_problems:
+	make -C test_problems clean
+
+
+# deep clean
+deep_clean: clean clean_test_problems
+	rm -f ./include/blasfeo_target.h
+	rm -f ./lib/libblasfeo.a
+	rm -f ./lib/libblasfeo.so
 
 
 # test problems
 
+# directory for test problems binaries
 BINARY_DIR = build/$(LA)/$(TARGET)
 
-test:
+
+# copy static library into test path
+deploy_to_test:
 	mkdir -p ./test_problems/$(BINARY_DIR)
-	cp libblasfeo.a ./test_problems/$(BINARY_DIR)/libblasfeo.a
-	make -C test_problems debug
+	cp ./lib/libblasfeo.a ./test_problems/$(BINARY_DIR)/libblasfeo.a
+
+
+# one single test
+build_test:
+	make -C test_problems one_test
 	@echo
 	@echo " Test problem build complete."
 	@echo
 
-
 run_test:
 	make -C test_problems run
 
-# copy library into test path
-deploy_to_test:
-	mkdir -p ./test_problems/$(BINARY_DIR)
-	cp libblasfeo.a ./test_problems/$(BINARY_DIR)/libblasfeo.a
+test: deploy_to_test build_test
 
-# build tests
+
+# aux test
 build_test_aux:
 	make -C test_problems aux
 	@echo
 	@echo " Test problem build complete."
 	@echo
 
-# run tests
 run_test_aux:
 	make -C test_problems run_aux
 
-# copy library
-# build tests
 test_aux: deploy_to_test build_test_aux
+
+
+# blas test
+build_test_blas:
+	make -C test_problems blas
+	@echo
+	@echo " Test problem build complete."
+	@echo
+
+run_test_blas:
+	make -C test_problems run_blas
+
+test_blas: deploy_to_test build_test_blas
+
 
 # deep build library (take into account flags changes)
 # copy library
@@ -576,32 +619,18 @@ test_aux_clean: clean static_library test_aux
 
 # build tests (use existing library)
 # run tests
-rerun_test_aux: build_test_aux
-	make -C test_problems run_aux
+update_test_aux: build_test_aux run_test_aux
 
 # build library
 # copy library
 # build test
 # run test
-run_test_aux_build: static_library test_aux run_test_aux
+update_lib_test_aux: static_library test_aux run_test_aux
 
 # deep build library (take into account flags changes)
 # copy library
 # build test
 # run test
-run_test_aux_clean: test_aux_clean run_test_aux
+update_target_test_aux: test_aux_clean run_test_aux
 
-clean:
-	rm -f libblasfeo.a
-	rm -f libblasfeo.so
-	rm -f ./lib/libblasfeo.a
-	rm -f ./lib/libblasfeo.so
-	make -C auxiliary clean
-	make -C kernel clean
-	make -C blas clean
-	make -C examples clean
 
-clean_test_problems:
-	make -C test_problems clean
-
-deep_clean: clean clean_test_problems

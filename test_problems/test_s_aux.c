@@ -232,4 +232,8 @@ SHOW_DEFINE(TARGET)
 SHOW_DEFINE(PRECISION)
 #endif
 
+	printf("\n\n");
+
+	return 0;
+
 	}

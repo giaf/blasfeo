@@ -188,5 +188,12 @@ SHOW_DEFINE(LA)
 #if defined(TARGET)
 SHOW_DEFINE(TARGET)
 #endif
+#if defined(PRECISION)
+SHOW_DEFINE(PRECISION)
+#endif
+
+	printf("\n\n");
+
+	return 0;
 
 	}
