@@ -4,7 +4,6 @@
 #define STRMAT s_strmat
 #define STRVEC s_strvec
 #define PS S_PS
-#define TEST_PRINT_STRMAT test_s_print_strmat
 #define PRINT_STRMAT s_print_strmat
 
 #define STRMAT_REF s_strmat_ref

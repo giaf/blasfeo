@@ -220,6 +220,8 @@ void dvecpei_libstr(int kmax, int *ipiv, struct d_strvec *sx, int xi);
 // reference for testing
 void blasfeo_d_create_strmat_ref(int m, int n, struct d_strmat_ref *sA, void *memory);
 void blasfeo_d_cvt_mat2strmat_ref(int m, int n, double *A, int lda, struct d_strmat_ref *sA, int ai, int aj);
+int blasfeo_d_memsize_strmat_ref(int m, int n);
+
 void blasfeo_dgecp_ref(int m, int n,\
 					struct d_strmat_ref *sA, int ai, int aj,\
 					struct d_strmat_ref *sB, int bi, int bj);

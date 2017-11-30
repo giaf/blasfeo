@@ -6,7 +6,6 @@
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_s_aux_ext_dep.h"
 #include "../include/blasfeo_s_aux.h"
-#include "../include/blasfeo_s_aux_test.h"
 #include "../include/blasfeo_i_aux_ext_dep.h"
 #include "../include/blasfeo_v_aux_ext_dep.h"
 #include "../include/blasfeo_s_kernel.h"
@@ -56,32 +55,25 @@ SHOW_DEFINE(TARGET)
 	s_zeros(&B, n, n);
 	for(ii=0; ii<n*n; ii++) B[ii] = 2*ii;
 
-	// standard column major allocation (malloc)
-	float *C;
-	s_zeros(&C, n, n);
-
-	// using blasfeo allocate
-	/* struct s_strmat sD;                          */
-	/* s_allocate_strmat(n-1, n-1, &sD);            */
-
 	/* -------- instantiate s_strmat */
 
 	// compute memory size
-	int size_strmat = N*s_size_strmat(n, n);
+	int size_strmat = 2*s_size_strmat(n, n);
+	int size_strmat_ref = 2*blasfeo_s_memsize_strmat_ref(n, n);
 	// inizilize void pointer
 	void *memory_strmat;
+	void *memory_strmat_ref;
 
 	// initialize pointer
 	// memory allocation
 	v_zeros_align(&memory_strmat, size_strmat);
+	v_zeros_align(&memory_strmat_ref, size_strmat_ref);
 
 	// get point to strmat
 	char *ptr_memory_strmat = (char *) memory_strmat;
+	char *ptr_memory_strmat_ref = (char *) memory_strmat_ref;
 
-	// -------- instantiate s_strmat
-	printf("\nInstantiate matrices\n\n");
-
-	// instantiate s_strmat depend on compilation flag LA_BLAS || LA_REFERENCE
+	// instantiate s_strmat
 	struct s_strmat sA;
 	s_create_strmat(n, n, &sA, ptr_memory_strmat);
 	ptr_memory_strmat += sA.memory_size;
@@ -96,24 +88,17 @@ SHOW_DEFINE(TARGET)
 	// reference matrices, column major
 
 	struct s_strmat_ref rA;
-	blasfeo_s_create_strmat_ref(n, n, &rA, ptr_memory_strmat);
-	ptr_memory_strmat += rA.memory_size;
+	blasfeo_s_create_strmat_ref(n, n, &rA, ptr_memory_strmat_ref);
+	ptr_memory_strmat_ref += rA.memory_size;
 	blasfeo_s_cvt_mat2strmat_ref(n, n, A, n, &rA, 0, 0);
 
 	struct s_strmat_ref rB;
-	blasfeo_s_create_strmat_ref(n, n, &rB, ptr_memory_strmat);
-	ptr_memory_strmat += sB.memory_size;
+	blasfeo_s_create_strmat_ref(n, n, &rB, ptr_memory_strmat_ref);
+	ptr_memory_strmat_ref += sB.memory_size;
 	blasfeo_s_cvt_mat2strmat_ref(n, n, B, n, &rB, 0, 0);
 
 
-	// -------- instantiate s_strmat
-
-	// test operations
-	//
-	/* sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 1.0, &sB, 0, 0, &sC, 0, 0); */
-
-	/* printf("\nPrint mat B:\n\n"); */
-	/* s_print_mat(p_n, p_n, B, n); */
+	// -------- Print matrices
 
 	printf("\nPrint strmat HP A:\n\n");
 	s_print_strmat(p_n, p_n, &sA, 0, 0);
@@ -127,40 +112,6 @@ SHOW_DEFINE(TARGET)
 	printf("\nPrint strmat REF B:\n\n");
 	blasfeo_s_print_strmat_ref(p_n, p_n, &rB, 0, 0);
 
-
-	/* printf("\nPrint stored strmat A:\n\n"); */
-	/* s_print_strmat((&sA)->pm, (&sA)->cn, &sA, 0, 0); */
-
-	/* printf("\nPrint strmat B:\n\n"); */
-	/* s_print_strmat(p_n, p_n, &sB, 0, 0); */
-
-	/* AUX */
-
-	/* ----------- memory */
-	/* printf("----------- STRMAT memory\n\n"); */
-	/* for (int i=0; i<12; i++) */
-	/* { */
-		/* printf("%d: %f, %f\n", i, sA.pA[i], A[i]); */
-	/* } */
-	/* printf("...\n\n"); */
-
-
-	/* ---------- extraction */
-	/* printf("----------- Extraction\n\n"); */
-
-	/* int ai = 8; */
-	/* int aj = 1; */
-
-	// ---- strmat
-	/* float ex_val = sgeex1_libstr(&sA, ai, aj); */
-	/* printf("Extract %d,%d for A: %f\n\n", ai, aj, ex_val); */
-
-	/* ---- column major */
-	/* struct s_strmat* ssA = &sA; */
-	/* int lda = (&sA)->m; */
-	/* float pointer + n_rows + n_col*leading_dimension; */
-	/* float *pA = (&sA)->pA + ai + aj*lda; */
-	/* float val = pA[0]; */
 
 	/* ----------- copy and scale */
 	printf("\n\n----------- TEST Copy&Scale\n\n");
