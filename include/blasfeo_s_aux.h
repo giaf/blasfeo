@@ -147,14 +147,16 @@ void svecpe_libstr(int kmax, int *ipiv, struct s_strvec *sx, int xi);
 // reference for testing
 void blasfeo_s_create_strmat_ref(int m, int n, struct s_strmat_ref *sA, void *memory);
 void blasfeo_s_cvt_mat2strmat_ref(int m, int n, float *A, int lda, struct s_strmat_ref *sA, int ai, int aj);
+int blasfeo_s_memsize_strmat_ref(int m, int n);
+
 void blasfeo_sgecp_ref(int m, int n,\
 					struct s_strmat_ref *sA, int ai, int aj,\
 					struct s_strmat_ref *sB, int bi, int bj);
 void blasfeo_sgesc_ref(int m, int n,\
-					double alpha,\
+					float alpha,\
 					struct s_strmat_ref *sA, int ai, int aj);
 void blasfeo_sgecpsc_ref(int m, int n,
-					double alpha,\
+					float alpha,\
 					struct s_strmat_ref *sA, int ai, int aj,\
 					struct s_strmat_ref *sB, int bi, int bj);
 

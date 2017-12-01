@@ -6,7 +6,6 @@
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_aux_ext_dep.h"
 #include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_d_aux_test.h"
 #include "../include/blasfeo_i_aux_ext_dep.h"
 #include "../include/blasfeo_v_aux_ext_dep.h"
 #include "../include/blasfeo_d_kernel.h"
@@ -60,28 +59,25 @@ SHOW_DEFINE(TARGET)
 	double *C;
 	d_zeros(&C, n, n);
 
-	// using blasfeo allocate
-	/* struct d_strmat sD;                          */
-	/* d_allocate_strmat(n-1, n-1, &sD);            */
-
 	/* -------- instantiate d_strmat */
 
 	// compute memory size
-	int size_strmat = N*d_size_strmat(n, n);
+	int size_strmat = 2*d_size_strmat(n, n);
+	int size_strmat_ref = 2*blasfeo_d_memsize_strmat_ref(n, n);
 	// inizilize void pointer
 	void *memory_strmat;
+	void *memory_strmat_ref;
 
 	// initialize pointer
 	// memory allocation
 	v_zeros_align(&memory_strmat, size_strmat);
+	v_zeros_align(&memory_strmat_ref, size_strmat_ref);
 
 	// get point to strmat
 	char *ptr_memory_strmat = (char *) memory_strmat;
+	char *ptr_memory_strmat_ref = (char *) memory_strmat_ref;
 
-	// -------- instantiate d_strmat
-	printf("\nInstantiate matrices\n\n");
-
-	// instantiate d_strmat depend on compilation flag LA_BLAS || LA_REFERENCE
+	// instantiate d_strmat
 	struct d_strmat sA;
 	d_create_strmat(n, n, &sA, ptr_memory_strmat);
 	ptr_memory_strmat += sA.memory_size;
@@ -96,17 +92,17 @@ SHOW_DEFINE(TARGET)
 	// reference matrices, column major
 
 	struct d_strmat_ref rA;
-	blasfeo_d_create_strmat_ref(n, n, &rA, ptr_memory_strmat);
-	ptr_memory_strmat += rA.memory_size;
+	blasfeo_d_create_strmat_ref(n, n, &rA, ptr_memory_strmat_ref);
+	ptr_memory_strmat_ref += rA.memory_size;
 	blasfeo_d_cvt_mat2strmat_ref(n, n, A, n, &rA, 0, 0);
 
 	struct d_strmat_ref rB;
-	blasfeo_d_create_strmat_ref(n, n, &rB, ptr_memory_strmat);
-	ptr_memory_strmat += sB.memory_size;
+	blasfeo_d_create_strmat_ref(n, n, &rB, ptr_memory_strmat_ref);
+	ptr_memory_strmat_ref += sB.memory_size;
 	blasfeo_d_cvt_mat2strmat_ref(n, n, B, n, &rB, 0, 0);
 
 
-	// -------- instantiate d_strmat
+	// -------- Print matrices
 
 	printf("\nPrint strmat HP A:\n\n");
 	d_print_strmat(p_n, p_n, &sA, 0, 0);
@@ -133,7 +129,6 @@ SHOW_DEFINE(TARGET)
 	// loop over A offset
 	for (ii = 0; ii < 8; ii++)
 		{
-
 
 		// ---- Scale
 		//

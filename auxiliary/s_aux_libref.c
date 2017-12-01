@@ -45,8 +45,6 @@
 #define STRVEC s_strvec_ref
 
 
-
-
 #define SIZE_STRMAT blasfeo_s_memsize_strmat_ref
 #define SIZE_DIAG_STRMAT blasfeo_s_memsize_diag_strmat_ref
 #define SIZE_STRVEC blasfeo_s_memsize_strvec_ref
@@ -69,7 +67,5 @@
 #define GECPSC_LIBSTR blasfeo_sgecpsc_ref
 
 
-
 // TESTING
 #include "x_aux_lib.c"
-
