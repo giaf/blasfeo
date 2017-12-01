@@ -140,7 +140,7 @@ struct s_strvec
 
 
 
-#if defined(TESTING)
+#if defined(TESTING_MODE)
 
 // matrix structure
 struct d_strmat_ref
@@ -181,7 +181,7 @@ struct s_strvec_ref
 #define MATEL_REF(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
 #define VECEL_REF(sa,ai) ((sa)->pa[ai])
 
-#endif // TESTING
+#endif // TESTING_MODE
 
 
 

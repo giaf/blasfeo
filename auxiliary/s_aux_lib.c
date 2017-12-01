@@ -724,28 +724,7 @@ void svecpe_libstr(int kmax, int *ipiv, struct s_strvec *sx, int xi)
 	return;
 	}
 
-#elif defined(TESTING)
 
-#define SIZE_STRMAT test_s_size_strmat
-#define SIZE_DIAG_STRMAT test_s_size_diag_strmat
-#define SIZE_STRVEC test_s_size_strvec
-
-#define CREATE_STRMAT test_s_create_strmat
-#define CREATE_STRVEC test_s_create_strvec
-
-#define CVT_MAT2STRMAT test_s_cvt_mat2strmat
-#define CVT_TRAN_MAT2STRMAT test_s_cvt_tran_mat2strmat
-#define CVT_VEC2STRVEC test_s_cvt_vec2strvec
-#define CVT_STRMAT2MAT test_s_cvt_strmat2mat
-#define CVT_TRAN_STRMAT2MAT test_s_cvt_tran_strmat2mat
-#define CVT_STRVEC2VEC test_s_cvt_strvec2vec
-#define CAST_MAT2STRMAT test_s_cast_mat2strmat
-#define CAST_DIAG_MAT2STRMAT test_s_cast_diag_mat2strmat
-#define CAST_VEC2VECMAT test_s_cast_vec2vecmat
-
-#define GECP_LIBSTR test_sgecp_libstr
-#define GESC_LIBSTR test_sgesc_libstr
-#define GECPSC_LIBSTR test_sgecpsc_libstr
 
 #else
 
@@ -753,5 +732,5 @@ void svecpe_libstr(int kmax, int *ipiv, struct s_strvec *sx, int xi)
 
 #endif
 
-// TESTING | LA_REFERENCE | LA_BLAS
+// LA_REFERENCE | LA_BLAS
 #include "x_aux_lib.c"

@@ -421,7 +421,7 @@ endif
 
 
 
-ifeq ($(TESTING), 1)
+ifeq ($(TESTING_MODE), 1)
 # reference routine for testing
 OBJS_REF =
 # aux
@@ -447,7 +447,7 @@ static_library: target
 	( cd blas; $(MAKE) obj)
 	ar rcs libblasfeo.a $(OBJS)
 	mv libblasfeo.a ./lib/
-ifeq ($(TESTING), 1)
+ifeq ($(TESTING_MODE), 1)
 	ar rcs libblasfeo_ref.a $(OBJS_REF)
 	mv libblasfeo_ref.a ./lib/
 endif
@@ -463,7 +463,7 @@ shared_library: target
 	( cd blas; $(MAKE) obj)
 	gcc -shared -o libblasfeo.so $(OBJS)
 	mv libblasfeo.so ./lib/
-ifeq ($(TESTING), 1)
+ifeq ($(TESTING_MODE), 1)
 	gcc -shared -o libblasfeo_ref.so $(OBJS_REF)
 	mv libblasfeo_ref.so ./lib/
 endif
@@ -584,7 +584,7 @@ BINARY_DIR = build/$(LA)/$(TARGET)
 deploy_to_test:
 	mkdir -p ./test_problems/$(BINARY_DIR)
 	cp ./lib/libblasfeo.a ./test_problems/$(BINARY_DIR)/
-ifeq ($(TESTING), 1)
+ifeq ($(TESTING_MODE), 1)
 	cp ./lib/libblasfeo_ref.a ./test_problems/$(BINARY_DIR)/
 endif
 

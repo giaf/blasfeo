@@ -67,5 +67,6 @@
 #define GECPSC_LIBSTR blasfeo_sgecpsc_ref
 
 
-// TESTING
+
+// TESTING_MODE
 #include "x_aux_lib.c"

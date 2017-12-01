@@ -83,8 +83,8 @@
 # Compile reference implementations with test_ prefix
 # in order to check HIGH_PERFORMANCE routines against reference
 #
-# TESTING = 0
- TESTING = 1
+ TESTING_MODE = 0
+# TESTING_MODE = 1
 
 # Enable on-line checks for matrix and vector dimensions
 #
@@ -165,8 +165,8 @@ endif
 ifeq ($(EXT_DEP), 1)
 CFLAGS += -DEXT_DEP
 endif
-ifeq ($(TESTING), 1)
-CFLAGS += -DTESTING
+ifeq ($(TESTING_MODE), 1)
+CFLAGS += -DTESTING_MODE
 endif
 
 ifeq ($(MACRO_LEVEL), 1)

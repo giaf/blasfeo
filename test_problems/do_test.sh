@@ -18,7 +18,7 @@ TOTAL=${#TARGETS[@]}
 for TARGET in "${TARGETS[@]}"
 do
 	echo "Testing $TARGET"
-	TESTING=1 TARGET=$TARGET make -C .. -e run_test_aux_clean
+	TESTING_MODE=1 TARGET=$TARGET make -C .. -e run_test_aux_clean
 	status=$?
 	let "DONE+=1"
 

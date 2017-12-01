@@ -35,7 +35,7 @@ BINARY_DIR = build/$(LA)/$(TARGET)
 
 LIBS = 
 SHARED_LIBS = 
-ifeq ($(TESTING), 1)
+ifeq ($(TESTING_MODE), 1)
 LIBS += $(BINARY_DIR)/libblasfeo_ref.a
 SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo_ref
 endif
@@ -76,7 +76,9 @@ endif
 # select one single test
 #OBJS = test_d_debug.o
 #OBJS = test_s_debug.o
-OBJS = test_d_blas.o
+#OBJS = test_d_aux.o
+OBJS = test_s_aux.o
+#OBJS = test_d_blas.o
 #OBJS = test_s_blas.o
 #OBJS = kernel_assembly.o test_assembly.o
 

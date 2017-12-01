@@ -26,147 +26,35 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-
-#if defined(LA_BLAS) | defined(LA_REFERENCE) | defined(TESTING_MODE)
-
-
-
-// create a matrix structure for a matrix of size m*n
-void ALLOCATE_STRMAT(int m, int n, struct STRMAT *sA)
-	{
-	sA->m = m;
-	sA->n = n;
-	ZEROS(&(sA->pA), sA->m, sA->n);
-	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
-	ZEROS(&(sA->dA), tmp, 1);
-	sA->memory_size = (m*n+tmp)*sizeof(REAL);
-	return;
-	}
+#include <stdio.h>
 
 
 
-// free memory of a matrix structure
-void FREE_STRMAT(struct STRMAT *sA)
-	{
-	free(sA->pA);
-	free(sA->dA);
-	return;
-	}
-
-
-
-// create a vector structure for a vector of size m
-void ALLOCATE_STRVEC(int m, struct STRVEC *sa)
-	{
-	sa->m = m;
-	ZEROS(&(sa->pa), sa->m, 1);
-	sa->memory_size = m*sizeof(REAL);
-	return;
-	}
-
-
-
-// free memory of a vector structure
-void FREE_STRVEC(struct STRVEC *sa)
-	{
-	free(sa->pa);
-	return;
-	}
-
-
-
-// print a matrix structure
-void PRINT_STRMAT(int m, int n, struct STRMAT *sA, int ai, int aj)
-	{
-	int lda = sA->m;
-	REAL *pA = sA->pA + ai + aj*lda;
-	PRINT_MAT(m, n, pA, lda);
-	return;
-	}
-
-
-
-// print a vector structure
-void PRINT_STRVEC(int m, struct STRVEC *sa, int ai)
-	{
-	REAL *pa = sa->pa + ai;
-	PRINT_MAT(m, 1, pa, m);
-	return;
-	}
-
-
-
-// print and transpose a vector structure
-void PRINT_TRAN_STRVEC(int m, struct STRVEC *sa, int ai)
-	{
-	REAL *pa = sa->pa + ai;
-	PRINT_MAT(1, m, pa, 1);
-	return;
-	}
-
-
-
-// print a matrix structure
-void PRINT_TO_FILE_STRMAT(FILE *file, int m, int n, struct STRMAT *sA, int ai, int aj)
-	{
-	int lda = sA->m;
-	REAL *pA = sA->pA + ai + aj*lda;
-	PRINT_TO_FILE_MAT(file, m, n, pA, lda);
-	return;
-	}
-
-
-
-// print a vector structure
-void PRINT_TO_FILE_STRVEC(FILE *file, int m, struct STRVEC *sa, int ai)
-	{
-	REAL *pa = sa->pa + ai;
-	PRINT_TO_FILE_MAT(file, m, 1, pa, m);
-	return;
-	}
-
-
-
-// print and transpose a vector structure
-void PRINT_TO_FILE_TRAN_STRVEC(FILE *file, int m, struct STRVEC *sa, int ai)
-	{
-	REAL *pa = sa->pa + ai;
-	PRINT_TO_FILE_MAT(file, 1, m, pa, 1);
-	return;
-	}
-
-
-
-// print a matrix structure
-void PRINT_E_STRMAT(int m, int n, struct STRMAT *sA, int ai, int aj)
-	{
-	int lda = sA->m;
-	REAL *pA = sA->pA + ai + aj*lda;
-	PRINT_E_MAT(m, n, pA, lda);
-	return;
-	}
-
-
-
-// print a vector structure
-void PRINT_E_STRVEC(int m, struct STRVEC *sa, int ai)
-	{
-	REAL *pa = sa->pa + ai;
-	PRINT_E_MAT(m, 1, pa, m);
-	return;
-	}
-
-
-
-// print and transpose a vector structure
-void PRINT_E_TRAN_STRVEC(int m, struct STRVEC *sa, int ai)
-	{
-	REAL *pa = sa->pa + ai;
-	PRINT_E_MAT(1, m, pa, 1);
-	return;
-	}
-
-
+#ifdef __cplusplus
+extern "C" {
 #endif
 
+
+
+// expose reference BLASFEO for testing
+
+void blasfeo_s_create_strmat_ref(int m, int n, struct s_strmat_ref *sA, void *memory);
+void blasfeo_s_cvt_mat2strmat_ref(int m, int n, float *A, int lda, struct s_strmat_ref *sA, int ai, int aj);
+int blasfeo_s_memsize_strmat_ref(int m, int n);
+
+void blasfeo_sgecp_ref(int m, int n,\
+					struct s_strmat_ref *sA, int ai, int aj,\
+					struct s_strmat_ref *sB, int bi, int bj);
+void blasfeo_sgesc_ref(int m, int n,\
+					float alpha,\
+					struct s_strmat_ref *sA, int ai, int aj);
+void blasfeo_sgecpsc_ref(int m, int n,
+					float alpha,\
+					struct s_strmat_ref *sA, int ai, int aj,\
+					struct s_strmat_ref *sB, int bi, int bj);
+
+
+#ifdef __cplusplus
+}
+#endif
 

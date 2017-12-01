@@ -82,9 +82,8 @@ OBJS += m_aux_lib.o
 
 endif # LA choice
 
-ifeq ($(TESTING), 1)
+ifeq ($(TESTING_MODE), 1)
 #testing against reference
-#avoid naming clash with 'test_' prefix
 OBJS += d_aux_libref.o
 OBJS += s_aux_libref.o
 endif
@@ -100,7 +99,7 @@ OBJS += s_aux_ext_dep_lib4.o
 OBJS += v_aux_ext_dep_lib.o
 OBJS += i_aux_ext_dep_lib.o
 
-ifeq ($(TESTING), 1)
+ifeq ($(TESTING_MODE), 1)
 OBJS += d_aux_ext_dep_libref.o
 OBJS += s_aux_ext_dep_libref.o
 endif
