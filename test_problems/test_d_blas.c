@@ -67,8 +67,7 @@ void omp_set_num_threads(int num_threads);
 
 
 
-#if defined(LA_HIGH_PERFORMANCE) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(LA_HIGH_PERFORMANCE) & (defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE))
 void dgemm_nn_1_1_1(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
 	{
 	kernel_dgemm_nn_4x2_vs_lib4(1, &alpha, A, 0, B, sdb, &beta, C, D, 1, 1);
@@ -460,7 +459,6 @@ void dgemm_nn_24_24_24(double alpha, double *A, int sda, double *B, int sdb, dou
 #endif
 	return;
 	}
-#endif
 #endif
 
 
