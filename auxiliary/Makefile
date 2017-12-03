@@ -111,3 +111,10 @@ obj: $(OBJS)
 
 clean:
 	rm -f *.o
+
+d_aux_lib.o: d_aux_lib.c x_aux_lib.c
+s_aux_lib.o: s_aux_lib.c x_aux_lib.c
+d_aux_ext_dep_lib.o: d_aux_ext_dep_lib.c x_aux_ext_dep_lib0.c x_aux_ext_dep_lib.c
+s_aux_ext_dep_lib.o: s_aux_ext_dep_lib.c x_aux_ext_dep_lib0.c x_aux_ext_dep_lib.c
+d_aux_ext_dep_lib4.o: d_aux_ext_dep_lib4.c x_aux_ext_dep_lib4.c
+s_aux_ext_dep_lib4.o: s_aux_ext_dep_lib4.c x_aux_ext_dep_lib4.c

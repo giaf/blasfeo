@@ -77,8 +77,8 @@ endif
 #OBJS = test_d_debug.o
 #OBJS = test_s_debug.o
 #OBJS = test_d_aux.o
-OBJS = test_s_aux.o
-#OBJS = test_d_blas.o
+#OBJS = test_s_aux.o
+OBJS = test_d_blas.o
 #OBJS = test_s_blas.o
 #OBJS = kernel_assembly.o test_assembly.o
 
