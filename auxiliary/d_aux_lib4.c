@@ -1651,16 +1651,22 @@ void d_create_strvec(int m, struct d_strvec *sa, void *memory)
 void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj)
 	{
 
-	if (m==1)
-		{
-		return;
-		}
-
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
 	int i, ii, j, jj, m0, m1, m2;
 	double 	*B, *pB;
+
+	// row vector in sA
+	if(m==1)
+		{
+		for(jj=0; jj<n; jj++)
+			{
+			pA[jj*bs] = A[jj*lda];
+			}
+		return;
+		}
+
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	__m256d
 		tmp;
@@ -1789,11 +1795,23 @@ void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int
 // convert and transpose a matrix into a matrix structure
 void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj)
 	{
+
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
 	int i, ii, j, m0, m1, m2;
 	double 	*B, *pB;
+
+	// row vector in sA
+	if(n==1)
+		{
+		for(ii=0; ii<m; ii++)
+			{
+			pA[ii*bs] = A[ii];
+			}
+		return;
+		}
+
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	__m256d
 		v0, v1, v2, v3,

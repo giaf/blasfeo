@@ -98,6 +98,7 @@ void PRINT_MAT(int m, int n, REAL *A, int lda)
 			}
 		printf("\n");
 		}
+	printf("\n");
 	return;
 	}
 
