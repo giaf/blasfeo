@@ -53,6 +53,27 @@ void AXPY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, int xi, struct STRVEC *sy
 	return;
 	}
 
+void AXPBY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+	{
+	if(m<=0)
+		return;
+	int ii;
+	REAL *x = sx->pa + xi;
+	REAL *y = sy->pa + yi;
+	REAL *z = sz->pa + zi;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		z[ii+0] = beta*y[ii+0] + alpha*x[ii+0];
+		z[ii+1] = beta*y[ii+1] + alpha*x[ii+1];
+		z[ii+2] = beta*y[ii+2] + alpha*x[ii+2];
+		z[ii+3] = beta*y[ii+3] + alpha*x[ii+3];
+		}
+	for(; ii<m; ii++)
+		z[ii+0] = beta*y[ii+0] + alpha*x[ii+0];
+	return;
+	}
+
 
 
 // multiply two vectors and compute dot product
@@ -193,6 +214,21 @@ void AXPY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, int xi, struct STRVEC *sy
 	return;
 	}
 
+
+void AXPBY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, REAL beta, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+	{
+	if(m<=0)
+		return;
+	int i1 = 1;
+	REAL *x = sx->pa + xi;
+	REAL *y = sy->pa + yi;
+	REAL *z = sz->pa + zi;
+	if(y!=z)
+		COPY(&m, y, &i1, z, &i1);
+	SCAL(&m, &beta, z, &i1);
+	AXPY(&m, &alpha, x, &i1, z, &i1);
+	return;
+	}
 
 
 // multiply two vectors and compute dot product
