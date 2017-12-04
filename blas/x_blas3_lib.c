@@ -1524,8 +1524,3 @@ void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int a
 #error : wrong LA choice
 
 #endif
-
-
-
-
-
