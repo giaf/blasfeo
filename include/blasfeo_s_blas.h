@@ -40,6 +40,8 @@ extern "C" {
 
 // z = y + alpha*x
 void saxpy_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi);
+// z = beta*y + alpha*x
+void saxpby_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi);
 // z = x .* y, return sum(z) = x^T * y
 float svecmuldot_libstr(int m, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi);
 // return x^T * y

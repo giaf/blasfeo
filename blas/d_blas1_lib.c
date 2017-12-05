@@ -56,6 +56,7 @@
 
 #define AXPY daxpy_
 #define COPY dcopy_
+#define DSCAL dscal_
 #define ROT drot_
 #define ROTG drotg_
 
