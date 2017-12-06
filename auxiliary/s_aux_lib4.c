@@ -2681,6 +2681,29 @@ void sveccp_libstr(int m, struct s_strvec *sa, int ai, struct s_strvec *sc, int 
 
 
 
+// copy and scale a strvec into a strvec
+void sveccpsc_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
+	{
+	float *pa = sa->pa + ai;
+	float *pc = sc->pa + ci;
+	int ii;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
+		pc[ii+1] = alpha*pa[ii+1];
+		pc[ii+2] = alpha*pa[ii+2];
+		pc[ii+3] = alpha*pa[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
+		}
+	return;
+	}
+
+
+
 // copy a lower triangular strmat into a lower triangular strmat
 void strcp_l_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj)
 	{
