@@ -124,6 +124,7 @@ void srowadin_libsp(int kmax, int *idx, float alpha, float *x, float *y, float *
 void srowsw_lib(int kmax, float *pA, float *pC);
 void srowsw_libstr(int kmax, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
 void srowpe_libstr(int kmax, int *ipiv, struct s_strmat *sA);
+void srowpei_libstr(int kmax, int *ipiv, struct s_strmat *sA);
 void scolin_lib(int kmax, float *x, int offset, float *pD, int sdd);
 void scolin_libstr(int kmax, struct s_strvec *sx, int xi, struct s_strmat *sA, int ai, int aj);
 void scolad_lib(int kmax, float alpha, float *x, int offset, float *pD, int sdd);
@@ -132,6 +133,7 @@ void scolad_libsp(int kmax, float alpha, int *idx, float *x, float *pD, int sdd)
 void scolsw_lib(int kmax, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc);
 void scolsw_libstr(int kmax, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
 void scolpe_libstr(int kmax, int *ipiv, struct s_strmat *sA);
+void scolpei_libstr(int kmax, int *ipiv, struct s_strmat *sA);
 void svecin_libsp(int kmax, int *idx, float *x, float *y);
 void svecad_libsp(int kmax, int *idx, float alpha, float *x, float *y);
 void svecad_sp_libstr(int m, float alpha, struct s_strvec *sx, int xi, int *idx, struct s_strvec *sz, int zi);
@@ -142,6 +144,7 @@ void sveccl_mask_libstr(int m, struct s_strvec *sxm, int xim, struct s_strvec *s
 void svecze_libstr(int m, struct s_strvec *sm, int mi, struct s_strvec *sv, int vi, struct s_strvec *se, int ei);
 void svecnrm_inf_libstr(int m, struct s_strvec *sx, int xi, float *ptr_norm);
 void svecpe_libstr(int kmax, int *ipiv, struct s_strvec *sx, int xi);
+void svecpei_libstr(int kmax, int *ipiv, struct s_strvec *sx, int xi);
 
 
 

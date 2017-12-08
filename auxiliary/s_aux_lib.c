@@ -240,6 +240,19 @@ void srowpe_libstr(int kmax, int *ipiv, struct s_strmat *sA)
 
 
 
+void srowpei_libstr(int kmax, int *ipiv, struct s_strmat *sA)
+	{
+	int ii;
+	for(ii=kmax-1; ii>=0; ii--)
+		{
+		if(ipiv[ii]!=ii)
+			srowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+		}
+	return;
+	}
+
+
+
 // insert a vector  into a rcol
 void scolin_libstr(int kmax, struct s_strvec *sx, int xi, struct s_strmat *sA, int ai, int aj)
 	{
@@ -279,6 +292,20 @@ void scolpe_libstr(int kmax, int *ipiv, struct s_strmat *sA)
 	{
 	int ii;
 	for(ii=0; ii<kmax; ii++)
+		{
+		if(ipiv[ii]!=ii)
+			scolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
+		}
+	return;
+	}
+
+
+
+// inverse permute the cols of a matrix struct
+void scolpei_libstr(int kmax, int *ipiv, struct s_strmat *sA)
+	{
+	int ii;
+	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
 			scolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
@@ -736,6 +763,26 @@ void svecpe_libstr(int kmax, int *ipiv, struct s_strvec *sx, int xi)
 	float tmp;
 	float *x = sx->pa + xi;
 	for(ii=0; ii<kmax; ii++)
+		{
+		if(ipiv[ii]!=ii)
+			{
+			tmp = x[ipiv[ii]];
+			x[ipiv[ii]] = x[ii];
+			x[ii] = tmp;
+			}
+		}
+	return;
+	}
+
+
+
+// inverse permute elements of a vector struct
+void svecpei_libstr(int kmax, int *ipiv, struct s_strvec *sx, int xi)
+	{
+	int ii;
+	float tmp;
+	float *x = sx->pa + xi;
+	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
 			{

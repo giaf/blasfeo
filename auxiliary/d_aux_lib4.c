@@ -2377,6 +2377,19 @@ void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	}
 
 
+// inverse permute the rows of a matrix struct
+void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
+	{
+	int ii;
+	for(ii=kmax-1; ii>=0; ii--)
+		{
+		if(ipiv[ii]!=ii)
+			drowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+		}
+	return;
+	}
+
+
 // extract a row int a vector
 void drowex_libstr(int kmax, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi)
 	{
@@ -2461,6 +2474,20 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	{
 	int ii;
 	for(ii=0; ii<kmax; ii++)
+		{
+		if(ipiv[ii]!=ii)
+			dcolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
+		}
+	return;
+	}
+
+
+
+// inverse permute the cols of a matrix struct
+void dcolpei_libstr(int kmax, int *ipiv, struct d_strmat *sA)
+	{
+	int ii;
+	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
 			dcolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
