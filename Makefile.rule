@@ -27,7 +27,7 @@
 ###################################################################################################
 
 # Target architecture list
-
+#
 # X64_INTEL_HASWELL: x86_64 architecture with AVX2 and FMA ISA (64 bit OS)
 # code optimized for Intel Haswell and Intel Skylake architectures.
 #
@@ -44,10 +44,11 @@
 # code optimized for ARM Cortex A15.
 #
 # ARMV8A_ARM_CORTEX_A57
+#
 # GENERIC : generic c99 code
 
 # Select target architecture
-
+#
 # TARGET = X64_INTEL_HASWELL
  TARGET = X64_INTEL_SANDY_BRIDGE
 # TARGET = X64_INTEL_CORE
@@ -59,28 +60,39 @@
 #
 # TARGET = GENERIC
 
-# Linear Algebra library
+# Select BLASFEO version
+#
  LA = HIGH_PERFORMANCE
 # LA = REFERENCE
 # LA = BLAS
 
-# BLAS and LAPACK version (for LA=BLAS)
-REF_BLAS = 0
-#REF_BLAS = OPENBLAS
-#REF_BLAS = NETLIB
-#REF_BLAS = MKL
-#REF_BLAS = BLIS
-#REF_BLAS = ATLAS
+# Select BLAS and LAPACK version (for LA=BLAS)
+#
+ REF_BLAS = 0
+# REF_BLAS = OPENBLAS
+# REF_BLAS = NETLIB
+# REF_BLAS = MKL
+# REF_BLAS = BLIS
+# REF_BLAS = ATLAS
 
 # Compile auxiliary functions with external dependencies (for memory allocation and printing)
-#EXT_DEP = 0
-EXT_DEP = 1
+#
+# EXT_DEP = 0
+ EXT_DEP = 1
+
+# Compile reference implementations with test_ prefix
+# in order to check HIGH_PERFORMANCE routines against reference
+#
+ TESTING_MODE = 0
+# TESTING_MODE = 1
 
 # Enable on-line checks for matrix and vector dimensions
-RUNTIME_CHECKS = 0
-#RUNTIME_CHECKS = 1
+#
+ RUNTIME_CHECKS = 0
+# RUNTIME_CHECKS = 1
 
-# Operating system
+# Operating system (automatic selection)
+#
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
     OS = LINUX
@@ -88,13 +100,15 @@ endif
 ifeq ($(UNAME_S),Darwin)
     OS = MAC
 endif
-
+# Operating system (manual selection)
+#
 # OS = LINUX
 # OS = MAC
 # OS = WINDOWS
 
 # C Compiler
-CC = gcc
+#
+ CC = gcc
 # CC = clang
 # CC = x86_64-w64-mingw32-gcc
 
@@ -103,21 +117,26 @@ PREFIX = /opt
 
 # Macro level (code size vs performance in assembly kernels):
 # 0 (no macro), 1 (all macro but gemm kernel), 2 (all macro)
-MACRO_LEVEL = 2
+#
+MACRO_LEVEL = 0
 
 # Minimum size of the computation kernel in level 3 routines
+#
 MIN_KERNEL_SIZE = 2x2
 #MIN_KERNEL_SIZE = 4x4
 
 # compiler / assembler / linker flags
+#
 CFLAGS  =
 ASFLAGS =
 LDFLAGS =
 
-# Optimization flags
+# Common optimization flags
+#
 CFLAGS += -O2 -fPIC
 
 # Debugging flags
+#
 CFLAGS  += #-g #-Wall -pedantic -Wfloat-equal #-pg
 ASFLAGS += #-g
 
@@ -126,7 +145,7 @@ ASFLAGS += #-g
 
 
 
-# Definirions
+# Definitions
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 CFLAGS  += -DLA_HIGH_PERFORMANCE
@@ -143,9 +162,11 @@ CFLAGS  += -DLA=$(LA)
 ifeq ($(RUNTIME_CHECKS), 1)
 CFLAGS += -DDIM_CHECK
 endif
-
 ifeq ($(EXT_DEP), 1)
 CFLAGS += -DEXT_DEP
+endif
+ifeq ($(TESTING_MODE), 1)
+CFLAGS += -DTESTING_MODE
 endif
 
 ifeq ($(MACRO_LEVEL), 1)
@@ -221,5 +242,5 @@ endif
 ifeq ($(TARGET), GENERIC)
 CFLAGS  += -DTARGET_GENERIC
 endif
-
+#
 CFLAGS  += -DTARGET=$(TARGET)

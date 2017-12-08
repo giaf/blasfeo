@@ -29,6 +29,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#include <mmintrin.h>
+#include <xmmintrin.h>  // SSE
+#include <emmintrin.h>  // SSE2
+#include <pmmintrin.h>  // SSE3
+#include <smmintrin.h>  // SSE4
+#include <immintrin.h>  // AVX
+#endif
+
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_s_kernel.h"
 
@@ -61,6 +70,27 @@ void saxpy_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_strv
 	}
 
 
+void saxpby_libstr(int m, float alpha, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+	{
+	if(m<=0)
+		return;
+	int ii;
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+	float *z = sz->pa + zi;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		z[ii+0] = beta*y[ii+0] + alpha*x[ii+0];
+		z[ii+1] = beta*y[ii+1] + alpha*x[ii+1];
+		z[ii+2] = beta*y[ii+2] + alpha*x[ii+2];
+		z[ii+3] = beta*y[ii+3] + alpha*x[ii+3];
+		}
+	for(; ii<m; ii++)
+		z[ii+0] = beta*y[ii+0] + alpha*x[ii+0];
+	return;
+	}
+
 
 void saxpy_bkp_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
 	{
@@ -84,6 +114,45 @@ void saxpy_bkp_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_
 		{
 		z[ii+0] = y[ii+0];
 		y[ii+0] = y[ii+0] + alpha*x[ii+0];
+		}
+	return;
+	}
+
+
+
+// multiply two vectors
+void svecmulacc_libstr(int m, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+	{
+
+	if(m<=0)
+		return;
+
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+	float *z = sz->pa + zi;
+	int ii;
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	__m256
+		v_tmp,
+		v_x0, v_y0, v_z0;
+#endif
+
+	ii = 0;
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<m-7; ii+=8)
+		{
+		v_x0 = _mm256_loadu_ps( &x[ii+0] );
+		v_y0 = _mm256_loadu_ps( &y[ii+0] );
+		v_z0 = _mm256_loadu_ps( &z[ii+0] );
+		v_tmp = _mm256_mul_ps( v_x0, v_y0 );
+		v_z0 = _mm256_add_ps( v_z0, v_tmp );
+		_mm256_storeu_ps( &z[ii+0], v_z0 );
+		}
+#endif
+	for(; ii<m; ii++)
+		{
+		z[ii+0] += x[ii+0] * y[ii+0];
 		}
 	return;
 	}

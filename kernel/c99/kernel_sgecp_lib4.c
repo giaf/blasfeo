@@ -396,10 +396,10 @@ void kernel_sgecpsc_3_3_lib4(int kmax, float *alphap, float *A0, int sda, float 
 	for(k=0; k<kmax; k++)
 		{
 
-		B[0+bs*0] = A0[3+bs*0];
+		B[0+bs*0] = alpha * A0[3+bs*0];
 
-		B[1+bs*0] = A1[0+bs*0];
-		B[2+bs*0] = A1[1+bs*0];
+		B[1+bs*0] = alpha * A1[0+bs*0];
+		B[2+bs*0] = alpha * A1[1+bs*0];
 
 		A0 += 4;
 		A1 += 4;
@@ -454,8 +454,8 @@ void kernel_sgecpsc_2_0_lib4(int kmax, float *alphap, float *A, float *B)
 	for(k=0; k<kmax; k++)
 		{
 
-		B[0+bs*0] = A[0+bs*0] * alpha;
-		B[1+bs*0] = A[1+bs*0] * alpha;
+		B[0+bs*0] = alpha * A[0+bs*0];
+		B[1+bs*0] = alpha * A[1+bs*0];
 
 		A += 4;
 		B += 4;
@@ -503,8 +503,8 @@ void kernel_sgecpsc_2_3_lib4(int kmax, float *alphap, float *A0, int sda, float 
 	for(k=0; k<kmax; k++)
 		{
 
-		B[0+bs*0] = A0[3+bs*0];
-		B[1+bs*0] = A1[0+bs*0];
+		B[0+bs*0] = alpha * A0[3+bs*0];
+		B[1+bs*0] = alpha * A1[0+bs*0];
 
 		A0 += 4;
 		A1 += 4;

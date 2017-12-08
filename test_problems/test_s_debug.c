@@ -119,7 +119,7 @@ int main()
 	// copy scale
 #if 1
 	s_print_strmat(n, n, &sA, 0, 0);
-	sgecpsc_libstr(10, 10, 0.1, &sA, 1, 0, &sD, 0, 0);
+	sgecpsc_libstr(10, 10, 0.1, &sA, 0, 0, &sD, 0, 0);
 	s_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 #endif

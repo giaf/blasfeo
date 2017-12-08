@@ -119,6 +119,128 @@ void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_str
 
 
 
+void daxpby_libstr(int m, double alpha, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+	{
+
+	if(m<=0)
+		return;
+
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+
+	int ii;
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	__m256d
+		v_beta, v_alpha,
+		v_tmp_x, v_tmp_y,
+		v_x0, v_y0,
+		v_x1, v_y1;
+#endif
+
+	ii = 0;
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	v_alpha = _mm256_broadcast_sd( &alpha );
+	v_beta = _mm256_broadcast_sd( &beta );
+	for( ; ii<m-7; ii+=8)
+		{
+		v_x0  = _mm256_loadu_pd( &x[ii+0] );
+		v_x1  = _mm256_loadu_pd( &x[ii+4] );
+		v_y0  = _mm256_loadu_pd( &y[ii+0] );
+		v_y1  = _mm256_loadu_pd( &y[ii+4] );
+#if defined(TARGET_X64_INTEL_HASWELL)
+		v_tmp_y = _mm256_mul_pd( v_beta, v_y0 );
+		v_y0  = _mm256_fmadd_pd( v_alpha, v_x0, v_tmp_y );
+		v_tmp_y = _mm256_mul_pd( v_beta, v_y1 );
+		v_y1  = _mm256_fmadd_pd( v_alpha, v_x1, v_tmp_y );
+
+#else // sandy bridge
+		v_tmp_x = _mm256_mul_pd( v_alpha, v_x0 );
+		v_tmp_y = _mm256_mul_pd( v_beta, v_y0 );
+		v_y0  = _mm256_add_pd( v_tmp_x, v_tmp_y );
+
+		v_tmp_x = _mm256_mul_pd( v_alpha, v_x1 );
+		v_tmp_y = _mm256_mul_pd( v_beta, v_y1 );
+		v_y1  = _mm256_add_pd( v_tmp_x, v_tmp_y );
+
+#endif
+		_mm256_storeu_pd( &z[ii+0], v_y0 );
+		_mm256_storeu_pd( &z[ii+4], v_y1 );
+		}
+	for( ; ii<m-3; ii+=4)
+		{
+		v_x0  = _mm256_loadu_pd( &x[ii] );
+		v_y0  = _mm256_loadu_pd( &y[ii] );
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+		v_tmp_y = _mm256_mul_pd( v_beta, v_y0 );
+		v_y0  = _mm256_fmadd_pd( v_alpha, v_x0, v_tmp_y );
+#else // sandy bridge
+		v_tmp_x = _mm256_mul_pd( v_alpha, v_x0 );
+		v_tmp_y = _mm256_mul_pd( v_beta, v_y0 );
+		v_y0  = _mm256_add_pd( v_tmp_x, v_tmp_y );
+#endif
+		_mm256_storeu_pd( &z[ii], v_y0 );
+		}
+#else
+	for( ; ii<m-3; ii+=4)
+		{
+		z[ii+0] = beta*y[ii+0] + alpha*x[ii+0];
+		z[ii+1] = beta*y[ii+1] + alpha*x[ii+1];
+		z[ii+2] = beta*y[ii+2] + alpha*x[ii+2];
+		z[ii+3] = beta*y[ii+3] + alpha*x[ii+3];
+		}
+#endif
+	for( ; ii<m; ii++)
+		{
+		z[ii+0] = beta*y[ii+0] + alpha*x[ii+0];
+		}
+
+	return;
+	}
+
+
+
+// multiply two vectors
+void dvecmulacc_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+	{
+
+	if(m<=0)
+		return;
+
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+	int ii;
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	__m256d
+		v_tmp,
+		v_x0, v_y0, v_z0;
+#endif
+
+	ii = 0;
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<m-3; ii+=4)
+		{
+		v_x0 = _mm256_loadu_pd( &x[ii+0] );
+		v_y0 = _mm256_loadu_pd( &y[ii+0] );
+		v_z0 = _mm256_loadu_pd( &z[ii+0] );
+		v_tmp = _mm256_mul_pd( v_x0, v_y0 );
+		v_z0 = _mm256_add_pd( v_z0, v_tmp );
+		_mm256_storeu_pd( &z[ii+0], v_z0 );
+		}
+#endif
+	for(; ii<m; ii++)
+		{
+		z[ii+0] += x[ii+0] * y[ii+0];
+		}
+	return;
+	}
+
+
+
 // multiply two vectors and compute dot product
 double dvecmuldot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
 	{

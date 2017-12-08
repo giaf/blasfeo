@@ -1897,6 +1897,19 @@ void srowpe_libstr(int kmax, int *ipiv, struct s_strmat *sA)
 	}
 
 
+// inverse permute the rows of a matrix struct
+void srowpei_libstr(int kmax, int *ipiv, struct s_strmat *sA)
+	{
+	int ii;
+	for(ii=kmax-1; ii>=0; ii--)
+		{
+		if(ipiv[ii]!=ii)
+			srowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+		}
+	return;
+	}
+
+
 // extract a row int a vector
 void srowex_libstr(int kmax, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi)
 	{
@@ -1961,6 +1974,21 @@ void scolpe_libstr(int kmax, int *ipiv, struct s_strmat *sA)
 		}
 	return;
 	}
+
+
+
+// inverse permute the cols of a matrix struct
+void scolpei_libstr(int kmax, int *ipiv, struct s_strmat *sA)
+	{
+	int ii;
+	for(ii=kmax-1; ii>=0; ii--)
+		{
+		if(ipiv[ii]!=ii)
+			scolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
+		}
+	return;
+	}
+
 
 
 // --- ge
@@ -2280,8 +2308,10 @@ void sgecpsc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 		ii = 0;
 		// clean up at the beginning
 		mna = (4-offB)%bs;
+
 		if(mna>0)
 			{
+
 			if(m<mna)
 				{
 				if(m==1)
@@ -2295,6 +2325,7 @@ void sgecpsc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 					return;
 					}
 				}
+
 			if(mna==1)
 				{
 				kernel_sgecpsc_1_0_lib4(n, &alpha, pA+offA, pB+offB);
@@ -2316,14 +2347,18 @@ void sgecpsc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 				pB += 4*sdb;
 				ii += 3;
 				}
+
 			}
+
 		// main loop
+
 		for(; ii<m-3; ii+=4)
 			{
 			kernel_sgecpsc_4_3_lib4(n, &alpha, pA, sda, pB);
 			pA += 4*sda;
 			pB += 4*sdb;
 			}
+
 		// clean up at the end
 		if(ii<m)
 			{
@@ -2668,6 +2703,29 @@ void sveccp_libstr(int m, struct s_strvec *sa, int ai, struct s_strvec *sc, int 
 	for(; ii<m; ii++)
 		{
 		pc[ii+0] = pa[ii+0];
+		}
+	return;
+	}
+
+
+
+// copy and scale a strvec into a strvec
+void sveccpsc_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
+	{
+	float *pa = sa->pa + ai;
+	float *pc = sc->pa + ci;
+	int ii;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
+		pc[ii+1] = alpha*pa[ii+1];
+		pc[ii+2] = alpha*pa[ii+2];
+		pc[ii+3] = alpha*pa[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
 		}
 	return;
 	}
@@ -3393,6 +3451,26 @@ void svecpe_libstr(int kmax, int *ipiv, struct s_strvec *sx, int xi)
 	float tmp;
 	float *x = sx->pa + xi;
 	for(ii=0; ii<kmax; ii++)
+		{
+		if(ipiv[ii]!=ii)
+			{
+			tmp = x[ipiv[ii]];
+			x[ipiv[ii]] = x[ii];
+			x[ii] = tmp;
+			}
+		}
+	return;
+	}
+
+
+
+// inverse permute elements of a vector struct
+void svecpei_libstr(int kmax, int *ipiv, struct s_strvec *sx, int xi)
+	{
+	int ii;
+	float tmp;
+	float *x = sx->pa + xi;
+	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
 			{

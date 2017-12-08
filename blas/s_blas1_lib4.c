@@ -62,6 +62,29 @@ void saxpy_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_strv
 
 
 
+void saxpby_libstr(int m, float alpha, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+	{
+	if(m<=0)
+		return;
+	int ii;
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+	float *z = sz->pa + zi;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		z[ii+0] = beta*y[ii+0] + alpha*x[ii+0];
+		z[ii+1] = beta*y[ii+1] + alpha*x[ii+1];
+		z[ii+2] = beta*y[ii+2] + alpha*x[ii+2];
+		z[ii+3] = beta*y[ii+3] + alpha*x[ii+3];
+		}
+	for(; ii<m; ii++)
+		z[ii+0] = beta*y[ii+0] + alpha*x[ii+0];
+	return;
+	}
+
+
+
 void saxpy_bkp_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
 	{
 	float *x = sx->pa + xi;
@@ -84,6 +107,29 @@ void saxpy_bkp_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_
 		{
 		z[ii+0] = y[ii+0];
 		y[ii+0] = y[ii+0] + alpha*x[ii+0];
+		}
+	return;
+	}
+
+
+
+// multiply two vectors and compute dot product
+void svecmulacc_libstr(int m, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+	{
+
+	if(m<=0)
+		return;
+
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+	float *z = sz->pa + zi;
+	int ii;
+
+	ii = 0;
+
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = x[ii+0] * y[ii+0];
 		}
 	return;
 	}

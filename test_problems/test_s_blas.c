@@ -175,7 +175,7 @@ int main()
 		{
 
 		int n = nn[ll];
-		int nrep = nnrep[ll];
+		int nrep = nnrep[ll]/2;
 //		int n = ll+1;
 //		int nrep = nnrep[0];
 //		n = n<16 ? 16 : n;
@@ -192,6 +192,9 @@ int main()
 		int n = nn[ll];
 		int nrep = 40000; //nnrep[ll];
 #endif
+
+		int rep_in;
+		int nrep_in = 10;
 
 		float *A; s_zeros(&A, n, n);
 		float *B; s_zeros(&B, n, n);
@@ -275,93 +278,106 @@ int main()
 		float alpha = 1.0;
 		float beta = 0.0;
 
-		gettimeofday(&tv0, NULL); // stop
+		float time_hpmpc    = 1e15;
+		float time_blasfeo  = 1e15;
+		float time_blas     = 1e15;
 
-		gettimeofday(&tv1, NULL); // stop
-
-		for(rep=0; rep<nrep; rep++)
+		for(rep_in=0; rep_in<nrep_in; rep_in++)
 			{
-//			kernel_sgemm_nt_24x4_lib8(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-//			kernel_sgemm_nt_16x4_lib8(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-//			kernel_sgemm_nt_8x8_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
-//			kernel_sgemm_nt_8x4_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
-//			kernel_sgemm_nt_4x8_gen_lib8(n, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 4, 0, 8);
-//			kernel_sgemm_nt_4x8_vs_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA, 4, 8);
-//			kernel_sgemm_nt_4x8_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
-//			kernel_sgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-//			kernel_sgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-//			kernel_sgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
-//			kernel_sgemm_nn_16x4_lib8(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-//			kernel_sgemm_nn_8x8_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
-//			kernel_sgemm_nn_8x4_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 
-//			sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-//			sgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-//			ssyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-//			spotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-			spotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
-//			sgetr_libstr(n, n, &sA, 0, 0, &sB, 0, 0);
-//			sgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-//			sgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
-//			strmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
-//			strmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
-//			strsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//			strsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//			strsm_rltn_libstr(n, n, 1.0, &sB, 0, 0, &sD, 0, 0, &sD, 0, 0);
-//			strsm_rltu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//			strsm_rutn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//			sgemv_n_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-//			sgemv_t_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-//			ssymv_l_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-//			sgemv_nt_libstr(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
+			gettimeofday(&tv0, NULL); // stop
+
+			for(rep=0; rep<nrep; rep++)
+				{
+	//			kernel_sgemm_nt_24x4_lib8(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+	//			kernel_sgemm_nt_16x4_lib8(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+	//			kernel_sgemm_nt_8x8_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+	//			kernel_sgemm_nt_8x4_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+	//			kernel_sgemm_nt_4x8_gen_lib8(n, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 4, 0, 8);
+	//			kernel_sgemm_nt_4x8_vs_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA, 4, 8);
+	//			kernel_sgemm_nt_4x8_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+	//			kernel_sgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+	//			kernel_sgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+	//			kernel_sgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+	//			kernel_sgemm_nn_16x4_lib8(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+	//			kernel_sgemm_nn_8x8_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+	//			kernel_sgemm_nn_8x4_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+
+				sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				sgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				ssyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+	//			spotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
+//				spotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
+	//			sgetr_libstr(n, n, &sA, 0, 0, &sB, 0, 0);
+	//			sgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
+	//			sgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
+	//			strmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+	//			strmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+	//			strsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+	//			strsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+	//			strsm_rltn_libstr(n, n, 1.0, &sB, 0, 0, &sD, 0, 0, &sD, 0, 0);
+	//			strsm_rltu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+	//			strsm_rutn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+	//			sgemv_n_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+	//			sgemv_t_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+	//			ssymv_l_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+	//			sgemv_nt_libstr(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
+				}
+
+	//		d_print_strmat(n, n, &sD, 0, 0);
+
+			gettimeofday(&tv1, NULL); // stop
+
+			for(rep=0; rep<nrep; rep++)
+				{
+	#if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
+	//			sgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
+	//			sgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
+	//			scopy_(&n2, A, &i_1, B, &i_1);
+	//			ssyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
+	//			strmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
+	//			spotrf_(&c_l, &n, B2, &n, &info);
+	//			sgetrf_(&n, &n, B2, &n, ipiv, &info);
+	//			strsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
+	//			strsm_(&c_l, &c_u, &c_n, &c_n, &n, &n, &d_1, B2, &n, B, &n);
+	//			strtri_(&c_l, &c_n, &n, B2, &n, &info);
+	//			slauum_(&c_l, &n, B, &n, &info);
+	//			sgemv_(&c_n, &n, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
+	//			sgemv_(&c_t, &n, &n, &d_1, A, &n, x2, &i_1, &d_0, y2, &i_1);
+	//			strmv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
+	//			strsv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
+	//			ssymv_(&c_l, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
+
+	//			for(i=0; i<n; i++)
+	//				{
+	//				i_t = n-i;
+	//				scopy_(&i_t, &B[i*(n+1)], &i_1, &C[i*(n+1)], &i_1);
+	//				}
+	//			ssyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, C, &n);
+	//			spotrf_(&c_l, &n, C, &n, &info);
+
+	#endif
+
+	#if defined(REF_BLAS_BLIS)
+	//			sgemm_(&c_n, &c_t, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
+	//			sgemm_(&c_n, &c_n, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
+	//			ssyrk_(&c_l, &c_n, &n77, &n77, &d_1, A, &n77, &d_0, C, &n77);
+	//			strmm_(&c_r, &c_u, &c_t, &c_n, &n77, &n77, &d_1, A, &n77, C, &n77);
+	//			spotrf_(&c_l, &n77, B, &n77, &info);
+	//			strtri_(&c_l, &c_n, &n77, B, &n77, &info);
+	//			slauum_(&c_l, &n77, B, &n77, &info);
+	#endif
+				}
+
+			gettimeofday(&tv2, NULL); // stop
+
+			float tmp_blasfeo  = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);
+			float tmp_blas     = (float) (tv2.tv_sec-tv1.tv_sec)/(nrep+0.0)+(tv2.tv_usec-tv1.tv_usec)/(nrep*1e6);
+
+			time_blasfeo = tmp_blasfeo<time_blasfeo ? tmp_blasfeo : time_blasfeo;
+			time_blas = tmp_blas<time_blas ? tmp_blas : time_blas;
+
 			}
-
-//		d_print_strmat(n, n, &sD, 0, 0);
-
-		gettimeofday(&tv2, NULL); // stop
-
-		for(rep=0; rep<nrep; rep++)
-			{
-#if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
-//			sgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
-//			sgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
-//			scopy_(&n2, A, &i_1, B, &i_1);
-//			ssyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
-//			strmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
-//			spotrf_(&c_l, &n, B2, &n, &info);
-//			sgetrf_(&n, &n, B2, &n, ipiv, &info);
-//			strsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
-//			strsm_(&c_l, &c_u, &c_n, &c_n, &n, &n, &d_1, B2, &n, B, &n);
-//			strtri_(&c_l, &c_n, &n, B2, &n, &info);
-//			slauum_(&c_l, &n, B, &n, &info);
-//			sgemv_(&c_n, &n, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
-//			sgemv_(&c_t, &n, &n, &d_1, A, &n, x2, &i_1, &d_0, y2, &i_1);
-//			strmv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
-//			strsv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
-//			ssymv_(&c_l, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
-
-//			for(i=0; i<n; i++)
-//				{
-//				i_t = n-i;
-//				scopy_(&i_t, &B[i*(n+1)], &i_1, &C[i*(n+1)], &i_1);
-//				}
-//			ssyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, C, &n);
-//			spotrf_(&c_l, &n, C, &n, &info);
-
-#endif
-
-#if defined(REF_BLAS_BLIS)
-//			sgemm_(&c_n, &c_t, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
-//			sgemm_(&c_n, &c_n, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
-//			ssyrk_(&c_l, &c_n, &n77, &n77, &d_1, A, &n77, &d_0, C, &n77);
-//			strmm_(&c_r, &c_u, &c_t, &c_n, &n77, &n77, &d_1, A, &n77, C, &n77);
-//			spotrf_(&c_l, &n77, B, &n77, &info);
-//			strtri_(&c_l, &c_n, &n77, B, &n77, &info);
-//			slauum_(&c_l, &n77, B, &n77, &info);
-#endif
-			}
-
-		gettimeofday(&tv3, NULL); // stop
 
 		// flops
 		if(1)
@@ -375,9 +391,9 @@ int main()
 //			float flop_operation = 2*16.0*2*n; // kernel 8x4
 //			float flop_operation = 1*16.0*2*n; // kernel 4x4
 
-//			float flop_operation = 2.0*n*n*n; // dgemm
+			float flop_operation = 2.0*n*n*n; // dgemm
 //			float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
-			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
+//			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //			float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //			float flop_operation = 2.0*n*n; // dgemv dsymv
 //			float flop_operation = 1.0*n*n; // dtrmv dtrsv
@@ -386,11 +402,6 @@ int main()
 
 //			float flop_operation = 4.0/3.0*n*n*n; // dsyrk+dpotrf
 
-			float time_hpmpc    = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);
-			float time_blasfeo  = (float) (tv2.tv_sec-tv1.tv_sec)/(nrep+0.0)+(tv2.tv_usec-tv1.tv_usec)/(nrep*1e6);
-			float time_blas     = (float) (tv3.tv_sec-tv2.tv_sec)/(nrep+0.0)+(tv3.tv_usec-tv2.tv_usec)/(nrep*1e6);
-
-			float Gflops_hpmpc    = 1e-9*flop_operation/time_hpmpc;
 			float Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
 			float Gflops_blas     = 1e-9*flop_operation/time_blas;
 

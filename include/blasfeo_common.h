@@ -138,6 +138,53 @@ struct s_strvec
 
 #endif
 
+
+
+#if defined(TESTING_MODE)
+
+// matrix structure
+struct d_strmat_ref
+	{
+	int m; // rows
+	int n; // cols
+	double *pA; // pointer to a m*n array of doubles
+	double *dA; // pointer to a min(m,n) (or max???) array of doubles
+	int use_dA; // flag to tell if dA can be used
+	int memory_size; // size of needed memory
+	};
+
+struct s_strmat_ref
+	{
+	int m; // rows
+	int n; // cols
+	float *pA; // pointer to a m*n array of floats
+	float *dA; // pointer to a min(m,n) (or max???) array of floats
+	int use_dA; // flag to tell if dA can be used
+	int memory_size; // size of needed memory
+	};
+
+// vector structure
+struct d_strvec_ref
+	{
+	int m; // size
+	double *pa; // pointer to a m array of doubles, the first is aligned to cache line size
+	int memory_size; // size of needed memory
+	};
+
+struct s_strvec_ref
+	{
+	int m; // size
+	float *pa; // pointer to a m array of floats, the first is aligned to cache line size
+	int memory_size; // size of needed memory
+	};
+
+#define MATEL_REF(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
+#define VECEL_REF(sa,ai) ((sa)->pa[ai])
+
+#endif // TESTING_MODE
+
+
+
 #endif  // BLASFEO_COMMON
 
 

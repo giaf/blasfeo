@@ -82,15 +82,39 @@ OBJS += m_aux_lib.o
 
 endif # LA choice
 
-ifeq ($(EXT_DEP), 1)
+ifeq ($(TESTING_MODE), 1)
+#testing against reference
+OBJS += d_aux_libref.o
+OBJS += s_aux_libref.o
+endif
+
+
 #ext dep
+ifeq ($(EXT_DEP), 1)
+
 OBJS += d_aux_ext_dep_lib.o
+OBJS += d_aux_ext_dep_lib4.o
 OBJS += s_aux_ext_dep_lib.o
+OBJS += s_aux_ext_dep_lib4.o
 OBJS += v_aux_ext_dep_lib.o
 OBJS += i_aux_ext_dep_lib.o
+
+ifeq ($(TESTING_MODE), 1)
+OBJS += d_aux_ext_dep_libref.o
+OBJS += s_aux_ext_dep_libref.o
 endif
+
+endif
+
 
 obj: $(OBJS)
 
 clean:
 	rm -f *.o
+
+d_aux_lib.o: d_aux_lib.c x_aux_lib.c
+s_aux_lib.o: s_aux_lib.c x_aux_lib.c
+d_aux_ext_dep_lib.o: d_aux_ext_dep_lib.c x_aux_ext_dep_lib0.c x_aux_ext_dep_lib.c
+s_aux_ext_dep_lib.o: s_aux_ext_dep_lib.c x_aux_ext_dep_lib0.c x_aux_ext_dep_lib.c
+d_aux_ext_dep_lib4.o: d_aux_ext_dep_lib4.c x_aux_ext_dep_lib4.c
+s_aux_ext_dep_lib4.o: s_aux_ext_dep_lib4.c x_aux_ext_dep_lib4.c

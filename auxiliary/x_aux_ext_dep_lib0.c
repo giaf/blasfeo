@@ -26,52 +26,147 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
 
-#if defined(LA_BLAS)
-#if defined(REF_BLAS_BLIS)
-#include "s_blas_64.h"
-#else
-#include "s_blas.h"
+#if defined(LA_BLAS) | defined(LA_REFERENCE) | defined(TESTING_MODE)
+
+
+
+// create a matrix structure for a matrix of size m*n
+void ALLOCATE_STRMAT(int m, int n, struct STRMAT *sA)
+	{
+	sA->m = m;
+	sA->n = n;
+	ZEROS(&(sA->pA), sA->m, sA->n);
+	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
+	ZEROS(&(sA->dA), tmp, 1);
+	sA->memory_size = (m*n+tmp)*sizeof(REAL);
+	return;
+	}
+
+
+
+// free memory of a matrix structure
+void FREE_STRMAT(struct STRMAT *sA)
+	{
+	free(sA->pA);
+	free(sA->dA);
+	return;
+	}
+
+
+
+// create a vector structure for a vector of size m
+void ALLOCATE_STRVEC(int m, struct STRVEC *sa)
+	{
+	sa->m = m;
+	ZEROS(&(sa->pa), sa->m, 1);
+	sa->memory_size = m*sizeof(REAL);
+	return;
+	}
+
+
+
+// free memory of a vector structure
+void FREE_STRVEC(struct STRVEC *sa)
+	{
+	free(sa->pa);
+	return;
+	}
+
+
+
+// print a matrix structure
+void PRINT_STRMAT(int m, int n, struct STRMAT *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	PRINT_MAT(m, n, pA, lda);
+	return;
+	}
+
+
+
+// print a vector structure
+void PRINT_STRVEC(int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_MAT(m, 1, pa, m);
+	return;
+	}
+
+
+
+// print and transpose a vector structure
+void PRINT_TRAN_STRVEC(int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_MAT(1, m, pa, 1);
+	return;
+	}
+
+
+
+// print a matrix structure
+void PRINT_TO_FILE_STRMAT(FILE *file, int m, int n, struct STRMAT *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	PRINT_TO_FILE_MAT(file, m, n, pA, lda);
+	return;
+	}
+
+
+
+// print a vector structure
+void PRINT_TO_FILE_STRVEC(FILE *file, int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_TO_FILE_MAT(file, m, 1, pa, m);
+	return;
+	}
+
+
+
+// print and transpose a vector structure
+void PRINT_TO_FILE_TRAN_STRVEC(FILE *file, int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_TO_FILE_MAT(file, 1, m, pa, 1);
+	return;
+	}
+
+
+
+// print a matrix structure
+void PRINT_E_STRMAT(int m, int n, struct STRMAT *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	PRINT_E_MAT(m, n, pA, lda);
+	return;
+	}
+
+
+
+// print a vector structure
+void PRINT_E_STRVEC(int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_E_MAT(m, 1, pa, m);
+	return;
+	}
+
+
+
+// print and transpose a vector structure
+void PRINT_E_TRAN_STRVEC(int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_E_MAT(1, m, pa, 1);
+	return;
+	}
+
+
 #endif
-#endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux.h"
-
-
-
-#define REAL float
-
-#define STRMAT s_strmat
-#define STRVEC s_strvec
-
-#define GELQF_LIBSTR sgelqf_libstr
-#define GELQF_WORK_SIZE_LIBSTR sgelqf_work_size_libstr
-#define GEQRF_LIBSTR sgeqrf_libstr
-#define GEQRF_WORK_SIZE_LIBSTR sgeqrf_work_size_libstr
-#define GETF2_NOPIVOT sgetf2_nopivot
-#define GETRF_NOPIVOT_LIBSTR sgetrf_nopivot_libstr
-#define GETRF_LIBSTR sgetrf_libstr
-#define POTRF_L_LIBSTR spotrf_l_libstr
-#define POTRF_L_MN_LIBSTR spotrf_l_mn_libstr
-#define PSTRF_L_LIBSTR spstrf_l_libstr
-#define SYRK_POTRF_LN_LIBSTR ssyrk_spotrf_ln_libstr
-
-#define COPY scopy_
-#define GELQF sgelqf_
-#define GEMM sgemm_
-#define GER sger_
-#define GEQRF sgeqrf_
-#define GEQR2 sgeqr2_
-#define GETRF sgetrf_
-#define POTRF spotrf_
-#define SCAL sscal_
-#define SYRK ssyrk_
-#define TRSM strsm_
-
-
-#include "x_lapack_lib.c"
 

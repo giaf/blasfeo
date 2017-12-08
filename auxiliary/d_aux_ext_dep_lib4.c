@@ -28,50 +28,53 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
-
-#if defined(LA_BLAS)
-#if defined(REF_BLAS_BLIS)
-#include "s_blas_64.h"
-#else
-#include "s_blas.h"
-#endif
-#endif
 
 #include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux.h"
+#include "../include/blasfeo_d_aux_ext_dep.h"
 
 
+#define REAL double
+#define STRMAT d_strmat
+#define STRVEC d_strvec
+#define PS D_PS
 
-#define REAL float
+#if defined(LA_HIGH_PERFORMANCE)
 
-#define STRMAT s_strmat
-#define STRVEC s_strvec
+#include "../include/blasfeo_block_size.h"
 
-#define GELQF_LIBSTR sgelqf_libstr
-#define GELQF_WORK_SIZE_LIBSTR sgelqf_work_size_libstr
-#define GEQRF_LIBSTR sgeqrf_libstr
-#define GEQRF_WORK_SIZE_LIBSTR sgeqrf_work_size_libstr
-#define GETF2_NOPIVOT sgetf2_nopivot
-#define GETRF_NOPIVOT_LIBSTR sgetrf_nopivot_libstr
-#define GETRF_LIBSTR sgetrf_libstr
-#define POTRF_L_LIBSTR spotrf_l_libstr
-#define POTRF_L_MN_LIBSTR spotrf_l_mn_libstr
-#define PSTRF_L_LIBSTR spstrf_l_libstr
-#define SYRK_POTRF_LN_LIBSTR ssyrk_spotrf_ln_libstr
+#define ZEROS d_zeros
+#define ZEROS_ALIGN d_zeros_align
 
-#define COPY scopy_
-#define GELQF sgelqf_
-#define GEMM sgemm_
-#define GER sger_
-#define GEQRF sgeqrf_
-#define GEQR2 sgeqr2_
-#define GETRF sgetrf_
-#define POTRF spotrf_
-#define SCAL sscal_
-#define SYRK ssyrk_
-#define TRSM strsm_
+#define FREE d_free
+#define FREE_ALIGN d_free_align
 
+#define PRINT_MAT d_print_mat
+#define PRINT_TRAN_MAT d_print_tran_mat
 
-#include "x_lapack_lib.c"
+#define PRINT_TO_FILE_MAT d_print_to_file_mat
+#define PRINT_TO_FILE_TRAN_MAT d_print_to_file_tran_mat
 
+#define PRINT_E_MAT d_print_e_mat
+#define PRINT_E_TRAN_MAT d_print_e_tran_mat
+
+#define ALLOCATE_STRMAT d_allocate_strmat
+#define ALLOCATE_STRVEC d_allocate_strvec
+
+#define FREE_STRMAT d_free_strmat
+#define FREE_STRVEC d_free_strvec
+
+#define PRINT_STRMAT d_print_strmat
+#define PRINT_STRVEC d_print_strvec
+#define PRINT_TRAN_STRVEC d_print_tran_strvec
+
+#define PRINT_TO_FILE_STRMAT d_print_to_file_strmat
+#define PRINT_TO_FILE_STRVEC d_print_to_file_strvec
+#define PRINT_TO_FILE_TRAN_STRVEC d_print_to_file_tran_strvec
+
+#define PRINT_E_STRMAT d_print_e_strmat
+#define PRINT_E_STRVEC d_print_e_strvec
+#define PRINT_E_TRAN_STRVEC d_print_e_tran_strvec
+
+#include "x_aux_ext_dep_lib4.c"
+
+#endif

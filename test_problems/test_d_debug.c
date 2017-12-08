@@ -241,7 +241,7 @@ int main()
 #endif
 
 	// givens rotations
-#if 1
+#if 0
 	DMATEL_LIBSTR(&sD, 0, 0) = 6.0;
 	DMATEL_LIBSTR(&sD, 0, 1) = 5.0;
 	DMATEL_LIBSTR(&sD, 0, 2) = 0.0;
@@ -405,13 +405,24 @@ int main()
 //	kernel_dgemm_nn_10x2_vs_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn, 8, 1);
 //	kernel_dgemm_nn_12x4_lib4(2, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn);
 //	dgemm_nn_libstr(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
-	dgemm_nt_libstr(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
-	d_print_strmat(n, n, &sD, 0, 0);
+//	dgemm_nt_libstr(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+//	d_print_strmat(n, n, &sD, 0, 0);
 //	return 0;
-	dgetrf_nopivot_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
+//	dgetrf_nopivot_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
 //	dgetrf_libstr(n, n, &sD, 0, 0, &sD, 0, 0, ipiv);
+//	dpotrf_l_libstr(n, &sD, 0, 0, &sD, 0, 0);
+//	dpstrf_l_libstr(n, &sD, 0, 0, &sD, 0, 0, ipiv);
 //	int_print_mat(1, n, ipiv, 1);
+//	d_print_strmat(n, n, &sD, 0, 0);
+	//
+	dgemm_nt_libstr(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+	dcolpe_libstr(n, ipiv, &sD);
 	d_print_strmat(n, n, &sD, 0, 0);
+	drowpe_libstr(n, ipiv, &sD);
+	d_print_strmat(n, n, &sD, 0, 0);
+	dpotrf_l_libstr(n, &sD, 0, 0, &sD, 0, 0);
+	d_print_strmat(n, n, &sD, 0, 0);
+	return 0;
 	//
 #if 0
 	// N scheme

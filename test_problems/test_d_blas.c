@@ -67,7 +67,7 @@ void omp_set_num_threads(int num_threads);
 
 
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(LA_HIGH_PERFORMANCE) & (defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE))
 void dgemm_nn_1_1_1(double alpha, double *A, int sda, double *B, int sdb, double beta, double *C, int sdc, double *D, int sdd)
 	{
 	kernel_dgemm_nn_4x2_vs_lib4(1, &alpha, A, 0, B, sdb, &beta, C, D, 1, 1);
@@ -558,7 +558,7 @@ int main()
 	printf("\nn\t  dgemm_blasfeo\t  dgemm_blas\n");
 	printf("\nn\t Gflops\t    %%\t Gflops\n\n");
 
-#if 0
+#if 1
 	int nn[] = {4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 148, 152, 156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224, 228, 232, 236, 240, 244, 248, 252, 256, 260, 264, 268, 272, 276, 280, 284, 288, 292, 296, 300, 304, 308, 312, 316, 320, 324, 328, 332, 336, 340, 344, 348, 352, 356, 360, 364, 368, 372, 376, 380, 384, 388, 392, 396, 400, 404, 408, 412, 416, 420, 424, 428, 432, 436, 440, 444, 448, 452, 456, 460, 500, 550, 600, 650, 700};
 	int nnrep[] = {10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 400, 400, 400, 400, 400, 200, 200, 200, 200, 200, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20, 20, 20, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 4, 4, 4, 4, 4};
 
@@ -570,10 +570,10 @@ int main()
 		{
 
 		int n = nn[ll];
-		int nrep = nnrep[ll];
+		int nrep = nnrep[ll]/2;
 //		int n = ll+1;
 //		int nrep = nnrep[0];
-		n = n<12 ? 12 : n;
+//		n = n<12 ? 12 : n;
 //		n = n<8 ? 8 : n;
 
 #elif 1
@@ -679,11 +679,11 @@ int main()
 //		d_print_strmat(n, n, &sB3, 0, 0);
 //		if(n==20) return;
 
-		int qr_work_size = 0;//dgeqrf_work_size_libstr(n, n);
+		int qr_work_size = dgeqrf_work_size_libstr(n, n);
 		void *qr_work;
 		v_zeros_align(&qr_work, qr_work_size);
 
-		int lq_work_size = 0;//dgelqf_work_size_libstr(n, n);
+		int lq_work_size = dgelqf_work_size_libstr(n, n);
 		void *lq_work;
 		v_zeros_align(&lq_work, lq_work_size);
 
@@ -709,10 +709,6 @@ int main()
 		float time_hpmpc    = 1e15;
 		float time_blasfeo  = 1e15;
 		float time_blas     = 1e15;
-
-		int sda = sA.cn;
-		int sdb = sB.cn;
-		int sdd = sD.cn;
 
 		for(rep_in=0; rep_in<nrep_in; rep_in++)
 			{
@@ -751,22 +747,22 @@ int main()
 				dgemm_nn_24_24_24(alpha, sA.pA, sA.cn, sB.pA, sB.cn, beta, sC.pA, sC.cn, sD.pA, sD.cn);
 #endif
 
-	//			dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-				dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-	//			dsyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-	//			dsyrk_ln_mn_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+				dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				dsyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//				dsyrk_ln_mn_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 	//			dpotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-	//			dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
+//				dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
 	//			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-	//			dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
+//				dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 	//			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
-	//			dcolin_libstr(n, &sx, 0, &sB3, 0, n-1);
-	//			dgelqf_libstr(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
-	//			dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sD, 0, 0, &sD, 0, 0); //
+//				dcolin_libstr(n, &sx, 0, &sB3, 0, n-1);
+//				dgelqf_libstr(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
+//				dtrmm_rlnn_libstr(n, n, 1.0, &sA, 0, 0, &sD, 0, 0, &sD, 0, 0); //
 	//			dtrmm_rutn_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 	//			dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 	//			dtrsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-	//			dtrsm_rltn_libstr(n, n, 1.0, &sB2, 0, 0, &sD, 0, 0, &sD, 0, 0); //
+//				dtrsm_rltn_libstr(n, n, 1.0, &sB2, 0, 0, &sD, 0, 0, &sD, 0, 0); //
 	//			dtrsm_rltu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 	//			dtrsm_rutn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 	//			dgemv_n_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
@@ -782,7 +778,7 @@ int main()
 			for(rep=0; rep<nrep; rep++)
 				{
 	#if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
-				dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, B, &n, &d_0, C, &n);
+//				dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, B, &n, &d_0, C, &n);
 	//			dpotrf_(&c_l, &n, B2, &n, &info);
 	//			dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
 	//			dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);

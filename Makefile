@@ -91,6 +91,7 @@ OBJS += \
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
+
 # aux
 OBJS += \
 		auxiliary/d_aux_lib4.o \
@@ -410,40 +411,68 @@ ifeq ($(EXT_DEP), 1)
 # ext dep
 OBJS += \
 		auxiliary/d_aux_ext_dep_lib.o \
+		auxiliary/d_aux_ext_dep_lib4.o \
 		auxiliary/s_aux_ext_dep_lib.o \
+		auxiliary/s_aux_ext_dep_lib4.o \
 		auxiliary/v_aux_ext_dep_lib.o \
 		auxiliary/i_aux_ext_dep_lib.o \
 
 endif
 
 
+
+ifeq ($(TESTING_MODE), 1)
+# reference routine for testing
+OBJS_REF =
+# aux
+OBJS_REF += \
+		auxiliary/d_aux_libref.o \
+		auxiliary/s_aux_libref.o \
+		auxiliary/d_aux_ext_dep_libref.o \
+		auxiliary/s_aux_ext_dep_libref.o \
+#
+endif
+
+
 # Define targets
+
 
 all: clean static_library
 
+
+# compile static library
 static_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd auxiliary; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
 	ar rcs libblasfeo.a $(OBJS)
-	cp libblasfeo.a ./lib/
+	mv libblasfeo.a ./lib/
+ifeq ($(TESTING_MODE), 1)
+	ar rcs libblasfeo_ref.a $(OBJS_REF)
+	mv libblasfeo_ref.a ./lib/
+endif
 	@echo
 	@echo " libblasfeo.a static library build complete."
 	@echo
 
+
+# compile shared library
 shared_library: target
 	( cd auxiliary; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
 	gcc -shared -o libblasfeo.so $(OBJS)
-	cp libblasfeo.so ./lib/
+	mv libblasfeo.so ./lib/
+ifeq ($(TESTING_MODE), 1)
+	gcc -shared -o libblasfeo_ref.so $(OBJS_REF)
+	mv libblasfeo_ref.so ./lib/
+endif
 	@echo
 	@echo " libblasfeo.so shared library build complete."
 	@echo
 
 
-# Generate headers
-
+# generate target header
 target:
 	touch ./include/blasfeo_target.h
 ifeq ($(TARGET), X64_INTEL_HASWELL)
@@ -506,38 +535,63 @@ ifeq ($(EXT_DEP), 1)
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
 
+
+# install static library & headers
 install_static:
 	mkdir -p $(PREFIX)/blasfeo
 	mkdir -p $(PREFIX)/blasfeo/lib
-	cp -f libblasfeo.a $(PREFIX)/blasfeo/lib/
+	cp -f ./lib/libblasfeo.a $(PREFIX)/blasfeo/lib/
 	mkdir -p $(PREFIX)/blasfeo/include
 	cp -f ./include/*.h $(PREFIX)/blasfeo/include/
 
+
+# install share library & headers
 install_shared:
 	mkdir -p $(PREFIX)/blasfeo
 	mkdir -p $(PREFIX)/blasfeo/lib
-	cp -f libblasfeo.so $(PREFIX)/blasfeo/lib/
+	cp -f ./lib/libblasfeo.so $(PREFIX)/blasfeo/lib/
 	mkdir -p $(PREFIX)/blasfeo/include
 	cp -f ./include/*.h $(PREFIX)/blasfeo/include/
+
+
+# clean .o files
+clean:
+	make -C auxiliary clean
+	make -C kernel clean
+	make -C blas clean
+	make -C examples clean
+
+
+# clean test problems
+clean_test_problems:
+	make -C test_problems clean
+
+
+# deep clean
+deep_clean: clean clean_test_problems
+	rm -f ./include/blasfeo_target.h
+	rm -f ./lib/libblasfeo.a
+	rm -f ./lib/libblasfeo.so
 
 
 # test problems
 
+# directory for test problems binaries
 BINARY_DIR = build/$(LA)/$(TARGET)
 
-# test_aux_shared:
-	# mkdir -p ./test_problems/$(BINARY_DIR)
-	# cp libblasfeo.so ./test_problems/$(BINARY_DIR)/libblasfeo.so
-	# make -C test_problems run_short_shared
-	# @echo
-	# @echo " Test problem build complete."
-	# @echo
 
-
-test:
+# copy static library into test path
+deploy_to_test:
 	mkdir -p ./test_problems/$(BINARY_DIR)
-	cp libblasfeo.a ./test_problems/$(BINARY_DIR)/libblasfeo.a
-	make -C test_problems gen
+	cp ./lib/libblasfeo.a ./test_problems/$(BINARY_DIR)/
+ifeq ($(TESTING_MODE), 1)
+	cp ./lib/libblasfeo_ref.a ./test_problems/$(BINARY_DIR)/
+endif
+
+
+# one single test
+build_test:
+	make -C test_problems one_test
 	@echo
 	@echo " Test problem build complete."
 	@echo
@@ -545,28 +599,54 @@ test:
 run_test:
 	make -C test_problems run
 
-test_aux:
-	mkdir -p ./test_problems/$(BINARY_DIR)
-	cp libblasfeo.a ./test_problems/$(BINARY_DIR)/libblasfeo.a
+test: deploy_to_test build_test
+
+
+# aux test
+build_test_aux:
 	make -C test_problems aux
 	@echo
 	@echo " Test problem build complete."
 	@echo
 
 run_test_aux:
-	make -C test_problems run_aux_short
+	make -C test_problems run_aux
 
-clean:
-	rm -f libblasfeo.a
-	rm -f libblasfeo.so
-	rm -f ./lib/libblasfeo.a
-	rm -f ./lib/libblasfeo.so
-	make -C auxiliary clean
-	make -C kernel clean
-	make -C blas clean
-	make -C examples clean
+test_aux: deploy_to_test build_test_aux
 
-clean_test_problems:
-	make -C test_problems clean
 
-deep_clean: clean clean_test_problems
+# blas test
+build_test_blas:
+	make -C test_problems blas
+	@echo
+	@echo " Test problem build complete."
+	@echo
+
+run_test_blas:
+	make -C test_problems run_blas
+
+test_blas: deploy_to_test build_test_blas
+
+
+# deep build library (take into account flags changes)
+# copy library
+# build tests
+test_aux_clean: clean static_library test_aux
+
+# build tests (use existing library)
+# run tests
+update_test_aux: build_test_aux run_test_aux
+
+# build library
+# copy library
+# build test
+# run test
+update_lib_test_aux: static_library test_aux run_test_aux
+
+# deep build library (take into account flags changes)
+# copy library
+# build test
+# run test
+update_target_test_aux: test_aux_clean run_test_aux
+
+

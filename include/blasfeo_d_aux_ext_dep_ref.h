@@ -26,52 +26,40 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdlib.h>
+/*
+ * auxiliary algebra operation external dependancies header
+ *
+ * include/blasfeo_d_aux_ext_dep.h
+ *
+ * - dynamic memory allocation
+ * - print
+ *
+ */
+
+
+#if defined(EXT_DEP)
+
+
+
 #include <stdio.h>
-#include <math.h>
 
-#if defined(LA_BLAS)
-#if defined(REF_BLAS_BLIS)
-#include "s_blas_64.h"
-#else
-#include "s_blas.h"
-#endif
+
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux.h"
+
+
+// expose reference BLASFEO for testing
+void blasfeo_d_print_strmat_ref(int m, int n, struct d_strmat_ref *sA, int ai, int aj);
 
 
 
-#define REAL float
-
-#define STRMAT s_strmat
-#define STRVEC s_strvec
-
-#define GELQF_LIBSTR sgelqf_libstr
-#define GELQF_WORK_SIZE_LIBSTR sgelqf_work_size_libstr
-#define GEQRF_LIBSTR sgeqrf_libstr
-#define GEQRF_WORK_SIZE_LIBSTR sgeqrf_work_size_libstr
-#define GETF2_NOPIVOT sgetf2_nopivot
-#define GETRF_NOPIVOT_LIBSTR sgetrf_nopivot_libstr
-#define GETRF_LIBSTR sgetrf_libstr
-#define POTRF_L_LIBSTR spotrf_l_libstr
-#define POTRF_L_MN_LIBSTR spotrf_l_mn_libstr
-#define PSTRF_L_LIBSTR spstrf_l_libstr
-#define SYRK_POTRF_LN_LIBSTR ssyrk_spotrf_ln_libstr
-
-#define COPY scopy_
-#define GELQF sgelqf_
-#define GEMM sgemm_
-#define GER sger_
-#define GEQRF sgeqrf_
-#define GEQR2 sgeqr2_
-#define GETRF sgetrf_
-#define POTRF spotrf_
-#define SCAL sscal_
-#define SYRK ssyrk_
-#define TRSM strsm_
+#ifdef __cplusplus
+}
+#endif
 
 
-#include "x_lapack_lib.c"
 
+#endif // EXT_DEP

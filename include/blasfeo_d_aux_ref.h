@@ -26,52 +26,36 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
+/*
+ * auxiliary algebra operations header
+ *
+ * include/blasfeo_aux_lib*.h
+ *
+ */
 
-#if defined(LA_BLAS)
-#if defined(REF_BLAS_BLIS)
-#include "s_blas_64.h"
-#else
-#include "s_blas.h"
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+
+// expose reference BLASFEO for testing
+
+void blasfeo_d_create_strmat_ref(int m, int n, struct d_strmat_ref *sA, void *memory);
+void blasfeo_d_cvt_mat2strmat_ref(int m, int n, double *A, int lda, struct d_strmat_ref *sA, int ai, int aj);
+int blasfeo_d_memsize_strmat_ref(int m, int n);
+
+void blasfeo_dgecp_ref(int m, int n,\
+					struct d_strmat_ref *sA, int ai, int aj,\
+					struct d_strmat_ref *sB, int bi, int bj);
+void blasfeo_dgesc_ref(int m, int n,\
+					double alpha,\
+					struct d_strmat_ref *sA, int ai, int aj);
+void blasfeo_dgecpsc_ref(int m, int n,
+					double alpha,\
+					struct d_strmat_ref *sA, int ai, int aj,\
+					struct d_strmat_ref *sB, int bi, int bj);
+
+
+#ifdef __cplusplus
+}
 #endif
-
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux.h"
-
-
-
-#define REAL float
-
-#define STRMAT s_strmat
-#define STRVEC s_strvec
-
-#define GELQF_LIBSTR sgelqf_libstr
-#define GELQF_WORK_SIZE_LIBSTR sgelqf_work_size_libstr
-#define GEQRF_LIBSTR sgeqrf_libstr
-#define GEQRF_WORK_SIZE_LIBSTR sgeqrf_work_size_libstr
-#define GETF2_NOPIVOT sgetf2_nopivot
-#define GETRF_NOPIVOT_LIBSTR sgetrf_nopivot_libstr
-#define GETRF_LIBSTR sgetrf_libstr
-#define POTRF_L_LIBSTR spotrf_l_libstr
-#define POTRF_L_MN_LIBSTR spotrf_l_mn_libstr
-#define PSTRF_L_LIBSTR spstrf_l_libstr
-#define SYRK_POTRF_LN_LIBSTR ssyrk_spotrf_ln_libstr
-
-#define COPY scopy_
-#define GELQF sgelqf_
-#define GEMM sgemm_
-#define GER sger_
-#define GEQRF sgeqrf_
-#define GEQR2 sgeqr2_
-#define GETRF sgetrf_
-#define POTRF spotrf_
-#define SCAL sscal_
-#define SYRK ssyrk_
-#define TRSM strsm_
-
-
-#include "x_lapack_lib.c"
-

@@ -1651,16 +1651,22 @@ void d_create_strvec(int m, struct d_strvec *sa, void *memory)
 void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj)
 	{
 
-	if (m==1)
-		{
-		return;
-		}
-
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
 	int i, ii, j, jj, m0, m1, m2;
 	double 	*B, *pB;
+
+	// row vector in sA
+	if(m==1)
+		{
+		for(jj=0; jj<n; jj++)
+			{
+			pA[jj*bs] = A[jj*lda];
+			}
+		return;
+		}
+
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	__m256d
 		tmp;
@@ -1789,11 +1795,23 @@ void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int
 // convert and transpose a matrix into a matrix structure
 void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj)
 	{
+
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
 	int i, ii, j, m0, m1, m2;
 	double 	*B, *pB;
+
+	// row vector in sA
+	if(n==1)
+		{
+		for(ii=0; ii<m; ii++)
+			{
+			pA[ii*bs] = A[ii];
+			}
+		return;
+		}
+
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	__m256d
 		v0, v1, v2, v3,
@@ -2359,6 +2377,19 @@ void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	}
 
 
+// inverse permute the rows of a matrix struct
+void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
+	{
+	int ii;
+	for(ii=kmax-1; ii>=0; ii--)
+		{
+		if(ipiv[ii]!=ii)
+			drowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+		}
+	return;
+	}
+
+
 // extract a row int a vector
 void drowex_libstr(int kmax, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi)
 	{
@@ -2443,6 +2474,20 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	{
 	int ii;
 	for(ii=0; ii<kmax; ii++)
+		{
+		if(ipiv[ii]!=ii)
+			dcolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
+		}
+	return;
+	}
+
+
+
+// inverse permute the cols of a matrix struct
+void dcolpei_libstr(int kmax, int *ipiv, struct d_strmat *sA)
+	{
+	int ii;
+	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
 			dcolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
@@ -3748,6 +3793,29 @@ void dvecsc_libstr(int m, double alpha, struct d_strvec *sa, int ai)
 	for(; ii<m; ii++)
 		{
 		pa[ii+0] *= alpha;
+		}
+	return;
+	}
+
+
+
+// copy and scale a strvec into a strvec
+void dveccpsc_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci)
+	{
+	double *pa = sa->pa + ai;
+	double *pc = sc->pa + ci;
+	int ii;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
+		pc[ii+1] = alpha*pa[ii+1];
+		pc[ii+2] = alpha*pa[ii+2];
+		pc[ii+3] = alpha*pa[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
 		}
 	return;
 	}

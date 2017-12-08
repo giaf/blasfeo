@@ -26,52 +26,47 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+/*
+ * auxiliary functions for LA:REFERENCE (column major)
+ *
+ * auxiliary/d_aux_lib*.c
+ *
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 
-#if defined(LA_BLAS)
-#if defined(REF_BLAS_BLIS)
-#include "s_blas_64.h"
-#else
-#include "s_blas.h"
-#endif
-#endif
-
 #include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux.h"
-
 
 
 #define REAL float
-
-#define STRMAT s_strmat
-#define STRVEC s_strvec
-
-#define GELQF_LIBSTR sgelqf_libstr
-#define GELQF_WORK_SIZE_LIBSTR sgelqf_work_size_libstr
-#define GEQRF_LIBSTR sgeqrf_libstr
-#define GEQRF_WORK_SIZE_LIBSTR sgeqrf_work_size_libstr
-#define GETF2_NOPIVOT sgetf2_nopivot
-#define GETRF_NOPIVOT_LIBSTR sgetrf_nopivot_libstr
-#define GETRF_LIBSTR sgetrf_libstr
-#define POTRF_L_LIBSTR spotrf_l_libstr
-#define POTRF_L_MN_LIBSTR spotrf_l_mn_libstr
-#define PSTRF_L_LIBSTR spstrf_l_libstr
-#define SYRK_POTRF_LN_LIBSTR ssyrk_spotrf_ln_libstr
-
-#define COPY scopy_
-#define GELQF sgelqf_
-#define GEMM sgemm_
-#define GER sger_
-#define GEQRF sgeqrf_
-#define GEQR2 sgeqr2_
-#define GETRF sgetrf_
-#define POTRF spotrf_
-#define SCAL sscal_
-#define SYRK ssyrk_
-#define TRSM strsm_
+#define STRMAT s_strmat_ref
+#define STRVEC s_strvec_ref
 
 
-#include "x_lapack_lib.c"
+#define SIZE_STRMAT blasfeo_s_memsize_strmat_ref
+#define SIZE_DIAG_STRMAT blasfeo_s_memsize_diag_strmat_ref
+#define SIZE_STRVEC blasfeo_s_memsize_strvec_ref
 
+#define CREATE_STRMAT blasfeo_s_create_strmat_ref
+#define CREATE_STRVEC blasfeo_s_create_strvec_ref
+
+#define CVT_MAT2STRMAT blasfeo_s_cvt_mat2strmat_ref
+#define CVT_TRAN_MAT2STRMAT blasfeo_s_cvt_tran_mat2strmat_ref
+#define CVT_VEC2STRVEC blasfeo_s_cvt_vec2strvec_ref
+#define CVT_STRMAT2MAT blasfeo_s_cvt_strmat2mat_ref
+#define CVT_TRAN_STRMAT2MAT blasfeo_s_cvt_tran_strmat2mat_ref
+#define CVT_STRVEC2VEC blasfeo_s_cvt_strvec2vec_ref
+#define CAST_MAT2STRMAT blasfeo_s_cast_mat2strmat_ref
+#define CAST_DIAG_MAT2STRMAT blasfeo_s_cast_diag_mat2strmat_ref
+#define CAST_VEC2VECMAT blasfeo_s_cast_vec2vecmat_ref
+
+#define GECP_LIBSTR blasfeo_sgecp_ref
+#define GESC_LIBSTR blasfeo_sgesc_ref
+#define GECPSC_LIBSTR blasfeo_sgecpsc_ref
+
+
+
+// TESTING_MODE
+#include "x_aux_lib.c"

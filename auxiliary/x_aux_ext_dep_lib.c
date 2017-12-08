@@ -26,52 +26,163 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
 
-#if defined(LA_BLAS)
-#if defined(REF_BLAS_BLIS)
-#include "s_blas_64.h"
+#if ! defined(OS_WINDOWS)
+int posix_memalign(void **memptr, size_t alignment, size_t size);
+#endif
+
+
+
+/* creates a zero matrix */
+void ZEROS(REAL **pA, int row, int col)
+	{
+	*pA = malloc((row*col)*sizeof(REAL));
+	REAL *A = *pA;
+	int i;
+	for(i=0; i<row*col; i++) A[i] = 0.0;
+	}
+
+
+
+/* creates a zero matrix aligned to a cache line */
+void ZEROS_ALIGN(REAL **pA, int row, int col)
+	{
+#if defined(OS_WINDOWS)
+	*pA = (REAL *) _aligneMALLOC( (row*col)*sizeof(REAL), 64 );
 #else
-#include "s_blas.h"
+	void *temp;
+	int err = posix_memalign(&temp, 64, (row*col)*sizeof(REAL));
+	if(err!=0)
+		{
+		printf("Memory allocation error");
+		exit(1);
+		}
+	*pA = temp;
 #endif
+	REAL *A = *pA;
+	int i;
+	for(i=0; i<row*col; i++) A[i] = 0.0;
+	}
+
+
+
+/* frees matrix */
+void FREE(REAL *pA)
+	{
+	free( pA );
+	}
+
+
+
+/* frees aligned matrix */
+void FREE_ALIGN(REAL *pA)
+	{
+#if defined(OS_WINDOWS)
+	_aligneFREE( pA );
+#else
+	free( pA );
 #endif
-
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux.h"
+	}
 
 
 
-#define REAL float
-
-#define STRMAT s_strmat
-#define STRVEC s_strvec
-
-#define GELQF_LIBSTR sgelqf_libstr
-#define GELQF_WORK_SIZE_LIBSTR sgelqf_work_size_libstr
-#define GEQRF_LIBSTR sgeqrf_libstr
-#define GEQRF_WORK_SIZE_LIBSTR sgeqrf_work_size_libstr
-#define GETF2_NOPIVOT sgetf2_nopivot
-#define GETRF_NOPIVOT_LIBSTR sgetrf_nopivot_libstr
-#define GETRF_LIBSTR sgetrf_libstr
-#define POTRF_L_LIBSTR spotrf_l_libstr
-#define POTRF_L_MN_LIBSTR spotrf_l_mn_libstr
-#define PSTRF_L_LIBSTR spstrf_l_libstr
-#define SYRK_POTRF_LN_LIBSTR ssyrk_spotrf_ln_libstr
-
-#define COPY scopy_
-#define GELQF sgelqf_
-#define GEMM sgemm_
-#define GER sger_
-#define GEQRF sgeqrf_
-#define GEQR2 sgeqr2_
-#define GETRF sgetrf_
-#define POTRF spotrf_
-#define SCAL sscal_
-#define SYRK ssyrk_
-#define TRSM strsm_
+/* prints a matrix in column-major format */
+void PRINT_MAT(int m, int n, REAL *A, int lda)
+	{
+	int i, j;
+	for(i=0; i<m; i++)
+		{
+		for(j=0; j<n; j++)
+			{
+			printf("%9.5f ", A[i+lda*j]);
+			}
+		printf("\n");
+		}
+	printf("\n");
+	return;
+	}
 
 
-#include "x_lapack_lib.c"
 
+/* prints the transposed of a matrix in column-major format */
+void PRINT_TRAN_MAT(int row, int col, REAL *A, int lda)
+	{
+	int i, j;
+	for(j=0; j<col; j++)
+		{
+		for(i=0; i<row; i++)
+			{
+			printf("%9.5f ", A[i+lda*j]);
+			}
+		printf("\n");
+		}
+	printf("\n");
+	}
+
+
+
+/* prints a matrix in column-major format */
+void PRINT_TO_FILE_MAT(FILE *file, int row, int col, REAL *A, int lda)
+	{
+	int i, j;
+	for(i=0; i<row; i++)
+		{
+		for(j=0; j<col; j++)
+			{
+			fprintf(file, "%9.5f ", A[i+lda*j]);
+			}
+		fprintf(file, "\n");
+		}
+	fprintf(file, "\n");
+	}
+
+
+
+/* prints the transposed of a matrix in column-major format */
+void PRINT_TO_FILE_TRAN_MAT(FILE *file, int row, int col, REAL *A, int lda)
+	{
+	int i, j;
+	for(j=0; j<col; j++)
+		{
+		for(i=0; i<row; i++)
+			{
+			fprintf(file, "%9.5f ", A[i+lda*j]);
+			}
+		fprintf(file, "\n");
+		}
+	fprintf(file, "\n");
+	}
+
+
+
+/* prints a matrix in column-major format (exponential notation) */
+void PRINT_E_MAT(int m, int n, REAL *A, int lda)
+	{
+	int i, j;
+	for(i=0; i<m; i++)
+		{
+		for(j=0; j<n; j++)
+			{
+			printf("%e\t", A[i+lda*j]);
+			}
+		printf("\n");
+		}
+	printf("\n");
+	}
+
+
+
+/* prints the transposed of a matrix in column-major format (exponential notation) */
+void PRINT_E_TRAN_MAT(int row, int col, REAL *A, int lda)
+	{
+	int i, j;
+	for(j=0; j<col; j++)
+		{
+		for(i=0; i<row; i++)
+			{
+			printf("%e\t", A[i+lda*j]);
+			}
+		printf("\n");
+		}
+	printf("\n");
+	}

@@ -40,224 +40,36 @@
 #include "../include/blasfeo_common.h"
 
 
+#define REAL double
+#define STRMAT d_strmat
+#define STRVEC d_strvec
+
 
 #if defined(LA_REFERENCE) | defined(LA_BLAS)
 
 
+#define SIZE_STRMAT d_size_strmat
+#define SIZE_DIAG_STRMAT d_size_diag_strmat
+#define SIZE_STRVEC d_size_strvec
 
-// return memory size (in bytes) needed for a strmat
-int d_size_strmat(int m, int n)
-	{
-	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
-	int size = (m*n+tmp)*sizeof(double);
-	return size;
-	}
+#define CREATE_STRMAT d_create_strmat
+#define CREATE_STRVEC d_create_strvec
 
+#define CVT_MAT2STRMAT d_cvt_mat2strmat
+#define CVT_TRAN_MAT2STRMAT d_cvt_tran_mat2strmat
+#define CVT_VEC2STRVEC d_cvt_vec2strvec
+#define CVT_STRMAT2MAT d_cvt_strmat2mat
+#define CVT_TRAN_STRMAT2MAT d_cvt_tran_strmat2mat
+#define CVT_STRVEC2VEC d_cvt_strvec2vec
 
-
-// return memory size (in bytes) needed for the diagonal of a strmat
-int d_size_diag_strmat(int m, int n)
-	{
-	int size = 0;
-	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
-	size = tmp*sizeof(double);
-	return size;
-	}
+#define CAST_MAT2STRMAT d_cast_mat2strmat
+#define CAST_DIAG_MAT2STRMAT d_cast_diag_mat2strmat
+#define CAST_VEC2VECMAT d_cast_vec2vecmat
 
 
-
-// create a matrix structure for a matrix of size m*n by using memory passed by a pointer
-void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory)
-	{
-	sA->m = m;
-	sA->n = n;
-	double *ptr = (double *) memory;
-	sA->pA = ptr;
-	ptr += m*n;
-	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
-	sA->dA = ptr;
-	ptr += tmp;
-	sA->use_dA = 0;
-	sA->memory_size = (m*n+tmp)*sizeof(double);
-	return;
-	}
-
-
-
-// return memory size (in bytes) needed for a strvec
-int d_size_strvec(int m)
-	{
-	int size = m*sizeof(double);
-	return size;
-	}
-
-
-
-// create a matrix structure for a matrix of size m*n by using memory passed by a pointer
-void d_create_strvec(int m, struct d_strvec *sa, void *memory)
-	{
-	sa->m = m;
-	double *ptr = (double *) memory;
-	sa->pa = ptr;
-//	ptr += m * n;
-	sa->memory_size = m*sizeof(double);
-	return;
-	}
-
-
-
-// convert a matrix into a matrix structure
-void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj)
-	{
-	int ii, jj;
-	int lda2 = sA->m;
-	double *pA = sA->pA + ai + aj*lda2;
-	for(jj=0; jj<n; jj++)
-		{
-		ii = 0;
-		for(; ii<m-3; ii+=4)
-			{
-			pA[ii+0+jj*lda2] = A[ii+0+jj*lda];
-			pA[ii+1+jj*lda2] = A[ii+1+jj*lda];
-			pA[ii+2+jj*lda2] = A[ii+2+jj*lda];
-			pA[ii+3+jj*lda2] = A[ii+3+jj*lda];
-			}
-		for(; ii<m; ii++)
-			{
-			pA[ii+0+jj*lda2] = A[ii+0+jj*lda];
-			}
-		}
-	return;
-	}
-
-
-
-// convert and transpose a matrix into a matrix structure
-void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, int ai, int aj)
-	{
-	int ii, jj;
-	int lda2 = sA->m;
-	double *pA = sA->pA + ai + aj*lda2;
-	for(jj=0; jj<n; jj++)
-		{
-		ii = 0;
-		for(; ii<m-3; ii+=4)
-			{
-			pA[jj+(ii+0)*lda2] = A[ii+0+jj*lda];
-			pA[jj+(ii+1)*lda2] = A[ii+1+jj*lda];
-			pA[jj+(ii+2)*lda2] = A[ii+2+jj*lda];
-			pA[jj+(ii+3)*lda2] = A[ii+3+jj*lda];
-			}
-		for(; ii<m; ii++)
-			{
-			pA[jj+(ii+0)*lda2] = A[ii+0+jj*lda];
-			}
-		}
-	return;
-	}
-
-
-
-// convert a vector into a vector structure
-void d_cvt_vec2strvec(int m, double *a, struct d_strvec *sa, int ai)
-	{
-	double *pa = sa->pa + ai;
-	int ii;
-	for(ii=0; ii<m; ii++)
-		pa[ii] = a[ii];
-	return;
-	}
-
-
-
-// convert a matrix structure into a matrix
-void d_cvt_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
-	{
-	int ii, jj;
-	int lda2 = sA->m;
-	double *pA = sA->pA + ai + aj*lda2;
-	for(jj=0; jj<n; jj++)
-		{
-		ii = 0;
-		for(; ii<m-3; ii+=4)
-			{
-			A[ii+0+jj*lda] = pA[ii+0+jj*lda2];
-			A[ii+1+jj*lda] = pA[ii+1+jj*lda2];
-			A[ii+2+jj*lda] = pA[ii+2+jj*lda2];
-			A[ii+3+jj*lda] = pA[ii+3+jj*lda2];
-			}
-		for(; ii<m; ii++)
-			{
-			A[ii+0+jj*lda] = pA[ii+0+jj*lda2];
-			}
-		}
-	return;
-	}
-
-
-
-// convert and transpose a matrix structure into a matrix
-void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, double *A, int lda)
-	{
-	int ii, jj;
-	int lda2 = sA->m;
-	double *pA = sA->pA + ai + aj*lda2;
-	for(jj=0; jj<n; jj++)
-		{
-		ii = 0;
-		for(; ii<m-3; ii+=4)
-			{
-			A[jj+(ii+0)*lda] = pA[ii+0+jj*lda2];
-			A[jj+(ii+1)*lda] = pA[ii+1+jj*lda2];
-			A[jj+(ii+2)*lda] = pA[ii+2+jj*lda2];
-			A[jj+(ii+3)*lda] = pA[ii+3+jj*lda2];
-			}
-		for(; ii<m; ii++)
-			{
-			A[jj+(ii+0)*lda] = pA[ii+0+jj*lda2];
-			}
-		}
-	return;
-	}
-
-
-
-// convert a vector structure into a vector
-void d_cvt_strvec2vec(int m, struct d_strvec *sa, int ai, double *a)
-	{
-	double *pa = sa->pa + ai;
-	int ii;
-	for(ii=0; ii<m; ii++)
-		a[ii] = pa[ii];
-	return;
-	}
-
-
-
-// cast a matrix into a matrix structure
-void d_cast_mat2strmat(double *A, struct d_strmat *sA)
-	{
-	sA->pA = A;
-	return;
-	}
-
-
-
-// cast a matrix into the diagonal of a matrix structure
-void d_cast_diag_mat2strmat(double *dA, struct d_strmat *sA)
-	{
-	sA->dA = dA;
-	return;
-	}
-
-
-
-// cast a vector into a vector structure
-void d_cast_vec2vecmat(double *a, struct d_strvec *sa)
-	{
-	sa->pa = a;
-	return;
-	}
+#define GECP_LIBSTR dgecp_libstr
+#define GESC_LIBSTR dgesc_libstr
+#define GECPSC_LIBSTR dgecpsc_libstr
 
 
 
@@ -433,6 +245,20 @@ void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 
 
 
+// inverse permute the rows of a matrix struct
+void drowpei_libstr(int kmax, int *ipiv, struct d_strmat *sA)
+	{
+	int ii;
+	for(ii=kmax-1; ii>=0; ii--)
+		{
+		if(ipiv[ii]!=ii)
+			drowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+		}
+	return;
+	}
+
+
+
 // extract vector from column
 void dcolex_libstr(int kmax, struct d_strmat *sA, int ai, int aj, struct d_strvec *sx, int xi)
 	{
@@ -494,85 +320,15 @@ void dcolpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	}
 
 
-// ---------------------- Copy&Scale
 
-// copy a generic strmat into a generic strmat
-void dgecp_libstr(int m, int n, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj)
+// inverse permute the cols of a matrix struct
+void dcolpei_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	{
-	int lda = sA->m;
-	double *pA = sA->pA + ai + aj*lda;
-	int ldb = sB->m;
-	double *pB = sB->pA + bi + bj*ldb;
-	int ii, jj;
-	for(jj=0; jj<n; jj++)
+	int ii;
+	for(ii=kmax-1; ii>=0; ii--)
 		{
-		ii = 0;
-		for(; ii<m-3; ii+=4)
-			{
-			pB[ii+0+jj*ldb] = pA[ii+0+jj*lda];
-			pB[ii+1+jj*ldb] = pA[ii+1+jj*lda];
-			pB[ii+2+jj*ldb] = pA[ii+2+jj*lda];
-			pB[ii+3+jj*ldb] = pA[ii+3+jj*lda];
-			}
-		for(; ii<m; ii++)
-			{
-			pB[ii+0+jj*ldb] = pA[ii+0+jj*lda];
-			}
-		}
-	return;
-	}
-
-
-// scale a generic strmat
-void dgesc_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj)
-	{
-	int lda = sA->m;
-	double *pA = sA->pA + ai + aj*lda;
-	int ii, jj;
-	for(jj=0; jj<n; jj++)
-		{
-		ii = 0;
-		for(; ii<m-3; ii+=4)
-			{
-			pA[ii+0+jj*lda] *= alpha;
-			pA[ii+1+jj*lda] *= alpha;
-			pA[ii+2+jj*lda] *= alpha;
-			pA[ii+3+jj*lda] *= alpha;
-			}
-		for(; ii<m; ii++)
-			{
-			pA[ii+0+jj*lda] *= alpha;
-			}
-		}
-	return;
-	}
-
-
-// scale an generic strmat and copy into generic strmat
-void dgecpsc_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj)
-	{
-
-	int lda = sA->m;
-	double *pA = sA->pA + ai + aj*lda;
-
-	int ldb = sB->m;
-	double *pB = sB->pA + bi + bj*ldb;
-
-	int ii, jj;
-	for(jj=0; jj<n; jj++)
-		{
-		ii = 0;
-		for(; ii<m-3; ii+=4)
-			{
-			pB[ii+0+jj*ldb] = pA[ii+0+jj*lda] * alpha;
-			pB[ii+1+jj*ldb] = pA[ii+1+jj*lda] * alpha;
-			pB[ii+2+jj*ldb] = pA[ii+2+jj*lda] * alpha;
-			pB[ii+3+jj*ldb] = pA[ii+3+jj*lda] * alpha;
-			}
-		for(; ii<m; ii++)
-			{
-			pB[ii+0+jj*ldb] = pA[ii+0+jj*lda] * alpha;
-			}
+		if(ipiv[ii]!=ii)
+			dcolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
 		}
 	return;
 	}
@@ -618,6 +374,29 @@ void dvecsc_libstr(int m, double alpha, struct d_strvec *sa, int ai)
 	for(; ii<m; ii++)
 		{
 		pa[ii+0] *= alpha;
+		}
+	return;
+	}
+
+
+
+// copy and scale a strvec into a strvec
+void dveccpsc_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci)
+	{
+	double *pa = sa->pa + ai;
+	double *pc = sc->pa + ci;
+	int ii;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
+		pc[ii+1] = alpha*pa[ii+1];
+		pc[ii+2] = alpha*pa[ii+2];
+		pc[ii+3] = alpha*pa[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
 		}
 	return;
 	}
@@ -1049,6 +828,37 @@ void dvecpei_libstr(int kmax, int *ipiv, struct d_strvec *sx, int xi)
 	return;
 	}
 
+// 1 norm, lower triangular, non-unit
+#if 0
+double dtrcon_1ln_libstr(int n, struct d_strmat *sA, int ai, int aj, double *work, int *iwork)
+	{
+	if(n<=0)
+		return 1.0;
+	int ii, jj;
+	int lda = sA.m;
+	double *pA = sA->pA + ai + aj*lda;
+	double a00, sum;
+	double rcond = 0.0;
+	// compute norm 1 of A
+	double anorm = 0.0;
+	for(jj=0; jj<n; jj++)
+		{
+		sum = 0.0;
+		for(ii=jj; ii<n; ii++)
+			{
+			sum += abs(pA[ii+lda*jj]);
+			}
+		anorm = sum>anorm ? sum : anorm;
+		}
+	if(anorm>0)
+		{
+		// estimate norm 1 of inv(A)
+		ainorm = 0.0;
+		}
+	return rcond;
+	}
+#endif
+
 
 
 #else
@@ -1057,3 +867,5 @@ void dvecpei_libstr(int kmax, int *ipiv, struct d_strvec *sx, int xi)
 
 #endif
 
+// LA_REFERENCE | LA_BLAS
+#include "x_aux_lib.c"

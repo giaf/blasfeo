@@ -1570,6 +1570,19 @@ void srowpe_libstr(int kmax, int *ipiv, struct s_strmat *sA)
 	}
 
 
+// inverse permute the rows of a matrix struct
+void srowpei_libstr(int kmax, int *ipiv, struct s_strmat *sA)
+	{
+	int ii;
+	for(ii=kmax-1; ii>=0; ii--)
+		{
+		if(ipiv[ii]!=ii)
+			srowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+		}
+	return;
+	}
+
+
 // extract a row int a vector
 void srowex_libstr(int kmax, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi)
 	{
@@ -1637,6 +1650,20 @@ void scolpe_libstr(int kmax, int *ipiv, struct s_strmat *sA)
 
 
 
+// inverse permute the cols of a matrix struct
+void scolpei_libstr(int kmax, int *ipiv, struct s_strmat *sA)
+	{
+	int ii;
+	for(ii=kmax-1; ii>=0; ii--)
+		{
+		if(ipiv[ii]!=ii)
+			scolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
+		}
+	return;
+	}
+
+
+
 // scale a generic strmat
 void sgesc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj)
 	{
@@ -1671,10 +1698,11 @@ void sgesc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 		{
 		mna = bs-offsetA;
 		mna = m<mna ? m : mna;
-		kernel_sgesc_8_0_gen_lib8(n, &alpha, &pA[offsetA], mna);
+		kernel_sgesc_8_0_gen_u_lib8(n, &alpha, &pA[offsetA], mna);
 		m -= mna;
 		pA += 8*sda;
 		}
+
 	ii = 0;
 	// main loop
 	for( ; ii<m-7; ii+=8)
@@ -1731,16 +1759,14 @@ void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_st
 
 	int ii, mna;
 
-#if 1
 	if(offsetB>0)
 		{
 		if(offsetB>offsetA)
 			{
 			mna = bs-offsetB;
 			mna = m<mna ? m : mna;
-			kernel_sgecp_8_0_gen_lib8(n, &pA[offsetA], &pB[offsetB], mna);
+			kernel_sgecp_8_0_gen_u_lib8(n, &pA[offsetA], &pB[offsetB], mna);
 			m -= mna;
-			//pA += 8*sda;
 			pB += 8*sdb;
 			}
 		else
@@ -1819,7 +1845,6 @@ void sgecp_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_st
 				}
 			}
 		}
-#endif
 
 	// same alignment
 	if(offsetA==offsetB)
@@ -1993,16 +2018,14 @@ void sgecpsc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 
 	int ii, mna;
 
-#if 1
 	if(offsetB>0)
 		{
 		if(offsetB>offsetA)
 			{
 			mna = bs-offsetB;
 			mna = m<mna ? m : mna;
-			kernel_sgecpsc_8_0_gen_lib8(n, &alpha, &pA[offsetA], &pB[offsetB], mna);
+			kernel_sgecpsc_8_0_gen_u_lib8(n, &alpha, &pA[offsetA], &pB[offsetB], mna);
 			m -= mna;
-			//pA += 8*sda;
 			pB += 8*sdb;
 			}
 		else
@@ -2081,7 +2104,6 @@ void sgecpsc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 				}
 			}
 		}
-#endif
 
 	// same alignment
 	if(offsetA==offsetB)
@@ -2256,6 +2278,29 @@ void sveccp_libstr(int m, struct s_strvec *sa, int ai, struct s_strvec *sc, int 
 	for(; ii<m; ii++)
 		{
 		pc[ii+0] = pa[ii+0];
+		}
+	return;
+	}
+
+
+
+// copy and scale a strvec into a strvec
+void sveccpsc_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci)
+	{
+	float *pa = sa->pa + ai;
+	float *pc = sc->pa + ci;
+	int ii;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
+		pc[ii+1] = alpha*pa[ii+1];
+		pc[ii+2] = alpha*pa[ii+2];
+		pc[ii+3] = alpha*pa[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
 		}
 	return;
 	}
@@ -2907,6 +2952,26 @@ void svecpe_libstr(int kmax, int *ipiv, struct s_strvec *sx, int xi)
 	float tmp;
 	float *x = sx->pa + xi;
 	for(ii=0; ii<kmax; ii++)
+		{
+		if(ipiv[ii]!=ii)
+			{
+			tmp = x[ipiv[ii]];
+			x[ipiv[ii]] = x[ii];
+			x[ii] = tmp;
+			}
+		}
+	return;
+	}
+
+
+
+// inverse permute elements of a vector struct
+void svecpei_libstr(int kmax, int *ipiv, struct s_strvec *sx, int xi)
+	{
+	int ii;
+	float tmp;
+	float *x = sx->pa + xi;
+	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
 			{
