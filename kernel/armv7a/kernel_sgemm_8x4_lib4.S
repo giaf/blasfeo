@@ -549,6 +549,125 @@ _inner_kernel_gemm_sub_nt_8x4_lib4:
 
 // subroutine
 //
+// cholesky factorization 
+//
+// input arguments:
+// r4   <- inv_diag_D
+//
+// output arguments:
+// r4   <- inv_diag_D
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_POTRF_8X4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_potrf_8x4_lib4, %function
+inner_edge_potrf_8x4_lib4:
+#elif defined(OS_MAC)
+_inner_edge_potrf_8x4_lib4:
+#endif
+#endif
+	
+	fconsts		s1, #112 // 1.0
+	flds		s0, .LC01 // 0.0
+
+	// first column
+	fcmpes		s16, s0
+	fmstat
+	ble			1f
+	fsqrts		s2, s16
+	fdivs		s2, s1, s2
+	fsts		s2, [r4, #0]
+2:
+	vmul.f32	q4, q4, d1[0]
+	vmul.f32	q8, q8, d1[0]
+
+	// second column
+	vmls.f32	q5, q4, d8[1]
+	vmls.f32	q9, q8, d8[1]
+	fcmpes		s21, s0
+	fmstat
+	ble			3f
+	fsqrts		s2, s21
+	fdivs		s2, s1, s2
+	fsts		s2, [r4, #4]
+4:
+	vmul.f32	q5, q5, d1[0]
+	vmul.f32	q9, q9, d1[0]
+
+	// third column
+	vmls.f32	q6, q4, d9[0]
+	vmls.f32	q10, q8, d9[0]
+	vmls.f32	q6, q5, d11[0]
+	vmls.f32	q10, q9, d11[0]
+	fcmpes		s16, s0
+	fmstat
+	ble			5f
+	fsqrts		s2, s26
+	fdivs		s2, s1, s2
+	fsts		s2, [r4, #8]
+6:
+	vmul.f32	q6, q6, d1[0]
+	vmul.f32	q10, q10, d1[0]
+
+	// fourth column
+	vmls.f32	q7, q4, d9[1]
+	vmls.f32	q11, q8, d9[1]
+	vmls.f32	q7, q5, d11[1]
+	vmls.f32	q11, q9, d11[1]
+	vmls.f32	q7, q6, d13[1]
+	vmls.f32	q11, q10, d13[1]
+	fcmpes		s31, s0
+	fmstat
+	ble			7f
+	fsqrts		s31, s31
+	fdivs		s2, s1, s31
+	fsts		s2, [r4, #12]
+8:
+	vmul.f32	q11, q11, d1[0]
+
+	b			0f
+
+1:
+	flds		s16, .LC01
+	b			2b
+
+3:
+	flds		s21, .LC01
+	b			4b
+
+5:
+	flds		s26, .LC01
+	b			6b
+
+7:
+	flds		s31, .LC01
+	b			8b
+
+0:
+	
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	mov		pc, lr // return
+
+#if defined(OS_LINUX)
+	.size	inner_edge_potrf_8x4_lib4, .-inner_edge_potrf_8x4_lib4
+#endif
+#endif
+
+	.align 3
+.LC01: // { 0 }
+	.word 0
+	.word 0
+
+
+
+
+
+// subroutine
+//
 // triangular substitution:
 // side = right
 // uplo = lower
@@ -787,6 +906,58 @@ _inner_store_8x4_lib4:
 
 
 
+// subroutine
+//
+// input arguments:
+// r4   <- D
+// r5   <- sdd
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_STORE_8X4_L_LIB4
+#else
+//	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_store_8x4_l_lib4, %function
+inner_store_8x4_l_lib4:
+#elif defined(OS_MAC)
+_inner_store_8x4_l_lib4:
+#endif
+#endif
+
+	add		r6, r4, r5
+
+	// top 4x4
+	// first column
+	vstr.64		d8, [r4, #0]
+	vstr.64		d9, [r4, #8]
+	// second column
+	vstr.32		s21, [r4, #20]
+	vstr.64		d11, [r4, #24]
+	// third column
+	vstr.64		d13, [r4, #40]
+	// fourth column
+	vstr.64		s31, [r4, #60]
+	// bottom 4x4
+	vst1.64		{d16, d17, d18, d19}, [r6:128]!
+	vst1.64		{d20, d21, d22, d23}, [r6:128]!
+
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	mov		pc, lr // return
+
+#if defined(OS_LINUX)
+	.size	inner_store_8x4_l_lib4, .-inner_store_8x4_l_lib4
+#endif
+#endif
+
+
+
+
+
 // zero double word
 	.align 3
 .LC00: // { 0 }
@@ -794,6 +965,10 @@ _inner_store_8x4_lib4:
 	.word 0
 	.word 0
 	.word 0
+
+
+
+
 
 //                               r0        r1             r2         r3       sp+0       sp+4          sp+8       sp+12    sp+16   sp+20
 // void kernel_sgemm_nt_8x4_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd)
@@ -885,6 +1060,8 @@ _kernel_sgemm_nt_8x4_lib4:
 #if defined(OS_LINUX)
 	.size	kernel_sgemm_nt_8x4_lib4, .-kernel_sgemm_nt_8x4_lib4
 #endif
+
+
 
 
 
@@ -993,6 +1170,113 @@ _kernel_strsm_nt_rl_inv_8x4_lib4:
 	.size	kernel_strsm_nt_rl_inv_8x4_lib4, .-kernel_strsm_nt_rl_inv_8x4_lib4
 #endif
 
+
+
+
+
+//                                  r0        r1         r2       r3         sp+0       sp+4     sp+8       sp+12    sp+16
+// void kernel_spotrf_nt_l_8x4_lib4(int kmax, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
+
+//	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_spotrf_nt_l_8x4_lib4
+	.type kernel_spotrf_nt_l_8x4_lib4, %function
+kernel_spotrf_nt_l_8x4_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_spotrf_nt_l_8x4_lib4
+_kernel_spotrf_nt_l_8x4_lib4:
+#endif
+
+	PROLOGUE
+
+
+
+	// zero accumulation registers
+	vldr	d8, .LC00
+	vldr	d9, .LC00+8
+	vmov	q5, q4
+	vmov	q6, q4
+	vmov	q7, q4
+	vmov	q8, q4
+	vmov	q9, q4
+	vmov	q10, q4
+	vmov	q11, q4
+
+
+
+	// call inner kernel dgemm nt
+	mov		r4, r0 // kmax
+	mov		r5, r1 // A
+	mov		r6, r2 // sda
+	lsl		r6, r6, #4 // 4*sizeof(float)*sda
+	mov		r7, r3 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_SUB_NT_8X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl	inner_kernel_gemm_sub_nt_8x4_lib4
+#elif defined(OS_MAC)
+	bl	_inner_kernel_gemm_sub_nt_8x4_lib4
+#endif
+#endif
+
+
+
+	// call inner blend for alpha=1.0 and beta=1.0
+	ldr		r4, [fp, #0] // C
+	ldr		r5, [fp, #4] // sdd
+	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_11_8X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl inner_scale_11_8x4_lib4
+#elif defined(OS_MAC)
+	bl _inner_scale_11_8x4_lib4
+#endif
+#endif
+
+
+
+	// factorization
+	ldr		r4, [fp, #16] // inv_diag_D
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_POTRF_8X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl inner_edge_potrf_8x4_lib4
+#elif defined(OS_MAC)
+	bl _inner_edge_potrf_8x4_lib4
+#endif
+#endif
+
+
+
+	// store l
+	ldr		r4, [fp, #8] // D
+	ldr		r5, [fp, #12] // sdd
+	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_L_LIB4
+#else
+#if defined(OS_LINUX)
+	bl inner_store_8x4_l_lib4
+#elif defined(OS_MAC)
+	bl _inner_store_8x4_l_lib4
+#endif
+#endif
+
+
+
+	EPILOGUE
+
+#if defined(OS_LINUX)
+	.size	kernel_spotrf_nt_l_8x4_lib4, .-kernel_spotrf_nt_l_8x4_lib4
+#endif
 
 
 

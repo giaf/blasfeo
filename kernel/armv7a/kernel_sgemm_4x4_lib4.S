@@ -573,6 +573,8 @@ _inner_edge_potrf_4x4_lib4:
 	fconsts		s1, #112 // 1.0
 	flds		s0, .LC01 // 0.0
 
+#if 0 // scalar
+
 	// first column
 	fcmpes		s16, s0
 	fmstat
@@ -621,8 +623,56 @@ _inner_edge_potrf_4x4_lib4:
 	fmstat
 	ble			7f
 	fsqrts		s31, s31
-	fdivs		s31, s1, s31
-	fsts		s31, [r4, #12]
+	fdivs		s2, s1, s31
+	fsts		s2, [r4, #12]
+
+#else // vector
+
+	// first column
+	fcmpes		s16, s0
+	fmstat
+	ble			1f
+	fsqrts		s2, s16
+	fdivs		s2, s1, s2
+	fsts		s2, [r4, #0]
+2:
+	vmul.f32	q4, q4, d1[0]
+
+	// second column
+	vmls.f32	q5, q4, d8[1]
+	fcmpes		s21, s0
+	fmstat
+	ble			3f
+	fsqrts		s2, s21
+	fdivs		s2, s1, s2
+	fsts		s2, [r4, #4]
+4:
+	vmul.f32	q5, q5, d1[0]
+
+	// third column
+	vmls.f32	q6, q4, d9[0]
+	vmls.f32	q6, q5, d11[0]
+	fcmpes		s16, s0
+	fmstat
+	ble			5f
+	fsqrts		s2, s26
+	fdivs		s2, s1, s2
+	fsts		s2, [r4, #8]
+6:
+	vmul.f32	q6, q6, d1[0]
+
+	// fourth column
+	vmls.f32	q7, q4, d9[1]
+	vmls.f32	q7, q5, d11[1]
+	vmls.f32	q7, q6, d13[1]
+	fcmpes		s31, s0
+	fmstat
+	ble			7f
+	fsqrts		s31, s31
+	fdivs		s2, s1, s31
+	fsts		s2, [r4, #12]
+
+#endif
 
 	b			0f
 
