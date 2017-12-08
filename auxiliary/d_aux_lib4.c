@@ -2378,7 +2378,7 @@ void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 
 
 // inverse permute the rows of a matrix struct
-void drowpe_libstr(int kmax, int *ipiv, struct d_strmat *sA)
+void drowpei_libstr(int kmax, int *ipiv, struct d_strmat *sA)
 	{
 	int ii;
 	for(ii=kmax-1; ii>=0; ii--)
