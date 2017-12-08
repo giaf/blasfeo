@@ -3772,6 +3772,29 @@ void dvecsc_libstr(int m, double alpha, struct d_strvec *sa, int ai)
 
 
 
+// copy and scale a strvec into a strvec
+void dveccpsc_libstr(int m, double alpha, struct d_strvec *sa, int ai, struct d_strvec *sc, int ci)
+	{
+	double *pa = sa->pa + ai;
+	double *pc = sc->pa + ci;
+	int ii;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
+		pc[ii+1] = alpha*pa[ii+1];
+		pc[ii+2] = alpha*pa[ii+2];
+		pc[ii+3] = alpha*pa[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		pc[ii+0] = alpha*pa[ii+0];
+		}
+	return;
+	}
+
+
+
 // scale and add a generic strmat into a generic strmat
 void dgead_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strmat *sC, int ci, int cj)
 	{

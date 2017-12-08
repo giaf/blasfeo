@@ -79,6 +79,7 @@ void sgesc_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj
 
 void sveccp_libstr(int m, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci);
 void svecsc_libstr(int m, float alpha, struct s_strvec *sa, int ai);
+void sveccpsc_libstr(int m, float alpha, struct s_strvec *sa, int ai, struct s_strvec *sc, int ci);
 
 void strcp_l_lib(int m, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb);
 void strcp_l_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);

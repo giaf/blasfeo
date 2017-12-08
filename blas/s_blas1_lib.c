@@ -49,6 +49,7 @@
 
 #define AXPY_LIBSTR saxpy_libstr
 #define AXPBY_LIBSTR saxpby_libstr
+#define VECMULACC_LIBSTR svecmulacc_libstr
 #define VECMULDOT_LIBSTR svecmuldot_libstr
 #define DOT_LIBSTR sdot_libstr
 #define ROTG_LIBSTR srotg_libstr
