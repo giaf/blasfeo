@@ -48,6 +48,7 @@
 #define STRVEC d_strvec
 
 #define AXPY_LIBSTR daxpy_libstr
+#define AXPBY_LIBSTR daxpby_libstr
 #define VECMULACC_LIBSTR dvecmulacc_libstr
 #define VECMULDOT_LIBSTR dvecmuldot_libstr
 #define DOT_LIBSTR ddot_libstr
@@ -57,7 +58,7 @@
 
 #define AXPY daxpy_
 #define COPY dcopy_
-#define DSCAL dscal_
+#define SCAL dscal_
 #define ROT drot_
 #define ROTG drotg_
 
