@@ -418,12 +418,12 @@ void spotrf_l_libstr(int m, struct s_strmat *sC, int ci, int cj, struct s_strmat
 		exit(1);
 		}
 
-	const int bs = 4;
+	const int ps = 4;
 
 	int sdc = sC->cn;
 	int sdd = sD->cn;
-	float *pC = sC->pA + cj*bs;
-	float *pD = sD->pA + dj*bs;
+	float *pC = sC->pA + cj*ps;
+	float *pD = sD->pA + dj*ps;
 	float *dD = sD->dA;
 	if(di==0 && dj==0) // XXX what to do if di and dj are not zero
 		sD->use_dA = 1;
@@ -433,32 +433,75 @@ void spotrf_l_libstr(int m, struct s_strmat *sC, int ci, int cj, struct s_strmat
 	int i, j, l;
 
 	i = 0;
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+	for(; i<m-7; i+=8)
+		{
+		j = 0;
+		for(; j<i; j+=4)
+			{
+//			kernel_strsm_nt_rl_inv_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &dD[j]);
+//			kernel_strsm_nt_rl_inv_4x4_lib4(j, &pD[(i+4)*sdd], &pD[j*sdd], &pC[j*ps+(i+4)*sdc], &pD[j*ps+(i+4)*sdd], &pD[j*ps+j*sdd], &dD[j]);
+			kernel_strsm_nt_rl_inv_8x4_lib4(j, &pD[i*sdd], sdd, &pD[j*sdd], &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, &pD[j*ps+j*sdd], &dD[j]);
+			}
+		kernel_spotrf_nt_l_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &dD[j]);
+		kernel_strsm_nt_rl_inv_4x4_lib4(j, &pD[(i+4)*sdd], &pD[j*sdd], &pC[j*ps+(i+4)*sdc], &pD[j*ps+(i+4)*sdd], &pD[j*ps+j*sdd], &dD[j]);
+		kernel_spotrf_nt_l_4x4_lib4(j+4, &pD[(i+4)*sdd], &pD[(j+4)*sdd], &pC[(j+4)*ps+(j+4)*sdc], &pD[(j+4)*ps+(j+4)*sdd], &dD[j+4]);
+		}
+	if(m>i)
+		{
+		if(m-i<=4)
+			{
+			goto left_4;
+			}
+		else
+			{
+			goto left_8;
+			}
+		}
+#else
 	for(; i<m-3; i+=4)
 		{
 		j = 0;
 		for(; j<i; j+=4)
 			{
-			kernel_strsm_nt_rl_inv_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &dD[j]);
+			kernel_strsm_nt_rl_inv_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &dD[j]);
 			}
-		kernel_spotrf_nt_l_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &dD[j]);
+		kernel_spotrf_nt_l_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &dD[j]);
 		}
 	if(m>i)
 		{
 		goto left_4;
 		}
+#endif
 
 	// common return if i==m
 	return;
 
 	// clean up loops definitions
 
-	left_4: // 1 - 3
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+	left_8:
 	j = 0;
 	for(; j<i; j+=4)
 		{
-		kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &dD[j], m-i, m-j);
+//		kernel_dtrsm_nt_rl_inv_8x4_vs_lib4(j, &pD[i*sdd], sdd, &pD[j*sdd], &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, &pD[j*ps+j*sdd], &dD[j], m-i, m-j);
+		kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &dD[j], m-i, m-j);
+		kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[(i+4)*sdd], &pD[j*sdd], &pC[j*ps+(i+4)*sdc], &pD[j*ps+(i+4)*sdd], &pD[j*ps+j*sdd], &dD[j], m-i-4, m-j);
 		}
-	kernel_spotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+j*sdc], &pD[j*bs+j*sdd], &dD[j], m-i, m-j);
+//	kernel_dpotrf_nt_l_8x4_vs_lib4(j, &pD[i*sdd], sdd, &pD[j*sdd], &pC[j*ps+j*sdc], sdc, &pD[j*ps+j*sdd], sdd, &dD[j], m-i, m-j);
+	kernel_spotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &dD[j], m-i, m-j);
+	kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[(i+4)*sdd], &pD[j*sdd], &pC[j*ps+(i+4)*sdc], &pD[j*ps+(i+4)*sdd], &pD[j*ps+j*sdd], &dD[j], m-i-4, m-j);
+	kernel_dpotrf_nt_l_4x4_vs_lib4(j+4, &pD[(i+4)*sdd], &pD[(j+4)*sdd], &pC[(j+4)*ps+(i+4)*sdc], &pD[(j+4)*ps+(i+4)*sdd], &dD[j+4], m-i-4, m-j-4);
+	return;
+#endif
+
+	left_4:
+	j = 0;
+	for(; j<i; j+=4)
+		{
+		kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &dD[j], m-i, m-j);
+		}
+	kernel_spotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &dD[j], m-i, m-j);
 	return;
 
 	return;

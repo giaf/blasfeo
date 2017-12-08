@@ -26,6 +26,23 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+//	// prologue
+//	stmdb	sp!, {r4 - r10, fp, lr} // save GP registers
+//	add		fp, sp, #36 // fp to old sp position
+//	fstmfdd	sp!, {d8-d15} // save FP registers
+#define PROLOGUE \
+	stmdb	sp!, {r4 - r10, fp, lr}; \
+	add		fp, sp, #36; \
+	fstmfdd	sp!, {d8-d15};
+//	// epilogue
+//	fldmfdd	sp!, {d8-d15} // load FP registers
+//	ldmia	sp!, {r4 - r10, fp, pc} // load GP registers and return
+#define EPILOGUE \
+	fldmfdd	sp!, {d8-d15}; \
+	ldmia	sp!, {r4 - r10, fp, pc};
+
+
+
 #if defined(OS_LINUX)
 	.text
 #elif defined(OS_MAC)
@@ -282,26 +299,25 @@ _inner_kernel_gemm_add_nt_8x4_lib4:
 
 
 
-#if 0
 // subroutine
 //
 // input arguments:
 // r4   <- k
 // r5   <- A
-// r6   <- B
-// r7   <- 4*sdb*sizeof(float)
+// r6   <- sda
+// r7   <- B
 //
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+	.macro INNER_KERNEL_GEMM_SUB_NT_8X4_LIB4
 #else
 //	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_kernel_gemm_add_nn_4x4_lib4, %function
-inner_kernel_gemm_add_nn_4x4_lib4:
+	.type inner_kernel_gemm_sub_nt_8x4_lib4, %function
+inner_kernel_gemm_sub_nt_8x4_lib4:
 #elif defined(OS_MAC)
-_inner_kernel_gemm_add_nn_4x4_lib4:
+_inner_kernel_gemm_sub_nt_8x4_lib4:
 #endif
 #endif
 
@@ -309,16 +325,25 @@ _inner_kernel_gemm_add_nn_4x4_lib4:
 	cmp		r4, #0
 	ble		2f // return
 
+	add		r8, r5, r6 // A1
+
 	// prefetch
 	pld		[r5, #0]
-	pld		[r6, #0]
+	pld		[r7, #0]
+	pld		[r8, #0]
+	pld		[r7, #64]
 
-	// preload A
-	vld1.64		{d0, d1}, [r5:128]! // A
-	vldr		d4, [r6, #0]   // B[0,1]
-	vldr		d5, [r6, #16]  // B[4,5]
-	vldr		d6, [r6, #32]  // B[8,9]
-	vldr		d7, [r6, #48]  // B[12,13]
+	// preload
+	vld1.64		{d0, d1}, [r7:128]! // B // TODO preload B in d0-d3 too ?????
+	vld1.64		{d2, d3}, [r7:128]! // B
+	vld1.64		{d4, d5}, [r7:128]! // B // TODO preload B in d0-d3 too ?????
+	vld1.64		{d6, d7}, [r7:128]! // B
+	vld1.64		{d24, d25}, [r5:128]! // A0
+	vld1.64		{d28, d29}, [r5:128]! // A0
+	vld1.64		{d26, d27}, [r8:128] // A1
+
+	sub		r7, r7, #64
+	sub		r5, r5, #32
 
 	cmp		r4, #4
 	ble		0f // consider clean up loop
@@ -326,48 +351,76 @@ _inner_kernel_gemm_add_nn_4x4_lib4:
 	// main loop
 1:
 	
-	// prefetch
-	pld		[r5, #64]
-	pld		[r6, r7]
-
 	// unroll 0
-	vmla.f32	q4, q0, d4[0]
-	vld1.64		{d2, d3}, [r5:128]! // A
-	vmla.f32	q5, q0, d5[0]
-	vmla.f32	q6, q0, d6[0]
-	vmla.f32	q7, q0, d7[0]
+	pld		[r5, #64] // A0
+	vmls.f32	q4, q12, d0[0]
+	vldr		d30, [r8, #16] // A1
+	vmls.f32	q5, q12, d0[1]
+	vldr		d31, [r8, #24] // A1
+	vmls.f32	q6, q12, d1[0]
+	pld		[r7, #128] // B
+	vmls.f32	q7, q12, d1[1]
+	vldr		d24, [r5, #32]
+	vmls.f32	q8, q13, d0[0]
+	vldr		d25, [r5, #40]
+	vmls.f32	q9, q13, d0[1]
+	vldr		d0, [r7, #64]
+	vmls.f32	q10, q13, d1[0]
+	pld		[r8, #64] // A1
+	vmls.f32	q11, q13, d1[1]
+	vldr		d1, [r7, #72]
 
 	// unroll 1
-	vld1.64		{d0, d1}, [r5:128]! // A
-	vmla.f32	q4, q1, d4[1]
-	vldr		d4, [r6, #8]  // B[2,3]
-	vmla.f32	q5, q1, d5[1]
-	vldr		d5, [r6, #24] // B[6,7]
-	vmla.f32	q6, q1, d6[1]
-	vldr		d6, [r6, #40] // B[10,11]
-	vmla.f32	q7, q1, d7[1]
-	vldr		d7, [r6, #56] // B[14,15]
+	vmls.f32	q4, q14, d2[0]
+	vldr		d26, [r8, #32] // A1
+	vmls.f32	q5, q14, d2[1]
+	vldr		d27, [r8, #40] // A1
+	vmls.f32	q6, q14, d3[0]
+	vmls.f32	q7, q14, d3[1]
+	vldr		d28, [r5, #48]
+	vmls.f32	q8, q15, d2[0]
+	vldr		d29, [r5, #56]
+	vmls.f32	q9, q15, d2[1]
+	vldr		d2, [r7, #80]
+	vmls.f32	q10, q15, d3[0]
+	add		r5, r5, #64
+	vmls.f32	q11, q15, d3[1]
+	vldr		d3, [r7, #88]
 
 	// unroll 2
-	vmla.f32	q4, q0, d4[0]
-	vld1.64		{d2, d3}, [r5:128]! // A
-	vmla.f32	q5, q0, d5[0]
-	add		r6, r6, r7
-	vmla.f32	q6, q0, d6[0]
-	vmla.f32	q7, q0, d7[0]
+	vmls.f32	q4, q12, d4[0]
+	vldr		d30, [r8, #48] // A1
+	vmls.f32	q5, q12, d4[1]
+	vldr		d31, [r8, #56] // A1
+	vmls.f32	q6, q12, d5[0]
+	add		r7, r7, #64
+	vmls.f32	q7, q12, d5[1]
+	vldr		d24, [r5, #0]
+	vmls.f32	q8, q13, d4[0]
+	vldr		d25, [r5, #8]
+	vmls.f32	q9, q13, d4[1]
+	vldr		d4, [r7, #32]
+	vmls.f32	q10, q13, d5[0]
+	add		r8, r8, #64
+	vmls.f32	q11, q13, d5[1]
+	vldr		d5, [r7, #40]
 
 	// unroll 3
-	vld1.64		{d0, d1}, [r5:128]! // A
-	vmla.f32	q4, q1, d4[1]
-	vldr		d4, [r6, #0]   // B[0,1]
-	vmla.f32	q5, q1, d5[1]
-	vldr		d5, [r6, #16]  // B[4,5]
-	vmla.f32	q6, q1, d6[1]
-	vldr		d6, [r6, #32]  // B[8,9]
-	vmla.f32	q7, q1, d7[1]
-	vldr		d7, [r6, #48]  // B[12,13]
-
+	vmls.f32	q4, q14, d6[0]
+	vldr		d26, [r8, #0] // A1
+	vmls.f32	q5, q14, d6[1]
+	vldr		d27, [r8, #8] // A1
+	vmls.f32	q6, q14, d7[0]
 	sub		r4, r4, #4
+	vmls.f32	q7, q14, d7[1]
+	vldr		d28, [r5, #16]
+	vmls.f32	q8, q15, d6[0]
+	vldr		d29, [r5, #24]
+	vmls.f32	q9, q15, d6[1]
+	vldr		d6, [r7, #48]
+	vmls.f32	q10, q15, d7[0]
+	vmls.f32	q11, q15, d7[1]
+	vldr		d7, [r7, #56]
 
 	cmp		r4, #4
 	bgt		1b
@@ -377,44 +430,75 @@ _inner_kernel_gemm_add_nn_4x4_lib4:
 	cmp		r4, #3
 	ble		4f
 
+
 	// unroll 0
-	vmla.f32	q4, q0, d4[0]
-	vld1.64		{d2, d3}, [r5:128]! // A
-	vmla.f32	q5, q0, d5[0]
-	vmla.f32	q6, q0, d6[0]
-	vmla.f32	q7, q0, d7[0]
+	vmls.f32	q4, q12, d0[0]
+	vldr		d30, [r8, #16] // A1
+	vmls.f32	q5, q12, d0[1]
+	vldr		d31, [r8, #24] // A1
+	vmls.f32	q6, q12, d1[0]
+	vmls.f32	q7, q12, d1[1]
+	vldr		d24, [r5, #32]
+	vmls.f32	q8, q13, d0[0]
+	vldr		d25, [r5, #40]
+	vmls.f32	q9, q13, d0[1]
+//	vldr		d4, [r7, #64]
+	vmls.f32	q10, q13, d1[0]
+	vmls.f32	q11, q13, d1[1]
+//	vldr		d5, [r7, #72]
 
 	// unroll 1
-	vld1.64		{d0, d1}, [r5:128]! // A
-	vmla.f32	q4, q1, d4[1]
-	vldr		d4, [r6, #8]  // B[2,3]
-	vmla.f32	q5, q1, d5[1]
-	vldr		d5, [r6, #24] // B[6,7]
-	vmla.f32	q6, q1, d6[1]
-	vldr		d6, [r6, #40] // B[10,11]
-	vmla.f32	q7, q1, d7[1]
-	vldr		d7, [r6, #56] // B[14,15]
+	vmls.f32	q4, q14, d2[0]
+	vldr		d26, [r8, #32] // A1
+	vmls.f32	q5, q14, d2[1]
+	vldr		d27, [r8, #40] // A1
+	vmls.f32	q6, q14, d3[0]
+	vmls.f32	q7, q14, d3[1]
+	vldr		d28, [r5, #48]
+	vmls.f32	q8, q15, d2[0]
+	vldr		d29, [r5, #56]
+	vmls.f32	q9, q15, d2[1]
+//	vldr		d6, [r7, #80]
+	vmls.f32	q10, q15, d3[0]
+//	add		r5, r5, #64
+	vmls.f32	q11, q15, d3[1]
+//	vldr		d7, [r7, #88]
 
 	// unroll 2
-	vmla.f32	q4, q0, d4[0]
-	vld1.64		{d2, d3}, [r5:128]! // A
-	vmla.f32	q5, q0, d5[0]
-	add		r6, r6, r7
-	vmla.f32	q6, q0, d6[0]
-	vmla.f32	q7, q0, d7[0]
+	vmls.f32	q4, q12, d4[0]
+	vldr		d30, [r8, #48] // A1
+	vmls.f32	q5, q12, d4[1]
+	vldr		d31, [r8, #56] // A1
+	vmls.f32	q6, q12, d5[0]
+//	add		r7, r7, #64
+	vmls.f32	q7, q12, d5[1]
+//	vldr		d24, [r5, #0]
+	vmls.f32	q8, q13, d4[0]
+//	vldr		d25, [r5, #8]
+	vmls.f32	q9, q13, d4[1]
+//	vldr		d4, [r7, #32]
+	vmls.f32	q10, q13, d5[0]
+//	add		r8, r8, #64
+	vmls.f32	q11, q13, d5[1]
+//	vldr		d5, [r7, #40]
 
 	// unroll 3
-//	vld1.64		{d0, d1}, [r5:128]! // A
-	vmla.f32	q4, q1, d4[1]
-//	vldr		d4, [r6, #0]   // B[0,1]
-	vmla.f32	q5, q1, d5[1]
-//	vldr		d5, [r6, #16]  // B[4,5]
-	vmla.f32	q6, q1, d6[1]
-//	vldr		d6, [r6, #32]  // B[8,9]
-	vmla.f32	q7, q1, d7[1]
-//	vldr		d7, [r6, #48]  // B[12,13]
-
+	vmls.f32	q4, q14, d6[0]
+//	vldr		d26, [r8, #0] // A1
+	vmls.f32	q5, q14, d6[1]
+//	vldr		d27, [r8, #8] // A1
+	vmls.f32	q6, q14, d7[0]
 	sub		r4, r4, #4
+	vmls.f32	q7, q14, d7[1]
+//	vldr		d28, [r5, #16]
+	vmls.f32	q8, q15, d6[0]
+//	vldr		d29, [r5, #24]
+	vmls.f32	q9, q15, d6[1]
+//	vldr		d6, [r7, #48]
+	vmls.f32	q10, q15, d7[0]
+	vmls.f32	q11, q15, d7[1]
+//	vldr		d7, [r7, #56]
+
 
 	b		2f // return
 
@@ -423,23 +507,26 @@ _inner_kernel_gemm_add_nn_4x4_lib4:
 	cmp		r4, #0
 	ble		2f // return
 
-	sub		r5, r5, #16
+//	sub		r5, r5, #32 // A0
+//	sub		r7, r7, #32 // B
+//	sub		r8, r8, #16 // A1
 
 3: // clean1-up loop
 
 	// unroll 0
-	vld1.64		{d0, d1}, [r5:128]! // A
-	vldr		s8, [r6, #0]  // B[0]
-	vmla.f32	q4, q0, d4[0]
-	vldr		s8, [r6, #16] // B[4]
-	vmla.f32	q5, q0, d4[0]
-	vldr		s8, [r6, #32] // B[8]
-	vmla.f32	q6, q0, d4[0]
-	vldr		s8, [r6, #48] // B[12]
-	vmla.f32	q7, q0, d4[0]
+	vld1.64		{d4, d5}, [r7:128]! // B
+	vld1.64		{d0, d1}, [r5:128]! // A0
+	vmls.f32	q4, q0, d4[0]
+	vmls.f32	q5, q0, d4[1]
+	vmls.f32	q6, q0, d5[0]
+	vmls.f32	q7, q0, d5[1]
+	vld1.64		{d0, d1}, [r8:128]! // A1
+	vmls.f32	q8, q0, d4[0]
+	vmls.f32	q9, q0, d4[1]
+	vmls.f32	q10, q0, d5[0]
+	vmls.f32	q11, q0, d5[1]
 
 	sub		r4, r4, #1
-	add		r6, r6, #4
 	cmp		r4, #0
 	bgt		3b
 
@@ -452,8 +539,87 @@ _inner_kernel_gemm_add_nn_4x4_lib4:
 	mov		pc, lr // return
 
 #if defined(OS_LINUX)
-	.size	inner_kernel_gemm_add_nn_4x4_lib4, .-inner_kernel_gemm_add_nn_4x4_lib4
+	.size	inner_kernel_gemm_sub_nt_8x4_lib4, .-inner_kernel_gemm_sub_nt_8x4_lib4
 #endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// triangular substitution:
+// side = right
+// uplo = lower
+// tran = transposed
+// requires explicit inverse of diagonal
+//
+// input arguments:
+// r4   <- E
+// r5   <- inv_diag_E
+//
+// output arguments:
+// r4   <- E
+// r5   <- inv_diag_E
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRSM_RLT_INV_8X4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_trsm_rlt_inv_8x4_lib4, %function
+inner_edge_trsm_rlt_inv_8x4_lib4:
+#elif defined(OS_MAC)
+inner_edge_trsm_rlt_inv_8x4_lib4:
+#endif
+#endif
+	
+	// first column
+	vldr.32		d0, [r5, #0] // E_inv[0]
+	vmul.f32	q4, q4, d0[0];
+	vmul.f32	q8, q8, d0[0];
+
+	// second column
+	vldr.32		d0, [r4, #4] // E[1+4*0]
+	vmls.f32	q5, q4, d0[0];
+	vmls.f32	q9, q8, d0[0];
+	vldr.32		d0, [r5, #4] // E_inv[1]
+	vmul.f32	q5, q5, d0[0];
+	vmul.f32	q9, q9, d0[0];
+
+	// thirs column
+	vldr.32		d0, [r4, #8] // E[2+4*0]
+	vmls.f32	q6, q4, d0[0];
+	vmls.f32	q10, q8, d0[0];
+	vldr.32		d0, [r4, #24] // E[2+4*1]
+	vmls.f32	q6, q5, d0[0];
+	vmls.f32	q10, q9, d0[0];
+	vldr.32		d0, [r5, #8] // E_inv[2]
+	vmul.f32	q6, q6, d0[0];
+	vmul.f32	q10, q10, d0[0];
+
+	// fourth column
+	vldr.32		d0, [r4, #12] // E[3+4*0]
+	vmls.f32	q7, q4, d0[0];
+	vmls.f32	q11, q8, d0[0];
+	vldr.32		d0, [r4, #28] // E[3+4*1]
+	vmls.f32	q7, q5, d0[0];
+	vmls.f32	q11, q9, d0[0];
+	vldr.32		d0, [r4, #44] // E[3+4*2]
+	vmls.f32	q7, q6, d0[0];
+	vmls.f32	q11, q10, d0[0];
+	vldr.32		d0, [r5, #12] // E_inv[3]
+	vmul.f32	q7, q7, d0[0];
+	vmul.f32	q11, q11, d0[0];
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	mov		pc, lr // return
+
+#if defined(OS_LINUX)
+	.size	inner_edge_trsm_rlt_inv_8x4_lib4, .-inner_edge_trsm_rlt_inv_8x4_lib4
 #endif
 #endif
 
@@ -534,6 +700,55 @@ _inner_scale_ab_8x4_lib4:
 // subroutine
 //
 // input arguments:
+// r4   <- C
+// r5   <- sdc
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_SCALE_11_8X4_LIB4
+#else
+//	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_11_8x4_lib4, %function
+inner_scale_11_8x4_lib4:
+#elif defined(OS_MAC)
+_inner_scale_11_8x4_lib4:
+#endif
+#endif
+
+	add		r6, r4, r5
+
+	vld1.64		{d0, d1, d2, d3}, [r4:128]!
+	vadd.f32	q4, q0, q4
+	vadd.f32	q5, q1, q5
+	vld1.64		{d0, d1, d2, d3}, [r4:128]!
+	vadd.f32	q6, q0, q6
+	vadd.f32	q7, q1, q7
+	vld1.64		{d0, d1, d2, d3}, [r6:128]!
+	vadd.f32	q8, q0, q8
+	vadd.f32	q9, q1, q9
+	vld1.64		{d0, d1, d2, d3}, [r6:128]!
+	vadd.f32	q10, q0, q10
+	vadd.f32	q11, q1, q11
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	mov		pc, lr // return
+
+#if defined(OS_LINUX)
+	.size	inner_scale_11_8x4_lib4, .-inner_scale_11_8x4_lib4
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
 // r4   <- D
 // r5   <- sdd
 //
@@ -593,14 +808,7 @@ kernel_sgemm_nt_8x4_lib4:
 _kernel_sgemm_nt_8x4_lib4:
 #endif
 
-	// prologue
-
-	// save GP registers
-	stmdb	sp!, {r4 - r10, fp, lr} // save registers
-	add		fp, sp, #36 // fp to old sp position
-
-	// save FP registers
-	fstmfdd	sp!, {d8-d15}
+	PROLOGUE
 
 
 
@@ -672,15 +880,7 @@ _kernel_sgemm_nt_8x4_lib4:
 
 
 
-	// epilogue
-
-	// load FP registers
-	fldmfdd	sp!, {d8-d15}
-
-	// load GP registers and return
-//	ldmia	sp!, {r4 - r10, fp, lr} // load registers
-//	mov		pc, lr // return
-	ldmia	sp!, {r4 - r10, fp, pc} // load registers and return
+	EPILOGUE
 
 #if defined(OS_LINUX)
 	.size	kernel_sgemm_nt_8x4_lib4, .-kernel_sgemm_nt_8x4_lib4
@@ -688,28 +888,20 @@ _kernel_sgemm_nt_8x4_lib4:
 
 
 
-#if 0
-//                               r0        r1             r2         r3         sp+0     sp+4          sp+8       sp+12
-// void kernel_sgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, double *B, int sdb, double *beta, double *C, double *D)
+//                                      r0        r1         r2       r3         sp+0       sp+4     rsp+8      rsp+12   rsp+16     rsp+20
+// void kernel_strsm_nt_rl_inv_8x4_lib4(int kmax, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
 
 //	.p2align 4,,15
 #if defined(OS_LINUX)
-	.global	kernel_sgemm_nn_4x4_lib4
-	.type	kernel_sgemm_nn_4x4_lib4, %function
-kernel_sgemm_nn_4x4_lib4:
+	.globl kernel_strsm_nt_rl_inv_8x4_lib4
+	.type kernel_strsm_nt_rl_inv_8x4_lib4, %function
+kernel_strsm_nt_rl_inv_8x4_lib4:
 #elif defined(OS_MAC)
-	.global	kernel_sgemm_nn_4x4_lib4
-_kernel_sgemm_nn_4x4_lib4:
+	.globl _kernel_strsm_nt_rl_inv_8x4_lib4
+_kernel_strsm_nt_rl_inv_8x4_lib4:
 #endif
 
-	// prologue
-
-	// save GP registers
-	stmdb	sp!, {r4 - r10, fp, lr} // save registers
-	add		fp, sp, #36 // fp to old sp position
-
-	// save FP registers
-	fstmfdd	sp!, {d8-d15}
+	PROLOGUE
 
 
 
@@ -719,74 +911,88 @@ _kernel_sgemm_nn_4x4_lib4:
 	vmov	q5, q4
 	vmov	q6, q4
 	vmov	q7, q4
+	vmov	q8, q4
+	vmov	q9, q4
+	vmov	q10, q4
+	vmov	q11, q4
 
 
 
 	// call inner kernel dgemm nt
 	mov		r4, r0 // kmax
-	mov		r5, r2 // A
-	mov		r6, r3 // B
-	ldr		r7, [fp, #0] // sdb
-	lsl		r7, r7, #4 // 4*sizeof(float)*sdb
+	mov		r5, r1 // A
+	mov		r6, r2 // sda
+	lsl		r6, r6, #4 // 4*sizeof(float)*sda
+	mov		r7, r3 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+	INNER_KERNEL_GEMM_SUB_NT_8X4_LIB4
 #else
 #if defined(OS_LINUX)
-	bl	inner_kernel_gemm_add_nn_4x4_lib4
+	bl	inner_kernel_gemm_sub_nt_8x4_lib4
 #elif defined(OS_MAC)
-	bl	_inner_kernel_gemm_add_nn_4x4_lib4
+	bl	_inner_kernel_gemm_sub_nt_8x4_lib4
 #endif
 #endif
 
 
 
-	// call inner blend for generic alpha and beta
-	mov		r4, r1 // alpha
-	ldr		r5, [fp, #4] // beta
-	ldr		r6, [fp, #8] // C
+	// call inner blend for alpha=1.0 and beta=1.0
+	ldr		r4, [fp, #0] // C
+	ldr		r5, [fp, #4] // sdd
+	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_4X4_LIB4
+	INNER_SCALE_11_8X4_LIB4
 #else
 #if defined(OS_LINUX)
-	bl inner_scale_ab_4x4_lib4
+	bl inner_scale_11_8x4_lib4
 #elif defined(OS_MAC)
-	bl _inner_scale_ab_4x4_lib4
+	bl _inner_scale_11_8x4_lib4
 #endif
 #endif
 
 
 
-	// store n
-	ldr		r4, [fp, #12] // D
+	// factorization
+	ldr		r4, [fp, #16] // E
+	ldr		r5, [fp, #20] // inv_diag_E
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_4X4_LIB4
+	INNER_EDGE_TRSM_RLT_INV_8X4_LIB4
 #else
 #if defined(OS_LINUX)
-	bl inner_store_4x4_lib4
+	bl inner_edge_trsm_rlt_inv_8x4_lib4
 #elif defined(OS_MAC)
-	bl _inner_store_4x4_lib4
+	bl _inner_edge_trsm_rlt_inv_8x4_lib4
 #endif
 #endif
 
 
 
-	// epilogue
+	// store l
+	ldr		r4, [fp, #8] // D
+	ldr		r5, [fp, #12] // sdd
+	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
-	// load FP registers
-	fldmfdd	sp!, {d8-d15}
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_LIB4
+#else
+#if defined(OS_LINUX)
+	bl inner_store_8x4_lib4
+#elif defined(OS_MAC)
+	bl _inner_store_8x4_lib4
+#endif
+#endif
 
-	// load GP registers and return
-//	ldmia	sp!, {r4 - r10, fp, lr} // load registers
-//	mov		pc, lr // return
-	ldmia	sp!, {r4 - r10, fp, pc} // load registers and return
+
+
+	EPILOGUE
 
 #if defined(OS_LINUX)
-	.size	kernel_sgemm_nn_4x4_lib4, .-kernel_sgemm_nn_4x4_lib4
+	.size	kernel_strsm_nt_rl_inv_8x4_lib4, .-kernel_strsm_nt_rl_inv_8x4_lib4
 #endif
-#endif
+
 
 
 
