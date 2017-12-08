@@ -447,6 +447,98 @@ void SYRK_POTRF_LN_LIBSTR(int m, int n, int k, struct STRMAT *sA, int ai, int aj
 
 
 
+// cholesky factorization with pivot
+void PSTRF_L_LIBSTR(int m, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, int *ipiv)
+	{
+	if(m<=0)
+		return;
+	int ii, jj, kk;
+	REAL
+		tmp,
+		f_00_inv,
+		c_00,
+		c_max;
+	int idx;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	REAL *pC = sC->pA + ci + cj*ldc;
+	REAL *pD = sD->pA + di + dj*ldd;
+	REAL *dD = sD->dA;
+	if(di==0 & dj==0)
+		sD->use_dA = 1;
+	else
+		sD->use_dA = 0;
+	// copy C in D
+	for(ii=0; ii<m; ii++)
+		for(jj=ii; jj<m; jj++)
+			pD[jj+ldd*ii] = pC[jj+ldc*ii];
+	// fact
+	for(ii=0; ii<m; ii++)
+		{
+		// pivot
+		c_max = pD[ii+ldc*ii];
+		idx = ii;
+		for(jj=ii+1; jj<m; jj++)
+			{
+			if(pD[jj+ldd*jj]>c_max)
+				{
+				c_max = pD[jj+ldd*jj];
+				idx = jj;
+				}
+			}
+		ipiv[ii] = idx;
+		// swap ii and idx
+		if(ii!=idx)
+			{
+			//
+			for(kk=0; kk<ii; kk++)
+				{
+				tmp = pD[ii+ldd*kk];
+				pD[ii+ldd*kk] = pD[idx+ldd*kk];
+				pD[idx+ldd*kk] = tmp;
+				}
+			//
+			tmp = pD[ii+ldd*ii];
+			pD[ii+ldd*ii] = pD[idx+ldd*idx];
+			pD[idx+ldd*idx] = tmp;
+			//
+			for(kk=ii+1; kk<idx; kk++)
+				{
+				tmp = pD[kk+ldd*ii];
+				pD[kk+ldd*ii] = pD[idx+ldd*kk];
+				pD[idx+ldd*kk] = tmp;
+				}
+			//
+			for(kk=idx+1; kk<m; kk++)
+				{
+				tmp = pD[kk+ldd*ii];
+				pD[kk+ldd*ii] = pD[kk+ldd*idx];
+				pD[kk+ldd*idx] = tmp;
+				}
+			}
+		c_00 = pD[ii+ldc*ii];
+		if(c_00>0)
+			f_00_inv = 1.0/sqrt(c_00);
+		else
+			f_00_inv = 0.0;
+		dD[ii+0] = f_00_inv;
+		for(jj=ii; jj<m; jj++)
+			{
+			pD[jj+ldd*ii] *= f_00_inv;
+			}
+		for(jj=ii+1; jj<m; jj++)
+			{
+			for(kk=jj; kk<m; kk++)
+				{
+				pD[kk+ldd*jj] -= pD[kk+ldd*ii] * pD[jj+ldd*ii];
+				}
+			}
+		}
+	return;
+	}
+
+
+
 // dgetrf without pivoting
 void GETF2_NOPIVOT(int m, int n, REAL *A, int lda, REAL *dA)
 	{

@@ -57,6 +57,7 @@
 #define GETRF_LIBSTR dgetrf_libstr
 #define POTRF_L_LIBSTR dpotrf_l_libstr
 #define POTRF_L_MN_LIBSTR dpotrf_l_mn_libstr
+#define PSTRF_L_LIBSTR dpstrf_l_libstr
 #define SYRK_POTRF_LN_LIBSTR dsyrk_dpotrf_ln_libstr
 
 #define COPY dcopy_
