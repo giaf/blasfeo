@@ -164,6 +164,19 @@ void sdiain_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, struct s_
 
 
 
+// add scalar to diagonal
+void sdiare_libstr(int kmax, float alpha, struct s_strmat *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	float *pA = sA->pA + ai + aj*lda;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		pA[ii*(lda+1)] += alpha;
+	return;
+	}
+
+
+
 // extract a row into a vector
 void srowex_libstr(int kmax, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi)
 	{
