@@ -177,6 +177,49 @@ void sdiain_lib(int kmax, float alpha, float *x, int offset, float *pD, int sdd)
 
 
 
+// add scalar to diagonal
+void sdiare_libstr(int kmax, float alpha, struct s_strmat *sA, int ai, int aj)
+	{
+	const int bs = 8;
+	int sda = sA->cn;
+	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	int offsetA = ai%bs;
+
+	int kna = (bs-offsetA%bs)%bs;
+	kna = kmax<kna ? kmax : kna;
+
+	int jj, ll;
+
+	if(kna>0)
+		{
+		for(ll=0; ll<kna; ll++)
+			{
+			pA[ll+bs*ll] += alpha;
+			}
+		pA += kna + bs*(sda-1) + kna*bs;
+		kmax -= kna;
+		}
+	for(jj=0; jj<kmax-7; jj+=8)
+		{
+		pA[jj*sda+(jj+0)*bs+0] += alpha;
+		pA[jj*sda+(jj+1)*bs+1] += alpha;
+		pA[jj*sda+(jj+2)*bs+2] += alpha;
+		pA[jj*sda+(jj+3)*bs+3] += alpha;
+		pA[jj*sda+(jj+4)*bs+4] += alpha;
+		pA[jj*sda+(jj+5)*bs+5] += alpha;
+		pA[jj*sda+(jj+6)*bs+6] += alpha;
+		pA[jj*sda+(jj+7)*bs+7] += alpha;
+		}
+	for(ll=0; ll<kmax-jj; ll++)
+		{
+		pA[jj*sda+(jj+ll)*bs+ll] += alpha;
+		}
+	return;
+	}
+
+
+
+
 // insert sqrt of vector to diagonal
 void sdiain_sqrt_lib(int kmax, float *x, int offset, float *pD, int sdd)
 	{

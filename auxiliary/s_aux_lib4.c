@@ -1864,7 +1864,72 @@ void sdiain_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, struct s_
 	int sda = sA->cn;
 	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	float *x = sx->pa + xi;
-	sdiain_lib(kmax, alpha, x, ai%bs, pA, sda);
+	int offsetA = ai%bs;
+
+	int kna = (bs-offsetA%bs)%bs;
+	kna = kmax<kna ? kmax : kna;
+
+	int jj, ll;
+
+	if(kna>0)
+		{
+		for(ll=0; ll<kna; ll++)
+			{
+			pA[ll+bs*ll] = alpha*x[ll];
+			}
+		pA += kna + bs*(sda-1) + kna*bs;
+		x  += kna;
+		kmax -= kna;
+		}
+	for(jj=0; jj<kmax-3; jj+=4)
+		{
+		pA[jj*sda+(jj+0)*bs+0] = alpha*x[jj+0];
+		pA[jj*sda+(jj+1)*bs+1] = alpha*x[jj+1];
+		pA[jj*sda+(jj+2)*bs+2] = alpha*x[jj+2];
+		pA[jj*sda+(jj+3)*bs+3] = alpha*x[jj+3];
+		}
+	for(ll=0; ll<kmax-jj; ll++)
+		{
+		pA[jj*sda+(jj+ll)*bs+ll] = alpha*x[jj+ll];
+		}
+	return;
+	}
+
+
+
+// add scalar to diagonal
+void sdiare_libstr(int kmax, float alpha, struct s_strmat *sA, int ai, int aj)
+	{
+	const int bs = 4;
+	int sda = sA->cn;
+	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	int offsetA = ai%bs;
+
+	int kna = (bs-offsetA%bs)%bs;
+	kna = kmax<kna ? kmax : kna;
+
+	int jj, ll;
+
+	if(kna>0)
+		{
+		for(ll=0; ll<kna; ll++)
+			{
+			pA[ll+bs*ll] += alpha;
+			}
+		pA += kna + bs*(sda-1) + kna*bs;
+		kmax -= kna;
+		}
+	for(jj=0; jj<kmax-3; jj+=4)
+		{
+		pA[jj*sda+(jj+0)*bs+0] += alpha;
+		pA[jj*sda+(jj+1)*bs+1] += alpha;
+		pA[jj*sda+(jj+2)*bs+2] += alpha;
+		pA[jj*sda+(jj+3)*bs+3] += alpha;
+		}
+	for(ll=0; ll<kmax-jj; ll++)
+		{
+		pA[jj*sda+(jj+ll)*bs+ll] += alpha;
+		}
 	return;
 	}
 

@@ -97,6 +97,7 @@ void strtr_u_lib(int m, float alpha, int offsetA, float *pA, int sda, int offset
 void strtr_u_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strmat *sC, int ci, int cj);
 
 void sdiareg_lib(int kmax, float reg, int offset, float *pD, int sdd);
+void sdiare_libstr(int kmax, float alpha, struct s_strmat *sA, int ai, int aj);
 void sdiaex_libstr(int kmax, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi);
 void sdiain_libstr(int kmax, float alpha, struct s_strvec *sx, int xi, struct s_strmat *sA, int ai, int aj);
 void sdiain_sqrt_lib(int kmax, float *x, int offset, float *pD, int sdd);
