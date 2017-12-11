@@ -48,7 +48,7 @@ void ZEROS(REAL **pA, int row, int col)
 void ZEROS_ALIGN(REAL **pA, int row, int col)
 	{
 #if defined(OS_WINDOWS)
-	*pA = (REAL *) _aligneMALLOC( (row*col)*sizeof(REAL), 64 );
+	*pA = (REAL *) _aligned_malloc( (row*col)*sizeof(REAL), 64 );
 #else
 	void *temp;
 	int err = posix_memalign(&temp, 64, (row*col)*sizeof(REAL));
@@ -78,7 +78,7 @@ void FREE(REAL *pA)
 void FREE_ALIGN(REAL *pA)
 	{
 #if defined(OS_WINDOWS)
-	_aligneFREE( pA );
+	_aligned_free( pA );
 #else
 	free( pA );
 #endif
