@@ -847,7 +847,7 @@ inner_kernel_sgecp_8_2_lib8:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_kernel_sgecpsc_8_2_lib8, .-inner_kernel_sgecpsc_8_2_lib8
+	.size	inner_kernel_sgecp_8_2_lib8, .-inner_kernel_sgecp_8_2_lib8
 #endif
 #endif
 
@@ -877,7 +877,7 @@ inner_kernel_sgecpsc_8_3_lib8:
 _inner_kernel_sgecpsc_8_3_lib8:
 #elif defined(OS_WINDOWS)
 	.def inner_kernel_sgecpsc_8_3_lib8; .scl 3; .type 32; .endef
-inner_kernel_sgecpsc_8_2_lib8:
+inner_kernel_sgecpsc_8_3_lib8:
 #endif
 #endif
 
@@ -980,7 +980,7 @@ inner_kernel_sgecpsc_8_2_lib8:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_kernel_sgecpsc_8_2_lib8, .-inner_kernel_sgecpsc_8_2_lib8
+	.size	inner_kernel_sgecpsc_8_3_lib8, .-inner_kernel_sgecpsc_8_3_lib8
 #endif
 #endif
 
@@ -1121,7 +1121,7 @@ inner_kernel_sgecpsc_8_4_lib8:
 _inner_kernel_sgecpsc_8_4_lib8:
 #elif defined(OS_WINDOWS)
 	.def inner_kernel_sgecpsc_8_4_lib8; .scl 3; .type 32; .endef
-inner_kernel_sgecpsc_8_2_lib8:
+inner_kernel_sgecpsc_8_4_lib8:
 #endif
 #endif
 
@@ -1574,7 +1574,7 @@ inner_kernel_sgecpsc_8_6_lib8:
 _inner_kernel_sgecpsc_8_6_lib8:
 #elif defined(OS_WINDOWS)
 	.def inner_kernel_sgecpsc_8_6_lib8; .scl 3; .type 32; .endef
-inner_kernel_sgecpsc_8_2_lib8:
+inner_kernel_sgecpsc_8_6_lib8:
 #endif
 #endif
 
@@ -1819,7 +1819,7 @@ inner_kernel_sgecpsc_8_7_lib8:
 _inner_kernel_sgecpsc_8_7_lib8:
 #elif defined(OS_WINDOWS)
 	.def inner_kernel_sgecpsc_8_7_lib8; .scl 3; .type 32; .endef
-inner_kernel_sgecpsc_8_2_lib8:
+inner_kernel_sgecpsc_8_7_lib8:
 #endif
 #endif
 
