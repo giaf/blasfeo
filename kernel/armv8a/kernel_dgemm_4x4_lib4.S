@@ -497,57 +497,57 @@ inner_kernel_dsyrk_l_sub_nt_4x4_lib4:
 	
 	// unroll 0
 	ldp		q26, q27, [x9], #32
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
+	fmls	v0.2d, v24.2d, v28.2d[0]
+	fmls	v1.2d, v25.2d, v28.2d[0]
 	ldp		q30, q31, [x10], #32
-	fmla	v2.2d, v24.2d, v28.2d[1]
-	fmla	v3.2d, v25.2d, v28.2d[1]
+	fmls	v2.2d, v24.2d, v28.2d[1]
+	fmls	v3.2d, v25.2d, v28.2d[1]
 	prfm	PLDL1KEEP, [x9, #64]
-//	fmla	v4.2d, v24.2d, v29.2d[0]
-	fmla	v5.2d, v25.2d, v29.2d[0]
+//	fmls	v4.2d, v24.2d, v29.2d[0]
+	fmls	v5.2d, v25.2d, v29.2d[0]
 	prfm	PLDL1KEEP, [x10, #64]
-//	fmla	v6.2d, v24.2d, v29.2d[1]
-	fmla	v7.2d, v25.2d, v29.2d[1]
+//	fmls	v6.2d, v24.2d, v29.2d[1]
+	fmls	v7.2d, v25.2d, v29.2d[1]
 
 	// unroll 1
 	ldp		q24, q25, [x9], #32
-	fmla	v0.2d, v26.2d, v30.2d[0]
-	fmla	v1.2d, v27.2d, v30.2d[0]
+	fmls	v0.2d, v26.2d, v30.2d[0]
+	fmls	v1.2d, v27.2d, v30.2d[0]
 	ldp		q28, q29, [x10], #32
-	fmla	v2.2d, v26.2d, v30.2d[1]
-	fmla	v3.2d, v27.2d, v30.2d[1]
-//	fmla	v4.2d, v26.2d, v31.2d[0]
-	fmla	v5.2d, v27.2d, v31.2d[0]
+	fmls	v2.2d, v26.2d, v30.2d[1]
+	fmls	v3.2d, v27.2d, v30.2d[1]
+//	fmls	v4.2d, v26.2d, v31.2d[0]
+	fmls	v5.2d, v27.2d, v31.2d[0]
 	sub		w8, w8, #4
-//	fmla	v6.2d, v26.2d, v31.2d[1]
-	fmla	v7.2d, v27.2d, v31.2d[1]
+//	fmls	v6.2d, v26.2d, v31.2d[1]
+	fmls	v7.2d, v27.2d, v31.2d[1]
 
 	// unroll 2
 	ldp		q26, q27, [x9], #32
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
+	fmls	v0.2d, v24.2d, v28.2d[0]
+	fmls	v1.2d, v25.2d, v28.2d[0]
 	ldp		q30, q31, [x10], #32
-	fmla	v2.2d, v24.2d, v28.2d[1]
-	fmla	v3.2d, v25.2d, v28.2d[1]
+	fmls	v2.2d, v24.2d, v28.2d[1]
+	fmls	v3.2d, v25.2d, v28.2d[1]
 	prfm	PLDL1KEEP, [x9, #64]
-//	fmla	v4.2d, v24.2d, v29.2d[0]
-	fmla	v5.2d, v25.2d, v29.2d[0]
+//	fmls	v4.2d, v24.2d, v29.2d[0]
+	fmls	v5.2d, v25.2d, v29.2d[0]
 	prfm	PLDL1KEEP, [x10, #64]
-//	fmla	v6.2d, v24.2d, v29.2d[1]
-	fmla	v7.2d, v25.2d, v29.2d[1]
+//	fmls	v6.2d, v24.2d, v29.2d[1]
+	fmls	v7.2d, v25.2d, v29.2d[1]
 
 	// unroll 3
 	ldp		q24, q25, [x9], #32
-	fmla	v0.2d, v26.2d, v30.2d[0]
-	fmla	v1.2d, v27.2d, v30.2d[0]
+	fmls	v0.2d, v26.2d, v30.2d[0]
+	fmls	v1.2d, v27.2d, v30.2d[0]
 	ldp		q28, q29, [x10], #32
-	fmla	v2.2d, v26.2d, v30.2d[1]
-	fmla	v3.2d, v27.2d, v30.2d[1]
+	fmls	v2.2d, v26.2d, v30.2d[1]
+	fmls	v3.2d, v27.2d, v30.2d[1]
 	cmp		w8, #4
-//	fmla	v4.2d, v26.2d, v31.2d[0]
-	fmla	v5.2d, v27.2d, v31.2d[0]
-//	fmla	v6.2d, v26.2d, v31.2d[1]
-	fmla	v7.2d, v27.2d, v31.2d[1]
+//	fmls	v4.2d, v26.2d, v31.2d[0]
+	fmls	v5.2d, v27.2d, v31.2d[0]
+//	fmls	v6.2d, v26.2d, v31.2d[1]
+	fmls	v7.2d, v27.2d, v31.2d[1]
 
 	bgt		1b
 
