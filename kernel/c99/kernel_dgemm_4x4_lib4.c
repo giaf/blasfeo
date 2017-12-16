@@ -4027,7 +4027,7 @@ void kernel_dpotrf_nt_l_4x4_vs_lib4(int kmax, double *A, double *B, double *C, d
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_GENERIC)
 void kernel_dpotrf_nt_l_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *inv_diag_D)
 	{
 	kernel_dpotrf_nt_l_4x4_vs_lib4(kmax, A, B, C, D, inv_diag_D, 4, 4);

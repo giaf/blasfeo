@@ -2736,7 +2736,7 @@ _kernel_dtrsm_nt_rl_inv_4x4_lib4:
 
 
 
-	// call inner kernel dsyrk l nt
+	// call inner kernel dgemm nt
 	mov		r4, r0 // kmax
 	mov		r5, r1 // A
 	mov		r6, r2 // B
@@ -2768,7 +2768,7 @@ _kernel_dtrsm_nt_rl_inv_4x4_lib4:
 
 
 
-	// factorization
+	// solution
 	ldr		r4, [fp, #4] // E
 	ldr		r5, [fp, #8] // inv_diag_E
 
@@ -2784,7 +2784,7 @@ _kernel_dtrsm_nt_rl_inv_4x4_lib4:
 
 
 
-	// store l
+	// store
 	ldr		r4, [fp, #0] // D
 
 #if MACRO_LEVEL>=1
