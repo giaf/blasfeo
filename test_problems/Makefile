@@ -39,9 +39,9 @@ ifeq ($(TESTING_MODE), 1)
 LIBS += $(BINARY_DIR)/libblasfeo_ref.a
 SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo_ref
 endif
-LIBS += $(BINARY_DIR)/libblasfeo.a
+LIBS += $(BINARY_DIR)/libblasfeo.a -lm
 # SHARED_LIBS = -L. $(BINARY_DIR)/libblasfeo.so
-SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
+SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo -lm
 
 ifeq ($(REF_BLAS), 0)
 LIBS += -lm

@@ -387,7 +387,7 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_8X4_LIB4
 #else
 	.align	4
@@ -442,7 +442,7 @@ inner_scale_ab_8x4_lib4:
 	fmla	v14.2d, v26.2d, v28.2d[0]
 	fmla	v15.2d, v27.2d, v28.2d[0]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -462,7 +462,7 @@ inner_scale_ab_8x4_lib4:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_8X4_LIB4
 #else
 	.align 4
@@ -477,7 +477,7 @@ inner_store_8x4_lib4:
 	st1		{v8.2d, v9.2d, v10.2d, v11.2d}, [x10], #64
 	st1		{v12.2d, v13.2d, v14.2d, v15.2d}, [x10], #64
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret

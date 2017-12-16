@@ -4448,7 +4448,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_GENERIC)
 void kernel_dtrsm_nt_rl_inv_4x4_lib4(int k, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E)
 	{
 	kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(k, A, B, C, D, E, inv_diag_E, 4, 4);
