@@ -74,11 +74,11 @@
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+	.macro INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
 #else
 	.align	4
-	.type inner_kernel_dgemm_add_nt_4x4_lib4, %function
-inner_kernel_dgemm_add_nt_4x4_lib4:
+	.type inner_kernel_gemm_add_nt_4x4_lib4, %function
+inner_kernel_gemm_add_nt_4x4_lib4:
 #endif
 
 // TODO more aggressive preload of A !!!
@@ -252,7 +252,7 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 #else
 	ret
 
-	.size	inner_kernel_dgemm_add_nt_4x4_lib4, .-inner_kernel_dgemm_add_nt_4x4_lib4
+	.size	inner_kernel_gemm_add_nt_4x4_lib4, .-inner_kernel_gemm_add_nt_4x4_lib4
 #endif
 
 
@@ -269,11 +269,11 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+	.macro INNER_KERNEL_GEMM_SUB_NT_4X4_LIB4
 #else
 	.align	4
-	.type inner_kernel_dgemm_sub_nt_4x4_lib4, %function
-inner_kernel_dgemm_sub_nt_4x4_lib4:
+	.type inner_kernel_gemm_sub_nt_4x4_lib4, %function
+inner_kernel_gemm_sub_nt_4x4_lib4:
 #endif
 
 // TODO more aggressive preload of A !!!
@@ -447,7 +447,7 @@ inner_kernel_dgemm_sub_nt_4x4_lib4:
 #else
 	ret
 
-	.size	inner_kernel_dgemm_sub_nt_4x4_lib4, .-inner_kernel_dgemm_sub_nt_4x4_lib4
+	.size	inner_kernel_gemm_sub_nt_4x4_lib4, .-inner_kernel_gemm_sub_nt_4x4_lib4
 #endif
 
 
@@ -464,11 +464,11 @@ inner_kernel_dgemm_sub_nt_4x4_lib4:
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_DSYRK_L_SUB_NT_4X4_LIB4
+	.macro INNER_KERNEL_SYRK_L_SUB_NT_4X4_LIB4
 #else
 	.align	4
-	.type inner_kernel_dsyrk_l_sub_nt_4x4_lib4, %function
-inner_kernel_dsyrk_l_sub_nt_4x4_lib4:
+	.type inner_kernel_syrk_l_sub_nt_4x4_lib4, %function
+inner_kernel_syrk_l_sub_nt_4x4_lib4:
 #endif
 
 // TODO more aggressive preload of A !!!
@@ -642,7 +642,7 @@ inner_kernel_dsyrk_l_sub_nt_4x4_lib4:
 #else
 	ret
 
-	.size	inner_kernel_dsyrk_l_sub_nt_4x4_lib4, .-inner_kernel_dsyrk_l_sub_nt_4x4_lib4
+	.size	inner_kernel_syrk_l_sub_nt_4x4_lib4, .-inner_kernel_syrk_l_sub_nt_4x4_lib4
 #endif
 
 
@@ -965,11 +965,11 @@ inner_store_4x4_lib4:
 inner_store_l_4x4_lib4:
 #endif
 
-	ldr		q8, [x8, #32]
-	ldr		q9, [x8, #112]
+	ldr		q16, [x8, #32]
+	ldr		q17, [x8, #112]
 
-	ins		v2.d[0], v8.d[0]
-	ins		v7.d[0], v9.d[0]
+	ins		v2.d[0], v16.d[0]
+	ins		v7.d[0], v17.d[0]
 
 	stp		q0, q1, [x8, #0]
 	stp		q2, q3, [x8, #32]
@@ -1014,15 +1014,15 @@ kernel_dgemm_nt_4x4_lib4:
 
 
 
-	// call inner kernel dgemm nt
+	// call inner kernel gemm nt
 	mov		w8, w0 // kmax
 	mov		x9, x2 // A
 	mov		x10, x3 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
 #else
-	bl	inner_kernel_dgemm_add_nt_4x4_lib4
+	bl	inner_kernel_gemm_add_nt_4x4_lib4
 #endif
 
 
@@ -1089,15 +1089,15 @@ kernel_dtrsm_nt_rl_inv_4x4_lib4:
 
 
 
-	// call inner kernel dgemm nt
+	// call inner kernel gemm nt
 	mov		w8, w0 // kmax
 	mov		x9, x1 // A
 	mov		x10, x2 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+	INNER_KERNEL_GEMM_SUB_NT_4X4_LIB4
 #else
-	bl	inner_kernel_dgemm_sub_nt_4x4_lib4
+	bl	inner_kernel_gemm_sub_nt_4x4_lib4
 #endif
 
 
@@ -1174,15 +1174,15 @@ kernel_dpotrf_nt_l_4x4_lib4:
 
 
 
-	// call inner kernel dsyrk l nt
+	// call inner kernel syrk l nt
 	mov		w8, w0 // kmax
 	mov		x9, x1 // A
 	mov		x10, x2 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DSYRK_L_SUB_NT_4X4_LIB4
+	INNER_KERNEL_SYRK_L_SUB_NT_4X4_LIB4
 #else
-	bl	inner_kernel_dsyrk_l_sub_nt_4x4_lib4
+	bl	inner_kernel_syrk_l_sub_nt_4x4_lib4
 #endif
 
 
