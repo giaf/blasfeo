@@ -751,8 +751,8 @@ inner_edge_potrf_4x4_lib4:
 	ble			1f
 	fsqrt		d17, d17
 	fdiv		d18, d16, d17
-	str			d18, [x8, #0]
 2:
+	str			d18, [x8, #0]
 	fmul		v0.2d, v0.2d, v18.2d[0]
 	fmul		v1.2d, v1.2d, v18.2d[0]
 
@@ -764,8 +764,8 @@ inner_edge_potrf_4x4_lib4:
 	ble			3f
 	fsqrt		d17, d17
 	fdiv		d18, d16, d17
-	str			d18, [x8, #8]
 4:
+	str			d18, [x8, #8]
 	fmul		v2.2d, v2.2d, v18.2d[0]
 	fmul		v3.2d, v3.2d, v18.2d[0]
 
@@ -777,8 +777,8 @@ inner_edge_potrf_4x4_lib4:
 	ble			5f
 	fsqrt		d17, d17
 	fdiv		d18, d16, d17
-	str			d18, [x8, #16]
 6:
+	str			d18, [x8, #16]
 	fmul		v5.2d, v5.2d, v18.2d[0]
 
 	// fourth column
@@ -790,26 +790,26 @@ inner_edge_potrf_4x4_lib4:
 	ble			7f
 	fsqrt		d17, d17
 	fdiv		d18, d16, d17
-	str			d18, [x8, #24]
 8:
+	str			d18, [x8, #24]
 	fmul		v7.2d, v7.2d, v18.2d[0]
 
 	b			0f
 
 1:
-	fmov		d0, xzr
+	fmov		d18, xzr
 	b			2b
 
 3:
-	fmov		d5, xzr
+	fmov		d18, xzr
 	b			4b
 
 5:
-	fmov		d10, xzr
+	fmov		d18, xzr
 	b			6b
 
 7:
-	fmov		d15, xzr
+	fmov		d18, xzr
 
 0:
 	

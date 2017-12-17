@@ -566,8 +566,8 @@ inner_edge_potrf_8x4_lib4:
 	ble			1f
 	fsqrt		s17, s17
 	fdiv		s18, s16, s17
-	str			s18, [x8, #0]
 2:
+	str			s18, [x8, #0]
 	fmul		v0.4s, v0.4s, v18.4s[0]
 	fmul		v4.4s, v4.4s, v18.4s[0]
 
@@ -579,8 +579,8 @@ inner_edge_potrf_8x4_lib4:
 	ble			3f
 	fsqrt		s17, s17
 	fdiv		s18, s16, s17
-	str			s18, [x8, #4]
 4:
+	str			s18, [x8, #4]
 	fmul		v1.4s, v1.4s, v18.4s[0]
 	fmul		v5.4s, v5.4s, v18.4s[0]
 
@@ -594,8 +594,8 @@ inner_edge_potrf_8x4_lib4:
 	ble			5f
 	fsqrt		s17, s17
 	fdiv		s18, s16, s17
-	str			s18, [x8, #8]
 6:
+	str			s18, [x8, #8]
 	fmul		v2.4s, v2.4s, v18.4s[0]
 	fmul		v6.4s, v6.4s, v18.4s[0]
 
@@ -608,30 +608,30 @@ inner_edge_potrf_8x4_lib4:
 	fmls		v7.4s, v6.4s, v2.4s[3]
 	ins			v17.s[0], v3.s[3]
 	fcmpe		s17, #0
-	ble			5f
+	ble			7f
 	fsqrt		s17, s17
 	fdiv		s18, s16, s17
+8:
 	str			s18, [x8, #12]
-6:
 	fmul		v3.4s, v3.4s, v18.4s[0]
 	fmul		v7.4s, v7.4s, v18.4s[0]
 
 	b			0f
 
 1:
-	fmov		d0, xzr
+	fmov		d18, xzr
 	b			2b
 
 3:
-	fmov		d5, xzr
+	fmov		d18, xzr
 	b			4b
 
 5:
-	fmov		d10, xzr
+	fmov		d18, xzr
 	b			6b
 
 7:
-	fmov		d15, xzr
+	fmov		d18, xzr
 
 0:
 	
@@ -895,6 +895,8 @@ kernel_sgemm_nt_8x4_lib4:
 	mov	x0, #0
 
 	ret
+
+	.size	kernel_sgemm_nt_8x4_lib4, .-kernel_sgemm_nt_8x4_lib4
 
 
 
