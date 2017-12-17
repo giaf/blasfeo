@@ -666,11 +666,11 @@ inner_kernel_syrk_l_sub_nt_4x4_lib4:
 // x9   <- inv_diag_E
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DTRSM_RLT_INV_4X4_LIB4
+	.macro INNER_EDGE_TRSM_RLT_INV_4X4_LIB4
 #else
 	.align 4
-	.type inner_edge_dtrsm_rlt_inv_4x4_lib4, %function
-inner_edge_dtrsm_rlt_inv_4x4_lib4:
+	.type inner_edge_trsm_rlt_inv_4x4_lib4, %function
+inner_edge_trsm_rlt_inv_4x4_lib4:
 #endif
 	
 	// first column
@@ -717,7 +717,7 @@ inner_edge_dtrsm_rlt_inv_4x4_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_dtrsm_rlt_inv_4x4_lib4, .-inner_edge_dtrsm_rlt_inv_4x4_lib4
+	.size	inner_edge_trsm_rlt_inv_4x4_lib4, .-inner_edge_trsm_rlt_inv_4x4_lib4
 #endif
 #endif
 
@@ -736,11 +736,11 @@ inner_edge_dtrsm_rlt_inv_4x4_lib4:
 // x8   <- inv_diag_D
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DPOTRF_4X4_LIB4
+	.macro INNER_EDGE_POTRF_4X4_LIB4
 #else
 	.p2align 4
-	.type inner_edge_dpotrf_4x4_lib4, %function
-inner_edge_dpotrf_4x4_lib4:
+	.type inner_edge_potrf_4x4_lib4, %function
+inner_edge_potrf_4x4_lib4:
 #endif
 	
 	fmov		d16, 1.0e+0 // 1.0
@@ -787,11 +787,11 @@ inner_edge_dpotrf_4x4_lib4:
 	fmls		v7.2d, v5.2d, v5.2d[1]
 	ins			v17.d[0], v7.d[1]
 	fcmpe		d17, #0
-	ble			5f
+	ble			7f
 	fsqrt		d17, d17
 	fdiv		d18, d16, d17
 	str			d18, [x8, #24]
-6:
+8:
 	fmul		v7.2d, v7.2d, v18.2d[0]
 
 	b			0f
@@ -818,7 +818,7 @@ inner_edge_dpotrf_4x4_lib4:
 #else
 	ret
 
-	.size	inner_edge_dpotrf_4x4_lib4, .-inner_edge_dpotrf_4x4_lib4
+	.size	inner_edge_potrf_4x4_lib4, .-inner_edge_potrf_4x4_lib4
 #endif
 
 
@@ -1118,9 +1118,9 @@ kernel_dtrsm_nt_rl_inv_4x4_lib4:
 	mov		x9, x6 // inv_diag_E
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRSM_RLT_INV_4X4_LIB4
+	INNER_EDGE_TRSM_RLT_INV_4X4_LIB4
 #else
-	bl inner_edge_dtrsm_rlt_inv_4x4_lib4
+	bl inner_edge_trsm_rlt_inv_4x4_lib4
 #endif
 
 
@@ -1202,9 +1202,9 @@ kernel_dpotrf_nt_l_4x4_lib4:
 	mov		x8, x5 // inv_diag_E
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DPOTRF_4X4_LIB4
+	INNER_EDGE_POTRF_4X4_LIB4
 #else
-	bl inner_edge_dpotrf_4x4_lib4
+	bl inner_edge_potrf_4x4_lib4
 #endif
 
 

@@ -489,29 +489,29 @@ inner_edge_potrf_4x4_lib4:
 	fmls		v3.4s, v2.4s, v2.4s[3]
 	ins			v17.s[0], v3.s[3]
 	fcmpe		s17, #0
-	ble			5f
+	ble			7f
 	fsqrt		s17, s17
 	fdiv		s18, s16, s17
 	str			s18, [x8, #12]
-6:
+8:
 	fmul		v3.4s, v3.4s, v18.4s[0]
 
 	b			0f
 
 1:
-	fmov		s0, xzr
+	fmov		d0, xzr
 	b			2b
 
 3:
-	fmov		s5, xzr
+	fmov		d5, xzr
 	b			4b
 
 5:
-	fmov		s10, xzr
+	fmov		d10, xzr
 	b			6b
 
 7:
-	fmov		s15, xzr
+	fmov		d15, xzr
 
 0:
 	

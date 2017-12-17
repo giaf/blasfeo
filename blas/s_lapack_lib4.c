@@ -433,7 +433,33 @@ void spotrf_l_libstr(int m, struct s_strmat *sC, int ci, int cj, struct s_strmat
 	int i, j, l;
 
 	i = 0;
-#if defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	for(; i<m-7; i+=8)
+		{
+		j = 0;
+		for(; j<i; j+=4)
+			{
+//			kernel_strsm_nt_rl_inv_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &dD[j]);
+//			kernel_strsm_nt_rl_inv_4x4_lib4(j, &pD[(i+4)*sdd], &pD[j*sdd], &pC[j*ps+(i+4)*sdc], &pD[j*ps+(i+4)*sdd], &pD[j*ps+j*sdd], &dD[j]);
+			kernel_strsm_nt_rl_inv_8x4_lib4(j, &pD[i*sdd], sdd, &pD[j*sdd], &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, &pD[j*ps+j*sdd], &dD[j]);
+			}
+//		kernel_spotrf_nt_l_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &dD[j]);
+//		kernel_strsm_nt_rl_inv_4x4_lib4(j, &pD[(i+4)*sdd], &pD[j*sdd], &pC[j*ps+(i+4)*sdc], &pD[j*ps+(i+4)*sdd], &pD[j*ps+j*sdd], &dD[j]);
+		kernel_spotrf_nt_l_8x4_lib4(j, &pD[i*sdd], sdd, &pD[j*sdd], &pC[j*ps+j*sdc], sdc, &pD[j*ps+j*sdd], sdd, &dD[j]);
+		kernel_spotrf_nt_l_4x4_lib4(j+4, &pD[(i+4)*sdd], &pD[(j+4)*sdd], &pC[(j+4)*ps+(j+4)*sdc], &pD[(j+4)*ps+(j+4)*sdd], &dD[j+4]);
+		}
+	if(m>i)
+		{
+		if(m-i<=4)
+			{
+			goto left_4;
+			}
+		else
+			{
+			goto left_8;
+			}
+		}
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 #if 1
 	for(; i<m-11; i+=12)
 		{
@@ -532,7 +558,7 @@ void spotrf_l_libstr(int m, struct s_strmat *sC, int ci, int cj, struct s_strmat
 	return;
 #endif
 
-#if defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	left_8:
 	if(m-i==8)
 		{
