@@ -210,7 +210,7 @@ ifeq ($(REF_BLAS), NETLIB)
 CFLAGS  += -DREF_BLAS_NETLIB
 endif
 ifeq ($(REF_BLAS), MKL)
-CFLAGS  += -DREF_BLAS_MKL -m64 -I/opt/intel/mkl/include -DMKL_DIRECT_CALL_SEQ
+CFLAGS  += -DREF_BLAS_MKL -DMKL_DIRECT_CALL_SEQ -std=c99 -m64 -I/opt/intel/mkl/include
 endif
 ifeq ($(REF_BLAS), ATLAS)
 CFLAGS  += -DREF_BLAS_ATLAS

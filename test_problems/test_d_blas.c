@@ -599,10 +599,10 @@ int main()
 		int rep_in;
 		int nrep_in = 10;
 
-		double *A; d_zeros(&A, n, n);
-		double *B; d_zeros(&B, n, n);
-		double *C; d_zeros(&C, n, n);
-		double *M; d_zeros(&M, n, n);
+		double *A; d_zeros_align(&A, n, n);
+		double *B; d_zeros_align(&B, n, n);
+		double *C; d_zeros_align(&C, n, n);
+		double *M; d_zeros_align(&M, n, n);
 
 		char c_n = 'n';
 		char c_l = 'l';
@@ -706,7 +706,6 @@ int main()
 		double alpha = 1.0;
 		double beta = 0.0;
 
-		float time_hpmpc    = 1e15;
 		float time_blasfeo  = 1e15;
 		float time_blas     = 1e15;
 
@@ -747,12 +746,12 @@ int main()
 				dgemm_nn_24_24_24(alpha, sA.pA, sA.cn, sB.pA, sB.cn, beta, sC.pA, sC.cn, sD.pA, sD.cn);
 #endif
 
-				dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-//				dsyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//				dsyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				dsyrk_ln_mn_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 	//			dpotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-//				dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
+				dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
 	//			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 //				dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 	//			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
@@ -825,6 +824,7 @@ int main()
 
 			}
 
+//		d_print_mat(n, n, C, n);
 //		d_print_strmat(n, n, &sD, 0, 0);
 
 		float Gflops_max = flops_max * GHz_max;
@@ -835,9 +835,9 @@ int main()
 //		float flop_operation = 1*16.0*2*n; // kernel 4x4
 //		float flop_operation = 0.5*16.0*2*n; // kernel 2x4
 
-		float flop_operation = 2.0*n*n*n; // dgemm
+//		float flop_operation = 2.0*n*n*n; // dgemm
 //		float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
-//		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
+		float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //		float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //		float flop_operation = 4.0/3.0*n*n*n; // dgeqrf
 //		float flop_operation = 2.0*n*n; // dgemv dsymv

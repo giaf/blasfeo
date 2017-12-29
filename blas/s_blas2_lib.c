@@ -30,7 +30,11 @@
 #include <stdio.h>
 
 #if defined(LA_BLAS)
+#if defined(REF_BLAS_MKL)
+#include "mkl.h"
+#else
 #include "s_blas.h"
+#endif
 #endif
 
 #include "../include/blasfeo_common.h"

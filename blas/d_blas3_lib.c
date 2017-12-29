@@ -32,6 +32,8 @@
 #if defined(LA_BLAS)
 #if defined(REF_BLAS_BLIS)
 #include "d_blas_64.h"
+#elif defined(REF_BLAS_MKL)
+#include "mkl.h"
 #else
 #include "d_blas.h"
 #endif

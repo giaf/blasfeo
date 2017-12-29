@@ -196,10 +196,10 @@ int main()
 		int rep_in;
 		int nrep_in = 10;
 
-		float *A; s_zeros(&A, n, n);
-		float *B; s_zeros(&B, n, n);
-		float *C; s_zeros(&C, n, n);
-		float *M; s_zeros(&M, n, n);
+		float *A; s_zeros_align(&A, n, n);
+		float *B; s_zeros_align(&B, n, n);
+		float *C; s_zeros_align(&C, n, n);
+		float *M; s_zeros_align(&M, n, n);
 
 		char c_n = 'n';
 		char c_l = 'l';
@@ -303,11 +303,11 @@ int main()
 	//			kernel_sgemm_nn_8x8_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 	//			kernel_sgemm_nn_8x4_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 
-				sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				sgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-//				ssyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//				ssyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 	//			spotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-//				spotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
+				spotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
 	//			sgetr_libstr(n, n, &sA, 0, 0, &sB, 0, 0);
 	//			sgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
 	//			sgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
@@ -391,9 +391,9 @@ int main()
 //			float flop_operation = 2*16.0*2*n; // kernel 8x4
 //			float flop_operation = 1*16.0*2*n; // kernel 4x4
 
-			float flop_operation = 2.0*n*n*n; // dgemm
+//			float flop_operation = 2.0*n*n*n; // dgemm
 //			float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
-//			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
+			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
 //			float flop_operation = 2.0/3.0*n*n*n; // dgetrf
 //			float flop_operation = 2.0*n*n; // dgemv dsymv
 //			float flop_operation = 1.0*n*n; // dtrmv dtrsv
