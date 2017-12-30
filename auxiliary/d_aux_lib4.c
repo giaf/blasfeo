@@ -1564,7 +1564,7 @@ void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y)
 
 
 // return the memory size (in bytes) needed for a strmat
-int d_size_strmat(int m, int n)
+int blasfeo_memsize_dmat(int m, int n)
 	{
 	const int bs = 4;
 	int nc = D_NC;
@@ -1579,7 +1579,7 @@ int d_size_strmat(int m, int n)
 
 
 // return the memory size (in bytes) needed for the digonal of a strmat
-int d_size_diag_strmat(int m, int n)
+int blasfeo_memsize_diag_dmat(int m, int n)
 	{
 	const int bs = 4;
 	int nc = D_NC;
@@ -1592,7 +1592,7 @@ int d_size_diag_strmat(int m, int n)
 
 
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
-void d_create_strmat(int m, int n, struct blasfeo_dmat *sA, void *memory)
+void blasfeo_create_dmat(int m, int n, struct blasfeo_dmat *sA, void *memory)
 	{
 	const int bs = 4;
 	int nc = D_NC;
@@ -1617,7 +1617,7 @@ void d_create_strmat(int m, int n, struct blasfeo_dmat *sA, void *memory)
 
 
 // return memory size (in bytes) needed for a strvec
-int d_size_strvec(int m)
+int blasfeo_memsize_dvec(int m)
 	{
 	const int bs = 4;
 //	int nc = D_NC;
@@ -1630,7 +1630,7 @@ int d_size_strvec(int m)
 
 
 // create a vector structure for a vector of size m by using memory passed by a pointer
-void d_create_strvec(int m, struct blasfeo_dvec *sa, void *memory)
+void blasfeo_create_dvec(int m, struct blasfeo_dvec *sa, void *memory)
 	{
 	const int bs = 4;
 //	int nc = D_NC;
@@ -1648,7 +1648,7 @@ void d_create_strvec(int m, struct blasfeo_dvec *sa, void *memory)
 
 
 // convert a matrix into a matrix structure
-void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj)
+void blasfeo_pack_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj)
 	{
 
 	const int bs = 4;
@@ -1793,7 +1793,7 @@ void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA,
 
 
 // convert and transpose a matrix into a matrix structure
-void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj)
+void blasfeo_pack_tran_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj)
 	{
 
 	const int bs = 4;
@@ -1921,7 +1921,7 @@ void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct blasfeo_dmat
 
 
 // convert a vector into a vector structure
-void d_cvt_vec2strvec(int m, double *a, struct blasfeo_dvec *sa, int ai)
+void blasfeo_pack_dvec(int m, double *a, struct blasfeo_dvec *sa, int ai)
 	{
 	double *pa = sa->pa + ai;
 	int ii;
@@ -1933,7 +1933,7 @@ void d_cvt_vec2strvec(int m, double *a, struct blasfeo_dvec *sa, int ai)
 
 
 // convert a matrix structure into a matrix
-void d_cvt_strmat2mat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *A, int lda)
+void blasfeo_unpack_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *A, int lda)
 	{
 	const int bs = 4;
 	int sda = sA->cn;
@@ -2032,7 +2032,7 @@ void d_cvt_strmat2mat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, dou
 
 
 // convert and transpose a matrix structure into a matrix
-void d_cvt_tran_strmat2mat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *A, int lda)
+void blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *A, int lda)
 	{
 	const int bs = 4;
 	int sda = sA->cn;
@@ -2133,7 +2133,7 @@ void d_cvt_tran_strmat2mat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj
 
 
 // convert a vector structure into a vector
-void d_cvt_strvec2vec(int m, struct blasfeo_dvec *sa, int ai, double *a)
+void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sa, int ai, double *a)
 	{
 	double *pa = sa->pa + ai;
 	int ii;

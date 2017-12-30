@@ -88,29 +88,29 @@ int main()
 	//
 
 	struct blasfeo_smat sA;
-	s_allocate_strmat(n, n, &sA);
-	s_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
+	blasfeo_allocate_smat(n, n, &sA);
+	blasfeo_pack_smat(n, n, A, n, &sA, 0, 0);
 	s_print_strmat(n, n, &sA, 0, 0);
 
 	struct blasfeo_smat sB;
-	s_allocate_strmat(n, n, &sB);
-	s_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
+	blasfeo_allocate_smat(n, n, &sB);
+	blasfeo_pack_smat(n, n, B, n, &sB, 0, 0);
 	s_print_strmat(n, n, &sB, 0, 0);
 
 	struct blasfeo_smat sD;
-	s_allocate_strmat(n, n, &sD);
-	s_cvt_mat2strmat(n, n, D, n, &sD, 0, 0);
+	blasfeo_allocate_smat(n, n, &sD);
+	blasfeo_pack_smat(n, n, D, n, &sD, 0, 0);
 
 	struct blasfeo_svec sx;
-	s_allocate_strvec(n, &sx);
+	blasfeo_allocate_svec(n, &sx);
 	sx.pa[7] = 1.0;
 	s_print_tran_strvec(n, &sx, 0);
 
 	struct blasfeo_svec sz0;
-	s_allocate_strvec(n, &sz0);
+	blasfeo_allocate_svec(n, &sz0);
 
 	struct blasfeo_svec sz1;
-	s_allocate_strvec(n, &sz1);
+	blasfeo_allocate_svec(n, &sz1);
 
 	//
 	// tests
@@ -190,9 +190,9 @@ int main()
 	free(A);
 	free(B);
 	free(D);
-	s_free_strmat(&sA);
-	s_free_strmat(&sB);
-	s_free_strmat(&sD);
+	blasfeo_free_smat(&sA);
+	blasfeo_free_smat(&sB);
+	blasfeo_free_smat(&sD);
 
 	return 0;
 	

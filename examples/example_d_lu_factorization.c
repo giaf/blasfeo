@@ -97,42 +97,42 @@ int main()
 	//
 
 	// work space enough for 5 matrix structs for size n times n
-	int size_strmat = 5*d_size_strmat(n, n);
+	int size_strmat = 5*blasfeo_memsize_dmat(n, n);
 	void *memory_strmat; v_zeros_align(&memory_strmat, size_strmat);
 	char *ptr_memory_strmat = (char *) memory_strmat;
 
 	struct blasfeo_dmat sA;
-//	d_allocate_strmat(n, n, &sA);
-	d_create_strmat(n, n, &sA, ptr_memory_strmat);
+//	blasfeo_allocate_dmat(n, n, &sA);
+	blasfeo_create_dmat(n, n, &sA, ptr_memory_strmat);
 	ptr_memory_strmat += sA.memsize;
 	// convert from column major matrix to strmat
-	d_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
+	blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
 	printf("\nA = \n");
 	d_print_strmat(n, n, &sA, 0, 0);
 
 	struct blasfeo_dmat sB;
-//	d_allocate_strmat(n, n, &sB);
-	d_create_strmat(n, n, &sB, ptr_memory_strmat);
+//	blasfeo_allocate_dmat(n, n, &sB);
+	blasfeo_create_dmat(n, n, &sB, ptr_memory_strmat);
 	ptr_memory_strmat += sB.memsize;
 	// convert from column major matrix to strmat
-	d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
+	blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
 	printf("\nB = \n");
 	d_print_strmat(n, n, &sB, 0, 0);
 
 	struct blasfeo_dmat sI;
-//	d_allocate_strmat(n, n, &sI);
-	d_create_strmat(n, n, &sI, ptr_memory_strmat);
+//	blasfeo_allocate_dmat(n, n, &sI);
+	blasfeo_create_dmat(n, n, &sI, ptr_memory_strmat);
 	ptr_memory_strmat += sI.memsize;
 	// convert from column major matrix to strmat
 
 	struct blasfeo_dmat sD;
-//	d_allocate_strmat(n, n, &sD);
-	d_create_strmat(n, n, &sD, ptr_memory_strmat);
+//	blasfeo_allocate_dmat(n, n, &sD);
+	blasfeo_create_dmat(n, n, &sD, ptr_memory_strmat);
 	ptr_memory_strmat += sD.memsize;
 
 	struct blasfeo_dmat sLU;
-//	d_allocate_strmat(n, n, &sD);
-	d_create_strmat(n, n, &sLU, ptr_memory_strmat);
+//	blasfeo_allocate_dmat(n, n, &sD);
+	blasfeo_create_dmat(n, n, &sLU, ptr_memory_strmat);
 	ptr_memory_strmat += sLU.memsize;
 
 	dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
@@ -147,7 +147,7 @@ int main()
 	int_print_mat(1, n, ipiv, 1);
 
 #if 0 // solve P L U X = P B
-	d_cvt_mat2strmat(n, n, I, n, &sI, 0, 0);
+	blasfeo_pack_dmat(n, n, I, n, &sI, 0, 0);
 	printf("\nI = \n");
 	d_print_strmat(n, n, &sI, 0, 0);
 
@@ -163,9 +163,9 @@ int main()
 	d_print_strmat(n, n, &sD, 0, 0);
 
 	// convert from strmat to column major matrix
-	d_cvt_strmat2mat(n, n, &sD, 0, 0, D, n);
+	blasfeo_unpack_dmat(n, n, &sD, 0, 0, D, n);
 #else // solve X^T (P L U)^T = B^T P^T
-	d_cvt_tran_mat2strmat(n, n, I, n, &sI, 0, 0);
+	blasfeo_pack_tran_dmat(n, n, I, n, &sI, 0, 0);
 	printf("\nI' = \n");
 	d_print_strmat(n, n, &sI, 0, 0);
 
@@ -181,7 +181,7 @@ int main()
 	d_print_strmat(n, n, &sD, 0, 0);
 
 	// convert from strmat to column major matrix
-	d_cvt_tran_strmat2mat(n, n, &sD, 0, 0, D, n);
+	blasfeo_unpack_tran_dmat(n, n, &sD, 0, 0, D, n);
 #endif
 
 	// print matrix in column-major format
@@ -199,10 +199,10 @@ int main()
 	d_free(D);
 	d_free(I);
 	int_free(ipiv);
-//	d_free_strmat(&sA);
-//	d_free_strmat(&sB);
-//	d_free_strmat(&sD);
-//	d_free_strmat(&sI);
+//	blasfeo_free_dmat(&sA);
+//	blasfeo_free_dmat(&sB);
+//	blasfeo_free_dmat(&sD);
+//	blasfeo_free_dmat(&sI);
 	v_free_align(memory_strmat);
 
 	return 0;

@@ -238,25 +238,25 @@ int main()
 
 		// matrix struct
 #if 0
-		struct blasfeo_smat sA; s_allocate_strmat(n+4, n+4, &sA);
-		struct blasfeo_smat sB; s_allocate_strmat(n+4, n+4, &sB);
-		struct blasfeo_smat sC; s_allocate_strmat(n+4, n+4, &sC);
-		struct blasfeo_smat sD; s_allocate_strmat(n+4, n+4, &sD);
-		struct blasfeo_smat sE; s_allocate_strmat(n+4, n+4, &sE);
+		struct blasfeo_smat sA; blasfeo_allocate_smat(n+4, n+4, &sA);
+		struct blasfeo_smat sB; blasfeo_allocate_smat(n+4, n+4, &sB);
+		struct blasfeo_smat sC; blasfeo_allocate_smat(n+4, n+4, &sC);
+		struct blasfeo_smat sD; blasfeo_allocate_smat(n+4, n+4, &sD);
+		struct blasfeo_smat sE; blasfeo_allocate_smat(n+4, n+4, &sE);
 #else
-		struct blasfeo_smat sA; s_allocate_strmat(n, n, &sA);
-		struct blasfeo_smat sB; s_allocate_strmat(n, n, &sB);
-		struct blasfeo_smat sC; s_allocate_strmat(n, n, &sC);
-		struct blasfeo_smat sD; s_allocate_strmat(n, n, &sD);
-		struct blasfeo_smat sE; s_allocate_strmat(n, n, &sE);
+		struct blasfeo_smat sA; blasfeo_allocate_smat(n, n, &sA);
+		struct blasfeo_smat sB; blasfeo_allocate_smat(n, n, &sB);
+		struct blasfeo_smat sC; blasfeo_allocate_smat(n, n, &sC);
+		struct blasfeo_smat sD; blasfeo_allocate_smat(n, n, &sD);
+		struct blasfeo_smat sE; blasfeo_allocate_smat(n, n, &sE);
 #endif
-		struct blasfeo_svec sx; s_allocate_strvec(n, &sx);
-		struct blasfeo_svec sy; s_allocate_strvec(n, &sy);
-		struct blasfeo_svec sz; s_allocate_strvec(n, &sz);
+		struct blasfeo_svec sx; blasfeo_allocate_svec(n, &sx);
+		struct blasfeo_svec sy; blasfeo_allocate_svec(n, &sy);
+		struct blasfeo_svec sz; blasfeo_allocate_svec(n, &sz);
 
-		s_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
-		s_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
-		s_cvt_vec2strvec(n, x, &sx, 0);
+		blasfeo_pack_smat(n, n, A, n, &sA, 0, 0);
+		blasfeo_pack_smat(n, n, B, n, &sB, 0, 0);
+		blasfeo_pack_svec(n, x, &sx, 0);
 
 
 		// create matrix to pivot all the time
@@ -443,14 +443,14 @@ int main()
 		free(y2);
 		free(ipiv);
 		
-		s_free_strmat(&sA);
-		s_free_strmat(&sB);
-		s_free_strmat(&sC);
-		s_free_strmat(&sD);
-		s_free_strmat(&sE);
-		s_free_strvec(&sx);
-		s_free_strvec(&sy);
-		s_free_strvec(&sz);
+		blasfeo_free_smat(&sA);
+		blasfeo_free_smat(&sB);
+		blasfeo_free_smat(&sC);
+		blasfeo_free_smat(&sD);
+		blasfeo_free_smat(&sE);
+		blasfeo_free_svec(&sx);
+		blasfeo_free_svec(&sy);
+		blasfeo_free_svec(&sz);
 
 		}
 

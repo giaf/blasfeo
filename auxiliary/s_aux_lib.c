@@ -41,19 +41,19 @@
 #if defined(LA_REFERENCE) | defined(LA_BLAS)
 
 
-#define SIZE_STRMAT s_size_strmat
-#define SIZE_DIAG_STRMAT s_size_diag_strmat
-#define SIZE_STRVEC s_size_strvec
+#define SIZE_STRMAT blasfeo_memsize_smat
+#define SIZE_DIAG_STRMAT blasfeo_memsize_diag_smat
+#define SIZE_STRVEC blasfeo_memsize_svec
 
-#define CREATE_STRMAT s_create_strmat
-#define CREATE_STRVEC s_create_strvec
+#define CREATE_STRMAT blasfeo_create_smat
+#define CREATE_STRVEC blasfeo_create_svec
 
-#define CVT_MAT2STRMAT s_cvt_mat2strmat
-#define CVT_TRAN_MAT2STRMAT s_cvt_tran_mat2strmat
-#define CVT_VEC2STRVEC s_cvt_vec2strvec
-#define CVT_STRMAT2MAT s_cvt_strmat2mat
-#define CVT_TRAN_STRMAT2MAT s_cvt_tran_strmat2mat
-#define CVT_STRVEC2VEC s_cvt_strvec2vec
+#define CVT_MAT2STRMAT blasfeo_pack_smat
+#define CVT_TRAN_MAT2STRMAT blasfeo_pack_tran_smat
+#define CVT_VEC2STRVEC blasfeo_pack_svec
+#define CVT_STRMAT2MAT blasfeo_unpack_smat
+#define CVT_TRAN_STRMAT2MAT blasfeo_unpack_tran_smat
+#define CVT_STRVEC2VEC blasfeo_unpack_svec
 #define CAST_MAT2STRMAT s_cast_mat2strmat
 #define CAST_DIAG_MAT2STRMAT s_cast_diag_mat2strmat
 #define CAST_VEC2VECMAT s_cast_vec2vecmat

@@ -40,22 +40,22 @@ extern "C" {
 * d_aux_lib.c
 ************************************************/
 
-// returns the memory size (in bytes) needed for a strmat
-int s_size_strmat(int m, int n);
-// returns the memory size (in bytes) needed for the diagonal of a strmat
-int s_size_diag_strmat(int m, int n);
-// returns the memory size (in bytes) needed for a strvec
-int s_size_strvec(int m);
+// returns the memory size (in bytes) needed for a smat
+int blasfeo_memsize_smat(int m, int n);
+// returns the memory size (in bytes) needed for the diagonal of a smat
+int blasfeo_memsize_diag_smat(int m, int n);
+// returns the memory size (in bytes) needed for a svec
+int blasfeo_memsize_svec(int m);
 // create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
-void s_create_strmat(int m, int n, struct blasfeo_smat *sA, void *memory);
+void blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memory);
 // create a strvec for a vector of size m by using memory passed by a pointer (pointer is not updated)
-void s_create_strvec(int m, struct blasfeo_svec *sA, void *memory);
-void s_cvt_mat2strmat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
-void s_cvt_vec2strvec(int m, float *a, struct blasfeo_svec *sa, int ai);
-void s_cvt_tran_mat2strmat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
-void s_cvt_strmat2mat(int m, int n, struct blasfeo_smat *sA, int ai, int aj, float *A, int lda);
-void s_cvt_strvec2vec(int m, struct blasfeo_svec *sa, int ai, float *a);
-void s_cvt_tran_strmat2mat(int m, int n, struct blasfeo_smat *sA, int ai, int aj, float *A, int lda);
+void blasfeo_create_svec(int m, struct blasfeo_svec *sA, void *memory);
+void blasfeo_pack_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
+void blasfeo_pack_svec(int m, float *a, struct blasfeo_svec *sa, int ai);
+void blasfeo_pack_tran_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
+void blasfeo_unpack_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj, float *A, int lda);
+void blasfeo_unpack_svec(int m, struct blasfeo_svec *sa, int ai, float *a);
+void blasfeo_unpack_tran_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj, float *A, int lda);
 void s_cast_mat2strmat(float *A, struct blasfeo_smat *sA);
 void s_cast_diag_mat2strmat(float *dA, struct blasfeo_smat *sA);
 void s_cast_vec2vecmat(float *a, struct blasfeo_svec *sa);

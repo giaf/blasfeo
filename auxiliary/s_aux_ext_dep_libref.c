@@ -55,11 +55,11 @@
 #define STRVEC blasfeo_svec_ref
 
 
-#define ALLOCATE_STRMAT blasfeo_s_allocate_strmat_ref
-#define ALLOCATE_STRVEC blasfeo_s_allocate_strvec_ref
+#define ALLOCATE_STRMAT blasfeo_blasfeo_allocate_smat_ref
+#define ALLOCATE_STRVEC blasfeo_blasfeo_allocate_svec_ref
 
-#define FREE_STRMAT blasfeo_s_free_strmat_ref
-#define FREE_STRVEC blasfeo_s_free_strvec_ref
+#define FREE_STRMAT blasfeo_blasfeo_free_smat_ref
+#define FREE_STRVEC blasfeo_blasfeo_free_svec_ref
 
 #define PRINT_STRMAT blasfeo_s_print_strmat_ref
 #define PRINT_STRVEC blasfeo_s_print_strvec_ref

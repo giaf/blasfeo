@@ -39,21 +39,21 @@ extern "C" {
 
 
 // --- memory calculations
-int test_d_size_strmat(int m, int n);
-int test_d_size_diag_strmat(int m, int n);
-int test_d_size_strvec(int m);
+int test_blasfeo_memsize_dmat(int m, int n);
+int test_blasfeo_memsize_diag_dmat(int m, int n);
+int test_blasfeo_memsize_dvec(int m);
 
 // --- creation
-void test_d_create_strmat(int m, int n, struct blasfeo_dmat *sA, void *memory);
-void test_d_create_strvec(int m, struct blasfeo_dvec *sA, void *memory);
+void test_blasfeo_create_dmat(int m, int n, struct blasfeo_dmat *sA, void *memory);
+void test_blasfeo_create_dvec(int m, struct blasfeo_dvec *sA, void *memory);
 
 // --- conversion
-void test_d_cvt_mat2strmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj);
-void test_d_cvt_vec2strvec(int m, double *a, struct blasfeo_dvec *sa, int ai);
-void test_d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj);
-void test_d_cvt_strmat2mat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *A, int lda);
-void test_d_cvt_strvec2vec(int m, struct blasfeo_dvec *sa, int ai, double *a);
-void test_d_cvt_tran_strmat2mat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *A, int lda);
+void test_blasfeo_pack_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj);
+void test_blasfeo_pack_dvec(int m, double *a, struct blasfeo_dvec *sa, int ai);
+void test_blasfeo_pack_tran_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj);
+void test_blasfeo_unpack_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *A, int lda);
+void test_blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sa, int ai, double *a);
+void test_blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *A, int lda);
 
 // --- cast
 void test_d_cast_mat2strmat(double *A, struct blasfeo_dmat *sA);
@@ -187,11 +187,11 @@ void test_dgecpsc_libstr(int m, int n,
 
 // ext_dep
 
-void test_d_allocate_strmat(int m, int n, struct blasfeo_dmat *sA);
-void test_d_allocate_strvec(int m, struct blasfeo_dvec *sa);
+void test_blasfeo_allocate_dmat(int m, int n, struct blasfeo_dmat *sA);
+void test_blasfeo_allocate_dvec(int m, struct blasfeo_dvec *sa);
 
-void test_d_free_strmat(struct blasfeo_dmat *sA);
-void test_d_free_strvec(struct blasfeo_dvec *sa);
+void test_blasfeo_free_dmat(struct blasfeo_dmat *sA);
+void test_blasfeo_free_dvec(struct blasfeo_dvec *sa);
 
 void test_d_print_strmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 void test_d_print_strvec(int m, struct blasfeo_dvec *sa, int ai);

@@ -59,11 +59,11 @@
 #if defined(LA_BLAS) | defined(LA_REFERENCE)
 
 
-#define ALLOCATE_STRMAT d_allocate_strmat
-#define ALLOCATE_STRVEC d_allocate_strvec
+#define ALLOCATE_STRMAT blasfeo_allocate_dmat
+#define ALLOCATE_STRVEC blasfeo_allocate_dvec
 
-#define FREE_STRMAT d_free_strmat
-#define FREE_STRVEC d_free_strvec
+#define FREE_STRMAT blasfeo_free_dmat
+#define FREE_STRVEC blasfeo_free_dvec
 
 #define PRINT_STRMAT d_print_strmat
 #define PRINT_STRVEC d_print_strvec

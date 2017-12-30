@@ -27,20 +27,20 @@ int main()
 	d_print_mat(n, n, B, n);
 
 	struct blasfeo_dmat sA;
-	d_allocate_strmat(n, n, &sA);
-	d_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
+	blasfeo_allocate_dmat(n, n, &sA);
+	blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
 	d_print_strmat(n, n, &sA, 0, 0);
 
 	struct blasfeo_dmat sB;
-	d_allocate_strmat(n, n, &sB);
-	d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
+	blasfeo_allocate_dmat(n, n, &sB);
+	blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
 	d_print_strmat(n, n, &sB, 0, 0);
 
 	struct blasfeo_dmat sD;
-	d_allocate_strmat(n, n, &sD);
+	blasfeo_allocate_dmat(n, n, &sD);
 
 	struct blasfeo_dmat sC;
-	d_allocate_strmat(n, n, &sC);
+	blasfeo_allocate_dmat(n, n, &sC);
 
 	double alpha = 1.0;
 	double beta = 0.0;

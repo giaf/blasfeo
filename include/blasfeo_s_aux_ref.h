@@ -38,8 +38,8 @@ extern "C" {
 
 // expose reference BLASFEO for testing
 
-void blasfeo_s_create_strmat_ref(int m, int n, struct blasfeo_smat_ref *sA, void *memory);
-void blasfeo_s_cvt_mat2strmat_ref(int m, int n, float *A, int lda, struct blasfeo_smat_ref *sA, int ai, int aj);
+void blasfeo_blasfeo_create_smat_ref(int m, int n, struct blasfeo_smat_ref *sA, void *memory);
+void blasfeo_blasfeo_pack_smat_ref(int m, int n, float *A, int lda, struct blasfeo_smat_ref *sA, int ai, int aj);
 int blasfeo_s_memsize_strmat_ref(int m, int n);
 
 void blasfeo_sgecp_ref(int m, int n,\

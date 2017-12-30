@@ -60,28 +60,28 @@ void ddiareg_lib(int kmax, double reg, int offset, double *pD, int sdd);
 
 // --- memory calculations
 //
-// returns the memory size (in bytes) needed for a strmat
-int d_size_strmat(int m, int n); // TODO d_memsize_strmat
-// returns the memory size (in bytes) needed for the diagonal of a strmat
-int d_size_diag_strmat(int m, int n);
-// returns the memory size (in bytes) needed for a strvec
-int d_size_strvec(int m);
+// returns the memory size (in bytes) needed for a dmat
+int blasfeo_memsize_dmat(int m, int n);
+// returns the memory size (in bytes) needed for the diagonal of a dmat
+int blasfeo_memsize_diag_dmat(int m, int n);
+// returns the memory size (in bytes) needed for a dvec
+int blasfeo_memsize_dvec(int m);
 
 // --- creation
 //
 // create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
-void d_create_strmat(int m, int n, struct blasfeo_dmat *sA, void *memory);
+void blasfeo_create_dmat(int m, int n, struct blasfeo_dmat *sA, void *memory);
 // create a strvec for a vector of size m by using memory passed by a pointer (pointer is not updated)
-void d_create_strvec(int m, struct blasfeo_dvec *sA, void *memory);
+void blasfeo_create_dvec(int m, struct blasfeo_dvec *sA, void *memory);
 
 // --- conversion
 //
-void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj);
-void d_cvt_vec2strvec(int m, double *a, struct blasfeo_dvec *sa, int ai);
-void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj);
-void d_cvt_strmat2mat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *A, int lda);
-void d_cvt_strvec2vec(int m, struct blasfeo_dvec *sa, int ai, double *a);
-void d_cvt_tran_strmat2mat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *A, int lda);
+void blasfeo_pack_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj);
+void blasfeo_pack_dvec(int m, double *a, struct blasfeo_dvec *sa, int ai);
+void blasfeo_pack_tran_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj);
+void blasfeo_unpack_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *A, int lda);
+void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sa, int ai, double *a);
+void blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *A, int lda);
 
 // --- cast
 //

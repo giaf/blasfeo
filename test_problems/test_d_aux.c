@@ -101,7 +101,7 @@ SHOW_DEFINE(TARGET)
 	/* -------- instantiate blasfeo_dmat */
 
 	// compute memory size
-	int size_strmat = 2*d_size_strmat(n, n);
+	int size_strmat = 2*blasfeo_memsize_dmat(n, n);
 	int size_strmat_ref = 2*blasfeo_d_memsize_strmat_ref(n, n);
 	// inizilize void pointer
 	void *memory_strmat;
@@ -118,27 +118,27 @@ SHOW_DEFINE(TARGET)
 
 	// instantiate blasfeo_dmat
 	struct blasfeo_dmat sA;
-	d_create_strmat(n, n, &sA, ptr_memory_strmat);
+	blasfeo_create_dmat(n, n, &sA, ptr_memory_strmat);
 	ptr_memory_strmat += sA.memsize;
-	d_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
+	blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
 
 	struct blasfeo_dmat sB;
-	d_create_strmat(n, n, &sB, ptr_memory_strmat);
+	blasfeo_create_dmat(n, n, &sB, ptr_memory_strmat);
 	ptr_memory_strmat += sB.memsize;
-	d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
+	blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
 
 	// Testing comparison
 	// reference matrices, column major
 
 	struct blasfeo_dmat_ref rA;
-	blasfeo_d_create_strmat_ref(n, n, &rA, ptr_memory_strmat_ref);
+	blasfeo_blasfeo_create_dmat_ref(n, n, &rA, ptr_memory_strmat_ref);
 	ptr_memory_strmat_ref += rA.memsize;
-	blasfeo_d_cvt_mat2strmat_ref(n, n, A, n, &rA, 0, 0);
+	blasfeo_blasfeo_pack_dmat_ref(n, n, A, n, &rA, 0, 0);
 
 	struct blasfeo_dmat_ref rB;
-	blasfeo_d_create_strmat_ref(n, n, &rB, ptr_memory_strmat_ref);
+	blasfeo_blasfeo_create_dmat_ref(n, n, &rB, ptr_memory_strmat_ref);
 	ptr_memory_strmat_ref += sB.memsize;
-	blasfeo_d_cvt_mat2strmat_ref(n, n, B, n, &rB, 0, 0);
+	blasfeo_blasfeo_pack_dmat_ref(n, n, B, n, &rB, 0, 0);
 
 
 	// -------- Print matrices

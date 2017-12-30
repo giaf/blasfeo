@@ -73,13 +73,13 @@ void s_print_e_tran_mat(int row, int col, float *A, int lda);
 
 #ifdef BLASFEO_COMMON
 // create a strmat for a matrix of size m*n by dynamically allocating memory
-void s_allocate_strmat(int m, int n, struct blasfeo_smat *sA);
+void blasfeo_allocate_smat(int m, int n, struct blasfeo_smat *sA);
 // create a strvec for a vector of size m by dynamically allocating memory
-void s_allocate_strvec(int m, struct blasfeo_svec *sa);
-// free the memory allocated by d_allocate_strmat
-void s_free_strmat(struct blasfeo_smat *sA);
-// free the memory allocated by d_allocate_strvec
-void s_free_strvec(struct blasfeo_svec *sa);
+void blasfeo_allocate_svec(int m, struct blasfeo_svec *sa);
+// free the memory allocated by blasfeo_allocate_dmat
+void blasfeo_free_smat(struct blasfeo_smat *sA);
+// free the memory allocated by blasfeo_allocate_dvec
+void blasfeo_free_svec(struct blasfeo_svec *sa);
 // print a strmat
 void s_print_strmat(int m, int n, struct blasfeo_smat *sA, int ai, int aj);
 // print in exponential notation a strmat

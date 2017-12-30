@@ -56,11 +56,11 @@
 #define PRINT_E_MAT s_print_e_mat
 #define PRINT_E_TRAN_MAT s_print_e_tran_mat
 
-#define ALLOCATE_STRMAT s_allocate_strmat
-#define ALLOCATE_STRVEC s_allocate_strvec
+#define ALLOCATE_STRMAT blasfeo_allocate_smat
+#define ALLOCATE_STRVEC blasfeo_allocate_svec
 
-#define FREE_STRMAT s_free_strmat
-#define FREE_STRVEC s_free_strvec
+#define FREE_STRMAT blasfeo_free_smat
+#define FREE_STRVEC blasfeo_free_svec
 
 #define PRINT_STRMAT s_print_strmat
 #define PRINT_STRVEC s_print_strvec
