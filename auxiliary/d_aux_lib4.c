@@ -1555,7 +1555,7 @@ void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y)
 
 
 /*
- * XMAT interface (General to specific interface)
+ * STRMAT interface (General to specific interface)
  *
  */
 

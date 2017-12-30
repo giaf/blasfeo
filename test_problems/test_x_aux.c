@@ -115,7 +115,7 @@ SHOW_DEFINE(TARGET)
 	/* AUX */
 
 	/* ----------- memory */
-	/* printf("----------- XMAT memory\n\n"); */
+	/* printf("----------- STRMAT memory\n\n"); */
 	/* for (int i=0; i<12; i++) */
 	/* { */
 		/* printf("%d: %f, %f\n", i, sA.pA[i], A[i]); */

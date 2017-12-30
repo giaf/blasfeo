@@ -44,8 +44,8 @@
 
 #define REAL double
 
-#define XMAT blasfeo_dmat
-#define XVEC blasfeo_dvec
+#define STRMAT blasfeo_dmat
+#define STRVEC blasfeo_dvec
 
 #define GEMV_N_LIBSTR dgemv_n_libstr
 #define GEMV_NT_LIBSTR dgemv_nt_libstr

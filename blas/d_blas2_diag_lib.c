@@ -36,7 +36,7 @@
 
 #define REAL double
 
-#define XVEC blasfeo_dvec
+#define STRVEC blasfeo_dvec
 
 #define GEMV_DIAG_LIBSTR dgemv_diag_libstr
 

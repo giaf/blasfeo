@@ -33,7 +33,7 @@
 
 
 // dgemm with A diagonal matrix (stored as strvec)
-void GEMM_L_DIAG_LIBSTR(int m, int n, REAL alpha, struct XVEC *sA, int ai, struct XMAT *sB, int bi, int bj, double beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void GEMM_L_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRVEC *sA, int ai, struct STRMAT *sB, int bi, int bj, double beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -96,7 +96,7 @@ void GEMM_L_DIAG_LIBSTR(int m, int n, REAL alpha, struct XVEC *sA, int ai, struc
 
 
 // dgemm with B diagonal matrix (stored as strvec)
-void GEMM_R_DIAG_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sB, int bi, double beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void GEMM_R_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sB, int bi, double beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;

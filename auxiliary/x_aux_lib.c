@@ -28,7 +28,7 @@
 
 
 // return memory size (in bytes) needed for a strmat
-int SIZE_XMAT(int m, int n)
+int SIZE_STRMAT(int m, int n)
 	{
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
 	int size = (m*n+tmp)*sizeof(REAL);
@@ -38,7 +38,7 @@ int SIZE_XMAT(int m, int n)
 
 
 // return memory size (in bytes) needed for the diagonal of a strmat
-int SIZE_DIAG_XMAT(int m, int n)
+int SIZE_DIAG_STRMAT(int m, int n)
 	{
 	int size = 0;
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
@@ -49,7 +49,7 @@ int SIZE_DIAG_XMAT(int m, int n)
 
 
 // return memory size (in bytes) needed for a strvec
-int SIZE_XVEC(int m)
+int SIZE_STRVEC(int m)
 	{
 	int size = m*sizeof(REAL);
 	return size;
@@ -58,7 +58,7 @@ int SIZE_XVEC(int m)
 
 
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
-void CREATE_XMAT(int m, int n, struct XMAT *sA, void *memory)
+void CREATE_STRMAT(int m, int n, struct STRMAT *sA, void *memory)
 	{
 	sA->m = m;
 	sA->n = n;
@@ -76,7 +76,7 @@ void CREATE_XMAT(int m, int n, struct XMAT *sA, void *memory)
 
 
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
-void CREATE_XVEC(int m, struct XVEC *sa, void *memory)
+void CREATE_STRVEC(int m, struct STRVEC *sa, void *memory)
 	{
 	sa->m = m;
 	REAL *ptr = (REAL *) memory;
@@ -89,7 +89,7 @@ void CREATE_XVEC(int m, struct XVEC *sa, void *memory)
 
 
 // convert a matrix into a matrix structure
-void CVT_MAT2XMAT(int m, int n, REAL *A, int lda, struct XMAT *sA, int ai, int aj)
+void CVT_MAT2STRMAT(int m, int n, REAL *A, int lda, struct STRMAT *sA, int ai, int aj)
 	{
 	int ii, jj;
 	int lda2 = sA->m;
@@ -115,7 +115,7 @@ void CVT_MAT2XMAT(int m, int n, REAL *A, int lda, struct XMAT *sA, int ai, int a
 
 
 // convert and transpose a matrix into a matrix structure
-void CVT_TRAN_MAT2XMAT(int m, int n, REAL *A, int lda, struct XMAT *sA, int ai, int aj)
+void CVT_TRAN_MAT2STRMAT(int m, int n, REAL *A, int lda, struct STRMAT *sA, int ai, int aj)
 	{
 	int ii, jj;
 	int lda2 = sA->m;
@@ -141,7 +141,7 @@ void CVT_TRAN_MAT2XMAT(int m, int n, REAL *A, int lda, struct XMAT *sA, int ai, 
 
 
 // convert a vector into a vector structure
-void CVT_VEC2XVEC(int m, REAL *a, struct XVEC *sa, int ai)
+void CVT_VEC2STRVEC(int m, REAL *a, struct STRVEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;
 	int ii;
@@ -153,7 +153,7 @@ void CVT_VEC2XVEC(int m, REAL *a, struct XVEC *sa, int ai)
 
 
 // convert a matrix structure into a matrix
-void CVT_XMAT2MAT(int m, int n, struct XMAT *sA, int ai, int aj, REAL *A, int lda)
+void CVT_STRMAT2MAT(int m, int n, struct STRMAT *sA, int ai, int aj, REAL *A, int lda)
 	{
 	int ii, jj;
 	int lda2 = sA->m;
@@ -179,7 +179,7 @@ void CVT_XMAT2MAT(int m, int n, struct XMAT *sA, int ai, int aj, REAL *A, int ld
 
 
 // convert and transpose a matrix structure into a matrix
-void CVT_TRAN_XMAT2MAT(int m, int n, struct XMAT *sA, int ai, int aj, REAL *A, int lda)
+void CVT_TRAN_STRMAT2MAT(int m, int n, struct STRMAT *sA, int ai, int aj, REAL *A, int lda)
 	{
 	int ii, jj;
 	int lda2 = sA->m;
@@ -205,7 +205,7 @@ void CVT_TRAN_XMAT2MAT(int m, int n, struct XMAT *sA, int ai, int aj, REAL *A, i
 
 
 // convert a vector structure into a vector
-void CVT_XVEC2VEC(int m, struct XVEC *sa, int ai, REAL *a)
+void CVT_STRVEC2VEC(int m, struct STRVEC *sa, int ai, REAL *a)
 	{
 	REAL *pa = sa->pa + ai;
 	int ii;
@@ -217,7 +217,7 @@ void CVT_XVEC2VEC(int m, struct XVEC *sa, int ai, REAL *a)
 
 
 // cast a matrix into a matrix structure
-void CAST_MAT2XMAT(REAL *A, struct XMAT *sA)
+void CAST_MAT2STRMAT(REAL *A, struct STRMAT *sA)
 	{
 	sA->pA = A;
 	return;
@@ -226,7 +226,7 @@ void CAST_MAT2XMAT(REAL *A, struct XMAT *sA)
 
 
 // cast a matrix into the diagonal of a matrix structure
-void CAST_DIAG_MAT2XMAT(REAL *dA, struct XMAT *sA)
+void CAST_DIAG_MAT2STRMAT(REAL *dA, struct STRMAT *sA)
 	{
 	sA->dA = dA;
 	return;
@@ -235,7 +235,7 @@ void CAST_DIAG_MAT2XMAT(REAL *dA, struct XMAT *sA)
 
 
 // cast a vector into a vector structure
-void CAST_VEC2VECMAT(REAL *a, struct XVEC *sa)
+void CAST_VEC2VECMAT(REAL *a, struct STRVEC *sa)
 	{
 	sa->pa = a;
 	return;
@@ -244,7 +244,7 @@ void CAST_VEC2VECMAT(REAL *a, struct XVEC *sa)
 
 
 // copy a generic strmat into a generic strmat
-void GECP_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sC, int ci, int cj)
+void GECP_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
@@ -272,7 +272,7 @@ void GECP_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sC,
 
 
 // scale a generic strmat
-void GESC_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj)
+void GESC_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
@@ -298,7 +298,7 @@ void GESC_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj)
 
 
 // scale an generic strmat and copy into generic strmat
-void GECPSC_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj)
+void GECPSC_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj)
 	{
 
 	int lda = sA->m;

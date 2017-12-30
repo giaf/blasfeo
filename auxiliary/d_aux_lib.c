@@ -41,29 +41,29 @@
 
 
 #define REAL double
-#define XMAT blasfeo_dmat
-#define XVEC blasfeo_dvec
+#define STRMAT blasfeo_dmat
+#define STRVEC blasfeo_dvec
 
 
 #if defined(LA_REFERENCE) | defined(LA_BLAS)
 
 
-#define SIZE_XMAT d_size_strmat
-#define SIZE_DIAG_XMAT d_size_diag_strmat
-#define SIZE_XVEC d_size_strvec
+#define SIZE_STRMAT d_size_strmat
+#define SIZE_DIAG_STRMAT d_size_diag_strmat
+#define SIZE_STRVEC d_size_strvec
 
-#define CREATE_XMAT d_create_strmat
-#define CREATE_XVEC d_create_strvec
+#define CREATE_STRMAT d_create_strmat
+#define CREATE_STRVEC d_create_strvec
 
-#define CVT_MAT2XMAT d_cvt_mat2strmat
-#define CVT_TRAN_MAT2XMAT d_cvt_tran_mat2strmat
-#define CVT_VEC2XVEC d_cvt_vec2strvec
-#define CVT_XMAT2MAT d_cvt_strmat2mat
-#define CVT_TRAN_XMAT2MAT d_cvt_tran_strmat2mat
-#define CVT_XVEC2VEC d_cvt_strvec2vec
+#define CVT_MAT2STRMAT d_cvt_mat2strmat
+#define CVT_TRAN_MAT2STRMAT d_cvt_tran_mat2strmat
+#define CVT_VEC2STRVEC d_cvt_vec2strvec
+#define CVT_STRMAT2MAT d_cvt_strmat2mat
+#define CVT_TRAN_STRMAT2MAT d_cvt_tran_strmat2mat
+#define CVT_STRVEC2VEC d_cvt_strvec2vec
 
-#define CAST_MAT2XMAT d_cast_mat2strmat
-#define CAST_DIAG_MAT2XMAT d_cast_diag_mat2strmat
+#define CAST_MAT2STRMAT d_cast_mat2strmat
+#define CAST_DIAG_MAT2STRMAT d_cast_diag_mat2strmat
 #define CAST_VEC2VECMAT d_cast_vec2vecmat
 
 

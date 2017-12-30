@@ -26,7 +26,7 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-void GEMV_DIAG_LIBSTR(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void GEMV_DIAG_LIBSTR(int m, REAL alpha, struct STRVEC *sA, int ai, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
 	{
 	if(m<=0)
 		return;

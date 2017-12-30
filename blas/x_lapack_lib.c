@@ -33,7 +33,7 @@
 
 
 // dpotrf
-void POTRF_L_LIBSTR(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void POTRF_L_LIBSTR(int m, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	if(m<=0)
 		return;
@@ -162,7 +162,7 @@ void POTRF_L_LIBSTR(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int
 
 
 // dpotrf
-void POTRF_L_MN_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void POTRF_L_MN_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -291,7 +291,7 @@ void POTRF_L_MN_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMA
 
 
 // dsyrk dpotrf
-void SYRK_POTRF_LN_LIBSTR(int m, int n, int k, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void SYRK_POTRF_LN_LIBSTR(int m, int n, int k, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	int ii, jj, kk;
 	REAL
@@ -448,7 +448,7 @@ void SYRK_POTRF_LN_LIBSTR(int m, int n, int k, struct XMAT *sA, int ai, int aj, 
 
 
 // cholesky factorization with pivot
-void PSTRF_L_LIBSTR(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv)
+void PSTRF_L_LIBSTR(int m, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, int *ipiv)
 	{
 	if(m<=0)
 		return;
@@ -572,7 +572,7 @@ void GETF2_NOPIVOT(int m, int n, REAL *A, int lda, REAL *dA)
 
 
 // dgetrf without pivoting
-void GETRF_NOPIVOT_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void GETRF_NOPIVOT_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	int ii, jj, kk;
 //	int i1 = 1;
@@ -836,7 +836,7 @@ void GETRF_NOPIVOT_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct 
 
 
 // dgetrf pivoting
-void GETRF_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv)
+void GETRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, int *ipiv)
 	{
 	int ii, i0, jj, kk, ip, itmp0, itmp1;
 	REAL dtmp, dmax;
@@ -1217,7 +1217,7 @@ int GEQRF_WORK_SIZE_LIBSTR(int m, int n)
 
 
 
-void GEQRF_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int di, int dj, void *work)
+void GEQRF_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1480,7 +1480,7 @@ int GELQF_WORK_SIZE_LIBSTR(int m, int n)
 
 
 
-void GELQF_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int di, int dj, void *work)
+void GELQF_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1742,7 +1742,7 @@ void GELQF_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD
 
 
 // dpotrf
-void POTRF_L_LIBSTR(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void POTRF_L_LIBSTR(int m, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	if(m<=0)
 		return;
@@ -1792,7 +1792,7 @@ void POTRF_L_LIBSTR(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int
 
 
 // dpotrf
-void POTRF_L_MN_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void POTRF_L_MN_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1847,7 +1847,7 @@ void POTRF_L_MN_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMA
 
 
 // dsyrk dpotrf
-void SYRK_POTRF_LN_LIBSTR(int m, int n, int k, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void SYRK_POTRF_LN_LIBSTR(int m, int n, int k, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1971,7 +1971,7 @@ static void GETF2_NOPIVOT(int m, int n, REAL *A, int lda)
 
 
 // dgetrf without pivoting
-void GETRF_NOPIVOT_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void GETRF_NOPIVOT_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	// TODO with custom level 2 LAPACK + level 3 BLAS
 	if(m<=0 | n<=0)
@@ -2009,7 +2009,7 @@ void GETRF_NOPIVOT_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct 
 
 
 // dgetrf pivoting
-void GETRF_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv)
+void GETRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, int *ipiv)
 	{
 	// TODO with custom level 2 LAPACK + level 3 BLAS
 	if(m<=0 | n<=0)
@@ -2076,7 +2076,7 @@ int GEQRF_WORK_SIZE_LIBSTR(int m, int n)
 
 
 
-void GEQRF_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
+void GEQRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -2146,7 +2146,7 @@ int GELQF_WORK_SIZE_LIBSTR(int m, int n)
 
 
 
-void GELQF_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
+void GELQF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;

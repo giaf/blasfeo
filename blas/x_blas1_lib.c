@@ -32,7 +32,7 @@
 
 
 
-void AXPY_LIBSTR(int m, REAL alpha, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void AXPY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
 	{
 	if(m<=0)
 		return;
@@ -53,7 +53,7 @@ void AXPY_LIBSTR(int m, REAL alpha, struct XVEC *sx, int xi, struct XVEC *sy, in
 	return;
 	}
 
-void AXPBY_LIBSTR(int m, REAL alpha, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void AXPBY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
 	{
 	if(m<=0)
 		return;
@@ -77,7 +77,7 @@ void AXPBY_LIBSTR(int m, REAL alpha, struct XVEC *sx, int xi, REAL beta, struct 
 
 
 // multiply two vectors
-void VECMULACC_LIBSTR(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void VECMULACC_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
 	{
 	if(m<=0)
 		return;
@@ -103,7 +103,7 @@ void VECMULACC_LIBSTR(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, s
 
 
 // multiply two vectors and compute dot product
-REAL VECMULDOT_LIBSTR(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+REAL VECMULDOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
 	{
 	if(m<=0)
 		return 0.0;
@@ -132,7 +132,7 @@ REAL VECMULDOT_LIBSTR(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, s
 
 
 // compute dot product of two vectors
-REAL DOT_LIBSTR(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi)
+REAL DOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi)
 	{
 	if(m<=0)
 		return 0.0;
@@ -185,7 +185,7 @@ void ROTG_LIBSTR(REAL a, REAL b, REAL *c, REAL *s)
 
 
 // apply plane rotation to the aj0 and aj1 columns of A at row index ai
-void COLROT_LIBSTR(int m, struct XMAT *sA, int ai, int aj0, int aj1, REAL c, REAL s)
+void COLROT_LIBSTR(int m, struct STRMAT *sA, int ai, int aj0, int aj1, REAL c, REAL s)
 	{
 	int lda = sA->m;
 	REAL *px = sA->pA + ai + aj0*lda;
@@ -204,7 +204,7 @@ void COLROT_LIBSTR(int m, struct XMAT *sA, int ai, int aj0, int aj1, REAL c, REA
 
 
 // apply plane rotation to the ai0 and ai1 rows of A at column index aj
-void ROWROT_LIBSTR(int m, struct XMAT *sA, int ai0, int ai1, int aj, REAL c, REAL s)
+void ROWROT_LIBSTR(int m, struct STRMAT *sA, int ai0, int ai1, int aj, REAL c, REAL s)
 	{
 	int lda = sA->m;
 	REAL *px = sA->pA + ai0 + aj*lda;
@@ -226,7 +226,7 @@ void ROWROT_LIBSTR(int m, struct XMAT *sA, int ai0, int ai1, int aj, REAL c, REA
 
 
 
-void AXPY_LIBSTR(int m, REAL alpha, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void AXPY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
 	{
 	if(m<=0)
 		return;
@@ -241,7 +241,7 @@ void AXPY_LIBSTR(int m, REAL alpha, struct XVEC *sx, int xi, struct XVEC *sy, in
 	}
 
 
-void AXPBY_LIBSTR(int m, REAL alpha, struct XVEC *sx, REAL beta, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void AXPBY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, REAL beta, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
 	{
 	if(m<=0)
 		return;
@@ -258,7 +258,7 @@ void AXPBY_LIBSTR(int m, REAL alpha, struct XVEC *sx, REAL beta, int xi, struct 
 
 
 // multiply two vectors and compute dot product
-REAL VECMULDOT_LIBSTR(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+REAL VECMULDOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
 	{
 	if(m<=0)
 		return 0.0;
@@ -279,7 +279,7 @@ REAL VECMULDOT_LIBSTR(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, s
 
 
 // compute dot product of two vectors
-REAL DOT_LIBSTR(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi)
+REAL DOT_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi)
 	{
 	if(m<=0)
 		return 0.0;
@@ -314,7 +314,7 @@ void ROTG_LIBSTR(REAL a, REAL b, REAL *c, REAL *s)
 
 
 // apply plane rotation to the aj0 and aj1 columns of A at row index ai
-void COLROT_LIBSTR(int m, struct XMAT *sA, int ai, int aj0, int aj1, REAL c, REAL s)
+void COLROT_LIBSTR(int m, struct STRMAT *sA, int ai, int aj0, int aj1, REAL c, REAL s)
 	{
 	int lda = sA->m;
 	REAL *px = sA->pA + ai + aj0*lda;
@@ -327,7 +327,7 @@ void COLROT_LIBSTR(int m, struct XMAT *sA, int ai, int aj0, int aj1, REAL c, REA
 
 
 // apply plane rotation to the ai0 and ai1 rows of A at column index aj
-void ROWROT_LIBSTR(int m, struct XMAT *sA, int ai0, int ai1, int aj, REAL c, REAL s)
+void ROWROT_LIBSTR(int m, struct STRMAT *sA, int ai0, int ai1, int aj, REAL c, REAL s)
 	{
 	int lda = sA->m;
 	REAL *px = sA->pA + ai0 + aj*lda;

@@ -41,25 +41,25 @@
 
 
 #define REAL float
-#define XMAT blasfeo_smat_ref
-#define XVEC blasfeo_svec_ref
+#define STRMAT blasfeo_smat_ref
+#define STRVEC blasfeo_svec_ref
 
 
-#define SIZE_XMAT blasfeo_s_memsize_strmat_ref
-#define SIZE_DIAG_XMAT blasfeo_s_memsize_diag_strmat_ref
-#define SIZE_XVEC blasfeo_s_memsize_strvec_ref
+#define SIZE_STRMAT blasfeo_s_memsize_strmat_ref
+#define SIZE_DIAG_STRMAT blasfeo_s_memsize_diag_strmat_ref
+#define SIZE_STRVEC blasfeo_s_memsize_strvec_ref
 
-#define CREATE_XMAT blasfeo_s_create_strmat_ref
-#define CREATE_XVEC blasfeo_s_create_strvec_ref
+#define CREATE_STRMAT blasfeo_s_create_strmat_ref
+#define CREATE_STRVEC blasfeo_s_create_strvec_ref
 
-#define CVT_MAT2XMAT blasfeo_s_cvt_mat2strmat_ref
-#define CVT_TRAN_MAT2XMAT blasfeo_s_cvt_tran_mat2strmat_ref
-#define CVT_VEC2XVEC blasfeo_s_cvt_vec2strvec_ref
-#define CVT_XMAT2MAT blasfeo_s_cvt_strmat2mat_ref
-#define CVT_TRAN_XMAT2MAT blasfeo_s_cvt_tran_strmat2mat_ref
-#define CVT_XVEC2VEC blasfeo_s_cvt_strvec2vec_ref
-#define CAST_MAT2XMAT blasfeo_s_cast_mat2strmat_ref
-#define CAST_DIAG_MAT2XMAT blasfeo_s_cast_diag_mat2strmat_ref
+#define CVT_MAT2STRMAT blasfeo_s_cvt_mat2strmat_ref
+#define CVT_TRAN_MAT2STRMAT blasfeo_s_cvt_tran_mat2strmat_ref
+#define CVT_VEC2STRVEC blasfeo_s_cvt_vec2strvec_ref
+#define CVT_STRMAT2MAT blasfeo_s_cvt_strmat2mat_ref
+#define CVT_TRAN_STRMAT2MAT blasfeo_s_cvt_tran_strmat2mat_ref
+#define CVT_STRVEC2VEC blasfeo_s_cvt_strvec2vec_ref
+#define CAST_MAT2STRMAT blasfeo_s_cast_mat2strmat_ref
+#define CAST_DIAG_MAT2STRMAT blasfeo_s_cast_diag_mat2strmat_ref
 #define CAST_VEC2VECMAT blasfeo_s_cast_vec2vecmat_ref
 
 #define GECP_LIBSTR blasfeo_sgecp_ref

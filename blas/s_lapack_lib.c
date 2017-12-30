@@ -47,8 +47,8 @@
 
 #define REAL float
 
-#define XMAT blasfeo_smat
-#define XVEC blasfeo_svec
+#define STRMAT blasfeo_smat
+#define STRVEC blasfeo_svec
 
 #define GELQF_LIBSTR sgelqf_libstr
 #define GELQF_WORK_SIZE_LIBSTR sgelqf_work_size_libstr

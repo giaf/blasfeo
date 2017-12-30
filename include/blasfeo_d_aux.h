@@ -53,7 +53,7 @@ void ddiain_sqrt_lib(int kmax, double *x, int offset, double *pD, int sdd);
 void ddiareg_lib(int kmax, double reg, int offset, double *pD, int sdd);
 
 /*
- * Data format: XMAT
+ * Data format: STRMAT
  *
  */
 

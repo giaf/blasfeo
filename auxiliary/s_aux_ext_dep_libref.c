@@ -51,27 +51,27 @@
 
 
 #define REAL float
-#define XMAT blasfeo_smat_ref
-#define XVEC blasfeo_svec_ref
+#define STRMAT blasfeo_smat_ref
+#define STRVEC blasfeo_svec_ref
 
 
-#define ALLOCATE_XMAT blasfeo_s_allocate_strmat_ref
-#define ALLOCATE_XVEC blasfeo_s_allocate_strvec_ref
+#define ALLOCATE_STRMAT blasfeo_s_allocate_strmat_ref
+#define ALLOCATE_STRVEC blasfeo_s_allocate_strvec_ref
 
-#define FREE_XMAT blasfeo_s_free_strmat_ref
-#define FREE_XVEC blasfeo_s_free_strvec_ref
+#define FREE_STRMAT blasfeo_s_free_strmat_ref
+#define FREE_STRVEC blasfeo_s_free_strvec_ref
 
-#define PRINT_XMAT blasfeo_s_print_strmat_ref
-#define PRINT_XVEC blasfeo_s_print_strvec_ref
-#define PRINT_TRAN_XVEC blasfeo_s_print_tran_strvec_ref
+#define PRINT_STRMAT blasfeo_s_print_strmat_ref
+#define PRINT_STRVEC blasfeo_s_print_strvec_ref
+#define PRINT_TRAN_STRVEC blasfeo_s_print_tran_strvec_ref
 
-#define PRINT_TO_FILE_XMAT blasfeo_s_print_to_file_strmat_ref
-#define PRINT_TO_FILE_XVEC blasfeo_s_print_to_file_strvec_ref
-#define PRINT_TO_FILE_TRAN_XVEC blasfeo_s_print_to_file_tran_strvec_ref
+#define PRINT_TO_FILE_STRMAT blasfeo_s_print_to_file_strmat_ref
+#define PRINT_TO_FILE_STRVEC blasfeo_s_print_to_file_strvec_ref
+#define PRINT_TO_FILE_TRAN_STRVEC blasfeo_s_print_to_file_tran_strvec_ref
 
-#define PRINT_E_XMAT blasfeo_s_print_e_strmat_ref
-#define PRINT_E_XVEC blasfeo_s_print_e_strvec_ref
-#define PRINT_E_TRAN_XVEC blasfeo_s_print_e_tran_strvec_ref
+#define PRINT_E_STRMAT blasfeo_s_print_e_strmat_ref
+#define PRINT_E_STRVEC blasfeo_s_print_e_strvec_ref
+#define PRINT_E_TRAN_STRVEC blasfeo_s_print_e_tran_strvec_ref
 
 #include "x_aux_ext_dep_lib0.c"
 

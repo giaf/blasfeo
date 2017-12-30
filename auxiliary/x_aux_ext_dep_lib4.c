@@ -31,7 +31,7 @@
 
 
 // create a matrix structure for a matrix of size m*n by dynamically allocating the memory
-void ALLOCATE_XMAT(int m, int n, struct XMAT *sA)
+void ALLOCATE_STRMAT(int m, int n, struct STRMAT *sA)
 	{
 	const int ps = PS;
 	int nc = D_NC;
@@ -53,7 +53,7 @@ void ALLOCATE_XMAT(int m, int n, struct XMAT *sA)
 
 
 // free memory of a matrix structure
-void FREE_XMAT(struct XMAT *sA)
+void FREE_STRMAT(struct STRMAT *sA)
 	{
 	FREE_ALIGN(sA->pA);
 	FREE_ALIGN(sA->dA);
@@ -63,7 +63,7 @@ void FREE_XMAT(struct XMAT *sA)
 
 
 // create a vector structure for a vector of size m by dynamically allocating the memory
-void ALLOCATE_XVEC(int m, struct XVEC *sa)
+void ALLOCATE_STRVEC(int m, struct STRVEC *sa)
 	{
 	const int ps = PS;
 //	int nc = D_NC;
@@ -79,7 +79,7 @@ void ALLOCATE_XVEC(int m, struct XVEC *sa)
 
 
 // free memory of a matrix structure
-void FREE_XVEC(struct XVEC *sa)
+void FREE_STRVEC(struct STRVEC *sa)
 	{
 	FREE_ALIGN(sa->pa);
 	return;
@@ -88,7 +88,7 @@ void FREE_XVEC(struct XVEC *sa)
 
 
 // print a matrix structure
-void PRINT_XMAT(int m, int n, struct XMAT *sA, int ai, int aj)
+void PRINT_STRMAT(int m, int n, struct STRMAT *sA, int ai, int aj)
 	{
 	const int ps = PS;
 	int sda = sA->cn;
@@ -140,7 +140,7 @@ void PRINT_XMAT(int m, int n, struct XMAT *sA, int ai, int aj)
 
 
 // print a vector structure
-void PRINT_XVEC(int m, struct XVEC *sa, int ai)
+void PRINT_STRVEC(int m, struct STRVEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;
 	PRINT_MAT(m, 1, pa, m);
@@ -150,7 +150,7 @@ void PRINT_XVEC(int m, struct XVEC *sa, int ai)
 
 
 // print the transposed of a vector structure
-void PRINT_TRAN_XVEC(int m, struct XVEC *sa, int ai)
+void PRINT_TRAN_STRVEC(int m, struct STRVEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;
 	PRINT_MAT(1, m, pa, 1);
@@ -160,7 +160,7 @@ void PRINT_TRAN_XVEC(int m, struct XVEC *sa, int ai)
 
 
 // print a matrix structure
-void PRINT_TO_FILE_XMAT(FILE * file, int m, int n, struct XMAT *sA, int ai, int aj)
+void PRINT_TO_FILE_STRMAT(FILE * file, int m, int n, struct STRMAT *sA, int ai, int aj)
 	{
 	const int ps = PS;
 	int sda = sA->cn;
@@ -212,7 +212,7 @@ void PRINT_TO_FILE_XMAT(FILE * file, int m, int n, struct XMAT *sA, int ai, int 
 
 
 // print a vector structure
-void PRINT_TO_FILE_XVEC(FILE * file, int m, struct XVEC *sa, int ai)
+void PRINT_TO_FILE_STRVEC(FILE * file, int m, struct STRVEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;
 	PRINT_TO_FILE_MAT(file, m, 1, pa, m);
@@ -222,7 +222,7 @@ void PRINT_TO_FILE_XVEC(FILE * file, int m, struct XVEC *sa, int ai)
 
 
 // print the transposed of a vector structure
-void PRINT_TO_FILE_TRAN_XVEC(FILE * file, int m, struct XVEC *sa, int ai)
+void PRINT_TO_FILE_TRAN_STRVEC(FILE * file, int m, struct STRVEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;
 	PRINT_TO_FILE_MAT(file, 1, m, pa, 1);
@@ -232,7 +232,7 @@ void PRINT_TO_FILE_TRAN_XVEC(FILE * file, int m, struct XVEC *sa, int ai)
 
 
 // print a matrix structure
-void PRINT_E_XMAT(int m, int n, struct XMAT *sA, int ai, int aj)
+void PRINT_E_STRMAT(int m, int n, struct STRMAT *sA, int ai, int aj)
 	{
 	const int ps = PS;
 	int sda = sA->cn;
@@ -284,7 +284,7 @@ void PRINT_E_XMAT(int m, int n, struct XMAT *sA, int ai, int aj)
 
 
 // print a vector structure
-void PRINT_E_XVEC(int m, struct XVEC *sa, int ai)
+void PRINT_E_STRVEC(int m, struct STRVEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;
 	PRINT_E_MAT(m, 1, pa, m);
@@ -294,7 +294,7 @@ void PRINT_E_XVEC(int m, struct XVEC *sa, int ai)
 
 
 // print the transposed of a vector structure
-void PRINT_E_TRAN_XVEC(int m, struct XVEC *sa, int ai)
+void PRINT_E_TRAN_STRVEC(int m, struct STRVEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;
 	PRINT_E_MAT(1, m, pa, 1);
