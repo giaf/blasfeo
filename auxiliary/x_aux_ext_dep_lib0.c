@@ -39,7 +39,7 @@ void ALLOCATE_STRMAT(int m, int n, struct STRMAT *sA)
 	ZEROS(&(sA->pA), sA->m, sA->n);
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
 	ZEROS(&(sA->dA), tmp, 1);
-	sA->memory_size = (m*n+tmp)*sizeof(REAL);
+	sA->memsize = (m*n+tmp)*sizeof(REAL);
 	return;
 	}
 
@@ -60,7 +60,7 @@ void ALLOCATE_STRVEC(int m, struct STRVEC *sa)
 	{
 	sa->m = m;
 	ZEROS(&(sa->pa), sa->m, 1);
-	sa->memory_size = m*sizeof(REAL);
+	sa->memsize = m*sizeof(REAL);
 	return;
 	}
 

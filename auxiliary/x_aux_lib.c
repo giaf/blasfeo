@@ -69,7 +69,7 @@ void CREATE_STRMAT(int m, int n, struct STRMAT *sA, void *memory)
 	sA->dA = ptr;
 	ptr += tmp;
 	sA->use_dA = 0;
-	sA->memory_size = (m*n+tmp)*sizeof(REAL);
+	sA->memsize = (m*n+tmp)*sizeof(REAL);
 	return;
 	}
 
@@ -82,7 +82,7 @@ void CREATE_STRVEC(int m, struct STRVEC *sa, void *memory)
 	REAL *ptr = (REAL *) memory;
 	sa->pa = ptr;
 //	ptr += m * n;
-	sa->memory_size = m*sizeof(REAL);
+	sa->memsize = m*sizeof(REAL);
 	return;
 	}
 

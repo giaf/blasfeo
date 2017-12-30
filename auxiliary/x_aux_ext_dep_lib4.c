@@ -46,7 +46,7 @@ void ALLOCATE_STRMAT(int m, int n, struct STRMAT *sA)
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
 	ZEROS_ALIGN(&(sA->dA), tmp, 1);
 	sA->use_dA = 0;
-	sA->memory_size = (pm*cn+tmp)*sizeof(REAL);
+	sA->memsize = (pm*cn+tmp)*sizeof(REAL);
 	return;
 	}
 
@@ -72,7 +72,7 @@ void ALLOCATE_STRVEC(int m, struct STRVEC *sa)
 	int pm = (m+ps-1)/ps*ps;
 	sa->pm = pm;
 	ZEROS_ALIGN(&(sa->pa), sa->pm, 1);
-	sa->memory_size = pm*sizeof(REAL);
+	sa->memsize = pm*sizeof(REAL);
 	return;
 	}
 

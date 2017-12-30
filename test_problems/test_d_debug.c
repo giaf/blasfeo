@@ -122,7 +122,7 @@ int main()
 	struct blasfeo_dmat sA;
 //	d_allocate_strmat(n, n, &sA);
 	d_create_strmat(n, n, &sA, ptr_memory_strmat);
-	ptr_memory_strmat += sA.memory_size;
+	ptr_memory_strmat += sA.memsize;
 	d_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
 //	d_cast_mat2strmat(A, &sA);
 	d_print_strmat(n, n, &sA, 0, 0);
@@ -130,25 +130,25 @@ int main()
 	struct blasfeo_dmat sB;
 //	d_allocate_strmat(n, n, &sB);
 	d_create_strmat(n, n, &sB, ptr_memory_strmat);
-	ptr_memory_strmat += sB.memory_size;
+	ptr_memory_strmat += sB.memsize;
 	d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
 	d_print_strmat(n, n, &sB, 0, 0);
 
 	struct blasfeo_dmat sC;
 //	d_allocate_strmat(n, n, &sC);
 	d_create_strmat(n, n, &sC, ptr_memory_strmat);
-	ptr_memory_strmat += sC.memory_size;
+	ptr_memory_strmat += sC.memsize;
 
 	struct blasfeo_dmat sD;
 //	d_allocate_strmat(n, n, &sD);
 	d_create_strmat(n, n, &sD, ptr_memory_strmat);
-	ptr_memory_strmat += sD.memory_size;
+	ptr_memory_strmat += sD.memsize;
 	d_cvt_mat2strmat(n, n, D, n, &sD, 0, 0);
 
 	struct blasfeo_dmat sE;
 //	d_allocate_strmat(n, n, &sE);
 	d_create_strmat(n, n, &sE, ptr_memory_strmat);
-	ptr_memory_strmat += sE.memory_size;
+	ptr_memory_strmat += sE.memsize;
 
 	struct blasfeo_dvec sx_n;
 	d_allocate_strvec(n, &sx_n);

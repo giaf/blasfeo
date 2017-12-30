@@ -1221,8 +1221,8 @@ int s_size_strmat(int m, int n)
 	int pm = (m+bs-1)/bs*bs;
 	int cn = (n+nc-1)/nc*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
-	int memory_size = (pm*cn+tmp)*sizeof(float);
-	return memory_size;
+	int memsize = (pm*cn+tmp)*sizeof(float);
+	return memsize;
 	}
 
 
@@ -1234,8 +1234,8 @@ int s_size_diag_strmat(int m, int n)
 	int nc = S_NC;
 	int al = bs*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
-	int memory_size = tmp*sizeof(float);
-	return memory_size;
+	int memsize = tmp*sizeof(float);
+	return memsize;
 	}
 
 
@@ -1259,7 +1259,7 @@ void s_create_strmat(int m, int n, struct blasfeo_smat *sA, void *memory)
 	sA->dA = ptr;
 	ptr += tmp;
 	sA->use_dA = 0;
-	sA->memory_size = (pm*cn+tmp)*sizeof(float);
+	sA->memsize = (pm*cn+tmp)*sizeof(float);
 	return;
 	}
 
@@ -1272,8 +1272,8 @@ int s_size_strvec(int m)
 //	int nc = S_NC;
 //	int al = bs*nc;
 	int pm = (m+bs-1)/bs*bs;
-	int memory_size = pm*sizeof(float);
-	return memory_size;
+	int memsize = pm*sizeof(float);
+	return memsize;
 	}
 
 
@@ -1290,7 +1290,7 @@ void s_create_strvec(int m, struct blasfeo_svec *sa, void *memory)
 	float *ptr = (float *) memory;
 	sa->pa = ptr;
 //	ptr += pm;
-	sa->memory_size = pm*sizeof(float);
+	sa->memsize = pm*sizeof(float);
 	return;
 	}
 

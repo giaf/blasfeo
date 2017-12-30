@@ -52,7 +52,7 @@ struct blasfeo_dmat
 	double *pA; // pointer to a pm*pn array of doubles, the first is aligned to cache line size
 	double *dA; // pointer to a min(m,n) (or max???) array of doubles
 	int use_dA; // flag to tell if dA can be used
-	int memory_size; // size of needed memory
+	int memsize; // size of needed memory
 	};
 
 struct blasfeo_smat
@@ -64,7 +64,7 @@ struct blasfeo_smat
 	float *pA; // pointer to a pm*pn array of floats, the first is aligned to cache line size
 	float *dA; // pointer to a min(m,n) (or max???) array of floats
 	int use_dA; // flag to tell if dA can be used
-	int memory_size; // size of needed memory
+	int memsize; // size of needed memory
 	};
 
 // vector structure
@@ -73,7 +73,7 @@ struct blasfeo_dvec
 	int m; // size
 	int pm; // packed size
 	double *pa; // pointer to a pm array of doubles, the first is aligned to cache line size
-	int memory_size; // size of needed memory
+	int memsize; // size of needed memory
 	};
 
 struct blasfeo_svec
@@ -81,7 +81,7 @@ struct blasfeo_svec
 	int m; // size
 	int pm; // packed size
 	float *pa; // pointer to a pm array of floats, the first is aligned to cache line size
-	int memory_size; // size of needed memory
+	int memsize; // size of needed memory
 	};
 
 #define DMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[((ai)-((ai)&(D_PS-1)))*(sA)->cn+(aj)*D_PS+((ai)&(D_PS-1))])
@@ -99,7 +99,7 @@ struct blasfeo_dmat
 	double *pA; // pointer to a m*n array of doubles
 	double *dA; // pointer to a min(m,n) (or max???) array of doubles
 	int use_dA; // flag to tell if dA can be used
-	int memory_size; // size of needed memory
+	int memsize; // size of needed memory
 	};
 
 struct blasfeo_smat
@@ -109,7 +109,7 @@ struct blasfeo_smat
 	float *pA; // pointer to a m*n array of floats
 	float *dA; // pointer to a min(m,n) (or max???) array of floats
 	int use_dA; // flag to tell if dA can be used
-	int memory_size; // size of needed memory
+	int memsize; // size of needed memory
 	};
 
 // vector structure
@@ -117,14 +117,14 @@ struct blasfeo_dvec
 	{
 	int m; // size
 	double *pa; // pointer to a m array of doubles, the first is aligned to cache line size
-	int memory_size; // size of needed memory
+	int memsize; // size of needed memory
 	};
 
 struct blasfeo_svec
 	{
 	int m; // size
 	float *pa; // pointer to a m array of floats, the first is aligned to cache line size
-	int memory_size; // size of needed memory
+	int memsize; // size of needed memory
 	};
 
 #define DMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
@@ -150,7 +150,7 @@ struct blasfeo_dmat_ref
 	double *pA; // pointer to a m*n array of doubles
 	double *dA; // pointer to a min(m,n) (or max???) array of doubles
 	int use_dA; // flag to tell if dA can be used
-	int memory_size; // size of needed memory
+	int memsize; // size of needed memory
 	};
 
 struct blasfeo_smat_ref
@@ -160,7 +160,7 @@ struct blasfeo_smat_ref
 	float *pA; // pointer to a m*n array of floats
 	float *dA; // pointer to a min(m,n) (or max???) array of floats
 	int use_dA; // flag to tell if dA can be used
-	int memory_size; // size of needed memory
+	int memsize; // size of needed memory
 	};
 
 // vector structure
@@ -168,14 +168,14 @@ struct blasfeo_dvec_ref
 	{
 	int m; // size
 	double *pa; // pointer to a m array of doubles, the first is aligned to cache line size
-	int memory_size; // size of needed memory
+	int memsize; // size of needed memory
 	};
 
 struct blasfeo_svec_ref
 	{
 	int m; // size
 	float *pa; // pointer to a m array of floats, the first is aligned to cache line size
-	int memory_size; // size of needed memory
+	int memsize; // size of needed memory
 	};
 
 #define MATEL_REF(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])

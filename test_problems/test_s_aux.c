@@ -114,12 +114,12 @@ SHOW_DEFINE(TARGET)
 	// instantiate blasfeo_smat
 	struct blasfeo_smat sA;
 	s_create_strmat(n, n, &sA, ptr_memory_strmat);
-	ptr_memory_strmat += sA.memory_size;
+	ptr_memory_strmat += sA.memsize;
 	s_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
 
 	struct blasfeo_smat sB;
 	s_create_strmat(n, n, &sB, ptr_memory_strmat);
-	ptr_memory_strmat += sB.memory_size;
+	ptr_memory_strmat += sB.memsize;
 	s_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
 
 	// Testing comparison
@@ -127,12 +127,12 @@ SHOW_DEFINE(TARGET)
 
 	struct blasfeo_smat_ref rA;
 	blasfeo_s_create_strmat_ref(n, n, &rA, ptr_memory_strmat_ref);
-	ptr_memory_strmat_ref += rA.memory_size;
+	ptr_memory_strmat_ref += rA.memsize;
 	blasfeo_s_cvt_mat2strmat_ref(n, n, A, n, &rA, 0, 0);
 
 	struct blasfeo_smat_ref rB;
 	blasfeo_s_create_strmat_ref(n, n, &rB, ptr_memory_strmat_ref);
-	ptr_memory_strmat_ref += sB.memory_size;
+	ptr_memory_strmat_ref += sB.memsize;
 	blasfeo_s_cvt_mat2strmat_ref(n, n, B, n, &rB, 0, 0);
 
 
