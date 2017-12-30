@@ -19,8 +19,8 @@ The currently supported compter architectures (TARGET) are:
 
 The optimized linear algebra kernels are currently provided for OS_LINUX (x86_64 64-bit, ARMv8A 64-bit, ARMv7A 32-bit), OS_WINDOWS (x86_64 64-bit) and OS_MAC (x86_64 64-bit).
 
-BLASFEO employes structures to describe matrices (d_strmat) and vectors (d_strvec), defined in include/blasfeo_common.h.
-The actual implementation of d_strmat and d_strvec depends on the LA and TARGET choice.
+BLASFEO employes structures to describe matrices (blasfeo_dmat) and vectors (blasfeo_dvec), defined in include/blasfeo_common.h.
+The actual implementation of blasfeo_dmat and blasfeo_dvec depends on the LA and TARGET choice.
 
 More information about BLASFEO can be found in the ArXiv paper at the URL
 https://arxiv.org/abs/1704.02457
