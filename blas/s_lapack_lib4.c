@@ -406,7 +406,7 @@ void sgetrf_nn_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *
 
 
 // dpotrf
-void spotrf_l_libstr(int m, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+void spotrf_l_libstr(int m, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(m<=0)
@@ -705,7 +705,7 @@ void spotrf_l_libstr(int m, struct s_strmat *sC, int ci, int cj, struct s_strmat
 
 
 // dpotrf
-void spotrf_l_mn_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+void spotrf_l_mn_libstr(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)
@@ -793,7 +793,7 @@ void spotrf_l_mn_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struc
 
 
 // dsyrk dpotrf
-void ssyrk_spotrf_ln_libstr(int m, int n, int k, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+void ssyrk_spotrf_ln_libstr(int m, int n, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
@@ -821,7 +821,7 @@ void ssyrk_spotrf_ln_libstr(int m, int n, int k, struct s_strmat *sA, int ai, in
 
 
 // dgetrf without pivoting
-void sgetrf_nopivot_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+void sgetrf_nopivot_libstr(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 	if(ci!=0 | di!=0)
 		{
@@ -846,7 +846,7 @@ void sgetrf_nopivot_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, st
 
 
 // dgetrf pivoting
-void sgetrf_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj, int *ipiv)
+void sgetrf_libstr(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, int *ipiv)
 	{
 	if(ci!=0 | di!=0)
 		{
@@ -881,7 +881,7 @@ int sgeqrf_work_size_libstr(int m, int n)
 
 
 
-void sgeqrf_libstr(int m, int n, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj, void *work)
+void sgeqrf_libstr(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;

@@ -48,8 +48,8 @@
 
 #define REAL float
 
-#define STRMAT s_strmat
-#define STRVEC s_strvec
+#define XMAT blasfeo_smat
+#define XVEC blasfeo_svec
 
 #define AXPY_LIBSTR saxpy_libstr
 #define AXPBY_LIBSTR saxpby_libstr

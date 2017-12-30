@@ -463,7 +463,7 @@ void strsm_nn_lu_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, fl
 
 
 // dgemm nt
-void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+void sgemm_nt_libstr(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(m<=0 | n<=0)
@@ -568,7 +568,7 @@ void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 
 
 // dgemm nn
-void sgemm_nn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+void sgemm_nn_libstr(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 	if(m<=0 || n<=0)
 		return;
@@ -593,7 +593,7 @@ void sgemm_nn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 
 
 // dtrsm_nn_llu
-void strsm_llnu_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
+void strsm_llnu_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
@@ -615,7 +615,7 @@ void strsm_llnu_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, i
 
 
 // dtrsm_nn_lun
-void strsm_lunn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
+void strsm_lunn_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
@@ -656,7 +656,7 @@ void strsm_lunn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, i
 
 
 // dtrsm_right_lower_transposed_notunit
-void strsm_rltn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
+void strsm_rltn_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
@@ -735,7 +735,7 @@ void strsm_rltn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, i
 
 
 // dtrsm_right_lower_transposed_unit
-void strsm_rltu_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
+void strsm_rltu_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
@@ -757,7 +757,7 @@ void strsm_rltu_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, i
 
 
 // dtrsm_right_upper_transposed_notunit
-void strsm_rutn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
+void strsm_rutn_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
@@ -798,7 +798,7 @@ void strsm_rutn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, i
 
 
 // dtrmm_right_upper_transposed_notunit (B, i.e. the first matrix, is triangular !!!)
-void strmm_rutn_libstr(int m, int n, float alpha, struct s_strmat *sB, int bi, int bj, struct s_strmat *sA, int ai, int aj, struct s_strmat *sD, int di, int dj)
+void strmm_rutn_libstr(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | di!=0)
 		{
@@ -819,7 +819,7 @@ void strmm_rutn_libstr(int m, int n, float alpha, struct s_strmat *sB, int bi, i
 
 
 // dtrmm_right_lower_nottransposed_notunit (B, i.e. the first matrix, is triangular !!!)
-void strmm_rlnn_libstr(int m, int n, float alpha, struct s_strmat *sB, int bi, int bj, struct s_strmat *sA, int ai, int aj, struct s_strmat *sD, int di, int dj)
+void strmm_rlnn_libstr(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	const int bs = 4;
@@ -909,7 +909,7 @@ void strmm_rlnn_libstr(int m, int n, float alpha, struct s_strmat *sB, int bi, i
 
 
 
-void ssyrk_ln_libstr(int m, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+void ssyrk_ln_libstr(int m, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(m<=0)
@@ -970,7 +970,7 @@ void ssyrk_ln_libstr(int m, int k, float alpha, struct s_strmat *sA, int ai, int
 
 
 
-void ssyrk_ln_mn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+void ssyrk_ln_mn_libstr(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)

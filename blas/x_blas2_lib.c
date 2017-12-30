@@ -32,7 +32,7 @@
 
 
 
-void GEMV_N_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+void GEMV_N_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL 
@@ -108,7 +108,7 @@ void GEMV_N_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 
 
 
-void GEMV_T_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+void GEMV_T_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL 
@@ -152,7 +152,7 @@ void GEMV_T_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 
 
 // TODO optimize !!!!!
-void GEMV_NT_LIBSTR(int m, int n, REAL alpha_n, REAL alpha_t, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx_n, int xi_n, struct STRVEC *sx_t, int xi_t, REAL beta_n, REAL beta_t, struct STRVEC *sy_n, int yi_n, struct STRVEC *sy_t, int yi_t, struct STRVEC *sz_n, int zi_n, struct STRVEC *sz_t, int zi_t)
+void GEMV_NT_LIBSTR(int m, int n, REAL alpha_n, REAL alpha_t, struct XMAT *sA, int ai, int aj, struct XVEC *sx_n, int xi_n, struct XVEC *sx_t, int xi_t, REAL beta_n, REAL beta_t, struct XVEC *sy_n, int yi_n, struct XVEC *sy_t, int yi_t, struct XVEC *sz_n, int zi_n, struct XVEC *sz_t, int zi_t)
 	{
 	int ii, jj;
 	REAL
@@ -189,7 +189,7 @@ void GEMV_NT_LIBSTR(int m, int n, REAL alpha_n, REAL alpha_t, struct STRMAT *sA,
 
 
 // TODO optimize !!!!!
-void SYMV_L_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+void SYMV_L_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
@@ -218,7 +218,7 @@ void SYMV_L_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 
 
 
-void TRMV_LNN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_LNN_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
@@ -270,7 +270,7 @@ void TRMV_LNN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STR
 
 
 	
-void TRMV_LTN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_LTN_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
@@ -316,7 +316,7 @@ void TRMV_LTN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STR
 
 
 
-void TRMV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_UNN_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
@@ -402,7 +402,7 @@ void TRMV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRMV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_UTN_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
@@ -446,7 +446,7 @@ void TRMV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LNN_MN_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0 | n==0)
 		return;
@@ -593,7 +593,7 @@ void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 
 
 
-void TRSV_LTN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LTN_MN_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -680,7 +680,7 @@ void TRSV_LTN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 
 
 
-void TRSV_LNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LNN_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -757,7 +757,7 @@ void TRSV_LNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LNU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LNU_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -815,7 +815,7 @@ void TRSV_LNU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LTN_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -897,7 +897,7 @@ void TRSV_LTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LTU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LTU_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -960,7 +960,7 @@ void TRSV_LTU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_UNN_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1042,7 +1042,7 @@ void TRSV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_UTN_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1123,7 +1123,7 @@ void TRSV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void GEMV_N_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+void GEMV_N_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1143,7 +1143,7 @@ void GEMV_N_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 
 
 
-void GEMV_T_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+void GEMV_T_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1163,7 +1163,7 @@ void GEMV_T_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 
 
 
-void GEMV_NT_LIBSTR(int m, int n, REAL alpha_n, REAL alpha_t, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx_n, int xi_n, struct STRVEC *sx_t, int xi_t, REAL beta_n, REAL beta_t, struct STRVEC *sy_n, int yi_n, struct STRVEC *sy_t, int yi_t, struct STRVEC *sz_n, int zi_n, struct STRVEC *sz_t, int zi_t)
+void GEMV_NT_LIBSTR(int m, int n, REAL alpha_n, REAL alpha_t, struct XMAT *sA, int ai, int aj, struct XVEC *sx_n, int xi_n, struct XVEC *sx_t, int xi_t, REAL beta_n, REAL beta_t, struct XVEC *sy_n, int yi_n, struct XVEC *sy_t, int yi_t, struct XVEC *sz_n, int zi_n, struct XVEC *sz_t, int zi_t)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1188,7 +1188,7 @@ void GEMV_NT_LIBSTR(int m, int n, REAL alpha_n, REAL alpha_t, struct STRMAT *sA,
 
 
 
-void SYMV_L_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+void SYMV_L_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1212,7 +1212,7 @@ void SYMV_L_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 
 
 
-void TRMV_LNN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_LNN_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1237,7 +1237,7 @@ void TRMV_LNN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STR
 
 
 
-void TRMV_LTN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_LTN_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1261,7 +1261,7 @@ void TRMV_LTN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STR
 
 
 
-void TRMV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_UNN_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1282,7 +1282,7 @@ void TRMV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRMV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_UTN_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1303,7 +1303,7 @@ void TRMV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LNN_MN_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0 | n==0)
 		return;
@@ -1346,7 +1346,7 @@ void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 
 
 
-void TRSV_LTN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LTN_MN_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1389,7 +1389,7 @@ void TRSV_LTN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 
 
 
-void TRSV_LNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LNN_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1429,7 +1429,7 @@ void TRSV_LNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LNU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LNU_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1469,7 +1469,7 @@ void TRSV_LNU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LTN_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1509,7 +1509,7 @@ void TRSV_LTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LTU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LTU_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1549,7 +1549,7 @@ void TRSV_LTU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_UNN_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1589,7 +1589,7 @@ void TRSV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_UTN_LIBSTR(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;

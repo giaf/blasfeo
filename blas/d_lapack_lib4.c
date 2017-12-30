@@ -566,7 +566,7 @@ void dlauum_dpotrf_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *
 
 
 // dpotrf
-void dpotrf_l_libstr(int m, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void dpotrf_l_libstr(int m, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0)
@@ -768,7 +768,7 @@ void dpotrf_l_libstr(int m, struct d_strmat *sC, int ci, int cj, struct d_strmat
 
 
 // dpotrf
-void dpotrf_l_mn_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void dpotrf_l_mn_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)
@@ -1038,7 +1038,7 @@ void dpotrf_l_mn_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struc
 
 
 // dsyrk dpotrf
-void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)
@@ -1316,7 +1316,7 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 
 
 // dgetrf without pivoting
-void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void dgetrf_nopivot_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	if(ci!=0 | di!=0)
 		{
@@ -1340,7 +1340,7 @@ void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, st
 
 
 // dgetrf pivoting
-void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, int *ipiv)
+void dgetrf_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv)
 	{
 	if(ci!=0 | di!=0)
 		{
@@ -2455,7 +2455,7 @@ int dgeqrf_work_size_libstr(int m, int n)
 
 
 
-void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, void *v_work)
+void dgeqrf_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *v_work)
 	{
 	char *work = (char *) v_work;
 	if(m<=0 | n<=0)
@@ -2535,7 +2535,7 @@ int dgelqf_work_size_libstr(int m, int n)
 
 
 
-void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, void *work)
+void dgelqf_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;

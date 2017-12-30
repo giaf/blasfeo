@@ -37,8 +37,8 @@
 
 #define REAL float
 
-#define STRMAT s_strmat
-#define STRVEC s_strvec
+#define XMAT blasfeo_smat
+#define XVEC blasfeo_svec
 
 #define GEMM_L_DIAG_LIBSTR sgemm_l_diag_libstr
 #define GEMM_R_DIAG_LIBSTR sgemm_r_diag_libstr

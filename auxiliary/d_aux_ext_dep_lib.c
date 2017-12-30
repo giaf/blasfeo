@@ -33,8 +33,8 @@
 
 
 #define REAL double
-#define STRMAT d_strmat
-#define STRVEC d_strvec
+#define XMAT blasfeo_dmat
+#define XVEC blasfeo_dvec
 #define PS D_PS
 
 
@@ -59,23 +59,23 @@
 #if defined(LA_BLAS) | defined(LA_REFERENCE)
 
 
-#define ALLOCATE_STRMAT d_allocate_strmat
-#define ALLOCATE_STRVEC d_allocate_strvec
+#define ALLOCATE_XMAT d_allocate_strmat
+#define ALLOCATE_XVEC d_allocate_strvec
 
-#define FREE_STRMAT d_free_strmat
-#define FREE_STRVEC d_free_strvec
+#define FREE_XMAT d_free_strmat
+#define FREE_XVEC d_free_strvec
 
-#define PRINT_STRMAT d_print_strmat
-#define PRINT_STRVEC d_print_strvec
-#define PRINT_TRAN_STRVEC d_print_tran_strvec
+#define PRINT_XMAT d_print_strmat
+#define PRINT_XVEC d_print_strvec
+#define PRINT_TRAN_XVEC d_print_tran_strvec
 
-#define PRINT_TO_FILE_STRMAT d_print_to_file_strmat
-#define PRINT_TO_FILE_STRVEC d_print_to_file_strvec
-#define PRINT_TO_FILE_TRAN_STRVEC d_print_to_file_tran_strvec
+#define PRINT_TO_FILE_XMAT d_print_to_file_strmat
+#define PRINT_TO_FILE_XVEC d_print_to_file_strvec
+#define PRINT_TO_FILE_TRAN_XVEC d_print_to_file_tran_strvec
 
-#define PRINT_E_STRMAT d_print_e_strmat
-#define PRINT_E_STRVEC d_print_e_strvec
-#define PRINT_E_TRAN_STRVEC d_print_e_tran_strvec
+#define PRINT_E_XMAT d_print_e_strmat
+#define PRINT_E_XVEC d_print_e_strvec
+#define PRINT_E_TRAN_XVEC d_print_e_tran_strvec
 
 #include "x_aux_ext_dep_lib0.c"
 

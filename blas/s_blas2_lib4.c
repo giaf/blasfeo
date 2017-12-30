@@ -40,7 +40,7 @@
 
 
 
-void sgemv_n_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+void sgemv_n_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<0)
@@ -82,7 +82,7 @@ void sgemv_n_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 
 
 
-void sgemv_t_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+void sgemv_t_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(n<=0)
@@ -125,7 +125,7 @@ void sgemv_t_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 
 
 
-void sgemv_nt_libstr(int m, int n, float alpha_n, float alpha_t, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx_n, int xi_n, struct s_strvec *sx_t, int xi_t, float beta_n, float beta_t, struct s_strvec *sy_n, int yi_n, struct s_strvec *sy_t, int yi_t, struct s_strvec *sz_n, int zi_n, struct s_strvec *sz_t, int zi_t)
+void sgemv_nt_libstr(int m, int n, float alpha_n, float alpha_t, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx_n, int xi_n, struct blasfeo_svec *sx_t, int xi_t, float beta_n, float beta_t, struct blasfeo_svec *sy_n, int yi_n, struct blasfeo_svec *sy_t, int yi_t, struct blasfeo_svec *sz_n, int zi_n, struct blasfeo_svec *sz_t, int zi_t)
 	{
 
 	if(ai!=0)
@@ -181,7 +181,7 @@ void sgemv_nt_libstr(int m, int n, float alpha_n, float alpha_t, struct s_strmat
 
 
 
-void ssymv_l_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+void ssymv_l_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0 | n<=0)
@@ -240,7 +240,7 @@ void ssymv_l_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int 
 
 
 // m >= n
-void strmv_lnn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+void strmv_lnn_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -341,7 +341,7 @@ void strmv_lnn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct 
 
 
 // m >= n
-void strmv_ltn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+void strmv_ltn_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -465,7 +465,7 @@ void strmv_ltn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct 
 
 
 
-void strmv_unn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+void strmv_unn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -519,7 +519,7 @@ void strmv_unn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strve
 
 
 
-void strmv_utn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+void strmv_utn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -562,7 +562,7 @@ void strmv_utn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strve
 
 
 
-void strsv_lnn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+void strsv_lnn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m==0)
@@ -645,7 +645,7 @@ void strsv_lnn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strve
 
 
 
-void strsv_lnn_mn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+void strsv_lnn_mn_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m==0 | n==0)
@@ -744,7 +744,7 @@ void strsv_lnn_mn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, stru
 
 
 
-void strsv_ltn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+void strsv_ltn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m==0)
@@ -835,7 +835,7 @@ void strsv_ltn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strve
 
 
 
-void strsv_ltn_mn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+void strsv_ltn_mn_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m==0)
@@ -930,7 +930,7 @@ void strsv_ltn_mn_libstr(int m, int n, struct s_strmat *sA, int ai, int aj, stru
 
 
 
-void strsv_lnu_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+void strsv_lnu_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -957,7 +957,7 @@ void strsv_lnu_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strve
 
 
 
-void strsv_ltu_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+void strsv_ltu_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -984,7 +984,7 @@ void strsv_ltu_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strve
 
 
 
-void strsv_unn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+void strsv_unn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1011,7 +1011,7 @@ void strsv_unn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strve
 
 
 
-void strsv_utn_libstr(int m, struct s_strmat *sA, int ai, int aj, struct s_strvec *sx, int xi, struct s_strvec *sz, int zi)
+void strsv_utn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 	if(m==0)
 		return;

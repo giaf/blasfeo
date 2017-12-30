@@ -26,20 +26,20 @@ int main()
 	for(ii=0; ii<n; ii++) B[ii*(n+1)] = 1.0;
 	d_print_mat(n, n, B, n);
 
-	struct d_strmat sA;
+	struct blasfeo_dmat sA;
 	d_allocate_strmat(n, n, &sA);
 	d_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
 	d_print_strmat(n, n, &sA, 0, 0);
 
-	struct d_strmat sB;
+	struct blasfeo_dmat sB;
 	d_allocate_strmat(n, n, &sB);
 	d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
 	d_print_strmat(n, n, &sB, 0, 0);
 
-	struct d_strmat sD;
+	struct blasfeo_dmat sD;
 	d_allocate_strmat(n, n, &sD);
 
-	struct d_strmat sC;
+	struct blasfeo_dmat sC;
 	d_allocate_strmat(n, n, &sC);
 
 	double alpha = 1.0;

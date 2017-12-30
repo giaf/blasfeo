@@ -36,7 +36,7 @@
 
 #define REAL float
 
-#define STRVEC s_strvec
+#define XVEC blasfeo_svec
 
 #define GEMV_DIAG_LIBSTR sgemv_diag_libstr
 

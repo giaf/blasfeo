@@ -87,29 +87,29 @@ int main()
 	// matrices in matrix struct format
 	//
 
-	struct s_strmat sA;
+	struct blasfeo_smat sA;
 	s_allocate_strmat(n, n, &sA);
 	s_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
 	s_print_strmat(n, n, &sA, 0, 0);
 
-	struct s_strmat sB;
+	struct blasfeo_smat sB;
 	s_allocate_strmat(n, n, &sB);
 	s_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
 	s_print_strmat(n, n, &sB, 0, 0);
 
-	struct s_strmat sD;
+	struct blasfeo_smat sD;
 	s_allocate_strmat(n, n, &sD);
 	s_cvt_mat2strmat(n, n, D, n, &sD, 0, 0);
 
-	struct s_strvec sx;
+	struct blasfeo_svec sx;
 	s_allocate_strvec(n, &sx);
 	sx.pa[7] = 1.0;
 	s_print_tran_strvec(n, &sx, 0);
 
-	struct s_strvec sz0;
+	struct blasfeo_svec sz0;
 	s_allocate_strvec(n, &sz0);
 
-	struct s_strvec sz1;
+	struct blasfeo_svec sz1;
 	s_allocate_strvec(n, &sz1);
 
 	//

@@ -48,8 +48,8 @@
 
 #define REAL double
 
-#define STRMAT d_strmat
-#define STRVEC d_strvec
+#define XMAT blasfeo_dmat
+#define XVEC blasfeo_dvec
 
 #define AXPY_LIBSTR daxpy_libstr
 #define AXPBY_LIBSTR daxpby_libstr

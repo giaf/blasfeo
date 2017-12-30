@@ -1,14 +1,14 @@
 #define PRECISION Double
 #define GECMP_LIBSTR dgecmp_libstr
 #define REAL double
-#define STRMAT d_strmat
-#define STRVEC d_strvec
+#define XMAT blasfeo_dmat
+#define XVEC blasfeo_dvec
 #define PS D_PS
-#define PRINT_STRMAT d_print_strmat
+#define PRINT_XMAT d_print_strmat
 
-#define STRMAT_REF d_strmat_ref
-#define STRVEC_REF d_strvec_ref
-#define PRINT_STRMAT_REF blasfeo_d_print_strmat_ref
+#define XMAT_REF blasfeo_dmat_ref
+#define XVEC_REF blasfeo_dvec_ref
+#define PRINT_XMAT_REF blasfeo_d_print_strmat_ref
 
 #include "test_x_common.h"
 #include "../include/blasfeo_d_aux.h"

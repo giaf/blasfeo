@@ -41,7 +41,7 @@
 
 
 
-static void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct d_strmat *hsRSQrq, struct d_strmat *hsL, struct d_strvec *hsux, struct d_strvec *hspi, struct d_strmat *hswork_mat, struct d_strvec *hswork_vec)
+static void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *hsBAbt, struct blasfeo_dmat *hsRSQrq, struct blasfeo_dmat *hsL, struct blasfeo_dvec *hsux, struct blasfeo_dvec *hspi, struct blasfeo_dmat *hswork_mat, struct blasfeo_dvec *hswork_vec)
 	{
 
 	int nn;
@@ -98,7 +98,7 @@ static void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAb
 
 
 
-static void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct d_strmat *hsRSQrq, struct d_strmat *hsL, struct d_strmat *hswork_mat)
+static void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *hsBAbt, struct blasfeo_dmat *hsRSQrq, struct blasfeo_dmat *hsL, struct blasfeo_dmat *hswork_mat)
 	{
 
 	int nn;
@@ -126,7 +126,7 @@ static void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct d_strmat *hsBA
 
 
 
-static void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct d_strmat *hsBAbt, struct d_strvec *hsb, struct d_strvec *hsrq, struct d_strmat *hsL, struct d_strvec *hsPb, struct d_strvec *hsux, struct d_strvec *hspi, struct d_strvec *hswork_vec)
+static void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *hsBAbt, struct blasfeo_dvec *hsb, struct blasfeo_dvec *hsrq, struct blasfeo_dmat *hsL, struct blasfeo_dvec *hsPb, struct blasfeo_dvec *hsux, struct blasfeo_dvec *hspi, struct blasfeo_dvec *hswork_vec)
 	{
 
 	int nn;
@@ -382,50 +382,50 @@ int main()
 * matrices as strmat
 ************************************************/	
 
-	struct d_strmat sA;
+	struct blasfeo_dmat sA;
 	d_allocate_strmat(nx_, nx_, &sA);
 	d_cvt_mat2strmat(nx_, nx_, A, nx_, &sA, 0, 0);
-	struct d_strvec sb;
+	struct blasfeo_dvec sb;
 	d_allocate_strvec(nx_, &sb);
 	d_cvt_vec2strvec(nx_, b, &sb, 0);
-	struct d_strvec sx0;
+	struct blasfeo_dvec sx0;
 	d_allocate_strvec(nx_, &sx0);
 	d_cvt_vec2strvec(nx_, x0, &sx0, 0);
-	struct d_strvec sb0;
+	struct blasfeo_dvec sb0;
 	d_allocate_strvec(nx_, &sb0);
 	double *b0; d_zeros(&b0, nx_, 1); // states offset
 	dgemv_n_libstr(nx_, nx_, 1.0, &sA, 0, 0, &sx0, 0, 1.0, &sb, 0, &sb0, 0);
 	d_print_tran_strvec(nx_, &sb0, 0);
 
-	struct d_strmat sBbt0;
+	struct blasfeo_dmat sBbt0;
 	d_allocate_strmat(nu_+nx_+1, nx_, &sBbt0);
 	d_cvt_tran_mat2strmat(nx_, nx_, B, nx_, &sBbt0, 0, 0);
 	drowin_libstr(nx_, 1.0, &sb0, 0, &sBbt0, nu_, 0);
 	d_print_strmat(nu_+1, nx_, &sBbt0, 0, 0);
 
-	struct d_strmat sBAbt1;
+	struct blasfeo_dmat sBAbt1;
 	d_allocate_strmat(nu_+nx_+1, nx_, &sBAbt1);
 	d_cvt_tran_mat2strmat(nx_, nu_, B, nx_, &sBAbt1, 0, 0);
 	d_cvt_tran_mat2strmat(nx_, nx_, A, nx_, &sBAbt1, nu_, 0);
 	d_cvt_tran_mat2strmat(nx_, 1, b, nx_, &sBAbt1, nu_+nx_, 0);
 	d_print_strmat(nu_+nx_+1, nx_, &sBAbt1, 0, 0);
 
-	struct d_strvec sr0; // XXX no need to update r0 since S=0
+	struct blasfeo_dvec sr0; // XXX no need to update r0 since S=0
 	d_allocate_strvec(nu_, &sr0);
 	d_cvt_vec2strvec(nu_, r, &sr0, 0);
 
-	struct d_strmat sRr0;
+	struct blasfeo_dmat sRr0;
 	d_allocate_strmat(nu_+1, nu_, &sRr0);
 	d_cvt_mat2strmat(nu_, nu_, R, nu_, &sRr0, 0, 0);
 	drowin_libstr(nu_, 1.0, &sr0, 0, &sRr0, nu_, 0);
 	d_print_strmat(nu_+1, nu_, &sRr0, 0, 0);
 
-	struct d_strvec srq1;
+	struct blasfeo_dvec srq1;
 	d_allocate_strvec(nu_+nx_, &srq1);
 	d_cvt_vec2strvec(nu_, r, &srq1, 0);
 	d_cvt_vec2strvec(nx_, q, &srq1, nu_);
 
-	struct d_strmat sRSQrq1;
+	struct blasfeo_dmat sRSQrq1;
 	d_allocate_strmat(nu_+nx_+1, nu_+nx_, &sRSQrq1);
 	d_cvt_mat2strmat(nu_, nu_, R, nu_, &sRSQrq1, 0, 0);
 	d_cvt_tran_mat2strmat(nu_, nx_, S, nu_, &sRSQrq1, nu_, 0);
@@ -433,11 +433,11 @@ int main()
 	drowin_libstr(nu_+nx_, 1.0, &srq1, 0, &sRSQrq1, nu_+nx_, 0);
 	d_print_strmat(nu_+nx_+1, nu_+nx_, &sRSQrq1, 0, 0);
 
-	struct d_strvec sqN;
+	struct blasfeo_dvec sqN;
 	d_allocate_strvec(nx_, &sqN);
 	d_cvt_vec2strvec(nx_, q, &sqN, 0);
 
-	struct d_strmat sQqN;
+	struct blasfeo_dmat sQqN;
 	d_allocate_strmat(nx_+1, nx_, &sQqN);
 	d_cvt_mat2strmat(nx_, nx_, Q, nx_, &sQqN, 0, 0);
 	drowin_libstr(nx_, 1.0, &sqN, 0, &sQqN, nx_, 0);
@@ -447,16 +447,16 @@ int main()
 * array of matrices
 ************************************************/	
 	
-	struct d_strmat hsBAbt[N];
-	struct d_strvec hsb[N];
-	struct d_strmat hsRSQrq[N+1];
-	struct d_strvec hsrq[N+1];
-	struct d_strmat hsL[N+1];
-	struct d_strvec hsPb[N];
-	struct d_strvec hsux[N+1];
-	struct d_strvec hspi[N];
-	struct d_strmat hswork_mat[1];
-	struct d_strvec hswork_vec[1];
+	struct blasfeo_dmat hsBAbt[N];
+	struct blasfeo_dvec hsb[N];
+	struct blasfeo_dmat hsRSQrq[N+1];
+	struct blasfeo_dvec hsrq[N+1];
+	struct blasfeo_dmat hsL[N+1];
+	struct blasfeo_dvec hsPb[N];
+	struct blasfeo_dvec hsux[N+1];
+	struct blasfeo_dvec hspi[N];
+	struct blasfeo_dmat hswork_mat[1];
+	struct blasfeo_dvec hswork_vec[1];
 
 	hsBAbt[0] = sBbt0;
 	hsb[0] = sb0;

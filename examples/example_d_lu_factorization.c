@@ -101,7 +101,7 @@ int main()
 	void *memory_strmat; v_zeros_align(&memory_strmat, size_strmat);
 	char *ptr_memory_strmat = (char *) memory_strmat;
 
-	struct d_strmat sA;
+	struct blasfeo_dmat sA;
 //	d_allocate_strmat(n, n, &sA);
 	d_create_strmat(n, n, &sA, ptr_memory_strmat);
 	ptr_memory_strmat += sA.memory_size;
@@ -110,7 +110,7 @@ int main()
 	printf("\nA = \n");
 	d_print_strmat(n, n, &sA, 0, 0);
 
-	struct d_strmat sB;
+	struct blasfeo_dmat sB;
 //	d_allocate_strmat(n, n, &sB);
 	d_create_strmat(n, n, &sB, ptr_memory_strmat);
 	ptr_memory_strmat += sB.memory_size;
@@ -119,18 +119,18 @@ int main()
 	printf("\nB = \n");
 	d_print_strmat(n, n, &sB, 0, 0);
 
-	struct d_strmat sI;
+	struct blasfeo_dmat sI;
 //	d_allocate_strmat(n, n, &sI);
 	d_create_strmat(n, n, &sI, ptr_memory_strmat);
 	ptr_memory_strmat += sI.memory_size;
 	// convert from column major matrix to strmat
 
-	struct d_strmat sD;
+	struct blasfeo_dmat sD;
 //	d_allocate_strmat(n, n, &sD);
 	d_create_strmat(n, n, &sD, ptr_memory_strmat);
 	ptr_memory_strmat += sD.memory_size;
 
-	struct d_strmat sLU;
+	struct blasfeo_dmat sLU;
 //	d_allocate_strmat(n, n, &sD);
 	d_create_strmat(n, n, &sLU, ptr_memory_strmat);
 	ptr_memory_strmat += sLU.memory_size;

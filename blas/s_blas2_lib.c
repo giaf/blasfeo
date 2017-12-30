@@ -44,8 +44,8 @@
 
 #define REAL float
 
-#define STRMAT s_strmat
-#define STRVEC s_strvec
+#define XMAT blasfeo_smat
+#define XVEC blasfeo_svec
 
 #define GEMV_N_LIBSTR sgemv_n_libstr
 #define GEMV_NT_LIBSTR sgemv_nt_libstr

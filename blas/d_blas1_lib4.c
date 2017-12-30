@@ -48,7 +48,7 @@
 
 
 
-void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+void daxpy_libstr(int m, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -119,7 +119,7 @@ void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_str
 
 
 
-void daxpby_libstr(int m, double alpha, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+void daxpby_libstr(int m, double alpha, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -203,7 +203,7 @@ void daxpby_libstr(int m, double alpha, struct d_strvec *sx, int xi, double beta
 
 
 // multiply two vectors
-void dvecmulacc_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+void dvecmulacc_libstr(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -242,7 +242,7 @@ void dvecmulacc_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, 
 
 
 // multiply two vectors and compute dot product
-double dvecmuldot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+double dvecmuldot_libstr(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -294,7 +294,7 @@ double dvecmuldot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy
 
 
 // compute dot product of two vectors
-double ddot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi)
+double ddot_libstr(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi)
 	{
 
 	if(m<=0)
@@ -405,7 +405,7 @@ void drotg_libstr(double a, double b, double *c, double *s)
 
 
 
-void dcolrot_libstr(int m, struct d_strmat *sA, int ai, int aj0, int aj1, double c, double s)
+void dcolrot_libstr(int m, struct blasfeo_dmat *sA, int ai, int aj0, int aj1, double c, double s)
 	{
 	const int ps = 4;
 	int sda = sA->cn;
@@ -465,7 +465,7 @@ void dcolrot_libstr(int m, struct d_strmat *sA, int ai, int aj0, int aj1, double
 	
 
 
-void drowrot_libstr(int m, struct d_strmat *sA, int ai0, int ai1, int aj, double c, double s)
+void drowrot_libstr(int m, struct blasfeo_dmat *sA, int ai0, int ai1, int aj, double c, double s)
 	{
 	const int ps = 4;
 	int sda = sA->cn;

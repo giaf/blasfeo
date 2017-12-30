@@ -47,8 +47,8 @@
 
 #define REAL double
 
-#define STRMAT d_strmat
-#define STRVEC d_strvec
+#define XMAT blasfeo_dmat
+#define XVEC blasfeo_dvec
 
 #define GELQF_LIBSTR dgelqf_libstr
 #define GELQF_WORK_SIZE_LIBSTR dgelqf_work_size_libstr

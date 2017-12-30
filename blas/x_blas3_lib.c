@@ -33,7 +33,7 @@
 
 
 // dgemm nt
-void GEMM_NT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_NT_LIBSTR(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -115,7 +115,7 @@ void GEMM_NT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 
 
 // dgemm nn
-void GEMM_NN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_NN_LIBSTR(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -197,7 +197,7 @@ void GEMM_NN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 
 
 // dtrsm_left_lower_nottransposed_unit
-void TRSM_LLNU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_LLNU_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -319,7 +319,7 @@ void TRSM_LLNU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_left_upper_nottransposed_notunit
-void TRSM_LUNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_LUNN_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -466,7 +466,7 @@ void TRSM_LUNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_right_lower_transposed_unit
-void TRSM_RLTU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_RLTU_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -539,7 +539,7 @@ void TRSM_RLTU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_right_lower_transposed_unit
-void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -639,7 +639,7 @@ void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_right_upper_transposed_notunit
-void TRSM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_RUTN_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -665,7 +665,7 @@ void TRSM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrmm_right_upper_transposed_notunit (A triangular !!!)
-void TRMM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRMM_RUTN_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -752,7 +752,7 @@ void TRMM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrmm_right_lower_nottransposed_notunit (A triangular !!!)
-void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -839,7 +839,7 @@ void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
-void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0)
 		return;
@@ -931,7 +931,7 @@ void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj,
 
 
 // dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
-void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1026,7 +1026,7 @@ void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int a
 
 
 // dgemm nt
-void GEMM_NT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_NT_LIBSTR(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	int jj;
 	char cn = 'n';
@@ -1069,7 +1069,7 @@ void GEMM_NT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 
 
 // dgemm nn
-void GEMM_NN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_NN_LIBSTR(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	int jj;
 	char cn = 'n';
@@ -1111,7 +1111,7 @@ void GEMM_NN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 
 
 // dtrsm_left_lower_nottransposed_unit
-void TRSM_LLNU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_LLNU_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1151,7 +1151,7 @@ void TRSM_LLNU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_left_upper_nottransposed_notunit
-void TRSM_LUNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_LUNN_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1191,7 +1191,7 @@ void TRSM_LUNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_right_lower_transposed_unit
-void TRSM_RLTU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_RLTU_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1233,7 +1233,7 @@ void TRSM_RLTU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_right_lower_transposed_notunit
-void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1275,7 +1275,7 @@ void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_right_upper_transposed_notunit
-void TRSM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_RUTN_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1317,7 +1317,7 @@ void TRSM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrmm_right_upper_transposed_notunit (A triangular !!!)
-void TRMM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRMM_RUTN_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1359,7 +1359,7 @@ void TRMM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrmm_right_lower_nottransposed_notunit (A triangular !!!)
-void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1401,7 +1401,7 @@ void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
-void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';
@@ -1458,7 +1458,7 @@ void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj,
 	}
 
 // dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
-void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	int jj;
 	char cl = 'l';

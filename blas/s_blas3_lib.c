@@ -46,7 +46,7 @@
 
 #define REAL float
 
-#define STRMAT s_strmat
+#define XMAT blasfeo_smat
 
 #define GEMM_NN_LIBSTR sgemm_nn_libstr
 #define GEMM_NT_LIBSTR sgemm_nt_libstr

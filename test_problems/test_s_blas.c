@@ -238,21 +238,21 @@ int main()
 
 		// matrix struct
 #if 0
-		struct s_strmat sA; s_allocate_strmat(n+4, n+4, &sA);
-		struct s_strmat sB; s_allocate_strmat(n+4, n+4, &sB);
-		struct s_strmat sC; s_allocate_strmat(n+4, n+4, &sC);
-		struct s_strmat sD; s_allocate_strmat(n+4, n+4, &sD);
-		struct s_strmat sE; s_allocate_strmat(n+4, n+4, &sE);
+		struct blasfeo_smat sA; s_allocate_strmat(n+4, n+4, &sA);
+		struct blasfeo_smat sB; s_allocate_strmat(n+4, n+4, &sB);
+		struct blasfeo_smat sC; s_allocate_strmat(n+4, n+4, &sC);
+		struct blasfeo_smat sD; s_allocate_strmat(n+4, n+4, &sD);
+		struct blasfeo_smat sE; s_allocate_strmat(n+4, n+4, &sE);
 #else
-		struct s_strmat sA; s_allocate_strmat(n, n, &sA);
-		struct s_strmat sB; s_allocate_strmat(n, n, &sB);
-		struct s_strmat sC; s_allocate_strmat(n, n, &sC);
-		struct s_strmat sD; s_allocate_strmat(n, n, &sD);
-		struct s_strmat sE; s_allocate_strmat(n, n, &sE);
+		struct blasfeo_smat sA; s_allocate_strmat(n, n, &sA);
+		struct blasfeo_smat sB; s_allocate_strmat(n, n, &sB);
+		struct blasfeo_smat sC; s_allocate_strmat(n, n, &sC);
+		struct blasfeo_smat sD; s_allocate_strmat(n, n, &sD);
+		struct blasfeo_smat sE; s_allocate_strmat(n, n, &sE);
 #endif
-		struct s_strvec sx; s_allocate_strvec(n, &sx);
-		struct s_strvec sy; s_allocate_strvec(n, &sy);
-		struct s_strvec sz; s_allocate_strvec(n, &sz);
+		struct blasfeo_svec sx; s_allocate_strvec(n, &sx);
+		struct blasfeo_svec sy; s_allocate_strvec(n, &sy);
+		struct blasfeo_svec sz; s_allocate_strvec(n, &sz);
 
 		s_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
 		s_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);

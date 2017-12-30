@@ -76,7 +76,7 @@ Structures and routines for single-precision are analogue.
 \subsection{{\tt d\_strmat} definition}
 
 \begin{verbatim}
-struct d_strmat 
+struct blasfeo_dmat 
     {
     int m;
     int n;
@@ -97,13 +97,13 @@ where the structure members are
 \subsection{{\tt strmat} management}
 
 \begin{verbatim}
-void d_allocate_strmat(int m, int n, struct d_strmat *sA);
+void d_allocate_strmat(int m, int n, struct blasfeo_dmat *sA);
 \end{verbatim}
 Populates the structure defining a $m\times n$ matrix, referenced by {\tt sA} and internally dynamically allocated the memory referenced by the structure.
 The use of this routine is intended for prototype and off-line use, and it not advised in performance-critical code, where the routine {\tt d\_create\_strmat} should be employed instead.
 
 \begin{verbatim}
-void d_free_strmat(struct d_strmat *sA);
+void d_free_strmat(struct blasfeo_dmat *sA);
 \end{verbatim}
 Frees the memory allocated by the routine {\tt d\_allocate\_strmat}.
 
@@ -114,7 +114,7 @@ Computes the size (in bytes) of the memory referenced by the structure defining 
 The memory has to be externally allocated to use in the {\tt d\_create\_strmat} routine.
 
 \begin{verbatim}
-void d_create_strmat(int m, int n, struct d_strmat *sA, void *memory);
+void d_create_strmat(int m, int n, struct blasfeo_dmat *sA, void *memory);
 \end{verbatim}
 Populates the structure defining a $m\times n$ matrix, referenced by {\tt sA}.
 The memory referenced by the structure should be allocated externally and provided to the routine using the {\tt memory} pointer.
@@ -126,22 +126,22 @@ The amount of memory referenced by the structure is computed using the {\tt d\_s
 \subsection{{\tt strmat} conversion}
 
 \begin{verbatim}
-void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, 
+void d_cvt_mat2strmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, 
      int ai, int aj);
 \end{verbatim}
 
 \begin{verbatim}
-void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct d_strmat *sA, 
+void d_cvt_tran_mat2strmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, 
      int ai, int aj);
 \end{verbatim}
 
 \begin{verbatim}
-void d_cvt_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, 
+void d_cvt_strmat2mat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, 
      double *A, int lda);
 \end{verbatim}
 
 \begin{verbatim}
-void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj, 
+void d_cvt_tran_strmat2mat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, 
      double *A, int lda);
 \end{verbatim}
 
@@ -150,11 +150,11 @@ void d_cvt_tran_strmat2mat(int m, int n, struct d_strmat *sA, int ai, int aj,
 \subsection{{\tt strmat} print}
 
 \begin{verbatim}
-void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj);
+void d_print_strmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 \end{verbatim}
 
 \begin{verbatim}
-void d_print_tran_strmat(int m, int n, struct d_strmat *sA, int ai, int aj);
+void d_print_tran_strmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 \end{verbatim}
 
 
@@ -171,7 +171,7 @@ Structures and routines for single-precision are analogue.
 \subsection{{\tt d\_strvec} definition}
 
 \begin{verbatim}
-struct d_strmat 
+struct blasfeo_dmat 
     {
     int m;
     double *pa;
@@ -190,13 +190,13 @@ where the structure members are
 \subsection{{\tt strvec} management}
 
 \begin{verbatim}
-void d_allocate_strvec(int m, struct d_strvec *sx);
+void d_allocate_strvec(int m, struct blasfeo_dvec *sx);
 \end{verbatim}
 Populates the structure defining a $m\times 1$ vector, referenced by {\tt sx} and internally dynamically allocated the memory referenced by the structure.
 The use of this routine is intended for prototype and off-line use, and it not advised in performance-critical code, where the routine {\tt d\_create\_strvec} should be employed instead.
 
 \begin{verbatim}
-void d_free_strvec(struct d_strvec *sx);
+void d_free_strvec(struct blasfeo_dvec *sx);
 \end{verbatim}
 Frees the memory allocated by the routine {\tt d\_allocate\_strvec}.
 
@@ -207,7 +207,7 @@ Computes the size (in bytes) of the memory referenced by the structure defining 
 The memory has to be externally allocated to use in the {\tt d\_create\_strvec} routine.
 
 \begin{verbatim}
-void d_create_strvec(int m, struct d_strvec *sx, void *memory);
+void d_create_strvec(int m, struct blasfeo_dvec *sx, void *memory);
 \end{verbatim}
 Populates the structure defining a $m\times 1$ vector, referenced by {\tt sx}.
 The memory referenced by the structure should be allocated externally and provided to the routine using the {\tt memory} pointer.
@@ -219,11 +219,11 @@ The amount of memory referenced by the structure is computed using the {\tt d\_s
 \subsection{{\tt strvec} conversion}
 
 \begin{verbatim}
-void d_cvt_vec2strvec(int m, double *x, struct d_strvec *sx, int xi);
+void d_cvt_vec2strvec(int m, double *x, struct blasfeo_dvec *sx, int xi);
 \end{verbatim}
 
 \begin{verbatim}
-void d_cvt_strvec2vec(int m, struct d_strvec *sx, int xi, double *x);
+void d_cvt_strvec2vec(int m, struct blasfeo_dvec *sx, int xi, double *x);
 \end{verbatim}
 
 
@@ -231,11 +231,11 @@ void d_cvt_strvec2vec(int m, struct d_strvec *sx, int xi, double *x);
 \subsection{{\tt strvec} print}
 
 \begin{verbatim}
-void d_print_strvec(int m, struct d_strvec *sx, int xi);
+void d_print_strvec(int m, struct blasfeo_dvec *sx, int xi);
 \end{verbatim}
 
 \begin{verbatim}
-void d_print_tran_strvec(int m, struct d_strvec *sx, int xi);
+void d_print_tran_strvec(int m, struct blasfeo_dvec *sx, int xi);
 \end{verbatim}
 
 

@@ -39,7 +39,7 @@
 
 
 // z = y + alpha*x, with increments equal to 1
-void saxpy_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+void saxpy_libstr(int m, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 	float *x = sx->pa + xi;
 	float *y = sy->pa + yi;
@@ -62,7 +62,7 @@ void saxpy_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_strv
 
 
 
-void saxpby_libstr(int m, float alpha, struct s_strvec *sx, int xi, float beta, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+void saxpby_libstr(int m, float alpha, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 	if(m<=0)
 		return;
@@ -85,7 +85,7 @@ void saxpby_libstr(int m, float alpha, struct s_strvec *sx, int xi, float beta, 
 
 
 
-void saxpy_bkp_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+void saxpy_bkp_libstr(int m, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 	float *x = sx->pa + xi;
 	float *y = sy->pa + yi;
@@ -114,7 +114,7 @@ void saxpy_bkp_libstr(int m, float alpha, struct s_strvec *sx, int xi, struct s_
 
 
 // multiply two vectors and compute dot product
-void svecmulacc_libstr(int m, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+void svecmulacc_libstr(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -137,7 +137,7 @@ void svecmulacc_libstr(int m, struct s_strvec *sx, int xi, struct s_strvec *sy, 
 
 
 // multiply two vectors and compute dot product
-float svecmuldot_libstr(int m, struct s_strvec *sx, int xi, struct s_strvec *sy, int yi, struct s_strvec *sz, int zi)
+float svecmuldot_libstr(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0)

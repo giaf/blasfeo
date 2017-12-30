@@ -36,8 +36,8 @@
 
 #define REAL double
 
-#define STRMAT d_strmat
-#define STRVEC d_strvec
+#define XMAT blasfeo_dmat
+#define XVEC blasfeo_dvec
 
 #define GEMM_R_DIAG_LIBSTR dgemm_r_diag_libstr
 #define GEMM_L_DIAG_LIBSTR dgemm_l_diag_libstr

@@ -46,7 +46,7 @@
 
 #define REAL double
 
-#define STRMAT d_strmat
+#define XMAT blasfeo_dmat
 
 #define GEMM_NN_LIBSTR dgemm_nn_libstr
 #define GEMM_NT_LIBSTR dgemm_nt_libstr

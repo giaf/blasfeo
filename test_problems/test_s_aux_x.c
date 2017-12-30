@@ -20,6 +20,6 @@
 
 
 #define REAL float
-#define STRMAT s_strmat
-#define STRVEC s_strvec
+#define XMAT blasfeo_smat
+#define XVEC blasfeo_svec
 

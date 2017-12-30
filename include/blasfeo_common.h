@@ -43,7 +43,7 @@ extern "C" {
 #include "blasfeo_block_size.h"
 
 // matrix structure
-struct d_strmat
+struct blasfeo_dmat
 	{
 	int m; // rows
 	int n; // cols
@@ -55,7 +55,7 @@ struct d_strmat
 	int memory_size; // size of needed memory
 	};
 
-struct s_strmat
+struct blasfeo_smat
 	{
 	int m; // rows
 	int n; // cols
@@ -68,7 +68,7 @@ struct s_strmat
 	};
 
 // vector structure
-struct d_strvec
+struct blasfeo_dvec
 	{
 	int m; // size
 	int pm; // packed size
@@ -76,7 +76,7 @@ struct d_strvec
 	int memory_size; // size of needed memory
 	};
 
-struct s_strvec
+struct blasfeo_svec
 	{
 	int m; // size
 	int pm; // packed size
@@ -92,7 +92,7 @@ struct s_strvec
 #elif defined(LA_BLAS) | defined(LA_REFERENCE)
 
 // matrix structure
-struct d_strmat
+struct blasfeo_dmat
 	{
 	int m; // rows
 	int n; // cols
@@ -102,7 +102,7 @@ struct d_strmat
 	int memory_size; // size of needed memory
 	};
 
-struct s_strmat
+struct blasfeo_smat
 	{
 	int m; // rows
 	int n; // cols
@@ -113,14 +113,14 @@ struct s_strmat
 	};
 
 // vector structure
-struct d_strvec
+struct blasfeo_dvec
 	{
 	int m; // size
 	double *pa; // pointer to a m array of doubles, the first is aligned to cache line size
 	int memory_size; // size of needed memory
 	};
 
-struct s_strvec
+struct blasfeo_svec
 	{
 	int m; // size
 	float *pa; // pointer to a m array of floats, the first is aligned to cache line size
@@ -143,7 +143,7 @@ struct s_strvec
 #if defined(TESTING_MODE)
 
 // matrix structure
-struct d_strmat_ref
+struct blasfeo_dmat_ref
 	{
 	int m; // rows
 	int n; // cols
@@ -153,7 +153,7 @@ struct d_strmat_ref
 	int memory_size; // size of needed memory
 	};
 
-struct s_strmat_ref
+struct blasfeo_smat_ref
 	{
 	int m; // rows
 	int n; // cols
@@ -164,14 +164,14 @@ struct s_strmat_ref
 	};
 
 // vector structure
-struct d_strvec_ref
+struct blasfeo_dvec_ref
 	{
 	int m; // size
 	double *pa; // pointer to a m array of doubles, the first is aligned to cache line size
 	int memory_size; // size of needed memory
 	};
 
-struct s_strvec_ref
+struct blasfeo_svec_ref
 	{
 	int m; // size
 	float *pa; // pointer to a m array of floats, the first is aligned to cache line size

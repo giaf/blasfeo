@@ -127,7 +127,7 @@ void dgemm_diag_right_lib(int m, int n, double alpha, double *pA, int sda, doubl
 
 
 // dgemm with A diagonal matrix (stored as strvec)
-void dgemm_l_diag_libstr(int m, int n, double alpha, struct d_strvec *sA, int ai, struct d_strmat *sB, int bi, int bj, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void dgemm_l_diag_libstr(int m, int n, double alpha, struct blasfeo_dvec *sA, int ai, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -151,7 +151,7 @@ void dgemm_l_diag_libstr(int m, int n, double alpha, struct d_strvec *sA, int ai
 
 
 // dgemm with B diagonal matrix (stored as strvec)
-void dgemm_r_diag_libstr(int m, int n, double alpha, struct d_strmat *sA, int ai, int aj, struct d_strvec *sB, int bi, double beta, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void dgemm_r_diag_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sB, int bi, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;

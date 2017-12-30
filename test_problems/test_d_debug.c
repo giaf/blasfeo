@@ -119,7 +119,7 @@ int main()
 	void *memory_strmat; v_zeros_align(&memory_strmat, size_strmat);
 	char *ptr_memory_strmat = (char *) memory_strmat;
 
-	struct d_strmat sA;
+	struct blasfeo_dmat sA;
 //	d_allocate_strmat(n, n, &sA);
 	d_create_strmat(n, n, &sA, ptr_memory_strmat);
 	ptr_memory_strmat += sA.memory_size;
@@ -127,74 +127,74 @@ int main()
 //	d_cast_mat2strmat(A, &sA);
 	d_print_strmat(n, n, &sA, 0, 0);
 
-	struct d_strmat sB;
+	struct blasfeo_dmat sB;
 //	d_allocate_strmat(n, n, &sB);
 	d_create_strmat(n, n, &sB, ptr_memory_strmat);
 	ptr_memory_strmat += sB.memory_size;
 	d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
 	d_print_strmat(n, n, &sB, 0, 0);
 
-	struct d_strmat sC;
+	struct blasfeo_dmat sC;
 //	d_allocate_strmat(n, n, &sC);
 	d_create_strmat(n, n, &sC, ptr_memory_strmat);
 	ptr_memory_strmat += sC.memory_size;
 
-	struct d_strmat sD;
+	struct blasfeo_dmat sD;
 //	d_allocate_strmat(n, n, &sD);
 	d_create_strmat(n, n, &sD, ptr_memory_strmat);
 	ptr_memory_strmat += sD.memory_size;
 	d_cvt_mat2strmat(n, n, D, n, &sD, 0, 0);
 
-	struct d_strmat sE;
+	struct blasfeo_dmat sE;
 //	d_allocate_strmat(n, n, &sE);
 	d_create_strmat(n, n, &sE, ptr_memory_strmat);
 	ptr_memory_strmat += sE.memory_size;
 
-	struct d_strvec sx_n;
+	struct blasfeo_dvec sx_n;
 	d_allocate_strvec(n, &sx_n);
 	d_cvt_vec2strvec(n, x_n, &sx_n, 0);
 
-	struct d_strvec sx_t;
+	struct blasfeo_dvec sx_t;
 	d_allocate_strvec(n, &sx_t);
 	d_cvt_vec2strvec(n, x_t, &sx_t, 0);
 
-	struct d_strvec sy_n;
+	struct blasfeo_dvec sy_n;
 	d_allocate_strvec(n, &sy_n);
 	d_cvt_vec2strvec(n, y_n, &sy_n, 0);
 
-	struct d_strvec sy_t;
+	struct blasfeo_dvec sy_t;
 	d_allocate_strvec(n, &sy_t);
 	d_cvt_vec2strvec(n, y_t, &sy_t, 0);
 
-	struct d_strvec sz_n;
+	struct blasfeo_dvec sz_n;
 	d_allocate_strvec(n, &sz_n);
 	d_cvt_vec2strvec(n, z_n, &sz_n, 0);
 
-	struct d_strvec sz_t;
+	struct blasfeo_dvec sz_t;
 	d_allocate_strvec(n, &sz_t);
 	d_cvt_vec2strvec(n, z_t, &sz_t, 0);
 
-	struct d_strvec sx0; d_create_strvec(n, &sx0, x0);
-	struct d_strvec sx1; d_create_strvec(n, &sx1, x1);
-	struct d_strvec sx2; d_create_strvec(n, &sx2, x2);
-	struct d_strvec sx3; d_create_strvec(n, &sx3, x3);
-	struct d_strvec sx4; d_create_strvec(n, &sx4, x4);
-	struct d_strvec sx5; d_create_strvec(n, &sx5, x5);
-	struct d_strvec sx6; d_create_strvec(n, &sx6, x6);
-	struct d_strvec sx7; d_create_strvec(n, &sx7, x7);
-//	struct d_strvec sx8; d_create_strvec(n, &sx8, x8);
-//	struct d_strvec sx9; d_create_strvec(n, &sx9, x9);
+	struct blasfeo_dvec sx0; d_create_strvec(n, &sx0, x0);
+	struct blasfeo_dvec sx1; d_create_strvec(n, &sx1, x1);
+	struct blasfeo_dvec sx2; d_create_strvec(n, &sx2, x2);
+	struct blasfeo_dvec sx3; d_create_strvec(n, &sx3, x3);
+	struct blasfeo_dvec sx4; d_create_strvec(n, &sx4, x4);
+	struct blasfeo_dvec sx5; d_create_strvec(n, &sx5, x5);
+	struct blasfeo_dvec sx6; d_create_strvec(n, &sx6, x6);
+	struct blasfeo_dvec sx7; d_create_strvec(n, &sx7, x7);
+//	struct blasfeo_dvec sx8; d_create_strvec(n, &sx8, x8);
+//	struct blasfeo_dvec sx9; d_create_strvec(n, &sx9, x9);
 
-	struct d_strvec sz0; d_allocate_strvec(n, &sz0);
-	struct d_strvec sz1; d_allocate_strvec(n, &sz1);
-	struct d_strvec sz2; d_allocate_strvec(n, &sz2);
-	struct d_strvec sz3; d_allocate_strvec(n, &sz3);
-	struct d_strvec sz4; d_allocate_strvec(n, &sz4);
-	struct d_strvec sz5; d_allocate_strvec(n, &sz5);
-	struct d_strvec sz6; d_allocate_strvec(n, &sz6);
-	struct d_strvec sz7; d_allocate_strvec(n, &sz7);
-//	struct d_strvec sz8; d_allocate_strvec(n, &sz8);
-//	struct d_strvec sz9; d_allocate_strvec(n, &sz9);
+	struct blasfeo_dvec sz0; d_allocate_strvec(n, &sz0);
+	struct blasfeo_dvec sz1; d_allocate_strvec(n, &sz1);
+	struct blasfeo_dvec sz2; d_allocate_strvec(n, &sz2);
+	struct blasfeo_dvec sz3; d_allocate_strvec(n, &sz3);
+	struct blasfeo_dvec sz4; d_allocate_strvec(n, &sz4);
+	struct blasfeo_dvec sz5; d_allocate_strvec(n, &sz5);
+	struct blasfeo_dvec sz6; d_allocate_strvec(n, &sz6);
+	struct blasfeo_dvec sz7; d_allocate_strvec(n, &sz7);
+//	struct blasfeo_dvec sz8; d_allocate_strvec(n, &sz8);
+//	struct blasfeo_dvec sz9; d_allocate_strvec(n, &sz9);
 
 	// tests
 	double *v; d_zeros(&v, n, 1);
@@ -213,11 +213,11 @@ int main()
 	d_print_mat(1, n, vm, 1);
 	d_print_mat(1, n, r, 1);
 
-	struct d_strvec sv; d_create_strvec(n, &sv, v);
-	struct d_strvec svp; d_create_strvec(n, &svp, vp);
-	struct d_strvec svm; d_create_strvec(n, &svm, vm);
-	struct d_strvec sm; d_create_strvec(n, &sm, m);
-	struct d_strvec sr; d_create_strvec(n, &sr, r);
+	struct blasfeo_dvec sv; d_create_strvec(n, &sv, v);
+	struct blasfeo_dvec svp; d_create_strvec(n, &svp, vp);
+	struct blasfeo_dvec svm; d_create_strvec(n, &svm, vm);
+	struct blasfeo_dvec sm; d_create_strvec(n, &sm, m);
+	struct blasfeo_dvec sr; d_create_strvec(n, &sr, r);
 
 //	d_print_tran_strvec(n, &sv, 0);
 //	d_print_tran_strvec(n, &svp, 0);

@@ -73,31 +73,31 @@ void s_print_e_tran_mat(int row, int col, float *A, int lda);
 
 #ifdef BLASFEO_COMMON
 // create a strmat for a matrix of size m*n by dynamically allocating memory
-void s_allocate_strmat(int m, int n, struct s_strmat *sA);
+void s_allocate_strmat(int m, int n, struct blasfeo_smat *sA);
 // create a strvec for a vector of size m by dynamically allocating memory
-void s_allocate_strvec(int m, struct s_strvec *sa);
+void s_allocate_strvec(int m, struct blasfeo_svec *sa);
 // free the memory allocated by d_allocate_strmat
-void s_free_strmat(struct s_strmat *sA);
+void s_free_strmat(struct blasfeo_smat *sA);
 // free the memory allocated by d_allocate_strvec
-void s_free_strvec(struct s_strvec *sa);
+void s_free_strvec(struct blasfeo_svec *sa);
 // print a strmat
-void s_print_strmat(int m, int n, struct s_strmat *sA, int ai, int aj);
+void s_print_strmat(int m, int n, struct blasfeo_smat *sA, int ai, int aj);
 // print in exponential notation a strmat
-void s_print_e_strmat(int m, int n, struct s_strmat *sA, int ai, int aj);
+void s_print_e_strmat(int m, int n, struct blasfeo_smat *sA, int ai, int aj);
 // print to file a strmat
-void s_print_to_file_strmat(FILE *file, int m, int n, struct s_strmat *sA, int ai, int aj);
+void s_print_to_file_strmat(FILE *file, int m, int n, struct blasfeo_smat *sA, int ai, int aj);
 // print a strvec
-void s_print_strvec(int m, struct s_strvec *sa, int ai);
+void s_print_strvec(int m, struct blasfeo_svec *sa, int ai);
 // print in exponential notation a strvec
-void s_print_e_strvec(int m, struct s_strvec *sa, int ai);
+void s_print_e_strvec(int m, struct blasfeo_svec *sa, int ai);
 // print to file a strvec
-void s_print_to_file_strvec(FILE *file, int m, struct s_strvec *sa, int ai);
+void s_print_to_file_strvec(FILE *file, int m, struct blasfeo_svec *sa, int ai);
 // print the transposed of a strvec
-void s_print_tran_strvec(int m, struct s_strvec *sa, int ai);
+void s_print_tran_strvec(int m, struct blasfeo_svec *sa, int ai);
 // print in exponential notation the transposed of a strvec
-void s_print_e_tran_strvec(int m, struct s_strvec *sa, int ai);
+void s_print_e_tran_strvec(int m, struct blasfeo_svec *sa, int ai);
 // print to file the transposed of a strvec
-void s_print_tran_to_file_strvec(FILE *file, int m, struct s_strvec *sa, int ai);
+void s_print_tran_to_file_strvec(FILE *file, int m, struct blasfeo_svec *sa, int ai);
 #endif
 
 

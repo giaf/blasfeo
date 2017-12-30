@@ -42,7 +42,7 @@ SHOW_DEFINE(TARGET)
 	for(ii=0; ii<n*n; ii++) B[ii] = 2*ii;
 
 
-	/* -------- instantiate s_strmat */
+	/* -------- instantiate blasfeo_smat */
 
 	// compute memory size
 	int size_strmat = N*s_size_strmat(n, n);
@@ -56,16 +56,16 @@ SHOW_DEFINE(TARGET)
 	// get point to strmat
 	char *ptr_memory_strmat = (char *) memory_strmat;
 
-	// -------- instantiate s_strmat
+	// -------- instantiate blasfeo_smat
 	printf("\nInstantiate matrices\n\n");
 
-	// instantiate s_strmat depend on compilation flag LA_BLAS || LA_REFERENCE
-	struct s_strmat sA;
+	// instantiate blasfeo_smat depend on compilation flag LA_BLAS || LA_REFERENCE
+	struct blasfeo_smat sA;
 	s_create_strmat(n, n, &sA, ptr_memory_strmat);
 	ptr_memory_strmat += sA.memory_size;
 	s_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
 
-	struct s_strmat sB;
+	struct blasfeo_smat sB;
 	s_create_strmat(n, n, &sB, ptr_memory_strmat);
 	ptr_memory_strmat += sB.memory_size;
 	s_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
@@ -73,18 +73,18 @@ SHOW_DEFINE(TARGET)
 	// Testing comparison
 	// reference matrices, column major
 
-	struct s_strmat rA;
+	struct blasfeo_smat rA;
 	test_s_create_strmat(n, n, &rA, ptr_memory_strmat);
 	ptr_memory_strmat += rA.memory_size;
 	test_s_cvt_mat2strmat(n, n, A, n, &rA, 0, 0);
 
-	struct s_strmat rB;
+	struct blasfeo_smat rB;
 	test_s_create_strmat(n, n, &rB, ptr_memory_strmat);
 	ptr_memory_strmat += sB.memory_size;
 	test_s_cvt_mat2strmat(n, n, B, n, &rB, 0, 0);
 
 
-	// -------- instantiate s_strmat
+	// -------- instantiate blasfeo_smat
 
 	// test operations
 	//
@@ -115,7 +115,7 @@ SHOW_DEFINE(TARGET)
 	/* AUX */
 
 	/* ----------- memory */
-	/* printf("----------- STRMAT memory\n\n"); */
+	/* printf("----------- XMAT memory\n\n"); */
 	/* for (int i=0; i<12; i++) */
 	/* { */
 		/* printf("%d: %f, %f\n", i, sA.pA[i], A[i]); */
@@ -134,7 +134,7 @@ SHOW_DEFINE(TARGET)
 	/* printf("Extract %d,%d for A: %f\n\n", ai, aj, ex_val); */
 
 	/* ---- column major */
-	/* struct s_strmat* ssA = &sA; */
+	/* struct blasfeo_smat* ssA = &sA; */
 	/* int lda = (&sA)->m; */
 	/* REAL pointer + n_rows + n_col*leading_dimension; */
 	/* REAL *pA = (&sA)->pA + ai + aj*lda; */

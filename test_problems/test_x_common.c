@@ -1,7 +1,7 @@
 // 1 to 1 comparison of every element
 int GECMP_LIBSTR(int n, int m,
-				 struct STRMAT *sB, struct STRMAT_REF *rB,
-				 struct STRMAT *sA, struct STRMAT_REF *rA
+				 struct XMAT *sB, struct XMAT_REF *rB,
+				 struct XMAT *sA, struct XMAT_REF *rA
 				 )
 	{
 	int ii, jj;
@@ -22,16 +22,16 @@ int GECMP_LIBSTR(int n, int m,
 					printf("\n\nFailed at index %d,%d, (HP) %f != %f (RF)\n\n", ii, jj, sbi, rbi);
 
 					printf("\nPrint B HP:\n\n");
-					PRINT_STRMAT(ii+offset, jj+offset, sB, 0, 0);
+					PRINT_XMAT(ii+offset, jj+offset, sB, 0, 0);
 
 					printf("\nPrint B REF:\n\n");
-					PRINT_STRMAT_REF(ii+offset, jj+offset, rB, 0, 0);
+					PRINT_XMAT_REF(ii+offset, jj+offset, rB, 0, 0);
 
 					printf("\nPrint A HP:\n\n");
-					PRINT_STRMAT(ii+offset, jj+offset, sA, 0, 0);
+					PRINT_XMAT(ii+offset, jj+offset, sA, 0, 0);
 
 					printf("\nPrint A REF:\n\n");
-					PRINT_STRMAT_REF(ii+offset, jj+offset, rA, 0, 0);
+					PRINT_XMAT_REF(ii+offset, jj+offset, rA, 0, 0);
 
 					#if defined(LA)
 					SHOW_DEFINE(LA)

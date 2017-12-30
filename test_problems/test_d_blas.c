@@ -646,23 +646,23 @@ int main()
 
 		// matrix struct
 #if 0
-		struct d_strmat sA; d_allocate_strmat(n+4, n+4, &sA);
-		struct d_strmat sB; d_allocate_strmat(n+4, n+4, &sB);
-		struct d_strmat sC; d_allocate_strmat(n+4, n+4, &sC);
-		struct d_strmat sD; d_allocate_strmat(n+4, n+4, &sD);
-		struct d_strmat sE; d_allocate_strmat(n+4, n+4, &sE);
+		struct blasfeo_dmat sA; d_allocate_strmat(n+4, n+4, &sA);
+		struct blasfeo_dmat sB; d_allocate_strmat(n+4, n+4, &sB);
+		struct blasfeo_dmat sC; d_allocate_strmat(n+4, n+4, &sC);
+		struct blasfeo_dmat sD; d_allocate_strmat(n+4, n+4, &sD);
+		struct blasfeo_dmat sE; d_allocate_strmat(n+4, n+4, &sE);
 #else
-		struct d_strmat sA; d_allocate_strmat(n, n, &sA);
-		struct d_strmat sB; d_allocate_strmat(n, n, &sB);
-		struct d_strmat sB2; d_allocate_strmat(n, n, &sB2);
-		struct d_strmat sB3; d_allocate_strmat(n, n, &sB3);
-		struct d_strmat sC; d_allocate_strmat(n, n, &sC);
-		struct d_strmat sD; d_allocate_strmat(n, n, &sD);
-		struct d_strmat sE; d_allocate_strmat(n, n, &sE);
+		struct blasfeo_dmat sA; d_allocate_strmat(n, n, &sA);
+		struct blasfeo_dmat sB; d_allocate_strmat(n, n, &sB);
+		struct blasfeo_dmat sB2; d_allocate_strmat(n, n, &sB2);
+		struct blasfeo_dmat sB3; d_allocate_strmat(n, n, &sB3);
+		struct blasfeo_dmat sC; d_allocate_strmat(n, n, &sC);
+		struct blasfeo_dmat sD; d_allocate_strmat(n, n, &sD);
+		struct blasfeo_dmat sE; d_allocate_strmat(n, n, &sE);
 #endif
-		struct d_strvec sx; d_allocate_strvec(n, &sx);
-		struct d_strvec sy; d_allocate_strvec(n, &sy);
-		struct d_strvec sz; d_allocate_strvec(n, &sz);
+		struct blasfeo_dvec sx; d_allocate_strvec(n, &sx);
+		struct blasfeo_dvec sy; d_allocate_strvec(n, &sy);
+		struct blasfeo_dvec sz; d_allocate_strvec(n, &sz);
 
 		d_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
 		d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
