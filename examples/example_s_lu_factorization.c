@@ -135,7 +135,7 @@ int main()
 	blasfeo_create_smat(n, n, &sLU, ptr_memory_strmat);
 	ptr_memory_strmat += sLU.memsize;
 
-	sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 	printf("\nB+A*A' = \n");
 	s_print_strmat(n, n, &sD, 0, 0);
 
@@ -155,10 +155,10 @@ int main()
 	printf("\nperm(I) = \n");
 	s_print_strmat(n, n, &sI, 0, 0);
 
-	strsm_llnu_libstr(n, n, 1.0, &sLU, 0, 0, &sI, 0, 0, &sD, 0, 0);
+	blasfeo_strsm_llnu(n, n, 1.0, &sLU, 0, 0, &sI, 0, 0, &sD, 0, 0);
 	printf("\nperm(inv(L)) = \n");
 	s_print_strmat(n, n, &sD, 0, 0);
-	strsm_lunn_libstr(n, n, 1.0, &sLU, 0, 0, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_strsm_lunn(n, n, 1.0, &sLU, 0, 0, &sD, 0, 0, &sD, 0, 0);
 	printf("\ninv(A) = \n");
 	s_print_strmat(n, n, &sD, 0, 0);
 
@@ -173,10 +173,10 @@ int main()
 	printf("\nperm(I') = \n");
 	s_print_strmat(n, n, &sB, 0, 0);
 
-	strsm_rltu_libstr(n, n, 1.0, &sLU, 0, 0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_strsm_rltu(n, n, 1.0, &sLU, 0, 0, &sB, 0, 0, &sD, 0, 0);
 	printf("\nperm(inv(L')) = \n");
 	s_print_strmat(n, n, &sD, 0, 0);
-	strsm_rutn_libstr(n, n, 1.0, &sLU, 0, 0, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_strsm_rutn(n, n, 1.0, &sLU, 0, 0, &sD, 0, 0, &sD, 0, 0);
 	printf("\ninv(A') = \n");
 	s_print_strmat(n, n, &sD, 0, 0);
 

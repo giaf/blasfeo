@@ -404,8 +404,8 @@ int main()
 //	kernel_dgemm_nn_10x4_vs_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn, 10, 4);
 //	kernel_dgemm_nn_10x2_vs_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn, 8, 1);
 //	kernel_dgemm_nn_12x4_lib4(2, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn);
-//	dgemm_nn_libstr(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
-//	dgemm_nt_libstr(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_dgemm_nn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
 //	d_print_strmat(n, n, &sD, 0, 0);
 //	return 0;
 //	dgetrf_nopivot_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
@@ -415,7 +415,7 @@ int main()
 //	int_print_mat(1, n, ipiv, 1);
 //	d_print_strmat(n, n, &sD, 0, 0);
 	//
-	dgemm_nt_libstr(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
 	dcolpe_libstr(n, ipiv, &sD);
 	d_print_strmat(n, n, &sD, 0, 0);
 	drowpe_libstr(n, ipiv, &sD);
@@ -534,20 +534,20 @@ int main()
 //	d_print_tran_strvec(n, &sz0, 0);
 //	d_print_tran_strvec(n, &sz1, 0);
 	return 0;
-	dtrmm_rlnn_libstr(8, 8, alpha, &sA, 3, 0, &sB, 0, 0, &sD, 0, 0);
-//	dgemm_nn_libstr(8, 8, 8, alpha, &sB, 0, 0, &sA, 1, 0, beta, &sA, 0, 0, &sD, 0, 0);
+	blasfeo_dtrmm_rlnn(8, 8, alpha, &sA, 3, 0, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_dgemm_nn(8, 8, 8, alpha, &sB, 0, 0, &sA, 1, 0, beta, &sA, 0, 0, &sD, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
-//	dsyrk_ln_libstr(n, 15, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_dsyrk_ln(n, 15, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 //	dpotrf_l_mn_libstr(n, 15, &sD, 0, 0, &sD, 0, 0);
 //	dsyrk_dpotrf_ln_libstr(n, 15, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
-//	dtrmm_rlnn_libstr(n, n, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_dtrmm_rlnn(n, n, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //	blasfeo_dgese(n, n, 0.0/0.0, &sD, 0, 0);
 //	kernel_dgemm_nt_4x8_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sC.pA, sD.pA);
 //	kernel_dgemm_nn_4x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sC.pA, sD.pA);
 //	kernel_dsyrk_nt_l_4x4_gen_lib4(n, &alpha, sA.pA, sB.pA, &beta, 0, sC.pA, sC.cn, 3, sD.pA, sD.cn, 0, 4, 0, 4);
 //	kernel_dsyrk_nt_l_8x4_gen_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, 0, sC.pA, sC.cn, 3, sD.pA, sD.cn, 0, 8, 0, 8);
-//	dsyrk_ln_libstr(10, 10, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 1, 0);
+//	blasfeo_dsyrk_ln(10, 10, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 1, 0);
 //	d_print_strmat(n, n, &sD, 0, 0);
 	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx0, 0, beta, &sz0, 0, &sz0, 0);
 	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx1, 0, beta, &sz1, 0, &sz1, 0);
@@ -591,7 +591,7 @@ int main()
 //	return 0;
 
 #if 1
-	dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sC, 0, 0);
+	blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sC, 0, 0);
 #else
 	blasfeo_dgese(n, n, 0.1, &sC, 0, 0);
 	DMATEL_LIBSTR(&sC, 0, 0) = 1.0;
@@ -659,7 +659,7 @@ int main()
 //	double beta = 1.0;
 //	kernel_dgemm_nt_4x12_vs_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sD.pA, sD.pA, 3, 10);
 //	kernel_dgemm_nt_8x8u_vs_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn, 7, 6);
-	dgemm_nn_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
 	dpotrf_l_libstr(16, &sD, 0, 0, &sD, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
@@ -677,8 +677,8 @@ int main()
 //	return 0;
 
 //	d_print_tran_strvec(n, &sx_n, 0);
-//	dgemm_l_diag_libstr(n, n, 1.0, &sx_n, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-//	dgemm_r_diag_libstr(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//	blasfeo_dgemm_dn(n, n, 1.0, &sx_n, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//	blasfeo_dgemm_nd(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //	d_print_strmat(n, n, &sD, 0, 0);
 //	exit(1);
 
@@ -695,7 +695,7 @@ int main()
 //	d_print_tran_strvec(n, &sz_n, 0);
 //	exit(1);
 
-//	dgemm_nt_libstr(8, 8, 8, 1.0, &sB, 0, 0, &sA, 1, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//	blasfeo_dgemm_nt(8, 8, 8, 1.0, &sB, 0, 0, &sA, 1, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //	d_print_strmat(n, n, &sD, 0, 0);
 //	return 0;
 
@@ -704,7 +704,7 @@ int main()
 //	kernel_dtrmm_nn_rl_4x4_gen_lib4(7, &alpha, sB.pA+sB.cn*4, 2, sA.pA, sA.cn, 1, sD.pA+sD.cn*4, sD.cn, 0, 4, 1, 4);
 //	kernel_dtrmm_nn_rl_4x4_lib4(4, &alpha, sB.pA, sA.pA, sA.cn+4*4, sD.pA+4*4);
 //	kernel_dtrmm_nn_rl_4x4_gen_lib4(3, &alpha, sB.pA+sB.cn*4+4*4, 2, sA.pA+sB.cn*4+4*4, sA.cn, 1, sD.pA+sD.cn*4+4*4, sD.cn, 0, 4, 0, 4);
-	dtrmm_rlnn_libstr(8, 8, 1.0, &sB, 0, 0, &sA, 3, 0, &sD, 2, 1);
+	blasfeo_dtrmm_rlnn(8, 8, 1.0, &sB, 0, 0, &sA, 3, 0, &sD, 2, 1);
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 
@@ -734,7 +734,7 @@ int main()
 	d_print_tran_strvec(n, &sz_n, 0);
 	return 0;
 
-	dgemm_nt_libstr(4, 8, 8, 1.0, &sB, 0, 0, &sA, 0, 0, 0.0, &sB, 0, 0, &sD, 3, 0);
+	blasfeo_dgemm_nt(4, 8, 8, 1.0, &sB, 0, 0, &sA, 0, 0, 0.0, &sB, 0, 0, &sD, 3, 0);
 //	d_print_strmat(n, n, &sB, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
 	exit(1);
@@ -747,7 +747,7 @@ int main()
 	d_print_mat(1, n, sD.dA, 1);
 #endif
 	int_print_mat(1, n, ipiv, 1);
-	dtrsm_rltn_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
+	blasfeo_dtrsm_rltn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
 	d_print_strmat(n, n, &sE, 0, 0);
 	exit(1);
 
@@ -756,18 +756,18 @@ int main()
 	drowpe_libstr(n, ipiv, &sB);
 	d_print_strmat(n, n, &sB, 0, 0);
 
-	dtrsm_llnu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
+	blasfeo_dtrsm_llnu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
 	d_print_strmat(n, n, &sE, 0, 0);
-	dtrsm_lunn_libstr(n, n, 1.0, &sD, 0, 0, &sE, 0, 0, &sE, 0, 0);
+	blasfeo_dtrsm_lunn(n, n, 1.0, &sD, 0, 0, &sE, 0, 0, &sE, 0, 0);
 	d_print_strmat(n, n, &sE, 0, 0);
 #else // solve X^T (P L U)^T = B^T P^T
 	d_print_strmat(n, n, &sB, 0, 0);
 	dcolpe_libstr(n, ipiv, &sB);
 	d_print_strmat(n, n, &sB, 0, 0);
 
-	dtrsm_rltu_libstr(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
+	blasfeo_dtrsm_rltu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
 	d_print_strmat(n, n, &sE, 0, 0);
-	dtrsm_rutn_libstr(n, n, 1.0, &sD, 0, 0, &sE, 0, 0, &sE, 0, 0);
+	blasfeo_dtrsm_rutn(n, n, 1.0, &sD, 0, 0, &sE, 0, 0, &sE, 0, 0);
 	d_print_strmat(n, n, &sE, 0, 0);
 #endif
 

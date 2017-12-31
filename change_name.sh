@@ -70,3 +70,30 @@
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dvecad_libstr/blasfeo_dvecad/g' {} \;
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/svecad_libstr/blasfeo_svecad/g' {} \;
 
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dgemm_nt_libstr/blasfeo_dgemm_nt/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/sgemm_nt_libstr/blasfeo_sgemm_nt/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dgemm_nn_libstr/blasfeo_dgemm_nn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/sgemm_nn_libstr/blasfeo_sgemm_nn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dsyrk_ln_libstr/blasfeo_dsyrk_ln/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/ssyrk_ln_libstr/blasfeo_ssyrk_ln/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dsyrk_ln_mn_libstr/blasfeo_dsyrk_ln_mn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/ssyrk_ln_mn_libstr/blasfeo_ssyrk_ln_mn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dtrmm_rutn_libstr/blasfeo_dtrmm_rutn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/strmm_rutn_libstr/blasfeo_strmm_rutn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dtrmm_rlnn_libstr/blasfeo_dtrmm_rlnn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/strmm_rlnn_libstr/blasfeo_strmm_rlnn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dtrsm_rltn_libstr/blasfeo_dtrsm_rltn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/strsm_rltn_libstr/blasfeo_strsm_rltn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dtrsm_rltu_libstr/blasfeo_dtrsm_rltu/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/strsm_rltu_libstr/blasfeo_strsm_rltu/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dtrsm_rutn_libstr/blasfeo_dtrsm_rutn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/strsm_rutn_libstr/blasfeo_strsm_rutn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dtrsm_llnu_libstr/blasfeo_dtrsm_llnu/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/strsm_llnu_libstr/blasfeo_strsm_llnu/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dtrsm_lunn_libstr/blasfeo_dtrsm_lunn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/strsm_lunn_libstr/blasfeo_strsm_lunn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dgemm_l_diag_libstr/blasfeo_dgemm_dn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/sgemm_l_diag_libstr/blasfeo_sgemm_dn/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dgemm_r_diag_libstr/blasfeo_dgemm_nd/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/sgemm_r_diag_libstr/blasfeo_sgemm_nd/g' {} \;
+

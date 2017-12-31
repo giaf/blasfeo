@@ -1121,7 +1121,7 @@ void dlauum_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *pA, int
 
 
 // dgemm nt
-void dgemm_nt_libstr(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0 | n<=0)
@@ -1296,7 +1296,7 @@ void dgemm_nt_libstr(int m, int n, int k, double alpha, struct blasfeo_dmat *sA,
 
 
 // dgemm nn
-void dgemm_nn_libstr(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)
@@ -1741,11 +1741,11 @@ void dgemm_nn_libstr(int m, int n, int k, double alpha, struct blasfeo_dmat *sA,
 
 
 // dtrsm_nn_llu
-void dtrsm_llnu_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dtrsm_llnu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
-		printf("\ndtrsm_llnu_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
+		printf("\nblasfeo_dtrsm_llnu: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
 	const int ps = 4;
@@ -1763,11 +1763,11 @@ void dtrsm_llnu_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int 
 
 
 // dtrsm_nn_lun
-void dtrsm_lunn_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dtrsm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
-		printf("\ndtrsm_lunn_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
+		printf("\nblasfeo_dtrsm_lunn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
 	const int ps = 4;
@@ -1804,7 +1804,7 @@ void dtrsm_lunn_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int 
 
 
 // dtrsm_right_lower_transposed_notunit
-void dtrsm_rltn_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)
@@ -1812,7 +1812,7 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int 
 	
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
-		printf("\ndtrsm_rltn_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
+		printf("\nblasfeo_dtrsm_rltn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
 
@@ -1997,11 +1997,11 @@ void dtrsm_rltn_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int 
 
 
 // dtrsm_right_lower_transposed_unit
-void dtrsm_rltu_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dtrsm_rltu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
-		printf("\ndtrsm_rltu_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
+		printf("\nblasfeo_dtrsm_rltu: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
 	const int ps = 4;
@@ -2019,11 +2019,11 @@ void dtrsm_rltu_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int 
 
 
 // dtrsm_right_upper_transposed_notunit
-void dtrsm_rutn_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dtrsm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
-		printf("\ndtrsm_rutn_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
+		printf("\nblasfeo_dtrsm_rutn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
 	const int ps = 4;
@@ -2060,11 +2060,11 @@ void dtrsm_rutn_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int 
 
 
 // dtrmm_right_upper_transposed_notunit (B, i.e. the first matrix, is triangular !!!)
-void dtrmm_rutn_libstr(int m, int n, double alpha, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dtrmm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | di!=0)
 		{
-		printf("\ndtrmm_rutn_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d\n", ai, bi, di);
+		printf("\nblasfeo_dtrmm_rutn: feature not implemented yet: ai=%d, bi=%d, di=%d\n", ai, bi, di);
 		exit(1);
 		}
 	const int ps = 4;
@@ -2081,7 +2081,7 @@ void dtrmm_rutn_libstr(int m, int n, double alpha, struct blasfeo_dmat *sB, int 
 
 
 // dtrmm_right_lower_nottransposed_notunit (B, i.e. the first matrix, is triangular !!!)
-void dtrmm_rlnn_libstr(int m, int n, double alpha, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	const int ps = 4;
@@ -2263,7 +2263,7 @@ void dtrmm_rlnn_libstr(int m, int n, double alpha, struct blasfeo_dmat *sB, int 
 
 
 
-void dsyrk_ln_libstr(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	
 	if(m<=0)
@@ -2271,7 +2271,7 @@ void dsyrk_ln_libstr(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai
 
 	if(ai!=0 | bi!=0)
 		{
-		printf("\ndsyrk_ln_libstr: feature not implemented yet: ai=%d, bi=%d\n", ai, bi);
+		printf("\nblasfeo_dsyrk_ln: feature not implemented yet: ai=%d, bi=%d\n", ai, bi);
 		exit(1);
 		}
 
@@ -2487,7 +2487,7 @@ void dsyrk_ln_libstr(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai
 
 
 
-void dsyrk_ln_mn_libstr(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dsyrk_ln_mn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	
 	if(m<=0 | n<=0)
@@ -2495,7 +2495,7 @@ void dsyrk_ln_mn_libstr(int m, int n, int k, double alpha, struct blasfeo_dmat *
 
 	if(ai!=0 | bi!=0)
 		{
-		printf("\ndsyrk_ln_libstr: feature not implemented yet: ai=%d, bi=%d\n", ai, bi);
+		printf("\nblasfeo_dsyrk_ln: feature not implemented yet: ai=%d, bi=%d\n", ai, bi);
 		exit(1);
 		}
 

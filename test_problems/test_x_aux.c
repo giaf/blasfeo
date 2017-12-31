@@ -88,7 +88,7 @@ SHOW_DEFINE(TARGET)
 
 	// test operations
 	//
-	/* sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 1.0, &sB, 0, 0, &sC, 0, 0); */
+	/* blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 1.0, &sB, 0, 0, &sC, 0, 0); */
 
 	/* printf("\nPrint mat B:\n\n"); */
 	/* s_print_mat(p_n, p_n, B, n); */

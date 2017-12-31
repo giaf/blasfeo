@@ -139,9 +139,9 @@ int main()
 //	kernel_sgemm_nt_8x4_lib4(2, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //	s_print_strmat(n, n, &sD, 0, 0);
 //	return 0;
-	sgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
-//	ssyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
-//	ssyrk_ln_mn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_ssyrk_ln(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_ssyrk_ln_mn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
 //	kernel_ssyrk_nt_l_8x8_lib8(n, &alpha, sA.pA, sA.pA, &beta, sB.pA, sD.pA);
 //	blasfeo_sgecp(16, 16, &sA, 2, 0, &sD, 1, 0);
 //	sgetr_libstr(16, 16, &sA, 2, 0, &sD, 2, 0);
@@ -177,7 +177,7 @@ int main()
 //	spotrf_l_mn_libstr(23, 17, &sD, 0, 0, &sD, 0, 0);
 	spotrf_l_libstr(n, &sD, 0, 0, &sD, 0, 0);
 //	kernel_strmm_nn_rl_8x4_lib8(3, &alpha, sB.pA, 7, sA.pA, sA.cn, sD.pA);
-//	strmm_rlnn_libstr(16, 12, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_strmm_rlnn(16, 12, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 	s_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 

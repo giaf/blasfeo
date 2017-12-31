@@ -127,13 +127,13 @@ void dgemm_diag_right_lib(int m, int n, double alpha, double *pA, int sda, doubl
 
 
 // dgemm with A diagonal matrix (stored as strvec)
-void dgemm_l_diag_libstr(int m, int n, double alpha, struct blasfeo_dvec *sA, int ai, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dgemm_dn(int m, int n, double alpha, struct blasfeo_dvec *sA, int ai, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
 	if(bi!=0 | ci!=0 | di!=0)
 		{
-		printf("\ndgemm_l_diag_libstr: feature not implemented yet: bi=%d, ci=%d, di=%d\n", bi, ci, di);
+		printf("\nblasfeo_dgemm_dn: feature not implemented yet: bi=%d, ci=%d, di=%d\n", bi, ci, di);
 		exit(1);
 		}
 	const int bs = 4;
@@ -151,13 +151,13 @@ void dgemm_l_diag_libstr(int m, int n, double alpha, struct blasfeo_dvec *sA, in
 
 
 // dgemm with B diagonal matrix (stored as strvec)
-void dgemm_r_diag_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sB, int bi, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dgemm_nd(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sB, int bi, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
 	if(ai!=0 | ci!=0 | di!=0)
 		{
-		printf("\ndgemm_r_diag_libstr: feature not implemented yet: ai=%d, ci=%d, di=%d\n", ai, ci, di);
+		printf("\nblasfeo_dgemm_nd: feature not implemented yet: ai=%d, ci=%d, di=%d\n", ai, ci, di);
 		exit(1);
 		}
 	const int bs = 4;

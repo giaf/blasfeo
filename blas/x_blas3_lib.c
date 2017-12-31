@@ -651,7 +651,7 @@ void TRSM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	REAL *pA = sA->pA+ai+aj*sA->m;
 	REAL *pB = sB->pA+bi+bj*sB->m;
 	REAL *pD = sD->pA+di+dj*sD->m;
-	printf("\ndtrsm_rutn_libstr: feature not implemented yet\n");
+	printf("\nblasfeo_dtrsm_rutn: feature not implemented yet\n");
 	exit(1);
 //	if(!(pB==pD))
 //		{

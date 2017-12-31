@@ -54,12 +54,12 @@ void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *hsBAbt, 
 	// middle stages
 	for(nn=0; nn<N; nn++)
 		{
-		dtrmm_rutn_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hsLxt[N-nn], 0, 0, 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
+		blasfeo_dtrmm_rutn(nu[N-nn-1]+nx[N-nn-1]+1, nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hsLxt[N-nn], 0, 0, 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
 		blasfeo_dgead(1, nx[N-nn], 1.0, &hsL[N-nn], nu[N-nn]+nx[N-nn], nu[N-nn], &hswork_mat[0], nu[N-nn-1]+nx[N-nn-1], 0);
 #if 1
 		dsyrk_dpotrf_ln_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #else
-		dsyrk_ln_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
+		blasfeo_dsyrk_ln(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 		dpotrf_l_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #endif
 		dtrtr_l_libstr(nx[N-nn-1], &hsL[N-nn-1], nu[N-nn-1], nu[N-nn-1], &hsLxt[N-nn-1], 0, 0);
@@ -105,12 +105,12 @@ void d_back_ric_trf_funnel1_libstr(int md, int *nx, int *nu, struct blasfeo_dmat
 	int ii;
 
 	ii = 0;
-	dtrmm_rutn_libstr(nu[0]+nx[0], nx[1], 1.0, &hsBAbt[ii], 0, 0, &hsLxt_old[ii], 0, 0, 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
-	dsyrk_ln_libstr(nu[0]+nx[0], nu[0]+nx[0], nx[1], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[0], 0, 0, &hsL[0], 0, 0);
+	blasfeo_dtrmm_rutn(nu[0]+nx[0], nx[1], 1.0, &hsBAbt[ii], 0, 0, &hsLxt_old[ii], 0, 0, 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
+	blasfeo_dsyrk_ln(nu[0]+nx[0], nu[0]+nx[0], nx[1], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[0], 0, 0, &hsL[0], 0, 0);
 	for(ii=1; ii<md; ii++)
 		{
-		dtrmm_rutn_libstr(nu[0]+nx[0], nx[1], 1.0, &hsBAbt[ii], 0, 0, &hsLxt_old[ii], 0, 0, 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
-		dsyrk_ln_libstr(nu[0]+nx[0], nu[0]+nx[0], nx[1], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsL[0], 0, 0, &hsL[0], 0, 0);
+		blasfeo_dtrmm_rutn(nu[0]+nx[0], nx[1], 1.0, &hsBAbt[ii], 0, 0, &hsLxt_old[ii], 0, 0, 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
+		blasfeo_dsyrk_ln(nu[0]+nx[0], nu[0]+nx[0], nx[1], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsL[0], 0, 0, &hsL[0], 0, 0);
 		}
 
 	dpotrf_l_libstr(nu[0]+nx[0], nu[0]+nx[0], &hsL[0], 0, 0, &hsL[0], 0, 0);
@@ -125,8 +125,8 @@ void d_back_ric_trf_funnel1_libstr(int md, int *nx, int *nu, struct blasfeo_dmat
 void d_back_ric_trf_step1_libstr(int *nx, int *nu, struct blasfeo_dmat *hsBAbt, struct blasfeo_dmat *hsRSQrq, struct blasfeo_dmat *hsL, struct blasfeo_dmat *hsLxt, struct blasfeo_dmat *hswork_mat)
 	{
 
-	dtrmm_rutn_libstr(nu[0]+nx[0], nx[1], 1.0, &hsBAbt[0], 0, 0, &hsLxt[1], 0, 0, 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
-	dsyrk_ln_libstr(nu[0]+nx[0], nu[0]+nx[0], nx[1], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[0], 0, 0, &hsL[0], 0, 0);
+	blasfeo_dtrmm_rutn(nu[0]+nx[0], nx[1], 1.0, &hsBAbt[0], 0, 0, &hsLxt[1], 0, 0, 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
+	blasfeo_dsyrk_ln(nu[0]+nx[0], nu[0]+nx[0], nx[1], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[0], 0, 0, &hsL[0], 0, 0);
 	dpotrf_l_libstr(nu[0]+nx[0], nu[0]+nx[0], &hsL[0], 0, 0, &hsL[0], 0, 0);
 	dtrtr_l_libstr(nx[0], &hsL[0], nu[0], nu[0], &hsLxt[0], 0, 0);
 
