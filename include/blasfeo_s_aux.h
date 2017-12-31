@@ -60,33 +60,33 @@ void s_cast_mat2strmat(float *A, struct blasfeo_smat *sA);
 void s_cast_diag_mat2strmat(float *dA, struct blasfeo_smat *sA);
 void s_cast_vec2vecmat(float *a, struct blasfeo_svec *sa);
 
-void sgein1_libstr(float a, struct blasfeo_smat *sA, int ai, int aj);
-float sgeex1_libstr(struct blasfeo_smat *sA, int ai, int aj);
-void svecin1_libstr(float a, struct blasfeo_svec *sx, int xi);
-float svecex1_libstr(struct blasfeo_svec *sx, int xi);
+void blasfeo_sgein1(float a, struct blasfeo_smat *sA, int ai, int aj);
+float blasfeo_sgeex1(struct blasfeo_smat *sA, int ai, int aj);
+void blasfeo_svecin1(float a, struct blasfeo_svec *sx, int xi);
+float blasfeo_svecex1(struct blasfeo_svec *sx, int xi);
 
 // A <= alpha
-void sgese_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj);
+void blasfeo_sgese(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj);
 // a <= alpha
-void svecse_libstr(int m, float alpha, struct blasfeo_svec *sx, int xi);
+void blasfeo_svecse(int m, float alpha, struct blasfeo_svec *sx, int xi);
 
 // copy and scale
 // void sgecp_lib(int m, int n, int offsetA, float *A, int sda, int offsetB, float *B, int sdb);
 //
-void sgecpsc_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
-void sgecp_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
-void sgesc_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj);
+void blasfeo_sgecpsc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
+void blasfeo_sgecp(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
+void blasfeo_sgesc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj);
 
-void sveccp_libstr(int m, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci);
-void svecsc_libstr(int m, float alpha, struct blasfeo_svec *sa, int ai);
-void sveccpsc_libstr(int m, float alpha, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci);
+void blasfeo_sveccp(int m, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci);
+void blasfeo_svecsc(int m, float alpha, struct blasfeo_svec *sa, int ai);
+void blasfeo_sveccpsc(int m, float alpha, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci);
 
 void strcp_l_lib(int m, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb);
-void strcp_l_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
+void blasfeo_strcp_l(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
 
 void sgead_lib(int m, int n, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb);
-void sgead_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
-void svecad_libstr(int m, float alpha, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci);
+void blasfeo_sgead(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
+void blasfeo_svecad(int m, float alpha, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci);
 
 void sgetr_lib(int m, int n, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc);
 void sgetr_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);

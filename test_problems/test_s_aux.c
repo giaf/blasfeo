@@ -172,7 +172,7 @@ SHOW_DEFINE(TARGET)
 		printf("Scale A[%d:%d,%d:%d] by %f\n",
 						ii,ni, 0,mi,    alpha);
 
-		sgesc_libstr(     ni, mi, alpha, &sA, ii, 0);
+		blasfeo_sgesc(     ni, mi, alpha, &sA, ii, 0);
 		blasfeo_sgesc_ref(ni, mi, alpha, &rA, ii, 0);
 
 		assert(sgecmp_libstr(n, n, &sA, &rA, &sA, &rA));
@@ -188,7 +188,7 @@ SHOW_DEFINE(TARGET)
 							     ii,ni, 0,mi,    alpha,  jj,ni, 0,mi);
 
 			// HP submatrix copy&scale
-			sgecpsc_libstr(ni, mi, alpha, &sA, ii, 0, &sB, jj, 0);
+			blasfeo_sgecpsc(ni, mi, alpha, &sA, ii, 0, &sB, jj, 0);
 			// REF submatrix copy&scale
 			blasfeo_sgecpsc_ref(ni, mi, alpha, &rA, ii, 0, &rB, jj, 0);
 			// check against blas with blasfeo REF
@@ -199,7 +199,7 @@ SHOW_DEFINE(TARGET)
 			printf("Copy A[%d:%d,%d:%d] in B[%d:%d,%d:%d]\n",
 							ii,ni, 0,mi,     jj,ni, 0,mi);
 
-			sgecp_libstr(     ni, mi, &sA, ii, 0, &sB, jj, 0);
+			blasfeo_sgecp(     ni, mi, &sA, ii, 0, &sB, jj, 0);
 			blasfeo_sgecp_ref(ni, mi, &rA, ii, 0, &rB, jj, 0);
 			assert(sgecmp_libstr(n, n, &sB, &rB, &sA, &rA));
 

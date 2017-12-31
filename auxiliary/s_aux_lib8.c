@@ -46,7 +46,7 @@ void strcp_l_lib(int m, int offsetA, float *A, int sda, int offsetB, float *B, i
 
 
 // scales and adds a strvec into a strvec
-void svecad_libstr(int m, float alpha, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci)
+void blasfeo_svecad(int m, float alpha, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci)
 	{
 	float *pa = sa->pa + ai;
 	float *pc = sc->pa + ci;
@@ -1456,7 +1456,7 @@ void s_cast_vec2vecmat(float *a, struct blasfeo_svec *sa)
 
 
 // insert element into strmat
-void sgein1_libstr(float a, struct blasfeo_smat *sA, int ai, int aj)
+void blasfeo_sgein1(float a, struct blasfeo_smat *sA, int ai, int aj)
 	{
 	const int bs = 8;
 	int sda = sA->cn;
@@ -1468,7 +1468,7 @@ void sgein1_libstr(float a, struct blasfeo_smat *sA, int ai, int aj)
 
 
 // extract element from strmat
-float sgeex1_libstr(struct blasfeo_smat *sA, int ai, int aj)
+float blasfeo_sgeex1(struct blasfeo_smat *sA, int ai, int aj)
 	{
 	const int bs = 8;
 	int sda = sA->cn;
@@ -1479,7 +1479,7 @@ float sgeex1_libstr(struct blasfeo_smat *sA, int ai, int aj)
 
 
 // insert element into strvec
-void svecin1_libstr(float a, struct blasfeo_svec *sx, int xi)
+void blasfeo_svecin1(float a, struct blasfeo_svec *sx, int xi)
 	{
 	const int bs = 8;
 	float *x = sx->pa + xi;
@@ -1490,7 +1490,7 @@ void svecin1_libstr(float a, struct blasfeo_svec *sx, int xi)
 
 
 // extract element from strvec
-float svecex1_libstr(struct blasfeo_svec *sx, int xi)
+float blasfeo_svecex1(struct blasfeo_svec *sx, int xi)
 	{
 	const int bs = 8;
 	float *x = sx->pa + xi;
@@ -1500,7 +1500,7 @@ float svecex1_libstr(struct blasfeo_svec *sx, int xi)
 
 
 // set all elements of a strmat to a value
-void sgese_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj)
+void blasfeo_sgese(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj)
 	{
 	const int bs = 8;
 	int sda = sA->cn;
@@ -1549,7 +1549,7 @@ void sgese_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, in
 
 
 // set all elements of a strvec to a value
-void svecse_libstr(int m, float alpha, struct blasfeo_svec *sx, int xi)
+void blasfeo_svecse(int m, float alpha, struct blasfeo_svec *sx, int xi)
 	{
 	float *x = sx->pa + xi;
 	int ii;
@@ -1708,7 +1708,7 @@ void scolpei_libstr(int kmax, int *ipiv, struct blasfeo_smat *sA)
 
 
 // scale a generic strmat
-void sgesc_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj)
+void blasfeo_sgesc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj)
 	{
 
 	// early return
@@ -1717,15 +1717,15 @@ void sgesc_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, in
 
 #if defined(DIM_CHECK)
 	// non-negative size
-	if(m<0) printf("\n****** sgesc_libstr : m<0 : %d<0 *****\n", m);
-	if(n<0) printf("\n****** sgesc_libstr : n<0 : %d<0 *****\n", n);
+	if(m<0) printf("\n****** blasfeo_sgesc : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** blasfeo_sgesc : n<0 : %d<0 *****\n", n);
 	// non-negative offset
-	if(ai<0) printf("\n****** sgesc_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** sgesc_libstr : aj<0 : %d<0 *****\n", aj);
+	if(ai<0) printf("\n****** blasfeo_sgesc : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** blasfeo_sgesc : aj<0 : %d<0 *****\n", aj);
 	// inside matrix
 	// A: m x n
-	if(ai+m > sA->m) printf("\n***** sgesc_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+n > sA->n) printf("\n***** sgesc_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+	if(ai+m > sA->m) printf("\n***** blasfeo_sgesc : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** blasfeo_sgesc : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
 #endif
 
 	const int bs = 8;
@@ -1766,7 +1766,7 @@ void sgesc_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, in
 
 
 // copy a generic strmat into a generic strmat
-void sgecp_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj)
+void blasfeo_sgecp(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj)
 	{
 
 	// early return
@@ -1775,20 +1775,20 @@ void sgecp_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct 
 
 #if defined(DIM_CHECK)
 	// non-negative size
-	if(m<0) printf("\n****** sgecp_libstr : m<0 : %d<0 *****\n", m);
-	if(n<0) printf("\n****** sgecp_libstr : n<0 : %d<0 *****\n", n);
+	if(m<0) printf("\n****** blasfeo_sgecp : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** blasfeo_sgecp : n<0 : %d<0 *****\n", n);
 	// non-negative offset
-	if(ai<0) printf("\n****** sgecp_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** sgecp_libstr : aj<0 : %d<0 *****\n", aj);
-	if(bi<0) printf("\n****** sgecp_libstr : bi<0 : %d<0 *****\n", bi);
-	if(bj<0) printf("\n****** sgecp_libstr : bj<0 : %d<0 *****\n", bj);
+	if(ai<0) printf("\n****** blasfeo_sgecp : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** blasfeo_sgecp : aj<0 : %d<0 *****\n", aj);
+	if(bi<0) printf("\n****** blasfeo_sgecp : bi<0 : %d<0 *****\n", bi);
+	if(bj<0) printf("\n****** blasfeo_sgecp : bj<0 : %d<0 *****\n", bj);
 	// inside matrix
 	// A: m x n
-	if(ai+m > sA->m) printf("\n***** sgecp_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+n > sA->n) printf("\n***** sgecp_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+	if(ai+m > sA->m) printf("\n***** blasfeo_sgecp : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** blasfeo_sgecp : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
 	// B: m x n
-	if(bi+m > sB->m) printf("\n***** sgecp_libstr : bi+m > row(B) : %d+%d > %d *****\n", bi, m, sB->m);
-	if(bj+n > sB->n) printf("\n***** sgecp_libstr : bj+n > col(B) : %d+%d > %d *****\n", bj, n, sB->n);
+	if(bi+m > sB->m) printf("\n***** blasfeo_sgecp : bi+m > row(B) : %d+%d > %d *****\n", bi, m, sB->m);
+	if(bj+n > sB->n) printf("\n***** blasfeo_sgecp : bj+n > col(B) : %d+%d > %d *****\n", bj, n, sB->n);
 #endif
 
 	const int bs = 8;
@@ -2025,7 +2025,7 @@ void sgecp_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct 
 
 
 // copy and scale a generic strmat into a generic strmat
-void sgecpsc_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj)
+void blasfeo_sgecpsc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj)
 	{
 
 	// early return
@@ -2034,20 +2034,20 @@ void sgecpsc_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, 
 
 #if defined(DIM_CHECK)
 	// non-negative size
-	if(m<0) printf("\n****** sgecpsc_libstr : m<0 : %d<0 *****\n", m);
-	if(n<0) printf("\n****** sgecpsc_libstr : n<0 : %d<0 *****\n", n);
+	if(m<0) printf("\n****** blasfeo_sgecpsc : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** blasfeo_sgecpsc : n<0 : %d<0 *****\n", n);
 	// non-negative offset
-	if(ai<0) printf("\n****** sgecpsc_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** sgecpsc_libstr : aj<0 : %d<0 *****\n", aj);
-	if(bi<0) printf("\n****** sgecpsc_libstr : bi<0 : %d<0 *****\n", bi);
-	if(bj<0) printf("\n****** sgecpsc_libstr : bj<0 : %d<0 *****\n", bj);
+	if(ai<0) printf("\n****** blasfeo_sgecpsc : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** blasfeo_sgecpsc : aj<0 : %d<0 *****\n", aj);
+	if(bi<0) printf("\n****** blasfeo_sgecpsc : bi<0 : %d<0 *****\n", bi);
+	if(bj<0) printf("\n****** blasfeo_sgecpsc : bj<0 : %d<0 *****\n", bj);
 	// inside matrix
 	// A: m x n
-	if(ai+m > sA->m) printf("\n***** sgecpsc_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+n > sA->n) printf("\n***** sgecpsc_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+	if(ai+m > sA->m) printf("\n***** blasfeo_sgecpsc : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** blasfeo_sgecpsc : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
 	// B: m x n
-	if(bi+m > sB->m) printf("\n***** sgecpsc_libstr : bi+m > row(B) : %d+%d > %d *****\n", bi, m, sB->m);
-	if(bj+n > sB->n) printf("\n***** sgecpsc_libstr : bj+n > col(B) : %d+%d > %d *****\n", bj, n, sB->n);
+	if(bi+m > sB->m) printf("\n***** blasfeo_sgecpsc : bi+m > row(B) : %d+%d > %d *****\n", bi, m, sB->m);
+	if(bj+n > sB->n) printf("\n***** blasfeo_sgecpsc : bj+n > col(B) : %d+%d > %d *****\n", bj, n, sB->n);
 #endif
 
 	const int bs = 8;
@@ -2283,7 +2283,7 @@ void sgecpsc_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, 
 
 
 // scale a strvec
-void svecsc_libstr(int m, float alpha, struct blasfeo_svec *sa, int ai)
+void blasfeo_svecsc(int m, float alpha, struct blasfeo_svec *sa, int ai)
 	{
 	float *pa = sa->pa + ai;
 	int ii;
@@ -2305,7 +2305,7 @@ void svecsc_libstr(int m, float alpha, struct blasfeo_svec *sa, int ai)
 
 
 // copy a strvec into a strvec
-void sveccp_libstr(int m, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci)
+void blasfeo_sveccp(int m, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci)
 	{
 	float *pa = sa->pa + ai;
 	float *pc = sc->pa + ci;
@@ -2328,7 +2328,7 @@ void sveccp_libstr(int m, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *
 
 
 // copy and scale a strvec into a strvec
-void sveccpsc_libstr(int m, float alpha, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci)
+void blasfeo_sveccpsc(int m, float alpha, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci)
 	{
 	float *pa = sa->pa + ai;
 	float *pc = sc->pa + ci;
@@ -2351,7 +2351,7 @@ void sveccpsc_libstr(int m, float alpha, struct blasfeo_svec *sa, int ai, struct
 
 
 // copy a lower triangular strmat into a lower triangular strmat
-void strcp_l_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj)
+void blasfeo_strcp_l(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj)
 	{
 	const int bs = 8;
 	int sda = sA->cn;
@@ -2360,14 +2360,14 @@ void strcp_l_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasf
 	float *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
 	strcp_l_lib(m, ai%bs, pA, sda, ci%bs, pC, sdc);
 	// XXX uses full matrix copy !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//	sgecp_libstr(m, m, sA, ai, aj, sC, ci, cj);
+	//	blasfeo_sgecp(m, m, sA, ai, aj, sC, ci, cj);
 	return;
 	}
 
 
 
 // scale and add a generic strmat into a generic strmat
-void sgead_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj)
+void blasfeo_sgead(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj)
 	{
 
 	// early return
@@ -2376,20 +2376,20 @@ void sgead_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, in
 
 #if defined(DIM_CHECK)
 	// non-negative size
-	if(m<0) printf("\n****** sgead_libstr : m<0 : %d<0 *****\n", m);
-	if(n<0) printf("\n****** sgead_libstr : n<0 : %d<0 *****\n", n);
+	if(m<0) printf("\n****** blasfeo_sgead : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** blasfeo_sgead : n<0 : %d<0 *****\n", n);
 	// non-negative offset
-	if(ai<0) printf("\n****** sgead_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** sgead_libstr : aj<0 : %d<0 *****\n", aj);
-	if(bi<0) printf("\n****** sgead_libstr : bi<0 : %d<0 *****\n", bi);
-	if(bj<0) printf("\n****** sgead_libstr : bj<0 : %d<0 *****\n", bj);
+	if(ai<0) printf("\n****** blasfeo_sgead : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** blasfeo_sgead : aj<0 : %d<0 *****\n", aj);
+	if(bi<0) printf("\n****** blasfeo_sgead : bi<0 : %d<0 *****\n", bi);
+	if(bj<0) printf("\n****** blasfeo_sgead : bj<0 : %d<0 *****\n", bj);
 	// inside matrix
 	// A: m x n
-	if(ai+m > sA->m) printf("\n***** sgead_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+n > sA->n) printf("\n***** sgead_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+	if(ai+m > sA->m) printf("\n***** blasfeo_sgead : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** blasfeo_sgead : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
 	// B: m x n
-	if(bi+m > sB->m) printf("\n***** sgead_libstr : bi+m > row(B) : %d+%d > %d *****\n", bi, m, sB->m);
-	if(bj+n > sB->n) printf("\n***** sgead_libstr : bj+n > col(B) : %d+%d > %d *****\n", bj, n, sB->n);
+	if(bi+m > sB->m) printf("\n***** blasfeo_sgead : bi+m > row(B) : %d+%d > %d *****\n", bi, m, sB->m);
+	if(bj+n > sB->n) printf("\n***** blasfeo_sgead : bj+n > col(B) : %d+%d > %d *****\n", bj, n, sB->n);
 #endif
 
 	const int bs = 8;

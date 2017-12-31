@@ -63,17 +63,17 @@ void test_d_cast_vec2vecmat(double *a, struct blasfeo_dvec *sa);
 // ------ copy / scale
 
 // B <= A
-void test_dgecp_libstr(int m, int n,
+void test_blasfeo_dgecp(int m, int n,
 					struct blasfeo_dmat *sA, int ai, int aj,
 					struct blasfeo_dmat *sB, int bi, int bj);
 
 // A <= alpha*A
-void test_dgesc_libstr(int m, int n,
+void test_blasfeo_dgesc(int m, int n,
 					double alpha,
 					struct blasfeo_dmat *sA, int ai, int aj);
 
 // B <= alpha*A
-void test_dgecpsc_libstr(int m, int n,
+void test_blasfeo_dgecpsc(int m, int n,
 					double alpha,
 					struct blasfeo_dmat *sA, int ai, int aj,
 					struct blasfeo_dmat *sB, int bi, int bj);
@@ -81,52 +81,52 @@ void test_dgecpsc_libstr(int m, int n,
 // // --- insert/extract
 // //
 // // <= sA[ai, aj]
-// void test_dgein1_libstr(double a, struct blasfeo_dmat *sA, int ai, int aj);
+// void test_blasfeo_dgein1(double a, struct blasfeo_dmat *sA, int ai, int aj);
 // // <= sA[ai, aj]
-// double dgeex1_libstr(struct blasfeo_dmat *sA, int ai, int aj);
+// double blasfeo_dgeex1(struct blasfeo_dmat *sA, int ai, int aj);
 // // sx[xi] <= a
-// void test_dvecin1_libstr(double a, struct blasfeo_dvec *sx, int xi);
+// void test_blasfeo_dvecin1(double a, struct blasfeo_dvec *sx, int xi);
 // // <= sx[xi]
-// double dvecex1_libstr(struct blasfeo_dvec *sx, int xi);
+// double blasfeo_dvecex1(struct blasfeo_dvec *sx, int xi);
 // // A <= alpha
 
 // // --- set
-// void test_dgese_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj);
+// void test_blasfeo_dgese(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj);
 // // a <= alpha
-// void test_dvecse_libstr(int m, double alpha, struct blasfeo_dvec *sx, int xi);
+// void test_blasfeo_dvecse(int m, double alpha, struct blasfeo_dvec *sx, int xi);
 // // B <= A
 
 
 // // --- vector
 // // y <= x
-// void test_dveccp_libstr(int m, struct blasfeo_dvec *sa, int ai, struct blasfeo_dvec *sc, int ci);
+// void test_blasfeo_dveccp(int m, struct blasfeo_dvec *sa, int ai, struct blasfeo_dvec *sc, int ci);
 // // x <= alpha*x
-// void test_dvecsc_libstr(int m, double alpha, struct blasfeo_dvec *sa, int ai);
+// void test_blasfeo_dvecsc(int m, double alpha, struct blasfeo_dvec *sa, int ai);
 // // TODO
 // // x <= alpha*x
-// void test_dveccpsc_libstr(int m, double alpha, struct blasfeo_dvec *sa, int ai, struct blasfeo_dvec *sc, int ci);
+// void test_blasfeo_dveccpsc(int m, double alpha, struct blasfeo_dvec *sa, int ai, struct blasfeo_dvec *sc, int ci);
 
 
 // // B <= A, A lower triangular
-// void test_dtrcp_l_libstr(int m,
+// void test_blasfeo_dtrcp_l(int m,
 //                     struct blasfeo_dmat *sA, int ai, int aj,
 //                     struct blasfeo_dmat *sB, int bi, int bj);
 
-// void test_dtrcpsc_l_libstr(int m, double alpha,
+// void test_blasfeo_dtrcpsc_l(int m, double alpha,
 //                     struct blasfeo_dmat *sA, int ai, int aj,
 //                     struct blasfeo_dmat *sB, int bi, int bj);
 
-// void test_dtrsc_l_libstr(int m, double alpha,
+// void test_blasfeo_dtrsc_l(int m, double alpha,
 //                     struct blasfeo_dmat *sA, int ai, int aj);
 
 
 // // B <= B + alpha*A
-// void test_dgead_libstr(int m, int n, double alpha,
+// void test_blasfeo_dgead(int m, int n, double alpha,
 //                     struct blasfeo_dmat *sA, int ai, int aj,
 //                     struct blasfeo_dmat *sC, int ci, int cj);
 
 // // y <= y + alpha*x
-// void test_dvecad_libstr(int m, double alpha,
+// void test_blasfeo_dvecad(int m, double alpha,
 //                     struct blasfeo_dvec *sa, int ai,
 //                     struct blasfeo_dvec *sc, int ci);
 

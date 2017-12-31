@@ -59,15 +59,15 @@
 #define CAST_VEC2VECMAT s_cast_vec2vecmat
 
 
-#define GECP_LIBSTR sgecp_libstr
-#define GESC_LIBSTR sgesc_libstr
-#define GECPSC_LIBSTR sgecpsc_libstr
+#define GECP_LIBSTR blasfeo_sgecp
+#define GESC_LIBSTR blasfeo_sgesc
+#define GECPSC_LIBSTR blasfeo_sgecpsc
 
 
 
 
 // insert element into strmat
-void sgein1_libstr(float a, struct blasfeo_smat *sA, int ai, int aj)
+void blasfeo_sgein1(float a, struct blasfeo_smat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	float *pA = sA->pA + ai + aj*lda;
@@ -78,7 +78,7 @@ void sgein1_libstr(float a, struct blasfeo_smat *sA, int ai, int aj)
 
 
 // extract element from strmat
-float sgeex1_libstr(struct blasfeo_smat *sA, int ai, int aj)
+float blasfeo_sgeex1(struct blasfeo_smat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	float *pA = sA->pA + ai + aj*lda;
@@ -88,7 +88,7 @@ float sgeex1_libstr(struct blasfeo_smat *sA, int ai, int aj)
 
 
 // insert element into strvec
-void svecin1_libstr(float a, struct blasfeo_svec *sx, int xi)
+void blasfeo_svecin1(float a, struct blasfeo_svec *sx, int xi)
 	{
 	float *x = sx->pa + xi;
 	x[0] = a;
@@ -98,7 +98,7 @@ void svecin1_libstr(float a, struct blasfeo_svec *sx, int xi)
 
 
 // extract element from strvec
-float svecex1_libstr(struct blasfeo_svec *sx, int xi)
+float blasfeo_svecex1(struct blasfeo_svec *sx, int xi)
 	{
 	float *x = sx->pa + xi;
 	return x[0];
@@ -107,7 +107,7 @@ float svecex1_libstr(struct blasfeo_svec *sx, int xi)
 
 
 // set all elements of a strmat to a value
-void sgese_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj)
+void blasfeo_sgese(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	float *pA = sA->pA + ai + aj*lda;
@@ -125,7 +125,7 @@ void sgese_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, in
 
 
 // set all elements of a strvec to a value
-void svecse_libstr(int m, float alpha, struct blasfeo_svec *sx, int xi)
+void blasfeo_svecse(int m, float alpha, struct blasfeo_svec *sx, int xi)
 	{
 	float *x = sx->pa + xi;
 	int ii;
@@ -329,7 +329,7 @@ void scolpei_libstr(int kmax, int *ipiv, struct blasfeo_smat *sA)
 
 
 // copy a strvec into a strvec
-void sveccp_libstr(int m, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci)
+void blasfeo_sveccp(int m, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci)
 	{
 	float *pa = sa->pa + ai;
 	float *pc = sc->pa + ci;
@@ -352,7 +352,7 @@ void sveccp_libstr(int m, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *
 
 
 // scale a strvec
-void svecsc_libstr(int m, float alpha, struct blasfeo_svec *sa, int ai)
+void blasfeo_svecsc(int m, float alpha, struct blasfeo_svec *sa, int ai)
 	{
 	float *pa = sa->pa + ai;
 	int ii;
@@ -374,7 +374,7 @@ void svecsc_libstr(int m, float alpha, struct blasfeo_svec *sa, int ai)
 
 
 // copy and scale a strvec into a strvec
-void sveccpsc_libstr(int m, float alpha, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci)
+void blasfeo_sveccpsc(int m, float alpha, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci)
 	{
 	float *pa = sa->pa + ai;
 	float *pc = sc->pa + ci;
@@ -397,7 +397,7 @@ void sveccpsc_libstr(int m, float alpha, struct blasfeo_svec *sa, int ai, struct
 
 
 // copy a lower triangular strmat into a lower triangular strmat
-void strcp_l_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj)
+void blasfeo_strcp_l(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	float *pA = sA->pA + ai + aj*lda;
@@ -418,7 +418,7 @@ void strcp_l_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasf
 
 
 // scale and add a generic strmat into a generic strmat
-void sgead_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj)
+void blasfeo_sgead(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	float *pA = sA->pA + ai + aj*lda;
@@ -446,7 +446,7 @@ void sgead_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, in
 
 
 // scales and adds a strvec into a strvec
-void svecad_libstr(int m, float alpha, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci)
+void blasfeo_svecad(int m, float alpha, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci)
 	{
 	float *pa = sa->pa + ai;
 	float *pc = sc->pa + ci;

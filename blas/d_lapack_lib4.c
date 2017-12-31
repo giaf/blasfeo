@@ -1375,7 +1375,7 @@ void dgetrf_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct
 
 	// needs to perform row-excanges on the yet-to-be-factorized matrix too
 	if(pC!=pD)
-		dgecp_libstr(m, n, sC, ci, cj, sD, di, dj);
+		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
 
 	// minimum matrix size
 	p = n<m ? n : m; // XXX
@@ -2484,7 +2484,7 @@ void dgeqrf_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct
 
 	// copy strmat submatrix
 	if(pC!=pD)
-		dgecp_libstr(m, n, sC, ci, cj, sD, di, dj);
+		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
 
 	int ii;
 	int imax0 = (ps-(di&(ps-1)))&(ps-1);
@@ -2563,7 +2563,7 @@ void dgelqf_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct
 
 	if(pC!=pD)
 		// copy strmat submatrix
-		dgecp_libstr(m, n, sC, ci, cj, sD, di, dj);
+		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
 
 	int ii, jj, ll;
 	int imax0 = (ps-(di&(ps-1)))&(ps-1);

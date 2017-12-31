@@ -235,7 +235,7 @@ int main()
 	// copy scale
 #if 0
 	d_print_strmat(n, n, &sA, 0, 0);
-	dgecpsc_libstr(5, 5, 0.1, &sA, 3, 0, &sD, 3, 0);
+	blasfeo_dgecpsc(5, 5, 0.1, &sA, 3, 0, &sD, 3, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 #endif
@@ -542,7 +542,7 @@ int main()
 //	dpotrf_l_mn_libstr(n, 15, &sD, 0, 0, &sD, 0, 0);
 //	dsyrk_dpotrf_ln_libstr(n, 15, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //	dtrmm_rlnn_libstr(n, n, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
-//	dgese_libstr(n, n, 0.0/0.0, &sD, 0, 0);
+//	blasfeo_dgese(n, n, 0.0/0.0, &sD, 0, 0);
 //	kernel_dgemm_nt_4x8_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sC.pA, sD.pA);
 //	kernel_dgemm_nn_4x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sC.pA, sD.pA);
 //	kernel_dsyrk_nt_l_4x4_gen_lib4(n, &alpha, sA.pA, sB.pA, &beta, 0, sC.pA, sC.cn, 3, sD.pA, sD.cn, 0, 4, 0, 4);
@@ -572,13 +572,13 @@ int main()
 	return 0;
 
 //	d_print_strmat(n, n, &sC, 0, 0);
-//	dgese_libstr(n, n, 1.0, &sB, 0, 0);
+//	blasfeo_dgese(n, n, 1.0, &sB, 0, 0);
 //	kernel_dger4_sub_4_lib4(6, sB.pA, sA.pA, sC.pA);
 //	kernel_dger4_sub_4_vs_lib4(6, sB.pA, sA.pA, sC.pA, 1);
 	return 0;
 
 //	d_print_strmat(n, n, &sC, 0, 0);
-//	dgese_libstr(n, n, 1.0, &sB, 0, 0);
+//	blasfeo_dgese(n, n, 1.0, &sB, 0, 0);
 //	kernel_dger4_sub_4_lib4(6, sB.pA, sA.pA, sC.pA);
 //	kernel_dger4_sub_4_vs_lib4(6, sB.pA, sA.pA, sC.pA, 1);
 //	kernel_dger4_sub_8_lib4(5, sB.pA, sB.cn, sA.pA, sC.pA, sC.cn);
@@ -593,7 +593,7 @@ int main()
 #if 1
 	dgemm_nt_libstr(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sC, 0, 0);
 #else
-	dgese_libstr(n, n, 0.1, &sC, 0, 0);
+	blasfeo_dgese(n, n, 0.1, &sC, 0, 0);
 	DMATEL_LIBSTR(&sC, 0, 0) = 1.0;
 //	DMATEL_LIBSTR(&sC, 0, 1) = 1.0;
 	for(ii=1; ii<n-1; ii++)
@@ -606,9 +606,9 @@ int main()
 	DMATEL_LIBSTR(&sC, n-1, n-1) = 1.0;
 #endif
 	d_print_strmat(n, n, &sC, 0, 0);
-	dgese_libstr(n, n, 0.0/0.0, &sD, 0, 0);
+	blasfeo_dgese(n, n, 0.0/0.0, &sD, 0, 0);
 //	d_print_strmat(n, n, &sA, 0, 0);
-//	dgein1_libstr(12.0, &sA, 0, 0);
+//	blasfeo_dgein1(12.0, &sA, 0, 0);
 //	DMATEL_LIBSTR(&sA, 0, 0) =   12.0;
 //	DMATEL_LIBSTR(&sA, 1, 0) =    6.0;
 //	DMATEL_LIBSTR(&sA, 2, 0) = -  4.0;
@@ -627,7 +627,7 @@ int main()
 	v_zeros_align(&qr_work, qr_work_size);
 //	dgeqrf_libstr(10, 10, &sC, 0, 0, &sD, 0, 0, qr_work);
 	dgelqf_libstr(17, 17, &sC, 0, 0, &sD, 0, 0, qr_work);
-//	dgecp_libstr(10, 10, &sC, 0, 0, &sD, 0, 0);
+//	blasfeo_dgecp(10, 10, &sC, 0, 0, &sD, 0, 0);
 //	kernel_dgeqrf_4_lib4(16, 12, sD.pA, sD.cn, sD.dA, qr_work);
 //	d_print_strmat(n, n, &sA, 0, 0);
 //	kernel_dgeqrf_vs_lib4(10, 16, 0, sD.pA+0, sD.cn, sD.dA);
@@ -668,7 +668,7 @@ int main()
 //	dmatse_libstr(n, n, 100.0, &sD, 0, 0);
 
 //	for(ii=0; ii<n; ii++)
-//		dvecin1_libstr(ii+1, &sx_n, ii);
+//		blasfeo_dvecin1(ii+1, &sx_n, ii);
 //	d_print_tran_strvec(n, &sx_n, 0);
 //	d_print_strmat(n, n, &sD, 0, 0);
 //	// ddiain_libstr(4, -1.0, &sx_n, 1, &sD, 3, 2);

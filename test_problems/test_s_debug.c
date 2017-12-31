@@ -119,7 +119,7 @@ int main()
 	// copy scale
 #if 0
 	s_print_strmat(n, n, &sA, 0, 0);
-	sgecpsc_libstr(10, 10, 0.1, &sA, 0, 0, &sD, 0, 0);
+	blasfeo_sgecpsc(10, 10, 0.1, &sA, 0, 0, &sD, 0, 0);
 	s_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 #endif
@@ -143,7 +143,7 @@ int main()
 //	ssyrk_ln_libstr(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
 //	ssyrk_ln_mn_libstr(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
 //	kernel_ssyrk_nt_l_8x8_lib8(n, &alpha, sA.pA, sA.pA, &beta, sB.pA, sD.pA);
-//	sgecp_libstr(16, 16, &sA, 2, 0, &sD, 1, 0);
+//	blasfeo_sgecp(16, 16, &sA, 2, 0, &sD, 1, 0);
 //	sgetr_libstr(16, 16, &sA, 2, 0, &sD, 2, 0);
 //	s_print_strmat(n, n, &sD, 0, 0);
 //	sgemv_n_libstr(6, 6, 1.0, &sA, 1, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);
@@ -152,7 +152,7 @@ int main()
 //	strmv_ltn_libstr(10, 10, &sA, 1, 0, &sx, 0, &sz0, 0);
 //	sA.pA[0] = 1.0;
 //	strsv_lnn_libstr(10, &sA, 0, 0, &sx, 0, &sz0, 0);
-//	for(ii=0; ii<8; ii++) sA.dA[ii] = 1.0/sgeex1_libstr(&sA, ii, ii);
+//	for(ii=0; ii<8; ii++) sA.dA[ii] = 1.0/blasfeo_sgeex1(&sA, ii, ii);
 //	kernel_strsv_lt_inv_8_lib8(0, sA.pA, sA.cn, sA.dA, sx.pa, sx.pa, sz0.pa);
 //	kernel_strsv_lt_inv_8_vs_lib8(0, sA.pA, sA.cn, sA.dA, sx.pa, sx.pa, sz0.pa, 3);
 //	s_print_strmat(n, n, &sA, 0, 0);
@@ -166,7 +166,7 @@ int main()
 //	s_print_tran_strvec(n, &sz0, 0);
 //	s_print_tran_strvec(n, &sz1, 0);
 //	return 0;
-//	sgesc_libstr(16, 9, 2.0, &sD, 0, 0);
+//	blasfeo_sgesc(16, 9, 2.0, &sD, 0, 0);
 //	s_print_strmat(n, n, &sD, 0, 0);
 //	kernel_spotrf_nt_l_8x8_lib8(0, sD.pA, sD.pA, sD.pA, sD.pA, sx.pa);
 //	s_print_strmat(n, n, &sD, 0, 0);

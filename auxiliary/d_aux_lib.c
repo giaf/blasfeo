@@ -67,14 +67,14 @@
 #define CAST_VEC2VECMAT d_cast_vec2vecmat
 
 
-#define GECP_LIBSTR dgecp_libstr
-#define GESC_LIBSTR dgesc_libstr
-#define GECPSC_LIBSTR dgecpsc_libstr
+#define GECP_LIBSTR blasfeo_dgecp
+#define GESC_LIBSTR blasfeo_dgesc
+#define GECPSC_LIBSTR blasfeo_dgecpsc
 
 
 
 // insert element into strmat
-void dgein1_libstr(double a, struct blasfeo_dmat *sA, int ai, int aj)
+void blasfeo_dgein1(double a, struct blasfeo_dmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -85,7 +85,7 @@ void dgein1_libstr(double a, struct blasfeo_dmat *sA, int ai, int aj)
 
 
 // extract element from strmat
-double dgeex1_libstr(struct blasfeo_dmat *sA, int ai, int aj)
+double blasfeo_dgeex1(struct blasfeo_dmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -94,7 +94,7 @@ double dgeex1_libstr(struct blasfeo_dmat *sA, int ai, int aj)
 
 
 // insert element into strvec
-void dvecin1_libstr(double a, struct blasfeo_dvec *sx, int xi)
+void blasfeo_dvecin1(double a, struct blasfeo_dvec *sx, int xi)
 	{
 	double *x = sx->pa + xi;
 	x[0] = a;
@@ -104,7 +104,7 @@ void dvecin1_libstr(double a, struct blasfeo_dvec *sx, int xi)
 
 
 // extract element from strvec
-double dvecex1_libstr(struct blasfeo_dvec *sx, int xi)
+double blasfeo_dvecex1(struct blasfeo_dvec *sx, int xi)
 	{
 	double *x = sx->pa + xi;
 	return x[0];
@@ -113,7 +113,7 @@ double dvecex1_libstr(struct blasfeo_dvec *sx, int xi)
 
 
 // set all elements of a strmat to a value
-void dgese_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj)
+void blasfeo_dgese(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -131,7 +131,7 @@ void dgese_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, i
 
 
 // set all elements of a strvec to a value
-void dvecse_libstr(int m, double alpha, struct blasfeo_dvec *sx, int xi)
+void blasfeo_dvecse(int m, double alpha, struct blasfeo_dvec *sx, int xi)
 	{
 	double *x = sx->pa + xi;
 	int ii;
@@ -338,7 +338,7 @@ void dcolpei_libstr(int kmax, int *ipiv, struct blasfeo_dmat *sA)
 // --- vector
 
 // copy a strvec into a strvec
-void dveccp_libstr(int m, struct blasfeo_dvec *sa, int ai, struct blasfeo_dvec *sc, int ci)
+void blasfeo_dveccp(int m, struct blasfeo_dvec *sa, int ai, struct blasfeo_dvec *sc, int ci)
 	{
 	double *pa = sa->pa + ai;
 	double *pc = sc->pa + ci;
@@ -359,7 +359,7 @@ void dveccp_libstr(int m, struct blasfeo_dvec *sa, int ai, struct blasfeo_dvec *
 	}
 
 // scale a strvec
-void dvecsc_libstr(int m, double alpha, struct blasfeo_dvec *sa, int ai)
+void blasfeo_dvecsc(int m, double alpha, struct blasfeo_dvec *sa, int ai)
 	{
 	double *pa = sa->pa + ai;
 	int ii;
@@ -381,7 +381,7 @@ void dvecsc_libstr(int m, double alpha, struct blasfeo_dvec *sa, int ai)
 
 
 // copy and scale a strvec into a strvec
-void dveccpsc_libstr(int m, double alpha, struct blasfeo_dvec *sa, int ai, struct blasfeo_dvec *sc, int ci)
+void blasfeo_dveccpsc(int m, double alpha, struct blasfeo_dvec *sa, int ai, struct blasfeo_dvec *sc, int ci)
 	{
 	double *pa = sa->pa + ai;
 	double *pc = sc->pa + ci;
@@ -404,7 +404,7 @@ void dveccpsc_libstr(int m, double alpha, struct blasfeo_dvec *sa, int ai, struc
 
 
 // copy a lower triangular strmat into a lower triangular strmat
-void dtrcp_l_libstr(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
+void blasfeo_dtrcp_l(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -425,7 +425,7 @@ void dtrcp_l_libstr(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasf
 
 
 // scale and add a generic strmat into a generic strmat
-void dgead_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
+void blasfeo_dgead(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -453,7 +453,7 @@ void dgead_libstr(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, i
 
 
 // scales and adds a strvec into a strvec
-void dvecad_libstr(int m, double alpha, struct blasfeo_dvec *sa, int ai, struct blasfeo_dvec *sc, int ci)
+void blasfeo_dvecad(int m, double alpha, struct blasfeo_dvec *sa, int ai, struct blasfeo_dvec *sc, int ci)
 	{
 	double *pa = sa->pa + ai;
 	double *pc = sc->pa + ci;

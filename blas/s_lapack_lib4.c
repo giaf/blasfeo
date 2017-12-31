@@ -861,7 +861,7 @@ void sgetrf_libstr(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct
 	float *dD = sD->dA; // XXX what to do if di and dj are not zero
 	// needs to perform row-excanges on the yet-to-be-factorized matrix too
 	if(pC!=pD)
-		sgecp_libstr(m, n, sC, ci, cj, sD, di, dj);
+		blasfeo_sgecp(m, n, sC, ci, cj, sD, di, dj);
 	sgetrf_nn_lib(m, n, pC, sdc, pD, sdd, dD, ipiv);
 	if(di==0 && dj==0)
 		sD->use_dA = 1;

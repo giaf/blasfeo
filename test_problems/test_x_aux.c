@@ -130,7 +130,7 @@ SHOW_DEFINE(TARGET)
 	/* int aj = 1; */
 
 	// ---- strmat
-	/* REAL ex_val = sgeex1_libstr(&sA, ai, aj); */
+	/* REAL ex_val = blasfeo_sgeex1(&sA, ai, aj); */
 	/* printf("Extract %d,%d for A: %f\n\n", ai, aj, ex_val); */
 
 	/* ---- column major */
@@ -160,8 +160,8 @@ SHOW_DEFINE(TARGET)
 		printf("Scale A[%d:%d,%d:%d] by %f\n",
 						ii,ni, 0,mi,    alpha);
 
-		sgesc_libstr(     ni, mi, alpha, &sA, ii, 0);
-		test_sgesc_libstr(ni, mi, alpha, &rA, ii, 0);
+		blasfeo_sgesc(     ni, mi, alpha, &sA, ii, 0);
+		test_blasfeo_sgesc(ni, mi, alpha, &rA, ii, 0);
 
 		/* printf("value 0,1: %f", MATEL_LIBSTR(&sA, 0,1)); */
 		/* printf("PS:%d", PS); */
@@ -179,9 +179,9 @@ SHOW_DEFINE(TARGET)
 							     ii,ni, 0,mi,    alpha,  jj,ni, 0,mi);
 
 			// HP submatrix copy&scale
-			sgecpsc_libstr(ni, mi, alpha, &sA, ii, 0, &sB, jj, 0);
+			blasfeo_sgecpsc(ni, mi, alpha, &sA, ii, 0, &sB, jj, 0);
 			// REF submatrix copy&scale
-			test_sgecpsc_libstr(ni, mi, alpha, &rA, ii, 0, &rB, jj, 0);
+			test_blasfeo_sgecpsc(ni, mi, alpha, &rA, ii, 0, &rB, jj, 0);
 			// check against blas with blasfeo REF
 			assert(sgecmp_libstr(n, n, &sB, &rB));
 
@@ -190,8 +190,8 @@ SHOW_DEFINE(TARGET)
 			printf("Copy A[%d:%d,%d:%d] in B[%d:%d,%d:%d]\n",
 							ii,ni, 0,mi,     jj,ni, 0,mi);
 
-			sgecp_libstr(     ni, mi, &sA, ii, 0, &sB, jj, 0);
-			test_sgecp_libstr(ni, mi, &rA, ii, 0, &rB, jj, 0);
+			blasfeo_sgecp(     ni, mi, &sA, ii, 0, &sB, jj, 0);
+			test_blasfeo_sgecp(ni, mi, &rA, ii, 0, &rB, jj, 0);
 			assert(sgecmp_libstr(n, n, &sB, &rB));
 
 			printf("\n");
