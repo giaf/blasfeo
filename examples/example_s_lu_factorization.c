@@ -151,7 +151,7 @@ int main()
 	printf("\nI = \n");
 	s_print_strmat(n, n, &sI, 0, 0);
 
-	srowpe_libstr(n, ipiv, &sI);
+	blasfeo_srowpe(n, ipiv, &sI);
 	printf("\nperm(I) = \n");
 	s_print_strmat(n, n, &sI, 0, 0);
 
@@ -169,7 +169,7 @@ int main()
 	printf("\nI' = \n");
 	s_print_strmat(n, n, &sI, 0, 0);
 
-	scolpe_libstr(n, ipiv, &sB);
+	blasfeo_scolpe(n, ipiv, &sB);
 	printf("\nperm(I') = \n");
 	s_print_strmat(n, n, &sB, 0, 0);
 

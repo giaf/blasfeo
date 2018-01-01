@@ -278,20 +278,20 @@ int main()
 	bb = DMATEL_LIBSTR(&sD, 1, 0);
 //	c = aa/sqrt(aa*aa+bb*bb);
 //	s = bb/sqrt(aa*aa+bb*bb);
-	drotg_libstr(aa, bb, &c, &s);
-	drowrot_libstr(3, &sD, 0, 1, 0, c, s);
-	drowrot_libstr(3, &sD, 0, 1, 5, c, s);
-	dcolrot_libstr(3, &sD, 5, 5, 6, c, s);
+	blasfeo_drotg(aa, bb, &c, &s);
+	blasfeo_drowrot(3, &sD, 0, 1, 0, c, s);
+	blasfeo_drowrot(3, &sD, 0, 1, 5, c, s);
+	blasfeo_dcolrot(3, &sD, 5, 5, 6, c, s);
 	d_print_strmat(n, n, &sD, 0, 0);
 	//
 	aa = DMATEL_LIBSTR(&sD, 1, 1);
 	bb = DMATEL_LIBSTR(&sD, 2, 1);
 //	c = aa/sqrt(aa*aa+bb*bb);
 //	s = bb/sqrt(aa*aa+bb*bb);
-	drotg_libstr(aa, bb, &c, &s);
-	drowrot_libstr(2, &sD, 1, 2, 1, c, s);
-	drowrot_libstr(3, &sD, 1, 2, 5, c, s);
-	dcolrot_libstr(3, &sD, 5, 6, 7, c, s);
+	blasfeo_drotg(aa, bb, &c, &s);
+	blasfeo_drowrot(2, &sD, 1, 2, 1, c, s);
+	blasfeo_drowrot(3, &sD, 1, 2, 5, c, s);
+	blasfeo_dcolrot(3, &sD, 5, 6, 7, c, s);
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 #endif
@@ -312,7 +312,7 @@ int main()
 	bb = DMATEL_LIBSTR(&sD, 1, 0);
 	c =  bb/sqrt(aa*aa+bb*bb);
 	s = -aa/sqrt(aa*aa+bb*bb);
-	drowrot_libstr(3, &sD, 0, 1, 0, c, s);
+	blasfeo_drowrot(3, &sD, 0, 1, 0, c, s);
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 #endif
@@ -333,7 +333,7 @@ int main()
 	bb = DMATEL_LIBSTR(&sD, 0, 1);
 	c =  bb/sqrt(aa*aa+bb*bb);
 	s = -aa/sqrt(aa*aa+bb*bb);
-	dcolrot_libstr(3, &sD, 0, 0, 1, c, s);
+	blasfeo_dcolrot(3, &sD, 0, 0, 1, c, s);
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 #endif
@@ -374,20 +374,20 @@ int main()
 	bb = DMATEL_LIBSTR(&sD, 0, 1);
 //	c = aa/sqrt(aa*aa+bb*bb);
 //	s = bb/sqrt(aa*aa+bb*bb);
-	drotg_libstr(aa, bb, &c, &s);
-	dcolrot_libstr(3, &sD, 0, 0, 1, c, s);
-	dcolrot_libstr(3, &sD, 0, 5, 6, c, s);
-	drowrot_libstr(3, &sD, 5, 6, 5, c, s);
+	blasfeo_drotg(aa, bb, &c, &s);
+	blasfeo_dcolrot(3, &sD, 0, 0, 1, c, s);
+	blasfeo_dcolrot(3, &sD, 0, 5, 6, c, s);
+	blasfeo_drowrot(3, &sD, 5, 6, 5, c, s);
 	d_print_strmat(n, n, &sD, 0, 0);
 	//
 	aa = DMATEL_LIBSTR(&sD, 1, 1);
 	bb = DMATEL_LIBSTR(&sD, 1, 2);
 //	c = aa/sqrt(aa*aa+bb*bb);
 //	s = bb/sqrt(aa*aa+bb*bb);
-	drotg_libstr(aa, bb, &c, &s);
-	dcolrot_libstr(2, &sD, 1, 1, 2, c, s);
-	dcolrot_libstr(3, &sD, 0, 6, 7, c, s);
-	drowrot_libstr(3, &sD, 6, 7, 5, c, s);
+	blasfeo_drotg(aa, bb, &c, &s);
+	blasfeo_dcolrot(2, &sD, 1, 1, 2, c, s);
+	blasfeo_dcolrot(3, &sD, 0, 6, 7, c, s);
+	blasfeo_drowrot(3, &sD, 6, 7, 5, c, s);
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 #endif
@@ -416,9 +416,9 @@ int main()
 //	d_print_strmat(n, n, &sD, 0, 0);
 	//
 	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
-	dcolpe_libstr(n, ipiv, &sD);
+	blasfeo_dcolpe(n, ipiv, &sD);
 	d_print_strmat(n, n, &sD, 0, 0);
-	drowpe_libstr(n, ipiv, &sD);
+	blasfeo_drowpe(n, ipiv, &sD);
 	d_print_strmat(n, n, &sD, 0, 0);
 	blasfeo_dpotrf_l(n, &sD, 0, 0, &sD, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
@@ -427,14 +427,14 @@ int main()
 #if 0
 	// N scheme
 #if 1
-	dvecpe_libstr(n, ipiv, &sx0, 0);
-	dvecpe_libstr(n, ipiv, &sx1, 0);
-	dvecpe_libstr(n, ipiv, &sx2, 0);
-	dvecpe_libstr(n, ipiv, &sx3, 0);
-	dvecpe_libstr(n, ipiv, &sx4, 0);
-	dvecpe_libstr(n, ipiv, &sx5, 0);
-	dvecpe_libstr(n, ipiv, &sx6, 0);
-	dvecpe_libstr(n, ipiv, &sx7, 0);
+	blasfeo_dvecpe(n, ipiv, &sx0, 0);
+	blasfeo_dvecpe(n, ipiv, &sx1, 0);
+	blasfeo_dvecpe(n, ipiv, &sx2, 0);
+	blasfeo_dvecpe(n, ipiv, &sx3, 0);
+	blasfeo_dvecpe(n, ipiv, &sx4, 0);
+	blasfeo_dvecpe(n, ipiv, &sx5, 0);
+	blasfeo_dvecpe(n, ipiv, &sx6, 0);
+	blasfeo_dvecpe(n, ipiv, &sx7, 0);
 #endif
 	blasfeo_dtrsv_lnu(n, &sD, 0, 0, &sx0, 0, &sz0, 0);
 	blasfeo_dtrsv_lnu(n, &sD, 0, 0, &sx1, 0, &sz1, 0);
@@ -501,14 +501,14 @@ int main()
 	blasfeo_dtrsv_ltu(n, &sD, 0, 0, &sz7, 0, &sz7, 0);
 	//
 #if 1
-	dvecpei_libstr(n, ipiv, &sz0, 0);
-	dvecpei_libstr(n, ipiv, &sz1, 0);
-	dvecpei_libstr(n, ipiv, &sz2, 0);
-	dvecpei_libstr(n, ipiv, &sz3, 0);
-	dvecpei_libstr(n, ipiv, &sz4, 0);
-	dvecpei_libstr(n, ipiv, &sz5, 0);
-	dvecpei_libstr(n, ipiv, &sz6, 0);
-	dvecpei_libstr(n, ipiv, &sz7, 0);
+	blasfeo_dvecpei(n, ipiv, &sz0, 0);
+	blasfeo_dvecpei(n, ipiv, &sz1, 0);
+	blasfeo_dvecpei(n, ipiv, &sz2, 0);
+	blasfeo_dvecpei(n, ipiv, &sz3, 0);
+	blasfeo_dvecpei(n, ipiv, &sz4, 0);
+	blasfeo_dvecpei(n, ipiv, &sz5, 0);
+	blasfeo_dvecpei(n, ipiv, &sz6, 0);
+	blasfeo_dvecpei(n, ipiv, &sz7, 0);
 #endif
 	//
 	d_print_tran_strvec(n, &sz0, 0);
@@ -636,11 +636,11 @@ int main()
 	free(qr_work);
 	return 0;
 
-//	dveccl_mask_libstr(n, &svm, 0, &sv, 0, &svp, 0, &sv, 0, &sm, 0);
+//	blasfeo_dveccl_mask(n, &svm, 0, &sv, 0, &svp, 0, &sv, 0, &sm, 0);
 //	veccl_libstr(n, &svm, 0, &sv, 0, &svp, 0, &sv, 0);
 //	d_print_tran_strvec(12, &sv, 0);
 //	d_print_tran_strvec(12, &sm, 0);
-//	dvecze_libstr(n, &sm, 0, &sr, 0, &sr, 0);
+//	blasfeo_dvecze(n, &sm, 0, &sr, 0, &sr, 0);
 //	d_print_tran_strvec(12, &sr, 0);
 //	return 0;
 
@@ -671,8 +671,8 @@ int main()
 //		blasfeo_dvecin1(ii+1, &sx_n, ii);
 //	d_print_tran_strvec(n, &sx_n, 0);
 //	d_print_strmat(n, n, &sD, 0, 0);
-//	// ddiain_libstr(4, -1.0, &sx_n, 1, &sD, 3, 2);
-//	ddiaad_libstr(4, -1.0, &sx_n, 1, &sD, 3, 2);
+//	// blasfeo_ddiain(4, -1.0, &sx_n, 1, &sD, 3, 2);
+//	blasfeo_ddiaad(4, -1.0, &sx_n, 1, &sD, 3, 2);
 //	d_print_strmat(n, n, &sD, 0, 0);
 //	return 0;
 
@@ -753,7 +753,7 @@ int main()
 
 #if 1 // solve P L U X = P B
 	d_print_strmat(n, n, &sB, 0, 0);
-	drowpe_libstr(n, ipiv, &sB);
+	blasfeo_drowpe(n, ipiv, &sB);
 	d_print_strmat(n, n, &sB, 0, 0);
 
 	blasfeo_dtrsm_llnu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
@@ -762,7 +762,7 @@ int main()
 	d_print_strmat(n, n, &sE, 0, 0);
 #else // solve X^T (P L U)^T = B^T P^T
 	d_print_strmat(n, n, &sB, 0, 0);
-	dcolpe_libstr(n, ipiv, &sB);
+	blasfeo_dcolpe(n, ipiv, &sB);
 	d_print_strmat(n, n, &sB, 0, 0);
 
 	blasfeo_dtrsm_rltu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
@@ -779,7 +779,7 @@ int main()
 //	blasfeo_unpack_dmat(n, n, &sE, 0, 0, C, n);
 //	d_print_mat(n, n, C, n);
 
-	dtrtr_u_libstr(6, &sE, 2, 0, &sB, 1, 0);
+	blasfeo_dtrtr_u(6, &sE, 2, 0, &sB, 1, 0);
 	d_print_strmat(n, n, &sB, 0, 0);
 
 	d_print_strmat(n, n, &sA, 0, 0);

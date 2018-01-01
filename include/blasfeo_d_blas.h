@@ -39,21 +39,21 @@ extern "C" {
 //
 
 // z = y + alpha*x
-void daxpy_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
+void blasfeo_daxpy(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
 // z = beta*y + alpha*x
-void daxpby_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
+void blasfeo_daxpby(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
 // z += x .* y
-void dvecmulacc_libstr(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
+void blasfeo_dvecmulacc(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
 // z = x .* y, return sum(z) = x^T * y
-double dvecmuldot_libstr(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
+double blasfeo_dvecmuldot(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
 // return x^T * y
-double ddot_libstr(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi);
+double blasfeo_ddot(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi);
 // construct givens plane rotation
-void drotg_libstr(double a, double b, double *c, double *s);
+void blasfeo_drotg(double a, double b, double *c, double *s);
 // apply plane rotation [a b] [c -s; s; c] to the aj0 and aj1 columns of A at row index ai
-void dcolrot_libstr(int m, struct blasfeo_dmat *sA, int ai, int aj0, int aj1, double c, double s);
+void blasfeo_dcolrot(int m, struct blasfeo_dmat *sA, int ai, int aj0, int aj1, double c, double s);
 // apply plane rotation [c s; -s c] [a; b] to the ai0 and ai1 rows of A at column index aj
-void drowrot_libstr(int m, struct blasfeo_dmat *sA, int ai0, int ai1, int aj, double c, double s);
+void blasfeo_drowrot(int m, struct blasfeo_dmat *sA, int ai0, int ai1, int aj, double c, double s);
 
 
 

@@ -308,7 +308,7 @@ int main()
 //				blasfeo_ssyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 	//			blasfeo_spotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
 				blasfeo_spotrf_l(n, &sB, 0, 0, &sB, 0, 0);
-	//			sgetr_libstr(n, n, &sA, 0, 0, &sB, 0, 0);
+	//			blasfeo_sgetr(n, n, &sA, 0, 0, &sB, 0, 0);
 	//			blasfeo_sgetrf_nopivot(n, n, &sB, 0, 0, &sB, 0, 0);
 	//			blasfeo_sgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 	//			blasfeo_strmm_rlnn(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);

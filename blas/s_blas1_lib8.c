@@ -48,7 +48,7 @@
 
 
 // z = y + alpha*x, with increments equal to 1
-void saxpy_libstr(int m, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+void blasfeo_saxpy(int m, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 	float *x = sx->pa + xi;
 	float *y = sy->pa + yi;
@@ -70,7 +70,7 @@ void saxpy_libstr(int m, float alpha, struct blasfeo_svec *sx, int xi, struct bl
 	}
 
 
-void saxpby_libstr(int m, float alpha, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+void blasfeo_saxpby(int m, float alpha, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 	if(m<=0)
 		return;
@@ -121,7 +121,7 @@ void saxpy_bkp_libstr(int m, float alpha, struct blasfeo_svec *sx, int xi, struc
 
 
 // multiply two vectors
-void svecmulacc_libstr(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+void blasfeo_svecmulacc(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -160,7 +160,7 @@ void svecmulacc_libstr(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_sv
 
 
 // multiply two vectors and compute dot product
-float svecmuldot_libstr(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+float blasfeo_svecmuldot(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0)

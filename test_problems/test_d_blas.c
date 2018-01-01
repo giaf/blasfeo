@@ -755,7 +755,7 @@ int main()
 	//			blasfeo_dgetrf_nopivot(n, n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 	//			blasfeo_dgeqrf(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
-//				dcolin_libstr(n, &sx, 0, &sB3, 0, n-1);
+//				blasfeo_dcolin(n, &sx, 0, &sB3, 0, n-1);
 //				blasfeo_dgelqf(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
 //				blasfeo_dtrmm_rlnn(n, n, 1.0, &sA, 0, 0, &sD, 0, 0, &sD, 0, 0); //
 	//			blasfeo_dtrmm_rutn(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);

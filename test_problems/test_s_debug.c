@@ -144,7 +144,7 @@ int main()
 //	blasfeo_ssyrk_ln_mn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sB, 0, 0, &sD, 0, 0);
 //	kernel_ssyrk_nt_l_8x8_lib8(n, &alpha, sA.pA, sA.pA, &beta, sB.pA, sD.pA);
 //	blasfeo_sgecp(16, 16, &sA, 2, 0, &sD, 1, 0);
-//	sgetr_libstr(16, 16, &sA, 2, 0, &sD, 2, 0);
+//	blasfeo_sgetr(16, 16, &sA, 2, 0, &sD, 2, 0);
 //	s_print_strmat(n, n, &sD, 0, 0);
 //	blasfeo_sgemv_n(6, 6, 1.0, &sA, 1, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);
 //	blasfeo_sgemv_t(11, 8, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);

@@ -39,21 +39,21 @@ extern "C" {
 //
 
 // z = y + alpha*x
-void saxpy_libstr(int kmax, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi);
+void blasfeo_saxpy(int kmax, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi);
 // z = beta*y + alpha*x
-void saxpby_libstr(int kmax, float alpha, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi);
+void blasfeo_saxpby(int kmax, float alpha, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi);
 // z += x .* y
-void svecmulacc_libstr(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi);
+void blasfeo_svecmulacc(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi);
 // z = x .* y, return sum(z) = x^T * y
-float svecmuldot_libstr(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi);
+float blasfeo_svecmuldot(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi);
 // return x^T * y
-float sdot_libstr(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi);
+float blasfeo_sdot(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi);
 // construct givens plane rotation
-void srotg_libstr(float a, float b, float *c, float *s);
+void blasfeo_srotg(float a, float b, float *c, float *s);
 // apply plane rotation [a b] [c -s; s; c] to the aj0 and aj1 columns of A at row index ai
-void scolrot_libstr(int m, struct blasfeo_smat *sA, int ai, int aj0, int aj1, float c, float s);
+void blasfeo_scolrot(int m, struct blasfeo_smat *sA, int ai, int aj0, int aj1, float c, float s);
 // apply plane rotation [c s; -s c] [a; b] to the ai0 and ai1 rows of A at column index aj
-void srowrot_libstr(int m, struct blasfeo_smat *sA, int ai0, int ai1, int aj, float c, float s);
+void blasfeo_srowrot(int m, struct blasfeo_smat *sA, int ai0, int ai1, int aj, float c, float s);
 
 
 

@@ -49,7 +49,7 @@ void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *hsBAbt, 
 
 	// last stage
 	blasfeo_dpotrf_l(nx[N]+1, nx[N], &hsRSQrq[N], 0, 0, &hsL[N], 0, 0);
-	dtrtr_l_libstr(nx[N], &hsL[N], 0, 0, &hsLxt[N], 0, 0);
+	blasfeo_dtrtr_l(nx[N], &hsL[N], 0, 0, &hsLxt[N], 0, 0);
 
 	// middle stages
 	for(nn=0; nn<N; nn++)
@@ -62,34 +62,34 @@ void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *hsBAbt, 
 		blasfeo_dsyrk_ln(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 		blasfeo_dpotrf_l(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #endif
-		dtrtr_l_libstr(nx[N-nn-1], &hsL[N-nn-1], nu[N-nn-1], nu[N-nn-1], &hsLxt[N-nn-1], 0, 0);
+		blasfeo_dtrtr_l(nx[N-nn-1], &hsL[N-nn-1], nu[N-nn-1], nu[N-nn-1], &hsLxt[N-nn-1], 0, 0);
 		}
 	
 	// forward substitution
 
 	// first stage
 	nn = 0;
-	drowex_libstr(nu[nn]+nx[nn], -1.0, &hsL[nn], nu[nn]+nx[nn], 0, &hsux[nn], 0);
+	blasfeo_drowex(nu[nn]+nx[nn], -1.0, &hsL[nn], nu[nn]+nx[nn], 0, &hsux[nn], 0);
 	blasfeo_dtrsv_ltn(nu[nn]+nx[nn], nu[nn]+nx[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
-	drowex_libstr(nx[nn+1], 1.0, &hsBAbt[nn], nu[nn]+nx[nn], 0, &hsux[nn+1], nu[nn+1]);
+	blasfeo_drowex(nx[nn+1], 1.0, &hsBAbt[nn], nu[nn]+nx[nn], 0, &hsux[nn+1], nu[nn+1]);
 	blasfeo_dgemv_t(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsux[nn+1], nu[nn+1], &hsux[nn+1], nu[nn+1]);
 	blasfeo_dveccp(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hspi[nn], 0);
-	drowex_libstr(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[0], 0);
+	blasfeo_drowex(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[0], 0);
 	blasfeo_dtrmv_unn(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
-	daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
+	blasfeo_daxpy(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
 	blasfeo_dtrmv_utn(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
 
 	// middle stages
 	for(nn=1; nn<N; nn++)
 		{
-		drowex_libstr(nu[nn], -1.0, &hsL[nn], nu[nn]+nx[nn], 0, &hsux[nn], 0);
+		blasfeo_drowex(nu[nn], -1.0, &hsL[nn], nu[nn]+nx[nn], 0, &hsux[nn], 0);
 		blasfeo_dtrsv_ltn(nu[nn]+nx[nn], nu[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
-		drowex_libstr(nx[nn+1], 1.0, &hsBAbt[nn], nu[nn]+nx[nn], 0, &hsux[nn+1], nu[nn+1]);
+		blasfeo_drowex(nx[nn+1], 1.0, &hsBAbt[nn], nu[nn]+nx[nn], 0, &hsux[nn+1], nu[nn+1]);
 		blasfeo_dgemv_t(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsux[nn+1], nu[nn+1], &hsux[nn+1], nu[nn+1]);
 		blasfeo_dveccp(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hspi[nn], 0);
-		drowex_libstr(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[0], 0);
+		blasfeo_drowex(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[0], 0);
 		blasfeo_dtrmv_unn(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
-		daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
+		blasfeo_daxpy(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
 		blasfeo_dtrmv_utn(nx[nn+1], &hsLxt[nn+1], 0, 0, &hspi[nn], 0, &hspi[nn], 0);
 		}
 
@@ -114,7 +114,7 @@ void d_back_ric_trf_funnel1_libstr(int md, int *nx, int *nu, struct blasfeo_dmat
 		}
 
 	blasfeo_dpotrf_l(nu[0]+nx[0], nu[0]+nx[0], &hsL[0], 0, 0, &hsL[0], 0, 0);
-	dtrtr_l_libstr(nx[0], &hsL[0], nu[0], nu[0], &hsLxt_new[0], 0, 0);
+	blasfeo_dtrtr_l(nx[0], &hsL[0], nu[0], nu[0], &hsLxt_new[0], 0, 0);
 
 	return;
 
@@ -128,7 +128,7 @@ void d_back_ric_trf_step1_libstr(int *nx, int *nu, struct blasfeo_dmat *hsBAbt, 
 	blasfeo_dtrmm_rutn(nu[0]+nx[0], nx[1], 1.0, &hsBAbt[0], 0, 0, &hsLxt[1], 0, 0, 0.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0);
 	blasfeo_dsyrk_ln(nu[0]+nx[0], nu[0]+nx[0], nx[1], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[0], 0, 0, &hsL[0], 0, 0);
 	blasfeo_dpotrf_l(nu[0]+nx[0], nu[0]+nx[0], &hsL[0], 0, 0, &hsL[0], 0, 0);
-	dtrtr_l_libstr(nx[0], &hsL[0], nu[0], nu[0], &hsLxt[0], 0, 0);
+	blasfeo_dtrtr_l(nx[0], &hsL[0], nu[0], nu[0], &hsLxt[0], 0, 0);
 
 	return;
 
@@ -140,7 +140,7 @@ void d_back_ric_trf_stepN_libstr(int *nx, struct blasfeo_dmat *hsRSQrq, struct b
 	{
 
 	blasfeo_dpotrf_l(nx[0], nx[0], &hsRSQrq[0], 0, 0, &hsL[0], 0, 0);
-	dtrtr_l_libstr(nx[0], &hsL[0], 0, 0, &hsLxt[0], 0, 0);
+	blasfeo_dtrtr_l(nx[0], &hsL[0], 0, 0, &hsLxt[0], 0, 0);
 
 	return;
 
@@ -188,7 +188,7 @@ void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *hsBAbt,
 		blasfeo_dtrmv_utn(nx[N-nn], &hsLxt[N-nn], 0, 0, &hsPb[N-nn-1], 0, &hsPb[N-nn-1], 0);
 		blasfeo_dveccp(nu[N-nn-1]+nx[N-nn-1], 1.0, &hsrq[N-nn-1], 0, &hsux[N-nn-1], 0);
 		blasfeo_dveccp(nx[N-nn], 1.0, &hsPb[N-nn-1], 0, &hswork_vec[0], 0);
-		daxpy_libstr(nx[N-nn], 1.0, &hsux[N-nn], nu[N-nn], &hswork_vec[0], 0);
+		blasfeo_daxpy(nx[N-nn], 1.0, &hsux[N-nn], nu[N-nn], &hswork_vec[0], 0);
 		blasfeo_dgemv_n(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hswork_vec[0], 0, 1.0, &hsux[N-nn-1], 0, &hsux[N-nn-1], 0);
 		blasfeo_dtrsv_lnn(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1], &hsL[N-nn-1], 0, 0, &hsux[N-nn-1], 0, &hsux[N-nn-1], 0);
 		}
@@ -199,7 +199,7 @@ void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *hsBAbt,
 	blasfeo_dtrmv_utn(nx[N-nn], &hsLxt[N-nn], 0, 0, &hsPb[N-nn-1], 0, &hsPb[N-nn-1], 0);
 	blasfeo_dveccp(nu[N-nn-1]+nx[N-nn-1], 1.0, &hsrq[N-nn-1], 0, &hsux[N-nn-1], 0);
 	blasfeo_dveccp(nx[N-nn], 1.0, &hsPb[N-nn-1], 0, &hswork_vec[0], 0);
-	daxpy_libstr(nx[N-nn], 1.0, &hsux[N-nn], nu[N-nn], &hswork_vec[0], 0);
+	blasfeo_daxpy(nx[N-nn], 1.0, &hsux[N-nn], nu[N-nn], &hswork_vec[0], 0);
 	blasfeo_dgemv_n(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hswork_vec[0], 0, 1.0, &hsux[N-nn-1], 0, &hsux[N-nn-1], 0);
 	blasfeo_dtrsv_lnn(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsux[N-nn-1], 0, &hsux[N-nn-1], 0);
 
@@ -214,7 +214,7 @@ void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *hsBAbt,
 	blasfeo_dveccp(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0);
 	blasfeo_dtrmv_unn(nx[nn+1], &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, &hswork_vec[0], 0);
 	blasfeo_dtrmv_utn(nx[nn+1], &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, &hswork_vec[0], 0);
-	daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
+	blasfeo_daxpy(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
 
 	// middle stages
 	for(nn=1; nn<N; nn++)
@@ -226,7 +226,7 @@ void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *hsBAbt,
 		blasfeo_dveccp(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0);
 		blasfeo_dtrmv_unn(nx[nn+1], &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, &hswork_vec[0], 0);
 		blasfeo_dtrmv_utn(nx[nn+1], &hsLxt[nn+1], 0, 0, &hswork_vec[0], 0, &hswork_vec[0], 0);
-		daxpy_libstr(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
+		blasfeo_daxpy(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
 		}
 
 	return;
@@ -440,7 +440,7 @@ int main()
 	struct blasfeo_dmat sBbt0;
 	blasfeo_allocate_dmat(nu_+nx_+1, nx_, &sBbt0);
 	blasfeo_pack_tran_dmat(nx_, nx_, B, nx_, &sBbt0, 0, 0);
-	drowin_libstr(nx_, 1.0, &sb0, 0, &sBbt0, nu_, 0);
+	blasfeo_drowin(nx_, 1.0, &sb0, 0, &sBbt0, nu_, 0);
 	d_print_strmat(nu_+1, nx_, &sBbt0, 0, 0);
 
 	struct blasfeo_dmat sBAbt1;
@@ -457,7 +457,7 @@ int main()
 	struct blasfeo_dmat sRr0;
 	blasfeo_allocate_dmat(nu_+1, nu_, &sRr0);
 	blasfeo_pack_dmat(nu_, nu_, R, nu_, &sRr0, 0, 0);
-	drowin_libstr(nu_, 1.0, &sr0, 0, &sRr0, nu_, 0);
+	blasfeo_drowin(nu_, 1.0, &sr0, 0, &sRr0, nu_, 0);
 	d_print_strmat(nu_+1, nu_, &sRr0, 0, 0);
 
 	struct blasfeo_dvec srq1;
@@ -470,7 +470,7 @@ int main()
 	blasfeo_pack_dmat(nu_, nu_, R, nu_, &sRSQrq1, 0, 0);
 	blasfeo_pack_tran_dmat(nu_, nx_, S, nu_, &sRSQrq1, nu_, 0);
 	blasfeo_pack_dmat(nx_, nx_, Q, nx_, &sRSQrq1, nu_, nu_);
-	drowin_libstr(nu_+nx_, 1.0, &srq1, 0, &sRSQrq1, nu_+nx_, 0);
+	blasfeo_drowin(nu_+nx_, 1.0, &srq1, 0, &sRSQrq1, nu_+nx_, 0);
 	d_print_strmat(nu_+nx_+1, nu_+nx_, &sRSQrq1, 0, 0);
 
 	struct blasfeo_dvec sqN;
@@ -480,7 +480,7 @@ int main()
 	struct blasfeo_dmat sQqN;
 	blasfeo_allocate_dmat(nx_+1, nx_, &sQqN);
 	blasfeo_pack_dmat(nx_, nx_, Q, nx_, &sQqN, 0, 0);
-	drowin_libstr(nx_, 1.0, &sqN, 0, &sQqN, nx_, 0);
+	blasfeo_drowin(nx_, 1.0, &sqN, 0, &sQqN, nx_, 0);
 	d_print_strmat(nx_+1, nx_, &sQqN, 0, 0);
 
 /************************************************

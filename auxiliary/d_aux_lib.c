@@ -143,7 +143,7 @@ void blasfeo_dvecse(int m, double alpha, struct blasfeo_dvec *sx, int xi)
 
 
 // insert a vector into diagonal
-void ddiain_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj)
+void blasfeo_ddiain(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -157,7 +157,7 @@ void ddiain_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, stru
 
 
 // add scalar to diagonal
-void ddiare_libstr(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int aj)
+void blasfeo_ddiare(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -170,7 +170,7 @@ void ddiare_libstr(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int 
 
 
 // extract a row into a vector
-void drowex_libstr(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi)
+void blasfeo_drowex(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -184,7 +184,7 @@ void drowex_libstr(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int 
 
 
 // insert a vector  into a row
-void drowin_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj)
+void blasfeo_drowin(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -198,7 +198,7 @@ void drowin_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, stru
 
 
 // add a vector to a row
-void drowad_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj)
+void blasfeo_drowad(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -212,7 +212,7 @@ void drowad_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, stru
 
 
 // swap two rows of a matrix struct
-void drowsw_libstr(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
+void blasfeo_drowsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -232,13 +232,13 @@ void drowsw_libstr(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct bla
 
 
 // permute the rows of a matrix struct
-void drowpe_libstr(int kmax, int *ipiv, struct blasfeo_dmat *sA)
+void blasfeo_drowpe(int kmax, int *ipiv, struct blasfeo_dmat *sA)
 	{
 	int ii;
 	for(ii=0; ii<kmax; ii++)
 		{
 		if(ipiv[ii]!=ii)
-			drowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+			blasfeo_drowsw(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
 		}
 	return;
 	}
@@ -246,13 +246,13 @@ void drowpe_libstr(int kmax, int *ipiv, struct blasfeo_dmat *sA)
 
 
 // inverse permute the rows of a matrix struct
-void drowpei_libstr(int kmax, int *ipiv, struct blasfeo_dmat *sA)
+void blasfeo_drowpei(int kmax, int *ipiv, struct blasfeo_dmat *sA)
 	{
 	int ii;
 	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
-			drowsw_libstr(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+			blasfeo_drowsw(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
 		}
 	return;
 	}
@@ -260,7 +260,7 @@ void drowpei_libstr(int kmax, int *ipiv, struct blasfeo_dmat *sA)
 
 
 // extract vector from column
-void dcolex_libstr(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi)
+void blasfeo_dcolex(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -274,7 +274,7 @@ void dcolex_libstr(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct bla
 
 
 // insert a vector  into a rcol
-void dcolin_libstr(int kmax, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj)
+void blasfeo_dcolin(int kmax, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -288,7 +288,7 @@ void dcolin_libstr(int kmax, struct blasfeo_dvec *sx, int xi, struct blasfeo_dma
 
 
 // swap two cols of a matrix struct
-void dcolsw_libstr(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
+void blasfeo_dcolsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -308,13 +308,13 @@ void dcolsw_libstr(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct bla
 
 
 // permute the cols of a matrix struct
-void dcolpe_libstr(int kmax, int *ipiv, struct blasfeo_dmat *sA)
+void blasfeo_dcolpe(int kmax, int *ipiv, struct blasfeo_dmat *sA)
 	{
 	int ii;
 	for(ii=0; ii<kmax; ii++)
 		{
 		if(ipiv[ii]!=ii)
-			dcolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
+			blasfeo_dcolsw(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
 		}
 	return;
 	}
@@ -322,13 +322,13 @@ void dcolpe_libstr(int kmax, int *ipiv, struct blasfeo_dmat *sA)
 
 
 // inverse permute the cols of a matrix struct
-void dcolpei_libstr(int kmax, int *ipiv, struct blasfeo_dmat *sA)
+void blasfeo_dcolpei(int kmax, int *ipiv, struct blasfeo_dmat *sA)
 	{
 	int ii;
 	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
-			dcolsw_libstr(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
+			blasfeo_dcolsw(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
 		}
 	return;
 	}
@@ -476,7 +476,7 @@ void blasfeo_dvecad(int m, double alpha, struct blasfeo_dvec *sa, int ai, struct
 
 
 // copy and transpose a generic strmat into a generic strmat
-void dgetr_libstr(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
+void blasfeo_dgetr(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -504,7 +504,7 @@ void dgetr_libstr(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct 
 
 
 // copy and transpose a lower triangular strmat into an upper triangular strmat
-void dtrtr_l_libstr(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
+void blasfeo_dtrtr_l(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -525,7 +525,7 @@ void dtrtr_l_libstr(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasf
 
 
 // copy and transpose an upper triangular strmat into a lower triangular strmat
-void dtrtr_u_libstr(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
+void blasfeo_dtrtr_u(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -546,7 +546,7 @@ void dtrtr_u_libstr(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasf
 
 
 // insert a strvec to the diagonal of a strmat, sparse formulation
-void ddiain_sp_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_ddiain_sp(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	double *x = sx->pa + xi;
 	int ldd = sD->m;
@@ -563,7 +563,7 @@ void ddiain_sp_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, i
 
 
 // extract a vector from diagonal
-void ddiaex_libstr(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi)
+void blasfeo_ddiaex(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -577,7 +577,7 @@ void ddiaex_libstr(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int 
 
 
 // extract the diagonal of a strmat from a strvec , sparse formulation
-void ddiaex_sp_libstr(int kmax, double alpha, int *idx, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dvec *sx, int xi)
+void blasfeo_ddiaex_sp(int kmax, double alpha, int *idx, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dvec *sx, int xi)
 	{
 	double *x = sx->pa + xi;
 	int ldd = sD->m;
@@ -594,7 +594,7 @@ void ddiaex_sp_libstr(int kmax, double alpha, int *idx, struct blasfeo_dmat *sD,
 
 
 // add a vector to diagonal
-void ddiaad_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj)
+void blasfeo_ddiaad(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj)
 	{
 	int lda = sA->m;
 	double *pA = sA->pA + ai + aj*lda;
@@ -608,7 +608,7 @@ void ddiaad_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, stru
 
 
 // add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation
-void ddiaad_sp_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_ddiaad_sp(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	double *x = sx->pa + xi;
 	int ldd = sD->m;
@@ -625,7 +625,7 @@ void ddiaad_sp_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, i
 
 
 // add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation
-void ddiaadin_sp_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, int *idx, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_ddiaadin_sp(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, int *idx, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
@@ -643,7 +643,7 @@ void ddiaadin_sp_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi,
 
 
 // add scaled strvec to row of strmat, sparse formulation
-void drowad_sp_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_drowad_sp(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	double *x = sx->pa + xi;
 	int ldd = sD->m;
@@ -660,7 +660,7 @@ void drowad_sp_libstr(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, i
 
 
 
-void dvecad_sp_libstr(int m, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dvec *sz, int zi)
+void blasfeo_dvecad_sp(int m, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dvec *sz, int zi)
 	{
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
@@ -672,7 +672,7 @@ void dvecad_sp_libstr(int m, double alpha, struct blasfeo_dvec *sx, int xi, int 
 
 
 
-void dvecin_sp_libstr(int m, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dvec *sz, int zi)
+void blasfeo_dvecin_sp(int m, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dvec *sz, int zi)
 	{
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
@@ -684,7 +684,7 @@ void dvecin_sp_libstr(int m, double alpha, struct blasfeo_dvec *sx, int xi, int 
 
 
 
-void dvecex_sp_libstr(int m, double alpha, int *idx, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
+void blasfeo_dvecex_sp(int m, double alpha, int *idx, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
 	{
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;
@@ -696,7 +696,7 @@ void dvecex_sp_libstr(int m, double alpha, int *idx, struct blasfeo_dvec *sx, in
 
 
 // clip without mask return
-void dveccl_libstr(int m, struct blasfeo_dvec *sxm, int xim, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sxp, int xip, struct blasfeo_dvec *sz, int zi)
+void blasfeo_dveccl(int m, struct blasfeo_dvec *sxm, int xim, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sxp, int xip, struct blasfeo_dvec *sz, int zi)
 	{
 	double *xm = sxm->pa + xim;
 	double *x  = sx->pa + xi;
@@ -724,7 +724,7 @@ void dveccl_libstr(int m, struct blasfeo_dvec *sxm, int xim, struct blasfeo_dvec
 
 
 // clip with mask return
-void dveccl_mask_libstr(int m, struct blasfeo_dvec *sxm, int xim, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sxp, int xip, struct blasfeo_dvec *sz, int zi, struct blasfeo_dvec *sm, int mi)
+void blasfeo_dveccl_mask(int m, struct blasfeo_dvec *sxm, int xim, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sxp, int xip, struct blasfeo_dvec *sz, int zi, struct blasfeo_dvec *sm, int mi)
 	{
 	double *xm = sxm->pa + xim;
 	double *x  = sx->pa + xi;
@@ -755,7 +755,7 @@ void dveccl_mask_libstr(int m, struct blasfeo_dvec *sxm, int xim, struct blasfeo
 
 
 // zero out components using mask
-void dvecze_libstr(int m, struct blasfeo_dvec *sm, int mi, struct blasfeo_dvec *sv, int vi, struct blasfeo_dvec *se, int ei)
+void blasfeo_dvecze(int m, struct blasfeo_dvec *sm, int mi, struct blasfeo_dvec *sv, int vi, struct blasfeo_dvec *se, int ei)
 	{
 	double *mask = sm->pa + mi;
 	double *v = sv->pa + vi;
@@ -777,7 +777,7 @@ void dvecze_libstr(int m, struct blasfeo_dvec *sm, int mi, struct blasfeo_dvec *
 
 
 
-void dvecnrm_inf_libstr(int m, struct blasfeo_dvec *sx, int xi, double *ptr_norm)
+void blasfeo_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_norm)
 	{
 	int ii;
 	double *x = sx->pa + xi;
@@ -791,7 +791,7 @@ void dvecnrm_inf_libstr(int m, struct blasfeo_dvec *sx, int xi, double *ptr_norm
 
 
 // permute elements of a vector struct
-void dvecpe_libstr(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi)
+void blasfeo_dvecpe(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi)
 	{
 	int ii;
 	double tmp;
@@ -811,7 +811,7 @@ void dvecpe_libstr(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi)
 
 
 // inverse permute elements of a vector struct
-void dvecpei_libstr(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi)
+void blasfeo_dvecpei(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi)
 	{
 	int ii;
 	double tmp;
