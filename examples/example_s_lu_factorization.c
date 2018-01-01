@@ -139,8 +139,8 @@ int main()
 	printf("\nB+A*A' = \n");
 	s_print_strmat(n, n, &sD, 0, 0);
 
-//	sgetrf_nopivot_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
-	sgetrf_libstr(n, n, &sD, 0, 0, &sLU, 0, 0, ipiv);
+//	blasfeo_sgetrf_nopivot(n, n, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_sgetrf_rowpivot(n, n, &sD, 0, 0, &sLU, 0, 0, ipiv);
 	printf("\nLU = \n");
 	s_print_strmat(n, n, &sLU, 0, 0);
 	printf("\nipiv = \n");

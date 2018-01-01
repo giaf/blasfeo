@@ -679,11 +679,11 @@ int main()
 //		d_print_strmat(n, n, &sB3, 0, 0);
 //		if(n==20) return;
 
-		int qr_work_size = dgeqrf_work_size_libstr(n, n);
+		int qr_work_size = blasfeo_dgeqrf_worksize(n, n);
 		void *qr_work;
 		v_zeros_align(&qr_work, qr_work_size);
 
-		int lq_work_size = dgelqf_work_size_libstr(n, n);
+		int lq_work_size = blasfeo_dgelqf_worksize(n, n);
 		void *lq_work;
 		v_zeros_align(&lq_work, lq_work_size);
 
@@ -750,13 +750,13 @@ int main()
 //				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ln_mn(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-	//			dpotrf_l_mn_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-				dpotrf_l_libstr(n, &sB, 0, 0, &sB, 0, 0);
-	//			dgetrf_nopivot_libstr(n, n, &sB, 0, 0, &sB, 0, 0);
-//				dgetrf_libstr(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
-	//			dgeqrf_libstr(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
+	//			blasfeo_dpotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
+				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
+	//			blasfeo_dgetrf_nopivot(n, n, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_dgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
+	//			blasfeo_dgeqrf(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
 //				dcolin_libstr(n, &sx, 0, &sB3, 0, n-1);
-//				dgelqf_libstr(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
+//				blasfeo_dgelqf(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
 //				blasfeo_dtrmm_rlnn(n, n, 1.0, &sA, 0, 0, &sD, 0, 0, &sD, 0, 0); //
 	//			blasfeo_dtrmm_rutn(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 	//			blasfeo_dtrsm_llnu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
@@ -764,10 +764,10 @@ int main()
 //				blasfeo_dtrsm_rltn(n, n, 1.0, &sB2, 0, 0, &sD, 0, 0, &sD, 0, 0); //
 	//			blasfeo_dtrsm_rltu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 	//			blasfeo_dtrsm_rutn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-	//			dgemv_n_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-	//			dgemv_t_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-	//			dsymv_l_libstr(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-	//			dgemv_nt_libstr(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
+	//			blasfeo_dgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+	//			blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+	//			blasfeo_dsymv_l(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+	//			blasfeo_dgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
 				}
 
 	//		d_print_strmat(n, n, &sD, 0, 0);

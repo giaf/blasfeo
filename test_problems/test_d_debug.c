@@ -408,9 +408,9 @@ int main()
 //	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
 //	d_print_strmat(n, n, &sD, 0, 0);
 //	return 0;
-//	dgetrf_nopivot_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
-//	dgetrf_libstr(n, n, &sD, 0, 0, &sD, 0, 0, ipiv);
-//	dpotrf_l_libstr(n, &sD, 0, 0, &sD, 0, 0);
+//	blasfeo_dgetrf_nopivot(n, n, &sD, 0, 0, &sD, 0, 0);
+//	blasfeo_dgetrf_rowpivot(n, n, &sD, 0, 0, &sD, 0, 0, ipiv);
+//	blasfeo_dpotrf_l(n, &sD, 0, 0, &sD, 0, 0);
 //	dpstrf_l_libstr(n, &sD, 0, 0, &sD, 0, 0, ipiv);
 //	int_print_mat(1, n, ipiv, 1);
 //	d_print_strmat(n, n, &sD, 0, 0);
@@ -420,7 +420,7 @@ int main()
 	d_print_strmat(n, n, &sD, 0, 0);
 	drowpe_libstr(n, ipiv, &sD);
 	d_print_strmat(n, n, &sD, 0, 0);
-	dpotrf_l_libstr(n, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_dpotrf_l(n, &sD, 0, 0, &sD, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 	//
@@ -436,14 +436,14 @@ int main()
 	dvecpe_libstr(n, ipiv, &sx6, 0);
 	dvecpe_libstr(n, ipiv, &sx7, 0);
 #endif
-	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx0, 0, &sz0, 0);
-	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx1, 0, &sz1, 0);
-	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx2, 0, &sz2, 0);
-	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx3, 0, &sz3, 0);
-	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx4, 0, &sz4, 0);
-	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx5, 0, &sz5, 0);
-	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx6, 0, &sz6, 0);
-	dtrsv_lnu_libstr(n, &sD, 0, 0, &sx7, 0, &sz7, 0);
+	blasfeo_dtrsv_lnu(n, &sD, 0, 0, &sx0, 0, &sz0, 0);
+	blasfeo_dtrsv_lnu(n, &sD, 0, 0, &sx1, 0, &sz1, 0);
+	blasfeo_dtrsv_lnu(n, &sD, 0, 0, &sx2, 0, &sz2, 0);
+	blasfeo_dtrsv_lnu(n, &sD, 0, 0, &sx3, 0, &sz3, 0);
+	blasfeo_dtrsv_lnu(n, &sD, 0, 0, &sx4, 0, &sz4, 0);
+	blasfeo_dtrsv_lnu(n, &sD, 0, 0, &sx5, 0, &sz5, 0);
+	blasfeo_dtrsv_lnu(n, &sD, 0, 0, &sx6, 0, &sz6, 0);
+	blasfeo_dtrsv_lnu(n, &sD, 0, 0, &sx7, 0, &sz7, 0);
 	//
 	d_print_tran_strvec(n, &sz0, 0);
 	d_print_tran_strvec(n, &sz1, 0);
@@ -454,14 +454,14 @@ int main()
 	d_print_tran_strvec(n, &sz6, 0);
 	d_print_tran_strvec(n, &sz7, 0);
 	//
-	dtrsv_unn_libstr(n, &sD, 0, 0, &sz0, 0, &sz0, 0);
-	dtrsv_unn_libstr(n, &sD, 0, 0, &sz1, 0, &sz1, 0);
-	dtrsv_unn_libstr(n, &sD, 0, 0, &sz2, 0, &sz2, 0);
-	dtrsv_unn_libstr(n, &sD, 0, 0, &sz3, 0, &sz3, 0);
-	dtrsv_unn_libstr(n, &sD, 0, 0, &sz4, 0, &sz4, 0);
-	dtrsv_unn_libstr(n, &sD, 0, 0, &sz5, 0, &sz5, 0);
-	dtrsv_unn_libstr(n, &sD, 0, 0, &sz6, 0, &sz6, 0);
-	dtrsv_unn_libstr(n, &sD, 0, 0, &sz7, 0, &sz7, 0);
+	blasfeo_dtrsv_unn(n, &sD, 0, 0, &sz0, 0, &sz0, 0);
+	blasfeo_dtrsv_unn(n, &sD, 0, 0, &sz1, 0, &sz1, 0);
+	blasfeo_dtrsv_unn(n, &sD, 0, 0, &sz2, 0, &sz2, 0);
+	blasfeo_dtrsv_unn(n, &sD, 0, 0, &sz3, 0, &sz3, 0);
+	blasfeo_dtrsv_unn(n, &sD, 0, 0, &sz4, 0, &sz4, 0);
+	blasfeo_dtrsv_unn(n, &sD, 0, 0, &sz5, 0, &sz5, 0);
+	blasfeo_dtrsv_unn(n, &sD, 0, 0, &sz6, 0, &sz6, 0);
+	blasfeo_dtrsv_unn(n, &sD, 0, 0, &sz7, 0, &sz7, 0);
 	//
 	d_print_tran_strvec(n, &sz0, 0);
 	d_print_tran_strvec(n, &sz1, 0);
@@ -473,14 +473,14 @@ int main()
 	d_print_tran_strvec(n, &sz7, 0);
 #else
 	// T scheme
-	dtrsv_utn_libstr(n, &sD, 0, 0, &sx0, 0, &sz0, 0);
-	dtrsv_utn_libstr(n, &sD, 0, 0, &sx1, 0, &sz1, 0);
-	dtrsv_utn_libstr(n, &sD, 0, 0, &sx2, 0, &sz2, 0);
-	dtrsv_utn_libstr(n, &sD, 0, 0, &sx3, 0, &sz3, 0);
-	dtrsv_utn_libstr(n, &sD, 0, 0, &sx4, 0, &sz4, 0);
-	dtrsv_utn_libstr(n, &sD, 0, 0, &sx5, 0, &sz5, 0);
-	dtrsv_utn_libstr(n, &sD, 0, 0, &sx6, 0, &sz6, 0);
-	dtrsv_utn_libstr(n, &sD, 0, 0, &sx7, 0, &sz7, 0);
+	blasfeo_dtrsv_utn(n, &sD, 0, 0, &sx0, 0, &sz0, 0);
+	blasfeo_dtrsv_utn(n, &sD, 0, 0, &sx1, 0, &sz1, 0);
+	blasfeo_dtrsv_utn(n, &sD, 0, 0, &sx2, 0, &sz2, 0);
+	blasfeo_dtrsv_utn(n, &sD, 0, 0, &sx3, 0, &sz3, 0);
+	blasfeo_dtrsv_utn(n, &sD, 0, 0, &sx4, 0, &sz4, 0);
+	blasfeo_dtrsv_utn(n, &sD, 0, 0, &sx5, 0, &sz5, 0);
+	blasfeo_dtrsv_utn(n, &sD, 0, 0, &sx6, 0, &sz6, 0);
+	blasfeo_dtrsv_utn(n, &sD, 0, 0, &sx7, 0, &sz7, 0);
 	//
 	d_print_tran_strvec(n, &sz0, 0);
 	d_print_tran_strvec(n, &sz1, 0);
@@ -491,14 +491,14 @@ int main()
 	d_print_tran_strvec(n, &sz6, 0);
 	d_print_tran_strvec(n, &sz7, 0);
 	//
-	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz0, 0, &sz0, 0);
-	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz1, 0, &sz1, 0);
-	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz2, 0, &sz2, 0);
-	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz3, 0, &sz3, 0);
-	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz4, 0, &sz4, 0);
-	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz5, 0, &sz5, 0);
-	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz6, 0, &sz6, 0);
-	dtrsv_ltu_libstr(n, &sD, 0, 0, &sz7, 0, &sz7, 0);
+	blasfeo_dtrsv_ltu(n, &sD, 0, 0, &sz0, 0, &sz0, 0);
+	blasfeo_dtrsv_ltu(n, &sD, 0, 0, &sz1, 0, &sz1, 0);
+	blasfeo_dtrsv_ltu(n, &sD, 0, 0, &sz2, 0, &sz2, 0);
+	blasfeo_dtrsv_ltu(n, &sD, 0, 0, &sz3, 0, &sz3, 0);
+	blasfeo_dtrsv_ltu(n, &sD, 0, 0, &sz4, 0, &sz4, 0);
+	blasfeo_dtrsv_ltu(n, &sD, 0, 0, &sz5, 0, &sz5, 0);
+	blasfeo_dtrsv_ltu(n, &sD, 0, 0, &sz6, 0, &sz6, 0);
+	blasfeo_dtrsv_ltu(n, &sD, 0, 0, &sz7, 0, &sz7, 0);
 	//
 #if 1
 	dvecpei_libstr(n, ipiv, &sz0, 0);
@@ -539,8 +539,8 @@ int main()
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 //	blasfeo_dsyrk_ln(n, 15, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
-//	dpotrf_l_mn_libstr(n, 15, &sD, 0, 0, &sD, 0, 0);
-//	dsyrk_dpotrf_ln_libstr(n, 15, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_dpotrf_l_mn(n, 15, &sD, 0, 0, &sD, 0, 0);
+//	blasfeo_dsyrk_dpotrf_ln(n, 15, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //	blasfeo_dtrmm_rlnn(n, n, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //	blasfeo_dgese(n, n, 0.0/0.0, &sD, 0, 0);
 //	kernel_dgemm_nt_4x8_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sC.pA, sD.pA);
@@ -549,16 +549,16 @@ int main()
 //	kernel_dsyrk_nt_l_8x4_gen_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, 0, sC.pA, sC.cn, 3, sD.pA, sD.cn, 0, 8, 0, 8);
 //	blasfeo_dsyrk_ln(10, 10, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 1, 0);
 //	d_print_strmat(n, n, &sD, 0, 0);
-	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx0, 0, beta, &sz0, 0, &sz0, 0);
-	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx1, 0, beta, &sz1, 0, &sz1, 0);
-	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx2, 0, beta, &sz2, 0, &sz2, 0);
-	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx3, 0, beta, &sz3, 0, &sz3, 0);
-	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx4, 0, beta, &sz4, 0, &sz4, 0);
-	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx5, 0, beta, &sz5, 0, &sz5, 0);
-	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx6, 0, beta, &sz6, 0, &sz6, 0);
-	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx7, 0, beta, &sz7, 0, &sz7, 0);
-//	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx8, 0, beta, &sz8, 0, &sz8, 0);
-//	dsymv_l_libstr(10, 10, alpha, &sA, 0, 0, &sx9, 0, beta, &sz9, 0, &sz9, 0);
+	blasfeo_dsymv_l(10, 10, alpha, &sA, 0, 0, &sx0, 0, beta, &sz0, 0, &sz0, 0);
+	blasfeo_dsymv_l(10, 10, alpha, &sA, 0, 0, &sx1, 0, beta, &sz1, 0, &sz1, 0);
+	blasfeo_dsymv_l(10, 10, alpha, &sA, 0, 0, &sx2, 0, beta, &sz2, 0, &sz2, 0);
+	blasfeo_dsymv_l(10, 10, alpha, &sA, 0, 0, &sx3, 0, beta, &sz3, 0, &sz3, 0);
+	blasfeo_dsymv_l(10, 10, alpha, &sA, 0, 0, &sx4, 0, beta, &sz4, 0, &sz4, 0);
+	blasfeo_dsymv_l(10, 10, alpha, &sA, 0, 0, &sx5, 0, beta, &sz5, 0, &sz5, 0);
+	blasfeo_dsymv_l(10, 10, alpha, &sA, 0, 0, &sx6, 0, beta, &sz6, 0, &sz6, 0);
+	blasfeo_dsymv_l(10, 10, alpha, &sA, 0, 0, &sx7, 0, beta, &sz7, 0, &sz7, 0);
+//	blasfeo_dsymv_l(10, 10, alpha, &sA, 0, 0, &sx8, 0, beta, &sz8, 0, &sz8, 0);
+//	blasfeo_dsymv_l(10, 10, alpha, &sA, 0, 0, &sx9, 0, beta, &sz9, 0, &sz9, 0);
 	d_print_tran_strvec(n, &sz0, 0);
 	d_print_tran_strvec(n, &sz1, 0);
 	d_print_tran_strvec(n, &sz2, 0);
@@ -621,12 +621,12 @@ int main()
 //	d_print_strmat(n, n, &sA, 0, 0);
 	d_print_strmat(n, n, &sC, 0, 0);
 //	printf("\n%f\n", DGEEL_LIBSTR(&sA, 0, 0));
-//	int qr_work_size = dgeqrf_work_size_libstr(n, n);
-	int qr_work_size = dgelqf_work_size_libstr(n, n);
+//	int qr_work_size = blasfeo_dgeqrf_worksize(n, n);
+	int qr_work_size = blasfeo_dgelqf_worksize(n, n);
 	void *qr_work;
 	v_zeros_align(&qr_work, qr_work_size);
-//	dgeqrf_libstr(10, 10, &sC, 0, 0, &sD, 0, 0, qr_work);
-	dgelqf_libstr(17, 17, &sC, 0, 0, &sD, 0, 0, qr_work);
+//	blasfeo_dgeqrf(10, 10, &sC, 0, 0, &sD, 0, 0, qr_work);
+	blasfeo_dgelqf(17, 17, &sC, 0, 0, &sD, 0, 0, qr_work);
 //	blasfeo_dgecp(10, 10, &sC, 0, 0, &sD, 0, 0);
 //	kernel_dgeqrf_4_lib4(16, 12, sD.pA, sD.cn, sD.dA, qr_work);
 //	d_print_strmat(n, n, &sA, 0, 0);
@@ -645,13 +645,13 @@ int main()
 //	return 0;
 
 //	d_print_strmat(n, n, &sA, 0, 0);
-//	dtrsv_unn_libstr(n, &sA, 1, 0, &sx0, 0, &sz0, 0);
+//	blasfeo_dtrsv_unn(n, &sA, 1, 0, &sx0, 0, &sz0, 0);
 //	d_print_tran_strvec(n, &sz0, 0);
-//	dtrsv_unn_libstr(n, &sA, 1, 0, &sx1, 0, &sz1, 0);
+//	blasfeo_dtrsv_unn(n, &sA, 1, 0, &sx1, 0, &sz1, 0);
 //	d_print_tran_strvec(n, &sz1, 0);
-//	dtrsv_unn_libstr(n, &sA, 1, 0, &sx2, 0, &sz2, 0);
+//	blasfeo_dtrsv_unn(n, &sA, 1, 0, &sx2, 0, &sz2, 0);
 //	d_print_tran_strvec(n, &sz2, 0);
-//	dtrsv_unn_libstr(n, &sA, 1, 0, &sx3, 0, &sz3, 0);
+//	blasfeo_dtrsv_unn(n, &sA, 1, 0, &sx3, 0, &sz3, 0);
 //	d_print_tran_strvec(n, &sz3, 0);
 //	return 0;
 
@@ -661,7 +661,7 @@ int main()
 //	kernel_dgemm_nt_8x8u_vs_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn, 7, 6);
 	blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
-	dpotrf_l_libstr(16, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_dpotrf_l(16, &sD, 0, 0, &sD, 0, 0);
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;;
 
@@ -691,7 +691,7 @@ int main()
 //	dmatin1_libstr(0.5, &sD, 2, 0);
 //	d_print_strmat(n, n, &sD, 0, 0);
 //	d_print_tran_strvec(n, &sx_n, 0);
-//	dtrsv_lnn_libstr(n, n, &sD, 0, 0, &sx_n, 0, &sz_n, 0);
+//	blasfeo_dtrsv_lnn(n, n, &sD, 0, 0, &sx_n, 0, &sz_n, 0);
 //	d_print_tran_strvec(n, &sz_n, 0);
 //	exit(1);
 
@@ -708,16 +708,16 @@ int main()
 	d_print_strmat(n, n, &sD, 0, 0);
 	return 0;
 
-	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx0, 0, &sx0, 0);
-	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx1, 0, &sx1, 0);
-	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx2, 0, &sx2, 0);
-	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx3, 0, &sx3, 0);
-	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx4, 0, &sx4, 0);
-	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx5, 0, &sx5, 0);
-	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx6, 0, &sx6, 0);
-	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx7, 0, &sx7, 0);
-//	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx8, 0, &sx8, 0);
-//	dtrmv_lnn_libstr(8, 8, &sA, 0, 0, &sx9, 0, &sx9, 0);
+	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx0, 0, &sx0, 0);
+	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx1, 0, &sx1, 0);
+	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx2, 0, &sx2, 0);
+	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx3, 0, &sx3, 0);
+	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx4, 0, &sx4, 0);
+	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx5, 0, &sx5, 0);
+	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx6, 0, &sx6, 0);
+	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx7, 0, &sx7, 0);
+//	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx8, 0, &sx8, 0);
+//	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx9, 0, &sx9, 0);
 	d_print_tran_strvec(n, &sx0, 0);
 	d_print_tran_strvec(n, &sx1, 0);
 	d_print_tran_strvec(n, &sx2, 0);
@@ -730,7 +730,7 @@ int main()
 //	d_print_tran_strvec(n, &sx9, 0);
 	return 0;
 
-	dgemv_t_libstr(2, 8, 1.0, &sA, 2, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
+	blasfeo_dgemv_t(2, 8, 1.0, &sA, 2, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
 	d_print_tran_strvec(n, &sz_n, 0);
 	return 0;
 
@@ -739,9 +739,9 @@ int main()
 	d_print_strmat(n, n, &sD, 0, 0);
 	exit(1);
 
-	dpotrf_l_libstr(n, &sD, 0, 0, &sD, 0, 0);
-//	dgetrf_nopivot_libstr(n, n, &sD, 0, 0, &sD, 0, 0);
-//	dgetrf_libstr(n, n, &sD, 0, 0, &sD, 0, 0, ipiv);
+	blasfeo_dpotrf_l(n, &sD, 0, 0, &sD, 0, 0);
+//	blasfeo_dgetrf_nopivot(n, n, &sD, 0, 0, &sD, 0, 0);
+//	blasfeo_dgetrf_rowpivot(n, n, &sD, 0, 0, &sD, 0, 0, ipiv);
 	d_print_strmat(n, n, &sD, 0, 0);
 #if defined(LA_HIGH_PERFORMANCE) | defined(LA_REFERENCE)
 	d_print_mat(1, n, sD.dA, 1);
@@ -783,8 +783,8 @@ int main()
 	d_print_strmat(n, n, &sB, 0, 0);
 
 	d_print_strmat(n, n, &sA, 0, 0);
-	dgemv_nt_libstr(6, n, 1.0, 1.0, &sA, 0, 0, &sx_n, 0, &sx_t, 0, 0.0, 0.0, &sy_n, 0, &sy_t, 0, &sz_n, 0, &sz_t, 0);
-//	dsymv_l_libstr(5, 5, 1.0, &sA, 0, 0, x_n, 0.0, y_n, z_n);
+	blasfeo_dgemv_nt(6, n, 1.0, 1.0, &sA, 0, 0, &sx_n, 0, &sx_t, 0, 0.0, 0.0, &sy_n, 0, &sy_t, 0, &sz_n, 0, &sz_t, 0);
+//	blasfeo_dsymv_l(5, 5, 1.0, &sA, 0, 0, x_n, 0.0, y_n, z_n);
 	d_print_mat(1, n, z_n, 1);
 	d_print_mat(1, n, z_t, 1);
 

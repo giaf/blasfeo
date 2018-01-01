@@ -50,17 +50,17 @@
 #define STRMAT blasfeo_dmat
 #define STRVEC blasfeo_dvec
 
-#define GELQF_LIBSTR dgelqf_libstr
-#define GELQF_WORK_SIZE_LIBSTR dgelqf_work_size_libstr
-#define GEQRF_LIBSTR dgeqrf_libstr
-#define GEQRF_WORK_SIZE_LIBSTR dgeqrf_work_size_libstr
+#define GELQF_LIBSTR blasfeo_dgelqf
+#define GELQF_WORK_SIZE_LIBSTR blasfeo_dgelqf_worksize
+#define GEQRF_LIBSTR blasfeo_dgeqrf
+#define GEQRF_WORK_SIZE_LIBSTR blasfeo_dgeqrf_worksize
 #define GETF2_NOPIVOT dgetf2_nopivot
-#define GETRF_NOPIVOT_LIBSTR dgetrf_nopivot_libstr
-#define GETRF_LIBSTR dgetrf_libstr
-#define POTRF_L_LIBSTR dpotrf_l_libstr
-#define POTRF_L_MN_LIBSTR dpotrf_l_mn_libstr
+#define GETRF_NOPIVOT_LIBSTR blasfeo_dgetrf_nopivot
+#define GETRF_LIBSTR blasfeo_dgetrf_rowpivot
+#define POTRF_L_LIBSTR blasfeo_dpotrf_l
+#define POTRF_L_MN_LIBSTR blasfeo_dpotrf_l_mn
 #define PSTRF_L_LIBSTR dpstrf_l_libstr
-#define SYRK_POTRF_LN_LIBSTR dsyrk_dpotrf_ln_libstr
+#define SYRK_POTRF_LN_LIBSTR blasfeo_dsyrk_dpotrf_ln
 
 #define COPY dcopy_
 #define GELQF dgelqf_

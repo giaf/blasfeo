@@ -40,7 +40,7 @@
 
 
 
-void sgemv_n_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+void blasfeo_sgemv_n(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<0)
@@ -82,7 +82,7 @@ void sgemv_n_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, 
 
 
 
-void sgemv_t_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+void blasfeo_sgemv_t(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(n<=0)
@@ -125,12 +125,12 @@ void sgemv_t_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, 
 
 
 
-void sgemv_nt_libstr(int m, int n, float alpha_n, float alpha_t, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx_n, int xi_n, struct blasfeo_svec *sx_t, int xi_t, float beta_n, float beta_t, struct blasfeo_svec *sy_n, int yi_n, struct blasfeo_svec *sy_t, int yi_t, struct blasfeo_svec *sz_n, int zi_n, struct blasfeo_svec *sz_t, int zi_t)
+void blasfeo_sgemv_nt(int m, int n, float alpha_n, float alpha_t, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx_n, int xi_n, struct blasfeo_svec *sx_t, int xi_t, float beta_n, float beta_t, struct blasfeo_svec *sy_n, int yi_n, struct blasfeo_svec *sy_t, int yi_t, struct blasfeo_svec *sz_n, int zi_n, struct blasfeo_svec *sz_t, int zi_t)
 	{
 
 	if(ai!=0)
 		{
-		printf("\nsgemv_nt_libstr: feature not implemented yet: ai=%d\n", ai);
+		printf("\nblasfeo_sgemv_nt: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 
@@ -181,7 +181,7 @@ void sgemv_nt_libstr(int m, int n, float alpha_n, float alpha_t, struct blasfeo_
 
 
 
-void ssymv_l_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+void blasfeo_ssymv_l(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0 | n<=0)
@@ -240,7 +240,7 @@ void ssymv_l_libstr(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, 
 
 
 // m >= n
-void strmv_lnn_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_strmv_lnn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -254,7 +254,7 @@ void strmv_lnn_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, str
 	float *z = sz->pa + zi;
 
 	if(m-n>0)
-		sgemv_n_libstr(m-n, n, 1.0, sA, ai+n, aj, sx, xi, 0.0, sz, zi+n, sz, zi+n);
+		blasfeo_sgemv_n(m-n, n, 1.0, sA, ai+n, aj, sx, xi, 0.0, sz, zi+n, sz, zi+n);
 
 	float *pA2 = pA;
 	float *z2 = z;
@@ -341,7 +341,7 @@ void strmv_lnn_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, str
 
 
 // m >= n
-void strmv_ltn_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_strmv_ltn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -465,7 +465,7 @@ void strmv_ltn_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, str
 
 
 
-void strmv_unn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_strmv_unn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -473,7 +473,7 @@ void strmv_unn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct bla
 
 	if(ai!=0)
 		{
-		printf("\ndtrmv_unn_libstr: feature not implemented yet: ai=%d\n", ai);
+		printf("\nblasfeo_dtrmv_unn: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 
@@ -519,7 +519,7 @@ void strmv_unn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct bla
 
 
 
-void strmv_utn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_strmv_utn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -527,7 +527,7 @@ void strmv_utn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct bla
 
 	if(ai!=0)
 		{
-		printf("\nstrmv_utn_libstr: feature not implemented yet: ai=%d\n", ai);
+		printf("\nblasfeo_strmv_utn: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 
@@ -562,7 +562,7 @@ void strmv_utn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct bla
 
 
 
-void strsv_lnn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_strsv_lnn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m==0)
@@ -570,25 +570,25 @@ void strsv_lnn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct bla
 
 #if defined(DIM_CHECK)
 	// non-negative size
-	if(m<0) printf("\n****** strsv_lnn_libstr : m<0 : %d<0 *****\n", m);
+	if(m<0) printf("\n****** blasfeo_strsv_lnn : m<0 : %d<0 *****\n", m);
 	// non-negative offset
-	if(ai<0) printf("\n****** strsv_lnn_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** strsv_lnn_libstr : aj<0 : %d<0 *****\n", aj);
-	if(xi<0) printf("\n****** strsv_lnn_libstr : xi<0 : %d<0 *****\n", xi);
-	if(zi<0) printf("\n****** strsv_lnn_libstr : zi<0 : %d<0 *****\n", zi);
+	if(ai<0) printf("\n****** blasfeo_strsv_lnn : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** blasfeo_strsv_lnn : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** blasfeo_strsv_lnn : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** blasfeo_strsv_lnn : zi<0 : %d<0 *****\n", zi);
 	// inside matrix
 	// A: m x k
-	if(ai+m > sA->m) printf("\n***** strsv_lnn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+m > sA->n) printf("\n***** strsv_lnn_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
+	if(ai+m > sA->m) printf("\n***** blasfeo_strsv_lnn : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+m > sA->n) printf("\n***** blasfeo_strsv_lnn : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
 	// x: m
-	if(xi+m > sx->m) printf("\n***** strsv_lnn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	if(xi+m > sx->m) printf("\n***** blasfeo_strsv_lnn : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
-	if(zi+m > sz->m) printf("\n***** strsv_lnn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_lnn : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
 
 	if(ai!=0)
 		{
-		printf("\nstrsv_lnn_libstr: feature not implemented yet: ai=%d\n", ai);
+		printf("\nblasfeo_strsv_lnn: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 
@@ -645,7 +645,7 @@ void strsv_lnn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct bla
 
 
 
-void strsv_lnn_mn_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_strsv_lnn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m==0 | n==0)
@@ -653,26 +653,26 @@ void strsv_lnn_mn_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, 
 
 #if defined(DIM_CHECK)
 	// non-negative size
-	if(m<0) printf("\n****** strsv_lnn_mn_libstr : m<0 : %d<0 *****\n", m);
-	if(n<0) printf("\n****** strsv_lnn_mn_libstr : n<0 : %d<0 *****\n", n);
+	if(m<0) printf("\n****** blasfeo_strsv_lnn_mn : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** blasfeo_strsv_lnn_mn : n<0 : %d<0 *****\n", n);
 	// non-negative offset
-	if(ai<0) printf("\n****** strsv_lnn_mn_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** strsv_lnn_mn_libstr : aj<0 : %d<0 *****\n", aj);
-	if(xi<0) printf("\n****** strsv_lnn_mn_libstr : xi<0 : %d<0 *****\n", xi);
-	if(zi<0) printf("\n****** strsv_lnn_mn_libstr : zi<0 : %d<0 *****\n", zi);
+	if(ai<0) printf("\n****** blasfeo_strsv_lnn_mn : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** blasfeo_strsv_lnn_mn : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** blasfeo_strsv_lnn_mn : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** blasfeo_strsv_lnn_mn : zi<0 : %d<0 *****\n", zi);
 	// inside matrix
 	// A: m x k
-	if(ai+m > sA->m) printf("\n***** strsv_lnn_mn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+n > sA->n) printf("\n***** strsv_lnn_mn_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+	if(ai+m > sA->m) printf("\n***** blasfeo_strsv_lnn_mn : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** blasfeo_strsv_lnn_mn : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
 	// x: m
-	if(xi+m > sx->m) printf("\n***** strsv_lnn_mn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	if(xi+m > sx->m) printf("\n***** blasfeo_strsv_lnn_mn : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
-	if(zi+m > sz->m) printf("\n***** strsv_lnn_mn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_lnn_mn : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
 
 	if(ai!=0)
 		{
-		printf("\nstrsv_lnn_mn_libstr: feature not implemented yet: ai=%d\n", ai);
+		printf("\nblasfeo_strsv_lnn_mn: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 
@@ -744,7 +744,7 @@ void strsv_lnn_mn_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, 
 
 
 
-void strsv_ltn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_strsv_ltn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m==0)
@@ -752,25 +752,25 @@ void strsv_ltn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct bla
 
 #if defined(DIM_CHECK)
 	// non-negative size
-	if(m<0) printf("\n****** strsv_ltn_libstr : m<0 : %d<0 *****\n", m);
+	if(m<0) printf("\n****** blasfeo_strsv_ltn : m<0 : %d<0 *****\n", m);
 	// non-negative offset
-	if(ai<0) printf("\n****** strsv_ltn_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** strsv_ltn_libstr : aj<0 : %d<0 *****\n", aj);
-	if(xi<0) printf("\n****** strsv_ltn_libstr : xi<0 : %d<0 *****\n", xi);
-	if(zi<0) printf("\n****** strsv_ltn_libstr : zi<0 : %d<0 *****\n", zi);
+	if(ai<0) printf("\n****** blasfeo_strsv_ltn : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** blasfeo_strsv_ltn : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** blasfeo_strsv_ltn : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** blasfeo_strsv_ltn : zi<0 : %d<0 *****\n", zi);
 	// inside matrix
 	// A: m x k
-	if(ai+m > sA->m) printf("\n***** strsv_ltn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+m > sA->n) printf("\n***** strsv_ltn_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
+	if(ai+m > sA->m) printf("\n***** blasfeo_strsv_ltn : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+m > sA->n) printf("\n***** blasfeo_strsv_ltn : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
 	// x: m
-	if(xi+m > sx->m) printf("\n***** strsv_ltn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	if(xi+m > sx->m) printf("\n***** blasfeo_strsv_ltn : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
-	if(zi+m > sz->m) printf("\n***** strsv_ltn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_ltn : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
 
 	if(ai!=0)
 		{
-		printf("\nstrsv_ltn_libstr: feature not implemented yet: ai=%d\n", ai);
+		printf("\nblasfeo_strsv_ltn: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 
@@ -835,7 +835,7 @@ void strsv_ltn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct bla
 
 
 
-void strsv_ltn_mn_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_strsv_ltn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m==0)
@@ -843,26 +843,26 @@ void strsv_ltn_mn_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, 
 
 #if defined(DIM_CHECK)
 	// non-negative size
-	if(m<0) printf("\n****** strsv_ltn_mn_libstr : m<0 : %d<0 *****\n", m);
-	if(n<0) printf("\n****** strsv_ltn_mn_libstr : n<0 : %d<0 *****\n", n);
+	if(m<0) printf("\n****** blasfeo_strsv_ltn_mn : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** blasfeo_strsv_ltn_mn : n<0 : %d<0 *****\n", n);
 	// non-negative offset
-	if(ai<0) printf("\n****** strsv_ltn_mn_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** strsv_ltn_mn_libstr : aj<0 : %d<0 *****\n", aj);
-	if(xi<0) printf("\n****** strsv_ltn_mn_libstr : xi<0 : %d<0 *****\n", xi);
-	if(zi<0) printf("\n****** strsv_ltn_mn_libstr : zi<0 : %d<0 *****\n", zi);
+	if(ai<0) printf("\n****** blasfeo_strsv_ltn_mn : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** blasfeo_strsv_ltn_mn : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** blasfeo_strsv_ltn_mn : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** blasfeo_strsv_ltn_mn : zi<0 : %d<0 *****\n", zi);
 	// inside matrix
 	// A: m x k
-	if(ai+m > sA->m) printf("\n***** strsv_ltn_mn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+n > sA->n) printf("\n***** strsv_ltn_mn_libstr : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+	if(ai+m > sA->m) printf("\n***** blasfeo_strsv_ltn_mn : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+n > sA->n) printf("\n***** blasfeo_strsv_ltn_mn : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
 	// x: m
-	if(xi+m > sx->m) printf("\n***** strsv_ltn_mn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	if(xi+m > sx->m) printf("\n***** blasfeo_strsv_ltn_mn : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
-	if(zi+m > sz->m) printf("\n***** strsv_ltn_mn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_ltn_mn : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
 
 	if(ai!=0)
 		{
-		printf("\nstrsv_ltn_mn_libstr: feature not implemented yet: ai=%d\n", ai);
+		printf("\nblasfeo_strsv_ltn_mn: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
 		}
 
@@ -930,109 +930,109 @@ void strsv_ltn_mn_libstr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, 
 
 
 
-void strsv_lnu_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_strsv_lnu(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 	if(m==0)
 		return;
 #if defined(DIM_CHECK)
 	// non-negative size
-	if(m<0) printf("\n****** strsv_lnu_libstr : m<0 : %d<0 *****\n", m);
+	if(m<0) printf("\n****** blasfeo_strsv_lnu : m<0 : %d<0 *****\n", m);
 	// non-negative offset
-	if(ai<0) printf("\n****** strsv_lnu_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** strsv_lnu_libstr : aj<0 : %d<0 *****\n", aj);
-	if(xi<0) printf("\n****** strsv_lnu_libstr : xi<0 : %d<0 *****\n", xi);
-	if(zi<0) printf("\n****** strsv_lnu_libstr : zi<0 : %d<0 *****\n", zi);
+	if(ai<0) printf("\n****** blasfeo_strsv_lnu : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** blasfeo_strsv_lnu : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** blasfeo_strsv_lnu : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** blasfeo_strsv_lnu : zi<0 : %d<0 *****\n", zi);
 	// inside matrix
 	// A: m x k
-	if(ai+m > sA->m) printf("\n***** strsv_lnu_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+m > sA->n) printf("\n***** strsv_lnu_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
+	if(ai+m > sA->m) printf("\n***** blasfeo_strsv_lnu : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+m > sA->n) printf("\n***** blasfeo_strsv_lnu : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
 	// x: m
-	if(xi+m > sx->m) printf("\n***** strsv_lnu_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	if(xi+m > sx->m) printf("\n***** blasfeo_strsv_lnu : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
-	if(zi+m > sz->m) printf("\n***** strsv_lnu_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_lnu : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	printf("\n***** strsv_lnu_libstr : feature not implemented yet *****\n");
+	printf("\n***** blasfeo_strsv_lnu : feature not implemented yet *****\n");
 	exit(1);
 	}
 
 
 
-void strsv_ltu_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_strsv_ltu(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 	if(m==0)
 		return;
 #if defined(DIM_CHECK)
 	// non-negative size
-	if(m<0) printf("\n****** strsv_ltu_libstr : m<0 : %d<0 *****\n", m);
+	if(m<0) printf("\n****** blasfeo_strsv_ltu : m<0 : %d<0 *****\n", m);
 	// non-negative offset
-	if(ai<0) printf("\n****** strsv_ltu_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** strsv_ltu_libstr : aj<0 : %d<0 *****\n", aj);
-	if(xi<0) printf("\n****** strsv_ltu_libstr : xi<0 : %d<0 *****\n", xi);
-	if(zi<0) printf("\n****** strsv_ltu_libstr : zi<0 : %d<0 *****\n", zi);
+	if(ai<0) printf("\n****** blasfeo_strsv_ltu : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** blasfeo_strsv_ltu : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** blasfeo_strsv_ltu : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** blasfeo_strsv_ltu : zi<0 : %d<0 *****\n", zi);
 	// inside matrix
 	// A: m x k
-	if(ai+m > sA->m) printf("\n***** strsv_ltu_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+m > sA->n) printf("\n***** strsv_ltu_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
+	if(ai+m > sA->m) printf("\n***** blasfeo_strsv_ltu : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+m > sA->n) printf("\n***** blasfeo_strsv_ltu : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
 	// x: m
-	if(xi+m > sx->m) printf("\n***** strsv_ltu_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	if(xi+m > sx->m) printf("\n***** blasfeo_strsv_ltu : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
-	if(zi+m > sz->m) printf("\n***** strsv_ltu_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_ltu : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	printf("\n***** strsv_ltu_libstr : feature not implemented yet *****\n");
+	printf("\n***** blasfeo_strsv_ltu : feature not implemented yet *****\n");
 	exit(1);
 	}
 
 
 
-void strsv_unn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_strsv_unn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 	if(m==0)
 		return;
 #if defined(DIM_CHECK)
 	// non-negative size
-	if(m<0) printf("\n****** strsv_unn_libstr : m<0 : %d<0 *****\n", m);
+	if(m<0) printf("\n****** blasfeo_strsv_unn : m<0 : %d<0 *****\n", m);
 	// non-negative offset
-	if(ai<0) printf("\n****** strsv_unn_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** strsv_unn_libstr : aj<0 : %d<0 *****\n", aj);
-	if(xi<0) printf("\n****** strsv_unn_libstr : xi<0 : %d<0 *****\n", xi);
-	if(zi<0) printf("\n****** strsv_unn_libstr : zi<0 : %d<0 *****\n", zi);
+	if(ai<0) printf("\n****** blasfeo_strsv_unn : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** blasfeo_strsv_unn : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** blasfeo_strsv_unn : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** blasfeo_strsv_unn : zi<0 : %d<0 *****\n", zi);
 	// inside matrix
 	// A: m x k
-	if(ai+m > sA->m) printf("\n***** strsv_unn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+m > sA->n) printf("\n***** strsv_unn_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
+	if(ai+m > sA->m) printf("\n***** blasfeo_strsv_unn : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+m > sA->n) printf("\n***** blasfeo_strsv_unn : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
 	// x: m
-	if(xi+m > sx->m) printf("\n***** strsv_unn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	if(xi+m > sx->m) printf("\n***** blasfeo_strsv_unn : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
-	if(zi+m > sz->m) printf("\n***** strsv_unn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_unn : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	printf("\n***** strsv_unn_libstr : feature not implemented yet *****\n");
+	printf("\n***** blasfeo_strsv_unn : feature not implemented yet *****\n");
 	exit(1);
 	}
 
 
 
-void strsv_utn_libstr(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_strsv_utn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 	if(m==0)
 		return;
 #if defined(DIM_CHECK)
 	// non-negative size
-	if(m<0) printf("\n****** strsv_utn_libstr : m<0 : %d<0 *****\n", m);
+	if(m<0) printf("\n****** blasfeo_strsv_utn : m<0 : %d<0 *****\n", m);
 	// non-negative offset
-	if(ai<0) printf("\n****** strsv_utn_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** strsv_utn_libstr : aj<0 : %d<0 *****\n", aj);
-	if(xi<0) printf("\n****** strsv_utn_libstr : xi<0 : %d<0 *****\n", xi);
-	if(zi<0) printf("\n****** strsv_utn_libstr : zi<0 : %d<0 *****\n", zi);
+	if(ai<0) printf("\n****** blasfeo_strsv_utn : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** blasfeo_strsv_utn : aj<0 : %d<0 *****\n", aj);
+	if(xi<0) printf("\n****** blasfeo_strsv_utn : xi<0 : %d<0 *****\n", xi);
+	if(zi<0) printf("\n****** blasfeo_strsv_utn : zi<0 : %d<0 *****\n", zi);
 	// inside matrix
 	// A: m x k
-	if(ai+m > sA->m) printf("\n***** strsv_utn_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+m > sA->n) printf("\n***** strsv_utn_libstr : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
+	if(ai+m > sA->m) printf("\n***** blasfeo_strsv_utn : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+m > sA->n) printf("\n***** blasfeo_strsv_utn : aj+m > col(A) : %d+%d > %d *****\n", aj, m, sA->n);
 	// x: m
-	if(xi+m > sx->m) printf("\n***** strsv_utn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
+	if(xi+m > sx->m) printf("\n***** blasfeo_strsv_utn : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
-	if(zi+m > sz->m) printf("\n***** strsv_utn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_utn : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-	printf("\n***** strsv_utn_libstr : feature not implemented yet *****\n");
+	printf("\n***** blasfeo_strsv_utn : feature not implemented yet *****\n");
 	exit(1);
 	}
 

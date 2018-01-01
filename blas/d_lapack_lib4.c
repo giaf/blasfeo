@@ -566,7 +566,7 @@ void dlauum_dpotrf_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *
 
 
 // dpotrf
-void dpotrf_l_libstr(int m, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dpotrf_l(int m, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0)
@@ -574,7 +574,7 @@ void dpotrf_l_libstr(int m, struct blasfeo_dmat *sC, int ci, int cj, struct blas
 
 	if(ci!=0 | di!=0)
 		{
-		printf("\ndpotrf_l_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+		printf("\nblasfeo_dpotrf_l: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
 
@@ -768,7 +768,7 @@ void dpotrf_l_libstr(int m, struct blasfeo_dmat *sC, int ci, int cj, struct blas
 
 
 // dpotrf
-void dpotrf_l_mn_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)
@@ -776,7 +776,7 @@ void dpotrf_l_mn_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, s
 
 	if(ci!=0 | di!=0)
 		{
-		printf("\ndpotrf_l_mn_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+		printf("\nblasfeo_dpotrf_l_mn: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
 
@@ -1038,7 +1038,7 @@ void dpotrf_l_mn_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, s
 
 
 // dsyrk dpotrf
-void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dsyrk_dpotrf_ln(int m, int n, int k, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)
@@ -1046,7 +1046,7 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct blasfeo_dmat *sA, int ai
 
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
-		printf("\ndsyrk_dpotrf_ln_libstr: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
+		printf("\nblasfeo_dsyrk_dpotrf_ln: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
 		}
 
@@ -1316,7 +1316,7 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct blasfeo_dmat *sA, int ai
 
 
 // dgetrf without pivoting
-void dgetrf_nopivot_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dgetrf_nopivot(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	if(ci!=0 | di!=0)
 		{
@@ -1340,11 +1340,11 @@ void dgetrf_nopivot_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj
 
 
 // dgetrf pivoting
-void dgetrf_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv)
+void blasfeo_dgetrf_rowpivot(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv)
 	{
 	if(ci!=0 | di!=0)
 		{
-		printf("\ndgetrf_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+		printf("\nblasfeo_dgetrf_rowpivot: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
 	const int ps = 4;
@@ -2444,7 +2444,7 @@ void dgetrf_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct
 
 
 
-int dgeqrf_work_size_libstr(int m, int n)
+int blasfeo_dgeqrf_worksize(int m, int n)
 	{
 	const int ps = 4;
 	int cm = (m+ps-1)/ps*ps;
@@ -2455,7 +2455,7 @@ int dgeqrf_work_size_libstr(int m, int n)
 
 
 
-void dgeqrf_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *v_work)
+void blasfeo_dgeqrf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *v_work)
 	{
 	char *work = (char *) v_work;
 	if(m<=0 | n<=0)
@@ -2528,14 +2528,14 @@ void dgeqrf_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct
 
 
 
-int dgelqf_work_size_libstr(int m, int n)
+int blasfeo_dgelqf_worksize(int m, int n)
 	{
 	return 0;
 	}
 
 
 
-void dgelqf_libstr(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
+void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;

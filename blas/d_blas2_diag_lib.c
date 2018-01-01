@@ -38,7 +38,7 @@
 
 #define STRVEC blasfeo_dvec
 
-#define GEMV_DIAG_LIBSTR dgemv_diag_libstr
+#define GEMV_DIAG_LIBSTR blasfeo_dgemv_d
 
 
 

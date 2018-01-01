@@ -406,7 +406,7 @@ void sgetrf_nn_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *
 
 
 // dpotrf
-void spotrf_l_libstr(int m, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+void blasfeo_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(m<=0)
@@ -414,7 +414,7 @@ void spotrf_l_libstr(int m, struct blasfeo_smat *sC, int ci, int cj, struct blas
 
 	if(ci!=0 | di!=0)
 		{
-		printf("\nspotrf_l_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+		printf("\nblasfeo_spotrf_l: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
 
@@ -705,7 +705,7 @@ void spotrf_l_libstr(int m, struct blasfeo_smat *sC, int ci, int cj, struct blas
 
 
 // dpotrf
-void spotrf_l_mn_libstr(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+void blasfeo_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)
@@ -713,7 +713,7 @@ void spotrf_l_mn_libstr(int m, int n, struct blasfeo_smat *sC, int ci, int cj, s
 
 	if(ci!=0 | di!=0)
 		{
-		printf("\nspotrf_l_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+		printf("\nblasfeo_spotrf_l: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
 
@@ -821,7 +821,7 @@ void ssyrk_spotrf_ln_libstr(int m, int n, int k, struct blasfeo_smat *sA, int ai
 
 
 // dgetrf without pivoting
-void sgetrf_nopivot_libstr(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+void blasfeo_sgetrf_nopivot(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 	if(ci!=0 | di!=0)
 		{
@@ -846,11 +846,11 @@ void sgetrf_nopivot_libstr(int m, int n, struct blasfeo_smat *sC, int ci, int cj
 
 
 // dgetrf pivoting
-void sgetrf_libstr(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, int *ipiv)
+void blasfeo_sgetrf_rowpivot(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, int *ipiv)
 	{
 	if(ci!=0 | di!=0)
 		{
-		printf("\nsgetrf_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+		printf("\nblasfeo_sgetrf_rowpivot: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
 	const int bs = 4;
@@ -872,20 +872,20 @@ void sgetrf_libstr(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct
 
 
 
-int sgeqrf_work_size_libstr(int m, int n)
+int blasfeo_sgeqrf_worksize(int m, int n)
 	{
-	printf("\nsgeqrf_work_size_libstr: feature not implemented yet\n");
+	printf("\nblasfeo_sgeqrf_worksize: feature not implemented yet\n");
 	exit(1);
 	return 0;
 	}
 
 
 
-void sgeqrf_libstr(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
+void blasfeo_sgeqrf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
-	printf("\nsgeqrf_libstr: feature not implemented yet\n");
+	printf("\nblasfeo_sgeqrf: feature not implemented yet\n");
 	exit(1);
 	return;
 	}
