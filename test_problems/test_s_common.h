@@ -4,11 +4,11 @@
 #define STRMAT blasfeo_smat
 #define STRVEC blasfeo_svec
 #define PS S_PS
-#define PRINT_STRMAT s_print_strmat
+#define PRINT_STRMAT blasfeo_print_smat
 
 #define STRMAT_REF blasfeo_smat_ref
 #define STRVEC_REF blasfeo_svec_ref
-#define PRINT_STRMAT_REF blasfeo_s_print_strmat_ref
+#define PRINT_STRMAT_REF blasfeo_blasfeo_print_smat_ref
 
 #include "test_x_common.h"
 #include "../include/blasfeo_s_aux.h"

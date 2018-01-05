@@ -87,23 +87,23 @@ void blasfeo_free_dmat(struct blasfeo_dmat *sA);
 // free the memory allocated by blasfeo_allocate_dvec
 void blasfeo_free_dvec(struct blasfeo_dvec *sa);
 // print a strmat
-void d_print_strmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
+void blasfeo_print_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 // print in exponential notation a strmat
-void d_print_e_strmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
+void blasfeo_print_exp_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 // print to file a strmat
-void d_print_to_file_strmat(FILE *file, int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
+void blasfeo_print_to_file_dmat(FILE *file, int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 // print a strvec
-void d_print_strvec(int m, struct blasfeo_dvec *sa, int ai);
+void blasfeo_print_dvec(int m, struct blasfeo_dvec *sa, int ai);
 // print in exponential notation a strvec
-void d_print_e_strvec(int m, struct blasfeo_dvec *sa, int ai);
+void blasfeo_print_exp_dvec(int m, struct blasfeo_dvec *sa, int ai);
 // print to file a strvec
-void d_print_to_file_strvec(FILE *file, int m, struct blasfeo_dvec *sa, int ai);
+void blasfeo_print_to_file_dvec(FILE *file, int m, struct blasfeo_dvec *sa, int ai);
 // print the transposed of a strvec
-void d_print_tran_strvec(int m, struct blasfeo_dvec *sa, int ai);
+void blasfeo_print_tran_dvec(int m, struct blasfeo_dvec *sa, int ai);
 // print in exponential notation the transposed of a strvec
-void d_print_e_tran_strvec(int m, struct blasfeo_dvec *sa, int ai);
+void blasfeo_print_exp_tran_dvec(int m, struct blasfeo_dvec *sa, int ai);
 // print to file the transposed of a strvec
-void d_print_tran_to_file_strvec(FILE *file, int m, struct blasfeo_dvec *sa, int ai);
+void blasfeo_print_to_file_tran_dvec(FILE *file, int m, struct blasfeo_dvec *sa, int ai);
 #endif
 
 

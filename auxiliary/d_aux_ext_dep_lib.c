@@ -65,17 +65,17 @@
 #define FREE_STRMAT blasfeo_free_dmat
 #define FREE_STRVEC blasfeo_free_dvec
 
-#define PRINT_STRMAT d_print_strmat
-#define PRINT_STRVEC d_print_strvec
-#define PRINT_TRAN_STRVEC d_print_tran_strvec
+#define PRINT_STRMAT blasfeo_print_dmat
+#define PRINT_STRVEC blasfeo_print_dvec
+#define PRINT_TRAN_STRVEC blasfeo_print_tran_dvec
 
-#define PRINT_TO_FILE_STRMAT d_print_to_file_strmat
-#define PRINT_TO_FILE_STRVEC d_print_to_file_strvec
+#define PRINT_TO_FILE_STRMAT blasfeo_print_to_file_dmat
+#define PRINT_TO_FILE_STRVEC blasfeo_print_to_file_dvec
 #define PRINT_TO_FILE_TRAN_STRVEC d_print_to_file_tran_strvec
 
-#define PRINT_E_STRMAT d_print_e_strmat
-#define PRINT_E_STRVEC d_print_e_strvec
-#define PRINT_E_TRAN_STRVEC d_print_e_tran_strvec
+#define PRINT_E_STRMAT blasfeo_print_exp_dmat
+#define PRINT_E_STRVEC blasfeo_print_exp_dvec
+#define PRINT_E_TRAN_STRVEC blasfeo_print_exp_tran_dvec
 
 #include "x_aux_ext_dep_lib0.c"
 

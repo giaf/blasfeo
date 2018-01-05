@@ -3,6 +3,7 @@
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_strvec/blasfeo_dvec/g' {} \;
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_strvec/blasfeo_svec/g' {} \;
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/memory_size/memsize/g' {} \;
+
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_allocate_strmat/blasfeo_allocate_dmat/g' {} \;
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_allocate_strmat/blasfeo_allocate_smat/g' {} \;
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_allocate_strvec/blasfeo_allocate_dvec/g' {} \;
@@ -11,6 +12,25 @@
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_free_strmat/blasfeo_free_smat/g' {} \;
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_free_strvec/blasfeo_free_dvec/g' {} \;
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_free_strvec/blasfeo_free_svec/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_print_strmat/blasfeo_print_dmat/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_print_strmat/blasfeo_print_smat/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_print_e_strmat/blasfeo_print_exp_dmat/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_print_e_strmat/blasfeo_print_exp_smat/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_print_to_file_strmat/blasfeo_print_to_file_dmat/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_print_to_file_strmat/blasfeo_print_to_file_smat/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_print_strvec/blasfeo_print_dvec/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_print_strvec/blasfeo_print_svec/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_print_e_strvec/blasfeo_print_exp_dvec/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_print_e_strvec/blasfeo_print_exp_svec/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_print_to_file_strvec/blasfeo_print_to_file_dvec/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_print_to_file_strvec/blasfeo_print_to_file_svec/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_print_tran_strvec/blasfeo_print_tran_dvec/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_print_tran_strvec/blasfeo_print_tran_svec/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_print_e_tran_strvec/blasfeo_print_exp_tran_dvec/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_print_e_tran_strvec/blasfeo_print_exp_tran_svec/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_print_tran_to_file_strvec/blasfeo_print_to_file_tran_dvec/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_print_tran_to_file_strvec/blasfeo_print_to_file_tran_svec/g' {} \;
+
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_create_strmat/blasfeo_create_dmat/g' {} \;
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_create_strmat/blasfeo_create_smat/g' {} \;
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_create_strvec/blasfeo_create_dvec/g' {} \;

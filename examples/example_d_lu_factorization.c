@@ -108,7 +108,7 @@ int main()
 	// convert from column major matrix to strmat
 	blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
 	printf("\nA = \n");
-	d_print_strmat(n, n, &sA, 0, 0);
+	blasfeo_print_dmat(n, n, &sA, 0, 0);
 
 	struct blasfeo_dmat sB;
 //	blasfeo_allocate_dmat(n, n, &sB);
@@ -117,7 +117,7 @@ int main()
 	// convert from column major matrix to strmat
 	blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
 	printf("\nB = \n");
-	d_print_strmat(n, n, &sB, 0, 0);
+	blasfeo_print_dmat(n, n, &sB, 0, 0);
 
 	struct blasfeo_dmat sI;
 //	blasfeo_allocate_dmat(n, n, &sI);
@@ -137,48 +137,48 @@ int main()
 
 	blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 	printf("\nB+A*A' = \n");
-	d_print_strmat(n, n, &sD, 0, 0);
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
 
 //	blasfeo_dgetrf_nopivot(n, n, &sD, 0, 0, &sD, 0, 0);
 	blasfeo_dgetrf_rowpivot(n, n, &sD, 0, 0, &sLU, 0, 0, ipiv);
 	printf("\nLU = \n");
-	d_print_strmat(n, n, &sLU, 0, 0);
+	blasfeo_print_dmat(n, n, &sLU, 0, 0);
 	printf("\nipiv = \n");
 	int_print_mat(1, n, ipiv, 1);
 
 #if 0 // solve P L U X = P B
 	blasfeo_pack_dmat(n, n, I, n, &sI, 0, 0);
 	printf("\nI = \n");
-	d_print_strmat(n, n, &sI, 0, 0);
+	blasfeo_print_dmat(n, n, &sI, 0, 0);
 
 	blasfeo_drowpe(n, ipiv, &sI);
 	printf("\nperm(I) = \n");
-	d_print_strmat(n, n, &sI, 0, 0);
+	blasfeo_print_dmat(n, n, &sI, 0, 0);
 
 	blasfeo_dtrsm_llnu(n, n, 1.0, &sLU, 0, 0, &sI, 0, 0, &sD, 0, 0);
 	printf("\nperm(inv(L)) = \n");
-	d_print_strmat(n, n, &sD, 0, 0);
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	blasfeo_dtrsm_lunn(n, n, 1.0, &sLU, 0, 0, &sD, 0, 0, &sD, 0, 0);
 	printf("\ninv(A) = \n");
-	d_print_strmat(n, n, &sD, 0, 0);
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
 
 	// convert from strmat to column major matrix
 	blasfeo_unpack_dmat(n, n, &sD, 0, 0, D, n);
 #else // solve X^T (P L U)^T = B^T P^T
 	blasfeo_pack_tran_dmat(n, n, I, n, &sI, 0, 0);
 	printf("\nI' = \n");
-	d_print_strmat(n, n, &sI, 0, 0);
+	blasfeo_print_dmat(n, n, &sI, 0, 0);
 
 	blasfeo_dcolpe(n, ipiv, &sB);
 	printf("\nperm(I') = \n");
-	d_print_strmat(n, n, &sB, 0, 0);
+	blasfeo_print_dmat(n, n, &sB, 0, 0);
 
 	blasfeo_dtrsm_rltu(n, n, 1.0, &sLU, 0, 0, &sB, 0, 0, &sD, 0, 0);
 	printf("\nperm(inv(L')) = \n");
-	d_print_strmat(n, n, &sD, 0, 0);
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	blasfeo_dtrsm_rutn(n, n, 1.0, &sLU, 0, 0, &sD, 0, 0, &sD, 0, 0);
 	printf("\ninv(A') = \n");
-	d_print_strmat(n, n, &sD, 0, 0);
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
 
 	// convert from strmat to column major matrix
 	blasfeo_unpack_tran_dmat(n, n, &sD, 0, 0, D, n);

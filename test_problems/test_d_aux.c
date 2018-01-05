@@ -144,16 +144,16 @@ SHOW_DEFINE(TARGET)
 	// -------- Print matrices
 
 	printf("\nPrint strmat HP A:\n\n");
-	d_print_strmat(p_n, p_n, &sA, 0, 0);
+	blasfeo_print_dmat(p_n, p_n, &sA, 0, 0);
 
 	printf("\nPrint strmat REF A:\n\n");
-	blasfeo_d_print_strmat_ref(p_n, p_n, &rA, 0, 0);
+	blasfeo_blasfeo_print_dmat_ref(p_n, p_n, &rA, 0, 0);
 
 	printf("\nPrint strmat HP B:\n\n");
-	d_print_strmat(p_n, p_n, &sB, 0, 0);
+	blasfeo_print_dmat(p_n, p_n, &sB, 0, 0);
 
 	printf("\nPrint strmat REF B:\n\n");
-	blasfeo_d_print_strmat_ref(p_n, p_n, &rB, 0, 0);
+	blasfeo_blasfeo_print_dmat_ref(p_n, p_n, &rB, 0, 0);
 
 	printf("\n\n----------- TEST Copy&Scale\n\n");
 

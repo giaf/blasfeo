@@ -94,23 +94,23 @@ SHOW_DEFINE(TARGET)
 	/* s_print_mat(p_n, p_n, B, n); */
 
 	printf("\nPrint strmat HP A:\n\n");
-	s_print_strmat(p_n, p_n, &sA, 0, 0);
+	blasfeo_print_smat(p_n, p_n, &sA, 0, 0);
 
 	printf("\nPrint strmat REF A:\n\n");
-	test_s_print_strmat(p_n, p_n, &rA, 0, 0);
+	test_blasfeo_print_smat(p_n, p_n, &rA, 0, 0);
 
 	printf("\nPrint strmat HP B:\n\n");
-	s_print_strmat(p_n, p_n, &sB, 0, 0);
+	blasfeo_print_smat(p_n, p_n, &sB, 0, 0);
 
 	printf("\nPrint strmat REF B:\n\n");
-	test_s_print_strmat(p_n, p_n, &rB, 0, 0);
+	test_blasfeo_print_smat(p_n, p_n, &rB, 0, 0);
 
 
 	/* printf("\nPrint stored strmat A:\n\n"); */
-	/* s_print_strmat((&sA)->pm, (&sA)->cn, &sA, 0, 0); */
+	/* blasfeo_print_smat((&sA)->pm, (&sA)->cn, &sA, 0, 0); */
 
 	/* printf("\nPrint strmat B:\n\n"); */
-	/* s_print_strmat(p_n, p_n, &sB, 0, 0); */
+	/* blasfeo_print_smat(p_n, p_n, &sB, 0, 0); */
 
 	/* AUX */
 

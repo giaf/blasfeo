@@ -193,17 +193,17 @@ void test_blasfeo_allocate_dvec(int m, struct blasfeo_dvec *sa);
 void test_blasfeo_free_dmat(struct blasfeo_dmat *sA);
 void test_blasfeo_free_dvec(struct blasfeo_dvec *sa);
 
-void test_d_print_strmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
-void test_d_print_strvec(int m, struct blasfeo_dvec *sa, int ai);
-void test_d_print_tran_strvec(int m, struct blasfeo_dvec *sa, int ai);
+void test_blasfeo_print_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
+void test_blasfeo_print_dvec(int m, struct blasfeo_dvec *sa, int ai);
+void test_blasfeo_print_tran_dvec(int m, struct blasfeo_dvec *sa, int ai);
 
-void test_d_print_to_file_strmat(FILE *file, int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
-void test_d_print_to_file_strvec(FILE *file, int m, struct blasfeo_dvec *sa, int ai);
-void test_d_print_tran_to_file_strvec(FILE *file, int m, struct blasfeo_dvec *sa, int ai);
+void test_blasfeo_print_to_file_dmat(FILE *file, int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
+void test_blasfeo_print_to_file_dvec(FILE *file, int m, struct blasfeo_dvec *sa, int ai);
+void test_blasfeo_print_to_file_tran_dvec(FILE *file, int m, struct blasfeo_dvec *sa, int ai);
 
-void test_d_print_e_strmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
-void test_d_print_e_strvec(int m, struct blasfeo_dvec *sa, int ai);
-void test_d_print_e_tran_strvec(int m, struct blasfeo_dvec *sa, int ai);
+void test_blasfeo_print_exp_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
+void test_blasfeo_print_exp_dvec(int m, struct blasfeo_dvec *sa, int ai);
+void test_blasfeo_print_exp_tran_dvec(int m, struct blasfeo_dvec *sa, int ai);
 
 
 

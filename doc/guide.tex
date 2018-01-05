@@ -150,7 +150,7 @@ void blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int
 \subsection{{\tt strmat} print}
 
 \begin{verbatim}
-void d_print_strmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
+void blasfeo_print_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 \end{verbatim}
 
 \begin{verbatim}
@@ -231,11 +231,11 @@ void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sx, int xi, double *x);
 \subsection{{\tt strvec} print}
 
 \begin{verbatim}
-void d_print_strvec(int m, struct blasfeo_dvec *sx, int xi);
+void blasfeo_print_dvec(int m, struct blasfeo_dvec *sx, int xi);
 \end{verbatim}
 
 \begin{verbatim}
-void d_print_tran_strvec(int m, struct blasfeo_dvec *sx, int xi);
+void blasfeo_print_tran_dvec(int m, struct blasfeo_dvec *sx, int xi);
 \end{verbatim}
 
 

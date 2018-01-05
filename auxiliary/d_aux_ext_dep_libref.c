@@ -61,17 +61,17 @@
 #define FREE_STRMAT blasfeo_blasfeo_free_dmat_ref
 #define FREE_STRVEC blasfeo_blasfeo_free_dvec_ref
 
-#define PRINT_STRMAT blasfeo_d_print_strmat_ref
-#define PRINT_STRVEC blasfeo_d_print_strvec_ref
-#define PRINT_TRAN_STRVEC blasfeo_d_print_tran_strvec_ref
+#define PRINT_STRMAT blasfeo_blasfeo_print_dmat_ref
+#define PRINT_STRVEC blasfeo_blasfeo_print_dvec_ref
+#define PRINT_TRAN_STRVEC blasfeo_blasfeo_print_tran_dvec_ref
 
-#define PRINT_TO_FILE_STRMAT blasfeo_d_print_to_file_strmat_ref
-#define PRINT_TO_FILE_STRVEC blasfeo_d_print_to_file_strvec_ref
+#define PRINT_TO_FILE_STRMAT blasfeo_blasfeo_print_to_file_dmat_ref
+#define PRINT_TO_FILE_STRVEC blasfeo_blasfeo_print_to_file_dvec_ref
 #define PRINT_TO_FILE_TRAN_STRVEC blasfeo_d_print_to_file_tran_strvec_ref
 
-#define PRINT_E_STRMAT blasfeo_d_print_e_strmat_ref
-#define PRINT_E_STRVEC blasfeo_d_print_e_strvec_ref
-#define PRINT_E_TRAN_STRVEC blasfeo_d_print_e_tran_strvec_ref
+#define PRINT_E_STRMAT blasfeo_blasfeo_print_exp_dmat_ref
+#define PRINT_E_STRVEC blasfeo_blasfeo_print_exp_dvec_ref
+#define PRINT_E_TRAN_STRVEC blasfeo_blasfeo_print_exp_tran_dvec_ref
 
 #include "x_aux_ext_dep_lib0.c"
 

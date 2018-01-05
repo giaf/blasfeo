@@ -400,20 +400,20 @@ int main()
 	blasfeo_allocate_svec(nx_, &sb0);
 	float *b0; s_zeros(&b0, nx_, 1); // states offset
 	blasfeo_sgemv_n(nx_, nx_, 1.0, &sA, 0, 0, &sx0, 0, 1.0, &sb, 0, &sb0, 0);
-	s_print_tran_strvec(nx_, &sb0, 0);
+	blasfeo_print_tran_svec(nx_, &sb0, 0);
 
 	struct blasfeo_smat sBbt0;
 	blasfeo_allocate_smat(nu_+nx_+1, nx_, &sBbt0);
 	blasfeo_pack_tran_smat(nx_, nx_, B, nx_, &sBbt0, 0, 0);
 	blasfeo_srowin(nx_, 1.0, &sb0, 0, &sBbt0, nu_, 0);
-	s_print_strmat(nu_+1, nx_, &sBbt0, 0, 0);
+	blasfeo_print_smat(nu_+1, nx_, &sBbt0, 0, 0);
 
 	struct blasfeo_smat sBAbt1;
 	blasfeo_allocate_smat(nu_+nx_+1, nx_, &sBAbt1);
 	blasfeo_pack_tran_smat(nx_, nu_, B, nx_, &sBAbt1, 0, 0);
 	blasfeo_pack_tran_smat(nx_, nx_, A, nx_, &sBAbt1, nu_, 0);
 	blasfeo_pack_tran_smat(nx_, 1, b, nx_, &sBAbt1, nu_+nx_, 0);
-	s_print_strmat(nu_+nx_+1, nx_, &sBAbt1, 0, 0);
+	blasfeo_print_smat(nu_+nx_+1, nx_, &sBAbt1, 0, 0);
 
 	struct blasfeo_svec sr0; // XXX no need to update r0 since S=0
 	blasfeo_allocate_svec(nu_, &sr0);
@@ -423,7 +423,7 @@ int main()
 	blasfeo_allocate_smat(nu_+1, nu_, &sRr0);
 	blasfeo_pack_smat(nu_, nu_, R, nu_, &sRr0, 0, 0);
 	blasfeo_srowin(nu_, 1.0, &sr0, 0, &sRr0, nu_, 0);
-	s_print_strmat(nu_+1, nu_, &sRr0, 0, 0);
+	blasfeo_print_smat(nu_+1, nu_, &sRr0, 0, 0);
 
 	struct blasfeo_svec srq1;
 	blasfeo_allocate_svec(nu_+nx_, &srq1);
@@ -436,7 +436,7 @@ int main()
 	blasfeo_pack_tran_smat(nu_, nx_, S, nu_, &sRSQrq1, nu_, 0);
 	blasfeo_pack_smat(nx_, nx_, Q, nx_, &sRSQrq1, nu_, nu_);
 	blasfeo_srowin(nu_+nx_, 1.0, &srq1, 0, &sRSQrq1, nu_+nx_, 0);
-	s_print_strmat(nu_+nx_+1, nu_+nx_, &sRSQrq1, 0, 0);
+	blasfeo_print_smat(nu_+nx_+1, nu_+nx_, &sRSQrq1, 0, 0);
 
 	struct blasfeo_svec sqN;
 	blasfeo_allocate_svec(nx_, &sqN);
@@ -446,7 +446,7 @@ int main()
 	blasfeo_allocate_smat(nx_+1, nx_, &sQqN);
 	blasfeo_pack_smat(nx_, nx_, Q, nx_, &sQqN, 0, 0);
 	blasfeo_srowin(nx_, 1.0, &sqN, 0, &sQqN, nx_, 0);
-	s_print_strmat(nx_+1, nx_, &sQqN, 0, 0);
+	blasfeo_print_smat(nx_+1, nx_, &sQqN, 0, 0);
 
 /************************************************
 * array of matrices
@@ -490,7 +490,7 @@ int main()
 	blasfeo_allocate_svec(nx_, &hswork_vec[0]);
 
 //	for(ii=0; ii<N; ii++)
-//		d_print_strmat(nu[ii]+nx[ii]+1, nx[ii+1], &hsBAbt[ii], 0, 0);
+//		blasfeo_print_dmat(nu[ii]+nx[ii]+1, nx[ii+1], &hsBAbt[ii], 0, 0);
 //	return 0;
 
 /************************************************
@@ -532,15 +532,15 @@ int main()
 	// print sol
 	printf("\nux = \n\n");
 	for(ii=0; ii<=N; ii++)
-		s_print_tran_strvec(nu[ii]+nx[ii], &hsux[ii], 0);
+		blasfeo_print_tran_svec(nu[ii]+nx[ii], &hsux[ii], 0);
 
 	printf("\npi = \n\n");
 	for(ii=0; ii<N; ii++)
-		s_print_tran_strvec(nx[ii+1], &hspi[ii], 0);
+		blasfeo_print_tran_svec(nx[ii+1], &hspi[ii], 0);
 
 //	printf("\nL = \n\n");
 //	for(ii=0; ii<=N; ii++)
-//		s_print_strmat(nu[ii]+nx[ii]+1, nu[ii]+nx[ii], &hsL[ii], 0, 0);
+//		blasfeo_print_smat(nu[ii]+nx[ii]+1, nu[ii]+nx[ii], &hsL[ii], 0, 0);
 
 	printf("\ntime sv\t\ttime trf\t\ttime trs\n");
 	printf("\n%e\t%e\t%e\n", time_sv, time_trf, time_trs);

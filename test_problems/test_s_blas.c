@@ -324,7 +324,7 @@ int main()
 	//			blasfeo_sgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
 				}
 
-	//		d_print_strmat(n, n, &sD, 0, 0);
+	//		blasfeo_print_dmat(n, n, &sD, 0, 0);
 
 			gettimeofday(&tv1, NULL); // stop
 
