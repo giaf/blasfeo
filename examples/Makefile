@@ -56,8 +56,7 @@ OBJS_TEST = tools.o example_d_riccati_recursion.o
 all: clean obj run
 
 obj: $(OBJS_TEST)
-	cp ../libblasfeo.a .
-	$(CC) -o test.out $(OBJS_TEST) -L. libblasfeo.a $(LIBS) #-pg
+	$(CC) -o test.out $(OBJS_TEST) -L. ../lib/libblasfeo.a $(LIBS) #-pg
 
 run:
 	./test.out

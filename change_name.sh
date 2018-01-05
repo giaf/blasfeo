@@ -218,7 +218,7 @@
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dpotrf_l_mn_libstr/blasfeo_dpotrf_l_mn/g' {} \;
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/spotrf_l_mn_libstr/blasfeo_spotrf_l_mn/g' {} \;
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dsyrk_dpotrf_ln_libstr/blasfeo_dsyrk_dpotrf_ln/g' {} \;
-#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/ssyrk_dpotrf_ln_libstr/blasfeo_ssyrk_dpotrf_ln/g' {} \;
+#find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/ssyrk_spotrf_ln_libstr/blasfeo_ssyrk_spotrf_ln/g' {} \;
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dgetrf_nopivot_libstr/blasfeo_dgetrf_nopivot/g' {} \;
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/sgetrf_nopivot_libstr/blasfeo_sgetrf_nopivot/g' {} \;
 #find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/dgetrf_libstr/blasfeo_dgetrf_rowpivot/g' {} \;

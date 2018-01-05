@@ -34,6 +34,7 @@
 
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_i_aux_ext_dep.h"
+#include "../include/blasfeo_d_aux_ext_dep.h"
 #include "../include/blasfeo_s_aux_ext_dep.h"
 #include "../include/blasfeo_s_aux.h"
 #include "../include/blasfeo_s_kernel.h"
@@ -49,7 +50,7 @@ static void s_back_ric_sv_libstr(int N, int *nx, int *nu, struct blasfeo_smat *h
 	// factorization and backward substitution
 
 	// last stage
-	blasfeo_spotrf_l(nx[N]+1, nx[N], &hsRSQrq[N], 0, 0, &hsL[N], 0, 0);
+	blasfeo_spotrf_l_mn(nx[N]+1, nx[N], &hsRSQrq[N], 0, 0, &hsL[N], 0, 0);
 
 	// middle stages
 	for(nn=0; nn<N; nn++)
@@ -57,7 +58,7 @@ static void s_back_ric_sv_libstr(int N, int *nx, int *nu, struct blasfeo_smat *h
 		blasfeo_strmm_rlnn(nu[N-nn-1]+nx[N-nn-1]+1, nx[N-nn], 1.0, &hsL[N-nn], nu[N-nn], nu[N-nn], &hsBAbt[N-nn-1], 0, 0, &hswork_mat[0], 0, 0);
 		blasfeo_sgead(1, nx[N-nn], 1.0, &hsL[N-nn], nu[N-nn]+nx[N-nn], nu[N-nn], &hswork_mat[0], nu[N-nn-1]+nx[N-nn-1], 0);
 #if 1
-		ssyrk_spotrf_ln_libstr(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
+		blasfeo_ssyrk_spotrf_ln(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #else
 		blasfeo_ssyrk_ln(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 		blasfeo_spotrf_l(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
@@ -69,26 +70,26 @@ static void s_back_ric_sv_libstr(int N, int *nx, int *nu, struct blasfeo_smat *h
 	// first stage
 	nn = 0;
 	blasfeo_srowex(nu[nn]+nx[nn], -1.0, &hsL[nn], nu[nn]+nx[nn], 0, &hsux[nn], 0);
-	blasfeo_strsv_ltn(nu[nn]+nx[nn], nu[nn]+nx[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
+	blasfeo_strsv_ltn(nu[nn]+nx[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
 	blasfeo_srowex(nx[nn+1], 1.0, &hsBAbt[nn], nu[nn]+nx[nn], 0, &hsux[nn+1], nu[nn+1]);
 	blasfeo_sgemv_t(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsux[nn+1], nu[nn+1], &hsux[nn+1], nu[nn+1]);
-	blasfeo_sveccp(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hspi[nn], 0);
+	blasfeo_sveccp(nx[nn+1], &hsux[nn+1], nu[nn+1], &hspi[nn], 0);
 	blasfeo_srowex(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[0], 0);
 	blasfeo_strmv_ltn(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
-	blasfeo_saxpy(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
+	blasfeo_saxpy(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0, &hspi[nn], 0);
 	blasfeo_strmv_lnn(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
 
 	// middle stages
 	for(nn=1; nn<N; nn++)
 		{
 		blasfeo_srowex(nu[nn], -1.0, &hsL[nn], nu[nn]+nx[nn], 0, &hsux[nn], 0);
-		blasfeo_strsv_ltn(nu[nn]+nx[nn], nu[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
+		blasfeo_strsv_ltn_mn(nu[nn]+nx[nn], nu[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
 		blasfeo_srowex(nx[nn+1], 1.0, &hsBAbt[nn], nu[nn]+nx[nn], 0, &hsux[nn+1], nu[nn+1]);
 		blasfeo_sgemv_t(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsux[nn+1], nu[nn+1], &hsux[nn+1], nu[nn+1]);
-		blasfeo_sveccp(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hspi[nn], 0);
+		blasfeo_sveccp(nx[nn+1], &hsux[nn+1], nu[nn+1], &hspi[nn], 0);
 		blasfeo_srowex(nx[nn+1], 1.0, &hsL[nn+1], nu[nn+1]+nx[nn+1], nu[nn+1], &hswork_vec[0], 0);
 		blasfeo_strmv_ltn(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
-		blasfeo_saxpy(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
+		blasfeo_saxpy(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0, &hspi[nn], 0);
 		blasfeo_strmv_lnn(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hspi[nn], 0, &hspi[nn], 0);
 		}
 
@@ -106,21 +107,20 @@ static void s_back_ric_trf_libstr(int N, int *nx, int *nu, struct blasfeo_smat *
 	// factorization
 
 	// last stage
-	blasfeo_spotrf_l(nx[N], nx[N], &hsRSQrq[N], 0, 0, &hsL[N], 0, 0);
+	blasfeo_spotrf_l(nx[N], &hsRSQrq[N], 0, 0, &hsL[N], 0, 0);
 
 	// middle stages
 	for(nn=0; nn<N; nn++)
 		{
 		blasfeo_strmm_rlnn(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hsL[N-nn], nu[N-nn], nu[N-nn], &hsBAbt[N-nn-1], 0, 0, &hswork_mat[0], 0, 0);
 #if 1
-		ssyrk_spotrf_ln_libstr(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
+		blasfeo_ssyrk_spotrf_ln(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #else
 		blasfeo_ssyrk_ln(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 		blasfeo_spotrf_l(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #endif
 		}
-	
-	return;
+		return;
 
 	}
 
@@ -134,7 +134,7 @@ static void s_back_ric_trs_libstr(int N, int *nx, int *nu, struct blasfeo_smat *
 	// backward substitution
 
 	// last stage
-	blasfeo_sveccp(nu[N]+nx[N], 1.0, &hsrq[N], 0, &hsux[N], 0);
+	blasfeo_sveccp(nu[N]+nx[N], &hsrq[N], 0, &hsux[N], 0);
 
 	// middle stages
 	for(nn=0; nn<N-1; nn++)
@@ -142,47 +142,47 @@ static void s_back_ric_trs_libstr(int N, int *nx, int *nu, struct blasfeo_smat *
 		// compute Pb
 		blasfeo_strmv_ltn(nx[N-nn], nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsb[N-nn-1], 0, &hsPb[N-nn-1], 0);
 		blasfeo_strmv_lnn(nx[N-nn], nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsPb[N-nn-1], 0, &hsPb[N-nn-1], 0);
-		blasfeo_sveccp(nu[N-nn-1]+nx[N-nn-1], 1.0, &hsrq[N-nn-1], 0, &hsux[N-nn-1], 0);
-		blasfeo_sveccp(nx[N-nn], 1.0, &hsPb[N-nn-1], 0, &hswork_vec[0], 0);
-		blasfeo_saxpy(nx[N-nn], 1.0, &hsux[N-nn], nu[N-nn], &hswork_vec[0], 0);
+		blasfeo_sveccp(nu[N-nn-1]+nx[N-nn-1], &hsrq[N-nn-1], 0, &hsux[N-nn-1], 0);
+		blasfeo_sveccp(nx[N-nn], &hsPb[N-nn-1], 0, &hswork_vec[0], 0);
+		blasfeo_saxpy(nx[N-nn], 1.0, &hsux[N-nn], nu[N-nn], &hswork_vec[0], 0, &hswork_vec[0], 0);
 		blasfeo_sgemv_n(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hswork_vec[0], 0, 1.0, &hsux[N-nn-1], 0, &hsux[N-nn-1], 0);
-		blasfeo_strsv_lnn(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1], &hsL[N-nn-1], 0, 0, &hsux[N-nn-1], 0, &hsux[N-nn-1], 0);
+		blasfeo_strsv_lnn_mn(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1], &hsL[N-nn-1], 0, 0, &hsux[N-nn-1], 0, &hsux[N-nn-1], 0);
 		}
 
 	// first stage
 	nn = N-1;
 	blasfeo_strmv_ltn(nx[N-nn], nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsb[N-nn-1], 0, &hsPb[N-nn-1], 0);
 	blasfeo_strmv_lnn(nx[N-nn], nx[N-nn], &hsL[N-nn], nu[N-nn], nu[N-nn], &hsPb[N-nn-1], 0, &hsPb[N-nn-1], 0);
-	blasfeo_sveccp(nu[N-nn-1]+nx[N-nn-1], 1.0, &hsrq[N-nn-1], 0, &hsux[N-nn-1], 0);
-	blasfeo_sveccp(nx[N-nn], 1.0, &hsPb[N-nn-1], 0, &hswork_vec[0], 0);
-	blasfeo_saxpy(nx[N-nn], 1.0, &hsux[N-nn], nu[N-nn], &hswork_vec[0], 0);
+	blasfeo_sveccp(nu[N-nn-1]+nx[N-nn-1], &hsrq[N-nn-1], 0, &hsux[N-nn-1], 0);
+	blasfeo_sveccp(nx[N-nn], &hsPb[N-nn-1], 0, &hswork_vec[0], 0);
+	blasfeo_saxpy(nx[N-nn], 1.0, &hsux[N-nn], nu[N-nn], &hswork_vec[0], 0, &hswork_vec[0], 0);
 	blasfeo_sgemv_n(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hsBAbt[N-nn-1], 0, 0, &hswork_vec[0], 0, 1.0, &hsux[N-nn-1], 0, &hsux[N-nn-1], 0);
-	blasfeo_strsv_lnn(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsux[N-nn-1], 0, &hsux[N-nn-1], 0);
+	blasfeo_strsv_lnn(nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsux[N-nn-1], 0, &hsux[N-nn-1], 0);
 
 	// forward substitution
 
 	// first stage
 	nn = 0;
-	blasfeo_sveccp(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hspi[nn], 0);
-	blasfeo_sveccp(nu[nn]+nx[nn], -1.0, &hsux[nn], 0, &hsux[nn], 0);
-	blasfeo_strsv_ltn(nu[nn]+nx[nn], nu[nn]+nx[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
+	blasfeo_sveccp(nx[nn+1], &hsux[nn+1], nu[nn+1], &hspi[nn], 0);
+	blasfeo_svecsc(nu[nn]+nx[nn], -1.0, &hsux[nn], 0);
+	blasfeo_strsv_ltn(nu[nn]+nx[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
 	blasfeo_sgemv_t(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsb[nn], 0, &hsux[nn+1], nu[nn+1]);
-	blasfeo_sveccp(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0);
+	blasfeo_sveccp(nx[nn+1], &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0);
 	blasfeo_strmv_ltn(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
 	blasfeo_strmv_lnn(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
-	blasfeo_saxpy(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
+	blasfeo_saxpy(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0, &hspi[nn], 0);
 
 	// middle stages
 	for(nn=1; nn<N; nn++)
 		{
-		blasfeo_sveccp(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hspi[nn], 0);
-		blasfeo_sveccp(nu[nn], -1.0, &hsux[nn], 0, &hsux[nn], 0);
-		blasfeo_strsv_ltn(nu[nn]+nx[nn], nu[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
+		blasfeo_sveccp(nx[nn+1], &hsux[nn+1], nu[nn+1], &hspi[nn], 0);
+		blasfeo_svecsc(nu[nn], -1.0, &hsux[nn], 0);
+		blasfeo_strsv_ltn_mn(nu[nn]+nx[nn], nu[nn], &hsL[nn], 0, 0, &hsux[nn], 0, &hsux[nn], 0);
 		blasfeo_sgemv_t(nu[nn]+nx[nn], nx[nn+1], 1.0, &hsBAbt[nn], 0, 0, &hsux[nn], 0, 1.0, &hsb[nn], 0, &hsux[nn+1], nu[nn+1]);
-		blasfeo_sveccp(nx[nn+1], 1.0, &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0);
+		blasfeo_sveccp(nx[nn+1], &hsux[nn+1], nu[nn+1], &hswork_vec[0], 0);
 		blasfeo_strmv_ltn(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
 		blasfeo_strmv_lnn(nx[nn+1], nx[nn+1], &hsL[nn+1], nu[nn+1], nu[nn+1], &hswork_vec[0], 0, &hswork_vec[0], 0);
-		blasfeo_saxpy(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0);
+		blasfeo_saxpy(nx[nn+1], 1.0, &hswork_vec[0], 0, &hspi[nn], 0, &hspi[nn], 0);
 		}
 
 	return;
@@ -398,7 +398,7 @@ int main()
 	blasfeo_pack_svec(nx_, x0, &sx0, 0);
 	struct blasfeo_svec sb0;
 	blasfeo_allocate_svec(nx_, &sb0);
-	float *b0; d_zeros(&b0, nx_, 1); // states offset
+	float *b0; s_zeros(&b0, nx_, 1); // states offset
 	blasfeo_sgemv_n(nx_, nx_, 1.0, &sA, 0, 0, &sx0, 0, 1.0, &sb, 0, &sb0, 0);
 	s_print_tran_strvec(nx_, &sb0, 0);
 

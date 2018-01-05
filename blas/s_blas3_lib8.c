@@ -488,6 +488,26 @@ void blasfeo_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 
 
 
+// dtrsm_nn_llu
+void blasfeo_strsm_llnu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	printf("\nblasfeo_strsm_llnu: feature not implemented yet\n");
+	exit(1);
+	return;
+	}
+
+
+
+// dtrsm_nn_lun
+void blasfeo_strsm_lunn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	printf("\nblasfeo_strsm_lunn: feature not implemented yet\n");
+	exit(1);
+	return;
+	}
+
+
+
 void blasfeo_ssyrk_ln(int m, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
@@ -1318,6 +1338,36 @@ void blasfeo_strsm_rltn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 		}
 	return;
 
+	}
+
+
+
+// dtrsm_right_lower_transposed_unit
+void blasfeo_strsm_rltu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	printf("\nblasfeo_strsm_rltu: feature not implemented yet\n");
+	exit(1);
+	return;
+	}
+
+
+
+// dtrsm_right_upper_transposed_notunit
+void blasfeo_strsm_rutn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	printf("\nblasfeo_strsm_rutn: feature not implemented yet\n");
+	exit(1);
+	return;
+	}
+
+
+
+// dtrmm_right_upper_transposed_notunit (B, i.e. the first matrix, is triangular !!!)
+void blasfeo_strmm_rutn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	printf("\nblasfeo_strmm_rutn: feature not implemented yet\n");
+	exit(1);
+	return;
 	}
 
 
