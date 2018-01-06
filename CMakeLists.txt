@@ -73,11 +73,21 @@ set_property(CACHE BLASFEO_MACRO_LEVEL
 		1  # all macro except gemm kernel
 		2) # all macro
 
+# Minimum kernel size
+set(BLASFEO_MIN_KERNEL_SIZE "2x2" CACHE STRING "Minimum kernel size")
+set_property(CACHE BLASFEO_MIN_KERNEL_SIZE
+	PROPERTY STRINGS
+		2x2
+		4x4)
+
 # Compile auxiliary functions with external dependencies (for memory allocation and printing)
 option(BLASFEO_EXT_DEP "Compile external dependencies in BLASFEO" ON)
 
 # Enable runtime checks
 option(BLASFEO_RUNTIME_CHECKS "Enable runtime checking" OFF)
+
+# Enable tests
+option(BLASFEO_TESTING "Enable tests" OFF)
 
 configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
@@ -90,6 +100,10 @@ endif()
 
 if(BLASFEO_RUNTIME_CHECKS)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDIM_CHECK")
+endif()
+
+if(BLASFEO_TESTING)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTESTING_MODE")
 endif()
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMACRO_LEVEL=${BLASFEO_MACRO_LEVEL}")
@@ -133,6 +147,15 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
 		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15")
 		set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -mfpu=neon-vfpv4")
 	endif()
+endif()
+
+# kernel size
+if(BLASFEO_MIN_KERNEL_SIZE MATCHES 2x2)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMIN_KERNEL_SIZE=2")
+	set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DMIN_KERNEL_SIZE=2")
+else()
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMIN_KERNEL_SIZE=4")
+	set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DMIN_KERNEL_SIZE=4")
 endif()
 
 # source files
