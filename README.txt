@@ -28,3 +28,10 @@ or in the slides at the URL
 www.cs.utexas.edu/users/flame/BLISRetreat2017/slides/Gianluca_BLIS_Retreat_2017.pdf
 or in the video at the URL
 https://utexas.app.box.com/s/yt2d693v8xc37yyjklnf4a4y1ldvyzon
+
+--------------------------------------------------
+
+Notes:
+
+- 06-01-2018: BLASFEO employs now a new naming convention.
+The bash script change_name.sh can be used to automatically change the source code of any software using BLASFEO to adapt it to the new naming convention.
