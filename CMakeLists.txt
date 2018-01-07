@@ -27,11 +27,9 @@
 ###################################################################################################
 
 cmake_minimum_required(VERSION 2.8.11)
-
 project(blasfeo)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
-
 enable_language(C ASM)
 
 # Target architecture
@@ -135,7 +133,9 @@ endif()
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_${BLASFEO_TARGET}")
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-	if(${BLASFEO_TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
+	if(${BLASFEO_TARGET} MATCHES X64_INTEL_HASWELL)
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx2 -mfma")
+	elseif(${BLASFEO_TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
 		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx")
 	elseif(${BLASFEO_TARGET} MATCHES X64_INTEL_CORE)
 		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -msse3")
@@ -159,15 +159,10 @@ else()
 endif()
 
 # source files
+add_library(blasfeo "")
 add_subdirectory(auxiliary)
 add_subdirectory(kernel)
 add_subdirectory(blas)
-
-# add library
-add_library(blasfeo
-	$<TARGET_OBJECTS:auxiliary>
-	$<TARGET_OBJECTS:kernel>
-	$<TARGET_OBJECTS:blas>)
 
 target_include_directories(blasfeo
 	PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
