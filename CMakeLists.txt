@@ -33,9 +33,10 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 enable_language(C ASM)
 
 # Target architecture
-set(BLASFEO_TARGET "X64_INTEL_SANDY_BRIDGE" CACHE STRING "Target architecture")
+set(BLASFEO_TARGET "AUTOMATIC" CACHE STRING "Target architecture")
 set_property(CACHE BLASFEO_TARGET
 	PROPERTY STRINGS
+		AUTOMATIC
 		X64_INTEL_HASWELL
 		X64_INTEL_SANDY_BRIDGE
 		X64_INTEL_CORE
@@ -87,6 +88,9 @@ option(BLASFEO_RUNTIME_CHECKS "Enable runtime checking" OFF)
 # Enable tests
 option(BLASFEO_TESTING "Enable tests" OFF)
 
+include(cmake/DetermineInstructionSet.cmake)
+determine_instruction_set_flags("${BLASFEO_TARGET}")
+
 configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
 
@@ -127,26 +131,6 @@ elseif(${BLASFEO_REFERENCE_BLAS} MATCHES MKL)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_MKL -m64 -I/opt/intel/mkl/include")
 elseif(${BLASFEO_REFERENCE_BLAS} MATCHES ATLAS)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_ATLAS")
-endif()
-
-# architecture-specific flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_${BLASFEO_TARGET}")
-
-if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-	if(${BLASFEO_TARGET} MATCHES X64_INTEL_HASWELL)
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx2 -mfma")
-	elseif(${BLASFEO_TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx")
-	elseif(${BLASFEO_TARGET} MATCHES X64_INTEL_CORE)
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -msse3")
-	elseif(${BLASFEO_TARGET} MATCHES X64_AMD_BULLDOZER)
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx -mfma")
-	elseif(${BLASFEO_TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc+crypto+fp+simd")
-	elseif(${BLASFEO_TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15")
-		set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -mfpu=neon-vfpv4")
-	endif()
 endif()
 
 # kernel size
