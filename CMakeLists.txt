@@ -174,5 +174,5 @@ install(TARGETS blasfeo EXPORT blasfeoConfig
 
 install(EXPORT blasfeoConfig DESTINATION cmake)
 
-file(GLOB_RECURSE BLASFEO_HEADERS "include/#.h")
+file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
 install(FILES ${BLASFEO_HEADERS} DESTINATION include)
