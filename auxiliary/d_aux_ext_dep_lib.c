@@ -26,10 +26,7 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
-
-#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_block_size.h"
 
 
 #define REAL double

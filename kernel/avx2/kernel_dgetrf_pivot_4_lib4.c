@@ -26,14 +26,11 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <mmintrin.h>
-#include <xmmintrin.h>  // SSE
 #include <emmintrin.h>  // SSE2
 #include <pmmintrin.h>  // SSE3
 #include <smmintrin.h>  // SSE4
 #include <immintrin.h>  // AVX
 
-#include "../../include/blasfeo_common.h"
 #include "../../include/blasfeo_d_aux.h"
 
 
