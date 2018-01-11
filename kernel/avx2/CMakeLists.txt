@@ -14,7 +14,7 @@ set(AVX2_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/kernel_dgetrf_pivot_4_lib4.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kernel_dgebp_lib4.S
     ${CMAKE_CURRENT_SOURCE_DIR}/kernel_dgelqf_4_lib4.S
-    # ${CMAKE_CURRENT_SOURCE_DIR}/kernel_dgetr_lib4.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/kernel_dgetr_lib4.c
 
     ${CMAKE_CURRENT_SOURCE_DIR}/kernel_sgemm_24x4_lib8.S
     ${CMAKE_CURRENT_SOURCE_DIR}/kernel_sgemm_16x4_lib8.S
