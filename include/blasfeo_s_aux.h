@@ -36,6 +36,10 @@ extern "C" {
 
 
 
+#include "blasfeo_s_aux_old.h"
+
+
+
 /************************************************
 * d_aux_lib.c
 ************************************************/
@@ -81,62 +85,35 @@ void blasfeo_sveccp(int m, struct blasfeo_svec *sa, int ai, struct blasfeo_svec 
 void blasfeo_svecsc(int m, float alpha, struct blasfeo_svec *sa, int ai);
 void blasfeo_sveccpsc(int m, float alpha, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci);
 
-void strcp_l_lib(int m, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb);
 void blasfeo_strcp_l(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
 
-void sgead_lib(int m, int n, float alpha, int offsetA, float *A, int sda, int offsetB, float *B, int sdb);
 void blasfeo_sgead(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
 void blasfeo_svecad(int m, float alpha, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci);
 
-void sgetr_lib(int m, int n, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc);
 void blasfeo_sgetr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
 
-void strtr_l_lib(int m, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc);
 void blasfeo_strtr_l(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
-void strtr_u_lib(int m, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc);
 void blasfeo_strtr_u(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
 
-void sdiareg_lib(int kmax, float reg, int offset, float *pD, int sdd);
 void blasfeo_sdiare(int kmax, float alpha, struct blasfeo_smat *sA, int ai, int aj);
 void blasfeo_sdiaex(int kmax, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi);
 void blasfeo_sdiain(int kmax, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_smat *sA, int ai, int aj);
-void sdiain_sqrt_lib(int kmax, float *x, int offset, float *pD, int sdd);
-void sdiaex_lib(int kmax, float alpha, int offset, float *pD, int sdd, float *x);
-void sdiaad_lib(int kmax, float alpha, float *x, int offset, float *pD, int sdd);
-void sdiain_libsp(int kmax, int *idx, float alpha, float *x, float *pD, int sdd);
 void blasfeo_sdiain_sp(int kmax, float alpha, struct blasfeo_svec *sx, int xi, int *idx, struct blasfeo_smat *sD, int di, int dj);
-void sdiaex_libsp(int kmax, int *idx, float alpha, float *pD, int sdd, float *x);
 void blasfeo_sdiaex_sp(int kmax, float alpha, int *idx, struct blasfeo_smat *sD, int di, int dj, struct blasfeo_svec *sx, int xi);
 void blasfeo_sdiaad(int kmax, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_smat *sA, int ai, int aj);
-void sdiaad_libsp(int kmax, int *idx, float alpha, float *x, float *pD, int sdd);
 void blasfeo_sdiaad_sp(int kmax, float alpha, struct blasfeo_svec *sx, int xi, int *idx, struct blasfeo_smat *sD, int di, int dj);
-void sdiaadin_libsp(int kmax, int *idx, float alpha, float *x, float *y, float *pD, int sdd);
 void blasfeo_sdiaadin_sp(int kmax, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, int *idx, struct blasfeo_smat *sD, int di, int dj);
-void srowin_lib(int kmax, float alpha, float *x, float *pD);
 void blasfeo_srowin(int kmax, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_smat *sA, int ai, int aj);
-void srowex_lib(int kmax, float alpha, float *pD, float *x);
 void blasfeo_srowex(int kmax, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi);
-void srowad_lib(int kmax, float alpha, float *x, float *pD);
 void blasfeo_srowad(int kmax, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_smat *sA, int ai, int aj);
-void srowin_libsp(int kmax, float alpha, int *idx, float *x, float *pD);
-void srowad_libsp(int kmax, int *idx, float alpha, float *x, float *pD);
 void blasfeo_srowad_sp(int kmax, float alpha, struct blasfeo_svec *sx, int xi, int *idx, struct blasfeo_smat *sD, int di, int dj);
-void srowadin_libsp(int kmax, int *idx, float alpha, float *x, float *y, float *pD);
-void srowsw_lib(int kmax, float *pA, float *pC);
 void blasfeo_srowsw(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
 void blasfeo_srowpe(int kmax, int *ipiv, struct blasfeo_smat *sA);
 void blasfeo_srowpei(int kmax, int *ipiv, struct blasfeo_smat *sA);
-void scolin_lib(int kmax, float *x, int offset, float *pD, int sdd);
 void blasfeo_scolin(int kmax, struct blasfeo_svec *sx, int xi, struct blasfeo_smat *sA, int ai, int aj);
-void scolad_lib(int kmax, float alpha, float *x, int offset, float *pD, int sdd);
-void scolin_libsp(int kmax, int *idx, float *x, float *pD, int sdd);
-void scolad_libsp(int kmax, float alpha, int *idx, float *x, float *pD, int sdd);
-void scolsw_lib(int kmax, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc);
 void blasfeo_scolsw(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
 void blasfeo_scolpe(int kmax, int *ipiv, struct blasfeo_smat *sA);
 void blasfeo_scolpei(int kmax, int *ipiv, struct blasfeo_smat *sA);
-void svecin_libsp(int kmax, int *idx, float *x, float *y);
-void svecad_libsp(int kmax, int *idx, float alpha, float *x, float *y);
 void blasfeo_svecad_sp(int m, float alpha, struct blasfeo_svec *sx, int xi, int *idx, struct blasfeo_svec *sz, int zi);
 void blasfeo_svecin_sp(int m, float alpha, struct blasfeo_svec *sx, int xi, int *idx, struct blasfeo_svec *sz, int zi);
 void blasfeo_svecex_sp(int m, float alpha, int *idx, struct blasfeo_svec *sx, int x, struct blasfeo_svec *sz, int zi);
