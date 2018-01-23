@@ -2034,6 +2034,7 @@ void blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int
 	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
 	int i, ii, jj;
 	int m0 = (bs-ai%bs)%bs;
+	m0 = m<m0 ? m : m0;
 	double *ptr_pA;
 	jj=0;
 	for(; jj<n-3; jj+=4)
