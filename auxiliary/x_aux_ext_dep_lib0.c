@@ -117,11 +117,31 @@ void PRINT_TO_FILE_STRMAT(FILE *file, int m, int n, struct STRMAT *sA, int ai, i
 
 
 
+// print a matrix structure
+void PRINT_TO_STRING_STRMAT(char **out_buf, int m, int n, struct STRMAT *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	PRINT_TO_STRING_MAT(out_buf, m, n, pA, lda);
+	return;
+	}
+
+
+
 // print a vector structure
 void PRINT_TO_FILE_STRVEC(FILE *file, int m, struct STRVEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;
 	PRINT_TO_FILE_MAT(file, m, 1, pa, m);
+	return;
+	}
+
+
+// print a vector structure
+void PRINT_TO_STRING_STRVEC(char **out_buf, int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_TO_FILE_MAT(out_buf, m, 1, pa, m);
 	return;
 	}
 
@@ -135,6 +155,15 @@ void PRINT_TO_FILE_TRAN_STRVEC(FILE *file, int m, struct STRVEC *sa, int ai)
 	return;
 	}
 
+
+
+// print and transpose a vector structure
+void PRINT_TO_STRING_TRAN_STRVEC(char **buf_out, int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_TO_STRING_MAT(buf_out, 1, m, pa, 1);
+	return;
+	}
 
 
 // print a matrix structure

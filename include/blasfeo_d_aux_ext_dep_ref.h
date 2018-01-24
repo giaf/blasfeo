@@ -37,8 +37,6 @@
  */
 
 
-#if defined(EXT_DEP)
-
 
 
 #include <stdio.h>
@@ -61,5 +59,3 @@ void blasfeo_print_dmat_ref(int m, int n, struct blasfeo_dmat_ref *sA, int ai, i
 #endif
 
 
-
-#endif // EXT_DEP
