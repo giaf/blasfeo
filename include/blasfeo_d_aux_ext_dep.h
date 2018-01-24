@@ -37,8 +37,6 @@
  */
 
 
-#if defined(EXT_DEP)
-
 
 
 #include <stdio.h>
@@ -68,6 +66,8 @@ void d_print_mat(int m, int n, double *A, int lda);
 void d_print_tran_mat(int row, int col, double *A, int lda);
 // print to file a column-major matrix
 void d_print_to_file_mat(FILE *file, int row, int col, double *A, int lda);
+// print to string a column-major matrix
+int d_print_to_string_mat(char **buf_out, int row, int col, double *A, int lda);
 // print to file the transposed of a column-major matrix
 void d_print_tran_to_file_mat(FILE *file, int row, int col, double *A, int lda);
 // print in exponential notation a column-major matrix
@@ -92,18 +92,24 @@ void blasfeo_print_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 void blasfeo_print_exp_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 // print to file a strmat
 void blasfeo_print_to_file_dmat(FILE *file, int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
+// print to string a strmat
+int blasfeo_print_to_string_dmat(char **buf_out, int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 // print a strvec
 void blasfeo_print_dvec(int m, struct blasfeo_dvec *sa, int ai);
 // print in exponential notation a strvec
 void blasfeo_print_exp_dvec(int m, struct blasfeo_dvec *sa, int ai);
 // print to file a strvec
 void blasfeo_print_to_file_dvec(FILE *file, int m, struct blasfeo_dvec *sa, int ai);
+// print to string a strvec
+int blasfeo_print_to_string_dvec(char **buf_out, int m, struct blasfeo_dvec *sa, int ai);
 // print the transposed of a strvec
 void blasfeo_print_tran_dvec(int m, struct blasfeo_dvec *sa, int ai);
 // print in exponential notation the transposed of a strvec
 void blasfeo_print_exp_tran_dvec(int m, struct blasfeo_dvec *sa, int ai);
 // print to file the transposed of a strvec
 void blasfeo_print_to_file_tran_dvec(FILE *file, int m, struct blasfeo_dvec *sa, int ai);
+// print to string the transposed of a strvec
+int blasfeo_print_to_string_tran_dvec(char **buf_out, int m, struct blasfeo_dvec *sa, int ai);
 #endif
 
 
@@ -113,5 +119,3 @@ void blasfeo_print_to_file_tran_dvec(FILE *file, int m, struct blasfeo_dvec *sa,
 #endif
 
 
-
-#endif // EXT_DEP

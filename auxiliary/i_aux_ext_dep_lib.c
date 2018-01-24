@@ -110,3 +110,21 @@ void int_print_mat(int row, int col, int *A, int lda)
 
 
 
+/* prints a matrix in column-major format */
+void int_print_to_string_mat(char **buf_out, int row, int col, int *A, int lda)
+	{
+	int i, j;
+	for(i=0; i<row; i++)
+		{
+		for(j=0; j<col; j++)
+			{
+			*buf_out += sprintf(*buf_out, "%d ", A[i+lda*j]);
+			}
+		*buf_out += sprintf(*buf_out, "\n");
+		}
+	*buf_out += sprintf(*buf_out, "\n");
+	return;
+	}	
+
+
+
