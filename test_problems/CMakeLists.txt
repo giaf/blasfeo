@@ -25,8 +25,20 @@
 #                                                                                                 #
 ###################################################################################################
 
-add_executable(d_blas test_blas_d.c)
+add_executable(d_blas test_d_blas.c)
 target_link_libraries(d_blas blasfeo m)
 
-add_executable(s_blas test_blas_s.c)
+add_executable(s_blas test_s_blas.c)
 target_link_libraries(s_blas blasfeo m)
+
+add_executable(s_aux test_s_aux.c)
+add_executable(d_aux test_d_aux.c)
+
+
+if(BLASFEO_TESTING)
+	target_link_libraries(d_aux blasfeo_ref)
+	target_link_libraries(s_aux blasfeo_ref)
+endif()
+
+target_link_libraries(d_aux blasfeo m)
+target_link_libraries(s_aux blasfeo m)

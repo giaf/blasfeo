@@ -52,7 +52,7 @@ extern "C" {
 
 
 // expose reference BLASFEO for testing
-void blasfeo_blasfeo_print_dmat_ref(int m, int n, struct blasfeo_dmat_ref *sA, int ai, int aj);
+void blasfeo_print_dmat_ref(int m, int n, struct blasfeo_dmat_ref *sA, int ai, int aj);
 
 
 
