@@ -8,7 +8,7 @@
 
 #define STRMAT_REF blasfeo_dmat_ref
 #define STRVEC_REF blasfeo_dvec_ref
-#define PRINT_STRMAT_REF blasfeo_blasfeo_print_dmat_ref
+#define PRINT_STRMAT_REF blasfeo_print_dmat_ref
 
 #include "test_x_common.h"
 #include "../include/blasfeo_d_aux.h"
