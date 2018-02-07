@@ -937,11 +937,16 @@ inner_edge_dsymv_add_nt_4_gen_lib4:
 	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
 	vsubpd		%ymm14, %ymm13, %ymm11
 
-	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendvpd	%ymm11, %ymm6, %ymm15, %ymm6
-	vblendvpd	%ymm11, %ymm7, %ymm15, %ymm7
-	vblendvpd	%ymm11, %ymm8, %ymm15, %ymm8
-	vblendvpd	%ymm11, %ymm9, %ymm15, %ymm9
+	cmp		$3, %eax
+	jg		0f
+	vxorpd		%ymm9, %ymm9, %ymm9
+	cmp		$2, %eax
+	jg		0f
+	vxorpd		%ymm8, %ymm8, %ymm8
+	cmp		$1, %eax
+	jg		0f
+	vxorpd		%ymm7, %ymm7, %ymm7
+0:
 
 	vmaskmovpd	0(%r13), %ymm11, %ymm12
 	vmaskmovpd	0(%r14), %ymm11, %ymm13
