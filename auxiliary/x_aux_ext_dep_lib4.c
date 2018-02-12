@@ -213,6 +213,57 @@ void PRINT_TO_FILE_STRMAT(FILE * file, int m, int n, struct STRMAT *sA, int ai, 
 
 
 
+// print a matrix structure
+void PRINT_TO_STRING_STRMAT(char **buf_out, int m, int n, struct STRMAT *sA, int ai, int aj)
+	{
+	const int ps = PS;
+	int sda = sA->cn;
+	REAL *pA = sA->pA + aj*ps + ai/ps*ps*sda + ai%ps;
+	int ii, i, j, tmp;
+	ii = 0;
+	if(ai%ps>0)
+		{
+		tmp = ps-ai%ps;
+		tmp = m<tmp ? m : tmp;
+		for(i=0; i<tmp; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				*buf_out += sprintf(*buf_out, "%9.5f ", pA[i+ps*j]);
+				}
+			*buf_out += sprintf(*buf_out, "\n");
+			}
+		pA += tmp + ps*(sda-1);
+		m -= tmp;
+		}
+	for( ; ii<m-(ps-1); ii+=ps)
+		{
+		for(i=0; i<ps; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				*buf_out += sprintf(*buf_out, "%9.5f ", pA[i+ps*j+sda*ii]);
+				}
+			*buf_out += sprintf(*buf_out, "\n");
+			}
+		}
+	if(ii<m)
+		{
+		tmp = m-ii;
+		for(i=0; i<tmp; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				*buf_out += sprintf(*buf_out, "%9.5f ", pA[i+ps*j+sda*ii]);
+				}
+			*buf_out += sprintf(*buf_out, "\n");
+			}
+		}
+	*buf_out += sprintf(*buf_out, "\n");
+	return;
+	}
+
+
 // print a vector structure
 void PRINT_TO_FILE_STRVEC(FILE * file, int m, struct STRVEC *sa, int ai)
 	{
@@ -223,6 +274,15 @@ void PRINT_TO_FILE_STRVEC(FILE * file, int m, struct STRVEC *sa, int ai)
 
 
 
+// print a vector structure
+void PRINT_TO_STRING_STRVEC(char **buf_out, int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_TO_STRING_MAT(buf_out, m, 1, pa, m);
+	return;
+	}
+
+
 // print the transposed of a vector structure
 void PRINT_TO_FILE_TRAN_STRVEC(FILE * file, int m, struct STRVEC *sa, int ai)
 	{
@@ -231,6 +291,15 @@ void PRINT_TO_FILE_TRAN_STRVEC(FILE * file, int m, struct STRVEC *sa, int ai)
 	return;
 	}
 
+
+
+// print the transposed of a vector structure
+void PRINT_TO_STRING_TRAN_STRVEC(char **buf_out, int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_TO_STRING_MAT(buf_out, 1, m, pa, 1);
+	return;
+	}
 
 
 // print a matrix structure

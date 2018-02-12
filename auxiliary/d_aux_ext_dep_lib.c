@@ -28,7 +28,6 @@
 
 #include "../include/blasfeo_block_size.h"
 
-
 #define REAL double
 #define STRMAT blasfeo_dmat
 #define STRVEC blasfeo_dvec
@@ -43,6 +42,7 @@
 
 #define PRINT_MAT d_print_mat
 #define PRINT_TO_FILE_MAT d_print_to_file_mat
+#define PRINT_TO_STRING_MAT d_print_to_string_mat
 
 #define PRINT_TRAN_MAT d_print_tran_mat
 #define PRINT_TO_FILE_TRAN_MAT d_print_to_file_tran_mat
@@ -69,6 +69,9 @@
 #define PRINT_TO_FILE_STRMAT blasfeo_print_to_file_dmat
 #define PRINT_TO_FILE_STRVEC blasfeo_print_to_file_dvec
 #define PRINT_TO_FILE_TRAN_STRVEC d_print_to_file_tran_strvec
+#define PRINT_TO_STRING_STRMAT blasfeo_print_to_string_dmat
+#define PRINT_TO_STRING_STRVEC blasfeo_print_to_string_dvec
+#define PRINT_TO_STRING_TRAN_STRVEC blasfeo_print_to_string_tran_dvec
 
 #define PRINT_E_STRMAT blasfeo_print_exp_dmat
 #define PRINT_E_STRVEC blasfeo_print_exp_dvec

@@ -96,59 +96,58 @@ SHOW_DEFINE(TARGET)
 	/* -------- instantiate blasfeo_smat */
 
 	// compute memory size
-	int size_strmat = 2*blasfeo_memsize_smat(n, n);
-	int size_strmat_ref = 2*blasfeo_s_memsize_strmat_ref(n, n);
+	int size_smat = 2*blasfeo_memsize_smat(n, n);
+	int size_smat_ref = 2*blasfeo_memsize_smat_ref(n, n);
 	// inizilize void pointer
-	void *memory_strmat;
-	void *memory_strmat_ref;
+	void *memory_smat;
+	void *memory_smat_ref;
 
 	// initialize pointer
 	// memory allocation
-	v_zeros_align(&memory_strmat, size_strmat);
-	v_zeros_align(&memory_strmat_ref, size_strmat_ref);
+	v_zeros_align(&memory_smat, size_smat);
+	v_zeros_align(&memory_smat_ref, size_smat_ref);
 
-	// get point to strmat
-	char *ptr_memory_strmat = (char *) memory_strmat;
-	char *ptr_memory_strmat_ref = (char *) memory_strmat_ref;
+	// get point to smat
+	char *ptr_memory_smat = (char *) memory_smat;
+	char *ptr_memory_smat_ref = (char *) memory_smat_ref;
 
 	// instantiate blasfeo_smat
 	struct blasfeo_smat sA;
-	blasfeo_create_smat(n, n, &sA, ptr_memory_strmat);
-	ptr_memory_strmat += sA.memsize;
+	blasfeo_create_smat(n, n, &sA, ptr_memory_smat);
+	ptr_memory_smat += sA.memsize;
 	blasfeo_pack_smat(n, n, A, n, &sA, 0, 0);
 
 	struct blasfeo_smat sB;
-	blasfeo_create_smat(n, n, &sB, ptr_memory_strmat);
-	ptr_memory_strmat += sB.memsize;
+	blasfeo_create_smat(n, n, &sB, ptr_memory_smat);
+	ptr_memory_smat += sB.memsize;
 	blasfeo_pack_smat(n, n, B, n, &sB, 0, 0);
 
 	// Testing comparison
 	// reference matrices, column major
 
 	struct blasfeo_smat_ref rA;
-	blasfeo_blasfeo_create_smat_ref(n, n, &rA, ptr_memory_strmat_ref);
-	ptr_memory_strmat_ref += rA.memsize;
-	blasfeo_blasfeo_pack_smat_ref(n, n, A, n, &rA, 0, 0);
+	blasfeo_create_smat_ref(n, n, &rA, ptr_memory_smat_ref);
+	ptr_memory_smat_ref += rA.memsize;
+	blasfeo_pack_smat_ref(n, n, A, n, &rA, 0, 0);
 
 	struct blasfeo_smat_ref rB;
-	blasfeo_blasfeo_create_smat_ref(n, n, &rB, ptr_memory_strmat_ref);
-	ptr_memory_strmat_ref += sB.memsize;
-	blasfeo_blasfeo_pack_smat_ref(n, n, B, n, &rB, 0, 0);
-
+	blasfeo_create_smat_ref(n, n, &rB, ptr_memory_smat_ref);
+	ptr_memory_smat_ref += sB.memsize;
+	blasfeo_pack_smat_ref(n, n, B, n, &rB, 0, 0);
 
 	// -------- Print matrices
 
-	printf("\nPrint strmat HP A:\n\n");
+	printf("\nPrint smat HP A:\n\n");
 	blasfeo_print_smat(p_n, p_n, &sA, 0, 0);
 
-	printf("\nPrint strmat REF A:\n\n");
-	blasfeo_blasfeo_print_smat_ref(p_n, p_n, &rA, 0, 0);
+	printf("\nPrint smat REF A:\n\n");
+	blasfeo_print_smat_ref(p_n, p_n, &rA, 0, 0);
 
-	printf("\nPrint strmat HP B:\n\n");
+	printf("\nPrint smat HP B:\n\n");
 	blasfeo_print_smat(p_n, p_n, &sB, 0, 0);
 
-	printf("\nPrint strmat REF B:\n\n");
-	blasfeo_blasfeo_print_smat_ref(p_n, p_n, &rB, 0, 0);
+	printf("\nPrint smat REF B:\n\n");
+	blasfeo_print_smat_ref(p_n, p_n, &rB, 0, 0);
 
 
 	/* ----------- copy and scale */
@@ -209,7 +208,9 @@ SHOW_DEFINE(TARGET)
 		printf("\n");
 		}
 
-	printf("\n\n----------- END TEST Copy&Scale\n\n");
+	printf("\n----------- END TEST Copy&Scale\n");
+
+	printf("\n----------- TEST SUCCEDED\n\n");
 
 #if defined(LA)
 SHOW_DEFINE(LA)

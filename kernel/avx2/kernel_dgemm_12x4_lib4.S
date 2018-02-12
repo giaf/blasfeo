@@ -3159,16 +3159,10 @@ inner_edge_dgemm_add_nn_12x4_lib4:
 	sall			$3, %eax // offsetB*sizeof(double)
 	addq			%rax, %r13 // B+offsetB*sizeof(double)
 
-	movq			%r11, %rax // A1 <- A0
-	addq			%r12, %rax // A1 <- A0 + 4*sda*sizeof(double)
-
-	movq			%rax, %rbp // A2 <- A1
-	addq			%r12, %rbp // A2 <- A1 + 4*sda*sizeof(double)
-
 1:
 	vmovapd			0(%r11), %ymm12 // A0[0]
-	vmovapd			0(%rax), %ymm14 // A1[0]
-	vmovapd			0(%rbp), %ymm15 // A2[0]
+	vmovapd			0(%r11, %r12, 1), %ymm14 // A1[0]
+	vmovapd			0(%r11, %r12, 2), %ymm15 // A2[0]
 	vbroadcastsd	0(%r13), %ymm13 // B[0]
 	vfmadd231pd		%ymm12, %ymm13, %ymm0
 	vfmadd231pd		%ymm14, %ymm13, %ymm4
@@ -3189,8 +3183,6 @@ inner_edge_dgemm_add_nn_12x4_lib4:
 	subl			$1, %r10d // k-1
 	subl			$1, %ebx // kend-1
 	addq			$32, %r11 // A0+1*bs*sizeof(float)
-	addq			$32, %rax // A1+1*bs*sizeof(float)
-	addq			$32, %rbp // A2+1*bs*sizeof(float)
 	addq			$8, %r13 // B+1*sizeof(float)
 
 	cmpl			$0, %ebx

@@ -140,6 +140,24 @@ void PRINT_TO_FILE_MAT(FILE *file, int row, int col, REAL *A, int lda)
 
 
 
+/* prints a matrix in column-major format */
+void PRINT_TO_STRING_MAT(char **buf_out, int row, int col, REAL *A, int lda)
+	{
+	int i, j;
+	for(i=0; i<row; i++)
+		{
+		for(j=0; j<col; j++)
+			{
+			*buf_out += sprintf(*buf_out, "%9.5f ", A[i+lda*j]);
+			}
+		*buf_out += sprintf(*buf_out, "\n");
+		}
+	*buf_out += sprintf(*buf_out, "\n");
+	return;
+	}
+
+
+
 /* prints the transposed of a matrix in column-major format */
 void PRINT_TO_FILE_TRAN_MAT(FILE *file, int row, int col, REAL *A, int lda)
 	{

@@ -40,9 +40,9 @@ extern "C" {
 
 // expose reference BLASFEO for testing
 
-void blasfeo_blasfeo_create_dmat_ref(int m, int n, struct blasfeo_dmat_ref *sA, void *memory);
-void blasfeo_blasfeo_pack_dmat_ref(int m, int n, double *A, int lda, struct blasfeo_dmat_ref *sA, int ai, int aj);
-int blasfeo_d_memsize_strmat_ref(int m, int n);
+void blasfeo_create_dmat_ref(int m, int n, struct blasfeo_dmat_ref *sA, void *memory);
+void blasfeo_pack_dmat_ref(int m, int n, double *A, int lda, struct blasfeo_dmat_ref *sA, int ai, int aj);
+int blasfeo_memsize_dmat_ref(int m, int n);
 
 void blasfeo_dgecp_ref(int m, int n,\
 					struct blasfeo_dmat_ref *sA, int ai, int aj,\

@@ -1184,6 +1184,8 @@ void blasfeo_unpack_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj, 
 	float *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
 	int i, ii, jj;
 	int m0 = (bs-ai%bs)%bs;
+	if(m0>m)
+		m0 = m;
 	float *ptr_pA;
 	jj=0;
 	for(; jj<n-3; jj+=4)
@@ -1304,6 +1306,8 @@ void blasfeo_unpack_tran_smat(int m, int n, struct blasfeo_smat *sA, int ai, int
 	float *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
 	int i, ii, jj;
 	int m0 = (bs-ai%bs)%bs;
+	if(m0>m)
+		m0 = m;
 	float *ptr_pA;
 	jj=0;
 	for(; jj<n-3; jj+=4)
