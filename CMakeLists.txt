@@ -32,6 +32,12 @@ project(blasfeo)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 enable_language(C ASM)
 
+# Build type
+if(NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
+	message(STATUS "Defaulting to CMAKE_BUILD_TYPE=Release.")
+endif()
+
 # Target architecture
 set(BLASFEO_TARGET "AUTOMATIC" CACHE STRING "Target architecture")
 set_property(CACHE BLASFEO_TARGET
@@ -97,14 +103,6 @@ determine_instruction_set_flags("${BLASFEO_TARGET}")
 
 configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
-
-if(${BLASFEO_REFERENCE_BLAS} MATCHES OPENBLAS)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I/opt/openblas/include")
-elseif(${BLASFEO_REFERENCE_BLAS} MATCHES BLIS)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
-elseif(${BLASFEO_REFERENCE_BLAS} MATCHES MKL)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -I/opt/intel/mkl/include")
-endif()
 
 # source files
 if(${BLASFEO_LA_MODE} MATCHES HIGH_PERFORMANCE)
@@ -559,6 +557,22 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 endif()
 target_compile_definitions(blasfeo PRIVATE "${OS_FLAG}")
 
+if(${BLASFEO_REFERENCE_BLAS} MATCHES OPENBLAS)
+	set(BLA_VENDOR "OpenBLAS")
+	find_package(BLAS REQUIRED)
+elseif(${BLASFEO_REFERENCE_BLAS} MATCHES MKL)
+	set(BLA_VENDOR "Intel")
+	find_package(BLAS REQUIRED)
+endif()
+target_link_libraries(blasfeo ${BLAS_LIBRARIES})
+
+if(CMAKE_COMPILER_IS_GNUCC)
+	if(${BLASFEO_REFERENCE_BLAS} MATCHES BLIS)
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
+	elseif(${BLASFEO_REFERENCE_BLAS} MATCHES MKL)
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64")
+	endif()
+endif()
 
 target_include_directories(blasfeo
 	PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
