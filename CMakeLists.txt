@@ -88,69 +88,28 @@ option(BLASFEO_RUNTIME_CHECKS "Enable runtime checking" OFF)
 # Enable tests
 option(BLASFEO_TESTING "Enable tests" OFF)
 
+if(BLASFEO_TESTING AND BLASFEO_LA_MODE MATCHES HIGH_PERFORMANCE)
+	message(FATAL_ERROR "Testing is on so BLASFEO linear algebra mode must be REFERENCE or BLAS")
+endif()
+
 include(cmake/DetermineInstructionSet.cmake)
 determine_instruction_set_flags("${BLASFEO_TARGET}")
 
 configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_${BLASFEO_LA_MODE}")
-
-if(BLASFEO_EXT_DEP)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DEXT_DEP")
-endif()
-
-if(BLASFEO_RUNTIME_CHECKS)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDIM_CHECK")
-endif()
-
-if(BLASFEO_TESTING)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTESTING_MODE")
-endif()
-
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMACRO_LEVEL=${BLASFEO_MACRO_LEVEL}")
-
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-	set(OS_FLAG "OS_LINUX")
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	set(OS_FLAG "OS_MAC")
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	set(OS_FLAG "OS_WINDOWS")
-endif()
-
-set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -D${OS_FLAG}")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D${OS_FLAG}")
-
 if(${BLASFEO_REFERENCE_BLAS} MATCHES OPENBLAS)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_OPENBLAS -I/opt/openblas/include")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I/opt/openblas/include")
 elseif(${BLASFEO_REFERENCE_BLAS} MATCHES BLIS)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_BLIS -std=c99")
-elseif(${BLASFEO_REFERENCE_BLAS} MATCHES NETLIB)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_NETLIB")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
 elseif(${BLASFEO_REFERENCE_BLAS} MATCHES MKL)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_MKL -m64 -I/opt/intel/mkl/include")
-elseif(${BLASFEO_REFERENCE_BLAS} MATCHES ATLAS)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_ATLAS")
-endif()
-
-# kernel size
-if(BLASFEO_MIN_KERNEL_SIZE MATCHES 2x2)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMIN_KERNEL_SIZE=2")
-	set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DMIN_KERNEL_SIZE=2")
-else()
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMIN_KERNEL_SIZE=4")
-	set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DMIN_KERNEL_SIZE=4")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -I/opt/intel/mkl/include")
 endif()
 
 # source files
-add_library(blasfeo "")
-add_subdirectory(auxiliary)
-add_subdirectory(kernel)
-add_subdirectory(blas)
+if(${BLASFEO_LA_MODE} MATCHES HIGH_PERFORMANCE)
 
-if(${LA} MATCHES HIGH_PERFORMANCE)
-
-	if(${TARGET} MATCHES X64_INTEL_HASWELL)
+	if(${BLASFEO_TARGET} MATCHES X64_INTEL_HASWELL)
 
 		file(GLOB AUX_SRC
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
@@ -213,9 +172,9 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib8.c
 			)
 
-	endif(${TARGET} MATCHES X64_INTEL_HASWELL)
+	endif()
 
-	if(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
+	if(${BLASFEO_TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
 
 		file(GLOB AUX_SRC
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
@@ -274,9 +233,9 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib8.c
 			)
 
-	endif(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
+	endif()
 
-	if(${TARGET} MATCHES X64_INTEL_CORE)
+	if(${BLASFEO_TARGET} MATCHES X64_INTEL_CORE)
 
 		file(GLOB AUX_SRC
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
@@ -321,9 +280,9 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
 			)
 
-	endif(${TARGET} MATCHES X64_INTEL_CORE)
+	endif()
 
-	if(${TARGET} MATCHES X64_AMD_BULLDOZER)
+	if(${BLASFEO_TARGET} MATCHES X64_AMD_BULLDOZER)
 
 		file(GLOB AUX_SRC
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
@@ -365,9 +324,9 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
 			)
 
-	endif(${TARGET} MATCHES X64_AMD_BULLDOZER)
+	endif()
 
-	if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
+	if(${BLASFEO_TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
 
 		file(GLOB AUX_SRC
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
@@ -415,9 +374,9 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
 			)
 
-	endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
+	endif()
 
-	if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
+	if(${BLASFEO_TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
 
 		file(GLOB AUX_SRC
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
@@ -462,9 +421,9 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
 			)
 
-	endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
+	endif()
 
-	if(${TARGET} MATCHES GENERIC)
+	if(${BLASFEO_TARGET} MATCHES GENERIC)
 
 		file(GLOB AUX_SRC
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
@@ -508,9 +467,9 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
 			)
 
-	endif(${TARGET} MATCHES GENERIC)
+	endif()
 
-else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
+else() # REFERENCE BLAS
 
 	file(GLOB AUX_SRC
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib.c
@@ -533,9 +492,9 @@ else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 		${PROJECT_SOURCE_DIR}/blas/s_lapack_lib.c
 		)
 
-endif(${LA} MATCHES HIGH_PERFORMANCE)
+endif()
 
-if(${EXT_DEP})
+if(${BLASFEO_EXT_DEP})
 
 	file(GLOB EXT_SRC
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_lib.c
@@ -551,22 +510,55 @@ endif()
 
 if(BLASFEO_TESTING)
 
-	file(GLOB AUX_REF_SRC
+	file(GLOB BLASFEO_REF_SRC
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_libref.c
 		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_libref.c
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_libref.c
 		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_libref.c
 		)
 
-	set(BLASFEO_REF_SRC ${AUX_REF_SRC})
-	add_library(blasfeo_ref ${BLASFEO_REF_SRC})
-	set_target_properties(blasfeo_ref PROPERTIES LINKER_LANGUAGE C)
 endif()
 
 set(BLASFEO_SRC ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
 
 # add library
 add_library(blasfeo ${BLASFEO_SRC})
+
+target_compile_definitions(blasfeo PUBLIC "LA_${BLASFEO_LA_MODE}")
+target_compile_definitions(blasfeo PRIVATE "MACRO_LEVEL=${BLASFEO_MACRO_LEVEL}")
+
+if(BLASFEO_EXT_DEP)
+	target_compile_definitions(blasfeo PRIVATE "EXT_DEP")
+endif()
+
+if(BLASFEO_RUNTIME_CHECKS)
+	target_compile_definitions(blasfeo PRIVATE "-DDIM_CHECK")
+endif()
+
+if(BLASFEO_TESTING)
+	target_compile_definitions(blasfeo PRIVATE "TESTING_MODE=1")
+endif()
+
+if(BLASFEO_REFERENCE_BLAS)
+	target_compile_definitions(blasfeo PRIVATE "REF_BLAS_${BLASFEO_REFERENCE_BLAS}")
+endif()
+
+# kernel size
+if(BLASFEO_MIN_KERNEL_SIZE MATCHES 2x2)
+	target_compile_definitions(blasfeo PRIVATE "MIN_KERNEL_SIZE=2")
+else()
+	target_compile_definitions(blasfeo PRIVATE "MIN_KERNEL_SIZE=4")
+endif()
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	set(OS_FLAG "OS_LINUX")
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	set(OS_FLAG "OS_MAC")
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+	set(OS_FLAG "OS_WINDOWS")
+endif()
+target_compile_definitions(blasfeo PRIVATE "${OS_FLAG}")
+
 
 target_include_directories(blasfeo
 	PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
@@ -580,4 +572,7 @@ install(TARGETS blasfeo EXPORT blasfeoConfig
 install(EXPORT blasfeoConfig DESTINATION cmake)
 
 file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
-install(FILES ${BLASFEO_HEADERS} DESTINATION include)
+install(FILES ${BLASFEO_HEADERS} DESTINATION include/blasfeo)
+
+# test problems
+add_subdirectory(test_problems)

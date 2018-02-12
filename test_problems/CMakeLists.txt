@@ -36,8 +36,8 @@ add_executable(d_aux test_d_aux.c)
 
 
 if(BLASFEO_TESTING)
-	target_link_libraries(d_aux blasfeo_ref)
-	target_link_libraries(s_aux blasfeo_ref)
+	target_sources(d_aux PRIVATE ${BLASFEO_REF_SRC})
+	target_sources(s_aux PRIVATE ${BLASFEO_REF_SRC})
 endif()
 
 target_link_libraries(d_aux blasfeo m)
