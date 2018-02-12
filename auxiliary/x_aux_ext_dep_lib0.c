@@ -141,7 +141,7 @@ void PRINT_TO_FILE_STRVEC(FILE *file, int m, struct STRVEC *sa, int ai)
 void PRINT_TO_STRING_STRVEC(char **out_buf, int m, struct STRVEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;
-	PRINT_TO_FILE_MAT(out_buf, m, 1, pa, m);
+	PRINT_TO_STRING_MAT(out_buf, m, 1, pa, m);
 	return;
 	}
 

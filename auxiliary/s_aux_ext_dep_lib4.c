@@ -72,7 +72,7 @@
 #define PRINT_TO_FILE_TRAN_STRVEC s_print_to_file_tran_strvec
 #define PRINT_TO_STRING_STRMAT blasfeo_print_to_string_smat
 #define PRINT_TO_STRING_STRVEC blasfeo_print_to_string_svec
-#define PRINT_TO_FILE_TRAN_STRVEC s_print_to_file_tran_strvec
+#define PRINT_TO_STRING_TRAN_STRVEC s_print_to_string_tran_strvec
 
 #define PRINT_E_STRMAT blasfeo_print_exp_smat
 #define PRINT_E_STRVEC blasfeo_print_exp_svec

@@ -41,6 +41,7 @@
 
 #define PRINT_MAT d_print_mat
 #define PRINT_TO_FILE_MAT d_print_to_file_mat
+#define PRINT_TO_STRING_MAT d_print_to_string_mat
 
 #define PRINT_TRAN_MAT d_print_tran_mat
 #define PRINT_TO_FILE_TRAN_MAT d_print_to_file_tran_mat
