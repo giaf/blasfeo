@@ -31,80 +31,21 @@ include ../Makefile.rule
 
 BINARY_DIR = build/$(LA)/$(TARGET)
 
-# ----------- Envs
+LIBS = $(BINARY_DIR)/libblasfeo.a
 
-LIBS = 
-SHARED_LIBS = 
-ifeq ($(TESTING_MODE), 1)
-LIBS += $(BINARY_DIR)/libblasfeo_ref.a
-SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo_ref
-endif
-LIBS += $(BINARY_DIR)/libblasfeo.a -lm
-# SHARED_LIBS = -L. $(BINARY_DIR)/libblasfeo.so
-SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo -lm
+include ../Makefile.blas
 
-ifeq ($(REF_BLAS), 0)
-LIBS += -lm
-SHARED_LIBS += -lm
-endif
-
-ifeq ($(REF_BLAS), OPENBLAS)
-LIBS += /opt/openblas/lib/libopenblas.a -pthread -lgfortran -lm
-endif
-
-ifeq ($(REF_BLAS), BLIS)
-LIBS += /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -lgfortran -lm -fopenmp
-endif
-
-ifeq ($(REF_BLAS), NETLIB)
-LIBS += /opt/netlib/liblapack.a /opt/netlib/libblas.a -lgfortran -lm
-endif
-
-ifeq ($(REF_BLAS), MKL)
-LIBS += -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/mkl/lib/intel64/libmkl_core.a /opt/intel/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm 
-endif
-
-ifeq ($(REF_BLAS), ATLAS)
-LIBS += /opt/atlas/lib/liblapack.a /opt/atlas/lib/libcblas.a /opt/atlas/lib/libf77blas.a /opt/atlas/lib/libatlas.a -lgfortran -lm
-endif
-
-#ifneq ($(NUM_THREAD), 1)
-#LIBS += -pthread
-#endif
-
-
-# select one single test
+# all benchmarks
 OBJS =
-#OBJS = test_d_debug.o
-#OBJS = test_s_debug.o
-#OBJS = test_d_aux.o
-#OBJS = test_s_aux.o
-#OBJS = test_s_blas.o
-#OBJS = kernel_assembly.o test_assembly.o
-
-
-# auxiliary test
-AUX_OBJS =
-AUX_OBJS += test_d_aux.o
-AUX_OBJS += test_s_aux.o
-
-# blas test
-BLAS_OBJS =
-BLAS_OBJS += test_d_blas.o
-BLAS_OBJS += test_s_blas.o
+OBJS += benchmarks_d_blas.o
+OBJS += benchmarks_s_blas.o
 
 %.o: %.c
 	# build obj
-	#
 	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
 	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ -o $(BINARY_DIR)/$@.out $(LIBS)
-	#
 
 # ----------- Targets
-
-default: obj
-
-obj: aux blas
 
 bin_dir:
 	# create bin folder if not existent
@@ -112,23 +53,16 @@ bin_dir:
 
 common: bin_dir
 	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
+	echo $(OBJS)
 
-one_test: common $(OBJS)
+default: build
 
-aux: common $(AUX_OBJS)
-
-blas: common $(BLAS_OBJS)
+build: $(OBJS) common
 
 run:
-	./$(BINARY_DIR)/$(OBJS).out
+	./$(BINARY_DIR)/benchmarks_d_blas.o.out
+	./$(BINARY_DIR)/benchmarks_s_blas.o.out
 
-run_aux:
-	./$(BINARY_DIR)/test_d_aux.o.out
-	./$(BINARY_DIR)/test_s_aux.o.out
-
-run_blas:
-	./$(BINARY_DIR)/test_d_blas.o.out
-	./$(BINARY_DIR)/test_s_blas.o.out
 
 clean:
 	rm -rf build/*

@@ -560,6 +560,7 @@ clean:
 	make -C kernel clean
 	make -C blas clean
 	make -C examples clean
+	make -C benchmarks clean
 
 
 # clean test problems
@@ -573,12 +574,27 @@ deep_clean: clean clean_test_problems
 	rm -f ./lib/libblasfeo.a
 	rm -f ./lib/libblasfeo.so
 
-
-# test problems
-
 # directory for test problems binaries
 BINARY_DIR = build/$(LA)/$(TARGET)
 
+### benchmarks
+
+deploy_to_benchmarks:
+	mkdir -p ./benchmarks/$(BINARY_DIR)/
+	cp ./lib/libblasfeo.a ./benchmarks/$(BINARY_DIR)/
+
+build_benchmarks:
+	make -C benchmarks build
+	@echo
+	@echo "Benchmarks build complete."
+	@echo
+
+benchmarks: deploy_to_benchmarks build_benchmarks
+
+run_benchmarks:
+	make -C benchmarks run
+
+### test problems
 
 # copy static library into test path
 deploy_to_test:
@@ -588,7 +604,6 @@ ifeq ($(TESTING_MODE), 1)
 	cp ./lib/libblasfeo_ref.a ./test_problems/$(BINARY_DIR)/
 endif
 
-
 # one single test
 build_test:
 	make -C test_problems one_test
@@ -596,11 +611,7 @@ build_test:
 	@echo " Test problem build complete."
 	@echo
 
-run_test:
-	make -C test_problems run
-
 test: deploy_to_test build_test
-
 
 # aux test
 build_test_aux:
@@ -626,6 +637,9 @@ run_test_blas:
 	make -C test_problems run_blas
 
 test_blas: deploy_to_test build_test_blas
+
+run_test:
+	make -C test_problems run
 
 
 # deep build library (take into account flags changes)
