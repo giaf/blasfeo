@@ -430,6 +430,7 @@ OBJS_REF += \
 		auxiliary/s_aux_libref.o \
 		auxiliary/d_aux_ext_dep_libref.o \
 		auxiliary/s_aux_ext_dep_libref.o \
+		blas/d_blas3_libref.o \
 #
 endif
 
@@ -662,5 +663,3 @@ update_lib_test_aux: static_library test_aux run_test_aux
 # build test
 # run test
 update_target_test_aux: test_aux_clean run_test_aux
-
-

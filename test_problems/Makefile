@@ -35,38 +35,18 @@ BINARY_DIR = build/$(LA)/$(TARGET)
 
 LIBS = 
 SHARED_LIBS = 
+
 ifeq ($(TESTING_MODE), 1)
 LIBS += $(BINARY_DIR)/libblasfeo_ref.a
 SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo_ref
+
 endif
-LIBS += $(BINARY_DIR)/libblasfeo.a -lm
+LIBS += $(BINARY_DIR)/libblasfeo.a
 # SHARED_LIBS = -L. $(BINARY_DIR)/libblasfeo.so
-SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo -lm
+SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
 
-ifeq ($(REF_BLAS), 0)
-LIBS += -lm
-SHARED_LIBS += -lm
-endif
-
-ifeq ($(REF_BLAS), OPENBLAS)
-LIBS += /opt/openblas/lib/libopenblas.a -pthread -lgfortran -lm
-endif
-
-ifeq ($(REF_BLAS), BLIS)
-LIBS += /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -lgfortran -lm -fopenmp
-endif
-
-ifeq ($(REF_BLAS), NETLIB)
-LIBS += /opt/netlib/liblapack.a /opt/netlib/libblas.a -lgfortran -lm
-endif
-
-ifeq ($(REF_BLAS), MKL)
-LIBS += -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/mkl/lib/intel64/libmkl_core.a /opt/intel/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm 
-endif
-
-ifeq ($(REF_BLAS), ATLAS)
-LIBS += /opt/atlas/lib/liblapack.a /opt/atlas/lib/libcblas.a /opt/atlas/lib/libf77blas.a /opt/atlas/lib/libatlas.a -lgfortran -lm
-endif
+# add dependent library
+include ../Makefile.blas
 
 #ifneq ($(NUM_THREAD), 1)
 #LIBS += -pthread
@@ -90,8 +70,8 @@ AUX_OBJS += test_s_aux.o
 
 # blas test
 BLAS_OBJS =
-BLAS_OBJS += test_d_blas.o
-BLAS_OBJS += test_s_blas.o
+BLAS_OBJS += test_d_blas3.o
+# BLAS_OBJS += test_s_blas.o
 
 %.o: %.c
 	# build obj
@@ -127,8 +107,7 @@ run_aux:
 	./$(BINARY_DIR)/test_s_aux.o.out
 
 run_blas:
-	./$(BINARY_DIR)/test_d_blas.o.out
-	./$(BINARY_DIR)/test_s_blas.o.out
+	./$(BINARY_DIR)/test_d_blas3.o.out
 
 clean:
 	rm -rf build/*

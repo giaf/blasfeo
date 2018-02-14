@@ -28,8 +28,7 @@
 
 
 
-#if defined(LA_REFERENCE)
-
+#if defined(LA_REFERENCE) | defined(TESTING_MODE)
 
 
 // dgemm nt

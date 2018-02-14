@@ -7,18 +7,18 @@
 * Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              *
 * All rights reserved.                                                                            *
 *                                                                                                 *
-* HPMPC is free software; you can redistribute it and/or                                          *
+* BLASFEO is free software; you can redistribute it and/or                                        *
 * modify it under the terms of the GNU Lesser General Public                                      *
 * License as published by the Free Software Foundation; either                                    *
 * version 2.1 of the License, or (at your option) any later version.                              *
 *                                                                                                 *
-* HPMPC is distributed in the hope that it will be useful,                                        *
+* BLASFEO is distributed in the hope that it will be useful,                                      *
 * but WITHOUT ANY WARRANTY; without even the implied warranty of                                  *
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                                            *
 * See the GNU Lesser General Public License for more details.                                     *
 *                                                                                                 *
 * You should have received a copy of the GNU Lesser General Public                                *
-* License along with HPMPC; if not, write to the Free Software                                    *
+* License along with BLASFEO; if not, write to the Free Software                                  *
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  *
 *                                                                                                 *
 * Author: Gianluca Frison, giaf (at) dtu.dk                                                       *
@@ -27,35 +27,33 @@
 **************************************************************************************************/
 
 /*
- * auxiliary algebra operations header
+ * blas3 functions for LA:REFERENCE (column major)
  *
- * include/blasfeo_aux_lib*.h
+ * blas/d_blas_lib*.c
  *
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_d_aux.h"
+#include "../include/blasfeo_d_aux.h"
 
 
-// expose reference BLASFEO for testing
+#define REAL double
+#define STRMAT blasfeo_dmat_ref
+#define STRVEC blasfeo_dvec_ref
 
-void blasfeo_create_dmat_ref  (int m, int n, struct blasfeo_dmat_ref *sA, void *memory);
-void blasfeo_pack_dmat_ref    (int m, int n, double *A, int lda, struct blasfeo_dmat_ref *sA, int ai, int aj);
-int  blasfeo_memsize_dmat_ref (int m, int n);
+#define GEMM_NN_LIBSTR blasfeo_dgemm_nn_ref
 
-void blasfeo_dgecp_ref(int m, int n,\
-					struct blasfeo_dmat_ref *sA, int ai, int aj,\
-					struct blasfeo_dmat_ref *sB, int bi, int bj);
-void blasfeo_dgesc_ref(int m, int n,\
-					double alpha,\
-					struct blasfeo_dmat_ref *sA, int ai, int aj);
-void blasfeo_dgecpsc_ref(int m, int n,
-					double alpha,\
-					struct blasfeo_dmat_ref *sA, int ai, int aj,\
-					struct blasfeo_dmat_ref *sB, int bi, int bj);
+#define COPY dcopy_
+#define GEMM dgemm_
+#define SYRK dsyrk_
+#define TRMM dtrmm_
+#define TRSM dtrsm_
 
 
-#ifdef __cplusplus
-}
-#endif
+// TESTING_MODE
+#include "x_blas3_lib.c"
