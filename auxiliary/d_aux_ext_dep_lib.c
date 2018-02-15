@@ -29,7 +29,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#if defined(LA_HIGH_PERFORMANCE)
 #include "../include/blasfeo_block_size.h"
+#endif
+
 #include "../include/blasfeo_common.h"
 
 #define REAL double
