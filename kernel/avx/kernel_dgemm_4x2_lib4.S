@@ -148,6 +148,12 @@
 
 
 
+// ASM Macros
+
+
+
+
+// void inner_kernel_dgemm_add_nn_4x2_lib4
 // common inner routine with file scope
 //
 // input arguments:
@@ -183,7 +189,7 @@ _inner_kernel_dgemm_add_nn_4x2_lib4:
 inner_kernel_dgemm_add_nn_4x2_lib4:
 #endif
 #endif
-	
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
@@ -243,10 +249,10 @@ inner_kernel_dgemm_add_nn_4x2_lib4:
 	addq	%r13, %r12
 
 	cmpl	$4, %r10d
-	jg		1b // main loop 
+	jg		1b // main loop
 
 0: // consider clean4-up
-	
+
 	cmpl	$3, %r10d
 	jle		4f // clean1
 
@@ -304,7 +310,7 @@ inner_kernel_dgemm_add_nn_4x2_lib4:
 
 	// clean-up loop
 3: // clean up loop
-	
+
 	vmovapd			0(%r11), %ymm8 // A0[0]
 	vbroadcastsd	0(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
@@ -318,7 +324,7 @@ inner_kernel_dgemm_add_nn_4x2_lib4:
 	addq	$8, %r12
 
 	cmpl	$0, %r10d
-	jg		3b // clean up loop 
+	jg		3b // clean up loop
 
 2: // return
 
@@ -331,11 +337,12 @@ inner_kernel_dgemm_add_nn_4x2_lib4:
 	.size	inner_kernel_dgemm_add_nn_4x2_lib4, .-inner_kernel_dgemm_add_nn_4x2_lib4
 #endif
 #endif
+// end
 
 
 
 
-
+// void inner_kernel_dgemm_add_nn_2x4_lib4
 // common inner routine with file scope
 //
 // input arguments:
@@ -365,7 +372,7 @@ _inner_kernel_dgemm_add_nn_2x4_lib4:
 inner_kernel_dgemm_add_nn_2x4_lib4:
 #endif
 #endif
-	
+
 	cmpl	$0, %r10d
 	jle		5f // return
 
@@ -432,11 +439,11 @@ inner_kernel_dgemm_add_nn_2x4_lib4:
 	addq	%r13, %r12
 
 	cmpl	$4, %r10d
-	jg		1b // main loop 
+	jg		1b // main loop
 
 
 0: // consider clean4-up
-	
+
 	cmpl	$3, %r10d
 	jle		4f // clean1
 
@@ -498,7 +505,7 @@ inner_kernel_dgemm_add_nn_2x4_lib4:
 
 	// clean-up loop
 3: // clean up loop
-	
+
 	// unroll 0
 	vbroadcastf128	0(%r11), %ymm11 // A
 	vmovupd			0(%r12), %ymm13
@@ -519,7 +526,7 @@ inner_kernel_dgemm_add_nn_2x4_lib4:
 	subl	$1, %r10d
 
 	cmpl	$0, %r10d
-	jg		3b // clean up loop 
+	jg		3b // clean up loop
 
 
 2: // reduce
@@ -539,11 +546,12 @@ inner_kernel_dgemm_add_nn_2x4_lib4:
 	.size	inner_kernel_dgemm_add_nn_2x4_lib4, .-inner_kernel_dgemm_add_nn_2x4_lib4
 #endif
 #endif
+// end
 
 
 
 
-
+// void inner_edge_dgemm_add_nn_4x2_lib4
 // common inner routine with file scope
 //
 // edge for B unaligned
@@ -578,7 +586,7 @@ _inner_edge_dgemm_add_nn_4x2_lib4:
 inner_edge_dgemm_add_nn_4x2_lib4:
 #endif
 #endif
-	
+
 	cmpl			$0, %r14d // offset==0
 	jle				2f // end
 
@@ -632,11 +640,12 @@ inner_edge_dgemm_add_nn_4x2_lib4:
 	.size	inner_edge_dgemm_add_nn_4x2_lib4, .-inner_edge_dgemm_add_nn_4x2_lib4
 #endif
 #endif
+// end
 
 
 
 
-
+// void inner_edge_dgemm_add_nn_2x4_lib4
 // common inner routine with file scope
 //
 // edge for B unaligned
@@ -671,7 +680,7 @@ _inner_edge_dgemm_add_nn_2x4_lib4:
 inner_edge_dgemm_add_nn_2x4_lib4:
 #endif
 #endif
-	
+
 	cmpl			$0, %r14d // offset==0
 	jle				2f // end
 
@@ -730,11 +739,12 @@ inner_edge_dgemm_add_nn_2x4_lib4:
 	.size	inner_edge_dgemm_add_nn_2x4_lib4, .-inner_edge_dgemm_add_nn_2x4_lib4
 #endif
 #endif
+// end
 
 
 
 
-
+// void inner_scale_ab_4x2_lib4
 // common inner routine with file scope
 //
 // scale for generic alpha and beta
@@ -771,7 +781,7 @@ _inner_scale_ab_4x2_lib4:
 inner_scale_ab_4x2_lib4:
 #endif
 #endif
-	
+
 
 	// alpha
 	vbroadcastsd	0(%r10), %ymm15
@@ -806,11 +816,12 @@ inner_scale_ab_4x2_lib4:
 	.size	inner_scale_ab_4x2_lib4, .-inner_scale_ab_4x2_lib4
 #endif
 #endif
+// end
 
 
 
 
-
+// void inner_scale_ab_2x4_lib4
 // common inner routine with file scope
 //
 // scale for generic alpha and beta
@@ -857,7 +868,7 @@ _inner_scale_ab_2x4_lib4:
 inner_scale_ab_2x4_lib4:
 #endif
 #endif
-	
+
 	// alpha
 	vmovddup	0(%r10), %xmm15
 
@@ -899,10 +910,12 @@ inner_scale_ab_2x4_lib4:
 #endif
 #endif
 
+// end
 
 
 
 
+// void inner_store_4x2_lib4
 // common inner routine with file scope
 //
 // store n
@@ -935,7 +948,7 @@ _inner_store_4x2_lib4:
 inner_store_4x2_lib4:
 #endif
 #endif
-	
+
 	vmovapd %ymm0,  0(%r10)
 	vmovapd %ymm1, 32(%r10)
 
@@ -948,11 +961,12 @@ inner_store_4x2_lib4:
 	.size	inner_store_4x2_lib4, .-inner_store_4x2_lib4
 #endif
 #endif
+// end
 
 
 
 
-
+// void inner_store_2x4_lib4
 // common inner routine with file scope
 //
 // store n
@@ -985,7 +999,7 @@ _inner_store_2x4_lib4:
 inner_store_2x4_lib4:
 #endif
 #endif
-	
+
 	vmovapd %xmm0,   0(%r10)
 	vmovapd %xmm1,  32(%r10)
 	vmovapd %xmm2,  64(%r10)
@@ -1000,11 +1014,12 @@ inner_store_2x4_lib4:
 	.size	inner_store_2x4_lib4, .-inner_store_2x4_lib4
 #endif
 #endif
+// end
 
 
 
 
-
+// void inner_store_2x2_lib4
 // common inner routine with file scope
 //
 // store n
@@ -1037,7 +1052,7 @@ _inner_store_2x2_lib4:
 inner_store_2x2_lib4:
 #endif
 #endif
-	
+
 	vmovapd %xmm0,   0(%r10)
 	vmovapd %xmm1,  32(%r10)
 
@@ -1050,11 +1065,12 @@ inner_store_2x2_lib4:
 	.size	inner_store_2x2_lib4, .-inner_store_2x2_lib4
 #endif
 #endif
+// end
 
 
 
 
-
+// void inner_store_4x2_vs_lib4
 // common inner routine with file scope
 //
 // store n vs
@@ -1116,11 +1132,12 @@ inner_store_4x2_vs_lib4:
 	.size	inner_store_4x2_vs_lib4, .-inner_store_4x2_vs_lib4
 #endif
 #endif
+// end
 
 
 
 
-
+// void inner_store_2x4_vs_lib4
 // common inner routine with file scope
 //
 // store n
@@ -1165,7 +1182,7 @@ _inner_store_2x4_vs_lib4:
 inner_store_2x4_vs_lib4:
 #endif
 #endif
-	
+
 	vcvtsi2sd	%r11d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC02(%rip), %ymm14
@@ -1197,13 +1214,18 @@ inner_store_2x4_vs_lib4:
 	.size	inner_store_2x4_vs_lib4, .-inner_store_2x4_vs_lib4
 #endif
 #endif
+// end
 
 
 
 
+// ASM Kernels
 
-//                               1      2              3          4            5          6        7             8          9
+
+
+
 // void kernel_dgemm_nn_4x2_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D);
+//                               1      2              3          4            5          6        7             8          9
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1218,7 +1240,7 @@ _kernel_dgemm_nn_4x2_lib4:
 	.def kernel_dgemm_nn_4x2_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_nn_4x2_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -1259,7 +1281,7 @@ kernel_dgemm_nn_4x2_lib4:
 #endif
 
 
-	// call inner blend 
+	// call inner blend
 
 	movq	ARG2, %r10 // alpha
 	movq	ARG7, %r11 // beta
@@ -1298,13 +1320,13 @@ kernel_dgemm_nn_4x2_lib4:
 #if defined(OS_LINUX)
 	.size	kernel_dgemm_nn_4x2_lib4, .-kernel_dgemm_nn_4x2_lib4
 #endif
+// end
 
 
 
 
-
-//                                  1      2              3          4            5          6        7             8          9          10      11
 // void kernel_dgemm_nn_4x2_vs_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1);
+//                                  1      2              3          4            5          6        7             8          9          10      11
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1319,7 +1341,7 @@ _kernel_dgemm_nn_4x2_vs_lib4:
 	.def kernel_dgemm_nn_4x2_vs_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_nn_4x2_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -1360,7 +1382,7 @@ kernel_dgemm_nn_4x2_vs_lib4:
 #endif
 
 
-	// call inner blend 
+	// call inner blend
 
 	movq	ARG2, %r10 // alpha
 	movq	ARG7, %r11 // beta
@@ -1402,12 +1424,13 @@ kernel_dgemm_nn_4x2_vs_lib4:
 	.size	kernel_dgemm_nn_4x2_vs_lib4, .-kernel_dgemm_nn_4x2_vs_lib4
 #endif
 
+// end
 
 
 
 
-//                               1      2              3          4            5          6        7             8          9
 // void kernel_dgemm_nn_2x4_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D);
+//                               1      2              3          4            5          6        7             8          9
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1422,7 +1445,7 @@ _kernel_dgemm_nn_2x4_lib4:
 	.def kernel_dgemm_nn_2x4_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_nn_2x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -1467,7 +1490,7 @@ kernel_dgemm_nn_2x4_lib4:
 #endif
 
 
-	// call inner blend 
+	// call inner blend
 
 	movq	ARG2, %r10 // alpha
 	movq	ARG7, %r11 // beta
@@ -1507,12 +1530,13 @@ kernel_dgemm_nn_2x4_lib4:
 	.size	kernel_dgemm_nn_2x4_lib4, .-kernel_dgemm_nn_2x4_lib4
 #endif
 
+// end
 
 
 
 
-//                                  1      2              3          4            5          6        7             8          9          10      11
 // void kernel_dgemm_nn_2x4_vs_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1);
+//                                  1      2              3          4            5          6        7             8          9          10      11
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1527,7 +1551,7 @@ _kernel_dgemm_nn_2x4_vs_lib4:
 	.def kernel_dgemm_nn_2x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_nn_2x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -1572,7 +1596,7 @@ kernel_dgemm_nn_2x4_vs_lib4:
 #endif
 
 
-	// call inner blend 
+	// call inner blend
 
 	movq	ARG2, %r10 // alpha
 	movq	ARG7, %r11 // beta
@@ -1614,12 +1638,13 @@ kernel_dgemm_nn_2x4_vs_lib4:
 	.size	kernel_dgemm_nn_2x4_vs_lib4, .-kernel_dgemm_nn_2x4_vs_lib4
 #endif
 
+// end
 
 
 
 
-//                               1      2              3          4            5          6        7             8          9
 // void kernel_dgemm_nn_2x2_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D);
+//                               1      2              3          4            5          6        7             8          9
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1634,7 +1659,7 @@ _kernel_dgemm_nn_2x2_lib4:
 	.def kernel_dgemm_nn_2x2_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_nn_2x2_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -1675,7 +1700,7 @@ kernel_dgemm_nn_2x2_lib4:
 #endif
 
 
-	// call inner blend 
+	// call inner blend
 
 	movq	ARG2, %r10 // alpha
 	movq	ARG7, %r11 // beta
@@ -1714,7 +1739,12 @@ kernel_dgemm_nn_2x2_lib4:
 #if defined(OS_LINUX)
 	.size	kernel_dgemm_nn_2x2_lib4, .-kernel_dgemm_nn_2x2_lib4
 #endif
+// end
 
+
+
+
+// Data
 
 
 
@@ -1904,5 +1934,3 @@ LC10: // { -1.0 1.0 1.0 1.0 }
 #elif defined(OS_MAC)
 	.subsections_via_symbols
 #endif
-
-
