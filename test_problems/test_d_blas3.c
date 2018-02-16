@@ -189,8 +189,8 @@ int main()
 	int iis = 8;
 	int jjs = 8;
 
-	int ni0 = 0;
-	int nj0 = 0;
+	int ni0 = 5;
+	int nj0 = 5;
 	int nk0 = 32;
 	int nis = 30;
 	int njs = 30;
@@ -205,8 +205,8 @@ int main()
 	// loop over alphas/betas
 	for (kk = 0; kk < 1; kk++)
 		{
-		double alpha = alphas[1];
-		double beta = betas[1];
+		double alpha = alphas[3];
+		double beta = betas[3];
 
 		// loop over row matrix dimension
 		for (ni = nj0; ni < ni0+nis; ni++)
