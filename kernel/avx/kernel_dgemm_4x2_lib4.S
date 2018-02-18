@@ -203,50 +203,62 @@ inner_kernel_dgemm_add_nn_4x2_lib4:
 	.p2align 3
 1: // main loop
 
-	prefetcht0	0(%r12, %r13, 2) // software prefetch
+	prefetcht0	0(%r12, %r13, 2) // software prefetch B + 2(4*sdb*sizeof(double))
+	// T0 (temporal data)-prefetch data into all levels of the cache hierarchy.
+	// The prefetch size may be 32, 64, or 128 Bytes.
 
 	// unroll 0
-	vbroadcastsd	0(%r12), %ymm12
+	// ymm8 = [a01 a10 a20 a30]
+	vbroadcastsd	0(%r12), %ymm12 // B
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm0, %ymm0
-	vmovapd			32(%r11), %ymm10 // A0
 
-	vbroadcastsd	32(%r12), %ymm12
+	vmovapd			32(%r11), %ymm10 // load A
+
+	vbroadcastsd	32(%r12), %ymm12 // B + 32 = B+4*sizeof(double)
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm1, %ymm1
 	subl	$4, %r10d
 
 	// unroll 1
-	vbroadcastsd	8(%r12), %ymm12
+	// ymm10 = [a01 a10 a20 a30]
+	vbroadcastsd	8(%r12), %ymm12 // B
 	vmulpd			%ymm10, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm0, %ymm0
+
 	vmovapd			64(%r11), %ymm8 // A0
 
-	vbroadcastsd	40(%r12), %ymm12
+	vbroadcastsd	40(%r12), %ymm12 // B + 32 = B+4*sizeof(double)
 	vmulpd			%ymm10, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm1, %ymm1
 
 	// unroll 2
-	vbroadcastsd	16(%r12), %ymm12
+	// ymm8 = [a01 a10 a20 a30]
+	vbroadcastsd	16(%r12), %ymm12 // B
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm0, %ymm0
+
 	vmovapd			96(%r11), %ymm10 // A0
 
-	vbroadcastsd	48(%r12), %ymm12
+	vbroadcastsd	48(%r12), %ymm12 // B
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm1, %ymm1
-	addq	$128, %r11
+
+	addq	$128, %r11 // Update A
 
 	// unroll 3
-	vbroadcastsd	24(%r12), %ymm12
+	// A[03 13 23 33] -> ymm10
+	vbroadcastsd	24(%r12), %ymm12 // B
 	vmulpd			%ymm10, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm0, %ymm0
-	vmovapd			0(%r11), %ymm8 // A0
 
-	vbroadcastsd	56(%r12), %ymm12
+	vmovapd			0(%r11), %ymm8 // load A[04 14 24 34] -> ymm8
+
+	vbroadcastsd	56(%r12), %ymm12 // B
 	vmulpd			%ymm10, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm1, %ymm1
-	addq	%r13, %r12
+
+	addq	%r13, %r12 // Update B = B + sdb*ps*8bit
 
 	cmpl	$4, %r10d
 	jg		1b // main loop
@@ -256,22 +268,29 @@ inner_kernel_dgemm_add_nn_4x2_lib4:
 	cmpl	$3, %r10d
 	jle		4f // clean1
 
+	// ki==4
+
 	// unroll 0
-	vbroadcastsd	0(%r12), %ymm12
+	// ymm8 = A[04 14 24 34]
+	vbroadcastsd	0(%r12), %ymm12 // B
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm0, %ymm0
-	vmovapd			32(%r11), %ymm10 // A0
+
+	vmovapd			32(%r11), %ymm10 // load A
 
 	vbroadcastsd	32(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm1, %ymm1
 	vaddpd			%ymm15, %ymm7, %ymm7
+
 	subl	$4, %r10d
 
 	// unroll 1
+	// ymm10 = A[05 15 25 35]
 	vbroadcastsd	8(%r12), %ymm12
 	vmulpd			%ymm10, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm0, %ymm0
+
 	vmovapd			64(%r11), %ymm8 // A0
 
 	vbroadcastsd	40(%r12), %ymm12
@@ -279,25 +298,31 @@ inner_kernel_dgemm_add_nn_4x2_lib4:
 	vaddpd			%ymm15, %ymm1, %ymm1
 
 	// unroll 2
+	// ymm8
 	vbroadcastsd	16(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm0, %ymm0
+
 	vmovapd			96(%r11), %ymm10 // A0
 
 	vbroadcastsd	48(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm1, %ymm1
+
 	addq	$128, %r11
 
 	// unroll 3
+	// ymm10
 	vbroadcastsd	24(%r12), %ymm12
 	vmulpd			%ymm10, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm0, %ymm0
+
 //	vmovapd			0(%r11), %ymm8 // A0
 
 	vbroadcastsd	56(%r12), %ymm12
 	vmulpd			%ymm10, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm1, %ymm1
+
 	addq	%r13, %r12
 
 	jmp		2f
@@ -391,24 +416,37 @@ inner_kernel_dgemm_add_nn_2x4_lib4:
 	prefetcht0	64(%r12, %r13, 2) // software prefetch
 
 	// unroll 0 1
-	vmovapd			0(%r12), %ymm13
-	vmovupd			16(%r12), %ymm14
-	vblendpd		$0x3, %ymm13, %ymm14, %ymm14
-	vshufpd			$0x0, %ymm14, %ymm14, %ymm13
+
+	// load
+	vmovapd			0(%r12), %ymm13 // B
+	vmovupd			16(%r12), %ymm14 // B
+
+	// mask
+	vblendpd		$0x3, %ymm13, %ymm14, %ymm14 //
+	vshufpd			$0x0, %ymm14, %ymm14, %ymm13 //
+
 	vmulpd			%ymm11, %ymm13, %ymm15
 	vaddpd			%ymm0, %ymm15, %ymm0
+
 	vbroadcastf128	64(%r11), %ymm9 // A
 	vshufpd			$0xf, %ymm14, %ymm14, %ymm13
+
 	vmulpd			%ymm12, %ymm13, %ymm15
 	vaddpd			%ymm1, %ymm15, %ymm1
+
 	vmovapd			64(%r12), %ymm13
 	vmovupd			80(%r12), %ymm14
+
+	// load
 	vblendpd		$0x3, %ymm13, %ymm14, %ymm14
 	vshufpd			$0x0, %ymm14, %ymm14, %ymm13
+
 	vmulpd			%ymm11, %ymm13, %ymm15
 	vaddpd			%ymm2, %ymm15, %ymm2
+
 	vbroadcastf128	96(%r11), %ymm10 // A
 	vshufpd			$0xf, %ymm14, %ymm14, %ymm13
+
 	vmulpd			%ymm12, %ymm13, %ymm15
 	vaddpd			%ymm3, %ymm15, %ymm3
 
