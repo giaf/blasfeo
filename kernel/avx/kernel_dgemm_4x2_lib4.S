@@ -1089,8 +1089,8 @@ _inner_store_4x2_vs_lib4:
 inner_store_4x2_vs_lib4:
 #endif
 #endif
-	
-	vcvtsi2sd	%r12d, %xmm15, %xmm15
+
+	vcvtsi2sd	%r11d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC02(%rip), %ymm14
 #elif defined(OS_MAC)
@@ -1101,7 +1101,7 @@ inner_store_4x2_vs_lib4:
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	vmaskmovpd	%ymm0, %ymm15,  0(%r10)
-	cmpl		$2, %r13d
+	cmpl		$2, %r12d
 	jl			0f // end
 	vmaskmovpd	%ymm1, %ymm15, 32(%r10)
 
