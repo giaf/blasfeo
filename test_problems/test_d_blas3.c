@@ -26,8 +26,6 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-
-
 #if defined(TESTING_MODE)
 
 // standard
@@ -71,12 +69,17 @@
 	#error PRECISION undefined
 #endif
 
+#ifndef MIN_KERNEL_SIZE
+	#error MIN_KERNEL_SIZE undefined
+#endif
+
 int main()
 	{
 
 	SHOW_DEFINE(LA)
 	SHOW_DEFINE(TARGET)
 	SHOW_DEFINE(PRECISION)
+	SHOW_DEFINE(MIN_KERNEL_SIZE)
 
 	int ii, jj, kk;
 	int n = 60;
@@ -102,15 +105,24 @@ int main()
 
 	printf("Allocate HP matrices\n");
 
+	struct blasfeo_dmat sA; blasfeo_allocate_dmat(n, n, &sA);
+	struct blasfeo_dmat sB; blasfeo_allocate_dmat(n, n, &sB);
+	struct blasfeo_dmat sC; blasfeo_allocate_dmat(n, n, &sC);
+	struct blasfeo_dmat sD; blasfeo_allocate_dmat(n, n, &sD);
+
+	blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
+	blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
+	blasfeo_pack_dmat(n, n, C, n, &sC, 0, 0);
+	blasfeo_pack_dmat(n, n, D, n, &sD, 0, 0);
+
+	// batch memory allocation
+	#if 0
 	// compute memory size
 	int size_dmat = 4*blasfeo_memsize_dmat(n, n);
-
 	// initialize void pointer
 	void *memory_dmat;
-
 	// memory allocation
 	v_zeros_align(&memory_dmat, size_dmat);
-
 	// cast memory pointer
 	char *ptr_memory_dmat = (char *) memory_dmat;
 
@@ -135,9 +147,23 @@ int main()
 	blasfeo_create_dmat(n, n, &sD, ptr_memory_dmat);
 	ptr_memory_dmat += sD.memsize;
 	blasfeo_pack_dmat(n, n, D, n, &sD, 0, 0);
+	#endif
+
 
 	printf("Allocate REF matrices\n");
 
+	struct blasfeo_dmat_ref rA; blasfeo_allocate_dmat_ref(n, n, &rA);
+	struct blasfeo_dmat_ref rB; blasfeo_allocate_dmat_ref(n, n, &rB);
+	struct blasfeo_dmat_ref rC; blasfeo_allocate_dmat_ref(n, n, &rC);
+	struct blasfeo_dmat_ref rD; blasfeo_allocate_dmat_ref(n, n, &rD);
+
+	blasfeo_pack_dmat_ref(n, n, A, n, &rA, 0, 0);
+	blasfeo_pack_dmat_ref(n, n, B, n, &rB, 0, 0);
+	blasfeo_pack_dmat_ref(n, n, C, n, &rC, 0, 0);
+	blasfeo_pack_dmat_ref(n, n, D, n, &rD, 0, 0);
+
+	// batch memory allocation
+	#if 0
 	// Testing comparison
 	// reference matrices, column major
 	int size_dmat_ref = 4*blasfeo_memsize_dmat_ref(n, n);
@@ -164,10 +190,10 @@ int main()
 	blasfeo_create_dmat_ref(n, n, &rD, ptr_memory_dmat_ref);
 	ptr_memory_dmat_ref += sD.memsize;
 	blasfeo_pack_dmat_ref(n, n, D, n, &rD, 0, 0);
-
+	#endif
 
 	// -------- Print matrices
-
+	#if 0
 	/* printf("\nPrint dmat HP A:\n\n"); */
 	/* blasfeo_print_dmat(p_n, p_n, &sA, 0, 0); */
 
@@ -179,6 +205,7 @@ int main()
 
 	/* printf("\nPrint dmat REF B:\n\n"); */
 	/* blasfeo_print_dmat_ref(p_n, p_n, &rB, 0, 0); */
+	#endif
 
 	printf("\n\n----------- TEST gemm\n\n");
 
@@ -202,6 +229,8 @@ int main()
 	total_calls = nis*njs*iis*jjs;
 	bad_calls = 0;
 
+	// Main test loop
+	#if 1
 	// loop over alphas/betas
 	for (kk = 0; kk < 1; kk++)
 		{
@@ -246,12 +275,12 @@ int main()
 								}
 							else
 								{
-								printf(
-									"Correct at D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
-									ii, ni, jj, nj,
-									alpha, ii, ni, jj, nk,
-									ii, nk, jj, nj,
-									beta, ii, ni, jj, nj);
+								/* printf( */
+									/* "Correct at D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n", */
+									/* ii, ni, jj, nj, */
+									/* alpha, ii, ni, jj, nk, */
+									/* ii, nk, jj, nj, */
+									/* beta, ii, ni, jj, nj); */
 								}
 							}
 						}
@@ -272,26 +301,63 @@ int main()
 			printf("\n----------- TEST FAILED, %d/%d bad_calls\n\n", bad_calls, total_calls);
 		}
 
+	#endif
+
 	SHOW_DEFINE(LA)
 	SHOW_DEFINE(TARGET)
 	SHOW_DEFINE(PRECISION)
+	SHOW_DEFINE(MIN_KERNEL_SIZE)
+	printf("\n\n");
 
 	d_free(A);
 	d_free(B);
 	d_free(C);
 	d_free(D);
+	printf("Freed double arrays \n");
 
-	blasfeo_free_dmat(&sA);
+	#if 0
+
+	printf("&sA.pA %p \n", (void *) sA.pA);
+	printf("&sB.pA %p \n", (void *) sB.pA);
+	printf("&sC.pA %p \n", (void *) sC.pA);
+	printf("&sD.pA %p \n", (void *) sD.pA);
+
+	printf("sA.pA[0] %f \n", sA.pA[0]);
+	printf("sB.pA[0] %f \n", sB.pA[0]);
+	printf("sC.pA[0] %f \n", sC.pA[0]);
+	printf("sD.pA[0] %f \n", sD.pA[0]);
+
+	printf("&sA.dA %p \n", (void *) sA.dA);
+	printf("&sB.dA %p \n", (void *) sB.dA);
+	printf("&sC.dA %p \n", (void *) sC.dA);
+	printf("&sD.dA %p \n", (void *) sD.dA);
+
+	printf("sA.dA[0] %f \n", sA.dA[0]);
+	printf("sB.dA[0] %f \n", sB.dA[0]);
+	printf("sC.dA[0] %f \n", sC.dA[0]);
+	printf("sD.dA[0] %f \n", sD.dA[0]);
+
+	/* printf("sA->m %d \n", sA.m); */
+	/* printf("sB->m %d \n", sB.m); */
+	/* printf("sC->m %d \n", sC.m); */
+	/* printf("sD->m %d \n", sD.m); */
+	#endif
+
 	blasfeo_free_dmat(&sB);
+	blasfeo_free_dmat(&sA);
 	blasfeo_free_dmat(&sC);
 	blasfeo_free_dmat(&sD);
+
+	printf("Freed HP dmat \n");
+	/* free(ptr_memory_dmat_ref); */
 
 	blasfeo_free_dmat_ref(&rA);
 	blasfeo_free_dmat_ref(&rB);
 	blasfeo_free_dmat_ref(&rC);
 	blasfeo_free_dmat_ref(&rD);
 
-	printf("\n\n");
+	printf("Freed REF dmat \n");
+
 
 	return 0;
 
