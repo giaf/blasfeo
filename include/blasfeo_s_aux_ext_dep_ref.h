@@ -39,10 +39,28 @@ extern "C" {
 #endif
 
 
-
+#ifdef BLASFEO_COMMON
 // expose reference BLASFEO for testing
-void blasfeo_print_smat_ref(int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
+// see blasfeo_s_aux_exp_dep.h for help
 
+void blasfeo_print_smat_ref(int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
+void blasfeo_allocate_smat_ref(int m, int n, struct blasfeo_smat_ref *sA);
+void blasfeo_allocate_svec_ref(int m, struct blasfeo_svec_ref *sa);
+void blasfeo_free_smat_ref(struct blasfeo_smat_ref *sA);
+void blasfeo_free_svec_ref(struct blasfeo_svec_ref *sa);
+void blasfeo_print_smat_ref(int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
+void blasfeo_print_exp_smat_ref(int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
+void blasfeo_print_to_file_smat_ref(FILE *file, int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
+void blasfeo_print_to_string_smat_ref(char **buf_out, int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
+void blasfeo_print_svec(int m, struct blasfeo_svec *sa, int ai);
+void blasfeo_print_exp_svec(int m, struct blasfeo_svec *sa, int ai);
+void blasfeo_print_to_file_svec(FILE *file, int m, struct blasfeo_svec *sa, int ai);
+void blasfeo_print_to_string_svec(char **buf_out, int m, struct blasfeo_svec *sa, int ai);
+void blasfeo_print_tran_svec(int m, struct blasfeo_svec *sa, int ai);
+void blasfeo_print_exp_tran_svec(int m, struct blasfeo_svec *sa, int ai);
+void blasfeo_print_to_file_tran_svec(FILE *file, int m, struct blasfeo_svec *sa, int ai);
+void blasfeo_print_to_string_tran_svec(char **buf_out, int m, struct blasfeo_svec *sa, int ai);
+#endif
 
 
 #ifdef __cplusplus
