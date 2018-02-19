@@ -1526,7 +1526,7 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 				}
 			}
 #endif // 2x2 min
-#else
+#else // SANDY_BRIDGE
 		for(; i<m-3; i+=4)
 			{
 			j = 0;
@@ -1545,7 +1545,7 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 			}
 #endif
 		}
-	else
+	else // offsetC==0 & offsetD==0
 		{
 // TODO 12x4
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
