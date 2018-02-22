@@ -52,8 +52,8 @@ if(BLASFEO_BENCHMARKS MATCHES ON)
 	endif(${REF_BLAS} MATCHES OPENBLAS)
 
 	if(${REF_BLAS} MATCHES BLIS)
-		target_link_libraries(d_blas /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -lgfortran -lm -fopenmp)
-		target_link_libraries(s_blas /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -lgfortran -lm -fopenmp)
+		target_link_libraries(d_blas /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -fopenmp -lgfortran -lm)
+		target_link_libraries(s_blas /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -fopenmp -lgfortran -lm)
 	endif(${REF_BLAS} MATCHES BLIS)
 
 	if(${REF_BLAS} MATCHES NETLIB)
