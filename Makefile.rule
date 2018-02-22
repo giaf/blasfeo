@@ -86,6 +86,9 @@
  TESTING_MODE = 0
 # TESTING_MODE = 1
 
+BENCHMARKS_MODE = 0
+# BENCHMARKS_MODE = 1
+
 # Enable on-line checks for matrix and vector dimensions
 #
  RUNTIME_CHECKS = 0
@@ -167,6 +170,9 @@ CFLAGS += -DEXT_DEP
 endif
 ifeq ($(TESTING_MODE), 1)
 CFLAGS += -DTESTING_MODE
+endif
+ifeq ($(BENCHMARKS_MODE), 1)
+CFLAGS += -DBENCHMARKS_MODE
 endif
 
 ifeq ($(MACRO_LEVEL), 1)

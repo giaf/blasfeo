@@ -26,6 +26,10 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+
+#if defined(BENCHMARKS_MODE)
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/time.h>
@@ -49,6 +53,8 @@
 
 #if defined(REF_BLAS_OPENBLAS)
 void openblas_set_num_threads(int num_threads);
+#include "cblas.h"
+#include "lapacke.h"
 #endif
 #if defined(REF_BLAS_BLIS)
 void omp_set_num_threads(int num_threads);
@@ -336,7 +342,7 @@ int main()
 	//			scopy_(&n2, A, &i_1, B, &i_1);
 	//			ssyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
 	//			strmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
-	//			spotrf_(&c_l, &n, B2, &n, &info);
+				spotrf_(&c_l, &n, B2, &n, &info);
 	//			sgetrf_(&n, &n, B2, &n, ipiv, &info);
 	//			strsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
 	//			strsm_(&c_l, &c_u, &c_n, &c_n, &n, &n, &d_1, B2, &n, B, &n);
@@ -463,3 +469,16 @@ int main()
 	
 	}
 
+#else
+
+
+
+#include <stdio.h>
+
+int main()
+	{
+	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this test.\n\n");
+	return 0;
+	}
+
+#endif
