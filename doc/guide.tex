@@ -6,8 +6,6 @@
 %\usepackage{graphics}
 \usepackage{subfig}
 
-\newcommand{\software}[1]{\textsf{#1}}
-\newcommand{\code}[1]{\texttt{#1}}
 
 
 \title{BLASFEO reference guide}
@@ -37,9 +35,6 @@ https://arxiv.org/abs/1704.02457
 \end{verbatim}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\input{conventions.tex}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
@@ -53,6 +48,8 @@ BLASFEO comes in three implementations:
 \item high-performance (HP)
 \item wrapper to BLAS and LAPACK (WR)
 \end{itemize}
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -240,5 +237,7 @@ void blasfeo_print_dvec(int m, struct blasfeo_dvec *sx, int xi);
 \begin{verbatim}
 void blasfeo_print_tran_dvec(int m, struct blasfeo_dvec *sx, int xi);
 \end{verbatim}
+
+
 
 \end{document}
