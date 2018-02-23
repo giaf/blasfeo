@@ -269,7 +269,6 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgebp_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgelqf_4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemv_4_lib4.c
 
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
@@ -328,9 +327,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_12_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_8_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dsymv_6_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemv_4_lib4.c
 
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetrf_pivot_4_lib4.c
