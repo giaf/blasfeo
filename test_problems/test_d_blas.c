@@ -26,6 +26,9 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+
+#if defined(BENCHMARKS_MODE)
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/time.h>
@@ -51,15 +54,26 @@
 
 
 
+#if defined(REF_BLAS_NETLIB)
+#include "cblas.h"
+#include "lapacke.h"
+#endif
+
 #if defined(REF_BLAS_OPENBLAS)
 void openblas_set_num_threads(int num_threads);
+#include "cblas.h"
+#include "lapacke.h"
 #endif
+
 #if defined(REF_BLAS_BLIS)
 void omp_set_num_threads(int num_threads);
+#include "blis.h"
 #endif
+
 #if defined(REF_BLAS_MKL)
 #include "mkl.h"
 #endif
+
 
 
 
@@ -778,7 +792,7 @@ int main()
 				{
 	#if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
 //				dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, B, &n, &d_0, C, &n);
-	//			dpotrf_(&c_l, &n, B2, &n, &info);
+				dpotrf_(&c_l, &n, B2, &n, &info);
 	//			dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
 	//			dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
 	//			dtrmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
@@ -889,3 +903,16 @@ int main()
 	return 0;
 
 	}
+#else
+
+
+
+#include <stdio.h>
+
+int main()
+	{
+	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this test.\n\n");
+	return 0;
+	}
+
+#endif

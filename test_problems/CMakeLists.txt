@@ -25,20 +25,50 @@
 #                                                                                                 #
 ###################################################################################################
 
-add_executable(d_blas test_d_blas.c)
-target_link_libraries(d_blas blasfeo m)
-
-add_executable(s_blas test_s_blas.c)
-target_link_libraries(s_blas blasfeo m)
 
 add_executable(s_aux test_s_aux.c)
 add_executable(d_aux test_d_aux.c)
 
+target_link_libraries(d_aux blasfeo m)
+target_link_libraries(s_aux blasfeo m)
 
-if(BLASFEO_TESTING)
+
+if(BLASFEO_TESTING MATCHES ON)
 	target_link_libraries(d_aux blasfeo_ref)
 	target_link_libraries(s_aux blasfeo_ref)
 endif()
 
-target_link_libraries(d_aux blasfeo m)
-target_link_libraries(s_aux blasfeo m)
+add_executable(d_blas test_d_blas.c)
+add_executable(s_blas test_s_blas.c)
+
+target_link_libraries(d_blas blasfeo)
+target_link_libraries(s_blas blasfeo)
+
+# link blas external blas implementations
+if(BLASFEO_BENCHMARKS MATCHES ON)
+	if(${REF_BLAS} MATCHES OPENBLAS)
+		target_link_libraries(d_blas /opt/openblas/lib/libopenblas.a -pthread -lgfortran -lm)
+		target_link_libraries(s_blas /opt/openblas/lib/libopenblas.a -pthread -lgfortran -lm)
+	endif(${REF_BLAS} MATCHES OPENBLAS)
+
+	if(${REF_BLAS} MATCHES BLIS)
+		target_link_libraries(d_blas /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -fopenmp -lgfortran -lm)
+		target_link_libraries(s_blas /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -fopenmp -lgfortran -lm)
+	endif(${REF_BLAS} MATCHES BLIS)
+
+	if(${REF_BLAS} MATCHES NETLIB)
+		target_link_libraries(d_blas /opt/netlib/liblapack.a /opt/netlib/libblas.a -lgfortran -lm)
+		target_link_libraries(s_blas /opt/netlib/liblapack.a /opt/netlib/libblas.a -lgfortran -lm)
+	endif(${REF_BLAS} MATCHES NETLIB)
+
+	if(${REF_BLAS} MATCHES MKL)
+		target_link_libraries(d_blas -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/mkl/lib/intel64/libmkl_core.a /opt/intel/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm)
+		target_link_libraries(s_blas -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/mkl/lib/intel64/libmkl_core.a /opt/intel/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm)
+	endif(${REF_BLAS} MATCHES MKL)
+
+	if(${REF_BLAS} MATCHES ATLAS)
+		target_link_libraries(d_blas /opt/atlas/lib/liblapack.a /opt/atlas/lib/libcblas.a /opt/atlas/lib/libf77blas.a /opt/atlas/lib/libatlas.a -lgfortran -lm)
+		target_link_libraries(s_blas /opt/atlas/lib/liblapack.a /opt/atlas/lib/libcblas.a /opt/atlas/lib/libf77blas.a /opt/atlas/lib/libatlas.a -lgfortran -lm)
+	endif(${REF_BLAS} MATCHES ATLAS)
+
+endif()
