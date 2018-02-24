@@ -119,7 +119,6 @@ endif()
 
 if(BLASFEO_BENCHMARKS MATCHES ON)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBENCHMARKS_MODE=1")
-
 	if(NOT REF_BLAS)
 		message(FATAL_ERROR
 				"\nBENCHMARKS_MODE: No reference blas selected"
@@ -690,3 +689,4 @@ install(FILES ${BLASFEO_HEADERS} DESTINATION ${BLASFEO_HEADERS_INSTALLATION_DIRE
 
 # test problems
 add_subdirectory(test_problems)
+add_subdirectory(benchmarks)

@@ -203,6 +203,12 @@ CFLAGS  += -DOS_WINDOWS
 ASFLAGS += -DOS_WINDOWS
 endif
 
+# REF_BLAS
+
+ifndef REF_BLAS
+    REF_BLAS = 0
+endif
+
 ifeq ($(REF_BLAS), 0)
 CFLAGS  +=
 endif
