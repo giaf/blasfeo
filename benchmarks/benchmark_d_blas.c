@@ -911,7 +911,7 @@ int main()
 
 int main()
 	{
-	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this test.\n\n");
+	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n\n");
 	return 0;
 	}
 
