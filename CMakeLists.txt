@@ -33,8 +33,8 @@ project(blasfeo C ASM)
 
 
 # Target architecture
-# set(TARGET X64_INTEL_HASWELL)
-set(TARGET X64_INTEL_SANDY_BRIDGE CACHE STRING "Target architecture")
+set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")
+# set(TARGET X64_INTEL_SANDY_BRIDGE
 # set(TARGET X64_INTEL_CORE)
 # set(TARGET X64_AMD_BULLDOZER)
 # set(TARGET ARMV8A_ARM_CORTEX_A57)
@@ -119,7 +119,6 @@ endif()
 
 if(BLASFEO_BENCHMARKS MATCHES ON)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBENCHMARKS_MODE=1")
-
 	if(NOT REF_BLAS)
 		message(FATAL_ERROR
 				"\nBENCHMARKS_MODE: No reference blas selected"
@@ -278,11 +277,11 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemv_8_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dsymv_6_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgetrf_pivot_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgebp_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgelqf_4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemv_4_lib4.c
 
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgetr_lib4.c
@@ -340,9 +339,9 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_12_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_8_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dsymv_6_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemv_4_lib4.c
 
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetrf_pivot_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
@@ -688,5 +687,11 @@ install(EXPORT blasfeoConfig DESTINATION cmake)
 file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
 install(FILES ${BLASFEO_HEADERS} DESTINATION ${BLASFEO_HEADERS_INSTALLATION_DIRECTORY})
 
-# test problems
-add_subdirectory(test_problems)
+# tests
+add_subdirectory(tests)
+
+# benchmarks
+add_subdirectory(benchmarks)
+
+# examples
+add_subdirectory(examples)

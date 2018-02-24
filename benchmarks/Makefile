@@ -30,15 +30,14 @@
 include ../Makefile.rule
 
 BINARY_DIR = build/$(LA)/$(TARGET)
-
 LIBS = $(BINARY_DIR)/libblasfeo.a
 
 include ../Makefile.blas
 
 # all benchmarks
 OBJS =
-OBJS += benchmarks_d_blas.o
-OBJS += benchmarks_s_blas.o
+OBJS += benchmark_d_blas.o
+OBJS += benchmark_s_blas.o
 
 %.o: %.c
 	# build obj
@@ -60,9 +59,14 @@ default: build
 build: $(OBJS) common
 
 run:
-	./$(BINARY_DIR)/benchmarks_d_blas.o.out
-	./$(BINARY_DIR)/benchmarks_s_blas.o.out
+	./$(BINARY_DIR)/benchmark_d_blas.o.out
+	./$(BINARY_DIR)/benchmark_s_blas.o.out
 
 
 clean:
-	rm -rf build/*
+	rm -rf ./*.o
+	rm -rf ./*.out
+	rm -rf ./$(BINARY_DIR)/*
+
+clean_all: clean
+	rm -rf ./build/*

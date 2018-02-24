@@ -28,41 +28,57 @@
 
 include ../Makefile.rule
 
-ifeq ($(REF_BLAS), 0)
-LIBS = -lm 
-endif
-ifeq ($(REF_BLAS), OPENBLAS)
-LIBS = /opt/openblas/lib/libopenblas.a -pthread -lm
-endif
-ifeq ($(REF_BLAS), BLIS)
-LIBS = -lblis -lm -fopenmp
-endif
-ifeq ($(REF_BLAS), NETLIB)
-LIBS = /opt/netlib/liblapack.a /opt/netlib/libblas.a -lgfortran -lm
-endif
-ifeq ($(REF_BLAS), MKL)
-LIBS = -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/mkl/lib/intel64/libmkl_core.a /opt/intel/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm
-endif
+BINARY_DIR = build/$(LA)/$(TARGET)
+LIBS = $(BINARY_DIR)/libblasfeo.a
 
-ifneq ($(NUM_THREAD), 1)
-LIBS += -pthread 
-endif
+# add different link library for different REF_BLAS implementation
+include ../Makefile.blas
 
-#OBJS_TEST = example_d_lu_factorization.o
-#OBJS_TEST = example_s_lu_factorization.o
-OBJS_TEST = tools.o example_d_riccati_recursion.o
-#OBJS_TEST = tools.o example_s_riccati_recursion.o
 
-all: clean obj run
+LINK_OBJ =
+EX_OBJ =
 
-obj: $(OBJS_TEST)
-	$(CC) -o test.out $(OBJS_TEST) -L. ../lib/libblasfeo.a $(LIBS) #-pg
+## dgemm kernel
+EX_OBJ = example_kernel_dgemm.o
+LINK_OBJ = kernel_dgemm.o
+
+## factorization
+# EX_OBJ = example_d_lu_factorization.o
+# EX_OBJ = example_s_lu_factorization.o
+# LINK_OBJ = tools.o
+
+## riccati
+# EX_OBJ = example_d_riccati_recursion.o
+# EX_OBJ = example_s_riccati_recursion.o
+# LINK_OBJ = tools.o
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
+
+kernel_%.o: kernel_%.S
+	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
+
+$(EX_OBJ):%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
+	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ $(BINARY_DIR)/$(LINK_OBJ) -o $(BINARY_DIR)/$@.out $(LIBS)
+
+bin_dir:
+	mkdir -p ./$(BINARY_DIR)/
+
+common: bin_dir
+	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
+
+default: build
+
+build: $(LINK_OBJ) $(EX_OBJ) common
 
 run:
-	./test.out
+	./$(BINARY_DIR)/$(EX_OBJ).out
 
 clean:
-	rm -f *.o
-	rm -f test.out
-	rm -f libblasfeo.a
+	rm -rf ./*.o
+	rm -rf ./*.out
+	rm -rf ./$(BINARY_DIR)/*
 
+clean_all: clean
+	rm -rf ./build/*

@@ -9,6 +9,8 @@
 #include "../include/blasfeo_d_kernel.h"
 #include "../include/blasfeo_d_blas.h"
 
+int kernel_dgemm_nt_4x4_lib4_test(int n, double *alpha, double *A, double *B, double *beta, double *C, double *D);
+
 int main()
 	{
 

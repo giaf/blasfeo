@@ -1,9 +1,9 @@
 ###################################################################################################
 #                                                                                                 #
-# This file is part of BLASFEO.                                                                   #
+# This file is part of HPIPM.                                                                     #
 #                                                                                                 #
-# BLASFEO -- BLAS For Embedded Optimization.                                                      #
-# Copyright (C) 2016-2017 by Gianluca Frison.                                                     #
+# HPIPM -- High Performance Interior Point Method.                                                #
+# Copyright (C) 2017 by Gianluca Frison.                                                          #
 # Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              #
 # All rights reserved.                                                                            #
 #                                                                                                 #
@@ -21,37 +21,26 @@
 # License along with HPMPC; if not, write to the Free Software                                    #
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  #
 #                                                                                                 #
-# Author: Gianluca Frison, giaf (at) dtu.dk                                                       #
-#                          gianluca.frison (at) imtek.uni-freiburg.de                             #
+# Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             #
 #                                                                                                 #
 ###################################################################################################
 
 
-ifeq ($(REF_BLAS), 0)
-LIBS += -lm
-SHARED_LIBS += -lm
-endif
+add_executable(example_d_riccati_recursion example_d_riccati_recursion.c tools.c)
+add_executable(example_s_riccati_recursion example_s_riccati_recursion.c tools.c)
 
-ifeq ($(REF_BLAS), OPENBLAS)
-LIBS += /opt/openblas/lib/libopenblas.a -pthread -lgfortran -lm
-endif
+target_link_libraries(example_d_riccati_recursion blasfeo m)
+target_link_libraries(example_s_riccati_recursion blasfeo m)
 
-ifeq ($(REF_BLAS), BLIS)
-LIBS += /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -lgfortran -lm -fopenmp
-endif
+add_executable(example_d_lu_factorization example_d_lu_factorization.c)
+add_executable(example_s_lu_factorization example_s_lu_factorization.c)
 
-ifeq ($(REF_BLAS), NETLIB)
-LIBS += /opt/netlib/liblapack.a /opt/netlib/libblas.a -lgfortran -lm
-endif
+target_link_libraries(example_d_lu_factorization blasfeo m)
+target_link_libraries(example_s_lu_factorization blasfeo m)
 
-ifeq ($(REF_BLAS), MKL)
-LIBS += -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/mkl/lib/intel64/libmkl_core.a /opt/intel/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm 
-endif
+add_executable(example_kernel_dgemm example_kernel_dgemm.c kernel_dgemm.S)
+target_link_libraries(example_kernel_dgemm blasfeo m)
 
-ifeq ($(REF_BLAS), ATLAS)
-LIBS += /opt/atlas/lib/liblapack.a /opt/atlas/lib/libcblas.a /opt/atlas/lib/libf77blas.a /opt/atlas/lib/libatlas.a -lgfortran -lm
-endif
 
-ifneq ($(NUM_THREAD), 1)
-LIBS += -pthread
-endif
+
+
