@@ -687,6 +687,8 @@ install(EXPORT blasfeoConfig DESTINATION cmake)
 file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
 install(FILES ${BLASFEO_HEADERS} DESTINATION ${BLASFEO_HEADERS_INSTALLATION_DIRECTORY})
 
-# test problems
-add_subdirectory(test_problems)
+# tests
+add_subdirectory(tests)
+
+# benchmarks
 add_subdirectory(benchmarks)

@@ -565,7 +565,7 @@ clean:
 
 # clean test problems
 clean_test_problems:
-	make -C test_problems clean
+	make -C tests clean
 
 
 # deep clean
@@ -574,7 +574,7 @@ deep_clean: clean clean_test_problems
 	rm -f ./lib/libblasfeo.a
 	rm -f ./lib/libblasfeo.so
 
-# directory for test problems binaries
+# directory for tests  binaries
 BINARY_DIR = build/$(LA)/$(TARGET)
 
 ### benchmarks
@@ -594,52 +594,52 @@ benchmarks: deploy_to_benchmarks build_benchmarks
 run_benchmarks:
 	make -C benchmarks run
 
-### test problems
+### tests
 
 # copy static library into test path
 deploy_to_test:
-	mkdir -p ./test_problems/$(BINARY_DIR)
-	cp ./lib/libblasfeo.a ./test_problems/$(BINARY_DIR)/
+	mkdir -p ./tests/$(BINARY_DIR)
+	cp ./lib/libblasfeo.a ./tests/$(BINARY_DIR)/
 ifeq ($(TESTING_MODE), 1)
-	cp ./lib/libblasfeo_ref.a ./test_problems/$(BINARY_DIR)/
+	cp ./lib/libblasfeo_ref.a ./tests/$(BINARY_DIR)/
 endif
 
 # one single test
 build_test:
-	make -C test_problems one_test
+	make -C tests one_test
 	@echo
-	@echo " Test problem build complete."
+	@echo " Tests build complete."
 	@echo
 
 test: deploy_to_test build_test
 
 # aux test
 build_test_aux:
-	make -C test_problems aux
+	make -C tests aux
 	@echo
-	@echo " Test problem build complete."
+	@echo " Tests build complete."
 	@echo
 
 run_test_aux:
-	make -C test_problems run_aux
+	make -C tests run_aux
 
 test_aux: deploy_to_test build_test_aux
 
 
 # blas test
 build_test_blas:
-	make -C test_problems blas
+	make -C tests blas
 	@echo
-	@echo " Test problem build complete."
+	@echo " Tests build complete."
 	@echo
 
 run_test_blas:
-	make -C test_problems run_blas
+	make -C tests run_blas
 
 test_blas: deploy_to_test build_test_blas
 
 run_test:
-	make -C test_problems run
+	make -C tests run
 
 
 # deep build library (take into account flags changes)
