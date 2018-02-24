@@ -26,14 +26,14 @@
 ###################################################################################################
 
 
+add_executable(benchmark_d_blas benchmark_d_blas.c)
+add_executable(benchmark_s_blas benchmark_s_blas.c)
+
+target_link_libraries(benchmark_d_blas blasfeo)
+target_link_libraries(benchmark_s_blas blasfeo)
+
 # link blas external blas implementations
 if(BLASFEO_BENCHMARKS MATCHES ON)
-	add_executable(benchmark_d_blas benchmark_d_blas.c)
-	add_executable(benchmark_s_blas benchmark_s_blas.c)
-
-	target_link_libraries(benchmark_d_blas blasfeo)
-	target_link_libraries(benchmark_s_blas blasfeo)
-
 	if(${REF_BLAS} MATCHES OPENBLAS)
 		target_link_libraries(benchmark_d_blas /opt/openblas/lib/libopenblas.a -pthread -lgfortran -lm)
 		target_link_libraries(benchmark_s_blas /opt/openblas/lib/libopenblas.a -pthread -lgfortran -lm)
