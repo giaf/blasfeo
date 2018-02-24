@@ -613,7 +613,7 @@ run_examples:
 ### tests
 
 # copy static library into test path
-deploy_to_test:
+deploy_to_tests:
 	mkdir -p ./tests/$(BINARY_DIR)
 	cp ./lib/libblasfeo.a ./tests/$(BINARY_DIR)/
 ifeq ($(TESTING_MODE), 1)
@@ -622,52 +622,52 @@ endif
 
 # test one, one single test
 
-build_test_one:
+build_tests_one:
 	make -C tests one
 	@echo
 	@echo " Build test_one complete."
 	@echo
 
-test_one: deploy_to_test build_test_one
+tests_one: deploy_to_tests build_tests_one
 
-run_test_one:
+run_tests_one:
 	make -C tests run_one
 
 # aux test
-build_test_aux:
+build_tests_aux:
 	make -C tests aux
 	@echo
-	@echo " Build test_aux complete."
+	@echo " Build tests_aux complete."
 	@echo
 
-test_aux: deploy_to_test build_test_aux
+tests_aux: deploy_to_tests build_tests_aux
 
-run_test_aux:
+run_tests_aux:
 	make -C tests run_aux
 
 # blas test
-build_test_blas:
+build_tests_blas:
 	make -C tests blas
 	@echo
-	@echo " Build test_blas complete."
+	@echo " Build tests_blas complete."
 	@echo
 
-test_blas: deploy_to_test build_test_blas
+tests_blas: deploy_to_tests build_tests_blas
 
-run_test_blas:
+run_tests_blas:
 	make -C tests run_blas
 
 ### shortcuts
 
-test_all: test_aux test_blas
-run_test_all: run_test_blas run_test_aux
-build_test_all: build_test_blas build_test_aux
+tests_all: tests_aux tests_blas
+run_tests_all: run_tests_blas run_tests_aux
+build_tests_all: build_tests_blas build_tests_aux
 
-test_clean_all:
+tests_clean_all:
 	make -C tests clean_all
-example_clean_all:
+examples_clean_all:
 	make -C examples clean_all
-benchmark_clean_all:
+benchmarks_clean_all:
 	make -C benchmarks clean_all
 
 # test_rebuild: if tests sources is modified
