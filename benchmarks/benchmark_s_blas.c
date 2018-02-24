@@ -485,7 +485,8 @@ int main()
 
 int main()
 	{
-	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n\n");
+	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n");
+	printf("On CMake use -DBLASFEO_BENCHMARKS=ON .\n\n");
 	return 0;
 	}
 
