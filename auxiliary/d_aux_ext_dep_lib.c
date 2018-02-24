@@ -26,11 +26,7 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
-
 #include "../include/blasfeo_block_size.h"
-#include "../include/blasfeo_common.h"
 
 #define REAL double
 #define STRMAT blasfeo_dmat

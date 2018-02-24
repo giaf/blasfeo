@@ -27,9 +27,7 @@
 **************************************************************************************************/
 
 #include <stdlib.h>
-#if defined(DIM_CHECK)
 #include <stdio.h>
-#endif
 
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_s_kernel.h"
