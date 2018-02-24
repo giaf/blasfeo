@@ -64,6 +64,9 @@ set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled")
 # (for memory allocation and printing)
 set(EXT_DEP ON CACHE BOOL "Compile external dependencies in BLASFEO")
 
+set(MIN_KERNEL_SIZE 2x2 CACHE STRING "Minimum kernel size")
+# set(MIN_KERNEL_SIZE 4x4 CACHE STRING "Minimum kernel size")
+
 configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
 
@@ -126,6 +129,11 @@ if(BLASFEO_BENCHMARKS MATCHES ON)
 	endif()
 endif()
 
+if(MIN_KERNEL_SIZE MATCHES 2x2)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMIN_KERNEL_SIZE=2")
+elseif(MIN_KERNEL_SIZE MATCHES 4x4)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMIN_KERNEL_SIZE=4")
+endif()
 
 # search directories
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${BLASFEO_PATH}/include")
