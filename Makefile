@@ -560,19 +560,18 @@ clean:
 	make -C kernel clean
 	make -C blas clean
 	make -C examples clean
+	make -C tests clean
 	make -C benchmarks clean
 
 
-# clean test problems
-clean_test_problems:
-	make -C tests clean
-
-
 # deep clean
-deep_clean: clean clean_test_problems
+deep_clean: clean
 	rm -f ./include/blasfeo_target.h
 	rm -f ./lib/libblasfeo.a
 	rm -f ./lib/libblasfeo.so
+	make -C examples clean_all
+	make -C tests clean_all
+	make -C benchmarks clean_all
 
 # directory for tests  binaries
 BINARY_DIR = build/$(LA)/$(TARGET)
@@ -593,6 +592,23 @@ benchmarks: deploy_to_benchmarks build_benchmarks
 
 run_benchmarks:
 	make -C benchmarks run
+
+### examples
+
+deploy_to_examples:
+	mkdir -p ./examples/$(BINARY_DIR)/
+	cp ./lib/libblasfeo.a ./examples/$(BINARY_DIR)/
+
+build_examples:
+	make -C examples build
+	@echo
+	@echo "Examples build complete."
+	@echo
+
+examples: deploy_to_examples build_examples
+
+run_examples:
+	make -C examples run
 
 ### tests
 

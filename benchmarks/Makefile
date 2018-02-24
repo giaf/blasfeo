@@ -64,4 +64,9 @@ run:
 
 
 clean:
-	rm -rf build/*
+	rm -rf ./*.o
+	rm -rf ./*.out
+	rm -rf ./$(BINARY_DIR)/*
+
+clean_all: clean
+	rm -rf ./build/*
