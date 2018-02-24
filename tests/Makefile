@@ -59,8 +59,8 @@ AUX_OBJS += test_s_aux.o
 
 # blas test
 BLAS_OBJS =
-BLAS_OBJS += test_d_blas.o
-BLAS_OBJS += test_s_blas.o
+# BLAS_OBJS += test_d_blas.o
+# BLAS_OBJS += test_s_blas.o
 
 test_%.o: test_%.c
 	@echo
@@ -99,8 +99,8 @@ run_aux:
 	./$(BINARY_DIR)/test_s_aux.o.out
 
 run_blas:
-	./$(BINARY_DIR)/test_d_blas.o.out
-	./$(BINARY_DIR)/test_s_blas.o.out
+	# ./$(BINARY_DIR)/test_d_blas.o.out
+	# ./$(BINARY_DIR)/test_s_blas.o.out
 
 clean:
 	rm -rf ./*.o
