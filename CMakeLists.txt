@@ -692,3 +692,6 @@ add_subdirectory(tests)
 
 # benchmarks
 add_subdirectory(benchmarks)
+
+# examples
+add_subdirectory(examples)
