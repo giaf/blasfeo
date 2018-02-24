@@ -620,63 +620,64 @@ ifeq ($(TESTING_MODE), 1)
 	cp ./lib/libblasfeo_ref.a ./tests/$(BINARY_DIR)/
 endif
 
-# one single test
-build_test:
-	make -C tests one_test
+# test one, one single test
+
+build_test_one:
+	make -C tests one
 	@echo
-	@echo " Tests build complete."
+	@echo " Build test_one complete."
 	@echo
 
-test: deploy_to_test build_test
+test_one: deploy_to_test build_test_one
+
+run_test_one:
+	make -C tests run_one
 
 # aux test
 build_test_aux:
 	make -C tests aux
 	@echo
-	@echo " Tests build complete."
+	@echo " Build test_aux complete."
 	@echo
-
-run_test_aux:
-	make -C tests run_aux
 
 test_aux: deploy_to_test build_test_aux
 
+run_test_aux:
+	make -C tests run_aux
 
 # blas test
 build_test_blas:
 	make -C tests blas
 	@echo
-	@echo " Tests build complete."
+	@echo " Build test_blas complete."
 	@echo
+
+test_blas: deploy_to_test build_test_blas
 
 run_test_blas:
 	make -C tests run_blas
 
-test_blas: deploy_to_test build_test_blas
+### shortcuts
 
-run_test:
-	make -C tests run
+test_all: test_aux test_blas
+run_test_all: run_test_blas run_test_aux
+build_test_all: build_test_blas build_test_aux
 
+test_clean_all:
+	make -C tests clean_all
+example_clean_all:
+	make -C examples clean_all
+benchmark_clean_all:
+	make -C benchmarks clean_all
 
-# deep build library (take into account flags changes)
-# copy library
-# build tests
-test_aux_clean: clean static_library test_aux
+# test_rebuild: if tests sources is modified
+# build tests (use existing library); run tests
+update_test: build_test_all run_test_all
 
-# build tests (use existing library)
-# run tests
-update_test_aux: build_test_aux run_test_aux
+# lib_rebuild: modified blasfeo lib code
+# build lib; copy lib; build test; run test
+update_lib_test: static_library test_all run_test_all
 
-# build library
-# copy library
-# build test
-# run test
-update_lib_test_aux: static_library test_aux run_test_aux
-
-# deep build library (take into account flags changes)
-# copy library
-# build test
-# run test
-update_target_test_aux: test_aux_clean run_test_aux
-
-
+# hard_rebuild: modified blasfeo lib flags affecting macros
+# delete lib; build lib; copy lib; build test; run test
+update_deep_test: clean static_library test_all run_test_all
