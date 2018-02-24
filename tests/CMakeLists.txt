@@ -28,12 +28,15 @@
 
 add_executable(test_s_aux test_s_aux.c)
 add_executable(test_d_aux test_d_aux.c)
+add_executable(test_d_blas3 test_d_blas3.c)
 
 target_link_libraries(test_d_aux blasfeo m)
 target_link_libraries(test_s_aux blasfeo m)
+target_link_libraries(test_d_blas3 blasfeo m)
 
 
 if(BLASFEO_TESTING MATCHES ON)
 	target_link_libraries(test_d_aux blasfeo_ref)
 	target_link_libraries(test_s_aux blasfeo_ref)
+	target_link_libraries(test_d_blas3 blasfeo_ref)
 endif()

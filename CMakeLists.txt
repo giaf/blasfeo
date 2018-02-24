@@ -660,6 +660,7 @@ if(BLASFEO_TESTING MATCHES ON)
 		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_libref.c
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_libref.c
 		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_libref.c
+		${PROJECT_SOURCE_DIR}/blas/d_blas3_libref.c
 		)
 
 	set(BLASFEO_REF_SRC ${AUX_REF_SRC})
