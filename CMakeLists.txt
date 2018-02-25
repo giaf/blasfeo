@@ -41,12 +41,12 @@ set(TARGET X64_INTEL_SANDY_BRIDGE)
 #set(TARGET GENERIC)
 
 # Linear Algebra library
-set(LA HIGH_PERFORMANCE)
+set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra optimization level")
 #set(LA REFERENCE)
 #set(LA BLAS)
 
 # BLAS and LAPACK version (for LA=BLAS in BLASFEO)
-set(REF_BLAS 0)
+set(REF_BLAS 0 CACHE STRING "Reference blas to use")
 #set(REF_BLAS OPENBLAS)
 #set(REF_BLAS NETLIB)
 #set(REF_BLAS MKL)
@@ -54,21 +54,32 @@ set(REF_BLAS 0)
 #set(REF_BLAS ATLAS)
 
 # Compile auxiliary functions with external dependencies (for memory allocation and printing)
-#set(EXT_DEP 0)
-set(EXT_DEP 1)
+#set(EXT_DEP "")
+set(EXT_DEP "EXT_DEP")
+
+configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
+	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
 
 # operating system
-set(OS LINUX)
+set(OS LINUX CACHE STRING "Operating system")
 #set(OS MAC)
 #set(OS WINDOWS)
 
 # C Compiler
-set(CC_COMPILER gcc)
+set(CC_COMPILER gcc CACHE STRING "compiler")
 #set(CC_COMPILER clang)
 #set(CC_COMPILER x86_64-w64-mingw32-gcc)
 
+# build shared library
+#set(BUILD_SHARED_LIBS ON CACHE STRING "Build shared libraries")
+
 # installation directory
-set(PREFIX /opt)
+if(CMAKE_INSTALL_PREFIX MATCHES "/usr/local")
+	set(CMAKE_INSTALL_PREFIX "/opt/blasfeo")
+endif()
+
+# headers installation directory
+set(BLASFEO_HEADERS_INSTALLATION_DIRECTORY "include" CACHE STRING "Headers local installation directory")
 
 # Macro level (code size vs performance in assembly kernels): 0 (no macro), 1 (all macro but gemm kernel), 2 (all macro)
 set(MACRO_LEVEL 0)
@@ -78,15 +89,18 @@ set(RUNTIME_CHECKS 0)
 #set(RUNTIME_CHECKS 0)
 
 # compiler flags
-set(CMAKE_C_FLAGS "")
-set(CMAKE_ASM_FLAGS "")
-
-# optimization flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -fPIC")
-
-# debugging flags
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
-#set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -g")
+if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+	set(CMAKE_C_FLAGS "")
+	set(CMAKE_ASM_FLAGS "")
+	set(CMAKE_C_FLAGS_RELEASE "")
+	set(CMAKE_ASM_FLAGS_RELEASE "")
+	# optimization flags
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+	# debugging flags
+	#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
+	#set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -g")
+endif()
 
 # search directories
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${BLASFEO_PATH}/include") XXX
@@ -94,31 +108,31 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -fPIC")
 #
 if(${LA} MATCHES HIGH_PERFORMANCE)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_HIGH_PERFORMANCE")
-endif(${LA} MATCHES HIGH_PERFORMANCE)
+endif()
 if(${LA} MATCHES REFERENCE)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_REFERENCE")
-endif(${LA} MATCHES REFERENCE)
+endif()
 if(${LA} MATCHES BLAS)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_BLAS")
-endif(${LA} MATCHES BLAS)
+endif()
 
 #
 if(${RUNTIME_CHECKS} MATCHES 1)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDIM_CHECK")
-endif(${RUNTIME_CHECKS} MATCHES 1)
+endif()
 
 #
-if(${EXT_DEP} MATCHES 1)
+if(${EXT_DEP})
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DEXT_DEP")
-endif(${EXT_DEP} MATCHES 1)
+endif()
 
 #
 if(${MACRO_LEVEL} MATCHES 1)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMACRO_LEVEL=1")
-endif(${MACRO_LEVEL} MATCHES 1)
+endif()
 if(${MACRO_LEVEL} MATCHES 2)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMACRO_LEVEL=2")
-endif(${MACRO_LEVEL} MATCHES 2)
+endif()
 
 #
 if(${OS} MATCHES LINUX)
@@ -156,28 +170,53 @@ endif(${REF_BLAS} MATCHES ATLAS)
 
 # architecture-specific flags
 if(${TARGET} MATCHES X64_INTEL_HASWELL)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx2 -mfma -DTARGET_X64_INTEL_HASWELL")
-endif(${TARGET} MATCHES X64_INTEL_HASWELL)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_INTEL_HASWELL")
+	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+		set()
+	endif()
+endif()
+
 if(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx -DTARGET_X64_INTEL_SANDY_BRIDGE")
-endif(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_INTEL_SANDY_BRIDGE")
+	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx")
+	endif()
+endif()
+
 if(${TARGET} MATCHES X64_INTEL_CORE)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -msse3 -DTARGET_X64_INTEL_CORE")
-endif(${TARGET} MATCHES X64_INTEL_CORE)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_INTEL_CORE")
+	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -msse3")
+	endif()
+endif()
+
 if(${TARGET} MATCHES X64_AMD_BULLDOZER)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx -mfma -DTARGET_X64_AMD_BULLDOZER")
-endif(${TARGET} MATCHES X64_AMD_BULLDOZER)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_AMD_BULLDOZER")
+	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx -mfma")
+	endif()
+endif()
+
 if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc+crypto+fp+simd -DTARGET_ARMV8A_ARM_CORTEX_A57")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV8A_ARM_CORTEX_A57")
 	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV8A_ARM_CORTEX_A57")
-endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
+	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc+crypto+fp+simd")
+	endif()
+endif()
+
 if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15 -DTARGET_ARMV7A_ARM_CORTEX_A15")
-	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -mfpu=neon-vfpv4 -DTARGET_ARMV7A_ARM_CORTEX_A15")
-endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV7A_ARM_CORTEX_A15")
+	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV7A_ARM_CORTEX_A15")
+	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15")
+		set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -mfpu=neon-vfpv4")
+	endif()
+endif()
+
 if(${TARGET} MATCHES GENERIC)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_GENERIC")
-endif(${TARGET} MATCHES GENERIC)
+endif()
 
 
 
@@ -192,6 +231,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/auxiliary/avx/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/avx2/kernel_dgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib8.c
+			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib48.c
 			)
 
 		file(GLOB KERNEL_SRC
@@ -212,6 +252,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_16x4_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_8x8_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_8x4_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_diag_lib8.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgead_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecp_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgesc_lib8.S
@@ -223,12 +265,15 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		file(GLOB BLAS_SRC
 			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib8.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib8.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib8.c
 			)
 
@@ -241,6 +286,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/auxiliary/avx/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/avx/kernel_dgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib8.c
+			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib48.c
 			)
 
 		file(GLOB KERNEL_SRC
@@ -259,6 +305,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_16x4_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x8_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x4_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_diag_lib8.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgead_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecp_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgesc_lib8.S
@@ -270,12 +318,15 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		file(GLOB BLAS_SRC
 			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib8.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib8.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib8.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib8.c
 			)
 
@@ -289,6 +340,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgetr_lib4.c 
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_sgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
 			)
 
 		file(GLOB KERNEL_SRC
@@ -310,11 +362,13 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		file(GLOB BLAS_SRC
 			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
@@ -330,6 +384,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgetr_lib4.c 
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_sgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
 			)
 
 		file(GLOB KERNEL_SRC
@@ -351,11 +406,13 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		file(GLOB BLAS_SRC
 			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
@@ -371,6 +428,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgetr_lib4.c 
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_sgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
 			)
 
 		file(GLOB KERNEL_SRC
@@ -398,11 +456,13 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		file(GLOB BLAS_SRC
 			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
@@ -418,6 +478,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgetr_lib4.c 
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_sgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
 			)
 
 		file(GLOB KERNEL_SRC
@@ -442,11 +503,13 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		file(GLOB BLAS_SRC
 			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
@@ -462,6 +525,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_dgetr_lib4.c 
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/c99/kernel_sgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
 			)
 
 		file(GLOB KERNEL_SRC
@@ -482,11 +546,13 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		file(GLOB BLAS_SRC
 			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
@@ -499,16 +565,19 @@ else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 	file(GLOB AUX_SRC
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib.c
 		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib.c
+		${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib.c
 		)
 
 	file(GLOB BLAS_SRC
 		${PROJECT_SOURCE_DIR}/blas/d_blas1_lib.c
 		${PROJECT_SOURCE_DIR}/blas/d_blas2_lib.c
+		${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
 		${PROJECT_SOURCE_DIR}/blas/d_blas3_lib.c
 		${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib.c
 		${PROJECT_SOURCE_DIR}/blas/d_lapack_lib.c
 		${PROJECT_SOURCE_DIR}/blas/s_blas1_lib.c
 		${PROJECT_SOURCE_DIR}/blas/s_blas2_lib.c
+		${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
 		${PROJECT_SOURCE_DIR}/blas/s_blas3_lib.c
 		${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib.c
 		${PROJECT_SOURCE_DIR}/blas/s_lapack_lib.c
@@ -516,7 +585,7 @@ else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 
 endif(${LA} MATCHES HIGH_PERFORMANCE)
 
-if(${EXT_DEP} MATCHES 1)
+if(${EXT_DEP})
 
 	file(GLOB EXT_SRC
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_lib.c
@@ -525,15 +594,20 @@ if(${EXT_DEP} MATCHES 1)
 		${PROJECT_SOURCE_DIR}/auxiliary/i_aux_ext_dep_lib.c
 		)
 
-endif(${EXT_DEP} MATCHES 1)
+endif()
 
 set(BLASFEO_SRC ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
 
 # add library
 add_library(blasfeo ${BLASFEO_SRC})
-#add_library(blasfeo SHARED ${BLASFEO})
 
-#target_link_libraries(hpipm)
+install(TARGETS blasfeo
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
+	RUNTIME DESTINATION bin)
+
+file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
+install(FILES ${BLASFEO_HEADERS} DESTINATION ${BLASFEO_HEADERS_INSTALLATION_DIRECTORY})
 
 # test problems
 add_subdirectory(test_problems)

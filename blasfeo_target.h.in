@@ -1,0 +1,11 @@
+#ifndef TARGET_@TARGET@
+#define TARGET_@TARGET@
+#endif
+
+#ifndef LA_@LA@
+#define LA_@LA@
+#endif
+
+#ifndef @EXT_DEP@
+#define @EXT_DEP@
+#endif
