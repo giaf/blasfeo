@@ -1357,8 +1357,8 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 				}
 			m -= 2*ps-air;
 			pA += 2*ps*sda;
-			pC += 2*ps*sda;
-			pD += 2*ps*sda;
+			pC += 2*ps*sdc;
+			pD += 2*ps*sdd;
 			}
 		else // m-i<=4
 			{
@@ -1368,10 +1368,10 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 				{
 				kernel_dgemm_nn_4x4_gen_lib4(k, &alpha, &pA[0], offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
 				}
-			m -= 2*ps-air;
-			pA += 2*ps*sda;
-			pC += 2*ps*sda;
-			pD += 2*ps*sda;
+			m -= 1*ps-air;
+			pA += 1*ps*sda;
+			pC += 1*ps*sdc;
+			pD += 1*ps*sdd;
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 			// nothing more to do
 //			return;
