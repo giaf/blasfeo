@@ -54,9 +54,10 @@ common: bin_dir
 	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
 	echo $(OBJS)
 
-default: build
+.DEFAULT_GOAL := build
+.PHONY: build
 
-build: $(OBJS) common
+build: common $(OBJS)
 
 run:
 	./$(BINARY_DIR)/benchmark_d_blas.o.out

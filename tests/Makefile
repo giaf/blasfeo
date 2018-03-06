@@ -71,6 +71,9 @@ test_%.o: test_%.c
 
 # ----------- Targets
 
+.DEFAULT_GOAL := build
+.PHONY: build
+
 default: obj
 
 obj: aux blas
