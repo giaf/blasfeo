@@ -258,31 +258,19 @@ int main()
 
 
 							// gemm_nn D <- alpha*A*B + beta*C
+							printf(
+								"Calling D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
+								ii, ni, jj, nj,
+								alpha, ii, ni, jj, nk,
+								ii, nk, jj, nj,
+								beta, ii, ni, jj, nj);
+
 							blasfeo_dgemm_nn(ni, nj, nk, alpha, &sA, ii, jj, &sB, ii, jj, beta, &sC, ii, jj, &sD, ii, jj);
 							blasfeo_dgemm_nn_ref(ni, nj, nk, alpha, &rA, ii, jj, &rB, ii, jj, beta, &rC, ii, jj, &rD, ii, jj);
 
 							int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, 1);
 
-							if (!res)
-								{
-								bad_calls += 1;
-								printf(
-									"Mismatch at D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
-									ii, ni, jj, nj,
-									alpha, ii, ni, jj, nk,
-									ii, nk, jj, nj,
-									beta, ii, ni, jj, nj);
-								}
-							else
-								{
-								/* printf( */
-									/* "Correct at D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n", */
-									/* ii, ni, jj, nj, */
-									/* alpha, ii, ni, jj, nk, */
-									/* ii, nk, jj, nj, */
-									/* beta, ii, ni, jj, nj); */
-								}
-
+							if (!res) bad_calls += 1;
 							assert(res);
 
 							}
