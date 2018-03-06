@@ -1312,6 +1312,7 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	int air = ai & (ps-1);
 	int bir = bi & (ps-1);
 
+	// pA, pB point to panels edges
 	double *pA = sA->pA + aj*ps + (ai-air)*sda;
 	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
 	double *pC = sC->pA + cj*ps;

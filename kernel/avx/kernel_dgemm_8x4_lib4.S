@@ -212,7 +212,7 @@ _inner_kernel_dgemm_add_nt_8x4_lib4:
 inner_kernel_dgemm_add_nt_8x4_lib4:
 #endif
 #endif
-	
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
@@ -231,7 +231,7 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	// main loop
 	.p2align 3
 1: // main loop
-	
+
 	// unroll 0
 	vmovapd 32(%r13), %ymm13 // B[4]
 	vmulpd	%ymm8, %ymm12, %ymm15
@@ -350,11 +350,11 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	vaddpd	%ymm6, %ymm15, %ymm6
 
 	cmpl	$4, %r10d
-	jg		1b // main loop 
+	jg		1b // main loop
 
 
 0: // consider clean4-up
-	
+
 	cmpl	$3, %r10d
 	jle		4f // clean1
 
@@ -487,7 +487,7 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 
 	// clean-up loop
 3: // clean up loop
-	
+
 	vmovapd 0(%r13), %ymm12 // B[0]
 	vmovapd 0(%r11), %ymm8 // A0[0]
 //	vmovapd 0(%r15), %ymm9 // A1[0]
@@ -520,7 +520,7 @@ inner_kernel_dgemm_add_nt_8x4_lib4:
 	vaddpd	%ymm6, %ymm15, %ymm6
 
 	cmpl	$0, %r10d
-	jg		3b // clean up loop 
+	jg		3b // clean up loop
 
 
 2: // return
@@ -602,7 +602,7 @@ _inner_kernel_dgemm_sub_nt_8x4_lib4:
 inner_kernel_dgemm_sub_nt_8x4_lib4:
 #endif
 #endif
-	
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
@@ -617,7 +617,7 @@ inner_kernel_dgemm_sub_nt_8x4_lib4:
 	// main loop
 	.p2align 3
 1: // main loop
-	
+
 	// unroll 0
 	vmovapd 32(%r13), %ymm13 // B[4]
 	vmulpd	%ymm8, %ymm12, %ymm15
@@ -731,11 +731,11 @@ inner_kernel_dgemm_sub_nt_8x4_lib4:
 	vmulpd	%ymm11, %ymm14, %ymm15
 	vsubpd	%ymm15, %ymm6, %ymm6
 
-	jg		1b // main loop 
+	jg		1b // main loop
 
 
 0: // consider clean4-up
-	
+
 	cmpl	$3, %r10d
 	jle		4f // clean1
 
@@ -863,7 +863,7 @@ inner_kernel_dgemm_sub_nt_8x4_lib4:
 
 	// clean-up loop
 3: // clean up loop
-	
+
 	vmovapd 0(%r13), %ymm12 // B[0]
 	vmovapd 0(%r11), %ymm8 // A0[0]
 	vmovapd 0(%r11, %r12, 1), %ymm9 // A1[0]
@@ -895,7 +895,7 @@ inner_kernel_dgemm_sub_nt_8x4_lib4:
 
 	cmpl	$0, %r10d
 
-	jg		3b // clean up loop 
+	jg		3b // clean up loop
 
 
 2: // return
@@ -981,7 +981,7 @@ _inner_kernel_dgemm_add_nn_8x4_lib4:
 inner_kernel_dgemm_add_nn_8x4_lib4:
 #endif
 #endif
-	
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
@@ -1112,10 +1112,10 @@ inner_kernel_dgemm_add_nn_8x4_lib4:
 
 
 	cmpl	$4, %r10d
-	jg		1b // main loop 
+	jg		1b // main loop
 
 0: // consider clean4-up
-	
+
 	cmpl	$3, %r10d
 	jle		4f // clean1
 
@@ -1241,7 +1241,7 @@ inner_kernel_dgemm_add_nn_8x4_lib4:
 
 	// clean-up loop
 3: // clean up loop
-	
+
 	vmovapd			0(%r11), %ymm8 // A0[0]
 	vmovapd 		0(%r11, %r12, 1), %ymm9 // A1[0]
 	vbroadcastsd	0(%r13), %ymm12
@@ -1272,7 +1272,7 @@ inner_kernel_dgemm_add_nn_8x4_lib4:
 	addq	$8, %r13
 
 	cmpl	$0, %r10d
-	jg		3b // clean up loop 
+	jg		3b // clean up loop
 
 2: // return
 
@@ -1357,7 +1357,7 @@ _inner_kernel_dgemm_sub_nn_8x4_lib4:
 inner_kernel_dgemm_sub_nn_8x4_lib4:
 #endif
 #endif
-	
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
@@ -1488,10 +1488,10 @@ inner_kernel_dgemm_sub_nn_8x4_lib4:
 
 
 	cmpl	$4, %r10d
-	jg		1b // main loop 
+	jg		1b // main loop
 
 0: // consider clean4-up
-	
+
 	cmpl	$3, %r10d
 	jle		4f // clean1
 
@@ -1617,7 +1617,7 @@ inner_kernel_dgemm_sub_nn_8x4_lib4:
 
 	// clean-up loop
 3: // clean up loop
-	
+
 	vmovapd			0(%r11), %ymm8 // A0[0]
 	vmovapd 		0(%r11, %r12, 1), %ymm9 // A1[0]
 	vbroadcastsd	0(%r13), %ymm12
@@ -1648,7 +1648,7 @@ inner_kernel_dgemm_sub_nn_8x4_lib4:
 	addq	$8, %r13
 
 	cmpl	$0, %r10d
-	jg		3b // clean up loop 
+	jg		3b // clean up loop
 
 2: // return
 
@@ -1721,7 +1721,7 @@ _inner_kernel_dgemm_add_nn_4x8_lib4:
 inner_kernel_dgemm_add_nn_4x8_lib4:
 #endif
 #endif
-	
+
 	cmpl	$0, %r10d
 	jle		2f // return
 
@@ -1852,11 +1852,11 @@ inner_kernel_dgemm_add_nn_4x8_lib4:
 	addq	%r13, %r12
 
 	cmpl	$4, %r10d
-	jg		1b // main loop 
+	jg		1b // main loop
 
 
 0: // consider clean4-up
-	
+
 	cmpl	$3, %r10d
 	jle		4f // clean1
 
@@ -1981,7 +1981,7 @@ inner_kernel_dgemm_add_nn_4x8_lib4:
 
 	// clean-up loop
 3: // clean up loop
-	
+
 	// unroll 0
 	vmovapd			0(%r11), %ymm13 // A
 	vbroadcastsd	0(%r12), %ymm12 // B
@@ -2014,7 +2014,7 @@ inner_kernel_dgemm_add_nn_4x8_lib4:
 	subl	$1, %r10d
 
 	cmpl	$0, %r10d
-	jg		3b // clean up loop 
+	jg		3b // clean up loop
 
 
 2: // return
@@ -2290,7 +2290,7 @@ _inner_edge_dgemm_add_nn_8x4_lib4:
 inner_edge_dgemm_add_nn_8x4_lib4:
 #endif
 #endif
-	
+
 	cmpl			$0, %r15d // offset==0
 	jle				2f // end
 
@@ -2411,7 +2411,7 @@ _inner_edge_dgemm_add_nn_4x8_lib4:
 inner_edge_dgemm_add_nn_4x8_lib4:
 #endif
 #endif
-	
+
 	cmpl			$0, %r14d // offset==0
 	jle				2f // end
 
@@ -2541,7 +2541,7 @@ _inner_edge_dtrmm_nt_ru_8x4_lib4:
 inner_edge_dtrmm_nt_ru_8x4_lib4:
 #endif
 #endif
-	
+
 	vbroadcastsd	0(%r12), %ymm12
 	vmovapd			0(%r10), %ymm8
 	vmulpd			%ymm8, %ymm12, %ymm15
@@ -2677,7 +2677,7 @@ _inner_edge_dtrmm_nt_ru_8x4_vs_lib4:
 inner_edge_dtrmm_nt_ru_8x4_vs_lib4:
 #endif
 #endif
-	
+
 	vbroadcastsd	0(%r13), %ymm12
 	subl			$1, %r10d
 	vmovapd			0(%r11), %ymm8
@@ -2838,7 +2838,7 @@ _inner_edge_dtrmm_nn_rl_8x4_lib4:
 inner_edge_dtrmm_nn_rl_8x4_lib4:
 #endif
 #endif
-	
+
 	cmpl	$0, %r15d
 	jg		0f
 
@@ -3269,7 +3269,7 @@ _inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 inner_edge_dtrmm_nn_rl_8x4_gen_lib4:
 #endif
 #endif
-	
+
 	cmpl			$0, %r10d
 	jle				3f // end
 
@@ -3780,7 +3780,7 @@ _inner_blend_8x4_lib4:
 inner_blend_8x4_lib4:
 #endif
 #endif
-	
+
 
 	// tc==n
 	vblendpd	$0xa, %ymm1, %ymm0, %ymm8
@@ -3869,7 +3869,7 @@ _inner_scale_11_8x4_lib4:
 inner_scale_11_8x4_lib4:
 #endif
 #endif
-	
+
 
 	vmovapd		0(%r10), %ymm15
 	vaddpd		%ymm0, %ymm15, %ymm0
@@ -3953,7 +3953,7 @@ _inner_scale_a0_8x4_lib4:
 inner_scale_a0_8x4_lib4:
 #endif
 #endif
-	
+
 
 	// alpha
 	vbroadcastsd	0(%r10), %ymm15
@@ -4040,7 +4040,7 @@ _inner_scale_ab_8x4_lib4:
 inner_scale_ab_8x4_lib4:
 #endif
 #endif
-	
+
 
 	// alpha
 	vbroadcastsd	0(%r10), %ymm15
@@ -4166,7 +4166,7 @@ _inner_scale_ab_8x4_gen_lib4:
 inner_scale_ab_8x4_gen_lib4:
 #endif
 #endif
-	
+
 
 	// alpha
 	vbroadcastsd	0(%r10), %ymm15
@@ -4480,7 +4480,7 @@ _inner_blend_scale_ab_8x4_lib4:
 inner_blend_scale_ab_8x4_lib4:
 #endif
 #endif
-	
+
 
 	// alpha
 	vbroadcastsd	0(%r10), %ymm15
@@ -4613,7 +4613,7 @@ _inner_scale_ab_4x8_lib4:
 inner_scale_ab_4x8_lib4:
 #endif
 #endif
-	
+
 	// alpha
 	vbroadcastsd	0(%r10), %ymm15
 
@@ -4741,7 +4741,7 @@ _inner_tran_scale_ab_4x8_lib4:
 inner_tran_scale_ab_4x8_lib4:
 #endif
 #endif
-		
+
 	vunpcklpd	%ymm1, %ymm0, %ymm12
 	vunpckhpd	%ymm0, %ymm1, %ymm13
 	vunpcklpd	%ymm3, %ymm2, %ymm14
@@ -4884,7 +4884,7 @@ _inner_blend_scale_ab_8x4_gen_lib4:
 inner_blend_scale_ab_8x4_gen_lib4:
 #endif
 #endif
-	
+
 
 	// alpha
 	vbroadcastsd	0(%r10), %ymm15
@@ -5215,7 +5215,7 @@ _inner_blend_scale_11_8x4_lib4:
 inner_blend_scale_11_8x4_lib4:
 #endif
 #endif
-	
+
 
 	// tc==n
 	vblendpd	$0xa, %ymm1, %ymm0, %ymm8
@@ -5319,7 +5319,7 @@ _inner_edge_dpotrf_8x4_lib4:
 inner_edge_dpotrf_8x4_lib4:
 #endif
 #endif
-	
+
 	vxorpd	%ymm15, %ymm15, %ymm15 // 0.0
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd	.LC04(%rip), %xmm14 // 1.0
@@ -5496,7 +5496,7 @@ _inner_edge_dpotrf_8x4_vs_lib4:
 inner_edge_dpotrf_8x4_vs_lib4:
 #endif
 #endif
-	
+
 	vxorpd	%ymm15, %ymm15, %ymm15 // 0.0
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd	.LC04(%rip), %xmm14 // 1.0
@@ -5632,7 +5632,7 @@ inner_edge_dpotrf_8x4_vs_lib4:
 
 // common inner routine with file scope
 //
-// triangular substitution for cholesky factorization 
+// triangular substitution for cholesky factorization
 //
 // input arguments:
 // r10  <- E
@@ -5676,7 +5676,7 @@ _inner_edge_dtrsm_rlt_inv_8x4_lib4:
 inner_edge_dtrsm_rlt_inv_8x4_lib4:
 #endif
 #endif
-	
+
 	vbroadcastsd	0(%r11), %ymm13
 	vmulpd			%ymm0, %ymm13, %ymm0
 	vmulpd			%ymm4, %ymm13, %ymm4
@@ -5739,7 +5739,7 @@ inner_edge_dtrsm_rlt_inv_8x4_lib4:
 
 // common inner routine with file scope
 //
-// triangular substitution for cholesky factorization 
+// triangular substitution for cholesky factorization
 //
 // input arguments:
 // r10  <- D
@@ -5785,7 +5785,7 @@ _inner_edge_dtrsm_rlt_inv_8x4_vs_lib4:
 inner_edge_dtrsm_rlt_inv_8x4_vs_lib4:
 #endif
 #endif
-	
+
 	vbroadcastsd	0(%r11), %ymm13
 	vmulpd			%ymm0, %ymm13, %ymm0
 	vmulpd			%ymm4, %ymm13, %ymm4
@@ -5842,7 +5842,7 @@ inner_edge_dtrsm_rlt_inv_8x4_vs_lib4:
 	vmulpd			%ymm7, %ymm13, %ymm7
 
 0:
-	
+
 #if MACRO_LEVEL>=1
 	.endm
 #else
@@ -5905,7 +5905,7 @@ _inner_edge_dtrsm_rlt_one_8x4_lib4:
 inner_edge_dtrsm_rlt_one_8x4_lib4:
 #endif
 #endif
-	
+
 	vbroadcastsd	8(%r10), %ymm13
 	vmulpd			%ymm0, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm1, %ymm1
@@ -6003,7 +6003,7 @@ _inner_edge_dtrsm_rlt_one_8x4_vs_lib4:
 inner_edge_dtrsm_rlt_one_8x4_vs_lib4:
 #endif
 #endif
-	
+
 	cmpl			$2, %r11d
 
 	jl				0f // ret
@@ -6048,7 +6048,7 @@ inner_edge_dtrsm_rlt_one_8x4_vs_lib4:
 	vsubpd			%ymm12, %ymm7, %ymm7
 
 0:
-	
+
 #if MACRO_LEVEL>=1
 	.endm
 #else
@@ -6113,7 +6113,7 @@ _inner_edge_dtrsm_rut_inv_8x4_lib4:
 inner_edge_dtrsm_rut_inv_8x4_lib4:
 #endif
 #endif
-	
+
 	vbroadcastsd	24(%r11), %ymm12
 	vmulpd			%ymm3, %ymm12, %ymm3
 	vmulpd			%ymm7, %ymm12, %ymm7
@@ -6226,7 +6226,7 @@ _inner_edge_dtrsm_rut_inv_8x4_vs_lib4:
 inner_edge_dtrsm_rut_inv_8x4_vs_lib4:
 #endif
 #endif
-	
+
 	cmpl			$3, %r12d
 	jle				0f
 
@@ -6717,7 +6717,7 @@ _inner_edge_dtrsm_lun_inv_8x4_lib4:
 inner_edge_dtrsm_lun_inv_8x4_lib4:
 #endif
 #endif
-	
+
 	// bottom-right
 
 	vmovapd			224(%r10, %r11, 1), %ymm13
@@ -7063,7 +7063,7 @@ _inner_edge_dtrsm_lun_inv_8x4_vs_lib4:
 inner_edge_dtrsm_lun_inv_8x4_vs_lib4:
 #endif
 #endif
-	
+
 	// bottom-right
 
 	cmpl	$7, %r13d
@@ -7410,7 +7410,7 @@ _inner_edge_dgetrf_l_8x4_lib4:
 inner_edge_dgetrf_l_8x4_lib4:
 #endif
 #endif
-	
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd			.LC04(%rip), %xmm14 // 1.0
 #elif defined(OS_MAC)
@@ -7508,7 +7508,7 @@ inner_edge_dgetrf_l_8x4_lib4:
 	vmulpd			%ymm6, %ymm13, %ymm15
 	vsubpd			%ymm15, %ymm7, %ymm7
 	vblendpd		$0x8, %ymm3, %ymm12, %ymm12
-	
+
 //	vpermpd			$0xff, %ymm3, %ymm13
 	vperm2f128		$0x11, %ymm3, %ymm3, %ymm11
 	vpermilpd		$0xf, %ymm11, %ymm13
@@ -7579,7 +7579,7 @@ _inner_store_8x4_lib4:
 inner_store_8x4_lib4:
 #endif
 #endif
-	
+
 	vmovapd %ymm0,  0(%r10)
 	vmovapd %ymm1, 32(%r10)
 	vmovapd %ymm2, 64(%r10)
@@ -7658,7 +7658,7 @@ _inner_store_4x8_lib4:
 inner_store_4x8_lib4:
 #endif
 #endif
-	
+
 	vmovapd %ymm0,   0(%r10)
 	vmovapd %ymm1,  32(%r10)
 	vmovapd %ymm2,  64(%r10)
@@ -7735,7 +7735,7 @@ _inner_store_8x4_vs_lib4:
 inner_store_8x4_vs_lib4:
 #endif
 #endif
-	
+
 	vcvtsi2sd	%r12d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC03(%rip), %ymm14
@@ -7828,7 +7828,7 @@ _inner_store_4x8_vs_lib4:
 inner_store_4x8_vs_lib4:
 #endif
 #endif
-	
+
 	vcvtsi2sd	%r11d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC02(%rip), %ymm14
@@ -7918,16 +7918,16 @@ _inner_store_l_8x4_lib4:
 inner_store_l_8x4_lib4:
 #endif
 #endif
-	
+
 	vmovapd		%ymm0,0(%r10)
 	vmovapd		32(%r10), %ymm14
-	vblendpd	$0x1, %ymm14, %ymm1, %ymm1	
+	vblendpd	$0x1, %ymm14, %ymm1, %ymm1
 	vmovapd		%ymm1, 32(%r10)
 	vmovapd		64(%r10), %ymm14
-	vblendpd	$0x3, %ymm14, %ymm2, %ymm2	
+	vblendpd	$0x3, %ymm14, %ymm2, %ymm2
 	vmovapd		%ymm2, 64(%r10)
 	vmovapd		96(%r10), %ymm14
-	vblendpd	$0x7, %ymm14, %ymm3, %ymm3	
+	vblendpd	$0x7, %ymm14, %ymm3, %ymm3
 	vmovapd		%ymm3, 96(%r10)
 
 	vmovapd		%ymm4, 0(%r10, %r11, 1)
@@ -8003,7 +8003,7 @@ _inner_store_l_8x4_vs_lib4:
 inner_store_l_8x4_vs_lib4:
 #endif
 #endif
-	
+
 	vcvtsi2sd	%r12d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC03(%rip), %ymm14
@@ -8020,17 +8020,17 @@ inner_store_l_8x4_vs_lib4:
 	jl			0f // end
 	cmpl		$3, %r13d
 	vmovapd		32(%r10), %ymm14
-	vblendpd	$0x1, %ymm14, %ymm1, %ymm1	
+	vblendpd	$0x1, %ymm14, %ymm1, %ymm1
 	vmovapd		%ymm1, 32(%r10)
 	vmaskmovpd	%ymm5, %ymm15, 32(%r10, %r11, 1)
 	jl			0f // end
 	vmovapd		64(%r10), %ymm14
-	vblendpd	$0x3, %ymm14, %ymm2, %ymm2	
+	vblendpd	$0x3, %ymm14, %ymm2, %ymm2
 	vmovapd		%ymm2, 64(%r10)
 	vmaskmovpd	%ymm6, %ymm15, 64(%r10, %r11, 1)
 	je			0f // end
 	vmovapd		96(%r10), %ymm14
-	vblendpd	$0x7, %ymm14, %ymm3, %ymm3	
+	vblendpd	$0x7, %ymm14, %ymm3, %ymm3
 	vmovapd		%ymm3, 96(%r10)
 	vmaskmovpd	%ymm7, %ymm15, 96(%r10, %r11, 1)
 0:
@@ -8105,7 +8105,7 @@ _inner_store_8x4_gen_lib4:
 inner_store_8x4_gen_lib4:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2sd	%r13d, %xmm14, %xmm14
 	vcvtsi2sd	%r14d, %xmm15, %xmm15
@@ -8183,7 +8183,7 @@ inner_store_8x4_gen_lib4:
 	jmp		4f
 
 0:
-	
+
 	cmpl	$1, %r10d
 	jg		1f
 
@@ -8409,7 +8409,7 @@ _inner_store_l_8x4_gen_lib4:
 inner_store_l_8x4_gen_lib4:
 #endif
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2sd	%r13d, %xmm14, %xmm14
 	vcvtsi2sd	%r14d, %xmm15, %xmm15
@@ -8495,7 +8495,7 @@ inner_store_l_8x4_gen_lib4:
 	jmp		3f
 
 0:
-	
+
 	cmpl	$1, %r10d
 	jg		1f
 
@@ -8742,7 +8742,7 @@ _kernel_dgemm_nt_8x4_lib4:
 	.def kernel_dgemm_nt_8x4_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_nt_8x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -8813,7 +8813,7 @@ kernel_dgemm_nt_8x4_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -8840,7 +8840,7 @@ _kernel_dgemm_nt_4x8_lib4:
 	.def kernel_dgemm_nt_4x8_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_nt_4x8_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -8907,7 +8907,7 @@ kernel_dgemm_nt_4x8_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -8934,7 +8934,7 @@ _kernel_dgemm_nt_8x4_vs_lib4:
 	.def kernel_dgemm_nt_8x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_nt_8x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -8992,8 +8992,8 @@ kernel_dgemm_nt_8x4_vs_lib4:
 	movq	ARG9, %r10 // store address D
 	movq	ARG10, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-	movq	ARG11, %r12 // km 
-	movq	ARG12, %r13 // kn 
+	movq	ARG11, %r12 // km
+	movq	ARG12, %r13 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_VS_LIB4
@@ -9007,7 +9007,7 @@ kernel_dgemm_nt_8x4_vs_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -9034,7 +9034,7 @@ _kernel_dgemm_nt_4x8_vs_lib4:
 	.def kernel_dgemm_nt_4x8_vs_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_nt_4x8_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -9103,7 +9103,7 @@ kernel_dgemm_nt_4x8_vs_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -9130,7 +9130,7 @@ _kernel_dgemm_nt_8x4_gen_lib4:
 	.def kernel_dgemm_nt_8x4_gen_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_nt_8x4_gen_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -9207,7 +9207,7 @@ kernel_dgemm_nt_8x4_gen_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -9234,7 +9234,7 @@ _kernel_dgemm_nn_8x4_lib4:
 	.def kernel_dgemm_nn_8x4_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_nn_8x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -9318,7 +9318,7 @@ kernel_dgemm_nn_8x4_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -9345,7 +9345,7 @@ _kernel_dgemm_nn_4x8_lib4:
 	.def kernel_dgemm_nn_4x8_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_nn_4x8_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -9390,7 +9390,7 @@ kernel_dgemm_nn_4x8_lib4:
 #endif
 
 
-	// call inner blend 
+	// call inner blend
 
 	movq	ARG2, %r10 // alpha
 	movq	ARG7, %r11 // beta
@@ -9450,7 +9450,7 @@ _kernel_dgemm_nn_8x4_vs_lib4:
 	.def kernel_dgemm_nn_8x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_nn_8x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -9536,7 +9536,7 @@ kernel_dgemm_nn_8x4_vs_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -9563,7 +9563,7 @@ _kernel_dgemm_nn_4x8_vs_lib4:
 	.def kernel_dgemm_nn_4x8_vs_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_nn_4x8_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -9608,7 +9608,7 @@ kernel_dgemm_nn_4x8_vs_lib4:
 #endif
 
 
-	// call inner blend 
+	// call inner blend
 
 	movq	ARG2, %r10 // alpha
 	movq	ARG7, %r11 // beta
@@ -9670,7 +9670,7 @@ _kernel_dgemm_nn_8x4_gen_lib4:
 	.def kernel_dgemm_nn_8x4_gen_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_nn_8x4_gen_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -9760,7 +9760,7 @@ kernel_dgemm_nn_8x4_gen_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -9787,7 +9787,7 @@ _kernel_dsyrk_nt_l_8x4_lib4:
 	.def kernel_dsyrk_nt_l_8x4_lib4; .scl 2; .type 32; .endef
 kernel_dsyrk_nt_l_8x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -9857,7 +9857,7 @@ kernel_dsyrk_nt_l_8x4_lib4:
 #endif
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -9884,7 +9884,7 @@ _kernel_dsyrk_nt_l_8x4_vs_lib4:
 	.def kernel_dsyrk_nt_l_8x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dsyrk_nt_l_8x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -9943,8 +9943,8 @@ kernel_dsyrk_nt_l_8x4_vs_lib4:
 	movq	ARG10, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
-	movq	ARG11, %r12 // km 
-	movq	ARG12, %r13 // kn 
+	movq	ARG11, %r12 // km
+	movq	ARG12, %r13 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_8X4_VS_LIB4
@@ -9957,7 +9957,7 @@ kernel_dsyrk_nt_l_8x4_vs_lib4:
 #endif
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -9984,7 +9984,7 @@ _kernel_dsyrk_nt_l_8x4_gen_lib4:
 	.def kernel_dsyrk_nt_l_8x4_gen_lib4; .scl 2; .type 32; .endef
 kernel_dsyrk_nt_l_8x4_gen_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -10061,7 +10061,7 @@ kernel_dsyrk_nt_l_8x4_gen_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -10088,7 +10088,7 @@ _kernel_dtrmm_nn_rl_8x4_lib4:
 	.def kernel_dtrmm_nn_rl_8x4_lib4; .scl 2; .type 32; .endef
 kernel_dtrmm_nn_rl_8x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -10170,7 +10170,7 @@ kernel_dtrmm_nn_rl_8x4_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -10197,7 +10197,7 @@ _kernel_dtrmm_nn_rl_8x4_gen_lib4:
 	.def kernel_dtrmm_nn_rl_8x4_gen_lib4; .scl 2; .type 32; .endef
 kernel_dtrmm_nn_rl_8x4_gen_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -10284,7 +10284,7 @@ kernel_dtrmm_nn_rl_8x4_gen_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -10311,7 +10311,7 @@ _kernel_dtrmm_nt_ru_8x4_lib4:
 	.def kernel_dtrmm_nt_ru_8x4_lib4; .scl 2; .type 32; .endef
 kernel_dtrmm_nt_ru_8x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -10417,7 +10417,7 @@ kernel_dtrmm_nt_ru_8x4_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -10444,7 +10444,7 @@ _kernel_dtrmm_nt_ru_8x4_vs_lib4:
 	.def kernel_dtrmm_nt_ru_8x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dtrmm_nt_ru_8x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -10539,8 +10539,8 @@ kernel_dtrmm_nt_ru_8x4_vs_lib4:
 	movq	ARG10, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
-	movq	ARG11, %r12 // km 
-	movq	ARG12, %r13 // kn 
+	movq	ARG11, %r12 // km
+	movq	ARG12, %r13 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_VS_LIB4
@@ -10554,7 +10554,7 @@ kernel_dtrmm_nt_ru_8x4_vs_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -10581,7 +10581,7 @@ _kernel_dpotrf_nt_l_8x4_lib4:
 	.def kernel_dpotrf_nt_l_8x4_lib4; .scl 2; .type 32; .endef
 kernel_dpotrf_nt_l_8x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -10634,7 +10634,7 @@ kernel_dpotrf_nt_l_8x4_lib4:
 
 	// factorization
 
-	movq	ARG9, %r10  // inv_diag_D 
+	movq	ARG9, %r10  // inv_diag_D
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DPOTRF_8X4_LIB4
@@ -10665,7 +10665,7 @@ kernel_dpotrf_nt_l_8x4_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -10676,7 +10676,7 @@ kernel_dpotrf_nt_l_8x4_lib4:
 
 
 
-//                                     rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24              rsp+32  rsp+40 
+//                                     rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24              rsp+32  rsp+40
 // void kernel_dpotrf_nt_l_8x4_vs_lib4(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D, int km, int kn);
 
 	.p2align 4,,15
@@ -10692,7 +10692,7 @@ _kernel_dpotrf_nt_l_8x4_vs_lib4:
 	.def kernel_dpotrf_nt_l_8x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dpotrf_nt_l_8x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -10745,8 +10745,8 @@ kernel_dpotrf_nt_l_8x4_vs_lib4:
 
 	// factorization
 
-	movq	ARG9, %r10  // inv_diag_D 
-	movq	ARG11, %r11 // kn 
+	movq	ARG9, %r10  // inv_diag_D
+	movq	ARG11, %r11 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DPOTRF_8X4_VS_LIB4
@@ -10765,8 +10765,8 @@ kernel_dpotrf_nt_l_8x4_vs_lib4:
 	movq	ARG8, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
-	movq	ARG10, %r12 // km 
-	movq	ARG11, %r13 // kn 
+	movq	ARG10, %r12 // km
+	movq	ARG11, %r13 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_8X4_VS_LIB4
@@ -10780,7 +10780,7 @@ kernel_dpotrf_nt_l_8x4_vs_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -10807,7 +10807,7 @@ _kernel_dsyrk_dpotrf_nt_l_8x4_lib4:
 	.def kernel_dsyrk_dpotrf_nt_l_8x4_lib4; .scl 2; .type 32; .endef
 kernel_dsyrk_dpotrf_nt_l_8x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -10879,7 +10879,7 @@ kernel_dsyrk_dpotrf_nt_l_8x4_lib4:
 
 	// factorization
 
-	movq	ARG13, %r10  // inv_diag_D 
+	movq	ARG13, %r10  // inv_diag_D
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DPOTRF_8X4_LIB4
@@ -10910,7 +10910,7 @@ kernel_dsyrk_dpotrf_nt_l_8x4_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -10937,7 +10937,7 @@ _kernel_dsyrk_dpotrf_nt_l_8x4_vs_lib4:
 	.def kernel_dsyrk_dpotrf_nt_l_8x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dsyrk_dpotrf_nt_l_8x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -11009,8 +11009,8 @@ kernel_dsyrk_dpotrf_nt_l_8x4_vs_lib4:
 
 	// factorization
 
-	movq	ARG13, %r10  // inv_diag_D 
-	movq	ARG15, %r11 // kn 
+	movq	ARG13, %r10  // inv_diag_D
+	movq	ARG15, %r11 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DPOTRF_8X4_VS_LIB4
@@ -11029,8 +11029,8 @@ kernel_dsyrk_dpotrf_nt_l_8x4_vs_lib4:
 	movq	ARG12, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
-	movq	ARG14, %r12 // km 
-	movq	ARG15, %r13 // kn 
+	movq	ARG14, %r12 // km
+	movq	ARG15, %r13 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_8X4_VS_LIB4
@@ -11044,7 +11044,7 @@ kernel_dsyrk_dpotrf_nt_l_8x4_vs_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -11071,7 +11071,7 @@ _kernel_dtrsm_nt_rl_inv_8x4_vs_lib4:
 	.def kernel_dtrsm_nt_rl_inv_8x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dtrsm_nt_rl_inv_8x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -11124,9 +11124,9 @@ kernel_dtrsm_nt_rl_inv_8x4_vs_lib4:
 
 	// solve
 
-	movq	ARG9, %r10  // E 
-	movq	ARG10, %r11  // inv_diag_E 
-	movq	ARG12, %r12 // kn 
+	movq	ARG9, %r10  // E
+	movq	ARG10, %r11  // inv_diag_E
+	movq	ARG12, %r12 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_INV_8X4_VS_LIB4
@@ -11145,8 +11145,8 @@ kernel_dtrsm_nt_rl_inv_8x4_vs_lib4:
 	movq	ARG8, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
-	movq	ARG11, %r12 // km 
-	movq	ARG12, %r13 // kn 
+	movq	ARG11, %r12 // km
+	movq	ARG12, %r13 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_VS_LIB4
@@ -11160,7 +11160,7 @@ kernel_dtrsm_nt_rl_inv_8x4_vs_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -11187,7 +11187,7 @@ _kernel_dgemm_dtrsm_nt_rl_inv_8x4_vs_lib4:
 	.def kernel_dgemm_dtrsm_nt_rl_inv_8x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_dtrsm_nt_rl_inv_8x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -11259,9 +11259,9 @@ kernel_dgemm_dtrsm_nt_rl_inv_8x4_vs_lib4:
 
 	// solve
 
-	movq	ARG13, %r10  // E 
-	movq	ARG14, %r11  // inv_diag_E 
-	movq	ARG16, %r12 // kn 
+	movq	ARG13, %r10  // E
+	movq	ARG14, %r11  // inv_diag_E
+	movq	ARG16, %r12 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_INV_8X4_VS_LIB4
@@ -11280,8 +11280,8 @@ kernel_dgemm_dtrsm_nt_rl_inv_8x4_vs_lib4:
 	movq	ARG12, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
-	movq	ARG15, %r12 // km 
-	movq	ARG16, %r13 // kn 
+	movq	ARG15, %r12 // km
+	movq	ARG16, %r13 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_VS_LIB4
@@ -11295,7 +11295,7 @@ kernel_dgemm_dtrsm_nt_rl_inv_8x4_vs_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -11306,7 +11306,7 @@ kernel_dgemm_dtrsm_nt_rl_inv_8x4_vs_lib4:
 
 
 
-//                                      rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24     rsp+32 
+//                                      rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24     rsp+32
 // void kernel_dtrsm_nt_rl_inv_8x4_lib4(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
 
 	.p2align 4,,15
@@ -11322,7 +11322,7 @@ _kernel_dtrsm_nt_rl_inv_8x4_lib4:
 	.def kernel_dtrsm_nt_rl_inv_8x4_lib4; .scl 2; .type 32; .endef
 kernel_dtrsm_nt_rl_inv_8x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -11375,8 +11375,8 @@ kernel_dtrsm_nt_rl_inv_8x4_lib4:
 
 	// solve
 
-	movq	ARG9, %r10  // E 
-	movq	ARG10, %r11  // inv_diag_E 
+	movq	ARG9, %r10  // E
+	movq	ARG10, %r11  // inv_diag_E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_INV_8X4_LIB4
@@ -11407,7 +11407,7 @@ kernel_dtrsm_nt_rl_inv_8x4_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -11434,7 +11434,7 @@ _kernel_dgemm_dtrsm_nt_rl_inv_8x4_lib4:
 	.def kernel_dgemm_dtrsm_nt_rl_inv_8x4_lib4; .scl 2; .type 32; .endef
 kernel_dgemm_dtrsm_nt_rl_inv_8x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -11506,8 +11506,8 @@ kernel_dgemm_dtrsm_nt_rl_inv_8x4_lib4:
 
 	// solve
 
-	movq	ARG13, %r10  // E 
-	movq	ARG14, %r11  // inv_diag_E 
+	movq	ARG13, %r10  // E
+	movq	ARG14, %r11  // inv_diag_E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_INV_8X4_LIB4
@@ -11538,7 +11538,7 @@ kernel_dgemm_dtrsm_nt_rl_inv_8x4_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -11565,7 +11565,7 @@ _kernel_dtrsm_nt_rl_one_8x4_lib4:
 	.def kernel_dtrsm_nt_rl_one_8x4_lib4; .scl 2; .type 32; .endef
 kernel_dtrsm_nt_rl_one_8x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -11618,7 +11618,7 @@ kernel_dtrsm_nt_rl_one_8x4_lib4:
 
 	// solve
 
-	movq	ARG9, %r10  // E 
+	movq	ARG9, %r10  // E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_ONE_8X4_LIB4
@@ -11649,7 +11649,7 @@ kernel_dtrsm_nt_rl_one_8x4_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -11676,7 +11676,7 @@ _kernel_dtrsm_nt_rl_one_8x4_vs_lib4:
 	.def kernel_dtrsm_nt_rl_one_8x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dtrsm_nt_rl_one_8x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -11729,8 +11729,8 @@ kernel_dtrsm_nt_rl_one_8x4_vs_lib4:
 
 	// solve
 
-	movq	ARG9, %r10  // E 
-	movq	ARG11, %r11 // kn 
+	movq	ARG9, %r10  // E
+	movq	ARG11, %r11 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_ONE_8X4_VS_LIB4
@@ -11749,8 +11749,8 @@ kernel_dtrsm_nt_rl_one_8x4_vs_lib4:
 	movq	ARG8, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
-	movq	ARG10, %r12 // km 
-	movq	ARG11, %r13 // kn 
+	movq	ARG10, %r12 // km
+	movq	ARG11, %r13 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_VS_LIB4
@@ -11764,7 +11764,7 @@ kernel_dtrsm_nt_rl_one_8x4_vs_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -11775,7 +11775,7 @@ kernel_dtrsm_nt_rl_one_8x4_vs_lib4:
 
 
 
-//                                      rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24     rsp+32 
+//                                      rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24     rsp+32
 // void kernel_dtrsm_nt_ru_inv_8x4_lib4(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
 
 	.p2align 4,,15
@@ -11791,7 +11791,7 @@ _kernel_dtrsm_nt_ru_inv_8x4_lib4:
 	.def kernel_dtrsm_nt_ru_inv_8x4_lib4; .scl 2; .type 32; .endef
 kernel_dtrsm_nt_ru_inv_8x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -11844,8 +11844,8 @@ kernel_dtrsm_nt_ru_inv_8x4_lib4:
 
 	// solve
 
-	movq	ARG9, %r10  // E 
-	movq	ARG10, %r11  // inv_diag_E 
+	movq	ARG9, %r10  // E
+	movq	ARG10, %r11  // inv_diag_E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RUT_INV_8X4_LIB4
@@ -11876,7 +11876,7 @@ kernel_dtrsm_nt_ru_inv_8x4_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -11903,7 +11903,7 @@ _kernel_dtrsm_nt_ru_inv_8x4_vs_lib4:
 	.def kernel_dtrsm_nt_ru_inv_8x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dtrsm_nt_ru_inv_8x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -11956,9 +11956,9 @@ kernel_dtrsm_nt_ru_inv_8x4_vs_lib4:
 
 	// solve
 
-	movq	ARG9, %r10  // E 
-	movq	ARG10, %r11  // inv_diag_E 
-	movq	ARG12, %r12 // kn 
+	movq	ARG9, %r10  // E
+	movq	ARG10, %r11  // inv_diag_E
+	movq	ARG12, %r12 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RUT_INV_8X4_VS_LIB4
@@ -11977,8 +11977,8 @@ kernel_dtrsm_nt_ru_inv_8x4_vs_lib4:
 	movq	ARG8, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
-	movq	ARG11, %r12 // km 
-	movq	ARG12, %r13 // kn 
+	movq	ARG11, %r12 // km
+	movq	ARG12, %r13 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_VS_LIB4
@@ -11992,7 +11992,7 @@ kernel_dtrsm_nt_ru_inv_8x4_vs_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -12019,7 +12019,7 @@ _kernel_dtrsm_nn_ru_inv_8x4_lib4:
 	.def kernel_dtrsm_nn_ru_inv_8x4_lib4; .scl 2; .type 32; .endef
 kernel_dtrsm_nn_ru_inv_8x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -12034,7 +12034,7 @@ kernel_dtrsm_nn_ru_inv_8x4_lib4:
 	vmovapd	%ymm0, %ymm7
 
 
-	// call inner dgemm kernel nt 
+	// call inner dgemm kernel nt
 
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11 // A
@@ -12074,7 +12074,7 @@ kernel_dtrsm_nn_ru_inv_8x4_lib4:
 
 	// solve
 
-	movq	ARG10, %r10  // E 
+	movq	ARG10, %r10  // E
 	movq	ARG11, %r11 // inv_diag_E
 
 #if MACRO_LEVEL>=1
@@ -12106,7 +12106,7 @@ kernel_dtrsm_nn_ru_inv_8x4_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -12133,7 +12133,7 @@ _kernel_dtrsm_nn_ru_inv_8x4_vs_lib4:
 	.def kernel_dtrsm_nn_ru_inv_8x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dtrsm_nn_ru_inv_8x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -12148,7 +12148,7 @@ kernel_dtrsm_nn_ru_inv_8x4_vs_lib4:
 	vmovapd	%ymm0, %ymm7
 
 
-	// call inner dgemm kernel nt 
+	// call inner dgemm kernel nt
 
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11 // A
@@ -12188,7 +12188,7 @@ kernel_dtrsm_nn_ru_inv_8x4_vs_lib4:
 
 	// solve
 
-	movq	ARG10, %r10  // E 
+	movq	ARG10, %r10  // E
 	movq	ARG11, %r11 // inv_diag_E
 
 #if MACRO_LEVEL>=1
@@ -12223,7 +12223,7 @@ kernel_dtrsm_nn_ru_inv_8x4_vs_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -12250,7 +12250,7 @@ _kernel_dtrsm_nn_ll_one_8x4_lib4:
 	.def kernel_dtrsm_nn_ll_one_8x4_lib4; .scl 2; .type 32; .endef
 kernel_dtrsm_nn_ll_one_8x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -12265,7 +12265,7 @@ kernel_dtrsm_nn_ll_one_8x4_lib4:
 	vmovapd	%ymm0, %ymm7
 
 
-	// call inner dgemm kernel nt 
+	// call inner dgemm kernel nt
 
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11 // A
@@ -12305,7 +12305,7 @@ kernel_dtrsm_nn_ll_one_8x4_lib4:
 
 	// solve
 
-	movq	ARG10, %r10  // E 
+	movq	ARG10, %r10  // E
 	movq	ARG11, %r11 // sde
 	sall	$5, %r11d // 4*sde*sizeof(double)
 
@@ -12338,7 +12338,7 @@ kernel_dtrsm_nn_ll_one_8x4_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -12365,7 +12365,7 @@ _kernel_dtrsm_nn_ll_one_8x4_vs_lib4:
 	.def kernel_dtrsm_nn_ll_one_8x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dtrsm_nn_ll_one_8x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -12380,7 +12380,7 @@ kernel_dtrsm_nn_ll_one_8x4_vs_lib4:
 	vmovapd	%ymm0, %ymm7
 
 
-	// call inner dgemm kernel nt 
+	// call inner dgemm kernel nt
 
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11 // A
@@ -12420,7 +12420,7 @@ kernel_dtrsm_nn_ll_one_8x4_vs_lib4:
 
 	// solve
 
-	movq	ARG10, %r10  // E 
+	movq	ARG10, %r10  // E
 	movq	ARG11, %r11 // sde
 	sall	$5, %r11d // 4*sde*sizeof(double)
 
@@ -12456,7 +12456,7 @@ kernel_dtrsm_nn_ll_one_8x4_vs_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -12483,7 +12483,7 @@ _kernel_dtrsm_nn_lu_inv_8x4_lib4:
 	.def kernel_dtrsm_nn_lu_inv_8x4_lib4; .scl 2; .type 32; .endef
 kernel_dtrsm_nn_lu_inv_8x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -12498,7 +12498,7 @@ kernel_dtrsm_nn_lu_inv_8x4_lib4:
 	vmovapd	%ymm0, %ymm7
 
 
-	// call inner dgemm kernel nt 
+	// call inner dgemm kernel nt
 
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11 // A
@@ -12538,10 +12538,10 @@ kernel_dtrsm_nn_lu_inv_8x4_lib4:
 
 	// solve
 
-	movq	ARG10, %r10  // E 
+	movq	ARG10, %r10  // E
 	movq	ARG11, %r11 // sde
 	sall	$5, %r11d // 4*sde*sizeof(double)
-	movq	ARG12, %r12  // inv_diag_E 
+	movq	ARG12, %r12  // inv_diag_E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_LUN_INV_8X4_LIB4
@@ -12572,7 +12572,7 @@ kernel_dtrsm_nn_lu_inv_8x4_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -12599,7 +12599,7 @@ _kernel_dtrsm_nn_lu_inv_8x4_vs_lib4:
 	.def kernel_dtrsm_nn_lu_inv_8x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dtrsm_nn_lu_inv_8x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -12614,7 +12614,7 @@ kernel_dtrsm_nn_lu_inv_8x4_vs_lib4:
 	vmovapd	%ymm0, %ymm7
 
 
-	// call inner dgemm kernel nt 
+	// call inner dgemm kernel nt
 
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11 // A
@@ -12654,10 +12654,10 @@ kernel_dtrsm_nn_lu_inv_8x4_vs_lib4:
 
 	// solve
 
-	movq	ARG10, %r10  // E 
+	movq	ARG10, %r10  // E
 	movq	ARG11, %r11 // sde
 	sall	$5, %r11d // 4*sde*sizeof(double)
-	movq	ARG12, %r12  // inv_diag_E 
+	movq	ARG12, %r12  // inv_diag_E
 	movq	ARG13, %r13  // km
 
 #if MACRO_LEVEL>=1
@@ -12691,7 +12691,7 @@ kernel_dtrsm_nn_lu_inv_8x4_vs_lib4:
 
 
 	EPILOGUE
-	
+
 	ret
 
 #if defined(OS_LINUX)
@@ -12718,7 +12718,7 @@ _kernel_dgetrf_nn_l_8x4_lib4:
 	.def kernel_dgetrf_nn_l_8x4_lib4; .scl 2; .type 32; .endef
 kernel_dgetrf_nn_l_8x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -12773,7 +12773,7 @@ kernel_dgetrf_nn_l_8x4_lib4:
 
 	// factorization
 
-	movq	ARG10, %r10  // inv_diag_D 
+	movq	ARG10, %r10  // inv_diag_D
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DGETRF_L_8X4_LIB4
@@ -12833,7 +12833,7 @@ _kernel_dgetrf_nn_l_8x4_vs_lib4:
 	.def kernel_dgetrf_nn_l_8x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dgetrf_nn_l_8x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -12888,7 +12888,7 @@ kernel_dgetrf_nn_l_8x4_vs_lib4:
 
 	// factorization
 
-	movq	ARG10, %r10  // inv_diag_D 
+	movq	ARG10, %r10  // inv_diag_D
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DGETRF_L_8X4_LIB4
@@ -12948,7 +12948,7 @@ _kernel_dlarfb4_r_8_lib4:
 	.def kernel_dlarfb4_r_8_lib4; .scl 2; .type 32; .endef
 kernel_dlarfb4_r_8_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -12961,7 +12961,7 @@ kernel_dlarfb4_r_8_lib4:
 	vmovapd	%ymm0, %ymm5
 	vmovapd	%ymm0, %ymm6
 	vmovapd	%ymm0, %ymm7
-	
+
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11 // D
 	movq	ARG5, %r12 // sdd

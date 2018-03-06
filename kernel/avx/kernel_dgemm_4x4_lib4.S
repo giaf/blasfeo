@@ -797,7 +797,7 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 	vbroadcastsd	96(%r12), %ymm12 // B
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm3, %ymm3
-	subl	$4, %r10d
+	subl			$4, %r10d
 
 	// unroll 1
 	// ymm14
@@ -1404,7 +1404,7 @@ inner_kernel_dgebp_add_nn_4x4_lib4:
 
 // common inner routine with file scope
 //
-// edge for B unaligned
+// edge for B unaligned, A aligned
 //
 // input arguments:
 // r10   <- k
@@ -1451,52 +1451,53 @@ inner_edge_dgemm_add_nn_4x4_lib4:
 #endif
 #endif
 
-	cmpl			$0, %r14d    // offset==0
-	jle				2f           // end
+	cmpl			$0, %r14d				// offset==0
+	jle				2f						// end
 
-	cmpl			$0, %r10d    // k==0
-	jle				2f           // end
+	cmpl			$0, %r10d				// k==0
+	jle				2f						// end
 
-	movl			$4, %r15d
-	subl			%r14d, %r15d // 4-offsetB
-	cmpl			%r10d, %r15d
-//	jle				0f
-//	movl			%r10d, %r15d // kend=min(k,4-offsetB)
-//0:
-	cmovgl			%r10d, %r15d // kend=min(k,4-offsetB)
+	movl			$4, %r15d				// load 4
+	subl			%r14d, %r15d			// 4-offsetB
+	cmpl			%r10d, %r15d			// k > 4-offsetB
+	cmovgl			%r10d, %r15d			// kend=min(k,4-offsetB)
 
-	movl			%r14d, %eax
-	sall			$3, %eax     // offsetB*sizeof(double)
-	addq			%rax, %r12   // B+offsetB*sizeof(double)
+	movl			%r14d, %eax				// load offsetB
+	sall			$3, %eax				// offsetB*sizeof(double)
+	addq			%rax, %r12				// B+offsetB*sizeof(double)
 
 1:
-	vmovapd			0(%r11), %ymm8
-	vbroadcastsd	0(%r12), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm0, %ymm0
-	vbroadcastsd	32(%r12), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm1, %ymm1
-	vbroadcastsd	64(%r12), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm2, %ymm2
-	vbroadcastsd	96(%r12), %ymm12
-	vmulpd			%ymm8, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm3, %ymm3
+	vmovapd			0(%r11), %ymm8			// load A
 
-	subl			$1, %r10d // k-1
-	subl			$1, %r15d // kend-1
-	addq			$32, %r11 // A+1*bs*sizeof(float)
-	addq			$8, %r12 // B+1*sizeof(float)
+	vbroadcastsd	0(%r12), %ymm12			// B_off
+	vmulpd			%ymm8, %ymm12, %ymm15	// mul
+	vaddpd			%ymm15, %ymm0, %ymm0	// store
 
-	cmpl			$0, %r15d
-	jg				1b
+	vbroadcastsd	32(%r12), %ymm12		// B_off+4
+	vmulpd			%ymm8, %ymm12, %ymm15	// mul
+	vaddpd			%ymm15, %ymm1, %ymm1	// store
 
-	cmpl			$0, %r10d
-	jle				2f // end
+	vbroadcastsd	64(%r12), %ymm12		// B_off+8
+	vmulpd			%ymm8, %ymm12, %ymm15	// mul
+	vaddpd			%ymm15, %ymm2, %ymm2	// store
 
-	addq			%r13, %r12
-	subq			$32, %r12 // B+bs*(sdb-1)*sizeof(double)
+	vbroadcastsd	96(%r12), %ymm12		// B_off+12
+	vmulpd			%ymm8, %ymm12, %ymm15	// mul
+	vaddpd			%ymm15, %ymm3, %ymm3	// store
+
+	subl			$1, %r10d				// k=-1
+	subl			$1, %r15d				// k_panel=-1
+	addq			$32, %r11				// A=+bs
+	addq			$8, %r12				// B=+1
+
+	cmpl			$0, %r15d				// if k_panel=0
+	jg				1b						// loop 1
+
+	cmpl			$0, %r10d				// if k=0
+	jle				2f						// end
+
+	addq			%r13, %r12				// B=Boff+sdb*bs
+	subq			$32, %r12				// B-=4*sizeof(double) (loop+offsetB)
 
 2:
 
@@ -6457,12 +6458,12 @@ kernel_dgemm_nn_4x4_gen_lib4:
 
 	// call inner dgemm kernel nn
 
-	movq	ARG1, %r10   // k
-	movq	ARG3, %r11   // A
-	movq	ARG5, %r12   // B
-	movq	ARG6, %r13   // sdb
-	sall	$5,   %r13d  // 4*sdb*sizeof(double)
-	movq	ARG4, %r14   // offsetB
+	movq	ARG1, %r10	// k
+	movq	ARG3, %r11	// A
+	movq	ARG5, %r12	// B
+	movq	ARG6, %r13	// sdb
+	sall	$5, %r13d	// 4*sdb*sizeof(double)
+	movq	ARG4, %r14	// offsetB
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DGEMM_ADD_NN_4X4_LIB4

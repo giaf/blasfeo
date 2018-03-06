@@ -535,7 +535,7 @@ void kernel_dgemm_nt_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B, 
 		c_10=0, c_11=0, c_12=0, c_13=0,
 		c_20=0, c_21=0, c_22=0, c_23=0,
 		c_30=0, c_31=0, c_32=0, c_33=0;
-	
+
 	int k;
 
 	for(k=0; k<kmax-3; k+=4)
