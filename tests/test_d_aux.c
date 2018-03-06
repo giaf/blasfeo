@@ -244,7 +244,8 @@ SHOW_DEFINE(PRECISION)
 
 int main()
 	{
-	printf("\n\n Recompile BLASFEO with TESTING_MODE=1 to run this test.\n\n");
+	printf("\n\n Recompile BLASFEO with TESTING_MODE=1 to run this test.\n");
+	printf("On CMake use -DBLASFEO_TESTING=ON .\n\n");
 	return 0;
 	}
 

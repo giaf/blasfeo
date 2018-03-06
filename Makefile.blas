@@ -26,60 +26,32 @@
 #                                                                                                 #
 ###################################################################################################
 
-include ../Makefile.rule
 
-BINARY_DIR = build/$(LA)/$(TARGET)
-LIBS = $(BINARY_DIR)/libblasfeo.a
+ifeq ($(REF_BLAS), 0)
+LIBS += -lm
+SHARED_LIBS += -lm
+endif
 
-# add different link library for different REF_BLAS implementation
-include ../Makefile.blas
+ifeq ($(REF_BLAS), OPENBLAS)
+LIBS += /opt/openblas/lib/libopenblas.a -pthread -lgfortran -lm
+endif
 
+ifeq ($(REF_BLAS), BLIS)
+LIBS += /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -lgfortran -lm -fopenmp
+endif
 
-LINK_OBJ =
-EX_OBJ =
+ifeq ($(REF_BLAS), NETLIB)
+LIBS += /opt/netlib/liblapack.a /opt/netlib/libblas.a -lgfortran -lm
+endif
 
-## dgemm kernel
-EX_OBJ = example_kernel_dgemm.o
-LINK_OBJ = kernel_dgemm.o
+ifeq ($(REF_BLAS), MKL)
+LIBS += -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/mkl/lib/intel64/libmkl_core.a /opt/intel/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm
+endif
 
-## factorization
-# EX_OBJ = example_d_lu_factorization.o
-# EX_OBJ = example_s_lu_factorization.o
-# LINK_OBJ = tools.o
+ifeq ($(REF_BLAS), ATLAS)
+LIBS += /opt/atlas/lib/liblapack.a /opt/atlas/lib/libcblas.a /opt/atlas/lib/libf77blas.a /opt/atlas/lib/libatlas.a -lgfortran -lm
+endif
 
-## riccati
-# EX_OBJ = example_d_riccati_recursion.o
-# EX_OBJ = example_s_riccati_recursion.o
-# LINK_OBJ = tools.o
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
-
-kernel_%.o: kernel_%.S
-	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
-
-$(EX_OBJ):%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
-	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ $(BINARY_DIR)/$(LINK_OBJ) -o $(BINARY_DIR)/$@.out $(LIBS)
-
-bin_dir:
-	mkdir -p ./$(BINARY_DIR)/
-
-common: bin_dir
-	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
-
-.DEFAULT_GOAL := build
-.PHONY: build
-
-build: common $(LINK_OBJ) $(EX_OBJ)
-
-run:
-	./$(BINARY_DIR)/$(EX_OBJ).out
-
-clean:
-	rm -rf ./*.o
-	rm -rf ./*.out
-	rm -rf ./$(BINARY_DIR)/*
-
-clean_all: clean
-	rm -rf ./build/*
+ifneq ($(NUM_THREAD), 1)
+LIBS += -pthread
+endif

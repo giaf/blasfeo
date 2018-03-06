@@ -9,6 +9,8 @@
 #include "../include/blasfeo_d_kernel.h"
 #include "../include/blasfeo_d_blas.h"
 
+int kernel_dgemm_nt_4x4_lib4_test(int n, double *alpha, double *A, double *B, double *beta, double *C, double *D);
+
 int main()
 	{
 
@@ -46,6 +48,7 @@ int main()
 	double beta = 0.0;
 	int ret = kernel_dgemm_nt_4x4_lib4_test(n, &alpha, sB.pA, sA.pA, &beta, sB.pA, sD.pA);
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
+
 //	printf("\n%ld %ld\n", (long long) n, ret);
 //	printf("\n%ld %ld\n", (long long) &alpha, ret);
 //	printf("\n%ld %ld\n", (long long) sA.pA, ret);

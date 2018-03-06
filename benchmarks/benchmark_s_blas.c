@@ -26,6 +26,10 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+
+#if defined(BENCHMARKS_MODE)
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/time.h>
@@ -47,12 +51,22 @@
 
 
 
+#if defined(REF_BLAS_NETLIB)
+#include "cblas.h"
+#include "lapacke.h"
+#endif
+
 #if defined(REF_BLAS_OPENBLAS)
 void openblas_set_num_threads(int num_threads);
+#include "cblas.h"
+#include "lapacke.h"
 #endif
+
 #if defined(REF_BLAS_BLIS)
 void omp_set_num_threads(int num_threads);
+#include "blis.h"
 #endif
+
 #if defined(REF_BLAS_MKL)
 #include "mkl.h"
 #endif
@@ -65,7 +79,7 @@ void omp_set_num_threads(int num_threads);
 
 int main()
 	{
-		
+
 #if defined(REF_BLAS_OPENBLAS)
 	openblas_set_num_threads(1);
 #endif
@@ -119,7 +133,7 @@ int main()
 	const float memops_max = 1; // ???
 	printf("Testing BLAS version for generic scalar instruction set: theoretical peak %5.1f Gflops ???\n", flops_max*GHz_max);
 #endif
-	
+
 //	FILE *f;
 //	f = fopen("./test_problems/results/test_blas.m", "w"); // a
 
@@ -150,23 +164,23 @@ int main()
 //	fprintf(f, "\n");
 
 //	fprintf(f, "B = [\n");
-	
+
 
 
 	int i, j, rep, ll;
-	
+
 	const int bss = S_PS;
 	const int ncs = S_NC;
 
 /*	int info = 0;*/
-	
+
 	printf("\nn\t  sgemm_blasfeo\t  sgemm_blas\n");
 	printf("\nn\t Gflops\t    %%\t Gflops\t    %%\n\n");
-	
+
 #if 1
 	int nn[] = {4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 148, 152, 156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224, 228, 232, 236, 240, 244, 248, 252, 256, 260, 264, 268, 272, 276, 280, 284, 288, 292, 296, 300, 304, 308, 312, 316, 320, 324, 328, 332, 336, 340, 344, 348, 352, 356, 360, 364, 368, 372, 376, 380, 384, 388, 392, 396, 400, 404, 408, 412, 416, 420, 424, 428, 432, 436, 440, 444, 448, 452, 456, 460, 500, 550, 600, 650, 700};
 	int nnrep[] = {10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 400, 400, 400, 400, 400, 200, 200, 200, 200, 200, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20, 20, 20, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 4, 4, 4, 4, 4};
-	
+
 //	for(ll=0; ll<24; ll++)
 	for(ll=0; ll<75; ll++)
 //	for(ll=0; ll<115; ll++)
@@ -184,7 +198,7 @@ int main()
 
 #else
 	int nn[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
-	
+
 	for(ll=0; ll<24; ll++)
 
 		{
@@ -210,16 +224,16 @@ int main()
 		int i_t;
 		float d_1 = 1;
 		float d_0 = 0;
-	
+
 		for(i=0; i<n*n; i++)
 			A[i] = i;
-	
+
 		for(i=0; i<n; i++)
 			B[i*(n+1)] = 1;
-	
+
 		for(i=0; i<n*n; i++)
 			M[i] = 1;
-	
+
 		float *B2; s_zeros(&B2, n, n);
 		for(i=0; i<n*n; i++)
 			B2[i] = 1e-15;
@@ -336,7 +350,7 @@ int main()
 	//			scopy_(&n2, A, &i_1, B, &i_1);
 	//			ssyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
 	//			strmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
-	//			spotrf_(&c_l, &n, B2, &n, &info);
+				spotrf_(&c_l, &n, B2, &n, &info);
 	//			sgetrf_(&n, &n, B2, &n, ipiv, &info);
 	//			strsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
 	//			strsm_(&c_l, &c_u, &c_n, &c_n, &n, &n, &d_1, B2, &n, B, &n);
@@ -442,7 +456,7 @@ int main()
 		free(x2);
 		free(y2);
 		free(ipiv);
-		
+
 		blasfeo_free_smat(&sA);
 		blasfeo_free_smat(&sB);
 		blasfeo_free_smat(&sC);
@@ -460,6 +474,20 @@ int main()
 //	fclose(f);
 
 	return 0;
-	
+
 	}
 
+#else
+
+
+
+#include <stdio.h>
+
+int main()
+	{
+	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n");
+	printf("On CMake use -DBLASFEO_BENCHMARKS=ON .\n\n");
+	return 0;
+	}
+
+#endif

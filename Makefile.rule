@@ -86,6 +86,9 @@
  TESTING_MODE = 0
 # TESTING_MODE = 1
 
+BENCHMARKS_MODE = 0
+# BENCHMARKS_MODE = 1
+
 # Enable on-line checks for matrix and vector dimensions
 #
  RUNTIME_CHECKS = 0
@@ -141,11 +144,13 @@ CFLAGS  += #-g #-Wall -pedantic -Wfloat-equal #-pg
 ASFLAGS += #-g
 
 
+# Support local options
+mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+current_dir := $(patsubst %/,%,$(dir $(mkfile_path)))
+# Do not complain if Makefile.local does not exisist
+-include $(current_dir)/Makefile.local
 
-
-
-
-# Definitions
+# Conditional Definitions
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 CFLAGS  += -DLA_HIGH_PERFORMANCE
@@ -167,6 +172,9 @@ CFLAGS += -DEXT_DEP
 endif
 ifeq ($(TESTING_MODE), 1)
 CFLAGS += -DTESTING_MODE
+endif
+ifeq ($(BENCHMARKS_MODE), 1)
+CFLAGS += -DBENCHMARKS_MODE
 endif
 
 ifeq ($(MACRO_LEVEL), 1)
@@ -195,6 +203,12 @@ endif
 ifeq ($(OS), WINDOWS)
 CFLAGS  += -DOS_WINDOWS
 ASFLAGS += -DOS_WINDOWS
+endif
+
+# REF_BLAS
+
+ifndef REF_BLAS
+    REF_BLAS = 0
 endif
 
 ifeq ($(REF_BLAS), 0)

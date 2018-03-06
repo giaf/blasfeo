@@ -560,93 +560,124 @@ clean:
 	make -C kernel clean
 	make -C blas clean
 	make -C examples clean
-
-
-# clean test problems
-clean_test_problems:
-	make -C test_problems clean
+	make -C tests clean
+	make -C benchmarks clean
 
 
 # deep clean
-deep_clean: clean clean_test_problems
+deep_clean: clean
 	rm -f ./include/blasfeo_target.h
 	rm -f ./lib/libblasfeo.a
 	rm -f ./lib/libblasfeo.so
+	make -C examples clean_all
+	make -C tests clean_all
+	make -C benchmarks clean_all
 
-
-# test problems
-
-# directory for test problems binaries
+# directory for tests  binaries
 BINARY_DIR = build/$(LA)/$(TARGET)
 
+### benchmarks
+
+deploy_to_benchmarks:
+	mkdir -p ./benchmarks/$(BINARY_DIR)/
+	cp ./lib/libblasfeo.a ./benchmarks/$(BINARY_DIR)/
+
+build_benchmarks:
+	make -C benchmarks build
+	@echo
+	@echo "Benchmarks build complete."
+	@echo
+
+benchmarks: deploy_to_benchmarks build_benchmarks
+
+run_benchmarks:
+	make -C benchmarks run
+
+### examples
+
+deploy_to_examples:
+	mkdir -p ./examples/$(BINARY_DIR)/
+	cp ./lib/libblasfeo.a ./examples/$(BINARY_DIR)/
+
+build_examples:
+	make -C examples build
+	@echo
+	@echo "Examples build complete."
+	@echo
+
+examples: deploy_to_examples build_examples
+
+run_examples:
+	make -C examples run
+
+### tests
 
 # copy static library into test path
-deploy_to_test:
-	mkdir -p ./test_problems/$(BINARY_DIR)
-	cp ./lib/libblasfeo.a ./test_problems/$(BINARY_DIR)/
+deploy_to_tests:
+	mkdir -p ./tests/$(BINARY_DIR)
+	cp ./lib/libblasfeo.a ./tests/$(BINARY_DIR)/
 ifeq ($(TESTING_MODE), 1)
-	cp ./lib/libblasfeo_ref.a ./test_problems/$(BINARY_DIR)/
+	cp ./lib/libblasfeo_ref.a ./tests/$(BINARY_DIR)/
 endif
 
+# test one, one single test
 
-# one single test
-build_test:
-	make -C test_problems one_test
+build_tests_one:
+	make -C tests one
 	@echo
-	@echo " Test problem build complete."
+	@echo " Build test_one complete."
 	@echo
 
-run_test:
-	make -C test_problems run
+tests_one: deploy_to_tests build_tests_one
 
-test: deploy_to_test build_test
-
+run_tests_one:
+	make -C tests run_one
 
 # aux test
-build_test_aux:
-	make -C test_problems aux
+build_tests_aux:
+	make -C tests aux
 	@echo
-	@echo " Test problem build complete."
+	@echo " Build tests_aux complete."
 	@echo
 
-run_test_aux:
-	make -C test_problems run_aux
+tests_aux: deploy_to_tests build_tests_aux
 
-test_aux: deploy_to_test build_test_aux
-
+run_tests_aux:
+	make -C tests run_aux
 
 # blas test
-build_test_blas:
-	make -C test_problems blas
+build_tests_blas:
+	make -C tests blas
 	@echo
-	@echo " Test problem build complete."
+	@echo " Build tests_blas complete."
 	@echo
 
-run_test_blas:
-	make -C test_problems run_blas
+tests_blas: deploy_to_tests build_tests_blas
 
-test_blas: deploy_to_test build_test_blas
+run_tests_blas:
+	make -C tests run_blas
 
+### shortcuts
 
-# deep build library (take into account flags changes)
-# copy library
-# build tests
-test_aux_clean: clean static_library test_aux
+tests_all: tests_aux tests_blas
+run_tests_all: run_tests_blas run_tests_aux
+build_tests_all: build_tests_blas build_tests_aux
 
-# build tests (use existing library)
-# run tests
-update_test_aux: build_test_aux run_test_aux
+tests_clean_all:
+	make -C tests clean_all
+examples_clean_all:
+	make -C examples clean_all
+benchmarks_clean_all:
+	make -C benchmarks clean_all
 
-# build library
-# copy library
-# build test
-# run test
-update_lib_test_aux: static_library test_aux run_test_aux
+# test_rebuild: if tests sources is modified
+# build tests (use existing library); run tests
+update_test: build_test_all run_test_all
 
-# deep build library (take into account flags changes)
-# copy library
-# build test
-# run test
-update_target_test_aux: test_aux_clean run_test_aux
+# lib_rebuild: modified blasfeo lib code
+# build lib; copy lib; build test; run test
+update_lib_test: static_library test_all run_test_all
 
-
+# hard_rebuild: modified blasfeo lib flags affecting macros
+# delete lib; build lib; copy lib; build test; run test
+update_deep_test: clean static_library test_all run_test_all

@@ -5,6 +5,7 @@
 include/blasfeo_target.h
 octave-workspace
 build/
+Makefile.local
 *.aux
 *.toc
 *.log

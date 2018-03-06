@@ -31,9 +31,10 @@ project(blasfeo C ASM)
 
 # enable_language(C ASM)
 
+
 # Target architecture
-# set(TARGET X64_INTEL_HASWELL)
-set(TARGET X64_INTEL_SANDY_BRIDGE CACHE STRING "Target architecture")
+set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")
+# set(TARGET X64_INTEL_SANDY_BRIDGE
 # set(TARGET X64_INTEL_CORE)
 # set(TARGET X64_AMD_BULLDOZER)
 # set(TARGET ARMV8A_ARM_CORTEX_A57)
@@ -45,7 +46,7 @@ set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra optimization level")
 # set(LA REFERENCE)
 # set(LA BLAS)
 
-# BLAS and LAPACK version (for LA=BLAS in BLASFEO)
+# BLAS and LAPACK version (for LA=BLAS in BLASFEO or for BLASFEO_BENCHMARS=ON)
 set(REF_BLAS 0 CACHE STRING "Reference blas to use")
 # set(REF_BLAS OPENBLAS)
 # set(REF_BLAS NETLIB)
@@ -53,16 +54,18 @@ set(REF_BLAS 0 CACHE STRING "Reference blas to use")
 # set(REF_BLAS BLIS)
 # set(REF_BLAS ATLAS)
 
+# Options
+# set(BLASFEO_TESTING ON CACHE BOOL "Tests enabled")
+set(BLASFEO_TESTING OFF CACHE BOOL "Tests disabled")
+# set(BLASFEO_BENCHMARKS ON CACHE BOOL "Benchmarks enabled")
+set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled")
+
 # Compile auxiliary functions with external dependencies
 # (for memory allocation and printing)
 set(EXT_DEP ON CACHE BOOL "Compile external dependencies in BLASFEO")
 
 configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
-
-# Enable tests
-# option(BLASFEO_TESTING "Enable tests" ON)
-option(BLASFEO_TESTING "Enable tests" OFF)
 
 # C Compiler
 # set(CC_COMPILER gcc CACHE STRING "compiler")
@@ -110,8 +113,17 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
 endif()
 
 # testing
-if(BLASFEO_TESTING)
+if(BLASFEO_TESTING MATCHES ON)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTESTING_MODE=1")
+endif()
+
+if(BLASFEO_BENCHMARKS MATCHES ON)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBENCHMARKS_MODE=1")
+	if(NOT REF_BLAS)
+		message(FATAL_ERROR
+				"\nBENCHMARKS_MODE: No reference blas selected"
+				"\nUse i.e. -DREF_BLAS=OPENBLAS")
+	endif()
 endif()
 
 
@@ -171,11 +183,11 @@ if(${REF_BLAS} MATCHES OPENBLAS)
 endif(${REF_BLAS} MATCHES OPENBLAS)
 
 if(${REF_BLAS} MATCHES BLIS)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_BLIS -std=c99")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_BLIS -std=c99 -I/opt/blis/include/blis")
 endif(${REF_BLAS} MATCHES BLIS)
 
 if(${REF_BLAS} MATCHES NETLIB)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_NETLIB")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_NETLIB -I/opt/netlib/include")
 endif(${REF_BLAS} MATCHES NETLIB)
 
 if(${REF_BLAS} MATCHES MKL)
@@ -641,7 +653,7 @@ if(${EXT_DEP})
 endif()
 
 
-if(BLASFEO_TESTING)
+if(BLASFEO_TESTING MATCHES ON)
 
 	file(GLOB AUX_REF_SRC
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_libref.c
@@ -660,6 +672,7 @@ set(BLASFEO_SRC ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
 # add library
 add_library(blasfeo ${BLASFEO_SRC})
 
+
 target_include_directories(blasfeo
 	PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
@@ -674,5 +687,11 @@ install(EXPORT blasfeoConfig DESTINATION cmake)
 file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
 install(FILES ${BLASFEO_HEADERS} DESTINATION ${BLASFEO_HEADERS_INSTALLATION_DIRECTORY})
 
-# test problems
-add_subdirectory(test_problems)
+# tests
+add_subdirectory(tests)
+
+# benchmarks
+add_subdirectory(benchmarks)
+
+# examples
+add_subdirectory(examples)

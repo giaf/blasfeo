@@ -1,9 +1,9 @@
 ###################################################################################################
 #                                                                                                 #
-# This file is part of BLASFEO.                                                                   #
+# This file is part of HPIPM.                                                                     #
 #                                                                                                 #
-# BLASFEO -- BLAS For Embedded Optimization.                                                      #
-# Copyright (C) 2016-2017 by Gianluca Frison.                                                     #
+# HPIPM -- High Performance Interior Point Method.                                                #
+# Copyright (C) 2017 by Gianluca Frison.                                                          #
 # Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              #
 # All rights reserved.                                                                            #
 #                                                                                                 #
@@ -21,65 +21,26 @@
 # License along with HPMPC; if not, write to the Free Software                                    #
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  #
 #                                                                                                 #
-# Author: Gianluca Frison, giaf (at) dtu.dk                                                       #
-#                          gianluca.frison (at) imtek.uni-freiburg.de                             #
+# Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             #
 #                                                                                                 #
 ###################################################################################################
 
-include ../Makefile.rule
 
-BINARY_DIR = build/$(LA)/$(TARGET)
-LIBS = $(BINARY_DIR)/libblasfeo.a
+add_executable(example_d_riccati_recursion example_d_riccati_recursion.c tools.c)
+add_executable(example_s_riccati_recursion example_s_riccati_recursion.c tools.c)
 
-# add different link library for different REF_BLAS implementation
-include ../Makefile.blas
+target_link_libraries(example_d_riccati_recursion blasfeo m)
+target_link_libraries(example_s_riccati_recursion blasfeo m)
+
+add_executable(example_d_lu_factorization example_d_lu_factorization.c)
+add_executable(example_s_lu_factorization example_s_lu_factorization.c)
+
+target_link_libraries(example_d_lu_factorization blasfeo m)
+target_link_libraries(example_s_lu_factorization blasfeo m)
+
+add_executable(example_kernel_dgemm example_kernel_dgemm.c kernel_dgemm.S)
+target_link_libraries(example_kernel_dgemm blasfeo m)
 
 
-LINK_OBJ =
-EX_OBJ =
 
-## dgemm kernel
-EX_OBJ = example_kernel_dgemm.o
-LINK_OBJ = kernel_dgemm.o
 
-## factorization
-# EX_OBJ = example_d_lu_factorization.o
-# EX_OBJ = example_s_lu_factorization.o
-# LINK_OBJ = tools.o
-
-## riccati
-# EX_OBJ = example_d_riccati_recursion.o
-# EX_OBJ = example_s_riccati_recursion.o
-# LINK_OBJ = tools.o
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
-
-kernel_%.o: kernel_%.S
-	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
-
-$(EX_OBJ):%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
-	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ $(BINARY_DIR)/$(LINK_OBJ) -o $(BINARY_DIR)/$@.out $(LIBS)
-
-bin_dir:
-	mkdir -p ./$(BINARY_DIR)/
-
-common: bin_dir
-	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
-
-.DEFAULT_GOAL := build
-.PHONY: build
-
-build: common $(LINK_OBJ) $(EX_OBJ)
-
-run:
-	./$(BINARY_DIR)/$(EX_OBJ).out
-
-clean:
-	rm -rf ./*.o
-	rm -rf ./*.out
-	rm -rf ./$(BINARY_DIR)/*
-
-clean_all: clean
-	rm -rf ./build/*
