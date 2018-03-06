@@ -39,10 +39,11 @@ ifeq ($(TESTING_MODE), 1)
 LIBS += $(BINARY_DIR)/libblasfeo_ref.a
 SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo_ref
 endif
-LIBS += $(BINARY_DIR)/libblasfeo.a -lm
+LIBS += $(BINARY_DIR)/libblasfeo.a
 # SHARED_LIBS = -L. $(BINARY_DIR)/libblasfeo.so
-SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo -lm
+SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
 
+include ../Makefile.blas
 
 # select one single test
 ONE_OBJS =
@@ -71,10 +72,8 @@ test_%.o: test_%.c
 
 # ----------- Targets
 
-.DEFAULT_GOAL := build
-.PHONY: build
-
-default: obj
+.DEFAULT_GOAL := obj
+.PHONY: obj
 
 obj: aux blas
 
@@ -83,6 +82,9 @@ bin_dir:
 
 common: bin_dir
 	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
+ifeq ($(TESTING_MODE), 1)
+	cp ../lib/libblasfeo_ref.a ./$(BINARY_DIR)
+endif
 
 one: common $(ONE_LINK_OBJS) $(ONE_OBJS)
 	@echo
