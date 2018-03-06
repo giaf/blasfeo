@@ -44,7 +44,7 @@ void dgemm_nt_lib(int m, int n, int k, double alpha, double *pA, int sda, double
 
 	if(m<=0 || n<=0)
 		return;
-	
+
 	const int ps = 4;
 
 	int i, j, l;
@@ -170,7 +170,7 @@ void dgemm_nt_lib(int m, int n, int k, double alpha, double *pA, int sda, double
 		kernel_dgemm_nt_8x8l_vs_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
 		kernel_dgemm_nt_8x8u_vs_lib4(k, &alpha, &pA[i*sda], sda, &pB[(j+4)*sdb], sdb, &beta, &pC[(j+4)*ps+i*sdc], sdc, &pD[(j+4)*ps+i*sdd], sdd, m-i, n-(j+4));
 		}
-	
+
 	if(j<n-4)
 		{
 		kernel_dgemm_nt_8x8l_vs_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
@@ -249,11 +249,11 @@ void dtrmm_nt_ru_lib(int m, int n, double alpha, double *pA, int sda, double *pB
 
 	if(m<=0 || n<=0)
 		return;
-	
+
 	const int ps = 4;
-	
+
 	int i, j;
-	
+
 	i = 0;
 // XXX there is a bug here !!!!!!
 #if 0//defined(TARGET_X64_INTEL_HASWELL)
@@ -328,7 +328,7 @@ void dtrmm_nt_ru_lib(int m, int n, double alpha, double *pA, int sda, double *pB
 		goto left_4;
 		}
 #endif
-	
+
 	// common return
 	return;
 
@@ -387,11 +387,11 @@ void dtrsm_nt_rl_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb,
 
 	if(m<=0 || n<=0)
 		return;
-	
+
 	const int ps = 4;
-	
+
 	int i, j;
-	
+
 	i = 0;
 
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -506,15 +506,15 @@ void dtrsm_nt_ru_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 
 	if(m<=0 || n<=0)
 		return;
-	
+
 	const int ps = 4;
-	
+
 	int i, j, idx;
 
 	int rn = n%4;
 
 	double *dummy;
-	
+
 	i = 0;
 
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -670,11 +670,11 @@ void dtrsm_nn_ll_one_lib(int m, int n, double *pA, int sda, double *pB, int sdb,
 
 	if(m<=0 || n<=0)
 		return;
-	
+
 	const int ps = 4;
-	
+
 	int i, j;
-	
+
 	i = 0;
 
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -779,12 +779,12 @@ void dtrsm_nn_lu_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 
 	if(m<=0 || n<=0)
 		return;
-	
+
 	const int ps = 4;
-	
+
 	int i, j, idx;
 	double *dummy;
-	
+
 	i = 0;
 	int rm = m%4;
 	if(rm>0)
@@ -862,7 +862,7 @@ void dlauum_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *pA, int
 
 	if(m<=0 || n<=0)
 		return;
-	
+
 	// TODO remove
 	double alpha, beta;
 	if(alg==0)
@@ -1126,7 +1126,7 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 	if(m<=0 | n<=0)
 		return;
-	
+
 	const int ps = 4;
 
 	int sda = sA->cn;
@@ -1142,10 +1142,10 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 	if(ai==0 & bi==0 & ci==0 & di==0)
 		{
-		dgemm_nt_lib(m, n, k, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd); 
+		dgemm_nt_lib(m, n, k, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd);
 		return;
 		}
-	
+
 	int ci0 = ci-air;
 	int di0 = di-air;
 	int offsetC;
@@ -1170,7 +1170,7 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		pD += -4*sdd;
 		offsetD = ps+di0;
 		}
-	
+
 	int i, j, l;
 
 	int idxB;
@@ -1308,8 +1308,10 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	int sdb = sB->cn;
 	int sdc = sC->cn;
 	int sdd = sD->cn;
+
 	int air = ai & (ps-1);
 	int bir = bi & (ps-1);
+
 	double *pA = sA->pA + aj*ps + (ai-air)*sda;
 	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
 	double *pC = sC->pA + cj*ps;
@@ -1321,6 +1323,7 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	int di0 = di-air;
 	int offsetC;
 	int offsetD;
+
 	if(ci0>=0)
 		{
 		pC += ci0/ps*ps*sdd;
@@ -1328,9 +1331,10 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		}
 	else
 		{
-		pC += -4*sdc;
+		pC += -ps*sdc;
 		offsetC = ps+ci0;
 		}
+
 	if(di0>=0)
 		{
 		pD += di0/ps*ps*sdd;
@@ -1338,10 +1342,10 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		}
 	else
 		{
-		pD += -4*sdd;
+		pD += -ps*sdd;
 		offsetD = ps+di0;
 		}
-	
+
 	int i, j, l;
 
 	// clean up at the beginning
@@ -1374,7 +1378,6 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 			pD += 2*ps*sda;
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
 			// nothing more to do
-//			return;
 			}
 #endif
 		}
@@ -1737,7 +1740,7 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 	return;
 	}
-	
+
 
 
 // dtrsm_nn_llu
@@ -1756,7 +1759,7 @@ void blasfeo_dtrsm_llnu(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 	double *pA = sA->pA + aj*ps;
 	double *pB = sB->pA + bj*ps;
 	double *pD = sD->pA + dj*ps;
-	dtrsm_nn_ll_one_lib(m, n, pA, sda, pB, sdb, pD, sdd); 
+	dtrsm_nn_ll_one_lib(m, n, pA, sda, pB, sdb, pD, sdd);
 	return;
 	}
 
@@ -1797,7 +1800,7 @@ void blasfeo_dtrsm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 			dA[ii] = 1.0 / dA[ii];
 		sA->use_dA = 0;
 		}
-	dtrsm_nn_lu_inv_lib(m, n, pA, sda, dA, pB, sdb, pD, sdd); 
+	dtrsm_nn_lu_inv_lib(m, n, pA, sda, dA, pB, sdb, pD, sdd);
 	return;
 	}
 
@@ -1809,7 +1812,7 @@ void blasfeo_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 
 	if(m<=0 || n<=0)
 		return;
-	
+
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
 		printf("\nblasfeo_dtrsm_rltn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
@@ -1848,7 +1851,7 @@ void blasfeo_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 		sA->use_dA = 0;
 		}
 
-//	dtrsm_nt_rl_inv_lib(m, n, pA, sda, dA, pB, sdb, pD, sdd); 
+//	dtrsm_nt_rl_inv_lib(m, n, pA, sda, dA, pB, sdb, pD, sdd);
 	i = 0;
 #if defined(TARGET_X64_INTEL_HASWELL)
 	for(; i<m-11; i+=12)
@@ -2012,7 +2015,7 @@ void blasfeo_dtrsm_rltu(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 	double *pA = sA->pA + aj*ps;
 	double *pB = sB->pA + bj*ps;
 	double *pD = sD->pA + dj*ps;
-	dtrsm_nt_rl_one_lib(m, n, pA, sda, pB, sdb, pD, sdd); 
+	dtrsm_nt_rl_one_lib(m, n, pA, sda, pB, sdb, pD, sdd);
 	return;
 	}
 
@@ -2053,7 +2056,7 @@ void blasfeo_dtrsm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 			dA[ii] = 1.0 / dA[ii];
 		sA->use_dA = 0;
 		}
-	dtrsm_nt_ru_inv_lib(m, n, pA, sda, dA, pB, sdb, pD, sdd); 
+	dtrsm_nt_ru_inv_lib(m, n, pA, sda, dA, pB, sdb, pD, sdd);
 	return;
 	}
 
@@ -2074,7 +2077,7 @@ void blasfeo_dtrmm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sB, int
 	double *pA = sA->pA + aj*ps;
 	double *pB = sB->pA + bj*ps;
 	double *pD = sD->pA + dj*ps;
-	dtrmm_nt_ru_lib(m, n, alpha, pA, sda, pB, sdb, 0.0, pD, sdd, pD, sdd); 
+	dtrmm_nt_ru_lib(m, n, alpha, pA, sda, pB, sdb, 0.0, pD, sdd, pD, sdd);
 	return;
 	}
 
@@ -2109,7 +2112,7 @@ void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, int
 		pD += -4*sdd;
 		offsetD = ps+di0;
 		}
-	
+
 	int ii, jj;
 
 	if(air!=0)
@@ -2265,7 +2268,7 @@ void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, int
 
 void blasfeo_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
-	
+
 	if(m<=0)
 		return;
 
@@ -2489,7 +2492,7 @@ void blasfeo_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 
 void blasfeo_dsyrk_ln_mn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
-	
+
 	if(m<=0 | n<=0)
 		return;
 

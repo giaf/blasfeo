@@ -1451,11 +1451,11 @@ inner_edge_dgemm_add_nn_4x4_lib4:
 #endif
 #endif
 
-	cmpl			$0, %r14d // offset==0
-	jle				2f // end
+	cmpl			$0, %r14d    // offset==0
+	jle				2f           // end
 
-	cmpl			$0, %r10d // k==0
-	jle				2f // end
+	cmpl			$0, %r10d    // k==0
+	jle				2f           // end
 
 	movl			$4, %r15d
 	subl			%r14d, %r15d // 4-offsetB
@@ -1466,8 +1466,8 @@ inner_edge_dgemm_add_nn_4x4_lib4:
 	cmovgl			%r10d, %r15d // kend=min(k,4-offsetB)
 
 	movl			%r14d, %eax
-	sall			$3, %eax // offsetB*sizeof(double)
-	addq			%rax, %r12 // B+offsetB*sizeof(double)
+	sall			$3, %eax     // offsetB*sizeof(double)
+	addq			%rax, %r12   // B+offsetB*sizeof(double)
 
 1:
 	vmovapd			0(%r11), %ymm8
@@ -6457,12 +6457,12 @@ kernel_dgemm_nn_4x4_gen_lib4:
 
 	// call inner dgemm kernel nn
 
-	movq	ARG1, %r10 // k
-	movq	ARG3, %r11  // A
-	movq	ARG5, %r12  // B
-	movq	ARG6, %r13 // sdb
-	sall	$5, %r13d // 4*sdb*sizeof(double)
-	movq	ARG4, %r14 // offsetB
+	movq	ARG1, %r10   // k
+	movq	ARG3, %r11   // A
+	movq	ARG5, %r12   // B
+	movq	ARG6, %r13   // sdb
+	sall	$5,   %r13d  // 4*sdb*sizeof(double)
+	movq	ARG4, %r14   // offsetB
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DGEMM_ADD_NN_4X4_LIB4

@@ -261,8 +261,8 @@ int main()
 							blasfeo_dgemm_nn(ni, nj, nk, alpha, &sA, ii, jj, &sB, ii, jj, beta, &sC, ii, jj, &sD, ii, jj);
 							blasfeo_dgemm_nn_ref(ni, nj, nk, alpha, &rA, ii, jj, &rB, ii, jj, beta, &rC, ii, jj, &rD, ii, jj);
 
-							/* assert(dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA)); */
-							int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, 0);
+							int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, 1);
+
 							if (!res)
 								{
 								bad_calls += 1;
@@ -282,6 +282,9 @@ int main()
 									/* ii, nk, jj, nj, */
 									/* beta, ii, ni, jj, nj); */
 								}
+
+							assert(res);
+
 							}
 						}
 					}
