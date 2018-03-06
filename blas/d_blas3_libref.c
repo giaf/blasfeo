@@ -7,18 +7,18 @@
 * Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              *
 * All rights reserved.                                                                            *
 *                                                                                                 *
-* HPMPC is free software; you can redistribute it and/or                                          *
+* BLASFEO is free software; you can redistribute it and/or                                        *
 * modify it under the terms of the GNU Lesser General Public                                      *
 * License as published by the Free Software Foundation; either                                    *
 * version 2.1 of the License, or (at your option) any later version.                              *
 *                                                                                                 *
-* HPMPC is distributed in the hope that it will be useful,                                        *
+* BLASFEO is distributed in the hope that it will be useful,                                      *
 * but WITHOUT ANY WARRANTY; without even the implied warranty of                                  *
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                                            *
 * See the GNU Lesser General Public License for more details.                                     *
 *                                                                                                 *
 * You should have received a copy of the GNU Lesser General Public                                *
-* License along with HPMPC; if not, write to the Free Software                                    *
+* License along with BLASFEO; if not, write to the Free Software                                  *
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  *
 *                                                                                                 *
 * Author: Gianluca Frison, giaf (at) dtu.dk                                                       *
@@ -26,47 +26,34 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#if defined(EXT_DEP)
+/*
+ * blas3 functions for LA:REFERENCE (column major)
+ *
+ * blas/d_blas_lib*.c
+ *
+ */
 
-
-
+#include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
+
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_d_aux.h"
+#include "../include/blasfeo_d_aux.h"
 
 
+#define REAL double
+#define STRMAT blasfeo_dmat_ref
+#define STRVEC blasfeo_dvec_ref
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define GEMM_NN_LIBSTR blasfeo_dgemm_nn_ref
 
-
-#ifdef BLASFEO_COMMON
-// expose reference BLASFEO for testing
-// see blasfeo_s_aux_exp_dep.h for help
-
-void blasfeo_print_smat_ref(int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
-void blasfeo_allocate_smat_ref(int m, int n, struct blasfeo_smat_ref *sA);
-void blasfeo_allocate_svec_ref(int m, struct blasfeo_svec_ref *sa);
-void blasfeo_free_smat_ref(struct blasfeo_smat_ref *sA);
-void blasfeo_free_svec_ref(struct blasfeo_svec_ref *sa);
-void blasfeo_print_smat_ref(int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
-void blasfeo_print_exp_smat_ref(int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
-void blasfeo_print_to_file_smat_ref(FILE *file, int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
-void blasfeo_print_to_string_smat_ref(char **buf_out, int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
-void blasfeo_print_svec(int m, struct blasfeo_svec *sa, int ai);
-void blasfeo_print_exp_svec(int m, struct blasfeo_svec *sa, int ai);
-void blasfeo_print_to_file_svec(FILE *file, int m, struct blasfeo_svec *sa, int ai);
-void blasfeo_print_to_string_svec(char **buf_out, int m, struct blasfeo_svec *sa, int ai);
-void blasfeo_print_tran_svec(int m, struct blasfeo_svec *sa, int ai);
-void blasfeo_print_exp_tran_svec(int m, struct blasfeo_svec *sa, int ai);
-void blasfeo_print_to_file_tran_svec(FILE *file, int m, struct blasfeo_svec *sa, int ai);
-void blasfeo_print_to_string_tran_svec(char **buf_out, int m, struct blasfeo_svec *sa, int ai);
-#endif
+#define COPY dcopy_
+#define GEMM dgemm_
+#define SYRK dsyrk_
+#define TRMM dtrmm_
+#define TRSM dtrsm_
 
 
-#ifdef __cplusplus
-}
-#endif
-
-
-
-#endif // EXT_DEP
+// TESTING_MODE
+#include "x_blas3_lib.c"

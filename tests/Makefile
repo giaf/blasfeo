@@ -35,12 +35,13 @@ BINARY_DIR = build/$(LA)/$(TARGET)
 
 LIBS =
 SHARED_LIBS =
+
 ifeq ($(TESTING_MODE), 1)
 LIBS += $(BINARY_DIR)/libblasfeo_ref.a
 SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo_ref
 endif
+
 LIBS += $(BINARY_DIR)/libblasfeo.a
-# SHARED_LIBS = -L. $(BINARY_DIR)/libblasfeo.so
 SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
 
 include ../Makefile.blas
@@ -60,8 +61,7 @@ AUX_OBJS += test_s_aux.o
 
 # blas test
 BLAS_OBJS =
-# BLAS_OBJS += test_d_blas.o
-# BLAS_OBJS += test_s_blas.o
+BLAS_OBJS += test_d_blas3.o
 
 test_%.o: test_%.c
 	@echo
@@ -86,10 +86,7 @@ ifeq ($(TESTING_MODE), 1)
 	cp ../lib/libblasfeo_ref.a ./$(BINARY_DIR)
 endif
 
-one: common $(ONE_LINK_OBJS) $(ONE_OBJS)
-	@echo
-	@echo build $(ONE_LINK_OBJS) $(ONE_OBJS)
-	@echo
+one: common $(ONE_OBJS)
 
 
 aux: common $(AUX_OBJS)
@@ -104,8 +101,7 @@ run_aux:
 	./$(BINARY_DIR)/test_s_aux.o.out
 
 run_blas:
-	# ./$(BINARY_DIR)/test_d_blas.o.out
-	# ./$(BINARY_DIR)/test_s_blas.o.out
+	./$(BINARY_DIR)/test_d_blas3.o.out
 
 clean:
 	rm -rf ./*.o

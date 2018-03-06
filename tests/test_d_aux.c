@@ -68,11 +68,14 @@ int main()
 	#error TARGET undefined
 #endif
 
+#ifndef PRECISION
+	#error PRECISION undefined
+#endif
 
-	printf("\n\n\n--------------- Double Precision --------------------\n\n\n");
 
 SHOW_DEFINE(LA)
 SHOW_DEFINE(TARGET)
+SHOW_DEFINE(PRECISION)
 
 
 	int ii, jj;
@@ -180,7 +183,7 @@ SHOW_DEFINE(TARGET)
 		/* printf("value 0,1: %f", MATEL_LIBSTR(&sA, 0,1)); */
 		/* printf("PS:%d", PS); */
 
-		assert(dgecmp_libstr(n, n, &sA, &rA, &sA, &rA));
+		assert(dgecmp_libstr(n, n, &sA, &rA, &sA, &rA, 1));
 
 		// loop over B offset
 		for (jj = 0; jj < 8; jj++)
@@ -197,7 +200,7 @@ SHOW_DEFINE(TARGET)
 			// REF submatrix copy&scale
 			blasfeo_dgecpsc_ref(ni, mi, alpha, &rA, ii, 0, &rB, jj, 0);
 			// check against blas with blasfeo REF
-			assert(dgecmp_libstr(n, n, &sB, &rB, &sA, &rA));
+			assert(dgecmp_libstr(n, n, &sB, &rB, &sA, &rA, 1));
 
 			// ---- Copy
 			//
@@ -206,7 +209,7 @@ SHOW_DEFINE(TARGET)
 
 			blasfeo_dgecp(     ni, mi, &sA, ii, 0, &sB, jj, 0);
 			blasfeo_dgecp_ref(ni, mi, &rA, ii, 0, &rB, jj, 0);
-			assert(dgecmp_libstr(n, n, &sB, &rB, &sA, &rA));
+			assert(dgecmp_libstr(n, n, &sB, &rB, &sA, &rA, 1));
 
 			printf("\n");
 			}
@@ -216,17 +219,11 @@ SHOW_DEFINE(TARGET)
 
 	printf("\n----------- END TEST Copy&Scale\n");
 
-	printf("\n----------- TEST SUCCEDED\n\n");
+	printf("\n----------- TEST SUCCEEDED\n\n");
 
-#if defined(LA)
-SHOW_DEFINE(LA)
-#endif
-#if defined(TARGET)
-SHOW_DEFINE(TARGET)
-#endif
-#if defined(PRECISION)
-SHOW_DEFINE(PRECISION)
-#endif
+	SHOW_DEFINE(LA)
+	SHOW_DEFINE(TARGET)
+	SHOW_DEFINE(PRECISION)
 
 	printf("\n\n");
 
