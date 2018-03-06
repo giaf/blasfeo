@@ -68,9 +68,10 @@ bin_dir:
 common: bin_dir
 	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
 
-default: build
+.DEFAULT_GOAL := build
+.PHONY: build
 
-build: $(LINK_OBJ) $(EX_OBJ) common
+build: common $(LINK_OBJ) $(EX_OBJ)
 
 run:
 	./$(BINARY_DIR)/$(EX_OBJ).out
