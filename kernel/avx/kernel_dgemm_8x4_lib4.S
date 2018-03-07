@@ -2444,16 +2444,16 @@ inner_edge_dgemm_add_nn_4x8_lib4:
 	vbroadcastsd	96(%r12), %ymm13
 	vmulpd			%ymm12, %ymm13, %ymm15
 	vaddpd			%ymm3, %ymm15, %ymm3
-	vbroadcastsd	128(%r12), %ymm12 // B
+	vbroadcastsd	128(%r12), %ymm13 // B
 	vmulpd			%ymm12, %ymm13, %ymm15
 	vaddpd			%ymm4, %ymm15, %ymm4
-	vbroadcastsd	160(%r12), %ymm12 // B
+	vbroadcastsd	160(%r12), %ymm13 // B
 	vmulpd			%ymm12, %ymm13, %ymm15
 	vaddpd			%ymm5, %ymm15, %ymm5
-	vbroadcastsd	192(%r12), %ymm12 // B
+	vbroadcastsd	192(%r12), %ymm13 // B
 	vmulpd			%ymm12, %ymm13, %ymm15
 	vaddpd			%ymm6, %ymm15, %ymm6
-	vbroadcastsd	224(%r12), %ymm12 // B
+	vbroadcastsd	224(%r12), %ymm13 // B
 	vmulpd			%ymm12, %ymm13, %ymm15
 	vaddpd			%ymm7, %ymm15, %ymm7
 
