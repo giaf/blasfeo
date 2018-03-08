@@ -1,20 +1,35 @@
 /* prints a matrix in column-major format */
 void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int err_i, int err_j)
 	{
+	const int subsize = 6;
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	int j0,i0, ie, je;
 	int i, j;
+
+	i0 = err_i-subsize;
+	j0 = err_j-subsize;
+
+	if (i0 < 0) i0 = 0;
+	if (j0 < 0) j0 = 0;
+
+	ie = err_i+subsize;
+	je = err_j+subsize;
+
+	if (ie > m) ie = m;
+	if (je > n) je = n;
+
 	printf("%s\t", "REF");
-	for(j=0; j<n; j++) printf("%11d\t", j);
+	for(j=j0; j<je; j++) printf("%11d\t", j);
 	printf("\n");
-	for(j=0; j<n; j++) printf("-----------------");
+	for(j=j0; j<je; j++) printf("-----------------");
 	printf("\n");
 
-	for(i=0; i<m; i++)
+	for(i=i0; i<ie; i++)
 		{
-		for(j=0; j<n; j++)
+		for(j=j0; j<je; j++)
 			{
-			if (j == 0)  printf("%d\t", i);
+			if (j == j0)  printf("%d\t| ", i);
 			if ((i==err_i) && (j==err_j)) printf(ANSI_COLOR_RED"%9.2f\t"ANSI_COLOR_RESET, pA[i+lda*j]);
 			else printf("%9.2f\t", pA[i+lda*j]);
 			}
@@ -28,12 +43,29 @@ void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int e
 void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, int err_i, int err_j)
 	{
 	const int ps = PS;
+	const int subsize = 6;
+	int i0, j0, ie, je;
+
+	i0 = err_i-subsize;
+	j0 = err_j-subsize;
+
+	if (i0 < 0) i0 = 0;
+	if (j0 < 0) j0 = 0;
+
+	ie = err_i+subsize;
+	je = err_j+subsize;
+
+	if (ie > m) ie = m;
+	if (je > n) je = n;
+
 	int sda = sA->cn;
 	REAL *pA = sA->pA + aj*ps + ai/ps*ps*sda + ai%ps;
 	int ii, i, j, tmp;
-	ii = 0;
+	ii = i0-i0%ps;
 	printf("%s\t", "HP");
-	for(j=0; j<n; j++) printf("%11d\t", j);
+	for(j=j0; j<je; j++) printf("%11d\t", j);
+	printf("\n");
+	for(j=j0; j<je; j++) printf("-----------------");
 	printf("\n");
 	if(ai%ps>0)
 		{
@@ -41,9 +73,9 @@ void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, i
 		tmp = m<tmp ? m : tmp;
 		for(i=0; i<tmp; i++)
 			{
-			for(j=0; j<n; j++)
+			for(j=j0; j<je; j++)
 				{
-				if (j == 0) printf("%d\t", i);
+				if (j == j0) printf("%d\t| ", i);
 				if ((i==err_i) && (j==err_j)) printf(ANSI_COLOR_RED"%9.2f\t"ANSI_COLOR_RESET, pA[i+ps*j]);
 				else printf("%9.2f\t", pA[i+ps*j]);
 				}
@@ -53,33 +85,36 @@ void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, i
 		m -= tmp;
 		}
 
-
-	for( ; ii<m-(ps-1); ii+=ps)
+	int ip0 = i0%ps;
+	for( ; ii<ie-(ps-1); ii+=ps)
 		{
-		for(j=0; j<n; j++) printf("-----------------");
-		printf("\n");
-		for(i=0; i<ps; i++)
+		for(i=ip0; i<ps; i++)
 			{
-			for(j=0; j<n; j++)
+			for(j=j0; j<je; j++)
 				{
-				if (j == 0) printf("%d\t", ii+i);
-				if ((ii+i==err_i) && (j==err_j)) printf(ANSI_COLOR_RED"%9.2f\t"ANSI_COLOR_RESET, pA[i+ps*j+sda*ii]);
+				if (j == j0) printf("%d\t| ", ii+i);
+				if ((ii+i==err_i) && (j==err_j))
+				{
+					printf(ANSI_COLOR_RED"%9.2f\t"ANSI_COLOR_RESET, pA[i+ps*j+sda*ii]);
+				}
 				else printf("%9.2f\t", pA[i+ps*j+sda*ii]);
 				}
 			printf("\n");
+			ip0 = 0;
 			}
+		for(j=j0; j<je; j++) printf(ANSI_COLOR_CYAN"-----------------"ANSI_COLOR_RESET);
+		printf("\n");
 		}
-	for(j=0; j<n; j++) printf("-----------------");
-	printf("\n");
+	/* printf("\n"); */
 
-	if(ii<m)
+	if(ii<ie)
 		{
-		tmp = m-ii;
+		tmp = ie-ii;
 		for(i=0; i<tmp; i++)
 			{
-			for(j=0; j<n; j++)
+			for(j=j0; j<je; j++)
 				{
-				if (j == 0) printf("%d\t", ii+i);
+				if (j == j0) printf("%d\t| ", ii+i);
 				if ((ii+i==err_i) && (j==err_j)) printf(ANSI_COLOR_RED"%9.2f\t"ANSI_COLOR_RESET, pA[i+ps*j+sda*ii]);
 				else printf("%9.2f\t", pA[i+ps*j+sda*ii]);
 				}

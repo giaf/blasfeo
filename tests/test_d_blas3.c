@@ -285,7 +285,7 @@ int main()
 
 	if (!bad_calls)
 		{
-			printf("\n----------- TEST SUCCEEDED\n\n");
+			printf("\n----------- TEST SUCCEEDED, total calls: %d \n\n", total_calls);
 		}
 	else
 		{
