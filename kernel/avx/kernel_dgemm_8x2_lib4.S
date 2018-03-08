@@ -758,12 +758,12 @@ inner_edge_dgemm_add_nn_8x2_lib4:
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm0, %ymm0
 	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm4, %ymm4
+	vaddpd			%ymm15, %ymm2, %ymm2
 	vbroadcastsd	32(%r13), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm1, %ymm1
 	vmulpd			%ymm9, %ymm12, %ymm15
-	vaddpd			%ymm15, %ymm5, %ymm5
+	vaddpd			%ymm15, %ymm3, %ymm3
 
 	subl			$1, %r10d // k-1
 	subl			$1, %ebx // kend-1
