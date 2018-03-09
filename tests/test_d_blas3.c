@@ -214,11 +214,15 @@ int main()
 	#endif
 
 	int ret, ni, nj, nk, total_calls, bad_calls;
+	int AB_offset_i;
 
 	int ii0 = 0;
 	int jj0 = 0;
 	int iis = 8;
 	int jjs = 8;
+
+	int AB_offset0 = 0;
+	int AB_offsets = 5;
 
 	int ni0 = 2;
 	int nj0 = 5;
@@ -264,27 +268,31 @@ int main()
 						for (jj = jj0; jj < jj0+jjs; jj++)
 							{
 
+							// loop over row AB offset
+							for (AB_offset_i = AB_offset0; AB_offset_i < AB_offsets; AB_offset_i++)
+								{
 
-							// gemm_nn D <- alpha*A*B + beta*C
-							#if (VERBOSE == 2)
-							printf(
-								"Calling D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
-								ii, ni, jj, nj,
-								alpha, ii, ni, jj, nk,
-								ii, nk, jj, nj,
-								beta, ii, ni, jj, nj);
-							#endif
+								// gemm_nn D <- alpha*A*B + beta*C
+								#if (VERBOSE == 2)
+								printf(
+									"Calling D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
+									ii, ni, jj, nj,
+									alpha, ii, ni, jj, nk,
+									ii, nk, jj, nj,
+									beta, ii, ni, jj, nj);
+								#endif
 
-							blasfeo_dgemm_nn(ni, nj, nk, alpha, &sA, ii, jj, &sB, ii, jj, beta, &sC, ii, jj, &sD, ii, jj);
-							blasfeo_dgemm_nn_ref(ni, nj, nk, alpha, &rA, ii, jj, &rB, ii, jj, beta, &rC, ii, jj, &rD, ii, jj);
+								blasfeo_dgemm_nn(ni, nj, nk, alpha, &sA, ii, jj, &sB, ii+AB_offset_i, jj, beta, &sC, ii, jj, &sD, ii, jj);
+								blasfeo_dgemm_nn_ref(ni, nj, nk, alpha, &rA, ii, jj, &rB, ii+AB_offset_i, jj, beta, &rC, ii, jj, &rD, ii, jj);
 
-							int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, VERBOSE);
+								int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, VERBOSE);
 
-							if (!res) bad_calls += 1;
-							#if VERBOSE
-							assert(res);
-							#endif
+								if (!res) bad_calls += 1;
+								#if VERBOSE
+								assert(res);
+								#endif
 
+								}
 							}
 						}
 					}
