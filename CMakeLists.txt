@@ -97,14 +97,6 @@ set(RUNTIME_CHECKS 0)
 
 # compiler flags
 if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-	set(CMAKE_C_FLAGS "")
-	set(CMAKE_ASM_FLAGS "")
-	set(CMAKE_C_FLAGS_RELEASE "")
-	set(CMAKE_ASM_FLAGS_RELEASE "")
-
-	# optimization flags
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 
 	# build informations
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA=${LA}")
@@ -696,11 +688,13 @@ install(EXPORT blasfeoConfig DESTINATION cmake)
 file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
 install(FILES ${BLASFEO_HEADERS} DESTINATION ${BLASFEO_HEADERS_INSTALLATION_DIRECTORY})
 
-# tests
-add_subdirectory(tests)
+if(NOT CMAKE_SYSTEM MATCHES "dSpace")
+	# tests
+	add_subdirectory(tests)
 
-# benchmarks
-add_subdirectory(benchmarks)
+	# benchmarks
+	add_subdirectory(benchmarks)
 
-# examples
-add_subdirectory(examples)
+	# examples
+	add_subdirectory(examples)
+endif()
