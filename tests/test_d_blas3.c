@@ -234,7 +234,7 @@ int main()
 	double alphas[6] = {0.0, 0.0001, 0.02, 1.0, 400.0, 50000.0};
 	double betas[6] = {0.0, 0.0001, 0.02, 1.0, 400.0, 50000.0};
 
-	total_calls = 6*nis*njs*iis*jjs;
+	total_calls = 6*nis*njs*iis*jjs*AB_offsets;
 	bad_calls = 0;
 
 	// Main test loop
@@ -278,8 +278,9 @@ int main()
 									"Calling D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
 									ii, ni, jj, nj,
 									alpha, ii, ni, jj, nk,
-									ii, nk, jj, nj,
-									beta, ii, ni, jj, nj);
+									ii+AB_offset_i, nk, jj, nj,
+									beta, ii, ni, jj, nj
+								);
 								#endif
 
 								blasfeo_dgemm_nn(ni, nj, nk, alpha, &sA, ii, jj, &sB, ii+AB_offset_i, jj, beta, &sC, ii, jj, &sD, ii, jj);
@@ -289,7 +290,17 @@ int main()
 
 								if (!res) bad_calls += 1;
 								#if VERBOSE
-								assert(res);
+								if (!res)
+									{
+									printf(
+										"Error on D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
+										ii, ni, jj, nj,
+										alpha, ii, ni, jj, nk,
+										ii+AB_offset_i, nk, jj, nj,
+										beta, ii, ni, jj, nj
+									);
+									assert(0);
+									}
 								#endif
 
 								}
