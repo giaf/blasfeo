@@ -97,14 +97,6 @@ set(RUNTIME_CHECKS 0)
 
 # compiler flags
 if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-	set(CMAKE_C_FLAGS "")
-	set(CMAKE_ASM_FLAGS "")
-	set(CMAKE_C_FLAGS_RELEASE "")
-	set(CMAKE_ASM_FLAGS_RELEASE "")
-
-	# optimization flags
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 
 	# build informations
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA=${LA}")
