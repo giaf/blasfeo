@@ -46,6 +46,14 @@ SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
 
 include ../Makefile.blas
 
+# set test verbosity
+ifeq ($(TEST_VERBOSITY), 1)
+CFLAGS += -DVERBOSE=1
+endif
+ifeq ($(TEST_VERBOSITY), 2)
+CFLAGS += -DVERBOSE=2
+endif
+
 # select one single test
 # ONE_OBJS =
 ONE_OBJS = test_d_debug.o
@@ -101,6 +109,9 @@ run_aux:
 
 run_blas:
 	./$(BINARY_DIR)/test_d_blas3.o.out
+
+build_run_blas: blas run_blas
+build_run_aux: aux run_aux
 
 clean:
 	rm -rf ./*.o

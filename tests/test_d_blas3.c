@@ -57,6 +57,10 @@
 
 
 
+#ifndef VERBOSE
+	#define VERBOSE 0
+#endif
+
 #ifndef LA
 	#error LA undefined
 #endif
@@ -84,6 +88,8 @@ int main()
 	int ii, jj, kk;
 	int n = 60;
 	int p_n = 15;
+
+	struct timeval before, after;
 
 	/* matrices in column-major format */
 	printf("Allocate C matrices\n");
@@ -207,8 +213,6 @@ int main()
 	/* blasfeo_print_dmat_ref(p_n, p_n, &rB, 0, 0); */
 	#endif
 
-	printf("\n\n----------- TEST gemm\n\n");
-
 	int ret, ni, nj, nk, total_calls, bad_calls;
 
 	int ii0 = 0;
@@ -216,7 +220,7 @@ int main()
 	int iis = 8;
 	int jjs = 8;
 
-	int ni0 = 5;
+	int ni0 = 2;
 	int nj0 = 5;
 	int nk0 = 32;
 	int nis = 30;
@@ -226,16 +230,20 @@ int main()
 	double alphas[6] = {0.0, 0.0001, 0.02, 1.0, 400.0, 50000.0};
 	double betas[6] = {0.0, 0.0001, 0.02, 1.0, 400.0, 50000.0};
 
-	total_calls = nis*njs*iis*jjs;
+	total_calls = 6*nis*njs*iis*jjs;
 	bad_calls = 0;
 
 	// Main test loop
 	#if 1
+	printf("\n\n----------- TEST gemm\n");
+
+	gettimeofday(&before, NULL);
+
 	// loop over alphas/betas
-	for (kk = 0; kk < 1; kk++)
+	for (kk = 0; kk < 6; kk++)
 		{
-		double alpha = alphas[3];
-		double beta = betas[3];
+		double alpha = alphas[kk];
+		double beta = betas[kk];
 
 		// loop over row matrix dimension
 		for (ni = nj0; ni < ni0+nis; ni++)
@@ -258,41 +266,51 @@ int main()
 
 
 							// gemm_nn D <- alpha*A*B + beta*C
+							#if (VERBOSE == 2)
 							printf(
 								"Calling D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
 								ii, ni, jj, nj,
 								alpha, ii, ni, jj, nk,
 								ii, nk, jj, nj,
 								beta, ii, ni, jj, nj);
+							#endif
 
 							blasfeo_dgemm_nn(ni, nj, nk, alpha, &sA, ii, jj, &sB, ii, jj, beta, &sC, ii, jj, &sD, ii, jj);
 							blasfeo_dgemm_nn_ref(ni, nj, nk, alpha, &rA, ii, jj, &rB, ii, jj, beta, &rC, ii, jj, &rD, ii, jj);
 
-							int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, 1);
+							int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, VERBOSE);
 
 							if (!res) bad_calls += 1;
+							#if VERBOSE
 							assert(res);
+							#endif
 
 							}
 						}
 					}
 				}
 			}
-		printf("\n");
 		}
 
 	printf("\n----------- END TEST gemm\n");
 
+	gettimeofday(&after, NULL);
+
+	float test_elapsed_time  = (float) (after.tv_sec-before.tv_sec)+(after.tv_usec-before.tv_usec)/1e6;
+
 	if (!bad_calls)
 		{
-			printf("\n----------- TEST SUCCEEDED, total calls: %d \n\n", total_calls);
+			printf("\n----------- TEST SUCCEEDED, calls: %d\n\n", total_calls);
 		}
 	else
 		{
 			printf("\n----------- TEST FAILED, %d/%d bad_calls\n\n", bad_calls, total_calls);
 		}
 
+	printf("\nElapsed time: %5.2f s\n\n", test_elapsed_time);
+
 	#endif
+
 
 	SHOW_DEFINE(LA)
 	SHOW_DEFINE(TARGET)
