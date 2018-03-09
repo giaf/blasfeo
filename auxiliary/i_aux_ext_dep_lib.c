@@ -55,6 +55,8 @@ void int_zeros_align(int **pA, int row, int col)
 	{
 #if defined(OS_WINDOWS)
 	*pA = (int *) _aligned_malloc( (row*col)*sizeof(int), 64 );
+#elif defined(__DSPACE__)
+	*pA = malloc((row*col)*sizeof(int));
 #else
 	void *temp;
 	int err = posix_memalign(&temp, 64, (row*col)*sizeof(int));
