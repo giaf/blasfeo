@@ -486,8 +486,8 @@ inner_kernel_dgemm_add_nn_2x4_lib4:
 	jle		4f // clean1
 
 	// unroll 0 1
-	vbroadcastf128	0(%r11), %ymm11 // A
-	vbroadcastf128	32(%r11), %ymm12 // A
+	// vbroadcastf128	0(%r11), %ymm11 // A
+	// vbroadcastf128	32(%r11), %ymm12 // A
 	vmovapd			0(%r12), %ymm13
 	vmovupd			16(%r12), %ymm14
 	vblendpd		$0x3, %ymm13, %ymm14, %ymm14
@@ -508,8 +508,8 @@ inner_kernel_dgemm_add_nn_2x4_lib4:
 	vaddpd			%ymm3, %ymm15, %ymm3
 
 	// unroll 2 3
-	vbroadcastf128	64(%r11), %ymm11 // A
-	vbroadcastf128	96(%r11), %ymm12 // A
+	vbroadcastf128	64(%r11), %ymm9 // A
+	vbroadcastf128	96(%r11), %ymm10 // A
 	vmovupd			16(%r12), %ymm13
 	vmovapd			32(%r12), %ymm14
 	vblendpd		$0x3, %ymm13, %ymm14, %ymm14
