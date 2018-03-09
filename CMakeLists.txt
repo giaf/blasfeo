@@ -688,11 +688,13 @@ install(EXPORT blasfeoConfig DESTINATION cmake)
 file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
 install(FILES ${BLASFEO_HEADERS} DESTINATION ${BLASFEO_HEADERS_INSTALLATION_DIRECTORY})
 
-# tests
-add_subdirectory(tests)
+if(NOT CMAKE_SYSTEM MATCHES "dSpace")
+	# tests
+	add_subdirectory(tests)
 
-# benchmarks
-add_subdirectory(benchmarks)
+	# benchmarks
+	add_subdirectory(benchmarks)
 
-# examples
-add_subdirectory(examples)
+	# examples
+	add_subdirectory(examples)
+endif()
