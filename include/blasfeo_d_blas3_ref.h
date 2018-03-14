@@ -40,20 +40,92 @@ extern "C" {
 
 // expose reference BLASFEO for testing
 
+
+// Class GEMM
+
 // D <= beta * C + alpha * A * B
 void blasfeo_dgemm_nn_ref(
-		int m, int n, int k, double alpha,
-		struct blasfeo_dmat_ref *sA, int ai, int aj,
-		struct blasfeo_dmat_ref *sB, int bi, int bj, double beta,
-		struct blasfeo_dmat_ref *sC, int ci, int cj,
-		struct blasfeo_dmat_ref *sD, int di, int dj);
+	int m, int n, int k, double alpha,
+	struct blasfeo_dmat_ref *sA, int ai, int aj,
+	struct blasfeo_dmat_ref *sB, int bi, int bj, double beta,
+	struct blasfeo_dmat_ref *sC, int ci, int cj,
+	struct blasfeo_dmat_ref *sD, int di, int dj);
 
 void blasfeo_dgemm_nt_ref(
-		int m, int n, int k, double alpha,
-		struct blasfeo_dmat_ref *sA, int ai, int aj,
-		struct blasfeo_dmat_ref *sB, int bi, int bj, double beta,
-		struct blasfeo_dmat_ref *sC, int ci, int cj,
-		struct blasfeo_dmat_ref *sD, int di, int dj);
+	int m, int n, int k, double alpha,
+	struct blasfeo_dmat_ref *sA, int ai, int aj,
+	struct blasfeo_dmat_ref *sB, int bi, int bj, double beta,
+	struct blasfeo_dmat_ref *sC, int ci, int cj,
+	struct blasfeo_dmat_ref *sD, int di, int dj);
+
+// D <= beta * C + alpha * A * B^T ; C, D lower triangular
+void blasfeo_dsyrk_ln_mn_ref(
+	int m, int n, int k, double alpha,
+	struct blasfeo_dmat_ref *sA, int ai, int aj,
+	struct blasfeo_dmat_ref *sB, int bi, int bj, double beta,
+	struct blasfeo_dmat_ref *sC, int ci, int cj,
+	struct blasfeo_dmat_ref *sD, int di, int dj);
+
+// Class SYRK
+
+// D <= beta * C + alpha * A * B^T ; C, D lower triangular
+void blasfeo_dsyrk_ln_ref(
+	int m, int k, double alpha,
+	struct blasfeo_dmat_ref *sA, int ai, int aj,
+	struct blasfeo_dmat_ref *sB, int bi, int bj, double beta,
+	struct blasfeo_dmat_ref *sC, int ci, int cj,
+	struct blasfeo_dmat_ref *sD, int di, int dj);
+
+// Class TRMM
+
+// D <= alpha * B * A^T ; B upper triangular
+void blasfeo_dtrmm_rutn_ref(
+	int m, int n, double alpha,
+	struct blasfeo_dmat_ref *sA, int ai, int aj,
+	struct blasfeo_dmat_ref *sB, int bi, int bj,
+	struct blasfeo_dmat_ref *sD, int di, int dj);
+
+// D <= alpha * B * A ; A lower triangular
+void blasfeo_dtrmm_rlnn_ref(
+	int m, int n, double alpha,
+	struct blasfeo_dmat_ref *sA, int ai, int aj,
+	struct blasfeo_dmat_ref *sB, int bi, int bj,
+	struct blasfeo_dmat_ref *sD, int di, int dj);
+
+// D <= alpha * B * A^{-T} , with A lower triangular employing explicit inverse of diagonal
+void blasfeo_dtrsm_rltn_ref(
+	int m, int n, double alpha,
+	struct blasfeo_dmat_ref *sA, int ai, int aj,
+	struct blasfeo_dmat_ref *sB, int bi, int bj,
+	struct blasfeo_dmat_ref *sD, int di, int dj);
+
+// D <= alpha * B * A^{-T} , with A lower triangular with unit diagonal
+void blasfeo_dtrsm_rltu_ref(
+	int m, int n, double alpha,
+	struct blasfeo_dmat_ref *sA, int ai, int aj,
+	struct blasfeo_dmat_ref *sB, int bi, int bj,
+	struct blasfeo_dmat_ref *sD, int di, int dj);
+
+// D <= alpha * B * A^{-T} , with A upper triangular employing explicit inverse of diagonal
+void blasfeo_dtrsm_rutn_ref(
+	int m, int n, double alpha,
+	struct blasfeo_dmat_ref *sA, int ai, int aj,
+	struct blasfeo_dmat_ref *sB, int bi, int bj,
+	struct blasfeo_dmat_ref *sD, int di, int dj);
+
+// D <= alpha * A^{-1} * B , with A lower triangular with unit diagonal
+void blasfeo_dtrsm_llnu_ref(
+	int m, int n, double alpha,
+	struct blasfeo_dmat_ref *sA, int ai, int aj,
+	struct blasfeo_dmat_ref *sB, int bi, int bj,
+	struct blasfeo_dmat_ref *sD, int di, int dj);
+
+// D <= alpha * A^{-1} * B , with A upper triangular employing explicit inverse of diagonal
+void blasfeo_dtrsm_lunn_ref(
+	int m, int n, double alpha,
+	struct blasfeo_dmat_ref *sA, int ai, int aj,
+	struct blasfeo_dmat_ref *sB, int bi, int bj,
+	struct blasfeo_dmat_ref *sD, int di, int dj);
 
 #ifdef __cplusplus
 }

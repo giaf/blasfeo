@@ -46,8 +46,19 @@
 #define STRMAT blasfeo_dmat_ref
 #define STRVEC blasfeo_dvec_ref
 
-#define GEMM_NN_LIBSTR blasfeo_dgemm_nn_ref
-#define GEMM_NT_LIBSTR blasfeo_dgemm_nt_ref
+#define GEMM_NN_LIBSTR    blasfeo_dgemm_nn_ref
+#define GEMM_NT_LIBSTR    blasfeo_dgemm_nt_ref
+
+#define SYRK_LN_LIBSTR    blasfeo_dsyrk_ln_ref
+#define SYRK_LN_MN_LIBSTR blasfeo_dsyrk_ln_mn_ref
+
+#define TRSM_LLNU_LIBSTR  blasfeo_dtrsm_llnu_ref
+#define TRSM_LLUNN_LIBSTR blasfeo_dtrsm_llunn_ref
+#define TRSM_RLTU_LIBSTR  blasfeo_dtrsm_rltu_ref
+#define TRSM_RLTN_LIBSTR  blasfeo_dtrsm_rltn_ref
+#define TRSM_RUTN_LIBSTR  blasfeo_dtrsm_rutn_ref
+#define TRMM_RUTN_LIBSTR  blasfeo_dtrmm_rutn_ref
+#define TRMM_RLNN_LIBSTR  blasfeo_dtrmm_rlnn_ref
 
 #define COPY dcopy_
 #define GEMM dgemm_
