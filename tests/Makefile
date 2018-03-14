@@ -54,6 +54,24 @@ ifeq ($(TEST_VERBOSITY), 2)
 CFLAGS += -DVERBOSE=2
 endif
 
+ifdef ROUTINE
+CFLAGS += -DROUTINE=$(ROUTINE)
+endif
+
+ifndef ROUTINE_CLASS
+ROUTINE_CLASS = GEMM
+endif
+ifeq ($(ROUTINE_CLASS), SYRK)
+CFLAGS += -DROUTINE_CLASS_SYRK
+endif
+ifeq ($(ROUTINE_CLASS), GEMM)
+CFLAGS += -DROUTINE_CLASS_GEMM
+endif
+ifeq ($(ROUTINE_CLASS), TRM)
+CFLAGS += -DROUTINE_CLASS_TRM
+endif
+
+
 # select one single test
 # ONE_OBJS =
 ONE_OBJS = test_d_debug.o

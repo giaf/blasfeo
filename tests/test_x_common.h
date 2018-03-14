@@ -4,6 +4,38 @@
 
 #include "../include/blasfeo_common.h"
 
+#define STR(x) #x
+#define SHOW_DEFINE(x) printf("%-16s= %s\n", #x, STR(x));
+
+#ifndef LA
+	#error LA undefined
+#endif
+
+#ifndef TARGET
+	#error TARGET undefined
+#endif
+
+#ifndef PRECISION
+	#error PRECISION undefined
+#endif
+
+#ifndef MIN_KERNEL_SIZE
+	#error MIN_KERNEL_SIZE undefined
+#endif
+
+#ifndef ROUTINE
+	#error ROUTINE undefined
+#endif
+
+#define concatenate(var, post) var ## post
+#define string(var) STR(var)
+
+#define REF(fun) concatenate(fun, _ref)
+
+#ifndef VERBOSE
+	#define VERBOSE 0
+#endif
+
 
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"
