@@ -48,6 +48,13 @@ void blasfeo_dgemm_nn_ref(
 		struct blasfeo_dmat_ref *sC, int ci, int cj,
 		struct blasfeo_dmat_ref *sD, int di, int dj);
 
+void blasfeo_dgemm_nt_ref(
+		int m, int n, int k, double alpha,
+		struct blasfeo_dmat_ref *sA, int ai, int aj,
+		struct blasfeo_dmat_ref *sB, int bi, int bj, double beta,
+		struct blasfeo_dmat_ref *sC, int ci, int cj,
+		struct blasfeo_dmat_ref *sD, int di, int dj);
+
 #ifdef __cplusplus
 }
 #endif

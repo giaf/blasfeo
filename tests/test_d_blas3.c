@@ -286,6 +286,9 @@ int main()
 								blasfeo_dgemm_nn(ni, nj, nk, alpha, &sA, ii, jj, &sB, ii+AB_offset_i, jj, beta, &sC, ii, jj, &sD, ii, jj);
 								blasfeo_dgemm_nn_ref(ni, nj, nk, alpha, &rA, ii, jj, &rB, ii+AB_offset_i, jj, beta, &rC, ii, jj, &rD, ii, jj);
 
+								/* blasfeo_dgemm_nt(ni, nj, nk, alpha, &sA, ii, jj, &sB, ii+AB_offset_i, jj, beta, &sC, ii, jj, &sD, ii, jj); */
+								/* blasfeo_dgemm_nt_ref(ni, nj, nk, alpha, &rA, ii, jj, &rB, ii+AB_offset_i, jj, beta, &rC, ii, jj, &rD, ii, jj); */
+
 								int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, VERBOSE);
 
 								if (!res) bad_calls += 1;

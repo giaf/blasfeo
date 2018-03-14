@@ -47,6 +47,7 @@
 #define STRVEC blasfeo_dvec_ref
 
 #define GEMM_NN_LIBSTR blasfeo_dgemm_nn_ref
+#define GEMM_NT_LIBSTR blasfeo_dgemm_nt_ref
 
 #define COPY dcopy_
 #define GEMM dgemm_
