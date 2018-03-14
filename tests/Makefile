@@ -97,11 +97,12 @@ one: common $(ONE_OBJS)
 
 
 aux: common $(AUX_OBJS)
-
 blas: common $(BLAS_OBJS)
 
 run_one:
 	./$(BINARY_DIR)/$(ONE_OBJS).out
+
+build_blas: $(BLAS_OBJS)
 
 run_aux:
 	./$(BINARY_DIR)/test_d_aux.o.out
@@ -112,6 +113,9 @@ run_blas:
 
 build_run_blas: blas run_blas
 build_run_aux: aux run_aux
+
+update_blas: $(BLAS_OBJS) run_blas
+update_aux: $(AUX_OBJS) run_aux
 
 clean:
 	rm -rf ./*.o
