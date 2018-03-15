@@ -89,9 +89,7 @@ BLAS_OBJS =
 BLAS_OBJS += test_d_blas3.o
 
 test_%.o: test_%.c
-	@echo
-	@echo build executable obj $(BINARY_DIR)/$@
-	@echo
+	# build executable obj $(BINARY_DIR)/$@
 	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
 	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ -o $(BINARY_DIR)/$@.out $(LIBS)
 
