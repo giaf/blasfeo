@@ -53,6 +53,7 @@
 
 #define AXPY_LIBSTR blasfeo_saxpy
 #define AXPBY_LIBSTR blasfeo_saxpby
+#define VECMUL_LIBSTR blasfeo_svecmul
 #define VECMULACC_LIBSTR blasfeo_svecmulacc
 #define VECMULDOT_LIBSTR blasfeo_svecmuldot
 #define DOT_LIBSTR blasfeo_sdot

@@ -113,8 +113,8 @@ void saxpy_bkp_libstr(int m, float alpha, struct blasfeo_svec *sx, int xi, struc
 
 
 
-// multiply two vectors and compute dot product
-void blasfeo_svecmulacc(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+// multiply two vectors
+void blasfeo_svecmul(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -130,6 +130,29 @@ void blasfeo_svecmulacc(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_s
 	for(; ii<m; ii++)
 		{
 		z[ii+0] = x[ii+0] * y[ii+0];
+		}
+	return;
+	}
+
+
+
+// multiply two vectors and add result to another vector
+void blasfeo_svecmulacc(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+	{
+
+	if(m<=0)
+		return;
+
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+	float *z = sz->pa + zi;
+	int ii;
+
+	ii = 0;
+
+	for(; ii<m; ii++)
+		{
+		z[ii+0] += x[ii+0] * y[ii+0];
 		}
 	return;
 	}

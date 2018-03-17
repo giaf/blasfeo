@@ -53,6 +53,8 @@ void AXPY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, int xi, struct STRVEC *sy
 	return;
 	}
 
+
+
 void AXPBY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
 	{
 	if(m<=0)
@@ -77,6 +79,32 @@ void AXPBY_LIBSTR(int m, REAL alpha, struct STRVEC *sx, int xi, REAL beta, struc
 
 
 // multiply two vectors
+void VECMUL_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+	{
+	if(m<=0)
+		return;
+	REAL *x = sx->pa + xi;
+	REAL *y = sy->pa + yi;
+	REAL *z = sz->pa + zi;
+	int ii;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		z[ii+0] = x[ii+0] * y[ii+0];
+		z[ii+1] = x[ii+1] * y[ii+1];
+		z[ii+2] = x[ii+2] * y[ii+2];
+		z[ii+3] = x[ii+3] * y[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = x[ii+0] * y[ii+0];
+		}
+	return;
+	}
+
+
+
+// multiply two vectors and add result to another vector
 void VECMULACC_LIBSTR(int m, struct STRVEC *sx, int xi, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
 	{
 	if(m<=0)

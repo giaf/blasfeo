@@ -42,6 +42,8 @@ extern "C" {
 void blasfeo_saxpy(int kmax, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi);
 // z = beta*y + alpha*x
 void blasfeo_saxpby(int kmax, float alpha, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi);
+// z = x .* y
+void blasfeo_svecmul(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi);
 // z += x .* y
 void blasfeo_svecmulacc(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi);
 // z = x .* y, return sum(z) = x^T * y
