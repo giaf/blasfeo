@@ -33,7 +33,7 @@
 #define FABS fabsf
 #define SQRT sqrtf
 
-#if defined(LA_BLAS)
+#if defined(LA_BLAS_WRAPPER)
 #if defined(REF_BLAS_MKL)
 #include "mkl.h"
 #else

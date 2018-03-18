@@ -27,7 +27,7 @@
 **************************************************************************************************/
 
 
-#if defined(LA_BLAS) | defined(LA_REFERENCE) | defined(TESTING_MODE)
+#if defined(LA_BLAS_WRAPPER) | defined(LA_REFERENCE) | defined(TESTING_MODE)
 
 
 

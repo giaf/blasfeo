@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#if defined(LA_BLAS)
+#if defined(LA_BLAS_WRAPPER)
 #if defined(REF_BLAS_BLIS)
 #include "s_blas_64.h"
 #elif defined(REF_BLAS_MKL)

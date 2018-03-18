@@ -1737,7 +1737,7 @@ void GELQF_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT
 
 
 
-#elif defined(LA_BLAS)
+#elif defined(LA_BLAS_WRAPPER)
 
 
 

@@ -409,13 +409,16 @@ endif # LA choice
 
 ifeq ($(EXT_DEP), 1)
 # ext dep
+ifeq ($(LA), HIGH_PERFORMANCE)
+OBJS += \
+		auxiliary/d_aux_ext_dep_lib4.o \
+		auxiliary/s_aux_ext_dep_lib4.o
+endif
 OBJS += \
 		auxiliary/d_aux_ext_dep_lib.o \
-		auxiliary/d_aux_ext_dep_lib4.o \
 		auxiliary/s_aux_ext_dep_lib.o \
-		auxiliary/s_aux_ext_dep_lib4.o \
 		auxiliary/v_aux_ext_dep_lib.o \
-		auxiliary/i_aux_ext_dep_lib.o \
+		auxiliary/i_aux_ext_dep_lib.o
 
 endif
 
@@ -518,11 +521,11 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 	echo "#endif" >> ./include/blasfeo_target.h
 	echo "#define LA HIGH_PERFORMANCE" >> ./include/blasfeo_target.h
 endif
-ifeq ($(LA), BLAS)
+ifeq ($(LA), BLAS_WRAPPER)
 	echo "#ifndef LA_BLAS" >> ./include/blasfeo_target.h
 	echo "#define LA_BLAS" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
-	echo "#define LA BLAS" >> ./include/blasfeo_target.h
+	echo "#define LA BLAS_WRAPPER" >> ./include/blasfeo_target.h
 endif
 ifeq ($(LA), REFERENCE)
 	echo "#ifndef LA_REFERENCE" >> ./include/blasfeo_target.h

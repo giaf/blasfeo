@@ -38,7 +38,7 @@
 
 
 
-#if defined(LA_REFERENCE) | defined(LA_BLAS)
+#if defined(LA_REFERENCE) | defined(LA_BLAS_WRAPPER)
 
 
 #define SIZE_STRMAT blasfeo_memsize_smat
@@ -815,5 +815,5 @@ void blasfeo_svecpei(int kmax, int *ipiv, struct blasfeo_svec *sx, int xi)
 
 #endif
 
-// LA_REFERENCE | LA_BLAS
+// LA_REFERENCE | LA_BLAS_WRAPPER
 #include "x_aux_lib.c"

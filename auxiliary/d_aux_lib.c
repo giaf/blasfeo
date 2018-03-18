@@ -45,7 +45,7 @@
 #define STRVEC blasfeo_dvec
 
 
-#if defined(LA_REFERENCE) | defined(LA_BLAS)
+#if defined(LA_REFERENCE) | defined(LA_BLAS_WRAPPER)
 
 
 #define SIZE_STRMAT blasfeo_memsize_dmat
@@ -867,5 +867,5 @@ double dtrcon_1ln_libstr(int n, struct blasfeo_dmat *sA, int ai, int aj, double 
 
 #endif
 
-// LA_REFERENCE | LA_BLAS
+// LA_REFERENCE | LA_BLAS_WRAPPER
 #include "x_aux_lib.c"

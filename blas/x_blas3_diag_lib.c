@@ -28,7 +28,7 @@
 
 
 
-#if defined(LA_REFERENCE) | defined(LA_BLAS) 
+#if defined(LA_REFERENCE) | defined(LA_BLAS_WRAPPER) 
 
 
 

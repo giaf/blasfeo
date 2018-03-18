@@ -74,7 +74,7 @@ OBJS += s_aux_lib4.o
 OBJS += m_aux_lib44.o
 endif
 
-else # LA_REFERENCE | LA_BLAS
+else # LA_REFERENCE | LA_BLAS_WRAPPER
 
 OBJS += d_aux_lib.o
 OBJS += s_aux_lib.o
@@ -92,10 +92,12 @@ endif
 #ext dep
 ifeq ($(EXT_DEP), 1)
 
-OBJS += d_aux_ext_dep_lib.o
+ifeq ($(LA), HIGH_PERFORMANCE)
 OBJS += d_aux_ext_dep_lib4.o
-OBJS += s_aux_ext_dep_lib.o
 OBJS += s_aux_ext_dep_lib4.o
+endif
+OBJS += d_aux_ext_dep_lib.o
+OBJS += s_aux_ext_dep_lib.o
 OBJS += v_aux_ext_dep_lib.o
 OBJS += i_aux_ext_dep_lib.o
 

@@ -47,12 +47,11 @@ SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
 include ../Makefile.blas
 
 # select one single test
-ONE_OBJS =
-# ONE_OBJS = test_d_debug.o
+# ONE_OBJS =
+ONE_OBJS = test_d_debug.o
 # ONE_OBJS = test_s_debug.o
 # ONE_OBJS = test_d_aux.o
 # ONE_OBJS = test_s_aux.o
-# ONE_OBJS = test_s_blas.o
 
 # auxiliary test
 AUX_OBJS =
