@@ -86,10 +86,10 @@ struct blasfeo_svec
 	int memsize; // size of needed memory
 	};
 
-#define DMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[((ai)-((ai)&(D_PS-1)))*(sA)->cn+(aj)*D_PS+((ai)&(D_PS-1))])
-#define SMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[((ai)-((ai)&(S_PS-1)))*(sA)->cn+(aj)*S_PS+((ai)&(S_PS-1))])
-#define DVECEL_LIBSTR(sa,ai) ((sa)->pa[ai])
-#define SVECEL_LIBSTR(sa,ai) ((sa)->pa[ai])
+#define BLASFEO_DMATEL(sA,ai,aj) ((sA)->pA[((ai)-((ai)&(D_PS-1)))*(sA)->cn+(aj)*D_PS+((ai)&(D_PS-1))])
+#define BLASFEO_SMATEL(sA,ai,aj) ((sA)->pA[((ai)-((ai)&(S_PS-1)))*(sA)->cn+(aj)*S_PS+((ai)&(S_PS-1))])
+#define BLASFEO_DVECEL(sa,ai) ((sa)->pa[ai])
+#define BLASFEO_SVECEL(sa,ai) ((sa)->pa[ai])
 
 #elif defined(LA_BLAS_WRAPPER) | defined(LA_REFERENCE)
 
@@ -129,10 +129,10 @@ struct blasfeo_svec
 	int memsize; // size of needed memory
 	};
 
-#define DMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
-#define SMATEL_LIBSTR(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
-#define DVECEL_LIBSTR(sa,ai) ((sa)->pa[ai])
-#define SVECEL_LIBSTR(sa,ai) ((sa)->pa[ai])
+#define BLASFEO_DMATEL(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
+#define BLASFEO_SMATEL(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
+#define BLASFEO_DVECEL(sa,ai) ((sa)->pa[ai])
+#define BLASFEO_SVECEL(sa,ai) ((sa)->pa[ai])
 
 #else
 

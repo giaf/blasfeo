@@ -685,10 +685,10 @@ int main()
 		int ii;
 		for(ii=0; ii<n; ii++)
 			{
-			DMATEL_LIBSTR(&sB3, ii, ii) = 1.0;
-//			DMATEL_LIBSTR(&sB3, n-1, ii) = 1.0;
-			DMATEL_LIBSTR(&sB3, ii, n-1) = 1.0;
-			DVECEL_LIBSTR(&sx, ii) = 1.0;
+			BLASFEO_DMATEL(&sB3, ii, ii) = 1.0;
+//			BLASFEO_DMATEL(&sB3, n-1, ii) = 1.0;
+			BLASFEO_DMATEL(&sB3, ii, n-1) = 1.0;
+			BLASFEO_DVECEL(&sx, ii) = 1.0;
 			}
 //		blasfeo_print_dmat(n, n, &sB3, 0, 0);
 //		if(n==20) return;

@@ -2467,8 +2467,8 @@ void blasfeo_dgeqrf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 	int sdd = sD->cn;
 
 	// go to submatrix
-	double *pC = &(DMATEL_LIBSTR(sC,ci,cj));
-	double *pD = &(DMATEL_LIBSTR(sD,di,dj));
+	double *pC = &(BLASFEO_DMATEL(sC,ci,cj));
+	double *pD = &(BLASFEO_DMATEL(sD,di,dj));
 
 	double *dD = sD->dA + di;
 	int cm = (m+ps-1)/ps*ps;
@@ -2546,8 +2546,8 @@ void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 	int sdd = sD->cn;
 
 	// go to submatrix
-	double *pC = &(DMATEL_LIBSTR(sC,ci,cj));
-	double *pD = &(DMATEL_LIBSTR(sD,di,dj));
+	double *pC = &(BLASFEO_DMATEL(sC,ci,cj));
+	double *pD = &(BLASFEO_DMATEL(sD,di,dj));
 
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_HASWELL)
