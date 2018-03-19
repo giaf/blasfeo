@@ -511,8 +511,8 @@ void TRSM_RLTU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 			c_01 = alpha * pB[ii+0+ldb*(jj+1)];
 			for(kk=0; kk<jj; kk++)
 				{
-				c_00 -= pD[ii+0+ldd*kk] * pD[jj+0+ldd*kk];
-				c_01 -= pD[ii+0+ldd*kk] * pD[jj+1+ldd*kk];
+				c_00 -= pD[ii+0+ldd*kk] * pA[jj+0+lda*kk];
+				c_01 -= pD[ii+0+ldd*kk] * pA[jj+1+lda*kk];
 				}
 			pD[ii+0+ldd*(jj+0)] = c_00;
 			c_01 -= c_00 * f_10;
