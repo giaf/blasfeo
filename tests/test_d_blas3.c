@@ -195,34 +195,34 @@ int main()
 	int jj0 = 0;
 	int AB_offset0 = 0;
 
-	int ni0 = 2;
-	int nj0 = 5;
-	int nk0 = 32;
+	int ni0 = 1;
+	int nj0 = 1;
+	int nk0 = 1;
 
 	#if ROUTINE_CLASS_GEMM
 	int AB_offsets = 5;
-	int iis = 9;
-	int jjs = 9;
+	int ii0s = 9;
+	int jj0s = 9;
 	int nis = 17;
 	int njs = 17;
-	int njs = 9;
+	int nks = 15;
 	int alphas = 6;
 	#elif ROUTINE_CLASS_SYRK || ROUTINE_CLASS_TRM
 	/* ai=bi=ci=di=0 */
 	int AB_offsets = 1;
-	int iis = 1;
-	int jjs = 1;
+	int ii0s = 1;
+	int jj0s = 1;
+	int nks = 1;
 	/* alpha=beta=1.0 */
 	int alphas = 1;
 	int nis = 17;
 	int njs = 17;
-	int nks = 17;
 	#endif
 
 	double alpha_l[6] = {1.0, 0.0, 0.0001, 0.02, 400.0, 50000.0};
 	double beta_l[6] = {1.0, 0.0, 0.0001, 0.02, 400.0, 50000.0};
 
-	total_calls = alphas*nis*njs*iis*jjs*AB_offsets;
+	total_calls = alphas*nis*njs*nks*ii0s*jj0s*AB_offsets;
 	bad_calls = 0;
 
 	// Main test loop
@@ -249,98 +249,103 @@ int main()
 				for (nk = nk0; nk < nk0+nks; nk++)
 					{
 					// loop over row offset
-					for (ii = ii0; ii < ii0+iis; ii++)
+					for (ii = ii0; ii < ii0+ii0s; ii++)
 						{
 
 						// loop over column offset
-						for (jj = jj0; jj < jj0+jjs; jj++)
+						for (jj = jj0; jj < jj0+jj0s; jj++)
 							{
 
-							// loop over row AB offset
-							for (AB_offset_i = AB_offset0; AB_offset_i < AB_offsets; AB_offset_i++)
+							// loop over column offset
+							for (nk = nk0; nk < nk0+nks; nk++)
 								{
 
-								#if (VERBOSE == 2)
-								printf(
-									"Calling D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
-									ii, ni, jj, nj,
-									alpha, ii, ni, jj, nk,
-									ii+AB_offset_i, nk, jj, nj,
-									beta, ii, ni, jj, nj
-								);
-								#endif
-
-								#ifdef ROUTINE_CLASS_GEMM
-								// D <- alpha*A*B + beta*C
-
-								ROUTINE(
-									ni, nj, nk, alpha,
-									&sA, ii, jj, &sB,
-									ii+AB_offset_i, jj, beta,
-									&sC, ii, jj,
-									&sD, ii, jj);
-
-								REF(ROUTINE)(
-									ni, nj, nk, alpha,
-									&rA, ii, jj,
-									&rB, ii+AB_offset_i, jj, beta,
-									&rC, ii, jj,
-									&rD, ii, jj);
-
-								#elif ROUTINE_CLASS_SYRK
-
-								ROUTINE(
-									ni, nj, alpha,
-									&sA, ii, jj,
-									&sB, ii+AB_offset_i, jj, beta,
-									&sC, ii, jj,
-									&sD, ii, jj);
-
-								REF(ROUTINE)(
-									ni, nj, alpha,
-									&rA, ii, jj,
-									&rB, ii+AB_offset_i, jj, beta,
-									&rC, ii, jj,
-									&rD, ii, jj);
-
-								#elif ROUTINE_CLASS_TRM
-
-								ROUTINE(
-									ni, nj, alpha,
-									&sA, ii, jj,
-									&sB, ii+AB_offset_i, jj,
-									&sD, ii, jj);
-
-								REF(ROUTINE)(
-									ni, nj, alpha,
-									&rA, ii, jj,
-									&rB, ii+AB_offset_i, jj,
-									&rD, ii, jj);
-
-								#else
-
-									printf("\n\nNo Routine Class defined for "string(ROUTINE)"\n\n");
-									exit(0);
-
-								#endif
-
-								int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, VERBOSE);
-
-								if (!res) bad_calls += 1;
-								#if VERBOSE
-								if (!res)
+								// loop over row AB offset
+								for (AB_offset_i = AB_offset0; AB_offset_i < AB_offsets; AB_offset_i++)
 									{
+
+									#if (VERBOSE == 2)
 									printf(
-										"Error on D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
+										"Calling D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
 										ii, ni, jj, nj,
 										alpha, ii, ni, jj, nk,
 										ii+AB_offset_i, nk, jj, nj,
 										beta, ii, ni, jj, nj
 									);
-									assert(0);
-									}
-								#endif
+									#endif
 
+									#ifdef ROUTINE_CLASS_GEMM
+									// D <- alpha*A*B + beta*C
+
+									ROUTINE(
+										ni, nj, nk, alpha,
+										&sA, ii, jj, &sB,
+										ii+AB_offset_i, jj, beta,
+										&sC, ii, jj,
+										&sD, ii, jj);
+
+									REF(ROUTINE)(
+										ni, nj, nk, alpha,
+										&rA, ii, jj,
+										&rB, ii+AB_offset_i, jj, beta,
+										&rC, ii, jj,
+										&rD, ii, jj);
+
+									#elif ROUTINE_CLASS_SYRK
+
+									ROUTINE(
+										ni, nj, alpha,
+										&sA, ii, jj,
+										&sB, ii+AB_offset_i, jj, beta,
+										&sC, ii, jj,
+										&sD, ii, jj);
+
+									REF(ROUTINE)(
+										ni, nj, alpha,
+										&rA, ii, jj,
+										&rB, ii+AB_offset_i, jj, beta,
+										&rC, ii, jj,
+										&rD, ii, jj);
+
+									#elif ROUTINE_CLASS_TRM
+
+									ROUTINE(
+										ni, nj, alpha,
+										&sA, ii, jj,
+										&sB, ii+AB_offset_i, jj,
+										&sD, ii, jj);
+
+									REF(ROUTINE)(
+										ni, nj, alpha,
+										&rA, ii, jj,
+										&rB, ii+AB_offset_i, jj,
+										&rD, ii, jj);
+
+									#else
+
+										printf("\n\nNo Routine Class defined for "string(ROUTINE)"\n\n");
+										exit(0);
+
+									#endif
+
+									int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, VERBOSE);
+
+									if (!res) bad_calls += 1;
+									#if VERBOSE
+									if (!res)
+										{
+										printf(
+											"Error on D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
+											ii, ni, jj, nj,
+											alpha, ii, ni, jj, nk,
+											ii+AB_offset_i, nk, jj, nj,
+											beta, ii, ni, jj, nj
+										);
+										assert(0);
+										}
+									#endif
+
+									}
 								}
 							}
 						}
@@ -382,50 +387,15 @@ int main()
 	d_free(C);
 	d_free(D);
 
-	/* printf("Freed double arrays \n"); */
-	#if 0
-
-	printf("&sA.pA %p \n", (void *) sA.pA);
-	printf("&sB.pA %p \n", (void *) sB.pA);
-	printf("&sC.pA %p \n", (void *) sC.pA);
-	printf("&sD.pA %p \n", (void *) sD.pA);
-
-	printf("sA.pA[0] %f \n", sA.pA[0]);
-	printf("sB.pA[0] %f \n", sB.pA[0]);
-	printf("sC.pA[0] %f \n", sC.pA[0]);
-	printf("sD.pA[0] %f \n", sD.pA[0]);
-
-	printf("&sA.dA %p \n", (void *) sA.dA);
-	printf("&sB.dA %p \n", (void *) sB.dA);
-	printf("&sC.dA %p \n", (void *) sC.dA);
-	printf("&sD.dA %p \n", (void *) sD.dA);
-
-	printf("sA.dA[0] %f \n", sA.dA[0]);
-	printf("sB.dA[0] %f \n", sB.dA[0]);
-	printf("sC.dA[0] %f \n", sC.dA[0]);
-	printf("sD.dA[0] %f \n", sD.dA[0]);
-
-	/* printf("sA->m %d \n", sA.m); */
-	/* printf("sB->m %d \n", sB.m); */
-	/* printf("sC->m %d \n", sC.m); */
-	/* printf("sD->m %d \n", sD.m); */
-	#endif
-
 	blasfeo_free_dmat(&sB);
 	blasfeo_free_dmat(&sA);
 	blasfeo_free_dmat(&sC);
 	blasfeo_free_dmat(&sD);
 
-	/* printf("Freed HP dmat \n"); */
-	/* free(ptr_memory_dmat_ref); */
-
 	blasfeo_free_dmat_ref(&rA);
 	blasfeo_free_dmat_ref(&rB);
 	blasfeo_free_dmat_ref(&rC);
 	blasfeo_free_dmat_ref(&rD);
-
-	/* printf("Freed REF dmat \n"); */
-
 
 	return 0;
 
