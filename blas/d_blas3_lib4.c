@@ -1786,18 +1786,20 @@ void blasfeo_dtrsm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 	int ii;
 	if(ai==0 & aj==0)
 		{
-		if(sA->use_dA!=1)
+		// recompute diagonal if size of operation grows
+		if(sA->use_dA<m)
 			{
-			ddiaex_lib(n, 1.0, ai, pA, sda, dA);
-			for(ii=0; ii<n; ii++)
+			ddiaex_lib(m, 1.0, ai, pA, sda, dA);
+			for(ii=0; ii<m; ii++)
 				dA[ii] = 1.0 / dA[ii];
-			sA->use_dA = 1;
+			sA->use_dA = m;
 			}
 		}
+	// if submatrix recompute diagonal
 	else
 		{
-		ddiaex_lib(n, 1.0, ai, pA, sda, dA);
-		for(ii=0; ii<n; ii++)
+		ddiaex_lib(m, 1.0, ai, pA, sda, dA);
+		for(ii=0; ii<m; ii++)
 			dA[ii] = 1.0 / dA[ii];
 		sA->use_dA = 0;
 		}
@@ -1836,12 +1838,12 @@ void blasfeo_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 
 	if(ai==0 & aj==0)
 		{
-		if(sA->use_dA!=1)
+		if(sA->use_dA<n)
 			{
 			ddiaex_lib(n, 1.0, ai, pA, sda, dA);
 			for(i=0; i<n; i++)
 				dA[i] = 1.0 / dA[i];
-			sA->use_dA = 1;
+			sA->use_dA = n;
 			}
 		}
 	else
