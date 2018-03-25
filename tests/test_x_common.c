@@ -122,12 +122,28 @@ void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, i
 			}
 		}
 	printf("\n");
+	#endif
 	return;
 	}
 
 
+static void printbits(void *c, size_t n)
+{
+	unsigned char *t = c;
+	if (c == NULL)
+	return;
+	while (n > 0)
+	{
+		int q;
+		--n;
+		for(q = 0x80; q; q >>= 1) printf("%x", !!(t[n] & q));
+	}
+	printf("\n");
+}
+
+
 // 1 to 1 comparison of every element
-int GECMP_LIBSTR(int n, int m,
+int GECMP_LIBSTR(int m, int n,
 				 struct STRMAT *sB, struct STRMAT_REF *rB,
 				 struct STRMAT *sA, struct STRMAT_REF *rA,
 				 int debug
@@ -146,23 +162,35 @@ int GECMP_LIBSTR(int n, int m,
 			// reference mat
 			REAL rbi = MATEL_REF(rB, ii, jj);
 
-			if ( (sbi != rbi) & ( fabs(sbi-rbi) > 1e-10*(fabs(sbi)+fabs(rbi)) ) )
+			if ( (sbi != rbi) & ( fabs(sbi-rbi) > 1e-13*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > 1e-12))
 				{
 					if (!debug) return 0;
 
-					printf("\n\nFailed at index %d,%d, (HP) %f != %f (RF)\n\n", ii, jj, sbi, rbi);
+					printf("\n\nFailed at index %d,%d, (HP) %2.18f != %2.18f (RF)\n", ii, jj, sbi, rbi);
+					printf("Absolute error: %3.5e\n", fabs(sbi-rbi));
+					printf("Relative error: %3.5e\n", fabs(sbi-rbi)/(fabs(sbi)+fabs(rbi)));
+					printf("\nBitwise comparison:\n");
+					printf("HP:  ");
+					printbits(&sbi, sizeof(REAL));
+					printf("REF: ");
+					printbits(&rbi, sizeof(REAL));
+					printf("\n");
 
-					/* printf("\nPrint D HP:\n\n"); */
+					/* printf("fabs(sbi-rbi) %2.18f \n", fabs(sbi-rbi)); */
+					/* printf("fabs(sbi)+fabs(rbi) %2.18f \n", fabs(sbi)+fabs(rbi)); */
+
+					/* printf("\nPrint D\n"); */
 					blasfeo_print_xmat_debug(ii+offset, jj+offset, sB, 0, 0, ii, jj);
-
-					/* printf("\nPrint D REF:\n\n"); */
 					print_xmat_debug(ii+offset, jj+offset, rB, 0, 0, ii, jj);
 
-					/* printf("\nPrint A HP:\n\n"); */
-					/* PRINT_STRMAT(ii+offset, jj+offset, sA, 0, 0); */
+					/* if (debug<2) return 0; */
 
-					/* printf("\nPrint A REF:\n\n"); */
-					/* PRINT_STRMAT_REF(ii+offset, jj+offset, rA, 0, 0); */
+					/* printf("A matrix \n"); */
+					/* [> printf("\nPrint D HP:\n\n"); <] */
+					/* blasfeo_print_xmat_debug(ii+offset, jj+offset, sA, 0, 0, ii, jj); */
+
+					/* [> printf("\nPrint D REF:\n\n"); <] */
+					/* print_xmat_debug(ii+offset, jj+offset, rA, 0, 0, ii, jj); */
 
 					#if defined(LA)
 					SHOW_DEFINE(LA)
