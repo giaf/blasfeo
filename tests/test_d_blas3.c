@@ -79,9 +79,9 @@ int main()
 	d_zeros(&C, n, n);
 	d_zeros(&D, n, n);
 
-	for(ii=0; ii<n*n; ii++) A[ii] = ii;
-	for(ii=0; ii<n*n; ii++) B[ii] = 2*ii;
-	for(ii=0; ii<n*n; ii++) C[ii] = 0.5*ii;
+	for(ii=0; ii<n*n; ii++) A[ii] = ii+1;
+	for(ii=0; ii<n*n; ii++) B[ii] = 2*(ii+1);
+	for(ii=0; ii<n*n; ii++) C[ii] = 0.5*(ii+1);
 
 	/* instantiate blasfeo_dmat */
 
@@ -91,6 +91,9 @@ int main()
 	struct blasfeo_dmat sB; blasfeo_allocate_dmat(n, n, &sB);
 	struct blasfeo_dmat sC; blasfeo_allocate_dmat(n, n, &sC);
 	struct blasfeo_dmat sD; blasfeo_allocate_dmat(n, n, &sD);
+
+	/* printf("sA use dA, %d\n", (&sA)->use_dA); */
+	/* printf("rA use dA, %d\n", (&rA)->use_dA); */
 
 	blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
 	blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
@@ -137,6 +140,7 @@ int main()
 	struct blasfeo_dmat_ref rB; blasfeo_allocate_dmat_ref(n, n, &rB);
 	struct blasfeo_dmat_ref rC; blasfeo_allocate_dmat_ref(n, n, &rC);
 	struct blasfeo_dmat_ref rD; blasfeo_allocate_dmat_ref(n, n, &rD);
+
 
 	blasfeo_pack_dmat_ref(n, n, A, n, &rA, 0, 0);
 	blasfeo_pack_dmat_ref(n, n, B, n, &rB, 0, 0);
@@ -211,7 +215,7 @@ int main()
 	/* ai=bi=ci=di=0 */
 	int AB_offsets = 1;
 	int ii0s = 1;
-	int jj0s = 1;
+	int jj0s = 9;
 	int nks = 1;
 	/* alpha=beta=1.0 */
 	int alphas = 1;
@@ -227,6 +231,8 @@ int main()
 
 	// Main test loop
 	#if 1
+
+
 	printf("\n----------- TEST " string(ROUTINE) "\n");
 
 	gettimeofday(&before, NULL);
@@ -237,13 +243,28 @@ int main()
 		double alpha = alpha_l[kk];
 		double beta = beta_l[kk];
 
-		// loop over row matrix dimension
-		for (ni = nj0; ni < ni0+nis; ni++)
+
+		// try different loop grow order n then m and viceversa
+		//
+
+		// loop over column matrix dimension
+		for (nj = nj0; nj < nj0+njs; nj++)
 			{
 
-			// loop over column matrix dimension
-			for (nj = nj0; nj < nj0+njs; nj++)
+			// loop over row matrix dimension
+			for (ni = ni0; ni < ni0+nis; ni++)
 				{
+
+/*
+ *         // loop over row matrix dimension
+ *         for (ni = ni0; ni < ni0+nis; ni++)
+ *             {
+ * 
+ *             // loop over column matrix dimension
+ *             for (nj = nj0; nj < nj0+njs; nj++)
+ *                 {
+ */
+
 
 				// loop over column matrix dimension
 				for (nk = nk0; nk < nk0+nks; nk++)
@@ -263,8 +284,10 @@ int main()
 								// loop over row AB offset
 								for (AB_offset_i = AB_offset0; AB_offset_i < AB_offsets; AB_offset_i++)
 									{
+									/* sA.use_dA=0; */
+									/* rA.use_dA=0; */
 
-									#if (VERBOSE == 2)
+									#if (VERBOSE>1)
 									printf(
 										"Calling D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
 										ii, ni, jj, nj,
@@ -331,9 +354,19 @@ int main()
 									int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, VERBOSE);
 
 									if (!res) bad_calls += 1;
-									#if VERBOSE
+									#if (VERBOSE==0)
+									#else
 									if (!res)
 										{
+										#if (VERBOSE>2)
+										printf("\nPrint A:\n\n");
+										blasfeo_print_xmat_debug(ni, ni, &sA, 0, 0, ii, jj);
+										print_xmat_debug(ni, ni, &rA, 0, 0, ii, jj);
+										printf("\nPrint B:\n\n");
+										blasfeo_print_xmat_debug(ni, nj, &sB, 0, 0, ii, jj);
+										print_xmat_debug(ni, nj, &rB, 0, 0, ii, jj);
+										#endif
+
 										printf(
 											"Error on D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
 											ii, ni, jj, nj,
