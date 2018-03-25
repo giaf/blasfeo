@@ -47,11 +47,14 @@ SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
 include ../Makefile.blas
 
 # set test verbosity
-ifeq ($(TEST_VERBOSITY), 1)
-CFLAGS += -DVERBOSE=1
+ifdef TEST_VERBOSITY
+ifeq ($(TEST_VERBOSITY), 0)
+else
+CFLAGS += -DVERBOSE=$(TEST_VERBOSITY)
 endif
-ifeq ($(TEST_VERBOSITY), 2)
-CFLAGS += -DVERBOSE=2
+endif
+ifndef TEST_VERBOSITY
+CFLAGS += -DVERBOSE=0
 endif
 
 ifdef ROUTINE
