@@ -10,7 +10,7 @@ declare -a TARGETS=()
 declare -a D_BLAS3_ROUTINES=()
 
 # import config for batch test
-source batch_test.sh.local
+source batch_test_local.sh
 
 DONE=0
 TOTAL=$((${#D_BLAS3_ROUTINES[@]} * ${#TARGETS[@]}))
@@ -22,7 +22,7 @@ do
 	echo "Testing $LA:$TARGET"
 	echo
 
-	if [ $BUILD_LIBS -eq 0 ]; then
+	if [ $BUILD_LIBS -eq 1 ]; then
 	make -s -C .. REF_BLAS=$REF_BLAS LA=$LA TARGET=$TARGET
 	make -s -C .. REF_BLAS=$REF_BLAS LA=$LA TARGET=$TARGET deploy_to_tests
 	fi
