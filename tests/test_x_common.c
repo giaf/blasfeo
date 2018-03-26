@@ -3,21 +3,22 @@ void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int e
 	{
 	const int subsize = 6;
 	int lda = sA->m;
-	REAL *pA = sA->pA + ai + aj*lda;
+	/* REAL *pA = sA->pA + ai + aj*lda; */
+	REAL *pA = sA->pA;
 	int j0,i0, ie, je;
 	int i, j;
 
 	i0 = err_i-subsize;
 	j0 = err_j-subsize;
 
-	if (i0 < 0) i0 = 0;
-	if (j0 < 0) j0 = 0;
+	if (i0 < ai) i0 = ai;
+	if (j0 < aj) j0 = aj;
 
 	ie = err_i+subsize;
 	je = err_j+subsize;
 
-	if (ie > m) ie = m;
-	if (je > n) je = n;
+	if (ie > ai+m) ie = ai+m;
+	if (je > aj+n) je = aj+n;
 
 	if (!ERR)
 	{
@@ -60,14 +61,14 @@ void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, i
 	i0 = err_i-subsize;
 	j0 = err_j-subsize;
 
-	if (i0 < 0) i0 = 0;
-	if (j0 < 0) j0 = 0;
+	if (i0 < ai) i0 = ai;
+	if (j0 < aj) j0 = aj;
 
 	ie = err_i+subsize;
 	je = err_j+subsize;
 
-	if (ie > m) ie = m;
-	if (je > n) je = n;
+	if (ie > ai+m) ie = ai+m;
+	if (je > aj+n) je = aj+n;
 
 	if (!ERR)
 	{
