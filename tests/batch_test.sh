@@ -1,44 +1,16 @@
 #! /bin/bash
 
-# TARGET
-
-# intel
-declare -a TARGETS=(
-	"GENERIC"
-	# "X64_INTEL_CORE"
-	# "X64_INTEL_SANDY_BRIDGE"
-	)
-
-# LA=BLAS_WRAPPER
+# default config
 LA=HIGH_PERFORMANCE
-# LA=REFERENCE
-# REF_BLAS=OPENBLAS
 REF_BLAS=0
-VERBOSE=3
+VERBOSE=1
+BUILD_LIBS=1
 
-# arm
-# amd
+declare -a TARGETS=()
+declare -a D_BLAS3_ROUTINES=()
 
-# LA
-# routines
-declare -a D_BLAS3_ROUTINES=(
-	# "GEMM|blasfeo_dgemm_nn"
-	# "GEMM|blasfeo_dgemm_nt"
-	# "GEMM|blasfeo_dsyrk_ln_mn"
-	"SYRK|blasfeo_dsyrk_ln"
-	"TRM|blasfeo_dtrsm_llnu"
-	"TRM|blasfeo_dtrsm_rltu"
-	"TRM|blasfeo_dtrsm_rltn"
-	"TRM|blasfeo_dtrsm_rutn"
-	# "TRM|blasfeo_dtrmm_rutn"
-	"TRM|blasfeo_dtrmm_rlnn"
-	"TRM|blasfeo_dtrsm_lunn"
-	)
-
-
-# echo "Cleaning .."
-# make -C .. clean
-# make clean
+# import config for batch test
+source batch_test.sh.local
 
 DONE=0
 TOTAL=$((${#D_BLAS3_ROUTINES[@]} * ${#TARGETS[@]}))
@@ -50,8 +22,10 @@ do
 	echo "Testing $LA:$TARGET"
 	echo
 
-	# make -s -C .. REF_BLAS=$REF_BLAS LA=$LA TARGET=$TARGET static_library
+	if [ $BUILD_LIBS -eq 0 ]; then
+	make -s -C .. REF_BLAS=$REF_BLAS LA=$LA TARGET=$TARGET
 	make -s -C .. REF_BLAS=$REF_BLAS LA=$LA TARGET=$TARGET deploy_to_tests
+	fi
 
 	for ROUTINE_SPEC in "${D_BLAS3_ROUTINES[@]}"
 	do
