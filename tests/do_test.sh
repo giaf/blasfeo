@@ -25,7 +25,7 @@ declare -a D_BLAS3_ROUTINES=(
 	# "GEMM|blasfeo_dgemm_nn"
 	# "GEMM|blasfeo_dgemm_nt"
 	# "GEMM|blasfeo_dsyrk_ln_mn"
-	# "SYRK|blasfeo_dsyrk_ln"
+	"SYRK|blasfeo_dsyrk_ln"
 	"TRM|blasfeo_dtrsm_llnu"
 	"TRM|blasfeo_dtrsm_rltu"
 	"TRM|blasfeo_dtrsm_rltn"

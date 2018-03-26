@@ -360,8 +360,9 @@ int main()
 										{
 										#if (VERBOSE>2)
 										printf("\nPrint A:\n\n");
-										blasfeo_print_xmat_debug(ni, ni, &sA, 0, 0, ii, jj);
-										print_xmat_debug(ni, ni, &rA, 0, 0, ii, jj);
+										int maxn = (ni > nj)? ni : nj;
+										blasfeo_print_xmat_debug(maxn, maxn, &sA, 0, 0, ii, jj);
+										print_xmat_debug(maxn, maxn, &rA, 0, 0, ii, jj);
 										printf("\nPrint B:\n\n");
 										blasfeo_print_xmat_debug(ni, nj, &sB, 0, 0, ii, jj);
 										print_xmat_debug(ni, nj, &rB, 0, 0, ii, jj);
