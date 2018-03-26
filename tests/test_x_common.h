@@ -65,4 +65,4 @@
 
 
 
-int GECMP_LIBSTR(int n, int m, struct STRMAT *sB, struct STRMAT_REF *rB, struct STRMAT *sA, struct STRMAT_REF *rA, int debug);
+int GECMP_LIBSTR(int n, int m, struct STRMAT *sB, struct STRMAT_REF *rB, struct STRMAT *sA, struct STRMAT_REF *rA, int* err_i, int* err_j, int debug);

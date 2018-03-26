@@ -195,6 +195,9 @@ int main()
 	int ret, ni, nj, nk, total_calls, bad_calls;
 	int AB_offset_i;
 
+	int err_i = 0;
+	int err_j = 0;
+
 	int ii0 = 0;
 	int jj0 = 0;
 	int AB_offset0 = 0;
@@ -287,6 +290,7 @@ int main()
 									/* sA.use_dA=0; */
 									/* rA.use_dA=0; */
 
+									#ifdef ROUTINE_CLASS_GEMM
 									#if (VERBOSE>1)
 									printf(
 										"Calling D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
@@ -297,13 +301,10 @@ int main()
 									);
 									#endif
 
-									#ifdef ROUTINE_CLASS_GEMM
-									// D <- alpha*A*B + beta*C
-
 									ROUTINE(
 										ni, nj, nk, alpha,
-										&sA, ii, jj, &sB,
-										ii+AB_offset_i, jj, beta,
+										&sA, ii, jj,
+										&sB, ii+AB_offset_i, jj, beta,
 										&sC, ii, jj,
 										&sD, ii, jj);
 
@@ -313,6 +314,29 @@ int main()
 										&rB, ii+AB_offset_i, jj, beta,
 										&rC, ii, jj,
 										&rD, ii, jj);
+
+									int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, &err_i, &err_j, VERBOSE);
+
+									if (!res) bad_calls += 1;
+									#if (VERBOSE==0)
+									#else
+									if (!res)
+										{
+										#if (VERBOSE>2)
+										printf("\nPrint A:\n");
+										blasfeo_print_xmat_debug(ni, nj, &sA, ii, jj, 0, 0, 0);
+										print_xmat_debug(ni, nj, &rA, ii, jj, 0, 0, 0);
+										printf("\nPrint B:\n");
+										blasfeo_print_xmat_debug(ni, nj, &sB, ii+AB_offset_i, jj, 0, 0, 0);
+										print_xmat_debug(ni, nj, &rB, ii+AB_offset_i, jj, 0, 0, 0);
+										printf("\nPrint C:\n");
+										blasfeo_print_xmat_debug(ni, nj, &sC, ii, jj, 0, 0, 0);
+										print_xmat_debug(ni, nj, &rC, ii, jj, 0, 0, 0);
+										#endif
+
+										assert(0);
+										}
+									#endif
 
 									#elif ROUTINE_CLASS_SYRK
 
@@ -330,7 +354,39 @@ int main()
 										&rC, ii, jj,
 										&rD, ii, jj);
 
+									int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, &err_i, &err_j, VERBOSE);
+
+									if (!res) bad_calls += 1;
+									#if (VERBOSE==0)
+									#else
+									if (!res)
+										{
+										#if (VERBOSE>2)
+										printf("\nPrint A:\n\n");
+										int maxn = (ni > nj)? ni : nj;
+										blasfeo_print_xmat_debug(maxn, maxn, &sA, ii, jj, 0, 0, 0);
+										print_xmat_debug(maxn, maxn, &rA, ii, jj, 0, 0, 0);
+										printf("\nPrint B:\n\n");
+										blasfeo_print_xmat_debug(ni, nj, &sB, ii, jj, 0, 0, 0);
+										print_xmat_debug(ni, nj, &rB, ii, jj, 0, 0, 0);
+										#endif
+
+										assert(0);
+										}
+									#endif
+
 									#elif ROUTINE_CLASS_TRM
+
+									int maxn = (ni > nj)? ni : nj;
+
+									#if (VERBOSE>1)
+									printf(
+										"Calling %f*A[%d:%d,%d:%d]*X[%d:%d,%d:%d] = %f*B[%d:%d,%d:%d]\n",
+										ii, maxn, jj, maxn,
+										ii, ni, jj, nj,
+										alpha, ii, ni, jj, nj
+									);
+									#endif
 
 									ROUTINE(
 										ni, nj, alpha,
@@ -344,39 +400,31 @@ int main()
 										&rB, ii+AB_offset_i, jj,
 										&rD, ii, jj);
 
+									int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, &err_i, &err_j, VERBOSE);
+
+									if (!res) bad_calls += 1;
+
+									#if (VERBOSE>0)
+									if (!res)
+										{
+										#if (VERBOSE>2)
+										printf("\nPrint A:\n\n");
+										blasfeo_print_xmat_debug(maxn, maxn, &sA, ii, jj, 0, 0, 0);
+										print_xmat_debug(maxn, maxn, &rA, ii, jj, 0, 0, 0);
+										printf("\nPrint B:\n\n");
+										blasfeo_print_xmat_debug(ni, nj, &sB, ii, jj, 0, 0, 0);
+										print_xmat_debug(ni, nj, &rB, ii, jj, 0, 0, 0);
+										#endif
+
+										assert(0);
+										}
+									#endif
+
 									#else
 
 										printf("\n\nNo Routine Class defined for "string(ROUTINE)"\n\n");
 										exit(0);
 
-									#endif
-
-									int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, VERBOSE);
-
-									if (!res) bad_calls += 1;
-									#if (VERBOSE==0)
-									#else
-									if (!res)
-										{
-										#if (VERBOSE>2)
-										printf("\nPrint A:\n\n");
-										int maxn = (ni > nj)? ni : nj;
-										blasfeo_print_xmat_debug(maxn, maxn, &sA, 0, 0, ii, jj);
-										print_xmat_debug(maxn, maxn, &rA, 0, 0, ii, jj);
-										printf("\nPrint B:\n\n");
-										blasfeo_print_xmat_debug(ni, nj, &sB, 0, 0, ii, jj);
-										print_xmat_debug(ni, nj, &rB, 0, 0, ii, jj);
-										#endif
-
-										printf(
-											"Error on D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
-											ii, ni, jj, nj,
-											alpha, ii, ni, jj, nk,
-											ii+AB_offset_i, nk, jj, nj,
-											beta, ii, ni, jj, nj
-										);
-										assert(0);
-										}
 									#endif
 
 									}
@@ -407,7 +455,7 @@ int main()
 	#endif
 
 
-	#if VERBOSE
+	#if (VERBOSE>1)
 	SHOW_DEFINE(LA)
 	SHOW_DEFINE(TARGET)
 	SHOW_DEFINE(PRECISION)
