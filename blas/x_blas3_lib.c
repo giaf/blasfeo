@@ -333,13 +333,22 @@ void TRSM_LUNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	REAL *pB = sB->pA + bi + bj*ldb;
 	REAL *pD = sD->pA + di + dj*ldd;
 	REAL *dA = sA->dA;
-	if(!(sA->use_dA==1 & ai==0 & aj==0))
+	if(ai==0 & aj==0)
 		{
-		// inverte diagonal of pA
+		if (sA->use_dA<m)
+			{
+			// invert diagonal of pA
+			for(ii=0; ii<m; ii++)
+				dA[ii] = 1.0/pA[ii+lda*ii];
+			// use only now
+			sA->use_dA = m;
+			}
+		}
+	else
+		{
 		for(ii=0; ii<m; ii++)
-			dA[ii] = 1.0/pA[ii+lda*ii];
-		// use only now
-		sA->use_dA = 0;
+			dA[ii] = 1.0 / pA[ii+lda*ii];
+		sA->use_dA = 0; // nonzero offset makes diagonal dirty
 		}
 #if 1
 	jj = 0;
@@ -552,21 +561,21 @@ void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	REAL *dA = sA->dA;
 	if(ai==0 & aj==0)
 		{
-		if(sA->use_dA!=1)
+		if(sA->use_dA<n)
 			{
 			for(ii=0; ii<n; ii++)
 				dA[ii] = 1.0 / pA[ii+lda*ii];
-			sA->use_dA = 1;
+			sA->use_dA = n;
 			}
 		}
 	else
 		{
 		for(ii=0; ii<n; ii++)
 			dA[ii] = 1.0 / pA[ii+lda*ii];
-		sA->use_dA = 0;
+		sA->use_dA = 0; // nonzero offset makes diagonal dirty
 		}
 	REAL
-		f_00_inv, 
+		f_00_inv,
 		f_10, f_11_inv,
 		c_00, c_01,
 		c_10, c_11;
@@ -1020,7 +1029,7 @@ void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int a
 
 
 
-#elif defined(LA_BLAS_WRAPPER)
+#elif defined(LA_BLAS)
 
 
 

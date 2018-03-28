@@ -1186,7 +1186,7 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 			// clean up at the beginning
 			if(bir!=0)
 				{
-				kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[0], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, n-j);
+				kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[0], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, bir+n-j);
 				j += ps-bir;
 				idxB += 4;
 				}
@@ -1209,7 +1209,7 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 			// clean up at the beginning
 			if(bir!=0)
 				{
-				kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[0], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, n-j);
+				kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[0], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, bir+n-j);
 				j += ps-bir;
 				idxB += 4;
 				}
@@ -1239,7 +1239,7 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, n-j);
+			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
 			j += ps-bir;
 			idxB += 4;
 			}
@@ -1257,7 +1257,7 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, n-j);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
 			j += ps-bir;
 			idxB += 4;
 			}
@@ -1276,7 +1276,7 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, n-j);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
 			j += ps-bir;
 			idxB += 4;
 			}
@@ -1786,18 +1786,20 @@ void blasfeo_dtrsm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 	int ii;
 	if(ai==0 & aj==0)
 		{
-		if(sA->use_dA!=1)
+		// recompute diagonal if size of operation grows
+		if(sA->use_dA<m)
 			{
-			ddiaex_lib(n, 1.0, ai, pA, sda, dA);
-			for(ii=0; ii<n; ii++)
+			ddiaex_lib(m, 1.0, ai, pA, sda, dA);
+			for(ii=0; ii<m; ii++)
 				dA[ii] = 1.0 / dA[ii];
-			sA->use_dA = 1;
+			sA->use_dA = m;
 			}
 		}
+	// if submatrix recompute diagonal
 	else
 		{
-		ddiaex_lib(n, 1.0, ai, pA, sda, dA);
-		for(ii=0; ii<n; ii++)
+		ddiaex_lib(m, 1.0, ai, pA, sda, dA);
+		for(ii=0; ii<m; ii++)
 			dA[ii] = 1.0 / dA[ii];
 		sA->use_dA = 0;
 		}
@@ -1836,12 +1838,12 @@ void blasfeo_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 
 	if(ai==0 & aj==0)
 		{
-		if(sA->use_dA!=1)
+		if(sA->use_dA<n)
 			{
 			ddiaex_lib(n, 1.0, ai, pA, sda, dA);
 			for(i=0; i<n; i++)
 				dA[i] = 1.0 / dA[i];
-			sA->use_dA = 1;
+			sA->use_dA = n;
 			}
 		}
 	else
@@ -2042,12 +2044,12 @@ void blasfeo_dtrsm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 	int ii;
 	if(ai==0 & aj==0)
 		{
-		if(sA->use_dA!=1)
+		if(sA->use_dA<n)
 			{
 			ddiaex_lib(n, 1.0, ai, pA, sda, dA);
 			for(ii=0; ii<n; ii++)
 				dA[ii] = 1.0 / dA[ii];
-			sA->use_dA = 1;
+			sA->use_dA = n;
 			}
 		}
 	else
