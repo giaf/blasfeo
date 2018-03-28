@@ -11,7 +11,7 @@ declare -a TARGETS=()
 declare -a D_BLAS3_ROUTINES=()
 
 # import config for batch test
-source batch_test_local.sh
+source batch_test.sh.local
 
 DONE=0
 TOTAL=$((${#D_BLAS3_ROUTINES[@]} * ${#TARGETS[@]}))
