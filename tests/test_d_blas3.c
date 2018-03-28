@@ -143,7 +143,7 @@ int main()
 	int err_i = 0;
 	int err_j = 0;
 
-	int ii0 = 1;
+	int ii0 = 0;
 	int jj0 = 0;
 	int AB_offset0 = 0;
 
