@@ -457,6 +457,9 @@ ifeq ($(TESTING_MODE), 1)
 endif
 	@echo
 	@echo " libblasfeo.a static library build complete."
+ifeq ($(TESTING_MODE), 1)
+	@echo " libblasfeo_ref.a static library build complete."
+endif
 	@echo
 
 

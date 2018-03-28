@@ -46,6 +46,38 @@ SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
 
 include ../Makefile.blas
 
+# set test verbosity
+ifdef TEST_VERBOSITY
+ifeq ($(TEST_VERBOSITY), 0)
+else
+CFLAGS += -DVERBOSE=$(TEST_VERBOSITY)
+endif
+endif
+ifndef TEST_VERBOSITY
+CFLAGS += -DVERBOSE=0
+endif
+
+ifdef ROUTINE
+CFLAGS += -DROUTINE=$(ROUTINE)
+else
+CFLAGS += -DROUTINE=blasfeo_dgemm_nn
+endif
+
+
+ifndef ROUTINE_CLASS
+ROUTINE_CLASS = GEMM
+endif
+ifeq ($(ROUTINE_CLASS), SYRK)
+CFLAGS += -DROUTINE_CLASS_SYRK
+endif
+ifeq ($(ROUTINE_CLASS), GEMM)
+CFLAGS += -DROUTINE_CLASS_GEMM
+endif
+ifeq ($(ROUTINE_CLASS), TRM)
+CFLAGS += -DROUTINE_CLASS_TRM
+endif
+
+
 # select one single test
 # ONE_OBJS =
 ONE_OBJS = test_d_debug.o
@@ -63,9 +95,7 @@ BLAS_OBJS =
 BLAS_OBJS += test_d_blas3.o
 
 test_%.o: test_%.c
-	@echo
-	@echo build executable obj $(BINARY_DIR)/$@
-	@echo
+	# build executable obj $(BINARY_DIR)/$@
 	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
 	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ -o $(BINARY_DIR)/$@.out $(LIBS)
 
@@ -89,11 +119,12 @@ one: common $(ONE_OBJS)
 
 
 aux: common $(AUX_OBJS)
-
 blas: common $(BLAS_OBJS)
 
 run_one:
 	./$(BINARY_DIR)/$(ONE_OBJS).out
+
+build_blas: $(BLAS_OBJS)
 
 run_aux:
 	./$(BINARY_DIR)/test_d_aux.o.out
@@ -101,6 +132,12 @@ run_aux:
 
 run_blas:
 	./$(BINARY_DIR)/test_d_blas3.o.out
+
+build_run_blas: blas run_blas
+build_run_aux: aux run_aux
+
+update_blas: $(BLAS_OBJS) run_blas
+update_aux: $(AUX_OBJS) run_aux
 
 clean:
 	rm -rf ./*.o

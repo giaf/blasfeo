@@ -49,44 +49,23 @@
 #include "../include/blasfeo_d_aux_ref.h"
 #include "../include/blasfeo_d_aux_ext_dep_ref.h"
 
-#define STR(x) #x
-#define SHOW_DEFINE(x) printf("%s=%s\n", #x, STR(x));
-
 #include "test_d_common.h"
 #include "test_x_common.c"
 
 
-
-#ifndef LA
-	#error LA undefined
-#endif
-
-#ifndef TARGET
-	#error TARGET undefined
-#endif
-
-#ifndef PRECISION
-	#error PRECISION undefined
-#endif
-
-#ifndef MIN_KERNEL_SIZE
-	#error MIN_KERNEL_SIZE undefined
-#endif
-
 int main()
 	{
-
-	SHOW_DEFINE(LA)
-	SHOW_DEFINE(TARGET)
-	SHOW_DEFINE(PRECISION)
-	SHOW_DEFINE(MIN_KERNEL_SIZE)
+	print_compile_flags();
 
 	int ii, jj, kk;
 	int n = 60;
 	int p_n = 15;
 
+	struct timeval before, after;
+	const char* result_code;
+
 	/* matrices in column-major format */
-	printf("Allocate C matrices\n");
+	/* printf("Allocate C matrices\n"); */
 
 	double *A, *B, *C, *D;
 	// standard column major allocation (malloc)
@@ -95,15 +74,13 @@ int main()
 	d_zeros(&C, n, n);
 	d_zeros(&D, n, n);
 
-
-	for(ii=0; ii<n*n; ii++) A[ii] = ii;
-	for(ii=0; ii<n*n; ii++) B[ii] = 2*ii;
-	for(ii=0; ii<n*n; ii++) C[ii] = 0.5*ii;
-
+	for(ii=0; ii<n*n; ii++) A[ii] = ii+1;
+	for(ii=0; ii<n*n; ii++) B[ii] = 2*(ii+1);
+	for(ii=0; ii<n*n; ii++) C[ii] = 0.5*(ii+1);
 
 	/* instantiate blasfeo_dmat */
 
-	printf("Allocate HP matrices\n");
+	/* printf("Allocate HP matrices\n"); */
 
 	struct blasfeo_dmat sA; blasfeo_allocate_dmat(n, n, &sA);
 	struct blasfeo_dmat sB; blasfeo_allocate_dmat(n, n, &sB);
@@ -125,72 +102,25 @@ int main()
 	v_zeros_align(&memory_dmat, size_dmat);
 	// cast memory pointer
 	char *ptr_memory_dmat = (char *) memory_dmat;
-
 	// instantiate blasfeo_dmat
 	struct blasfeo_dmat sA;
-	struct blasfeo_dmat sB;
-	struct blasfeo_dmat sC;
-	struct blasfeo_dmat sD;
-
 	blasfeo_create_dmat(n, n, &sA, ptr_memory_dmat);
 	ptr_memory_dmat += sA.memsize;
 	blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
-
-	blasfeo_create_dmat(n, n, &sB, ptr_memory_dmat);
-	ptr_memory_dmat += sB.memsize;
-	blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
-
-	blasfeo_create_dmat(n, n, &sC, ptr_memory_dmat);
-	ptr_memory_dmat += sC.memsize;
-	blasfeo_pack_dmat(n, n, C, n, &sC, 0, 0);
-
-	blasfeo_create_dmat(n, n, &sD, ptr_memory_dmat);
-	ptr_memory_dmat += sD.memsize;
-	blasfeo_pack_dmat(n, n, D, n, &sD, 0, 0);
 	#endif
 
-
-	printf("Allocate REF matrices\n");
+	/* printf("Allocate REF matrices\n"); */
 
 	struct blasfeo_dmat_ref rA; blasfeo_allocate_dmat_ref(n, n, &rA);
 	struct blasfeo_dmat_ref rB; blasfeo_allocate_dmat_ref(n, n, &rB);
 	struct blasfeo_dmat_ref rC; blasfeo_allocate_dmat_ref(n, n, &rC);
 	struct blasfeo_dmat_ref rD; blasfeo_allocate_dmat_ref(n, n, &rD);
 
+
 	blasfeo_pack_dmat_ref(n, n, A, n, &rA, 0, 0);
 	blasfeo_pack_dmat_ref(n, n, B, n, &rB, 0, 0);
 	blasfeo_pack_dmat_ref(n, n, C, n, &rC, 0, 0);
 	blasfeo_pack_dmat_ref(n, n, D, n, &rD, 0, 0);
-
-	// batch memory allocation
-	#if 0
-	// Testing comparison
-	// reference matrices, column major
-	int size_dmat_ref = 4*blasfeo_memsize_dmat_ref(n, n);
-	void *memory_dmat_ref;
-	v_zeros_align(&memory_dmat_ref, size_dmat_ref);
-	char *ptr_memory_dmat_ref = (char *) memory_dmat_ref;
-
-	struct blasfeo_dmat_ref rA;
-	blasfeo_create_dmat_ref(n, n, &rA, ptr_memory_dmat_ref);
-	ptr_memory_dmat_ref += rA.memsize;
-	blasfeo_pack_dmat_ref(n, n, A, n, &rA, 0, 0);
-
-	struct blasfeo_dmat_ref rB;
-	blasfeo_create_dmat_ref(n, n, &rB, ptr_memory_dmat_ref);
-	ptr_memory_dmat_ref += sB.memsize;
-	blasfeo_pack_dmat_ref(n, n, B, n, &rB, 0, 0);
-
-	struct blasfeo_dmat_ref rC;
-	blasfeo_create_dmat_ref(n, n, &rC, ptr_memory_dmat_ref);
-	ptr_memory_dmat_ref += sC.memsize;
-	blasfeo_pack_dmat_ref(n, n, C, n, &rC, 0, 0);
-
-	struct blasfeo_dmat_ref rD;
-	blasfeo_create_dmat_ref(n, n, &rD, ptr_memory_dmat_ref);
-	ptr_memory_dmat_ref += sD.memsize;
-	blasfeo_pack_dmat_ref(n, n, D, n, &rD, 0, 0);
-	#endif
 
 	// -------- Print matrices
 	#if 0
@@ -207,148 +137,281 @@ int main()
 	/* blasfeo_print_dmat_ref(p_n, p_n, &rB, 0, 0); */
 	#endif
 
-	printf("\n\n----------- TEST gemm\n\n");
-
 	int ret, ni, nj, nk, total_calls, bad_calls;
+	int AB_offset_i;
+
+	int err_i = 0;
+	int err_j = 0;
 
 	int ii0 = 0;
 	int jj0 = 0;
-	int iis = 8;
-	int jjs = 8;
+	int AB_offset0 = 0;
 
-	int ni0 = 5;
-	int nj0 = 5;
-	int nk0 = 32;
-	int nis = 30;
-	int njs = 30;
+	int ni0 = 1;
+	int nj0 = 1;
+	int nk0 = 1;
+
+	#if ROUTINE_CLASS_GEMM
+	int AB_offsets = 9;
+	int ii0s = 9;
+	int jj0s = 9;
+	int nis = 17;
+	int njs = 17;
+	int nks = 15;
+	int alphas = 6;
+	#elif ROUTINE_CLASS_SYRK || ROUTINE_CLASS_TRM
+	/* ai=bi=ci=di=0 */
+	int AB_offsets = 1;
+	int ii0s = 1;
+	int jj0s = 9;
 	int nks = 1;
+	/* alpha=beta=1.0 */
+	int alphas = 1;
+	int nis = 17;
+	int njs = 17;
+	#endif
 
-	double alphas[6] = {0.0, 0.0001, 0.02, 1.0, 400.0, 50000.0};
-	double betas[6] = {0.0, 0.0001, 0.02, 1.0, 400.0, 50000.0};
+	double alpha_l[6] = {1.0, 0.0, 0.0001, 0.02, 400.0, 50000.0};
+	double beta_l[6] = {1.0, 0.0, 0.0001, 0.02, 400.0, 50000.0};
 
-	total_calls = nis*njs*iis*jjs;
+	total_calls = alphas*nis*njs*nks*ii0s*jj0s*AB_offsets;
 	bad_calls = 0;
 
 	// Main test loop
 	#if 1
-	// loop over alphas/betas
-	for (kk = 0; kk < 1; kk++)
-		{
-		double alpha = alphas[3];
-		double beta = betas[3];
 
-		// loop over row matrix dimension
-		for (ni = nj0; ni < ni0+nis; ni++)
+
+	printf("\n----------- TEST " string(ROUTINE) "\n");
+
+	gettimeofday(&before, NULL);
+
+	// loop over alphas/betas
+	for (kk = 0; kk < alphas; kk++)
+		{
+		double alpha = alpha_l[kk];
+		double beta = beta_l[kk];
+
+
+		// try different loop grow order n then m and viceversa
+		//
+
+		// loop over column matrix dimension
+		for (nj = nj0; nj < nj0+njs; nj++)
 			{
 
-			// loop over column matrix dimension
-			for (nj = nj0; nj < nj0+njs; nj++)
+			// loop over row matrix dimension
+			for (ni = ni0; ni < ni0+nis; ni++)
 				{
+
+/*
+ *         // loop over row matrix dimension
+ *         for (ni = ni0; ni < ni0+nis; ni++)
+ *             {
+ * 
+ *             // loop over column matrix dimension
+ *             for (nj = nj0; nj < nj0+njs; nj++)
+ *                 {
+ */
+
 
 				// loop over column matrix dimension
 				for (nk = nk0; nk < nk0+nks; nk++)
 					{
 					// loop over row offset
-					for (ii = ii0; ii < ii0+iis; ii++)
+					for (ii = ii0; ii < ii0+ii0s; ii++)
 						{
 
 						// loop over column offset
-						for (jj = jj0; jj < jj0+jjs; jj++)
+						for (jj = jj0; jj < jj0+jj0s; jj++)
 							{
 
+							// loop over column offset
+							for (nk = nk0; nk < nk0+nks; nk++)
+								{
 
-							// gemm_nn D <- alpha*A*B + beta*C
-							printf(
-								"Calling D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
-								ii, ni, jj, nj,
-								alpha, ii, ni, jj, nk,
-								ii, nk, jj, nj,
-								beta, ii, ni, jj, nj);
+								// loop over row AB offset
+								for (AB_offset_i = AB_offset0; AB_offset_i < AB_offsets; AB_offset_i++)
+									{
+									/* sA.use_dA=0; */
+									/* rA.use_dA=0; */
 
-							blasfeo_dgemm_nn(ni, nj, nk, alpha, &sA, ii, jj, &sB, ii, jj, beta, &sC, ii, jj, &sD, ii, jj);
-							blasfeo_dgemm_nn_ref(ni, nj, nk, alpha, &rA, ii, jj, &rB, ii, jj, beta, &rC, ii, jj, &rD, ii, jj);
+									#ifdef ROUTINE_CLASS_GEMM
+									#if (VERBOSE>1)
+									print_routine_signature(string(ROUTINE), alpha, beta, ni, nj, nk,
+										ii, jj, ii+AB_offset_i, jj, ii, jj, ii, jj);
+									#endif
 
-							int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, 1);
+									ROUTINE(
+										ni, nj, nk, alpha,
+										&sA, ii, jj,
+										&sB, ii+AB_offset_i, jj, beta,
+										&sC, ii, jj,
+										&sD, ii, jj);
 
-							if (!res) bad_calls += 1;
-							assert(res);
+									REF(ROUTINE)(
+										ni, nj, nk, alpha,
+										&rA, ii, jj,
+										&rB, ii+AB_offset_i, jj, beta,
+										&rC, ii, jj,
+										&rD, ii, jj);
 
+									int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, &err_i, &err_j, VERBOSE);
+
+									if (!res) bad_calls += 1;
+									#if (VERBOSE==0)
+									#else
+									if (!res)
+										{
+										#if (VERBOSE>2)
+										print_input_matrices(
+											string(ROUTINE), ni, nj, nk,
+											&sA, &rA, &sB, &rB, &sC, &rC,
+											ii, jj, ii+AB_offset_i, jj, ii, jj);
+										#endif
+
+										print_routine_signature(string(ROUTINE), alpha, beta, ni, nj, nk,
+											ii, jj, ii+AB_offset_i, jj, ii, jj, ii, jj);
+										print_compile_flags();
+										assert(0);
+										}
+									#endif
+
+									#elif ROUTINE_CLASS_SYRK
+
+									ROUTINE(
+										ni, nj, alpha,
+										&sA, ii, jj,
+										&sB, ii+AB_offset_i, jj, beta,
+										&sC, ii, jj,
+										&sD, ii, jj);
+
+									REF(ROUTINE)(
+										ni, nj, alpha,
+										&rA, ii, jj,
+										&rB, ii+AB_offset_i, jj, beta,
+										&rC, ii, jj,
+										&rD, ii, jj);
+
+									int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, &err_i, &err_j, VERBOSE);
+
+									if (!res) bad_calls += 1;
+									#if (VERBOSE>0)
+									if (!res)
+										{
+										#if (VERBOSE>2)
+										print_input_matrices(
+											string(ROUTINE), ni, nj, nk,
+											&sA, &rA, &sB, &rB, &sC, &rC,
+											ii, jj, ii+AB_offset_i, jj, ii, jj);
+										#endif
+
+										print_routine_signature(string(ROUTINE), alpha, beta, ni, nj, nk,
+											ii, jj, ii+AB_offset_i, jj, ii, jj, ii, jj);
+										print_compile_flags();
+										assert(0);
+										}
+									#endif
+
+									#elif ROUTINE_CLASS_TRM
+
+									int maxn = (ni > nj)? ni : nj;
+
+									#if (VERBOSE>1)
+									print_routine_signature(string(ROUTINE), alpha, beta, ni, nj, nk,
+										ii, jj, ii+AB_offset_i, jj, ii, jj, ii, jj);
+									#endif
+
+									ROUTINE(
+										ni, nj, alpha,
+										&sA, ii, jj,
+										&sB, ii+AB_offset_i, jj,
+										&sD, ii, jj);
+
+									REF(ROUTINE)(
+										ni, nj, alpha,
+										&rA, ii, jj,
+										&rB, ii+AB_offset_i, jj,
+										&rD, ii, jj);
+
+									int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, &err_i, &err_j, VERBOSE);
+
+									if (!res) bad_calls += 1;
+
+									#if (VERBOSE>0)
+									if (!res)
+										{
+										#if (VERBOSE>2)
+										print_input_matrices(
+											string(ROUTINE), ni, nj, nk,
+											&sA, &rA, &sB, &rB, &sC, &rC,
+											ii, jj, ii+AB_offset_i, jj, ii, jj);
+										#endif
+
+										print_routine_signature(string(ROUTINE), alpha, beta, ni, nj, nk,
+											ii, jj, ii+AB_offset_i, jj, ii, jj, ii, jj);
+										print_compile_flags();
+										assert(0);
+										}
+									#endif
+
+									#else
+
+										printf("\n\nNo Routine Class defined for "string(ROUTINE)"\n\n");
+										exit(0);
+
+									#endif
+
+									}
+								}
 							}
 						}
 					}
 				}
 			}
-		printf("\n");
 		}
 
-	printf("\n----------- END TEST gemm\n");
+	gettimeofday(&after, NULL);
+
+	float test_elapsed_time  = (float) (after.tv_sec-before.tv_sec)+(after.tv_usec-before.tv_usec)/1e6;
 
 	if (!bad_calls)
 		{
-			printf("\n----------- TEST SUCCEEDED\n\n");
+			result_code = "SUCCEEDED";
 		}
 	else
 		{
-			printf("\n----------- TEST FAILED, %d/%d bad_calls\n\n", bad_calls, total_calls);
+			result_code = "FAILED";
 		}
+
+	printf("\n----------- TEST "string(ROUTINE)" %s, %d/%d Bad calls, Elapsed time: %5.2f s\n\n",
+			result_code, bad_calls, total_calls, test_elapsed_time);
 
 	#endif
 
+
+	#if (VERBOSE>1)
 	SHOW_DEFINE(LA)
 	SHOW_DEFINE(TARGET)
 	SHOW_DEFINE(PRECISION)
 	SHOW_DEFINE(MIN_KERNEL_SIZE)
+	SHOW_DEFINE(ROUTINE)
 	printf("\n\n");
+	#endif
 
 	d_free(A);
 	d_free(B);
 	d_free(C);
 	d_free(D);
-	printf("Freed double arrays \n");
-
-	#if 0
-
-	printf("&sA.pA %p \n", (void *) sA.pA);
-	printf("&sB.pA %p \n", (void *) sB.pA);
-	printf("&sC.pA %p \n", (void *) sC.pA);
-	printf("&sD.pA %p \n", (void *) sD.pA);
-
-	printf("sA.pA[0] %f \n", sA.pA[0]);
-	printf("sB.pA[0] %f \n", sB.pA[0]);
-	printf("sC.pA[0] %f \n", sC.pA[0]);
-	printf("sD.pA[0] %f \n", sD.pA[0]);
-
-	printf("&sA.dA %p \n", (void *) sA.dA);
-	printf("&sB.dA %p \n", (void *) sB.dA);
-	printf("&sC.dA %p \n", (void *) sC.dA);
-	printf("&sD.dA %p \n", (void *) sD.dA);
-
-	printf("sA.dA[0] %f \n", sA.dA[0]);
-	printf("sB.dA[0] %f \n", sB.dA[0]);
-	printf("sC.dA[0] %f \n", sC.dA[0]);
-	printf("sD.dA[0] %f \n", sD.dA[0]);
-
-	/* printf("sA->m %d \n", sA.m); */
-	/* printf("sB->m %d \n", sB.m); */
-	/* printf("sC->m %d \n", sC.m); */
-	/* printf("sD->m %d \n", sD.m); */
-	#endif
 
 	blasfeo_free_dmat(&sB);
 	blasfeo_free_dmat(&sA);
 	blasfeo_free_dmat(&sC);
 	blasfeo_free_dmat(&sD);
 
-	printf("Freed HP dmat \n");
-	/* free(ptr_memory_dmat_ref); */
-
 	blasfeo_free_dmat_ref(&rA);
 	blasfeo_free_dmat_ref(&rB);
 	blasfeo_free_dmat_ref(&rC);
 	blasfeo_free_dmat_ref(&rD);
-
-	printf("Freed REF dmat \n");
-
 
 	return 0;
 
@@ -363,7 +426,6 @@ int main()
 	printf("\n\n Recompile BLASFEO with TESTING_MODE=1 to run this test.\n\n");
 	return 0;
 	}
-
 
 
 #endif
