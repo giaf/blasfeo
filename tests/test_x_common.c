@@ -1,3 +1,11 @@
+void print_compile_flags(){
+	SHOW_DEFINE(LA)
+	SHOW_DEFINE(TARGET)
+	SHOW_DEFINE(PRECISION)
+	SHOW_DEFINE(MIN_KERNEL_SIZE)
+	SHOW_DEFINE(ROUTINE)
+}
+
 /* prints a matrix in column-major format */
 void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int err_i, int err_j, int ERR)
 	{
@@ -56,7 +64,9 @@ void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, i
 	#else
 	const int ps = PS;
 	const int subsize = 6;
-	int i0, j0, ie, je, ip0, ipe, ip;
+
+	int i0, j0, ie, je;
+	int ii, j, ip0, ipe, ip;
 
 	i0 = err_i-subsize;
 	j0 = err_j-subsize;
@@ -80,7 +90,6 @@ void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, i
 
 	int sda = sA->cn;
 	REAL *pA = sA->pA;
-	int ii, i, j, tmp;
 
 	printf("%s\t", "HP");
 	for(j=j0; j<je; j++) printf("%11d\t", j);
@@ -97,7 +106,7 @@ void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, i
 			{
 			for(j=j0; j<je; j++)
 				{
-				if (j == j0) printf("%d\t| ", ii+i);
+				if (j == j0) printf("%d\t| ", ii+ip);
 				if ((ii+ip==err_i) && (j==err_j) && ERR)
 				{
 					printf(ANSI_COLOR_RED"%9.2f\t"ANSI_COLOR_RESET, pA[ip+ps*j+sda*ii]);
@@ -114,6 +123,91 @@ void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, i
 	#endif
 	return;
 	}
+
+
+void print_routine_signature(const char* routine, REAL alpha, REAL beta, int m, int n, int k,
+							 int ai, int aj, int bi, int bj, int ci, int cj, int di, int dj)
+{
+	if (strcmp(routine, "blasfeo_dgemm_nn") == 0)
+	{
+		printf(
+			"Calling D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
+			di, m, dj, n,
+			alpha, ai, m, aj, k,
+			bi, k, bj, n,
+			beta, ci, m, cj, n
+		);
+	}
+	else if (strcmp(routine, "blasfeo_dgemm_nt") == 0)
+	{
+		printf(
+			"Calling D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
+			di, m, dj, n,
+			alpha, ai, m, aj, k,
+			bi, n, bj, k,
+			beta, ci, m, cj, n
+		);
+	}
+	else if (strncmp(routine, "blasfeo_trsm", 13) == 0)
+	{
+		int maxn = (m > n)? m : n;
+		printf(
+			"Calling %f*A[%d:%d,%d:%d]*X[%d:%d,%d:%d] = %f*B[%d:%d,%d:%d]\n",
+			ai, maxn, aj, maxn,
+			di, m, dj, n,
+			alpha, bi, m, bj, n
+		);
+	}
+	else
+	{
+	}
+}
+
+
+void print_input_matrices(const char* routine, int m, int n, int k,
+						  struct STRMAT *sA, struct STRMAT_REF *rA,
+						  struct STRMAT *sB, struct STRMAT_REF *rB,
+						  struct STRMAT *sC, struct STRMAT_REF *rC,
+						  int ai, int aj, int bi, int bj, int ci, int cj)
+{
+	if (strcmp(routine, "blasfeo_dgemm_nn") == 0)
+	{
+		printf("\nPrint A:\n");
+		blasfeo_print_xmat_debug(m, k, sA, ai, aj, 0, 0, 0);
+		print_xmat_debug(m, k, rA, ai, aj, 0, 0, 0);
+		printf("\nPrint B:\n");
+		blasfeo_print_xmat_debug(k, n, sB, bi, bj, 0, 0, 0);
+		print_xmat_debug(k, n, rB, bi, bj, 0, 0, 0);
+		printf("\nPrint C:\n");
+		blasfeo_print_xmat_debug(m, n, sC, ci, cj, 0, 0, 0);
+		print_xmat_debug(m, n, rC, ci, cj, 0, 0, 0);
+	}
+	else if (strcmp(routine, "blasfeo_dgemm_nt") == 0)
+	{
+		printf("\nPrint A:\n");
+		blasfeo_print_xmat_debug(m, k, sA, ai, aj, 0, 0, 0);
+		print_xmat_debug(m, k, rA, ai, aj, 0, 0, 0);
+		printf("\nPrint B:\n");
+		blasfeo_print_xmat_debug(n, k, sB, bi, bj, 0, 0, 0);
+		print_xmat_debug(n, k, rB, bi, bj, 0, 0, 0);
+		printf("\nPrint C:\n");
+		blasfeo_print_xmat_debug(m, n, sC, ci, cj, 0, 0, 0);
+		print_xmat_debug(m, n, rC, ci, cj, 0, 0, 0);
+	}
+	else if (strncmp(routine, "blasfeo_trsm", 13) == 0)
+	{
+		printf("\nPrint A:\n\n");
+		int maxn = (m > n)? m : n;
+		blasfeo_print_xmat_debug(maxn, maxn, sA, ai, aj, 0, 0, 0);
+		print_xmat_debug(maxn, maxn, rA, ai, aj, 0, 0, 0);
+		printf("\nPrint B:\n\n");
+		blasfeo_print_xmat_debug(m, n, sB, bi, bj, 0, 0, 0);
+		print_xmat_debug(m, n, rB, bi, bj, 0, 0, 0);
+	}
+	else
+	{
+	}
+}
 
 
 static void printbits(void *c, size_t n)
@@ -168,29 +262,9 @@ int GECMP_LIBSTR(int m, int n,
 					printbits(&rbi, sizeof(REAL));
 					printf("\n");
 
-					/* printf("fabs(sbi-rbi) %2.18f \n", fabs(sbi-rbi)); */
-					/* printf("fabs(sbi)+fabs(rbi) %2.18f \n", fabs(sbi)+fabs(rbi)); */
-
-					/* printf("\nPrint D\n"); */
+					printf("\nResult matrix:\n");
 					blasfeo_print_xmat_debug(ii+offset, jj+offset, sB, 0, 0, ii, jj, 1);
 					print_xmat_debug(ii+offset, jj+offset, rB, 0, 0, ii, jj, 1);
-
-					#if defined(LA)
-					SHOW_DEFINE(LA)
-					#endif
-
-					#if defined(TARGET)
-					SHOW_DEFINE(TARGET)
-					#endif
-
-					#if defined(PRECISION)
-					SHOW_DEFINE(PRECISION)
-					#endif
-
-					#if defined(MIN_KERNEL_SIZE)
-					SHOW_DEFINE(MIN_KERNEL_SIZE)
-					#endif
-
 
 					return 0;
 				}

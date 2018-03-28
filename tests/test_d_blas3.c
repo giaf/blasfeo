@@ -55,12 +55,7 @@
 
 int main()
 	{
-
-	SHOW_DEFINE(LA)
-	SHOW_DEFINE(TARGET)
-	SHOW_DEFINE(PRECISION)
-	SHOW_DEFINE(MIN_KERNEL_SIZE)
-	SHOW_DEFINE(ROUTINE)
+	print_compile_flags();
 
 	int ii, jj, kk;
 	int n = 60;
@@ -92,9 +87,6 @@ int main()
 	struct blasfeo_dmat sC; blasfeo_allocate_dmat(n, n, &sC);
 	struct blasfeo_dmat sD; blasfeo_allocate_dmat(n, n, &sD);
 
-	/* printf("sA use dA, %d\n", (&sA)->use_dA); */
-	/* printf("rA use dA, %d\n", (&rA)->use_dA); */
-
 	blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
 	blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
 	blasfeo_pack_dmat(n, n, C, n, &sC, 0, 0);
@@ -110,28 +102,11 @@ int main()
 	v_zeros_align(&memory_dmat, size_dmat);
 	// cast memory pointer
 	char *ptr_memory_dmat = (char *) memory_dmat;
-
 	// instantiate blasfeo_dmat
 	struct blasfeo_dmat sA;
-	struct blasfeo_dmat sB;
-	struct blasfeo_dmat sC;
-	struct blasfeo_dmat sD;
-
 	blasfeo_create_dmat(n, n, &sA, ptr_memory_dmat);
 	ptr_memory_dmat += sA.memsize;
 	blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
-
-	blasfeo_create_dmat(n, n, &sB, ptr_memory_dmat);
-	ptr_memory_dmat += sB.memsize;
-	blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
-
-	blasfeo_create_dmat(n, n, &sC, ptr_memory_dmat);
-	ptr_memory_dmat += sC.memsize;
-	blasfeo_pack_dmat(n, n, C, n, &sC, 0, 0);
-
-	blasfeo_create_dmat(n, n, &sD, ptr_memory_dmat);
-	ptr_memory_dmat += sD.memsize;
-	blasfeo_pack_dmat(n, n, D, n, &sD, 0, 0);
 	#endif
 
 	/* printf("Allocate REF matrices\n"); */
@@ -146,36 +121,6 @@ int main()
 	blasfeo_pack_dmat_ref(n, n, B, n, &rB, 0, 0);
 	blasfeo_pack_dmat_ref(n, n, C, n, &rC, 0, 0);
 	blasfeo_pack_dmat_ref(n, n, D, n, &rD, 0, 0);
-
-	// batch memory allocation
-	#if 0
-	// Testing comparison
-	// reference matrices, column major
-	int size_dmat_ref = 4*blasfeo_memsize_dmat_ref(n, n);
-	void *memory_dmat_ref;
-	v_zeros_align(&memory_dmat_ref, size_dmat_ref);
-	char *ptr_memory_dmat_ref = (char *) memory_dmat_ref;
-
-	struct blasfeo_dmat_ref rA;
-	blasfeo_create_dmat_ref(n, n, &rA, ptr_memory_dmat_ref);
-	ptr_memory_dmat_ref += rA.memsize;
-	blasfeo_pack_dmat_ref(n, n, A, n, &rA, 0, 0);
-
-	struct blasfeo_dmat_ref rB;
-	blasfeo_create_dmat_ref(n, n, &rB, ptr_memory_dmat_ref);
-	ptr_memory_dmat_ref += sB.memsize;
-	blasfeo_pack_dmat_ref(n, n, B, n, &rB, 0, 0);
-
-	struct blasfeo_dmat_ref rC;
-	blasfeo_create_dmat_ref(n, n, &rC, ptr_memory_dmat_ref);
-	ptr_memory_dmat_ref += sC.memsize;
-	blasfeo_pack_dmat_ref(n, n, C, n, &rC, 0, 0);
-
-	struct blasfeo_dmat_ref rD;
-	blasfeo_create_dmat_ref(n, n, &rD, ptr_memory_dmat_ref);
-	ptr_memory_dmat_ref += sD.memsize;
-	blasfeo_pack_dmat_ref(n, n, D, n, &rD, 0, 0);
-	#endif
 
 	// -------- Print matrices
 	#if 0
@@ -198,7 +143,7 @@ int main()
 	int err_i = 0;
 	int err_j = 0;
 
-	int ii0 = 0;
+	int ii0 = 1;
 	int jj0 = 0;
 	int AB_offset0 = 0;
 
@@ -207,7 +152,7 @@ int main()
 	int nk0 = 1;
 
 	#if ROUTINE_CLASS_GEMM
-	int AB_offsets = 5;
+	int AB_offsets = 9;
 	int ii0s = 9;
 	int jj0s = 9;
 	int nis = 17;
@@ -292,13 +237,8 @@ int main()
 
 									#ifdef ROUTINE_CLASS_GEMM
 									#if (VERBOSE>1)
-									printf(
-										"Calling D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
-										ii, ni, jj, nj,
-										alpha, ii, ni, jj, nk,
-										ii+AB_offset_i, nk, jj, nj,
-										beta, ii, ni, jj, nj
-									);
+									print_routine_signature(string(ROUTINE), alpha, beta, ni, nj, nk,
+										ii, jj, ii+AB_offset_i, jj, ii, jj, ii, jj);
 									#endif
 
 									ROUTINE(
@@ -323,17 +263,15 @@ int main()
 									if (!res)
 										{
 										#if (VERBOSE>2)
-										printf("\nPrint A:\n");
-										blasfeo_print_xmat_debug(ni, nj, &sA, ii, jj, 0, 0, 0);
-										print_xmat_debug(ni, nj, &rA, ii, jj, 0, 0, 0);
-										printf("\nPrint B:\n");
-										blasfeo_print_xmat_debug(ni, nj, &sB, ii+AB_offset_i, jj, 0, 0, 0);
-										print_xmat_debug(ni, nj, &rB, ii+AB_offset_i, jj, 0, 0, 0);
-										printf("\nPrint C:\n");
-										blasfeo_print_xmat_debug(ni, nj, &sC, ii, jj, 0, 0, 0);
-										print_xmat_debug(ni, nj, &rC, ii, jj, 0, 0, 0);
+										print_input_matrices(
+											string(ROUTINE), ni, nj, nk,
+											&sA, &rA, &sB, &rB, &sC, &rC,
+											ii, jj, ii+AB_offset_i, jj, ii, jj);
 										#endif
 
+										print_routine_signature(string(ROUTINE), alpha, beta, ni, nj, nk,
+											ii, jj, ii+AB_offset_i, jj, ii, jj, ii, jj);
+										print_compile_flags();
 										assert(0);
 										}
 									#endif
@@ -357,20 +295,19 @@ int main()
 									int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, &err_i, &err_j, VERBOSE);
 
 									if (!res) bad_calls += 1;
-									#if (VERBOSE==0)
-									#else
+									#if (VERBOSE>0)
 									if (!res)
 										{
 										#if (VERBOSE>2)
-										printf("\nPrint A:\n\n");
-										int maxn = (ni > nj)? ni : nj;
-										blasfeo_print_xmat_debug(maxn, maxn, &sA, ii, jj, 0, 0, 0);
-										print_xmat_debug(maxn, maxn, &rA, ii, jj, 0, 0, 0);
-										printf("\nPrint B:\n\n");
-										blasfeo_print_xmat_debug(ni, nj, &sB, ii, jj, 0, 0, 0);
-										print_xmat_debug(ni, nj, &rB, ii, jj, 0, 0, 0);
+										print_input_matrices(
+											string(ROUTINE), ni, nj, nk,
+											&sA, &rA, &sB, &rB, &sC, &rC,
+											ii, jj, ii+AB_offset_i, jj, ii, jj);
 										#endif
 
+										print_routine_signature(string(ROUTINE), alpha, beta, ni, nj, nk,
+											ii, jj, ii+AB_offset_i, jj, ii, jj, ii, jj);
+										print_compile_flags();
 										assert(0);
 										}
 									#endif
@@ -380,12 +317,8 @@ int main()
 									int maxn = (ni > nj)? ni : nj;
 
 									#if (VERBOSE>1)
-									printf(
-										"Calling %f*A[%d:%d,%d:%d]*X[%d:%d,%d:%d] = %f*B[%d:%d,%d:%d]\n",
-										ii, maxn, jj, maxn,
-										ii, ni, jj, nj,
-										alpha, ii, ni, jj, nj
-									);
+									print_routine_signature(string(ROUTINE), alpha, beta, ni, nj, nk,
+										ii, jj, ii+AB_offset_i, jj, ii, jj, ii, jj);
 									#endif
 
 									ROUTINE(
@@ -408,14 +341,15 @@ int main()
 									if (!res)
 										{
 										#if (VERBOSE>2)
-										printf("\nPrint A:\n\n");
-										blasfeo_print_xmat_debug(maxn, maxn, &sA, ii, jj, 0, 0, 0);
-										print_xmat_debug(maxn, maxn, &rA, ii, jj, 0, 0, 0);
-										printf("\nPrint B:\n\n");
-										blasfeo_print_xmat_debug(ni, nj, &sB, ii, jj, 0, 0, 0);
-										print_xmat_debug(ni, nj, &rB, ii, jj, 0, 0, 0);
+										print_input_matrices(
+											string(ROUTINE), ni, nj, nk,
+											&sA, &rA, &sB, &rB, &sC, &rC,
+											ii, jj, ii+AB_offset_i, jj, ii, jj);
 										#endif
 
+										print_routine_signature(string(ROUTINE), alpha, beta, ni, nj, nk,
+											ii, jj, ii+AB_offset_i, jj, ii, jj, ii, jj);
+										print_compile_flags();
 										assert(0);
 										}
 									#endif

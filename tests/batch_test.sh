@@ -5,6 +5,7 @@ LA=HIGH_PERFORMANCE
 REF_BLAS=0
 VERBOSE=1
 BUILD_LIBS=1
+MIN_KERNEL_SIZE=2
 
 declare -a TARGETS=()
 declare -a D_BLAS3_ROUTINES=()
@@ -23,7 +24,7 @@ do
 	echo
 
 	if [ $BUILD_LIBS -eq 1 ]; then
-	make -s -C .. REF_BLAS=$REF_BLAS LA=$LA TARGET=$TARGET
+	make -s -C .. MIN_KERNEL_SIZE=$MIN_KERNEL_SIZE SREF_BLAS=$REF_BLAS LA=$LA TARGET=$TARGET
 	make -s -C .. REF_BLAS=$REF_BLAS LA=$LA TARGET=$TARGET deploy_to_tests
 	fi
 

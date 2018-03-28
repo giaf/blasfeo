@@ -59,7 +59,10 @@ endif
 
 ifdef ROUTINE
 CFLAGS += -DROUTINE=$(ROUTINE)
+else
+CFLAGS += -DROUTINE=blasfeo_dgemm_nn
 endif
+
 
 ifndef ROUTINE_CLASS
 ROUTINE_CLASS = GEMM
