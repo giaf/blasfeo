@@ -1,4 +1,4 @@
-void print_compile_flags(){
+void print_compilation_flags(){
 	SHOW_DEFINE(LA)
 	SHOW_DEFINE(TARGET)
 	SHOW_DEFINE(PRECISION)
@@ -153,9 +153,9 @@ void print_routine_signature(const char* routine, REAL alpha, REAL beta, int m, 
 		int maxn = (m > n)? m : n;
 		printf(
 			"Calling %f*A[%d:%d,%d:%d]*X[%d:%d,%d:%d] = %f*B[%d:%d,%d:%d]\n",
-			ai, maxn, aj, maxn,
+			alpha, ai, maxn, aj, maxn,
 			di, m, dj, n,
-			alpha, bi, m, bj, n
+			beta, bi, m, bj, n
 		);
 	}
 	else

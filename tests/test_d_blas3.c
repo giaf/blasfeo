@@ -55,11 +55,10 @@
 
 int main()
 	{
-	print_compile_flags();
+	print_compilation_flags();
 
 	int ii, jj, kk;
 	int n = 60;
-	int p_n = 15;
 
 	struct timeval before, after;
 	const char* result_code;
@@ -137,7 +136,7 @@ int main()
 	/* blasfeo_print_dmat_ref(p_n, p_n, &rB, 0, 0); */
 	#endif
 
-	int ret, ni, nj, nk, total_calls, bad_calls;
+	int ni, nj, nk, total_calls, bad_calls;
 	int AB_offset_i;
 
 	int err_i = 0;
@@ -271,7 +270,7 @@ int main()
 
 										print_routine_signature(string(ROUTINE), alpha, beta, ni, nj, nk,
 											ii, jj, ii+AB_offset_i, jj, ii, jj, ii, jj);
-										print_compile_flags();
+										print_compilation_flags();
 										assert(0);
 										}
 									#endif
@@ -307,7 +306,7 @@ int main()
 
 										print_routine_signature(string(ROUTINE), alpha, beta, ni, nj, nk,
 											ii, jj, ii+AB_offset_i, jj, ii, jj, ii, jj);
-										print_compile_flags();
+										print_compilation_flags();
 										assert(0);
 										}
 									#endif
@@ -349,7 +348,7 @@ int main()
 
 										print_routine_signature(string(ROUTINE), alpha, beta, ni, nj, nk,
 											ii, jj, ii+AB_offset_i, jj, ii, jj, ii, jj);
-										print_compile_flags();
+										print_compilation_flags();
 										assert(0);
 										}
 									#endif
