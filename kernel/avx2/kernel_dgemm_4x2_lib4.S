@@ -599,11 +599,10 @@ inner_edge_dgemm_add_nn_4x2_lib4:
 
 1:
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%r11, %r12, 1), %ymm9
-	vbroadcastsd	0(%r13), %ymm12
+	vbroadcastsd	0(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm0, %ymm0
-	vbroadcastsd	32(%r13), %ymm12
+	vbroadcastsd	32(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm1, %ymm1
 
