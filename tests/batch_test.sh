@@ -25,6 +25,8 @@ do
 
 	if [ $BUILD_LIBS -eq 1 ]; then
 	make -s -C .. MIN_KERNEL_SIZE=$MIN_KERNEL_SIZE SREF_BLAS=$REF_BLAS LA=$LA TARGET=$TARGET
+	fi
+	if [ $BUILD_LIBS -eq 1 ] || [ $DEPLOY_LIBS -eq 1 ]; then
 	make -s -C .. REF_BLAS=$REF_BLAS LA=$LA TARGET=$TARGET deploy_to_tests
 	fi
 
