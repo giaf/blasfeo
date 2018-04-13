@@ -1656,7 +1656,8 @@ void blasfeo_pack_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA
 	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
 	int i, ii, j, jj, m0, m1, m2;
 	double 	*B, *pB;
-
+	sA->use_dA = 0;
+	
 	// row vector in sA
 	if(m==1)
 		{
@@ -1801,6 +1802,7 @@ void blasfeo_pack_tran_dmat(int m, int n, double *A, int lda, struct blasfeo_dma
 	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
 	int i, ii, j, m0, m1, m2;
 	double 	*B, *pB;
+	sA->use_dA = 0;
 
 	// row vector in sA
 	if(n==1)
@@ -4353,4 +4355,3 @@ void blasfeo_dvecpei(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi)
 #error : wrong LA choice
 
 #endif
-
