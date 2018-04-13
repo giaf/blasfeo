@@ -96,7 +96,7 @@ BLAS_OBJS += test_d_blas3.o
 
 test_%.o: test_%.c
 	# build executable obj $(BINARY_DIR)/$@
-	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
+	$(CC) $(CFLAGS) -Wall -c $< -o $(BINARY_DIR)/$@
 	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ -o $(BINARY_DIR)/$@.out $(LIBS)
 
 # ----------- Targets
