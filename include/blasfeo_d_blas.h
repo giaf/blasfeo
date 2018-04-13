@@ -39,6 +39,8 @@ extern "C" {
 //
 
 // z = y + alpha*x
+// z[zi:zi+n] = alpha*x[xi:xi+n] + y[yi:yi+n]
+// NB: Different arguments semantic compare to equivalent standard BLAS routine
 void blasfeo_daxpy(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
 // z = beta*y + alpha*x
 void blasfeo_daxpby(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
