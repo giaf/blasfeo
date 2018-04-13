@@ -2457,9 +2457,13 @@ int blasfeo_dgeqrf_worksize(int m, int n)
 
 void blasfeo_dgeqrf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *v_work)
 	{
-	char *work = (char *) v_work;
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	char *work = (char *) v_work;
 	const int ps = 4;
 
 	// extract dimensions
@@ -2539,6 +2543,10 @@ void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int ps = 4;
 
 	// extract dimensions

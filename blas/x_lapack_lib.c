@@ -37,9 +37,10 @@ void POTRF_L_LIBSTR(int m, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD,
 	{
 	if(m<=0)
 		return;
+
 	int ii, jj, kk;
 	REAL
-		f_00_inv, 
+		f_00_inv,
 		f_10, f_11_inv,
 		c_00, c_01,
 		c_10, c_11;
@@ -49,6 +50,8 @@ void POTRF_L_LIBSTR(int m, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD,
 	REAL *pD = sD->pA + di + dj*ldd;
 	REAL *dD = sD->dA;
 	if(di==0 & dj==0)
+		// if zero offset potrf recomputes the right values
+		// for the stored inverse diagonal of sD
 		sD->use_dA = 1;
 	else
 		sD->use_dA = 0;
@@ -177,10 +180,14 @@ void POTRF_L_MN_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct S
 	REAL *pC = sC->pA + ci + cj*ldc;
 	REAL *pD = sD->pA + di + dj*ldd;
 	REAL *dD = sD->dA;
+
 	if(di==0 & dj==0)
+		// if zero offset potrf recomputes the right values
+		// for the stored inverse diagonal of sD
 		sD->use_dA = 1;
 	else
 		sD->use_dA = 0;
+
 	jj = 0;
 	for(; jj<n-1; jj+=2)
 		{
@@ -309,6 +316,8 @@ void SYRK_POTRF_LN_LIBSTR(int m, int n, int k, struct STRMAT *sA, int ai, int aj
 	REAL *pD = sD->pA + di + dj*ldd;
 	REAL *dD = sD->dA;
 	if(di==0 & dj==0)
+		// if zero offset potrf recomputes the right values
+		// for the stored inverse diagonal of sD
 		sD->use_dA = 1;
 	else
 		sD->use_dA = 0;
@@ -465,6 +474,8 @@ void PSTRF_L_LIBSTR(int m, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD,
 	REAL *pD = sD->pA + di + dj*ldd;
 	REAL *dD = sD->dA;
 	if(di==0 & dj==0)
+		// if zero offset potrf recomputes the right values
+		// for the stored inverse diagonal of sD
 		sD->use_dA = 1;
 	else
 		sD->use_dA = 0;
@@ -587,6 +598,8 @@ void GETRF_NOPIVOT_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struc
 	REAL *pD = sD->pA + di + dj*ldd;
 	REAL *dD = sD->dA;
 	if(di==0 & dj==0)
+		// if zero offset potrf recomputes the right values
+		// for the stored inverse diagonal of sD
 		sD->use_dA = 1;
 	else
 		sD->use_dA = 0;
@@ -852,6 +865,8 @@ void GETRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 	REAL *pD = sD->pA+di+dj*ldd;
 	REAL *dD = sD->dA;
 	if(di==0 & dj==0)
+		// if zero offset getrf recomputes the right values
+		// for the stored inverse diagonal of sD
 		sD->use_dA = 1;
 	else
 		sD->use_dA = 0;
@@ -1221,6 +1236,10 @@ void GEQRF_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj, kk;
 	int lda = sA->m;
 	int ldd = sD->m;
@@ -1484,6 +1503,10 @@ void GELQF_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj, kk;
 	int lda = sA->m;
 	int ldd = sD->m;
@@ -1746,6 +1769,10 @@ void POTRF_L_LIBSTR(int m, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD,
 	{
 	if(m<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	char cl = 'l';
 	char cn = 'n';
@@ -1796,6 +1823,10 @@ void POTRF_L_MN_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct S
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	char cl = 'l';
 	char cn = 'n';
@@ -1851,6 +1882,10 @@ void SYRK_POTRF_LN_LIBSTR(int m, int n, int k, struct STRMAT *sA, int ai, int aj
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	char cl = 'l';
 	char cn = 'n';
@@ -1976,6 +2011,10 @@ void GETRF_NOPIVOT_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struc
 	// TODO with custom level 2 LAPACK + level 3 BLAS
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	REAL d1 = 1.0;
 	REAL *pC = sC->pA+ci+cj*sC->m;
@@ -2014,6 +2053,10 @@ void GETRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 	// TODO with custom level 2 LAPACK + level 3 BLAS
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	int tmp = m<n ? m : n;
 	REAL d1 = 1.0;
@@ -2080,6 +2123,10 @@ void GEQRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	REAL *pC = sC->pA+ci+cj*sC->m;
 	REAL *pD = sD->pA+di+dj*sD->m;
@@ -2150,6 +2197,10 @@ void GELQF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	REAL *pC = sC->pA+ci+cj*sC->m;
 	REAL *pD = sD->pA+di+dj*sD->m;
