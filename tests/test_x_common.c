@@ -59,7 +59,7 @@ void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int e
 /* prints a matrix in panel-major format */
 void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, int err_i, int err_j, int ERR)
 	{
-	#if defined(LA_BLAS_WRAPPER)
+	#if defined(LA_BLAS_WRAPPER) || defined(LA_REFERENCE)
 	/* print_xmat_debug(m, n, sA->pA, ai, aj, err_i, err_j); */
 	#else
 	const int ps = PS;

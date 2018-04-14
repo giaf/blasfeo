@@ -16,13 +16,8 @@ source batch_test.sh.local
 DONE=0
 TOTAL=$((${#D_BLAS3_ROUTINES[@]} * ${#TARGETS[@]}))
 
-## now loop through the above array
-for TARGET in "${TARGETS[@]}"
-do
-	echo
-	echo "Testing $LA:$TARGET"
-	echo
 
+test_routines(){
 	if [ $BUILD_LIBS -eq 1 ]; then
 	make -s -C .. MIN_KERNEL_SIZE=$MIN_KERNEL_SIZE SREF_BLAS=$REF_BLAS LA=$LA TARGET=$TARGET
 	fi
@@ -51,4 +46,36 @@ do
 		echo "Completed  $TARGET $ROUTINE ($DONE/$TOTAL) "
 		echo
 	done
+
+}
+
+for LA in "${LAS[@]}"
+do
+	if [ "$LA" = "REFERENCE" ]
+	then
+		TARGET=GENERIC
+		echo
+		echo "Testing $LA"
+		echo
+		test_routines
+	elif [ "$LA" = "BLASF_WRAPPER" ]
+	then
+		for REF_BLAS in "${REF_BLASES[@]}"
+		do
+			echo
+			echo "Testing $LA:$REF_BLAS"
+			echo
+			test_routines
+		done
+	else
+		for TARGET in "${TARGETS[@]}"
+		do
+			echo
+			echo "Testing $LA:$TARGET"
+			echo
+			test_routines
+		done
+	fi
 done
+
+

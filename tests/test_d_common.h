@@ -3,7 +3,9 @@
 #define REAL double
 #define STRMAT blasfeo_dmat
 #define STRVEC blasfeo_dvec
+
 #define PS D_PS
+
 #define PRINT_STRMAT blasfeo_print_dmat
 
 #define STRMAT_REF blasfeo_dmat_ref

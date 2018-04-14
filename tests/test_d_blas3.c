@@ -313,8 +313,6 @@ int main()
 
 									#elif ROUTINE_CLASS_TRM
 
-									int maxn = (ni > nj)? ni : nj;
-
 									#if (VERBOSE>1)
 									print_routine_signature(string(ROUTINE), alpha, beta, ni, nj, nk,
 										ii, jj, ii+AB_offset_i, jj, ii, jj, ii, jj);
