@@ -51,6 +51,9 @@ void blasfeo_sgemm_dn(int m, int n, float alpha, struct blasfeo_svec *sA, int ai
 		exit(1);
 		}
 
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int bs = 4;
 
 	int sdb = sB->cn;
@@ -107,6 +110,9 @@ void blasfeo_sgemm_nd(int m, int n, float alpha, struct blasfeo_smat *sA, int ai
 		printf("\nblasfeo_sgemm_nd: feature not implemented yet: ai=%d, ci=%d, di=%d\n", ai, ci, di);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int bs = 4;
 

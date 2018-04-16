@@ -52,6 +52,9 @@ void blasfeo_sgemm_nd(int m, int n, float alpha, struct blasfeo_smat *sA, int ai
 		exit(1);
 		}
 
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int bs = 8;
 
 	int sda = sA->cn;

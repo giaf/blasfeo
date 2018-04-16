@@ -55,6 +55,9 @@ void ALLOCATE_STRMAT(int m, int n, struct STRMAT *sA)
 // free memory of a matrix structure
 void FREE_STRMAT(struct STRMAT *sA)
 	{
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
 	FREE_ALIGN(sA->pA);
 	FREE_ALIGN(sA->dA);
 	return;

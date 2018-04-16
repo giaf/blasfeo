@@ -44,7 +44,6 @@ void sgemm_nt_lib(int m, int n, int k, float alpha, float *pA, int sda, float *p
 
 	if(m<=0 || n<=0)
 		return;
-	
 	const int bs = 4;
 
 	int i, j, l;
@@ -468,6 +467,10 @@ void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	
 	const int bs = 4;
 
@@ -577,6 +580,10 @@ void blasfeo_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 		printf("\nblasfeo_sgemm_nn: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int bs = 4;
 	int sda = sA->cn;
 	int sdb = sB->cn;
@@ -589,7 +596,7 @@ void blasfeo_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 	sgemm_nn_lib(m, n, k, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd); 
 	return;
 	}
-	
+
 
 
 // dtrsm_nn_llu
@@ -600,6 +607,10 @@ void blasfeo_strsm_llnu(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 		printf("\nblasfeo_strsm_llnu: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int bs = 4;
 	// TODO alpha
 	int sda = sA->cn;
@@ -608,7 +619,7 @@ void blasfeo_strsm_llnu(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 	float *pA = sA->pA + aj*bs;
 	float *pB = sB->pA + bj*bs;
 	float *pD = sD->pA + dj*bs;
-	strsm_nn_ll_one_lib(m, n, pA, sda, pB, sdb, pD, sdd); 
+	strsm_nn_ll_one_lib(m, n, pA, sda, pB, sdb, pD, sdd);
 	return;
 	}
 
@@ -622,6 +633,10 @@ void blasfeo_strsm_lunn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 		printf("\nblasfeo_strsm_lunn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int bs = 4;
 	// TODO alpha
 	int sda = sA->cn;
@@ -649,7 +664,7 @@ void blasfeo_strsm_lunn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 			dA[ii] = 1.0 / dA[ii];
 		sA->use_dA = 0;
 		}
-	strsm_nn_lu_inv_lib(m, n, pA, sda, dA, pB, sdb, pD, sdd); 
+	strsm_nn_lu_inv_lib(m, n, pA, sda, dA, pB, sdb, pD, sdd);
 	return;
 	}
 
@@ -664,6 +679,9 @@ void blasfeo_strsm_rltn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 		printf("\nblasfeo_strsm_rltn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int bs = 4;
 
@@ -742,6 +760,10 @@ void blasfeo_strsm_rltu(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 		printf("\nblasfeo_strsm_rltu: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int bs = 4;
 	// TODO alpha
 	int sda = sA->cn;
@@ -764,6 +786,10 @@ void blasfeo_strsm_rutn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 		printf("\nblasfeo_strsm_rutn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int bs = 4;
 	// TODO alpha
 	int sda = sA->cn;
@@ -805,6 +831,10 @@ void blasfeo_strmm_rutn(int m, int n, float alpha, struct blasfeo_smat *sB, int 
 		printf("\nblasfeo_strmm_rutn: feature not implemented yet: ai=%d, bi=%d, di=%d\n", ai, bi, di);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int bs = 4;
 	int sda = sA->cn;
 	int sdb = sB->cn;
@@ -821,6 +851,9 @@ void blasfeo_strmm_rutn(int m, int n, float alpha, struct blasfeo_smat *sB, int 
 // dtrmm_right_lower_nottransposed_notunit (B, i.e. the first matrix, is triangular !!!)
 void blasfeo_strmm_rlnn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
 	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int bs = 4;
 
@@ -921,6 +954,9 @@ void blasfeo_ssyrk_ln(int m, int k, float alpha, struct blasfeo_smat *sA, int ai
 		exit(1);
 		}
 
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int bs = 4;
 
 	int sda = sA->cn;
@@ -981,6 +1017,9 @@ void blasfeo_ssyrk_ln_mn(int m, int n, int k, float alpha, struct blasfeo_smat *
 		printf("\nsryrk_ln_libstr: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int bs = 4;
 
