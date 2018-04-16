@@ -37,6 +37,10 @@ void GEMM_L_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRVEC *sA, int ai, str
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -100,6 +104,10 @@ void GEMM_R_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj;
 	int lda = sA->m;
 	int ldd = sD->m;

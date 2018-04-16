@@ -36,6 +36,10 @@ void GEMM_NT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj, kk;
 	REAL 
 		c_00, c_01,
@@ -118,6 +122,10 @@ void GEMM_NN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj, kk;
 	REAL 
 		c_00, c_01,
@@ -200,6 +208,10 @@ void TRSM_LLNU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj, kk;
 	REAL
 		d_00, d_01,
@@ -322,6 +334,10 @@ void TRSM_LUNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj, kk, id;
 	REAL
 		d_00, d_01,
@@ -469,6 +485,10 @@ void TRSM_RLTU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj, kk;
 	int lda = sA->m;
 	int ldb = sB->m;
@@ -550,6 +570,10 @@ void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj, kk;
 	int lda = sA->m;
 	int ldb = sB->m;
@@ -648,6 +672,12 @@ void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 // dtrsm_right_upper_transposed_notunit
 void TRSM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
 	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	char cl = 'l';
 	char cn = 'n';
 	char cr = 'r';
@@ -782,6 +812,10 @@ void TRMM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj, kk;
 	REAL
 		c_00, c_01,
@@ -869,6 +903,10 @@ void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj, kk;
 	REAL 
 		c_00, c_01,
@@ -956,6 +994,10 @@ void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj,
 	{
 	if(m<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj, kk;
 	int n = m; // TODO optimize for this case !!!!!!!!!
 	REAL
@@ -1048,6 +1090,10 @@ void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int a
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj, kk;
 	REAL
 		c_00, c_01,
@@ -1141,6 +1187,10 @@ void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int a
 // dgemm nt
 void GEMM_NT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	char cn = 'n';
 	char ct = 't';
@@ -1184,6 +1234,10 @@ void GEMM_NT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 // dgemm nn
 void GEMM_NN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	char cn = 'n';
 	REAL *pA = sA->pA+ai+aj*sA->m;
@@ -1226,6 +1280,10 @@ void GEMM_NN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 // dtrsm_left_lower_nottransposed_unit
 void TRSM_LLNU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
 	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	char cl = 'l';
 	char cn = 'n';
@@ -1266,6 +1324,10 @@ void TRSM_LLNU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 // dtrsm_left_upper_nottransposed_notunit
 void TRSM_LUNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
 	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	char cl = 'l';
 	char cn = 'n';
@@ -1306,6 +1368,10 @@ void TRSM_LUNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 // dtrsm_right_lower_transposed_unit
 void TRSM_RLTU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
 	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	char cl = 'l';
 	char cn = 'n';
@@ -1348,6 +1414,10 @@ void TRSM_RLTU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 // dtrsm_right_lower_transposed_notunit
 void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
 	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	char cl = 'l';
 	char cn = 'n';
@@ -1390,6 +1460,10 @@ void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 // dtrsm_right_upper_transposed_notunit
 void TRSM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
 	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	char cl = 'l';
 	char cn = 'n';
@@ -1432,6 +1506,10 @@ void TRSM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 // dtrmm_right_upper_transposed_notunit (A triangular !!!)
 void TRMM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
 	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	char cl = 'l';
 	char cn = 'n';
@@ -1474,6 +1552,10 @@ void TRMM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 // dtrmm_right_lower_nottransposed_notunit (A triangular !!!)
 void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
 	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	char cl = 'l';
 	char cn = 'n';
@@ -1516,6 +1598,10 @@ void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 // dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
 void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	char cl = 'l';
 	char cn = 'n';
@@ -1573,6 +1659,10 @@ void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj,
 // dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
 void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int jj;
 	char cl = 'l';
 	char cn = 'n';

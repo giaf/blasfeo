@@ -42,7 +42,10 @@ void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 
 	if(m==0 | n==0)
 		return;
-	
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 #if defined(DIM_CHECK)
 	// TODO check that sA=!sD or that if sA==sD then they do not overlap (same for sB)
 	// non-negative size
@@ -281,7 +284,10 @@ void blasfeo_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 
 	if(m==0 | n==0)
 		return;
-	
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 #if defined(DIM_CHECK)
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_sgemm_nt : m<0 : %d<0 *****\n", m);
@@ -520,6 +526,9 @@ void blasfeo_ssyrk_ln(int m, int k, float alpha, struct blasfeo_smat *sA, int ai
 		exit(1);
 		}
 
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int bs = 8;
 
 	int i, j;
@@ -709,6 +718,9 @@ void blasfeo_ssyrk_ln_mn(int m, int n, int k, float alpha, struct blasfeo_smat *
 		printf("\nblasfeo_ssyrk_ln_mn: feature not implemented yet: ci>0, di>0\n");
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int bs = 8;
 
@@ -1011,6 +1023,8 @@ void blasfeo_ssyrk_ln_mn(int m, int n, int k, float alpha, struct blasfeo_smat *
 // dtrmm_right_lower_nottransposed_notunit (B, i.e. the first matrix, is triangular !!!)
 void blasfeo_strmm_rlnn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
 	{
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int bs = 8;
 
@@ -1262,6 +1276,9 @@ void blasfeo_strsm_rltn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 		printf("\nblasfeo_strsm_rltn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int bs = 8;
 
