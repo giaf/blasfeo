@@ -2233,22 +2233,22 @@ inner_edge_dgemm_add_nn_4x8_lib4:
 	addq			%rax, %r12 // B+offsetB*sizeof(double)
 
 1:
-	vmovapd			0(%r11), %ymm12
-	vbroadcastsd	0(%r12), %ymm13
+	vmovapd			0(%r11), %ymm12 // A
+	vbroadcastsd	0(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm0
-	vbroadcastsd	32(%r12), %ymm13
+	vbroadcastsd	32(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm1
-	vbroadcastsd	64(%r12), %ymm13
+	vbroadcastsd	64(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm2
-	vbroadcastsd	96(%r12), %ymm13
+	vbroadcastsd	96(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm3
-	vbroadcastsd	128(%r12), %ymm12 // B
+	vbroadcastsd	128(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm4
-	vbroadcastsd	160(%r12), %ymm12 // B
+	vbroadcastsd	160(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm5
-	vbroadcastsd	192(%r12), %ymm12 // B
+	vbroadcastsd	192(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm6
-	vbroadcastsd	224(%r12), %ymm12 // B
+	vbroadcastsd	224(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm7
 
 	subl			$1, %r10d // k-1
