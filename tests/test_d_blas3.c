@@ -142,27 +142,32 @@ int main()
 	int err_i = 0;
 	int err_j = 0;
 
+	// sub-mastrix offset, sweep start
 	int ii0 = 0;
 	int jj0 = 0;
+	int kk0 = 0;
 	int AB_offset0 = 0;
 
+	// sub-matrix dimensions, sweep start
 	int ni0 = 1;
 	int nj0 = 1;
 	int nk0 = 1;
 
 	#if ROUTINE_CLASS_GEMM
-	int AB_offsets = 9;
-	int ii0s = 9;
-	int jj0s = 9;
-	int nis = 17;
-	int njs = 17;
-	int nks = 15;
-	int alphas = 6;
+	int AB_offsets = 2;
+	int ii0s = 13;
+	int jj0s = 1;
+	int kk0s = 1;
+	int nis = 25;
+	int njs = 25;
+	int nks = 25;
+	int alphas = 1;
 	#elif ROUTINE_CLASS_SYRK || ROUTINE_CLASS_TRM
 	/* ai=bi=ci=di=0 */
 	int AB_offsets = 1;
 	int ii0s = 1;
 	int jj0s = 9;
+	int kk0s = 1;
 	int nks = 1;
 	/* alpha=beta=1.0 */
 	int alphas = 1;
@@ -225,7 +230,7 @@ int main()
 							{
 
 							// loop over column offset
-							for (nk = nk0; nk < nk0+nks; nk++)
+							for (kk = kk0; kk < kk0+kk0s; kk++)
 								{
 
 								// loop over row AB offset
@@ -244,15 +249,15 @@ int main()
 										ni, nj, nk, alpha,
 										&sA, ii, jj,
 										&sB, ii+AB_offset_i, jj, beta,
-										&sC, ii, jj,
-										&sD, ii, jj);
+										&sC, ii+AB_offset_i, jj,
+										&sD, ii+AB_offset_i, jj);
 
 									REF(ROUTINE)(
 										ni, nj, nk, alpha,
 										&rA, ii, jj,
 										&rB, ii+AB_offset_i, jj, beta,
-										&rC, ii, jj,
-										&rD, ii, jj);
+										&rC, ii+AB_offset_i, jj,
+										&rD, ii+AB_offset_i, jj);
 
 									int res = dgecmp_libstr(ni, nj, &sD, &rD, &sA, &rA, &err_i, &err_j, VERBOSE);
 

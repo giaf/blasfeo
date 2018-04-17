@@ -148,7 +148,7 @@ void print_routine_signature(const char* routine, REAL alpha, REAL beta, int m, 
 			beta, ci, m, cj, n
 		);
 	}
-	else if (strncmp(routine, "blasfeo_trsm", 13) == 0)
+	else if ((strncmp(routine, "blasfeo_dtrsm", 13) == 0) || (strncmp(routine, "blasfeo_dtrmm", 13) == 0))
 	{
 		int maxn = (m > n)? m : n;
 		printf(
@@ -160,6 +160,14 @@ void print_routine_signature(const char* routine, REAL alpha, REAL beta, int m, 
 	}
 	else
 	{
+		printf("Do not know: %s\n", routine);
+		printf(
+			"D[%d:%d,%d:%d], %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d], %f*C[%d:%d,%d:%d]\n",
+			di, m, dj, n,
+			alpha, ai, m, aj, k,
+			bi, k, bj, n,
+			beta, ci, m, cj, n
+		);
 	}
 }
 
