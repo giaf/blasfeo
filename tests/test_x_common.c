@@ -9,24 +9,40 @@ void print_compilation_flags(){
 /* prints a matrix in column-major format */
 void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int err_i, int err_j, int ERR)
 	{
-	const int subsize = 6;
-	int lda = sA->m;
+
 	/* REAL *pA = sA->pA + ai + aj*lda; */
+	int lda = sA->m;
 	REAL *pA = sA->pA;
 	int j0,i0, ie, je;
 	int i, j;
+	const int max_rows = 16;
+	const int max_cols = 9;
+	const int offset = 2;
 
-	i0 = err_i-subsize;
-	j0 = err_j-subsize;
+	i0 = (ai - offset >=0 )? ai - offset : 0;
+	ie = ai + m + offset;
+	j0 = (aj - offset >=0 )? aj - offset : 0;
+	je = aj + n + offset;
 
-	if (i0 < ai) i0 = ai;
-	if (j0 < aj) j0 = aj;
+	if (ie-i0 > max_rows)
+	{
+		i0 = (err_i - ((int)(max_rows/2)) >=0 )? err_i - ((int)(max_rows/2)) : 0;
+		ie = err_i + ((int)(max_rows/2)) ;
+	}
+	if (je-j0 > max_cols)
+	{
+		j0 = (err_j - ((int)(max_rows/2)) >=0 )? err_j - ((int)(max_rows/2)) : 0;
+		je = err_j + ((int)(max_rows/2)) ;
+	}
 
-	ie = err_i+subsize;
-	je = err_j+subsize;
-
-	if (ie > ai+m) ie = ai+m;
-	if (je > aj+n) je = aj+n;
+	/* i0 = err_i-subsize; */
+	/* j0 = err_j-subsize; */
+	/* if (i0 < ai) i0 = ai; */
+	/* if (j0 < aj) j0 = aj; */
+	/* ie = err_i+subsize; */
+	/* je = err_j+subsize; */
+	/* if (ie > ai+m) ie = ai+m; */
+	/* if (je > aj+n) je = aj+n; */
 
 	if (!ERR)
 	{
@@ -47,8 +63,13 @@ void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int e
 		for(j=j0; j<je; j++)
 			{
 			if (j == j0)  printf("%d\t| ", i);
-			if ((i==err_i) && (j==err_j) && ERR) printf(ANSI_COLOR_RED"%9.2f\t"ANSI_COLOR_RESET, pA[i+lda*j]);
+
+			if ((i==err_i) && (j==err_j) && ERR)
+				printf(ANSI_COLOR_RED"%9.2f\t"ANSI_COLOR_RESET, pA[i+lda*j]);
+			else if ((i >= ai) && (i < ai+m) && (j >= aj) && (j < aj+n))
+				printf(ANSI_COLOR_GREEN"%9.2f\t"ANSI_COLOR_RESET, pA[i+lda*j]);
 			else printf("%9.2f\t", pA[i+lda*j]);
+
 			}
 		printf("\n");
 		}
@@ -63,22 +84,42 @@ void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, i
 	/* print_xmat_debug(m, n, sA->pA, ai, aj, err_i, err_j); */
 	#else
 	const int ps = PS;
-	const int subsize = 6;
 
 	int i0, j0, ie, je;
 	int ii, j, ip0, ipe, ip;
 
-	i0 = err_i-subsize;
-	j0 = err_j-subsize;
+	const int max_rows = 16;
+	const int max_cols = 9;
+	const int offset = 2;
 
-	if (i0 < ai) i0 = ai;
-	if (j0 < aj) j0 = aj;
+	i0 = (ai - offset >=0 )? ai - offset : 0;
+	ie = ai + m + offset;
+	j0 = (aj - offset >=0 )? aj - offset : 0;
+	je = aj + n + offset;
 
-	ie = err_i+subsize;
-	je = err_j+subsize;
+	if (ie-i0 > max_rows)
+	{
+		i0 = (err_i - ((int)(max_rows/2)) >=0 )? err_i - ((int)(max_rows/2)) : 0;
+		ie = err_i + ((int)(max_rows/2)) ;
+	}
+	if (je-j0 > max_cols)
+	{
+		j0 = (err_j - ((int)(max_rows/2)) >=0 )? err_j - ((int)(max_rows/2)) : 0;
+		je = err_j + ((int)(max_rows/2)) ;
+	}
 
-	if (ie > ai+m) ie = ai+m;
-	if (je > aj+n) je = aj+n;
+	/* const int subsize = 6; */
+	/* i0 = err_i-subsize; */
+	/* j0 = err_j-subsize; */
+
+	/* if (i0 < ai) i0 = ai; */
+	/* if (j0 < aj) j0 = aj; */
+
+	/* ie = err_i+subsize; */
+	/* je = err_j+subsize; */
+
+	/* if (ie > ai+m) ie = ai+m; */
+	/* if (je > aj+n) je = aj+n; */
 
 	if (!ERR)
 	{
@@ -107,11 +148,13 @@ void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, i
 			for(j=j0; j<je; j++)
 				{
 				if (j == j0) printf("%d\t| ", ii+ip);
+
 				if ((ii+ip==err_i) && (j==err_j) && ERR)
-				{
 					printf(ANSI_COLOR_RED"%9.2f\t"ANSI_COLOR_RESET, pA[ip+ps*j+sda*ii]);
-				}
+				else if ((ii+ip >= ai) && (ii+ip < ai+m) && (j >= aj) && (j < aj+n))
+					printf(ANSI_COLOR_GREEN"%9.2f\t"ANSI_COLOR_RESET, pA[ip+ps*j+sda*ii]);
 				else printf("%9.2f\t", pA[ip+ps*j+sda*ii]);
+
 				}
 			printf("\n");
 			ip0 = 0;
@@ -234,7 +277,7 @@ static void printbits(void *c, size_t n)
 
 
 // 1 to 1 comparison of every element
-int GECMP_LIBSTR(int m, int n,
+int GECMP_LIBSTR(int m, int n, int bi, int bj,
 				 struct STRMAT *sB, struct STRMAT_REF *rB,
 				 struct STRMAT *sA, struct STRMAT_REF *rA,
 				 int* err_i, int* err_j,
@@ -242,7 +285,6 @@ int GECMP_LIBSTR(int m, int n,
 				 )
 	{
 	int ii, jj;
-	const int offset = 8;
 
 	for(ii = 0; ii < m; ii++)
 		{
@@ -271,8 +313,8 @@ int GECMP_LIBSTR(int m, int n,
 					printf("\n");
 
 					printf("\nResult matrix:\n");
-					blasfeo_print_xmat_debug(ii+offset, jj+offset, sB, 0, 0, ii, jj, 1);
-					print_xmat_debug(ii+offset, jj+offset, rB, 0, 0, ii, jj, 1);
+					blasfeo_print_xmat_debug(m, n, sB, bi, bj, ii, jj, 1);
+					print_xmat_debug(m, n, rB, bi, bj, ii, jj, 1);
 
 					return 0;
 				}
