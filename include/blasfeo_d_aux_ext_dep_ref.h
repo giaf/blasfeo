@@ -47,6 +47,7 @@
 extern "C" {
 #endif
 
+#include "blasfeo_common.h"
 
 #ifdef BLASFEO_COMMON
 // expose reference BLASFEO for testing
