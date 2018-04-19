@@ -2281,7 +2281,7 @@ void kernel_dtrmm_nt_ru_4x4_vs_lib4(int kmax, double *alpha, double *A, double *
 		}
 
 	// k = 1
-	if(kmax>0)
+	if(kmax>1)
 		{
 		a_0 = A[0];
 		a_1 = A[1];
@@ -2307,7 +2307,7 @@ void kernel_dtrmm_nt_ru_4x4_vs_lib4(int kmax, double *alpha, double *A, double *
 		}
 
 	// k = 2
-	if(kmax>0)
+	if(kmax>2)
 		{
 		a_0 = A[0];
 		a_1 = A[1];

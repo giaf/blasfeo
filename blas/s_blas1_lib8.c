@@ -70,6 +70,7 @@ void blasfeo_saxpy(int m, float alpha, struct blasfeo_svec *sx, int xi, struct b
 	}
 
 
+
 void blasfeo_saxpby(int m, float alpha, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 	if(m<=0)
@@ -90,6 +91,7 @@ void blasfeo_saxpby(int m, float alpha, struct blasfeo_svec *sx, int xi, float b
 		z[ii+0] = beta*y[ii+0] + alpha*x[ii+0];
 	return;
 	}
+
 
 
 void saxpy_bkp_libstr(int m, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
@@ -121,6 +123,43 @@ void saxpy_bkp_libstr(int m, float alpha, struct blasfeo_svec *sx, int xi, struc
 
 
 // multiply two vectors
+void blasfeo_svecmul(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+	{
+
+	if(m<=0)
+		return;
+
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+	float *z = sz->pa + zi;
+	int ii;
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	__m256
+		v_tmp,
+		v_x0, v_y0;
+#endif
+
+	ii = 0;
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<m-7; ii+=8)
+		{
+		v_x0 = _mm256_loadu_ps( &x[ii+0] );
+		v_y0 = _mm256_loadu_ps( &y[ii+0] );
+		v_tmp = _mm256_mul_ps( v_x0, v_y0 );
+		_mm256_storeu_ps( &z[ii+0], v_tmp );
+		}
+#endif
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = x[ii+0] * y[ii+0];
+		}
+	return;
+	}
+
+
+
+// multiply two vectors and add result to another vector
 void blasfeo_svecmulacc(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 

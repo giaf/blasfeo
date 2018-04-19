@@ -51,9 +51,9 @@ int main()
 
 	printf("\nLA provided by REFERENCE\n\n");
 
-#elif defined(LA_BLAS)
+#elif defined(LA_BLAS_WRAPPER)
 
-	printf("\nLA provided by BLAS\n\n");
+	printf("\nLA provided by BLAS_WRAPPER\n\n");
 
 #else
 
@@ -226,9 +226,9 @@ int main()
 //	blasfeo_print_tran_dvec(n, &sr, 0);
 
 //	blasfeo_print_tran_dvec(n, &sm, 0);
-//	DVECEL_LIBSTR(&sm, 0) = 0.0;
-//	DVECEL_LIBSTR(&sm, 1) = 1.0;
-//	DVECEL_LIBSTR(&sm, 2) = 2.0;
+//	BLASFEO_DVECEL(&sm, 0) = 0.0;
+//	BLASFEO_DVECEL(&sm, 1) = 1.0;
+//	BLASFEO_DVECEL(&sm, 2) = 2.0;
 //	blasfeo_print_tran_dvec(n, &sm, 0);
 //	return 0;
 
@@ -242,40 +242,40 @@ int main()
 
 	// givens rotations
 #if 0
-	DMATEL_LIBSTR(&sD, 0, 0) = 6.0;
-	DMATEL_LIBSTR(&sD, 0, 1) = 5.0;
-	DMATEL_LIBSTR(&sD, 0, 2) = 0.0;
-	DMATEL_LIBSTR(&sD, 1, 0) = 5.0;
-	DMATEL_LIBSTR(&sD, 1, 1) = 1.0;
-	DMATEL_LIBSTR(&sD, 1, 2) = 4.0;
-	DMATEL_LIBSTR(&sD, 2, 0) = 0.0;
-	DMATEL_LIBSTR(&sD, 2, 1) = 4.0;
-	DMATEL_LIBSTR(&sD, 2, 2) = 3.0;
+	BLASFEO_DMATEL(&sD, 0, 0) = 6.0;
+	BLASFEO_DMATEL(&sD, 0, 1) = 5.0;
+	BLASFEO_DMATEL(&sD, 0, 2) = 0.0;
+	BLASFEO_DMATEL(&sD, 1, 0) = 5.0;
+	BLASFEO_DMATEL(&sD, 1, 1) = 1.0;
+	BLASFEO_DMATEL(&sD, 1, 2) = 4.0;
+	BLASFEO_DMATEL(&sD, 2, 0) = 0.0;
+	BLASFEO_DMATEL(&sD, 2, 1) = 4.0;
+	BLASFEO_DMATEL(&sD, 2, 2) = 3.0;
 	//
-	DMATEL_LIBSTR(&sD, 0, 5) = 1.0;
-	DMATEL_LIBSTR(&sD, 0, 6) = 0.0;
-	DMATEL_LIBSTR(&sD, 0, 7) = 0.0;
-	DMATEL_LIBSTR(&sD, 1, 5) = 0.0;
-	DMATEL_LIBSTR(&sD, 1, 6) = 1.0;
-	DMATEL_LIBSTR(&sD, 1, 7) = 0.0;
-	DMATEL_LIBSTR(&sD, 2, 5) = 0.0;
-	DMATEL_LIBSTR(&sD, 2, 6) = 0.0;
-	DMATEL_LIBSTR(&sD, 2, 7) = 1.0;
+	BLASFEO_DMATEL(&sD, 0, 5) = 1.0;
+	BLASFEO_DMATEL(&sD, 0, 6) = 0.0;
+	BLASFEO_DMATEL(&sD, 0, 7) = 0.0;
+	BLASFEO_DMATEL(&sD, 1, 5) = 0.0;
+	BLASFEO_DMATEL(&sD, 1, 6) = 1.0;
+	BLASFEO_DMATEL(&sD, 1, 7) = 0.0;
+	BLASFEO_DMATEL(&sD, 2, 5) = 0.0;
+	BLASFEO_DMATEL(&sD, 2, 6) = 0.0;
+	BLASFEO_DMATEL(&sD, 2, 7) = 1.0;
 	//
-	DMATEL_LIBSTR(&sD, 5, 5) = 1.0;
-	DMATEL_LIBSTR(&sD, 5, 6) = 0.0;
-	DMATEL_LIBSTR(&sD, 5, 7) = 0.0;
-	DMATEL_LIBSTR(&sD, 6, 5) = 0.0;
-	DMATEL_LIBSTR(&sD, 6, 6) = 1.0;
-	DMATEL_LIBSTR(&sD, 6, 7) = 0.0;
-	DMATEL_LIBSTR(&sD, 7, 5) = 0.0;
-	DMATEL_LIBSTR(&sD, 7, 6) = 0.0;
-	DMATEL_LIBSTR(&sD, 7, 7) = 1.0;
+	BLASFEO_DMATEL(&sD, 5, 5) = 1.0;
+	BLASFEO_DMATEL(&sD, 5, 6) = 0.0;
+	BLASFEO_DMATEL(&sD, 5, 7) = 0.0;
+	BLASFEO_DMATEL(&sD, 6, 5) = 0.0;
+	BLASFEO_DMATEL(&sD, 6, 6) = 1.0;
+	BLASFEO_DMATEL(&sD, 6, 7) = 0.0;
+	BLASFEO_DMATEL(&sD, 7, 5) = 0.0;
+	BLASFEO_DMATEL(&sD, 7, 6) = 0.0;
+	BLASFEO_DMATEL(&sD, 7, 7) = 1.0;
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	double aa, bb, c, s;
 	//
-	aa = DMATEL_LIBSTR(&sD, 0, 0);
-	bb = DMATEL_LIBSTR(&sD, 1, 0);
+	aa = BLASFEO_DMATEL(&sD, 0, 0);
+	bb = BLASFEO_DMATEL(&sD, 1, 0);
 //	c = aa/sqrt(aa*aa+bb*bb);
 //	s = bb/sqrt(aa*aa+bb*bb);
 	blasfeo_drotg(aa, bb, &c, &s);
@@ -284,8 +284,8 @@ int main()
 	blasfeo_dcolrot(3, &sD, 5, 5, 6, c, s);
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	//
-	aa = DMATEL_LIBSTR(&sD, 1, 1);
-	bb = DMATEL_LIBSTR(&sD, 2, 1);
+	aa = BLASFEO_DMATEL(&sD, 1, 1);
+	bb = BLASFEO_DMATEL(&sD, 2, 1);
 //	c = aa/sqrt(aa*aa+bb*bb);
 //	s = bb/sqrt(aa*aa+bb*bb);
 	blasfeo_drotg(aa, bb, &c, &s);
@@ -296,20 +296,20 @@ int main()
 	return 0;
 #endif
 #if 0
-	DMATEL_LIBSTR(&sD, 0, 0) = 6.0;
-	DMATEL_LIBSTR(&sD, 0, 1) = 5.0;
-	DMATEL_LIBSTR(&sD, 0, 2) = 0.0;
-	DMATEL_LIBSTR(&sD, 1, 0) = 5.0;
-	DMATEL_LIBSTR(&sD, 1, 1) = 1.0;
-	DMATEL_LIBSTR(&sD, 1, 2) = 4.0;
-	DMATEL_LIBSTR(&sD, 2, 0) = 0.0;
-	DMATEL_LIBSTR(&sD, 2, 1) = 4.0;
-	DMATEL_LIBSTR(&sD, 2, 2) = 3.0;
+	BLASFEO_DMATEL(&sD, 0, 0) = 6.0;
+	BLASFEO_DMATEL(&sD, 0, 1) = 5.0;
+	BLASFEO_DMATEL(&sD, 0, 2) = 0.0;
+	BLASFEO_DMATEL(&sD, 1, 0) = 5.0;
+	BLASFEO_DMATEL(&sD, 1, 1) = 1.0;
+	BLASFEO_DMATEL(&sD, 1, 2) = 4.0;
+	BLASFEO_DMATEL(&sD, 2, 0) = 0.0;
+	BLASFEO_DMATEL(&sD, 2, 1) = 4.0;
+	BLASFEO_DMATEL(&sD, 2, 2) = 3.0;
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	double aa, bb, c, s;
 	//
-	aa = DMATEL_LIBSTR(&sD, 0, 0);
-	bb = DMATEL_LIBSTR(&sD, 1, 0);
+	aa = BLASFEO_DMATEL(&sD, 0, 0);
+	bb = BLASFEO_DMATEL(&sD, 1, 0);
 	c =  bb/sqrt(aa*aa+bb*bb);
 	s = -aa/sqrt(aa*aa+bb*bb);
 	blasfeo_drowrot(3, &sD, 0, 1, 0, c, s);
@@ -317,20 +317,20 @@ int main()
 	return 0;
 #endif
 #if 0
-	DMATEL_LIBSTR(&sD, 0, 0) = 6.0;
-	DMATEL_LIBSTR(&sD, 0, 1) = 5.0;
-	DMATEL_LIBSTR(&sD, 0, 2) = 0.0;
-	DMATEL_LIBSTR(&sD, 1, 0) = 5.0;
-	DMATEL_LIBSTR(&sD, 1, 1) = 1.0;
-	DMATEL_LIBSTR(&sD, 1, 2) = 4.0;
-	DMATEL_LIBSTR(&sD, 2, 0) = 0.0;
-	DMATEL_LIBSTR(&sD, 2, 1) = 4.0;
-	DMATEL_LIBSTR(&sD, 2, 2) = 3.0;
+	BLASFEO_DMATEL(&sD, 0, 0) = 6.0;
+	BLASFEO_DMATEL(&sD, 0, 1) = 5.0;
+	BLASFEO_DMATEL(&sD, 0, 2) = 0.0;
+	BLASFEO_DMATEL(&sD, 1, 0) = 5.0;
+	BLASFEO_DMATEL(&sD, 1, 1) = 1.0;
+	BLASFEO_DMATEL(&sD, 1, 2) = 4.0;
+	BLASFEO_DMATEL(&sD, 2, 0) = 0.0;
+	BLASFEO_DMATEL(&sD, 2, 1) = 4.0;
+	BLASFEO_DMATEL(&sD, 2, 2) = 3.0;
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	double aa, bb, c, s;
 	//
-	aa = DMATEL_LIBSTR(&sD, 0, 0);
-	bb = DMATEL_LIBSTR(&sD, 0, 1);
+	aa = BLASFEO_DMATEL(&sD, 0, 0);
+	bb = BLASFEO_DMATEL(&sD, 0, 1);
 	c =  bb/sqrt(aa*aa+bb*bb);
 	s = -aa/sqrt(aa*aa+bb*bb);
 	blasfeo_dcolrot(3, &sD, 0, 0, 1, c, s);
@@ -338,40 +338,40 @@ int main()
 	return 0;
 #endif
 #if 0
-	DMATEL_LIBSTR(&sD, 0, 0) = 6.0;
-	DMATEL_LIBSTR(&sD, 0, 1) = 5.0;
-	DMATEL_LIBSTR(&sD, 0, 2) = 0.0;
-	DMATEL_LIBSTR(&sD, 1, 0) = 5.0;
-	DMATEL_LIBSTR(&sD, 1, 1) = 1.0;
-	DMATEL_LIBSTR(&sD, 1, 2) = 4.0;
-	DMATEL_LIBSTR(&sD, 2, 0) = 0.0;
-	DMATEL_LIBSTR(&sD, 2, 1) = 4.0;
-	DMATEL_LIBSTR(&sD, 2, 2) = 3.0;
+	BLASFEO_DMATEL(&sD, 0, 0) = 6.0;
+	BLASFEO_DMATEL(&sD, 0, 1) = 5.0;
+	BLASFEO_DMATEL(&sD, 0, 2) = 0.0;
+	BLASFEO_DMATEL(&sD, 1, 0) = 5.0;
+	BLASFEO_DMATEL(&sD, 1, 1) = 1.0;
+	BLASFEO_DMATEL(&sD, 1, 2) = 4.0;
+	BLASFEO_DMATEL(&sD, 2, 0) = 0.0;
+	BLASFEO_DMATEL(&sD, 2, 1) = 4.0;
+	BLASFEO_DMATEL(&sD, 2, 2) = 3.0;
 	//
-	DMATEL_LIBSTR(&sD, 0, 5) = 1.0;
-	DMATEL_LIBSTR(&sD, 0, 6) = 0.0;
-	DMATEL_LIBSTR(&sD, 0, 7) = 0.0;
-	DMATEL_LIBSTR(&sD, 1, 5) = 0.0;
-	DMATEL_LIBSTR(&sD, 1, 6) = 1.0;
-	DMATEL_LIBSTR(&sD, 1, 7) = 0.0;
-	DMATEL_LIBSTR(&sD, 2, 5) = 0.0;
-	DMATEL_LIBSTR(&sD, 2, 6) = 0.0;
-	DMATEL_LIBSTR(&sD, 2, 7) = 1.0;
+	BLASFEO_DMATEL(&sD, 0, 5) = 1.0;
+	BLASFEO_DMATEL(&sD, 0, 6) = 0.0;
+	BLASFEO_DMATEL(&sD, 0, 7) = 0.0;
+	BLASFEO_DMATEL(&sD, 1, 5) = 0.0;
+	BLASFEO_DMATEL(&sD, 1, 6) = 1.0;
+	BLASFEO_DMATEL(&sD, 1, 7) = 0.0;
+	BLASFEO_DMATEL(&sD, 2, 5) = 0.0;
+	BLASFEO_DMATEL(&sD, 2, 6) = 0.0;
+	BLASFEO_DMATEL(&sD, 2, 7) = 1.0;
 	//
-	DMATEL_LIBSTR(&sD, 5, 5) = 1.0;
-	DMATEL_LIBSTR(&sD, 5, 6) = 0.0;
-	DMATEL_LIBSTR(&sD, 5, 7) = 0.0;
-	DMATEL_LIBSTR(&sD, 6, 5) = 0.0;
-	DMATEL_LIBSTR(&sD, 6, 6) = 1.0;
-	DMATEL_LIBSTR(&sD, 6, 7) = 0.0;
-	DMATEL_LIBSTR(&sD, 7, 5) = 0.0;
-	DMATEL_LIBSTR(&sD, 7, 6) = 0.0;
-	DMATEL_LIBSTR(&sD, 7, 7) = 1.0;
+	BLASFEO_DMATEL(&sD, 5, 5) = 1.0;
+	BLASFEO_DMATEL(&sD, 5, 6) = 0.0;
+	BLASFEO_DMATEL(&sD, 5, 7) = 0.0;
+	BLASFEO_DMATEL(&sD, 6, 5) = 0.0;
+	BLASFEO_DMATEL(&sD, 6, 6) = 1.0;
+	BLASFEO_DMATEL(&sD, 6, 7) = 0.0;
+	BLASFEO_DMATEL(&sD, 7, 5) = 0.0;
+	BLASFEO_DMATEL(&sD, 7, 6) = 0.0;
+	BLASFEO_DMATEL(&sD, 7, 7) = 1.0;
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	double aa, bb, c, s;
 	//
-	aa = DMATEL_LIBSTR(&sD, 0, 0);
-	bb = DMATEL_LIBSTR(&sD, 0, 1);
+	aa = BLASFEO_DMATEL(&sD, 0, 0);
+	bb = BLASFEO_DMATEL(&sD, 0, 1);
 //	c = aa/sqrt(aa*aa+bb*bb);
 //	s = bb/sqrt(aa*aa+bb*bb);
 	blasfeo_drotg(aa, bb, &c, &s);
@@ -380,8 +380,8 @@ int main()
 	blasfeo_drowrot(3, &sD, 5, 6, 5, c, s);
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	//
-	aa = DMATEL_LIBSTR(&sD, 1, 1);
-	bb = DMATEL_LIBSTR(&sD, 1, 2);
+	aa = BLASFEO_DMATEL(&sD, 1, 1);
+	bb = BLASFEO_DMATEL(&sD, 1, 2);
 //	c = aa/sqrt(aa*aa+bb*bb);
 //	s = bb/sqrt(aa*aa+bb*bb);
 	blasfeo_drotg(aa, bb, &c, &s);
@@ -594,30 +594,30 @@ int main()
 	blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sC, 0, 0);
 #else
 	blasfeo_dgese(n, n, 0.1, &sC, 0, 0);
-	DMATEL_LIBSTR(&sC, 0, 0) = 1.0;
-//	DMATEL_LIBSTR(&sC, 0, 1) = 1.0;
+	BLASFEO_DMATEL(&sC, 0, 0) = 1.0;
+//	BLASFEO_DMATEL(&sC, 0, 1) = 1.0;
 	for(ii=1; ii<n-1; ii++)
 		{
-//		DMATEL_LIBSTR(&sC, ii, ii-1) = 1.0;
-		DMATEL_LIBSTR(&sC, ii, ii) = 1.0;
-//		DMATEL_LIBSTR(&sC, ii, ii+1) = 1.0;
+//		BLASFEO_DMATEL(&sC, ii, ii-1) = 1.0;
+		BLASFEO_DMATEL(&sC, ii, ii) = 1.0;
+//		BLASFEO_DMATEL(&sC, ii, ii+1) = 1.0;
 		}
-//	DMATEL_LIBSTR(&sC, n-1, n-2) = 1.0;
-	DMATEL_LIBSTR(&sC, n-1, n-1) = 1.0;
+//	BLASFEO_DMATEL(&sC, n-1, n-2) = 1.0;
+	BLASFEO_DMATEL(&sC, n-1, n-1) = 1.0;
 #endif
 	blasfeo_print_dmat(n, n, &sC, 0, 0);
 	blasfeo_dgese(n, n, 0.0/0.0, &sD, 0, 0);
 //	blasfeo_print_dmat(n, n, &sA, 0, 0);
 //	blasfeo_dgein1(12.0, &sA, 0, 0);
-//	DMATEL_LIBSTR(&sA, 0, 0) =   12.0;
-//	DMATEL_LIBSTR(&sA, 1, 0) =    6.0;
-//	DMATEL_LIBSTR(&sA, 2, 0) = -  4.0;
-//	DMATEL_LIBSTR(&sA, 0, 1) = - 51.0;
-//	DMATEL_LIBSTR(&sA, 1, 1) =  167.0;
-//	DMATEL_LIBSTR(&sA, 2, 1) =   24.0;
-//	DMATEL_LIBSTR(&sA, 0, 2) =    4.0;
-//	DMATEL_LIBSTR(&sA, 1, 2) = - 68.0;
-//	DMATEL_LIBSTR(&sA, 2, 2) = - 41.0;
+//	BLASFEO_DMATEL(&sA, 0, 0) =   12.0;
+//	BLASFEO_DMATEL(&sA, 1, 0) =    6.0;
+//	BLASFEO_DMATEL(&sA, 2, 0) = -  4.0;
+//	BLASFEO_DMATEL(&sA, 0, 1) = - 51.0;
+//	BLASFEO_DMATEL(&sA, 1, 1) =  167.0;
+//	BLASFEO_DMATEL(&sA, 2, 1) =   24.0;
+//	BLASFEO_DMATEL(&sA, 0, 2) =    4.0;
+//	BLASFEO_DMATEL(&sA, 1, 2) = - 68.0;
+//	BLASFEO_DMATEL(&sA, 2, 2) = - 41.0;
 //	blasfeo_print_dmat(n, n, &sA, 0, 0);
 	blasfeo_print_dmat(n, n, &sC, 0, 0);
 //	printf("\n%f\n", DGEEL_LIBSTR(&sA, 0, 0));

@@ -27,7 +27,7 @@
 **************************************************************************************************/
 
 
-#if defined(LA_BLAS) | defined(LA_REFERENCE) | defined(TESTING_MODE)
+#if defined(LA_BLAS_WRAPPER) | defined(LA_REFERENCE) | defined(TESTING_MODE)
 
 
 
@@ -40,6 +40,7 @@ void ALLOCATE_STRMAT(int m, int n, struct STRMAT *sA)
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
 	ZEROS(&(sA->dA), tmp, 1);
 	sA->memsize = (m*n+tmp)*sizeof(REAL);
+	sA->use_dA = 0;
 	return;
 	}
 

@@ -1119,7 +1119,7 @@ void TRSV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-#elif defined(LA_BLAS)
+#elif defined(LA_BLAS_WRAPPER)
 
 
 

@@ -1123,9 +1123,11 @@ void dlauum_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *pA, int
 // dgemm nt
 void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
-
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int ps = 4;
 
@@ -1139,6 +1141,9 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
 	double *pC = sC->pA + cj*ps;
 	double *pD = sD->pA + dj*ps;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	if(ai==0 & bi==0 & ci==0 & di==0)
 		{
@@ -1186,7 +1191,7 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 			// clean up at the beginning
 			if(bir!=0)
 				{
-				kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[0], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, n-j);
+				kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[0], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, bir+n-j);
 				j += ps-bir;
 				idxB += 4;
 				}
@@ -1209,7 +1214,7 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 			// clean up at the beginning
 			if(bir!=0)
 				{
-				kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[0], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, n-j);
+				kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[0], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, bir+n-j);
 				j += ps-bir;
 				idxB += 4;
 				}
@@ -1239,7 +1244,7 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, n-j);
+			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
 			j += ps-bir;
 			idxB += 4;
 			}
@@ -1257,7 +1262,7 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, n-j);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
 			j += ps-bir;
 			idxB += 4;
 			}
@@ -1276,7 +1281,7 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, n-j);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
 			j += ps-bir;
 			idxB += 4;
 			}
@@ -1290,7 +1295,6 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 #endif
 
 	return;
-
 	}
 
 
@@ -1298,9 +1302,11 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 // dgemm nn
 void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
-
 	if(m<=0 || n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int ps = 4;
 
@@ -1324,7 +1330,6 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	int di0 = di-air;
 	int offsetC;
 	int offsetD;
-
 	if(ci0>=0)
 		{
 		pC += ci0/ps*ps*sdd;
@@ -1744,14 +1749,18 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 
 
-// dtrsm_nn_llu
+// dtrsm_llnu
 void blasfeo_dtrsm_llnu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
 	{
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
 		printf("\nblasfeo_dtrsm_llnu: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
+
 	const int ps = 4;
 	// TODO alpha
 	int sda = sA->cn;
@@ -1774,6 +1783,10 @@ void blasfeo_dtrsm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 		printf("\nblasfeo_dtrsm_lunn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int ps = 4;
 	// TODO alpha
 	int sda = sA->cn;
@@ -1784,24 +1797,28 @@ void blasfeo_dtrsm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 	double *pD = sD->pA + dj*ps;
 	double *dA = sA->dA;
 	int ii;
+
 	if(ai==0 & aj==0)
 		{
-		if(sA->use_dA!=1)
+		// recompute diagonal if size of operation grows
+		if(sA->use_dA<m)
 			{
-			ddiaex_lib(n, 1.0, ai, pA, sda, dA);
-			for(ii=0; ii<n; ii++)
+			ddiaex_lib(m, 1.0, ai, pA, sda, dA);
+			for(ii=0; ii<m; ii++)
 				dA[ii] = 1.0 / dA[ii];
-			sA->use_dA = 1;
+			sA->use_dA = m;
 			}
 		}
+	// if submatrix recompute diagonal
 	else
 		{
-		ddiaex_lib(n, 1.0, ai, pA, sda, dA);
-		for(ii=0; ii<n; ii++)
+		ddiaex_lib(m, 1.0, ai, pA, sda, dA);
+		for(ii=0; ii<m; ii++)
 			dA[ii] = 1.0 / dA[ii];
 		sA->use_dA = 0;
 		}
 	dtrsm_nn_lu_inv_lib(m, n, pA, sda, dA, pB, sdb, pD, sdd);
+
 	return;
 	}
 
@@ -1820,6 +1837,9 @@ void blasfeo_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 		exit(1);
 		}
 
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int ps = 4;
 
 	// TODO alpha !!!!!
@@ -1836,12 +1856,12 @@ void blasfeo_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 
 	if(ai==0 & aj==0)
 		{
-		if(sA->use_dA!=1)
+		if(sA->use_dA<n)
 			{
 			ddiaex_lib(n, 1.0, ai, pA, sda, dA);
 			for(i=0; i<n; i++)
 				dA[i] = 1.0 / dA[i];
-			sA->use_dA = 1;
+			sA->use_dA = n;
 			}
 		}
 	else
@@ -1995,7 +2015,6 @@ void blasfeo_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 		}
 	return;
 #endif
-
 	}
 
 
@@ -2008,6 +2027,10 @@ void blasfeo_dtrsm_rltu(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 		printf("\nblasfeo_dtrsm_rltu: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int ps = 4;
 	// TODO alpha
 	int sda = sA->cn;
@@ -2030,6 +2053,10 @@ void blasfeo_dtrsm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 		printf("\nblasfeo_dtrsm_rutn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int ps = 4;
 	// TODO alpha
 	int sda = sA->cn;
@@ -2042,12 +2069,12 @@ void blasfeo_dtrsm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 	int ii;
 	if(ai==0 & aj==0)
 		{
-		if(sA->use_dA!=1)
+		if(sA->use_dA<n)
 			{
 			ddiaex_lib(n, 1.0, ai, pA, sda, dA);
 			for(ii=0; ii<n; ii++)
 				dA[ii] = 1.0 / dA[ii];
-			sA->use_dA = 1;
+			sA->use_dA = n;
 			}
 		}
 	else
@@ -2066,6 +2093,9 @@ void blasfeo_dtrsm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 // dtrmm_right_upper_transposed_notunit (B, i.e. the first matrix, is triangular !!!)
 void blasfeo_dtrmm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sD, int di, int dj)
 	{
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	if(ai!=0 | bi!=0 | di!=0)
 		{
 		printf("\nblasfeo_dtrmm_rutn: feature not implemented yet: ai=%d, bi=%d, di=%d\n", ai, bi, di);
@@ -2103,6 +2133,10 @@ void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, int
 
 	int di0 = di-air;
 	int offsetD;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	if(di0>=0)
 		{
 		pD += di0/ps*ps*sdd;
@@ -2262,14 +2296,12 @@ void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, int
 		kernel_dtrmm_nn_rl_4x4_gen_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, offsetD, &pD[ii*sdd+jj*ps], sdd, 0, m-ii, 0, n-jj);
 		}
 	return;
-
 	}
 
 
 
 void blasfeo_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
-
 	if(m<=0)
 		return;
 
@@ -2278,6 +2310,9 @@ void blasfeo_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 		printf("\nblasfeo_dsyrk_ln: feature not implemented yet: ai=%d, bi=%d\n", ai, bi);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int ps = 4;
 
@@ -2493,7 +2528,6 @@ void blasfeo_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 
 void blasfeo_dsyrk_ln_mn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
-
 	if(m<=0 | n<=0)
 		return;
 
@@ -2502,6 +2536,9 @@ void blasfeo_dsyrk_ln_mn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 		printf("\nblasfeo_dsyrk_ln: feature not implemented yet: ai=%d, bi=%d\n", ai, bi);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int ps = 4;
 

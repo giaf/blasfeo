@@ -136,6 +136,10 @@ void blasfeo_dgemm_dn(int m, int n, double alpha, struct blasfeo_dvec *sA, int a
 		printf("\nblasfeo_dgemm_dn: feature not implemented yet: bi=%d, ci=%d, di=%d\n", bi, ci, di);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int bs = 4;
 	int sdb = sB->cn;
 	int sdc = sC->cn;
@@ -160,6 +164,10 @@ void blasfeo_dgemm_nd(int m, int n, double alpha, struct blasfeo_dmat *sA, int a
 		printf("\nblasfeo_dgemm_nd: feature not implemented yet: ai=%d, ci=%d, di=%d\n", ai, ci, di);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int bs = 4;
 	int sda = sA->cn;
 	int sdc = sC->cn;

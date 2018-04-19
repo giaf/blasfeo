@@ -4,6 +4,10 @@ find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_
 find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_strvec/blasfeo_dvec/g' {} \;
 find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_strvec/blasfeo_svec/g' {} \;
 find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/memory_size/memsize/g' {} \;
+find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/DMATEL_LIBSTR/BLASFEO_DMATEL/g' {} \;
+find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/SMATEL_LIBSTR/BLASFEO_SMATEL/g' {} \;
+find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/DVECEL_LIBSTR/BLASFEO_DVECEL/g' {} \;
+find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/SVECEL_LIBSTR/BLASFEO_SVECEL/g' {} \;
 # aux_ext_dep
 find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/d_allocate_strmat/blasfeo_allocate_dmat/g' {} \;
 find ./ -type f -not -path "*git*" -not -path "*change_name*" -exec sed -i 's/s_allocate_strmat/blasfeo_allocate_smat/g' {} \;

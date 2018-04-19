@@ -49,7 +49,7 @@
 
 # Select target architecture
 #
- TARGET = X64_INTEL_HASWELL
+TARGET = X64_INTEL_HASWELL
 # TARGET = X64_INTEL_SANDY_BRIDGE
 # TARGET = X64_INTEL_CORE
 #
@@ -62,13 +62,13 @@
 
 # Select BLASFEO version
 #
- LA = HIGH_PERFORMANCE
+LA = HIGH_PERFORMANCE
 # LA = REFERENCE
-# LA = BLAS
+# LA = BLAS_WRAPPER
 
-# Select BLAS and LAPACK version (for LA=BLAS)
+# Select BLAS and LAPACK version (for LA=BLAS_WRAPPER)
 #
- REF_BLAS = 0
+REF_BLAS = 0
 # REF_BLAS = OPENBLAS
 # REF_BLAS = NETLIB
 # REF_BLAS = MKL
@@ -78,12 +78,12 @@
 # Compile auxiliary functions with external dependencies (for memory allocation and printing)
 #
 # EXT_DEP = 0
- EXT_DEP = 1
+EXT_DEP = 1
 
 # Compile reference implementations with test_ prefix
 # in order to check HIGH_PERFORMANCE routines against reference
 #
- TESTING_MODE = 0
+TESTING_MODE = 0
 # TESTING_MODE = 1
 
 BENCHMARKS_MODE = 0
@@ -158,8 +158,8 @@ endif
 ifeq ($(LA), REFERENCE)
 CFLAGS  += -DLA_REFERENCE
 endif
-ifeq ($(LA), BLAS)
-CFLAGS  += -DLA_BLAS
+ifeq ($(LA), BLAS_WRAPPER)
+CFLAGS  += -DLA_BLAS_WRAPPER
 endif
 
 CFLAGS  += -DLA=$(LA)
