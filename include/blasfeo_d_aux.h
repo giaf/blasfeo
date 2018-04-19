@@ -40,7 +40,8 @@
 extern "C" {
 #endif
 
-
+#ifndef BLASFEO_D_AUX
+#define BLASFEO_D_AUX
 
 #include "blasfeo_d_aux_old.h"
 
@@ -173,7 +174,7 @@ void blasfeo_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_nor
 void blasfeo_dvecpe(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi);
 void blasfeo_dvecpei(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi);
 
-
+#endif
 
 #ifdef __cplusplus
 }
