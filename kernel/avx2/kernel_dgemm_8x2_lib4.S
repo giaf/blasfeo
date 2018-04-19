@@ -694,10 +694,10 @@ inner_edge_dgemm_add_nn_8x2_lib4:
 	vmovapd			0(%r11, %r12, 1), %ymm9
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
-	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vfmadd231pd		%ymm9, %ymm12, %ymm2
 	vbroadcastsd	32(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm1
-	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	vfmadd231pd		%ymm9, %ymm12, %ymm3
 
 	subl			$1, %r10d // k-1
 	subl			$1, %ebx // kend-1
