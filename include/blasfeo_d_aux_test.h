@@ -33,10 +33,12 @@
  *
  */
 
+#include "blasfeo_common.h"
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 // --- memory calculations
 int test_blasfeo_memsize_dmat(int m, int n);

@@ -36,6 +36,8 @@ extern "C" {
 #ifndef BLASFEO_COMMON
 #define BLASFEO_COMMON
 
+#include "blasfeo_target.h"
+
 #ifdef __DSPACE__
 	#define fmax(a, b) (a < b) ? (b) : (a)
 #endif
