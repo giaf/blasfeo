@@ -42,6 +42,8 @@ extern "C" {
 	#define fmax(a, b) (a < b) ? (b) : (a)
 #endif
 
+#include "blasfeo_target.h"
+
 #if defined(LA_HIGH_PERFORMANCE)
 
 #include "blasfeo_block_size.h"

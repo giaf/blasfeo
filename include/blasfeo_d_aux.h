@@ -43,6 +43,8 @@ extern "C" {
 #ifndef BLASFEO_D_AUX
 #define BLASFEO_D_AUX
 
+
+#include "blasfeo_common.h"
 #include "blasfeo_d_aux_old.h"
 
 

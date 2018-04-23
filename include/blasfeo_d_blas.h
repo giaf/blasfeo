@@ -33,7 +33,7 @@
 extern "C" {
 #endif
 
-
+#include "blasfeo_common.h"
 
 //
 // level 1 BLAS
