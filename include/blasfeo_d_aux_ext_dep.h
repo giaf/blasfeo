@@ -41,7 +41,7 @@
 
 #include <stdio.h>
 
-
+#include "blasfeo_common.h"
 
 #ifdef __cplusplus
 extern "C" {

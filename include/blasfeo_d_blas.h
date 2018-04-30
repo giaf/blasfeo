@@ -26,13 +26,14 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include "blasfeo_common.h"
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
+#include "blasfeo_common.h"
 
 //
 // level 1 BLAS
