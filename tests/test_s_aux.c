@@ -35,7 +35,6 @@
 // standard
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/time.h>
 #include <assert.h>
 // BLASFEO
 #include "../include/blasfeo_common.h"
