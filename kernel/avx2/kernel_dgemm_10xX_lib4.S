@@ -838,8 +838,8 @@ inner_scale_ab_10x2_lib4:
 
 	vmulpd		%ymm0, %ymm15, %ymm0
 	vmulpd		%ymm1, %ymm15, %ymm1
-	vmulpd		%ymm2, %ymm15, %ymm2
-	vmulpd		%ymm3, %ymm15, %ymm3
+	vmulpd		%ymm4, %ymm15, %ymm4
+	vmulpd		%ymm5, %ymm15, %ymm5
 
 	vmulpd		%ymm8, %ymm15, %ymm8
 
