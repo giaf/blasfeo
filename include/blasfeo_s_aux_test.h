@@ -26,6 +26,9 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#ifndef BLASFEO_S_AUX_TEST_H_
+#define BLASFEO_S_AUX_TEST_H_
+
 #include <stdio.h>
 
 
@@ -164,3 +167,4 @@ void test_blasfeo_print_exp_tran_svec(int m, struct blasfeo_svec *sa, int ai);
 }
 #endif
 
+#endif  // BLASFEO_S_AUX_TEST_H_

@@ -26,6 +26,9 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#ifndef BLASFEO_S_AUX_H_
+#define BLASFEO_S_AUX_H_
+
 #include <stdio.h>
 
 
@@ -130,3 +133,4 @@ void blasfeo_svecpei(int kmax, int *ipiv, struct blasfeo_svec *sx, int xi);
 }
 #endif
 
+#endif  // BLASFEO_S_AUX_H_

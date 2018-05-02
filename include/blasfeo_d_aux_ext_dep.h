@@ -36,7 +36,8 @@
  *
  */
 
-
+#ifndef BLASFEO_D_AUX_EXT_DEP_H_
+#define BLASFEO_D_AUX_EXT_DEP_H_
 
 
 #include <stdio.h>
@@ -77,7 +78,6 @@ void d_print_e_tran_mat(int row, int col, double *A, int lda);
 
 /* strmat and strvec */
 
-#ifdef BLASFEO_COMMON
 // create a strmat for a matrix of size m*n by dynamically allocating memory
 void blasfeo_allocate_dmat(int m, int n, struct blasfeo_dmat *sA);
 // create a strvec for a vector of size m by dynamically allocating memory
@@ -110,7 +110,6 @@ void blasfeo_print_exp_tran_dvec(int m, struct blasfeo_dvec *sa, int ai);
 void blasfeo_print_to_file_tran_dvec(FILE *file, int m, struct blasfeo_dvec *sa, int ai);
 // print to string the transposed of a strvec
 void blasfeo_print_to_string_tran_dvec(char **buf_out, int m, struct blasfeo_dvec *sa, int ai);
-#endif
 
 
 
@@ -118,4 +117,4 @@ void blasfeo_print_to_string_tran_dvec(char **buf_out, int m, struct blasfeo_dve
 }
 #endif
 
-
+#endif  // BLASFEO_D_AUX_EXT_DEP_H_

@@ -26,20 +26,21 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#ifndef BLASFEO_S_AUX_EXT_DEP_REF_H_
+#define BLASFEO_S_AUX_EXT_DEP_REF_H_
+
 #if defined(EXT_DEP)
 
 
 
 #include <stdio.h>
 
-
+#include "blasfeo_common.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
-#ifdef BLASFEO_COMMON
 // expose reference BLASFEO for testing
 // see blasfeo_s_aux_exp_dep.h for help
 
@@ -60,7 +61,6 @@ void blasfeo_print_tran_svec(int m, struct blasfeo_svec *sa, int ai);
 void blasfeo_print_exp_tran_svec(int m, struct blasfeo_svec *sa, int ai);
 void blasfeo_print_to_file_tran_svec(FILE *file, int m, struct blasfeo_svec *sa, int ai);
 void blasfeo_print_to_string_tran_svec(char **buf_out, int m, struct blasfeo_svec *sa, int ai);
-#endif
 
 
 #ifdef __cplusplus
@@ -69,4 +69,6 @@ void blasfeo_print_to_string_tran_svec(char **buf_out, int m, struct blasfeo_sve
 
 
 
-#endif // EXT_DEP
+#endif  // EXT_DEP
+
+#endif  // BLASFEO_S_AUX_EXT_DEP_REF_H_

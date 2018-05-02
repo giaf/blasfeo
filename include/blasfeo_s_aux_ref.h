@@ -26,6 +26,9 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#ifndef BLASFEO_S_AUX_REF_H_
+#define BLASFEO_S_AUX_REF_H_
+
 #include <stdio.h>
 
 
@@ -58,3 +61,4 @@ void blasfeo_sgecpsc_ref(int m, int n,
 }
 #endif
 
+#endif  // BLASFEO_S_AUX_REF_H_

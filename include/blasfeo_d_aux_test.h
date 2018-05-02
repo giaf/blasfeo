@@ -33,6 +33,9 @@
  *
  */
 
+#ifndef BLASFEO_D_AUX_TEST_H_
+#define BLASFEO_D_AUX_TEST_H_
+
 #include "blasfeo_common.h"
 
 
@@ -209,6 +212,8 @@ void test_blasfeo_print_exp_tran_dvec(int m, struct blasfeo_dvec *sa, int ai);
 
 
 
-// #ifdef __cplusplus
-// }
-// #endif
+#ifdef __cplusplus
+}
+#endif
+
+#endif  // BLASFEO_D_AUX_TEST_H_

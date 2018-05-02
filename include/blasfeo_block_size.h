@@ -26,8 +26,8 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#ifndef BLASFEO_BLOCK_SIZE
-#define BLASFEO_BLOCK_SIZE
+#ifndef BLASFEO_BLOCK_SIZE_H_
+#define BLASFEO_BLOCK_SIZE_H_
 
 
 
@@ -85,4 +85,4 @@
 #endif
 
 
-#endif  // BLASFEO_BLOCK_SIZE
+#endif  // BLASFEO_BLOCK_SIZE_H_
