@@ -3100,6 +3100,108 @@ void blasfeo_svecex_sp(int m, float alpha, int *idx, struct blasfeo_svec *sx, in
 
 
 
+// clip strvec between two strvec
+void blasfeo_sveccl(int m, struct blasfeo_svec *sxm, int xim, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sxp, int xip, struct blasfeo_svec *sz, int zi)
+	{
+	float *xm = sxm->pa + xim;
+	float *x  = sx->pa + xi;
+	float *xp = sxp->pa + xip;
+	float *z  = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		if(x[ii]>=xp[ii])
+			{
+			z[ii] = xp[ii];
+			}
+		else if(x[ii]<=xm[ii])
+			{
+			z[ii] = xm[ii];
+			}
+		else
+			{
+			z[ii] = x[ii];
+			}
+		}
+	return;
+	}
+
+
+
+// clip strvec between two strvec, with mask
+void blasfeo_sveccl_mask(int m, struct blasfeo_svec *sxm, int xim, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sxp, int xip, struct blasfeo_svec *sz, int zi, struct blasfeo_svec *sm, int mi)
+	{
+	float *xm = sxm->pa + xim;
+	float *x  = sx->pa + xi;
+	float *xp = sxp->pa + xip;
+	float *z  = sz->pa + zi;
+	float *mask  = sm->pa + mi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		if(x[ii]>=xp[ii])
+			{
+			z[ii] = xp[ii];
+			mask[ii] = 1.0;
+			}
+		else if(x[ii]<=xm[ii])
+			{
+			z[ii] = xm[ii];
+			mask[ii] = -1.0;
+			}
+		else
+			{
+			z[ii] = x[ii];
+			mask[ii] = 0.0;
+			}
+		}
+	return;
+	}
+
+
+// zero out strvec, with mask
+void blasfeo_svecze(int m, struct blasfeo_svec *sm, int mi, struct blasfeo_svec *sv, int vi, struct blasfeo_svec *se, int ei)
+	{
+	float *mask = sm->pa + mi;
+	float *v = sv->pa + vi;
+	float *e = se->pa + ei;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		if(mask[ii]==0)
+			{
+			e[ii] = v[ii];
+			}
+		else
+			{
+			e[ii] = 0;
+			}
+		}
+	return;
+	}
+
+
+
+// compute inf norm of strvec
+void blasfeo_svecnrm_inf(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm)
+	{
+	int ii;
+	float *x = sx->pa + xi;
+	float norm = 0.0;
+	float tmp;
+	for(ii=0; ii<m; ii++)
+#if defined(OS_LINUX)
+		norm = fmax(norm, fabs(x[ii]));
+#else
+		tmp = x[ii]<0 ? -x[ii] : x[ii];
+		norm = tmp>norm ? tmp : norm;
+#endif
+	*ptr_norm = norm;
+	return;
+	}
+
+
+
 // permute elements of a vector struct
 void blasfeo_svecpe(int kmax, int *ipiv, struct blasfeo_svec *sx, int xi)
 	{

@@ -35,9 +35,7 @@
 extern "C" {
 #endif
 
-#ifdef __DSPACE__
-	#define fmax(a, b) (a < b) ? (b) : (a)
-#endif
+
 
 #if defined(LA_HIGH_PERFORMANCE)
 

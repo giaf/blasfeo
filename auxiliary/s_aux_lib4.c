@@ -3636,8 +3636,14 @@ void blasfeo_svecnrm_inf(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm
 	int ii;
 	float *x = sx->pa + xi;
 	float norm = 0.0;
+	float tmp;
 	for(ii=0; ii<m; ii++)
+#if defined(OS_LINUX)
 		norm = fmax(norm, fabs(x[ii]));
+#else
+		tmp = x[ii]<0 ? -x[ii] : x[ii];
+		norm = tmp>norm ? tmp : norm;
+#endif
 	*ptr_norm = norm;
 	return;
 	}
