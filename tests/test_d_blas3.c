@@ -31,7 +31,7 @@
 // standard
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/time.h>
+#include <time.h>
 #include <assert.h>
 
 // BLASFEO routines
@@ -60,7 +60,14 @@ int main()
 	int ii, jj, kk;
 	int n = 60;
 
-	struct timeval before, after;
+	double test_elapsed_time;
+
+	// _SYS_TIME_H
+	/* struct timeval before, after; */
+
+	// time.h
+	time_t before, after;
+
 	const char* result_code;
 
 	/* matrices in column-major format */
@@ -182,14 +189,14 @@ int main()
 
 	printf("\n----------- TEST " string(ROUTINE) "\n");
 
-	gettimeofday(&before, NULL);
+	/* gettimeofday(&before, NULL); */
+	time(&before);
 
 	// loop over alphas/betas
 	for (kk = 0; kk < alphas; kk++)
 		{
 		double alpha = alpha_l[kk];
 		double beta = beta_l[kk];
-
 
 		// try different loop grow order n then m and viceversa
 		//
@@ -206,7 +213,7 @@ int main()
  *         // loop over row matrix dimension
  *         for (ni = ni0; ni < ni0+nis; ni++)
  *             {
- * 
+ *
  *             // loop over column matrix dimension
  *             for (nj = nj0; nj < nj0+njs; nj++)
  *                 {
@@ -367,9 +374,12 @@ int main()
 			}
 		}
 
-	gettimeofday(&after, NULL);
+	/* gettimeofday(&after, NULL); */
+	time(&after);
 
-	float test_elapsed_time  = (float) (after.tv_sec-before.tv_sec)+(after.tv_usec-before.tv_usec)/1e6;
+	/* get current time; same as: timer = time(NULL)  */
+	/* test_elapsed_time  = (float) (after.tv_sec-before.tv_sec)+(after.tv_usec-before.tv_usec)/1e6; */
+	test_elapsed_time = difftime(after, before);
 
 	if (!bad_calls)
 		{
@@ -380,11 +390,10 @@ int main()
 			result_code = "FAILED";
 		}
 
-	printf("\n----------- TEST "string(ROUTINE)" %s, %d/%d Bad calls, Elapsed time: %5.2f s\n\n",
+	printf("\n----------- TEST "string(ROUTINE)" %s, %d/%d Bad calls, Elapsed time: %4.0f s\n\n",
 			result_code, bad_calls, total_calls, test_elapsed_time);
 
 	#endif
-
 
 	#if (VERBOSE>1)
 	SHOW_DEFINE(LA)
