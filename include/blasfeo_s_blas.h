@@ -26,7 +26,8 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-
+#ifndef BLASFEO_S_BLAS_H_
+#define BLASFEO_S_BLAS_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -170,3 +171,5 @@ int blasfeo_sgelqf_worksize(int m, int n); // in bytes
 #ifdef __cplusplus
 }
 #endif
+
+#endif  // BLASFEO_S_BLAS_H_

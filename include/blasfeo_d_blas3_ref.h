@@ -33,6 +33,9 @@
  *
  */
 
+#ifndef BLASFEO_D_BLAS3_REF_H_
+#define BLASFEO_D_BLAS3_REF_H_
+
 #include "blasfeo_common.h"
 
 
@@ -133,3 +136,5 @@ void blasfeo_dtrsm_lunn_ref(
 #ifdef __cplusplus
 }
 #endif
+
+#endif  // BLASFEO_D_BLAS3_REF_H_

@@ -26,14 +26,15 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#ifndef BLASFEO_D_BLAS_H_
+#define BLASFEO_D_BLAS_H_
+
 #include "blasfeo_common.h"
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "blasfeo_common.h"
 
 //
 // level 1 BLAS
@@ -172,3 +173,5 @@ int blasfeo_dgelqf_worksize(int m, int n); // in bytes
 #ifdef __cplusplus
 }
 #endif
+
+#endif  // BLASFEO_D_BLAS_H_

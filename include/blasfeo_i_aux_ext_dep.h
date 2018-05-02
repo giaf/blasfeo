@@ -26,8 +26,8 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-
-
+#ifndef BLASFEO_I_AUX_EXT_DEP_H_
+#define BLASFEO_I_AUX_EXT_DEP_H_
 
 #include <stdio.h>
 
@@ -52,4 +52,4 @@ int int_print_to_string_mat(char **buf_out, int row, int col, int *A, int lda);
 }
 #endif
 
-
+#endif  // BLASFEO_I_AUX_EXT_DEP_H_
