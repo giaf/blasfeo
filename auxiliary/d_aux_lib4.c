@@ -4436,7 +4436,7 @@ void blasfeo_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_nor
 	double norm = 0.0;
 	double tmp;
 	for(ii=0; ii<m; ii++)
-#if defined(OS_LINUX)
+#ifdef USE_C_MATH
 		norm = fmax(norm, fabs(x[ii]));
 #else
 		tmp = x[ii]<0 ? -x[ii] : x[ii];

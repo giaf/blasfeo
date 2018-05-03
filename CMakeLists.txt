@@ -60,6 +60,9 @@ set(BLASFEO_TESTING OFF CACHE BOOL "Tests disabled")
 # set(BLASFEO_BENCHMARKS ON CACHE BOOL "Benchmarks enabled")
 set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled")
 
+# Use C math library for fmax
+set(USE_C_MATH ON CACHE BOOL "Use C math library for fmax")
+
 # Compile auxiliary functions with external dependencies
 # (for memory allocation and printing)
 set(EXT_DEP ON CACHE BOOL "Compile external dependencies in BLASFEO")
@@ -92,8 +95,7 @@ set(BLASFEO_HEADERS_INSTALLATION_DIRECTORY "include"
 set(MACRO_LEVEL 0)
 
 # enable runtine checks
-set(RUNTIME_CHECKS 0)
-# set(RUNTIME_CHECKS 0)
+set(RUNTIME_CHECKS OFF)
 
 # compiler flags
 if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
@@ -142,8 +144,13 @@ if(${LA} MATCHES BLAS)
 endif()
 
 #
-if(${RUNTIME_CHECKS} MATCHES 1)
+if(${RUNTIME_CHECKS})
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDIM_CHECK")
+endif()
+
+#
+if(${USE_C_MATH})
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSE_C_MATH")
 endif()
 
 #
