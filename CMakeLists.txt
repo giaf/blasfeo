@@ -701,7 +701,10 @@ if(NOT CMAKE_SYSTEM MATCHES "dSpace")
 	add_subdirectory(tests)
 
 	# benchmarks
-	add_subdirectory(benchmarks)
+	# temporarly disable benchmarks on windows
+	if(NOT CMAKE_SYSTEM MATCHES "Windows")
+		add_subdirectory(benchmarks)
+	endif()
 
 	# examples
 	add_subdirectory(examples)
