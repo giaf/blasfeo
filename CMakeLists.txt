@@ -60,8 +60,8 @@ set(BLASFEO_TESTING OFF CACHE BOOL "Tests disabled")
 # set(BLASFEO_BENCHMARKS ON CACHE BOOL "Benchmarks enabled")
 set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled")
 
-# Use C math library for fmax
-set(USE_C_MATH ON CACHE BOOL "Use C math library for fmax")
+# Use C99 extension to math library
+set(USE_C99_MATH ON CACHE BOOL "Use C99 extension to math library")
 
 # Compile auxiliary functions with external dependencies
 # (for memory allocation and printing)
@@ -149,8 +149,8 @@ if(${RUNTIME_CHECKS})
 endif()
 
 #
-if(${USE_C_MATH})
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSE_C_MATH")
+if(${USE_C99_MATH})
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSE_C99_MATH")
 endif()
 
 #
