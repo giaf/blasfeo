@@ -27,10 +27,7 @@
 **************************************************************************************************/
 
 
-
 #if defined(TESTING_MODE)
-
-
 
 // standard
 #include <stdlib.h>
@@ -48,9 +45,6 @@
 #include "../include/blasfeo_s_aux_ref.h"
 #include "../include/blasfeo_s_aux_ext_dep_ref.h"
 
-#define STR(x) #x
-#define SHOW_DEFINE(x) printf("%s=%s\n", #x, STR(x));
-
 #include "test_s_common.h"
 #include "test_x_common.c"
 
@@ -58,29 +52,12 @@
 int main()
 	{
 
-#ifndef LA
-	#error LA undefined
-#endif
-
-#ifndef TARGET
-	#error TARGET undefined
-#endif
-
-#ifndef PRECISION
-	#error PRECISION undefined
-#endif
-
-
-SHOW_DEFINE(LA)
-SHOW_DEFINE(TARGET)
-SHOW_DEFINE(PRECISION)
-
+	print_compilation_flags();
 
 	int ii, jj;
 
 	int n = 21;
 	int p_n = 15;
-	int N = 10;
 
 	//
 	// matrices in column-major format
@@ -156,8 +133,8 @@ SHOW_DEFINE(PRECISION)
 	printf("\n\n----------- TEST Copy&Scale\n\n");
 
 	float alpha;
+	int ni, mi, res, ai, aj, bi, bj, err_i, err_j;
 	alpha = 1.5;
-	int ret, ni, mi;
 	ni = 12;
 	mi = 10;
 
@@ -167,42 +144,54 @@ SHOW_DEFINE(PRECISION)
 	for (ii = 0; ii < 8; ii++)
 		{
 
-
 		// ---- Scale
 		//
+		//
+		ai = ii;
+		aj = 0;
 		printf("Scale A[%d:%d,%d:%d] by %f\n",
-						ii,ni, 0,mi,    alpha);
+						ai, ni, aj, mi, alpha);
 
-		blasfeo_sgesc(     ni, mi, alpha, &sA, ii, 0);
-		blasfeo_sgesc_ref(ni, mi, alpha, &rA, ii, 0);
+		blasfeo_sgesc(ni, mi, alpha, &sA, ai, aj);
+		blasfeo_sgesc_ref(ni, mi, alpha, &rA, ai, aj);
 
-		assert(sgecmp_libstr(n, n, &sA, &rA, &sA, &rA, 1));
+		res = sgecmp_libstr(ni, mi, ai, aj, &sA, &rA, &sA, &rA, &err_i, &err_j, VERBOSE);
+		assert(res);
 
 		// loop over B offset
 		for (jj = 0; jj < 8; jj++)
 			{
 
+			ai = ii;
+			aj = 0;
+			bi = jj;
+			bj = 0;
+
 			// ---- Copy&Scale
 			//
-
+			//
 			printf("Copy-Scale A[%d:%d,%d:%d] by %f in B[%d:%d,%d:%d]\n",
-							     ii,ni, 0,mi,    alpha,  jj,ni, 0,mi);
+							     ai,ni, aj,mi,   alpha,  bi,ni, bj,mi);
 
 			// HP submatrix copy&scale
-			blasfeo_sgecpsc(ni, mi, alpha, &sA, ii, 0, &sB, jj, 0);
+			blasfeo_sgecpsc(ni, mi, alpha, &sA, ai, aj, &sB, bi, bj);
 			// REF submatrix copy&scale
-			blasfeo_sgecpsc_ref(ni, mi, alpha, &rA, ii, 0, &rB, jj, 0);
+			blasfeo_sgecpsc_ref(ni, mi, alpha, &rA, ai, aj, &rB, bi, bj);
+
 			// check against blas with blasfeo REF
-			assert(sgecmp_libstr(n, n, &sB, &rB, &sA, &rA, 1));
+			res = sgecmp_libstr(ni, mi, bi, bj, &sB, &rB, &sA, &rA, &err_i, &err_j, VERBOSE);
+			assert(res);
 
 			// ---- Copy
 			//
 			printf("Copy A[%d:%d,%d:%d] in B[%d:%d,%d:%d]\n",
-							ii,ni, 0,mi,     jj,ni, 0,mi);
+							ai,ni, aj,mi,     bi,ni, bj,mi);
 
-			blasfeo_sgecp(     ni, mi, &sA, ii, 0, &sB, jj, 0);
-			blasfeo_sgecp_ref(ni, mi, &rA, ii, 0, &rB, jj, 0);
-			assert(sgecmp_libstr(n, n, &sB, &rB, &sA, &rA, 1));
+			blasfeo_sgecp(ni, mi, &sA, ai, aj, &sB, bi, bj);
+			blasfeo_sgecp_ref(ni, mi, &rA, ii, 0, &rB, bi, bj);
+
+			int res = sgecmp_libstr(ni, mi, bi, bj, &sB, &rB, &sA, &rA, &err_i, &err_j, VERBOSE);
+			assert(res);
 
 			printf("\n");
 			}
@@ -211,14 +200,10 @@ SHOW_DEFINE(PRECISION)
 		}
 
 	printf("\n----------- END TEST Copy&Scale\n");
-
 	printf("\n----------- TEST SUCCEEDED\n\n");
-
-	SHOW_DEFINE(LA)
-	SHOW_DEFINE(TARGET)
-	SHOW_DEFINE(PRECISION)
-
 	printf("\n\n");
+
+	print_compilation_flags();
 
 	return 0;
 
@@ -238,7 +223,5 @@ int main()
 	printf("On CMake use -DBLASFEO_TESTING=ON .\n\n");
 	return 0;
 	}
-
-
 
 #endif

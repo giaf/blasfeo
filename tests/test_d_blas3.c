@@ -31,7 +31,6 @@
 // standard
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
 #include <assert.h>
 
 // BLASFEO routines
@@ -43,6 +42,7 @@
 #include "../include/blasfeo_d_aux_ext_dep.h"
 #include "../include/blasfeo_i_aux_ext_dep.h"
 #include "../include/blasfeo_v_aux_ext_dep.h"
+#include "../include/blasfeo_timing.h"
 
 // BLASFEO LA:REFERENCE routines
 #include "../include/blasfeo_d_blas3_ref.h"
@@ -62,11 +62,7 @@ int main()
 
 	double test_elapsed_time;
 
-	// _SYS_TIME_H
-	/* struct timeval before, after; */
-
-	// time.h
-	time_t before, after;
+	blasfeo_timer timer;
 
 	const char* result_code;
 
@@ -193,8 +189,7 @@ int main()
 
 	printf("\n----------- TEST " string(ROUTINE) "\n");
 
-	/* gettimeofday(&before, NULL); */
-	time(&before);
+	blasfeo_tic(&timer);
 
 	// loop over alphas/betas
 	for (kk = 0; kk < alphas; kk++)
@@ -389,12 +384,7 @@ int main()
 			}
 		}
 
-	/* gettimeofday(&after, NULL); */
-	time(&after);
-
-	/* get current time; same as: timer = time(NULL)  */
-	/* test_elapsed_time  = (float) (after.tv_sec-before.tv_sec)+(after.tv_usec-before.tv_usec)/1e6; */
-	test_elapsed_time = difftime(after, before);
+	test_elapsed_time = blasfeo_toc(&timer);
 
 	if (!bad_calls)
 		{
@@ -405,18 +395,13 @@ int main()
 			result_code = "FAILED";
 		}
 
-	printf("\n----------- TEST "string(ROUTINE)" %s, %d/%d Bad calls, Elapsed time: %4.0f s\n\n",
+	printf("\n----------- TEST "string(ROUTINE)" %s, %d/%d Bad calls, Elapsed time: %4.4f s\n\n",
 			result_code, bad_calls, total_calls, test_elapsed_time);
 
 	#endif
 
 	#if (VERBOSE>1)
-	SHOW_DEFINE(LA)
-	SHOW_DEFINE(TARGET)
-	SHOW_DEFINE(PRECISION)
-	SHOW_DEFINE(MIN_KERNEL_SIZE)
-	SHOW_DEFINE(ROUTINE)
-	printf("\n\n");
+	print_compilation_flags();
 	#endif
 
 	d_free(A);

@@ -34,7 +34,7 @@
 #define REF(fun) concatenate(fun, _ref)
 
 #ifndef VERBOSE
-	#define VERBOSE 0
+#define VERBOSE 0
 #endif
 
 
