@@ -32,8 +32,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/time.h>
-
 
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_s_aux_ext_dep.h"
@@ -41,6 +39,7 @@
 #include "../include/blasfeo_s_aux.h"
 #include "../include/blasfeo_s_kernel.h"
 #include "../include/blasfeo_s_blas.h"
+#include "../include/blasfeo_timing.h"
 
 #ifndef S_PS
 #define S_PS 1
@@ -48,7 +47,6 @@
 #ifndef S_NC
 #define S_NC 1
 #endif
-
 
 
 #if defined(REF_BLAS_NETLIB)
@@ -272,16 +270,23 @@ int main()
 		blasfeo_pack_smat(n, n, B, n, &sB, 0, 0);
 		blasfeo_pack_svec(n, x, &sx, 0);
 
-
 		// create matrix to pivot all the time
-//		blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
+		// blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 
 		float *dummy;
 
 		int info;
 
+		float alpha = 1.0;
+		float beta = 0.0;
+
 		/* timing */
-		struct timeval tvm1, tv0, tv1, tv2, tv3, tv4, tv5, tv6, tv7, tv8, tv9, tv10, tv11, tv12, tv13, tv14, tv15, tv16;
+		blasfeo_timer timer;
+
+		double time_blasfeo  = 1e15;
+		double time_blas     = 1e15;
+		double tmp_time_blasfeo;
+		double tmp_time_blas;
 
 		/* warm up */
 		for(rep=0; rep<nrep; rep++)
@@ -289,163 +294,155 @@ int main()
 			blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 			}
 
-		float alpha = 1.0;
-		float beta = 0.0;
+		/* benchmarks */
 
-		float time_hpmpc    = 1e15;
-		float time_blasfeo  = 1e15;
-		float time_blas     = 1e15;
-
+		// batches repetion, find minimum averaged time
+		// discard batch interrupted by the scheduler
 		for(rep_in=0; rep_in<nrep_in; rep_in++)
 			{
 
-			gettimeofday(&tv0, NULL); // stop
+			// BENCHMARK_BLASFEO
+			blasfeo_tic(&timer);
 
+			// averaged repetions
 			for(rep=0; rep<nrep; rep++)
 				{
-	//			kernel_sgemm_nt_24x4_lib8(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-	//			kernel_sgemm_nt_16x4_lib8(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-	//			kernel_sgemm_nt_8x8_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
-	//			kernel_sgemm_nt_8x4_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
-	//			kernel_sgemm_nt_4x8_gen_lib8(n, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 4, 0, 8);
-	//			kernel_sgemm_nt_4x8_vs_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA, 4, 8);
-	//			kernel_sgemm_nt_4x8_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
-	//			kernel_sgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-	//			kernel_sgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-	//			kernel_sgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
-	//			kernel_sgemm_nn_16x4_lib8(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-	//			kernel_sgemm_nn_8x8_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
-	//			kernel_sgemm_nn_8x4_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 
-//				blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-//				blasfeo_sgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-//				blasfeo_ssyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-	//			blasfeo_spotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
 				blasfeo_spotrf_l(n, &sB, 0, 0, &sB, 0, 0);
-	//			blasfeo_sgetr(n, n, &sA, 0, 0, &sB, 0, 0);
-	//			blasfeo_sgetrf_nopivot(n, n, &sB, 0, 0, &sB, 0, 0);
-	//			blasfeo_sgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
-	//			blasfeo_strmm_rlnn(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
-	//			blasfeo_strmm_rutn(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
-	//			blasfeo_strsm_llnu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-	//			blasfeo_strsm_lunn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-	//			blasfeo_strsm_rltn(n, n, 1.0, &sB, 0, 0, &sD, 0, 0, &sD, 0, 0);
-	//			blasfeo_strsm_rltu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-	//			blasfeo_strsm_rutn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-	//			blasfeo_sgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-	//			blasfeo_sgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-	//			blasfeo_ssymv_l(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-	//			blasfeo_sgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
+
+				#if 0
+				kernel_sgemm_nt_24x4_lib8(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+				kernel_sgemm_nt_16x4_lib8(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+				kernel_sgemm_nt_8x8_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+				kernel_sgemm_nt_8x4_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+				kernel_sgemm_nt_4x8_gen_lib8(n, &alpha, sA.pA, sB.pA, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 4, 0, 8);
+				kernel_sgemm_nt_4x8_vs_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA, 4, 8);
+				kernel_sgemm_nt_4x8_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+				kernel_sgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+				kernel_sgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+				kernel_sgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+				kernel_sgemm_nn_16x4_lib8(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+				kernel_sgemm_nn_8x8_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+				kernel_sgemm_nn_8x4_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+				blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+				blasfeo_sgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+				blasfeo_ssyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+				blasfeo_spotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
+				blasfeo_sgetr(n, n, &sA, 0, 0, &sB, 0, 0);
+				blasfeo_sgetrf_nopivot(n, n, &sB, 0, 0, &sB, 0, 0);
+				blasfeo_sgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
+				blasfeo_strmm_rlnn(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+				blasfeo_strmm_rutn(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+				blasfeo_strsm_llnu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+				blasfeo_strsm_lunn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+				blasfeo_strsm_rltn(n, n, 1.0, &sB, 0, 0, &sD, 0, 0, &sD, 0, 0);
+				blasfeo_strsm_rltu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+				blasfeo_strsm_rutn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+				blasfeo_sgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+				blasfeo_sgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+				blasfeo_ssymv_l(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+				blasfeo_sgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
+				#endif
 				}
 
-	//		blasfeo_print_dmat(n, n, &sD, 0, 0);
+			tmp_time_blasfeo = blasfeo_toc(&timer) / nrep;
+			time_blasfeo = tmp_time_blasfeo<time_blasfeo ? tmp_time_blasfeo : time_blasfeo;
+			// BENCHMARK_BLASFEO_END
 
-			gettimeofday(&tv1, NULL); // stop
+			// BENCHMARK_BLAS_REF
+			blasfeo_tic(&timer);
 
 			for(rep=0; rep<nrep; rep++)
 				{
-	#if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
-	//			sgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
-	//			sgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
-	//			scopy_(&n2, A, &i_1, B, &i_1);
-	//			ssyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
-	//			strmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
+				#if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
 				spotrf_(&c_l, &n, B2, &n, &info);
-	//			sgetrf_(&n, &n, B2, &n, ipiv, &info);
-	//			strsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
-	//			strsm_(&c_l, &c_u, &c_n, &c_n, &n, &n, &d_1, B2, &n, B, &n);
-	//			strtri_(&c_l, &c_n, &n, B2, &n, &info);
-	//			slauum_(&c_l, &n, B, &n, &info);
-	//			sgemv_(&c_n, &n, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
-	//			sgemv_(&c_t, &n, &n, &d_1, A, &n, x2, &i_1, &d_0, y2, &i_1);
-	//			strmv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
-	//			strsv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
-	//			ssymv_(&c_l, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
 
-	//			for(i=0; i<n; i++)
-	//				{
-	//				i_t = n-i;
-	//				scopy_(&i_t, &B[i*(n+1)], &i_1, &C[i*(n+1)], &i_1);
-	//				}
-	//			ssyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, C, &n);
-	//			spotrf_(&c_l, &n, C, &n, &info);
+				// sgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
+				// sgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
+				// scopy_(&n2, A, &i_1, B, &i_1);
+				// ssyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
+				// strmm_(&c_r, &c_u, &c_t, &c_n, &n, &n, &d_1, A, &n, C, &n);
+				// sgetrf_(&n, &n, B2, &n, ipiv, &info);
+				// strsm_(&c_l, &c_l, &c_n, &c_u, &n, &n, &d_1, B2, &n, B, &n);
+				// strsm_(&c_l, &c_u, &c_n, &c_n, &n, &n, &d_1, B2, &n, B, &n);
+				// strtri_(&c_l, &c_n, &n, B2, &n, &info);
+				// slauum_(&c_l, &n, B, &n, &info);
+				// sgemv_(&c_n, &n, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
+				// sgemv_(&c_t, &n, &n, &d_1, A, &n, x2, &i_1, &d_0, y2, &i_1);
+				// strmv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
+				// strsv_(&c_l, &c_n, &c_n, &n, B, &n, x, &i_1);
+				// ssymv_(&c_l, &n, &d_1, A, &n, x, &i_1, &d_0, y, &i_1);
+				// for(i=0; i<n; i++)
+				// 	{
+				// 	i_t = n-i;
+				// 	scopy_(&i_t, &B[i*(n+1)], &i_1, &C[i*(n+1)], &i_1);
+				// 	}
+				// ssyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, C, &n);
+				// spotrf_(&c_l, &n, C, &n, &info);
+				#endif
 
-	#endif
-
-	#if defined(REF_BLAS_BLIS)
-	//			sgemm_(&c_n, &c_t, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
-	//			sgemm_(&c_n, &c_n, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
-	//			ssyrk_(&c_l, &c_n, &n77, &n77, &d_1, A, &n77, &d_0, C, &n77);
-	//			strmm_(&c_r, &c_u, &c_t, &c_n, &n77, &n77, &d_1, A, &n77, C, &n77);
-	//			spotrf_(&c_l, &n77, B, &n77, &info);
-	//			strtri_(&c_l, &c_n, &n77, B, &n77, &info);
-	//			slauum_(&c_l, &n77, B, &n77, &info);
-	#endif
+				#if defined(REF_BLAS_BLIS)
+				// sgemm_(&c_n, &c_t, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
+				// sgemm_(&c_n, &c_n, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
+				// ssyrk_(&c_l, &c_n, &n77, &n77, &d_1, A, &n77, &d_0, C, &n77);
+				// strmm_(&c_r, &c_u, &c_t, &c_n, &n77, &n77, &d_1, A, &n77, C, &n77);
+				// spotrf_(&c_l, &n77, B, &n77, &info);
+				// strtri_(&c_l, &c_n, &n77, B, &n77, &info);
+				// slauum_(&c_l, &n77, B, &n77, &info);
+				#endif
 				}
 
-			gettimeofday(&tv2, NULL); // stop
-
-			float tmp_blasfeo  = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);
-			float tmp_blas     = (float) (tv2.tv_sec-tv1.tv_sec)/(nrep+0.0)+(tv2.tv_usec-tv1.tv_usec)/(nrep*1e6);
-
-			time_blasfeo = tmp_blasfeo<time_blasfeo ? tmp_blasfeo : time_blasfeo;
-			time_blas = tmp_blas<time_blas ? tmp_blas : time_blas;
+			tmp_time_blas = blasfeo_toc(&timer) / nrep;
+			time_blas = tmp_time_blas<time_blas ? tmp_time_blas : time_blas;
+			// BENCHMARK_BLAS_REF_END
 
 			}
 
 		// flops
-		if(1)
-			{
 
-			float Gflops_max = flops_max * GHz_max;
+		// float flop_operation = 4*16.0*2*n; // kernel 16x4
+		// float flop_operation = 3*16.0*2*n; // kernel 12x4
+		// float flop_operation = 2*16.0*2*n; // kernel 8x4
+		// float flop_operation = 1*16.0*2*n; // kernel 4x4
+		// float flop_operation = 0.5*16.0*2*n; // kernel 2x4
+		// float flop_operation = 2.0*n*n*n; // gemm
+		// float flop_operation = 1.0*n*n*n; // syrk trmm trsm
+		// float flop_operation = 2.0/3.0*n*n*n; // getrf
+		// float flop_operation = 4.0/3.0*n*n*n; // geqrf
+		// float flop_operation = 2.0*n*n; // gemv symv
+		// float flop_operation = 1.0*n*n; // trmv trsv
+		// float flop_operation = 4.0*n*n; // gemv_nt
+		// float flop_operation = 4.0/3.0*n*n*n; // syrk+potrf
+		// float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
 
-//			float flop_operation = 6*16.0*2*n; // kernel 24x4
-//			float flop_operation = 4*16.0*2*n; // kernel 16x4
-//			float flop_operation = 3*16.0*2*n; // kernel 12x4
-//			float flop_operation = 2*16.0*2*n; // kernel 8x4
-//			float flop_operation = 1*16.0*2*n; // kernel 4x4
+		float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
 
-//			float flop_operation = 2.0*n*n*n; // dgemm
-//			float flop_operation = 1.0*n*n*n; // dsyrk dtrmm dtrsm
-			float flop_operation = 1.0/3.0*n*n*n; // dpotrf dtrtri
-//			float flop_operation = 2.0/3.0*n*n*n; // dgetrf
-//			float flop_operation = 2.0*n*n; // dgemv dsymv
-//			float flop_operation = 1.0*n*n; // dtrmv dtrsv
-//			float flop_operation = 4.0*n*n; // dgemv_nt
-//			float flop_operation = 3*16.0*2*n; // kernel 12x4
+		float Gflops_max = flops_max * GHz_max;
 
-//			float flop_operation = 4.0/3.0*n*n*n; // dsyrk+dpotrf
-
-			float Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
-			float Gflops_blas     = 1e-9*flop_operation/time_blas;
+		float Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
+		float Gflops_blas     = 1e-9*flop_operation/time_blas;
 
 
-			printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
-//			fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n",
+			n,
+			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max,
+			Gflops_blas, 100.0*Gflops_blas/Gflops_max);
 
-			}
+		#if 0
 		// memops
-		else
-			{
 
-			float Gmemops_max = memops_max * GHz_max;
+		float Gmemops_max = memops_max * GHz_max;
 
-			float memop_operation = 1.0*n*n; // dgecp
+		float memop_operation = 1.0*n*n; // dgecp
 
-			float time_hpmpc    = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);
-			float time_blasfeo  = (float) (tv2.tv_sec-tv1.tv_sec)/(nrep+0.0)+(tv2.tv_usec-tv1.tv_usec)/(nrep*1e6);
-			float time_blas     = (float) (tv3.tv_sec-tv2.tv_sec)/(nrep+0.0)+(tv3.tv_usec-tv2.tv_usec)/(nrep*1e6);
+		float Gmemops_blasfeo  = 1e-9*memop_operation/time_blasfeo;
+		float Gmemops_blas     = 1e-9*memop_operation/time_blas;
 
-			float Gmemops_hpmpc    = 1e-9*memop_operation/time_hpmpc;
-			float Gmemops_blasfeo  = 1e-9*memop_operation/time_blasfeo;
-			float Gmemops_blas     = 1e-9*memop_operation/time_blas;
-
-
-			printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gmemops_blasfeo, 100.0*Gmemops_blasfeo/Gmemops_max, Gmemops_blas, 100.0*Gmemops_blas/Gmemops_max);
-//			fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n", n, Gmemops_blasfeo, 100.0*Gmemops_blasfeo/Gmemops_max, Gmemops_blas, 100.0*Gmemops_blas/Gmemops_max);
-
-			}
-
+		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n",
+			n,
+			Gmemops_blasfeo, 100.0*Gmemops_blasfeo/Gmemops_max,
+			Gmemops_blas, 100.0*Gmemops_blas/Gmemops_max);
+		#endif
 
 		free(A);
 		free(B);
@@ -478,7 +475,6 @@ int main()
 	}
 
 #else
-
 
 
 #include <stdio.h>
