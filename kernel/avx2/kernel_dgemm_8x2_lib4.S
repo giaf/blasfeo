@@ -193,7 +193,7 @@ inner_kernel_dgemm_add_nn_8x2_lib4:
 #endif
 	
 	cmpl	$0, %r10d
-	jle		2f // return
+	jle		5f // return
 
 	vxorpd	%ymm4, %ymm4, %ymm4
 	vmovapd	%ymm4, %ymm5
@@ -343,12 +343,14 @@ inner_kernel_dgemm_add_nn_8x2_lib4:
 	cmpl	$0, %r10d
 	jg		3b // clean up loop 
 
-2: // return
+2: // reduce
 
 	vaddpd		%ymm4, %ymm0, %ymm0
 	vaddpd		%ymm5, %ymm1, %ymm1
 	vaddpd		%ymm6, %ymm2, %ymm2
 	vaddpd		%ymm7, %ymm3, %ymm3
+
+5: // return
 
 #if MACRO_LEVEL>=2
 	.endm
