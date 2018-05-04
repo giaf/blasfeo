@@ -26,6 +26,9 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#ifndef BLASFEO_V_AUX_EXT_DEP_H_
+#define BLASFEO_V_AUX_EXT_DEP_H_
+
 #if defined(EXT_DEP)
 
 
@@ -68,4 +71,6 @@ void c_free_align(char *ptrA);
 
 
 
-#endif // EXT_DEP
+#endif  // EXT_DEP
+
+#endif  // BLASFEO_V_AUX_EXT_DEP_H_

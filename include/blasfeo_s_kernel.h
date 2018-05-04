@@ -26,6 +26,8 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#ifndef BLASFEO_S_KERNEL_H_
+#define BLASFEO_S_KERNEL_H_
 
 
 #ifdef __cplusplus
@@ -413,3 +415,5 @@ void kernel_sgetr_1_lib4(int tri, int kmax, int kna, float alpha, float *A, floa
 #ifdef __cplusplus
 }
 #endif
+
+#endif  // BLASFEO_S_KERNEL_H_

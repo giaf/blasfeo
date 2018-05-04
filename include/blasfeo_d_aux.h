@@ -33,14 +33,15 @@
  *
  */
 
+#ifndef BLASFEO_D_AUX_H_
+#define BLASFEO_D_AUX_H_
+
+#include "blasfeo_common.h"
+#include "blasfeo_d_aux_old.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
-
-#include "blasfeo_d_aux_old.h"
-
 
 
 // --- memory calculations
@@ -170,8 +171,8 @@ void blasfeo_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_nor
 void blasfeo_dvecpe(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi);
 void blasfeo_dvecpei(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi);
 
-
-
 #ifdef __cplusplus
 }
 #endif
+
+#endif  // BLASFEO_D_AUX_H_
