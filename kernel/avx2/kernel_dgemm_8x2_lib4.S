@@ -278,7 +278,6 @@ inner_kernel_dgemm_add_nn_8x2_lib4:
 	vfmadd231pd		%ymm8, %ymm12, %ymm1
 	vfmadd231pd		%ymm9, %ymm12, %ymm3
 	vmovapd			32(%r11, %r12, 1), %ymm11 // A1
-	vaddpd			%ymm15, %ymm7, %ymm7
 	subl	$4, %r10d
 
 	// unroll 1
