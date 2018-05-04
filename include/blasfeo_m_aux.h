@@ -29,6 +29,8 @@
 #ifndef BLASFEO_M_AUX_H_
 #define BLASFEO_M_AUX_H_
 
+#include "blasfeo_common.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

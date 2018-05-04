@@ -29,11 +29,11 @@
 #ifndef BLASFEO_S_BLAS_H_
 #define BLASFEO_S_BLAS_H_
 
+#include "blasfeo_common.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
 
 //
 // level 1 BLAS
