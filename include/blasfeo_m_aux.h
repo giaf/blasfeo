@@ -26,7 +26,10 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#ifndef BLASFEO_M_AUX_H_
+#define BLASFEO_M_AUX_H_
 
+#include "blasfeo_common.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,3 +46,5 @@ void m_cvt_s2blasfeo_dmat(int m, int n, struct blasfeo_smat *Ms, int mis, int ni
 #ifdef __cplusplus
 }
 #endif
+
+#endif  // BLASFEO_M_AUX_H_

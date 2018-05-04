@@ -26,7 +26,8 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-
+#ifndef BLASFEO_D_KERNEL_H_
+#define BLASFEO_D_KERNEL_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -374,3 +375,5 @@ void kernel_dgetr_4_0_lib4(int m, double *A, int sda, double *B);
 #ifdef __cplusplus
 }
 #endif
+
+#endif  // BLASFEO_D_KERNEL_H_

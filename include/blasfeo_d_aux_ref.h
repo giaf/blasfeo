@@ -33,6 +33,11 @@
  *
  */
 
+#ifndef BLASFEO_D_AUX_REF_H_
+#define BLASFEO_D_AUX_REF_H_
+
+#include "blasfeo_common.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -64,3 +69,5 @@ void blasfeo_dgecpsc_ref(int m, int n,
 #ifdef __cplusplus
 }
 #endif
+
+#endif  // BLASFEO_D_AUX_REF_H_

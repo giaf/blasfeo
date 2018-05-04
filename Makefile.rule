@@ -75,6 +75,11 @@ REF_BLAS = 0
 # REF_BLAS = BLIS
 # REF_BLAS = ATLAS
 
+# Use C99 extension to math library
+#
+# USE_C99_MATH = 0
+USE_C99_MATH = 1
+
 # Compile auxiliary functions with external dependencies (for memory allocation and printing)
 #
 # EXT_DEP = 0
@@ -164,6 +169,9 @@ endif
 
 CFLAGS  += -DLA=$(LA)
 
+ifeq ($(USE_C99_MATH), 1)
+CFLAGS += -DUSE_C99_MATH
+endif
 ifeq ($(RUNTIME_CHECKS), 1)
 CFLAGS += -DDIM_CHECK
 endif

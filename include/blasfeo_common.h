@@ -26,19 +26,16 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#ifndef BLASFEO_COMMON_H_
+#define BLASFEO_COMMON_H_
+
+#include "blasfeo_target.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-
-#ifndef BLASFEO_COMMON
-#define BLASFEO_COMMON
-
-#ifdef __DSPACE__
-	#define fmax(a, b) (a < b) ? (b) : (a)
-#endif
 
 #if defined(LA_HIGH_PERFORMANCE)
 
@@ -185,11 +182,8 @@ struct blasfeo_svec_ref
 
 #endif // TESTING_MODE
 
-
-
-#endif  // BLASFEO_COMMON
-
-
 #ifdef __cplusplus
 }
 #endif
+
+#endif  // BLASFEO_COMMON_H_
