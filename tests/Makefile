@@ -44,6 +44,9 @@ endif
 LIBS += $(BINARY_DIR)/libblasfeo.a
 SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
 
+timing: ../auxiliary/timing.c
+	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/timing.o
+
 include ../Makefile.blas
 
 # set test verbosity
@@ -80,8 +83,9 @@ endif
 
 # select one single test
 # ONE_OBJS =
-ONE_OBJS = test_d_debug.o
-# ONE_OBJS = test_s_debug.o
+ONE_OBJS = test_d_custom.o
+# ONE_OBJS = test_s_custom.o
+#
 # ONE_OBJS = test_d_aux.o
 # ONE_OBJS = test_s_aux.o
 
@@ -97,26 +101,25 @@ BLAS_OBJS += test_d_blas3.o
 test_%.o: test_%.c
 	# build executable obj $(BINARY_DIR)/$@
 	$(CC) $(CFLAGS) -Wall -c $< -o $(BINARY_DIR)/$@
-	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ -o $(BINARY_DIR)/$@.out $(LIBS)
+	$(CC) $(CFLAGS) $(BINARY_DIR)/timing.o $(BINARY_DIR)/$@ -o $(BINARY_DIR)/$@.out $(LIBS)
 
 # ----------- Targets
 
 .DEFAULT_GOAL := obj
 .PHONY: obj
 
-obj: aux blas
+obj: one aux blas
 
 bin_dir:
 	mkdir -p $(BINARY_DIR)/
 
-common: bin_dir
+common: bin_dir timing
 	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
 ifeq ($(TESTING_MODE), 1)
 	cp ../lib/libblasfeo_ref.a ./$(BINARY_DIR)
 endif
 
 one: common $(ONE_OBJS)
-
 
 aux: common $(AUX_OBJS)
 blas: common $(BLAS_OBJS)

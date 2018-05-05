@@ -28,7 +28,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/time.h>
 
 #include "tools.h"
 
@@ -39,6 +38,7 @@
 #include "../include/blasfeo_s_aux.h"
 #include "../include/blasfeo_s_kernel.h"
 #include "../include/blasfeo_s_blas.h"
+#include "../include/blasfeo_timing.h"
 
 
 
@@ -64,7 +64,7 @@ static void s_back_ric_sv_libstr(int N, int *nx, int *nu, struct blasfeo_smat *h
 		blasfeo_spotrf_l(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #endif
 		}
-	
+
 	// forward substitution
 
 	// first stage
@@ -191,8 +191,8 @@ static void s_back_ric_trs_libstr(int N, int *nx, int *nu, struct blasfeo_smat *
 
 
 
-/************************************************ 
-Mass-spring system: nx/2 masses connected each other with springs (in a row), and the first and the last one to walls. nu (<=nx) controls act on the first nu masses. The system is sampled with sampling time Ts. 
+/************************************************
+Mass-spring system: nx/2 masses connected each other with springs (in a row), and the first and the last one to walls. nu (<=nx) controls act on the first nu masses. The system is sampled with sampling time Ts.
 ************************************************/
 static void d_mass_spring_system(double Ts, int nx, int nu, int N, double *A, double *B, double *b, double *x0)
 	{
@@ -202,11 +202,11 @@ static void d_mass_spring_system(double Ts, int nx, int nu, int N, double *A, do
 	int info = 0;
 
 	int pp = nx/2; // number of masses
-	
+
 /************************************************
-* build the continuous time system 
+* build the continuous time system
 ************************************************/
-	
+
 	double *T; d_zeros(&T, pp, pp);
 	int ii;
 	for(ii=0; ii<pp; ii++) T[ii*(pp+1)] = -2;
@@ -219,27 +219,27 @@ static void d_mass_spring_system(double Ts, int nx, int nu, int N, double *A, do
 	dmcopy(pp, pp, Z, pp, Ac, nx);
 	dmcopy(pp, pp, T, pp, Ac+pp, nx);
 	dmcopy(pp, pp, I, pp, Ac+pp*nx, nx);
-	dmcopy(pp, pp, Z, pp, Ac+pp*(nx+1), nx); 
+	dmcopy(pp, pp, Z, pp, Ac+pp*(nx+1), nx);
 	free(T);
 	free(Z);
 	free(I);
-	
+
 	d_zeros(&I, nu, nu); for(ii=0; ii<nu; ii++) I[ii*(nu+1)]=1.0; //I = eye(nu);
 	double *Bc; d_zeros(&Bc, nx, nu);
 	dmcopy(nu, nu, I, nu, Bc+pp, nx);
 	free(I);
-	
+
 /************************************************
-* compute the discrete time system 
+* compute the discrete time system
 ************************************************/
 
 	double *bb; d_zeros(&bb, nx, 1);
 	dmcopy(nx, 1, bb, nx, b, nx);
-		
+
 	dmcopy(nx, nx, Ac, nx, A, nx);
 	dscal_3l(nx2, Ts, A);
 	expm(nx, A);
-	
+
 	d_zeros(&T, nx, nx);
 	d_zeros(&I, nx, nx); for(ii=0; ii<nx; ii++) I[ii*(nx+1)]=1.0; //I = eye(nx);
 	dmcopy(nx, nx, A, nx, T, nx);
@@ -247,7 +247,7 @@ static void d_mass_spring_system(double Ts, int nx, int nu, int N, double *A, do
 	dgemm_nn_3l(nx, nu, nx, T, nx, Bc, nx, B, nx);
 	free(T);
 	free(I);
-	
+
 	int *ipiv = (int *) malloc(nx*sizeof(int));
 	dgesv_3l(nx, nu, Ac, nx, ipiv, B, nx, &info);
 	free(ipiv);
@@ -255,12 +255,12 @@ static void d_mass_spring_system(double Ts, int nx, int nu, int N, double *A, do
 	free(Ac);
 	free(Bc);
 	free(bb);
-	
-			
+
+
 /************************************************
-* initial state 
+* initial state
 ************************************************/
-	
+
 	if(nx==4)
 		{
 		x0[0] = 5;
@@ -308,7 +308,7 @@ int main()
 
 /************************************************
 * problem size
-************************************************/	
+************************************************/
 
 	// problem size
 	int N = 4;
@@ -329,7 +329,7 @@ int main()
 
 /************************************************
 * dynamical system
-************************************************/	
+************************************************/
 
 	double *Ad; d_zeros(&Ad, nx_, nx_); // states update matrix
 
@@ -345,10 +345,10 @@ int main()
 	float *B; s_zeros(&B, nx_, nu_); for(ii=0; ii<nx_*nu_; ii++) B[ii] = (float) Bd[ii];
 	float *b; s_zeros(&b, nx_, 1); for(ii=0; ii<nx_; ii++) b[ii] = (float) bd[ii];
 	float *x0; s_zeros(&x0, nx_, 1); for(ii=0; ii<nx_; ii++) x0[ii] = (float) x0d[ii];
-	
+
 	for(ii=0; ii<nx_; ii++)
 		b[ii] = 0.1;
-	
+
 	for(ii=0; ii<nx_; ii++)
 		x0[ii] = 0;
 	x0[0] = 2.5;
@@ -361,7 +361,7 @@ int main()
 
 /************************************************
 * cost function
-************************************************/	
+************************************************/
 
 	float *R; s_zeros(&R, nu_, nu_);
 	for(ii=0; ii<nu_; ii++) R[ii*(nu_+1)] = 2.0;
@@ -385,7 +385,7 @@ int main()
 
 /************************************************
 * matrices as strmat
-************************************************/	
+************************************************/
 
 	struct blasfeo_smat sA;
 	blasfeo_allocate_smat(nx_, nx_, &sA);
@@ -450,8 +450,8 @@ int main()
 
 /************************************************
 * array of matrices
-************************************************/	
-	
+************************************************/
+
 	struct blasfeo_smat hsBAbt[N];
 	struct blasfeo_svec hsb[N];
 	struct blasfeo_smat hsRSQrq[N+1];
@@ -495,39 +495,37 @@ int main()
 
 /************************************************
 * call Riccati solver
-************************************************/	
-	
-	// timing 
-	struct timeval tv0, tv1, tv2, tv3;
+************************************************/
+
+	// timing
+	blasfeo_timer timer;
 	int nrep = 1000;
 	int rep;
 
-	gettimeofday(&tv0, NULL); // time
+	double time_sv, time_trf, time_trs;
 
 	for(rep=0; rep<nrep; rep++)
 		{
 		s_back_ric_sv_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL, hsux, hspi, hswork_mat, hswork_vec);
 		}
 
-	gettimeofday(&tv1, NULL); // time
+	time_sv = blasfeo_toc(&timer) / nrep;
+	blasfeo_tic(&timer);
 
 	for(rep=0; rep<nrep; rep++)
 		{
 		s_back_ric_trf_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL, hswork_mat);
 		}
 
-	gettimeofday(&tv2, NULL); // time
+	time_trf = blasfeo_toc(&timer) / nrep;
+	blasfeo_tic(&timer);
 
 	for(rep=0; rep<nrep; rep++)
 		{
 		s_back_ric_trs_libstr(N, nx, nu, hsBAbt, hsb, hsrq, hsL, hsPb, hsux, hspi, hswork_vec);
 		}
 
-	gettimeofday(&tv3, NULL); // time
-
-	float time_sv  = (float) (tv1.tv_sec-tv0.tv_sec)/(nrep+0.0)+(tv1.tv_usec-tv0.tv_usec)/(nrep*1e6);
-	float time_trf = (float) (tv2.tv_sec-tv1.tv_sec)/(nrep+0.0)+(tv2.tv_usec-tv1.tv_usec)/(nrep*1e6);
-	float time_trs = (float) (tv3.tv_sec-tv2.tv_sec)/(nrep+0.0)+(tv3.tv_usec-tv2.tv_usec)/(nrep*1e6);
+	time_trs = blasfeo_toc(&timer) / nrep;
 
 	// print sol
 	printf("\nux = \n\n");
@@ -548,7 +546,7 @@ int main()
 
 /************************************************
 * free memory
-************************************************/	
+************************************************/
 
 	d_free(Ad);
 	d_free(Bd);
@@ -594,7 +592,7 @@ int main()
 
 /************************************************
 * return
-************************************************/	
+************************************************/
 
 	return 0;
 

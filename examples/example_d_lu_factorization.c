@@ -28,7 +28,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/time.h>
 
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_i_aux_ext_dep.h"
