@@ -655,6 +655,7 @@ if(${EXT_DEP})
 		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_lib4.c
 		${PROJECT_SOURCE_DIR}/auxiliary/v_aux_ext_dep_lib.c
 		${PROJECT_SOURCE_DIR}/auxiliary/i_aux_ext_dep_lib.c
+		${PROJECT_SOURCE_DIR}/auxiliary/timing.c
 		)
 
 endif()

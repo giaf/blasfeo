@@ -80,7 +80,7 @@ REF_BLAS = 0
 # USE_C99_MATH = 0
 USE_C99_MATH = 1
 
-# Compile auxiliary functions with external dependencies (for memory allocation and printing)
+# Compile auxiliary functions with external dependencies (for memory allocation, printing and timing)
 #
 # EXT_DEP = 0
 EXT_DEP = 1

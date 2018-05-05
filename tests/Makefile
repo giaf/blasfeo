@@ -44,9 +44,6 @@ endif
 LIBS += $(BINARY_DIR)/libblasfeo.a
 SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
 
-timing: ../auxiliary/timing.c
-	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/timing.o
-
 include ../Makefile.blas
 
 # set test verbosity
@@ -101,7 +98,7 @@ BLAS_OBJS += test_d_blas3.o
 test_%.o: test_%.c
 	# build executable obj $(BINARY_DIR)/$@
 	$(CC) $(CFLAGS) -Wall -c $< -o $(BINARY_DIR)/$@
-	$(CC) $(CFLAGS) $(BINARY_DIR)/timing.o $(BINARY_DIR)/$@ -o $(BINARY_DIR)/$@.out $(LIBS)
+	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ -o $(BINARY_DIR)/$@.out $(LIBS)
 
 # ----------- Targets
 
@@ -113,7 +110,7 @@ obj: one aux blas
 bin_dir:
 	mkdir -p $(BINARY_DIR)/
 
-common: bin_dir timing
+common: bin_dir
 	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
 ifeq ($(TESTING_MODE), 1)
 	cp ../lib/libblasfeo_ref.a ./$(BINARY_DIR)

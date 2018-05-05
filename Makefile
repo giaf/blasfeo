@@ -418,7 +418,8 @@ OBJS += \
 		auxiliary/d_aux_ext_dep_lib.o \
 		auxiliary/s_aux_ext_dep_lib.o \
 		auxiliary/v_aux_ext_dep_lib.o \
-		auxiliary/i_aux_ext_dep_lib.o
+		auxiliary/i_aux_ext_dep_lib.o \
+		auxiliary/timing.o
 
 endif
 

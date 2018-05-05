@@ -282,7 +282,7 @@ static void d_mass_spring_system(double Ts, int nx, int nu, int N, double *A, do
 int main()
 	{
 
-	printf("\nExample of LU factorization and backsolve\n\n");
+	printf("\nExample of Riccati recursion factorization and backsolve\n\n");
 
 #if defined(LA_HIGH_PERFORMANCE)
 

@@ -39,13 +39,10 @@ OBJS =
 OBJS += benchmark_d_blas.o
 OBJS += benchmark_s_blas.o
 
-timing: ../auxiliary/timing.c
-	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/timing.o
-
 %.o: %.c
 	# build obj
 	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
-	$(CC) $(CFLAGS) $(BINARY_DIR)/timing.o $(BINARY_DIR)/$@ -o $(BINARY_DIR)/$@.out $(LIBS)
+	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ -o $(BINARY_DIR)/$@.out $(LIBS)
 
 # ----------- Targets
 
@@ -53,7 +50,7 @@ bin_dir:
 	# create bin folder if not existent
 	mkdir -p $(BINARY_DIR)/
 
-common: bin_dir timing
+common: bin_dir
 	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
 	echo $(OBJS)
 

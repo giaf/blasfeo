@@ -282,7 +282,7 @@ static void d_mass_spring_system(double Ts, int nx, int nu, int N, double *A, do
 int main()
 	{
 
-	printf("\nExample of LU factorization and backsolve\n\n");
+	printf("\nExample of Riccati recursion factorization and backsolve\n\n");
 
 #if defined(LA_HIGH_PERFORMANCE)
 
@@ -503,6 +503,8 @@ int main()
 	int rep;
 
 	double time_sv, time_trf, time_trs;
+
+	blasfeo_tic(&timer);
 
 	for(rep=0; rep<nrep; rep++)
 		{

@@ -57,17 +57,14 @@ LINK_OBJ = tools.o
 kernel_%.o: kernel_%.S
 	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
 
-timing: ../auxiliary/timing.c
-	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/timing.o
-
 $(EX_OBJ):%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
-	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ $(BINARY_DIR)/$(LINK_OBJ) $(BINARY_DIR)/timing.o -o $(BINARY_DIR)/$@.out $(LIBS)
+	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ $(BINARY_DIR)/$(LINK_OBJ) -o $(BINARY_DIR)/$@.out $(LIBS)
 
 bin_dir:
 	mkdir -p ./$(BINARY_DIR)/
 
-common: bin_dir timing $(LINK_OBJ)
+common: bin_dir $(LINK_OBJ)
 	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
 
 .DEFAULT_GOAL := build
