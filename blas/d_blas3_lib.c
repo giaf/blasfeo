@@ -29,9 +29,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#if defined(LA_BLAS)
+#if defined(LA_BLAS_WRAPPER)
 #if defined(REF_BLAS_BLIS)
 #include "d_blas_64.h"
+#elif defined(REF_BLAS_MKL)
+#include "mkl.h"
 #else
 #include "d_blas.h"
 #endif
@@ -44,19 +46,19 @@
 
 #define REAL double
 
-#define STRMAT d_strmat
+#define STRMAT blasfeo_dmat
 
-#define GEMM_NN_LIBSTR dgemm_nn_libstr
-#define GEMM_NT_LIBSTR dgemm_nt_libstr
-#define SYRK_LN_LIBSTR dsyrk_ln_libstr
-#define SYRK_LN_MN_LIBSTR dsyrk_ln_mn_libstr
-#define TRMM_RLNN_LIBSTR dtrmm_rlnn_libstr
-#define TRMM_RUTN_LIBSTR dtrmm_rutn_libstr
-#define TRSM_LLNU_LIBSTR dtrsm_llnu_libstr
-#define TRSM_LUNN_LIBSTR dtrsm_lunn_libstr
-#define TRSM_RLTN_LIBSTR dtrsm_rltn_libstr
-#define TRSM_RLTU_LIBSTR dtrsm_rltu_libstr
-#define TRSM_RUTN_LIBSTR dtrsm_rutn_libstr
+#define GEMM_NN_LIBSTR blasfeo_dgemm_nn
+#define GEMM_NT_LIBSTR blasfeo_dgemm_nt
+#define SYRK_LN_LIBSTR blasfeo_dsyrk_ln
+#define SYRK_LN_MN_LIBSTR blasfeo_dsyrk_ln_mn
+#define TRMM_RLNN_LIBSTR blasfeo_dtrmm_rlnn
+#define TRMM_RUTN_LIBSTR blasfeo_dtrmm_rutn
+#define TRSM_LLNU_LIBSTR blasfeo_dtrsm_llnu
+#define TRSM_LUNN_LIBSTR blasfeo_dtrsm_lunn
+#define TRSM_RLTN_LIBSTR blasfeo_dtrsm_rltn
+#define TRSM_RLTU_LIBSTR blasfeo_dtrsm_rltu
+#define TRSM_RUTN_LIBSTR blasfeo_dtrsm_rutn
 
 #define COPY dcopy_
 #define GEMM dgemm_

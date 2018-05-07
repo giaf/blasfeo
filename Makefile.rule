@@ -49,8 +49,8 @@
 
 # Select target architecture
 #
-# TARGET = X64_INTEL_HASWELL
- TARGET = X64_INTEL_SANDY_BRIDGE
+TARGET = X64_INTEL_HASWELL
+# TARGET = X64_INTEL_SANDY_BRIDGE
 # TARGET = X64_INTEL_CORE
 #
 # TARGET = X64_AMD_BULLDOZER
@@ -62,29 +62,37 @@
 
 # Select BLASFEO version
 #
- LA = HIGH_PERFORMANCE
+LA = HIGH_PERFORMANCE
 # LA = REFERENCE
-# LA = BLAS
+# LA = BLAS_WRAPPER
 
-# Select BLAS and LAPACK version (for LA=BLAS)
+# Select BLAS and LAPACK version (for LA=BLAS_WRAPPER)
 #
- REF_BLAS = 0
+REF_BLAS = 0
 # REF_BLAS = OPENBLAS
 # REF_BLAS = NETLIB
 # REF_BLAS = MKL
 # REF_BLAS = BLIS
 # REF_BLAS = ATLAS
 
-# Compile auxiliary functions with external dependencies (for memory allocation and printing)
+# Use C99 extension to math library
+#
+# USE_C99_MATH = 0
+USE_C99_MATH = 1
+
+# Compile auxiliary functions with external dependencies (for memory allocation, printing and timing)
 #
 # EXT_DEP = 0
- EXT_DEP = 1
+EXT_DEP = 1
 
 # Compile reference implementations with test_ prefix
 # in order to check HIGH_PERFORMANCE routines against reference
 #
- TESTING_MODE = 0
+TESTING_MODE = 0
 # TESTING_MODE = 1
+
+BENCHMARKS_MODE = 0
+# BENCHMARKS_MODE = 1
 
 # Enable on-line checks for matrix and vector dimensions
 #
@@ -141,11 +149,13 @@ CFLAGS  += #-g #-Wall -pedantic -Wfloat-equal #-pg
 ASFLAGS += #-g
 
 
+# Support local options
+mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+current_dir := $(patsubst %/,%,$(dir $(mkfile_path)))
+# Do not complain if Makefile.local does not exisist
+-include $(current_dir)/Makefile.local
 
-
-
-
-# Definitions
+# Conditional Definitions
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 CFLAGS  += -DLA_HIGH_PERFORMANCE
@@ -153,12 +163,15 @@ endif
 ifeq ($(LA), REFERENCE)
 CFLAGS  += -DLA_REFERENCE
 endif
-ifeq ($(LA), BLAS)
-CFLAGS  += -DLA_BLAS
+ifeq ($(LA), BLAS_WRAPPER)
+CFLAGS  += -DLA_BLAS_WRAPPER
 endif
 
 CFLAGS  += -DLA=$(LA)
 
+ifeq ($(USE_C99_MATH), 1)
+CFLAGS += -DUSE_C99_MATH
+endif
 ifeq ($(RUNTIME_CHECKS), 1)
 CFLAGS += -DDIM_CHECK
 endif
@@ -167,6 +180,9 @@ CFLAGS += -DEXT_DEP
 endif
 ifeq ($(TESTING_MODE), 1)
 CFLAGS += -DTESTING_MODE
+endif
+ifeq ($(BENCHMARKS_MODE), 1)
+CFLAGS += -DBENCHMARKS_MODE
 endif
 
 ifeq ($(MACRO_LEVEL), 1)
@@ -197,6 +213,12 @@ CFLAGS  += -DOS_WINDOWS
 ASFLAGS += -DOS_WINDOWS
 endif
 
+# REF_BLAS
+
+ifndef REF_BLAS
+    REF_BLAS = 0
+endif
+
 ifeq ($(REF_BLAS), 0)
 CFLAGS  +=
 endif
@@ -210,7 +232,7 @@ ifeq ($(REF_BLAS), NETLIB)
 CFLAGS  += -DREF_BLAS_NETLIB
 endif
 ifeq ($(REF_BLAS), MKL)
-CFLAGS  += -DREF_BLAS_MKL -m64 -I/opt/intel/mkl/include -DMKL_DIRECT_CALL_SEQ
+CFLAGS  += -DREF_BLAS_MKL -DMKL_DIRECT_CALL_SEQ -std=c99 -m64 -I/opt/intel/mkl/include
 endif
 ifeq ($(REF_BLAS), ATLAS)
 CFLAGS  += -DREF_BLAS_ATLAS

@@ -69,7 +69,7 @@ void CREATE_STRMAT(int m, int n, struct STRMAT *sA, void *memory)
 	sA->dA = ptr;
 	ptr += tmp;
 	sA->use_dA = 0;
-	sA->memory_size = (m*n+tmp)*sizeof(REAL);
+	sA->memsize = (m*n+tmp)*sizeof(REAL);
 	return;
 	}
 
@@ -82,7 +82,7 @@ void CREATE_STRVEC(int m, struct STRVEC *sa, void *memory)
 	REAL *ptr = (REAL *) memory;
 	sa->pa = ptr;
 //	ptr += m * n;
-	sa->memory_size = m*sizeof(REAL);
+	sa->memsize = m*sizeof(REAL);
 	return;
 	}
 
@@ -91,6 +91,9 @@ void CREATE_STRVEC(int m, struct STRVEC *sa, void *memory)
 // convert a matrix into a matrix structure
 void CVT_MAT2STRMAT(int m, int n, REAL *A, int lda, struct STRMAT *sA, int ai, int aj)
 	{
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
 	int ii, jj;
 	int lda2 = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda2;
@@ -117,6 +120,9 @@ void CVT_MAT2STRMAT(int m, int n, REAL *A, int lda, struct STRMAT *sA, int ai, i
 // convert and transpose a matrix into a matrix structure
 void CVT_TRAN_MAT2STRMAT(int m, int n, REAL *A, int lda, struct STRMAT *sA, int ai, int aj)
 	{
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
 	int ii, jj;
 	int lda2 = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda2;
@@ -219,6 +225,9 @@ void CVT_STRVEC2VEC(int m, struct STRVEC *sa, int ai, REAL *a)
 // cast a matrix into a matrix structure
 void CAST_MAT2STRMAT(REAL *A, struct STRMAT *sA)
 	{
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
 	sA->pA = A;
 	return;
 	}
@@ -228,6 +237,9 @@ void CAST_MAT2STRMAT(REAL *A, struct STRMAT *sA)
 // cast a matrix into the diagonal of a matrix structure
 void CAST_DIAG_MAT2STRMAT(REAL *dA, struct STRMAT *sA)
 	{
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
 	sA->dA = dA;
 	return;
 	}
@@ -246,6 +258,9 @@ void CAST_VEC2VECMAT(REAL *a, struct STRVEC *sa)
 // copy a generic strmat into a generic strmat
 void GECP_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT *sC, int ci, int cj)
 	{
+	// invalidate stored inverse diagonal
+	sC->use_dA = 0;
+
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
 	int ldc = sC->m;
@@ -274,6 +289,9 @@ void GECP_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT 
 // scale a generic strmat
 void GESC_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj)
 	{
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
 	int ii, jj;
@@ -300,6 +318,8 @@ void GESC_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj)
 // scale an generic strmat and copy into generic strmat
 void GECPSC_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj)
 	{
+	// invalidate stored inverse diagonal
+	sB->use_dA = 0;
 
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;

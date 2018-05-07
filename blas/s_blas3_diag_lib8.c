@@ -40,7 +40,7 @@
 
 
 // dgemm with B diagonal matrix (stored as strvec)
-void sgemm_r_diag_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strvec *sB, int bi, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+void blasfeo_sgemm_nd(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sB, int bi, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(m<=0 | n<=0)
@@ -48,9 +48,12 @@ void sgemm_r_diag_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai,
 
 	if(ai!=0 | ci!=0 | di!=0)
 		{
-		printf("\nsgemm_r_diag_libstr: feature not implemented yet: ai=%d, ci=%d, di=%d\n", ai, ci, di);
+		printf("\nblasfeo_sgemm_nd: feature not implemented yet: ai=%d, ci=%d, di=%d\n", ai, ci, di);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int bs = 8;
 

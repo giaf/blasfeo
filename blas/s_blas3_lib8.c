@@ -37,40 +37,43 @@
 
 
 
-void sgemm_nt_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(m==0 | n==0)
 		return;
-	
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 #if defined(DIM_CHECK)
 	// TODO check that sA=!sD or that if sA==sD then they do not overlap (same for sB)
 	// non-negative size
-	if(m<0) printf("\n****** sgemm_nt_libstr : m<0 : %d<0 *****\n", m);
-	if(n<0) printf("\n****** sgemm_nt_libstr : n<0 : %d<0 *****\n", n);
-	if(k<0) printf("\n****** sgemm_nt_libstr : k<0 : %d<0 *****\n", k);
+	if(m<0) printf("\n****** blasfeo_sgemm_nt : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** blasfeo_sgemm_nt : n<0 : %d<0 *****\n", n);
+	if(k<0) printf("\n****** blasfeo_sgemm_nt : k<0 : %d<0 *****\n", k);
 	// non-negative offset
-	if(ai<0) printf("\n****** sgemm_nt_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** sgemm_nt_libstr : aj<0 : %d<0 *****\n", aj);
-	if(bi<0) printf("\n****** sgemm_nt_libstr : bi<0 : %d<0 *****\n", bi);
-	if(bj<0) printf("\n****** sgemm_nt_libstr : bj<0 : %d<0 *****\n", bj);
-	if(ci<0) printf("\n****** sgemm_nt_libstr : ci<0 : %d<0 *****\n", ci);
-	if(cj<0) printf("\n****** sgemm_nt_libstr : cj<0 : %d<0 *****\n", cj);
-	if(di<0) printf("\n****** sgemm_nt_libstr : di<0 : %d<0 *****\n", di);
-	if(dj<0) printf("\n****** sgemm_nt_libstr : dj<0 : %d<0 *****\n", dj);
+	if(ai<0) printf("\n****** blasfeo_sgemm_nt : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** blasfeo_sgemm_nt : aj<0 : %d<0 *****\n", aj);
+	if(bi<0) printf("\n****** blasfeo_sgemm_nt : bi<0 : %d<0 *****\n", bi);
+	if(bj<0) printf("\n****** blasfeo_sgemm_nt : bj<0 : %d<0 *****\n", bj);
+	if(ci<0) printf("\n****** blasfeo_sgemm_nt : ci<0 : %d<0 *****\n", ci);
+	if(cj<0) printf("\n****** blasfeo_sgemm_nt : cj<0 : %d<0 *****\n", cj);
+	if(di<0) printf("\n****** blasfeo_sgemm_nt : di<0 : %d<0 *****\n", di);
+	if(dj<0) printf("\n****** blasfeo_sgemm_nt : dj<0 : %d<0 *****\n", dj);
 	// inside matrix
 	// A: m x k
-	if(ai+m > sA->m) printf("\n***** sgemm_nt_libstr : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
-	if(aj+k > sA->n) printf("\n***** sgemm_nt_libstr : aj+k > col(A) : %d+%d > %d *****\n", aj, k, sA->n);
+	if(ai+m > sA->m) printf("\n***** blasfeo_sgemm_nt : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
+	if(aj+k > sA->n) printf("\n***** blasfeo_sgemm_nt : aj+k > col(A) : %d+%d > %d *****\n", aj, k, sA->n);
 	// B: n x k
-	if(bi+n > sB->m) printf("\n***** sgemm_nt_libstr : bi+n > row(B) : %d+%d > %d *****\n", bi, n, sB->m);
-	if(bj+k > sB->n) printf("\n***** sgemm_nt_libstr : bj+k > col(B) : %d+%d > %d *****\n", bj, k, sB->n);
+	if(bi+n > sB->m) printf("\n***** blasfeo_sgemm_nt : bi+n > row(B) : %d+%d > %d *****\n", bi, n, sB->m);
+	if(bj+k > sB->n) printf("\n***** blasfeo_sgemm_nt : bj+k > col(B) : %d+%d > %d *****\n", bj, k, sB->n);
 	// C: m x n
-	if(ci+m > sC->m) printf("\n***** sgemm_nt_libstr : ci+m > row(C) : %d+%d > %d *****\n", ci, n, sC->m);
-	if(cj+n > sC->n) printf("\n***** sgemm_nt_libstr : cj+n > col(C) : %d+%d > %d *****\n", cj, k, sC->n);
+	if(ci+m > sC->m) printf("\n***** blasfeo_sgemm_nt : ci+m > row(C) : %d+%d > %d *****\n", ci, n, sC->m);
+	if(cj+n > sC->n) printf("\n***** blasfeo_sgemm_nt : cj+n > col(C) : %d+%d > %d *****\n", cj, k, sC->n);
 	// D: m x n
-	if(di+m > sD->m) printf("\n***** sgemm_nt_libstr : di+m > row(D) : %d+%d > %d *****\n", di, n, sD->m);
-	if(dj+n > sD->n) printf("\n***** sgemm_nt_libstr : dj+n > col(D) : %d+%d > %d *****\n", dj, k, sD->n);
+	if(di+m > sD->m) printf("\n***** blasfeo_sgemm_nt : di+m > row(D) : %d+%d > %d *****\n", di, n, sD->m);
+	if(dj+n > sD->n) printf("\n***** blasfeo_sgemm_nt : dj+n > col(D) : %d+%d > %d *****\n", dj, k, sD->n);
 #endif
 
 	const int bs = 8;
@@ -276,39 +279,42 @@ left_12:
 
 
 
-void sgemm_nn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+void blasfeo_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(m==0 | n==0)
 		return;
-	
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 #if defined(DIM_CHECK)
 	// non-negative size
-	if(m<0) printf("\n****** sgemm_nt_libstr : m<0 : %d<0 *****\n", m);
-	if(n<0) printf("\n****** sgemm_nt_libstr : n<0 : %d<0 *****\n", n);
-	if(k<0) printf("\n****** sgemm_nt_libstr : k<0 : %d<0 *****\n", k);
+	if(m<0) printf("\n****** blasfeo_sgemm_nt : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** blasfeo_sgemm_nt : n<0 : %d<0 *****\n", n);
+	if(k<0) printf("\n****** blasfeo_sgemm_nt : k<0 : %d<0 *****\n", k);
 	// non-negative offset
-	if(ai<0) printf("\n****** sgemm_nt_libstr : ai<0 : %d<0 *****\n", ai);
-	if(aj<0) printf("\n****** sgemm_nt_libstr : aj<0 : %d<0 *****\n", aj);
-	if(bi<0) printf("\n****** sgemm_nt_libstr : bi<0 : %d<0 *****\n", bi);
-	if(bj<0) printf("\n****** sgemm_nt_libstr : bj<0 : %d<0 *****\n", bj);
-	if(ci<0) printf("\n****** sgemm_nt_libstr : ci<0 : %d<0 *****\n", ci);
-	if(cj<0) printf("\n****** sgemm_nt_libstr : cj<0 : %d<0 *****\n", cj);
-	if(di<0) printf("\n****** sgemm_nt_libstr : di<0 : %d<0 *****\n", di);
-	if(dj<0) printf("\n****** sgemm_nt_libstr : dj<0 : %d<0 *****\n", dj);
+	if(ai<0) printf("\n****** blasfeo_sgemm_nt : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** blasfeo_sgemm_nt : aj<0 : %d<0 *****\n", aj);
+	if(bi<0) printf("\n****** blasfeo_sgemm_nt : bi<0 : %d<0 *****\n", bi);
+	if(bj<0) printf("\n****** blasfeo_sgemm_nt : bj<0 : %d<0 *****\n", bj);
+	if(ci<0) printf("\n****** blasfeo_sgemm_nt : ci<0 : %d<0 *****\n", ci);
+	if(cj<0) printf("\n****** blasfeo_sgemm_nt : cj<0 : %d<0 *****\n", cj);
+	if(di<0) printf("\n****** blasfeo_sgemm_nt : di<0 : %d<0 *****\n", di);
+	if(dj<0) printf("\n****** blasfeo_sgemm_nt : dj<0 : %d<0 *****\n", dj);
 	// inside matrix
 	// A: m x k
-	if(ai+m > sA->m) printf("\n***** sgemm_nn_libstr : ai+m > row(A) : %d+%d > %d *****\n\n", ai, m, sA->m);
-	if(aj+k > sA->n) printf("\n***** sgemm_nn_libstr : aj+k > col(A) : %d+%d > %d *****\n\n", aj, k, sA->n);
+	if(ai+m > sA->m) printf("\n***** blasfeo_sgemm_nn : ai+m > row(A) : %d+%d > %d *****\n\n", ai, m, sA->m);
+	if(aj+k > sA->n) printf("\n***** blasfeo_sgemm_nn : aj+k > col(A) : %d+%d > %d *****\n\n", aj, k, sA->n);
 	// B: k x n
-	if(bi+k > sB->m) printf("\n***** sgemm_nn_libstr : bi+k > row(B) : %d+%d > %d *****\n\n", bi, k, sB->m);
-	if(bj+n > sB->n) printf("\n***** sgemm_nn_libstr : bj+n > col(B) : %d+%d > %d *****\n\n", bj, n, sB->n);
+	if(bi+k > sB->m) printf("\n***** blasfeo_sgemm_nn : bi+k > row(B) : %d+%d > %d *****\n\n", bi, k, sB->m);
+	if(bj+n > sB->n) printf("\n***** blasfeo_sgemm_nn : bj+n > col(B) : %d+%d > %d *****\n\n", bj, n, sB->n);
 	// C: m x n
-	if(ci+m > sC->m) printf("\n***** sgemm_nn_libstr : ci+m > row(C) : %d+%d > %d *****\n\n", ci, n, sC->m);
-	if(cj+n > sC->n) printf("\n***** sgemm_nn_libstr : cj+n > col(C) : %d+%d > %d *****\n\n", cj, k, sC->n);
+	if(ci+m > sC->m) printf("\n***** blasfeo_sgemm_nn : ci+m > row(C) : %d+%d > %d *****\n\n", ci, n, sC->m);
+	if(cj+n > sC->n) printf("\n***** blasfeo_sgemm_nn : cj+n > col(C) : %d+%d > %d *****\n\n", cj, k, sC->n);
 	// D: m x n
-	if(di+m > sD->m) printf("\n***** sgemm_nn_libstr : di+m > row(D) : %d+%d > %d *****\n\n", di, n, sD->m);
-	if(dj+n > sD->n) printf("\n***** sgemm_nn_libstr : dj+n > col(D) : %d+%d > %d *****\n\n", dj, k, sD->n);
+	if(di+m > sD->m) printf("\n***** blasfeo_sgemm_nn : di+m > row(D) : %d+%d > %d *****\n\n", di, n, sD->m);
+	if(dj+n > sD->n) printf("\n***** blasfeo_sgemm_nn : dj+n > col(D) : %d+%d > %d *****\n\n", dj, k, sD->n);
 #endif
 
 	const int bs = 8;
@@ -488,7 +494,27 @@ void sgemm_nn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int 
 
 
 
-void ssyrk_ln_libstr(int m, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+// dtrsm_nn_llu
+void blasfeo_strsm_llnu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	printf("\nblasfeo_strsm_llnu: feature not implemented yet\n");
+	exit(1);
+	return;
+	}
+
+
+
+// dtrsm_nn_lun
+void blasfeo_strsm_lunn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	printf("\nblasfeo_strsm_lunn: feature not implemented yet\n");
+	exit(1);
+	return;
+	}
+
+
+
+void blasfeo_ssyrk_ln(int m, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(m<=0)
@@ -496,9 +522,12 @@ void ssyrk_ln_libstr(int m, int k, float alpha, struct s_strmat *sA, int ai, int
 
 	if(ci>0 | di>0)
 		{
-		printf("\nssyrk_ln_libstr: feature not implemented yet: ci>0, di>0\n");
+		printf("\nblasfeo_ssyrk_ln: feature not implemented yet: ci>0, di>0\n");
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int bs = 8;
 
@@ -678,7 +707,7 @@ void ssyrk_ln_libstr(int m, int k, float alpha, struct s_strmat *sA, int ai, int
 
 
 
-void ssyrk_ln_mn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, float beta, struct s_strmat *sC, int ci, int cj, struct s_strmat *sD, int di, int dj)
+void blasfeo_ssyrk_ln_mn(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(m<=0)
@@ -686,9 +715,12 @@ void ssyrk_ln_mn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, i
 
 	if(ci>0 | di>0)
 		{
-		printf("\nssyrk_ln_mn_libstr: feature not implemented yet: ci>0, di>0\n");
+		printf("\nblasfeo_ssyrk_ln_mn: feature not implemented yet: ci>0, di>0\n");
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int bs = 8;
 
@@ -989,8 +1021,10 @@ void ssyrk_ln_mn_libstr(int m, int n, int k, float alpha, struct s_strmat *sA, i
 
 
 // dtrmm_right_lower_nottransposed_notunit (B, i.e. the first matrix, is triangular !!!)
-void strmm_rlnn_libstr(int m, int n, float alpha, struct s_strmat *sB, int bi, int bj, struct s_strmat *sA, int ai, int aj, struct s_strmat *sD, int di, int dj)
+void blasfeo_strmm_rlnn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
 	{
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int bs = 8;
 
@@ -1234,14 +1268,17 @@ void strmm_rlnn_libstr(int m, int n, float alpha, struct s_strmat *sB, int bi, i
 
 
 // dtrsm_right_lower_transposed_notunit
-void strsm_rltn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, int aj, struct s_strmat *sB, int bi, int bj, struct s_strmat *sD, int di, int dj)
+void blasfeo_strsm_rltn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
-		printf("\nstrsm_rltn_libstr: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
+		printf("\nblasfeo_strsm_rltn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
 		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int bs = 8;
 
@@ -1318,6 +1355,36 @@ void strsm_rltn_libstr(int m, int n, float alpha, struct s_strmat *sA, int ai, i
 		}
 	return;
 
+	}
+
+
+
+// dtrsm_right_lower_transposed_unit
+void blasfeo_strsm_rltu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	printf("\nblasfeo_strsm_rltu: feature not implemented yet\n");
+	exit(1);
+	return;
+	}
+
+
+
+// dtrsm_right_upper_transposed_notunit
+void blasfeo_strsm_rutn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	printf("\nblasfeo_strsm_rutn: feature not implemented yet\n");
+	exit(1);
+	return;
+	}
+
+
+
+// dtrmm_right_upper_transposed_notunit (B, i.e. the first matrix, is triangular !!!)
+void blasfeo_strmm_rutn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	printf("\nblasfeo_strmm_rutn: feature not implemented yet\n");
+	exit(1);
+	return;
 	}
 
 

@@ -28,15 +28,19 @@
 
 
 
-#if defined(LA_REFERENCE) | defined(LA_BLAS) 
+#if defined(LA_REFERENCE) | defined(LA_BLAS_WRAPPER) 
 
 
 
 // dgemm with A diagonal matrix (stored as strvec)
-void GEMM_L_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRVEC *sA, int ai, struct STRMAT *sB, int bi, int bj, double beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_L_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRVEC *sA, int ai, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -96,10 +100,14 @@ void GEMM_L_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRVEC *sA, int ai, str
 
 
 // dgemm with B diagonal matrix (stored as strvec)
-void GEMM_R_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sB, int bi, double beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_R_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sB, int bi, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	int ii, jj;
 	int lda = sA->m;
 	int ldd = sD->m;
@@ -107,7 +115,7 @@ void GEMM_R_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int
 	REAL *dB = sB->pa + bi;
 	REAL *pD = sD->pA + di + dj*ldd;
 	REAL a0, a1;
-	if(beta==0)
+	if(beta==0.0)
 		{
 		jj = 0;
 		for(; jj<n-1; jj+=2)

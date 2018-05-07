@@ -44,12 +44,13 @@ void v_zeros(void **ptrA, int size)
 	}
 
 
-
 /* creates a zero matrix aligned to a cache line given the size in bytes */
 void v_zeros_align(void **ptrA, int size)
 	{
 #if defined(OS_WINDOWS)
 	*ptrA = _aligned_malloc( size, 64 );
+#elif defined(__DSPACE__)
+	*ptrA = malloc(size);
 #else
 	int err = posix_memalign(ptrA, 64, size);
 	if(err!=0)
@@ -64,13 +65,11 @@ void v_zeros_align(void **ptrA, int size)
 	}
 
 
-
 /* frees matrix */
 void v_free(void *pA)
 	{
 	free( pA );
 	}
-
 
 
 /* frees aligned matrix */
@@ -84,7 +83,6 @@ void v_free_align(void *pA)
 	}
 
 
-
 /* creates a zero matrix given the size in bytes */
 void c_zeros(char **ptrA, int size)
 	{
@@ -95,12 +93,13 @@ void c_zeros(char **ptrA, int size)
 	}
 
 
-
 /* creates a zero matrix aligned to a cache line given the size in bytes */
 void c_zeros_align(char **ptrA, int size)
 	{
 #if defined(OS_WINDOWS)
 	*ptrA = _aligned_malloc( size, 64 );
+#elif defined(__DSPACE__)
+	*ptrA = malloc(size);
 #else
 	void *temp;
 	int err = posix_memalign(&temp, 64, size);
@@ -117,13 +116,11 @@ void c_zeros_align(char **ptrA, int size)
 	}
 
 
-
 /* frees matrix */
 void c_free(char *pA)
 	{
 	free( pA );
 	}
-
 
 
 /* frees aligned matrix */
@@ -135,4 +132,3 @@ void c_free_align(char *pA)
 	free( pA );
 #endif
 	}
-

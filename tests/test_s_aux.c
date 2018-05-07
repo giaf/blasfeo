@@ -27,15 +27,11 @@
 **************************************************************************************************/
 
 
-
 #if defined(TESTING_MODE)
-
-
 
 // standard
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/time.h>
 #include <assert.h>
 // BLASFEO
 #include "../include/blasfeo_common.h"
@@ -49,9 +45,6 @@
 #include "../include/blasfeo_s_aux_ref.h"
 #include "../include/blasfeo_s_aux_ext_dep_ref.h"
 
-#define STR(x) #x
-#define SHOW_DEFINE(x) printf("%s=%s\n", #x, STR(x));
-
 #include "test_s_common.h"
 #include "test_x_common.c"
 
@@ -59,26 +52,12 @@
 int main()
 	{
 
-#ifndef LA
-	#error LA undefined
-#endif
-
-#ifndef TARGET
-	#error TARGET undefined
-#endif
-
-
-	printf("\n\n\n--------------- Single Precision --------------------\n\n\n");
-
-SHOW_DEFINE(LA)
-SHOW_DEFINE(TARGET)
-
+	print_compilation_flags();
 
 	int ii, jj;
 
 	int n = 21;
 	int p_n = 15;
-	int N = 10;
 
 	//
 	// matrices in column-major format
@@ -93,70 +72,69 @@ SHOW_DEFINE(TARGET)
 	s_zeros(&B, n, n);
 	for(ii=0; ii<n*n; ii++) B[ii] = 2*ii;
 
-	/* -------- instantiate s_strmat */
+	/* -------- instantiate blasfeo_smat */
 
 	// compute memory size
-	int size_strmat = 2*s_size_strmat(n, n);
-	int size_strmat_ref = 2*blasfeo_s_memsize_strmat_ref(n, n);
+	int size_smat = 2*blasfeo_memsize_smat(n, n);
+	int size_smat_ref = 2*blasfeo_memsize_smat_ref(n, n);
 	// inizilize void pointer
-	void *memory_strmat;
-	void *memory_strmat_ref;
+	void *memory_smat;
+	void *memory_smat_ref;
 
 	// initialize pointer
 	// memory allocation
-	v_zeros_align(&memory_strmat, size_strmat);
-	v_zeros_align(&memory_strmat_ref, size_strmat_ref);
+	v_zeros_align(&memory_smat, size_smat);
+	v_zeros_align(&memory_smat_ref, size_smat_ref);
 
-	// get point to strmat
-	char *ptr_memory_strmat = (char *) memory_strmat;
-	char *ptr_memory_strmat_ref = (char *) memory_strmat_ref;
+	// get point to smat
+	char *ptr_memory_smat = (char *) memory_smat;
+	char *ptr_memory_smat_ref = (char *) memory_smat_ref;
 
-	// instantiate s_strmat
-	struct s_strmat sA;
-	s_create_strmat(n, n, &sA, ptr_memory_strmat);
-	ptr_memory_strmat += sA.memory_size;
-	s_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
+	// instantiate blasfeo_smat
+	struct blasfeo_smat sA;
+	blasfeo_create_smat(n, n, &sA, ptr_memory_smat);
+	ptr_memory_smat += sA.memsize;
+	blasfeo_pack_smat(n, n, A, n, &sA, 0, 0);
 
-	struct s_strmat sB;
-	s_create_strmat(n, n, &sB, ptr_memory_strmat);
-	ptr_memory_strmat += sB.memory_size;
-	s_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
+	struct blasfeo_smat sB;
+	blasfeo_create_smat(n, n, &sB, ptr_memory_smat);
+	ptr_memory_smat += sB.memsize;
+	blasfeo_pack_smat(n, n, B, n, &sB, 0, 0);
 
 	// Testing comparison
 	// reference matrices, column major
 
-	struct s_strmat_ref rA;
-	blasfeo_s_create_strmat_ref(n, n, &rA, ptr_memory_strmat_ref);
-	ptr_memory_strmat_ref += rA.memory_size;
-	blasfeo_s_cvt_mat2strmat_ref(n, n, A, n, &rA, 0, 0);
+	struct blasfeo_smat_ref rA;
+	blasfeo_create_smat_ref(n, n, &rA, ptr_memory_smat_ref);
+	ptr_memory_smat_ref += rA.memsize;
+	blasfeo_pack_smat_ref(n, n, A, n, &rA, 0, 0);
 
-	struct s_strmat_ref rB;
-	blasfeo_s_create_strmat_ref(n, n, &rB, ptr_memory_strmat_ref);
-	ptr_memory_strmat_ref += sB.memory_size;
-	blasfeo_s_cvt_mat2strmat_ref(n, n, B, n, &rB, 0, 0);
-
+	struct blasfeo_smat_ref rB;
+	blasfeo_create_smat_ref(n, n, &rB, ptr_memory_smat_ref);
+	ptr_memory_smat_ref += sB.memsize;
+	blasfeo_pack_smat_ref(n, n, B, n, &rB, 0, 0);
 
 	// -------- Print matrices
 
-	printf("\nPrint strmat HP A:\n\n");
-	s_print_strmat(p_n, p_n, &sA, 0, 0);
+	printf("\nPrint smat HP A:\n\n");
+	blasfeo_print_smat(p_n, p_n, &sA, 0, 0);
 
-	printf("\nPrint strmat REF A:\n\n");
-	blasfeo_s_print_strmat_ref(p_n, p_n, &rA, 0, 0);
+	printf("\nPrint smat REF A:\n\n");
+	blasfeo_print_smat_ref(p_n, p_n, &rA, 0, 0);
 
-	printf("\nPrint strmat HP B:\n\n");
-	s_print_strmat(p_n, p_n, &sB, 0, 0);
+	printf("\nPrint smat HP B:\n\n");
+	blasfeo_print_smat(p_n, p_n, &sB, 0, 0);
 
-	printf("\nPrint strmat REF B:\n\n");
-	blasfeo_s_print_strmat_ref(p_n, p_n, &rB, 0, 0);
+	printf("\nPrint smat REF B:\n\n");
+	blasfeo_print_smat_ref(p_n, p_n, &rB, 0, 0);
 
 
 	/* ----------- copy and scale */
 	printf("\n\n----------- TEST Copy&Scale\n\n");
 
 	float alpha;
+	int ni, mi, res, ai, aj, bi, bj, err_i, err_j;
 	alpha = 1.5;
-	int ret, ni, mi;
 	ni = 12;
 	mi = 10;
 
@@ -166,42 +144,54 @@ SHOW_DEFINE(TARGET)
 	for (ii = 0; ii < 8; ii++)
 		{
 
-
 		// ---- Scale
 		//
+		//
+		ai = ii;
+		aj = 0;
 		printf("Scale A[%d:%d,%d:%d] by %f\n",
-						ii,ni, 0,mi,    alpha);
+						ai, ni, aj, mi, alpha);
 
-		sgesc_libstr(     ni, mi, alpha, &sA, ii, 0);
-		blasfeo_sgesc_ref(ni, mi, alpha, &rA, ii, 0);
+		blasfeo_sgesc(ni, mi, alpha, &sA, ai, aj);
+		blasfeo_sgesc_ref(ni, mi, alpha, &rA, ai, aj);
 
-		assert(sgecmp_libstr(n, n, &sA, &rA, &sA, &rA));
+		res = sgecmp_libstr(ni, mi, ai, aj, &sA, &rA, &sA, &rA, &err_i, &err_j, VERBOSE);
+		assert(res);
 
 		// loop over B offset
 		for (jj = 0; jj < 8; jj++)
 			{
 
+			ai = ii;
+			aj = 0;
+			bi = jj;
+			bj = 0;
+
 			// ---- Copy&Scale
 			//
-
+			//
 			printf("Copy-Scale A[%d:%d,%d:%d] by %f in B[%d:%d,%d:%d]\n",
-							     ii,ni, 0,mi,    alpha,  jj,ni, 0,mi);
+							     ai,ni, aj,mi,   alpha,  bi,ni, bj,mi);
 
 			// HP submatrix copy&scale
-			sgecpsc_libstr(ni, mi, alpha, &sA, ii, 0, &sB, jj, 0);
+			blasfeo_sgecpsc(ni, mi, alpha, &sA, ai, aj, &sB, bi, bj);
 			// REF submatrix copy&scale
-			blasfeo_sgecpsc_ref(ni, mi, alpha, &rA, ii, 0, &rB, jj, 0);
+			blasfeo_sgecpsc_ref(ni, mi, alpha, &rA, ai, aj, &rB, bi, bj);
+
 			// check against blas with blasfeo REF
-			assert(sgecmp_libstr(n, n, &sB, &rB, &sA, &rA));
+			res = sgecmp_libstr(ni, mi, bi, bj, &sB, &rB, &sA, &rA, &err_i, &err_j, VERBOSE);
+			assert(res);
 
 			// ---- Copy
 			//
 			printf("Copy A[%d:%d,%d:%d] in B[%d:%d,%d:%d]\n",
-							ii,ni, 0,mi,     jj,ni, 0,mi);
+							ai,ni, aj,mi,     bi,ni, bj,mi);
 
-			sgecp_libstr(     ni, mi, &sA, ii, 0, &sB, jj, 0);
-			blasfeo_sgecp_ref(ni, mi, &rA, ii, 0, &rB, jj, 0);
-			assert(sgecmp_libstr(n, n, &sB, &rB, &sA, &rA));
+			blasfeo_sgecp(ni, mi, &sA, ai, aj, &sB, bi, bj);
+			blasfeo_sgecp_ref(ni, mi, &rA, ii, 0, &rB, bi, bj);
+
+			int res = sgecmp_libstr(ni, mi, bi, bj, &sB, &rB, &sA, &rA, &err_i, &err_j, VERBOSE);
+			assert(res);
 
 			printf("\n");
 			}
@@ -209,19 +199,11 @@ SHOW_DEFINE(TARGET)
 		printf("\n");
 		}
 
-	printf("\n\n----------- END TEST Copy&Scale\n\n");
-
-#if defined(LA)
-SHOW_DEFINE(LA)
-#endif
-#if defined(TARGET)
-SHOW_DEFINE(TARGET)
-#endif
-#if defined(PRECISION)
-SHOW_DEFINE(PRECISION)
-#endif
-
+	printf("\n----------- END TEST Copy&Scale\n");
+	printf("\n----------- TEST SUCCEEDED\n\n");
 	printf("\n\n");
+
+	print_compilation_flags();
 
 	return 0;
 
@@ -237,10 +219,9 @@ SHOW_DEFINE(PRECISION)
 
 int main()
 	{
-	printf("\n\n Recompile BLASFEO with TESTING_MODE=1 to run this test.\n\n");
+	printf("\n\n Recompile BLASFEO with TESTING_MODE=1 to run this test.\n");
+	printf("On CMake use -DBLASFEO_TESTING=ON .\n\n");
 	return 0;
 	}
-
-
 
 #endif

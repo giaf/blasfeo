@@ -711,15 +711,9 @@ inner_edge_dgemm_add_nn_12x4_lib4:
 	sall			$3, %eax // offsetB*sizeof(double)
 	addq			%rax, %r13 // B+offsetB*sizeof(double)
 
-	movq			%r11, %rax // A1 <- A0
-	addq			%r12, %rax // A1 <- A0 + 4*sda*sizeof(double)
-
-	movq			%rax, %rbp // A2 <- A1
-	addq			%r12, %rbp // A2 <- A1 + 4*sda*sizeof(double)
-
 1:
-	vmovapd			0(%r11), %ymm8 // A0[0]
-	vmovapd 		0(%r11, %r12, 1), %ymm9 // A1[0]
+	vmovapd			0(%r11), %ymm12 // A0[0]
+	vmovapd 		0(%r11, %r12, 1), %ymm13 // A1[0]
 
 	vbroadcastsd	0(%r13), %ymm14
 	vmulpd			%ymm12, %ymm14, %ymm15
@@ -753,12 +747,9 @@ inner_edge_dgemm_add_nn_12x4_lib4:
 	vmulpd			0(%r11, %r12, 2), %ymm14, %ymm15
 	vaddpd			%ymm15, %ymm11, %ymm11
 
-
 	subl			$1, %r10d // k-1
 	subl			$1, %ebx // kend-1
 	addq			$32, %r11 // A0+1*bs*sizeof(float)
-	addq			$32, %rax // A1+1*bs*sizeof(float)
-	addq			$32, %rbp // A2+1*bs*sizeof(float)
 	addq			$8, %r13 // B+1*sizeof(float)
 
 	cmpl			$0, %ebx
@@ -1159,7 +1150,7 @@ kernel_dgemm_nn_12x4_lib4:
 	movq	ARG4, %r12 // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13 // B
-	movq	ARG7, %r14 // sda
+	movq	ARG7, %r14 // sdb
 	sall	$5, %r14d // 4*sdb*sizeof(double)
 	movq	ARG5, %r15 // offsetB
 
@@ -1177,7 +1168,7 @@ kernel_dgemm_nn_12x4_lib4:
 	INNER_KERNEL_DGEMM_ADD_NN_12X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nn_12x4_lib4
+//	call inner_kernel_dgemm_add_nn_12x4_lib4
 #elif defined(OS_MAC)
 	callq _inner_kernel_dgemm_add_nn_12x4_lib4
 #endif

@@ -451,10 +451,10 @@ inner_kernel_dgemm_add_nn_10x2_lib4:
 	jg		1b // main loop 
 
 	vaddpd			%ymm2, %ymm0, %ymm0
-	vaddpd			%ymm3, %ymm0, %ymm1
-	vaddpd			%ymm6, %ymm0, %ymm4
-	vaddpd			%ymm7, %ymm0, %ymm5
-	vaddpd			%ymm9, %ymm0, %ymm8
+	vaddpd			%ymm3, %ymm1, %ymm1
+	vaddpd			%ymm6, %ymm4, %ymm4
+	vaddpd			%ymm7, %ymm5, %ymm5
+	vaddpd			%ymm9, %ymm8, %ymm8
 
 0: // consider clean4-up
 	
@@ -838,8 +838,8 @@ inner_scale_ab_10x2_lib4:
 
 	vmulpd		%ymm0, %ymm15, %ymm0
 	vmulpd		%ymm1, %ymm15, %ymm1
-	vmulpd		%ymm2, %ymm15, %ymm2
-	vmulpd		%ymm3, %ymm15, %ymm3
+	vmulpd		%ymm4, %ymm15, %ymm4
+	vmulpd		%ymm5, %ymm15, %ymm5
 
 	vmulpd		%ymm8, %ymm15, %ymm8
 

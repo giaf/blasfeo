@@ -68,6 +68,12 @@ OBJS += s_blas1_lib.o s_blas2_lib.o s_blas2_diag_lib.o s_blas3_lib.o s_blas3_dia
 
 endif # LA choice
 
+ifeq ($(TESTING_MODE), 1)
+#testing against reference
+OBJS += d_blas3_libref.o
+endif
+
+
 obj: $(OBJS)
 
 clean:

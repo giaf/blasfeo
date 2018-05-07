@@ -29,8 +29,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#if defined(LA_BLAS)
+#if defined(LA_BLAS_WRAPPER)
+#if defined(REF_BLAS_MKL)
+#include "mkl.h"
+#else
 #include "d_blas.h"
+#endif
 #endif
 
 #include "../include/blasfeo_common.h"
@@ -40,25 +44,25 @@
 
 #define REAL double
 
-#define STRMAT d_strmat
-#define STRVEC d_strvec
+#define STRMAT blasfeo_dmat
+#define STRVEC blasfeo_dvec
 
-#define GEMV_N_LIBSTR dgemv_n_libstr
-#define GEMV_NT_LIBSTR dgemv_nt_libstr
-#define GEMV_T_LIBSTR dgemv_t_libstr
-#define SYMV_L_LIBSTR dsymv_l_libstr
-#define TRMV_LNN_LIBSTR dtrmv_lnn_libstr
-#define TRMV_LTN_LIBSTR dtrmv_ltn_libstr
-#define TRMV_UNN_LIBSTR dtrmv_unn_libstr
-#define TRMV_UTN_LIBSTR dtrmv_utn_libstr
-#define TRSV_LNN_LIBSTR dtrsv_lnn_libstr
-#define TRSV_LNN_MN_LIBSTR dtrsv_lnn_mn_libstr
-#define TRSV_LNU_LIBSTR dtrsv_lnu_libstr
-#define TRSV_LTN_LIBSTR dtrsv_ltn_libstr
-#define TRSV_LTN_MN_LIBSTR dtrsv_ltn_mn_libstr
-#define TRSV_LTU_LIBSTR dtrsv_ltu_libstr
-#define TRSV_UNN_LIBSTR dtrsv_unn_libstr
-#define TRSV_UTN_LIBSTR dtrsv_utn_libstr
+#define GEMV_N_LIBSTR blasfeo_dgemv_n
+#define GEMV_NT_LIBSTR blasfeo_dgemv_nt
+#define GEMV_T_LIBSTR blasfeo_dgemv_t
+#define SYMV_L_LIBSTR blasfeo_dsymv_l
+#define TRMV_LNN_LIBSTR blasfeo_dtrmv_lnn
+#define TRMV_LTN_LIBSTR blasfeo_dtrmv_ltn
+#define TRMV_UNN_LIBSTR blasfeo_dtrmv_unn
+#define TRMV_UTN_LIBSTR blasfeo_dtrmv_utn
+#define TRSV_LNN_LIBSTR blasfeo_dtrsv_lnn
+#define TRSV_LNN_MN_LIBSTR blasfeo_dtrsv_lnn_mn
+#define TRSV_LNU_LIBSTR blasfeo_dtrsv_lnu
+#define TRSV_LTN_LIBSTR blasfeo_dtrsv_ltn
+#define TRSV_LTN_MN_LIBSTR blasfeo_dtrsv_ltn_mn
+#define TRSV_LTU_LIBSTR blasfeo_dtrsv_ltu
+#define TRSV_UNN_LIBSTR blasfeo_dtrsv_unn
+#define TRSV_UTN_LIBSTR blasfeo_dtrsv_utn
 
 #define COPY dcopy_
 #define GEMV dgemv_

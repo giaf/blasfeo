@@ -30,9 +30,11 @@
 #include <stdio.h>
 #include <math.h>
 
-#if defined(LA_BLAS)
+#if defined(LA_BLAS_WRAPPER)
 #if defined(REF_BLAS_BLIS)
 #include "s_blas_64.h"
+#elif defined(REF_BLAS_MKL)
+#include "mkl.h"
 #else
 #include "s_blas.h"
 #endif
@@ -45,20 +47,20 @@
 
 #define REAL float
 
-#define STRMAT s_strmat
-#define STRVEC s_strvec
+#define STRMAT blasfeo_smat
+#define STRVEC blasfeo_svec
 
-#define GELQF_LIBSTR sgelqf_libstr
-#define GELQF_WORK_SIZE_LIBSTR sgelqf_work_size_libstr
-#define GEQRF_LIBSTR sgeqrf_libstr
-#define GEQRF_WORK_SIZE_LIBSTR sgeqrf_work_size_libstr
+#define GELQF_LIBSTR blasfeo_sgelqf
+#define GELQF_WORK_SIZE_LIBSTR blasfeo_sgelqf_worksize
+#define GEQRF_LIBSTR blasfeo_sgeqrf
+#define GEQRF_WORK_SIZE_LIBSTR blasfeo_sgeqrf_worksize
 #define GETF2_NOPIVOT sgetf2_nopivot
-#define GETRF_NOPIVOT_LIBSTR sgetrf_nopivot_libstr
-#define GETRF_LIBSTR sgetrf_libstr
-#define POTRF_L_LIBSTR spotrf_l_libstr
-#define POTRF_L_MN_LIBSTR spotrf_l_mn_libstr
+#define GETRF_NOPIVOT_LIBSTR blasfeo_sgetrf_nopivot
+#define GETRF_LIBSTR blasfeo_sgetrf_rowpivot
+#define POTRF_L_LIBSTR blasfeo_spotrf_l
+#define POTRF_L_MN_LIBSTR blasfeo_spotrf_l_mn
 #define PSTRF_L_LIBSTR spstrf_l_libstr
-#define SYRK_POTRF_LN_LIBSTR ssyrk_spotrf_ln_libstr
+#define SYRK_POTRF_LN_LIBSTR blasfeo_ssyrk_spotrf_ln
 
 #define COPY scopy_
 #define GELQF sgelqf_

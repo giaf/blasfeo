@@ -55,6 +55,8 @@ void int_zeros_align(int **pA, int row, int col)
 	{
 #if defined(OS_WINDOWS)
 	*pA = (int *) _aligned_malloc( (row*col)*sizeof(int), 64 );
+#elif defined(__DSPACE__)
+	*pA = malloc((row*col)*sizeof(int));
 #else
 	void *temp;
 	int err = posix_memalign(&temp, 64, (row*col)*sizeof(int));
@@ -105,6 +107,24 @@ void int_print_mat(int row, int col, int *A, int lda)
 		printf("\n");
 		}
 	printf("\n");
+	}	
+
+
+
+/* prints a matrix in column-major format */
+void int_print_to_string_mat(char **buf_out, int row, int col, int *A, int lda)
+	{
+	int i, j;
+	for(i=0; i<row; i++)
+		{
+		for(j=0; j<col; j++)
+			{
+			*buf_out += sprintf(*buf_out, "%d ", A[i+lda*j]);
+			}
+		*buf_out += sprintf(*buf_out, "\n");
+		}
+	*buf_out += sprintf(*buf_out, "\n");
+	return;
 	}	
 
 

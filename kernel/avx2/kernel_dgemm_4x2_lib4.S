@@ -441,14 +441,13 @@ inner_kernel_dgemm_add_nn_2x4_lib4:
 	jle		4f // clean1
 
 	// unroll 0 1
-	vbroadcastf128	0(%r11), %ymm11 // A
-	vbroadcastf128	32(%r11), %ymm12 // A
 	vmovapd			0(%r12), %ymm13
 	vmovupd			16(%r12), %ymm14
 	vblendpd		$0x3, %ymm13, %ymm14, %ymm14
 	vshufpd			$0x0, %ymm14, %ymm14, %ymm13
 	vmulpd			%ymm11, %ymm13, %ymm15
 	vaddpd			%ymm0, %ymm15, %ymm0
+	vbroadcastf128	64(%r11), %ymm9 // A
 	vshufpd			$0xf, %ymm14, %ymm14, %ymm13
 	vmulpd			%ymm12, %ymm13, %ymm15
 	vaddpd			%ymm1, %ymm15, %ymm1
@@ -458,19 +457,20 @@ inner_kernel_dgemm_add_nn_2x4_lib4:
 	vshufpd			$0x0, %ymm14, %ymm14, %ymm13
 	vmulpd			%ymm11, %ymm13, %ymm15
 	vaddpd			%ymm2, %ymm15, %ymm2
+	vbroadcastf128	96(%r11), %ymm10 // A
 	vshufpd			$0xf, %ymm14, %ymm14, %ymm13
 	vmulpd			%ymm12, %ymm13, %ymm15
 	vaddpd			%ymm3, %ymm15, %ymm3
 
 	// unroll 2 3
-	vbroadcastf128	64(%r11), %ymm11 // A
-	vbroadcastf128	96(%r11), %ymm12 // A
 	vmovupd			16(%r12), %ymm13
 	vmovapd			32(%r12), %ymm14
+	addq	$128, %r11
 	vblendpd		$0x3, %ymm13, %ymm14, %ymm14
 	vshufpd			$0x0, %ymm14, %ymm14, %ymm13
 	vmulpd			%ymm9, %ymm13, %ymm15
 	vaddpd			%ymm0, %ymm15, %ymm0
+//	vbroadcastf128	0(%r11), %ymm11 // A
 	vshufpd			$0xf, %ymm14, %ymm14, %ymm13
 	vmulpd			%ymm10, %ymm13, %ymm15
 	vaddpd			%ymm1, %ymm15, %ymm1
@@ -480,6 +480,7 @@ inner_kernel_dgemm_add_nn_2x4_lib4:
 	vshufpd			$0x0, %ymm14, %ymm14, %ymm13
 	vmulpd			%ymm9, %ymm13, %ymm15
 	vaddpd			%ymm2, %ymm15, %ymm2
+//	vbroadcastf128	32(%r11), %ymm12 // A
 	vshufpd			$0xf, %ymm14, %ymm14, %ymm13
 	vmulpd			%ymm10, %ymm13, %ymm15
 	vaddpd			%ymm3, %ymm15, %ymm3
@@ -599,11 +600,10 @@ inner_edge_dgemm_add_nn_4x2_lib4:
 
 1:
 	vmovapd			0(%r11), %ymm8
-	vmovapd			0(%r11, %r12, 1), %ymm9
-	vbroadcastsd	0(%r13), %ymm12
+	vbroadcastsd	0(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm0, %ymm0
-	vbroadcastsd	32(%r13), %ymm12
+	vbroadcastsd	32(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm15, %ymm1, %ymm1
 
@@ -1061,17 +1061,15 @@ inner_store_2x2_lib4:
 //
 // input arguments:
 // r10  <- D
-// r11  <- 4*sdd*sizeof(double)
-// r12d  <- km
-// r13d  <- kn
+// r11d  <- km
+// r12d  <- kn
 // ymm0 <- [d00 d10 d20 d30]
 // ymm1 <- [d01 d11 d21 d31]
 //
 // output arguments:
 // r10  <- D
-// r11  <- 4*sdd*sizeof(double)
-// r12d  <- km
-// r13d  <- kn
+// r11d  <- km
+// r12d  <- kn
 // ymm0 <- [d00 d10 d20 d30]
 // ymm1 <- [d01 d11 d21 d31]
 
@@ -1090,7 +1088,7 @@ inner_store_4x2_vs_lib4:
 #endif
 #endif
 	
-	vcvtsi2sd	%r12d, %xmm15, %xmm15
+	vcvtsi2sd	%r11d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd		.LC02(%rip), %ymm14
 #elif defined(OS_MAC)
@@ -1101,7 +1099,7 @@ inner_store_4x2_vs_lib4:
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	vmaskmovpd	%ymm0, %ymm15,  0(%r10)
-	cmpl		$2, %r13d
+	cmpl		$2, %r12d
 	jl			0f // end
 	vmaskmovpd	%ymm1, %ymm15, 32(%r10)
 

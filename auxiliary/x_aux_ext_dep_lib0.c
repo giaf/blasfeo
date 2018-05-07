@@ -27,7 +27,7 @@
 **************************************************************************************************/
 
 
-#if defined(LA_BLAS) | defined(LA_REFERENCE) | defined(TESTING_MODE)
+#if defined(LA_BLAS_WRAPPER) | defined(LA_REFERENCE) | defined(TESTING_MODE)
 
 
 
@@ -39,7 +39,8 @@ void ALLOCATE_STRMAT(int m, int n, struct STRMAT *sA)
 	ZEROS(&(sA->pA), sA->m, sA->n);
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
 	ZEROS(&(sA->dA), tmp, 1);
-	sA->memory_size = (m*n+tmp)*sizeof(REAL);
+	sA->memsize = (m*n+tmp)*sizeof(REAL);
+	sA->use_dA = 0;
 	return;
 	}
 
@@ -60,7 +61,7 @@ void ALLOCATE_STRVEC(int m, struct STRVEC *sa)
 	{
 	sa->m = m;
 	ZEROS(&(sa->pa), sa->m, 1);
-	sa->memory_size = m*sizeof(REAL);
+	sa->memsize = m*sizeof(REAL);
 	return;
 	}
 
@@ -117,11 +118,31 @@ void PRINT_TO_FILE_STRMAT(FILE *file, int m, int n, struct STRMAT *sA, int ai, i
 
 
 
+// print a matrix structure
+void PRINT_TO_STRING_STRMAT(char **out_buf, int m, int n, struct STRMAT *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	PRINT_TO_STRING_MAT(out_buf, m, n, pA, lda);
+	return;
+	}
+
+
+
 // print a vector structure
 void PRINT_TO_FILE_STRVEC(FILE *file, int m, struct STRVEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;
 	PRINT_TO_FILE_MAT(file, m, 1, pa, m);
+	return;
+	}
+
+
+// print a vector structure
+void PRINT_TO_STRING_STRVEC(char **out_buf, int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_TO_STRING_MAT(out_buf, m, 1, pa, m);
 	return;
 	}
 
@@ -135,6 +156,15 @@ void PRINT_TO_FILE_TRAN_STRVEC(FILE *file, int m, struct STRVEC *sa, int ai)
 	return;
 	}
 
+
+
+// print and transpose a vector structure
+void PRINT_TO_STRING_TRAN_STRVEC(char **buf_out, int m, struct STRVEC *sa, int ai)
+	{
+	REAL *pa = sa->pa + ai;
+	PRINT_TO_STRING_MAT(buf_out, 1, m, pa, 1);
+	return;
+	}
 
 
 // print a matrix structure

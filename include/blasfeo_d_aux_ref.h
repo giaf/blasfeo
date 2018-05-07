@@ -33,6 +33,11 @@
  *
  */
 
+#ifndef BLASFEO_D_AUX_REF_H_
+#define BLASFEO_D_AUX_REF_H_
+
+#include "blasfeo_common.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -40,22 +45,29 @@ extern "C" {
 
 // expose reference BLASFEO for testing
 
-void blasfeo_d_create_strmat_ref(int m, int n, struct d_strmat_ref *sA, void *memory);
-void blasfeo_d_cvt_mat2strmat_ref(int m, int n, double *A, int lda, struct d_strmat_ref *sA, int ai, int aj);
-int blasfeo_d_memsize_strmat_ref(int m, int n);
+void blasfeo_create_dmat_ref  (int m, int n, struct blasfeo_dmat_ref *sA, void *memory);
+void blasfeo_create_dvec_ref  (int m, int n, struct blasfeo_dvec_ref *sA, void *memory);
+
+void blasfeo_free_dmat_ref(struct blasfeo_dmat_ref *sA);
+void blasfeo_free_dvec_ref(struct blasfeo_dvec_ref *sa);
+
+void blasfeo_pack_dmat_ref    (int m, int n, double *A, int lda, struct blasfeo_dmat_ref *sA, int ai, int aj);
+int  blasfeo_memsize_dmat_ref (int m, int n);
 
 void blasfeo_dgecp_ref(int m, int n,\
-					struct d_strmat_ref *sA, int ai, int aj,\
-					struct d_strmat_ref *sB, int bi, int bj);
+					struct blasfeo_dmat_ref *sA, int ai, int aj,\
+					struct blasfeo_dmat_ref *sB, int bi, int bj);
 void blasfeo_dgesc_ref(int m, int n,\
 					double alpha,\
-					struct d_strmat_ref *sA, int ai, int aj);
+					struct blasfeo_dmat_ref *sA, int ai, int aj);
 void blasfeo_dgecpsc_ref(int m, int n,
 					double alpha,\
-					struct d_strmat_ref *sA, int ai, int aj,\
-					struct d_strmat_ref *sB, int bi, int bj);
+					struct blasfeo_dmat_ref *sA, int ai, int aj,\
+					struct blasfeo_dmat_ref *sB, int bi, int bj);
 
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif  // BLASFEO_D_AUX_REF_H_

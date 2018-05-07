@@ -33,8 +33,12 @@
 #define FABS fabsf
 #define SQRT sqrtf
 
-#if defined(LA_BLAS)
+#if defined(LA_BLAS_WRAPPER)
+#if defined(REF_BLAS_MKL)
+#include "mkl.h"
+#else
 #include "s_blas.h"
+#endif
 #endif
 
 #include "../include/blasfeo_common.h"
@@ -44,17 +48,18 @@
 
 #define REAL float
 
-#define STRMAT s_strmat
-#define STRVEC s_strvec
+#define STRMAT blasfeo_smat
+#define STRVEC blasfeo_svec
 
-#define AXPY_LIBSTR saxpy_libstr
-#define AXPBY_LIBSTR saxpby_libstr
-#define VECMULACC_LIBSTR svecmulacc_libstr
-#define VECMULDOT_LIBSTR svecmuldot_libstr
-#define DOT_LIBSTR sdot_libstr
-#define ROTG_LIBSTR srotg_libstr
-#define COLROT_LIBSTR scolrot_libstr
-#define ROWROT_LIBSTR srowrot_libstr
+#define AXPY_LIBSTR blasfeo_saxpy
+#define AXPBY_LIBSTR blasfeo_saxpby
+#define VECMUL_LIBSTR blasfeo_svecmul
+#define VECMULACC_LIBSTR blasfeo_svecmulacc
+#define VECMULDOT_LIBSTR blasfeo_svecmuldot
+#define DOT_LIBSTR blasfeo_sdot
+#define ROTG_LIBSTR blasfeo_srotg
+#define COLROT_LIBSTR blasfeo_scolrot
+#define ROWROT_LIBSTR blasfeo_srowrot
 
 #define AXPY saxpy_
 #define COPY scopy_

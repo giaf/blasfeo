@@ -19,8 +19,8 @@ The currently supported compter architectures (TARGET) are:
 
 The optimized linear algebra kernels are currently provided for OS_LINUX (x86_64 64-bit, ARMv8A 64-bit, ARMv7A 32-bit), OS_WINDOWS (x86_64 64-bit) and OS_MAC (x86_64 64-bit).
 
-BLASFEO employes structures to describe matrices (d_strmat) and vectors (d_strvec), defined in include/blasfeo_common.h.
-The actual implementation of d_strmat and d_strvec depends on the LA and TARGET choice.
+BLASFEO employes structures to describe matrices (blasfeo_dmat) and vectors (blasfeo_dvec), defined in include/blasfeo_common.h.
+The actual implementation of blasfeo_dmat and blasfeo_dvec depends on the LA and TARGET choice.
 
 More information about BLASFEO can be found in the ArXiv paper at the URL
 https://arxiv.org/abs/1704.02457
@@ -28,3 +28,10 @@ or in the slides at the URL
 www.cs.utexas.edu/users/flame/BLISRetreat2017/slides/Gianluca_BLIS_Retreat_2017.pdf
 or in the video at the URL
 https://utexas.app.box.com/s/yt2d693v8xc37yyjklnf4a4y1ldvyzon
+
+--------------------------------------------------
+
+Notes:
+
+- 06-01-2018: BLASFEO employs now a new naming convention.
+The bash script change_name.sh can be used to automatically change the source code of any software using BLASFEO to adapt it to the new naming convention.

@@ -36,14 +36,13 @@
  *
  */
 
-
-#if defined(EXT_DEP)
-
+#ifndef BLASFEO_D_AUX_EXT_DEP_H_
+#define BLASFEO_D_AUX_EXT_DEP_H_
 
 
 #include <stdio.h>
 
-
+#include "blasfeo_common.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -68,6 +67,8 @@ void d_print_mat(int m, int n, double *A, int lda);
 void d_print_tran_mat(int row, int col, double *A, int lda);
 // print to file a column-major matrix
 void d_print_to_file_mat(FILE *file, int row, int col, double *A, int lda);
+// print to string a column-major matrix
+void d_print_to_string_mat(char **buf_out, int row, int col, double *A, int lda);
 // print to file the transposed of a column-major matrix
 void d_print_tran_to_file_mat(FILE *file, int row, int col, double *A, int lda);
 // print in exponential notation a column-major matrix
@@ -77,34 +78,38 @@ void d_print_e_tran_mat(int row, int col, double *A, int lda);
 
 /* strmat and strvec */
 
-#ifdef BLASFEO_COMMON
 // create a strmat for a matrix of size m*n by dynamically allocating memory
-void d_allocate_strmat(int m, int n, struct d_strmat *sA);
+void blasfeo_allocate_dmat(int m, int n, struct blasfeo_dmat *sA);
 // create a strvec for a vector of size m by dynamically allocating memory
-void d_allocate_strvec(int m, struct d_strvec *sa);
-// free the memory allocated by d_allocate_strmat
-void d_free_strmat(struct d_strmat *sA);
-// free the memory allocated by d_allocate_strvec
-void d_free_strvec(struct d_strvec *sa);
+void blasfeo_allocate_dvec(int m, struct blasfeo_dvec *sa);
+// free the memory allocated by blasfeo_allocate_dmat
+void blasfeo_free_dmat(struct blasfeo_dmat *sA);
+// free the memory allocated by blasfeo_allocate_dvec
+void blasfeo_free_dvec(struct blasfeo_dvec *sa);
 // print a strmat
-void d_print_strmat(int m, int n, struct d_strmat *sA, int ai, int aj);
+void blasfeo_print_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 // print in exponential notation a strmat
-void d_print_e_strmat(int m, int n, struct d_strmat *sA, int ai, int aj);
+void blasfeo_print_exp_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 // print to file a strmat
-void d_print_to_file_strmat(FILE *file, int m, int n, struct d_strmat *sA, int ai, int aj);
+void blasfeo_print_to_file_dmat(FILE *file, int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
+// print to string a strmat
+void blasfeo_print_to_string_dmat(char **buf_out, int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 // print a strvec
-void d_print_strvec(int m, struct d_strvec *sa, int ai);
+void blasfeo_print_dvec(int m, struct blasfeo_dvec *sa, int ai);
 // print in exponential notation a strvec
-void d_print_e_strvec(int m, struct d_strvec *sa, int ai);
+void blasfeo_print_exp_dvec(int m, struct blasfeo_dvec *sa, int ai);
 // print to file a strvec
-void d_print_to_file_strvec(FILE *file, int m, struct d_strvec *sa, int ai);
+void blasfeo_print_to_file_dvec(FILE *file, int m, struct blasfeo_dvec *sa, int ai);
+// print to string a strvec
+void blasfeo_print_to_string_dvec(char **buf_out, int m, struct blasfeo_dvec *sa, int ai);
 // print the transposed of a strvec
-void d_print_tran_strvec(int m, struct d_strvec *sa, int ai);
+void blasfeo_print_tran_dvec(int m, struct blasfeo_dvec *sa, int ai);
 // print in exponential notation the transposed of a strvec
-void d_print_e_tran_strvec(int m, struct d_strvec *sa, int ai);
+void blasfeo_print_exp_tran_dvec(int m, struct blasfeo_dvec *sa, int ai);
 // print to file the transposed of a strvec
-void d_print_tran_to_file_strvec(FILE *file, int m, struct d_strvec *sa, int ai);
-#endif
+void blasfeo_print_to_file_tran_dvec(FILE *file, int m, struct blasfeo_dvec *sa, int ai);
+// print to string the transposed of a strvec
+void blasfeo_print_to_string_tran_dvec(char **buf_out, int m, struct blasfeo_dvec *sa, int ai);
 
 
 
@@ -112,6 +117,4 @@ void d_print_tran_to_file_strvec(FILE *file, int m, struct d_strvec *sa, int ai)
 }
 #endif
 
-
-
-#endif // EXT_DEP
+#endif  // BLASFEO_D_AUX_EXT_DEP_H_

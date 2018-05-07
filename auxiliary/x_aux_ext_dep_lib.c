@@ -48,7 +48,9 @@ void ZEROS(REAL **pA, int row, int col)
 void ZEROS_ALIGN(REAL **pA, int row, int col)
 	{
 #if defined(OS_WINDOWS)
-	*pA = (REAL *) _aligneMALLOC( (row*col)*sizeof(REAL), 64 );
+	*pA = (REAL *) _aligned_malloc( (row*col)*sizeof(REAL), 64 );
+#elif defined(__DSPACE__)
+	*pA = malloc((row*col)*sizeof(REAL));
 #else
 	void *temp;
 	int err = posix_memalign(&temp, 64, (row*col)*sizeof(REAL));
@@ -78,7 +80,7 @@ void FREE(REAL *pA)
 void FREE_ALIGN(REAL *pA)
 	{
 #if defined(OS_WINDOWS)
-	_aligneFREE( pA );
+	_aligned_free( pA );
 #else
 	free( pA );
 #endif
@@ -134,6 +136,24 @@ void PRINT_TO_FILE_MAT(FILE *file, int row, int col, REAL *A, int lda)
 		fprintf(file, "\n");
 		}
 	fprintf(file, "\n");
+	}
+
+
+
+/* prints a matrix in column-major format */
+void PRINT_TO_STRING_MAT(char **buf_out, int row, int col, REAL *A, int lda)
+	{
+	int i, j;
+	for(i=0; i<row; i++)
+		{
+		for(j=0; j<col; j++)
+			{
+			*buf_out += sprintf(*buf_out, "%9.5f ", A[i+lda*j]);
+			}
+		*buf_out += sprintf(*buf_out, "\n");
+		}
+	*buf_out += sprintf(*buf_out, "\n");
+	return;
 	}
 
 

@@ -9,6 +9,8 @@
 #include "../include/blasfeo_d_kernel.h"
 #include "../include/blasfeo_d_blas.h"
 
+int kernel_dgemm_nt_4x4_lib4_test(int n, double *alpha, double *A, double *B, double *beta, double *C, double *D);
+
 int main()
 	{
 
@@ -26,26 +28,27 @@ int main()
 	for(ii=0; ii<n; ii++) B[ii*(n+1)] = 1.0;
 	d_print_mat(n, n, B, n);
 
-	struct d_strmat sA;
-	d_allocate_strmat(n, n, &sA);
-	d_cvt_mat2strmat(n, n, A, n, &sA, 0, 0);
-	d_print_strmat(n, n, &sA, 0, 0);
+	struct blasfeo_dmat sA;
+	blasfeo_allocate_dmat(n, n, &sA);
+	blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
+	blasfeo_print_dmat(n, n, &sA, 0, 0);
 
-	struct d_strmat sB;
-	d_allocate_strmat(n, n, &sB);
-	d_cvt_mat2strmat(n, n, B, n, &sB, 0, 0);
-	d_print_strmat(n, n, &sB, 0, 0);
+	struct blasfeo_dmat sB;
+	blasfeo_allocate_dmat(n, n, &sB);
+	blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
+	blasfeo_print_dmat(n, n, &sB, 0, 0);
 
-	struct d_strmat sD;
-	d_allocate_strmat(n, n, &sD);
+	struct blasfeo_dmat sD;
+	blasfeo_allocate_dmat(n, n, &sD);
 
-	struct d_strmat sC;
-	d_allocate_strmat(n, n, &sC);
+	struct blasfeo_dmat sC;
+	blasfeo_allocate_dmat(n, n, &sC);
 
 	double alpha = 1.0;
 	double beta = 0.0;
 	int ret = kernel_dgemm_nt_4x4_lib4_test(n, &alpha, sB.pA, sA.pA, &beta, sB.pA, sD.pA);
-	d_print_strmat(n, n, &sD, 0, 0);
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+
 //	printf("\n%ld %ld\n", (long long) n, ret);
 //	printf("\n%ld %ld\n", (long long) &alpha, ret);
 //	printf("\n%ld %ld\n", (long long) sA.pA, ret);

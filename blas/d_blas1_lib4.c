@@ -48,7 +48,7 @@
 
 
 
-void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+void blasfeo_daxpy(int m, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -119,7 +119,7 @@ void daxpy_libstr(int m, double alpha, struct d_strvec *sx, int xi, struct d_str
 
 
 
-void daxpby_libstr(int m, double alpha, struct d_strvec *sx, int xi, double beta, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+void blasfeo_daxpby(int m, double alpha, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -203,7 +203,44 @@ void daxpby_libstr(int m, double alpha, struct d_strvec *sx, int xi, double beta
 
 
 // multiply two vectors
-void dvecmulacc_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+void blasfeo_dvecmul(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+	{
+
+	if(m<=0)
+		return;
+
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+	int ii;
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	__m256d
+		v_tmp,
+		v_x0, v_y0;
+#endif
+
+	ii = 0;
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<m-3; ii+=4)
+		{
+		v_x0 = _mm256_loadu_pd( &x[ii+0] );
+		v_y0 = _mm256_loadu_pd( &y[ii+0] );
+		v_tmp = _mm256_mul_pd( v_x0, v_y0 );
+		_mm256_storeu_pd( &z[ii+0], v_tmp );
+		}
+#endif
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = x[ii+0] * y[ii+0];
+		}
+	return;
+	}
+
+
+
+// multiply two vectors and add result to another vector
+void blasfeo_dvecmulacc(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -242,7 +279,7 @@ void dvecmulacc_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, 
 
 
 // multiply two vectors and compute dot product
-double dvecmuldot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi, struct d_strvec *sz, int zi)
+double blasfeo_dvecmuldot(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -294,7 +331,7 @@ double dvecmuldot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy
 
 
 // compute dot product of two vectors
-double ddot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int yi)
+double blasfeo_ddot(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi)
 	{
 
 	if(m<=0)
@@ -379,7 +416,7 @@ double ddot_libstr(int m, struct d_strvec *sx, int xi, struct d_strvec *sy, int 
 
 
 
-void drotg_libstr(double a, double b, double *c, double *s)
+void blasfeo_drotg(double a, double b, double *c, double *s)
 	{
 	double aa = fabs(a);
 	double bb = fabs(b);
@@ -405,7 +442,7 @@ void drotg_libstr(double a, double b, double *c, double *s)
 
 
 
-void dcolrot_libstr(int m, struct d_strmat *sA, int ai, int aj0, int aj1, double c, double s)
+void blasfeo_dcolrot(int m, struct blasfeo_dmat *sA, int ai, int aj0, int aj1, double c, double s)
 	{
 	const int ps = 4;
 	int sda = sA->cn;
@@ -465,7 +502,7 @@ void dcolrot_libstr(int m, struct d_strmat *sA, int ai, int aj0, int aj1, double
 	
 
 
-void drowrot_libstr(int m, struct d_strmat *sA, int ai0, int ai1, int aj, double c, double s)
+void blasfeo_drowrot(int m, struct blasfeo_dmat *sA, int ai0, int ai1, int aj, double c, double s)
 	{
 	const int ps = 4;
 	int sda = sA->cn;

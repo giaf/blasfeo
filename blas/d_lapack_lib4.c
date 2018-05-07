@@ -566,7 +566,7 @@ void dlauum_dpotrf_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *
 
 
 // dpotrf
-void dpotrf_l_libstr(int m, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void blasfeo_dpotrf_l(int m, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0)
@@ -574,7 +574,7 @@ void dpotrf_l_libstr(int m, struct d_strmat *sC, int ci, int cj, struct d_strmat
 
 	if(ci!=0 | di!=0)
 		{
-		printf("\ndpotrf_l_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+		printf("\nblasfeo_dpotrf_l: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
 
@@ -620,7 +620,7 @@ void dpotrf_l_libstr(int m, struct d_strmat *sC, int ci, int cj, struct d_strmat
 			goto left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -708,6 +708,19 @@ void dpotrf_l_libstr(int m, struct d_strmat *sC, int ci, int cj, struct d_strmat
 	kernel_dpotrf_nt_l_4x4_vs_lib4(j+4, &pD[(i+4)*sdd], &pD[(j+4)*sdd], &pC[(j+4)*ps+(i+4)*sdc], &pD[(j+4)*ps+(i+4)*sdd], &dD[j+4], m-i-4, m-j-4);
 	return;
 #endif
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	left_8:
+	j = 0;
+	for(; j<i; j+=4)
+		{
+		kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &dD[j], m-i, m-j);
+		kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(j, &pD[(i+4)*sdd], &pD[j*sdd], &pC[j*ps+(i+4)*sdc], &pD[j*ps+(i+4)*sdd], &pD[j*ps+j*sdd], &dD[j], m-(i+4), m-j);
+		}
+	kernel_dpotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &dD[j], m-i, m-j);
+	kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(j, &pD[(i+4)*sdd], &pD[j*sdd], &pC[j*ps+(i+4)*sdc], &pD[j*ps+(i+4)*sdd], &pD[j*ps+j*sdd], &dD[j], m-(i+4), m-j);
+	kernel_dpotrf_nt_l_4x4_vs_lib4(j+4, &pD[(i+4)*sdd], &pD[(j+4)*sdd], &pC[(j+4)*ps+(i+4)*sdc], &pD[(j+4)*ps+(i+4)*sdd], &dD[j+4], m-i-4, m-j-4);
+	return;
+#endif
 
 #if defined(TARGET_X64_INTEL_HASWELL)
 	left_4:
@@ -731,11 +744,22 @@ void dpotrf_l_libstr(int m, struct d_strmat *sC, int ci, int cj, struct d_strmat
 #else
 	left_4:
 	j = 0;
-	for(; j<i; j+=4)
+	if(m-i==4)
 		{
-		kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &dD[j], m-i, m-j);
+		for(; j<i; j+=4)
+			{
+			kernel_dtrsm_nt_rl_inv_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &dD[j]);
+			}
+		kernel_dpotrf_nt_l_4x4_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &dD[j]);
 		}
-	kernel_dpotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &dD[j], m-i, m-j);
+	else
+		{
+		for(; j<i; j+=4)
+			{
+			kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &dD[j], m-i, m-j);
+			}
+		kernel_dpotrf_nt_l_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &dD[j], m-i, m-j);
+		}
 	return;
 #endif
 
@@ -744,7 +768,7 @@ void dpotrf_l_libstr(int m, struct d_strmat *sC, int ci, int cj, struct d_strmat
 
 
 // dpotrf
-void dpotrf_l_mn_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void blasfeo_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)
@@ -752,7 +776,7 @@ void dpotrf_l_mn_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struc
 
 	if(ci!=0 | di!=0)
 		{
-		printf("\ndpotrf_l_mn_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+		printf("\nblasfeo_dpotrf_l_mn: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
 
@@ -1014,7 +1038,7 @@ void dpotrf_l_mn_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struc
 
 
 // dsyrk dpotrf
-void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, int aj, struct d_strmat *sB, int bi, int bj, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void blasfeo_dsyrk_dpotrf_ln(int m, int n, int k, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)
@@ -1022,7 +1046,7 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
-		printf("\ndsyrk_dpotrf_ln_libstr: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
+		printf("\nblasfeo_dsyrk_dpotrf_ln: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
 		}
 
@@ -1292,7 +1316,7 @@ void dsyrk_dpotrf_ln_libstr(int m, int n, int k, struct d_strmat *sA, int ai, in
 
 
 // dgetrf without pivoting
-void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj)
+void blasfeo_dgetrf_nopivot(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	if(ci!=0 | di!=0)
 		{
@@ -1316,11 +1340,11 @@ void dgetrf_nopivot_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, st
 
 
 // dgetrf pivoting
-void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, int *ipiv)
+void blasfeo_dgetrf_rowpivot(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv)
 	{
 	if(ci!=0 | di!=0)
 		{
-		printf("\ndgetrf_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+		printf("\nblasfeo_dgetrf_rowpivot: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
 	const int ps = 4;
@@ -1351,7 +1375,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 
 	// needs to perform row-excanges on the yet-to-be-factorized matrix too
 	if(pC!=pD)
-		dgecp_libstr(m, n, sC, ci, cj, sD, di, dj);
+		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
 
 	// minimum matrix size
 	p = n<m ? n : m; // XXX
@@ -2420,7 +2444,7 @@ void dgetrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 
 
 
-int dgeqrf_work_size_libstr(int m, int n)
+int blasfeo_dgeqrf_worksize(int m, int n)
 	{
 	const int ps = 4;
 	int cm = (m+ps-1)/ps*ps;
@@ -2431,11 +2455,15 @@ int dgeqrf_work_size_libstr(int m, int n)
 
 
 
-void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, void *v_work)
+void blasfeo_dgeqrf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *v_work)
 	{
-	char *work = (char *) v_work;
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	char *work = (char *) v_work;
 	const int ps = 4;
 
 	// extract dimensions
@@ -2443,8 +2471,8 @@ void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	int sdd = sD->cn;
 
 	// go to submatrix
-	double *pC = &(DMATEL_LIBSTR(sC,ci,cj));
-	double *pD = &(DMATEL_LIBSTR(sD,di,dj));
+	double *pC = &(BLASFEO_DMATEL(sC,ci,cj));
+	double *pD = &(BLASFEO_DMATEL(sD,di,dj));
 
 	double *dD = sD->dA + di;
 	int cm = (m+ps-1)/ps*ps;
@@ -2460,7 +2488,7 @@ void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 
 	// copy strmat submatrix
 	if(pC!=pD)
-		dgecp_libstr(m, n, sC, ci, cj, sD, di, dj);
+		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
 
 	int ii;
 	int imax0 = (ps-(di&(ps-1)))&(ps-1);
@@ -2504,17 +2532,21 @@ void dgeqrf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 
 
 
-int dgelqf_work_size_libstr(int m, int n)
+int blasfeo_dgelqf_worksize(int m, int n)
 	{
 	return 0;
 	}
 
 
 
-void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_strmat *sD, int di, int dj, void *work)
+void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
 	const int ps = 4;
 
 	// extract dimensions
@@ -2522,8 +2554,8 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 	int sdd = sD->cn;
 
 	// go to submatrix
-	double *pC = &(DMATEL_LIBSTR(sC,ci,cj));
-	double *pD = &(DMATEL_LIBSTR(sD,di,dj));
+	double *pC = &(BLASFEO_DMATEL(sC,ci,cj));
+	double *pD = &(BLASFEO_DMATEL(sD,di,dj));
 
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -2539,7 +2571,7 @@ void dgelqf_libstr(int m, int n, struct d_strmat *sC, int ci, int cj, struct d_s
 
 	if(pC!=pD)
 		// copy strmat submatrix
-		dgecp_libstr(m, n, sC, ci, cj, sD, di, dj);
+		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
 
 	int ii, jj, ll;
 	int imax0 = (ps-(di&(ps-1)))&(ps-1);

@@ -26,7 +26,10 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#ifndef BLASFEO_M_AUX_H_
+#define BLASFEO_M_AUX_H_
 
+#include "blasfeo_common.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,12 +37,14 @@ extern "C" {
 
 
 
-void m_cvt_d2s_strvec(int m, struct d_strvec *vd, int vdi, struct s_strvec *vs, int vsi);
-void m_cvt_s2d_strvec(int m, struct s_strvec *vs, int vsi, struct d_strvec *vd, int vdi);
-void m_cvt_d2s_strmat(int m, int n, struct d_strmat *Md, int mid, int nid, struct s_strmat *Ms, int mis, int nis);
-void m_cvt_s2d_strmat(int m, int n, struct s_strmat *Ms, int mis, int nis, struct d_strmat *Md, int mid, int nid);
+void m_cvt_d2blasfeo_svec(int m, struct blasfeo_dvec *vd, int vdi, struct blasfeo_svec *vs, int vsi);
+void m_cvt_s2blasfeo_dvec(int m, struct blasfeo_svec *vs, int vsi, struct blasfeo_dvec *vd, int vdi);
+void m_cvt_d2blasfeo_smat(int m, int n, struct blasfeo_dmat *Md, int mid, int nid, struct blasfeo_smat *Ms, int mis, int nis);
+void m_cvt_s2blasfeo_dmat(int m, int n, struct blasfeo_smat *Ms, int mis, int nis, struct blasfeo_dmat *Md, int mid, int nid);
 
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif  // BLASFEO_M_AUX_H_

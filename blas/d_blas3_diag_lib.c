@@ -36,11 +36,11 @@
 
 #define REAL double
 
-#define STRMAT d_strmat
-#define STRVEC d_strvec
+#define STRMAT blasfeo_dmat
+#define STRVEC blasfeo_dvec
 
-#define GEMM_R_DIAG_LIBSTR dgemm_r_diag_libstr
-#define GEMM_L_DIAG_LIBSTR dgemm_l_diag_libstr
+#define GEMM_R_DIAG_LIBSTR blasfeo_dgemm_nd
+#define GEMM_L_DIAG_LIBSTR blasfeo_dgemm_dn
 
 
 

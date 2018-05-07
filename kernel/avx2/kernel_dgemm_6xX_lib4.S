@@ -1747,17 +1747,17 @@ inner_scale_ab_8x6_lib4:
 	vmovapd		160(%r12), %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm5
 
-	vmovapd		0(%r12, %r13, 1), %xmm15
+	vmovapd		0(%r12, %r13, 1), %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm6
-	vmovapd		32(%r12, %r13, 1), %xmm15
+	vmovapd		32(%r12, %r13, 1), %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm7
-	vmovapd		64(%r12, %r13, 1), %xmm15
+	vmovapd		64(%r12, %r13, 1), %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm8
-	vmovapd		96(%r12, %r13, 1), %xmm15
+	vmovapd		96(%r12, %r13, 1), %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm9
-	vmovapd		128(%r12, %r13, 1), %xmm15
+	vmovapd		128(%r12, %r13, 1), %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm10
-	vmovapd		160(%r12, %r13, 1), %xmm15
+	vmovapd		160(%r12, %r13, 1), %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm11
 
 0:
@@ -1768,7 +1768,7 @@ inner_scale_ab_8x6_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_scale_ab_6x8_lib4, .-inner_scale_ab_6x8_lib4
+	.size	inner_scale_ab_8x6_lib4, .-inner_scale_ab_8x6_lib4
 #endif
 #endif
 
