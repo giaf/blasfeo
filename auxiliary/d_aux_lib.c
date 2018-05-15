@@ -322,6 +322,22 @@ void blasfeo_dcolin(int kmax, struct blasfeo_dvec *sx, int xi, struct blasfeo_dm
 
 
 
+// scale a column
+void blasfeo_dcolsc(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int aj)
+	{
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
+	int lda = sA->m;
+	double *pA = sA->pA + ai + aj*lda;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		pA[ii] *= alpha;
+	return;
+	}
+
+
+
 // swap two cols of two matrix structs
 void blasfeo_dcolsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
 	{
