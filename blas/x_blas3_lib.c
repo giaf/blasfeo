@@ -1180,7 +1180,7 @@ void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int a
 
 
 
-#elif defined(LA_BLAS)
+#elif defined(LA_BLAS_WRAPPER)
 
 
 
