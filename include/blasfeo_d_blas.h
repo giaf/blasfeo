@@ -167,6 +167,8 @@ int blasfeo_dgeqrf_worksize(int m, int n); // in bytes
 // D <= lq( C )
 void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work);
 int blasfeo_dgelqf_worksize(int m, int n); // in bytes
+// D <= lq( C ), positive diagonal elements
+void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work);
 
 
 

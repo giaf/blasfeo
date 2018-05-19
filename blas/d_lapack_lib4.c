@@ -2720,6 +2720,17 @@ void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 
 
 
+// LQ factorization with positive diagonal elements
+void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
+	{
+	if(m<=0 | n<=0)
+		return;
+	printf("\nblasfeo_dgelqf_pd: feature not implemented yet\n");
+	exit(1);
+	}
+
+
+
 #else
 
 #error : wrong LA choice
