@@ -166,11 +166,11 @@ void blasfeo_sgelqf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struc
 int blasfeo_sgelqf_worksize(int m, int n); // in bytes
 // D <= lq( C ), positive diagonal elements
 void blasfeo_sgelqf_pd(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work);
-// [D, A] <= lq( [D, A] ), positive diagonal elements
-// array of matrices [D, A] with:
-// D diagonal (on input), lower triangular (on output), of size (m)x(m)
+// [L, A] <= lq( [L, A] ), positive diagonal elements
+// array of matrices [L, A] with:
+// L lower triangular, of size (m)x(m)
 // A full, of size (m)x(n1)
-void blasfeo_sgelqf_pd_da(int m, int n1, struct blasfeo_smat *sD, int di, int dj, struct blasfeo_smat *sA, int ai, int aj, void *work);
+void blasfeo_sgelqf_pd_la(int m, int n1, struct blasfeo_smat *sD, int di, int dj, struct blasfeo_smat *sA, int ai, int aj, void *work);
 
 
 

@@ -2030,6 +2030,7 @@ void GELQF_PD_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STR
 
 
 
+#if 0
 // LQ factorization with positive diagonal elements
 // [D, A] <= lq( [D. A] )
 // array of matrices [D, A] with
@@ -2290,6 +2291,267 @@ void GELQF_PD_DA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct
 			for(kk=0; kk<n1; kk++)
 				{
 				pA10[jj+lda*kk] += w0 * pv0[0+lda*kk];
+				}
+			}
+		}
+	return;
+	}
+#endif
+
+
+
+// LQ factorization with positive diagonal elements
+// [L, A] <= lq( [L. A] )
+// array of matrices [L, A] with
+// L lower triangular, of size (m)x(m)
+// A full of size (m)x(n1)
+void GELQF_PD_LA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct STRMAT *sA, int ai, int aj, void *work)
+	{
+	if(m<=0)
+		return;
+	
+	// invalidate stored inverse diagonal of result matrix
+	sA->use_dA = 0;
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	int lda = sA->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA+ai+aj*lda; // full matrix
+	REAL *pD = sD->pA+di+dj*ldd; // diagonal matrix
+	REAL *dA = sA->dA+ai; // vectors of tau
+	REAL *dD = sD->dA+di; // vectors of tau
+	REAL alpha, beta, sigma, tmp, w0, w1;
+	REAL *pA00, *pD00, *pv0, *pv1;
+	REAL pW[4] = {0.0, 0.0, 0.0, 0.0};
+	int ldw = 2;
+	REAL pT[4] = {0.0, 0.0, 0.0, 0.0};
+	int ldb = 2;
+	int jmax, kmax;
+	ii = 0;
+#if 1
+	for(; ii<m-1; ii+=2)
+		{
+		// first row
+		pD00 = &pD[ii+ldd*ii];
+		pA00 = &pA[ii+lda*0];
+		sigma = 0.0;
+		for(jj=0; jj<n1; jj++)
+			{
+			tmp = pA00[0+lda*jj];
+			sigma += tmp*tmp;
+			}
+		if(sigma==0.0)
+			{
+			// tau0
+			dD[ii] = 0.0;
+			}
+		else
+			{
+			alpha = pD00[0+ldd*0];
+			beta = sigma + alpha*alpha;
+			beta = sqrt(beta);
+			if(alpha<=0)
+				tmp = alpha-beta;
+			else
+				tmp = -sigma/(alpha+beta);
+			// tau0
+			dD[ii] = 2*tmp*tmp/(sigma+tmp*tmp);
+			tmp = 1.0/tmp;
+			// compute v0
+			pD00[0+ldd*0] = beta;
+			for(jj=0; jj<n1; jj++)
+				pA00[0+lda*jj] *= tmp;
+			}
+		// gemv_t & ger
+		pv0 = &pA00[0+lda*0];
+		w0 = pD00[0+1+ldd*0]; // pvd0[0] = 1.0
+		for(kk=0; kk<n1; kk++)
+			{
+			w0 += pA00[0+1+lda*kk] * pv0[0+lda*kk];
+			}
+		w0 = - dD[ii] * w0;
+		pD00[0+1+ldd*0] += w0; // pv0[0] = 1.0
+		for(kk=0; kk<n1; kk++)
+			{
+			pA00[0+1+lda*kk] += w0 * pv0[0+lda*kk];
+			}
+		// second row
+		sigma = 0.0;
+		for(jj=0; jj<n1; jj++)
+			{
+			tmp = pA00[1+lda*jj];
+			sigma += tmp*tmp;
+			}
+		if(sigma==0.0)
+			{
+			// tau1
+			dD[(ii+1)] = 0.0;
+			}
+		else
+			{
+			alpha = pD00[1+ldd*1];
+			beta = sigma + alpha*alpha;
+			beta = sqrt(beta);
+			if(alpha<=0)
+				tmp = alpha-beta;
+			else
+				tmp = -sigma/(alpha+beta);
+			// tau1
+			dD[ii+1] = 2*tmp*tmp/(sigma+tmp*tmp);
+			tmp = 1.0/tmp;
+			// compute v1
+			pD00[1+lda*1] = beta;
+			for(jj=0; jj<n1; jj++)
+				pA00[1+lda*jj] *= tmp;
+			}
+		// compute lower triangular T containing tau for matrix update
+		pv0 = &pA00[0+lda*0];
+		pv1 = &pA00[1+lda*0];
+		tmp = 0.0;
+		for(kk=0; kk<n1; kk++)
+			tmp += pv0[0+lda*kk]*pv1[0+lda*kk];
+		pT[0+ldb*0] = dD[ii+0];
+		pT[1+ldb*0] = - dD[ii+1] * tmp * dD[ii+0];
+		pT[1+ldb*1] = dD[ii+1];
+		// downgrade
+		jmax = m-ii-2;
+		jj = 0;
+#if 1
+		for(; jj<jmax-1; jj+=2)
+			{
+			// compute W^T = C^T * V
+			pW[0+ldw*0] = pD00[jj+0+2+ldd*0];
+			pW[1+ldw*0] = pD00[jj+1+2+ldd*0];
+			pW[0+ldw*1] = pD00[jj+0+2+ldd*1];
+			pW[1+ldw*1] = pD00[jj+1+2+ldd*1];
+			kk = 0;
+			for(; kk<n1; kk++)
+				{
+				tmp = pA00[jj+0+2+ldd*kk];
+				pW[0+ldw*0] += tmp * pv0[0+lda*kk];
+				pW[0+ldw*1] += tmp * pv1[0+lda*kk];
+				tmp = pA00[jj+1+2+ldd*kk];
+				pW[1+ldw*0] += tmp * pv0[0+lda*kk];
+				pW[1+ldw*1] += tmp * pv1[0+lda*kk];
+				}
+			// compute W^T *= T
+			pW[0+ldw*1] = pT[1+ldb*0]*pW[0+ldw*0] + pT[1+ldb*1]*pW[0+ldw*1];
+			pW[1+ldw*1] = pT[1+ldb*0]*pW[1+ldw*0] + pT[1+ldb*1]*pW[1+ldw*1];
+			pW[0+ldw*0] = pT[0+ldb*0]*pW[0+ldw*0];
+			pW[1+ldw*0] = pT[0+ldb*0]*pW[1+ldw*0];
+			// compute C -= V * W^T
+			pD00[jj+0+2+ldd*0] -= pW[0+ldw*0];
+			pD00[jj+1+2+ldd*0] -= pW[1+ldw*0];
+			pD00[jj+0+2+ldd*1] -= pW[0+ldw*1];
+			pD00[jj+1+2+ldd*1] -= pW[1+ldw*1];
+			kk = 0;
+			for(; kk<n1-1; kk+=2)
+				{
+				pA00[jj+0+2+lda*(kk+0)] -= pv0[0+lda*(kk+0)]*pW[0+ldw*0] + pv1[0+lda*(kk+0)]*pW[0+ldw*1];
+				pA00[jj+0+2+lda*(kk+1)] -= pv0[0+lda*(kk+1)]*pW[0+ldw*0] + pv1[0+lda*(kk+1)]*pW[0+ldw*1];
+				pA00[jj+1+2+lda*(kk+0)] -= pv0[0+lda*(kk+0)]*pW[1+ldw*0] + pv1[0+lda*(kk+0)]*pW[1+ldw*1];
+				pA00[jj+1+2+lda*(kk+1)] -= pv0[0+lda*(kk+1)]*pW[1+ldw*0] + pv1[0+lda*(kk+1)]*pW[1+ldw*1];
+				}
+			for(; kk<n1; kk++)
+				{
+				pA00[jj+0+2+lda*kk] -= pv0[0+lda*kk]*pW[0+ldw*0] + pv1[0+lda*kk]*pW[0+ldw*1];
+				pA00[jj+1+2+lda*kk] -= pv0[0+lda*kk]*pW[1+ldw*0] + pv1[0+lda*kk]*pW[1+ldw*1];
+				}
+			}
+#endif
+		for(; jj<jmax; jj++)
+			{
+			// compute W = T * V^T * C
+			pW[0+ldw*0] = pD00[jj+0+2+ldd*0];
+			pW[0+ldw*1] = pD00[jj+0+2+ldd*1];
+			for(kk=0; kk<n1; kk++)
+				{
+				tmp = pA00[jj+0+2+ldd*kk];
+				pW[0+ldw*0] += tmp * pv0[0+lda*kk];
+				pW[0+ldw*1] += tmp * pv1[0+lda*kk];
+				}
+			pW[0+ldw*1] = pT[1+ldb*0]*pW[0+ldw*0] + pT[1+ldb*1]*pW[0+ldw*1];
+			pW[0+ldw*0] = pT[0+ldb*0]*pW[0+ldw*0];
+			// compute C -= V * W^T
+			pD00[jj+0+2+ldd*0] -= pW[0+ldw*0];
+			pD00[jj+0+2+ldd*1] -= pW[0+ldw*1];
+			for(kk=0; kk<n1; kk++)
+				{
+				pA00[jj+0+2+lda*kk] -= pv0[0+lda*kk]*pW[0+ldw*0] + pv1[0+lda*kk]*pW[0+ldw*1];
+				}
+			}
+//		return;
+		}
+#endif
+	for(; ii<m; ii++)
+		{
+		pD00 = &pD[ii+ldd*ii];
+		pA00 = &pA[ii+lda*0];
+		sigma = 0.0;
+		for(jj=0; jj<n1; jj++)
+			{
+			tmp = pA00[0+lda*jj];
+			sigma += tmp*tmp;
+			}
+		if(sigma==0.0)
+			{
+			dD[ii] = 0.0;
+			}
+		else
+			{
+			alpha = pD00[0+ldd*0];
+			beta = sigma + alpha*alpha;
+			beta = sqrt(beta);
+			if(alpha<=0)
+				tmp = alpha-beta;
+			else
+				tmp = -sigma/(alpha+beta);
+			// tau0
+			dD[ii] = 2*tmp*tmp/(sigma+tmp*tmp);
+			tmp = 1.0/tmp;
+			// compute v0
+			pD00[0+ldd*0] = beta;
+			for(jj=0; jj<n1; jj++)
+				pA00[0+lda*jj] *= tmp;
+			}
+		// gemv_t & ger
+		pv0 = &pA00[0+lda*0];
+		jmax = m-ii-1;
+		jj = 0;
+#if 1
+		for(; jj<jmax-1; jj+=2)
+			{
+			w0 = pD00[jj+1+0+ldd*0]; // pv0[0] = 1.0
+			w1 = pD00[jj+1+1+ldd*0]; // pv0[0] = 1.0
+			for(kk=0; kk<n1; kk++)
+				{
+				w0 += pA00[jj+1+0+lda*kk] * pv0[0+lda*kk];
+				w1 += pA00[jj+1+1+lda*kk] * pv0[0+lda*kk];
+				}
+			w0 = - dD[ii] * w0;
+			w1 = - dD[ii] * w1;
+			pD00[jj+1+0+ldd*0] += w0; // pv0[0] = 1.0
+			pD00[jj+1+1+ldd*0] += w1; // pv0[0] = 1.0
+			for(kk=0; kk<n1; kk++)
+				{
+				pA00[jj+1+0+lda*kk] += w0 * pv0[0+lda*kk];
+				pA00[jj+1+1+lda*kk] += w1 * pv0[0+lda*kk];
+				}
+			}
+#endif
+		for(; jj<jmax; jj++)
+			{
+			w0 = pD00[jj+1+ldd*0]; // pvd0[0] = 1.0
+			for(kk=0; kk<n1; kk++)
+				{
+				w0 += pA00[jj+1+lda*kk] * pv0[0+lda*kk];
+				}
+			w0 = - dD[ii] * w0;
+			pD00[jj+1+ldd*0] += w0; // pv0[0] = 1.0
+			for(kk=0; kk<n1; kk++)
+				{
+				pA00[jj+1+lda*kk] += w0 * pv0[0+lda*kk];
 				}
 			}
 		}
@@ -2794,16 +3056,16 @@ void GELQF_PD_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STR
 
 
 // LQ factorization with positive diagonal elements
-// [D, A] <= lq( [D. A] )
-// array of matrices [D, A] with
-// D diagonal (on input), of size (m)x(m)
+// [L, A] <= lq( [L. A] )
+// array of matrices [L, A] with
+// L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
-void GELQF_PD_DA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct STRMAT *sA, int ai, int aj, void *work)
+void GELQF_PD_LA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct STRMAT *sA, int ai, int aj, void *work)
 
 	{
 	if(m<=0)
 		return;
-	printf("\nblasfeo_gelqf_pd_da: feature not implemented yet\n");
+	printf("\nblasfeo_gelqf_pd_la: feature not implemented yet\n");
 	exit(1);
 	}
 

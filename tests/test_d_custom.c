@@ -203,8 +203,8 @@ int main()
 
 
 	// array lq
-	struct blasfeo_dmat lq0;
-	blasfeo_allocate_dmat(n, 2*n, &lq0);
+	struct blasfeo_dmat lq0; blasfeo_allocate_dmat(n, 2*n, &lq0);
+	struct blasfeo_dmat lq1; blasfeo_allocate_dmat(n, 2*n, &lq1);
 
 	void *lq0_work = malloc(blasfeo_dgelqf_worksize(n, 2*n));
 
@@ -214,9 +214,19 @@ int main()
 	blasfeo_print_dmat(n, 2*n, &lq0, 0, 0);
 
 //	blasfeo_dgelqf_pd(n, 2*n, &lq0, 0, 0, &lq0, 0, 0, lq0_work);
-	blasfeo_dgelqf_pd_da(n, n, &lq0, 0, 0, &lq0, 0, n, lq0_work);
+	blasfeo_dgelqf_pd_la(n, n, &lq0, 0, 0, &lq0, 0, n, lq0_work);
 
 	blasfeo_print_dmat(n, 2*n, &lq0, 0, 0);
+
+	blasfeo_dtrcp_l(n, &lq0, 0, 0, &lq1, 0, 0);
+	blasfeo_pack_dmat(n, n, B, n, &lq1, 0, n);
+
+	blasfeo_print_dmat(n, 2*n, &lq1, 0, 0);
+
+//	blasfeo_dgelqf_pd(n, 2*n, &lq1, 0, 0, &lq1, 0, 0, lq0_work);
+	blasfeo_dgelqf_pd_la(n, n, &lq1, 0, 0, &lq1, 0, n, lq0_work);
+
+	blasfeo_print_dmat(n, 2*n, &lq1, 0, 0);
 
 	return 0;
 
