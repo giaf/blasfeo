@@ -922,9 +922,8 @@ void blasfeo_sgelqf_pd(int m, int n, struct blasfeo_smat *sC, int ci, int cj, st
 
 
 
-// LQ factorization with positive diagonal elements
+// LQ factorization with positive diagonal elements, array of matrices
 // [L, A] <= lq( [L. A] )
-// array of matrices [L, A] with
 // L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
 void blasfeo_sgelqf_pd_la(int m, int n1, struct blasfeo_smat *sD, int di, int dj, struct blasfeo_smat *sA, int ai, int aj, void *work)
@@ -934,6 +933,20 @@ void blasfeo_sgelqf_pd_la(int m, int n1, struct blasfeo_smat *sD, int di, int dj
 	printf("\nblasfeo_sgelqf_pd_la: feature not implemented yet\n");
 	exit(1);
 	return;
+	}
+
+
+
+// LQ factorization with positive diagonal elements, array of matrices
+// [L, L, A] <= lq( [L. L, A] )
+// L lower triangular, of size (m)x(m)
+// A full of size (m)x(n1)
+void blasfeo_sgelqf_pd_lla(int m, int n1, struct blasfeo_smat *sD, int di, int dj, struct blasfeo_smat *sL, int li, int lj, struct blasfeo_smat *sA, int ai, int aj, void *work)
+	{
+	if(m<=0)
+		return;
+	printf("\nblasfeo_dgelqf_pd_lla: feature not implemented yet\n");
+	exit(1);
 	}
 
 

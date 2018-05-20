@@ -52,6 +52,7 @@
 
 #define GELQF_PD_DA_LIBSTR blasfeo_sgelqf_pd_da
 #define GELQF_PD_LA_LIBSTR blasfeo_sgelqf_pd_la
+#define GELQF_PD_LLA_LIBSTR blasfeo_sgelqf_pd_lla
 #define GELQF_PD_LIBSTR blasfeo_sgelqf_pd
 #define GELQF_LIBSTR blasfeo_sgelqf
 #define GELQF_WORK_SIZE_LIBSTR blasfeo_sgelqf_worksize
