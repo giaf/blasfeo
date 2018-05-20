@@ -924,6 +924,22 @@ void blasfeo_sgelqf_pd(int m, int n, struct blasfeo_smat *sC, int ci, int cj, st
 
 
 
+// LQ factorization with positive diagonal elements
+// [D, A] <= lq( [D. A] )
+// array of matrices [D, A] with
+// D diagonal (on input), of size (m)x(m)
+// A full of size (m)x(n1)
+void blasfeo_sgelqf_pd_da(int m, int n1, struct blasfeo_smat *sD, int di, int dj, struct blasfeo_smat *sA, int ai, int aj, void *work)
+	{
+	if(m<=0)
+		return;
+	printf("\nblasfeo_sgelqf_pd: feature not implemented yet\n");
+	exit(1);
+	return;
+	}
+
+
+
 #else
 
 #error : wrong LA choice
