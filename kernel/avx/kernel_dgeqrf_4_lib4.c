@@ -3517,4 +3517,316 @@ void kernel_dgelqf_pd_vs_lib4(int m, int n, int k, int offD, double *pD, int sdd
 
 
 
+// unblocked algorithm
+// positive diagonal; array algorithm [L, A]
+void kernel_dgelqf_pd_la_vs_lib4(int m, int n1, int k, int offD, double *pD, int sdd, double *dD, int offA, double *pA, int sda)
+	{
+	if(m<=0)
+		return;
+	int ii, jj, kk, ll, imax, jmax, jmax0, kmax, kmax0;
+	const int ps = 4;
+	imax = k;//m<n ? m : n;
+	double alpha, beta, sigma, tmp;
+	double w00, w01,
+		   w10, w11,
+		   w20, w21,
+		   w30, w31;
+	__m256d
+		_a0, _b0, _t0, _w0, _w1;
+	double *pC00, *pC10, *pC10a, *pC20, *pC20a, *pC01, *pC11; // TODO remove
+	double *pD00, *pD10, *pD20, *pD20a, *pD01, *pD11;
+	double *pA00, *pA10, *pA20, *pA20a, *pA01, *pA11;
+	double pT[4];
+	int ldt = 2;
+	double *pD0 = pD-offD;
+	double *pA0 = pA-offA;
+	ii = 0;
+#if 0 // rank 2
+	for(; ii<imax-1; ii+=2)
+		{
+		// first row
+		pC00 = &pD0[((offD+ii)&(ps-1))+((offD+ii)-((offD+ii)&(ps-1)))*sdd+ii*ps];
+		sigma = 0.0;
+		for(jj=1; jj<n-ii; jj++)
+			{
+			tmp = pC00[0+ps*jj];
+			sigma += tmp*tmp;
+			}
+		if(sigma==0.0)
+			{
+			dD[ii] = 0.0;
+			}
+		else
+			{
+			alpha = pC00[0];
+			beta = sigma + alpha*alpha;
+			beta = sqrt(beta);
+			if(alpha<=0)
+				tmp = alpha-beta;
+			else
+				tmp = -sigma / (alpha+beta);
+			dD[ii] = 2*tmp*tmp / (sigma+tmp*tmp);
+			tmp = 1.0 / tmp;
+			pC00[0] = beta;
+			for(jj=1; jj<n-ii; jj++)
+				pC00[0+ps*jj] *= tmp;
+			}
+		pC10 = &pD0[((offD+ii+1)&(ps-1))+((offD+ii+1)-((offD+ii+1)&(ps-1)))*sdd+ii*ps];
+		kmax = n-ii;
+		w00 = pC10[0+ps*0]; // pC00[0+ps*0] = 1.0
+		for(kk=1; kk<kmax; kk++)
+			{
+			w00 += pC10[0+ps*kk] * pC00[0+ps*kk];
+			}
+		w00 = - w00*dD[ii];
+		pC10[0+ps*0] += w00; // pC00[0+ps*0] = 1.0
+		for(kk=1; kk<kmax; kk++)
+			{
+			pC10[0+ps*kk] += w00 * pC00[0+ps*kk];
+			}
+		// second row
+		pC11 = pC10+ps*1;
+		sigma = 0.0;
+		for(jj=1; jj<n-(ii+1); jj++)
+			{
+			tmp = pC11[0+ps*jj];
+			sigma += tmp*tmp;
+			}
+		if(sigma==0.0)
+			{
+			dD[(ii+1)] = 0.0;
+			}
+		else
+			{
+			alpha = pC11[0+ps*0];
+			beta = sigma + alpha*alpha;
+			beta = sqrt(beta);
+			if(alpha<=0)
+				tmp = alpha-beta;
+			else
+				tmp = -sigma / (alpha+beta);
+			dD[ii+1] = 2*tmp*tmp / (sigma+tmp*tmp);
+			tmp = 1.0 / tmp;
+			pC11[0+ps*0] = beta;
+			for(jj=1; jj<n-(ii+1); jj++)
+				pC11[0+ps*jj] *= tmp;
+			}
+		// compute T
+		kmax = n-ii;
+		tmp = 1.0*0.0 + pC00[0+ps*1]*1.0;
+		for(kk=2; kk<kmax; kk++)
+			tmp += pC00[0+ps*kk]*pC10[0+ps*kk];
+		pT[0+ldt*0] = - dD[ii+0];
+		pT[0+ldt*1] = + dD[ii+1] * tmp * dD[ii+0];
+		pT[1+ldt*1] = - dD[ii+1];
+		// downgrade
+		kmax = n-ii;
+		jmax = m-ii-2;
+		jmax0 = (ps-((ii+2+offD)&(ps-1)))&(ps-1);
+		jmax0 = jmax<jmax0 ? jmax : jmax0;
+		jj = 0;
+		pC20a = &pD0[((offD+ii+2)&(ps-1))+((offD+ii+2)-((offD+ii+2)&(ps-1)))*sdd+ii*ps];
+		pC20 = pC20a;
+		if(jmax0>0)
+			{
+			for( ; jj<jmax0; jj++)
+				{
+				w00 = pC20[0+ps*0]*1.0 + pC20[0+ps*1]*pC00[0+ps*1];
+				w01 = pC20[0+ps*0]*0.0 + pC20[0+ps*1]*1.0;
+				for(kk=2; kk<kmax; kk++)
+					{
+					w00 += pC20[0+ps*kk]*pC00[0+ps*kk];
+					w01 += pC20[0+ps*kk]*pC10[0+ps*kk];
+					}
+				w01 = w00*pT[0+ldt*1] + w01*pT[1+ldt*1];
+				w00 = w00*pT[0+ldt*0];
+				pC20[0+ps*0] += w00*1.0          + w01*0.0;
+				pC20[0+ps*1] += w00*pC00[0+ps*1] + w01*1.0;
+				for(kk=2; kk<kmax; kk++)
+					{
+					pC20[0+ps*kk] += w00*pC00[0+ps*kk] + w01*pC10[0+ps*kk];
+					}
+				pC20 += 1;
+				}
+			pC20 += -ps+ps*sdd;
+			}
+		for( ; jj<jmax-3; jj+=4)
+			{
+			//
+			_w0 = _mm256_load_pd( &pC20[0+ps*0] );
+			_a0 = _mm256_load_pd( &pC20[0+ps*1] );
+			_b0 = _mm256_broadcast_sd( &pC00[0+ps*1] );
+			_t0 = _mm256_mul_pd( _a0, _b0 );
+			_w0 = _mm256_add_pd( _w0, _t0 );
+			_w1 = _mm256_load_pd( &pC20[0+ps*1] );
+			for(kk=2; kk<kmax; kk++)
+				{
+				_a0 = _mm256_load_pd( &pC20[0+ps*kk] );
+				_b0 = _mm256_broadcast_sd( &pC00[0+ps*kk] );
+				_t0 = _mm256_mul_pd( _a0, _b0 );
+				_w0 = _mm256_add_pd( _w0, _t0 );
+				_b0 = _mm256_broadcast_sd( &pC10[0+ps*kk] );
+				_t0 = _mm256_mul_pd( _a0, _b0 );
+				_w1 = _mm256_add_pd( _w1, _t0 );
+				}
+			//
+			_b0 = _mm256_broadcast_sd( &pT[1+ldt*1] );
+			_w1 = _mm256_mul_pd( _w1, _b0 );
+			_b0 = _mm256_broadcast_sd( &pT[0+ldt*1] );
+			_t0 = _mm256_mul_pd( _w0, _b0 );
+			_w1 = _mm256_add_pd( _w1, _t0 );
+			_b0 = _mm256_broadcast_sd( &pT[0+ldt*0] );
+			_w0 = _mm256_mul_pd( _w0, _b0 );
+			//
+			_a0 = _mm256_load_pd( &pC20[0+ps*0] );
+			_a0 = _mm256_add_pd( _a0, _w0 );
+			_mm256_store_pd( &pC20[0+ps*0], _a0 );
+			_a0 = _mm256_load_pd( &pC20[0+ps*1] );
+			_b0 = _mm256_broadcast_sd( &pC00[0+ps*1] );
+			_t0 = _mm256_mul_pd( _w0, _b0 );
+			_a0 = _mm256_add_pd( _a0, _t0 );
+			_a0 = _mm256_add_pd( _a0, _w1 );
+			_mm256_store_pd( &pC20[0+ps*1], _a0 );
+			for(kk=2; kk<kmax; kk++)
+				{
+				_a0 = _mm256_load_pd( &pC20[0+ps*kk] );
+				_b0 = _mm256_broadcast_sd( &pC00[0+ps*kk] );
+				_t0 = _mm256_mul_pd( _w0, _b0 );
+				_a0 = _mm256_add_pd( _a0, _t0 );
+				_b0 = _mm256_broadcast_sd( &pC10[0+ps*kk] );
+				_t0 = _mm256_mul_pd( _w1, _b0 );
+				_a0 = _mm256_add_pd( _a0, _t0 );
+				_mm256_store_pd( &pC20[0+ps*kk], _a0 );
+				}
+			pC20 += ps*sdd;
+			}
+		for(ll=0; ll<jmax-jj; ll++)
+			{
+			w00 = pC20[0+ps*0]*1.0 + pC20[0+ps*1]*pC00[0+ps*1];
+			w01 = pC20[0+ps*0]*0.0 + pC20[0+ps*1]*1.0;
+			for(kk=2; kk<kmax; kk++)
+				{
+				w00 += pC20[0+ps*kk]*pC00[0+ps*kk];
+				w01 += pC20[0+ps*kk]*pC10[0+ps*kk];
+				}
+			w01 = w00*pT[0+ldt*1] + w01*pT[1+ldt*1];
+			w00 = w00*pT[0+ldt*0];
+			pC20[0+ps*0] += w00*1.0          + w01*0.0;
+			pC20[0+ps*1] += w00*pC00[0+ps*1] + w01*1.0;
+			for(kk=2; kk<kmax; kk++)
+				{
+				pC20[0+ps*kk] += w00*pC00[0+ps*kk] + w01*pC10[0+ps*kk];
+				}
+			pC20 += 1;
+			}
+		}
+#endif
+	for(; ii<imax; ii++)
+		{
+		pD00 = &pD0[((offD+ii)&(ps-1))+((offD+ii)-((offD+ii)&(ps-1)))*sdd+ii*ps];
+		pA00 = &pA0[((offA+ii)&(ps-1))+((offA+ii)-((offA+ii)&(ps-1)))*sda+0*ps];
+		sigma = 0.0;
+		for(jj=0; jj<n1; jj++)
+			{
+			tmp = pA00[0+ps*jj];
+			sigma += tmp*tmp;
+			}
+		if(sigma==0.0)
+			{
+			dD[ii] = 0.0;
+			}
+		else
+			{
+			alpha = pD00[0];
+			beta = sigma + alpha*alpha;
+			beta = sqrt(beta);
+			if(alpha<=0)
+				tmp = alpha-beta;
+			else
+				tmp = -sigma / (alpha+beta);
+			dD[ii] = 2*tmp*tmp / (sigma+tmp*tmp);
+			tmp = 1.0 / tmp;
+			pD00[0] = beta;
+			for(jj=0; jj<n1; jj++)
+				pA00[0+ps*jj] *= tmp;
+			}
+		// compute T
+		pT[0+ldt*0] = - dD[ii+0];
+		// downgrade
+		jmax = m-ii-1;
+		jmax0 = (ps-((ii+1+offA)&(ps-1)))&(ps-1);
+		jmax0 = jmax<jmax0 ? jmax : jmax0;
+		jj = 0;
+		pA10 = &pA0[((offA+ii+1)&(ps-1))+((offA+ii+1)-((offA+ii+1)&(ps-1)))*sda+0*ps];
+		if(jmax0>0)
+			{
+			for( ; jj<jmax0; jj++)
+				{
+				pD10 = &pD0[((offD+ii+jj+1)&(ps-1))+((offD+ii+jj+1)-((offD+ii+jj+1)&(ps-1)))*sdd+ii*ps];
+				w00 = pD10[0+ps*0];
+				for(kk=0; kk<n1; kk++)
+					{
+					w00 += pA10[0+ps*kk] * pA00[0+ps*kk];
+					}
+				w00 = w00*pT[0+ldt*0];
+				pD10[0+ps*0] += w00;
+				for(kk=0; kk<n1; kk++)
+					{
+					pA10[0+ps*kk] += w00 * pA00[0+ps*kk];
+					}
+				pA10 += 1;
+				}
+			pA10 += -ps+ps*sdd;
+			}
+		for( ; jj<jmax-3; jj+=4)
+			{
+			//
+			pD10 = &pD0[((offD+ii+jj+1)&(ps-1))+((offD+ii+jj+1)-((offD+ii+jj+1)&(ps-1)))*sdd+ii*ps];
+			_w0 = _mm256_load_pd( &pD10[0+ps*0] );
+			for(kk=0; kk<n1; kk++)
+				{
+				_a0 = _mm256_load_pd( &pA10[0+ps*kk] );
+				_b0 = _mm256_broadcast_sd( &pA00[0+ps*kk] );
+				_t0 = _mm256_mul_pd( _a0, _b0 );
+				_w0 = _mm256_add_pd( _w0, _t0 );
+				}
+			//
+			_b0 = _mm256_broadcast_sd( &pT[0+ldt*0] );
+			_w0 = _mm256_mul_pd( _w0, _b0 );
+			//
+			_a0 = _mm256_load_pd( &pD10[0+ps*0] );
+			_a0 = _mm256_add_pd( _a0, _w0 );
+			_mm256_store_pd( &pD10[0+ps*0], _a0 );
+			for(kk=0; kk<n1; kk++)
+				{
+				_a0 = _mm256_load_pd( &pA10[0+ps*kk] );
+				_b0 = _mm256_broadcast_sd( &pA00[0+ps*kk] );
+				_t0 = _mm256_mul_pd( _w0, _b0 );
+				_a0 = _mm256_add_pd( _a0, _t0 );
+				_mm256_store_pd( &pA10[0+ps*kk], _a0 );
+				}
+			pA10 += ps*sdd;
+			}
+		for(ll=0; ll<jmax-jj; ll++)
+			{
+			pD10 = &pD0[((offD+ii+jj+ll+1)&(ps-1))+((offD+ii+jj+ll+1)-((offD+ii+jj+ll+1)&(ps-1)))*sdd+ii*ps];
+			w00 = pD10[0+ps*0];
+			for(kk=0; kk<n1; kk++)
+				{
+				w00 += pA10[0+ps*kk] * pA00[0+ps*kk];
+				}
+			w00 = w00*pT[0+ldt*0];
+			pD10[0+ps*0] += w00;
+			for(kk=0; kk<n1; kk++)
+				{
+				pA10[0+ps*kk] += w00 * pA00[0+ps*kk];
+				}
+			pA10 += 1;
+			}
+		}
+	return;
+	}
+
+
+
 

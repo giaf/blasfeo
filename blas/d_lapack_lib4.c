@@ -2726,8 +2726,6 @@ void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 	{
 	if(m<=0 | n<=0)
 		return;
-//	printf("\nblasfeo_dgelqf_pd: feature not implemented yet\n");
-//	exit(1);
 
 	// invalidate stored inverse diagonal of result matrix
 	sD->use_dA = 0;
@@ -2872,7 +2870,7 @@ void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 //		kernel_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
 		kernel_dgelqf_pd_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
 		jj = ii+4;
-#if 0 & defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		for(; jj<m-7; jj+=8)
 			{
 			kernel_dlarfb4_r_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
@@ -2914,8 +2912,50 @@ void blasfeo_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj
 	{
 	if(m<=0)
 		return;
-	printf("\nblasfeo_dgelqf_pd_la: feature not implemented yet\n");
-	exit(1);
+//	printf("\nblasfeo_dgelqf_pd_la: feature not implemented yet\n");
+//	exit(1);
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+	sA->use_dA = 0;
+
+	const int ps = 4;
+
+	// extract dimensions
+	int sda = sA->cn;
+	int sdd = sD->cn;
+
+	// go to submatrix
+	double *pA = &(BLASFEO_DMATEL(sA, ai, aj));
+	double *pD = &(BLASFEO_DMATEL(sD, di, dj));
+
+	double *dD = sD->dA + di;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	double pT[144] __attribute__ ((aligned (64))) = {0};
+	double pK[96] __attribute__ ((aligned (64))) = {0};
+#else
+	double pT[144] = {0};
+	double pK[96] = {0};
+#endif
+	/* if(pC!=pD) */
+		/* dgecp_lib(m, n, 1.0, ci&(ps-1), pC, sdc, di&(ps-1), pD, sdd); */
+		/* // where ci&(ps-1) == ci%ps */
+
+	int ii, jj, ll;
+	int imax0 = (ps-(di&(ps-1)))&(ps-1);
+	int imax = m;
+	// different block alignment
+	if( di&(ps-1) != ai&(ps-1) )
+		{
+		kernel_dgelqf_pd_la_vs_lib4(m, n1, imax, di&(ps-1), pD, sdd, dD, ai&(ps-1), pA, sda);
+		return;
+		}
+	// same block alignment
+#if 1
+	kernel_dgelqf_pd_la_vs_lib4(m, n1, imax, di&(ps-1), pD, sdd, dD, ai&(ps-1), pA, sda);
+#else
+#endif
+	return;
 	}
 
 
