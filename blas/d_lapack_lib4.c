@@ -2715,6 +2715,7 @@ void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 		}
 #endif // no haswell
 #endif
+
 	return;
 	}
 
@@ -2725,8 +2726,182 @@ void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 	{
 	if(m<=0 | n<=0)
 		return;
-	printf("\nblasfeo_dgelqf_pd: feature not implemented yet\n");
-	exit(1);
+//	printf("\nblasfeo_dgelqf_pd: feature not implemented yet\n");
+//	exit(1);
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	const int ps = 4;
+
+	// extract dimensions
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+
+	// go to submatrix
+	double *pC = &(BLASFEO_DMATEL(sC,ci,cj));
+	double *pD = &(BLASFEO_DMATEL(sD,di,dj));
+
+	double *dD = sD->dA + di;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	double pT[144] __attribute__ ((aligned (64))) = {0};
+	double pK[96] __attribute__ ((aligned (64))) = {0};
+#else
+	double pT[144] = {0};
+	double pK[96] = {0};
+#endif
+	/* if(pC!=pD) */
+		/* dgecp_lib(m, n, 1.0, ci&(ps-1), pC, sdc, di&(ps-1), pD, sdd); */
+		/* // where ci&(ps-1) == ci%ps */
+
+	if(pC!=pD)
+		// copy strmat submatrix
+		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
+
+	int ii, jj, ll;
+	int imax0 = (ps-(di&(ps-1)))&(ps-1);
+	int imax = m<n ? m : n;
+#if 0
+	kernel_dgelqf_pd_vs_lib4(m, n, imax, di&(ps-1), pD, sdd, dD);
+#else
+	imax0 = imax<imax0 ? imax : imax0;
+	if(imax0>0)
+		{
+		kernel_dgelqf_pd_vs_lib4(m, n, imax0, di&(ps-1), pD, sdd, dD);
+		pD += imax0-ps+ps*sdd+imax0*ps;
+		dD += imax0;
+		m -= imax0;
+		n -= imax0;
+		imax -= imax0;
+		}
+	ii = 0;
+#if 0 & defined(TARGET_X64_INTEL_HASWELL)
+//	for(; ii<imax-11; ii+=12)
+	for(; ii<imax-127; ii+=12) // crossover point ~ ii=128
+		{
+		kernel_dgelqf_dlarft12_12_lib4(n-(ii+0), pD+(ii+0)*sdd+(ii+0)*ps, sdd, dD+(ii+0), &pT[0+0*12+0*ps]);
+		jj = ii+12;
+		for(; jj<m; jj+=4)
+			{
+			kernel_dlarfb12_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, pT, pD+jj*sdd+ii*ps, pK, m-jj);
+			}
+		}
+	for(; ii<imax-11; ii+=4)
+		{
+		kernel_dgelqf_dlarft4_12_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, dD+ii, pT);
+		jj = ii+12;
+		for(; jj<m-11; jj+=12)
+			{
+			kernel_dlarfb4_r_12_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+			}
+		for(; jj<m-7; jj+=8)
+			{
+			kernel_dlarfb4_r_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+			}
+		for(; jj<m-3; jj+=4)
+			{
+			kernel_dlarfb4_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+			}
+		for(ll=0; ll<m-jj; ll++)
+			{
+			kernel_dlarfb4_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
+			}
+		}
+	// 8 9 10 11
+	if(ii<imax-7)
+		{
+		kernel_dgelqf_dlarft4_8_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, dD+ii, pT);
+		jj = ii+8;
+		if(jj<m)
+			{
+			for(; jj<m-11; jj+=12)
+				{
+				kernel_dlarfb4_r_12_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+				}
+			for(; jj<m-7; jj+=8)
+				{
+				kernel_dlarfb4_r_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+				}
+			for(; jj<m-3; jj+=4)
+				{
+				kernel_dlarfb4_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+				}
+			for(ll=0; ll<m-jj; ll++)
+				{
+				kernel_dlarfb4_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
+				}
+			}
+		ii += 4;
+		}
+	// 4 5 6 7
+	if(ii<imax-3)
+		{
+		kernel_dgelqf_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		jj = ii+4;
+		if(jj<m)
+			{
+			for(; jj<m-11; jj+=12)
+				{
+				kernel_dlarfb4_r_12_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+				}
+			for(; jj<m-7; jj+=8)
+				{
+				kernel_dlarfb4_r_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+				}
+			for(; jj<m-3; jj+=4)
+				{
+				kernel_dlarfb4_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+				}
+			for(ll=0; ll<m-jj; ll++)
+				{
+				kernel_dlarfb4_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
+				}
+			}
+		ii += 4;
+		}
+	// 1 2 3
+	if(ii<imax)
+		{
+		kernel_dgelqf_vs_lib4(m-ii, n-ii, imax-ii, ii&(ps-1), pD+ii*sdd+ii*ps, sdd, dD+ii);
+		}
+#else // no haswell
+	for(ii=0; ii<imax-4; ii+=4)
+		{
+//		kernel_dgelqf_vs_lib4(4, n-ii, 4, 0, pD+ii*sdd+ii*ps, sdd, dD+ii);
+//		kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+//		kernel_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		kernel_dgelqf_pd_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		jj = ii+4;
+#if 0 & defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		for(; jj<m-7; jj+=8)
+			{
+			kernel_dlarfb4_r_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+			}
+#endif
+		for(; jj<m-3; jj+=4)
+			{
+			kernel_dlarfb4_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+			}
+		for(ll=0; ll<m-jj; ll++)
+			{
+			kernel_dlarfb4_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
+			}
+		}
+	if(ii<imax)
+		{
+		if(ii==imax-4)
+			{
+			kernel_dgelqf_pd_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+			}
+		else
+			{
+			kernel_dgelqf_pd_vs_lib4(m-ii, n-ii, imax-ii, ii&(ps-1), pD+ii*sdd+ii*ps, sdd, dD+ii);
+			}
+		}
+#endif // no haswell
+#endif
+
+	return;
 	}
 
 
