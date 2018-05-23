@@ -2951,9 +2951,57 @@ void blasfeo_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj
 		return;
 		}
 	// same block alignment
-#if 1
+#if 0
 	kernel_dgelqf_pd_la_vs_lib4(m, n1, imax, di&(ps-1), pD, sdd, dD, ai&(ps-1), pA, sda);
 #else
+	imax0 = imax<imax0 ? imax : imax0;
+	if(imax0>0)
+		{
+		kernel_dgelqf_pd_la_vs_lib4(m, n1, imax0, di&(ps-1), pD, sdd, dD, ai&(ps-1), pA, sda);
+		pD += imax0-ps+ps*sdd+imax0*ps;
+		dD += imax0;
+		pA += imax0-ps+ps*sda+0*ps;
+		m -= imax0;
+		imax -= imax0;
+		}
+	ii = 0;
+// TODO haswell
+#if 0 // haswell
+#else // no haswell
+	for(ii=0; ii<imax-4; ii+=4)
+		{
+		kernel_dgelqf_pd_la_vs_lib4(4, n1, 4, 0, pD+ii*sdd+ii*ps, sdd, dD+ii, 0, pA+ii*sda+0*ps, sda);
+//		kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+		kernel_dlarft_4_la_lib4(n1, dD+ii, pA+ii*sda+0*ps, pT);
+//		kernel_dgelqf_pd_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		jj = ii+4;
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		for(; jj<m-7; jj+=8)
+			{
+			kernel_dlarfb4_r_8_la_lib4(n1, pA+ii*sda+0*ps, pT, pD+jj*sdd+ii*ps, sdd, pA+jj*sda+0*ps, sda);
+			}
+#endif
+		for(; jj<m-3; jj+=4)
+			{
+			kernel_dlarfb4_r_4_la_lib4(n1, pA+ii*sda+0*ps, pT, pD+jj*sdd+ii*ps, pA+jj*sda+0*ps);
+			}
+		for(ll=0; ll<m-jj; ll++)
+			{
+			kernel_dlarfb4_r_1_la_lib4(n1, pA+ii*sda+0*ps, pT, pD+ll+jj*sdd+ii*ps, pA+ll+jj*sda+0*ps);
+			}
+		}
+	if(ii<imax)
+		{
+//		if(ii==imax-4)
+//			{
+//			kernel_dgelqf_pd_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+//			}
+//		else
+//			{
+			kernel_dgelqf_pd_la_vs_lib4(m-ii, n1, imax-ii, 0, pD+ii*sdd+ii*ps, sdd, dD+ii, 0, pA+ii*sda+0*ps, sda);
+//			}
+		}
+#endif // no haswell
 #endif
 	return;
 	}

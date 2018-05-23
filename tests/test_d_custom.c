@@ -47,7 +47,7 @@ int main()
 
 	int ii;
 
-	int n = 8;
+	int n = 12;
 
 	//
 	// matrices in column-major format
