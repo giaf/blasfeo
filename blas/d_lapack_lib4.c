@@ -3083,10 +3083,10 @@ void blasfeo_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, int d
 		kernel_dlarft_4_lla_lib4(imax0+ii, n1, dD+ii, pL+ii*sdl+0*ps, pA+ii*sda+0*ps, pT);
 //		kernel_dgelqf_pd_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
 		jj = ii+4;
-#if 0 //defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		for(; jj<m-7; jj+=8)
 			{
-			kernel_dlarfb4_r_8_la_lib4(n1, pA+ii*sda+0*ps, pT, pD+jj*sdd+ii*ps, sdd, pA+jj*sda+0*ps, sda);
+			kernel_dlarfb4_r_8_lla_lib4(imax0+ii, n1, pL+ii*sdl+0*ps, pA+ii*sda+0*ps, pT, pD+jj*sdd+ii*ps, sdd, pL+jj*sdl+0*ps, sdl, pA+jj*sda+0*ps, sda);
 			}
 #endif
 		for(; jj<m-3; jj+=4)
