@@ -13204,8 +13204,6 @@ _kernel_dlarfb4_r_8_lla_lib4:
 kernel_dlarfb4_r_8_lla_lib4:
 #endif
 
-
-
 	PROLOGUE
 
 	// zero accumulation registers
@@ -13308,7 +13306,6 @@ kernel_dlarfb4_r_8_lla_lib4:
 	vbroadcastsd	120(%r13), %ymm15
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm15, %ymm7
-
 
 	// A
 
