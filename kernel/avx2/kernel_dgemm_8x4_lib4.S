@@ -13188,7 +13188,7 @@ kernel_dlarfb4_r_8_la_lib4:
 
 
 //                                  1       2       3            4            5           6           7        8           9        10          11
-// void kernel_dlarfb4_r_4_lla_lib4(int n0, int n1, double *pVL, double *pVA, double *pT, double *pD, int sdd, double *pL, int sdl, double *pA, int sda);
+// void kernel_dlarfb4_r_8_lla_lib4(int n0, int n1, double *pVL, double *pVA, double *pT, double *pD, int sdd, double *pL, int sdl, double *pA, int sda);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
