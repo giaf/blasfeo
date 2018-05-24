@@ -50,6 +50,10 @@
 #define STRMAT blasfeo_dmat
 #define STRVEC blasfeo_dvec
 
+#define GELQF_PD_DA_LIBSTR blasfeo_dgelqf_pd_da
+#define GELQF_PD_LA_LIBSTR blasfeo_dgelqf_pd_la
+#define GELQF_PD_LLA_LIBSTR blasfeo_dgelqf_pd_lla
+#define GELQF_PD_LIBSTR blasfeo_dgelqf_pd
 #define GELQF_LIBSTR blasfeo_dgelqf
 #define GELQF_WORK_SIZE_LIBSTR blasfeo_dgelqf_worksize
 #define GEQRF_LIBSTR blasfeo_dgeqrf

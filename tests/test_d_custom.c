@@ -38,16 +38,16 @@
 #include "../include/blasfeo_d_kernel.h"
 #include "../include/blasfeo_d_blas.h"
 
-#include "test_d_common.h"
-#include "test_x_common.c"
+//#include "test_d_common.h"
+//#include "test_x_common.c"
 
 int main()
 	{
-	print_compilation_flags();
+//	print_compilation_flags();
 
 	int ii;
 
-	int n = 8;
+	int n = 12;
 
 	//
 	// matrices in column-major format
@@ -200,6 +200,37 @@ int main()
 	struct blasfeo_dvec svm; blasfeo_create_dvec(n, &svm, vm);
 	struct blasfeo_dvec sm; blasfeo_create_dvec(n, &sm, m);
 	struct blasfeo_dvec sr; blasfeo_create_dvec(n, &sr, r);
+
+
+	// array lq
+	struct blasfeo_dmat lq0; blasfeo_allocate_dmat(n, 2*n, &lq0);
+	struct blasfeo_dmat lq1; blasfeo_allocate_dmat(n, 2*n, &lq1);
+
+	void *lq0_work = malloc(blasfeo_dgelqf_worksize(n, 2*n));
+
+	blasfeo_pack_dmat(n, n, A, n, &lq0, 0, n);
+	blasfeo_pack_dmat(n, n, B, n, &lq0, 0, 0);
+
+	blasfeo_print_dmat(n, 2*n, &lq0, 0, 0);
+
+//	blasfeo_dgelqf_pd(n, 2*n, &lq0, 0, 0, &lq0, 0, 0, lq0_work);
+	blasfeo_dgelqf_pd_la(n, n, &lq0, 0, 0, &lq0, 0, n, lq0_work);
+
+	blasfeo_print_dmat(n, 2*n, &lq0, 0, 0);
+
+	blasfeo_dtrcp_l(n, &lq0, 0, 0, &lq1, 0, 0);
+	blasfeo_pack_dmat(n, n, B, n, &lq1, 0, n);
+
+	blasfeo_print_dmat(n, 2*n, &lq1, 0, 0);
+
+//	blasfeo_dgelqf_pd(n, 2*n, &lq1, 0, 0, &lq1, 0, 0, lq0_work);
+//	blasfeo_dgelqf_pd_la(n, n, &lq1, 0, 0, &lq1, 0, n, lq0_work);
+	blasfeo_dgelqf_pd_lla(n, 0, &lq1, 0, 0, &lq1, 0, n, &lq1, 0, 2*n, lq0_work);
+
+	blasfeo_print_dmat(n, 2*n, &lq1, 0, 0);
+
+	return 0;
+
 
 //	blasfeo_print_tran_dvec(n, &sv, 0);
 //	blasfeo_print_tran_dvec(n, &svp, 0);
@@ -789,8 +820,10 @@ int main()
 //	blasfeo_free_dmat(&sB);
 //	blasfeo_free_dmat(&sD);
 	v_free_align(memory_strmat);
+	blasfeo_free_dmat(&lq0);
+	free(lq0_work);
 
 	return 0;
 
-	print_compilation_flags();
+//	print_compilation_flags();
 	}

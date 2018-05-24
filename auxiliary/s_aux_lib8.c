@@ -1719,6 +1719,53 @@ void blasfeo_srowad(int kmax, float alpha, struct blasfeo_svec *sx, int xi, stru
 
 
 
+// scale a column
+void blasfeo_scolsc(int kmax, float alpha, struct blasfeo_smat *sA, int ai, int aj)
+	{
+
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
+	const int bs = 8;
+
+	int sda = sA->cn;
+	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+
+	int kna = (bs-ai%bs)%bs;
+	kna = kmax<kna ? kmax : kna;
+
+	int jj, ll;
+
+	if(kna>0)
+		{
+		for(ll=0; ll<kna; ll++)
+			{
+			pA[ll] *= alpha;
+			}
+		pA += kna + bs*(sda-1);
+		kmax -= kna;
+		}
+	for(jj=0; jj<kmax-7; jj+=8)
+		{
+		pA[jj*sda+0] *= alpha;
+		pA[jj*sda+1] *= alpha;
+		pA[jj*sda+2] *= alpha;
+		pA[jj*sda+3] *= alpha;
+		pA[jj*sda+4] *= alpha;
+		pA[jj*sda+5] *= alpha;
+		pA[jj*sda+6] *= alpha;
+		pA[jj*sda+7] *= alpha;
+		}
+	for(ll=0; ll<kmax-jj; ll++)
+		{
+		pA[jj*sda+ll] *= alpha;
+		}
+
+	return;
+	}
+
+
+
 // swap two cols of a matrix struct
 void blasfeo_scolsw(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj)
 	{
