@@ -2937,13 +2937,11 @@ void blasfeo_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj
 	double pT[144] = {0};
 	double pK[96] = {0};
 #endif
-	/* if(pC!=pD) */
-		/* dgecp_lib(m, n, 1.0, ci&(ps-1), pC, sdc, di&(ps-1), pD, sdd); */
-		/* // where ci&(ps-1) == ci%ps */
 
 	int ii, jj, ll;
 	int imax0 = (ps-(di&(ps-1)))&(ps-1);
 	int imax = m;
+	imax0 = imax<imax0 ? imax : imax0;
 	// different block alignment
 	if( di&(ps-1) != ai&(ps-1) )
 		{
@@ -2954,7 +2952,6 @@ void blasfeo_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj
 #if 0
 	kernel_dgelqf_pd_la_vs_lib4(m, n1, imax, di&(ps-1), pD, sdd, dD, ai&(ps-1), pA, sda);
 #else
-	imax0 = imax<imax0 ? imax : imax0;
 	if(imax0>0)
 		{
 		kernel_dgelqf_pd_la_vs_lib4(m, n1, imax0, di&(ps-1), pD, sdd, dD, ai&(ps-1), pA, sda);
@@ -3016,8 +3013,105 @@ void blasfeo_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, int d
 	{
 	if(m<=0)
 		return;
-	printf("\nblasfeo_dgelqf_pd_lla: feature not implemented yet\n");
-	exit(1);
+//.	printf("\nblasfeo_dgelqf_pd_lla: feature not implemented yet\n");
+//.	exit(1);
+
+	if(li!=ai)
+		{
+		printf("\nblasfeo_dgelqf_pd_lla: feature not implemented yet: li!=ai\n");
+		exit(1);
+		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+	sL->use_dA = 0;
+	sA->use_dA = 0;
+
+	const int ps = 4;
+
+	// extract dimensions
+	int sda = sA->cn;
+	int sdl = sL->cn;
+	int sdd = sD->cn;
+
+	// go to submatrix
+	double *pA = &(BLASFEO_DMATEL(sA, ai, aj));
+	double *pL = &(BLASFEO_DMATEL(sL, li, lj));
+	double *pD = &(BLASFEO_DMATEL(sD, di, dj));
+
+	double *dD = sD->dA + di;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	double pT[144] __attribute__ ((aligned (64))) = {0};
+	double pK[96] __attribute__ ((aligned (64))) = {0};
+#else
+	double pT[144] = {0};
+	double pK[96] = {0};
+#endif
+
+	int ii, jj, ll;
+	int imax0 = (ps-(di&(ps-1)))&(ps-1);
+	int imax = m;
+	imax0 = imax<imax0 ? imax : imax0;
+	// different block alignment
+	if( di&(ps-1)!=ai&(ps-1) | imax0>0 )
+		{
+		kernel_dgelqf_pd_lla_vs_lib4(m, 0, n1, imax, di&(ps-1), pD, sdd, dD, li&(ps-1), pL, sdl, ai&(ps-1), pA, sda);
+		return;
+		}
+	// same block alignment
+#if 0
+	kernel_dgelqf_pd_lla_vs_lib4(m, 0, n1, imax, di&(ps-1), pD, sdd, dD, li&(ps-1), pL, sdl, ai&(ps-1), pA, sda);
+#else
+	if(imax0>0)
+		{
+		kernel_dgelqf_pd_lla_vs_lib4(m, 0, n1, imax0, di&(ps-1), pD, sdd, dD, li&(ps-1), pL, sdl, ai&(ps-1), pA, sda);
+		pD += imax0-ps+ps*sdd+imax0*ps;
+		dD += imax0;
+		pA += imax0-ps+ps*sda+0*ps;
+		pL += imax0-ps+ps*sdl+0*ps;
+		m -= imax0;
+		imax -= imax0;
+		}
+	ii = 0;
+// TODO haswell
+#if 0 // haswell
+#else // no haswell
+	for(ii=0; ii<imax-4; ii+=4)
+		{
+		kernel_dgelqf_pd_lla_vs_lib4(4, imax0+ii, n1, 4, 0, pD+ii*sdd+ii*ps, sdd, dD+ii, 0, pL+ii*sdl+0*ps, sdl, 0, pA+ii*sda+0*ps, sda);
+//		kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+		kernel_dlarft_4_lla_lib4(imax0+ii, n1, dD+ii, pL+ii*sdl+0*ps, pA+ii*sda+0*ps, pT);
+//		kernel_dgelqf_pd_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		jj = ii+4;
+#if 0 //defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		for(; jj<m-7; jj+=8)
+			{
+			kernel_dlarfb4_r_8_la_lib4(n1, pA+ii*sda+0*ps, pT, pD+jj*sdd+ii*ps, sdd, pA+jj*sda+0*ps, sda);
+			}
+#endif
+		for(; jj<m-3; jj+=4)
+			{
+			kernel_dlarfb4_r_4_lla_lib4(imax0+ii, n1, pL+ii*sdl+0*ps, pA+ii*sda+0*ps, pT, pD+jj*sdd+ii*ps, pL+jj*sdl+0*ps, pA+jj*sda+0*ps);
+			}
+		for(ll=0; ll<m-jj; ll++)
+			{
+			kernel_dlarfb4_r_1_lla_lib4(imax0+ii, n1, pL+ii*sdl+0*ps, pA+ii*sda+0*ps, pT, pD+ll+jj*sdd+ii*ps, pL+ll+jj*sdl+0*ps, pA+ll+jj*sda+0*ps);
+			}
+		}
+	if(ii<imax)
+		{
+//		if(ii==imax-4)
+//			{
+//			kernel_dgelqf_pd_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+//			}
+//		else
+//			{
+			kernel_dgelqf_pd_lla_vs_lib4(m-ii, imax0+ii, n1, imax-ii, 0, pD+ii*sdd+ii*ps, sdd, dD+ii, 0, pL+ii*sdl+0*ps, sdl, 0, pA+ii*sda+0*ps, sda);
+//			}
+		}
+#endif // no haswell
+#endif
+	return;
 	}
 
 

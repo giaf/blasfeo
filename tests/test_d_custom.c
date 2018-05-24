@@ -213,8 +213,8 @@ int main()
 
 	blasfeo_print_dmat(n, 2*n, &lq0, 0, 0);
 
-//	blasfeo_dgelqf_pd(n, 2*n, &lq0, 0, 0, &lq0, 0, 0, lq0_work);
-	blasfeo_dgelqf_pd_la(n, n, &lq0, 0, 0, &lq0, 0, n, lq0_work);
+	blasfeo_dgelqf_pd(n, 2*n, &lq0, 0, 0, &lq0, 0, 0, lq0_work);
+//	blasfeo_dgelqf_pd_la(n, n, &lq0, 0, 0, &lq0, 0, n, lq0_work);
 
 	blasfeo_print_dmat(n, 2*n, &lq0, 0, 0);
 

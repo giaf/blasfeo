@@ -9993,6 +9993,291 @@ kernel_dlarfb4_r_4_la_lib4:
 
 
 
+//                                  1       2       3            4            5           6           7           8
+// void kernel_dlarfb4_r_4_lla_lib4(int n0, int n1, double *pVL, double *pVA, double *pT, double *pD, double *pL, double *pA);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dlarfb4_r_4_lla_lib4
+	.type kernel_dlarfb4_r_4_lla_lib4, @function
+kernel_dlarfb4_r_4_lla_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dlarfb4_r_4_lla_lib4
+_kernel_dlarfb4_r_4_lla_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dlarfb4_r_4_lla_lib4
+	.def kernel_dlarfb4_r_4_lla_lib4; .scl 2; .type 32; .endef
+kernel_dlarfb4_r_4_lla_lib4:
+#endif
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+	// L
+
+	movq	ARG1, %r10 // n0
+	movq	ARG7, %r11 // L
+	movq	ARG3, %r12 // VL
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_add_nt_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_add_nt_4x4_lib4
+#endif
+#endif
+
+	// A
+
+	movq	ARG2, %r10 // n1
+	movq	ARG8, %r11 // A
+	movq	ARG4, %r12 // VA
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_add_nt_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_add_nt_4x4_lib4
+#endif
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_4X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_blend_4x4_lib4
+#endif
+#endif
+
+	// L final 4x4 lower triangular
+
+	movq	ARG1, %r10 // n0
+	sall	$5, %r10d // n0*ps*sizeof(double)
+	movq	ARG7, %r11 // L
+	addq	%r10, %r11 // L+n0*ps
+	movq	ARG3, %r12 // VL
+	addq	%r10, %r12 // VL+n0*ps
+
+	// 4
+	vmovapd			0(%r11), %ymm12
+	vbroadcastsd	0(%r12), %ymm13
+	vmulpd			%ymm12, %ymm13, %ymm15
+	vaddpd			%ymm0, %ymm15, %ymm0
+	vbroadcastsd	8(%r12), %ymm13
+	vmulpd			%ymm12, %ymm13, %ymm15
+	vaddpd			%ymm1, %ymm15, %ymm1
+	vbroadcastsd	16(%r12), %ymm13
+	vmulpd			%ymm12, %ymm13, %ymm15
+	vaddpd			%ymm2, %ymm15, %ymm2
+	vbroadcastsd	24(%r12), %ymm13
+	vmulpd			%ymm12, %ymm13, %ymm15
+	vaddpd			%ymm3, %ymm15, %ymm3
+	// 3
+	vmovapd			32(%r11), %ymm12
+	vbroadcastsd	40(%r12), %ymm13
+	vmulpd			%ymm12, %ymm13, %ymm15
+	vaddpd			%ymm1, %ymm15, %ymm1
+	vbroadcastsd	48(%r12), %ymm13
+	vmulpd			%ymm12, %ymm13, %ymm15
+	vaddpd			%ymm2, %ymm15, %ymm2
+	vbroadcastsd	56(%r12), %ymm13
+	vmulpd			%ymm12, %ymm13, %ymm15
+	vaddpd			%ymm3, %ymm15, %ymm3
+	// 2
+	vmovapd			64(%r11), %ymm12
+	vbroadcastsd	80(%r12), %ymm13
+	vmulpd			%ymm12, %ymm13, %ymm15
+	vaddpd			%ymm2, %ymm15, %ymm2
+	vbroadcastsd	88(%r12), %ymm13
+	vmulpd			%ymm12, %ymm13, %ymm15
+	vaddpd			%ymm3, %ymm15, %ymm3
+	// 1
+	vmovapd			96(%r11), %ymm12
+	vbroadcastsd	120(%r12), %ymm13
+	vmulpd			%ymm12, %ymm13, %ymm15
+	vaddpd			%ymm3, %ymm15, %ymm3
+
+	// D
+
+	movq	ARG6, %r10 // D
+
+	//
+	vmovapd			0(%r10), %ymm12
+	vaddpd			%ymm12, %ymm0, %ymm0
+	//
+	vmovapd			32(%r10), %ymm12
+	vaddpd			%ymm12, %ymm1, %ymm1
+	//
+	vmovapd			64(%r10), %ymm12
+	vaddpd			%ymm12, %ymm2, %ymm2
+	//
+	vmovapd			96(%r10), %ymm12
+	vaddpd			%ymm12, %ymm3, %ymm3
+
+	// T
+
+	movq	ARG5, %r10 // T
+
+	//
+	vbroadcastsd	120(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm3
+	//
+	vbroadcastsd	112(%r10), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm15
+	vaddpd			%ymm15, %ymm3, %ymm3
+	vbroadcastsd	80(%r10), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm2
+	//
+	vbroadcastsd	104(%r10), %ymm12
+	vmulpd			%ymm1, %ymm12, %ymm15
+	vaddpd			%ymm15, %ymm3, %ymm3
+	vbroadcastsd	72(%r10), %ymm12
+	vmulpd			%ymm1, %ymm12, %ymm15
+	vaddpd			%ymm15, %ymm2, %ymm2
+	vbroadcastsd	40(%r10), %ymm12
+	vmulpd			%ymm1, %ymm12, %ymm1
+	//
+	vbroadcastsd	96(%r10), %ymm12
+	vmulpd			%ymm0, %ymm12, %ymm15
+	vaddpd			%ymm15, %ymm3, %ymm3
+	vbroadcastsd	64(%r10), %ymm12
+	vmulpd			%ymm0, %ymm12, %ymm15
+	vaddpd			%ymm15, %ymm2, %ymm2
+	vbroadcastsd	32(%r10), %ymm12
+	vmulpd			%ymm0, %ymm12, %ymm15
+	vaddpd			%ymm15, %ymm1, %ymm1
+	vbroadcastsd	0(%r10), %ymm12
+	vmulpd			%ymm0, %ymm12, %ymm0
+
+	// D
+
+	movq	ARG6, %r10 // D
+
+	//
+	vmovapd			0(%r10), %ymm12
+	vaddpd			%ymm12, %ymm0, %ymm12
+	vmovapd			%ymm12, 0(%r10)
+	//
+	vmovapd			32(%r10), %ymm12
+	vaddpd			%ymm12, %ymm1, %ymm12
+	vmovapd			%ymm12, 32(%r10)
+	//
+	vmovapd			64(%r10), %ymm12
+	vaddpd			%ymm12, %ymm2, %ymm12
+	vmovapd			%ymm12, 64(%r10)
+	//
+	vmovapd			96(%r10), %ymm12
+	vaddpd			%ymm12, %ymm3, %ymm12
+	vmovapd			%ymm12, 96(%r10)
+
+	// L
+
+	movq	ARG1, %r10 // n0
+	movq	ARG3, %r11 // VL
+	movq	ARG7, %r12 // L
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEBP_ADD_NN_4X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgebp_add_nn_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgebp_add_nn_4x4_lib4
+#endif
+#endif
+
+	// L final 4x4 lower triangular
+
+	movq	ARG1, %r10 // n0
+	sall	$5, %r10d // n0*ps*sizeof(double)
+	movq	ARG3, %r11 // VL
+	addq	%r10, %r11 // VL+n0*ps
+	movq	ARG7, %r12 // L
+	addq	%r10, %r12 // L+n0*ps
+
+	// 4
+	vmovapd			0(%r12), %ymm12
+	vbroadcastsd	0(%r11), %ymm13
+	vmulpd			%ymm0, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vbroadcastsd	8(%r11), %ymm13
+	vmulpd			%ymm1, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vbroadcastsd	16(%r11), %ymm13
+	vmulpd			%ymm2, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vbroadcastsd	24(%r11), %ymm13
+	vmulpd			%ymm3, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vmovapd			%ymm12, 0(%r12)
+	// 3
+	vmovapd			32(%r12), %ymm12
+	vbroadcastsd	40(%r11), %ymm13
+	vmulpd			%ymm1, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vbroadcastsd	48(%r11), %ymm13
+	vmulpd			%ymm2, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vbroadcastsd	56(%r11), %ymm13
+	vmulpd			%ymm3, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vmovapd			%ymm12, 32(%r12)
+	// 2
+	vmovapd			64(%r12), %ymm12
+	vbroadcastsd	80(%r11), %ymm13
+	vmulpd			%ymm2, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vbroadcastsd	88(%r11), %ymm13
+	vmulpd			%ymm3, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vmovapd			%ymm12, 64(%r12)
+	// 3
+	vmovapd			96(%r12), %ymm12
+	vbroadcastsd	120(%r11), %ymm13
+	vmulpd			%ymm3, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vmovapd			%ymm12, 96(%r12)
+
+	// A
+
+	movq	ARG2, %r10 // n1
+	movq	ARG4, %r11 // VA
+	movq	ARG8, %r12 // A
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEBP_ADD_NN_4X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgebp_add_nn_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgebp_add_nn_4x4_lib4
+#endif
+#endif
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dlarfb4_r_4_lla_lib4, .-kernel_dlarfb4_r_4_lla_lib4
+#endif
+
+
+
+
+
 	// read-only data
 #if defined(OS_LINUX)
 	.section	.rodata.cst32,"aM",@progbits,32
