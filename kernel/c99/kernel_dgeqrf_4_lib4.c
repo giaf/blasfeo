@@ -3688,54 +3688,20 @@ void kernel_dgelqf_pd_la_vs_lib4(int m, int n1, int k, int offD, double *pD, int
 
 
 
-// assume kmax>=4
-void kernel_dlarft_4_la_lib4(int n0, int n1, double *pD, double *dD, double *pA, double *pT)
+void kernel_dlarft_4_la_lib4(int n1, double *dD, double *pA, double *pT)
 	{
 	const int ps = 4;
 	int kk;
 	double v10,
 	       v20, v21,
 		   v30, v31, v32;
-	// L
-	// 0
-	// 1
-	v10 =  pD[0+ps*1];
-	// 2
-	v10 += pD[1+ps*2]*pD[0+ps*2];
-	v20 =  pD[0+ps*2];
-	v21 =  pD[1+ps*2];
-	// 3
-	v10 += pD[1+ps*3]*pD[0+ps*3];
-	v20 += pD[2+ps*3]*pD[0+ps*3];
-	v21 += pD[2+ps*3]*pD[1+ps*3];
-	v30 =  pD[0+ps*3];
-	v31 =  pD[1+ps*3];
-	v32 =  pD[2+ps*3];
-	// middle
-	for(kk=4; kk<n0; kk++)
-		{
-		v10 += pD[1+ps*kk]*pD[0+ps*kk];
-		v20 += pD[2+ps*kk]*pD[0+ps*kk];
-		v30 += pD[3+ps*kk]*pD[0+ps*kk];
-		v21 += pD[2+ps*kk]*pD[1+ps*kk];
-		v31 += pD[3+ps*kk]*pD[1+ps*kk];
-		v32 += pD[3+ps*kk]*pD[2+ps*kk];
-		}
-	// 4x4 lower triangular
-	//
-	v10 += pD[1+ps*(n0+0)]*pD[0+ps*(n0+0)];
-	v20 += pD[2+ps*(n0+0)]*pD[0+ps*(n0+0)];
-	v30 += pD[3+ps*(n0+0)]*pD[0+ps*(n0+0)];
-	v21 += pD[2+ps*(n0+0)]*pD[1+ps*(n0+0)];
-	v31 += pD[3+ps*(n0+0)]*pD[1+ps*(n0+0)];
-	v32 += pD[3+ps*(n0+0)]*pD[2+ps*(n0+0)];
-	//
-	v21 += pD[2+ps*(n0+1)]*pD[1+ps*(n0+1)];
-	v31 += pD[3+ps*(n0+1)]*pD[1+ps*(n0+1)];
-	v32 += pD[3+ps*(n0+1)]*pD[2+ps*(n0+1)];
-	//
-	v32 += pD[3+ps*(n0+2)]*pD[2+ps*(n0+2)];
-	//
+	// orthogonal pD
+	v10 = 0.0;
+	v20 = 0.0;
+	v30 = 0.0;
+	v21 = 0.0;
+	v31 = 0.0;
+	v32 = 0.0;
 	// A
 	for(kk=0; kk<n1; kk++)
 		{
@@ -3921,8 +3887,6 @@ void kernel_dgelqf_pd_lla_vs_lib4(int m, int n0, int n1, int k, int offD, double
 		   w10, w11,
 		   w20, w21,
 		   w30, w31;
-	__m256d
-		_a0, _b0, _t0, _w0, _w1;
 	double *pC00, *pC10, *pC10a, *pC20, *pC20a, *pC01, *pC11; // TODO remove
 	double *pD00, *pD10, *pD20, *pD20a, *pD01, *pD11;
 	double *pL00, *pL10, *pL20, *pL20a, *pL01, *pL11;
@@ -4008,9 +3972,9 @@ void kernel_dgelqf_pd_lla_vs_lib4(int m, int n0, int n1, int k, int offD, double
 		tmp = 1.0*0.0 + pC00[0+ps*1]*1.0;
 		for(kk=2; kk<kmax; kk++)
 			tmp += pC00[0+ps*kk]*pC10[0+ps*kk];
-		pT[0+ldt*0] = - dD[ii+0];
-		pT[0+ldt*1] = + dD[ii+1] * tmp * dD[ii+0];
-		pT[1+ldt*1] = - dD[ii+1];
+		pT[0+ldt*0] = dD[ii+0];
+		pT[0+ldt*1] = - dD[ii+1] * tmp * dD[ii+0];
+		pT[1+ldt*1] = dD[ii+1];
 		// downgrade
 		kmax = n-ii;
 		jmax = m-ii-2;
@@ -4030,8 +3994,8 @@ void kernel_dgelqf_pd_lla_vs_lib4(int m, int n0, int n1, int k, int offD, double
 					w00 += pC20[0+ps*kk]*pC00[0+ps*kk];
 					w01 += pC20[0+ps*kk]*pC10[0+ps*kk];
 					}
-				w01 = w00*pT[0+ldt*1] + w01*pT[1+ldt*1];
-				w00 = w00*pT[0+ldt*0];
+				w01 = - w00*pT[0+ldt*1] - w01*pT[1+ldt*1];
+				w00 = - w00*pT[0+ldt*0];
 				pC20[0+ps*0] += w00*1.0          + w01*0.0;
 				pC20[0+ps*1] += w00*pC00[0+ps*1] + w01*1.0;
 				for(kk=2; kk<kmax; kk++)
@@ -4044,51 +4008,47 @@ void kernel_dgelqf_pd_lla_vs_lib4(int m, int n0, int n1, int k, int offD, double
 			}
 		for( ; jj<jmax-3; jj+=4)
 			{
-			//
-			_w0 = _mm256_load_pd( &pC20[0+ps*0] );
-			_a0 = _mm256_load_pd( &pC20[0+ps*1] );
-			_b0 = _mm256_broadcast_sd( &pC00[0+ps*1] );
-			_t0 = _mm256_mul_pd( _a0, _b0 );
-			_w0 = _mm256_add_pd( _w0, _t0 );
-			_w1 = _mm256_load_pd( &pC20[0+ps*1] );
+			w00 = pC20[0+ps*0]*1.0 + pC20[0+ps*1]*pC00[0+ps*1];
+			w10 = pC20[1+ps*0]*1.0 + pC20[1+ps*1]*pC00[0+ps*1];
+			w20 = pC20[2+ps*0]*1.0 + pC20[2+ps*1]*pC00[0+ps*1];
+			w30 = pC20[3+ps*0]*1.0 + pC20[3+ps*1]*pC00[0+ps*1];
+			w01 = pC20[0+ps*0]*0.0 + pC20[0+ps*1]*1.0;
+			w11 = pC20[1+ps*0]*0.0 + pC20[1+ps*1]*1.0;
+			w21 = pC20[2+ps*0]*0.0 + pC20[2+ps*1]*1.0;
+			w31 = pC20[3+ps*0]*0.0 + pC20[3+ps*1]*1.0;
 			for(kk=2; kk<kmax; kk++)
 				{
-				_a0 = _mm256_load_pd( &pC20[0+ps*kk] );
-				_b0 = _mm256_broadcast_sd( &pC00[0+ps*kk] );
-				_t0 = _mm256_mul_pd( _a0, _b0 );
-				_w0 = _mm256_add_pd( _w0, _t0 );
-				_b0 = _mm256_broadcast_sd( &pC10[0+ps*kk] );
-				_t0 = _mm256_mul_pd( _a0, _b0 );
-				_w1 = _mm256_add_pd( _w1, _t0 );
+				w00 += pC20[0+ps*kk]*pC00[0+ps*kk];
+				w10 += pC20[1+ps*kk]*pC00[0+ps*kk];
+				w20 += pC20[2+ps*kk]*pC00[0+ps*kk];
+				w30 += pC20[3+ps*kk]*pC00[0+ps*kk];
+				w01 += pC20[0+ps*kk]*pC10[0+ps*kk];
+				w11 += pC20[1+ps*kk]*pC10[0+ps*kk];
+				w21 += pC20[2+ps*kk]*pC10[0+ps*kk];
+				w31 += pC20[3+ps*kk]*pC10[0+ps*kk];
 				}
-			//
-			_b0 = _mm256_broadcast_sd( &pT[1+ldt*1] );
-			_w1 = _mm256_mul_pd( _w1, _b0 );
-			_b0 = _mm256_broadcast_sd( &pT[0+ldt*1] );
-			_t0 = _mm256_mul_pd( _w0, _b0 );
-			_w1 = _mm256_add_pd( _w1, _t0 );
-			_b0 = _mm256_broadcast_sd( &pT[0+ldt*0] );
-			_w0 = _mm256_mul_pd( _w0, _b0 );
-			//
-			_a0 = _mm256_load_pd( &pC20[0+ps*0] );
-			_a0 = _mm256_add_pd( _a0, _w0 );
-			_mm256_store_pd( &pC20[0+ps*0], _a0 );
-			_a0 = _mm256_load_pd( &pC20[0+ps*1] );
-			_b0 = _mm256_broadcast_sd( &pC00[0+ps*1] );
-			_t0 = _mm256_mul_pd( _w0, _b0 );
-			_a0 = _mm256_add_pd( _a0, _t0 );
-			_a0 = _mm256_add_pd( _a0, _w1 );
-			_mm256_store_pd( &pC20[0+ps*1], _a0 );
+			w01 = - w00*pT[0+ldt*1] - w01*pT[1+ldt*1];
+			w11 = - w10*pT[0+ldt*1] - w11*pT[1+ldt*1];
+			w21 = - w20*pT[0+ldt*1] - w21*pT[1+ldt*1];
+			w31 = - w30*pT[0+ldt*1] - w31*pT[1+ldt*1];
+			w00 = - w00*pT[0+ldt*0];
+			w10 = - w10*pT[0+ldt*0];
+			w20 = - w20*pT[0+ldt*0];
+			w30 = - w30*pT[0+ldt*0];
+			pC20[0+ps*0] += w00*1.0          + w01*0.0;
+			pC20[1+ps*0] += w10*1.0          + w11*0.0;
+			pC20[2+ps*0] += w20*1.0          + w21*0.0;
+			pC20[3+ps*0] += w30*1.0          + w31*0.0;
+			pC20[0+ps*1] += w00*pC00[0+ps*1] + w01*1.0;
+			pC20[1+ps*1] += w10*pC00[0+ps*1] + w11*1.0;
+			pC20[2+ps*1] += w20*pC00[0+ps*1] + w21*1.0;
+			pC20[3+ps*1] += w30*pC00[0+ps*1] + w31*1.0;
 			for(kk=2; kk<kmax; kk++)
 				{
-				_a0 = _mm256_load_pd( &pC20[0+ps*kk] );
-				_b0 = _mm256_broadcast_sd( &pC00[0+ps*kk] );
-				_t0 = _mm256_mul_pd( _w0, _b0 );
-				_a0 = _mm256_add_pd( _a0, _t0 );
-				_b0 = _mm256_broadcast_sd( &pC10[0+ps*kk] );
-				_t0 = _mm256_mul_pd( _w1, _b0 );
-				_a0 = _mm256_add_pd( _a0, _t0 );
-				_mm256_store_pd( &pC20[0+ps*kk], _a0 );
+				pC20[0+ps*kk] += w00*pC00[0+ps*kk] + w01*pC10[0+ps*kk];
+				pC20[1+ps*kk] += w10*pC00[0+ps*kk] + w11*pC10[0+ps*kk];
+				pC20[2+ps*kk] += w20*pC00[0+ps*kk] + w21*pC10[0+ps*kk];
+				pC20[3+ps*kk] += w30*pC00[0+ps*kk] + w31*pC10[0+ps*kk];
 				}
 			pC20 += ps*sdd;
 			}
@@ -4101,8 +4061,8 @@ void kernel_dgelqf_pd_lla_vs_lib4(int m, int n0, int n1, int k, int offD, double
 				w00 += pC20[0+ps*kk]*pC00[0+ps*kk];
 				w01 += pC20[0+ps*kk]*pC10[0+ps*kk];
 				}
-			w01 = w00*pT[0+ldt*1] + w01*pT[1+ldt*1];
-			w00 = w00*pT[0+ldt*0];
+			w01 = - w00*pT[0+ldt*1] - w01*pT[1+ldt*1];
+			w00 = - w00*pT[0+ldt*0];
 			pC20[0+ps*0] += w00*1.0          + w01*0.0;
 			pC20[0+ps*1] += w00*pC00[0+ps*1] + w01*1.0;
 			for(kk=2; kk<kmax; kk++)
@@ -4154,9 +4114,6 @@ void kernel_dgelqf_pd_lla_vs_lib4(int m, int n0, int n1, int k, int offD, double
 				pA00[0+ps*jj] *= tmp;
 				}
 			}
-		// compute T
-		pT[0+ldt*0] = - dD[ii+0];
-		// downgrade
 		jmax = m-ii-1;
 		jmax0 = (ps-((ii+1+offA)&(ps-1)))&(ps-1);
 		jmax0 = jmax<jmax0 ? jmax : jmax0;
@@ -4177,7 +4134,7 @@ void kernel_dgelqf_pd_lla_vs_lib4(int m, int n0, int n1, int k, int offD, double
 					{
 					w00 += pA10[0+ps*kk] * pA00[0+ps*kk];
 					}
-				w00 = w00*pT[0+ldt*0];
+				w00 = - w00*dD[ii];
 				pD10[0+ps*0] += w00;
 				for(kk=0; kk<=n0+ii; kk++)
 					{
@@ -4191,52 +4148,53 @@ void kernel_dgelqf_pd_lla_vs_lib4(int m, int n0, int n1, int k, int offD, double
 				pA10 += 1;
 				}
 			pL10 += -ps+ps*sdl;
-			pA10 += -ps+ps*sda;
+			pA10 += -ps+ps*sdd;
 			}
 		for( ; jj<jmax-3; jj+=4)
 			{
-			//
 			pD10 = &pD0[((offD+ii+jj+1)&(ps-1))+((offD+ii+jj+1)-((offD+ii+jj+1)&(ps-1)))*sdd+ii*ps];
-			_w0 = _mm256_load_pd( &pD10[0+ps*0] );
+			w00 = pD10[0+ps*0];
+			w10 = pD10[1+ps*0];
+			w20 = pD10[2+ps*0];
+			w30 = pD10[3+ps*0];
 			for(kk=0; kk<=n0+ii; kk++)
 				{
-				_a0 = _mm256_load_pd( &pL10[0+ps*kk] );
-				_b0 = _mm256_broadcast_sd( &pL00[0+ps*kk] );
-				_t0 = _mm256_mul_pd( _a0, _b0 );
-				_w0 = _mm256_add_pd( _w0, _t0 );
+				w00 += pL10[0+ps*kk]*pL00[0+ps*kk];
+				w10 += pL10[1+ps*kk]*pL00[0+ps*kk];
+				w20 += pL10[2+ps*kk]*pL00[0+ps*kk];
+				w30 += pL10[3+ps*kk]*pL00[0+ps*kk];
 				}
 			for(kk=0; kk<n1; kk++)
 				{
-				_a0 = _mm256_load_pd( &pA10[0+ps*kk] );
-				_b0 = _mm256_broadcast_sd( &pA00[0+ps*kk] );
-				_t0 = _mm256_mul_pd( _a0, _b0 );
-				_w0 = _mm256_add_pd( _w0, _t0 );
+				w00 += pA10[0+ps*kk]*pA00[0+ps*kk];
+				w10 += pA10[1+ps*kk]*pA00[0+ps*kk];
+				w20 += pA10[2+ps*kk]*pA00[0+ps*kk];
+				w30 += pA10[3+ps*kk]*pA00[0+ps*kk];
 				}
-			//
-			_b0 = _mm256_broadcast_sd( &pT[0+ldt*0] );
-			_w0 = _mm256_mul_pd( _w0, _b0 );
-			//
-			_a0 = _mm256_load_pd( &pD10[0+ps*0] );
-			_a0 = _mm256_add_pd( _a0, _w0 );
-			_mm256_store_pd( &pD10[0+ps*0], _a0 );
+			w00 = - w00*dD[ii];
+			w10 = - w10*dD[ii];
+			w20 = - w20*dD[ii];
+			w30 = - w30*dD[ii];
+			pD10[0+ps*0] += w00;
+			pD10[1+ps*0] += w10;
+			pD10[2+ps*0] += w20;
+			pD10[3+ps*0] += w30;
 			for(kk=0; kk<=n0+ii; kk++)
 				{
-				_a0 = _mm256_load_pd( &pL10[0+ps*kk] );
-				_b0 = _mm256_broadcast_sd( &pL00[0+ps*kk] );
-				_t0 = _mm256_mul_pd( _w0, _b0 );
-				_a0 = _mm256_add_pd( _a0, _t0 );
-				_mm256_store_pd( &pL10[0+ps*kk], _a0 );
+				pL10[0+ps*kk] += w00*pL00[0+ps*kk];
+				pL10[1+ps*kk] += w10*pL00[0+ps*kk];
+				pL10[2+ps*kk] += w20*pL00[0+ps*kk];
+				pL10[3+ps*kk] += w30*pL00[0+ps*kk];
 				}
 			for(kk=0; kk<n1; kk++)
 				{
-				_a0 = _mm256_load_pd( &pA10[0+ps*kk] );
-				_b0 = _mm256_broadcast_sd( &pA00[0+ps*kk] );
-				_t0 = _mm256_mul_pd( _w0, _b0 );
-				_a0 = _mm256_add_pd( _a0, _t0 );
-				_mm256_store_pd( &pA10[0+ps*kk], _a0 );
+				pA10[0+ps*kk] += w00*pA00[0+ps*kk];
+				pA10[1+ps*kk] += w10*pA00[0+ps*kk];
+				pA10[2+ps*kk] += w20*pA00[0+ps*kk];
+				pA10[3+ps*kk] += w30*pA00[0+ps*kk];
 				}
 			pL10 += ps*sdl;
-			pA10 += ps*sda;
+			pA10 += ps*sdd;
 			}
 		for(ll=0; ll<jmax-jj; ll++)
 			{
@@ -4250,7 +4208,7 @@ void kernel_dgelqf_pd_lla_vs_lib4(int m, int n0, int n1, int k, int offD, double
 				{
 				w00 += pA10[0+ps*kk] * pA00[0+ps*kk];
 				}
-			w00 = w00*pT[0+ldt*0];
+			w00 = - w00*dD[ii];
 			pD10[0+ps*0] += w00;
 			for(kk=0; kk<=n0+ii; kk++)
 				{
