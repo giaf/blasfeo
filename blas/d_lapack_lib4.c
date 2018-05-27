@@ -2560,10 +2560,10 @@ void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_HASWELL)
 	double pT[144] __attribute__ ((aligned (64))) = {0};
-	double pK[96] __attribute__ ((aligned (64))) = {0};
+	double pK[144] __attribute__ ((aligned (64))) = {0};
 #else
-	double pT[144] = {0};
-	double pK[96] = {0};
+	double pT[144] = {0}; // XXX smaller ?
+	double pK[96] = {0}; // XXX smaller ?
 #endif
 	/* if(pC!=pD) */
 		/* dgecp_lib(m, n, 1.0, ci&(ps-1), pC, sdc, di&(ps-1), pD, sdd); */
@@ -2591,15 +2591,31 @@ void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 		}
 	ii = 0;
 #if defined(TARGET_X64_INTEL_HASWELL)
-//	for(; ii<imax-11; ii+=12)
-	for(; ii<imax-127; ii+=12) // crossover point ~ ii=128
+	for(; ii<imax-11; ii+=12)
+//	for(; ii<imax-127; ii+=12) // crossover point ~ ii=128
 		{
 		kernel_dgelqf_dlarft12_12_lib4(n-(ii+0), pD+(ii+0)*sdd+(ii+0)*ps, sdd, dD+(ii+0), &pT[0+0*12+0*ps]);
 		jj = ii+12;
+#if 1
+		for(; jj<m-11; jj+=12)
+			{
+			kernel_dlarfb12_r_12_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, pT, pD+jj*sdd+ii*ps, pK);
+//			d_print_mat(4, 12, pK, 4);
+//			d_print_mat(4, 12, pK+4*12, 4);
+//			d_print_mat(4, 12, pK+8*12, 4);
+			}
 		for(; jj<m; jj+=4)
 			{
 			kernel_dlarfb12_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, pT, pD+jj*sdd+ii*ps, pK, m-jj);
+//			d_print_mat(4, 12, pK, 4);
 			}
+#else
+		for(; jj<m; jj+=4)
+			{
+			kernel_dlarfb12_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, pT, pD+jj*sdd+ii*ps, pK, m-jj);
+//			d_print_mat(4, 12, pK, 4);
+			}
+#endif
 		}
 	for(; ii<imax-11; ii+=4)
 		{
