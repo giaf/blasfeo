@@ -2750,6 +2750,7 @@ void kernel_dlarfb4_r_1_lib4(int kmax, double *pV, double *pT, double *pD)
 
 // assume n>=4
 // positive diagonal
+#if ! defined(TARGET_X64_INTEL_HASWELL)
 void kernel_dgelqf_pd_dlarft4_4_lib4(int n, double *pD, double *dD, double *pT)
 	{
 	int ii, jj, ll;
@@ -2989,6 +2990,7 @@ col4:
 	pT[0+ps*3] = - dD[3] * (w0*pT[0+ps*0] + w1*pT[0+ps*1] + w2*pT[0+ps*2]);
 	return;
 	}
+#endif
 
 
 

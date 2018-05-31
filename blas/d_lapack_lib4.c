@@ -2591,6 +2591,7 @@ void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 		}
 	ii = 0;
 #if defined(TARGET_X64_INTEL_HASWELL)
+	// rank 12 update
 	for(; ii<imax-11; ii+=12)
 //	for(; ii<imax-127; ii+=12) // crossover point ~ ii=128
 		{
@@ -2600,23 +2601,20 @@ void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 		for(; jj<m-11; jj+=12)
 			{
 			kernel_dlarfb12_r_12_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, pT, pD+jj*sdd+ii*ps, pK);
-//			d_print_mat(4, 12, pK, 4);
-//			d_print_mat(4, 12, pK+4*12, 4);
-//			d_print_mat(4, 12, pK+8*12, 4);
 			}
 		for(; jj<m; jj+=4)
 			{
 			kernel_dlarfb12_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, pT, pD+jj*sdd+ii*ps, pK, m-jj);
-//			d_print_mat(4, 12, pK, 4);
 			}
 #else
 		for(; jj<m; jj+=4)
 			{
 			kernel_dlarfb12_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, pT, pD+jj*sdd+ii*ps, pK, m-jj);
-//			d_print_mat(4, 12, pK, 4);
 			}
 #endif
 		}
+#if 0
+	// rank 4 update
 	for(; ii<imax-11; ii+=4)
 		{
 		kernel_dgelqf_dlarft4_12_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, dD+ii, pT);
@@ -2638,6 +2636,7 @@ void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 			kernel_dlarfb4_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
 			}
 		}
+#endif
 	// 8 9 10 11
 	if(ii<imax-7)
 		{
@@ -2759,7 +2758,7 @@ void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_HASWELL)
 	double pT[144] __attribute__ ((aligned (64))) = {0};
-	double pK[96] __attribute__ ((aligned (64))) = {0};
+	double pK[144] __attribute__ ((aligned (64))) = {0};
 #else
 	double pT[144] = {0};
 	double pK[96] = {0};
@@ -2789,42 +2788,26 @@ void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 		imax -= imax0;
 		}
 	ii = 0;
-#if 0 & defined(TARGET_X64_INTEL_HASWELL)
-//	for(; ii<imax-11; ii+=12)
-	for(; ii<imax-127; ii+=12) // crossover point ~ ii=128
+#if defined(TARGET_X64_INTEL_HASWELL)
+	// rank 12 update
+	for(; ii<imax-11; ii+=12)
 		{
-		kernel_dgelqf_dlarft12_12_lib4(n-(ii+0), pD+(ii+0)*sdd+(ii+0)*ps, sdd, dD+(ii+0), &pT[0+0*12+0*ps]);
+		kernel_dgelqf_pd_dlarft12_12_lib4(n-(ii+0), pD+(ii+0)*sdd+(ii+0)*ps, sdd, dD+(ii+0), &pT[0+0*12+0*ps]);
 		jj = ii+12;
+		for(; jj<m-11; jj+=12)
+			{
+			kernel_dlarfb12_r_12_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, pT, pD+jj*sdd+ii*ps, pK);
+			}
 		for(; jj<m; jj+=4)
 			{
 			kernel_dlarfb12_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, pT, pD+jj*sdd+ii*ps, pK, m-jj);
 			}
 		}
-	for(; ii<imax-11; ii+=4)
-		{
-		kernel_dgelqf_dlarft4_12_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, dD+ii, pT);
-		jj = ii+12;
-		for(; jj<m-11; jj+=12)
-			{
-			kernel_dlarfb4_r_12_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
-			}
-		for(; jj<m-7; jj+=8)
-			{
-			kernel_dlarfb4_r_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
-			}
-		for(; jj<m-3; jj+=4)
-			{
-			kernel_dlarfb4_r_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
-			}
-		for(ll=0; ll<m-jj; ll++)
-			{
-			kernel_dlarfb4_r_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
-			}
-		}
+	// rank 4 update
 	// 8 9 10 11
 	if(ii<imax-7)
 		{
-		kernel_dgelqf_dlarft4_8_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, dD+ii, pT);
+		kernel_dgelqf_pd_dlarft4_8_lib4(n-ii, pD+ii*sdd+ii*ps, sdd, dD+ii, pT);
 		jj = ii+8;
 		if(jj<m)
 			{
@@ -2850,7 +2833,7 @@ void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 	// 4 5 6 7
 	if(ii<imax-3)
 		{
-		kernel_dgelqf_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		kernel_dgelqf_pd_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
 		jj = ii+4;
 		if(jj<m)
 			{
@@ -2876,9 +2859,10 @@ void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 	// 1 2 3
 	if(ii<imax)
 		{
-		kernel_dgelqf_vs_lib4(m-ii, n-ii, imax-ii, ii&(ps-1), pD+ii*sdd+ii*ps, sdd, dD+ii);
+		kernel_dgelqf_pd_vs_lib4(m-ii, n-ii, imax-ii, ii&(ps-1), pD+ii*sdd+ii*ps, sdd, dD+ii);
 		}
 #else // no haswell
+	// rank 4 update
 	for(ii=0; ii<imax-4; ii+=4)
 		{
 //		kernel_dgelqf_vs_lib4(4, n-ii, 4, 0, pD+ii*sdd+ii*ps, sdd, dD+ii);
