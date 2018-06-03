@@ -872,8 +872,6 @@ void blasfeo_sgetrf_rowpivot(int m, int n, struct blasfeo_smat *sC, int ci, int 
 
 int blasfeo_sgeqrf_worksize(int m, int n)
 	{
-	printf("\nblasfeo_sgeqrf_worksize: feature not implemented yet\n");
-	exit(1);
 	return 0;
 	}
 
@@ -892,8 +890,6 @@ void blasfeo_sgeqrf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struc
 
 int blasfeo_sgelqf_worksize(int m, int n)
 	{
-	printf("\nblasfeo_sgelqf_worksize: feature not implemented yet\n");
-	exit(1);
 	return 0;
 	}
 
