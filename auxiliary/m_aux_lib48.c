@@ -39,7 +39,7 @@
 
 
 
-void m_cvt_d2blasfeo_svec(int m, struct blasfeo_dvec *vd, int vdi, struct blasfeo_svec *vs, int vsi)
+void blasfeo_cvt_dvec2svec(int m, struct blasfeo_dvec *vd, int vdi, struct blasfeo_svec *vs, int vsi)
 	{
 	double *pd = vd->pa+vdi;
 	float *ps = vs->pa+vsi;
@@ -53,7 +53,7 @@ void m_cvt_d2blasfeo_svec(int m, struct blasfeo_dvec *vd, int vdi, struct blasfe
 
 
 
-void m_cvt_s2blasfeo_dvec(int m, struct blasfeo_svec *vs, int vsi, struct blasfeo_dvec *vd, int vdi)
+void blasfeo_cvt_svec2dvec(int m, struct blasfeo_svec *vs, int vsi, struct blasfeo_dvec *vd, int vdi)
 	{
 	double *pd = vd->pa+vdi;
 	float *ps = vs->pa+vsi;
@@ -67,13 +67,11 @@ void m_cvt_s2blasfeo_dvec(int m, struct blasfeo_svec *vs, int vsi, struct blasfe
 
 
 
-void m_cvt_d2blasfeo_smat(int m, int n, struct blasfeo_dmat *Md, int mid, int nid, struct blasfeo_smat *Ms, int mis, int nis)
+void blasfeo_cvt_dmat2smat(int m, int n, struct blasfeo_dmat *Md, int mid, int nid, struct blasfeo_smat *Ms, int mis, int nis)
 	{
-//	printf("\nm_cvt_d2blasfeo_smat: feature not implmeneted yet\n\n");
-//	exit(1);
 	if(mid!=0 | mis!=0)
 		{
-		printf("\nm_cvt_d2blasfeo_smat: feature not implmeneted yet: mid=%d, mis=%d\n\n", mid, mis);
+		printf("\nblasfeo_cvt_dmat2smat: feature not implmeneted yet: mid=%d, mis=%d\n\n", mid, mis);
 		exit(1);
 		}
 	const int psd = 4;
@@ -135,9 +133,9 @@ void m_cvt_d2blasfeo_smat(int m, int n, struct blasfeo_dmat *Md, int mid, int ni
 
 
 
-void m_cvt_s2blasfeo_dmat(int m, int n, struct blasfeo_smat *Ms, int mis, int nis, struct blasfeo_dmat *Md, int mid, int nid)
+void blasfeo_cvt_smat2dmat(int m, int n, struct blasfeo_smat *Ms, int mis, int nis, struct blasfeo_dmat *Md, int mid, int nid)
 	{
-	printf("\nm_cvt_s2blasfeo_dmat: feature not implmeneted yet\n\n");
+	printf("\nblasfeo_cvt_smat2dmat: feature not implmeneted yet\n\n");
 	exit(1);
 	return;
 	}
