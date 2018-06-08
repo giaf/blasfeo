@@ -255,7 +255,7 @@ CFLAGS  += -m64 -mavx -mfma -DTARGET_X64_AMD_BULLDOZER
 endif
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
 CFLAGS  += -march=armv8-a+crc+crypto+fp+simd -DTARGET_ARMV8A_ARM_CORTEX_A57
-ASFLAGS += -DTARGET_ARMV7A_ARM_CORTEX_A15
+ASFLAGS += -DTARGET_ARMV7A_ARM_CORTEX_A57
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 CFLAGS  += -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15 -DTARGET_ARMV7A_ARM_CORTEX_A15
