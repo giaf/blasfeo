@@ -1491,7 +1491,7 @@ inner_kernel_dgemm_add_nn_12x4_lib4:
 	.type inner_kernel_dgebp_add_nn_12x12_lib4, @function
 inner_kernel_dgebp_add_nn_12x12_lib4:
 #elif defined(OS_MAC)
-_inner_kernel_dgebp_add_nn_12x4x12_lib4:
+_inner_kernel_dgebp_add_nn_12x12_lib4:
 #elif defined(OS_WINDOWS)
 	.def inner_kernel_dgebp_add_nn_12x12_lib4; .scl 2; .type 32; .endef
 inner_kernel_dgebp_add_nn_12x12_lib4:
