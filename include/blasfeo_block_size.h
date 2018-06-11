@@ -59,7 +59,7 @@
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
 
-#elif defined( TARGET_ARMV8A_ARM_CORTEX_A57 )
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
 #define D_PS 4
 #define S_PS 4
