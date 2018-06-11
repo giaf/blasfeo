@@ -450,10 +450,10 @@ static_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd auxiliary; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
-	ar rcs libblasfeo.a $(OBJS)
+	$(AR) rcs libblasfeo.a $(OBJS)
 	mv libblasfeo.a ./lib/
 ifeq ($(TESTING_MODE), 1)
-	ar rcs libblasfeo_ref.a $(OBJS_REF)
+	$(AR) rcs libblasfeo_ref.a $(OBJS_REF)
 	mv libblasfeo_ref.a ./lib/
 endif
 	@echo
@@ -469,10 +469,10 @@ shared_library: target
 	( cd auxiliary; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
-	gcc -shared -o libblasfeo.so $(OBJS)
+	$(CC) -shared -o libblasfeo.so $(OBJS)
 	mv libblasfeo.so ./lib/
 ifeq ($(TESTING_MODE), 1)
-	gcc -shared -o libblasfeo_ref.so $(OBJS_REF)
+	$(CC) -shared -o libblasfeo_ref.so $(OBJS_REF)
 	mv libblasfeo_ref.so ./lib/
 endif
 	@echo
