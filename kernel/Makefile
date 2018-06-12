@@ -55,6 +55,11 @@ ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
 	( cd c99; $(MAKE) obj)
 endif
 
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
+	( cd armv8a; $(MAKE) obj)
+	( cd c99; $(MAKE) obj)
+endif
+
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 	( cd armv7a; $(MAKE) obj)
 	( cd c99; $(MAKE) obj)

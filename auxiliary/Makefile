@@ -62,6 +62,12 @@ OBJS += s_aux_lib4.o
 OBJS += m_aux_lib44.o
 endif
 
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
+OBJS += d_aux_lib4.o
+OBJS += s_aux_lib4.o
+OBJS += m_aux_lib44.o
+endif
+
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 OBJS += d_aux_lib4.o
 OBJS += s_aux_lib4.o
