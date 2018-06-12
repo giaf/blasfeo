@@ -52,13 +52,13 @@
 #define PRINT_TRAN_MAT d_print_tran_mat
 
 #define PRINT_TO_FILE_MAT d_print_to_file_mat
-#define PRINT_TO_FILE_E_MAT d_print_to_file_e_mat
+#define PRINT_TO_FILE_EXP_MAT d_print_to_file_exp_mat
 
 #define PRINT_TO_STRING_MAT d_print_to_string_mat
 #define PRINT_TO_FILE_TRAN_MAT d_print_to_file_tran_mat
 
-#define PRINT_E_MAT d_print_e_mat
-#define PRINT_E_TRAN_MAT d_print_e_tran_mat
+#define PRINT_EXP_MAT d_print_exp_mat
+#define PRINT_EXP_TRAN_MAT d_print_exp_tran_mat
 
 #define ALLOCATE_STRMAT blasfeo_allocate_dmat
 #define ALLOCATE_STRVEC blasfeo_allocate_dvec
@@ -71,7 +71,7 @@
 #define PRINT_TRAN_STRVEC blasfeo_print_tran_dvec
 
 #define PRINT_TO_FILE_STRMAT blasfeo_print_to_file_dmat
-#define PRINT_TO_FILE_E_STRMAT blasfeo_print_to_file_e_dmat
+#define PRINT_TO_FILE_EXP_STRMAT blasfeo_print_to_file_exp_dmat
 
 #define PRINT_TO_FILE_STRVEC blasfeo_print_to_file_dvec
 #define PRINT_TO_FILE_TRAN_STRVEC d_print_to_file_tran_strvec
@@ -79,9 +79,9 @@
 #define PRINT_TO_STRING_STRVEC blasfeo_print_to_string_dvec
 #define PRINT_TO_STRING_TRAN_STRVEC blasfeo_print_to_string_tran_dvec
 
-#define PRINT_E_STRMAT blasfeo_print_e_dmat
-#define PRINT_E_STRVEC blasfeo_print_e_dvec
-#define PRINT_E_TRAN_STRVEC blasfeo_print_e_tran_dvec
+#define PRINT_EXP_STRMAT blasfeo_print_exp_dmat
+#define PRINT_EXP_STRVEC blasfeo_print_exp_dvec
+#define PRINT_EXP_TRAN_STRVEC blasfeo_print_exp_tran_dvec
 
 #include "x_aux_ext_dep_lib4.c"
 
