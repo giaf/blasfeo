@@ -66,5 +66,5 @@
  *    _libref (reference implementation with dedicated namespace)
  *
  * 5) _sp(sparse)
- *    _e(exponential format)
+ *    _exp(exponential format)
  */
