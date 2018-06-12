@@ -103,7 +103,7 @@ void dgemm_nt_lib(int m, int n, int k, double alpha, double *pA, int sda, double
 			goto left_8;
 			}
 		}
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -191,7 +191,7 @@ void dgemm_nt_lib(int m, int n, int k, double alpha, double *pA, int sda, double
 		}
 	return;
 #endif
-#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	left_8:
 	j = 0;
 	for(; j<n; j+=4)
