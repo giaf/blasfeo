@@ -139,7 +139,7 @@ void PRINT_TO_FILE_MAT(FILE *file, int row, int col, REAL *A, int lda)
 	}
 
 /* prints a matrix in column-major format */
-void PRINT_TO_FILE_E_MAT(FILE *file, int row, int col, REAL *A, int lda)
+void PRINT_TO_FILE_EXP_MAT(FILE *file, int row, int col, REAL *A, int lda)
 	{
 	int i, j;
 	for(i=0; i<row; i++)
@@ -190,7 +190,7 @@ void PRINT_TO_FILE_TRAN_MAT(FILE *file, int row, int col, REAL *A, int lda)
 
 
 /* prints a matrix in column-major format (exponential notation) */
-void PRINT_E_MAT(int m, int n, REAL *A, int lda)
+void PRINT_EXP_MAT(int m, int n, REAL *A, int lda)
 	{
 	int i, j;
 	for(i=0; i<m; i++)
@@ -207,7 +207,7 @@ void PRINT_E_MAT(int m, int n, REAL *A, int lda)
 
 
 /* prints the transposed of a matrix in column-major format (exponential notation) */
-void PRINT_E_TRAN_MAT(int row, int col, REAL *A, int lda)
+void PRINT_EXP_TRAN_MAT(int row, int col, REAL *A, int lda)
 	{
 	int i, j;
 	for(j=0; j<col; j++)
