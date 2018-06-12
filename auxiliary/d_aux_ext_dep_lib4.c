@@ -79,9 +79,9 @@
 #define PRINT_TO_STRING_STRVEC blasfeo_print_to_string_dvec
 #define PRINT_TO_STRING_TRAN_STRVEC blasfeo_print_to_string_tran_dvec
 
-#define PRINT_E_STRMAT blasfeo_print_exp_dmat
-#define PRINT_E_STRVEC blasfeo_print_exp_dvec
-#define PRINT_E_TRAN_STRVEC blasfeo_print_exp_tran_dvec
+#define PRINT_E_STRMAT blasfeo_print_e_dmat
+#define PRINT_E_STRVEC blasfeo_print_e_dvec
+#define PRINT_E_TRAN_STRVEC blasfeo_print_e_tran_dvec
 
 #include "x_aux_ext_dep_lib4.c"
 

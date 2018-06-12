@@ -66,10 +66,12 @@ void s_print_mat(int m, int n, float *A, int lda);
 void s_print_tran_mat(int row, int col, float *A, int lda);
 // print to file a column-major matrix
 void s_print_to_file_mat(FILE *file, int row, int col, float *A, int lda);
+void s_print_to_file_e_mat(FILE *file, int row, int col, float *A, int lda);
 // print to string a column-major matrix
 int s_print_to_string_mat(char **buf_out, int row, int col, float *A, int lda);
 // print to file the transposed of a column-major matrix
 void s_print_tran_to_file_mat(FILE *file, int row, int col, float *A, int lda);
+void s_print_tran_to_file_e_mat(FILE *file, int row, int col, float *A, int lda);
 // print in exponential notation a column-major matrix
 void s_print_e_mat(int m, int n, float *A, int lda);
 // print in exponential notation the transposed of a column-major matrix
@@ -88,15 +90,16 @@ void blasfeo_free_svec(struct blasfeo_svec *sa);
 // print a strmat
 void blasfeo_print_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj);
 // print in exponential notation a strmat
-void blasfeo_print_exp_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj);
+void blasfeo_print_e_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj);
 // print to file a strmat
 void blasfeo_print_to_file_smat(FILE *file, int m, int n, struct blasfeo_smat *sA, int ai, int aj);
+void blasfeo_print_to_file_e_smat(FILE *file, int m, int n, struct blasfeo_smat *sA, int ai, int aj);
 // print to string a strmat
 void blasfeo_print_to_string_smat(char **buf_out, int m, int n, struct blasfeo_smat *sA, int ai, int aj);
 // print a strvec
 void blasfeo_print_svec(int m, struct blasfeo_svec *sa, int ai);
 // print in exponential notation a strvec
-void blasfeo_print_exp_svec(int m, struct blasfeo_svec *sa, int ai);
+void blasfeo_print_e_svec(int m, struct blasfeo_svec *sa, int ai);
 // print to file a strvec
 void blasfeo_print_to_file_svec(FILE *file, int m, struct blasfeo_svec *sa, int ai);
 // print to string a strvec
@@ -104,7 +107,7 @@ void blasfeo_print_to_string_svec(char **buf_out, int m, struct blasfeo_svec *sa
 // print the transposed of a strvec
 void blasfeo_print_tran_svec(int m, struct blasfeo_svec *sa, int ai);
 // print in exponential notation the transposed of a strvec
-void blasfeo_print_exp_tran_svec(int m, struct blasfeo_svec *sa, int ai);
+void blasfeo_print_e_tran_svec(int m, struct blasfeo_svec *sa, int ai);
 // print to file the transposed of a strvec
 void blasfeo_print_to_file_tran_svec(FILE *file, int m, struct blasfeo_svec *sa, int ai);
 // print to string the transposed of a strvec

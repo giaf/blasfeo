@@ -59,6 +59,12 @@
  *    trf (LU factorization using partial pivoting with row interchanges.)
  *
  * 4) _l(lower) / _u(upper)
+ *    _lib8 (hp implementation, 8 rows kernel)
+ *    _lib4 (hp implementation, 4 rows kernel)
+ *    _lib0 (hp interface with reference implentation)
+ *    _lib (reference implementation)
+ *    _libref (reference implementation with dedicated namespace)
  *
  * 5) _sp(sparse)
+ *    _e(exponential format)
  */
