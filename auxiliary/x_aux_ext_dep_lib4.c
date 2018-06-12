@@ -161,7 +161,6 @@ void PRINT_TRAN_STRVEC(int m, struct STRVEC *sa, int ai)
 	}
 
 
-
 // print a matrix structure
 void PRINT_TO_FILE_STRMAT(FILE * file, int m, int n, struct STRMAT *sA, int ai, int aj)
 	{
@@ -212,6 +211,55 @@ void PRINT_TO_FILE_STRMAT(FILE * file, int m, int n, struct STRMAT *sA, int ai, 
 	return;
 	}
 
+// print a matrix structure
+void PRINT_TO_FILE_E_STRMAT(FILE * file, int m, int n, struct STRMAT *sA, int ai, int aj)
+	{
+	const int ps = PS;
+	int sda = sA->cn;
+	REAL *pA = sA->pA + aj*ps + ai/ps*ps*sda + ai%ps;
+	int ii, i, j, tmp;
+	ii = 0;
+	if(ai%ps>0)
+		{
+		tmp = ps-ai%ps;
+		tmp = m<tmp ? m : tmp;
+		for(i=0; i<tmp; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				fprintf(file, "%9.5e ", pA[i+ps*j]);
+				}
+			fprintf(file, "\n");
+			}
+		pA += tmp + ps*(sda-1);
+		m -= tmp;
+		}
+	for( ; ii<m-(ps-1); ii+=ps)
+		{
+		for(i=0; i<ps; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				fprintf(file, "%9.5e ", pA[i+ps*j+sda*ii]);
+				}
+			fprintf(file, "\n");
+			}
+		}
+	if(ii<m)
+		{
+		tmp = m-ii;
+		for(i=0; i<tmp; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				fprintf(file, "%9.5e ", pA[i+ps*j+sda*ii]);
+				}
+			fprintf(file, "\n");
+			}
+		}
+	fprintf(file, "\n");
+	return;
+	}
 
 
 // print a matrix structure

@@ -138,6 +138,20 @@ void PRINT_TO_FILE_MAT(FILE *file, int row, int col, REAL *A, int lda)
 	fprintf(file, "\n");
 	}
 
+/* prints a matrix in column-major format */
+void PRINT_TO_FILE_E_MAT(FILE *file, int row, int col, REAL *A, int lda)
+	{
+	int i, j;
+	for(i=0; i<row; i++)
+		{
+		for(j=0; j<col; j++)
+			{
+			fprintf(file, "%9.5e ", A[i+lda*j]);
+			}
+		fprintf(file, "\n");
+		}
+	fprintf(file, "\n");
+	}
 
 
 /* prints a matrix in column-major format */

@@ -117,6 +117,15 @@ void PRINT_TO_FILE_STRMAT(FILE *file, int m, int n, struct STRMAT *sA, int ai, i
 	}
 
 
+// print a matrix structure
+void PRINT_TO_FILE_E_STRMAT(FILE *file, int m, int n, struct STRMAT *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	PRINT_TO_FILE_E_MAT(file, m, n, pA, lda);
+	return;
+	}
+
 
 // print a matrix structure
 void PRINT_TO_STRING_STRMAT(char **out_buf, int m, int n, struct STRMAT *sA, int ai, int aj)
@@ -198,5 +207,3 @@ void PRINT_E_TRAN_STRVEC(int m, struct STRVEC *sa, int ai)
 
 
 #endif
-
-

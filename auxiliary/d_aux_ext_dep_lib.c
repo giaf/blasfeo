@@ -49,6 +49,7 @@
 
 #define PRINT_MAT d_print_mat
 #define PRINT_TO_FILE_MAT d_print_to_file_mat
+#define PRINT_TO_FILE_E_MAT d_print_to_file_e_mat
 #define PRINT_TO_STRING_MAT d_print_to_string_mat
 
 #define PRINT_TRAN_MAT d_print_tran_mat
@@ -74,6 +75,7 @@
 #define PRINT_TRAN_STRVEC blasfeo_print_tran_dvec
 
 #define PRINT_TO_FILE_STRMAT blasfeo_print_to_file_dmat
+#define PRINT_TO_FILE_E_STRMAT blasfeo_print_to_file_e_dmat
 #define PRINT_TO_FILE_STRVEC blasfeo_print_to_file_dvec
 #define PRINT_TO_FILE_TRAN_STRVEC d_print_to_file_tran_strvec
 #define PRINT_TO_STRING_STRMAT blasfeo_print_to_string_dmat
