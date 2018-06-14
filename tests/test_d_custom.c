@@ -202,6 +202,18 @@ int main()
 	struct blasfeo_dvec sr; blasfeo_create_dvec(n, &sr, r);
 
 
+
+	double alpha = 1.0;
+	double beta = 0.0;
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+//	kernel_dgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+//	kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+	kernel_dgemm_nt_12x4_lib4(8, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+	return 0;
+
+
+
 	// array lq
 	struct blasfeo_dmat lq0; blasfeo_allocate_dmat(n, 2*n, &lq0);
 	struct blasfeo_dmat lq1; blasfeo_allocate_dmat(n, 2*n, &lq1);
@@ -405,8 +417,8 @@ int main()
 	return 0;
 #endif
 
-	double alpha = 1.0;
-	double beta = 1.0;
+	alpha = 1.0;
+	beta = 1.0;
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 //	kernel_dgemm_nn_4x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 //	kernel_dgemm_nn_4x8_vs_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA, 4, 8);
