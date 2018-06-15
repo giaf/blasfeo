@@ -85,15 +85,22 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	cmp		w8, #0
 	ble		2f // return
 
-	// 2nd panel
-	add		x12, x9, x10
-	// 3rd panel
-	add		x13, x12, x10
 
+	// prefetch
+	// B
+	prfm	PLDL1KEEP, [x11, #0]
+	// A 1st panel
+	prfm	PLDL1KEEP, [x9, #0]
+	// A 2nd panel
+	add		x12, x9, x10
+	prfm	PLDL1KEEP, [x12, #0]
+	// A 3rd panel
+	add		x13, x12, x10
+	prfm	PLDL1KEEP, [x13, #0]
 
 
 	// preload
-	// 1 k
+	// 1st loop
 	// A
 	ldr		d24, [x9, #(0*8+0*32)] // A0[0]
 	ldr		x20, [x9, #(1*8+0*32)] // A0[1]
@@ -117,13 +124,12 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	ins		v25.d[1], x21 // A1[1]
 	ins		v30.d[1], x26 // B0[1]
 
-	// 2 k
+	// 2nd loop
 	// A
 	ldr		x20, [x9, #(1*8+1*32)] // A0[1]
 	ldr		x21, [x9, #(3*8+1*32)] // A1[1]
 	// B
 	ldr		x26, [x11, #(1*8+1*32)] // B0[1]
-
 
 
 	cmp		w8, #4
@@ -137,67 +143,6 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 //	ins		v30.d[1], x26 // B0[1]
 //	ld1		{v30.d}[1], [x11], #8 // B0[1]
 
-#if 0
-	// unroll 0
-	ldr		d24, [x9], #8 // A0[0]
-	ldr		x20, [x9], #8 // A0[1]
-	ldr		d25, [x9], #8 // A1[0]
-	ldr		x21, [x9], #8 // A1[1]
-	ldr		d26, [x12], #8 // A2[0]
-	ldr		x22, [x12], #8 // A2[1]
-	ldr		d27, [x12], #8 // A3[0]
-	ldr		x23, [x12], #8 // A3[1]
-	ldr		d28, [x13], #8 // A4[0]
-	ldr		x24, [x13], #8 // A4[1]
-	ldr		d29, [x13], #8 // A5[0]
-	ldr		x25, [x13], #8 // A5[1]
-
-	ins		v24.d[1], x20 // A0[1]
-	ins		v25.d[1], x21 // A1[1]
-	ins		v26.d[1], x22 // A2[1]
-	ins		v27.d[1], x23 // A3[1]
-	ins		v28.d[1], x24 // A4[1]
-	ins		v29.d[1], x25 // A5[1]
-
-	ldr		d30, [x11], #8 // B0[0]
-	ldr		x26, [x11], #8 // B0[1]
-	ins		v30.d[1], x26 // B0[1]
-
-	ldr		d31, [x11], #8 // B1[0]
-	ldr		x27, [x11], #8 // B1[1]
-	ins		v31.d[1], x27 // B1[1]
-
-	fmla	v0.2d, v24.2d, v30.2d[0]
-	fmla	v1.2d, v25.2d, v30.2d[0]
-	fmla	v8.2d, v26.2d, v30.2d[0]
-	fmla	v9.2d, v27.2d, v30.2d[0]
-	fmla	v16.2d, v28.2d, v30.2d[0]
-	fmla	v17.2d, v29.2d, v30.2d[0]
-
-	fmla	v2.2d, v24.2d, v30.2d[1]
-	fmla	v3.2d, v25.2d, v30.2d[1]
-	fmla	v10.2d, v26.2d, v30.2d[1]
-	fmla	v11.2d, v27.2d, v30.2d[1]
-	fmla	v18.2d, v28.2d, v30.2d[1]
-	fmla	v19.2d, v29.2d, v30.2d[1]
-
-	fmla	v4.2d, v24.2d, v31.2d[0]
-	fmla	v5.2d, v25.2d, v31.2d[0]
-	fmla	v12.2d, v26.2d, v31.2d[0]
-	fmla	v13.2d, v27.2d, v31.2d[0]
-	fmla	v20.2d, v28.2d, v31.2d[0]
-	fmla	v21.2d, v29.2d, v31.2d[0]
-
-	fmla	v6.2d, v24.2d, v31.2d[1]
-	fmla	v7.2d, v25.2d, v31.2d[1]
-	fmla	v14.2d, v26.2d, v31.2d[1]
-	fmla	v15.2d, v27.2d, v31.2d[1]
-	fmla	v22.2d, v28.2d, v31.2d[1]
-	fmla	v23.2d, v29.2d, v31.2d[1]
-#endif
-
-
-
 
 	// unroll 0
 
@@ -207,6 +152,7 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	fmla	v0.2d, v24.2d, v30.2d[0]
 	ldr		x22, [x12, #(1*8+1*32)] // A2[1]
 	fmla	v2.2d, v24.2d, v30.2d[1]
+	prfm	PLDL1KEEP, [x11, #64]
 	fmla	v1.2d, v25.2d, v30.2d[0]
 
 	// load 28 ins 31
@@ -215,6 +161,7 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	fmla	v3.2d, v25.2d, v30.2d[1]
 	ldr		x27, [x11, #(3*8+1*32)] // B1[1]
 	fmla	v8.2d, v26.2d, v30.2d[0]
+	prfm	PLDL1KEEP, [x9, #64]
 	fmla	v10.2d, v26.2d, v30.2d[1]
 
 	// load 29 ins 27
@@ -223,6 +170,7 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	fmla	v4.2d, v24.2d, v31.2d[0]
 	ldr		x23, [x12, #(3*8+1*32)] // A3[1]
 	fmla	v6.2d, v24.2d, v31.2d[1]
+	prfm	PLDL1KEEP, [x12, #64]
 	fmla	v5.2d, v25.2d, v31.2d[0]
 
 	// load 24 ins 28
@@ -231,6 +179,7 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	fmla	v7.2d, v25.2d, v31.2d[1]
 	ldr		x24, [x13, #(1*8+1*32)] // A4[1]
 	fmla	v12.2d, v26.2d, v31.2d[0]
+	prfm	PLDL1KEEP, [x13, #64]
 	fmla	v14.2d, v26.2d, v31.2d[1]
 
 	// load 25 ins 29
@@ -341,6 +290,7 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	fmla	v0.2d, v24.2d, v30.2d[0]
 	ldr		x22, [x12, #(1*8+3*32)] // A2[1]
 	fmla	v2.2d, v24.2d, v30.2d[1]
+	prfm	PLDL1KEEP, [x11, #128]
 	fmla	v1.2d, v25.2d, v30.2d[0]
 
 	// load 28 ins 31
@@ -349,6 +299,7 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	fmla	v3.2d, v25.2d, v30.2d[1]
 	ldr		x27, [x11, #(3*8+3*32)] // B1[1]
 	fmla	v8.2d, v26.2d, v30.2d[0]
+	prfm	PLDL1KEEP, [x9, #128]
 	fmla	v10.2d, v26.2d, v30.2d[1]
 
 	// load 29 ins 27
@@ -357,6 +308,7 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	fmla	v4.2d, v24.2d, v31.2d[0]
 	ldr		x23, [x12, #(3*8+3*32)] // A3[1]
 	fmla	v6.2d, v24.2d, v31.2d[1]
+	prfm	PLDL1KEEP, [x12, #128]
 	fmla	v5.2d, v25.2d, v31.2d[0]
 
 	// load 24 ins 28
@@ -365,6 +317,7 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	fmla	v7.2d, v25.2d, v31.2d[1]
 	ldr		x24, [x13, #(1*8+3*32)] // A4[1]
 	fmla	v12.2d, v26.2d, v31.2d[0]
+	prfm	PLDL1KEEP, [x13, #128]
 	fmla	v14.2d, v26.2d, v31.2d[1]
 
 	// load 25 ins 29
@@ -491,6 +444,7 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	fmla	v0.2d, v24.2d, v30.2d[0]
 	ldr		x22, [x12, #(1*8+1*32)] // A2[1]
 	fmla	v2.2d, v24.2d, v30.2d[1]
+	prfm	PLDL1KEEP, [x11, #64]
 	fmla	v1.2d, v25.2d, v30.2d[0]
 
 	// load 28 ins 31
@@ -499,6 +453,7 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	fmla	v3.2d, v25.2d, v30.2d[1]
 	ldr		x27, [x11, #(3*8+1*32)] // B1[1]
 	fmla	v8.2d, v26.2d, v30.2d[0]
+	prfm	PLDL1KEEP, [x9, #64]
 	fmla	v10.2d, v26.2d, v30.2d[1]
 
 	// load 29 ins 27
@@ -507,6 +462,7 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	fmla	v4.2d, v24.2d, v31.2d[0]
 	ldr		x23, [x12, #(3*8+1*32)] // A3[1]
 	fmla	v6.2d, v24.2d, v31.2d[1]
+	prfm	PLDL1KEEP, [x12, #64]
 	fmla	v5.2d, v25.2d, v31.2d[0]
 
 	// load 24 ins 28
@@ -515,6 +471,7 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	fmla	v7.2d, v25.2d, v31.2d[1]
 	ldr		x24, [x13, #(1*8+1*32)] // A4[1]
 	fmla	v12.2d, v26.2d, v31.2d[0]
+	prfm	PLDL1KEEP, [x13, #64]
 	fmla	v14.2d, v26.2d, v31.2d[1]
 
 	// load 25 ins 29
@@ -770,65 +727,57 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 3: // clean1-up loop
 
 	// unroll 0
-	ldr		d24, [x9], #8 // A0[0]
-	ldr		x20, [x9], #8 // A0[1]
-	ldr		d25, [x9], #8 // A1[0]
-	ldr		x21, [x9], #8 // A1[1]
+	ldr		q24, [x9], #16 // A0
+	ldr		q25, [x9], #16 // A1
+	ldr		q30, [x11], #16 // B0
+	ldr		q31, [x11], #16 // B1
+
 	ldr		d26, [x12], #8 // A2[0]
-	ldr		x22, [x12], #8 // A2[1]
-	ldr		d27, [x12], #8 // A3[0]
-	ldr		x23, [x12], #8 // A3[1]
-	ldr		d28, [x13], #8 // A4[0]
-	ldr		x24, [x13], #8 // A4[1]
-	ldr		d29, [x13], #8 // A5[0]
-	ldr		x25, [x13], #8 // A5[1]
-
-	ins		v24.d[1], x20 // A0[1]
-	ins		v25.d[1], x21 // A1[1]
-	ins		v26.d[1], x22 // A2[1]
-	ins		v27.d[1], x23 // A3[1]
-	ins		v28.d[1], x24 // A4[1]
-	ins		v29.d[1], x25 // A5[1]
-
-	ldr		d30, [x11], #8 // B0[0]
-	ldr		x26, [x11], #8 // B0[1]
-	ins		v30.d[1], x26 // B0[1]
-
-	ldr		d31, [x11], #8 // B1[0]
-	ldr		x27, [x11], #8 // B1[1]
-	ins		v31.d[1], x27 // B1[1]
-
 	fmla	v0.2d, v24.2d, v30.2d[0]
+	ldr		x22, [x12], #8 // A2[1]
+	fmla	v2.2d, v24.2d, v30.2d[1]
+	fmla	v4.2d, v24.2d, v31.2d[0]
+
+	ldr		d27, [x12], #8 // A3[0]
+	ins		v26.d[1], x22 // A2[1]
+	fmla	v6.2d, v24.2d, v31.2d[1]
+	ldr		x23, [x12], #8 // A3[1]
 	fmla	v1.2d, v25.2d, v30.2d[0]
+	fmla	v3.2d, v25.2d, v30.2d[1]
+
+	ldr		d28, [x13], #8 // A4[0]
+	ins		v27.d[1], x23 // A3[1]
+	fmla	v5.2d, v25.2d, v31.2d[0]
+	ldr		x24, [x13], #8 // A4[1]
+	fmla	v7.2d, v25.2d, v31.2d[1]
 	fmla	v8.2d, v26.2d, v30.2d[0]
+
+	ldr		d29, [x13], #8 // A5[0]
+	ins		v28.d[1], x24 // A4[1]
+	fmla	v10.2d, v26.2d, v30.2d[1]
+	ldr		x25, [x13], #8 // A5[1]
+	fmla	v12.2d, v26.2d, v31.2d[0]
 	fmla	v9.2d, v27.2d, v30.2d[0]
+
+	ins		v29.d[1], x25 // A5[1]
+	fmla	v14.2d, v26.2d, v31.2d[1]
+	fmla	v11.2d, v27.2d, v30.2d[1]
+	fmla	v13.2d, v27.2d, v31.2d[0]
+
+	fmla	v15.2d, v27.2d, v31.2d[1]
 	fmla	v16.2d, v28.2d, v30.2d[0]
+	fmla	v18.2d, v28.2d, v30.2d[1]
+
+	fmla	v20.2d, v28.2d, v31.2d[0]
+	sub		w8, w8, #1
+	fmla	v22.2d, v28.2d, v31.2d[1]
 	fmla	v17.2d, v29.2d, v30.2d[0]
 
-	fmla	v2.2d, v24.2d, v30.2d[1]
-	fmla	v3.2d, v25.2d, v30.2d[1]
-	fmla	v10.2d, v26.2d, v30.2d[1]
-	fmla	v11.2d, v27.2d, v30.2d[1]
-	fmla	v18.2d, v28.2d, v30.2d[1]
 	fmla	v19.2d, v29.2d, v30.2d[1]
-
-	fmla	v4.2d, v24.2d, v31.2d[0]
-	fmla	v5.2d, v25.2d, v31.2d[0]
-	fmla	v12.2d, v26.2d, v31.2d[0]
-	fmla	v13.2d, v27.2d, v31.2d[0]
-	fmla	v20.2d, v28.2d, v31.2d[0]
+	cmp		w8, #0
 	fmla	v21.2d, v29.2d, v31.2d[0]
-
-	fmla	v6.2d, v24.2d, v31.2d[1]
-	fmla	v7.2d, v25.2d, v31.2d[1]
-	fmla	v14.2d, v26.2d, v31.2d[1]
-	fmla	v15.2d, v27.2d, v31.2d[1]
-	fmla	v22.2d, v28.2d, v31.2d[1]
 	fmla	v23.2d, v29.2d, v31.2d[1]
 
-
-	sub		w8, w8, #1
-	cmp		w8, #0
 	bgt		3b
 
 2: // return
