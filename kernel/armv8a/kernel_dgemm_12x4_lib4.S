@@ -90,6 +90,42 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	// 3rd panel
 	add		x13, x12, x10
 
+
+
+	// preload
+	// 1 k
+	// A
+	ldr		d24, [x9, #(0*8+0*32)] // A0[0]
+	ldr		x20, [x9, #(1*8+0*32)] // A0[1]
+	ldr		d25, [x9, #(2*8+0*32)] // A1[0]
+	ldr		x21, [x9, #(3*8+0*32)] // A1[1]
+	ldr		d26, [x12, #(0*8+0*32)] // A2[0]
+	ldr		x22, [x12, #(1*8+0*32)] // A2[1]
+	ldr		d27, [x12, #(2*8+0*32)] // A3[0]
+	ldr		x23, [x12, #(3*8+0*32)] // A3[1]
+	//                              // A4[0]
+	ldr		x24, [x13, #(1*8+0*32)] // A4[1]
+	//                              // A5[0]
+	ldr		x25, [x13, #(3*8+0*32)] // A5[1]
+	// B
+	ldr		d30, [x11, #(0*8+0*32)] // B0[0]
+	ldr		x26, [x11, #(1*8+0*32)] // B0[1]
+	//                              // B1[0]
+	ldr		x27, [x11, #(3*8+0*32)] // B1[1]
+
+	ins		v24.d[1], x20 // A0[1]
+	ins		v25.d[1], x21 // A1[1]
+	ins		v30.d[1], x26 // B0[1]
+
+	// 2 k
+	// A
+	ldr		x20, [x9, #(1*8+1*32)] // A0[1]
+	ldr		x21, [x9, #(3*8+1*32)] // A1[1]
+	// B
+	ldr		x26, [x11, #(1*8+1*32)] // B0[1]
+
+
+
 	cmp		w8, #4
 	ble		0f // consider clean up loop
 
@@ -101,6 +137,7 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 //	ins		v30.d[1], x26 // B0[1]
 //	ld1		{v30.d}[1], [x11], #8 // B0[1]
 
+#if 0
 	// unroll 0
 	ldr		d24, [x9], #8 // A0[0]
 	ldr		x20, [x9], #8 // A0[1]
@@ -157,427 +194,567 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	fmla	v15.2d, v27.2d, v31.2d[1]
 	fmla	v22.2d, v28.2d, v31.2d[1]
 	fmla	v23.2d, v29.2d, v31.2d[1]
+#endif
+
+
+
+
+	// unroll 0
+
+	// load 31 ins 26
+	ldr		d31, [x11, #(2*8+0*32)] // B1[0]
+	ins		v26.d[1], x22 // A2[1]
+	fmla	v0.2d, v24.2d, v30.2d[0]
+	ldr		x22, [x12, #(1*8+1*32)] // A2[1]
+	fmla	v2.2d, v24.2d, v30.2d[1]
+	fmla	v1.2d, v25.2d, v30.2d[0]
+
+	// load 28 ins 31
+	ldr		d28, [x13, #(0*8+0*32)] // A4[0]
+	ins		v31.d[1], x27 // B1[1]
+	fmla	v3.2d, v25.2d, v30.2d[1]
+	ldr		x27, [x11, #(3*8+1*32)] // B1[1]
+	fmla	v8.2d, v26.2d, v30.2d[0]
+	fmla	v10.2d, v26.2d, v30.2d[1]
+
+	// load 29 ins 27
+	ldr		d29, [x13, #(2*8+0*32)] // A5[0]
+	ins		v27.d[1], x23 // A3[1]
+	fmla	v4.2d, v24.2d, v31.2d[0]
+	ldr		x23, [x12, #(3*8+1*32)] // A3[1]
+	fmla	v6.2d, v24.2d, v31.2d[1]
+	fmla	v5.2d, v25.2d, v31.2d[0]
+
+	// load 24 ins 28
+	ldr		d24, [x9, #(0*8+1*32)] // A0[0]
+	ins		v28.d[1], x24 // A4[1]
+	fmla	v7.2d, v25.2d, v31.2d[1]
+	ldr		x24, [x13, #(1*8+1*32)] // A4[1]
+	fmla	v12.2d, v26.2d, v31.2d[0]
+	fmla	v14.2d, v26.2d, v31.2d[1]
+
+	// load 25 ins 29
+	ldr		d25, [x9, #(2*8+1*32)] // A1[0]
+	ins		v29.d[1], x25 // A5[1]
+	fmla	v9.2d, v27.2d, v30.2d[0]
+	ldr		x25, [x13, #(3*8+1*32)] // A5[1]
+	fmla	v11.2d, v27.2d, v30.2d[1]
+	fmla	v16.2d, v28.2d, v30.2d[0]
+
+	// load 26 ins 24
+	ldr		d26, [x12, #(0*8+1*32)] // A2[0]
+	ins		v24.d[1], x20 // A0[1]
+	fmla	v18.2d, v28.2d, v30.2d[1]
+	ldr		x20, [x9, #(1*8+2*32)] // A0[1]
+	fmla	v17.2d, v29.2d, v30.2d[0]
+	fmla	v19.2d, v29.2d, v30.2d[1]
+
+	// load 30 ins 25
+	ldr		d30, [x11, #(0*8+1*32)] // B0[0]
+	ins		v25.d[1], x21 // A1[1]
+	fmla	v13.2d, v27.2d, v31.2d[0]
+	ldr		x21, [x9, #(3*8+2*32)] // A1[1]
+	fmla	v15.2d, v27.2d, v31.2d[1]
+	fmla	v20.2d, v28.2d, v31.2d[0]
+
+	// load 27 ins 30
+	ldr		d27, [x12, #(2*8+1*32)] // A3[0]
+	ins		v30.d[1], x26 // B0[1]
+	fmla	v22.2d, v28.2d, v31.2d[1]
+	ldr		x26, [x11, #(1*8+2*32)] // B0[1]
+	fmla	v21.2d, v29.2d, v31.2d[0]
+	fmla	v23.2d, v29.2d, v31.2d[1]
 
 
 	// unroll 1
-	ldr		d24, [x9], #8 // A0[0]
-	ldr		x20, [x9], #8 // A0[1]
-	ldr		d25, [x9], #8 // A1[0]
-	ldr		x21, [x9], #8 // A1[1]
-	ldr		d26, [x12], #8 // A2[0]
-	ldr		x22, [x12], #8 // A2[1]
-	ldr		d27, [x12], #8 // A3[0]
-	ldr		x23, [x12], #8 // A3[1]
-	ldr		d28, [x13], #8 // A4[0]
-	ldr		x24, [x13], #8 // A4[1]
-	ldr		d29, [x13], #8 // A5[0]
-	ldr		x25, [x13], #8 // A5[1]
 
-	ins		v24.d[1], x20 // A0[1]
-	ins		v25.d[1], x21 // A1[1]
+	// load 31 ins 26
+	ldr		d31, [x11, #(2*8+1*32)] // B1[0]
 	ins		v26.d[1], x22 // A2[1]
-	ins		v27.d[1], x23 // A3[1]
-	ins		v28.d[1], x24 // A4[1]
-	ins		v29.d[1], x25 // A5[1]
-
-	ldr		d30, [x11], #8 // B0[0]
-	ldr		x26, [x11], #8 // B0[1]
-	ins		v30.d[1], x26 // B0[1]
-
-	ldr		d31, [x11], #8 // B1[0]
-	ldr		x27, [x11], #8 // B1[1]
-	ins		v31.d[1], x27 // B1[1]
-
 	fmla	v0.2d, v24.2d, v30.2d[0]
-	fmla	v1.2d, v25.2d, v30.2d[0]
-	fmla	v8.2d, v26.2d, v30.2d[0]
-	fmla	v9.2d, v27.2d, v30.2d[0]
-	fmla	v16.2d, v28.2d, v30.2d[0]
-	fmla	v17.2d, v29.2d, v30.2d[0]
-
+	ldr		x22, [x12, #(1*8+2*32)] // A2[1]
 	fmla	v2.2d, v24.2d, v30.2d[1]
+	fmla	v1.2d, v25.2d, v30.2d[0]
+
+	// load 28 ins 31
+	ldr		d28, [x13, #(0*8+1*32)] // A4[0]
+	ins		v31.d[1], x27 // B1[1]
 	fmla	v3.2d, v25.2d, v30.2d[1]
+	ldr		x27, [x11, #(3*8+2*32)] // B1[1]
+	fmla	v8.2d, v26.2d, v30.2d[0]
 	fmla	v10.2d, v26.2d, v30.2d[1]
+
+	// load 29 ins 27
+	ldr		d29, [x13, #(2*8+1*32)] // A5[0]
+	ins		v27.d[1], x23 // A3[1]
+	fmla	v4.2d, v24.2d, v31.2d[0]
+	ldr		x23, [x12, #(3*8+2*32)] // A3[1]
+	fmla	v6.2d, v24.2d, v31.2d[1]
+	fmla	v5.2d, v25.2d, v31.2d[0]
+
+	// load 24 ins 28
+	ldr		d24, [x9, #(0*8+2*32)] // A0[0]
+	ins		v28.d[1], x24 // A4[1]
+	fmla	v7.2d, v25.2d, v31.2d[1]
+	ldr		x24, [x13, #(1*8+2*32)] // A4[1]
+	fmla	v12.2d, v26.2d, v31.2d[0]
+	fmla	v14.2d, v26.2d, v31.2d[1]
+
+	// load 25 ins 29
+	ldr		d25, [x9, #(2*8+2*32)] // A1[0]
+	ins		v29.d[1], x25 // A5[1]
+	fmla	v9.2d, v27.2d, v30.2d[0]
+	ldr		x25, [x13, #(3*8+2*32)] // A5[1]
 	fmla	v11.2d, v27.2d, v30.2d[1]
+	fmla	v16.2d, v28.2d, v30.2d[0]
+
+	// load 26 ins 24
+	ldr		d26, [x12, #(0*8+2*32)] // A2[0]
+	ins		v24.d[1], x20 // A0[1]
 	fmla	v18.2d, v28.2d, v30.2d[1]
+	ldr		x20, [x9, #(1*8+3*32)] // A0[1]
+	fmla	v17.2d, v29.2d, v30.2d[0]
 	fmla	v19.2d, v29.2d, v30.2d[1]
 
-	fmla	v4.2d, v24.2d, v31.2d[0]
-	fmla	v5.2d, v25.2d, v31.2d[0]
-	fmla	v12.2d, v26.2d, v31.2d[0]
+	// load 30 ins 25
+	ldr		d30, [x11, #(0*8+2*32)] // B0[0]
+	ins		v25.d[1], x21 // A1[1]
 	fmla	v13.2d, v27.2d, v31.2d[0]
-	fmla	v20.2d, v28.2d, v31.2d[0]
-	fmla	v21.2d, v29.2d, v31.2d[0]
-
-	fmla	v6.2d, v24.2d, v31.2d[1]
-	fmla	v7.2d, v25.2d, v31.2d[1]
-	fmla	v14.2d, v26.2d, v31.2d[1]
+	ldr		x21, [x9, #(3*8+3*32)] // A1[1]
 	fmla	v15.2d, v27.2d, v31.2d[1]
+	fmla	v20.2d, v28.2d, v31.2d[0]
+
+	// load 27 ins 30
+	ldr		d27, [x12, #(2*8+2*32)] // A3[0]
+	ins		v30.d[1], x26 // B0[1]
 	fmla	v22.2d, v28.2d, v31.2d[1]
+	ldr		x26, [x11, #(1*8+3*32)] // B0[1]
+	fmla	v21.2d, v29.2d, v31.2d[0]
 	fmla	v23.2d, v29.2d, v31.2d[1]
 
 
 	// unroll 2
-	ldr		d24, [x9], #8 // A0[0]
-	ldr		x20, [x9], #8 // A0[1]
-	ldr		d25, [x9], #8 // A1[0]
-	ldr		x21, [x9], #8 // A1[1]
-	ldr		d26, [x12], #8 // A2[0]
-	ldr		x22, [x12], #8 // A2[1]
-	ldr		d27, [x12], #8 // A3[0]
-	ldr		x23, [x12], #8 // A3[1]
-	ldr		d28, [x13], #8 // A4[0]
-	ldr		x24, [x13], #8 // A4[1]
-	ldr		d29, [x13], #8 // A5[0]
-	ldr		x25, [x13], #8 // A5[1]
 
-	ins		v24.d[1], x20 // A0[1]
-	ins		v25.d[1], x21 // A1[1]
+	// load 31 ins 26
+	ldr		d31, [x11, #(2*8+2*32)] // B1[0]
 	ins		v26.d[1], x22 // A2[1]
-	ins		v27.d[1], x23 // A3[1]
-	ins		v28.d[1], x24 // A4[1]
-	ins		v29.d[1], x25 // A5[1]
-
-	ldr		d30, [x11], #8 // B0[0]
-	ldr		x26, [x11], #8 // B0[1]
-	ins		v30.d[1], x26 // B0[1]
-
-	ldr		d31, [x11], #8 // B1[0]
-	ldr		x27, [x11], #8 // B1[1]
-	ins		v31.d[1], x27 // B1[1]
-
 	fmla	v0.2d, v24.2d, v30.2d[0]
-	fmla	v1.2d, v25.2d, v30.2d[0]
-	fmla	v8.2d, v26.2d, v30.2d[0]
-	fmla	v9.2d, v27.2d, v30.2d[0]
-	fmla	v16.2d, v28.2d, v30.2d[0]
-	fmla	v17.2d, v29.2d, v30.2d[0]
-
+	ldr		x22, [x12, #(1*8+3*32)] // A2[1]
 	fmla	v2.2d, v24.2d, v30.2d[1]
+	fmla	v1.2d, v25.2d, v30.2d[0]
+
+	// load 28 ins 31
+	ldr		d28, [x13, #(0*8+2*32)] // A4[0]
+	ins		v31.d[1], x27 // B1[1]
 	fmla	v3.2d, v25.2d, v30.2d[1]
+	ldr		x27, [x11, #(3*8+3*32)] // B1[1]
+	fmla	v8.2d, v26.2d, v30.2d[0]
 	fmla	v10.2d, v26.2d, v30.2d[1]
+
+	// load 29 ins 27
+	ldr		d29, [x13, #(2*8+2*32)] // A5[0]
+	ins		v27.d[1], x23 // A3[1]
+	fmla	v4.2d, v24.2d, v31.2d[0]
+	ldr		x23, [x12, #(3*8+3*32)] // A3[1]
+	fmla	v6.2d, v24.2d, v31.2d[1]
+	fmla	v5.2d, v25.2d, v31.2d[0]
+
+	// load 24 ins 28
+	ldr		d24, [x9, #(0*8+3*32)] // A0[0]
+	ins		v28.d[1], x24 // A4[1]
+	fmla	v7.2d, v25.2d, v31.2d[1]
+	ldr		x24, [x13, #(1*8+3*32)] // A4[1]
+	fmla	v12.2d, v26.2d, v31.2d[0]
+	fmla	v14.2d, v26.2d, v31.2d[1]
+
+	// load 25 ins 29
+	ldr		d25, [x9, #(2*8+3*32)] // A1[0]
+	ins		v29.d[1], x25 // A5[1]
+	fmla	v9.2d, v27.2d, v30.2d[0]
+	ldr		x25, [x13, #(3*8+3*32)] // A5[1]
 	fmla	v11.2d, v27.2d, v30.2d[1]
+	fmla	v16.2d, v28.2d, v30.2d[0]
+
+	// load 26 ins 24
+	ldr		d26, [x12, #(0*8+3*32)] // A2[0]
+	ins		v24.d[1], x20 // A0[1]
 	fmla	v18.2d, v28.2d, v30.2d[1]
+	ldr		x20, [x9, #(1*8+4*32)] // A0[1]
+	fmla	v17.2d, v29.2d, v30.2d[0]
 	fmla	v19.2d, v29.2d, v30.2d[1]
 
-	fmla	v4.2d, v24.2d, v31.2d[0]
-	fmla	v5.2d, v25.2d, v31.2d[0]
-	fmla	v12.2d, v26.2d, v31.2d[0]
+	// load 30 ins 25
+	ldr		d30, [x11, #(0*8+3*32)] // B0[0]
+	ins		v25.d[1], x21 // A1[1]
 	fmla	v13.2d, v27.2d, v31.2d[0]
-	fmla	v20.2d, v28.2d, v31.2d[0]
-	fmla	v21.2d, v29.2d, v31.2d[0]
-
-	fmla	v6.2d, v24.2d, v31.2d[1]
-	fmla	v7.2d, v25.2d, v31.2d[1]
-	fmla	v14.2d, v26.2d, v31.2d[1]
+	ldr		x21, [x9, #(3*8+4*32)] // A1[1]
 	fmla	v15.2d, v27.2d, v31.2d[1]
+	fmla	v20.2d, v28.2d, v31.2d[0]
+
+	// load 27 ins 30
+	ldr		d27, [x12, #(2*8+3*32)] // A3[0]
+	ins		v30.d[1], x26 // B0[1]
 	fmla	v22.2d, v28.2d, v31.2d[1]
+	ldr		x26, [x11, #(1*8+4*32)] // B0[1]
+	fmla	v21.2d, v29.2d, v31.2d[0]
 	fmla	v23.2d, v29.2d, v31.2d[1]
 
 
 	// unroll 3
-	ldr		d24, [x9], #8 // A0[0]
-	ldr		x20, [x9], #8 // A0[1]
-	ldr		d25, [x9], #8 // A1[0]
-	ldr		x21, [x9], #8 // A1[1]
-	ldr		d26, [x12], #8 // A2[0]
-	ldr		x22, [x12], #8 // A2[1]
-	ldr		d27, [x12], #8 // A3[0]
-	ldr		x23, [x12], #8 // A3[1]
-	ldr		d28, [x13], #8 // A4[0]
-	ldr		x24, [x13], #8 // A4[1]
-	ldr		d29, [x13], #8 // A5[0]
-	ldr		x25, [x13], #8 // A5[1]
 
-	ins		v24.d[1], x20 // A0[1]
-	ins		v25.d[1], x21 // A1[1]
+	// load 31 ins 26
+	ldr		d31, [x11, #(2*8+3*32)] // B1[0]
 	ins		v26.d[1], x22 // A2[1]
-	ins		v27.d[1], x23 // A3[1]
-	ins		v28.d[1], x24 // A4[1]
-	ins		v29.d[1], x25 // A5[1]
-
-	ldr		d30, [x11], #8 // B0[0]
-	ldr		x26, [x11], #8 // B0[1]
-	ins		v30.d[1], x26 // B0[1]
-
-	ldr		d31, [x11], #8 // B1[0]
-	ldr		x27, [x11], #8 // B1[1]
-	ins		v31.d[1], x27 // B1[1]
-
 	fmla	v0.2d, v24.2d, v30.2d[0]
-	fmla	v1.2d, v25.2d, v30.2d[0]
-	fmla	v8.2d, v26.2d, v30.2d[0]
-	fmla	v9.2d, v27.2d, v30.2d[0]
-	fmla	v16.2d, v28.2d, v30.2d[0]
-	fmla	v17.2d, v29.2d, v30.2d[0]
-
+	ldr		x22, [x12, #(1*8+4*32)] // A2[1]
 	fmla	v2.2d, v24.2d, v30.2d[1]
+	add		x9, x9, #(4*32) // A_0
+	fmla	v1.2d, v25.2d, v30.2d[0]
+
+	// load 28 ins 31
+	ldr		d28, [x13, #(0*8+3*32)] // A4[0]
+	ins		v31.d[1], x27 // B1[1]
 	fmla	v3.2d, v25.2d, v30.2d[1]
+	ldr		x27, [x11, #(3*8+4*32)] // B1[1]
+	fmla	v8.2d, v26.2d, v30.2d[0]
 	fmla	v10.2d, v26.2d, v30.2d[1]
+
+	// load 29 ins 27
+	ldr		d29, [x13, #(2*8+3*32)] // A5[0]
+	ins		v27.d[1], x23 // A3[1]
+	fmla	v4.2d, v24.2d, v31.2d[0]
+	ldr		x23, [x12, #(3*8+4*32)] // A3[1]
+	fmla	v6.2d, v24.2d, v31.2d[1]
+	sub		w8, w8, #4
+	fmla	v5.2d, v25.2d, v31.2d[0]
+
+	// load 24 ins 28
+	ldr		d24, [x9, #(0*8+0*32)] // A0[0]
+	ins		v28.d[1], x24 // A4[1]
+	fmla	v7.2d, v25.2d, v31.2d[1]
+	ldr		x24, [x13, #(1*8+4*32)] // A4[1]
+	fmla	v12.2d, v26.2d, v31.2d[0]
+	add		x12, x12, #(4*32) // A_1
+	fmla	v14.2d, v26.2d, v31.2d[1]
+
+	// load 25 ins 29
+	ldr		d25, [x9, #(2*8+0*32)] // A1[0]
+	ins		v29.d[1], x25 // A5[1]
+	fmla	v9.2d, v27.2d, v30.2d[0]
+	ldr		x25, [x13, #(3*8+4*32)] // A5[1]
 	fmla	v11.2d, v27.2d, v30.2d[1]
+	add		x11, x11, #(4*32) // B
+	fmla	v16.2d, v28.2d, v30.2d[0]
+
+	// load 26 ins 24
+	ldr		d26, [x12, #(0*8+0*32)] // A2[0]
+	ins		v24.d[1], x20 // A0[1]
 	fmla	v18.2d, v28.2d, v30.2d[1]
+	ldr		x20, [x9, #(1*8+1*32)] // A0[1]
+	fmla	v17.2d, v29.2d, v30.2d[0]
+	add		x13, x13, #(4*32) // A_2
 	fmla	v19.2d, v29.2d, v30.2d[1]
 
-	fmla	v4.2d, v24.2d, v31.2d[0]
-	fmla	v5.2d, v25.2d, v31.2d[0]
-	fmla	v12.2d, v26.2d, v31.2d[0]
+	// load 30 ins 25
+	ldr		d30, [x11, #(0*8+0*32)] // B0[0]
+	ins		v25.d[1], x21 // A1[1]
 	fmla	v13.2d, v27.2d, v31.2d[0]
-	fmla	v20.2d, v28.2d, v31.2d[0]
-	fmla	v21.2d, v29.2d, v31.2d[0]
-
-	fmla	v6.2d, v24.2d, v31.2d[1]
-	fmla	v7.2d, v25.2d, v31.2d[1]
-	fmla	v14.2d, v26.2d, v31.2d[1]
+	ldr		x21, [x9, #(3*8+1*32)] // A1[1]
 	fmla	v15.2d, v27.2d, v31.2d[1]
+	cmp		w8, #4
+	fmla	v20.2d, v28.2d, v31.2d[0]
+
+	// load 27 ins 30
+	ldr		d27, [x12, #(2*8+0*32)] // A3[0]
+	ins		v30.d[1], x26 // B0[1]
 	fmla	v22.2d, v28.2d, v31.2d[1]
+	ldr		x26, [x11, #(1*8+1*32)] // B0[1]
+	fmla	v21.2d, v29.2d, v31.2d[0]
 	fmla	v23.2d, v29.2d, v31.2d[1]
 
-
-	sub		w8, w8, #4
-	cmp		w8, #4
 
 	bgt		1b
 
 0:
+
+//	b 2f // XXX
 
 	cmp		w8, #3
 	ble		4f
 
 
 	// unroll 0
-	ldr		d24, [x9], #8 // A0[0]
-	ldr		x20, [x9], #8 // A0[1]
-	ldr		d25, [x9], #8 // A1[0]
-	ldr		x21, [x9], #8 // A1[1]
-	ldr		d26, [x12], #8 // A2[0]
-	ldr		x22, [x12], #8 // A2[1]
-	ldr		d27, [x12], #8 // A3[0]
-	ldr		x23, [x12], #8 // A3[1]
-	ldr		d28, [x13], #8 // A4[0]
-	ldr		x24, [x13], #8 // A4[1]
-	ldr		d29, [x13], #8 // A5[0]
-	ldr		x25, [x13], #8 // A5[1]
 
-	ins		v24.d[1], x20 // A0[1]
-	ins		v25.d[1], x21 // A1[1]
+	// load 31 ins 26
+	ldr		d31, [x11, #(2*8+0*32)] // B1[0]
 	ins		v26.d[1], x22 // A2[1]
-	ins		v27.d[1], x23 // A3[1]
-	ins		v28.d[1], x24 // A4[1]
-	ins		v29.d[1], x25 // A5[1]
-
-	ldr		d30, [x11], #8 // B0[0]
-	ldr		x26, [x11], #8 // B0[1]
-	ins		v30.d[1], x26 // B0[1]
-
-	ldr		d31, [x11], #8 // B1[0]
-	ldr		x27, [x11], #8 // B1[1]
-	ins		v31.d[1], x27 // B1[1]
-
 	fmla	v0.2d, v24.2d, v30.2d[0]
-	fmla	v1.2d, v25.2d, v30.2d[0]
-	fmla	v8.2d, v26.2d, v30.2d[0]
-	fmla	v9.2d, v27.2d, v30.2d[0]
-	fmla	v16.2d, v28.2d, v30.2d[0]
-	fmla	v17.2d, v29.2d, v30.2d[0]
-
+	ldr		x22, [x12, #(1*8+1*32)] // A2[1]
 	fmla	v2.2d, v24.2d, v30.2d[1]
+	fmla	v1.2d, v25.2d, v30.2d[0]
+
+	// load 28 ins 31
+	ldr		d28, [x13, #(0*8+0*32)] // A4[0]
+	ins		v31.d[1], x27 // B1[1]
 	fmla	v3.2d, v25.2d, v30.2d[1]
+	ldr		x27, [x11, #(3*8+1*32)] // B1[1]
+	fmla	v8.2d, v26.2d, v30.2d[0]
 	fmla	v10.2d, v26.2d, v30.2d[1]
+
+	// load 29 ins 27
+	ldr		d29, [x13, #(2*8+0*32)] // A5[0]
+	ins		v27.d[1], x23 // A3[1]
+	fmla	v4.2d, v24.2d, v31.2d[0]
+	ldr		x23, [x12, #(3*8+1*32)] // A3[1]
+	fmla	v6.2d, v24.2d, v31.2d[1]
+	fmla	v5.2d, v25.2d, v31.2d[0]
+
+	// load 24 ins 28
+	ldr		d24, [x9, #(0*8+1*32)] // A0[0]
+	ins		v28.d[1], x24 // A4[1]
+	fmla	v7.2d, v25.2d, v31.2d[1]
+	ldr		x24, [x13, #(1*8+1*32)] // A4[1]
+	fmla	v12.2d, v26.2d, v31.2d[0]
+	fmla	v14.2d, v26.2d, v31.2d[1]
+
+	// load 25 ins 29
+	ldr		d25, [x9, #(2*8+1*32)] // A1[0]
+	ins		v29.d[1], x25 // A5[1]
+	fmla	v9.2d, v27.2d, v30.2d[0]
+	ldr		x25, [x13, #(3*8+1*32)] // A5[1]
 	fmla	v11.2d, v27.2d, v30.2d[1]
+	fmla	v16.2d, v28.2d, v30.2d[0]
+
+	// load 26 ins 24
+	ldr		d26, [x12, #(0*8+1*32)] // A2[0]
+	ins		v24.d[1], x20 // A0[1]
 	fmla	v18.2d, v28.2d, v30.2d[1]
+	ldr		x20, [x9, #(1*8+2*32)] // A0[1]
+	fmla	v17.2d, v29.2d, v30.2d[0]
 	fmla	v19.2d, v29.2d, v30.2d[1]
 
-	fmla	v4.2d, v24.2d, v31.2d[0]
-	fmla	v5.2d, v25.2d, v31.2d[0]
-	fmla	v12.2d, v26.2d, v31.2d[0]
+	// load 30 ins 25
+	ldr		d30, [x11, #(0*8+1*32)] // B0[0]
+	ins		v25.d[1], x21 // A1[1]
 	fmla	v13.2d, v27.2d, v31.2d[0]
-	fmla	v20.2d, v28.2d, v31.2d[0]
-	fmla	v21.2d, v29.2d, v31.2d[0]
-
-	fmla	v6.2d, v24.2d, v31.2d[1]
-	fmla	v7.2d, v25.2d, v31.2d[1]
-	fmla	v14.2d, v26.2d, v31.2d[1]
+	ldr		x21, [x9, #(3*8+2*32)] // A1[1]
 	fmla	v15.2d, v27.2d, v31.2d[1]
+	fmla	v20.2d, v28.2d, v31.2d[0]
+
+	// load 27 ins 30
+	ldr		d27, [x12, #(2*8+1*32)] // A3[0]
+	ins		v30.d[1], x26 // B0[1]
 	fmla	v22.2d, v28.2d, v31.2d[1]
+	ldr		x26, [x11, #(1*8+2*32)] // B0[1]
+	fmla	v21.2d, v29.2d, v31.2d[0]
 	fmla	v23.2d, v29.2d, v31.2d[1]
 
 
 	// unroll 1
-	ldr		d24, [x9], #8 // A0[0]
-	ldr		x20, [x9], #8 // A0[1]
-	ldr		d25, [x9], #8 // A1[0]
-	ldr		x21, [x9], #8 // A1[1]
-	ldr		d26, [x12], #8 // A2[0]
-	ldr		x22, [x12], #8 // A2[1]
-	ldr		d27, [x12], #8 // A3[0]
-	ldr		x23, [x12], #8 // A3[1]
-	ldr		d28, [x13], #8 // A4[0]
-	ldr		x24, [x13], #8 // A4[1]
-	ldr		d29, [x13], #8 // A5[0]
-	ldr		x25, [x13], #8 // A5[1]
 
-	ins		v24.d[1], x20 // A0[1]
-	ins		v25.d[1], x21 // A1[1]
+	// load 31 ins 26
+	ldr		d31, [x11, #(2*8+1*32)] // B1[0]
 	ins		v26.d[1], x22 // A2[1]
-	ins		v27.d[1], x23 // A3[1]
-	ins		v28.d[1], x24 // A4[1]
-	ins		v29.d[1], x25 // A5[1]
-
-	ldr		d30, [x11], #8 // B0[0]
-	ldr		x26, [x11], #8 // B0[1]
-	ins		v30.d[1], x26 // B0[1]
-
-	ldr		d31, [x11], #8 // B1[0]
-	ldr		x27, [x11], #8 // B1[1]
-	ins		v31.d[1], x27 // B1[1]
-
 	fmla	v0.2d, v24.2d, v30.2d[0]
-	fmla	v1.2d, v25.2d, v30.2d[0]
-	fmla	v8.2d, v26.2d, v30.2d[0]
-	fmla	v9.2d, v27.2d, v30.2d[0]
-	fmla	v16.2d, v28.2d, v30.2d[0]
-	fmla	v17.2d, v29.2d, v30.2d[0]
-
+	ldr		x22, [x12, #(1*8+2*32)] // A2[1]
 	fmla	v2.2d, v24.2d, v30.2d[1]
+	fmla	v1.2d, v25.2d, v30.2d[0]
+
+	// load 28 ins 31
+	ldr		d28, [x13, #(0*8+1*32)] // A4[0]
+	ins		v31.d[1], x27 // B1[1]
 	fmla	v3.2d, v25.2d, v30.2d[1]
+	ldr		x27, [x11, #(3*8+2*32)] // B1[1]
+	fmla	v8.2d, v26.2d, v30.2d[0]
 	fmla	v10.2d, v26.2d, v30.2d[1]
+
+	// load 29 ins 27
+	ldr		d29, [x13, #(2*8+1*32)] // A5[0]
+	ins		v27.d[1], x23 // A3[1]
+	fmla	v4.2d, v24.2d, v31.2d[0]
+	ldr		x23, [x12, #(3*8+2*32)] // A3[1]
+	fmla	v6.2d, v24.2d, v31.2d[1]
+	fmla	v5.2d, v25.2d, v31.2d[0]
+
+	// load 24 ins 28
+	ldr		d24, [x9, #(0*8+2*32)] // A0[0]
+	ins		v28.d[1], x24 // A4[1]
+	fmla	v7.2d, v25.2d, v31.2d[1]
+	ldr		x24, [x13, #(1*8+2*32)] // A4[1]
+	fmla	v12.2d, v26.2d, v31.2d[0]
+	fmla	v14.2d, v26.2d, v31.2d[1]
+
+	// load 25 ins 29
+	ldr		d25, [x9, #(2*8+2*32)] // A1[0]
+	ins		v29.d[1], x25 // A5[1]
+	fmla	v9.2d, v27.2d, v30.2d[0]
+	ldr		x25, [x13, #(3*8+2*32)] // A5[1]
 	fmla	v11.2d, v27.2d, v30.2d[1]
+	fmla	v16.2d, v28.2d, v30.2d[0]
+
+	// load 26 ins 24
+	ldr		d26, [x12, #(0*8+2*32)] // A2[0]
+	ins		v24.d[1], x20 // A0[1]
 	fmla	v18.2d, v28.2d, v30.2d[1]
+	ldr		x20, [x9, #(1*8+3*32)] // A0[1]
+	fmla	v17.2d, v29.2d, v30.2d[0]
 	fmla	v19.2d, v29.2d, v30.2d[1]
 
-	fmla	v4.2d, v24.2d, v31.2d[0]
-	fmla	v5.2d, v25.2d, v31.2d[0]
-	fmla	v12.2d, v26.2d, v31.2d[0]
+	// load 30 ins 25
+	ldr		d30, [x11, #(0*8+2*32)] // B0[0]
+	ins		v25.d[1], x21 // A1[1]
 	fmla	v13.2d, v27.2d, v31.2d[0]
-	fmla	v20.2d, v28.2d, v31.2d[0]
-	fmla	v21.2d, v29.2d, v31.2d[0]
-
-	fmla	v6.2d, v24.2d, v31.2d[1]
-	fmla	v7.2d, v25.2d, v31.2d[1]
-	fmla	v14.2d, v26.2d, v31.2d[1]
+	ldr		x21, [x9, #(3*8+3*32)] // A1[1]
 	fmla	v15.2d, v27.2d, v31.2d[1]
+	fmla	v20.2d, v28.2d, v31.2d[0]
+
+	// load 27 ins 30
+	ldr		d27, [x12, #(2*8+2*32)] // A3[0]
+	ins		v30.d[1], x26 // B0[1]
 	fmla	v22.2d, v28.2d, v31.2d[1]
+	ldr		x26, [x11, #(1*8+3*32)] // B0[1]
+	fmla	v21.2d, v29.2d, v31.2d[0]
 	fmla	v23.2d, v29.2d, v31.2d[1]
 
 
 	// unroll 2
-	ldr		d24, [x9], #8 // A0[0]
-	ldr		x20, [x9], #8 // A0[1]
-	ldr		d25, [x9], #8 // A1[0]
-	ldr		x21, [x9], #8 // A1[1]
-	ldr		d26, [x12], #8 // A2[0]
-	ldr		x22, [x12], #8 // A2[1]
-	ldr		d27, [x12], #8 // A3[0]
-	ldr		x23, [x12], #8 // A3[1]
-	ldr		d28, [x13], #8 // A4[0]
-	ldr		x24, [x13], #8 // A4[1]
-	ldr		d29, [x13], #8 // A5[0]
-	ldr		x25, [x13], #8 // A5[1]
 
-	ins		v24.d[1], x20 // A0[1]
-	ins		v25.d[1], x21 // A1[1]
+	// load 31 ins 26
+	ldr		d31, [x11, #(2*8+2*32)] // B1[0]
 	ins		v26.d[1], x22 // A2[1]
-	ins		v27.d[1], x23 // A3[1]
-	ins		v28.d[1], x24 // A4[1]
-	ins		v29.d[1], x25 // A5[1]
-
-	ldr		d30, [x11], #8 // B0[0]
-	ldr		x26, [x11], #8 // B0[1]
-	ins		v30.d[1], x26 // B0[1]
-
-	ldr		d31, [x11], #8 // B1[0]
-	ldr		x27, [x11], #8 // B1[1]
-	ins		v31.d[1], x27 // B1[1]
-
 	fmla	v0.2d, v24.2d, v30.2d[0]
-	fmla	v1.2d, v25.2d, v30.2d[0]
-	fmla	v8.2d, v26.2d, v30.2d[0]
-	fmla	v9.2d, v27.2d, v30.2d[0]
-	fmla	v16.2d, v28.2d, v30.2d[0]
-	fmla	v17.2d, v29.2d, v30.2d[0]
-
+	ldr		x22, [x12, #(1*8+3*32)] // A2[1]
 	fmla	v2.2d, v24.2d, v30.2d[1]
+	fmla	v1.2d, v25.2d, v30.2d[0]
+
+	// load 28 ins 31
+	ldr		d28, [x13, #(0*8+2*32)] // A4[0]
+	ins		v31.d[1], x27 // B1[1]
 	fmla	v3.2d, v25.2d, v30.2d[1]
+	ldr		x27, [x11, #(3*8+3*32)] // B1[1]
+	fmla	v8.2d, v26.2d, v30.2d[0]
 	fmla	v10.2d, v26.2d, v30.2d[1]
+
+	// load 29 ins 27
+	ldr		d29, [x13, #(2*8+2*32)] // A5[0]
+	ins		v27.d[1], x23 // A3[1]
+	fmla	v4.2d, v24.2d, v31.2d[0]
+	ldr		x23, [x12, #(3*8+3*32)] // A3[1]
+	fmla	v6.2d, v24.2d, v31.2d[1]
+	fmla	v5.2d, v25.2d, v31.2d[0]
+
+	// load 24 ins 28
+	ldr		d24, [x9, #(0*8+3*32)] // A0[0]
+	ins		v28.d[1], x24 // A4[1]
+	fmla	v7.2d, v25.2d, v31.2d[1]
+	ldr		x24, [x13, #(1*8+3*32)] // A4[1]
+	fmla	v12.2d, v26.2d, v31.2d[0]
+	fmla	v14.2d, v26.2d, v31.2d[1]
+
+	// load 25 ins 29
+	ldr		d25, [x9, #(2*8+3*32)] // A1[0]
+	ins		v29.d[1], x25 // A5[1]
+	fmla	v9.2d, v27.2d, v30.2d[0]
+	ldr		x25, [x13, #(3*8+3*32)] // A5[1]
 	fmla	v11.2d, v27.2d, v30.2d[1]
+	fmla	v16.2d, v28.2d, v30.2d[0]
+
+	// load 26 ins 24
+	ldr		d26, [x12, #(0*8+3*32)] // A2[0]
+	ins		v24.d[1], x20 // A0[1]
 	fmla	v18.2d, v28.2d, v30.2d[1]
+//	ldr		x20, [x9, #(1*8+4*32)] // A0[1]
+	fmla	v17.2d, v29.2d, v30.2d[0]
 	fmla	v19.2d, v29.2d, v30.2d[1]
 
-	fmla	v4.2d, v24.2d, v31.2d[0]
-	fmla	v5.2d, v25.2d, v31.2d[0]
-	fmla	v12.2d, v26.2d, v31.2d[0]
+	// load 30 ins 25
+	ldr		d30, [x11, #(0*8+3*32)] // B0[0]
+	ins		v25.d[1], x21 // A1[1]
 	fmla	v13.2d, v27.2d, v31.2d[0]
-	fmla	v20.2d, v28.2d, v31.2d[0]
-	fmla	v21.2d, v29.2d, v31.2d[0]
-
-	fmla	v6.2d, v24.2d, v31.2d[1]
-	fmla	v7.2d, v25.2d, v31.2d[1]
-	fmla	v14.2d, v26.2d, v31.2d[1]
+//	ldr		x21, [x9, #(3*8+4*32)] // A1[1]
 	fmla	v15.2d, v27.2d, v31.2d[1]
+	fmla	v20.2d, v28.2d, v31.2d[0]
+
+	// load 27 ins 30
+	ldr		d27, [x12, #(2*8+3*32)] // A3[0]
+	ins		v30.d[1], x26 // B0[1]
 	fmla	v22.2d, v28.2d, v31.2d[1]
+//	ldr		x26, [x11, #(1*8+4*32)] // B0[1]
+	fmla	v21.2d, v29.2d, v31.2d[0]
 	fmla	v23.2d, v29.2d, v31.2d[1]
 
 
 	// unroll 3
-	ldr		d24, [x9], #8 // A0[0]
-	ldr		x20, [x9], #8 // A0[1]
-	ldr		d25, [x9], #8 // A1[0]
-	ldr		x21, [x9], #8 // A1[1]
-	ldr		d26, [x12], #8 // A2[0]
-	ldr		x22, [x12], #8 // A2[1]
-	ldr		d27, [x12], #8 // A3[0]
-	ldr		x23, [x12], #8 // A3[1]
-	ldr		d28, [x13], #8 // A4[0]
-	ldr		x24, [x13], #8 // A4[1]
-	ldr		d29, [x13], #8 // A5[0]
-	ldr		x25, [x13], #8 // A5[1]
 
-	ins		v24.d[1], x20 // A0[1]
-	ins		v25.d[1], x21 // A1[1]
+	// load 31 ins 26
+	ldr		d31, [x11, #(2*8+3*32)] // B1[0]
 	ins		v26.d[1], x22 // A2[1]
-	ins		v27.d[1], x23 // A3[1]
-	ins		v28.d[1], x24 // A4[1]
-	ins		v29.d[1], x25 // A5[1]
-
-	ldr		d30, [x11], #8 // B0[0]
-	ldr		x26, [x11], #8 // B0[1]
-	ins		v30.d[1], x26 // B0[1]
-
-	ldr		d31, [x11], #8 // B1[0]
-	ldr		x27, [x11], #8 // B1[1]
-	ins		v31.d[1], x27 // B1[1]
-
 	fmla	v0.2d, v24.2d, v30.2d[0]
-	fmla	v1.2d, v25.2d, v30.2d[0]
-	fmla	v8.2d, v26.2d, v30.2d[0]
-	fmla	v9.2d, v27.2d, v30.2d[0]
-	fmla	v16.2d, v28.2d, v30.2d[0]
-	fmla	v17.2d, v29.2d, v30.2d[0]
-
+//	ldr		x22, [x12, #(1*8+4*32)] // A2[1]
 	fmla	v2.2d, v24.2d, v30.2d[1]
+	add		x9, x9, #(4*32) // A_0
+	fmla	v1.2d, v25.2d, v30.2d[0]
+
+	// load 28 ins 31
+	ldr		d28, [x13, #(0*8+3*32)] // A4[0]
+	ins		v31.d[1], x27 // B1[1]
 	fmla	v3.2d, v25.2d, v30.2d[1]
+//	ldr		x27, [x11, #(3*8+4*32)] // B1[1]
+	fmla	v8.2d, v26.2d, v30.2d[0]
 	fmla	v10.2d, v26.2d, v30.2d[1]
+
+	// load 29 ins 27
+	ldr		d29, [x13, #(2*8+3*32)] // A5[0]
+	ins		v27.d[1], x23 // A3[1]
+	fmla	v4.2d, v24.2d, v31.2d[0]
+//	ldr		x23, [x12, #(3*8+4*32)] // A3[1]
+	fmla	v6.2d, v24.2d, v31.2d[1]
+	sub		w8, w8, #4
+	fmla	v5.2d, v25.2d, v31.2d[0]
+
+	// load 24 ins 28
+//	ldr		d24, [x9, #(0*8+0*32)] // A0[0]
+	ins		v28.d[1], x24 // A4[1]
+	fmla	v7.2d, v25.2d, v31.2d[1]
+//	ldr		x24, [x13, #(1*8+4*32)] // A4[1]
+	fmla	v12.2d, v26.2d, v31.2d[0]
+	add		x12, x12, #(4*32) // A_1
+	fmla	v14.2d, v26.2d, v31.2d[1]
+
+	// load 25 ins 29
+//	ldr		d25, [x9, #(2*8+0*32)] // A1[0]
+	ins		v29.d[1], x25 // A5[1]
+	fmla	v9.2d, v27.2d, v30.2d[0]
+//	ldr		x25, [x13, #(3*8+4*32)] // A5[1]
 	fmla	v11.2d, v27.2d, v30.2d[1]
+	add		x11, x11, #(4*32) // B
+	fmla	v16.2d, v28.2d, v30.2d[0]
+
+	// load 26 ins 24
+//	ldr		d26, [x12, #(0*8+0*32)] // A2[0]
+//	ins		v24.d[1], x20 // A0[1]
 	fmla	v18.2d, v28.2d, v30.2d[1]
+//	ldr		x20, [x9, #(1*8+1*32)] // A0[1]
+	fmla	v17.2d, v29.2d, v30.2d[0]
+	add		x13, x13, #(4*32) // A_2
 	fmla	v19.2d, v29.2d, v30.2d[1]
 
-	fmla	v4.2d, v24.2d, v31.2d[0]
-	fmla	v5.2d, v25.2d, v31.2d[0]
-	fmla	v12.2d, v26.2d, v31.2d[0]
+	// load 30 ins 25
+//	ldr		d30, [x11, #(0*8+0*32)] // B0[0]
+//	ins		v25.d[1], x21 // A1[1]
 	fmla	v13.2d, v27.2d, v31.2d[0]
-	fmla	v20.2d, v28.2d, v31.2d[0]
-	fmla	v21.2d, v29.2d, v31.2d[0]
-
-	fmla	v6.2d, v24.2d, v31.2d[1]
-	fmla	v7.2d, v25.2d, v31.2d[1]
-	fmla	v14.2d, v26.2d, v31.2d[1]
+//	ldr		x21, [x9, #(3*8+1*32)] // A1[1]
 	fmla	v15.2d, v27.2d, v31.2d[1]
-	fmla	v22.2d, v28.2d, v31.2d[1]
-	fmla	v23.2d, v29.2d, v31.2d[1]
-
-
-	sub		w8, w8, #4
 //	cmp		w8, #4
+	fmla	v20.2d, v28.2d, v31.2d[0]
+
+	// load 27 ins 30
+//	ldr		d27, [x12, #(2*8+0*32)] // A3[0]
+//	ins		v30.d[1], x26 // B0[1]
+	fmla	v22.2d, v28.2d, v31.2d[1]
+//	ldr		x26, [x11, #(1*8+1*32)] // B0[1]
+	fmla	v21.2d, v29.2d, v31.2d[0]
+	fmla	v23.2d, v29.2d, v31.2d[1]
 
 	b		2f // return
 
@@ -586,9 +763,9 @@ inner_kernel_gemm_add_nt_12x4_lib4:
 	cmp		w8, #0
 	ble		2f // return
 
-	sub		x9, x9, #32
-	sub		x11, x11, #32
-	sub		x12, x12, #32
+//	sub		x9, x9, #32
+//	sub		x11, x11, #32
+//	sub		x12, x12, #32
 
 3: // clean1-up loop
 
