@@ -954,6 +954,87 @@ inner_store_4x4_lib4:
 //
 // input arguments:
 // x8   <- D
+// x9  <- km
+// x10  <- kn
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_4X4_VS_LIB4
+#else
+	.align 4
+	.type inner_store_4x4_vs_lib4, %function
+inner_store_4x4_vs_lib4:
+#endif
+
+	cmp		w9, #4
+	bge		1f
+
+	ldp		q24, q25, [x8, #(0*8+0*32)]
+	ldp		q26, q27, [x8, #(0*8+1*32)]
+	ldp		q28, q29, [x8, #(0*8+2*32)]
+	ldp		q30, q31, [x8, #(0*8+3*32)]
+
+	// 4th row
+	ins		v1.d[1], v25.d[1]
+	ins		v3.d[1], v27.d[1]
+	ins		v5.d[1], v29.d[1]
+	ins		v7.d[1], v31.d[1]
+	cmp		w9, #3
+	bge		1f
+	// 3th row
+	ins		v1.d[0], v25.d[0]
+	ins		v3.d[0], v27.d[0]
+	ins		v5.d[0], v29.d[0]
+	ins		v7.d[0], v31.d[0]
+	cmp		w9, #2
+	bge		1f
+	// 2nd row
+	ins		v0.d[1], v24.d[1]
+	ins		v2.d[1], v26.d[1]
+	ins		v4.d[1], v28.d[1]
+	ins		v6.d[1], v30.d[1]
+	cmp		w9, #1
+	bge		1f
+	// 1st row
+	ins		v0.d[0], v24.d[0]
+	ins		v2.d[0], v26.d[0]
+	ins		v4.d[0], v28.d[0]
+	ins		v6.d[0], v30.d[0]
+
+1:
+	// 1st col
+	stp		q0, q1, [x8, #(0*8+0*32)]
+	cmp		w10, #2
+	blt		0f
+	// 2nd col
+	stp		q2, q3, [x8, #(0*8+1*32)]
+	cmp		w10, #3
+	blt		0f
+	// 3rd col
+	stp		q4, q5, [x8, #(0*8+2*32)]
+	beq		0f
+	// 4th col
+	stp		q6, q7, [x8, #(0*8+3*32)]
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_store_4x4_vs_lib4, .-inner_store_4x4_vs_lib4
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// x8   <- D
 //
 // output arguments:
 
@@ -1058,6 +1139,83 @@ kernel_dgemm_nt_4x4_lib4:
 	ret
 
 	.size	kernel_dgemm_nt_4x4_lib4, .-kernel_dgemm_nt_4x4_lib4
+
+
+
+
+
+//                                  w0        x1             x2         x3         x4            x5         x6         w7      sp+0
+// void kernel_dgemm_nt_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D, int m1, int n1)
+
+	.align	4
+	.global	kernel_dgemm_nt_4x4_vs_lib4
+	.type	kernel_dgemm_nt_4x4_vs_lib4, %function
+kernel_dgemm_nt_4x4_vs_lib4:
+	
+
+
+	PROLOGUE
+
+
+
+	// TODO zero the entire 128-bit register ???
+	fmov	d0, xzr
+	fmov    d1, d0
+	fmov    d2, d0
+	fmov    d3, d0
+	fmov    d4, d0
+	fmov    d5, d0
+	fmov    d6, d0
+	fmov    d7, d0
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		x10, x3 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nt_4x4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x4 // beta
+	mov		x10, x5 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	bl inner_scale_ab_4x4_lib4
+#endif
+
+
+
+	// store n
+	mov		x8, x6 // D
+	mov		w9, w7 // m1
+	ldr		w10, [sp, #(STACKSIZE + 0)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB4
+#else
+	bl inner_store_4x4_vs_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	.size	kernel_dgemm_nt_4x4_vs_lib4, .-kernel_dgemm_nt_4x4_vs_lib4
 
 
 
