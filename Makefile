@@ -654,6 +654,19 @@ benchmarks: deploy_to_benchmarks build_benchmarks
 run_benchmarks:
 	make -C benchmarks run
 
+
+
+build_benchmarks_all:
+	make -C benchmarks all
+	@echo
+	@echo "Benchmarks build complete."
+	@echo
+
+benchmarks_all: deploy_to_benchmarks build_benchmarks_all
+
+run_benchmarks_all:
+	make -C benchmarks run_all
+
 ### examples
 
 deploy_to_examples:

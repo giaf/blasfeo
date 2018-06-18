@@ -71,3 +71,82 @@ clean:
 
 clean_all: clean
 	rm -rf ./build/*
+
+
+# single benchmarks
+
+
+BLAS_OBJS =
+RUN_BLAS_OBJS =
+
+
+# dgemm_nt
+
+BLAS_OBJS += dgemm_nt
+RUN_BLAS_OBJS += run_dgemm_nt
+
+dgemm_nt: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgemm_nt_benchmark.o -DDOUBLE_PRECISION -DGEMM_NT
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dgemm_nt_benchmark.o -o $(BINARY_DIR)/dgemm_nt_benchmark.out $(LIBS)
+
+run_dgemm_nt:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dgemm_nt
+	./$(BINARY_DIR)/dgemm_nt_benchmark.out > ./$(BINARY_DIR)/data/dgemm_nt.m
+
+
+# dgemm_nn
+
+BLAS_OBJS += dgemm_nn
+RUN_BLAS_OBJS += run_dgemm_nn
+
+dgemm_nn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgemm_nn_benchmark.o -DDOUBLE_PRECISION -DGEMM_NN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dgemm_nn_benchmark.o -o $(BINARY_DIR)/dgemm_nn_benchmark.out $(LIBS)
+
+run_dgemm_nn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dgemm_nn
+	./$(BINARY_DIR)/dgemm_nn_benchmark.out > ./$(BINARY_DIR)/data/dgemm_nn.m
+
+all: $(BLAS_OBJS)
+
+run_all: $(RUN_BLAS_OBJS)
+
+
+# sgemm_nt
+
+BLAS_OBJS += sgemm_nt
+RUN_BLAS_OBJS += run_sgemm_nt
+
+sgemm_nt: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgemm_nt_benchmark.o -DSINGLE_PRECISION -DGEMM_NT
+	$(CC) $(CFLAGS) $(BINARY_DIR)/sgemm_nt_benchmark.o -o $(BINARY_DIR)/sgemm_nt_benchmark.out $(LIBS)
+
+run_sgemm_nt:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking sgemm_nt
+	./$(BINARY_DIR)/sgemm_nt_benchmark.out > ./$(BINARY_DIR)/data/sgemm_nt.m
+
+
+# sgemm_nt
+
+BLAS_OBJS += sgemm_nn
+RUN_BLAS_OBJS += run_sgemm_nn
+
+sgemm_nn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgemm_nn_benchmark.o -DSINGLE_PRECISION -DGEMM_NN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/sgemm_nn_benchmark.o -o $(BINARY_DIR)/sgemm_nn_benchmark.out $(LIBS)
+
+run_sgemm_nn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking sgemm_nn
+	./$(BINARY_DIR)/sgemm_nn_benchmark.out > ./$(BINARY_DIR)/data/sgemm_nn.m
+
+all: $(BLAS_OBJS)
+
+run_all: $(RUN_BLAS_OBJS)
