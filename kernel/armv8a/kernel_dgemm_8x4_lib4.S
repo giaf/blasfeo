@@ -410,8 +410,6 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	cmp		w8, #4
 	ble		0f // consider clean up loop
 
-	// prefetch
-
 	// main loop
 1:
 	
