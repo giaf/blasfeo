@@ -378,9 +378,11 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	cmp		w8, #0
 	ble		2f // return
 
-	add		x12, x9, x10
-
 	// prefetch
+	prfm	PLDL1KEEP, [x9, #0]
+	prfm	PLDL1KEEP, [x10, #0]
+	add		x12, x9, x10
+	prfm	PLDL1KEEP, [x12, #0]
 
 	// preload
 	ldr		d16, [x9, #(0*8+0*32)] // A0
@@ -400,6 +402,10 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	ins		v25.d[1], x25
 	ldr		x21, [x12, #(3*8+0*32)] // A1
 
+	// prefetch
+	prfm	PLDL1KEEP, [x9, #64]
+	prfm	PLDL1KEEP, [x11, #64]
+	prfm	PLDL1KEEP, [x12, #64]
 
 	cmp		w8, #4
 	ble		0f // consider clean up loop
@@ -773,7 +779,6 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 
 
 
-	
 #if MACRO_LEVEL>=2
 	.endm
 #else
