@@ -141,6 +141,8 @@ int main()
 	int ii, jj, ll;
 	int rep;
 
+	int nrep_in = 10; // number of benchmark batches
+
 #if 1
 	int nn[] = {4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 148, 152, 156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224, 228, 232, 236, 240, 244, 248, 252, 256, 260, 264, 268, 272, 276, 280, 284, 288, 292, 296, 300, 304, 308, 312, 316, 320, 324, 328, 332, 336, 340, 344, 348, 352, 356, 360, 364, 368, 372, 376, 380, 384, 388, 392, 396, 400, 404, 408, 412, 416, 420, 424, 428, 432, 436, 440, 444, 448, 452, 456, 460, 500, 550, 600, 650, 700};
 	int nnrep[] = {10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 400, 400, 400, 400, 400, 200, 200, 200, 200, 200, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20, 20, 20, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 4, 4, 4, 4, 4};
@@ -153,7 +155,8 @@ int main()
 		{
 
 		int n = nn[ll];
-		int nrep = nnrep[ll]/2;
+		int nrep = nnrep[ll]/nrep_in;
+		nrep = nrep>1 ? nrep : 1;
 //		int n = ll+1;
 //		int nrep = nnrep[0];
 //		n = n<12 ? 12 : n;
@@ -180,7 +183,6 @@ int main()
 #endif
 
 		int rep_in;
-		int nrep_in = 10;
 
 #if defined(DOUBLE_PRECISION)
 		struct blasfeo_dmat sA; blasfeo_allocate_dmat(n, n, &sA);
@@ -189,9 +191,9 @@ int main()
 		struct blasfeo_dmat sD; blasfeo_allocate_dmat(n, n, &sD);
 //		struct blasfeo_dmat sE; blasfeo_allocate_dmat(n, n, &sE);
 
-//		struct blasfeo_dvec sx; blasfeo_allocate_dvec(n, &sx);
+		struct blasfeo_dvec sx; blasfeo_allocate_dvec(n, &sx);
 //		struct blasfeo_dvec sy; blasfeo_allocate_dvec(n, &sy);
-//		struct blasfeo_dvec sz; blasfeo_allocate_dvec(n, &sz);
+		struct blasfeo_dvec sz; blasfeo_allocate_dvec(n, &sz);
 #elif defined(SINGLE_PRECISION)
 		struct blasfeo_smat sA; blasfeo_allocate_smat(n, n, &sA);
 		struct blasfeo_smat sB; blasfeo_allocate_smat(n, n, &sB);
@@ -199,9 +201,9 @@ int main()
 		struct blasfeo_smat sD; blasfeo_allocate_smat(n, n, &sD);
 //		struct blasfeo_smat sE; blasfeo_allocate_smat(n, n, &sE);
 
-//		struct blasfeo_svec sx; blasfeo_allocate_svec(n, &sx);
+		struct blasfeo_svec sx; blasfeo_allocate_svec(n, &sx);
 //		struct blasfeo_svec sy; blasfeo_allocate_svec(n, &sy);
-//		struct blasfeo_svec sz; blasfeo_allocate_svec(n, &sz);
+		struct blasfeo_svec sz; blasfeo_allocate_svec(n, &sz);
 #endif
 
 		// A
@@ -264,6 +266,12 @@ int main()
 				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 #elif defined(GEMM_NN)
 				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+#elif defined(POTRF_L)
+				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
+#elif defined(GEMV_N)
+				blasfeo_dgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
+#elif defined(GEMV_T)
+				blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #else
 #error wrong routine
 #endif
@@ -274,6 +282,12 @@ int main()
 				blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 #elif defined(GEMM_NN)
 				blasfeo_sgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+#elif defined(POTRF_L)
+				blasfeo_spotrf_l(n, &sB, 0, 0, &sB, 0, 0);
+#elif defined(GEMV_N)
+				blasfeo_sgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
+#elif defined(GEMV_T)
+				blasfeo_sgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #else
 #error wrong routine
 #endif
@@ -288,13 +302,19 @@ int main()
 
 			}
 
-		float Gflops_max = flops_max * GHz_max;
+		double Gflops_max = flops_max * GHz_max;
 
 #if defined(GEMM_NT) | defined(GEMM_NN)
-		float flop_operation = 2.0*n*n*n; // gemm
+		double flop_operation = 2.0*n*n*n;
+#elif defined(POTRF_L)
+		double flop_operation = 1.0/3.0*n*n*n;
+#elif defined(GEMV_N) | defined(GEMV_T)
+		double flop_operation = 2.0*n*n;
+#else
+#error wrong routine
 #endif
 
-		float Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
+		double Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
 
 		printf("%d\t%7.2f\t%7.2f\n",
 			n,
@@ -308,9 +328,9 @@ int main()
 //		blasfeo_free_dmat(&sC);
 		blasfeo_free_dmat(&sD);
 //		blasfeo_free_dmat(&sE);
-//		blasfeo_free_dvec(&sx);
+		blasfeo_free_dvec(&sx);
 //		blasfeo_free_dvec(&sy);
-//		blasfeo_free_dvec(&sz);
+		blasfeo_free_dvec(&sz);
 #elif defined(SINGLE_PRECISION)
 		blasfeo_free_smat(&sA);
 		blasfeo_free_smat(&sB);
@@ -319,9 +339,9 @@ int main()
 //		blasfeo_free_smat(&sC);
 		blasfeo_free_smat(&sD);
 //		blasfeo_free_smat(&sE);
-//		blasfeo_free_svec(&sx);
+		blasfeo_free_svec(&sx);
 //		blasfeo_free_svec(&sy);
-//		blasfeo_free_svec(&sz);
+		blasfeo_free_svec(&sz);
 #endif
 
 		}

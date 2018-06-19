@@ -667,6 +667,9 @@ benchmarks_all: deploy_to_benchmarks build_benchmarks_all
 run_benchmarks_all:
 	make -C benchmarks run_all
 
+print_figures_benchmark_all:
+	make -C benchmarks print_figures
+
 ### examples
 
 deploy_to_examples:
