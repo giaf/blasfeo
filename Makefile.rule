@@ -258,6 +258,7 @@ CFLAGS  += -m64 -mavx -mfma -DTARGET_X64_AMD_BULLDOZER
 endif
 ifeq ($(TARGET), X86_AMD_JAGUAR)
 CFLAGS  += -m32 -mavx -DTARGET_X86_AMD_JAGUAR
+ASFLAGS += -m32 -mavx -DTARGET_X86_AMD_JAGUAR
 endif
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
 CFLAGS  += -march=armv8-a+crc+crypto+fp+simd -DTARGET_ARMV8A_ARM_CORTEX_A57
