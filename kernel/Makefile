@@ -77,6 +77,7 @@ endif
 clean:
 	make -C avx2 clean
 	make -C avx clean
+	make -C avx_x86 clean
 	make -C sse3 clean
 	make -C fma clean
 	make -C armv8a clean

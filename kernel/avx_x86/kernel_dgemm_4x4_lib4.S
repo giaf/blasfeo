@@ -40,15 +40,28 @@
 #define ARG9  STACKSIZE + 36(%esp)
 #define ARG10 STACKSIZE + 40(%esp)
 #define PROLOGUE \
-	pushl	%ebp; \
-	pushl	%edi; \
-	pushl	%esi; \
-	pushl	%ebx;
+	movl	0(%esp), %ebp; \
+	movl	-4(%esp), %edi; \
+	movl	-8(%esp), %esi; \
+	movl	-12(%esp), %ebx; \
+	subl	$16, %esp;
 #define EPILOGUE \
-	popl	%ebx; \
-	popl	%esi; \
-	popl	%edi; \
-	popl	%ebp;
+	movl	0(%esp), %ebx; \
+	movl	4(%esp), %esi; \
+	movl	8(%esp), %edi; \
+	movl	12(%esp), %ebp; \
+	addl	$16, %esp;
+
+//#define PROLOGUE \
+//	pushl	%ebp; \
+//	pushl	%edi; \
+//	pushl	%esi; \
+//	pushl	%ebx;
+//#define EPILOGUE \
+//	popl	%ebx; \
+//	popl	%esi; \
+//	popl	%edi; \
+//	popl	%ebp;
 
 #else
 
