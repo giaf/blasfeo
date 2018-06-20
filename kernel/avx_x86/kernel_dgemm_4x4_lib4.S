@@ -39,29 +39,29 @@
 #define ARG8  STACKSIZE + 32(%esp)
 #define ARG9  STACKSIZE + 36(%esp)
 #define ARG10 STACKSIZE + 40(%esp)
-#define PROLOGUE \
-	movl	0(%esp), %ebp; \
-	movl	-4(%esp), %edi; \
-	movl	-8(%esp), %esi; \
-	movl	-12(%esp), %ebx; \
-	subl	$16, %esp;
-#define EPILOGUE \
-	movl	0(%esp), %ebx; \
-	movl	4(%esp), %esi; \
-	movl	8(%esp), %edi; \
-	movl	12(%esp), %ebp; \
-	addl	$16, %esp;
-
 //#define PROLOGUE \
-//	pushl	%ebp; \
-//	pushl	%edi; \
-//	pushl	%esi; \
-//	pushl	%ebx;
+//	subl	$16, %esp; \
+//	movl	0(%esp), %ebx; \
+//	movl	4(%esp), %esi; \
+//	movl	8(%esp), %edi; \
+//	movl	12(%esp), %ebp;
 //#define EPILOGUE \
-//	popl	%ebx; \
-//	popl	%esi; \
-//	popl	%edi; \
-//	popl	%ebp;
+//	movl	0(%esp), %ebx; \
+//	movl	4(%esp), %esi; \
+//	movl	8(%esp), %edi; \
+//	movl	12(%esp), %ebp; \
+//	addl	$16, %esp;
+
+#define PROLOGUE \
+	pushl	%ebp; \
+	pushl	%edi; \
+	pushl	%esi; \
+	pushl	%ebx;
+#define EPILOGUE \
+	popl	%ebx; \
+	popl	%esi; \
+	popl	%edi; \
+	popl	%ebp;
 
 #else
 
@@ -106,7 +106,7 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 	jle		0f // consider clean-up loop
 
 	// main loop
-	.p2align 3
+	.align 8
 1: // main loop
 
 	// unroll 0
@@ -312,7 +312,7 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 #if MACRO_LEVEL>=1
 	.macro INNER_BLEND_SCALE_AB_4X4_LIB4
 #else
-	.p2align 4,,15
+	.align 16
 	.type inner_blend_scale_ab_4x4_lib4, @function
 inner_blend_scale_ab_4x4_lib4:
 #endif
@@ -376,7 +376,7 @@ inner_blend_scale_ab_4x4_lib4:
 #if MACRO_LEVEL>=1
 	.macro INNER_STORE_4X4_LIB4
 #else
-	.p2align 4,,15
+	.align 16
 	.type inner_store_4x4_lib4, @function
 inner_store_4x4_lib4:
 #endif
@@ -392,6 +392,59 @@ inner_store_4x4_lib4:
 	ret
 
 	.size	inner_store_4x4_lib4, .-inner_store_4x4_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// store n vs
+//
+// input arguments:
+// eax   <- D
+// ebx   <- km
+// ecx   <- kn
+// ymm0  <- [d00 d11 d22 d33]
+// ymm1  <- [d01 d10 d23 d32]
+// ymm2  <- [d03 d12 d21 d30]
+// ymm3  <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_4X4_VS_LIB4
+#else
+	.align 16
+	.type inner_store_4x4_vs_lib4, @function
+inner_store_4x4_vs_lib4:
+#endif
+
+	vcvtsi2sd	%ebx, %xmm7, %xmm7
+	vmovupd		.LC02, %ymm6
+	vmovddup	%xmm7, %xmm7
+	vinsertf128	$1, %xmm7, %ymm7, %ymm7
+	vsubpd		%ymm7, %ymm6, %ymm7
+
+	cmpl		$2, %ecx
+	vmaskmovpd	%ymm0, %ymm7,  0(%eax)
+	jl			0f // end
+	cmpl		$3, %ecx
+	vmaskmovpd	%ymm1, %ymm7, 32(%eax)
+	jl			0f // end
+	vmaskmovpd	%ymm2, %ymm7, 64(%eax)
+	je			0f // end
+	vmaskmovpd	%ymm3, %ymm7, 96(%eax)
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_store_4x4_vs_lib4, .-inner_store_4x4_vs_lib4
 #endif
 
 
@@ -425,11 +478,7 @@ kernel_dgemm_nt_4x4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemm_add_nt_4x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nt_4x4_lib4
-#endif
 #endif
 
 
@@ -461,6 +510,72 @@ kernel_dgemm_nt_4x4_lib4:
 	ret
 
 	.size	kernel_dgemm_nt_4x4_lib4, .-kernel_dgemm_nt_4x4_lib4
+
+
+
+
+
+//                                  1      2              3          4          5             6          7          8       9
+// void kernel_dgemm_nt_4x4_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int m1, int n1);
+
+	.align 16
+	.globl kernel_dgemm_nt_4x4_vs_lib4
+	.type kernel_dgemm_nt_4x4_vs_lib4, @function
+kernel_dgemm_nt_4x4_vs_lib4:
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nt
+
+	movl	ARG1, %eax // k
+	movl	ARG3, %ebx  // A
+	movl	ARG4, %ecx  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+#else
+	call inner_kernel_dgemm_add_nt_4x4_lib4
+#endif
+
+
+	// call inner blend scale
+
+	movl	ARG2, %eax // alpha
+	movl	ARG5, %ebx // beta
+	movl	ARG6, %ecx   // C
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_AB_4X4_LIB4
+#else
+	call inner_blend_scale_ab_4x4_lib4
+#endif
+
+
+	// store n
+
+	movl	ARG7, %eax // D
+	movl	ARG8, %ebx // m1
+	movl	ARG9, %ecx // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB4
+#else
+	call inner_store_4x4_vs_lib4
+#endif
+
+	EPILOGUE
+
+	ret
+
+	.size	kernel_dgemm_nt_4x4_vs_lib4, .-kernel_dgemm_nt_4x4_vs_lib4
 
 
 
