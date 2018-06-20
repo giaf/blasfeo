@@ -245,6 +245,12 @@ run_sgemv_t:
 print_figures:
 	cp print_blas_benchmark.m ./$(BINARY_DIR)/data/
 	cd ./$(BINARY_DIR)/data/ ; octave-cli print_blas_benchmark.m
+	cd ./$(BINARY_DIR)/data/ ; epstopdf dgemm.eps -out dgemm.pdf ; rm dgemm.eps
+	cd ./$(BINARY_DIR)/data/ ; epstopdf dpotrf.eps -out dpotrf.pdf ; rm dpotrf.eps
+	cd ./$(BINARY_DIR)/data/ ; epstopdf dgemv.eps -out dgemv.pdf ; rm dgemv.eps
+	cd ./$(BINARY_DIR)/data/ ; epstopdf sgemm.eps -out sgemm.pdf ; rm sgemm.eps
+	cd ./$(BINARY_DIR)/data/ ; epstopdf spotrf.eps -out spotrf.pdf ; rm spotrf.eps
+	cd ./$(BINARY_DIR)/data/ ; epstopdf sgemv.eps -out sgemv.pdf ; rm sgemv.eps
 
 # all
 

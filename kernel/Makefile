@@ -50,6 +50,10 @@ ifeq ($(TARGET), X64_AMD_BULLDOZER)
 	( cd c99; $(MAKE) obj)
 endif
 
+ifeq ($(TARGET), X86_AMD_JAGUAR)
+	( cd c99; $(MAKE) obj)
+endif
+
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
 	( cd armv8a; $(MAKE) obj)
 	( cd c99; $(MAKE) obj)
