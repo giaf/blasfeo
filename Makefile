@@ -630,6 +630,7 @@ deep_clean: clean
 	rm -f ./include/blasfeo_target.h
 	rm -f ./lib/libblasfeo.a
 	rm -f ./lib/libblasfeo.so
+	rm -f ./lib/libblasfeo_ref.a
 	make -C examples clean_all
 	make -C tests clean_all
 	make -C benchmarks clean_all
