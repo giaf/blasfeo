@@ -205,7 +205,7 @@ int main()
 
 
 
-#if 1
+#if 0
 	// potrf
 	alpha = 1.0;
 	beta = 1.0;
@@ -219,8 +219,8 @@ int main()
 
 
 
-#if 1
-	// gemm kernel
+#if 0
+	// gemm_nt
 	alpha = 1.0;
 	beta = 0.0;
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
@@ -232,6 +232,22 @@ int main()
 //	kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 
 //	kernel_dgemm_nt_12x4_lib4(8, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+	return 0;
+#endif
+
+
+
+#if 1
+	// gemm_nn
+	alpha = 1.0;
+	beta = 0.0;
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+
+//	kernel_dgemm_nn_4x4_lib4(4, &alpha, sB.pA, 0, sA.pA, sA.cn, &beta, sA.pA, sD.pA);
+
+	blasfeo_dgemm_nn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	return 0;
