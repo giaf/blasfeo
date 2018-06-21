@@ -201,16 +201,41 @@ int main()
 	struct blasfeo_dvec sm; blasfeo_create_dvec(n, &sm, m);
 	struct blasfeo_dvec sr; blasfeo_create_dvec(n, &sr, r);
 
+	double alpha, beta;
 
 
-	double alpha = 1.0;
-	double beta = 0.0;
+
+#if 1
+	// potrf
+	alpha = 1.0;
+	beta = 1.0;
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
-//	kernel_dgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
-//	kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-	kernel_dgemm_nt_12x4_lib4(8, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+	blasfeo_dpotrf_l(n, &sD, 0, 0, &sD, 0, 0);
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	return 0;
+#endif
+
+
+
+#if 1
+	// gemm kernel
+	alpha = 1.0;
+	beta = 0.0;
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+
+	kernel_dgemm_nt_4x4_lib4(4, &alpha, sA.pA, sB.pA, &beta, sA.pA, sD.pA);
+//	kernel_dgemm_nt_4x4_lib4(4, &alpha, sA.pA, sB.pA+1*4*sB.cn, &beta, sD.pA+1*4*4, sD.pA+1*4*4);
+//	kernel_dgemm_nt_4x4_vs_lib4(4, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA, 4, 4);
+
+//	kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+
+//	kernel_dgemm_nt_12x4_lib4(8, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+	return 0;
+#endif
 
 
 
