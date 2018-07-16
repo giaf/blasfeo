@@ -58,8 +58,8 @@ endif
 
 ifeq ($(TARGET), X86_AMD_JAGUAR)
 OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
+OBJS += s_aux_lib8.o
+OBJS += m_aux_lib48.o
 endif
 
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)

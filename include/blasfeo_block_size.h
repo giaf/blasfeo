@@ -62,7 +62,7 @@
 #elif defined( TARGET_X86_AMD_JAGUAR )
 
 #define D_PS 4
-#define S_PS 4
+#define S_PS 8
 #define D_NC 4 // 2
 #define S_NC 4 //2
 

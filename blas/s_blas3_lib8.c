@@ -40,6 +40,11 @@
 void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
+#if defined(TARGET_X86_AMD_JAGUAR)
+	printf("\nblasfeo_sgemm_nt: feature not implemented yet\n");
+	exit(1);
+#else
+
 	if(m==0 | n==0)
 		return;
 
@@ -275,12 +280,18 @@ left_12:
 	return;
 #endif
 
+#endif // jaguar
 	}
 
 
 
 void blasfeo_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
+
+#if defined(TARGET_X86_AMD_JAGUAR)
+	printf("\nblasfeo_sgemm_nn: feature not implemented yet\n");
+	exit(1);
+#else
 
 	if(m==0 | n==0)
 		return;
@@ -490,6 +501,7 @@ void blasfeo_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 		}
 	return;
 
+#endif // jaguar
 	}
 
 
@@ -516,6 +528,11 @@ void blasfeo_strsm_lunn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 
 void blasfeo_ssyrk_ln(int m, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
+
+#if defined(TARGET_X86_AMD_JAGUAR)
+	printf("\nblasfeo_ssyrk_ln: feature not implemented yet\n");
+	exit(1);
+#else
 
 	if(m<=0)
 		return;
@@ -703,12 +720,18 @@ void blasfeo_ssyrk_ln(int m, int k, float alpha, struct blasfeo_smat *sA, int ai
 	kernel_ssyrk_nt_l_8x4_vs_lib8(k, &alpha, &pA[(j+0)*sda], &pB[0+(j+0)*sdb], &beta, &pC[(j+0)*bs+(j+0)*sdc], &pD[(j+0)*bs+(j+0)*sdd], m-(i+0), m-(j+0));
 	return;
 
+#endif // jaguar
 	}
 
 
 
 void blasfeo_ssyrk_ln_mn(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
+
+#if defined(TARGET_X86_AMD_JAGUAR)
+	printf("\nblasfeo_ssyrk_ln_mn: feature not implemented yet\n");
+	exit(1);
+#else
 
 	if(m<=0)
 		return;
@@ -1016,6 +1039,7 @@ void blasfeo_ssyrk_ln_mn(int m, int n, int k, float alpha, struct blasfeo_smat *
 		}
 	return;
 
+#endif // jaguar
 	}
 
 
@@ -1023,6 +1047,12 @@ void blasfeo_ssyrk_ln_mn(int m, int n, int k, float alpha, struct blasfeo_smat *
 // dtrmm_right_lower_nottransposed_notunit (B, i.e. the first matrix, is triangular !!!)
 void blasfeo_strmm_rlnn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
 	{
+
+#if defined(TARGET_X86_AMD_JAGUAR)
+	printf("\nblasfeo_strmm_rlnn: feature not implemented yet\n");
+	exit(1);
+#else
+
 	// invalidate stored inverse diagonal of result matrix
 	sD->use_dA = 0;
 
@@ -1263,6 +1293,7 @@ void blasfeo_strmm_rlnn(int m, int n, float alpha, struct blasfeo_smat *sB, int 
 		}
 	return;
 
+#endif // jaguar
 	}
 
 
@@ -1270,6 +1301,11 @@ void blasfeo_strmm_rlnn(int m, int n, float alpha, struct blasfeo_smat *sB, int 
 // dtrsm_right_lower_transposed_notunit
 void blasfeo_strsm_rltn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
+
+#if defined(TARGET_X86_AMD_JAGUAR)
+	printf("\nblasfeo_strsm_rltn: feature not implemented yet\n");
+	exit(1);
+#else
 
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
@@ -1355,6 +1391,7 @@ void blasfeo_strsm_rltn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 		}
 	return;
 
+#endif // jaguar
 	}
 
 

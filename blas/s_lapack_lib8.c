@@ -39,6 +39,11 @@
 void blasfeo_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
+#if defined(TARGET_X86_AMD_JAGUAR)
+	printf("\nblasfeo_spotrf_l: feature not implemented yet\n");
+	exit(1);
+#else
+
 	if(m<=0)
 		return;
 
@@ -218,12 +223,18 @@ void blasfeo_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct bla
 	return;
 #endif
 
+#endif // jaguar
 	}
 
 
 
 void blasfeo_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
+
+#if defined(TARGET_X86_AMD_JAGUAR)
+	printf("\nblasfeo_spotrf_l_mn: feature not implemented yet\n");
+	exit(1);
+#else
 
 	if(m<=0 | n<=0)
 		return;
@@ -530,12 +541,18 @@ void blasfeo_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int cj, 
 
 	return;
 
+#endif // jaguar
 	}
 
 
 
 void blasfeo_ssyrk_spotrf_ln(int m, int n, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
+
+#if defined(TARGET_X86_AMD_JAGUAR)
+	printf("\nblasfeo_ssyrk_spotrf_ln: feature not implemented yet\n");
+	exit(1);
+#else
 
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
@@ -845,6 +862,7 @@ void blasfeo_ssyrk_spotrf_ln(int m, int n, int k, struct blasfeo_smat *sA, int a
 		}
 	return;
 
+#endif // jaguar
 	}
 
 

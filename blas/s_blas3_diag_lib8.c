@@ -55,6 +55,11 @@ void blasfeo_sgemm_dn(int m, int n, double alpha, struct blasfeo_svec *sA, int a
 void blasfeo_sgemm_nd(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sB, int bi, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
+#if defined(TARGET_X86_AMD_JAGUAR)
+	printf("\nblasfeo_sgemm_nd: feature not implemented yet\n");
+	exit(1);
+#else
+
 	if(m<=0 | n<=0)
 		return;
 
@@ -105,6 +110,7 @@ void blasfeo_sgemm_nd(int m, int n, float alpha, struct blasfeo_smat *sA, int ai
 		}
 		return;
 
+#endif // jaguar
 	}
 
 
