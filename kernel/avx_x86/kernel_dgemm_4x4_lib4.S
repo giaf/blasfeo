@@ -1074,11 +1074,11 @@ inner_store_4x4_vs_lib4:
 	vinsertf128	$1, %xmm7, %ymm7, %ymm7
 	vsubpd		%ymm7, %ymm6, %ymm7
 
-	cmpl		$2, %ecx
 	vmaskmovpd	%ymm0, %ymm7,  0(%eax)
+	cmpl		$2, %ecx
 	jl			0f // end
-	cmpl		$3, %ecx
 	vmaskmovpd	%ymm1, %ymm7, 32(%eax)
+	cmpl		$3, %ecx
 	jl			0f // end
 	vmaskmovpd	%ymm2, %ymm7, 64(%eax)
 	je			0f // end

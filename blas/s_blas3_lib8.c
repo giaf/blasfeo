@@ -40,11 +40,6 @@
 void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_sgemm_nt: feature not implemented yet\n");
-	exit(1);
-#else
-
 	if(m==0 | n==0)
 		return;
 
@@ -148,7 +143,7 @@ void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 			goto left_24;
 			}
 		}
-#else
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; i<m-15; i+=16)
 		{
 		j = 0;
@@ -192,6 +187,35 @@ void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 			goto left_16;
 			}
 		}
+#else
+	for(; i<m-7; i+=8)
+		{
+		j = 0;
+		for(; j<n-7; j+=8)
+			{
+			kernel_sgemm_nt_8x4_lib8(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd]);
+			kernel_sgemm_nt_8x4_lib8(k, &alpha, &pA[i*sda], &pB[4+j*sdb], &beta, &pC[(j+4)*bs+i*sdc], &pD[(j+4)*bs+i*sdd]);
+			}
+		if(j<n)
+			{
+			if(j<n-3)
+				{
+				kernel_sgemm_nt_8x4_lib8(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd]);
+				if(j<n-4)
+					{
+					kernel_sgemm_nt_8x4_vs_lib8(k, &alpha, &pA[i*sda], &pB[4+j*sdb], &beta, &pC[(j+4)*bs+i*sdc], &pD[(j+4)*bs+i*sdd], 8, n-(j+4));
+					}
+				}
+			else
+				{
+				kernel_sgemm_nt_8x4_vs_lib8(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd], 8, n-j);
+				}
+			}
+		}
+	if(m-i>0)
+		{
+		goto left_8;
+		}
 #endif
 
 	// common return if i==m
@@ -199,6 +223,7 @@ void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 
 	// clean up loops definitions
 
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	left_24:
 	j = 0;
 	for(; j<n-4; j+=8)
@@ -211,6 +236,7 @@ void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 		kernel_sgemm_nt_24x4_vs_lib8(k, &alpha, &pA[i*sda], sda, &pB[0+j*sdb], &beta, &pC[(j+0)*bs+i*sdc], sdc, &pD[(j+0)*bs+i*sdd], sdd, m-i, n-j);
 		}
 	return;
+#endif
 
 #if defined(TARGET_X64_INTEL_HASWELL)
 	left_20:
@@ -229,6 +255,7 @@ void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 	return;
 #endif
 
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	left_16:
 	j = 0;
 	for(; j<n-4; j+=8)
@@ -241,6 +268,7 @@ void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 		kernel_sgemm_nt_16x4_vs_lib8(k, &alpha, &pA[i*sda], sda, &pB[0+j*sdb], &beta, &pC[(j+0)*bs+i*sdc], sdc, &pD[(j+0)*bs+i*sdd], sdd, m-i, n-j);
 		}
 	return;
+#endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 left_12:
@@ -262,7 +290,12 @@ left_12:
 	j = 0;
 	for(; j<n-4; j+=8)
 		{
+#if defined(TARGET_X86_AMD_JAGUAR)
+		kernel_sgemm_nt_8x4_vs_lib8(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd], m-i, n-j);
+		kernel_sgemm_nt_8x4_vs_lib8(k, &alpha, &pA[i*sda], &pB[4+j*sdb], &beta, &pC[(j+4)*bs+i*sdc], &pD[(j+4)*bs+i*sdd], m-i, n-j-4);
+#else
 		kernel_sgemm_nt_8x8_vs_lib8(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd], m-i, n-j);
+#endif
 		}
 	if(j<n)
 		{
@@ -280,7 +313,6 @@ left_12:
 	return;
 #endif
 
-#endif // jaguar
 	}
 
 
