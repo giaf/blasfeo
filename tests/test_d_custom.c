@@ -67,7 +67,7 @@ int main()
 
 	double *x_n; d_zeros(&x_n, n, 1);
 //	for(ii=0; ii<n; ii++) x_n[ii] = 1.0;
-	x_n[1] = 1.0;
+	x_n[0] = 1.0;
 //	x_n[1] = 1.0;
 //	x_n[2] = 2.0;
 //	x_n[3] = 3.0;
@@ -239,7 +239,7 @@ int main()
 
 
 
-#if 1
+#if 0
 	// gemm_nn
 	alpha = 1.0;
 	beta = 0.0;
@@ -253,7 +253,13 @@ int main()
 	return 0;
 #endif
 
-
+#if 1
+	// gemv_n
+	blasfeo_print_tran_dvec(n, &sz_n, 0);
+	blasfeo_dgemv_n(3, 3, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
+	blasfeo_print_tran_dvec(n, &sz_n, 0);
+	return 0;
+#endif
 
 	// array lq
 	struct blasfeo_dmat lq0; blasfeo_allocate_dmat(n, 2*n, &lq0);
