@@ -522,7 +522,7 @@ void kernel_sgemm_nt_4x4_gen_lib4(int kmax, float *alpha, float *A, float *B, fl
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 void kernel_sgemm_nt_4x4_vs_lib4(int kmax, float *alpha, float *A, float *B, float *beta, float *C, float *D, int km, int kn)
 	{
 
@@ -843,7 +843,6 @@ void kernel_sgemm_nt_4x4_vs_lib4(int kmax, float *alpha, float *A, float *B, flo
 
 
 
-//#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
 void kernel_sgemm_nt_4x4_lib4(int kmax, float *alpha, float *A, float *B, float *beta, float *C, float *D)
 	{

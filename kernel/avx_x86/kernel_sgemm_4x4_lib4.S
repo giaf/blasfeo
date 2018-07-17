@@ -481,6 +481,62 @@ inner_store_4x4_lib4:
 
 
 
+// common inner routine with file scope
+//
+// store n vs
+//
+// input arguments:
+// eax  <- D
+// ebx  <- km
+// ecx  <- kn
+// xmm0 <- [d00 d11 d22 d33]
+// xmm1 <- [d01 d10 d23 d32]
+// xmm2 <- [d03 d12 d21 d30]
+// xmm3 <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_4X4_VS_LIB4
+#else
+	.align 16
+	.type inner_store_4x4_vs_lib4, @function
+inner_store_4x4_vs_lib4:
+#endif
+	
+	// compute mask for rows
+	vcvtsi2ss	%ebx, %xmm7, %xmm7
+	vmovups		.LC00, %xmm6
+	vshufps		$0x00, %xmm7, %xmm7, %xmm7
+	vsubps		%xmm7, %xmm6, %xmm7
+
+	// offset==0
+	vmaskmovps	%xmm0, %xmm7,  0(%eax)
+	cmpl		$2, %ecx
+	jl			0f // end
+	vmaskmovps	%xmm1, %xmm7, 16(%eax)
+	cmpl		$3, %ecx
+	jl			0f // end
+	vmaskmovps	%xmm2, %xmm7, 32(%eax)
+	je			0f // end
+	vmaskmovps	%xmm3, %xmm7, 48(%eax)
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_store_4x4_vs_lib4, .-inner_store_4x4_vs_lib4
+#endif
+#endif
+
+
+
+
+
 //                               1      2              3          4          5             6          7
 // void kernel_sgemm_nt_4x4_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D);
 
@@ -545,4 +601,80 @@ kernel_sgemm_nt_4x4_lib4:
 
 
 
+//                                  1      2              3          4          5             6          7          8       9
+// void kernel_sgemm_nt_4x4_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int m1, int n1);
+
+	.align 16
+	.globl kernel_sgemm_nt_4x4_vs_lib4
+	.type kernel_sgemm_nt_4x4_vs_lib4, @function
+kernel_sgemm_nt_4x4_vs_lib4:
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorps	%xmm0, %xmm0, %xmm0
+	vmovaps	%xmm0, %xmm1
+	vmovaps	%xmm0, %xmm2
+	vmovaps	%xmm0, %xmm3
+
+
+	// call inner gemm kernel nt
+
+	movl	ARG1, %eax // k
+	movl	ARG3, %ebx  // A
+	movl	ARG4, %ecx  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+#else
+	call inner_kernel_gemm_add_nt_4x4_lib4
+#endif
+
+
+	// call inner blend scale
+
+	movl	ARG2, %eax // alpha
+	movl	ARG5, %ebx // beta
+	movl	ARG6, %ecx   // C
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_AB_4X4_LIB4
+#else
+	call inner_blend_scale_ab_4x4_lib4
+#endif
+
+
+	// store n
+
+	movl	ARG7, %eax // D
+	movl	ARG8, %ebx // m1
+	movl	ARG9, %ecx // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB4
+#else
+	call inner_store_4x4_vs_lib4
+#endif
+
+	EPILOGUE
+
+	ret
+
+	.size	kernel_sgemm_nt_4x4_vs_lib4, .-kernel_sgemm_nt_4x4_vs_lib4
+
+
+
+
+
+	// read-only data
+	.section	.rodata.cst32,"aM",@progbits,32
+	.align 16
+.LC00: // { 3.5 2.5 1.5 0.5 }
+	.long	1056964608
+	.long	1069547520
+	.long	1075838976
+	.long	1080033280
+
+	.section	.note.GNU-stack,"",@progbits
 
