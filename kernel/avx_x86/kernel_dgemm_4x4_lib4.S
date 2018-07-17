@@ -336,6 +336,9 @@ inner_kernel_gemm_add_nn_4x4_lib4:
 	.align 8
 1: // main loop
 
+	prefetcht0	0(%ecx, %edx, 1) // software prefetch
+	prefetcht0	64(%ecx, %edx, 1) // software prefetch
+
 	// unroll 0
 	vmovapd 		0(%ebx), %ymm4 // A
 	vbroadcastsd	0(%ecx), %ymm5 // B
