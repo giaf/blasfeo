@@ -243,8 +243,8 @@ ifeq ($(TARGET), X86_AMD_JAGUAR)
 # aux
 OBJS += \
 		auxiliary/d_aux_lib4.o \
-		auxiliary/s_aux_lib8.o \
-		auxiliary/m_aux_lib48.o \
+		auxiliary/s_aux_lib4.o \
+		auxiliary/m_aux_lib44.o \
 
 # kernels
 OBJS += \
@@ -258,7 +258,13 @@ OBJS += \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
 		\
-		kernel/avx_x86/kernel_sgemm_8x4_lib8.o \
+		kernel/c99/kernel_sgemm_4x4_lib4.o \
+		kernel/c99/kernel_sgemm_diag_lib4.o \
+		kernel/c99/kernel_sgemv_4_lib4.o \
+		kernel/c99/kernel_ssymv_4_lib4.o \
+		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_sgecp_lib4.o \
+		kernel/c99/kernel_sgetr_lib4.o \
 
 # blas
 OBJS += \
@@ -269,12 +275,12 @@ OBJS += \
 		blas/d_blas3_diag_lib4.o \
 		blas/d_lapack_lib4.o \
 		\
-		blas/s_blas1_lib8.o \
-		blas/s_blas2_lib8.o \
+		blas/s_blas1_lib4.o \
+		blas/s_blas2_lib4.o \
 		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib8.o \
-		blas/s_blas3_diag_lib8.o \
-		blas/s_lapack_lib8.o \
+		blas/s_blas3_lib4.o \
+		blas/s_blas3_diag_lib4.o \
+		blas/s_lapack_lib4.o \
 
 endif
 

@@ -50,7 +50,7 @@ OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_
 endif
 ifeq ($(TARGET), X86_AMD_JAGUAR)
 OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
-OBJS += s_blas1_lib8.o s_blas2_lib8.o s_blas2_diag_lib.o s_blas3_lib8.o s_blas3_diag_lib8.o s_lapack_lib8.o
+OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
 endif
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
 OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o

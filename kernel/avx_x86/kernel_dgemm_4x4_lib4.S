@@ -88,20 +88,20 @@
 // eax   <- k
 // ebx   <- A
 // ecx   <- B
-// ymm0  <- [d00 d10 d20 d30]
-// ymm1  <- [d01 d11 d21 d31]
-// ymm2  <- [d02 d12 d22 d32]
-// ymm3  <- [d03 d13 d23 d33]
+// ymm0  <- [d00 d11 d22 d33]
+// ymm1  <- [d01 d10 d23 d32]
+// ymm2  <- [d03 d12 d21 d30]
+// ymm3  <- [d02 d13 d20 d31]
 
 //
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+	.macro INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
 #else
 	.align 16
-	.type inner_kernel_gemm_add_nt_4x4_lib4, @function
-inner_kernel_gemm_add_nt_4x4_lib4:
+	.type inner_kernel_dgemm_add_nt_4x4_lib4, @function
+inner_kernel_dgemm_add_nt_4x4_lib4:
 #endif
 
 	cmpl	$0, %eax
@@ -294,7 +294,7 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 #else
 	ret
 
-	.size	inner_kernel_gemm_add_nt_4x4_lib4, .-inner_kernel_gemm_add_nt_4x4_lib4
+	.size	inner_kernel_dgemm_add_nt_4x4_lib4, .-inner_kernel_dgemm_add_nt_4x4_lib4
 #endif
 
 
@@ -317,11 +317,11 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+	.macro INNER_KERNEL_DGEMM_ADD_NN_4X4_LIB4
 #else
 	.p2align 4,,15
-	.type inner_kernel_gemm_add_nn_4x4_lib4, @function
-inner_kernel_gemm_add_nn_4x4_lib4:
+	.type inner_kernel_dgemm_add_nn_4x4_lib4, @function
+inner_kernel_dgemm_add_nn_4x4_lib4:
 #endif
 
 	cmpl	$0, %eax
@@ -514,7 +514,7 @@ inner_kernel_gemm_add_nn_4x4_lib4:
 #else
 	ret
 
-	.size	inner_kernel_gemm_add_nn_4x4_lib4, .-inner_kernel_gemm_add_nn_4x4_lib4
+	.size	inner_kernel_dgemm_add_nn_4x4_lib4, .-inner_kernel_dgemm_add_nn_4x4_lib4
 #endif
 
 
@@ -541,11 +541,11 @@ inner_kernel_gemm_add_nn_4x4_lib4:
 
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+	.macro INNER_EDGE_DGEMM_ADD_NN_4X4_LIB4
 #else
 	.p2align 4,,15
-	.type inner_edge_gemm_add_nn_4x4_lib4, @function
-inner_edge_gemm_add_nn_4x4_lib4:
+	.type inner_edge_dgemm_add_nn_4x4_lib4, @function
+inner_edge_dgemm_add_nn_4x4_lib4:
 #endif
 
 	cmpl			$0, %esi				// offset==0
@@ -603,7 +603,7 @@ inner_edge_gemm_add_nn_4x4_lib4:
 #else
 	ret
 
-	.size	inner_edge_gemm_add_nn_4x4_lib4, .-inner_edge_gemm_add_nn_4x4_lib4
+	.size	inner_edge_dgemm_add_nn_4x4_lib4, .-inner_edge_dgemm_add_nn_4x4_lib4
 #endif
 
 
@@ -625,11 +625,11 @@ inner_edge_gemm_add_nn_4x4_lib4:
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_SUB_NT_4X4_LIB4
+	.macro INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
 #else
 	.align 16
-	.type inner_kernel_gemm_sub_nt_4x4_lib4, @function
-inner_kernel_gemm_sub_nt_4x4_lib4:
+	.type inner_kernel_dgemm_sub_nt_4x4_lib4, @function
+inner_kernel_dgemm_sub_nt_4x4_lib4:
 #endif
 
 	cmpl	$0, %eax
@@ -822,7 +822,7 @@ inner_kernel_gemm_sub_nt_4x4_lib4:
 #else
 	ret
 
-	.size	inner_kernel_gemm_sub_nt_4x4_lib4, .-inner_kernel_gemm_sub_nt_4x4_lib4
+	.size	inner_kernel_dgemm_sub_nt_4x4_lib4, .-inner_kernel_dgemm_sub_nt_4x4_lib4
 #endif
 
 
@@ -1116,16 +1116,16 @@ kernel_dgemm_nt_4x4_lib4:
 	vmovapd	%ymm0, %ymm3
 
 
-	// call inner gemm kernel nt
+	// call inner dgemm kernel nt
 
 	movl	ARG1, %eax // k
 	movl	ARG3, %ebx  // A
 	movl	ARG4, %ecx  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
 #else
-	call inner_kernel_gemm_add_nt_4x4_lib4
+	call inner_kernel_dgemm_add_nt_4x4_lib4
 #endif
 
 
@@ -1180,16 +1180,16 @@ kernel_dgemm_nt_4x4_vs_lib4:
 	vmovapd	%ymm0, %ymm3
 
 
-	// call inner gemm kernel nt
+	// call inner dgemm kernel nt
 
 	movl	ARG1, %eax // k
 	movl	ARG3, %ebx  // A
 	movl	ARG4, %ecx  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
 #else
-	call inner_kernel_gemm_add_nt_4x4_lib4
+	call inner_kernel_dgemm_add_nt_4x4_lib4
 #endif
 
 
@@ -1246,7 +1246,7 @@ kernel_dgemm_nn_4x4_lib4:
 	vmovapd	%ymm0, %ymm3
 
 
-	// call inner gemm kernel nn
+	// call inner dgemm kernel nn
 
 	movl	ARG1, %eax // k
 	movl	ARG3, %ebx  // A
@@ -1256,15 +1256,15 @@ kernel_dgemm_nn_4x4_lib4:
 	movl	ARG4, %esi // offsetB
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+	INNER_EDGE_DGEMM_ADD_NN_4X4_LIB4
 #else
-	call inner_edge_gemm_add_nn_4x4_lib4
+	call inner_edge_dgemm_add_nn_4x4_lib4
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+	INNER_KERNEL_DGEMM_ADD_NN_4X4_LIB4
 #else
-	call inner_kernel_gemm_add_nn_4x4_lib4
+	call inner_kernel_dgemm_add_nn_4x4_lib4
 #endif
 
 
@@ -1320,16 +1320,16 @@ kernel_dtrsm_nt_rl_inv_4x4_lib4:
 	vmovapd	%ymm0, %ymm3
 
 
-	// call inner gemm kernel nt
+	// call inner dgemm kernel nt
 
 	movl	ARG1, %eax
 	movl	ARG2, %ebx
 	movl	ARG3, %ecx
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
 #else
-	call inner_kernel_gemm_sub_nt_4x4_lib4
+	call inner_kernel_dgemm_sub_nt_4x4_lib4
 #endif
 
 
@@ -1395,16 +1395,16 @@ kernel_dtrsm_nt_rl_inv_4x4_vs_lib4:
 	vmovapd	%ymm0, %ymm3
 
 
-	// call inner gemm kernel nt
+	// call inner dgemm kernel nt
 
 	movl	ARG1, %eax
 	movl	ARG2, %ebx
 	movl	ARG3, %ecx
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
 #else
-	call inner_kernel_gemm_sub_nt_4x4_lib4
+	call inner_kernel_dgemm_sub_nt_4x4_lib4
 #endif
 
 

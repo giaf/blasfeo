@@ -1825,11 +1825,6 @@ void blasfeo_scolpei(int kmax, int *ipiv, struct blasfeo_smat *sA)
 void blasfeo_sgesc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj)
 	{
 
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_sgesc: feature not implemented yet\n");
-	exit(1);
-#else
-
 	// early return
 	if(m==0 | n==0)
 		return;
@@ -1883,7 +1878,6 @@ void blasfeo_sgesc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, i
 
 	return;
 
-#endif // jaguar
 	}
 
 
@@ -1891,11 +1885,6 @@ void blasfeo_sgesc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, i
 // copy a generic strmat into a generic strmat
 void blasfeo_sgecp(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj)
 	{
-
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_sgecp: feature not implemented yet\n");
-	exit(1);
-#else
 
 	// early return
 	if(m==0 | n==0)
@@ -2151,7 +2140,6 @@ void blasfeo_sgecp(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct
 
 	return;
 
-#endif // jaguar
 	}
 
 
@@ -2159,11 +2147,6 @@ void blasfeo_sgecp(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct
 // copy and scale a generic strmat into a generic strmat
 void blasfeo_sgecpsc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj)
 	{
-
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_sgecpsc: feature not implemented yet\n");
-	exit(1);
-#else
 
 	// early return
 	if(m==0 | n==0)
@@ -2419,7 +2402,6 @@ void blasfeo_sgecpsc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai,
 
 	return;
 
-#endif // jaguar
 	}
 
 
@@ -2514,11 +2496,6 @@ void blasfeo_strcp_l(int m, struct blasfeo_smat *sA, int ai, int aj, struct blas
 // scale and add a generic strmat into a generic strmat
 void blasfeo_sgead(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj)
 	{
-
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_sgead: feature not implemented yet\n");
-	exit(1);
-#else
 
 	// early return
 	if(m==0 | n==0)
@@ -2777,7 +2754,6 @@ void blasfeo_sgead(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, i
 
 	return;
 
-#endif // jaguar
 	}
 
 
@@ -2785,11 +2761,6 @@ void blasfeo_sgead(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, i
 // copy and transpose a generic strmat into a generic strmat
 void blasfeo_sgetr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj)
 	{
-
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_sgetr: feature not implemented yet\n");
-	exit(1);
-#else
 
 	// early return
 	if(m==0 | n==0)
@@ -2997,7 +2968,6 @@ void blasfeo_sgetr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct
 
 	return;
 
-#endif // jaguar
 	}
 
 

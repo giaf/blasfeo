@@ -42,11 +42,6 @@
 void blasfeo_sgemv_n(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_sgemv_n: feature not implemented yet\n");
-	exit(1);
-#else
-
 	if(m<0)
 		return;
 
@@ -82,18 +77,12 @@ void blasfeo_sgemv_n(int m, int n, float alpha, struct blasfeo_smat *sA, int ai,
 		
 	return;
 
-#endif // jaguar
 	}
 
 
 
 void blasfeo_sgemv_t(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
-
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_sgemv_t: feature not implemented yet\n");
-	exit(1);
-#else
 
 	if(n<=0)
 		return;
@@ -142,7 +131,6 @@ void blasfeo_sgemv_t(int m, int n, float alpha, struct blasfeo_smat *sA, int ai,
 	
 	return;
 
-#endif // jaguar
 	}
 
 
@@ -150,11 +138,6 @@ void blasfeo_sgemv_t(int m, int n, float alpha, struct blasfeo_smat *sA, int ai,
 // m >= n
 void blasfeo_strmv_lnn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
-
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_strmv_lnn: feature not implemented yet\n");
-	exit(1);
-#else
 
 	if(m<=0)
 		return;
@@ -303,7 +286,6 @@ void blasfeo_strmv_lnn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, st
 
 	return;
 
-#endif // jaguar
 	}
 
 
@@ -311,11 +293,6 @@ void blasfeo_strmv_lnn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, st
 // m >= n
 void blasfeo_strmv_ltn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
-
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_strmv_ltn: feature not implemented yet\n");
-	exit(1);
-#else
 
 	if(m<=0)
 		return;
@@ -554,18 +531,12 @@ void blasfeo_strmv_ltn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, st
 
 	return;
 
-#endif // jaguar
 	}
 
 
 
 void blasfeo_strsv_lnn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
-
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_strsv_lnn: feature not implemented yet\n");
-	exit(1);
-#else
 
 	if(m==0)
 		return;
@@ -643,18 +614,12 @@ void blasfeo_strsv_lnn(int m, struct blasfeo_smat *sA, int ai, int aj, struct bl
 
 	return;
 
-#endif // jaguar
 	}
 
 
 
 void blasfeo_strsv_lnn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
-
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_strsv_lnn_mn: feature not implemented yet\n");
-	exit(1);
-#else
 
 	if(m==0 | n==0)
 		return;
@@ -748,18 +713,12 @@ void blasfeo_strsv_lnn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int aj,
 
 	return;
 
-#endif // jaguar
 	}
 
 
 
 void blasfeo_strsv_ltn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
-
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_strsv_ltn: feature not implemented yet\n");
-	exit(1);
-#else
 
 	if(m==0)
 		return;
@@ -836,18 +795,12 @@ void blasfeo_strsv_ltn(int m, struct blasfeo_smat *sA, int ai, int aj, struct bl
 
 	return;
 
-#endif // jaguar
 	}
 
 
 
 void blasfeo_strsv_ltn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
-
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_strsv_ltn_mn: feature not implemented yet\n");
-	exit(1);
-#else
 
 	if(m==0)
 		return;
@@ -928,18 +881,12 @@ void blasfeo_strsv_ltn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int aj,
 
 	return;
 
-#endif // jaguar
 	}
 
 
 
 void blasfeo_sgemv_nt(int m, int n, float alpha_n, float alpha_t, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx_n, int xi_n, struct blasfeo_svec *sx_t, int xi_t, float beta_n, float beta_t, struct blasfeo_svec *sy_n, int yi_n, struct blasfeo_svec *sy_t, int yi_t, struct blasfeo_svec *sz_n, int zi_n, struct blasfeo_svec *sz_t, int zi_t)
 	{
-
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_sgemv_nt: feature not implemented yet\n");
-	exit(1);
-#else
 
 	if(ai!=0)
 		{
@@ -988,18 +935,12 @@ void blasfeo_sgemv_nt(int m, int n, float alpha_n, float alpha_t, struct blasfeo
 		}
 	
 		return;
-#endif // jaguar
 	}
 
 
 
 void blasfeo_ssymv_l(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
-
-#if defined(TARGET_X86_AMD_JAGUAR)
-	printf("\nblasfeo_ssymn_l: feature not implemented yet\n");
-	exit(1);
-#else
 
 //	if(m<=0 | n<=0)
 //		return;
@@ -1056,7 +997,6 @@ void blasfeo_ssymv_l(int m, int n, float alpha, struct blasfeo_smat *sA, int ai,
 		}
 	
 	return;
-#endif // jaguar
 	}
 
 
