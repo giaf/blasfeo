@@ -253,10 +253,18 @@ int main()
 	return 0;
 #endif
 
-#if 1
+#if 0
 	// gemv_n
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	blasfeo_dgemv_n(3, 3, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
+	blasfeo_print_tran_dvec(n, &sz_n, 0);
+	return 0;
+#endif
+
+#if 1
+	// gemv_t
+	blasfeo_print_tran_dvec(n, &sz_n, 0);
+	blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	return 0;
 #endif
