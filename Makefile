@@ -258,6 +258,7 @@ OBJS += \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
 		\
+		kernel/avx_x86/kernel_sgemm_4x4_lib4.o \
 		kernel/c99/kernel_sgemm_4x4_lib4.o \
 		kernel/c99/kernel_sgemm_diag_lib4.o \
 		kernel/c99/kernel_sgemv_4_lib4.o \

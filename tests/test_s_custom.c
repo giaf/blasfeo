@@ -36,12 +36,12 @@
 #include "../include/blasfeo_s_kernel.h"
 #include "../include/blasfeo_s_blas.h"
 
-#include "test_s_common.h"
-#include "test_x_common.c"
+//#include "test_s_common.h"
+//#include "test_x_common.c"
 
 int main()
 	{
-	print_compilation_flags();
+//	print_compilation_flags();
 
 	int ii, jj;
 
@@ -110,6 +110,12 @@ int main()
 
 	float alpha = 1.0;
 	float beta = 0.0;
+	
+//	kernel_sgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+	blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_print_smat(n, n, &sD, 0, 0);
+	return 0;
+
 //	kernel_sgemm_nt_24x4_lib8(4, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //	kernel_sgemm_nt_16x4_lib8(4, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //	kernel_sgemm_nt_8x8_lib8(5, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
