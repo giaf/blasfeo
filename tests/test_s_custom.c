@@ -111,9 +111,8 @@ int main()
 	float alpha = 1.0;
 	float beta = 0.0;
 
-//	kernel_sgemm_nt_8x4_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
-//	kernel_sgemm_nt_8x4_vs_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA, 7, 3);
-	blasfeo_sgemm_nt(9, 5, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+	kernel_sgemm_nt_8x4_lib8(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+//	blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 1.0, &sD, 0, 0, &sD, 0, 0);
 	blasfeo_print_smat(n, n, &sD, 0, 0);
 	return 0;
 
