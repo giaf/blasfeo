@@ -304,6 +304,225 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 // common inner routine with file scope
 //
 // input arguments:
+// eax   <- k
+// ebx   <- A
+// ecx   <- B
+// ymm0  <- [d00 d11 d22 d33]
+// ymm1  <- [d01 d10 d23 d32]
+// ymm2  <- [d03 d12 d21 d30]
+// ymm3  <- [d02 d13 d20 d31]
+
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_SUB_NT_4X4_LIB4
+#else
+	.align 16
+	.type inner_kernel_gemm_sub_nt_4x4_lib4, @function
+inner_kernel_gemm_sub_nt_4x4_lib4:
+#endif
+
+	cmpl	$0, %eax
+	jle		2f // return
+
+	// preload
+
+	cmpl	$4, %eax
+	jle		0f // consider clean-up loop
+
+	// main loop
+	.align 8
+1: // main loop
+
+	// unroll 0
+	vmovapd 		0(%ebx), %ymm4 // A
+	vbroadcastsd	0(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm0, %ymm0
+	vbroadcastsd	8(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm1, %ymm1
+	vbroadcastsd	16(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm2, %ymm2
+	vbroadcastsd	24(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm3, %ymm3
+
+	// unroll 1
+	vmovapd 		32(%ebx), %ymm4 // A
+	vbroadcastsd	32(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm0, %ymm0
+	vbroadcastsd	40(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm1, %ymm1
+	vbroadcastsd	48(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm2, %ymm2
+	vbroadcastsd	56(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm3, %ymm3
+
+	// unroll 2
+	vmovapd 		64(%ebx), %ymm4 // A
+	vbroadcastsd	64(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm0, %ymm0
+	vbroadcastsd	72(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm1, %ymm1
+	vbroadcastsd	80(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm2, %ymm2
+	vbroadcastsd	88(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm3, %ymm3
+
+	// unroll 3
+	vmovapd 		96(%ebx), %ymm4 // A
+	vbroadcastsd	96(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm0, %ymm0
+	vbroadcastsd	104(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm1, %ymm1
+	vbroadcastsd	112(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm2, %ymm2
+	vbroadcastsd	120(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm3, %ymm3
+
+	subl	$4, %eax
+	addl	$128, %ecx
+	addl	$128, %ebx
+
+	cmpl	$4, %eax
+	jg		1b // main loop
+
+
+0: // consider clean4-up
+
+	cmpl	$3, %eax
+	jle		4f // clean1
+
+	// unroll 0
+	vmovapd 		0(%ebx), %ymm4 // A
+	vbroadcastsd	0(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm0, %ymm0
+	vbroadcastsd	8(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm1, %ymm1
+	vbroadcastsd	16(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm2, %ymm2
+	vbroadcastsd	24(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm3, %ymm3
+
+	// unroll 1
+	vmovapd 		32(%ebx), %ymm4 // A
+	vbroadcastsd	32(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm0, %ymm0
+	vbroadcastsd	40(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm1, %ymm1
+	vbroadcastsd	48(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm2, %ymm2
+	vbroadcastsd	56(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm3, %ymm3
+
+	// unroll 2
+	vmovapd 		64(%ebx), %ymm4 // A
+	vbroadcastsd	64(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm0, %ymm0
+	vbroadcastsd	72(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm1, %ymm1
+	vbroadcastsd	80(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm2, %ymm2
+	vbroadcastsd	88(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm3, %ymm3
+
+	// unroll 3
+	vmovapd 		96(%ebx), %ymm4 // A
+	vbroadcastsd	96(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm0, %ymm0
+	vbroadcastsd	104(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm1, %ymm1
+	vbroadcastsd	112(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm2, %ymm2
+	vbroadcastsd	120(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm3, %ymm3
+
+	subl	$4, %eax
+	addl	$128, %ecx
+	addl	$128, %ebx
+
+//	cmpl	$3, %eax
+	jmp		2f // return
+
+
+4: // consider clean1-up loop
+
+	cmpl	$0, %eax
+	jle		2f // return
+
+	// clean-up loop
+3: // clean up loop
+
+	// unroll 0
+	vmovapd 		0(%ebx), %ymm4 // A
+	vbroadcastsd	0(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm0, %ymm0
+	vbroadcastsd	8(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm1, %ymm1
+	vbroadcastsd	16(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm2, %ymm2
+	vbroadcastsd	24(%ecx), %ymm5 // B
+	vmulpd			%ymm4, %ymm5, %ymm7
+	vsubpd			%ymm7, %ymm3, %ymm3
+
+	subl	$1, %eax
+	addl	$32, %ecx
+	addl	$32, %ebx
+
+	cmpl	$0, %eax
+	jg		3b // clean up loop
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	.size	inner_kernel_gemm_sub_nt_4x4_lib4, .-inner_kernel_gemm_sub_nt_4x4_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// input arguments:
 // eax  <- k
 // ebx   <- A
 // ecx   <- B
@@ -607,225 +826,6 @@ inner_edge_gemm_add_nn_4x4_lib4:
 	ret
 
 	.size	inner_edge_gemm_add_nn_4x4_lib4, .-inner_edge_gemm_add_nn_4x4_lib4
-#endif
-
-
-
-
-
-// common inner routine with file scope
-//
-// input arguments:
-// eax   <- k
-// ebx   <- A
-// ecx   <- B
-// ymm0  <- [d00 d11 d22 d33]
-// ymm1  <- [d01 d10 d23 d32]
-// ymm2  <- [d03 d12 d21 d30]
-// ymm3  <- [d02 d13 d20 d31]
-
-//
-// output arguments:
-
-#if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_SUB_NT_4X4_LIB4
-#else
-	.align 16
-	.type inner_kernel_gemm_sub_nt_4x4_lib4, @function
-inner_kernel_gemm_sub_nt_4x4_lib4:
-#endif
-
-	cmpl	$0, %eax
-	jle		2f // return
-
-	// preload
-
-	cmpl	$4, %eax
-	jle		0f // consider clean-up loop
-
-	// main loop
-	.align 8
-1: // main loop
-
-	// unroll 0
-	vmovapd 		0(%ebx), %ymm4 // A
-	vbroadcastsd	0(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm0, %ymm0
-	vbroadcastsd	8(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm1, %ymm1
-	vbroadcastsd	16(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm2, %ymm2
-	vbroadcastsd	24(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm3, %ymm3
-
-	// unroll 1
-	vmovapd 		32(%ebx), %ymm4 // A
-	vbroadcastsd	32(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm0, %ymm0
-	vbroadcastsd	40(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm1, %ymm1
-	vbroadcastsd	48(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm2, %ymm2
-	vbroadcastsd	56(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm3, %ymm3
-
-	// unroll 2
-	vmovapd 		64(%ebx), %ymm4 // A
-	vbroadcastsd	64(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm0, %ymm0
-	vbroadcastsd	72(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm1, %ymm1
-	vbroadcastsd	80(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm2, %ymm2
-	vbroadcastsd	88(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm3, %ymm3
-
-	// unroll 3
-	vmovapd 		96(%ebx), %ymm4 // A
-	vbroadcastsd	96(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm0, %ymm0
-	vbroadcastsd	104(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm1, %ymm1
-	vbroadcastsd	112(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm2, %ymm2
-	vbroadcastsd	120(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm3, %ymm3
-
-	subl	$4, %eax
-	addl	$128, %ecx
-	addl	$128, %ebx
-
-	cmpl	$4, %eax
-	jg		1b // main loop
-
-
-0: // consider clean4-up
-
-	cmpl	$3, %eax
-	jle		4f // clean1
-
-	// unroll 0
-	vmovapd 		0(%ebx), %ymm4 // A
-	vbroadcastsd	0(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm0, %ymm0
-	vbroadcastsd	8(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm1, %ymm1
-	vbroadcastsd	16(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm2, %ymm2
-	vbroadcastsd	24(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm3, %ymm3
-
-	// unroll 1
-	vmovapd 		32(%ebx), %ymm4 // A
-	vbroadcastsd	32(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm0, %ymm0
-	vbroadcastsd	40(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm1, %ymm1
-	vbroadcastsd	48(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm2, %ymm2
-	vbroadcastsd	56(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm3, %ymm3
-
-	// unroll 2
-	vmovapd 		64(%ebx), %ymm4 // A
-	vbroadcastsd	64(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm0, %ymm0
-	vbroadcastsd	72(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm1, %ymm1
-	vbroadcastsd	80(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm2, %ymm2
-	vbroadcastsd	88(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm3, %ymm3
-
-	// unroll 3
-	vmovapd 		96(%ebx), %ymm4 // A
-	vbroadcastsd	96(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm0, %ymm0
-	vbroadcastsd	104(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm1, %ymm1
-	vbroadcastsd	112(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm2, %ymm2
-	vbroadcastsd	120(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm3, %ymm3
-
-	subl	$4, %eax
-	addl	$128, %ecx
-	addl	$128, %ebx
-
-//	cmpl	$3, %eax
-	jmp		2f // return
-
-
-4: // consider clean1-up loop
-
-	cmpl	$0, %eax
-	jle		2f // return
-
-	// clean-up loop
-3: // clean up loop
-
-	// unroll 0
-	vmovapd 		0(%ebx), %ymm4 // A
-	vbroadcastsd	0(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm0, %ymm0
-	vbroadcastsd	8(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm1, %ymm1
-	vbroadcastsd	16(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm2, %ymm2
-	vbroadcastsd	24(%ecx), %ymm5 // B
-	vmulpd			%ymm4, %ymm5, %ymm7
-	vsubpd			%ymm7, %ymm3, %ymm3
-
-	subl	$1, %eax
-	addl	$32, %ecx
-	addl	$32, %ebx
-
-	cmpl	$0, %eax
-	jg		3b // clean up loop
-
-2: // return
-
-#if MACRO_LEVEL>=2
-	.endm
-#else
-	ret
-
-	.size	inner_kernel_gemm_sub_nt_4x4_lib4, .-inner_kernel_gemm_sub_nt_4x4_lib4
 #endif
 
 

@@ -190,64 +190,64 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 	jle		4f // clean1
 
 	// unroll 0
+	vmovaps 		0(%ecx), %xmm5 // B
 	vmovaps 		0(%ebx), %xmm4 // A
-	vbroadcastss	0(%ecx), %xmm5 // B
+	vshufps			$0xb1, %xmm5, %xmm5, %xmm6
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm0, %xmm7, %xmm0
-	vbroadcastss	4(%ecx), %xmm5 // B
-	vmulps			%xmm4, %xmm5, %xmm7
-	vaddps			%xmm1, %xmm7, %xmm1
-	vbroadcastss	8(%ecx), %xmm5 // B
-	vmulps			%xmm4, %xmm5, %xmm7
+	vshufps			$0x1b, %xmm5, %xmm5, %xmm7
+	vshufps			$0x4e, %xmm5, %xmm5, %xmm5
+	vmulps			%xmm4, %xmm6, %xmm6
+	vaddps			%xmm1, %xmm6, %xmm1
+	vmulps			%xmm4, %xmm7, %xmm7
 	vaddps			%xmm2, %xmm7, %xmm2
-	vbroadcastss	12(%ecx), %xmm5 // B
-	vmulps			%xmm4, %xmm5, %xmm7
-	vaddps			%xmm3, %xmm7, %xmm3
+	vmulps			%xmm4, %xmm5, %xmm5
+	vaddps			%xmm3, %xmm5, %xmm3
 
 	// unroll 1
+	vmovaps 		16(%ecx), %xmm5 // B
 	vmovaps 		16(%ebx), %xmm4 // A
-	vbroadcastss	16(%ecx), %xmm5 // B
+	vshufps			$0xb1, %xmm5, %xmm5, %xmm6
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm0, %xmm7, %xmm0
-	vbroadcastss	20(%ecx), %xmm5 // B
-	vmulps			%xmm4, %xmm5, %xmm7
-	vaddps			%xmm1, %xmm7, %xmm1
-	vbroadcastss	24(%ecx), %xmm5 // B
-	vmulps			%xmm4, %xmm5, %xmm7
+	vshufps			$0x1b, %xmm5, %xmm5, %xmm7
+	vshufps			$0x4e, %xmm5, %xmm5, %xmm5
+	vmulps			%xmm4, %xmm6, %xmm6
+	vaddps			%xmm1, %xmm6, %xmm1
+	vmulps			%xmm4, %xmm7, %xmm7
 	vaddps			%xmm2, %xmm7, %xmm2
-	vbroadcastss	28(%ecx), %xmm5 // B
-	vmulps			%xmm4, %xmm5, %xmm7
-	vaddps			%xmm3, %xmm7, %xmm3
+	vmulps			%xmm4, %xmm5, %xmm5
+	vaddps			%xmm3, %xmm5, %xmm3
 
 	// unroll 2
+	vmovaps 		32(%ecx), %xmm5 // B
 	vmovaps 		32(%ebx), %xmm4 // A
-	vbroadcastss	32(%ecx), %xmm5 // B
+	vshufps			$0xb1, %xmm5, %xmm5, %xmm6
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm0, %xmm7, %xmm0
-	vbroadcastss	36(%ecx), %xmm5 // B
-	vmulps			%xmm4, %xmm5, %xmm7
-	vaddps			%xmm1, %xmm7, %xmm1
-	vbroadcastss	40(%ecx), %xmm5 // B
-	vmulps			%xmm4, %xmm5, %xmm7
+	vshufps			$0x1b, %xmm5, %xmm5, %xmm7
+	vshufps			$0x4e, %xmm5, %xmm5, %xmm5
+	vmulps			%xmm4, %xmm6, %xmm6
+	vaddps			%xmm1, %xmm6, %xmm1
+	vmulps			%xmm4, %xmm7, %xmm7
 	vaddps			%xmm2, %xmm7, %xmm2
-	vbroadcastss	44(%ecx), %xmm5 // B
-	vmulps			%xmm4, %xmm5, %xmm7
-	vaddps			%xmm3, %xmm7, %xmm3
+	vmulps			%xmm4, %xmm5, %xmm5
+	vaddps			%xmm3, %xmm5, %xmm3
 
 	// unroll 3
+	vmovaps 		48(%ecx), %xmm5 // B
 	vmovaps 		48(%ebx), %xmm4 // A
-	vbroadcastss	48(%ecx), %xmm5 // B
+	vshufps			$0xb1, %xmm5, %xmm5, %xmm6
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm0, %xmm7, %xmm0
-	vbroadcastss	52(%ecx), %xmm5 // B
-	vmulps			%xmm4, %xmm5, %xmm7
-	vaddps			%xmm1, %xmm7, %xmm1
-	vbroadcastss	56(%ecx), %xmm5 // B
-	vmulps			%xmm4, %xmm5, %xmm7
+	vshufps			$0x1b, %xmm5, %xmm5, %xmm7
+	vshufps			$0x4e, %xmm5, %xmm5, %xmm5
+	vmulps			%xmm4, %xmm6, %xmm6
+	vaddps			%xmm1, %xmm6, %xmm1
+	vmulps			%xmm4, %xmm7, %xmm7
 	vaddps			%xmm2, %xmm7, %xmm2
-	vbroadcastss	60(%ecx), %xmm5 // B
-	vmulps			%xmm4, %xmm5, %xmm7
-	vaddps			%xmm3, %xmm7, %xmm3
+	vmulps			%xmm4, %xmm5, %xmm5
+	vaddps			%xmm3, %xmm5, %xmm3
 
 	subl	$4, %eax
 	addl	$64, %ecx
@@ -266,19 +266,19 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 3: // clean up loop
 
 	// unroll 0
+	vmovaps 		0(%ecx), %xmm5 // B
 	vmovaps 		0(%ebx), %xmm4 // A
-	vbroadcastss	0(%ecx), %xmm5 // B
+	vshufps			$0xb1, %xmm5, %xmm5, %xmm6
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm0, %xmm7, %xmm0
-	vbroadcastss	4(%ecx), %xmm5 // B
-	vmulps			%xmm4, %xmm5, %xmm7
-	vaddps			%xmm1, %xmm7, %xmm1
-	vbroadcastss	8(%ecx), %xmm5 // B
-	vmulps			%xmm4, %xmm5, %xmm7
+	vshufps			$0x1b, %xmm5, %xmm5, %xmm7
+	vshufps			$0x4e, %xmm5, %xmm5, %xmm5
+	vmulps			%xmm4, %xmm6, %xmm6
+	vaddps			%xmm1, %xmm6, %xmm1
+	vmulps			%xmm4, %xmm7, %xmm7
 	vaddps			%xmm2, %xmm7, %xmm2
-	vbroadcastss	12(%ecx), %xmm5 // B
-	vmulps			%xmm4, %xmm5, %xmm7
-	vaddps			%xmm3, %xmm7, %xmm3
+	vmulps			%xmm4, %xmm5, %xmm5
+	vaddps			%xmm3, %xmm5, %xmm3
 
 	subl	$1, %eax
 	addl	$16, %ecx
@@ -302,6 +302,317 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 
 
 // common inner routine with file scope
+//
+// input arguments:
+// eax  <- k
+// ebx   <- A
+// ecx   <- B
+// edx   <- 4*sdb*sizeof(float)
+// xmm0  <- [d00 d11 d22 d33]
+// xmm1  <- [d01 d10 d23 d32]
+// xmm2  <- [d03 d12 d21 d30]
+// xmm3  <- [d02 d13 d20 d31]
+
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+#else
+	.p2align 4,,15
+	.type inner_kernel_gemm_add_nn_4x4_lib4, @function
+inner_kernel_gemm_add_nn_4x4_lib4:
+#endif
+
+	cmpl	$0, %eax
+	jle		2f // return
+
+	// preload
+
+	cmpl	$4, %eax
+	jle		0f // consider clean-up loop
+
+	// main loop
+	.align 8
+1: // main loop
+
+	prefetcht0	0(%ecx, %edx, 1) // software prefetch
+
+	// unroll 0
+	vmovaps 		0(%ebx), %xmm4 // A
+	vbroadcastss	0(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm0, %xmm7, %xmm0
+	vbroadcastss	16(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm1, %xmm7, %xmm1
+	vbroadcastss	32(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm2, %xmm7, %xmm2
+	vbroadcastss	48(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm3, %xmm7, %xmm3
+
+	// unroll 1
+	vmovaps 		16(%ebx), %xmm4 // A
+	vbroadcastss	4(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm0, %xmm7, %xmm0
+	vbroadcastss	20(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm1, %xmm7, %xmm1
+	vbroadcastss	36(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm2, %xmm7, %xmm2
+	vbroadcastss	52(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm3, %xmm7, %xmm3
+
+	// unroll 2
+	vmovaps 		32(%ebx), %xmm4 // A
+	vbroadcastss	8(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm0, %xmm7, %xmm0
+	vbroadcastss	24(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm1, %xmm7, %xmm1
+	vbroadcastss	40(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm2, %xmm7, %xmm2
+	vbroadcastss	56(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm3, %xmm7, %xmm3
+
+	// unroll 3
+	vmovaps 		48(%ebx), %xmm4 // A
+	vbroadcastss	12(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm0, %xmm7, %xmm0
+	vbroadcastss	28(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm1, %xmm7, %xmm1
+	vbroadcastss	44(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm2, %xmm7, %xmm2
+	vbroadcastss	60(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm3, %xmm7, %xmm3
+
+	subl	$4, %eax
+	addl	$64, %ebx
+	addl	%edx, %ecx
+
+	cmpl	$4, %eax
+	jg		1b // main loop
+
+
+0: // consider clean4-up
+
+	cmpl	$3, %eax
+	jle		4f // clean1
+
+	// unroll 0
+	vmovaps 		0(%ebx), %xmm4 // A
+	vbroadcastss	0(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm0, %xmm7, %xmm0
+	vbroadcastss	16(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm1, %xmm7, %xmm1
+	vbroadcastss	32(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm2, %xmm7, %xmm2
+	vbroadcastss	48(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm3, %xmm7, %xmm3
+
+	// unroll 1
+	vmovaps 		16(%ebx), %xmm4 // A
+	vbroadcastss	4(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm0, %xmm7, %xmm0
+	vbroadcastss	20(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm1, %xmm7, %xmm1
+	vbroadcastss	36(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm2, %xmm7, %xmm2
+	vbroadcastss	52(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm3, %xmm7, %xmm3
+
+	// unroll 2
+	vmovaps 		32(%ebx), %xmm4 // A
+	vbroadcastss	8(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm0, %xmm7, %xmm0
+	vbroadcastss	24(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm1, %xmm7, %xmm1
+	vbroadcastss	40(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm2, %xmm7, %xmm2
+	vbroadcastss	56(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm3, %xmm7, %xmm3
+
+	// unroll 3
+	vmovaps 		48(%ebx), %xmm4 // A
+	vbroadcastss	12(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm0, %xmm7, %xmm0
+	vbroadcastss	28(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm1, %xmm7, %xmm1
+	vbroadcastss	44(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm2, %xmm7, %xmm2
+	vbroadcastss	60(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm3, %xmm7, %xmm3
+
+	subl	$4, %eax
+	addl	$64, %ebx
+	addl	%edx, %ecx
+
+//	cmpl	$3, %eax
+	jmp		2f // return
+
+
+4: // consider clean1-up loop
+
+	cmpl	$0, %eax
+	jle		2f // return
+
+	// clean-up loop
+3: // clean up loop
+
+	// unroll 0
+	vmovaps 		0(%ebx), %xmm4 // A
+	vbroadcastss	0(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm0, %xmm7, %xmm0
+	vbroadcastss	16(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm1, %xmm7, %xmm1
+	vbroadcastss	32(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm2, %xmm7, %xmm2
+	vbroadcastss	48(%ecx), %xmm5 // B
+	vmulps			%xmm4, %xmm5, %xmm7
+	vaddps			%xmm3, %xmm7, %xmm3
+
+	subl	$1, %eax
+	addl	$16, %ebx
+	addl	$4, %ecx
+
+	cmpl	$0, %eax
+	jg		3b // clean up loop
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	.size	inner_kernel_gemm_add_nn_4x4_lib4, .-inner_kernel_gemm_add_nn_4x4_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned, A aligned
+//
+// input arguments:
+// eax   <- k
+// ebx   <- A
+// ecx   <- B
+// edx   <- bs*sdb*sizeof(float)
+// esi   <- offB
+// xmm0  <- [d00 d11 d22 d33]
+// xmm1  <- [d01 d10 d23 d32]
+// xmm2  <- [d03 d12 d21 d30]
+// xmm3  <- [d02 d13 d20 d31]
+
+//
+// output arguments:
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+#else
+	.p2align 4,,15
+	.type inner_edge_gemm_add_nn_4x4_lib4, @function
+inner_edge_gemm_add_nn_4x4_lib4:
+#endif
+
+	cmpl			$0, %esi				// offset==0
+	jle				2f						// end
+
+	cmpl			$0, %eax				// k==0
+	jle				2f						// end
+
+	movl			%esi, %edi				// load offsetB
+	sall			$3, %edi				// offsetB*sizeof(float)
+	addl			%edi, %ecx				// B+offsetB*sizeof(float)
+
+	movl			$4, %edi				// load 4
+	subl			%esi, %edi				// 4-offsetB
+	cmpl			%eax, %edi				// k > 4-offsetB
+	cmovgl			%eax, %edi				// kend=min(k,4-offsetB)
+
+1:
+	vmovaps			0(%ebx), %xmm5			// load A
+
+	vbroadcastss	0(%ecx), %xmm4			// B_off
+	vmulps			%xmm5, %xmm4, %xmm7		// mul
+	vaddps			%xmm7, %xmm0, %xmm0		// store
+
+	vbroadcastss	16(%ecx), %xmm4			// B_off+4
+	vmulps			%xmm5, %xmm4, %xmm7		// mul
+	vaddps			%xmm7, %xmm1, %xmm1		// store
+
+	vbroadcastss	32(%ecx), %xmm4			// B_off+8
+	vmulps			%xmm5, %xmm4, %xmm7		// mul
+	vaddps			%xmm7, %xmm2, %xmm2		// store
+
+	vbroadcastss	48(%ecx), %xmm4			// B_off+12
+	vmulps			%xmm5, %xmm4, %xmm7		// mul
+	vaddps			%xmm7, %xmm3, %xmm3		// store
+
+	subl			$1, %eax				// k=-1
+	subl			$1, %edi				// k_panel=-1
+	addl			$16, %ebx				// A=+bs
+	addl			$4, %ecx				// B=+1
+
+	cmpl			$0, %edi				// if k_panel=0
+	jg				1b						// loop 1
+
+	cmpl			$0, %eax				// if k=0
+	jle				2f						// end
+
+	addl			%edx, %ecx				// B=Boff+sdb*bs
+	subl			$16, %ecx				// B-=4*sizeof(float) (loop+offsetB)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_edge_gemm_add_nn_4x4_lib4, .-inner_edge_gemm_add_nn_4x4_lib4
+#endif
+
+
+
+
+
+/// common inner routine with file scope
 //
 // blend for generic alpha and beta
 //
@@ -538,7 +849,7 @@ inner_store_4x4_vs_lib4:
 
 
 //                               1      2              3          4          5             6          7
-// void kernel_sgemm_nt_4x4_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D);
+// void kernel_sgemm_nt_4x4_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D);
 
 	.align 16
 	.globl kernel_sgemm_nt_4x4_lib4
@@ -602,7 +913,7 @@ kernel_sgemm_nt_4x4_lib4:
 
 
 //                                  1      2              3          4          5             6          7          8       9
-// void kernel_sgemm_nt_4x4_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int m1, int n1);
+// void kernel_sgemm_nt_4x4_vs_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D, int m1, int n1);
 
 	.align 16
 	.globl kernel_sgemm_nt_4x4_vs_lib4
@@ -662,6 +973,156 @@ kernel_sgemm_nt_4x4_vs_lib4:
 	ret
 
 	.size	kernel_sgemm_nt_4x4_vs_lib4, .-kernel_sgemm_nt_4x4_vs_lib4
+
+
+
+
+
+//                               1      2              3          4            5          6        7             8
+// void kernel_sgemm_nn_4x4_lib4(int k, double *alpha, double *A, double *B, int sdb, double *beta, double *C, double *D);
+
+	.align 16
+	.globl kernel_sgemm_nn_4x4_lib4
+	.type kernel_sgemm_nn_4x4_lib4, @function
+kernel_sgemm_nn_4x4_lib4:
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorps	%xmm0, %xmm0, %xmm0
+	vmovaps	%xmm0, %xmm1
+	vmovaps	%xmm0, %xmm2
+	vmovaps	%xmm0, %xmm3
+
+
+	// call inner gemm kernel nn
+
+	movl	ARG1, %eax // k
+	movl	ARG3, %ebx  // A
+	movl	ARG4, %ecx  // B
+	movl	ARG5, %edx // sdb
+	sall	$4, %edx // 4*sdb*sizeof(float)
+
+// TODO add offset to interface
+//#if MACRO_LEVEL>=1
+//	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+//#else
+//	call inner_edge_gemm_add_nn_4x4_lib4
+//#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+#else
+	call inner_kernel_gemm_add_nn_4x4_lib4
+#endif
+
+
+	// call inner blend
+
+	movl	ARG2, %eax // alpha
+	movl	ARG6, %ebx // beta
+	movl	ARG7, %ecx   // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	call inner_scale_ab_4x4_lib4
+#endif
+
+
+	// store n
+
+	movl	ARG8, %eax // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB4
+#else
+	call inner_store_4x4_lib4
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	.size	kernel_sgemm_nn_4x4_lib4, .-kernel_sgemm_nn_4x4_lib4
+
+
+
+
+
+//                               1      2              3          4            5          6        7             8           9       10
+// void kernel_sgemm_nn_4x4_vs_lib4(int k, double *alpha, double *A, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1);
+
+	.align 16
+	.globl kernel_sgemm_nn_4x4_vs_lib4
+	.type kernel_sgemm_nn_4x4_vs_lib4, @function
+kernel_sgemm_nn_4x4_vs_lib4:
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorps	%xmm0, %xmm0, %xmm0
+	vmovaps	%xmm0, %xmm1
+	vmovaps	%xmm0, %xmm2
+	vmovaps	%xmm0, %xmm3
+
+
+	// call inner gemm kernel nn
+
+	movl	ARG1, %eax // k
+	movl	ARG3, %ebx  // A
+	movl	ARG4, %ecx  // B
+	movl	ARG5, %edx // sdb
+	sall	$4, %edx // 4*sdb*sizeof(float)
+
+// TODO add offset to interface
+//#if MACRO_LEVEL>=1
+//	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+//#else
+//	call inner_edge_gemm_add_nn_4x4_lib4
+//#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+#else
+	call inner_kernel_gemm_add_nn_4x4_lib4
+#endif
+
+
+	// call inner blend
+
+	movl	ARG2, %eax // alpha
+	movl	ARG6, %ebx // beta
+	movl	ARG7, %ecx   // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	call inner_scale_ab_4x4_lib4
+#endif
+
+
+	// store n
+
+	movl	ARG8, %eax // D
+	movl	ARG9, %ebx // m1
+	movl	ARG10, %ecx // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB4
+#else
+	call inner_store_4x4_vs_lib4
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	.size	kernel_sgemm_nn_4x4_vs_lib4, .-kernel_sgemm_nn_4x4_vs_lib4
 
 
 
