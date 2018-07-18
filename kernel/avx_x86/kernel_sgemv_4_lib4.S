@@ -256,21 +256,21 @@ inner_kernel_gemv_add_t_4_lib4:
 	vshufps		$0x00, %xmm7, %xmm7, %xmm7
 	vsubps		%xmm6, %xmm5, %xmm6
 
-	vmaskmovpd	0(%edx), %xmm6, %xmm4
+	vmaskmovps	0(%edx), %xmm6, %xmm4
 
-	vmaskmovpd	0(%ebx), %xmm6, %xmm5
+	vmaskmovps	0(%ebx), %xmm6, %xmm5
 	vmulps	%xmm5, %xmm4, %xmm7
 	vaddps	%xmm0, %xmm7, %xmm0
 	
-	vmaskmovpd	16(%ebx), %xmm6, %xmm5
+	vmaskmovps	16(%ebx), %xmm6, %xmm5
 	vmulps	%xmm5, %xmm4, %xmm7
 	vaddps	%xmm1, %xmm7, %xmm1
 	
-	vmaskmovpd	32(%ebx), %xmm6, %xmm5
+	vmaskmovps	32(%ebx), %xmm6, %xmm5
 	vmulps	%xmm5, %xmm4, %xmm7
 	vaddps	%xmm2, %xmm7, %xmm2
 
-	vmaskmovpd	48(%ebx), %xmm6, %xmm5
+	vmaskmovps	48(%ebx), %xmm6, %xmm5
 	vmulps	%xmm5, %xmm4, %xmm7
 	vaddps	%xmm3, %xmm7, %xmm3
 		
@@ -463,7 +463,7 @@ inner_store_4_vs_lib4:
 	vshufps		$0x00, %xmm7, %xmm7, %xmm7
 	vsubps		%xmm7, %xmm6, %xmm7
 
-	vmaskmovpd	%xmm0, %xmm7,  0(%eax)
+	vmaskmovps	%xmm0, %xmm7,  0(%eax)
 
 #if MACRO_LEVEL>=1
 	.endm
