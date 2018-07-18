@@ -96,6 +96,7 @@ int main()
 	const double flops_max = 2;
 #elif defined(TARGET_GENERIC)
 	const double flops_max = 2;
+#else
 #error wrong target
 #endif
 
