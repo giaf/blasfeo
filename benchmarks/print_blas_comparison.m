@@ -81,7 +81,9 @@ end
 
 
 
-% finalize
+% finalize & print
+
+system('mkdir -p figures');
 
 for jj=1:length(routines)
 	
@@ -94,6 +96,12 @@ for jj=1:length(routines)
 	grid on
 	legend(target_names)
 
+	file_name_eps = ['figures/d', routines{jj}, '.eps'];
+	file_name_pdf = ['figures/d', routines{jj}, '.pdf'];
+	print(fig(2*(jj-1)+1), file_name_eps, '-depsc')
+	system(['epstopdf ', file_name_eps, ' -out ', file_name_pdf]);
+	system(['rm ', file_name_eps]);
+
 	% single
 	figure(fig(2*(jj-1)+2))
 	title(['s', routine_names{jj}])
@@ -102,6 +110,12 @@ for jj=1:length(routines)
 	ylabel('Gflops')
 	grid on
 	legend(target_names)
+
+	file_name_eps = ['figures/s', routines{jj}, '.eps'];
+	file_name_pdf = ['figures/s', routines{jj}, '.pdf'];
+	print(fig(2*(jj-1)+2), file_name_eps, '-depsc')
+	system(['epstopdf ', file_name_eps, ' -out ', file_name_pdf]);
+	system(['rm ', file_name_eps]);
 
 end
 
