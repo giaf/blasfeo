@@ -3,6 +3,7 @@
 % DGEMM
 
 dgemm_nt
+save -mat dgemm_nt.mat A B
 
 Gflops_max = A(1)*A(2);
 
@@ -11,6 +12,7 @@ plot(B(:,1), B(:,2), 'r');
 hold on
 
 dgemm_nn
+save -mat dgemm_nn.mat A B
 
 plot(B(:,1), B(:,2), 'b');
 hold off
@@ -27,6 +29,7 @@ print(f1, file_name, '-depsc')
 % DPOTRF
 
 dpotrf_l
+save -mat dpotrf_l.mat A B
 
 Gflops_max = A(1)*A(2);
 
@@ -42,9 +45,10 @@ grid on
 file_name = ['dpotrf.eps'];
 print(f1, file_name, '-depsc') 
 
-% DGEMv
+% DGEMV
 
 dgemv_n
+save -mat dgemv_n.mat A B
 
 Gflops_max = A(1)*A(2);
 
@@ -53,6 +57,7 @@ plot(B(:,1), B(:,2), 'r');
 hold on
 
 dgemv_t
+save -mat dgemv_t.mat A B
 
 plot(B(:,1), B(:,2), 'b');
 hold off
@@ -69,6 +74,7 @@ print(f1, file_name, '-depsc')
 % SGEMM
 
 sgemm_nt
+save -mat sgemm_nt.mat A B
 
 Gflops_max = A(1)*A(2);
 
@@ -77,6 +83,7 @@ plot(B(:,1), B(:,2), 'r');
 hold on
 
 sgemm_nn
+save -mat sgemm_nn.mat A B
 
 plot(B(:,1), B(:,2), 'b');
 hold off
@@ -93,6 +100,7 @@ print(f1, file_name, '-depsc')
 % SPOTRF
 
 spotrf_l
+save -mat spotrf_l.mat A B
 
 Gflops_max = A(1)*A(2);
 
@@ -111,6 +119,7 @@ print(f1, file_name, '-depsc')
 % SGEMV
 
 sgemv_n
+save -mat sgemv_n.mat A B
 
 Gflops_max = A(1)*A(2);
 
@@ -119,6 +128,7 @@ plot(B(:,1), B(:,2), 'r');
 hold on
 
 sgemv_t
+save -mat sgemv_t.mat A B
 
 plot(B(:,1), B(:,2), 'b');
 hold off
