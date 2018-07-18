@@ -38,6 +38,7 @@ OBJS += \
 		kernel_dgemv_4_lib4.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
+		kernel_sgemv_4_lib4.o \
 
 endif
 

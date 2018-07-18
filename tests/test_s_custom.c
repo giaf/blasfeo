@@ -87,7 +87,7 @@ int main()
 
 	struct blasfeo_svec sx;
 	blasfeo_allocate_svec(n, &sx);
-	sx.pa[7] = 1.0;
+	sx.pa[0] = 1.0;
 	blasfeo_print_tran_svec(n, &sx, 0);
 
 	struct blasfeo_svec sz0;
@@ -110,6 +110,11 @@ int main()
 
 	float alpha = 1.0;
 	float beta = 0.0;
+
+//	blasfeo_sgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);
+	blasfeo_sgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);
+	blasfeo_print_tran_svec(n, &sz0, 0);
+	return 0;
 	
 //	kernel_sgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
 //	kernel_sgemm_nn_4x4_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
