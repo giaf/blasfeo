@@ -94,6 +94,7 @@ AUX_OBJS += test_s_aux.o
 # blas test
 BLAS_OBJS =
 BLAS_OBJS += test_d_blas3.o
+BLAS_OBJS += test_s_blas3.o
 
 test_%.o: test_%.c
 	# build executable obj $(BINARY_DIR)/$@
@@ -130,13 +131,17 @@ run_aux:
 	./$(BINARY_DIR)/test_d_aux.o.out
 	./$(BINARY_DIR)/test_s_aux.o.out
 
-run_blas:
+run_dblas:
 	./$(BINARY_DIR)/test_d_blas3.o.out
+
+run_sblas:
+	./$(BINARY_DIR)/test_s_blas3.o.out
 
 build_run_blas: blas run_blas
 build_run_aux: aux run_aux
 
-update_blas: $(BLAS_OBJS) run_blas
+update_dblas: $(BLAS_OBJS) run_dblas
+update_sblas: $(BLAS_OBJS) run_sblas
 update_aux: $(AUX_OBJS) run_aux
 
 clean:

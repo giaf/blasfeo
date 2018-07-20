@@ -79,6 +79,7 @@ endif # LA choice
 ifeq ($(TESTING_MODE), 1)
 #testing against reference
 OBJS += d_blas3_libref.o
+OBJS += s_blas3_libref.o
 endif
 
 
