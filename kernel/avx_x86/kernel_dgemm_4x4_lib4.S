@@ -39,6 +39,7 @@
 #define ARG8  STACKSIZE + 32(%esp)
 #define ARG9  STACKSIZE + 36(%esp)
 #define ARG10 STACKSIZE + 40(%esp)
+#define ARG11 STACKSIZE + 44(%esp)
 
 #if 1
 
@@ -1300,6 +1301,82 @@ kernel_dgemm_nn_4x4_lib4:
 	ret
 
 	.size	kernel_dgemm_nn_4x4_lib4, .-kernel_dgemm_nn_4x4_lib4
+
+
+
+
+
+//                                  1      2              3          4            5          6        7             8          9          10      11
+// void kernel_dgemm_nn_4x4_vs_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1);
+
+	.align 16
+	.globl kernel_dgemm_nn_4x4_vs_lib4
+	.type kernel_dgemm_nn_4x4_vs_lib4, @function
+kernel_dgemm_nn_4x4_vs_lib4:
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner gemm kernel nn
+
+	movl	ARG1, %eax // k
+	movl	ARG3, %ebx  // A
+	movl	ARG5, %ecx  // B
+	movl	ARG6, %edx // sdb
+	sall	$5, %edx // 4*sdb*sizeof(double)
+	movl	ARG4, %esi // offsetB
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+#else
+	call inner_edge_gemm_add_nn_4x4_lib4
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+#else
+	call inner_kernel_gemm_add_nn_4x4_lib4
+#endif
+
+
+	// call inner blend
+
+	movl	ARG2, %eax // alpha
+	movl	ARG7, %ebx // beta
+	movl	ARG8, %ecx   // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	call inner_scale_ab_4x4_lib4
+#endif
+
+
+	// store n
+
+	movl	ARG9, %eax // D
+	movl	ARG10, %ebx // m1
+	movl	ARG11, %ecx // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB4
+#else
+	call inner_store_4x4_vs_lib4
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	.size	kernel_dgemm_nn_4x4_vs_lib4, .-kernel_dgemm_nn_4x4_vs_lib4
 
 
 
