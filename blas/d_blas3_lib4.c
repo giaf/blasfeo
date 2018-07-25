@@ -1185,9 +1185,6 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	double *pC = sC->pA + cj*ps;
 	double *pD = sD->pA + dj*ps;
 
-	// invalidate stored inverse diagonal of result matrix
-	sD->use_dA = 0;
-
 	if(ai==0 & bi==0 & ci==0 & di==0)
 		{
 		dgemm_nt_lib(m, n, k, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd);
@@ -1588,16 +1585,18 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 				}
 			if(j<n)
 				{
-				kernel_dgemm_nn_4x4_gen_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, 0, &pC[j*ps+i*sdc], sdc, 0, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+//				kernel_dgemm_nn_4x4_gen_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, 0, &pC[j*ps+i*sdc], sdc, 0, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+				kernel_dgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
 				}
 			}
 		if(m>i)
 			{
-			goto left_4_g;
+//			goto left_4_g;
+			goto left_4;
 			}
 #endif
 		}
-	else // offsetC==0 & offsetD==0
+	else // ! (offsetC==0 & offsetD==0)
 		{
 // TODO 12x4
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -1770,6 +1769,14 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		}
 	return;
 #endif // 2x2 min
+#else // ! (haswell | sandybridge)
+	left_4:
+	j = 0;
+	for(; j<n; j+=4)
+		{
+		kernel_dgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+		}
+	return;
 #endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
