@@ -345,3 +345,34 @@ void GECPSC_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 		}
 	return;
 	}
+
+
+
+// scale and add a generic strmat into a generic strmat
+void GEAD_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sC, int ci, int cj)
+	{
+	// invalidate stored inverse diagonal
+	sC->use_dA = 0;
+
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	int ldc = sC->m;
+	REAL *pC = sC->pA + ci + cj*ldc;
+	int ii, jj;
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			pC[ii+0+jj*ldc] += alpha*pA[ii+0+jj*lda];
+			pC[ii+1+jj*ldc] += alpha*pA[ii+1+jj*lda];
+			pC[ii+2+jj*ldc] += alpha*pA[ii+2+jj*lda];
+			pC[ii+3+jj*ldc] += alpha*pA[ii+3+jj*lda];
+			}
+		for(; ii<m; ii++)
+			{
+			pC[ii+0+jj*ldc] += alpha*pA[ii+0+jj*lda];
+			}
+		}
+	return;
+	}
