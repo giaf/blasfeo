@@ -6403,7 +6403,7 @@ kernel_dgemm_nt_4x4_gen_lib4:
 
 
 //                               1      2              3          4            5          6        7             8          9
-// void kernel_dgemm_nt_4x4_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D);
+// void kernel_dgemm_nn_4x4_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -6508,7 +6508,7 @@ kernel_dgemm_nn_4x4_lib4:
 
 
 //                                  1      2              3          4            5          6        7             8          9          10      11
-// void kernel_dgemm_nt_4x4_vs_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int km, int kn);
+// void kernel_dgemm_nn_4x4_vs_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int km, int kn);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)

@@ -60,7 +60,7 @@ common: bin_dir
 build: common $(OBJS)
 
 run:
-	./$(BINARY_DIR)/benchmark_d_blas.o.out
+#	./$(BINARY_DIR)/benchmark_d_blas.o.out
 	./$(BINARY_DIR)/benchmark_s_blas.o.out
 
 

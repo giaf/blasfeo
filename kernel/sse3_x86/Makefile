@@ -26,116 +26,29 @@
 #                                                                                                 #
 ###################################################################################################
 
-include ../Makefile.rule
+include ../../Makefile.rule
 
 OBJS =
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 
-ifeq ($(TARGET), X64_INTEL_HASWELL)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib8.o
-OBJS += m_aux_lib48.o
-endif
-
-ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib8.o
-OBJS += m_aux_lib48.o
-endif
-
-ifeq ($(TARGET), X64_INTEL_CORE)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
-ifeq ($(TARGET), X64_AMD_BULLDOZER)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
-ifeq ($(TARGET), X86_AMD_JAGUAR)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
 ifeq ($(TARGET), X86_AMD_BARCELONA)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
+OBJS += \
+#		kernel_dgemm_4x4_lib4.o \
+		kernel_dgemv_4_lib4.o \
+		\
+		kernel_sgemm_4x4_lib4.o \
+		kernel_sgemv_4_lib4.o \
+
 endif
 
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
-ifeq ($(TARGET), GENERIC)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
-else # LA_REFERENCE | LA_BLAS_WRAPPER
-
-OBJS += d_aux_lib.o
-OBJS += s_aux_lib.o
-OBJS += m_aux_lib.o
+else # LA_REFERENCE | LA_BLAS
 
 endif # LA choice
-
-ifeq ($(TESTING_MODE), 1)
-#testing against reference
-OBJS += d_aux_libref.o
-OBJS += s_aux_libref.o
-endif
-
-
-#ext dep
-ifeq ($(EXT_DEP), 1)
-
-ifeq ($(LA), HIGH_PERFORMANCE)
-OBJS += d_aux_ext_dep_lib4.o
-OBJS += s_aux_ext_dep_lib4.o
-endif
-OBJS += d_aux_ext_dep_lib.o
-OBJS += s_aux_ext_dep_lib.o
-OBJS += v_aux_ext_dep_lib.o
-OBJS += i_aux_ext_dep_lib.o
-OBJS += timing.o
-
-ifeq ($(TESTING_MODE), 1)
-OBJS += d_aux_ext_dep_libref.o
-OBJS += s_aux_ext_dep_libref.o
-endif
-
-endif
-
 
 obj: $(OBJS)
 
 clean:
 	rm -f *.o
+	rm -f *.s
 
-d_aux_lib.o: d_aux_lib.c x_aux_lib.c
-s_aux_lib.o: s_aux_lib.c x_aux_lib.c
-d_aux_ext_dep_lib.o: d_aux_ext_dep_lib.c x_aux_ext_dep_lib0.c x_aux_ext_dep_lib.c
-s_aux_ext_dep_lib.o: s_aux_ext_dep_lib.c x_aux_ext_dep_lib0.c x_aux_ext_dep_lib.c
-d_aux_ext_dep_lib4.o: d_aux_ext_dep_lib4.c x_aux_ext_dep_lib4.c
-s_aux_ext_dep_lib4.o: s_aux_ext_dep_lib4.c x_aux_ext_dep_lib4.c
