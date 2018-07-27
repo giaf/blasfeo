@@ -48,8 +48,6 @@
 #include "test_d_common.h"
 #include "test_x_common.c"
 
-#define VERBOSE 1
-
 int main()
 	{
 	print_compilation_flags();
