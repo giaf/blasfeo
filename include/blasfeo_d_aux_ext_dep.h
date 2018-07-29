@@ -67,14 +67,18 @@ void d_print_mat(int m, int n, double *A, int lda);
 void d_print_tran_mat(int row, int col, double *A, int lda);
 // print to file a column-major matrix
 void d_print_to_file_mat(FILE *file, int row, int col, double *A, int lda);
+// print to file a column-major matrix in exponential format
+void d_print_to_file_exp_mat(FILE *file, int row, int col, double *A, int lda);
 // print to string a column-major matrix
 void d_print_to_string_mat(char **buf_out, int row, int col, double *A, int lda);
 // print to file the transposed of a column-major matrix
 void d_print_tran_to_file_mat(FILE *file, int row, int col, double *A, int lda);
+// print to file the transposed of a column-major matrix in exponential format
+void d_print_tran_to_file_exp_mat(FILE *file, int row, int col, double *A, int lda);
 // print in exponential notation a column-major matrix
-void d_print_e_mat(int m, int n, double *A, int lda);
+void d_print_exp_mat(int m, int n, double *A, int lda);
 // print in exponential notation the transposed of a column-major matrix
-void d_print_e_tran_mat(int row, int col, double *A, int lda);
+void d_print_exp_tran_mat(int row, int col, double *A, int lda);
 
 /* strmat and strvec */
 
@@ -92,6 +96,8 @@ void blasfeo_print_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 void blasfeo_print_exp_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 // print to file a strmat
 void blasfeo_print_to_file_dmat(FILE *file, int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
+// print to file a strmat in exponential format
+void blasfeo_print_to_file_exp_dmat(FILE *file, int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 // print to string a strmat
 void blasfeo_print_to_string_dmat(char **buf_out, int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 // print a strvec

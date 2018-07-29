@@ -126,6 +126,3 @@ void int_print_to_string_mat(char **buf_out, int row, int col, int *A, int lda)
 	*buf_out += sprintf(*buf_out, "\n");
 	return;
 	}	
-
-
-

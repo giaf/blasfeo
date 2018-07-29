@@ -350,13 +350,13 @@ int main()
 	x0[1] = 2.5;
 
 	printf("A:\n");
-	d_print_e_mat(nx_, nx_, A, nx_);
+	d_print_exp_mat(nx_, nx_, A, nx_);
 	printf("B:\n");
-	d_print_e_mat(nx_, nu_, B, nx_);
+	d_print_exp_mat(nx_, nu_, B, nx_);
 	printf("b:\n");
-	d_print_e_mat(1, nx_, b, 1);
+	d_print_exp_mat(1, nx_, b, 1);
 	printf("x0:\n");
-	d_print_e_mat(1, nx_, x0, 1);
+	d_print_exp_mat(1, nx_, x0, 1);
 
 /************************************************
 * cost function
@@ -377,15 +377,15 @@ int main()
 	for(ii=0; ii<nx_; ii++) q[ii] = 0.1;
 
 	printf("R:\n");
-	d_print_e_mat(nu_, nu_, R, nu_);
+	d_print_exp_mat(nu_, nu_, R, nu_);
 	printf("S:\n");
-	d_print_e_mat(nu_, nx_, S, nu_);
+	d_print_exp_mat(nu_, nx_, S, nu_);
 	printf("Q:\n");
-	d_print_e_mat(nx_, nx_, Q, nx_);
+	d_print_exp_mat(nx_, nx_, Q, nx_);
 	printf("r:\n");
-	d_print_e_mat(1, nu_, r, 1);
+	d_print_exp_mat(1, nu_, r, 1);
 	printf("q:\n");
-	d_print_e_mat(1, nx_, q, 1);
+	d_print_exp_mat(1, nx_, q, 1);
 
 /************************************************
 * matrices as strmat

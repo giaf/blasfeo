@@ -52,6 +52,7 @@ void blasfeo_free_svec_ref(struct blasfeo_svec_ref *sa);
 void blasfeo_print_smat_ref(int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
 void blasfeo_print_exp_smat_ref(int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
 void blasfeo_print_to_file_smat_ref(FILE *file, int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
+void blasfeo_print_to_file_exp_smat_ref(FILE *file, int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
 void blasfeo_print_to_string_smat_ref(char **buf_out, int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj);
 void blasfeo_print_svec(int m, struct blasfeo_svec *sa, int ai);
 void blasfeo_print_exp_svec(int m, struct blasfeo_svec *sa, int ai);

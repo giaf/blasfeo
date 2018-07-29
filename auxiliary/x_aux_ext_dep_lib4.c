@@ -161,7 +161,6 @@ void PRINT_TRAN_STRVEC(int m, struct STRVEC *sa, int ai)
 	}
 
 
-
 // print a matrix structure
 void PRINT_TO_FILE_STRMAT(FILE * file, int m, int n, struct STRMAT *sA, int ai, int aj)
 	{
@@ -212,6 +211,55 @@ void PRINT_TO_FILE_STRMAT(FILE * file, int m, int n, struct STRMAT *sA, int ai, 
 	return;
 	}
 
+// print a matrix structure
+void PRINT_TO_FILE_EXP_STRMAT(FILE * file, int m, int n, struct STRMAT *sA, int ai, int aj)
+	{
+	const int ps = PS;
+	int sda = sA->cn;
+	REAL *pA = sA->pA + aj*ps + ai/ps*ps*sda + ai%ps;
+	int ii, i, j, tmp;
+	ii = 0;
+	if(ai%ps>0)
+		{
+		tmp = ps-ai%ps;
+		tmp = m<tmp ? m : tmp;
+		for(i=0; i<tmp; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				fprintf(file, "%9.5e ", pA[i+ps*j]);
+				}
+			fprintf(file, "\n");
+			}
+		pA += tmp + ps*(sda-1);
+		m -= tmp;
+		}
+	for( ; ii<m-(ps-1); ii+=ps)
+		{
+		for(i=0; i<ps; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				fprintf(file, "%9.5e ", pA[i+ps*j+sda*ii]);
+				}
+			fprintf(file, "\n");
+			}
+		}
+	if(ii<m)
+		{
+		tmp = m-ii;
+		for(i=0; i<tmp; i++)
+			{
+			for(j=0; j<n; j++)
+				{
+				fprintf(file, "%9.5e ", pA[i+ps*j+sda*ii]);
+				}
+			fprintf(file, "\n");
+			}
+		}
+	fprintf(file, "\n");
+	return;
+	}
 
 
 // print a matrix structure
@@ -304,7 +352,7 @@ void PRINT_TO_STRING_TRAN_STRVEC(char **buf_out, int m, struct STRVEC *sa, int a
 
 
 // print a matrix structure
-void PRINT_E_STRMAT(int m, int n, struct STRMAT *sA, int ai, int aj)
+void PRINT_EXP_STRMAT(int m, int n, struct STRMAT *sA, int ai, int aj)
 	{
 	const int ps = PS;
 	int sda = sA->cn;
@@ -356,20 +404,20 @@ void PRINT_E_STRMAT(int m, int n, struct STRMAT *sA, int ai, int aj)
 
 
 // print a vector structure
-void PRINT_E_STRVEC(int m, struct STRVEC *sa, int ai)
+void PRINT_EXP_STRVEC(int m, struct STRVEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;
-	PRINT_E_MAT(m, 1, pa, m);
+	PRINT_EXP_MAT(m, 1, pa, m);
 	return;
 	}
 
 
 
 // print the transposed of a vector structure
-void PRINT_E_TRAN_STRVEC(int m, struct STRVEC *sa, int ai)
+void PRINT_EXP_TRAN_STRVEC(int m, struct STRVEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;
-	PRINT_E_MAT(1, m, pa, 1);
+	PRINT_EXP_MAT(1, m, pa, 1);
 	return;
 	}
 
