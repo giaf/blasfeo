@@ -1611,7 +1611,24 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 				}
 			}
 #endif // 2x2 min
-#else // SANDY_BRIDGE
+#elif defined(TARGET_X86_AMD_BARCELONA)
+		for(; i<m-3; i+=4)
+			{
+			j = 0;
+			for(; j<n-1; j+=2)
+				{
+				kernel_dgemm_nn_4x2_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd]);
+				}
+			if(j<n)
+				{
+				kernel_dgemm_nn_4x2_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+				}
+			}
+		if(m>i)
+			{
+			goto left_4;
+			}
+#else // all others
 		for(; i<m-3; i+=4)
 			{
 			j = 0;
@@ -1621,13 +1638,11 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 				}
 			if(j<n)
 				{
-//				kernel_dgemm_nn_4x4_gen_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, 0, &pC[j*ps+i*sdc], sdc, 0, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
 				kernel_dgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
 				}
 			}
 		if(m>i)
 			{
-//			goto left_4_g;
 			goto left_4;
 			}
 #endif
@@ -1805,7 +1820,15 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		}
 	return;
 #endif // 2x2 min
-#else // ! (haswell | sandybridge)
+#elif defined(TARGET_X86_AMD_BARCELONA)
+	left_4:
+	j = 0;
+	for(; j<n; j+=2)
+		{
+		kernel_dgemm_nn_4x2_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+		}
+	return;
+#else // all others
 	left_4:
 	j = 0;
 	for(; j<n; j+=4)
