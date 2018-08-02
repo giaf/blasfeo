@@ -217,6 +217,9 @@ inner_kernel_gemv_add_t_4_lib4:
 	.align 8
 1: // main loop
 	
+	prefetcht0	0(%ebx, %ecx, 1) // software prefetch
+	prefetcht0	64(%ebx, %ecx, 1) // software prefetch
+
 	vmovupd	0(%edx), %ymm4
 
 	vmovapd	0(%ebx), %ymm5
@@ -374,7 +377,6 @@ inner_blend_n_scale_ab_4_lib4:
 	.macro INNER_BLEND_T_SCALE_AB_4_LIB4
 #else
 	.align 16
-#if defined(OS_LINUX)
 	.type inner_blend_t_scale_ab_4_lib4, @function
 inner_blend_t_scale_ab_4_lib4:
 #endif

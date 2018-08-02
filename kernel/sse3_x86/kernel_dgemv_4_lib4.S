@@ -168,12 +168,11 @@ inner_kernel_gemv_add_n_4_lib4:
 	mulpd		%xmm5, %xmm4
 	addpd		%xmm4, %xmm1
 
+	subl	$1, %eax
 	addl	$32, %ebx
 	addl	$8, %ecx
 
-	subl	$1, %eax
 	cmpl	$0, %eax
-
 	jg		0b // clean
 
 2: // return
@@ -223,6 +222,9 @@ inner_kernel_gemv_add_t_4_lib4:
 	.align 8
 1: // main loop
 	
+	prefetcht0	0(%ebx, %ecx, 1) // software prefetch
+	prefetcht0	64(%ebx, %ecx, 1) // software prefetch
+
 	movupd		0(%edx), %xmm4
 
 	movapd		0(%ebx), %xmm5
@@ -295,8 +297,8 @@ inner_kernel_gemv_add_t_4_lib4:
 	addl	$8, %ebx
 	addl	$8, %edx
 	
-	cmpl	$1, %eax
-	jg		1b // main loop 
+	cmpl	$0, %eax
+	jg		0b // main loop 
 
 	
 2: // return

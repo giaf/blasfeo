@@ -217,6 +217,8 @@ inner_kernel_gemv_add_t_4_lib4:
 	.align 8
 1: // main loop
 	
+	prefetcht0	0(%ebx, %ecx, 1) // software prefetch
+
 	vmovups	0(%edx), %xmm4
 
 	vmovaps	0(%ebx), %xmm5
