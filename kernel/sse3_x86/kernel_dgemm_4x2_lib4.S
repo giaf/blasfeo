@@ -527,6 +527,226 @@ inner_kernel_gemm_add_nn_4x2_lib4:
 
 // common inner routine with file scope
 //
+// input arguments:
+// eax   <- k
+// ebx   <- A
+// ecx   <- B
+// xmm0 <- [d00 d10]
+// xmm1 <- [d01 d11]
+// xmm2 <- [d20 d30]
+// xmm3 <- [d21 d31]
+
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_SUB_NT_4X2_LIB4
+#else
+	.align 16
+	.type inner_kernel_gemm_sub_nt_4x2_lib4, @function
+inner_kernel_gemm_sub_nt_4x2_lib4:
+#endif
+
+	cmpl	$0, %eax
+	jle		2f // return
+
+	// preload
+
+	cmpl	$4, %eax
+	jle		0f // consider clean-up loop
+
+	// main loop
+	.align 8
+1: // main loop
+
+	// unroll 0
+	movddup		0(%ecx), %xmm5 // B0
+	movapd		%xmm5, %xmm6 // B0
+	movapd		0(%ebx), %xmm4 // A0
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm0
+	movddup		8(%ecx), %xmm5 // B1
+	mulpd		%xmm5, %xmm4
+	subpd		%xmm4, %xmm1
+	movapd		16(%ebx), %xmm4 // A2
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm3
+	mulpd		%xmm6, %xmm4
+	subpd		%xmm4, %xmm2
+
+	// unroll 1
+	movddup		32(%ecx), %xmm5 // B0
+	movapd		%xmm5, %xmm6 // B0
+	movapd		32(%ebx), %xmm4 // A0
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm0
+	movddup		40(%ecx), %xmm5 // B1
+	mulpd		%xmm5, %xmm4
+	subpd		%xmm4, %xmm1
+	movapd		48(%ebx), %xmm4 // A2
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm3
+	mulpd		%xmm6, %xmm4
+	subpd		%xmm4, %xmm2
+
+	// unroll 2
+	movddup		64(%ecx), %xmm5 // B0
+	movapd		%xmm5, %xmm6 // B0
+	movapd		64(%ebx), %xmm4 // A0
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm0
+	movddup		72(%ecx), %xmm5 // B1
+	mulpd		%xmm5, %xmm4
+	subpd		%xmm4, %xmm1
+	movapd		80(%ebx), %xmm4 // A2
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm3
+	mulpd		%xmm6, %xmm4
+	subpd		%xmm4, %xmm2
+
+	// unroll 3
+	movddup		96(%ecx), %xmm5 // B0
+	movapd		%xmm5, %xmm6 // B0
+	movapd		96(%ebx), %xmm4 // A0
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm0
+	movddup		104(%ecx), %xmm5 // B1
+	mulpd		%xmm5, %xmm4
+	subpd		%xmm4, %xmm1
+	movapd		112(%ebx), %xmm4 // A2
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm3
+	mulpd		%xmm6, %xmm4
+	subpd		%xmm4, %xmm2
+
+
+	subl	$4, %eax
+	addl	$128, %ecx
+	addl	$128, %ebx
+
+	cmpl	$4, %eax
+	jg		1b // main loop
+
+
+0: // consider clean4-up
+
+	cmpl	$3, %eax
+	jle		4f // clean1
+
+	// unroll 0
+	movddup		0(%ecx), %xmm5 // B0
+	movapd		%xmm5, %xmm6 // B0
+	movapd		0(%ebx), %xmm4 // A0
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm0
+	movddup		8(%ecx), %xmm5 // B1
+	mulpd		%xmm5, %xmm4
+	subpd		%xmm4, %xmm1
+	movapd		16(%ebx), %xmm4 // A2
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm3
+	mulpd		%xmm6, %xmm4
+	subpd		%xmm4, %xmm2
+
+	// unroll 1
+	movddup		32(%ecx), %xmm5 // B0
+	movapd		%xmm5, %xmm6 // B0
+	movapd		32(%ebx), %xmm4 // A0
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm0
+	movddup		40(%ecx), %xmm5 // B1
+	mulpd		%xmm5, %xmm4
+	subpd		%xmm4, %xmm1
+	movapd		48(%ebx), %xmm4 // A2
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm3
+	mulpd		%xmm6, %xmm4
+	subpd		%xmm4, %xmm2
+
+	// unroll 2
+	movddup		64(%ecx), %xmm5 // B0
+	movapd		%xmm5, %xmm6 // B0
+	movapd		64(%ebx), %xmm4 // A0
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm0
+	movddup		72(%ecx), %xmm5 // B1
+	mulpd		%xmm5, %xmm4
+	subpd		%xmm4, %xmm1
+	movapd		80(%ebx), %xmm4 // A2
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm3
+	mulpd		%xmm6, %xmm4
+	subpd		%xmm4, %xmm2
+
+	// unroll 3
+	movddup		96(%ecx), %xmm5 // B0
+	movapd		%xmm5, %xmm6 // B0
+	movapd		96(%ebx), %xmm4 // A0
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm0
+	movddup		104(%ecx), %xmm5 // B1
+	mulpd		%xmm5, %xmm4
+	subpd		%xmm4, %xmm1
+	movapd		112(%ebx), %xmm4 // A2
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm3
+	mulpd		%xmm6, %xmm4
+	subpd		%xmm4, %xmm2
+
+	subl	$4, %eax
+	addl	$128, %ecx
+	addl	$128, %ebx
+
+//	cmpl	$3, %eax
+	jmp		2f // return
+
+
+4: // consider clean1-up loop
+
+	cmpl	$0, %eax
+	jle		2f // return
+
+	// clean-up loop
+3: // clean up loop
+
+	// unroll 0
+	movddup		0(%ecx), %xmm5 // B0
+	movapd		%xmm5, %xmm6 // B0
+	movapd		0(%ebx), %xmm4 // A0
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm0
+	movddup		8(%ecx), %xmm5 // B1
+	mulpd		%xmm5, %xmm4
+	subpd		%xmm4, %xmm1
+	movapd		16(%ebx), %xmm4 // A2
+	mulpd		%xmm4, %xmm5
+	subpd		%xmm5, %xmm3
+	mulpd		%xmm6, %xmm4
+	subpd		%xmm4, %xmm2
+
+	subl	$1, %eax
+	addl	$32, %ecx
+	addl	$32, %ebx
+
+	cmpl	$0, %eax
+	jg		3b // clean up loop
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	.size	inner_kernel_gemm_sub_nt_4x2_lib4, .-inner_kernel_gemm_sub_nt_4x2_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // edge for B unaligned, A aligned
 //
 // input arguments:
@@ -613,6 +833,54 @@ inner_edge_gemm_add_nn_4x2_lib4:
 
 // common inner routine with file scope
 //
+// triangular substitution for cholesky factorization 
+//
+// input arguments:
+// eax  <- E
+// ebx  <- inv_diag_E
+// xmm0 <- [d00 d10]
+// xmm1 <- [d01 d11]
+// xmm2 <- [d20 d30]
+// xmm3 <- [d21 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRSM_RLT_INV_4X2_LIB4
+#else
+	.align 16
+	.type inner_edge_trsm_rlt_inv_4x2_lib4, @function
+inner_edge_trsm_rlt_inv_4x2_lib4:
+#endif
+	
+	movddup			0(%ebx), %xmm7
+	mulpd			%xmm7, %xmm0
+	mulpd			%xmm7, %xmm2
+
+	movddup			8(%eax), %xmm7
+	movapd			%xmm7, %xmm6
+	mulpd			%xmm0, %xmm7
+	mulpd			%xmm2, %xmm6
+	subpd			%xmm7, %xmm1
+	subpd			%xmm6, %xmm3
+	movddup			8(%ebx), %xmm7
+	mulpd			%xmm7, %xmm1
+	mulpd			%xmm7, %xmm3
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_edge_trsm_rlt_inv_4x2_lib4, .-inner_edge_trsm_rlt_inv_4x2_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // blend for generic alpha and beta
 //
 // input arguments:
@@ -671,6 +939,48 @@ inner_scale_ab_4x2_lib4:
 	ret
 
 	.size	inner_scale_ab_4x2_lib4, .-inner_scale_ab_4x2_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// blend for generic alpha=1 and beta=1
+//
+// input arguments:
+// eax   <- C
+// xmm0 <- [d00 d10]
+// xmm1 <- [d01 d11]
+// xmm2 <- [d20 d30]
+// xmm3 <- [d21 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_11_4X2_LIB4
+#else
+	.align 16
+	.type inner_scale_11_4x2_lib4, @function
+inner_scale_11_4x2_lib4:
+#endif
+
+	movapd		0(%eax), %xmm7
+	addpd		%xmm7, %xmm0
+	movapd		16(%eax), %xmm7
+	addpd		%xmm7, %xmm2
+	movapd		32(%eax), %xmm7
+	addpd		%xmm7, %xmm1
+	movapd		48(%eax), %xmm7
+	addpd		%xmm7, %xmm3
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_scale_11_4x2_lib4, .-inner_scale_11_4x2_lib4
 #endif
 
 
@@ -1077,6 +1387,158 @@ kernel_dgemm_nn_4x2_vs_lib4:
 	ret
 
 	.size	kernel_dgemm_nn_4x2_vs_lib4, .-kernel_dgemm_nn_4x2_vs_lib4
+
+
+
+
+
+//                                      1      2          3          4          5          6          7
+// void kernel_dtrsm_nt_rl_inv_4x2_lib4(int k, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E);
+
+	.align 16
+	.globl kernel_dtrsm_nt_rl_inv_4x2_lib4
+	.type kernel_dtrsm_nt_rl_inv_4x2_lib4, @function
+kernel_dtrsm_nt_rl_inv_4x2_lib4:
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
+
+
+	// call inner dgemm kernel nt 
+
+	movl	ARG1, %eax
+	movl	ARG2, %ebx
+	movl	ARG3, %ecx
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_SUB_NT_4X2_LIB4
+#else
+	call inner_kernel_gemm_sub_nt_4x2_lib4
+#endif
+
+
+	// call inner blender_loader nn
+
+	movl	ARG4, %eax
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_11_4X2_LIB4
+#else
+	call inner_scale_11_4x2_lib4
+#endif
+
+
+	// solve
+
+	movl	ARG6, %eax  // E 
+	movl	ARG7, %ebx  // inv_diag_E 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRSM_RLT_INV_4X2_LIB4
+#else
+	call inner_edge_trsm_rlt_inv_4x2_lib4
+#endif
+
+
+	// store
+
+	movl	ARG5, %eax // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X2_LIB4
+#else
+	call inner_store_4x2_lib4
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	.size	kernel_dtrsm_nt_rl_inv_4x2_lib4, .-kernel_dtrsm_nt_rl_inv_4x2_lib4
+
+
+
+
+
+//                                         1      2          3          4          5          6          7                   8       9
+// void kernel_dtrsm_nt_rl_inv_4x2_vs_lib4(int k, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E, int m1, int n1);
+
+	.align 16
+	.globl kernel_dtrsm_nt_rl_inv_4x2_vs_lib4
+	.type kernel_dtrsm_nt_rl_inv_4x2_vs_lib4, @function
+kernel_dtrsm_nt_rl_inv_4x2_vs_lib4:
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
+
+
+	// call inner dgemm kernel nt 
+
+	movl	ARG1, %eax
+	movl	ARG2, %ebx
+	movl	ARG3, %ecx
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_SUB_NT_4X2_LIB4
+#else
+	call inner_kernel_gemm_sub_nt_4x2_lib4
+#endif
+
+
+	// call inner blender_loader nn
+
+	movl	ARG4, %eax
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_11_4X2_LIB4
+#else
+	call inner_scale_11_4x2_lib4
+#endif
+
+
+	// solve
+
+	movl	ARG6, %eax  // E 
+	movl	ARG7, %ebx  // inv_diag_E 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRSM_RLT_INV_4X2_LIB4
+#else
+	call inner_edge_trsm_rlt_inv_4x2_lib4
+#endif
+
+
+	// store
+
+	movl	ARG5, %eax // D
+	movl	ARG8, %ebx // m1
+	movl	ARG9, %ecx // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X2_VS_LIB4
+#else
+	call inner_store_4x2_vs_lib4
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	.size	kernel_dtrsm_nt_rl_inv_4x2_vs_lib4, .-kernel_dtrsm_nt_rl_inv_4x2_vs_lib4
 
 
 
