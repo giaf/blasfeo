@@ -88,10 +88,10 @@
 // eax   <- k
 // ebx   <- A
 // ecx   <- x
-// ymm0  <- [z0 z1 z2 z3]_a
-// ymm1  <- [z0 z1 z2 z3]_b
-// ymm2  <- [z0 z1 z2 z3]_c
-// ymm3  <- [z0 z1 z2 z3]_d
+// xmm0  <- [z0 z1]_a
+// xmm1  <- [z2 z3]_b
+// xmm2  <- [z0 z1]_a
+// xmm3  <- [z2 z3]_b
 
 //
 // output arguments:
@@ -114,32 +114,43 @@ inner_kernel_gemv_add_n_4_lib4:
 	.align 8
 1: // main loop
 	
-	vmovapd	0(%ebx), %ymm4
-	vbroadcastsd	0(%ecx), %ymm5
-	vmulpd	%ymm4, %ymm5, %ymm7
-	vaddpd	%ymm0, %ymm7, %ymm0
-	
-	vmovapd	32(%ebx), %ymm4
-	vbroadcastsd	8(%ecx), %ymm5
-	vmulpd	%ymm4, %ymm5, %ymm7
-	vaddpd	%ymm1, %ymm7, %ymm1
-	
-	vmovapd	64(%ebx), %ymm4
-	vbroadcastsd	16(%ecx), %ymm5
-	vmulpd	%ymm4, %ymm5, %ymm7
-	vaddpd	%ymm2, %ymm7, %ymm2
+	movddup		0(%ecx), %xmm5
+	movapd		0(%ebx), %xmm4
+	mulpd		%xmm5, %xmm4
+	addpd		%xmm4, %xmm0
+	movapd		16(%ebx), %xmm4
+	mulpd		%xmm5, %xmm4
+	addpd		%xmm4, %xmm1
 
-	vmovapd	96(%ebx), %ymm4
-	vbroadcastsd	24(%ecx), %ymm5
-	vmulpd	%ymm4, %ymm5, %ymm7
-	vaddpd	%ymm3, %ymm7, %ymm3
-	
+	movddup		8(%ecx), %xmm5
+	movapd		32(%ebx), %xmm4
+	mulpd		%xmm5, %xmm4
+	addpd		%xmm4, %xmm2
+	movapd		48(%ebx), %xmm4
+	mulpd		%xmm5, %xmm4
+	addpd		%xmm4, %xmm3
+
+	movddup		16(%ecx), %xmm5
+	movapd		64(%ebx), %xmm4
+	mulpd		%xmm5, %xmm4
+	addpd		%xmm4, %xmm0
+	movapd		80(%ebx), %xmm4
+	mulpd		%xmm5, %xmm4
+	addpd		%xmm4, %xmm1
+
+	movddup		24(%ecx), %xmm5
+	movapd		96(%ebx), %xmm4
+	mulpd		%xmm5, %xmm4
+	addpd		%xmm4, %xmm2
+	movapd		112(%ebx), %xmm4
+	mulpd		%xmm5, %xmm4
+	addpd		%xmm4, %xmm3
+
 	subl	$4, %eax
 	addl	$128, %ebx
 	addl	$32, %ecx
 	
 	cmpl	$3, %eax
-
 	jg		1b // main loop 
 
 
@@ -149,14 +160,17 @@ inner_kernel_gemv_add_n_4_lib4:
 
 0: // clean-up
 	
-	vmovapd	0(%ebx), %ymm4
-	vbroadcastsd	0(%ecx), %ymm5
-	vmulpd	%ymm4, %ymm5, %ymm7
-	vaddpd	%ymm0, %ymm7, %ymm0
-	
+	movddup		0(%ecx), %xmm5
+	movapd		0(%ebx), %xmm4
+	mulpd		%xmm5, %xmm4
+	addpd		%xmm4, %xmm0
+	movapd		16(%ebx), %xmm4
+	mulpd		%xmm5, %xmm4
+	addpd		%xmm4, %xmm1
+
 	addl	$32, %ebx
 	addl	$8, %ecx
-	
+
 	subl	$1, %eax
 	cmpl	$0, %eax
 
@@ -183,21 +197,13 @@ inner_kernel_gemv_add_n_4_lib4:
 // ebx   <- A
 // ecx   <- bs*sda*sizeof(double) = 32*sda
 // edx   <- x
-// ymm0  <- [z0a z0b z0c z0d]
-// ymm1  <- [z1a z1b z1c z1d]
-// ymm2  <- [z2a z2b z2c z2d]
-// ymm3  <- [z3a z3b z3c z3d]
+// xmm0  <- [z0a z0b]
+// xmm1  <- [z2a z2b]
+// xmm2  <- [z1a z1b]
+// xmm3  <- [z3a z3b]
 
 //
 // output arguments:
-// eax  <- 0
-// ebx   <- A+4*k*sizeof(double)
-// ecx   <- bs*sda*sizeof(double) = 32*sda
-// edx   <- x+k*sizeof(double)
-// ymm0  <- [z0a z0b z0c z0d]
-// ymm1  <- [z1a z1b z1c z1d]
-// ymm2  <- [z2a z2b z2c z2d]
-// ymm3  <- [z3a z3b z3c z3d]
 
 #if MACRO_LEVEL>=2
 	.macro INNER_KERNEL_GEMV_ADD_T_4_LIB4
@@ -217,31 +223,47 @@ inner_kernel_gemv_add_t_4_lib4:
 	.align 8
 1: // main loop
 	
-	vmovupd	0(%edx), %ymm4
+	movupd		0(%edx), %xmm4
 
-	vmovapd	0(%ebx), %ymm5
-	vmulpd	%ymm5, %ymm4, %ymm7
-	vaddpd	%ymm0, %ymm7, %ymm0
-	
+	movapd		0(%ebx), %xmm5
+	mulpd		%xmm4, %xmm5
+	addpd		%xmm5, %xmm0
+
+	movapd		32(%ebx), %xmm5
+	mulpd		%xmm4, %xmm5
+	addpd		%xmm5, %xmm2
+
+	movapd		64(%ebx), %xmm5
+	mulpd		%xmm4, %xmm5
+	addpd		%xmm5, %xmm1
+
+	movapd		96(%ebx), %xmm5
+	mulpd		%xmm4, %xmm5
+	addpd		%xmm5, %xmm3
+
+	movupd		16(%edx), %xmm4
+
+	movapd		16(%ebx), %xmm5
+	mulpd		%xmm4, %xmm5
+	addpd		%xmm5, %xmm0
+
+	movapd		48(%ebx), %xmm5
+	mulpd		%xmm4, %xmm5
+	addpd		%xmm5, %xmm2
+
+	movapd		80(%ebx), %xmm5
+	mulpd		%xmm4, %xmm5
+	addpd		%xmm5, %xmm1
+
+	movapd		112(%ebx), %xmm5
+	mulpd		%xmm4, %xmm5
+	addpd		%xmm5, %xmm3
+
 	subl	$4, %eax
-
-	vmovapd	32(%ebx), %ymm5
-	vmulpd	%ymm5, %ymm4, %ymm7
-	vaddpd	%ymm1, %ymm7, %ymm1
-	
-	vmovapd	64(%ebx), %ymm5
-	vmulpd	%ymm5, %ymm4, %ymm7
-	vaddpd	%ymm2, %ymm7, %ymm2
-
-	vmovapd	96(%ebx), %ymm5
-	vmulpd	%ymm5, %ymm4, %ymm7
-	vaddpd	%ymm3, %ymm7, %ymm3
-	
 	addl	%ecx, %ebx
 	addl	$32, %edx
 	
 	cmpl	$3, %eax
-
 	jg		1b // main loop 
 
 
@@ -251,35 +273,31 @@ inner_kernel_gemv_add_t_4_lib4:
 
 0: // clean-up
 	
-	vcvtsi2sd	%eax, %xmm6, %xmm6
-	vmovupd		.LC02, %ymm5
-	vmovddup	%xmm6, %xmm6
-	vinsertf128	$1, %xmm6, %ymm6, %ymm6
-	vsubpd		%ymm6, %ymm5, %ymm6
+	movsd		0(%edx), %xmm4
 
-	vmaskmovpd	0(%edx), %ymm6, %ymm4
+	movsd		0(%ebx), %xmm5
+	mulsd		%xmm4, %xmm5
+	addsd		%xmm5, %xmm0
 
-	vmaskmovpd	0(%ebx), %ymm6, %ymm5
-	vmulpd	%ymm5, %ymm4, %ymm7
-	vaddpd	%ymm0, %ymm7, %ymm0
-	
-	vmaskmovpd	32(%ebx), %ymm6, %ymm5
-	vmulpd	%ymm5, %ymm4, %ymm7
-	vaddpd	%ymm1, %ymm7, %ymm1
-	
-	vmaskmovpd	64(%ebx), %ymm6, %ymm5
-	vmulpd	%ymm5, %ymm4, %ymm7
-	vaddpd	%ymm2, %ymm7, %ymm2
+	movsd		32(%ebx), %xmm5
+	mulsd		%xmm4, %xmm5
+	addsd		%xmm5, %xmm2
 
-	vmaskmovpd	96(%ebx), %ymm6, %ymm5
-	vmulpd	%ymm5, %ymm4, %ymm7
-	vaddpd	%ymm3, %ymm7, %ymm3
-		
-	sall	$3, %eax
-	addl	%eax, %ebx
-	addl	%eax, %edx
-	xorl	%eax, %eax
+	movsd		64(%ebx), %xmm5
+	mulsd		%xmm4, %xmm5
+	addsd		%xmm5, %xmm1
+
+	movsd		96(%ebx), %xmm5
+	mulsd		%xmm4, %xmm5
+	addsd		%xmm5, %xmm3
 	
+	subl	$1, %eax
+	addl	$8, %ebx
+	addl	$8, %edx
+	
+	cmpl	$1, %eax
+	jg		1b // main loop 
+
 	
 2: // return
 
@@ -297,6 +315,7 @@ inner_kernel_gemv_add_t_4_lib4:
 
 
 
+
 // common inner routine with file scope
 //
 // blend for ta==n, scale for generic alpha and beta
@@ -305,16 +324,17 @@ inner_kernel_gemv_add_t_4_lib4:
 // eax  <- alpha
 // ebx  <- beta
 // ecx  <- y
-// ymm0 <- [z0 z1 z2 z3]_a
-// ymm1 <- [z0 z1 z2 z3]_b
-// ymm2 <- [z0 z1 z2 z3]_c
-// ymm3 <- [z0 z1 z2 z3]_d
+// xmm0  <- [z0 z1]_a
+// xmm1  <- [z2 z3]_b
+// xmm2  <- [z0 z1]_a
+// xmm3  <- [z2 z3]_b
 //
 // output arguments:
 // eax  <- alpha
 // ebx  <- beta
 // ecx  <- y
-// ymm0 <- [z0 z1 z2 z3]
+// xmm0 <- [z0 z1]
+// xmm1 <- [z2 z3]
 
 #if MACRO_LEVEL>=1
 	.macro INNER_BLEND_N_SCALE_AB_4_LIB4
@@ -325,19 +345,22 @@ inner_blend_n_scale_ab_4_lib4:
 #endif
 
 	// reduction
-	vaddpd	%ymm0, %ymm1, %ymm0
-	vaddpd	%ymm2, %ymm3, %ymm2
-	vaddpd	%ymm0, %ymm2, %ymm0
+	addpd		%xmm2, %xmm0
+	addpd		%xmm3, %xmm1
 
 	// alpha
-	vbroadcastsd	0(%eax), %ymm7
-	vmulpd	%ymm0, %ymm7, %ymm0
+	movddup		0(%eax), %xmm7
+	mulpd		%xmm7, %xmm0
+	mulpd		%xmm7, %xmm1
 
 	// beta
-	vbroadcastsd	0(%ebx), %ymm7
-	vmovupd		0(%ecx), %ymm6
-	vmulpd		%ymm7, %ymm6, %ymm6
-	vaddpd		%ymm0, %ymm6, %ymm0
+	movddup		0(%ebx), %xmm7
+	movupd		0(%ecx), %xmm6
+	mulpd		%xmm7, %xmm6
+	addpd		%xmm6, %xmm0
+	movupd		16(%ecx), %xmm6
+	mulpd		%xmm7, %xmm6
+	addpd		%xmm6, %xmm1
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -359,42 +382,42 @@ inner_blend_n_scale_ab_4_lib4:
 // eax  <- alpha
 // ebx  <- beta
 // ecx  <- y
-// ymm0 <- [z0a z0b z0c z0d]
-// ymm1 <- [z1a z1b z1c z1d]
-// ymm2 <- [z2a z2b z2c z2d]
-// ymm3 <- [z3a z3b z3c z3d]
+// xmm0  <- [z0a z0b]
+// xmm1  <- [z2a z2b]
+// xmm2  <- [z1a z1b]
+// xmm3  <- [z3a z3b]
 //
 // output arguments:
 // eax  <- alpha
 // ebx  <- beta
 // ecx  <- y
-// ymm0 <- [z0 z1 z2 z3]
+// xmm0 <- [z0 z1 z2 z3]
 
 #if MACRO_LEVEL>=1
 	.macro INNER_BLEND_T_SCALE_AB_4_LIB4
 #else
 	.align 16
-#if defined(OS_LINUX)
 	.type inner_blend_t_scale_ab_4_lib4, @function
 inner_blend_t_scale_ab_4_lib4:
 #endif
 
 	// reduction
-	vhaddpd	%ymm1, %ymm0, %ymm0
-	vhaddpd	%ymm3, %ymm2, %ymm2
-	vperm2f128	$0x2, %ymm0, %ymm2, %ymm1
-	vperm2f128	$0x13, %ymm0, %ymm2, %ymm0
-	vaddpd	%ymm0, %ymm1, %ymm0
+	haddpd		%xmm2, %xmm0
+	haddpd		%xmm3, %xmm1
 
 	// alpha
-	vbroadcastsd	0(%eax), %ymm7
-	vmulpd	%ymm0, %ymm7, %ymm0
+	movddup		0(%eax), %xmm7
+	mulpd		%xmm7, %xmm0
+	mulpd		%xmm7, %xmm1
 
 	// beta
-	vbroadcastsd	0(%ebx), %ymm7
-	vmovupd		0(%ecx), %ymm6
-	vmulpd		%ymm7, %ymm6, %ymm6
-	vaddpd		%ymm0, %ymm6, %ymm0
+	movddup		0(%ebx), %xmm7
+	movupd		0(%ecx), %xmm6
+	mulpd		%xmm7, %xmm6
+	addpd		%xmm6, %xmm0
+	movupd		16(%ecx), %xmm6
+	mulpd		%xmm7, %xmm6
+	addpd		%xmm6, %xmm1
 	
 #if MACRO_LEVEL>=1
 	.endm
@@ -414,7 +437,8 @@ inner_blend_t_scale_ab_4_lib4:
 //
 // input arguments:
 // eax  <- z
-// ymm0 <- [z0 z1 z2 z3]
+// xmm0 <- [z0 z1]
+// xmm1 <- [z2 z3]
 //
 // output arguments:
 
@@ -426,7 +450,8 @@ inner_blend_t_scale_ab_4_lib4:
 inner_store_4_lib4:
 #endif
 	
-	vmovupd %ymm0,  0(%eax)
+	movupd		%xmm0,  0(%eax)
+	movupd		%xmm1, 16(%eax)
 	
 #if MACRO_LEVEL>=1
 	.endm
@@ -447,12 +472,12 @@ inner_store_4_lib4:
 // input arguments:
 // eax   <- D
 // ebx   <- km
-// ymm0  <- [z0 z1 z2 z3]
+// xmm0  <- [z0 z1 z2 z3]
 //
 // output arguments:
 // eax   <- D
 // ebx   <- km
-// ymm0  <- [z0 z1 z2 z3]
+// xmm0  <- [z0 z1 z2 z3]
 
 #if MACRO_LEVEL>=1
 	.macro INNER_STORE_4_VS_LIB4
@@ -462,13 +487,27 @@ inner_store_4_lib4:
 inner_store_4_vs_lib4:
 #endif
 	
-	vcvtsi2sd	%ebx, %xmm7, %xmm7
-	vmovupd		.LC02, %ymm6
-	vmovddup	%xmm7, %xmm7
-	vinsertf128	$1, %xmm7, %ymm7, %ymm7
-	vsubpd		%ymm7, %ymm6, %ymm7
+	cmpl	$0, %ebx
+	jle		0f // return
 
-	vmaskmovpd	%ymm0, %ymm7,  0(%eax)
+	movsd 	%xmm0, 0(%eax)
+
+	cmpl	$1, %ebx
+	jle		0f // return
+
+	movhpd 	%xmm0, 8(%eax)
+
+	cmpl	$2, %ebx
+	jle		0f // return
+
+	movsd 	%xmm1, 16(%eax)
+
+	cmpl	$3, %ebx
+	jle		0f // return
+
+	movhpd 	%xmm1, 24(%eax)
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -496,10 +535,10 @@ kernel_dgemv_n_4_lib4:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
 
 
 	// call inner dgemv kernel n
@@ -562,10 +601,10 @@ kernel_dgemv_n_4_vs_lib4:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
 
 
 	// call inner dgemv kernel n
@@ -629,10 +668,10 @@ kernel_dgemv_t_4_lib4:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
 
 
 	// call inner dgemv kernel n
@@ -696,10 +735,10 @@ kernel_dgemv_t_4_vs_lib4:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
 
 
 	// call inner dgemv kernel n
@@ -749,58 +788,6 @@ kernel_dgemv_t_4_vs_lib4:
 	.size	kernel_dgemv_t_4_vs_lib4, .-kernel_dgemv_t_4_vs_lib4
 
 
-
-
-
-	// read-only data
-	.section	.rodata.cst32,"aM",@progbits,32
-
-	.align 32
-.LC00: // { -1 -1 -1 1 }
-	.quad	-1
-	.quad	-1
-	.quad	-1
-	.quad	1
-
-	.align 32
-.LC01: // { -1 -1 -1 -1 }
-	.quad	-1
-	.quad	-1
-	.quad	-1
-	.quad	-1
-
-	.align 32
-.LC02: // { 3.5 2.5 1.5 0.5 }
-	.long	0
-	.long	1071644672
-	.long	0
-	.long	1073217536
-	.long	0
-	.long	1074003968
-	.long	0
-	.long	1074528256
-
-	.align 32
-.LC03: // { 7.5 6.5 5.5 4.5 }
-	.long	0
-	.long	1074921472
-	.long	0
-	.long	1075183616
-	.long	0
-	.long	1075445760
-	.long	0
-	.long	1075707904
-
-	.align 32
-.LC04: // { 1.0 1.0 1.0 1.0 }
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
 
 
 
