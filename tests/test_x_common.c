@@ -1,4 +1,7 @@
-void print_compilation_flags(){
+// Test {double,single} precision common
+
+void print_compilation_flags()
+{
 	SHOW_DEFINE(LA)
 	SHOW_DEFINE(TARGET)
 	SHOW_DEFINE(PRECISION)
@@ -6,8 +9,96 @@ void print_compilation_flags(){
 	SHOW_DEFINE(ROUTINE)
 }
 
+void initialize_test_args(struct TestArgs * targs)
+{
+	// sub-mastrix offset, sweep start
+	targs->ii0 = 0;
+	targs->jj0 = 0;
+	targs->kk0 = 0;
+
+	targs->ii0s = 1;
+	targs->jj0s = 1;
+	targs->kk0s = 1;
+
+	targs->AB_offset0 = 0;
+	targs->AB_offsets = 1;
+
+	// sub-matrix dimensions, sweep start
+	targs->ni0 = 4;
+	targs->nj0 = 4;
+	targs->nk0 = 4;
+
+	// sub-matrix dimensions, sweep lenght
+	targs->nis = 1;
+	targs->njs = 1;
+	targs->nks = 1;
+
+	targs->alphas = 1;
+	targs->alpha_l[0] = 1.0;
+	targs->alpha_l[1] = 0.0;
+	targs->alpha_l[2] = 0.0001;
+	targs->alpha_l[3] = 0.02;
+	targs->alpha_l[4] = 400.0;
+	targs->alpha_l[5] = 50000.0;
+
+	targs->betas = 1;
+	targs->beta_l[0] = 1.0;
+	targs->beta_l[1] = 0.0;
+	targs->beta_l[2] = 0.0001;
+	targs->beta_l[3] = 0.02;
+	targs->beta_l[4] = 400.0;
+	targs->beta_l[5] = 50000.0;
+
+	targs->total_calls = 1;
+};
+
+int compute_total_calls(struct TestArgs * targs)
+{
+	int total_calls =
+		targs->alphas *
+		targs->betas *
+		targs->nis *
+		targs->njs *
+		targs->nks *
+		targs->ii0s *
+		targs->jj0s *
+		targs->kk0s *
+		targs->AB_offsets;
+
+	return total_calls;
+}
+
+void initialize_args(struct RoutineArgs * args)
+{
+	args->alpha = 0;
+	args->beta = 0;
+
+	args->err_i = 0;
+	args->err_j = 0;
+
+	// sizes
+	args->n = 0;
+	args->m = 0;
+	args->k = 0;
+
+	// offset
+	args->ai = 0;
+	args->aj = 0;
+
+	args->bi = 0;
+	args->bj = 0;
+
+	args->ci = 0;
+	args->cj = 0;
+
+	args->di = 0;
+	args->dj = 0;
+};
+
 /* prints a matrix in column-major format */
-void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int err_i, int err_j, int ERR)
+void print_xmat_debug(
+	int m, int n, struct STRMAT_REF *sA,
+	int ai, int aj, int err_i, int err_j, int ERR)
 	{
 
 	/* REAL *pA = sA->pA + ai + aj*lda; */
@@ -78,7 +169,9 @@ void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int e
 	}
 
 /* prints a matrix in panel-major format */
-void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, int err_i, int err_j, int ERR)
+void blasfeo_print_xmat_debug(
+	int m, int n, struct STRMAT *sA,
+	int ai, int aj, int err_i, int err_j, int ERR)
 	{
 	#if defined(LA_BLAS_WRAPPER) || defined(LA_REFERENCE)
 	/* print_xmat_debug(m, n, sA->pA, ai, aj, err_i, err_j); */
@@ -168,58 +261,10 @@ void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, i
 	}
 
 
-void print_routine_signature(const char* routine, REAL alpha, REAL beta, int m, int n, int k,
-							 int ai, int aj, int bi, int bj, int ci, int cj, int di, int dj)
-{
-	if (strcmp(routine, "blasfeo_dgemm_nn") == 0)
-	{
-		printf(
-			"Calling D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
-			di, m, dj, n,
-			alpha, ai, m, aj, k,
-			bi, k, bj, n,
-			beta, ci, m, cj, n
-		);
-	}
-	else if (strcmp(routine, "blasfeo_dgemm_nt") == 0)
-	{
-		printf(
-			"Calling D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
-			di, m, dj, n,
-			alpha, ai, m, aj, k,
-			bi, n, bj, k,
-			beta, ci, m, cj, n
-		);
-	}
-	else if ((strncmp(routine, "blasfeo_dtrsm", 13) == 0) || (strncmp(routine, "blasfeo_dtrmm", 13) == 0))
-	{
-		int maxn = (m > n)? m : n;
-		printf(
-			"Calling %f*A[%d:%d,%d:%d]*X[%d:%d,%d:%d] = %f*B[%d:%d,%d:%d]\n",
-			alpha, ai, maxn, aj, maxn,
-			di, m, dj, n,
-			beta, bi, m, bj, n
-		);
-	}
-	else
-	{
-		printf("Do not know: %s\n", routine);
-		printf(
-			"D[%d:%d,%d:%d], %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d], %f*C[%d:%d,%d:%d]\n",
-			di, m, dj, n,
-			alpha, ai, m, aj, k,
-			bi, k, bj, n,
-			beta, ci, m, cj, n
-		);
-	}
-}
-
-
-void print_input_matrices(const char* routine, int m, int n, int k,
-						  struct STRMAT *sA, struct STRMAT_REF *rA,
-						  struct STRMAT *sB, struct STRMAT_REF *rB,
-						  struct STRMAT *sC, struct STRMAT_REF *rC,
-						  int ai, int aj, int bi, int bj, int ci, int cj)
+void print_input_matrices(
+	const char* routine, int m, int n, int k, struct STRMAT *sA, struct STRMAT_REF *rA,
+	struct STRMAT *sB, struct STRMAT_REF *rB, struct STRMAT *sC, struct STRMAT_REF *rC,
+	int ai, int aj, int bi, int bj, int ci, int cj)
 {
 	if (strcmp(routine, "blasfeo_dgemm_nn") == 0)
 	{
@@ -275,14 +320,11 @@ static void printbits(void *c, size_t n)
 	printf("\n");
 }
 
-
 // 1 to 1 comparison of every element
-int GECMP_LIBSTR(int m, int n, int bi, int bj,
-				 struct STRMAT *sB, struct STRMAT_REF *rB,
-				 struct STRMAT *sA, struct STRMAT_REF *rA,
-				 int* err_i, int* err_j,
-				 int debug
-				 )
+int GECMP_LIBSTR(
+	int m, int n, int bi, int bj,
+	struct STRMAT *sB, struct STRMAT_REF *rB, struct STRMAT *sA, struct STRMAT_REF *rA,
+	int* err_i, int* err_j, int debug)
 	{
 	int ii, jj;
 
