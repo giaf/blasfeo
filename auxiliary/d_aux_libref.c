@@ -44,9 +44,6 @@
 #define STRMAT blasfeo_dmat_ref
 #define STRVEC blasfeo_dvec_ref
 
-
-
-
 #define SIZE_STRMAT blasfeo_memsize_dmat_ref
 #define SIZE_DIAG_STRMAT blasfeo_memsize_diag_dmat_ref
 #define SIZE_STRVEC blasfeo_memsize_dvec_ref

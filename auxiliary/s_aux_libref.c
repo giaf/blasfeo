@@ -44,7 +44,6 @@
 #define STRMAT blasfeo_smat_ref
 #define STRVEC blasfeo_svec_ref
 
-
 #define SIZE_STRMAT blasfeo_memsize_smat_ref
 #define SIZE_DIAG_STRMAT blasfeo_memsize_diag_smat_ref
 #define SIZE_STRVEC blasfeo_memsize_svec_ref
@@ -62,6 +61,7 @@
 #define CAST_DIAG_MAT2STRMAT blasfeo_s_cast_diag_mat2strmat_ref
 #define CAST_VEC2VECMAT blasfeo_s_cast_vec2vecmat_ref
 
+#define GEAD_LIBSTR blasfeo_sgead_ref
 #define GECP_LIBSTR blasfeo_sgecp_ref
 #define GESC_LIBSTR blasfeo_sgesc_ref
 #define GECPSC_LIBSTR blasfeo_sgecpsc_ref

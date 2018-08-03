@@ -45,15 +45,19 @@ void blasfeo_create_smat_ref(int m, int n, struct blasfeo_smat_ref *sA, void *me
 void blasfeo_pack_smat_ref(int m, int n, float *A, int lda, struct blasfeo_smat_ref *sA, int ai, int aj);
 int blasfeo_memsize_smat_ref(int m, int n);
 
-void blasfeo_sgecp_ref(int m, int n,\
-					struct blasfeo_smat_ref *sA, int ai, int aj,\
-					struct blasfeo_smat_ref *sB, int bi, int bj);
-void blasfeo_sgesc_ref(int m, int n,\
+void blasfeo_sgead_ref(int m, int n,
 					float alpha,\
+					struct blasfeo_smat_ref *sA, int ai, int aj,
+					struct blasfeo_smat_ref *sB, int bi, int bj);
+void blasfeo_sgecp_ref(int m, int n,
+					struct blasfeo_smat_ref *sA, int ai, int aj,
+					struct blasfeo_smat_ref *sB, int bi, int bj);
+void blasfeo_sgesc_ref(int m, int n,
+					float alpha,
 					struct blasfeo_smat_ref *sA, int ai, int aj);
 void blasfeo_sgecpsc_ref(int m, int n,
-					float alpha,\
-					struct blasfeo_smat_ref *sA, int ai, int aj,\
+					float alpha,
+					struct blasfeo_smat_ref *sA, int ai, int aj,
 					struct blasfeo_smat_ref *sB, int bi, int bj);
 
 
