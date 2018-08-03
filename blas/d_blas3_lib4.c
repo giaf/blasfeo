@@ -1940,26 +1940,28 @@ void blasfeo_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 	if(m<=0 || n<=0)
 		return;
 
-	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
-		{
-		printf("\nblasfeo_dtrsm_rltn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
-		exit(1);
-		}
+	const int ps = 4;
 
 	// invalidate stored inverse diagonal of result matrix
 	sD->use_dA = 0;
-
-	const int ps = 4;
 
 	// TODO alpha !!!!!
 
 	int sda = sA->cn;
 	int sdb = sB->cn;
 	int sdd = sD->cn;
+	int bir = bi & (ps-1);
+	int dir = di & (ps-1);
 	double *pA = sA->pA + aj*ps;
-	double *pB = sB->pA + bj*ps;
-	double *pD = sD->pA + dj*ps;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
+	double *pD = sD->pA + dj*ps + (di-dir)*sdd;
 	double *dA = sA->dA;
+
+	if(ai!=0 | bir!=0 | dir!=0 | alpha!=1.0)
+		{
+		printf("\nblasfeo_dtrsm_rltn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
+		exit(1);
+		}
 
 	int i, j;
 
@@ -2034,6 +2036,26 @@ void blasfeo_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 			{
 			goto left_8;
 			}
+		}
+#elif defined(TARGET_X86_AMD_BARCELONA)
+	for(; i<m-3; i+=4)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nt_rl_inv_4x2_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], &dA[j]);
+			kernel_dtrsm_nt_rl_inv_4x2_lib4(j+2, &pD[i*sdd], &pA[j*sda+2], &pB[(j+2)*ps+i*sdb], &pD[(j+2)*ps+i*sdd], &pA[(j+2)*ps+j*sda+2], &dA[j+2]);
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nt_rl_inv_4x2_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+			if(j<n-2)
+				kernel_dtrsm_nt_rl_inv_4x2_vs_lib4(j+2, &pD[i*sdd], &pA[j*sda+2], &pB[(j+2)*ps+i*sdb], &pD[(j+2)*ps+i*sdd], &pA[(j+2)*ps+j*sda+2], &dA[j+2], m-i, n-(j+2));
+			}
+		}
+	if(m>i)
+		{
+		goto left_4;
 		}
 #else
 	for(; i<m-3; i+=4)
@@ -2113,6 +2135,18 @@ void blasfeo_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 		{
 		kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], &dA[j], m-i, n-j);
 		j += 4;
+		}
+	return;
+#elif defined(TARGET_X86_AMD_BARCELONA)
+	left_4:
+	j = 0;
+	for(; j<n; j+=4)
+		{
+		kernel_dtrsm_nt_rl_inv_4x2_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+		if(j<n-2)
+		{
+			kernel_dtrsm_nt_rl_inv_4x2_vs_lib4(j+2, &pD[i*sdd], &pA[j*sda+2], &pB[(j+2)*ps+i*sdb], &pD[(j+2)*ps+i*sdd], &pA[(j+2)*ps+j*sda+2], &dA[j+2], m-i, n-(j+2));
+			}
 		}
 	return;
 #else
