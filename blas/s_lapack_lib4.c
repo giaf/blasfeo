@@ -63,7 +63,7 @@ void ssyrk_spotrf_nt_l_lib(int m, int n, int k, float *pA, int sda, float *pB, i
 			}
 		if(j<n)
 			{
-			if(i<j) // dgemm
+			if(j<i) // dgemm
 				{
 				kernel_sgemm_strsm_nt_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
 				}
@@ -741,7 +741,7 @@ void blasfeo_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int cj, 
 			}
 		if(j<n)
 			{
-			if(i<j) // dtrsm
+			if(j<i) // dtrsm
 				{
 				kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &dD[j], m-i, n-j);
 				}
