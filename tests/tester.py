@@ -68,14 +68,16 @@ class CookBook:
         if self.SILENT: make_flags += " -s"
         flags = args["flags"]
 
-        print(f"\nTesting {flags['TARGET']}:{routine_name} ({self.DONE}/{self.TOTAL})\n")
+        print(f"\nTesting {flags['TARGET']}:{routine_name}\n")
 
         status = make(args["make_cmd"], flags, make_flags)
 
         if not status:
             print(f"Error with {flags['TARGET']}:{routine_name} ({self.DONE}/{self.TOTAL})")
+            return status
 
         self.DONE += 1
+        print(f"\nTested {flags['TARGET']}:{routine_name} ({self.DONE}/{self.TOTAL})\n")
 
         return status
 
