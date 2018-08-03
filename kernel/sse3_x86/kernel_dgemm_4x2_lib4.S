@@ -40,6 +40,7 @@
 #define ARG9  STACKSIZE + 36(%esp)
 #define ARG10 STACKSIZE + 40(%esp)
 #define ARG11 STACKSIZE + 44(%esp)
+#define ARG12 STACKSIZE + 48(%esp)
 
 #if 1
 
@@ -964,6 +965,60 @@ inner_edge_trsm_rlt_inv_4x2_lib4:
 
 // common inner routine with file scope
 //
+// triangular substitution for cholesky factorization 
+//
+// input arguments:
+// eax  <- E
+// ebx  <- inv_diag_E
+// ecx  <- kn
+// xmm0 <- [d00 d10]
+// xmm1 <- [d01 d11]
+// xmm2 <- [d20 d30]
+// xmm3 <- [d21 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRSM_RLT_INV_4X2_VS_LIB4
+#else
+	.align 16
+	.type inner_edge_trsm_rlt_inv_4x2_vs_lib4, @function
+inner_edge_trsm_rlt_inv_4x2_vs_lib4:
+#endif
+	
+	movddup			0(%ebx), %xmm7
+	mulpd			%xmm7, %xmm0
+	mulpd			%xmm7, %xmm2
+
+	cmpl			$2, %ecx
+	jl				0f // ret
+
+	movddup			8(%eax), %xmm7
+	movapd			%xmm7, %xmm6
+	mulpd			%xmm0, %xmm7
+	mulpd			%xmm2, %xmm6
+	subpd			%xmm7, %xmm1
+	subpd			%xmm6, %xmm3
+	movddup			8(%ebx), %xmm7
+	mulpd			%xmm7, %xmm1
+	mulpd			%xmm7, %xmm3
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_edge_trsm_rlt_inv_4x2_vs_lib4, .-inner_edge_trsm_rlt_inv_4x2_vs_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // blend for generic alpha and beta
 //
 // input arguments:
@@ -1840,11 +1895,12 @@ kernel_dtrsm_nt_rl_inv_4x2_vs_lib4:
 
 	movl	ARG6, %eax  // E 
 	movl	ARG7, %ebx  // inv_diag_E 
+	movl	ARG9, %ecx // n1
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_TRSM_RLT_INV_4X2_LIB4
+	INNER_EDGE_TRSM_RLT_INV_4X2_VS_LIB4
 #else
-	call inner_edge_trsm_rlt_inv_4x2_lib4
+	call inner_edge_trsm_rlt_inv_4x2_vs_lib4
 #endif
 
 
@@ -2018,6 +2074,371 @@ kernel_dpotrf_nt_l_4x2_vs_lib4:
 	ret
 
 	.size	kernel_dpotrf_nt_l_4x2_vs_lib4, .-kernel_dpotrf_nt_l_4x2_vs_lib4
+
+
+
+
+
+//                                            1       2           3           4       5           6           7          8          9          10
+// void kernel_dgemm_dtrsm_nt_rl_inv_4x2_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *E, double *inv_diag_E);
+
+	.align 16
+	.globl kernel_dgemm_dtrsm_nt_rl_inv_4x2_lib4
+	.type kernel_dgemm_dtrsm_nt_rl_inv_4x2_lib4, @function
+kernel_dgemm_dtrsm_nt_rl_inv_4x2_lib4:
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
+
+
+	// call inner dgemm kernel nt add
+
+	movl	ARG1, %eax // kp
+	movl	ARG2, %ebx  // Ap
+	movl	ARG3, %ecx  // Bp
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X2_LIB4
+#else
+	call inner_kernel_gemm_add_nt_4x2_lib4
+#endif
+
+
+	// call inner dgemm kernel nt sub
+
+	movl	ARG4, %eax // km
+	movl	ARG5, %ebx   // Am
+	movl	ARG6, %ecx   // Bm
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_SUB_NT_4X2_LIB4
+#else
+	call inner_kernel_gemm_sub_nt_4x2_lib4
+#endif
+
+
+	// call inner blender_loader nn
+
+	movl	ARG7, %eax   // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_11_4X2_LIB4
+#else
+	call inner_scale_11_4x2_lib4
+#endif
+
+
+	// solve
+
+	movl	ARG9, %eax  // E 
+	movl	ARG10, %ebx  // inv_diag_E 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRSM_RLT_INV_4X2_LIB4
+#else
+	call inner_edge_trsm_rlt_inv_4x2_lib4
+#endif
+
+
+	// store
+
+	movl	ARG8, %eax   // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X2_LIB4
+#else
+	call inner_store_4x2_lib4
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dgemm_dtrsm_nt_rl_inv_4x2_lib4, .-kernel_dgemm_dtrsm_nt_rl_inv_4x2_lib4
+#endif
+
+
+
+
+
+//                                               1       2           3           4       5           6           7          8          9          10                  11      12
+// void kernel_dgemm_dtrsm_nt_rl_inv_4x2_vs_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *E, double *inv_diag_E, int km, int kn);
+
+	.align 16
+	.globl kernel_dgemm_dtrsm_nt_rl_inv_4x2_vs_lib4
+	.type kernel_dgemm_dtrsm_nt_rl_inv_4x2_vs_lib4, @function
+kernel_dgemm_dtrsm_nt_rl_inv_4x2_vs_lib4:
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
+
+
+	// call inner dgemm kernel nt add
+
+	movl	ARG1, %eax // kp
+	movl	ARG2, %ebx  // Ap
+	movl	ARG3, %ecx  // Bp
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X2_LIB4
+#else
+	call inner_kernel_gemm_add_nt_4x2_lib4
+#endif
+
+
+	// call inner dgemm kernel nt sub
+
+	movl	ARG4, %eax // km
+	movl	ARG5, %ebx   // Am
+	movl	ARG6, %ecx   // Bm
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_SUB_NT_4X2_LIB4
+#else
+	call inner_kernel_gemm_sub_nt_4x2_lib4
+#endif
+
+
+	// call inner blender_loader nn
+
+	movl	ARG7, %eax  // C 
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_11_4X2_LIB4
+#else
+	call inner_scale_11_4x2_lib4
+#endif
+
+
+	// solve
+
+	movl	ARG9, %eax  // E 
+	movl	ARG10, %ebx  // inv_diag_E 
+	movl	ARG12, %ecx // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRSM_RLT_INV_4X2_VS_LIB4
+#else
+	call inner_edge_trsm_rlt_inv_4x2_vs_lib4
+#endif
+
+
+	// store
+
+	movl	ARG8, %eax // D 
+	movl	ARG11, %ebx // km 
+	movl	ARG12, %ecx // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X2_VS_LIB4
+#else
+	call inner_store_4x2_vs_lib4
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dgemm_dtrsm_nt_rl_inv_4x2_vs_lib4, .-kernel_dgemm_dtrsm_nt_rl_inv_4x2_vs_lib4
+#endif
+
+
+
+
+
+//                                        1       2           3           4       5           6           7          8          9
+// void kernel_dsyrk_dpotrf_nt_l_4x2_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *inv_diag_D);
+
+	.align 16
+	.globl kernel_dsyrk_dpotrf_nt_l_4x2_lib4
+	.type kernel_dsyrk_dpotrf_nt_l_4x2_lib4, @function
+kernel_dsyrk_dpotrf_nt_l_4x2_lib4:
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
+
+
+	// call inner dgemm kernel nt add
+
+	movl	ARG1, %eax // kp
+	movl	ARG2, %ebx  // Ap
+	movl	ARG3, %ecx  // Bp
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X2_LIB4
+#else
+	call inner_kernel_gemm_add_nt_4x2_lib4
+#endif
+
+
+	// call inner dgemm kernel nt sub
+
+	movl	ARG4, %eax // km
+	movl	ARG5, %ebx   // Am
+	movl	ARG6, %ecx   // Bm
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_SUB_NT_4X2_LIB4
+#else
+	call inner_kernel_gemm_sub_nt_4x2_lib4
+#endif
+
+
+	// call inner blender_loader nn
+
+	movl	ARG7, %eax   // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_11_4X2_LIB4
+#else
+	call inner_scale_11_4x2_lib4
+#endif
+
+
+	// factorization
+
+	movl	ARG9, %eax  // inv_diag_D 
+	movl	$4, %ebx
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_POTRF_4X2_VS_LIB4
+#else
+	call inner_edge_potrf_4x2_vs_lib4
+#endif
+
+
+	// store
+
+	movl	ARG8, %eax  // D 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X2_LIB4
+#else
+	call inner_store_l_4x2_lib4
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dsyrk_dpotrf_nt_l_4x2_lib4, .-kernel_dsyrk_dpotrf_nt_l_4x2_lib4
+#endif
+
+
+
+
+
+//                                           1       2           3           4       5           6           7          8          9                   10      11
+// void kernel_dsyrk_dpotrf_nt_l_4x2_vs_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *inv_diag_D, int km, int kn);
+
+	.align 16
+	.globl kernel_dsyrk_dpotrf_nt_l_4x2_vs_lib4
+	.type kernel_dsyrk_dpotrf_nt_l_4x2_vs_lib4, @function
+kernel_dsyrk_dpotrf_nt_l_4x2_vs_lib4:
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
+
+
+	// call inner dgemm kernel nt add
+
+	movl	ARG1, %eax // kp
+	movl	ARG2, %ebx  // Ap
+	movl	ARG3, %ecx  // Bp
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X2_LIB4
+#else
+	call inner_kernel_gemm_add_nt_4x2_lib4
+#endif
+
+
+	// call inner dgemm kernel nt sub
+
+	movl	ARG4, %eax // km
+	movl	ARG5, %ebx   // Am
+	movl	ARG6, %ecx   // Bm
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_SUB_NT_4X2_LIB4
+#else
+	call inner_kernel_gemm_sub_nt_4x2_lib4
+#endif
+
+
+	// call inner blender_loader nn
+
+	movl	ARG7, %eax   // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_11_4X2_LIB4
+#else
+	call inner_scale_11_4x2_lib4
+#endif
+
+
+	// factorization
+
+	movl	ARG9, %eax  // inv_diag_D 
+	movl	ARG11, %ebx // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_POTRF_4X2_VS_LIB4
+#else
+	call inner_edge_potrf_4x2_vs_lib4
+#endif
+
+
+	// store
+
+	movl	ARG8, %eax  // D 
+	movl	ARG10, %ebx // km 
+	movl	ARG11, %ecx // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X2_VS_LIB4
+#else
+	call inner_store_l_4x2_vs_lib4
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dsyrk_dpotrf_nt_l_4x2_vs_lib4, .-kernel_dsyrk_dpotrf_nt_l_4x2_vs_lib4
+#endif
 
 
 
