@@ -1120,7 +1120,7 @@ void blasfeo_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, 
 
 
 // dsyrk dpotrf
-void blasfeo_dsyrk_dpotrf_ln(int m, int n, int k, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_dsyrk_dpotrf_ln_mn(int m, int n, int k, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)
@@ -1128,7 +1128,7 @@ void blasfeo_dsyrk_dpotrf_ln(int m, int n, int k, struct blasfeo_dmat *sA, int a
 
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
-		printf("\nblasfeo_dsyrk_dpotrf_ln: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
+		printf("\nblasfeo_dsyrk_dpotrf_ln_mn: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
 		}
 
@@ -1393,6 +1393,14 @@ void blasfeo_dsyrk_dpotrf_ln(int m, int n, int k, struct blasfeo_dmat *sA, int a
 
 	return;
 
+	}
+
+
+
+void blasfeo_dsyrk_dpotrf_ln(int m, int k, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	blasfeo_dsyrk_dpotrf_ln_mn(m, m, k, sA, ai, aj, sB, bi, bj, sC, ci, cj, sD, di, dj);
+	return;
 	}
 
 

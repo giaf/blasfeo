@@ -793,7 +793,34 @@ void blasfeo_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int cj, 
 
 
 // dsyrk dpotrf
-void blasfeo_ssyrk_spotrf_ln(int m, int n, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+void blasfeo_ssyrk_spotrf_ln(int m, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
+		{
+		printf("\nblasfeo_ssyrk_spotrf_ln: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	float *pA = sA->pA + aj*bs;
+	float *pB = sB->pA + bj*bs;
+	float *pC = sC->pA + cj*bs;
+	float *pD = sD->pA + dj*bs;
+	float *dD = sD->dA; // XXX what to do if di and dj are not zero
+	ssyrk_spotrf_nt_l_lib(m, m, k, pA, sda, pB, sdb, pC, sdc, pD, sdd, dD);
+	if(di==0 && dj==0)
+		sD->use_dA = 1;
+	else
+		sD->use_dA = 0;
+	return;
+	}
+
+
+
+void blasfeo_ssyrk_spotrf_ln_mn(int m, int n, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
