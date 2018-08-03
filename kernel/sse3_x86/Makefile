@@ -35,6 +35,7 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 ifeq ($(TARGET), X86_AMD_BARCELONA)
 OBJS += \
 		kernel_dgemm_4x2_lib4.o \
+		kernel_dgemm_2x2_lib4.o \
 		kernel_dgemv_4_lib4.o \
 #		\
 		kernel_sgemm_4x4_lib4.o \

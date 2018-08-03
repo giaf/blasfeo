@@ -298,6 +298,7 @@ OBJS += \
 # kernels
 OBJS += \
 		kernel/sse3_x86/kernel_dgemm_4x2_lib4.o \
+		kernel/sse3_x86/kernel_dgemm_2x2_lib4.o \
 		kernel/sse3_x86/kernel_dgemv_4_lib4.o \
 		kernel/c99/kernel_dgemm_4x4_lib4.o \
 		kernel/c99/kernel_dgemm_diag_lib4.o \

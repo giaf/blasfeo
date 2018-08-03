@@ -1057,7 +1057,6 @@ inner_store_4x2_vs_lib4:
 	cmpl		$2, %ecx
 	jl			4f // end
 	movsd		%xmm1, 32(%eax)
-	je			4f // end
 
 	jmp		4f
 
@@ -1067,7 +1066,6 @@ inner_store_4x2_vs_lib4:
 	cmpl		$2, %ecx
 	jl			4f // end
 	movapd		%xmm1, 32(%eax)
-	je			4f // end
 
 	jmp		4f
 
@@ -1082,7 +1080,6 @@ inner_store_4x2_vs_lib4:
 	jl			4f // end
 	movapd		%xmm1,  32(%eax)
 	movsd		%xmm3,  48(%eax)
-	je			4f // end
 
 	jmp		4f
 
@@ -1094,7 +1091,6 @@ inner_store_4x2_vs_lib4:
 	jl			4f // end
 	movapd		%xmm1,  32(%eax)
 	movapd		%xmm3,  48(%eax)
-	je			4f // end
 
 4:
 
@@ -1106,6 +1102,124 @@ inner_store_4x2_vs_lib4:
 	ret
 
 	.size	inner_store_4x2_vs_lib4, .-inner_store_4x2_vs_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// store n
+//
+// input arguments:
+// eax  <- D
+// xmm0 <- [d00 d10]
+// xmm1 <- [d01 d11]
+// xmm2 <- [d20 d30]
+// xmm3 <- [d21 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_L_4X2_LIB4
+#else
+	.align 16
+	.type inner_store_l_4x2_lib4, @function
+inner_store_l_4x2_lib4:
+#endif
+
+	movapd	%xmm0,  0(%eax)
+	movapd	%xmm2, 16(%eax)
+	movhpd	%xmm1, 40(%eax)
+	movapd	%xmm3, 48(%eax)
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_store_l_4x2_lib4, .-inner_store_l_4x2_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// store n
+//
+// input arguments:
+// eax  <- D
+// ebx  <- m1
+// ecx  <- n1
+// xmm0 <- [d00 d10]
+// xmm1 <- [d01 d11]
+// xmm2 <- [d20 d30]
+// xmm3 <- [d21 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_L_4X2_VS_LIB4
+#else
+	.align 16
+	.type inner_store_l_4x2_vs_lib4, @function
+inner_store_l_4x2_vs_lib4:
+#endif
+
+	cmpl		$2, %ebx
+	jg			1f
+	je			0f
+
+	// km==1
+	movsd		%xmm0,  0(%eax)
+
+	jmp		4f
+
+0:
+	// km==2
+	movapd		%xmm0,  0(%eax)
+	cmpl		$2, %ecx
+	jl			4f // end
+	movhpd		%xmm1, 40(%eax)
+
+	jmp		4f
+
+1:
+	cmpl		$3, %ebx
+	jg			2f
+
+	// km==3
+	movapd		%xmm0,   0(%eax)
+	movsd		%xmm2,  16(%eax)
+	cmpl		$2, %ecx
+	jl			4f // end
+	movhpd		%xmm1,  40(%eax)
+	movsd		%xmm3,  48(%eax)
+
+	jmp		4f
+
+2:
+	// km==4
+	movapd		%xmm0,   0(%eax)
+	movapd		%xmm2,  16(%eax)
+	cmpl		$2, %ecx
+	jl			4f // end
+	movhpd		%xmm1,  40(%eax)
+	movapd		%xmm3,  48(%eax)
+
+4:
+
+
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_store_l_4x2_vs_lib4, .-inner_store_l_4x2_vs_lib4
 #endif
 
 
@@ -1387,6 +1501,136 @@ kernel_dgemm_nn_4x2_vs_lib4:
 	ret
 
 	.size	kernel_dgemm_nn_4x2_vs_lib4, .-kernel_dgemm_nn_4x2_vs_lib4
+
+
+
+
+
+//                                 1      2              3          4          5             6          7
+// void kernel_dsyrk_nt_l_4x2_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D);
+
+	.align 16
+	.globl kernel_dsyrk_nt_l_4x2_lib4
+	.type kernel_dsyrk_nt_l_4x2_lib4, @function
+kernel_dsyrk_nt_l_4x2_lib4:
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
+
+
+	// call inner gemm kernel nt
+
+	movl	ARG1, %eax // k
+	movl	ARG3, %ebx  // A
+	movl	ARG4, %ecx  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X2_LIB4
+#else
+	call inner_kernel_gemm_add_nt_4x2_lib4
+#endif
+
+
+	// call inner blend scale
+
+	movl	ARG2, %eax // alpha
+	movl	ARG5, %ebx // beta
+	movl	ARG6, %ecx   // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X2_LIB4
+#else
+	call inner_scale_ab_4x2_lib4
+#endif
+
+
+	// store n
+
+	movl	ARG7, %eax // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X2_LIB4
+#else
+	call inner_store_l_4x2_lib4
+#endif
+
+	EPILOGUE
+
+	ret
+
+	.size	kernel_dsyrk_nt_l_4x2_lib4, .-kernel_dsyrk_nt_l_4x2_lib4
+
+
+
+
+
+//                                    1      2              3          4          5             6          7          8       9
+// void kernel_dsyrk_nt_l_4x2_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int m1, int n1);
+
+	.align 16
+	.globl kernel_dsyrk_nt_l_4x2_vs_lib4
+	.type kernel_dsyrk_nt_l_4x2_vs_lib4, @function
+kernel_dsyrk_nt_l_4x2_vs_lib4:
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+	movapd	%xmm0, %xmm2
+	movapd	%xmm0, %xmm3
+
+
+	// call inner gemm kernel nt
+
+	movl	ARG1, %eax // k
+	movl	ARG3, %ebx  // A
+	movl	ARG4, %ecx  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X2_LIB4
+#else
+	call inner_kernel_gemm_add_nt_4x2_lib4
+#endif
+
+
+	// call inner blend scale
+
+	movl	ARG2, %eax // alpha
+	movl	ARG5, %ebx // beta
+	movl	ARG6, %ecx   // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X2_LIB4
+#else
+	call inner_scale_ab_4x2_lib4
+#endif
+
+
+	// store n
+
+	movl	ARG7, %eax // D
+	movl	ARG8, %ebx // m1
+	movl	ARG9, %ecx // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X2_VS_LIB4
+#else
+	call inner_store_l_4x2_vs_lib4
+#endif
+
+	EPILOGUE
+
+	ret
+
+	.size	kernel_dsyrk_nt_l_4x2_vs_lib4, .-kernel_dsyrk_nt_l_4x2_vs_lib4
 
 
 

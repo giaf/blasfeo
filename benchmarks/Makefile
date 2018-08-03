@@ -112,6 +112,22 @@ run_dgemm_nn:
 	./$(BINARY_DIR)/dgemm_nn_benchmark.out > ./$(BINARY_DIR)/data/dgemm_nn.m
 
 
+# dsyrk_ln
+
+BLAS_OBJS += dsyrk_ln
+RUN_BLAS_OBJS += run_dsyrk_ln
+
+dsyrk_ln: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dsyrk_ln_benchmark.o -DDOUBLE_PRECISION -DSYRK_LN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dsyrk_ln_benchmark.o -o $(BINARY_DIR)/dsyrk_ln_benchmark.out $(LIBS)
+
+run_dsyrk_ln:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dsyrk_ln
+	./$(BINARY_DIR)/dsyrk_ln_benchmark.out > ./$(BINARY_DIR)/data/dsyrk_ln.m
+
+
 # dpotrf_l
 
 BLAS_OBJS += dpotrf_l
@@ -192,6 +208,22 @@ run_sgemm_nn:
 	./$(BINARY_DIR)/sgemm_nn_benchmark.out > ./$(BINARY_DIR)/data/sgemm_nn.m
 
 
+# ssyrk_ln
+
+BLAS_OBJS += ssyrk_ln
+RUN_BLAS_OBJS += run_ssyrk_ln
+
+ssyrk_ln: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/ssyrk_ln_benchmark.o -DSINGLE_PRECISION -DSYRK_LN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/ssyrk_ln_benchmark.o -o $(BINARY_DIR)/ssyrk_ln_benchmark.out $(LIBS)
+
+run_ssyrk_ln:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking ssyrk_ln
+	./$(BINARY_DIR)/ssyrk_ln_benchmark.out > ./$(BINARY_DIR)/data/ssyrk_ln.m
+
+
 # spotrf_l
 
 BLAS_OBJS += spotrf_l
@@ -246,9 +278,11 @@ print_figures:
 	cp print_blas_benchmark.m ./$(BINARY_DIR)/data/
 	cd ./$(BINARY_DIR)/data/ ; octave-cli print_blas_benchmark.m
 	cd ./$(BINARY_DIR)/data/ ; epstopdf dgemm.eps -out dgemm.pdf ; rm dgemm.eps
+	cd ./$(BINARY_DIR)/data/ ; epstopdf dsyrk.eps -out dsyrk.pdf ; rm dsyrk.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf dpotrf.eps -out dpotrf.pdf ; rm dpotrf.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf dgemv.eps -out dgemv.pdf ; rm dgemv.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf sgemm.eps -out sgemm.pdf ; rm sgemm.eps
+	cd ./$(BINARY_DIR)/data/ ; epstopdf ssyrk.eps -out sgemm.pdf ; rm ssyrk.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf spotrf.eps -out spotrf.pdf ; rm spotrf.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf sgemv.eps -out sgemv.pdf ; rm sgemv.eps
 
