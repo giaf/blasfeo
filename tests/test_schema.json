@@ -1,44 +1,80 @@
 {
-  "target":[
-    "X64_AMD_BULLDOZER",
-    "ARMV8A_ARM_CORTEX_A57",
-    "ARMV7A_ARM_CORTEX_A15",
-    "GENERIC",
-    "X64_INTEL_CORE",
-    "X64_INTEL_SANDY_BRIDGE",
-    "X64_INTEL_HASWELL"
-  ],
-  "la":
-  [
-    "HIGH_PERFORMANCE",
-    "REFERENCE",
-    "BLASF_WRAPPER"
-  ],
-  "ref_blas":
-  {
-    "OPEN_BLAS",
-    "BLIS",
-    "MKL",
-    "NETLIB",
-    "ATLAS"
+  "target": {
+    "type": "list",
+    "values":[
+       "X64_AMD_BULLDOZER",
+       "ARMV8A_ARM_CORTEX_A57",
+       "ARMV7A_ARM_CORTEX_A15",
+       "GENERIC",
+       "X64_INTEL_CORE",
+       "X64_INTEL_SANDY_BRIDGE",
+       "X64_INTEL_HASWELL"
+      ],
+      "default":["X64_INTEL_SANDY_BRIDGE"]
   },
-  "verbose": [0,1,2,3],
-  "build_libs": [0, 1],
-  "deploy_libs": [0, 1],
-  "precision":["d", "s"],
-  "min_kernel_sizes":["2x2", "4x4"],
-  "classes":{"aux", "blas3", "blas2", "ext_dep","others"},
+  "la": {
+    "type": "list",
+    "values":[
+      "HIGH_PERFORMANCE",
+      "REFERENCE",
+      "BLASF_WRAPPER"],
+    "default": ["HIGH_PERFORMANCE"]
+  },
+  "ref_blas": {
+    "type": "string",
+    "values":[
+      "OPEN_BLAS",
+      "BLIS",
+      "MKL",
+      "NETLIB",
+      "ATLAS"
+    ],
+    "default":"OPEN_BLAS"
+  },
+  "verbose": {
+    "values": [0,1,2,3],
+    "default":1
+  },
+  "build_lib": {
+    "default":1
+  },
+  "deploy_libs": {
+    "values": [0, 1],
+    "default":1
+  },
+  "precision":{
+    "type": "list",
+    "values": ["d", "s"],
+    "default":["d", "s"]
+  },
+  "min_kernel_sizes":{
+    "type": "list",
+    "values": ["2x2", "4x4"],
+    "default":["2x2"]
+  },
+  "classes":[
+    "aux", "blas3", "blas2", "ext_dep","others"],
   "routines":{
+    "blas1":{
+      "AXY":[
+        "axpy"
+      ]
+    },
+    "blas2":{
+      "GEMV":[
+        "gemv"
+      ]
+    },
     "blas3":{
-      "GEMM":{
+      "GEMM":[
         "gemm_nn",
         "gemm_nt",
         "syrk_ln_mn"
-      },
-      "SYRK":{
+      ],
+      "SYRK":[
         "syrk_ln"
-      },
-      "TRM":{
+      ],
+      "TRM":[
         "trsm_llnu",
         "trsm_rltu",
         "trsm_rltn",
@@ -46,8 +82,19 @@
         "trmm_rutn",
         "trmm_rlnn",
         "trsm_lunn"
-      },
-      "aux":{
+      ]
+    },
+    "aux":{
+      "1ARGS":[
+        "gesc"
+      ],
+      "2ARGS":[
+        "gecp"
+      ],
+      "3ARGS":[
+        "gead",
+        "gecpsc"
+      ]
     }
   }
 }
