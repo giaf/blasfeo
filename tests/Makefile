@@ -59,8 +59,6 @@ endif
 
 ifdef ROUTINE
 CFLAGS += -DROUTINE=$(ROUTINE)
-else
-CFLAGS += -DROUTINE=blasfeo_dgemm_nn
 endif
 
 ifndef ROUTINE_CLASS
@@ -88,17 +86,24 @@ ONE_OBJS = test_d_custom.o
 # auxiliary test
 AUX_OBJS =
 AUX_OBJS += test_d_aux.o
-AUX_OBJS += test_s_aux.o
+# AUX_OBJS += test_s_aux.o
 
 # blas test
 BLAS_OBJS =
 BLAS_OBJS += test_d_blas3.o
 BLAS_OBJS += test_s_blas3.o
 
+DBLAS_OBJS += test_d_blas3.o
+SBLAS_OBJS += test_s_blas3.o
+
 test_%.o: test_%.c
+	#
 	# build executable obj $(BINARY_DIR)/$@
+	#
 	$(CC) $(CFLAGS) -Wall -c $< -o $(BINARY_DIR)/$@
+	#
 	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ -o $(BINARY_DIR)/$@.out $(LIBS)
+	#
 
 # ----------- Targets
 
@@ -130,23 +135,29 @@ build_aux: $(AUX_OBJS)
 
 run_daux:
 	./$(BINARY_DIR)/test_d_aux.o.out
+	#
 
 run_saux:
 	./$(BINARY_DIR)/test_s_aux.o.out
+	#
 
 run_dblas3:
 	./$(BINARY_DIR)/test_d_blas3.o.out
+	#
 
 run_sblas3:
 	./$(BINARY_DIR)/test_s_blas3.o.out
+	#
 
-update_dblas3: build_blas run_dblas3
-update_sblas3: build_blas run_sblas3
+update_dblas3: $(DBLAS_OBJS) run_dblas3
+update_sblas3: $(SBLAS_OBJS) run_sblas3
+
 update_daux: build_aux run_daux
 update_saux: build_aux run_saux
 
 full_update_dblas3: blas run_dblas3
 full_update_sblas3: blas run_sblas3
+
 full_update_daux: aux run_daux
 full_update_saux: aux run_saux
 
