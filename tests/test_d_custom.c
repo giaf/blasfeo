@@ -205,12 +205,14 @@ int main()
 
 
 
-#if 0
+#if 1
 	// potrf
 	alpha = 1.0;
 	beta = 1.0;
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
-	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ln(n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_dsyrk_ln_mn(n, n-1, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	blasfeo_dpotrf_l(n, &sD, 0, 0, &sD, 0, 0);
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
@@ -219,7 +221,7 @@ int main()
 
 
 
-#if 1
+#if 0
 	// gemm_nt
 	alpha = 1.0;
 	beta = 0.0;
@@ -250,7 +252,7 @@ int main()
 
 //	kernel_dgemm_nn_4x4_lib4(4, &alpha, sB.pA, 0, sA.pA, sA.cn, &beta, sA.pA, sD.pA);
 
-	blasfeo_dgemm_nn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_nn(5, 5, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	return 0;
@@ -259,12 +261,12 @@ int main()
 #if 0
 	// gemv_n
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
-	blasfeo_dgemv_n(3, 3, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
+	blasfeo_dgemv_n(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	return 0;
 #endif
 
-#if 1
+#if 0
 	// gemv_t
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);

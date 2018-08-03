@@ -7272,7 +7272,7 @@ kernel_dtrmm_nt_ru_4x4_vs_lib4:
 
 
 
-//                                  edi    rsi        rdx        ecx        r8         r9
+//                                  1      2          3          4          5          6
 // void kernel_dpotrf_nt_l_4x4_lib4(int k, double *A, double *B, double *C, double *D, double *inv_diag_D);
 
 	.p2align 4,,15

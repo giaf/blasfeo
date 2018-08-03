@@ -26,6 +26,25 @@ grid on
 file_name = ['dgemm.eps'];
 print(f1, file_name, '-depsc') 
 
+% SYRK
+
+dsyrk_ln
+save -mat dsyrk_ln.mat A B
+
+Gflops_max = A(1)*A(2);
+
+f1 = figure();
+plot(B(:,1), B(:,2), 'r');
+
+axis([0 300 0 Gflops_max]);
+legend('dsyrk\_ln', 'Location', 'SouthEast');
+xlabel('matrix size n')
+ylabel('Gflops')
+grid on
+
+file_name = ['dsyrk.eps'];
+print(f1, file_name, '-depsc') 
+
 % DPOTRF
 
 dpotrf_l
@@ -95,6 +114,25 @@ ylabel('Gflops')
 grid on
 
 file_name = ['sgemm.eps'];
+print(f1, file_name, '-depsc') 
+
+% SSYRK
+
+ssyrk_ln
+save -mat ssyrk_ln.mat A B
+
+Gflops_max = A(1)*A(2);
+
+f1 = figure();
+plot(B(:,1), B(:,2), 'r');
+
+axis([0 300 0 Gflops_max]);
+legend('ssyrk\_ln', 'Location', 'SouthEast');
+xlabel('matrix size n')
+ylabel('Gflops')
+grid on
+
+file_name = ['ssyrk.eps'];
 print(f1, file_name, '-depsc') 
 
 % SPOTRF
