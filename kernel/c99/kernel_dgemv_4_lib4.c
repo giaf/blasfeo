@@ -28,6 +28,10 @@
 
 
 
+#include "../../include/blasfeo_d_kernel.h"
+
+
+
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 void kernel_dgemv_n_4_gen_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z, int k0, int k1)
 	{
@@ -555,94 +559,33 @@ void kernel_dtrsv_lt_inv_4_lib4(int kmax, double *A, int sda, double *inv_diag_A
 
 	const int bs = 4;
 	
-	int
-		k;
+	int k;
 	
-	double *tA, *tx;
-	tA = A;
-	tx = x;
-
-	double
-		x_0, x_1, x_2, x_3,
-		y_0=0, y_1=0, y_2=0, y_3=0;
+	double yy[4] = {0, 0, 0, 0};
 	
-	k=4;
-	A += 4 + (sda-1)*bs;
-	x += 4;
-	for(; k<kmax-3; k+=4)
-		{
-		
-		x_0 = x[0];
-		x_1 = x[1];
-		x_2 = x[2];
-		x_3 = x[3];
-		
-		y_0 -= A[0+bs*0] * x_0;
-		y_1 -= A[0+bs*1] * x_0;
-		y_2 -= A[0+bs*2] * x_0;
-		y_3 -= A[0+bs*3] * x_0;
-
-		y_0 -= A[1+bs*0] * x_1;
-		y_1 -= A[1+bs*1] * x_1;
-		y_2 -= A[1+bs*2] * x_1;
-		y_3 -= A[1+bs*3] * x_1;
-		
-		y_0 -= A[2+bs*0] * x_2;
-		y_1 -= A[2+bs*1] * x_2;
-		y_2 -= A[2+bs*2] * x_2;
-		y_3 -= A[2+bs*3] * x_2;
-
-		y_0 -= A[3+bs*0] * x_3;
-		y_1 -= A[3+bs*1] * x_3;
-		y_2 -= A[3+bs*2] * x_3;
-		y_3 -= A[3+bs*3] * x_3;
-		
-		A += sda*bs;
-		x += 4;
-
-		}
-	for(; k<kmax; k++)
-		{
-		
-		x_0 = x[0];
-		
-		y_0 -= A[0+bs*0] * x_0;
-		y_1 -= A[0+bs*1] * x_0;
-		y_2 -= A[0+bs*2] * x_0;
-		y_3 -= A[0+bs*3] * x_0;
-		
-		A += 1;//sda*bs;
-		x += 1;
-
-		}
-	
-	y_0 = y[0] + y_0;
-	y_1 = y[1] + y_1;
-	y_2 = y[2] + y_2;
-	y_3 = y[3] + y_3;
-
-	A = tA;
-	x = tx;
+	double alpha = -1.0;
+	double beta = 1.0;
+	kernel_dgemv_t_4_lib4(kmax-4, &alpha, A+sda*bs, sda, x+4, &beta, y, yy);
 
 	// bottom trinagle
-	y_3 *= inv_diag_A[3];
-	z[3] = y_3;
+	yy[3] *= inv_diag_A[3];
+	z[3] = yy[3];
 
-	y_2 -= A[3+bs*2] * y_3;
-	y_2 *= inv_diag_A[2];
-	z[2] = y_2;
+	yy[2] -= A[3+bs*2] * yy[3];
+	yy[2] *= inv_diag_A[2];
+	z[2] = yy[2];
 
 	// square
-	y_0 -= A[2+bs*0]*y_2 + A[3+bs*0]*y_3;
-	y_1 -= A[2+bs*1]*y_2 + A[3+bs*1]*y_3;
+	yy[0] -= A[2+bs*0]*yy[2] + A[3+bs*0]*yy[3];
+	yy[1] -= A[2+bs*1]*yy[2] + A[3+bs*1]*yy[3];
 		
 	// top trinagle
-	y_1 *= inv_diag_A[1];
-	z[1] = y_1;
+	yy[1] *= inv_diag_A[1];
+	z[1] = yy[1];
 
-	y_0 -= A[1+bs*0] * y_1;
-	y_0 *= inv_diag_A[0];
-	z[0] = y_0;
+	yy[0] -= A[1+bs*0] * yy[1];
+	yy[0] *= inv_diag_A[0];
+	z[0] = yy[0];
 
 	}
 #endif
