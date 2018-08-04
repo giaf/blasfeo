@@ -2318,8 +2318,6 @@ void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, int
 			for(; jj<n; jj+=4)
 				{
 				kernel_dtrmm_nn_rl_12x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd, 12, n-jj);
-//				kernel_dtrmm_nn_rl_8x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd, 8, n-jj);
-//				kernel_dtrmm_nn_rl_4x4_gen_lib4(n-jj, &alpha, &pA[(ii+8)*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, 0, &pD[(ii+8)*sdd+jj*ps], sdd, 0, 4, 0, n-jj);
 				}
 			}
 		if(ii<m)
@@ -2329,7 +2327,7 @@ void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, int
 			else if(ii<m-4)
 				goto left_8;
 			else
-				goto left_4_gen;
+				goto left_4;
 			}
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		for(; ii<m-7; ii+=8)
@@ -2341,15 +2339,15 @@ void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, int
 				}
 			for(; jj<n; jj+=4)
 				{
-				kernel_dtrmm_nn_rl_8x4_gen_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, 0, &pD[ii*sdd+jj*ps], sdd, 0, 8, 0, n-jj);
+				kernel_dtrmm_nn_rl_8x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd, 8, n-jj);
 				}
 			}
 		if(ii<m)
 			{
 			if(ii<m-4)
-				goto left_8_gen;
+				goto left_8;
 			else
-				goto left_4_gen;
+				goto left_4;
 			}
 #else
 		for(; ii<m-3; ii+=4)
@@ -2361,12 +2359,12 @@ void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, int
 				}
 			for(; jj<n; jj+=4)
 				{
-				kernel_dtrmm_nn_rl_4x4_gen_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, 0, &pD[ii*sdd+jj*ps], sdd, 0, 4, 0, n-jj);
+				kernel_dtrmm_nn_rl_4x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], 4, n-jj);
 				}
 			}
 		if(ii<m)
 			{
-			goto left_4_gen;
+			goto left_4;
 			}
 #endif
 		}
@@ -2412,7 +2410,7 @@ void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, int
 	return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	left_8:
 	jj = 0;
 	for(; jj<n; jj+=4)
@@ -2431,6 +2429,14 @@ void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, int
 		}
 	return;
 #endif
+
+	left_4:
+	jj = 0;
+	for(; jj<n; jj+=4)
+		{
+		kernel_dtrmm_nn_rl_4x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], m-ii, n-jj);
+		}
+	return;
 
 	left_4_gen:
 	jj = 0;

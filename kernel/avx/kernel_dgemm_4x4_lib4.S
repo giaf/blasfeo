@@ -2072,17 +2072,17 @@ inner_edge_dtrmm_nn_rl_4x4_lib4:
 
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DTRMM_NN_RL_4X4_GEN_LIB4
+	.macro INNER_EDGE_DTRMM_NN_RL_4X4_VS_LIB4
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_edge_dtrmm_nn_rl_4x4_gen_lib4, @function
-inner_edge_dtrmm_nn_rl_4x4_gen_lib4:
+	.type inner_edge_dtrmm_nn_rl_4x4_vs_lib4, @function
+inner_edge_dtrmm_nn_rl_4x4_vs_lib4:
 #elif defined(OS_MAC)
-_inner_edge_dtrmm_nn_rl_4x4_gen_lib4:
+_inner_edge_dtrmm_nn_rl_4x4_vs_lib4:
 #elif defined(OS_WINDOWS)
-	.def inner_edge_dtrmm_nn_rl_4x4_gen_lib4; .scl 2; .type 32; .endef
-inner_edge_dtrmm_nn_rl_4x4_gen_lib4:
+	.def inner_edge_dtrmm_nn_rl_4x4_vs_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrmm_nn_rl_4x4_vs_lib4:
 #endif
 #endif
 
@@ -2426,7 +2426,7 @@ inner_edge_dtrmm_nn_rl_4x4_gen_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_dtrmm_nn_rl_4x4_gen_lib4, .-inner_edge_dtrmm_nn_rl_4x4_gen_lib4
+	.size	inner_edge_dtrmm_nn_rl_4x4_vs_lib4, .-inner_edge_dtrmm_nn_rl_4x4_vs_lib4
 #endif
 #endif
 
@@ -6921,6 +6921,109 @@ kernel_dtrmm_nn_rl_4x4_lib4:
 
 
 
+//                                     1      2              3          4            5          6        7          8       9
+// void kernel_dtrmm_nn_rl_4x4_vs_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *D, int m1, int n1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dtrmm_nn_rl_4x4_vs_lib4
+	.type kernel_dtrmm_nn_rl_4x4_vs_lib4, @function
+kernel_dtrmm_nn_rl_4x4_vs_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dtrmm_nn_rl_4x4_vs_lib4
+_kernel_dtrmm_nn_rl_4x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrmm_nn_rl_4x4_vs_lib4
+	.def kernel_dtrmm_nn_rl_4x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dtrmm_nn_rl_4x4_vs_lib4:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// initial triangle
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11 // A
+	movq	ARG5, %r12 // B
+	movq	ARG6, %r13 // sdb
+	sall	$5, %r13d // 4*sdb*sizeof(double)
+	movq	ARG4, %r14 // offsetB
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRMM_NN_RL_4X4_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dtrmm_nn_rl_4x4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dtrmm_nn_rl_4x4_vs_lib4
+#endif
+#endif
+
+	// call inner dgemm kernel nt after initial triangle
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NN_4X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_add_nn_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_add_nn_4x4_lib4
+#endif
+#endif
+
+
+	// call inner scale
+
+	movq	ARG2, %r10 // alpha
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_A0_4X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_scale_a0_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_scale_a0_4x4_lib4
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG7, %r10 // D
+	movq	ARG8, %r11 // m1
+	movq	ARG9, %r12 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_4x4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_4x4_vs_lib4
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dtrmm_nn_rl_4x4_vs_lib4, .-kernel_dtrmm_nn_rl_4x4_vs_lib4
+#endif
+
+
+
+
+
 //                                      1      2              3          4            5          6        7            8          9        10      11      12      13
 // void kernel_dtrmm_nn_rl_4x4_gen_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, int offsetD, double *D, int sdd, int m0, int m1, int n0, int n1);
 
@@ -6958,12 +7061,12 @@ kernel_dtrmm_nn_rl_4x4_gen_lib4:
 	movq	ARG4, %r14 // B
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRMM_NN_RL_4X4_GEN_LIB4
+	INNER_EDGE_DTRMM_NN_RL_4X4_VS_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dtrmm_nn_rl_4x4_gen_lib4
+	call inner_edge_dtrmm_nn_rl_4x4_vs_lib4
 #elif defined(OS_MAC)
-	callq _inner_edge_dtrmm_nn_rl_4x4_gen_lib4
+	callq _inner_edge_dtrmm_nn_rl_4x4_vs_lib4
 #endif
 #endif
 
