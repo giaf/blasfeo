@@ -287,6 +287,10 @@ int main()
 				blasfeo_dgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #elif defined(GEMV_T)
 				blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
+#elif defined(TRMV_LNN)
+				blasfeo_dtrmv_lnn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
+#elif defined(TRMV_LTN)
+				blasfeo_dtrmv_ltn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
 #else
 #error wrong routine
 #endif
@@ -309,6 +313,10 @@ int main()
 				blasfeo_sgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #elif defined(GEMV_T)
 				blasfeo_sgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
+#elif defined(TRMV_LNN)
+				blasfeo_strmv_lnn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
+#elif defined(TRMV_LTN)
+				blasfeo_strmv_ltn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
 #else
 #error wrong routine
 #endif
@@ -333,6 +341,8 @@ int main()
 		double flop_operation = 1.0/3.0*n*n*n;
 #elif defined(GEMV_N) | defined(GEMV_T)
 		double flop_operation = 2.0*n*n;
+#elif defined(TRMV_LNN) | defined(TRMV_LTN)
+		double flop_operation = 1.0*n*n;
 #else
 #error wrong routine
 #endif

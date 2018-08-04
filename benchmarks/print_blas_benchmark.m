@@ -128,6 +128,32 @@ grid on
 file_name = ['dgemv.eps'];
 print(f1, file_name, '-depsc') 
 
+% DTRMV
+
+dtrmv_lnn
+save -mat dtrmv_lnn.mat A B
+
+Gflops_max = A(1)*A(2);
+
+f1 = figure();
+plot(B(:,1), B(:,2), 'r');
+hold on
+
+dtrmv_ltn
+save -mat dtrmv_ltn.mat A B
+
+plot(B(:,1), B(:,2), 'b');
+hold off
+
+axis([0 300 0 Gflops_max]);
+legend('dtrmv\_lnn', 'dtrmv\_ltn', 'Location', 'SouthEast');
+xlabel('matrix size n')
+ylabel('Gflops')
+grid on
+
+file_name = ['dtrmv.eps'];
+print(f1, file_name, '-depsc') 
+
 % SGEMM
 
 sgemm_nt
@@ -254,6 +280,32 @@ ylabel('Gflops')
 grid on
 
 file_name = ['sgemv.eps'];
+print(f1, file_name, '-depsc') 
+
+% STRMV
+
+strmv_lnn
+save -mat strmv_lnn.mat A B
+
+Gflops_max = A(1)*A(2);
+
+f1 = figure();
+plot(B(:,1), B(:,2), 'r');
+hold on
+
+strmv_ltn
+save -mat strmv_ltn.mat A B
+
+plot(B(:,1), B(:,2), 'b');
+hold off
+
+axis([0 300 0 Gflops_max]);
+legend('strmv\_lnn', 'strmv\_ltn', 'Location', 'SouthEast');
+xlabel('matrix size n')
+ylabel('Gflops')
+grid on
+
+file_name = ['strmv.eps'];
 print(f1, file_name, '-depsc') 
 
 

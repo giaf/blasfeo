@@ -67,7 +67,9 @@ run:
 clean:
 	rm -rf ./*.o
 	rm -rf ./*.out
-	rm -rf ./$(BINARY_DIR)/*
+	rm -rf ./$(BINARY_DIR)/*.o
+	rm -rf ./$(BINARY_DIR)/*.out
+	rm -rf ./$(BINARY_DIR)/libblasfeo.a
 
 clean_all: clean
 	rm -rf ./build/*
@@ -208,6 +210,38 @@ run_dgemv_t:
 	./$(BINARY_DIR)/dgemv_t_benchmark.out > ./$(BINARY_DIR)/data/dgemv_t.m
 
 
+# dtrmv_lnn
+
+BLAS_OBJS += dtrmv_lnn
+RUN_BLAS_OBJS += run_dtrmv_lnn
+
+dtrmv_lnn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrmv_lnn_benchmark.o -DDOUBLE_PRECISION -DTRMV_LNN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrmv_lnn_benchmark.o -o $(BINARY_DIR)/dtrmv_lnn_benchmark.out $(LIBS)
+
+run_dtrmv_lnn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dtrmv_lnn
+	./$(BINARY_DIR)/dtrmv_lnn_benchmark.out > ./$(BINARY_DIR)/data/dtrmv_lnn.m
+
+
+# dtrmv_ltn
+
+BLAS_OBJS += dtrmv_ltn
+RUN_BLAS_OBJS += run_dtrmv_ltn
+
+dtrmv_ltn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrmv_ltn_benchmark.o -DDOUBLE_PRECISION -DTRMV_LTN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrmv_ltn_benchmark.o -o $(BINARY_DIR)/dtrmv_ltn_benchmark.out $(LIBS)
+
+run_dtrmv_ltn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dtrmv_ltn
+	./$(BINARY_DIR)/dtrmv_ltn_benchmark.out > ./$(BINARY_DIR)/data/dtrmv_ltn.m
+
+
 # sgemm_nt
 
 BLAS_OBJS += sgemm_nt
@@ -336,6 +370,38 @@ run_sgemv_t:
 	./$(BINARY_DIR)/sgemv_t_benchmark.out > ./$(BINARY_DIR)/data/sgemv_t.m
 
 
+# strmv_lnn
+
+BLAS_OBJS += strmv_lnn
+RUN_BLAS_OBJS += run_strmv_lnn
+
+strmv_lnn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strmv_lnn_benchmark.o -DSINGLE_PRECISION -DTRMV_LNN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/strmv_lnn_benchmark.o -o $(BINARY_DIR)/strmv_lnn_benchmark.out $(LIBS)
+
+run_strmv_lnn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking strmv_lnn
+	./$(BINARY_DIR)/strmv_lnn_benchmark.out > ./$(BINARY_DIR)/data/strmv_lnn.m
+
+
+# strmv_ltn
+
+BLAS_OBJS += strmv_ltn
+RUN_BLAS_OBJS += run_strmv_ltn
+
+strmv_ltn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strmv_ltn_benchmark.o -DSINGLE_PRECISION -DTRMV_LTN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/strmv_ltn_benchmark.o -o $(BINARY_DIR)/strmv_ltn_benchmark.out $(LIBS)
+
+run_strmv_ltn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking strmv_ltn
+	./$(BINARY_DIR)/strmv_ltn_benchmark.out > ./$(BINARY_DIR)/data/strmv_ltn.m
+
+
 # print
 
 print_figures:
@@ -347,12 +413,14 @@ print_figures:
 	cd ./$(BINARY_DIR)/data/ ; epstopdf dtrsm.eps -out dtrsm.pdf ; rm dtrsm.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf dpotrf.eps -out dpotrf.pdf ; rm dpotrf.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf dgemv.eps -out dgemv.pdf ; rm dgemv.eps
+	cd ./$(BINARY_DIR)/data/ ; epstopdf dtrmv.eps -out dtrmv.pdf ; rm dtrmv.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf sgemm.eps -out sgemm.pdf ; rm sgemm.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf ssyrk.eps -out sgemm.pdf ; rm ssyrk.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf strmm.eps -out sgemm.pdf ; rm strmm.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf strsm.eps -out sgemm.pdf ; rm strsm.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf spotrf.eps -out spotrf.pdf ; rm spotrf.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf sgemv.eps -out sgemv.pdf ; rm sgemv.eps
+	cd ./$(BINARY_DIR)/data/ ; epstopdf strmv.eps -out strmv.pdf ; rm strmv.eps
 
 # all
 
