@@ -128,6 +128,38 @@ run_dsyrk_ln:
 	./$(BINARY_DIR)/dsyrk_ln_benchmark.out > ./$(BINARY_DIR)/data/dsyrk_ln.m
 
 
+# dtrmm_rlnn
+
+BLAS_OBJS += dtrmm_rlnn
+RUN_BLAS_OBJS += run_dtrmm_rlnn
+
+dtrmm_rlnn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrmm_rlnn_benchmark.o -DDOUBLE_PRECISION -DSYRK_LN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrmm_rlnn_benchmark.o -o $(BINARY_DIR)/dtrmm_rlnn_benchmark.out $(LIBS)
+
+run_dtrmm_rlnn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dtrmm_rlnn
+	./$(BINARY_DIR)/dtrmm_rlnn_benchmark.out > ./$(BINARY_DIR)/data/dtrmm_rlnn.m
+
+
+# dtrsm_rltn
+
+BLAS_OBJS += dtrsm_rltn
+RUN_BLAS_OBJS += run_dtrsm_rltn
+
+dtrsm_rltn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrsm_rltn_benchmark.o -DDOUBLE_PRECISION -DSYRK_LN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrsm_rltn_benchmark.o -o $(BINARY_DIR)/dtrsm_rltn_benchmark.out $(LIBS)
+
+run_dtrsm_rltn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dtrsm_rltn
+	./$(BINARY_DIR)/dtrsm_rltn_benchmark.out > ./$(BINARY_DIR)/data/dtrsm_rltn.m
+
+
 # dpotrf_l
 
 BLAS_OBJS += dpotrf_l
@@ -224,6 +256,38 @@ run_ssyrk_ln:
 	./$(BINARY_DIR)/ssyrk_ln_benchmark.out > ./$(BINARY_DIR)/data/ssyrk_ln.m
 
 
+# strmm_rlnn
+
+BLAS_OBJS += strmm_rlnn
+RUN_BLAS_OBJS += run_strmm_rlnn
+
+strmm_rlnn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strmm_rlnn_benchmark.o -DSINGLE_PRECISION -DSYRK_LN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/strmm_rlnn_benchmark.o -o $(BINARY_DIR)/strmm_rlnn_benchmark.out $(LIBS)
+
+run_strmm_rlnn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking strmm_rlnn
+	./$(BINARY_DIR)/strmm_rlnn_benchmark.out > ./$(BINARY_DIR)/data/strmm_rlnn.m
+
+
+# strsm_rltn
+
+BLAS_OBJS += strsm_rltn
+RUN_BLAS_OBJS += run_strsm_rltn
+
+strsm_rltn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strsm_rltn_benchmark.o -DSINGLE_PRECISION -DSYRK_LN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/strsm_rltn_benchmark.o -o $(BINARY_DIR)/strsm_rltn_benchmark.out $(LIBS)
+
+run_strsm_rltn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking strsm_rltn
+	./$(BINARY_DIR)/strsm_rltn_benchmark.out > ./$(BINARY_DIR)/data/strsm_rltn.m
+
+
 # spotrf_l
 
 BLAS_OBJS += spotrf_l
@@ -279,10 +343,14 @@ print_figures:
 	cd ./$(BINARY_DIR)/data/ ; octave-cli print_blas_benchmark.m
 	cd ./$(BINARY_DIR)/data/ ; epstopdf dgemm.eps -out dgemm.pdf ; rm dgemm.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf dsyrk.eps -out dsyrk.pdf ; rm dsyrk.eps
+	cd ./$(BINARY_DIR)/data/ ; epstopdf dtrmm.eps -out dtrmm.pdf ; rm dtrmm.eps
+	cd ./$(BINARY_DIR)/data/ ; epstopdf dtrsm.eps -out dtrsm.pdf ; rm dtrsm.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf dpotrf.eps -out dpotrf.pdf ; rm dpotrf.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf dgemv.eps -out dgemv.pdf ; rm dgemv.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf sgemm.eps -out sgemm.pdf ; rm sgemm.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf ssyrk.eps -out sgemm.pdf ; rm ssyrk.eps
+	cd ./$(BINARY_DIR)/data/ ; epstopdf strmm.eps -out sgemm.pdf ; rm strmm.eps
+	cd ./$(BINARY_DIR)/data/ ; epstopdf strsm.eps -out sgemm.pdf ; rm strsm.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf spotrf.eps -out spotrf.pdf ; rm spotrf.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf sgemv.eps -out sgemv.pdf ; rm sgemv.eps
 

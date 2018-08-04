@@ -26,7 +26,7 @@ grid on
 file_name = ['dgemm.eps'];
 print(f1, file_name, '-depsc') 
 
-% SYRK
+% DSYRK
 
 dsyrk_ln
 save -mat dsyrk_ln.mat A B
@@ -43,6 +43,44 @@ ylabel('Gflops')
 grid on
 
 file_name = ['dsyrk.eps'];
+print(f1, file_name, '-depsc') 
+
+% DTRMM
+
+dtrmm_rlnn
+save -mat dtrmm_rlnn.mat A B
+
+Gflops_max = A(1)*A(2);
+
+f1 = figure();
+plot(B(:,1), B(:,2), 'r');
+
+axis([0 300 0 Gflops_max]);
+legend('dtrmm\_rlnn', 'Location', 'SouthEast');
+xlabel('matrix size n')
+ylabel('Gflops')
+grid on
+
+file_name = ['dtrmm.eps'];
+print(f1, file_name, '-depsc') 
+
+% DTRSM
+
+dtrsm_rltn
+save -mat dtrsm_rltn.mat A B
+
+Gflops_max = A(1)*A(2);
+
+f1 = figure();
+plot(B(:,1), B(:,2), 'r');
+
+axis([0 300 0 Gflops_max]);
+legend('dtrsm\_rltn', 'Location', 'SouthEast');
+xlabel('matrix size n')
+ylabel('Gflops')
+grid on
+
+file_name = ['dtrsm.eps'];
 print(f1, file_name, '-depsc') 
 
 % DPOTRF
@@ -133,6 +171,44 @@ ylabel('Gflops')
 grid on
 
 file_name = ['ssyrk.eps'];
+print(f1, file_name, '-depsc') 
+
+% STRMM
+
+strmm_rlnn
+save -mat strmm_rlnn.mat A B
+
+Gflops_max = A(1)*A(2);
+
+f1 = figure();
+plot(B(:,1), B(:,2), 'r');
+
+axis([0 300 0 Gflops_max]);
+legend('strmm\_rlnn', 'Location', 'SouthEast');
+xlabel('matrix size n')
+ylabel('Gflops')
+grid on
+
+file_name = ['strmm.eps'];
+print(f1, file_name, '-depsc') 
+
+% DTRSM
+
+strsm_rltn
+save -mat strsm_rltn.mat A B
+
+Gflops_max = A(1)*A(2);
+
+f1 = figure();
+plot(B(:,1), B(:,2), 'r');
+
+axis([0 300 0 Gflops_max]);
+legend('strsm\_rltn', 'Location', 'SouthEast');
+xlabel('matrix size n')
+ylabel('Gflops')
+grid on
+
+file_name = ['strsm.eps'];
 print(f1, file_name, '-depsc') 
 
 % SPOTRF

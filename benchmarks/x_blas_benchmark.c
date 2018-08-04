@@ -277,6 +277,10 @@ int main()
 				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 #elif defined(SYRK_LN)
 				blasfeo_dsyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+#elif defined(TRMM_RLNN)
+				blasfeo_dtrmm_rlnn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
+#elif defined(TRSM_RLTN)
+				blasfeo_dtrsm_rltn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(POTRF_L)
 				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 #elif defined(GEMV_N)
@@ -295,6 +299,10 @@ int main()
 				blasfeo_sgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 #elif defined(SYRK_LN)
 				blasfeo_ssyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+#elif defined(TRMM_RLNN)
+				blasfeo_strmm_rlnn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
+#elif defined(TRSM_RLTN)
+				blasfeo_strsm_rltn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(POTRF_L)
 				blasfeo_spotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 #elif defined(GEMV_N)
@@ -319,7 +327,7 @@ int main()
 
 #if defined(GEMM_NT) | defined(GEMM_NN)
 		double flop_operation = 2.0*n*n*n;
-#elif defined(SYRK_LN)
+#elif defined(SYRK_LN) | defined(TRMM_RLNN) | defined(TRSM_RLTN)
 		double flop_operation = 1.0*n*n*n;
 #elif defined(POTRF_L)
 		double flop_operation = 1.0/3.0*n*n*n;

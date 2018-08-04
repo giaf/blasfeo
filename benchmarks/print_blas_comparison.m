@@ -8,6 +8,8 @@ routines = {
 'gemm_nt',
 'gemm_nn',
 'syrk_ln',
+'trmm_rlnn',
+'trsm_rltn',
 'potrf_l',
 'gemv_n',
 'gemv_t',
@@ -17,6 +19,8 @@ routine_names = {
 'gemm\_nt',
 'gemm\_nn',
 'syrk\_ln',
+'trmm\_rlnn',
+'trsm\_rltn',
 'potrf\_l',
 'gemv\_n',
 'gemv\_t',
@@ -30,25 +34,28 @@ end
 
 
 targets = {
-%'HIGH_PERFORMANCE/X64_INTEL_SANDY_BRIDGE',
-%'HIGH_PERFORMANCE/X64_INTEL_CORE',
+'HIGH_PERFORMANCE/X64_INTEL_HASWELL',
+'HIGH_PERFORMANCE/X64_INTEL_SANDY_BRIDGE',
+'HIGH_PERFORMANCE/X64_INTEL_CORE',
 %'HIGH_PERFORMANCE/X86_AMD_JAGUAR',
 'HIGH_PERFORMANCE/X86_AMD_BARCELONA',
 %'HIGH_PERFORMANCE/GENERIC',
 %'REFERENCE/X64_INTEL_SANDY_BRIDGE',
 %'REFERENCE/X86_AMD_JAGUAR',
+'BLAS_WRAPPER/X64_INTEL_HASWELL',
 %'BLAS_WRAPPER/X64_INTEL_SANDY_BRIDGE',
 %'BLAS_WRAPPER/X86_AMD_JAGUAR',
 };
 
 target_names = {
-%'HP\_X64\_SB',
-%'HP\_X64\_CR',
+'HP\_X64\_HW',
+'HP\_X64\_SB',
+'HP\_X64\_CR',
 %'HP\_X86\_JG',
 'HP\_X86\_BC',
 %'HP\_GE',
 %'RF',
-%'OB',
+'OB',
 };
 
 
