@@ -2349,6 +2349,34 @@ void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, int
 			else
 				goto left_4;
 			}
+#elif defined(TARGET_X86_AMD_BARCELONA)
+		for(; ii<m-3; ii+=4)
+			{
+			jj = 0;
+			for(; jj<n-3; jj+=4)
+				{
+				kernel_dtrmm_nn_rl_4x2_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps]);
+				if(offsetB+2<4)
+					kernel_dtrmm_nn_rl_4x2_lib4(n-(jj+2), &alpha, &pA[ii*sda+(jj+2)*ps], offsetB+2, &pB[jj*sdb+(jj+2)*ps], sdb, &pD[ii*sdd+(jj+2)*ps]);
+				else
+					kernel_dtrmm_nn_rl_4x2_lib4(n-(jj+2), &alpha, &pA[ii*sda+(jj+2)*ps], offsetB+2-ps, &pB[(jj+ps)*sdb+(jj+2)*ps], sdb, &pD[ii*sdd+(jj+2)*ps]);
+				}
+			for(; jj<n; jj+=4)
+				{
+				kernel_dtrmm_nn_rl_4x2_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], 4, n-jj);
+				if(jj<n-2)
+					{
+					if(offsetB+2<4)
+						kernel_dtrmm_nn_rl_4x2_vs_lib4(n-(jj+2), &alpha, &pA[ii*sda+(jj+2)*ps], offsetB+2, &pB[jj*sdb+(jj+2)*ps], sdb, &pD[ii*sdd+(jj+2)*ps], 4, n-(jj+2));
+					else
+						kernel_dtrmm_nn_rl_4x2_vs_lib4(n-(jj+2), &alpha, &pA[ii*sda+(jj+2)*ps], offsetB+2-ps, &pB[(jj+ps)*sdb+(jj+2)*ps], sdb, &pD[ii*sdd+(jj+2)*ps], 4, n-(jj+2));
+					}
+				}
+			}
+		if(ii<m)
+			{
+			goto left_4;
+			}
 #else
 		for(; ii<m-3; ii+=4)
 			{
@@ -2430,6 +2458,22 @@ void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, int
 	return;
 #endif
 
+#if defined(TARGET_X86_AMD_BARCELONA)
+	left_4:
+	jj = 0;
+	for(; jj<n; jj+=4)
+		{
+		kernel_dtrmm_nn_rl_4x2_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], m-ii, n-jj);
+		if(jj<n-2)
+			{
+			if(offsetB+2<4)
+				kernel_dtrmm_nn_rl_4x2_vs_lib4(n-(jj+2), &alpha, &pA[ii*sda+(jj+2)*ps], offsetB+2, &pB[jj*sdb+(jj+2)*ps], sdb, &pD[ii*sdd+(jj+2)*ps], m-ii, n-(jj+2));
+			else
+				kernel_dtrmm_nn_rl_4x2_vs_lib4(n-(jj+2), &alpha, &pA[ii*sda+(jj+2)*ps], offsetB+2-ps, &pB[(jj+ps)*sdb+(jj+2)*ps], sdb, &pD[ii*sdd+(jj+2)*ps], m-ii, n-(jj+2));
+			}
+		}
+	return;
+#else
 	left_4:
 	jj = 0;
 	for(; jj<n; jj+=4)
@@ -2437,6 +2481,7 @@ void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, int
 		kernel_dtrmm_nn_rl_4x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], m-ii, n-jj);
 		}
 	return;
+#endif
 
 	left_4_gen:
 	jj = 0;

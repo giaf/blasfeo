@@ -245,7 +245,7 @@ int main()
 	alpha = 1.0;
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 
-	blasfeo_dtrmm_rlnn(n-1, n-1, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dtrmm_rlnn(9, n, alpha, &sA, 3, 0, &sB, 0, 0, &sD, 0, 0);
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	return 0;
