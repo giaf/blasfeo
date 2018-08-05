@@ -291,6 +291,10 @@ int main()
 				blasfeo_dtrmv_lnn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
 #elif defined(TRMV_LTN)
 				blasfeo_dtrmv_ltn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
+#elif defined(TRSV_LNN)
+				blasfeo_dtrsv_lnn(n, &sB, 0, 0, &sx, 0, &sz, 0);
+#elif defined(TRSV_LTN)
+				blasfeo_dtrsv_ltn(n, &sB, 0, 0, &sx, 0, &sz, 0);
 #else
 #error wrong routine
 #endif
@@ -317,6 +321,10 @@ int main()
 				blasfeo_strmv_lnn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
 #elif defined(TRMV_LTN)
 				blasfeo_strmv_ltn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
+#elif defined(TRSV_LNN)
+				blasfeo_strsv_lnn(n, &sB, 0, 0, &sx, 0, &sz, 0);
+#elif defined(TRSV_LTN)
+				blasfeo_strsv_ltn(n, &sB, 0, 0, &sx, 0, &sz, 0);
 #else
 #error wrong routine
 #endif
@@ -341,7 +349,7 @@ int main()
 		double flop_operation = 1.0/3.0*n*n*n;
 #elif defined(GEMV_N) | defined(GEMV_T)
 		double flop_operation = 2.0*n*n;
-#elif defined(TRMV_LNN) | defined(TRMV_LTN)
+#elif defined(TRMV_LNN) | defined(TRMV_LTN) | defined(TRSV_LNN) | defined(TRSV_LTN)
 		double flop_operation = 1.0*n*n;
 #else
 #error wrong routine
