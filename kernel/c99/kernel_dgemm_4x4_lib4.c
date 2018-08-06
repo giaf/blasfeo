@@ -40,6 +40,15 @@ void kernel_dgemm_nt_4x4_lib4(int kmax, double *alpha, double *A, double *B, dou
 
 	const int bs = 4;
 
+#if defined(TARGET_X86_AMD_BARCELONA)
+
+	kernel_dgemm_nt_4x2_lib4(kmax, alpha, A, B, beta, C, D);
+	kernel_dgemm_nt_4x2_lib4(kmax, alpha, A, B+2, beta, C+2*bs, D+2*bs);
+
+	return;
+
+#endif
+
 	double
 		a_0, a_1, a_2, a_3,
 		b_0, b_1, b_2, b_3;
@@ -688,6 +697,15 @@ void kernel_dgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, int offsetB, d
 	{
 
 	const int bs = 4;
+
+#if defined(TARGET_X86_AMD_BARCELONA)
+
+	kernel_dgemm_nn_4x2_lib4(kmax, alpha, A, offsetB, B, sdb, beta, C, D);
+	kernel_dgemm_nn_4x2_lib4(kmax, alpha, A, offsetB, B+2*bs, sdb, beta, C+2*bs, D+2*bs);
+
+	return;
+
+#endif
 
 	double
 		a_0, a_1, a_2, a_3,
