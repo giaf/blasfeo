@@ -149,7 +149,7 @@ DP_BLAS3_OBJS += dtrmm_rlnn
 RUN_DP_BLAS3_OBJS += run_dtrmm_rlnn
 
 dtrmm_rlnn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrmm_rlnn_benchmark.o -DDOUBLE_PRECISION -DSYRK_LN
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrmm_rlnn_benchmark.o -DDOUBLE_PRECISION -DTRMM_RLNN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrmm_rlnn_benchmark.o -o $(BINARY_DIR)/dtrmm_rlnn_benchmark.out $(LIBS)
 
 run_dtrmm_rlnn:
@@ -165,7 +165,7 @@ DP_BLAS3_OBJS += dtrsm_rltn
 RUN_DP_BLAS3_OBJS += run_dtrsm_rltn
 
 dtrsm_rltn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrsm_rltn_benchmark.o -DDOUBLE_PRECISION -DSYRK_LN
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrsm_rltn_benchmark.o -DDOUBLE_PRECISION -DTRSM_RLTN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrsm_rltn_benchmark.o -o $(BINARY_DIR)/dtrsm_rltn_benchmark.out $(LIBS)
 
 run_dtrsm_rltn:
@@ -173,6 +173,22 @@ run_dtrsm_rltn:
 	@echo
 	@echo benchmarking dtrsm_rltn
 	./$(BINARY_DIR)/dtrsm_rltn_benchmark.out > ./$(BINARY_DIR)/data/dtrsm_rltn.m
+
+
+# dgetrf_rowpivot
+
+SP_LAPACK_OBJS += dgetrf_rowpivot
+RUN_SP_LAPACK_OBJS += run_dgetrf_rowpivot
+
+dgetrf_rowpivot: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgetrf_rowpivot_benchmark.o -DDOUBLE_PRECISION -DGETRF_ROWPIVOT
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dgetrf_rowpivot_benchmark.o -o $(BINARY_DIR)/dgetrf_rowpivot_benchmark.out $(LIBS)
+
+run_dgetrf_rowpivot:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dgetrf_rowpivot
+	./$(BINARY_DIR)/dgetrf_rowpivot_benchmark.out > ./$(BINARY_DIR)/data/dgetrf_rowpivot.m
 
 
 # dpotrf_l
@@ -341,7 +357,7 @@ SP_BLAS3_OBJS += strmm_rlnn
 RUN_SP_BLAS3_OBJS += run_strmm_rlnn
 
 strmm_rlnn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strmm_rlnn_benchmark.o -DSINGLE_PRECISION -DSYRK_LN
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strmm_rlnn_benchmark.o -DSINGLE_PRECISION -DTRMM_RLNN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/strmm_rlnn_benchmark.o -o $(BINARY_DIR)/strmm_rlnn_benchmark.out $(LIBS)
 
 run_strmm_rlnn:
@@ -357,7 +373,7 @@ SP_BLAS3_OBJS += strsm_rltn
 RUN_SP_BLAS3_OBJS += run_strsm_rltn
 
 strsm_rltn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strsm_rltn_benchmark.o -DSINGLE_PRECISION -DSYRK_LN
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strsm_rltn_benchmark.o -DSINGLE_PRECISION -DTRSM_RLTN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/strsm_rltn_benchmark.o -o $(BINARY_DIR)/strsm_rltn_benchmark.out $(LIBS)
 
 run_strsm_rltn:
@@ -365,6 +381,22 @@ run_strsm_rltn:
 	@echo
 	@echo benchmarking strsm_rltn
 	./$(BINARY_DIR)/strsm_rltn_benchmark.out > ./$(BINARY_DIR)/data/strsm_rltn.m
+
+
+# sgetrf_rowpivot
+
+SP_LAPACK_OBJS += sgetrf_rowpivot
+RUN_SP_LAPACK_OBJS += run_sgetrf_rowpivot
+
+sgetrf_rowpivot: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgetrf_rowpivot_benchmark.o -DSINGLE_PRECISION -DGETRF_ROWPIVOT
+	$(CC) $(CFLAGS) $(BINARY_DIR)/sgetrf_rowpivot_benchmark.o -o $(BINARY_DIR)/sgetrf_rowpivot_benchmark.out $(LIBS)
+
+run_sgetrf_rowpivot:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking sgetrf_rowpivot
+	./$(BINARY_DIR)/sgetrf_rowpivot_benchmark.out > ./$(BINARY_DIR)/data/sgetrf_rowpivot.m
 
 
 # spotrf_l
