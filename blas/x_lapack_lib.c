@@ -3201,7 +3201,79 @@ void POTRF_L_MN_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct S
 
 
 // dsyrk dpotrf
-void SYRK_POTRF_LN_LIBSTR(int m, int n, int k, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void SYRK_POTRF_LN_LIBSTR(int m, int k, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+	{
+	if(m<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	REAL d1 = 1.0;
+	REAL *pA = sA->pA + ai + aj*sA->m;
+	REAL *pB = sB->pA + bi + bj*sB->m;
+	REAL *pC = sC->pA + ci + cj*sC->m;
+	REAL *pD = sD->pA + di + dj*sD->m;
+#if defined(REF_BLAS_BLIS)
+	long long i1 = 1;
+	long long mm = m;
+	long long kk = k;
+	long long info;
+	long long lda = sA->m;
+	long long ldb = sB->m;
+	long long ldc = sC->m;
+	long long ldd = sD->m;
+	if(!(pC==pD))
+		{
+		for(jj=0; jj<m; jj++)
+			COPY(&mm, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+		}
+	if(pA==pB)
+		{
+		SYRK(&cl, &cn, &mm, &kk, &d1, pA, &lda, &d1, pD, &ldd);
+		POTRF(&cl, &mm, pD, &ldd, &info);
+		}
+	else
+		{
+		GEMM(&cn, &ct, &mm, &mm, &kk, &d1, pA, &lda, pB, &ldb, &d1, pD, &ldd);
+		POTRF(&cl, &mm, pD, &ldd, &info);
+		}
+#else
+	int i1 = 1;
+	int info;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(pC==pD))
+		{
+		for(jj=0; jj<m; jj++)
+			COPY(&m, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+		}
+	if(pA==pB)
+		{
+		SYRK(&cl, &cn, &m, &k, &d1, pA, &lda, &d1, pD, &ldd);
+		POTRF(&cl, &m, pD, &ldd, &info);
+		}
+	else
+		{
+		GEMM(&cn, &ct, &m, &m, &k, &d1, pA, &lda, pB, &ldb, &d1, pD, &ldd);
+		POTRF(&cl, &m, pD, &ldd, &info);
+		}
+#endif
+	return;
+	}
+
+
+
+// dsyrk dpotrf
+void SYRK_POTRF_LN_MN_LIBSTR(int m, int n, int k, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
