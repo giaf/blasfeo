@@ -117,10 +117,15 @@ dgemv_t
 save -mat dgemv_t.mat A B
 
 plot(B(:,1), B(:,2), 'b');
+
+dgemv_nt
+save -mat dgemv_nt.mat A B
+
+plot(B(:,1), B(:,2), 'g');
 hold off
 
 axis([0 300 0 Gflops_max]);
-legend('dgemv\_n', 'dgemv\_t', 'Location', 'SouthEast');
+legend('dgemv\_n', 'dgemv\_t', 'dgemv\_nt', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
@@ -178,6 +183,25 @@ ylabel('Gflops')
 grid on
 
 file_name = ['dtrsv.eps'];
+print(f1, file_name, '-depsc') 
+
+% DSYMV_L
+
+dsymv_l
+save -mat dsymv_l.mat A B
+
+Gflops_max = A(1)*A(2);
+
+f1 = figure();
+plot(B(:,1), B(:,2), 'r');
+
+axis([0 300 0 Gflops_max]);
+legend('dsymv\_l', 'Location', 'SouthEast');
+xlabel('matrix size n')
+ylabel('Gflops')
+grid on
+
+file_name = ['dsymv.eps'];
 print(f1, file_name, '-depsc') 
 
 % SGEMM
@@ -244,7 +268,7 @@ grid on
 file_name = ['strmm.eps'];
 print(f1, file_name, '-depsc') 
 
-% DTRSM
+% STRSM
 
 strsm_rltn
 save -mat strsm_rltn.mat A B
@@ -297,10 +321,15 @@ sgemv_t
 save -mat sgemv_t.mat A B
 
 plot(B(:,1), B(:,2), 'b');
+
+sgemv_nt
+save -mat sgemv_nt.mat A B
+
+plot(B(:,1), B(:,2), 'g');
 hold off
 
 axis([0 300 0 Gflops_max]);
-legend('sgemv\_n', 'sgemv\_t', 'Location', 'SouthEast');
+legend('sgemv\_n', 'sgemv\_t', 'sgemv\_nt', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
@@ -358,6 +387,25 @@ ylabel('Gflops')
 grid on
 
 file_name = ['strsv.eps'];
+print(f1, file_name, '-depsc') 
+
+% SSYMV_L
+
+ssymv_l
+save -mat ssymv_l.mat A B
+
+Gflops_max = A(1)*A(2);
+
+f1 = figure();
+plot(B(:,1), B(:,2), 'r');
+
+axis([0 300 0 Gflops_max]);
+legend('ssymv\_l', 'Location', 'SouthEast');
+xlabel('matrix size n')
+ylabel('Gflops')
+grid on
+
+file_name = ['ssymv.eps'];
 print(f1, file_name, '-depsc') 
 
 

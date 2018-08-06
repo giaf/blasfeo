@@ -13,10 +13,12 @@ routines = {
 'potrf_l',
 'gemv_n',
 'gemv_t',
+'gemv_nt',
 'trmv_lnn',
 'trmv_ltn',
 'trsv_lnn',
 'trsv_ltn',
+'symv_l',
 };
 
 routine_names = {
@@ -28,10 +30,12 @@ routine_names = {
 'potrf\_l',
 'gemv\_n',
 'gemv\_t',
+'gemv\_nt',
 'trmv\_lnn',
 'trmv\_ltn',
 'trsv\_lnn',
 'trsv\_ltn',
+'symv\_l',
 };
 
 for jj=1:2*length(routines)
@@ -44,13 +48,13 @@ end
 targets = {
 'HIGH_PERFORMANCE/X64_INTEL_HASWELL',
 'HIGH_PERFORMANCE/X64_INTEL_SANDY_BRIDGE',
-'HIGH_PERFORMANCE/X64_INTEL_CORE',
+%'HIGH_PERFORMANCE/X64_INTEL_CORE',
 %'HIGH_PERFORMANCE/X86_AMD_JAGUAR',
-'HIGH_PERFORMANCE/X86_AMD_BARCELONA',
-'HIGH_PERFORMANCE/GENERIC',
+%'HIGH_PERFORMANCE/X86_AMD_BARCELONA',
+%'HIGH_PERFORMANCE/GENERIC',
 %'REFERENCE/X64_INTEL_SANDY_BRIDGE',
 %'REFERENCE/X86_AMD_JAGUAR',
-'BLAS_WRAPPER/X64_INTEL_HASWELL',
+%'BLAS_WRAPPER/X64_INTEL_HASWELL',
 %'BLAS_WRAPPER/X64_INTEL_SANDY_BRIDGE',
 %'BLAS_WRAPPER/X86_AMD_JAGUAR',
 };
@@ -58,12 +62,12 @@ targets = {
 target_names = {
 'HP\_X64\_HW',
 'HP\_X64\_SB',
-'HP\_X64\_CR',
+%'HP\_X64\_CR',
 %'HP\_X86\_JG',
-'HP\_X86\_BC',
-'HP\_GE',
+%'HP\_X86\_BC',
+%'HP\_GE',
 %'RF',
-'OB',
+%'OB',
 };
 
 

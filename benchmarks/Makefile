@@ -177,8 +177,8 @@ run_dtrsm_rltn:
 
 # dgetrf_rowpivot
 
-SP_LAPACK_OBJS += dgetrf_rowpivot
-RUN_SP_LAPACK_OBJS += run_dgetrf_rowpivot
+DP_LAPACK_OBJS += dgetrf_rowpivot
+RUN_DP_LAPACK_OBJS += run_dgetrf_rowpivot
 
 dgetrf_rowpivot: common
 	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgetrf_rowpivot_benchmark.o -DDOUBLE_PRECISION -DGETRF_ROWPIVOT
@@ -303,6 +303,38 @@ run_dtrsv_ltn:
 	./$(BINARY_DIR)/dtrsv_ltn_benchmark.out > ./$(BINARY_DIR)/data/dtrsv_ltn.m
 
 
+# dgemv_nt
+
+DP_BLAS2_OBJS += dgemv_nt
+RUN_DP_BLAS2_OBJS += run_dgemv_nt
+
+dgemv_nt: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgemv_nt_benchmark.o -DDOUBLE_PRECISION -DGEMV_NT
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dgemv_nt_benchmark.o -o $(BINARY_DIR)/dgemv_nt_benchmark.out $(LIBS)
+
+run_dgemv_nt:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dgemv_nt
+	./$(BINARY_DIR)/dgemv_nt_benchmark.out > ./$(BINARY_DIR)/data/dgemv_nt.m
+
+
+# dsymv_l
+
+DP_BLAS2_OBJS += dsymv_l
+RUN_DP_BLAS2_OBJS += run_dsymv_l
+
+dsymv_l: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dsymv_l_benchmark.o -DDOUBLE_PRECISION -DSYMV_L
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dsymv_l_benchmark.o -o $(BINARY_DIR)/dsymv_l_benchmark.out $(LIBS)
+
+run_dsymv_l:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dsymv_l
+	./$(BINARY_DIR)/dsymv_l_benchmark.out > ./$(BINARY_DIR)/data/dsymv_l.m
+
+
 # sgemm_nt
 
 SP_BLAS3_OBJS += sgemm_nt
@@ -385,18 +417,18 @@ run_strsm_rltn:
 
 # sgetrf_rowpivot
 
-SP_LAPACK_OBJS += sgetrf_rowpivot
-RUN_SP_LAPACK_OBJS += run_sgetrf_rowpivot
+#SP_LAPACK_OBJS += sgetrf_rowpivot
+#RUN_SP_LAPACK_OBJS += run_sgetrf_rowpivot
 
-sgetrf_rowpivot: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgetrf_rowpivot_benchmark.o -DSINGLE_PRECISION -DGETRF_ROWPIVOT
-	$(CC) $(CFLAGS) $(BINARY_DIR)/sgetrf_rowpivot_benchmark.o -o $(BINARY_DIR)/sgetrf_rowpivot_benchmark.out $(LIBS)
+#sgetrf_rowpivot: common
+#	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgetrf_rowpivot_benchmark.o -DSINGLE_PRECISION -DGETRF_ROWPIVOT
+#	$(CC) $(CFLAGS) $(BINARY_DIR)/sgetrf_rowpivot_benchmark.o -o $(BINARY_DIR)/sgetrf_rowpivot_benchmark.out $(LIBS)
 
-run_sgetrf_rowpivot:
-	mkdir -p ./$(BINARY_DIR)/data
-	@echo
-	@echo benchmarking sgetrf_rowpivot
-	./$(BINARY_DIR)/sgetrf_rowpivot_benchmark.out > ./$(BINARY_DIR)/data/sgetrf_rowpivot.m
+#run_sgetrf_rowpivot:
+#	mkdir -p ./$(BINARY_DIR)/data
+#	@echo
+#	@echo benchmarking sgetrf_rowpivot
+#	./$(BINARY_DIR)/sgetrf_rowpivot_benchmark.out > ./$(BINARY_DIR)/data/sgetrf_rowpivot.m
 
 
 # spotrf_l
@@ -511,6 +543,38 @@ run_strsv_ltn:
 	./$(BINARY_DIR)/strsv_ltn_benchmark.out > ./$(BINARY_DIR)/data/strsv_ltn.m
 
 
+# sgemv_nt
+
+SP_BLAS2_OBJS += sgemv_nt
+RUN_SP_BLAS2_OBJS += run_sgemv_nt
+
+sgemv_nt: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgemv_nt_benchmark.o -DSINGLE_PRECISION -DGEMV_NT
+	$(CC) $(CFLAGS) $(BINARY_DIR)/sgemv_nt_benchmark.o -o $(BINARY_DIR)/sgemv_nt_benchmark.out $(LIBS)
+
+run_sgemv_nt:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking sgemv_nt
+	./$(BINARY_DIR)/sgemv_nt_benchmark.out > ./$(BINARY_DIR)/data/sgemv_nt.m
+
+
+# ssymv_l
+
+SP_BLAS2_OBJS += ssymv_l
+RUN_SP_BLAS2_OBJS += run_ssymv_l
+
+ssymv_l: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/ssymv_l_benchmark.o -DSINGLE_PRECISION -DSYMV_L
+	$(CC) $(CFLAGS) $(BINARY_DIR)/ssymv_l_benchmark.o -o $(BINARY_DIR)/ssymv_l_benchmark.out $(LIBS)
+
+run_ssymv_l:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking ssymv_l
+	./$(BINARY_DIR)/ssymv_l_benchmark.out > ./$(BINARY_DIR)/data/ssymv_l.m
+
+
 # print
 
 print_figures:
@@ -524,6 +588,7 @@ print_figures:
 	cd ./$(BINARY_DIR)/data/ ; epstopdf dgemv.eps -out dgemv.pdf ; rm dgemv.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf dtrmv.eps -out dtrmv.pdf ; rm dtrmv.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf dtrsv.eps -out dtrsv.pdf ; rm dtrsv.eps
+	cd ./$(BINARY_DIR)/data/ ; epstopdf dsymv.eps -out dsymv.pdf ; rm dsymv.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf sgemm.eps -out sgemm.pdf ; rm sgemm.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf ssyrk.eps -out sgemm.pdf ; rm ssyrk.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf strmm.eps -out sgemm.pdf ; rm strmm.eps
@@ -532,6 +597,7 @@ print_figures:
 	cd ./$(BINARY_DIR)/data/ ; epstopdf sgemv.eps -out sgemv.pdf ; rm sgemv.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf strmv.eps -out strmv.pdf ; rm strmv.eps
 	cd ./$(BINARY_DIR)/data/ ; epstopdf strsv.eps -out strsv.pdf ; rm strsv.eps
+	cd ./$(BINARY_DIR)/data/ ; epstopdf ssymv.eps -out ssymv.pdf ; rm ssymv.eps
 
 # build
 
