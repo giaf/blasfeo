@@ -240,7 +240,7 @@ int main()
 	return 0;
 #endif
 
-#if 1
+#if 0
 	// trmm_rlnn
 	alpha = 1.0;
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
@@ -281,6 +281,22 @@ int main()
 	// gemv_t
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
+	blasfeo_print_tran_dvec(n, &sz_n, 0);
+	return 0;
+#endif
+
+#if 0
+	// trsv_ltn
+	blasfeo_print_tran_dvec(n, &sz_n, 0);
+	blasfeo_dtrsv_ltn(n, &sA, 0, 1, &sx_n, 0, &sz_n, 0);
+	blasfeo_print_tran_dvec(n, &sz_n, 0);
+	return 0;
+#endif
+
+#if 1
+	// symv_l
+	blasfeo_print_tran_dvec(n, &sx_n, 0);
+	blasfeo_dsymv_l(5, 5, 1.0, &sA, 1, 1, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	return 0;
 #endif
