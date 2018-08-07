@@ -384,6 +384,7 @@ void blasfeo_dsymv_l(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai
 #if defined(TARGET_X86_AMD_BARCELONA) | defined(TARGET_X86_AMD_JAGUAR)
 	// using dgemv_n and dgemv_t kernels
 	double beta1 = 1.0;
+	double xx[4];
 	for(ii=0; ii<n-3; ii+=4)
 		{
 		// gemv_n
@@ -400,48 +401,92 @@ void blasfeo_dsymv_l(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai
 		{
 		if(n-ii==1)
 			{
+			xx[0] = alpha*x[ii+0];
+			xx[1] = alpha*x[ii+1];
+			xx[2] = alpha*x[ii+2];
+			xx[3] = alpha*x[ii+3];
 			// gemv_n
 			kernel_dgemv_n_4_vs_lib4(ii, &alpha, pA+ii*sda, x, &beta1, z+ii, z+ii, m-ii);
 			// 4x4
-			z[ii+0] += alpha*(pA[ii*sda+0+bs*(ii+0)]*x[ii+0] + pA[ii*sda+1+bs*(ii+0)]*x[ii+1] + pA[ii*sda+2+bs*(ii+0)]*x[ii+2] + pA[ii*sda+3+bs*(ii+0)]*x[ii+3]);
+			z[ii+0] += pA[ii*sda+0+bs*(ii+0)]*xx[0];
 			if(m-ii>1)
-				z[ii+1] += alpha*(pA[ii*sda+1+bs*(ii+0)]*x[ii+0]);
+				{
+				z[ii+0] += pA[ii*sda+1+bs*(ii+0)]*xx[1];
+				z[ii+1] += pA[ii*sda+1+bs*(ii+0)]*xx[0];
+				}
 			if(m-ii>2)
-				z[ii+2] += alpha*(pA[ii*sda+2+bs*(ii+0)]*x[ii+0]);
+				{
+				z[ii+0] += pA[ii*sda+2+bs*(ii+0)]*xx[2];
+				z[ii+2] += pA[ii*sda+2+bs*(ii+0)]*xx[0];
+				}
 			if(m-ii>3)
-				z[ii+3] += alpha*(pA[ii*sda+3+bs*(ii+0)]*x[ii+0]);
+				{
+				z[ii+0] += pA[ii*sda+3+bs*(ii+0)]*xx[3];
+				z[ii+3] += pA[ii*sda+3+bs*(ii+0)]*xx[0];
+				}
 			// gemv_t
 			kernel_dgemv_t_4_vs_lib4(m-ii-4, &alpha, pA+(ii+4)*sda+ii*bs, sda, x+ii+4, &beta1, z+ii, z+ii, n-ii);
 			ii += 4;
 			}
 		else if(n-ii==2)
 			{
+			xx[0] = alpha*x[ii+0];
+			xx[1] = alpha*x[ii+1];
+			xx[2] = alpha*x[ii+2];
+			xx[3] = alpha*x[ii+3];
 			// gemv_n
 			kernel_dgemv_n_4_vs_lib4(ii, &alpha, pA+ii*sda, x, &beta1, z+ii, z+ii, m-ii);
 			// 4x4
-			z[ii+0] += alpha*(pA[ii*sda+0+bs*(ii+0)]*x[ii+0] + pA[ii*sda+1+bs*(ii+0)]*x[ii+1] + pA[ii*sda+2+bs*(ii+0)]*x[ii+2] + pA[ii*sda+3+bs*(ii+0)]*x[ii+3]);
+			z[ii+0] += pA[ii*sda+0+bs*(ii+0)]*xx[0];
 			if(m-ii>1)
-				z[ii+1] += alpha*(pA[ii*sda+1+bs*(ii+0)]*x[ii+0] + pA[ii*sda+1+bs*(ii+1)]*x[ii+1] + pA[ii*sda+2+bs*(ii+1)]*x[ii+2] + pA[ii*sda+3+bs*(ii+1)]*x[ii+3]);
+				{
+				z[ii+0] += pA[ii*sda+1+bs*(ii+0)]*xx[1];
+				z[ii+1] += pA[ii*sda+1+bs*(ii+0)]*xx[0] + pA[ii*sda+1+bs*(ii+1)]*xx[1];
+				}
 			if(m-ii>2)
-				z[ii+2] += alpha*(pA[ii*sda+2+bs*(ii+0)]*x[ii+0] + pA[ii*sda+2+bs*(ii+1)]*x[ii+1]);
+				{
+				z[ii+0] += pA[ii*sda+2+bs*(ii+0)]*xx[2];
+				z[ii+1] += pA[ii*sda+2+bs*(ii+1)]*xx[2];
+				z[ii+2] += pA[ii*sda+2+bs*(ii+0)]*xx[0] + pA[ii*sda+2+bs*(ii+1)]*xx[1];
+				}
 			if(m-ii>3)
-				z[ii+3] += alpha*(pA[ii*sda+3+bs*(ii+0)]*x[ii+0] + pA[ii*sda+3+bs*(ii+1)]*x[ii+1]);
+				{
+				z[ii+0] += pA[ii*sda+3+bs*(ii+0)]*xx[3];
+				z[ii+1] += pA[ii*sda+3+bs*(ii+1)]*xx[3];
+				z[ii+3] += pA[ii*sda+3+bs*(ii+0)]*xx[0] + pA[ii*sda+3+bs*(ii+1)]*xx[1];
+				}
 			// gemv_t
 			kernel_dgemv_t_4_vs_lib4(m-ii-4, &alpha, pA+(ii+4)*sda+ii*bs, sda, x+ii+4, &beta1, z+ii, z+ii, n-ii);
 			ii += 4;
 			}
 		else // if(n-ii==3)
 			{
+			xx[0] = alpha*x[ii+0];
+			xx[1] = alpha*x[ii+1];
+			xx[2] = alpha*x[ii+2];
+			xx[3] = alpha*x[ii+3];
 			// gemv_n
 			kernel_dgemv_n_4_vs_lib4(ii, &alpha, pA+ii*sda, x, &beta1, z+ii, z+ii, m-ii);
 			// 4x4
-			z[ii+0] += alpha*(pA[ii*sda+0+bs*(ii+0)]*x[ii+0] + pA[ii*sda+1+bs*(ii+0)]*x[ii+1] + pA[ii*sda+2+bs*(ii+0)]*x[ii+2] + pA[ii*sda+3+bs*(ii+0)]*x[ii+3]);
+			z[ii+0] += pA[ii*sda+0+bs*(ii+0)]*xx[0];
 			if(m-ii>1)
-				z[ii+1] += alpha*(pA[ii*sda+1+bs*(ii+0)]*x[ii+0] + pA[ii*sda+1+bs*(ii+1)]*x[ii+1] + pA[ii*sda+2+bs*(ii+1)]*x[ii+2] + pA[ii*sda+3+bs*(ii+1)]*x[ii+3]);
+				{
+				z[ii+0] += pA[ii*sda+1+bs*(ii+0)]*xx[1];
+				z[ii+1] += pA[ii*sda+1+bs*(ii+0)]*xx[0] + pA[ii*sda+1+bs*(ii+1)]*xx[1];
+				}
 			if(m-ii>2)
-				z[ii+2] += alpha*(pA[ii*sda+2+bs*(ii+0)]*x[ii+0] + pA[ii*sda+2+bs*(ii+1)]*x[ii+1] + pA[ii*sda+2+bs*(ii+2)]*x[ii+2] + pA[ii*sda+3+bs*(ii+2)]*x[ii+3]);
+				{
+				z[ii+0] += pA[ii*sda+2+bs*(ii+0)]*xx[2];
+				z[ii+1] += pA[ii*sda+2+bs*(ii+1)]*xx[2];
+				z[ii+2] += pA[ii*sda+2+bs*(ii+0)]*xx[0] + pA[ii*sda+2+bs*(ii+1)]*xx[1] + pA[ii*sda+2+bs*(ii+2)]*xx[2];
+				}
 			if(m-ii>3)
-				z[ii+3] += alpha*(pA[ii*sda+3+bs*(ii+0)]*x[ii+0] + pA[ii*sda+3+bs*(ii+1)]*x[ii+1] + pA[ii*sda+3+bs*(ii+2)]*x[ii+2]);
+				{
+				z[ii+0] += pA[ii*sda+3+bs*(ii+0)]*xx[3];
+				z[ii+1] += pA[ii*sda+3+bs*(ii+1)]*xx[3];
+				z[ii+2] += pA[ii*sda+3+bs*(ii+2)]*xx[3];
+				z[ii+3] += pA[ii*sda+3+bs*(ii+0)]*xx[0] + pA[ii*sda+3+bs*(ii+1)]*xx[1] + pA[ii*sda+3+bs*(ii+2)]*xx[2];
+				}
 			// gemv_t
 			kernel_dgemv_t_4_vs_lib4(m-ii-4, &alpha, pA+(ii+4)*sda+ii*bs, sda, x+ii+4, &beta1, z+ii, z+ii, n-ii);
 			ii += 4;
