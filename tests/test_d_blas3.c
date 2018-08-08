@@ -237,7 +237,6 @@ int main()
 									di = ii+AB_offset_i;
 									dj = jj;
 
-
 									#ifdef ROUTINE_CLASS_GEMM
 									#if (VERBOSE>1)
 									print_routine_signature(string(ROUTINE),

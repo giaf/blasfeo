@@ -37,19 +37,27 @@
 /* creates a zero matrix given the size in bytes */
 void v_zeros(void **ptrA, int size)
 	{
+	// allocate memory
 	*ptrA = (void *) malloc(size);
-	char *A = *ptrA;
+	// zero memory
 	int i;
-	for(i=0; i<size; i++) A[i] = 0;
+	double *dA = (double *) *ptrA;
+	for(i=0; i<size/8; i++) dA[i] = 0.0;
+	char *cA = (char *) dA;
+	i *= 8;
+	for(; i<size; i++) cA[i] = 0;
+	return;
 	}
 
 
 /* creates a zero matrix aligned to a cache line given the size in bytes */
 void v_zeros_align(void **ptrA, int size)
 	{
+	// allocate memory
 #if defined(OS_WINDOWS)
 	*ptrA = _aligned_malloc( size, 64 );
 #elif defined(__DSPACE__)
+	// XXX fix this hack !!!
 	*ptrA = malloc(size);
 #else
 	int err = posix_memalign(ptrA, 64, size);
@@ -59,9 +67,14 @@ void v_zeros_align(void **ptrA, int size)
 		exit(1);
 		}
 #endif
-	char *A = *ptrA;
+	// zero allocated memory
 	int i;
-	for(i=0; i<size; i++) A[i] = 0;
+	double *dA = (double *) *ptrA;
+	for(i=0; i<size/8; i++) dA[i] = 0.0;
+	char *cA = (char *) dA;
+	i *= 8;
+	for(; i<size; i++) cA[i] = 0;
+	return;
 	}
 
 
@@ -86,33 +99,46 @@ void v_free_align(void *pA)
 /* creates a zero matrix given the size in bytes */
 void c_zeros(char **ptrA, int size)
 	{
+	// allocate memory
 	*ptrA = malloc(size);
-	char *A = *ptrA;
+	// zero memory
 	int i;
-	for(i=0; i<size; i++) A[i] = 0;
+	double *dA = (double *) *ptrA;
+	for(i=0; i<size/8; i++) dA[i] = 0.0;
+	char *cA = (char *) dA;
+	i *= 8;
+	for(; i<size; i++) cA[i] = 0;
+	return;
 	}
 
 
 /* creates a zero matrix aligned to a cache line given the size in bytes */
 void c_zeros_align(char **ptrA, int size)
 	{
+	// allocate memory
 #if defined(OS_WINDOWS)
 	*ptrA = _aligned_malloc( size, 64 );
 #elif defined(__DSPACE__)
+	// XXX fix this hack !!!
 	*ptrA = malloc(size);
 #else
-	void *temp;
-	int err = posix_memalign(&temp, 64, size);
+	void *tmp;
+	int err = posix_memalign(&tmp, 64, size);
 	if(err!=0)
 		{
 		printf("Memory allocation error");
 		exit(1);
 		}
-	*ptrA = temp;
+	*ptrA = tmp;
 #endif
-	char *A = *ptrA;
+	// zero allocated memory
 	int i;
-	for(i=0; i<size; i++) A[i] = 0;
+	double *dA = (double *) *ptrA;
+	for(i=0; i<size/8; i++) dA[i] = 0.0;
+	char *cA = (char *) dA;
+	i *= 8;
+	for(; i<size; i++) cA[i] = 0;
+	return;
 	}
 
 

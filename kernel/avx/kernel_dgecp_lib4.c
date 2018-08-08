@@ -2466,6 +2466,8 @@ void kernel_dgead_4_1_lib4(int kmax, double alpha, double *A0, int sda, double *
 		b_0,
 		alpha_0, c_0;
 
+	alpha_0 = _mm256_broadcast_sd( &alpha );
+
 	int k;
 
 	for(k=0; k<kmax-3; k+=4)

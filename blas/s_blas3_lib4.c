@@ -50,7 +50,7 @@ void sgemm_nt_lib(int m, int n, int k, float alpha, float *pA, int sda, float *p
 
 	i = 0;
 
-#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; i<m-15; i+=16)
 		{
 		j = 0;
@@ -67,7 +67,7 @@ void sgemm_nt_lib(int m, int n, int k, float alpha, float *pA, int sda, float *p
 			}
 		}
 #endif
-#if defined(TARGET_ARMV7A_ARM_CORTEX_A15)  | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A15)  | defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; i<m-11; i+=12)
 		{
 		j = 0;
@@ -83,11 +83,11 @@ void sgemm_nt_lib(int m, int n, int k, float alpha, float *pA, int sda, float *p
 			}
 		}
 #endif
-#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53) | defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
-#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 		for(; j<n-7; j+=8)
 			{
 			kernel_sgemm_nt_8x8_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], sdb, &beta, &pC[j*bs+i*sdc], sdc, &pD[j*bs+i*sdd], sdd);
@@ -1047,7 +1047,7 @@ void blasfeo_ssyrk_ln_mn(int m, int n, int k, float alpha, struct blasfeo_smat *
 			}
 		if(j<n)
 			{
-			if(i<j) // dgemm
+			if(j<i) // dgemm
 				{
 				kernel_sgemm_nt_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
 				}

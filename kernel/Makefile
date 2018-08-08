@@ -50,7 +50,22 @@ ifeq ($(TARGET), X64_AMD_BULLDOZER)
 	( cd c99; $(MAKE) obj)
 endif
 
+ifeq ($(TARGET), X86_AMD_JAGUAR)
+	( cd avx_x86; $(MAKE) obj)
+	( cd c99; $(MAKE) obj)
+endif
+
+ifeq ($(TARGET), X86_AMD_BARCELONA)
+	( cd sse3_x86; $(MAKE) obj)
+	( cd c99; $(MAKE) obj)
+endif
+
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
+	( cd armv8a; $(MAKE) obj)
+	( cd c99; $(MAKE) obj)
+endif
+
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
 	( cd armv8a; $(MAKE) obj)
 	( cd c99; $(MAKE) obj)
 endif
@@ -67,7 +82,9 @@ endif
 clean:
 	make -C avx2 clean
 	make -C avx clean
+	make -C avx_x86 clean
 	make -C sse3 clean
+	make -C sse3_x86 clean
 	make -C fma clean
 	make -C armv8a clean
 	make -C armv7a clean

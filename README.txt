@@ -6,14 +6,17 @@ It is for example employed in the Model Predictive Control software package HPMP
 BLASFEO provides three implementations of each linear algebra routine (LA):
 - HIGH_PERFORMANCE: a high-performance implementation hand-optimized for different computer architectures.
 - REFERENCE: a lightly-optimized version, coded entirely in C withou assumptions about the computer architecture.
-- BLAS: a wrapper to BLAS and LAPACK routines.
+- BLAS_WRAPPER: a wrapper to BLAS and LAPACK routines.
 
 The currently supported compter architectures (TARGET) are:
 - X64_INTEL_HASWELL: Intel Haswell architecture or newer, AVX2 and FMA ISA, 64-bit OS.
 - X64_INTEL_SANDY_BRIDGE: Intel Sandy-Bridge architecture or newer, AVX ISA, 64-bit OS.
 - X64_INTEL_CORE: Intel Core architecture or newer, SSE3 ISA, 64-bit OS.
 - X64_AMD_BULLDOZER: AMD Bulldozer architecture, AVX and FMA ISAs, 64-bit OS.
-- ARMV78_ARM_CORTEX_A57: ARMv78 architecture, VFPv4 and NEONv2 ISAs, 64-bit OS.
+- X86_AMD_JAGUAR: AMD Jaguar architecture, AVX ISA, 32-bit OS.
+- X86_AMD_BARCELONA: AMD Barcelona architecture, SSE3 ISA, 32-bit OS.
+- ARMV8A_ARM_CORTEX_A57: ARMv8A architecture, VFPv4 and NEONv2 ISAs, 64-bit OS.
+- ARMV8A_ARM_CORTEX_A53: ARMv8A architecture, VFPv4 and NEONv2 ISAs, 64-bit OS.
 - ARMV7A_ARM_CORTEX_A15: ARMv7A architecture, VFPv3 and NEON ISAs, 32-bit OS.
 - GENERIC: generic target, coded in C, giving better performance if the architecture provides more than 16 scalar FP registers (e.g. many RISC such as ARM).
 

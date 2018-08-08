@@ -196,13 +196,110 @@ ifeq ($(TARGET), X64_AMD_BULLDOZER)
 
 # aux
 OBJS += \
-		auxiliarn/d_aux_lib4.o \
+		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
 
 # kernels
 OBJS += \
 		kernel/fma/kernel_dgemm_4x4_lib4.o \
+		kernel/c99/kernel_dgemm_4x4_lib4.o \
+		kernel/c99/kernel_dgemm_diag_lib4.o \
+		kernel/c99/kernel_dgemv_4_lib4.o \
+		kernel/c99/kernel_dsymv_4_lib4.o \
+		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_dgeqrf_4_lib4.o \
+		kernel/c99/kernel_dgecp_lib4.o \
+		kernel/c99/kernel_dgetr_lib4.o \
+		\
+		kernel/c99/kernel_sgemm_4x4_lib4.o \
+		kernel/c99/kernel_sgemm_diag_lib4.o \
+		kernel/c99/kernel_sgemv_4_lib4.o \
+		kernel/c99/kernel_ssymv_4_lib4.o \
+		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_sgecp_lib4.o \
+		kernel/c99/kernel_sgetr_lib4.o \
+
+# blas
+OBJS += \
+		blas/d_blas1_lib4.o \
+		blas/d_blas2_lib4.o \
+		blas/d_blas2_diag_lib.o \
+		blas/d_blas3_lib4.o \
+		blas/d_blas3_diag_lib4.o \
+		blas/d_lapack_lib4.o \
+		\
+		blas/s_blas1_lib4.o \
+		blas/s_blas2_lib4.o \
+		blas/s_blas2_diag_lib.o \
+		blas/s_blas3_lib4.o \
+		blas/s_blas3_diag_lib4.o \
+		blas/s_lapack_lib4.o \
+
+endif
+
+ifeq ($(TARGET), X86_AMD_JAGUAR)
+
+# aux
+OBJS += \
+		auxiliary/d_aux_lib4.o \
+		auxiliary/s_aux_lib4.o \
+		auxiliary/m_aux_lib44.o \
+
+# kernels
+OBJS += \
+		kernel/avx_x86/kernel_dgemm_4x4_lib4.o \
+		kernel/avx_x86/kernel_dgemv_4_lib4.o \
+		kernel/c99/kernel_dgemm_4x4_lib4.o \
+		kernel/c99/kernel_dgemm_diag_lib4.o \
+		kernel/c99/kernel_dgemv_4_lib4.o \
+		kernel/c99/kernel_dsymv_4_lib4.o \
+		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_dgeqrf_4_lib4.o \
+		kernel/c99/kernel_dgecp_lib4.o \
+		kernel/c99/kernel_dgetr_lib4.o \
+		\
+		kernel/avx_x86/kernel_sgemm_4x4_lib4.o \
+		kernel/avx_x86/kernel_sgemv_4_lib4.o \
+		kernel/c99/kernel_sgemm_4x4_lib4.o \
+		kernel/c99/kernel_sgemm_diag_lib4.o \
+		kernel/c99/kernel_sgemv_4_lib4.o \
+		kernel/c99/kernel_ssymv_4_lib4.o \
+		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_sgecp_lib4.o \
+		kernel/c99/kernel_sgetr_lib4.o \
+
+# blas
+OBJS += \
+		blas/d_blas1_lib4.o \
+		blas/d_blas2_lib4.o \
+		blas/d_blas2_diag_lib.o \
+		blas/d_blas3_lib4.o \
+		blas/d_blas3_diag_lib4.o \
+		blas/d_lapack_lib4.o \
+		\
+		blas/s_blas1_lib4.o \
+		blas/s_blas2_lib4.o \
+		blas/s_blas2_diag_lib.o \
+		blas/s_blas3_lib4.o \
+		blas/s_blas3_diag_lib4.o \
+		blas/s_lapack_lib4.o \
+
+endif
+
+ifeq ($(TARGET), X86_AMD_BARCELONA)
+
+# aux
+OBJS += \
+		auxiliary/d_aux_lib4.o \
+		auxiliary/s_aux_lib4.o \
+		auxiliary/m_aux_lib44.o \
+
+# kernels
+OBJS += \
+		kernel/sse3_x86/kernel_dgemm_4x2_lib4.o \
+		kernel/sse3_x86/kernel_dgemm_2x2_lib4.o \
+		kernel/sse3_x86/kernel_dgemv_4_lib4.o \
 		kernel/c99/kernel_dgemm_4x4_lib4.o \
 		kernel/c99/kernel_dgemm_diag_lib4.o \
 		kernel/c99/kernel_dgemv_4_lib4.o \
@@ -248,6 +345,59 @@ OBJS += \
 
 # kernels
 OBJS += \
+		kernel/armv8a/kernel_dgemm_8x4_lib4.o \
+		kernel/armv8a/kernel_dgemm_4x4_lib4.o \
+		kernel/c99/kernel_dgemm_4x4_lib4.o \
+		kernel/c99/kernel_dgemm_diag_lib4.o \
+		kernel/c99/kernel_dgemv_4_lib4.o \
+		kernel/c99/kernel_dsymv_4_lib4.o \
+		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_dgeqrf_4_lib4.o \
+		kernel/c99/kernel_dgecp_lib4.o \
+		kernel/c99/kernel_dgetr_lib4.o \
+		\
+		kernel/armv8a/kernel_sgemm_16x4_lib4.o \
+		kernel/armv8a/kernel_sgemm_12x4_lib4.o \
+		kernel/armv8a/kernel_sgemm_8x8_lib4.o \
+		kernel/armv8a/kernel_sgemm_8x4_lib4.o \
+		kernel/armv8a/kernel_sgemm_4x4_lib4.o \
+		kernel/c99/kernel_sgemm_4x4_lib4.o \
+		kernel/c99/kernel_sgemm_diag_lib4.o \
+		kernel/c99/kernel_sgemv_4_lib4.o \
+		kernel/c99/kernel_ssymv_4_lib4.o \
+		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_sgecp_lib4.o \
+		kernel/c99/kernel_sgetr_lib4.o \
+
+# blas
+OBJS += \
+		blas/d_blas1_lib4.o \
+		blas/d_blas2_lib4.o \
+		blas/d_blas2_diag_lib.o \
+		blas/d_blas3_lib4.o \
+		blas/d_blas3_diag_lib4.o \
+		blas/d_lapack_lib4.o \
+		\
+		blas/s_blas1_lib4.o \
+		blas/s_blas2_lib4.o \
+		blas/s_blas2_diag_lib.o \
+		blas/s_blas3_lib4.o \
+		blas/s_blas3_diag_lib4.o \
+		blas/s_lapack_lib4.o \
+
+endif
+
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
+
+# aux
+OBJS += \
+		auxiliary/d_aux_lib4.o \
+		auxiliary/s_aux_lib4.o \
+		auxiliary/m_aux_lib44.o \
+
+# kernels
+OBJS += \
+		kernel/armv8a/kernel_dgemm_12x4_lib4.o \
 		kernel/armv8a/kernel_dgemm_8x4_lib4.o \
 		kernel/armv8a/kernel_dgemm_4x4_lib4.o \
 		kernel/c99/kernel_dgemm_4x4_lib4.o \
@@ -435,6 +585,7 @@ OBJS_REF += \
 		auxiliary/d_aux_ext_dep_libref.o \
 		auxiliary/s_aux_ext_dep_libref.o \
 		blas/d_blas3_libref.o \
+		blas/s_blas3_libref.o \
 #
 endif
 
@@ -450,10 +601,10 @@ static_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd auxiliary; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
-	ar rcs libblasfeo.a $(OBJS)
+	$(AR) rcs libblasfeo.a $(OBJS)
 	mv libblasfeo.a ./lib/
 ifeq ($(TESTING_MODE), 1)
-	ar rcs libblasfeo_ref.a $(OBJS_REF)
+	$(AR) rcs libblasfeo_ref.a $(OBJS_REF)
 	mv libblasfeo_ref.a ./lib/
 endif
 	@echo
@@ -469,10 +620,10 @@ shared_library: target
 	( cd auxiliary; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
 	( cd blas; $(MAKE) obj)
-	gcc -shared -o libblasfeo.so $(OBJS)
+	$(CC) -shared -o libblasfeo.so $(OBJS)
 	mv libblasfeo.so ./lib/
 ifeq ($(TESTING_MODE), 1)
-	gcc -shared -o libblasfeo_ref.so $(OBJS_REF)
+	$(CC) -shared -o libblasfeo_ref.so $(OBJS_REF)
 	mv libblasfeo_ref.so ./lib/
 endif
 	@echo
@@ -506,6 +657,18 @@ ifeq ($(TARGET), X64_AMD_BULLDOZER)
 	echo "#define TARGET_X64_AMD_BULLDOZER" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 #	echo "#define TARGET X64_AMD_BULLDOZER" >> ./include/blasfeo_target.h
+endif
+ifeq ($(TARGET), X86_AMD_JAGUAR)
+	echo "#ifndef TARGET_X86_AMD_JAGUAR" > ./include/blasfeo_target.h
+	echo "#define TARGET_X86_AMD_JAGUAR" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+#	echo "#define TARGET X86_AMD_JAGUAR" >> ./include/blasfeo_target.h
+endif
+ifeq ($(TARGET), X86_AMD_BARCELONA)
+	echo "#ifndef TARGET_X86_AMD_BARCELONA" > ./include/blasfeo_target.h
+	echo "#define TARGET_X86_AMD_BARCELONA" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+#	echo "#define TARGET X86_AMD_BARCELONA" >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), GENERIC)
 	echo "#ifndef TARGET_GENERIC" > ./include/blasfeo_target.h
@@ -577,6 +740,7 @@ deep_clean: clean
 	rm -f ./include/blasfeo_target.h
 	rm -f ./lib/libblasfeo.a
 	rm -f ./lib/libblasfeo.so
+	rm -f ./lib/libblasfeo_ref.a
 	make -C examples clean_all
 	make -C tests clean_all
 	make -C benchmarks clean_all
@@ -600,6 +764,22 @@ benchmarks: deploy_to_benchmarks build_benchmarks
 
 run_benchmarks:
 	make -C benchmarks run
+
+
+
+build_benchmarks_all:
+	make -C benchmarks all
+	@echo
+	@echo "Benchmarks build complete."
+	@echo
+
+benchmarks_all: deploy_to_benchmarks build_benchmarks_all
+
+run_benchmarks_all:
+	make -C benchmarks run_all
+
+print_figures_benchmark_all:
+	make -C benchmarks print_figures
 
 ### examples
 

@@ -37,10 +37,10 @@ extern "C" {
 
 
 
-void m_cvt_d2blasfeo_svec(int m, struct blasfeo_dvec *vd, int vdi, struct blasfeo_svec *vs, int vsi);
-void m_cvt_s2blasfeo_dvec(int m, struct blasfeo_svec *vs, int vsi, struct blasfeo_dvec *vd, int vdi);
-void m_cvt_d2blasfeo_smat(int m, int n, struct blasfeo_dmat *Md, int mid, int nid, struct blasfeo_smat *Ms, int mis, int nis);
-void m_cvt_s2blasfeo_dmat(int m, int n, struct blasfeo_smat *Ms, int mis, int nis, struct blasfeo_dmat *Md, int mid, int nid);
+void blasfeo_cvt_d2s_vec(int m, struct blasfeo_dvec *vd, int vdi, struct blasfeo_svec *vs, int vsi);
+void blasfeo_cvt_s2d_vec(int m, struct blasfeo_svec *vs, int vsi, struct blasfeo_dvec *vd, int vdi);
+void blasfeo_cvt_d2s_mat(int m, int n, struct blasfeo_dmat *Md, int mid, int nid, struct blasfeo_smat *Ms, int mis, int nis);
+void blasfeo_cvt_s2d_mat(int m, int n, struct blasfeo_smat *Ms, int mis, int nis, struct blasfeo_dmat *Md, int mid, int nid);
 
 
 #ifdef __cplusplus

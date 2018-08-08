@@ -48,7 +48,7 @@
 #include "test_d_common.h"
 #include "test_x_common.c"
 
-
+#define VERBOSE 1
 
 int main()
 	{
@@ -194,7 +194,19 @@ int main()
 			res = dgecmp_libstr(ni, mi, bi, bj, &sB, &rB, &sA, &rA, &err_i, &err_j, VERBOSE);
 			assert(res);
 
+			// ---- Add&Scale
+			//
+			printf("Add A[%d:%d,%d:%d] in B[%d:%d,%d:%d]\n",
+						  ai,ni,aj,mi,      bi,ni, bj,mi);
+
+			blasfeo_dgead(ni, mi, alpha, &sA, ai, aj, &sB, bi, bj);
+			blasfeo_dgead_ref(ni, mi, alpha, &rA, ii, 0, &rB, bi, bj);
+
+			res = dgecmp_libstr(ni, mi, bi, bj, &sB, &rB, &sA, &rA, &err_i, &err_j, VERBOSE);
+			assert(res);
+
 			printf("\n");
+
 			}
 
 		printf("\n");

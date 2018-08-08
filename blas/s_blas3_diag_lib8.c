@@ -39,6 +39,18 @@
 
 
 
+// dgemm with A diagonal matrix (stored as strvec)
+void blasfeo_sgemm_dn(int m, int n, double alpha, struct blasfeo_svec *sA, int ai, struct blasfeo_smat *sB, int bi, int bj, double beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+	printf("\nblasfeo_dgemm_dn: feature not implemented yet: bi=%d, ci=%d, di=%d\n", bi, ci, di);
+	exit(1);
+	return;
+	}
+
+
+
 // dgemm with B diagonal matrix (stored as strvec)
 void blasfeo_sgemm_nd(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sB, int bi, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{

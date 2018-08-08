@@ -515,9 +515,18 @@ int main()
 #elif defined(TARGET_X64_AMD_BULLDOZER)
 	const float flops_max = 8;
 	printf("Testing BLAS version for SSE3 and FMA instruction set, 64 bit (optimized for AMD Bulldozer): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_X86_AMD_JAGUAR)
+	const float flops_max = 2;
+	printf("Testing BLAS version for AVX instruction set, 32 bit (optimized for AMD Jaguar): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_X86_AMD_BARCELONA)
+	const float flops_max = 4; // 2 on jaguar
+	printf("Testing BLAS version for SSE3 instruction set, 32 bit (optimized for AMD Barcelona): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	const float flops_max = 4;
 	printf("Testing BLAS version for NEONv2 instruction set, 64 bit (optimized for ARM Cortex A57): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	const float flops_max = 4;
+	printf("Testing BLAS version for NEONv2 instruction set, 64 bit (optimized for ARM Cortex A53): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	const float flops_max = 2;
 	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A15): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
@@ -735,58 +744,58 @@ int main()
 			for(rep=0; rep<nrep; rep++)
 				{
 
-				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
+//				kernel_dgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//				kernel_dgemm_nt_8x8_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//				kernel_dsyrk_nt_l_8x8_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//				kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//				kernel_dgemm_nt_4x8_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+//				kernel_dgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+//				kernel_dgemm_nn_4x4_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+//				kernel_dger4_12_sub_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+//				kernel_dger4_sub_12r_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+//				kernel_dger4_sub_8r_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+//				kernel_dger12_add_4r_lib4(n, sA.pA, sB.pA, sB.cn, sD.pA);
+//				kernel_dger8_add_4r_lib4(n, sA.pA, sB.pA, sB.cn, sD.pA);
+//				kernel_dger4_sub_4r_lib4(n, sA.pA, sB.pA, sD.pA);
+//				kernel_dger2_sub_4r_lib4(n, sA.pA, sB.pA, sD.pA);
+//				kernel_dger4_sub_8c_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+//				kernel_dger4_sub_4c_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
+//				kernel_dgemm_nn_4x12_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+//				kernel_dgemm_nn_4x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+//				kernel_dgemm_nn_2x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+//				kernel_dgemm_nn_4x4_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+//				kernel_dgemm_nn_12x4_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//				kernel_dgemm_nn_8x4_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//				kernel_dgemm_nn_4x4_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+//				kernel_dgemm_nn_8x6_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
+//				kernel_dgemm_nn_8x4_gen_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 8, 0, 4);
+//				kernel_dgemm_nn_4x4_gen_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 8, 0, 4);
 
-				#if 0
-				kernel_dgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-				kernel_dgemm_nt_8x8_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-				kernel_dsyrk_nt_l_8x8_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-				kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-				kernel_dgemm_nt_4x8_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
-				kernel_dgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
-				kernel_dgemm_nn_4x4_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
-				kernel_dger4_12_sub_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
-				kernel_dger4_sub_12r_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
-				kernel_dger4_sub_8r_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
-				kernel_dger12_add_4r_lib4(n, sA.pA, sB.pA, sB.cn, sD.pA);
-				kernel_dger8_add_4r_lib4(n, sA.pA, sB.pA, sB.cn, sD.pA);
-				kernel_dger4_sub_4r_lib4(n, sA.pA, sB.pA, sD.pA);
-				kernel_dger2_sub_4r_lib4(n, sA.pA, sB.pA, sD.pA);
-				kernel_dger4_sub_8c_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
-				kernel_dger4_sub_4c_lib4(n, sA.pA, sA.cn, sB.pA, sD.pA, sD.cn);
-				kernel_dgemm_nn_4x12_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
-				kernel_dgemm_nn_4x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
-				kernel_dgemm_nn_2x8_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
-				kernel_dgemm_nn_4x4_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
-				kernel_dgemm_nn_12x4_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-				kernel_dgemm_nn_8x4_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-				kernel_dgemm_nn_4x4_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
-				kernel_dgemm_nn_8x6_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
-				kernel_dgemm_nn_8x4_gen_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 8, 0, 4);
-				kernel_dgemm_nn_4x4_gen_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 8, 0, 4);
-				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-				blasfeo_dsyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-				blasfeo_dsyrk_ln_mn(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-				blasfeo_dpotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_dsyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_dsyrk_ln_mn(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
+//				blasfeo_dpotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
 				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
-				blasfeo_dgetrf_nopivot(n, n, &sB, 0, 0, &sB, 0, 0);
-				blasfeo_dgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
-				blasfeo_dgeqrf(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
-				blasfeo_dcolin(n, &sx, 0, &sB3, 0, n-1);
-				blasfeo_dgelqf(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
-				blasfeo_dtrmm_rlnn(n, n, 1.0, &sA, 0, 0, &sD, 0, 0, &sD, 0, 0); //
-				blasfeo_dtrmm_rutn(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
-				blasfeo_dtrsm_llnu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-				blasfeo_dtrsm_lunn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-				blasfeo_dtrsm_rltn(n, n, 1.0, &sB2, 0, 0, &sD, 0, 0, &sD, 0, 0); //
-				blasfeo_dtrsm_rltu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-				blasfeo_dtrsm_rutn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-				blasfeo_dgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-				blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-				blasfeo_dsymv_l(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-				blasfeo_dgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
-				#endif
+//				blasfeo_dgetrf_nopivot(n, n, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_dgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
+//				blasfeo_dgeqrf(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
+//				blasfeo_dcolin(n, &sx, 0, &sB3, 0, n-1);
+//				blasfeo_dgelqf(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
+//				blasfeo_dgelqf_pd(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
+//				blasfeo_dgelqf_pd_la(n, n, &sB3, 0, 0, &sA, 0, 0, lq_work);
+//				blasfeo_dgelqf_pd_lla(n, n, &sB3, 0, 0, &sB, 0, 0, &sA, 0, 0, lq_work);
+//				blasfeo_dtrmm_rlnn(n, n, 1.0, &sA, 0, 0, &sD, 0, 0, &sD, 0, 0); //
+//				blasfeo_dtrmm_rutn(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+//				blasfeo_dtrsm_llnu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_dtrsm_lunn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_dtrsm_rltn(n, n, 1.0, &sB2, 0, 0, &sD, 0, 0, &sD, 0, 0); //
+//				blasfeo_dtrsm_rltu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_dtrsm_rutn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_dgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+//				blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+//				blasfeo_dsymv_l(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+//				blasfeo_dgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
 				}
 
 			tmp_time_blasfeo = blasfeo_toc(&timer) / nrep;
@@ -843,22 +852,23 @@ int main()
 
 		float Gflops_max = flops_max * GHz_max;
 
-		// float flop_operation = 4*16.0*2*n; // kernel 16x4
-		// float flop_operation = 3*16.0*2*n; // kernel 12x4
-		// float flop_operation = 2*16.0*2*n; // kernel 8x4
-		// float flop_operation = 1*16.0*2*n; // kernel 4x4
-		// float flop_operation = 0.5*16.0*2*n; // kernel 2x4
-		// float flop_operation = 2.0*n*n*n; // gemm
-		// float flop_operation = 1.0*n*n*n; // syrk trmm trsm
-		// float flop_operation = 2.0/3.0*n*n*n; // getrf
-		// float flop_operation = 4.0/3.0*n*n*n; // geqrf
-		// float flop_operation = 2.0*n*n; // gemv symv
-		// float flop_operation = 1.0*n*n; // trmv trsv
-		// float flop_operation = 4.0*n*n; // gemv_nt
-		// float flop_operation = 4.0/3.0*n*n*n; // syrk+potrf
-		// float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
+//		float flop_operation = 4*16.0*2*n; // kernel 16x4
+//		float flop_operation = 3*16.0*2*n; // kernel 12x4
+//		float flop_operation = 2*16.0*2*n; // kernel 8x4
+//		float flop_operation = 1*16.0*2*n; // kernel 4x4
+//		float flop_operation = 0.5*16.0*2*n; // kernel 2x4
 
+//		float flop_operation = 2.0*n*n*n; // gemm
+//		float flop_operation = 1.0*n*n*n; // syrk trmm trsm
 		float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
+//		float flop_operation = 2.0/3.0*n*n*n; // getrf
+//		float flop_operation = 4.0/3.0*n*n*n; // geqrf
+//		float flop_operation = 2.0*n*n*n; // geqrf_la
+//		float flop_operation = 8.0/3.0*n*n*n; // geqrf_lla
+//		float flop_operation = 2.0*n*n; // gemv symv
+//		float flop_operation = 1.0*n*n; // trmv trsv
+//		float flop_operation = 4.0*n*n; // gemv_nt
+//		float flop_operation = 4.0/3.0*n*n*n; // syrk+potrf
 
 		float Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
 		float Gflops_blas     = 1e-9*flop_operation/time_blas;

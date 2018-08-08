@@ -186,6 +186,7 @@ void kernel_dsyrk_nt_l_4x4_gen_lib4(int k, double *alpha, double *A, double *B, 
 void kernel_dtrmm_nt_ru_4x4_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D); //
 void kernel_dtrmm_nt_ru_4x4_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int km, int kn); //
 void kernel_dtrmm_nn_rl_4x4_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *D);
+void kernel_dtrmm_nn_rl_4x4_vs_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *D, int m1, int n1);
 void kernel_dtrmm_nn_rl_4x4_gen_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, int offsetD, double *D, int sdd, int m0, int m1, int n0, int n1);
 void kernel_dtrsm_nt_rl_inv_4x4_lib4(int k, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E);
 void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int k, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E, int km, int kn);
@@ -202,11 +203,21 @@ void kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 // 4x2
 void kernel_dgemm_nn_4x2_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D); //
 void kernel_dgemm_nn_4x2_vs_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1); //
+void kernel_dgemm_nt_4x2_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D);
+void kernel_dgemm_nt_4x2_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int m1, int n1);
+void kernel_dsyrk_nt_l_4x2_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D); //
+void kernel_dsyrk_nt_l_4x2_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int km, int kn); //
+void kernel_dtrmm_nn_rl_4x2_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *D);
+void kernel_dtrmm_nn_rl_4x2_vs_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *D, int m1, int n1);
+void kernel_dtrsm_nt_rl_inv_4x2_lib4(int k, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E);
+void kernel_dtrsm_nt_rl_inv_4x2_vs_lib4(int k, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E, int km, int kn);
 // 2x4
 void kernel_dgemm_nn_2x4_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D); //
 void kernel_dgemm_nn_2x4_vs_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1); //
 // 2x2
 void kernel_dgemm_nn_2x2_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D); //
+void kernel_dsyrk_nt_l_2x2_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D); //
+void kernel_dsyrk_nt_l_2x2_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int km, int kn); //
 // diag
 void kernel_dgemm_diag_right_4_a0_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *D, int sdd);
 void kernel_dgemm_diag_right_4_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd);
@@ -270,19 +281,35 @@ void kernel_dgelqf_dlarft12_12_lib4(int n, double *pD, int sdd, double *dD, doub
 void kernel_dgelqf_dlarft4_12_lib4(int n, double *pD, int sdd, double *dD, double *pT);
 void kernel_dgelqf_dlarft4_8_lib4(int n, double *pD, int sdd, double *dD, double *pT);
 void kernel_dgelqf_dlarft4_4_lib4(int n, double *pD, double *dD, double *pT);
+void kernel_dlarfb12_r_12_lib4(int kmax, double *pV, int sdd, double *pT, double *pD, double *pK);
 void kernel_dlarfb12_r_4_lib4(int kmax, double *pV, int sdd, double *pT, double *pD, double *pK, int km);
 void kernel_dlarfb4_r_12_lib4(int kmax, double *pV, double *pT, double *pD, int sdd);
 void kernel_dlarfb4_r_8_lib4(int kmax, double *pV, double *pT, double *pD, int sdd);
 void kernel_dlarfb4_r_4_lib4(int kmax, double *pV, double *pT, double *pD);
 void kernel_dlarfb4_r_1_lib4(int kmax, double *pV, double *pT, double *pD);
+void kernel_dgelqf_pd_dlarft12_12_lib4(int n, double *pD, int sdd, double *dD, double *pT);
+void kernel_dgelqf_pd_dlarft4_8_lib4(int n, double *pD, int sdd, double *dD, double *pT);
 void kernel_dgelqf_pd_dlarft4_4_lib4(int n, double *pD, double *dD, double *pT);
 void kernel_dgelqf_pd_4_lib4(int n, double *pD, double *dD);
 void kernel_dgelqf_pd_vs_lib4(int m, int n, int k, int offD, double *pD, int sdd, double *dD);
 void kernel_dgelqf_pd_la_vs_lib4(int m, int n1, int k, int offD, double *pD, int sdd, double *dD, int offA, double *pA, int sda);
 void kernel_dlarft_4_la_lib4(int n1, double *dD, double *pA, double *pT);
+void kernel_dlarfb4_r_12_la_lib4(int n1, double *pVA, double *pT, double *pD, int sdd, double *pA, int sda);
 void kernel_dlarfb4_r_8_la_lib4(int n1, double *pVA, double *pT, double *pD, int sdd, double *pA, int sda);
 void kernel_dlarfb4_r_4_la_lib4(int n1, double *pVA, double *pT, double *pD, double *pA);
 void kernel_dlarfb4_r_1_la_lib4(int n1, double *pVA, double *pT, double *pD, double *pA);
+void kernel_dgelqf_pd_lla_vs_lib4(int m, int n0, int n1, int k, int offD, double *pD, int sdd, double *dD, int offL, double *pL, int sdl, int offA, double *pA, int sda);
+void kernel_dlarft_4_lla_lib4(int n0, int n1, double *dD, double *pL, double *pA, double *pT);
+void kernel_dlarfb4_r_12_lla_lib4(int n0, int n1, double *pVL, double *pVA, double *pT, double *pD, int sdd, double *pL, int sdl, double *pA, int sda);
+void kernel_dlarfb4_r_8_lla_lib4(int n0, int n1, double *pVL, double *pVA, double *pT, double *pD, int sdd, double *pL, int sdl, double *pA, int sda);
+void kernel_dlarfb4_r_4_lla_lib4(int n0, int n1, double *pVL, double *pVA, double *pT, double *pD, double *pL, double *pA);
+void kernel_dlarfb4_r_1_lla_lib4(int n0, int n1, double *pVL, double *pVA, double *pT, double *pD, double *pL, double *pA);
+// 4x2
+void kernel_dpotrf_nt_l_4x2_lib4(int k, double *A, double *B, double *C, double *D, double *inv_diag_D);
+void kernel_dpotrf_nt_l_4x2_vs_lib4(int k, double *A, double *B, double *C, double *D, double *inv_diag_D, int km, int kn);
+// 2x2
+void kernel_dpotrf_nt_l_2x2_lib4(int k, double *A, double *B, double *C, double *D, double *inv_diag_D);
+void kernel_dpotrf_nt_l_2x2_vs_lib4(int k, double *A, double *B, double *C, double *D, double *inv_diag_D, int km, int kn);
 
 
 
@@ -311,6 +338,14 @@ void kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4(int kp, double *Ap, double *Bp, int k
 void kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *E, double *inv_diag_E, int km, int kn);
 void kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *inv_diag_D, int km, int kn);
 void kernel_dsyrk_dpotrf_nt_l_4x4_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *inv_diag_D);
+// 4x2
+void kernel_dgemm_dtrsm_nt_rl_inv_4x2_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *E, double *inv_diag_E);
+void kernel_dgemm_dtrsm_nt_rl_inv_4x2_vs_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *E, double *inv_diag_E, int km, int kn);
+void kernel_dsyrk_dpotrf_nt_l_4x2_vs_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *inv_diag_D, int km, int kn);
+void kernel_dsyrk_dpotrf_nt_l_4x2_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *inv_diag_D);
+// 2x2
+void kernel_dsyrk_dpotrf_nt_l_2x2_vs_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *inv_diag_D, int km, int kn);
+void kernel_dsyrk_dpotrf_nt_l_2x2_lib4(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *inv_diag_D);
 
 /*
  *

@@ -65,6 +65,7 @@
 #define POTRF_L_MN_LIBSTR blasfeo_spotrf_l_mn
 #define PSTRF_L_LIBSTR spstrf_l_libstr
 #define SYRK_POTRF_LN_LIBSTR blasfeo_ssyrk_spotrf_ln
+#define SYRK_POTRF_LN_MN_LIBSTR blasfeo_ssyrk_spotrf_ln_mn
 
 #define COPY scopy_
 #define GELQF sgelqf_

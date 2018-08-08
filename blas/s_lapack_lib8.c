@@ -534,12 +534,12 @@ void blasfeo_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int cj, 
 
 
 
-void blasfeo_ssyrk_spotrf_ln(int m, int n, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+void blasfeo_ssyrk_spotrf_ln_mn(int m, int n, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
-		printf("\nblasfeo_ssyrk_spotrf_ln: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
+		printf("\nblasfeo_ssyrk_spotrf_ln_mn: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
 		}
 
@@ -849,6 +849,14 @@ void blasfeo_ssyrk_spotrf_ln(int m, int n, int k, struct blasfeo_smat *sA, int a
 
 
 
+void blasfeo_ssyrk_spotrf_ln(int m, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_ssyrk_spotrf_ln_mn(m, m, k, sA, ai, aj, sB, bi, bj, sC, ci, cj, sD, di, dj);
+	return;
+	}
+
+
+
 // dgetrf without pivoting
 void blasfeo_sgetrf_nopivot(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
@@ -872,8 +880,6 @@ void blasfeo_sgetrf_rowpivot(int m, int n, struct blasfeo_smat *sC, int ci, int 
 
 int blasfeo_sgeqrf_worksize(int m, int n)
 	{
-	printf("\nblasfeo_sgeqrf_worksize: feature not implemented yet\n");
-	exit(1);
 	return 0;
 	}
 
@@ -892,8 +898,6 @@ void blasfeo_sgeqrf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struc
 
 int blasfeo_sgelqf_worksize(int m, int n)
 	{
-	printf("\nblasfeo_sgelqf_worksize: feature not implemented yet\n");
-	exit(1);
 	return 0;
 	}
 

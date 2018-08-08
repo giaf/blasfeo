@@ -187,17 +187,17 @@
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_DGEMV_ADD_N_4_LIB4
+	.macro INNER_KERNEL_GEMV_ADD_N_4_LIB4
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_kernel_dgemv_add_n_4_lib4, @function
-inner_kernel_dgemv_add_n_4_lib4:
+	.type inner_kernel_gemv_add_n_4_lib4, @function
+inner_kernel_gemv_add_n_4_lib4:
 #elif defined(OS_MAC)
-_inner_kernel_dgemv_add_n_4_lib4:
+_inner_kernel_gemv_add_n_4_lib4:
 #elif defined(OS_WINDOWS)
-	.def inner_kernel_dgemv_add_n_4_lib4; .scl 2; .type 32; .endef
-inner_kernel_dgemv_add_n_4_lib4:
+	.def inner_kernel_gemv_add_n_4_lib4; .scl 2; .type 32; .endef
+inner_kernel_gemv_add_n_4_lib4:
 #endif
 #endif
 	
@@ -268,7 +268,7 @@ inner_kernel_dgemv_add_n_4_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_kernel_dgemv_add_n_4_lib4, .-inner_kernel_dgemv_add_n_4_lib4
+	.size	inner_kernel_gemv_add_n_4_lib4, .-inner_kernel_gemv_add_n_4_lib4
 #endif
 #endif
 
@@ -316,17 +316,17 @@ inner_kernel_dgemv_add_n_4_lib4:
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_DGEMV_ADD_T_4_LIB4
+	.macro INNER_KERNEL_GEMV_ADD_T_4_LIB4
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_kernel_dgemv_add_t_4_lib4, @function
-inner_kernel_dgemv_add_t_4_lib4:
+	.type inner_kernel_gemv_add_t_4_lib4, @function
+inner_kernel_gemv_add_t_4_lib4:
 #elif defined(OS_MAC)
-_inner_kernel_dgemv_add_t_4_lib4:
+_inner_kernel_gemv_add_t_4_lib4:
 #elif defined(OS_WINDOWS)
-	.def inner_kernel_dgemv_add_t_4_lib4; .scl 2; .type 32; .endef
-inner_kernel_dgemv_add_t_4_lib4:
+	.def inner_kernel_gemv_add_t_4_lib4; .scl 2; .type 32; .endef
+inner_kernel_gemv_add_t_4_lib4:
 #endif
 #endif
 
@@ -417,7 +417,7 @@ inner_kernel_dgemv_add_t_4_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_kernel_dgemv_add_t_4_lib4, .-inner_kernel_dgemv_add_t_4_lib4
+	.size	inner_kernel_gemv_add_t_4_lib4, .-inner_kernel_gemv_add_t_4_lib4
 #endif
 #endif
 
@@ -471,17 +471,17 @@ inner_kernel_dgemv_add_t_4_lib4:
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_DGEMV_ADD_NT_4_LIB4
+	.macro INNER_KERNEL_GEMV_ADD_NT_4_LIB4
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_kernel_dgemv_add_nt_4_lib4, @function
-inner_kernel_dgemv_add_nt_4_lib4:
+	.type inner_kernel_gemv_add_nt_4_lib4, @function
+inner_kernel_gemv_add_nt_4_lib4:
 #elif defined(OS_MAC)
-_inner_kernel_dgemv_add_nt_4_lib4:
+_inner_kernel_gemv_add_nt_4_lib4:
 #elif defined(OS_WINDOWS)
-	.def inner_kernel_dgemv_add_nt_4_lib4; .scl 2; .type 32; .endef
-inner_kernel_dgemv_add_nt_4_lib4:
+	.def inner_kernel_gemv_add_nt_4_lib4; .scl 2; .type 32; .endef
+inner_kernel_gemv_add_nt_4_lib4:
 #endif
 #endif
 
@@ -602,7 +602,7 @@ inner_kernel_dgemv_add_nt_4_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_kernel_dgemv_add_nt_4_lib4, .-inner_kernel_dgemv_add_nt_4_lib4
+	.size	inner_kernel_gemv_add_nt_4_lib4, .-inner_kernel_gemv_add_nt_4_lib4
 #endif
 #endif
 
@@ -653,7 +653,7 @@ inner_kernel_dgemv_add_nt_4_lib4:
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=2
-	.macro INNER_EDGE_DGEMV_ADD_T_4_LIB4
+	.macro INNER_EDGE_GEMV_ADD_T_4_LIB4
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2746,12 +2746,12 @@ kernel_dgemv_n_4_lib4:
 	movq	ARG4, %r12  // x
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
+	INNER_KERNEL_GEMV_ADD_N_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_n_4_lib4
+	call inner_kernel_gemv_add_n_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_n_4_lib4
+	callq _inner_kernel_gemv_add_n_4_lib4
 #endif
 #endif
 
@@ -2834,12 +2834,12 @@ kernel_dgemv_n_4_vs_lib4:
 	movq	ARG4, %r12  // x
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
+	INNER_KERNEL_GEMV_ADD_N_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_n_4_lib4
+	call inner_kernel_gemv_add_n_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_n_4_lib4
+	callq _inner_kernel_gemv_add_n_4_lib4
 #endif
 #endif
 
@@ -2923,12 +2923,12 @@ kernel_dgemv_n_4_gen_lib4:
 	movq	ARG4, %r12  // x
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
+	INNER_KERNEL_GEMV_ADD_N_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_n_4_lib4
+	call inner_kernel_gemv_add_n_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_n_4_lib4
+	callq _inner_kernel_gemv_add_n_4_lib4
 #endif
 #endif
 
@@ -3016,12 +3016,12 @@ kernel_dgemv_t_4_lib4:
 	movq	ARG5, %r13  // x
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
+	INNER_KERNEL_GEMV_ADD_T_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_t_4_lib4
+	call inner_kernel_gemv_add_t_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_t_4_lib4
+	callq _inner_kernel_gemv_add_t_4_lib4
 #endif
 #endif
 
@@ -3107,12 +3107,12 @@ kernel_dgemv_t_4_vs_lib4:
 	movq	ARG5, %r13  // x
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
+	INNER_KERNEL_GEMV_ADD_T_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_t_4_lib4
+	call inner_kernel_gemv_add_t_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_t_4_lib4
+	callq _inner_kernel_gemv_add_t_4_lib4
 #endif
 #endif
 
@@ -3200,7 +3200,7 @@ kernel_dgemv_t_4_gen_lib4:
 	movq	ARG3, %r14 // offA
 
 #if MACRO_LEVEL>=2
-	INNER_EDGE_DGEMV_ADD_T_4_LIB4
+	INNER_EDGE_GEMV_ADD_T_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_edge_dgemv_add_t_4_lib4
@@ -3210,12 +3210,12 @@ kernel_dgemv_t_4_gen_lib4:
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
+	INNER_KERNEL_GEMV_ADD_T_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_t_4_lib4
+	call inner_kernel_gemv_add_t_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_t_4_lib4
+	callq _inner_kernel_gemv_add_t_4_lib4
 #endif
 #endif
 
@@ -3299,12 +3299,12 @@ kernel_dtrsv_ln_inv_4_lib4:
 	movq	ARG4, %r12  // x
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
+	INNER_KERNEL_GEMV_ADD_N_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_n_4_lib4
+	call inner_kernel_gemv_add_n_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_n_4_lib4
+	callq _inner_kernel_gemv_add_n_4_lib4
 #endif
 #endif
 
@@ -3403,12 +3403,12 @@ kernel_dtrsv_ln_inv_4_vs_lib4:
 	movq	ARG4, %r12  // x
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
+	INNER_KERNEL_GEMV_ADD_N_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_n_4_lib4
+	call inner_kernel_gemv_add_n_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_n_4_lib4
+	callq _inner_kernel_gemv_add_n_4_lib4
 #endif
 #endif
 
@@ -3509,12 +3509,12 @@ kernel_dtrsv_ln_one_4_lib4:
 	movq	ARG3, %r12  // x
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
+	INNER_KERNEL_GEMV_ADD_N_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_n_4_lib4
+	call inner_kernel_gemv_add_n_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_n_4_lib4
+	callq _inner_kernel_gemv_add_n_4_lib4
 #endif
 #endif
 
@@ -3612,12 +3612,12 @@ kernel_dtrsv_ln_one_4_vs_lib4:
 	movq	ARG3, %r12  // x
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
+	INNER_KERNEL_GEMV_ADD_N_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_n_4_lib4
+	call inner_kernel_gemv_add_n_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_n_4_lib4
+	callq _inner_kernel_gemv_add_n_4_lib4
 #endif
 #endif
 
@@ -3722,12 +3722,12 @@ kernel_dtrsv_lt_inv_4_lib4:
 	addq	$32, %r13 // x+4 
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
+	INNER_KERNEL_GEMV_ADD_T_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_t_4_lib4
+	call inner_kernel_gemv_add_t_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_t_4_lib4
+	callq _inner_kernel_gemv_add_t_4_lib4
 #endif
 #endif
 
@@ -3829,12 +3829,12 @@ kernel_dtrsv_lt_inv_3_lib4:
 	addq	$32, %r13 // x+4 
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
+	INNER_KERNEL_GEMV_ADD_T_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_t_4_lib4
+	call inner_kernel_gemv_add_t_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_t_4_lib4
+	callq _inner_kernel_gemv_add_t_4_lib4
 #endif
 #endif
 
@@ -3940,12 +3940,12 @@ kernel_dtrsv_lt_inv_2_lib4:
 	addq	$32, %r13 // x+4 
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
+	INNER_KERNEL_GEMV_ADD_T_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_t_4_lib4
+	call inner_kernel_gemv_add_t_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_t_4_lib4
+	callq _inner_kernel_gemv_add_t_4_lib4
 #endif
 #endif
 
@@ -4051,12 +4051,12 @@ kernel_dtrsv_lt_inv_1_lib4:
 	addq	$32, %r13 // x+4 
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
+	INNER_KERNEL_GEMV_ADD_T_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_t_4_lib4
+	call inner_kernel_gemv_add_t_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_t_4_lib4
+	callq _inner_kernel_gemv_add_t_4_lib4
 #endif
 #endif
 
@@ -4159,12 +4159,12 @@ kernel_dtrsv_un_inv_4_lib4:
 	addq	$32, %r12 // x+4 
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
+	INNER_KERNEL_GEMV_ADD_N_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_n_4_lib4
+	call inner_kernel_gemv_add_n_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_n_4_lib4
+	callq _inner_kernel_gemv_add_n_4_lib4
 #endif
 #endif
 
@@ -4271,12 +4271,12 @@ kernel_dtrmv_un_4_lib4:
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
+	INNER_KERNEL_GEMV_ADD_N_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_n_4_lib4
+	call inner_kernel_gemv_add_n_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_n_4_lib4
+	callq _inner_kernel_gemv_add_n_4_lib4
 #endif
 #endif
 
@@ -4549,12 +4549,12 @@ kernel_dgemv_nt_4_lib4:
 	movq	ARG10, %r14  // z_n
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_NT_4_LIB4
+	INNER_KERNEL_GEMV_ADD_NT_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_nt_4_lib4
+	call inner_kernel_gemv_add_nt_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_nt_4_lib4
+	callq _inner_kernel_gemv_add_nt_4_lib4
 #endif
 #endif
 
@@ -4667,12 +4667,12 @@ kernel_dgemv_nt_4_vs_lib4:
 	movq	ARG10, %r14  // z_n
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_NT_4_LIB4
+	INNER_KERNEL_GEMV_ADD_NT_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_nt_4_lib4
+	call inner_kernel_gemv_add_nt_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_nt_4_lib4
+	callq _inner_kernel_gemv_add_nt_4_lib4
 #endif
 #endif
 
@@ -4784,12 +4784,12 @@ kernel_dsymv_l_4_lib4:
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_NT_4_LIB4
+	INNER_KERNEL_GEMV_ADD_NT_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_nt_4_lib4
+	call inner_kernel_gemv_add_nt_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_nt_4_lib4
+	callq _inner_kernel_gemv_add_nt_4_lib4
 #endif
 #endif
 
@@ -4900,12 +4900,12 @@ kernel_dsymv_l_4_gen_lib4:
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMV_ADD_NT_4_LIB4
+	INNER_KERNEL_GEMV_ADD_NT_4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_nt_4_lib4
+	call inner_kernel_gemv_add_nt_4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_nt_4_lib4
+	callq _inner_kernel_gemv_add_nt_4_lib4
 #endif
 #endif
 

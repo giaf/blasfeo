@@ -63,7 +63,7 @@ void ssyrk_spotrf_nt_l_lib(int m, int n, int k, float *pA, int sda, float *pB, i
 			}
 		if(j<n)
 			{
-			if(i<j) // dgemm
+			if(j<i) // dgemm
 				{
 				kernel_sgemm_strsm_nt_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &inv_diag_D[j], m-i, n-j);
 				}
@@ -433,7 +433,7 @@ void blasfeo_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct bla
 	int i, j, l;
 
 	i = 0;
-#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 #if 1
 	for(; i<m-15; i+=16)
 		{
@@ -588,7 +588,7 @@ void blasfeo_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct bla
 
 	// clean up loops definitions
 
-#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	left_16:
 	j = 0;
 	for(; j<i; j+=4)
@@ -609,13 +609,13 @@ void blasfeo_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct bla
 	kernel_strsm_nt_rl_inv_4x4_vs_lib4(j+4, &pD[(i+8)*sdd], &pD[(j+4)*sdd], &pC[(j+4)*ps+(i+8)*sdc], &pD[(j+4)*ps+(i+8)*sdd], &pD[(j+4)*ps+(j+4)*sdd], &dD[j+4], m-i-8, m-j-4);
 	kernel_strsm_nt_rl_inv_4x4_vs_lib4(j+4, &pD[(i+12)*sdd], &pD[(j+4)*sdd], &pC[(j+4)*ps+(i+12)*sdc], &pD[(j+4)*ps+(i+12)*sdd], &pD[(j+4)*ps+(j+4)*sdd], &dD[j+4], m-i-12, m-j-4);
 //	kernel_dpotrf_nt_l_8x4_vs_lib4(j+8, &pD[(i+8)*sdd], sdd, &pD[(j+8)*sdd], &pC[(j+8)*ps+(j+8)*sdc], sdc, &pD[(j+8)*ps+(j+8)*sdd], sdd, &dD[j+8], m-i-8, m-j-8);
-	kernel_dpotrf_nt_l_4x4_vs_lib4(j+8, &pD[(i+8)*sdd], &pD[(j+8)*sdd], &pC[(j+8)*ps+(i+8)*sdc], &pD[(j+8)*ps+(i+8)*sdd], &dD[j+8], m-i-8, m-j-8);
+	kernel_spotrf_nt_l_4x4_vs_lib4(j+8, &pD[(i+8)*sdd], &pD[(j+8)*sdd], &pC[(j+8)*ps+(i+8)*sdc], &pD[(j+8)*ps+(i+8)*sdd], &dD[j+8], m-i-8, m-j-8);
 	kernel_strsm_nt_rl_inv_4x4_vs_lib4(j+8, &pD[(i+12)*sdd], &pD[(j+8)*sdd], &pC[(j+8)*ps+(i+12)*sdc], &pD[(j+8)*ps+(i+12)*sdd], &pD[(j+8)*ps+(j+8)*sdd], &dD[j+8], m-i-12, m-j-8);
-	kernel_dpotrf_nt_l_4x4_vs_lib4(j+12, &pD[(i+12)*sdd], &pD[(j+12)*sdd], &pC[(j+12)*ps+(i+12)*sdc], &pD[(j+12)*ps+(i+12)*sdd], &dD[j+12], m-i-12, m-j-12);
+	kernel_spotrf_nt_l_4x4_vs_lib4(j+12, &pD[(i+12)*sdd], &pD[(j+12)*sdd], &pC[(j+12)*ps+(i+12)*sdc], &pD[(j+12)*ps+(i+12)*sdd], &dD[j+12], m-i-12, m-j-12);
 	return;
 #endif
 
-#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	left_12:
 	if(m-i==12)
 		{
@@ -645,12 +645,12 @@ void blasfeo_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct bla
 	//	kernel_dpotrf_nt_l_8x4_vs_lib4(j+4, &pD[(i+4)*sdd], sdd, &pD[(j+4)*sdd], &pC[(j+4)*ps+(j+4)*sdc], sdc, &pD[(j+4)*ps+(j+4)*sdd], sdd, &dD[j+4], m-i-4, m-j-4);
 		kernel_spotrf_nt_l_4x4_vs_lib4(j+4, &pD[(i+4)*sdd], &pD[(j+4)*sdd], &pC[(j+4)*ps+(j+4)*sdc], &pD[(j+4)*ps+(j+4)*sdd], &dD[j+4], m-i-4, m-j-4);
 		kernel_strsm_nt_rl_inv_4x4_vs_lib4(j+4, &pD[(i+8)*sdd], &pD[(j+4)*sdd], &pC[(j+4)*ps+(i+8)*sdc], &pD[(j+4)*ps+(i+8)*sdd], &pD[(j+4)*ps+(j+4)*sdd], &dD[j+4], m-i-8, m-j-4);
-		kernel_dpotrf_nt_l_4x4_vs_lib4(j+8, &pD[(i+8)*sdd], &pD[(j+8)*sdd], &pC[(j+8)*ps+(i+8)*sdc], &pD[(j+8)*ps+(i+8)*sdd], &dD[j+8], m-i-8, m-j-8);
+		kernel_spotrf_nt_l_4x4_vs_lib4(j+8, &pD[(i+8)*sdd], &pD[(j+8)*sdd], &pC[(j+8)*ps+(i+8)*sdc], &pD[(j+8)*ps+(i+8)*sdd], &dD[j+8], m-i-8, m-j-8);
 		}
 	return;
 #endif
 
-#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	left_8:
 	if(m-i==8)
 		{
@@ -741,7 +741,7 @@ void blasfeo_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int cj, 
 			}
 		if(j<n)
 			{
-			if(i<j) // dtrsm
+			if(j<i) // dtrsm
 				{
 				kernel_strsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pD[j*sdd], &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], &pD[j*bs+j*sdd], &dD[j], m-i, n-j);
 				}
@@ -793,7 +793,34 @@ void blasfeo_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int cj, 
 
 
 // dsyrk dpotrf
-void blasfeo_ssyrk_spotrf_ln(int m, int n, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+void blasfeo_ssyrk_spotrf_ln(int m, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
+		{
+		printf("\nblasfeo_ssyrk_spotrf_ln: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
+		exit(1);
+		}
+	const int bs = 4;
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	float *pA = sA->pA + aj*bs;
+	float *pB = sB->pA + bj*bs;
+	float *pC = sC->pA + cj*bs;
+	float *pD = sD->pA + dj*bs;
+	float *dD = sD->dA; // XXX what to do if di and dj are not zero
+	ssyrk_spotrf_nt_l_lib(m, m, k, pA, sda, pB, sdb, pC, sdc, pD, sdd, dD);
+	if(di==0 && dj==0)
+		sD->use_dA = 1;
+	else
+		sD->use_dA = 0;
+	return;
+	}
+
+
+
+void blasfeo_ssyrk_spotrf_ln_mn(int m, int n, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
@@ -874,8 +901,6 @@ void blasfeo_sgetrf_rowpivot(int m, int n, struct blasfeo_smat *sC, int ci, int 
 
 int blasfeo_sgeqrf_worksize(int m, int n)
 	{
-	printf("\nblasfeo_sgeqrf_worksize: feature not implemented yet\n");
-	exit(1);
 	return 0;
 	}
 
@@ -894,8 +919,6 @@ void blasfeo_sgeqrf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struc
 
 int blasfeo_sgelqf_worksize(int m, int n)
 	{
-	printf("\nblasfeo_sgelqf_worksize: feature not implemented yet\n");
-	exit(1);
 	return 0;
 	}
 

@@ -13187,6 +13187,328 @@ kernel_dlarfb4_r_8_la_lib4:
 
 
 
+//                                  1       2       3            4            5           6           7        8           9        10          11
+// void kernel_dlarfb4_r_8_lla_lib4(int n0, int n1, double *pVL, double *pVA, double *pT, double *pD, int sdd, double *pL, int sdl, double *pA, int sda);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dlarfb4_r_8_lla_lib4
+	.type kernel_dlarfb4_r_8_lla_lib4, @function
+kernel_dlarfb4_r_8_lla_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dlarfb4_r_8_lla_lib4
+_kernel_dlarfb4_r_8_lla_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dlarfb4_r_8_lla_lib4
+	.def kernel_dlarfb4_r_8_lla_lib4; .scl 2; .type 32; .endef
+kernel_dlarfb4_r_8_lla_lib4:
+#endif
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+//	vxorpd	%ymm0, %ymm0, %ymm0
+//	vmovapd	%ymm0, %ymm1
+//	vmovapd	%ymm0, %ymm2
+//	vmovapd	%ymm0, %ymm3
+//	vmovapd	%ymm0, %ymm4
+//	vmovapd	%ymm0, %ymm5
+//	vmovapd	%ymm0, %ymm6
+//	vmovapd	%ymm0, %ymm7
+	
+	// D
+
+	movq	ARG6, %r10 // D
+	movq	ARG7, %r11 // sdd
+	sall	$5, %r11d
+
+	//
+	vmovapd			0(%r10), %ymm0
+	vmovapd			0(%r10, %r11, 1), %ymm4
+	//
+	vmovapd			32(%r10), %ymm1
+	vmovapd			32(%r10, %r11, 1), %ymm5
+	//
+	vmovapd			64(%r10), %ymm2
+	vmovapd			64(%r10, %r11, 1), %ymm6
+	//
+	vmovapd			96(%r10), %ymm3
+	vmovapd			96(%r10, %r11, 1), %ymm7
+
+	// L
+
+	movq	ARG1, %r10 // n0
+	movq	ARG8, %r11 // L
+	movq	ARG9, %r12 // sdl
+	sall	$5, %r12d
+	movq	ARG3, %r13 // VL
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_add_nt_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_add_nt_8x4_lib4
+#endif
+#endif
+
+	// L final 4x4 lower triangular
+	movq	ARG1, %r10 // n0
+	sall	$5, %r10d // n0*ps*sizeof(double)
+	movq	ARG8, %r11 // L
+	addq	%r10, %r11 // L+n0*ps
+	movq	ARG9, %r12 // sdl
+	sall	$5, %r12d
+	movq	ARG3, %r13 // VL
+	addq	%r10, %r13 // VL+n0*ps
+
+	// 4
+	vmovapd			0(%r11), %ymm12
+	vmovapd			0(%r11, %r12, 1), %ymm13
+	vbroadcastsd	0(%r13), %ymm15
+	vfmadd231pd		%ymm12, %ymm15, %ymm0
+	vfmadd231pd		%ymm13, %ymm15, %ymm4
+	vbroadcastsd	8(%r13), %ymm15
+	vfmadd231pd		%ymm12, %ymm15, %ymm1
+	vfmadd231pd		%ymm13, %ymm15, %ymm5
+	vbroadcastsd	16(%r13), %ymm15
+	vfmadd231pd		%ymm12, %ymm15, %ymm2
+	vfmadd231pd		%ymm13, %ymm15, %ymm6
+	vbroadcastsd	24(%r13), %ymm15
+	vfmadd231pd		%ymm12, %ymm15, %ymm3
+	vfmadd231pd		%ymm13, %ymm15, %ymm7
+	// 3
+	vmovapd			32(%r11), %ymm12
+	vmovapd			32(%r11, %r12, 1), %ymm13
+	vbroadcastsd	40(%r13), %ymm15
+	vfmadd231pd		%ymm12, %ymm15, %ymm1
+	vfmadd231pd		%ymm13, %ymm15, %ymm5
+	vbroadcastsd	48(%r13), %ymm15
+	vfmadd231pd		%ymm12, %ymm15, %ymm2
+	vfmadd231pd		%ymm13, %ymm15, %ymm6
+	vbroadcastsd	56(%r13), %ymm15
+	vfmadd231pd		%ymm12, %ymm15, %ymm3
+	vfmadd231pd		%ymm13, %ymm15, %ymm7
+	// 2
+	vmovapd			64(%r11), %ymm12
+	vmovapd			64(%r11, %r12, 1), %ymm13
+	vbroadcastsd	80(%r13), %ymm15
+	vfmadd231pd		%ymm12, %ymm15, %ymm2
+	vfmadd231pd		%ymm13, %ymm15, %ymm6
+	vbroadcastsd	88(%r13), %ymm15
+	vfmadd231pd		%ymm12, %ymm15, %ymm3
+	vfmadd231pd		%ymm13, %ymm15, %ymm7
+	// 1
+	vmovapd			96(%r11), %ymm12
+	vmovapd			96(%r11, %r12, 1), %ymm13
+	vbroadcastsd	120(%r13), %ymm15
+	vfmadd231pd		%ymm12, %ymm15, %ymm3
+	vfmadd231pd		%ymm13, %ymm15, %ymm7
+
+	// A
+
+	movq	ARG2, %r10 // n1
+	movq	ARG10, %r11 // A
+	movq	ARG11, %r12 // sda
+	sall	$5, %r12d
+	movq	ARG4, %r13 // VA
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_ADD_NT_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_add_nt_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_add_nt_8x4_lib4
+#endif
+#endif
+
+	// T
+
+	movq	ARG5, %r10 // T
+
+	//
+	vbroadcastsd	120(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm3
+	vmulpd			%ymm7, %ymm12, %ymm7
+	//
+	vbroadcastsd	112(%r10), %ymm12
+	vfmadd231pd		%ymm2, %ymm12, %ymm3
+	vfmadd231pd		%ymm6, %ymm12, %ymm7
+	vbroadcastsd	80(%r10), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm2
+	vmulpd			%ymm6, %ymm12, %ymm6
+	//
+	vbroadcastsd	104(%r10), %ymm12
+	vfmadd231pd		%ymm1, %ymm12, %ymm3
+	vfmadd231pd		%ymm5, %ymm12, %ymm7
+	vbroadcastsd	72(%r10), %ymm12
+	vfmadd231pd		%ymm1, %ymm12, %ymm2
+	vfmadd231pd		%ymm5, %ymm12, %ymm6
+	vbroadcastsd	40(%r10), %ymm12
+	vmulpd			%ymm1, %ymm12, %ymm1
+	vmulpd			%ymm5, %ymm12, %ymm5
+	//
+	vbroadcastsd	96(%r10), %ymm12
+	vfmadd231pd		%ymm0, %ymm12, %ymm3
+	vfmadd231pd		%ymm4, %ymm12, %ymm7
+	vbroadcastsd	64(%r10), %ymm12
+	vfmadd231pd		%ymm0, %ymm12, %ymm2
+	vfmadd231pd		%ymm4, %ymm12, %ymm6
+	vbroadcastsd	32(%r10), %ymm12
+	vfmadd231pd		%ymm0, %ymm12, %ymm1
+	vfmadd231pd		%ymm4, %ymm12, %ymm5
+	vbroadcastsd	0(%r10), %ymm12
+	vmulpd			%ymm0, %ymm12, %ymm0
+	vmulpd			%ymm4, %ymm12, %ymm4
+
+	// D
+
+	movq	ARG6, %r10 // D
+	movq	ARG7, %r11 // sdd
+	sall	$5, %r11d
+
+	//
+	vmovapd			0(%r10), %ymm12
+	vmovapd			0(%r10, %r11, 1), %ymm14
+	vaddpd			%ymm12, %ymm0, %ymm12
+	vaddpd			%ymm14, %ymm4, %ymm14
+	vmovapd			%ymm12, 0(%r10)
+	vmovapd			%ymm14, 0(%r10, %r11, 1)
+	//
+	vmovapd			32(%r10), %ymm12
+	vmovapd			32(%r10, %r11, 1), %ymm14
+	vaddpd			%ymm12, %ymm1, %ymm12
+	vaddpd			%ymm14, %ymm5, %ymm14
+	vmovapd			%ymm12, 32(%r10)
+	vmovapd			%ymm14, 32(%r10, %r11, 1)
+	//
+	vmovapd			64(%r10), %ymm12
+	vmovapd			64(%r10, %r11, 1), %ymm14
+	vaddpd			%ymm12, %ymm2, %ymm12
+	vaddpd			%ymm14, %ymm6, %ymm14
+	vmovapd			%ymm12, 64(%r10)
+	vmovapd			%ymm14, 64(%r10, %r11, 1)
+	//
+	vmovapd			96(%r10), %ymm12
+	vmovapd			96(%r10, %r11, 1), %ymm14
+	vaddpd			%ymm12, %ymm3, %ymm12
+	vaddpd			%ymm14, %ymm7, %ymm14
+	vmovapd			%ymm12, 96(%r10)
+	vmovapd			%ymm14, 96(%r10, %r11, 1)
+
+	// L
+
+	movq	ARG1, %r10 // n0
+	movq	ARG3, %r11 // VL
+	movq	ARG8, %r12 // L
+	movq	ARG9, %r13 // sdl
+	sall	$5, %r13d
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEBP_ADD_NN_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgebp_add_nn_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgebp_add_nn_8x4_lib4
+#endif
+#endif
+
+	// L final 4x4 lower triangular
+
+	movq	ARG1, %r10 // n0
+	sall	$5, %r10d // n0*ps*sizeof(double)
+	movq	ARG3, %r11 // VL
+	addq	%r10, %r11
+	movq	ARG8, %r12 // L
+	addq	%r10, %r12
+	movq	ARG9, %r13 // sdl
+	sall	$5, %r13d
+
+	// 4
+	vmovapd			0(%r12), %ymm12
+	vmovapd			0(%r12, %r13, 1), %ymm13
+	vbroadcastsd	0(%r11), %ymm15
+	vfmadd231pd		%ymm0, %ymm15, %ymm12
+	vfmadd231pd		%ymm4, %ymm15, %ymm13
+	vbroadcastsd	8(%r11), %ymm15
+	vfmadd231pd		%ymm1, %ymm15, %ymm12
+	vfmadd231pd		%ymm5, %ymm15, %ymm13
+	vbroadcastsd	16(%r11), %ymm15
+	vfmadd231pd		%ymm2, %ymm15, %ymm12
+	vfmadd231pd		%ymm6, %ymm15, %ymm13
+	vbroadcastsd	24(%r11), %ymm15
+	vfmadd231pd		%ymm3, %ymm15, %ymm12
+	vfmadd231pd		%ymm7, %ymm15, %ymm13
+	vmovapd			%ymm12, 0(%r12)
+	vmovapd			%ymm13, 0(%r12, %r13, 1)
+	// 3
+	vmovapd			32(%r12), %ymm12
+	vmovapd			32(%r12, %r13, 1), %ymm13
+	vbroadcastsd	40(%r11), %ymm15
+	vfmadd231pd		%ymm1, %ymm15, %ymm12
+	vfmadd231pd		%ymm5, %ymm15, %ymm13
+	vbroadcastsd	48(%r11), %ymm15
+	vfmadd231pd		%ymm2, %ymm15, %ymm12
+	vfmadd231pd		%ymm6, %ymm15, %ymm13
+	vbroadcastsd	56(%r11), %ymm15
+	vfmadd231pd		%ymm3, %ymm15, %ymm12
+	vfmadd231pd		%ymm7, %ymm15, %ymm13
+	vmovapd			%ymm12, 32(%r12)
+	vmovapd			%ymm13, 32(%r12, %r13, 1)
+	// 2
+	vmovapd			64(%r12), %ymm12
+	vmovapd			64(%r12, %r13, 1), %ymm13
+	vbroadcastsd	80(%r11), %ymm15
+	vfmadd231pd		%ymm2, %ymm15, %ymm12
+	vfmadd231pd		%ymm6, %ymm15, %ymm13
+	vbroadcastsd	88(%r11), %ymm15
+	vfmadd231pd		%ymm3, %ymm15, %ymm12
+	vfmadd231pd		%ymm7, %ymm15, %ymm13
+	vmovapd			%ymm12, 64(%r12)
+	vmovapd			%ymm13, 64(%r12, %r13, 1)
+	// 3
+	vmovapd			96(%r12), %ymm12
+	vmovapd			96(%r12, %r13, 1), %ymm13
+	vbroadcastsd	120(%r11), %ymm15
+	vfmadd231pd		%ymm3, %ymm15, %ymm12
+	vfmadd231pd		%ymm7, %ymm15, %ymm13
+	vmovapd			%ymm12, 96(%r12)
+	vmovapd			%ymm13, 96(%r12, %r13, 1)
+
+	// A
+
+	movq	ARG2, %r10 // n1
+	movq	ARG4, %r11 // VA
+	movq	ARG10, %r12 // A
+	movq	ARG11, %r13 // sda
+	sall	$5, %r13d
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEBP_ADD_NN_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgebp_add_nn_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgebp_add_nn_8x4_lib4
+#endif
+#endif
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dlarfb4_r_8_lla_lib4, .-kernel_dlarfb4_r_8_lla_lib4
+#endif
+
+
+
+
+
 	// read-only data
 #if defined(OS_LINUX)
 	.section	.rodata.cst32,"aM",@progbits,32
