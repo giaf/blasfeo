@@ -26,6 +26,34 @@
 * Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             *
 *                                                                                                 *
 **************************************************************************************************/
+
+void print_compilation_flags(){
+	SHOW_DEFINE(LA)
+	SHOW_DEFINE(TARGET)
+	SHOW_DEFINE(PRECISION)
+	SHOW_DEFINE(MIN_KERNEL_SIZE)
+	SHOW_DEFINE(ROUTINE)
+}
+
+/* prints a matrix in column-major format */
+void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int err_i, int err_j, int ERR)
+	{
+
+	/* REAL *pA = sA->pA + ai + aj*lda; */
+	int lda = sA->m;
+	REAL *pA = sA->pA;
+	int j0,i0, ie, je;
+	int i, j;
+	const int max_rows = 16;
+	const int max_cols = 9;
+	const int offset = 2;
+
+	i0 = (ai - offset >=0 )? ai - offset : 0;
+	ie = ai + m + offset;
+	j0 = (aj - offset >=0 )? aj - offset : 0;
+	je = aj + n + offset;
+
+	if (ie-i0 > max_rows)
 	{
 		i0 = (err_i - ((int)(max_rows/2)) >=0 )? err_i - ((int)(max_rows/2)) : 0;
 		ie = err_i + ((int)(max_rows/2)) ;

@@ -26,3 +26,7 @@
 * Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             *
 *                                                                                                 *
 **************************************************************************************************/
+
+#include "test_s_common.h"
+#include "test_x_common.c"
+

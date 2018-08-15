@@ -26,6 +26,34 @@
 * Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             *
 *                                                                                                 *
 **************************************************************************************************/
+
+#define STR(x) #x
+#define SHOW_DEFINE(x) printf("%s=%s\n", #x, STR(x));
+
+#include "test_s_common.h"
+#include "test_x_common.c"
+
+
+int main()
+	{
+
+#ifndef LA
+	#error LA undefined
+#endif
+
+#ifndef TARGET
+	#error TARGET undefined
+#endif
+
+
+	printf("\n\n\n--------------- TYPE_NAME Precision --------------------\n\n\n");
+
+SHOW_DEFINE(LA)
+SHOW_DEFINE(TARGET)
+
+
+	int ii, jj;
+
 	int n = 21;
 	int p_n = 15;
 	int N = 10;
