@@ -26,6 +26,9 @@
 * Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             *
 *                                                                                                 *
 **************************************************************************************************/
+
+#include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 
 //#include "../include/aux_d.h"
