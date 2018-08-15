@@ -2907,7 +2907,7 @@ kernel_ssymv_l_4r_gen_lib8:
 	.section .rdata,"dr"
 #endif
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC00: // { 7.5 6.5 5.5 4.5 3.5 2.5 1.5 0.5 }
 #elif defined(OS_MAC)
