@@ -317,13 +317,13 @@ int main()
 	int nu_ = 1;
 
 	// stage-wise variant size
-	int nx[N+1];
+	int *nx = malloc((N+1)*sizeof(int));
 	nx[0] = 0;
 	for(ii=1; ii<=N; ii++)
 		nx[ii] = nx_;
 	nx[N] = nx_;
 
-	int nu[N+1];
+	int *nu = malloc((N+1)*sizeof(int));
 	for(ii=0; ii<N; ii++)
 		nu[ii] = nu_;
 	nu[N] = 0;
@@ -453,16 +453,16 @@ int main()
 * array of matrices
 ************************************************/
 
-	struct blasfeo_smat hsBAbt[N];
-	struct blasfeo_svec hsb[N];
-	struct blasfeo_smat hsRSQrq[N+1];
-	struct blasfeo_svec hsrq[N+1];
-	struct blasfeo_smat hsL[N+1];
-	struct blasfeo_svec hsPb[N];
-	struct blasfeo_svec hsux[N+1];
-	struct blasfeo_svec hspi[N];
-	struct blasfeo_smat hswork_mat[1];
-	struct blasfeo_svec hswork_vec[1];
+	struct blasfeo_smat *hsBAbt = malloc(N*sizeof(struct blasfeo_smat));
+	struct blasfeo_svec *hsb = malloc(N*sizeof(struct blasfeo_svec));
+	struct blasfeo_smat *hsRSQrq = malloc((N+1)*sizeof(struct blasfeo_smat));
+	struct blasfeo_svec *hsrq = malloc((N+1)*sizeof(struct blasfeo_svec));
+	struct blasfeo_smat *hsL = malloc((N+1)*sizeof(struct blasfeo_smat));
+	struct blasfeo_svec *hsPb = malloc(N*sizeof(struct blasfeo_svec));
+	struct blasfeo_svec *hsux = malloc((N+1)*sizeof(struct blasfeo_svec));
+	struct blasfeo_svec *hspi = malloc(N*sizeof(struct blasfeo_svec));
+	struct blasfeo_smat *hswork_mat = malloc(1*sizeof(struct blasfeo_smat));
+	struct blasfeo_svec *hswork_vec = malloc(1*sizeof(struct blasfeo_svec));
 
 	hsBAbt[0] = sBbt0;
 	hsb[0] = sb0;
@@ -591,6 +591,19 @@ int main()
 	blasfeo_free_svec(&hsux[N]);
 	blasfeo_free_smat(&hswork_mat[0]);
 	blasfeo_free_svec(&hswork_vec[0]);
+
+	free(nx);
+	free(nu);
+	free(hsBAbt);
+	free(hsb);
+	free(hsRSQrq);
+	free(hsrq);
+	free(hsL);
+	free(hsPb);
+	free(hsux);
+	free(hspi);
+	free(hswork_mat);
+	free(hswork_vec);
 
 
 /************************************************

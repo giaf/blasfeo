@@ -121,9 +121,9 @@ endif
 # C Compiler
 #
 CC = gcc
-AR = ar
 # CC = clang
 # CC = x86_64-w64-mingw32-gcc
+AR = ar
 
 # Installation directory
 PREFIX = /opt

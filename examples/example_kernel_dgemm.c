@@ -26,6 +26,34 @@
 * Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             *
 *                                                                                                 *
 **************************************************************************************************/
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_i_aux_ext_dep.h"
+#include "../include/blasfeo_d_aux_ext_dep.h"
+#include "../include/blasfeo_v_aux_ext_dep.h"
+#include "../include/blasfeo_d_aux.h"
+#include "../include/blasfeo_d_kernel.h"
+#include "../include/blasfeo_d_blas.h"
+
+int kernel_dgemm_nt_4x4_lib4_test(int n, double *alpha, double *A, double *B, double *beta, double *C, double *D);
+
+int main()
+	{
+
+	printf("\ntest assembly\n");
+
+	int ii;
+
+	int n = 12;
+
+	double *A; d_zeros(&A, n, n);
+	for(ii=0; ii<n*n; ii++) A[ii] = ii;
+	d_print_mat(n, n, A, n);
+
+	double *B; d_zeros(&B, n, n);
 	for(ii=0; ii<n; ii++) B[ii*(n+1)] = 1.0;
 	d_print_mat(n, n, B, n);
 

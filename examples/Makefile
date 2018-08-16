@@ -48,8 +48,8 @@ LINK_OBJ = kernel_dgemm.o
 # LINK_OBJ = tools.o
 
 ## riccati
-# EX_OBJ = example_d_riccati_recursion.o
-EX_OBJ = example_s_riccati_recursion.o
+EX_OBJ = example_d_riccati_recursion.o
+# EX_OBJ = example_s_riccati_recursion.o
 LINK_OBJ = tools.o
 
 %.o: %.c
