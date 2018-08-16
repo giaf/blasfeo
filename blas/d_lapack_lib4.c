@@ -35,7 +35,11 @@
 #include "../include/blasfeo_d_aux.h"
 #include "../include/blasfeo_d_kernel.h"
 
-
+#if defined (_MSC_VER)
+#define CACHE_ALIGN(X) __declspec(align(X))
+#else
+#define CACHE_ALIGN(X) __attribute__ ((aligned (X)))
+#endif
 
 /*
  * old interface
@@ -2915,8 +2919,8 @@ void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_HASWELL)
-	double pT[144] __attribute__ ((aligned (64))) = {0};
-	double pK[144] __attribute__ ((aligned (64))) = {0};
+	double pT[144] CACHE_ALIGN(64) = {0};
+	double pK[144] CACHE_ALIGN(64) = {0};
 #else
 	double pT[144] = {0}; // XXX smaller ?
 	double pK[96] = {0}; // XXX smaller ?
@@ -3113,8 +3117,8 @@ void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_HASWELL)
-	double pT[144] __attribute__ ((aligned (64))) = {0};
-	double pK[144] __attribute__ ((aligned (64))) = {0};
+	double pT[144] CACHE_ALIGN(64) = {0};
+	double pK[144] CACHE_ALIGN(64) = {0};
 #else
 	double pT[144] = {0};
 	double pK[96] = {0};
@@ -3287,8 +3291,8 @@ void blasfeo_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj
 
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_HASWELL)
-	double pT[144] __attribute__ ((aligned (64))) = {0};
-	double pK[96] __attribute__ ((aligned (64))) = {0};
+	double pT[144] CACHE_ALIGN(64) = {0};
+	double pK[96] CACHE_ALIGN(64) = {0};
 #else
 	double pT[144] = {0};
 	double pK[96] = {0};
@@ -3403,8 +3407,8 @@ void blasfeo_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, int d
 
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_HASWELL)
-	double pT[144] __attribute__ ((aligned (64))) = {0};
-	double pK[96] __attribute__ ((aligned (64))) = {0};
+	double pT[144] CACHE_ALIGN(64) = {0};
+	double pK[96] CACHE_ALIGN(64) = {0};
 #else
 	double pT[144] = {0};
 	double pK[96] = {0};

@@ -278,7 +278,7 @@ static void d_mass_spring_system(double Ts, int nx, int nu, int N, double *A, do
 
 	}
 
-
+#define NN 4
 
 int main()
 	{
@@ -312,21 +312,20 @@ int main()
 ************************************************/
 
 	// problem size
-	int N = 4;
 	int nx_ = 4;
 	int nu_ = 1;
 
 	// stage-wise variant size
-	int nx[N+1];
+	int nx[NN+1];
 	nx[0] = 0;
-	for(ii=1; ii<=N; ii++)
+	for(ii=1; ii<=NN; ii++)
 		nx[ii] = nx_;
-	nx[N] = nx_;
+	nx[NN] = nx_;
 
-	int nu[N+1];
-	for(ii=0; ii<N; ii++)
+	int nu[NN+1];
+	for(ii=0; ii<NN; ii++)
 		nu[ii] = nu_;
-	nu[N] = 0;
+	nu[NN] = 0;
 
 /************************************************
 * dynamical system
@@ -340,7 +339,7 @@ int main()
 	double *x0; d_zeros(&x0, nx_, 1); // initial state
 
 	double Ts = 0.5; // sampling time
-	d_mass_spring_system(Ts, nx_, nu_, N, A, B, b, x0);
+	d_mass_spring_system(Ts, nx_, nu_, NN, A, B, b, x0);
 
 	for(ii=0; ii<nx_; ii++)
 		b[ii] = 0.1;
@@ -463,14 +462,14 @@ int main()
 * array of matrices
 ************************************************/
 
-	struct blasfeo_dmat hsBAbt[N];
-	struct blasfeo_dvec hsb[N];
-	struct blasfeo_dmat hsRSQrq[N+1];
-	struct blasfeo_dvec hsrq[N+1];
-	struct blasfeo_dmat hsL[N+1];
-	struct blasfeo_dvec hsPb[N];
-	struct blasfeo_dvec hsux[N+1];
-	struct blasfeo_dvec hspi[N];
+	struct blasfeo_dmat hsBAbt[NN];
+	struct blasfeo_dvec hsb[NN];
+	struct blasfeo_dmat hsRSQrq[NN+1];
+	struct blasfeo_dvec hsrq[NN+1];
+	struct blasfeo_dmat hsL[NN+1];
+	struct blasfeo_dvec hsPb[NN];
+	struct blasfeo_dvec hsux[NN+1];
+	struct blasfeo_dvec hspi[NN];
 	struct blasfeo_dmat hswork_mat[1];
 	struct blasfeo_dvec hswork_vec[1];
 
@@ -482,7 +481,7 @@ int main()
 	blasfeo_allocate_dvec(nx_, &hsPb[0]);
 	blasfeo_allocate_dvec(nx_+nu_+1, &hsux[0]);
 	blasfeo_allocate_dvec(nx_, &hspi[0]);
-	for(ii=1; ii<N; ii++)
+	for(ii=1; ii<NN; ii++)
 		{
 		hsBAbt[ii] = sBAbt1;
 		hsb[ii] = sb;
@@ -493,14 +492,14 @@ int main()
 		blasfeo_allocate_dvec(nx_+nu_+1, &hsux[ii]);
 		blasfeo_allocate_dvec(nx_, &hspi[ii]);
 		}
-	hsRSQrq[N] = sQqN;
-	hsrq[N] = sqN;
-	blasfeo_allocate_dmat(nx_+1, nx_, &hsL[N]);
-	blasfeo_allocate_dvec(nx_+nu_+1, &hsux[N]);
+	hsRSQrq[NN] = sQqN;
+	hsrq[NN] = sqN;
+	blasfeo_allocate_dmat(nx_+1, nx_, &hsL[NN]);
+	blasfeo_allocate_dvec(nx_+nu_+1, &hsux[NN]);
 	blasfeo_allocate_dmat(nu_+nx_+1, nx_, &hswork_mat[0]);
 	blasfeo_allocate_dvec(nx_, &hswork_vec[0]);
 
-//	for(ii=0; ii<N; ii++)
+//	for(ii=0; ii<NN; ii++)
 //		blasfeo_print_exp_dmat(nu[ii]+nx[ii]+1, nx[ii+1], &hsBAbt[ii], 0, 0);
 //	return 0;
 
@@ -519,7 +518,7 @@ int main()
 
 	for(rep=0; rep<nrep; rep++)
 		{
-		d_back_ric_sv_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL, hsux, hspi, hswork_mat, hswork_vec);
+		d_back_ric_sv_libstr(NN, nx, nu, hsBAbt, hsRSQrq, hsL, hsux, hspi, hswork_mat, hswork_vec);
 		}
 
 	time_sv = blasfeo_toc(&timer) / nrep;
@@ -527,7 +526,7 @@ int main()
 
 	for(rep=0; rep<nrep; rep++)
 		{
-		d_back_ric_trf_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL, hswork_mat);
+		d_back_ric_trf_libstr(NN, nx, nu, hsBAbt, hsRSQrq, hsL, hswork_mat);
 		}
 
 	time_trf = blasfeo_toc(&timer) / nrep;
@@ -535,22 +534,22 @@ int main()
 
 	for(rep=0; rep<nrep; rep++)
 		{
-		d_back_ric_trs_libstr(N, nx, nu, hsBAbt, hsb, hsrq, hsL, hsPb, hsux, hspi, hswork_vec);
+		d_back_ric_trs_libstr(NN, nx, nu, hsBAbt, hsb, hsrq, hsL, hsPb, hsux, hspi, hswork_vec);
 		}
 
 	time_trs = blasfeo_toc(&timer) / nrep;
 
 	// print sol
 	printf("\nux = \n\n");
-	for(ii=0; ii<=N; ii++)
+	for(ii=0; ii<=NN; ii++)
 		blasfeo_print_tran_dvec(nu[ii]+nx[ii], &hsux[ii], 0);
 
 	printf("\npi = \n\n");
-	for(ii=0; ii<N; ii++)
+	for(ii=0; ii<NN; ii++)
 		blasfeo_print_tran_dvec(nx[ii+1], &hspi[ii], 0);
 
 //	printf("\nL = \n\n");
-//	for(ii=0; ii<=N; ii++)
+//	for(ii=0; ii<=NN; ii++)
 //		blasfeo_print_exp_dmat(nu[ii]+nx[ii]+1, nu[ii]+nx[ii], &hsL[ii], 0, 0);
 
 	printf("\ntime sv\t\ttime trf\t\ttime trs\n");
@@ -586,15 +585,15 @@ int main()
 	blasfeo_free_dvec(&hsPb[0]);
 	blasfeo_free_dvec(&hsux[0]);
 	blasfeo_free_dvec(&hspi[0]);
-	for(ii=1; ii<N; ii++)
+	for(ii=1; ii<NN; ii++)
 		{
 		blasfeo_free_dmat(&hsL[ii]);
 		blasfeo_free_dvec(&hsPb[ii]);
 		blasfeo_free_dvec(&hsux[ii]);
 		blasfeo_free_dvec(&hspi[ii]);
 		}
-	blasfeo_free_dmat(&hsL[N]);
-	blasfeo_free_dvec(&hsux[N]);
+	blasfeo_free_dmat(&hsL[NN]);
+	blasfeo_free_dvec(&hsux[NN]);
 	blasfeo_free_dmat(&hswork_mat[0]);
 	blasfeo_free_dvec(&hswork_vec[0]);
 

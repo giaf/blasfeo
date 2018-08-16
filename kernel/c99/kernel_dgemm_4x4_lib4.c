@@ -33,7 +33,11 @@
 
 #include "../../include/blasfeo_d_kernel.h"
 
-
+#if defined (_MSC_VER)
+#define CACHE_ALIGN(X) __declspec(align(X))
+#else
+#define CACHE_ALIGN(X) __attribute__ ((aligned (X)))
+#endif
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA)
 void kernel_dgemm_nt_4x4_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D)
@@ -54,7 +58,7 @@ void kernel_dgemm_nt_4x4_lib4(int kmax, double *alpha, double *A, double *B, dou
 		a_0, a_1, a_2, a_3,
 		b_0, b_1, b_2, b_3;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
+	double CC[16] CACHE_ALIGN(64) = {0};
 
 	int k;
 
@@ -196,7 +200,7 @@ void kernel_dgemm_nt_4x4_lib4(int kmax, double *alpha, double *A, double *B, dou
 		B += 16;
 
 		}
-	
+
 	for(; k<kmax; k++)
 		{
 
@@ -236,7 +240,7 @@ void kernel_dgemm_nt_4x4_lib4(int kmax, double *alpha, double *A, double *B, dou
 		B += 4;
 
 		}
-	
+
 	D[0+bs*0] = beta[0]*C[0+bs*0] + alpha[0]*CC[0+bs*0];
 	D[1+bs*0] = beta[0]*C[1+bs*0] + alpha[0]*CC[1+bs*0];
 	D[2+bs*0] = beta[0]*C[2+bs*0] + alpha[0]*CC[2+bs*0];
@@ -270,7 +274,7 @@ void kernel_dgemm_nt_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B, 
 
 	const int bs = 4;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
+	double CC[16] CACHE_ALIGN(64) = {0};
 
 	kernel_dgemm_nt_4x4_lib4(kmax, alpha, A, B, beta, C, CC);
 
@@ -388,11 +392,11 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 
 	const int bs = 4;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
+	double CC[16] CACHE_ALIGN(64) = {0};
 
 	double
 		*C1, *D1;
-	
+
 	int k;
 
 	if(offsetC==0)
@@ -489,7 +493,7 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		CC[2+bs*3] = beta[0]*C1[1+bs*3];
 		CC[3+bs*3] = beta[0]*C1[2+bs*3];
 		}
-	
+
 	double beta1 = 1.0;
 
 	kernel_dgemm_nt_4x4_lib4(kmax, alpha, A, B, &beta1, CC, CC);
@@ -712,11 +716,11 @@ void kernel_dgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, int offsetB, d
 		a_0, a_1, a_2, a_3,
 		b_0, b_1, b_2, b_3;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double
 		*C1, *D1;
-	
+
 	int k;
 
 	k = 0;
@@ -1133,8 +1137,8 @@ void kernel_dgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, int offsetB, d
 		A += 4;
 		B += 1;
 
-		}	
-	
+		}
+
 	scale:
 
 	D[0+bs*0] = beta[0]*C[0+bs*0] + alpha[0]*CC[0+bs*0];
@@ -1170,10 +1174,10 @@ void kernel_dgemm_nn_4x4_vs_lib4(int kmax, double *alpha, double *A, int offsetB
 
 	const int bs = 4;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
+	double CC[16] CACHE_ALIGN(64) = {0};
 
 	kernel_dgemm_nn_4x4_lib4(kmax, alpha, A, offsetB, B, sdb, beta, C, CC);
-	
+
 	if(km>=4)
 		{
 		D[0+bs*0] = CC[0+bs*0];
@@ -1288,11 +1292,11 @@ void kernel_dgemm_nn_4x4_gen_lib4(int kmax, double *alpha, double *A, int offset
 
 	const int bs = 4;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double
 		*C1, *D1;
-	
+
 	if(offsetC==0)
 		{
 		CC[0+bs*0] = beta[0]*C0[0+bs*0];
@@ -1387,7 +1391,7 @@ void kernel_dgemm_nn_4x4_gen_lib4(int kmax, double *alpha, double *A, int offset
 		CC[2+bs*3] = beta[0]*C1[1+bs*3];
 		CC[3+bs*3] = beta[0]*C1[2+bs*3];
 		}
-	
+
 	double beta1 = 1.0;
 
 	kernel_dgemm_nn_4x4_lib4(kmax, alpha, A, offsetB, B, sdb, &beta1, CC, CC);
@@ -1597,10 +1601,10 @@ void kernel_dsyrk_nt_l_4x4_lib4(int kmax, double *alpha, double *A, double *B, d
 
 	const int bs = 4;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
+	double CC[16] CACHE_ALIGN(64) = {0};
 
 	kernel_dgemm_nt_4x4_lib4(kmax, alpha, A, B, beta, C, CC);
-	
+
 	D[0+bs*0] = CC[0+bs*0];
 	D[1+bs*0] = CC[1+bs*0];
 	D[2+bs*0] = CC[2+bs*0];
@@ -1628,10 +1632,10 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 
 	const int bs = 4;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
+	double CC[16] CACHE_ALIGN(64) = {0};
 
 	kernel_dgemm_nt_4x4_lib4(kmax, alpha, A, B, beta, C, CC);
-	
+
 	if(km>=4)
 		{
 		D[0+bs*0] = CC[0+bs*0];
@@ -1688,7 +1692,7 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 		{
 		D[0+bs*0] = CC[0+bs*0];
 		}
-	
+
 	return;
 
 	}
@@ -1702,8 +1706,8 @@ void kernel_dsyrk_nt_l_4x4_gen_lib4(int kmax, double *alpha, double *A, double *
 
 	const int bs = 4;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double
 		*C1, *D1;
 
@@ -1777,7 +1781,7 @@ void kernel_dsyrk_nt_l_4x4_gen_lib4(int kmax, double *alpha, double *A, double *
 
 		CC[3+bs*3] = beta[0]*C1[2+bs*3];
 		}
-	
+
 	double beta1 = 1.0;
 
 	kernel_dgemm_nt_4x4_lib4(kmax, alpha, A, B, &beta1, CC, CC);
@@ -1953,8 +1957,8 @@ void kernel_dtrmm_nt_ru_4x4_lib4(int kmax, double *alpha, double *A, double *B, 
 		a_0, a_1, a_2, a_3,
 		b_0, b_1, b_2, b_3;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	int k;
 
 	k = 0;
@@ -2036,7 +2040,7 @@ void kernel_dtrmm_nt_ru_4x4_lib4(int kmax, double *alpha, double *A, double *B, 
 		B += 4;
 		k++;
 		}
-	
+
 	CC[0+bs*0] = beta[0]*C[0+bs*0] + alpha[0]*CC[0+bs*0];
 	CC[1+bs*0] = beta[0]*C[1+bs*0] + alpha[0]*CC[1+bs*0];
 	CC[2+bs*0] = beta[0]*C[2+bs*0] + alpha[0]*CC[2+bs*0];
@@ -2078,8 +2082,8 @@ void kernel_dtrmm_nt_ru_4x4_vs_lib4(int kmax, double *alpha, double *A, double *
 		a_0, a_1, a_2, a_3,
 		b_0, b_1, b_2, b_3;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	int k;
 
 	k = 0;
@@ -2161,7 +2165,7 @@ void kernel_dtrmm_nt_ru_4x4_vs_lib4(int kmax, double *alpha, double *A, double *
 		B += 4;
 		k++;
 		}
-	
+
 	CC[0+bs*0] = beta[0]*C[0+bs*0] + alpha[0]*CC[0+bs*0];
 	CC[1+bs*0] = beta[0]*C[1+bs*0] + alpha[0]*CC[1+bs*0];
 	CC[2+bs*0] = beta[0]*C[2+bs*0] + alpha[0]*CC[2+bs*0];
@@ -2305,10 +2309,10 @@ void kernel_dtrmm_nn_rl_4x4_lib4(int kmax, double *alpha, double *A, int offsetB
 		a_0, a_1, a_2, a_3,
 		b_0, b_1, b_2, b_3;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double *D1;
-	
+
 	int k;
 
 	B += offsetB;
@@ -2859,9 +2863,9 @@ void kernel_dtrmm_nn_rl_4x4_lib4(int kmax, double *alpha, double *A, int offsetB
 		k += 1;
 
 		}
-	
+
 	store:
-	
+
 	CC[0+bs*0] = alpha[0]*CC[0+bs*0];
 	CC[1+bs*0] = alpha[0]*CC[1+bs*0];
 	CC[2+bs*0] = alpha[0]*CC[2+bs*0];
@@ -2903,10 +2907,10 @@ void kernel_dtrmm_nn_rl_4x4_vs_lib4(int kmax, double *alpha, double *A, int offs
 		a_0, a_1, a_2, a_3,
 		b_0, b_1, b_2, b_3;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double *D1;
-	
+
 	int k;
 
 	B += offsetB;
@@ -3457,9 +3461,9 @@ void kernel_dtrmm_nn_rl_4x4_vs_lib4(int kmax, double *alpha, double *A, int offs
 		k += 1;
 
 		}
-	
+
 	store:
-	
+
 	CC[0+bs*0] = alpha[0]*CC[0+bs*0];
 	CC[1+bs*0] = alpha[0]*CC[1+bs*0];
 	CC[2+bs*0] = alpha[0]*CC[2+bs*0];
@@ -3602,10 +3606,10 @@ void kernel_dtrmm_nn_rl_4x4_gen_lib4(int kmax, double *alpha, double *A, int off
 		a_0, a_1, a_2, a_3,
 		b_0, b_1, b_2, b_3;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double *D1;
-	
+
 	int k;
 
 	B += offsetB;
@@ -4156,9 +4160,9 @@ void kernel_dtrmm_nn_rl_4x4_gen_lib4(int kmax, double *alpha, double *A, int off
 		k += 1;
 
 		}
-	
+
 	store:
-	
+
 	CC[0+bs*0] = alpha[0]*CC[0+bs*0];
 	CC[1+bs*0] = alpha[0]*CC[1+bs*0];
 	CC[2+bs*0] = alpha[0]*CC[2+bs*0];
@@ -4374,7 +4378,7 @@ void kernel_dtrmm_nn_rl_4x4_gen_lib4(int kmax, double *alpha, double *A, int off
 		if(m0<=2 & m1>2) D1[1+bs*3] = CC[2+bs*3];
 		if(m0<=3 & m1>3) D1[2+bs*3] = CC[3+bs*3];
 		}
-	
+
 	return;
 
 	}
@@ -4393,8 +4397,8 @@ void kernel_dpotrf_nt_l_4x4_lib4(int kmax, double *A, double *B, double *C, doub
 		b_0, b_1, b_2, b_3,
 		tmp;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	int k;
 
 	double alpha1 = -1.0;
@@ -4495,8 +4499,8 @@ void kernel_dpotrf_nt_l_4x4_vs_lib4(int kmax, double *A, double *B, double *C, d
 
 	double tmp;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
@@ -4519,7 +4523,7 @@ void kernel_dpotrf_nt_l_4x4_vs_lib4(int kmax, double *A, double *B, double *C, d
 
 	if(kn==1)
 		goto store;
-	
+
 	CC[1+bs*1] -= CC[1+bs*0] * CC[1+bs*0];
 	CC[2+bs*1] -= CC[2+bs*0] * CC[1+bs*0];
 	CC[3+bs*1] -= CC[3+bs*0] * CC[1+bs*0];
@@ -4539,7 +4543,7 @@ void kernel_dpotrf_nt_l_4x4_vs_lib4(int kmax, double *A, double *B, double *C, d
 
 	if(kn==2)
 		goto store;
-	
+
 	CC[2+bs*2] -= CC[2+bs*0] * CC[2+bs*0];
 	CC[3+bs*2] -= CC[3+bs*0] * CC[2+bs*0];
 	CC[2+bs*2] -= CC[2+bs*1] * CC[2+bs*1];
@@ -4559,7 +4563,7 @@ void kernel_dpotrf_nt_l_4x4_vs_lib4(int kmax, double *A, double *B, double *C, d
 
 	if(kn==3)
 		goto store;
-	
+
 	CC[3+bs*3] -= CC[3+bs*0] * CC[3+bs*0];
 	CC[3+bs*3] -= CC[3+bs*1] * CC[3+bs*1];
 	CC[3+bs*3] -= CC[3+bs*2] * CC[3+bs*2];
@@ -4634,7 +4638,7 @@ void kernel_dpotrf_nt_l_4x4_vs_lib4(int kmax, double *A, double *B, double *C, d
 		{
 		D[0+bs*0] = CC[0+bs*0];
 		}
-	
+
 	return;
 
 	}
@@ -4674,8 +4678,8 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *C, 
 
 	double tmp;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
@@ -4770,8 +4774,8 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *
 
 	double tmp;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
@@ -4785,7 +4789,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *
 
 	if(kn==1)
 		goto store;
-	
+
 	tmp = E[1+bs*0];
 	CC[0+bs*1] -= CC[0+bs*0] * tmp;
 	CC[1+bs*1] -= CC[1+bs*0] * tmp;
@@ -4799,7 +4803,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *
 
 	if(kn==2)
 		goto store;
-	
+
 	tmp = E[2+bs*0];
 	CC[0+bs*2] -= CC[0+bs*0] * tmp;
 	CC[1+bs*2] -= CC[1+bs*0] * tmp;
@@ -4818,7 +4822,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *
 
 	if(kn==3)
 		goto store;
-	
+
 	tmp = E[3+bs*0];
 	CC[0+bs*3] -= CC[0+bs*0] * tmp;
 	CC[1+bs*3] -= CC[1+bs*0] * tmp;
@@ -4982,8 +4986,8 @@ void kernel_dtrsm_nt_rl_one_4x4_lib4(int kmax, double *A, double *B, double *C, 
 
 	double tmp;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
@@ -5057,8 +5061,8 @@ void kernel_dtrsm_nt_rl_one_4x4_vs_lib4(int kmax, double *A, double *B, double *
 
 	double tmp;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
@@ -5066,7 +5070,7 @@ void kernel_dtrsm_nt_rl_one_4x4_vs_lib4(int kmax, double *A, double *B, double *
 
 	if(kn==1)
 		goto store;
-	
+
 	tmp = E[1+bs*0];
 	CC[0+bs*1] -= CC[0+bs*0] * tmp;
 	CC[1+bs*1] -= CC[1+bs*0] * tmp;
@@ -5075,7 +5079,7 @@ void kernel_dtrsm_nt_rl_one_4x4_vs_lib4(int kmax, double *A, double *B, double *
 
 	if(kn==2)
 		goto store;
-	
+
 	tmp = E[2+bs*0];
 	CC[0+bs*2] -= CC[0+bs*0] * tmp;
 	CC[1+bs*2] -= CC[1+bs*0] * tmp;
@@ -5089,7 +5093,7 @@ void kernel_dtrsm_nt_rl_one_4x4_vs_lib4(int kmax, double *A, double *B, double *
 
 	if(kn==3)
 		goto store;
-	
+
 	tmp = E[3+bs*0];
 	CC[0+bs*3] -= CC[0+bs*0] * tmp;
 	CC[1+bs*3] -= CC[1+bs*0] * tmp;
@@ -5208,7 +5212,7 @@ void kernel_dtrsm_nt_rl_one_4x4_vs_lib4(int kmax, double *A, double *B, double *
 
 		D[0+bs*3] = CC[0+bs*3];
 		}
-	
+
 	return;
 
 	}
@@ -5224,8 +5228,8 @@ void kernel_dtrsm_nt_ru_inv_4x4_lib4(int kmax, double *A, double *B, double *C, 
 
 	double tmp;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
@@ -5320,8 +5324,8 @@ void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *
 
 	double tmp;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-	
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
@@ -5493,7 +5497,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *
 
 		D[0+bs*3] = CC[0+bs*3];
 		}
-	
+
 	return;
 
 	}
@@ -5511,8 +5515,8 @@ void kernel_dgetrf_nn_4x4_lib4(int kmax, double *A, double *B, int sdb, double *
 
 	double tmp;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-		
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
@@ -5536,7 +5540,7 @@ void kernel_dgetrf_nn_4x4_lib4(int kmax, double *A, double *B, int sdb, double *
 	tmp = 1.0 / CC[1+bs*1];
 	CC[2+bs*1] *= tmp;
 	CC[3+bs*1] *= tmp;
-	
+
 	inv_diag_D[1] = tmp;
 
 	// third column
@@ -5603,8 +5607,8 @@ void kernel_dgetrf_nn_4x4_vs_lib4(int kmax, double *A, double *B, int sdb, doubl
 
 	double tmp;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-		
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
@@ -5631,7 +5635,7 @@ void kernel_dgetrf_nn_4x4_vs_lib4(int kmax, double *A, double *B, int sdb, doubl
 	tmp = 1.0 / CC[1+bs*1];
 	CC[2+bs*1] *= tmp;
 	CC[3+bs*1] *= tmp;
-	
+
 	inv_diag_D[1] = tmp;
 
 	if(kn==2)
@@ -5789,8 +5793,8 @@ void kernel_dtrsm_nn_ll_one_4x4_lib4(int kmax, double *A, double *B, int sdb, do
 		tmp,
 		e_1, e_2, e_3;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-		
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
@@ -5870,8 +5874,8 @@ void kernel_dtrsm_nn_ll_one_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 		tmp,
 		e_1, e_2, e_3;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-		
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
@@ -5881,7 +5885,7 @@ void kernel_dtrsm_nn_ll_one_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 
 	if(km==1)
 		goto store;
-	
+
 	e_1 = E[1+bs*0];
 	e_2 = E[2+bs*0];
 	e_3 = E[3+bs*0];
@@ -5900,7 +5904,7 @@ void kernel_dtrsm_nn_ll_one_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 
 	if(km==2)
 		goto store;
-	
+
 	e_2 = E[2+bs*1];
 	e_3 = E[3+bs*1];
 	CC[2+bs*0] -= e_2 * CC[1+bs*0];
@@ -5914,7 +5918,7 @@ void kernel_dtrsm_nn_ll_one_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 
 	if(km==3)
 		goto store;
-	
+
 	e_3 = E[3+bs*2];
 	CC[3+bs*0] -= e_3 * CC[2+bs*0];
 	CC[3+bs*1] -= e_3 * CC[2+bs*1];
@@ -6046,8 +6050,8 @@ void kernel_dtrsm_nn_ru_inv_4x4_lib4(int kmax, double *A, double *B, int sdb, do
 			        e_22, e_23,
 					      e_33;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-		
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
@@ -6151,8 +6155,8 @@ void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 			        e_22, e_23,
 					      e_33;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-		
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
@@ -6168,7 +6172,7 @@ void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 
 	if(kn==1)
 		goto store;
-	
+
 	e_01 = E[0+bs*1];
 	e_11 = inv_diag_E[1];
 	CC[0+bs*1] -= CC[0+bs*0] * e_01;
@@ -6182,7 +6186,7 @@ void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 
 	if(kn==2)
 		goto store;
-	
+
 	e_02 = E[0+bs*2];
 	e_12 = E[1+bs*2];
 	e_22 = inv_diag_E[2];
@@ -6201,7 +6205,7 @@ void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 
 	if(kn==3)
 		goto store;
-	
+
 	e_03 = E[0+bs*3];
 	e_13 = E[1+bs*3];
 	e_23 = E[2+bs*3];
@@ -6350,8 +6354,8 @@ void kernel_dtrsm_nn_lu_inv_4x4_lib4(int kmax, double *A, double *B, int sdb, do
 			        e_22, e_23,
 					      e_33;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-		
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
@@ -6457,8 +6461,8 @@ void kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 			        e_22, e_23,
 					      e_33;
 
-	double CC[16] __attribute__ ((aligned (64))) = {0};
-		
+	double CC[16] CACHE_ALIGN(64) = {0};
+
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
@@ -6489,7 +6493,7 @@ void kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 		CC[2+bs*2] -= e_23 * CC[3+bs*2];
 		CC[2+bs*3] -= e_23 * CC[3+bs*3];
 		}
-	
+
 	if(km>2)
 		{
 		e_02 = E[0+bs*2];
@@ -6508,7 +6512,7 @@ void kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 		CC[1+bs*2] -= e_12 * CC[2+bs*2];
 		CC[1+bs*3] -= e_12 * CC[2+bs*3];
 		}
-	
+
 	if(km>1)
 		{
 		e_01 = E[0+bs*1];
@@ -6522,7 +6526,7 @@ void kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 		CC[0+bs*2] -= e_01 * CC[1+bs*2];
 		CC[0+bs*3] -= e_01 * CC[1+bs*3];
 		}
-	
+
 	e_00 = inv_diag_E[0];
 	CC[0+bs*0] *= e_00;
 	CC[0+bs*1] *= e_00;

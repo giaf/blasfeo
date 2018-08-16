@@ -278,7 +278,7 @@ static void d_mass_spring_system(double Ts, int nx, int nu, int N, double *A, do
 
 	}
 
-
+#define NN 4
 
 int main()
 	{
@@ -312,21 +312,20 @@ int main()
 ************************************************/
 
 	// problem size
-	int N = 4;
 	int nx_ = 4;
 	int nu_ = 1;
 
 	// stage-wise variant size
-	int nx[N+1];
+	int nx[NN+1];
 	nx[0] = 0;
-	for(ii=1; ii<=N; ii++)
+	for(ii=1; ii<=NN; ii++)
 		nx[ii] = nx_;
-	nx[N] = nx_;
+	nx[NN] = nx_;
 
-	int nu[N+1];
-	for(ii=0; ii<N; ii++)
+	int nu[NN+1];
+	for(ii=0; ii<NN; ii++)
 		nu[ii] = nu_;
-	nu[N] = 0;
+	nu[NN] = 0;
 
 /************************************************
 * dynamical system
@@ -340,7 +339,7 @@ int main()
 	double *x0d; d_zeros(&x0d, nx_, 1); // initial state
 
 	double Ts = 0.5; // sampling time
-	d_mass_spring_system(Ts, nx_, nu_, N, Ad, Bd, bd, x0d);
+	d_mass_spring_system(Ts, nx_, nu_, NN, Ad, Bd, bd, x0d);
 
 	float *A; s_zeros(&A, nx_, nx_); for(ii=0; ii<nx_*nx_; ii++) A[ii] = (float) Ad[ii];
 	float *B; s_zeros(&B, nx_, nu_); for(ii=0; ii<nx_*nu_; ii++) B[ii] = (float) Bd[ii];
@@ -453,14 +452,14 @@ int main()
 * array of matrices
 ************************************************/
 
-	struct blasfeo_smat hsBAbt[N];
-	struct blasfeo_svec hsb[N];
-	struct blasfeo_smat hsRSQrq[N+1];
-	struct blasfeo_svec hsrq[N+1];
-	struct blasfeo_smat hsL[N+1];
-	struct blasfeo_svec hsPb[N];
-	struct blasfeo_svec hsux[N+1];
-	struct blasfeo_svec hspi[N];
+	struct blasfeo_smat hsBAbt[NN];
+	struct blasfeo_svec hsb[NN];
+	struct blasfeo_smat hsRSQrq[NN+1];
+	struct blasfeo_svec hsrq[NN+1];
+	struct blasfeo_smat hsL[NN+1];
+	struct blasfeo_svec hsPb[NN];
+	struct blasfeo_svec hsux[NN+1];
+	struct blasfeo_svec hspi[NN];
 	struct blasfeo_smat hswork_mat[1];
 	struct blasfeo_svec hswork_vec[1];
 
@@ -472,7 +471,7 @@ int main()
 	blasfeo_allocate_svec(nx_, &hsPb[0]);
 	blasfeo_allocate_svec(nx_+nu_+1, &hsux[0]);
 	blasfeo_allocate_svec(nx_, &hspi[0]);
-	for(ii=1; ii<N; ii++)
+	for(ii=1; ii<NN; ii++)
 		{
 		hsBAbt[ii] = sBAbt1;
 		hsb[ii] = sb;
@@ -483,14 +482,14 @@ int main()
 		blasfeo_allocate_svec(nx_+nu_+1, &hsux[ii]);
 		blasfeo_allocate_svec(nx_, &hspi[ii]);
 		}
-	hsRSQrq[N] = sQqN;
-	hsrq[N] = sqN;
-	blasfeo_allocate_smat(nx_+1, nx_, &hsL[N]);
-	blasfeo_allocate_svec(nx_+nu_+1, &hsux[N]);
+	hsRSQrq[NN] = sQqN;
+	hsrq[NN] = sqN;
+	blasfeo_allocate_smat(nx_+1, nx_, &hsL[NN]);
+	blasfeo_allocate_svec(nx_+nu_+1, &hsux[NN]);
 	blasfeo_allocate_smat(nu_+nx_+1, nx_, &hswork_mat[0]);
 	blasfeo_allocate_svec(nx_, &hswork_vec[0]);
 
-//	for(ii=0; ii<N; ii++)
+//	for(ii=0; ii<NN; ii++)
 //		blasfeo_print_dmat(nu[ii]+nx[ii]+1, nx[ii+1], &hsBAbt[ii], 0, 0);
 //	return 0;
 
@@ -509,7 +508,7 @@ int main()
 
 	for(rep=0; rep<nrep; rep++)
 		{
-		s_back_ric_sv_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL, hsux, hspi, hswork_mat, hswork_vec);
+		s_back_ric_sv_libstr(NN, nx, nu, hsBAbt, hsRSQrq, hsL, hsux, hspi, hswork_mat, hswork_vec);
 		}
 
 	time_sv = blasfeo_toc(&timer) / nrep;
@@ -517,7 +516,7 @@ int main()
 
 	for(rep=0; rep<nrep; rep++)
 		{
-		s_back_ric_trf_libstr(N, nx, nu, hsBAbt, hsRSQrq, hsL, hswork_mat);
+		s_back_ric_trf_libstr(NN, nx, nu, hsBAbt, hsRSQrq, hsL, hswork_mat);
 		}
 
 	time_trf = blasfeo_toc(&timer) / nrep;
@@ -525,22 +524,22 @@ int main()
 
 	for(rep=0; rep<nrep; rep++)
 		{
-		s_back_ric_trs_libstr(N, nx, nu, hsBAbt, hsb, hsrq, hsL, hsPb, hsux, hspi, hswork_vec);
+		s_back_ric_trs_libstr(NN, nx, nu, hsBAbt, hsb, hsrq, hsL, hsPb, hsux, hspi, hswork_vec);
 		}
 
 	time_trs = blasfeo_toc(&timer) / nrep;
 
 	// print sol
 	printf("\nux = \n\n");
-	for(ii=0; ii<=N; ii++)
+	for(ii=0; ii<=NN; ii++)
 		blasfeo_print_tran_svec(nu[ii]+nx[ii], &hsux[ii], 0);
 
 	printf("\npi = \n\n");
-	for(ii=0; ii<N; ii++)
+	for(ii=0; ii<NN; ii++)
 		blasfeo_print_tran_svec(nx[ii+1], &hspi[ii], 0);
 
 //	printf("\nL = \n\n");
-//	for(ii=0; ii<=N; ii++)
+//	for(ii=0; ii<=NN; ii++)
 //		blasfeo_print_smat(nu[ii]+nx[ii]+1, nu[ii]+nx[ii], &hsL[ii], 0, 0);
 
 	printf("\ntime sv\t\ttime trf\t\ttime trs\n");
@@ -580,15 +579,15 @@ int main()
 	blasfeo_free_svec(&hsPb[0]);
 	blasfeo_free_svec(&hsux[0]);
 	blasfeo_free_svec(&hspi[0]);
-	for(ii=1; ii<N; ii++)
+	for(ii=1; ii<NN; ii++)
 		{
 		blasfeo_free_smat(&hsL[ii]);
 		blasfeo_free_svec(&hsPb[ii]);
 		blasfeo_free_svec(&hsux[ii]);
 		blasfeo_free_svec(&hspi[ii]);
 		}
-	blasfeo_free_smat(&hsL[N]);
-	blasfeo_free_svec(&hsux[N]);
+	blasfeo_free_smat(&hsL[NN]);
+	blasfeo_free_svec(&hsux[NN]);
 	blasfeo_free_smat(&hswork_mat[0]);
 	blasfeo_free_svec(&hswork_vec[0]);
 
