@@ -124,6 +124,10 @@ int main()
 		double alpha = 1.0;
 		double beta = 0.0;
 
+
+
+
+
 		/* call blas */
 		for(rep_in=0; rep_in<nrep_in; rep_in++)
 			{
@@ -135,30 +139,30 @@ int main()
 			for(rep=0; rep<nrep; rep++)
 				{
 
-#if 0
+#if 1
 				ii = 0;
 				for(; ii<n-11; ii+=12)
 					{
 					for(jj=0; jj<n-3; jj+=4)
 						{
-						kernel_dgemm_nn_12x4_lib(n, &alpha, A+ii, lda, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
-//						kernel_dgemm_nt_12x4_lib(n, &alpha, A+ii, lda, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
+//						kernel_dgemm_nn_12x4_lib(n, &alpha, A+ii, lda, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
+						kernel_dgemm_nt_12x4_lib(n, &alpha, A+ii, lda, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
 						}
 					}
 				for(; ii<n-7; ii+=8)
 					{
 					for(jj=0; jj<n-3; jj+=4)
 						{
-						kernel_dgemm_nn_8x4_lib(n, &alpha, A+ii, lda, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
-//						kernel_dgemm_nt_8x4_lib(n, &alpha, A+ii, lda, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
+//						kernel_dgemm_nn_8x4_lib(n, &alpha, A+ii, lda, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
+						kernel_dgemm_nt_8x4_lib(n, &alpha, A+ii, lda, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
 						}
 					}
 				for(; ii<n-3; ii+=4)
 					{
 					for(jj=0; jj<n-3; jj+=4)
 						{
-						kernel_dgemm_nn_4x4_lib(n, &alpha, A+ii, lda, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
-//						kernel_dgemm_nt_4x4_lib(n, &alpha, A+ii, lda, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
+//						kernel_dgemm_nn_4x4_lib(n, &alpha, A+ii, lda, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
+						kernel_dgemm_nt_4x4_lib(n, &alpha, A+ii, lda, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
 						}
 					}
 #else
@@ -182,6 +186,10 @@ int main()
 
 //		d_print_mat(n, n, C, ldc);
 
+
+
+
+
 		/* call blas with packing */
 		for(rep_in=0; rep_in<nrep_in; rep_in++)
 			{
@@ -193,34 +201,46 @@ int main()
 			for(rep=0; rep<nrep; rep++)
 				{
 
-				blasfeo_pack_tran_dmat(n, n, B, n, &sB, 0, 0);
+//				blasfeo_pack_tran_dmat(n, n, B, n, &sB, 0, 0);
 //				blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
 
-				for(ii=0; ii<n-11; ii+=12)
+				double pU[3072] __attribute__ ((aligned (64)));
+				int sdu = 256;
+				ii = 0;
+				if(n<=256)
 					{
-//					blasfeo_pack_dmat(12, n, A+ii, n, &sA, ii, 0);
-					blasfeo_pack_tran_dmat(n, 12, A+ii*lda, n, &sA, ii, 0);
-					for(jj=0; jj<n-3; jj+=4)
+					for(; ii<n-11; ii+=12)
 						{
-						kernel_dgemm_nt_12x4_lib4(n, &alpha, sA.pA+ii*sda, sda, sB.pA+jj*bs, &beta, sC.pA+ii*sdc+jj*bs, sdc, sC.pA+ii*sdc+jj*bs, sdc);
+//						blasfeo_pack_dmat(12, n, A+ii, n, &sA, ii, 0);
+//						blasfeo_pack_tran_dmat(n, 12, A+ii*lda, n, &sA, ii, 0);
+						kernel_dpack_nn_12_lib4(n, A+ii+0, lda, pU, sdu);
+						for(jj=0; jj<n-3; jj+=4)
+							{
+//							kernel_dgemm_nt_12x4_lib4(n, &alpha, sA.pA+ii*sda, sda, sB.pA+jj*bs, &beta, sC.pA+ii*sdc+jj*bs, sdc, sC.pA+ii*sdc+jj*bs, sdc);
+							kernel_dgemm_nt_12x4_lib4x(n, &alpha, pU, sdu, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
+							}
 						}
-					}
-				for(; ii<n-7; ii+=8)
-					{
-//					blasfeo_pack_dmat(8, n, A+ii, n, &sA, ii, 0);
-					blasfeo_pack_tran_dmat(n, 8, A+ii*lda, n, &sA, ii, 0);
-					for(jj=0; jj<n-3; jj+=4)
+					for(; ii<n-7; ii+=8)
 						{
-						kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA+ii*sda, sda, sB.pA+jj*bs, &beta, sC.pA+ii*sdc+jj*bs, sdc, sC.pA+ii*sdc+jj*bs, sdc);
+//						blasfeo_pack_dmat(8, n, A+ii, n, &sA, ii, 0);
+//						blasfeo_pack_tran_dmat(n, 8, A+ii*lda, n, &sA, ii, 0);
+						kernel_dpack_nn_8_lib4(n, A+ii+0, lda, pU, sdu);
+						for(jj=0; jj<n-3; jj+=4)
+							{
+//							kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA+ii*sda, sda, sB.pA+jj*bs, &beta, sC.pA+ii*sdc+jj*bs, sdc, sC.pA+ii*sdc+jj*bs, sdc);
+							kernel_dgemm_nt_8x4_lib4x(n, &alpha, pU, sdu, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
+							}
 						}
-					}
-				for(; ii<n-3; ii+=4)
-					{
-//					blasfeo_pack_dmat(4, n, A+ii, n, &sA, ii, 0);
-					blasfeo_pack_tran_dmat(n, 4, A+ii*lda, n, &sA, ii, 0);
-					for(jj=0; jj<n-3; jj+=4)
+					for(; ii<n-3; ii+=4)
 						{
-						kernel_dgemm_nt_4x4_lib4(n, &alpha, sA.pA+ii*sda, sB.pA+jj*bs, &beta, sC.pA+ii*sdc+jj*bs, sC.pA+ii*sdc+jj*bs);
+//						blasfeo_pack_dmat(4, n, A+ii, n, pU, 0, 0);
+//						blasfeo_pack_tran_dmat(n, 4, A+ii*lda, n, &sA, ii, 0);
+						kernel_dpack_nn_4_lib4(n, A+ii, lda, pU);
+						for(jj=0; jj<n-3; jj+=4)
+							{
+//							kernel_dgemm_nt_4x4_lib4x(n, &alpha, sA.pA+ii*sda, sB.pA+jj*bs, &beta, sC.pA+ii*sdc+jj*bs, sC.pA+ii*sdc+jj*bs);
+							kernel_dgemm_nt_4x4_lib4x(n, &alpha, pU, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
+							}
 						}
 					}
 
@@ -234,6 +254,12 @@ int main()
 
 			}
 
+//		d_print_mat(n, n, C, ldc);
+
+
+
+
+
 		/* call blasfeo */
 		for(rep_in=0; rep_in<nrep_in; rep_in++)
 			{
@@ -245,30 +271,30 @@ int main()
 			for(rep=0; rep<nrep; rep++)
 				{
 
-#if 0
+#if 1
 				ii = 0;
 				for(; ii<n-11; ii+=12)
 					{
 					for(jj=0; jj<n-3; jj+=4)
 						{
-						kernel_dgemm_nn_12x4_lib4(n, &alpha, sA.pA+ii*sda, sda, 0, sB.pA+jj*bs, sdb, &beta, sC.pA+ii*sdc+jj*bs, sdc, sC.pA+ii*sdc+jj*bs, sdc);
-//						kernel_dgemm_nt_12x4_lib4(n, &alpha, sA.pA+ii*sda, sda, sB.pA+jj*sdb, &beta, sC.pA+ii*sdc+jj*bs, sdc, sC.pA+ii*sdc+jj*bs, sdc);
+//						kernel_dgemm_nn_12x4_lib4(n, &alpha, sA.pA+ii*sda, sda, 0, sB.pA+jj*bs, sdb, &beta, sC.pA+ii*sdc+jj*bs, sdc, sC.pA+ii*sdc+jj*bs, sdc);
+						kernel_dgemm_nt_12x4_lib4(n, &alpha, sA.pA+ii*sda, sda, sB.pA+jj*sdb, &beta, sC.pA+ii*sdc+jj*bs, sdc, sC.pA+ii*sdc+jj*bs, sdc);
 						}
 					}
 				for(; ii<n-7; ii+=8)
 					{
 					for(jj=0; jj<n-3; jj+=4)
 						{
-						kernel_dgemm_nn_8x4_lib4(n, &alpha, sA.pA+ii*sda, sda, 0, sB.pA+jj*bs, sdb, &beta, sC.pA+ii*sdc+jj*bs, sdc, sC.pA+ii*sdc+jj*bs, sdc);
-//						kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA+ii*sda, sda, sB.pA+jj*sdb, &beta, sC.pA+ii*sdc+jj*bs, sdc, sC.pA+ii*sdc+jj*bs, sdc);
+//						kernel_dgemm_nn_8x4_lib4(n, &alpha, sA.pA+ii*sda, sda, 0, sB.pA+jj*bs, sdb, &beta, sC.pA+ii*sdc+jj*bs, sdc, sC.pA+ii*sdc+jj*bs, sdc);
+						kernel_dgemm_nt_8x4_lib4(n, &alpha, sA.pA+ii*sda, sda, sB.pA+jj*sdb, &beta, sC.pA+ii*sdc+jj*bs, sdc, sC.pA+ii*sdc+jj*bs, sdc);
 						}
 					}
 				for(; ii<n-3; ii+=4)
 					{
 					for(jj=0; jj<n-3; jj+=4)
 						{
-						kernel_dgemm_nn_4x4_lib4(n, &alpha, sA.pA+ii*sda, 0, sB.pA+jj*bs, sdb, &beta, sC.pA+ii*sdc+jj*bs, sC.pA+ii*sdc+jj*bs);
-//						kernel_dgemm_nt_4x4_lib4(n, &alpha, sA.pA+ii*sda, sB.pA+jj*sdb, &beta, sC.pA+ii*sdc+jj*bs, sC.pA+ii*sdc+jj*bs);
+//						kernel_dgemm_nn_4x4_lib4(n, &alpha, sA.pA+ii*sda, 0, sB.pA+jj*bs, sdb, &beta, sC.pA+ii*sdc+jj*bs, sC.pA+ii*sdc+jj*bs);
+						kernel_dgemm_nt_4x4_lib4(n, &alpha, sA.pA+ii*sda, sB.pA+jj*sdb, &beta, sC.pA+ii*sdc+jj*bs, sC.pA+ii*sdc+jj*bs);
 						}
 					}
 #else
@@ -320,6 +346,8 @@ int main()
 
 //		d_print_mat(n, n, C, ldc);
 //		blasfeo_print_dmat(n, n, &sC, 0, 0);
+
+
 
 		double Gflops_max = flops_max * GHz_max;
 

@@ -43,7 +43,6 @@ void kernel_dpatr_tn_4_lib4(int kmax, double *A, int sda, double *C)
 	const int bs = 4;
 	
 	__m256d
-		alph,
 		v0, v1, v2, v3,
 		v4, v5, v6, v7;
 	
@@ -116,4 +115,173 @@ void kernel_dpatr_tn_4_lib4(int kmax, double *A, int sda, double *C)
 
 
 
+void kernel_dpack_nn_12_lib4(int kmax, double *A, int lda, double *C, int sdc)
+	{
 
+	const int bs = 4;
+
+	int k;
+
+	__m256d
+		v0;
+	
+	double *C1 = C + bs*sdc;
+	double *C2 = C1 + bs*sdc;
+	
+	k = 0;
+	for(; k<kmax-3; k+=4)
+		{
+
+		v0 = _mm256_loadu_pd( &A[0+lda*0] );
+		_mm256_store_pd( &C[0+bs*0], v0 );
+		v0 = _mm256_loadu_pd( &A[0+lda*1] );
+		_mm256_store_pd( &C[0+bs*1], v0 );
+		v0 = _mm256_loadu_pd( &A[0+lda*2] );
+		_mm256_store_pd( &C[0+bs*2], v0 );
+		v0 = _mm256_loadu_pd( &A[0+lda*3] );
+		_mm256_store_pd( &C[0+bs*3], v0 );
+
+		v0 = _mm256_loadu_pd( &A[4+lda*0] );
+		_mm256_store_pd( &C1[0+bs*0], v0 );
+		v0 = _mm256_loadu_pd( &A[4+lda*1] );
+		_mm256_store_pd( &C1[0+bs*1], v0 );
+		v0 = _mm256_loadu_pd( &A[4+lda*2] );
+		_mm256_store_pd( &C1[0+bs*2], v0 );
+		v0 = _mm256_loadu_pd( &A[4+lda*3] );
+		_mm256_store_pd( &C1[0+bs*3], v0 );
+
+		v0 = _mm256_loadu_pd( &A[8+lda*0] );
+		_mm256_store_pd( &C2[0+bs*0], v0 );
+		v0 = _mm256_loadu_pd( &A[8+lda*1] );
+		_mm256_store_pd( &C2[0+bs*1], v0 );
+		v0 = _mm256_loadu_pd( &A[8+lda*2] );
+		_mm256_store_pd( &C2[0+bs*2], v0 );
+		v0 = _mm256_loadu_pd( &A[8+lda*3] );
+		_mm256_store_pd( &C2[0+bs*3], v0 );
+
+		A += 4*lda;
+		C += 4*bs;
+		C1 += 4*bs;
+		C2 += 4*bs;
+
+		}
+	for(; k<kmax; k++)
+		{
+
+		v0 = _mm256_loadu_pd( &A[0+lda*0] );
+		_mm256_store_pd( &C[0+bs*0], v0 );
+
+		v0 = _mm256_loadu_pd( &A[4+lda*0] );
+		_mm256_store_pd( &C1[0+bs*0], v0 );
+
+		v0 = _mm256_loadu_pd( &A[8+lda*0] );
+		_mm256_store_pd( &C2[0+bs*0], v0 );
+
+		A += 1*lda;
+		C += 1*bs;
+		C1 += 4*bs;
+		C2 += 4*bs;
+
+		}
+
+	return;
+
+	}
+
+
+
+void kernel_dpack_nn_8_lib4(int kmax, double *A, int lda, double *C, int sdc)
+	{
+
+	const int bs = 4;
+
+	int k;
+
+	__m256d
+		v0;
+	
+	double *C1 = C + bs*sdc;
+	
+	k = 0;
+	for(; k<kmax-3; k+=4)
+		{
+
+		v0 = _mm256_loadu_pd( &A[0+lda*0] );
+		_mm256_store_pd( &C[0+bs*0], v0 );
+		v0 = _mm256_loadu_pd( &A[0+lda*1] );
+		_mm256_store_pd( &C[0+bs*1], v0 );
+		v0 = _mm256_loadu_pd( &A[0+lda*2] );
+		_mm256_store_pd( &C[0+bs*2], v0 );
+		v0 = _mm256_loadu_pd( &A[0+lda*3] );
+		_mm256_store_pd( &C[0+bs*3], v0 );
+
+		v0 = _mm256_loadu_pd( &A[4+lda*0] );
+		_mm256_store_pd( &C1[0+bs*0], v0 );
+		v0 = _mm256_loadu_pd( &A[4+lda*1] );
+		_mm256_store_pd( &C1[0+bs*1], v0 );
+		v0 = _mm256_loadu_pd( &A[4+lda*2] );
+		_mm256_store_pd( &C1[0+bs*2], v0 );
+		v0 = _mm256_loadu_pd( &A[4+lda*3] );
+		_mm256_store_pd( &C1[0+bs*3], v0 );
+
+		A += 4*lda;
+		C += 4*bs;
+		C1 += 4*bs;
+
+		}
+	for(; k<kmax; k++)
+		{
+
+		v0 = _mm256_loadu_pd( &A[0+lda*0] );
+		_mm256_store_pd( &C[0+bs*0], v0 );
+
+		v0 = _mm256_loadu_pd( &A[4+lda*0] );
+		_mm256_store_pd( &C1[0+bs*0], v0 );
+
+		A += 1*lda;
+		C += 1*bs;
+		C1 += 4*bs;
+
+		}
+
+	return;
+
+	}
+
+
+
+void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *C)
+	{
+
+	const int bs = 4;
+
+	int k;
+
+	__m256d
+		v0;
+	
+	k = 0;
+	for(; k<kmax-3; k+=4)
+		{
+		v0 = _mm256_loadu_pd( &A[0+lda*0] );
+		_mm256_store_pd( &C[0+bs*0], v0 );
+		v0 = _mm256_loadu_pd( &A[0+lda*1] );
+		_mm256_store_pd( &C[0+bs*1], v0 );
+		v0 = _mm256_loadu_pd( &A[0+lda*2] );
+		_mm256_store_pd( &C[0+bs*2], v0 );
+		v0 = _mm256_loadu_pd( &A[0+lda*3] );
+		_mm256_store_pd( &C[0+bs*3], v0 );
+		A += 4*lda;
+		C += 4*bs;
+		}
+	for(; k<kmax; k++)
+		{
+		v0 = _mm256_loadu_pd( &A[0+lda*0] );
+		_mm256_store_pd( &C[0+bs*0], v0 );
+		A += 1*lda;
+		C += 1*bs;
+		}
+
+	return;
+
+	}
