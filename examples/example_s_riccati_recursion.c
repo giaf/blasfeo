@@ -312,7 +312,7 @@ int main()
 ************************************************/
 
 	// problem size
-	int N = 4;
+	const int N = 4;
 	int nx_ = 4;
 	int nu_ = 1;
 
