@@ -285,3 +285,50 @@ void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *C)
 	return;
 
 	}
+
+
+
+void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *C)
+	{
+
+	const int bs = 4;
+
+	int k;
+
+	__m256d
+		v0, v1, v2, v3, v4, v5, v6, v7;
+	
+	k = 0;
+	for(; k<kmax-3; k+=4)
+		{
+		v0 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A[0+lda*0] ) ), _mm_load_pd( &A[0+lda*2]) , 0x1 ); // 00 10 02 12
+		v1 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A[0+lda*1] ) ), _mm_load_pd( &A[0+lda*3]) , 0x1 ); // 01 11 03 13
+		v2 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A[2+lda*0] ) ), _mm_load_pd( &A[2+lda*2]) , 0x1 ); // 20 30 22 32
+		v3 = _mm256_insertf128_pd( _mm256_castpd128_pd256( _mm_load_pd( &A[2+lda*1] ) ), _mm_load_pd( &A[2+lda*3]) , 0x1 ); // 21 31 23 33
+
+		v4 = _mm256_unpacklo_pd( v0, v1 ); // 00 01 02 03
+		_mm256_store_pd( &C[0+bs*0], v4 );
+		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 12 13
+		_mm256_store_pd( &C[0+bs*1], v5 );
+		v6 = _mm256_unpacklo_pd( v2, v3 ); // 20 21 22 23
+		_mm256_store_pd( &C[0+bs*2], v6 );
+		v7 = _mm256_unpackhi_pd( v2, v3 ); // 30 31 32 33
+		_mm256_store_pd( &C[0+bs*3], v7 );
+
+		A += 4;
+		C += 4*bs;
+		}
+	for(; k<kmax; k++)
+		{
+		C[0+bs*0] = A[0+lda*0];
+		C[1+bs*0] = A[0+lda*1];
+		C[2+bs*0] = A[0+lda*2];
+		C[3+bs*0] = A[0+lda*3];
+
+		A += 1;
+		C += bs;
+		}
+
+	return;
+
+	}
