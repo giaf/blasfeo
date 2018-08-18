@@ -59,8 +59,8 @@ int main()
 //	for(ll=0; ll<1; ll++)
 //	for(ll=0; ll<4; ll++) // up to 16
 //	for(ll=0; ll<24; ll++)
-	for(ll=0; ll<63; ll++) // up to 256
-//	for(ll=0; ll<75; ll++) // up to 300
+//	for(ll=0; ll<63; ll++) // up to 256
+	for(ll=0; ll<75; ll++) // up to 300
 //	for(ll=0; ll<115; ll++)
 //	for(ll=0; ll<120; ll++)
 
