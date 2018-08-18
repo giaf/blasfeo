@@ -1225,24 +1225,24 @@ inner_scale_ab_8x4_lib:
 	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
 	je			0f // end
 
-	vmovapd		0(%r12), %ymm15
+	vmovupd		0(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm0
-	vmovapd		32(%r12), %ymm15
+	vmovupd		32(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm4
 	addq		%r13, %r12
-	vmovapd		0(%r12), %ymm15
+	vmovupd		0(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm1
-	vmovapd		32(%r12), %ymm15
+	vmovupd		32(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm5
 	addq		%r13, %r12
-	vmovapd		0(%r12), %ymm15
+	vmovupd		0(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm2
-	vmovapd		32(%r12), %ymm15
+	vmovupd		32(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm6
 	addq		%r13, %r12
-	vmovapd		0(%r12), %ymm15
+	vmovupd		0(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm3
-	vmovapd		32(%r12), %ymm15
+	vmovupd		32(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm7
 //	addq		%r13, %r12
 

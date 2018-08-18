@@ -57,10 +57,11 @@ int main()
 	int nnrep[] = {10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 400, 400, 400, 400, 400, 200, 200, 200, 200, 200, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20, 20, 20, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 4, 4, 4, 4, 4};
 
 //	for(ll=0; ll<1; ll++)
+	for(ll=0; ll<2; ll++) // up to 8
 //	for(ll=0; ll<4; ll++) // up to 16
 //	for(ll=0; ll<24; ll++)
 //	for(ll=0; ll<63; ll++) // up to 256
-	for(ll=0; ll<75; ll++) // up to 300
+//	for(ll=0; ll<75; ll++) // up to 300
 //	for(ll=0; ll<115; ll++)
 //	for(ll=0; ll<120; ll++)
 
@@ -74,6 +75,7 @@ int main()
 //		int nrep = nnrep[0];
 //		n = n<12 ? 12 : n;
 //		n = n<8 ? 8 : n;
+		nrep = 1;
 
 
 		double *A = malloc(n*n*sizeof(double));
@@ -123,7 +125,7 @@ int main()
 		/* benchmarks */
 
 		double alpha = 1.0;
-		double beta = 0.0;
+		double beta = 1.0;
 
 
 
@@ -140,10 +142,13 @@ int main()
 			for(rep=0; rep<nrep; rep++)
 				{
 
-				int ta = 't';
-				int tb = 't';
+				char ta = 'n';
+				char tb = 't';
+				char uplo = 'l';
 
-				dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+				for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
+				dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
+				dpotrf_(&uplo, &n, C, &n);
 
 				}
 
@@ -153,7 +158,7 @@ int main()
 
 			}
 
-//		d_print_mat(n, n, C, ldc);
+		d_print_mat(n, n, C, ldc);
 
 
 
@@ -170,10 +175,13 @@ int main()
 			for(rep=0; rep<nrep; rep++)
 				{
 
-				int ta = 't';
-				int tb = 't';
+				char ta = 'n';
+				char tb = 't';
+				char uplo = 'l';
 
-				blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+				for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
+				blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
+				blasfeo_dpotrf(&uplo, &n, C, &n);
 
 				}
 
@@ -183,7 +191,7 @@ int main()
 
 			}
 
-//		d_print_mat(n, n, C, ldc);
+		d_print_mat(n, n, C, ldc);
 
 
 
