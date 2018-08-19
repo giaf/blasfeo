@@ -1231,6 +1231,81 @@ inner_kernel_dgemm_add_nn_4x4_lib4x:
 
 // common inner routine with file scope
 //
+// triangular substitution:
+// side = right
+// uplo = lower
+// tran = transposed
+// requires explicit inverse of diagonal
+//
+// input arguments:
+// r10  <- E
+// r11  <- lde
+// r12  <- inv_diag_E
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSM_RLT_INV_4X4_LIB
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_dtrsm_rlt_inv_4x4_lib, @function
+inner_edge_dtrsm_rlt_inv_4x4_lib:
+#elif defined(OS_MAC)
+_inner_edge_dtrsm_rlt_inv_4x4_lib:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsm_rlt_inv_4x4_lib; .scl 2; .type 32; .endef
+inner_edge_dtrsm_rlt_inv_4x4_lib:
+#endif
+#endif
+	
+	vbroadcastsd	0(%r12), %ymm13
+	vmulpd			%ymm0, %ymm13, %ymm0
+	vbroadcastsd	8(%r10), %ymm13
+	vfnmadd231pd	%ymm0, %ymm13, %ymm1
+	vbroadcastsd	16(%r10), %ymm13
+	vfnmadd231pd	%ymm0, %ymm13, %ymm2
+	vbroadcastsd	24(%r10), %ymm13
+	vfnmadd231pd	%ymm0, %ymm13, %ymm3
+	addq	%r11, %r10
+
+	vbroadcastsd	8(%r12), %ymm13
+	vmulpd			%ymm1, %ymm13, %ymm1
+	vbroadcastsd	16(%r10), %ymm13
+	vfnmadd231pd	%ymm1, %ymm13, %ymm2
+	vbroadcastsd	24(%r10), %ymm13
+	vfnmadd231pd	%ymm1, %ymm13, %ymm3
+	addq	%r11, %r10
+
+	vbroadcastsd	16(%r12), %ymm13
+	vmulpd			%ymm2, %ymm13, %ymm2
+	vbroadcastsd	24(%r10), %ymm13
+	vfnmadd231pd	%ymm2, %ymm13, %ymm3
+	addq	%r11, %r10
+
+	vbroadcastsd	24(%r12), %ymm13
+	vmulpd			%ymm3, %ymm13, %ymm3
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_dtrsm_rlt_inv_4x4_lib, .-inner_edge_dtrsm_rlt_inv_4x4_lib
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // scale for generic alpha and beta
 //
 // input arguments:
@@ -2047,6 +2122,116 @@ kernel_dpotrf_nt_l_4x4_lib4cc:
 
 #if defined(OS_LINUX)
 	.size	kernel_dpotrf_nt_l_4x4_lib4cc, .-kernel_dpotrf_nt_l_4x4_lib4cc
+#endif
+
+
+
+
+
+//                                      1      2          3          4        5          6        7          8        9          10       11
+// void kernel_dtrsm_nt_rl_inv_4x4_lib4(int k, double *A, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dtrsm_nt_rl_inv_4x4_lib4cc
+	.type kernel_dtrsm_nt_rl_inv_4x4_lib4cc, @function
+kernel_dtrsm_nt_rl_inv_4x4_lib4cc:
+#elif defined(OS_MAC)
+	.globl _kernel_dtrsm_nt_rl_inv_4x4_lib4cc
+_kernel_dtrsm_nt_rl_inv_4x4_lib4cc:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nt_rl_inv_4x4_lib4cc
+	.def kernel_dtrsm_nt_rl_inv_4x4_lib4cc; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_rl_inv_4x4_lib4cc:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nt 
+
+	movq	ARG1, %r10
+	movq	ARG2, %r11
+	movq	ARG3, %r12
+	movq	ARG4, %r13 // ldb
+	sall	$3, %r13d
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4X
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_sub_nt_4x4_lib4x
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_sub_nt_4x4_lib4x
+#endif
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	ARG5, %r10 // C
+	movq	ARG6, %r11 // ldc
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_11_4X4_LIB
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_scale_11_4x4_lib
+#elif defined(OS_MAC)
+	callq _inner_scale_11_4x4_lib
+#endif
+#endif
+
+
+	// solve
+
+	movq	ARG9, %r10  // E 
+	movq	ARG10, %r11 // lde
+	sall	$3, %r11d
+	movq	ARG11, %r12  // inv_diag_E 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RLT_INV_4X4_LIB
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dtrsm_rlt_inv_4x4_lib
+#elif defined(OS_MAC)
+	callq _inner_edge_dtrsm_rlt_inv_4x4_lib
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG7, %r10 // D
+	movq	ARG8, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_4x4_lib
+#elif defined(OS_MAC)
+	callq _inner_store_4x4_lib
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dtrsm_nt_rl_inv_4x4_lib4cc, .-kernel_dtrsm_nt_rl_inv_4x4_lib4cc
 #endif
 
 

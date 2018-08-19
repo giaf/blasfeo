@@ -57,10 +57,12 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc)
 		jj = 0;
 		for(; jj<ii; jj+=4)
 			{
-			// TODO
+			kernel_dtrsm_nt_rl_inv_4x4_lib4cc(jj, pU, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj);
+			kernel_dpack_nn_4_lib4(4, C+ii+jj*ldc, ldc, pU+jj*bs);
 			}
-		kernel_dpack_nn_4_lib4(ii, C+ii, ldc, pU);
-		kernel_dpotrf_nt_l_4x4_lib4cc(ii, pU, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj);
+		// TODO
+//		kernel_dpack_nn_4_lib4(ii, C+ii, ldc, pU);
+		kernel_dpotrf_nt_l_4x4_lib4cc(jj, pU, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj);
 		}
 
 	return;
