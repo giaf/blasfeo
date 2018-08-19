@@ -76,7 +76,7 @@ int main()
 //		int nrep = nnrep[0];
 //		n = n<12 ? 12 : n;
 //		n = n<8 ? 8 : n;
-		nrep = 1;
+//		nrep = 1;
 
 
 		double *A = malloc(n*n*sizeof(double));
@@ -148,6 +148,7 @@ int main()
 			char ta = 'n';
 			char tb = 't';
 			char uplo = 'l';
+			int info = 0;
 
 			for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 			dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
@@ -161,8 +162,9 @@ int main()
 
 //				for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 //				dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
-				for(ii=0; ii<n*n; ii++) D[ii] = C[ii];
-				dpotrf_(&uplo, &n, D, &n);
+//				for(ii=0; ii<n*n; ii++) D[ii] = C[ii];
+//				dpotrf_(&uplo, &n, D, &n, &info);
+				dpotrf_(&uplo, &n, B, &n, &info);
 
 				}
 
@@ -199,8 +201,9 @@ int main()
 
 //				for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 //				blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
-				for(ii=0; ii<n*n; ii++) D[ii] = C[ii];
-				blasfeo_dpotrf(&uplo, &n, D, &n);
+//				for(ii=0; ii<n*n; ii++) D[ii] = C[ii];
+//				blasfeo_dpotrf(&uplo, &n, D, &n);
+				blasfeo_dpotrf(&uplo, &n, B, &n);
 
 				}
 
@@ -230,6 +233,7 @@ int main()
 				
 //				blasfeo_dgemm_nn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
 //				blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
+				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 
 				}
 

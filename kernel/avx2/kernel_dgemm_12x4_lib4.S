@@ -6404,11 +6404,14 @@ inner_tran_scale_11_4x12_lib4:
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
+	.globl inner_edge_dpotrf_12x4_vs_lib4
 	.type inner_edge_dpotrf_12x4_vs_lib4, @function
 inner_edge_dpotrf_12x4_vs_lib4:
 #elif defined(OS_MAC)
+	.globl _inner_edge_dpotrf_12x4_vs_lib4
 _inner_edge_dpotrf_12x4_vs_lib4:
 #elif defined(OS_WINDOWS)
+	.globl inner_edge_dpotrf_12x4_vs_lib4
 	.def inner_edge_dpotrf_12x4_vs_lib4; .scl 2; .type 32; .endef
 inner_edge_dpotrf_12x4_vs_lib4:
 #endif
