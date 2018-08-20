@@ -78,7 +78,7 @@ set(MIN_KERNEL_SIZE 2x2 CACHE STRING "Minimum kernel size")
 
 # Skip BLASFEO utils for unsupported systems and for Realease build
 if(CMAKE_SYSTEM MATCHES "dSpace" OR CMAKE_BUILD_TYPE MATCHES "Release")
-	set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled" FORCE)
+	set(BLASFEO_TESTING OFF CACHE BOOL "Examples disabled" FORCE)
 	set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled" FORCE)
 	set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled" FORCE)
 endif()
