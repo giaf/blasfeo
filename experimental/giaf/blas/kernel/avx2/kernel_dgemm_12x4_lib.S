@@ -172,17 +172,17 @@
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_ADD_NT_12X4_LIB
+	.macro INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_kernel_gemm_add_nt_12x4_lib, @function
-inner_kernel_gemm_add_nt_12x4_lib:
+	.type inner_kernel_dgemm_add_nt_12x4_lib, @function
+inner_kernel_dgemm_add_nt_12x4_lib:
 #elif defined(OS_MAC)
-_inner_kernel_gemm_add_nt_12x4_lib:
+_inner_kernel_dgemm_add_nt_12x4_lib:
 #elif defined(OS_WINDOWS)
-	.def inner_kernel_gemm_add_nt_12x4_lib; .scl 2; .type 32; .endef
-inner_kernel_gemm_add_nt_12x4_lib:
+	.def inner_kernel_dgemm_add_nt_12x4_lib; .scl 2; .type 32; .endef
+inner_kernel_dgemm_add_nt_12x4_lib:
 #endif
 #endif
 
@@ -447,7 +447,7 @@ inner_kernel_gemm_add_nt_12x4_lib:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_kernel_gemm_add_nt_12x4_lib, .-inner_kernel_gemm_add_nt_12x4_lib
+	.size	inner_kernel_dgemm_add_nt_12x4_lib, .-inner_kernel_dgemm_add_nt_12x4_lib
 #endif
 #endif
 
@@ -479,17 +479,17 @@ inner_kernel_gemm_add_nt_12x4_lib:
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_ADD_NT_12X4_LIB4X
+	.macro INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4C
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_kernel_gemm_add_nt_12x4_lib4x, @function
-inner_kernel_gemm_add_nt_12x4_lib4x:
+	.type inner_kernel_dgemm_add_nt_12x4_lib4c, @function
+inner_kernel_dgemm_add_nt_12x4_lib4c:
 #elif defined(OS_MAC)
-_inner_kernel_gemm_add_nt_12x4_lib4x:
+_inner_kernel_dgemm_add_nt_12x4_lib4c:
 #elif defined(OS_WINDOWS)
-	.def inner_kernel_gemm_add_nt_12x4_lib4x; .scl 2; .type 32; .endef
-inner_kernel_gemm_add_nt_12x4_lib4x:
+	.def inner_kernel_dgemm_add_nt_12x4_lib4c; .scl 2; .type 32; .endef
+inner_kernel_dgemm_add_nt_12x4_lib4c:
 #endif
 #endif
 
@@ -748,7 +748,7 @@ inner_kernel_gemm_add_nt_12x4_lib4x:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_kernel_gemm_add_nt_12x4_lib4x, .-inner_kernel_gemm_add_nt_12x4_lib4x
+	.size	inner_kernel_dgemm_add_nt_12x4_lib4c, .-inner_kernel_dgemm_add_nt_12x4_lib4c
 #endif
 #endif
 
@@ -1081,17 +1081,17 @@ inner_kernel_dgemm_sub_nt_12x4_lib4x:
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_ADD_NN_12X4_LIB
+	.macro INNER_KERNEL_DGEMM_ADD_NN_12X4_LIB
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_kernel_gemm_add_nn_12x4_lib, @function
-inner_kernel_gemm_add_nn_12x4_lib:
+	.type inner_kernel_dgemm_add_nn_12x4_lib, @function
+inner_kernel_dgemm_add_nn_12x4_lib:
 #elif defined(OS_MAC)
-_inner_kernel_gemm_add_nn_12x4_lib:
+_inner_kernel_dgemm_add_nn_12x4_lib:
 #elif defined(OS_WINDOWS)
-	.def inner_kernel_gemm_add_nn_12x4_lib; .scl 2; .type 32; .endef
-inner_kernel_gemm_add_nn_12x4_lib:
+	.def inner_kernel_dgemm_add_nn_12x4_lib; .scl 2; .type 32; .endef
+inner_kernel_dgemm_add_nn_12x4_lib:
 #endif
 #endif
 
@@ -1356,7 +1356,7 @@ inner_kernel_gemm_add_nn_12x4_lib:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_kernel_gemm_add_nn_12x4_lib, .-inner_kernel_gemm_add_nn_12x4_lib
+	.size	inner_kernel_dgemm_add_nn_12x4_lib, .-inner_kernel_dgemm_add_nn_12x4_lib
 #endif
 #endif
 
@@ -1388,17 +1388,17 @@ inner_kernel_gemm_add_nn_12x4_lib:
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_ADD_NN_12X4_LIB4X
+	.macro INNER_KERNEL_DGEMM_ADD_NN_12X4_LIB4C
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_kernel_gemm_add_nn_12x4_lib4x, @function
-inner_kernel_gemm_add_nn_12x4_lib4x:
+	.type inner_kernel_dgemm_add_nn_12x4_lib4c, @function
+inner_kernel_dgemm_add_nn_12x4_lib4c:
 #elif defined(OS_MAC)
-_inner_kernel_gemm_add_nn_12x4_lib4x:
+_inner_kernel_dgemm_add_nn_12x4_lib4c:
 #elif defined(OS_WINDOWS)
-	.def inner_kernel_gemm_add_nn_12x4_lib4x; .scl 2; .type 32; .endef
-inner_kernel_gemm_add_nn_12x4_lib4x:
+	.def inner_kernel_dgemm_add_nn_12x4_lib4c; .scl 2; .type 32; .endef
+inner_kernel_dgemm_add_nn_12x4_lib4c:
 #endif
 #endif
 
@@ -1658,7 +1658,7 @@ inner_kernel_gemm_add_nn_12x4_lib4x:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_kernel_gemm_add_nn_12x4_lib4x, .-inner_kernel_gemm_add_nn_12x4_lib4x
+	.size	inner_kernel_dgemm_add_nn_12x4_lib4c, .-inner_kernel_dgemm_add_nn_12x4_lib4c
 #endif
 #endif
 
@@ -2131,12 +2131,12 @@ kernel_dgemm_nt_12x4_lib:
 	sall	$3, %r14d
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_12X4_LIB
+	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_gemm_add_nt_12x4_lib
+	call inner_kernel_dgemm_add_nt_12x4_lib
 #elif defined(OS_MAC)
-	callq _inner_kernel_gemm_add_nt_12x4_lib
+	callq _inner_kernel_dgemm_add_nt_12x4_lib
 #endif
 #endif
 
@@ -2189,21 +2189,21 @@ kernel_dgemm_nt_12x4_lib:
 
 
 
-//                                 1      2              3          4        5          6        7             8          9        10         11
-// void kernel_dgemm_nt_12x4_lib4x(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+//                                  1      2              3          4        5          6        7             8          9        10         11
+// void kernel_dgemm_nt_12x4_lib4cc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dgemm_nt_12x4_lib4x
-	.type kernel_dgemm_nt_12x4_lib4x, @function
-kernel_dgemm_nt_12x4_lib4x:
+	.globl kernel_dgemm_nt_12x4_lib4cc
+	.type kernel_dgemm_nt_12x4_lib4cc, @function
+kernel_dgemm_nt_12x4_lib4cc:
 #elif defined(OS_MAC)
-	.globl _kernel_dgemm_nt_12x4_lib4x
-_kernel_dgemm_nt_12x4_lib4x:
+	.globl _kernel_dgemm_nt_12x4_lib4cc
+_kernel_dgemm_nt_12x4_lib4cc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dgemm_nt_12x4_lib4x
-	.def kernel_dgemm_nt_12x4_lib4x; .scl 2; .type 32; .endef
-kernel_dgemm_nt_12x4_lib4x:
+	.globl kernel_dgemm_nt_12x4_lib4cc
+	.def kernel_dgemm_nt_12x4_lib4cc; .scl 2; .type 32; .endef
+kernel_dgemm_nt_12x4_lib4cc:
 #endif
 
 	PROLOGUE
@@ -2235,12 +2235,12 @@ kernel_dgemm_nt_12x4_lib4x:
 	sall	$3, %r14d
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_12X4_LIB4X
+	INNER_KERNEL_DGEMM_ADD_NT_12X4_LIB4C
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_gemm_add_nt_12x4_lib4x
+	call inner_kernel_dgemm_add_nt_12x4_lib4c
 #elif defined(OS_MAC)
-	callq _inner_kernel_gemm_add_nt_12x4_lib4x
+	callq _inner_kernel_dgemm_add_nt_12x4_lib4c
 #endif
 #endif
 
@@ -2286,7 +2286,7 @@ kernel_dgemm_nt_12x4_lib4x:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dgemm_nt_12x4_lib4x, .-kernel_dgemm_nt_12x4_lib4x
+	.size	kernel_dgemm_nt_12x4_lib4cc, .-kernel_dgemm_nt_12x4_lib4cc
 #endif
 
 
@@ -2294,20 +2294,20 @@ kernel_dgemm_nt_12x4_lib4x:
 
 
 //                                  1      2              3          4        5          6             7          8        9          10
-// void kernel_dgemm_nt_12x4_lib44x(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+// void kernel_dgemm_nt_12x4_lib44c(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dgemm_nt_12x4_lib44x
-	.type kernel_dgemm_nt_12x4_lib44x, @function
-kernel_dgemm_nt_12x4_lib44x:
+	.globl kernel_dgemm_nt_12x4_lib44c
+	.type kernel_dgemm_nt_12x4_lib44c, @function
+kernel_dgemm_nt_12x4_lib44c:
 #elif defined(OS_MAC)
-	.globl _kernel_dgemm_nt_12x4_lib44x
-_kernel_dgemm_nt_12x4_lib44x:
+	.globl _kernel_dgemm_nt_12x4_lib44c
+_kernel_dgemm_nt_12x4_lib44c:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dgemm_nt_12x4_lib44x
-	.def kernel_dgemm_nt_12x4_lib44x; .scl 2; .type 32; .endef
-kernel_dgemm_nt_12x4_lib44x:
+	.globl kernel_dgemm_nt_12x4_lib44c
+	.def kernel_dgemm_nt_12x4_lib44c; .scl 2; .type 32; .endef
+kernel_dgemm_nt_12x4_lib44c:
 #endif
 
 	PROLOGUE
@@ -2388,7 +2388,7 @@ kernel_dgemm_nt_12x4_lib44x:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dgemm_nt_12x4_lib44x, .-kernel_dgemm_nt_12x4_lib44x
+	.size	kernel_dgemm_nt_12x4_lib44c, .-kernel_dgemm_nt_12x4_lib44c
 #endif
 
 
@@ -2441,12 +2441,12 @@ kernel_dgemm_nn_12x4_lib:
 	sall	$3, %r14d
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_12X4_LIB
+	INNER_KERNEL_DGEMM_ADD_NN_12X4_LIB
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_gemm_add_nn_12x4_lib
+	call inner_kernel_dgemm_add_nn_12x4_lib
 #elif defined(OS_MAC)
-	callq _inner_kernel_gemm_add_nn_12x4_lib
+	callq _inner_kernel_dgemm_add_nn_12x4_lib
 #endif
 #endif
 
@@ -2500,20 +2500,20 @@ kernel_dgemm_nn_12x4_lib:
 
 
 //                                 1      2              3          4        5          6        7             8          9        10         11
-// void kernel_dgemm_nn_12x4_lib4x(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+// void kernel_dgemm_nn_12x4_lib4cc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dgemm_nn_12x4_lib4x
-	.type kernel_dgemm_nn_12x4_lib4x, @function
-kernel_dgemm_nn_12x4_lib4x:
+	.globl kernel_dgemm_nn_12x4_lib4cc
+	.type kernel_dgemm_nn_12x4_lib4cc, @function
+kernel_dgemm_nn_12x4_lib4cc:
 #elif defined(OS_MAC)
-	.globl _kernel_dgemm_nn_12x4_lib4x
-_kernel_dgemm_nn_12x4_lib4x:
+	.globl _kernel_dgemm_nn_12x4_lib4cc
+_kernel_dgemm_nn_12x4_lib4cc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dgemm_nn_12x4_lib4x
-	.def kernel_dgemm_nn_12x4_lib4x; .scl 2; .type 32; .endef
-kernel_dgemm_nn_12x4_lib4x:
+	.globl kernel_dgemm_nn_12x4_lib4cc
+	.def kernel_dgemm_nn_12x4_lib4cc; .scl 2; .type 32; .endef
+kernel_dgemm_nn_12x4_lib4cc:
 #endif
 
 	PROLOGUE
@@ -2545,12 +2545,12 @@ kernel_dgemm_nn_12x4_lib4x:
 	sall	$3, %r14d
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_12X4_LIB4X
+	INNER_KERNEL_DGEMM_ADD_NN_12X4_LIB4C
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_gemm_add_nn_12x4_lib4x
+	call inner_kernel_dgemm_add_nn_12x4_lib4c
 #elif defined(OS_MAC)
-	callq _inner_kernel_gemm_add_nn_12x4_lib4x
+	callq _inner_kernel_dgemm_add_nn_12x4_lib4c
 #endif
 #endif
 
@@ -2596,7 +2596,7 @@ kernel_dgemm_nn_12x4_lib4x:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dgemm_nn_12x4_lib4x, .-kernel_dgemm_nn_12x4_lib4x
+	.size	kernel_dgemm_nn_12x4_lib4cc, .-kernel_dgemm_nn_12x4_lib4cc
 #endif
 
 

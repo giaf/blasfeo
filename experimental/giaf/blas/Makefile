@@ -52,4 +52,4 @@ print:
 	cd tests/data/ ; epstopdf blas.eps -out blas.pdf ; rm blas.eps
 
 clean:
-	rm *.o
+	rm -f *.o

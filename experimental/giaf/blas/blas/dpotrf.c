@@ -30,6 +30,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "../include/blasfeo_d_kernel.h"
+
 #include "../../../../include/blasfeo_target.h"
 #include "../../../../include/blasfeo_common.h"
 #include "../../../../include/blasfeo_d_aux.h"
@@ -53,31 +55,29 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc) // TODO int *info
 
 	int bs = 4;
 
-	double pd[300] __attribute__ ((aligned (64))); // TODO change to 256 !!!
+	double pd[256] __attribute__ ((aligned (64)));
 
-	double pU[12*300] __attribute__ ((aligned (64))); // TODO change to 256 !!!
+	double pU[12*256] __attribute__ ((aligned (64)));
 	int sdu = 256;
 
 	struct blasfeo_dmat sC;
 	int sdc;
 	double *pc;
 	int sC_size, stot_size;
-	void *smat_mem;
-	void *smat_mem_align;
+	void *smat_mem, *smat_mem_align;
 
 
-	if(m>=96)
-		{
-
-		goto l_1;
-
-		}
-	else
-		{
-
-		goto l_0;
-
-		}
+//	if(*uplo=='l')
+//		{
+		if(m>=96)
+			{
+			goto l_1;
+			}
+		else
+			{
+			goto l_0;
+			}
+//		}
 
 
 l_0:
