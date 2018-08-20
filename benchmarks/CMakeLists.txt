@@ -29,34 +29,70 @@
 add_executable(benchmark_d_blas benchmark_d_blas.c)
 add_executable(benchmark_s_blas benchmark_s_blas.c)
 
-target_link_libraries(benchmark_d_blas blasfeo)
-target_link_libraries(benchmark_s_blas blasfeo)
-
 # link blas external blas implementations
-if(BLASFEO_BENCHMARKS MATCHES ON)
-	if(${REF_BLAS} MATCHES OPENBLAS)
-		target_link_libraries(benchmark_d_blas /opt/openblas/lib/libopenblas.a -pthread -lgfortran -lm)
-		target_link_libraries(benchmark_s_blas /opt/openblas/lib/libopenblas.a -pthread -lgfortran -lm)
-	endif(${REF_BLAS} MATCHES OPENBLAS)
+if(${REF_BLAS} MATCHES OPENBLAS)
+	target_link_libraries(benchmark_d_blas
+		/opt/openblas/lib/libopenblas.a
+		-pthread -lgfortran -lm)
+	target_link_libraries(benchmark_s_blas
+		/opt/openblas/lib/libopenblas.a
+		-pthread -lgfortran -lm)
 
-	if(${REF_BLAS} MATCHES BLIS)
-		target_link_libraries(benchmark_d_blas /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -fopenmp -lgfortran -lm)
-		target_link_libraries(benchmark_s_blas /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -fopenmp -lgfortran -lm)
-	endif(${REF_BLAS} MATCHES BLIS)
+elseif(${REF_BLAS} MATCHES BLIS)
+	target_link_libraries(benchmark_d_blas
+		/opt/netlib/liblapack.a
+		/opt/blis/lib/libblis.a
+		-fopenmp -lgfortran -lm)
+	target_link_libraries(benchmark_s_blas
+		/opt/netlib/liblapack.a
+		/opt/blis/lib/libblis.a
+		-fopenmp -lgfortran -lm)
 
-	if(${REF_BLAS} MATCHES NETLIB)
-		target_link_libraries(benchmark_d_blas /opt/netlib/liblapack.a /opt/netlib/libblas.a -lgfortran -lm)
-		target_link_libraries(benchmark_s_blas /opt/netlib/liblapack.a /opt/netlib/libblas.a -lgfortran -lm)
-	endif(${REF_BLAS} MATCHES NETLIB)
+elseif(${REF_BLAS} MATCHES NETLIB)
+	target_link_libraries(benchmark_d_blas
+		/opt/netlib/liblapack.a
+		/opt/netlib/libblas.a
+		-lgfortran -lm)
+	target_link_libraries(benchmark_s_blas
+		/opt/netlib/liblapack.a
+		/opt/netlib/libblas.a
+		-lgfortran -lm)
 
-	if(${REF_BLAS} MATCHES MKL)
-		target_link_libraries(benchmark_d_blas -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/mkl/lib/intel64/libmkl_core.a /opt/intel/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm)
-		target_link_libraries(benchmark_s_blas -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/mkl/lib/intel64/libmkl_core.a /opt/intel/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm)
-	endif(${REF_BLAS} MATCHES MKL)
+elseif(${REF_BLAS} MATCHES MKL)
+	target_link_libraries(benchmark_d_blas
+		-Wl,--start-group
+		/opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a
+		/opt/intel/mkl/lib/intel64/libmkl_core.a
+		/opt/intel/mkl/lib/intel64/libmkl_sequential.a
+		-Wl,--end-group -ldl -lpthread -lm)
+	target_link_libraries(benchmark_s_blas
+		-Wl,--start-group
+		/opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a
+		/opt/intel/mkl/lib/intel64/libmkl_core.a
+		/opt/intel/mkl/lib/intel64/libmkl_sequential.a
+		-Wl,--end-group -ldl -lpthread -lm)
 
-	if(${REF_BLAS} MATCHES ATLAS)
-		target_link_libraries(benchmark_d_blas /opt/atlas/lib/liblapack.a /opt/atlas/lib/libcblas.a /opt/atlas/lib/libf77blas.a /opt/atlas/lib/libatlas.a -lgfortran -lm)
-		target_link_libraries(benchmark_s_blas /opt/atlas/lib/liblapack.a /opt/atlas/lib/libcblas.a /opt/atlas/lib/libf77blas.a /opt/atlas/lib/libatlas.a -lgfortran -lm)
-	endif(${REF_BLAS} MATCHES ATLAS)
+elseif(${REF_BLAS} MATCHES ATLAS)
+	target_link_libraries(benchmark_d_blas
+		/opt/atlas/lib/liblapack.a
+		/opt/atlas/lib/libcblas.a
+		/opt/atlas/lib/libf77blas.a
+		/opt/atlas/lib/libatlas.a
+		-lgfortran -lm)
+	target_link_libraries(benchmark_s_blas
+		/opt/atlas/lib/liblapack.a
+		/opt/atlas/lib/libcblas.a
+		/opt/atlas/lib/libf77blas.a
+		/opt/atlas/lib/libatlas.a
+		-lgfortran -lm)
+
+elseif(${REF_BLAS} MATCHES 0)
+	target_link_libraries(benchmark_d_blas blasfeo -lm)
+	target_link_libraries(benchmark_s_blas blasfeo -lm)
+
+else()
+	message(FATAL_ERROR
+		"\nBENCHMARKS_MODE: No reference blas selected"
+		"\nUse i.e. -DREF_BLAS=OPENBLAS or -DREF_BLAS=0 to disable the comparison")
 
 endif()

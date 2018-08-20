@@ -435,7 +435,12 @@ int main()
 		float Gflops_max = flops_max * GHz_max;
 
 		float Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
+
+		#ifndef REF_BLAS_NONE
 		float Gflops_blas     = 1e-9*flop_operation/time_blas;
+		#else
+		float Gflops_blas     = 0;
+		#endif
 
 
 		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n",
