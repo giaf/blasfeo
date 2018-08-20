@@ -844,11 +844,14 @@ inner_kernel_dgemm_add_nt_12x4_lib4:
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
+	.globl inner_kernel_dgemm_sub_nt_12x4_lib4
 	.type inner_kernel_dgemm_sub_nt_12x4_lib4, @function
 inner_kernel_dgemm_sub_nt_12x4_lib4:
 #elif defined(OS_MAC)
+	.globl _inner_kernel_dgemm_sub_nt_12x4_lib4
 _inner_kernel_dgemm_sub_nt_12x4_lib4:
 #elif defined(OS_WINDOWS)
+	.globl inner_kernel_dgemm_sub_nt_12x4_lib4
 	.def inner_kernel_dgemm_sub_nt_12x4_lib4; .scl 2; .type 32; .endef
 inner_kernel_dgemm_sub_nt_12x4_lib4:
 #endif

@@ -2403,8 +2403,120 @@ kernel_dpotrf_nt_l_8x4_lib4cc:
 
 
 
-//                                      1      2          3        4          5        6          7        8          9        10         11       12
-// void kernel_dtrsm_nt_rl_inv_8x4_lib4(int k, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
+//                                    1      2          3        4          5          6        7          8        9
+// void kernel_dpotrf_nt_l_8x4_lib44c(int k, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dpotrf_nt_l_8x4_lib44c
+	.type kernel_dpotrf_nt_l_8x4_lib44c, @function
+kernel_dpotrf_nt_l_8x4_lib44c:
+#elif defined(OS_MAC)
+	.globl _kernel_dpotrf_nt_l_8x4_lib44c
+_kernel_dpotrf_nt_l_8x4_lib44c:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dpotrf_nt_l_8x4_lib44c
+	.def kernel_dpotrf_nt_l_8x4_lib44c; .scl 2; .type 32; .endef
+kernel_dpotrf_nt_l_8x4_lib44c:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // ldb
+	sall	$5, %r12d
+	movq	ARG4, %r13 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_sub_nt_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_sub_nt_8x4_lib4
+#endif
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	ARG5, %r10 // C
+	movq	ARG6, %r11 // ldc
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_11_8X4_LIB
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_scale_11_8x4_lib
+#elif defined(OS_MAC)
+	callq _inner_scale_11_8x4_lib
+#endif
+#endif
+
+
+	// factorization
+
+	movq	ARG9, %r10  // inv_diag_D 
+	movl	$4, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DPOTRF_8X4_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dpotrf_8x4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dpotrf_8x4_vs_lib4
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG7, %r10 // D
+	movq	ARG8, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_8X4_LIB
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_l_8x4_lib
+#elif defined(OS_MAC)
+	callq _inner_store_l_8x4_lib
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dpotrf_nt_l_8x4_lib44c, .-kernel_dpotrf_nt_l_8x4_lib44c
+#endif
+
+
+
+
+
+//                                        1      2          3        4          5        6          7        8          9        10         11       12
+// void kernel_dtrsm_nt_rl_inv_8x4_lib4cc(int k, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2515,6 +2627,119 @@ kernel_dtrsm_nt_rl_inv_8x4_lib4cc:
 	.size	kernel_dtrsm_nt_rl_inv_8x4_lib4cc, .-kernel_dtrsm_nt_rl_inv_8x4_lib4cc
 #endif
 
+
+
+
+
+//                                        1      2          3        4          5          6        7          8        9          10       11
+// void kernel_dtrsm_nt_rl_inv_8x4_lib44c(int k, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dtrsm_nt_rl_inv_8x4_lib44c
+	.type kernel_dtrsm_nt_rl_inv_8x4_lib44c, @function
+kernel_dtrsm_nt_rl_inv_8x4_lib44c:
+#elif defined(OS_MAC)
+	.globl _kernel_dtrsm_nt_rl_inv_8x4_lib44c
+_kernel_dtrsm_nt_rl_inv_8x4_lib44c:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nt_rl_inv_8x4_lib44c
+	.def kernel_dtrsm_nt_rl_inv_8x4_lib44c; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_rl_inv_8x4_lib44c:
+#endif
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
+
+
+	// call inner dgemm kernel nt 
+
+	movq	ARG1, %r10
+	movq	ARG2, %r11
+	movq	ARG3, %r12
+	sall	$5, %r12d
+	movq	ARG4, %r13
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_SUB_NT_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_sub_nt_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_sub_nt_8x4_lib4
+#endif
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	ARG5, %r10 // C
+	movq	ARG6, %r11 // ldc
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_11_8X4_LIB
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_scale_11_8x4_lib
+#elif defined(OS_MAC)
+	callq _inner_scale_11_8x4_lib
+#endif
+#endif
+
+
+	// solve
+
+	movq	ARG9, %r10  // E 
+	movq	ARG10, %r11 // lde
+	sall	$3, %r11d
+	movq	ARG11, %r12  // inv_diag_E 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RLT_INV_8X4_LIB
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dtrsm_rlt_inv_8x4_lib
+#elif defined(OS_MAC)
+	callq _inner_edge_dtrsm_rlt_inv_8x4_lib
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG7, %r10 // D
+	movq	ARG8, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_LIB
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_8x4_lib
+#elif defined(OS_MAC)
+	callq _inner_store_8x4_lib
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dtrsm_nt_rl_inv_8x4_lib44c, .-kernel_dtrsm_nt_rl_inv_8x4_lib44c
+#endif
 
 
 
