@@ -33,7 +33,10 @@ CFLAGS = -O2 -fPIC -mavx2 -DOS_LINUX
 ASFLAGS = -mavx2 -DOS_LINUX
 
 #OBJS = kernel/avx/kernel_dgemm_4x4_lib.o tests/test.o
-OBJS = kernel/avx2/kernel_dgemm_12x4_lib.o kernel/avx2/kernel_dgemm_8x4_lib.o kernel/avx2/kernel_dgemm_4x4_lib.o kernel/avx2/kernel_dpatr_lib4.o blas/dgemm.o blas/dpotrf.o tests/test.o
+OBJS = kernel/avx2/kernel_dgemm_12x4_lib.o kernel/avx2/kernel_dgemm_8x4_lib.o kernel/avx2/kernel_dgemm_4x4_lib.o kernel/avx2/kernel_dpatr_lib4.o blas/dgemm.o blas/dpotrf.o
+
+OBJS += tests/test.o
+#OBJS += tests/benchmark.o
 
 build: $(OBJS)
 	$(CC) $(OBJS) /home/gianluca/blasfeo/lib/libblasfeo.a /opt/openblas/lib/libopenblas.a -lm -o tests/test.out
@@ -43,8 +46,8 @@ build: $(OBJS)
 
 run:
 	mkdir -p tests/data
-#	./tests/test.out
-	./tests/test.out > tests/data/blas.m
+	./tests/test.out
+#	./tests/test.out > tests/data/blas.m
 
 print:
 	cp tests/print_blas.m tests/data
