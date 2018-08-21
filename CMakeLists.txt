@@ -59,8 +59,12 @@ set(REF_BLAS 0 CACHE STRING "Reference blas to use")
 # Options
 # set(BLASFEO_TESTING ON CACHE BOOL "Tests enabled")
 set(BLASFEO_TESTING OFF CACHE BOOL "Tests disabled")
+
 # set(BLASFEO_BENCHMARKS ON CACHE BOOL "Benchmarks enabled")
 set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled")
+
+set(BLASFEO_EXAMPLES ON CACHE BOOL "Examples enabled")
+# set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled")
 
 # Use C99 extension to math library
 set(USE_C99_MATH ON CACHE BOOL "Use C99 extension to math library")
@@ -71,6 +75,13 @@ set(EXT_DEP ON CACHE BOOL "Compile external dependencies in BLASFEO")
 
 set(MIN_KERNEL_SIZE 2x2 CACHE STRING "Minimum kernel size")
 # set(MIN_KERNEL_SIZE 4x4 CACHE STRING "Minimum kernel size")
+
+# Skip BLASFEO utils for unsupported systems and for Realease build
+if(CMAKE_SYSTEM MATCHES "dSpace" OR CMAKE_BUILD_TYPE MATCHES "Release")
+	set(BLASFEO_TESTING OFF CACHE BOOL "Examples disabled" FORCE)
+	set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled" FORCE)
+	set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled" FORCE)
+endif()
 
 configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
@@ -118,11 +129,6 @@ endif()
 
 if(BLASFEO_BENCHMARKS MATCHES ON)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBENCHMARKS_MODE=1")
-	if(NOT REF_BLAS)
-		message(FATAL_ERROR
-				"\nBENCHMARKS_MODE: No reference blas selected"
-				"\nUse i.e. -DREF_BLAS=OPENBLAS")
-	endif()
 endif()
 
 if(MIN_KERNEL_SIZE MATCHES 2x2)
@@ -184,7 +190,7 @@ endif()
 
 #
 if(${REF_BLAS} MATCHES 0)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_NONE")
 endif(${REF_BLAS} MATCHES 0)
 
 if(${REF_BLAS} MATCHES OPENBLAS)
@@ -698,14 +704,17 @@ install(EXPORT blasfeoConfig DESTINATION cmake)
 file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
 install(FILES ${BLASFEO_HEADERS} DESTINATION ${BLASFEO_HEADERS_INSTALLATION_DIRECTORY})
 
-#if(NOT CMAKE_SYSTEM MATCHES "dSpace" AND NOT CMAKE_BUILD_TYPE MATCHES "Release")
-if(NOT CMAKE_SYSTEM MATCHES "dSpace")
-	# tests
+# tests
+if(BLASFEO_TESTING MATCHES ON)
 	add_subdirectory(tests)
+endif()
 
-	# benchmarks
+# benchmarks
+if(BLASFEO_BENCHMARKS MATCHES ON)
 	add_subdirectory(benchmarks)
+endif()
 
-	# examples
+# examples
+if(BLASFEO_EXAMPLES MATCHES ON)
 	add_subdirectory(examples)
 endif()

@@ -53,7 +53,7 @@
 #define D_NC 1
 #endif
 
-
+// comparison with standard blas libraries
 
 #if defined(REF_BLAS_NETLIB)
 #include "cblas.h"
@@ -74,7 +74,6 @@ void omp_set_num_threads(int num_threads);
 #if defined(REF_BLAS_MKL)
 #include "mkl.h"
 #endif
-
 
 #include "cpu_freq.h"
 
@@ -872,7 +871,12 @@ int main()
 //		float flop_operation = 4.0/3.0*n*n*n; // syrk+potrf
 
 		float Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
+
+		#ifndef REF_BLAS_NONE
 		float Gflops_blas     = 1e-9*flop_operation/time_blas;
+		#else
+		float Gflops_blas     = 0;
+		#endif
 
 		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n",
 			n,
