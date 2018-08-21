@@ -1,0 +1,164 @@
+{
+    "blas1":{
+      "axpy":{
+        "doc":"
+          Scale vector1 by alpha1 and accumalate on vecor2
+
+          math: z = y + alpha*x
+          math-full: z[zi:zi+n] = alpha*x[xi:xi+n] + y[yi:yi+n]",
+        "arguments":["alpha1", "vector1"],
+        "signature":{
+          "int":"rows",
+          "int":"columns",
+          "FLOAT": "scale factor",
+          "STRMAT_ptr": "matrix1",
+          "int":"row offset",
+          "int":"column offset"},
+        "implementation": {},
+        "test": {}
+      },
+      ,
+      "axpby",
+      "vecmul",
+      "vecmulacc",
+      "vecmuldot",
+      "dot",
+      "rotg",
+      "colrot",
+      "rowrot"
+    },
+    "blas2":{
+      "gemv_n",
+      "gemv_t",
+      "gemv_d",
+      "gemv_nt",
+      "symv_l_nt",
+      "trsv_lnn_mn",
+      "trsv_ltn_mn",
+      "trsv_lnn",
+      "trsv_lnu",
+      "trsv_ltn",
+      "trsv_unn",
+      "trsv_utn",
+      "trsm_unn",
+      "trsm_utn",
+      "trsm_lnn",
+      "trsm_ltn"
+    },
+    "blas3":{
+      "gemm_nn",
+      "gemm_nt",
+      "gemm_dn",
+      "gemm_nd",
+      "syrk_ln_mn",
+      "syrk_ln",
+      "trsm_llnu",
+      "trsm_rltu",
+      "trsm_rltn",
+      "trsm_lunn",
+      "trsm_rutn",
+      "trmm_rutn",
+      "trmm_rlnn",
+      "dia_left_ib"
+    },
+    "lapack":{
+      "potrf_l",
+      "potrf_l_mn",
+      "syrk_{PREC}potrf_l_ln",
+      "getrf_nopivot",
+      "getrf_rowpivot",
+      "geqrf",
+      "geqrf_worksize",
+      "gelqf",
+      "gelqf_worksize",
+      "gelqf_pd",
+      "gelqf_pd_la",
+      "gelqf_pd_lla"
+    },
+    "aux":{
+      "ge":{
+        "gesc":{
+        "doc": "Scale matrix",
+        "signature":{
+          "int":"rows",
+          "int":"columns",
+          "FLOAT": "scale factor",
+          "STRMAT_ptr": "matrix",
+          "int":"row offset",
+          "int":"column offset"},
+        "implementation": {},
+        "test": {}
+      },
+      "gecp",
+      "gead",
+      "gecpsc"
+      },
+      "tr":{
+        "cp_l",
+        "cpsc",
+        "sc_l",
+        "tr_l",
+        "tr_u"
+      },
+      "dia":{
+        "re",
+        "in",
+        "in_sp",
+        "ex",
+        "ex_sp",
+        "ad",
+        "ad_sp",
+        "adin_sp"
+      },
+      "row":{
+        "in",
+        "ex",
+        "ad",
+        "ad_sp",
+        "sw",
+        "pe",
+        "pei"
+      },
+      "col":{
+        "in",
+        "ex",
+        "sw",
+        "pe",
+        "pei"
+      },
+      "vec":{
+        "se",
+        "cp",
+        "sc",
+        "sccp",
+        "in1",
+        "ex1",
+        "in_sp",
+        "ad",
+        "ad_sp",
+        "ex_sp",
+        "sw",
+        "cl",
+        "cl_mask",
+        "ze",
+        "nrm_inf",
+        "pe",
+        "pei"
+      },
+      "mem":{
+        "memsize_STRMAT",
+        "memsize_diag_STRMAT",
+        "memsize_STRVEC",
+        "create_STRMAT",
+        "create_STRVEC",
+        "pack_STRMAT",
+        "pack_tran_STRVEC",
+        "unpack_STRMAT",
+        "unpack_tran_STRMAT",
+        "unpack_STRVEC",
+        "cast_mat2strmat",
+        "cast_diag_mat2strmat",
+        "cast_vec2vecmat"
+      }
+    }
+}
