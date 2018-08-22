@@ -150,6 +150,375 @@
 
 
 
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACK_TN_4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpack_tn_4_lib4, @function
+inner_kernel_dpack_tn_4_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpack_tn_4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpack_tn_4_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpack_tn_4_lib4:
+#endif
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	movq	%r11, %r14
+	addq	%r12, %r14
+	addq	%r12, %r14
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovupd		0(%r11), %xmm0
+	vmovupd		0(%r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vmovupd		0(%r11, %r12, 1), %xmm1
+	vmovupd		0(%r14, %r12, 1), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
+	vmovupd		16(%r11), %xmm2
+	vmovupd		16(%r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
+	vmovupd		16(%r11, %r12, 1), %xmm3
+	vmovupd		16(%r14, %r12, 1), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
+
+	vunpcklpd	%ymm1, %ymm0, %ymm4
+	vmovapd		%ymm4, 0(%r13)
+	vunpckhpd	%ymm1, %ymm0, %ymm5
+	vmovapd		%ymm5, 32(%r13)
+	vunpcklpd	%ymm3, %ymm2, %ymm6
+	vmovapd		%ymm6, 64(%r13)
+	vunpckhpd	%ymm3, %ymm2, %ymm7
+	vmovapd		%ymm7, 96(%r13)
+
+	subl	$4, %r10d
+	addq	$32, %r11
+	addq	$32, %r14
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovsd		0(%r11), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+	vmovsd		0(%r11, %r12, 1), %xmm0
+	vmovsd		%xmm0, 8(%r13)
+	vmovsd		0(%r14), %xmm0
+	vmovsd		%xmm0, 16(%r13)
+	vmovsd		0(%r14, %r12, 1), %xmm0
+	vmovsd		%xmm0, 24(%r13)
+
+	subl	$1, %r10d
+	addq	$8, %r11
+	addq	$8, %r14
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpack_tn_4_lib4, .-inner_kernel_dpack_tn_4_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACK_TN_3_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpack_tn_3_lib4, @function
+inner_kernel_dpack_tn_3_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpack_tn_3_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpack_tn_3_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpack_tn_3_lib4:
+#endif
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	movq	%r11, %r14
+	addq	%r12, %r14
+	addq	%r12, %r14
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovupd		0(%r11), %xmm0
+	vmovupd		0(%r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vmovupd		0(%r11, %r12, 1), %xmm1
+	vmovupd		16(%r11), %xmm2
+	vmovupd		16(%r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
+	vmovupd		16(%r11, %r12, 1), %xmm3
+
+	vunpcklpd	%ymm1, %ymm0, %ymm4
+	vmovapd		%ymm4, 0(%r13)
+	vunpckhpd	%ymm1, %ymm0, %ymm5
+	vmovapd		%ymm5, 32(%r13)
+	vunpcklpd	%ymm3, %ymm2, %ymm6
+	vmovapd		%ymm6, 64(%r13)
+	vunpckhpd	%ymm3, %ymm2, %ymm7
+	vmovapd		%ymm7, 96(%r13)
+
+	subl	$4, %r10d
+	addq	$32, %r11
+	addq	$32, %r14
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovsd		0(%r11), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+	vmovsd		0(%r11, %r12, 1), %xmm0
+	vmovsd		%xmm0, 8(%r13)
+	vmovsd		0(%r14), %xmm0
+	vmovsd		%xmm0, 16(%r13)
+
+	subl	$1, %r10d
+	addq	$8, %r11
+	addq	$8, %r14
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpack_tn_3_lib4, .-inner_kernel_dpack_tn_3_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACK_TN_2_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpack_tn_2_lib4, @function
+inner_kernel_dpack_tn_2_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpack_tn_2_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpack_tn_2_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpack_tn_2_lib4:
+#endif
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	movq	%r11, %r14
+	addq	%r12, %r14
+	addq	%r12, %r14
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovupd		0(%r11), %xmm0
+	vmovupd		0(%r11, %r12, 1), %xmm1
+	vmovupd		16(%r11), %xmm2
+	vmovupd		16(%r11, %r12, 1), %xmm3
+
+	vunpcklpd	%ymm1, %ymm0, %ymm4
+	vmovapd		%ymm4, 0(%r13)
+	vunpckhpd	%ymm1, %ymm0, %ymm5
+	vmovapd		%ymm5, 32(%r13)
+	vunpcklpd	%ymm3, %ymm2, %ymm6
+	vmovapd		%ymm6, 64(%r13)
+	vunpckhpd	%ymm3, %ymm2, %ymm7
+	vmovapd		%ymm7, 96(%r13)
+
+	subl	$4, %r10d
+	addq	$32, %r11
+	addq	$32, %r14
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovsd		0(%r11), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+	vmovsd		0(%r11, %r12, 1), %xmm0
+	vmovsd		%xmm0, 8(%r13)
+
+	subl	$1, %r10d
+	addq	$8, %r11
+	addq	$8, %r14
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpack_tn_2_lib4, .-inner_kernel_dpack_tn_2_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACK_TN_1_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpack_tn_1_lib4, @function
+inner_kernel_dpack_tn_1_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpack_tn_1_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpack_tn_1_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpack_tn_1_lib4:
+#endif
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovsd		0(%r11), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+	vmovsd		8(%r11), %xmm0
+	vmovsd		%xmm0, 32(%r13)
+	vmovsd		16(%r11), %xmm0
+	vmovsd		%xmm0, 64(%r13)
+	vmovsd		24(%r11), %xmm0
+	vmovsd		%xmm0, 96(%r13)
+
+	subl	$4, %r10d
+	addq	$32, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovsd		0(%r11), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+
+	subl	$1, %r10d
+	addq	$8, %r11
+	addq	$8, %r14
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpack_tn_1_lib4, .-inner_kernel_dpack_tn_1_lib4
+#endif
+#endif
+
+
+
+
+
 //                              1         2          3        4          5
 // void kernel_dpack_nn_12_lib4(int kmax, double *A, int lda, double *C, int sdc)
 
@@ -925,6 +1294,112 @@ kernel_dpack_tn_4_lib4:
 
 
 
+//                                1         2          3        4          5
+// void kernel_dpack_tn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dpack_tn_4_vs_lib4
+	.type kernel_dpack_tn_4_vs_lib4, @function
+kernel_dpack_tn_4_vs_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dpack_tn_4_vs_lib4
+_kernel_dpack_tn_4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dpack_tn_4_vs_lib4
+	.def kernel_dpack_tn_4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dpack_tn_4_vs_lib4:
+#endif
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$3, %r12d
+	movq	ARG4, %r13 // C
+
+	movq	ARG5, %r14 // m1
+	cmpl	$1, %r14d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACK_TN_1_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpack_tn_1_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpack_tn_1_lib4
+#endif
+#endif
+
+	jmp		103f
+
+100:
+
+	movq	ARG5, %r14 // m1
+	cmpl	$2, %r14d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACK_TN_2_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpack_tn_2_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpack_tn_2_lib4
+#endif
+#endif
+	
+	jmp		103f
+
+101:
+
+	movq	ARG5, %r14 // m1
+	cmpl	$3, %r14d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACK_TN_3_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpack_tn_3_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpack_tn_3_lib4
+#endif
+#endif
+
+	jmp		103f
+
+102:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACK_TN_4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpack_tn_4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpack_tn_4_lib4
+#endif
+#endif
+
+103:
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dpack_tn_4_vs_lib4, .-kernel_dpack_tn_4_vs_lib4
+#endif
+
+
+
+
+
+#if 0
 //                             1         2          3        4
 // void kernel_dpack_tn_3_lib4(int kmax, double *A, int lda, double *C)
 
@@ -1215,6 +1690,7 @@ kernel_dpack_tn_1_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dpack_tn_1_lib4, .-kernel_dpack_tn_1_lib4
+#endif
 #endif
 
 
