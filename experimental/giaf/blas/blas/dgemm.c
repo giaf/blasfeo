@@ -126,6 +126,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 nn_0:
 	
 	ii = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
 	for(; ii<m-11; ii+=12)
 		{
 		kernel_dpack_nn_12_lib4(k, A+ii+0, lda, pU, sdu);
@@ -138,6 +139,22 @@ nn_0:
 			kernel_dgemm_nn_12x4_vs_lib4cc(k, alpha, pU, sdu, B+jj*ldb, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 			}
 		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto nn_0_left_4;
+			}
+		if(m-ii<=8)
+			{
+			goto nn_0_left_8;
+			}
+		else
+			{
+			goto nn_0_left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_dpack_nn_8_lib4(k, A+ii+0, lda, pU, sdu);
@@ -150,6 +167,18 @@ nn_0:
 			kernel_dgemm_nn_8x4_vs_lib4cc(k, alpha, pU, sdu, B+jj*ldb, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 			}
 		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto nn_0_left_4;
+			}
+		else
+			{
+			goto nn_0_left_8;
+			}
+		}
+#else
 	for(; ii<m-3; ii+=4)
 		{
 		kernel_dpack_nn_4_lib4(k, A+ii, lda, pU);
@@ -166,10 +195,34 @@ nn_0:
 		{
 		goto nn_0_left_4;
 		}
+#endif
 	goto nn_0_return;
 
+#if defined(TARGET_X64_INTEL_HASWELL)
+nn_0_left_12:
+	kernel_dpack_nn_12_vs_lib4(k, A+ii, lda, pU, sdu, m-ii);
+	d_print_mat(4, k, pU+0*sdu, 4);
+	d_print_mat(4, k, pU+1*sdu*bs, 4);
+	d_print_mat(4, k, pU+2*sdu*bs, 4);
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dgemm_nn_12x4_vs_lib4cc(k, alpha, pU, sdu, B+jj*ldb, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+		}
+	goto nn_0_return;
+#endif
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+nn_0_left_8:
+	kernel_dpack_nn_8_vs_lib4(k, A+ii, lda, pU, sdu, m-ii);
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dgemm_nn_8x4_vs_lib4cc(k, alpha, pU, sdu, B+jj*ldb, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+		}
+	goto nn_0_return;
+#endif
+
 nn_0_left_4:
-	kernel_dpack_nn_4_lib4(k, A+ii, lda, pU);
+	kernel_dpack_nn_4_vs_lib4(k, A+ii, lda, pU, m-ii);
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dgemm_nn_4x4_vs_lib4cc(k, alpha, pU, B+jj*ldb, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);

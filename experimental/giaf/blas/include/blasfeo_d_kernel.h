@@ -70,8 +70,14 @@ void kernel_dpotrf_nt_l_4x4_lib44c(int kmax, double *A, double *B, double *C, in
 // pack
 // 12
 void kernel_dpack_nn_12_lib4(int kmax, double *A, int lda, double *B, int sdb);
+void kernel_dpack_nn_12_vs_lib4(int kmax, double *A, int lda, double *B, int sdb, int m1);
 // 8
 void kernel_dpack_nn_8_lib4(int kmax, double *A, int lda, double *B, int sdb);
+void kernel_dpack_nn_8_vs_lib4(int kmax, double *A, int lda, double *B, int sdb, int m1);
 // 4
 void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *B);
+void kernel_dpack_nn_4_vs_lib4(int kmax, double *A, int lda, double *B, int m1);
 void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *B);
+void kernel_dpack_tn_3_lib4(int kmax, double *A, int lda, double *B);
+void kernel_dpack_tn_2_lib4(int kmax, double *A, int lda, double *B);
+void kernel_dpack_tn_1_lib4(int kmax, double *A, int lda, double *B);

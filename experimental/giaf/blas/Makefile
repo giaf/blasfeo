@@ -33,7 +33,7 @@ CFLAGS = -O2 -fPIC -mavx2 -DOS_LINUX
 ASFLAGS = -mavx2 -DOS_LINUX
 
 #OBJS = kernel/avx/kernel_dgemm_4x4_lib.o tests/test.o
-OBJS = kernel/avx2/kernel_dgemm_12x4_lib.o kernel/avx2/kernel_dgemm_8x4_lib.o kernel/avx2/kernel_dgemm_4x4_lib.o kernel/avx2/kernel_dpatr_lib4.o blas/dgemm.o blas/dpotrf.o
+OBJS = kernel/avx2/kernel_dgemm_12x4_lib.o kernel/avx2/kernel_dgemm_8x4_lib.o kernel/avx2/kernel_dgemm_4x4_lib.o kernel/avx2/kernel_dpatr_lib4.o kernel/avx2/kernel_dpack_lib4.o blas/dgemm.o blas/dpotrf.o
 
 OBJS += tests/test.o
 #OBJS += tests/benchmark.o

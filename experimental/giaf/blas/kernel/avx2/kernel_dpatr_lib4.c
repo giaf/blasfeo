@@ -115,6 +115,7 @@ void kernel_dpatr_tn_4_lib4(int kmax, double *A, int sda, double *C)
 
 
 
+#if 0
 void kernel_dpack_nn_12_lib4(int kmax, double *A, int lda, double *C, int sdc)
 	{
 
@@ -332,3 +333,4 @@ void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *C)
 	return;
 
 	}
+#endif

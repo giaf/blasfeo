@@ -92,14 +92,14 @@ int main()
 	double alpha = 1.0;
 	double beta = 0.0;
 
-	char ta = 'n';
+	char ta = 't';
 	char tb = 'n';
 	char uplo = 'l';
 	int info = 0;
 
-	int m0 = 13;
-	int n0 = 13;
-	int k0 = 13;
+	int m0 = 6;
+	int n0 = 6;
+	int k0 = 6;
 
 
 	// blas
