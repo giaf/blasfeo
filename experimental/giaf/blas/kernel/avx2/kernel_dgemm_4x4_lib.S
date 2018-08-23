@@ -1972,7 +1972,6 @@ inner_edge_dtrsm_rlt_inv_4x4_vs_lib:
 	cmpl			$2, %r13d
 	jl				0f // ret
 
-
 	vbroadcastsd	8(%r10), %ymm13
 	vfnmadd231pd	%ymm0, %ymm13, %ymm1
 	vbroadcastsd	8(%r12), %ymm13
@@ -2511,6 +2510,8 @@ inner_store_l_4x4_lib:
 // input arguments:
 // r10  <- D
 // r11  <- ldd
+// r12d   <- km
+// r13d   <- kn
 // ymm0 <- [d00 d11 d22 d33]
 // ymm1 <- [d01 d10 d23 d32]
 // ymm2 <- [d03 d12 d21 d30]
@@ -2545,18 +2546,26 @@ inner_store_l_4x4_vs_lib:
 
 	vmaskmovpd	%ymm0, %ymm14, 0(%r10)
 	addq		%r11, %r10
+	cmpl		$2, %r13d
+	jl			0f // end
 	vmovupd		0(%r10), %ymm15
 	vblendpd	$0x1, %ymm15, %ymm1, %ymm1
 	vmaskmovpd	%ymm1, %ymm14, 0(%r10)
 	addq		%r11, %r10
+	cmpl		$3, %r13d
+	jl			0f // end
 	vmovupd		0(%r10), %ymm15
 	vblendpd	$0x3, %ymm15, %ymm2, %ymm2
 	vmaskmovpd	%ymm2, %ymm14, 0(%r10)
 	addq		%r11, %r10
+	cmpl		$3, %r13d
+	je			0f // end
 	vmovupd		0(%r10), %ymm15
 	vblendpd	$0x7, %ymm15, %ymm3, %ymm3
 	vmaskmovpd	%ymm3, %ymm14, 0(%r10)
 //	addq	%r11, %r10
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm

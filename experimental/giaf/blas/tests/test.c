@@ -92,24 +92,26 @@ int main()
 
 
 	double alpha = 1.0;
-	double beta = 0.0;
+	double beta = 1.0;
 
 	char ta = 'n';
-	char tb = 'n';
+	char tb = 't';
 	char uplo = 'l';
 	int info = 0;
 
-	int m0 = 15;
-	int n0 = 15;
-	int k0 = 15;
+	int m0 = 7;
+	int n0 = 7;
+	int k0 = 7;
 
 
 	// blas
 
 	for(ii=0; ii<n*n; ii++) C[ii] = -1;
 
-	dgemm_(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
-//	dpotrf_(&uplo, &m0, B, &n, &info);
+	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
+//	dgemm_(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, A, &n, &beta, C, &n);
+	dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
+	dpotrf_(&uplo, &m0, C, &n, &info);
 
 	d_print_mat(n, n, C, ldc);
 //	d_print_mat(n, n, D, ldd);
@@ -119,8 +121,10 @@ int main()
 
 	for(ii=0; ii<n*n; ii++) C[ii] = -1;
 
-	blasfeo_dgemm(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
-//	blasfeo_dpotrf(&uplo, &m0, B, &n);
+	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
+//	blasfeo_dgemm(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, A, &n, &beta, C, &n);
+	blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
+	blasfeo_dpotrf(&uplo, &m0, C, &n);
 
 	d_print_mat(n, n, C, ldc);
 //	d_print_mat(n, n, D, ldd);

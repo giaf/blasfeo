@@ -46,8 +46,8 @@ build: $(OBJS)
 
 run:
 	mkdir -p tests/data
-	./tests/test.out
-#	./tests/test.out > tests/data/blas.m
+#	./tests/test.out
+	./tests/test.out > tests/data/blas.m
 
 print:
 	cp tests/print_blas.m tests/data
