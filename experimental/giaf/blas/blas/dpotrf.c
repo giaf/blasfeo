@@ -36,17 +36,18 @@
 #include "../../../../include/blasfeo_common.h"
 #include "../../../../include/blasfeo_d_aux.h"
 #include "../../../../include/blasfeo_d_kernel.h"
+#include "../../../../include/blasfeo_d_blas.h"
 
 
 
 void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc) // TODO int *info
 	{
 
-	if(*uplo!='l')
-		{
-		printf("\nUplo u not implemented yet\n");
-		exit(1);
-		}
+//	if(*uplo!='l')
+//		{
+//		printf("\nUplo u not implemented yet\n");
+//		exit(1);
+//		}
 
 	int m = *pm;
 	int ldc = *pldc;
@@ -55,9 +56,9 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc) // TODO int *info
 
 	int bs = 4;
 
-	double pd[256] __attribute__ ((aligned (64)));
+	double pd[300] __attribute__ ((aligned (64)));
 
-	double pU[12*256] __attribute__ ((aligned (64)));
+	double pU[12*300] __attribute__ ((aligned (64)));
 	int sdu = 256;
 
 	struct blasfeo_dmat sC;
@@ -67,9 +68,9 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc) // TODO int *info
 	void *smat_mem, *smat_mem_align;
 
 
-//	if(*uplo=='l')
-//		{
-		if(m>=96)
+	if(*uplo=='l')
+		{
+		if(m>=128)
 			{
 			goto l_1;
 			}
@@ -77,7 +78,11 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc) // TODO int *info
 			{
 			goto l_0;
 			}
-//		}
+		}
+	else
+		{
+		goto u;
+		}
 
 
 l_0:
@@ -91,11 +96,14 @@ l_0:
 			kernel_dtrsm_nt_rl_inv_12x4_lib4cc(jj, pU, sdu, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj);
 			kernel_dpack_nn_12_lib4(4, C+ii+jj*ldc, ldc, pU+jj*bs, sdu);
 			}
-		kernel_dpotrf_nt_l_12x4_lib4cc(jj, pU, sdu, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj);
+//		kernel_dpotrf_nt_l_12x4_lib4cc(jj, pU, sdu, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj);
+		kernel_dpotrf_nt_l_12x4_lib44c(jj, pU, sdu, pU, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj);
 		kernel_dpack_nn_8_lib4(4, C+ii+4+jj*ldc, ldc, pU+4*sdu+jj*bs, sdu);
-		kernel_dpotrf_nt_l_8x4_lib4cc(jj+4, pU+4*sdu, sdu, C+jj+4, ldc, C+ii+4+(jj+4)*ldc, ldc, C+ii+4+(jj+4)*ldc, ldc, pd+jj+4);
+//		kernel_dpotrf_nt_l_8x4_lib4cc(jj+4, pU+4*sdu, sdu, C+jj+4, ldc, C+ii+4+(jj+4)*ldc, ldc, C+ii+4+(jj+4)*ldc, ldc, pd+jj+4);
+		kernel_dpotrf_nt_l_8x4_lib44c(jj+4, pU+4*sdu, sdu, pU+4*sdu, C+ii+4+(jj+4)*ldc, ldc, C+ii+4+(jj+4)*ldc, ldc, pd+jj+4);
 		kernel_dpack_nn_4_lib4(4, C+ii+8+(jj+4)*ldc, ldc, pU+8*sdu+(jj+4)*bs);
-		kernel_dpotrf_nt_l_4x4_lib4cc(jj+8, pU+8*sdu, C+jj+8, ldc, C+ii+8+(jj+8)*ldc, ldc, C+ii+8+(jj+8)*ldc, ldc, pd+jj+8);
+//		kernel_dpotrf_nt_l_4x4_lib4cc(jj+8, pU+8*sdu, C+jj+8, ldc, C+ii+8+(jj+8)*ldc, ldc, C+ii+8+(jj+8)*ldc, ldc, pd+jj+8);
+		kernel_dpotrf_nt_l_4x4_lib44c(jj+8, pU+8*sdu, pU+8*sdu, C+ii+8+(jj+8)*ldc, ldc, C+ii+8+(jj+8)*ldc, ldc, pd+jj+8);
 		}
 	for(; ii<m-7; ii+=8)
 		{
@@ -105,9 +113,11 @@ l_0:
 			kernel_dtrsm_nt_rl_inv_8x4_lib4cc(jj, pU, sdu, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj);
 			kernel_dpack_nn_8_lib4(4, C+ii+jj*ldc, ldc, pU+jj*bs, sdu);
 			}
-		kernel_dpotrf_nt_l_8x4_lib4cc(jj, pU, sdu, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj);
+//		kernel_dpotrf_nt_l_8x4_lib4cc(jj, pU, sdu, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj);
+		kernel_dpotrf_nt_l_8x4_lib44c(jj, pU, sdu, pU, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj);
 		kernel_dpack_nn_4_lib4(4, C+ii+4+jj*ldc, ldc, pU+4*sdu+jj*bs);
-		kernel_dpotrf_nt_l_4x4_lib4cc(jj+4, pU+4*sdu, C+jj+4, ldc, C+ii+4+(jj+4)*ldc, ldc, C+ii+4+(jj+4)*ldc, ldc, pd+jj+4);
+//		kernel_dpotrf_nt_l_4x4_lib4cc(jj+4, pU+4*sdu, C+jj+4, ldc, C+ii+4+(jj+4)*ldc, ldc, C+ii+4+(jj+4)*ldc, ldc, pd+jj+4);
+		kernel_dpotrf_nt_l_4x4_lib44c(jj+4, pU+4*sdu, pU+4*sdu, C+ii+4+(jj+4)*ldc, ldc, C+ii+4+(jj+4)*ldc, ldc, pd+jj+4);
 		}
 	for(; ii<m-3; ii+=4)
 		{
@@ -117,10 +127,12 @@ l_0:
 			kernel_dtrsm_nt_rl_inv_4x4_lib4cc(jj, pU, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj);
 			kernel_dpack_nn_4_lib4(4, C+ii+jj*ldc, ldc, pU+jj*bs);
 			}
-		kernel_dpotrf_nt_l_4x4_lib4cc(jj, pU, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj);
+//		kernel_dpotrf_nt_l_4x4_lib4cc(jj, pU, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj);
+		kernel_dpotrf_nt_l_4x4_lib44c(jj, pU, pU, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj);
 		}
 
 	return;
+
 
 
 l_1:
@@ -131,7 +143,7 @@ l_1:
 	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
 	blasfeo_create_dmat(m, m, &sC, smat_mem_align);
 	sdc = sC.cn;
-	pc = smat_mem_align + sC_size;
+	pc = smat_mem_align + sC_size; // TODO use the memory in sC for that !!!
 
 	ii = 0;
 	for(; ii<m-11; ii+=12)
@@ -174,5 +186,26 @@ l_1:
 	free(smat_mem);
 
 	return;
+
+
+
+u:
+	
+	sC_size = blasfeo_memsize_dmat(m, m);
+	stot_size = sC_size;
+	smat_mem = malloc(stot_size+63);
+	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_create_dmat(m, m, &sC, smat_mem_align);
+	sdc = sC.cn;
+
+	blasfeo_pack_tran_dmat(m, m, C, ldc, &sC, 0, 0); // TODO triangular
+
+	blasfeo_dpotrf_l(m, &sC, 0, 0, &sC, 0, 0);
+
+	blasfeo_unpack_tran_dmat(m, m, &sC, 0, 0, C, ldc); // TODO triangular
+
+	// TODO check diagonal to compute info
+
+	free(smat_mem);
 
 	}

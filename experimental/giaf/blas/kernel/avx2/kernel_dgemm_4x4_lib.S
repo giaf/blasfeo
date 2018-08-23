@@ -2375,6 +2375,83 @@ inner_scale_11_4x4_lib:
 
 // common inner routine with file scope
 //
+// scale for alpha=1 and beta=1
+//
+// input arguments:
+// r10   <- C
+// r11   <- ldc
+// r12d   <- km
+// r13d   <- kn
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_11_4X4_VS_LIB
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_11_4x4_vs_lib, @function
+inner_scale_11_4x4_vs_lib:
+#elif defined(OS_MAC)
+_inner_scale_11_4x4_vs_lib:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_11_4x4_vs_lib; .scl 2; .type 32; .endef
+inner_scale_11_4x4_vs_lib:
+#endif
+#endif
+
+	vcvtsi2sd	%r12d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC00(%rip), %ymm13
+#elif defined(OS_MAC)
+	vmovupd		LC00(%rip), %ymm13
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm13, %ymm13
+
+
+	vmaskmovpd	0(%r10), %ymm13, %ymm15
+	vaddpd		%ymm0, %ymm15, %ymm0
+	addq		%r11, %r10
+	cmpl		$2, %r13d
+	jl			0f // end
+	vmaskmovpd	0(%r10), %ymm13, %ymm15
+	vaddpd		%ymm1, %ymm15, %ymm1
+	addq		%r11, %r10
+	cmpl		$3, %r13d
+	jl			0f // end
+	vmaskmovpd	0(%r10), %ymm13, %ymm15
+	vaddpd		%ymm2, %ymm15, %ymm2
+	addq		%r11, %r10
+	cmpl		$3, %r13d
+	je			0f // end
+	vmaskmovpd	0(%r10), %ymm13, %ymm15
+	vaddpd		%ymm3, %ymm15, %ymm3
+//	addq		%r11, %r10
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_scale_11_4x4_vs_lib, .-inner_scale_11_4x4_vs_lib
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // store n
 //
 // input arguments:
@@ -2548,6 +2625,74 @@ inner_store_l_4x4_lib:
 
 #if defined(OS_LINUX)
 	.size	inner_store_l_4x4_lib, .-inner_store_l_4x4_lib
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// store n
+//
+// input arguments:
+// r10  <- D
+// r11  <- ldd
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_L_4X4_VS_LIB
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_store_l_4x4_vs_lib, @function
+inner_store_l_4x4_vs_lib:
+#elif defined(OS_MAC)
+_inner_store_l_4x4_vs_lib:
+#elif defined(OS_WINDOWS)
+	.def inner_store_l_4x4_vs_lib; .scl 2; .type 32; .endef
+inner_store_l_4x4_vs_lib:
+#endif
+#endif
+
+	vcvtsi2sd	%r12d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC00(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC00(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm14
+
+	vmaskmovpd	%ymm0, %ymm14, 0(%r10)
+	addq		%r11, %r10
+	vmovupd		0(%r10), %ymm15
+	vblendpd	$0x1, %ymm15, %ymm1, %ymm1
+	vmaskmovpd	%ymm1, %ymm14, 0(%r10)
+	addq		%r11, %r10
+	vmovupd		0(%r10), %ymm15
+	vblendpd	$0x3, %ymm15, %ymm2, %ymm2
+	vmaskmovpd	%ymm2, %ymm14, 0(%r10)
+	addq		%r11, %r10
+	vmovupd		0(%r10), %ymm15
+	vblendpd	$0x7, %ymm15, %ymm3, %ymm3
+	vmaskmovpd	%ymm3, %ymm14, 0(%r10)
+//	addq	%r11, %r10
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_store_l_4x4_vs_lib, .-inner_store_l_4x4_vs_lib
 #endif
 #endif
 
@@ -3240,116 +3385,8 @@ kernel_dgemm_nn_4x4_vs_lib4cc:
 
 
 
-//                                    1      2          3          4        5          6        7          8        9
-// void kernel_dpotrf_nt_l_4x4_lib4cc(int k, double *A, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
-
-	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpotrf_nt_l_4x4_lib4cc
-	.type kernel_dpotrf_nt_l_4x4_lib4cc, @function
-kernel_dpotrf_nt_l_4x4_lib4cc:
-#elif defined(OS_MAC)
-	.globl _kernel_dpotrf_nt_l_4x4_lib4cc
-_kernel_dpotrf_nt_l_4x4_lib4cc:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpotrf_nt_l_4x4_lib4cc
-	.def kernel_dpotrf_nt_l_4x4_lib4cc; .scl 2; .type 32; .endef
-kernel_dpotrf_nt_l_4x4_lib4cc:
-#endif
-	
-	PROLOGUE
-
-	// zero accumulation registers
-
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
-
-
-	// call inner dgemm kernel nt
-
-	movq	ARG1, %r10 // kmax
-	movq	ARG2, %r11 // A
-	movq	ARG3, %r12 // B
-	movq	ARG4, %r13 // ldb
-	sall	$3, %r13d
-
-#if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4X
-#else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_sub_nt_4x4_lib4x
-#elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_sub_nt_4x4_lib4x
-#endif
-#endif
-
-
-	// call inner blender_loader nn
-
-	movq	ARG5, %r10 // C
-	movq	ARG6, %r11 // ldc
-	sall	$3, %r11d
-
-#if MACRO_LEVEL>=1
-	INNER_SCALE_11_4X4_LIB
-#else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_11_4x4_lib
-#elif defined(OS_MAC)
-	callq _inner_scale_11_4x4_lib
-#endif
-#endif
-
-
-	// factorization
-
-	movq	ARG9, %r10  // inv_diag_D 
-	movl	$4, %r11d
-
-#if MACRO_LEVEL>=1
-	INNER_EDGE_DPOTRF_4X4_VS_LIB4
-#else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dpotrf_4x4_vs_lib4
-#elif defined(OS_MAC)
-	callq _inner_edge_dpotrf_4x4_vs_lib4
-#endif
-#endif
-
-
-	// store
-
-	movq	ARG7, %r10 // D
-	movq	ARG8, %r11 // ldd
-	sall	$3, %r11d
-
-#if MACRO_LEVEL>=1
-	INNER_STORE_L_4X4_LIB
-#else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_l_4x4_lib
-#elif defined(OS_MAC)
-	callq _inner_store_l_4x4_lib
-#endif
-#endif
-
-
-	EPILOGUE
-
-	ret
-
-#if defined(OS_LINUX)
-	.size	kernel_dpotrf_nt_l_4x4_lib4cc, .-kernel_dpotrf_nt_l_4x4_lib4cc
-#endif
-
-
-
-
-
 //                                    1      2          3          4          5        6          7        8
-// void kernel_dpotrf_nt_l_4x4_lib4ec(int k, double *A, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
+// void kernel_dpotrf_nt_l_4x4_lib44c(int k, double *A, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
