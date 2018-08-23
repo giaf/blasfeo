@@ -2265,20 +2265,19 @@ inner_scale_ab_4x4_vs_lib:
 	vbroadcastsd	0(%r11), %ymm14
 
 	vxorpd		%ymm15, %ymm15, %ymm15 // 0.0
-
 	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
 	je			0f // end
 
 
 	vcvtsi2sd	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC00(%rip), %ymm14
+	vmovupd		.LC00(%rip), %ymm13
 #elif defined(OS_MAC)
-	vmovupd		LC00(%rip), %ymm14
+	vmovupd		LC00(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
 	vinsertf128	$1, %xmm15, %ymm15, %ymm15
-	vsubpd		%ymm15, %ymm14, %ymm13
+	vsubpd		%ymm15, %ymm13, %ymm13
 
 
 	vmaskmovpd	0(%r12), %ymm13, %ymm15
