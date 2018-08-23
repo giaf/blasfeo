@@ -2655,4 +2655,352 @@ kernel_dpotrf_nt_l_12x4_lib4cc:
 
 
 
+// common inner routine with file scope
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- ldb
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4X
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dgemm_sub_nt_4x4_lib4x, @function
+inner_kernel_dgemm_sub_nt_4x4_lib4x:
+#elif defined(OS_MAC)
+_inner_kernel_dgemm_sub_nt_4x4_lib4x:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dgemm_sub_nt_4x4_lib4x; .scl 2; .type 32; .endef
+inner_kernel_dgemm_sub_nt_4x4_lib4x:
+#endif
+#endif
+
+	cmpl	$0, %r10d
+	jle		5f // return
+
+	// preload
+
+	vxorpd			%ymm4, %ymm4, %ymm4
+	vmovapd			%ymm4, %ymm5
+	vmovapd			%ymm4, %ymm6
+	vmovapd			%ymm4, %ymm7
+
+	cmpl	$4, %r10d
+	jle		0f // consider clean-up loop
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+//	prefetcht0	0(%r12, %r13, 2) // software prefetch
+//	prefetcht0	64(%r12, %r13, 2) // software prefetch
+
+	// unroll 0
+	vmovupd			0(%r11), %ymm13 // A
+	vbroadcastsd	0(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm0
+	vbroadcastsd	8(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm1
+	vbroadcastsd	16(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm2
+	vbroadcastsd	24(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm3
+	addq	%r13, %r12
+
+	// unroll 1
+	vmovupd			32(%r11), %ymm13 // A
+	vbroadcastsd	0(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm4
+	vbroadcastsd	8(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm5
+	vbroadcastsd	16(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm6
+	vbroadcastsd	24(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm7
+	addq	%r13, %r12
+
+	// unroll 2
+	vmovupd			64(%r11), %ymm13 // A
+	vbroadcastsd	0(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm0
+	vbroadcastsd	8(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm1
+	vbroadcastsd	16(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm2
+	vbroadcastsd	24(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm3
+	addq	%r13, %r12
+
+	// unroll 3
+	vmovupd			96(%r11), %ymm13 // A
+	vbroadcastsd	0(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm4
+	vbroadcastsd	8(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm5
+	vbroadcastsd	16(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm6
+	vbroadcastsd	24(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm7
+	addq	%r13, %r12
+
+	subl	$4, %r10d
+	addq	$128, %r11
+
+	cmpl	$4, %r10d
+	jg		1b // main loop
+
+
+0: // consider clean4-up
+
+	cmpl	$3, %r10d
+	jle		4f // clean1
+
+	// unroll 0
+	vmovupd			0(%r11), %ymm13 // A
+	vbroadcastsd	0(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm0
+	vbroadcastsd	8(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm1
+	vbroadcastsd	16(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm2
+	vbroadcastsd	24(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm3
+	addq	%r13, %r12
+
+	// unroll 1
+	vmovupd			32(%r11), %ymm13 // A
+	vbroadcastsd	0(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm4
+	vbroadcastsd	8(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm5
+	vbroadcastsd	16(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm6
+	vbroadcastsd	24(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm7
+	addq	%r13, %r12
+
+	// unroll 2
+	vmovupd			64(%r11), %ymm13 // A
+	vbroadcastsd	0(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm0
+	vbroadcastsd	8(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm1
+	vbroadcastsd	16(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm2
+	vbroadcastsd	24(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm3
+	addq	%r13, %r12
+
+	// unroll 3
+	vmovupd			96(%r11), %ymm13 // A
+	vbroadcastsd	0(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm4
+	vbroadcastsd	8(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm5
+	vbroadcastsd	16(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm6
+	vbroadcastsd	24(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm7
+	addq	%r13, %r12
+
+	subl	$4, %r10d
+	addq	$128, %r11
+
+	jmp		2f // return
+
+
+4: // consider clean1-up loop
+
+	cmpl	$0, %r10d
+	jle		2f // return
+
+	// clean-up loop
+3: // clean up loop
+
+	// unroll 0
+	vmovupd			0(%r11), %ymm13 // A
+	vbroadcastsd	0(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm0
+	vbroadcastsd	8(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm1
+	vbroadcastsd	16(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm2
+	vbroadcastsd	24(%r12), %ymm12 // B
+	vfnmadd231pd	%ymm13, %ymm12, %ymm3
+	addq	%r13, %r12
+
+	subl	$1, %r10d
+	addq	$32, %r11
+
+	cmpl	$0, %r10d
+	jg		3b // clean up loop
+
+
+2: // return
+
+	vaddpd			%ymm4, %ymm0, %ymm0
+	vaddpd			%ymm5, %ymm1, %ymm1
+	vaddpd			%ymm6, %ymm2, %ymm2
+	vaddpd			%ymm7, %ymm3, %ymm3
+
+5: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dgemm_sub_nt_4x4_lib4x, .-inner_kernel_dgemm_sub_nt_4x4_lib4x
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// scale for alpha=1 and beta=1
+//
+// input arguments:
+// r10   <- C
+// r11   <- ldc
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_11_4X4_LIB
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_11_4x4_lib, @function
+inner_scale_11_4x4_lib:
+#elif defined(OS_MAC)
+_inner_scale_11_4x4_lib:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_11_4x4_lib; .scl 2; .type 32; .endef
+inner_scale_11_4x4_lib:
+#endif
+#endif
+
+	vmovupd		0(%r10), %ymm15
+	vaddpd		%ymm0, %ymm15, %ymm0
+	addq		%r11, %r10
+	vmovupd		0(%r10), %ymm15
+	vaddpd		%ymm1, %ymm15, %ymm1
+	addq		%r11, %r10
+	vmovupd		0(%r10), %ymm15
+	vaddpd		%ymm2, %ymm15, %ymm2
+	addq		%r11, %r10
+	vmovupd		0(%r10), %ymm15
+	vaddpd		%ymm3, %ymm15, %ymm3
+//	addq		%r11, %r10
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_scale_11_4x4_lib, .-inner_scale_11_4x4_lib
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// scale for alpha=1 and beta=1
+//
+// input arguments:
+// r10   <- C
+// r11   <- ldc
+// r12d   <- km
+// r13d   <- kn
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_11_4X4_VS_LIB
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_11_4x4_vs_lib, @function
+inner_scale_11_4x4_vs_lib:
+#elif defined(OS_MAC)
+_inner_scale_11_4x4_vs_lib:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_11_4x4_vs_lib; .scl 2; .type 32; .endef
+inner_scale_11_4x4_vs_lib:
+#endif
+#endif
+
+	vcvtsi2sd	%r12d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC00(%rip), %ymm13
+#elif defined(OS_MAC)
+	vmovupd		LC00(%rip), %ymm13
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm13, %ymm13
+
+
+	vmaskmovpd	0(%r10), %ymm13, %ymm15
+	vaddpd		%ymm0, %ymm15, %ymm0
+	addq		%r11, %r10
+	cmpl		$2, %r13d
+	jl			0f // end
+	vmaskmovpd	0(%r10), %ymm13, %ymm15
+	vaddpd		%ymm1, %ymm15, %ymm1
+	addq		%r11, %r10
+	cmpl		$3, %r13d
+	jl			0f // end
+	vmaskmovpd	0(%r10), %ymm13, %ymm15
+	vaddpd		%ymm2, %ymm15, %ymm2
+	addq		%r11, %r10
+	cmpl		$3, %r13d
+	je			0f // end
+	vmaskmovpd	0(%r10), %ymm13, %ymm15
+	vaddpd		%ymm3, %ymm15, %ymm3
+//	addq		%r11, %r10
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_scale_11_4x4_vs_lib, .-inner_scale_11_4x4_vs_lib
+#endif
+#endif
+
+
+
+
+
 
