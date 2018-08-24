@@ -46,7 +46,7 @@
 #
 # ARMV8A_ARM_CORTEX_A57
 #
-# GENERIC : generic c99 code
+# GENERIC : generic C code
 
 # Select target architecture
 #
@@ -64,13 +64,16 @@ TARGET = X64_INTEL_HASWELL
 #
 # TARGET = GENERIC
 
-# Select BLASFEO version
+# Select backend LA version:
+# high_performance: target-tailored; performance-optimized for cache resident matrices; panel-major matrix format
+# reference: target-unspecific lightly-optimizated; small code footprint; column-major matrix format
+# BLAS_wrapper: call to external BLAS and LAPACK libraries; column-major matrix format
 #
 LA = HIGH_PERFORMANCE
 # LA = REFERENCE
 # LA = BLAS_WRAPPER
 
-# Select BLAS and LAPACK version (for LA=BLAS_WRAPPER)
+# For LA=BLAS_WRAPPER, select external BLAS and LAPACK implementation
 #
 REF_BLAS = 0
 # REF_BLAS = OPENBLAS
