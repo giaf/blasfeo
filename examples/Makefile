@@ -53,11 +53,10 @@ EX_OBJ = example_d_riccati_recursion.o
 LINK_OBJ = tools.o
 
 ## getting started
-EX_OBJ = getting_started.o
+#EX_OBJ = getting_started.o
 
 
 CFLAGS += -I../include/
-
 
 
 %.o: %.c
