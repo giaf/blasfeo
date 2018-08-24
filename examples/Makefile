@@ -52,6 +52,14 @@ EX_OBJ = example_d_riccati_recursion.o
 # EX_OBJ = example_s_riccati_recursion.o
 LINK_OBJ = tools.o
 
+## getting started
+EX_OBJ = getting_started.o
+
+
+CFLAGS += -I../include/
+
+
+
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
 
