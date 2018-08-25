@@ -175,11 +175,11 @@ void sgemm_nn_lib(int m, int n, int k, float alpha, float *pA, int sda, float *p
 		j = 0;
 		for(; j<n-3; j+=4)
 			{
-			kernel_sgemm_nn_4x4_lib4(k, &alpha, &pA[i*sda], &pB[j*bs], sdb, &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd]);
+			kernel_sgemm_nn_4x4_lib4(k, &alpha, &pA[i*sda], 0, &pB[j*bs], sdb, &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd]);
 			}
 		if(j<n)
 			{
-			kernel_sgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*bs], sdb, &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
+			kernel_sgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], 0, &pB[j*bs], sdb, &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
 			}
 		}
 	if(m>i)
@@ -196,7 +196,7 @@ void sgemm_nn_lib(int m, int n, int k, float alpha, float *pA, int sda, float *p
 	j = 0;
 	for(; j<n; j+=4)
 		{
-		kernel_sgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*bs], sdb, &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
+		kernel_sgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], 0, &pB[j*bs], sdb, &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
 		}
 	return;
 

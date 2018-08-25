@@ -224,11 +224,11 @@ void sgetrf_nn_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *
 		i0 = ii;
 		for( ; ii<m-3; ii+=4)
 			{
-			kernel_sgemm_nn_4x4_lib4(jj, &dm1, &pD[ii*sdd], &pD[jj*bs], sdd, &d1, &pD[jj*bs+ii*sdd], &pD[jj*bs+ii*sdd]);
+			kernel_sgemm_nn_4x4_lib4(jj, &dm1, &pD[ii*sdd], 0, &pD[jj*bs], sdd, &d1, &pD[jj*bs+ii*sdd], &pD[jj*bs+ii*sdd]);
 			}
 		if(m-ii>0)
 			{
-			kernel_sgemm_nn_4x4_vs_lib4(jj, &dm1, &pD[ii*sdd], &pD[jj*bs], sdd, &d1, &pD[jj*bs+ii*sdd], &pD[jj*bs+ii*sdd], m-ii, 4);
+			kernel_sgemm_nn_4x4_vs_lib4(jj, &dm1, &pD[ii*sdd], 0, &pD[jj*bs], sdd, &d1, &pD[jj*bs+ii*sdd], &pD[jj*bs+ii*sdd], m-ii, 4);
 			}
 		kernel_sgetrf_pivot_4_lib4(m-i0, &pD[jj*bs+i0*sdd], sdd, &inv_diag_D[jj], &ipiv[i0]);
 		ipiv[i0+0] += i0;
@@ -294,7 +294,7 @@ void sgetrf_nn_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *
 	i0 = ii;
 	for( ; ii<m; ii+=4)
 		{
-		kernel_sgemm_nn_4x4_vs_lib4(jj, &dm1, &pD[ii*sdd], &pD[jj*bs], sdd, &d1, &pD[jj*bs+ii*sdd], &pD[jj*bs+ii*sdd], m-ii, n-jj);
+		kernel_sgemm_nn_4x4_vs_lib4(jj, &dm1, &pD[ii*sdd], 0, &pD[jj*bs], sdd, &d1, &pD[jj*bs+ii*sdd], &pD[jj*bs+ii*sdd], m-ii, n-jj);
 		}
 	kernel_sgetrf_pivot_4_vs_lib4(m-i0, n-jj, &pD[jj*bs+i0*sdd], sdd, &inv_diag_D[jj], &ipiv[i0]);
 	ipiv[i0+0] += i0;
@@ -348,7 +348,7 @@ void sgetrf_nn_lib(int m, int n, float *pC, int sdc, float *pD, int sdd, float *
 	// pivot & factorize & solve lower
 	ii = jj;
 	i0 = ii;
-	kernel_sgemm_nn_4x4_vs_lib4(jj, &dm1, &pD[ii*sdd], &pD[jj*bs], sdd, &d1, &pD[jj*bs+ii*sdd], &pD[jj*bs+ii*sdd], m-ii, n-jj);
+	kernel_sgemm_nn_4x4_vs_lib4(jj, &dm1, &pD[ii*sdd], 0, &pD[jj*bs], sdd, &d1, &pD[jj*bs+ii*sdd], &pD[jj*bs+ii*sdd], m-ii, n-jj);
 	kernel_sgetrf_pivot_4_vs_lib4(m-i0, n-jj, &pD[jj*bs+i0*sdd], sdd, &inv_diag_D[jj], &ipiv[i0]);
 	ipiv[i0+0] += i0;
 	if(ipiv[i0+0]!=i0+0)
