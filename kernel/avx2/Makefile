@@ -39,10 +39,6 @@ OBJS += \
 		kernel_dgemm_8x4_lib4.o \
 		kernel_dgemm_8x8_lib4.o \
 		kernel_dgemm_12x4_lib4.o \
-		kernel_dgemm_10xX_lib4.o \
-		kernel_dgemm_8x2_lib4.o \
-		kernel_dgemm_6xX_lib4.o \
-		kernel_dgemm_4x2_lib4.o \
 		kernel_dgemv_8_lib4.o \
 		kernel_dsymv_6_lib4.o \
 		kernel_dgetrf_pivot_4_lib4.o \

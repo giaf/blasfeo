@@ -1469,47 +1469,6 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	if(offsetC==0 & offsetD==0)
 		{
 #if defined(TARGET_X64_INTEL_HASWELL)
-#if MIN_KERNEL_SIZE==2 // 2x2 min
-		for(; i<m-11; i+=12)
-			{
-			j = 0;
-			for(; j<n-3; j+=4)
-				{
-				kernel_dgemm_nn_12x4_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd);
-				}
-			if(j<n)
-				{
-				kernel_dgemm_nn_12x4_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-				}
-			}
-		if(m>i)
-			{
-			if(m-i<=2)
-				{
-				goto left_2;
-				}
-			else if(m-i<=4)
-				{
-				goto left_4;
-				}
-			else if(m-i<=6)
-				{
-				goto left_6;
-				}
-			else if(m-i<=8)
-				{
-				goto left_8;
-				}
-			else if(m-i<=10)
-				{
-				goto left_10;
-				}
-			else
-				{
-				goto left_12;
-				}
-			}
-#else // 4x4 min
 		for(; i<m-11; i+=12)
 			{
 			j = 0;
@@ -1537,53 +1496,7 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 				goto left_12;
 				}
 			}
-#endif // 2x2 min
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-#if MIN_KERNEL_SIZE==2 // 2x2 min
-		for(; i<m-12 | i==m-8; i+=8)
-			{
-			j = 0;
-			for(; j<n-3; j+=4)
-				{
-				kernel_dgemm_nn_8x4_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd);
-				}
-			if(j<n-2)
-				{
-				kernel_dgemm_nn_8x4_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-				}
-			else if(j<n)
-				{
-				kernel_dgemm_nn_8x2_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-				}
-			}
-		if(m>i)
-			{
-			if(m-i<=2)
-				{
-				goto left_2;
-				}
-			else if(m-i<=4)
-				{
-				goto left_4;
-				}
-			else if(m-i<=6)
-				{
-				goto left_6;
-				}
-			else if(m-i<=8)
-				{
-				goto left_8;
-				}
-			else if(m-i<=10)
-				{
-				goto left_10;
-				}
-			else
-				{
-				goto left_12;
-				}
-			}
-#else // 4x4 min
 		for(; i<m-12 | i==m-8; i+=8)
 			{
 			j = 0;
@@ -1611,7 +1524,6 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 				goto left_12;
 				}
 			}
-#endif // 2x2 min
 #elif defined(TARGET_X86_AMD_BARCELONA)
 		for(; i<m-3; i+=4)
 			{
@@ -1707,20 +1619,6 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	left_10:
-	j = 0;
-	for(; j<n-2; j+=4)
-		{
-		kernel_dgemm_nn_10x4_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-		}
-	if(j<n)
-		{
-		kernel_dgemm_nn_10x2_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-		}
-	return;
-#endif
-
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_X64_INTEL_HASWELL)
 	left_8_g:
 	j = 0;
@@ -1734,49 +1632,9 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	left_8:
 	j = 0;
-#if defined(TARGET_X64_INTEL_HASWELL) & MIN_KERNEL_SIZE==2 // 2x2 min
-	for(; j<n-4; j+=6)
-		{
-		kernel_dgemm_nn_8x6_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-		}
-	if(j<n-2)
-		{
-		kernel_dgemm_nn_8x4_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-		}
-	else if(j<n)
-		{
-		kernel_dgemm_nn_8x2_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-		}
-#else
 	for(; j<n; j+=4)
 		{
 		kernel_dgemm_nn_8x4_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-		}
-#endif
-	return;
-#endif
-
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	left_6:
-	j = 0;
-	for(; j<n-6; j+=8)
-		{
-		kernel_dgemm_nn_6x8_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-		}
-	if(j<n-4)
-		{
-		kernel_dgemm_nn_6x6_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-//		j += 6;
-		}
-	else if(j<n-2)
-		{
-		kernel_dgemm_nn_6x4_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-//		j += 4;
-		}
-	else if(j<n)
-		{
-		kernel_dgemm_nn_6x2_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-//		j += 2;
 		}
 	return;
 #endif
@@ -1790,25 +1648,6 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	return;
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-#if MIN_KERNEL_SIZE==2 // 2x2 min
-	left_4:
-	j = 0;
-	for(; j<n-4; j+=8)
-		{
-		kernel_dgemm_nn_4x8_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
-		}
-	if(j<n-2)
-		{
-		kernel_dgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
-//		j += 4;
-		}
-	else if(j<n)
-		{
-		kernel_dgemm_nn_4x2_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
-//		j += 2;
-		}
-	return;
-#else // 4x4 min
 	left_4:
 	j = 0;
 	for(; j<n-4; j+=8)
@@ -1820,7 +1659,6 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		kernel_dgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
 		}
 	return;
-#endif // 2x2 min
 #elif defined(TARGET_X86_AMD_BARCELONA)
 	left_4:
 	j = 0;
@@ -1835,21 +1673,6 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	for(; j<n; j+=4)
 		{
 		kernel_dgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
-		}
-	return;
-#endif
-
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	left_2:
-	j = 0;
-	for(; j<n-4; j+=8)
-		{
-		kernel_dgemm_nn_2x8_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
-		}
-	if(j<n)
-		{
-		kernel_dgemm_nn_2x4_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
-//		j += 4;
 		}
 	return;
 #endif
