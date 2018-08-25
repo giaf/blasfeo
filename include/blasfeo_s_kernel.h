@@ -130,6 +130,8 @@ void kernel_ssyrk_spotrf_nt_l_8x4_lib8(int kp, float *Ap, float *Bp, int km_, fl
 void kernel_strmm_nn_rl_8x4_lib8(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *D);
 void kernel_strmm_nn_rl_8x4_vs_lib8(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *D, int km, int kn);
 void kernel_strmm_nn_rl_8x4_gen_lib8(int k, float *alpha, float *A, int offsetB, float *B, int sdb, int offsetD, float *D, int sdd, int m0, int m1, int n0, int n1);
+void kernel_strmm_nt_ru_8x4_lib8(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D);
+void kernel_strmm_nt_ru_8x4_vs_lib8(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D, int km, int kn);
 
 // 4x8
 void kernel_sgemm_nt_4x8_lib8(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D);

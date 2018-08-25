@@ -41,6 +41,8 @@ OBJS += kernel_dgemv_4_lib4.o \
 		kernel_sgemv_4_lib4.o \
 		kernel_ssymv_4_lib4.o \
 		kernel_sgetrf_pivot_4_lib4.o \
+		\
+		kernel_sgemm_8x4_lib8.o \
 
 endif
 
@@ -52,6 +54,8 @@ OBJS += kernel_dgemv_4_lib4.o \
 		kernel_sgemv_4_lib4.o \
 		kernel_ssymv_4_lib4.o \
 		kernel_sgetrf_pivot_4_lib4.o \
+		\
+		kernel_sgemm_8x4_lib8.o \
 
 endif
 

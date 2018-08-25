@@ -62,6 +62,7 @@ OBJS += \
 		kernel/avx2/kernel_sgemm_16x4_lib8.o \
 		kernel/avx2/kernel_sgemm_8x8_lib8.o \
 		kernel/avx2/kernel_sgemm_8x4_lib8.o \
+		kernel/c99/kernel_sgemm_8x4_lib8.o \
 		kernel/avx/kernel_sgemm_diag_lib8.o \
 		kernel/avx/kernel_sgemv_8_lib8.o \
 		kernel/avx/kernel_sgemv_4_lib8.o \
@@ -115,6 +116,7 @@ OBJS += \
 		kernel/avx/kernel_sgemm_16x4_lib8.o \
 		kernel/avx/kernel_sgemm_8x8_lib8.o \
 		kernel/avx/kernel_sgemm_8x4_lib8.o \
+		kernel/c99/kernel_sgemm_8x4_lib8.o \
 		kernel/avx/kernel_sgemm_diag_lib8.o \
 		kernel/avx/kernel_sgemv_8_lib8.o \
 		kernel/avx/kernel_sgemv_4_lib8.o \
