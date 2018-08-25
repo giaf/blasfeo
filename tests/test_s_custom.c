@@ -103,15 +103,29 @@ int main()
 	// tests
 	//
 
-#if 1
+#if 0
 	// gemm_nt
 	alpha = 1.0;
 	beta = 0.0;
 	blasfeo_print_smat(n, n, &sD, 0, 0);
 
-//	kernel_sgemm_nt_4x4_lib4(4, &alpha, sA.pA+4*sA.cn, sB.pA, &beta, sA.pA, sD.pA);
+	kernel_sgemm_nt_4x4_lib4(4, &alpha, sA.pA+4*sA.cn, sB.pA, &beta, sA.pA, sD.pA);
 
-	blasfeo_sgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
+//	blasfeo_sgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
+
+	blasfeo_print_smat(n, n, &sD, 0, 0);
+	return 0;
+#endif
+
+#if 1
+	// gemm_nn
+	alpha = 1.0;
+	beta = 0.0;
+	blasfeo_print_smat(n, n, &sD, 0, 0);
+
+//	kernel_sgemm_nn_4x4_lib4(8, &alpha, sA.pA+4*sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sD.pA);
+
+	blasfeo_sgemm_nn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
 	blasfeo_print_smat(n, n, &sD, 0, 0);
 	return 0;
