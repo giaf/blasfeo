@@ -190,17 +190,17 @@
 // xmm15 <- dirty
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+	.macro INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_kernel_dgemm_add_nt_4x4_lib4, @function
-inner_kernel_dgemm_add_nt_4x4_lib4:
+	.type inner_kernel_dgemm_nt_4x4_lib4, @function
+inner_kernel_dgemm_nt_4x4_lib4:
 #elif defined(OS_MAC)
-_inner_kernel_dgemm_add_nt_4x4_lib4:
+_inner_kernel_dgemm_nt_4x4_lib4:
 #elif defined(OS_WINDOWS)
-	.def inner_kernel_dgemm_add_nt_4x4_lib4; .scl 2; .type 32; .endef
-inner_kernel_dgemm_add_nt_4x4_lib4:
+	.def inner_kernel_dgemm_nt_4x4_lib4; .scl 2; .type 32; .endef
+inner_kernel_dgemm_nt_4x4_lib4:
 #endif
 #endif
 	
@@ -571,441 +571,7 @@ inner_kernel_dgemm_add_nt_4x4_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_kernel_dgemm_add_nt_4x4_lib4, .-inner_kernel_dgemm_add_nt_4x4_lib4
-#endif
-#endif
-
-
-
-
-
-// common inner routine with file scope
-//
-// input arguments:
-// r10d   <- k
-// r11   <- A
-// r12   <- B
-// xmm0  <- [d00 d10]
-// xmm1  <- [d20 d30]
-// xmm2  <- [d01 d11]
-// xmm3  <- [d21 d31]
-// xmm0  <- [d02 d12]
-// xmm1  <- [d22 d32]
-// xmm2  <- [d03 d13]
-// xmm3  <- [d23 d33]
-// xmm8  <- dirty
-// xmm9  <- dirty
-// xmm10 <- dirty
-// xmm11 <- dirty
-// xmm12 <- dirty
-// xmm13 <- dirty
-// xmm14 <- dirty
-// xmm15 <- dirty
-
-//
-// output arguments:
-// r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- B+4*k*sizeof(double)
-// xmm0  <- [d00 d10]
-// xmm1  <- [d20 d30]
-// xmm2  <- [d01 d11]
-// xmm3  <- [d21 d31]
-// xmm0  <- [d02 d12]
-// xmm1  <- [d22 d32]
-// xmm2  <- [d03 d13]
-// xmm3  <- [d23 d33]
-// xmm8  <- dirty
-// xmm9  <- dirty
-// xmm10 <- dirty
-// xmm11 <- dirty
-// xmm12 <- dirty
-// xmm13 <- dirty
-// xmm14 <- dirty
-// xmm15 <- dirty
-
-#if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
-#else
-	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dgemm_sub_nt_4x4_lib4, @function
-inner_kernel_dgemm_sub_nt_4x4_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dgemm_sub_nt_4x4_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dgemm_sub_nt_4x4_lib4; .scl 2; .type 32; .endef
-inner_kernel_dgemm_sub_nt_4x4_lib4:
-#endif
-#endif
-	
-	cmpl	$0, %r10d
-	jle		2f // return
-
-	// prefetch
-	movapd		0(%r11), %xmm8 // A[0]
-	movapd 		16(%r11), %xmm9 // A[2]
-	movapd		0(%r12), %xmm10 // B[0]
-
-	xorpd		%xmm11, %xmm11
-	movapd		%xmm11, %xmm12
-	movapd		%xmm11, %xmm13
-	movapd		%xmm11, %xmm14
-	movapd		%xmm11, %xmm15
-
-	cmpl	$4, %r10d
-	jle		0f // consider clean-up loop
-
-	// main loop
-	.p2align 3
-1: // main loop
-
-	// unroll 0
-	subpd		%xmm14, %xmm3
-	movapd		16(%r12), %xmm14 // B[2]
-	subpd		%xmm11, %xmm7
-	movapd		%xmm10, %xmm11
-	pshufd		$0x4e, %xmm10, %xmm15
-	mulpd		%xmm8, %xmm10
-	mulpd		%xmm9, %xmm11
-
-	subpd		%xmm12, %xmm2
-	subpd		%xmm13, %xmm6
-	movapd		%xmm15, %xmm13
-	mulpd		%xmm8, %xmm15
-	mulpd		%xmm9, %xmm13
-
-	subpd		%xmm10, %xmm1
-	movapd		32(%r12), %xmm10 // B[4]
-	subpd		%xmm11, %xmm5
-	movapd		%xmm14, %xmm11
-	pshufd		$0x4e, %xmm14, %xmm12
-	mulpd		%xmm8, %xmm14
-	mulpd		%xmm9, %xmm11
-
-	subpd		%xmm15, %xmm0
-	subpd		%xmm13, %xmm4
-	movapd		%xmm12, %xmm13
-	mulpd		%xmm8, %xmm12
-	movapd 		32(%r11), %xmm8 // A[4]
-	mulpd		%xmm9, %xmm13
-	movapd 		48(%r11), %xmm9 // A[6]
-
-
-	// unroll 1
-	subpd		%xmm14, %xmm3
-	movapd		48(%r12), %xmm14 // B[6]
-	subpd		%xmm11, %xmm7
-	movapd		%xmm10, %xmm11
-	pshufd		$0x4e, %xmm10, %xmm15
-	mulpd		%xmm8, %xmm10
-	mulpd		%xmm9, %xmm11
-
-	subpd		%xmm12, %xmm2
-	subpd		%xmm13, %xmm6
-	movapd		%xmm15, %xmm13
-	mulpd		%xmm8, %xmm15
-	mulpd		%xmm9, %xmm13
-
-	subpd		%xmm10, %xmm1
-	movapd		64(%r12), %xmm10 // B[8]
-	subpd		%xmm11, %xmm5
-	movapd		%xmm14, %xmm11
-	pshufd		$0x4e, %xmm14, %xmm12
-	mulpd		%xmm8, %xmm14
-	mulpd		%xmm9, %xmm11
-
-	subpd		%xmm15, %xmm0
-	subpd		%xmm13, %xmm4
-	movapd		%xmm12, %xmm13
-	mulpd		%xmm8, %xmm12
-	movapd 		64(%r11), %xmm8 // A[8]
-	mulpd		%xmm9, %xmm13
-	movapd 		80(%r11), %xmm9 // A[10]
-
-
-	// unroll 2
-	subpd		%xmm14, %xmm3
-	movapd		80(%r12), %xmm14 // B[10]
-	subpd		%xmm11, %xmm7
-	movapd		%xmm10, %xmm11
-	pshufd		$0x4e, %xmm10, %xmm15
-	mulpd		%xmm8, %xmm10
-	mulpd		%xmm9, %xmm11
-	subl		$4, %r10d
-
-	subpd		%xmm12, %xmm2
-	subpd		%xmm13, %xmm6
-	movapd		%xmm15, %xmm13
-	mulpd		%xmm8, %xmm15
-	mulpd		%xmm9, %xmm13
-
-	subpd		%xmm10, %xmm1
-	movapd		96(%r12), %xmm10 // B[12]
-	subpd		%xmm11, %xmm5
-	movapd		%xmm14, %xmm11
-	pshufd		$0x4e, %xmm14, %xmm12
-	mulpd		%xmm8, %xmm14
-	mulpd		%xmm9, %xmm11
-
-	subpd		%xmm15, %xmm0
-	subpd		%xmm13, %xmm4
-	movapd		%xmm12, %xmm13
-	mulpd		%xmm8, %xmm12
-	movapd 		96(%r11), %xmm8 // A[12]
-	mulpd		%xmm9, %xmm13
-	movapd 		112(%r11), %xmm9 // A[14]
-	
-
-	// unroll 3
-	subpd		%xmm14, %xmm3
-	movapd		112(%r12), %xmm14 // B[14]
-	subpd		%xmm11, %xmm7
-	movapd		%xmm10, %xmm11
-	pshufd		$0x4e, %xmm10, %xmm15
-	mulpd		%xmm8, %xmm10
-	mulpd		%xmm9, %xmm11
-	addq		$128, %r12 // B += 16
-
-	subpd		%xmm12, %xmm2
-	subpd		%xmm13, %xmm6
-	movapd		%xmm15, %xmm13
-	mulpd		%xmm8, %xmm15
-	mulpd		%xmm9, %xmm13
-	addq		$128, %r11 // A += 16
-
-	subpd		%xmm10, %xmm1
-	movapd		0(%r12), %xmm10 // B[0]
-	subpd		%xmm11, %xmm5
-	movapd		%xmm14, %xmm11
-	pshufd		$0x4e, %xmm14, %xmm12
-	mulpd		%xmm8, %xmm14
-	mulpd		%xmm9, %xmm11
-	cmpl		$4, %r10d
-
-	subpd		%xmm15, %xmm0
-	subpd		%xmm13, %xmm4
-	movapd		%xmm12, %xmm13
-	mulpd		%xmm8, %xmm12
-	movapd 		0(%r11), %xmm8 // A[0]
-	mulpd		%xmm9, %xmm13
-	movapd 		16(%r11), %xmm9 // A[2]
-
-
-	jg		1b // main loop 
-
-
-0: // consider clean4-up
-	
-	cmpl	$3, %r10d
-	jle		4f // clean1
-
-
-	// unroll 0
-	subpd		%xmm14, %xmm3
-	movapd		16(%r12), %xmm14 // B[2]
-	subpd		%xmm11, %xmm7
-	movapd		%xmm10, %xmm11
-	pshufd		$0x4e, %xmm10, %xmm15
-	mulpd		%xmm8, %xmm10
-	mulpd		%xmm9, %xmm11
-
-	subpd		%xmm12, %xmm2
-	subpd		%xmm13, %xmm6
-	movapd		%xmm15, %xmm13
-	mulpd		%xmm8, %xmm15
-	mulpd		%xmm9, %xmm13
-
-	subpd		%xmm10, %xmm1
-	movapd		32(%r12), %xmm10 // B[4]
-	subpd		%xmm11, %xmm5
-	movapd		%xmm14, %xmm11
-	pshufd		$0x4e, %xmm14, %xmm12
-	mulpd		%xmm8, %xmm14
-	mulpd		%xmm9, %xmm11
-
-	subpd		%xmm15, %xmm0
-	subpd		%xmm13, %xmm4
-	movapd		%xmm12, %xmm13
-	mulpd		%xmm8, %xmm12
-	movapd 		32(%r11), %xmm8 // A[4]
-	mulpd		%xmm9, %xmm13
-	movapd 		48(%r11), %xmm9 // A[6]
-
-
-	// unroll 1
-	subpd		%xmm14, %xmm3
-	movapd		48(%r12), %xmm14 // B[6]
-	subpd		%xmm11, %xmm7
-	movapd		%xmm10, %xmm11
-	pshufd		$0x4e, %xmm10, %xmm15
-	mulpd		%xmm8, %xmm10
-	mulpd		%xmm9, %xmm11
-
-	subpd		%xmm12, %xmm2
-	subpd		%xmm13, %xmm6
-	movapd		%xmm15, %xmm13
-	mulpd		%xmm8, %xmm15
-	mulpd		%xmm9, %xmm13
-
-	subpd		%xmm10, %xmm1
-	movapd		64(%r12), %xmm10 // B[8]
-	subpd		%xmm11, %xmm5
-	movapd		%xmm14, %xmm11
-	pshufd		$0x4e, %xmm14, %xmm12
-	mulpd		%xmm8, %xmm14
-	mulpd		%xmm9, %xmm11
-
-	subpd		%xmm15, %xmm0
-	subpd		%xmm13, %xmm4
-	movapd		%xmm12, %xmm13
-	mulpd		%xmm8, %xmm12
-	movapd 		64(%r11), %xmm8 // A[8]
-	mulpd		%xmm9, %xmm13
-	movapd 		80(%r11), %xmm9 // A[10]
-
-
-	// unroll 2
-	subpd		%xmm14, %xmm3
-	movapd		80(%r12), %xmm14 // B[10]
-	subpd		%xmm11, %xmm7
-	movapd		%xmm10, %xmm11
-	pshufd		$0x4e, %xmm10, %xmm15
-	mulpd		%xmm8, %xmm10
-	mulpd		%xmm9, %xmm11
-	subl		$4, %r10d
-
-	subpd		%xmm12, %xmm2
-	subpd		%xmm13, %xmm6
-	movapd		%xmm15, %xmm13
-	mulpd		%xmm8, %xmm15
-	mulpd		%xmm9, %xmm13
-
-	subpd		%xmm10, %xmm1
-	movapd		96(%r12), %xmm10 // B[12]
-	subpd		%xmm11, %xmm5
-	movapd		%xmm14, %xmm11
-	pshufd		$0x4e, %xmm14, %xmm12
-	mulpd		%xmm8, %xmm14
-	mulpd		%xmm9, %xmm11
-
-	subpd		%xmm15, %xmm0
-	subpd		%xmm13, %xmm4
-	movapd		%xmm12, %xmm13
-	mulpd		%xmm8, %xmm12
-	movapd 		96(%r11), %xmm8 // A[12]
-	mulpd		%xmm9, %xmm13
-	movapd 		112(%r11), %xmm9 // A[14]
-	
-
-	// unroll 3
-	subpd		%xmm14, %xmm3
-	movapd		112(%r12), %xmm14 // B[14]
-	subpd		%xmm11, %xmm7
-	movapd		%xmm10, %xmm11
-	pshufd		$0x4e, %xmm10, %xmm15
-	mulpd		%xmm8, %xmm10
-	mulpd		%xmm9, %xmm11
-	addq		$128, %r12 // B += 16
-
-	subpd		%xmm12, %xmm2
-	subpd		%xmm13, %xmm6
-	movapd		%xmm15, %xmm13
-	mulpd		%xmm8, %xmm15
-	mulpd		%xmm9, %xmm13
-	addq		$128, %r11 // A += 16
-
-	subpd		%xmm10, %xmm1
-//	movapd		0(%r12), %xmm10 // B[0]
-	subpd		%xmm11, %xmm5
-	movapd		%xmm14, %xmm11
-	pshufd		$0x4e, %xmm14, %xmm12
-	mulpd		%xmm8, %xmm14
-	mulpd		%xmm9, %xmm11
-//	cmpl		$4, %r10d
-
-	subpd		%xmm15, %xmm0
-	subpd		%xmm13, %xmm4
-	movapd		%xmm12, %xmm13
-	mulpd		%xmm8, %xmm12
-//	movapd 		0(%r11), %xmm8 // A[0]
-	mulpd		%xmm9, %xmm13
-//	movapd 		16(%r11), %xmm9 // A[2]
-
-
-	// update accumulators
-	subpd		%xmm14, %xmm3
-	subpd		%xmm11, %xmm7
-	subpd		%xmm12, %xmm2
-	subpd		%xmm13, %xmm6
-
-
-	jmp		2f
-
-
-4: // consider clean1-up loop
-
-	cmpl	$0, %r10d
-	jle		2f // return
-
-	// clean-up loop
-3: // clean up loop
-	
-
-	// unroll 0
-	movapd		0(%r11), %xmm8 // A[0]
-	movapd 		16(%r11), %xmm9 // A[2]
-	movapd		0(%r12), %xmm10 // B[0]
-	subpd		%xmm14, %xmm3
-	movapd		16(%r12), %xmm14 // B[2]
-	subpd		%xmm11, %xmm7
-	movapd		%xmm10, %xmm11
-	pshufd		$0x4e, %xmm10, %xmm15
-	mulpd		%xmm8, %xmm10
-	mulpd		%xmm9, %xmm11
-	subl	$1, %r10d
-
-	subpd		%xmm12, %xmm2
-	subpd		%xmm13, %xmm6
-	movapd		%xmm15, %xmm13
-	mulpd		%xmm8, %xmm15
-	mulpd		%xmm9, %xmm13
-	addq	$32, %r12
-
-	subpd		%xmm10, %xmm1
-	subpd		%xmm11, %xmm5
-	movapd		%xmm14, %xmm11
-	pshufd		$0x4e, %xmm14, %xmm12
-	mulpd		%xmm8, %xmm14
-	mulpd		%xmm9, %xmm11
-	addq	$32, %r11
-
-	subpd		%xmm15, %xmm0
-	subpd		%xmm13, %xmm4
-	movapd		%xmm12, %xmm13
-	mulpd		%xmm8, %xmm12
-	mulpd		%xmm9, %xmm13
-
-	cmpl	$0, %r10d
-	jg		3b // clean up loop 
-
-
-	// update accumulators
-	subpd		%xmm14, %xmm3
-	subpd		%xmm11, %xmm7
-	subpd		%xmm12, %xmm2
-	subpd		%xmm13, %xmm6
-
-
-2: // return
-
-#if MACRO_LEVEL>=2
-	.endm
-#else
-	ret
-
-#if defined(OS_LINUX)
-	.size	inner_kernel_dgemm_sub_nt_4x4_lib4, .-inner_kernel_dgemm_sub_nt_4x4_lib4
+	.size	inner_kernel_dgemm_nt_4x4_lib4, .-inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -1061,17 +627,17 @@ inner_kernel_dgemm_sub_nt_4x4_lib4:
 // xmm15 <- dirty
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_DGEMM_ADD_NN_4X4_LIB4
+	.macro INNER_KERNEL_DGEMM_NN_4X4_LIB4
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_kernel_dgemm_add_nn_4x4_lib4, @function
-inner_kernel_dgemm_add_nn_4x4_lib4:
+	.type inner_kernel_dgemm_nn_4x4_lib4, @function
+inner_kernel_dgemm_nn_4x4_lib4:
 #elif defined(OS_MAC)
-_inner_kernel_dgemm_add_nn_4x4_lib4:
+_inner_kernel_dgemm_nn_4x4_lib4:
 #elif defined(OS_WINDOWS)
-	.def inner_kernel_dgemm_add_nn_4x4_lib4; .scl 2; .type 32; .endef
-inner_kernel_dgemm_add_nn_4x4_lib4:
+	.def inner_kernel_dgemm_nn_4x4_lib4; .scl 2; .type 32; .endef
+inner_kernel_dgemm_nn_4x4_lib4:
 #endif
 #endif
 	
@@ -1444,7 +1010,7 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_kernel_dgemm_add_nn_4x4_lib4, .-inner_kernel_dgemm_add_nn_4x4_lib4
+	.size	inner_kernel_dgemm_nn_4x4_lib4, .-inner_kernel_dgemm_nn_4x4_lib4
 #endif
 #endif
 
@@ -1495,17 +1061,17 @@ inner_kernel_dgemm_add_nn_4x4_lib4:
 
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DGEMM_ADD_NN_4X4_LIB4
+	.macro INNER_EDGE_DGEMM_NN_4X4_LIB4
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_edge_dgemm_add_nn_4x4_lib4, @function
-inner_edge_dgemm_add_nn_4x4_lib4:
+	.type inner_edge_dgemm_nn_4x4_lib4, @function
+inner_edge_dgemm_nn_4x4_lib4:
 #elif defined(OS_MAC)
-_inner_edge_dgemm_add_nn_4x4_lib4:
+_inner_edge_dgemm_nn_4x4_lib4:
 #elif defined(OS_WINDOWS)
-	.def inner_edge_dgemm_add_nn_4x4_lib4; .scl 2; .type 32; .endef
-inner_edge_dgemm_add_nn_4x4_lib4:
+	.def inner_edge_dgemm_nn_4x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dgemm_nn_4x4_lib4:
 #endif
 #endif
 	
@@ -1581,7 +1147,7 @@ inner_edge_dgemm_add_nn_4x4_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_dgemm_add_nn_4x4_lib4, .-inner_edge_dgemm_add_nn_4x4_lib4
+	.size	inner_edge_dgemm_nn_4x4_lib4, .-inner_edge_dgemm_nn_4x4_lib4
 #endif
 #endif
 
@@ -3979,17 +3545,17 @@ inner_blend_scale_ab_4x4_gen_lib4:
 // xmm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_BLEND_SCALE_11_4X4_LIB4
+	.macro INNER_BLEND_SCALE_M11_4X4_LIB4
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_blend_scale_11_4x4_lib4, @function
-inner_blend_scale_11_4x4_lib4:
+	.type inner_blend_scale_m11_4x4_lib4, @function
+inner_blend_scale_m11_4x4_lib4:
 #elif defined(OS_MAC)
-_inner_blend_scale_11_4x4_lib4:
+_inner_blend_scale_m11_4x4_lib4:
 #elif defined(OS_WINDOWS)
-	.def inner_blend_scale_11_4x4_lib4; .scl 2; .type 32; .endef
-inner_blend_scale_11_4x4_lib4:
+	.def inner_blend_scale_m11_4x4_lib4; .scl 2; .type 32; .endef
+inner_blend_scale_m11_4x4_lib4:
 #endif
 #endif	
 	
@@ -4011,21 +3577,29 @@ inner_blend_scale_11_4x4_lib4:
 
 
 	movapd		0(%r10), %xmm15
-	addpd		%xmm15, %xmm0
+	subpd		%xmm0, %xmm15
+	movapd		%xmm15, %xmm0
 	movapd		16(%r10), %xmm15
-	addpd		%xmm15, %xmm4
+	subpd		%xmm4, %xmm15
+	movapd		%xmm15, %xmm4
 	movapd		32(%r10), %xmm15
-	addpd		%xmm15, %xmm1
+	subpd		%xmm1, %xmm15
+	movapd		%xmm15, %xmm1
 	movapd		48(%r10), %xmm15
-	addpd		%xmm15, %xmm5
+	subpd		%xmm5, %xmm15
+	movapd		%xmm15, %xmm5
 	movapd		64(%r10), %xmm15
-	addpd		%xmm15, %xmm2
+	subpd		%xmm2, %xmm15
+	movapd		%xmm15, %xmm2
 	movapd		80(%r10), %xmm15
-	addpd		%xmm15, %xmm6
+	subpd		%xmm6, %xmm15
+	movapd		%xmm15, %xmm6
 	movapd		96(%r10), %xmm15
-	addpd		%xmm15, %xmm3
+	subpd		%xmm3, %xmm15
+	movapd		%xmm15, %xmm3
 	movapd		112(%r10), %xmm15
-	addpd		%xmm15, %xmm7
+	subpd		%xmm7, %xmm15
+	movapd		%xmm15, %xmm7
 
 	ret
 
@@ -4033,7 +3607,7 @@ inner_blend_scale_11_4x4_lib4:
 	.endm
 #else
 #if defined(OS_LINUX)
-	.size	inner_blend_scale_11_4x4_lib4, .-inner_blend_scale_11_4x4_lib4
+	.size	inner_blend_scale_m11_4x4_lib4, .-inner_blend_scale_m11_4x4_lib4
 #endif
 #endif
 
@@ -6153,12 +5727,12 @@ kernel_dgemm_nt_4x4_lib4:
 	movq	ARG4, %r12  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -6245,12 +5819,12 @@ kernel_dgemm_nt_4x4_vs_lib4:
 	movq	ARG4, %r12  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -6340,12 +5914,12 @@ kernel_dgemm_nt_4x4_gen_lib4:
 	movq	ARG4, %r12  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -6444,22 +6018,22 @@ kernel_dgemm_nn_4x4_lib4:
 	movq	ARG4, %r14 // offsetB
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DGEMM_ADD_NN_4X4_LIB4
+	INNER_EDGE_DGEMM_NN_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dgemm_add_nn_4x4_lib4
+	call inner_edge_dgemm_nn_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_edge_dgemm_add_nn_4x4_lib4
+	callq _inner_edge_dgemm_nn_4x4_lib4
 #endif
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NN_4X4_LIB4
+	INNER_KERNEL_DGEMM_NN_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nn_4x4_lib4
+	call inner_kernel_dgemm_nn_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nn_4x4_lib4
+	callq _inner_kernel_dgemm_nn_4x4_lib4
 #endif
 #endif
 
@@ -6549,22 +6123,22 @@ kernel_dgemm_nn_4x4_vs_lib4:
 	movq	ARG4, %r14 // offsetB
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DGEMM_ADD_NN_4X4_LIB4
+	INNER_EDGE_DGEMM_NN_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dgemm_add_nn_4x4_lib4
+	call inner_edge_dgemm_nn_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_edge_dgemm_add_nn_4x4_lib4
+	callq _inner_edge_dgemm_nn_4x4_lib4
 #endif
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NN_4X4_LIB4
+	INNER_KERNEL_DGEMM_NN_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nn_4x4_lib4
+	call inner_kernel_dgemm_nn_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nn_4x4_lib4
+	callq _inner_kernel_dgemm_nn_4x4_lib4
 #endif
 #endif
 
@@ -6656,22 +6230,22 @@ kernel_dgemm_nn_4x4_gen_lib4:
 	movq	ARG4, %r14 // offsetB
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DGEMM_ADD_NN_4X4_LIB4
+	INNER_EDGE_DGEMM_NN_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dgemm_add_nn_4x4_lib4
+	call inner_edge_dgemm_nn_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_edge_dgemm_add_nn_4x4_lib4
+	callq _inner_edge_dgemm_nn_4x4_lib4
 #endif
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NN_4X4_LIB4
+	INNER_KERNEL_DGEMM_NN_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nn_4x4_lib4
+	call inner_kernel_dgemm_nn_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nn_4x4_lib4
+	callq _inner_kernel_dgemm_nn_4x4_lib4
 #endif
 #endif
 
@@ -6768,12 +6342,12 @@ kernel_dsyrk_nt_l_4x4_lib4:
 	movq	ARG4, %r12  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -6862,12 +6436,12 @@ kernel_dsyrk_nt_l_4x4_vs_lib4:
 	movq	ARG4, %r12  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -6958,12 +6532,12 @@ kernel_dsyrk_nt_l_4x4_gen_lib4:
 	movq	ARG4, %r12  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -7063,12 +6637,12 @@ kernel_dtrmm_nt_ru_4x4_lib4:
 	addq	$128, %r12 // B+4*bs
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -7187,12 +6761,12 @@ kernel_dtrmm_nt_ru_4x4_vs_lib4:
 	addq	$128, %r12 // B+4*bs
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -7311,12 +6885,12 @@ kernel_dpotrf_nt_l_4x4_lib4:
 	movq	ARG3, %r12
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_sub_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_sub_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -7326,12 +6900,12 @@ kernel_dpotrf_nt_l_4x4_lib4:
 	movq	ARG4, %r10 // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_BLEND_SCALE_M11_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_11_4x4_lib4
+	call inner_blend_scale_m11_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_11_4x4_lib4
+	callq _inner_blend_scale_m11_4x4_lib4
 #endif
 #endif
 
@@ -7417,12 +6991,12 @@ kernel_dpotrf_nt_l_4x4_vs_lib4:
 	movq	ARG3, %r12
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_sub_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_sub_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -7432,12 +7006,12 @@ kernel_dpotrf_nt_l_4x4_vs_lib4:
 	movq	ARG4, %r10 // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_BLEND_SCALE_M11_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_11_4x4_lib4
+	call inner_blend_scale_m11_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_11_4x4_lib4
+	callq _inner_blend_scale_m11_4x4_lib4
 #endif
 #endif
 
@@ -7525,14 +7099,30 @@ kernel_dsyrk_dpotrf_nt_l_4x4_lib4:
 	movq	ARG3, %r12  // Bp
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
+
+
+	// change sign
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	movapd		.LC11(%rip), %xmm15
+#elif defined(OS_MAC)
+	movapd		LC11(%rip), %xmm15
+#endif
+	xorpd		%xmm15, %xmm0
+	xorpd		%xmm15, %xmm1
+	xorpd		%xmm15, %xmm2
+	xorpd		%xmm15, %xmm3
+	xorpd		%xmm15, %xmm4
+	xorpd		%xmm15, %xmm5
+	xorpd		%xmm15, %xmm6
+	xorpd		%xmm15, %xmm7
 
 
 	// call inner dgemm kernel nt sub
@@ -7542,12 +7132,12 @@ kernel_dsyrk_dpotrf_nt_l_4x4_lib4:
 	movq	ARG6, %r12   // Bm
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_sub_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_sub_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -7557,12 +7147,12 @@ kernel_dsyrk_dpotrf_nt_l_4x4_lib4:
 	movq	ARG7, %r10   // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_BLEND_SCALE_M11_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_11_4x4_lib4
+	call inner_blend_scale_m11_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_11_4x4_lib4
+	callq _inner_blend_scale_m11_4x4_lib4
 #endif
 #endif
 
@@ -7648,14 +7238,30 @@ kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4:
 	movq	ARG3, %r12  // Bp
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
+
+
+	// change sign
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	movapd		.LC11(%rip), %xmm15
+#elif defined(OS_MAC)
+	movapd		LC11(%rip), %xmm15
+#endif
+	xorpd		%xmm15, %xmm0
+	xorpd		%xmm15, %xmm1
+	xorpd		%xmm15, %xmm2
+	xorpd		%xmm15, %xmm3
+	xorpd		%xmm15, %xmm4
+	xorpd		%xmm15, %xmm5
+	xorpd		%xmm15, %xmm6
+	xorpd		%xmm15, %xmm7
 
 
 	// call inner dgemm kernel nt sub
@@ -7665,12 +7271,12 @@ kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4:
 	movq	ARG6, %r12   // Bm
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_sub_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_sub_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -7680,12 +7286,12 @@ kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4:
 	movq	ARG7, %r10   // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_BLEND_SCALE_M11_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_11_4x4_lib4
+	call inner_blend_scale_m11_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_11_4x4_lib4
+	callq _inner_blend_scale_m11_4x4_lib4
 #endif
 #endif
 
@@ -7773,12 +7379,12 @@ kernel_dtrsm_nt_rl_inv_4x4_lib4:
 	movq	ARG3, %r12
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_sub_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_sub_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -7788,12 +7394,12 @@ kernel_dtrsm_nt_rl_inv_4x4_lib4:
 	movq	ARG4, %r10
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_BLEND_SCALE_M11_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_11_4x4_lib4
+	call inner_blend_scale_m11_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_11_4x4_lib4
+	callq _inner_blend_scale_m11_4x4_lib4
 #endif
 #endif
 
@@ -7879,14 +7485,30 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4:
 	movq	ARG3, %r12  // Bp
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
+
+
+	// change sign
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	movapd		.LC11(%rip), %xmm15
+#elif defined(OS_MAC)
+	movapd		LC11(%rip), %xmm15
+#endif
+	xorpd		%xmm15, %xmm0
+	xorpd		%xmm15, %xmm1
+	xorpd		%xmm15, %xmm2
+	xorpd		%xmm15, %xmm3
+	xorpd		%xmm15, %xmm4
+	xorpd		%xmm15, %xmm5
+	xorpd		%xmm15, %xmm6
+	xorpd		%xmm15, %xmm7
 
 
 	// call inner dgemm kernel nt sub
@@ -7896,12 +7518,12 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4:
 	movq	ARG6, %r12   // Bm
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_sub_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_sub_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -7911,12 +7533,12 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4:
 	movq	ARG7, %r10   // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_BLEND_SCALE_M11_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_11_4x4_lib4
+	call inner_blend_scale_m11_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_11_4x4_lib4
+	callq _inner_blend_scale_m11_4x4_lib4
 #endif
 #endif
 
@@ -8002,12 +7624,12 @@ kernel_dtrsm_nt_rl_inv_4x4_vs_lib4:
 	movq	ARG3, %r12
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_sub_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_sub_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -8017,12 +7639,12 @@ kernel_dtrsm_nt_rl_inv_4x4_vs_lib4:
 	movq	ARG4, %r10 // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_BLEND_SCALE_M11_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_11_4x4_lib4
+	call inner_blend_scale_m11_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_11_4x4_lib4
+	callq _inner_blend_scale_m11_4x4_lib4
 #endif
 #endif
 
@@ -8111,14 +7733,30 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4:
 	movq	ARG3, %r12  // Bp
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
+
+
+	// change sign
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	movapd		.LC11(%rip), %xmm15
+#elif defined(OS_MAC)
+	movapd		LC11(%rip), %xmm15
+#endif
+	xorpd		%xmm15, %xmm0
+	xorpd		%xmm15, %xmm1
+	xorpd		%xmm15, %xmm2
+	xorpd		%xmm15, %xmm3
+	xorpd		%xmm15, %xmm4
+	xorpd		%xmm15, %xmm5
+	xorpd		%xmm15, %xmm6
+	xorpd		%xmm15, %xmm7
 
 
 	// call inner dgemm kernel nt sub
@@ -8128,12 +7766,12 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4:
 	movq	ARG6, %r12   // Bm
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_SUB_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_sub_nt_4x4_lib4
+	call inner_kernel_dgemm_nt_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_sub_nt_4x4_lib4
+	callq _inner_kernel_dgemm_nt_4x4_lib4
 #endif
 #endif
 
@@ -8143,12 +7781,12 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4:
 	movq	ARG7, %r10  // C 
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_4X4_LIB4
+	INNER_BLEND_SCALE_M11_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_11_4x4_lib4
+	call inner_blend_scale_m11_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_11_4x4_lib4
+	callq _inner_blend_scale_m11_4x4_lib4
 #endif
 #endif
 
@@ -8253,12 +7891,12 @@ kernel_dtrmm_nn_rl_4x4_lib4:
 	// call inner dgemm kernel nt after initial triangle
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NN_4X4_LIB4
+	INNER_KERNEL_DGEMM_NN_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nn_4x4_lib4
+	call inner_kernel_dgemm_nn_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nn_4x4_lib4
+	callq _inner_kernel_dgemm_nn_4x4_lib4
 #endif
 #endif
 
@@ -8359,12 +7997,12 @@ kernel_dtrmm_nn_rl_4x4_vs_lib4:
 	// call inner dgemm kernel nt after initial triangle
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NN_4X4_LIB4
+	INNER_KERNEL_DGEMM_NN_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nn_4x4_lib4
+	call inner_kernel_dgemm_nn_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nn_4x4_lib4
+	callq _inner_kernel_dgemm_nn_4x4_lib4
 #endif
 #endif
 
@@ -8466,12 +8104,12 @@ kernel_dtrmm_nn_rl_4x4_gen_lib4:
 	// call inner dgemm kernel nt after initial triangle
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_ADD_NN_4X4_LIB4
+	INNER_KERNEL_DGEMM_NN_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nn_4x4_lib4
+	call inner_kernel_dgemm_nn_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nn_4x4_lib4
+	callq _inner_kernel_dgemm_nn_4x4_lib4
 #endif
 #endif
 
@@ -8607,6 +8245,41 @@ LC04: // { 1.0 1.0 1.0 1.0 }
 	.long	1072693248
 
 
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	.align 32
+.LC11: // { -1.0 1.0 1.0 1.0 }
+#elif defined(OS_MAC)
+	.align 5
+LC11: // { -1.0 1.0 1.0 1.0 }
+#endif
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+
+#if 0
+	// change sign
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	movapd		.LC11(%rip), %xmm15
+#elif defined(OS_MAC)
+	movapd		LC11(%rip), %xmm15
+#endif
+	xorpd		%xmm15, %xmm0
+	xorpd		%xmm15, %xmm1
+	xorpd		%xmm15, %xmm2
+	xorpd		%xmm15, %xmm3
+	xorpd		%xmm15, %xmm4
+	xorpd		%xmm15, %xmm5
+	xorpd		%xmm15, %xmm6
+	xorpd		%xmm15, %xmm7
+#endif
 
 #if defined(OS_LINUX)
 	.section	.note.GNU-stack,"",@progbits

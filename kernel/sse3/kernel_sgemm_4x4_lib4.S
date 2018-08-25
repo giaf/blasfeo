@@ -509,6 +509,11 @@ inner_blend_scale_ab_4x4_lib4:
 	mulps		%xmm14, %xmm15
 	addps		%xmm15, %xmm3
 
+//	shufps		$0x00, %xmm0, %xmm0
+//	shufps		$0x55, %xmm1, %xmm1
+//	shufps		$0xaa, %xmm2, %xmm2
+//	shufps		$0xff, %xmm3, %xmm3
+
 #if MACRO_LEVEL>=1
 	.endm
 #else
