@@ -160,6 +160,54 @@ run_dtrmm_rlnn:
 	./$(BINARY_DIR)/dtrmm_rlnn_benchmark.out > ./$(BINARY_DIR)/data/dtrmm_rlnn.m
 
 
+# dtrmm_rutn
+
+DP_BLAS3_OBJS += dtrmm_rutn
+RUN_DP_BLAS3_OBJS += run_dtrmm_rutn
+
+dtrmm_rutn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrmm_rutn_benchmark.o -DDOUBLE_PRECISION -DTRMM_RUTN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrmm_rutn_benchmark.o -o $(BINARY_DIR)/dtrmm_rutn_benchmark.out $(LIBS)
+
+run_dtrmm_rutn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dtrmm_rutn
+	./$(BINARY_DIR)/dtrmm_rutn_benchmark.out > ./$(BINARY_DIR)/data/dtrmm_rutn.m
+
+
+# dtrsm_llnu
+
+DP_BLAS3_OBJS += dtrsm_llnu
+RUN_DP_BLAS3_OBJS += run_dtrsm_llnu
+
+dtrsm_llnu: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrsm_llnu_benchmark.o -DDOUBLE_PRECISION -DTRSM_LLNU
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrsm_llnu_benchmark.o -o $(BINARY_DIR)/dtrsm_llnu_benchmark.out $(LIBS)
+
+run_dtrsm_llnu:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dtrsm_llnu
+	./$(BINARY_DIR)/dtrsm_llnu_benchmark.out > ./$(BINARY_DIR)/data/dtrsm_llnu.m
+
+
+# dtrsm_lunn
+
+DP_BLAS3_OBJS += dtrsm_lunn
+RUN_DP_BLAS3_OBJS += run_dtrsm_lunn
+
+dtrsm_lunn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrsm_lunn_benchmark.o -DDOUBLE_PRECISION -DTRSM_LUNN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrsm_lunn_benchmark.o -o $(BINARY_DIR)/dtrsm_lunn_benchmark.out $(LIBS)
+
+run_dtrsm_lunn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dtrsm_lunn
+	./$(BINARY_DIR)/dtrsm_lunn_benchmark.out > ./$(BINARY_DIR)/data/dtrsm_lunn.m
+
+
 # dtrsm_rltn
 
 DP_BLAS3_OBJS += dtrsm_rltn
@@ -174,6 +222,86 @@ run_dtrsm_rltn:
 	@echo
 	@echo benchmarking dtrsm_rltn
 	./$(BINARY_DIR)/dtrsm_rltn_benchmark.out > ./$(BINARY_DIR)/data/dtrsm_rltn.m
+
+
+# dtrsm_rltu
+
+DP_BLAS3_OBJS += dtrsm_rltu
+RUN_DP_BLAS3_OBJS += run_dtrsm_rltu
+
+dtrsm_rltu: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrsm_rltu_benchmark.o -DDOUBLE_PRECISION -DTRSM_RLTU
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrsm_rltu_benchmark.o -o $(BINARY_DIR)/dtrsm_rltu_benchmark.out $(LIBS)
+
+run_dtrsm_rltu:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dtrsm_rltu
+	./$(BINARY_DIR)/dtrsm_rltu_benchmark.out > ./$(BINARY_DIR)/data/dtrsm_rltu.m
+
+
+# dtrsm_rutn
+
+DP_BLAS3_OBJS += dtrsm_rutn
+RUN_DP_BLAS3_OBJS += run_dtrsm_rutn
+
+dtrsm_rutn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrsm_rutn_benchmark.o -DDOUBLE_PRECISION -DTRSM_RUTN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrsm_rutn_benchmark.o -o $(BINARY_DIR)/dtrsm_rutn_benchmark.out $(LIBS)
+
+run_dtrsm_rutn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dtrsm_rutn
+	./$(BINARY_DIR)/dtrsm_rutn_benchmark.out > ./$(BINARY_DIR)/data/dtrsm_rutn.m
+
+
+# dgelqf
+
+DP_LAPACK_OBJS += dgelqf
+RUN_DP_LAPACK_OBJS += run_dgelqf
+
+dgelqf: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgelqf_benchmark.o -DDOUBLE_PRECISION -DGELQF
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dgelqf_benchmark.o -o $(BINARY_DIR)/dgelqf_benchmark.out $(LIBS)
+
+run_dgelqf:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dgelqf
+	./$(BINARY_DIR)/dgelqf_benchmark.out > ./$(BINARY_DIR)/data/dgelqf.m
+
+
+# dgeqrf
+
+DP_LAPACK_OBJS += dgeqrf
+RUN_DP_LAPACK_OBJS += run_dgeqrf
+
+dgeqrf: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgeqrf_benchmark.o -DDOUBLE_PRECISION -DGEQRF
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dgeqrf_benchmark.o -o $(BINARY_DIR)/dgeqrf_benchmark.out $(LIBS)
+
+run_dgeqrf:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dgeqrf
+	./$(BINARY_DIR)/dgeqrf_benchmark.out > ./$(BINARY_DIR)/data/dgeqrf.m
+
+
+# dgetrf_nopivot
+
+DP_LAPACK_OBJS += dgetrf_nopivot
+RUN_DP_LAPACK_OBJS += run_dgetrf_nopivot
+
+dgetrf_nopivot: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgetrf_nopivot_benchmark.o -DDOUBLE_PRECISION -DGETRF_NOPIVOT
+	$(CC) $(CFLAGS) $(BINARY_DIR)/dgetrf_nopivot_benchmark.o -o $(BINARY_DIR)/dgetrf_nopivot_benchmark.out $(LIBS)
+
+run_dgetrf_nopivot:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking dgetrf_nopivot
+	./$(BINARY_DIR)/dgetrf_nopivot_benchmark.out > ./$(BINARY_DIR)/data/dgetrf_nopivot.m
 
 
 # dgetrf_rowpivot
@@ -400,6 +528,54 @@ run_strmm_rlnn:
 	./$(BINARY_DIR)/strmm_rlnn_benchmark.out > ./$(BINARY_DIR)/data/strmm_rlnn.m
 
 
+# strmm_rutn
+
+SP_BLAS3_OBJS += strmm_rutn
+RUN_SP_BLAS3_OBJS += run_strmm_rutn
+
+strmm_rutn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strmm_rutn_benchmark.o -DSINGLE_PRECISION -DTRMM_RUTN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/strmm_rutn_benchmark.o -o $(BINARY_DIR)/strmm_rutn_benchmark.out $(LIBS)
+
+run_strmm_rutn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking strmm_rutn
+	./$(BINARY_DIR)/strmm_rutn_benchmark.out > ./$(BINARY_DIR)/data/strmm_rutn.m
+
+
+# strsm_lunn
+
+SP_BLAS3_OBJS += strsm_lunn
+RUN_SP_BLAS3_OBJS += run_strsm_lunn
+
+strsm_lunn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strsm_lunn_benchmark.o -DSINGLE_PRECISION -DTRSM_LUNN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/strsm_lunn_benchmark.o -o $(BINARY_DIR)/strsm_lunn_benchmark.out $(LIBS)
+
+run_strsm_lunn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking strsm_lunn
+	./$(BINARY_DIR)/strsm_lunn_benchmark.out > ./$(BINARY_DIR)/data/strsm_lunn.m
+
+
+# strsm_llnu
+
+SP_BLAS3_OBJS += strsm_llnu
+RUN_SP_BLAS3_OBJS += run_strsm_llnu
+
+strsm_llnu: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strsm_llnu_benchmark.o -DSINGLE_PRECISION -DTRSM_LLNU
+	$(CC) $(CFLAGS) $(BINARY_DIR)/strsm_llnu_benchmark.o -o $(BINARY_DIR)/strsm_llnu_benchmark.out $(LIBS)
+
+run_strsm_llnu:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking strsm_llnu
+	./$(BINARY_DIR)/strsm_llnu_benchmark.out > ./$(BINARY_DIR)/data/strsm_llnu.m
+
+
 # strsm_rltn
 
 SP_BLAS3_OBJS += strsm_rltn
@@ -416,20 +592,100 @@ run_strsm_rltn:
 	./$(BINARY_DIR)/strsm_rltn_benchmark.out > ./$(BINARY_DIR)/data/strsm_rltn.m
 
 
+# strsm_rltu
+
+SP_BLAS3_OBJS += strsm_rltu
+RUN_SP_BLAS3_OBJS += run_strsm_rltu
+
+strsm_rltu: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strsm_rltu_benchmark.o -DSINGLE_PRECISION -DTRSM_RLTU
+	$(CC) $(CFLAGS) $(BINARY_DIR)/strsm_rltu_benchmark.o -o $(BINARY_DIR)/strsm_rltu_benchmark.out $(LIBS)
+
+run_strsm_rltu:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking strsm_rltu
+	./$(BINARY_DIR)/strsm_rltu_benchmark.out > ./$(BINARY_DIR)/data/strsm_rltu.m
+
+
+# strsm_rutn
+
+SP_BLAS3_OBJS += strsm_rutn
+RUN_SP_BLAS3_OBJS += run_strsm_rutn
+
+strsm_rutn: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strsm_rutn_benchmark.o -DSINGLE_PRECISION -DTRSM_RLTU
+	$(CC) $(CFLAGS) $(BINARY_DIR)/strsm_rutn_benchmark.o -o $(BINARY_DIR)/strsm_rutn_benchmark.out $(LIBS)
+
+run_strsm_rutn:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking strsm_rutn
+	./$(BINARY_DIR)/strsm_rutn_benchmark.out > ./$(BINARY_DIR)/data/strsm_rutn.m
+
+
+# sgelqf
+
+SP_LAPACK_OBJS += sgelqf
+RUN_SP_LAPACK_OBJS += run_sgelqf
+
+sgelqf: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgelqf_benchmark.o -DSINGLE_PRECISION -DGELQF
+	$(CC) $(CFLAGS) $(BINARY_DIR)/sgelqf_benchmark.o -o $(BINARY_DIR)/sgelqf_benchmark.out $(LIBS)
+
+run_sgelqf:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking sgelqf
+	./$(BINARY_DIR)/sgelqf_benchmark.out > ./$(BINARY_DIR)/data/sgelqf.m
+
+
+# sgeqrf
+
+SP_LAPACK_OBJS += sgeqrf
+RUN_SP_LAPACK_OBJS += run_sgeqrf
+
+sgeqrf: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgeqrf_benchmark.o -DSINGLE_PRECISION -DGEQRF
+	$(CC) $(CFLAGS) $(BINARY_DIR)/sgeqrf_benchmark.o -o $(BINARY_DIR)/sgeqrf_benchmark.out $(LIBS)
+
+run_sgeqrf:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking sgeqrf
+	./$(BINARY_DIR)/sgeqrf_benchmark.out > ./$(BINARY_DIR)/data/sgeqrf.m
+
+
+# sgetrf_nopivot
+
+SP_LAPACK_OBJS += sgetrf_nopivot
+RUN_SP_LAPACK_OBJS += run_sgetrf_nopivot
+
+sgetrf_nopivot: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgetrf_nopivot_benchmark.o -DSINGLE_PRECISION -DGETRF_NOPIVOT
+	$(CC) $(CFLAGS) $(BINARY_DIR)/sgetrf_nopivot_benchmark.o -o $(BINARY_DIR)/sgetrf_nopivot_benchmark.out $(LIBS)
+
+run_sgetrf_nopivot:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking sgetrf_nopivot
+	./$(BINARY_DIR)/sgetrf_nopivot_benchmark.out > ./$(BINARY_DIR)/data/sgetrf_nopivot.m
+
+
 # sgetrf_rowpivot
 
-#SP_LAPACK_OBJS += sgetrf_rowpivot
-#RUN_SP_LAPACK_OBJS += run_sgetrf_rowpivot
+SP_LAPACK_OBJS += sgetrf_rowpivot
+RUN_SP_LAPACK_OBJS += run_sgetrf_rowpivot
 
-#sgetrf_rowpivot: common
-#	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgetrf_rowpivot_benchmark.o -DSINGLE_PRECISION -DGETRF_ROWPIVOT
-#	$(CC) $(CFLAGS) $(BINARY_DIR)/sgetrf_rowpivot_benchmark.o -o $(BINARY_DIR)/sgetrf_rowpivot_benchmark.out $(LIBS)
+sgetrf_rowpivot: common
+	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgetrf_rowpivot_benchmark.o -DSINGLE_PRECISION -DGETRF_ROWPIVOT
+	$(CC) $(CFLAGS) $(BINARY_DIR)/sgetrf_rowpivot_benchmark.o -o $(BINARY_DIR)/sgetrf_rowpivot_benchmark.out $(LIBS)
 
-#run_sgetrf_rowpivot:
-#	mkdir -p ./$(BINARY_DIR)/data
-#	@echo
-#	@echo benchmarking sgetrf_rowpivot
-#	./$(BINARY_DIR)/sgetrf_rowpivot_benchmark.out > ./$(BINARY_DIR)/data/sgetrf_rowpivot.m
+run_sgetrf_rowpivot:
+	mkdir -p ./$(BINARY_DIR)/data
+	@echo
+	@echo benchmarking sgetrf_rowpivot
+	./$(BINARY_DIR)/sgetrf_rowpivot_benchmark.out > ./$(BINARY_DIR)/data/sgetrf_rowpivot.m
 
 
 # spotrf_l
@@ -581,24 +837,6 @@ run_ssymv_l:
 print_figures:
 	cp print_blas_benchmark.m ./$(BINARY_DIR)/data/
 	cd ./$(BINARY_DIR)/data/ ; octave-cli print_blas_benchmark.m
-	cd ./$(BINARY_DIR)/data/ ; epstopdf dgemm.eps -out dgemm.pdf ; rm dgemm.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf dsyrk.eps -out dsyrk.pdf ; rm dsyrk.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf dtrmm.eps -out dtrmm.pdf ; rm dtrmm.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf dtrsm.eps -out dtrsm.pdf ; rm dtrsm.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf dpotrf.eps -out dpotrf.pdf ; rm dpotrf.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf dgemv.eps -out dgemv.pdf ; rm dgemv.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf dtrmv.eps -out dtrmv.pdf ; rm dtrmv.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf dtrsv.eps -out dtrsv.pdf ; rm dtrsv.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf dsymv.eps -out dsymv.pdf ; rm dsymv.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf sgemm.eps -out sgemm.pdf ; rm sgemm.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf ssyrk.eps -out sgemm.pdf ; rm ssyrk.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf strmm.eps -out sgemm.pdf ; rm strmm.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf strsm.eps -out sgemm.pdf ; rm strsm.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf spotrf.eps -out spotrf.pdf ; rm spotrf.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf sgemv.eps -out sgemv.pdf ; rm sgemv.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf strmv.eps -out strmv.pdf ; rm strmv.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf strsv.eps -out strsv.pdf ; rm strsv.eps
-	cd ./$(BINARY_DIR)/data/ ; epstopdf ssymv.eps -out ssymv.pdf ; rm ssymv.eps
 
 # build
 

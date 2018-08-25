@@ -911,8 +911,10 @@ void blasfeo_sgeqrf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struc
 	{
 	if(m<=0 | n<=0)
 		return;
+#ifndef BENCHMARKS_MODE
 	printf("\nblasfeo_sgeqrf: feature not implemented yet\n");
 	exit(1);
+#endif
 	return;
 	}
 
@@ -929,8 +931,10 @@ void blasfeo_sgelqf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struc
 	{
 	if(m<=0 | n<=0)
 		return;
+#ifndef BENCHMARKS_MODE
 	printf("\nblasfeo_sgelqf: feature not implemented yet\n");
 	exit(1);
+#endif
 	return;
 	}
 
@@ -941,8 +945,10 @@ void blasfeo_sgelqf_pd(int m, int n, struct blasfeo_smat *sC, int ci, int cj, st
 	{
 	if(m<=0 | n<=0)
 		return;
+#ifndef BENCHMARKS_MODE
 	printf("\nblasfeo_sgelqf_pd: feature not implemented yet\n");
 	exit(1);
+#endif
 	return;
 	}
 
@@ -956,8 +962,10 @@ void blasfeo_sgelqf_pd_la(int m, int n1, struct blasfeo_smat *sD, int di, int dj
 	{
 	if(m<=0)
 		return;
+#ifndef BENCHMARKS_MODE
 	printf("\nblasfeo_sgelqf_pd_la: feature not implemented yet\n");
 	exit(1);
+#endif
 	return;
 	}
 
@@ -971,8 +979,10 @@ void blasfeo_sgelqf_pd_lla(int m, int n1, struct blasfeo_smat *sD, int di, int d
 	{
 	if(m<=0)
 		return;
+#ifndef BENCHMARKS_MODE
 	printf("\nblasfeo_dgelqf_pd_lla: feature not implemented yet\n");
 	exit(1);
+#endif
 	}
 
 

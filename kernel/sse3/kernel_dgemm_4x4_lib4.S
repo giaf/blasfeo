@@ -6115,7 +6115,7 @@ inner_store_l_4x4_gen_lib4:
 
 
 
-//                               rdi    rsi            rdx        rcx        r8            r9         rsp+8
+//                               1      2              3          4          5             6          7
 // void kernel_dgemm_nt_4x4_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D);
 
 	.p2align 4,,15
