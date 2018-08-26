@@ -72,19 +72,19 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
 		\
-		blas/s_blas1_lib8.o \
-		blas/s_blas2_lib8.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib8.o \
-		blas/s_blas3_diag_lib8.o \
-		blas/s_lapack_lib8.o \
+		blasfeo_api/s_blas1_lib8.o \
+		blasfeo_api/s_blas2_lib8.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib8.o \
+		blasfeo_api/s_blas3_diag_lib8.o \
+		blasfeo_api/s_lapack_lib8.o \
 
 endif
 
@@ -126,18 +126,19 @@ OBJS += \
 
 # blas
 OBJS  += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
-		blas/s_blas1_lib8.o \
-		blas/s_blas2_lib8.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib8.o \
-		blas/s_blas3_diag_lib8.o \
-		blas/s_lapack_lib8.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
+		\
+		blasfeo_api/s_blas1_lib8.o \
+		blasfeo_api/s_blas2_lib8.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib8.o \
+		blasfeo_api/s_blas3_diag_lib8.o \
+		blasfeo_api/s_lapack_lib8.o \
 
 endif
 
@@ -172,19 +173,19 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
 		\
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
 
 endif
 
@@ -218,19 +219,19 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
 		\
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
 
 endif
 
@@ -267,19 +268,19 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
 		\
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
 
 endif
 
@@ -315,19 +316,19 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
 		\
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
 
 endif
 
@@ -367,19 +368,19 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
 		\
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
 
 endif
 
@@ -420,19 +421,19 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
 		\
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
 
 endif
 
@@ -468,18 +469,19 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
+		\
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
 
 endif
 
@@ -512,18 +514,19 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
+		\
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
 
 endif
 
@@ -537,19 +540,19 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib.o \
-		blas/d_blas2_lib.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib.o \
-		blas/d_blas3_diag_lib.o \
-		blas/d_lapack_lib.o \
+		blasfeo_api/d_blas1_lib.o \
+		blasfeo_api/d_blas2_lib.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib.o \
+		blasfeo_api/d_blas3_diag_lib.o \
+		blasfeo_api/d_lapack_lib.o \
 		\
-		blas/s_blas1_lib.o \
-		blas/s_blas2_lib.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib.o \
-		blas/s_blas3_diag_lib.o \
-		blas/s_lapack_lib.o \
+		blasfeo_api/s_blas1_lib.o \
+		blasfeo_api/s_blas2_lib.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib.o \
+		blasfeo_api/s_blas3_diag_lib.o \
+		blasfeo_api/s_lapack_lib.o \
 
 endif # LA choice
 
@@ -580,8 +583,8 @@ OBJS_REF += \
 		auxiliary/s_aux_libref.o \
 		auxiliary/d_aux_ext_dep_libref.o \
 		auxiliary/s_aux_ext_dep_libref.o \
-		blas/d_blas3_libref.o \
-		blas/s_blas3_libref.o \
+		blasfeo_api/d_blas3_libref.o \
+		blasfeo_api/s_blas3_libref.o \
 #
 endif
 
@@ -596,7 +599,7 @@ all: clean static_library
 static_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd auxiliary; $(MAKE) obj)
-	( cd blas; $(MAKE) obj)
+	( cd blasfeo_api; $(MAKE) obj)
 	$(AR) rcs libblasfeo.a $(OBJS)
 	mv libblasfeo.a ./lib/
 ifeq ($(TESTING_MODE), 1)
@@ -615,7 +618,7 @@ endif
 shared_library: target
 	( cd auxiliary; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
-	( cd blas; $(MAKE) obj)
+	( cd blasfeo_api; $(MAKE) obj)
 	$(CC) -shared -o libblasfeo.so $(OBJS) -Wl,-Bsymbolic
 	mv libblasfeo.so ./lib/
 ifeq ($(TESTING_MODE), 1)
@@ -725,7 +728,7 @@ install_shared:
 clean:
 	make -C auxiliary clean
 	make -C kernel clean
-	make -C blas clean
+	make -C blasfeo_api clean
 	make -C examples clean
 	make -C tests clean
 	make -C benchmarks clean
