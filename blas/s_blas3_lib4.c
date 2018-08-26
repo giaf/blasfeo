@@ -204,54 +204,6 @@ void sgemm_nn_lib(int m, int n, int k, float alpha, float *pA, int sda, float *p
 
 
 
-void strmm_nt_ru_lib(int m, int n, float alpha, float *pA, int sda, float *pB, int sdb, float beta, float *pC, int sdc, float *pD, int sdd)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-	
-	const int bs = 4;
-	
-	int i, j;
-	
-	i = 0;
-	for(; i<m-3; i+=4)
-		{
-		j = 0;
-		for(; j<n-3; j+=4)
-			{
-			kernel_strmm_nt_ru_4x4_lib4(n-j, &alpha, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd]);
-			}
-		if(j<n) // TODO specialized edge routine
-			{
-			kernel_strmm_nt_ru_4x4_vs_lib4(n-j, &alpha, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
-			}
-		}
-	if(i<m)
-		{
-		goto left_4;
-		}
-	
-	// common return
-	return;
-
-	left_4:
-	j = 0;
-//	for(; j<n-3; j+=4)
-	for(; j<n; j+=4)
-		{
-		kernel_strmm_nt_ru_4x4_vs_lib4(n-j, &alpha, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
-		}
-//	if(j<n) // TODO specialized edge routine
-//		{
-//		kernel_strmm_nt_ru_4x4_vs_lib4(n-j, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], alg, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
-//		}
-	return;
-
-	}
-
-
-
 // D <= B * A^{-T} , with A lower triangular with unit diagonal
 void strsm_nt_rl_one_lib(int m, int n, float *pA, int sda, float *pB, int sdb, float *pD, int sdd)
 	{
@@ -833,18 +785,55 @@ void blasfeo_strmm_rutn(int m, int n, float alpha, struct blasfeo_smat *sB, int 
 		exit(1);
 		}
 
+	if(m<=0 || n<=0)
+		return;
+
 	// invalidate stored inverse diagonal of result matrix
 	sD->use_dA = 0;
 
 	const int bs = 4;
+
 	int sda = sA->cn;
 	int sdb = sB->cn;
 	int sdd = sD->cn;
 	float *pA = sA->pA + aj*bs;
 	float *pB = sB->pA + bj*bs;
 	float *pD = sD->pA + dj*bs;
-	strmm_nt_ru_lib(m, n, alpha, pA, sda, pB, sdb, 0.0, pD, sdd, pD, sdd); 
+
+	int i, j;
+	
+//	strmm_nt_ru_lib(m, n, alpha, pA, sda, pB, sdb, 0.0, pD, sdd, pD, sdd); 
+	i = 0;
+	for(; i<m-3; i+=4)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_strmm_nt_ru_4x4_lib4(n-j, &alpha, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], &pD[j*bs+i*sdd]);
+			}
+		if(j<n) // TODO specialized edge routine
+			{
+			kernel_strmm_nt_ru_4x4_vs_lib4(n-j, &alpha, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], &pD[j*bs+i*sdd], m-i, n-j);
+			}
+		}
+	if(i<m)
+		{
+		goto left_4;
+		}
+	
+	// common return
 	return;
+
+	left_4:
+	j = 0;
+	for(; j<n; j+=4)
+		{
+		kernel_strmm_nt_ru_4x4_vs_lib4(n-j, &alpha, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], &pD[j*bs+i*sdd], m-i, n-j);
+		}
+	// TODO specialized edge routine
+
+	return;
+
 	}
 
 

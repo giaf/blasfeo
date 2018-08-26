@@ -1391,10 +1391,6 @@ void blasfeo_strsm_rutn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 // dtrmm_right_upper_transposed_notunit (B, i.e. the first matrix, is triangular !!!)
 void blasfeo_strmm_rutn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
 	{
-//#ifndef BENCHMARKS_MODE
-//	printf("\nblasfeo_strmm_rutn: feature not implemented yet\n");
-//	exit(1);
-//#endif
 	if(ai!=0 | bi!=0 | di!=0)
 		{
 		printf("\nblasfeo_strmm_rutn: feature not implemented yet: ai=%d, bi=%d, di=%d\n", ai, bi, di);
@@ -1426,19 +1422,19 @@ void blasfeo_strmm_rutn(int m, int n, float alpha, struct blasfeo_smat *sB, int 
 		j = 0;
 		for(; j<n-7; j+=8)
 			{
-			kernel_strmm_nt_ru_8x4_lib8(n-(j+0), &alpha, &pA[(j+0)*bs+i*sda], &pB[(j+0)*bs+(j+0)*sdb], &beta, &pD[(j+0)*bs+i*sdd], &pD[(j+0)*bs+i*sdd]);
-			kernel_strmm_nt_ru_8x4_lib8(n-(j+4), &alpha, &pA[(j+4)*bs+i*sda], &pB[(j+4)*bs+(j+0)*sdb+4], &beta, &pD[(j+4)*bs+i*sdd], &pD[(j+4)*bs+i*sdd]);
+			kernel_strmm_nt_ru_8x4_lib8(n-(j+0), &alpha, &pA[(j+0)*bs+i*sda], &pB[(j+0)*bs+(j+0)*sdb], &pD[(j+0)*bs+i*sdd]);
+			kernel_strmm_nt_ru_8x4_lib8(n-(j+4), &alpha, &pA[(j+4)*bs+i*sda], &pB[(j+4)*bs+(j+0)*sdb+4], &pD[(j+4)*bs+i*sdd]);
 			}
 		if(j<n) // TODO specialized edge routine
 			{
 			if(j<n-4)
 				{
-				kernel_strmm_nt_ru_8x4_vs_lib8(n-(j+0), &alpha, &pA[(j+0)*bs+i*sda], &pB[(j+0)*bs+(j+0)*sdb], &beta, &pD[(j+0)*bs+i*sdd], &pD[(j+0)*bs+i*sdd], m-i, n-(j+0));
-				kernel_strmm_nt_ru_8x4_vs_lib8(n-(j+4), &alpha, &pA[(j+4)*bs+i*sda], &pB[(j+4)*bs+(j+0)*sdb+4], &beta, &pD[(j+4)*bs+i*sdd], &pD[(j+4)*bs+i*sdd], m-i, n-(j+4));
+				kernel_strmm_nt_ru_8x4_vs_lib8(n-(j+0), &alpha, &pA[(j+0)*bs+i*sda], &pB[(j+0)*bs+(j+0)*sdb], &pD[(j+0)*bs+i*sdd], m-i, n-(j+0));
+				kernel_strmm_nt_ru_8x4_vs_lib8(n-(j+4), &alpha, &pA[(j+4)*bs+i*sda], &pB[(j+4)*bs+(j+0)*sdb+4], &pD[(j+4)*bs+i*sdd], m-i, n-(j+4));
 				}
 			else
 				{
-				kernel_strmm_nt_ru_8x4_vs_lib8(n-j, &alpha, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], &beta, &pD[j*bs+i*sdd], &pD[j*bs+i*sdd], m-i, n-j);
+				kernel_strmm_nt_ru_8x4_vs_lib8(n-j, &alpha, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], &pD[j*bs+i*sdd], m-i, n-j);
 				}
 			}
 		}
@@ -1454,12 +1450,12 @@ void blasfeo_strmm_rutn(int m, int n, float alpha, struct blasfeo_smat *sB, int 
 	j = 0;
 	for(; j<n-4; j+=8)
 		{
-		kernel_strmm_nt_ru_8x4_vs_lib8(n-(j+0), &alpha, &pA[(j+0)*bs+i*sda], &pB[(j+0)*bs+(j+0)*sdb], &beta, &pD[(j+0)*bs+i*sdd], &pD[(j+0)*bs+i*sdd], m-i, n-(j+0));
-		kernel_strmm_nt_ru_8x4_vs_lib8(n-(j+4), &alpha, &pA[(j+4)*bs+i*sda], &pB[(j+4)*bs+(j+0)*sdb+4], &beta, &pD[(j+4)*bs+i*sdd], &pD[(j+4)*bs+i*sdd], m-i, n-(j+4));
+		kernel_strmm_nt_ru_8x4_vs_lib8(n-(j+0), &alpha, &pA[(j+0)*bs+i*sda], &pB[(j+0)*bs+(j+0)*sdb], &pD[(j+0)*bs+i*sdd], m-i, n-(j+0));
+		kernel_strmm_nt_ru_8x4_vs_lib8(n-(j+4), &alpha, &pA[(j+4)*bs+i*sda], &pB[(j+4)*bs+(j+0)*sdb+4], &pD[(j+4)*bs+i*sdd], m-i, n-(j+4));
 		}
 	if(j<n) // TODO specialized edge routine
 		{
-		kernel_strmm_nt_ru_8x4_vs_lib8(n-j, &alpha, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], &beta, &pD[j*bs+i*sdd], &pD[j*bs+i*sdd], m-i, n-j);
+		kernel_strmm_nt_ru_8x4_vs_lib8(n-j, &alpha, &pA[j*bs+i*sda], &pB[j*bs+j*sdb], &pD[j*bs+i*sdd], m-i, n-j);
 		}
 
 	return;

@@ -1738,19 +1738,16 @@ inner_edge_dtrmm_nt_ru_8x4_lib4:
 #endif
 #endif
 	
-	movq	%r10, %r15 // A1 <- A0
-	addq	%r11, %r15 // A1 <- A0 + 4*sda*sizeof(double)
-
 	vbroadcastsd	0(%r12), %ymm12
 	vmovapd			0(%r10), %ymm8
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
-	vmovapd			0(%r15), %ymm9
+	vmovapd			0(%r10, %r11, ), %ymm9
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
 
 	vbroadcastsd	32(%r12), %ymm12
 	vmovapd			32(%r10), %ymm8
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
-	vmovapd			32(%r15), %ymm9
+	vmovapd			32(%r10, %r11, ), %ymm9
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
 	vbroadcastsd	40(%r12), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm1
@@ -1759,7 +1756,7 @@ inner_edge_dtrmm_nt_ru_8x4_lib4:
 	vbroadcastsd	64(%r12), %ymm12
 	vmovapd			64(%r10), %ymm8
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
-	vmovapd			64(%r15), %ymm9
+	vmovapd			64(%r10, %r11, ), %ymm9
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
 	vbroadcastsd	72(%r12), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm1
@@ -1771,7 +1768,7 @@ inner_edge_dtrmm_nt_ru_8x4_lib4:
 	vbroadcastsd	96(%r12), %ymm12
 	vmovapd			96(%r10), %ymm8
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
-	vmovapd			96(%r15), %ymm9
+	vmovapd			96(%r10, %r11, ), %ymm9
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
 	vbroadcastsd	104(%r12), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm1
@@ -1857,62 +1854,37 @@ inner_edge_dtrmm_nt_ru_8x4_vs_lib4:
 #endif
 #endif
 	
-	movq	%r11, %r15 // A1 <- A0
-	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
-
 	vbroadcastsd	0(%r13), %ymm12
-	subl			$1, %r10d
 	vmovapd			0(%r11), %ymm8
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
-	addq			$32, %r11
-	vmovapd			0(%r15), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	subl			$1, %r10d
+	addq			$32, %r11
 	addq			$32, %r13
-	addq			$32, %r15
 
 	cmpl	$0, %r10d
 	jle		0f
 
 	vbroadcastsd	0(%r13), %ymm12
-	subl			$1, %r10d
 	vmovapd			0(%r11), %ymm8
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
-	vmovapd			0(%r15), %ymm9
-	vfmadd231pd		%ymm9, %ymm12, %ymm4
-	addq			$32, %r11
-	vbroadcastsd	8(%r13), %ymm12
-	vfmadd231pd		%ymm8, %ymm12, %ymm1
-	addq			$32, %r13
-	vfmadd231pd		%ymm9, %ymm12, %ymm5
-	addq			$32, %r15
-
-	cmpl	$0, %r10d
-	jle		0f
-
-	vbroadcastsd	0(%r13), %ymm12
-	subl			$1, %r10d
-	vmovapd			0(%r11), %ymm8
-	vfmadd231pd		%ymm8, %ymm12, %ymm0
-	vmovapd			0(%r15), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
 	vbroadcastsd	8(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm1
-	addq			$32, %r11
 	vfmadd231pd		%ymm9, %ymm12, %ymm5
-	vbroadcastsd	16(%r13), %ymm12
-	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	subl			$1, %r10d
+	addq			$32, %r11
 	addq			$32, %r13
-	vfmadd231pd		%ymm9, %ymm12, %ymm6
-	addq			$32, %r15
 
 	cmpl	$0, %r10d
 	jle		0f
 
 	vbroadcastsd	0(%r13), %ymm12
-	subl			$1, %r10d
 	vmovapd			0(%r11), %ymm8
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
-	vmovapd			0(%r15), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
 	vbroadcastsd	8(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm1
@@ -1920,12 +1892,30 @@ inner_edge_dtrmm_nt_ru_8x4_vs_lib4:
 	vbroadcastsd	16(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm2
 	vfmadd231pd		%ymm9, %ymm12, %ymm6
+	subl			$1, %r10d
 	addq			$32, %r11
+	addq			$32, %r13
+
+	cmpl	$0, %r10d
+	jle		0f
+
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			0(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			0(%r11, %r12, 1), %ymm9
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vbroadcastsd	8(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	vbroadcastsd	16(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	vfmadd231pd		%ymm9, %ymm12, %ymm6
 	vbroadcastsd	24(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm3
-	addq			$32, %r13
 	vfmadd231pd		%ymm9, %ymm12, %ymm7
-	addq			$32, %r15
+	subl			$1, %r10d
+	addq			$32, %r11
+	addq			$32, %r13
 
 0:
 
@@ -9247,8 +9237,8 @@ kernel_dtrmm_nn_rl_8x4_gen_lib4:
 
 
 
-//                                  rdi    rsi            rdx        rcx      r8         r9            rsp+8      rsp+16   rsp+24     rsp+32
-// void kernel_dtrmm_nt_ru_8x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd);
+//                                  1      2              3          4        5          6          7
+// void kernel_dtrmm_nt_ru_8x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *D, int sdd);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -9334,26 +9324,22 @@ kernel_dtrmm_nt_ru_8x4_lib4:
 	// call inner scale
 
 	movq	ARG2, %r10 // alpha
-	movq	ARG6, %r11 // beta
-	movq	ARG7, %r12 // C
-	movq	ARG8, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_8X4_LIB4
+	INNER_SCALE_A0_8X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_ab_8x4_lib4
+	call inner_scale_a0_8x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_scale_ab_8x4_lib4
+	callq _inner_scale_a0_8x4_lib4
 #endif
 #endif
 
 
 	// store n
 
-	movq	ARG9, %r10 // D
-	movq	ARG10, %r11 // sdd
+	movq	ARG6, %r10 // D
+	movq	ARG7, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
 #if MACRO_LEVEL>=1
@@ -9379,8 +9365,8 @@ kernel_dtrmm_nt_ru_8x4_lib4:
 
 
 
-//                                 rdi     rsi            rdx        rcx      r8         r9            rsp+8      rsp+16   rsp+24     rsp+32   rsp+40  rsp+48
-// void kernel_dtrmm_nt_ru_8x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, int km, int kn);
+//                                  1      2              3          4        5          6          7        8       9
+// void kernel_dtrmm_nt_ru_8x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *D, int sdd, int km, int kn);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -9468,30 +9454,25 @@ kernel_dtrmm_nt_ru_8x4_vs_lib4:
 	// call inner scale
 
 	movq	ARG2, %r10 // alpha
-	movq	ARG6, %r11 // beta
-	movq	ARG7, %r12 // C
-	movq	ARG8, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_8X4_LIB4
+	INNER_SCALE_A0_8X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_ab_8x4_lib4
+	call inner_scale_a0_8x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_scale_ab_8x4_lib4
+	callq _inner_scale_a0_8x4_lib4
 #endif
 #endif
 
 
 // store n
 
-	movq	ARG9, %r10 // store address D
-	movq	ARG10, %r11 // sdd
+	movq	ARG6, %r10 // store address D
+	movq	ARG7, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-
-	movq	ARG11, %r12 // km 
-	movq	ARG12, %r13 // kn 
+	movq	ARG8, %r12 // km 
+	movq	ARG9, %r13 // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_VS_LIB4

@@ -133,7 +133,7 @@ int main()
 
 #if 1
 	// trmm_rutn
-	alpha = 1.0;
+	alpha = -1.0;
 	beta = 0.0;
 	blasfeo_print_smat(n, n, &sD, 0, 0);
 

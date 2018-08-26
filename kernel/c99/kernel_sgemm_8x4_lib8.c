@@ -34,7 +34,7 @@
 
 
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-void kernel_strmm_nt_ru_8x4_lib8(int kmax, float *alpha, float *A, float *B, float *beta, float *C, float *D)
+void kernel_strmm_nt_ru_8x4_lib8(int kmax, float *alpha, float *A, float *B, float *D)
 	{
 
 	const int bs = 8;
@@ -172,45 +172,7 @@ void kernel_strmm_nt_ru_8x4_lib8(int kmax, float *alpha, float *A, float *B, flo
 		k++;
 		}
 	
-	CC[0+bs*0] = beta[0]*C[0+bs*0] + alpha[0]*CC[0+bs*0];
-	CC[1+bs*0] = beta[0]*C[1+bs*0] + alpha[0]*CC[1+bs*0];
-	CC[2+bs*0] = beta[0]*C[2+bs*0] + alpha[0]*CC[2+bs*0];
-	CC[3+bs*0] = beta[0]*C[3+bs*0] + alpha[0]*CC[3+bs*0];
-	CC[4+bs*0] = beta[0]*C[4+bs*0] + alpha[0]*CC[4+bs*0];
-	CC[5+bs*0] = beta[0]*C[5+bs*0] + alpha[0]*CC[5+bs*0];
-	CC[6+bs*0] = beta[0]*C[6+bs*0] + alpha[0]*CC[6+bs*0];
-	CC[7+bs*0] = beta[0]*C[7+bs*0] + alpha[0]*CC[7+bs*0];
-
-	CC[0+bs*1] = beta[0]*C[0+bs*1] + alpha[0]*CC[0+bs*1];
-	CC[1+bs*1] = beta[0]*C[1+bs*1] + alpha[0]*CC[1+bs*1];
-	CC[2+bs*1] = beta[0]*C[2+bs*1] + alpha[0]*CC[2+bs*1];
-	CC[3+bs*1] = beta[0]*C[3+bs*1] + alpha[0]*CC[3+bs*1];
-	CC[4+bs*1] = beta[0]*C[4+bs*1] + alpha[0]*CC[4+bs*1];
-	CC[5+bs*1] = beta[0]*C[5+bs*1] + alpha[0]*CC[5+bs*1];
-	CC[6+bs*1] = beta[0]*C[6+bs*1] + alpha[0]*CC[6+bs*1];
-	CC[7+bs*1] = beta[0]*C[7+bs*1] + alpha[0]*CC[7+bs*1];
-
-	CC[0+bs*2] = beta[0]*C[0+bs*2] + alpha[0]*CC[0+bs*2];
-	CC[1+bs*2] = beta[0]*C[1+bs*2] + alpha[0]*CC[1+bs*2];
-	CC[2+bs*2] = beta[0]*C[2+bs*2] + alpha[0]*CC[2+bs*2];
-	CC[3+bs*2] = beta[0]*C[3+bs*2] + alpha[0]*CC[3+bs*2];
-	CC[4+bs*2] = beta[0]*C[4+bs*2] + alpha[0]*CC[4+bs*2];
-	CC[5+bs*2] = beta[0]*C[5+bs*2] + alpha[0]*CC[5+bs*2];
-	CC[6+bs*2] = beta[0]*C[6+bs*2] + alpha[0]*CC[6+bs*2];
-	CC[7+bs*2] = beta[0]*C[7+bs*2] + alpha[0]*CC[7+bs*2];
-
-	CC[0+bs*3] = beta[0]*C[0+bs*3] + alpha[0]*CC[0+bs*3];
-	CC[1+bs*3] = beta[0]*C[1+bs*3] + alpha[0]*CC[1+bs*3];
-	CC[2+bs*3] = beta[0]*C[2+bs*3] + alpha[0]*CC[2+bs*3];
-	CC[3+bs*3] = beta[0]*C[3+bs*3] + alpha[0]*CC[3+bs*3];
-	CC[4+bs*3] = beta[0]*C[4+bs*3] + alpha[0]*CC[4+bs*3];
-	CC[5+bs*3] = beta[0]*C[5+bs*3] + alpha[0]*CC[5+bs*3];
-	CC[6+bs*3] = beta[0]*C[6+bs*3] + alpha[0]*CC[6+bs*3];
-	CC[7+bs*3] = beta[0]*C[7+bs*3] + alpha[0]*CC[7+bs*3];
-
-	float beta1  = 1.0;
-
-	kernel_sgemm_nt_8x4_lib8(kmax-k, alpha, A, B, &beta1, CC, D);
+	kernel_sgemm_nt_8x4_lib8(kmax-k, alpha, A, B, alpha, CC, D);
 
 	return;
 
@@ -220,7 +182,7 @@ void kernel_strmm_nt_ru_8x4_lib8(int kmax, float *alpha, float *A, float *B, flo
 
 
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-void kernel_strmm_nt_ru_8x4_vs_lib8(int kmax, float *alpha, float *A, float *B, float *beta, float *C, float *D, int km, int kn)
+void kernel_strmm_nt_ru_8x4_vs_lib8(int kmax, float *alpha, float *A, float *B, float *D, int km, int kn)
 	{
 
 	const int bs = 8;
@@ -358,45 +320,7 @@ void kernel_strmm_nt_ru_8x4_vs_lib8(int kmax, float *alpha, float *A, float *B, 
 		k++;
 		}
 	
-	CC[0+bs*0] = beta[0]*C[0+bs*0] + alpha[0]*CC[0+bs*0];
-	CC[1+bs*0] = beta[0]*C[1+bs*0] + alpha[0]*CC[1+bs*0];
-	CC[2+bs*0] = beta[0]*C[2+bs*0] + alpha[0]*CC[2+bs*0];
-	CC[3+bs*0] = beta[0]*C[3+bs*0] + alpha[0]*CC[3+bs*0];
-	CC[4+bs*0] = beta[0]*C[4+bs*0] + alpha[0]*CC[4+bs*0];
-	CC[5+bs*0] = beta[0]*C[5+bs*0] + alpha[0]*CC[5+bs*0];
-	CC[6+bs*0] = beta[0]*C[6+bs*0] + alpha[0]*CC[6+bs*0];
-	CC[7+bs*0] = beta[0]*C[7+bs*0] + alpha[0]*CC[7+bs*0];
-
-	CC[0+bs*1] = beta[0]*C[0+bs*1] + alpha[0]*CC[0+bs*1];
-	CC[1+bs*1] = beta[0]*C[1+bs*1] + alpha[0]*CC[1+bs*1];
-	CC[2+bs*1] = beta[0]*C[2+bs*1] + alpha[0]*CC[2+bs*1];
-	CC[3+bs*1] = beta[0]*C[3+bs*1] + alpha[0]*CC[3+bs*1];
-	CC[4+bs*1] = beta[0]*C[4+bs*1] + alpha[0]*CC[4+bs*1];
-	CC[5+bs*1] = beta[0]*C[5+bs*1] + alpha[0]*CC[5+bs*1];
-	CC[6+bs*1] = beta[0]*C[6+bs*1] + alpha[0]*CC[6+bs*1];
-	CC[7+bs*1] = beta[0]*C[7+bs*1] + alpha[0]*CC[7+bs*1];
-
-	CC[0+bs*2] = beta[0]*C[0+bs*2] + alpha[0]*CC[0+bs*2];
-	CC[1+bs*2] = beta[0]*C[1+bs*2] + alpha[0]*CC[1+bs*2];
-	CC[2+bs*2] = beta[0]*C[2+bs*2] + alpha[0]*CC[2+bs*2];
-	CC[3+bs*2] = beta[0]*C[3+bs*2] + alpha[0]*CC[3+bs*2];
-	CC[4+bs*2] = beta[0]*C[4+bs*2] + alpha[0]*CC[4+bs*2];
-	CC[5+bs*2] = beta[0]*C[5+bs*2] + alpha[0]*CC[5+bs*2];
-	CC[6+bs*2] = beta[0]*C[6+bs*2] + alpha[0]*CC[6+bs*2];
-	CC[7+bs*2] = beta[0]*C[7+bs*2] + alpha[0]*CC[7+bs*2];
-
-	CC[0+bs*3] = beta[0]*C[0+bs*3] + alpha[0]*CC[0+bs*3];
-	CC[1+bs*3] = beta[0]*C[1+bs*3] + alpha[0]*CC[1+bs*3];
-	CC[2+bs*3] = beta[0]*C[2+bs*3] + alpha[0]*CC[2+bs*3];
-	CC[3+bs*3] = beta[0]*C[3+bs*3] + alpha[0]*CC[3+bs*3];
-	CC[4+bs*3] = beta[0]*C[4+bs*3] + alpha[0]*CC[4+bs*3];
-	CC[5+bs*3] = beta[0]*C[5+bs*3] + alpha[0]*CC[5+bs*3];
-	CC[6+bs*3] = beta[0]*C[6+bs*3] + alpha[0]*CC[6+bs*3];
-	CC[7+bs*3] = beta[0]*C[7+bs*3] + alpha[0]*CC[7+bs*3];
-
-	float beta1  = 1.0;
-
-	kernel_sgemm_nt_8x4_lib8(kmax-k, alpha, A, B, &beta1, CC, CC);
+	kernel_sgemm_nt_8x4_lib8(kmax-k, alpha, A, B, alpha, CC, CC);
 
 	if(km>=8)
 		{

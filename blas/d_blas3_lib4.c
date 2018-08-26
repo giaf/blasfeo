@@ -335,18 +335,18 @@ void dtrmm_nt_ru_lib(int m, int n, double alpha, double *pA, int sda, double *pB
 	int i, j;
 
 	i = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
 // XXX there is a bug here !!!!!!
-#if 0//defined(TARGET_X64_INTEL_HASWELL)
 	for(; i<m-11; i+=12)
 		{
 		j = 0;
 		for(; j<n-3; j+=4)
 			{
-			kernel_dtrmm_nt_ru_12x4_lib4(n-j, &alpha, &pA[j*ps+i*sda], sda, &pB[j*ps+j*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd);
+			kernel_dtrmm_nt_ru_12x4_lib4(n-j, &alpha, &pA[j*ps+i*sda], sda, &pB[j*ps+j*sdb], &pD[j*ps+i*sdd], sdd);
 			}
-		if(j<n) // TODO specialized edge routine
+		if(j<n)
 			{
-			kernel_dtrmm_nt_ru_12x4_vs_lib4(n-j, &alpha, &pA[j*ps+i*sda], sda, &pB[j*ps+j*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
+			kernel_dtrmm_nt_ru_12x4_vs_lib4(n-j, &alpha, &pA[j*ps+i*sda], sda, &pB[j*ps+j*sdb], &pD[j*ps+i*sdd], sdd, m-i, n-j);
 			}
 		}
 	if(i<m)
@@ -371,11 +371,11 @@ void dtrmm_nt_ru_lib(int m, int n, double alpha, double *pA, int sda, double *pB
 		j = 0;
 		for(; j<n-3; j+=4)
 			{
-			kernel_dtrmm_nt_ru_8x4_lib4(n-j, &alpha, &pA[j*ps+i*sda], sda, &pB[j*ps+j*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd);
+			kernel_dtrmm_nt_ru_8x4_lib4(n-j, &alpha, &pA[j*ps+i*sda], sda, &pB[j*ps+j*sdb], &pD[j*ps+i*sdd], sdd);
 			}
-		if(j<n) // TODO specialized edge routine
+		if(j<n)
 			{
-			kernel_dtrmm_nt_ru_8x4_vs_lib4(n-j, &alpha, &pA[j*ps+i*sda], sda, &pB[j*ps+j*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
+			kernel_dtrmm_nt_ru_8x4_vs_lib4(n-j, &alpha, &pA[j*ps+i*sda], sda, &pB[j*ps+j*sdb], &pD[j*ps+i*sdd], sdd, m-i, n-j);
 			}
 		}
 	if(i<m)
@@ -396,11 +396,11 @@ void dtrmm_nt_ru_lib(int m, int n, double alpha, double *pA, int sda, double *pB
 		j = 0;
 		for(; j<n-3; j+=4)
 			{
-			kernel_dtrmm_nt_ru_4x4_lib4(n-j, &alpha, &pA[j*ps+i*sda], &pB[j*ps+j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd]);
+			kernel_dtrmm_nt_ru_4x4_lib4(n-j, &alpha, &pA[j*ps+i*sda], &pB[j*ps+j*sdb], &pD[j*ps+i*sdd]);
 			}
-		if(j<n) // TODO specialized edge routine
+		if(j<n)
 			{
-			kernel_dtrmm_nt_ru_4x4_vs_lib4(n-j, &alpha, &pA[j*ps+i*sda], &pB[j*ps+j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+			kernel_dtrmm_nt_ru_4x4_vs_lib4(n-j, &alpha, &pA[j*ps+i*sda], &pB[j*ps+j*sdb], &pD[j*ps+i*sdd], m-i, n-j);
 			}
 		}
 	if(i<m)
@@ -416,15 +416,10 @@ void dtrmm_nt_ru_lib(int m, int n, double alpha, double *pA, int sda, double *pB
 	// clean up
 	left_12:
 	j = 0;
-//	for(; j<n-3; j+=4)
 	for(; j<n; j+=4)
 		{
-		kernel_dtrmm_nt_ru_12x4_vs_lib4(n-j, &alpha, &pA[j*ps+i*sda], sda, &pB[j*ps+j*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
+		kernel_dtrmm_nt_ru_12x4_vs_lib4(n-j, &alpha, &pA[j*ps+i*sda], sda, &pB[j*ps+j*sdb], &pD[j*ps+i*sdd], sdd, m-i, n-j);
 		}
-//	if(j<n) // TODO specialized edge routine
-//		{
-//		kernel_dtrmm_nt_ru_8x4_vs_lib4(n-j, &pA[j*ps+i*sda], sda, &pB[j*ps+j*sdb], alg, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-//		}
 	return;
 #endif
 
@@ -432,29 +427,19 @@ void dtrmm_nt_ru_lib(int m, int n, double alpha, double *pA, int sda, double *pB
 	// clean up
 	left_8:
 	j = 0;
-//	for(; j<n-3; j+=4)
 	for(; j<n; j+=4)
 		{
-		kernel_dtrmm_nt_ru_8x4_vs_lib4(n-j, &alpha, &pA[j*ps+i*sda], sda, &pB[j*ps+j*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
+		kernel_dtrmm_nt_ru_8x4_vs_lib4(n-j, &alpha, &pA[j*ps+i*sda], sda, &pB[j*ps+j*sdb], &pD[j*ps+i*sdd], sdd, m-i, n-j);
 		}
-//	if(j<n) // TODO specialized edge routine
-//		{
-//		kernel_dtrmm_nt_ru_8x4_vs_lib4(n-j, &pA[j*ps+i*sda], sda, &pB[j*ps+j*sdb], alg, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-//		}
 	return;
 #endif
 
 	left_4:
 	j = 0;
-//	for(; j<n-3; j+=4)
 	for(; j<n; j+=4)
 		{
-		kernel_dtrmm_nt_ru_4x4_vs_lib4(n-j, &alpha, &pA[j*ps+i*sda], &pB[j*ps+j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+		kernel_dtrmm_nt_ru_4x4_vs_lib4(n-j, &alpha, &pA[j*ps+i*sda], &pB[j*ps+j*sdb], &pD[j*ps+i*sdd], m-i, n-j);
 		}
-//	if(j<n) // TODO specialized edge routine
-//		{
-//		kernel_dtrmm_nt_ru_4x4_vs_lib4(n-j, &pA[j*ps+i*sda], &pB[j*ps+j*sdb], alg, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
-//		}
 	return;
 
 	}

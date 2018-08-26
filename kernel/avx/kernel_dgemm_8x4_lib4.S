@@ -10407,8 +10407,8 @@ kernel_dtrmm_nn_rl_8x4_gen_lib4:
 
 
 
-//                                  rdi    rsi            rdx        rcx      r8         r9            rsp+8      rsp+16   rsp+24     rsp+32
-// void kernel_dtrmm_nt_ru_8x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd);
+//                                  1      2              3          4        5          6          7
+// void kernel_dtrmm_nt_ru_8x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *D, int sdd);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -10495,26 +10495,22 @@ kernel_dtrmm_nt_ru_8x4_lib4:
 	// call inner scale
 
 	movq	ARG2, %r10 // alpha
-	movq	ARG6, %r11 // beta
-	movq	ARG7, %r12 // C
-	movq	ARG8, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_8X4_LIB4
+	INNER_SCALE_A0_8X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_ab_8x4_lib4
+	call inner_scale_a0_8x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_scale_ab_8x4_lib4
+	callq _inner_scale_a0_8x4_lib4
 #endif
 #endif
 
 
 	// store n
 
-	movq	ARG9, %r10 // D
-	movq	ARG10, %r11 // sdd
+	movq	ARG6, %r10 // D
+	movq	ARG7, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
 #if MACRO_LEVEL>=1
@@ -10540,8 +10536,8 @@ kernel_dtrmm_nt_ru_8x4_lib4:
 
 
 
-//                                 rdi     rsi            rdx        rcx      r8         r9            rsp+8      rsp+16   rsp+24     rsp+32   rsp+40  rsp+48
-// void kernel_dtrmm_nt_ru_8x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, int km, int kn);
+//                                  1      2              3          4        5          6          7        8       9
+// void kernel_dtrmm_nt_ru_8x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *D, int sdd, int km, int kn);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -10629,10 +10625,6 @@ kernel_dtrmm_nt_ru_8x4_vs_lib4:
 	// call inner scale
 
 	movq	ARG2, %r10 // alpha
-	movq	ARG6, %r11 // beta
-	movq	ARG7, %r12 // C
-	movq	ARG8, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X4_LIB4
@@ -10647,12 +10639,11 @@ kernel_dtrmm_nt_ru_8x4_vs_lib4:
 
 // store n
 
-	movq	ARG9, %r10 // store address D
-	movq	ARG10, %r11 // sdd
+	movq	ARG6, %r10 // store address D
+	movq	ARG7, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-
-	movq	ARG11, %r12 // km
-	movq	ARG12, %r13 // kn
+	movq	ARG8, %r12 // km 
+	movq	ARG9, %r13 // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_VS_LIB4

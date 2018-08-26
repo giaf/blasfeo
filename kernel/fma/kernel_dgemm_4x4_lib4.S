@@ -1282,6 +1282,10 @@ inner_blend_scale_ab_4x4_lib4:
 	mulpd	%xmm15, %xmm1
 	mulpd	%xmm15, %xmm2
 	mulpd	%xmm15, %xmm3
+	mulpd	%xmm15, %xmm4
+	mulpd	%xmm15, %xmm5
+	mulpd	%xmm15, %xmm6
+	mulpd	%xmm15, %xmm7
 
 
 	// beta
@@ -1400,6 +1404,89 @@ inner_blend_scale_11_4x4_lib4:
 
 #if defined(OS_LINUX)
 	.size	inner_blend_scale_11_4x4_lib4, .-inner_blend_scale_11_4x4_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// scale for generic alpha and beta
+//
+// input arguments:
+// r10   <- alpha
+// xmm0  <- [d00 d10]
+// xmm1  <- [d20 d30]
+// xmm2  <- [d01 d11]
+// xmm3  <- [d21 d31]
+// xmm0  <- [d02 d12]
+// xmm1  <- [d22 d32]
+// xmm2  <- [d03 d13]
+// xmm3  <- [d23 d33]
+// xmm8  <- dirty
+// xmm9  <- dirty
+// xmm10 <- dirty
+// xmm11 <- dirty
+// xmm12 <- dirty
+// xmm13 <- dirty
+// xmm14 <- dirty
+// xmm15 <- dirty
+
+// output arguments:
+// r10   <- alpha
+// xmm0  <- [d00 d10]
+// xmm1  <- [d20 d30]
+// xmm2  <- [d01 d11]
+// xmm3  <- [d21 d31]
+// xmm0  <- [d02 d12]
+// xmm1  <- [d22 d32]
+// xmm2  <- [d03 d13]
+// xmm3  <- [d23 d33]
+// xmm8  <- dirty
+// xmm9  <- dirty
+// xmm10 <- dirty
+// xmm11 <- dirty
+// xmm12 <- dirty
+// xmm13 <- dirty
+// xmm14 <- dirty
+// xmm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_A0_4X4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_a0_4x4_lib4, @function
+inner_scale_a0_4x4_lib4:
+#elif defined(OS_MAC)
+_inner_scale_a0_4x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_a0_4x4_lib4; .scl 2; .type 32; .endef
+inner_scale_a0_4x4_lib4:
+#endif
+#endif
+	
+	// alpha
+	movddup	0(%r10), %xmm15
+
+	mulpd	%xmm15, %xmm0
+	mulpd	%xmm15, %xmm1
+	mulpd	%xmm15, %xmm2
+	mulpd	%xmm15, %xmm3
+	mulpd	%xmm15, %xmm4
+	mulpd	%xmm15, %xmm5
+	mulpd	%xmm15, %xmm6
+	mulpd	%xmm15, %xmm7
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_scale_a0_4x4_lib4, .-inner_scale_a0_4x4_lib4
 #endif
 #endif
 
@@ -2628,8 +2715,8 @@ kernel_dsyrk_nt_l_4x4_vs_lib4:
 
 
 
-//                                  rdi    rsi            rdx        rcx        r8            r9         rsp+8
-// void kernel_dtrmm_nt_ru_4x4_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D);
+//                                  1      2              3          4          5
+// void kernel_dtrmm_nt_ru_4x4_vs_lib4(int k, double *alpha, double *A, double *B, double *D);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2711,23 +2798,21 @@ kernel_dtrmm_nt_ru_4x4_lib4:
 	// call inner scale
 
 	movq	ARG2, %r10 // alpha
-	movq	ARG5, %r11 // beta
-	movq	ARG6, %r12   // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_4X4_LIB4
+	INNER_SCALE_A0_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_ab_4x4_lib4
+	call inner_scale_a0_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_scale_ab_4x4_lib4
+	callq _inner_scale_0b_4x4_lib4
 #endif
 #endif
 
 
 	// store n
 
-	movq	ARG7, %r10 // D
+	movq	ARG5, %r10 // D
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB4
@@ -2752,8 +2837,8 @@ kernel_dtrmm_nt_ru_4x4_lib4:
 
 
 
-//                                     rdi    rsi            rdx        rcx        r8            r9         rsp+8     rsp+16   rsp+24
-// void kernel_dtrmm_nt_ru_4x4_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int km, int kn);
+//                                     1      2              3          4          5          6       7
+// void kernel_dtrmm_nt_ru_4x4_vs_lib4(int k, double *alpha, double *A, double *B, double *D, int km, int kn);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -2836,25 +2921,24 @@ kernel_dtrmm_nt_ru_4x4_vs_lib4:
 	// call inner loader nn
 
 	movq	ARG2, %r10 // alpha
-	movq	ARG5, %r11 // beta
-	movq	ARG6, %r12   // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_4X4_LIB4
+	INNER_SCALE_A0_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_ab_4x4_lib4
+	call inner_scale_a0_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_scale_ab_4x4_lib4
+	callq _inner_scale_a0_4x4_lib4
 #endif
 #endif
 
 
 	// store n
 
-	movq	ARG7, %r10 // D
-	movq	ARG8, %r11 // km 
-	movq	ARG9, %r12 // kn 
+	movq	ARG5, %r10 // D
+	movq	ARG6, %r11 // km 
+	movq	ARG6, %r12   // C
+	movq	ARG7, %r12 // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_VS_LIB4
