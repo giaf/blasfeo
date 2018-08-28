@@ -9415,6 +9415,16 @@ kernel_dlarfb4_r_4_lla_lib4:
 
 
 
+#if defined(BLAS_API)
+
+#include "kernel_dgemm_4x4_lib.S"
+
+#endif
+
+
+
+
+
 	// read-only data
 #if defined(OS_LINUX)
 	.section	.rodata.cst32,"aM",@progbits,32
@@ -9594,10 +9604,10 @@ LC10: // { -1.0 1.0 1.0 1.0 }
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
-.LC11: // { -1.0 1.0 1.0 1.0 }
+.LC11:
 #elif defined(OS_MAC)
 	.align 5
-LC11: // { -1.0 1.0 1.0 1.0 }
+LC11:
 #endif
 	.long	0x0
 	.long	0x80000000
@@ -9610,17 +9620,7 @@ LC11: // { -1.0 1.0 1.0 1.0 }
 	.long	0x0
 	.long	0x80000000
 
-#if 0
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovapd		.LC11(%rip), %ymm15
-#elif defined(OS_MAC)
-	vmovapd		LC11(%rip), %ymm15
-#endif
-	vxorpd		%ymm15, %ymm0, %ymm0
-	vxorpd		%ymm15, %ymm1, %ymm1
-	vxorpd		%ymm15, %ymm2, %ymm2
-	vxorpd		%ymm15, %ymm3, %ymm3
-#endif
+
 
 
 

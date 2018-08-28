@@ -12980,6 +12980,16 @@ kernel_dlarfb4_r_8_lla_lib4:
 
 
 
+#if defined(BLAS_API)
+
+#include "kernel_dgemm_8x4_lib.S"
+
+#endif
+
+
+
+
+
 	// read-only data
 #if defined(OS_LINUX)
 	.section	.rodata.cst32,"aM",@progbits,32
@@ -13020,14 +13030,10 @@ LC01: // { -1 -1 -1 -1 }
 LC02: // { 3.5 2.5 1.5 0.5 }
 	.align 5
 #endif
-	.long	0
-	.long	1071644672
-	.long	0
-	.long	1073217536
-	.long	0
-	.long	1074003968
-	.long	0
-	.long	1074528256
+	.double 0.5
+	.double 1.5
+	.double 2.5
+	.double 3.5
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -13036,14 +13042,10 @@ LC02: // { 3.5 2.5 1.5 0.5 }
 LC03: // { 7.5 6.5 5.5 4.5 }
 	.align 5
 #endif
-	.long	0
-	.long	1074921472
-	.long	0
-	.long	1075183616
-	.long	0
-	.long	1075445760
-	.long	0
-	.long	1075707904
+	.double 4.5
+	.double 5.5
+	.double 6.5
+	.double 7.5
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -13159,10 +13161,10 @@ LC10: // { -1.0 1.0 1.0 1.0 }
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
-.LC11: // { -1.0 1.0 1.0 1.0 }
+.LC11:
 #elif defined(OS_MAC)
 	.align 5
-LC11: // { -1.0 1.0 1.0 1.0 }
+LC11:
 #endif
 	.long	0x0
 	.long	0x80000000
@@ -13175,22 +13177,6 @@ LC11: // { -1.0 1.0 1.0 1.0 }
 	.long	0x0
 	.long	0x80000000
 
-#if 0
-	// change sign
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovapd		.LC11(%rip), %ymm15
-#elif defined(OS_MAC)
-	vmovapd		LC11(%rip), %ymm15
-#endif
-	vxorpd		%ymm15, %ymm0, %ymm0
-	vxorpd		%ymm15, %ymm1, %ymm1
-	vxorpd		%ymm15, %ymm2, %ymm2
-	vxorpd		%ymm15, %ymm3, %ymm3
-	vxorpd		%ymm15, %ymm4, %ymm4
-	vxorpd		%ymm15, %ymm5, %ymm5
-	vxorpd		%ymm15, %ymm6, %ymm6
-	vxorpd		%ymm15, %ymm7, %ymm7
-#endif
 
 
 

@@ -37,8 +37,9 @@ include ../Makefile.blas
 
 # all benchmarks
 OBJS =
-OBJS += benchmark_d_blas.o
-OBJS += benchmark_s_blas.o
+OBJS += benchmark_d_blasfeo_api.o
+OBJS += benchmark_s_blasfeo_api.o
+OBJS += benchmark_d_blas_api.o
 
 %.o: %.c
 	# build obj
@@ -61,8 +62,9 @@ common: bin_dir
 build: common $(OBJS)
 
 run:
-	./$(BINARY_DIR)/benchmark_d_blas.o.out
-#	./$(BINARY_DIR)/benchmark_s_blas.o.out
+	./$(BINARY_DIR)/benchmark_d_blasfeo_api.o.out
+#	./$(BINARY_DIR)/benchmark_s_blasfeo_api.o.out
+#	./$(BINARY_DIR)/benchmark_d_blas_api.o.out
 
 
 clean:
@@ -102,7 +104,7 @@ DP_BLAS3_OBJS += dgemm_nt
 RUN_DP_BLAS3_OBJS += run_dgemm_nt
 
 dgemm_nt: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgemm_nt_benchmark.o -DDOUBLE_PRECISION -DGEMM_NT
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dgemm_nt_benchmark.o -DDOUBLE_PRECISION -DGEMM_NT
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dgemm_nt_benchmark.o -o $(BINARY_DIR)/dgemm_nt_benchmark.out $(LIBS)
 
 run_dgemm_nt:
@@ -118,7 +120,7 @@ DP_BLAS3_OBJS += dgemm_nn
 RUN_DP_BLAS3_OBJS += run_dgemm_nn
 
 dgemm_nn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgemm_nn_benchmark.o -DDOUBLE_PRECISION -DGEMM_NN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dgemm_nn_benchmark.o -DDOUBLE_PRECISION -DGEMM_NN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dgemm_nn_benchmark.o -o $(BINARY_DIR)/dgemm_nn_benchmark.out $(LIBS)
 
 run_dgemm_nn:
@@ -134,7 +136,7 @@ DP_BLAS3_OBJS += dsyrk_ln
 RUN_DP_BLAS3_OBJS += run_dsyrk_ln
 
 dsyrk_ln: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dsyrk_ln_benchmark.o -DDOUBLE_PRECISION -DSYRK_LN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dsyrk_ln_benchmark.o -DDOUBLE_PRECISION -DSYRK_LN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dsyrk_ln_benchmark.o -o $(BINARY_DIR)/dsyrk_ln_benchmark.out $(LIBS)
 
 run_dsyrk_ln:
@@ -150,7 +152,7 @@ DP_BLAS3_OBJS += dtrmm_rlnn
 RUN_DP_BLAS3_OBJS += run_dtrmm_rlnn
 
 dtrmm_rlnn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrmm_rlnn_benchmark.o -DDOUBLE_PRECISION -DTRMM_RLNN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dtrmm_rlnn_benchmark.o -DDOUBLE_PRECISION -DTRMM_RLNN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrmm_rlnn_benchmark.o -o $(BINARY_DIR)/dtrmm_rlnn_benchmark.out $(LIBS)
 
 run_dtrmm_rlnn:
@@ -166,7 +168,7 @@ DP_BLAS3_OBJS += dtrmm_rutn
 RUN_DP_BLAS3_OBJS += run_dtrmm_rutn
 
 dtrmm_rutn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrmm_rutn_benchmark.o -DDOUBLE_PRECISION -DTRMM_RUTN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dtrmm_rutn_benchmark.o -DDOUBLE_PRECISION -DTRMM_RUTN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrmm_rutn_benchmark.o -o $(BINARY_DIR)/dtrmm_rutn_benchmark.out $(LIBS)
 
 run_dtrmm_rutn:
@@ -182,7 +184,7 @@ DP_BLAS3_OBJS += dtrsm_llnu
 RUN_DP_BLAS3_OBJS += run_dtrsm_llnu
 
 dtrsm_llnu: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrsm_llnu_benchmark.o -DDOUBLE_PRECISION -DTRSM_LLNU
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dtrsm_llnu_benchmark.o -DDOUBLE_PRECISION -DTRSM_LLNU
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrsm_llnu_benchmark.o -o $(BINARY_DIR)/dtrsm_llnu_benchmark.out $(LIBS)
 
 run_dtrsm_llnu:
@@ -198,7 +200,7 @@ DP_BLAS3_OBJS += dtrsm_lunn
 RUN_DP_BLAS3_OBJS += run_dtrsm_lunn
 
 dtrsm_lunn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrsm_lunn_benchmark.o -DDOUBLE_PRECISION -DTRSM_LUNN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dtrsm_lunn_benchmark.o -DDOUBLE_PRECISION -DTRSM_LUNN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrsm_lunn_benchmark.o -o $(BINARY_DIR)/dtrsm_lunn_benchmark.out $(LIBS)
 
 run_dtrsm_lunn:
@@ -214,7 +216,7 @@ DP_BLAS3_OBJS += dtrsm_rltn
 RUN_DP_BLAS3_OBJS += run_dtrsm_rltn
 
 dtrsm_rltn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrsm_rltn_benchmark.o -DDOUBLE_PRECISION -DTRSM_RLTN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dtrsm_rltn_benchmark.o -DDOUBLE_PRECISION -DTRSM_RLTN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrsm_rltn_benchmark.o -o $(BINARY_DIR)/dtrsm_rltn_benchmark.out $(LIBS)
 
 run_dtrsm_rltn:
@@ -230,7 +232,7 @@ DP_BLAS3_OBJS += dtrsm_rltu
 RUN_DP_BLAS3_OBJS += run_dtrsm_rltu
 
 dtrsm_rltu: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrsm_rltu_benchmark.o -DDOUBLE_PRECISION -DTRSM_RLTU
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dtrsm_rltu_benchmark.o -DDOUBLE_PRECISION -DTRSM_RLTU
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrsm_rltu_benchmark.o -o $(BINARY_DIR)/dtrsm_rltu_benchmark.out $(LIBS)
 
 run_dtrsm_rltu:
@@ -246,7 +248,7 @@ DP_BLAS3_OBJS += dtrsm_rutn
 RUN_DP_BLAS3_OBJS += run_dtrsm_rutn
 
 dtrsm_rutn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrsm_rutn_benchmark.o -DDOUBLE_PRECISION -DTRSM_RUTN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dtrsm_rutn_benchmark.o -DDOUBLE_PRECISION -DTRSM_RUTN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrsm_rutn_benchmark.o -o $(BINARY_DIR)/dtrsm_rutn_benchmark.out $(LIBS)
 
 run_dtrsm_rutn:
@@ -262,7 +264,7 @@ DP_LAPACK_OBJS += dgelqf
 RUN_DP_LAPACK_OBJS += run_dgelqf
 
 dgelqf: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgelqf_benchmark.o -DDOUBLE_PRECISION -DGELQF
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dgelqf_benchmark.o -DDOUBLE_PRECISION -DGELQF
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dgelqf_benchmark.o -o $(BINARY_DIR)/dgelqf_benchmark.out $(LIBS)
 
 run_dgelqf:
@@ -278,7 +280,7 @@ DP_LAPACK_OBJS += dgeqrf
 RUN_DP_LAPACK_OBJS += run_dgeqrf
 
 dgeqrf: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgeqrf_benchmark.o -DDOUBLE_PRECISION -DGEQRF
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dgeqrf_benchmark.o -DDOUBLE_PRECISION -DGEQRF
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dgeqrf_benchmark.o -o $(BINARY_DIR)/dgeqrf_benchmark.out $(LIBS)
 
 run_dgeqrf:
@@ -294,7 +296,7 @@ DP_LAPACK_OBJS += dgetrf_nopivot
 RUN_DP_LAPACK_OBJS += run_dgetrf_nopivot
 
 dgetrf_nopivot: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgetrf_nopivot_benchmark.o -DDOUBLE_PRECISION -DGETRF_NOPIVOT
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dgetrf_nopivot_benchmark.o -DDOUBLE_PRECISION -DGETRF_NOPIVOT
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dgetrf_nopivot_benchmark.o -o $(BINARY_DIR)/dgetrf_nopivot_benchmark.out $(LIBS)
 
 run_dgetrf_nopivot:
@@ -310,7 +312,7 @@ DP_LAPACK_OBJS += dgetrf_rowpivot
 RUN_DP_LAPACK_OBJS += run_dgetrf_rowpivot
 
 dgetrf_rowpivot: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgetrf_rowpivot_benchmark.o -DDOUBLE_PRECISION -DGETRF_ROWPIVOT
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dgetrf_rowpivot_benchmark.o -DDOUBLE_PRECISION -DGETRF_ROWPIVOT
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dgetrf_rowpivot_benchmark.o -o $(BINARY_DIR)/dgetrf_rowpivot_benchmark.out $(LIBS)
 
 run_dgetrf_rowpivot:
@@ -326,7 +328,7 @@ DP_LAPACK_OBJS += dpotrf_l
 RUN_DP_LAPACK_OBJS += run_dpotrf_l
 
 dpotrf_l: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dpotrf_l_benchmark.o -DDOUBLE_PRECISION -DPOTRF_L
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dpotrf_l_benchmark.o -DDOUBLE_PRECISION -DPOTRF_L
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dpotrf_l_benchmark.o -o $(BINARY_DIR)/dpotrf_l_benchmark.out $(LIBS)
 
 run_dpotrf_l:
@@ -342,7 +344,7 @@ DP_BLAS2_OBJS += dgemv_n
 RUN_DP_BLAS2_OBJS += run_dgemv_n
 
 dgemv_n: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgemv_n_benchmark.o -DDOUBLE_PRECISION -DGEMV_N
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dgemv_n_benchmark.o -DDOUBLE_PRECISION -DGEMV_N
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dgemv_n_benchmark.o -o $(BINARY_DIR)/dgemv_n_benchmark.out $(LIBS)
 
 run_dgemv_n:
@@ -358,7 +360,7 @@ DP_BLAS2_OBJS += dgemv_t
 RUN_DP_BLAS2_OBJS += run_dgemv_t
 
 dgemv_t: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgemv_t_benchmark.o -DDOUBLE_PRECISION -DGEMV_T
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dgemv_t_benchmark.o -DDOUBLE_PRECISION -DGEMV_T
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dgemv_t_benchmark.o -o $(BINARY_DIR)/dgemv_t_benchmark.out $(LIBS)
 
 run_dgemv_t:
@@ -374,7 +376,7 @@ DP_BLAS2_OBJS += dtrmv_lnn
 RUN_DP_BLAS2_OBJS += run_dtrmv_lnn
 
 dtrmv_lnn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrmv_lnn_benchmark.o -DDOUBLE_PRECISION -DTRMV_LNN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dtrmv_lnn_benchmark.o -DDOUBLE_PRECISION -DTRMV_LNN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrmv_lnn_benchmark.o -o $(BINARY_DIR)/dtrmv_lnn_benchmark.out $(LIBS)
 
 run_dtrmv_lnn:
@@ -390,7 +392,7 @@ DP_BLAS2_OBJS += dtrmv_ltn
 RUN_DP_BLAS2_OBJS += run_dtrmv_ltn
 
 dtrmv_ltn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrmv_ltn_benchmark.o -DDOUBLE_PRECISION -DTRMV_LTN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dtrmv_ltn_benchmark.o -DDOUBLE_PRECISION -DTRMV_LTN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrmv_ltn_benchmark.o -o $(BINARY_DIR)/dtrmv_ltn_benchmark.out $(LIBS)
 
 run_dtrmv_ltn:
@@ -406,7 +408,7 @@ DP_BLAS2_OBJS += dtrsv_lnn
 RUN_DP_BLAS2_OBJS += run_dtrsv_lnn
 
 dtrsv_lnn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrsv_lnn_benchmark.o -DDOUBLE_PRECISION -DTRSV_LNN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dtrsv_lnn_benchmark.o -DDOUBLE_PRECISION -DTRSV_LNN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrsv_lnn_benchmark.o -o $(BINARY_DIR)/dtrsv_lnn_benchmark.out $(LIBS)
 
 run_dtrsv_lnn:
@@ -422,7 +424,7 @@ DP_BLAS2_OBJS += dtrsv_ltn
 RUN_DP_BLAS2_OBJS += run_dtrsv_ltn
 
 dtrsv_ltn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dtrsv_ltn_benchmark.o -DDOUBLE_PRECISION -DTRSV_LTN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dtrsv_ltn_benchmark.o -DDOUBLE_PRECISION -DTRSV_LTN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dtrsv_ltn_benchmark.o -o $(BINARY_DIR)/dtrsv_ltn_benchmark.out $(LIBS)
 
 run_dtrsv_ltn:
@@ -438,7 +440,7 @@ DP_BLAS2_OBJS += dgemv_nt
 RUN_DP_BLAS2_OBJS += run_dgemv_nt
 
 dgemv_nt: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dgemv_nt_benchmark.o -DDOUBLE_PRECISION -DGEMV_NT
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dgemv_nt_benchmark.o -DDOUBLE_PRECISION -DGEMV_NT
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dgemv_nt_benchmark.o -o $(BINARY_DIR)/dgemv_nt_benchmark.out $(LIBS)
 
 run_dgemv_nt:
@@ -454,7 +456,7 @@ DP_BLAS2_OBJS += dsymv_l
 RUN_DP_BLAS2_OBJS += run_dsymv_l
 
 dsymv_l: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/dsymv_l_benchmark.o -DDOUBLE_PRECISION -DSYMV_L
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/dsymv_l_benchmark.o -DDOUBLE_PRECISION -DSYMV_L
 	$(CC) $(CFLAGS) $(BINARY_DIR)/dsymv_l_benchmark.o -o $(BINARY_DIR)/dsymv_l_benchmark.out $(LIBS)
 
 run_dsymv_l:
@@ -470,7 +472,7 @@ SP_BLAS3_OBJS += sgemm_nt
 RUN_SP_BLAS3_OBJS += run_sgemm_nt
 
 sgemm_nt: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgemm_nt_benchmark.o -DSINGLE_PRECISION -DGEMM_NT
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/sgemm_nt_benchmark.o -DSINGLE_PRECISION -DGEMM_NT
 	$(CC) $(CFLAGS) $(BINARY_DIR)/sgemm_nt_benchmark.o -o $(BINARY_DIR)/sgemm_nt_benchmark.out $(LIBS)
 
 run_sgemm_nt:
@@ -486,7 +488,7 @@ SP_BLAS3_OBJS += sgemm_nn
 RUN_SP_BLAS3_OBJS += run_sgemm_nn
 
 sgemm_nn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgemm_nn_benchmark.o -DSINGLE_PRECISION -DGEMM_NN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/sgemm_nn_benchmark.o -DSINGLE_PRECISION -DGEMM_NN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/sgemm_nn_benchmark.o -o $(BINARY_DIR)/sgemm_nn_benchmark.out $(LIBS)
 
 run_sgemm_nn:
@@ -502,7 +504,7 @@ SP_BLAS3_OBJS += ssyrk_ln
 RUN_SP_BLAS3_OBJS += run_ssyrk_ln
 
 ssyrk_ln: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/ssyrk_ln_benchmark.o -DSINGLE_PRECISION -DSYRK_LN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/ssyrk_ln_benchmark.o -DSINGLE_PRECISION -DSYRK_LN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/ssyrk_ln_benchmark.o -o $(BINARY_DIR)/ssyrk_ln_benchmark.out $(LIBS)
 
 run_ssyrk_ln:
@@ -518,7 +520,7 @@ SP_BLAS3_OBJS += strmm_rlnn
 RUN_SP_BLAS3_OBJS += run_strmm_rlnn
 
 strmm_rlnn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strmm_rlnn_benchmark.o -DSINGLE_PRECISION -DTRMM_RLNN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/strmm_rlnn_benchmark.o -DSINGLE_PRECISION -DTRMM_RLNN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/strmm_rlnn_benchmark.o -o $(BINARY_DIR)/strmm_rlnn_benchmark.out $(LIBS)
 
 run_strmm_rlnn:
@@ -534,7 +536,7 @@ SP_BLAS3_OBJS += strmm_rutn
 RUN_SP_BLAS3_OBJS += run_strmm_rutn
 
 strmm_rutn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strmm_rutn_benchmark.o -DSINGLE_PRECISION -DTRMM_RUTN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/strmm_rutn_benchmark.o -DSINGLE_PRECISION -DTRMM_RUTN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/strmm_rutn_benchmark.o -o $(BINARY_DIR)/strmm_rutn_benchmark.out $(LIBS)
 
 run_strmm_rutn:
@@ -550,7 +552,7 @@ SP_BLAS3_OBJS += strsm_lunn
 RUN_SP_BLAS3_OBJS += run_strsm_lunn
 
 strsm_lunn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strsm_lunn_benchmark.o -DSINGLE_PRECISION -DTRSM_LUNN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/strsm_lunn_benchmark.o -DSINGLE_PRECISION -DTRSM_LUNN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/strsm_lunn_benchmark.o -o $(BINARY_DIR)/strsm_lunn_benchmark.out $(LIBS)
 
 run_strsm_lunn:
@@ -566,7 +568,7 @@ SP_BLAS3_OBJS += strsm_llnu
 RUN_SP_BLAS3_OBJS += run_strsm_llnu
 
 strsm_llnu: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strsm_llnu_benchmark.o -DSINGLE_PRECISION -DTRSM_LLNU
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/strsm_llnu_benchmark.o -DSINGLE_PRECISION -DTRSM_LLNU
 	$(CC) $(CFLAGS) $(BINARY_DIR)/strsm_llnu_benchmark.o -o $(BINARY_DIR)/strsm_llnu_benchmark.out $(LIBS)
 
 run_strsm_llnu:
@@ -582,7 +584,7 @@ SP_BLAS3_OBJS += strsm_rltn
 RUN_SP_BLAS3_OBJS += run_strsm_rltn
 
 strsm_rltn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strsm_rltn_benchmark.o -DSINGLE_PRECISION -DTRSM_RLTN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/strsm_rltn_benchmark.o -DSINGLE_PRECISION -DTRSM_RLTN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/strsm_rltn_benchmark.o -o $(BINARY_DIR)/strsm_rltn_benchmark.out $(LIBS)
 
 run_strsm_rltn:
@@ -598,7 +600,7 @@ SP_BLAS3_OBJS += strsm_rltu
 RUN_SP_BLAS3_OBJS += run_strsm_rltu
 
 strsm_rltu: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strsm_rltu_benchmark.o -DSINGLE_PRECISION -DTRSM_RLTU
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/strsm_rltu_benchmark.o -DSINGLE_PRECISION -DTRSM_RLTU
 	$(CC) $(CFLAGS) $(BINARY_DIR)/strsm_rltu_benchmark.o -o $(BINARY_DIR)/strsm_rltu_benchmark.out $(LIBS)
 
 run_strsm_rltu:
@@ -614,7 +616,7 @@ SP_BLAS3_OBJS += strsm_rutn
 RUN_SP_BLAS3_OBJS += run_strsm_rutn
 
 strsm_rutn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strsm_rutn_benchmark.o -DSINGLE_PRECISION -DTRSM_RLTU
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/strsm_rutn_benchmark.o -DSINGLE_PRECISION -DTRSM_RLTU
 	$(CC) $(CFLAGS) $(BINARY_DIR)/strsm_rutn_benchmark.o -o $(BINARY_DIR)/strsm_rutn_benchmark.out $(LIBS)
 
 run_strsm_rutn:
@@ -630,7 +632,7 @@ SP_LAPACK_OBJS += sgelqf
 RUN_SP_LAPACK_OBJS += run_sgelqf
 
 sgelqf: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgelqf_benchmark.o -DSINGLE_PRECISION -DGELQF
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/sgelqf_benchmark.o -DSINGLE_PRECISION -DGELQF
 	$(CC) $(CFLAGS) $(BINARY_DIR)/sgelqf_benchmark.o -o $(BINARY_DIR)/sgelqf_benchmark.out $(LIBS)
 
 run_sgelqf:
@@ -646,7 +648,7 @@ SP_LAPACK_OBJS += sgeqrf
 RUN_SP_LAPACK_OBJS += run_sgeqrf
 
 sgeqrf: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgeqrf_benchmark.o -DSINGLE_PRECISION -DGEQRF
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/sgeqrf_benchmark.o -DSINGLE_PRECISION -DGEQRF
 	$(CC) $(CFLAGS) $(BINARY_DIR)/sgeqrf_benchmark.o -o $(BINARY_DIR)/sgeqrf_benchmark.out $(LIBS)
 
 run_sgeqrf:
@@ -662,7 +664,7 @@ SP_LAPACK_OBJS += sgetrf_nopivot
 RUN_SP_LAPACK_OBJS += run_sgetrf_nopivot
 
 sgetrf_nopivot: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgetrf_nopivot_benchmark.o -DSINGLE_PRECISION -DGETRF_NOPIVOT
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/sgetrf_nopivot_benchmark.o -DSINGLE_PRECISION -DGETRF_NOPIVOT
 	$(CC) $(CFLAGS) $(BINARY_DIR)/sgetrf_nopivot_benchmark.o -o $(BINARY_DIR)/sgetrf_nopivot_benchmark.out $(LIBS)
 
 run_sgetrf_nopivot:
@@ -678,7 +680,7 @@ SP_LAPACK_OBJS += sgetrf_rowpivot
 RUN_SP_LAPACK_OBJS += run_sgetrf_rowpivot
 
 sgetrf_rowpivot: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgetrf_rowpivot_benchmark.o -DSINGLE_PRECISION -DGETRF_ROWPIVOT
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/sgetrf_rowpivot_benchmark.o -DSINGLE_PRECISION -DGETRF_ROWPIVOT
 	$(CC) $(CFLAGS) $(BINARY_DIR)/sgetrf_rowpivot_benchmark.o -o $(BINARY_DIR)/sgetrf_rowpivot_benchmark.out $(LIBS)
 
 run_sgetrf_rowpivot:
@@ -694,7 +696,7 @@ SP_LAPACK_OBJS += spotrf_l
 RUN_SP_LAPACK_OBJS += run_spotrf_l
 
 spotrf_l: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/spotrf_l_benchmark.o -DSINGLE_PRECISION -DPOTRF_L
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/spotrf_l_benchmark.o -DSINGLE_PRECISION -DPOTRF_L
 	$(CC) $(CFLAGS) $(BINARY_DIR)/spotrf_l_benchmark.o -o $(BINARY_DIR)/spotrf_l_benchmark.out $(LIBS)
 
 run_spotrf_l:
@@ -710,7 +712,7 @@ SP_BLAS2_OBJS += sgemv_n
 RUN_SP_BLAS2_OBJS += run_sgemv_n
 
 sgemv_n: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgemv_n_benchmark.o -DSINGLE_PRECISION -DGEMV_N
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/sgemv_n_benchmark.o -DSINGLE_PRECISION -DGEMV_N
 	$(CC) $(CFLAGS) $(BINARY_DIR)/sgemv_n_benchmark.o -o $(BINARY_DIR)/sgemv_n_benchmark.out $(LIBS)
 
 run_sgemv_n:
@@ -726,7 +728,7 @@ SP_BLAS2_OBJS += sgemv_t
 RUN_SP_BLAS2_OBJS += run_sgemv_t
 
 sgemv_t: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgemv_t_benchmark.o -DSINGLE_PRECISION -DGEMV_T
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/sgemv_t_benchmark.o -DSINGLE_PRECISION -DGEMV_T
 	$(CC) $(CFLAGS) $(BINARY_DIR)/sgemv_t_benchmark.o -o $(BINARY_DIR)/sgemv_t_benchmark.out $(LIBS)
 
 run_sgemv_t:
@@ -742,7 +744,7 @@ SP_BLAS2_OBJS += strmv_lnn
 RUN_SP_BLAS2_OBJS += run_strmv_lnn
 
 strmv_lnn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strmv_lnn_benchmark.o -DSINGLE_PRECISION -DTRMV_LNN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/strmv_lnn_benchmark.o -DSINGLE_PRECISION -DTRMV_LNN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/strmv_lnn_benchmark.o -o $(BINARY_DIR)/strmv_lnn_benchmark.out $(LIBS)
 
 run_strmv_lnn:
@@ -758,7 +760,7 @@ SP_BLAS2_OBJS += strmv_ltn
 RUN_SP_BLAS2_OBJS += run_strmv_ltn
 
 strmv_ltn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strmv_ltn_benchmark.o -DSINGLE_PRECISION -DTRMV_LTN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/strmv_ltn_benchmark.o -DSINGLE_PRECISION -DTRMV_LTN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/strmv_ltn_benchmark.o -o $(BINARY_DIR)/strmv_ltn_benchmark.out $(LIBS)
 
 run_strmv_ltn:
@@ -774,7 +776,7 @@ SP_BLAS2_OBJS += strsv_lnn
 RUN_SP_BLAS2_OBJS += run_strsv_lnn
 
 strsv_lnn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strsv_lnn_benchmark.o -DSINGLE_PRECISION -DTRSV_LNN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/strsv_lnn_benchmark.o -DSINGLE_PRECISION -DTRSV_LNN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/strsv_lnn_benchmark.o -o $(BINARY_DIR)/strsv_lnn_benchmark.out $(LIBS)
 
 run_strsv_lnn:
@@ -790,7 +792,7 @@ SP_BLAS2_OBJS += strsv_ltn
 RUN_SP_BLAS2_OBJS += run_strsv_ltn
 
 strsv_ltn: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/strsv_ltn_benchmark.o -DSINGLE_PRECISION -DTRSV_LTN
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/strsv_ltn_benchmark.o -DSINGLE_PRECISION -DTRSV_LTN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/strsv_ltn_benchmark.o -o $(BINARY_DIR)/strsv_ltn_benchmark.out $(LIBS)
 
 run_strsv_ltn:
@@ -806,7 +808,7 @@ SP_BLAS2_OBJS += sgemv_nt
 RUN_SP_BLAS2_OBJS += run_sgemv_nt
 
 sgemv_nt: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/sgemv_nt_benchmark.o -DSINGLE_PRECISION -DGEMV_NT
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/sgemv_nt_benchmark.o -DSINGLE_PRECISION -DGEMV_NT
 	$(CC) $(CFLAGS) $(BINARY_DIR)/sgemv_nt_benchmark.o -o $(BINARY_DIR)/sgemv_nt_benchmark.out $(LIBS)
 
 run_sgemv_nt:
@@ -822,7 +824,7 @@ SP_BLAS2_OBJS += ssymv_l
 RUN_SP_BLAS2_OBJS += run_ssymv_l
 
 ssymv_l: common
-	$(CC) $(CFLAGS) -c x_blas_benchmark.c -o $(BINARY_DIR)/ssymv_l_benchmark.o -DSINGLE_PRECISION -DSYMV_L
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/ssymv_l_benchmark.o -DSINGLE_PRECISION -DSYMV_L
 	$(CC) $(CFLAGS) $(BINARY_DIR)/ssymv_l_benchmark.o -o $(BINARY_DIR)/ssymv_l_benchmark.out $(LIBS)
 
 run_ssymv_l:

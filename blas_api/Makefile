@@ -27,44 +27,26 @@
 #                                                                                                 #
 ###################################################################################################
 
-include ../../Makefile.rule
+include ../Makefile.rule
 
-OBJS = 
+OBJS =
+
+ifeq ($(BLAS_API), 1)
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
-OBJS += \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dgemm_8x4_lib4.o \
-		kernel_dgemm_8x8_lib4.o \
-		kernel_dgemm_12x4_lib4.o \
-		kernel_dgemv_8_lib4.o \
-		kernel_dsymv_6_lib4.o \
-		kernel_dgetrf_pivot_4_lib4.o \
-		kernel_dgebp_lib4.o \
-		kernel_dgelqf_4_lib4.o \
-		kernel_dgetr_lib4.o \
-		\
-		kernel_sgemm_24x4_lib8.o \
-		kernel_sgemm_16x4_lib8.o \
-		kernel_sgemm_8x8_lib8.o \
-		kernel_sgemm_8x4_lib8.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		kernel_dpack_lib4.o \
-
+OBJS += dgemm.o dpotrf.o
 endif
 
 endif
 
-else # LA_REFERENCE | LA_BLAS
-
-endif # LA choice
+endif
 
 obj: $(OBJS)
 
 clean:
 	rm -f *.o
 	rm -f *.s
+
+

@@ -27,14 +27,14 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#ifndef BLASFEO_D_BLAS_H_
-#define BLASFEO_D_BLAS_H_
+
+
+// BLAS 3
+//
+void blasfeo_dgemm(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
 
 
 
-#include "blasfeo_d_blasfeo_api.h"
-#include "blasfeo_d_blas_api.h"
-
-
-
-#endif  // BLASFEO_D_BLAS_H_
+// LAPACK
+//
+void blasfeo_dpotrf(char *uplo, int *m, double *A, int *lda); //, int *info);

@@ -70,6 +70,12 @@ OBJS += \
 		kernel/avx/kernel_sgetr_lib8.o \
 		kernel/avx/kernel_sgead_lib8.o \
 
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		kernel/avx2/kernel_dpack_lib4.o \
+
+endif
+
 # blas
 OBJS += \
 		blasfeo_api/d_blas1_lib4.o \
@@ -85,6 +91,13 @@ OBJS += \
 		blasfeo_api/s_blas3_lib8.o \
 		blasfeo_api/s_blas3_diag_lib8.o \
 		blasfeo_api/s_lapack_lib8.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
 
 endif
 
@@ -600,6 +613,7 @@ static_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd auxiliary; $(MAKE) obj)
 	( cd blasfeo_api; $(MAKE) obj)
+	( cd blas_api; $(MAKE) obj)
 	$(AR) rcs libblasfeo.a $(OBJS)
 	mv libblasfeo.a ./lib/
 ifeq ($(TESTING_MODE), 1)
@@ -619,6 +633,7 @@ shared_library: target
 	( cd auxiliary; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
 	( cd blasfeo_api; $(MAKE) obj)
+	( cd blas_api; $(MAKE) obj)
 	$(CC) -shared -o libblasfeo.so $(OBJS) -Wl,-Bsymbolic
 	mv libblasfeo.so ./lib/
 ifeq ($(TESTING_MODE), 1)
