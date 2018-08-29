@@ -38,7 +38,13 @@
 #include "../include/blasfeo_d_kernel.h"
 #include "../include/blasfeo_d_blas.h"
 
+#if defined(REF_BLAS_BLIS)
+#include "../include/d_blas_64.h"
+#elif defined(REF_BLAS_MKL)
+#include "mkl.h"
+#else
 #include "../include/d_blas.h"
+#endif
 
 
 int main()
@@ -52,9 +58,15 @@ int main()
 	const double GHz_max = 3.3;
 	const double flops_max = 16;
 
+	FILE *f;
+	f = fopen("./build/tmp_run.m", "w"); // a
+
 	printf("A = [%f %f];\n", GHz_max, flops_max);
+	fprintf(f, "A = [%f %f];\n", GHz_max, flops_max);
 	printf("\n");
+	fprintf(f, "\n");
 	printf("B = [\n");
+	fprintf(f, "B = [\n");
 
 	int ii, jj, ll;
 
@@ -143,7 +155,7 @@ int main()
 		/* benchmarks */
 
 		char ta = 'n';
-		char tb = 'n';
+		char tb = 't';
 		char uplo = 'l';
 		int info = 0;
 
@@ -235,8 +247,8 @@ int main()
 			for(rep=0; rep<nrep; rep++)
 				{
 				
-				blasfeo_dgemm_nn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
-//				blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
+//				blasfeo_dgemm_nn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
+				blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
 //				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 
 				}
@@ -266,6 +278,11 @@ int main()
 			Gflops_blas, 100.0*Gflops_blas/Gflops_max,
 			Gflops_blas_pack, 100.0*Gflops_blas_pack/Gflops_max,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max);
+		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n",
+			n,
+			Gflops_blas, 100.0*Gflops_blas/Gflops_max,
+			Gflops_blas_pack, 100.0*Gflops_blas_pack/Gflops_max,
+			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max);
 
 		free(A);
 		free(B);
@@ -279,6 +296,9 @@ int main()
 		}
 
 	printf("];\n");
+	fprintf(f, "];\n");
+
+	fclose(f);
 
 	return 0;
 

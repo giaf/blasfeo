@@ -836,9 +836,13 @@ run_ssymv_l:
 
 # print
 
+print_blas_run:
+	cp print_blas_run.m ./build/
+	cd ./build/ ; octave-cli print_blas_run.m
+
 print_figures:
-	cp print_blas_benchmark.m ./$(BINARY_DIR)/data/
-	cd ./$(BINARY_DIR)/data/ ; octave-cli print_blas_benchmark.m
+	cp print_blasfeo_benchmark.m ./$(BINARY_DIR)/data/
+	cd ./$(BINARY_DIR)/data/ ; octave-cli print_blasfeo_benchmark.m
 
 # build
 
