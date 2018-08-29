@@ -83,6 +83,7 @@ endif
 # ONE_OBJS =
 ONE_OBJS = test_d_custom.o
 # ONE_OBJS = test_s_custom.o
+# ONE_OBJS = test_d_blas_api.o
 #
 # ONE_OBJS = test_d_aux.o
 # ONE_OBJS = test_s_aux.o
