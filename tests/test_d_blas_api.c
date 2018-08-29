@@ -38,6 +38,9 @@
 #include "../include/blasfeo_d_kernel.h"
 #include "../include/blasfeo_d_blas.h"
 
+#include "../include/d_blas.h"
+
+
 
 int main()
 	{

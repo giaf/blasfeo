@@ -31,10 +31,12 @@
 #include <stdio.h>
 
 #if defined(LA_BLAS_WRAPPER)
-#if defined(REF_BLAS_MKL)
+#if defined(REF_BLAS_BLIS)
+#include "../include/d_blas_64.h"
+#elif defined(REF_BLAS_MKL)
 #include "mkl.h"
 #else
-#include "d_blas.h"
+#include "../include/d_blas.h"
 #endif
 #endif
 
