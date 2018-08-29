@@ -45,6 +45,11 @@
 int main()
 	{
 
+#if !defined(BLAS_API)
+	printf("\nRecompile with BLAS_API=1 to run this benchmark!\n\n");
+	exit(1);
+#endif
+
 	int n = 16;
 
 	int ii;
@@ -94,10 +99,10 @@ int main()
 
 
 	double alpha = 1.0;
-	double beta = 1.0;
+	double beta = 0.0;
 
 	char ta = 'n';
-	char tb = 't';
+	char tb = 'n';
 	char uplo = 'l';
 	int info = 0;
 
@@ -111,7 +116,7 @@ int main()
 	for(ii=0; ii<n*n; ii++) C[ii] = -1;
 
 	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
-//	dgemm_(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, A, &n, &beta, C, &n);
+//	dgemm_(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
 	dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
 	dpotrf_(&uplo, &m0, C, &n, &info);
 
@@ -124,7 +129,7 @@ int main()
 	for(ii=0; ii<n*n; ii++) C[ii] = -1;
 
 	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
-//	blasfeo_dgemm(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, A, &n, &beta, C, &n);
+//	blasfeo_dgemm(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
 	blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
 	blasfeo_dpotrf(&uplo, &m0, C, &n);
 

@@ -38,6 +38,9 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 OBJS += dgemm.o dpotrf.o
 endif
+ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
+OBJS += dgemm.o dpotrf.o
+endif
 
 endif
 

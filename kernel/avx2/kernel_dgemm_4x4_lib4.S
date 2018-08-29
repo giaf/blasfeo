@@ -9465,14 +9465,10 @@ LC01: // { -1 -1 -1 -1 }
 	.align 5
 LC02: // { 3.5 2.5 1.5 0.5 }
 #endif
-	.long	0
-	.long	1071644672
-	.long	0
-	.long	1073217536
-	.long	0
-	.long	1074003968
-	.long	0
-	.long	1074528256
+	.double 0.5
+	.double 1.5
+	.double 2.5
+	.double 3.5
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -9481,14 +9477,10 @@ LC02: // { 3.5 2.5 1.5 0.5 }
 	.align 5
 LC03: // { 7.5 6.5 5.5 4.5 }
 #endif
-	.long	0
-	.long	1074921472
-	.long	0
-	.long	1075183616
-	.long	0
-	.long	1075445760
-	.long	0
-	.long	1075707904
+	.double 4.5
+	.double 5.5
+	.double 6.5
+	.double 7.5
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -9497,14 +9489,10 @@ LC03: // { 7.5 6.5 5.5 4.5 }
 	.align 5
 LC04: // { 1.0 1.0 1.0 1.0 }
 #endif
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
+	.double 1.0
+	.double 1.0
+	.double 1.0
+	.double 1.0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -9513,14 +9501,10 @@ LC04: // { 1.0 1.0 1.0 1.0 }
 	.align 5
 LC05: // { 1.0 1.0 1.0 -1.0 }
 #endif
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
+	.double -1.0
+	.double 1.0
+	.double 1.0
+	.double 1.0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -9529,14 +9513,10 @@ LC05: // { 1.0 1.0 1.0 -1.0 }
 	.align 5
 LC06: // { 1.0 1.0 -1.0 -1.0 }
 #endif
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
+	.double -1.0
+	.double -1.0
+	.double 1.0
+	.double 1.0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -9545,14 +9525,10 @@ LC06: // { 1.0 1.0 -1.0 -1.0 }
 	.align 5
 LC07: // { 1.0 -1.0 -1.0 -1.0 }
 #endif
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	1072693248
+	.double -1.0
+	.double -1.0
+	.double -1.0
+	.double 1.0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -9561,14 +9537,10 @@ LC07: // { 1.0 -1.0 -1.0 -1.0 }
 	.align 5
 LC08: // { -1.0 -1.0 -1.0 1.0 }
 #endif
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	-1074790400
+	.double 1.0
+	.double -1.0
+	.double -1.0
+	.double -1.0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -9577,14 +9549,10 @@ LC08: // { -1.0 -1.0 -1.0 1.0 }
 	.align 5
 LC09: // { -1.0 -1.0 1.0 1.0 }
 #endif
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	-1074790400
+	.double 1.0
+	.double 1.0
+	.double -1.0
+	.double -1.0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -9593,14 +9561,10 @@ LC09: // { -1.0 -1.0 1.0 1.0 }
 	.align 5
 LC10: // { -1.0 1.0 1.0 1.0 }
 #endif
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	-1074790400
+	.double 1.0
+	.double 1.0
+	.double 1.0
+	.double -1.0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32

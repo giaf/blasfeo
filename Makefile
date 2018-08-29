@@ -57,6 +57,7 @@ OBJS += \
 		kernel/avx2/kernel_dgelqf_4_lib4.o \
 		kernel/avx2/kernel_dgetr_lib4.o \
 		kernel/avx/kernel_dgecp_lib4.o \
+		kernel/avx/kernel_dpack_lib4.o \
 		\
 		kernel/avx2/kernel_sgemm_24x4_lib8.o \
 		kernel/avx2/kernel_sgemm_16x4_lib8.o \
@@ -69,12 +70,6 @@ OBJS += \
 		kernel/avx/kernel_sgecpsc_lib8.o \
 		kernel/avx/kernel_sgetr_lib8.o \
 		kernel/avx/kernel_sgead_lib8.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		kernel/avx2/kernel_dpack_lib4.o \
-
-endif
 
 # blas
 OBJS += \
@@ -125,6 +120,7 @@ OBJS += \
 		kernel/avx/kernel_dgebp_lib4.o \
 		kernel/avx/kernel_dgecp_lib4.o \
 		kernel/avx/kernel_dgetr_lib4.o \
+		kernel/avx/kernel_dpack_lib4.o \
 		\
 		kernel/avx/kernel_sgemm_16x4_lib8.o \
 		kernel/avx/kernel_sgemm_8x8_lib8.o \
@@ -152,6 +148,13 @@ OBJS  += \
 		blasfeo_api/s_blas3_lib8.o \
 		blasfeo_api/s_blas3_diag_lib8.o \
 		blasfeo_api/s_lapack_lib8.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
 
 endif
 
@@ -744,6 +747,7 @@ clean:
 	make -C auxiliary clean
 	make -C kernel clean
 	make -C blasfeo_api clean
+	make -C blas_api clean
 	make -C examples clean
 	make -C tests clean
 	make -C benchmarks clean
