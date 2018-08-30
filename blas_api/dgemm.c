@@ -64,7 +64,11 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 		{
 		if(*tb=='n')
 			{
+#if defined(TARGET_X64_INTEL_HASWELL)
 			if(m>=256 | n>=256 | k>=256)
+#else
+			if(m>=12 | n>=12 | k>=12)
+#endif
 				{
 				goto nn_1;
 				}
@@ -75,7 +79,11 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 			}
 		else // tb==t
 			{
+#if defined(TARGET_X64_INTEL_HASWELL)
 			if(m>=96 | n>=96 | k>=96)
+#else
+			if(m>=12 | n>=12 | k>=12)
+#endif
 				{
 				goto nt_1;
 				}
@@ -89,7 +97,11 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 		{
 		if(*tb=='n')
 			{
+#if defined(TARGET_X64_INTEL_HASWELL)
 			if(m>=256 | n>=256 | k>=256)
+#else
+			if(m>=12 | n>=12 | k>=12)
+#endif
 				{
 				goto tn_1;
 				}
@@ -100,7 +112,11 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 			}
 		else // tb==t
 			{
+#if defined(TARGET_X64_INTEL_HASWELL)
 			if(m>=96 | n>=96 | k>=96)
+#else
+			if(m>=12 | n>=12 | k>=12)
+#endif
 				{
 				goto tt_1;
 				}
@@ -461,7 +477,7 @@ nt_1:
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(k, n, &sB, smat_mem_align+sA_size);
 
-	blasfeo_pack_dmat(k, n, B, k, &sB, 0, 0);
+	blasfeo_pack_dmat(k, n, B, ldb, &sB, 0, 0);
 
 	sda = sA.cn;
 	sdb = sB.cn;
@@ -937,7 +953,7 @@ tt_1:
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(k, n, &sB, smat_mem_align+sA_size);
 
-	blasfeo_pack_dmat(k, n, B, k, &sB, 0, 0);
+	blasfeo_pack_dmat(k, n, B, ldb, &sB, 0, 0);
 
 	sda = sA.cn;
 	sdb = sB.cn;

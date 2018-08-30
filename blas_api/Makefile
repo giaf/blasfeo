@@ -41,6 +41,30 @@ endif
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 OBJS += dgemm.o dpotrf.o
 endif
+ifeq ($(TARGET), X64_INTEL_CORE)
+OBJS += dgemm.o dpotrf.o
+endif
+ifeq ($(TARGET), X64_AMD_BULLDOZER)
+OBJS += dgemm.o dpotrf.o
+endif
+ifeq ($(TARGET), X86_AMD_JAGUAR)
+OBJS += dgemm.o dpotrf.o
+endif
+ifeq ($(TARGET), X86_AMD_BARCELONA)
+OBJS += dgemm.o dpotrf.o
+endif
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
+OBJS += dgemm.o dpotrf.o
+endif
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
+OBJS += dgemm.o dpotrf.o
+endif
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
+OBJS += dgemm.o dpotrf.o
+endif
+ifeq ($(TARGET), GENERIC)
+OBJS += dgemm.o dpotrf.o
+endif
 
 endif
 

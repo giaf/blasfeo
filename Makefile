@@ -177,6 +177,7 @@ OBJS += \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
 		kernel/sse3/kernel_sgemm_4x4_lib4.o \
 		kernel/c99/kernel_sgemm_4x4_lib4.o \
@@ -203,6 +204,13 @@ OBJS += \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
 
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
+
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
@@ -224,6 +232,7 @@ OBJS += \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
 		kernel/c99/kernel_sgemm_4x4_lib4.o \
 		kernel/c99/kernel_sgemm_diag_lib4.o \
@@ -249,6 +258,13 @@ OBJS += \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
 
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
+
 endif
 
 ifeq ($(TARGET), X86_AMD_JAGUAR)
@@ -271,6 +287,7 @@ OBJS += \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
 		kernel/avx_x86/kernel_sgemm_4x4_lib4.o \
 		kernel/avx_x86/kernel_sgemv_4_lib4.o \
@@ -298,6 +315,13 @@ OBJS += \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
 
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
+
 endif
 
 ifeq ($(TARGET), X86_AMD_BARCELONA)
@@ -321,6 +345,7 @@ OBJS += \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
 		kernel/c99/kernel_sgemm_4x4_lib4.o \
 		kernel/c99/kernel_sgemm_diag_lib4.o \
@@ -346,6 +371,13 @@ OBJS += \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
 
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
+
 endif
 
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
@@ -368,6 +400,7 @@ OBJS += \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
 		kernel/armv8a/kernel_sgemm_16x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_12x4_lib4.o \
@@ -397,6 +430,13 @@ OBJS += \
 		blasfeo_api/s_blas3_lib4.o \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
 
 endif
 
@@ -421,6 +461,7 @@ OBJS += \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
 		kernel/armv8a/kernel_sgemm_16x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_12x4_lib4.o \
@@ -451,6 +492,13 @@ OBJS += \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
 
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
+
 endif
 
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
@@ -471,6 +519,7 @@ OBJS += \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
 		kernel/armv7a/kernel_sgemm_12x4_lib4.o \
 		kernel/armv7a/kernel_sgemm_8x4_lib4.o \
@@ -499,6 +548,13 @@ OBJS += \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
 
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
+
 endif
 
 ifeq ($(TARGET), GENERIC)
@@ -519,6 +575,7 @@ OBJS += \
 		kernel/c99/kernel_dgetr_lib4.o \
 		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
 		kernel/c99/kernel_sgemm_4x4_lib4.o \
 		kernel/c99/kernel_sgemm_diag_lib4.o \
@@ -543,6 +600,13 @@ OBJS += \
 		blasfeo_api/s_blas3_lib4.o \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
 
 endif
 
