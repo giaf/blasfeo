@@ -38,6 +38,8 @@
 #include "../include/blasfeo_d_kernel.h"
 #include "../include/blasfeo_d_blas.h"
 
+#include "cpu_freq.h"
+
 #if defined(REF_BLAS_BLIS)
 #include "../include/d_blas_64.h"
 #elif defined(REF_BLAS_MKL)
@@ -55,8 +57,50 @@ int main()
 	exit(1);
 #endif
 
-	const double GHz_max = 3.3;
-	const double flops_max = 16;
+	printf("\n");
+	printf("\n");
+	printf("\n");
+
+	printf("BLASFEO performance test - BLAS API - double precision\n");
+	printf("\n");
+
+	// maximum frequency of the processor
+	const float GHz_max = GHZ_MAX;
+	printf("Frequency used to compute theoretical peak: %5.1f GHz (edit test_param.h to modify this value).\n", GHz_max);
+	printf("\n");
+
+	// maximum flops per cycle, double precision
+#if defined(TARGET_X64_INTEL_HASWELL)
+	const float flops_max = 16;
+	printf("Testing BLAS version for AVX2 and FMA instruction sets, 64 bit (optimized for Intel Haswell): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	const float flops_max = 8;
+	printf("Testing BLAS version for AVX instruction set, 64 bit (optimized for Intel Sandy Bridge): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_X64_INTEL_CORE)
+	const float flops_max = 4;
+	printf("Testing BLAS version for SSE3 instruction set, 64 bit (optimized for Intel Core): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_X64_AMD_BULLDOZER)
+	const float flops_max = 8;
+	printf("Testing BLAS version for SSE3 and FMA instruction set, 64 bit (optimized for AMD Bulldozer): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_X86_AMD_JAGUAR)
+	const float flops_max = 2;
+	printf("Testing BLAS version for AVX instruction set, 32 bit (optimized for AMD Jaguar): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_X86_AMD_BARCELONA)
+	const float flops_max = 4; // 2 on jaguar
+	printf("Testing BLAS version for SSE3 instruction set, 32 bit (optimized for AMD Barcelona): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	const float flops_max = 4;
+	printf("Testing BLAS version for NEONv2 instruction set, 64 bit (optimized for ARM Cortex A57): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	const float flops_max = 4;
+	printf("Testing BLAS version for NEONv2 instruction set, 64 bit (optimized for ARM Cortex A53): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+	const float flops_max = 2;
+	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A15): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_GENERIC)
+	const float flops_max = 2;
+	printf("Testing BLAS version for generic scalar instruction set: theoretical peak %5.1f Gflops ???\n", flops_max*GHz_max);
+#endif
 
 	FILE *f;
 	f = fopen("./build/tmp_run.m", "w"); // a
