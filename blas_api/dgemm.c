@@ -66,6 +66,8 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
 			if(m>=256 | n>=256 | k>=256)
+#elif defined(TARGET_X64_INTEL_CORE)
+			if(m>=8 | n>=8 | k>=8)
 #else
 			if(m>=12 | n>=12 | k>=12)
 #endif
@@ -81,6 +83,8 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
 			if(m>=96 | n>=96 | k>=96)
+#elif defined(TARGET_X64_INTEL_CORE)
+			if(m>=8 | n>=8 | k>=8)
 #else
 			if(m>=12 | n>=12 | k>=12)
 #endif
@@ -99,6 +103,8 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
 			if(m>=256 | n>=256 | k>=256)
+#elif defined(TARGET_X64_INTEL_CORE)
+			if(m>=8 | n>=8 | k>=8)
 #else
 			if(m>=12 | n>=12 | k>=12)
 #endif
@@ -114,6 +120,8 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
 			if(m>=96 | n>=96 | k>=96)
+#elif defined(TARGET_X64_INTEL_CORE)
+			if(m>=8 | n>=8 | k>=8)
 #else
 			if(m>=12 | n>=12 | k>=12)
 #endif

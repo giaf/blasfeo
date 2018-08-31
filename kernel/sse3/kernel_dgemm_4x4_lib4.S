@@ -3217,6 +3217,10 @@ inner_blend_scale_ab_4x4_lib4:
 	// beta
 	movddup	0(%r11), %xmm14
 
+	xorpd		%xmm15, %xmm15 // 0.0
+	ucomisd		%xmm15, %xmm14 // beta==0.0 ?
+	je			0f // end
+
 	movapd		0(%r12), %xmm15
 	mulpd		%xmm14, %xmm15
 	addpd		%xmm15, %xmm0
@@ -3241,6 +3245,8 @@ inner_blend_scale_ab_4x4_lib4:
 	movapd		112(%r12), %xmm15
 	mulpd		%xmm14, %xmm15
 	addpd		%xmm15, %xmm7
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -8153,6 +8159,16 @@ kernel_dtrmm_nn_rl_4x4_gen_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dtrmm_nn_rl_4x4_gen_lib4, .-kernel_dtrmm_nn_rl_4x4_gen_lib4
+#endif
+
+
+
+
+
+#if defined(BLAS_API)
+
+#include "kernel_dgemm_4x4_lib.S"
+
 #endif
 
 
