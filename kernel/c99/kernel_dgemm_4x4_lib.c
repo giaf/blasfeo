@@ -273,107 +273,110 @@ void kernel_dgemm_nt_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B
 #endif
 #endif
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, alpha, A, B, ldb, beta, C, ldc, CC, bs);
+	double alpha1 = 1.0;
+	double beta1 = 0.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
 
 	if(m1>=4)
 		{
-		D[0+ldd*0] = CC[0+bs*0];
-		D[1+ldd*0] = CC[1+bs*0];
-		D[2+ldd*0] = CC[2+bs*0];
-		D[3+ldd*0] = CC[3+bs*0];
+		D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+		D[1+ldd*0] = beta[0]*C[1+ldc*0] + alpha[0]*CC[1+bs*0];
+		D[2+ldd*0] = beta[0]*C[2+ldc*0] + alpha[0]*CC[2+bs*0];
+		D[3+ldd*0] = beta[0]*C[3+ldc*0] + alpha[0]*CC[3+bs*0];
 
 		if(n1==1)
 			return;
 
-		D[0+ldd*1] = CC[0+bs*1];
-		D[1+ldd*1] = CC[1+bs*1];
-		D[2+ldd*1] = CC[2+bs*1];
-		D[3+ldd*1] = CC[3+bs*1];
+		D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
+		D[1+ldd*1] = beta[0]*C[1+ldc*1] + alpha[0]*CC[1+bs*1];
+		D[2+ldd*1] = beta[0]*C[2+ldc*1] + alpha[0]*CC[2+bs*1];
+		D[3+ldd*1] = beta[0]*C[3+ldc*1] + alpha[0]*CC[3+bs*1];
 
 		if(n1==2)
 			return;
 
-		D[0+ldd*2] = CC[0+bs*2];
-		D[1+ldd*2] = CC[1+bs*2];
-		D[2+ldd*2] = CC[2+bs*2];
-		D[3+ldd*2] = CC[3+bs*2];
+		D[0+ldd*2] = beta[0]*C[0+ldc*2] + alpha[0]*CC[0+bs*2];
+		D[1+ldd*2] = beta[0]*C[1+ldc*2] + alpha[0]*CC[1+bs*2];
+		D[2+ldd*2] = beta[0]*C[2+ldc*2] + alpha[0]*CC[2+bs*2];
+		D[3+ldd*2] = beta[0]*C[3+ldc*2] + alpha[0]*CC[3+bs*2];
 
 		if(n1==3)
 			return;
 
-		D[0+ldd*3] = CC[0+bs*3];
-		D[1+ldd*3] = CC[1+bs*3];
-		D[2+ldd*3] = CC[2+bs*3];
-		D[3+ldd*3] = CC[3+bs*3];
+		D[0+ldd*3] = beta[0]*C[0+ldc*3] + alpha[0]*CC[0+bs*3];
+		D[1+ldd*3] = beta[0]*C[1+ldc*3] + alpha[0]*CC[1+bs*3];
+		D[2+ldd*3] = beta[0]*C[2+ldc*3] + alpha[0]*CC[2+bs*3];
+		D[3+ldd*3] = beta[0]*C[3+ldc*3] + alpha[0]*CC[3+bs*3];
 		}
 	else if(m1>=3)
 		{
-		D[0+ldd*0] = CC[0+bs*0];
-		D[1+ldd*0] = CC[1+bs*0];
-		D[2+ldd*0] = CC[2+bs*0];
+		D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+		D[1+ldd*0] = beta[0]*C[1+ldc*0] + alpha[0]*CC[1+bs*0];
+		D[2+ldd*0] = beta[0]*C[2+ldc*0] + alpha[0]*CC[2+bs*0];
 
 		if(n1==1)
 			return;
 
-		D[0+ldd*1] = CC[0+bs*1];
-		D[1+ldd*1] = CC[1+bs*1];
-		D[2+ldd*1] = CC[2+bs*1];
+		D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
+		D[1+ldd*1] = beta[0]*C[1+ldc*1] + alpha[0]*CC[1+bs*1];
+		D[2+ldd*1] = beta[0]*C[2+ldc*1] + alpha[0]*CC[2+bs*1];
 
 		if(n1==2)
 			return;
 
-		D[0+ldd*2] = CC[0+bs*2];
-		D[1+ldd*2] = CC[1+bs*2];
-		D[2+ldd*2] = CC[2+bs*2];
+		D[0+ldd*2] = beta[0]*C[0+ldc*2] + alpha[0]*CC[0+bs*2];
+		D[1+ldd*2] = beta[0]*C[1+ldc*2] + alpha[0]*CC[1+bs*2];
+		D[2+ldd*2] = beta[0]*C[2+ldc*2] + alpha[0]*CC[2+bs*2];
 
 		if(n1==3)
 			return;
 
-		D[0+ldd*3] = CC[0+bs*3];
-		D[1+ldd*3] = CC[1+bs*3];
-		D[2+ldd*3] = CC[2+bs*3];
+		D[0+ldd*3] = beta[0]*C[0+ldc*3] + alpha[0]*CC[0+bs*3];
+		D[1+ldd*3] = beta[0]*C[1+ldc*3] + alpha[0]*CC[1+bs*3];
+		D[2+ldd*3] = beta[0]*C[2+ldc*3] + alpha[0]*CC[2+bs*3];
 		}
 	else if(m1>=2)
 		{
-		D[0+ldd*0] = CC[0+bs*0];
-		D[1+ldd*0] = CC[1+bs*0];
+		D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+		D[1+ldd*0] = beta[0]*C[1+ldc*0] + alpha[0]*CC[1+bs*0];
 
 		if(n1==1)
 			return;
 
-		D[0+ldd*1] = CC[0+bs*1];
-		D[1+ldd*1] = CC[1+bs*1];
+		D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
+		D[1+ldd*1] = beta[0]*C[1+ldc*1] + alpha[0]*CC[1+bs*1];
 
 		if(n1==2)
 			return;
 
-		D[0+ldd*2] = CC[0+bs*2];
-		D[1+ldd*2] = CC[1+bs*2];
+		D[0+ldd*2] = beta[0]*C[0+ldc*2] + alpha[0]*CC[0+bs*2];
+		D[1+ldd*2] = beta[0]*C[1+ldc*2] + alpha[0]*CC[1+bs*2];
 
 		if(n1==3)
 			return;
 
-		D[0+ldd*3] = CC[0+bs*3];
-		D[1+ldd*3] = CC[1+bs*3];
+		D[0+ldd*3] = beta[0]*C[0+ldc*3] + alpha[0]*CC[0+bs*3];
+		D[1+ldd*3] = beta[0]*C[1+ldc*3] + alpha[0]*CC[1+bs*3];
 		}
 	else //if(m1>=1)
 		{
-		D[0+ldd*0] = CC[0+bs*0];
+		D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
 
 		if(n1==1)
 			return;
 
-		D[0+ldd*1] = CC[0+bs*1];
+		D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
 
 		if(n1==2)
 			return;
 
-		D[0+ldd*2] = CC[0+bs*2];
+		D[0+ldd*2] = beta[0]*C[0+ldc*2] + alpha[0]*CC[0+bs*2];
 
 		if(n1==3)
 			return;
 
-		D[0+ldd*3] = CC[0+bs*3];
+		D[0+ldd*3] = beta[0]*C[0+ldc*3] + alpha[0]*CC[0+bs*3];
 		}
 
 	return;
@@ -803,107 +806,110 @@ void kernel_dgemm_nn_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B
 #endif
 #endif
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, alpha, A, B, ldb, beta, C, ldc, CC, bs);
+	double alpha1 = 1.0;
+	double beta1 = 0.0;
+
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
 
 	if(m1>=4)
 		{
-		D[0+ldd*0] = CC[0+bs*0];
-		D[1+ldd*0] = CC[1+bs*0];
-		D[2+ldd*0] = CC[2+bs*0];
-		D[3+ldd*0] = CC[3+bs*0];
+		D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+		D[1+ldd*0] = beta[0]*C[1+ldc*0] + alpha[0]*CC[1+bs*0];
+		D[2+ldd*0] = beta[0]*C[2+ldc*0] + alpha[0]*CC[2+bs*0];
+		D[3+ldd*0] = beta[0]*C[3+ldc*0] + alpha[0]*CC[3+bs*0];
 
 		if(n1==1)
 			return;
 
-		D[0+ldd*1] = CC[0+bs*1];
-		D[1+ldd*1] = CC[1+bs*1];
-		D[2+ldd*1] = CC[2+bs*1];
-		D[3+ldd*1] = CC[3+bs*1];
+		D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
+		D[1+ldd*1] = beta[0]*C[1+ldc*1] + alpha[0]*CC[1+bs*1];
+		D[2+ldd*1] = beta[0]*C[2+ldc*1] + alpha[0]*CC[2+bs*1];
+		D[3+ldd*1] = beta[0]*C[3+ldc*1] + alpha[0]*CC[3+bs*1];
 
 		if(n1==2)
 			return;
 
-		D[0+ldd*2] = CC[0+bs*2];
-		D[1+ldd*2] = CC[1+bs*2];
-		D[2+ldd*2] = CC[2+bs*2];
-		D[3+ldd*2] = CC[3+bs*2];
+		D[0+ldd*2] = beta[0]*C[0+ldc*2] + alpha[0]*CC[0+bs*2];
+		D[1+ldd*2] = beta[0]*C[1+ldc*2] + alpha[0]*CC[1+bs*2];
+		D[2+ldd*2] = beta[0]*C[2+ldc*2] + alpha[0]*CC[2+bs*2];
+		D[3+ldd*2] = beta[0]*C[3+ldc*2] + alpha[0]*CC[3+bs*2];
 
 		if(n1==3)
 			return;
 
-		D[0+ldd*3] = CC[0+bs*3];
-		D[1+ldd*3] = CC[1+bs*3];
-		D[2+ldd*3] = CC[2+bs*3];
-		D[3+ldd*3] = CC[3+bs*3];
+		D[0+ldd*3] = beta[0]*C[0+ldc*3] + alpha[0]*CC[0+bs*3];
+		D[1+ldd*3] = beta[0]*C[1+ldc*3] + alpha[0]*CC[1+bs*3];
+		D[2+ldd*3] = beta[0]*C[2+ldc*3] + alpha[0]*CC[2+bs*3];
+		D[3+ldd*3] = beta[0]*C[3+ldc*3] + alpha[0]*CC[3+bs*3];
 		}
 	else if(m1>=3)
 		{
-		D[0+ldd*0] = CC[0+bs*0];
-		D[1+ldd*0] = CC[1+bs*0];
-		D[2+ldd*0] = CC[2+bs*0];
+		D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+		D[1+ldd*0] = beta[0]*C[1+ldc*0] + alpha[0]*CC[1+bs*0];
+		D[2+ldd*0] = beta[0]*C[2+ldc*0] + alpha[0]*CC[2+bs*0];
 
 		if(n1==1)
 			return;
 
-		D[0+ldd*1] = CC[0+bs*1];
-		D[1+ldd*1] = CC[1+bs*1];
-		D[2+ldd*1] = CC[2+bs*1];
+		D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
+		D[1+ldd*1] = beta[0]*C[1+ldc*1] + alpha[0]*CC[1+bs*1];
+		D[2+ldd*1] = beta[0]*C[2+ldc*1] + alpha[0]*CC[2+bs*1];
 
 		if(n1==2)
 			return;
 
-		D[0+ldd*2] = CC[0+bs*2];
-		D[1+ldd*2] = CC[1+bs*2];
-		D[2+ldd*2] = CC[2+bs*2];
+		D[0+ldd*2] = beta[0]*C[0+ldc*2] + alpha[0]*CC[0+bs*2];
+		D[1+ldd*2] = beta[0]*C[1+ldc*2] + alpha[0]*CC[1+bs*2];
+		D[2+ldd*2] = beta[0]*C[2+ldc*2] + alpha[0]*CC[2+bs*2];
 
 		if(n1==3)
 			return;
 
-		D[0+ldd*3] = CC[0+bs*3];
-		D[1+ldd*3] = CC[1+bs*3];
-		D[2+ldd*3] = CC[2+bs*3];
+		D[0+ldd*3] = beta[0]*C[0+ldc*3] + alpha[0]*CC[0+bs*3];
+		D[1+ldd*3] = beta[0]*C[1+ldc*3] + alpha[0]*CC[1+bs*3];
+		D[2+ldd*3] = beta[0]*C[2+ldc*3] + alpha[0]*CC[2+bs*3];
 		}
 	else if(m1>=2)
 		{
-		D[0+ldd*0] = CC[0+bs*0];
-		D[1+ldd*0] = CC[1+bs*0];
+		D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+		D[1+ldd*0] = beta[0]*C[1+ldc*0] + alpha[0]*CC[1+bs*0];
 
 		if(n1==1)
 			return;
 
-		D[0+ldd*1] = CC[0+bs*1];
-		D[1+ldd*1] = CC[1+bs*1];
+		D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
+		D[1+ldd*1] = beta[0]*C[1+ldc*1] + alpha[0]*CC[1+bs*1];
 
 		if(n1==2)
 			return;
 
-		D[0+ldd*2] = CC[0+bs*2];
-		D[1+ldd*2] = CC[1+bs*2];
+		D[0+ldd*2] = beta[0]*C[0+ldc*2] + alpha[0]*CC[0+bs*2];
+		D[1+ldd*2] = beta[0]*C[1+ldc*2] + alpha[0]*CC[1+bs*2];
 
 		if(n1==3)
 			return;
 
-		D[0+ldd*3] = CC[0+bs*3];
-		D[1+ldd*3] = CC[1+bs*3];
+		D[0+ldd*3] = beta[0]*C[0+ldc*3] + alpha[0]*CC[0+bs*3];
+		D[1+ldd*3] = beta[0]*C[1+ldc*3] + alpha[0]*CC[1+bs*3];
 		}
 	else //if(m1>=1)
 		{
-		D[0+ldd*0] = CC[0+bs*0];
+		D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
 
 		if(n1==1)
 			return;
 
-		D[0+ldd*1] = CC[0+bs*1];
+		D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
 
 		if(n1==2)
 			return;
 
-		D[0+ldd*2] = CC[0+bs*2];
+		D[0+ldd*2] = beta[0]*C[0+ldc*2] + alpha[0]*CC[0+bs*2];
 
 		if(n1==3)
 			return;
 
-		D[0+ldd*3] = CC[0+bs*3];
+		D[0+ldd*3] = beta[0]*C[0+ldc*3] + alpha[0]*CC[0+bs*3];
 		}
 
 	return;
