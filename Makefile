@@ -701,7 +701,7 @@ shared_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd blasfeo_api; $(MAKE) obj)
 	( cd blas_api; $(MAKE) obj)
-	$(CC) -shared -o libblasfeo.so $(OBJS) -Wl,-Bsymbolic
+	$(CC) -shared -o libblasfeo.so $(OBJS) #-Wl,-Bsymbolic
 	mv libblasfeo.so ./lib/
 ifeq ($(TESTING_MODE), 1)
 	$(CC) -shared -o libblasfeo_ref.so $(OBJS_REF)
