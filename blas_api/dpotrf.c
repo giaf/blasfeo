@@ -110,7 +110,7 @@ l_0:
 			goto l_0_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE2)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<m-7; ii+=8)
 		{
 		for(jj=0; jj<ii; jj+=4)
@@ -165,7 +165,7 @@ l_0_left_12:
 	goto l_0_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE2)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 l_0_left_8:
 	for(jj=0; jj<ii; jj+=4)
 		{
@@ -233,7 +233,7 @@ l_1:
 			goto l_1_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE2)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<m-7; ii+=8)
 		{
 		jj = 0;
@@ -293,7 +293,7 @@ l_1_left_12:
 #endif
 
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE2)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 l_1_left_8:
 	for(jj=0; jj<ii; jj+=4)
 		{
