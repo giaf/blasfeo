@@ -91,4 +91,5 @@ clean:
 	rm -f *.o
 	rm -f *.s
 
+kernel_dgemm_8x4_lib4.o: kernel_dgemm_8x4_lib4.S kernel_dgemm_8x4_lib.S
 kernel_dgemm_4x4_lib4.o: kernel_dgemm_4x4_lib4.S kernel_dgemm_4x4_lib.S
