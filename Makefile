@@ -827,10 +827,17 @@ deep_clean: clean
 	make -C tests clean_all
 	make -C benchmarks clean_all
 
+
+
 # directory for tests  binaries
 BINARY_DIR = build/$(LA)/$(TARGET)
 
+
+
 ### benchmarks
+
+
+# single benchmark
 
 deploy_to_benchmarks:
 	mkdir -p ./benchmarks/$(BINARY_DIR)/
@@ -847,24 +854,27 @@ benchmarks: deploy_to_benchmarks build_benchmarks
 run_benchmarks:
 	make -C benchmarks run
 
+print_blas_run:
+	make -C benchmarks print_blas_run
 
 
-build_benchmarks_all:
-	make -C benchmarks all
+# BLASFEO API benchmark
+
+build_benchmarks_blasfeo_api_all:
+	make -C benchmarks blasfeo_api_all
 	@echo
 	@echo "Benchmarks build complete."
 	@echo
 
-benchmarks_all: deploy_to_benchmarks build_benchmarks_all
+benchmarks_blasfeo_api_all: deploy_to_benchmarks build_benchmarks_blasfeo_api_all
 
-run_benchmarks_all:
-	make -C benchmarks run_all
+run_benchmarks_blasfeo_api_all:
+	make -C benchmarks run_blasfeo_api_all
 
-print_blas_run:
-	make -C benchmarks print_blas_run
+figures_benchmark_blasfeo_api_all:
+	make -C benchmarks figures_benchmark_blasfeo_api_all
 
-print_figures_benchmark_all:
-	make -C benchmarks print_figures
+
 
 ### examples
 
@@ -882,6 +892,8 @@ examples: deploy_to_examples build_examples
 
 run_examples:
 	make -C examples run
+
+
 
 ### tests
 
