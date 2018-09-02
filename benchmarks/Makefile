@@ -89,3 +89,8 @@ print_blas_run:
 
 # benchmark BLASFEO API
 include Makefile.blasfeo_api
+
+
+
+# benchmark BLAS API
+include Makefile.blas_api

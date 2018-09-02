@@ -194,88 +194,39 @@ int main()
 		int rep_in;
 
 #if defined(DOUBLE_PRECISION)
-		struct blasfeo_dmat sA; blasfeo_allocate_dmat(n, n, &sA);
-		struct blasfeo_dmat sB; blasfeo_allocate_dmat(n, n, &sB);
-		struct blasfeo_dmat sB2; blasfeo_allocate_dmat(n, n, &sB2);
-//		struct blasfeo_dmat sC; blasfeo_allocate_dmat(n, n, &sC);
-		struct blasfeo_dmat sD; blasfeo_allocate_dmat(n, n, &sD);
-//		struct blasfeo_dmat sE; blasfeo_allocate_dmat(n, n, &sE);
-
-		struct blasfeo_dvec sx; blasfeo_allocate_dvec(n, &sx);
-		struct blasfeo_dvec sx2; blasfeo_allocate_dvec(n, &sx2);
-//		struct blasfeo_dvec sy; blasfeo_allocate_dvec(n, &sy);
-		struct blasfeo_dvec sz; blasfeo_allocate_dvec(n, &sz);
-
-		void *qr_work;
-		v_zeros_align(&qr_work, blasfeo_dgeqrf_worksize(n, n));
-		void *lq_work;
-		v_zeros_align(&lq_work, blasfeo_dgelqf_worksize(n, n));
-
-		for(ii=0; ii<n; ii++)
-			{
-			BLASFEO_DMATEL(&sB2, ii, ii) = 1.0;
-			BLASFEO_DMATEL(&sB2, ii, n-1) = 1.0;
-			BLASFEO_DVECEL(&sx2, ii) = 1.0;
-			}
+		double *A = malloc(n*n*sizeof(double));
+		double *B = malloc(n*n*sizeof(double));
+		double *D = malloc(n*n*sizeof(double));
 #elif defined(SINGLE_PRECISION)
-		struct blasfeo_smat sA; blasfeo_allocate_smat(n, n, &sA);
-		struct blasfeo_smat sB; blasfeo_allocate_smat(n, n, &sB);
-		struct blasfeo_smat sB2; blasfeo_allocate_smat(n, n, &sB2);
-//		struct blasfeo_smat sC; blasfeo_allocate_smat(n, n, &sC);
-		struct blasfeo_smat sD; blasfeo_allocate_smat(n, n, &sD);
-//		struct blasfeo_smat sE; blasfeo_allocate_smat(n, n, &sE);
-
-		struct blasfeo_svec sx; blasfeo_allocate_svec(n, &sx);
-		struct blasfeo_svec sx2; blasfeo_allocate_svec(n, &sx2);
-//		struct blasfeo_svec sy; blasfeo_allocate_svec(n, &sy);
-		struct blasfeo_svec sz; blasfeo_allocate_svec(n, &sz);
-
-		void *qr_work;
-		v_zeros_align(&qr_work, blasfeo_sgeqrf_worksize(n, n));
-		void *lq_work;
-		v_zeros_align(&lq_work, blasfeo_sgelqf_worksize(n, n));
-
-		for(ii=0; ii<n; ii++)
-			{
-			BLASFEO_SMATEL(&sB2, ii, ii) = 1.0;
-			BLASFEO_SMATEL(&sB2, ii, n-1) = 1.0;
-			BLASFEO_SVECEL(&sx2, ii) = 1.0;
-			}
+		float *A = malloc(n*n*sizeof(float));
+		float *B = malloc(n*n*sizeof(float));
+		float *D = malloc(n*n*sizeof(float));
 #endif
-		int *ipiv; int_zeros(&ipiv, n, 1);
 
 		// A
-		for(ii=0; ii<n; ii++)
-			for(jj=0; jj<n; jj++)
-#if defined(DOUBLE_PRECISION)
-				blasfeo_dgein1(ii+n*jj+0.0, &sA, ii, jj);
-#elif defined(SINGLE_PRECISION)
-				blasfeo_sgein1(ii+n*jj+0.0, &sA, ii, jj);
-#endif
+		for(ii=0; ii<n*n; ii++)
+			A[ii] = ii;
 
 		// B
-#if defined(DOUBLE_PRECISION)
-		blasfeo_dgese(n, n, 0.0, &sB, 0, 0);
-#elif defined(SINGLE_PRECISION)
-		blasfeo_sgese(n, n, 0.0, &sB, 0, 0);
-#endif
+		for(ii=0; ii<n*n; ii++)
+			B[ii] = 0.0;
 		for(ii=0; ii<n; ii++)
-#if defined(DOUBLE_PRECISION)
-			blasfeo_dgein1(1.0, &sB, ii, ii);
-#elif defined(SINGLE_PRECISION)
-			blasfeo_sgein1(1.0, &sB, ii, ii);
-#endif
+			B[ii+n*ii] = 1.0;
 
 
 		int info;
 
 #if defined(DOUBLE_PRECISION)
-		double alpha = 1.0;
-		double beta = 0.0;
+		double r_1 = 1.0;
+		double r_0 = 0.0;
 #elif defined(SINGLE_PRECISION)
-		float alpha = 1.0;
-		float beta = 0.0;
+		float r_1 = 1.0;
+		float r_0 = 0.0;
 #endif
+		char c_l = 'l';
+		char c_n = 'n';
+		char c_t = 't';
+		char c_u = 'u';
 
 		/* timing */
 		blasfeo_timer timer;
@@ -301,55 +252,37 @@ int main()
 #if defined(DOUBLE_PRECISION)
 
 #if defined(GEMM_NN)
-				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+				blasfeo_dgemm(&c_n, &c_n, &n, &n, &n, &r_1, A, &n, B, &n, &r_0, D, &n);
 #elif defined(GEMM_NT)
-				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+				blasfeo_dgemm(&c_n, &c_t, &n, &n, &n, &r_1, A, &n, B, &n, &r_0, D, &n);
 #elif defined(GEMM_TN)
+				blasfeo_dgemm(&c_t, &c_n, &n, &n, &n, &r_1, A, &n, B, &n, &r_0, D, &n);
 #elif defined(GEMM_TT)
+				blasfeo_dgemm(&c_t, &c_t, &n, &n, &n, &r_1, A, &n, B, &n, &r_0, D, &n);
 #elif defined(SYRK_LN)
-				blasfeo_dsyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 #elif defined(TRMM_RLNN)
-				blasfeo_dtrmm_rlnn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRMM_RUTN)
-				blasfeo_dtrmm_rutn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_LUNN)
-				blasfeo_dtrsm_lunn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_LLNU)
-				blasfeo_dtrsm_llnu(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_RLTN)
-				blasfeo_dtrsm_rltn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_RLTU)
-				blasfeo_dtrsm_rltu(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_RUTN)
-				blasfeo_dtrsm_rutn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(GELQF)
-				blasfeo_dcolin(n, &sx2, 0, &sB2, 0, n-1);
-				blasfeo_dgelqf(n, n, &sB2, 0, 0, &sB2, 0, 0, lq_work);
 #elif defined(GEQRF)
-				blasfeo_dgeqrf(n, n, &sB, 0, 0, &sD, 0, 0, qr_work);
 #elif defined(GETRF_NOPIVOT)
-				blasfeo_dgetrf_nopivot(n, n, &sB, 0, 0, &sB, 0, 0);
 #elif defined(GETRF_ROWPIVOT)
-				blasfeo_dgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 #elif defined(POTRF_L)
-				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
+				blasfeo_dpotrf(&c_l, &n, B, &n);
 #elif defined(POTRF_U)
+				blasfeo_dpotrf(&c_u, &n, B, &n);
 #elif defined(GEMV_N)
-				blasfeo_dgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #elif defined(GEMV_T)
-				blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #elif defined(TRMV_LNN)
-				blasfeo_dtrmv_lnn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
 #elif defined(TRMV_LTN)
-				blasfeo_dtrmv_ltn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
 #elif defined(TRSV_LNN)
-				blasfeo_dtrsv_lnn(n, &sB, 0, 0, &sx, 0, &sz, 0);
 #elif defined(TRSV_LTN)
-				blasfeo_dtrsv_ltn(n, &sB, 0, 0, &sx, 0, &sz, 0);
 #elif defined(GEMV_NT)
-				blasfeo_dgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sz, 0, &sz, 0, &sz, 0, &sz, 0);
 #elif defined(SYMV_L)
-				blasfeo_dsymv_l(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #else
 #error wrong routine
 #endif
@@ -357,55 +290,31 @@ int main()
 #elif defined(SINGLE_PRECISION)
 
 #if defined(GEMM_NN)
-				blasfeo_sgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 #elif defined(GEMM_NT)
-				blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 #elif defined(GEMM_TN)
 #elif defined(GEMM_TT)
 #elif defined(SYRK_LN)
-				blasfeo_ssyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 #elif defined(TRMM_RLNN)
-				blasfeo_strmm_rlnn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRMM_RUTN)
-				blasfeo_strmm_rutn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_LUNN)
-				blasfeo_strsm_lunn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_LLNU)
-				blasfeo_strsm_llnu(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_RLTN)
-				blasfeo_strsm_rltn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_RLTU)
-				blasfeo_strsm_rltu(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_RUTN)
-				blasfeo_strsm_rutn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(GELQF)
-				blasfeo_scolin(n, &sx2, 0, &sB2, 0, n-1);
-				blasfeo_sgelqf(n, n, &sB2, 0, 0, &sB2, 0, 0, lq_work);
 #elif defined(GEQRF)
-				blasfeo_sgeqrf(n, n, &sB, 0, 0, &sB, 0, 0, qr_work);
 #elif defined(GETRF_NOPIVOT)
-				blasfeo_sgetrf_nopivot(n, n, &sB, 0, 0, &sB, 0, 0);
 #elif defined(GETRF_ROWPIVOT)
-				blasfeo_sgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 #elif defined(POTRF_L)
-				blasfeo_spotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 #elif defined(POTRF_U)
 #elif defined(GEMV_N)
-				blasfeo_sgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #elif defined(GEMV_T)
-				blasfeo_sgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #elif defined(TRMV_LNN)
-				blasfeo_strmv_lnn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
 #elif defined(TRMV_LTN)
-				blasfeo_strmv_ltn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
 #elif defined(TRSV_LNN)
-				blasfeo_strsv_lnn(n, &sB, 0, 0, &sx, 0, &sz, 0);
 #elif defined(TRSV_LTN)
-				blasfeo_strsv_ltn(n, &sB, 0, 0, &sx, 0, &sz, 0);
 #elif defined(GEMV_NT)
-				blasfeo_sgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sz, 0, &sz, 0, &sz, 0, &sz, 0);
 #elif defined(SYMV_L)
-				blasfeo_ssymv_l(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #else
 #error wrong routine
 #endif
@@ -448,34 +357,9 @@ int main()
 			n,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max);
 
-#if defined(DOUBLE_PRECISION)
-		blasfeo_free_dmat(&sA);
-		blasfeo_free_dmat(&sB);
-		blasfeo_free_dmat(&sB2);
-//		blasfeo_free_dmat(&sB3);
-//		blasfeo_free_dmat(&sC);
-		blasfeo_free_dmat(&sD);
-//		blasfeo_free_dmat(&sE);
-		blasfeo_free_dvec(&sx);
-		blasfeo_free_dvec(&sx2);
-//		blasfeo_free_dvec(&sy);
-		blasfeo_free_dvec(&sz);
-#elif defined(SINGLE_PRECISION)
-		blasfeo_free_smat(&sA);
-		blasfeo_free_smat(&sB);
-		blasfeo_free_smat(&sB2);
-//		blasfeo_free_smat(&sB3);
-//		blasfeo_free_smat(&sC);
-		blasfeo_free_smat(&sD);
-//		blasfeo_free_smat(&sE);
-		blasfeo_free_svec(&sx);
-		blasfeo_free_svec(&sx2);
-//		blasfeo_free_svec(&sy);
-		blasfeo_free_svec(&sz);
-#endif
-		free(qr_work);
-		free(lq_work);
-		int_free(ipiv);
+		free(A);
+		free(B);
+		free(D);
 
 		}
 
@@ -497,3 +381,4 @@ int main()
 	}
 
 #endif
+

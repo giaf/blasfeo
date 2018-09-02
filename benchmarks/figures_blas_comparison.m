@@ -5,12 +5,20 @@ s_Gflops_max = 0;
 
 
 routines = {
-'gemm_nt',
 'gemm_nn',
+'gemm_nt',
+'gemm_tn',
+'gemm_tt',
 'syrk_ln',
 'trmm_rlnn',
+'trmm_rutn',
+'trsm_llnu',
+'trsm_lunn',
 'trsm_rltn',
+'trsm_rltu',
+'trsm_rutn',
 'potrf_l',
+'potrf_u',
 'getrf_rowpivot',
 'gemv_n',
 'gemv_t',
@@ -23,11 +31,20 @@ routines = {
 };
 
 routine_names = {
-'gemm\_nt',
 'gemm\_nn',
+'gemm\_nt',
+'gemm\_tn',
+'gemm\_tt',
 'syrk\_ln',
 'trmm\_rlnn',
+'trmm\_rutn',
+'trsm\_llnu',
+'trsm\_lunn',
 'trsm\_rltn',
+'trsm\_rltu',
+'trsm\_rutn',
+'potrf\_l',
+'potrf\_u',
 'getrf\_rowpivot',
 'gemv\_n',
 'gemv\_t',
@@ -48,6 +65,7 @@ end
 
 targets = {
 'HIGH_PERFORMANCE/X64_INTEL_HASWELL/BLASFEO_API',
+'HIGH_PERFORMANCE/X64_INTEL_HASWELL/BLAS_API',
 %'HIGH_PERFORMANCE/X64_INTEL_SANDY_BRIDGE/BLASFEO_API',
 %'HIGH_PERFORMANCE/X64_INTEL_CORE/BLASFEO_API',
 %'HIGH_PERFORMANCE/X86_AMD_JAGUAR/BLASFEO_API',
@@ -62,6 +80,7 @@ targets = {
 
 target_names = {
 'BF\_HP\_X64\_HW',
+'SB\_HP\_X64\_HW',
 %'BF\_HP\_X64\_SB',
 %'BF\_HP\_X64\_CR',
 %'BF\_HP\_X86\_JG',

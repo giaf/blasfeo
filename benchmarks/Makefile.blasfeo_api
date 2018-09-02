@@ -1,4 +1,33 @@
-# BLASFEA API bennchmarks
+###################################################################################################
+#                                                                                                 #
+# This file is part of BLASFEO.                                                                   #
+#                                                                                                 #
+# BLASFEO -- BLAS For Embedded Optimization.                                                      #
+# Copyright (C) 2016-2018 by Gianluca Frison.                                                     #
+# Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              #
+# All rights reserved.                                                                            #
+#                                                                                                 #
+# This program is free software: you can redistribute it and/or modify                            #
+# it under the terms of the GNU General Public License as published by                            #
+# the Free Software Foundation, either version 3 of the License, or                               #
+# (at your option) any later version                                                              #.
+#                                                                                                 #
+# This program is distributed in the hope that it will be useful,                                 #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of                                  #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                   #
+# GNU General Public License for more details.                                                    #
+#                                                                                                 #
+# You should have received a copy of the GNU General Public License                               #
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.                          #
+#                                                                                                 #
+# The authors designate this particular file as subject to the "Classpath" exception              #
+# as provided by the authors in the LICENSE file that accompained this code.                      #
+#                                                                                                 #
+# Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             #
+#                                                                                                 #
+###################################################################################################
+
+# BLASFEO API bennchmarks
 
 
 DP_BLAS2_OBJS =
@@ -18,6 +47,22 @@ RUN_SP_BLAS3_OBJS =
 RUN_SP_LAPACK_OBJS =
 
 
+# dgemm_nn
+
+DP_BLAS3_OBJS += blasfeo_api_dgemm_nn
+RUN_DP_BLAS3_OBJS += run_blasfeo_api_dgemm_nn
+
+blasfeo_api_dgemm_nn: common
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/BLASFEO_API/dgemm_nn_benchmark.o -DDOUBLE_PRECISION -DGEMM_NN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLASFEO_API/dgemm_nn_benchmark.o -o $(BINARY_DIR)/BLASFEO_API/dgemm_nn_benchmark.out $(LIBS)
+
+run_blasfeo_api_dgemm_nn:
+	mkdir -p ./$(BINARY_DIR)/BLASFEO_API/data
+	@echo
+	@echo benchmarking dgemm_nn
+	./$(BINARY_DIR)/BLASFEO_API/dgemm_nn_benchmark.out > ./$(BINARY_DIR)/BLASFEO_API/data/dgemm_nn.m
+
+
 # dgemm_nt
 
 DP_BLAS3_OBJS += blasfeo_api_dgemm_nt
@@ -34,20 +79,36 @@ run_blasfeo_api_dgemm_nt:
 	./$(BINARY_DIR)/BLASFEO_API/dgemm_nt_benchmark.out > ./$(BINARY_DIR)/BLASFEO_API/data/dgemm_nt.m
 
 
-# dgemm_nn
+# dgemm_tn
 
-DP_BLAS3_OBJS += blasfeo_api_dgemm_nn
-RUN_DP_BLAS3_OBJS += run_blasfeo_api_dgemm_nn
+DP_BLAS3_OBJS += blasfeo_api_dgemm_tn
+RUN_DP_BLAS3_OBJS += run_blasfeo_api_dgemm_tn
 
-blasfeo_api_dgemm_nn: common
-	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/BLASFEO_API/dgemm_nn_benchmark.o -DDOUBLE_PRECISION -DGEMM_NN
-	$(CC) $(CFLAGS) $(BINARY_DIR)/BLASFEO_API/dgemm_nn_benchmark.o -o $(BINARY_DIR)/BLASFEO_API/dgemm_nn_benchmark.out $(LIBS)
+blasfeo_api_dgemm_tn: common
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/BLASFEO_API/dgemm_tn_benchmark.o -DDOUBLE_PRECISION -DGEMM_TN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLASFEO_API/dgemm_tn_benchmark.o -o $(BINARY_DIR)/BLASFEO_API/dgemm_tn_benchmark.out $(LIBS)
 
-run_blasfeo_api_dgemm_nn:
+run_blasfeo_api_dgemm_tn:
 	mkdir -p ./$(BINARY_DIR)/BLASFEO_API/data
 	@echo
-	@echo benchmarking dgemm_nn
-	./$(BINARY_DIR)/BLASFEO_API/dgemm_nn_benchmark.out > ./$(BINARY_DIR)/BLASFEO_API/data/dgemm_nn.m
+	@echo benchmarking dgemm_tn
+	./$(BINARY_DIR)/BLASFEO_API/dgemm_tn_benchmark.out > ./$(BINARY_DIR)/BLASFEO_API/data/dgemm_tn.m
+
+
+# dgemm_tt
+
+DP_BLAS3_OBJS += blasfeo_api_dgemm_tt
+RUN_DP_BLAS3_OBJS += run_blasfeo_api_dgemm_tt
+
+blasfeo_api_dgemm_tt: common
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/BLASFEO_API/dgemm_tt_benchmark.o -DDOUBLE_PRECISION -DGEMM_TT
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLASFEO_API/dgemm_tt_benchmark.o -o $(BINARY_DIR)/BLASFEO_API/dgemm_tt_benchmark.out $(LIBS)
+
+run_blasfeo_api_dgemm_tt:
+	mkdir -p ./$(BINARY_DIR)/BLASFEO_API/data
+	@echo
+	@echo benchmarking dgemm_tt
+	./$(BINARY_DIR)/BLASFEO_API/dgemm_tt_benchmark.out > ./$(BINARY_DIR)/BLASFEO_API/data/dgemm_tt.m
 
 
 # dsyrk_ln
@@ -258,6 +319,22 @@ run_blasfeo_api_dpotrf_l:
 	./$(BINARY_DIR)/BLASFEO_API/dpotrf_l_benchmark.out > ./$(BINARY_DIR)/BLASFEO_API/data/dpotrf_l.m
 
 
+# dpotrf_u
+
+DP_LAPACK_OBJS += blasfeo_api_dpotrf_u
+RUN_DP_LAPACK_OBJS += run_blasfeo_api_dpotrf_u
+
+blasfeo_api_dpotrf_u: common
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/BLASFEO_API/dpotrf_u_benchmark.o -DDOUBLE_PRECISION -DPOTRF_U
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLASFEO_API/dpotrf_u_benchmark.o -o $(BINARY_DIR)/BLASFEO_API/dpotrf_u_benchmark.out $(LIBS)
+
+run_blasfeo_api_dpotrf_u:
+	mkdir -p ./$(BINARY_DIR)/BLASFEO_API/data
+	@echo
+	@echo benchmarking dpotrf_u
+	./$(BINARY_DIR)/BLASFEO_API/dpotrf_u_benchmark.out > ./$(BINARY_DIR)/BLASFEO_API/data/dpotrf_u.m
+
+
 # dgemv_n
 
 DP_BLAS2_OBJS += blasfeo_api_dgemv_n
@@ -386,6 +463,22 @@ run_blasfeo_api_dsymv_l:
 	./$(BINARY_DIR)/BLASFEO_API/dsymv_l_benchmark.out > ./$(BINARY_DIR)/BLASFEO_API/data/dsymv_l.m
 
 
+# sgemm_nn
+
+SP_BLAS3_OBJS += blasfeo_api_sgemm_nn
+RUN_SP_BLAS3_OBJS += run_blasfeo_api_sgemm_nn
+
+blasfeo_api_sgemm_nn: common
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/BLASFEO_API/sgemm_nn_benchmark.o -DSINGLE_PRECISION -DGEMM_NN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLASFEO_API/sgemm_nn_benchmark.o -o $(BINARY_DIR)/BLASFEO_API/sgemm_nn_benchmark.out $(LIBS)
+
+run_blasfeo_api_sgemm_nn:
+	mkdir -p ./$(BINARY_DIR)/BLASFEO_API/data
+	@echo
+	@echo benchmarking sgemm_nn
+	./$(BINARY_DIR)/BLASFEO_API/sgemm_nn_benchmark.out > ./$(BINARY_DIR)/BLASFEO_API/data/sgemm_nn.m
+
+
 # sgemm_nt
 
 SP_BLAS3_OBJS += blasfeo_api_sgemm_nt
@@ -402,20 +495,36 @@ run_blasfeo_api_sgemm_nt:
 	./$(BINARY_DIR)/BLASFEO_API/sgemm_nt_benchmark.out > ./$(BINARY_DIR)/BLASFEO_API/data/sgemm_nt.m
 
 
-# sgemm_nn
+# sgemm_tn
 
-SP_BLAS3_OBJS += blasfeo_api_sgemm_nn
-RUN_SP_BLAS3_OBJS += run_blasfeo_api_sgemm_nn
+SP_BLAS3_OBJS += blasfeo_api_sgemm_tn
+RUN_SP_BLAS3_OBJS += run_blasfeo_api_sgemm_tn
 
-blasfeo_api_sgemm_nn: common
-	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/BLASFEO_API/sgemm_nn_benchmark.o -DSINGLE_PRECISION -DGEMM_NN
-	$(CC) $(CFLAGS) $(BINARY_DIR)/BLASFEO_API/sgemm_nn_benchmark.o -o $(BINARY_DIR)/BLASFEO_API/sgemm_nn_benchmark.out $(LIBS)
+blasfeo_api_sgemm_tn: common
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/BLASFEO_API/sgemm_tn_benchmark.o -DSINGLE_PRECISION -DGEMM_TN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLASFEO_API/sgemm_tn_benchmark.o -o $(BINARY_DIR)/BLASFEO_API/sgemm_tn_benchmark.out $(LIBS)
 
-run_blasfeo_api_sgemm_nn:
+run_blasfeo_api_sgemm_tn:
 	mkdir -p ./$(BINARY_DIR)/BLASFEO_API/data
 	@echo
-	@echo benchmarking sgemm_nn
-	./$(BINARY_DIR)/BLASFEO_API/sgemm_nn_benchmark.out > ./$(BINARY_DIR)/BLASFEO_API/data/sgemm_nn.m
+	@echo benchmarking sgemm_tn
+	./$(BINARY_DIR)/BLASFEO_API/sgemm_tn_benchmark.out > ./$(BINARY_DIR)/BLASFEO_API/data/sgemm_tn.m
+
+
+# sgemm_tt
+
+SP_BLAS3_OBJS += blasfeo_api_sgemm_tt
+RUN_SP_BLAS3_OBJS += run_blasfeo_api_sgemm_tt
+
+blasfeo_api_sgemm_tt: common
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/BLASFEO_API/sgemm_tt_benchmark.o -DSINGLE_PRECISION -DGEMM_TT
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLASFEO_API/sgemm_tt_benchmark.o -o $(BINARY_DIR)/BLASFEO_API/sgemm_tt_benchmark.out $(LIBS)
+
+run_blasfeo_api_sgemm_tt:
+	mkdir -p ./$(BINARY_DIR)/BLASFEO_API/data
+	@echo
+	@echo benchmarking sgemm_tt
+	./$(BINARY_DIR)/BLASFEO_API/sgemm_tt_benchmark.out > ./$(BINARY_DIR)/BLASFEO_API/data/sgemm_tt.m
 
 
 # ssyrk_ln
@@ -626,6 +735,22 @@ run_blasfeo_api_spotrf_l:
 	./$(BINARY_DIR)/BLASFEO_API/spotrf_l_benchmark.out > ./$(BINARY_DIR)/BLASFEO_API/data/spotrf_l.m
 
 
+# spotrf_u
+
+SP_LAPACK_OBJS += blasfeo_api_spotrf_u
+RUN_SP_LAPACK_OBJS += run_blasfeo_api_spotrf_u
+
+blasfeo_api_spotrf_u: common
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/BLASFEO_API/spotrf_u_benchmark.o -DSINGLE_PRECISION -DPOTRF_U
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLASFEO_API/spotrf_u_benchmark.o -o $(BINARY_DIR)/BLASFEO_API/spotrf_u_benchmark.out $(LIBS)
+
+run_blasfeo_api_spotrf_u:
+	mkdir -p ./$(BINARY_DIR)/BLASFEO_API/data
+	@echo
+	@echo benchmarking spotrf_u
+	./$(BINARY_DIR)/BLASFEO_API/spotrf_u_benchmark.out > ./$(BINARY_DIR)/BLASFEO_API/data/spotrf_u.m
+
+
 # sgemv_n
 
 SP_BLAS2_OBJS += blasfeo_api_sgemv_n
@@ -800,7 +925,7 @@ run_blasfeo_api_all: run_blasfeo_api_dp_all run_blasfeo_api_sp_all
 # print
 
 figures_benchmark_blasfeo_api_all:
-	cp figures_benchmark_blasfeo_api.m ./$(BINARY_DIR)/BLASFEO_API/data/
-	cd ./$(BINARY_DIR)/BLASFEO_API/data/ ; octave-cli figures_benchmark_blasfeo_api.m
+	cp figures_blas_benchmark.m ./$(BINARY_DIR)/BLASFEO_API/data/
+	cd ./$(BINARY_DIR)/BLASFEO_API/data/ ; octave-cli figures_blas_benchmark.m
 
 

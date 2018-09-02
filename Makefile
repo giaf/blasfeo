@@ -842,6 +842,7 @@ BINARY_DIR = build/$(LA)/$(TARGET)
 deploy_to_benchmarks:
 	mkdir -p ./benchmarks/$(BINARY_DIR)/
 	mkdir -p ./benchmarks/$(BINARY_DIR)/BLASFEO_API/
+	mkdir -p ./benchmarks/$(BINARY_DIR)/BLAS_API/
 	cp ./lib/libblasfeo.a ./benchmarks/$(BINARY_DIR)/
 
 build_benchmarks:
@@ -874,6 +875,23 @@ run_benchmarks_blasfeo_api_all:
 
 figures_benchmark_blasfeo_api_all:
 	make -C benchmarks figures_benchmark_blasfeo_api_all
+
+
+# BLAS API benchmark
+
+build_benchmarks_blas_api_all:
+	make -C benchmarks blas_api_all
+	@echo
+	@echo "Benchmarks build complete."
+	@echo
+
+benchmarks_blas_api_all: deploy_to_benchmarks build_benchmarks_blas_api_all
+
+run_benchmarks_blas_api_all:
+	make -C benchmarks run_blas_api_all
+
+figures_benchmark_blas_api_all:
+	make -C benchmarks figures_benchmark_blas_api_all
 
 
 

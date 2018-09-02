@@ -6,13 +6,27 @@
 
 f1 = figure();
 
-dgemm_nt
-save -mat dgemm_nt.mat A B
+dgemm_nn
+save -mat dgemm_nn.mat A B
 
 plot(B(:,1), B(:,2));
 
-dgemm_nn
-save -mat dgemm_nn.mat A B
+dgemm_nt
+save -mat dgemm_nt.mat A B
+
+hold all
+plot(B(:,1), B(:,2));
+hold off
+
+dgemm_tn
+save -mat dgemm_tn.mat A B
+
+hold all
+plot(B(:,1), B(:,2));
+hold off
+
+dgemm_tt
+save -mat dgemm_tt.mat A B
 
 hold all
 plot(B(:,1), B(:,2));
@@ -21,7 +35,7 @@ hold off
 Gflops_max = A(1)*A(2);
 
 axis([0 300 0 Gflops_max]);
-legend('dgemm\_nt', 'dgemm\_nn', 'Location', 'SouthEast');
+legend('dgemm\_nn', 'dgemm\_nt', 'dgemm\_tn', 'dgemm\_tt', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
@@ -222,10 +236,17 @@ save -mat dpotrf_l.mat A B
 
 plot(B(:,1), B(:,2));
 
+dpotrf_u
+save -mat dpotrf_u.mat A B
+
+hold all
+plot(B(:,1), B(:,2));
+hold off
+
 Gflops_max = A(1)*A(2);
 
 axis([0 300 0 Gflops_max]);
-legend('dpotrf\_l', 'Location', 'SouthEast');
+legend('dpotrf\_l', 'dpotrf\_u', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
@@ -375,13 +396,27 @@ system(['rm ', file_name_eps]);
 
 f1 = figure();
 
-sgemm_nt
-save -mat sgemm_nt.mat A B
+sgemm_nn
+save -mat sgemm_nn.mat A B
 
 plot(B(:,1), B(:,2));
 
-sgemm_nn
-save -mat sgemm_nn.mat A B
+sgemm_nt
+save -mat sgemm_nt.mat A B
+
+hold all
+plot(B(:,1), B(:,2));
+hold off
+
+sgemm_tn
+save -mat sgemm_tn.mat A B
+
+hold all
+plot(B(:,1), B(:,2));
+hold off
+
+sgemm_tt
+save -mat sgemm_tt.mat A B
 
 hold all
 plot(B(:,1), B(:,2));
@@ -390,7 +425,7 @@ hold off
 Gflops_max = A(1)*A(2);
 
 axis([0 300 0 Gflops_max]);
-legend('sgemm\_nt', 'sgemm\_nn', 'Location', 'SouthEast');
+legend('sgemm\_nn', 'sgemm\_nt', 'sgemm\_tn', 'sgemm\_tt', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
@@ -592,10 +627,17 @@ save -mat spotrf_l.mat A B
 
 plot(B(:,1), B(:,2));
 
+spotrf_u
+save -mat spotrf_u.mat A B
+
+hold all
+plot(B(:,1), B(:,2));
+hold off
+
 Gflops_max = A(1)*A(2);
 
 axis([0 300 0 Gflops_max]);
-legend('spotrf\_l', 'Location', 'SouthEast');
+legend('spotrf\_l', 'spotrf\_u', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
