@@ -166,14 +166,16 @@ current_dir := $(patsubst %/,%,$(dir $(mkfile_path)))
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 CFLAGS  += -DLA_HIGH_PERFORMANCE
+BINARY_DIR = build/$(LA)/$(TARGET)
 endif
 ifeq ($(LA), REFERENCE)
 CFLAGS  += -DLA_REFERENCE
+BINARY_DIR = build/$(LA)/$(TARGET)
 endif
 ifeq ($(LA), BLAS_WRAPPER)
 CFLAGS  += -DLA_BLAS_WRAPPER
+BINARY_DIR = build/$(LA)/$(REF_BLAS)
 endif
-
 CFLAGS  += -DLA=$(LA)
 
 ifeq ($(BLAS_API), 1)

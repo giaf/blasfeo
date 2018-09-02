@@ -30,8 +30,6 @@
 # ----------- Include
 include ../Makefile.rule
 
-BINARY_DIR = build/$(LA)/$(TARGET)
-
 # ----------- Envs
 
 LIBS =

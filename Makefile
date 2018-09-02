@@ -829,11 +829,6 @@ deep_clean: clean
 
 
 
-# directory for tests  binaries
-BINARY_DIR = build/$(LA)/$(TARGET)
-
-
-
 ### benchmarks
 
 

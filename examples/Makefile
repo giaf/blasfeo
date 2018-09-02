@@ -29,7 +29,6 @@
 
 include ../Makefile.rule
 
-BINARY_DIR = build/$(LA)/$(TARGET)
 LIBS = $(BINARY_DIR)/libblasfeo.a
 
 # add different link library for different REF_BLAS implementation
