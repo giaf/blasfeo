@@ -841,6 +841,7 @@ BINARY_DIR = build/$(LA)/$(TARGET)
 
 deploy_to_benchmarks:
 	mkdir -p ./benchmarks/$(BINARY_DIR)/
+	mkdir -p ./benchmarks/$(BINARY_DIR)/BLASFEO_API/
 	cp ./lib/libblasfeo.a ./benchmarks/$(BINARY_DIR)/
 
 build_benchmarks:
