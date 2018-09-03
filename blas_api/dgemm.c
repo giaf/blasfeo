@@ -37,6 +37,10 @@
 
 
 
+#define KMAX 256
+
+
+
 // XXX implementation for x64 intel haswell only
 void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha, double *A, int *plda, double *B, int *pldb, double *beta, double *C, int *pldc)
 	{
@@ -52,24 +56,34 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 
 	int bs = 4;
 
-	double pU[12*256] __attribute__ ((aligned (64)));
-	int sdu = 256;
+// TODO visual studio alignment
+#if defined(TARGET_X64_INTEL_HASWELL)
+	double pU[3*4*KMAX] __attribute__ ((aligned (64)));
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	double pU[2*4*KMAX] __attribute__ ((aligned (64)));
+#elif defined(TARGET_GENERIC)
+	double pU[1*4*KMAX];
+#else
+	double pU[1*4*KMAX] __attribute__ ((aligned (64)));
+#endif
+	int sdu = (m+3)/4*4;
+	sdu = sdu<KMAX ? sdu : KMAX;
 
 	struct blasfeo_dmat sA, sB;
 	int sda, sdb;
 	int sA_size, sB_size;
 	void *smat_mem, *smat_mem_align;
 
-	if(*ta=='n')
+	if(*ta=='n' | *ta=='N')
 		{
-		if(*tb=='n')
+		if(*tb=='n' | *tb=='N')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-			if(m>=256 | n>=256 | k>=256)
+			if(n>=256 | k>=256 | k>KMAX)
 #elif defined(TARGET_X64_INTEL_CORE)
-			if(m>=8 | n>=8 | k>=8)
+			if(n>=8 | k>=8 | k>KMAX)
 #else
-			if(m>=12 | n>=12 | k>=12)
+			if(n>=12 | k>=12 | k>KMAX)
 #endif
 				{
 				goto nn_1;
@@ -79,14 +93,14 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 				goto nn_0;
 				}
 			}
-		else // tb==t
+		else if(*tb=='t' | *tb=='T')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-			if(m>=96 | n>=96 | k>=96)
+			if(n>=96 | k>=96 | k>KMAX)
 #elif defined(TARGET_X64_INTEL_CORE)
-			if(m>=8 | n>=8 | k>=8)
+			if(n>=8 | k>=8 | k>KMAX)
 #else
-			if(m>=12 | n>=12 | k>=12)
+			if(n>=12 | k>=12 | k>KMAX)
 #endif
 				{
 				goto nt_1;
@@ -96,17 +110,22 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 				goto nt_0;
 				}
 			}
+		else
+			{
+			printf("\nBLASFEO: dpotrf: wrong value for tb\n");
+			return;
+			}
 		}
-	else // ta==t
+	else if(*ta=='t' | *ta=='T')
 		{
-		if(*tb=='n')
+		if(*tb=='n' | *tb=='N')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-			if(m>=256 | n>=256 | k>=256)
+			if(n>=256 | k>=256 | k>KMAX)
 #elif defined(TARGET_X64_INTEL_CORE)
-			if(m>=8 | n>=8 | k>=8)
+			if(n>=8 | k>=8 | k>KMAX)
 #else
-			if(m>=12 | n>=12 | k>=12)
+			if(n>=12 | k>=12 | k>KMAX)
 #endif
 				{
 				goto tn_1;
@@ -116,14 +135,14 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 				goto tn_0;
 				}
 			}
-		else // tb==t
+		else if(*tb=='t' | *tb=='T')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-			if(m>=96 | n>=96 | k>=96)
+			if(n>=96 | k>=96 | k>KMAX)
 #elif defined(TARGET_X64_INTEL_CORE)
-			if(m>=8 | n>=8 | k>=8)
+			if(n>=8 | k>=8 | k>KMAX)
 #else
-			if(m>=12 | n>=12 | k>=12)
+			if(n>=12 | k>=12 | k>KMAX)
 #endif
 				{
 				goto tt_1;
@@ -133,6 +152,16 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 				goto tt_0;
 				}
 			}
+		else
+			{
+			printf("\nBLASFEO: dpotrf: wrong value for tb\n");
+			return;
+			}
+		}
+	else
+		{
+		printf("\nBLASFEO: dpotrf: wrong value for ta\n");
+		return;
 		}
 
 	return;

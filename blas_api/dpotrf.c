@@ -55,14 +55,22 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 
 	int bs = 4;
 
+#if defined(TARGET_GENERIC)
+	double pd[KMAX];
+#else
 	double pd[KMAX] __attribute__ ((aligned (64)));
+#endif
 
+// TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL)
 	double pU[3*4*KMAX] __attribute__ ((aligned (64)));
 	double pD[3*16] __attribute__ ((aligned (64)));
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	double pU[2*4*KMAX] __attribute__ ((aligned (64)));
 	double pD[2*16] __attribute__ ((aligned (64)));
+#elif defined(TARGET_GENERIC)
+	double pU[1*4*KMAX];
+	double pD[1*16];
 #else
 	double pU[1*4*KMAX] __attribute__ ((aligned (64)));
 	double pD[1*16] __attribute__ ((aligned (64)));
