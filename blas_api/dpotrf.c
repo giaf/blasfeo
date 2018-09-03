@@ -43,11 +43,13 @@
 
 
 
-void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc) // TODO int *info
+void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	{
 
 	int m = *pm;
 	int ldc = *pldc;
+
+	*info = 0;
 
 	int ii, jj;
 
@@ -215,6 +217,14 @@ l_0_left_4:
 	goto l_0_return;
 
 l_0_return:
+	for(ii=0; ii<m; ii++)
+		{
+		if(pd[ii]==0.0)
+			{
+			*info = ii+1;
+			return;
+			}
+		}
 	return;
 
 
@@ -343,6 +353,15 @@ l_1_left_4:
 	goto l_1_return;
 
 l_1_return:
+	for(ii=0; ii<m; ii++)
+		{
+		if(pc[ii]==0.0)
+			{
+			*info = ii+1;
+			free(smat_mem);
+			return;
+			}
+		}
 	free(smat_mem);
 	return;
 
@@ -534,6 +553,14 @@ u_0_left_4:
 	goto u_0_return;
 
 u_0_return:
+	for(ii=0; ii<m; ii++)
+		{
+		if(pd[ii]==0.0)
+			{
+			*info = ii+1;
+			return;
+			}
+		}
 	return;
 	
 
@@ -708,6 +735,15 @@ u_1_left_4:
 	goto u_1_return;
 
 u_1_return:
+	for(ii=0; ii<m; ii++)
+		{
+		if(pc[ii]==0.0)
+			{
+			*info = ii+1;
+			free(smat_mem);
+			return;
+			}
+		}
 	free(smat_mem);
 	return;
 

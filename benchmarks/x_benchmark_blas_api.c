@@ -272,9 +272,9 @@ int main()
 #elif defined(GETRF_NOPIVOT)
 #elif defined(GETRF_ROWPIVOT)
 #elif defined(POTRF_L)
-				blasfeo_dpotrf(&c_l, &n, B, &n);
+				blasfeo_dpotrf(&c_l, &n, B, &n, &info);
 #elif defined(POTRF_U)
-				blasfeo_dpotrf(&c_u, &n, B, &n);
+				blasfeo_dpotrf(&c_u, &n, B, &n, &info);
 #elif defined(GEMV_N)
 #elif defined(GEMV_T)
 #elif defined(TRMV_LNN)

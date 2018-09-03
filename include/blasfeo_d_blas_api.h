@@ -37,4 +37,4 @@ void blasfeo_dgemm(char *ta, char *tb, int *m, int *n, int *k, double *alpha, do
 
 // LAPACK
 //
-void blasfeo_dpotrf(char *uplo, int *m, double *A, int *lda); //, int *info);
+void blasfeo_dpotrf(char *uplo, int *m, double *A, int *lda, int *info);

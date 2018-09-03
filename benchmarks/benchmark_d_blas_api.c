@@ -263,7 +263,7 @@ int main()
 //				blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				for(ii=0; ii<n*n; ii++) D[ii] = C[ii];
 //				blasfeo_dpotrf(&uplo, &n, D, &n);
-				blasfeo_dpotrf(&uplo, &n, B, &n);
+				blasfeo_dpotrf(&uplo, &n, B, &n, &info);
 
 				}
 
