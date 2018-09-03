@@ -36,6 +36,10 @@
 
 
 
+#define KMAX 256
+
+
+
 /****************************
 * old interface
 ****************************/
@@ -1542,6 +1546,102 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 	return;
 	}
+
+
+
+#if 0
+// dgemm_tn
+void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	if(m<=0 || n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	const int ps = 4;
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+
+	int air = ai & (ps-1);
+	int bir = bi & (ps-1);
+	int cir = ci & (ps-1);
+	int dir = di & (ps-1);
+
+	if(cir!=0 | dir!=0)
+		{
+		printf("\nblasfeo_dgemm_tn: feature not implemented yet: ci, di not 0\n");
+		exit(1);
+		}
+
+	// pA, pB point to panels edges
+	double *pA = sA->pA + aj*ps + (ai-air)*sda + air;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
+	double *pC = sC->pA + cj*ps;
+	double *pD = sD->pA + dj*ps;
+
+	int offsetA = air;
+	int offsetB = bir;
+
+	// TODO offsetC offsetD
+
+// TODO visual studio alignment
+#if defined(TARGET_X64_INTEL_HASWELL)
+	double pU[3*4*KMAX] __attribute__ ((aligned (64)));
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	double pU[2*4*KMAX] __attribute__ ((aligned (64)));
+#elif defined(TARGET_GENERIC)
+	double pU[1*4*KMAX];
+#else
+	double pU[1*4*KMAX] __attribute__ ((aligned (64)));
+#endif
+	int sdu = (m+3)/4*4;
+	sdu = sdu<KMAX ? sdu : KMAX;
+
+	int ii, jj;
+
+	if(1)
+		{
+		goto tn_0;
+		}
+
+	return;
+
+tn_0:
+
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+ii*ps, sda, pU);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nn_4x4_lib4(k, &alpha, pU, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nn_4x4_vs_lib4(k, &alpha, pU, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		goto tn_0_left_4;
+		}
+
+tn_0_left_4:
+	kernel_dpacp_tn_4_lib4(k, offsetA, pA+ii*ps, sda, pU);
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dgemm_nn_4x4_vs_lib4(k, &alpha, pU, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
+		}
+	goto tn_0_return;
+
+tn_0_return:
+	return;
+	}
+#endif
 
 
 
