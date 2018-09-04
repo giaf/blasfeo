@@ -50,10 +50,14 @@ OBJS += benchmark_d_blas_api.o
 bin_dir:
 	# create bin folder if not existent
 	mkdir -p $(BINARY_DIR)/
+	mkdir -p $(BINARY_DIR)/BLASFEO_API/
+ifeq ($(BLAS_API), 1)
+	mkdir -p $(BINARY_DIR)/BLAS_API/
+endif
 
 common: bin_dir
 	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
-	echo $(OBJS)
+#	echo $(OBJS)
 
 .DEFAULT_GOAL := build
 .PHONY: build

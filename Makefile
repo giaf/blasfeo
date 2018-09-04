@@ -837,7 +837,9 @@ deep_clean: clean
 deploy_to_benchmarks:
 	mkdir -p ./benchmarks/$(BINARY_DIR)/
 	mkdir -p ./benchmarks/$(BINARY_DIR)/BLASFEO_API/
+ifeq ($(BLAS_API), 1)
 	mkdir -p ./benchmarks/$(BINARY_DIR)/BLAS_API/
+endif
 	cp ./lib/libblasfeo.a ./benchmarks/$(BINARY_DIR)/
 
 build_benchmarks:
