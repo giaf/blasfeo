@@ -39,10 +39,6 @@
 
 
 
-#define KMAX 256
-
-
-
 void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	{
 
@@ -56,27 +52,27 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	int bs = 4;
 
 #if defined(TARGET_GENERIC)
-	double pd[KMAX];
+	double pd[K_MAX];
 #else
-	double pd[KMAX] __attribute__ ((aligned (64)));
+	double pd[K_MAX] __attribute__ ((aligned (64)));
 #endif
 
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL)
-	double pU[3*4*KMAX] __attribute__ ((aligned (64)));
+	double pU[3*4*K_MAX] __attribute__ ((aligned (64)));
 	double pD[3*16] __attribute__ ((aligned (64)));
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	double pU[2*4*KMAX] __attribute__ ((aligned (64)));
+	double pU[2*4*K_MAX] __attribute__ ((aligned (64)));
 	double pD[2*16] __attribute__ ((aligned (64)));
 #elif defined(TARGET_GENERIC)
-	double pU[1*4*KMAX];
+	double pU[1*4*K_MAX];
 	double pD[1*16];
 #else
-	double pU[1*4*KMAX] __attribute__ ((aligned (64)));
+	double pU[1*4*K_MAX] __attribute__ ((aligned (64)));
 	double pD[1*16] __attribute__ ((aligned (64)));
 #endif
 	int sdu = (m+3)/4*4;
-	sdu = sdu<KMAX ? sdu : KMAX;
+	sdu = sdu<K_MAX ? sdu : K_MAX;
 
 
 	struct blasfeo_dmat sC;
@@ -89,11 +85,11 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	if(*uplo=='l' | *uplo=='L')
 		{
 #if defined(TARGET_X64_INTEL_HASWELL)
-		if(m>=128 | m>KMAX)
+		if(m>=128 | m>K_MAX)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-		if(m>=64 | m>KMAX)
+		if(m>=64 | m>K_MAX)
 #else
-		if(m>=12 | m>KMAX)
+		if(m>=12 | m>K_MAX)
 #endif
 			{
 			goto l_1;
@@ -106,11 +102,11 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	else if(*uplo=='u' | *uplo=='U')
 		{
 #if defined(TARGET_X64_INTEL_HASWELL)
-		if(m>=256 | m>KMAX)
+		if(m>=256 | m>K_MAX)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-		if(m>=64 | m>KMAX)
+		if(m>=64 | m>K_MAX)
 #else
-		if(m>=12 | m>KMAX)
+		if(m>=12 | m>K_MAX)
 #endif
 			{
 			goto u_1;

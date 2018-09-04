@@ -91,6 +91,9 @@ MACRO_LEVEL = 0
 BLAS_API = 0
 # BLAS_API = 1
 
+# Maximum K value for stack allocation (decrease this value if stack size is exceeded)
+K_MAX = 300
+
 # Use C99 extension to math library
 #
 # USE_C99_MATH = 0
@@ -182,6 +185,8 @@ ifeq ($(BLAS_API), 1)
 CFLAGS += -DBLAS_API
 ASFLAGS += -DBLAS_API
 endif
+
+CFLAGS  += -DK_MAX=$(K_MAX)
 
 ifeq ($(USE_C99_MATH), 1)
 CFLAGS += -DUSE_C99_MATH

@@ -37,10 +37,6 @@
 
 
 
-#define KMAX 256
-
-
-
 void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha, double *A, int *plda, double *B, int *pldb, double *beta, double *C, int *pldc)
 	{
 
@@ -57,16 +53,16 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL)
-	double pU[3*4*KMAX] __attribute__ ((aligned (64)));
+	double pU[3*4*K_MAX] __attribute__ ((aligned (64)));
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	double pU[2*4*KMAX] __attribute__ ((aligned (64)));
+	double pU[2*4*K_MAX] __attribute__ ((aligned (64)));
 #elif defined(TARGET_GENERIC)
-	double pU[1*4*KMAX];
+	double pU[1*4*K_MAX];
 #else
-	double pU[1*4*KMAX] __attribute__ ((aligned (64)));
+	double pU[1*4*K_MAX] __attribute__ ((aligned (64)));
 #endif
 	int sdu = (m+3)/4*4;
-	sdu = sdu<KMAX ? sdu : KMAX;
+	sdu = sdu<K_MAX ? sdu : K_MAX;
 
 	struct blasfeo_dmat sA, sB;
 	int sda, sdb;
@@ -78,13 +74,13 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 		if(*tb=='n' | *tb=='N')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
-			if(n>=256 | k>=256 | k>KMAX)
+			if(n>=256 | k>=256 | k>K_MAX)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-			if(n>=56 | k>=56 | k>KMAX)
+			if(n>=56 | k>=56 | k>K_MAX)
 #elif defined(TARGET_X64_INTEL_CORE)
-			if(n>=8 | k>=8 | k>KMAX)
+			if(n>=8 | k>=8 | k>K_MAX)
 #else
-			if(n>=12 | k>=12 | k>KMAX)
+			if(n>=12 | k>=12 | k>K_MAX)
 #endif
 				{
 				goto nn_1;
@@ -97,13 +93,13 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 		else if(*tb=='t' | *tb=='T')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
-			if(n>=96 | k>=96 | k>KMAX)
+			if(n>=96 | k>=96 | k>K_MAX)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-			if(n>=56 | k>=56 | k>KMAX)
+			if(n>=56 | k>=56 | k>K_MAX)
 #elif defined(TARGET_X64_INTEL_CORE)
-			if(n>=8 | k>=8 | k>KMAX)
+			if(n>=8 | k>=8 | k>K_MAX)
 #else
-			if(n>=12 | k>=12 | k>KMAX)
+			if(n>=12 | k>=12 | k>K_MAX)
 #endif
 				{
 				goto nt_1;
@@ -124,13 +120,13 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 		if(*tb=='n' | *tb=='N')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
-			if(n>=256 | k>=256 | k>KMAX)
+			if(n>=256 | k>=256 | k>K_MAX)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-			if(n>=56 | k>=56 | k>KMAX)
+			if(n>=56 | k>=56 | k>K_MAX)
 #elif defined(TARGET_X64_INTEL_CORE)
-			if(n>=8 | k>=8 | k>KMAX)
+			if(n>=8 | k>=8 | k>K_MAX)
 #else
-			if(n>=12 | k>=12 | k>KMAX)
+			if(n>=12 | k>=12 | k>K_MAX)
 #endif
 				{
 				goto tn_1;
@@ -143,13 +139,13 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 		else if(*tb=='t' | *tb=='T')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
-			if(n>=96 | k>=96 | k>KMAX)
+			if(n>=96 | k>=96 | k>K_MAX)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-			if(n>=56 | k>=56 | k>KMAX)
+			if(n>=56 | k>=56 | k>K_MAX)
 #elif defined(TARGET_X64_INTEL_CORE)
-			if(n>=8 | k>=8 | k>KMAX)
+			if(n>=8 | k>=8 | k>K_MAX)
 #else
-			if(n>=12 | k>=12 | k>KMAX)
+			if(n>=12 | k>=12 | k>K_MAX)
 #endif
 				{
 				goto tt_1;
