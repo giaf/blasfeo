@@ -51,6 +51,7 @@
 
 #define GEMM_NN_LIBSTR blasfeo_dgemm_nn
 #define GEMM_NT_LIBSTR blasfeo_dgemm_nt
+#define GEMM_TN_LIBSTR blasfeo_dgemm_tn
 #define SYRK_LN_LIBSTR blasfeo_dsyrk_ln
 #define SYRK_LN_MN_LIBSTR blasfeo_dsyrk_ln_mn
 #define TRMM_RLNN_LIBSTR blasfeo_dtrmm_rlnn

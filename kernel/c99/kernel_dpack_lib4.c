@@ -258,3 +258,74 @@ l3:
 	return;
 
 	}
+
+
+
+// copy transposed panel into normal panel
+void kernel_dpacp_tn_4_lib4(int kmax, int offsetA, double *A, int sda, double *B)
+	{
+
+	const int ps = 4;
+
+	int k;
+
+	int kna = (ps-offsetA)%ps;
+	kna = kmax<kna ? kmax : kna;
+
+	k = 0;
+	if(kna>0)
+		{
+		for( ; k<kna; k++)
+			{
+			//
+			B[0+ps*0] = A[0+ps*0];
+			B[1+ps*0] = A[0+ps*1];
+			B[2+ps*0] = A[0+ps*2];
+			B[3+ps*0] = A[0+ps*3];
+
+			A += 1;
+			B += ps;
+			}
+		A += ps*(sda-1);
+		}
+	for(; k<kmax-3; k+=4)
+		{
+		//
+		B[0+ps*0] = A[0+ps*0];
+		B[0+ps*1] = A[1+ps*0];
+		B[0+ps*2] = A[2+ps*0];
+		B[0+ps*3] = A[3+ps*0];
+		//
+		B[1+ps*0] = A[0+ps*1];
+		B[1+ps*1] = A[1+ps*1];
+		B[1+ps*2] = A[2+ps*1];
+		B[1+ps*3] = A[3+ps*1];
+		//
+		B[2+ps*0] = A[0+ps*2];
+		B[2+ps*1] = A[1+ps*2];
+		B[2+ps*2] = A[2+ps*2];
+		B[2+ps*3] = A[3+ps*2];
+		//
+		B[3+ps*0] = A[0+ps*3];
+		B[3+ps*1] = A[1+ps*3];
+		B[3+ps*2] = A[2+ps*3];
+		B[3+ps*3] = A[3+ps*3];
+
+		A += ps*sda;
+		B += ps*ps;
+		}
+	for( ; k<kmax; k++)
+		{
+		//
+		B[0+ps*0] = A[0+ps*0];
+		B[1+ps*0] = A[0+ps*1];
+		B[2+ps*0] = A[0+ps*2];
+		B[3+ps*0] = A[0+ps*3];
+
+		A += 1;
+		B += ps;
+		}
+	return;
+	}
+
+

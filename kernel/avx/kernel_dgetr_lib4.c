@@ -491,7 +491,7 @@ void kernel_dgetr_4_0_lib4(int kmax, double *A, int sda, double *B)
 
 
 
-// transposed of general matrices, read across panels, write along panels
+// copy transposed panel into normal panel
 void kernel_dpacp_tn_4_lib4(int kmax, int offsetA, double *A, int sda, double *B)
 	{
 

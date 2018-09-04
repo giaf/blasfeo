@@ -1067,182 +1067,6 @@ void dlauum_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *pA, int
 
 
 
-// dgemm nt
-void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
-	{
-	if(m<=0 | n<=0)
-		return;
-
-	// invalidate stored inverse diagonal of result matrix
-	sD->use_dA = 0;
-
-	const int ps = 4;
-
-	int sda = sA->cn;
-	int sdb = sB->cn;
-	int sdc = sC->cn;
-	int sdd = sD->cn;
-	int air = ai & (ps-1);
-	int bir = bi & (ps-1);
-	double *pA = sA->pA + aj*ps + (ai-air)*sda;
-	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
-	double *pC = sC->pA + cj*ps;
-	double *pD = sD->pA + dj*ps;
-
-	if(ai==0 & bi==0 & ci==0 & di==0)
-		{
-		dgemm_nt_lib(m, n, k, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd);
-		return;
-		}
-
-	int ci0 = ci-air;
-	int di0 = di-air;
-	int offsetC;
-	int offsetD;
-	if(ci0>=0)
-		{
-		pC += ci0/ps*ps*sdd;
-		offsetC = ci0%ps;
-		}
-	else
-		{
-		pC += -4*sdc;
-		offsetC = ps+ci0;
-		}
-	if(di0>=0)
-		{
-		pD += di0/ps*ps*sdd;
-		offsetD = di0%ps;
-		}
-	else
-		{
-		pD += -4*sdd;
-		offsetD = ps+di0;
-		}
-
-	int i, j, l;
-
-	int idxB;
-
-	// clean up at the beginning
-	if(air!=0)
-		{
-#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-		if(m>5)
-			{
-			j = 0;
-			idxB = 0;
-			// clean up at the beginning
-			if(bir!=0)
-				{
-				kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[0], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, bir+n-j);
-				j += ps-bir;
-				idxB += 4;
-				}
-			// main loop
-			for(; j<n; j+=4)
-				{
-				kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[0], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
-				idxB += 4;
-				}
-			m -= 2*ps-air;
-			pA += 2*ps*sda;
-			pC += 2*ps*sdc;
-			pD += 2*ps*sdd;
-			}
-		else // m<=4
-			{
-#endif
-			j = 0;
-			idxB = 0;
-			// clean up at the beginning
-			if(bir!=0)
-				{
-				kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[0], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, bir+n-j);
-				j += ps-bir;
-				idxB += 4;
-				}
-			// main loop
-			for(; j<n; j+=4)
-				{
-				kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[0], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
-				idxB += 4;
-				}
-			m -= ps-air;
-			pA += ps*sda;
-			pC += ps*sdc;
-			pD += ps*sdd;
-#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-			// nothing more to do
-//			return;
-			}
-#endif
-		}
-	i = 0;
-	// main loop
-#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	for(; i<m-4; i+=8)
-		{
-		j = 0;
-		idxB = 0;
-		// clean up at the beginning
-		if(bir!=0)
-			{
-			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
-			j += ps-bir;
-			idxB += 4;
-			}
-		// main loop
-		for(; j<n; j+=4)
-			{
-			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
-			idxB += 4;
-			}
-		}
-	if(i<m)
-		{
-		j = 0;
-		idxB = 0;
-		// clean up at the beginning
-		if(bir!=0)
-			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
-			j += ps-bir;
-			idxB += 4;
-			}
-		// main loop
-		for(; j<n; j+=4)
-			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
-			idxB += 4;
-			}
-		}
-#else
-	for(; i<m; i+=4)
-		{
-		j = 0;
-		idxB = 0;
-		// clean up at the beginning
-		if(bir!=0)
-			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
-			j += ps-bir;
-			idxB += 4;
-			}
-		// main loop
-		for(; j<n; j+=4)
-			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
-			idxB += 4;
-			}
-		}
-#endif
-
-	return;
-	}
-
-
-
 // dgemm nn
 void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
@@ -1549,7 +1373,182 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 
 
-#if 0
+// dgemm nt
+void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	const int ps = 4;
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	int air = ai & (ps-1);
+	int bir = bi & (ps-1);
+	double *pA = sA->pA + aj*ps + (ai-air)*sda;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
+	double *pC = sC->pA + cj*ps;
+	double *pD = sD->pA + dj*ps;
+
+	if(ai==0 & bi==0 & ci==0 & di==0)
+		{
+		dgemm_nt_lib(m, n, k, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd);
+		return;
+		}
+
+	int ci0 = ci-air;
+	int di0 = di-air;
+	int offsetC;
+	int offsetD;
+	if(ci0>=0)
+		{
+		pC += ci0/ps*ps*sdd;
+		offsetC = ci0%ps;
+		}
+	else
+		{
+		pC += -4*sdc;
+		offsetC = ps+ci0;
+		}
+	if(di0>=0)
+		{
+		pD += di0/ps*ps*sdd;
+		offsetD = di0%ps;
+		}
+	else
+		{
+		pD += -4*sdd;
+		offsetD = ps+di0;
+		}
+
+	int i, j, l;
+
+	int idxB;
+
+	// clean up at the beginning
+	if(air!=0)
+		{
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		if(m>5)
+			{
+			j = 0;
+			idxB = 0;
+			// clean up at the beginning
+			if(bir!=0)
+				{
+				kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[0], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, bir+n-j);
+				j += ps-bir;
+				idxB += 4;
+				}
+			// main loop
+			for(; j<n; j+=4)
+				{
+				kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[0], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
+				idxB += 4;
+				}
+			m -= 2*ps-air;
+			pA += 2*ps*sda;
+			pC += 2*ps*sdc;
+			pD += 2*ps*sdd;
+			}
+		else // m<=4
+			{
+#endif
+			j = 0;
+			idxB = 0;
+			// clean up at the beginning
+			if(bir!=0)
+				{
+				kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[0], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, bir+n-j);
+				j += ps-bir;
+				idxB += 4;
+				}
+			// main loop
+			for(; j<n; j+=4)
+				{
+				kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[0], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
+				idxB += 4;
+				}
+			m -= ps-air;
+			pA += ps*sda;
+			pC += ps*sdc;
+			pD += ps*sdd;
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+			// nothing more to do
+//			return;
+			}
+#endif
+		}
+	i = 0;
+	// main loop
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; i<m-4; i+=8)
+		{
+		j = 0;
+		idxB = 0;
+		// clean up at the beginning
+		if(bir!=0)
+			{
+			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
+			j += ps-bir;
+			idxB += 4;
+			}
+		// main loop
+		for(; j<n; j+=4)
+			{
+			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			idxB += 4;
+			}
+		}
+	if(i<m)
+		{
+		j = 0;
+		idxB = 0;
+		// clean up at the beginning
+		if(bir!=0)
+			{
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
+			j += ps-bir;
+			idxB += 4;
+			}
+		// main loop
+		for(; j<n; j+=4)
+			{
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			idxB += 4;
+			}
+		}
+#else
+	for(; i<m; i+=4)
+		{
+		j = 0;
+		idxB = 0;
+		// clean up at the beginning
+		if(bir!=0)
+			{
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
+			j += ps-bir;
+			idxB += 4;
+			}
+		// main loop
+		for(; j<n; j+=4)
+			{
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			idxB += 4;
+			}
+		}
+#endif
+
+	return;
+	}
+
+
+
 // dgemm_tn
 void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
@@ -1641,7 +1640,6 @@ tn_0_left_4:
 tn_0_return:
 	return;
 	}
-#endif
 
 
 

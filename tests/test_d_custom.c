@@ -242,6 +242,18 @@ int main()
 #endif
 
 #if 1
+	// gemm_tn
+	alpha = 1.0;
+	beta = 0.0;
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+
+	blasfeo_dgemm_tn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
+
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+	return 0;
+#endif
+
+#if 0
 	// trmm_rutn
 	alpha = -1.0;
 	beta = 0.0;
