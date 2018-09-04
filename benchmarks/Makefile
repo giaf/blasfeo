@@ -82,11 +82,11 @@ clean_all: clean
 
 
 
-# print
+# figures
 
-print_blas_run:
-	cp print_blas_run.m ./build/
-	cd ./build/ ; octave-cli print_blas_run.m
+figures_benchmark_one:
+	cp figures_benchmark_one.m ./build/
+	cd ./build/ ; octave-cli figures_benchmark_one.m
 
 
 

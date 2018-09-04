@@ -853,8 +853,8 @@ benchmarks: deploy_to_benchmarks build_benchmarks
 run_benchmarks:
 	make -C benchmarks run
 
-print_blas_run:
-	make -C benchmarks print_blas_run
+figures_benchmark_one:
+	make -C benchmarks figures_benchmark_one
 
 
 # BLASFEO API benchmark

@@ -27,9 +27,6 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-
-#if defined(BENCHMARKS_MODE)
-
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -477,6 +474,14 @@ void dgemm_nn_24_24_24(double alpha, double *A, int sda, double *B, int sdb, dou
 int main()
 	{
 
+#if !defined(BENCHMARKS_MODE)
+	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n");
+	printf("On CMake use -DBLASFEO_BENCHMARKS=ON .\n\n");
+	return 0;
+#endif
+
+
+
 #if defined(REF_BLAS_OPENBLAS)
 	openblas_set_num_threads(1);
 #endif
@@ -500,7 +505,7 @@ int main()
 
 	// maximum frequency of the processor
 	const float GHz_max = GHZ_MAX;
-	printf("Frequency used to compute theoretical peak: %5.1f GHz (edit test_param.h to modify this value).\n", GHz_max);
+	printf("Frequency used to compute theoretical peak: %5.1f GHz (edit benchmarks/cpu_freq.h to modify this value).\n", GHz_max);
 	printf("\n");
 
 	// maximum flops per cycle, double precision
@@ -536,36 +541,16 @@ int main()
 	printf("Testing BLASFEO version for generic scalar instruction set: theoretical peak %5.1f Gflops ???\n", flops_max*GHz_max);
 #endif
 
-//	FILE *f;
-//	f = fopen("./test_problems/results/test_blas.m", "w"); // a
 
-#if defined(TARGET_X64_INTEL_HASWELL)
-//	fprintf(f, "C = 'd_x64_intel_haswell';\n");
-//	fprintf(f, "\n");
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-//	fprintf(f, "C = 'd_x64_intel_sandybridge';\n");
-//	fprintf(f, "\n");
-#elif defined(TARGET_X64_INTEL_CORE)
-//	fprintf(f, "C = 'd_x64_intel_core';\n");
-//	fprintf(f, "\n");
-#elif defined(TARGET_X64_AMD_BULLDOZER)
-//	fprintf(f, "C = 'd_x64_amd_bulldozer';\n");
-//	fprintf(f, "\n");
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-//	fprintf(f, "C = 'd_armv8a_arm_cortex_a57';\n");
-//	fprintf(f, "\n");
-#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-//	fprintf(f, "C = 'd_armv7a_arm_cortex_a15';\n");
-//	fprintf(f, "\n");
-#elif defined(TARGET_GENERIC)
-//	fprintf(f, "C = 'd_generic';\n");
-//	fprintf(f, "\n");
-#endif
 
-//	fprintf(f, "A = [%f %f];\n", GHz_max, flops_max);
-//	fprintf(f, "\n");
+	FILE *f;
+	f = fopen("./build/benchmark_one.m", "w"); // a
 
-//	fprintf(f, "B = [\n");
+	fprintf(f, "A = [%f %f];\n", GHz_max, flops_max);
+	fprintf(f, "\n");
+	fprintf(f, "B = [\n");
+
+	printf("\nn\t Gflops\t    %%\t Gflops\n\n");
 
 
 
@@ -574,10 +559,7 @@ int main()
 	const int bsd = D_PS;
 	const int ncd = D_NC;
 
-/*	int info = 0;*/
 
-	printf("\nn\t  dgemm_blasfeo\t  dgemm_blas\n");
-	printf("\nn\t Gflops\t    %%\t Gflops\n\n");
 
 #if 1
 	int nn[] = {4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 148, 152, 156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224, 228, 232, 236, 240, 244, 248, 252, 256, 260, 264, 268, 272, 276, 280, 284, 288, 292, 296, 300, 304, 308, 312, 316, 320, 324, 328, 332, 336, 340, 344, 348, 352, 356, 360, 364, 368, 372, 376, 380, 384, 388, 392, 396, 400, 404, 408, 412, 416, 420, 424, 428, 432, 436, 440, 444, 448, 452, 456, 460, 500, 550, 600, 650, 700};
@@ -772,12 +754,13 @@ int main()
 //				kernel_dgemm_nn_8x4_gen_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 8, 0, 4);
 //				kernel_dgemm_nn_4x4_gen_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 8, 0, 4);
 
-//				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+				blasfeo_dgemm_tn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ln_mn(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //				blasfeo_dpotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
-				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dgetrf_nopivot(n, n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 //				blasfeo_dgeqrf(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
@@ -859,9 +842,9 @@ int main()
 //		float flop_operation = 1*16.0*2*n; // kernel 4x4
 //		float flop_operation = 0.5*16.0*2*n; // kernel 2x4
 
-//		float flop_operation = 2.0*n*n*n; // gemm
+		float flop_operation = 2.0*n*n*n; // gemm
 //		float flop_operation = 1.0*n*n*n; // syrk trmm trsm
-		float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
+//		float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
 //		float flop_operation = 2.0/3.0*n*n*n; // getrf
 //		float flop_operation = 4.0/3.0*n*n*n; // geqrf
 //		float flop_operation = 2.0*n*n*n; // geqrf_la
@@ -880,6 +863,10 @@ int main()
 		#endif
 
 		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n",
+			n,
+			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max,
+			Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n",
 			n,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max,
 			Gflops_blas, 100.0*Gflops_blas/Gflops_max);
@@ -909,21 +896,10 @@ int main()
 
 		}
 
-	printf("\n");
+	printf("];\n");
+	fprintf(f, "];\n");
 
 	return 0;
 
 	}
 
-#else
-
-#include <stdio.h>
-
-int main()
-	{
-	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n");
-	printf("On CMake use -DBLASFEO_BENCHMARKS=ON .\n\n");
-	return 0;
-	}
-
-#endif

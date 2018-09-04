@@ -52,9 +52,14 @@
 int main()
 	{
 
+#if !defined(BENCHMARKS_MODE)
+	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n");
+	printf("On CMake use -DBLASFEO_BENCHMARKS=ON .\n\n");
+	return 0;
+#endif
 #if !defined(BLAS_API)
 	printf("\nRecompile with BLAS_API=1 to run this benchmark!\n\n");
-	exit(1);
+	return 0;
 #endif
 
 	printf("\n");
@@ -66,7 +71,7 @@ int main()
 
 	// maximum frequency of the processor
 	const float GHz_max = GHZ_MAX;
-	printf("Frequency used to compute theoretical peak: %5.1f GHz (edit test_param.h to modify this value).\n", GHz_max);
+	printf("Frequency used to compute theoretical peak: %5.1f GHz (edit benchmarks/cpu_freq.h to modify this value).\n", GHz_max);
 	printf("\n");
 
 	// maximum flops per cycle, double precision
@@ -102,15 +107,17 @@ int main()
 	printf("Testing BLAS version for generic scalar instruction set: theoretical peak %5.1f Gflops ???\n", flops_max*GHz_max);
 #endif
 
-	FILE *f;
-	f = fopen("./build/tmp_run.m", "w"); // a
 
-	printf("A = [%f %f];\n", GHz_max, flops_max);
+
+	FILE *f;
+	f = fopen("./build/benchmark_one.m", "w"); // a
+
 	fprintf(f, "A = [%f %f];\n", GHz_max, flops_max);
-	printf("\n");
 	fprintf(f, "\n");
-	printf("B = [\n");
 	fprintf(f, "B = [\n");
+
+	printf("\nn\t Gflops\t    %%\t Gflops\n\n");
+
 
 	int ii, jj, ll;
 
@@ -339,7 +346,7 @@ int main()
 
 		}
 
-	printf("];\n");
+	printf("\n");
 	fprintf(f, "];\n");
 
 	fclose(f);
