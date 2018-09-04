@@ -1575,8 +1575,8 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	// pA, pB point to panels edges
 	double *pA = sA->pA + aj*ps + (ai-air)*sda + air;
 	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
-	double *pC = sC->pA + cj*ps;
-	double *pD = sD->pA + dj*ps;
+	double *pC = sC->pA + cj*ps + (ci-cir)*sdc;
+	double *pD = sD->pA + dj*ps + (di-dir)*sdd;
 
 	int offsetA = air;
 	int offsetB = bir;
@@ -1764,6 +1764,231 @@ tn_1_left_4:
 	goto tn_1_return;
 
 tn_1_return:
+	free(smat_mem);
+	return;
+
+	}
+
+
+
+// dgemm_tt
+void blasfeo_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	if(m<=0 || n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	const int ps = 4;
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+
+	int air = ai & (ps-1);
+	int bir = bi & (ps-1);
+	int cir = ci & (ps-1);
+	int dir = di & (ps-1);
+
+	if(bir!=0 | cir!=0 | dir!=0)
+		{
+		printf("\nblasfeo_dgemm_tt: feature not implemented yet: ci, di not 0\n");
+		exit(1);
+		}
+
+	// pA, pB point to panels edges
+	double *pA = sA->pA + aj*ps + (ai-air)*sda + air;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
+	double *pC = sC->pA + cj*ps + (ci-cir)*sdc;
+	double *pD = sD->pA + dj*ps + (di-dir)*sdd;
+
+	int offsetA = air;
+
+	// TODO offsetC offsetD
+
+// TODO visual studio alignment
+#if defined(TARGET_X64_INTEL_HASWELL)
+	double pU[3*4*K_MAX] __attribute__ ((aligned (64)));
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	double pU[2*4*K_MAX] __attribute__ ((aligned (64)));
+#elif defined(TARGET_GENERIC)
+	double pU[1*4*K_MAX];
+#else
+	double pU[1*4*K_MAX] __attribute__ ((aligned (64)));
+#endif
+	int sdu = (m+3)/4*4;
+	sdu = sdu<K_MAX ? sdu : K_MAX;
+
+	struct blasfeo_dmat sAt;
+	int sdat;
+	int sAt_size;
+	void *smat_mem, *smat_mem_align;
+	double *pAt;
+
+	int ii, jj;
+
+	if(k>K_MAX)
+		{
+		goto tt_1;
+		}
+	else
+		{
+		goto tt_0;
+		}
+
+	return;
+
+
+
+tt_0:
+
+	ii = 0;
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<m-7; ii+=8)
+		{
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pU+4*sdu);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nt_8x4_lib4(k, &alpha, pU, sdu, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nt_8x4_vs_lib4(k, &alpha, pU, sdu, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, sdu, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto tt_0_left_4;
+			}
+		else
+			{
+			goto tt_0_left_8;
+			}
+		}
+#else
+	for(; ii<m-3; ii+=4)
+		{
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+ii*ps, sda, pU);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nt_4x4_lib4(k, &alpha, pU, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nt_4x4_vs_lib4(k, &alpha, pU, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		goto tt_0_left_4;
+		}
+#endif
+	goto tt_0_return;
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+tt_0_left_8:
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pU+4*sdu);
+		for(jj=0; jj<n; jj+=4)
+			{
+			kernel_dgemm_nt_8x4_vs_lib4(k, &alpha, pU, sdu, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			}
+	goto tt_0_return;
+#endif
+
+tt_0_left_4:
+	kernel_dpacp_tn_4_lib4(k, offsetA, pA+ii*ps, sda, pU);
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dgemm_nt_4x4_vs_lib4(k, &alpha, pU, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
+		}
+	goto tt_0_return;
+
+tt_0_return:
+	return;
+
+
+
+tt_1:
+
+	sAt_size = blasfeo_memsize_dmat(12, k);
+	smat_mem = malloc(sAt_size+63);
+	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_create_dmat(12, k, &sAt, smat_mem_align);
+	pAt = sAt.pA;
+	sdat = sAt.cn;
+
+	ii = 0;
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<m-7; ii+=8)
+		{
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pAt+0*sdat);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pAt+4*sdat);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nt_8x4_lib4(k, &alpha, pAt, sdat, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nt_8x4_vs_lib4(k, &alpha, pAt, sdat, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, sdat, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto tt_1_left_4;
+			}
+		else
+			{
+			goto tt_1_left_8;
+			}
+		}
+#else
+	for(; ii<m-3; ii+=4)
+		{
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+ii*ps, sda, pAt);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nt_4x4_lib4(k, &alpha, pAt, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nt_4x4_vs_lib4(k, &alpha, pAt, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		goto tt_1_left_4;
+		}
+#endif
+	goto tt_1_return;
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+tt_1_left_8:
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pAt+0*sdat);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pAt+4*sdat);
+		for(jj=0; jj<n; jj+=4)
+			{
+			kernel_dgemm_nt_8x4_vs_lib4(k, &alpha, pAt, sdat, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			}
+	goto tt_1_return;
+#endif
+
+tt_1_left_4:
+	kernel_dpacp_tn_4_lib4(k, offsetA, pA+ii*ps, sda, pAt);
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dgemm_nt_4x4_vs_lib4(k, &alpha, pAt, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
+		}
+	goto tt_1_return;
+
+tt_1_return:
 	free(smat_mem);
 	return;
 
