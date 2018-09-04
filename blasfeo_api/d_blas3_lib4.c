@@ -1626,11 +1626,11 @@ tn_0:
 		{
 		if(m-ii<=4)
 			{
-			goto tn_0_left_8;
+			goto tn_0_left_4;
 			}
 		else
 			{
-			goto tn_0_left_4;
+			goto tn_0_left_8;
 			}
 		}
 #else
