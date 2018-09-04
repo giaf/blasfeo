@@ -41,7 +41,6 @@
 
 
 
-// XXX implementation for x64 intel haswell only
 void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha, double *A, int *plda, double *B, int *pldb, double *beta, double *C, int *pldc)
 	{
 
@@ -78,8 +77,10 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 		{
 		if(*tb=='n' | *tb=='N')
 			{
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
 			if(n>=256 | k>=256 | k>KMAX)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+			if(n>=56 | k>=56 | k>KMAX)
 #elif defined(TARGET_X64_INTEL_CORE)
 			if(n>=8 | k>=8 | k>KMAX)
 #else
@@ -95,8 +96,10 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 			}
 		else if(*tb=='t' | *tb=='T')
 			{
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
 			if(n>=96 | k>=96 | k>KMAX)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+			if(n>=56 | k>=56 | k>KMAX)
 #elif defined(TARGET_X64_INTEL_CORE)
 			if(n>=8 | k>=8 | k>KMAX)
 #else
@@ -120,8 +123,10 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 		{
 		if(*tb=='n' | *tb=='N')
 			{
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
 			if(n>=256 | k>=256 | k>KMAX)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+			if(n>=56 | k>=56 | k>KMAX)
 #elif defined(TARGET_X64_INTEL_CORE)
 			if(n>=8 | k>=8 | k>KMAX)
 #else
@@ -137,8 +142,10 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 			}
 		else if(*tb=='t' | *tb=='T')
 			{
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
 			if(n>=96 | k>=96 | k>KMAX)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+			if(n>=56 | k>=56 | k>KMAX)
 #elif defined(TARGET_X64_INTEL_CORE)
 			if(n>=8 | k>=8 | k>KMAX)
 #else

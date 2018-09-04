@@ -88,7 +88,13 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 
 	if(*uplo=='l' | *uplo=='L')
 		{
+#if defined(TARGET_X64_INTEL_HASWELL)
 		if(m>=128 | m>KMAX)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		if(m>=64 | m>KMAX)
+#else
+		if(m>=12 | m>KMAX)
+#endif
 			{
 			goto l_1;
 			}
@@ -99,7 +105,13 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 		}
 	else if(*uplo=='u' | *uplo=='U')
 		{
+#if defined(TARGET_X64_INTEL_HASWELL)
 		if(m>=256 | m>KMAX)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		if(m>=64 | m>KMAX)
+#else
+		if(m>=12 | m>KMAX)
+#endif
 			{
 			goto u_1;
 			}
