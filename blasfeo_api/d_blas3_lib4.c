@@ -1596,14 +1596,26 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	int sdu = (m+3)/4*4;
 	sdu = sdu<K_MAX ? sdu : K_MAX;
 
+	struct blasfeo_dmat sAt;
+	int sdat;
+	int sAt_size;
+	void *smat_mem, *smat_mem_align;
+	double *pAt;
+
 	int ii, jj;
 
-	if(1)
+	if(k>K_MAX)
+		{
+		goto tn_1;
+		}
+	else
 		{
 		goto tn_0;
 		}
 
 	return;
+
+
 
 tn_0:
 
@@ -1674,6 +1686,87 @@ tn_0_left_4:
 
 tn_0_return:
 	return;
+
+
+
+tn_1:
+
+	sAt_size = blasfeo_memsize_dmat(12, k);
+	smat_mem = malloc(sAt_size+63);
+	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_create_dmat(12, k, &sAt, smat_mem_align);
+	pAt = sAt.pA;
+	sdat = sAt.cn;
+
+	ii = 0;
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<m-7; ii+=8)
+		{
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pAt+0*sdat);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pAt+4*sdat);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nn_8x4_lib4(k, &alpha, pAt, sdat, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nn_8x4_vs_lib4(k, &alpha, pAt, sdat, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, sdat, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto tn_1_left_4;
+			}
+		else
+			{
+			goto tn_1_left_8;
+			}
+		}
+#else
+	for(; ii<m-3; ii+=4)
+		{
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+ii*ps, sda, pAt);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nn_4x4_lib4(k, &alpha, pAt, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nn_4x4_vs_lib4(k, &alpha, pAt, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		goto tn_1_left_4;
+		}
+#endif
+	goto tn_1_return;
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+tn_1_left_8:
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pAt+0*sdat);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pAt+4*sdat);
+		for(jj=0; jj<n; jj+=4)
+			{
+			kernel_dgemm_nn_8x4_vs_lib4(k, &alpha, pAt, sdat, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			}
+	goto tn_1_return;
+#endif
+
+tn_1_left_4:
+	kernel_dpacp_tn_4_lib4(k, offsetA, pA+ii*ps, sda, pAt);
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dgemm_nn_4x4_vs_lib4(k, &alpha, pAt, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
+		}
+	goto tn_1_return;
+
+tn_1_return:
+	free(smat_mem);
+	return;
+
 	}
 
 

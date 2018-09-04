@@ -900,6 +900,9 @@ inner_kernel_dpacp_tn_4_lib4:
 	.p2align 3
 1: // main loop
 	
+//	prefetcht0	0(%r12, %r13, 1) // software prefetch
+//	prefetcht0	64(%r12, %r13, 1) // software prefetch
+
 	vmovapd		0(%r12), %xmm0
 	vmovapd		64(%r12), %xmm15
 	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
