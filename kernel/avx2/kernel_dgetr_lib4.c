@@ -757,6 +757,7 @@ void kernel_dgetr_4_0_lib4(int kmax, double *A, int sda, double *B)
 
 
 
+#if 0
 // transposed of general matrices, read across panels, write along panels
 void kernel_dpacp_tn_4_lib4(int kmax, int offsetA, double *A, int sda, double *B)
 	{
@@ -820,4 +821,5 @@ void kernel_dpacp_tn_4_lib4(int kmax, int offsetA, double *A, int sda, double *B
 		}
 	return;
 	}
+#endif
 

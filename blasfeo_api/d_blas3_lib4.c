@@ -1620,7 +1620,37 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 tn_0:
 
 	ii = 0;
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; ii<m-11; ii+=12)
+		{
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pU+4*sdu);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+8)*ps, sda, pU+8*sdu);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nn_12x4_lib4(k, &alpha, pU, sdu, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nn_12x4_vs_lib4(k, &alpha, pU, sdu, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, sdu, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto tn_0_left_4;
+			}
+		if(m-ii<=8)
+			{
+			goto tn_0_left_8;
+			}
+		else
+			{
+			goto tn_0_left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
@@ -1665,6 +1695,18 @@ tn_0:
 #endif
 	goto tn_0_return;
 
+#if defined(TARGET_X64_INTEL_HASWELL)
+tn_0_left_12:
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pU+4*sdu);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+8)*ps, sda, pU+8*sdu);
+		for(jj=0; jj<n; jj+=4)
+			{
+			kernel_dgemm_nn_12x4_vs_lib4(k, &alpha, pU, sdu, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			}
+	goto tn_0_return;
+#endif
+
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 tn_0_left_8:
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
@@ -1699,7 +1741,37 @@ tn_1:
 	sdat = sAt.cn;
 
 	ii = 0;
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; ii<m-11; ii+=12)
+		{
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pAt+0*sdat);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pAt+4*sdat);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+8)*ps, sda, pAt+8*sdat);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nn_12x4_lib4(k, &alpha, pAt, sdat, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nn_12x4_vs_lib4(k, &alpha, pAt, sdat, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, sdat, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto tn_1_left_4;
+			}
+		if(m-ii<=8)
+			{
+			goto tn_1_left_8;
+			}
+		else
+			{
+			goto tn_1_left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pAt+0*sdat);
@@ -1743,6 +1815,18 @@ tn_1:
 		}
 #endif
 	goto tn_1_return;
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+tn_1_left_12:
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pAt+0*sdat);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pAt+4*sdat);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+8)*ps, sda, pAt+8*sdat);
+		for(jj=0; jj<n; jj+=4)
+			{
+			kernel_dgemm_nn_12x4_vs_lib4(k, &alpha, pAt, sdat, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			}
+	goto tn_1_return;
+#endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 tn_1_left_8:
@@ -1845,7 +1929,37 @@ void blasfeo_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 tt_0:
 
 	ii = 0;
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; ii<m-11; ii+=12)
+		{
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pU+4*sdu);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+8)*ps, sda, pU+8*sdu);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nt_12x4_lib4(k, &alpha, pU, sdu, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nt_12x4_vs_lib4(k, &alpha, pU, sdu, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, sdu, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto tt_0_left_4;
+			}
+		if(m-ii<=8)
+			{
+			goto tt_0_left_8;
+			}
+		else
+			{
+			goto tt_0_left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
@@ -1890,6 +2004,18 @@ tt_0:
 #endif
 	goto tt_0_return;
 
+#if defined(TARGET_X64_INTEL_HASWELL)
+tt_0_left_12:
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pU+4*sdu);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+8)*ps, sda, pU+8*sdu);
+		for(jj=0; jj<n; jj+=4)
+			{
+			kernel_dgemm_nt_12x4_vs_lib4(k, &alpha, pU, sdu, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			}
+	goto tt_0_return;
+#endif
+
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 tt_0_left_8:
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
@@ -1924,7 +2050,37 @@ tt_1:
 	sdat = sAt.cn;
 
 	ii = 0;
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; ii<m-11; ii+=12)
+		{
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pAt+0*sdat);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pAt+4*sdat);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+8)*ps, sda, pAt+8*sdat);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nt_12x4_lib4(k, &alpha, pAt, sdat, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nt_12x4_vs_lib4(k, &alpha, pAt, sdat, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, sdat, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto tt_1_left_4;
+			}
+		if(m-ii<=8)
+			{
+			goto tt_1_left_8;
+			}
+		else
+			{
+			goto tt_1_left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pAt+0*sdat);
@@ -1968,6 +2124,18 @@ tt_1:
 		}
 #endif
 	goto tt_1_return;
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+tt_1_left_12:
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pAt+0*sdat);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pAt+4*sdat);
+		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+8)*ps, sda, pAt+8*sdat);
+		for(jj=0; jj<n; jj+=4)
+			{
+			kernel_dgemm_nt_12x4_vs_lib4(k, &alpha, pAt, sdat, pB+jj*sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			}
+	goto tt_1_return;
+#endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 tt_1_left_8:
