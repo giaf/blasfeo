@@ -51,6 +51,16 @@
 
 
 
+#if defined(REF_BLAS_BLIS)
+#include "../include/d_blas_64.h"
+#elif defined(REF_BLAS_MKL)
+#include "mkl.h"
+#else
+#include "../include/d_blas.h"
+#endif
+
+
+
 #include "cpu_freq.h"
 
 
