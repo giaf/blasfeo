@@ -66,9 +66,13 @@ ifeq ($(TARGET), GENERIC)
 OBJS += dgemm.o dpotrf.o
 endif
 
-endif
+endif # HIGH_PERFROMANCE
 
-endif
+ifeq ($(LA), REFERENCE)
+OBJS += dgemm_ref.o
+endif # REFERENCE
+
+endif # BLAS_API
 
 obj: $(OBJS)
 
@@ -76,4 +80,4 @@ clean:
 	rm -f *.o
 	rm -f *.s
 
-
+dgemm_ref.o: dgemm_ref.c xgemm_ref.c

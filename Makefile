@@ -634,6 +634,12 @@ OBJS += \
 		blasfeo_api/s_blas3_diag_lib.o \
 		blasfeo_api/s_lapack_lib.o \
 
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm_ref.o \
+
+endif
+
 endif # LA choice
 
 ifeq ($(EXT_DEP), 1)
