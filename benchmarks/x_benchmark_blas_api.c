@@ -204,13 +204,13 @@ int main()
 		int rep_in;
 
 #if defined(DOUBLE_PRECISION)
-		double *A = malloc(n*n*sizeof(double));
-		double *B = malloc(n*n*sizeof(double));
-		double *D = malloc(n*n*sizeof(double));
+		double *A; d_zeros_align(&A, n, n); // = malloc(n*n*sizeof(double));
+		double *B; d_zeros_align(&B, n, n); // = malloc(n*n*sizeof(double));
+		double *D; d_zeros_align(&D, n, n); // = malloc(n*n*sizeof(double));
 #elif defined(SINGLE_PRECISION)
-		float *A = malloc(n*n*sizeof(float));
-		float *B = malloc(n*n*sizeof(float));
-		float *D = malloc(n*n*sizeof(float));
+		float *A; s_zeros_align(&A, n, n); // = malloc(n*n*sizeof(float));
+		float *B; s_zeros_align(&B, n, n); // = malloc(n*n*sizeof(float));
+		float *D; s_zeros_align(&D, n, n); // = malloc(n*n*sizeof(float));
 #endif
 
 		// A
@@ -367,9 +367,18 @@ int main()
 			n,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max);
 
-		free(A);
-		free(B);
-		free(D);
+//		free(A);
+//		free(B);
+//		free(D);
+#if defined(DOUBLE_PRECISION)
+		d_free_align(A);
+		d_free_align(B);
+		d_free_align(D);
+#elif defined(SINGLE_PRECISION)
+		s_free_align(A);
+		s_free_align(B);
+		s_free_align(D);
+#endif
 
 		}
 

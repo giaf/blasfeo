@@ -338,9 +338,12 @@ int main()
 				blasfeo_dcolin(n, &sx2, 0, &sB2, 0, n-1);
 				blasfeo_dgelqf(n, n, &sB2, 0, 0, &sB2, 0, 0, lq_work);
 #elif defined(GEQRF)
-				blasfeo_dgeqrf(n, n, &sB, 0, 0, &sD, 0, 0, qr_work);
+				blasfeo_drowin(n, 1.0, &sx2, 0, &sB2, n-1, 0);
+				blasfeo_dgeqrf(n, n, &sB2, 0, 0, &sB2, 0, 0, qr_work);
 #elif defined(GETRF_NOPIVOT)
+#if !defined(LA_BLAS_WRAPPER)
 				blasfeo_dgetrf_nopivot(n, n, &sB, 0, 0, &sB, 0, 0);
+#endif
 #elif defined(GETRF_ROWPIVOT)
 				blasfeo_dgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 #elif defined(POTRF_L)
@@ -359,7 +362,9 @@ int main()
 #elif defined(TRSV_LTN)
 				blasfeo_dtrsv_ltn(n, &sB, 0, 0, &sx, 0, &sz, 0);
 #elif defined(GEMV_NT)
+#if !defined(LA_BLAS_WRAPPER)
 				blasfeo_dgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sz, 0, &sz, 0, &sz, 0, &sz, 0);
+#endif
 #elif defined(SYMV_L)
 				blasfeo_dsymv_l(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #else
@@ -394,9 +399,12 @@ int main()
 				blasfeo_scolin(n, &sx2, 0, &sB2, 0, n-1);
 				blasfeo_sgelqf(n, n, &sB2, 0, 0, &sB2, 0, 0, lq_work);
 #elif defined(GEQRF)
-				blasfeo_sgeqrf(n, n, &sB, 0, 0, &sB, 0, 0, qr_work);
+				blasfeo_srowin(n, 1.0, &sx2, 0, &sB2, n-1, 0);
+				blasfeo_sgeqrf(n, n, &sB2, 0, 0, &sB2, 0, 0, qr_work);
 #elif defined(GETRF_NOPIVOT)
+#if !defined(LA_BLAS_WRAPPER)
 				blasfeo_sgetrf_nopivot(n, n, &sB, 0, 0, &sB, 0, 0);
+#endif
 #elif defined(GETRF_ROWPIVOT)
 				blasfeo_sgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 #elif defined(POTRF_L)
@@ -415,7 +423,9 @@ int main()
 #elif defined(TRSV_LTN)
 				blasfeo_strsv_ltn(n, &sB, 0, 0, &sx, 0, &sz, 0);
 #elif defined(GEMV_NT)
+#if !defined(LA_BLAS_WRAPPER)
 				blasfeo_sgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sz, 0, &sz, 0, &sz, 0, &sz, 0);
+#endif
 #elif defined(SYMV_L)
 				blasfeo_ssymv_l(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #else
