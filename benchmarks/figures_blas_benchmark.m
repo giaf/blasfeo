@@ -557,12 +557,12 @@ system(['rm ', file_name_eps]);
 f1 = figure();
 
 sgelqf
-save -mat dgelqf.mat A B
+save -mat sgelqf.mat A B
 
 plot(B(:,1), B(:,2));
 
 sgeqrf
-save -mat dgeqrf.mat A B
+save -mat sgeqrf.mat A B
 
 hold all
 plot(B(:,1), B(:,2));
