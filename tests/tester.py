@@ -24,7 +24,6 @@ class CookBook:
         # build standard recipe skelethon
         self.build_recipe()
 
-
     def run_all_recipes(self):
         # tune the recipe and run
 
@@ -45,7 +44,6 @@ class CookBook:
 
                 self.recipe["flags"]["TARGET"]=target
                 self.run_recipe()
-
 
     def run_recipe(self):
         # preparation step
@@ -80,7 +78,6 @@ class CookBook:
         print(f"\nTested {flags['TARGET']}:{routine_name} ({self.DONE}/{self.TOTAL})\n")
 
         return status
-
 
     def build_recipe(self):
         scheduled_routines = set(self.specs['routines'])
