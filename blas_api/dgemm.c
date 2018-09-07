@@ -288,7 +288,7 @@ nn_1:
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(n, k, &sB, smat_mem_align+sA_size);
 
-	blasfeo_pack_tran_dmat(k, n, B, k, &sB, 0, 0);
+	blasfeo_pack_tran_dmat(k, n, B, ldb, &sB, 0, 0);
 
 	sda = sA.cn;
 	sdb = sB.cn;
@@ -752,7 +752,7 @@ tn_1:
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(n, k, &sB, smat_mem_align+sA_size);
 
-	blasfeo_pack_tran_dmat(k, n, B, k, &sB, 0, 0);
+	blasfeo_pack_tran_dmat(k, n, B, ldb, &sB, 0, 0);
 
 	sda = sA.cn;
 	sdb = sB.cn;
