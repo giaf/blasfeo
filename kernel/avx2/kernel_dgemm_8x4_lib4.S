@@ -3062,9 +3062,6 @@ inner_scale_ab_8x4_gen_lib4:
 	vmulpd		%ymm6, %ymm15, %ymm6
 	vmulpd		%ymm7, %ymm15, %ymm7
 
-	movq	%r13, %rax // C1 <- C0
-	addq	%r14, %rax // C1 <- C0 + 4*sdc*sizeof(double)
-
 	// beta
 	vbroadcastsd	0(%r11), %ymm15
 
@@ -3087,21 +3084,18 @@ inner_scale_ab_8x4_gen_lib4:
 	vmovapd		96(%r13), %ymm14
 	vfmadd231pd	%ymm14, %ymm15, %ymm3
 
-	vmovapd		0(%rax), %ymm14
+	vmovapd		0(%r13, %r14, 1), %ymm14
 	vfmadd231pd	%ymm14, %ymm15, %ymm4
-	vmovapd		32(%rax), %ymm14
+	vmovapd		32(%r13, %r14, 1), %ymm14
 	vfmadd231pd	%ymm14, %ymm15, %ymm5
-	vmovapd		64(%rax), %ymm14
+	vmovapd		64(%r13, %r14, 1), %ymm14
 	vfmadd231pd	%ymm14, %ymm15, %ymm6
-	vmovapd		96(%rax), %ymm14
+	vmovapd		96(%r13, %r14, 1), %ymm14
 	vfmadd231pd	%ymm14, %ymm15, %ymm7
 
 	jmp		3f
 
 0:
-
-	movq	%rax, %rbx // C0
-	addq	%r14, %rbx // C1 <- C0 + 4*sdc*sizeof(double)
 
 	cmpl	$1, %r12d
 	jg		1f
@@ -3109,8 +3103,8 @@ inner_scale_ab_8x4_gen_lib4:
 	// offset==1
 
 	vmovapd		0(%r13), %ymm12
-	vmovapd		0(%rax), %ymm13
-	vmovapd		0(%rbx), %ymm14
+	vmovapd		0(%r13, %r14, 1), %ymm13
+	vmovapd		0(%r13, %r14, 2), %ymm14
 	vblendpd	$0x1, %ymm13, %ymm12, %ymm12
 	vblendpd	$0x1, %ymm14, %ymm13, %ymm13
 	vperm2f128	$0x01, %ymm12, %ymm12, %ymm14
@@ -3121,8 +3115,8 @@ inner_scale_ab_8x4_gen_lib4:
 	vfmadd231pd	%ymm13, %ymm15, %ymm4
 
 	vmovapd		32(%r13), %ymm12
-	vmovapd		32(%rax), %ymm13
-	vmovapd		32(%rbx), %ymm14
+	vmovapd		32(%r13, %r14, 1), %ymm13
+	vmovapd		32(%r13, %r14, 2), %ymm14
 	vblendpd	$0x1, %ymm13, %ymm12, %ymm12
 	vblendpd	$0x1, %ymm14, %ymm13, %ymm13
 	vperm2f128	$0x01, %ymm12, %ymm12, %ymm14
@@ -3133,8 +3127,8 @@ inner_scale_ab_8x4_gen_lib4:
 	vfmadd231pd	%ymm13, %ymm15, %ymm5
 
 	vmovapd		64(%r13), %ymm12
-	vmovapd		64(%rax), %ymm13
-	vmovapd		64(%rbx), %ymm14
+	vmovapd		64(%r13, %r14, 1), %ymm13
+	vmovapd		64(%r13, %r14, 2), %ymm14
 	vblendpd	$0x1, %ymm13, %ymm12, %ymm12
 	vblendpd	$0x1, %ymm14, %ymm13, %ymm13
 	vperm2f128	$0x01, %ymm12, %ymm12, %ymm14
@@ -3145,8 +3139,8 @@ inner_scale_ab_8x4_gen_lib4:
 	vfmadd231pd	%ymm13, %ymm15, %ymm6
 
 	vmovapd		96(%r13), %ymm12
-	vmovapd		96(%rax), %ymm13
-	vmovapd		96(%rbx), %ymm14
+	vmovapd		96(%r13, %r14, 1), %ymm13
+	vmovapd		96(%r13, %r14, 2), %ymm14
 	vblendpd	$0x1, %ymm13, %ymm12, %ymm12
 	vblendpd	$0x1, %ymm14, %ymm13, %ymm13
 	vperm2f128	$0x01, %ymm12, %ymm12, %ymm14
@@ -3166,8 +3160,8 @@ inner_scale_ab_8x4_gen_lib4:
 	// offset==2
 
 	vmovapd		0(%r13), %ymm12
-	vmovapd		0(%rax), %ymm13
-	vmovapd		0(%rbx), %ymm14
+	vmovapd		0(%r13, %r14, 1), %ymm13
+	vmovapd		0(%r13, %r14, 2), %ymm14
 	vblendpd	$0x3, %ymm13, %ymm12, %ymm12
 	vblendpd	$0x3, %ymm14, %ymm13, %ymm13
 	vperm2f128	$0x01, %ymm12, %ymm12, %ymm12
@@ -3176,8 +3170,8 @@ inner_scale_ab_8x4_gen_lib4:
 	vfmadd231pd	%ymm13, %ymm15, %ymm4
 
 	vmovapd		32(%r13), %ymm12
-	vmovapd		32(%rax), %ymm13
-	vmovapd		32(%rbx), %ymm14
+	vmovapd		32(%r13, %r14, 1), %ymm13
+	vmovapd		32(%r13, %r14, 2), %ymm14
 	vblendpd	$0x3, %ymm13, %ymm12, %ymm12
 	vblendpd	$0x3, %ymm14, %ymm13, %ymm13
 	vperm2f128	$0x01, %ymm12, %ymm12, %ymm12
@@ -3186,8 +3180,8 @@ inner_scale_ab_8x4_gen_lib4:
 	vfmadd231pd	%ymm13, %ymm15, %ymm5
 
 	vmovapd		64(%r13), %ymm12
-	vmovapd		64(%rax), %ymm13
-	vmovapd		64(%rbx), %ymm14
+	vmovapd		64(%r13, %r14, 1), %ymm13
+	vmovapd		64(%r13, %r14, 2), %ymm14
 	vblendpd	$0x3, %ymm13, %ymm12, %ymm12
 	vblendpd	$0x3, %ymm14, %ymm13, %ymm13
 	vperm2f128	$0x01, %ymm12, %ymm12, %ymm12
@@ -3196,8 +3190,8 @@ inner_scale_ab_8x4_gen_lib4:
 	vfmadd231pd	%ymm13, %ymm15, %ymm6
 
 	vmovapd		96(%r13), %ymm12
-	vmovapd		96(%rax), %ymm13
-	vmovapd		96(%rbx), %ymm14
+	vmovapd		96(%r13, %r14, 1), %ymm13
+	vmovapd		96(%r13, %r14, 2), %ymm14
 	vblendpd	$0x3, %ymm13, %ymm12, %ymm12
 	vblendpd	$0x3, %ymm14, %ymm13, %ymm13
 	vperm2f128	$0x01, %ymm12, %ymm12, %ymm12
@@ -3213,8 +3207,8 @@ inner_scale_ab_8x4_gen_lib4:
 	// offset==3
 
 	vmovapd		0(%r13), %ymm12
-	vmovapd		0(%rax), %ymm13
-	vmovapd		0(%rbx), %ymm14
+	vmovapd		0(%r13, %r14, 1), %ymm13
+	vmovapd		0(%r13, %r14, 2), %ymm14
 	vblendpd	$0x7, %ymm13, %ymm12, %ymm12
 	vblendpd	$0x7, %ymm14, %ymm13, %ymm13
 	vperm2f128	$0x01, %ymm12, %ymm12, %ymm14
@@ -3225,8 +3219,8 @@ inner_scale_ab_8x4_gen_lib4:
 	vfmadd231pd	%ymm13, %ymm15, %ymm4
 
 	vmovapd		32(%r13), %ymm12
-	vmovapd		32(%rax), %ymm13
-	vmovapd		32(%rbx), %ymm14
+	vmovapd		32(%r13, %r14, 1), %ymm13
+	vmovapd		32(%r13, %r14, 2), %ymm14
 	vblendpd	$0x7, %ymm13, %ymm12, %ymm12
 	vblendpd	$0x7, %ymm14, %ymm13, %ymm13
 	vperm2f128	$0x01, %ymm12, %ymm12, %ymm14
@@ -3237,8 +3231,8 @@ inner_scale_ab_8x4_gen_lib4:
 	vfmadd231pd	%ymm13, %ymm15, %ymm5
 
 	vmovapd		64(%r13), %ymm12
-	vmovapd		64(%rax), %ymm13
-	vmovapd		64(%rbx), %ymm14
+	vmovapd		64(%r13, %r14, 1), %ymm13
+	vmovapd		64(%r13, %r14, 2), %ymm14
 	vblendpd	$0x7, %ymm13, %ymm12, %ymm12
 	vblendpd	$0x7, %ymm14, %ymm13, %ymm13
 	vperm2f128	$0x01, %ymm12, %ymm12, %ymm14
@@ -3249,8 +3243,8 @@ inner_scale_ab_8x4_gen_lib4:
 	vfmadd231pd	%ymm13, %ymm15, %ymm6
 
 	vmovapd		96(%r13), %ymm12
-	vmovapd		96(%rax), %ymm13
-	vmovapd		96(%rbx), %ymm14
+	vmovapd		96(%r13, %r14, 1), %ymm13
+	vmovapd		96(%r13, %r14, 2), %ymm14
 	vblendpd	$0x7, %ymm13, %ymm12, %ymm12
 	vblendpd	$0x7, %ymm14, %ymm13, %ymm13
 	vperm2f128	$0x01, %ymm12, %ymm12, %ymm14
@@ -7939,7 +7933,7 @@ kernel_dgemm_nt_4x8_vs_lib4:
 
 
 
-//                                   rdi    rsi            rdx        rcx      r8         r9            rsp+8        rsp+16     rsp+24   rsp+32       rsp+40     rsp+48   rsp+56  rsp+64  rsp+72  rsp+80
+//                                   1      2              3          4        5          6             7            8          9        10           11         12       13      14      15     16
 // void kernel_dgemm_nt_8x4_gen_lib4(int k, double *alpha, double *A, int sda, double *B, double *beta, int offsetC, double *C, int sdc, int offsetD, double *D, int sdd, int m0, int m1, int n0, int n1);
 
 	.p2align 4,,15
@@ -13048,14 +13042,10 @@ LC03: // { 7.5 6.5 5.5 4.5 }
 LC04: // { 1.0 1.0 1.0 1.0 }
 	.align 5
 #endif
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
+	.double	1.0
+	.double	1.0
+	.double	1.0
+	.double	1.0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -13064,14 +13054,10 @@ LC04: // { 1.0 1.0 1.0 1.0 }
 	.align 5
 LC05: // { 1.0 1.0 1.0 -1.0 }
 #endif
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
+	.double	-1.0
+	.double	1.0
+	.double	1.0
+	.double	1.0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -13080,14 +13066,10 @@ LC05: // { 1.0 1.0 1.0 -1.0 }
 	.align 5
 LC06: // { 1.0 1.0 -1.0 -1.0 }
 #endif
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
+	.double	-1.0
+	.double	-1.0
+	.double	1.0
+	.double	1.0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -13096,14 +13078,10 @@ LC06: // { 1.0 1.0 -1.0 -1.0 }
 	.align 5
 LC07: // { 1.0 -1.0 -1.0 -1.0 }
 #endif
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	1072693248
+	.double	-1.0
+	.double	-1.0
+	.double	-1.0
+	.double	1.0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -13112,14 +13090,10 @@ LC07: // { 1.0 -1.0 -1.0 -1.0 }
 	.align 5
 LC08: // { -1.0 -1.0 -1.0 1.0 }
 #endif
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	-1074790400
+	.double	1.0
+	.double	-1.0
+	.double	-1.0
+	.double	-1.0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -13128,14 +13102,10 @@ LC08: // { -1.0 -1.0 -1.0 1.0 }
 	.align 5
 LC09: // { -1.0 -1.0 1.0 1.0 }
 #endif
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	-1074790400
-	.long	0
-	.long	-1074790400
+	.double	1.0
+	.double	1.0
+	.double	-1.0
+	.double	-1.0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -13144,14 +13114,10 @@ LC09: // { -1.0 -1.0 1.0 1.0 }
 	.align 5
 LC10: // { -1.0 1.0 1.0 1.0 }
 #endif
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	1072693248
-	.long	0
-	.long	-1074790400
+	.double	1.0
+	.double	1.0
+	.double	1.0
+	.double	-1.0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
