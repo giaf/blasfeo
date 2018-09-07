@@ -261,6 +261,122 @@ l3:
 
 
 
+void kernel_dunpack_nt_4_lib4(int kmax, double *C, double *A, int lda)
+{
+
+	const int ps = 4;
+
+	int ii;
+
+	ii = 0;
+	for(; ii<kmax-3; ii+=4)
+		{
+		A[0+lda*0] = C[0+ps*0];
+		A[0+lda*1] = C[1+ps*0];
+		A[0+lda*2] = C[2+ps*0];
+		A[0+lda*3] = C[3+ps*0];
+
+		A[1+lda*0] = C[0+ps*1];
+		A[1+lda*1] = C[1+ps*1];
+		A[1+lda*2] = C[2+ps*1];
+		A[1+lda*3] = C[3+ps*1];
+
+		A[2+lda*0] = C[0+ps*2];
+		A[2+lda*1] = C[1+ps*2];
+		A[2+lda*2] = C[2+ps*2];
+		A[2+lda*3] = C[3+ps*2];
+
+		A[3+lda*0] = C[0+ps*3];
+		A[3+lda*1] = C[1+ps*3];
+		A[3+lda*2] = C[2+ps*3];
+		A[3+lda*3] = C[3+ps*3];
+
+		A += 4;
+		C += 4*ps;
+		}
+	for(; ii<kmax; ii++)
+		{
+		A[0+lda*0] = C[0+ps*0];
+		A[0+lda*1] = C[1+ps*0];
+		A[0+lda*2] = C[2+ps*0];
+		A[0+lda*3] = C[3+ps*0];
+
+		A += 1;
+		C += 1*ps;
+		}
+
+	return;
+
+	}
+
+
+
+void kernel_dunpack_nt_4_vs_lib4(int kmax, double *C, double *A, int lda, int m1)
+{
+
+	if(m1<=0)
+		return;
+
+	const int ps = 4;
+
+	int ii;
+
+	if(m1>=4)
+		{
+		kernel_dunpack_nt_4_lib4(kmax, C, A, lda);
+		return;
+		}
+	else if(m1==1)
+		{
+		goto l1;
+		}
+	else if(m1==2)
+		{
+		goto l2;
+		}
+	else //if(m1==3)
+		{
+		goto l3;
+		}
+	return;
+	
+l1:
+	for(; ii<kmax; ii++)
+		{
+		A[0+lda*0] = C[0+ps*0];
+
+		A += 1;
+		C += 1*ps;
+		}
+	return;
+		
+l2:
+	for(; ii<kmax; ii++)
+		{
+		A[0+lda*0] = C[0+ps*0];
+		A[0+lda*1] = C[1+ps*0];
+
+		A += 1;
+		C += 1*ps;
+		}
+	return;
+		
+l3:
+	for(; ii<kmax; ii++)
+		{
+		A[0+lda*0] = C[0+ps*0];
+		A[0+lda*1] = C[1+ps*0];
+		A[0+lda*2] = C[2+ps*0];
+
+		A += 1;
+		C += 1*ps;
+		}
+	return;
+
+	}
+
+
+
 // copy transposed panel into normal panel
 void kernel_dpacp_tn_4_lib4(int kmax, int offsetA, double *A, int sda, double *B)
 	{
