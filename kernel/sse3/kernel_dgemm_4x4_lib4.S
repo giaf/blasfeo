@@ -3876,51 +3876,51 @@ inner_edge_dtrsm_rlt_inv_4x4_lib4:
 	movddup			0(%r11), %xmm13
 	mulpd			%xmm13, %xmm0
 	mulpd			%xmm13, %xmm4
-
 	movddup			8(%r10), %xmm13
 	movapd			%xmm13, %xmm12
 	mulpd			%xmm0, %xmm13
 	mulpd			%xmm4, %xmm12
 	subpd			%xmm13, %xmm1
 	subpd			%xmm12, %xmm5
-	movddup			8(%r11), %xmm13
-	mulpd			%xmm13, %xmm1
-	mulpd			%xmm13, %xmm5
-
 	movddup			16(%r10), %xmm13
 	movapd			%xmm13, %xmm12
 	mulpd			%xmm0, %xmm12
 	mulpd			%xmm4, %xmm13
 	subpd			%xmm12, %xmm2
 	subpd			%xmm13, %xmm6
-	movddup			48(%r10), %xmm13
-	movapd			%xmm13, %xmm12
-	mulpd			%xmm1, %xmm12
-	mulpd			%xmm5, %xmm13
-	subpd			%xmm12, %xmm2
-	subpd			%xmm13, %xmm6
-	movddup			16(%r11), %xmm13
-	mulpd			%xmm13, %xmm2
-	mulpd			%xmm13, %xmm6
-
 	movddup			24(%r10), %xmm13
 	movapd			%xmm13, %xmm12
 	mulpd			%xmm0, %xmm12
 	mulpd			%xmm4, %xmm13
 	subpd			%xmm12, %xmm3
 	subpd			%xmm13, %xmm7
+
+	movddup			8(%r11), %xmm13
+	mulpd			%xmm13, %xmm1
+	mulpd			%xmm13, %xmm5
+	movddup			48(%r10), %xmm13
+	movapd			%xmm13, %xmm12
+	mulpd			%xmm1, %xmm12
+	mulpd			%xmm5, %xmm13
+	subpd			%xmm12, %xmm2
+	subpd			%xmm13, %xmm6
 	movddup			56(%r10), %xmm13
 	movapd			%xmm13, %xmm12
 	mulpd			%xmm1, %xmm12
 	mulpd			%xmm5, %xmm13
 	subpd			%xmm12, %xmm3
 	subpd			%xmm13, %xmm7
+
+	movddup			16(%r11), %xmm13
+	mulpd			%xmm13, %xmm2
+	mulpd			%xmm13, %xmm6
 	movddup			88(%r10), %xmm13
 	movapd			%xmm13, %xmm12
 	mulpd			%xmm2, %xmm12
 	mulpd			%xmm6, %xmm13
 	subpd			%xmm12, %xmm3
 	subpd			%xmm13, %xmm7
+
 	movddup			24(%r11), %xmm13
 	mulpd			%xmm13, %xmm3
 	mulpd			%xmm13, %xmm7
