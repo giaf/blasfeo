@@ -1118,165 +1118,189 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 	int i, j, l;
 
-	// clean up at the beginning
+
+
+	// algorithm scheme
 	if(air!=0)
 		{
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-		if(m>5)
-			{
-			j = 0;
-			for(; j<n; j+=4)
-				{
-				kernel_dgemm_nn_8x4_gen_lib4(k, &alpha, &pA[0], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
-				}
-			m -= 2*ps-air;
-			pA += 2*ps*sda;
-			pC += 2*ps*sdc;
-			pD += 2*ps*sdd;
-			}
-		else // m-i<=4
-			{
-#endif
-			j = 0;
-			for(; j<n; j+=4)
-				{
-				kernel_dgemm_nn_4x4_gen_lib4(k, &alpha, &pA[0], offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
-				}
-			m -= 1*ps-air;
-			pA += 1*ps*sda;
-			pC += 1*ps*sdc;
-			pD += 1*ps*sdd;
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-			// nothing more to do
-			}
-#endif
+		goto clear_air;
 		}
-	// main loop
-	i = 0;
+select_loop:
 	if(offsetC==0 & offsetD==0)
 		{
-#if defined(TARGET_X64_INTEL_HASWELL)
-		for(; i<m-11; i+=12)
-			{
-			j = 0;
-			for(; j<n-3; j+=4)
-				{
-				kernel_dgemm_nn_12x4_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd);
-				}
-			if(j<n)
-				{
-				kernel_dgemm_nn_12x4_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-				}
-			}
-		if(m>i)
-			{
-			if(m-i<=4)
-				{
-				goto left_4;
-				}
-			else if(m-i<=8)
-				{
-				goto left_8;
-				}
-			else
-				{
-				goto left_12;
-				}
-			}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-		for(; i<m-12 | i==m-8; i+=8)
-			{
-			j = 0;
-			for(; j<n-3; j+=4)
-				{
-				kernel_dgemm_nn_8x4_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd);
-				}
-			if(j<n)
-				{
-				kernel_dgemm_nn_8x4_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-				}
-			}
-		if(m>i)
-			{
-			if(m-i<=4)
-				{
-				goto left_4;
-				}
-			else if(m-i<=8)
-				{
-				goto left_8;
-				}
-			else
-				{
-				goto left_12;
-				}
-			}
-#elif defined(TARGET_X86_AMD_BARCELONA)
-		for(; i<m-3; i+=4)
-			{
-			j = 0;
-			for(; j<n-1; j+=2)
-				{
-				kernel_dgemm_nn_4x2_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd]);
-				}
-			if(j<n)
-				{
-				kernel_dgemm_nn_4x2_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
-				}
-			}
-		if(m>i)
-			{
-			goto left_4;
-			}
-#else // all others
-		for(; i<m-3; i+=4)
-			{
-			j = 0;
-			for(; j<n-3; j+=4)
-				{
-				kernel_dgemm_nn_4x4_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd]);
-				}
-			if(j<n)
-				{
-				kernel_dgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
-				}
-			}
-		if(m>i)
-			{
-			goto left_4;
-			}
-#endif
+		goto loop_00;
 		}
-	else // ! (offsetC==0 & offsetD==0)
+	else
 		{
+		goto loop_CD;
+		}
+	// should never get here
+	return;
+
+
+
+	// clean up at the beginning
+clear_air:
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+	if(m>5)
+		{
+		j = 0;
+		for(; j<n; j+=4)
+			{
+			kernel_dgemm_nn_8x4_gen_lib4(k, &alpha, &pA[0], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
+			}
+		m -= 2*ps-air;
+		pA += 2*ps*sda;
+		pC += 2*ps*sdc;
+		pD += 2*ps*sdd;
+		}
+	else // m-i<=4
+		{
+#endif
+		j = 0;
+		for(; j<n; j+=4)
+			{
+			kernel_dgemm_nn_4x4_gen_lib4(k, &alpha, &pA[0], offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
+			}
+		m -= 1*ps-air;
+		pA += 1*ps*sda;
+		pC += 1*ps*sdc;
+		pD += 1*ps*sdd;
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		// nothing more to do
+		}
+#endif
+	goto select_loop;
+
+
+
+	// main loop aligned
+loop_00:
+	i = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; i<m-11; i+=12)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_dgemm_nn_12x4_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd);
+			}
+		if(j<n)
+			{
+			kernel_dgemm_nn_12x4_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		if(m-i<=4)
+			{
+			goto left_4;
+			}
+		else if(m-i<=8)
+			{
+			goto left_8;
+			}
+		else
+			{
+			goto left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; i<m-12 | i==m-8; i+=8)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_dgemm_nn_8x4_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd);
+			}
+		if(j<n)
+			{
+			kernel_dgemm_nn_8x4_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		if(m-i<=4)
+			{
+			goto left_4;
+			}
+		else if(m-i<=8)
+			{
+			goto left_8;
+			}
+		else
+			{
+			goto left_12;
+			}
+		}
+#elif defined(TARGET_X86_AMD_BARCELONA)
+	for(; i<m-3; i+=4)
+		{
+		j = 0;
+		for(; j<n-1; j+=2)
+			{
+			kernel_dgemm_nn_4x2_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd]);
+			}
+		if(j<n)
+			{
+			kernel_dgemm_nn_4x2_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		goto left_4;
+		}
+#else // all others
+	for(; i<m-3; i+=4)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_dgemm_nn_4x4_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd]);
+			}
+		if(j<n)
+			{
+			kernel_dgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		goto left_4;
+		}
+#endif
+
+
+
+	// main loop C, D not aligned
+loop_CD:
+	i = 0;
 // TODO 12x4
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-		for(; i<m-4; i+=8)
+	for(; i<m-4; i+=8)
+		{
+		j = 0;
+		for(; j<n; j+=4)
 			{
-			j = 0;
-			for(; j<n; j+=4)
-				{
-				kernel_dgemm_nn_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
-				}
+			kernel_dgemm_nn_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
 			}
-		if(m>i)
-			{
-			goto left_4_g;
-			}
-#else
-		for(; i<m; i+=4)
-			{
-			j = 0;
-			for(; j<n; j+=4)
-				{
-				kernel_dgemm_nn_4x4_gen_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
-				}
-			}
-#endif
 		}
-
-	// common return if i==m
+	if(m>i)
+		{
+		goto left_4_g;
+		}
+#else
+	for(; i<m; i+=4)
+		{
+		j = 0;
+		for(; j<n; j+=4)
+			{
+			kernel_dgemm_nn_4x4_gen_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			}
+		}
+#endif
 	return;
+
+
 
 	// clean up loops definitions
 
@@ -1292,6 +1316,8 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	return;
 #endif
 
+
+
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	left_12:
 	j = 0;
@@ -1299,12 +1325,10 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		{
 		kernel_dgemm_nn_12x4_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
 		}
-//	if(j<n)
-//		{
-//		kernel_dgemm_nn_12x2_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
-//		}
 	return;
 #endif
+
+
 
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_X64_INTEL_HASWELL)
 	left_8_g:
@@ -1316,6 +1340,8 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	return;
 #endif
 
+
+
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	left_8:
 	j = 0;
@@ -1326,6 +1352,8 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	return;
 #endif
 
+
+
 	left_4_g:
 	j = 0;
 	for(; j<n; j+=4)
@@ -1333,6 +1361,8 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		kernel_dgemm_nn_4x4_gen_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
 		}
 	return;
+
+
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	left_4:
@@ -1365,6 +1395,7 @@ void blasfeo_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 #endif
 
 	return;
+
 	}
 
 
@@ -1479,8 +1510,13 @@ void blasfeo_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 //			return;
 			}
 #endif
-		}
+		} // end of ari!=0
 	i = 0;
+//	if(offsetC==0 & offsetD==0)
+//		{
+//		// TODO
+//		}
+//	else
 	// main loop
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; i<m-4; i+=8)
@@ -1580,6 +1616,8 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 	int offsetA = air;
 	int offsetB = bir;
+	int offsetC = cir;
+	int offsetD = cir;
 
 	// TODO offsetC offsetD
 
@@ -1604,21 +1642,33 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 	int ii, jj;
 
-	if(k>K_MAX)
+
+
+	// algorithm scheme
+	if(offsetC==0 & offsetD==0)
 		{
-		goto tn_1;
+		if(k>K_MAX)
+			{
+			goto loop_00_1;
+			}
+		else
+			{
+			goto loop_00_0;
+			}
 		}
 	else
 		{
-		goto tn_0;
+		// TODO
+//		goto loop_CD;
 		}
-
+	// should never get here
 	return;
 
 
 
-tn_0:
+// no-malloc algorithm
 
+loop_00_0:
 	ii = 0;
 #if defined(TARGET_X64_INTEL_HASWELL)
 	for(; ii<m-11; ii+=12)
@@ -1639,15 +1689,15 @@ tn_0:
 		{
 		if(m-ii<=4)
 			{
-			goto tn_0_left_4;
+			goto left_4_0;
 			}
 		if(m-ii<=8)
 			{
-			goto tn_0_left_8;
+			goto left_8_0;
 			}
 		else
 			{
-			goto tn_0_left_12;
+			goto left_12_0;
 			}
 		}
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -1668,11 +1718,11 @@ tn_0:
 		{
 		if(m-ii<=4)
 			{
-			goto tn_0_left_4;
+			goto left_4_0;
 			}
 		else
 			{
-			goto tn_0_left_8;
+			goto left_8_0;
 			}
 		}
 #else
@@ -1690,13 +1740,15 @@ tn_0:
 		}
 	if(ii<m)
 		{
-		goto tn_0_left_4;
+		goto left_4_0;
 		}
 #endif
 	goto tn_0_return;
 
+
+
 #if defined(TARGET_X64_INTEL_HASWELL)
-tn_0_left_12:
+left_12_0:
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pU+4*sdu);
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+8)*ps, sda, pU+8*sdu);
@@ -1707,8 +1759,10 @@ tn_0_left_12:
 	goto tn_0_return;
 #endif
 
+
+
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-tn_0_left_8:
+left_8_0:
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pU+4*sdu);
 		for(jj=0; jj<n; jj+=4)
@@ -1718,7 +1772,9 @@ tn_0_left_8:
 	goto tn_0_return;
 #endif
 
-tn_0_left_4:
+
+
+left_4_0:
 	kernel_dpacp_tn_4_lib4(k, offsetA, pA+ii*ps, sda, pU);
 	for(jj=0; jj<n; jj+=4)
 		{
@@ -1726,13 +1782,16 @@ tn_0_left_4:
 		}
 	goto tn_0_return;
 
+
+
 tn_0_return:
 	return;
 
 
 
-tn_1:
+// malloc algorithm
 
+loop_00_1:
 	sAt_size = blasfeo_memsize_dmat(12, k);
 	smat_mem = malloc(sAt_size+63);
 	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
@@ -1760,15 +1819,15 @@ tn_1:
 		{
 		if(m-ii<=4)
 			{
-			goto tn_1_left_4;
+			goto left_4_1;
 			}
 		if(m-ii<=8)
 			{
-			goto tn_1_left_8;
+			goto left_8_1;
 			}
 		else
 			{
-			goto tn_1_left_12;
+			goto left_12_1;
 			}
 		}
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -1789,11 +1848,11 @@ tn_1:
 		{
 		if(m-ii<=4)
 			{
-			goto tn_1_left_4;
+			goto left_4_1;
 			}
 		else
 			{
-			goto tn_1_left_8;
+			goto left_8_1;
 			}
 		}
 #else
@@ -1811,13 +1870,15 @@ tn_1:
 		}
 	if(ii<m)
 		{
-		goto tn_1_left_4;
+		goto left_4_1;
 		}
 #endif
 	goto tn_1_return;
 
+
+
 #if defined(TARGET_X64_INTEL_HASWELL)
-tn_1_left_12:
+left_12_1:
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pAt+0*sdat);
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pAt+4*sdat);
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+8)*ps, sda, pAt+8*sdat);
@@ -1828,8 +1889,10 @@ tn_1_left_12:
 	goto tn_1_return;
 #endif
 
+
+
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-tn_1_left_8:
+left_8_1:
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pAt+0*sdat);
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pAt+4*sdat);
 		for(jj=0; jj<n; jj+=4)
@@ -1839,13 +1902,17 @@ tn_1_left_8:
 	goto tn_1_return;
 #endif
 
-tn_1_left_4:
+
+
+left_4_1:
 	kernel_dpacp_tn_4_lib4(k, offsetA, pA+ii*ps, sda, pAt);
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dgemm_nn_4x4_vs_lib4(k, &alpha, pAt, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
 		}
 	goto tn_1_return;
+
+
 
 tn_1_return:
 	free(smat_mem);
