@@ -1322,6 +1322,44 @@ void blasfeo_strsm_rltn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 	
 	i = 0;
 
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; i<m-23; i+=24)
+		{
+		j = 0;
+		for(; j<n-7; j+=8)
+			{
+			kernel_strsm_nt_rl_inv_24x4_lib8(j+0, &pD[i*sdd], sdd, &pA[0+j*sda], &pB[(j+0)*bs+i*sdb], sdb, &pD[(j+0)*bs+i*sdd], sdd, &pA[0+(j+0)*bs+j*sda], &dA[j+0]);
+			kernel_strsm_nt_rl_inv_24x4_lib8(j+4, &pD[i*sdd], sdd, &pA[4+j*sda], &pB[(j+4)*bs+i*sdb], sdb, &pD[(j+4)*bs+i*sdd], sdd, &pA[4+(j+4)*bs+j*sda], &dA[j+0]);
+			}
+		if(n-j>0)
+			{
+			kernel_strsm_nt_rl_inv_24x4_vs_lib8(j+0, &pD[i*sdd], sdd, &pA[0+j*sda], &pB[(j+0)*bs+i*sdb], sdb, &pD[(j+0)*bs+i*sdd], sdd, &pA[0+(j+0)*bs+j*sda], &dA[j+0], m-i, n-j-0);
+			if(n-j>4)
+				{
+				kernel_strsm_nt_rl_inv_24x4_vs_lib8(j+4, &pD[i*sdd], sdd, &pA[4+j*sda], &pB[(j+4)*bs+i*sdb], sdb, &pD[(j+4)*bs+i*sdd], sdd, &pA[4+(j+4)*bs+j*sda], &dA[j+4], m-i, n-j-4);
+				}
+			}
+		}
+#endif
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; i<m-15; i+=16)
+		{
+		j = 0;
+		for(; j<n-7; j+=8)
+			{
+			kernel_strsm_nt_rl_inv_16x4_lib8(j+0, &pD[i*sdd], sdd, &pA[0+j*sda], &pB[(j+0)*bs+i*sdb], sdb, &pD[(j+0)*bs+i*sdd], sdd, &pA[0+(j+0)*bs+j*sda], &dA[j+0]);
+			kernel_strsm_nt_rl_inv_16x4_lib8(j+4, &pD[i*sdd], sdd, &pA[4+j*sda], &pB[(j+4)*bs+i*sdb], sdb, &pD[(j+4)*bs+i*sdd], sdd, &pA[4+(j+4)*bs+j*sda], &dA[j+0]);
+			}
+		if(n-j>0)
+			{
+			kernel_strsm_nt_rl_inv_16x4_vs_lib8(j+0, &pD[i*sdd], sdd, &pA[0+j*sda], &pB[(j+0)*bs+i*sdb], sdb, &pD[(j+0)*bs+i*sdd], sdd, &pA[0+(j+0)*bs+j*sda], &dA[j+0], m-i, n-j-0);
+			if(n-j>4)
+				{
+				kernel_strsm_nt_rl_inv_16x4_vs_lib8(j+4, &pD[i*sdd], sdd, &pA[4+j*sda], &pB[(j+4)*bs+i*sdb], sdb, &pD[(j+4)*bs+i*sdd], sdd, &pA[4+(j+4)*bs+j*sda], &dA[j+4], m-i, n-j-4);
+				}
+			}
+		}
+#endif
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
