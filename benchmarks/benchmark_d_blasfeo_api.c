@@ -651,6 +651,8 @@ int main()
 #if 0
 		struct blasfeo_dmat sA; blasfeo_allocate_dmat(n+4, n+4, &sA);
 		struct blasfeo_dmat sB; blasfeo_allocate_dmat(n+4, n+4, &sB);
+		struct blasfeo_dmat sB2; blasfeo_allocate_dmat(n+4, n+4, &sB2);
+		struct blasfeo_dmat sB3; blasfeo_allocate_dmat(n+4, n+4, &sB3);
 		struct blasfeo_dmat sC; blasfeo_allocate_dmat(n+4, n+4, &sC);
 		struct blasfeo_dmat sD; blasfeo_allocate_dmat(n+4, n+4, &sD);
 		struct blasfeo_dmat sE; blasfeo_allocate_dmat(n+4, n+4, &sE);
@@ -756,8 +758,8 @@ int main()
 
 //				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-//				blasfeo_dgemm_tn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-				blasfeo_dgemm_tt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+				blasfeo_dgemm_tn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_dgemm_tt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ln_mn(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //				blasfeo_dpotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
@@ -793,7 +795,7 @@ int main()
 			for(rep=0; rep<nrep; rep++)
 				{
 				#if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
-				dpotrf_(&c_l, &n, B2, &n, &info);
+//				dpotrf_(&c_l, &n, B2, &n, &info);
 				// dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, B, &n, &d_0, C, &n);
 				// dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
 				// dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_0, C, &n);
