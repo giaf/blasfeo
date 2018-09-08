@@ -5149,6 +5149,16 @@ kernel_dgemm_dtrsm_nt_rl_inv_8x8u_vs_lib4:
 
 
 
+#if defined(BLAS_API)
+
+#include "kernel_dgemm_8x8_lib.S"
+
+#endif
+
+
+
+
+
 	// read-only data
 #if defined(OS_LINUX)
 	.section	.rodata.cst32,"aM",@progbits,32
@@ -5189,14 +5199,10 @@ LC01: // { -1 -1 -1 -1 }
 LC02: // { 3.5 2.5 1.5 0.5 }
 	.align 5
 #endif
-	.long	0
-	.long	1071644672
-	.long	0
-	.long	1073217536
-	.long	0
-	.long	1074003968
-	.long	0
-	.long	1074528256
+	.double 0.5
+	.double 1.5
+	.double 2.5
+	.double 3.5
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
@@ -5205,14 +5211,10 @@ LC02: // { 3.5 2.5 1.5 0.5 }
 LC03: // { 7.5 6.5 5.5 4.5 }
 	.align 5
 #endif
-	.long	0
-	.long	1074921472
-	.long	0
-	.long	1075183616
-	.long	0
-	.long	1075445760
-	.long	0
-	.long	1075707904
+	.double 4.5
+	.double 5.5
+	.double 6.5
+	.double 7.5
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
