@@ -891,7 +891,44 @@ inner_kernel_dpacp_tn_4_lib4:
 	cmpl	$0, %r10d
 	jle		0f // return
 
+	cmpl	$0, %r11d
+	jle		3f // offset==0
 
+	movl			$4, %r15d				// load 4
+	subl			%r11d, %r15d			// 4-offsetA
+	cmpl			%r10d, %r15d			// k > 4-offsetA
+	cmovgl			%r10d, %r15d			// kend=min(k,4-offsetA)
+
+	movl			%r11d, %eax				// load offsetA
+	sall			$3, %eax				// offsetA*sizeof(double)
+	addq			%rax, %r12				// B+offsetB*sizeof(double)
+
+4:
+	vmovsd		0(%r12), %xmm0
+	vmovsd		%xmm0, 0(%r14)
+	vmovsd		32(%r12), %xmm0
+	vmovsd		%xmm0, 8(%r14)
+	vmovsd		64(%r12), %xmm0
+	vmovsd		%xmm0, 16(%r14)
+	vmovsd		96(%r12), %xmm0
+	vmovsd		%xmm0, 24(%r14)
+
+	subl			$1, %r10d				// k=-1
+	subl			$1, %r15d				// k_panel=-1
+	addq			$8, %r12				// A=+1
+	addq			$32, %r14				// C=+bs
+
+	cmpl			$0, %r15d				// if k_panel=0
+	jg				4b						// loop 1
+
+	cmpl			$0, %r10d				// if k=0
+	jle				0f						// end
+
+	addq			%r13, %r12				// A=Boff+sdb*bs
+	subq			$32, %r12				// A-=4*sizeof(double) (loop+offsetA)
+
+
+3:
 	cmpl	$3, %r10d
 	jle		2f // clean-up loop
 
@@ -1970,10 +2007,6 @@ kernel_dpacp_tn_4_lib4:
 	movq	ARG4, %r13 // sda
 	sall	$5, %r13d
 	movq	ARG5, %r14 // C
-
-
-	// TODO offsetA!=0 !!!!!!!!!!!!!!!
-
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_TN_4_LIB4

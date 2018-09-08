@@ -4,6 +4,8 @@
 
 % DGEMM
 
+printf('dgemm\n');
+
 f1 = figure();
 
 dgemm_nn
@@ -51,6 +53,8 @@ system(['rm ', file_name_eps]);
 
 % DSYRK
 
+printf('dsyrk\n');
+
 f1 = figure();
 dsyrk_ln
 dsyrk_ln
@@ -74,7 +78,10 @@ system(['epstopdf ', file_name_eps, ' -out ', file_name_pdf]);
 system(['rm ', file_name_eps]);
 
 
+
 % DTRMM
+
+printf('dtrmm\n');
 
 f1 = figure();
 
@@ -108,6 +115,8 @@ system(['rm ', file_name_eps]);
 
 
 % DTRSM
+
+printf('dtrsm\n');
 
 f1 = figure();
 
@@ -163,6 +172,8 @@ system(['rm ', file_name_eps]);
 
 % DGEQRF
 
+printf('dgeqrf\n');
+
 f1 = figure();
 
 dgelqf
@@ -195,6 +206,8 @@ system(['rm ', file_name_eps]);
 
 
 % DGETRF
+
+printf('dgetrf\n');
 
 f1 = figure();
 
@@ -229,6 +242,8 @@ system(['rm ', file_name_eps]);
 
 % DPOTRF
 
+printf('dpotrf\n');
+
 f1 = figure();
 
 dpotrf_l
@@ -261,6 +276,8 @@ system(['rm ', file_name_eps]);
 
 
 % DGEMV
+
+printf('dgemv\n');
 
 f1 = figure();
 
@@ -302,6 +319,8 @@ system(['rm ', file_name_eps]);
 
 % DTRMV
 
+printf('dtrmv\n');
+
 f1 = figure();
 
 dtrmv_lnn
@@ -335,6 +354,8 @@ system(['rm ', file_name_eps]);
 
 % DTRSV
 
+printf('dtrsv\n');
+
 f1 = figure();
 
 dtrsv_lnn
@@ -366,7 +387,9 @@ system(['rm ', file_name_eps]);
 
 
 
-% DSYMV_L
+% DSYMV
+
+printf('dsymv\n');
 
 f1 = figure();
 
@@ -393,6 +416,8 @@ system(['rm ', file_name_eps]);
 
 
 % SGEMM
+
+printf('sgemm\n');
 
 f1 = figure();
 
@@ -441,6 +466,8 @@ system(['rm ', file_name_eps]);
 
 % SSYRK
 
+printf('ssyrk\n');
+
 f1 = figure();
 
 ssyrk_ln
@@ -466,6 +493,8 @@ system(['rm ', file_name_eps]);
 
 
 % STRMM
+
+printf('strmm\n');
 
 f1 = figure();
 
@@ -499,6 +528,8 @@ system(['rm ', file_name_eps]);
 
 
 % STRSM
+
+printf('strsm\n');
 
 f1 = figure();
 
@@ -554,6 +585,8 @@ system(['rm ', file_name_eps]);
 
 % SGEQRF
 
+printf('sgeqrf\n');
+
 f1 = figure();
 
 sgelqf
@@ -586,6 +619,8 @@ system(['rm ', file_name_eps]);
 
 
 % SGETRF
+
+printf('sgetrf\n');
 
 f1 = figure();
 
@@ -620,6 +655,8 @@ system(['rm ', file_name_eps]);
 
 % SPOTRF
 
+printf('spotrf\n');
+
 f1 = figure();
 
 spotrf_l
@@ -652,6 +689,8 @@ system(['rm ', file_name_eps]);
 
 
 % SGEMV
+
+printf('sgemv\n');
 
 f1 = figure();
 
@@ -693,6 +732,8 @@ system(['rm ', file_name_eps]);
 
 % STRMV
 
+printf('strmv\n');
+
 f1 = figure();
 
 strmv_lnn
@@ -726,6 +767,8 @@ system(['rm ', file_name_eps]);
 
 % STRSV
 
+printf('strsv\n');
+
 f1 = figure();
 
 strsv_lnn
@@ -757,7 +800,9 @@ system(['rm ', file_name_eps]);
 
 
 
-% SSYMV_L
+% SSYMV
+
+printf('ssymv\n');
 
 f1 = figure();
 

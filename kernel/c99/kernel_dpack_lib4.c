@@ -391,6 +391,7 @@ void kernel_dpacp_tn_4_lib4(int kmax, int offsetA, double *A, int sda, double *B
 	k = 0;
 	if(kna>0)
 		{
+		A += offsetA;
 		for( ; k<kna; k++)
 			{
 			//
