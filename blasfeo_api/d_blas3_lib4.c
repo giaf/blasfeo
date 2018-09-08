@@ -1141,8 +1141,23 @@ select_loop:
 
 	// clean up at the beginning
 clear_air:
+#if defined(TARGET_X64_INTEL_HASWELL)
+	if(air+m>8)
+		{
+		j = 0;
+		for(; j<n; j+=4)
+			{
+			kernel_dgemm_nn_12x4_gen_lib4(k, &alpha, &pA[0], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
+			}
+		m -= 3*ps-air;
+		pA += 3*ps*sda;
+		pC += 3*ps*sdc;
+		pD += 3*ps*sdd;
+		}
+	else // air+m<=8
+#endif
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-	if(m>5)
+	if(air+m>4) // (m>5)
 		{
 		j = 0;
 		for(; j<n; j+=4)
@@ -1154,7 +1169,7 @@ clear_air:
 		pC += 2*ps*sdc;
 		pD += 2*ps*sdd;
 		}
-	else // m-i<=4
+	else // air+m<=4 // m-i<=4
 		{
 #endif
 		j = 0;
@@ -1274,8 +1289,27 @@ loop_00:
 	// main loop C, D not aligned
 loop_CD:
 	i = 0;
-// TODO 12x4
-#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; i<m-8; i+=12)
+		{
+		j = 0;
+		for(; j<n; j+=4)
+			{
+			kernel_dgemm_nn_12x4_gen_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			}
+		}
+	if(m>i)
+		{
+		if(m-i<=4)
+			{
+			goto left_4_g;
+			}
+		else
+			{
+			goto left_8_g;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; i<m-4; i+=8)
 		{
 		j = 0;
@@ -1309,9 +1343,7 @@ loop_CD:
 	j = 0;
 	for(; j<n; j+=4)
 		{
-//		kernel_dgemm_nn_12x4_gen_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
-		kernel_dgemm_nn_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
-		kernel_dgemm_nn_4x4_gen_lib4(k, &alpha, &pA[(i+8)*sda], offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+(i+8)*sdc], sdc, offsetD, &pD[j*ps+(i+8)*sdd], sdd, 0, m-(i+8), 0, n-j);
+		kernel_dgemm_nn_12x4_gen_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
 		}
 	return;
 #endif
