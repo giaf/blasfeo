@@ -91,8 +91,8 @@ MACRO_LEVEL = 0
 BLAS_API = 0
 # BLAS_API = 1
 
-# Maximum K value for stack allocation (decrease this value if stack size is exceeded)
-K_MAX = 300
+# Maximum K value for stack buffer size (decrease this value if stack size is exceeded)
+K_MAX_STACK = 300
 
 # Use C99 extension to math library
 #
@@ -115,7 +115,7 @@ BENCHMARKS_MODE = 0
 
 # Enable on-line checks for matrix and vector dimensions
 #
- RUNTIME_CHECKS = 0
+RUNTIME_CHECKS = 0
 # RUNTIME_CHECKS = 1
 
 # Operating system (automatic selection)
@@ -186,7 +186,7 @@ CFLAGS += -DBLAS_API
 ASFLAGS += -DBLAS_API
 endif
 
-CFLAGS  += -DK_MAX=$(K_MAX)
+CFLAGS  += -DK_MAX_STACK=$(K_MAX_STACK)
 
 ifeq ($(USE_C99_MATH), 1)
 CFLAGS += -DUSE_C99_MATH

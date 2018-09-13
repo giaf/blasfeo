@@ -1859,16 +1859,16 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL)
-	double pU[3*4*K_MAX] __attribute__ ((aligned (64)));
+	double pU[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	double pU[2*4*K_MAX] __attribute__ ((aligned (64)));
+	double pU[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #elif defined(TARGET_GENERIC)
-	double pU[1*4*K_MAX];
+	double pU[1*4*K_MAX_STACK];
 #else
-	double pU[1*4*K_MAX] __attribute__ ((aligned (64)));
+	double pU[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
 	int sdu = (k+3)/4*4;
-	sdu = sdu<K_MAX ? sdu : K_MAX;
+	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;
 
 	struct blasfeo_dmat sAt;
 	int sdat;
@@ -1883,7 +1883,7 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	// algorithm scheme
 	if(offsetC==0 & offsetD==0)
 		{
-		if(k>K_MAX)
+		if(k>K_MAX_STACK)
 			{
 			goto loop_00_1;
 			}
@@ -1894,7 +1894,7 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		}
 	else
 		{
-		if(k>K_MAX)
+		if(k>K_MAX_STACK)
 			{
 			goto loop_CD_1;
 			}
@@ -2420,16 +2420,16 @@ void blasfeo_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL)
-	double pU[3*4*K_MAX] __attribute__ ((aligned (64)));
+	double pU[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	double pU[2*4*K_MAX] __attribute__ ((aligned (64)));
+	double pU[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #elif defined(TARGET_GENERIC)
-	double pU[1*4*K_MAX];
+	double pU[1*4*K_MAX_STACK];
 #else
-	double pU[1*4*K_MAX] __attribute__ ((aligned (64)));
+	double pU[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
 	int sdu = (k+3)/4*4;
-	sdu = sdu<K_MAX ? sdu : K_MAX;
+	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;
 
 	struct blasfeo_dmat sAt;
 	int sdat;
@@ -2446,7 +2446,7 @@ void blasfeo_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	// algorithm scheme
 	if(offsetC==0 & offsetD==0)
 		{
-		if(k>K_MAX)
+		if(k>K_MAX_STACK)
 			{
 			goto loop_00_1;
 			}
@@ -2457,7 +2457,7 @@ void blasfeo_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 		}
 	else
 		{
-		if(k>K_MAX)
+		if(k>K_MAX_STACK)
 			{
 			goto loop_CD_1;
 			}

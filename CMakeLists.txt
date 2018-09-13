@@ -56,6 +56,9 @@ set(REF_BLAS 0 CACHE STRING "Reference blas to use")
 # set(REF_BLAS BLIS)
 # set(REF_BLAS ATLAS)
 
+# Stack buffer size (malloc for larger)
+set(K_MAX_STACK 300 CACHE STRING "Maximum k value using stack memory")
+
 # Options
 # set(BLASFEO_TESTING ON CACHE BOOL "Tests enabled")
 set(BLASFEO_TESTING OFF CACHE BOOL "Tests disabled")
@@ -150,6 +153,8 @@ endif()
 if(${LA} MATCHES BLAS)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_BLAS")
 endif()
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DK_MAX_STACK=${K_MAX_STACK}")
 
 #
 if(${RUNTIME_CHECKS})
@@ -297,6 +302,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
 
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_24x4_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_16x4_lib8.S
@@ -357,6 +363,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgebp_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgelqf_4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
 
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_16x4_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x8_lib8.S
@@ -408,6 +415,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgeqrf_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dpack_lib4.c
 
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_diag_lib4.c
@@ -452,6 +460,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetrf_pivot_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dpack_lib4.c
 
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_diag_lib4.c
@@ -499,6 +508,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetrf_pivot_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dpack_lib4.c
 
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_16x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_12x4_lib4.S
@@ -550,6 +560,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetrf_pivot_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dpack_lib4.c
 
 			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_12x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
@@ -600,6 +611,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgeqrf_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dpack_lib4.c
 
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_diag_lib4.c
