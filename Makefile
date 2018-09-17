@@ -586,6 +586,7 @@ OBJS_REF += \
 		auxiliary/s_aux_ext_dep_libref.o \
 		blas/d_blas3_libref.o \
 		blas/s_blas3_libref.o \
+		blas/d_lapack_libref.o \
 #
 endif
 

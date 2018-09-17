@@ -27,7 +27,7 @@
 **************************************************************************************************/
 
 /*
- * level3 algebra routines header
+ * lapack algebra routines header
  *
  * include/blasfeo_blas3_lib*.h
  *
@@ -132,6 +132,15 @@ void blasfeo_dtrsm_lunn_ref(
 	struct blasfeo_dmat_ref *sA, int ai, int aj,
 	struct blasfeo_dmat_ref *sB, int bi, int bj,
 	struct blasfeo_dmat_ref *sD, int di, int dj);
+
+// Lapack
+
+// Class GETRF
+//
+// D <= lu( C ) ; no pivoting
+void blasfeo_dgetrf_nopivot_ref(int m, int n, struct blasfeo_dmat_ref *sC, int ci, int cj, struct blasfeo_dmat_ref *sD, int di, int dj);
+// D <= lu( C ) ; pivoting
+void blasfeo_dgetrf_rowpivot_ref(int m, int n, struct blasfeo_dmat_ref *sC, int ci, int cj, struct blasfeo_dmat_ref *sD, int di, int dj, int *ipiv);
 
 #ifdef __cplusplus
 }

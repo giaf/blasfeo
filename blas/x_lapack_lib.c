@@ -28,7 +28,8 @@
 
 
 
-#if defined(LA_REFERENCE)
+#if defined(LA_REFERENCE)  | defined(TESTING_MODE)
+
 
 
 
@@ -1220,7 +1221,7 @@ void GETRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 			}
 		}
 #endif
-	return;	
+	return;
 	}
 
 
