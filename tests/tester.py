@@ -3,10 +3,48 @@
 import subprocess
 import sys
 import json
+import argparse
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='BLAFEO tests scheduler')
+
+    parser.add_argument('--run', dest='batch_run', type=str, default="batch_run.json",
+                        help='Batch run json file')
+    parser.add_argument('--verbose', type=int, default=0,
+                        help='Verbosity level')
+
+    args = parser.parse_args()
+    return args
+
+
+
+def make(cmd="", make_flags={}, env_flags={}):
+
+    make_flags = " ".join([f"{k}={v}" for k, v in make_flags.items()])
+    env_flags = " ".join([f"{k}={v}" for k, v in env_flags.items()])
+
+    run_cmd = f"{env_flags} make {make_flags} {cmd}"
+
+    print(run_cmd)
+    make_process = subprocess.Popen(run_cmd,
+        shell=True, stdout=subprocess.PIPE, stderr=sys.stdout.fileno())
+
+    while True:
+        line = make_process.stdout.readline()
+        if not line: break
+        print(line.decode("utf-8").strip())
+        sys.stdout.flush()
+    return 1
 
 
 class CookBook:
-    def __init__(self, recipe_specs="batch_run.json", recipe_schema="test_schema.json"):
+    def __init__(self, recipe_specs="batch_run.json", recipe_schema="test_schema.json", verbose=0):
+
+        self.make_flags = []
+
+        if not verbose:
+            self.make_flags.append("-s")
 
         with open(recipe_specs) as f:
             self.specs = json.load(f)
@@ -29,7 +67,7 @@ class CookBook:
 
         for la in self.specs["las"]:
             print(f"Testing {la}")
-            self.recipe["flags"]["LA"]=la
+            self.recipe["make_flags"]["LA"]=la
 
             if la=="REFERENCE":
                 self.run_recipe()
@@ -42,40 +80,48 @@ class CookBook:
             for target in self.specs["targets"]:
                 print(f"Testing {target}")
 
-                self.recipe["flags"]["TARGET"]=target
+                self.recipe["make_flags"]["TARGET"]=target
                 self.run_recipe()
 
     def run_recipe(self):
         # preparation step
-        flags = self.recipe["flags"]
+        make_flags = self.recipe["make_flags"]
+        env_flags = self.recipe["env_flags"]
 
-        if flags["BUILD_LIBS"]:
-            make(flags=flags, make_flags="-C ..")
-        if flags["BUILD_LIBS"] and flags["DEPLOY_LIBS"]:
-            make("deploy_to_tests", flags=flags, make_flags="-C ..")
+        if make_flags["BUILD_LIBS"]:
+            make("-C ..", make_flags, env_flags)
+
+        if make_flags["BUILD_LIBS"] and make_flags["DEPLOY_LIBS"]:
+            make("-C .. deploy_to_tests", make_flags, env_flags)
 
         for routine_name, args in self.recipe['routines'].items():
             # update local flags with global flags
-            if args.get("flags"): args["flags"].update(flags)
-            else: args["flags"] = {}
+
+            if args.get("flags"): args["flags"].update(make_flags)
+            else: args["flags"] = make_flags
+
+            if args.get("env_flags"): args["env_flags"].update(env_flags)
+            else: args["env_flags"] = env_flags
+
             status =  self.test_routine(routine_name, args)
 
     def test_routine(self, routine_name, args):
 
-        make_flags = ""
-        if self.SILENT: make_flags += " -s"
-        flags = args["flags"]
+        make_flags = args["flags"]
+        env_flags = args["env_flags"]
 
-        print(f"\nTesting {flags['TARGET']}:{routine_name}\n")
+        if self.SILENT: make_flags.update({"-s":""})
 
-        status = make(args["make_cmd"], flags, make_flags)
+        print(f"\nTesting {make_flags['TARGET']}:{routine_name}\n")
+
+        status = make(args["make_cmd"], make_flags, env_flags)
 
         if not status:
-            print(f"Error with {flags['TARGET']}:{routine_name} ({self.DONE}/{self.TOTAL})")
+            print(f"Error with {make_flags['TARGET']}:{routine_name} ({self.DONE}/{self.TOTAL})")
             return status
 
         self.DONE += 1
-        print(f"\nTested {flags['TARGET']}:{routine_name} ({self.DONE}/{self.TOTAL})\n")
+        print(f"\nTested {make_flags['TARGET']}:{routine_name} ({self.DONE}/{self.TOTAL})\n")
 
         return status
 
@@ -83,7 +129,11 @@ class CookBook:
         scheduled_routines = set(self.specs['routines'])
 
         # create recipe with no global flags
-        self.recipe = {'routines':{}, "flags":self.specs['global_flags']}
+        self.recipe = {
+            'routines':{},
+            'make_flags':self.specs['make_flags'],
+            'env_flags':self.specs['env_flags']
+        }
 
         available_classes = self.schema['routines']
 
@@ -101,12 +151,12 @@ class CookBook:
                         for precision in self.specs["precisions"]:
 
                             flags = {}
-                            flags.update(self.specs['flags'])
+                            flags.update(self.specs['make_flags'])
 
                             routine_name = f"{precision}{available_routine}"
                             routine_fullname = f"blasfeo_{routine_name}"
                             flags["ROUTINE"] = routine_fullname
-                            flags["ROUTINE_SUBCLASS"] = routine_subclass
+                            flags["ROUTINE_CLASS"] = routine_subclass
 
                             self.recipe["routines"][routine_name] = {
                                 "class": routine_class,
@@ -120,26 +170,12 @@ class CookBook:
 
 
 
-def make(cmd="", flags={}, make_flags=""):
-
-    flags = " ".join([f"{k}={v}" for k, v in flags.items()])
-
-    run_cmd = f"make {make_flags} {flags} {cmd}"
-    print(run_cmd)
-    make_process = subprocess.Popen(run_cmd,
-        shell=True, stdout=subprocess.PIPE, stderr=sys.stdout.fileno())
-
-    while True:
-        line = make_process.stdout.readline()
-        if not line: break
-        print(line.decode("utf-8").strip())
-        sys.stdout.flush()
-    #  return fail
-    return 1
-
-
-
 if __name__ == "__main__":
+
+    args = parse_arguments()
+
+    SILENT = args.verbose
+
 
     # generate recipes
     # test set to be run in the given excution of the script

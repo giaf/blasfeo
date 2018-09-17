@@ -53,6 +53,7 @@ else
 CFLAGS += -DVERBOSE=$(VERBOSE)
 endif
 endif
+
 ifndef VERBOSE
 CFLAGS += -DVERBOSE=0
 endif
@@ -72,6 +73,9 @@ CFLAGS += -DROUTINE_CLASS_GEMM
 endif
 ifeq ($(ROUTINE_CLASS), TRM)
 CFLAGS += -DROUTINE_CLASS_TRM
+endif
+ifeq ($(ROUTINE_CLASS), GETRF)
+CFLAGS += -DROUTINE_CLASS_GETRF
 endif
 
 

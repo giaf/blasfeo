@@ -7,15 +7,15 @@ void call_routines(struct RoutineArgs *args){
 	// routine call
 	//
 	ROUTINE(
-		args->m, args->n, args->k, args->alpha,
+		args->m, args->n, args->alpha,
 		args->sA, args->ai, args->aj,
-		args->sB, args->bi, args->bj, args->beta,
+		args->sB, args->bi, args->bj,
 		args->sD, args->di, args->dj);
 
 	REF(ROUTINE)(
-		args->m, args->n, args->k, args->alpha,
+		args->m, args->n, args->alpha,
 		args->rA, args->ai, args->aj,
-		args->rB, args->bi, args->bj, args->beta,
+		args->rB, args->bi, args->bj,
 		args->rD, args->di, args->dj);
 
 }

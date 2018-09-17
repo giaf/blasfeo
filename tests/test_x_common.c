@@ -323,7 +323,7 @@ static void printbits(void *c, size_t n)
 // 1 to 1 comparison of every element
 int GECMP_LIBSTR(
 	int m, int n, int bi, int bj,
-	struct STRMAT *sB, struct STRMAT_REF *rB, struct STRMAT *sA, struct STRMAT_REF *rA,
+	struct STRMAT *sD, struct STRMAT_REF *rD,
 	int* err_i, int* err_j, int debug)
 	{
 	int ii, jj;
@@ -334,9 +334,9 @@ int GECMP_LIBSTR(
 			{
 
 			// strtucture mat
-			REAL sbi = MATEL_LIBSTR(sB, ii, jj);
+			REAL sbi = MATEL_LIBSTR(sD, ii, jj);
 			// reference mat
-			REAL rbi = MATEL_REF(rB, ii, jj);
+			REAL rbi = MATEL_REF(rD, ii, jj);
 
 			if ( (sbi != rbi) & ( fabs(sbi-rbi) > 1e-13*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > 1e-12))
 				{
@@ -355,8 +355,8 @@ int GECMP_LIBSTR(
 					printf("\n");
 
 					printf("\nResult matrix:\n");
-					blasfeo_print_xmat_debug(m, n, sB, bi, bj, ii, jj, 1);
-					print_xmat_debug(m, n, rB, bi, bj, ii, jj, 1);
+					blasfeo_print_xmat_debug(m, n, sD, bi, bj, ii, jj, 1);
+					print_xmat_debug(m, n, rD, bi, bj, ii, jj, 1);
 
 					return 0;
 				}

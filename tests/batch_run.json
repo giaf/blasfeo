@@ -5,6 +5,7 @@
     "ARMV7A_ARM_CORTEX_A15",
     "GENERIC",
     "X64_INTEL_CORE",
+    "X64_INTEL_SANDY_BRIDGE",
     "X64_INTEL_HASWELL",
     "REFERENCE",
     "BLASF_WRAPPER",
@@ -16,27 +17,31 @@
     "trsm_rutn",
     "trmm_rutn",
     "trmm_rlnn",
-    "X64_INTEL_SANDY_BRIDGE",
-    "trsm_lunn"
+    "trsm_lunn",
+    "getrf_rowpivot"
   ],
-  "global_flags":{
-    "BUILD_LIBS":1,
-    "DEPLOY_LIBS":1
+  "available_flags":{
+    "SOC":"BACHMANN",
+    "CFLAGS":"-Wuninitialized"
   },
-  "flags":{
-    "VERBOSE":1,
+  "env_flags":{
+  },
+  "make_flags":{
+    "CC":"clang",
+    "BUILD_LIBS":1,
+    "DEPLOY_LIBS":1,
+    "VERBOSE":2,
     "MIN_KERNEL_SIZE":"2x2",
     "REF_BLAS":"0"
   },
   "precisions":["d"],
   "targets":[
-    "X64_INTEL_HASWELL"
+    "GENERIC"
   ],
   "las":[
     "HIGH_PERFORMANCE"
   ],
   "routines":[
-  "gemm_nt",
-  "gemm_nn"
+    "trsm_lunn"
   ]
 }

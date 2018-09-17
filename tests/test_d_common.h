@@ -11,9 +11,9 @@
 #include "../include/blasfeo_timing.h"
 
 // BLASFEO LA:REFERENCE routines
-#include "../include/blasfeo_d_blas3_ref.h"
 #include "../include/blasfeo_d_aux_ref.h"
 #include "../include/blasfeo_d_aux_ext_dep_ref.h"
+#include "../include/blasfeo_d_blas3_ref.h"
 
 #include "../include/blasfeo_d_aux_test.h"
 

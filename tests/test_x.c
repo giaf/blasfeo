@@ -28,7 +28,7 @@
 
 void test_routine(struct RoutineArgs *args, int *bad_calls){
 
-	#if (VERBOSE>1)
+	#if (VERBOSE>2)
 	print_routine(args);
 	#endif
 
@@ -39,8 +39,7 @@ void test_routine(struct RoutineArgs *args, int *bad_calls){
 	// routine test
 	int res = GECMP_LIBSTR(
 		args->n, args->m, args->ai, args->aj,
-		args->sB, args->rB,
-		args->sA, args->rA,
+		args->sD, args->rD,
 		&(args->err_i), &(args->err_j), VERBOSE);
 
 	if (!res) *bad_calls += 1;
@@ -49,7 +48,7 @@ void test_routine(struct RoutineArgs *args, int *bad_calls){
 	#else
 	if (!res)
 		{
-	#if (VERBOSE>2)
+	#if (VERBOSE>1)
 		// print input matrices
 		// templated call
 		print_routine_matrices(args);
@@ -61,7 +60,7 @@ void test_routine(struct RoutineArgs *args, int *bad_calls){
 		print_routine(args);
 
 		print_compilation_flags();
-		assert(0);
+		// assert(0);
 		}
 
 	#endif
@@ -125,6 +124,12 @@ int main()
 	PACK_STRMAT_REF(n, n, C, n, &rC, 0, 0);
 	PACK_STRMAT_REF(n, n, D, n, &rD, 0, 0);
 
+	// Allocate row pivot vectors
+	int *sipiv;
+	int *ripiv;
+	int_zeros(&sipiv, n, 1);
+	int_zeros(&ripiv, n, 1);
+
 	// Test description structure
 	struct TestArgs targs;
 	initialize_test_args(&targs);
@@ -172,11 +177,13 @@ int main()
 	args.sB = &sB;
 	args.sC = &sC;
 	args.sD = &sD;
+	args.sipiv = sipiv;
 
 	args.rA = &rA;
 	args.rB = &rB;
 	args.rC = &rC;
 	args.rD = &rD;
+	args.ripiv = ripiv;
 
 	// loop over alphas/betas
 	for (aa = 0; aa < alphas; aa++)

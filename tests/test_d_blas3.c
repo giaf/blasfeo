@@ -44,6 +44,9 @@
 #include "test_x_common.c"
 
 // template base on routine class
+#ifdef ROUTINE_CLASS_GETRF
+#include "test_class_getrf.c"
+#endif
 #ifdef ROUTINE_CLASS_GEMM
 #include "test_class_gemm.c"
 #endif

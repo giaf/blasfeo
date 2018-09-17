@@ -65,8 +65,42 @@
       "potrf_l":{},
       "potrf_l_mn":{},
       "syrk_{PREC}potrf_l_ln":{},
-      "getrf_nopivot":{},
-      "getrf_rowpivot":{},
+      "getrf_nopivot":{
+        "common_name": "Sequential General LU factorization",
+        "doc": [
+          "LU factorization of a general M-by-N matrix A.",
+          "Iterative version of Sivan Toledo's recursive LU algorithm",
+          "A = P * L * U"
+        ],
+        "signature":{
+          "int": "rows",
+          "int": "columns",
+          "STRMAT_ptr": "input matrix",
+          "int": "input row offset",
+          "int": "input column offset",
+          "STRMAT_ptr": "lower and upper trinagular (trapeziodal) matrices condensed",
+          "int": "output row offset",
+          "int": "output column offset"
+        }
+      },
+      "getrf_rowpivot":{
+        "common_name": "Sequential General LU factorization with rowpivot",
+        "doc": [
+          "LU factorization of a general M-by-N matrix A with row pivot",
+          "Iterative version of Sivan Toledo's recursive LU algorithm",
+          "A = P * L * U"
+        ],
+        "signature":{
+          "int": "rows",
+          "int": "columns",
+          "STRMAT_ptr": "input matrix",
+          "int": "input (A) row offset",
+          "int": "input (A) column offset",
+          "STRMAT_ptr": "LU: lower and upper trinagular (trapeziodal) condensed matrix",
+          "int": "output (LU) row offset",
+          "int": "output (LU) column offset"
+        }
+      },
       "geqrf":{},
       "geqrf_worksize":{},
       "gelqf":{},

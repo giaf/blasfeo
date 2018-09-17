@@ -90,6 +90,10 @@ struct RoutineArgs{
 	int di;
 	int dj;
 
+	// indexes arrays
+	int *sipiv;
+	int *ripiv;
+
 	// matrices
 	struct STRMAT *sA;
 	struct STRMAT *sB;
@@ -142,6 +146,5 @@ void print_routine(struct RoutineArgs *args);
 void print_routine_matrices(struct RoutineArgs *args);
 
 int GECMP_LIBSTR(
-	int n, int m, int bi, int bj, struct STRMAT *sB,
-	struct STRMAT_REF *rB, struct STRMAT *sA, struct STRMAT_REF *rA,
-	int* err_i, int* err_j, int debug);
+	int n, int m, int bi, int bj, struct STRMAT *sC,
+	struct STRMAT_REF *rC, int* err_i, int* err_j, int debug);

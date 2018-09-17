@@ -82,6 +82,9 @@
         "trmm_rutn",
         "trmm_rlnn",
         "trsm_lunn"
+      ],
+      "GETRF":[
+        "getrf_rowpivot"
       ]
     },
     "aux":{
