@@ -47,9 +47,10 @@ void ZEROS(REAL **pA, int row, int col)
 /* creates a zero matrix aligned to a cache line */
 void ZEROS_ALIGN(REAL **pA, int row, int col)
 	{
+	*pA = malloc((row*col)*sizeof(REAL));
 #if defined(OS_WINDOWS)
 	*pA = (REAL *) _aligned_malloc( (row*col)*sizeof(REAL), 64 );
-#elif defined(__DSPACE__)
+#elif defined(__DSPACE__) | defined(__BACHMANN__)
 	*pA = malloc((row*col)*sizeof(REAL));
 #else
 	void *temp;

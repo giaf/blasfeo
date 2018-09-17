@@ -1705,13 +1705,13 @@ void blasfeo_pack_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA
 		for( ; ii<m-3; ii+=4)
 			{
 			tmp = _mm256_loadu_pd( &B[0+lda*0] );
-			_mm256_store_pd( &pB[0+bs*0], tmp );
+			_mm256_storeu_pd( &pB[0+bs*0], tmp );
 			tmp = _mm256_loadu_pd( &B[0+lda*1] );
-			_mm256_store_pd( &pB[0+bs*1], tmp );
+			_mm256_storeu_pd( &pB[0+bs*1], tmp );
 			tmp = _mm256_loadu_pd( &B[0+lda*2] );
-			_mm256_store_pd( &pB[0+bs*2], tmp );
+			_mm256_storeu_pd( &pB[0+bs*2], tmp );
 			tmp = _mm256_loadu_pd( &B[0+lda*3] );
-			_mm256_store_pd( &pB[0+bs*3], tmp );
+			_mm256_storeu_pd( &pB[0+bs*3], tmp );
 			// update
 			B  += 4;
 			pB += bs*sda;
