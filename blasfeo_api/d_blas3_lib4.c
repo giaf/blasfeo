@@ -442,7 +442,7 @@ void dtrsm_nn_lu_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 	const int ps = 4;
 
 	int i, j, idx;
-	double *dummy;
+//	double *dummy;
 
 	i = 0;
 	int rm = m%4;
@@ -453,7 +453,9 @@ void dtrsm_nn_lu_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 		j = 0;
 		for( ; j<n; j+=4)
 			{
-			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(0, dummy, dummy, 0, pB+idx*sdb+j*ps, pD+idx*sdd+j*ps, pA+idx*sda+idx*ps, inv_diag_A+idx, rm, n-j);
+//			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(0, dummy, dummy, 0, pB+idx*sdb+j*ps, pD+idx*sdd+j*ps, pA+idx*sda+idx*ps, inv_diag_A+idx, rm, n-j);
+			// XXX pA & pD are dummy and should not be used internally !!!
+			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(0, pA, pD, sdd, pB+idx*sdb+j*ps, pD+idx*sdd+j*ps, pA+idx*sda+idx*ps, inv_diag_A+idx, rm, n-j);
 			}
 		// TODO
 		i += rm;
