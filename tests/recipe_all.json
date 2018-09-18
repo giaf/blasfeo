@@ -21,7 +21,7 @@
     "X64_INTEL_HASWELL"
   ],
   "las":[
-    "BLASF_WRAPPER",
+    "BLASFEO_WRAPPER",
     "HIGH_PERFORMANCE",
     "REFERENCE"
   ],
