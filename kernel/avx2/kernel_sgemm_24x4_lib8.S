@@ -3,26 +3,27 @@
 * This file is part of BLASFEO.                                                                   *
 *                                                                                                 *
 * BLASFEO -- BLAS For Embedded Optimization.                                                      *
-* Copyright (C) 2016-2017 by Gianluca Frison.                                                     *
+* Copyright (C) 2016-2018 by Gianluca Frison.                                                     *
 * Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              *
 * All rights reserved.                                                                            *
 *                                                                                                 *
-* HPMPC is free software; you can redistribute it and/or                                          *
-* modify it under the terms of the GNU Lesser General Public                                      *
-* License as published by the Free Software Foundation; either                                    *
-* version 2.1 of the License, or (at your option) any later version.                              *
+* This program is free software: you can redistribute it and/or modify                            *
+* it under the terms of the GNU General Public License as published by                            *
+* the Free Software Foundation, either version 3 of the License, or                               *
+* (at your option) any later version                                                              *.
 *                                                                                                 *
-* HPMPC is distributed in the hope that it will be useful,                                        *
+* This program is distributed in the hope that it will be useful,                                 *
 * but WITHOUT ANY WARRANTY; without even the implied warranty of                                  *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-* See the GNU Lesser General Public License for more details.                                     *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                   *
+* GNU General Public License for more details.                                                    *
 *                                                                                                 *
-* You should have received a copy of the GNU Lesser General Public                                *
-* License along with HPMPC; if not, write to the Free Software                                    *
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  *
+* You should have received a copy of the GNU General Public License                               *
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.                          *
 *                                                                                                 *
-* Author: Gianluca Frison, giaf (at) dtu.dk                                                       *
-*                          gianluca.frison (at) imtek.uni-freiburg.de                             *
+* The authors designate this particular file as subject to the "Classpath" exception              *
+* as provided by the authors in the LICENSE file that accompained this code.                      *
+*                                                                                                 *
+* Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             *
 *                                                                                                 *
 **************************************************************************************************/
 
@@ -7644,7 +7645,7 @@ kernel_strmm_nn_rl_24x4_vs_lib8:
 	.section	__TEXT,__const
 #endif
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC00: // { 7.5 6.5 5.5 4.5 3.5 2.5 1.5 0.5 }
 #elif defined(OS_MAC)
@@ -7660,7 +7661,7 @@ LC00: // { 7.5 6.5 5.5 4.5 3.5 2.5 1.5 0.5 }
 	.long	1087373312
 	.long	1089470464
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC01: // { 15.5 14.5 13.5 12.5 11.5 10.5 9.5 8.5 }
 #elif defined(OS_MAC)
@@ -7676,7 +7677,7 @@ LC01: // { 15.5 14.5 13.5 12.5 11.5 10.5 9.5 8.5 }
 	.long	1097334784
 	.long	1098383360
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32
 .LC02: // { 23.5 22.5 21.5 20.5 19.5 18.5 17.5 16.5 }
 #elif defined(OS_MAC)

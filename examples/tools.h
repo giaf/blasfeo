@@ -1,9 +1,11 @@
 /**************************************************************************************************
 *                                                                                                 *
-* This file is part of HPMPC.                                                                     *
+* This file is part of BLASFEO.                                                                   *
 *                                                                                                 *
-* HPMPC -- Library for High-Performance implementation of solvers for MPC.                        *
-* Copyright (C) 2014-2015 by Technical University of Denmark. All rights reserved.                *
+* BLASFEO -- BLAS For Embedded Optimization.                                                      *
+* Copyright (C) 2016-2017 by Gianluca Frison.                                                     *
+* Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              *
+* All rights reserved.                                                                            *
 *                                                                                                 *
 * HPMPC is free software; you can redistribute it and/or                                          *
 * modify it under the terms of the GNU Lesser General Public                                      *
@@ -20,6 +22,7 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  *
 *                                                                                                 *
 * Author: Gianluca Frison, giaf (at) dtu.dk                                                       *
+*                          gianluca.frison (at) imtek.uni-freiburg.de                             *
 *                                                                                                 *
 **************************************************************************************************/
 

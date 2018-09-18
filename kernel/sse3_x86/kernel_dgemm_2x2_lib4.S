@@ -3,26 +3,27 @@
 * This file is part of BLASFEO.                                                                   *
 *                                                                                                 *
 * BLASFEO -- BLAS For Embedded Optimization.                                                      *
-* Copyright (C) 2016-2017 by Gianluca Frison.                                                     *
+* Copyright (C) 2016-2018 by Gianluca Frison.                                                     *
 * Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              *
 * All rights reserved.                                                                            *
 *                                                                                                 *
-* HPMPC is free software; you can redistribute it and/or                                          *
-* modify it under the terms of the GNU Lesser General Public                                      *
-* License as published by the Free Software Foundation; either                                    *
-* version 2.1 of the License, or (at your option) any later version.                              *
+* This program is free software: you can redistribute it and/or modify                            *
+* it under the terms of the GNU General Public License as published by                            *
+* the Free Software Foundation, either version 3 of the License, or                               *
+* (at your option) any later version                                                              *.
 *                                                                                                 *
-* HPMPC is distributed in the hope that it will be useful,                                        *
+* This program is distributed in the hope that it will be useful,                                 *
 * but WITHOUT ANY WARRANTY; without even the implied warranty of                                  *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-* See the GNU Lesser General Public License for more details.                                     *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                   *
+* GNU General Public License for more details.                                                    *
 *                                                                                                 *
-* You should have received a copy of the GNU Lesser General Public                                *
-* License along with HPMPC; if not, write to the Free Software                                    *
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  *
+* You should have received a copy of the GNU General Public License                               *
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.                          *
 *                                                                                                 *
-* Author: Gianluca Frison, giaf (at) dtu.dk                                                       *
-*                          gianluca.frison (at) imtek.uni-freiburg.de                             *
+* The authors designate this particular file as subject to the "Classpath" exception              *
+* as provided by the authors in the LICENSE file that accompained this code.                      *
+*                                                                                                 *
+* Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             *
 *                                                                                                 *
 **************************************************************************************************/
 
@@ -1042,6 +1043,184 @@ kernel_dpotrf_nt_l_2x2_vs_lib4:
 	ret
 
 	.size	kernel_dpotrf_nt_l_2x2_vs_lib4, .-kernel_dpotrf_nt_l_2x2_vs_lib4
+
+
+
+
+
+//                                        1       2           3           4       5           6           7          8          9
+// void kernel_dsyrk_dpotrf_nt_l_2x2_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *inv_diag_D);
+
+	.align 16
+	.globl kernel_dsyrk_dpotrf_nt_l_2x2_lib4
+	.type kernel_dsyrk_dpotrf_nt_l_2x2_lib4, @function
+kernel_dsyrk_dpotrf_nt_l_2x2_lib4:
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+
+
+	// call inner dgemm kernel nt add
+
+	movl	ARG1, %eax // kp
+	movl	ARG2, %ebx  // Ap
+	movl	ARG3, %ecx  // Bp
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_2X2_LIB4
+#else
+	call inner_kernel_gemm_add_nt_2x2_lib4
+#endif
+
+
+	// call inner dgemm kernel nt sub
+
+	movl	ARG4, %eax // km
+	movl	ARG5, %ebx   // Am
+	movl	ARG6, %ecx   // Bm
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_SUB_NT_2X2_LIB4
+#else
+	call inner_kernel_gemm_sub_nt_2x2_lib4
+#endif
+
+
+	// call inner blender_loader nn
+
+	movl	ARG7, %eax   // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_11_2X2_LIB4
+#else
+	call inner_scale_11_2x2_lib4
+#endif
+
+
+	// factorization
+
+	movl	ARG9, %eax  // inv_diag_D 
+	movl	$4, %ebx
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_POTRF_2X2_VS_LIB4
+#else
+	call inner_edge_potrf_2x2_vs_lib4
+#endif
+
+
+	// store
+
+	movl	ARG8, %eax  // D 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_2X2_LIB4
+#else
+	call inner_store_l_2x2_lib4
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dsyrk_dpotrf_nt_l_2x2_lib4, .-kernel_dsyrk_dpotrf_nt_l_2x2_lib4
+#endif
+
+
+
+
+
+//                                           1       2           3           4       5           6           7          8          9                   10      11
+// void kernel_dsyrk_dpotrf_nt_l_2x2_vs_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *inv_diag_D, int km, int kn);
+
+	.align 16
+	.globl kernel_dsyrk_dpotrf_nt_l_2x2_vs_lib4
+	.type kernel_dsyrk_dpotrf_nt_l_2x2_vs_lib4, @function
+kernel_dsyrk_dpotrf_nt_l_2x2_vs_lib4:
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	xorpd	%xmm0, %xmm0
+	movapd	%xmm0, %xmm1
+
+
+	// call inner dgemm kernel nt add
+
+	movl	ARG1, %eax // kp
+	movl	ARG2, %ebx  // Ap
+	movl	ARG3, %ecx  // Bp
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_2X2_LIB4
+#else
+	call inner_kernel_gemm_add_nt_2x2_lib4
+#endif
+
+
+	// call inner dgemm kernel nt sub
+
+	movl	ARG4, %eax // km
+	movl	ARG5, %ebx   // Am
+	movl	ARG6, %ecx   // Bm
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_SUB_NT_2X2_LIB4
+#else
+	call inner_kernel_gemm_sub_nt_2x2_lib4
+#endif
+
+
+	// call inner blender_loader nn
+
+	movl	ARG7, %eax   // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_11_2X2_LIB4
+#else
+	call inner_scale_11_2x2_lib4
+#endif
+
+
+	// factorization
+
+	movl	ARG9, %eax  // inv_diag_D 
+	movl	ARG11, %ebx // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_POTRF_2X2_VS_LIB4
+#else
+	call inner_edge_potrf_2x2_vs_lib4
+#endif
+
+
+	// store
+
+	movl	ARG8, %eax  // D 
+	movl	ARG10, %ebx // km 
+	movl	ARG11, %ecx // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_2X2_VS_LIB4
+#else
+	call inner_store_l_2x2_vs_lib4
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dsyrk_dpotrf_nt_l_2x2_vs_lib4, .-kernel_dsyrk_dpotrf_nt_l_2x2_vs_lib4
+#endif
 
 
 

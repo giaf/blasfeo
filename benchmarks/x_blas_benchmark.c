@@ -214,6 +214,7 @@ int main()
 //		struct blasfeo_svec sy; blasfeo_allocate_svec(n, &sy);
 		struct blasfeo_svec sz; blasfeo_allocate_svec(n, &sz);
 #endif
+		int *ipiv; int_zeros(&ipiv, n, 1);
 
 		// A
 		for(ii=0; ii<n; ii++)
@@ -277,12 +278,30 @@ int main()
 				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 #elif defined(SYRK_LN)
 				blasfeo_dsyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+#elif defined(TRMM_RLNN)
+				blasfeo_dtrmm_rlnn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
+#elif defined(TRSM_RLTN)
+				blasfeo_dtrsm_rltn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
+#elif defined(GETRF_ROWPIVOT)
+				blasfeo_dgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 #elif defined(POTRF_L)
 				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 #elif defined(GEMV_N)
 				blasfeo_dgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #elif defined(GEMV_T)
 				blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
+#elif defined(TRMV_LNN)
+				blasfeo_dtrmv_lnn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
+#elif defined(TRMV_LTN)
+				blasfeo_dtrmv_ltn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
+#elif defined(TRSV_LNN)
+				blasfeo_dtrsv_lnn(n, &sB, 0, 0, &sx, 0, &sz, 0);
+#elif defined(TRSV_LTN)
+				blasfeo_dtrsv_ltn(n, &sB, 0, 0, &sx, 0, &sz, 0);
+#elif defined(GEMV_NT)
+				blasfeo_dgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sz, 0, &sz, 0, &sz, 0, &sz, 0);
+#elif defined(SYMV_L)
+				blasfeo_dsymv_l(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #else
 #error wrong routine
 #endif
@@ -295,12 +314,30 @@ int main()
 				blasfeo_sgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 #elif defined(SYRK_LN)
 				blasfeo_ssyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+#elif defined(TRMM_RLNN)
+				blasfeo_strmm_rlnn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
+#elif defined(TRSM_RLTN)
+				blasfeo_strsm_rltn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
+#elif defined(GETRF_ROWPIVOT)
+				blasfeo_sgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 #elif defined(POTRF_L)
 				blasfeo_spotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 #elif defined(GEMV_N)
 				blasfeo_sgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #elif defined(GEMV_T)
 				blasfeo_sgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
+#elif defined(TRMV_LNN)
+				blasfeo_strmv_lnn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
+#elif defined(TRMV_LTN)
+				blasfeo_strmv_ltn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
+#elif defined(TRSV_LNN)
+				blasfeo_strsv_lnn(n, &sB, 0, 0, &sx, 0, &sz, 0);
+#elif defined(TRSV_LTN)
+				blasfeo_strsv_ltn(n, &sB, 0, 0, &sx, 0, &sz, 0);
+#elif defined(GEMV_NT)
+				blasfeo_sgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sz, 0, &sz, 0, &sz, 0, &sz, 0);
+#elif defined(SYMV_L)
+				blasfeo_ssymv_l(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #else
 #error wrong routine
 #endif
@@ -319,12 +356,18 @@ int main()
 
 #if defined(GEMM_NT) | defined(GEMM_NN)
 		double flop_operation = 2.0*n*n*n;
-#elif defined(SYRK_LN)
+#elif defined(SYRK_LN) | defined(TRMM_RLNN) | defined(TRSM_RLTN)
 		double flop_operation = 1.0*n*n*n;
+#elif defined(GETRF_ROWPIVOT)
+		double flop_operation = 2.0/3.0*n*n*n;
 #elif defined(POTRF_L)
 		double flop_operation = 1.0/3.0*n*n*n;
-#elif defined(GEMV_N) | defined(GEMV_T)
+#elif defined(GEMV_NT)
+		double flop_operation = 4.0*n*n;
+#elif defined(GEMV_N) | defined(GEMV_T) | defined(SYMV_L)
 		double flop_operation = 2.0*n*n;
+#elif defined(TRMV_LNN) | defined(TRMV_LTN) | defined(TRSV_LNN) | defined(TRSV_LTN)
+		double flop_operation = 1.0*n*n;
 #else
 #error wrong routine
 #endif
@@ -358,6 +401,7 @@ int main()
 //		blasfeo_free_svec(&sy);
 		blasfeo_free_svec(&sz);
 #endif
+		int_free(ipiv);
 
 		}
 

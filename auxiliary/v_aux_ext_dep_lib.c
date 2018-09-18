@@ -3,26 +3,27 @@
 * This file is part of BLASFEO.                                                                   *
 *                                                                                                 *
 * BLASFEO -- BLAS For Embedded Optimization.                                                      *
-* Copyright (C) 2016-2017 by Gianluca Frison.                                                     *
+* Copyright (C) 2016-2018 by Gianluca Frison.                                                     *
 * Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              *
 * All rights reserved.                                                                            *
 *                                                                                                 *
-* HPMPC is free software; you can redistribute it and/or                                          *
-* modify it under the terms of the GNU Lesser General Public                                      *
-* License as published by the Free Software Foundation; either                                    *
-* version 2.1 of the License, or (at your option) any later version.                              *
+* This program is free software: you can redistribute it and/or modify                            *
+* it under the terms of the GNU General Public License as published by                            *
+* the Free Software Foundation, either version 3 of the License, or                               *
+* (at your option) any later version                                                              *.
 *                                                                                                 *
-* HPMPC is distributed in the hope that it will be useful,                                        *
+* This program is distributed in the hope that it will be useful,                                 *
 * but WITHOUT ANY WARRANTY; without even the implied warranty of                                  *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-* See the GNU Lesser General Public License for more details.                                     *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                   *
+* GNU General Public License for more details.                                                    *
 *                                                                                                 *
-* You should have received a copy of the GNU Lesser General Public                                *
-* License along with HPMPC; if not, write to the Free Software                                    *
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  *
+* You should have received a copy of the GNU General Public License                               *
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.                          *
 *                                                                                                 *
-* Author: Gianluca Frison, giaf (at) dtu.dk                                                       *
-*                          gianluca.frison (at) imtek.uni-freiburg.de                             *
+* The authors designate this particular file as subject to the "Classpath" exception              *
+* as provided by the authors in the LICENSE file that accompained this code.                      *
+*                                                                                                 *
+* Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             *
 *                                                                                                 *
 **************************************************************************************************/
 
@@ -37,19 +38,27 @@
 /* creates a zero matrix given the size in bytes */
 void v_zeros(void **ptrA, int size)
 	{
+	// allocate memory
 	*ptrA = (void *) malloc(size);
-	char *A = *ptrA;
+	// zero memory
 	int i;
-	for(i=0; i<size; i++) A[i] = 0;
+	double *dA = (double *) *ptrA;
+	for(i=0; i<size/8; i++) dA[i] = 0.0;
+	char *cA = (char *) dA;
+	i *= 8;
+	for(; i<size; i++) cA[i] = 0;
+	return;
 	}
 
 
 /* creates a zero matrix aligned to a cache line given the size in bytes */
 void v_zeros_align(void **ptrA, int size)
 	{
+	// allocate memory
 #if defined(OS_WINDOWS)
 	*ptrA = _aligned_malloc( size, 64 );
 #elif defined(__DSPACE__)
+	// XXX fix this hack !!!
 	*ptrA = malloc(size);
 #else
 	int err = posix_memalign(ptrA, 64, size);
@@ -59,9 +68,14 @@ void v_zeros_align(void **ptrA, int size)
 		exit(1);
 		}
 #endif
-	char *A = *ptrA;
+	// zero allocated memory
 	int i;
-	for(i=0; i<size; i++) A[i] = 0;
+	double *dA = (double *) *ptrA;
+	for(i=0; i<size/8; i++) dA[i] = 0.0;
+	char *cA = (char *) dA;
+	i *= 8;
+	for(; i<size; i++) cA[i] = 0;
+	return;
 	}
 
 
@@ -86,33 +100,46 @@ void v_free_align(void *pA)
 /* creates a zero matrix given the size in bytes */
 void c_zeros(char **ptrA, int size)
 	{
+	// allocate memory
 	*ptrA = malloc(size);
-	char *A = *ptrA;
+	// zero memory
 	int i;
-	for(i=0; i<size; i++) A[i] = 0;
+	double *dA = (double *) *ptrA;
+	for(i=0; i<size/8; i++) dA[i] = 0.0;
+	char *cA = (char *) dA;
+	i *= 8;
+	for(; i<size; i++) cA[i] = 0;
+	return;
 	}
 
 
 /* creates a zero matrix aligned to a cache line given the size in bytes */
 void c_zeros_align(char **ptrA, int size)
 	{
+	// allocate memory
 #if defined(OS_WINDOWS)
 	*ptrA = _aligned_malloc( size, 64 );
 #elif defined(__DSPACE__)
+	// XXX fix this hack !!!
 	*ptrA = malloc(size);
 #else
-	void *temp;
-	int err = posix_memalign(&temp, 64, size);
+	void *tmp;
+	int err = posix_memalign(&tmp, 64, size);
 	if(err!=0)
 		{
 		printf("Memory allocation error");
 		exit(1);
 		}
-	*ptrA = temp;
+	*ptrA = tmp;
 #endif
-	char *A = *ptrA;
+	// zero allocated memory
 	int i;
-	for(i=0; i<size; i++) A[i] = 0;
+	double *dA = (double *) *ptrA;
+	for(i=0; i<size/8; i++) dA[i] = 0.0;
+	char *cA = (char *) dA;
+	i *= 8;
+	for(; i<size; i++) cA[i] = 0;
+	return;
 	}
 
 

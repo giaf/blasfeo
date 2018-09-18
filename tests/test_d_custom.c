@@ -3,26 +3,27 @@
 * This file is part of BLASFEO.                                                                   *
 *                                                                                                 *
 * BLASFEO -- BLAS For Embedded Optimization.                                                      *
-* Copyright (C) 2016-2017 by Gianluca Frison.                                                     *
+* Copyright (C) 2016-2018 by Gianluca Frison.                                                     *
 * Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              *
 * All rights reserved.                                                                            *
 *                                                                                                 *
-* HPMPC is free software; you can redistribute it and/or                                          *
-* modify it under the terms of the GNU Lesser General Public                                      *
-* License as published by the Free Software Foundation; either                                    *
-* version 2.1 of the License, or (at your option) any later version.                              *
+* This program is free software: you can redistribute it and/or modify                            *
+* it under the terms of the GNU General Public License as published by                            *
+* the Free Software Foundation, either version 3 of the License, or                               *
+* (at your option) any later version                                                              *.
 *                                                                                                 *
-* HPMPC is distributed in the hope that it will be useful,                                        *
+* This program is distributed in the hope that it will be useful,                                 *
 * but WITHOUT ANY WARRANTY; without even the implied warranty of                                  *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-* See the GNU Lesser General Public License for more details.                                     *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                   *
+* GNU General Public License for more details.                                                    *
 *                                                                                                 *
-* You should have received a copy of the GNU Lesser General Public                                *
-* License along with HPMPC; if not, write to the Free Software                                    *
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  *
+* You should have received a copy of the GNU General Public License                               *
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.                          *
 *                                                                                                 *
-* Author: Gianluca Frison, giaf (at) dtu.dk                                                       *
-*                          gianluca.frison (at) imtek.uni-freiburg.de                             *
+* The authors designate this particular file as subject to the "Classpath" exception              *
+* as provided by the authors in the LICENSE file that accompained this code.                      *
+*                                                                                                 *
+* Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             *
 *                                                                                                 *
 **************************************************************************************************/
 
@@ -205,22 +206,6 @@ int main()
 
 
 
-#if 1
-	// potrf
-	alpha = 1.0;
-	beta = 1.0;
-	blasfeo_print_dmat(n, n, &sD, 0, 0);
-//	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
-	blasfeo_dsyrk_ln(n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
-//	blasfeo_dsyrk_ln_mn(n, n-1, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
-	blasfeo_print_dmat(n, n, &sD, 0, 0);
-	blasfeo_dpotrf_l(n, &sD, 0, 0, &sD, 0, 0);
-	blasfeo_print_dmat(n, n, &sD, 0, 0);
-	return 0;
-#endif
-
-
-
 #if 0
 	// gemm_nt
 	alpha = 1.0;
@@ -242,8 +227,6 @@ int main()
 	return 0;
 #endif
 
-
-
 #if 0
 	// gemm_nn
 	alpha = 1.0;
@@ -254,6 +237,35 @@ int main()
 
 	blasfeo_dgemm_nn(5, 5, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+	return 0;
+#endif
+
+#if 0
+	// trmm_rlnn
+	alpha = 1.0;
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+
+	blasfeo_dtrmm_rlnn(9, n, alpha, &sA, 3, 0, &sB, 0, 0, &sD, 0, 0);
+
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+	return 0;
+#endif
+
+#if 0
+	// potrf
+	alpha = 1.0;
+	beta = 1.0;
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+//	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ln(n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_dsyrk_ln_mn(n, n-1, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_print_dmat(n, n, &sD, 0, 0);
+	blasfeo_dpotrf_l(4, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_dtrsm_rltn(7, 4, 1.0, &sD, 0, 0, &sD, 4, 0, &sD, 4, 0);
+//	blasfeo_dpotrf_l_mn(n, 7, &sD, 0, 0, &sD, 0, 0);
+//	blasfeo_dsyrk_dpotrf_ln(n, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_dsyrk_dpotrf_ln_mn(n-1, n-3, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	return 0;
 #endif
@@ -270,6 +282,22 @@ int main()
 	// gemv_t
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
+	blasfeo_print_tran_dvec(n, &sz_n, 0);
+	return 0;
+#endif
+
+#if 0
+	// trsv_ltn
+	blasfeo_print_tran_dvec(n, &sz_n, 0);
+	blasfeo_dtrsv_ltn(n, &sA, 0, 1, &sx_n, 0, &sz_n, 0);
+	blasfeo_print_tran_dvec(n, &sz_n, 0);
+	return 0;
+#endif
+
+#if 1
+	// symv_l
+	blasfeo_print_tran_dvec(n, &sx_n, 0);
+	blasfeo_dsymv_l(5, 5, 1.0, &sA, 1, 1, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	return 0;
 #endif

@@ -1,25 +1,27 @@
 ###################################################################################################
 #                                                                                                 #
-# This file is part of HPIPM.                                                                     #
+# This file is part of BLASFEO.                                                                   #
 #                                                                                                 #
-# HPIPM -- High Performance Interior Point Method.                                                #
-# Copyright (C) 2017 by Gianluca Frison.                                                          #
+# BLASFEO -- BLAS For Embedded Optimization.                                                      #
+# Copyright (C) 2016-2018 by Gianluca Frison.                                                     #
 # Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              #
 # All rights reserved.                                                                            #
 #                                                                                                 #
-# HPMPC is free software; you can redistribute it and/or                                          #
-# modify it under the terms of the GNU Lesser General Public                                      #
-# License as published by the Free Software Foundation; either                                    #
-# version 2.1 of the License, or (at your option) any later version.                              #
+# This program is free software: you can redistribute it and/or modify                            #
+# it under the terms of the GNU General Public License as published by                            #
+# the Free Software Foundation, either version 3 of the License, or                               #
+# (at your option) any later version                                                              #.
 #                                                                                                 #
-# HPMPC is distributed in the hope that it will be useful,                                        #
+# This program is distributed in the hope that it will be useful,                                 #
 # but WITHOUT ANY WARRANTY; without even the implied warranty of                                  #
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                                            #
-# See the GNU Lesser General Public License for more details.                                     #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                   #
+# GNU General Public License for more details.                                                    #
 #                                                                                                 #
-# You should have received a copy of the GNU Lesser General Public                                #
-# License along with HPMPC; if not, write to the Free Software                                    #
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  #
+# You should have received a copy of the GNU General Public License                               #
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.                          #
+#                                                                                                 #
+# The authors designate this particular file as subject to the "Classpath" exception              #
+# as provided by the authors in the LICENSE file that accompained this code.                      #
 #                                                                                                 #
 # Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             #
 #                                                                                                 #
@@ -57,8 +59,12 @@ set(REF_BLAS 0 CACHE STRING "Reference blas to use")
 # Options
 # set(BLASFEO_TESTING ON CACHE BOOL "Tests enabled")
 set(BLASFEO_TESTING OFF CACHE BOOL "Tests disabled")
+
 # set(BLASFEO_BENCHMARKS ON CACHE BOOL "Benchmarks enabled")
 set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled")
+
+set(BLASFEO_EXAMPLES ON CACHE BOOL "Examples enabled")
+# set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled")
 
 # Use C99 extension to math library
 set(USE_C99_MATH ON CACHE BOOL "Use C99 extension to math library")
@@ -69,6 +75,13 @@ set(EXT_DEP ON CACHE BOOL "Compile external dependencies in BLASFEO")
 
 set(MIN_KERNEL_SIZE 2x2 CACHE STRING "Minimum kernel size")
 # set(MIN_KERNEL_SIZE 4x4 CACHE STRING "Minimum kernel size")
+
+# Skip BLASFEO utils for unsupported systems and for Realease build
+if(CMAKE_SYSTEM MATCHES "dSpace" OR CMAKE_BUILD_TYPE MATCHES "Release")
+	set(BLASFEO_TESTING OFF CACHE BOOL "Examples disabled" FORCE)
+	set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled" FORCE)
+	set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled" FORCE)
+endif()
 
 configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
@@ -116,11 +129,6 @@ endif()
 
 if(BLASFEO_BENCHMARKS MATCHES ON)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBENCHMARKS_MODE=1")
-	if(NOT REF_BLAS)
-		message(FATAL_ERROR
-				"\nBENCHMARKS_MODE: No reference blas selected"
-				"\nUse i.e. -DREF_BLAS=OPENBLAS")
-	endif()
 endif()
 
 if(MIN_KERNEL_SIZE MATCHES 2x2)
@@ -182,7 +190,7 @@ endif()
 
 #
 if(${REF_BLAS} MATCHES 0)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DREF_BLAS_NONE")
 endif(${REF_BLAS} MATCHES 0)
 
 if(${REF_BLAS} MATCHES OPENBLAS)
@@ -696,14 +704,17 @@ install(EXPORT blasfeoConfig DESTINATION cmake)
 file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
 install(FILES ${BLASFEO_HEADERS} DESTINATION ${BLASFEO_HEADERS_INSTALLATION_DIRECTORY})
 
-#if(NOT CMAKE_SYSTEM MATCHES "dSpace" AND NOT CMAKE_BUILD_TYPE MATCHES "Release")
-if(NOT CMAKE_SYSTEM MATCHES "dSpace")
-	# tests
+# tests
+if(BLASFEO_TESTING MATCHES ON)
 	add_subdirectory(tests)
+endif()
 
-	# benchmarks
+# benchmarks
+if(BLASFEO_BENCHMARKS MATCHES ON)
 	add_subdirectory(benchmarks)
+endif()
 
-	# examples
+# examples
+if(BLASFEO_EXAMPLES MATCHES ON)
 	add_subdirectory(examples)
 endif()

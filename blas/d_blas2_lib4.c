@@ -3,26 +3,27 @@
 * This file is part of BLASFEO.                                                                   *
 *                                                                                                 *
 * BLASFEO -- BLAS For Embedded Optimization.                                                      *
-* Copyright (C) 2016-2017 by Gianluca Frison.                                                     *
+* Copyright (C) 2016-2018 by Gianluca Frison.                                                     *
 * Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              *
 * All rights reserved.                                                                            *
 *                                                                                                 *
-* HPMPC is free software; you can redistribute it and/or                                          *
-* modify it under the terms of the GNU Lesser General Public                                      *
-* License as published by the Free Software Foundation; either                                    *
-* version 2.1 of the License, or (at your option) any later version.                              *
+* This program is free software: you can redistribute it and/or modify                            *
+* it under the terms of the GNU General Public License as published by                            *
+* the Free Software Foundation, either version 3 of the License, or                               *
+* (at your option) any later version                                                              *.
 *                                                                                                 *
-* HPMPC is distributed in the hope that it will be useful,                                        *
+* This program is distributed in the hope that it will be useful,                                 *
 * but WITHOUT ANY WARRANTY; without even the implied warranty of                                  *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-* See the GNU Lesser General Public License for more details.                                     *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                   *
+* GNU General Public License for more details.                                                    *
 *                                                                                                 *
-* You should have received a copy of the GNU Lesser General Public                                *
-* License along with HPMPC; if not, write to the Free Software                                    *
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  *
+* You should have received a copy of the GNU General Public License                               *
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.                          *
 *                                                                                                 *
-* Author: Gianluca Frison, giaf (at) dtu.dk                                                       *
-*                          gianluca.frison (at) imtek.uni-freiburg.de                             *
+* The authors designate this particular file as subject to the "Classpath" exception              *
+* as provided by the authors in the LICENSE file that accompained this code.                      *
+*                                                                                                 *
+* Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             *
 *                                                                                                 *
 **************************************************************************************************/
 
@@ -31,6 +32,7 @@
 
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_kernel.h"
+#include "../include/blasfeo_d_blas.h"
 #include "../include/blasfeo_d_aux.h"
 
 
@@ -315,6 +317,11 @@ void blasfeo_dgemv_nt(int m, int n, double alpha_n, double alpha_t, struct blasf
 		exit(1);
 		}
 	const int bs = 4;
+#if defined(TARGET_X86_AMD_BARCELONA) | defined(TARGET_X86_AMD_JAGUAR)
+	blasfeo_dgemv_n(m, n, alpha_n, sA, ai, aj, sx_n, xi_n, beta_n, sy_n, yi_n, sz_n, zi_n);
+	blasfeo_dgemv_t(m, n, alpha_t, sA, ai, aj, sx_t, xi_t, beta_t, sy_t, yi_t, sz_t, zi_t);
+	return;
+#endif
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs; // TODO ai
 	double *x_n = sx_n->pa + xi_n;
@@ -329,8 +336,12 @@ void blasfeo_dgemv_nt(int m, int n, double alpha_n, double alpha_t, struct blasf
 
 
 
+// m >= n
 void blasfeo_dsymv_l(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
+
+	if(m<n)
+		n = m;
 
 	if(m<=0 | n<=0)
 		return;
@@ -358,7 +369,7 @@ void blasfeo_dsymv_l(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai
 		{
 		z[ii+0] = beta*y[ii+0];
 		}
-	
+
 	// clean up at the beginning
 	if(ai%bs!=0) // 1, 2, 3
 		{
@@ -370,6 +381,131 @@ void blasfeo_dsymv_l(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai
 		m -= n1;
 		n -= n1;
 		}
+
+#if defined(TARGET_X86_AMD_BARCELONA) | defined(TARGET_X86_AMD_JAGUAR)
+	// using dgemv_n and dgemv_t kernels
+	double beta1 = 1.0;
+	double xx[4];
+	for(ii=0; ii<n-3; ii+=4)
+		{
+		// gemv_n
+		kernel_dgemv_n_4_lib4(ii, &alpha, pA+ii*sda, x, &beta1, z+ii, z+ii);
+		// 4x4
+		z[ii+0] += alpha*(pA[ii*sda+0+bs*(ii+0)]*x[ii+0] + pA[ii*sda+1+bs*(ii+0)]*x[ii+1] + pA[ii*sda+2+bs*(ii+0)]*x[ii+2] + pA[ii*sda+3+bs*(ii+0)]*x[ii+3]);
+		z[ii+1] += alpha*(pA[ii*sda+1+bs*(ii+0)]*x[ii+0] + pA[ii*sda+1+bs*(ii+1)]*x[ii+1] + pA[ii*sda+2+bs*(ii+1)]*x[ii+2] + pA[ii*sda+3+bs*(ii+1)]*x[ii+3]);
+		z[ii+2] += alpha*(pA[ii*sda+2+bs*(ii+0)]*x[ii+0] + pA[ii*sda+2+bs*(ii+1)]*x[ii+1] + pA[ii*sda+2+bs*(ii+2)]*x[ii+2] + pA[ii*sda+3+bs*(ii+2)]*x[ii+3]);
+		z[ii+3] += alpha*(pA[ii*sda+3+bs*(ii+0)]*x[ii+0] + pA[ii*sda+3+bs*(ii+1)]*x[ii+1] + pA[ii*sda+3+bs*(ii+2)]*x[ii+2] + pA[ii*sda+3+bs*(ii+3)]*x[ii+3]);
+		// gemv_t
+		kernel_dgemv_t_4_lib4(m-ii-4, &alpha, pA+(ii+4)*sda+ii*bs, sda, x+ii+4, &beta1, z+ii, z+ii);
+		}
+	if(ii<n)
+		{
+		if(n-ii==1)
+			{
+			xx[0] = alpha*x[ii+0];
+			xx[1] = alpha*x[ii+1];
+			xx[2] = alpha*x[ii+2];
+			xx[3] = alpha*x[ii+3];
+			// gemv_n
+			kernel_dgemv_n_4_vs_lib4(ii, &alpha, pA+ii*sda, x, &beta1, z+ii, z+ii, m-ii);
+			// 4x4
+			z[ii+0] += pA[ii*sda+0+bs*(ii+0)]*xx[0];
+			if(m-ii>1)
+				{
+				z[ii+0] += pA[ii*sda+1+bs*(ii+0)]*xx[1];
+				z[ii+1] += pA[ii*sda+1+bs*(ii+0)]*xx[0];
+				}
+			if(m-ii>2)
+				{
+				z[ii+0] += pA[ii*sda+2+bs*(ii+0)]*xx[2];
+				z[ii+2] += pA[ii*sda+2+bs*(ii+0)]*xx[0];
+				}
+			if(m-ii>3)
+				{
+				z[ii+0] += pA[ii*sda+3+bs*(ii+0)]*xx[3];
+				z[ii+3] += pA[ii*sda+3+bs*(ii+0)]*xx[0];
+				}
+			// gemv_t
+			kernel_dgemv_t_4_vs_lib4(m-ii-4, &alpha, pA+(ii+4)*sda+ii*bs, sda, x+ii+4, &beta1, z+ii, z+ii, n-ii);
+			ii += 4;
+			}
+		else if(n-ii==2)
+			{
+			xx[0] = alpha*x[ii+0];
+			xx[1] = alpha*x[ii+1];
+			xx[2] = alpha*x[ii+2];
+			xx[3] = alpha*x[ii+3];
+			// gemv_n
+			kernel_dgemv_n_4_vs_lib4(ii, &alpha, pA+ii*sda, x, &beta1, z+ii, z+ii, m-ii);
+			// 4x4
+			z[ii+0] += pA[ii*sda+0+bs*(ii+0)]*xx[0];
+			if(m-ii>1)
+				{
+				z[ii+0] += pA[ii*sda+1+bs*(ii+0)]*xx[1];
+				z[ii+1] += pA[ii*sda+1+bs*(ii+0)]*xx[0] + pA[ii*sda+1+bs*(ii+1)]*xx[1];
+				}
+			if(m-ii>2)
+				{
+				z[ii+0] += pA[ii*sda+2+bs*(ii+0)]*xx[2];
+				z[ii+1] += pA[ii*sda+2+bs*(ii+1)]*xx[2];
+				z[ii+2] += pA[ii*sda+2+bs*(ii+0)]*xx[0] + pA[ii*sda+2+bs*(ii+1)]*xx[1];
+				}
+			if(m-ii>3)
+				{
+				z[ii+0] += pA[ii*sda+3+bs*(ii+0)]*xx[3];
+				z[ii+1] += pA[ii*sda+3+bs*(ii+1)]*xx[3];
+				z[ii+3] += pA[ii*sda+3+bs*(ii+0)]*xx[0] + pA[ii*sda+3+bs*(ii+1)]*xx[1];
+				}
+			// gemv_t
+			kernel_dgemv_t_4_vs_lib4(m-ii-4, &alpha, pA+(ii+4)*sda+ii*bs, sda, x+ii+4, &beta1, z+ii, z+ii, n-ii);
+			ii += 4;
+			}
+		else // if(n-ii==3)
+			{
+			xx[0] = alpha*x[ii+0];
+			xx[1] = alpha*x[ii+1];
+			xx[2] = alpha*x[ii+2];
+			xx[3] = alpha*x[ii+3];
+			// gemv_n
+			kernel_dgemv_n_4_vs_lib4(ii, &alpha, pA+ii*sda, x, &beta1, z+ii, z+ii, m-ii);
+			// 4x4
+			z[ii+0] += pA[ii*sda+0+bs*(ii+0)]*xx[0];
+			if(m-ii>1)
+				{
+				z[ii+0] += pA[ii*sda+1+bs*(ii+0)]*xx[1];
+				z[ii+1] += pA[ii*sda+1+bs*(ii+0)]*xx[0] + pA[ii*sda+1+bs*(ii+1)]*xx[1];
+				}
+			if(m-ii>2)
+				{
+				z[ii+0] += pA[ii*sda+2+bs*(ii+0)]*xx[2];
+				z[ii+1] += pA[ii*sda+2+bs*(ii+1)]*xx[2];
+				z[ii+2] += pA[ii*sda+2+bs*(ii+0)]*xx[0] + pA[ii*sda+2+bs*(ii+1)]*xx[1] + pA[ii*sda+2+bs*(ii+2)]*xx[2];
+				}
+			if(m-ii>3)
+				{
+				z[ii+0] += pA[ii*sda+3+bs*(ii+0)]*xx[3];
+				z[ii+1] += pA[ii*sda+3+bs*(ii+1)]*xx[3];
+				z[ii+2] += pA[ii*sda+3+bs*(ii+2)]*xx[3];
+				z[ii+3] += pA[ii*sda+3+bs*(ii+0)]*xx[0] + pA[ii*sda+3+bs*(ii+1)]*xx[1] + pA[ii*sda+3+bs*(ii+2)]*xx[2];
+				}
+			// gemv_t
+			kernel_dgemv_t_4_vs_lib4(m-ii-4, &alpha, pA+(ii+4)*sda+ii*bs, sda, x+ii+4, &beta1, z+ii, z+ii, n-ii);
+			ii += 4;
+			}
+		for( ; ii<m-3; ii+=4)
+			{
+			// gemv_n
+			kernel_dgemv_n_4_lib4(n, &alpha, pA+ii*sda, x, &beta1, z+ii, z+ii);
+			}
+		if(ii<m)
+			{
+			// gemv_n
+			kernel_dgemv_n_4_vs_lib4(n, &alpha, pA+ii*sda, x, &beta1, z+ii, z+ii, m-ii);
+			}
+		}
+	return;
+#endif
+
 	// main loop
 	ii = 0;
 	for(; ii<n-3; ii+=4)
@@ -489,6 +625,107 @@ void blasfeo_dtrmv_lnn(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, st
 
 
 // m >= n
+void blasfeo_dtrmv_lnu(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
+	{
+
+	if(m<=0)
+		return;
+
+	const int bs = 4;
+
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+
+	if(m-n>0)
+		blasfeo_dgemv_n(m-n, n, 1.0, sA, ai+n, aj, sx, xi, 0.0, sz, zi+n, sz, zi+n);
+
+	double *pA2 = pA;
+	double *z2 = z;
+	int m2 = n;
+	int n2 = 0;
+	double *pA3, *x3;
+
+	double alpha = 1.0;
+	double beta = 1.0;
+
+	double zt[4];
+
+	int ii, jj, jj_end;
+
+	ii = 0;
+
+	if(ai%4!=0)
+		{
+		pA2 += sda*bs - ai%bs;
+		z2 += bs-ai%bs;
+		m2 -= bs-ai%bs;
+		n2 += bs-ai%bs;
+		}
+	
+	pA2 += m2/bs*bs*sda;
+	z2 += m2/bs*bs;
+	n2 += m2/bs*bs;
+
+	if(m2%bs!=0)
+		{
+		//
+		pA3 = pA2 + bs*n2;
+		x3 = x + n2;
+		zt[3] = pA3[3+bs*0]*x3[0] + pA3[3+bs*1]*x3[1] + pA3[3+bs*2]*x3[2] + 1.0*x3[3];
+		zt[2] = pA3[2+bs*0]*x3[0] + pA3[2+bs*1]*x3[1] + 1.0*x3[2];
+		zt[1] = pA3[1+bs*0]*x3[0] + 1.0*x3[1];
+		zt[0] = 1.0*x3[0];
+		kernel_dgemv_n_4_lib4(n2, &alpha, pA2, x, &beta, zt, zt);
+		for(jj=0; jj<m2%bs; jj++)
+			z2[jj] = zt[jj];
+		}
+	for(; ii<m2-3; ii+=4)
+		{
+		pA2 -= bs*sda;
+		z2 -= 4;
+		n2 -= 4;
+		pA3 = pA2 + bs*n2;
+		x3 = x + n2;
+		z2[3] = pA3[3+bs*0]*x3[0] + pA3[3+bs*1]*x3[1] + pA3[3+bs*2]*x3[2] + 1.0*x3[3];
+		z2[2] = pA3[2+bs*0]*x3[0] + pA3[2+bs*1]*x3[1] + 1.0*x3[2];
+		z2[1] = pA3[1+bs*0]*x3[0] + 1.0*x3[1];
+		z2[0] = 1.0*x3[0];
+		kernel_dgemv_n_4_lib4(n2, &alpha, pA2, x, &beta, z2, z2);
+		}
+	if(ai%4!=0)
+		{
+		if(ai%bs==1)
+			{
+			zt[2] = pA[2+bs*0]*x[0] + pA[2+bs*1]*x[1] + 1.0*x[2];
+			zt[1] = pA[1+bs*0]*x[0] + 1.0*x[1];
+			zt[0] = 1.0*x[0];
+			jj_end = 4-ai%bs<n ? 4-ai%bs : n;
+			for(jj=0; jj<jj_end; jj++)
+				z[jj] = zt[jj];
+			}
+		else if(ai%bs==2)
+			{
+			zt[1] = pA[1+bs*0]*x[0] + 1.0*x[1];
+			zt[0] = 1.0*x[0];
+			jj_end = 4-ai%bs<n ? 4-ai%bs : n;
+			for(jj=0; jj<jj_end; jj++)
+				z[jj] = zt[jj];
+			}
+		else // if (ai%bs==3)
+			{
+			z[0] = 1.0*x[0];
+			}
+		}
+
+	return;
+
+	}
+
+
+
+// m >= n
 void blasfeo_dtrmv_ltn(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
 	{
 
@@ -598,6 +835,131 @@ void blasfeo_dtrmv_ltn(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, st
 		zt[1] = pA[1+bs*1]*xt[1] + pA[2+bs*1]*xt[2] + pA[3+bs*1]*xt[3];
 		zt[2] = pA[2+bs*2]*xt[2] + pA[3+bs*2]*xt[3];
 		zt[3] = pA[3+bs*3]*xt[3];
+		pA += bs*sda;
+		x += 4;
+		kernel_dgemv_t_4_lib4(m-4-jj, &alpha, pA, sda, x, &beta, zt, zt);
+		for(ll=0; ll<n-jj; ll++)
+			z[ll] = zt[ll];
+//		pA += bs*4;
+//		z += 4;
+		}
+
+	return;
+
+	}
+
+
+
+// m >= n
+void blasfeo_dtrmv_ltu(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
+	{
+
+	if(m<=0)
+		return;
+
+	const int bs = 4;
+
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+
+	double xt[4];
+	double zt[4];
+
+	double alpha = 1.0;
+	double beta = 1.0;
+
+	int ii, jj, ll, ll_max;
+
+	jj = 0;
+
+	if(ai%bs!=0)
+		{
+
+		if(ai%bs==1)
+			{
+			ll_max = m-jj<3 ? m-jj : 3;
+			for(ll=0; ll<ll_max; ll++)
+				xt[ll] = x[ll];
+			for(; ll<3; ll++)
+				xt[ll] = 0.0;
+			zt[0] = 1.0*xt[0] + pA[1+bs*0]*xt[1] + pA[2+bs*0]*xt[2];
+			zt[1] = 1.0*xt[1] + pA[2+bs*1]*xt[2];
+			zt[2] = 1.0*xt[2];
+			pA += bs*sda - 1;
+			x += 3;
+			kernel_dgemv_t_4_lib4(m-3-jj, &alpha, pA, sda, x, &beta, zt, zt);
+			ll_max = n-jj<3 ? n-jj : 3;
+			for(ll=0; ll<ll_max; ll++)
+				z[ll] = zt[ll];
+			pA += bs*3;
+			z += 3;
+			jj += 3;
+			}
+		else if(ai%bs==2)
+			{
+			ll_max = m-jj<2 ? m-jj : 2;
+			for(ll=0; ll<ll_max; ll++)
+				xt[ll] = x[ll];
+			for(; ll<2; ll++)
+				xt[ll] = 0.0;
+			zt[0] = 1.0*xt[0] + pA[1+bs*0]*xt[1];
+			zt[1] = 1.0*xt[1];
+			pA += bs*sda - 2;
+			x += 2;
+			kernel_dgemv_t_4_lib4(m-2-jj, &alpha, pA, sda, x, &beta, zt, zt);
+			ll_max = n-jj<2 ? n-jj : 2;
+			for(ll=0; ll<ll_max; ll++)
+				z[ll] = zt[ll];
+			pA += bs*2;
+			z += 2;
+			jj += 2;
+			}
+		else // if(ai%bs==3)
+			{
+			ll_max = m-jj<1 ? m-jj : 1;
+			for(ll=0; ll<ll_max; ll++)
+				xt[ll] = x[ll];
+			for(; ll<1; ll++)
+				xt[ll] = 0.0;
+			zt[0] = 1.0*xt[0];
+			pA += bs*sda - 3;
+			x += 1;
+			kernel_dgemv_t_4_lib4(m-1-jj, &alpha, pA, sda, x, &beta, zt, zt);
+			ll_max = n-jj<1 ? n-jj : 1;
+			for(ll=0; ll<ll_max; ll++)
+				z[ll] = zt[ll];
+			pA += bs*1;
+			z += 1;
+			jj += 1;
+			}
+
+		}
+	
+	for(; jj<n-3; jj+=4)
+		{
+		zt[0] = 1.0*x[0] + pA[1+bs*0]*x[1] + pA[2+bs*0]*x[2] + pA[3+bs*0]*x[3];
+		zt[1] = 1.0*x[1] + pA[2+bs*1]*x[2] + pA[3+bs*1]*x[3];
+		zt[2] = 1.0*x[2] + pA[3+bs*2]*x[3];
+		zt[3] = 1.0*x[3];
+		pA += bs*sda;
+		x += 4;
+		kernel_dgemv_t_4_lib4(m-4-jj, &alpha, pA, sda, x, &beta, zt, z);
+		pA += bs*4;
+		z += 4;
+		}
+	if(jj<n)
+		{
+		ll_max = m-jj<4 ? m-jj : 4;
+		for(ll=0; ll<ll_max; ll++)
+			xt[ll] = x[ll];
+		for(; ll<4; ll++)
+			xt[ll] = 0.0;
+		zt[0] = 1.0*xt[0] + pA[1+bs*0]*xt[1] + pA[2+bs*0]*xt[2] + pA[3+bs*0]*xt[3];
+		zt[1] = 1.0*xt[1] + pA[2+bs*1]*xt[2] + pA[3+bs*1]*xt[3];
+		zt[2] = 1.0*xt[2] + pA[3+bs*2]*xt[3];
+		zt[3] = 1.0*xt[3];
 		pA += bs*sda;
 		x += 4;
 		kernel_dgemv_t_4_lib4(m-4-jj, &alpha, pA, sda, x, &beta, zt, zt);
