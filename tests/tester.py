@@ -5,12 +5,14 @@ import sys
 import json
 import argparse
 
+RECIPE_SCHEMA="test_schema.json"
+RECIPE_JSON="recipe_default.json"
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='BLAFEO tests scheduler')
 
-    parser.add_argument('--run', dest='batch_run', type=str, default="batch_run.json",
-                        help='Batch run json file')
+    parser.add_argument(dest='recipe_json', type=str, default=RECIPE_JSON, nargs='?',
+                        help='Run a batch of test from a specific recipe, i.e. recipe_all.json')
     parser.add_argument('--verbose', type=int, default=0,
                         help='Verbosity level')
 
@@ -39,16 +41,14 @@ def make(cmd="", make_flags={}, env_flags={}):
 
 
 class CookBook:
-    def __init__(self,
-        cli_flags,
-        recipe_specs="batch_run.json",
-        recipe_schema="test_schema.json"):
+    def __init__(self, cli_flags):
 
         self.cli_flags=cli_flags
 
-        with open(recipe_specs) as f:
+        with open(cli_flags.recipe_json) as f:
             self.specs = json.load(f)
-        with open(recipe_schema) as f:
+
+        with open(RECIPE_SCHEMA) as f:
             self.schema = json.load(f)
 
         self.DONE = 0
