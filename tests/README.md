@@ -18,7 +18,7 @@ flexible code (Python, json) to the fast and efficient (C and assembly).
 	Define all possible tests
 
 - `batch_run.json`:
-	Define current test run to be excuted
+	Define current test run to be executed
 	Check validity against the schema
 
 ### Build and execution
@@ -47,7 +47,7 @@ flexible code (Python, json) to the fast and efficient (C and assembly).
 	every class of routines have the same signature.
 
 - `test_x.c` :
-	Run the actual test templated with the aformentioned configurations.
+	Run the actual test templated with the aforementioned configurations.
 
 
 ### BLASFEO
@@ -55,7 +55,7 @@ flexible code (Python, json) to the fast and efficient (C and assembly).
 - `blasfeo_libref.{a, so}`:
 
 	Blasfeo library compiled with REFERENCE target with routines name aliased
-	postponing `_ref` prefix in order to cohesist with the same routines
+	postponing `_ref` prefix in order to coesist with the same routines
 	compiled with other targets, i.e. HIGH_PERFORMANCE.
 
 - `blasfeo_lib.{a, so}`:
@@ -65,7 +65,14 @@ flexible code (Python, json) to the fast and efficient (C and assembly).
 
 # How To
 
-Launch the tests in two steps:
-- Edit the configuration file `batch_run.json`
-- Run `python tester.py`
+Run: `python tester.py`
 
+The default behavior is to run `recipe_default.json`
+which test only `dgemm_nn` routine for target `GENERIC`.
+
+To customize the run, follow the next two steps:
+- Edit the configuration file `recipe_all.json` with the desired values
+- Run: `python tester.py <your_recipe.json>`
+
+NB: Only the routines specified in `recipe_all.json` are supported at
+now.
