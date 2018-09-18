@@ -39,12 +39,12 @@ def make(cmd="", make_flags={}, env_flags={}):
 
 
 class CookBook:
-    def __init__(self, recipe_specs="batch_run.json", recipe_schema="test_schema.json", verbose=0):
+    def __init__(self,
+        cli_flags,
+        recipe_specs="batch_run.json",
+        recipe_schema="test_schema.json"):
 
-        self.make_flags = []
-
-        if not verbose:
-            self.make_flags.append("-s")
+        self.cli_flags=cli_flags
 
         with open(recipe_specs) as f:
             self.specs = json.load(f)
@@ -52,7 +52,8 @@ class CookBook:
             self.schema = json.load(f)
 
         self.DONE = 0
-        self.SILENT = 0
+
+        self.VERBOSE = self.cli_flags.verbose
 
         self.TOTAL =\
             len(self.specs["routines"])\
@@ -61,69 +62,6 @@ class CookBook:
 
         # build standard recipe skelethon
         self.build_recipe()
-
-    def run_all_recipes(self):
-        # tune the recipe and run
-
-        for la in self.specs["las"]:
-            print(f"Testing {la}")
-            self.recipe["make_flags"]["LA"]=la
-
-            if la=="REFERENCE":
-                self.run_recipe()
-                break
-
-            if la=="BLAS_WRAPPER":
-                self.run_recipe()
-                break
-
-            for target in self.specs["targets"]:
-                print(f"Testing {target}")
-
-                self.recipe["make_flags"]["TARGET"]=target
-                self.run_recipe()
-
-    def run_recipe(self):
-        # preparation step
-        make_flags = self.recipe["make_flags"]
-        env_flags = self.recipe["env_flags"]
-
-        if make_flags["BUILD_LIBS"]:
-            make("-C ..", make_flags, env_flags)
-
-        if make_flags["BUILD_LIBS"] and make_flags["DEPLOY_LIBS"]:
-            make("-C .. deploy_to_tests", make_flags, env_flags)
-
-        for routine_name, args in self.recipe['routines'].items():
-            # update local flags with global flags
-
-            if args.get("flags"): args["flags"].update(make_flags)
-            else: args["flags"] = make_flags
-
-            if args.get("env_flags"): args["env_flags"].update(env_flags)
-            else: args["env_flags"] = env_flags
-
-            status =  self.test_routine(routine_name, args)
-
-    def test_routine(self, routine_name, args):
-
-        make_flags = args["flags"]
-        env_flags = args["env_flags"]
-
-        if self.SILENT: make_flags.update({"-s":""})
-
-        print(f"\nTesting {make_flags['TARGET']}:{routine_name}\n")
-
-        status = make(args["make_cmd"], make_flags, env_flags)
-
-        if not status:
-            print(f"Error with {make_flags['TARGET']}:{routine_name} ({self.DONE}/{self.TOTAL})")
-            return status
-
-        self.DONE += 1
-        print(f"\nTested {make_flags['TARGET']}:{routine_name} ({self.DONE}/{self.TOTAL})\n")
-
-        return status
 
     def build_recipe(self):
         scheduled_routines = set(self.specs['routines'])
@@ -134,6 +72,7 @@ class CookBook:
             'make_flags':self.specs['make_flags'],
             'env_flags':self.specs['env_flags']
         }
+
 
         available_classes = self.schema['routines']
 
@@ -168,17 +107,78 @@ class CookBook:
         if scheduled_routines:
             print(f"Some routines not found in the schema {scheduled_routines}")
 
+    def run_all_recipes(self):
+        # tune the recipe and run
+
+        for la in self.specs["las"]:
+            print(f"Testing {la}")
+            self.recipe["make_flags"]["LA"]=la
+
+            if la=="REFERENCE":
+                self.run_recipe()
+                break
+
+            if la=="BLAS_WRAPPER":
+                self.run_recipe()
+                break
+
+            for target in self.specs["targets"]:
+                print(f"Testing {target}")
+
+                self.recipe["make_flags"]["TARGET"]=target
+                self.run_recipe()
+
+    def run_recipe(self):
+        # preparation step
+        make_flags = self.recipe["make_flags"]
+        env_flags = self.recipe["env_flags"]
+
+        _silent = ""
+        if not self.VERBOSE: _silent="-s"
+
+        if make_flags["BUILD_LIBS"]:
+            make(f"{_silent} -C .. ", make_flags, env_flags)
+
+        if make_flags["BUILD_LIBS"] and make_flags["DEPLOY_LIBS"]:
+            make(f"{_silent} -C .. deploy_to_tests", make_flags, env_flags)
+
+        for routine_name, args in self.recipe['routines'].items():
+            # update local flags with global flags
+
+            if args.get("flags"): args["flags"].update(make_flags)
+            else: args["flags"] = make_flags
+
+            if args.get("env_flags"): args["env_flags"].update(env_flags)
+            else: args["env_flags"] = env_flags
+
+            status =  self.test_routine(routine_name, args)
+
+    def test_routine(self, routine_name, args):
+
+        make_flags = args["flags"]
+        env_flags = args["env_flags"]
+
+        print(f"\nTesting {make_flags['TARGET']}:{routine_name}\n")
+
+        status = make(args["make_cmd"], make_flags, env_flags)
+
+        if not status:
+            print(f"Error with {make_flags['TARGET']}:{routine_name} ({self.DONE}/{self.TOTAL})")
+            return status
+
+        self.DONE += 1
+        print(f"\nTested {make_flags['TARGET']}:{routine_name} ({self.DONE}/{self.TOTAL})\n")
+
+        return status
+
 
 
 if __name__ == "__main__":
 
-    args = parse_arguments()
-
-    SILENT = args.verbose
-
+    cli_flags = parse_arguments()
 
     # generate recipes
     # test set to be run in the given excution of the script
-    cookbook = CookBook()
+    cookbook = CookBook(cli_flags)
     #  print(json.dumps(cookbook.recipe, indent=4))
     cookbook.run_all_recipes()

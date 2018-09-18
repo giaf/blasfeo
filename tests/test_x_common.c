@@ -173,22 +173,22 @@ void print_xmat_debug(
 	}
 
 	printf("%s\t", "REF");
-	for(j=j0; j<je; j++) printf("%11d\t", j);
+	for(j=j0; j<je; j++) printf("%7d\t", j);
 	printf("\n");
-	for(j=j0; j<je; j++) printf("-----------------");
+	for(j=j0; j<je+1; j++) printf("-------\t");
 	printf("\n");
 
 	for(i=i0; i<ie; i++)
 		{
 		for(j=j0; j<je; j++)
 			{
-			if (j == j0)  printf("%d\t| ", i);
+			if (j == j0)  printf("%3d |\t", i);
 
 			if ((i==err_i) && (j==err_j) && ERR)
-				printf(ANSI_COLOR_RED"%9.2f\t"ANSI_COLOR_RESET, pA[i+lda*j]);
+				printf(ANSI_COLOR_RED"%6.2f\t"ANSI_COLOR_RESET, pA[i+lda*j]);
 			else if ((i >= ai) && (i < ai+m) && (j >= aj) && (j < aj+n))
-				printf(ANSI_COLOR_GREEN"%9.2f\t"ANSI_COLOR_RESET, pA[i+lda*j]);
-			else printf("%9.2f\t", pA[i+lda*j]);
+				printf(ANSI_COLOR_GREEN"%6.2f\t"ANSI_COLOR_RESET, pA[i+lda*j]);
+			else printf("%6.2f\t", pA[i+lda*j]);
 
 			}
 		printf("\n");
@@ -255,9 +255,9 @@ void blasfeo_print_xmat_debug(
 	REAL *pA = sA->pA;
 
 	printf("%s\t", "HP");
-	for(j=j0; j<je; j++) printf("%11d\t", j);
+	for(j=j0; j<je; j++) printf("%7d\t", j);
 	printf("\n");
-	for(j=j0; j<je; j++) printf("-----------------");
+	for(j=j0; j<je+1; j++) printf("-------\t");
 	printf("\n");
 
 	ii = i0-i0%ps;
@@ -269,22 +269,22 @@ void blasfeo_print_xmat_debug(
 			{
 			for(j=j0; j<je; j++)
 				{
-				if (j == j0) printf("%d\t| ", ii+ip);
+				if (j == j0) printf("%3d |\t", ii+ip);
 
 				if ((ii+ip==err_i) && (j==err_j) && ERR)
-					printf(ANSI_COLOR_RED"%9.2f\t"ANSI_COLOR_RESET, pA[ip+ps*j+sda*ii]);
+					printf(ANSI_COLOR_RED"%6.2f\t"ANSI_COLOR_RESET, pA[ip+ps*j+sda*ii]);
 				else if ((ii+ip >= ai) && (ii+ip < ai+m) && (j >= aj) && (j < aj+n))
-					printf(ANSI_COLOR_GREEN"%9.2f\t"ANSI_COLOR_RESET, pA[ip+ps*j+sda*ii]);
-				else printf("%9.2f\t", pA[ip+ps*j+sda*ii]);
+					printf(ANSI_COLOR_GREEN"%6.2f\t"ANSI_COLOR_RESET, pA[ip+ps*j+sda*ii]);
+				else printf("%6.2f\t", pA[ip+ps*j+sda*ii]);
 
 				}
 			printf("\n");
 			ip0 = 0;
 			}
-		if (ipe == ps) for(j=j0; j<je; j++) printf(ANSI_COLOR_CYAN"-----------------"ANSI_COLOR_RESET);
+		if (ipe == ps) for(j=j0; j<je+1; j++) printf(ANSI_COLOR_CYAN"-------\t"ANSI_COLOR_RESET);
 		printf("\n");
 		}
-
+	printf("\n");
 	#endif
 	return;
 	}

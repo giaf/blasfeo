@@ -75,4 +75,3 @@
 
 
 #define PRINT_STRMAT_REF blasfeo_print_dmat_ref
-

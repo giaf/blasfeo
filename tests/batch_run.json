@@ -30,7 +30,7 @@
     "CC":"clang",
     "BUILD_LIBS":1,
     "DEPLOY_LIBS":1,
-    "VERBOSE":2,
+    "VERBOSE":1,
     "MIN_KERNEL_SIZE":"2x2",
     "REF_BLAS":"0"
   },
