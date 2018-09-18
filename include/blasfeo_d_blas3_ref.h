@@ -28,7 +28,7 @@
 **************************************************************************************************/
 
 /*
- * lapack algebra routines header
+ * blas3 and lapack algebra routines header
  *
  * include/blasfeo_blas3_lib*.h
  *
