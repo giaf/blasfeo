@@ -49,10 +49,6 @@
 	#error PRECISION undefined
 #endif
 
-#ifndef MIN_KERNEL_SIZE
-	#error MIN_KERNEL_SIZE undefined
-#endif
-
 #ifndef ROUTINE
 	#error ROUTINE undefined
 #endif
