@@ -1720,6 +1720,23 @@ void blasfeo_srowad(int kmax, float alpha, struct blasfeo_svec *sx, int xi, stru
 
 
 
+// insert as vector as a column
+void blasfeo_scolin(int kmax, struct blasfeo_svec *sx, int xi, struct blasfeo_smat *sA, int ai, int aj)
+	{
+
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
+	const int bs = 8;
+	int sda = sA->cn;
+	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	float *x = sx->pa + xi;
+	scolin_lib(kmax, x, ai%bs, pA, sda);
+	return;
+	}
+
+
+
 // scale a column
 void blasfeo_scolsc(int kmax, float alpha, struct blasfeo_smat *sA, int ai, int aj)
 	{

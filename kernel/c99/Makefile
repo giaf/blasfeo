@@ -41,6 +41,8 @@ OBJS += kernel_dgemv_4_lib4.o \
 		kernel_sgemv_4_lib4.o \
 		kernel_ssymv_4_lib4.o \
 		kernel_sgetrf_pivot_4_lib4.o \
+		\
+		kernel_sgemm_8x4_lib8.o \
 
 endif
 
@@ -52,6 +54,8 @@ OBJS += kernel_dgemv_4_lib4.o \
 		kernel_sgemv_4_lib4.o \
 		kernel_ssymv_4_lib4.o \
 		kernel_sgetrf_pivot_4_lib4.o \
+		\
+		kernel_sgemm_8x4_lib8.o \
 
 endif
 
@@ -65,6 +69,7 @@ OBJS += \
 		kernel_dgeqrf_4_lib4.o \
 		kernel_dgecp_lib4.o \
 		kernel_dgetr_lib4.o \
+		kernel_dpack_lib4.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -86,6 +91,7 @@ OBJS += \
 		kernel_dgeqrf_4_lib4.o \
 		kernel_dgecp_lib4.o \
 		kernel_dgetr_lib4.o \
+		kernel_dpack_lib4.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -107,6 +113,7 @@ OBJS += \
 		kernel_dgeqrf_4_lib4.o \
 		kernel_dgecp_lib4.o \
 		kernel_dgetr_lib4.o \
+		kernel_dpack_lib4.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -128,6 +135,7 @@ OBJS += \
 		kernel_dgeqrf_4_lib4.o \
 		kernel_dgecp_lib4.o \
 		kernel_dgetr_lib4.o \
+		kernel_dpack_lib4.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -149,6 +157,7 @@ OBJS += \
 		kernel_dgeqrf_4_lib4.o \
 		kernel_dgecp_lib4.o \
 		kernel_dgetr_lib4.o \
+		kernel_dpack_lib4.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -170,6 +179,7 @@ OBJS += \
 		kernel_dgeqrf_4_lib4.o \
 		kernel_dgecp_lib4.o \
 		kernel_dgetr_lib4.o \
+		kernel_dpack_lib4.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -191,6 +201,7 @@ OBJS += \
 		kernel_dgeqrf_4_lib4.o \
 		kernel_dgecp_lib4.o \
 		kernel_dgetr_lib4.o \
+		kernel_dpack_lib4.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -212,6 +223,7 @@ OBJS += \
 		kernel_dgeqrf_4_lib4.o \
 		kernel_dgecp_lib4.o \
 		kernel_dgetr_lib4.o \
+		kernel_dpack_lib4.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -233,3 +245,4 @@ clean:
 	rm -f *.o
 	rm -f *.s
 
+kernel_dgemm_4x4_lib4.o: kernel_dgemm_4x4_lib4.c kernel_dgemm_4x4_lib.c

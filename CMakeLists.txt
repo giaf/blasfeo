@@ -43,8 +43,8 @@ set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A15)
 # set(TARGET GENERIC)
 
-# Linear Algebra library
-set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra optimization level")
+# Linear Algebra backend
+set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
 # set(LA REFERENCE)
 # set(LA BLAS)
 
@@ -55,6 +55,9 @@ set(REF_BLAS 0 CACHE STRING "Reference blas to use")
 # set(REF_BLAS MKL)
 # set(REF_BLAS BLIS)
 # set(REF_BLAS ATLAS)
+
+# Stack buffer size (malloc for larger)
+set(K_MAX_STACK 300 CACHE STRING "Maximum k value using stack memory")
 
 # Options
 # set(BLASFEO_TESTING ON CACHE BOOL "Tests enabled")
@@ -150,6 +153,8 @@ endif()
 if(${LA} MATCHES BLAS)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_BLAS")
 endif()
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DK_MAX_STACK=${K_MAX_STACK}")
 
 #
 if(${RUNTIME_CHECKS})
@@ -281,12 +286,10 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_12x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_8x8_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_8x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_10xX_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_8x2_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_6xX_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_4x2_lib4.S
-
-
+#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_10xX_lib4.S
+#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_8x2_lib4.S
+#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_6xX_lib4.S
+#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_4x2_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_4x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemv_8_lib4.S
@@ -297,20 +300,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgebp_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgelqf_4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemv_4_lib4.c
-
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgetr_lib4.c
-
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
 
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_24x4_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_16x4_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_8x8_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_8x4_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_8x4_lib8.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_diag_lib8.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_8_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_4_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_ssymv_4_lib8.c
-
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgead_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecpsc_lib8.S
@@ -318,18 +320,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib8.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib8.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib8.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib8.c
-			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib8.c
 			)
 
 	endif(${TARGET} MATCHES X64_INTEL_HASWELL)
@@ -344,24 +347,23 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 
 		file(GLOB KERNEL_SRC
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_12x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_10xX_lib4.S
+#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_10xX_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_8x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_8x2_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_6xX_lib4.S
+#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_8x2_lib4.S
+#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_6xX_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_4x2_lib4.S
-
+#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_4x2_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_12_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_8_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dsymv_6_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgemv_4_lib4.c
-
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetrf_pivot_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgebp_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgelqf_4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
 
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_16x4_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x8_lib8.S
@@ -370,7 +372,6 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_8_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_4_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_ssymv_4_lib8.c
-
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgead_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecpsc_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
@@ -379,18 +380,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib8.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib8.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib8.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib8.c
-			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib8.c
 			)
 
 	endif(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
@@ -411,33 +413,33 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetrf_pivot_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgeqrf_4_lib4.c
-
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dpack_lib4.c
 
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_ssymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgetrf_pivot_4_lib4.c
-
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgetr_lib4.c
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
 			)
 
 	endif(${TARGET} MATCHES X64_INTEL_CORE)
@@ -458,6 +460,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetrf_pivot_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dpack_lib4.c
+
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemv_4_lib4.c
@@ -470,18 +474,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
 			)
 
 	endif(${TARGET} MATCHES X64_AMD_BULLDOZER)
@@ -503,6 +508,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetrf_pivot_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dpack_lib4.c
+
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_16x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_12x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x8_lib4.S
@@ -520,18 +527,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
 			)
 
 	endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
@@ -552,6 +560,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetrf_pivot_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dpack_lib4.c
+
 			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_12x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
@@ -567,18 +577,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
 			)
 
 	endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
@@ -598,33 +609,33 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetrf_pivot_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgeqrf_4_lib4.c
-
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_dpack_lib4.c
 
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgemv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_ssymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgetrf_pivot_4_lib4.c
-
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/c99/kernel_sgetr_lib4.c
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blas/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/d_lapack_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blas/s_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
 			)
 
 	endif(${TARGET} MATCHES GENERIC)
@@ -638,18 +649,19 @@ else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 		)
 
 	file(GLOB BLAS_SRC
-		${PROJECT_SOURCE_DIR}/blas/d_blas1_lib.c
-		${PROJECT_SOURCE_DIR}/blas/d_blas2_lib.c
-		${PROJECT_SOURCE_DIR}/blas/d_blas2_diag_lib.c
-		${PROJECT_SOURCE_DIR}/blas/d_blas3_lib.c
-		${PROJECT_SOURCE_DIR}/blas/d_blas3_diag_lib.c
-		${PROJECT_SOURCE_DIR}/blas/d_lapack_lib.c
-		${PROJECT_SOURCE_DIR}/blas/s_blas1_lib.c
-		${PROJECT_SOURCE_DIR}/blas/s_blas2_lib.c
-		${PROJECT_SOURCE_DIR}/blas/s_blas2_diag_lib.c
-		${PROJECT_SOURCE_DIR}/blas/s_blas3_lib.c
-		${PROJECT_SOURCE_DIR}/blas/s_blas3_diag_lib.c
-		${PROJECT_SOURCE_DIR}/blas/s_lapack_lib.c
+		${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib.c
+		${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib.c
+		${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
+		${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib.c
+		${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib.c
+		${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib.c
+
+		${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib.c
+		${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib.c
+		${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
+		${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib.c
+		${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib.c
+		${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib.c
 		)
 
 endif(${LA} MATCHES HIGH_PERFORMANCE)
@@ -676,7 +688,7 @@ if(BLASFEO_TESTING MATCHES ON)
 		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_libref.c
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_libref.c
 		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_libref.c
-		${PROJECT_SOURCE_DIR}/blas/d_blas3_libref.c
+		${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_libref.c
 		)
 
 	set(BLASFEO_REF_SRC ${AUX_REF_SRC})

@@ -1,12 +1,6 @@
 BLASFEO - BLAS For Embedded Optimization
 
-BLASFEO provides a set of linear algebra routines optimized for use in embedded optimization.
-It is for example employed in the Model Predictive Control software package HPMPC.
-
-BLASFEO provides three implementations of each linear algebra routine (LA):
-- HIGH_PERFORMANCE: a high-performance implementation hand-optimized for different computer architectures.
-- REFERENCE: a lightly-optimized version, coded entirely in C withou assumptions about the computer architecture.
-- BLAS_WRAPPER: a wrapper to BLAS and LAPACK routines.
+BLASFEO provides a set of basic linear algebra routines, performance-optimized for matrices of moderate size (up to a couple hundreds size in each dimension), as typically encountered in embedded optimization applications.
 
 The currently supported compter architectures (TARGET) are:
 - X64_INTEL_HASWELL: Intel Haswell architecture or newer, AVX2 and FMA ISA, 64-bit OS.
@@ -20,7 +14,12 @@ The currently supported compter architectures (TARGET) are:
 - ARMV7A_ARM_CORTEX_A15: ARMv7A architecture, VFPv3 and NEON ISAs, 32-bit OS.
 - GENERIC: generic target, coded in C, giving better performance if the architecture provides more than 16 scalar FP registers (e.g. many RISC such as ARM).
 
-The optimized linear algebra kernels are currently provided for OS_LINUX (x86_64 64-bit, ARMv8A 64-bit, ARMv7A 32-bit), OS_WINDOWS (x86_64 64-bit) and OS_MAC (x86_64 64-bit).
+The BLASFEO backend provides three possible implementations of each linear algebra routine (LA):
+- HIGH_PERFORMANCE: target-tailored; performance-optimized for cache resident matrices; panel-major matrix format
+- REFERENCE: target-unspecific lightly-optimizated; small code footprint; column-major matrix format
+- BLAS_WRAPPER: call to external BLAS and LAPACK libraries; column-major matrix format
+
+The optimized linear algebra kernels are currently provided for OS_LINUX (x86_64 64-bit, x86 32-bit, ARMv8A 64-bit, ARMv7A 32-bit), OS_WINDOWS (x86_64 64-bit) and OS_MAC (x86_64 64-bit).
 
 BLASFEO employes structures to describe matrices (blasfeo_dmat) and vectors (blasfeo_dvec), defined in include/blasfeo_common.h.
 The actual implementation of blasfeo_dmat and blasfeo_dvec depends on the LA and TARGET choice.
@@ -35,6 +34,11 @@ https://utexas.app.box.com/s/yt2d693v8xc37yyjklnf4a4y1ldvyzon
 --------------------------------------------------
 
 Notes:
+
+- BLASFEO is released under the GPL+CE (Gnu General Public License version 3.0 with Classpath Exception).
+This license has been chosen to avoid the issues that the LGPL license implies in case of static linking.
+Unformally speaking, the GPL+CE license allows the BLASFEO library to be linked to both statically and dynamically to produce an executable, and the resulting executable can be released under terms of your choice.
+Please refer to the LICENSE.txt file for the legally binding statement of the license.
 
 - 06-01-2018: BLASFEO employs now a new naming convention.
 The bash script change_name.sh can be used to automatically change the source code of any software using BLASFEO to adapt it to the new naming convention.

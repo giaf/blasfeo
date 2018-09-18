@@ -2016,7 +2016,7 @@ void kernel_dsyrk_nt_l_4x4_gen_lib4(int kmax, double *alpha, double *A, double *
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_ru_4x4_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D)
+void kernel_dtrmm_nt_ru_4x4_lib4(int kmax, double *alpha, double *A, double *B, double *D)
 	{
 
 	const int bs = 4;
@@ -2117,29 +2117,7 @@ void kernel_dtrmm_nt_ru_4x4_lib4(int kmax, double *alpha, double *A, double *B, 
 		k++;
 		}
 	
-	CC[0+bs*0] = beta[0]*C[0+bs*0] + alpha[0]*CC[0+bs*0];
-	CC[1+bs*0] = beta[0]*C[1+bs*0] + alpha[0]*CC[1+bs*0];
-	CC[2+bs*0] = beta[0]*C[2+bs*0] + alpha[0]*CC[2+bs*0];
-	CC[3+bs*0] = beta[0]*C[3+bs*0] + alpha[0]*CC[3+bs*0];
-
-	CC[0+bs*1] = beta[0]*C[0+bs*1] + alpha[0]*CC[0+bs*1];
-	CC[1+bs*1] = beta[0]*C[1+bs*1] + alpha[0]*CC[1+bs*1];
-	CC[2+bs*1] = beta[0]*C[2+bs*1] + alpha[0]*CC[2+bs*1];
-	CC[3+bs*1] = beta[0]*C[3+bs*1] + alpha[0]*CC[3+bs*1];
-
-	CC[0+bs*2] = beta[0]*C[0+bs*2] + alpha[0]*CC[0+bs*2];
-	CC[1+bs*2] = beta[0]*C[1+bs*2] + alpha[0]*CC[1+bs*2];
-	CC[2+bs*2] = beta[0]*C[2+bs*2] + alpha[0]*CC[2+bs*2];
-	CC[3+bs*2] = beta[0]*C[3+bs*2] + alpha[0]*CC[3+bs*2];
-
-	CC[0+bs*3] = beta[0]*C[0+bs*3] + alpha[0]*CC[0+bs*3];
-	CC[1+bs*3] = beta[0]*C[1+bs*3] + alpha[0]*CC[1+bs*3];
-	CC[2+bs*3] = beta[0]*C[2+bs*3] + alpha[0]*CC[2+bs*3];
-	CC[3+bs*3] = beta[0]*C[3+bs*3] + alpha[0]*CC[3+bs*3];
-
-	double beta1  = 1.0;
-
-	kernel_dgemm_nt_4x4_lib4(kmax-k, alpha, A, B, &beta1, CC, D);
+	kernel_dgemm_nt_4x4_lib4(kmax-k, alpha, A, B, alpha, CC, D);
 
 	return;
 
@@ -2149,7 +2127,7 @@ void kernel_dtrmm_nt_ru_4x4_lib4(int kmax, double *alpha, double *A, double *B, 
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_ru_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D, int km, int kn)
+void kernel_dtrmm_nt_ru_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B, double *D, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -2250,29 +2228,7 @@ void kernel_dtrmm_nt_ru_4x4_vs_lib4(int kmax, double *alpha, double *A, double *
 		k++;
 		}
 	
-	CC[0+bs*0] = beta[0]*C[0+bs*0] + alpha[0]*CC[0+bs*0];
-	CC[1+bs*0] = beta[0]*C[1+bs*0] + alpha[0]*CC[1+bs*0];
-	CC[2+bs*0] = beta[0]*C[2+bs*0] + alpha[0]*CC[2+bs*0];
-	CC[3+bs*0] = beta[0]*C[3+bs*0] + alpha[0]*CC[3+bs*0];
-
-	CC[0+bs*1] = beta[0]*C[0+bs*1] + alpha[0]*CC[0+bs*1];
-	CC[1+bs*1] = beta[0]*C[1+bs*1] + alpha[0]*CC[1+bs*1];
-	CC[2+bs*1] = beta[0]*C[2+bs*1] + alpha[0]*CC[2+bs*1];
-	CC[3+bs*1] = beta[0]*C[3+bs*1] + alpha[0]*CC[3+bs*1];
-
-	CC[0+bs*2] = beta[0]*C[0+bs*2] + alpha[0]*CC[0+bs*2];
-	CC[1+bs*2] = beta[0]*C[1+bs*2] + alpha[0]*CC[1+bs*2];
-	CC[2+bs*2] = beta[0]*C[2+bs*2] + alpha[0]*CC[2+bs*2];
-	CC[3+bs*2] = beta[0]*C[3+bs*2] + alpha[0]*CC[3+bs*2];
-
-	CC[0+bs*3] = beta[0]*C[0+bs*3] + alpha[0]*CC[0+bs*3];
-	CC[1+bs*3] = beta[0]*C[1+bs*3] + alpha[0]*CC[1+bs*3];
-	CC[2+bs*3] = beta[0]*C[2+bs*3] + alpha[0]*CC[2+bs*3];
-	CC[3+bs*3] = beta[0]*C[3+bs*3] + alpha[0]*CC[3+bs*3];
-
-	double beta1  = 1.0;
-
-	kernel_dgemm_nt_4x4_lib4(kmax-k, alpha, A, B, &beta1, CC, CC);
+	kernel_dgemm_nt_4x4_lib4(kmax-k, alpha, A, B, alpha, CC, CC);
 
 	if(km>=4)
 		{
@@ -6878,4 +6834,12 @@ void kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 #endif
 
 
+
+
+
+#if defined(BLAS_API)
+
+#include "kernel_dgemm_4x4_lib.c"
+
+#endif
 

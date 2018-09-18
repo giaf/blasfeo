@@ -30,39 +30,58 @@
 // A panel-major bs=4; B, C, D column-major
 // 12x4
 void kernel_dgemm_nn_12x4_lib4cc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nn_12x4_vs_lib4cc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dgemm_nt_12x4_lib4cc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nt_12x4_vs_lib4cc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dtrsm_nt_rl_inv_12x4_lib4cc(int kmax, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE);
-void kernel_dpotrf_nt_l_12x4_lib4cc(int kmax, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *dD);
+void kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cc(int kmax, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE, int m1, int n1);
 // 8x4
 void kernel_dgemm_nn_8x4_lib4cc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nn_8x4_vs_lib4cc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dgemm_nt_8x4_lib4cc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nt_8x4_vs_lib4cc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dtrsm_nt_rl_inv_8x4_lib4cc(int kmax, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE);
-void kernel_dpotrf_nt_l_8x4_lib4cc(int kmax, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *dD);
+void kernel_dtrsm_nt_rl_inv_8x4_vs_lib4cc(int kmax, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE, int m1, int n1);
 // 4x4
 void kernel_dgemm_nn_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nn_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dgemm_nt_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nt_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dtrsm_nt_rl_inv_4x4_lib4cc(int kmax, double *A, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE);
-void kernel_dpotrf_nt_l_4x4_lib4cc(int kmax, double *A, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *dD);
+void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4cc(int kmax, double *A, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE, int m1, int n1);
 
-// A panel-major bs=4; B, C, D column-major
+// A, B panel-major bs=4; C, D column-major
 // 12x4
 void kernel_dgemm_nt_12x4_lib44c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nt_12x4_vs_lib44c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dtrsm_nt_rl_inv_12x4_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE);
+void kernel_dtrsm_nt_rl_inv_12x4_vs_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE, int m1, int n1);
 void kernel_dpotrf_nt_l_12x4_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *dD);
+void kernel_dpotrf_nt_l_12x4_vs_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *dD, int m1, int n1);
 // 8x4
 void kernel_dgemm_nt_8x4_lib44c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nt_8x4_vs_lib44c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dtrsm_nt_rl_inv_8x4_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE);
+void kernel_dtrsm_nt_rl_inv_8x4_vs_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE, int m1, int n1);
 void kernel_dpotrf_nt_l_8x4_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *dD);
+void kernel_dpotrf_nt_l_8x4_vs_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *dD, int m1, int n1);
 // 4x4
 void kernel_dgemm_nt_4x4_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nt_4x4_vs_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dtrsm_nt_rl_inv_4x4_lib44c(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE);
+void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44c(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE, int m1, int n1);
 void kernel_dpotrf_nt_l_4x4_lib44c(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *dD);
+void kernel_dpotrf_nt_l_4x4_vs_lib44c(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *dD, int m1, int n1);
 
 // pack
 // 12
 void kernel_dpack_nn_12_lib4(int kmax, double *A, int lda, double *B, int sdb);
+void kernel_dpack_nn_12_vs_lib4(int kmax, double *A, int lda, double *B, int sdb, int m1);
 // 8
 void kernel_dpack_nn_8_lib4(int kmax, double *A, int lda, double *B, int sdb);
+void kernel_dpack_nn_8_vs_lib4(int kmax, double *A, int lda, double *B, int sdb, int m1);
 // 4
 void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *B);
+void kernel_dpack_nn_4_vs_lib4(int kmax, double *A, int lda, double *B, int m1);
 void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *B);
+void kernel_dpack_tn_4_vs_lib4(int kmax, double *A, int lda, double *B, int n1);

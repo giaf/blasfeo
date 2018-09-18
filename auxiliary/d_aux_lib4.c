@@ -1705,14 +1705,13 @@ void blasfeo_pack_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA
 		for( ; ii<m-3; ii+=4)
 			{
 			tmp = _mm256_loadu_pd( &B[0+lda*0] );
-			_mm256_storeu_pd( &pB[0+bs*0], tmp );
+			_mm256_store_pd( &pB[0+bs*0], tmp );
 			tmp = _mm256_loadu_pd( &B[0+lda*1] );
-			_mm256_storeu_pd( &pB[0+bs*1], tmp );
+			_mm256_store_pd( &pB[0+bs*1], tmp );
 			tmp = _mm256_loadu_pd( &B[0+lda*2] );
-			_mm256_storeu_pd( &pB[0+bs*2], tmp );
+			_mm256_store_pd( &pB[0+bs*2], tmp );
 			tmp = _mm256_loadu_pd( &B[0+lda*3] );
-			_mm256_storeu_pd( &pB[0+bs*3], tmp );
-			// update
+			_mm256_store_pd( &pB[0+bs*3], tmp );
 			B  += 4;
 			pB += bs*sda;
 			}
@@ -1955,6 +1954,12 @@ void blasfeo_unpack_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, 
 	if(m0>m)
 		m0 = m;
 	double *ptr_pA;
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	__m256d
+		tmp;
+#endif
+
 	jj=0;
 	for(; jj<n-3; jj+=4)
 		{
@@ -1976,6 +1981,20 @@ void blasfeo_unpack_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, 
 				}
 			ptr_pA += (sda-1)*bs;
 			}
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		for(; ii<m-bs+1; ii+=bs)
+			{
+			tmp = _mm256_load_pd( &ptr_pA[0+bs*0] );
+			_mm256_storeu_pd( &A[ii+lda*(jj+0)], tmp );
+			tmp = _mm256_load_pd( &ptr_pA[0+bs*1] );
+			_mm256_storeu_pd( &A[ii+lda*(jj+1)], tmp );
+			tmp = _mm256_load_pd( &ptr_pA[0+bs*2] );
+			_mm256_storeu_pd( &A[ii+lda*(jj+2)], tmp );
+			tmp = _mm256_load_pd( &ptr_pA[0+bs*3] );
+			_mm256_storeu_pd( &A[ii+lda*(jj+3)], tmp );
+			ptr_pA += sda*bs;
+			}
+#else
 		for(; ii<m-bs+1; ii+=bs)
 			{
 			// unroll 0
@@ -2000,6 +2019,7 @@ void blasfeo_unpack_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, 
 			A[3+ii+lda*(jj+3)] = ptr_pA[3+bs*3];
 			ptr_pA += sda*bs;
 			}
+#endif
 		for(; ii<m; ii++)
 			{
 			// unroll 0
@@ -2056,6 +2076,13 @@ void blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int
 	if(m0>m)
 		m0 = m;
 	double *ptr_pA;
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	__m256d
+		v0, v1, v2, v3,
+		v4, v5, v6, v7;
+#endif
+
 	jj=0;
 	for(; jj<n-3; jj+=4)
 		{
@@ -2077,6 +2104,30 @@ void blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int
 				}
 			ptr_pA += (sda-1)*bs;
 			}
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		for(; ii<m-bs+1; ii+=bs)
+			{
+			v0 = _mm256_load_pd( &ptr_pA[0+bs*0] ); // 00 10 20 30
+			v1 = _mm256_load_pd( &ptr_pA[0+bs*1] ); // 01 11 21 31
+			v4 = _mm256_unpacklo_pd( v0, v1 ); // 00 01 20 21
+			v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 30 31
+			v2 = _mm256_load_pd( &ptr_pA[0+bs*2] ); // 02 12 22 32
+			v3 = _mm256_load_pd( &ptr_pA[0+bs*3] ); // 03 13 23 33
+			v6 = _mm256_unpacklo_pd( v2, v3 ); // 02 03 22 23
+			v7 = _mm256_unpackhi_pd( v2, v3 ); // 12 13 32 33
+
+			v0 = _mm256_permute2f128_pd( v4, v6, 0x20 ); // 00 01 02 03
+			_mm256_storeu_pd( &A[jj+lda*(ii+0)], v0 );
+			v2 = _mm256_permute2f128_pd( v4, v6, 0x31 ); // 20 21 22 23
+			_mm256_storeu_pd( &A[jj+lda*(ii+2)], v2 );
+			v1 = _mm256_permute2f128_pd( v5, v7, 0x20 ); // 10 11 12 13
+			_mm256_storeu_pd( &A[jj+lda*(ii+1)], v1 );
+			v3 = _mm256_permute2f128_pd( v5, v7, 0x31 ); // 30 31 32 33
+			_mm256_storeu_pd( &A[jj+lda*(ii+3)], v3 );
+
+			ptr_pA += sda*bs;
+			}
+#else
 		for(; ii<m-bs+1; ii+=bs)
 			{
 			// unroll 0
@@ -2101,6 +2152,7 @@ void blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int
 			A[jj+3+lda*(ii+3)] = ptr_pA[3+bs*3];
 			ptr_pA += sda*bs;
 			}
+#endif
 		for(; ii<m; ii++)
 			{
 			// unroll 0

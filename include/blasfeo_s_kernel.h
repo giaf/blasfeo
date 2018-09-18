@@ -130,6 +130,8 @@ void kernel_ssyrk_spotrf_nt_l_8x4_lib8(int kp, float *Ap, float *Bp, int km_, fl
 void kernel_strmm_nn_rl_8x4_lib8(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *D);
 void kernel_strmm_nn_rl_8x4_vs_lib8(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *D, int km, int kn);
 void kernel_strmm_nn_rl_8x4_gen_lib8(int k, float *alpha, float *A, int offsetB, float *B, int sdb, int offsetD, float *D, int sdd, int m0, int m1, int n0, int n1);
+void kernel_strmm_nt_ru_8x4_lib8(int k, float *alpha, float *A, float *B, float *D);
+void kernel_strmm_nt_ru_8x4_vs_lib8(int k, float *alpha, float *A, float *B, float *D, int km, int kn);
 
 // 4x8
 void kernel_sgemm_nt_4x8_lib8(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D);
@@ -328,12 +330,12 @@ void kernel_strsm_nt_rl_inv_8x4_lib4(int k, float *A, int sda, float *B, float *
 void kernel_sgemm_nt_4x4_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D); //
 void kernel_sgemm_nt_4x4_vs_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D, int km, int kn); //
 void kernel_sgemm_nt_4x4_gen_lib4(int k, float *alpha, float *A, float *B, float *beta, int offsetC, float *C, int sdc, int offsetD, float *D, int sdd, int m0, int m1, int k0, int k1);
-void kernel_sgemm_nn_4x4_lib4(int k, float *alpha, float *A, float *B, int sdb, float *beta, float *C, float *D); //
-void kernel_sgemm_nn_4x4_vs_lib4(int k, float *alpha, float *A, float *B, int sdb, float *beta, float *C, float *D, int km, int kn); //
+void kernel_sgemm_nn_4x4_lib4(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *beta, float *C, float *D); //
+void kernel_sgemm_nn_4x4_vs_lib4(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *beta, float *C, float *D, int km, int kn); //
 void kernel_ssyrk_nt_l_4x4_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D); //
 void kernel_ssyrk_nt_l_4x4_vs_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D, int km, int kn); //
-void kernel_strmm_nt_ru_4x4_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D); //
-void kernel_strmm_nt_ru_4x4_vs_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D, int km, int kn); //
+void kernel_strmm_nt_ru_4x4_lib4(int k, float *alpha, float *A, float *B, float *D); //
+void kernel_strmm_nt_ru_4x4_vs_lib4(int k, float *alpha, float *A, float *B, float *D, int km, int kn); //
 void kernel_strmm_nn_rl_4x4_lib4(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *D);
 void kernel_strmm_nn_rl_4x4_gen_lib4(int k, float *alpha, float *A, int offsetB, float *B, int sdb, int offsetD, float *D, int sdd, int m0, int m1, int n0, int n1);
 void kernel_strsm_nt_rl_inv_4x4_lib4(int k, float *A, float *B, float *C, float *D, float *E, float *inv_diag_E);

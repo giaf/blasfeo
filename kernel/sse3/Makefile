@@ -35,7 +35,7 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), X64_INTEL_CORE)
 OBJS += kernel_dgemm_4x4_lib4.o kernel_dgemv_4_lib4.o
-OBJS +=
+OBJS += kernel_sgemm_4x4_lib4.o 
 endif
 
 else # LA_REFERENCE | LA_BLAS
@@ -48,3 +48,4 @@ clean:
 	rm -f *.o
 	rm -f *.s
 
+kernel_dgemm_4x4_lib4.o: kernel_dgemm_4x4_lib4.S kernel_dgemm_4x4_lib.S

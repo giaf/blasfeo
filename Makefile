@@ -46,10 +46,6 @@ OBJS += \
 		kernel/avx2/kernel_dgemm_8x8_lib4.o \
 		kernel/avx2/kernel_dgemm_8x4_lib4.o \
 		kernel/avx2/kernel_dgemm_4x4_lib4.o \
-		kernel/avx2/kernel_dgemm_10xX_lib4.o \
-		kernel/avx2/kernel_dgemm_8x2_lib4.o \
-		kernel/avx2/kernel_dgemm_6xX_lib4.o \
-		kernel/avx2/kernel_dgemm_4x2_lib4.o \
 		kernel/avx/kernel_dgemm_diag_lib4.o \
 		kernel/avx2/kernel_dgemv_8_lib4.o \
 		kernel/avx/kernel_dgemv_4_lib4.o \
@@ -61,11 +57,13 @@ OBJS += \
 		kernel/avx2/kernel_dgelqf_4_lib4.o \
 		kernel/avx2/kernel_dgetr_lib4.o \
 		kernel/avx/kernel_dgecp_lib4.o \
+		kernel/avx/kernel_dpack_lib4.o \
 		\
 		kernel/avx2/kernel_sgemm_24x4_lib8.o \
 		kernel/avx2/kernel_sgemm_16x4_lib8.o \
 		kernel/avx2/kernel_sgemm_8x8_lib8.o \
 		kernel/avx2/kernel_sgemm_8x4_lib8.o \
+		kernel/c99/kernel_sgemm_8x4_lib8.o \
 		kernel/avx/kernel_sgemm_diag_lib8.o \
 		kernel/avx/kernel_sgemv_8_lib8.o \
 		kernel/avx/kernel_sgemv_4_lib8.o \
@@ -75,19 +73,26 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
 		\
-		blas/s_blas1_lib8.o \
-		blas/s_blas2_lib8.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib8.o \
-		blas/s_blas3_diag_lib8.o \
-		blas/s_lapack_lib8.o \
+		blasfeo_api/s_blas1_lib8.o \
+		blasfeo_api/s_blas2_lib8.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib8.o \
+		blasfeo_api/s_blas3_diag_lib8.o \
+		blasfeo_api/s_lapack_lib8.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
 
 endif
 
@@ -101,13 +106,9 @@ OBJS += \
 
 # kernels
 OBJS += \
-		kernel/avx/kernel_dgemm_8x4_lib4.o \
-		kernel/avx/kernel_dgemm_8x2_lib4.o \
-		kernel/avx/kernel_dgemm_4x4_lib4.o \
-		kernel/avx/kernel_dgemm_4x2_lib4.o \
 		kernel/avx/kernel_dgemm_12x4_lib4.o \
-		kernel/avx/kernel_dgemm_10xX_lib4.o \
-		kernel/avx/kernel_dgemm_6xX_lib4.o \
+		kernel/avx/kernel_dgemm_8x4_lib4.o \
+		kernel/avx/kernel_dgemm_4x4_lib4.o \
 		kernel/avx/kernel_dgemm_diag_lib4.o \
 		kernel/avx/kernel_dgemv_12_lib4.o \
 		kernel/avx/kernel_dgemv_8_lib4.o \
@@ -119,10 +120,12 @@ OBJS += \
 		kernel/avx/kernel_dgebp_lib4.o \
 		kernel/avx/kernel_dgecp_lib4.o \
 		kernel/avx/kernel_dgetr_lib4.o \
+		kernel/avx/kernel_dpack_lib4.o \
 		\
 		kernel/avx/kernel_sgemm_16x4_lib8.o \
 		kernel/avx/kernel_sgemm_8x8_lib8.o \
 		kernel/avx/kernel_sgemm_8x4_lib8.o \
+		kernel/c99/kernel_sgemm_8x4_lib8.o \
 		kernel/avx/kernel_sgemm_diag_lib8.o \
 		kernel/avx/kernel_sgemv_8_lib8.o \
 		kernel/avx/kernel_sgemv_4_lib8.o \
@@ -132,18 +135,26 @@ OBJS += \
 
 # blas
 OBJS  += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
-		blas/s_blas1_lib8.o \
-		blas/s_blas2_lib8.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib8.o \
-		blas/s_blas3_diag_lib8.o \
-		blas/s_lapack_lib8.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
+		\
+		blasfeo_api/s_blas1_lib8.o \
+		blasfeo_api/s_blas2_lib8.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib8.o \
+		blasfeo_api/s_blas3_diag_lib8.o \
+		blasfeo_api/s_lapack_lib8.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
 
 endif
 
@@ -166,7 +177,9 @@ OBJS += \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
+		kernel/sse3/kernel_sgemm_4x4_lib4.o \
 		kernel/c99/kernel_sgemm_4x4_lib4.o \
 		kernel/c99/kernel_sgemm_diag_lib4.o \
 		kernel/c99/kernel_sgemv_4_lib4.o \
@@ -177,19 +190,26 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
 		\
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
 
 endif
 
@@ -212,6 +232,7 @@ OBJS += \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
 		kernel/c99/kernel_sgemm_4x4_lib4.o \
 		kernel/c99/kernel_sgemm_diag_lib4.o \
@@ -223,19 +244,26 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
 		\
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
 
 endif
 
@@ -259,6 +287,7 @@ OBJS += \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
 		kernel/avx_x86/kernel_sgemm_4x4_lib4.o \
 		kernel/avx_x86/kernel_sgemv_4_lib4.o \
@@ -272,19 +301,26 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
 		\
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
 
 endif
 
@@ -309,6 +345,7 @@ OBJS += \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
 		kernel/c99/kernel_sgemm_4x4_lib4.o \
 		kernel/c99/kernel_sgemm_diag_lib4.o \
@@ -320,19 +357,26 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
 		\
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
 
 endif
 
@@ -356,6 +400,7 @@ OBJS += \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
 		kernel/armv8a/kernel_sgemm_16x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_12x4_lib4.o \
@@ -372,19 +417,26 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
 		\
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
 
 endif
 
@@ -409,6 +461,7 @@ OBJS += \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
 		kernel/armv8a/kernel_sgemm_16x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_12x4_lib4.o \
@@ -425,19 +478,26 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
 		\
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
 
 endif
 
@@ -459,6 +519,7 @@ OBJS += \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
 		kernel/c99/kernel_dgecp_lib4.o \
 		kernel/c99/kernel_dgetr_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
 		kernel/armv7a/kernel_sgemm_12x4_lib4.o \
 		kernel/armv7a/kernel_sgemm_8x4_lib4.o \
@@ -473,18 +534,26 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
+		\
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
 
 endif
 
@@ -506,6 +575,7 @@ OBJS += \
 		kernel/c99/kernel_dgetr_lib4.o \
 		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
 		kernel/c99/kernel_dgeqrf_4_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
 		\
 		kernel/c99/kernel_sgemm_4x4_lib4.o \
 		kernel/c99/kernel_sgemm_diag_lib4.o \
@@ -517,18 +587,26 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib4.o \
-		blas/d_blas2_lib4.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib4.o \
-		blas/d_blas3_diag_lib4.o \
-		blas/d_lapack_lib4.o \
-		blas/s_blas1_lib4.o \
-		blas/s_blas2_lib4.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib4.o \
-		blas/s_blas3_diag_lib4.o \
-		blas/s_lapack_lib4.o \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
+		\
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
 
 endif
 
@@ -542,19 +620,25 @@ OBJS += \
 
 # blas
 OBJS += \
-		blas/d_blas1_lib.o \
-		blas/d_blas2_lib.o \
-		blas/d_blas2_diag_lib.o \
-		blas/d_blas3_lib.o \
-		blas/d_blas3_diag_lib.o \
-		blas/d_lapack_lib.o \
+		blasfeo_api/d_blas1_lib.o \
+		blasfeo_api/d_blas2_lib.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib.o \
+		blasfeo_api/d_blas3_diag_lib.o \
+		blasfeo_api/d_lapack_lib.o \
 		\
-		blas/s_blas1_lib.o \
-		blas/s_blas2_lib.o \
-		blas/s_blas2_diag_lib.o \
-		blas/s_blas3_lib.o \
-		blas/s_blas3_diag_lib.o \
-		blas/s_lapack_lib.o \
+		blasfeo_api/s_blas1_lib.o \
+		blasfeo_api/s_blas2_lib.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib.o \
+		blasfeo_api/s_blas3_diag_lib.o \
+		blasfeo_api/s_lapack_lib.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm_ref.o \
+
+endif
 
 endif # LA choice
 
@@ -602,7 +686,8 @@ all: clean static_library
 static_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd auxiliary; $(MAKE) obj)
-	( cd blas; $(MAKE) obj)
+	( cd blasfeo_api; $(MAKE) obj)
+	( cd blas_api; $(MAKE) obj)
 	$(AR) rcs libblasfeo.a $(OBJS)
 	mv libblasfeo.a ./lib/
 ifeq ($(TESTING_MODE), 1)
@@ -621,8 +706,9 @@ endif
 shared_library: target
 	( cd auxiliary; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
-	( cd blas; $(MAKE) obj)
-	$(CC) -shared -o libblasfeo.so $(OBJS)
+	( cd blasfeo_api; $(MAKE) obj)
+	( cd blas_api; $(MAKE) obj)
+	$(CC) -shared -o libblasfeo.so $(OBJS) #-Wl,-Bsymbolic
 	mv libblasfeo.so ./lib/
 ifeq ($(TESTING_MODE), 1)
 	$(CC) -shared -o libblasfeo_ref.so $(OBJS_REF)
@@ -731,7 +817,8 @@ install_shared:
 clean:
 	make -C auxiliary clean
 	make -C kernel clean
-	make -C blas clean
+	make -C blasfeo_api clean
+	make -C blas_api clean
 	make -C examples clean
 	make -C tests clean
 	make -C benchmarks clean
@@ -747,13 +834,19 @@ deep_clean: clean
 	make -C tests clean_all
 	make -C benchmarks clean_all
 
-# directory for tests  binaries
-BINARY_DIR = build/$(LA)/$(TARGET)
+
 
 ### benchmarks
 
+
+# single benchmark
+
 deploy_to_benchmarks:
 	mkdir -p ./benchmarks/$(BINARY_DIR)/
+	mkdir -p ./benchmarks/$(BINARY_DIR)/BLASFEO_API/
+ifeq ($(BLAS_API), 1)
+	mkdir -p ./benchmarks/$(BINARY_DIR)/BLAS_API/
+endif
 	cp ./lib/libblasfeo.a ./benchmarks/$(BINARY_DIR)/
 
 build_benchmarks:
@@ -767,21 +860,44 @@ benchmarks: deploy_to_benchmarks build_benchmarks
 run_benchmarks:
 	make -C benchmarks run
 
+figures_benchmark_one:
+	make -C benchmarks figures_benchmark_one
 
 
-build_benchmarks_all:
-	make -C benchmarks all
+# BLASFEO API benchmark
+
+build_benchmarks_blasfeo_api_all:
+	make -C benchmarks blasfeo_api_all
 	@echo
 	@echo "Benchmarks build complete."
 	@echo
 
-benchmarks_all: deploy_to_benchmarks build_benchmarks_all
+benchmarks_blasfeo_api_all: deploy_to_benchmarks build_benchmarks_blasfeo_api_all
 
-run_benchmarks_all:
-	make -C benchmarks run_all
+run_benchmarks_blasfeo_api_all:
+	make -C benchmarks run_blasfeo_api_all
 
-print_figures_benchmark_all:
-	make -C benchmarks print_figures
+figures_benchmark_blasfeo_api_all:
+	make -C benchmarks figures_benchmark_blasfeo_api_all
+
+
+# BLAS API benchmark
+
+build_benchmarks_blas_api_all:
+	make -C benchmarks blas_api_all
+	@echo
+	@echo "Benchmarks build complete."
+	@echo
+
+benchmarks_blas_api_all: deploy_to_benchmarks build_benchmarks_blas_api_all
+
+run_benchmarks_blas_api_all:
+	make -C benchmarks run_blas_api_all
+
+figures_benchmark_blas_api_all:
+	make -C benchmarks figures_benchmark_blas_api_all
+
+
 
 ### examples
 
@@ -799,6 +915,8 @@ examples: deploy_to_examples build_examples
 
 run_examples:
 	make -C examples run
+
+
 
 ### tests
 

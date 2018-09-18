@@ -97,9 +97,56 @@ int main()
 	struct blasfeo_svec sz1;
 	blasfeo_allocate_svec(n, &sz1);
 
+	float alpha, beta;
+
 	//
 	// tests
 	//
+
+#if 0
+	// gemm_nt
+	alpha = 1.0;
+	beta = 0.0;
+	blasfeo_print_smat(n, n, &sD, 0, 0);
+
+	kernel_sgemm_nt_4x4_lib4(4, &alpha, sA.pA+4*sA.cn, sB.pA, &beta, sA.pA, sD.pA);
+
+//	blasfeo_sgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
+
+	blasfeo_print_smat(n, n, &sD, 0, 0);
+	return 0;
+#endif
+
+#if 0
+	// gemm_nn
+	alpha = 1.0;
+	beta = 0.0;
+	blasfeo_print_smat(n, n, &sD, 0, 0);
+
+//	kernel_sgemm_nn_4x4_lib4(8, &alpha, sA.pA+4*sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sD.pA);
+
+	blasfeo_sgemm_nn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
+
+	blasfeo_print_smat(n, n, &sD, 0, 0);
+	return 0;
+#endif
+
+#if 1
+	// trmm_rutn
+	alpha = -1.0;
+	beta = 0.0;
+	blasfeo_print_smat(n, n, &sD, 0, 0);
+
+//	kernel_sgemm_nn_4x4_lib4(8, &alpha, sA.pA+4*sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sD.pA);
+
+	blasfeo_strmm_rutn(n, n, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+
+	blasfeo_print_smat(n, n, &sD, 0, 0);
+	return 0;
+#endif
+
+
+
 
 	// copy scale
 #if 0
@@ -109,8 +156,8 @@ int main()
 	return 0;
 #endif
 
-	float alpha = 1.0;
-	float beta = 0.0;
+	alpha = 1.0;
+	beta = 0.0;
 
 //	blasfeo_sgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);
 	blasfeo_sgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);

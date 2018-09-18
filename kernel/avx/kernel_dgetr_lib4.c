@@ -488,3 +488,76 @@ void kernel_dgetr_4_0_lib4(int kmax, double *A, int sda, double *B)
 	return;
 	}
 
+
+
+
+#if 0
+// copy transposed panel into normal panel
+void kernel_dpacp_tn_4_lib4(int kmax, int offsetA, double *A, int sda, double *B)
+	{
+
+	const int ps = 4;
+
+	__m256d
+		v0, v1, v2, v3, v4, v5, v6, v7;
+
+	int k;
+
+	int kna = (ps-offsetA)%ps;
+	kna = kmax<kna ? kmax : kna;
+
+	k = 0;
+	if(kna>0)
+		{
+		for( ; k<kna; k++)
+			{
+			//
+			B[0+ps*0] = A[0+ps*0];
+			B[1+ps*0] = A[0+ps*1];
+			B[2+ps*0] = A[0+ps*2];
+			B[3+ps*0] = A[0+ps*3];
+
+			A += 1;
+			B += ps;
+			}
+		A += ps*(sda-1);
+		}
+	for(; k<kmax-3; k+=4)
+		{
+
+		v0 = _mm256_load_pd( &A[0+ps*0] ); // 00 10 20 30
+		v1 = _mm256_load_pd( &A[0+ps*1] ); // 01 11 21 31
+		v4 = _mm256_unpacklo_pd( v0, v1 ); // 00 01 20 21
+		v5 = _mm256_unpackhi_pd( v0, v1 ); // 10 11 30 31
+		v2 = _mm256_load_pd( &A[0+ps*2] ); // 02 12 22 32
+		v3 = _mm256_load_pd( &A[0+ps*3] ); // 03 13 23 33
+		v6 = _mm256_unpacklo_pd( v2, v3 ); // 02 03 22 23
+		v7 = _mm256_unpackhi_pd( v2, v3 ); // 12 13 32 33
+
+		v0 = _mm256_permute2f128_pd( v4, v6, 0x20 ); // 00 01 02 03
+		_mm256_store_pd( &B[0+ps*0], v0 );
+		v2 = _mm256_permute2f128_pd( v4, v6, 0x31 ); // 20 21 22 23
+		_mm256_store_pd( &B[0+ps*2], v2 );
+		v1 = _mm256_permute2f128_pd( v5, v7, 0x20 ); // 10 11 12 13
+		_mm256_store_pd( &B[0+ps*1], v1 );
+		v3 = _mm256_permute2f128_pd( v5, v7, 0x31 ); // 30 31 32 33
+		_mm256_store_pd( &B[0+ps*3], v3 );
+
+		A += ps*sda;
+		B += ps*ps;
+		}
+	for( ; k<kmax; k++)
+		{
+		//
+		B[0+ps*0] = A[0+ps*0];
+		B[1+ps*0] = A[0+ps*1];
+		B[2+ps*0] = A[0+ps*2];
+		B[3+ps*0] = A[0+ps*3];
+
+		A += 1;
+		B += ps;
+		}
+	return;
+	}
+#endif
+
