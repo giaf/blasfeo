@@ -12,9 +12,12 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description='BLAFEO tests scheduler')
 
     parser.add_argument(dest='recipe_json', type=str, default=RECIPE_JSON, nargs='?',
-                        help='Run a batch of test from a specific recipe, i.e. recipe_all.json')
+        help='Run a batch of test from a specific recipe, i.e. recipe_all.json')
     parser.add_argument('--verbose', type=int, default=0,
-                        help='Verbosity level')
+        help='Verbosity level')
+    parser.add_argument('--rebuild', default=False, action='store_true',
+        help='Rebuild libblasfeo to take into account recent code '+
+        'changes or addition of new target to the recipe batch')
 
     args = parser.parse_args()
     return args
@@ -136,10 +139,16 @@ class CookBook:
         _silent = ""
         if not self.VERBOSE: _silent="-s"
 
-        if make_flags["BUILD_LIBS"]:
-            make(f"{_silent} -C .. ", make_flags, env_flags)
+        _build_libblasfeo = make_flags.get("BUILD_LIBS")
+        _deploy_libblasfeo = make_flags.get("DEPLOY_LIBS")
 
-        if make_flags["BUILD_LIBS"] and make_flags["DEPLOY_LIBS"]:
+        if self.cli_flags.rebuild:
+            _build_libblasfeo = 1
+            _deploy_libblasfeo = 1
+
+        if _build_libblasfeo:
+            make(f"{_silent} -C .. ", make_flags, env_flags)
+        if _deploy_libblasfeo:
             make(f"{_silent} -C .. deploy_to_tests", make_flags, env_flags)
 
         for routine_name, args in self.recipe['routines'].items():
