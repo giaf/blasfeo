@@ -27,34 +27,19 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#if defined(LA_REFERENCE) | defined(LA_BLAS_WRAPPER) | defined(TESTING_MODE)
+#include <stdlib.h>
+#include <stdio.h>
 
-void GEMV_DIAG_LIBSTR(int m, REAL alpha, struct STRVEC *sA, int ai, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
-	{
-	if(m<=0)
-		return;
-	int ii;
-	REAL *a = sA->pa + ai;
-	REAL *x = sx->pa + xi;
-	REAL *y = sy->pa + yi;
-	REAL *z = sz->pa + zi;
-	if(alpha==1.0 & beta==1.0)
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = a[ii]*x[ii] + y[ii];
-		}
-	else
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = alpha*a[ii]*x[ii] + beta*y[ii];
-		}
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_d_kernel.h"
 
-	return;
 
-	}
 
-#else
+#define REAL float
+#define STRVEC blasfeo_svec_ref
 
-#error : wrong LA choice
+#define GEMV_DIAG_LIBSTR blasfeo_sgemv_d_ref
 
-#endif
+
+
+#include "x_blas2_diag_lib.c"

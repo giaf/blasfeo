@@ -27,34 +27,35 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#if defined(LA_REFERENCE) | defined(LA_BLAS_WRAPPER) | defined(TESTING_MODE)
+#include <stdlib.h>
+#include <stdio.h>
 
-void GEMV_DIAG_LIBSTR(int m, REAL alpha, struct STRVEC *sA, int ai, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
-	{
-	if(m<=0)
-		return;
-	int ii;
-	REAL *a = sA->pa + ai;
-	REAL *x = sx->pa + xi;
-	REAL *y = sy->pa + yi;
-	REAL *z = sz->pa + zi;
-	if(alpha==1.0 & beta==1.0)
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = a[ii]*x[ii] + y[ii];
-		}
-	else
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = alpha*a[ii]*x[ii] + beta*y[ii];
-		}
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_s_aux.h"
 
-	return;
 
-	}
 
-#else
+#define REAL float
 
-#error : wrong LA choice
+#define STRMAT blasfeo_smat_ref
+#define STRVEC blasfeo_svec_ref
 
-#endif
+#define GEMV_N_LIBSTR blasfeo_sgemv_n_ref
+#define GEMV_NT_LIBSTR blasfeo_sgemv_nt_ref
+#define GEMV_T_LIBSTR blasfeo_sgemv_t_ref
+#define SYMV_L_LIBSTR blasfeo_ssymv_l_ref
+#define TRMV_LNN_LIBSTR blasfeo_strmv_lnn_ref
+#define TRMV_LTN_LIBSTR blasfeo_strmv_ltn_ref
+#define TRMV_UNN_LIBSTR blasfeo_strmv_unn_ref
+#define TRMV_UTN_LIBSTR blasfeo_strmv_utn_ref
+#define TRSV_LNN_LIBSTR blasfeo_strsv_lnn_ref
+#define TRSV_LNN_MN_LIBSTR blasfeo_strsv_lnn_mn_ref
+#define TRSV_LNU_LIBSTR blasfeo_strsv_lnu_ref
+#define TRSV_LTN_LIBSTR blasfeo_strsv_ltn_ref
+#define TRSV_LTN_MN_LIBSTR blasfeo_strsv_ltn_mn_ref
+#define TRSV_LTU_LIBSTR blasfeo_strsv_ltu_ref
+#define TRSV_UNN_LIBSTR blasfeo_strsv_unn_ref
+#define TRSV_UTN_LIBSTR blasfeo_strsv_utn_ref
+
+
+#include "x_blas2_lib.c"

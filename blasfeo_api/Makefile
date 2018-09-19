@@ -83,9 +83,19 @@ endif # LA choice
 
 ifeq ($(TESTING_MODE), 1)
 #testing against reference
-OBJS += d_blas3_libref.o
-OBJS += d_lapack_libref.o
+OBJS += s_blas1_libref.o
+OBJS += s_blas2_libref.o
+OBJS += s_blas2_diag_libref.o
 OBJS += s_blas3_libref.o
+OBJS += s_blas3_diag_libref.o
+OBJS += s_lapack_libref.o
+
+OBJS += d_blas1_libref.o
+OBJS += d_blas2_libref.o
+OBJS += d_blas2_diag_libref.o
+OBJS += d_blas3_libref.o
+OBJS += d_blas3_diag_libref.o
+OBJS += d_lapack_libref.o
 endif
 
 

@@ -27,34 +27,34 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#if defined(LA_REFERENCE) | defined(LA_BLAS_WRAPPER) | defined(TESTING_MODE)
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 
-void GEMV_DIAG_LIBSTR(int m, REAL alpha, struct STRVEC *sA, int ai, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
-	{
-	if(m<=0)
-		return;
-	int ii;
-	REAL *a = sA->pa + ai;
-	REAL *x = sx->pa + xi;
-	REAL *y = sy->pa + yi;
-	REAL *z = sz->pa + zi;
-	if(alpha==1.0 & beta==1.0)
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = a[ii]*x[ii] + y[ii];
-		}
-	else
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = alpha*a[ii]*x[ii] + beta*y[ii];
-		}
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_s_aux.h"
 
-	return;
+#define REAL float
 
-	}
+#define STRMAT blasfeo_smat_ref
+#define STRVEC blasfeo_svec_ref
 
-#else
+#define GELQF_PD_DA_LIBSTR blasfeo_sgelqf_pd_da_ref
+#define GELQF_PD_LA_LIBSTR blasfeo_sgelqf_pd_la_ref
+#define GELQF_PD_LLA_LIBSTR blasfeo_sgelqf_pd_lla_ref
+#define GELQF_PD_LIBSTR blasfeo_sgelqf_pd_ref
+#define GELQF_LIBSTR blasfeo_sgelqf_ref
+#define GELQF_WORK_SIZE_LIBSTR blasfeo_sgelqf_worksize_ref
+#define GEQRF_LIBSTR blasfeo_sgeqrf_ref
+#define GEQRF_WORK_SIZE_LIBSTR blasfeo_sgeqrf_worksize_ref
+#define GETF2_NOPIVOT sgetf2_nopivot_ref
+#define GETRF_NOPIVOT_LIBSTR blasfeo_sgetrf_nopivot_ref
+#define GETRF_LIBSTR blasfeo_sgetrf_rowpivot_ref
+#define POTRF_L_LIBSTR blasfeo_spotrf_l_ref
+#define POTRF_L_MN_LIBSTR blasfeo_spotrf_l_mn_ref
+#define PSTRF_L_LIBSTR spstrf_l_libstr_ref
+#define SYRK_POTRF_LN_LIBSTR blasfeo_ssyrk_spotrf_ln_ref
+#define SYRK_POTRF_LN_MN_LIBSTR blasfeo_ssyrk_spotrf_ln_mn_ref
 
-#error : wrong LA choice
 
-#endif
+#include "x_lapack_lib.c"

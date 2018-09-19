@@ -122,6 +122,8 @@ OBJS += i_aux_ext_dep_lib.o
 OBJS += timing.o
 
 ifeq ($(TESTING_MODE), 1)
+OBJS += d_aux_libref.o
+OBJS += s_aux_libref.o
 OBJS += d_aux_ext_dep_libref.o
 OBJS += s_aux_ext_dep_libref.o
 endif

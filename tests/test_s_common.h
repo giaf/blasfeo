@@ -40,12 +40,11 @@
 #include "../include/blasfeo_timing.h"
 
 // BLASFEO LA:REFERENCE routines
-#include "../include/blasfeo_s_blas3_ref.h"
+#include "../include/blasfeo_s_blasfeo_api_ref.h"
 #include "../include/blasfeo_s_aux_ref.h"
 #include "../include/blasfeo_s_aux_ext_dep_ref.h"
 
 #include "../include/blasfeo_s_aux_test.h"
->>>>>>> tmm_acados-master
 
 #define PRECISION Single
 #define GECMP_LIBSTR sgecmp_libstr

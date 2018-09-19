@@ -27,34 +27,31 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#if defined(LA_REFERENCE) | defined(LA_BLAS_WRAPPER) | defined(TESTING_MODE)
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 
-void GEMV_DIAG_LIBSTR(int m, REAL alpha, struct STRVEC *sA, int ai, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
-	{
-	if(m<=0)
-		return;
-	int ii;
-	REAL *a = sA->pa + ai;
-	REAL *x = sx->pa + xi;
-	REAL *y = sy->pa + yi;
-	REAL *z = sz->pa + zi;
-	if(alpha==1.0 & beta==1.0)
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = a[ii]*x[ii] + y[ii];
-		}
-	else
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = alpha*a[ii]*x[ii] + beta*y[ii];
-		}
+#define FABS fabs
+#define SQRT sqrt
 
-	return;
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_d_kernel.h"
 
-	}
 
-#else
 
-#error : wrong LA choice
+#define REAL double
 
-#endif
+#define STRMAT blasfeo_dmat_ref
+#define STRVEC blasfeo_dvec_ref
+
+#define AXPY_LIBSTR blasfeo_daxpy_ref
+#define AXPBY_LIBSTR blasfeo_daxpby_ref
+#define VECMUL_LIBSTR blasfeo_dvecmul_ref
+#define VECMULACC_LIBSTR blasfeo_dvecmulacc_ref
+#define VECMULDOT_LIBSTR blasfeo_dvecmuldot_ref
+#define DOT_LIBSTR blasfeo_ddot_ref
+#define ROTG_LIBSTR blasfeo_drotg_ref
+#define COLROT_LIBSTR blasfeo_dcolrot_ref
+#define ROWROT_LIBSTR blasfeo_drowrot_ref
+
+#include "x_blas1_lib.c"
