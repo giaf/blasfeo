@@ -3314,7 +3314,7 @@ void blasfeo_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj
 	int imax = m;
 	imax0 = imax<imax0 ? imax : imax0;
 	// different block alignment
-	if( di&(ps-1) != ai&(ps-1) )
+	if( (di&(ps-1)) != (ai&(ps-1)) )
 		{
 		kernel_dgelqf_pd_la_vs_lib4(m, n1, imax, di&(ps-1), pD, sdd, dD, ai&(ps-1), pA, sda);
 		return;
@@ -3435,7 +3435,7 @@ void blasfeo_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, int d
 	int imax = m;
 	imax0 = imax<imax0 ? imax : imax0;
 	// different block alignment
-	if( di&(ps-1)!=ai&(ps-1) | imax0>0 )
+	if( (di&(ps-1)) != (ai&(ps-1)) | imax0>0 )
 		{
 		kernel_dgelqf_pd_lla_vs_lib4(m, 0, n1, imax, di&(ps-1), pD, sdd, dD, li&(ps-1), pL, sdl, ai&(ps-1), pA, sda);
 		return;
