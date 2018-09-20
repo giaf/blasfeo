@@ -88,6 +88,7 @@ void kernel_dpack_nn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
 	const int ps = 4;
 
 	int ii;
+	ii = 0;
 
 	if(m1>=4)
 		{
@@ -204,6 +205,7 @@ void kernel_dpack_tn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
 	const int ps = 4;
 
 	int ii;
+	ii = 0;
 
 	if(m1>=4)
 		{
