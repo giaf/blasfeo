@@ -2,6 +2,10 @@
   "env_flags":{
     "CFLAGS":"-Wuninitialized"
   },
+  "available_make_flags":{
+    "SOC":"BACHMANN",
+    "SOC":"DSPACE"
+  },
   "make_flags":{
     "CC":"clang",
     "BUILD_LIBS":1,
