@@ -366,7 +366,7 @@ int GECMP_LIBSTR(
 			// reference mat
 			REAL rbi = MATEL_REF(rD, ii, jj);
 
-			if ( (sbi != rbi) & ( fabs(sbi-rbi) > 1e-13*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > 1e-12))
+			if ( (sbi != rbi) & ( fabs(sbi-rbi) > 1e-11*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > 1e-11))
 				{
 					*err_i = ii;
 					*err_j = jj;
