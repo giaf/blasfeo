@@ -69,6 +69,10 @@ ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
 OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
 endif
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
+OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
+OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
+endif
 ifeq ($(TARGET), GENERIC)
 OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
 OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o

@@ -102,6 +102,9 @@ int main()
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	const float flops_max = 2;
 	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A15): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+	const float flops_max = 0.5;
+	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A7): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_GENERIC)
 	const float flops_max = 2;
 	printf("Testing BLAS version for generic scalar instruction set: theoretical peak %5.1f Gflops ???\n", flops_max*GHz_max);

@@ -557,6 +557,62 @@ endif
 
 endif
 
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
+# aux
+OBJS += \
+		auxiliary/d_aux_lib4.o \
+		auxiliary/s_aux_lib4.o \
+		auxiliary/m_aux_lib44.o \
+
+# kernels
+OBJS += \
+		kernel/armv7a/kernel_dgemm_4x4_lib4.o \
+		kernel/c99/kernel_dgemm_4x4_lib4.o \
+		kernel/c99/kernel_dgemm_diag_lib4.o \
+		kernel/c99/kernel_dgemv_4_lib4.o \
+		kernel/c99/kernel_dsymv_4_lib4.o \
+		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_dgeqrf_4_lib4.o \
+		kernel/c99/kernel_dgecp_lib4.o \
+		kernel/c99/kernel_dgetr_lib4.o \
+		kernel/c99/kernel_dpack_lib4.o \
+		\
+		kernel/armv7a/kernel_sgemm_12x4_lib4.o \
+		kernel/armv7a/kernel_sgemm_8x4_lib4.o \
+		kernel/armv7a/kernel_sgemm_4x4_lib4.o \
+		kernel/c99/kernel_sgemm_4x4_lib4.o \
+		kernel/c99/kernel_sgemm_diag_lib4.o \
+		kernel/c99/kernel_sgemv_4_lib4.o \
+		kernel/c99/kernel_ssymv_4_lib4.o \
+		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/c99/kernel_sgecp_lib4.o \
+		kernel/c99/kernel_sgetr_lib4.o \
+
+# blas
+OBJS += \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
+		\
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
+
+endif
+
 ifeq ($(TARGET), GENERIC)
 
 # aux
@@ -768,6 +824,12 @@ ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 	echo "#define TARGET_ARMV7A_ARM_CORTEX_A15" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 #	echo "#define TARGET ARMV7A_ARM_CORTEX_A15" >> ./include/blasfeo_target.h
+endif
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
+	echo "#ifndef TARGET_ARMV7A_ARM_CORTEX_A15" > ./include/blasfeo_target.h
+	echo "#define TARGET_ARMV7A_ARM_CORTEX_A15" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+#	echo "#define TARGET ARMV7A_ARM_CORTEX_A7" >> ./include/blasfeo_target.h
 endif
 ifeq ($(LA), HIGH_PERFORMANCE)
 	echo "#ifndef LA_HIGH_PERFORMANCE" >> ./include/blasfeo_target.h
