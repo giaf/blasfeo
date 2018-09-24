@@ -27,8 +27,6 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#if defined(LA_REFERENCE) | defined(LA_BLAS_WRAPPER) | defined(TESTING_MODE)
-
 void GEMV_DIAG_LIBSTR(int m, REAL alpha, struct STRVEC *sA, int ai, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
 	{
 	if(m<=0)
@@ -52,9 +50,3 @@ void GEMV_DIAG_LIBSTR(int m, REAL alpha, struct STRVEC *sA, int ai, struct STRVE
 	return;
 
 	}
-
-#else
-
-#error : wrong LA choice
-
-#endif
