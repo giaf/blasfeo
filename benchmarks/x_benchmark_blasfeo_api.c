@@ -132,6 +132,8 @@ int main()
 	const double flops_max = 8; // 1x128 bit fma
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	const double flops_max = 8; // 1x128 bit fma
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+	const double flops_max = 8; // 1x128 bit fma
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A7)
 	const double flops_max = 2; // 1x32 bit fma
 #elif defined(TARGET_GENERIC)

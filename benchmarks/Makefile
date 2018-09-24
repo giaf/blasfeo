@@ -65,8 +65,8 @@ common: bin_dir
 build: common $(OBJS)
 
 run:
-#	./$(BINARY_DIR)/benchmark_d_blasfeo_api.o.out
-	./$(BINARY_DIR)/benchmark_s_blasfeo_api.o.out
+	./$(BINARY_DIR)/benchmark_d_blasfeo_api.o.out
+#	./$(BINARY_DIR)/benchmark_s_blasfeo_api.o.out
 #	./$(BINARY_DIR)/benchmark_d_blas_api.o.out
 
 
