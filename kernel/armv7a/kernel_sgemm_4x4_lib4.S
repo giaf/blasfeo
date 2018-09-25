@@ -1051,8 +1051,8 @@ _kernel_sgemm_nt_4x4_lib4:
 
 
 
-//                               r0        r1             r2         r3         sp+0     sp+4          sp+8       sp+12
-// void kernel_sgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, double *B, int sdb, double *beta, double *C, double *D)
+//                               r0        r1             r2         r3           sp+0       sp+4     sp+8          sp+12      sp+16
+// void kernel_sgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D)
 
 //	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1080,9 +1080,21 @@ _kernel_sgemm_nn_4x4_lib4:
 	// call inner kernel dgemm nt
 	mov		r4, r0 // kmax
 	mov		r5, r2 // A
-	mov		r6, r3 // B
-	ldr		r7, [fp, #0] // sdb
+	ldr		r6, [fp, #0] // B
+	ldr		r7, [fp, #4] // sdb
 	lsl		r7, r7, #4 // 4*sizeof(float)*sdb
+	mov		r8, r3 // offsetB
+
+// TODO
+#if MACRO_LEVEL>=1
+//	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+#else
+#if defined(OS_LINUX)
+//	bl	inner_edge_gemm_add_nn_4x4_lib4
+#elif defined(OS_MAC)
+//	bl	_inner_edge_gemm_add_nn_4x4_lib4
+#endif
+#endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
@@ -1098,8 +1110,8 @@ _kernel_sgemm_nn_4x4_lib4:
 
 	// call inner blend for generic alpha and beta
 	mov		r4, r1 // alpha
-	ldr		r5, [fp, #4] // beta
-	ldr		r6, [fp, #8] // C
+	ldr		r5, [fp, #8] // beta
+	ldr		r6, [fp, #12] // C
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_4X4_LIB4
@@ -1114,7 +1126,7 @@ _kernel_sgemm_nn_4x4_lib4:
 
 
 	// store n
-	ldr		r4, [fp, #12] // D
+	ldr		r4, [fp, #16] // D
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB4
