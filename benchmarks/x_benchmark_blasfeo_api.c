@@ -118,9 +118,9 @@ int main()
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	const double flops_max = 4;
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-	const double flops_max = 2;
-#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	const double flops_max = 0.5;
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+	const double flops_max = 2;
 #elif defined(TARGET_GENERIC)
 	const double flops_max = 2;
 #else
