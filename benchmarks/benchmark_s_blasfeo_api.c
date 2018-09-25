@@ -50,20 +50,24 @@
 #endif
 
 
+
 #if defined(REF_BLAS_NETLIB)
-#include "cblas.h"
-#include "lapacke.h"
+//#include "cblas.h"
+//#include "lapacke.h"
+#include "../include/d_blas.h"
 #endif
 
 #if defined(REF_BLAS_OPENBLAS)
 void openblas_set_num_threads(int num_threads);
-#include "cblas.h"
-#include "lapacke.h"
+//#include "cblas.h"
+//#include "lapacke.h"
+#include "../include/d_blas.h"
 #endif
 
 #if defined(REF_BLAS_BLIS)
 void omp_set_num_threads(int num_threads);
-#include "blis.h"
+//#include "blis.h"
+#include "../include/d_blas_64.h"
 #endif
 
 #if defined(REF_BLAS_MKL)

@@ -40,13 +40,31 @@
 
 #include "cpu_freq.h"
 
-#if defined(REF_BLAS_BLIS)
-#include "../include/d_blas_64.h"
-#elif defined(REF_BLAS_MKL)
-#include "mkl.h"
-#else
+
+
+#if defined(REF_BLAS_NETLIB)
+//#include "cblas.h"
+//#include "lapacke.h"
 #include "../include/d_blas.h"
 #endif
+
+#if defined(REF_BLAS_OPENBLAS)
+void openblas_set_num_threads(int num_threads);
+//#include "cblas.h"
+//#include "lapacke.h"
+#include "../include/d_blas.h"
+#endif
+
+#if defined(REF_BLAS_BLIS)
+void omp_set_num_threads(int num_threads);
+//#include "blis.h"
+#include "../include/d_blas_64.h"
+#endif
+
+#if defined(REF_BLAS_MKL)
+#include "mkl.h"
+#endif
+
 
 
 int main()
@@ -209,7 +227,7 @@ int main()
 		/* benchmarks */
 
 		char ta = 'n';
-		char tb = 'n';
+		char tb = 't';
 		char uplo = 'u';
 		int info = 0;
 
@@ -235,10 +253,10 @@ int main()
 				{
 
 //				for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
-//				dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+				dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				for(ii=0; ii<n*n; ii++) D[ii] = C[ii];
 //				dpotrf_(&uplo, &n, D, &n, &info);
-				dpotrf_(&uplo, &n, B, &n, &info);
+//				dpotrf_(&uplo, &n, B, &n, &info);
 
 				}
 
@@ -270,10 +288,10 @@ int main()
 				{
 
 //				for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
-//				blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+				blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				for(ii=0; ii<n*n; ii++) D[ii] = C[ii];
 //				blasfeo_dpotrf(&uplo, &n, D, &n);
-				blasfeo_dpotrf(&uplo, &n, B, &n, &info);
+//				blasfeo_dpotrf(&uplo, &n, B, &n, &info);
 
 				}
 
@@ -302,8 +320,10 @@ int main()
 				{
 				
 //				blasfeo_dgemm_nn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
-//				blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
-				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
+				blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
+//				blasfeo_dgemm_tn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
+//				blasfeo_dgemm_tt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
+//				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 
 				}
 
@@ -320,8 +340,8 @@ int main()
 
 		double Gflops_max = flops_max * GHz_max;
 
-//		double flop_operation = 2.0*n*n*n; // gemm
-		double flop_operation = 1.0/3.0*n*n*n; // potrf
+		double flop_operation = 2.0*n*n*n; // gemm
+//		double flop_operation = 1.0/3.0*n*n*n; // potrf
 
 		double Gflops_blas      = 1e-9*flop_operation/time_blas;
 		double Gflops_blas_pack = 1e-9*flop_operation/time_blas_pack;
