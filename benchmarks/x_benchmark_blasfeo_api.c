@@ -483,7 +483,7 @@ int main()
 
 		double Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
 
-		printf("%d\t%7.2f\t%7.2f\n",
+		printf("%d\t%7.3f\t%7.3f\n",
 			n,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max);
 

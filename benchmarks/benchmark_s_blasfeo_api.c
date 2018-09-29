@@ -451,7 +451,7 @@ int main()
 		#endif
 
 
-		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n",
+		printf("%d\t%7.3f\t%7.3f\t%7.3f\t%7.3f\n",
 			n,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max,
 			Gflops_blas, 100.0*Gflops_blas/Gflops_max);
