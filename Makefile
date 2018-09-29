@@ -826,8 +826,8 @@ ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 #	echo "#define TARGET ARMV7A_ARM_CORTEX_A15" >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
-	echo "#ifndef TARGET_ARMV7A_ARM_CORTEX_A15" > ./include/blasfeo_target.h
-	echo "#define TARGET_ARMV7A_ARM_CORTEX_A15" >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_ARMV7A_ARM_CORTEX_A7" > ./include/blasfeo_target.h
+	echo "#define TARGET_ARMV7A_ARM_CORTEX_A7" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 #	echo "#define TARGET ARMV7A_ARM_CORTEX_A7" >> ./include/blasfeo_target.h
 endif
