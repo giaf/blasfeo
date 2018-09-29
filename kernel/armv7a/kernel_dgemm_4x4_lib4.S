@@ -158,8 +158,6 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 	fldd	d27, [r5, #120] // A
 	fldd	d31, [r6, #120] // B
 
-
-
 	// unroll 2
 	fmacd	d0, d16, d20
 	pld		[r6, #192] // prefetch
@@ -826,15 +824,13 @@ _inner_kernel_dsyrk_l_add_nt_4x4_lib4:
 	// main loop
 1:
 	
-	// prefetch
-	pld		[r5, #128]
-	pld		[r6, #128]
-
 	// unroll 0
 	fmacd	d0, d16, d20
-	fldd	d16, [r5, #64] // A
+	pld		[r5, #128] // prefetch
 	fmacd	d1, d17, d20
+	pld		[r6, #128] // prefetch
 	fmacd	d2, d18, d20
+	fldd	d16, [r5, #64] // A
 	fmacd	d3, d19, d20
 	fldd	d20, [r6, #64] // B
 
@@ -876,24 +872,21 @@ _inner_kernel_dsyrk_l_add_nt_4x4_lib4:
 	fldd	d27, [r5, #120] // A
 	fldd	d31, [r6, #120] // B
 
-	// prefetch
-	pld		[r5, #192]
-	pld		[r6, #192]
-
-	add		r5, r5, #128
-	add		r6, r6, #128
-
 	// unroll 2
 	fmacd	d0, d16, d20
-	fldd	d16, [r5, #0] // A
+	pld		[r6, #192] // prefetch
 	fmacd	d1, d17, d20
+	fldd	d16, [r5, #128] // A
 	fmacd	d2, d18, d20
+	add		r6, r6, #128
 	fmacd	d3, d19, d20
 	fldd	d20, [r6, #0] // B
 
+	pld		[r5, #192] // prefetch
 	fmacd	d5, d17, d21
-	fldd	d17, [r5, #8] // A
+	fldd	d17, [r5, #136] // A
 	fmacd	d6, d18, d21
+	add		r5, r5, #128
 	fmacd	d7, d19, d21
 	fldd	d21, [r6, #8] // B
 
@@ -910,6 +903,7 @@ _inner_kernel_dsyrk_l_add_nt_4x4_lib4:
 	fmacd	d0, d24, d28
 	fldd	d24, [r5, #32] // A
 	fmacd	d1, d25, d28
+	sub		r4, r4, #4
 	fmacd	d2, d26, d28
 	fmacd	d3, d27, d28
 	fldd	d28, [r6, #32] // B
@@ -929,7 +923,6 @@ _inner_kernel_dsyrk_l_add_nt_4x4_lib4:
 	fldd	d27, [r5, #56] // A
 	fldd	d31, [r6, #56] // B
 
-	sub		r4, r4, #4
 	cmp		r4, #4
 	bgt		1b
 
@@ -1668,6 +1661,8 @@ _inner_store_l_4x4_lib4:
 .LC00: // { 0 }
 	.word 0
 	.word 0
+
+
 
 //                               r0        r1             r2         r3         sp+0          sp+4       sp+8
 // void kernel_dgemm_nt_4x4_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D)
@@ -2577,6 +2572,17 @@ _kernel_dsyrk_dpotrf_nt_l_4x4_lib4:
 #if defined(OS_LINUX)
 	.size	kernel_dsyrk_dpotrf_nt_l_4x4_lib4, .-kernel_dsyrk_dpotrf_nt_l_4x4_lib4
 #endif
+
+
+
+
+
+#if defined(BLAS_API)
+
+#include "kernel_dgemm_4x4_lib.S"
+
+#endif
+
 
 
 
