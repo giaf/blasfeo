@@ -99,16 +99,16 @@ int main()
 
 
 	double alpha = 1.0;
-	double beta = 1.0;
+	double beta = 10.0;
 
 	char ta = 'n';
 	char tb = 't';
-	char uplo = 'u';
+	char uplo = 'l';
 	int info = 0;
 
-	int m0 = 11;
-	int n0 = 11;
-	int k0 = 11;
+	int m0 = 12;
+	int n0 = 16;
+	int k0 = 16;
 
 
 	// blas
@@ -116,7 +116,7 @@ int main()
 	for(ii=0; ii<n*n; ii++) C[ii] = -1;
 
 //	dgemm_(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
-	for(ii=0; ii<n*n; ii++) C[ii] = -B[ii];
+	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 	dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
 	dpotrf_(&uplo, &m0, C, &n, &info);
 
@@ -130,7 +130,7 @@ int main()
 	for(ii=0; ii<n*n; ii++) C[ii] = -1;
 
 //	blasfeo_dgemm(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
-	for(ii=0; ii<n*n; ii++) C[ii] = -B[ii];
+	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 	blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
 	blasfeo_dpotrf(&uplo, &m0, C, &n, &info);
 

@@ -68,7 +68,7 @@ void sgemm_nt_lib(int m, int n, int k, float alpha, float *pA, int sda, float *p
 			}
 		}
 #endif
-#if defined(TARGET_ARMV7A_ARM_CORTEX_A15)  | defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; i<m-11; i+=12)
 		{
 		j = 0;
