@@ -63,7 +63,7 @@ void openblas_set_num_threads(int num_threads);
 #endif
 
 #if defined(REF_BLAS_BLIS)
-void omp_set_num_threads(int num_threads);
+//void omp_set_num_threads(int num_threads);
 #include "blis.h"
 #endif
 
@@ -85,7 +85,7 @@ int main()
 	openblas_set_num_threads(1);
 #endif
 #if defined(REF_BLAS_BLIS)
-	omp_set_num_threads(1);
+//	omp_set_num_threads(1);
 #endif
 #if defined(REF_BLAS_MKL)
 	mkl_set_num_threads(1);
