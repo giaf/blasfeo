@@ -83,21 +83,6 @@ int main()
 
 	int bs = 4;
 
-	struct blasfeo_dmat sA; blasfeo_allocate_dmat(n, n, &sA);
-	blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
-	int sda = sA.cn;
-	struct blasfeo_dmat sB; blasfeo_allocate_dmat(n, n, &sB);
-	blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
-	int sdb = sB.cn;
-	struct blasfeo_dmat sC; blasfeo_allocate_dmat(n, n, &sC);
-	blasfeo_pack_dmat(n, n, C, n, &sC, 0, 0);
-	int sdc = sC.cn;
-	struct blasfeo_dmat sD; blasfeo_allocate_dmat(n, n, &sD);
-	blasfeo_pack_dmat(n, n, D, n, &sD, 0, 0);
-	int sdd = sD.cn;
-
-
-
 	double alpha = 1.0;
 	double beta = 10.0;
 
@@ -145,10 +130,6 @@ int main()
 	free(B);
 	free(C);
 	free(D);
-	blasfeo_free_dmat(&sA);
-	blasfeo_free_dmat(&sB);
-	blasfeo_free_dmat(&sC);
-	blasfeo_free_dmat(&sD);
 
 
 	// return
