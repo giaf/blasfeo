@@ -83,7 +83,8 @@ _inner_kernel_gemm_add_nt_4x4_lib4:
 
 	// preload
 #if defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-
+	pld		[r5, #64]
+	pld		[r6, #64]
 #else
 	vld1.64		{d0, d1}, [r5:128]! // A
 	vld1.64		{d4, d5}, [r6:128]! // B
@@ -97,11 +98,17 @@ _inner_kernel_gemm_add_nt_4x4_lib4:
 	
 #if defined(TARGET_ARMV7A_ARM_CORTEX_A7)
 
-	vld1.64		{d16, d17, d18, d19}, [r5:128]! // A
-	vld1.64		{d0, d1, d2, d3}, [r6:128]! // B
+	vld1.64		{d0, d1}, [r6:128]! // B
+	vld1.64		{d16, d17}, [r5:128]! // A
 
-	vld1.64		{d20, d21, d22, d23}, [r5:128]! // A
-	vld1.64		{d4, d5, d6, d7}, [r6:128]! // B
+	vld1.64		{d2, d3}, [r6:128]! // B
+	vld1.64		{d18, d19}, [r5:128]! // A
+
+	vld1.64		{d4, d5}, [r6:128]! // B
+	vld1.64		{d20, d21}, [r5:128]! // A
+
+	vld1.64		{d6, d7}, [r6:128]! // B
+	vld1.64		{d22, d23}, [r5:128]! // A
 
 	// prefetch
 
@@ -185,11 +192,17 @@ _inner_kernel_gemm_add_nt_4x4_lib4:
 
 #if defined(TARGET_ARMV7A_ARM_CORTEX_A7)
 
-	vld1.64		{d16, d17, d18, d19}, [r5:128]! // A
-	vld1.64		{d0, d1, d2, d3}, [r6:128]! // B
+	vld1.64		{d0, d1}, [r6:128]! // B
+	vld1.64		{d16, d17}, [r5:128]! // A
 
-	vld1.64		{d20, d21, d22, d23}, [r5:128]! // A
-	vld1.64		{d4, d5, d6, d7}, [r6:128]! // B
+	vld1.64		{d2, d3}, [r6:128]! // B
+	vld1.64		{d18, d19}, [r5:128]! // A
+
+	vld1.64		{d4, d5}, [r6:128]! // B
+	vld1.64		{d20, d21}, [r5:128]! // A
+
+	vld1.64		{d6, d7}, [r6:128]! // B
+	vld1.64		{d22, d23}, [r5:128]! // A
 
 	// prefetch
 
@@ -337,6 +350,7 @@ _inner_kernel_gemm_add_nn_4x4_lib4:
 
 	// preload
 #if defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+	add		r8, r7, r7
 
 #else
 	vld1.64		{d0, d1}, [r5:128]! // A
@@ -354,19 +368,21 @@ _inner_kernel_gemm_add_nn_4x4_lib4:
 	
 #if defined(TARGET_ARMV7A_ARM_CORTEX_A7)
 
-	vld1.64		{d16, d17, d18, d19}, [r5:128]! // A
-	vld1.64		{d0, d1, d2, d3}, [r6:128]! // B
-
-	vld1.64		{d20, d21, d22, d23}, [r5:128]! // A
-	vld1.64		{d4, d5, d6, d7}, [r6:128]! // B
-
 	// prefetch
+
+	vld1.64		{d0, d1, d2, d3}, [r6:128]! // B
+	vld1.64		{d16, d17, d18, d19}, [r5:128]! // A
+
+	vld1.64		{d4, d5, d6, d7}, [r6:128]! // B
+	vld1.64		{d20, d21, d22, d23}, [r5:128]! // A
+
+	sub		r6, r6, #64
 
 	// unroll 0
 	vmla.f32	q4, q8, d0[0]
 	pld		[r5, #64]
 	vmla.f32	q5, q8, d2[0]
-	pld		[r6, #64]
+	pld		[r6, r8]
 	vmla.f32	q6, q8, d4[0]
 	vmla.f32	q7, q8, d6[0]
 
@@ -390,7 +406,6 @@ _inner_kernel_gemm_add_nn_4x4_lib4:
 
 	add		r6, r6, r7
 	sub		r4, r4, #4
-	sub		r6, r6, #64
 
 #else
 
@@ -449,11 +464,11 @@ _inner_kernel_gemm_add_nn_4x4_lib4:
 
 #if defined(TARGET_ARMV7A_ARM_CORTEX_A7)
 
-	vld1.64		{d16, d17, d18, d19}, [r5:128]! // A
 	vld1.64		{d0, d1, d2, d3}, [r6:128]! // B
+	vld1.64		{d16, d17, d18, d19}, [r5:128]! // A
 
-	vld1.64		{d20, d21, d22, d23}, [r5:128]! // A
 	vld1.64		{d4, d5, d6, d7}, [r6:128]! // B
+	vld1.64		{d20, d21, d22, d23}, [r5:128]! // A
 
 	// prefetch
 
