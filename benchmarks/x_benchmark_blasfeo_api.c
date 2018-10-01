@@ -293,6 +293,13 @@ int main()
 			blasfeo_sgein1(1.0, &sB, ii, ii);
 #endif
 
+		// x
+#if defined(DOUBLE_PRECISION)
+		blasfeo_dvecse(n, 1.0, &sx, 0);
+#else
+		blasfeo_svecse(n, 1.0, &sx, 0);
+#endif
+
 
 		int info;
 
