@@ -8,13 +8,13 @@ void call_routines(struct RoutineArgs *args){
 	//
 	ROUTINE(
 		args->m, args->n,
-		args->sA, args->ai, args->aj,
+		args->sA_po, args->ai, args->aj,
 		args->sD, args->di, args->dj,
 		args->sipiv);
 
 	REF(ROUTINE)(
 		args->m, args->n,
-		args->rA, args->ai, args->aj,
+		args->rA_po, args->ai, args->aj,
 		args->rD, args->di, args->dj,
 		args->ripiv);
 
@@ -35,8 +35,8 @@ void print_routine(struct RoutineArgs *args){
 void print_routine_matrices(struct RoutineArgs *args)
 {
 		printf("\nPrint A:\n");
-		blasfeo_print_xmat_debug(args->m, args->n, args->sA, args->ai, args->aj, 0, 0, 0);
-		print_xmat_debug(args->m, args->n, args->rA, args->ai, args->aj, 0, 0, 0);
+		blasfeo_print_xmat_debug(args->m, args->n, args->sA_po, args->ai, args->aj, 0, 0, 0);
+		print_xmat_debug(args->m, args->n, args->rA_po, args->ai, args->aj, 0, 0, 0);
 
 		printf("\nPrint LU:\n");
 		blasfeo_print_xmat_debug(args->m, args->n, args->sD, args->ai, args->aj, 0, 0, 0);

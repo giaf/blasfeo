@@ -121,11 +121,13 @@ struct RoutineArgs{
 
 	// matrices
 	struct STRMAT *sA;
+	struct STRMAT *sA_po;
 	struct STRMAT *sB;
 	struct STRMAT *sC;
 	struct STRMAT *sD;
 
 	struct STRMAT_REF *rA;
+	struct STRMAT_REF *rA_po;
 	struct STRMAT_REF *rB;
 	struct STRMAT_REF *rC;
 	struct STRMAT_REF *rD;

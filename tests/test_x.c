@@ -91,10 +91,11 @@ int main()
 	blasfeo_timer timer;
 
 	// matrices in column-major format
-	REAL *A, *B, *C, *D;
+	REAL *A, *A_po, *B, *C, *D;
 
 	// standard column major allocation (malloc)
 	ZEROS(&A, n, n);
+	ZEROS(&A_po, n, n);
 	ZEROS(&B, n, n);
 	ZEROS(&C, n, n);
 	ZEROS(&D, n, n);
@@ -104,22 +105,42 @@ int main()
 	for(ii=0; ii<n*n; ii++) B[ii] = 2*(ii+1);
 	for(ii=0; ii<n*n; ii++) C[ii] = 0.5*(ii+1);
 
+	// Create positive definite matrix
+	// A_po = A * A'
+	REAL c;
+	for(jj=0; jj<n; jj++)
+	{
+		for(ii=0; ii<n; ii++)
+		{
+			c = 0.0;
+			for(kk=0; kk<n; kk++)
+				c += A[ii+n*kk] * A[jj+n*kk];
+			A_po[ii+n*jj] = c;
+		}
+	}
+	// A_po[i,i] = A_po[i,i] + i
+	for(ii=0; ii<n; ii++) A_po[(ii*n)+ii] = A_po[(ii*n)+ii] + ii;
+
 	// Allocate HP matrices
 	struct STRMAT sA; ALLOCATE_STRMAT(n, n, &sA);
+	struct STRMAT sA_po; ALLOCATE_STRMAT(n, n, &sA_po);
 	struct STRMAT sB; ALLOCATE_STRMAT(n, n, &sB);
 	struct STRMAT sC; ALLOCATE_STRMAT(n, n, &sC);
 	struct STRMAT sD; ALLOCATE_STRMAT(n, n, &sD);
 	PACK_STRMAT(n, n, A, n, &sA, 0, 0);
+	PACK_STRMAT(n, n, A_po, n, &sA_po, 0, 0);
 	PACK_STRMAT(n, n, B, n, &sB, 0, 0);
 	PACK_STRMAT(n, n, C, n, &sC, 0, 0);
 	PACK_STRMAT(n, n, D, n, &sD, 0, 0);
 
 	// Allocate ref matrices
 	struct STRMAT_REF rA; ALLOCATE_STRMAT_REF(n, n, &rA);
+	struct STRMAT_REF rA_po; ALLOCATE_STRMAT_REF(n, n, &rA_po);
 	struct STRMAT_REF rB; ALLOCATE_STRMAT_REF(n, n, &rB);
 	struct STRMAT_REF rC; ALLOCATE_STRMAT_REF(n, n, &rC);
 	struct STRMAT_REF rD; ALLOCATE_STRMAT_REF(n, n, &rD);
 	PACK_STRMAT_REF(n, n, A, n, &rA, 0, 0);
+	PACK_STRMAT_REF(n, n, A_po, n, &rA_po, 0, 0);
 	PACK_STRMAT_REF(n, n, B, n, &rB, 0, 0);
 	PACK_STRMAT_REF(n, n, C, n, &rC, 0, 0);
 	PACK_STRMAT_REF(n, n, D, n, &rD, 0, 0);
@@ -174,12 +195,14 @@ int main()
 
 	// pack matrices
 	args.sA = &sA;
+	args.sA_po = &sA_po;
 	args.sB = &sB;
 	args.sC = &sC;
 	args.sD = &sD;
 	args.sipiv = sipiv;
 
 	args.rA = &rA;
+	args.rA_po = &rA_po;
 	args.rB = &rB;
 	args.rC = &rC;
 	args.rD = &rD;
@@ -268,16 +291,19 @@ int main()
 	#endif
 
 	FREE(A);
+	FREE(A_po);
 	FREE(B);
 	FREE(C);
 	FREE(D);
 
 	FREE_STRMAT(&sB);
 	FREE_STRMAT(&sA);
+	FREE_STRMAT(&sA_po);
 	FREE_STRMAT(&sC);
 	FREE_STRMAT(&sD);
 
 	FREE_STRMAT_REF(&rA);
+	FREE_STRMAT_REF(&rA_po);
 	FREE_STRMAT_REF(&rB);
 	FREE_STRMAT_REF(&rC);
 	FREE_STRMAT_REF(&rD);
