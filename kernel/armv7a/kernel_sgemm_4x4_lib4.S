@@ -114,9 +114,9 @@ _inner_kernel_gemm_add_nt_4x4_lib4:
 
 	// unroll 0
 	vmla.f32	q4, q8, d0[0]
-	pld		[r5, #64]
-	vmla.f32	q5, q8, d0[1]
 	pld		[r6, #64]
+	vmla.f32	q5, q8, d0[1]
+	pld		[r5, #64]
 	vmla.f32	q6, q8, d1[0]
 	vmla.f32	q7, q8, d1[1]
 
@@ -350,8 +350,10 @@ _inner_kernel_gemm_add_nn_4x4_lib4:
 
 	// preload
 #if defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-	add		r8, r7, r7
+	pld		[r5, #64]
+	pld		[r6, r7]
 
+	add		r8, r7, r7
 #else
 	vld1.64		{d0, d1}, [r5:128]! // A
 	vldr		d4, [r6, #0]   // B[0,1]
@@ -380,9 +382,9 @@ _inner_kernel_gemm_add_nn_4x4_lib4:
 
 	// unroll 0
 	vmla.f32	q4, q8, d0[0]
-	pld		[r5, #64]
-	vmla.f32	q5, q8, d2[0]
 	pld		[r6, r8]
+	vmla.f32	q5, q8, d2[0]
+	pld		[r5, #64]
 	vmla.f32	q6, q8, d4[0]
 	vmla.f32	q7, q8, d6[0]
 

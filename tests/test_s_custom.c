@@ -111,7 +111,7 @@ int main()
 
 //	kernel_sgemm_nt_4x4_lib4(4, &alpha, sA.pA+4*sA.cn, sB.pA, &beta, sA.pA, sD.pA);
 
-	blasfeo_sgemm_nt(n, n, 8, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_sgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
 	blasfeo_print_smat(n, n, &sD, 0, 0);
 	return 0;
@@ -124,6 +124,7 @@ int main()
 	blasfeo_print_smat(n, n, &sD, 0, 0);
 
 //	kernel_sgemm_nn_4x4_lib4(8, &alpha, sA.pA+4*sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sD.pA);
+//	kernel_sgemm_nn_8x4_lib4(8, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn);
 
 	blasfeo_sgemm_nn(n, n, n, alpha, &sB, 0, 0, &sA, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
@@ -259,5 +260,5 @@ int main()
 
 	return 0;
 
-	print_compilation_flags();
+//	print_compilation_flags();
 	}
