@@ -30,8 +30,6 @@
 /*
  * blas3 functions for LA:REFERENCE (column major)
  *
- * blas/s_blas_lib*.c
- *
  */
 
 #include <stdlib.h>
@@ -40,10 +38,9 @@
 
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_s_aux.h"
-#include "../include/blasfeo_s_aux.h"
 
 
-#define REAL float 
+#define REAL float
 #define STRMAT blasfeo_smat_ref
 #define STRVEC blasfeo_svec_ref
 
@@ -60,13 +57,6 @@
 #define TRSM_RUTN_LIBSTR  blasfeo_strsm_rutn_ref
 #define TRMM_RUTN_LIBSTR  blasfeo_strmm_rutn_ref
 #define TRMM_RLNN_LIBSTR  blasfeo_strmm_rlnn_ref
-
-#define COPY scopy_
-#define GEMM sgemm_
-#define SYRK ssyrk_
-#define TRMM strmm_
-#define TRSM strsm_
-
 
 // TESTING_MODE
 #include "x_blas3_lib.c"

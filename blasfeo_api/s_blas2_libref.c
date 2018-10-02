@@ -30,16 +30,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#if defined(LA_BLAS_WRAPPER)
-#if defined(REF_BLAS_BLIS)
-#include "blis.h"
-#elif defined(REF_BLAS_MKL)
-#include "mkl.h"
-#else
-#include "../include/s_blas.h"
-#endif
-#endif
-
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_s_aux.h"
 
@@ -47,28 +37,25 @@
 
 #define REAL float
 
-#define STRMAT blasfeo_smat
-#define STRVEC blasfeo_svec
+#define STRMAT blasfeo_smat_ref
+#define STRVEC blasfeo_svec_ref
 
-#define GEMM_NN_LIBSTR blasfeo_sgemm_nn
-#define GEMM_NT_LIBSTR blasfeo_sgemm_nt
-#define SYRK_LN_LIBSTR blasfeo_ssyrk_ln
-#define SYRK_LN_MN_LIBSTR blasfeo_ssyrk_ln_mn
-#define TRMM_RLNN_LIBSTR blasfeo_strmm_rlnn
-#define TRMM_RUTN_LIBSTR blasfeo_strmm_rutn
-#define TRSM_LLNU_LIBSTR blasfeo_strsm_llnu
-#define TRSM_LUNN_LIBSTR blasfeo_strsm_lunn
-#define TRSM_RLTN_LIBSTR blasfeo_strsm_rltn
-#define TRSM_RLTU_LIBSTR blasfeo_strsm_rltu
-#define TRSM_RUTN_LIBSTR blasfeo_strsm_rutn
-
-#define COPY scopy_
-#define GEMM sgemm_
-#define SYRK ssyrk_
-#define TRMM strmm_
-#define TRSM strsm_
-
+#define GEMV_N_LIBSTR blasfeo_sgemv_n_ref
+#define GEMV_NT_LIBSTR blasfeo_sgemv_nt_ref
+#define GEMV_T_LIBSTR blasfeo_sgemv_t_ref
+#define SYMV_L_LIBSTR blasfeo_ssymv_l_ref
+#define TRMV_LNN_LIBSTR blasfeo_strmv_lnn_ref
+#define TRMV_LTN_LIBSTR blasfeo_strmv_ltn_ref
+#define TRMV_UNN_LIBSTR blasfeo_strmv_unn_ref
+#define TRMV_UTN_LIBSTR blasfeo_strmv_utn_ref
+#define TRSV_LNN_LIBSTR blasfeo_strsv_lnn_ref
+#define TRSV_LNN_MN_LIBSTR blasfeo_strsv_lnn_mn_ref
+#define TRSV_LNU_LIBSTR blasfeo_strsv_lnu_ref
+#define TRSV_LTN_LIBSTR blasfeo_strsv_ltn_ref
+#define TRSV_LTN_MN_LIBSTR blasfeo_strsv_ltn_mn_ref
+#define TRSV_LTU_LIBSTR blasfeo_strsv_ltu_ref
+#define TRSV_UNN_LIBSTR blasfeo_strsv_unn_ref
+#define TRSV_UTN_LIBSTR blasfeo_strsv_utn_ref
 
 
-#include "x_blas3_lib.c"
-
+#include "x_blas2_lib.c"

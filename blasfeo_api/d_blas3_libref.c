@@ -27,19 +27,11 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-/*
- * blas3 functions for LA:REFERENCE (column major)
- *
- * blas/d_blas_lib*.c
- *
- */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 
 #include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
 #include "../include/blasfeo_d_aux.h"
 
 
@@ -49,6 +41,8 @@
 
 #define GEMM_NN_LIBSTR    blasfeo_dgemm_nn_ref
 #define GEMM_NT_LIBSTR    blasfeo_dgemm_nt_ref
+#define GEMM_TN_LIBSTR    blasfeo_dgemm_tn_ref
+#define GEMM_TT_LIBSTR    blasfeo_dgemm_tt_ref
 
 #define SYRK_LN_LIBSTR    blasfeo_dsyrk_ln_ref
 #define SYRK_LN_MN_LIBSTR blasfeo_dsyrk_ln_mn_ref
@@ -60,12 +54,6 @@
 #define TRSM_RUTN_LIBSTR  blasfeo_dtrsm_rutn_ref
 #define TRMM_RUTN_LIBSTR  blasfeo_dtrmm_rutn_ref
 #define TRMM_RLNN_LIBSTR  blasfeo_dtrmm_rlnn_ref
-
-#define COPY dcopy_
-#define GEMM dgemm_
-#define SYRK dsyrk_
-#define TRMM dtrmm_
-#define TRSM dtrsm_
 
 
 // TESTING_MODE

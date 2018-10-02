@@ -27,6 +27,19 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include "test_s_common.h"
-#include "test_x_common.c"
+#include <stdlib.h>
+#include <stdio.h>
 
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_d_kernel.h"
+
+
+
+#define REAL float
+#define STRVEC blasfeo_svec_ref
+
+#define GEMV_DIAG_LIBSTR blasfeo_sgemv_d_ref
+
+
+
+#include "x_blas2_diag_lib.c"
