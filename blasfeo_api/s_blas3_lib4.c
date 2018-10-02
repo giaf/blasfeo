@@ -514,7 +514,7 @@ void blasfeo_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 
 	i = 0;
 
-#if defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
