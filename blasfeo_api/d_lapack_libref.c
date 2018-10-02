@@ -29,46 +29,31 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-
-#if defined(LA_BLAS_WRAPPER)
-#if defined(REF_BLAS_BLIS)
-#include "blis.h"
-#elif defined(REF_BLAS_MKL)
-#include "mkl.h"
-#else
-#include "../include/s_blas.h"
-#endif
-#endif
+#include <math.h>
 
 #include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux.h"
+#include "../include/blasfeo_d_aux.h"
 
+#define REAL double
+#define STRMAT blasfeo_dmat_ref
+#define STRVEC blasfeo_dvec_ref
 
+#define GELQF_PD_DA_LIBSTR blasfeo_dgelqf_pd_da_ref
+#define GELQF_PD_LA_LIBSTR blasfeo_dgelqf_pd_la_ref
+#define GELQF_PD_LLA_LIBSTR blasfeo_dgelqf_pd_lla_ref
+#define GELQF_PD_LIBSTR blasfeo_dgelqf_pd_ref
+#define GELQF_LIBSTR blasfeo_dgelqf_ref
+#define GELQF_WORK_SIZE_LIBSTR blasfeo_dgelqf_worksize_ref
+#define GEQRF_LIBSTR blasfeo_dgeqrf_ref
+#define GEQRF_WORK_SIZE_LIBSTR blasfeo_dgeqrf_worksize_ref
+#define GETF2_NOPIVOT dgetf2_nopivot_ref
+#define GETRF_NOPIVOT_LIBSTR blasfeo_dgetrf_nopivot_ref
+#define GETRF_LIBSTR blasfeo_dgetrf_rowpivot_ref
+#define POTRF_L_LIBSTR blasfeo_dpotrf_l_ref
+#define POTRF_L_MN_LIBSTR blasfeo_dpotrf_l_mn_ref
+#define PSTRF_L_LIBSTR dpstrf_l_libstr_ref
+#define SYRK_POTRF_LN_LIBSTR blasfeo_dsyrk_dpotrf_ln_ref
+#define SYRK_POTRF_LN_MN_LIBSTR blasfeo_dsyrk_dpotrf_ln_mn_ref
 
-#define REAL float
-
-#define STRMAT blasfeo_smat
-#define STRVEC blasfeo_svec
-
-#define GEMM_NN_LIBSTR blasfeo_sgemm_nn
-#define GEMM_NT_LIBSTR blasfeo_sgemm_nt
-#define SYRK_LN_LIBSTR blasfeo_ssyrk_ln
-#define SYRK_LN_MN_LIBSTR blasfeo_ssyrk_ln_mn
-#define TRMM_RLNN_LIBSTR blasfeo_strmm_rlnn
-#define TRMM_RUTN_LIBSTR blasfeo_strmm_rutn
-#define TRSM_LLNU_LIBSTR blasfeo_strsm_llnu
-#define TRSM_LUNN_LIBSTR blasfeo_strsm_lunn
-#define TRSM_RLTN_LIBSTR blasfeo_strsm_rltn
-#define TRSM_RLTU_LIBSTR blasfeo_strsm_rltu
-#define TRSM_RUTN_LIBSTR blasfeo_strsm_rutn
-
-#define COPY scopy_
-#define GEMM sgemm_
-#define SYRK ssyrk_
-#define TRMM strmm_
-#define TRSM strsm_
-
-
-
-#include "x_blas3_lib.c"
-
+// TESTING_MODE
+#include "x_lapack_lib.c"

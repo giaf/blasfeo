@@ -725,8 +725,18 @@ OBJS_REF += \
 		auxiliary/s_aux_libref.o \
 		auxiliary/d_aux_ext_dep_libref.o \
 		auxiliary/s_aux_ext_dep_libref.o \
+		blasfeo_api/d_blas1_libref.o \
+		blasfeo_api/d_blas2_libref.o \
+		blasfeo_api/d_blas2_diag_libref.o \
 		blasfeo_api/d_blas3_libref.o \
+		blasfeo_api/d_blas3_diag_libref.o \
+		blasfeo_api/d_lapack_libref.o \
+		blasfeo_api/s_blas1_libref.o \
+		blasfeo_api/s_blas2_libref.o \
+		blasfeo_api/s_blas2_diag_libref.o \
 		blasfeo_api/s_blas3_libref.o \
+		blasfeo_api/s_blas3_diag_libref.o \
+		blasfeo_api/s_lapack_libref.o \
 #
 endif
 

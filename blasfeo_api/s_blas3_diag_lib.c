@@ -45,4 +45,3 @@
 
 
 #include "x_blas3_diag_lib.c"
-

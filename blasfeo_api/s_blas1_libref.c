@@ -29,10 +29,14 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
+
+#define FABS fabsf
+#define SQRT sqrtf
 
 #if defined(LA_BLAS_WRAPPER)
 #if defined(REF_BLAS_BLIS)
-#include "blis.h"
+#include "../include/s_blas_64.h"
 #elif defined(REF_BLAS_MKL)
 #include "mkl.h"
 #else
@@ -41,34 +45,24 @@
 #endif
 
 #include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux.h"
+#include "../include/blasfeo_s_kernel.h"
 
 
 
 #define REAL float
 
-#define STRMAT blasfeo_smat
-#define STRVEC blasfeo_svec
+#define STRMAT blasfeo_smat_ref
+#define STRVEC blasfeo_svec_ref
 
-#define GEMM_NN_LIBSTR blasfeo_sgemm_nn
-#define GEMM_NT_LIBSTR blasfeo_sgemm_nt
-#define SYRK_LN_LIBSTR blasfeo_ssyrk_ln
-#define SYRK_LN_MN_LIBSTR blasfeo_ssyrk_ln_mn
-#define TRMM_RLNN_LIBSTR blasfeo_strmm_rlnn
-#define TRMM_RUTN_LIBSTR blasfeo_strmm_rutn
-#define TRSM_LLNU_LIBSTR blasfeo_strsm_llnu
-#define TRSM_LUNN_LIBSTR blasfeo_strsm_lunn
-#define TRSM_RLTN_LIBSTR blasfeo_strsm_rltn
-#define TRSM_RLTU_LIBSTR blasfeo_strsm_rltu
-#define TRSM_RUTN_LIBSTR blasfeo_strsm_rutn
-
-#define COPY scopy_
-#define GEMM sgemm_
-#define SYRK ssyrk_
-#define TRMM strmm_
-#define TRSM strsm_
+#define AXPY_LIBSTR blasfeo_saxpy_ref
+#define AXPBY_LIBSTR blasfeo_saxpby_ref
+#define VECMUL_LIBSTR blasfeo_svecmul_ref
+#define VECMULACC_LIBSTR blasfeo_svecmulacc_ref
+#define VECMULDOT_LIBSTR blasfeo_svecmuldot_ref
+#define DOT_LIBSTR blasfeo_sdot_ref
+#define ROTG_LIBSTR blasfeo_srotg_ref
+#define COLROT_LIBSTR blasfeo_scolrot_ref
+#define ROWROT_LIBSTR blasfeo_srowrot_ref
 
 
-
-#include "x_blas3_lib.c"
-
+#include "x_blas1_lib.c"

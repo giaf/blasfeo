@@ -146,7 +146,7 @@ PREFIX = /opt
 
 # compiler / assembler / linker flags
 #
-CFLAGS  =
+# CFLAGS  =
 ASFLAGS =
 LDFLAGS =
 
@@ -227,6 +227,14 @@ endif
 ifeq ($(OS), WINDOWS)
 CFLAGS  += -DOS_WINDOWS
 ASFLAGS += -DOS_WINDOWS
+endif
+ifeq ($(SOC), DSPACE)
+CFLAGS  += -D__DSPACE__
+ASFLAGS += -D__DSPACE__
+endif
+ifeq ($(SOC), BACHMANN)
+CFLAGS  += -D__BACHMANN__
+ASFLAGS += -D__BACHMANN__
 endif
 
 # REF_BLAS
