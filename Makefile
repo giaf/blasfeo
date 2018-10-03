@@ -823,11 +823,17 @@ ifeq ($(TARGET), X86_AMD_BARCELONA)
 	echo "#endif" >> ./include/blasfeo_target.h
 #	echo "#define TARGET X86_AMD_BARCELONA" >> ./include/blasfeo_target.h
 endif
-ifeq ($(TARGET), GENERIC)
-	echo "#ifndef TARGET_GENERIC" > ./include/blasfeo_target.h
-	echo "#define TARGET_GENERIC" >> ./include/blasfeo_target.h
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
+	echo "#ifndef TARGET_ARMV8A_ARM_CORTEX_A57" > ./include/blasfeo_target.h
+	echo "#define TARGET_ARMV8A_ARM_CORTEX_A57" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define TARGET GENERIC" >> ./include/blasfeo_target.h
+#	echo "#define TARGET ARMV8A_ARM_CORTEX_A57" >> ./include/blasfeo_target.h
+endif
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
+	echo "#ifndef TARGET_ARMV8A_ARM_CORTEX_A53" > ./include/blasfeo_target.h
+	echo "#define TARGET_ARMV8A_ARM_CORTEX_A53" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+#	echo "#define TARGET ARMV8A_ARM_CORTEX_A53" >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 	echo "#ifndef TARGET_ARMV7A_ARM_CORTEX_A15" > ./include/blasfeo_target.h
@@ -840,6 +846,12 @@ ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
 	echo "#define TARGET_ARMV7A_ARM_CORTEX_A7" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 #	echo "#define TARGET ARMV7A_ARM_CORTEX_A7" >> ./include/blasfeo_target.h
+endif
+ifeq ($(TARGET), GENERIC)
+	echo "#ifndef TARGET_GENERIC" > ./include/blasfeo_target.h
+	echo "#define TARGET_GENERIC" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+#	echo "#define TARGET GENERIC" >> ./include/blasfeo_target.h
 endif
 ifeq ($(LA), HIGH_PERFORMANCE)
 	echo "#ifndef LA_HIGH_PERFORMANCE" >> ./include/blasfeo_target.h

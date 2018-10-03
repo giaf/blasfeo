@@ -1412,8 +1412,8 @@ loop_00:
 #if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
 #else
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[(i+0)*sda], sda, &pB[idxB*sdb], &beta, 0, &pC[j*ps+(i+0)*sdc]-bir*ps, sdc, 0, &pD[j*ps+(i+0)*sdd]-bir*ps, sdd, 0, m-(i+0), bir, bir+n-j);
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[(i+4)*sda], sda, &pB[idxB*sdb], &beta, 0, &pC[j*ps+(i+4)*sdc]-bir*ps, sdc, 0, &pD[j*ps+(i+4)*sdd]-bir*ps, sdd, 0, m-(i+4), bir, bir+n-j);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[(i+0)*sda], &pB[idxB*sdb], &beta, 0, &pC[j*ps+(i+0)*sdc]-bir*ps, sdc, 0, &pD[j*ps+(i+0)*sdd]-bir*ps, sdd, 0, m-(i+0), bir, bir+n-j);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, &pA[(i+4)*sda], &pB[idxB*sdb], &beta, 0, &pC[j*ps+(i+4)*sdc]-bir*ps, sdc, 0, &pD[j*ps+(i+4)*sdd]-bir*ps, sdd, 0, m-(i+4), bir, bir+n-j);
 #endif
 			j += ps-bir;
 			idxB += 4;
