@@ -1953,3 +1953,9 @@ kernel_dpotrf_nt_l_4x4_lib4:
 
 
 
+#if defined(BLAS_API)
+
+#include "kernel_dgemm_4x4_lib.S"
+
+#endif
+
