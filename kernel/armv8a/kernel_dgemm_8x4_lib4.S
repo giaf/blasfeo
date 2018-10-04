@@ -2699,3 +2699,9 @@ kernel_dpotrf_nt_l_8x4_vs_lib4:
 
 
 
+#if defined(BLAS_API)
+
+#include "kernel_dgemm_8x4_lib.S"
+
+#endif
+
