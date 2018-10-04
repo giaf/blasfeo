@@ -1641,7 +1641,7 @@ inner_scale_ab_8x4_lib4:
 inner_scale_m11_8x4_lib4:
 #endif
 
-	add		x12, x8, x9
+	add		x10, x8, x9
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x8], #64
 	fsub	v0.2d, v24.2d, v0.2d
@@ -1655,13 +1655,13 @@ inner_scale_m11_8x4_lib4:
 	fsub	v6.2d, v26.2d, v6.2d
 	fsub	v7.2d, v27.2d, v7.2d
 
-	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x12], #64
+	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
 	fsub	v8.2d, v24.2d, v8.2d
 	fsub	v9.2d, v25.2d, v9.2d
 	fsub	v10.2d, v26.2d, v10.2d
 	fsub	v11.2d, v27.2d, v11.2d
 
-	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x12], #64
+	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
 	fsub	v12.2d, v24.2d, v12.2d
 	fsub	v13.2d, v25.2d, v13.2d
 	fsub	v14.2d, v26.2d, v14.2d
