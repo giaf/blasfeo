@@ -2518,6 +2518,95 @@ kernel_dgemm_nt_8x4_vs_lib4:
 
 
 
+//                                 w0        x1             x2         w3       x4         x5            x6         w7       sp+0       sp+8
+// void kernel_dsyrk_nt_l_8x4_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd)
+
+	.align	4
+	.global	kernel_dsyrk_nt_l_8x4_lib4
+	.type	kernel_dsyrk_nt_l_8x4_lib4, %function
+kernel_dsyrk_nt_l_8x4_lib4:
+	
+
+
+	PROLOGUE
+
+
+
+	// TODO zero the entire 128-bit register ???
+	fmov	d0, xzr
+	fmov    d1, d0
+	fmov    d2, d0
+	fmov    d3, d0
+	fmov    d4, d0
+	fmov    d5, d0
+	fmov    d6, d0
+	fmov    d7, d0
+	fmov    d8, d0
+	fmov    d9, d0
+	fmov    d10, d0
+	fmov    d11, d0
+	fmov    d12, d0
+	fmov    d13, d0
+	fmov    d14, d0
+	fmov    d15, d0
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		w10, w3 // sda
+	lsl		w10, w10, #5 // 32*sda
+	mov		x11, x4 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nt_8x4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x5 // beta
+	mov		x10, x6 // C
+	mov		w11, w7 // C
+	lsl		w11, w11, #5 // 32*sdc
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_LIB4
+#else
+	bl inner_scale_ab_8x4_lib4
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 0)] // D
+	ldr		w9, [sp, #(STACKSIZE + 8)] // sdd
+	lsl		w9, w9, #5 // 32*sdd
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_8X4_LIB4
+#else
+	bl inner_store_l_8x4_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	.size	kernel_dsyrk_nt_l_8x4_lib4, .-kernel_dsyrk_nt_l_8x4_lib4
+
+
+
+
+
 //                                      w0        x1         w2        x3        x4         w5       x6         w7       sp+0       sp+8
 // void kernel_dtrsm_nt_rl_inv_8x4_lib4(int kmax, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
 
