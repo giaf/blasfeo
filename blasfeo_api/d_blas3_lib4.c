@@ -3703,7 +3703,7 @@ void blasfeo_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 			goto left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -3799,7 +3799,7 @@ void blasfeo_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 		j += 4;
 		}
 	return;
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	left_8:
 	j = 0;
 	for(; j<n; j+=4)
@@ -4492,12 +4492,7 @@ void blasfeo_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 		{
 		kernel_dgemm_nt_8x4_vs_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, m-j);
 		}
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	kernel_dsyrk_nt_l_8x4_vs_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, m-j);
-#else
-	kernel_dsyrk_nt_l_4x4_vs_lib4(k, &alpha, &pA[(i+0)*sda], &pB[j*sdb], &beta, &pC[j*ps+(i+0)*sdc], &pD[j*ps+(i+0)*sdd], m-(i+0), m-j);
-	kernel_dgemm_nt_4x4_vs_lib4(k, &alpha, &pA[(i+4)*sda], &pB[j*sdb], &beta, &pC[j*ps+(i+4)*sdc], &pD[j*ps+(i+4)*sdd], m-(i+4), m-j);
-#endif
 	kernel_dsyrk_nt_l_4x4_vs_lib4(k, &alpha, &pA[(i+4)*sda], &pB[(j+4)*sdb], &beta, &pC[(j+4)*ps+(i+4)*sdc], &pD[(j+4)*ps+(i+4)*sdd], m-i-4, m-j-4);
 	return;
 #endif
@@ -4645,7 +4640,7 @@ void blasfeo_dsyrk_ln_mn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 				goto left_12;
 				}
 			}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 		for(; i<m-7; i+=8)
 			{
 			j = 0;
@@ -4852,7 +4847,7 @@ void blasfeo_dsyrk_ln_mn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 			}
 		}
 	return;
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	left_8:
 	j = 0;
 	for(; j<i & j<n; j+=4)
