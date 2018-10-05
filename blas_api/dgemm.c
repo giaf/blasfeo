@@ -54,7 +54,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL)
 	double pU[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	double pU[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #elif defined(TARGET_GENERIC)
 	double pU[1*4*K_MAX_STACK];
@@ -285,6 +285,7 @@ nn_1:
 	sB_size = blasfeo_memsize_dmat(n, k);
 	smat_mem = malloc(sA_size+sB_size+63);
 	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	// TODO smaller for non-haswell !!!
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(n, k, &sB, smat_mem_align+sA_size);
 
@@ -322,7 +323,7 @@ nn_1:
 			goto nn_1_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_dpack_nn_8_lib4(k, A+ii, lda, sA.pA, sda);
@@ -376,7 +377,7 @@ nn_1_left_12:
 	goto nn_1_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 nn_1_left_8:
 	kernel_dpack_nn_8_vs_lib4(k, A+ii, lda, sA.pA, sda, m-ii);
 	for(jj=0; jj<n; jj+=4)
@@ -387,7 +388,7 @@ nn_1_left_8:
 #endif
 
 nn_1_left_4:
-	kernel_dpack_nn_4_lib4(k, A+ii, lda, sA.pA);
+	kernel_dpack_nn_4_vs_lib4(k, A+ii, lda, sA.pA, m-ii);
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dgemm_nt_4x4_vs_lib44c(k, alpha, sA.pA, sB.pA+jj*sdb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
@@ -514,6 +515,7 @@ nt_1:
 	sB_size = blasfeo_memsize_dmat(k, n);
 	smat_mem = malloc(sA_size+sB_size+63);
 	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	// TODO smaller for non-haswell !!!
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(k, n, &sB, smat_mem_align+sA_size);
 
@@ -551,7 +553,7 @@ nt_1:
 			goto nt_1_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_dpack_nn_8_lib4(k, A+ii, lda, sA.pA, sda);
@@ -605,7 +607,7 @@ nt_1_left_12:
 	goto nt_1_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 nt_1_left_8:
 	kernel_dpack_nn_8_vs_lib4(k, A+ii, lda, sA.pA, sda, m-ii);
 	for(jj=0; jj<n; jj+=4)
@@ -749,6 +751,7 @@ tn_1:
 	sB_size = blasfeo_memsize_dmat(n, k);
 	smat_mem = malloc(sA_size+sB_size+63);
 	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	// TODO smaller for non-haswell !!!
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(n, k, &sB, smat_mem_align+sA_size);
 
@@ -788,7 +791,7 @@ tn_1:
 			goto tn_1_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_dpack_tn_4_lib4(k, A+(ii+0)*lda, lda, sA.pA);
@@ -845,7 +848,7 @@ tn_1_left_12:
 	goto tn_1_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 tn_1_left_8:
 	kernel_dpack_tn_4_lib4(k, A+(ii+0)*lda, lda, sA.pA);
 	kernel_dpack_tn_4_vs_lib4(k, A+(ii+4)*lda, lda, sA.pA+4*sda, m-ii-4);
@@ -990,6 +993,7 @@ tt_1:
 	sB_size = blasfeo_memsize_dmat(k, n);
 	smat_mem = malloc(sA_size+sB_size+63);
 	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	// TODO smaller for non-haswell !!!
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(k, n, &sB, smat_mem_align+sA_size);
 
@@ -1029,7 +1033,7 @@ tt_1:
 			goto tt_1_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_dpack_tn_4_lib4(k, A+(ii+0)*lda, lda, sA.pA);
@@ -1086,7 +1090,7 @@ tt_1_left_12:
 	goto tt_1_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 tt_1_left_8:
 	kernel_dpack_tn_4_lib4(k, A+(ii+0)*lda, lda, sA.pA);
 	kernel_dpack_tn_4_vs_lib4(k, A+(ii+4)*lda, lda, sA.pA+4*sda, m-ii-4);

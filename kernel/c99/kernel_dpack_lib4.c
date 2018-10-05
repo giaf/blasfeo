@@ -29,6 +29,7 @@
 
 
 
+#if ! ( defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) )
 void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *C)
 	{
 
@@ -76,6 +77,7 @@ void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *C)
 	return;
 
 	}
+#endif
 
 
 
@@ -444,5 +446,23 @@ void kernel_dpacp_tn_4_lib4(int kmax, int offsetA, double *A, int sda, double *B
 		}
 	return;
 	}
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dpack_nn_8_vs_lib4(int kmax, double *A, int lda, double *C, int sdc, int m1)
+	{
+
+	const int ps = 4;
+
+	kernel_dpack_nn_4_lib4(kmax, A+0, lda, C+0*ps*sdc);
+	kernel_dpack_nn_4_vs_lib4(kmax, A+4, lda, C+1*ps*sdc, m1-4);
+
+	return;
+
+	}
+#endif
+
+
 
 
