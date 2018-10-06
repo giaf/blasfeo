@@ -575,15 +575,15 @@ inner_kernel_gemm_add_nn_4x4_lib4:
 //	prfm	PLDL1KEEP, [x9, #0]
 //	prfm	PLDL1KEEP, [x10, #0]
 
-	cmp		w8, #4
-	ble		0f // consider clean up loop
-
 	// preload
 	ldp		q24, q25, [x10, #0]
 	ldp		q26, q27, [x10, #32]
 	ldp		q28, q29, [x10, #64]
 	ldp		q30, q31, [x10, #96]
 	ldp		q16, q17, [x9, #0]
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
 
 
 	// prefetch
@@ -1150,12 +1150,6 @@ inner_kernel_syrk_l_add_nt_4x4_lib4:
 // x10   <- B
 // x11   <- 32*sdb
 // w12   <- offsetB
-
-// r4   <- k
-// r5   <- A
-// r6   <- B
-// r7   <- bs*sdb*sizeof(double)
-// r8   <- offsetB
 
 #if MACRO_LEVEL>=1
 	.macro INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
@@ -2103,11 +2097,9 @@ kernel_dgemm_nn_4x4_lib4:
 	mov		w8, w0 // kmax
 	mov		x9, x2 // A
 	mov		x10, x4 // B
-	mov		w11, w5 // B
+	mov		w11, w5 // sdb
 	lsl		w11, w11, #5 // 32*sdb
-	mov		w12, w3 // B
-
-// TODO offsetB
+	mov		w12, w3 // offsetB
 
 #if MACRO_LEVEL>=2
 	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
