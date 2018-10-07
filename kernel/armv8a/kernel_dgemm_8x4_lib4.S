@@ -822,8 +822,12 @@ inner_kernel_gemm_add_nn_8x4_lib4:
 	add		x13, x9, x10
 
 	// prefetch
-//	prfm	PLDL1KEEP, [x9, #0]
-//	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x11, #64]
+	prfm	PLDL1KEEP, [x9, #0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x9, #64]
+	prfm	PLDL1KEEP, [x13, #64]
 
 	// preload
 	ldp		q24, q25, [x11, #0]
@@ -838,10 +842,11 @@ inner_kernel_gemm_add_nn_8x4_lib4:
 
 
 	// prefetch
-//	prfm	PLDL1KEEP, [x9, #32]
-//	prfm	PLDL1KEEP, [x11, #32]
-
 	add		x14, x12, #32
+
+//	prfm	PLDL1KEEP, [x11, x12]
+//	prfm	PLDL1KEEP, [x11, x14]
+
 
 	// main loop
 1:
@@ -854,22 +859,22 @@ inner_kernel_gemm_add_nn_8x4_lib4:
 	ldp		q22, q23, [x13, #32]
 	fmla	v2.2d, v16.2d, v26.2d[0]
 	fmla	v3.2d, v17.2d, v26.2d[0]
-	prfm	PLDL1KEEP, [x11, x12]
+	prfm	PLDL1KEEP, [x9, #128]
 	fmla	v10.2d, v20.2d, v26.2d[0]
 	fmla	v11.2d, v21.2d, v26.2d[0]
-	prfm	PLDL1KEEP, [x11, x14]
+	prfm	PLDL1KEEP, [x13, #128]
 	fmla	v4.2d, v16.2d, v28.2d[0]
 	fmla	v5.2d, v17.2d, v28.2d[0]
-	prfm	PLDL1KEEP, [x9, #128]
+	prfm	PLDL1KEEP, [x9, #192]
 	fmla	v12.2d, v20.2d, v28.2d[0]
 	fmla	v13.2d, v21.2d, v28.2d[0]
-	prfm	PLDL1KEEP, [x13, #128]
+	prfm	PLDL1KEEP, [x13, #192]
 	fmla	v6.2d, v16.2d, v30.2d[0]
 	fmla	v7.2d, v17.2d, v30.2d[0]
-	prfm	PLDL1KEEP, [x9, #192]
+	prfm	PLDL1KEEP, [x11, x12]
 	fmla	v14.2d, v20.2d, v30.2d[0]
 	fmla	v15.2d, v21.2d, v30.2d[0]
-	prfm	PLDL1KEEP, [x13, #192]
+	prfm	PLDL1KEEP, [x11, x14]
 
 	fmla	v0.2d, v18.2d, v24.2d[1]
 	fmla	v1.2d, v19.2d, v24.2d[1]

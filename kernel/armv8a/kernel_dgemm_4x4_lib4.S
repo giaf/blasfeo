@@ -572,8 +572,10 @@ inner_kernel_gemm_add_nn_4x4_lib4:
 	ble		2f // return
 
 	// prefetch
-//	prfm	PLDL1KEEP, [x9, #0]
-//	prfm	PLDL1KEEP, [x10, #0]
+	prfm	PLDL1KEEP, [x10, #0]
+	prfm	PLDL1KEEP, [x10, #32]
+	prfm	PLDL1KEEP, [x9, #0]
+	prfm	PLDL1KEEP, [x9, #32]
 
 	// preload
 	ldp		q24, q25, [x10, #0]
@@ -600,13 +602,13 @@ inner_kernel_gemm_add_nn_4x4_lib4:
 	ldp		q18, q19, [x9, #32]
 	fmla	v2.2d, v16.2d, v26.2d[0]
 	fmla	v3.2d, v17.2d, v26.2d[0]
-	prfm	PLDL1KEEP, [x10, x11]
+	prfm	PLDL1KEEP, [x9, #128]
 	fmla	v4.2d, v16.2d, v28.2d[0]
 	fmla	v5.2d, v17.2d, v28.2d[0]
-	prfm	PLDL1KEEP, [x10, x13]
+	prfm	PLDL1KEEP, [x10, x11]
 	fmla	v6.2d, v16.2d, v30.2d[0]
 	fmla	v7.2d, v17.2d, v30.2d[0]
-	prfm	PLDL1KEEP, [x9, #128]
+	prfm	PLDL1KEEP, [x10, x13]
 
 	fmla	v0.2d, v18.2d, v24.2d[1]
 	fmla	v1.2d, v19.2d, v24.2d[1]
