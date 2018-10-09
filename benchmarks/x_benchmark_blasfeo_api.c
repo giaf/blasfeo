@@ -36,18 +36,9 @@
 //#include <xmmintrin.h> // needed to flush to zero sub-normals with _MM_SET_FLUSH_ZERO_MODE (_MM_FLUSH_ZERO_ON); in the main()
 //#endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux_ext_dep.h"
-#include "../include/blasfeo_s_aux_ext_dep.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_s_aux.h"
-#include "../include/blasfeo_i_aux_ext_dep.h"
-#include "../include/blasfeo_v_aux_ext_dep.h"
-#include "../include/blasfeo_d_kernel.h"
-#include "../include/blasfeo_s_kernel.h"
-#include "../include/blasfeo_d_blas.h"
-#include "../include/blasfeo_s_blas.h"
-#include "../include/blasfeo_timing.h"
+
+
+#include "../include/blasfeo.h"
 
 
 

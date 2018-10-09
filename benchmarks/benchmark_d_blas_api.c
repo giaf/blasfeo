@@ -30,15 +30,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_target.h"
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_timing.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_d_aux_ext_dep.h"
-#include "../include/blasfeo_d_kernel.h"
-#include "../include/blasfeo_d_blas.h"
 
-#include "cpu_freq.h"
+
+#include "../include/blasfeo.h"
 
 
 
@@ -63,6 +57,10 @@ void openblas_set_num_threads(int num_threads);
 #if defined(REF_BLAS_MKL)
 #include "mkl.h"
 #endif
+
+
+
+#include "cpu_freq.h"
 
 
 

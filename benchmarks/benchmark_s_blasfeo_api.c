@@ -34,13 +34,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux_ext_dep.h"
-#include "../include/blasfeo_i_aux_ext_dep.h"
-#include "../include/blasfeo_s_aux.h"
-#include "../include/blasfeo_s_kernel.h"
-#include "../include/blasfeo_s_blas.h"
-#include "../include/blasfeo_timing.h"
+
+
+#include "../include/blasfeo.h"
+
+
 
 #ifndef S_PS
 #define S_PS 1

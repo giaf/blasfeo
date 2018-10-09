@@ -88,9 +88,13 @@ REF_BLAS = 0
 #
 MACRO_LEVEL = 0
 
-# Compile BLAS api routines (experimenta)
+# Compile BLAS api routines (experimental)
 BLAS_API = 0
 # BLAS_API = 1
+
+# Export standard FORTRAN API for BLAS routines (experimental)
+FORTRAN_BLAS_API = 0
+# FORTRAN_BLAS_API = 1
 
 # Maximum K value for stack buffer size (decrease this value if stack size is exceeded)
 K_MAX_STACK = 300
@@ -184,6 +188,10 @@ CFLAGS  += -DLA=$(LA)
 
 ifeq ($(BLAS_API), 1)
 CFLAGS += -DBLAS_API
+ASFLAGS += -DBLAS_API
+endif
+ifeq ($(FORTRAN_BLAS_API), 1)
+CFLAGS += -DBLAS_API -DFORTRAN_BLAS_API
 ASFLAGS += -DBLAS_API
 endif
 

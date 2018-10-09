@@ -37,8 +37,12 @@
 #ifndef BLASFEO_D_AUX_H_
 #define BLASFEO_D_AUX_H_
 
+
+
 #include "blasfeo_common.h"
 #include "blasfeo_d_aux_old.h"
+
+
 
 #ifdef __cplusplus
 extern "C" {

@@ -27,51 +27,17 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#ifndef BLASFEO_V_AUX_EXT_DEP_H_
-#define BLASFEO_V_AUX_EXT_DEP_H_
-
-
-
 #include "blasfeo_target.h"
-
-
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-
-/************************************************
-* d_aux_extern_depend_lib.c
-************************************************/
-
-#ifdef EXT_DEP
-
-void v_zeros(void **ptrA, int size);
-// dynamically allocate size bytes of memory aligned to 64-byte boundaries and set accordingly a pointer to void; set allocated memory to zero
-void v_zeros_align(void **ptrA, int size);
-// free the memory allocated by v_zeros
-void v_free(void *ptrA);
-// free the memory allocated by v_zeros_aligned
-void v_free_align(void *ptrA);
-// dynamically allocate size bytes of memory and set accordingly a pointer to char; set allocated memory to zero
-void c_zeros(char **ptrA, int size);
-// dynamically allocate size bytes of memory aligned to 64-byte boundaries and set accordingly a pointer to char; set allocated memory to zero
-void c_zeros_align(char **ptrA, int size);
-// free the memory allocated by c_zeros
-void c_free(char *ptrA);
-// free the memory allocated by c_zeros_aligned
-void c_free_align(char *ptrA);
-
-#endif // EXT_DEP
-
-
-
-#ifdef __cplusplus
-}
-#endif
-
-
-
-#endif  // BLASFEO_V_AUX_EXT_DEP_H_
+#include "blasfeo_block_size.h"
+#include "blasfeo_common.h"
+#include "blasfeo_d_aux.h"
+#include "blasfeo_d_aux_ext_dep.h"
+#include "blasfeo_d_kernel.h"
+#include "blasfeo_d_blas.h"
+#include "blasfeo_s_aux.h"
+#include "blasfeo_s_aux_ext_dep.h"
+#include "blasfeo_s_kernel.h"
+#include "blasfeo_s_blas.h"
+#include "blasfeo_i_aux_ext_dep.h"
+#include "blasfeo_v_aux_ext_dep.h"
+#include "blasfeo_timing.h"

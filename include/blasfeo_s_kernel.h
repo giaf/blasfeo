@@ -31,9 +31,12 @@
 #define BLASFEO_S_KERNEL_H_
 
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
 
 //
 // lib8
@@ -413,6 +416,18 @@ void kernel_sgetr_4_lib4(int tri, int kmax, int kna, float alpha, float *A, floa
 void kernel_sgetr_3_lib4(int tri, int kmax, int kna, float alpha, float *A, float *C, int sdc);
 void kernel_sgetr_2_lib4(int tri, int kmax, int kna, float alpha, float *A, float *C, int sdc);
 void kernel_sgetr_1_lib4(int tri, int kmax, int kna, float alpha, float *A, float *C, int sdc);
+
+
+
+/************************************************
+* BLAS API kernels
+************************************************/
+
+#ifdef BLAS_API
+
+// TODO
+
+#endif // BLAS_API
 
 
 

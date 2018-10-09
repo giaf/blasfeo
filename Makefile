@@ -876,6 +876,16 @@ ifeq ($(EXT_DEP), 1)
 	echo "#define EXT_DEP" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
+ifeq ($(BLAS_API), 1)
+	echo "#ifndef BLAS_API" >> ./include/blasfeo_target.h
+	echo "#define BLAS_API" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
+ifeq ($(FORTRAN_BLAS_API), 1)
+	echo "#ifndef FORTRAN_BLAS_API" >> ./include/blasfeo_target.h
+	echo "#define FORTRAN_BLAS_API" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
 
 
 # install static library & headers
