@@ -29,63 +29,39 @@
 
 include ../Makefile.rule
 
-LIBS = $(BINARY_DIR)/libblasfeo.a
+LIBS = libblasfeo.a
 
 # add different link library for different REF_BLAS implementation
 include ../Makefile.blas
 
-LINK_OBJ =
-EX_OBJ =
-
 ## dgemm kernel
-EX_OBJ = example_kernel_dgemm.o
-LINK_OBJ = kernel_dgemm.o
+# OBJS = example_kernel_dgemm.o
+# OBJS = kernel_dgemm.o
 
 ## factorization
-# EX_OBJ = example_d_lu_factorization.o
-# EX_OBJ = example_s_lu_factorization.o
-# LINK_OBJ = tools.o
+# OBJS = example_d_lu_factorization.o
+# OBJS = example_s_lu_factorization.o
 
 ## riccati
-EX_OBJ = example_d_riccati_recursion.o
-# EX_OBJ = example_s_riccati_recursion.o
-LINK_OBJ = tools.o
+OBJS = example_d_riccati_recursion.o tools.o
+# OBJS = example_s_riccati_recursion.o tools.o
 
 ## getting started
-#EX_OBJ = getting_started.o
+# OBJS = getting_started.o
 
 
 CFLAGS += -I../include/
 
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
+build: common $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o example.out
 
-kernel_%.o: kernel_%.S
-	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
-
-$(EX_OBJ):%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
-	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ $(BINARY_DIR)/$(LINK_OBJ) -o $(BINARY_DIR)/$@.out $(LIBS)
-
-bin_dir:
-	mkdir -p ./$(BINARY_DIR)/
-
-common: bin_dir $(LINK_OBJ)
-	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
-
-.DEFAULT_GOAL := build
-.PHONY: build
-
-build: common $(EX_OBJ)
+common:
+	cp ../lib/libblasfeo.a .
 
 run:
-	./$(BINARY_DIR)/$(EX_OBJ).out
+	./example.out
 
 clean:
 	rm -rf ./*.o
 	rm -rf ./*.out
-	rm -rf ./$(BINARY_DIR)/*
-
-clean_all: clean
-	rm -rf ./build/*
