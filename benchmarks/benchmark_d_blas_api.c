@@ -67,6 +67,10 @@ void openblas_set_num_threads(int num_threads);
 int main()
 	{
 
+#if defined(REF_BLAS_OPENBLAS)
+openblas_set_num_threads(1);
+#endif
+
 #if !defined(BENCHMARKS_MODE)
 	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n");
 	printf("On CMake use -DBLASFEO_BENCHMARKS=ON .\n\n");
@@ -235,7 +239,7 @@ int main()
 
 
 
-#if 0
+#if 1
 		/* call blas */
 		for(rep_in=0; rep_in<nrep_in; rep_in++)
 			{
@@ -272,6 +276,7 @@ int main()
 
 
 
+#if 1
 		/* call blas with packing */
 		for(rep_in=0; rep_in<nrep_in; rep_in++)
 			{
@@ -327,6 +332,7 @@ int main()
 			// BENCHMARK_BLASFEO_END
 
 			}
+#endif
 
 //		d_print_mat(n, n, C, ldc);
 //		d_print_mat(n, n, D, ldd);
@@ -335,7 +341,7 @@ int main()
 
 
 
-#if 0
+#if 1
 		/* call blasfeo */
 		for(rep_in=0; rep_in<nrep_in; rep_in++)
 			{

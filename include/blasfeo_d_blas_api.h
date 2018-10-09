@@ -46,21 +46,11 @@ extern "C" {
 
 #ifdef BLAS_API
 
-// BLAS 3
-//
-void blasfeo_dgemm(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
-
-
-
-// LAPACK
-//
-void blasfeo_dpotrf(char *uplo, int *m, double *A, int *lda, int *info);
-
-#endif // BLAS_API
-
 
 
 #ifdef FORTRAN_BLAS_API
+
+
 
 // BLAS 3
 //
@@ -72,7 +62,29 @@ void dgemm_(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A
 //
 void dpotrf_(char *uplo, int *m, double *A, int *lda, int *info);
 
+
+
+#else // BLASFEO_API
+
+
+
+// BLAS 3
+//
+void blasfeo_dgemm(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
+
+
+
+// LAPACK
+//
+void blasfeo_dpotrf(char *uplo, int *m, double *A, int *lda, int *info);
+
+
+
 #endif // BLASFEO_API
+
+
+
+#endif // BLAS_API
 
 
 

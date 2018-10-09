@@ -88,11 +88,11 @@ REF_BLAS = 0
 #
 MACRO_LEVEL = 0
 
-# Compile BLAS api routines (experimental)
+# Compile BLAS API routines (experimental)
 BLAS_API = 0
 # BLAS_API = 1
 
-# Export standard FORTRAN API for BLAS routines (experimental)
+# Export standard FORTRAN API for BLAS API routines (experimental)
 FORTRAN_BLAS_API = 0
 # FORTRAN_BLAS_API = 1
 

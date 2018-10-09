@@ -37,6 +37,12 @@
 
 
 
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_dgemm dgemm_
+#endif
+
+
+
 void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha, double *A, int *plda, double *B, int *pldb, double *beta, double *C, int *pldc)
 	{
 

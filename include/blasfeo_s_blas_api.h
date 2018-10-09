@@ -46,20 +46,12 @@ extern "C" {
 
 #ifdef BLAS_API
 
-// BLAS 3
-//
-
-
-
-// LAPACK
-//
-
-#endif // BLAS_API
-
 
 
 #ifdef FORTRAN_BLAS_API
 
+
+
 // BLAS 3
 //
 
@@ -68,7 +60,27 @@ extern "C" {
 // LAPACK
 //
 
+
+
+#else // BLASFEO_API
+
+
+
+// BLAS 3
+//
+
+
+
+// LAPACK
+//
+
+
+
 #endif // BLASFEO_API
+
+
+
+#endif // BLAS_API
 
 
 
