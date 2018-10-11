@@ -83,32 +83,17 @@ int main()
 
 	int bs = 4;
 
-	struct blasfeo_dmat sA; blasfeo_allocate_dmat(n, n, &sA);
-	blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
-	int sda = sA.cn;
-	struct blasfeo_dmat sB; blasfeo_allocate_dmat(n, n, &sB);
-	blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
-	int sdb = sB.cn;
-	struct blasfeo_dmat sC; blasfeo_allocate_dmat(n, n, &sC);
-	blasfeo_pack_dmat(n, n, C, n, &sC, 0, 0);
-	int sdc = sC.cn;
-	struct blasfeo_dmat sD; blasfeo_allocate_dmat(n, n, &sD);
-	blasfeo_pack_dmat(n, n, D, n, &sD, 0, 0);
-	int sdd = sD.cn;
-
-
-
 	double alpha = 1.0;
-	double beta = 1.0;
+	double beta = 10.0;
 
 	char ta = 'n';
 	char tb = 't';
-	char uplo = 'u';
+	char uplo = 'l';
 	int info = 0;
 
-	int m0 = 11;
-	int n0 = 11;
-	int k0 = 11;
+	int m0 = 12;
+	int n0 = 16;
+	int k0 = 16;
 
 
 	// blas
@@ -116,7 +101,7 @@ int main()
 	for(ii=0; ii<n*n; ii++) C[ii] = -1;
 
 //	dgemm_(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
-	for(ii=0; ii<n*n; ii++) C[ii] = -B[ii];
+	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 	dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
 	dpotrf_(&uplo, &m0, C, &n, &info);
 
@@ -130,7 +115,7 @@ int main()
 	for(ii=0; ii<n*n; ii++) C[ii] = -1;
 
 //	blasfeo_dgemm(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
-	for(ii=0; ii<n*n; ii++) C[ii] = -B[ii];
+	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 	blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
 	blasfeo_dpotrf(&uplo, &m0, C, &n, &info);
 
@@ -145,10 +130,6 @@ int main()
 	free(B);
 	free(C);
 	free(D);
-	blasfeo_free_dmat(&sA);
-	blasfeo_free_dmat(&sB);
-	blasfeo_free_dmat(&sC);
-	blasfeo_free_dmat(&sD);
 
 
 	// return

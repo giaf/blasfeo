@@ -54,8 +54,8 @@ void dtrmm_(char *side, char *uplo, char *trans, char *diag, long long *m, long 
 void dtrsm_(char *side, char *uplo, char *trans, char *diag, long long *m, long long *n, double *alpha, double *A, long long *lda, double *B, long long *ldb);
 
 // lapack
-long long dpotrf_(char *uplo, long long *m, double *A, long long *lda, long long *info);
-long long dgetrf_(long long *m, long long *n, double *A, long long *lda, long long *ipiv, long long *info);
+void dpotrf_(char *uplo, long long *m, double *A, long long *lda, long long *info);
+void dgetrf_(long long *m, long long *n, double *A, long long *lda, long long *ipiv, long long *info);
 void dgeqrf_(long long *m, long long *n, double *A, long long *lda, double *tau, double *work, long long *lwork, long long *info);
 void dgeqr2_(long long *m, long long *n, double *A, long long *lda, double *tau, double *work, long long *info);
 

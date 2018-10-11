@@ -32,7 +32,7 @@
 
 #if defined(LA_BLAS_WRAPPER)
 #if defined(REF_BLAS_BLIS)
-#include "../include/d_blas_64.h"
+#include "blis.h"
 #elif defined(REF_BLAS_MKL)
 #include "mkl.h"
 #else
@@ -53,8 +53,10 @@
 #define GEMM_NT_LIBSTR blasfeo_dgemm_nt
 #define GEMM_TN_LIBSTR blasfeo_dgemm_tn
 #define GEMM_TT_LIBSTR blasfeo_dgemm_tt
+
 #define SYRK_LN_LIBSTR blasfeo_dsyrk_ln
 #define SYRK_LN_MN_LIBSTR blasfeo_dsyrk_ln_mn
+
 #define TRMM_RLNN_LIBSTR blasfeo_dtrmm_rlnn
 #define TRMM_RUTN_LIBSTR blasfeo_dtrmm_rutn
 #define TRSM_LLNU_LIBSTR blasfeo_dtrsm_llnu

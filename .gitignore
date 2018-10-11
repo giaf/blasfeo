@@ -10,6 +10,7 @@ build/
 *.toc
 *.log
 figures/
+libblasfeo.a
 
 # CMake
 build*

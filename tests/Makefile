@@ -46,22 +46,20 @@ SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
 include ../Makefile.blas
 
 # set test verbosity
-ifdef TEST_VERBOSITY
-ifeq ($(TEST_VERBOSITY), 0)
+ifdef VERBOSE
+ifeq ($(VERBOSE), 0)
 else
-CFLAGS += -DVERBOSE=$(TEST_VERBOSITY)
+CFLAGS += -DVERBOSE=$(VERBOSE)
 endif
 endif
-ifndef TEST_VERBOSITY
+
+ifndef VERBOSE
 CFLAGS += -DVERBOSE=0
 endif
 
 ifdef ROUTINE
 CFLAGS += -DROUTINE=$(ROUTINE)
-else
-CFLAGS += -DROUTINE=blasfeo_dgemm_nn
 endif
-
 
 ifndef ROUTINE_CLASS
 ROUTINE_CLASS = GEMM
@@ -74,6 +72,9 @@ CFLAGS += -DROUTINE_CLASS_GEMM
 endif
 ifeq ($(ROUTINE_CLASS), TRM)
 CFLAGS += -DROUTINE_CLASS_TRM
+endif
+ifeq ($(ROUTINE_CLASS), GETRF)
+CFLAGS += -DROUTINE_CLASS_GETRF
 endif
 
 
@@ -96,10 +97,15 @@ BLAS_OBJS =
 BLAS_OBJS += test_d_blas3.o
 BLAS_OBJS += test_s_blas3.o
 
+DBLAS_OBJS += test_d_blas3.o
+SBLAS_OBJS += test_s_blas3.o
+
 test_%.o: test_%.c
+	#
 	# build executable obj $(BINARY_DIR)/$@
 	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
 	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ -o $(BINARY_DIR)/$@.out $(LIBS)
+	#
 
 # ----------- Targets
 
@@ -127,22 +133,35 @@ run_one:
 
 build_blas: $(BLAS_OBJS)
 
-run_aux:
+build_aux: $(AUX_OBJS)
+
+run_daux:
 	./$(BINARY_DIR)/test_d_aux.o.out
+	#
+
+run_saux:
 	./$(BINARY_DIR)/test_s_aux.o.out
+	#
 
-run_dblas:
+run_dblas3:
 	./$(BINARY_DIR)/test_d_blas3.o.out
+	#
 
-run_sblas:
+run_sblas3:
 	./$(BINARY_DIR)/test_s_blas3.o.out
+	#
 
-build_run_blas: blas run_blas
-build_run_aux: aux run_aux
+update_dblas3: $(DBLAS_OBJS) run_dblas3
+update_sblas3: $(SBLAS_OBJS) run_sblas3
 
-update_dblas: $(BLAS_OBJS) run_dblas
-update_sblas: $(BLAS_OBJS) run_sblas
-update_aux: $(AUX_OBJS) run_aux
+update_daux: build_aux run_daux
+update_saux: build_aux run_saux
+
+full_update_dblas3: blas run_dblas3
+full_update_sblas3: blas run_sblas3
+
+full_update_daux: aux run_daux
+full_update_saux: aux run_saux
 
 clean:
 	rm -rf ./*.o

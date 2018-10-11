@@ -36,7 +36,7 @@
 
 #if defined(LA_BLAS_WRAPPER)
 #if defined(REF_BLAS_BLIS)
-#include "../include/s_blas_64.h"
+#include "blis.h"
 #elif defined(REF_BLAS_MKL)
 #include "mkl.h"
 #else
@@ -72,4 +72,3 @@
 
 
 #include "x_blas1_lib.c"
-

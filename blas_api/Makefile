@@ -62,6 +62,9 @@ endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 OBJS += dgemm.o dpotrf.o
 endif
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
+OBJS += dgemm.o dpotrf.o
+endif
 ifeq ($(TARGET), GENERIC)
 OBJS += dgemm.o dpotrf.o
 endif

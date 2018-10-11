@@ -35,10 +35,9 @@ LIBS = $(BINARY_DIR)/libblasfeo.a
 include ../Makefile.blas
 
 # all benchmarks
-OBJS =
-OBJS += benchmark_d_blasfeo_api.o
-OBJS += benchmark_s_blasfeo_api.o
-OBJS += benchmark_d_blas_api.o
+ONE_OBJS = benchmark_d_blasfeo_api.o
+#ONE_OBJS = benchmark_s_blasfeo_api.o
+#ONE_OBJS = benchmark_d_blas_api.o
 
 %.o: %.c
 	# build obj
@@ -62,12 +61,10 @@ common: bin_dir
 .DEFAULT_GOAL := build
 .PHONY: build
 
-build: common $(OBJS)
+build: common $(ONE_OBJS)
 
 run:
-	./$(BINARY_DIR)/benchmark_d_blasfeo_api.o.out
-#	./$(BINARY_DIR)/benchmark_s_blasfeo_api.o.out
-#	./$(BINARY_DIR)/benchmark_d_blas_api.o.out
+	./$(BINARY_DIR)/$(ONE_OBJS).out
 
 
 clean:

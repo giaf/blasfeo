@@ -36,28 +36,32 @@
 //#include <xmmintrin.h> // needed to flush to zero sub-normals with _MM_SET_FLUSH_ZERO_MODE (_MM_FLUSH_ZERO_ON); in the main()
 //#endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux_ext_dep.h"
-#include "../include/blasfeo_s_aux_ext_dep.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_s_aux.h"
-#include "../include/blasfeo_i_aux_ext_dep.h"
-#include "../include/blasfeo_v_aux_ext_dep.h"
-#include "../include/blasfeo_d_kernel.h"
-#include "../include/blasfeo_s_kernel.h"
-#include "../include/blasfeo_d_blas.h"
-#include "../include/blasfeo_s_blas.h"
-#include "../include/blasfeo_timing.h"
 
 
+#include "../include/blasfeo.h"
+
+
+
+#if defined(REF_BLAS_NETLIB)
+//#include "cblas.h"
+//#include "lapacke.h"
+#endif
+
+#if defined(REF_BLAS_OPENBLAS)
+void openblas_set_num_threads(int num_threads);
+//#include "cblas.h"
+//#include "lapacke.h"
+#endif
 
 #if defined(REF_BLAS_BLIS)
-#include "../include/d_blas_64.h"
-#elif defined(REF_BLAS_MKL)
-#include "mkl.h"
-#else
-#include "../include/d_blas.h"
+//void omp_set_num_threads(int num_threads);
+#include "blis.h"
 #endif
+
+#if defined(REF_BLAS_MKL)
+#include "mkl.h"
+#endif
+
 
 
 
@@ -72,7 +76,7 @@ int main()
 	openblas_set_num_threads(1);
 #endif
 #if defined(REF_BLAS_BLIS)
-	omp_set_num_threads(1);
+//	omp_set_num_threads(1);
 #endif
 #if defined(REF_BLAS_MKL)
 	mkl_set_num_threads(1);
@@ -104,6 +108,8 @@ int main()
 	const double flops_max = 4;
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	const double flops_max = 4;
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+	const double flops_max = 0.5;
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	const double flops_max = 2;
 #elif defined(TARGET_GENERIC)
@@ -130,6 +136,8 @@ int main()
 	const double flops_max = 8; // 1x128 bit fma
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	const double flops_max = 8; // 1x128 bit fma
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+	const double flops_max = 2; // 1x32 bit fma
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	const double flops_max = 8; // 1x128 bit fma
 #elif defined(TARGET_GENERIC)
@@ -274,6 +282,13 @@ int main()
 			blasfeo_dgein1(1.0, &sB, ii, ii);
 #elif defined(SINGLE_PRECISION)
 			blasfeo_sgein1(1.0, &sB, ii, ii);
+#endif
+
+		// x
+#if defined(DOUBLE_PRECISION)
+		blasfeo_dvecse(n, 1.0, &sx, 0);
+#else
+		blasfeo_svecse(n, 1.0, &sx, 0);
 #endif
 
 
@@ -466,7 +481,7 @@ int main()
 
 		double Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
 
-		printf("%d\t%7.2f\t%7.2f\n",
+		printf("%d\t%7.3f\t%7.3f\n",
 			n,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max);
 

@@ -29,11 +29,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <blasfeo_common.h>         // matrix and vector struct definition
-#include <blasfeo_d_aux.h>          // auxiliary routines (e.g. pack, copy)
-#include <blasfeo_d_aux_ext_dep.h>  // allocation and printing routines, double precision
-#include <blasfeo_v_aux_ext_dep.h>  // allocation, void
-#include <blasfeo_d_blas.h>         // linear algebra routines
+
+#include <blasfeo.h>
 
 int main()
     {

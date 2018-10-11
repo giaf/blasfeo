@@ -31,19 +31,18 @@
 #define BLASFEO_S_AUX_EXT_DEP_H_
 
 
-#if defined(EXT_DEP)
-
-
-
-#include <stdio.h>
 
 #include "blasfeo_common.h"
+
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
+
+#ifdef EXT_DEP
 
 /************************************************
 * s_aux_extern_depend_lib.c
@@ -117,6 +116,8 @@ void blasfeo_print_to_file_tran_svec(FILE *file, int m, struct blasfeo_svec *sa,
 // print to string the transposed of a strvec
 void blasfeo_print_to_string_tran_svec(char **buf_out, int m, struct blasfeo_svec *sa, int ai);
 
+#endif // EXT_DEP
+
 
 
 #ifdef __cplusplus
@@ -124,7 +125,5 @@ void blasfeo_print_to_string_tran_svec(char **buf_out, int m, struct blasfeo_sve
 #endif
 
 
-
-#endif  // EXT_DEP
 
 #endif  // BLASFEO_S_AUX_EXT_DEP_H_

@@ -1,0 +1,23 @@
+{
+  "env_flags":{
+    "CFLAGS":"-Wuninitialized"
+  },
+  "make_flags":{
+    "CC":"clang",
+    "BUILD_LIBS":1,
+    "DEPLOY_LIBS":1,
+    "VERBOSE":1,
+    "TESTING_MODE":1,
+    "REF_BLAS":"0"
+  },
+  "precisions":["d"],
+  "targets":[
+    "GENERIC"
+  ],
+  "las":[
+    "HIGH_PERFORMANCE"
+  ],
+  "routines":[
+    "gemm_nn"
+  ]
+}

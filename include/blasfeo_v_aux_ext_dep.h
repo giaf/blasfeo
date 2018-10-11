@@ -30,11 +30,9 @@
 #ifndef BLASFEO_V_AUX_EXT_DEP_H_
 #define BLASFEO_V_AUX_EXT_DEP_H_
 
-#if defined(EXT_DEP)
 
 
-
-#include <stdio.h>
+#include "blasfeo_target.h"
 
 
 
@@ -47,6 +45,8 @@ extern "C" {
 /************************************************
 * d_aux_extern_depend_lib.c
 ************************************************/
+
+#ifdef EXT_DEP
 
 void v_zeros(void **ptrA, int size);
 // dynamically allocate size bytes of memory aligned to 64-byte boundaries and set accordingly a pointer to void; set allocated memory to zero
@@ -64,6 +64,8 @@ void c_free(char *ptrA);
 // free the memory allocated by c_zeros_aligned
 void c_free_align(char *ptrA);
 
+#endif // EXT_DEP
+
 
 
 #ifdef __cplusplus
@@ -71,7 +73,5 @@ void c_free_align(char *ptrA);
 #endif
 
 
-
-#endif  // EXT_DEP
 
 #endif  // BLASFEO_V_AUX_EXT_DEP_H_

@@ -30,27 +30,46 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_target.h"
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_timing.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_d_aux_ext_dep.h"
-#include "../include/blasfeo_d_kernel.h"
-#include "../include/blasfeo_d_blas.h"
+
+
+#include "../include/blasfeo.h"
+
+
+
+#if defined(REF_BLAS_NETLIB)
+//#include "cblas.h"
+//#include "lapacke.h"
+#include "../include/d_blas.h"
+#endif
+
+#if defined(REF_BLAS_OPENBLAS)
+void openblas_set_num_threads(int num_threads);
+//#include "cblas.h"
+//#include "lapacke.h"
+#include "../include/d_blas.h"
+#endif
+
+#if defined(REF_BLAS_BLIS)
+//void omp_set_num_threads(int num_threads);
+#include "blis.h"
+#endif
+
+#if defined(REF_BLAS_MKL)
+#include "mkl.h"
+#endif
+
+
 
 #include "cpu_freq.h"
 
-#if defined(REF_BLAS_BLIS)
-#include "../include/d_blas_64.h"
-#elif defined(REF_BLAS_MKL)
-#include "mkl.h"
-#else
-#include "../include/d_blas.h"
-#endif
 
 
 int main()
 	{
+
+#if defined(REF_BLAS_OPENBLAS)
+openblas_set_num_threads(1);
+#endif
 
 #if !defined(BENCHMARKS_MODE)
 	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n");
@@ -102,6 +121,9 @@ int main()
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	const float flops_max = 2;
 	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A15): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+	const float flops_max = 0.5;
+	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A7): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_GENERIC)
 	const float flops_max = 2;
 	printf("Testing BLAS version for generic scalar instruction set: theoretical peak %5.1f Gflops ???\n", flops_max*GHz_max);
@@ -198,15 +220,15 @@ int main()
 
 		double time_blasfeo   = 1e15;
 		double time_blas      = 1e15;
-		double time_blas_pack = 1e15;
+		double time_blas_api  = 1e15;
 		double tmp_time_blasfeo;
 		double tmp_time_blas;
-		double tmp_time_blas_pack;
+		double tmp_time_blas_api;
 
 		/* benchmarks */
 
 		char ta = 'n';
-		char tb = 'n';
+		char tb = 't';
 		char uplo = 'u';
 		int info = 0;
 
@@ -217,6 +239,7 @@ int main()
 
 
 
+#if 1
 		/* call blas */
 		for(rep_in=0; rep_in<nrep_in; rep_in++)
 			{
@@ -232,10 +255,10 @@ int main()
 				{
 
 //				for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
-//				dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+				dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				for(ii=0; ii<n*n; ii++) D[ii] = C[ii];
 //				dpotrf_(&uplo, &n, D, &n, &info);
-				dpotrf_(&uplo, &n, B, &n, &info);
+//				dpotrf_(&uplo, &n, B, &n, &info);
 
 				}
 
@@ -244,6 +267,7 @@ int main()
 			// BENCHMARK_BLAS
 
 			}
+#endif
 
 //		d_print_mat(n, n, C, ldc);
 //		d_print_mat(n, n, D, ldd);
@@ -252,6 +276,7 @@ int main()
 
 
 
+#if 1
 		/* call blas with packing */
 		for(rep_in=0; rep_in<nrep_in; rep_in++)
 			{
@@ -267,18 +292,47 @@ int main()
 				{
 
 //				for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
-//				blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+				blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				for(ii=0; ii<n*n; ii++) D[ii] = C[ii];
 //				blasfeo_dpotrf(&uplo, &n, D, &n);
-				blasfeo_dpotrf(&uplo, &n, B, &n, &info);
+//				blasfeo_dpotrf(&uplo, &n, B, &n, &info);
+
+#if 0
+				int memsize_A = blasfeo_memsize_dmat(n, n);
+				int memsize_B = blasfeo_memsize_dmat(n, n);
+				int memsize_C = blasfeo_memsize_dmat(n, n);
+
+				int memsize = 64+memsize_A+memsize_B+memsize_C;
+
+				void *mem = calloc(memsize, 1);
+				void *mem_align = (void *) ( ( ( (unsigned long long) mem ) + 63) / 64 * 64 );
+
+				struct blasfeo_dmat sA, sB, sC;
+
+				blasfeo_create_dmat(n, n, &sA, mem_align);
+				blasfeo_create_dmat(n, n, &sB, mem_align+memsize_A);
+				blasfeo_create_dmat(n, n, &sC, mem_align+memsize_A+memsize_B);
+
+				blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
+//				blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
+				blasfeo_pack_tran_dmat(n, n, B, n, &sB, 0, 0);
+				blasfeo_pack_dmat(n, n, C, n, &sC, 0, 0);
+
+				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sC, 0, 0);
+
+				blasfeo_unpack_dmat(n, n, &sC, 0, 0, C, n);
+
+				free(mem);
+#endif
 
 				}
 
-			tmp_time_blas_pack = blasfeo_toc(&timer) / nrep;
-			time_blas_pack = tmp_time_blas_pack<time_blas_pack ? tmp_time_blas_pack : time_blas_pack;
+			tmp_time_blas_api = blasfeo_toc(&timer) / nrep;
+			time_blas_api = tmp_time_blas_api<time_blas_api ? tmp_time_blas_api : time_blas_api;
 			// BENCHMARK_BLASFEO_END
 
 			}
+#endif
 
 //		d_print_mat(n, n, C, ldc);
 //		d_print_mat(n, n, D, ldd);
@@ -287,6 +341,7 @@ int main()
 
 
 
+#if 1
 		/* call blasfeo */
 		for(rep_in=0; rep_in<nrep_in; rep_in++)
 			{
@@ -299,8 +354,10 @@ int main()
 				{
 				
 //				blasfeo_dgemm_nn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
-//				blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
-				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
+				blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
+//				blasfeo_dgemm_tn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
+//				blasfeo_dgemm_tt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
+//				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 
 				}
 
@@ -309,6 +366,7 @@ int main()
 			// BENCHMARK_BLASFEO_END
 
 			}
+#endif
 
 //		d_print_mat(n, n, C, ldc);
 //		blasfeo_print_dmat(n, n, &sC, 0, 0);
@@ -317,22 +375,22 @@ int main()
 
 		double Gflops_max = flops_max * GHz_max;
 
-//		double flop_operation = 2.0*n*n*n; // gemm
-		double flop_operation = 1.0/3.0*n*n*n; // potrf
+		double flop_operation = 2.0*n*n*n; // gemm
+//		double flop_operation = 1.0/3.0*n*n*n; // potrf
 
 		double Gflops_blas      = 1e-9*flop_operation/time_blas;
-		double Gflops_blas_pack = 1e-9*flop_operation/time_blas_pack;
+		double Gflops_blas_api  = 1e-9*flop_operation/time_blas_api;
 		double Gflops_blasfeo   = 1e-9*flop_operation/time_blasfeo;
 
-		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n",
+		printf("%d\t%7.3f\t%7.3f\t%7.3f\t%7.3f\t%7.3f\t%7.3f\n",
 			n,
+			Gflops_blas_api, 100.0*Gflops_blas_api/Gflops_max,
 			Gflops_blas, 100.0*Gflops_blas/Gflops_max,
-			Gflops_blas_pack, 100.0*Gflops_blas_pack/Gflops_max,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max);
-		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n",
+		fprintf(f, "%d\t%7.3f\t%7.3f\t%7.3f\t%7.3f\t%7.3f\t%7.3f\n",
 			n,
+			Gflops_blas_api, 100.0*Gflops_blas_api/Gflops_max,
 			Gflops_blas, 100.0*Gflops_blas/Gflops_max,
-			Gflops_blas_pack, 100.0*Gflops_blas_pack/Gflops_max,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max);
 
 		free(A);

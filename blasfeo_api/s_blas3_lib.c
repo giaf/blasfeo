@@ -32,7 +32,7 @@
 
 #if defined(LA_BLAS_WRAPPER)
 #if defined(REF_BLAS_BLIS)
-#include "../include/s_blas_64.h"
+#include "blis.h"
 #elif defined(REF_BLAS_MKL)
 #include "mkl.h"
 #else
@@ -48,6 +48,7 @@
 #define REAL float
 
 #define STRMAT blasfeo_smat
+#define STRVEC blasfeo_svec
 
 #define GEMM_NN_LIBSTR blasfeo_sgemm_nn
 #define GEMM_NT_LIBSTR blasfeo_sgemm_nt
