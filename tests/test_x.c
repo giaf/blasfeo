@@ -28,9 +28,9 @@
 
 void test_routine(struct RoutineArgs *args, int *bad_calls){
 
-	#if (VERBOSE>2)
+#if (VERBOSE>2)
 	print_routine(args);
-	#endif
+#endif
 
 	// execute both HP routine and REF routine
 	// templated call
@@ -43,16 +43,16 @@ void test_routine(struct RoutineArgs *args, int *bad_calls){
 		&(args->err_i), &(args->err_j), VERBOSE);
 
 	if (!res) *bad_calls += 1;
-	#if (VERBOSE==0)
+#if (VERBOSE==0)
 	// increment number of bad calls olny
-	#else
+#else
 	if (!res)
 		{
-	#if (VERBOSE>1)
+#if (VERBOSE>1)
 		// print input matrices
 		// templated call
 		print_routine_matrices(args);
-	#endif
+#endif
 
 		// VERBOSE 1 if error
 		// print routine name and signature
@@ -60,10 +60,12 @@ void test_routine(struct RoutineArgs *args, int *bad_calls){
 		print_routine(args);
 
 		print_compilation_flags();
-		// assert(0);
+#if (VERBOSE>1)
+		assert(0);
+#endif
 		}
 
-	#endif
+#endif
 
 }
 
