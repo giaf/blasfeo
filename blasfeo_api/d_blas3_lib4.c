@@ -2051,7 +2051,7 @@ loop_CD_0:
 		{
 		goto left_4_0_g;
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#else
 	for(; ii<m; ii+=4)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+ii*ps, sda, pU);
@@ -2296,7 +2296,7 @@ loop_CD_1:
 		{
 		goto left_4_1_g;
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#else
 	for(; ii<m; ii+=4)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+ii*ps, sda, pAt);
