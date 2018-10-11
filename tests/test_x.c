@@ -244,6 +244,10 @@ int main()
 								for (kk = kk0; kk < kk0+kk0s; kk++)
 									{
 
+									// reset result matrix D
+									GESE_REF(n, n, -1.0, &rD, 0, 0);
+									GESE(n, n, -1.0, &sD, 0, 0);
+
 									// load current iteration arguments
 									args.ai = ii;
 									args.aj = jj;

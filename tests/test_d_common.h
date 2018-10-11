@@ -58,9 +58,10 @@
 #define STRVEC blasfeo_dvec
 
 #define ALLOCATE_STRMAT blasfeo_allocate_dmat
+#define FREE_STRMAT blasfeo_free_dmat
+#define GESE blasfeo_dgese
 #define PACK_STRMAT blasfeo_pack_dmat
 #define PRINT_STRMAT blasfeo_print_dmat
-#define FREE_STRMAT blasfeo_free_dmat
 
 #define PS D_PS
 
@@ -69,9 +70,7 @@
 #define STRVEC_REF blasfeo_dvec_ref
 
 #define ALLOCATE_STRMAT_REF blasfeo_allocate_dmat_ref
-#define PACK_STRMAT_REF blasfeo_pack_dmat_ref
-#define PRINT_STRMAT_REF blasfeo_print_dmat_ref
 #define FREE_STRMAT_REF blasfeo_free_dmat_ref
-
-
+#define GESE_REF blasfeo_dgese_ref
+#define PACK_STRMAT_REF blasfeo_pack_dmat_ref
 #define PRINT_STRMAT_REF blasfeo_print_dmat_ref
