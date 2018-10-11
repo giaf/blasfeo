@@ -2697,7 +2697,7 @@ loop_CD_0:
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_12x4_gen_lib4(k, &alpha, pU, sdu, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+			kernel_dgemm_nt_12x4_gen_lib4(k, &alpha, pU, sdu, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 			jj += ps-bir;
 			idxB += 4;
 			}
@@ -2728,7 +2728,7 @@ loop_CD_0:
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pU, sdu, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pU, sdu, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 			jj += ps-bir;
 			idxB += 4;
 			}
@@ -2751,7 +2751,7 @@ loop_CD_0:
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pU, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pU, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 			jj += ps-bir;
 			idxB += 4;
 			}
@@ -2882,7 +2882,7 @@ left_8_0_g:
 	// clean up at the beginning
 	if(bir!=0)
 		{
-		kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pU, sdu, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+		kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pU, sdu, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 		jj += ps-bir;
 		idxB += 4;
 		}
@@ -2999,7 +2999,7 @@ left_4_0_g:
 	// clean up at the beginning
 	if(bir!=0)
 		{
-		kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pU, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+		kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pU, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 		jj += ps-bir;
 		idxB += 4;
 		}
@@ -3234,7 +3234,7 @@ loop_CD_1:
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_12x4_gen_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+			kernel_dgemm_nt_12x4_gen_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 			jj += ps-bir;
 			idxB += 4;
 			}
@@ -3265,7 +3265,7 @@ loop_CD_1:
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 			jj += ps-bir;
 			idxB += 4;
 			}
@@ -3288,7 +3288,7 @@ loop_CD_1:
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pAt, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pAt, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 			jj += ps-bir;
 			idxB += 4;
 			}
@@ -3419,7 +3419,7 @@ left_8_1_g:
 	// clean up at the beginning
 	if(bir!=0)
 		{
-		kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+		kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 		jj += ps-bir;
 		idxB += 4;
 		}
@@ -3536,7 +3536,7 @@ left_4_1_g:
 	// clean up at the beginning
 	if(bir!=0)
 		{
-		kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pAt, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+		kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pAt, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 		jj += ps-bir;
 		idxB += 4;
 		}
