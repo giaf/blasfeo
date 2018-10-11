@@ -111,6 +111,7 @@ void kernel_dpack_nn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
 	return;
 	
 l1:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -121,6 +122,7 @@ l1:
 	return;
 		
 l2:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -132,6 +134,7 @@ l2:
 	return;
 		
 l3:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -227,6 +230,7 @@ void kernel_dpack_tn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
 	return;
 	
 l1:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -237,6 +241,7 @@ l1:
 	return;
 		
 l2:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -248,6 +253,7 @@ l2:
 	return;
 		
 l3:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -343,6 +349,7 @@ void kernel_dunpack_nt_4_vs_lib4(int kmax, double *C, double *A, int lda, int m1
 	return;
 	
 l1:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		A[0+lda*0] = C[0+ps*0];
@@ -353,6 +360,7 @@ l1:
 	return;
 		
 l2:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		A[0+lda*0] = C[0+ps*0];
@@ -364,6 +372,7 @@ l2:
 	return;
 		
 l3:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		A[0+lda*0] = C[0+ps*0];
