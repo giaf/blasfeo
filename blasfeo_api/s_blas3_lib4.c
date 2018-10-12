@@ -209,15 +209,15 @@ void strsm_nt_ru_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, fl
 
 	if(m<=0 || n<=0)
 		return;
-	
+
 	const int bs = 4;
-	
+
 	int i, j, idx;
 
 	int rn = n%4;
 
-	float *dummy;
-	
+	// float *dummy;
+
 	i = 0;
 
 	for(; i<m-3; i+=4)
@@ -227,7 +227,8 @@ void strsm_nt_ru_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, fl
 		if(rn>0)
 			{
 			idx = n-rn;
-			kernel_strsm_nt_ru_inv_4x4_vs_lib4(0, dummy, dummy, &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, rn);
+			// XXX pA & pD are dummy and should not be used internally !!!
+			kernel_strsm_nt_ru_inv_4x4_vs_lib4(0, pD, pA, &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, rn);
 			j += rn;
 			}
 		for(; j<n; j+=4)
@@ -251,7 +252,8 @@ void strsm_nt_ru_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, fl
 	if(rn>0)
 		{
 		idx = n-rn;
-		kernel_strsm_nt_ru_inv_4x4_vs_lib4(0, dummy, dummy, &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, rn);
+		// XXX pA & pD are dummy and should not be used internally !!!
+		kernel_strsm_nt_ru_inv_4x4_vs_lib4(0, pD, pA, &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, rn);
 		j += rn;
 		}
 	for(; j<n; j+=4)
@@ -331,7 +333,8 @@ void strsm_nn_lu_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, fl
 		j = 0;
 		for( ; j<n; j+=4)
 			{
-			kernel_strsm_nn_lu_inv_4x4_vs_lib4(0, dummy, dummy, 0, pB+idx*sdb+j*bs, pD+idx*sdd+j*bs, pA+idx*sda+idx*bs, inv_diag_A+idx, rm, n-j);
+			// XXX pA & pD are dummy and should not be used internally !!!
+			kernel_strsm_nn_lu_inv_4x4_vs_lib4(0, pD, pA, 0, pB+idx*sdb+j*bs, pD+idx*sdd+j*bs, pA+idx*sda+idx*bs, inv_diag_A+idx, rm, n-j);
 			}
 		// TODO
 		i += rm;

@@ -36,8 +36,8 @@ void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *C)
 	const int ps = 4;
 
 	int ii;
-
 	ii = 0;
+
 	for(; ii<kmax-3; ii+=4)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -90,6 +90,7 @@ void kernel_dpack_nn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
 	const int ps = 4;
 
 	int ii;
+	ii = 0;
 
 	if(m1>=4)
 		{
@@ -109,7 +110,7 @@ void kernel_dpack_nn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
 		goto l3;
 		}
 	return;
-	
+
 l1:
 	ii = 0;
 	for(; ii<kmax; ii++)
@@ -120,7 +121,7 @@ l1:
 		C += 1*ps;
 		}
 	return;
-		
+
 l2:
 	ii = 0;
 	for(; ii<kmax; ii++)
@@ -132,7 +133,7 @@ l2:
 		C += 1*ps;
 		}
 	return;
-		
+
 l3:
 	ii = 0;
 	for(; ii<kmax; ii++)
@@ -147,7 +148,7 @@ l3:
 	return;
 
 	}
-		
+
 
 
 void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *C)
@@ -156,8 +157,8 @@ void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *C)
 	const int ps = 4;
 
 	int ii;
-
 	ii = 0;
+
 	for(; ii<kmax-3; ii+=4)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -209,6 +210,7 @@ void kernel_dpack_tn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
 	const int ps = 4;
 
 	int ii;
+	ii = 0;
 
 	if(m1>=4)
 		{
@@ -228,7 +230,7 @@ void kernel_dpack_tn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
 		goto l3;
 		}
 	return;
-	
+
 l1:
 	ii = 0;
 	for(; ii<kmax; ii++)
@@ -239,7 +241,7 @@ l1:
 		C += 1*ps;
 		}
 	return;
-		
+
 l2:
 	ii = 0;
 	for(; ii<kmax; ii++)
@@ -251,7 +253,7 @@ l2:
 		C += 1*ps;
 		}
 	return;
-		
+
 l3:
 	ii = 0;
 	for(; ii<kmax; ii++)
@@ -275,8 +277,8 @@ void kernel_dunpack_nt_4_lib4(int kmax, double *C, double *A, int lda)
 	const int ps = 4;
 
 	int ii;
-
 	ii = 0;
+
 	for(; ii<kmax-3; ii+=4)
 		{
 		A[0+lda*0] = C[0+ps*0];
@@ -328,6 +330,7 @@ void kernel_dunpack_nt_4_vs_lib4(int kmax, double *C, double *A, int lda, int m1
 	const int ps = 4;
 
 	int ii;
+	ii = 0;
 
 	if(m1>=4)
 		{
@@ -347,7 +350,7 @@ void kernel_dunpack_nt_4_vs_lib4(int kmax, double *C, double *A, int lda, int m1
 		goto l3;
 		}
 	return;
-	
+
 l1:
 	ii = 0;
 	for(; ii<kmax; ii++)
@@ -358,7 +361,7 @@ l1:
 		C += 1*ps;
 		}
 	return;
-		
+
 l2:
 	ii = 0;
 	for(; ii<kmax; ii++)
@@ -370,7 +373,7 @@ l2:
 		C += 1*ps;
 		}
 	return;
-		
+
 l3:
 	ii = 0;
 	for(; ii<kmax; ii++)
