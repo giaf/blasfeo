@@ -2640,7 +2640,7 @@ loop_00_0:
 		if(jj<n-2)
 			{
 			kernel_dgemm_nt_4x2_lib4(k, &alpha, pU, pB+idxB*sdb+0, &beta, pC+ii*sdc+(jj+0)*ps, pD+ii*sdd+(jj+0)*ps);
-			kernel_dgemm_nt_4x2_lib4(k, &alpha, pU, pB+idxB*sdb+2, &beta, pC+ii*sdc+(jj+2)*ps, pD+ii*sdd+(jj+2)*ps, m-ii, n-(jj+2));
+			kernel_dgemm_nt_4x2_vs_lib4(k, &alpha, pU, pB+idxB*sdb+2, &beta, pC+ii*sdc+(jj+2)*ps, pD+ii*sdd+(jj+2)*ps, m-ii, n-(jj+2));
 			}
 		else if(jj<n)
 			{
@@ -3170,7 +3170,7 @@ loop_00_1:
 		if(jj<n-2)
 			{
 			kernel_dgemm_nt_4x2_lib4(k, &alpha, pAt, pB+idxB*sdb+0, &beta, pC+ii*sdc+(jj+0)*ps, pD+ii*sdd+(jj+0)*ps);
-			kernel_dgemm_nt_4x2_lib4(k, &alpha, pAt, pB+idxB*sdb+2, &beta, pC+ii*sdc+(jj+2)*ps, pD+ii*sdd+(jj+2)*ps, m-ii, n-(jj+2));
+			kernel_dgemm_nt_4x2_vs_lib4(k, &alpha, pAt, pB+idxB*sdb+2, &beta, pC+ii*sdc+(jj+2)*ps, pD+ii*sdd+(jj+2)*ps, m-ii, n-(jj+2));
 			}
 		else if(jj<n)
 			{
