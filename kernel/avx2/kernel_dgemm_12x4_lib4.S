@@ -3119,21 +3119,21 @@ inner_edge_dgemm_nn_4x12_lib4:
 	vfmadd231pd		%ymm12, %ymm13, %ymm2
 	vbroadcastsd	96(%r12), %ymm13
 	vfmadd231pd		%ymm12, %ymm13, %ymm3
-	vbroadcastsd	128(%r12), %ymm12 // B
+	vbroadcastsd	128(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm4
-	vbroadcastsd	160(%r12), %ymm12 // B
+	vbroadcastsd	160(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm5
-	vbroadcastsd	192(%r12), %ymm12 // B
+	vbroadcastsd	192(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm6
-	vbroadcastsd	224(%r12), %ymm12 // B
+	vbroadcastsd	224(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm7
-	vbroadcastsd	256(%r12), %ymm12 // B
+	vbroadcastsd	256(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm8
-	vbroadcastsd	288(%r12), %ymm12 // B
+	vbroadcastsd	288(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm9
-	vbroadcastsd	320(%r12), %ymm12 // B
+	vbroadcastsd	320(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm10
-	vbroadcastsd	352(%r12), %ymm12 // B
+	vbroadcastsd	352(%r12), %ymm13 // B
 	vfmadd231pd		%ymm12, %ymm13, %ymm11
 
 	subl			$1, %r10d // k-1
@@ -9693,6 +9693,8 @@ inner_store_4x12_vs_lib4:
 	vmaskmovpd	%ymm10, %ymm15, 320(%r10)
 	je			0f // end
 	vmaskmovpd	%ymm11, %ymm15, 352(%r10)
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm

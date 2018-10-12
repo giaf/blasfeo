@@ -172,7 +172,7 @@ void dtrsm_nt_ru_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 
 	int rn = n%4;
 
-	// double *dummy;
+	double *dummy = NULL;
 
 	i = 0;
 
@@ -184,8 +184,7 @@ void dtrsm_nt_ru_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 		if(rn>0)
 			{
 			idx = n-rn;
-			// XXX pA & pD are dummy and should not be used internally !!!
-			kernel_dtrsm_nt_ru_inv_12x4_vs_lib4(0, pD, 0, pA, &pB[i*sdb+idx*ps], sdb, &pD[i*sdd+idx*ps], sdd, &pA[idx*sda+idx*ps], &inv_diag_A[idx], m-i, rn);
+			kernel_dtrsm_nt_ru_inv_12x4_vs_lib4(0, dummy, 0, dummy, &pB[i*sdb+idx*ps], sdb, &pD[i*sdd+idx*ps], sdd, &pA[idx*sda+idx*ps], &inv_diag_A[idx], m-i, rn);
 			j += rn;
 			}
 		for(; j<n; j+=4)
@@ -217,8 +216,7 @@ void dtrsm_nt_ru_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 		if(rn>0)
 			{
 			idx = n-rn;
-			// XXX pA & pD are dummy and should not be used internally !!!
-			kernel_dtrsm_nt_ru_inv_8x4_vs_lib4(0, pD, 0, pA, &pB[i*sdb+idx*ps], sdb, &pD[i*sdd+idx*ps], sdd, &pA[idx*sda+idx*ps], &inv_diag_A[idx], m-i, rn);
+			kernel_dtrsm_nt_ru_inv_8x4_vs_lib4(0, dummy, 0, dummy, &pB[i*sdb+idx*ps], sdb, &pD[i*sdd+idx*ps], sdd, &pA[idx*sda+idx*ps], &inv_diag_A[idx], m-i, rn);
 			j += rn;
 			}
 		for(; j<n; j+=4)
@@ -246,8 +244,7 @@ void dtrsm_nt_ru_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 		if(rn>0)
 			{
 			idx = n-rn;
-			// XXX pA & pD are dummy and should not be used internally !!!
-			kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(0, pD, pA, &pB[i*sdb+idx*ps], &pD[i*sdd+idx*ps], &pA[idx*sda+idx*ps], &inv_diag_A[idx], m-i, rn);
+			kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(0, dummy, dummy, &pB[i*sdb+idx*ps], &pD[i*sdd+idx*ps], &pA[idx*sda+idx*ps], &inv_diag_A[idx], m-i, rn);
 			j += rn;
 			}
 		for(; j<n; j+=4)
@@ -273,8 +270,7 @@ void dtrsm_nt_ru_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 	if(rn>0)
 		{
 		idx = n-rn;
-		// XXX pA & pD are dummy and should not be used internally !!!
-		kernel_dtrsm_nt_ru_inv_12x4_vs_lib4(0, pA, 0, pD, &pB[i*sdb+idx*ps], sdb, &pD[i*sdd+idx*ps], sdd, &pA[idx*sda+idx*ps], &inv_diag_A[idx], m-i, rn);
+		kernel_dtrsm_nt_ru_inv_12x4_vs_lib4(0, dummy, 0, dummy, &pB[i*sdb+idx*ps], sdb, &pD[i*sdd+idx*ps], sdd, &pA[idx*sda+idx*ps], &inv_diag_A[idx], m-i, rn);
 		j += rn;
 		}
 	for(; j<n; j+=4)
@@ -294,8 +290,7 @@ void dtrsm_nt_ru_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 	if(rn>0)
 		{
 		idx = n-rn;
-		// XXX pA & pD are dummy and should not be used internally !!!
-		kernel_dtrsm_nt_ru_inv_8x4_vs_lib4(0, pD, 0, pA, &pB[i*sdb+idx*ps], sdb, &pD[i*sdd+idx*ps], sdd, &pA[idx*sda+idx*ps], &inv_diag_A[idx], m-i, rn);
+		kernel_dtrsm_nt_ru_inv_8x4_vs_lib4(0, dummy, 0, dummy, &pB[i*sdb+idx*ps], sdb, &pD[i*sdd+idx*ps], sdd, &pA[idx*sda+idx*ps], &inv_diag_A[idx], m-i, rn);
 		j += rn;
 		}
 	for(; j<n; j+=4)
@@ -314,8 +309,7 @@ void dtrsm_nt_ru_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 	if(rn>0)
 		{
 		idx = n-rn;
-		// XXX pA & pD are dummy and should not be used internally !!!
-		kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(0, pD, pA, &pB[i*sdb+idx*ps], &pD[i*sdd+idx*ps], &pA[idx*sda+idx*ps], &inv_diag_A[idx], m-i, rn);
+		kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(0, dummy, dummy, &pB[i*sdb+idx*ps], &pD[i*sdd+idx*ps], &pA[idx*sda+idx*ps], &inv_diag_A[idx], m-i, rn);
 		j += rn;
 		}
 	for(; j<n; j+=4)
@@ -2022,7 +2016,7 @@ loop_CD_0:
 	ii = 0;
 	// clean up loops definitions
 #if defined(TARGET_X64_INTEL_HASWELL)
-	for(; ii<m-4; ii+=8)
+	for(; ii<m-8; ii+=12)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pU+4*sdu);
@@ -2267,7 +2261,7 @@ loop_CD_1:
 	ii = 0;
 	// clean up loops definitions
 #if defined(TARGET_X64_INTEL_HASWELL)
-	for(; ii<m-4; ii+=8)
+	for(; ii<m-8; ii+=12)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pAt+0*sdat);
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pAt+4*sdat);
