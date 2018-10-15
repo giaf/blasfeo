@@ -392,6 +392,7 @@ OBJS += \
 OBJS += \
 		kernel/armv8a/kernel_dgemm_8x4_lib4.o \
 		kernel/armv8a/kernel_dgemm_4x4_lib4.o \
+		kernel/armv8a/kernel_dpack_lib4.o \
 		kernel/generic/kernel_dgemm_4x4_lib4.o \
 		kernel/generic/kernel_dgemm_diag_lib4.o \
 		kernel/generic/kernel_dgemv_4_lib4.o \
@@ -453,6 +454,7 @@ OBJS += \
 		kernel/armv8a/kernel_dgemm_12x4_lib4.o \
 		kernel/armv8a/kernel_dgemm_8x4_lib4.o \
 		kernel/armv8a/kernel_dgemm_4x4_lib4.o \
+		kernel/armv8a/kernel_dpack_lib4.o \
 		kernel/generic/kernel_dgemm_4x4_lib4.o \
 		kernel/generic/kernel_dgemm_diag_lib4.o \
 		kernel/generic/kernel_dgemv_4_lib4.o \
