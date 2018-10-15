@@ -549,6 +549,412 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 // w8   <- k
 // x9   <- A
 // x10   <- B
+// x11   <- 32*sdb
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+#else
+	.align	4
+	.type inner_kernel_gemm_add_nn_4x4_lib4, %function
+inner_kernel_gemm_add_nn_4x4_lib4:
+#endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	// prefetch
+	prfm	PLDL1KEEP, [x10, #0]
+	prfm	PLDL1KEEP, [x10, #32]
+	prfm	PLDL1KEEP, [x9, #0]
+	prfm	PLDL1KEEP, [x9, #32]
+
+	// preload
+	ldp		q24, q25, [x10, #0]
+	ldp		q26, q27, [x10, #32]
+	ldp		q28, q29, [x10, #64]
+	ldp		q30, q31, [x10, #96]
+	ldp		q16, q17, [x9, #0]
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+
+	// prefetch
+//	prfm	PLDL1KEEP, [x9, #32]
+//	prfm	PLDL1KEEP, [x10, #32]
+
+	add		x13, x11, #32
+
+	// main loop
+1:
+	
+	fmla	v0.2d, v16.2d, v24.2d[0]
+	fmla	v1.2d, v17.2d, v24.2d[0]
+	ldp		q18, q19, [x9, #32]
+	fmla	v2.2d, v16.2d, v26.2d[0]
+	fmla	v3.2d, v17.2d, v26.2d[0]
+	prfm	PLDL1KEEP, [x9, #128]
+	fmla	v4.2d, v16.2d, v28.2d[0]
+	fmla	v5.2d, v17.2d, v28.2d[0]
+	prfm	PLDL1KEEP, [x10, x11]
+	fmla	v6.2d, v16.2d, v30.2d[0]
+	fmla	v7.2d, v17.2d, v30.2d[0]
+	prfm	PLDL1KEEP, [x10, x13]
+
+	fmla	v0.2d, v18.2d, v24.2d[1]
+	fmla	v1.2d, v19.2d, v24.2d[1]
+	ldp		q16, q17, [x9, #64]
+	fmla	v2.2d, v18.2d, v26.2d[1]
+	fmla	v3.2d, v19.2d, v26.2d[1]
+	prfm	PLDL1KEEP, [x9, #192]
+	fmla	v4.2d, v18.2d, v28.2d[1]
+	fmla	v5.2d, v19.2d, v28.2d[1]
+	add		x10, x10, x11
+	fmla	v6.2d, v18.2d, v30.2d[1]
+	fmla	v7.2d, v19.2d, v30.2d[1]
+	sub		w8, w8, #4
+
+	fmla	v0.2d, v16.2d, v25.2d[0]
+	fmla	v1.2d, v17.2d, v25.2d[0]
+	ldp		q18, q19, [x9, #96]
+	fmla	v2.2d, v16.2d, v27.2d[0]
+	fmla	v3.2d, v17.2d, v27.2d[0]
+	add		x9, x9, #128
+	fmla	v4.2d, v16.2d, v29.2d[0]
+	fmla	v5.2d, v17.2d, v29.2d[0]
+	fmla	v6.2d, v16.2d, v31.2d[0]
+	fmla	v7.2d, v17.2d, v31.2d[0]
+	ldp		q16, q17, [x9, #0]
+
+	fmla	v0.2d, v18.2d, v25.2d[1]
+	fmla	v1.2d, v19.2d, v25.2d[1]
+	ldp		q24, q25, [x10, #0]
+	fmla	v2.2d, v18.2d, v27.2d[1]
+	fmla	v3.2d, v19.2d, v27.2d[1]
+	ldp		q26, q27, [x10, #32]
+	fmla	v4.2d, v18.2d, v29.2d[1]
+	fmla	v5.2d, v19.2d, v29.2d[1]
+	ldp		q28, q29, [x10, #64]
+	fmla	v6.2d, v18.2d, v31.2d[1]
+	fmla	v7.2d, v19.2d, v31.2d[1]
+	ldp		q30, q31, [x10, #96]
+
+	cmp		w8, #4
+	bgt		1b
+
+//	sub		x9, x9, #32
+//	sub		x10, x10, #32
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	fmla	v0.2d, v16.2d, v24.2d[0]
+	fmla	v1.2d, v17.2d, v24.2d[0]
+	ldp		q18, q19, [x9, #32]
+	fmla	v2.2d, v16.2d, v26.2d[0]
+	fmla	v3.2d, v17.2d, v26.2d[0]
+//	prfm	PLDL1KEEP, [x10, x11]
+	fmla	v4.2d, v16.2d, v28.2d[0]
+	fmla	v5.2d, v17.2d, v28.2d[0]
+//	prfm	PLDL1KEEP, [x10, x13]
+	fmla	v6.2d, v16.2d, v30.2d[0]
+	fmla	v7.2d, v17.2d, v30.2d[0]
+//	prfm	PLDL1KEEP, [x9, #128]
+
+	fmla	v0.2d, v18.2d, v24.2d[1]
+	fmla	v1.2d, v19.2d, v24.2d[1]
+	ldp		q16, q17, [x9, #64]
+	fmla	v2.2d, v18.2d, v26.2d[1]
+	fmla	v3.2d, v19.2d, v26.2d[1]
+//	prfm	PLDL1KEEP, [x9, #192]
+	fmla	v4.2d, v18.2d, v28.2d[1]
+	fmla	v5.2d, v19.2d, v28.2d[1]
+	add		x10, x10, x11
+	fmla	v6.2d, v18.2d, v30.2d[1]
+	fmla	v7.2d, v19.2d, v30.2d[1]
+	sub		w8, w8, #4
+
+	fmla	v0.2d, v16.2d, v25.2d[0]
+	fmla	v1.2d, v17.2d, v25.2d[0]
+	ldp		q18, q19, [x9, #96]
+	fmla	v2.2d, v16.2d, v27.2d[0]
+	fmla	v3.2d, v17.2d, v27.2d[0]
+	add		x9, x9, #128
+	fmla	v4.2d, v16.2d, v29.2d[0]
+	fmla	v5.2d, v17.2d, v29.2d[0]
+	fmla	v6.2d, v16.2d, v31.2d[0]
+	fmla	v7.2d, v17.2d, v31.2d[0]
+//	ldp		q16, q17, [x9, #0]
+
+	fmla	v0.2d, v18.2d, v25.2d[1]
+	fmla	v1.2d, v19.2d, v25.2d[1]
+//	ldp		q24, q25, [x10, #0]
+	fmla	v2.2d, v18.2d, v27.2d[1]
+	fmla	v3.2d, v19.2d, v27.2d[1]
+//	ldp		q26, q27, [x10, #32]
+	fmla	v4.2d, v18.2d, v29.2d[1]
+	fmla	v5.2d, v19.2d, v29.2d[1]
+//	ldp		q28, q29, [x10, #64]
+	fmla	v6.2d, v18.2d, v31.2d[1]
+	fmla	v7.2d, v19.2d, v31.2d[1]
+//	ldp		q30, q31, [x10, #96]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// unroll 0
+	ldp		q24, q25, [x9, #0]
+	ldr		d28, [x10, #0]
+	ldr		d29, [x10, #32]
+	ldr		d30, [x10, #64]
+	ldr		d31, [x10, #96]
+	fmla	v0.2d, v24.2d, v28.2d[0]
+	fmla	v1.2d, v25.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v4.2d, v24.2d, v30.2d[0]
+	fmla	v5.2d, v25.2d, v30.2d[0]
+	fmla	v6.2d, v24.2d, v31.2d[0]
+	fmla	v7.2d, v25.2d, v31.2d[0]
+
+	add		x9, x9, #32
+	add		x10, x10, #8
+	sub		w8, w8, #1
+
+	cmp		w8, #0
+	bgt		3b
+
+2: // return
+
+
+
+#else // cortex a53 TODO !!!!!
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	// prefetch
+//	prfm	PLDL1KEEP, [x9, #0]
+//	prfm	PLDL1KEEP, [x10, #0]
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// preload
+
+	// prefetch
+//	prfm	PLDL1KEEP, [x9, #32]
+//	prfm	PLDL1KEEP, [x10, #32]
+
+	add		x13, x11, #32
+
+	// main loop
+1:
+
+	prfm	PLDL1KEEP, [x9, #128]
+	prfm	PLDL1KEEP, [x10, x11]
+	prfm	PLDL1KEEP, [x10, x13]
+
+	// unroll 0 & 1
+	ldr		q28, [x10, #0]
+	ldr		q29, [x10, #32]
+	ldr		q30, [x10, #64]
+	ldr		q31, [x10, #96]
+
+	ld1		{v24.2d, v25.2d}, [x9], #32
+	fmla	v0.2d, v24.2d, v28.2d[0]
+	fmla	v1.2d, v25.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v4.2d, v24.2d, v30.2d[0]
+	fmla	v5.2d, v25.2d, v30.2d[0]
+	fmla	v6.2d, v24.2d, v31.2d[0]
+	fmla	v7.2d, v25.2d, v31.2d[0]
+
+	ld1		{v24.2d, v25.2d}, [x9], #32
+	fmla	v0.2d, v24.2d, v28.2d[1]
+	fmla	v1.2d, v25.2d, v28.2d[1]
+	fmla	v2.2d, v24.2d, v29.2d[1]
+	fmla	v3.2d, v25.2d, v29.2d[1]
+	fmla	v4.2d, v24.2d, v30.2d[1]
+	fmla	v5.2d, v25.2d, v30.2d[1]
+	fmla	v6.2d, v24.2d, v31.2d[1]
+	fmla	v7.2d, v25.2d, v31.2d[1]
+
+	prfm	PLDL1KEEP, [x9, #192]
+
+	// unroll 2 & 3
+	ldr		q28, [x10, #16]
+	ldr		q29, [x10, #48]
+	ldr		q30, [x10, #80]
+	ldr		q31, [x10, #112]
+
+	ld1		{v24.2d, v25.2d}, [x9], #32
+	fmla	v0.2d, v24.2d, v28.2d[0]
+	fmla	v1.2d, v25.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v4.2d, v24.2d, v30.2d[0]
+	fmla	v5.2d, v25.2d, v30.2d[0]
+	fmla	v6.2d, v24.2d, v31.2d[0]
+	fmla	v7.2d, v25.2d, v31.2d[0]
+
+	ld1		{v24.2d, v25.2d}, [x9], #32
+	fmla	v0.2d, v24.2d, v28.2d[1]
+	fmla	v1.2d, v25.2d, v28.2d[1]
+	fmla	v2.2d, v24.2d, v29.2d[1]
+	fmla	v3.2d, v25.2d, v29.2d[1]
+	fmla	v4.2d, v24.2d, v30.2d[1]
+	fmla	v5.2d, v25.2d, v30.2d[1]
+	fmla	v6.2d, v24.2d, v31.2d[1]
+	fmla	v7.2d, v25.2d, v31.2d[1]
+
+	add		x10, x10, x11
+	sub		w8, w8, #4
+
+	cmp		w8, #4
+	bgt		1b
+
+//	sub		x9, x9, #32
+//	sub		x10, x10, #32
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// unroll 0 & 1
+	ldr		q28, [x10, #0]
+	ldr		q29, [x10, #32]
+	ldr		q30, [x10, #64]
+	ldr		q31, [x10, #96]
+
+	ld1		{v24.2d, v25.2d}, [x9], #32
+	fmla	v0.2d, v24.2d, v28.2d[0]
+	fmla	v1.2d, v25.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v4.2d, v24.2d, v30.2d[0]
+	fmla	v5.2d, v25.2d, v30.2d[0]
+	fmla	v6.2d, v24.2d, v31.2d[0]
+	fmla	v7.2d, v25.2d, v31.2d[0]
+
+	ld1		{v24.2d, v25.2d}, [x9], #32
+	fmla	v0.2d, v24.2d, v28.2d[1]
+	fmla	v1.2d, v25.2d, v28.2d[1]
+	fmla	v2.2d, v24.2d, v29.2d[1]
+	fmla	v3.2d, v25.2d, v29.2d[1]
+	fmla	v4.2d, v24.2d, v30.2d[1]
+	fmla	v5.2d, v25.2d, v30.2d[1]
+	fmla	v6.2d, v24.2d, v31.2d[1]
+	fmla	v7.2d, v25.2d, v31.2d[1]
+
+	// unroll 2 & 3
+	ldr		q28, [x10, #16]
+	ldr		q29, [x10, #48]
+	ldr		q30, [x10, #80]
+	ldr		q31, [x10, #112]
+
+	ld1		{v24.2d, v25.2d}, [x9], #32
+	fmla	v0.2d, v24.2d, v28.2d[0]
+	fmla	v1.2d, v25.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v4.2d, v24.2d, v30.2d[0]
+	fmla	v5.2d, v25.2d, v30.2d[0]
+	fmla	v6.2d, v24.2d, v31.2d[0]
+	fmla	v7.2d, v25.2d, v31.2d[0]
+
+	ld1		{v24.2d, v25.2d}, [x9], #32
+	fmla	v0.2d, v24.2d, v28.2d[1]
+	fmla	v1.2d, v25.2d, v28.2d[1]
+	fmla	v2.2d, v24.2d, v29.2d[1]
+	fmla	v3.2d, v25.2d, v29.2d[1]
+	fmla	v4.2d, v24.2d, v30.2d[1]
+	fmla	v5.2d, v25.2d, v30.2d[1]
+	fmla	v6.2d, v24.2d, v31.2d[1]
+	fmla	v7.2d, v25.2d, v31.2d[1]
+
+	add		x10, x10, x11
+	sub		w8, w8, #4
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// unroll 0
+	ldr		d28, [x10, #0]
+	ldr		d29, [x10, #32]
+	ldr		d30, [x10, #64]
+	ldr		d31, [x10, #96]
+
+	ld1		{v24.2d, v25.2d}, [x9], #32
+	fmla	v0.2d, v24.2d, v28.2d[0]
+	fmla	v1.2d, v25.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v4.2d, v24.2d, v30.2d[0]
+	fmla	v5.2d, v25.2d, v30.2d[0]
+	fmla	v6.2d, v24.2d, v31.2d[0]
+	fmla	v7.2d, v25.2d, v31.2d[0]
+
+	add		x10, x10, #8
+	sub		w8, w8, #1
+
+	cmp		w8, #0
+	bgt		3b
+
+2: // return
+
+
+
+#endif
+	
+
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	.size	inner_kernel_gemm_add_nn_4x4_lib4, .-inner_kernel_gemm_add_nn_4x4_lib4
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10   <- B
 //
 // output arguments:
 
@@ -734,6 +1140,83 @@ inner_kernel_syrk_l_add_nt_4x4_lib4:
 	.size	inner_kernel_syrk_l_add_nt_4x4_lib4, .-inner_kernel_syrk_l_add_nt_4x4_lib4
 #endif
 
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10   <- B
+// x11   <- 32*sdb
+// w12   <- offsetB
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+#else
+	.align	4
+	.type inner_edge_gemm_add_nn_4x4_lib4, %function
+inner_edge_gemm_add_nn_4x4_lib4:
+#endif
+
+	cmp		w12, #0
+	ble		2f // return
+
+	cmp		w8, #0
+	ble		2f // return
+
+	mov		w13, #4
+	sub		w14, w13, w12 // 4-offsetB
+	cmp		w14, w8
+	ble		0f
+	mov		w14, w8 // kend=min(k,4-offsetB(
+0:
+//	movgt	w14, w8 // kend=min(k,4-offsetB(
+	
+	add		x10, x10, x12, LSL #3 // B + offsetB*sizeof(double)
+
+1:
+	ldp		q24, q25, [x9, #0]
+	ldr		d28, [x10, #0]
+	ldr		d29, [x10, #32]
+	ldr		d30, [x10, #64]
+	ldr		d31, [x10, #96]
+	fmla	v0.2d, v24.2d, v28.2d[0]
+	fmla	v1.2d, v25.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v4.2d, v24.2d, v30.2d[0]
+	fmla	v5.2d, v25.2d, v30.2d[0]
+	fmla	v6.2d, v24.2d, v31.2d[0]
+	fmla	v7.2d, v25.2d, v31.2d[0]
+
+	add		x9, x9, #32
+	add		x10, x10, #8
+	sub		w8, w8, #1
+
+	sub		w14, w14, #1
+
+	cmp		w14, #0
+	bgt		1b
+
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x10, x10, x11
+	sub		x10, x10, #32
+
+2: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_edge_gemm_add_nn_4x4_lib4, .-inner_edge_gemm_add_nn_4x4_lib4
+#endif
+	
 
 
 
@@ -1581,6 +2064,178 @@ kernel_dgemm_nt_4x4_vs_lib4:
 	ret
 
 	.size	kernel_dgemm_nt_4x4_vs_lib4, .-kernel_dgemm_nt_4x4_vs_lib4
+
+
+
+
+
+//                               w0        x1             x2         x3           x4         x5       x6            x7         sp+0
+// void kernel_dgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D)
+
+	.align	4
+	.global	kernel_dgemm_nn_4x4_lib4
+	.type	kernel_dgemm_nn_4x4_lib4, %function
+kernel_dgemm_nn_4x4_lib4:
+	
+
+
+	PROLOGUE
+
+
+
+	// TODO zero the entire 128-bit register ???
+	fmov	d0, xzr
+	fmov    d1, d0
+	fmov    d2, d0
+	fmov    d3, d0
+	fmov    d4, d0
+	fmov    d5, d0
+	fmov    d6, d0
+	fmov    d7, d0
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		x10, x4 // B
+	mov		w11, w5 // sdb
+	lsl		w11, w11, #5 // 32*sdb
+	mov		w12, w3 // offsetB
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+#else
+	bl	inner_edge_gemm_add_nn_4x4_lib4
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nn_4x4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x6 // beta
+	mov		x10, x7 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	bl inner_scale_ab_4x4_lib4
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 0)] //D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB4
+#else
+	bl inner_store_4x4_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	.size	kernel_dgemm_nn_4x4_lib4, .-kernel_dgemm_nn_4x4_lib4
+
+
+
+
+
+//                                  w0        x1             x2         x3           x4         x5       x6            x7         sp+0       sp+8    sp+16
+// void kernel_dgemm_nn_4x4_vs_lib4(int kmax, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1)
+
+	.align	4
+	.global	kernel_dgemm_nn_4x4_vs_lib4
+	.type	kernel_dgemm_nn_4x4_vs_lib4, %function
+kernel_dgemm_nn_4x4_vs_lib4:
+	
+
+
+	PROLOGUE
+
+
+
+	// TODO zero the entire 128-bit register ???
+	fmov	d0, xzr
+	fmov    d1, d0
+	fmov    d2, d0
+	fmov    d3, d0
+	fmov    d4, d0
+	fmov    d5, d0
+	fmov    d6, d0
+	fmov    d7, d0
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		x10, x4 // B
+	mov		w11, w5 // B
+	lsl		w11, w11, #5 // 32*sdb
+	mov		w12, w3 // B
+
+// TODO offsetB
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+#else
+	bl	inner_edge_gemm_add_nn_4x4_lib4
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nn_4x4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x6 // beta
+	mov		x10, x7 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	bl inner_scale_ab_4x4_lib4
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 0)] // D
+	ldr		w9, [sp, #(STACKSIZE + 8)] // m1
+	ldr		w10, [sp, #(STACKSIZE + 16)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB4
+#else
+	bl inner_store_4x4_vs_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	.size	kernel_dgemm_nn_4x4_vs_lib4, .-kernel_dgemm_nn_4x4_vs_lib4
 
 
 

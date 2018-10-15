@@ -33,6 +33,7 @@
 
 
 #include "blasfeo_s_blasfeo_api.h"
+#include "blasfeo_s_blas_api.h"
 
 
 

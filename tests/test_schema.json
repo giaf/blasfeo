@@ -50,7 +50,7 @@
   "min_kernel_sizes":{
     "type": "list",
     "values": ["2x2", "4x4"],
-    "default":["2x2"]
+    "default":["4x4"]
   },
   "classes":[
     "aux", "blas3", "blas2", "ext_dep","others"],
@@ -69,6 +69,8 @@
       "GEMM":[
         "gemm_nn",
         "gemm_nt",
+        "gemm_tn",
+        "gemm_tt",
         "syrk_ln_mn"
       ],
       "SYRK":[

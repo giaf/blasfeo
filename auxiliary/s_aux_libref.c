@@ -42,30 +42,31 @@
 
 
 #define REAL float
-#define STRMAT blasfeo_smat_ref
-#define STRVEC blasfeo_svec_ref
+#define MAT blasfeo_smat_ref
+#define VEC blasfeo_svec_ref
 
-#define SIZE_STRMAT blasfeo_memsize_smat_ref
-#define SIZE_DIAG_STRMAT blasfeo_memsize_diag_smat_ref
-#define SIZE_STRVEC blasfeo_memsize_svec_ref
+#define MEMSIZE_MAT blasfeo_memsize_smat_ref
+#define MEMSIZE_DIAG_MAT blasfeo_memsize_diag_smat_ref
+#define MEMSIZE_VEC blasfeo_memsize_svec_ref
 
-#define CREATE_STRMAT blasfeo_create_smat_ref
-#define CREATE_STRVEC blasfeo_create_svec_ref
+#define CREATE_MAT blasfeo_create_smat_ref
+#define CREATE_VEC blasfeo_create_svec_ref
 
-#define CVT_MAT2STRMAT blasfeo_pack_smat_ref
-#define CVT_TRAN_MAT2STRMAT blasfeo_pack_tran_smat_ref
-#define CVT_VEC2STRVEC blasfeo_pack_svec_ref
-#define CVT_STRMAT2MAT blasfeo_unpack_smat_ref
-#define CVT_TRAN_STRMAT2MAT blasfeo_unpack_tran_smat_ref
-#define CVT_STRVEC2VEC blasfeo_unpack_svec_ref
+#define PACK_MAT blasfeo_pack_smat_ref
+#define PACK_TRAN_MAT blasfeo_pack_tran_smat_ref
+#define PACK_VEC blasfeo_pack_svec_ref
+#define UNPACK_MAT blasfeo_unpack_smat_ref
+#define UNPACK_TRAN_MAT blasfeo_unpack_tran_smat_ref
+#define UNPACK_VEC blasfeo_unpack_svec_ref
 #define CAST_MAT2STRMAT blasfeo_s_cast_mat2strmat_ref
 #define CAST_DIAG_MAT2STRMAT blasfeo_s_cast_diag_mat2strmat_ref
 #define CAST_VEC2VECMAT blasfeo_s_cast_vec2vecmat_ref
 
-#define GEAD_LIBSTR blasfeo_sgead_ref
-#define GECP_LIBSTR blasfeo_sgecp_ref
-#define GESC_LIBSTR blasfeo_sgesc_ref
-#define GECPSC_LIBSTR blasfeo_sgecpsc_ref
+#define GEAD blasfeo_sgead_ref
+#define GECP blasfeo_sgecp_ref
+#define GECPSC blasfeo_sgecpsc_ref
+#define GESC blasfeo_sgesc_ref
+#define GESE blasfeo_sgese_ref
 
 
 

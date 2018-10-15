@@ -30,10 +30,12 @@
 #ifndef BLASFEO_S_AUX_H_
 #define BLASFEO_S_AUX_H_
 
-#include <stdio.h>
+
 
 #include "blasfeo_s_aux_old.h"
 #include "blasfeo_common.h"
+
+
 
 #ifdef __cplusplus
 extern "C" {

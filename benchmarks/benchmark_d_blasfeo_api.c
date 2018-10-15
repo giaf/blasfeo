@@ -34,16 +34,11 @@
 //#include <xmmintrin.h> // needed to flush to zero sub-normals with _MM_SET_FLUSH_ZERO_MODE (_MM_FLUSH_ZERO_ON); in the main()
 //#endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux_ext_dep.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_i_aux_ext_dep.h"
-#include "../include/blasfeo_v_aux_ext_dep.h"
-#include "../include/blasfeo_d_kernel.h"
-#include "../include/blasfeo_d_blas.h"
-#include "../include/blasfeo_timing.h"
 
-#include "cpu_freq.h"
+
+#include "../include/blasfeo.h"
+
+
 
 #ifndef D_PS
 #define D_PS 1
@@ -76,6 +71,10 @@ void omp_set_num_threads(int num_threads);
 #if defined(REF_BLAS_MKL)
 #include "mkl.h"
 #endif
+
+
+
+#include "cpu_freq.h"
 
 
 

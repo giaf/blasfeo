@@ -172,7 +172,7 @@ void dtrsm_nt_ru_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, 
 
 	int rn = n%4;
 
-	double *dummy;
+	double *dummy = NULL;
 
 	i = 0;
 
@@ -966,6 +966,30 @@ loop_00:
 			goto left_12;
 			}
 		}
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	for(; i<m-7; i+=8)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_dgemm_nn_8x4_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd);
+			}
+		if(j<n)
+			{
+			kernel_dgemm_nn_8x4_vs_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		if(m-i<=4)
+			{
+			goto left_4;
+			}
+		else
+			{
+			goto left_8;
+			}
+		}
 #elif defined(TARGET_X86_AMD_BARCELONA)
 	for(; i<m-3; i+=4)
 		{
@@ -1095,7 +1119,7 @@ loop_CD:
 
 
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	left_8:
 	j = 0;
 	for(; j<n; j+=4)
@@ -1858,7 +1882,7 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL)
 	double pU[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	double pU[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #elif defined(TARGET_GENERIC)
 	double pU[1*4*K_MAX_STACK];
@@ -1940,7 +1964,7 @@ loop_00_0:
 			goto left_12_0;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
@@ -1992,7 +2016,7 @@ loop_CD_0:
 	ii = 0;
 	// clean up loops definitions
 #if defined(TARGET_X64_INTEL_HASWELL)
-	for(; ii<m-4; ii+=8)
+	for(; ii<m-8; ii+=12)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pU+4*sdu);
@@ -2027,7 +2051,7 @@ loop_CD_0:
 		{
 		goto left_4_0_g;
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#else
 	for(; ii<m; ii+=4)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+ii*ps, sda, pU);
@@ -2056,7 +2080,7 @@ left_12_0:
 
 
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 left_8_0:
 	kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
 	kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pU+4*sdu);
@@ -2237,7 +2261,7 @@ loop_CD_1:
 	ii = 0;
 	// clean up loops definitions
 #if defined(TARGET_X64_INTEL_HASWELL)
-	for(; ii<m-4; ii+=8)
+	for(; ii<m-8; ii+=12)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+0)*ps, sda, pAt+0*sdat);
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(ii+4)*ps, sda, pAt+4*sdat);
@@ -2272,7 +2296,7 @@ loop_CD_1:
 		{
 		goto left_4_1_g;
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#else
 	for(; ii<m; ii+=4)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+ii*ps, sda, pAt);
@@ -2616,7 +2640,7 @@ loop_00_0:
 		if(jj<n-2)
 			{
 			kernel_dgemm_nt_4x2_lib4(k, &alpha, pU, pB+idxB*sdb+0, &beta, pC+ii*sdc+(jj+0)*ps, pD+ii*sdd+(jj+0)*ps);
-			kernel_dgemm_nt_4x2_lib4(k, &alpha, pU, pB+idxB*sdb+2, &beta, pC+ii*sdc+(jj+2)*ps, pD+ii*sdd+(jj+2)*ps, m-ii, n-(jj+2));
+			kernel_dgemm_nt_4x2_vs_lib4(k, &alpha, pU, pB+idxB*sdb+2, &beta, pC+ii*sdc+(jj+2)*ps, pD+ii*sdd+(jj+2)*ps, m-ii, n-(jj+2));
 			}
 		else if(jj<n)
 			{
@@ -2673,7 +2697,7 @@ loop_CD_0:
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_12x4_gen_lib4(k, &alpha, pU, sdu, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+			kernel_dgemm_nt_12x4_gen_lib4(k, &alpha, pU, sdu, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 			jj += ps-bir;
 			idxB += 4;
 			}
@@ -2704,7 +2728,7 @@ loop_CD_0:
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pU, sdu, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pU, sdu, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 			jj += ps-bir;
 			idxB += 4;
 			}
@@ -2727,7 +2751,7 @@ loop_CD_0:
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pU, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pU, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 			jj += ps-bir;
 			idxB += 4;
 			}
@@ -2858,7 +2882,7 @@ left_8_0_g:
 	// clean up at the beginning
 	if(bir!=0)
 		{
-		kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pU, sdu, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+		kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pU, sdu, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 		jj += ps-bir;
 		idxB += 4;
 		}
@@ -2975,7 +2999,7 @@ left_4_0_g:
 	// clean up at the beginning
 	if(bir!=0)
 		{
-		kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pU, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+		kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pU, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 		jj += ps-bir;
 		idxB += 4;
 		}
@@ -3146,7 +3170,7 @@ loop_00_1:
 		if(jj<n-2)
 			{
 			kernel_dgemm_nt_4x2_lib4(k, &alpha, pAt, pB+idxB*sdb+0, &beta, pC+ii*sdc+(jj+0)*ps, pD+ii*sdd+(jj+0)*ps);
-			kernel_dgemm_nt_4x2_lib4(k, &alpha, pAt, pB+idxB*sdb+2, &beta, pC+ii*sdc+(jj+2)*ps, pD+ii*sdd+(jj+2)*ps, m-ii, n-(jj+2));
+			kernel_dgemm_nt_4x2_vs_lib4(k, &alpha, pAt, pB+idxB*sdb+2, &beta, pC+ii*sdc+(jj+2)*ps, pD+ii*sdd+(jj+2)*ps, m-ii, n-(jj+2));
 			}
 		else if(jj<n)
 			{
@@ -3210,7 +3234,7 @@ loop_CD_1:
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_12x4_gen_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+			kernel_dgemm_nt_12x4_gen_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 			jj += ps-bir;
 			idxB += 4;
 			}
@@ -3241,7 +3265,7 @@ loop_CD_1:
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 			jj += ps-bir;
 			idxB += 4;
 			}
@@ -3264,7 +3288,7 @@ loop_CD_1:
 		// clean up at the beginning
 		if(bir!=0)
 			{
-			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pAt, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+			kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pAt, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 			jj += ps-bir;
 			idxB += 4;
 			}
@@ -3395,7 +3419,7 @@ left_8_1_g:
 	// clean up at the beginning
 	if(bir!=0)
 		{
-		kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+		kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 		jj += ps-bir;
 		idxB += 4;
 		}
@@ -3512,7 +3536,7 @@ left_4_1_g:
 	// clean up at the beginning
 	if(bir!=0)
 		{
-		kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pAt, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, bir, bir+n-jj);
+		kernel_dgemm_nt_4x4_gen_lib4(k, &alpha, pAt, pB+idxB*sdb, &beta, offsetC, pC+ii*sdc+jj*ps-bir*ps, sdc, offsetD, pD+ii*sdd+jj*ps-bir*ps, sdd, 0, m-ii, bir, bir+n-jj);
 		jj += ps-bir;
 		idxB += 4;
 		}

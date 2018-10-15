@@ -30,7 +30,11 @@
 #ifndef BLASFEO_COMMON_H_
 #define BLASFEO_COMMON_H_
 
+
+
 #include "blasfeo_target.h"
+
+
 
 #ifdef __cplusplus
 extern "C" {

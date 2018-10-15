@@ -52,6 +52,7 @@ void blasfeo_sgead_ref(int m, int n, float alpha, struct blasfeo_smat_ref *sA, i
 void blasfeo_sgecp_ref(int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj, struct blasfeo_smat_ref *sB, int bi, int bj);
 void blasfeo_sgesc_ref(int m, int n, float alpha, struct blasfeo_smat_ref *sA, int ai, int aj);
 void blasfeo_sgecpsc_ref(int m, int n, float alpha, struct blasfeo_smat_ref *sA, int ai, int aj, struct blasfeo_smat_ref *sB, int bi, int bj);
+void blasfeo_sgese_ref(int m, int n, float alpha, struct blasfeo_smat_ref *sA, int ai, int aj);
 
 // ge
 void blasfeo_sgecp_ref(int m, int n, struct blasfeo_smat_ref *sA, int ai, int aj, struct blasfeo_smat_ref *sB, int bi, int bj);

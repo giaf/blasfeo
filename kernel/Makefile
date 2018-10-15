@@ -33,56 +33,56 @@ obj:
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 	( cd avx2; $(MAKE) obj)
 	( cd avx; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
+	( cd generic; $(MAKE) obj)
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 	( cd avx; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
+	( cd generic; $(MAKE) obj)
 endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
 	( cd sse3; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
+	( cd generic; $(MAKE) obj)
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
 	( cd fma; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
+	( cd generic; $(MAKE) obj)
 endif
 
 ifeq ($(TARGET), X86_AMD_JAGUAR)
 	( cd avx_x86; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
+	( cd generic; $(MAKE) obj)
 endif
 
 ifeq ($(TARGET), X86_AMD_BARCELONA)
 	( cd sse3_x86; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
+	( cd generic; $(MAKE) obj)
 endif
 
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
 	( cd armv8a; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
+	( cd generic; $(MAKE) obj)
 endif
 
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
 	( cd armv8a; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
+	( cd generic; $(MAKE) obj)
 endif
 
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 	( cd armv7a; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
+	( cd generic; $(MAKE) obj)
 endif
 
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
 	( cd armv7a; $(MAKE) obj)
-	( cd c99; $(MAKE) obj)
+	( cd generic; $(MAKE) obj)
 endif
 
 ifeq ($(TARGET), GENERIC)
-	( cd c99; $(MAKE) obj)
+	( cd generic; $(MAKE) obj)
 endif
 
 clean:
@@ -94,5 +94,5 @@ clean:
 	make -C fma clean
 	make -C armv8a clean
 	make -C armv7a clean
-	make -C c99 clean
+	make -C generic clean
 

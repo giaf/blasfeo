@@ -29,6 +29,45 @@
 
 
 
+#ifndef BLASFEO_D_BLAS_API_H_
+#define BLASFEO_D_BLAS_API_H_
+
+
+
+#include "blasfeo_target.h"
+
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
+#ifdef BLAS_API
+
+
+
+#ifdef FORTRAN_BLAS_API
+
+
+
+// BLAS 3
+//
+void dgemm_(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
+
+
+
+// LAPACK
+//
+void dpotrf_(char *uplo, int *m, double *A, int *lda, int *info);
+
+
+
+#else // BLASFEO_API
+
+
+
 // BLAS 3
 //
 void blasfeo_dgemm(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
@@ -38,3 +77,19 @@ void blasfeo_dgemm(char *ta, char *tb, int *m, int *n, int *k, double *alpha, do
 // LAPACK
 //
 void blasfeo_dpotrf(char *uplo, int *m, double *A, int *lda, int *info);
+
+
+
+#endif // BLASFEO_API
+
+
+
+#endif // BLAS_API
+
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif  // BLASFEO_D_BLAS_API_H_

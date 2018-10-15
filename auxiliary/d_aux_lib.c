@@ -42,35 +42,37 @@
 
 
 #define REAL double
-#define STRMAT blasfeo_dmat
-#define STRVEC blasfeo_dvec
+#define MAT blasfeo_dmat
+#define VEC blasfeo_dvec
 
 
 #if defined(LA_REFERENCE) | defined(LA_BLAS_WRAPPER)
 
 
-#define SIZE_STRMAT blasfeo_memsize_dmat
-#define SIZE_DIAG_STRMAT blasfeo_memsize_diag_dmat
-#define SIZE_STRVEC blasfeo_memsize_dvec
+#define MEMSIZE_MAT blasfeo_memsize_dmat
+#define MEMSIZE_DIAG_MAT blasfeo_memsize_diag_dmat
+#define MEMSIZE_VEC blasfeo_memsize_dvec
 
-#define CREATE_STRMAT blasfeo_create_dmat
-#define CREATE_STRVEC blasfeo_create_dvec
+#define CREATE_MAT blasfeo_create_dmat
+#define CREATE_VEC blasfeo_create_dvec
 
-#define CVT_MAT2STRMAT blasfeo_pack_dmat
-#define CVT_TRAN_MAT2STRMAT blasfeo_pack_tran_dmat
-#define CVT_VEC2STRVEC blasfeo_pack_dvec
-#define CVT_STRMAT2MAT blasfeo_unpack_dmat
-#define CVT_TRAN_STRMAT2MAT blasfeo_unpack_tran_dmat
-#define CVT_STRVEC2VEC blasfeo_unpack_dvec
+#define PACK_MAT blasfeo_pack_dmat
+#define PACK_TRAN_MAT blasfeo_pack_tran_dmat
+#define PACK_VEC blasfeo_pack_dvec
+#define UNPACK_MAT blasfeo_unpack_dmat
+#define UNPACK_TRAN_MAT blasfeo_unpack_tran_dmat
+#define UNPACK_VEC blasfeo_unpack_dvec
 
 #define CAST_MAT2STRMAT d_cast_mat2strmat
 #define CAST_DIAG_MAT2STRMAT d_cast_diag_mat2strmat
 #define CAST_VEC2VECMAT d_cast_vec2vecmat
 
 
-#define GECP_LIBSTR blasfeo_dgecp
-#define GESC_LIBSTR blasfeo_dgesc
-#define GECPSC_LIBSTR blasfeo_dgecpsc
+#define GEAD blasfeo_dgead_ref
+#define GECP blasfeo_dgecp
+#define GECPSC blasfeo_dgecpsc
+#define GESC blasfeo_dgesc
+#define GESE blasfeo_dgese_ref
 
 
 
@@ -116,27 +118,6 @@ double blasfeo_dvecex1(struct blasfeo_dvec *sx, int xi)
 	{
 	double *x = sx->pa + xi;
 	return x[0];
-	}
-
-
-
-// set all elements of a strmat to a value
-void blasfeo_dgese(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj)
-	{
-	// invalidate stored inverse diagonal
-	sA->use_dA = 0;
-
-	int lda = sA->m;
-	double *pA = sA->pA + ai + aj*lda;
-	int ii, jj;
-	for(jj=0; jj<n; jj++)
-		{
-		for(ii=0; ii<m; ii++)
-			{
-			pA[ii+lda*jj] = alpha;
-			}
-		}
-	return;
 	}
 
 
@@ -414,37 +395,6 @@ void blasfeo_dtrcp_l(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blas
 		for(; ii<m; ii++)
 			{
 			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
-			}
-		}
-	return;
-	}
-
-
-
-// scale and add a generic strmat into a generic strmat
-void blasfeo_dgead(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
-	{
-	// invalidate stored inverse diagonal
-	sC->use_dA = 0;
-
-	int lda = sA->m;
-	double *pA = sA->pA + ai + aj*lda;
-	int ldc = sC->m;
-	double *pC = sC->pA + ci + cj*ldc;
-	int ii, jj;
-	for(jj=0; jj<n; jj++)
-		{
-		ii = 0;
-		for(; ii<m-3; ii+=4)
-			{
-			pC[ii+0+jj*ldc] += alpha*pA[ii+0+jj*lda];
-			pC[ii+1+jj*ldc] += alpha*pA[ii+1+jj*lda];
-			pC[ii+2+jj*ldc] += alpha*pA[ii+2+jj*lda];
-			pC[ii+3+jj*ldc] += alpha*pA[ii+3+jj*lda];
-			}
-		for(; ii<m; ii++)
-			{
-			pC[ii+0+jj*ldc] += alpha*pA[ii+0+jj*lda];
 			}
 		}
 	return;

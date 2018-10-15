@@ -39,6 +39,12 @@
 
 
 
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_dpotrf dpotrf_
+#endif
+
+
+
 void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	{
 

@@ -54,8 +54,8 @@ void strmm_(char *side, char *uplo, char *transa, char *diag, long long *m, long
 void strsm_(char *side, char *uplo, char *transa, char *diag, long long *m, long long *n, float *alpha, float *A, long long *lda, float *B, long long *ldb);
 
 // lapack
-long long spotrf_(char *uplo, long long *m, float *A, long long *lda, long long *info);
-long long sgetrf_(long long *m, long long *n, float *A, long long *lda, long long *ipiv, long long *info);
+void spotrf_(char *uplo, long long *m, float *A, long long *lda, long long *info);
+void sgetrf_(long long *m, long long *n, float *A, long long *lda, long long *ipiv, long long *info);
 void sgeqrf_(long long *m, long long *n, float *A, long long *lda, float *tau, float *work, long long *lwork, long long *info);
 void sgeqr2_(long long *m, long long *n, float *A, long long *lda, float *tau, float *work, long long *info);
 

@@ -12971,6 +12971,7 @@ kernel_dlarfb4_r_8_lla_lib4:
 #if defined(BLAS_API)
 
 #include "kernel_dgemm_8x4_lib.S"
+//#include "archive/kernel_dgemm_8x4_lib.S"
 
 #endif
 
