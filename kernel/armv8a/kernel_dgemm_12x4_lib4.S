@@ -1557,7 +1557,7 @@ inner_store_12x4_vs_lib4:
 	add		x12, x8, x9
 	add		x13, x12, x9
 
-	cmp		w10, #8
+	cmp		w10, #12
 	bge		1f
 
 	ldp		q24, q25, [x13, #(0*8+0*32)]
