@@ -56,8 +56,8 @@ void dtrmm_(char *side, char *uplo, char *trans, char *diag, int *m, int *n, dou
 void dtrsm_(char *side, char *uplo, char *trans, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
 
 // lapack
-int dpotrf_(char *uplo, int *m, double *A, int *lda, int *info);
-int dgetrf_(int *m, int *n, double *A, int *lda, int *ipiv, int *info);
+void dpotrf_(char *uplo, int *m, double *A, int *lda, int *info);
+void dgetrf_(int *m, int *n, double *A, int *lda, int *ipiv, int *info);
 void dgeqrf_(int *m, int *n, double *A, int *lda, double *tau, double *work, int *lwork, int *info);
 void dgeqr2_(int *m, int *n, double *A, int *lda, double *tau, double *work, int *info);
 void dgelqf_(int *m, int *n, double *A, int *lda, double *tau, double *work, int *lwork, int *info);

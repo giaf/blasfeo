@@ -34,16 +34,11 @@
 //#include <xmmintrin.h> // needed to flush to zero sub-normals with _MM_SET_FLUSH_ZERO_MODE (_MM_FLUSH_ZERO_ON); in the main()
 //#endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux_ext_dep.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_i_aux_ext_dep.h"
-#include "../include/blasfeo_v_aux_ext_dep.h"
-#include "../include/blasfeo_d_kernel.h"
-#include "../include/blasfeo_d_blas.h"
-#include "../include/blasfeo_timing.h"
 
-#include "cpu_freq.h"
+
+#include "../include/blasfeo.h"
+
+
 
 #ifndef D_PS
 #define D_PS 1
@@ -52,27 +47,34 @@
 #define D_NC 1
 #endif
 
-// comparison with standard blas libraries
+
 
 #if defined(REF_BLAS_NETLIB)
-#include "cblas.h"
-#include "lapacke.h"
+//#include "cblas.h"
+//#include "lapacke.h"
+#include "../include/d_blas.h"
 #endif
 
 #if defined(REF_BLAS_OPENBLAS)
 void openblas_set_num_threads(int num_threads);
-#include "cblas.h"
-#include "lapacke.h"
+//#include "cblas.h"
+//#include "lapacke.h"
+#include "../include/d_blas.h"
 #endif
 
 #if defined(REF_BLAS_BLIS)
 void omp_set_num_threads(int num_threads);
 #include "blis.h"
+//#include "../include/d_blas_64.h"
 #endif
 
 #if defined(REF_BLAS_MKL)
 #include "mkl.h"
 #endif
+
+
+
+#include "cpu_freq.h"
 
 
 
@@ -486,7 +488,7 @@ int main()
 	openblas_set_num_threads(1);
 #endif
 #if defined(REF_BLAS_BLIS)
-	omp_set_num_threads(1);
+//	omp_set_num_threads(1);
 #endif
 #if defined(REF_BLAS_MKL)
 	mkl_set_num_threads(1);
@@ -533,6 +535,9 @@ int main()
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	const float flops_max = 4;
 	printf("Testing BLASFEO version for NEONv2 instruction set, 64 bit (optimized for ARM Cortex A53): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+	const float flops_max = 0.5;
+	printf("Testing BLASFEO version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A7): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	const float flops_max = 2;
 	printf("Testing BLASFEO version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A15): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
@@ -757,8 +762,8 @@ int main()
 //				kernel_dgemm_nn_4x4_gen_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 8, 0, 4);
 
 //				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-//				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-				blasfeo_dgemm_tn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_dgemm_tn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_tt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ln_mn(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
@@ -865,11 +870,11 @@ int main()
 		float Gflops_blas     = 0;
 		#endif
 
-		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n",
+		printf("%d\t%7.3f\t%7.3f\t%7.3f\t%7.3f\n",
 			n,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max,
 			Gflops_blas, 100.0*Gflops_blas/Gflops_max);
-		fprintf(f, "%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n",
+		fprintf(f, "%d\t%7.3f\t%7.3f\t%7.3f\t%7.3f\n",
 			n,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max,
 			Gflops_blas, 100.0*Gflops_blas/Gflops_max);

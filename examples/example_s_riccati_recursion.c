@@ -32,14 +32,7 @@
 
 #include "tools.h"
 
-#include <blasfeo_common.h>
-#include <blasfeo_i_aux_ext_dep.h>
-#include <blasfeo_d_aux_ext_dep.h>
-#include <blasfeo_s_aux_ext_dep.h>
-#include <blasfeo_s_aux.h>
-#include <blasfeo_s_kernel.h>
-#include <blasfeo_s_blas.h>
-#include <blasfeo_timing.h>
+#include <blasfeo.h>
 
 
 

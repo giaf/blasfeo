@@ -26,10 +26,10 @@ def parse_arguments():
 
 def make(cmd="", make_flags={}, env_flags={}):
 
-    make_flags = " ".join([f"{k}={v}" for k, v in make_flags.items()])
-    env_flags = " ".join([f"{k}={v}" for k, v in env_flags.items()])
+    make_flags = " ".join(["{k}={v}".format(k=k, v=v) for k, v in make_flags.items()])
+    env_flags = " ".join(["{k}={v}".format(k=k, v=v) for k, v in env_flags.items()])
 
-    run_cmd = f"{env_flags} make {make_flags} {cmd}"
+    run_cmd = "{env_flags} make {make_flags} {cmd}".format(env_flags=env_flags, make_flags=make_flags, cmd=cmd)
 
     print(run_cmd)
     make_process = subprocess.Popen(run_cmd,
@@ -95,26 +95,26 @@ class CookBook:
                             flags = {}
                             flags.update(self.specs['make_flags'])
 
-                            routine_name = f"{precision}{available_routine}"
-                            routine_fullname = f"blasfeo_{routine_name}"
+                            routine_name = "{}{}".format(precision, available_routine)
+                            routine_fullname = "blasfeo_{}".format(routine_name)
                             flags["ROUTINE"] = routine_fullname
                             flags["ROUTINE_CLASS"] = routine_subclass
 
                             self.recipe["routines"][routine_name] = {
                                 "class": routine_class,
                                 "subclass": routine_subclass,
-                                "make_cmd": f"update_{precision}{routine_class}",
+                                "make_cmd": "update_{}{}".format(precision, routine_class),
                                 "flags": flags
                             }
 
         if scheduled_routines:
-            print(f"Some routines not found in the schema {scheduled_routines}")
+            print("Some routines not found in the schema {}".format(scheduled_routines))
 
     def run_all_recipes(self):
         # tune the recipe and run
 
         for la in self.specs["las"]:
-            print(f"Testing {la}")
+            print("Testing {la}".format(la=la))
             self.recipe["make_flags"]["LA"]=la
 
             if la=="REFERENCE":
@@ -126,7 +126,7 @@ class CookBook:
                 break
 
             for target in self.specs["targets"]:
-                print(f"Testing {target}")
+                print("Testing {target}".format(target=target))
 
                 self.recipe["make_flags"]["TARGET"]=target
                 self.run_recipe()
@@ -147,9 +147,9 @@ class CookBook:
             _deploy_libblasfeo = 1
 
         if _build_libblasfeo:
-            make(f"{_silent} -C .. ", make_flags, env_flags)
+            make("{} -C .. ".format(_silent), make_flags, env_flags)
         if _deploy_libblasfeo:
-            make(f"{_silent} -C .. deploy_to_tests", make_flags, env_flags)
+            make("{} -C .. deploy_to_tests".format(_silent), make_flags, env_flags)
 
         for routine_name, args in self.recipe['routines'].items():
             # update local flags with global flags
@@ -167,16 +167,16 @@ class CookBook:
         make_flags = args["flags"]
         env_flags = args["env_flags"]
 
-        print(f"\nTesting {make_flags['TARGET']}:{routine_name}\n")
+        print("\nTesting {}:{}\n".format(make_flags['TARGET'], routine_name))
 
         status = make(args["make_cmd"], make_flags, env_flags)
 
         if not status:
-            print(f"Error with {make_flags['TARGET']}:{routine_name} ({self.DONE}/{self.TOTAL})")
+            print("Error with {}:{} ({}/{})".format(make_flags['TARGET'], routine_name, self.DONE, self.TOTAL))
             return status
 
         self.DONE += 1
-        print(f"\nTested {make_flags['TARGET']}:{routine_name} ({self.DONE}/{self.TOTAL})\n")
+        print("\nTested {}:{} ({}/{})".format(make_flags['TARGET'], routine_name, self.DONE, self.TOTAL))
 
         return status
 

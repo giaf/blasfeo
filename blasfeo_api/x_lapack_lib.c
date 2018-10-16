@@ -3106,23 +3106,6 @@ void POTRF_L_LIBSTR(int m, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD,
 	REAL d1 = 1.0;
 	REAL *pC = sC->pA+ci+cj*sC->m;
 	REAL *pD = sD->pA+di+dj*sD->m;
-#if defined(REF_BLAS_BLIS)
-	long long i1 = 1;
-	long long mm = m;
-	long long info;
-	long long tmp;
-	long long ldc = sC->m;
-	long long ldd = sD->m;
-	if(!(pC==pD))
-		{
-		for(jj=0; jj<m; jj++)
-			{
-			tmp = m-jj;
-			COPY(&tmp, pC+jj*ldc+jj, &i1, pD+jj*ldd+jj, &i1);
-			}
-		}
-	POTRF(&cl, &mm, pD, &ldd, &info);
-#else
 	int i1 = 1;
 	int info;
 	int tmp;
@@ -3137,7 +3120,6 @@ void POTRF_L_LIBSTR(int m, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD,
 			}
 		}
 	POTRF(&cl, &m, pD, &ldd, &info);
-#endif
 	return;
 	}
 
@@ -3160,26 +3142,6 @@ void POTRF_L_MN_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct S
 	REAL d1 = 1.0;
 	REAL *pC = sC->pA+ci+cj*sC->m;
 	REAL *pD = sD->pA+di+dj*sD->m;
-#if defined(REF_BLAS_BLIS)
-	long long i1 = 1;
-	long long mm = m;
-	long long nn = n;
-	long long mmn = mm-nn;
-	long long info;
-	long long tmp;
-	long long ldc = sC->m;
-	long long ldd = sD->m;
-	if(!(pC==pD))
-		{
-		for(jj=0; jj<n; jj++)
-			{
-			tmp = m-jj;
-			COPY(&tmp, pC+jj*ldc+jj, &i1, pD+jj*ldd+jj, &i1);
-			}
-		}
-	POTRF(&cl, &nn, pD, &ldd, &info);
-	TRSM(&cr, &cl, &ct, &cn, &mmn, &nn, &d1, pD, &ldd, pD+n, &ldd);
-#else
 	int i1 = 1;
 	int mmn = m-n;
 	int info;
@@ -3196,7 +3158,6 @@ void POTRF_L_MN_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct S
 		}
 	POTRF(&cl, &n, pD, &ldd, &info);
 	TRSM(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &ldd, pD+n, &ldd);
-#endif
 	return;
 	}
 
@@ -3222,31 +3183,6 @@ void SYRK_POTRF_LN_LIBSTR(int m, int k, struct STRMAT *sA, int ai, int aj, struc
 	REAL *pB = sB->pA + bi + bj*sB->m;
 	REAL *pC = sC->pA + ci + cj*sC->m;
 	REAL *pD = sD->pA + di + dj*sD->m;
-#if defined(REF_BLAS_BLIS)
-	long long i1 = 1;
-	long long mm = m;
-	long long kk = k;
-	long long info;
-	long long lda = sA->m;
-	long long ldb = sB->m;
-	long long ldc = sC->m;
-	long long ldd = sD->m;
-	if(!(pC==pD))
-		{
-		for(jj=0; jj<m; jj++)
-			COPY(&mm, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
-		}
-	if(pA==pB)
-		{
-		SYRK(&cl, &cn, &mm, &kk, &d1, pA, &lda, &d1, pD, &ldd);
-		POTRF(&cl, &mm, pD, &ldd, &info);
-		}
-	else
-		{
-		GEMM(&cn, &ct, &mm, &mm, &kk, &d1, pA, &lda, pB, &ldb, &d1, pD, &ldd);
-		POTRF(&cl, &mm, pD, &ldd, &info);
-		}
-#else
 	int i1 = 1;
 	int info;
 	int lda = sA->m;
@@ -3268,7 +3204,6 @@ void SYRK_POTRF_LN_LIBSTR(int m, int k, struct STRMAT *sA, int ai, int aj, struc
 		GEMM(&cn, &ct, &m, &m, &k, &d1, pA, &lda, pB, &ldb, &d1, pD, &ldd);
 		POTRF(&cl, &m, pD, &ldd, &info);
 		}
-#endif
 	return;
 	}
 
@@ -3294,36 +3229,6 @@ void SYRK_POTRF_LN_MN_LIBSTR(int m, int n, int k, struct STRMAT *sA, int ai, int
 	REAL *pB = sB->pA + bi + bj*sB->m;
 	REAL *pC = sC->pA + ci + cj*sC->m;
 	REAL *pD = sD->pA + di + dj*sD->m;
-#if defined(REF_BLAS_BLIS)
-	long long i1 = 1;
-	long long mm = m;
-	long long nn = n;
-	long long kk = k;
-	long long mmn = mm-nn;
-	long long info;
-	long long lda = sA->m;
-	long long ldb = sB->m;
-	long long ldc = sC->m;
-	long long ldd = sD->m;
-	if(!(pC==pD))
-		{
-		for(jj=0; jj<n; jj++)
-			COPY(&mm, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
-		}
-	if(pA==pB)
-		{
-		SYRK(&cl, &cn, &nn, &kk, &d1, pA, &lda, &d1, pD, &ldd);
-		GEMM(&cn, &ct, &mmn, &nn, &kk, &d1, pA+n, &lda, pB, &ldb, &d1, pD+n, &ldd);
-		POTRF(&cl, &nn, pD, &ldd, &info);
-		TRSM(&cr, &cl, &ct, &cn, &mmn, &nn, &d1, pD, &ldd, pD+n, &ldd);
-		}
-	else
-		{
-		GEMM(&cn, &ct, &mm, &nn, &kk, &d1, pA, &lda, pB, &ldb, &d1, pD, &ldd);
-		POTRF(&cl, &nn, pD, &ldd, &info);
-		TRSM(&cr, &cl, &ct, &cn, &mmn, &nn, &d1, pD, &ldd, pD+n, &ldd);
-		}
-#else
 	int i1 = 1;
 	int mmn = m-n;
 	int info;
@@ -3349,35 +3254,12 @@ void SYRK_POTRF_LN_MN_LIBSTR(int m, int n, int k, struct STRMAT *sA, int ai, int
 		POTRF(&cl, &n, pD, &ldd, &info);
 		TRSM(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &ldd, pD+n, &ldd);
 		}
-#endif
 	return;
 	}
 
 
 
 // dgetrf without pivoting
-#if defined(REF_BLAS_BLIS)
-static void GETF2_NOPIVOT(long long m, long long n, REAL *A, long long lda)
-	{
-	if(m<=0 | n<=0)
-		return;
-	long long i, j;
-	long long jmax = m<n ? m : n;
-	REAL dtmp;
-	REAL dm1 = -1.0;
-	long long itmp0, itmp1;
-	long long i1 = 1;
-	for(j=0; j<jmax; j++)
-		{
-		itmp0 = m-j-1;
-		dtmp = 1.0/A[j+lda*j];
-		SCAL(&itmp0, &dtmp, &A[(j+1)+lda*j], &i1);
-		itmp1 = n-j-1;
-		GER(&itmp0, &itmp1, &dm1, &A[(j+1)+lda*j], &i1, &A[j+lda*(j+1)], &lda, &A[(j+1)+lda*(j+1)], &lda);
-		}
-	return;
-	}
-#else
 static void GETF2_NOPIVOT(int m, int n, REAL *A, int lda)
 	{
 	if(m<=0 | n<=0)
@@ -3398,7 +3280,6 @@ static void GETF2_NOPIVOT(int m, int n, REAL *A, int lda)
 		}
 	return;
 	}
-#endif
 
 
 
@@ -3416,19 +3297,6 @@ void GETRF_NOPIVOT_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struc
 	REAL d1 = 1.0;
 	REAL *pC = sC->pA+ci+cj*sC->m;
 	REAL *pD = sD->pA+di+dj*sD->m;
-#if defined(REF_BLAS_BLIS)
-	long long i1 = 1;
-	long long mm = m;
-	long long nn = n;
-	long long ldc = sC->m;
-	long long ldd = sD->m;
-	if(!(pC==pD))
-		{
-		for(jj=0; jj<n; jj++)
-			COPY(&mm, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
-		}
-	GETF2_NOPIVOT(mm, nn, pD, ldd);
-#else
 	int i1 = 1;
 	int ldc = sC->m;
 	int ldd = sD->m;
@@ -3438,7 +3306,6 @@ void GETRF_NOPIVOT_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struc
 			COPY(&m, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
 		}
 	GETF2_NOPIVOT(m, n, pD, ldd);
-#endif
 	return;
 	}
 
@@ -3459,22 +3326,6 @@ void GETRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 	REAL d1 = 1.0;
 	REAL *pC = sC->pA+ci+cj*sC->m;
 	REAL *pD = sD->pA+di+dj*sD->m;
-#if defined(REF_BLAS_BLIS)
-	long long i1 = 1;
-	long long info;
-	long long mm = m;
-	long long nn = n;
-	long long ldc = sC->m;
-	long long ldd = sD->m;
-	if(!(pC==pD))
-		{
-		for(jj=0; jj<n; jj++)
-			COPY(&mm, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
-		}
-	GETRF(&mm, &nn, pD, &ldd, (long long *) ipiv, &info);
-	for(jj=0; jj<tmp; jj++)
-		ipiv[jj] -= 1;
-#else
 	int i1 = 1;
 	int info;
 	int ldc = sC->m;
@@ -3487,7 +3338,6 @@ void GETRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 	GETRF(&m, &n, pD, &ldd, ipiv, &info);
 	for(jj=0; jj<tmp; jj++)
 		ipiv[jj] -= 1;
-#endif
 	return;
 	}
 
@@ -3497,19 +3347,10 @@ int GEQRF_WORK_SIZE_LIBSTR(int m, int n)
 	{
 	REAL dwork;
 	REAL *pD, *dD;
-#if defined(REF_BLAS_BLIS)
-	long long mm = m;
-	long long nn = n;
-	long long lwork = -1;
-	long long info;
-	long long ldd = mm;
-	GEQRF(&mm, &nn, pD, &ldd, dD, &dwork, &lwork, &info);
-#else
 	int lwork = -1;
 	int info;
 	int ldd = m;
 	GEQRF(&m, &n, pD, &ldd, dD, &dwork, &lwork, &info);
-#endif
 	int size = dwork;
 	return size*sizeof(REAL);
 	}
@@ -3529,24 +3370,6 @@ void GEQRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 	REAL *pD = sD->pA+di+dj*sD->m;
 	REAL *dD = sD->dA+di;
 	REAL *dwork = (REAL *) work;
-#if defined(REF_BLAS_BLIS)
-	long long i1 = 1;
-	long long info = -1;
-	long long mm = m;
-	long long nn = n;
-	long long ldc = sC->m;
-	long long ldd = sD->m;
-	if(!(pC==pD))
-		{
-		for(jj=0; jj<n; jj++)
-			COPY(&mm, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
-		}
-//	GEQR2(&mm, &nn, pD, &ldd, dD, dwork, &info);
-	long long lwork = -1;
-	GEQRF(&mm, &nn, pD, &ldd, dD, dwork, &lwork, &info);
-	lwork = dwork[0];
-	GEQRF(&mm, &nn, pD, &ldd, dD, dwork, &lwork, &info);
-#else
 	int i1 = 1;
 	int info = -1;
 	int ldc = sC->m;
@@ -3561,7 +3384,6 @@ void GEQRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 	GEQRF(&m, &n, pD, &ldd, dD, dwork, &lwork, &info);
 	lwork = dwork[0];
 	GEQRF(&m, &n, pD, &ldd, dD, dwork, &lwork, &info);
-#endif
 	return;
 	}
 
@@ -3571,19 +3393,10 @@ int GELQF_WORK_SIZE_LIBSTR(int m, int n)
 	{
 	REAL dwork;
 	REAL *pD, *dD;
-#if defined(REF_BLAS_BLIS)
-	long long mm = m;
-	long long nn = n;
-	long long lwork = -1;
-	long long info;
-	long long ldd = mm;
-	GELQF(&mm, &nn, pD, &ldd, dD, &dwork, &lwork, &info);
-#else
 	int lwork = -1;
 	int info;
 	int ldd = m;
 	GELQF(&m, &n, pD, &ldd, dD, &dwork, &lwork, &info);
-#endif
 	int size = dwork;
 	return size*sizeof(REAL);
 	}
@@ -3603,24 +3416,6 @@ void GELQF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 	REAL *pD = sD->pA+di+dj*sD->m;
 	REAL *dD = sD->dA+di;
 	REAL *dwork = (REAL *) work;
-#if defined(REF_BLAS_BLIS)
-	long long i1 = 1;
-	long long info = -1;
-	long long mm = m;
-	long long nn = n;
-	long long ldc = sC->m;
-	long long ldd = sD->m;
-	if(!(pC==pD))
-		{
-		for(jj=0; jj<n; jj++)
-			COPY(&mm, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
-		}
-//	GEQR2(&mm, &nn, pD, &ldd, dD, dwork, &info);
-	long long lwork = -1;
-	GELQF(&mm, &nn, pD, &ldd, dD, dwork, &lwork, &info);
-	lwork = dwork[0];
-	GELQF(&mm, &nn, pD, &ldd, dD, dwork, &lwork, &info);
-#else
 	int i1 = 1;
 	int info = -1;
 	int ldc = sC->m;
@@ -3635,7 +3430,6 @@ void GELQF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 	GELQF(&m, &n, pD, &ldd, dD, dwork, &lwork, &info);
 	lwork = dwork[0];
 	GELQF(&m, &n, pD, &ldd, dD, dwork, &lwork, &info);
-#endif
 	return;
 	}
 

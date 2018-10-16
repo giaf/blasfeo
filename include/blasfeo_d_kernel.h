@@ -30,6 +30,12 @@
 #ifndef BLASFEO_D_KERNEL_H_
 #define BLASFEO_D_KERNEL_H_
 
+
+
+#include "blasfeo_target.h"
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -419,9 +425,34 @@ void kernel_dgetr_4_0_lib4(int m, double *A, int sda, double *B);
 
 
 
+// pack
+// 12
+void kernel_dpack_nn_12_lib4(int kmax, double *A, int lda, double *B, int sdb);
+void kernel_dpack_nn_12_vs_lib4(int kmax, double *A, int lda, double *B, int sdb, int m1);
+// 8
+void kernel_dpack_nn_8_lib4(int kmax, double *A, int lda, double *B, int sdb);
+void kernel_dpack_nn_8_vs_lib4(int kmax, double *A, int lda, double *B, int sdb, int m1);
+// 4
+void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *B);
+void kernel_dpack_nn_4_vs_lib4(int kmax, double *A, int lda, double *B, int m1);
+void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *B);
+void kernel_dpack_tn_4_vs_lib4(int kmax, double *A, int lda, double *B, int n1);
+// unpack
+// 4
+void kernel_dunpack_nt_4_lib4(int kmax, double *A, double *B, int ldb);
+void kernel_dunpack_nt_4_vs_lib4(int kmax, double *A, double *B, int ldb, int m1);
+
+// panel copy
+// 4
+void kernel_dpacp_tn_4_lib4(int kmax, int offsetA, double *A, int sda, double *B);
+
+
+
 /************************************************
 * BLAS API kernels
 ************************************************/
+
+#ifdef BLAS_API
 
 // A panel-major bs=4; B, C, D column-major
 // 12x4
@@ -480,26 +511,7 @@ void kernel_dtrsm_nn_ru_inv_8x4_lib4c4c(int kmax, double *A, int sda, double *B,
 // 4x4
 void kernel_dtrsm_nn_ru_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *C, double *D, double *E, int lde, double *dE);
 
-// pack
-// 12
-void kernel_dpack_nn_12_lib4(int kmax, double *A, int lda, double *B, int sdb);
-void kernel_dpack_nn_12_vs_lib4(int kmax, double *A, int lda, double *B, int sdb, int m1);
-// 8
-void kernel_dpack_nn_8_lib4(int kmax, double *A, int lda, double *B, int sdb);
-void kernel_dpack_nn_8_vs_lib4(int kmax, double *A, int lda, double *B, int sdb, int m1);
-// 4
-void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *B);
-void kernel_dpack_nn_4_vs_lib4(int kmax, double *A, int lda, double *B, int m1);
-void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *B);
-void kernel_dpack_tn_4_vs_lib4(int kmax, double *A, int lda, double *B, int n1);
-// unpack
-// 4
-void kernel_dunpack_nt_4_lib4(int kmax, double *A, double *B, int ldb);
-void kernel_dunpack_nt_4_vs_lib4(int kmax, double *A, double *B, int ldb, int m1);
-
-// panel copy
-// 4
-void kernel_dpacp_tn_4_lib4(int kmax, int offsetA, double *A, int sda, double *B);
+#endif // BLAS_API
 
 
 

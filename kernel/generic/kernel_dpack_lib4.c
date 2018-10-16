@@ -29,14 +29,19 @@
 
 
 
+#include "../../include/blasfeo_d_kernel.h"
+
+
+
+#if ! ( defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) )
 void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *C)
 	{
 
 	const int ps = 4;
 
 	int ii;
-
 	ii = 0;
+
 	for(; ii<kmax-3; ii+=4)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -76,6 +81,7 @@ void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *C)
 	return;
 
 	}
+#endif
 
 
 
@@ -88,6 +94,7 @@ void kernel_dpack_nn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
 	const int ps = 4;
 
 	int ii;
+	ii = 0;
 
 	if(m1>=4)
 		{
@@ -107,8 +114,9 @@ void kernel_dpack_nn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
 		goto l3;
 		}
 	return;
-	
+
 l1:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -117,8 +125,9 @@ l1:
 		C += 1*ps;
 		}
 	return;
-		
+
 l2:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -128,8 +137,9 @@ l2:
 		C += 1*ps;
 		}
 	return;
-		
+
 l3:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -142,7 +152,7 @@ l3:
 	return;
 
 	}
-		
+
 
 
 void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *C)
@@ -151,8 +161,8 @@ void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *C)
 	const int ps = 4;
 
 	int ii;
-
 	ii = 0;
+
 	for(; ii<kmax-3; ii+=4)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -204,6 +214,7 @@ void kernel_dpack_tn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
 	const int ps = 4;
 
 	int ii;
+	ii = 0;
 
 	if(m1>=4)
 		{
@@ -223,8 +234,9 @@ void kernel_dpack_tn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
 		goto l3;
 		}
 	return;
-	
+
 l1:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -233,8 +245,9 @@ l1:
 		C += 1*ps;
 		}
 	return;
-		
+
 l2:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -244,8 +257,9 @@ l2:
 		C += 1*ps;
 		}
 	return;
-		
+
 l3:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		C[0+ps*0] = A[0+lda*0];
@@ -267,8 +281,8 @@ void kernel_dunpack_nt_4_lib4(int kmax, double *C, double *A, int lda)
 	const int ps = 4;
 
 	int ii;
-
 	ii = 0;
+
 	for(; ii<kmax-3; ii+=4)
 		{
 		A[0+lda*0] = C[0+ps*0];
@@ -320,6 +334,7 @@ void kernel_dunpack_nt_4_vs_lib4(int kmax, double *C, double *A, int lda, int m1
 	const int ps = 4;
 
 	int ii;
+	ii = 0;
 
 	if(m1>=4)
 		{
@@ -339,8 +354,9 @@ void kernel_dunpack_nt_4_vs_lib4(int kmax, double *C, double *A, int lda, int m1
 		goto l3;
 		}
 	return;
-	
+
 l1:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		A[0+lda*0] = C[0+ps*0];
@@ -349,8 +365,9 @@ l1:
 		C += 1*ps;
 		}
 	return;
-		
+
 l2:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		A[0+lda*0] = C[0+ps*0];
@@ -360,8 +377,9 @@ l2:
 		C += 1*ps;
 		}
 	return;
-		
+
 l3:
+	ii = 0;
 	for(; ii<kmax; ii++)
 		{
 		A[0+lda*0] = C[0+ps*0];
@@ -444,5 +462,38 @@ void kernel_dpacp_tn_4_lib4(int kmax, int offsetA, double *A, int sda, double *B
 		}
 	return;
 	}
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dpack_nn_8_vs_lib4(int kmax, double *A, int lda, double *C, int sdc, int m1)
+	{
+
+	kernel_dpack_nn_4_lib4(kmax, A+0, lda, C+0*sdc);
+	kernel_dpack_nn_4_vs_lib4(kmax, A+4, lda, C+4*sdc, m1-4);
+
+	return;
+
+	}
+#endif
+
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dpack_nn_12_vs_lib4(int kmax, double *A, int lda, double *C, int sdc, int m1)
+	{
+
+	const int ps = 4;
+
+	kernel_dpack_nn_8_lib4(kmax, A+0, lda, C+0*sdc, sdc);
+	kernel_dpack_nn_4_vs_lib4(kmax, A+8, lda, C+8*sdc, m1-8);
+
+	return;
+
+	}
+#endif
+
+
 
 

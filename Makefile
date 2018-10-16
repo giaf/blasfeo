@@ -49,7 +49,7 @@ OBJS += \
 		kernel/avx/kernel_dgemm_diag_lib4.o \
 		kernel/avx2/kernel_dgemv_8_lib4.o \
 		kernel/avx/kernel_dgemv_4_lib4.o \
-		kernel/c99/kernel_dgemv_4_lib4.o \
+		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/avx2/kernel_dsymv_6_lib4.o \
 		kernel/avx2/kernel_dgetrf_pivot_4_lib4.o \
 		kernel/avx/kernel_dgeqrf_4_lib4.o \
@@ -63,7 +63,7 @@ OBJS += \
 		kernel/avx2/kernel_sgemm_16x4_lib8.o \
 		kernel/avx2/kernel_sgemm_8x8_lib8.o \
 		kernel/avx2/kernel_sgemm_8x4_lib8.o \
-		kernel/c99/kernel_sgemm_8x4_lib8.o \
+		kernel/generic/kernel_sgemm_8x4_lib8.o \
 		kernel/avx/kernel_sgemm_diag_lib8.o \
 		kernel/avx/kernel_sgemv_8_lib8.o \
 		kernel/avx/kernel_sgemv_4_lib8.o \
@@ -113,7 +113,7 @@ OBJS += \
 		kernel/avx/kernel_dgemv_12_lib4.o \
 		kernel/avx/kernel_dgemv_8_lib4.o \
 		kernel/avx/kernel_dgemv_4_lib4.o \
-		kernel/c99/kernel_dgemv_4_lib4.o \
+		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/avx/kernel_dsymv_6_lib4.o \
 		kernel/avx/kernel_dgetrf_pivot_4_lib4.o \
 		kernel/avx/kernel_dgeqrf_4_lib4.o \
@@ -125,7 +125,7 @@ OBJS += \
 		kernel/avx/kernel_sgemm_16x4_lib8.o \
 		kernel/avx/kernel_sgemm_8x8_lib8.o \
 		kernel/avx/kernel_sgemm_8x4_lib8.o \
-		kernel/c99/kernel_sgemm_8x4_lib8.o \
+		kernel/generic/kernel_sgemm_8x4_lib8.o \
 		kernel/avx/kernel_sgemm_diag_lib8.o \
 		kernel/avx/kernel_sgemv_8_lib8.o \
 		kernel/avx/kernel_sgemv_4_lib8.o \
@@ -169,24 +169,24 @@ OBJS += \
 OBJS += \
 		kernel/sse3/kernel_dgemm_4x4_lib4.o \
 		kernel/sse3/kernel_dgemv_4_lib4.o \
-		kernel/c99/kernel_dgemm_4x4_lib4.o \
-		kernel/c99/kernel_dgemm_diag_lib4.o \
-		kernel/c99/kernel_dgemv_4_lib4.o \
-		kernel/c99/kernel_dsymv_4_lib4.o \
-		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_dgeqrf_4_lib4.o \
-		kernel/c99/kernel_dgecp_lib4.o \
-		kernel/c99/kernel_dgetr_lib4.o \
-		kernel/c99/kernel_dpack_lib4.o \
+		kernel/generic/kernel_dgemm_4x4_lib4.o \
+		kernel/generic/kernel_dgemm_diag_lib4.o \
+		kernel/generic/kernel_dgemv_4_lib4.o \
+		kernel/generic/kernel_dsymv_4_lib4.o \
+		kernel/generic/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_dgeqrf_4_lib4.o \
+		kernel/generic/kernel_dgecp_lib4.o \
+		kernel/generic/kernel_dgetr_lib4.o \
+		kernel/generic/kernel_dpack_lib4.o \
 		\
 		kernel/sse3/kernel_sgemm_4x4_lib4.o \
-		kernel/c99/kernel_sgemm_4x4_lib4.o \
-		kernel/c99/kernel_sgemm_diag_lib4.o \
-		kernel/c99/kernel_sgemv_4_lib4.o \
-		kernel/c99/kernel_ssymv_4_lib4.o \
-		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_sgecp_lib4.o \
-		kernel/c99/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_sgemm_4x4_lib4.o \
+		kernel/generic/kernel_sgemm_diag_lib4.o \
+		kernel/generic/kernel_sgemv_4_lib4.o \
+		kernel/generic/kernel_ssymv_4_lib4.o \
+		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_sgecp_lib4.o \
+		kernel/generic/kernel_sgetr_lib4.o \
 
 # blas
 OBJS += \
@@ -224,23 +224,23 @@ OBJS += \
 # kernels
 OBJS += \
 		kernel/fma/kernel_dgemm_4x4_lib4.o \
-		kernel/c99/kernel_dgemm_4x4_lib4.o \
-		kernel/c99/kernel_dgemm_diag_lib4.o \
-		kernel/c99/kernel_dgemv_4_lib4.o \
-		kernel/c99/kernel_dsymv_4_lib4.o \
-		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_dgeqrf_4_lib4.o \
-		kernel/c99/kernel_dgecp_lib4.o \
-		kernel/c99/kernel_dgetr_lib4.o \
-		kernel/c99/kernel_dpack_lib4.o \
+		kernel/generic/kernel_dgemm_4x4_lib4.o \
+		kernel/generic/kernel_dgemm_diag_lib4.o \
+		kernel/generic/kernel_dgemv_4_lib4.o \
+		kernel/generic/kernel_dsymv_4_lib4.o \
+		kernel/generic/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_dgeqrf_4_lib4.o \
+		kernel/generic/kernel_dgecp_lib4.o \
+		kernel/generic/kernel_dgetr_lib4.o \
+		kernel/generic/kernel_dpack_lib4.o \
 		\
-		kernel/c99/kernel_sgemm_4x4_lib4.o \
-		kernel/c99/kernel_sgemm_diag_lib4.o \
-		kernel/c99/kernel_sgemv_4_lib4.o \
-		kernel/c99/kernel_ssymv_4_lib4.o \
-		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_sgecp_lib4.o \
-		kernel/c99/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_sgemm_4x4_lib4.o \
+		kernel/generic/kernel_sgemm_diag_lib4.o \
+		kernel/generic/kernel_sgemv_4_lib4.o \
+		kernel/generic/kernel_ssymv_4_lib4.o \
+		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_sgecp_lib4.o \
+		kernel/generic/kernel_sgetr_lib4.o \
 
 # blas
 OBJS += \
@@ -279,25 +279,25 @@ OBJS += \
 OBJS += \
 		kernel/avx_x86/kernel_dgemm_4x4_lib4.o \
 		kernel/avx_x86/kernel_dgemv_4_lib4.o \
-		kernel/c99/kernel_dgemm_4x4_lib4.o \
-		kernel/c99/kernel_dgemm_diag_lib4.o \
-		kernel/c99/kernel_dgemv_4_lib4.o \
-		kernel/c99/kernel_dsymv_4_lib4.o \
-		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_dgeqrf_4_lib4.o \
-		kernel/c99/kernel_dgecp_lib4.o \
-		kernel/c99/kernel_dgetr_lib4.o \
-		kernel/c99/kernel_dpack_lib4.o \
+		kernel/generic/kernel_dgemm_4x4_lib4.o \
+		kernel/generic/kernel_dgemm_diag_lib4.o \
+		kernel/generic/kernel_dgemv_4_lib4.o \
+		kernel/generic/kernel_dsymv_4_lib4.o \
+		kernel/generic/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_dgeqrf_4_lib4.o \
+		kernel/generic/kernel_dgecp_lib4.o \
+		kernel/generic/kernel_dgetr_lib4.o \
+		kernel/generic/kernel_dpack_lib4.o \
 		\
 		kernel/avx_x86/kernel_sgemm_4x4_lib4.o \
 		kernel/avx_x86/kernel_sgemv_4_lib4.o \
-		kernel/c99/kernel_sgemm_4x4_lib4.o \
-		kernel/c99/kernel_sgemm_diag_lib4.o \
-		kernel/c99/kernel_sgemv_4_lib4.o \
-		kernel/c99/kernel_ssymv_4_lib4.o \
-		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_sgecp_lib4.o \
-		kernel/c99/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_sgemm_4x4_lib4.o \
+		kernel/generic/kernel_sgemm_diag_lib4.o \
+		kernel/generic/kernel_sgemv_4_lib4.o \
+		kernel/generic/kernel_ssymv_4_lib4.o \
+		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_sgecp_lib4.o \
+		kernel/generic/kernel_sgetr_lib4.o \
 
 # blas
 OBJS += \
@@ -337,23 +337,23 @@ OBJS += \
 		kernel/sse3_x86/kernel_dgemm_4x2_lib4.o \
 		kernel/sse3_x86/kernel_dgemm_2x2_lib4.o \
 		kernel/sse3_x86/kernel_dgemv_4_lib4.o \
-		kernel/c99/kernel_dgemm_4x4_lib4.o \
-		kernel/c99/kernel_dgemm_diag_lib4.o \
-		kernel/c99/kernel_dgemv_4_lib4.o \
-		kernel/c99/kernel_dsymv_4_lib4.o \
-		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_dgeqrf_4_lib4.o \
-		kernel/c99/kernel_dgecp_lib4.o \
-		kernel/c99/kernel_dgetr_lib4.o \
-		kernel/c99/kernel_dpack_lib4.o \
+		kernel/generic/kernel_dgemm_4x4_lib4.o \
+		kernel/generic/kernel_dgemm_diag_lib4.o \
+		kernel/generic/kernel_dgemv_4_lib4.o \
+		kernel/generic/kernel_dsymv_4_lib4.o \
+		kernel/generic/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_dgeqrf_4_lib4.o \
+		kernel/generic/kernel_dgecp_lib4.o \
+		kernel/generic/kernel_dgetr_lib4.o \
+		kernel/generic/kernel_dpack_lib4.o \
 		\
-		kernel/c99/kernel_sgemm_4x4_lib4.o \
-		kernel/c99/kernel_sgemm_diag_lib4.o \
-		kernel/c99/kernel_sgemv_4_lib4.o \
-		kernel/c99/kernel_ssymv_4_lib4.o \
-		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_sgecp_lib4.o \
-		kernel/c99/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_sgemm_4x4_lib4.o \
+		kernel/generic/kernel_sgemm_diag_lib4.o \
+		kernel/generic/kernel_sgemv_4_lib4.o \
+		kernel/generic/kernel_ssymv_4_lib4.o \
+		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_sgecp_lib4.o \
+		kernel/generic/kernel_sgetr_lib4.o \
 
 # blas
 OBJS += \
@@ -392,28 +392,29 @@ OBJS += \
 OBJS += \
 		kernel/armv8a/kernel_dgemm_8x4_lib4.o \
 		kernel/armv8a/kernel_dgemm_4x4_lib4.o \
-		kernel/c99/kernel_dgemm_4x4_lib4.o \
-		kernel/c99/kernel_dgemm_diag_lib4.o \
-		kernel/c99/kernel_dgemv_4_lib4.o \
-		kernel/c99/kernel_dsymv_4_lib4.o \
-		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_dgeqrf_4_lib4.o \
-		kernel/c99/kernel_dgecp_lib4.o \
-		kernel/c99/kernel_dgetr_lib4.o \
-		kernel/c99/kernel_dpack_lib4.o \
+		kernel/armv8a/kernel_dpack_lib4.o \
+		kernel/generic/kernel_dgemm_4x4_lib4.o \
+		kernel/generic/kernel_dgemm_diag_lib4.o \
+		kernel/generic/kernel_dgemv_4_lib4.o \
+		kernel/generic/kernel_dsymv_4_lib4.o \
+		kernel/generic/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_dgeqrf_4_lib4.o \
+		kernel/generic/kernel_dgecp_lib4.o \
+		kernel/generic/kernel_dgetr_lib4.o \
+		kernel/generic/kernel_dpack_lib4.o \
 		\
 		kernel/armv8a/kernel_sgemm_16x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_12x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_8x8_lib4.o \
 		kernel/armv8a/kernel_sgemm_8x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_4x4_lib4.o \
-		kernel/c99/kernel_sgemm_4x4_lib4.o \
-		kernel/c99/kernel_sgemm_diag_lib4.o \
-		kernel/c99/kernel_sgemv_4_lib4.o \
-		kernel/c99/kernel_ssymv_4_lib4.o \
-		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_sgecp_lib4.o \
-		kernel/c99/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_sgemm_4x4_lib4.o \
+		kernel/generic/kernel_sgemm_diag_lib4.o \
+		kernel/generic/kernel_sgemv_4_lib4.o \
+		kernel/generic/kernel_ssymv_4_lib4.o \
+		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_sgecp_lib4.o \
+		kernel/generic/kernel_sgetr_lib4.o \
 
 # blas
 OBJS += \
@@ -453,28 +454,29 @@ OBJS += \
 		kernel/armv8a/kernel_dgemm_12x4_lib4.o \
 		kernel/armv8a/kernel_dgemm_8x4_lib4.o \
 		kernel/armv8a/kernel_dgemm_4x4_lib4.o \
-		kernel/c99/kernel_dgemm_4x4_lib4.o \
-		kernel/c99/kernel_dgemm_diag_lib4.o \
-		kernel/c99/kernel_dgemv_4_lib4.o \
-		kernel/c99/kernel_dsymv_4_lib4.o \
-		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_dgeqrf_4_lib4.o \
-		kernel/c99/kernel_dgecp_lib4.o \
-		kernel/c99/kernel_dgetr_lib4.o \
-		kernel/c99/kernel_dpack_lib4.o \
+		kernel/armv8a/kernel_dpack_lib4.o \
+		kernel/generic/kernel_dgemm_4x4_lib4.o \
+		kernel/generic/kernel_dgemm_diag_lib4.o \
+		kernel/generic/kernel_dgemv_4_lib4.o \
+		kernel/generic/kernel_dsymv_4_lib4.o \
+		kernel/generic/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_dgeqrf_4_lib4.o \
+		kernel/generic/kernel_dgecp_lib4.o \
+		kernel/generic/kernel_dgetr_lib4.o \
+		kernel/generic/kernel_dpack_lib4.o \
 		\
 		kernel/armv8a/kernel_sgemm_16x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_12x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_8x8_lib4.o \
 		kernel/armv8a/kernel_sgemm_8x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_4x4_lib4.o \
-		kernel/c99/kernel_sgemm_4x4_lib4.o \
-		kernel/c99/kernel_sgemm_diag_lib4.o \
-		kernel/c99/kernel_sgemv_4_lib4.o \
-		kernel/c99/kernel_ssymv_4_lib4.o \
-		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_sgecp_lib4.o \
-		kernel/c99/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_sgemm_4x4_lib4.o \
+		kernel/generic/kernel_sgemm_diag_lib4.o \
+		kernel/generic/kernel_sgemv_4_lib4.o \
+		kernel/generic/kernel_ssymv_4_lib4.o \
+		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_sgecp_lib4.o \
+		kernel/generic/kernel_sgetr_lib4.o \
 
 # blas
 OBJS += \
@@ -511,26 +513,82 @@ OBJS += \
 # kernels
 OBJS += \
 		kernel/armv7a/kernel_dgemm_4x4_lib4.o \
-		kernel/c99/kernel_dgemm_4x4_lib4.o \
-		kernel/c99/kernel_dgemm_diag_lib4.o \
-		kernel/c99/kernel_dgemv_4_lib4.o \
-		kernel/c99/kernel_dsymv_4_lib4.o \
-		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_dgeqrf_4_lib4.o \
-		kernel/c99/kernel_dgecp_lib4.o \
-		kernel/c99/kernel_dgetr_lib4.o \
-		kernel/c99/kernel_dpack_lib4.o \
+		kernel/generic/kernel_dgemm_4x4_lib4.o \
+		kernel/generic/kernel_dgemm_diag_lib4.o \
+		kernel/generic/kernel_dgemv_4_lib4.o \
+		kernel/generic/kernel_dsymv_4_lib4.o \
+		kernel/generic/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_dgeqrf_4_lib4.o \
+		kernel/generic/kernel_dgecp_lib4.o \
+		kernel/generic/kernel_dgetr_lib4.o \
+		kernel/generic/kernel_dpack_lib4.o \
 		\
 		kernel/armv7a/kernel_sgemm_12x4_lib4.o \
 		kernel/armv7a/kernel_sgemm_8x4_lib4.o \
 		kernel/armv7a/kernel_sgemm_4x4_lib4.o \
-		kernel/c99/kernel_sgemm_4x4_lib4.o \
-		kernel/c99/kernel_sgemm_diag_lib4.o \
-		kernel/c99/kernel_sgemv_4_lib4.o \
-		kernel/c99/kernel_ssymv_4_lib4.o \
-		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_sgecp_lib4.o \
-		kernel/c99/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_sgemm_4x4_lib4.o \
+		kernel/generic/kernel_sgemm_diag_lib4.o \
+		kernel/generic/kernel_sgemv_4_lib4.o \
+		kernel/generic/kernel_ssymv_4_lib4.o \
+		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_sgecp_lib4.o \
+		kernel/generic/kernel_sgetr_lib4.o \
+
+# blas
+OBJS += \
+		blasfeo_api/d_blas1_lib4.o \
+		blasfeo_api/d_blas2_lib4.o \
+		blasfeo_api/d_blas2_diag_lib.o \
+		blasfeo_api/d_blas3_lib4.o \
+		blasfeo_api/d_blas3_diag_lib4.o \
+		blasfeo_api/d_lapack_lib4.o \
+		\
+		blasfeo_api/s_blas1_lib4.o \
+		blasfeo_api/s_blas2_lib4.o \
+		blasfeo_api/s_blas2_diag_lib.o \
+		blasfeo_api/s_blas3_lib4.o \
+		blasfeo_api/s_blas3_diag_lib4.o \
+		blasfeo_api/s_lapack_lib4.o \
+
+ifeq ($(BLAS_API), 1)
+OBJS += \
+		blas_api/dgemm.o \
+		blas_api/dpotrf.o \
+
+endif
+
+endif
+
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
+# aux
+OBJS += \
+		auxiliary/d_aux_lib4.o \
+		auxiliary/s_aux_lib4.o \
+		auxiliary/m_aux_lib44.o \
+
+# kernels
+OBJS += \
+		kernel/armv7a/kernel_dgemm_4x4_lib4.o \
+		kernel/generic/kernel_dgemm_4x4_lib4.o \
+		kernel/generic/kernel_dgemm_diag_lib4.o \
+		kernel/generic/kernel_dgemv_4_lib4.o \
+		kernel/generic/kernel_dsymv_4_lib4.o \
+		kernel/generic/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_dgeqrf_4_lib4.o \
+		kernel/generic/kernel_dgecp_lib4.o \
+		kernel/generic/kernel_dgetr_lib4.o \
+		kernel/generic/kernel_dpack_lib4.o \
+		\
+		kernel/armv7a/kernel_sgemm_12x4_lib4.o \
+		kernel/armv7a/kernel_sgemm_8x4_lib4.o \
+		kernel/armv7a/kernel_sgemm_4x4_lib4.o \
+		kernel/generic/kernel_sgemm_4x4_lib4.o \
+		kernel/generic/kernel_sgemm_diag_lib4.o \
+		kernel/generic/kernel_sgemv_4_lib4.o \
+		kernel/generic/kernel_ssymv_4_lib4.o \
+		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_sgecp_lib4.o \
+		kernel/generic/kernel_sgetr_lib4.o \
 
 # blas
 OBJS += \
@@ -567,23 +625,23 @@ OBJS += \
 
 # kernels
 OBJS += \
-		kernel/c99/kernel_dgemm_4x4_lib4.o \
-		kernel/c99/kernel_dgemm_diag_lib4.o \
-		kernel/c99/kernel_dgemv_4_lib4.o \
-		kernel/c99/kernel_dsymv_4_lib4.o \
-		kernel/c99/kernel_dgecp_lib4.o \
-		kernel/c99/kernel_dgetr_lib4.o \
-		kernel/c99/kernel_dgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_dgeqrf_4_lib4.o \
-		kernel/c99/kernel_dpack_lib4.o \
+		kernel/generic/kernel_dgemm_4x4_lib4.o \
+		kernel/generic/kernel_dgemm_diag_lib4.o \
+		kernel/generic/kernel_dgemv_4_lib4.o \
+		kernel/generic/kernel_dsymv_4_lib4.o \
+		kernel/generic/kernel_dgecp_lib4.o \
+		kernel/generic/kernel_dgetr_lib4.o \
+		kernel/generic/kernel_dgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_dgeqrf_4_lib4.o \
+		kernel/generic/kernel_dpack_lib4.o \
 		\
-		kernel/c99/kernel_sgemm_4x4_lib4.o \
-		kernel/c99/kernel_sgemm_diag_lib4.o \
-		kernel/c99/kernel_sgemv_4_lib4.o \
-		kernel/c99/kernel_ssymv_4_lib4.o \
-		kernel/c99/kernel_sgetrf_pivot_4_lib4.o \
-		kernel/c99/kernel_sgecp_lib4.o \
-		kernel/c99/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_sgemm_4x4_lib4.o \
+		kernel/generic/kernel_sgemm_diag_lib4.o \
+		kernel/generic/kernel_sgemv_4_lib4.o \
+		kernel/generic/kernel_ssymv_4_lib4.o \
+		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
+		kernel/generic/kernel_sgecp_lib4.o \
+		kernel/generic/kernel_sgetr_lib4.o \
 
 # blas
 OBJS += \
@@ -767,17 +825,35 @@ ifeq ($(TARGET), X86_AMD_BARCELONA)
 	echo "#endif" >> ./include/blasfeo_target.h
 #	echo "#define TARGET X86_AMD_BARCELONA" >> ./include/blasfeo_target.h
 endif
-ifeq ($(TARGET), GENERIC)
-	echo "#ifndef TARGET_GENERIC" > ./include/blasfeo_target.h
-	echo "#define TARGET_GENERIC" >> ./include/blasfeo_target.h
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
+	echo "#ifndef TARGET_ARMV8A_ARM_CORTEX_A57" > ./include/blasfeo_target.h
+	echo "#define TARGET_ARMV8A_ARM_CORTEX_A57" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define TARGET GENERIC" >> ./include/blasfeo_target.h
+#	echo "#define TARGET ARMV8A_ARM_CORTEX_A57" >> ./include/blasfeo_target.h
+endif
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
+	echo "#ifndef TARGET_ARMV8A_ARM_CORTEX_A53" > ./include/blasfeo_target.h
+	echo "#define TARGET_ARMV8A_ARM_CORTEX_A53" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+#	echo "#define TARGET ARMV8A_ARM_CORTEX_A53" >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 	echo "#ifndef TARGET_ARMV7A_ARM_CORTEX_A15" > ./include/blasfeo_target.h
 	echo "#define TARGET_ARMV7A_ARM_CORTEX_A15" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 #	echo "#define TARGET ARMV7A_ARM_CORTEX_A15" >> ./include/blasfeo_target.h
+endif
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
+	echo "#ifndef TARGET_ARMV7A_ARM_CORTEX_A7" > ./include/blasfeo_target.h
+	echo "#define TARGET_ARMV7A_ARM_CORTEX_A7" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+#	echo "#define TARGET ARMV7A_ARM_CORTEX_A7" >> ./include/blasfeo_target.h
+endif
+ifeq ($(TARGET), GENERIC)
+	echo "#ifndef TARGET_GENERIC" > ./include/blasfeo_target.h
+	echo "#define TARGET_GENERIC" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+#	echo "#define TARGET GENERIC" >> ./include/blasfeo_target.h
 endif
 ifeq ($(LA), HIGH_PERFORMANCE)
 	echo "#ifndef LA_HIGH_PERFORMANCE" >> ./include/blasfeo_target.h
@@ -800,6 +876,16 @@ endif
 ifeq ($(EXT_DEP), 1)
 	echo "#ifndef EXT_DEP" >> ./include/blasfeo_target.h
 	echo "#define EXT_DEP" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
+ifeq ($(BLAS_API), 1)
+	echo "#ifndef BLAS_API" >> ./include/blasfeo_target.h
+	echo "#define BLAS_API" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
+ifeq ($(FORTRAN_BLAS_API), 1)
+	echo "#ifndef FORTRAN_BLAS_API" >> ./include/blasfeo_target.h
+	echo "#define FORTRAN_BLAS_API" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
 

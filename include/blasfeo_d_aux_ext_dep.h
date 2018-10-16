@@ -43,12 +43,19 @@
 
 #include <stdio.h>
 
+
+
 #include "blasfeo_common.h"
+
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+
+
+#ifdef EXT_DEP
 
 /* column-major matrices */
 
@@ -117,6 +124,8 @@ void blasfeo_print_exp_tran_dvec(int m, struct blasfeo_dvec *sa, int ai);
 void blasfeo_print_to_file_tran_dvec(FILE *file, int m, struct blasfeo_dvec *sa, int ai);
 // print to string the transposed of a strvec
 void blasfeo_print_to_string_tran_dvec(char **buf_out, int m, struct blasfeo_dvec *sa, int ai);
+
+#endif // EXT_DEP
 
 
 

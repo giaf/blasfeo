@@ -148,6 +148,9 @@ for jj=1:length(routines)
 	ylabel('Gflops')
 	grid on
 	legend(target_names)
+	ytick = get(gca, 'ytick');
+	ytick = [ytick, d_Gflops_max];
+	set(gca, 'ytick', ytick);
 
 	file_name_eps = ['figures/d', routines{jj}, '.eps'];
 	file_name_pdf = ['figures/d', routines{jj}, '.pdf'];
@@ -163,6 +166,9 @@ for jj=1:length(routines)
 	ylabel('Gflops')
 	grid on
 	legend(target_names)
+	ytick = get(gca, 'ytick');
+	ytick = [ytick, s_Gflops_max];
+	set(gca, 'ytick', ytick);
 
 	file_name_eps = ['figures/s', routines{jj}, '.eps'];
 	file_name_pdf = ['figures/s', routines{jj}, '.pdf'];

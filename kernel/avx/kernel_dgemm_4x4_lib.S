@@ -3590,7 +3590,7 @@ kernel_dpotrf_nt_l_4x4_lib44c:
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_11_M4X4_LIB
+	INNER_BLEND_SCALE_M11_4X4_LIB
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_blend_scale_m11_4x4_lib

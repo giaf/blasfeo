@@ -41,6 +41,9 @@ legend('dgemm\_nn', 'dgemm\_nt', 'dgemm\_tn', 'dgemm\_tt', 'Location', 'SouthEas
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['dgemm'];
 file_name_eps = [file_name, '.eps'];
@@ -69,6 +72,9 @@ legend('dsyrk\_ln', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['dsyrk'];
 file_name_eps = [file_name, '.eps'];
@@ -104,6 +110,9 @@ legend('dtrmm\_rlnn', 'dtrmm\_rutn', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['dtrmm'];
 file_name_eps = [file_name, '.eps'];
@@ -160,6 +169,9 @@ legend('dtrsm\_llnu', 'dtrsm\_lunn', 'dtrsm\_rltn', 'dtrsm\_rltu', 'dtrsm\_rutn'
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['dtrsm'];
 file_name_eps = [file_name, '.eps'];
@@ -195,6 +207,9 @@ legend('dgelqf', 'dgeqrf', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['dgeqrf'];
 file_name_eps = [file_name, '.eps'];
@@ -230,6 +245,9 @@ legend('dgetrf\_nopivot', 'dgetrf\_rowpivot', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['dgetrf'];
 file_name_eps = [file_name, '.eps'];
@@ -265,6 +283,9 @@ legend('dpotrf\_l', 'dpotrf\_u', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['dpotrf'];
 file_name_eps = [file_name, '.eps'];
@@ -307,6 +328,9 @@ legend('dgemv\_n', 'dgemv\_t', 'dgemv\_nt', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['dgemv'];
 file_name_eps = [file_name, '.eps'];
@@ -342,6 +366,9 @@ legend('dtrmv\_lnn', 'dtrmv\_ltn', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['dtrmv'];
 file_name_eps = [file_name, '.eps'];
@@ -377,6 +404,9 @@ legend('dtrsv\_lnn', 'dtrsv\_ltn', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['dtrsv'];
 file_name_eps = [file_name, '.eps'];
@@ -405,6 +435,9 @@ legend('dsymv\_l', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['dsymv'];
 file_name_eps = [file_name, '.eps'];
@@ -454,6 +487,9 @@ legend('sgemm\_nn', 'sgemm\_nt', 'sgemm\_tn', 'sgemm\_tt', 'Location', 'SouthEas
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['sgemm'];
 file_name_eps = [file_name, '.eps'];
@@ -482,6 +518,9 @@ legend('ssyrk\_ln', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['ssyrk'];
 file_name_eps = [file_name, '.eps'];
@@ -517,6 +556,9 @@ legend('strmm\_rlnn', 'strmm\_rutn', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['strmm'];
 file_name_eps = [file_name, '.eps'];
@@ -573,6 +615,9 @@ legend('strsm\_llnu', 'strsm\_lunn', 'strsm\_rltn', 'strsm\_rltu', 'strsm\_rutn'
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['strsm'];
 file_name_eps = [file_name, '.eps'];
@@ -608,6 +653,9 @@ legend('sgelqf', 'sgeqrf', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['sgeqrf'];
 file_name_eps = [file_name, '.eps'];
@@ -643,6 +691,9 @@ legend('sgetrf\_nopivot', 'sgetrf\_rowpivot', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['sgetrf'];
 file_name_eps = [file_name, '.eps'];
@@ -678,6 +729,9 @@ legend('spotrf\_l', 'spotrf\_u', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['spotrf'];
 file_name_eps = [file_name, '.eps'];
@@ -720,6 +774,9 @@ legend('sgemv\_n', 'sgemv\_t', 'sgemv\_nt', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['sgemv'];
 file_name_eps = [file_name, '.eps'];
@@ -755,6 +812,9 @@ legend('strmv\_lnn', 'strmv\_ltn', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['strmv'];
 file_name_eps = [file_name, '.eps'];
@@ -790,6 +850,9 @@ legend('strsv\_lnn', 'strsv\_ltn', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['strsv'];
 file_name_eps = [file_name, '.eps'];
@@ -818,6 +881,9 @@ legend('ssymv\_l', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
+ytick = get(gca, 'ytick');
+ytick = [ytick, Gflops_max];
+set(gca, 'ytick', ytick);
 
 file_name = ['ssymv'];
 file_name_eps = [file_name, '.eps'];

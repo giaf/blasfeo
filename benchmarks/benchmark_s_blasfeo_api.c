@@ -34,13 +34,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux_ext_dep.h"
-#include "../include/blasfeo_i_aux_ext_dep.h"
-#include "../include/blasfeo_s_aux.h"
-#include "../include/blasfeo_s_kernel.h"
-#include "../include/blasfeo_s_blas.h"
-#include "../include/blasfeo_timing.h"
+
+
+#include "../include/blasfeo.h"
+
+
 
 #ifndef S_PS
 #define S_PS 1
@@ -50,15 +48,18 @@
 #endif
 
 
+
 #if defined(REF_BLAS_NETLIB)
-#include "cblas.h"
-#include "lapacke.h"
+//#include "cblas.h"
+//#include "lapacke.h"
+#include "../include/d_blas.h"
 #endif
 
 #if defined(REF_BLAS_OPENBLAS)
 void openblas_set_num_threads(int num_threads);
-#include "cblas.h"
-#include "lapacke.h"
+//#include "cblas.h"
+//#include "lapacke.h"
+#include "../include/d_blas.h"
 #endif
 
 #if defined(REF_BLAS_BLIS)
@@ -83,7 +84,7 @@ int main()
 	openblas_set_num_threads(1);
 #endif
 #if defined(REF_BLAS_BLIS)
-	omp_set_num_threads(1);
+//	omp_set_num_threads(1);
 #endif
 #if defined(REF_BLAS_MKL)
 	mkl_set_num_threads(1);
@@ -139,6 +140,10 @@ int main()
 	const float flops_max = 8; // 1x128 bit fma
 	const float memops_max = 4; // ???
 	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A15): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+	const float flops_max = 2; // 1x32 bit fma
+	const float memops_max = 2; // ???
+	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A7): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_GENERIC)
 	const float flops_max = 2; // 1x32 bit mul + 1x32 bit add ???
 	const float memops_max = 1; // ???
@@ -443,7 +448,7 @@ int main()
 		#endif
 
 
-		printf("%d\t%7.2f\t%7.2f\t%7.2f\t%7.2f\n",
+		printf("%d\t%7.3f\t%7.3f\t%7.3f\t%7.3f\n",
 			n,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max,
 			Gflops_blas, 100.0*Gflops_blas/Gflops_max);

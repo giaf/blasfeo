@@ -68,7 +68,7 @@ void sgemm_nt_lib(int m, int n, int k, float alpha, float *pA, int sda, float *p
 			}
 		}
 #endif
-#if defined(TARGET_ARMV7A_ARM_CORTEX_A15)  | defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; i<m-11; i+=12)
 		{
 		j = 0;
@@ -84,7 +84,7 @@ void sgemm_nt_lib(int m, int n, int k, float alpha, float *pA, int sda, float *p
 			}
 		}
 #endif
-#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53) | defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53) | defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -158,52 +158,6 @@ void sgemm_nt_lib(int m, int n, int k, float alpha, float *pA, int sda, float *p
 
 
 
-void sgemm_nn_lib(int m, int n, int k, float alpha, float *pA, int sda, float *pB, int sdb, float beta, float *pC, int sdc, float *pD, int sdd)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-	
-	const int bs = 4;
-
-	int i, j, l;
-
-	i = 0;
-
-	for(; i<m-3; i+=4)
-		{
-		j = 0;
-		for(; j<n-3; j+=4)
-			{
-			kernel_sgemm_nn_4x4_lib4(k, &alpha, &pA[i*sda], 0, &pB[j*bs], sdb, &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd]);
-			}
-		if(j<n)
-			{
-			kernel_sgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], 0, &pB[j*bs], sdb, &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
-			}
-		}
-	if(m>i)
-		{
-		goto left_4;
-		}
-
-	// common return if i==m
-	return;
-
-	// clean up loops definitions
-
-	left_4:
-	j = 0;
-	for(; j<n; j+=4)
-		{
-		kernel_sgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], 0, &pB[j*bs], sdb, &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
-		}
-	return;
-
-	}
-
-
-
 // D <= B * A^{-T} , with A lower triangular with unit diagonal
 void strsm_nt_rl_one_lib(int m, int n, float *pA, int sda, float *pB, int sdb, float *pD, int sdd)
 	{
@@ -255,15 +209,15 @@ void strsm_nt_ru_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, fl
 
 	if(m<=0 || n<=0)
 		return;
-	
+
 	const int bs = 4;
-	
+
 	int i, j, idx;
 
 	int rn = n%4;
 
-	float *dummy;
-	
+	// float *dummy;
+
 	i = 0;
 
 	for(; i<m-3; i+=4)
@@ -273,7 +227,8 @@ void strsm_nt_ru_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, fl
 		if(rn>0)
 			{
 			idx = n-rn;
-			kernel_strsm_nt_ru_inv_4x4_vs_lib4(0, dummy, dummy, &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, rn);
+			// XXX pA & pD are dummy and should not be used internally !!!
+			kernel_strsm_nt_ru_inv_4x4_vs_lib4(0, pD, pA, &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, rn);
 			j += rn;
 			}
 		for(; j<n; j+=4)
@@ -297,7 +252,8 @@ void strsm_nt_ru_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, fl
 	if(rn>0)
 		{
 		idx = n-rn;
-		kernel_strsm_nt_ru_inv_4x4_vs_lib4(0, dummy, dummy, &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, rn);
+		// XXX pA & pD are dummy and should not be used internally !!!
+		kernel_strsm_nt_ru_inv_4x4_vs_lib4(0, pD, pA, &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, rn);
 		j += rn;
 		}
 	for(; j<n; j+=4)
@@ -377,7 +333,8 @@ void strsm_nn_lu_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, fl
 		j = 0;
 		for( ; j<n; j+=4)
 			{
-			kernel_strsm_nn_lu_inv_4x4_vs_lib4(0, dummy, dummy, 0, pB+idx*sdb+j*bs, pD+idx*sdd+j*bs, pA+idx*sda+idx*bs, inv_diag_A+idx, rm, n-j);
+			// XXX pA & pD are dummy and should not be used internally !!!
+			kernel_strsm_nn_lu_inv_4x4_vs_lib4(0, pD, pA, 0, pB+idx*sdb+j*bs, pD+idx*sdd+j*bs, pA+idx*sda+idx*bs, inv_diag_A+idx, rm, n-j);
 			}
 		// TODO
 		i += rm;
@@ -526,9 +483,11 @@ void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 // dgemm nn
 void blasfeo_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
+
 	if(m<=0 || n<=0)
 		return;
-	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
+
+	if(ai!=0 | ci!=0 | di!=0)
 		{
 		printf("\nblasfeo_sgemm_nn: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
@@ -537,17 +496,75 @@ void blasfeo_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 	// invalidate stored inverse diagonal of result matrix
 	sD->use_dA = 0;
 
-	const int bs = 4;
+	const int ps = 4;
+
 	int sda = sA->cn;
 	int sdb = sB->cn;
 	int sdc = sC->cn;
 	int sdd = sD->cn;
-	float *pA = sA->pA + aj*bs;
-	float *pB = sB->pA + bj*bs;
-	float *pC = sC->pA + cj*bs;
-	float *pD = sD->pA + dj*bs;
-	sgemm_nn_lib(m, n, k, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd); 
+
+	int bir = bi & (ps-1);
+
+	float *pA = sA->pA + aj*ps;
+	float *pB = sB->pA + bj*ps + (bi-bir)*sdb;
+	float *pC = sC->pA + cj*ps;
+	float *pD = sD->pA + dj*ps;
+
+	int offsetB = bir;
+
+//	sgemm_nn_lib(m, n, k, alpha, pA, sda, pB, sdb, beta, pC, sdc, pD, sdd); 
+	int i, j, l;
+
+	i = 0;
+
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+	for(; i<m-7; i+=8)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_sgemm_nn_8x4_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd);
+			}
+		if(j<n)
+			{
+			kernel_sgemm_nn_4x4_vs_lib4(k, &alpha, &pA[(i+0)*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+(i+0)*sdc], &pD[j*ps+(i+0)*sdd], m-(i+0), n-j);
+			kernel_sgemm_nn_4x4_vs_lib4(k, &alpha, &pA[(i+4)*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+(i+4)*sdc], &pD[j*ps+(i+4)*sdd], m-(i+4), n-j);
+			}
+		}
+#endif
+	for(; i<m-3; i+=4)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_sgemm_nn_4x4_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd]);
+			}
+		if(j<n)
+			{
+			kernel_sgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		goto left_4;
+		}
+
+	// common return if i==m
 	return;
+
+	// clean up loops definitions
+
+	left_4:
+	j = 0;
+	for(; j<n; j+=4)
+		{
+		kernel_sgemm_nn_4x4_vs_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+		}
+	return;
+
+
+	return;
+
 	}
 
 

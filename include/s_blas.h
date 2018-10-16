@@ -56,8 +56,8 @@ void strmm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, fl
 void strsm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, float *alpha, float *A, int *lda, float *B, int *ldb);
 
 // lapack
-int spotrf_(char *uplo, int *m, float *A, int *lda, int *info);
-int sgetrf_(int *m, int *n, float *A, int *lda, int *ipiv, int *info);
+void spotrf_(char *uplo, int *m, float *A, int *lda, int *info);
+void sgetrf_(int *m, int *n, float *A, int *lda, int *ipiv, int *info);
 void sgeqrf_(int *m, int *n, float *A, int *lda, float *tau, float *work, int *lwork, int *info);
 void sgeqr2_(int *m, int *n, float *A, int *lda, float *tau, float *work, int *info);
 void sgelqf_(int *m, int *n, float *A, int *lda, float *tau, float *work, int *lwork, int *info);

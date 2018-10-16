@@ -27,58 +27,65 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
 
-#if defined(LA_BLAS_WRAPPER)
-#if defined(REF_BLAS_BLIS)
-#include "blis.h"
-#elif defined(REF_BLAS_MKL)
-#include "mkl.h"
-#else
-#include "../include/d_blas.h"
+
+#ifndef BLASFEO_S_BLAS_API_H_
+#define BLASFEO_S_BLAS_API_H_
+
+
+
+#include "blasfeo_target.h"
+
+
+
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+
+
+#ifdef BLAS_API
+
+
+
+#ifdef FORTRAN_BLAS_API
+
+
+
+// BLAS 3
+//
+
+
+
+// LAPACK
+//
+
+
+
+#else // BLASFEO_API
+
+
+
+// BLAS 3
+//
+
+
+
+// LAPACK
+//
+
+
+
+#endif // BLASFEO_API
+
+
+
+#endif // BLAS_API
+
+
+
+#ifdef __cplusplus
+}
 #endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
-
-
-
-#define REAL double
-
-#define STRMAT blasfeo_dmat
-#define STRVEC blasfeo_dvec
-
-#define GELQF_PD_DA_LIBSTR blasfeo_dgelqf_pd_da
-#define GELQF_PD_LA_LIBSTR blasfeo_dgelqf_pd_la
-#define GELQF_PD_LLA_LIBSTR blasfeo_dgelqf_pd_lla
-#define GELQF_PD_LIBSTR blasfeo_dgelqf_pd
-#define GELQF_LIBSTR blasfeo_dgelqf
-#define GELQF_WORK_SIZE_LIBSTR blasfeo_dgelqf_worksize
-#define GEQRF_LIBSTR blasfeo_dgeqrf
-#define GEQRF_WORK_SIZE_LIBSTR blasfeo_dgeqrf_worksize
-#define GETF2_NOPIVOT dgetf2_nopivot
-#define GETRF_NOPIVOT_LIBSTR blasfeo_dgetrf_nopivot
-#define GETRF_LIBSTR blasfeo_dgetrf_rowpivot
-#define POTRF_L_LIBSTR blasfeo_dpotrf_l
-#define POTRF_L_MN_LIBSTR blasfeo_dpotrf_l_mn
-#define PSTRF_L_LIBSTR dpstrf_l_libstr
-#define SYRK_POTRF_LN_LIBSTR blasfeo_dsyrk_dpotrf_ln
-#define SYRK_POTRF_LN_MN_LIBSTR blasfeo_dsyrk_dpotrf_ln_mn
-
-#define COPY dcopy_
-#define GELQF dgelqf_
-#define GEMM dgemm_
-#define GER dger_
-#define GEQRF dgeqrf_
-#define GEQR2 dgeqr2_
-#define GETRF dgetrf_
-#define POTRF dpotrf_
-#define SCAL dscal_
-#define SYRK dsyrk_
-#define TRSM dtrsm_
-
-
-#include "x_lapack_lib.c"
+#endif  // BLASFEO_S_BLAS_API_H_
