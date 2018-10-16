@@ -1747,7 +1747,7 @@ inner_edge_gemm_add_nn_8x4_lib4:
 	fmla	v4.2d, v24.2d, v30.2d[0]
 	fmla	v5.2d, v25.2d, v30.2d[0]
 	fmla	v12.2d, v26.2d, v30.2d[0]
-	fmla	v14.2d, v27.2d, v30.2d[0]
+	fmla	v13.2d, v27.2d, v30.2d[0]
 	fmla	v6.2d, v24.2d, v31.2d[0]
 	fmla	v7.2d, v25.2d, v31.2d[0]
 	fmla	v14.2d, v26.2d, v31.2d[0]
