@@ -68,6 +68,7 @@
     "blas3":{
       "GEMM":[
         "gemm_nn",
+        "gemm",
         "gemm_nt",
         "gemm_tn",
         "gemm_tt",

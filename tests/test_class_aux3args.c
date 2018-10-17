@@ -8,7 +8,7 @@ void call_routines(struct RoutineArgs *args){
 
 	// routine call
 	//
-	ROUTINE(
+	BLASFEO(ROUTINE)(
 		args->n, args->m, args->alpha,
 		args->sA, args->ai, args->aj,
 		args->sB, args->bi, args->bj

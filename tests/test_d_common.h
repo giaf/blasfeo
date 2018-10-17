@@ -33,6 +33,8 @@
 #include "../include/blasfeo_d_aux.h"
 #include "../include/blasfeo_d_kernel.h"
 
+#include "../include/blasfeo_d_blas_api.h"
+
 // BLASFEO External dependencies
 #include "../include/blasfeo_i_aux_ext_dep.h"
 #include "../include/blasfeo_v_aux_ext_dep.h"
@@ -46,9 +48,11 @@
 
 #include "../include/blasfeo_d_aux_test.h"
 
+#include "../include/d_blas.h"
 
 #define PRECISION Double
 #define GECMP_LIBSTR dgecmp_libstr
+#define GECMP_BLASAPI dgecmp_blasapi
 #define REAL double
 
 #define ZEROS d_zeros

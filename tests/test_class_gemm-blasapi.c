@@ -1,24 +1,25 @@
 // CLASS_GEMM
 //
+
 void call_routines(struct RoutineArgs *args){
 
 	// unpack args
-
+	//
 	// routine call
 	//
-	BLASFEO(ROUTINE)(
-		args->m, args->n, args->k, args->alpha,
-		args->sA, args->ai, args->aj,
-		args->sB, args->bi, args->bj, args->beta,
-		args->sC, args->ci, args->cj,
-		args->sD, args->di, args->dj);
+	BLAS(ROUTINE)(
+		&(args->ta), &(args->tb),
+		&(args->m), &(args->m), &(args->m), &(args->alpha),
+		args->cA->pA, &(args->cA->m),
+		args->cB->pA, &(args->cB->m), &(args->beta),
+		args->cD->pA, &(args->cD->m));
 
-	REF(ROUTINE)(
-		args->m, args->n, args->k, args->alpha,
-		args->rA, args->ai, args->aj,
-		args->rB, args->bi, args->bj, args->beta,
-		args->rC, args->ci, args->cj,
-		args->rD, args->di, args->dj);
+	BLAS(ROUTINE)(
+		&(args->ta), &(args->tb),
+		&(args->m), &(args->m), &(args->m), &(args->alpha),
+		args->rA->pA, &(args->rA->m),
+		args->rB->pA, &(args->rB->m), &(args->beta),
+		args->rD->pA, &(args->rD->m));
 
 }
 
@@ -39,31 +40,35 @@ void print_routine(struct RoutineArgs *args){
 void print_routine_matrices(struct RoutineArgs *args)
 {
 		printf("\nPrint A:\n");
-		blasfeo_print_xmat_debug(args->m, args->n, args->sA, args->ai, args->aj, 0, 0, 0);
+		print_xmat_debug(args->m, args->n, args->cA, args->ai, args->aj, 0, 0, 0);
 		print_xmat_debug(args->m, args->n, args->rA, args->ai, args->aj, 0, 0, 0);
 
 		printf("\nPrint B:\n");
-		blasfeo_print_xmat_debug(args->m, args->n, args->sB, args->ai, args->aj, 0, 0, 0);
+		print_xmat_debug(args->m, args->n, args->cB, args->ai, args->aj, 0, 0, 0);
 		print_xmat_debug(args->m, args->n, args->rB, args->ai, args->aj, 0, 0, 0);
 
 		printf("\nPrint C:\n");
-		blasfeo_print_xmat_debug(args->m, args->n, args->sC, args->ai, args->aj, 0, 0, 0);
+		print_xmat_debug(args->m, args->n, args->cC, args->ai, args->aj, 0, 0, 0);
 		print_xmat_debug(args->m, args->n, args->rC, args->ai, args->aj, 0, 0, 0);
 
 		printf("\nPrint D:\n");
-		blasfeo_print_xmat_debug(args->m, args->n, args->sD, args->ai, args->aj, 0, 0, 0);
+		print_xmat_debug(args->m, args->n, args->cD, args->ai, args->aj, 0, 0, 0);
 		print_xmat_debug(args->m, args->n, args->rD, args->ai, args->aj, 0, 0, 0);
 }
 
 
 void set_test_args(struct TestArgs *targs)
 {
-	targs->AB_offsets = 5;
-	targs->ii0s = 13;
+	targs->ii0s = 1;
 	targs->jj0s = 1;
-	targs->kk0s = 13;
-	targs->nis = 13;
-	targs->njs = 13;
-	targs->nks = 13;
+	targs->kk0s = 1;
+	targs->nis = 10;
+	targs->njs = 10;
+	targs->nks = 10;
 	targs->alphas = 1;
+
+	targs->tas = 1;
+	targs->tbs = 1;
+	targs->uplos = 1;
+
 }

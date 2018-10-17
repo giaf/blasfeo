@@ -33,6 +33,8 @@
 #include "../include/blasfeo_s_aux.h"
 #include "../include/blasfeo_s_kernel.h"
 
+#include "../include/blasfeo_s_blas_api.h"
+
 // BLASFEO External dependencies
 #include "../include/blasfeo_i_aux_ext_dep.h"
 #include "../include/blasfeo_v_aux_ext_dep.h"
@@ -45,9 +47,11 @@
 #include "../include/blasfeo_s_aux_ext_dep_ref.h"
 
 #include "../include/blasfeo_s_aux_test.h"
+#include "../include/s_blas.h"
 
 #define PRECISION Single
 #define GECMP_LIBSTR sgecmp_libstr
+#define GECMP_BLASAPI sgecmp_blasapi
 #define REAL float
 
 #define ZEROS s_zeros

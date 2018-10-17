@@ -37,10 +37,17 @@ void test_routine(struct RoutineArgs *args, int *bad_calls){
 	call_routines(args);
 
 	// routine test
+	#ifdef BLAS_API
+	int res = GECMP_BLASAPI(
+		args->n, args->m, args->ai, args->aj,
+		args->cD, args->rD,
+		&(args->err_i), &(args->err_j), VERBOSE);
+	#else
 	int res = GECMP_LIBSTR(
 		args->n, args->m, args->ai, args->aj,
 		args->sD, args->rD,
 		&(args->err_i), &(args->err_j), VERBOSE);
+	#endif
 
 	if (!res) *bad_calls += 1;
 #if (VERBOSE==0)
@@ -135,6 +142,26 @@ int main()
 	PACK_STRMAT(n, n, C, n, &sC, 0, 0);
 	PACK_STRMAT(n, n, D, n, &sD, 0, 0);
 
+	// Allocate BLASFEO_blasapi matrices
+	struct STRMAT_REF cA; ALLOCATE_STRMAT_REF(n, n, &cA);
+	struct STRMAT_REF cA_po; ALLOCATE_STRMAT_REF(n, n, &cA_po);
+	struct STRMAT_REF cB; ALLOCATE_STRMAT_REF(n, n, &cB);
+	struct STRMAT_REF cC; ALLOCATE_STRMAT_REF(n, n, &cC);
+	struct STRMAT_REF cD; ALLOCATE_STRMAT_REF(n, n, &cD);
+	PACK_STRMAT_REF(n, n, A, n, &cA, 0, 0);
+	PACK_STRMAT_REF(n, n, A_po, n, &cA_po, 0, 0);
+	PACK_STRMAT_REF(n, n, B, n, &cB, 0, 0);
+	PACK_STRMAT_REF(n, n, C, n, &cC, 0, 0);
+	PACK_STRMAT_REF(n, n, D, n, &cD, 0, 0);
+	cA.m = n;
+	cA.n = n;
+	cB.m = n;
+	cB.n = n;
+	cC.m = n;
+	cC.n = n;
+	cD.m = n;
+	cD.n = n;
+
 	// Allocate ref matrices
 	struct STRMAT_REF rA; ALLOCATE_STRMAT_REF(n, n, &rA);
 	struct STRMAT_REF rA_po; ALLOCATE_STRMAT_REF(n, n, &rA_po);
@@ -146,11 +173,21 @@ int main()
 	PACK_STRMAT_REF(n, n, B, n, &rB, 0, 0);
 	PACK_STRMAT_REF(n, n, C, n, &rC, 0, 0);
 	PACK_STRMAT_REF(n, n, D, n, &rD, 0, 0);
+	rA.m = n;
+	rA.n = n;
+	rB.m = n;
+	rB.n = n;
+	rC.m = n;
+	rC.n = n;
+	rD.m = n;
+	rD.n = n;
 
 	// Allocate row pivot vectors
 	int *sipiv;
 	int *ripiv;
+	int *cipiv;
 	int_zeros(&sipiv, n, 1);
+	int_zeros(&cipiv, n, 1);
 	int_zeros(&ripiv, n, 1);
 
 	// Test description structure
@@ -195,13 +232,21 @@ int main()
 	struct RoutineArgs args;
 	initialize_args(&args);
 
-	// pack matrices
+	// bind matrices
 	args.sA = &sA;
 	args.sA_po = &sA_po;
 	args.sB = &sB;
 	args.sC = &sC;
 	args.sD = &sD;
 	args.sipiv = sipiv;
+
+	// blasapi matrices (column major)
+	args.cA = &cA;
+	args.cA_po = &cA_po;
+	args.cB = &cB;
+	args.cC = &cC;
+	args.cD = &cD;
+	args.cipiv = cipiv;
 
 	args.rA = &rA;
 	args.rA_po = &rA_po;
@@ -246,6 +291,7 @@ int main()
 
 									// reset result matrix D
 									GESE_REF(n, n, -1.0, &rD, 0, 0);
+									GESE_REF(n, n, -1.0, &cD, 0, 0);
 									GESE(n, n, -1.0, &sD, 0, 0);
 
 									// load current iteration arguments
