@@ -41,23 +41,13 @@
 
 // tests helpers
 #include "test_s_common.h"
+
+// include routine specific implementation
 #include "test_x_common.h"
+
 #include "test_x_common.c"
 
-// template base on routine class
-#ifdef ROUTINE_CLASS_GEMM
-#include "test_class_gemm.c"
-#endif
-#ifdef ROUTINE_CLASS_SYRK
-#include "test_class_syrk.c"
-#endif
-#ifdef ROUTINE_CLASS_TRM
-#include "test_class_trm.c"
-#endif
-
 #include "test_x.c"
-
-#else
 
 #include <stdio.h>
 

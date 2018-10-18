@@ -121,6 +121,11 @@ void initialize_args(struct RoutineArgs * args)
 
 	args->di = 0;
 	args->dj = 0;
+
+	args->ta = 'n';
+	args->tb = 't';
+	args->uplo = 'l';
+
 };
 
 /* prints a matrix in column-major format */
@@ -384,6 +389,51 @@ int GECMP_LIBSTR(
 
 					printf("\nResult matrix:\n");
 					blasfeo_print_xmat_debug(m, n, sD, bi, bj, ii, jj, 1);
+					print_xmat_debug(m, n, rD, bi, bj, ii, jj, 1);
+
+					return 0;
+				}
+			}
+		}
+
+	return 1;
+	}
+
+int GECMP_BLASAPI(
+	int m, int n, int bi, int bj,
+	struct STRMAT_REF *sD, struct STRMAT_REF *rD,
+	int* err_i, int* err_j, int debug)
+	{
+	int ii, jj;
+
+	for(ii = 0; ii < m; ii++)
+		{
+		for(jj = 0; jj < n; jj++)
+			{
+
+			// strtucture mat
+			REAL sbi = MATEL_REF(sD, ii, jj);
+			// reference mat
+			REAL rbi = MATEL_REF(rD, ii, jj);
+
+			if ( (sbi != rbi) & ( fabs(sbi-rbi) > 1e-11*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > 1e-11))
+				{
+					*err_i = ii;
+					*err_j = jj;
+					if (!debug) return 0;
+
+					printf("\n\nFailed at index %d,%d, (HP) %2.18f != %2.18f (RF)\n", ii, jj, sbi, rbi);
+					printf("Absolute error: %3.5e\n", fabs(sbi-rbi));
+					printf("Relative error: %3.5e\n", fabs(sbi-rbi)/(fabs(sbi)+fabs(rbi)));
+					printf("\nBitwise comparison:\n");
+					printf("HP:  ");
+					printbits(&sbi, sizeof(REAL));
+					printf("REF: ");
+					printbits(&rbi, sizeof(REAL));
+					printf("\n");
+
+					printf("\nResult matrix:\n");
+					print_xmat_debug(m, n, sD, bi, bj, ii, jj, 1);
 					print_xmat_debug(m, n, rD, bi, bj, ii, jj, 1);
 
 					return 0;

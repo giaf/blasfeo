@@ -96,7 +96,7 @@ class CookBook:
                             flags.update(self.specs['make_flags'])
 
                             routine_name = "{}{}".format(precision, available_routine)
-                            routine_fullname = "blasfeo_{}".format(routine_name)
+                            routine_fullname = routine_name
                             flags["ROUTINE"] = routine_fullname
                             flags["ROUTINE_CLASS"] = routine_subclass
 

@@ -57,6 +57,8 @@
 #define string(var) STR(var)
 
 #define REF(fun) concatenate(fun, _ref)
+#define BLASFEO(fun) concatenate(blasfeo_, fun)
+#define BLAS(fun) concatenate(fun, _)
 
 #ifndef VERBOSE
 #define VERBOSE 0
@@ -118,6 +120,7 @@ struct RoutineArgs{
 	// indexes arrays
 	int *sipiv;
 	int *ripiv;
+	int *cipiv;
 
 	// matrices
 	struct STRMAT *sA;
@@ -131,6 +134,17 @@ struct RoutineArgs{
 	struct STRMAT_REF *rB;
 	struct STRMAT_REF *rC;
 	struct STRMAT_REF *rD;
+
+	struct STRMAT_REF *cA;
+	struct STRMAT_REF *cA_po;
+	struct STRMAT_REF *cB;
+	struct STRMAT_REF *cC;
+	struct STRMAT_REF *cD;
+
+	// blas_api
+	char ta;
+	char tb;
+	char uplo;
 };
 
 struct TestArgs{
@@ -159,9 +173,20 @@ struct TestArgs{
 
 	int alphas;
 	int betas;
+
 	REAL alpha_l[6];
 	REAL beta_l[6];
 
+	// blas_api parameters
+	int tas;
+	int tbs;
+	int uplos;
+
+	const char* ta_l[2];
+	const char* tb_l[2];
+	const char* uplos_l[2];
+
+	// statistics
 	int total_calls;
 };
 
@@ -172,6 +197,40 @@ void call_routines(struct RoutineArgs *args);
 void print_routine(struct RoutineArgs *args);
 void print_routine_matrices(struct RoutineArgs *args);
 
+void print_xmat_debug(
+	int m, int n, struct STRMAT_REF *sA,
+	int ai, int aj, int err_i, int err_j, int ERR);
+
+void blasfeo_print_xmat_debug(
+	int m, int n, struct STRMAT *sA,
+	int ai, int aj, int err_i, int err_j, int ERR);
+
 int GECMP_LIBSTR(
 	int n, int m, int bi, int bj, struct STRMAT *sC,
 	struct STRMAT_REF *rC, int* err_i, int* err_j, int debug);
+
+int GECMP_BLASAPI(
+	int n, int m, int bi, int bj, struct STRMAT_REF *cC,
+	struct STRMAT_REF *rC, int* err_i, int* err_j, int debug);
+
+
+// template base on routine class
+#ifdef ROUTINE_CLASS_GETRF
+#include "test_class_getrf.c"
+#endif
+#ifdef ROUTINE_CLASS_GEMM
+
+#ifdef BLAS_API
+#include "test_class_gemm-blasapi.c"
+#else
+#include "test_class_gemm.c"
+#endif
+
+#endif
+
+#ifdef ROUTINE_CLASS_SYRK
+#include "test_class_syrk.c"
+#endif
+#ifdef ROUTINE_CLASS_TRM
+#include "test_class_trm.c"
+#endif
