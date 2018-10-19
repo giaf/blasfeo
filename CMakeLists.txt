@@ -76,9 +76,6 @@ set(USE_C99_MATH ON CACHE BOOL "Use C99 extension to math library")
 # (for memory allocation and printing)
 set(EXT_DEP ON CACHE BOOL "Compile external dependencies in BLASFEO")
 
-set(MIN_KERNEL_SIZE 2x2 CACHE STRING "Minimum kernel size")
-# set(MIN_KERNEL_SIZE 4x4 CACHE STRING "Minimum kernel size")
-
 # Skip BLASFEO utils for unsupported systems and for Realease build
 if(CMAKE_SYSTEM MATCHES "dSpace" OR CMAKE_BUILD_TYPE MATCHES "Release")
 	set(BLASFEO_TESTING OFF CACHE BOOL "Examples disabled" FORCE)
@@ -132,12 +129,6 @@ endif()
 
 if(BLASFEO_BENCHMARKS MATCHES ON)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBENCHMARKS_MODE=1")
-endif()
-
-if(MIN_KERNEL_SIZE MATCHES 2x2)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMIN_KERNEL_SIZE=2")
-elseif(MIN_KERNEL_SIZE MATCHES 4x4)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMIN_KERNEL_SIZE=4")
 endif()
 
 # search directories
