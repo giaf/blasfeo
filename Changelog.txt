@@ -1,0 +1,13 @@
+BLASFEO ChangeLog
+====================================================================
+Version 0.1.0
+19-Oct-2018
+
+common:
+	* initial release
+
+BLASFEO_API:
+	* stable version of dgemm for all targets
+	
+BLAS_API:
+	* stable version of dgemm for all targets
