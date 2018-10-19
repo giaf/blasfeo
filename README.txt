@@ -24,7 +24,11 @@ The optimized linear algebra kernels are currently provided for OS_LINUX (x86_64
 BLASFEO employes structures to describe matrices (blasfeo_dmat) and vectors (blasfeo_dvec), defined in include/blasfeo_common.h.
 The actual implementation of blasfeo_dmat and blasfeo_dvec depends on the LA and TARGET choice.
 
-More information about BLASFEO can be found in the ArXiv paper at the URL
+The BLASFEO wiki can be found at the page
+https://blasfeo.syscop.de
+providing more detailed installation instructions and examples, and a rich collection of benchmarks and comparisions.
+
+More scientific information about BLASFEO can be found in the ArXiv paper at the URL
 https://arxiv.org/abs/1704.02457
 or in the slides at the URL
 www.cs.utexas.edu/users/flame/BLISRetreat2017/slides/Gianluca_BLIS_Retreat_2017.pdf
