@@ -39,6 +39,3 @@ add_executable(example_s_lu_factorization example_s_lu_factorization.c)
 
 target_link_libraries(example_d_lu_factorization blasfeo m)
 target_link_libraries(example_s_lu_factorization blasfeo m)
-
-add_executable(example_kernel_dgemm example_kernel_dgemm.c kernel_dgemm.S)
-target_link_libraries(example_kernel_dgemm blasfeo m)
