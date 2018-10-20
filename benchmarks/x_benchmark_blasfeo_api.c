@@ -39,6 +39,7 @@
 
 
 #include "../include/blasfeo.h"
+#include "benchmark_x_common.h"
 
 
 
@@ -62,10 +63,6 @@ void openblas_set_num_threads(int num_threads);
 #include "mkl.h"
 #endif
 
-
-
-
-#include "cpu_freq.h"
 
 
 

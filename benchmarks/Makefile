@@ -34,6 +34,15 @@ LIBS = $(BINARY_DIR)/libblasfeo.a
 
 include ../Makefile.blas
 
+# set cpu freq
+ifdef GHZ_MAX
+CFLAGS += -DGHZ_MAX=$(GHZ_MAX)
+else
+ifeq (,$(wildcard ./cpu_freq.h))
+$(error GHZ_MAX is not set, create cpu_freq.h or specify GHZ_MAX Makefile option)
+endif
+endif
+
 # all benchmarks
 ONE_OBJS = benchmark_d_blasfeo_api.o
 #ONE_OBJS = benchmark_s_blasfeo_api.o

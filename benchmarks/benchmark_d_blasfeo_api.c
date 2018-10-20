@@ -37,6 +37,8 @@
 
 
 #include "../include/blasfeo.h"
+#include "benchmark_x_common.h"
+
 
 
 
@@ -72,9 +74,6 @@ void omp_set_num_threads(int num_threads);
 #include "mkl.h"
 #endif
 
-
-
-#include "cpu_freq.h"
 
 
 
