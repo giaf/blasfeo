@@ -518,58 +518,21 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 
 	kernel_dgemm_nt_4x4_lib4(kmax, alpha, A, B, &beta1, CC, CC);
 
-	// shift sol for cols
-	if(n0>0)
-		{
-		if(n0==1)
-			{
-			CC[0+bs*0] = CC[0+bs*1];
-			CC[1+bs*0] = CC[1+bs*1];
-			CC[2+bs*0] = CC[2+bs*1];
-			CC[3+bs*0] = CC[3+bs*1];
-
-			CC[0+bs*1] = CC[0+bs*2];
-			CC[1+bs*1] = CC[1+bs*2];
-			CC[2+bs*1] = CC[2+bs*2];
-			CC[3+bs*1] = CC[3+bs*2];
-
-			CC[0+bs*2] = CC[0+bs*3];
-			CC[1+bs*2] = CC[1+bs*3];
-			CC[2+bs*2] = CC[2+bs*3];
-			CC[3+bs*2] = CC[3+bs*3];
-
-			D0 += 1*bs;
-			}
-		else if(n0==2)
-			{
-			CC[0+bs*0] = CC[0+bs*2];
-			CC[1+bs*0] = CC[1+bs*2];
-			CC[2+bs*0] = CC[2+bs*2];
-			CC[3+bs*0] = CC[3+bs*2];
-
-			CC[0+bs*1] = CC[0+bs*3];
-			CC[1+bs*1] = CC[1+bs*3];
-			CC[2+bs*1] = CC[2+bs*3];
-			CC[3+bs*1] = CC[3+bs*3];
-
-			D0 += 2*bs;
-			}
-		else //if(n0==3)
-			{
-			CC[0+bs*0] = CC[0+bs*3];
-			CC[1+bs*0] = CC[1+bs*3];
-			CC[2+bs*0] = CC[2+bs*3];
-			CC[3+bs*0] = CC[3+bs*3];
-
-			D0 += 3*bs;
-			}
-		}
-
-	int kn = n1 - n0;
-
 	if(offsetD==0)
 		{
-		if(kn<=0)
+		if(n0==0)
+			goto l_00;
+		else if(n0==1)
+			goto l_01;
+		else if(n0==2)
+			goto l_02;
+		else if(n0==3)
+			goto l_03;
+		else
+			return;
+
+l_00:
+		if(n1<=0)
 			return;
 
 		if(m0<=0 & m1>0) D0[0+bs*0] = CC[0+bs*0];
@@ -577,7 +540,8 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		if(m0<=2 & m1>2) D0[2+bs*0] = CC[2+bs*0];
 		if(m0<=3 & m1>3) D0[3+bs*0] = CC[3+bs*0];
 
-		if(kn<=1)
+l_01:
+		if(n1<=1)
 			return;
 
 		if(m0<=0 & m1>0) D0[0+bs*1] = CC[0+bs*1];
@@ -585,7 +549,8 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		if(m0<=2 & m1>2) D0[2+bs*1] = CC[2+bs*1];
 		if(m0<=3 & m1>3) D0[3+bs*1] = CC[3+bs*1];
 
-		if(kn<=2)
+l_02:
+		if(n1<=2)
 			return;
 
 		if(m0<=0 & m1>0) D0[0+bs*2] = CC[0+bs*2];
@@ -593,7 +558,8 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		if(m0<=2 & m1>2) D0[2+bs*2] = CC[2+bs*2];
 		if(m0<=3 & m1>3) D0[3+bs*2] = CC[3+bs*2];
 
-		if(kn<=3)
+l_03:
+		if(n1<=3)
 			return;
 
 		if(m0<=0 & m1>0) D0[0+bs*3] = CC[0+bs*3];
@@ -605,7 +571,19 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		{
 		D1 = D0 + sdd*bs;
 
-		if(kn<=0)
+		if(n0==0)
+			goto l_10;
+		else if(n0==1)
+			goto l_11;
+		else if(n0==2)
+			goto l_12;
+		else if(n0==3)
+			goto l_13;
+		else
+			return;
+
+l_10:
+		if(n1<=0)
 			return;
 
 		if(m0<=0 & m1>0) D0[1+bs*0] = CC[0+bs*0];
@@ -613,7 +591,8 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		if(m0<=2 & m1>2) D0[3+bs*0] = CC[2+bs*0];
 		if(m0<=3 & m1>3) D1[0+bs*0] = CC[3+bs*0];
 
-		if(kn<=1)
+l_11:
+		if(n1<=1)
 			return;
 
 		if(m0<=0 & m1>0) D0[1+bs*1] = CC[0+bs*1];
@@ -621,7 +600,8 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		if(m0<=2 & m1>2) D0[3+bs*1] = CC[2+bs*1];
 		if(m0<=3 & m1>3) D1[0+bs*1] = CC[3+bs*1];
 
-		if(kn<=2)
+l_12:
+		if(n1<=2)
 			return;
 
 		if(m0<=0 & m1>0) D0[1+bs*2] = CC[0+bs*2];
@@ -629,7 +609,8 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		if(m0<=2 & m1>2) D0[3+bs*2] = CC[2+bs*2];
 		if(m0<=3 & m1>3) D1[0+bs*2] = CC[3+bs*2];
 
-		if(kn<=3)
+l_13:
+		if(n1<=3)
 			return;
 
 		if(m0<=0 & m1>0) D0[1+bs*3] = CC[0+bs*3];
@@ -641,7 +622,19 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		{
 		D1 = D0 + sdd*bs;
 
-		if(kn<=0)
+		if(n0==0)
+			goto l_20;
+		else if(n0==1)
+			goto l_21;
+		else if(n0==2)
+			goto l_22;
+		else if(n0==3)
+			goto l_23;
+		else
+			return;
+
+l_20:
+		if(n1<=0)
 			return;
 
 		if(m0<=0 & m1>0) D0[2+bs*0] = CC[0+bs*0];
@@ -649,7 +642,8 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		if(m0<=2 & m1>2) D1[0+bs*0] = CC[2+bs*0];
 		if(m0<=3 & m1>3) D1[1+bs*0] = CC[3+bs*0];
 
-		if(kn<=1)
+l_21:
+		if(n1<=1)
 			return;
 
 		if(m0<=0 & m1>0) D0[2+bs*1] = CC[0+bs*1];
@@ -657,7 +651,8 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		if(m0<=2 & m1>2) D1[0+bs*1] = CC[2+bs*1];
 		if(m0<=3 & m1>3) D1[1+bs*1] = CC[3+bs*1];
 
-		if(kn<=2)
+l_22:
+		if(n1<=2)
 			return;
 
 		if(m0<=0 & m1>0) D0[2+bs*2] = CC[0+bs*2];
@@ -665,7 +660,9 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		if(m0<=2 & m1>2) D1[0+bs*2] = CC[2+bs*2];
 		if(m0<=3 & m1>3) D1[1+bs*2] = CC[3+bs*2];
 
-		if(kn<=3)
+
+l_23:
+		if(n1<=3)
 			return;
 
 		if(m0<=0 & m1>0) D0[2+bs*3] = CC[0+bs*3];
@@ -677,7 +674,19 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		{
 		D1 = D0 + sdd*bs;
 
-		if(kn<=0)
+		if(n0==0)
+			goto l_30;
+		else if(n0==1)
+			goto l_31;
+		else if(n0==2)
+			goto l_32;
+		else if(n0==3)
+			goto l_33;
+		else
+			return;
+
+l_30:
+		if(n1<=0)
 			return;
 
 		if(m0<=0 & m1>0) D0[3+bs*0] = CC[0+bs*0];
@@ -685,7 +694,8 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		if(m0<=2 & m1>2) D1[1+bs*0] = CC[2+bs*0];
 		if(m0<=3 & m1>3) D1[2+bs*0] = CC[3+bs*0];
 
-		if(kn<=1)
+l_31:
+		if(n1<=1)
 			return;
 
 		if(m0<=0 & m1>0) D0[3+bs*1] = CC[0+bs*1];
@@ -693,7 +703,9 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		if(m0<=2 & m1>2) D1[1+bs*1] = CC[2+bs*1];
 		if(m0<=3 & m1>3) D1[2+bs*1] = CC[3+bs*1];
 
-		if(kn<=2)
+
+l_32:
+		if(n1<=2)
 			return;
 
 		if(m0<=0 & m1>0) D0[3+bs*2] = CC[0+bs*2];
@@ -701,7 +713,9 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 		if(m0<=2 & m1>2) D1[1+bs*2] = CC[2+bs*2];
 		if(m0<=3 & m1>3) D1[2+bs*2] = CC[3+bs*2];
 
-		if(kn<=3)
+
+l_33:
+		if(n1<=3)
 			return;
 
 		if(m0<=0 & m1>0) D0[3+bs*3] = CC[0+bs*3];
@@ -1440,82 +1454,42 @@ void kernel_dgemm_nn_4x4_gen_lib4(int kmax, double *alpha, double *A, int offset
 
 	kernel_dgemm_nn_4x4_lib4(kmax, alpha, A, offsetB, B, sdb, &beta1, CC, CC);
 
-	// shift sol for cols
-	if(n0>0)
-		{
-		if(n0==1)
-			{
-			CC[0+bs*0] = CC[0+bs*1];
-			CC[1+bs*0] = CC[1+bs*1];
-			CC[2+bs*0] = CC[2+bs*1];
-			CC[3+bs*0] = CC[3+bs*1];
-
-			CC[0+bs*1] = CC[0+bs*2];
-			CC[1+bs*1] = CC[1+bs*2];
-			CC[2+bs*1] = CC[2+bs*2];
-			CC[3+bs*1] = CC[3+bs*2];
-
-			CC[0+bs*2] = CC[0+bs*3];
-			CC[1+bs*2] = CC[1+bs*3];
-			CC[2+bs*2] = CC[2+bs*3];
-			CC[3+bs*2] = CC[3+bs*3];
-
-			D0 += 1*bs;
-			}
-		else if(n0==2)
-			{
-			CC[0+bs*0] = CC[0+bs*2];
-			CC[1+bs*0] = CC[1+bs*2];
-			CC[2+bs*0] = CC[2+bs*2];
-			CC[3+bs*0] = CC[3+bs*2];
-
-			CC[0+bs*1] = CC[0+bs*3];
-			CC[1+bs*1] = CC[1+bs*3];
-			CC[2+bs*1] = CC[2+bs*3];
-			CC[3+bs*1] = CC[3+bs*3];
-
-			D0 += 2*bs;
-			}
-		else //if(n0==3)
-			{
-			CC[0+bs*0] = CC[0+bs*3];
-			CC[1+bs*0] = CC[1+bs*3];
-			CC[2+bs*0] = CC[2+bs*3];
-			CC[3+bs*0] = CC[3+bs*3];
-
-			D0 += 3*bs;
-			}
-		}
-
-	int kn = n1 - n0;
-
 	if(offsetD==0)
 		{
-		if(kn<=0)
+		if(n0==0)
+			goto l_00;
+		else if(n0==1)
+			goto l_01;
+		else if(n0==2)
+			goto l_02;
+		else if(n0==3)
+			goto l_03;
+		else
+			return;
+
+l_00:
+		if(n1<=0)
 			return;
 
 		if(m0<=0 & m1>0) D0[0+bs*0] = CC[0+bs*0];
-		if(m0<=1 & m1>1) D0[1+bs*0] = CC[1+bs*0];
-		if(m0<=2 & m1>2) D0[2+bs*0] = CC[2+bs*0];
-		if(m0<=3 & m1>3) D0[3+bs*0] = CC[3+bs*0];
 
-		if(kn<=1)
+l_01:
+		if(n1<=1)
 			return;
 
 		if(m0<=0 & m1>0) D0[0+bs*1] = CC[0+bs*1];
 		if(m0<=1 & m1>1) D0[1+bs*1] = CC[1+bs*1];
-		if(m0<=2 & m1>2) D0[2+bs*1] = CC[2+bs*1];
-		if(m0<=3 & m1>3) D0[3+bs*1] = CC[3+bs*1];
 
-		if(kn<=2)
+l_02:
+		if(n1<=2)
 			return;
 
 		if(m0<=0 & m1>0) D0[0+bs*2] = CC[0+bs*2];
 		if(m0<=1 & m1>1) D0[1+bs*2] = CC[1+bs*2];
 		if(m0<=2 & m1>2) D0[2+bs*2] = CC[2+bs*2];
-		if(m0<=3 & m1>3) D0[3+bs*2] = CC[3+bs*2];
 
-		if(kn<=3)
+l_03:
+		if(n1<=3)
 			return;
 
 		if(m0<=0 & m1>0) D0[0+bs*3] = CC[0+bs*3];
@@ -1527,109 +1501,136 @@ void kernel_dgemm_nn_4x4_gen_lib4(int kmax, double *alpha, double *A, int offset
 		{
 		D1 = D0 + sdd*bs;
 
-		if(kn<=0)
+		if(n0==0)
+			goto l_10;
+		else if(n0==1)
+			goto l_11;
+		else if(n0==2)
+			goto l_12;
+		else if(n0==3)
+			goto l_13;
+		else
 			return;
 
-		if(m0<=0 & m1>0) D0[1+bs*0] = CC[0+bs*0];
-		if(m0<=1 & m1>1) D0[2+bs*0] = CC[1+bs*0];
-		if(m0<=2 & m1>2) D0[3+bs*0] = CC[2+bs*0];
-		if(m0<=3 & m1>3) D1[0+bs*0] = CC[3+bs*0];
-
-		if(kn<=1)
+l_10:
+		if(n1<=0)
 			return;
 
-		if(m0<=0 & m1>0) D0[1+bs*1] = CC[0+bs*1];
-		if(m0<=1 & m1>1) D0[2+bs*1] = CC[1+bs*1];
-		if(m0<=2 & m1>2) D0[3+bs*1] = CC[2+bs*1];
-		if(m0<=3 & m1>3) D1[0+bs*1] = CC[3+bs*1];
+		if(m0<=0 & m1>0) D0[0+bs*0] = CC[0+bs*0];
 
-		if(kn<=2)
+l_11:
+		if(n1<=1)
 			return;
 
-		if(m0<=0 & m1>0) D0[1+bs*2] = CC[0+bs*2];
-		if(m0<=1 & m1>1) D0[2+bs*2] = CC[1+bs*2];
-		if(m0<=2 & m1>2) D0[3+bs*2] = CC[2+bs*2];
-		if(m0<=3 & m1>3) D1[0+bs*2] = CC[3+bs*2];
+		if(m0<=0 & m1>0) D0[0+bs*1] = CC[0+bs*1];
+		if(m0<=1 & m1>1) D0[1+bs*1] = CC[1+bs*1];
 
-		if(kn<=3)
+l_12:
+		if(n1<=2)
 			return;
 
-		if(m0<=0 & m1>0) D0[1+bs*3] = CC[0+bs*3];
-		if(m0<=1 & m1>1) D0[2+bs*3] = CC[1+bs*3];
-		if(m0<=2 & m1>2) D0[3+bs*3] = CC[2+bs*3];
-		if(m0<=3 & m1>3) D1[0+bs*3] = CC[3+bs*3];
+		if(m0<=0 & m1>0) D0[0+bs*2] = CC[0+bs*2];
+		if(m0<=1 & m1>1) D0[1+bs*2] = CC[1+bs*2];
+		if(m0<=2 & m1>2) D0[2+bs*2] = CC[2+bs*2];
+
+l_13:
+		if(n1<=3)
+			return;
+
+		if(m0<=0 & m1>0) D0[0+bs*3] = CC[0+bs*3];
+		if(m0<=1 & m1>1) D0[1+bs*3] = CC[1+bs*3];
+		if(m0<=2 & m1>2) D0[2+bs*3] = CC[2+bs*3];
+		if(m0<=3 & m1>3) D1[3+bs*3] = CC[3+bs*3];
 		}
 	else if(offsetD==2)
 		{
 		D1 = D0 + sdd*bs;
 
-		if(kn<=0)
+		if(n0==0)
+			goto l_20;
+		else if(n0==1)
+			goto l_21;
+		else if(n0==2)
+			goto l_22;
+		else if(n0==3)
+			goto l_23;
+		else
 			return;
 
-		if(m0<=0 & m1>0) D0[2+bs*0] = CC[0+bs*0];
-		if(m0<=1 & m1>1) D0[3+bs*0] = CC[1+bs*0];
-		if(m0<=2 & m1>2) D1[0+bs*0] = CC[2+bs*0];
-		if(m0<=3 & m1>3) D1[1+bs*0] = CC[3+bs*0];
-
-		if(kn<=1)
+l_20:
+		if(n1<=0)
 			return;
 
-		if(m0<=0 & m1>0) D0[2+bs*1] = CC[0+bs*1];
-		if(m0<=1 & m1>1) D0[3+bs*1] = CC[1+bs*1];
-		if(m0<=2 & m1>2) D1[0+bs*1] = CC[2+bs*1];
-		if(m0<=3 & m1>3) D1[1+bs*1] = CC[3+bs*1];
+		if(m0<=0 & m1>0) D0[0+bs*0] = CC[0+bs*0];
 
-		if(kn<=2)
+l_21:
+		if(n1<=1)
 			return;
 
-		if(m0<=0 & m1>0) D0[2+bs*2] = CC[0+bs*2];
-		if(m0<=1 & m1>1) D0[3+bs*2] = CC[1+bs*2];
-		if(m0<=2 & m1>2) D1[0+bs*2] = CC[2+bs*2];
-		if(m0<=3 & m1>3) D1[1+bs*2] = CC[3+bs*2];
+		if(m0<=0 & m1>0) D0[0+bs*1] = CC[0+bs*1];
+		if(m0<=1 & m1>1) D0[1+bs*1] = CC[1+bs*1];
 
-		if(kn<=3)
+l_22:
+		if(n1<=2)
 			return;
 
-		if(m0<=0 & m1>0) D0[2+bs*3] = CC[0+bs*3];
-		if(m0<=1 & m1>1) D0[3+bs*3] = CC[1+bs*3];
-		if(m0<=2 & m1>2) D1[0+bs*3] = CC[2+bs*3];
-		if(m0<=3 & m1>3) D1[1+bs*3] = CC[3+bs*3];
+		if(m0<=0 & m1>0) D0[0+bs*2] = CC[0+bs*2];
+		if(m0<=1 & m1>1) D0[1+bs*2] = CC[1+bs*2];
+		if(m0<=2 & m1>2) D1[2+bs*2] = CC[2+bs*2];
+
+l_23:
+		if(n1<=3)
+			return;
+
+		if(m0<=0 & m1>0) D0[0+bs*3] = CC[0+bs*3];
+		if(m0<=1 & m1>1) D0[1+bs*3] = CC[1+bs*3];
+		if(m0<=2 & m1>2) D1[2+bs*3] = CC[2+bs*3];
+		if(m0<=3 & m1>3) D1[3+bs*3] = CC[3+bs*3];
 		}
 	else //if(offsetD==3)
 		{
 		D1 = D0 + sdd*bs;
 
-		if(kn<=0)
+		if(n0==0)
+			goto l_30;
+		else if(n0==1)
+			goto l_31;
+		else if(n0==2)
+			goto l_32;
+		else if(n0==3)
+			goto l_33;
+		else
 			return;
 
-		if(m0<=0 & m1>0) D0[3+bs*0] = CC[0+bs*0];
-		if(m0<=1 & m1>1) D1[0+bs*0] = CC[1+bs*0];
-		if(m0<=2 & m1>2) D1[1+bs*0] = CC[2+bs*0];
-		if(m0<=3 & m1>3) D1[2+bs*0] = CC[3+bs*0];
-
-		if(kn<=1)
+l_30:
+		if(n1<=0)
 			return;
 
-		if(m0<=0 & m1>0) D0[3+bs*1] = CC[0+bs*1];
-		if(m0<=1 & m1>1) D1[0+bs*1] = CC[1+bs*1];
-		if(m0<=2 & m1>2) D1[1+bs*1] = CC[2+bs*1];
-		if(m0<=3 & m1>3) D1[2+bs*1] = CC[3+bs*1];
+		if(m0<=0 & m1>0) D0[0+bs*0] = CC[0+bs*0];
 
-		if(kn<=2)
+l_31:
+		if(n1<=1)
 			return;
 
-		if(m0<=0 & m1>0) D0[3+bs*2] = CC[0+bs*2];
-		if(m0<=1 & m1>1) D1[0+bs*2] = CC[1+bs*2];
-		if(m0<=2 & m1>2) D1[1+bs*2] = CC[2+bs*2];
-		if(m0<=3 & m1>3) D1[2+bs*2] = CC[3+bs*2];
+		if(m0<=0 & m1>0) D0[0+bs*1] = CC[0+bs*1];
+		if(m0<=1 & m1>1) D1[1+bs*1] = CC[1+bs*1];
 
-		if(kn<=3)
+l_32:
+		if(n1<=2)
 			return;
 
-		if(m0<=0 & m1>0) D0[3+bs*3] = CC[0+bs*3];
-		if(m0<=1 & m1>1) D1[0+bs*3] = CC[1+bs*3];
-		if(m0<=2 & m1>2) D1[1+bs*3] = CC[2+bs*3];
-		if(m0<=3 & m1>3) D1[2+bs*3] = CC[3+bs*3];
+		if(m0<=0 & m1>0) D0[0+bs*2] = CC[0+bs*2];
+		if(m0<=1 & m1>1) D1[1+bs*2] = CC[1+bs*2];
+		if(m0<=2 & m1>2) D1[2+bs*2] = CC[2+bs*2];
+
+l_33:
+		if(n1<=3)
+			return;
+
+		if(m0<=0 & m1>0) D0[0+bs*3] = CC[0+bs*3];
+		if(m0<=1 & m1>1) D1[1+bs*3] = CC[1+bs*3];
+		if(m0<=2 & m1>2) D1[2+bs*3] = CC[2+bs*3];
+		if(m0<=3 & m1>3) D1[3+bs*3] = CC[3+bs*3];
 		}
 
 	return;

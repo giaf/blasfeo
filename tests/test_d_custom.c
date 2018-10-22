@@ -48,7 +48,7 @@ int main()
 
 	int ii;
 
-	int n = 16;
+	int n = 20;
 
 	//
 	// matrices in column-major format
@@ -254,13 +254,45 @@ int main()
 	return 0;
 #endif
 
-#if 1
+#if 0
 	// gemm_tt
 	alpha = 1.0;
 	beta = 0.0;
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 
 	blasfeo_dgemm_tt(8, 8, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 1, 0);
+
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+	return 0;
+#endif
+
+#if 1
+	// syrk_ln
+	alpha = 1.0;
+	beta = 0.0;
+//	blasfeo_print_dmat(n, n, &sD, 0, 0);
+
+//	kernel_dsyrk_nt_l_4x4_lib4(4, &alpha, sA.pA, sB.pA, &beta, sA.pA, sD.pA);
+//	kernel_dsyrk_nt_l_4x4_vs_lib4(4, &alpha, sA.pA, sB.pA, &beta, sA.pA, sD.pA, 3, 4);
+//	kernel_dsyrk_nt_l_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 0, sA.pA, sA.cn, 0, sD.pA, sD.cn, 1, 4, 1, 3);
+
+	blasfeo_dsyrk_ln(15, n, alpha, &sB, 0, 0, &sA, 2, 0, beta, &sD, 0, 0, &sD, 0, 0);
+
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+	return 0;
+#endif
+
+#if 0
+	// syrk_un
+	alpha = 1.0;
+	beta = 0.0;
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+
+//	kernel_dsyrk_nt_u_4x4_lib4(4, &alpha, sA.pA, sB.pA, &beta, sA.pA, sD.pA);
+//	kernel_dsyrk_nt_u_4x4_vs_lib4(4, &alpha, sA.pA, sB.pA, &beta, sA.pA, sD.pA, 3, 4);
+	kernel_dsyrk_nt_u_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 0, sA.pA, sA.cn, 0, sD.pA, sD.cn, 1, 4, 1, 3);
+
+//	blasfeo_dsyrk_un(n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	return 0;
