@@ -1021,7 +1021,7 @@ void kernel_dlarf_4_lib4(int m, int n, double *pD, int sdd, double *dD, double *
 
 
 
-void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, double *dD, double *pC0, int sdc)
+void kernel_dlarf_t_4_lib4(int m, int n, double *pD, int sdd, double *pVt, double *dD, double *pC0, int sdc, double *pW0)
 	{
 	if(m<=0 | n<=0)
 		return;
