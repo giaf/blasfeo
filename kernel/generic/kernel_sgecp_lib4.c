@@ -903,7 +903,7 @@ void kernel_strcp_l_3_3_lib4(int kmax, float *A0, int sda, float *B)
 
 
 // both A and B are aligned to 64-bit boundaries
-void kernel_strcp_l_2_0_lib4(int kmax, float alpha, float *A, float *B)
+void kernel_strcp_l_2_0_lib4(int kmax, float *A, float *B)
 	{
 
 	// A and C are lower triangular
