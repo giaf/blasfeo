@@ -386,7 +386,15 @@ void kernel_dgemm_nt_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_AMD_BULLDOZER) // || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined(TARGET_X86_AMD_BARCELONA)
+void kernel_dgemm_nt_4x4_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
+	{
+	const int ps = 4;
+	kernel_dgemm_nt_4x2_lib44c(kmax, alpha, A, B+0, beta, C+0*ldc, ldc, D+0*ldd, ldd);
+	kernel_dgemm_nt_4x2_lib44c(kmax, alpha, A, B+2, beta, C+2*ldc, ldc, D+2*ldd, ldd);
+	return;
+	}
+#elif defined(TARGET_GENERIC)
 void kernel_dgemm_nt_4x4_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 

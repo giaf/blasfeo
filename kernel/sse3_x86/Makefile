@@ -54,3 +54,4 @@ clean:
 	rm -f *.o
 	rm -f *.s
 
+kernel_dgemm_4x2_lib4.o: kernel_dgemm_4x2_lib4.S kernel_dgemm_4x2_lib.S
