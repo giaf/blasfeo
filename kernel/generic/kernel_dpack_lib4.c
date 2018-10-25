@@ -727,38 +727,68 @@ void kernel_dpacp_nn_4_vs_lib4(int kmax, int offsetA, double *A, int sda, double
 air_0:
 	
 	if(m1==1)
+		{
 		goto air_0_1;
+		}
 	else if(m1==2)
+		{
 		goto air_0_2;
+		}
 	else //if(m1==3)
+		{
 		goto air_0_3;
+		}
 
 air_1:
 	
 	if(m1==1)
+		{
+		A0 += air;
 		goto air_0_1;
+		}
 	else if(m1==2)
+		{
+		A0 += air;
 		goto air_0_2;
+		}
 	else //if(m1==3)
+		{
+		A0 += air;
 		goto air_0_3;
+		}
 
 air_2:
 	
 	if(m1==1)
+		{
+		A0 += air;
 		goto air_0_1;
+		}
 	else if(m1==2)
+		{
+		A0 += air;
 		goto air_0_2;
+		}
 	else //if(m1==3)
+		{
 		goto air_2_3;
+		}
 
 air_3:
 	
 	if(m1==1)
+		{
+		A0 += air;
 		goto air_0_1;
+		}
 	else if(m1==2)
+		{
 		goto air_3_2;
+		}
 	else //if(m1==3)
+		{
 		goto air_3_3;
+		}
 
 
 

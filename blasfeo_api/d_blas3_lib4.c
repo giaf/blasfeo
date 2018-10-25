@@ -4409,10 +4409,12 @@ void blasfeo_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 		{
 		if(bir==0)
 			{
+//	printf("\n000\n");
 			goto loop_000;
 			}
 		else
 			{
+//	printf("\nB00\n");
 			goto loop_B00;
 			}
 		}
@@ -4420,10 +4422,12 @@ void blasfeo_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 		{
 		if(bir==0)
 			{
+//	printf("\n0CD\n");
 			goto loop_0CD;
 			}
 		else
 			{
+//	printf("\nBCD\n");
 			goto loop_BCD;
 			}
 		}
@@ -4854,7 +4858,10 @@ loop_BCD:
 		}
 	else
 		{
+//		printf("\n%d %d\n", air, m-i);
+//		d_print_mat(4, k, pA+i*sda, 4);
 		kernel_dpacp_nn_4_vs_lib4(k, air, pA+i*sda, sda, pU, m-i);
+//		d_print_mat(4, k, pU, 4);
 		pA2 = pU;
 		sda2 = sdu;
 		}
