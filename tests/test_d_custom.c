@@ -211,8 +211,10 @@ int main()
 //	kernel_dpacp_nn_4_lib4(6, 3, sA.pA, sA.cn, sD.pA);
 //	kernel_dpacp_nn_4_vs_lib4(6, 3, sA.pA, sA.cn, sD.pA, 1);
 //	kernel_dpacp_nn_8_lib4(6, 3, sA.pA, sA.cn, sD.pA, sD.cn);
-	kernel_dpacp_nn_8_vs_lib4(6, 3, sA.pA, sA.cn, sD.pA, sD.cn, 7);
-	blasfeo_print_dmat(8, n, &sD, 0, 0);
+//	kernel_dpacp_nn_8_vs_lib4(6, 3, sA.pA, sA.cn, sD.pA, sD.cn, 7);
+//	kernel_dpacp_nn_12_lib4(6, 3, sA.pA, sA.cn, sD.pA, sD.cn);
+	kernel_dpacp_nn_12_vs_lib4(6, 3, sA.pA, sA.cn, sD.pA, sD.cn, 11);
+	blasfeo_print_dmat(12, n, &sD, 0, 0);
 	return 0;
 	
 #endif
