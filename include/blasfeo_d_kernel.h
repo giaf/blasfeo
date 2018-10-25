@@ -448,6 +448,8 @@ void kernel_dunpack_nt_4_vs_lib4(int kmax, double *A, double *B, int ldb, int m1
 // panel copy
 // 4
 void kernel_dpacp_tn_4_lib4(int kmax, int offsetA, double *A, int sda, double *B);
+void kernel_dpacp_nn_4_lib4(int kmax, int offsetA, double *A, int sda, double *B);
+void kernel_dpacp_nn_4_vs_lib4(int kmax, int offsetA, double *A, int sda, double *B, int m1);
 
 
 
