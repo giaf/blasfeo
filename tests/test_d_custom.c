@@ -206,6 +206,15 @@ int main()
 
 
 
+#if 1
+	// pack
+//	kernel_dpacp_nn_4_lib4(6, 3, sA.pA, sA.cn, sD.pA);
+	kernel_dpacp_nn_4_vs_lib4(6, 3, sA.pA, sA.cn, sD.pA, 1);
+	d_print_mat(4, n, sD.pA, 4);
+	return 0;
+	
+#endif
+
 #if 0
 	// gemm_nt
 	alpha = 1.0;
@@ -266,7 +275,7 @@ int main()
 	return 0;
 #endif
 
-#if 1
+#if 0
 	// syrk_ln
 	alpha = 1.0;
 	beta = 0.0;
@@ -276,7 +285,7 @@ int main()
 //	kernel_dsyrk_nt_l_4x4_vs_lib4(4, &alpha, sA.pA, sB.pA, &beta, sA.pA, sD.pA, 3, 4);
 //	kernel_dsyrk_nt_l_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 0, sA.pA, sA.cn, 0, sD.pA, sD.cn, 1, 4, 1, 3);
 
-	blasfeo_dsyrk_ln(15, n, alpha, &sB, 0, 0, &sA, 2, 0, beta, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ln(6, 1, alpha, &sA, 3, 0, &sA, 3, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	return 0;
@@ -365,7 +374,7 @@ int main()
 	return 0;
 #endif
 
-#if 1
+#if 0
 	// symv_l
 	blasfeo_print_tran_dvec(n, &sx_n, 0);
 	blasfeo_dsymv_l(5, 5, 1.0, &sA, 1, 1, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
