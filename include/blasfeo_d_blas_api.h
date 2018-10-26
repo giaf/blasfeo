@@ -55,6 +55,8 @@ extern "C" {
 // BLAS 3
 //
 void dgemm_(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
+//
+void dsyrk_(char *uplo, char *ta, int *m, int *k, double *alpha, double *A, int *lda, double *beta, double *C, int *ldc);
 
 
 
@@ -71,6 +73,8 @@ void dpotrf_(char *uplo, int *m, double *A, int *lda, int *info);
 // BLAS 3
 //
 void blasfeo_dgemm(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
+//
+void blasfeo_dsyrk(char *uplo, char *ta, int *m, int *k, double *alpha, double *A, int *lda, double *beta, double *C, int *ldc);
 
 
 
