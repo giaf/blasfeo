@@ -547,396 +547,6 @@ inner_kernel_dgemm_nt_8x4_lib4:
 // r11   <- A
 // r12   <- 4*sda*sizeof(double)
 // r13   <- B
-// r15   <- dirty
-// ymm0  <- [d00 d11 d22 d33]
-// ymm1  <- [d01 d10 d23 d32]
-// ymm2  <- [d03 d12 d21 d30]
-// ymm3  <- [d02 d13 d20 d31]
-// ymm4  <- [d40 d51 d62 d73]
-// ymm5  <- [d41 d50 d63 d72]
-// ymm6  <- [d43 d52 d61 d70]
-// ymm7  <- [d42 d53 d60 d71]
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm12 <- dirty
-// ymm13 <- dirty
-// ymm14 <- dirty
-// ymm15 <- dirty
-
-//
-// output arguments:
-// r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- 4*sda*sizeof(double)
-// r13   <- B+4*k*sizeof(double)
-// r15   <- dirty
-// ymm0  <- [d00 d11 d22 d33]
-// ymm1  <- [d01 d10 d23 d32]
-// ymm2  <- [d03 d12 d21 d30]
-// ymm3  <- [d02 d13 d20 d31]
-// ymm4  <- [d40 d51 d62 d73]
-// ymm5  <- [d41 d50 d63 d72]
-// ymm6  <- [d43 d52 d61 d70]
-// ymm7  <- [d42 d53 d60 d71]
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm12 <- dirty
-// ymm13 <- dirty
-// ymm14 <- dirty
-// ymm15 <- dirty
-
-#if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_DGEMM_NT_UNALIGN_8X4_LIB4
-#else
-	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dgemm_nt_unalign_8x4_lib4, @function
-inner_kernel_dgemm_nt_unalign_8x4_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dgemm_nt_unalign_8x4_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dgemm_nt_unalign_8x4_lib4; .scl 2; .type 32; .endef
-inner_kernel_dgemm_nt_unalign_8x4_lib4:
-#endif
-#endif
-
-	cmpl	$0, %r10d
-	jle		2f // return
-
-//	movq	%r11, %r15 // A1 <- A0
-//	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
-
-	// prefetch
-	vmovupd 0(%r11), %ymm8 // A0[0]
-//	vmovupd 0(%r15), %ymm9 // A1[0]
-	vmovupd 0(%r11, %r12, 1), %ymm9 // A1[0]
-	vmovupd 0(%r13), %ymm12 // B[0]
-
-	cmpl	$4, %r10d
-	jle		0f // consider clean-up loop
-
-	// main loop
-	.p2align 3
-1: // main loop
-
-	// unroll 0
-	vmovupd 32(%r13), %ymm13 // B[4]
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vaddpd	%ymm0, %ymm15, %ymm0
-	vshufpd $0x5, %ymm12, %ymm12, %ymm14
-	vmulpd	%ymm9, %ymm12, %ymm15
-	vaddpd	%ymm4, %ymm15, %ymm4
-
-	vperm2f128 $0x1, %ymm14, %ymm14, %ymm12
-	vmulpd	%ymm8, %ymm14, %ymm15
-	vaddpd	%ymm1, %ymm15, %ymm1
-	vmovupd 32(%r11), %ymm10 // A0[4]
-	vmulpd	%ymm9, %ymm14, %ymm15
-	vaddpd	%ymm5, %ymm15, %ymm5
-
-//	vmovupd 32(%r15), %ymm11 // A1[4]
-	vmovupd 32(%r11, %r12, 1), %ymm11 // A1[4]
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vaddpd	%ymm3, %ymm15, %ymm3
-	vshufpd $0x5, %ymm12, %ymm12, %ymm14
-	vmulpd	%ymm9, %ymm12, %ymm15
-	vaddpd	%ymm7, %ymm15, %ymm7
-
-	subl	$4, %r10d
-	vmulpd	%ymm8, %ymm14, %ymm15
-	vaddpd	%ymm2, %ymm15, %ymm2
-	vmulpd	%ymm9, %ymm14, %ymm15
-	vaddpd	%ymm6, %ymm15, %ymm6
-
-	// unroll 1
-	vmovupd 64(%r13), %ymm12 // B[8]
-	vmulpd	%ymm10, %ymm13, %ymm15
-	vaddpd	%ymm0, %ymm15, %ymm0
-	vshufpd $0x5, %ymm13, %ymm13, %ymm14
-	vmulpd	%ymm11, %ymm13, %ymm15
-	vaddpd	%ymm4, %ymm15, %ymm4
-
-	vperm2f128 $0x1, %ymm14, %ymm14, %ymm13
-	vmulpd	%ymm10, %ymm14, %ymm15
-	vaddpd	%ymm1, %ymm15, %ymm1
-	vmovupd 64(%r11), %ymm8 // A0[8]
-	vmulpd	%ymm11, %ymm14, %ymm15
-	vaddpd	%ymm5, %ymm15, %ymm5
-
-//	vmovupd 64(%r15), %ymm9 // A1[8]
-	vmovupd 64(%r11, %r12, 1), %ymm9 // A1[8]
-	vmulpd	%ymm10, %ymm13, %ymm15
-	vaddpd	%ymm3, %ymm15, %ymm3
-	vshufpd $0x5, %ymm13, %ymm13, %ymm14
-	vmulpd	%ymm11, %ymm13, %ymm15
-	vaddpd	%ymm7, %ymm15, %ymm7
-
-	vmulpd	%ymm10, %ymm14, %ymm15
-	vaddpd	%ymm2, %ymm15, %ymm2
-	vmulpd	%ymm11, %ymm14, %ymm15
-	vaddpd	%ymm6, %ymm15, %ymm6
-
-	// unroll 2
-	vmovupd 96(%r13), %ymm13 // B[12]
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vaddpd	%ymm0, %ymm15, %ymm0
-	vshufpd $0x5, %ymm12, %ymm12, %ymm14
-	vmulpd	%ymm9, %ymm12, %ymm15
-	vaddpd	%ymm4, %ymm15, %ymm4
-
-	vperm2f128 $0x1, %ymm14, %ymm14, %ymm12
-	vmulpd	%ymm8, %ymm14, %ymm15
-	vaddpd	%ymm1, %ymm15, %ymm1
-	vmovupd 96(%r11), %ymm10 // A0[12]
-	vmulpd	%ymm9, %ymm14, %ymm15
-	vaddpd	%ymm5, %ymm15, %ymm5
-
-//	vmovupd 96(%r15), %ymm11 // A1[12]
-	vmovupd 96(%r11, %r12, 1), %ymm11 // A1[12]
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vaddpd	%ymm3, %ymm15, %ymm3
-	vshufpd $0x5, %ymm12, %ymm12, %ymm14
-	addq	$128, %r13
-	vmulpd	%ymm9, %ymm12, %ymm15
-	vaddpd	%ymm7, %ymm15, %ymm7
-
-	addq	$128, %r11
-	vmulpd	%ymm8, %ymm14, %ymm15
-	vaddpd	%ymm2, %ymm15, %ymm2
-	addq	$128, %r15
-	vmulpd	%ymm9, %ymm14, %ymm15
-	vaddpd	%ymm6, %ymm15, %ymm6
-
-
-	// unroll 3
-	vmovupd 0(%r13), %ymm12 // B[0]
-	vmulpd	%ymm10, %ymm13, %ymm15
-	vaddpd	%ymm0, %ymm15, %ymm0
-	vshufpd $0x5, %ymm13, %ymm13, %ymm14
-	vmulpd	%ymm11, %ymm13, %ymm15
-	vaddpd	%ymm4, %ymm15, %ymm4
-
-	vperm2f128 $0x1, %ymm14, %ymm14, %ymm13
-	vmulpd	%ymm10, %ymm14, %ymm15
-	vaddpd	%ymm1, %ymm15, %ymm1
-	vmovupd 0(%r11), %ymm8 // A0[0]
-	vmulpd	%ymm11, %ymm14, %ymm15
-	vaddpd	%ymm5, %ymm15, %ymm5
-
-//	vmovupd 0(%r15), %ymm9 // A1[0]
-	vmovupd 0(%r11, %r12, 1), %ymm9 // A1[0]
-	vmulpd	%ymm10, %ymm13, %ymm15
-	vaddpd	%ymm3, %ymm15, %ymm3
-	vshufpd $0x5, %ymm13, %ymm13, %ymm14
-	vmulpd	%ymm11, %ymm13, %ymm15
-	vaddpd	%ymm7, %ymm15, %ymm7
-
-	vmulpd	%ymm10, %ymm14, %ymm15
-	vaddpd	%ymm2, %ymm15, %ymm2
-	vmulpd	%ymm11, %ymm14, %ymm15
-	vaddpd	%ymm6, %ymm15, %ymm6
-
-	cmpl	$4, %r10d
-	jg		1b // main loop
-
-
-0: // consider clean4-up
-
-	cmpl	$3, %r10d
-	jle		4f // clean1
-
-	// unroll 0
-	vmovupd 32(%r13), %ymm13 // B[4]
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vaddpd	%ymm0, %ymm15, %ymm0
-	vshufpd $0x5, %ymm12, %ymm12, %ymm14
-	vmulpd	%ymm9, %ymm12, %ymm15
-	vaddpd	%ymm4, %ymm15, %ymm4
-
-	vperm2f128 $0x1, %ymm14, %ymm14, %ymm12
-	vmulpd	%ymm8, %ymm14, %ymm15
-	vaddpd	%ymm1, %ymm15, %ymm1
-	vmovupd 32(%r11), %ymm10 // A0[4]
-	vmulpd	%ymm9, %ymm14, %ymm15
-	vaddpd	%ymm5, %ymm15, %ymm5
-
-//	vmovupd 32(%r15), %ymm11 // A1[4]
-	vmovupd 32(%r11, %r12, 1), %ymm11 // A1[4]
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vaddpd	%ymm3, %ymm15, %ymm3
-	vshufpd $0x5, %ymm12, %ymm12, %ymm14
-	vmulpd	%ymm9, %ymm12, %ymm15
-	vaddpd	%ymm7, %ymm15, %ymm7
-
-	subl	$4, %r10d
-	vmulpd	%ymm8, %ymm14, %ymm15
-	vaddpd	%ymm2, %ymm15, %ymm2
-	vmulpd	%ymm9, %ymm14, %ymm15
-	vaddpd	%ymm6, %ymm15, %ymm6
-
-	// unroll 1
-	vmovupd 64(%r13), %ymm12 // B[8]
-	vmulpd	%ymm10, %ymm13, %ymm15
-	vaddpd	%ymm0, %ymm15, %ymm0
-	vshufpd $0x5, %ymm13, %ymm13, %ymm14
-	vmulpd	%ymm11, %ymm13, %ymm15
-	vaddpd	%ymm4, %ymm15, %ymm4
-
-	vperm2f128 $0x1, %ymm14, %ymm14, %ymm13
-	vmulpd	%ymm10, %ymm14, %ymm15
-	vaddpd	%ymm1, %ymm15, %ymm1
-	vmovupd 64(%r11), %ymm8 // A0[8]
-	vmulpd	%ymm11, %ymm14, %ymm15
-	vaddpd	%ymm5, %ymm15, %ymm5
-
-//	vmovupd 64(%r15), %ymm9 // A1[8]
-	vmovupd 64(%r11, %r12, 1), %ymm9 // A1[8]
-	vmulpd	%ymm10, %ymm13, %ymm15
-	vaddpd	%ymm3, %ymm15, %ymm3
-	vshufpd $0x5, %ymm13, %ymm13, %ymm14
-	vmulpd	%ymm11, %ymm13, %ymm15
-	vaddpd	%ymm7, %ymm15, %ymm7
-
-	vmulpd	%ymm10, %ymm14, %ymm15
-	vaddpd	%ymm2, %ymm15, %ymm2
-	vmulpd	%ymm11, %ymm14, %ymm15
-	vaddpd	%ymm6, %ymm15, %ymm6
-
-	// unroll 2
-	vmovupd 96(%r13), %ymm13 // B[12]
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vaddpd	%ymm0, %ymm15, %ymm0
-	vshufpd $0x5, %ymm12, %ymm12, %ymm14
-	vmulpd	%ymm9, %ymm12, %ymm15
-	vaddpd	%ymm4, %ymm15, %ymm4
-
-	vperm2f128 $0x1, %ymm14, %ymm14, %ymm12
-	vmulpd	%ymm8, %ymm14, %ymm15
-	vaddpd	%ymm1, %ymm15, %ymm1
-	vmovupd 96(%r11), %ymm10 // A0[12]
-	vmulpd	%ymm9, %ymm14, %ymm15
-	vaddpd	%ymm5, %ymm15, %ymm5
-
-//	vmovupd 96(%r15), %ymm11 // A1[12]
-	vmovupd 96(%r11, %r12, 1), %ymm11 // A1[12]
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vaddpd	%ymm3, %ymm15, %ymm3
-	vshufpd $0x5, %ymm12, %ymm12, %ymm14
-	addq	$128, %r13
-	vmulpd	%ymm9, %ymm12, %ymm15
-	vaddpd	%ymm7, %ymm15, %ymm7
-	addq	$128, %r11
-
-	vmulpd	%ymm8, %ymm14, %ymm15
-	vaddpd	%ymm2, %ymm15, %ymm2
-//	addq	$128, %r15
-	vmulpd	%ymm9, %ymm14, %ymm15
-	vaddpd	%ymm6, %ymm15, %ymm6
-
-
-	// unroll 3
-//	vmovupd 0(%r13), %ymm12 // B[0]
-	vmulpd	%ymm10, %ymm13, %ymm15
-	vaddpd	%ymm0, %ymm15, %ymm0
-	vshufpd $0x5, %ymm13, %ymm13, %ymm14
-	vmulpd	%ymm11, %ymm13, %ymm15
-	vaddpd	%ymm4, %ymm15, %ymm4
-
-	vperm2f128 $0x1, %ymm14, %ymm14, %ymm13
-	vmulpd	%ymm10, %ymm14, %ymm15
-	vaddpd	%ymm1, %ymm15, %ymm1
-//	vmovupd 0(%r11), %ymm8 // A0[0]
-	vmulpd	%ymm11, %ymm14, %ymm15
-	vaddpd	%ymm5, %ymm15, %ymm5
-
-//	vmovupd 0(%r15), %ymm9 // A1[0]
-//	vmovupd 0(%r11, %r12, 1), %ymm9 // A1[0]
-	vmulpd	%ymm10, %ymm13, %ymm15
-	vaddpd	%ymm3, %ymm15, %ymm3
-	vshufpd $0x5, %ymm13, %ymm13, %ymm14
-	vmulpd	%ymm11, %ymm13, %ymm15
-	vaddpd	%ymm7, %ymm15, %ymm7
-
-	vmulpd	%ymm10, %ymm14, %ymm15
-	vaddpd	%ymm2, %ymm15, %ymm2
-	vmulpd	%ymm11, %ymm14, %ymm15
-	vaddpd	%ymm6, %ymm15, %ymm6
-
-
-//	cmpl	$3, %r10d
-	jmp		2f
-
-
-4: // consider clean1-up loop
-
-	cmpl	$0, %r10d
-	jle		2f // return
-
-	// clean-up loop
-3: // clean up loop
-
-	vmovupd 0(%r13), %ymm12 // B[0]
-	vmovupd 0(%r11), %ymm8 // A0[0]
-//	vmovupd 0(%r15), %ymm9 // A1[0]
-	vmovupd 0(%r11, %r12, 1), %ymm9 // A1[0]
-	vmulpd	%ymm8, %ymm12, %ymm15
-	vaddpd	%ymm0, %ymm15, %ymm0
-	vshufpd $0x5, %ymm12, %ymm12, %ymm14
-	vmulpd	%ymm9, %ymm12, %ymm15
-	vaddpd	%ymm4, %ymm15, %ymm4
-	addq	$32, %r11
-
-	vmulpd	%ymm8, %ymm14, %ymm15
-	vaddpd	%ymm1, %ymm15, %ymm1
-	addq	$32, %r13
-	vmulpd	%ymm9, %ymm14, %ymm15
-	vaddpd	%ymm5, %ymm15, %ymm5
-
-	vperm2f128 $0x1, %ymm14, %ymm14, %ymm14
-	vmulpd	%ymm8, %ymm14, %ymm15
-	vaddpd	%ymm3, %ymm15, %ymm3
-//	addq	$32, %r15
-	vmulpd	%ymm9, %ymm14, %ymm15
-	vaddpd	%ymm7, %ymm15, %ymm7
-
-	vshufpd $0x5, %ymm14, %ymm14, %ymm14
-	vmulpd	%ymm8, %ymm14, %ymm15
-	vaddpd	%ymm2, %ymm15, %ymm2
-	subl	$1, %r10d
-	vmulpd	%ymm9, %ymm14, %ymm15
-	vaddpd	%ymm6, %ymm15, %ymm6
-
-	cmpl	$0, %r10d
-	jg		3b // clean up loop
-
-
-2: // return
-
-#if MACRO_LEVEL>=2
-	.endm
-#else
-	ret
-
-#if defined(OS_LINUX)
-	.size	inner_kernel_dgemm_nt_unalign_8x4_lib4, .-inner_kernel_dgemm_nt_unalign_8x4_lib4
-#endif
-#endif
-
-
-
-
-
-// common inner routine with file scope
-//
-// input arguments:
-// r10d  <- k
-// r11   <- A
-// r12   <- 4*sda*sizeof(double)
-// r13   <- B
 // r14   <- 4*sdb*sizeof(double)
 // r15   <- dirty
 // rax   <- dirty
@@ -9420,12 +9030,12 @@ kernel_dgemm_nt_8x4_gen_lib4:
 	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_NT_UNALIGN_8X4_LIB4
+	INNER_KERNEL_DGEMM_NT_8X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_nt_unalign_8x4_lib4
+	call inner_kernel_dgemm_nt_8x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_nt_unalign_8x4_lib4
+	callq _inner_kernel_dgemm_nt_8x4_lib4
 #endif
 #endif
 
@@ -10274,12 +9884,12 @@ kernel_dsyrk_nt_l_8x4_gen_lib4:
 	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_NT_UNALIGN_8X4_LIB4
+	INNER_KERNEL_DGEMM_NT_8X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_nt_unalign_8x4_lib4
+	call inner_kernel_dgemm_nt_8x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_nt_unalign_8x4_lib4
+	callq _inner_kernel_dgemm_nt_8x4_lib4
 #endif
 #endif
 
@@ -14404,6 +14014,18 @@ LC11:
 	.long	0x80000000
 	.long	0x0
 	.long	0x80000000
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	.align 32
+.LC12:
+#elif defined(OS_MAC)
+	.align 5
+LC12:
+#endif
+	.double	-1.0
+	.double	-1.0
+	.double	-1.0
+	.double	-1.0
 
 
 

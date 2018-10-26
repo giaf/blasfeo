@@ -5171,6 +5171,8 @@ inner_store_l_4x4_vs_lib4:
 
 
 
+#if 0
+
 // common inner routine with file scope
 //
 // store n generalized
@@ -5689,6 +5691,8 @@ inner_store_l_4x4_gen_lib4:
 #if defined(OS_LINUX)
 	.size	inner_store_l_4x4_gen_lib4, .-inner_store_l_4x4_gen_lib4
 #endif
+#endif
+
 #endif
 
 
@@ -6499,6 +6503,7 @@ kernel_dsyrk_nt_l_4x4_vs_lib4:
 
 
 
+#if 0
 
 //                                     1      2              3          4          5             6            7          8        9            10         11       12      13      14      15
 // void kernel_dsyrk_nt_l_4x4_gen_lib4(int k, double *alpha, double *A, double *B, double *beta, int offsetC, double *C, int sdc, int offsetD, double *D, int sdd, int m0, int m1, int n0, int n1);
@@ -6596,6 +6601,8 @@ kernel_dsyrk_nt_l_4x4_gen_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dsyrk_nt_l_4x4_gen_lib4, .-kernel_dsyrk_nt_l_4x4_gen_lib4
+#endif
+
 #endif
 
 
