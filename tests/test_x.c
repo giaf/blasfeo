@@ -286,6 +286,7 @@ int main()
 								{
 
 								// loop over column offset
+								// TODO where is kk used ????????????
 								for (kk = kk0; kk < kk0+kk0s; kk++)
 									{
 

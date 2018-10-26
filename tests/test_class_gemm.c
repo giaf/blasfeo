@@ -60,8 +60,8 @@ void set_test_args(struct TestArgs *targs)
 {
 	targs->AB_offsets = 5;
 	targs->ii0s = 13;
-	targs->jj0s = 1;
-	targs->kk0s = 13;
+	targs->jj0s = 13;
+	targs->kk0s = 1;
 	targs->nis = 13;
 	targs->njs = 13;
 	targs->nks = 13;
