@@ -206,7 +206,7 @@ int main()
 
 
 
-#if 1
+#if 0
 	// panel copy
 //	kernel_dpacp_nn_4_lib4(6, 3, sA.pA, sA.cn, sD.pA);
 //	kernel_dpacp_nn_4_vs_lib4(6, 3, sA.pA, sA.cn, sD.pA, 1);
@@ -279,7 +279,7 @@ int main()
 	return 0;
 #endif
 
-#if 0
+#if 1
 	// syrk_ln
 	alpha = 1.0;
 	beta = 0.0;
@@ -287,9 +287,10 @@ int main()
 
 //	kernel_dsyrk_nt_l_4x4_lib4(4, &alpha, sA.pA, sB.pA, &beta, sA.pA, sD.pA);
 //	kernel_dsyrk_nt_l_4x4_vs_lib4(4, &alpha, sA.pA, sB.pA, &beta, sA.pA, sD.pA, 3, 4);
-//	kernel_dsyrk_nt_l_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 0, sA.pA, sA.cn, 0, sD.pA, sD.cn, 1, 4, 1, 3);
+//	kernel_dsyrk_nt_l_4x4_gen_lib4(4, &alpha, sA.pA, sB.pA, &beta, 0, sA.pA, sA.cn, 3, sD.pA, sD.cn, 3, 4, 0, 4);
+//	kernel_dsyrk_nt_l_8x4_gen_lib4(4, &alpha, sA.pA, sA.cn, sB.pA, &beta, 0, sA.pA, sA.cn, 1, sD.pA, sD.cn, 0, 5, 0, 4);
 
-	blasfeo_dsyrk_ln(15, n, alpha, &sA, 1, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ln(12, 12, alpha, &sB, 0, 0, &sA, 1, 0, beta, &sD, 1, 0, &sD, 1, 0);
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	return 0;

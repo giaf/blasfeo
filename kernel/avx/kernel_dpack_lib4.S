@@ -1074,6 +1074,10 @@ inner_kernel_dpacp_nn_12_0_lib4:
 	jg		1b
 
 
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
 2: // clean-up loop
 	
 	vmovapd		0(%r11), %ymm0
@@ -1176,6 +1180,10 @@ inner_kernel_dpacp_nn_12_0_vs_lib4:
 
 	cmpl	$3, %r10d
 	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
 
 
 2: // clean-up loop
@@ -1302,6 +1310,10 @@ inner_kernel_dpacp_nn_12_1_lib4:
 
 	cmpl	$3, %r10d
 	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
 
 
 2: // clean-up loop
@@ -1448,6 +1460,10 @@ inner_kernel_dpacp_nn_12_1_vs_lib4:
 	jg		1b
 
 
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
 2: // clean-up loop
 	
 	vmovapd		0(%r11), %ymm0
@@ -1568,6 +1584,10 @@ inner_kernel_dpacp_nn_12_2_lib4:
 
 	cmpl	$3, %r10d
 	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
 
 
 2: // clean-up loop
@@ -1699,6 +1719,10 @@ inner_kernel_dpacp_nn_12_2_vs_lib4:
 	jg		1b
 
 
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
 2: // clean-up loop
 	
 	vmovapd		0(%r11), %ymm0
@@ -1828,6 +1852,10 @@ inner_kernel_dpacp_nn_12_3_lib4:
 
 	cmpl	$3, %r10d
 	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
 
 
 2: // clean-up loop
@@ -1974,6 +2002,10 @@ inner_kernel_dpacp_nn_12_3_vs_lib4:
 	jg		1b
 
 
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
 2: // clean-up loop
 	
 	vmovapd		0(%r11), %ymm0
@@ -2068,6 +2100,10 @@ inner_kernel_dpacp_nn_8_0_lib4:
 	jg		1b
 
 
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
 2: // clean-up loop
 	
 	vmovapd		0(%r11), %ymm0
@@ -2160,6 +2196,10 @@ inner_kernel_dpacp_nn_8_0_vs_lib4:
 
 	cmpl	$3, %r10d
 	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
 
 
 2: // clean-up loop
@@ -2264,6 +2304,10 @@ inner_kernel_dpacp_nn_8_1_lib4:
 
 	cmpl	$3, %r10d
 	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
 
 
 2: // clean-up loop
@@ -2385,6 +2429,10 @@ inner_kernel_dpacp_nn_8_1_vs_lib4:
 	jg		1b
 
 
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
 2: // clean-up loop
 	
 	vmovapd		0(%r11), %ymm0
@@ -2484,6 +2532,10 @@ inner_kernel_dpacp_nn_8_2_lib4:
 
 	cmpl	$3, %r10d
 	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
 
 
 2: // clean-up loop
@@ -2595,6 +2647,10 @@ inner_kernel_dpacp_nn_8_2_vs_lib4:
 	jg		1b
 
 
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
 2: // clean-up loop
 	
 	vmovapd		0(%r11), %ymm0
@@ -2700,6 +2756,10 @@ inner_kernel_dpacp_nn_8_3_lib4:
 
 	cmpl	$3, %r10d
 	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
 
 
 2: // clean-up loop
@@ -2821,6 +2881,10 @@ inner_kernel_dpacp_nn_8_3_vs_lib4:
 	jg		1b
 
 
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
 2: // clean-up loop
 	
 	vmovapd		0(%r11), %ymm0
@@ -2900,6 +2964,10 @@ inner_kernel_dpacp_nn_4_0_lib4:
 
 	cmpl	$3, %r10d
 	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
 
 
 2: // clean-up loop
@@ -2988,6 +3056,10 @@ inner_kernel_dpacp_nn_4_1_lib4:
 	jg		1b
 
 
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
 2: // clean-up loop
 	
 	vmovapd		0(%r11), %ymm0
@@ -3071,6 +3143,10 @@ inner_kernel_dpacp_nn_4_2_lib4:
 
 	cmpl	$3, %r10d
 	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
 
 
 2: // clean-up loop
@@ -3161,6 +3237,10 @@ inner_kernel_dpacp_nn_4_3_lib4:
 	jg		1b
 
 
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
 2: // clean-up loop
 	
 	vmovapd		0(%r11), %ymm0
@@ -3244,6 +3324,10 @@ inner_kernel_dpacp_nn_3_0_lib4:
 
 	cmpl	$3, %r10d
 	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
 
 
 2: // clean-up loop
@@ -3330,6 +3414,10 @@ inner_kernel_dpacp_nn_3_2_lib4:
 	jg		1b
 
 
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
 2: // clean-up loop
 	
 	vmovupd		16(%r11), %xmm0
@@ -3414,6 +3502,10 @@ inner_kernel_dpacp_nn_3_3_lib4:
 	jg		1b
 
 
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
 2: // clean-up loop
 	
 	vmovsd		24(%r11), %xmm0
@@ -3488,6 +3580,10 @@ inner_kernel_dpacp_nn_2_0_lib4:
 
 	cmpl	$3, %r10d
 	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
 
 
 2: // clean-up loop
@@ -3568,6 +3664,10 @@ inner_kernel_dpacp_nn_2_1_lib4:
 	jg		1b
 
 
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
 2: // clean-up loop
 	
 	vmovsd		24(%r11), %xmm0
@@ -3641,6 +3741,10 @@ inner_kernel_dpacp_nn_1_0_lib4:
 
 	cmpl	$3, %r10d
 	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
 
 
 2: // clean-up loop

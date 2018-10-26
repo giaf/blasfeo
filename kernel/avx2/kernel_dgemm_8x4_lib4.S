@@ -6942,6 +6942,7 @@ inner_store_8x4_gen_lib4:
 	vsubpd		%ymm12, %ymm14, %ymm14
 	vsubpd		%ymm15, %ymm13, %ymm15
 
+
 	// shift D and sol for cols
 	cmpl	$0, %r15d
 	jle		0f
@@ -6979,6 +6980,10 @@ inner_store_8x4_gen_lib4:
 0:
 	subl	%r15d, %eax
 	movl	%eax, %r15d
+
+	cmpl	$0, %r15d
+	jle		3f
+
 
 	cmpl	$0, %r10d
 	jg		0f
@@ -7230,212 +7235,180 @@ inner_store_l_8x4_gen_lib4:
 #endif
 	
 	// compute mask for rows
-	vcvtsi2sd	%r13d, %xmm14, %xmm14 // TODO remove
 	vcvtsi2sd	%r14d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC02(%rip), %ymm12 // TODO remove
 	vmovupd		.LC03(%rip), %ymm13
 #elif defined(OS_MAC)
-	vmovupd		LC02(%rip), %ymm12 // TODO remove
 	vmovupd		LC03(%rip), %ymm13
 #endif
-	vmovddup	%xmm14, %xmm14 // TODO remove
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm14, %ymm14, %ymm14 // TODO remove
 	vinsertf128	$1, %xmm15, %ymm15, %ymm15
-	vsubpd		%ymm12, %ymm14, %ymm14 // TODO remove
 	vsubpd		%ymm15, %ymm13, %ymm15
 
+
+	// shift D and sol for cols
+	cmpl	$0, %r15d
+	jle		0f
+
+	vmovapd		%ymm1, %ymm0
+	vmovapd		%ymm5, %ymm4
+	vmovapd		%ymm2, %ymm1
+	vmovapd		%ymm6, %ymm5
+	vmovapd		%ymm3, %ymm2
+	vmovapd		%ymm7, %ymm6
+	addq		$32, %r11
+
+	cmpl	$1, %r15d
+	jle		0f
+
+	vmovapd		%ymm1, %ymm0
+	vmovapd		%ymm5, %ymm4
+	vmovapd		%ymm2, %ymm1
+	vmovapd		%ymm6, %ymm5
+	addq		$32, %r11
+
+	cmpl	$2, %r15d
+	jle		0f
+
+	vmovapd		%ymm1, %ymm0
+	vmovapd		%ymm5, %ymm4
+	addq		$32, %r11
+
+0:
+
+	// compute number of cols
+	cmpl	$4, %eax
+	jle		0f
+	movl	$4, %eax
+0:
+	subl	%r15d, %eax
+	movl	%eax, %r15d
+
+	cmpl	$0, %r15d
+	jle		3f
+
+
+	// select offset
 	cmpl	$0, %r10d
-	jg		0f
+	je		10f
+	cmpl	$1, %r10d
+	je		11f
+	cmpl	$2, %r10d
+	je		12f
+	cmpl	$3, %r10d
+	je		13f
+
+	jmp 3f
+
 
 	// offset==0
+10:
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd		.LC04(%rip), %ymm13
+	vmovapd		.LC12(%rip), %ymm14
 #elif defined(OS_MAC)
 	vmovapd		LC04(%rip), %ymm13
+	vmovapd		LC12(%rip), %ymm14
 #endif
 
+	// select m0
+	cmpl	$0, %r13d
+	jle		20f
+	cmpl	$1, %r13d
+	je		21f
+	cmpl	$2, %r13d
+	je		22f
+	cmpl	$3, %r13d
+	je		23f
+
+	jmp 3f
+
+20:
+	vmaskmovpd	%ymm0, %ymm14,  0(%r11)
+	vmaskmovpd	%ymm4, %ymm15,  0(%r11, %r12, 1)
+	cmpl		$2, %r15d
+	jl			3f // end
+	vblendpd	$0x1, %ymm13, %ymm14, %ymm14
+	vmaskmovpd	%ymm1, %ymm14, 32(%r11)
+	vmaskmovpd	%ymm5, %ymm15, 32(%r11, %r12, 1)
+	cmpl		$3, %r15d
+	jl			3f // end
+	vblendpd	$0x2, %ymm13, %ymm14, %ymm14
+	vmaskmovpd	%ymm2, %ymm14, 64(%r11)
+	vmaskmovpd	%ymm6, %ymm15, 64(%r11, %r12, 1)
+	cmpl		$4, %r15d
+	jl			3f // end
+	vblendpd	$0x4, %ymm13, %ymm14, %ymm14
+	vmaskmovpd	%ymm3, %ymm14, 96(%r11)
+	vmaskmovpd	%ymm7, %ymm15, 96(%r11, %r12, 1)
+
+	jmp 3f
+
+21:
+	vblendpd	$0x1, %ymm13, %ymm14, %ymm14
+	vmaskmovpd	%ymm0, %ymm14,  0(%r11)
+	vmaskmovpd	%ymm4, %ymm15,  0(%r11, %r12, 1)
+	cmpl		$2, %r15d
+	jl			3f // end
+	vblendpd	$0x2, %ymm13, %ymm14, %ymm14
+	vmaskmovpd	%ymm1, %ymm14, 32(%r11)
+	vmaskmovpd	%ymm5, %ymm15, 32(%r11, %r12, 1)
+	cmpl		$3, %r15d
+	jl			3f // end
+	vblendpd	$0x4, %ymm13, %ymm14, %ymm14
+	vmaskmovpd	%ymm2, %ymm14, 64(%r11)
+	vmaskmovpd	%ymm6, %ymm15, 64(%r11, %r12, 1)
+	cmpl		$4, %r15d
+	jl			3f // end
+	vmaskmovpd	%ymm7, %ymm15, 96(%r11, %r12, 1)
+
+	jmp 3f
+
+22:
+	vblendpd	$0x3, %ymm13, %ymm14, %ymm14
+	vmaskmovpd	%ymm0, %ymm14,  0(%r11)
+	vmaskmovpd	%ymm4, %ymm15,  0(%r11, %r12, 1)
+	cmpl		$2, %r15d
+	jl			3f // end
+	vblendpd	$0x4, %ymm13, %ymm14, %ymm14
+	vmaskmovpd	%ymm1, %ymm14, 32(%r11)
+	vmaskmovpd	%ymm5, %ymm15, 32(%r11, %r12, 1)
+	cmpl		$3, %r15d
+	jl			3f // end
+	vmaskmovpd	%ymm6, %ymm15, 64(%r11, %r12, 1)
+	cmpl		$4, %r15d
+	jl			3f // end
+	vblendpd	$0x1, %ymm13, %ymm15, %ymm15
+	vmaskmovpd	%ymm7, %ymm15, 96(%r11, %r12, 1)
+
+	jmp 3f
+
+23:
+	vblendpd	$0x7, %ymm13, %ymm14, %ymm14
+	vmaskmovpd	%ymm0, %ymm14,  0(%r11)
+	vmaskmovpd	%ymm4, %ymm15,  0(%r11, %r12, 1)
+	cmpl		$2, %r15d
+	jl			3f // end
+	vmaskmovpd	%ymm5, %ymm15, 32(%r11, %r12, 1)
+	cmpl		$3, %r15d
+	jl			3f // end
+	vblendpd	$0x1, %ymm13, %ymm15, %ymm15
+	vmaskmovpd	%ymm6, %ymm15, 64(%r11, %r12, 1)
+	cmpl		$4, %r15d
+	jl			3f // end
+	vblendpd	$0x2, %ymm13, %ymm15, %ymm15
+	vmaskmovpd	%ymm7, %ymm15, 96(%r11, %r12, 1)
+
+	jmp 3f
+
+
+	// offset==1
+11:
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd		.LC12(%rip), %ymm14
 #elif defined(OS_MAC)
 	vmovapd		LC12(%rip), %ymm14
 #endif
-
-	cmpl		$0, %r13d
-	je			20f
-	cmpl		$1, %r13d
-	je			21f
-	cmpl		$2, %r13d
-	je			22f
-	cmpl		$3, %r13d
-	je			23f
-	jmp			3f // end
-
-20:
-
-	cmpl		$0, %r15d
-	je			10f
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x1, %ymm13, %ymm14, %ymm14
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x2, %ymm13, %ymm14, %ymm14
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
-	vmaskmovpd	%ymm0, %ymm14,  0(%r11)
-	vmaskmovpd	%ymm4, %ymm15,  0(%r11, %r12, 1)
-11:
-	cmpl		$2, %eax
-	jl			3f // end
-	vblendpd	$0x1, %ymm13, %ymm14, %ymm14
-	vmaskmovpd	%ymm1, %ymm14, 32(%r11)
-	vmaskmovpd	%ymm5, %ymm15, 32(%r11, %r12, 1)
-12:
-	cmpl		$3, %eax
-	jl			3f // end
-	vblendpd	$0x2, %ymm13, %ymm14, %ymm14
-	vmaskmovpd	%ymm2, %ymm14, 64(%r11)
-	vmaskmovpd	%ymm6, %ymm15, 64(%r11, %r12, 1)
-13:
-	cmpl		$4, %eax
-	jl			3f // end
-	vblendpd	$0x4, %ymm13, %ymm14, %ymm14
-	vmaskmovpd	%ymm3, %ymm14, 96(%r11)
-	vmaskmovpd	%ymm7, %ymm15, 96(%r11, %r12, 1)
-
-	jmp		3f
-
-21:
-
-	cmpl		$0, %r15d
-	je			10f
-	vblendpd	$0x1, %ymm13, %ymm14, %ymm14
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x2, %ymm13, %ymm14, %ymm14
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x4, %ymm13, %ymm14, %ymm14
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
-	vblendpd	$0x1, %ymm13, %ymm14, %ymm14
-	vmaskmovpd	%ymm0, %ymm14,  0(%r11)
-	vmaskmovpd	%ymm4, %ymm15,  0(%r11, %r12, 1)
-11:
-	cmpl		$2, %eax
-	jl			3f // end
-	vblendpd	$0x2, %ymm13, %ymm14, %ymm14
-	vmaskmovpd	%ymm1, %ymm14, 32(%r11)
-	vmaskmovpd	%ymm5, %ymm15, 32(%r11, %r12, 1)
-12:
-	cmpl		$3, %eax
-	jl			3f // end
-	vblendpd	$0x4, %ymm13, %ymm14, %ymm14
-	vmaskmovpd	%ymm2, %ymm14, 64(%r11)
-	vmaskmovpd	%ymm6, %ymm15, 64(%r11, %r12, 1)
-13:
-	cmpl		$4, %eax
-	jl			3f // end
-	vblendpd	$0x8, %ymm13, %ymm14, %ymm14
-	vmaskmovpd	%ymm3, %ymm14, 96(%r11)
-	vmaskmovpd	%ymm7, %ymm15, 96(%r11, %r12, 1)
-
-	jmp		3f
-
-22:
-
-	cmpl		$0, %r15d
-	je			10f
-	vblendpd	$0x3, %ymm13, %ymm14, %ymm14
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x4, %ymm13, %ymm14, %ymm14
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x8, %ymm13, %ymm14, %ymm14
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
-	vblendpd	$0x3, %ymm13, %ymm14, %ymm14
-	vmaskmovpd	%ymm0, %ymm14,  0(%r11)
-	vmaskmovpd	%ymm4, %ymm15,  0(%r11, %r12, 1)
-11:
-	cmpl		$2, %eax
-	jl			3f // end
-	vblendpd	$0x4, %ymm13, %ymm14, %ymm14
-	vmaskmovpd	%ymm1, %ymm14, 32(%r11)
-	vmaskmovpd	%ymm5, %ymm15, 32(%r11, %r12, 1)
-12:
-	cmpl		$3, %eax
-	jl			3f // end
-	vblendpd	$0x8, %ymm13, %ymm14, %ymm14
-	vmaskmovpd	%ymm2, %ymm14, 64(%r11)
-	vmaskmovpd	%ymm6, %ymm15, 64(%r11, %r12, 1)
-13:
-	cmpl		$4, %eax
-	jl			3f // end
-	vblendpd	$0x1, %ymm13, %ymm15, %ymm15
-	vmaskmovpd	%ymm3, %ymm14, 96(%r11)
-	vmaskmovpd	%ymm7, %ymm15, 96(%r11, %r12, 1)
-
-	jmp		3f
-
-23:
-
-	cmpl		$0, %r15d
-	je			10f
-	vblendpd	$0x7, %ymm13, %ymm14, %ymm14
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x8, %ymm13, %ymm14, %ymm14
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x1, %ymm13, %ymm15, %ymm15
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
-	vblendpd	$0x7, %ymm13, %ymm14, %ymm14
-	vmaskmovpd	%ymm0, %ymm14,  0(%r11)
-	vmaskmovpd	%ymm4, %ymm15,  0(%r11, %r12, 1)
-11:
-	cmpl		$2, %eax
-	jl			3f // end
-	vblendpd	$0x8, %ymm13, %ymm14, %ymm14
-	vmaskmovpd	%ymm1, %ymm14, 32(%r11)
-	vmaskmovpd	%ymm5, %ymm15, 32(%r11, %r12, 1)
-12:
-	cmpl		$3, %eax
-	jl			3f // end
-	vblendpd	$0x1, %ymm13, %ymm15, %ymm15
-	vmaskmovpd	%ymm2, %ymm14, 64(%r11)
-	vmaskmovpd	%ymm6, %ymm15, 64(%r11, %r12, 1)
-13:
-	cmpl		$4, %eax
-	jl			3f // end
-	vblendpd	$0x2, %ymm13, %ymm15, %ymm15
-	vmaskmovpd	%ymm3, %ymm14, 96(%r11)
-	vmaskmovpd	%ymm7, %ymm15, 96(%r11, %r12, 1)
-
-	jmp		3f
-
-0:
-	
-	cmpl	$1, %r10d
-	jg		1f
-
-	// offset==1
 
 	vmovapd		%ymm0, %ymm13
 	vperm2f128	$0x03, %ymm4, %ymm0, %ymm12
@@ -7463,225 +7436,140 @@ inner_store_l_8x4_gen_lib4:
 
 	vperm2f128	$0x01, %ymm15, %ymm15, %ymm12
 	vshufpd		$0x5, %ymm15, %ymm12, %ymm15
-	vperm2f128	$0x01, %ymm14, %ymm14, %ymm12
-	vshufpd		$0x5, %ymm14, %ymm12, %ymm14
+//	vperm2f128	$0x01, %ymm14, %ymm14, %ymm12
+//	vshufpd		$0x5, %ymm14, %ymm12, %ymm14
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC08(%rip), %ymm12
+//	vmovupd		.LC08(%rip), %ymm12
 	vmovupd		.LC05(%rip), %ymm13
 #elif defined(OS_MAC)
-	vmovupd		LC08(%rip), %ymm12
+//	vmovupd		LC08(%rip), %ymm12
 	vmovupd		LC05(%rip), %ymm13
 #endif
-	vandpd		%ymm12, %ymm14, %ymm12
+//	vandpd		%ymm12, %ymm14, %ymm12
 	vandpd		%ymm13, %ymm15, %ymm13
 
 	vblendpd	$0x1, %ymm14, %ymm15, %ymm14
 
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovapd		.LC04(%rip), %ymm15
-#elif defined(OS_MAC)
-	vmovapd		LC04(%rip), %ymm15
-#endif
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovapd		.LC04(%rip), %ymm15
 	vmovapd		.LC12(%rip), %ymm12
 #elif defined(OS_MAC)
+	vmovapd		LC04(%rip), %ymm15
 	vmovapd		LC12(%rip), %ymm12
 #endif
 
-	cmpl		$0, %r13d
-	je			20f
-	cmpl		$1, %r13d
-	je			21f
-	cmpl		$2, %r13d
-	je			22f
-	cmpl		$3, %r13d
-	je			23f
-	jmp			3f // end
+	// select m0
+	cmpl	$0, %r13d
+	jle		20f
+	cmpl	$1, %r13d
+	je		21f
+	cmpl	$2, %r13d
+	je		22f
+	cmpl	$3, %r13d
+	je		23f
+
+	jmp 3f
 
 20:
-
-	cmpl		$0, %r15d
-	je			10f
-//	vblendpd	$0x1, %ymm15, %ymm12, %ymm12
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x2, %ymm15, %ymm12, %ymm12
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x4, %ymm15, %ymm12, %ymm12
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
-//	vblendpd	$0x1, %ymm15, %ymm12, %ymm12
+	vblendpd	$0x1, %ymm15, %ymm12, %ymm12
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm4, %ymm14, 0(%r11, %r12, 1)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 2)
-11:
 	cmpl		$2, %eax
 	jl			3f // end
 	vblendpd	$0x2, %ymm15, %ymm12, %ymm12
 	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
 	vmaskmovpd	%ymm5, %ymm14, 32(%r11, %r12, 1)
 	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 2)
-12:
 	cmpl		$3, %eax
 	jl			3f // end
 	vblendpd	$0x4, %ymm15, %ymm12, %ymm12
 	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
 	vmaskmovpd	%ymm6, %ymm14, 64(%r11, %r12, 1)
 	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 2)
-13:
 	cmpl		$4, %eax
 	jl			3f // end
-	vblendpd	$0x8, %ymm15, %ymm12, %ymm12
-	vmaskmovpd	%ymm3, %ymm12, 96(%r11)
 	vmaskmovpd	%ymm7, %ymm14, 96(%r11, %r12, 1)
 	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 2)
 
-	jmp		3f
+	jmp 3f
 
 21:
-
-	cmpl		$0, %r15d
-	je			10f
-	vblendpd	$0x3, %ymm15, %ymm12, %ymm12
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x4, %ymm15, %ymm12, %ymm12
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x8, %ymm15, %ymm12, %ymm12
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
 	vblendpd	$0x3, %ymm15, %ymm12, %ymm12
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm4, %ymm14, 0(%r11, %r12, 1)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 2)
-11:
 	cmpl		$2, %eax
 	jl			3f // end
 	vblendpd	$0x4, %ymm15, %ymm12, %ymm12
 	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
 	vmaskmovpd	%ymm5, %ymm14, 32(%r11, %r12, 1)
 	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 2)
-12:
 	cmpl		$3, %eax
 	jl			3f // end
-	vblendpd	$0x8, %ymm15, %ymm12, %ymm12
-	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
 	vmaskmovpd	%ymm6, %ymm14, 64(%r11, %r12, 1)
 	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 2)
-13:
 	cmpl		$4, %eax
 	jl			3f // end
 	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
-	vmaskmovpd	%ymm3, %ymm12, 96(%r11)
 	vmaskmovpd	%ymm7, %ymm14, 96(%r11, %r12, 1)
 	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 2)
 
-	jmp		3f
+	jmp 3f
 
 22:
-
-	cmpl		$0, %r15d
-	je			10f
-	vblendpd	$0x7, %ymm15, %ymm12, %ymm12
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x8, %ymm15, %ymm12, %ymm12
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
 	vblendpd	$0x7, %ymm15, %ymm12, %ymm12
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm4, %ymm14, 0(%r11, %r12, 1)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 2)
-11:
 	cmpl		$2, %eax
 	jl			3f // end
-	vblendpd	$0x8, %ymm15, %ymm12, %ymm12
-	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
 	vmaskmovpd	%ymm5, %ymm14, 32(%r11, %r12, 1)
 	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 2)
-12:
 	cmpl		$3, %eax
 	jl			3f // end
 	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
-	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
 	vmaskmovpd	%ymm6, %ymm14, 64(%r11, %r12, 1)
 	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 2)
-13:
 	cmpl		$4, %eax
 	jl			3f // end
 	vblendpd	$0x2, %ymm15, %ymm14, %ymm14
-	vmaskmovpd	%ymm3, %ymm12, 96(%r11)
 	vmaskmovpd	%ymm7, %ymm14, 96(%r11, %r12, 1)
 	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 2)
 
-	jmp		3f
+	jmp 3f
 
 23:
-
-	cmpl		$0, %r15d
-	je			10f
-	vblendpd	$0xf, %ymm15, %ymm12, %ymm12
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x2, %ymm15, %ymm14, %ymm14
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
-//	vblendpd	$0xf, %ymm15, %ymm12, %ymm12
-//	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm4, %ymm14, 0(%r11, %r12, 1)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 2)
-11:
 	cmpl		$2, %eax
 	jl			3f // end
 	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
 	vmaskmovpd	%ymm5, %ymm14, 32(%r11, %r12, 1)
 	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 2)
-12:
 	cmpl		$3, %eax
 	jl			3f // end
 	vblendpd	$0x2, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
 	vmaskmovpd	%ymm6, %ymm14, 64(%r11, %r12, 1)
 	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 2)
-13:
 	cmpl		$4, %eax
 	jl			3f // end
 	vblendpd	$0x4, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm3, %ymm12, 96(%r11)
 	vmaskmovpd	%ymm7, %ymm14, 96(%r11, %r12, 1)
 	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 2)
 
-	jmp		3f
+	jmp 3f
 
-1:
-
-	cmpl	$2, %r10d
-	jg		2f
 
 	// offset==2
+12:
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovapd		.LC12(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovapd		LC12(%rip), %ymm14
+#endif
 
 	vmovapd		%ymm0, %ymm13
 	vperm2f128	$0x03, %ymm4, %ymm0, %ymm0
@@ -7699,222 +7587,135 @@ inner_store_l_8x4_gen_lib4:
 	vperm2f128	$0x03, %ymm7, %ymm3, %ymm3
 	vperm2f128	$0x03, %ymm13, %ymm7, %ymm7
 
-	vperm2f128	$0x01, %ymm14, %ymm14, %ymm14
+//	vperm2f128	$0x01, %ymm14, %ymm14, %ymm14
 	vperm2f128	$0x01, %ymm15, %ymm15, %ymm15
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC09(%rip), %ymm12
+//	vmovupd		.LC09(%rip), %ymm12
 	vmovupd		.LC06(%rip), %ymm13
 #elif defined(OS_MAC)
-	vmovupd		LC09(%rip), %ymm12
+//	vmovupd		LC09(%rip), %ymm12
 	vmovupd		LC06(%rip), %ymm13
 #endif
-	vandpd		%ymm12, %ymm14, %ymm12
+//	vandpd		%ymm12, %ymm14, %ymm12
 	vandpd		%ymm13, %ymm15, %ymm13
 
 	vblendpd	$0x3, %ymm14, %ymm15, %ymm14
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd		.LC04(%rip), %ymm15
-#elif defined(OS_MAC)
-	vmovapd		LC04(%rip), %ymm15
-#endif
-
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd		.LC12(%rip), %ymm12
 #elif defined(OS_MAC)
+	vmovapd		LC04(%rip), %ymm15
 	vmovapd		LC12(%rip), %ymm12
 #endif
 
-	cmpl		$0, %r13d
-	je			20f
-	cmpl		$1, %r13d
-	je			21f
-	cmpl		$2, %r13d
-	je			22f
-	cmpl		$3, %r13d
-	je			23f
-	jmp			3f // end
+	// select m0
+	cmpl	$0, %r13d
+	jle		20f
+	cmpl	$1, %r13d
+	je		21f
+	cmpl	$2, %r13d
+	je		22f
+	cmpl	$3, %r13d
+	je		23f
+
+	jmp 3f
 
 20:
-
-	cmpl		$0, %r15d
-	je			10f
-//	vblendpd	$0x3, %ymm15, %ymm12, %ymm12
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x4, %ymm15, %ymm12, %ymm12
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x8, %ymm15, %ymm12, %ymm12
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
-//	vblendpd	$0x3, %ymm15, %ymm12, %ymm12
+	vblendpd	$0x3, %ymm15, %ymm12, %ymm12
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm4, %ymm14, 0(%r11, %r12, 1)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 2)
-11:
-	cmpl		$2, %eax
+	cmpl		$2, %r15d
 	jl			3f // end
 	vblendpd	$0x4, %ymm15, %ymm12, %ymm12
 	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
 	vmaskmovpd	%ymm5, %ymm14, 32(%r11, %r12, 1)
 	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 2)
-12:
-	cmpl		$3, %eax
+	cmpl		$3, %r15d
 	jl			3f // end
-	vblendpd	$0x8, %ymm15, %ymm12, %ymm12
-	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
 	vmaskmovpd	%ymm6, %ymm14, 64(%r11, %r12, 1)
 	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 2)
-13:
-	cmpl		$4, %eax
+	cmpl		$4, %r15d
 	jl			3f // end
 	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
-	vmaskmovpd	%ymm3, %ymm12, 96(%r11)
 	vmaskmovpd	%ymm7, %ymm14, 96(%r11, %r12, 1)
 	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 2)
 
-	jmp		3f
+	jmp 3f
 
 21:
-
-	cmpl		$0, %r15d
-	je			10f
-	vblendpd	$0x7, %ymm15, %ymm12, %ymm12
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x8, %ymm15, %ymm12, %ymm12
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x1, %ymm14, %ymm14, %ymm14
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
 	vblendpd	$0x7, %ymm15, %ymm12, %ymm12
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm4, %ymm14, 0(%r11, %r12, 1)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 2)
-11:
-	cmpl		$2, %eax
+	cmpl		$2, %r15d
 	jl			3f // end
-	vblendpd	$0x8, %ymm15, %ymm12, %ymm12
-	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
 	vmaskmovpd	%ymm5, %ymm14, 32(%r11, %r12, 1)
 	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 2)
-12:
-	cmpl		$3, %eax
+	cmpl		$3, %r15d
 	jl			3f // end
 	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
-	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
 	vmaskmovpd	%ymm6, %ymm14, 64(%r11, %r12, 1)
 	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 2)
-13:
-	cmpl		$4, %eax
+	cmpl		$4, %r15d
 	jl			3f // end
 	vblendpd	$0x2, %ymm15, %ymm14, %ymm14
-	vmaskmovpd	%ymm3, %ymm12, 96(%r11)
 	vmaskmovpd	%ymm7, %ymm14, 96(%r11, %r12, 1)
 	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 2)
 
-	jmp		3f
+	jmp 3f
 
 22:
-
-	cmpl		$0, %r15d
-	je			10f
-//	vblendpd	$0xf, %ymm15, %ymm12, %ymm12
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x2, %ymm14, %ymm14, %ymm14
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
-//	vblendpd	$0xf, %ymm15, %ymm12, %ymm12
-//	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm4, %ymm14, 0(%r11, %r12, 1)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 2)
-11:
-	cmpl		$2, %eax
+	cmpl		$2, %r15d
 	jl			3f // end
 	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
 	vmaskmovpd	%ymm5, %ymm14, 32(%r11, %r12, 1)
 	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 2)
-12:
-	cmpl		$3, %eax
+	cmpl		$3, %r15d
 	jl			3f // end
 	vblendpd	$0x2, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
 	vmaskmovpd	%ymm6, %ymm14, 64(%r11, %r12, 1)
 	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 2)
-13:
-	cmpl		$4, %eax
+	cmpl		$4, %r15d
 	jl			3f // end
 	vblendpd	$0x4, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm3, %ymm12, 96(%r11)
 	vmaskmovpd	%ymm7, %ymm14, 96(%r11, %r12, 1)
 	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 2)
 
-	jmp		3f
+	jmp 3f
 
 23:
-
-	cmpl		$0, %r15d
-	je			10f
-//	vblendpd	$0xf, %ymm15, %ymm12, %ymm12
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x3, %ymm15, %ymm14, %ymm14
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x4, %ymm14, %ymm14, %ymm14
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
-//	vblendpd	$0xf, %ymm15, %ymm12, %ymm12
-//	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
+	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
 	vmaskmovpd	%ymm4, %ymm14, 0(%r11, %r12, 1)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 2)
-11:
-	cmpl		$2, %eax
+	cmpl		$2, %r15d
 	jl			3f // end
-	vblendpd	$0x3, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
+	vblendpd	$0x2, %ymm15, %ymm14, %ymm14
 	vmaskmovpd	%ymm5, %ymm14, 32(%r11, %r12, 1)
 	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 2)
-12:
-	cmpl		$3, %eax
+	cmpl		$3, %r15d
 	jl			3f // end
 	vblendpd	$0x4, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
 	vmaskmovpd	%ymm6, %ymm14, 64(%r11, %r12, 1)
 	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 2)
-13:
-	cmpl		$4, %eax
+	cmpl		$4, %r15d
 	jl			3f // end
-	vblendpd	$0x8, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm3, %ymm12, 96(%r11)
-	vmaskmovpd	%ymm7, %ymm14, 96(%r11, %r12, 1)
 	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 2)
 
-	jmp		3f
+	jmp 3f
 
-2:
 
 	// offset==3
+13:
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovapd		.LC12(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovapd		LC12(%rip), %ymm14
+#endif
 
 	vmovapd		%ymm0, %ymm13
 	vperm2f128	$0x21, %ymm0, %ymm4, %ymm12
@@ -7940,220 +7741,124 @@ inner_store_l_8x4_gen_lib4:
 	vperm2f128	$0x21, %ymm7, %ymm13, %ymm12
 	vshufpd		$0x5, %ymm12, %ymm13, %ymm7
 
-	vperm2f128	$0x01, %ymm14, %ymm14, %ymm12
-	vshufpd		$0x5, %ymm12, %ymm14, %ymm14
+//	vperm2f128	$0x01, %ymm14, %ymm14, %ymm12
+//	vshufpd		$0x5, %ymm12, %ymm14, %ymm14
 	vperm2f128	$0x01, %ymm15, %ymm15, %ymm12
 	vshufpd		$0x5, %ymm12, %ymm15, %ymm15
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC10(%rip), %ymm12
+//	vmovupd		.LC10(%rip), %ymm12
 	vmovupd		.LC07(%rip), %ymm13
 #elif defined(OS_MAC)
-	vmovupd		LC10(%rip), %ymm12
+//	vmovupd		LC10(%rip), %ymm12
 	vmovupd		LC07(%rip), %ymm13
 #endif
-	vandpd		%ymm12, %ymm14, %ymm12
+//	vandpd		%ymm12, %ymm14, %ymm12
 	vandpd		%ymm13, %ymm15, %ymm13
 
 	vblendpd	$0x7, %ymm14, %ymm15, %ymm14
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd		.LC04(%rip), %ymm15
-#elif defined(OS_MAC)
-	vmovapd		LC04(%rip), %ymm15
-#endif
-
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd		.LC12(%rip), %ymm12
 #elif defined(OS_MAC)
+	vmovapd		LC04(%rip), %ymm15
 	vmovapd		LC12(%rip), %ymm12
 #endif
 
-	cmpl		$0, %r13d
-	je			20f
-	cmpl		$1, %r13d
-	je			21f
-	cmpl		$2, %r13d
-	je			22f
-	cmpl		$3, %r13d
-	je			23f
-	jmp			3f // end
+	// select m0
+	cmpl	$0, %r13d
+	jle		20f
+	cmpl	$1, %r13d
+	je		21f
+	cmpl	$2, %r13d
+	je		22f
+	cmpl	$3, %r13d
+	je		23f
+
+	jmp 3f
 
 20:
-
-	cmpl		$0, %r15d
-	je			10f
-//	vblendpd	$0x7, %ymm15, %ymm12, %ymm12
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x8, %ymm15, %ymm12, %ymm12
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
-//	vblendpd	$0x7, %ymm15, %ymm12, %ymm12
+	vblendpd	$0x7, %ymm15, %ymm12, %ymm12
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm4, %ymm14, 0(%r11, %r12, 1)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 2)
-11:
-	cmpl		$2, %eax
+	cmpl		$2, %r15d
 	jl			3f // end
-	vblendpd	$0x8, %ymm15, %ymm12, %ymm12
-	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
 	vmaskmovpd	%ymm5, %ymm14, 32(%r11, %r12, 1)
 	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 2)
-12:
-	cmpl		$3, %eax
+	cmpl		$3, %r15d
 	jl			3f // end
 	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
-	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
 	vmaskmovpd	%ymm6, %ymm14, 64(%r11, %r12, 1)
 	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 2)
-13:
-	cmpl		$4, %eax
+	cmpl		$4, %r15d
 	jl			3f // end
 	vblendpd	$0x2, %ymm15, %ymm14, %ymm14
-	vmaskmovpd	%ymm3, %ymm12, 96(%r11)
 	vmaskmovpd	%ymm7, %ymm14, 96(%r11, %r12, 1)
 	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 2)
 
-	jmp		3f
+	jmp 3f
 
 21:
-
-	cmpl		$0, %r15d
-	je			10f
-//	vblendpd	$0xf, %ymm15, %ymm12, %ymm12
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x2, %ymm15, %ymm14, %ymm14
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
-//	vblendpd	$0xf, %ymm15, %ymm12, %ymm12
-//	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm4, %ymm14, 0(%r11, %r12, 1)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 2)
-11:
-	cmpl		$2, %eax
+	cmpl		$2, %r15d
 	jl			3f // end
 	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
 	vmaskmovpd	%ymm5, %ymm14, 32(%r11, %r12, 1)
 	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 2)
-12:
-	cmpl		$3, %eax
+	cmpl		$3, %r15d
 	jl			3f // end
 	vblendpd	$0x2, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
 	vmaskmovpd	%ymm6, %ymm14, 64(%r11, %r12, 1)
 	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 2)
-13:
-	cmpl		$4, %eax
+	cmpl		$4, %r15d
 	jl			3f // end
 	vblendpd	$0x4, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm3, %ymm12, 96(%r11)
 	vmaskmovpd	%ymm7, %ymm14, 96(%r11, %r12, 1)
 	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 2)
 
-	jmp		3f
+	jmp 3f
 
 22:
-
-	cmpl		$0, %r15d
-	je			10f
-//	vblendpd	$0xf, %ymm15, %ymm12, %ymm12
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x3, %ymm15, %ymm14, %ymm14
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x4, %ymm15, %ymm14, %ymm14
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
-//	vblendpd	$0xf, %ymm15, %ymm12, %ymm12
-//	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
+	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
 	vmaskmovpd	%ymm4, %ymm14, 0(%r11, %r12, 1)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 2)
-11:
-	cmpl		$2, %eax
+	cmpl		$2, %r15d
 	jl			3f // end
-	vblendpd	$0x3, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
+	vblendpd	$0x2, %ymm15, %ymm14, %ymm14
 	vmaskmovpd	%ymm5, %ymm14, 32(%r11, %r12, 1)
 	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 2)
-12:
-	cmpl		$3, %eax
+	cmpl		$3, %r15d
 	jl			3f // end
 	vblendpd	$0x4, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
 	vmaskmovpd	%ymm6, %ymm14, 64(%r11, %r12, 1)
 	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 2)
-13:
-	cmpl		$4, %eax
+	cmpl		$4, %r15d
 	jl			3f // end
-	vblendpd	$0x8, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm3, %ymm12, 96(%r11)
-	vmaskmovpd	%ymm7, %ymm14, 96(%r11, %r12, 1)
 	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 2)
 
-	jmp		3f
+	jmp 3f
 
 23:
-
-	cmpl		$0, %r15d
-	je			10f
-//	vblendpd	$0xf, %ymm15, %ymm12, %ymm12
-	cmpl		$1, %r15d
-	je			11f
-	vblendpd	$0x7, %ymm15, %ymm14, %ymm14
-	cmpl		$2, %r15d
-	je			12f
-	vblendpd	$0x8, %ymm15, %ymm14, %ymm14
-	cmpl		$3, %r15d
-	je			13f
-	jmp			3f // end
-
-10:
-//	vblendpd	$0xf, %ymm15, %ymm12, %ymm12
-//	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
+	vblendpd	$0x3, %ymm15, %ymm14, %ymm14
 	vmaskmovpd	%ymm4, %ymm14, 0(%r11, %r12, 1)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 2)
-11:
-	cmpl		$2, %eax
+	cmpl		$2, %r15d
 	jl			3f // end
-	vblendpd	$0x7, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
+	vblendpd	$0x4, %ymm15, %ymm14, %ymm14
 	vmaskmovpd	%ymm5, %ymm14, 32(%r11, %r12, 1)
 	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 2)
-12:
-	cmpl		$3, %eax
+	cmpl		$3, %r15d
 	jl			3f // end
-	vblendpd	$0x8, %ymm15, %ymm14, %ymm14
-//	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
-	vmaskmovpd	%ymm6, %ymm14, 64(%r11, %r12, 1)
 	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 2)
-13:
-	cmpl		$4, %eax
+	cmpl		$4, %r15d
 	jl			3f // end
 	vblendpd	$0x1, %ymm15, %ymm13, %ymm13
-//	vmaskmovpd	%ymm3, %ymm12, 96(%r11)
-	vmaskmovpd	%ymm7, %ymm14, 96(%r11, %r12, 1)
 	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 2)
 
-//	jmp		3f
+	jmp 3f
 
 3:
 

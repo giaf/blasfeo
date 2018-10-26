@@ -218,19 +218,19 @@ int GECMP_BLASAPI(
 #ifdef ROUTINE_CLASS_GETRF
 #include "test_class_getrf.c"
 #endif
-#ifdef ROUTINE_CLASS_GEMM
 
+#ifdef ROUTINE_CLASS_GEMM
 #ifdef BLAS_API
 #include "test_class_gemm-blasapi.c"
 #else
 #include "test_class_gemm.c"
 #endif
-
 #endif
 
 #ifdef ROUTINE_CLASS_SYRK
 #include "test_class_syrk.c"
 #endif
+
 #ifdef ROUTINE_CLASS_TRM
 #include "test_class_trm.c"
 #endif
