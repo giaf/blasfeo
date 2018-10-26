@@ -492,6 +492,8 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4cc(int kmax, double *A, double *B, int ld
 // 12x4
 void kernel_dgemm_nt_12x4_lib44c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_12x4_vs_lib44c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+void kernel_dsyrk_nt_l_12x4_lib44c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dsyrk_nt_l_12x4_vs_lib44c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dtrsm_nt_rl_inv_12x4_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE);
 void kernel_dtrsm_nt_rl_inv_12x4_vs_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE, int m1, int n1);
 void kernel_dpotrf_nt_l_12x4_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *dD);
@@ -502,6 +504,8 @@ void kernel_dpotrf_nt_l_8x8_vs_lib44c(int kmax, double *A, int sda, double *B, i
 // 8x4
 void kernel_dgemm_nt_8x4_lib44c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_8x4_vs_lib44c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+void kernel_dsyrk_nt_l_8x4_lib44c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dsyrk_nt_l_8x4_vs_lib44c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dtrsm_nt_rl_inv_8x4_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE);
 void kernel_dtrsm_nt_rl_inv_8x4_vs_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE, int m1, int n1);
 void kernel_dpotrf_nt_l_8x4_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *dD);

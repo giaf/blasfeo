@@ -3592,12 +3592,12 @@ kernel_dsyrk_nt_l_4x4_lib44c:
 	sall	$3, %r13d
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_4X4_LIB
+	INNER_BLEND_SCALE_AB_4X4_LIB
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_ab_4x4_lib
+	call inner_blend_scale_ab_4x4_lib
 #elif defined(OS_MAC)
-	callq _inner_scale_ab_4x4_lib
+	callq _inner_blend_scale_ab_4x4_lib
 #endif
 #endif
 
@@ -3686,12 +3686,12 @@ kernel_dsyrk_nt_l_4x4_vs_lib44c:
 	movq	ARG11, %r15 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_4X4_VS_LIB
+	INNER_BLEND_SCALE_AB_4X4_VS_LIB
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_ab_4x4_vs_lib
+	call inner_blend_scale_ab_4x4_vs_lib
 #elif defined(OS_MAC)
-	callq _inner_scale_ab_4x4_vs_lib
+	callq _inner_blend_scale_ab_4x4_vs_lib
 #endif
 #endif
 
