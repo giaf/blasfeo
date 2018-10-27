@@ -295,7 +295,8 @@ openblas_set_num_threads(1);
 
 //				blasfeo_dsyrk(&c_l, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
 //				blasfeo_dsyrk(&c_l, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
-				blasfeo_dsyrk(&c_u, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
+//				blasfeo_dsyrk(&c_u, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
+				blasfeo_dsyrk(&c_u, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
 
 //				for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 //				blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);

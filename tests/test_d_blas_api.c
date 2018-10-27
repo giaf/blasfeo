@@ -86,7 +86,7 @@ int main()
 	double alpha = 1.0;
 	double beta = 0.0;
 
-	char ta = 'n';
+	char ta = 't';
 	char tb = 't';
 	char uplo = 'u';
 	int info = 0;
