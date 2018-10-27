@@ -499,6 +499,8 @@ void kernel_dtrsm_nt_rl_inv_12x4_vs_lib44c(int kmax, double *A, int sda, double 
 void kernel_dpotrf_nt_l_12x4_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *dD);
 void kernel_dpotrf_nt_l_12x4_vs_lib44c(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *dD, int m1, int n1);
 // 8x8
+void kernel_dsyrk_nt_l_8x8_lib44c(int kmax, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dsyrk_nt_l_8x8_vs_lib44c(int kmax, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dpotrf_nt_l_8x8_lib44c(int kmax, double *A, int sda, double *B, int sdb, double *C, int ldc, double *D, int ldd, double *dD);
 void kernel_dpotrf_nt_l_8x8_vs_lib44c(int kmax, double *A, int sda, double *B, int sdb, double *C, int ldc, double *D, int ldd, double *dD, int m1, int n1);
 // 8x4
