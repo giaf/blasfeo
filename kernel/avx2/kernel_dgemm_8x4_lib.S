@@ -2738,6 +2738,130 @@ inner_store_8x4_lib:
 // input arguments:
 // r10  <- D
 // r11  <- ldd
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_L_8X4_LIB
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_store_l_8x4_lib, @function
+inner_store_l_8x4_lib:
+#elif defined(OS_MAC)
+_inner_store_l_8x4_lib:
+#elif defined(OS_WINDOWS)
+	.def inner_store_l_8x4_lib; .scl 2; .type 32; .endef
+inner_store_l_8x4_lib:
+#endif
+#endif
+
+	vmovupd		%ymm0, 0(%r10)
+	vmovupd		%ymm4, 32(%r10)
+	addq		%r11, %r10
+	vmovupd		0(%r10), %ymm15
+	vblendpd	$0x1, %ymm15, %ymm1, %ymm1
+	vmovupd		%ymm1, 0(%r10)
+	vmovupd		%ymm5, 32(%r10)
+	addq		%r11, %r10
+	vmovupd		0(%r10), %ymm15
+	vblendpd	$0x3, %ymm15, %ymm2, %ymm2
+	vmovupd		%ymm2, 0(%r10)
+	vmovupd		%ymm6, 32(%r10)
+	addq		%r11, %r10
+	vmovupd		0(%r10), %ymm15
+	vblendpd	$0x7, %ymm15, %ymm3, %ymm3
+	vmovupd		%ymm3, 0(%r10)
+	vmovupd		%ymm7, 32(%r10)
+//	addq	%r11, %r10
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_store_l_8x4_lib, .-inner_store_l_8x4_lib
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// store n
+//
+// input arguments:
+// r10  <- D
+// r11  <- ldd
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_U_8X4_LIB
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_store_u_8x4_lib, @function
+inner_store_u_8x4_lib:
+#elif defined(OS_MAC)
+_inner_store_u_8x4_lib:
+#elif defined(OS_WINDOWS)
+	.def inner_store_u_8x4_lib; .scl 2; .type 32; .endef
+inner_store_u_8x4_lib:
+#endif
+#endif
+
+	vmovupd		%ymm0, 0(%r10)
+	vmovupd		32(%r10), %ymm15
+	vblendpd	$0x1, %ymm4, %ymm15, %ymm4
+	vmovupd		%ymm4, 32(%r10)
+	addq		%r11, %r10
+	vmovupd		%ymm1, 0(%r10)
+	vmovupd		32(%r10), %ymm15
+	vblendpd	$0x3, %ymm5, %ymm15, %ymm5
+	vmovupd		%ymm5, 32(%r10)
+	addq		%r11, %r10
+	vmovupd		%ymm2, 0(%r10)
+	vmovupd		32(%r10), %ymm15
+	vblendpd	$0x7, %ymm6, %ymm15, %ymm6
+	vmovupd		%ymm6, 32(%r10)
+	addq		%r11, %r10
+	vmovupd		%ymm3, 0(%r10)
+	vmovupd		%ymm7, 32(%r10)
+//	addq	%r11, %r10
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_store_u_8x4_lib, .-inner_store_u_8x4_lib
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// store n
+//
+// input arguments:
+// r10  <- D
+// r11  <- ldd
 // r12d   <- km
 // r13d   <- kn
 // ymm0 <- [d00 d11 d22 d33]
@@ -2804,68 +2928,6 @@ inner_store_8x4_vs_lib:
 
 #if defined(OS_LINUX)
 	.size	inner_store_8x4_vs_lib, .-inner_store_8x4_vs_lib
-#endif
-#endif
-
-
-
-
-
-// common inner routine with file scope
-//
-// store n
-//
-// input arguments:
-// r10  <- D
-// r11  <- ldd
-// ymm0 <- [d00 d11 d22 d33]
-// ymm1 <- [d01 d10 d23 d32]
-// ymm2 <- [d03 d12 d21 d30]
-// ymm3 <- [d02 d13 d20 d31]
-//
-// output arguments:
-
-#if MACRO_LEVEL>=1
-	.macro INNER_STORE_L_8X4_LIB
-#else
-	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_store_l_8x4_lib, @function
-inner_store_l_8x4_lib:
-#elif defined(OS_MAC)
-_inner_store_l_8x4_lib:
-#elif defined(OS_WINDOWS)
-	.def inner_store_l_8x4_lib; .scl 2; .type 32; .endef
-inner_store_l_8x4_lib:
-#endif
-#endif
-
-	vmovupd		%ymm0, 0(%r10)
-	vmovupd		%ymm4, 32(%r10)
-	addq		%r11, %r10
-	vmovupd		0(%r10), %ymm15
-	vblendpd	$0x1, %ymm15, %ymm1, %ymm1
-	vmovupd		%ymm1, 0(%r10)
-	vmovupd		%ymm5, 32(%r10)
-	addq		%r11, %r10
-	vmovupd		0(%r10), %ymm15
-	vblendpd	$0x3, %ymm15, %ymm2, %ymm2
-	vmovupd		%ymm2, 0(%r10)
-	vmovupd		%ymm6, 32(%r10)
-	addq		%r11, %r10
-	vmovupd		0(%r10), %ymm15
-	vblendpd	$0x7, %ymm15, %ymm3, %ymm3
-	vmovupd		%ymm3, 0(%r10)
-	vmovupd		%ymm7, 32(%r10)
-//	addq	%r11, %r10
-
-#if MACRO_LEVEL>=1
-	.endm
-#else
-	ret
-
-#if defined(OS_LINUX)
-	.size	inner_store_l_8x4_lib, .-inner_store_l_8x4_lib
 #endif
 #endif
 
@@ -2948,6 +3010,90 @@ inner_store_l_8x4_vs_lib:
 
 #if defined(OS_LINUX)
 	.size	inner_store_l_8x4_vs_lib, .-inner_store_l_8x4_vs_lib
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// store n vs
+//
+// input arguments:
+// r10   <- D
+// r11  <- ldd
+// r12d   <- km
+// r13d   <- kn
+// ymm0  <- [d00 d11 d22 d33]
+// ymm1  <- [d01 d10 d23 d32]
+// ymm2  <- [d03 d12 d21 d30]
+// ymm3  <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_U_8X4_VS_LIB
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_store_u_8x4_vs_lib, @function
+inner_store_u_8x4_vs_lib:
+#elif defined(OS_MAC)
+_inner_store_u_8x4_vs_lib:
+#elif defined(OS_WINDOWS)
+	.def inner_store_u_8x4_vs_lib; .scl 2; .type 32; .endef
+inner_store_u_8x4_vs_lib:
+#endif
+#endif
+	
+	vcvtsi2sd	%r12d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC03(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC03(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm13
+
+	vmovupd		%ymm0, 0(%r10)
+	vmovupd		32(%r10), %ymm15
+	vblendpd	$0x1, %ymm4, %ymm15, %ymm4
+	vmaskmovpd	%ymm4, %ymm13, 32(%r10)
+	addq		%r11, %r10
+	cmpl		$2, %r13d
+	jl			0f // end
+	vmovupd		%ymm1, 0(%r10)
+	vmovupd		32(%r10), %ymm15
+	vblendpd	$0x3, %ymm5, %ymm15, %ymm5
+	vmaskmovpd	%ymm5, %ymm13, 32(%r10)
+	addq		%r11, %r10
+	cmpl		$3, %r13d
+	jl			0f // end
+	vmovupd		%ymm2, 0(%r10)
+	vmovupd		32(%r10), %ymm15
+	vblendpd	$0x7, %ymm6, %ymm15, %ymm6
+	vmaskmovpd	%ymm6, %ymm13, 32(%r10)
+	addq		%r11, %r10
+	cmpl		$3, %r13d
+	je			0f // end
+	vmovupd		0(%r10), %ymm15
+	vblendpd	$0x7, %ymm15, %ymm3, %ymm3
+	vmovupd		%ymm3, 0(%r10)
+	vmaskmovpd	%ymm7, %ymm13, 32(%r10)
+//	addq	%r11, %r10
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_store_u_8x4_vs_lib, .-inner_store_u_8x4_vs_lib
 #endif
 #endif
 
@@ -3869,6 +4015,206 @@ kernel_dsyrk_nt_l_8x4_vs_lib44c:
 
 #if defined(OS_LINUX)
 	.size	kernel_dsyrk_nt_l_8x4_vs_lib44c, .-kernel_dsyrk_nt_l_8x4_vs_lib44c
+#endif
+
+
+
+
+
+//                                 1      2              3          4        5          6             7          8        9          10
+// void kernel_dsyrk_nt_u_8x4_lib44c(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dsyrk_nt_u_8x4_lib44c
+	.type kernel_dsyrk_nt_u_8x4_lib44c, @function
+kernel_dsyrk_nt_u_8x4_lib44c:
+#elif defined(OS_MAC)
+	.globl _kernel_dsyrk_nt_u_8x4_lib44c
+_kernel_dsyrk_nt_u_8x4_lib44c:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dsyrk_nt_u_8x4_lib44c
+	.def kernel_dsyrk_nt_u_8x4_lib44c; .scl 2; .type 32; .endef
+kernel_dsyrk_nt_u_8x4_lib44c:
+#endif
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movq	ARG5, %r13  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x4_lib4
+#endif
+#endif
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG6, %r11 // beta
+	movq	ARG7, %r12   // C
+	movq	ARG8, %r13   // ldc
+	sall	$3, %r13d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_LIB
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_scale_ab_8x4_lib
+#elif defined(OS_MAC)
+	callq _inner_scale_ab_8x4_lib
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_U_8X4_LIB
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_u_8x4_lib
+#elif defined(OS_MAC)
+	callq _inner_store_u_8x4_lib
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dsyrk_nt_u_8x4_lib44c, .-kernel_dsyrk_nt_u_8x4_lib44c
+#endif
+
+
+
+
+
+//                                       1      2              3          4        5          6             7          8        9          10       11      12
+// void kernel_dsyrk_nt_u_8x4_vs_lib44c(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dsyrk_nt_u_8x4_vs_lib44c
+	.type kernel_dsyrk_nt_u_8x4_vs_lib44c, @function
+kernel_dsyrk_nt_u_8x4_vs_lib44c:
+#elif defined(OS_MAC)
+	.globl _kernel_dsyrk_nt_u_8x4_vs_lib44c
+_kernel_dsyrk_nt_u_8x4_vs_lib44c:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dsyrk_nt_u_8x4_vs_lib44c
+	.def kernel_dsyrk_nt_u_8x4_vs_lib44c; .scl 2; .type 32; .endef
+kernel_dsyrk_nt_u_8x4_vs_lib44c:
+#endif
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movq	ARG5, %r13  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x4_lib4
+#endif
+#endif
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG6, %r11 // beta
+	movq	ARG7, %r12   // C
+	movq	ARG8, %r13   // ldc
+	sall	$3, %r13d
+	movq	ARG11, %r14 // m1
+	movq	ARG12, %r15 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_VS_LIB
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_scale_ab_8x4_vs_lib
+#elif defined(OS_MAC)
+	callq _inner_scale_ab_8x4_vs_lib
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // ldd
+	sall	$3, %r11d
+	movq	ARG11, %r12 // m1
+	movq	ARG12, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_U_8X4_VS_LIB
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_u_8x4_vs_lib
+#elif defined(OS_MAC)
+	callq _inner_store_u_8x4_vs_lib
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dsyrk_nt_u_8x4_vs_lib44c, .-kernel_dsyrk_nt_u_8x4_vs_lib44c
 #endif
 
 

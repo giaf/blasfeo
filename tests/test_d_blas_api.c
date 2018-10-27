@@ -88,10 +88,10 @@ int main()
 
 	char ta = 'n';
 	char tb = 't';
-	char uplo = 'l';
+	char uplo = 'u';
 	int info = 0;
 
-	int m0 = 11;
+	int m0 = 15;
 	int n0 = 16;
 	int k0 = 16;
 
