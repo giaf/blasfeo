@@ -87,13 +87,6 @@ OBJS += \
 		blasfeo_api/s_blas3_diag_lib8.o \
 		blasfeo_api/s_lapack_lib8.o \
 
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
-
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
@@ -149,13 +142,6 @@ OBJS  += \
 		blasfeo_api/s_blas3_diag_lib8.o \
 		blasfeo_api/s_lapack_lib8.o \
 
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
-
 endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
@@ -204,13 +190,6 @@ OBJS += \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
 
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
-
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
@@ -257,13 +236,6 @@ OBJS += \
 		blasfeo_api/s_blas3_lib4.o \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
 
 endif
 
@@ -315,13 +287,6 @@ OBJS += \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
 
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
-
 endif
 
 ifeq ($(TARGET), X86_AMD_BARCELONA)
@@ -370,13 +335,6 @@ OBJS += \
 		blasfeo_api/s_blas3_lib4.o \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
 
 endif
 
@@ -431,13 +389,6 @@ OBJS += \
 		blasfeo_api/s_blas3_lib4.o \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
 
 endif
 
@@ -494,13 +445,6 @@ OBJS += \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
 
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
-
 endif
 
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
@@ -549,13 +493,6 @@ OBJS += \
 		blasfeo_api/s_blas3_lib4.o \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
 
 endif
 
@@ -606,13 +543,6 @@ OBJS += \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
 
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
-
 endif
 
 ifeq ($(TARGET), GENERIC)
@@ -659,16 +589,17 @@ OBJS += \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
 
+endif # GENERIC
+
 ifeq ($(BLAS_API), 1)
 OBJS += \
 		blas_api/dgemm.o \
+		blas_api/dsyrk.o \
 		blas_api/dpotrf.o \
 
 endif
 
-endif
-
-else # LA_REFERENCE | LA_BLAS
+else # LA_HIGH_PERFORMANCE vs LA_REFERENCE | LA_BLAS
 
 # aux
 OBJS += \

@@ -47,20 +47,24 @@
 
 #define REAL float
 
-#define STRMAT blasfeo_smat
-#define STRVEC blasfeo_svec
+#define XMAT blasfeo_smat
 
-#define GEMM_NN_LIBSTR blasfeo_sgemm_nn
-#define GEMM_NT_LIBSTR blasfeo_sgemm_nt
-#define SYRK_LN_LIBSTR blasfeo_ssyrk_ln
-#define SYRK_LN_MN_LIBSTR blasfeo_ssyrk_ln_mn
-#define TRMM_RLNN_LIBSTR blasfeo_strmm_rlnn
-#define TRMM_RUTN_LIBSTR blasfeo_strmm_rutn
-#define TRSM_LLNU_LIBSTR blasfeo_strsm_llnu
-#define TRSM_LUNN_LIBSTR blasfeo_strsm_lunn
-#define TRSM_RLTN_LIBSTR blasfeo_strsm_rltn
-#define TRSM_RLTU_LIBSTR blasfeo_strsm_rltu
-#define TRSM_RUTN_LIBSTR blasfeo_strsm_rutn
+#define GEMM_NN blasfeo_sgemm_nn
+#define GEMM_NT blasfeo_sgemm_nt
+#define GEMM_TN blasfeo_sgemm_tn
+#define GEMM_TT blasfeo_sgemm_tt
+#define SYRK_LN blasfeo_ssyrk_ln
+#define SYRK_LN_MN blasfeo_ssyrk_ln_mn
+#define SYRK_LT blasfeo_ssyrk_lt
+#define SYRK_UN blasfeo_ssyrk_un
+#define SYRK_UT blasfeo_ssyrk_ut
+#define TRMM_RLNN blasfeo_strmm_rlnn
+#define TRMM_RUTN blasfeo_strmm_rutn
+#define TRSM_LLNU blasfeo_strsm_llnu
+#define TRSM_LUNN blasfeo_strsm_lunn
+#define TRSM_RLTN blasfeo_strsm_rltn
+#define TRSM_RLTU blasfeo_strsm_rltu
+#define TRSM_RUTN blasfeo_strsm_rutn
 
 #define COPY scopy_
 #define GEMM sgemm_

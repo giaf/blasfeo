@@ -33,7 +33,7 @@
 
 
 // dgemm nn
-void GEMM_NN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_NN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -119,7 +119,7 @@ void GEMM_NN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 
 
 // dgemm nt
-void GEMM_NT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -205,7 +205,7 @@ void GEMM_NT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 
 
 // dgemm tn
-void GEMM_TN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_TN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -291,7 +291,7 @@ void GEMM_TN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 
 
 // dgemm tt
-void GEMM_TT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_TT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -377,7 +377,7 @@ void GEMM_TT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 
 
 // dtrsm_left_lower_nottransposed_unit
-void TRSM_LLNU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -503,7 +503,7 @@ void TRSM_LLNU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_left_upper_nottransposed_notunit
-void TRSM_LUNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -654,7 +654,7 @@ void TRSM_LUNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_right_lower_transposed_unit
-void TRSM_RLTU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -739,7 +739,7 @@ void TRSM_RLTU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_right_lower_transposed_unit
-void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -843,7 +843,7 @@ void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_right_upper_transposed_notunit
-void TRSM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -981,7 +981,7 @@ void TRSM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrmm_right_upper_transposed_notunit (A triangular !!!)
-void TRMM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRMM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1072,7 +1072,7 @@ void TRMM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrmm_right_lower_nottransposed_notunit (A triangular !!!)
-void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRMM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1162,8 +1162,8 @@ void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 
-// dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
-void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+// dsyrk_lower not-transposed
+void SYRK_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0)
 		return;
@@ -1172,7 +1172,6 @@ void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj,
 	sD->use_dA = 0;
 
 	int ii, jj, kk;
-	int n = m; // TODO optimize for this case !!!!!!!!!
 	REAL
 		c_00, c_01,
 		c_10, c_11;
@@ -1185,7 +1184,7 @@ void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj,
 	REAL *pC = sC->pA + ci + cj*ldc;
 	REAL *pD = sD->pA + di + dj*ldd;
 	jj = 0;
-	for(; jj<n-1; jj+=2)
+	for(; jj<m-1; jj+=2)
 		{
 		// diagonal
 		c_00 = 0.0;
@@ -1233,7 +1232,7 @@ void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj,
 			pD[ii+0+ldd*(jj+1)] = beta * pC[ii+0+ldc*(jj+1)] + alpha * c_01;
 			}
 		}
-	for(; jj<n; jj++)
+	if(jj<m)
 		{
 		// diagonal
 		c_00 = 0.0;
@@ -1242,24 +1241,14 @@ void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj,
 			c_00 += pA[jj+lda*kk] * pB[jj+ldb*kk];
 			}
 		pD[jj+ldd*jj] = beta * pC[jj+ldc*jj] + alpha * c_00;
-		// lower
-		for(ii=jj+1; ii<m; ii++)
-			{
-			c_00 = 0.0;
-			for(kk=0; kk<k; kk++)
-				{
-				c_00 += pA[ii+lda*kk] * pB[jj+ldb*kk];
-				}
-			pD[ii+ldd*jj] = beta * pC[ii+ldc*jj] + alpha * c_00;
-			}
 		}
 	return;
 	}
 
 
 
-// dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
-void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+// dsyrk_lower not-transposed
+void SYRK_LN_MN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1353,12 +1342,271 @@ void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int a
 
 
 
+// dsyrk_lower transposed
+void SYRK_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL
+		c_00, c_01,
+		c_10, c_11;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pC = sC->pA + ci + cj*ldc;
+	REAL *pD = sD->pA + di + dj*ldd;
+	jj = 0;
+	for(; jj<m-1; jj+=2)
+		{
+		// diagonal
+		c_00 = 0.0;
+		c_10 = 0.0;
+		c_11 = 0.0;
+		for(kk=0; kk<k; kk++)
+			{
+			c_00 += pA[kk+lda*(jj+0)] * pB[kk+ldb*(jj+0)];
+			c_10 += pA[kk+lda*(jj+1)] * pB[kk+ldb*(jj+0)];
+			c_11 += pA[kk+lda*(jj+1)] * pB[kk+ldb*(jj+1)];
+			}
+		pD[jj+0+ldd*(jj+0)] = beta * pC[jj+0+ldc*(jj+0)] + alpha * c_00;
+		pD[jj+1+ldd*(jj+0)] = beta * pC[jj+1+ldc*(jj+0)] + alpha * c_10;
+		pD[jj+1+ldd*(jj+1)] = beta * pC[jj+1+ldc*(jj+1)] + alpha * c_11;
+		// lower
+		ii = jj+2;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[kk+lda*(ii+0)] * pB[kk+ldb*(jj+0)];
+				c_10 += pA[kk+lda*(ii+1)] * pB[kk+ldb*(jj+0)];
+				c_01 += pA[kk+lda*(ii+0)] * pB[kk+ldb*(jj+1)];
+				c_11 += pA[kk+lda*(ii+1)] * pB[kk+ldb*(jj+1)];
+				}
+			pD[ii+0+ldd*(jj+0)] = beta * pC[ii+0+ldc*(jj+0)] + alpha * c_00;
+			pD[ii+1+ldd*(jj+0)] = beta * pC[ii+1+ldc*(jj+0)] + alpha * c_10;
+			pD[ii+0+ldd*(jj+1)] = beta * pC[ii+0+ldc*(jj+1)] + alpha * c_01;
+			pD[ii+1+ldd*(jj+1)] = beta * pC[ii+1+ldc*(jj+1)] + alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[kk+lda*(ii+0)] * pB[kk+ldb*(jj+0)];
+				c_01 += pA[kk+lda*(ii+0)] * pB[kk+ldb*(jj+1)];
+				}
+			pD[ii+0+ldd*(jj+0)] = beta * pC[ii+0+ldc*(jj+0)] + alpha * c_00;
+			pD[ii+0+ldd*(jj+1)] = beta * pC[ii+0+ldc*(jj+1)] + alpha * c_01;
+			}
+		}
+	if(jj<m)
+		{
+		// diagonal
+		c_00 = 0.0;
+		for(kk=0; kk<k; kk++)
+			{
+			c_00 += pA[kk+lda*jj] * pB[kk+ldb*jj];
+			}
+		pD[jj+ldd*jj] = beta * pC[jj+ldc*jj] + alpha * c_00;
+		}
+	return;
+	}
+
+
+
+// dsyrk_upper not-transposed
+void SYRK_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL
+		c_00, c_01,
+		c_10, c_11;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pC = sC->pA + ci + cj*ldc;
+	REAL *pD = sD->pA + di + dj*ldd;
+	jj = 0;
+	for(; jj<m-1; jj+=2)
+		{
+		// upper
+		ii = 0;
+		for(; ii<jj; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[ii+0+lda*kk] * pB[jj+0+ldb*kk];
+				c_10 += pA[ii+1+lda*kk] * pB[jj+0+ldb*kk];
+				c_01 += pA[ii+0+lda*kk] * pB[jj+1+ldb*kk];
+				c_11 += pA[ii+1+lda*kk] * pB[jj+1+ldb*kk];
+				}
+			pD[ii+0+ldd*(jj+0)] = beta * pC[ii+0+ldc*(jj+0)] + alpha * c_00;
+			pD[ii+1+ldd*(jj+0)] = beta * pC[ii+1+ldc*(jj+0)] + alpha * c_10;
+			pD[ii+0+ldd*(jj+1)] = beta * pC[ii+0+ldc*(jj+1)] + alpha * c_01;
+			pD[ii+1+ldd*(jj+1)] = beta * pC[ii+1+ldc*(jj+1)] + alpha * c_11;
+			}
+		// diagonal
+		c_00 = 0.0;
+		c_01 = 0.0;
+		c_11 = 0.0;
+		for(kk=0; kk<k; kk++)
+			{
+			c_00 += pA[jj+0+lda*kk] * pB[jj+0+ldb*kk];
+			c_01 += pA[jj+0+lda*kk] * pB[jj+1+ldb*kk];
+			c_11 += pA[jj+1+lda*kk] * pB[jj+1+ldb*kk];
+			}
+		pD[jj+0+ldd*(jj+0)] = beta * pC[jj+0+ldc*(jj+0)] + alpha * c_00;
+		pD[jj+0+ldd*(jj+1)] = beta * pC[jj+0+ldc*(jj+1)] + alpha * c_01;
+		pD[jj+1+ldd*(jj+1)] = beta * pC[jj+1+ldc*(jj+1)] + alpha * c_11;
+		}
+	if(jj<m)
+		{
+		// upper
+		ii = 0;
+		for(; ii<jj; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[ii+0+lda*kk] * pB[jj+0+ldb*kk];
+				c_10 += pA[ii+1+lda*kk] * pB[jj+0+ldb*kk];
+				}
+			pD[ii+0+ldd*(jj+0)] = beta * pC[ii+0+ldc*(jj+0)] + alpha * c_00;
+			pD[ii+1+ldd*(jj+0)] = beta * pC[ii+1+ldc*(jj+0)] + alpha * c_10;
+			}
+		// diagonal
+		c_00 = 0.0;
+		for(kk=0; kk<k; kk++)
+			{
+			c_00 += pA[jj+0+lda*kk] * pB[jj+0+ldb*kk];
+			}
+		pD[jj+0+ldd*(jj+0)] = beta * pC[jj+0+ldc*(jj+0)] + alpha * c_00;
+		}
+	return;
+	}
+
+
+
+// dsyrk_upper transposed
+void SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL
+		c_00, c_01,
+		c_10, c_11;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pC = sC->pA + ci + cj*ldc;
+	REAL *pD = sD->pA + di + dj*ldd;
+	jj = 0;
+	for(; jj<m-1; jj+=2)
+		{
+		// upper
+		ii = 0;
+		for(; ii<jj; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[kk+lda*(ii+0)] * pB[kk+ldb*(jj+0)];
+				c_10 += pA[kk+lda*(ii+1)] * pB[kk+ldb*(jj+0)];
+				c_01 += pA[kk+lda*(ii+0)] * pB[kk+ldb*(jj+1)];
+				c_11 += pA[kk+lda*(ii+1)] * pB[kk+ldb*(jj+1)];
+				}
+			pD[ii+0+ldd*(jj+0)] = beta * pC[ii+0+ldc*(jj+0)] + alpha * c_00;
+			pD[ii+1+ldd*(jj+0)] = beta * pC[ii+1+ldc*(jj+0)] + alpha * c_10;
+			pD[ii+0+ldd*(jj+1)] = beta * pC[ii+0+ldc*(jj+1)] + alpha * c_01;
+			pD[ii+1+ldd*(jj+1)] = beta * pC[ii+1+ldc*(jj+1)] + alpha * c_11;
+			}
+		// diagonal
+		c_00 = 0.0;
+		c_01 = 0.0;
+		c_11 = 0.0;
+		for(kk=0; kk<k; kk++)
+			{
+			c_00 += pA[kk+lda*(jj+0)] * pB[kk+ldb*(jj+0)];
+			c_01 += pA[kk+lda*(jj+0)] * pB[kk+ldb*(jj+1)];
+			c_11 += pA[kk+lda*(jj+1)] * pB[kk+ldb*(jj+1)];
+			}
+		pD[jj+0+ldd*(jj+0)] = beta * pC[jj+0+ldc*(jj+0)] + alpha * c_00;
+		pD[jj+0+ldd*(jj+1)] = beta * pC[jj+0+ldc*(jj+1)] + alpha * c_01;
+		pD[jj+1+ldd*(jj+1)] = beta * pC[jj+1+ldc*(jj+1)] + alpha * c_11;
+		}
+	if(jj<m)
+		{
+		// upper
+		ii = 0;
+		for(; ii<jj; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[kk+lda*(ii+0)] * pB[kk+ldb*(jj+0)];
+				c_10 += pA[kk+lda*(ii+1)] * pB[kk+ldb*(jj+0)];
+				}
+			pD[ii+0+ldd*(jj+0)] = beta * pC[ii+0+ldc*(jj+0)] + alpha * c_00;
+			pD[ii+1+ldd*(jj+0)] = beta * pC[ii+1+ldc*(jj+0)] + alpha * c_10;
+			}
+		// diagonal
+		c_00 = 0.0;
+		for(kk=0; kk<k; kk++)
+			{
+			c_00 += pA[kk+lda*(jj+0)] * pB[kk+ldb*(jj+0)];
+			}
+		pD[jj+0+ldd*(jj+0)] = beta * pC[jj+0+ldc*(jj+0)] + alpha * c_00;
+		}
+	return;
+	}
+
+
+
 #elif defined(LA_BLAS_WRAPPER)
 
 
 
 // dgemm nn
-void GEMM_NN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_NN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1387,7 +1635,7 @@ void GEMM_NN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 
 
 // dgemm nt
-void GEMM_NT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1417,7 +1665,7 @@ void GEMM_NT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 
 
 // dgemm tn
-void GEMM_TN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_TN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1447,7 +1695,7 @@ void GEMM_TN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 
 
 // dgemm tt
-void GEMM_TT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_TT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1477,7 +1725,7 @@ void GEMM_TT_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, 
 
 
 // dtrsm_left_lower_nottransposed_unit
-void TRSM_LLNU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1506,7 +1754,7 @@ void TRSM_LLNU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_left_upper_nottransposed_notunit
-void TRSM_LUNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1535,7 +1783,7 @@ void TRSM_LUNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_right_lower_transposed_unit
-void TRSM_RLTU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1566,7 +1814,7 @@ void TRSM_RLTU_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_right_lower_transposed_notunit
-void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1597,7 +1845,7 @@ void TRSM_RLTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrsm_right_upper_transposed_notunit
-void TRSM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1628,7 +1876,7 @@ void TRSM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrmm_right_upper_transposed_notunit (A triangular !!!)
-void TRMM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRMM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1659,7 +1907,7 @@ void TRMM_RUTN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 // dtrmm_right_lower_nottransposed_notunit (A triangular !!!)
-void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, struct STRMAT *sD, int di, int dj)
+void TRMM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1689,8 +1937,8 @@ void TRMM_RLNN_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int a
 
 
 
-// dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
-void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+// dsyrk lower not-transposed (allowing for different factors => use dgemm !!!)
+void SYRK_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1727,8 +1975,10 @@ void SYRK_LN_LIBSTR(int m, int k, REAL alpha, struct STRMAT *sA, int ai, int aj,
 	return;
 	}
 
-// dsyrk_lower_nortransposed (allowing for different factors => use dgemm !!!)
-void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+
+
+// dsyrk lower not-transposed (allowing for different factors => use dgemm !!!)
+void SYRK_LN_MN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1766,6 +2016,128 @@ void SYRK_LN_MN_LIBSTR(int m, int n, int k, REAL alpha, struct STRMAT *sA, int a
 		}
 	return;
 	}
+
+
+
+// dsyrk lower transposed (allowing for different factors => use dgemm !!!)
+void SYRK_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA + ai + aj*sA->m;
+	REAL *pB = sB->pA + bi + bj*sB->m;
+	REAL *pC = sC->pA + ci + cj*sC->m;
+	REAL *pD = sD->pA + di + dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(beta==0.0 || pC==pD))
+		{
+		for(jj=0; jj<m; jj++)
+			COPY(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+		}
+	if(pA==pB)
+		{
+		SYRK(&cl, &ct, &m, &k, &alpha, pA, &lda, &beta, pD, &ldd);
+		}
+	else
+		{
+		GEMM(&ct, &cn, &m, &m, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+		}
+	return;
+	}
+
+
+
+// dsyrk upper not-transposed (allowing for different factors => use dgemm !!!)
+void SYRK_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA + ai + aj*sA->m;
+	REAL *pB = sB->pA + bi + bj*sB->m;
+	REAL *pC = sC->pA + ci + cj*sC->m;
+	REAL *pD = sD->pA + di + dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(beta==0.0 || pC==pD))
+		{
+		for(jj=0; jj<m; jj++)
+			COPY(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+		}
+	if(pA==pB)
+		{
+		SYRK(&cu, &cn, &m, &k, &alpha, pA, &lda, &beta, pD, &ldd);
+		}
+	else
+		{
+		GEMM(&cn, &ct, &m, &m, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+		}
+	return;
+	}
+
+
+
+// dsyrk upper transposed (allowing for different factors => use dgemm !!!)
+void SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA + ai + aj*sA->m;
+	REAL *pB = sB->pA + bi + bj*sB->m;
+	REAL *pC = sC->pA + ci + cj*sC->m;
+	REAL *pD = sD->pA + di + dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(beta==0.0 || pC==pD))
+		{
+		for(jj=0; jj<m; jj++)
+			COPY(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+		}
+	if(pA==pB)
+		{
+		SYRK(&cu, &ct, &m, &k, &alpha, pA, &lda, &beta, pD, &ldd);
+		}
+	else
+		{
+		GEMM(&ct, &cn, &m, &m, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+		}
+	return;
+	}
+
+
 
 #else
 
