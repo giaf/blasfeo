@@ -279,6 +279,13 @@ int main()
 #elif defined(GEMM_TT)
 				blasfeo_dgemm(&c_t, &c_t, &n, &n, &n, &r_1, A, &n, B, &n, &r_0, D, &n);
 #elif defined(SYRK_LN)
+				blasfeo_dsyrk(&c_l, &c_n, &n, &n, &r_1, A, &n, &r_0, D, &n);
+#elif defined(SYRK_LT)
+				blasfeo_dsyrk(&c_l, &c_t, &n, &n, &r_1, A, &n, &r_0, D, &n);
+#elif defined(SYRK_UN)
+				blasfeo_dsyrk(&c_u, &c_n, &n, &n, &r_1, A, &n, &r_0, D, &n);
+#elif defined(SYRK_UT)
+				blasfeo_dsyrk(&c_u, &c_t, &n, &n, &r_1, A, &n, &r_0, D, &n);
 #elif defined(TRMM_RLNN)
 #elif defined(TRMM_RUTN)
 #elif defined(TRSM_LUNN)
@@ -313,6 +320,9 @@ int main()
 #elif defined(GEMM_TN)
 #elif defined(GEMM_TT)
 #elif defined(SYRK_LN)
+#elif defined(SYRK_LT)
+#elif defined(SYRK_UN)
+#elif defined(SYRK_UT)
 #elif defined(TRMM_RLNN)
 #elif defined(TRMM_RUTN)
 #elif defined(TRSM_LUNN)
@@ -352,7 +362,7 @@ int main()
 
 #if defined(GEMM_NN) | defined(GEMM_NT) | defined(GEMM_TN) | defined(GEMM_TT)
 		double flop_operation = 2.0*n*n*n;
-#elif defined(SYRK_LN) | defined(TRMM_RLNN) | defined(TRMM_RUTN) | defined(TRSM_LLNU) | defined(TRSM_LUNN) | defined(TRSM_RLTN) | defined(TRSM_RLTU) | defined(TRSM_RUTN)
+#elif defined(SYRK_LN) | defined(SYRK_LT) | defined(SYRK_UN) | defined(SYRK_UT) | defined(TRMM_RLNN) | defined(TRMM_RUTN) | defined(TRSM_LLNU) | defined(TRSM_LUNN) | defined(TRSM_RLTN) | defined(TRSM_RLTU) | defined(TRSM_RUTN)
 		double flop_operation = 1.0*n*n*n;
 #elif defined(GELQF) | defined(GEQRF)
 		double flop_operation = 4.0/3.0*n*n*n;

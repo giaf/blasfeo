@@ -33,24 +33,32 @@
 DP_BLAS2_OBJS =
 DP_BLAS3_OBJS =
 DP_LAPACK_OBJS =
+DGEMM_OBJS =
+DSYRK_OBJS =
 
 SP_BLAS2_OBJS =
 SP_BLAS3_OBJS =
 SP_LAPACK_OBJS =
+SGEMM_OBJS =
+SSYRK_OBJS =
 
 RUN_DP_BLAS2_OBJS =
 RUN_DP_BLAS3_OBJS =
 RUN_DP_LAPACK_OBJS =
+RUN_DGEMM_OBJS =
+RUN_DSYRK_OBJS =
 
 RUN_SP_BLAS2_OBJS =
 RUN_SP_BLAS3_OBJS =
 RUN_SP_LAPACK_OBJS =
+RUN_SGEMM_OBJS =
+RUN_SSYRK_OBJS =
 
 
 # dgemm_nn
 
-DP_BLAS3_OBJS += blas_api_dgemm_nn
-RUN_DP_BLAS3_OBJS += run_blas_api_dgemm_nn
+DGEMM_OBJS += blas_api_dgemm_nn
+RUN_DGEMM_OBJS += run_blas_api_dgemm_nn
 
 blas_api_dgemm_nn: common
 	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/dgemm_nn_benchmark.o -DDOUBLE_PRECISION -DGEMM_NN
@@ -65,8 +73,8 @@ run_blas_api_dgemm_nn:
 
 # dgemm_nt
 
-DP_BLAS3_OBJS += blas_api_dgemm_nt
-RUN_DP_BLAS3_OBJS += run_blas_api_dgemm_nt
+DGEMM_OBJS += blas_api_dgemm_nt
+RUN_DGEMM_OBJS += run_blas_api_dgemm_nt
 
 blas_api_dgemm_nt: common
 	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/dgemm_nt_benchmark.o -DDOUBLE_PRECISION -DGEMM_NT
@@ -81,8 +89,8 @@ run_blas_api_dgemm_nt:
 
 # dgemm_tn
 
-DP_BLAS3_OBJS += blas_api_dgemm_tn
-RUN_DP_BLAS3_OBJS += run_blas_api_dgemm_tn
+DGEMM_OBJS += blas_api_dgemm_tn
+RUN_DGEMM_OBJS += run_blas_api_dgemm_tn
 
 blas_api_dgemm_tn: common
 	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/dgemm_tn_benchmark.o -DDOUBLE_PRECISION -DGEMM_TN
@@ -97,8 +105,8 @@ run_blas_api_dgemm_tn:
 
 # dgemm_tt
 
-DP_BLAS3_OBJS += blas_api_dgemm_tt
-RUN_DP_BLAS3_OBJS += run_blas_api_dgemm_tt
+DGEMM_OBJS += blas_api_dgemm_tt
+RUN_DGEMM_OBJS += run_blas_api_dgemm_tt
 
 blas_api_dgemm_tt: common
 	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/dgemm_tt_benchmark.o -DDOUBLE_PRECISION -DGEMM_TT
@@ -113,8 +121,8 @@ run_blas_api_dgemm_tt:
 
 # dsyrk_ln
 
-DP_BLAS3_OBJS += blas_api_dsyrk_ln
-RUN_DP_BLAS3_OBJS += run_blas_api_dsyrk_ln
+DSYRK_OBJS += blas_api_dsyrk_ln
+RUN_DSYRK_OBJS += run_blas_api_dsyrk_ln
 
 blas_api_dsyrk_ln: common
 	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/dsyrk_ln_benchmark.o -DDOUBLE_PRECISION -DSYRK_LN
@@ -125,6 +133,54 @@ run_blas_api_dsyrk_ln:
 	@echo
 	@echo benchmarking dsyrk_ln
 	./$(BINARY_DIR)/BLAS_API/dsyrk_ln_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/dsyrk_ln.m
+
+
+# dsyrk_lt
+
+DSYRK_OBJS += blas_api_dsyrk_lt
+RUN_DSYRK_OBJS += run_blas_api_dsyrk_lt
+
+blas_api_dsyrk_lt: common
+	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/dsyrk_lt_benchmark.o -DDOUBLE_PRECISION -DSYRK_LT
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLAS_API/dsyrk_lt_benchmark.o -o $(BINARY_DIR)/BLAS_API/dsyrk_lt_benchmark.out $(LIBS)
+
+run_blas_api_dsyrk_lt:
+	mkdir -p ./$(BINARY_DIR)/BLAS_API/data
+	@echo
+	@echo benchmarking dsyrk_lt
+	./$(BINARY_DIR)/BLAS_API/dsyrk_lt_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/dsyrk_lt.m
+
+
+# dsyrk_un
+
+DSYRK_OBJS += blas_api_dsyrk_un
+RUN_DSYRK_OBJS += run_blas_api_dsyrk_un
+
+blas_api_dsyrk_un: common
+	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/dsyrk_un_benchmark.o -DDOUBLE_PRECISION -DSYRK_UN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLAS_API/dsyrk_un_benchmark.o -o $(BINARY_DIR)/BLAS_API/dsyrk_un_benchmark.out $(LIBS)
+
+run_blas_api_dsyrk_un:
+	mkdir -p ./$(BINARY_DIR)/BLAS_API/data
+	@echo
+	@echo benchmarking dsyrk_un
+	./$(BINARY_DIR)/BLAS_API/dsyrk_un_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/dsyrk_un.m
+
+
+# dsyrk_ut
+
+DSYRK_OBJS += blas_api_dsyrk_ut
+RUN_DSYRK_OBJS += run_blas_api_dsyrk_ut
+
+blas_api_dsyrk_ut: common
+	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/dsyrk_ut_benchmark.o -DDOUBLE_PRECISION -DSYRK_UT
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLAS_API/dsyrk_ut_benchmark.o -o $(BINARY_DIR)/BLAS_API/dsyrk_ut_benchmark.out $(LIBS)
+
+run_blas_api_dsyrk_ut:
+	mkdir -p ./$(BINARY_DIR)/BLAS_API/data
+	@echo
+	@echo benchmarking dsyrk_ut
+	./$(BINARY_DIR)/BLAS_API/dsyrk_ut_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/dsyrk_ut.m
 
 
 # dtrmm_rlnn
@@ -465,8 +521,8 @@ run_blas_api_dsymv_l:
 
 # sgemm_nn
 
-SP_BLAS3_OBJS += blas_api_sgemm_nn
-RUN_SP_BLAS3_OBJS += run_blas_api_sgemm_nn
+SGEMM_OBJS += blas_api_sgemm_nn
+RUN_SGEMM_OBJS += run_blas_api_sgemm_nn
 
 blas_api_sgemm_nn: common
 	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/sgemm_nn_benchmark.o -DSINGLE_PRECISION -DGEMM_NN
@@ -481,8 +537,8 @@ run_blas_api_sgemm_nn:
 
 # sgemm_nt
 
-SP_BLAS3_OBJS += blas_api_sgemm_nt
-RUN_SP_BLAS3_OBJS += run_blas_api_sgemm_nt
+SGEMM_OBJS += blas_api_sgemm_nt
+RUN_SGEMM_OBJS += run_blas_api_sgemm_nt
 
 blas_api_sgemm_nt: common
 	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/sgemm_nt_benchmark.o -DSINGLE_PRECISION -DGEMM_NT
@@ -497,8 +553,8 @@ run_blas_api_sgemm_nt:
 
 # sgemm_tn
 
-SP_BLAS3_OBJS += blas_api_sgemm_tn
-RUN_SP_BLAS3_OBJS += run_blas_api_sgemm_tn
+SGEMM_OBJS += blas_api_sgemm_tn
+RUN_SGEMM_OBJS += run_blas_api_sgemm_tn
 
 blas_api_sgemm_tn: common
 	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/sgemm_tn_benchmark.o -DSINGLE_PRECISION -DGEMM_TN
@@ -513,8 +569,8 @@ run_blas_api_sgemm_tn:
 
 # sgemm_tt
 
-SP_BLAS3_OBJS += blas_api_sgemm_tt
-RUN_SP_BLAS3_OBJS += run_blas_api_sgemm_tt
+SGEMM_OBJS += blas_api_sgemm_tt
+RUN_SGEMM_OBJS += run_blas_api_sgemm_tt
 
 blas_api_sgemm_tt: common
 	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/sgemm_tt_benchmark.o -DSINGLE_PRECISION -DGEMM_TT
@@ -529,8 +585,8 @@ run_blas_api_sgemm_tt:
 
 # ssyrk_ln
 
-SP_BLAS3_OBJS += blas_api_ssyrk_ln
-RUN_SP_BLAS3_OBJS += run_blas_api_ssyrk_ln
+SSYRK_OBJS += blas_api_ssyrk_ln
+RUN_SSYRK_OBJS += run_blas_api_ssyrk_ln
 
 blas_api_ssyrk_ln: common
 	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/ssyrk_ln_benchmark.o -DSINGLE_PRECISION -DSYRK_LN
@@ -541,6 +597,54 @@ run_blas_api_ssyrk_ln:
 	@echo
 	@echo benchmarking ssyrk_ln
 	./$(BINARY_DIR)/BLAS_API/ssyrk_ln_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/ssyrk_ln.m
+
+
+# ssyrk_lt
+
+SSYRK_OBJS += blas_api_ssyrk_lt
+RUN_SSYRK_OBJS += run_blas_api_ssyrk_lt
+
+blas_api_ssyrk_lt: common
+	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/ssyrk_lt_benchmark.o -DSINGLE_PRECISION -DSYRK_LT
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLAS_API/ssyrk_lt_benchmark.o -o $(BINARY_DIR)/BLAS_API/ssyrk_lt_benchmark.out $(LIBS)
+
+run_blas_api_ssyrk_lt:
+	mkdir -p ./$(BINARY_DIR)/BLAS_API/data
+	@echo
+	@echo benchmarking ssyrk_lt
+	./$(BINARY_DIR)/BLAS_API/ssyrk_lt_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/ssyrk_lt.m
+
+
+# ssyrk_un
+
+SSYRK_OBJS += blas_api_ssyrk_un
+RUN_SSYRK_OBJS += run_blas_api_ssyrk_un
+
+blas_api_ssyrk_un: common
+	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/ssyrk_un_benchmark.o -DSINGLE_PRECISION -DSYRK_UN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLAS_API/ssyrk_un_benchmark.o -o $(BINARY_DIR)/BLAS_API/ssyrk_un_benchmark.out $(LIBS)
+
+run_blas_api_ssyrk_un:
+	mkdir -p ./$(BINARY_DIR)/BLAS_API/data
+	@echo
+	@echo benchmarking ssyrk_un
+	./$(BINARY_DIR)/BLAS_API/ssyrk_un_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/ssyrk_un.m
+
+
+# ssyrk_ut
+
+SSYRK_OBJS += blas_api_ssyrk_ut
+RUN_SSYRK_OBJS += run_blas_api_ssyrk_ut
+
+blas_api_ssyrk_ut: common
+	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/ssyrk_ut_benchmark.o -DSINGLE_PRECISION -DSYRK_UT
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLAS_API/ssyrk_ut_benchmark.o -o $(BINARY_DIR)/BLAS_API/ssyrk_ut_benchmark.out $(LIBS)
+
+run_blas_api_ssyrk_ut:
+	mkdir -p ./$(BINARY_DIR)/BLAS_API/data
+	@echo
+	@echo benchmarking ssyrk_ut
+	./$(BINARY_DIR)/BLAS_API/ssyrk_ut_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/ssyrk_ut.m
 
 
 # strmm_rlnn
@@ -884,7 +988,11 @@ run_blas_api_ssymv_l:
 
 blas_api_dp_blas2: $(DP_BLAS2_OBJS)
 
-blas_api_dp_blas3: $(DP_BLAS3_OBJS)
+blas_api_dp_blas3: $(DGEMM_OBJS) $(DSYRK_OBJS) $(DP_BLAS3_OBJS)
+
+blas_api_dgemm: $(DGEMM_OBJS)
+
+blas_api_dsyrk: $(DSYRK_OBJS)
 
 blas_api_dp_lapack: $(DP_LAPACK_OBJS)
 
@@ -892,7 +1000,11 @@ blas_api_dp_all: blas_api_dp_blas3 blas_api_dp_lapack blas_api_dp_blas2
 
 blas_api_sp_blas2: $(SP_BLAS2_OBJS)
 
-blas_api_sp_blas3: $(SP_BLAS3_OBJS)
+blas_api_sp_blas3: $(SGEMM_OBJS) $(SSYRK_OBJS) $(SP_BLAS3_OBJS)
+
+blas_api_sgemm: $(SGEMM_OBJS)
+
+blas_api_ssyrk: $(SSYRK_OBJS)
 
 blas_api_sp_lapack: $(SP_LAPACK_OBJS)
 
@@ -904,7 +1016,11 @@ blas_api_all: blas_api_dp_all blas_api_sp_all
 
 run_blas_api_dp_blas2: $(RUN_DP_BLAS2_OBJS)
 
-run_blas_api_dp_blas3: $(RUN_DP_BLAS3_OBJS)
+run_blas_api_dp_blas3: $(RUN_DGEMM_OBJS) $(RUN_DSYRK_OBJS) $(RUN_DP_BLAS3_OBJS)
+
+run_blas_api_dgemm: $(RUN_DGEMM_OBJS)
+
+run_blas_api_dsyrk: $(RUN_DSYRK_OBJS)
 
 run_blas_api_dp_lapack: $(RUN_DP_LAPACK_OBJS)
 
@@ -912,7 +1028,11 @@ run_blas_api_dp_all: run_blas_api_dp_blas3 run_blas_api_dp_lapack run_blas_api_d
 
 run_blas_api_sp_blas2: $(RUN_SP_BLAS2_OBJS)
 
-run_blas_api_sp_blas3: $(RUN_SP_BLAS3_OBJS)
+run_blas_api_sp_blas3: $(RUN_SGEMM_OBJS) $(RUN_SSYRK_OBJS) $(RUN_SP_BLAS3_OBJS)
+
+run_blas_api_sgemm: $(RUN_SGEMM_OBJS)
+
+run_blas_api_ssyrk: $(RUN_SSYRK_OBJS)
 
 run_blas_api_sp_lapack: $(RUN_SP_LAPACK_OBJS)
 
