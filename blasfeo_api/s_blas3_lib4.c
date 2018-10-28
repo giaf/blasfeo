@@ -569,6 +569,30 @@ void blasfeo_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 
 
 
+// sgemm_tn
+void blasfeo_sgemm_tn(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_sgemm_tn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// sgemm_tt
+void blasfeo_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_sgemm_tt: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
 // dtrsm_nn_llu
 void blasfeo_strsm_llnu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
@@ -1093,6 +1117,39 @@ void blasfeo_ssyrk_ln_mn(int m, int n, int k, float alpha, struct blasfeo_smat *
 		}
 	return;
 
+	}
+
+
+
+void blasfeo_ssyrk_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_ssyrk_lt: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+void blasfeo_ssyrk_un(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_ssyrk_un: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+void blasfeo_ssyrk_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_ssyrk_ut: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
 	}
 
 
