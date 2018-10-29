@@ -534,7 +534,7 @@ inner_kernel_dunpack_nt_4_lib4:
 _inner_kernel_dunpack_nt_4_lib4:
 #elif defined(OS_WINDOWS)
 	.def inner_kernel_dunpack_nt_4_lib4; .scl 2; .type 32; .endef
-inner_kernel_dunpack_n_4_lib4:
+inner_kernel_dunpack_nt_4_lib4:
 #endif
 #endif
 
@@ -637,7 +637,7 @@ inner_kernel_dunpack_nt_3_lib4:
 _inner_kernel_dunpack_nt_3_lib4:
 #elif defined(OS_WINDOWS)
 	.def inner_kernel_dunpack_nt_3_lib4; .scl 2; .type 32; .endef
-inner_kernel_dunpack_n_3_lib4:
+inner_kernel_dunpack_nt_3_lib4:
 #endif
 #endif
 
@@ -729,7 +729,7 @@ inner_kernel_dunpack_nt_2_lib4:
 _inner_kernel_dunpack_nt_2_lib4:
 #elif defined(OS_WINDOWS)
 	.def inner_kernel_dunpack_nt_2_lib4; .scl 2; .type 32; .endef
-inner_kernel_dunpack_n_2_lib4:
+inner_kernel_dunpack_nt_2_lib4:
 #endif
 #endif
 
@@ -811,7 +811,7 @@ inner_kernel_dunpack_nt_1_lib4:
 _inner_kernel_dunpack_nt_1_lib4:
 #elif defined(OS_WINDOWS)
 	.def inner_kernel_dunpack_nt_1_lib4; .scl 2; .type 32; .endef
-inner_kernel_dunpack_n_1_lib4:
+inner_kernel_dunpack_nt_1_lib4:
 #endif
 #endif
 
