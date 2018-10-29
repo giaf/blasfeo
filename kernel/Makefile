@@ -29,7 +29,43 @@
 
 include ../Makefile.rule
 
-obj:
+OBJS =
+
+ifeq ($(TARGET), X64_INTEL_HASWELL)
+OBJS += kernel_align_x64.o
+endif
+ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
+OBJS += kernel_align_x64.o
+endif
+ifeq ($(TARGET), X64_INTEL_CORE)
+OBJS += kernel_align_x64.o
+endif
+ifeq ($(TARGET), X64_AMD_BULLDOZER)
+OBJS += kernel_align_x64.o
+endif
+ifeq ($(TARGET), X86_AMD_JAGUAR)
+OBJS += kernel_align_x86.o
+endif
+ifeq ($(TARGET), X86_AMD_BARCELONA)
+OBJS += kernel_align_x86.o
+endif
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
+OBJS += kernel_align_generic.o
+endif
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
+OBJS += kernel_align_generic.o
+endif
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
+OBJS += kernel_align_generic.o
+endif
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
+OBJS += kernel_align_generic.o
+endif
+ifeq ($(TARGET), GENERIC)
+OBJS += kernel_align_generic.o
+endif
+
+obj: $(OBJS)
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 	( cd avx2; $(MAKE) obj)
 	( cd avx; $(MAKE) obj)

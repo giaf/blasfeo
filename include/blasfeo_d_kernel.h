@@ -42,6 +42,11 @@ extern "C" {
 
 
 
+// utils
+void blasfeo_align_64_byte(void *ptr, void **ptr_align);
+
+
+
 // level 2 BLAS
 // 12
 void kernel_dgemv_n_12_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);

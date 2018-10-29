@@ -206,6 +206,14 @@ int main()
 
 
 
+#if 1
+	double *ptr = sA.pA+1;
+	printf("\n%f %p\n", *ptr, ptr);
+	blasfeo_align_64_byte(ptr, (void **) &ptr);
+	printf("\n%f %p\n", *ptr, ptr);
+	return 0;
+#endif
+
 #if 0
 	// panel copy
 //	kernel_dpacp_nn_4_lib4(6, 3, sA.pA, sA.cn, sD.pA);

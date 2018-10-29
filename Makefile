@@ -70,6 +70,8 @@ OBJS += \
 		kernel/avx/kernel_sgecpsc_lib8.o \
 		kernel/avx/kernel_sgetr_lib8.o \
 		kernel/avx/kernel_sgead_lib8.o \
+		\
+		kernel/kernel_align_x64.o\
 
 # blas
 OBJS += \
@@ -125,6 +127,8 @@ OBJS += \
 		kernel/avx/kernel_sgecpsc_lib8.o \
 		kernel/avx/kernel_sgetr_lib8.o \
 		kernel/avx/kernel_sgead_lib8.o \
+		\
+		kernel/kernel_align_x64.o\
 
 # blas
 OBJS  += \
@@ -173,6 +177,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_x64.o\
 
 # blas
 OBJS += \
@@ -220,6 +226,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_x64.o\
 
 # blas
 OBJS += \
@@ -270,6 +278,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_x86.o\
 
 # blas
 OBJS += \
@@ -319,6 +329,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_x86.o\
 
 # blas
 OBJS += \
@@ -373,6 +385,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_generic.o\
 
 # blas
 OBJS += \
@@ -428,6 +442,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_generic.o\
 
 # blas
 OBJS += \
@@ -477,6 +493,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_generic.o\
 
 # blas
 OBJS += \
@@ -526,6 +544,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_generic.o\
 
 # blas
 OBJS += \
@@ -572,6 +592,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_generic.o\
 
 # blas
 OBJS += \
