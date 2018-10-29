@@ -1,4 +1,19 @@
 BLASFEO ChangeLog
+
+
+
+====================================================================
+Version 0.1.1-master
+26-Oct-2018
+
+BLASFEO_API:
+	* stable version of dsyrk_ln for all targets
+
+X64:
+	* AMD_BULLDOZER: fixed performance bug (mix of legacy and VEX code)
+
+
+
 ====================================================================
 Version 0.1.0
 19-Oct-2018

@@ -100,11 +100,11 @@
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_ADD_NT_4X2_LIB4
+	.macro INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
 	.align 16
-	.type inner_kernel_gemm_add_nt_4x2_lib4, @function
-inner_kernel_gemm_add_nt_4x2_lib4:
+	.type inner_kernel_gemm_nt_4x2_lib4, @function
+inner_kernel_gemm_nt_4x2_lib4:
 #endif
 
 	cmpl	$0, %eax
@@ -298,7 +298,7 @@ inner_kernel_gemm_add_nt_4x2_lib4:
 #else
 	ret
 
-	.size	inner_kernel_gemm_add_nt_4x2_lib4, .-inner_kernel_gemm_add_nt_4x2_lib4
+	.size	inner_kernel_gemm_nt_4x2_lib4, .-inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
@@ -1910,9 +1910,9 @@ kernel_dgemm_nt_4x2_lib4:
 	movl	ARG4, %ecx  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_add_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
@@ -1974,9 +1974,9 @@ kernel_dgemm_nt_4x2_vs_lib4:
 	movl	ARG4, %ecx  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_add_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
@@ -2190,9 +2190,9 @@ kernel_dsyrk_nt_l_4x2_lib4:
 	movl	ARG4, %ecx  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_add_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
@@ -2254,9 +2254,9 @@ kernel_dsyrk_nt_l_4x2_vs_lib4:
 	movl	ARG4, %ecx  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_add_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
@@ -2625,9 +2625,9 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x2_lib4:
 	movl	ARG3, %ecx  // Bp
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_add_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
@@ -2715,9 +2715,9 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x2_vs_lib4:
 	movl	ARG3, %ecx  // Bp
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_add_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
@@ -2808,9 +2808,9 @@ kernel_dsyrk_dpotrf_nt_l_4x2_lib4:
 	movl	ARG3, %ecx  // Bp
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_add_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
@@ -2898,9 +2898,9 @@ kernel_dsyrk_dpotrf_nt_l_4x2_vs_lib4:
 	movl	ARG3, %ecx  // Bp
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_add_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
@@ -3112,6 +3112,16 @@ kernel_dtrmm_nn_rl_4x2_vs_lib4:
 	ret
 
 	.size	kernel_dtrmm_nn_rl_4x2_vs_lib4, .-kernel_dtrmm_nn_rl_4x2_vs_lib4
+
+
+
+
+
+#if defined(BLAS_API)
+
+#include "kernel_dgemm_4x2_lib.S"
+
+#endif
 
 
 
