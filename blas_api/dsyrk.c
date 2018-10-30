@@ -651,7 +651,7 @@ ut_0_return:
 lx_1:
 	sA_size = blasfeo_memsize_dmat(m, k);
 	mem = malloc(sA_size+63);
-	mem_align = (void *) ( ( ( (unsigned long long) mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(mem, &mem_align);
 	blasfeo_create_dmat(m, k, &sA, mem_align);
 
 	if(*ta=='n' | *ta=='N')
@@ -771,7 +771,7 @@ lx_1_return:
 ux_1:
 	sA_size = blasfeo_memsize_dmat(m, k);
 	mem = malloc(sA_size+63);
-	mem_align = (void *) ( ( ( (unsigned long long) mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(mem, &mem_align);
 	blasfeo_create_dmat(m, k, &sA, mem_align);
 
 	if(*ta=='n' | *ta=='N')
@@ -846,11 +846,11 @@ ux_1:
 		kernel_dsyrk_nt_u_4x4_lib44c(k, alpha, pU+ii*sdu, pU+ii*sdu, beta, C+ii+ii*ldc, ldc, C+ii+ii*ldc, ldc);
 		for(jj=ii+4; jj<m-3; jj+=4)
 			{
-			kernel_dgemm_nt_4x4_lib4cc(k, alpha, pU+ii*sdu, pU+jj*sdu, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
+			kernel_dgemm_nt_4x4_lib44c(k, alpha, pU+ii*sdu, pU+jj*sdu, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
 			}
 		if(jj<m)
 			{
-			kernel_dgemm_nt_4x4_vs_lib4cc(k, alpha, pU+ii*sdu, pU+jj*sdu, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, m-jj);
+			kernel_dgemm_nt_4x4_vs_lib44c(k, alpha, pU+ii*sdu, pU+jj*sdu, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, m-jj);
 			}
 		}
 	if(ii<m)

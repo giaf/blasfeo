@@ -252,7 +252,7 @@ l_1:
 	sC_size = blasfeo_memsize_dmat(m, m);
 	stot_size = sC_size;
 	smat_mem = malloc(stot_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	blasfeo_create_dmat(m, m, &sC, smat_mem_align);
 	sdc = sC.cn;
 	pc = sC.dA;
@@ -602,7 +602,7 @@ u_1:
 	sC_size = blasfeo_memsize_dmat(m, m);
 	stot_size = sC_size;
 	smat_mem = malloc(stot_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	blasfeo_create_dmat(m, m, &sC, smat_mem_align);
 	sdc = sC.cn;
 	pc = sC.dA;

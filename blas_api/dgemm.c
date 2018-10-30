@@ -290,7 +290,7 @@ nn_1:
 	sA_size = blasfeo_memsize_dmat(12, k);
 	sB_size = blasfeo_memsize_dmat(n, k);
 	smat_mem = malloc(sA_size+sB_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	// TODO smaller for non-haswell !!!
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(n, k, &sB, smat_mem_align+sA_size);
@@ -520,7 +520,7 @@ nt_1:
 	sA_size = blasfeo_memsize_dmat(12, k);
 	sB_size = blasfeo_memsize_dmat(k, n);
 	smat_mem = malloc(sA_size+sB_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	// TODO smaller for non-haswell !!!
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(k, n, &sB, smat_mem_align+sA_size);
@@ -756,7 +756,7 @@ tn_1:
 	sA_size = blasfeo_memsize_dmat(12, k);
 	sB_size = blasfeo_memsize_dmat(n, k);
 	smat_mem = malloc(sA_size+sB_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	// TODO smaller for non-haswell !!!
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(n, k, &sB, smat_mem_align+sA_size);
@@ -998,7 +998,7 @@ tt_1:
 	sA_size = blasfeo_memsize_dmat(12, k);
 	sB_size = blasfeo_memsize_dmat(k, n);
 	smat_mem = malloc(sA_size+sB_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	// TODO smaller for non-haswell !!!
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(k, n, &sB, smat_mem_align+sA_size);

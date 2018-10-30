@@ -2165,7 +2165,7 @@ tn_0_return:
 loop_00_1:
 	sAt_size = blasfeo_memsize_dmat(12, k);
 	smat_mem = malloc(sAt_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	blasfeo_create_dmat(12, k, &sAt, smat_mem_align);
 	pAt = sAt.pA;
 	sdat = sAt.cn;
@@ -2253,7 +2253,7 @@ loop_00_1:
 loop_CD_1:
 	sAt_size = blasfeo_memsize_dmat(12, k);
 	smat_mem = malloc(sAt_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	blasfeo_create_dmat(12, k, &sAt, smat_mem_align);
 	pAt = sAt.pA;
 	sdat = sAt.cn;
@@ -3020,7 +3020,7 @@ tt_0_return:
 loop_00_1:
 	sAt_size = blasfeo_memsize_dmat(12, k);
 	smat_mem = malloc(sAt_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	blasfeo_create_dmat(12, k, &sAt, smat_mem_align);
 	pAt = sAt.pA;
 	sdat = sAt.cn;
@@ -3217,7 +3217,7 @@ loop_00_1:
 loop_CD_1:
 	sAt_size = blasfeo_memsize_dmat(12, k);
 	smat_mem = malloc(sAt_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	blasfeo_create_dmat(12, k, &sAt, smat_mem_align);
 	pAt = sAt.pA;
 	sdat = sAt.cn;
@@ -4380,7 +4380,7 @@ void blasfeo_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 		{
 		sdu = (k+ps-1)/ps*ps;
 		mem = malloc(12*sdu*sizeof(double)+63);
-		pU = (void *) ( ( ( (unsigned long long) mem ) + 63) / 64 * 64 );
+		blasfeo_align_64_byte(mem, (void **) &pU);
 		}
 	else
 		{
