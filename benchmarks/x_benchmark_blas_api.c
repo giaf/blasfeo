@@ -244,6 +244,7 @@ int main()
 #endif
 		char c_l = 'l';
 		char c_n = 'n';
+		char c_r = 'r';
 		char c_t = 't';
 		char c_u = 'u';
 
@@ -291,6 +292,7 @@ int main()
 #elif defined(TRSM_LUNN)
 #elif defined(TRSM_LLNU)
 #elif defined(TRSM_RLTN)
+				blasfeo_dtrsm(&c_r, &c_l, &c_t, &c_n, &n, &n, &r_1, B, &n, D, &n);
 #elif defined(TRSM_RLTU)
 #elif defined(TRSM_RUTN)
 #elif defined(GELQF)
