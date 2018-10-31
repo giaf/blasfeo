@@ -53,6 +53,9 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 	int ldb = *pldb;
 	int ldc = *pldc;
 
+	if(m<=0 | n<=0)
+		return;
+
 	int ii, jj;
 
 	int bs = 4;

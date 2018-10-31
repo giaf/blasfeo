@@ -83,7 +83,15 @@ int main()
 
 	int bs = 4;
 
-	double alpha = 1.0;
+	double d_0 = 0.0;
+	double d_1 = 1.0;
+
+	char c_l = 'l';
+	char c_n = 'n';
+	char c_r = 'r';
+	char c_t = 't';
+
+	double alpha = 2.0;
 	double beta = 0.0;
 
 	char ta = 't';
@@ -92,8 +100,16 @@ int main()
 	int info = 0;
 
 	int m0 = 15;
-	int n0 = 16;
+	int n0 = 15;
 	int k0 = 16;
+
+
+
+	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
+	dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
+	dpotrf_(&c_l, &n, D, &n, &info);
+//	d_print_mat(n, n, D, n);
+//	return 0;
 
 
 	// blas
@@ -107,11 +123,17 @@ int main()
 //	dpotrf_(&uplo, &m0, C, &n, &info);
 #endif
 
-#if 1
+#if 0
 	dsyrk_(&uplo, &ta, &m0, &k0, &alpha, A, &n, &beta, C, &n);
 #endif
 
+#if 1
+	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
+	dtrsm_(&c_r, &c_l, &c_t, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+#endif
+
 	printf("\ninfo %d\n", info);
+	d_print_mat(n, n, B, ldb);
 	d_print_mat(n, n, C, ldc);
 //	d_print_mat(n, n, D, ldd);
 
@@ -127,11 +149,17 @@ int main()
 //	blasfeo_dpotrf(&uplo, &m0, C, &n, &info);
 #endif
 
-#if 1
+#if 0
 	blasfeo_dsyrk(&uplo, &ta, &m0, &k0, &alpha, A, &n, &beta, C, &n);
 #endif
 
+#if 1
+	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
+	blasfeo_dtrsm(&c_r, &c_l, &c_t, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+#endif
+
 	printf("\ninfo %d\n", info);
+	d_print_mat(n, n, B, ldc);
 	d_print_mat(n, n, C, ldc);
 //	d_print_mat(n, n, D, ldd);
 

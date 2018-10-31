@@ -51,6 +51,9 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	int m = *pm;
 	int ldc = *pldc;
 
+	if(m<=0)
+		return;
+
 	*info = 0;
 
 	int ii, jj;

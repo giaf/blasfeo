@@ -53,6 +53,9 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 	int lda = *plda;
 	int ldc = *pldc;
 
+	if(m<=0)
+		return;
+
 	int ii, jj;
 
 	int bs = 4;
