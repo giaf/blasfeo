@@ -60,13 +60,13 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 
 	int bs = 4;
 
+// TODO visual studio alignment
 #if defined(TARGET_GENERIC)
 	double pd[K_MAX_STACK];
 #else
 	double pd[K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
 
-// TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL)
 	double pU[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 	double pD[4*16] __attribute__ ((aligned (64)));
