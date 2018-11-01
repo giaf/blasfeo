@@ -2254,9 +2254,9 @@ inner_blend_scale_m1b_4x4_vs_lib:
 
 	vcvtsi2sd	%r13d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC00(%rip), %ymm13
+	vmovupd		.LC02(%rip), %ymm13
 #elif defined(OS_MAC)
-	vmovupd		LC00(%rip), %ymm13
+	vmovupd		LC02(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
 	vinsertf128	$1, %xmm15, %ymm15, %ymm15
@@ -3118,9 +3118,9 @@ inner_store_u_4x4_vs_lib:
 
 	vcvtsi2sd	%r12d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC00(%rip), %ymm14
+	vmovupd		.LC02(%rip), %ymm14
 #elif defined(OS_MAC)
-	vmovupd		LC00(%rip), %ymm14
+	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
 	vinsertf128	$1, %xmm15, %ymm15, %ymm15
