@@ -100,14 +100,13 @@ void blasfeo_dtrmm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 				{
 				if(*diag=='n' | *diag=='N')
 					{
-					if(0)
 #if defined(TARGET_X64_INTEL_HASWELL)
-//					if(m>=120 | n>=120 | m>K_MAX_STACK) // XXX cond on m !!!!!
+					if(m>300 | n>300 | m>K_MAX_STACK) // XXX cond on m !!!!!
 #else
-//					if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
+					if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
 #endif
 						{
-//						goto rlnn_1;
+						goto rlnn_1;
 						}
 					else
 						{
@@ -260,7 +259,7 @@ rlnn_0_return:
 
 
 
-rltn_1:
+rlnn_1:
 	sA_size = blasfeo_memsize_dmat(12, n);
 	sB_size = blasfeo_memsize_dmat(n, n);
 	mem = malloc(sA_size+sB_size+64);
@@ -268,35 +267,119 @@ rltn_1:
 	blasfeo_create_dmat(12, n, &sA, mem_align);
 	blasfeo_create_dmat(n, n, &sB, mem_align+sA_size);
 
-	// TODO pack triangle
-//	blasfeo_pack_dmat(n, n, A, lda, &sB, 0, 0);
-	blasfeo_pack_l_dmat(n, n, A, lda, &sB, 0, 0);
-//	blasfeo_print_dmat(n, n, &sB, 0, 0);
-
 	pU = sA.pA;
 	sdu = sA.cn;
 	pB = sB.pA;
 	sdb = sB.cn;
 
+	for(ii=0; ii<n-3; ii+=4)
+		{
+		kernel_dpack_tn_4_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb);
+		}
+	if(ii<n)
+		{
+		kernel_dpack_tn_4_vs_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb, n-ii);
+		}
+
 	ii = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; ii<m-11; ii+=12)
+		{
+		kernel_dpack_nn_12_lib4(n, B+ii, ldb, pU, sdu);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dtrmm_nt_ru_12x4_lib44c(n-jj, alpha, pU+jj*ps, sdu, pB+jj*ps+jj*sdb, &d_0, B+ii+jj*ldb, ldb, B+ii+jj*ldb, ldb);
+			}
+		if(jj<n)
+			{
+			kernel_dtrmm_nt_ru_12x4_vs_lib44c(n-jj, alpha, pU+jj*ps, sdu, pB+jj*ps+jj*sdb, &d_0, B+ii+jj*ldb, ldb, B+ii+jj*ldb, ldb, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto rlnn_1_left_4;
+			}
+		if(m-ii<=8)
+			{
+			goto rlnn_1_left_8;
+			}
+		else
+			{
+			goto rlnn_1_left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<m-7; ii+=8)
+		{
+		kernel_dpack_nn_8_lib4(n, B+ii, ldb, pU, sdu);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dtrmm_nt_ru_8x4_lib44c(n-jj, alpha, pU+jj*ps, sdu, pB+jj*ps+jj*sdb, &d_0, B+ii+jj*ldb, ldb, B+ii+jj*ldb, ldb);
+			}
+		if(jj<n)
+			{
+			kernel_dtrmm_nt_ru_8x4_vs_lib44c(n-jj, alpha, pU+jj*ps, sdu, pB+jj*ps+jj*sdb, &d_0, B+ii+jj*ldb, ldb, B+ii+jj*ldb, ldb, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto rlnn_1_left_4;
+			}
+		else
+			{
+			goto rlnn_1_left_8;
+			}
+		}
+#else
 	for(; ii<m-3; ii+=4)
 		{
 		kernel_dpack_nn_4_lib4(n, B+ii, ldb, pU);
 		for(jj=0; jj<n-3; jj+=4)
 			{
-//			kernel_dtrmm_nn_rl_4x4_lib44c(n-jj, alpha, pU+jj*ps, 0, pB+jj*ps+jj*sdb, sdb, &d_0, B+ii+jj*ldb, ldb, B+ii+jj*ldb, ldb);
+			kernel_dtrmm_nt_ru_4x4_lib44c(n-jj, alpha, pU+jj*ps, pB+jj*ps+jj*sdb, &d_0, B+ii+jj*ldb, ldb, B+ii+jj*ldb, ldb);
 			}
 		if(jj<n)
 			{
-//			kernel_dtrmm_nn_rl_4x4_vs_lib44c(n-jj, alpha, pU+jj*ps, 0, pB+jj*ps+jj*sdb, sdb, &d_0, B+ii+jj*ldb, ldb, B+ii+jj*ldb, ldb, m-ii, n-jj);
+			kernel_dtrmm_nt_ru_4x4_vs_lib44c(n-jj, alpha, pU+jj*ps, pB+jj*ps+jj*sdb, &d_0, B+ii+jj*ldb, ldb, B+ii+jj*ldb, ldb, m-ii, n-jj);
 			}
 		}
 	if(ii<m)
 		{
-		goto rlnn_0_left_4;
+		goto rlnn_1_left_4;
 		}
+#endif
+goto rlnn_1_return;
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+rlnn_1_left_12:
+	kernel_dpack_nn_12_vs_lib4(n, B+ii, ldb, pU, sdu, m-ii);
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dtrmm_nt_ru_12x4_vs_lib44c(n-jj, alpha, pU+jj*ps, sdu, pB+jj*ps+jj*sdb, &d_0, B+ii+jj*ldb, ldb, B+ii+jj*ldb, ldb, m-ii, n-jj);
+		}
+goto rlnn_1_return;
+#endif
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+rlnn_1_left_8:
+	kernel_dpack_nn_8_vs_lib4(n, B+ii, ldb, pU, sdu, m-ii);
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dtrmm_nt_ru_8x4_vs_lib44c(n-jj, alpha, pU+jj*ps, sdu, pB+jj*ps+jj*sdb, &d_0, B+ii+jj*ldb, ldb, B+ii+jj*ldb, ldb, m-ii, n-jj);
+		}
+goto rlnn_1_return;
+#endif
 
 rlnn_1_left_4:
+	kernel_dpack_nn_4_vs_lib4(n, B+ii, ldb, pU, m-ii);
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dtrmm_nt_ru_4x4_vs_lib44c(n-jj, alpha, pU+jj*ps, pB+jj*ps+jj*sdb, &d_0, B+ii+jj*ldb, ldb, B+ii+jj*ldb, ldb, m-ii, n-jj);
+		}
 goto rlnn_1_return;
 
 rlnn_1_return:

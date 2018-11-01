@@ -1742,10 +1742,10 @@ inner_edge_dgemm_nn_4x8_lib4:
 // edge for B upper triangular
 //
 // input arguments:
-// r10   <- A
-// r11   <- 4*sda*sizeof(double)
-// r12   <- B
-// r15   <- dirty
+// r10   <- kmax
+// r11   <- A
+// r12   <- 4*sda*sizeof(double)
+// r13   <- B
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
@@ -1760,10 +1760,10 @@ inner_edge_dgemm_nn_4x8_lib4:
 
 //
 // output arguments:
-// r10   <- A+4*4*sizeof(double)
-// r11   <- 4*sda*sizeof(double)
-// r12   <- B+4*4*sizeof(double)
-// r15   <- dirty
+// r10   <- kmax+4
+// r11   <- A+4*4*sizeof(double)
+// r12   <- 4*sda*sizeof(double)
+// r13   <- B+4*4*sizeof(double)
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
@@ -1792,70 +1792,71 @@ inner_edge_dtrmm_nt_ru_8x4_lib4:
 #endif
 #endif
 
-	vbroadcastsd	0(%r12), %ymm12
-	vmovapd			0(%r10), %ymm8
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			0(%r11), %ymm8
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm0, %ymm15, %ymm0
-	vmovapd			0(%r10, %r11, 1), %ymm9
+	vmovapd			0(%r11, %r12, 1), %ymm9
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vaddpd			%ymm4, %ymm15, %ymm4
 
-	vbroadcastsd	32(%r12), %ymm12
-	vmovapd			32(%r10), %ymm8
+	vbroadcastsd	32(%r13), %ymm12
+	vmovapd			32(%r11), %ymm8
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm0, %ymm15, %ymm0
-	vmovapd			32(%r10, %r11, 1), %ymm9
+	vmovapd			32(%r11, %r12, 1), %ymm9
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vaddpd			%ymm4, %ymm15, %ymm4
-	vbroadcastsd	40(%r12), %ymm12
+	vbroadcastsd	40(%r13), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm1, %ymm15, %ymm1
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vaddpd			%ymm5, %ymm15, %ymm5
 
-	vbroadcastsd	64(%r12), %ymm12
-	vmovapd			64(%r10), %ymm8
+	vbroadcastsd	64(%r13), %ymm12
+	vmovapd			64(%r11), %ymm8
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm0, %ymm15, %ymm0
-	vmovapd			64(%r10, %r11, 1), %ymm9
+	vmovapd			64(%r11, %r12, 1), %ymm9
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vaddpd			%ymm4, %ymm15, %ymm4
-	vbroadcastsd	72(%r12), %ymm12
+	vbroadcastsd	72(%r13), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm1, %ymm15, %ymm1
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vaddpd			%ymm5, %ymm15, %ymm5
-	vbroadcastsd	80(%r12), %ymm12
+	vbroadcastsd	80(%r13), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm2, %ymm15, %ymm2
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vaddpd			%ymm6, %ymm15, %ymm6
 
-	vbroadcastsd	96(%r12), %ymm12
-	vmovapd			96(%r10), %ymm8
+	vbroadcastsd	96(%r13), %ymm12
+	vmovapd			96(%r11), %ymm8
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm0, %ymm15, %ymm0
-	vmovapd			96(%r10, %r11, 1), %ymm9
+	vmovapd			96(%r11, %r12, 1), %ymm9
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vaddpd			%ymm4, %ymm15, %ymm4
-	vbroadcastsd	104(%r12), %ymm12
+	vbroadcastsd	104(%r13), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm1, %ymm15, %ymm1
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vaddpd			%ymm5, %ymm15, %ymm5
-	vbroadcastsd	112(%r12), %ymm12
+	vbroadcastsd	112(%r13), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm2, %ymm15, %ymm2
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vaddpd			%ymm6, %ymm15, %ymm6
-	vbroadcastsd	120(%r12), %ymm12
+	vbroadcastsd	120(%r13), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm3, %ymm15, %ymm3
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vaddpd			%ymm7, %ymm15, %ymm7
 
-	addq			$128, %r10
-	addq			$128, %r12
+	subl			$4, %r10d
+	addq			$128, %r11
+	addq			$128, %r13
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -1933,10 +1934,10 @@ inner_edge_dtrmm_nt_ru_8x4_vs_lib4:
 	vmovapd			0(%r11), %ymm8
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm0, %ymm15, %ymm0
-	addq			$32, %r11
 	vmovapd			0(%r11, %r12, 1), %ymm9
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vaddpd			%ymm4, %ymm15, %ymm4
+	addq			$32, %r11
 	addq			$32, %r13
 
 	cmpl	$0, %r10d
@@ -10051,10 +10052,11 @@ kernel_dtrmm_nt_ru_8x4_lib4:
 
 	// initial triangle
 
-	movq	ARG3, %r10 // A
-	movq	ARG4, %r11 // sda
-	sall	$5, %r11d // 4*sda*sizeof(double)
-	movq	ARG5, %r12 // B
+	movq	ARG1, %r10 // A
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_8X4_LIB4

@@ -288,6 +288,7 @@ int main()
 #elif defined(SYRK_UT)
 				blasfeo_dsyrk(&c_u, &c_t, &n, &n, &r_1, A, &n, &r_0, D, &n);
 #elif defined(TRMM_RLNN)
+				blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &n, &n, &r_1, B, &n, D, &n);
 #elif defined(TRMM_RUTN)
 #elif defined(TRSM_LUNN)
 #elif defined(TRSM_LLNU)

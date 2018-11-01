@@ -3171,11 +3171,10 @@ inner_edge_dgemm_nn_4x12_lib4:
 // edge for B upper triangular
 //
 // input arguments:
-// r10   <- A
-// r11   <- 4*sda*sizeof(double)
-// r12   <- B
-// r14   <- dirty
-// r15   <- dirty
+// r10   <- kmax
+// r11   <- A
+// r12   <- 4*sda*sizeof(double)
+// r13   <- B
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
@@ -3195,11 +3194,10 @@ inner_edge_dgemm_nn_4x12_lib4:
 
 //
 // output arguments:
-// r10   <- A+4*4*sizeof(double)
-// r11   <- 4*sda*sizeof(double)
-// r12   <- B+4*4*sizeof(double)
-// r14   <- dirty
-// r15   <- dirty
+// r10   <- kmax
+// r11   <- A+4*4*sizeof(double)
+// r12   <- 4*sda*sizeof(double)
+// r13   <- B+4*4*sizeof(double)
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
@@ -3233,64 +3231,65 @@ inner_edge_dtrmm_nt_ru_12x4_lib4:
 #endif
 #endif
 	
-	vbroadcastsd	0(%r12), %ymm12
-	vmovapd			0(%r10), %ymm13
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			0(%r11), %ymm13
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
-	vmovapd			0(%r10, %r11, 1), %ymm14
+	vmovapd			0(%r11, %r12, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
-	vmovapd			0(%r10, %r11, 2), %ymm15
+	vmovapd			0(%r11, %r12, 2), %ymm15
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
 
-	vbroadcastsd	32(%r12), %ymm12
-	vmovapd			32(%r10), %ymm13
+	vbroadcastsd	32(%r13), %ymm12
+	vmovapd			32(%r11), %ymm13
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
-	vmovapd			32(%r10, %r11, 1), %ymm14
+	vmovapd			32(%r11, %r12, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
-	vmovapd			32(%r10, %r11, 2), %ymm15
+	vmovapd			32(%r11, %r12, 2), %ymm15
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
-	vbroadcastsd	40(%r12), %ymm12
+	vbroadcastsd	40(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 
-	vbroadcastsd	64(%r12), %ymm12
-	vmovapd			64(%r10), %ymm13
+	vbroadcastsd	64(%r13), %ymm12
+	vmovapd			64(%r11), %ymm13
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
-	vmovapd			64(%r10, %r11, 1), %ymm14
+	vmovapd			64(%r11, %r12, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
-	vmovapd			64(%r10, %r11, 2), %ymm15
+	vmovapd			64(%r11, %r12, 2), %ymm15
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
-	vbroadcastsd	72(%r12), %ymm12
+	vbroadcastsd	72(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
-	vbroadcastsd	80(%r12), %ymm12
+	vbroadcastsd	80(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 
-	vbroadcastsd	96(%r12), %ymm12
-	vmovapd			96(%r10), %ymm13
+	vbroadcastsd	96(%r13), %ymm12
+	vmovapd			96(%r11), %ymm13
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
-	vmovapd			96(%r10, %r11, 1), %ymm14
+	vmovapd			96(%r11, %r12, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
-	vmovapd			96(%r10, %r11, 2), %ymm15
+	vmovapd			96(%r11, %r12, 2), %ymm15
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
-	vbroadcastsd	104(%r12), %ymm12
+	vbroadcastsd	104(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
-	vbroadcastsd	112(%r12), %ymm12
+	vbroadcastsd	112(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
-	vbroadcastsd	120(%r12), %ymm12
+	vbroadcastsd	120(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	addq			$128, %r10
-	addq			$128, %r12
+	subl			$4, %r10d
+	addq			$128, %r11
+	addq			$128, %r13
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -11851,14 +11850,23 @@ kernel_dtrmm_nt_ru_12x4_lib4:
 	// call inner dgemm kernel nt after initial triangle
 
 	movq	ARG1, %r10 // k
-	subl	$4, %r10d //k-4
+//	subl	$4, %r10d //k-4
 	movq	ARG3, %r11 // A
-	addq	$128, %r11 // A+4*bs
+//	addq	$128, %r11 // A+4*bs
 	movq	ARG4, %r12 // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13 // B
-	addq	$128, %r13 // B+4*bs
+//	addq	$128, %r13 // B+4*bs
 
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRMM_NT_RU_12X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dtrmm_nt_ru_12x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dtrmm_nt_ru_12x4_lib4
+#endif
+#endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4
@@ -11886,18 +11894,19 @@ kernel_dtrmm_nt_ru_12x4_lib4:
 
 	// initial triangle
 
-	movq	ARG3, %r10 // A
-	movq	ARG4, %r11 // sda
-	sall	$5, %r11d // 4*sda*sizeof(double)
-	movq	ARG5, %r12 // B
+//	movq	ARG1, %r10 // kmax
+//	movq	ARG3, %r11 // A
+//	movq	ARG4, %r12 // sda
+//	sall	$5, %r12d // 4*sda*sizeof(double)
+//	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRMM_NT_RU_12X4_LIB4
+//	INNER_EDGE_DTRMM_NT_RU_12X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dtrmm_nt_ru_12x4_lib4
+//	call inner_edge_dtrmm_nt_ru_12x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_edge_dtrmm_nt_ru_12x4_lib4
+//	callq _inner_edge_dtrmm_nt_ru_12x4_lib4
 #endif
 #endif
 
@@ -11984,14 +11993,23 @@ kernel_dtrmm_nt_ru_12x4_vs_lib4:
 	// call inner dgemm kernel nt after initial triangle
 
 	movq	ARG1, %r10 // k
-	subl	$4, %r10d //k-4
+//	subl	$4, %r10d //k-4
 	movq	ARG3, %r11 // A
-	addq	$128, %r11 // A+4*bs
+//	addq	$128, %r11 // A+4*bs
 	movq	ARG4, %r12 // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13 // B
-	addq	$128, %r13 // B+4*bs
+//	addq	$128, %r13 // B+4*bs
 
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRMM_NT_RU_12X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dtrmm_nt_ru_12x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dtrmm_nt_ru_12x4_lib4
+#endif
+#endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4
@@ -12019,18 +12037,18 @@ kernel_dtrmm_nt_ru_12x4_vs_lib4:
 
 	// initial triangle
 
-	movq	ARG3, %r10 // A
-	movq	ARG4, %r11 // sda
-	sall	$5, %r11d // 4*sda*sizeof(double)
-	movq	ARG5, %r12 // B
+//	movq	ARG3, %r10 // A
+//	movq	ARG4, %r11 // sda
+//	sall	$5, %r11d // 4*sda*sizeof(double)
+//	movq	ARG5, %r12 // B
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRMM_NT_RU_12X4_LIB4
+//	INNER_EDGE_DTRMM_NT_RU_12X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dtrmm_nt_ru_12x4_lib4
+//	call inner_edge_dtrmm_nt_ru_12x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_edge_dtrmm_nt_ru_12x4_lib4
+//	callq _inner_edge_dtrmm_nt_ru_12x4_lib4
 #endif
 #endif
 
