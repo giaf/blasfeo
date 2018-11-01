@@ -2634,6 +2634,159 @@ inner_scale_ab_4x4_vs_lib:
 
 // common inner routine with file scope
 //
+// scale for alpha=-1 and generic beta
+//
+// input arguments:
+// r10   <- beta
+// r11   <- C
+// r12   <- ldc
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_M1B_4X4_LIB
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_m1b_4x4_lib, @function
+inner_scale_m1b_4x4_lib:
+#elif defined(OS_MAC)
+_inner_scale_m1b_4x4_lib:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_m1b_4x4_lib; .scl 2; .type 32; .endef
+inner_scale_m1b_4x4_lib:
+#endif
+#endif
+
+	// beta
+	vbroadcastsd	0(%r10), %ymm14
+
+	vxorpd		%ymm15, %ymm15, %ymm15 // 0.0
+
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			0f // end
+
+	vmovupd		0(%r11), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm0
+	addq		%r12, %r11
+	vmovupd		0(%r11), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm1
+	addq		%r12, %r11
+	vmovupd		0(%r11), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm2
+	addq		%r12, %r11
+	vmovupd		0(%r11), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm3
+//	addq		%r12, %r11
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_scale_m1b_4x4_lib, .-inner_scale_m1b_4x4_lib
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// scale for generic alpha and beta
+//
+// input arguments:
+// r10   <- beta
+// r11   <- C
+// r12   <- ldc
+// r13d   <- km
+// r14d   <- kn
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_M1B_4X4_VS_LIB
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_m1b_4x4_vs_lib, @function
+inner_scale_m1b_4x4_vs_lib:
+#elif defined(OS_MAC)
+_inner_scale_m1b_4x4_vs_lib:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_m1b_4x4_vs_lib; .scl 2; .type 32; .endef
+inner_scale_m1b_4x4_vs_lib:
+#endif
+#endif
+
+	// beta
+	vbroadcastsd	0(%r10), %ymm14
+
+	vxorpd		%ymm15, %ymm15, %ymm15 // 0.0
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			0f // end
+
+
+	vcvtsi2sd	%r13d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC02(%rip), %ymm13
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %ymm13
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm13, %ymm13
+
+
+	vmaskmovpd	0(%r11), %ymm13, %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm0
+	addq		%r12, %r11
+	cmpl		$2, %r14d
+	jl			0f // end
+	vmaskmovpd	0(%r11), %ymm13, %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm1
+	addq		%r12, %r11
+	cmpl		$3, %r14d
+	jl			0f // end
+	vmaskmovpd	0(%r11), %ymm13, %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm2
+	addq		%r12, %r11
+	cmpl		$3, %r14d
+	je			0f // end
+	vmaskmovpd	0(%r11), %ymm13, %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm3
+//	addq		%r12, %r11
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_scale_m1b_4x4_vs_lib, .-inner_scale_m1b_4x4_vs_lib
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // scale for alpha=-1 and beta=1
 //
 // input arguments:
@@ -4441,20 +4594,20 @@ kernel_dpotrf_nt_l_4x4_vs_lib44c:
 
 
 //                                         1      2          3          4         5        6          7        8          9        10
-// void kernel_dtrsm_nt_rl_inv_4x4_lib44c(int k, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
+// void kernel_dtrsm_nt_rl_inv_4x4_lib44cc(int k, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dtrsm_nt_rl_inv_4x4_lib44c
-	.type kernel_dtrsm_nt_rl_inv_4x4_lib44c, @function
-kernel_dtrsm_nt_rl_inv_4x4_lib44c:
+	.globl kernel_dtrsm_nt_rl_inv_4x4_lib44cc
+	.type kernel_dtrsm_nt_rl_inv_4x4_lib44cc, @function
+kernel_dtrsm_nt_rl_inv_4x4_lib44cc:
 #elif defined(OS_MAC)
-	.globl _kernel_dtrsm_nt_rl_inv_4x4_lib44c
-_kernel_dtrsm_nt_rl_inv_4x4_lib44c:
+	.globl _kernel_dtrsm_nt_rl_inv_4x4_lib44cc
+_kernel_dtrsm_nt_rl_inv_4x4_lib44cc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dtrsm_nt_rl_inv_4x4_lib44c
-	.def kernel_dtrsm_nt_rl_inv_4x4_lib44c; .scl 2; .type 32; .endef
-kernel_dtrsm_nt_rl_inv_4x4_lib44c:
+	.globl kernel_dtrsm_nt_rl_inv_4x4_lib44cc
+	.def kernel_dtrsm_nt_rl_inv_4x4_lib44cc; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_rl_inv_4x4_lib44cc:
 #endif
 	
 	PROLOGUE
@@ -4541,27 +4694,27 @@ kernel_dtrsm_nt_rl_inv_4x4_lib44c:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dtrsm_nt_rl_inv_4x4_lib44c, .-kernel_dtrsm_nt_rl_inv_4x4_lib44c
+	.size	kernel_dtrsm_nt_rl_inv_4x4_lib44cc, .-kernel_dtrsm_nt_rl_inv_4x4_lib44cc
 #endif
 
 
 
 
 //                                            1      2          3          4         5        6          7        8          9        10                  11      12
-// void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44c(int k, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1);
+// void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc(int k, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dtrsm_nt_rl_inv_4x4_vs_lib44c
-	.type kernel_dtrsm_nt_rl_inv_4x4_vs_lib44c, @function
-kernel_dtrsm_nt_rl_inv_4x4_vs_lib44c:
+	.globl kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc
+	.type kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc, @function
+kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc:
 #elif defined(OS_MAC)
-	.globl _kernel_dtrsm_nt_rl_inv_4x4_vs_lib44c
-_kernel_dtrsm_nt_rl_inv_4x4_vs_lib44c:
+	.globl _kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc
+_kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dtrsm_nt_rl_inv_4x4_vs_lib44c
-	.def kernel_dtrsm_nt_rl_inv_4x4_vs_lib44c; .scl 2; .type 32; .endef
-kernel_dtrsm_nt_rl_inv_4x4_vs_lib44c:
+	.globl kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc
+	.def kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc:
 #endif
 	
 	PROLOGUE
@@ -4653,7 +4806,7 @@ kernel_dtrsm_nt_rl_inv_4x4_vs_lib44c:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dtrsm_nt_rl_inv_4x4_vs_lib44c, .-kernel_dtrsm_nt_rl_inv_4x4_vs_lib44c
+	.size	kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc, .-kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc
 #endif
 
 
@@ -4714,12 +4867,12 @@ kernel_dtrsm_nt_rl_inv_4x4_lib4ccc:
 	sall	$3, %r12d
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_M1B_4X4_LIB
+	INNER_SCALE_M1B_4X4_LIB
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_m1b_4x4_lib
+	call inner_scale_m1b_4x4_lib
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_m1b_4x4_lib
+	callq _inner_scale_m1b_4x4_lib
 #endif
 #endif
 
@@ -4884,12 +5037,12 @@ kernel_dtrsm_nt_rl_inv_4x4_vs_lib4ccc:
 	movq	ARG14, %r14 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_M1B_4X4_VS_LIB
+	INNER_SCALE_M1B_4X4_VS_LIB
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_m1b_4x4_vs_lib
+	call inner_scale_m1b_4x4_vs_lib
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_m1b_4x4_vs_lib
+	callq _inner_scale_m1b_4x4_vs_lib
 #endif
 #endif
 
