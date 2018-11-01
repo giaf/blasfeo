@@ -37,6 +37,7 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 
 OBJS += dgemm.o
 OBJS += dsyrk.o
+OBJS += dtrmm.o
 OBJS += dtrsm.o
 OBJS += dpotrf.o
 

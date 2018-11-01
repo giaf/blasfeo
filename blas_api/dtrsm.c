@@ -51,9 +51,6 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 	int lda = *plda;
 	int ldb = *pldb;
 
-	double d_m10 = -1.0;
-	double *d_m1 = &d_m10;
-
 	int ii, jj;
 
 	int ps = 4;

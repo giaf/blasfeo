@@ -617,6 +617,7 @@ ifeq ($(BLAS_API), 1)
 OBJS += \
 		blas_api/dgemm.o \
 		blas_api/dsyrk.o \
+		blas_api/dtrmm.o \
 		blas_api/dtrsm.o \
 		blas_api/dpotrf.o \
 
