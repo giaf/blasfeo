@@ -37,7 +37,7 @@ int test_routine(struct RoutineArgs *args, int *bad_calls){
 	call_routines(args);
 
 	// routine test
-	#ifdef BLAS_API
+	#ifdef TEST_BLAS_API
 	int res = GECMP_BLASAPI(
 		args->n, args->m, args->ai, args->aj,
 		args->cD, args->rD,
