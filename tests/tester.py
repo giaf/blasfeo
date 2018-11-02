@@ -99,11 +99,12 @@ class CookBook:
                             routine_fullname = routine_name
                             flags["ROUTINE"] = routine_fullname
                             flags["ROUTINE_CLASS"] = routine_subclass
+                            flags["PRECISION"] = precision
 
                             self.recipe["routines"][routine_name] = {
                                 "class": routine_class,
                                 "subclass": routine_subclass,
-                                "make_cmd": "update_{}{}".format(precision, routine_class),
+                                "make_cmd": "update",
                                 "flags": flags
                             }
 

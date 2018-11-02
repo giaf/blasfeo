@@ -56,11 +56,16 @@ endif
 ifndef VERBOSE
 CFLAGS += -DVERBOSE=0
 endif
-
 ifdef ROUTINE
 CFLAGS += -DROUTINE=$(ROUTINE)
 endif
 
+ifeq ($(PRECISION), d)
+CFLAGS += -DPRECISION_DOUBLE
+endif
+ifeq ($(PRECISION), s)
+CFLAGS += -DPRECISION_SINGLE
+endif
 ifndef ROUTINE_CLASS
 ROUTINE_CLASS = GEMM
 endif
@@ -81,26 +86,10 @@ endif
 # select one single test
 ONE_OBJS = test_d_custom.o
 # ONE_OBJS = test_s_custom.o
-#
-# ONE_OBJS = test_d_blas_api.o
-#
-# ONE_OBJS = test_d_aux.o
-# ONE_OBJS = test_s_aux.o
 
-# auxiliary test
-AUX_OBJS =
-AUX_OBJS += test_d_aux.o
-AUX_OBJS += test_s_aux.o
+OBJS = test.o
 
-# blas test
-BLAS_OBJS =
-BLAS_OBJS += test_d_blas3.o
-BLAS_OBJS += test_s_blas3.o
-
-DBLAS_OBJS += test_d_blas3.o
-SBLAS_OBJS += test_s_blas3.o
-
-test_%.o: test_%.c
+%.o: %.c
 	#
 	# build executable obj $(BINARY_DIR)/$@
 	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
@@ -125,43 +114,17 @@ endif
 
 one: common $(ONE_OBJS)
 
-aux: common $(AUX_OBJS)
-blas: common $(BLAS_OBJS)
-
 run_one:
 	./$(BINARY_DIR)/$(ONE_OBJS).out
 
-build_blas: $(BLAS_OBJS)
+build: $(OBJS)
 
-build_aux: $(AUX_OBJS)
-
-run_daux:
-	./$(BINARY_DIR)/test_d_aux.o.out
+run:
+	./$(BINARY_DIR)/test.o.out
 	#
 
-run_saux:
-	./$(BINARY_DIR)/test_s_aux.o.out
-	#
-
-run_dblas3:
-	./$(BINARY_DIR)/test_d_blas3.o.out
-	#
-
-run_sblas3:
-	./$(BINARY_DIR)/test_s_blas3.o.out
-	#
-
-update_dblas3: $(DBLAS_OBJS) run_dblas3
-update_sblas3: $(SBLAS_OBJS) run_sblas3
-
-update_daux: build_aux run_daux
-update_saux: build_aux run_saux
-
-full_update_dblas3: blas run_dblas3
-full_update_sblas3: blas run_sblas3
-
-full_update_daux: aux run_daux
-full_update_saux: aux run_saux
+update: build run
+full: common build run
 
 clean:
 	rm -rf ./*.o
