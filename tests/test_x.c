@@ -26,7 +26,7 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-void test_routine(struct RoutineArgs *args, int *bad_calls){
+int test_routine(struct RoutineArgs *args, int *bad_calls){
 
 #if (VERBOSE>2)
 	print_routine(args);
@@ -67,11 +67,10 @@ void test_routine(struct RoutineArgs *args, int *bad_calls){
 		print_routine(args);
 
 		print_compilation_flags();
-#if (VERBOSE>1)
-		assert(0);
-#endif
 		}
 
+	// terminate on error
+	return res;
 #endif
 
 }
@@ -313,8 +312,9 @@ int main()
 
 									args.alpha = alpha;
 
-									test_routine(&args, &bad_calls);
+									int result = test_routine(&args, &bad_calls);
 
+									if (!result) return 0;
 									}
 								}
 							}
