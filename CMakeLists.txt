@@ -799,7 +799,10 @@ add_library(blasfeo ${BLASFEO_SRC})
 
 
 target_include_directories(blasfeo
-	PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+	PUBLIC
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+		$<INSTALL_INTERFACE:include/blasfeo/include>)
+
 
 install(TARGETS blasfeo EXPORT blasfeoConfig
 	LIBRARY DESTINATION lib

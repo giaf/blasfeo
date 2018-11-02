@@ -30,49 +30,95 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#if defined(LA_BLAS_WRAPPER)
-#if defined(REF_BLAS_BLIS)
-#include "blis.h"
-#elif defined(REF_BLAS_MKL)
-#include "mkl.h"
-#else
-#include "../include/s_blas.h"
-#endif
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#include <mmintrin.h>
+#include <xmmintrin.h>  // SSE
+#include <emmintrin.h>  // SSE2
+#include <pmmintrin.h>  // SSE3
+#include <smmintrin.h>  // SSE4
+#include <immintrin.h>  // AVX
 #endif
 
+#include "../include/blasfeo_target.h"
 #include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux.h"
+#include "../include/blasfeo_d_aux.h"
+//#include "../include/blasfeo_d_kernel.h"
 
 
 
-#define REAL float
-
-#define XMAT blasfeo_smat
-
-#define GEMM_NN blasfeo_sgemm_nn
-#define GEMM_NT blasfeo_sgemm_nt
-#define GEMM_TN blasfeo_sgemm_tn
-#define GEMM_TT blasfeo_sgemm_tt
-#define SYRK_LN blasfeo_ssyrk_ln
-#define SYRK_LN_MN blasfeo_ssyrk_ln_mn
-#define SYRK_LT blasfeo_ssyrk_lt
-#define SYRK_UN blasfeo_ssyrk_un
-#define SYRK_UT blasfeo_ssyrk_ut
-#define TRMM_RLNN blasfeo_strmm_rlnn
-#define TRMM_RUTN blasfeo_strmm_rutn
-#define TRSM_LLNU blasfeo_strsm_llnu
-#define TRSM_LUNN blasfeo_strsm_lunn
-#define TRSM_RLTN blasfeo_strsm_rltn
-#define TRSM_RLTU blasfeo_strsm_rltu
-#define TRSM_RUTN blasfeo_strsm_rutn
-
-#define COPY scopy_
-#define GEMM sgemm_
-#define SYRK ssyrk_
-#define TRMM strmm_
-#define TRSM strsm_
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_dcopy dcopy_
+#endif
 
 
 
-#include "x_blas3_lib.c"
+void blasfeo_dcopy(int *pn, double *x, int *pincx, double *y, int *pincy)
+	{
 
+	int n = *pn;
+	int incx = *pincx;
+	int incy = *pincy;
+
+	int ii;
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	__m256d
+		tmp;
+#endif
+
+	if(incx==1 & incy==1)
+		{
+		ii = 0;
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		for(; ii<n-15; ii+=16)
+			{
+			tmp = _mm256_loadu_pd( &x[0] );
+			_mm256_storeu_pd( &y[0], tmp );
+			tmp = _mm256_loadu_pd( &x[4] );
+			_mm256_storeu_pd( &y[4], tmp );
+			tmp = _mm256_loadu_pd( &x[8] );
+			_mm256_storeu_pd( &y[8], tmp );
+			tmp = _mm256_loadu_pd( &x[12] );
+			_mm256_storeu_pd( &y[12], tmp );
+			x += 16;
+			y += 16;
+			}
+		for(; ii<n-3; ii+=4)
+			{
+			tmp = _mm256_loadu_pd( &x[0] );
+			_mm256_storeu_pd( &y[0], tmp );
+			x += 4;
+			y += 4;
+			}
+#else
+		for(; ii<n-3; ii+=4)
+			{
+			y[0] = x[0];
+			y[1] = x[1];
+			y[2] = x[2];
+			y[3] = x[3];
+			x += 4;
+			y += 4;
+			}
+#endif
+		for(; ii<n; ii++)
+			{
+			y[0] = x[0];
+			x += 1;
+			y += 1;
+			}
+		}
+	else
+		{
+		ii = 0;
+		for(; ii<n; ii++)
+			{
+			y[0] = x[0];
+			x += incx;
+			y += incy;
+			}
+		}
+
+	return;
+
+	}

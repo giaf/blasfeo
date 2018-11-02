@@ -70,6 +70,8 @@ OBJS += \
 		kernel/avx/kernel_sgecpsc_lib8.o \
 		kernel/avx/kernel_sgetr_lib8.o \
 		kernel/avx/kernel_sgead_lib8.o \
+		\
+		kernel/kernel_align_x64.o\
 
 # blas
 OBJS += \
@@ -86,13 +88,6 @@ OBJS += \
 		blasfeo_api/s_blas3_lib8.o \
 		blasfeo_api/s_blas3_diag_lib8.o \
 		blasfeo_api/s_lapack_lib8.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
 
 endif
 
@@ -132,6 +127,8 @@ OBJS += \
 		kernel/avx/kernel_sgecpsc_lib8.o \
 		kernel/avx/kernel_sgetr_lib8.o \
 		kernel/avx/kernel_sgead_lib8.o \
+		\
+		kernel/kernel_align_x64.o\
 
 # blas
 OBJS  += \
@@ -148,13 +145,6 @@ OBJS  += \
 		blasfeo_api/s_blas3_lib8.o \
 		blasfeo_api/s_blas3_diag_lib8.o \
 		blasfeo_api/s_lapack_lib8.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
 
 endif
 
@@ -187,6 +177,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_x64.o\
 
 # blas
 OBJS += \
@@ -203,13 +195,6 @@ OBJS += \
 		blasfeo_api/s_blas3_lib4.o \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
 
 endif
 
@@ -241,6 +226,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_x64.o\
 
 # blas
 OBJS += \
@@ -257,13 +244,6 @@ OBJS += \
 		blasfeo_api/s_blas3_lib4.o \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
 
 endif
 
@@ -298,6 +278,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_x86.o\
 
 # blas
 OBJS += \
@@ -314,13 +296,6 @@ OBJS += \
 		blasfeo_api/s_blas3_lib4.o \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
 
 endif
 
@@ -354,6 +329,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_x86.o\
 
 # blas
 OBJS += \
@@ -370,13 +347,6 @@ OBJS += \
 		blasfeo_api/s_blas3_lib4.o \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
 
 endif
 
@@ -415,6 +385,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_generic.o\
 
 # blas
 OBJS += \
@@ -431,13 +403,6 @@ OBJS += \
 		blasfeo_api/s_blas3_lib4.o \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
 
 endif
 
@@ -477,6 +442,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_generic.o\
 
 # blas
 OBJS += \
@@ -493,13 +460,6 @@ OBJS += \
 		blasfeo_api/s_blas3_lib4.o \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
 
 endif
 
@@ -533,6 +493,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_generic.o\
 
 # blas
 OBJS += \
@@ -549,13 +511,6 @@ OBJS += \
 		blasfeo_api/s_blas3_lib4.o \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
 
 endif
 
@@ -589,6 +544,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_generic.o\
 
 # blas
 OBJS += \
@@ -605,13 +562,6 @@ OBJS += \
 		blasfeo_api/s_blas3_lib4.o \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
-
-ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm.o \
-		blas_api/dpotrf.o \
-
-endif
 
 endif
 
@@ -642,6 +592,8 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_4_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		\
+		kernel/kernel_align_generic.o\
 
 # blas
 OBJS += \
@@ -659,16 +611,20 @@ OBJS += \
 		blasfeo_api/s_blas3_diag_lib4.o \
 		blasfeo_api/s_lapack_lib4.o \
 
+endif # GENERIC
+
 ifeq ($(BLAS_API), 1)
 OBJS += \
+		blas_api/dcopy.o \
 		blas_api/dgemm.o \
+		blas_api/dsyrk.o \
+		blas_api/dtrmm.o \
+		blas_api/dtrsm.o \
 		blas_api/dpotrf.o \
 
 endif
 
-endif
-
-else # LA_REFERENCE | LA_BLAS
+else # LA_HIGH_PERFORMANCE vs LA_REFERENCE | LA_BLAS
 
 # aux
 OBJS += \

@@ -35,44 +35,19 @@ ifeq ($(BLAS_API), 1)
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 
-ifeq ($(TARGET), X64_INTEL_HASWELL)
-OBJS += dgemm.o dpotrf.o
-endif
-ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-OBJS += dgemm.o dpotrf.o
-endif
-ifeq ($(TARGET), X64_INTEL_CORE)
-OBJS += dgemm.o dpotrf.o
-endif
-ifeq ($(TARGET), X64_AMD_BULLDOZER)
-OBJS += dgemm.o dpotrf.o
-endif
-ifeq ($(TARGET), X86_AMD_JAGUAR)
-OBJS += dgemm.o dpotrf.o
-endif
-ifeq ($(TARGET), X86_AMD_BARCELONA)
-OBJS += dgemm.o dpotrf.o
-endif
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
-OBJS += dgemm.o dpotrf.o
-endif
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
-OBJS += dgemm.o dpotrf.o
-endif
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-OBJS += dgemm.o dpotrf.o
-endif
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
-OBJS += dgemm.o dpotrf.o
-endif
-ifeq ($(TARGET), GENERIC)
-OBJS += dgemm.o dpotrf.o
-endif
+OBJS += dcopy.o
+OBJS += dgemm.o
+OBJS += dsyrk.o
+OBJS += dtrmm.o
+OBJS += dtrsm.o
+OBJS += dpotrf.o
 
-endif # HIGH_PERFROMANCE
+#endif # HIGH_PERFROMANCE
 
-ifeq ($(LA), REFERENCE)
+else #ifeq ($(LA), REFERENCE)
+
 OBJS += dgemm_ref.o
+
 endif # REFERENCE
 
 endif # BLAS_API

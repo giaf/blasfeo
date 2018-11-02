@@ -59,16 +59,37 @@ system(['rm ', file_name_eps]);
 printf('dsyrk\n');
 
 f1 = figure();
-dsyrk_ln
+
 dsyrk_ln
 save -mat dsyrk_ln.mat A B
 
 plot(B(:,1), B(:,2));
 
+dsyrk_lt
+save -mat dsyrk_lt.mat A B
+
+hold all
+plot(B(:,1), B(:,2));
+hold off
+
+dsyrk_un
+save -mat dsyrk_un.mat A B
+
+hold all
+plot(B(:,1), B(:,2));
+hold off
+
+dsyrk_ut
+save -mat dsyrk_ut.mat A B
+
+hold all
+plot(B(:,1), B(:,2));
+hold off
+
 Gflops_max = A(1)*A(2);
 
 axis([0 300 0 Gflops_max]);
-legend('dsyrk\_ln', 'Location', 'SouthEast');
+legend('dsyrk\_ln', 'dsyrk\_lt', 'dsyrk\_un', 'dsyrk\_ut', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
@@ -511,10 +532,31 @@ save -mat ssyrk_ln.mat A B
 
 plot(B(:,1), B(:,2));
 
+ssyrk_lt
+save -mat ssyrk_lt.mat A B
+
+hold all
+plot(B(:,1), B(:,2));
+hold off
+
+ssyrk_un
+save -mat ssyrk_un.mat A B
+
+hold all
+plot(B(:,1), B(:,2));
+hold off
+
+ssyrk_ut
+save -mat ssyrk_ut.mat A B
+
+hold all
+plot(B(:,1), B(:,2));
+hold off
+
 Gflops_max = A(1)*A(2);
 
 axis([0 300 0 Gflops_max]);
-legend('ssyrk\_ln', 'Location', 'SouthEast');
+legend('ssyrk\_ln', 'ssyrk\_lt', 'ssyrk\_un', 'ssyrk\_ut', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on

@@ -39,6 +39,7 @@
 
 
 #include "../include/blasfeo.h"
+#include "benchmark_x_common.h"
 
 
 
@@ -66,7 +67,6 @@ void openblas_set_num_threads(int num_threads);
 
 
 
-#include "cpu_freq.h"
 
 
 
@@ -244,6 +244,7 @@ int main()
 #endif
 		char c_l = 'l';
 		char c_n = 'n';
+		char c_r = 'r';
 		char c_t = 't';
 		char c_u = 'u';
 
@@ -279,11 +280,20 @@ int main()
 #elif defined(GEMM_TT)
 				blasfeo_dgemm(&c_t, &c_t, &n, &n, &n, &r_1, A, &n, B, &n, &r_0, D, &n);
 #elif defined(SYRK_LN)
+				blasfeo_dsyrk(&c_l, &c_n, &n, &n, &r_1, A, &n, &r_0, D, &n);
+#elif defined(SYRK_LT)
+				blasfeo_dsyrk(&c_l, &c_t, &n, &n, &r_1, A, &n, &r_0, D, &n);
+#elif defined(SYRK_UN)
+				blasfeo_dsyrk(&c_u, &c_n, &n, &n, &r_1, A, &n, &r_0, D, &n);
+#elif defined(SYRK_UT)
+				blasfeo_dsyrk(&c_u, &c_t, &n, &n, &r_1, A, &n, &r_0, D, &n);
 #elif defined(TRMM_RLNN)
+				blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &n, &n, &r_1, B, &n, D, &n);
 #elif defined(TRMM_RUTN)
 #elif defined(TRSM_LUNN)
 #elif defined(TRSM_LLNU)
 #elif defined(TRSM_RLTN)
+				blasfeo_dtrsm(&c_r, &c_l, &c_t, &c_n, &n, &n, &r_1, B, &n, D, &n);
 #elif defined(TRSM_RLTU)
 #elif defined(TRSM_RUTN)
 #elif defined(GELQF)
@@ -313,6 +323,9 @@ int main()
 #elif defined(GEMM_TN)
 #elif defined(GEMM_TT)
 #elif defined(SYRK_LN)
+#elif defined(SYRK_LT)
+#elif defined(SYRK_UN)
+#elif defined(SYRK_UT)
 #elif defined(TRMM_RLNN)
 #elif defined(TRMM_RUTN)
 #elif defined(TRSM_LUNN)
@@ -352,7 +365,7 @@ int main()
 
 #if defined(GEMM_NN) | defined(GEMM_NT) | defined(GEMM_TN) | defined(GEMM_TT)
 		double flop_operation = 2.0*n*n*n;
-#elif defined(SYRK_LN) | defined(TRMM_RLNN) | defined(TRMM_RUTN) | defined(TRSM_LLNU) | defined(TRSM_LUNN) | defined(TRSM_RLTN) | defined(TRSM_RLTU) | defined(TRSM_RUTN)
+#elif defined(SYRK_LN) | defined(SYRK_LT) | defined(SYRK_UN) | defined(SYRK_UT) | defined(TRMM_RLNN) | defined(TRMM_RUTN) | defined(TRSM_LLNU) | defined(TRSM_LUNN) | defined(TRSM_RLTN) | defined(TRSM_RLTU) | defined(TRSM_RUTN)
 		double flop_operation = 1.0*n*n*n;
 #elif defined(GELQF) | defined(GEQRF)
 		double flop_operation = 4.0/3.0*n*n*n;

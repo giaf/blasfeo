@@ -27,52 +27,98 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
+#if defined(OS_LINUX)
 
-#if defined(LA_BLAS_WRAPPER)
-#if defined(REF_BLAS_BLIS)
-#include "blis.h"
-#elif defined(REF_BLAS_MKL)
-#include "mkl.h"
+#define STACKSIZE 16
+#define ARG1  STACKSIZE +  4(%esp)
+#define ARG2  STACKSIZE +  8(%esp)
+#define ARG3  STACKSIZE + 12(%esp)
+#define ARG4  STACKSIZE + 16(%esp)
+#define ARG5  STACKSIZE + 20(%esp)
+#define ARG6  STACKSIZE + 24(%esp)
+#define ARG7  STACKSIZE + 28(%esp)
+#define ARG8  STACKSIZE + 32(%esp)
+#define ARG9  STACKSIZE + 36(%esp)
+#define ARG10 STACKSIZE + 40(%esp)
+#define ARG11 STACKSIZE + 44(%esp)
+
+#if 1
+
+#define PROLOGUE \
+	subl	$16, %esp; \
+	movl	%ebx, 0(%esp); \
+	movl	%esi, 4(%esp); \
+	movl	%edi, 8(%esp); \
+	movl	%ebp, 12(%esp);
+#define EPILOGUE \
+	movl	0(%esp), %ebx; \
+	movl	4(%esp), %esi; \
+	movl	8(%esp), %edi; \
+	movl	12(%esp), %ebp; \
+	addl	$16, %esp;
+
 #else
-#include "../include/s_blas.h"
+
+#define PROLOGUE \
+	pushl	%ebp; \
+	pushl	%edi; \
+	pushl	%esi; \
+	pushl	%ebx;
+#define EPILOGUE \
+	popl	%ebx; \
+	popl	%esi; \
+	popl	%edi; \
+	popl	%ebp;
+
 #endif
+
+#else
+
+#error wrong OS
+
 #endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux.h"
+
+
+	.text
 
 
 
-#define REAL float
+//               1          2
+// void align_64(void *ptr, void **ptr_align);
 
-#define XMAT blasfeo_smat
+	.align 16
+#if defined(OS_LINUX)
+	.globl blasfeo_align_64_byte
+	.type blasfeo_align_64_byte, @function
+blasfeo_align_64_byte:
+#elif defined(OS_MAC)
+	.globl _blasfeo_align_64_byte
+_blasfeo_align_64_byte:
+#elif defined(OS_WINDOWS)
+	.globl blasfeo_align_64_byte
+	.def blasfeo_align_64_byte; .scl 2; .type 32; .endef
+blasfeo_align_64_byte:
+#endif
+	
+	PROLOGUE
 
-#define GEMM_NN blasfeo_sgemm_nn
-#define GEMM_NT blasfeo_sgemm_nt
-#define GEMM_TN blasfeo_sgemm_tn
-#define GEMM_TT blasfeo_sgemm_tt
-#define SYRK_LN blasfeo_ssyrk_ln
-#define SYRK_LN_MN blasfeo_ssyrk_ln_mn
-#define SYRK_LT blasfeo_ssyrk_lt
-#define SYRK_UN blasfeo_ssyrk_un
-#define SYRK_UT blasfeo_ssyrk_ut
-#define TRMM_RLNN blasfeo_strmm_rlnn
-#define TRMM_RUTN blasfeo_strmm_rutn
-#define TRSM_LLNU blasfeo_strsm_llnu
-#define TRSM_LUNN blasfeo_strsm_lunn
-#define TRSM_RLTN blasfeo_strsm_rltn
-#define TRSM_RLTU blasfeo_strsm_rltu
-#define TRSM_RUTN blasfeo_strsm_rutn
+	movl	ARG1, %eax
+	movl	ARG2, %ebx
 
-#define COPY scopy_
-#define GEMM sgemm_
-#define SYRK ssyrk_
-#define TRMM strmm_
-#define TRSM strsm_
+	addl 	$63, %eax
+	movl	$63, %ecx
+	notl	%ecx
+	andl	%ecx, %eax
+	movl	%eax, (%ebx)
+
+	EPILOGUE
+	
+	ret
+
+#if defined(OS_LINUX)
+	.size	blasfeo_align_64_byte, .-blasfeo_align_64_byte
+#endif
 
 
-
-#include "x_blas3_lib.c"
 

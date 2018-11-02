@@ -49,6 +49,8 @@
 #define ARG16 STACKSIZE + 80(%rsp)
 #define ARG17 STACKSIZE + 88(%rsp)
 #define ARG18 STACKSIZE + 96(%rsp)
+#define ARG2L  %esi
+#define ARG6L  %r9d
 #define PROLOGUE \
 	subq	$STACKSIZE, %rsp; \
 	movq	%rbx,   (%rsp); \
@@ -89,6 +91,8 @@
 #define ARG16 STACKSIZE + 128(%rsp)
 #define ARG17 STACKSIZE + 136(%rsp)
 #define ARG18 STACKSIZE + 144(%rsp)
+#define ARG2L  %edx
+#define ARG6L  STACKSIZE + 48(%rsp)
 #define PROLOGUE \
 	subq	$STACKSIZE, %rsp; \
 	movq	%rbx,   (%rsp); \
@@ -530,7 +534,7 @@ inner_kernel_dunpack_nt_4_lib4:
 _inner_kernel_dunpack_nt_4_lib4:
 #elif defined(OS_WINDOWS)
 	.def inner_kernel_dunpack_nt_4_lib4; .scl 2; .type 32; .endef
-inner_kernel_dunpack_n_4_lib4:
+inner_kernel_dunpack_nt_4_lib4:
 #endif
 #endif
 
@@ -633,7 +637,7 @@ inner_kernel_dunpack_nt_3_lib4:
 _inner_kernel_dunpack_nt_3_lib4:
 #elif defined(OS_WINDOWS)
 	.def inner_kernel_dunpack_nt_3_lib4; .scl 2; .type 32; .endef
-inner_kernel_dunpack_n_3_lib4:
+inner_kernel_dunpack_nt_3_lib4:
 #endif
 #endif
 
@@ -725,7 +729,7 @@ inner_kernel_dunpack_nt_2_lib4:
 _inner_kernel_dunpack_nt_2_lib4:
 #elif defined(OS_WINDOWS)
 	.def inner_kernel_dunpack_nt_2_lib4; .scl 2; .type 32; .endef
-inner_kernel_dunpack_n_2_lib4:
+inner_kernel_dunpack_nt_2_lib4:
 #endif
 #endif
 
@@ -807,7 +811,7 @@ inner_kernel_dunpack_nt_1_lib4:
 _inner_kernel_dunpack_nt_1_lib4:
 #elif defined(OS_WINDOWS)
 	.def inner_kernel_dunpack_nt_1_lib4; .scl 2; .type 32; .endef
-inner_kernel_dunpack_n_1_lib4:
+inner_kernel_dunpack_nt_1_lib4:
 #endif
 #endif
 
@@ -1002,6 +1006,2769 @@ inner_kernel_dpacp_tn_4_lib4:
 
 #if defined(OS_LINUX)
 	.size	inner_kernel_dpacp_tn_4_lib4, .-inner_kernel_dpacp_tn_4_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_12_0_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_12_0_lib4, @function
+inner_kernel_dpacp_nn_12_0_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_12_0_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_12_0_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_12_0_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		0(%r11, %r12, 1), %ymm0
+	vmovapd		%ymm0, 0(%r13, %r14, 1)
+	vmovapd		0(%r11, %r12, 2), %ymm0
+	vmovapd		%ymm0, 0(%r13, %r14, 2)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		%ymm0, 32(%r13)
+	vmovapd		32(%r11, %r12, 1), %ymm0
+	vmovapd		%ymm0, 32(%r13, %r14, 1)
+	vmovapd		32(%r11, %r12, 2), %ymm0
+	vmovapd		%ymm0, 32(%r13, %r14, 2)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		%ymm0, 64(%r13)
+	vmovapd		64(%r11, %r12, 1), %ymm0
+	vmovapd		%ymm0, 64(%r13, %r14, 1)
+	vmovapd		64(%r11, %r12, 2), %ymm0
+	vmovapd		%ymm0, 64(%r13, %r14, 2)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		%ymm0, 96(%r13)
+	vmovapd		96(%r11, %r12, 1), %ymm0
+	vmovapd		%ymm0, 96(%r13, %r14, 1)
+	vmovapd		96(%r11, %r12, 2), %ymm0
+	vmovapd		%ymm0, 96(%r13, %r14, 2)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		0(%r11, %r12, 1), %ymm0
+	vmovapd		%ymm0, 0(%r13, %r14, 1)
+	vmovapd		0(%r11, %r12, 2), %ymm0
+	vmovapd		%ymm0, 0(%r13, %r14, 2)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_12_0_lib4, .-inner_kernel_dpacp_nn_12_0_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_12_0_VS_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_12_0_vs_lib4, @function
+inner_kernel_dpacp_nn_12_0_vs_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_12_0_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_12_0_vs_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_12_0_vs_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	vcvtsi2sd	%r15d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC02(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		0(%r11, %r12, 1), %ymm0
+	vmovapd		%ymm0, 0(%r13, %r14, 1)
+	vmovapd		0(%r11, %r12, 2), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 0(%r13, %r14, 2)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		%ymm0, 32(%r13)
+	vmovapd		32(%r11, %r12, 1), %ymm0
+	vmovapd		%ymm0, 32(%r13, %r14, 1)
+	vmovapd		32(%r11, %r12, 2), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 32(%r13, %r14, 2)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		%ymm0, 64(%r13)
+	vmovapd		64(%r11, %r12, 1), %ymm0
+	vmovapd		%ymm0, 64(%r13, %r14, 1)
+	vmovapd		64(%r11, %r12, 2), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 64(%r13, %r14, 2)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		%ymm0, 96(%r13)
+	vmovapd		96(%r11, %r12, 1), %ymm0
+	vmovapd		%ymm0, 96(%r13, %r14, 1)
+	vmovapd		96(%r11, %r12, 2), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 96(%r13, %r14, 2)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		0(%r11, %r12, 1), %ymm0
+	vmovapd		%ymm0, 0(%r13, %r14, 1)
+	vmovapd		0(%r11, %r12, 2), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 0(%r13, %r14, 2)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_12_0_vs_lib4, .-inner_kernel_dpacp_nn_12_0_vs_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_12_1_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_12_1_lib4, @function
+inner_kernel_dpacp_nn_12_1_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_12_1_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_12_1_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_12_1_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	movq	%r11, %rax
+	addq	%r12, %rax
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vmovapd		0(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14, 1)
+	vmovapd		%ymm2, 0(%r13, %r14, 2)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		32(%r11, %r12, 1), %ymm1
+	vmovapd		32(%r11, %r12, 2), %ymm2
+	vmovapd		32(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 32(%r13)
+	vmovapd		%ymm1, 32(%r13, %r14)
+	vmovapd		%ymm2, 32(%r13, %r14, 2)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		64(%r11, %r12, 1), %ymm1
+	vmovapd		64(%r11, %r12, 2), %ymm2
+	vmovapd		64(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 64(%r13)
+	vmovapd		%ymm1, 64(%r13, %r14)
+	vmovapd		%ymm2, 64(%r13, %r14, 2)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		96(%r11, %r12, 1), %ymm1
+	vmovapd		96(%r11, %r12, 2), %ymm2
+	vmovapd		96(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 96(%r13)
+	vmovapd		%ymm1, 96(%r13, %r14)
+	vmovapd		%ymm2, 96(%r13, %r14, 2)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %rax
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vmovapd		0(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14)
+	vmovapd		%ymm2, 0(%r13, %r14, 2)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %rax
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_12_1_lib4, .-inner_kernel_dpacp_nn_12_1_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_12_1_VS_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_12_1_vs_lib4, @function
+inner_kernel_dpacp_nn_12_1_vs_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_12_1_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_12_1_vs_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_12_1_vs_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	vcvtsi2sd	%r15d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC02(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
+
+	movq	%r11, %rax
+	addq	%r12, %rax
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vmovapd		0(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14, 1)
+	vmaskmovpd	%ymm2, %ymm15, 0(%r13, %r14, 2)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		32(%r11, %r12, 1), %ymm1
+	vmovapd		32(%r11, %r12, 2), %ymm2
+	vmovapd		32(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 32(%r13)
+	vmovapd		%ymm1, 32(%r13, %r14)
+	vmaskmovpd	%ymm2, %ymm15, 32(%r13, %r14, 2)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		64(%r11, %r12, 1), %ymm1
+	vmovapd		64(%r11, %r12, 2), %ymm2
+	vmovapd		64(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 64(%r13)
+	vmovapd		%ymm1, 64(%r13, %r14)
+	vmaskmovpd	%ymm2, %ymm15, 64(%r13, %r14, 2)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		96(%r11, %r12, 1), %ymm1
+	vmovapd		96(%r11, %r12, 2), %ymm2
+	vmovapd		96(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 96(%r13)
+	vmovapd		%ymm1, 96(%r13, %r14)
+	vmaskmovpd	%ymm2, %ymm15, 96(%r13, %r14, 2)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %rax
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vmovapd		0(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14)
+	vmaskmovpd	%ymm2, %ymm15, 0(%r13, %r14, 2)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %rax
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_12_1_vs_lib4, .-inner_kernel_dpacp_nn_12_1_vs_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_12_2_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_12_2_lib4, @function
+inner_kernel_dpacp_nn_12_2_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_12_2_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_12_2_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_12_2_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	movq	%r11, %rax
+	addq	%r12, %rax
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vmovapd		0(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14)
+	vmovapd		%ymm2, 0(%r13, %r14, 2)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		32(%r11, %r12, 1), %ymm1
+	vmovapd		32(%r11, %r12, 2), %ymm2
+	vmovapd		32(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 32(%r13)
+	vmovapd		%ymm1, 32(%r13, %r14)
+	vmovapd		%ymm2, 32(%r13, %r14, 2)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		64(%r11, %r12, 1), %ymm1
+	vmovapd		64(%r11, %r12, 2), %ymm2
+	vmovapd		64(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 64(%r13)
+	vmovapd		%ymm1, 64(%r13, %r14)
+	vmovapd		%ymm2, 64(%r13, %r14, 2)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		96(%r11, %r12, 1), %ymm1
+	vmovapd		96(%r11, %r12, 2), %ymm2
+	vmovapd		96(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 96(%r13)
+	vmovapd		%ymm1, 96(%r13, %r14)
+	vmovapd		%ymm2, 96(%r13, %r14, 2)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %rax
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vmovapd		0(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14)
+	vmovapd		%ymm2, 0(%r13, %r14, 2)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %rax
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_12_2_lib4, .-inner_kernel_dpacp_nn_12_2_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_12_2_VS_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_12_2_vs_lib4, @function
+inner_kernel_dpacp_nn_12_2_vs_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_12_2_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_12_2_vs_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_12_2_vs_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	vcvtsi2sd	%r15d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC02(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
+
+	movq	%r11, %rax
+	addq	%r12, %rax
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vmovapd		0(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14)
+	vmaskmovpd	%ymm2, %ymm15, 0(%r13, %r14, 2)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		32(%r11, %r12, 1), %ymm1
+	vmovapd		32(%r11, %r12, 2), %ymm2
+	vmovapd		32(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 32(%r13)
+	vmovapd		%ymm1, 32(%r13, %r14)
+	vmaskmovpd	%ymm2, %ymm15, 32(%r13, %r14, 2)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		64(%r11, %r12, 1), %ymm1
+	vmovapd		64(%r11, %r12, 2), %ymm2
+	vmovapd		64(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 64(%r13)
+	vmovapd		%ymm1, 64(%r13, %r14)
+	vmaskmovpd	%ymm2, %ymm15, 64(%r13, %r14, 2)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		96(%r11, %r12, 1), %ymm1
+	vmovapd		96(%r11, %r12, 2), %ymm2
+	vmovapd		96(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 96(%r13)
+	vmovapd		%ymm1, 96(%r13, %r14)
+	vmaskmovpd	%ymm2, %ymm15, 96(%r13, %r14, 2)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %rax
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vmovapd		0(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14)
+	vmaskmovpd	%ymm2, %ymm15, 0(%r13, %r14, 2)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %rax
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_12_2_vs_lib4, .-inner_kernel_dpacp_nn_12_2_vs_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_12_3_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_12_3_lib4, @function
+inner_kernel_dpacp_nn_12_3_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_12_3_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_12_3_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_12_3_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	movq	%r11, %rax
+	addq	%r12, %rax
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vmovapd		0(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14, 1)
+	vmovapd		%ymm2, 0(%r13, %r14, 2)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		32(%r11, %r12, 1), %ymm1
+	vmovapd		32(%r11, %r12, 2), %ymm2
+	vmovapd		32(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vmovapd		%ymm0, 32(%r13)
+	vmovapd		%ymm1, 32(%r13, %r14, 1)
+	vmovapd		%ymm2, 32(%r13, %r14, 2)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		64(%r11, %r12, 1), %ymm1
+	vmovapd		64(%r11, %r12, 2), %ymm2
+	vmovapd		64(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vmovapd		%ymm0, 64(%r13)
+	vmovapd		%ymm1, 64(%r13, %r14, 1)
+	vmovapd		%ymm2, 64(%r13, %r14, 2)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		96(%r11, %r12, 1), %ymm1
+	vmovapd		96(%r11, %r12, 2), %ymm2
+	vmovapd		96(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vmovapd		%ymm0, 96(%r13)
+	vmovapd		%ymm1, 96(%r13, %r14, 1)
+	vmovapd		%ymm2, 96(%r13, %r14, 2)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %rax
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vmovapd		0(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14, 1)
+	vmovapd		%ymm2, 0(%r13, %r14, 2)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %rax
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_12_3_lib4, .-inner_kernel_dpacp_nn_12_3_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_12_3_VS_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_12_3_vs_lib4, @function
+inner_kernel_dpacp_nn_12_3_vs_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_12_3_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_12_3_vs_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_12_3_vs_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	movq	%r11, %rax
+	addq	%r12, %rax
+
+	vcvtsi2sd	%r15d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC02(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vmovapd		0(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14, 1)
+	vmaskmovpd	%ymm2, %ymm15, 0(%r13, %r14, 2)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		32(%r11, %r12, 1), %ymm1
+	vmovapd		32(%r11, %r12, 2), %ymm2
+	vmovapd		32(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vmovapd		%ymm0, 32(%r13)
+	vmovapd		%ymm1, 32(%r13, %r14, 1)
+	vmaskmovpd	%ymm2, %ymm15, 32(%r13, %r14, 2)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		64(%r11, %r12, 1), %ymm1
+	vmovapd		64(%r11, %r12, 2), %ymm2
+	vmovapd		64(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vmovapd		%ymm0, 64(%r13)
+	vmovapd		%ymm1, 64(%r13, %r14, 1)
+	vmaskmovpd	%ymm2, %ymm15, 64(%r13, %r14, 2)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		96(%r11, %r12, 1), %ymm1
+	vmovapd		96(%r11, %r12, 2), %ymm2
+	vmovapd		96(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vmovapd		%ymm0, 96(%r13)
+	vmovapd		%ymm1, 96(%r13, %r14, 1)
+	vmaskmovpd	%ymm2, %ymm15, 96(%r13, %r14, 2)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %rax
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vmovapd		0(%rax, %r12, 2), %ymm3
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14, 1)
+	vmaskmovpd	%ymm2, %ymm15, 0(%r13, %r14, 2)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %rax
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_12_3_vs_lib4, .-inner_kernel_dpacp_nn_12_3_vs_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_8_0_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_8_0_lib4, @function
+inner_kernel_dpacp_nn_8_0_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_8_0_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_8_0_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_8_0_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		0(%r11, %r12), %ymm0
+	vmovapd		%ymm0, 0(%r13, %r14)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		%ymm0, 32(%r13)
+	vmovapd		32(%r11, %r12), %ymm0
+	vmovapd		%ymm0, 32(%r13, %r14)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		%ymm0, 64(%r13)
+	vmovapd		64(%r11, %r12), %ymm0
+	vmovapd		%ymm0, 64(%r13, %r14)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		%ymm0, 96(%r13)
+	vmovapd		96(%r11, %r12), %ymm0
+	vmovapd		%ymm0, 96(%r13, %r14)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		0(%r11, %r12), %ymm0
+	vmovapd		%ymm0, 0(%r13, %r14)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_8_0_lib4, .-inner_kernel_dpacp_nn_8_0_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_8_0_VS_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_8_0_vs_lib4, @function
+inner_kernel_dpacp_nn_8_0_vs_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_8_0_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_8_0_vs_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_8_0_vs_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	vcvtsi2sd	%r15d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC01(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC01(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		0(%r11, %r12), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 0(%r13, %r14)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		%ymm0, 32(%r13)
+	vmovapd		32(%r11, %r12), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 32(%r13, %r14)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		%ymm0, 64(%r13)
+	vmovapd		64(%r11, %r12), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 64(%r13, %r14)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		%ymm0, 96(%r13)
+	vmovapd		96(%r11, %r12), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 96(%r13, %r14)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		0(%r11, %r12), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 0(%r13, %r14)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_8_0_vs_lib4, .-inner_kernel_dpacp_nn_8_0_vs_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_8_1_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_8_1_lib4, @function
+inner_kernel_dpacp_nn_8_1_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_8_1_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_8_1_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_8_1_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		32(%r11, %r12, 1), %ymm1
+	vmovapd		32(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 32(%r13)
+	vmovapd		%ymm1, 32(%r13, %r14)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		64(%r11, %r12, 1), %ymm1
+	vmovapd		64(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 64(%r13)
+	vmovapd		%ymm1, 64(%r13, %r14)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		96(%r11, %r12, 1), %ymm1
+	vmovapd		96(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 96(%r13)
+	vmovapd		%ymm1, 96(%r13, %r14)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_8_1_lib4, .-inner_kernel_dpacp_nn_8_1_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_8_1_VS_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_8_1_vs_lib4, @function
+inner_kernel_dpacp_nn_8_1_vs_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_8_1_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_8_1_vs_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_8_1_vs_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	vcvtsi2sd	%r15d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC01(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC01(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 0(%r13)
+	vmaskmovpd	%ymm1, %ymm15, 0(%r13, %r14)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		32(%r11, %r12, 1), %ymm1
+	vmovapd		32(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 32(%r13)
+	vmaskmovpd	%ymm1, %ymm15, 32(%r13, %r14)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		64(%r11, %r12, 1), %ymm1
+	vmovapd		64(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 64(%r13)
+	vmaskmovpd	%ymm1, %ymm15, 64(%r13, %r14)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		96(%r11, %r12, 1), %ymm1
+	vmovapd		96(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 96(%r13)
+	vmaskmovpd	%ymm1, %ymm15, 96(%r13, %r14)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 0(%r13)
+	vmaskmovpd	%ymm1, %ymm15, 0(%r13, %r14)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_8_1_vs_lib4, .-inner_kernel_dpacp_nn_8_1_vs_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_8_2_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_8_2_lib4, @function
+inner_kernel_dpacp_nn_8_2_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_8_2_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_8_2_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_8_2_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		32(%r11, %r12, 1), %ymm1
+	vmovapd		32(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 32(%r13)
+	vmovapd		%ymm1, 32(%r13, %r14)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		64(%r11, %r12, 1), %ymm1
+	vmovapd		64(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 64(%r13)
+	vmovapd		%ymm1, 64(%r13, %r14)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		96(%r11, %r12, 1), %ymm1
+	vmovapd		96(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 96(%r13)
+	vmovapd		%ymm1, 96(%r13, %r14)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_8_2_lib4, .-inner_kernel_dpacp_nn_8_2_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_8_2_VS_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_8_2_vs_lib4, @function
+inner_kernel_dpacp_nn_8_2_vs_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_8_2_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_8_2_vs_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_8_2_vs_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	vcvtsi2sd	%r15d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC01(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC01(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 0(%r13)
+	vmaskmovpd	%ymm1, %ymm15, 0(%r13, %r14)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		32(%r11, %r12, 1), %ymm1
+	vmovapd		32(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 32(%r13)
+	vmaskmovpd	%ymm1, %ymm15, 32(%r13, %r14)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		64(%r11, %r12, 1), %ymm1
+	vmovapd		64(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 64(%r13)
+	vmaskmovpd	%ymm1, %ymm15, 64(%r13, %r14)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		96(%r11, %r12, 1), %ymm1
+	vmovapd		96(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 96(%r13)
+	vmaskmovpd	%ymm1, %ymm15, 96(%r13, %r14)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vmovapd		%ymm0, 0(%r13)
+	vmaskmovpd	%ymm1, %ymm15, 0(%r13, %r14)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_8_2_vs_lib4, .-inner_kernel_dpacp_nn_8_2_vs_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_8_3_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_8_3_lib4, @function
+inner_kernel_dpacp_nn_8_3_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_8_3_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_8_3_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_8_3_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14, 1)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		32(%r11, %r12, 1), %ymm1
+	vmovapd		32(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vmovapd		%ymm0, 32(%r13)
+	vmovapd		%ymm1, 32(%r13, %r14, 1)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		64(%r11, %r12, 1), %ymm1
+	vmovapd		64(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vmovapd		%ymm0, 64(%r13)
+	vmovapd		%ymm1, 64(%r13, %r14, 1)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		96(%r11, %r12, 1), %ymm1
+	vmovapd		96(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vmovapd		%ymm0, 96(%r13)
+	vmovapd		%ymm1, 96(%r13, %r14, 1)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 0(%r13, %r14, 1)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_8_3_lib4, .-inner_kernel_dpacp_nn_8_3_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_8_3_VS_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_8_3_vs_lib4, @function
+inner_kernel_dpacp_nn_8_3_vs_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_8_3_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_8_3_vs_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_8_3_vs_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	vcvtsi2sd	%r15d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC01(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC01(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vmovapd		%ymm0, 0(%r13)
+	vmaskmovpd	%ymm1, %ymm15, 0(%r13, %r14, 1)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		32(%r11, %r12, 1), %ymm1
+	vmovapd		32(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vmovapd		%ymm0, 32(%r13)
+	vmaskmovpd	%ymm1, %ymm15, 32(%r13, %r14, 1)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		64(%r11, %r12, 1), %ymm1
+	vmovapd		64(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vmovapd		%ymm0, 64(%r13)
+	vmaskmovpd	%ymm1, %ymm15, 64(%r13, %r14, 1)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		96(%r11, %r12, 1), %ymm1
+	vmovapd		96(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vmovapd		%ymm0, 96(%r13)
+	vmaskmovpd	%ymm1, %ymm15, 96(%r13, %r14, 1)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vmovapd		0(%r11, %r12, 2), %ymm2
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vmovapd		%ymm0, 0(%r13)
+	vmaskmovpd	%ymm1, %ymm15, 0(%r13, %r14, 1)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_8_3_vs_lib4, .-inner_kernel_dpacp_nn_8_3_vs_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_4_0_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_4_0_lib4, @function
+inner_kernel_dpacp_nn_4_0_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_4_0_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_4_0_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_4_0_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		%ymm0, 32(%r13)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		%ymm0, 64(%r13)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		%ymm0, 96(%r13)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		%ymm0, 0(%r13)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_4_0_lib4, .-inner_kernel_dpacp_nn_4_0_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_4_1_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_4_1_lib4, @function
+inner_kernel_dpacp_nn_4_1_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_4_1_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_4_1_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_4_1_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm1
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		32(%r11, %r12, 1), %ymm1
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm1
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vmovapd		%ymm0, 32(%r13)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		64(%r11, %r12, 1), %ymm1
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm1
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vmovapd		%ymm0, 64(%r13)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		96(%r11, %r12, 1), %ymm1
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm1
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vmovapd		%ymm0, 96(%r13)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm1
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vmovapd		%ymm0, 0(%r13)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_4_1_lib4, .-inner_kernel_dpacp_nn_4_1_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_4_2_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_4_2_lib4, @function
+inner_kernel_dpacp_nn_4_2_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_4_2_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_4_2_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_4_2_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		32(%r11, %r12, 1), %ymm1
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vmovapd		%ymm0, 32(%r13)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		64(%r11, %r12, 1), %ymm1
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vmovapd		%ymm0, 64(%r13)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		96(%r11, %r12, 1), %ymm1
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vmovapd		%ymm0, 96(%r13)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vmovapd		%ymm0, 0(%r13)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_4_2_lib4, .-inner_kernel_dpacp_nn_4_2_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_4_3_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_4_3_lib4, @function
+inner_kernel_dpacp_nn_4_3_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_4_3_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_4_3_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_4_3_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	//
+	vmovapd		32(%r11), %ymm0
+	vmovapd		32(%r11, %r12, 1), %ymm1
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vmovapd		%ymm0, 32(%r13)
+	//
+	vmovapd		64(%r11), %ymm0
+	vmovapd		64(%r11, %r12, 1), %ymm1
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vmovapd		%ymm0, 64(%r13)
+	//
+	vmovapd		96(%r11), %ymm0
+	vmovapd		96(%r11, %r12, 1), %ymm1
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vmovapd		%ymm0, 96(%r13)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovapd		0(%r11, %r12, 1), %ymm1
+	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vmovapd		%ymm0, 0(%r13)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_4_3_lib4, .-inner_kernel_dpacp_nn_4_3_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_3_0_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_3_0_lib4, @function
+inner_kernel_dpacp_nn_3_0_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_3_0_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_3_0_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_3_0_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovupd		0(%r11), %xmm0
+	vmovsd		16(%r11), %xmm1
+	vmovupd		%xmm0, 0(%r13)
+	vmovsd		%xmm1, 16(%r13)
+	//
+	vmovupd		32(%r11), %xmm0
+	vmovsd		48(%r11), %xmm1
+	vmovupd		%xmm0, 32(%r13)
+	vmovsd		%xmm1, 48(%r13)
+	//
+	vmovupd		64(%r11), %xmm0
+	vmovsd		80(%r11), %xmm1
+	vmovupd		%xmm0, 64(%r13)
+	vmovsd		%xmm1, 80(%r13)
+	//
+	vmovupd		96(%r11), %xmm0
+	vmovsd		112(%r11), %xmm1
+	vmovupd		%xmm0, 96(%r13)
+	vmovsd		%xmm1, 112(%r13)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovupd		0(%r11), %xmm0
+	vmovsd		16(%r11), %xmm1
+	vmovupd		%xmm0, 0(%r13)
+	vmovsd		%xmm1, 16(%r13)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_3_0_lib4, .-inner_kernel_dpacp_nn_3_0_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_3_2_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_3_2_lib4, @function
+inner_kernel_dpacp_nn_3_2_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_3_2_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_3_2_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_3_2_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovupd		16(%r11), %xmm0
+	vmovsd		0(%r11, %r12), %xmm1
+	vmovupd		%xmm0, 0(%r13)
+	vmovsd		%xmm1, 16(%r13)
+	//
+	vmovupd		48(%r11), %xmm0
+	vmovsd		32(%r11, %r12), %xmm1
+	vmovupd		%xmm0, 32(%r13)
+	vmovsd		%xmm1, 48(%r13)
+	//
+	vmovupd		80(%r11), %xmm0
+	vmovsd		64(%r11, %r12), %xmm1
+	vmovupd		%xmm0, 64(%r13)
+	vmovsd		%xmm1, 80(%r13)
+	//
+	vmovupd		112(%r11), %xmm0
+	vmovsd		96(%r11, %r12), %xmm1
+	vmovupd		%xmm0, 96(%r13)
+	vmovsd		%xmm1, 112(%r13)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovupd		16(%r11), %xmm0
+	vmovsd		0(%r11, %r12), %xmm1
+	vmovupd		%xmm0, 0(%r13)
+	vmovsd		%xmm1, 16(%r13)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_3_2_lib4, .-inner_kernel_dpacp_nn_3_2_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_3_3_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_3_3_lib4, @function
+inner_kernel_dpacp_nn_3_3_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_3_3_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_3_3_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_3_3_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovsd		24(%r11), %xmm0
+	vmovapd		0(%r11, %r12), %xmm1
+	vmovsd		%xmm0, 0(%r13)
+	vmovupd		%xmm1, 8(%r13)
+	//
+	vmovsd		56(%r11), %xmm0
+	vmovapd		32(%r11, %r12), %xmm1
+	vmovsd		%xmm0, 32(%r13)
+	vmovupd		%xmm1, 40(%r13)
+	//
+	vmovsd		88(%r11), %xmm0
+	vmovapd		64(%r11, %r12), %xmm1
+	vmovsd		%xmm0, 64(%r13)
+	vmovupd		%xmm1, 72(%r13)
+	//
+	vmovsd		120(%r11), %xmm0
+	vmovapd		96(%r11, %r12), %xmm1
+	vmovsd		%xmm0, 96(%r13)
+	vmovupd		%xmm1, 104(%r13)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovsd		24(%r11), %xmm0
+	vmovapd		0(%r11, %r12), %xmm1
+	vmovsd		%xmm0, 0(%r13)
+	vmovupd		%xmm1, 8(%r13)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_3_3_lib4, .-inner_kernel_dpacp_nn_3_3_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_2_0_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_2_0_lib4, @function
+inner_kernel_dpacp_nn_2_0_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_2_0_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_2_0_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_2_0_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovupd		0(%r11), %xmm0
+	vmovupd		%xmm0, 0(%r13)
+	//
+	vmovupd		32(%r11), %xmm0
+	vmovupd		%xmm0, 32(%r13)
+	//
+	vmovupd		64(%r11), %xmm0
+	vmovupd		%xmm0, 64(%r13)
+	//
+	vmovupd		96(%r11), %xmm0
+	vmovupd		%xmm0, 96(%r13)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovupd		0(%r11), %xmm0
+	vmovupd		%xmm0, 0(%r13)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_2_0_lib4, .-inner_kernel_dpacp_nn_2_0_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_2_1_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_2_1_lib4, @function
+inner_kernel_dpacp_nn_2_1_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_2_1_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_2_1_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_2_1_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovsd		24(%r11), %xmm0
+	vmovhpd		0(%r11, %r12), %xmm0, %xmm0
+	vmovapd		%xmm0, 0(%r13)
+	//
+	vmovsd		56(%r11), %xmm0
+	vmovhpd		32(%r11, %r12), %xmm0, %xmm0
+	vmovapd		%xmm0, 32(%r13)
+	//
+	vmovsd		88(%r11), %xmm0
+	vmovhpd		64(%r11, %r12), %xmm0, %xmm0
+	vmovapd		%xmm0, 64(%r13)
+	//
+	vmovsd		120(%r11), %xmm0
+	vmovhpd		96(%r11, %r12), %xmm0, %xmm0
+	vmovapd		%xmm0, 96(%r13)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovsd		24(%r11), %xmm0
+	vmovhpd		0(%r11, %r12), %xmm0, %xmm0
+	vmovapd		%xmm0, 0(%r13)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_2_1_lib4, .-inner_kernel_dpacp_nn_2_1_lib4
+#endif
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACP_NN_1_0_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_kernel_dpacp_nn_1_0_lib4, @function
+inner_kernel_dpacp_nn_1_0_lib4:
+#elif defined(OS_MAC)
+_inner_kernel_dpacp_nn_1_0_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_kernel_dpacp_nn_1_0_lib4; .scl 2; .type 32; .endef
+inner_kernel_dpacp_nn_1_0_lib4:
+#endif
+#endif
+	
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+	// main loop
+	.p2align 3
+1:
+	//
+	vmovsd		0(%r11), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+	//
+	vmovsd		32(%r11), %xmm0
+	vmovsd		%xmm0, 32(%r13)
+	//
+	vmovsd		64(%r11), %xmm0
+	vmovsd		%xmm0, 64(%r13)
+	//
+	vmovsd		96(%r11), %xmm0
+	vmovsd		%xmm0, 96(%r13)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovsd		0(%r11), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+
+	subl	$1, %r10d
+	addq	$32, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_kernel_dpacp_nn_1_0_lib4, .-inner_kernel_dpacp_nn_1_0_lib4
 #endif
 #endif
 
@@ -2025,6 +4792,744 @@ kernel_dpacp_tn_4_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dpacp_tn_4_lib4, .-kernel_dpacp_tn_4_lib4
+#endif
+
+
+
+
+
+//                              1         2            3          4        5          6
+// void kernel_dpacp_nn_12_lib4(int kmax, int offsetA, double *A, int sda, double *C, int ldc)
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dpacp_nn_12_lib4
+	.type kernel_dpacp_nn_12_lib4, @function
+kernel_dpacp_nn_12_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dpacp_nn_12_lib4
+_kernel_dpacp_nn_12_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dpacp_nn_12_lib4
+	.def kernel_dpacp_nn_12_lib4; .scl 2; .type 32; .endef
+kernel_dpacp_nn_12_lib4:
+#endif
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d
+	movq	ARG5, %r13 // C
+	movq	ARG6, %r14 // sdc
+	sall	$5, %r14d
+
+
+	cmpl	$0, ARG2L
+	je		100f
+	cmpl	$1, ARG2L
+	je		101f
+	cmpl	$2, ARG2L
+	je		102f
+	cmpl	$3, ARG2L
+	je		103f
+
+	jmp		200f
+
+100:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_12_0_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_12_0_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_12_0_lib4
+#endif
+#endif
+	jmp		200f
+
+101:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_12_1_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_12_1_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_12_1_lib4
+#endif
+#endif
+	jmp		200f
+
+102:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_12_2_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_12_2_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_12_2_lib4
+#endif
+#endif
+	jmp		200f
+
+103:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_12_3_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_12_3_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_12_3_lib4
+#endif
+#endif
+	jmp		200f
+
+200:
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dpacp_nn_12_lib4, .-kernel_dpacp_nn_12_lib4
+#endif
+
+
+
+
+
+//                                 1         2            3          4        5          6        7
+// void kernel_dpacp_nn_12_vs_lib4(int kmax, int offsetA, double *A, int sda, double *C, int ldc, int m1)
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dpacp_nn_12_vs_lib4
+	.type kernel_dpacp_nn_12_vs_lib4, @function
+kernel_dpacp_nn_12_vs_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dpacp_nn_12_vs_lib4
+_kernel_dpacp_nn_12_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dpacp_nn_12_vs_lib4
+	.def kernel_dpacp_nn_12_vs_lib4; .scl 2; .type 32; .endef
+kernel_dpacp_nn_12_vs_lib4:
+#endif
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d
+	movq	ARG5, %r13 // C
+	movq	ARG6, %r14 // sdc
+	sall	$5, %r14d
+	movq	ARG7, %r15 // m1
+
+
+	cmpl	$0, ARG2L
+	je		100f
+	cmpl	$1, ARG2L
+	je		101f
+	cmpl	$2, ARG2L
+	je		102f
+	cmpl	$3, ARG2L
+	je		103f
+
+	jmp		200f
+
+100:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_12_0_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_12_0_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_12_0_vs_lib4
+#endif
+#endif
+	jmp		200f
+
+101:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_12_1_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_12_1_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_12_1_vs_lib4
+#endif
+#endif
+	jmp		200f
+
+102:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_12_2_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_12_2_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_12_2_vs_lib4
+#endif
+#endif
+	jmp		200f
+
+103:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_12_3_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_12_3_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_12_3_vs_lib4
+#endif
+#endif
+	jmp		200f
+
+200:
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dpacp_nn_12_vs_lib4, .-kernel_dpacp_nn_12_vs_lib4
+#endif
+
+
+
+
+
+//                             1         2            3          4        5          6
+// void kernel_dpacp_nn_8_lib4(int kmax, int offsetA, double *A, int sda, double *C, int ldc)
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dpacp_nn_8_lib4
+	.type kernel_dpacp_nn_8_lib4, @function
+kernel_dpacp_nn_8_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dpacp_nn_8_lib4
+_kernel_dpacp_nn_8_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dpacp_nn_8_lib4
+	.def kernel_dpacp_nn_8_lib4; .scl 2; .type 32; .endef
+kernel_dpacp_nn_8_lib4:
+#endif
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d
+	movq	ARG5, %r13 // C
+	movq	ARG6, %r14 // sdc
+	sall	$5, %r14d
+
+
+	cmpl	$0, ARG2L
+	je		100f
+	cmpl	$1, ARG2L
+	je		101f
+	cmpl	$2, ARG2L
+	je		102f
+	cmpl	$3, ARG2L
+	je		103f
+
+	jmp		200f
+
+100:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_8_0_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_8_0_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_8_0_lib4
+#endif
+#endif
+	jmp		200f
+
+101:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_8_1_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_8_1_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_8_1_lib4
+#endif
+#endif
+	jmp		200f
+
+102:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_8_2_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_8_2_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_8_2_lib4
+#endif
+#endif
+	jmp		200f
+
+103:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_8_3_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_8_3_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_8_3_lib4
+#endif
+#endif
+	jmp		200f
+
+200:
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dpacp_nn_8_lib4, .-kernel_dpacp_nn_8_lib4
+#endif
+
+
+
+
+
+//                                1         2            3          4        5          6        7
+// void kernel_dpacp_nn_8_vs_lib4(int kmax, int offsetA, double *A, int sda, double *C, int ldc, int m1)
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dpacp_nn_8_vs_lib4
+	.type kernel_dpacp_nn_8_vs_lib4, @function
+kernel_dpacp_nn_8_vs_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dpacp_nn_8_vs_lib4
+_kernel_dpacp_nn_8_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dpacp_nn_8_vs_lib4
+	.def kernel_dpacp_nn_8_vs_lib4; .scl 2; .type 32; .endef
+kernel_dpacp_nn_8_vs_lib4:
+#endif
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d
+	movq	ARG5, %r13 // C
+	movq	ARG6, %r14 // sdc
+	sall	$5, %r14d
+	movq	ARG7, %r15 // m1
+
+
+	cmpl	$0, ARG2L
+	je		100f
+	cmpl	$1, ARG2L
+	je		101f
+	cmpl	$2, ARG2L
+	je		102f
+	cmpl	$3, ARG2L
+	je		103f
+
+	jmp		200f
+
+100:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_8_0_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_8_0_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_8_0_vs_lib4
+#endif
+#endif
+	jmp		200f
+
+101:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_8_1_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_8_1_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_8_1_vs_lib4
+#endif
+#endif
+	jmp		200f
+
+102:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_8_2_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_8_2_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_8_2_vs_lib4
+#endif
+#endif
+	jmp		200f
+
+103:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_8_3_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_8_3_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_8_3_vs_lib4
+#endif
+#endif
+	jmp		200f
+
+200:
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dpacp_nn_8_vs_lib4, .-kernel_dpacp_nn_8_vs_lib4
+#endif
+
+
+
+
+
+//                             1         2            3          4        5
+// void kernel_dpacp_nn_4_lib4(int kmax, int offsetA, double *A, int sda, double *C)
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dpacp_nn_4_lib4
+	.type kernel_dpacp_nn_4_lib4, @function
+kernel_dpacp_nn_4_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dpacp_nn_4_lib4
+_kernel_dpacp_nn_4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dpacp_nn_4_lib4
+	.def kernel_dpacp_nn_4_lib4; .scl 2; .type 32; .endef
+kernel_dpacp_nn_4_lib4:
+#endif
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d
+	movq	ARG5, %r13 // C
+
+
+	cmpl	$0, ARG2L
+	je		100f
+	cmpl	$1, ARG2L
+	je		101f
+	cmpl	$2, ARG2L
+	je		102f
+	cmpl	$3, ARG2L
+	je		103f
+
+	jmp		200f
+
+100:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_4_0_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_4_0_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_4_0_lib4
+#endif
+#endif
+	jmp		200f
+
+101:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_4_1_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_4_1_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_4_1_lib4
+#endif
+#endif
+	jmp		200f
+
+102:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_4_2_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_4_2_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_4_2_lib4
+#endif
+#endif
+	jmp		200f
+
+103:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_4_3_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_4_3_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_4_3_lib4
+#endif
+#endif
+	jmp		200f
+
+200:
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dpacp_nn_4_lib4, .-kernel_dpacp_nn_4_lib4
+#endif
+
+
+
+
+
+//                                1         2            3          4        5          6
+// void kernel_dpacp_nn_4_vs_lib4(int kmax, int offsetA, double *A, int sda, double *C, int m1)
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dpacp_nn_4_vs_lib4
+	.type kernel_dpacp_nn_4_vs_lib4, @function
+kernel_dpacp_nn_4_vs_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dpacp_nn_4_vs_lib4
+_kernel_dpacp_nn_4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dpacp_nn_4_vs_lib4
+	.def kernel_dpacp_nn_4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dpacp_nn_4_vs_lib4:
+#endif
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d
+	movq	ARG5, %r13 // C
+
+
+	cmpl	$0, ARG6L
+	jle		200f
+	cmpl	$1, ARG6L
+	je		104f
+	cmpl	$2, ARG6L
+	je		105f
+	cmpl	$3, ARG6L
+	je		106f
+	cmpl	$4, ARG6L
+	jge		107f
+
+	jmp		200f
+
+
+	// m1==1
+104:
+	cmpl	$3, ARG2L
+	jle		100f
+
+	jmp		200f
+
+100:
+	movq	ARG2, %r14
+	sall	$3, %r14d
+	addq	%r14, %r11
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_1_0_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_1_0_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_1_0_lib4
+#endif
+#endif
+	jmp		200f
+
+
+	// m1==2
+105:
+	cmpl	$2, ARG2L
+	jle		100f
+	cmpl	$3, ARG2L
+	je		103f
+
+	jmp		200f
+
+100:
+	movq	ARG2, %r14
+	sall	$3, %r14d
+	addq	%r14, %r11
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_2_0_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_2_0_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_2_0_lib4
+#endif
+#endif
+	jmp		200f
+
+103:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_2_1_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_2_1_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_2_1_lib4
+#endif
+#endif
+	jmp		200f
+
+
+	// m1==3
+106:
+	cmpl	$1, ARG2L
+	jle		100f
+	cmpl	$2, ARG2L
+	je		102f
+	cmpl	$3, ARG2L
+	je		103f
+
+	jmp		200f
+
+100:
+	movq	ARG2, %r14
+	sall	$3, %r14d
+	addq	%r14, %r11
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_3_0_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_3_0_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_3_0_lib4
+#endif
+#endif
+	jmp		200f
+
+102:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_3_2_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_3_2_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_3_2_lib4
+#endif
+#endif
+	jmp		200f
+
+103:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_3_3_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_3_3_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_3_3_lib4
+#endif
+#endif
+	jmp		200f
+
+
+
+	// m1==4
+107:
+	cmpl	$0, ARG2L
+	je		100f
+	cmpl	$1, ARG2L
+	je		101f
+	cmpl	$2, ARG2L
+	je		102f
+	cmpl	$3, ARG2L
+	je		103f
+
+	jmp		200f
+
+100:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_4_0_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_4_0_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_4_0_lib4
+#endif
+#endif
+	jmp		200f
+
+101:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_4_1_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_4_1_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_4_1_lib4
+#endif
+#endif
+	jmp		200f
+
+102:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_4_2_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_4_2_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_4_2_lib4
+#endif
+#endif
+	jmp		200f
+
+103:
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACP_NN_4_3_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dpacp_nn_4_3_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dpacp_nn_4_3_lib4
+#endif
+#endif
+	jmp		200f
+
+200:
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dpacp_nn_4_vs_lib4, .-kernel_dpacp_nn_4_vs_lib4
 #endif
 
 

@@ -68,6 +68,10 @@ void blasfeo_create_dvec(int m, struct blasfeo_dvec *sA, void *memory);
 // --- packing
 // pack the column-major matrix A into the matrix struct B
 void blasfeo_pack_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sB, int bi, int bj);
+// pack the lower-triangular column-major matrix A into the matrix struct B
+void blasfeo_pack_l_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sB, int bi, int bj);
+// pack the upper-triangular column-major matrix A into the matrix struct B
+void blasfeo_pack_u_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sB, int bi, int bj);
 // transpose and pack the column-major matrix A into the matrix struct B
 void blasfeo_pack_tran_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sB, int bi, int bj);
 // pack the vector x into the vector structure y

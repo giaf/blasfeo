@@ -53,6 +53,9 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 	int ldb = *pldb;
 	int ldc = *pldc;
 
+	if(m<=0 | n<=0)
+		return;
+
 	int ii, jj;
 
 	int bs = 4;
@@ -290,7 +293,7 @@ nn_1:
 	sA_size = blasfeo_memsize_dmat(12, k);
 	sB_size = blasfeo_memsize_dmat(n, k);
 	smat_mem = malloc(sA_size+sB_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	// TODO smaller for non-haswell !!!
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(n, k, &sB, smat_mem_align+sA_size);
@@ -503,7 +506,7 @@ nt_0_left_8:
 #endif
 
 nt_0_left_4:
-	kernel_dpack_nn_4_lib4(k, A+ii, lda, pU);
+	kernel_dpack_nn_4_vs_lib4(k, A+ii, lda, pU, m-ii);
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dgemm_nt_4x4_vs_lib4cc(k, alpha, pU, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
@@ -520,7 +523,7 @@ nt_1:
 	sA_size = blasfeo_memsize_dmat(12, k);
 	sB_size = blasfeo_memsize_dmat(k, n);
 	smat_mem = malloc(sA_size+sB_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	// TODO smaller for non-haswell !!!
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(k, n, &sB, smat_mem_align+sA_size);
@@ -624,7 +627,7 @@ nt_1_left_8:
 #endif
 
 nt_1_left_4:
-	kernel_dpack_nn_4_lib4(k, A+ii, lda, sA.pA);
+	kernel_dpack_nn_4_vs_lib4(k, A+ii, lda, sA.pA, m-ii);
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dgemm_nt_4x4_vs_lib44c(k, alpha, sA.pA, sB.pA+jj*sdb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
@@ -739,7 +742,7 @@ tn_0_left_8:
 #endif
 
 tn_0_left_4:
-	kernel_dpack_tn_4_lib4(k, A+ii*lda, lda, pU);
+	kernel_dpack_tn_4_vs_lib4(k, A+ii*lda, lda, pU, m-ii);
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dgemm_nn_4x4_vs_lib4cc(k, alpha, pU, B+jj*ldb, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
@@ -756,7 +759,7 @@ tn_1:
 	sA_size = blasfeo_memsize_dmat(12, k);
 	sB_size = blasfeo_memsize_dmat(n, k);
 	smat_mem = malloc(sA_size+sB_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	// TODO smaller for non-haswell !!!
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(n, k, &sB, smat_mem_align+sA_size);
@@ -866,7 +869,7 @@ tn_1_left_8:
 #endif
 
 tn_1_left_4:
-	kernel_dpack_tn_4_lib4(k, A+(ii+0)*lda, lda, sA.pA);
+	kernel_dpack_tn_4_vs_lib4(k, A+(ii+0)*lda, lda, sA.pA, m-ii);
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dgemm_nt_4x4_vs_lib44c(k, alpha, sA.pA, sB.pA+jj*sdb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
@@ -981,7 +984,7 @@ tt_0_left_8:
 #endif
 
 tt_0_left_4:
-	kernel_dpack_tn_4_lib4(k, A+ii*lda, lda, pU);
+	kernel_dpack_tn_4_vs_lib4(k, A+ii*lda, lda, pU, m-ii);
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dgemm_nt_4x4_vs_lib4cc(k, alpha, pU, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
@@ -998,7 +1001,7 @@ tt_1:
 	sA_size = blasfeo_memsize_dmat(12, k);
 	sB_size = blasfeo_memsize_dmat(k, n);
 	smat_mem = malloc(sA_size+sB_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	// TODO smaller for non-haswell !!!
 	blasfeo_create_dmat(12, k, &sA, smat_mem_align);
 	blasfeo_create_dmat(k, n, &sB, smat_mem_align+sA_size);
@@ -1108,7 +1111,7 @@ tt_1_left_8:
 #endif
 
 tt_1_left_4:
-	kernel_dpack_tn_4_lib4(k, A+(ii+0)*lda, lda, sA.pA);
+	kernel_dpack_tn_4_vs_lib4(k, A+(ii+0)*lda, lda, sA.pA, m-ii);
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dgemm_nt_4x4_vs_lib44c(k, alpha, sA.pA, sB.pA+jj*sdb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
