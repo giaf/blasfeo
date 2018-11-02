@@ -141,6 +141,8 @@ struct RoutineArgs{
 	struct STRMAT_REF *cC;
 	struct STRMAT_REF *cD;
 
+	void * work;
+
 	// blas_api
 	char ta;
 	char tb;
@@ -150,16 +152,16 @@ struct RoutineArgs{
 struct TestArgs{
 
 	// sub-mastrix offset, sweep start
-	int ii0;
-	int jj0;
-	int kk0;
+	int ai0;
+	int bi0;
+	int di0;
+	int xj0;
 
-	int ii0s;
-	int jj0s;
-	int kk0s;
-
-	int AB_offset0;
-	int AB_offsets;
+	// sub-mastrix offset, sweep lenght
+	int ais;
+	int bis;
+	int dis;
+	int xjs;
 
 	// sub-matrix dimensions, sweep start
 	int ni0;

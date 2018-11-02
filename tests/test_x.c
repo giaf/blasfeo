@@ -79,22 +79,28 @@ int main()
 	{
 	print_compilation_flags();
 
-	int ii, jj, kk, aa;
-	int ni, nj, nk, bad_calls;
-	int AB_offset_i;
+	int ii, jj, kk;
 	int n = 60;
+	int qf_worksize = PS*(2*(n+PS))*sizeof(REAL);
+	int bad_calls;
 	double test_elapsed_time;
 	const char* result_code;
 
 	// test args
-	int ii0, jj0, kk0;
-	int ii0s, jj0s, kk0s;
-	int AB_offset0, AB_offsets;
-	// sub-matrix dimensions, sweep start
+	//
+	// sub-matrix offset
+	int ai, bi, di, xj;
+	int ai0, bi0, di0, xj0;
+	int ais, bis, dis, xjs;
+
+	// sub-matrix dimensions
+	int ni, nj, nk;
 	int ni0, nj0, nk0;
-	// sub-matrix dimensions, sweep lenght
 	int nis, njs, nks;
+
+	// coefficients
 	int alphas;
+	int aa;
 
 	blasfeo_timer timer;
 
@@ -199,16 +205,15 @@ int main()
 	int total_calls = compute_total_calls(&targs);
 
 	// unpack Test Args
-	ii0 = targs.ii0;
-	jj0 = targs.jj0;
-	kk0 = targs.kk0;
+	ai0 = targs.ai0;
+	bi0 = targs.bi0;
+	di0 = targs.di0;
+	xj0 = targs.xj0;
 
-	ii0s = targs.ii0s;
-	jj0s = targs.jj0s;
-	kk0s = targs.kk0s;
-
-	AB_offset0 = targs.AB_offset0;
-	AB_offsets = targs.AB_offsets;
+	ais = targs.ais;
+	bis = targs.bis;
+	dis = targs.dis;
+	xjs = targs.xjs;
 
 	// sub-matrix dimensions, sweep start
 	ni0 = targs.ni0;
@@ -254,6 +259,8 @@ int main()
 	args.rD = &rD;
 	args.ripiv = ripiv;
 
+	v_zeros_align(&(args.work), qf_worksize);
+
 	// loop over alphas/betas
 	for (aa = 0; aa < alphas; aa++)
 		{
@@ -272,39 +279,39 @@ int main()
 				for (nk = nk0; nk < nk0+nks; nk++)
 					{
 
-					// loop over row AB offset
-					for (AB_offset_i = AB_offset0; AB_offset_i < AB_offsets; AB_offset_i++)
+					// loop over A row offset
+					for (ai = ai0; ai < ai0+ais; ai++)
 						{
 
-						// loop over row offset
-						for (ii = ii0; ii < ii0+ii0s; ii++)
+						// loop over B row offset
+						for (bi = bi0; bi < bi0+bis; bi++)
 							{
 
 							// loop over column offset
-							for (jj = jj0; jj < jj0+jj0s; jj++)
+							for (xj = xj0; xj < xj0+xjs; xj++)
 								{
 
-								// loop over column offset
-								for (kk = kk0; kk < kk0+kk0s; kk++)
+								// loop over D row offset
+								for (di = di0; di < di0+dis; di++)
 									{
 
-									// reset result matrix D
+									// reset result D
 									GESE_REF(n, n, -1.0, &rD, 0, 0);
 									GESE_REF(n, n, -1.0, &cD, 0, 0);
 									GESE_LIBSTR(n, n, -1.0, &sD, 0, 0);
 
 									// load current iteration arguments
-									args.ai = ii;
-									args.aj = jj;
+									args.ai = ai;
+									args.aj = xj;
 
-									args.bi = ii+AB_offset_i;
-									args.bj = jj;
+									args.bi = bi;
+									args.bj = xj;
 
-									args.ci = ii;
-									args.cj = jj;
+									args.ci = ai;
+									args.cj = xj;
 
-									args.di = ii;
-									args.dj = jj;
+									args.di = di;
+									args.dj = xj;
 
 									args.n = ni;
 									args.m = nj;
@@ -347,6 +354,8 @@ int main()
 	FREE(B);
 	FREE(C);
 	FREE(D);
+
+	FREE(args.work);
 
 	FREE_STRMAT(&sB);
 	FREE_STRMAT(&sA);
