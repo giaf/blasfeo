@@ -121,6 +121,8 @@ static void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *
 	}
 
 
+
+#if ( REF_BLAS!=0 | defined(BLAS_API) )
 static void d_back_ric_trf(int N, int *nx, int *nu, double **hBAbt, double **hRSQrq, double **hL, double **hwork_mat)
 	{
 
@@ -145,9 +147,7 @@ static void d_back_ric_trf(int N, int *nx, int *nu, double **hBAbt, double **hRS
 	ldb = nu[N]+nx[N];
 	for(ii=0; ii<nx[N]; ii++)
 		dcopy_(&m, hRSQrq[N]+ii*lda, &inc, hL[N]+ii*ldb, &inc);
-//	d_print_mat(nx[N]+1, nx[N], hL[N], nx[N]+1);
 	dpotrf_(&c_l, &m, hL[N], &ldb, &info);
-//	d_print_mat(nx[N]+1, nx[N], hL[N], nx[N]+1);
 	
 	// middle stages
 	for(nn=0; nn<N; nn++)
@@ -157,31 +157,27 @@ static void d_back_ric_trf(int N, int *nx, int *nu, double **hBAbt, double **hRS
 		ldb = nu[N-nn-1]+nx[N-nn-1];
 		for(ii=0; ii<nx[N-nn]; ii++)
 			dcopy_(&m, hBAbt[N-nn-1]+ii*lda, &inc, hwork_mat[0]+ii*ldb, &inc);
-//		d_print_mat(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], hwork_mat[0], nu[N-nn-1]+nx[N-nn-1]);
 		lda = nu[N-nn]+nx[N-nn];
 		ldb = nu[N-nn-1]+nx[N-nn-1];
 		m = nu[N-nn-1]+nx[N-nn-1];
 		n = nx[N-nn];
 		dtrmm_(&c_r, &c_l, &c_n, &c_n, &m, &n, &d_1, hL[N-nn]+nu[N-nn]*(lda+1), &lda, hwork_mat[0], &ldb);
-//		d_print_mat(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], hwork_mat[0], nu[N-nn-1]+nx[N-nn-1]);
 		m = nu[N-nn-1]+nx[N-nn-1];
 		lda = nu[N-nn-1]+nx[N-nn-1]+1;
 		ldb = nu[N-nn-1]+nx[N-nn-1];
 		for(ii=0; ii<nx[N-nn-1]+nu[N-nn-1]; ii++)
 			dcopy_(&m, hRSQrq[N-nn-1]+ii*lda, &inc, hL[N-nn-1]+ii*ldb, &inc);
-//		d_print_mat(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], hL[N-nn-1], ldb);
 		m = nu[N-nn-1]+nx[N-nn-1];
 		n = nx[N-nn];
 		lda = nu[N-nn-1]+nx[N-nn-1];
 		ldb = nu[N-nn-1]+nx[N-nn-1];
 		dsyrk_(&c_l, &c_n, &m, &n, &d_1, hwork_mat[0], &lda, &d_1, hL[N-nn-1], &ldb);
-//		d_print_mat(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], hL[N-nn-1], ldb);
 		dpotrf_(&c_l, &m, hL[N-nn-1], &ldb, &info);
-//		d_print_mat(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], hL[N-nn-1], ldb);
 		}
 
 	return;
 	}
+#endif
 
 
 
@@ -571,7 +567,7 @@ int main()
 * BLAS API
 ************************************************/
 	
-#if defined(BLAS_API)
+#if ( REF_BLAS!=0 | defined(BLAS_API) )
 
 	printf("\n*** BLAS_API ***\n\n");
 
@@ -635,8 +631,11 @@ int main()
 	int nrep = 1000;
 	int rep;
 
-	double time_sv, time_trf, time_trs, time_trf_blas_api;
+	double time_sv=0.0, time_trf=0.0, time_trs=0.0, time_trf_blas_api=0.0;
 
+	/* BLASFEO API */
+
+	// factorization + solution
 	blasfeo_tic(&timer);
 
 	for(rep=0; rep<nrep; rep++)
@@ -645,6 +644,8 @@ int main()
 		}
 
 	time_sv = blasfeo_toc(&timer) / nrep;
+
+	// factorization
 	blasfeo_tic(&timer);
 
 	for(rep=0; rep<nrep; rep++)
@@ -653,6 +654,8 @@ int main()
 		}
 
 	time_trf = blasfeo_toc(&timer) / nrep;
+
+	// solution
 	blasfeo_tic(&timer);
 
 	for(rep=0; rep<nrep; rep++)
@@ -661,6 +664,11 @@ int main()
 		}
 
 	time_trs = blasfeo_toc(&timer) / nrep;
+
+	/* BLAS API */
+#if ( REF_BLAS!=0 | defined(BLAS_API) )
+
+	// factorization
 	blasfeo_tic(&timer);
 
 	for(rep=0; rep<nrep; rep++)
@@ -669,6 +677,8 @@ int main()
 		}
 
 	time_trf_blas_api = blasfeo_toc(&timer) / nrep;
+
+#endif
 
 	// print sol
 	printf("\nux = \n\n");
