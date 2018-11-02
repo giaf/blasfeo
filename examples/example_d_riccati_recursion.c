@@ -113,10 +113,74 @@ static void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *
 		blasfeo_dsyrk_ln(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 		blasfeo_dpotrf_l(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #endif
+//		blasfeo_print_dmat(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0);
 		}
 
 	return;
 
+	}
+
+
+static void d_back_ric_trf(int N, int *nx, int *nu, double **hBAbt, double **hRSQrq, double **hL, double **hwork_mat)
+	{
+
+	char c_l = 'l';
+	char c_n = 'n';
+	char c_r = 'r';
+
+	double d_1 = 1.0;
+
+	int m, n;
+	int inc = 1;
+	int lda, ldb;
+	int info;
+	
+	int ii, nn;
+
+	// factorization
+
+	// last stage
+	m = nx[N];
+	lda = nu[N]+nx[N]+1;
+	ldb = nu[N]+nx[N];
+	for(ii=0; ii<nx[N]; ii++)
+		dcopy_(&m, hRSQrq[N]+ii*lda, &inc, hL[N]+ii*ldb, &inc);
+//	d_print_mat(nx[N]+1, nx[N], hL[N], nx[N]+1);
+	dpotrf_(&c_l, &m, hL[N], &ldb, &info);
+//	d_print_mat(nx[N]+1, nx[N], hL[N], nx[N]+1);
+	
+	// middle stages
+	for(nn=0; nn<N; nn++)
+		{
+		m = nu[N-nn-1]+nx[N-nn-1];
+		lda = nu[N-nn-1]+nx[N-nn-1]+1;
+		ldb = nu[N-nn-1]+nx[N-nn-1];
+		for(ii=0; ii<nx[N-nn]; ii++)
+			dcopy_(&m, hBAbt[N-nn-1]+ii*lda, &inc, hwork_mat[0]+ii*ldb, &inc);
+//		d_print_mat(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], hwork_mat[0], nu[N-nn-1]+nx[N-nn-1]);
+		lda = nu[N-nn]+nx[N-nn];
+		ldb = nu[N-nn-1]+nx[N-nn-1];
+		m = nu[N-nn-1]+nx[N-nn-1];
+		n = nx[N-nn];
+		dtrmm_(&c_r, &c_l, &c_n, &c_n, &m, &n, &d_1, hL[N-nn]+nu[N-nn]*(lda+1), &lda, hwork_mat[0], &ldb);
+//		d_print_mat(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], hwork_mat[0], nu[N-nn-1]+nx[N-nn-1]);
+		m = nu[N-nn-1]+nx[N-nn-1];
+		lda = nu[N-nn-1]+nx[N-nn-1]+1;
+		ldb = nu[N-nn-1]+nx[N-nn-1];
+		for(ii=0; ii<nx[N-nn-1]+nu[N-nn-1]; ii++)
+			dcopy_(&m, hRSQrq[N-nn-1]+ii*lda, &inc, hL[N-nn-1]+ii*ldb, &inc);
+//		d_print_mat(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], hL[N-nn-1], ldb);
+		m = nu[N-nn-1]+nx[N-nn-1];
+		n = nx[N-nn];
+		lda = nu[N-nn-1]+nx[N-nn-1];
+		ldb = nu[N-nn-1]+nx[N-nn-1];
+		dsyrk_(&c_l, &c_n, &m, &n, &d_1, hwork_mat[0], &lda, &d_1, hL[N-nn-1], &ldb);
+//		d_print_mat(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], hL[N-nn-1], ldb);
+		dpotrf_(&c_l, &m, hL[N-nn-1], &ldb, &info);
+//		d_print_mat(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], hL[N-nn-1], ldb);
+		}
+
+	return;
 	}
 
 
@@ -299,16 +363,16 @@ int main()
 #endif
 
 	// loop index
-	int ii;
+	int ii, jj;
 
 /************************************************
 * problem size
 ************************************************/
 
 	// problem size
-	int N = 4;
-	int nx_ = 4;
-	int nu_ = 1;
+	int N = 10;
+	int nx_ = 8;
+	int nu_ = 3;
 
 	// stage-wise variant size
 	int *nx = malloc((N+1)*sizeof(int));
@@ -383,6 +447,10 @@ int main()
 	d_print_exp_mat(1, nx_, q, 1);
 
 /************************************************
+* BLASFEO API
+************************************************/
+
+/************************************************
 * matrices as strmat
 ************************************************/
 
@@ -399,6 +467,7 @@ int main()
 	blasfeo_allocate_dvec(nx_, &sb0);
 	double *b0; d_zeros(&b0, nx_, 1); // states offset
 	blasfeo_dgemv_n(nx_, nx_, 1.0, &sA, 0, 0, &sx0, 0, 1.0, &sb, 0, &sb0, 0);
+	blasfeo_unpack_dvec(nx_, &sb0, 0, b0);
 	printf("b0:\n");
 	blasfeo_print_tran_dvec(nx_, &sb0, 0);
 
@@ -499,6 +568,65 @@ int main()
 //	return 0;
 
 /************************************************
+* BLAS API
+************************************************/
+	
+#if defined(BLAS_API)
+
+	printf("\n*** BLAS_API ***\n\n");
+
+//	int incx, incy;
+
+	double *Bbt0 = malloc((nu_+1)*nx_*sizeof(double));
+	blasfeo_unpack_dmat(nu_+1, nx_, &sBbt0, 0, 0, Bbt0, nu_+1);
+	printf("Bbt0:\n");
+	d_print_exp_mat(nu_+1, nx_, Bbt0, nu_+1);
+
+	double *BAbt1 = malloc((nu_+nx_+1)*nx_*sizeof(double));
+	blasfeo_unpack_dmat(nu_+nx_+1, nx_, &sBAbt1, 0, 0, BAbt1, nu_+nx_+1);
+	printf("BAbt1:\n");
+	d_print_exp_mat(nu_+nx_+1, nx_, BAbt1, nu_+nx_+1);
+
+	double *Rr0 = malloc((nu_+1)*nu_*sizeof(double));
+	blasfeo_unpack_dmat(nu_+1, nu_, &sRr0, 0, 0, Rr0, nu_+1);
+	printf("Rr0:\n");
+	d_print_exp_mat(nu_+1, nu_, Rr0, nu_+1);
+
+	double *RSQrq1 = malloc((nu_+nx_+1)*(nu_+nx_)*sizeof(double));
+	blasfeo_unpack_dmat(nu_+nx_+1, nu_+nx_, &sRSQrq1, 0, 0, RSQrq1, nu_+nx_+1);
+	printf("RSQrq1:\n");
+	d_print_exp_mat(nu_+nx_+1, nu_+nx_, RSQrq1, nu_+nx_+1);
+
+	double *QqN = malloc((nx_+1)*nx_*sizeof(double));
+	blasfeo_unpack_dmat(nx_+1, nx_, &sQqN, 0, 0, QqN, nx_+1);
+	printf("RSQrq1:\n");
+	d_print_exp_mat(nx_+1, nx_, QqN, nx_+1);
+
+
+	double **hBAbt = malloc(N*sizeof(double *));
+	double **hRSQrq = malloc((N+1)*sizeof(double *));
+	double **hL = malloc((N+1)*sizeof(double *));
+	double **hwork_mat = malloc(1*sizeof(double *));
+
+	hBAbt[0] = Bbt0;
+	hRSQrq[0] = Rr0;
+	hL[0] = malloc((nu_+1)*(nu_)*sizeof(double));
+	hwork_mat[0] = malloc((nu_+nx_+1)*(nx_)*sizeof(double));
+	for(ii=1; ii<N; ii++)
+		{
+		hBAbt[ii] = BAbt1;
+		hRSQrq[ii] = RSQrq1;
+		hL[ii] = malloc((nu_+nx_+1)*(nu_+nx_)*sizeof(double));
+		}
+	ii = N;
+	hRSQrq[ii] = QqN;
+	hL[ii] = malloc((nx_+1)*(nx_)*sizeof(double));
+
+//	return 0;
+
+#endif
+
+/************************************************
 * call Riccati solver
 ************************************************/
 
@@ -507,7 +635,7 @@ int main()
 	int nrep = 1000;
 	int rep;
 
-	double time_sv, time_trf, time_trs;
+	double time_sv, time_trf, time_trs, time_trf_blas_api;
 
 	blasfeo_tic(&timer);
 
@@ -533,6 +661,14 @@ int main()
 		}
 
 	time_trs = blasfeo_toc(&timer) / nrep;
+	blasfeo_tic(&timer);
+
+	for(rep=0; rep<nrep; rep++)
+		{
+		d_back_ric_trf(N, nx, nu, hBAbt, hRSQrq, hL, hwork_mat);
+		}
+
+	time_trf_blas_api = blasfeo_toc(&timer) / nrep;
 
 	// print sol
 	printf("\nux = \n\n");
@@ -547,8 +683,9 @@ int main()
 //	for(ii=0; ii<=N; ii++)
 //		blasfeo_print_exp_dmat(nu[ii]+nx[ii]+1, nu[ii]+nx[ii], &hsL[ii], 0, 0);
 
-	printf("\ntime sv\t\ttime trf\t\ttime trs\n");
-	printf("\n%e\t%e\t%e\n", time_sv, time_trf, time_trs);
+	printf("\n           \ttime sv\t\ttime trf\ttime trs\n");
+	printf("\nBLASFEO API\t%e\t%e\t%e\n", time_sv, time_trf, time_trs);
+	printf("\nBLAS API   \t%e\t%e\t%e\n", 0.0, time_trf_blas_api, 0.0);
 	printf("\n");
 
 /************************************************
@@ -604,6 +741,25 @@ int main()
 	free(hspi);
 	free(hswork_mat);
 	free(hswork_vec);
+
+#if defined(BLAS_API)
+	free(BAbt1);
+	free(Bbt0);
+	free(Rr0);
+	free(RSQrq1);
+	free(QqN);
+
+	free(hwork_mat[0]);
+	for(ii=0; ii<=N; ii++)
+		{
+		free(hL[ii]);
+		}
+
+	free(hBAbt);
+	free(hRSQrq);
+	free(hL);
+	free(hwork_mat);
+#endif
 
 
 /************************************************
