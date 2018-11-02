@@ -62,11 +62,11 @@
 #define CAST_DIAG_MAT2STRMAT blasfeo_s_cast_diag_mat2strmat_ref
 #define CAST_VEC2VECMAT blasfeo_s_cast_vec2vecmat_ref
 
-#define GEAD blasfeo_sgead_ref
-#define GECP blasfeo_sgecp_ref
-#define GECPSC blasfeo_sgecpsc_ref
-#define GESC blasfeo_sgesc_ref
-#define GESE blasfeo_sgese_ref
+#define GEAD_LIBSTR blasfeo_sgead_ref
+#define GECP_LIBSTR blasfeo_sgecp_ref
+#define GECPSC_LIBSTR blasfeo_sgecpsc_ref
+#define GESC_LIBSTR blasfeo_sgesc_ref
+#define GESE_LIBSTR blasfeo_sgese_ref
 
 
 

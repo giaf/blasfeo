@@ -291,7 +291,7 @@ int main()
 									// reset result matrix D
 									GESE_REF(n, n, -1.0, &rD, 0, 0);
 									GESE_REF(n, n, -1.0, &cD, 0, 0);
-									GESE(n, n, -1.0, &sD, 0, 0);
+									GESE_LIBSTR(n, n, -1.0, &sD, 0, 0);
 
 									// load current iteration arguments
 									args.ai = ii;
