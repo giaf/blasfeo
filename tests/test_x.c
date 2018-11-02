@@ -132,8 +132,9 @@ int main()
 			A_po[ii+n*jj] = c;
 		}
 	}
-	// A_po[i,i] = A_po[i,i] + i
-	for(ii=0; ii<n; ii++) A_po[(ii*n)+ii] = A_po[(ii*n)+ii] + ii;
+	// A_po[i,i] = A_po[i,i] + 1E6 + i
+	// Well conditioned positive definite matrix
+	for(ii=0; ii<n; ii++) A_po[(ii*n)+ii] = A_po[(ii*n)+ii] + 1E6+ii;
 
 	// Allocate HP matrices
 	struct STRMAT sA; ALLOCATE_STRMAT(n, n, &sA);
