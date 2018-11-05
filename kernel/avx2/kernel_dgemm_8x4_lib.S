@@ -3610,7 +3610,6 @@ inner_store_u_8x4_vs_lib:
 	cmpl		$3, %r13d
 	je			0f // end
 	vmovupd		0(%r10), %ymm15
-	vblendpd	$0x7, %ymm15, %ymm3, %ymm3
 	vmovupd		%ymm3, 0(%r10)
 	vmaskmovpd	%ymm7, %ymm13, 32(%r10)
 //	addq	%r11, %r10
