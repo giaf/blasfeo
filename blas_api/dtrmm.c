@@ -86,6 +86,7 @@ void blasfeo_dtrmm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 	int sda, sdb, sdu;
 	int sA_size, sB_size;
 	void *mem, *mem_align;
+	int m1, n1;
 
 	if(*side=='l' | *side=='L') // _l
 		{
@@ -371,8 +372,9 @@ rlnn_0_return:
 
 
 rlnn_1:
-	sA_size = blasfeo_memsize_dmat(12, n);
-	sB_size = blasfeo_memsize_dmat(n, n);
+	n1 = (n+128-1)/128*128;
+	sA_size = blasfeo_memsize_dmat(12, n1);
+	sB_size = blasfeo_memsize_dmat(n1, n1);
 	mem = malloc(sA_size+sB_size+64);
 	blasfeo_align_64_byte(mem, &mem_align);
 	blasfeo_create_dmat(12, n, &sA, mem_align);

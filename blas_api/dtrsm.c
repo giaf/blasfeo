@@ -90,6 +90,7 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 	int sda, sdb, sdu;
 	int sA_size, sB_size;
 	void *mem, *mem_align;
+	int m1, n1;
 
 
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -268,7 +269,7 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 
 rltn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=120 | n>=120 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>120 | n>120 | m>K_MAX_STACK) // XXX cond on m !!!!!
 #else
 	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
 #endif
@@ -398,8 +399,9 @@ rltn_0_return:
 
 
 rltn_1:
-	sA_size = blasfeo_memsize_dmat(12, n);
-	sB_size = blasfeo_memsize_dmat(n, n);
+	n1 = (n+128-1)/128*128;
+	sA_size = blasfeo_memsize_dmat(12, n1);
+	sB_size = blasfeo_memsize_dmat(n1, n1);
 	mem = malloc(sA_size+sB_size+64);
 	blasfeo_align_64_byte(mem, &mem_align);
 	blasfeo_create_dmat(12, n, &sA, mem_align);
