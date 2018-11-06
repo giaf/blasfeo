@@ -594,11 +594,11 @@ inner_kernel_dunpack_nt_4_lib4:
 	
 	vmovsd		0(%r11), %xmm0
 	vmovsd		%xmm0, 0(%r12)
-	vmovsd		8(%r11, %r12, 1), %xmm0
+	vmovsd		8(%r11), %xmm0
 	vmovsd		%xmm0, 0(%r12, %r13, 1)
-	vmovsd		16(%r14), %xmm0
+	vmovsd		16(%r11), %xmm0
 	vmovsd		%xmm0, 0(%r14)
-	vmovsd		24(%r14, %r12, 1), %xmm0
+	vmovsd		24(%r11), %xmm0
 	vmovsd		%xmm0, 0(%r14, %r13, 1)
 
 	subl	$1, %r10d
