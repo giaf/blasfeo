@@ -91,13 +91,13 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	double *pc;
 	int sC_size, stot_size;
 	void *smat_mem, *smat_mem_align;
+	int m1;
 
 
 	if(*uplo=='l' | *uplo=='L')
 		{
 #if defined(TARGET_X64_INTEL_HASWELL)
-		if(m>=128 | m>K_MAX_STACK)
-//		if(m>=256 | m>K_MAX_STACK)
+		if(m>128 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		if(m>=64 | m>K_MAX_STACK)
 #else
@@ -114,7 +114,7 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	else if(*uplo=='u' | *uplo=='U')
 		{
 #if defined(TARGET_X64_INTEL_HASWELL)
-		if(m>=256 | m>K_MAX_STACK)
+		if(m>256 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		if(m>=64 | m>K_MAX_STACK)
 #else
@@ -255,7 +255,9 @@ l_0_return:
 
 l_1:
 	
-	sC_size = blasfeo_memsize_dmat(m, m);
+	m1 = (m+128-1)/128*128;
+	sC_size = blasfeo_memsize_dmat(m1, m1);
+//	sC_size = blasfeo_memsize_dmat(m, m);
 	stot_size = sC_size;
 	smat_mem = malloc(stot_size+63);
 	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
@@ -606,7 +608,9 @@ u_0_return:
 
 u_1:
 
-	sC_size = blasfeo_memsize_dmat(m, m);
+	m1 = (m+128-1)/128*128;
+	sC_size = blasfeo_memsize_dmat(m1, m1);
+//	sC_size = blasfeo_memsize_dmat(m, m);
 	stot_size = sC_size;
 	smat_mem = malloc(stot_size+63);
 	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
