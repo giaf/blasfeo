@@ -93,21 +93,6 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 	int m1, n1;
 
 
-#if defined(TARGET_X64_INTEL_HASWELL)
-					if(m>=120 | n>=120 | m>K_MAX_STACK) // XXX cond on m !!!!!
-#else
-					if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
-#endif
-						{
-						goto rltn_1;
-						}
-					else
-						{
-						goto rltn_0;
-						}
-
-
-
 	if(*side=='l' | *side=='L') // _l
 		{
 		if(*uplo=='l' | *uplo=='L') // _ll
