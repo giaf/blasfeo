@@ -150,10 +150,17 @@ printf('dtrsm\n');
 
 f1 = figure();
 
+dtrsm_llnn
+save -mat dtrsm_llnn.mat A B
+
+plot(B(:,1), B(:,2));
+
 dtrsm_llnu
 save -mat dtrsm_llnu.mat A B
 
+hold all
 plot(B(:,1), B(:,2));
+hold off
 
 dtrsm_lunn
 save -mat dtrsm_lunn.mat A B
@@ -186,7 +193,7 @@ hold off
 Gflops_max = A(1)*A(2);
 
 axis([0 300 0 Gflops_max]);
-legend('dtrsm\_llnu', 'dtrsm\_lunn', 'dtrsm\_rltn', 'dtrsm\_rltu', 'dtrsm\_rutn', 'Location', 'SouthEast');
+legend('dtrsm\_llnn', 'dtrsm\_llnu', 'dtrsm\_lunn', 'dtrsm\_rltn', 'dtrsm\_rltu', 'dtrsm\_rutn', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on
@@ -617,10 +624,17 @@ printf('strsm\n');
 
 f1 = figure();
 
+strsm_llnn
+save -mat strsm_llnn.mat A B
+
+plot(B(:,1), B(:,2));
+
 strsm_llnu
 save -mat strsm_llnu.mat A B
 
+hold all
 plot(B(:,1), B(:,2));
+hold off
 
 strsm_lunn
 save -mat strsm_lunn.mat A B
@@ -653,7 +667,7 @@ hold off
 Gflops_max = A(1)*A(2);
 
 axis([0 300 0 Gflops_max]);
-legend('strsm\_llnu', 'strsm\_lunn', 'strsm\_rltn', 'strsm\_rltu', 'strsm\_rutn', 'Location', 'SouthEast');
+legend('strsm\_llnn', 'strsm\_llnu', 'strsm\_lunn', 'strsm\_rltn', 'strsm\_rltu', 'strsm\_rutn', 'Location', 'SouthEast');
 xlabel('matrix size n')
 ylabel('Gflops')
 grid on

@@ -291,6 +291,8 @@ int main()
 				blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &n, &n, &r_1, B, &n, D, &n);
 #elif defined(TRMM_RUTN)
 #elif defined(TRSM_LUNN)
+#elif defined(TRSM_LLNN)
+				blasfeo_dtrsm(&c_l, &c_l, &c_n, &c_n, &n, &n, &r_1, B, &n, D, &n);
 #elif defined(TRSM_LLNU)
 #elif defined(TRSM_RLTN)
 				blasfeo_dtrsm(&c_r, &c_l, &c_t, &c_n, &n, &n, &r_1, B, &n, D, &n);
@@ -329,6 +331,7 @@ int main()
 #elif defined(TRMM_RLNN)
 #elif defined(TRMM_RUTN)
 #elif defined(TRSM_LUNN)
+#elif defined(TRSM_LLNN)
 #elif defined(TRSM_LLNU)
 #elif defined(TRSM_RLTN)
 #elif defined(TRSM_RLTU)
@@ -365,7 +368,7 @@ int main()
 
 #if defined(GEMM_NN) | defined(GEMM_NT) | defined(GEMM_TN) | defined(GEMM_TT)
 		double flop_operation = 2.0*n*n*n;
-#elif defined(SYRK_LN) | defined(SYRK_LT) | defined(SYRK_UN) | defined(SYRK_UT) | defined(TRMM_RLNN) | defined(TRMM_RUTN) | defined(TRSM_LLNU) | defined(TRSM_LUNN) | defined(TRSM_RLTN) | defined(TRSM_RLTU) | defined(TRSM_RUTN)
+#elif defined(SYRK_LN) | defined(SYRK_LT) | defined(SYRK_UN) | defined(SYRK_UT) | defined(TRMM_RLNN) | defined(TRMM_RUTN) | defined(TRSM_LLNN) | defined(TRSM_LLNU) | defined(TRSM_LUNN) | defined(TRSM_RLTN) | defined(TRSM_RLTU) | defined(TRSM_RUTN)
 		double flop_operation = 1.0*n*n*n;
 #elif defined(GELQF) | defined(GEQRF)
 		double flop_operation = 4.0/3.0*n*n*n;

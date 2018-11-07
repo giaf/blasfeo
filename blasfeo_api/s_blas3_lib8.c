@@ -517,7 +517,19 @@ void blasfeo_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 
 
 
-// dtrsm_nn_llu
+// dtrsm_llnn
+void blasfeo_strsm_llnn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_strsm_llnn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// dtrsm_llnu
 void blasfeo_strsm_llnu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
 #ifndef BENCHMARKS_MODE
