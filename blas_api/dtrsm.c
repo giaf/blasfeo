@@ -250,23 +250,69 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 		}
 
 
-
+/***********************
+* llnn
+***********************/
 llnn:
-	goto llnn_0;
+	if(1)
+#if defined(TARGET_X64_INTEL_HASWELL)
+//	if(m>120 | n>120 | m>K_MAX_STACK) // XXX cond on m !!!!!
+#else
+//	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
+#endif
+		{
+		goto llnn_1;
+		}
+	else
+		{
+		goto llnn_0;
+		}
 
 llnn_0:
+	// XXX limits of ii and jj swapped !!!
 	pU = pU0;
 	sdu = sdu0;
 	dA = pd0;
 
-	// XXX limits of ii and jj swapped !!!
 	for(ii=0; ii<m; ii++)
 		dA[ii] = 1.0/A[ii+ii*lda];
 
 	ii = 0;
-	// XXX limits of ii and jj swapped !!!
 #if defined(TARGET_X64_INTEL_HASWELL)
-	for(ii=0; ii<n-7; ii+=8)
+	for(; ii<n-11; ii+=12)
+		{
+		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
+		kernel_dpack_tn_4_lib4(m, B+(ii+4)*ldb, ldb, pU+4*sdu);
+		kernel_dpack_tn_4_lib4(m, B+(ii+8)*ldb, ldb, pU+8*sdu);
+		for(jj=0; jj<m-3; jj+=4)
+			{
+			kernel_dtrsm_nt_rl_inv_12x4_lib4c4c(jj, pU, sdu, A+jj, lda, alpha, pU+jj*ps, sdu, pU+jj*ps, sdu, A+jj+jj*lda, lda, dA+jj);
+			}
+		if(jj<m)
+			{
+			kernel_dtrsm_nt_rl_inv_12x4_vs_lib4c4c(jj, pU, sdu, A+jj, lda, alpha, pU+jj*ps, sdu, pU+jj*ps, sdu, A+jj+jj*lda, lda, dA+jj, n-ii, m-jj);
+			}
+		kernel_dunpack_nt_4_lib4(m, pU, B+ii*ldb, ldb);
+		kernel_dunpack_nt_4_lib4(m, pU+4*sdu, B+(ii+4)*ldb, ldb);
+		kernel_dunpack_nt_4_lib4(m, pU+8*sdu, B+(ii+8)*ldb, ldb);
+		}
+	if(ii<n)
+		{
+		if(n-ii<=4)
+			{
+			goto llnn_0_left_4;
+			}
+		if(n-ii<=8)
+			{
+			goto llnn_0_left_8;
+			}
+		else
+			{
+			goto llnn_0_left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<n-7; ii+=8)
 		{
 		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
 		kernel_dpack_tn_4_lib4(m, B+(ii+4)*ldb, ldb, pU+ps*sdu);
@@ -293,7 +339,7 @@ llnn_0:
 			}
 		}
 #else
-	for(ii=0; ii<n-3; ii+=4)
+	for(; ii<n-3; ii+=4)
 		{
 		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
 		for(jj=0; jj<m-3; jj+=4)
@@ -313,6 +359,22 @@ llnn_0:
 #endif
 	goto llnn_0_return;
 
+#if defined(TARGET_X64_INTEL_HASWELL)
+llnn_0_left_12:
+	kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
+	kernel_dpack_tn_4_lib4(m, B+(ii+4)*ldb, ldb, pU+4*sdu);
+	kernel_dpack_tn_4_vs_lib4(m, B+(ii+8)*ldb, ldb, pU+8*sdu, n-(ii+8));
+	for(jj=0; jj<m; jj+=4)
+		{
+		kernel_dtrsm_nt_rl_inv_12x4_vs_lib4c4c(jj, pU, sdu, A+jj, lda, alpha, pU+jj*ps, sdu, pU+jj*ps, sdu, A+jj+jj*lda, lda, dA+jj, n-ii, m-jj);
+		}
+	kernel_dunpack_nt_4_lib4(m, pU, B+ii*ldb, ldb);
+	kernel_dunpack_nt_4_lib4(m, pU+4*sdu, B+(ii+4)*ldb, ldb);
+	kernel_dunpack_nt_4_vs_lib4(m, pU+8*sdu, B+(ii+8)*ldb, ldb, n-(ii+8));
+goto llnn_0_return;
+#endif
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 llnn_0_left_8:
 	kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
 	kernel_dpack_tn_4_vs_lib4(m, B+(ii+4)*ldb, ldb, pU+ps*sdu, n-(ii+4));
@@ -323,6 +385,7 @@ llnn_0_left_8:
 	kernel_dunpack_nt_4_lib4(m, pU, B+ii*ldb, ldb);
 	kernel_dunpack_nt_4_vs_lib4(m, pU+ps*sdu, B+(ii+4)*ldb, ldb, n-(ii+4));
 goto llnn_0_return;
+#endif
 
 llnn_0_left_4:
 	kernel_dpack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, m-ii);
@@ -338,6 +401,68 @@ llnn_0_return:
 
 
 
+llnn_1:
+	// XXX limits of ii and jj swapped !!!
+	m1 = (m+128-1)/128*128;
+	sA_size = blasfeo_memsize_dmat(12, m1);
+	sB_size = blasfeo_memsize_dmat(m1, m1);
+	mem = malloc(sA_size+sB_size+64);
+	blasfeo_align_64_byte(mem, &mem_align);
+	blasfeo_create_dmat(12, m, &sA, mem_align);
+	blasfeo_create_dmat(m, m, &sB, mem_align+sA_size);
+
+	// TODO pack using loops over kernels !!!!!!!!!!!!!!!!!!!!!!!!!
+//	blasfeo_pack_dmat(n, n, A, lda, &sB, 0, 0);
+	blasfeo_pack_l_dmat(m, m, A, lda, &sB, 0, 0);
+//	blasfeo_print_dmat(n, n, &sB, 0, 0);
+
+	pU = sA.pA;
+	sdu = sA.cn;
+	pB = sB.pA;
+	sdb = sB.cn;
+	dB = sB.dA;
+
+	for(ii=0; ii<m; ii++)
+		dB[ii] = 1.0/A[ii+ii*lda];
+
+	ii = 0;
+	for(; ii<n-3; ii+=4)
+		{
+		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
+		for(jj=0; jj<m-3; jj+=4)
+			{
+			kernel_dtrsm_nt_rl_inv_4x4_lib4(jj, pU, sB.pA+jj*sdb, alpha, pU+jj*ps, pU+jj*ps, sB.pA+jj*ps+jj*sdb, dB+jj);
+			}
+		if(jj<m)
+			{
+			kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(jj, pU, sB.pA+jj*sdb, alpha, pU+jj*ps, pU+jj*ps, sB.pA+jj*ps+jj*sdb, dB+jj, n-ii, m-jj);
+			}
+		kernel_dunpack_nt_4_lib4(m, pU, B+ii*ldb, ldb);
+		}
+	if(ii<m)
+		{
+		goto llnn_1_left_4;
+		}
+	goto llnn_1_return;
+
+llnn_1_left_4:
+	kernel_dpack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
+	for(jj=0; jj<m; jj+=4)
+		{
+		kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(jj, pU, sB.pA+jj*sdb, alpha, pU+jj*ps, pU+jj*ps, sB.pA+jj*ps+jj*sdb, dB+jj, n-ii, m-jj);
+		}
+	kernel_dunpack_nt_4_vs_lib4(m, pU, B+ii*ldb, ldb, n-ii);
+goto llnn_1_return;
+
+llnn_1_return:
+	free(mem);
+	return;
+
+
+
+/***********************
+* rltn
+***********************/
 rltn:
 #if defined(TARGET_X64_INTEL_HASWELL)
 	if(m>120 | n>120 | m>K_MAX_STACK) // XXX cond on m !!!!!

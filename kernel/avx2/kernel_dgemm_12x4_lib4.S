@@ -4572,6 +4572,120 @@ inner_tran_12x4_lib4:
 
 // common inner routine with file scope
 //
+// scale for alpha = 1.0 and beta
+//
+// input arguments:
+// r10   <- beta
+// r11   <- C
+// r12   <- 4*sdc*sizeof(double)
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm4  <- [d40 d50 d60 d70]
+// ymm5  <- [d41 d51 d61 d71]
+// ymm6  <- [d42 d52 d62 d72]
+// ymm7  <- [d43 d53 d63 d73]
+// ymm8  <- [d80 d90 da0 db0]
+// ymm9  <- [d81 d91 da1 db1]
+// ymm10 <- [d82 d92 da2 db2]
+// ymm11 <- [d83 d93 d63 db3]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10   <- beta
+// r11   <- C
+// r12   <- 4*sdc*sizeof(double)
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm4  <- [d40 d50 d60 d70]
+// ymm5  <- [d41 d51 d61 d71]
+// ymm6  <- [d42 d52 d62 d72]
+// ymm7  <- [d43 d53 d63 d73]
+// ymm8  <- [d80 d90 da0 db0]
+// ymm9  <- [d81 d91 da1 db1]
+// ymm10 <- [d82 d92 da2 db2]
+// ymm11 <- [d83 d93 d63 db3]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_M1B_12X4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_m1b_12x4_lib4, @function
+inner_scale_m1b_12x4_lib4:
+#elif defined(OS_MAC)
+_inner_scale_m1b_12x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_m1b_12x4_lib4; .scl 2; .type 32; .endef
+inner_scale_m1b_12x4_lib4:
+#endif
+#endif
+	
+	// beta
+	vbroadcastsd	0(%r10), %ymm14
+
+	vxorpd		%ymm15, %ymm15, %ymm15 // 0.0
+
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			0f // end
+
+	vmovapd		0(%r11), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm0
+	vmovapd		32(%r11), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm1
+	vmovapd		64(%r11), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm2
+	vmovapd		96(%r11), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm3
+
+	vmovapd		0(%r11, %r12, 1), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm4
+	vmovapd		32(%r11, %r12, 1), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm5
+	vmovapd		64(%r11, %r12, 1), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm6
+	vmovapd		96(%r11, %r12, 1), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm7
+
+	vmovapd		0(%r11, %r12, 2), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm8
+	vmovapd		32(%r11, %r12, 2), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm9
+	vmovapd		64(%r11, %r12, 2), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm10
+	vmovapd		96(%r11, %r12, 2), %ymm15
+	vfmsub231pd	%ymm14, %ymm15, %ymm11
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_scale_m1b_12x4_lib4, .-inner_scale_m1b_12x4_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // scale for alpha = 1.0 and beta = 1.0
 //
 // input arguments:

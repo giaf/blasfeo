@@ -2567,6 +2567,88 @@ inner_scale_a0_4x4_lib4:
 
 // common inner routine with file scope
 //
+// scale for alpha = 1.0 and beta
+//
+// input arguments:
+// r10   <- beta
+// r11   <- C
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10   <- beta
+// r11   <- C
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_M1B_4X4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_m1b_4x4_lib4, @function
+inner_scale_m1b_4x4_lib4:
+#elif defined(OS_MAC)
+_inner_scale_m1b_4x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_scale_m1b_4x4_lib4; .scl 2; .type 32; .endef
+inner_scale_m1b_4x4_lib4:
+#endif
+#endif
+
+	// beta
+	vbroadcastsd	0(%r10), %ymm14
+
+	vxorpd		%ymm15, %ymm15, %ymm15 // 0.0
+
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			0f // end
+
+	vmovapd		0(%r11), %ymm15
+	vmulpd		%ymm15, %ymm14, %ymm15
+	vsubpd		%ymm0, %ymm15, %ymm0
+	vmovapd		32(%r11), %ymm15
+	vmulpd		%ymm15, %ymm14, %ymm15
+	vsubpd		%ymm1, %ymm15, %ymm1
+	vmovapd		64(%r11), %ymm15
+	vmulpd		%ymm15, %ymm14, %ymm15
+	vsubpd		%ymm2, %ymm15, %ymm2
+	vmovapd		96(%r11), %ymm15
+	vmulpd		%ymm15, %ymm14, %ymm15
+	vsubpd		%ymm3, %ymm15, %ymm3
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_scale_m1b_4x4_lib4, .-inner_scale_m1b_4x4_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // scale for alpha = 1.0 and beta = 1.0
 //
 // input arguments:
@@ -2957,6 +3039,98 @@ inner_blend_scale_ab_4x4_gen_lib4:
 
 // common inner routine with file scope
 //
+// blender_loader for alpha = 1.0 and beta
+//
+// input arguments:
+// r10   <- beta
+// r11   <- C
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10   <- beta
+// r11   <- C
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_SCALE_M1B_4X4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_blend_scale_m1b_4x4_lib4, @function
+inner_blend_scale_m1b_4x4_lib4:
+#elif defined(OS_MAC)
+_inner_blend_scale_m1b_4x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_blend_scale_m1b_4x4_lib4; .scl 2; .type 32; .endef
+inner_blend_scale_m1b_4x4_lib4:
+#endif
+#endif
+
+	vblendpd	$0xa, %ymm1, %ymm0, %ymm8
+	vblendpd	$0x5, %ymm1, %ymm0, %ymm9
+	vblendpd	$0xa, %ymm3, %ymm2, %ymm10
+	vblendpd	$0x5, %ymm3, %ymm2, %ymm11
+
+	vblendpd	$0xc, %ymm10, %ymm8, %ymm0
+	vblendpd	$0x3, %ymm10, %ymm8, %ymm2
+	vblendpd	$0xc, %ymm11, %ymm9, %ymm1
+	vblendpd	$0x3, %ymm11, %ymm9, %ymm3
+
+	// beta
+	vbroadcastsd	0(%r10), %ymm14
+
+	vxorpd		%ymm15, %ymm15, %ymm15 // 0.0
+
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			0f // end
+
+	vmovapd		0(%r11), %ymm15
+	vmulpd		%ymm15, %ymm14, %ymm15
+	vsubpd		%ymm0, %ymm15, %ymm0
+	vmovapd		32(%r11), %ymm15
+	vmulpd		%ymm15, %ymm14, %ymm15
+	vsubpd		%ymm1, %ymm15, %ymm1
+	vmovapd		64(%r11), %ymm15
+	vmulpd		%ymm15, %ymm14, %ymm15
+	vsubpd		%ymm2, %ymm15, %ymm2
+	vmovapd		96(%r11), %ymm15
+	vmulpd		%ymm15, %ymm14, %ymm15
+	vsubpd		%ymm3, %ymm15, %ymm3
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_blend_scale_m1b_4x4_lib4, .-inner_blend_scale_m1b_4x4_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // blender_loader for alpha = 1.0 and beta = 1.0
 //
 // input arguments:
@@ -2984,7 +3158,7 @@ inner_blend_scale_ab_4x4_gen_lib4:
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_BLEND_SCALE_m11_4X4_LIB4
+	.macro INNER_BLEND_SCALE_M11_4X4_LIB4
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -8257,8 +8431,8 @@ kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4:
 
 
 
-//                                      1      2          3          4          5          6          7
-// void kernel_dtrsm_nt_rl_inv_4x4_lib4(int k, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E);
+//                                      1      2          3          4             5          6          7          8
+// void kernel_dtrsm_nt_rl_inv_4x4_lib4(int k, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -8286,9 +8460,9 @@ kernel_dtrsm_nt_rl_inv_4x4_lib4:
 
 	// call inner dgemm kernel nt
 
-	movq	ARG1, %r10
-	movq	ARG2, %r11
-	movq	ARG3, %r12
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // B
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_4X4_LIB4
@@ -8303,23 +8477,24 @@ kernel_dtrsm_nt_rl_inv_4x4_lib4:
 
 	// call inner blender_loader nn
 
-	movq	ARG4, %r10
+	movq	ARG4, %r10 // beta
+	movq	ARG5, %r11 // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_M11_4X4_LIB4
+	INNER_BLEND_SCALE_M1B_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_m11_4x4_lib4
+	call inner_blend_scale_m1b_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_m11_4x4_lib4
+	callq _inner_blend_scale_m1b_4x4_lib4
 #endif
 #endif
 
 
 	// solve
 
-	movq	ARG6, %r10  // E
-	movq	ARG7, %r11  // inv_diag_E
+	movq	ARG7, %r10  // E
+	movq	ARG8, %r11  // inv_diag_E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_INV_4X4_LIB4
@@ -8334,7 +8509,7 @@ kernel_dtrsm_nt_rl_inv_4x4_lib4:
 
 	// store
 
-	movq	ARG5, %r10 // D
+	movq	ARG6, %r10 // D
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB4
@@ -8490,8 +8665,8 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4:
 
 
 
-//                                         edi    rsi        rdx        ecx        r8         r9         rsp+8               rsp+16  rsp+24
-// void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int k, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E, int km, int kn);
+//                                         1      2          3          4             5          6          7          8                   9       10
+// void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int k, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E, int km, int kn);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -8519,9 +8694,9 @@ kernel_dtrsm_nt_rl_inv_4x4_vs_lib4:
 
 	// call inner dgemm kernel nt
 
-	movq	ARG1, %r10
-	movq	ARG2, %r11
-	movq	ARG3, %r12
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // B
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_4X4_LIB4
@@ -8536,24 +8711,25 @@ kernel_dtrsm_nt_rl_inv_4x4_vs_lib4:
 
 	// call inner blender_loader nn // TODO scale gen
 
-	movq	ARG4, %r10 // C
+	movq	ARG4, %r10 // beta
+	movq	ARG5, %r11 // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_M11_4X4_LIB4
+	INNER_BLEND_SCALE_M1B_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_m11_4x4_lib4
+	call inner_blend_scale_m1b_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_m11_4x4_lib4
+	callq _inner_blend_scale_m1b_4x4_lib4
 #endif
 #endif
 
 
 	// solve
 
-	movq	ARG6, %r10  // E
-	movq	ARG7, %r11  // inv_diag_E
-	movq	ARG9, %r12 // kn
+	movq	ARG7, %r10  // E
+	movq	ARG8, %r11  // inv_diag_E
+	movq	ARG10, %r12 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_INV_4X4_VS_LIB4
@@ -8568,9 +8744,9 @@ kernel_dtrsm_nt_rl_inv_4x4_vs_lib4:
 
 	// store
 
-	movq	ARG5, %r10 // D
-	movq	ARG8, %r11 // km
-	movq	ARG9, %r12 // kn
+	movq	ARG6, %r10 // D
+	movq	ARG9, %r11 // km
+	movq	ARG10, %r12 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_VS_LIB4

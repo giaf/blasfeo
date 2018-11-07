@@ -5375,7 +5375,7 @@ void kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA)
-void kernel_dtrsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E)
+void kernel_dtrsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -5393,9 +5393,8 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *C, 
 #endif
 
 	double alpha1 = -1.0;
-	double beta1  = 1.0;
 
-	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, C, CC);
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -5479,7 +5478,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *C, 
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E, int km, int kn)
+void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -5497,9 +5496,8 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *
 #endif
 
 	double alpha1 = -1.0;
-	double beta1  = 1.0;
 
-	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, C, CC);
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -5680,7 +5678,7 @@ void kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4(int kp, double *Ap, double *Bp, int k
 	double alpha = 1.0;
 	double beta  = 1.0;
 	kernel_dgemm_nt_4x4_lib4(kp, &alpha, Ap, Bp, &beta, C, D);
-	kernel_dtrsm_nt_rl_inv_4x4_lib4(km_, Am, Bm, D, D, E, inv_diag_E);
+	kernel_dtrsm_nt_rl_inv_4x4_lib4(km_, Am, Bm, &beta, D, D, E, inv_diag_E);
 	}
 #endif
 
@@ -5692,7 +5690,7 @@ void kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4(int kp, double *Ap, double *Bp, in
 	double alpha = 1.0;
 	double beta  = 1.0;
 	kernel_dgemm_nt_4x4_vs_lib4(kp, &alpha, Ap, Bp, &beta, C, D, km, kn);
-	kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(km_, Am, Bm, D, D, E, inv_diag_E, km, kn);
+	kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(km_, Am, Bm, &beta, D, D, E, inv_diag_E, km, kn);
 	}
 #endif
 
