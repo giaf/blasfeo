@@ -377,6 +377,157 @@ void GEMM_TT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 
 
 // dtrsm_left_lower_nottransposed_unit
+void TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL
+		d_00, d_01,
+		d_10, d_11;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda; // triangular
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	REAL *dA = sA->dA;
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA<n)
+			{
+			for(ii=0; ii<n; ii++)
+				dA[ii] = 1.0 / pA[ii+lda*ii];
+			sA->use_dA = n;
+			}
+		}
+	else
+		{
+		for(ii=0; ii<n; ii++)
+			dA[ii] = 1.0 / pA[ii+lda*ii];
+		sA->use_dA = 0; // nonzero offset makes diagonal dirty
+		}
+#if 1
+	// solve
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			d_00 = alpha * pB[ii+0+ldb*(jj+0)];
+			d_10 = alpha * pB[ii+1+ldb*(jj+0)];
+			d_01 = alpha * pB[ii+0+ldb*(jj+1)];
+			d_11 = alpha * pB[ii+1+ldb*(jj+1)];
+			kk = 0;
+#if 0
+			for(; kk<ii-1; kk+=2)
+				{
+				d_00 -= pA[ii+0+lda*(kk+0)] * pD[kk+ldd*(jj+0)];
+				d_10 -= pA[ii+1+lda*(kk+0)] * pD[kk+ldd*(jj+0)];
+				d_01 -= pA[ii+0+lda*(kk+0)] * pD[kk+ldd*(jj+1)];
+				d_11 -= pA[ii+1+lda*(kk+0)] * pD[kk+ldd*(jj+1)];
+				d_00 -= pA[ii+0+lda*(kk+1)] * pD[kk+ldd*(jj+0)];
+				d_10 -= pA[ii+1+lda*(kk+1)] * pD[kk+ldd*(jj+0)];
+				d_01 -= pA[ii+0+lda*(kk+1)] * pD[kk+ldd*(jj+1)];
+				d_11 -= pA[ii+1+lda*(kk+1)] * pD[kk+ldd*(jj+1)];
+				}
+			if(kk<ii)
+#else
+			for(; kk<ii; kk++)
+#endif
+				{
+				d_00 -= pA[ii+0+lda*kk] * pD[kk+ldd*(jj+0)];
+				d_10 -= pA[ii+1+lda*kk] * pD[kk+ldd*(jj+0)];
+				d_01 -= pA[ii+0+lda*kk] * pD[kk+ldd*(jj+1)];
+				d_11 -= pA[ii+1+lda*kk] * pD[kk+ldd*(jj+1)];
+				}
+			d_00 *= dA[ii+0];
+			d_01 *= dA[ii+0];
+			d_10 -= pA[ii+1+lda*ii] * d_00;
+			d_11 -= pA[ii+1+lda*ii] * d_01;
+			d_10 *= dA[ii+1];
+			d_11 *= dA[ii+1];
+			pD[ii+0+ldd*(jj+0)] = d_00;
+			pD[ii+1+ldd*(jj+0)] = d_10;
+			pD[ii+0+ldd*(jj+1)] = d_01;
+			pD[ii+1+ldd*(jj+1)] = d_11;
+			}
+		for(; ii<m; ii++)
+			{
+			d_00 = alpha * pB[ii+ldb*(jj+0)];
+			d_01 = alpha * pB[ii+ldb*(jj+1)];
+			for(kk=0; kk<ii; kk++)
+				{
+				d_00 -= pA[ii+lda*kk] * pD[kk+ldd*(jj+0)];
+				d_01 -= pA[ii+lda*kk] * pD[kk+ldd*(jj+1)];
+				}
+			d_00 *= dA[ii+0];
+			d_01 *= dA[ii+0];
+			pD[ii+ldd*(jj+0)] = d_00;
+			pD[ii+ldd*(jj+1)] = d_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			d_00 = alpha * pB[ii+0+ldb*jj];
+			d_10 = alpha * pB[ii+1+ldb*jj];
+			for(kk=0; kk<ii; kk++)
+				{
+				d_00 -= pA[ii+0+lda*kk] * pD[kk+ldd*jj];
+				d_10 -= pA[ii+1+lda*kk] * pD[kk+ldd*jj];
+				}
+			d_00 *= dA[ii+0];
+			d_10 -= pA[ii+1+lda*kk] * d_00;
+			d_10 *= dA[ii+1];
+			pD[ii+0+ldd*jj] = d_00;
+			pD[ii+1+ldd*jj] = d_10;
+			}
+		for(; ii<m; ii++)
+			{
+			d_00 = alpha * pB[ii+ldb*jj];
+			for(kk=0; kk<ii; kk++)
+				{
+				d_00 -= pA[ii+lda*kk] * pD[kk+ldd*jj];
+				}
+			d_00 *= dA[ii+0];
+			pD[ii+ldd*jj] = d_00;
+			}
+		}
+#else
+	// copy
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			for(ii=0; ii<m; ii++)
+				pD[ii+ldd*jj] = alpha * pB[ii+ldb*jj];
+		}
+	for(jj=0; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m; ii++)
+			{
+			d_00 = pD[ii+ldd*jj];
+			for(kk=ii+1; kk<m; kk++)
+				{
+				pD[kk+ldd*jj] -= pA[kk+lda*ii] * d_00;
+				}
+			}
+		}
+#endif
+	return;
+	}
+
+
+
+// dtrsm_left_lower_nottransposed_unit
 void TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
@@ -1719,6 +1870,34 @@ void GEMM_TT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 			COPY(&m, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
 		}
 	GEMM(&ct, &ct, &m, &n, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+	return;
+	}
+
+
+
+// dtrsm_left_lower_nottransposed_unit
+void TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	REAL *pA = sA->pA+ai+aj*sA->m;
+	REAL *pB = sB->pA+bi+bj*sB->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*sD->m, &i1);
+		}
+	TRSM(&cl, &cl, &cn, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
 	return;
 	}
 

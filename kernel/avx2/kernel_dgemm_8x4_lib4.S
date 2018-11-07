@@ -12040,8 +12040,8 @@ kernel_dtrsm_nn_ru_inv_8x4_vs_lib4:
 
 
 
-//                                      edi    rsi        rdx      ecx        r8       r9         rsp+8    rsp+16     rsp+24   rsp+32     rsp+40
-// void kernel_dtrsm_nn_ll_one_8x4_lib4(int k, double *A, int sda, double *B, int sdb, double *C, int sdc, double *D, int sdd, double *E, int sde);
+//                                      1      2          3        4          5        6             7          8        9          10       11         12
+// void kernel_dtrsm_nn_ll_one_8x4_lib4(int k, double *A, int sda, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, double *E, int sde);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -12094,9 +12094,10 @@ kernel_dtrsm_nn_ll_one_8x4_lib4:
 
 	// call inner blender_loader nn
 
-	movq	ARG6, %r10 // C
-	movq	ARG7, %r11 // sdc
-	sall	$5, %r11d // 4*sdc*sizeof(double)
+	movq	ARG6, %r10 // beta
+	movq	ARG7, %r11 // C
+	movq	ARG8, %r12 // sdc
+	sall	$5, %r12d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_8X4_LIB4
@@ -12111,8 +12112,8 @@ kernel_dtrsm_nn_ll_one_8x4_lib4:
 
 	// solve
 
-	movq	ARG10, %r10  // E 
-	movq	ARG11, %r11 // sde
+	movq	ARG11, %r10  // E 
+	movq	ARG12, %r11 // sde
 	sall	$5, %r11d // 4*sde*sizeof(double)
 
 #if MACRO_LEVEL>=1
@@ -12128,8 +12129,8 @@ kernel_dtrsm_nn_ll_one_8x4_lib4:
 
 	// store
 
-	movq	ARG8, %r10 // D
-	movq	ARG9, %r11 // sdd
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
 #if MACRO_LEVEL>=1
@@ -12155,8 +12156,8 @@ kernel_dtrsm_nn_ll_one_8x4_lib4:
 
 
 
-//                                         edi    rsi        rdx      ecx        r8       r9         rsp+8    rsp+16     rsp+24   rsp+32     rsp+40   rsp+48  tsp+56
-// void kernel_dtrsm_nn_ll_one_8x4_vs_lib4(int k, double *A, int sda, double *B, int sdb, double *C, int sdc, double *D, int sdd, double *E, int sde, int km, int kn);
+//                                         1      2          3        4          5        6             7          8        9          10       11         12        13     14
+// void kernel_dtrsm_nn_ll_one_8x4_vs_lib4(int k, double *A, int sda, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, double *E, int sde, int km, int kn);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -12209,9 +12210,10 @@ kernel_dtrsm_nn_ll_one_8x4_vs_lib4:
 
 	// call inner blender_loader nn
 
-	movq	ARG6, %r10 // C
-	movq	ARG7, %r11 // sdc
-	sall	$5, %r11d // 4*sdc*sizeof(double)
+	movq	ARG6, %r10 // beta
+	movq	ARG7, %r11 // C
+	movq	ARG8, %r12 // sdc
+	sall	$5, %r12d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_8X4_LIB4
@@ -12226,8 +12228,8 @@ kernel_dtrsm_nn_ll_one_8x4_vs_lib4:
 
 	// solve
 
-	movq	ARG10, %r10  // E 
-	movq	ARG11, %r11 // sde
+	movq	ARG11, %r10  // E 
+	movq	ARG12, %r11 // sde
 	sall	$5, %r11d // 4*sde*sizeof(double)
 
 #if MACRO_LEVEL>=1
@@ -12243,12 +12245,12 @@ kernel_dtrsm_nn_ll_one_8x4_vs_lib4:
 
 	// store
 
-	movq	ARG8, %r10 // D
-	movq	ARG9, %r11 // sdd
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
-	movq	ARG12, %r12 // km
-	movq	ARG13, %r13 // kn
+	movq	ARG13, %r12 // km
+	movq	ARG14, %r13 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_VS_LIB4

@@ -60,6 +60,7 @@
 #define SYRK_UT blasfeo_dsyrk_ut
 #define TRMM_RLNN blasfeo_dtrmm_rlnn
 #define TRMM_RUTN blasfeo_dtrmm_rutn
+#define TRSM_LLNN blasfeo_dtrsm_llnn
 #define TRSM_LLNU blasfeo_dtrsm_llnu
 #define TRSM_LUNN blasfeo_dtrsm_lunn
 #define TRSM_RLTN blasfeo_dtrsm_rltn
