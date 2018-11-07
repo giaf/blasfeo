@@ -259,7 +259,7 @@ openblas_set_num_threads(1);
 
 //				dtrsm_(&c_r, &c_l, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
 
-				dtrmm_(&c_r, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				dtrmm_(&c_r, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
 
 //				for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 //				dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
@@ -304,14 +304,19 @@ openblas_set_num_threads(1);
 //				blasfeo_dsyrk(&c_u, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
 
 //				blasfeo_dtrsm(&c_r, &c_l, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
+				blasfeo_dtrsm(&c_l, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
 
-				blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
 
 //				for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 //				blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				for(ii=0; ii<n*n; ii++) D[ii] = C[ii];
 //				blasfeo_dpotrf(&uplo, &n, D, &n);
 //				blasfeo_dpotrf(&uplo, &n, B, &n, &info);
+
+//				dgemm_(&c_n, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+//				dgemm_(&c_n, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+//				dpotrf_(&c_l, &n, B, &n, &info);
 
 #if 0
 				int memsize_A = blasfeo_memsize_dmat(n, n);
@@ -376,7 +381,7 @@ openblas_set_num_threads(1);
 //				blasfeo_dsyrk_ln(n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sC, 0, 0);
 //				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dtrsm_rltn(n, n, alpha, &sB, 0, 0, &sC, 0, 0, &sC, 0, 0);
-				blasfeo_dtrmm_rlnn(n, n, alpha, &sB, 0, 0, &sC, 0, 0, &sC, 0, 0);
+//				blasfeo_dtrmm_rlnn(n, n, alpha, &sB, 0, 0, &sC, 0, 0, &sC, 0, 0);
 
 				}
 

@@ -96,16 +96,18 @@ int main()
 
 	char ta = 'n';
 	char tb = 't';
-	char uplo = 'l';
+	char uplo = 'u';
 	int info = 0;
 
-	int m0 = 11;
+	int m0 = 15;
 	int n0 = 15;
 	int k0 = 16;
 
 
 
 	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
+//	blasfeo_dsyrk(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
+//	blasfeo_dpotrf(&c_l, &n, D, &n, &info);
 	dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
 	dpotrf_(&c_l, &n, D, &n, &info);
 //	d_print_mat(n, n, D, n);
@@ -127,12 +129,12 @@ int main()
 	dsyrk_(&uplo, &ta, &m0, &k0, &alpha, A, &n, &beta, C, &n);
 #endif
 
-#if 0
+#if 1
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	dtrsm_(&c_r, &c_l, &c_t, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+	dtrsm_(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
-#if 1
+#if 0
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
 	dtrmm_(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
 #endif
@@ -158,12 +160,12 @@ int main()
 	blasfeo_dsyrk(&uplo, &ta, &m0, &k0, &alpha, A, &n, &beta, C, &n);
 #endif
 
-#if 0
+#if 1
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	blasfeo_dtrsm(&c_r, &c_l, &c_t, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+	blasfeo_dtrsm(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
-#if 1
+#if 0
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
 	blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
 #endif

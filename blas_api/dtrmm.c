@@ -250,6 +250,8 @@ void blasfeo_dtrmm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 rlnn:
 #if defined(TARGET_X64_INTEL_HASWELL)
 	if(m>300 | n>300 | m>K_MAX_STACK) // XXX cond on m !!!!!
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	if(m>=64 | n>=64 | m>K_MAX_STACK) // XXX cond on m !!!!!
 #else
 	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
 #endif

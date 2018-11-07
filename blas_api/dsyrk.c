@@ -97,6 +97,8 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 //			if(m>=0 | k>=0 | k>K_MAX_STACK)
 #if defined(TARGET_X64_INTEL_HASWELL)
 			if(m>100 | k>100 | k>K_MAX_STACK)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+			if(m>=64 | k>=64 | k>K_MAX_STACK)
 #else
 			if(m>=12 | k>=12 | k>K_MAX_STACK)
 #endif
@@ -114,6 +116,8 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 //			if(m>=0 | k>=0 | k>K_MAX_STACK)
 #if defined(TARGET_X64_INTEL_HASWELL)
 			if(m>300 | k>300 | k>K_MAX_STACK)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+			if(m>=64 | k>=64 | k>K_MAX_STACK)
 #else
 			if(m>=12 | k>=12 | k>K_MAX_STACK)
 #endif
@@ -139,6 +143,8 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 //			if(m>=0 | k>=0 | k>K_MAX_STACK)
 #if defined(TARGET_X64_INTEL_HASWELL)
 			if(m>108 | k>108 | k>K_MAX_STACK)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+			if(m>=64 | k>=64 | k>K_MAX_STACK)
 #else
 			if(m>=12 | k>=12 | k>K_MAX_STACK)
 #endif
@@ -156,6 +162,8 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 //			if(m>=0 | k>=0 | k>K_MAX_STACK)
 #if defined(TARGET_X64_INTEL_HASWELL)
 			if(m>300 | k>300 | k>K_MAX_STACK)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+			if(m>=64 | k>=64 | k>K_MAX_STACK)
 #else
 			if(m>=12 | k>=12 | k>K_MAX_STACK)
 #endif
