@@ -99,9 +99,9 @@ int main()
 	char uplo = 'u';
 	int info = 0;
 
-	int m0 = 15;
-	int n0 = 15;
-	int k0 = 16;
+	int m0 = 11;
+	int n0 = 11;
+	int k0 = 11;
 
 
 
@@ -110,7 +110,7 @@ int main()
 //	blasfeo_dpotrf(&c_l, &n, D, &n, &info);
 	dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
 	dpotrf_(&c_l, &n, D, &n, &info);
-//	d_print_mat(n, n, D, n);
+	d_print_mat(n, n, D, n);
 //	return 0;
 
 
@@ -131,7 +131,7 @@ int main()
 
 #if 1
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	dtrsm_(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+	dtrsm_(&c_l, &c_l, &c_t, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
 #if 0
@@ -162,7 +162,7 @@ int main()
 
 #if 1
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	blasfeo_dtrsm(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+	blasfeo_dtrsm(&c_l, &c_l, &c_t, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
 #if 0

@@ -91,6 +91,7 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 	int sA_size, sB_size;
 	void *mem, *mem_align;
 	int m1, n1;
+	int idx, m4, mn4;
 
 
 	if(*side=='l' | *side=='L') // _l
@@ -113,8 +114,9 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 				{
 				if(*diag=='n' | *diag=='N') // _lltn
 					{
-					printf("\nBLASFEO: dtrmm_lltn: not implemented yet\n");
-					return;
+					goto lltn;
+//					printf("\nBLASFEO: dtrmm_lltn: not implemented yet\n");
+//					return;
 					}
 				else if(*diag=='u' | *diag=='U') // _lltu
 					{
@@ -547,6 +549,69 @@ goto llnn_1_return;
 
 llnn_1_return:
 	free(mem);
+	return;
+
+
+
+/***********************
+* lltn
+***********************/
+lltn:
+	if(1)
+		{
+		goto lltn_0;
+		}
+
+lltn_0:
+	// XXX limits of ii and jj swapped !!!
+	pU = pU0;
+	sdu = sdu0;
+	dA = pd0;
+
+	for(ii=0; ii<m; ii++)
+		dA[ii] = 1.0/A[ii+ii*lda];
+
+	mn4 = m%4;
+	m4 = m - mn4;
+
+	ii = 0;
+	for(; ii<n-3; ii+=4)
+		{
+		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
+		if(mn4!=0)
+			{
+			idx = m4;
+			kernel_dtrsm_nn_rl_inv_4x4_vs_lib4c4c(0, pU+(idx+4)*ps, A+idx+4+idx*lda, lda, alpha, pU+idx*ps, pU+idx*ps, A+idx+idx*lda, lda, dA+idx, n-ii, mn4);
+			}
+		for(jj=0; jj<m4-3; jj+=4)
+			{
+			idx = m4-jj-4;
+			kernel_dtrsm_nn_rl_inv_4x4_lib4c4c(jj+mn4, pU+(idx+4)*ps, A+idx+4+idx*lda, lda, alpha, pU+idx*ps, pU+idx*ps, A+idx+idx*lda, lda, dA+idx);
+			}
+		kernel_dunpack_nt_4_lib4(m, pU, B+ii*ldb, ldb);
+		}
+	if(ii<m)
+		{
+		goto lltn_0_left_4;
+		}
+	goto lltn_0_return;
+
+lltn_0_left_4:
+	kernel_dpack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
+	if(mn4!=0)
+		{
+		idx = m4;
+		kernel_dtrsm_nn_rl_inv_4x4_vs_lib4c4c(0, pU+(idx+4)*ps, A+idx+4+idx*lda, lda, alpha, pU+idx*ps, pU+idx*ps, A+idx+idx*lda, lda, dA+idx, n-ii, mn4);
+		}
+	for(jj=0; jj<m4-3; jj+=4)
+		{
+		idx = m4-jj-4;
+		kernel_dtrsm_nn_rl_inv_4x4_vs_lib4c4c(jj+mn4, pU+(idx+4)*ps, A+idx+4+idx*lda, lda, alpha, pU+idx*ps, pU+idx*ps, A+idx+idx*lda, lda, dA+idx, n-ii, 4);
+		}
+	kernel_dunpack_nt_4_vs_lib4(m, pU, B+ii*ldb, ldb, n-ii);
+	goto lltn_0_return;
+
+lltn_0_return:
 	return;
 
 

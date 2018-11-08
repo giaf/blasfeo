@@ -8991,7 +8991,7 @@ kernel_dtrsm_nt_ru_inv_4x4_vs_lib4:
 
 
 
-//                                      edi    rsi        rdx        ecx      r8         r9         rsp+8      rsp+16
+//                                      1      2          3          4        5          6          7          8
 // void kernel_dtrsm_nn_ru_inv_4x4_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *E, double *inv_diag_E);
 
 	.p2align 4,,15
