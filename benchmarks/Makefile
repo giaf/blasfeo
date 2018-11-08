@@ -34,12 +34,31 @@ LIBS = $(BINARY_DIR)/libblasfeo.a
 
 include ../Makefile.blas
 
-# set cpu freq
+ifeq ($(REF_BLAS), 0)
+get_refblas:
+	$(info )
+	$(info ERROR REF_BLAS is not set or invalid)
+	$(info )
+	$(error .)
+else
+get_refblas:
+	@echo Using REF_BLAS=$(REF_BLAS)
+endif
+
 ifdef GHZ_MAX
 CFLAGS += -DGHZ_MAX=$(GHZ_MAX)
+get_cpu_freq:
+	@echo Using GHZ_MAX=$(GHZ_MAX) from command line option
 else
 ifeq (,$(wildcard ./cpu_freq.h))
-$(error GHZ_MAX is not set, create cpu_freq.h or specify GHZ_MAX Makefile option)
+get_cpu_freq:
+	$(info )
+	$(info ERROR GHZ_MAX is not set, create cpu_freq.h or specify GHZ_MAX Makefile option)
+	$(info )
+	$(error .)
+else
+get_cpu_freq:
+	@echo Using GHZ_MAX from cpu_freq.h
 endif
 endif
 
@@ -63,7 +82,7 @@ ifeq ($(BLAS_API), 1)
 	mkdir -p $(BINARY_DIR)/BLAS_API/
 endif
 
-common: bin_dir
+common: get_refblas get_cpu_freq bin_dir
 	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
 #	echo $(OBJS)
 

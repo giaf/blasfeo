@@ -34,6 +34,11 @@ LIBS += -lm
 SHARED_LIBS += -lm
 
 else
+
+ifeq ($(REF_BLAS), SYSTEM)
+LIBS += -lblas -llapack -lm
+endif
+
 ifeq ($(REF_BLAS), OPENBLAS)
 LIBS += /opt/openblas/lib/libopenblas.a -pthread -lgfortran -lm
 
