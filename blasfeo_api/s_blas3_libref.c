@@ -41,22 +41,22 @@
 
 
 #define REAL float
-#define STRMAT blasfeo_smat_ref
-#define STRVEC blasfeo_svec_ref
+#define XMAT blasfeo_smat_ref
+#define XVEC blasfeo_svec_ref
 
-#define GEMM_NN_LIBSTR    blasfeo_sgemm_nn_ref
-#define GEMM_NT_LIBSTR    blasfeo_sgemm_nt_ref
+#define GEMM_NN    blasfeo_sgemm_nn_ref
+#define GEMM_NT    blasfeo_sgemm_nt_ref
 
-#define SYRK_LN_LIBSTR    blasfeo_ssyrk_ln_ref
-#define SYRK_LN_MN_LIBSTR blasfeo_ssyrk_ln_mn_ref
+#define SYRK_LN    blasfeo_ssyrk_ln_ref
+#define SYRK_LN_MN blasfeo_ssyrk_ln_mn_ref
 
-#define TRSM_LLNU_LIBSTR  blasfeo_strsm_llnu_ref
-#define TRSM_LUNN_LIBSTR  blasfeo_strsm_lunn_ref
-#define TRSM_RLTU_LIBSTR  blasfeo_strsm_rltu_ref
-#define TRSM_RLTN_LIBSTR  blasfeo_strsm_rltn_ref
-#define TRSM_RUTN_LIBSTR  blasfeo_strsm_rutn_ref
-#define TRMM_RUTN_LIBSTR  blasfeo_strmm_rutn_ref
-#define TRMM_RLNN_LIBSTR  blasfeo_strmm_rlnn_ref
+#define TRSM_LLNU  blasfeo_strsm_llnu_ref
+#define TRSM_LUNN  blasfeo_strsm_lunn_ref
+#define TRSM_RLTU  blasfeo_strsm_rltu_ref
+#define TRSM_RLTN  blasfeo_strsm_rltn_ref
+#define TRSM_RUTN  blasfeo_strsm_rutn_ref
+#define TRMM_RUTN  blasfeo_strmm_rutn_ref
+#define TRMM_RLNN  blasfeo_strmm_rlnn_ref
 
 // TESTING_MODE
 #include "x_blas3_lib.c"

@@ -36,24 +36,24 @@
 
 
 #define REAL double
-#define STRMAT blasfeo_dmat_ref
-#define STRVEC blasfeo_dvec_ref
+#define XMAT blasfeo_dmat_ref
+#define XVEC blasfeo_dvec_ref
 
-#define GEMM_NN_LIBSTR    blasfeo_dgemm_nn_ref
-#define GEMM_NT_LIBSTR    blasfeo_dgemm_nt_ref
-#define GEMM_TN_LIBSTR    blasfeo_dgemm_tn_ref
-#define GEMM_TT_LIBSTR    blasfeo_dgemm_tt_ref
+#define GEMM_NN    blasfeo_dgemm_nn_ref
+#define GEMM_NT    blasfeo_dgemm_nt_ref
+#define GEMM_TN    blasfeo_dgemm_tn_ref
+#define GEMM_TT    blasfeo_dgemm_tt_ref
 
-#define SYRK_LN_LIBSTR    blasfeo_dsyrk_ln_ref
-#define SYRK_LN_MN_LIBSTR blasfeo_dsyrk_ln_mn_ref
+#define SYRK_LN    blasfeo_dsyrk_ln_ref
+#define SYRK_LN_MN blasfeo_dsyrk_ln_mn_ref
 
-#define TRSM_LLNU_LIBSTR  blasfeo_dtrsm_llnu_ref
-#define TRSM_LUNN_LIBSTR  blasfeo_dtrsm_lunn_ref
-#define TRSM_RLTU_LIBSTR  blasfeo_dtrsm_rltu_ref
-#define TRSM_RLTN_LIBSTR  blasfeo_dtrsm_rltn_ref
-#define TRSM_RUTN_LIBSTR  blasfeo_dtrsm_rutn_ref
-#define TRMM_RUTN_LIBSTR  blasfeo_dtrmm_rutn_ref
-#define TRMM_RLNN_LIBSTR  blasfeo_dtrmm_rlnn_ref
+#define TRSM_LLNU  blasfeo_dtrsm_llnu_ref
+#define TRSM_LUNN  blasfeo_dtrsm_lunn_ref
+#define TRSM_RLTU  blasfeo_dtrsm_rltu_ref
+#define TRSM_RLTN  blasfeo_dtrsm_rltn_ref
+#define TRSM_RUTN  blasfeo_dtrsm_rutn_ref
+#define TRMM_RUTN  blasfeo_dtrmm_rutn_ref
+#define TRMM_RLNN  blasfeo_dtrmm_rlnn_ref
 
 
 // TESTING_MODE

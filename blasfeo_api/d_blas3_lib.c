@@ -48,6 +48,7 @@
 #define REAL double
 
 #define XMAT blasfeo_dmat
+#define XVEC blasfeo_dvec
 
 #define GEMM_NN blasfeo_dgemm_nn
 #define GEMM_NT blasfeo_dgemm_nt
