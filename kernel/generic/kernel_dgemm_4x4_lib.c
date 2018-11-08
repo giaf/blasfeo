@@ -394,7 +394,6 @@ void kernel_dgemm_nt_4x4_lib44c(int kmax, double *alpha, double *A, double *B, d
 	kernel_dgemm_nt_4x2_lib44c(kmax, alpha, A, B+0, beta, C+0*ldc, ldc, D+0*ldd, ldd);
 	kernel_dgemm_nt_4x2_lib44c(kmax, alpha, A, B+2, beta, C+2*ldc, ldc, D+2*ldd, ldd);
 	return;
-	}
 #endif
 
 	const int bs = 4;

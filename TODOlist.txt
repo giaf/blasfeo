@@ -5,3 +5,22 @@
 - remove n from trmv
 - store_gen in single precision
 - clean target.h and create it also from cmake (see "file")
+
+
+
+- (some) octave dependencies:
+	BLAS:
+		* dot
+		* gemv
+		* gemm
+		* syrk
+	LAPACK:
+		* geqrf
+		* getrf
+		* getri
+		* getrs
+		* potrf
+		* potri
+		* potrs
+		* trtri
+		* trtrs
