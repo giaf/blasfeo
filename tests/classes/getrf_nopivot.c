@@ -1,4 +1,4 @@
-// CLASS_GETRF
+// CLASS_GETRF_NOPIVOT
 //
 void call_routines(struct RoutineArgs *args){
 
@@ -9,14 +9,14 @@ void call_routines(struct RoutineArgs *args){
 	BLASFEO(ROUTINE)(
 		args->m, args->n,
 		args->sA_po, args->ai, args->aj,
-		args->sD, args->di, args->dj,
-		args->sipiv);
+		args->sD, args->di, args->dj
+		);
 
 	REF(BLASFEO(ROUTINE))(
 		args->m, args->n,
 		args->rA_po, args->ai, args->aj,
 		args->rD, args->di, args->dj,
-		args->ripiv);
+		);
 
 }
 
@@ -46,9 +46,9 @@ void print_routine_matrices(struct RoutineArgs *args)
 
 void set_test_args(struct TestArgs *targs)
 {
-	targs->ii0s = 1;
-	targs->jj0s = 1;
-	targs->kk0s = 1;
-	targs->nis = 10;
-	targs->njs = 10;
+	targs->nis = 9;
+	targs->njs = 9;
+	targs->nks = 9;
+
+	targs->alphas = 1;
 }
