@@ -41,6 +41,8 @@ OBJS += dsyrk.o
 OBJS += dtrmm.o
 OBJS += dtrsm.o
 OBJS += dpotrf.o
+OBJS += dpotrs.o
+OBJS += dtrtrs.o
 
 #endif # HIGH_PERFROMANCE
 
