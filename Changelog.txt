@@ -4,22 +4,29 @@ BLASFEO ChangeLog
 
 ====================================================================
 Version 0.1.1-master
-02-Nov-2018
+08-Nov-2018
 
 common:
 	* example_d_riccati_recursion: add trf for blas_api
 
 BLASFEO_API:
 	* stable version of dsyrk_ln for all targets
+	* dtrsm_llnn for all targets
 
 BLAS_API:
 	* dsyrk for all targets
 	* dtrmm_rlnn for all targets
-	* dtrsm_rltn for all targets
+	* dtrsm_{rltn, llnn, llrn} for all targets
+	* dpotrf for all targets
+	* dpotrs for all targets
+	* dtrtrs for all targets
 	* dcopy for all targets
 
 X64:
-	* AMD_BULLDOZER: fixed performance bug (mix of legacy and VEX code)
+	* AMD_BULLDOZER: fix performance bug (mix of legacy and VEX code)
+
+ARMv8A:
+	* Cortex A53: add basic kernel_dgemm_nn_8x4_lib4
 
 
 
