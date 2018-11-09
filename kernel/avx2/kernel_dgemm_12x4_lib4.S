@@ -14294,8 +14294,8 @@ kernel_dtrsm_nt_rl_one_12x4_vs_lib4:
 
 
 
-//                                       rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24     rsp+32 
-// void kernel_dtrsm_nt_ru_inv_12x4_lib4(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
+//                                       1      2          3        4          5             6          7        8          9        10         11
+// void kernel_dtrsm_nt_ru_inv_12x4_lib4(int k, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -14331,11 +14331,11 @@ kernel_dtrsm_nt_ru_inv_12x4_lib4:
 
 	// call inner dgemm kernel nt
 
-	movq	ARG1, %r10
-	movq	ARG2, %r11
-	movq	ARG3, %r12
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-	movq	ARG4, %r13
+	movq	ARG4, %r13 // B
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4
@@ -14350,25 +14350,26 @@ kernel_dtrsm_nt_ru_inv_12x4_lib4:
 
 	// call inner blender nn
 
-	movq	ARG5, %r10
-	movq	ARG6, %r11 // sdc
-	sall	$5, %r11d // 4*sdc*sizeof(double)
+	movq	ARG5, %r10 // beta
+	movq	ARG6, %r11 // C
+	movq	ARG7, %r12 // sdc
+	sall	$5, %r12d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_12X4_LIB4
+	INNER_SCALE_M1B_12X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_m11_12x4_lib4
+	call inner_scale_m1b_12x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_scale_m11_12x4_lib4
+	callq _inner_scale_m1b_12x4_lib4
 #endif
 #endif
 
 
 	// solve
 
-	movq	ARG9, %r10  // E 
-	movq	ARG10, %r11  // inv_diag_E 
+	movq	ARG10, %r10  // E 
+	movq	ARG11, %r11  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RUT_INV_12X4_LIB4
@@ -14383,8 +14384,8 @@ kernel_dtrsm_nt_ru_inv_12x4_lib4:
 
 	// store n
 
-	movq	ARG7, %r10 // store address D
-	movq	ARG8, %r11 // sdd
+	movq	ARG8, %r10 // store address D
+	movq	ARG9, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
 #if MACRO_LEVEL>=1
@@ -14410,8 +14411,8 @@ kernel_dtrsm_nt_ru_inv_12x4_lib4:
 
 
 
-//                                          rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24     rsp+32              rsp+40  rsp+48
-// void kernel_dtrsm_nt_ru_inv_12x4_vs_lib4(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E, int km, int kn);
+//                                          1      2          3        4          5             6          7        8          9        10         11                  12      13
+// void kernel_dtrsm_nt_ru_inv_12x4_vs_lib4(int k, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E, int km, int kn);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -14447,11 +14448,11 @@ kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
 
 	// call inner dgemm kernel nt
 
-	movq	ARG1, %r10
-	movq	ARG2, %r11
-	movq	ARG3, %r12
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
-	movq	ARG4, %r13
+	movq	ARG4, %r13 // B
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4
@@ -14466,26 +14467,27 @@ kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
 
 	// call inner blender nn
 
-	movq	ARG5, %r10
-	movq	ARG6, %r11 // sdc
-	sall	$5, %r11d // 4*sdc*sizeof(double)
+	movq	ARG5, %r10 // beta
+	movq	ARG6, %r11 // C
+	movq	ARG7, %r12 // sdc
+	sall	$5, %r12d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_12X4_LIB4
+	INNER_SCALE_M1B_12X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_m11_12x4_lib4
+	call inner_scale_m1b_12x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_scale_m11_12x4_lib4
+	callq _inner_scale_m1b_12x4_lib4
 #endif
 #endif
 
 
 	// solve
 
-	movq	ARG9, %r10  // E 
-	movq	ARG10, %r11  // inv_diag_E 
-	movq	ARG12, %r12 // kn 
+	movq	ARG10, %r10  // E 
+	movq	ARG11, %r11  // inv_diag_E 
+	movq	ARG13, %r12 // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RUT_INV_12X4_VS_LIB4
@@ -14500,12 +14502,11 @@ kernel_dtrsm_nt_ru_inv_12x4_vs_lib4:
 
 	// store n
 
-	movq	ARG7, %r10 // store address D
-	movq	ARG8, %r11 // sdd
+	movq	ARG8, %r10 // store address D
+	movq	ARG9, %r11 // sdd
 	sall	$5, %r11d // 4*sdd*sizeof(double)
-
-	movq	ARG11, %r12 // km 
-	movq	ARG12, %r13 // kn 
+	movq	ARG12, %r12 // km 
+	movq	ARG13, %r13 // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_VS_LIB4
