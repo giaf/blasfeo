@@ -22,7 +22,7 @@ PLAT = LINUX
 # Libraries and includes
 #-----------------------------------------------------------------------------
  
-BLLIB = /Users/julie/Documents/Boulot/lapack-dev/lapack/trunk/blas_LINUX.a
+BLLIB = /usr/lib/libblas/libblas.a ../../../lib/libblasfeo.a
 CBLIB = ../lib/cblas_$(PLAT).a
 
 #-----------------------------------------------------------------------------
