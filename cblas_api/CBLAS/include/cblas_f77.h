@@ -170,7 +170,7 @@
    #define F77_ssyr2k     ssyr2k_
    #define F77_strmm      strmm_
    #define F77_strsm      strsm_
-   #define F77_dgemm      dgemm_
+   #define F77_dgemm      blasfeo_dgemm
    #define F77_dsymm      dsymm_
    #define F77_dsyrk      dsyrk_
    #define F77_dsyr2k     dsyr2k_
@@ -192,7 +192,7 @@
 /*
  * Level 1 BLAS
  */
-#define F77_xerbla  XERBLA
+   #define F77_xerbla  XERBLA
    #define F77_srotg      SROTG
    #define F77_srotmg     SROTMG
    #define F77_srot       SROT
@@ -323,7 +323,7 @@
    #define F77_ssyr2k     SSYR2K
    #define F77_strmm      STRMM
    #define F77_strsm      STRSM
-   #define F77_dgemm      DGEMM
+   #define F77_dgemm      blasfeo_dgemm
    #define F77_dsymm      DSYMM
    #define F77_dsyrk      DSYRK
    #define F77_dsyr2k     DSYR2K
@@ -345,7 +345,7 @@
 /*
  * Level 1 BLAS
  */
-#define F77_xerbla  xerbla
+   #define F77_xerbla  xerbla
    #define F77_srotg      srotg
    #define F77_srotmg     srotmg
    #define F77_srot       srot
@@ -476,7 +476,7 @@
    #define F77_ssyr2k     ssyr2k
    #define F77_strmm      strmm
    #define F77_strsm      strsm
-   #define F77_dgemm      dgemm
+   #define F77_dgemm      blasfeo_dgemm
    #define F77_dsymm      dsymm
    #define F77_dsyrk      dsyrk
    #define F77_dsyr2k     dsyr2k
