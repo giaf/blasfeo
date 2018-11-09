@@ -3444,9 +3444,6 @@ tt_1_return:
 	free(smat_mem);
 	return;
 
-
-
-
 	}
 
 
@@ -3734,6 +3731,18 @@ void blasfeo_dtrsm_llnu(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 		}
 	return;
 
+	}
+
+
+
+// dtrsm_lltn
+void blasfeo_dtrsm_lltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_dtrsm_lltn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
 	}
 
 

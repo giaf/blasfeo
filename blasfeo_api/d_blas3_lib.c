@@ -62,6 +62,7 @@
 #define TRMM_RUTN blasfeo_dtrmm_rutn
 #define TRSM_LLNN blasfeo_dtrsm_llnn
 #define TRSM_LLNU blasfeo_dtrsm_llnu
+#define TRSM_LLTN blasfeo_dtrsm_lltn
 #define TRSM_LUNN blasfeo_dtrsm_lunn
 #define TRSM_RLTN blasfeo_dtrsm_rltn
 #define TRSM_RLTU blasfeo_dtrsm_rltu

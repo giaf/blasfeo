@@ -653,6 +653,18 @@ void TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
+// dtrsm_lltn
+void TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_xtrsm_lltn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
 // dtrsm_left_upper_nottransposed_notunit
 void TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -1927,6 +1939,35 @@ void TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			COPY(&m, pB+jj*ldb, &i1, pD+jj*sD->m, &i1);
 		}
 	TRSM(&cl, &cl, &cn, &cu, &m, &n, &alpha, pA, &lda, pD, &ldd);
+	return;
+	}
+
+
+
+// dtrsm_left_lower_transposed_unit
+void TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char ct = 't';
+	REAL *pA = sA->pA+ai+aj*sA->m;
+	REAL *pB = sB->pA+bi+bj*sB->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*sD->m, &i1);
+		}
+	TRSM(&cl, &cl, &ct, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
 	return;
 	}
 
