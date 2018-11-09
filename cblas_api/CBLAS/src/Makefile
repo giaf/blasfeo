@@ -242,6 +242,7 @@ all: $(alev)
 .SUFFIXES: .o .c .f
 
 .c.o:
+	# $(CC) $(CFLAGS) -I../include -I/../../../include -c $*.c
 	$(CC) $(CFLAGS) -I../include -c $*.c
 .f.o:
 	$(FC) $(FFLAGS) -c $*.f
