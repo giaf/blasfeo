@@ -96,7 +96,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 				goto nn_0;
 				}
 			}
-		else if(*tb=='t' | *tb=='T')
+		else if(*tb=='t' | *tb=='T' | *tb=='C')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
 			if(n>=96 | k>=96 | k>K_MAX_STACK)
@@ -121,7 +121,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 			return;
 			}
 		}
-	else if(*ta=='t' | *ta=='T')
+	else if(*ta=='t' | *ta=='T' | *tb=='C')
 		{
 		if(*tb=='n' | *tb=='N')
 			{
@@ -142,7 +142,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 				goto tn_0;
 				}
 			}
-		else if(*tb=='t' | *tb=='T')
+		else if(*tb=='t' | *tb=='T' | *tb=='C')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
 			if(n>=96 | k>=96 | k>K_MAX_STACK)
