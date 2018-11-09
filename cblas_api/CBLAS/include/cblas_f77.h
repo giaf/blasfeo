@@ -39,7 +39,7 @@
 /*
  * Level 1 BLAS
  */
-#define F77_xerbla xerbla_
+   #define F77_xerbla     xerbla_
    #define F77_srotg      srotg_
    #define F77_srotmg     srotmg_
    #define F77_srot       srot_
@@ -66,13 +66,13 @@
    #define F77_izamax_sub izamaxsub_
    #define F77_sdot_sub   sdotsub_
    #define F77_ddot_sub   ddotsub_
-   #define F77_dsdot_sub   dsdotsub_
+   #define F77_dsdot_sub  dsdotsub_
    #define F77_sscal      sscal_
    #define F77_dscal      dscal_
    #define F77_cscal      cscal_
    #define F77_zscal      zscal_
-   #define F77_csscal      csscal_
-   #define F77_zdscal      zdscal_
+   #define F77_csscal     csscal_
+   #define F77_zdscal     zdscal_
    #define F77_cdotu_sub  cdotusub_
    #define F77_cdotc_sub  cdotcsub_
    #define F77_zdotu_sub  zdotusub_
@@ -81,11 +81,11 @@
    #define F77_sasum_sub  sasumsub_
    #define F77_dnrm2_sub  dnrm2sub_
    #define F77_dasum_sub  dasumsub_
-   #define F77_scnrm2_sub  scnrm2sub_
-   #define F77_scasum_sub  scasumsub_
-   #define F77_dznrm2_sub  dznrm2sub_
-   #define F77_dzasum_sub  dzasumsub_
-   #define F77_sdsdot_sub   sdsdotsub_
+   #define F77_scnrm2_sub scnrm2sub_
+   #define F77_scasum_sub scasumsub_
+   #define F77_dznrm2_sub dznrm2sub_
+   #define F77_dzasum_sub dzasumsub_
+   #define F77_sdsdot_sub sdsdotsub_
 /*
  * Level 2 BLAS
  */
@@ -219,13 +219,13 @@
    #define F77_izamax_sub IZAMAXSUB
    #define F77_sdot_sub   SDOTSUB
    #define F77_ddot_sub   DDOTSUB
-   #define F77_dsdot_sub   DSDOTSUB
+   #define F77_dsdot_sub  DSDOTSUB
    #define F77_sscal      SSCAL
    #define F77_dscal      DSCAL
    #define F77_cscal      CSCAL
    #define F77_zscal      ZSCAL
-   #define F77_csscal      CSSCAL
-   #define F77_zdscal      ZDSCAL
+   #define F77_csscal     CSSCAL
+   #define F77_zdscal     ZDSCAL
    #define F77_cdotu_sub  CDOTUSUB
    #define F77_cdotc_sub  CDOTCSUB
    #define F77_zdotu_sub  ZDOTUSUB
@@ -234,11 +234,11 @@
    #define F77_sasum_sub  SASUMSUB
    #define F77_dnrm2_sub  DNRM2SUB
    #define F77_dasum_sub  DASUMSUB
-   #define F77_scnrm2_sub  SCNRM2SUB
-   #define F77_scasum_sub  SCASUMSUB
-   #define F77_dznrm2_sub  DZNRM2SUB
-   #define F77_dzasum_sub  DZASUMSUB
-   #define F77_sdsdot_sub   SDSDOTSUB
+   #define F77_scnrm2_sub SCNRM2SUB
+   #define F77_scasum_sub SCASUMSUB
+   #define F77_dznrm2_sub DZNRM2SUB
+   #define F77_dzasum_sub DZASUMSUB
+   #define F77_sdsdot_sub SDSDOTSUB
 /*
  * Level 2 BLAS
  */
@@ -372,13 +372,13 @@
    #define F77_izamax_sub izamaxsub
    #define F77_sdot_sub   sdotsub
    #define F77_ddot_sub   ddotsub
-   #define F77_dsdot_sub   dsdotsub
+   #define F77_dsdot_sub  dsdotsub
    #define F77_sscal      sscal
    #define F77_dscal      dscal
    #define F77_cscal      cscal
    #define F77_zscal      zscal
-   #define F77_csscal      csscal
-   #define F77_zdscal      zdscal
+   #define F77_csscal     csscal
+   #define F77_zdscal     zdscal
    #define F77_cdotu_sub  cdotusub
    #define F77_cdotc_sub  cdotcsub
    #define F77_zdotu_sub  zdotusub
@@ -387,11 +387,11 @@
    #define F77_sasum_sub  sasumsub
    #define F77_dnrm2_sub  dnrm2sub
    #define F77_dasum_sub  dasumsub
-   #define F77_scnrm2_sub  scnrm2sub
-   #define F77_scasum_sub  scasumsub
-   #define F77_dznrm2_sub  dznrm2sub
-   #define F77_dzasum_sub  dzasumsub
-   #define F77_sdsdot_sub   sdsdotsub
+   #define F77_scnrm2_sub scnrm2sub
+   #define F77_scasum_sub scasumsub
+   #define F77_dznrm2_sub dznrm2sub
+   #define F77_dzasum_sub dzasumsub
+   #define F77_sdsdot_sub sdsdotsub
 /*
  * Level 2 BLAS
  */
