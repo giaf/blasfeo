@@ -597,9 +597,12 @@ void kernel_dtrsm_nt_rl_inv_8x4_vs_lib4c4c(int kmax, double *A, int sda, double 
 // 4x4
 void kernel_dtrsm_nn_rl_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *dE);
 void kernel_dtrsm_nn_rl_inv_4x4_vs_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *dE, int m1, int n1);
-void kernel_dtrsm_nn_ru_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *C, double *D, double *E, int lde, double *dE);
+void kernel_dtrsm_nn_ru_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *dE);
+void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *dE, int m1, int n1);
 void kernel_dtrsm_nt_rl_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *dE);
 void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *dE, int m1, int n1);
+void kernel_dtrsm_nt_ru_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *dE);
+void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *dE, int m1, int n1);
 
 #endif // BLAS_API
 

@@ -492,7 +492,7 @@ u_0:
 		for(jj=0; jj<ii; jj+=4)
 			{
 			kernel_dpack_tn_4_lib4(4, C+jj+ii*ldc, ldc, pU+jj*bs);
-			kernel_dtrsm_nn_ru_inv_4x4_lib4c4c(jj, pU, C+jj*ldc, ldc, pU+jj*bs, pU+jj*bs, C+jj+jj*ldc, ldc, pd+jj);
+			kernel_dtrsm_nn_ru_inv_4x4_lib4c4c(jj, pU, C+jj*ldc, ldc, &d_1, pU+jj*bs, pU+jj*bs, C+jj+jj*ldc, ldc, pd+jj);
 			kernel_dunpack_nt_4_lib4(4, pU+jj*bs, C+jj+ii*ldc, ldc);
 			}
 		kernel_dpack_tn_4_lib4(4, C+ii+ii*ldc, ldc, pD);
@@ -585,7 +585,7 @@ u_0_left_4:
 	for(jj=0; jj<ii; jj+=4)
 		{
 		kernel_dpack_tn_4_vs_lib4(4, C+jj+ii*ldc, ldc, pU+jj*bs, m-ii);
-		kernel_dtrsm_nn_ru_inv_4x4_lib4c4c(jj, pU, C+jj*ldc, ldc, pU+jj*bs, pU+jj*bs, C+jj+jj*ldc, ldc, pd+jj); // TODO vs
+		kernel_dtrsm_nn_ru_inv_4x4_lib4c4c(jj, pU, C+jj*ldc, ldc, &d_1, pU+jj*bs, pU+jj*bs, C+jj+jj*ldc, ldc, pd+jj); // TODO vs
 		kernel_dunpack_nt_4_vs_lib4(4, pU+jj*bs, C+jj+ii*ldc, ldc, m-ii); // TODO vs
 		}
 	kernel_dpack_tn_4_vs_lib4(4, C+ii+ii*ldc, ldc, pD, m-ii); // TODO pack vs with m and n, or triangle

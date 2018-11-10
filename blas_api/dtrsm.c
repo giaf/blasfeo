@@ -115,8 +115,6 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 				if(*diag=='n' | *diag=='N') // _lltn
 					{
 					goto lltn;
-//					printf("\nBLASFEO: dtrsm_lltn: not implemented yet\n");
-//					return;
 					}
 				else if(*diag=='u' | *diag=='U') // _lltu
 					{
@@ -136,8 +134,9 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 				{
 				if(*diag=='n' | *diag=='N') // _lunn
 					{
-					printf("\nBLASFEO: dtrsm_lunn: not implemented yet\n");
-					return;
+//					printf("\nBLASFEO: dtrsm_lunn: not implemented yet\n");
+//					return;
+					goto lunn;
 					}
 				else if(*diag=='u' | *diag=='U') // _lunu
 					{
@@ -912,6 +911,64 @@ lltn_1_return:
 	free(mem);
 	return;
 
+
+/************************************************
+* lunn
+************************************************/
+lunn:
+	goto lunn_0;
+
+lunn_0:
+	// XXX limits of ii and jj swapped !!!
+	pU = pU0;
+	sdu = sdu0;
+	dA = pd0;
+
+	for(ii=0; ii<m; ii++)
+		dA[ii] = 1.0/A[ii+ii*lda];
+
+	mn4 = m%4;
+	m4 = m - mn4;
+
+	ii = 0;
+	for(; ii<n-3; ii+=4)
+		{
+		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
+		if(mn4!=0)
+			{
+			idx = m4;
+			kernel_dtrsm_nt_ru_inv_4x4_vs_lib4c4c(0, pU+(idx+4)*ps, A+idx+(idx+4)*lda, lda, alpha, pU+idx*ps, pU+idx*ps, A+idx+idx*lda, lda, dA+idx, n-ii, mn4);
+			}
+		for(jj=0; jj<m4-3; jj+=4)
+			{
+			idx = m4-jj-4;
+			kernel_dtrsm_nt_ru_inv_4x4_lib4c4c(jj+mn4, pU+(idx+4)*ps, A+idx+(idx+4)*lda, lda, alpha, pU+idx*ps, pU+idx*ps, A+idx+idx*lda, lda, dA+idx);
+			}
+		kernel_dunpack_nt_4_lib4(m, pU, B+ii*ldb, ldb);
+		}
+	if(ii<n)
+		{
+		goto lunn_0_left_4;
+		}
+	goto lunn_0_return;
+
+lunn_0_left_4:
+	kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
+	if(mn4!=0)
+		{
+		idx = m4;
+		kernel_dtrsm_nt_ru_inv_4x4_vs_lib4c4c(0, pU+(idx+4)*ps, A+idx+(idx+4)*lda, lda, alpha, pU+idx*ps, pU+idx*ps, A+idx+idx*lda, lda, dA+idx, n-ii, mn4);
+		}
+	for(jj=0; jj<m4-3; jj+=4)
+		{
+		idx = m4-jj-4;
+		kernel_dtrsm_nt_ru_inv_4x4_vs_lib4c4c(jj+mn4, pU+(idx+4)*ps, A+idx+(idx+4)*lda, lda, alpha, pU+idx*ps, pU+idx*ps, A+idx+idx*lda, lda, dA+idx, n-ii, 4);
+		}
+	kernel_dunpack_nt_4_lib4(m, pU, B+ii*ldb, ldb);
+	goto lunn_0_return;
+
+lunn_0_return:
+	return;
 
 /************************************************
 * rltn
