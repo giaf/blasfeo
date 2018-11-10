@@ -55,6 +55,7 @@ void blasfeo_dtrtrs(char *uplo, char *trans, char *diag, int *pm, int *pn, doubl
 	int lda = *plda;
 
 	char c_l = 'l';
+
 	double d_1 = 1.0;
 
 	int ii;
@@ -73,6 +74,7 @@ void blasfeo_dtrtrs(char *uplo, char *trans, char *diag, int *pm, int *pn, doubl
 			}
 		}
 	
+//	printf("\n%c %c %c %c\n", c_l, *uplo, *trans, *diag);
 	blasfeo_dtrsm(&c_l, uplo, trans, diag, pm, pn, &d_1, A, plda, B, pldb);
 
 	return;

@@ -106,7 +106,7 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 					}
 				else if(*diag=='u' | *diag=='U') // _llnu
 					{
-					printf("\nBLASFEO: dtrmm_llnu: not implemented yet\n");
+					printf("\nBLASFEO: dtrsm_llnu: not implemented yet\n");
 					return;
 					}
 				}
@@ -115,18 +115,18 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 				if(*diag=='n' | *diag=='N') // _lltn
 					{
 					goto lltn;
-//					printf("\nBLASFEO: dtrmm_lltn: not implemented yet\n");
+//					printf("\nBLASFEO: dtrsm_lltn: not implemented yet\n");
 //					return;
 					}
 				else if(*diag=='u' | *diag=='U') // _lltu
 					{
-					printf("\nBLASFEO: dtrmm_lltu: not implemented yet\n");
+					printf("\nBLASFEO: dtrsm_lltu: not implemented yet\n");
 					return;
 					}
 				}
 			else
 				{
-				printf("\nBLASFEO: dtrmm: wrong value for transa\n");
+				printf("\nBLASFEO: dtrsm: wrong value for transa\n");
 				return;
 				}
 			}
@@ -136,12 +136,12 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 				{
 				if(*diag=='n' | *diag=='N') // _lunn
 					{
-					printf("\nBLASFEO: dtrmm_lunn: not implemented yet\n");
+					printf("\nBLASFEO: dtrsm_lunn: not implemented yet\n");
 					return;
 					}
 				else if(*diag=='u' | *diag=='U') // _lunu
 					{
-					printf("\nBLASFEO: dtrmm_lunu: not implemented yet\n");
+					printf("\nBLASFEO: dtrsm_lunu: not implemented yet\n");
 					return;
 					}
 				}
@@ -149,24 +149,24 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 				{
 				if(*diag=='n' | *diag=='N') // _lutn
 					{
-					printf("\nBLASFEO: dtrmm_lutn: not implemented yet\n");
+					printf("\nBLASFEO: dtrsm_lutn: not implemented yet\n");
 					return;
 					}
 				else if(*diag=='u' | *diag=='U') // _lutu
 					{
-					printf("\nBLASFEO: dtrmm_lutu: not implemented yet\n");
+					printf("\nBLASFEO: dtrsm_lutu: not implemented yet\n");
 					return;
 					}
 				}
 			else
 				{
-				printf("\nBLASFEO: dtrmm: wrong value for transa\n");
+				printf("\nBLASFEO: dtrsm: wrong value for transa\n");
 				return;
 				}
 			}
 		else
 			{
-			printf("\nBLASFEO: dtrmm: wrong value for uplo\n");
+			printf("\nBLASFEO: dtrsm: wrong value for uplo\n");
 			return;
 			}
 		}
@@ -178,12 +178,12 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 				{
 				if(*diag=='n' | *diag=='N') // _rlnn
 					{
-					printf("\nBLASFEO: dtrmm_rlnn: not implemented yet\n");
+					printf("\nBLASFEO: dtrsm_rlnn: not implemented yet\n");
 					return;
 					}
 				else if(*diag=='u' | *diag=='U') // _rlnu
 					{
-					printf("\nBLASFEO: dtrmm_rlnu: not implemented yet\n");
+					printf("\nBLASFEO: dtrsm_rlnu: not implemented yet\n");
 					return;
 					}
 				}
@@ -195,13 +195,13 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 					}
 				else if(*diag=='u' | *diag=='U') // _rltu
 					{
-					printf("\nBLASFEO: dtrmm_rltu: not implemented yet\n");
+					printf("\nBLASFEO: dtrsm_rltu: not implemented yet\n");
 					return;
 					}
 				}
 			else
 				{
-				printf("\nBLASFEO: dtrmm: wrong value for transa\n");
+				printf("\nBLASFEO: dtrsm: wrong value for transa\n");
 				return;
 				}
 			}
@@ -211,12 +211,12 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 				{
 				if(*diag=='n' | *diag=='N') // _runn
 					{
-					printf("\nBLASFEO: dtrmm_runn: not implemented yet\n");
+					printf("\nBLASFEO: dtrsm_runn: not implemented yet\n");
 					return;
 					}
 				else if(*diag=='u' | *diag=='U') // _runu
 					{
-					printf("\nBLASFEO: dtrmm_runu: not implemented yet\n");
+					printf("\nBLASFEO: dtrsm_runu: not implemented yet\n");
 					return;
 					}
 				}
@@ -224,30 +224,30 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 				{
 				if(*diag=='n' | *diag=='N') // _rutn
 					{
-					printf("\nBLASFEO: dtrmm_rutn: not implemented yet\n");
+					printf("\nBLASFEO: dtrsm_rutn: not implemented yet\n");
 					return;
 					}
 				else if(*diag=='u' | *diag=='U') // _rutu
 					{
-					printf("\nBLASFEO: dtrmm_rutu: not implemented yet\n");
+					printf("\nBLASFEO: dtrsm_rutu: not implemented yet\n");
 					return;
 					}
 				}
 			else
 				{
-				printf("\nBLASFEO: dtrmm: wrong value for transa\n");
+				printf("\nBLASFEO: dtrsm: wrong value for transa\n");
 				return;
 				}
 			}
 		else
 			{
-			printf("\nBLASFEO: dtrmm: wrong value for uplo\n");
+			printf("\nBLASFEO: dtrsm: wrong value for uplo\n");
 			return;
 			}
 		}
 	else
 		{
-		printf("\nBLASFEO: dtrmm: wrong value for side\n");
+		printf("\nBLASFEO: dtrsm: wrong value for side\n");
 		return;
 		}
 
@@ -355,7 +355,7 @@ llnn_0:
 			}
 		kernel_dunpack_nt_4_lib4(m, pU, B+ii*ldb, ldb);
 		}
-	if(ii<m)
+	if(ii<n)
 		{
 		goto llnn_0_left_4;
 		}
@@ -503,7 +503,7 @@ llnn_1:
 			}
 		kernel_dunpack_nt_4_lib4(m, pU, B+ii*ldb, ldb);
 		}
-	if(ii<m)
+	if(ii<n)
 		{
 		goto llnn_1_left_4;
 		}
@@ -605,13 +605,13 @@ lltn_0:
 		kernel_dunpack_nt_4_lib4(m, pU+4*sdu, B+(ii+4)*ldb, ldb);
 		kernel_dunpack_nt_4_lib4(m, pU+8*sdu, B+(ii+8)*ldb, ldb);
 		}
-	if(ii<m)
+	if(ii<n)
 		{
-		if(m-ii<=4)
+		if(n-ii<=4)
 			{
 			goto lltn_0_left_4;
 			}
-		if(m-ii<=8)
+		if(n-ii<=8)
 			{
 			goto lltn_0_left_8;
 			}
@@ -638,9 +638,9 @@ lltn_0:
 		kernel_dunpack_nt_4_lib4(m, pU, B+ii*ldb, ldb);
 		kernel_dunpack_nt_4_lib4(m, pU+4*sdu, B+(ii+4)*ldb, ldb);
 		}
-	if(ii<m)
+	if(ii<n)
 		{
-		if(m-ii<=4)
+		if(n-ii<=4)
 			{
 			goto lltn_0_left_4;
 			}
@@ -665,7 +665,7 @@ lltn_0:
 			}
 		kernel_dunpack_nt_4_lib4(m, pU, B+ii*ldb, ldb);
 		}
-	if(ii<m)
+	if(ii<n)
 		{
 		goto lltn_0_left_4;
 		}
@@ -846,7 +846,7 @@ lltn_1:
 			}
 		kernel_dunpack_nt_4_lib4(m, pU, B+ii*ldb, ldb);
 		}
-	if(ii<m)
+	if(ii<n)
 		{
 		goto lltn_1_left_4;
 		}

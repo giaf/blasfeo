@@ -66,6 +66,7 @@ void blasfeo_dpotrs(char *uplo, int *pm, int *pn, double *A, int *plda, double *
 	if(m==0 | n==0)
 		return;
 	
+//	printf("\n%c\n", *uplo);
 	if(*uplo=='u' | *uplo=='U')
 		{
 		blasfeo_dtrsm(&c_l, &c_u, &c_t, &c_n, pm, pn, &d_1, A, plda, B, pldb);
