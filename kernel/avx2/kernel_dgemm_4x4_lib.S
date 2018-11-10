@@ -1904,21 +1904,18 @@ inner_edge_dtrsm_rlt_inv_4x4_lib:
 	vfnmadd231pd	%ymm0, %ymm13, %ymm2
 	vbroadcastsd	24(%r10), %ymm13
 	vfnmadd231pd	%ymm0, %ymm13, %ymm3
-	addq	%r11, %r10
 
 	vbroadcastsd	8(%r12), %ymm13
 	vmulpd			%ymm1, %ymm13, %ymm1
-	vbroadcastsd	16(%r10), %ymm13
+	vbroadcastsd	16(%r10, %r11, 1), %ymm13
 	vfnmadd231pd	%ymm1, %ymm13, %ymm2
-	vbroadcastsd	24(%r10), %ymm13
+	vbroadcastsd	24(%r10, %r11, 1), %ymm13
 	vfnmadd231pd	%ymm1, %ymm13, %ymm3
-	addq	%r11, %r10
 
 	vbroadcastsd	16(%r12), %ymm13
 	vmulpd			%ymm2, %ymm13, %ymm2
-	vbroadcastsd	24(%r10), %ymm13
+	vbroadcastsd	24(%r10, %r11, 2), %ymm13
 	vfnmadd231pd	%ymm2, %ymm13, %ymm3
-	addq	%r11, %r10
 
 	vbroadcastsd	24(%r12), %ymm13
 	vmulpd			%ymm3, %ymm13, %ymm3
@@ -2166,7 +2163,7 @@ inner_edge_dtrsm_run_inv_4x4_vs_lib:
 	vmulpd			%ymm3, %ymm13, %ymm3
 
 0:
-	
+
 #if MACRO_LEVEL>=1
 	.endm
 #else

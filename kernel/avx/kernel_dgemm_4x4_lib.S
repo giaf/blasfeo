@@ -2119,24 +2119,21 @@ inner_edge_dtrsm_rlt_inv_4x4_lib:
 	vbroadcastsd	24(%r10), %ymm13
 	vmulpd			%ymm0, %ymm13, %ymm15
 	vsubpd			%ymm15, %ymm3, %ymm3
-	addq	%r11, %r10
 
 	vbroadcastsd	8(%r12), %ymm13
 	vmulpd			%ymm1, %ymm13, %ymm1
-	vbroadcastsd	16(%r10), %ymm13
+	vbroadcastsd	16(%r10, %r11, 1), %ymm13
 	vmulpd			%ymm1, %ymm13, %ymm15
 	vsubpd			%ymm15, %ymm2, %ymm2
-	vbroadcastsd	24(%r10), %ymm13
+	vbroadcastsd	24(%r10, %r11, 1), %ymm13
 	vmulpd			%ymm1, %ymm13, %ymm15
 	vsubpd			%ymm15, %ymm3, %ymm3
-	addq	%r11, %r10
 
 	vbroadcastsd	16(%r12), %ymm13
 	vmulpd			%ymm2, %ymm13, %ymm2
-	vbroadcastsd	24(%r10), %ymm13
+	vbroadcastsd	24(%r10, %r11, 2), %ymm13
 	vmulpd			%ymm2, %ymm13, %ymm15
 	vsubpd			%ymm15, %ymm3, %ymm3
-	addq	%r11, %r10
 
 	vbroadcastsd	24(%r12), %ymm13
 	vmulpd			%ymm3, %ymm13, %ymm3

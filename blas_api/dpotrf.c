@@ -400,7 +400,7 @@ u_0:
 			kernel_dpack_tn_4_lib4(4, C+jj+(ii+4)*ldc, ldc, pU+jj*bs+4*sdu);
 			kernel_dpack_tn_4_lib4(4, C+jj+(ii+8)*ldc, ldc, pU+jj*bs+8*sdu);
 
-			kernel_dtrsm_nn_ru_inv_12x4_lib4c4c(jj, pU, sdu, C+jj*ldc, ldc, pU+jj*bs, sdu, pU+jj*bs, sdu, C+jj+jj*ldc, ldc, pd+jj);
+			kernel_dtrsm_nn_ru_inv_12x4_lib4c4c(jj, pU, sdu, C+jj*ldc, ldc, &d_1, pU+jj*bs, sdu, pU+jj*bs, sdu, C+jj+jj*ldc, ldc, pd+jj);
 
 			kernel_dunpack_nt_4_lib4(4, pU+jj*bs+0*sdu, C+jj+(ii+0)*ldc, ldc);
 			kernel_dunpack_nt_4_lib4(4, pU+jj*bs+4*sdu, C+jj+(ii+4)*ldc, ldc);
@@ -461,7 +461,7 @@ u_0:
 			{
 			kernel_dpack_tn_4_lib4(4, C+jj+(ii+0)*ldc, ldc, pU+jj*bs+0*sdu);
 			kernel_dpack_tn_4_lib4(4, C+jj+(ii+4)*ldc, ldc, pU+jj*bs+4*sdu);
-			kernel_dtrsm_nn_ru_inv_8x4_lib4c4c(jj, pU, sdu, C+jj*ldc, ldc, pU+jj*bs, sdu, pU+jj*bs, sdu, C+jj+jj*ldc, ldc, pd+jj);
+			kernel_dtrsm_nn_ru_inv_8x4_lib4c4c(jj, pU, sdu, C+jj*ldc, ldc, &d_1, pU+jj*bs, sdu, pU+jj*bs, sdu, C+jj+jj*ldc, ldc, pd+jj);
 			kernel_dunpack_nt_4_lib4(4, pU+jj*bs+0*sdu, C+jj+(ii+0)*ldc, ldc);
 			kernel_dunpack_nt_4_lib4(4, pU+jj*bs+4*sdu, C+jj+(ii+4)*ldc, ldc);
 			}
@@ -514,7 +514,7 @@ u_0_left_12:
 		kernel_dpack_tn_4_lib4(4, C+jj+(ii+4)*ldc, ldc, pU+jj*bs+4*sdu);
 		kernel_dpack_tn_4_vs_lib4(4, C+jj+(ii+8)*ldc, ldc, pU+jj*bs+8*sdu, m-ii-8);
 
-		kernel_dtrsm_nn_ru_inv_12x4_lib4c4c(jj, pU, sdu, C+jj*ldc, ldc, pU+jj*bs, sdu, pU+jj*bs, sdu, C+jj+jj*ldc, ldc, pd+jj); // TODO vs
+		kernel_dtrsm_nn_ru_inv_12x4_lib4c4c(jj, pU, sdu, C+jj*ldc, ldc, &d_1, pU+jj*bs, sdu, pU+jj*bs, sdu, C+jj+jj*ldc, ldc, pd+jj); // TODO vs
 
 		kernel_dunpack_nt_4_lib4(4, pU+jj*bs+0*sdu, C+jj+(ii+0)*ldc, ldc);
 		kernel_dunpack_nt_4_lib4(4, pU+jj*bs+4*sdu, C+jj+(ii+4)*ldc, ldc);
@@ -562,7 +562,7 @@ u_0_left_8:
 		kernel_dpack_tn_4_lib4(4, C+jj+(ii+0)*ldc, ldc, pU+jj*bs+0*sdu);
 		kernel_dpack_tn_4_vs_lib4(4, C+jj+(ii+4)*ldc, ldc, pU+jj*bs+4*sdu, m-ii-4);
 
-		kernel_dtrsm_nn_ru_inv_8x4_lib4c4c(jj, pU, sdu, C+jj*ldc, ldc, pU+jj*bs, sdu, pU+jj*bs, sdu, C+jj+jj*ldc, ldc, pd+jj); // TODO vs
+		kernel_dtrsm_nn_ru_inv_8x4_lib4c4c(jj, pU, sdu, C+jj*ldc, ldc, &d_1, pU+jj*bs, sdu, pU+jj*bs, sdu, C+jj+jj*ldc, ldc, pd+jj); // TODO vs
 
 		kernel_dunpack_nt_4_lib4(4, pU+jj*bs+0*sdu, C+jj+(ii+0)*ldc, ldc);
 		kernel_dunpack_nt_4_vs_lib4(4, pU+jj*bs+4*sdu, C+jj+(ii+4)*ldc, ldc, m-ii-4);
