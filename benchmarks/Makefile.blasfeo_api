@@ -897,7 +897,7 @@ STRSM_OBJS += blasfeo_api_strsm_runn
 RUN_STRSM_OBJS += run_blasfeo_api_strsm_runn
 
 blasfeo_api_strsm_runn: common
-	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/BLASFEO_API/strsm_runn_benchmark.o -DSINGLE_PRECISION -DTRSM_RLNU
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/BLASFEO_API/strsm_runn_benchmark.o -DSINGLE_PRECISION -DTRSM_RUNN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/BLASFEO_API/strsm_runn_benchmark.o -o $(BINARY_DIR)/BLASFEO_API/strsm_runn_benchmark.out $(LIBS)
 
 run_blasfeo_api_strsm_runn:
@@ -913,7 +913,7 @@ STRSM_OBJS += blasfeo_api_strsm_rutn
 RUN_STRSM_OBJS += run_blasfeo_api_strsm_rutn
 
 blasfeo_api_strsm_rutn: common
-	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/BLASFEO_API/strsm_rutn_benchmark.o -DSINGLE_PRECISION -DTRSM_RLTU
+	$(CC) $(CFLAGS) -c x_benchmark_blasfeo_api.c -o $(BINARY_DIR)/BLASFEO_API/strsm_rutn_benchmark.o -DSINGLE_PRECISION -DTRSM_RUTN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/BLASFEO_API/strsm_rutn_benchmark.o -o $(BINARY_DIR)/BLASFEO_API/strsm_rutn_benchmark.out $(LIBS)
 
 run_blasfeo_api_strsm_rutn:
