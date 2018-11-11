@@ -350,10 +350,12 @@ int main()
 #elif defined(TRSM_LUNN)
 				blasfeo_dtrsm_lunn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_LUTN)
+#elif defined(TRSM_RLNN)
 #elif defined(TRSM_RLTN)
 				blasfeo_dtrsm_rltn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_RLTU)
 				blasfeo_dtrsm_rltu(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
+#elif defined(TRSM_RUNN)
 #elif defined(TRSM_RUTN)
 				blasfeo_dtrsm_rutn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(GELQF)
@@ -423,10 +425,12 @@ int main()
 #elif defined(TRSM_LUNN)
 				blasfeo_strsm_lunn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_LUTN)
+#elif defined(TRSM_RLNN)
 #elif defined(TRSM_RLTN)
 				blasfeo_strsm_rltn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_RLTU)
 				blasfeo_strsm_rltu(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
+#elif defined(TRSM_RUNN)
 #elif defined(TRSM_RUTN)
 				blasfeo_strsm_rutn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(GELQF)
@@ -480,7 +484,7 @@ int main()
 
 #if defined(GEMM_NN) | defined(GEMM_NT) | defined(GEMM_TN) | defined(GEMM_TT)
 		double flop_operation = 2.0*n*n*n;
-#elif defined(SYRK_LN) | defined(SYRK_LT) | defined(SYRK_UN) | defined(SYRK_UT) | defined(TRMM_RLNN) | defined(TRMM_RUTN) | defined(TRSM_LLNN) | defined(TRSM_LLNU) | defined(TRSM_LLTN) | defined(TRSM_LUNN) | defined(TRSM_LUTN) | defined(TRSM_RLTN) | defined(TRSM_RLTU) | defined(TRSM_RUTN)
+#elif defined(SYRK_LN) | defined(SYRK_LT) | defined(SYRK_UN) | defined(SYRK_UT) | defined(TRMM_RLNN) | defined(TRMM_RUTN) | defined(TRSM_LLNN) | defined(TRSM_LLNU) | defined(TRSM_LLTN) | defined(TRSM_LUNN) | defined(TRSM_LUTN) | defined(TRSM_RLNN) | defined(TRSM_RLTN) | defined(TRSM_RLTU) | defined(TRSM_RUNN) | defined(TRSM_RUTN)
 		double flop_operation = 1.0*n*n*n;
 #elif defined(GELQF) | defined(GEQRF)
 		double flop_operation = 4.0/3.0*n*n*n;

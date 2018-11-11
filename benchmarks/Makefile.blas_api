@@ -299,6 +299,22 @@ run_blas_api_dtrsm_lutn:
 	./$(BINARY_DIR)/BLAS_API/dtrsm_lutn_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/dtrsm_lutn.m
 
 
+# dtrsm_rlnn
+
+DTRSM_OBJS += blas_api_dtrsm_rlnn
+RUN_DTRSM_OBJS += run_blas_api_dtrsm_rlnn
+
+blas_api_dtrsm_rlnn: common
+	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/dtrsm_rlnn_benchmark.o -DDOUBLE_PRECISION -DTRSM_RLNN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLAS_API/dtrsm_rlnn_benchmark.o -o $(BINARY_DIR)/BLAS_API/dtrsm_rlnn_benchmark.out $(LIBS)
+
+run_blas_api_dtrsm_rlnn:
+	mkdir -p ./$(BINARY_DIR)/BLAS_API/data
+	@echo
+	@echo benchmarking dtrsm_rlnn
+	./$(BINARY_DIR)/BLAS_API/dtrsm_rlnn_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/dtrsm_rlnn.m
+
+
 # dtrsm_rltn
 
 DTRSM_OBJS += blas_api_dtrsm_rltn
@@ -329,6 +345,22 @@ run_blas_api_dtrsm_rltu:
 	@echo
 	@echo benchmarking dtrsm_rltu
 	./$(BINARY_DIR)/BLAS_API/dtrsm_rltu_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/dtrsm_rltu.m
+
+
+# dtrsm_runn
+
+DTRSM_OBJS += blas_api_dtrsm_runn
+RUN_DTRSM_OBJS += run_blas_api_dtrsm_runn
+
+blas_api_dtrsm_runn: common
+	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/dtrsm_runn_benchmark.o -DDOUBLE_PRECISION -DTRSM_RUNN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLAS_API/dtrsm_runn_benchmark.o -o $(BINARY_DIR)/BLAS_API/dtrsm_runn_benchmark.out $(LIBS)
+
+run_blas_api_dtrsm_runn:
+	mkdir -p ./$(BINARY_DIR)/BLAS_API/data
+	@echo
+	@echo benchmarking dtrsm_runn
+	./$(BINARY_DIR)/BLAS_API/dtrsm_runn_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/dtrsm_runn.m
 
 
 # dtrsm_rutn
@@ -811,6 +843,22 @@ run_blas_api_strsm_lutn:
 	./$(BINARY_DIR)/BLAS_API/strsm_lutn_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/strsm_lutn.m
 
 
+# strsm_rlnn
+
+STRSM_OBJS += blas_api_strsm_rlnn
+RUN_STRSM_OBJS += run_blas_api_strsm_rlnn
+
+blas_api_strsm_rlnn: common
+	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/strsm_rlnn_benchmark.o -DSINGLE_PRECISION -DTRSM_RLNN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLAS_API/strsm_rlnn_benchmark.o -o $(BINARY_DIR)/BLAS_API/strsm_rlnn_benchmark.out $(LIBS)
+
+run_blas_api_strsm_rlnn:
+	mkdir -p ./$(BINARY_DIR)/BLAS_API/data
+	@echo
+	@echo benchmarking strsm_rlnn
+	./$(BINARY_DIR)/BLAS_API/strsm_rlnn_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/strsm_rlnn.m
+
+
 # strsm_rltn
 
 STRSM_OBJS += blas_api_strsm_rltn
@@ -843,13 +891,29 @@ run_blas_api_strsm_rltu:
 	./$(BINARY_DIR)/BLAS_API/strsm_rltu_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/strsm_rltu.m
 
 
+# strsm_runn
+
+STRSM_OBJS += blas_api_strsm_runn
+RUN_STRSM_OBJS += run_blas_api_strsm_runn
+
+blas_api_strsm_runn: common
+	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/strsm_runn_benchmark.o -DSINGLE_PRECISION -DTRSM_RUNN
+	$(CC) $(CFLAGS) $(BINARY_DIR)/BLAS_API/strsm_runn_benchmark.o -o $(BINARY_DIR)/BLAS_API/strsm_runn_benchmark.out $(LIBS)
+
+run_blas_api_strsm_runn:
+	mkdir -p ./$(BINARY_DIR)/BLAS_API/data
+	@echo
+	@echo benchmarking strsm_runn
+	./$(BINARY_DIR)/BLAS_API/strsm_runn_benchmark.out > ./$(BINARY_DIR)/BLAS_API/data/strsm_runn.m
+
+
 # strsm_rutn
 
 STRSM_OBJS += blas_api_strsm_rutn
 RUN_STRSM_OBJS += run_blas_api_strsm_rutn
 
 blas_api_strsm_rutn: common
-	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/strsm_rutn_benchmark.o -DSINGLE_PRECISION -DTRSM_RLTU
+	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/strsm_rutn_benchmark.o -DSINGLE_PRECISION -DTRSM_RUTN
 	$(CC) $(CFLAGS) $(BINARY_DIR)/BLAS_API/strsm_rutn_benchmark.o -o $(BINARY_DIR)/BLAS_API/strsm_rutn_benchmark.out $(LIBS)
 
 run_blas_api_strsm_rutn:
