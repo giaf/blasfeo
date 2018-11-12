@@ -8579,8 +8579,8 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4:
 
 
 
-//                                      edi    rsi        rdx        ecx        r8         r9
-// void kernel_dtrsm_nt_rl_one_4x4_lib4(int k, double *A, double *B, double *C, double *D, double *E);
+//                                      1      2          3          4             5          6          7
+// void kernel_dtrsm_nt_rl_one_4x4_lib4(int k, double *A, double *B, double *beta, double *C, double *D, double *E);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -8595,7 +8595,7 @@ _kernel_dtrsm_nt_rl_one_4x4_lib4:
 	.def kernel_dtrsm_nt_rl_one_4x4_lib4; .scl 2; .type 32; .endef
 kernel_dtrsm_nt_rl_one_4x4_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -8606,11 +8606,11 @@ kernel_dtrsm_nt_rl_one_4x4_lib4:
 	vmovapd	%ymm0, %ymm3
 
 
-	// call inner dgemm kernel nt 
+	// call inner dgemm kernel nt
 
-	movq	ARG1, %r10
-	movq	ARG2, %r11
-	movq	ARG3, %r12
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // B
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_4X4_LIB4
@@ -8625,22 +8625,23 @@ kernel_dtrsm_nt_rl_one_4x4_lib4:
 
 	// call inner blender_loader nn
 
-	movq	ARG4, %r10
+	movq	ARG4, %r10 // beta
+	movq	ARG5, %r11 // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_4X4_LIB4
+	INNER_SCALE_M1B_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_m11_4x4_lib4
+	call inner_scale_m1b_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_scale_m11_4x4_lib4
+	callq _inner_scale_m1b_4x4_lib4
 #endif
 #endif
 
 
 	// solve
 
-	movq	ARG6, %r10  // E 
+	movq	ARG7, %r10  // E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_ONE_4X4_LIB4
@@ -8655,7 +8656,7 @@ kernel_dtrsm_nt_rl_one_4x4_lib4:
 
 	// store
 
-	movq	ARG5, %r10 // D
+	movq	ARG6, %r10 // D
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB4
@@ -8680,8 +8681,8 @@ kernel_dtrsm_nt_rl_one_4x4_lib4:
 
 
 
-//                                         edi    rsi        rdx        ecx        r8         r9         rsp+8   rsp+16
-// void kernel_dtrsm_nt_rl_one_4x4_vs_lib4(int k, double *A, double *B, double *C, double *D, double *E, int km, int kn);
+//                                         1      2          3          4             5          6          7          8       9
+// void kernel_dtrsm_nt_rl_one_4x4_vs_lib4(int k, double *A, double *B, double *beta, double *C, double *D, double *E, int km, int kn);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -8696,7 +8697,7 @@ _kernel_dtrsm_nt_rl_one_4x4_vs_lib4:
 	.def kernel_dtrsm_nt_rl_one_4x4_vs_lib4; .scl 2; .type 32; .endef
 kernel_dtrsm_nt_rl_one_4x4_vs_lib4:
 #endif
-	
+
 	PROLOGUE
 
 	// zero accumulation registers
@@ -8707,11 +8708,11 @@ kernel_dtrsm_nt_rl_one_4x4_vs_lib4:
 	vmovapd	%ymm0, %ymm3
 
 
-	// call inner dgemm kernel nt 
+	// call inner dgemm kernel nt
 
-	movq	ARG1, %r10
-	movq	ARG2, %r11
-	movq	ARG3, %r12
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // B
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_4X4_LIB4
@@ -8726,7 +8727,8 @@ kernel_dtrsm_nt_rl_one_4x4_vs_lib4:
 
 	// call inner blender_loader nn
 
-	movq	ARG4, %r10 // C
+	movq	ARG4, %r10 // beta
+	movq	ARG5, %r11 // C
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_4X4_LIB4
@@ -8741,8 +8743,8 @@ kernel_dtrsm_nt_rl_one_4x4_vs_lib4:
 
 	// solve
 
-	movq	ARG6, %r10  // E 
-	movq	ARG8, %r11 // kn 
+	movq	ARG7, %r10  // E
+	movq	ARG9, %r11 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_ONE_4X4_VS_LIB4
@@ -8757,9 +8759,9 @@ kernel_dtrsm_nt_rl_one_4x4_vs_lib4:
 
 	// store
 
-	movq	ARG5, %r10 // D
-	movq	ARG7, %r11 // km 
-	movq	ARG8, %r12 // kn 
+	movq	ARG6, %r10 // D
+	movq	ARG8, %r11 // km
+	movq	ARG9, %r12 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_VS_LIB4
