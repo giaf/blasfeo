@@ -8731,12 +8731,12 @@ kernel_dtrsm_nt_rl_one_4x4_vs_lib4:
 	movq	ARG5, %r11 // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_4X4_LIB4
+	INNER_SCALE_M1B_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_m11_4x4_lib4
+	call inner_scale_m1b_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_scale_m11_4x4_lib4
+	callq _inner_scale_m1b_4x4_lib4
 #endif
 #endif
 

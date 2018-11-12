@@ -3823,24 +3823,23 @@ inner_edge_dtrsm_rlt_one_4x4_vs_lib4:
 #endif
 
 	cmpl			$2, %r11d
-
 	jl				0f // ret
 
 	vbroadcastsd	8(%r10), %ymm13
-	cmpl			$3, %r11d
 	vmulpd			%ymm0, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm1, %ymm1
 
+	cmpl			$3, %r11d
 	jl				0f // ret
 
 	vbroadcastsd	16(%r10), %ymm13
-	cmpl			$4, %r11d
 	vmulpd			%ymm0, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm2, %ymm2
 	vbroadcastsd	48(%r10), %ymm13
 	vmulpd			%ymm1, %ymm13, %ymm12
 	vsubpd			%ymm12, %ymm2, %ymm2
 
+	cmpl			$4, %r11d
 	jl				0f // ret
 
 	vbroadcastsd	24(%r10), %ymm13
@@ -9220,12 +9219,12 @@ kernel_dtrsm_nt_rl_one_4x4_vs_lib4:
 	movq	ARG5, %r11 // C
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_M11_4X4_LIB4
+	INNER_BLEND_SCALE_M1B_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_m11_4x4_lib4
+	call inner_blend_scale_m1b_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_blend_scale_m11_4x4_lib4
+	callq _inner_blend_scale_m1b_4x4_lib4
 #endif
 #endif
 
@@ -9239,7 +9238,7 @@ kernel_dtrsm_nt_rl_one_4x4_vs_lib4:
 	INNER_EDGE_DTRSM_RLT_ONE_4X4_VS_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dtrsm_rlt_one_4x4_vs_lib4
+//	call inner_edge_dtrsm_rlt_one_4x4_vs_lib4
 #elif defined(OS_MAC)
 	callq _inner_edge_dtrsm_rlt_one_4x4_vs_lib4
 #endif

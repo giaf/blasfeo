@@ -842,7 +842,7 @@ llnu_1:
 llnu_1_left_12:
 	kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
 	kernel_dpack_tn_4_lib4(m, B+(ii+4)*ldb, ldb, pU+4*sdu);
-	kernel_dpack_tn_4_vs_lib4(m, B+(ii+8)*ldb, ldb, pU+8*sdu, n-ii);
+	kernel_dpack_tn_4_vs_lib4(m, B+(ii+8)*ldb, ldb, pU+8*sdu, n-ii-8);
 	for(jj=0; jj<m; jj+=4)
 		{
 		kernel_dtrsm_nt_rl_one_12x4_vs_lib4(jj, pU, sdu, sB.pA+jj*sdb, alpha, pU+jj*ps, sdu, pU+jj*ps, sdu, sB.pA+jj*ps+jj*sdb, n-ii, m-jj);
@@ -856,7 +856,7 @@ goto llnu_1_return;
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 llnu_1_left_8:
 	kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
-	kernel_dpack_tn_4_vs_lib4(m, B+(ii+4)*ldb, ldb, pU+4*sdu, n-ii);
+	kernel_dpack_tn_4_vs_lib4(m, B+(ii+4)*ldb, ldb, pU+4*sdu, n-ii-4);
 	for(jj=0; jj<m; jj+=4)
 		{
 		kernel_dtrsm_nt_rl_one_8x4_vs_lib4(jj, pU, sdu, sB.pA+jj*sdb, alpha, pU+jj*ps, sdu, pU+jj*ps, sdu, sB.pA+jj*ps+jj*sdb, n-ii, m-jj);
