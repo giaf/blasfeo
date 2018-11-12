@@ -46,8 +46,8 @@
 
 
 #define REAL float
-
 #define XMAT blasfeo_smat
+#define XVEC blasfeo_svec
 
 #define GEMM_NN blasfeo_sgemm_nn
 #define GEMM_NT blasfeo_sgemm_nt

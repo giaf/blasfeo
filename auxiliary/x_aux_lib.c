@@ -380,7 +380,7 @@ void GEAD_LIBSTR(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj, struc
 
 
 // set all elements of a strmat to a value
-void GESE(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
+void GESE_LIBSTR(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -397,7 +397,3 @@ void GESE(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
 		}
 	return;
 	}
-
-
-
-

@@ -40,16 +40,15 @@ void print_compilation_flags()
 void initialize_test_args(struct TestArgs * targs)
 {
 	// sub-mastrix offset, sweep start
-	targs->ii0 = 0;
-	targs->jj0 = 0;
-	targs->kk0 = 0;
+	targs->ai0 = 0;
+	targs->bi0 = 0;
+	targs->di0 = 0;
+	targs->xj0 = 0;
 
-	targs->ii0s = 1;
-	targs->jj0s = 1;
-	targs->kk0s = 1;
-
-	targs->AB_offset0 = 0;
-	targs->AB_offsets = 1;
+	targs->ais = 1;
+	targs->bis = 1;
+	targs->dis = 1;
+	targs->xjs = 1;
 
 	// sub-matrix dimensions, sweep start
 	targs->ni0 = 4;
@@ -88,10 +87,10 @@ int compute_total_calls(struct TestArgs * targs)
 		targs->nis *
 		targs->njs *
 		targs->nks *
-		targs->ii0s *
-		targs->jj0s *
-		targs->kk0s *
-		targs->AB_offsets;
+		targs->ais *
+		targs->bis *
+		targs->dis *
+		targs->xjs;
 
 	return total_calls;
 }
