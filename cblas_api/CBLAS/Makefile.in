@@ -37,8 +37,10 @@ LOADER = $(FC)
 # Flags for Compilers
 #-----------------------------------------------------------------------------
 
-CFLAGS = -O3 -DADD_
-FFLAGS = -O3  
+# CFLAGS = -O3 -DADD_
+# FFLAGS = -O3  
+CFLAGS = -g -DADD_
+FFLAGS = -g 
 
 #-----------------------------------------------------------------------------
 # Archive programs and flags

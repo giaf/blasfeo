@@ -482,7 +482,7 @@
 *           Set LDC to 1 more than minimum value if room.
             LDC = M
             IF( LDC.LT.NMAX )
-     $         LDC = LDC + 1
+     $         LDC = LDC 
 *           Skip tests if not enough room.
             IF( LDC.GT.NMAX )
      $         GO TO 100
@@ -506,7 +506,7 @@
 *                 Set LDA to 1 more than minimum value if room.
                   LDA = MA
                   IF( LDA.LT.NMAX )
-     $               LDA = LDA + 1
+     $               LDA = LDA 
 *                 Skip tests if not enough room.
                   IF( LDA.GT.NMAX )
      $               GO TO 80
@@ -531,7 +531,7 @@
 *                    Set LDB to 1 more than minimum value if room.
                      LDB = MB
                      IF( LDB.LT.NMAX )
-     $                  LDB = LDB + 1
+     $                  LDB = LDB 
 *                    Skip tests if not enough room.
                      IF( LDB.GT.NMAX )
      $                  GO TO 70
