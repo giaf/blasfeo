@@ -119,6 +119,9 @@ TESTING_MODE = 0
 BENCHMARKS_MODE = 0
 # BENCHMARKS_MODE = 1
 
+SANDBOX_MODE = 0
+# SANDBOX_MODE = 1
+
 # Enable on-line checks for matrix and vector dimensions
 #
 RUNTIME_CHECKS = 0
@@ -216,6 +219,10 @@ endif
 
 ifeq ($(BENCHMARKS_MODE), 1)
 CFLAGS += -DBENCHMARKS_MODE
+endif
+
+ifeq ($(SANDBOX_MODE), 1)
+CFLAGS += -DSANDBOX_MODE
 endif
 
 ifeq ($(MACRO_LEVEL), 1)

@@ -1751,7 +1751,7 @@ _inner_store_l_4x4_lib4:
 	.type	kernel_dgemm_nt_4x4_lib4, %function
 kernel_dgemm_nt_4x4_lib4:
 #elif defined(OS_MAC)
-	.global	kernel_dgemm_nt_4x4_lib4
+	.global	_kernel_dgemm_nt_4x4_lib4
 _kernel_dgemm_nt_4x4_lib4:
 #endif
 
@@ -1862,7 +1862,7 @@ _kernel_dgemm_nt_4x4_lib4:
 	.type	kernel_dgemm_nn_4x4_lib4, %function
 kernel_dgemm_nn_4x4_lib4:
 #elif defined(OS_MAC)
-	.global	kernel_dgemm_nn_4x4_lib4
+	.global	_kernel_dgemm_nn_4x4_lib4
 _kernel_dgemm_nn_4x4_lib4:
 #endif
 

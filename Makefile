@@ -701,6 +701,47 @@ OBJS_REF += \
 endif
 
 
+
+ifeq ($(SANDBOX_MODE), 1)
+
+ifeq ($(TARGET), X64_INTEL_HASWELL)
+OBJS += sandbox/kernel_avx2.o
+endif
+ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
+OBJS += sandbox/kernel_avx.o
+endif
+ifeq ($(TARGET), X64_INTEL_CORE)
+OBJS += sandbox/kernel_sse3.o
+endif
+ifeq ($(TARGET), X64_AMD_BULLDOZER)
+OBJS += sandbox/kernel_avx.o
+endif
+ifeq ($(TARGET), X86_AMD_JAGUAR)
+OBJS += sandbox/kernel_avx_x86.o
+endif
+ifeq ($(TARGET), X86_AMD_BARCELONA)
+OBJS += sandbox/kernel_sse3_x86.o
+endif
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
+OBJS += sandbox/kernel_armv8a.o
+endif
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
+OBJS += sandbox/kernel_armv8a.o
+endif
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
+OBJS += sandbox/kernel_armv7a.o
+endif
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
+OBJS += sandbox/kernel_armv7a.o
+endif
+ifeq ($(TARGET), GENERIC)
+OBJS += sandbox/kernel_generic.o
+endif
+
+endif
+
+
+
 # Define targets
 
 
@@ -713,6 +754,9 @@ static_library: target
 	( cd auxiliary; $(MAKE) obj)
 	( cd blasfeo_api; $(MAKE) obj)
 	( cd blas_api; $(MAKE) obj)
+ifeq ($(SANDBOX_MODE), 1)
+	( cd sandbox; $(MAKE) obj)
+endif
 	$(AR) rcs libblasfeo.a $(OBJS)
 	mv libblasfeo.a ./lib/
 ifeq ($(TESTING_MODE), 1)
@@ -733,6 +777,9 @@ shared_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd blasfeo_api; $(MAKE) obj)
 	( cd blas_api; $(MAKE) obj)
+ifeq ($(SANDBOX_MODE), 1)
+	( cd sandbox; $(MAKE) obj)
+endif
 	$(CC) -shared -o libblasfeo.so $(OBJS) #-Wl,-Bsymbolic
 	mv libblasfeo.so ./lib/
 ifeq ($(TESTING_MODE), 1)
@@ -875,6 +922,7 @@ clean:
 	make -C examples clean
 	make -C tests clean
 	make -C benchmarks clean
+	make -C sandbox clean
 
 
 # deep clean
@@ -968,6 +1016,24 @@ examples: deploy_to_examples build_examples
 
 run_examples:
 	make -C examples run
+
+
+
+### sandbox
+
+build_sandbox:
+	make -C sandbox build
+	@echo
+	@echo "Sandbox build complete."
+	@echo
+
+disassembly_sandbox:
+	make -C sandbox disassembly
+
+sandbox: build_sandbox
+
+run_sandbox:
+	make -C sandbox run
 
 
 
