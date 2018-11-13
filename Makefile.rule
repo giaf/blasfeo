@@ -65,9 +65,9 @@ TARGET = X64_INTEL_HASWELL
 #
 # TARGET = GENERIC
 
-# Select backend LA version:
+# Select back-end LA version:
 # high_performance: target-tailored; performance-optimized for cache resident matrices; panel-major matrix format
-# reference: target-unspecific lightly-optimizated; small code footprint; column-major matrix format
+# reference: target-unspecific lightly-optimized; small code footprint; column-major matrix format
 # BLAS_wrapper: call to external BLAS and LAPACK libraries; column-major matrix format
 #
 LA = HIGH_PERFORMANCE

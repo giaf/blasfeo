@@ -50,7 +50,7 @@ void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, 
 			{
 			GEMM_NN(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
 			}
-		else if(*tb=='t' | *tb=='T')
+		else if(*tb=='t' | *tb=='T' | *tb=='C')
 			{
 			GEMM_NT(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
 			}
@@ -60,13 +60,13 @@ void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, 
 			return;
 			}
 		}
-	else if(*ta=='t' | *ta=='T')
+	else if(*ta=='t' | *ta=='T' | *ta=='C')
 		{
 		if(*tb=='n' | *tb=='N')
 			{
 			GEMM_TN(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
 			}
-		else if(*tb=='t' | *tb=='T')
+		else if(*tb=='t' | *tb=='T'| *tb=='C')
 			{
 			GEMM_TT(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
 			}
