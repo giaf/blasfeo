@@ -70,7 +70,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 #else
 	double pU[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
-	int sdu = (m+3)/4*4;
+	int sdu = (k+3)/4*4;
 	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;
 
 	struct blasfeo_dmat sA, sB;
