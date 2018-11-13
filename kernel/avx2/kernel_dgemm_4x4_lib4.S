@@ -3674,6 +3674,161 @@ inner_edge_dtrsm_rut_inv_4x4_vs_lib4:
 //
 // triangular substitution:
 // side = right
+// uplo = upper
+// tran = transposed
+// unit diagonal
+//
+// input arguments:
+// r10  <- E
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm12 <- dirty
+// ymm13 <- dirty
+//
+// output arguments:
+// r10  <- E
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm12 <- dirty
+// ymm13 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSM_RUT_ONE_4X4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_dtrsm_rut_one_4x4_lib4, @function
+inner_edge_dtrsm_rut_one_4x4_lib4:
+#elif defined(OS_MAC)
+_inner_edge_dtrsm_rut_one_4x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsm_rut_one_4x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrsm_rut_one_4x4_lib4:
+#endif
+#endif
+	
+	vbroadcastsd	112(%r10), %ymm12
+	vfnmadd231pd	%ymm3, %ymm12, %ymm2
+	vbroadcastsd	104(%r10), %ymm12
+	vfnmadd231pd	%ymm3, %ymm12, %ymm1
+	vbroadcastsd	96(%r10), %ymm12
+	vfnmadd231pd	%ymm3, %ymm12, %ymm0
+
+	vbroadcastsd	72(%r10), %ymm12
+	vfnmadd231pd	%ymm2, %ymm12, %ymm1
+	vbroadcastsd	64(%r10), %ymm12
+	vfnmadd231pd	%ymm2, %ymm12, %ymm0
+
+	vbroadcastsd	32(%r10), %ymm12
+	vfnmadd231pd	%ymm1, %ymm12, %ymm0
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_dtrsm_rut_one_4x4_lib4, .-inner_edge_dtrsm_rut_one_4x4_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// triangular substitution:
+// side = right
+// uplo = lower
+// tran = transposed
+// unit diagonal
+//
+// input arguments:
+// r10  <- D
+// r11d <- kn
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm12 <- dirty
+// ymm13 <- dirty
+//
+// output arguments:
+// r10  <- D
+// r11d <- kn
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm12 <- dirty
+// ymm13 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSM_RUT_ONE_4X4_VS_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_dtrsm_rut_one_4x4_vs_lib4, @function
+inner_edge_dtrsm_rut_one_4x4_vs_lib4:
+#elif defined(OS_MAC)
+_inner_edge_dtrsm_rut_one_4x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsm_rut_one_4x4_vs_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrsm_rut_one_4x4_vs_lib4:
+#endif
+#endif
+	
+	cmpl			$3, %r11d
+	jle				0f
+
+	vbroadcastsd	112(%r10), %ymm12
+	vfnmadd231pd	%ymm3, %ymm12, %ymm2
+	vbroadcastsd	104(%r10), %ymm12
+	vfnmadd231pd	%ymm3, %ymm12, %ymm1
+	vbroadcastsd	96(%r10), %ymm12
+	vfnmadd231pd	%ymm3, %ymm12, %ymm0
+
+0:
+	cmpl			$2, %r11d
+	jle				1f
+
+	vbroadcastsd	72(%r10), %ymm12
+	vfnmadd231pd	%ymm2, %ymm12, %ymm1
+	vbroadcastsd	64(%r10), %ymm12
+	vfnmadd231pd	%ymm2, %ymm12, %ymm0
+
+1:
+	cmpl			$1, %r11d
+	jle				2f
+
+	vbroadcastsd	32(%r10), %ymm12
+	vfnmadd231pd	%ymm1, %ymm12, %ymm0
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_dtrsm_rut_one_4x4_vs_lib4, .-inner_edge_dtrsm_rut_one_4x4_vs_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// triangular substitution:
+// side = right
 // uplo = up
 // tran = normal
 // requires explicit inverse of diagonal
@@ -8989,6 +9144,213 @@ kernel_dtrsm_nt_ru_inv_4x4_vs_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dtrsm_nt_ru_inv_4x4_vs_lib4, .-kernel_dtrsm_nt_ru_inv_4x4_vs_lib4
+#endif
+
+
+
+
+
+//                                      1      2          3          4             5          6          7
+// void kernel_dtrsm_nt_ru_one_4x4_lib4(int k, double *A, double *B, double *beta, double *C, double *D, double *E);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dtrsm_nt_ru_one_4x4_lib4
+	.type kernel_dtrsm_nt_ru_one_4x4_lib4, @function
+kernel_dtrsm_nt_ru_one_4x4_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dtrsm_nt_ru_one_4x4_lib4
+_kernel_dtrsm_nt_ru_one_4x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nt_ru_one_4x4_lib4
+	.def kernel_dtrsm_nt_ru_one_4x4_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_ru_one_4x4_lib4:
+#endif
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_4x4_lib4
+#endif
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	ARG4, %r10 // beta
+	movq	ARG5, %r11 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_scale_m1b_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_scale_m1b_4x4_lib4
+#endif
+#endif
+
+
+	// solve
+
+	movq	ARG7, %r10  // E
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RUT_ONE_4X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dtrsm_rut_one_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dtrsm_rut_one_4x4_lib4
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG6, %r10 // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_4x4_lib4
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dtrsm_nt_ru_one_4x4_lib4, .-kernel_dtrsm_nt_ru_one_4x4_lib4
+#endif
+
+
+
+
+
+//                                         1      2          3          4             5          6          7          8       9
+// void kernel_dtrsm_nt_ru_one_4x4_vs_lib4(int k, double *A, double *B, double *beta, double *C, double *D, double *E, int km, int kn);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dtrsm_nt_ru_one_4x4_vs_lib4
+	.type kernel_dtrsm_nt_ru_one_4x4_vs_lib4, @function
+kernel_dtrsm_nt_ru_one_4x4_vs_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dtrsm_nt_ru_one_4x4_vs_lib4
+_kernel_dtrsm_nt_ru_one_4x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nt_ru_one_4x4_vs_lib4
+	.def kernel_dtrsm_nt_ru_one_4x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_ru_one_4x4_vs_lib4:
+#endif
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_4x4_lib4
+#endif
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	ARG4, %r10 // C
+	movq	ARG5, %r11 // beta
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_scale_m1b_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_scale_m1b_4x4_lib4
+#endif
+#endif
+
+
+	// solve
+
+	movq	ARG7, %r10  // E
+	movq	ARG9, %r11 // kn
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RUT_ONE_4X4_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dtrsm_rut_one_4x4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dtrsm_rut_one_4x4_vs_lib4
+#endif
+#endif
+
+
+	// store
+
+	movq	ARG6, %r10 // D
+	movq	ARG8, %r11 // km
+	movq	ARG9, %r12 // kn
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_4x4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_4x4_vs_lib4
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dtrsm_nt_ru_one_4x4_vs_lib4, .-kernel_dtrsm_nt_ru_one_4x4_vs_lib4
 #endif
 
 

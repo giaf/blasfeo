@@ -5780,6 +5780,213 @@ inner_edge_dtrsm_rut_inv_8x4_vs_lib4:
 //
 // triangular substitution:
 // side = right
+// uplo = upper
+// tran = transposed
+// unit diagonal
+//
+// input arguments:
+// r10  <- E
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm4 <- [d40 d51 d62 d73]
+// ymm5 <- [d41 d50 d63 d72]
+// ymm6 <- [d43 d52 d61 d70]
+// ymm7 <- [d42 d53 d60 d71]
+// ymm12 <- dirty
+// ymm13 <- dirty
+//
+// output arguments:
+// r10  <- E
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm4 <- [d40 d51 d62 d73]
+// ymm5 <- [d41 d50 d63 d72]
+// ymm6 <- [d43 d52 d61 d70]
+// ymm7 <- [d42 d53 d60 d71]
+// ymm12 <- dirty
+// ymm13 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSM_RUT_ONE_8X4_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_dtrsm_rut_one_8x4_lib4, @function
+inner_edge_dtrsm_rut_one_8x4_lib4:
+#elif defined(OS_MAC)
+_inner_edge_dtrsm_rut_one_8x4_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsm_rut_one_8x4_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrsm_rut_one_8x4_lib4:
+#endif
+#endif
+
+	vbroadcastsd	112(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm2, %ymm2
+	vmulpd			%ymm7, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm6, %ymm6
+	vbroadcastsd	104(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm1, %ymm1
+	vmulpd			%ymm7, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm5, %ymm5
+	vbroadcastsd	96(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+	vmulpd			%ymm7, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm4, %ymm4
+
+	vbroadcastsd	72(%r10), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm1, %ymm1
+	vmulpd			%ymm6, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm5, %ymm5
+	vbroadcastsd	64(%r10), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+	vmulpd			%ymm6, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm4, %ymm4
+
+	vbroadcastsd	32(%r10), %ymm12
+	vmulpd			%ymm1, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+	vmulpd			%ymm5, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm4, %ymm4
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_dtrsm_rut_one_8x4_lib4, .-inner_edge_dtrsm_rut_one_8x4_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// triangular substitution:
+// side = right
+// uplo = lower
+// tran = transposed
+// unit diagonal
+//
+// input arguments:
+// r10  <- D
+// r11d <- kn
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm4 <- [d40 d51 d62 d73]
+// ymm5 <- [d41 d50 d63 d72]
+// ymm6 <- [d43 d52 d61 d70]
+// ymm7 <- [d42 d53 d60 d71]
+// ymm12 <- dirty
+// ymm13 <- dirty
+//
+// output arguments:
+// r10  <- D
+// r11d <- kn
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm4 <- [d40 d51 d62 d73]
+// ymm5 <- [d41 d50 d63 d72]
+// ymm6 <- [d43 d52 d61 d70]
+// ymm7 <- [d42 d53 d60 d71]
+// ymm12 <- dirty
+// ymm13 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSM_RUT_ONE_8X4_VS_LIB4
+#else
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_edge_dtrsm_rut_one_8x4_vs_lib4, @function
+inner_edge_dtrsm_rut_one_8x4_vs_lib4:
+#elif defined(OS_MAC)
+_inner_edge_dtrsm_rut_one_8x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.def inner_edge_dtrsm_rut_one_8x4_vs_lib4; .scl 2; .type 32; .endef
+inner_edge_dtrsm_rut_one_8x4_vs_lib4:
+#endif
+#endif
+
+	cmpl			$3, %r11d
+	jle				0f
+
+	vbroadcastsd	112(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm2, %ymm2
+	vmulpd			%ymm7, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm6, %ymm6
+	vbroadcastsd	104(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm1, %ymm1
+	vmulpd			%ymm7, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm5, %ymm5
+	vbroadcastsd	96(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+	vmulpd			%ymm7, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm4, %ymm4
+
+0:
+	cmpl			$2, %r11d
+	jle				1f
+
+	vbroadcastsd	72(%r10), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm1, %ymm1
+	vmulpd			%ymm6, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm5, %ymm5
+	vbroadcastsd	64(%r10), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+	vmulpd			%ymm6, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm4, %ymm4
+
+1:
+	cmpl			$1, %r11d
+	jle				2f
+
+	vbroadcastsd	32(%r10), %ymm12
+	vmulpd			%ymm1, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm0, %ymm0
+	vmulpd			%ymm5, %ymm12, %ymm15
+	vsubpd			%ymm15, %ymm4, %ymm4
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+#if defined(OS_LINUX)
+	.size	inner_edge_dtrsm_rut_one_8x4_vs_lib4, .-inner_edge_dtrsm_rut_one_8x4_vs_lib4
+#endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// triangular substitution:
+// side = right
 // uplo = up
 // tran = normal
 // requires explicit inverse of diagonal
@@ -12295,6 +12502,233 @@ kernel_dtrsm_nt_ru_inv_8x4_vs_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dtrsm_nt_ru_inv_8x4_vs_lib4, .-kernel_dtrsm_nt_ru_inv_8x4_vs_lib4
+#endif
+
+
+
+
+
+//                                      1      2          3        4          5             6          7        8          9        10
+// void kernel_dtrsm_nt_ru_one_8x4_lib4(int k, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, double *E);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dtrsm_nt_ru_one_8x4_lib4
+	.type kernel_dtrsm_nt_ru_one_8x4_lib4, @function
+kernel_dtrsm_nt_ru_one_8x4_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dtrsm_nt_ru_one_8x4_lib4
+_kernel_dtrsm_nt_ru_one_8x4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nt_ru_one_8x4_lib4
+	.def kernel_dtrsm_nt_ru_one_8x4_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_ru_one_8x4_lib4:
+#endif
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movq	ARG4, %r13 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x4_lib4
+#endif
+#endif
+
+
+	// call inner blender nn
+
+	movq	ARG5, %r10 // beta
+	movq	ARG6, %r11 // C
+	movq	ARG7, %r12 // sdc
+	sall	$5, %r12d // 4*sdc*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_M1B_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_scale_m1b_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_blend_scale_m1b_8x4_lib4
+#endif
+#endif
+
+
+	// solve
+
+	movq	ARG10, %r10  // E
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RUT_ONE_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dtrsm_rut_one_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dtrsm_rut_one_8x4_lib4
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG8, %r10 // store address D
+	movq	ARG9, %r11 // sdd
+	sall	$5, %r11d // 4*sdd*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_8x4_lib4
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dtrsm_nt_ru_one_8x4_lib4, .-kernel_dtrsm_nt_ru_one_8x4_lib4
+#endif
+
+
+
+
+
+//                                         1      2          3        4          5             6          7        8          9        10         11      12
+// void kernel_dtrsm_nt_ru_one_8x4_vs_lib4(int k, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, double *E, int km, int kn);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dtrsm_nt_ru_one_8x4_vs_lib4
+	.type kernel_dtrsm_nt_ru_one_8x4_vs_lib4, @function
+kernel_dtrsm_nt_ru_one_8x4_vs_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dtrsm_nt_ru_one_8x4_vs_lib4
+_kernel_dtrsm_nt_ru_one_8x4_vs_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dtrsm_nt_ru_one_8x4_vs_lib4
+	.def kernel_dtrsm_nt_ru_one_8x4_vs_lib4; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_ru_one_8x4_vs_lib4:
+#endif
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+	vmovapd	%ymm0, %ymm4
+	vmovapd	%ymm0, %ymm5
+	vmovapd	%ymm0, %ymm6
+	vmovapd	%ymm0, %ymm7
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movq	ARG4, %r13 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x4_lib4
+#endif
+#endif
+
+
+	// call inner blender nn
+
+	movq	ARG5, %r10 // beta
+	movq	ARG6, %r11 // C
+	movq	ARG7, %r12 // sdc
+	sall	$5, %r12d // 4*sdc*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_SCALE_M1B_8X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_blend_scale_m1b_8x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_blend_scale_m1b_8x4_lib4
+#endif
+#endif
+
+
+	// solve
+
+	movq	ARG10, %r10  // E 
+	movq	ARG12, %r11 // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RUT_ONE_8X4_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dtrsm_rut_one_8x4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dtrsm_rut_one_8x4_vs_lib4
+#endif
+#endif
+
+
+	// store n
+
+	movq	ARG8, %r10 // store address D
+	movq	ARG9, %r11 // sdd
+	sall	$5, %r11d // 4*sdd*sizeof(double)
+	movq	ARG11, %r12 // km 
+	movq	ARG12, %r13 // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_store_8x4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_store_8x4_vs_lib4
+#endif
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dtrsm_nt_ru_one_8x4_vs_lib4, .-kernel_dtrsm_nt_ru_one_8x4_vs_lib4
 #endif
 
 
