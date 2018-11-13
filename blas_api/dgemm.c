@@ -121,7 +121,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 			return;
 			}
 		}
-	else if(*ta=='t' | *ta=='T' | *tb=='C')
+	else if(*ta=='t' | *ta=='T' | *ta=='C')
 		{
 		if(*tb=='n' | *tb=='N')
 			{
