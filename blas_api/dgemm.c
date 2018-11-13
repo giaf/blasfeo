@@ -70,7 +70,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 #else
 	double pU[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
-	int sdu = (m+3)/4*4;
+	int sdu = (k+3)/4*4;
 	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;
 
 	struct blasfeo_dmat sA, sB;
@@ -100,7 +100,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 				goto nn_0;
 				}
 			}
-		else if(*tb=='t' | *tb=='T')
+		else if(*tb=='t' | *tb=='T' | *tb=='C')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
 			if(n>96 | k>96 | k>K_MAX_STACK)
@@ -125,7 +125,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 			return;
 			}
 		}
-	else if(*ta=='t' | *ta=='T')
+	else if(*ta=='t' | *ta=='T' | *ta=='C')
 		{
 		if(*tb=='n' | *tb=='N')
 			{
@@ -146,7 +146,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 				goto tn_0;
 				}
 			}
-		else if(*tb=='t' | *tb=='T')
+		else if(*tb=='t' | *tb=='T' | *tb=='C')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
 			if(n>=96 | k>=96 | k>K_MAX_STACK)
