@@ -26,12 +26,12 @@ def parse_arguments():
 
 def make(cmd="", make_flags={}, env_flags={}):
 
-    make_flags = " ".join(["{k}={v}".format(k=k, v=v) for k, v in make_flags.items()])
+    make_flags = " ".join(["{k}={v}".format(k=k, v=v) if v is not None else k for k, v in make_flags.items()])
     env_flags = " ".join(["{k}={v}".format(k=k, v=v) for k, v in env_flags.items()])
 
     run_cmd = "{env_flags} make {make_flags} {cmd}".format(env_flags=env_flags, make_flags=make_flags, cmd=cmd)
 
-    print(run_cmd)
+    print(run_cmd,"\n")
     make_process = subprocess.Popen(run_cmd,
         shell=True, stdout=subprocess.PIPE, stderr=sys.stdout.fileno())
 
@@ -59,7 +59,7 @@ class CookBook:
         self.VERBOSE = self.cli_flags.verbose
 
         self.TOTAL =\
-            len(self.specs["routines"])\
+            len(set(self.specs["routines"]))\
             * len(self.specs["targets"])\
             * len(self.specs["precisions"])
 
@@ -99,16 +99,18 @@ class CookBook:
                             routine_fullname = routine_name
                             flags["ROUTINE"] = routine_fullname
                             flags["ROUTINE_CLASS"] = routine_subclass
+                            flags["PRECISION"] = precision
 
                             self.recipe["routines"][routine_name] = {
                                 "class": routine_class,
                                 "subclass": routine_subclass,
-                                "make_cmd": "update_{}{}".format(precision, routine_class),
+                                "make_cmd": "update",
                                 "flags": flags
                             }
 
         if scheduled_routines:
-            print("Some routines not found in the schema {}".format(scheduled_routines))
+            print("Some routines were not found in the schema ({}) {}"
+                  .format(RECIPE_SCHEMA, scheduled_routines))
 
     def run_all_recipes(self):
         # tune the recipe and run
@@ -136,20 +138,23 @@ class CookBook:
         make_flags = self.recipe["make_flags"]
         env_flags = self.recipe["env_flags"]
 
-        _silent = ""
-        if not self.VERBOSE: _silent="-s"
+        if not self.VERBOSE: make_flags.update({"-s":None})
 
         _build_libblasfeo = make_flags.get("BUILD_LIBS")
         _deploy_libblasfeo = make_flags.get("DEPLOY_LIBS")
+
 
         if self.cli_flags.rebuild:
             _build_libblasfeo = 1
             _deploy_libblasfeo = 1
 
         if _build_libblasfeo:
-            make("{} -C .. ".format(_silent), make_flags, env_flags)
+            # compile also BLAS_API by default
+            libblasfeo_flags = dict(make_flags)
+            libblasfeo_flags.update({"BLAS_API":1})
+            make("-C .. ", libblasfeo_flags, env_flags)
         if _deploy_libblasfeo:
-            make("{} -C .. deploy_to_tests".format(_silent), make_flags, env_flags)
+            make("-C .. deploy_to_tests", make_flags, env_flags)
 
         for routine_name, args in self.recipe['routines'].items():
             # update local flags with global flags

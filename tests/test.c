@@ -41,13 +41,21 @@
 #endif
 
 // tests helpers
+
+#ifdef PRECISION_DOUBLE
 #include "test_d_common.h"
+#else
 
-// include routine specific implementation
+#ifdef PRECISION_SINGLE
+#include "test_s_common.h"
+#else
+#error No precision (float, double) specified
+#endif
+
+#endif
+
 #include "test_x_common.h"
-
 #include "test_x_common.c"
-
 #include "test_x.c"
 
 #else

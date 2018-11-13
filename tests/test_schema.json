@@ -23,13 +23,13 @@
   "ref_blas": {
     "type": "string",
     "values":[
-      "OPEN_BLAS",
+      "OPENBLAS",
       "BLIS",
       "MKL",
       "NETLIB",
       "ATLAS"
     ],
-    "default":"OPEN_BLAS"
+    "default":"OPENBLAS"
   },
   "verbose": {
     "values": [0,1,2,3],
@@ -66,9 +66,11 @@
       ]
     },
     "blas3":{
+      "GEMM_BLAS":[
+        "gemm"
+      ],
       "GEMM":[
         "gemm_nn",
-        "gemm",
         "gemm_nt",
         "gemm_tn",
         "gemm_tt",
@@ -85,9 +87,21 @@
         "trmm_rutn",
         "trmm_rlnn",
         "trsm_lunn"
-      ],
-      "GETRF":[
+      ]
+    },
+    "lapack":{
+      "GETRF_ROWPIVOT":[
         "getrf_rowpivot"
+      ],
+      "GETRF_NOPIVOT":[
+        "getrf_nowpivot"
+      ],
+      "GEQF":[
+        "geqrf",
+        "gelqf"
+      ],
+      "POTRF":[
+        "potrf_l"
       ]
     },
     "aux":{

@@ -60,11 +60,11 @@
 #define CAST_VEC2VECMAT s_cast_vec2vecmat
 
 
-#define GEAD blasfeo_sgead
-#define GECP blasfeo_sgecp
-#define GECPSC blasfeo_sgecpsc
-#define GESC blasfeo_sgesc
-#define GESE blasfeo_sgese
+#define GEAD_LIBSTR blasfeo_sgead
+#define GECP_LIBSTR blasfeo_sgecp
+#define GECPSC_LIBSTR blasfeo_sgecpsc
+#define GESC_LIBSTR blasfeo_sgesc
+#define GESE_LIBSTR blasfeo_sgese
 
 
 

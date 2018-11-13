@@ -1056,8 +1056,9 @@ inner_edge_dgemm_nn_4x4_lib4:
 // edge for B upper triangular
 //
 // input arguments:
-// r10   <- A
-// r11   <- B
+// r10d  <- k
+// r11   <- A
+// r12   <- B
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
@@ -1068,8 +1069,9 @@ inner_edge_dgemm_nn_4x4_lib4:
 
 //
 // output arguments:
-// r10   <- A+4*4*sizeof(double)
-// r11   <- B+4*4*sizeof(double)
+// r10d  <- k
+// r11   <- A+4*4*sizeof(double)
+// r12   <- B+4*4*sizeof(double)
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
@@ -1094,36 +1096,37 @@ inner_edge_dtrmm_nt_ru_4x4_lib4:
 #endif
 #endif
 	
-	vmovapd			0(%r10), %ymm8
-	vbroadcastsd	0(%r11), %ymm12
+	vmovapd			0(%r11), %ymm8
+	vbroadcastsd	0(%r12), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
 
-	vmovapd			32(%r10), %ymm8
-	vbroadcastsd	32(%r11), %ymm12
+	vmovapd			32(%r11), %ymm8
+	vbroadcastsd	32(%r12), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
-	vbroadcastsd	40(%r11), %ymm12
+	vbroadcastsd	40(%r12), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm1
 
-	vmovapd			64(%r10), %ymm8
-	vbroadcastsd	64(%r11), %ymm12
+	vmovapd			64(%r11), %ymm8
+	vbroadcastsd	64(%r12), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
-	vbroadcastsd	72(%r11), %ymm12
+	vbroadcastsd	72(%r12), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm1
-	vbroadcastsd	80(%r11), %ymm12
+	vbroadcastsd	80(%r12), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm2
 
-	vmovapd			96(%r10), %ymm8
-	vbroadcastsd	96(%r11), %ymm12
+	vmovapd			96(%r11), %ymm8
+	vbroadcastsd	96(%r12), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
-	vbroadcastsd	104(%r11), %ymm12
+	vbroadcastsd	104(%r12), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm1
-	vbroadcastsd	112(%r11), %ymm12
+	vbroadcastsd	112(%r12), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm2
-	vbroadcastsd	120(%r11), %ymm12
+	vbroadcastsd	120(%r12), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm3
 
-	addq			$128, %r10
+	subl			$4, %r10d
 	addq			$128, %r11
+	addq			$128, %r12
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -7199,11 +7202,21 @@ kernel_dtrmm_nt_ru_4x4_lib4:
 	// call inner dgemm kernel nt after initial triangle
 
 	movq	ARG1, %r10 // k
-	subl	$4, %r10d // k-4
+//	subl	$4, %r10d //k-4
 	movq	ARG3, %r11 // A
-	addq	$128, %r11 // A+4*bs
+//	addq	$128, %r11 // A+4*bs
 	movq	ARG4, %r12 // B
-	addq	$128, %r12 // B+4*bs
+//	addq	$128, %r12 // B+4*bs
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRMM_NT_RU_4X4_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dtrmm_nt_ru_4x4_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dtrmm_nt_ru_4x4_lib4
+#endif
+#endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_4X4_LIB4
@@ -7231,19 +7244,19 @@ kernel_dtrmm_nt_ru_4x4_lib4:
 
 	// initial triangle
 
-	movq	ARG3, %r10
-	movq	ARG4, %r11
+//	movq	ARG1, %r10
+//	movq	ARG3, %r12
+//	movq	ARG4, %r13
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRMM_NT_RU_4X4_LIB4
+//	INNER_EDGE_DTRMM_NT_RU_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dtrmm_nt_ru_4x4_lib4
+//	call inner_edge_dtrmm_nt_ru_4x4_lib4
 #elif defined(OS_MAC)
-	callq _inner_edge_dtrmm_nt_ru_4x4_lib4
+//	callq _inner_edge_dtrmm_nt_ru_4x4_lib4
 #endif
 #endif
-
 
 	// call inner scale
 
@@ -7317,11 +7330,21 @@ kernel_dtrmm_nt_ru_4x4_vs_lib4:
 	// call inner dgemm kernel nt after initial triangle
 
 	movq	ARG1, %r10 // k
-	subl	$4, %r10d // k-4
+//	subl	$4, %r10d // k-4
 	movq	ARG3, %r11 // A
-	addq	$128, %r11 // A+4*bs
+//	addq	$128, %r11 // A+4*bs
 	movq	ARG4, %r12 // B
-	addq	$128, %r12 // B+4*bs
+//	addq	$128, %r12 // B+4*bs
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRMM_NT_RU_4X4_VS_LIB4
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_edge_dtrmm_nt_ru_4x4_vs_lib4
+#elif defined(OS_MAC)
+	callq _inner_edge_dtrmm_nt_ru_4x4_vs_lib4
+#endif
+#endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_4X4_LIB4
@@ -7349,17 +7372,17 @@ kernel_dtrmm_nt_ru_4x4_vs_lib4:
 
 	// initial triangle
 
-	movq	ARG1, %r10 // k
-	movq	ARG3, %r11 // A
-	movq	ARG4, %r12 // B
+//	movq	ARG1, %r10 // k
+//	movq	ARG3, %r11 // A
+//	movq	ARG4, %r12 // B
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRMM_NT_RU_4X4_VS_LIB4
+//	INNER_EDGE_DTRMM_NT_RU_4X4_VS_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dtrmm_nt_ru_4x4_vs_lib4
+//	call inner_edge_dtrmm_nt_ru_4x4_vs_lib4
 #elif defined(OS_MAC)
-	callq _inner_edge_dtrmm_nt_ru_4x4_vs_lib4
+//	callq _inner_edge_dtrmm_nt_ru_4x4_vs_lib4
 #endif
 #endif
 

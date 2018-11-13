@@ -1799,6 +1799,328 @@ void blasfeo_pack_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA
 
 
 
+// convert a lower triangular matrix into a matrix structure
+// TODO	vectorize triangle in the 4x4 diag blocks
+void blasfeo_pack_l_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj)
+	{
+	if(m<=0 || n<=0)
+		return;
+
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	int i, ii, j, jj, m0, m1, m2;
+	double 	*B, *pB;
+	sA->use_dA = 0;
+
+	// row vector in sA
+	if(m==1)
+		{
+		for(jj=0; jj<n; jj++)
+			{
+			pA[jj*bs] = A[jj*lda];
+			}
+		return;
+		}
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	__m256d
+		tmp;
+#endif
+	m0 = (bs-ai%bs)%bs;
+	if(m0>m)
+		m0 = m;
+	m1 = m - m0;
+	if(m0>0)
+		{
+		printf("\nblasfeo_pack_l_dmat: feature not implemented yet: ai!=0\n");
+		exit(1);
+		}
+	jj = 0;
+	for( ; jj<n-3; jj+=4)
+		{
+		B  =  A + jj + jj*lda;
+		pB = pA + jj*bs + jj*sda;
+		ii = jj;
+		// col 0
+		pB[0+bs*0] = B[0+lda*0];
+		pB[1+bs*0] = B[1+lda*0];
+		pB[2+bs*0] = B[2+lda*0];
+		pB[3+bs*0] = B[3+lda*0];
+		// col 1
+//		pB[0+bs*1] = B[0+lda*1];
+		pB[1+bs*1] = B[1+lda*1];
+		pB[2+bs*1] = B[2+lda*1];
+		pB[3+bs*1] = B[3+lda*1];
+		// col 2
+//		pB[0+bs*2] = B[0+lda*2];
+//		pB[1+bs*2] = B[1+lda*2];
+		pB[2+bs*2] = B[2+lda*2];
+		pB[3+bs*2] = B[3+lda*2];
+		// col 3
+//		pB[0+bs*3] = B[0+lda*3];
+//		pB[1+bs*3] = B[1+lda*3];
+//		pB[2+bs*3] = B[2+lda*3];
+		pB[3+bs*3] = B[3+lda*3];
+		B  += 4;
+		pB += bs*sda;
+		ii += 4;
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		for( ; ii<m-3; ii+=4)
+			{
+			tmp = _mm256_loadu_pd( &B[0+lda*0] );
+			_mm256_store_pd( &pB[0+bs*0], tmp );
+			tmp = _mm256_loadu_pd( &B[0+lda*1] );
+			_mm256_store_pd( &pB[0+bs*1], tmp );
+			tmp = _mm256_loadu_pd( &B[0+lda*2] );
+			_mm256_store_pd( &pB[0+bs*2], tmp );
+			tmp = _mm256_loadu_pd( &B[0+lda*3] );
+			_mm256_store_pd( &pB[0+bs*3], tmp );
+			B  += 4;
+			pB += bs*sda;
+			}
+#else
+		for( ; ii<m-3; ii+=4)
+			{
+			// col 0
+			pB[0+bs*0] = B[0+lda*0];
+			pB[1+bs*0] = B[1+lda*0];
+			pB[2+bs*0] = B[2+lda*0];
+			pB[3+bs*0] = B[3+lda*0];
+			// col 1
+			pB[0+bs*1] = B[0+lda*1];
+			pB[1+bs*1] = B[1+lda*1];
+			pB[2+bs*1] = B[2+lda*1];
+			pB[3+bs*1] = B[3+lda*1];
+			// col 2
+			pB[0+bs*2] = B[0+lda*2];
+			pB[1+bs*2] = B[1+lda*2];
+			pB[2+bs*2] = B[2+lda*2];
+			pB[3+bs*2] = B[3+lda*2];
+			// col 3
+			pB[0+bs*3] = B[0+lda*3];
+			pB[1+bs*3] = B[1+lda*3];
+			pB[2+bs*3] = B[2+lda*3];
+			pB[3+bs*3] = B[3+lda*3];
+			// update
+			B  += 4;
+			pB += bs*sda;
+			}
+#endif
+		for( ; ii<m; ii++)
+			{
+			// col 0
+			pB[0+bs*0] = B[0+lda*0];
+			// col 1
+			pB[0+bs*1] = B[0+lda*1];
+			// col 2
+			pB[0+bs*2] = B[0+lda*2];
+			// col 3
+			pB[0+bs*3] = B[0+lda*3];
+			// update
+			B  += 1;
+			pB += 1;
+			}
+		}
+	if(jj<n)
+		{
+		B  =  A + jj + jj*lda;
+		pB = pA + jj*bs + jj*sda;
+		if(n-jj==1)
+			{
+			// col 0
+			pB[0+bs*0] = B[0+lda*0];
+			}
+		else if(n-jj==2)
+			{
+			// col 0
+			pB[0+bs*0] = B[0+lda*0];
+			pB[1+bs*0] = B[1+lda*0];
+			// col 1
+//			pB[0+bs*1] = B[0+lda*1];
+			pB[1+bs*1] = B[1+lda*1];
+			}
+		else //if(n-jj==3)
+			{
+			// col 0
+			pB[0+bs*0] = B[0+lda*0];
+			pB[1+bs*0] = B[1+lda*0];
+			pB[2+bs*0] = B[2+lda*0];
+			// col 1
+//			pB[0+bs*1] = B[0+lda*1];
+			pB[1+bs*1] = B[1+lda*1];
+			pB[2+bs*1] = B[2+lda*1];
+			// col 2
+//			pB[0+bs*2] = B[0+lda*2];
+//			pB[1+bs*2] = B[1+lda*2];
+			pB[2+bs*2] = B[2+lda*2];
+			}
+		}
+	return;
+	}
+
+
+
+// convert a upper triangular matrix into a matrix structure
+// TODO	vectorize triangle in the 4x4 diag blocks
+void blasfeo_pack_u_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj)
+	{
+	if(m<=0 || n<=0)
+		return;
+
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	int i, ii, j, jj, m0, m1, m2;
+	double 	*B, *pB;
+	sA->use_dA = 0;
+
+	// row vector in sA
+	if(m==1)
+		{
+		for(jj=0; jj<n; jj++)
+			{
+			pA[jj*bs] = A[jj*lda];
+			}
+		return;
+		}
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	__m256d
+		tmp;
+#endif
+	m0 = (bs-ai%bs)%bs;
+	if(m0>m)
+		m0 = m;
+	m1 = m - m0;
+	jj = 0;
+	for( ; jj<n-3; jj+=4)
+		{
+		B  =  A + jj*lda;
+		pB = pA + jj*bs;
+		ii = 0;
+		if(m0>0)
+			{
+			for( ; ii<m0; ii++)
+				{
+				pB[ii+bs*0] = B[ii+lda*0];
+				pB[ii+bs*1] = B[ii+lda*1];
+				pB[ii+bs*2] = B[ii+lda*2];
+				pB[ii+bs*3] = B[ii+lda*3];
+				}
+			B  += m0;
+			pB += m0 + bs*(sda-1);
+			}
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		for( ; ii<jj-3; ii+=4)
+			{
+			tmp = _mm256_loadu_pd( &B[0+lda*0] );
+			_mm256_store_pd( &pB[0+bs*0], tmp );
+			tmp = _mm256_loadu_pd( &B[0+lda*1] );
+			_mm256_store_pd( &pB[0+bs*1], tmp );
+			tmp = _mm256_loadu_pd( &B[0+lda*2] );
+			_mm256_store_pd( &pB[0+bs*2], tmp );
+			tmp = _mm256_loadu_pd( &B[0+lda*3] );
+			_mm256_store_pd( &pB[0+bs*3], tmp );
+			B  += 4;
+			pB += bs*sda;
+			}
+#else
+		for( ; ii<jj-3; ii+=4)
+			{
+			// col 0
+			pB[0+bs*0] = B[0+lda*0];
+			pB[1+bs*0] = B[1+lda*0];
+			pB[2+bs*0] = B[2+lda*0];
+			pB[3+bs*0] = B[3+lda*0];
+			// col 1
+			pB[0+bs*1] = B[0+lda*1];
+			pB[1+bs*1] = B[1+lda*1];
+			pB[2+bs*1] = B[2+lda*1];
+			pB[3+bs*1] = B[3+lda*1];
+			// col 2
+			pB[0+bs*2] = B[0+lda*2];
+			pB[1+bs*2] = B[1+lda*2];
+			pB[2+bs*2] = B[2+lda*2];
+			pB[3+bs*2] = B[3+lda*2];
+			// col 3
+			pB[0+bs*3] = B[0+lda*3];
+			pB[1+bs*3] = B[1+lda*3];
+			pB[2+bs*3] = B[2+lda*3];
+			pB[3+bs*3] = B[3+lda*3];
+			// update
+			B  += 4;
+			pB += bs*sda;
+			}
+#endif
+		// col 0
+		pB[0+bs*0] = B[0+lda*0];
+//		pB[1+bs*0] = B[1+lda*0];
+//		pB[2+bs*0] = B[2+lda*0];
+//		pB[3+bs*0] = B[3+lda*0];
+		// col 1
+		pB[0+bs*1] = B[0+lda*1];
+		pB[1+bs*1] = B[1+lda*1];
+//		pB[2+bs*1] = B[2+lda*1];
+//		pB[3+bs*1] = B[3+lda*1];
+		// col 2
+		pB[0+bs*2] = B[0+lda*2];
+		pB[1+bs*2] = B[1+lda*2];
+		pB[2+bs*2] = B[2+lda*2];
+//		pB[3+bs*2] = B[3+lda*2];
+		// col 3
+		pB[0+bs*3] = B[0+lda*3];
+		pB[1+bs*3] = B[1+lda*3];
+		pB[2+bs*3] = B[2+lda*3];
+		pB[3+bs*3] = B[3+lda*3];
+		}
+	for( ; jj<n; jj++)
+		{
+
+		B  =  A + jj*lda;
+		pB = pA + jj*bs;
+
+		ii = 0;
+		if(m0>0)
+			{
+			for( ; ii<m0; ii++)
+				{
+				pB[ii+bs*0] = B[ii+lda*0];
+				}
+			B  += m0;
+			pB += m0 + bs*(sda-1);
+			}
+		for( ; ii<jj-3; ii+=4)
+			{
+			// col 0
+			pB[0+bs*0] = B[0+lda*0];
+			pB[1+bs*0] = B[1+lda*0];
+			pB[2+bs*0] = B[2+lda*0];
+			pB[3+bs*0] = B[3+lda*0];
+			// update
+			B  += 4;
+			pB += bs*sda;
+			}
+		for( ; ii<=jj; ii++)
+			{
+			// col 0
+			pB[0+bs*0] = B[0+lda*0];
+			// update
+			B  += 1;
+			pB += 1;
+			}
+		}
+	return;
+	}
+
+
+
 // convert and transpose a matrix into a matrix structure
 void blasfeo_pack_tran_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj)
 	{

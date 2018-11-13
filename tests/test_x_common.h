@@ -141,6 +141,8 @@ struct RoutineArgs{
 	struct STRMAT_REF *cC;
 	struct STRMAT_REF *cD;
 
+	void * work;
+
 	// blas_api
 	char ta;
 	char tb;
@@ -150,16 +152,16 @@ struct RoutineArgs{
 struct TestArgs{
 
 	// sub-mastrix offset, sweep start
-	int ii0;
-	int jj0;
-	int kk0;
+	int ai0;
+	int bi0;
+	int di0;
+	int xj0;
 
-	int ii0s;
-	int jj0s;
-	int kk0s;
-
-	int AB_offset0;
-	int AB_offsets;
+	// sub-mastrix offset, sweep lenght
+	int ais;
+	int bis;
+	int dis;
+	int xjs;
 
 	// sub-matrix dimensions, sweep start
 	int ni0;
@@ -215,22 +217,47 @@ int GECMP_BLASAPI(
 
 
 // template base on routine class
-#ifdef ROUTINE_CLASS_GETRF
-#include "test_class_getrf.c"
+//
+#ifdef ROUTINE_CLASS_GETRF_NOPIVOT
+#include "classes/getrf_nopivot.c"
+#endif
+
+#ifdef ROUTINE_CLASS_GETRF_ROWPIVOT
+#include "classes/getrf_rowpivot.c"
+#endif
+
+#ifdef ROUTINE_CLASS_GEQF
+#include "classes/geqf.c"
+#endif
+
+#ifdef ROUTINE_CLASS_POTRF
+#include "classes/potrf.c"
 #endif
 
 #ifdef ROUTINE_CLASS_GEMM
-#ifdef BLAS_API
-#include "test_class_gemm-blasapi.c"
-#else
-#include "test_class_gemm.c"
+#include "classes/gemm.c"
 #endif
+
+#ifdef ROUTINE_CLASS_GEMM_BLAS
+#include "classes/gemm-blasapi.c"
 #endif
 
 #ifdef ROUTINE_CLASS_SYRK
-#include "test_class_syrk.c"
+#include "classes/syrk.c"
 #endif
 
 #ifdef ROUTINE_CLASS_TRM
-#include "test_class_trm.c"
+#include "classes/trm.c"
+#endif
+
+#ifdef ROUTINE_CLASS_1ARGS
+#include "classes/aux1args.c"
+#endif
+
+#ifdef ROUTINE_CLASS_2ARGS
+#include "classes/aux2args.c"
+#endif
+
+#ifdef ROUTINE_CLASS_3ARGS
+#include "classes/aux3args.c"
 #endif

@@ -34,19 +34,26 @@
     "BLASFEO_WRAPPER"
   ],
   "routines":[
+    "gead",
+    "gecp",
+    "gesc",
+    "gecpsc",
+    "gemm",
+    "gemm_nn",
     "gemm_nn",
     "gemm_nt",
     "gemm_tn",
     "gemm_tt",
     "syrk_ln_mn",
     "syrk_ln",
+    "getrf_rowpivot",
+    "potrf_l",
     "trsm_llnu",
+    "trsm_lunn",
     "trsm_rltu",
     "trsm_rltn",
     "trsm_rutn",
     "trmm_rutn",
-    "trmm_rlnn",
-    "trsm_lunn",
-    "getrf_rowpivot"
+    "trmm_rlnn"
   ]
 }

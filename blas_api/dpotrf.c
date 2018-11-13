@@ -51,19 +51,24 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	int m = *pm;
 	int ldc = *pldc;
 
+	if(m<=0)
+		return;
+
 	*info = 0;
 
 	int ii, jj;
 
 	int bs = 4;
 
+	double d_1 = 1.0;
+
+// TODO visual studio alignment
 #if defined(TARGET_GENERIC)
 	double pd[K_MAX_STACK];
 #else
 	double pd[K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
 
-// TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL)
 	double pU[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 	double pD[4*16] __attribute__ ((aligned (64)));
@@ -86,12 +91,13 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	double *pc;
 	int sC_size, stot_size;
 	void *smat_mem, *smat_mem_align;
+	int m1;
 
 
 	if(*uplo=='l' | *uplo=='L')
 		{
 #if defined(TARGET_X64_INTEL_HASWELL)
-		if(m>=128 | m>K_MAX_STACK)
+		if(m>128 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		if(m>=64 | m>K_MAX_STACK)
 #else
@@ -108,7 +114,7 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	else if(*uplo=='u' | *uplo=='U')
 		{
 #if defined(TARGET_X64_INTEL_HASWELL)
-		if(m>=256 | m>K_MAX_STACK)
+		if(m>256 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		if(m>=64 | m>K_MAX_STACK)
 #else
@@ -137,7 +143,7 @@ l_0:
 		{
 		for(jj=0; jj<ii; jj+=4)
 			{
-			kernel_dtrsm_nt_rl_inv_12x4_lib4cc(jj, pU, sdu, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj);
+			kernel_dtrsm_nt_rl_inv_12x4_lib4ccc(jj, pU, sdu, C+jj, ldc, &d_1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj);
 			kernel_dpack_nn_12_lib4(4, C+ii+jj*ldc, ldc, pU+jj*bs, sdu);
 			}
 		kernel_dpotrf_nt_l_12x4_lib44c(jj, pU, sdu, pU, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj);
@@ -164,7 +170,7 @@ l_0:
 		{
 		for(jj=0; jj<ii; jj+=4)
 			{
-			kernel_dtrsm_nt_rl_inv_8x4_lib4cc(jj, pU, sdu, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj);
+			kernel_dtrsm_nt_rl_inv_8x4_lib4ccc(jj, pU, sdu, C+jj, ldc, &d_1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj);
 			kernel_dpack_nn_8_lib4(4, C+ii+jj*ldc, ldc, pU+jj*bs, sdu);
 			}
 		kernel_dpotrf_nt_l_8x4_lib44c(jj, pU, sdu, pU, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj);
@@ -187,7 +193,7 @@ l_0:
 		{
 		for(jj=0; jj<ii; jj+=4)
 			{
-			kernel_dtrsm_nt_rl_inv_4x4_lib4cc(jj, pU, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj);
+			kernel_dtrsm_nt_rl_inv_4x4_lib4ccc(jj, pU, C+jj, ldc, &d_1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj);
 			kernel_dpack_nn_4_lib4(4, C+ii+jj*ldc, ldc, pU+jj*bs);
 			}
 		kernel_dpotrf_nt_l_4x4_lib44c(jj, pU, pU, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj);
@@ -203,7 +209,7 @@ l_0:
 l_0_left_12:
 	for(jj=0; jj<ii; jj+=4)
 		{
-		kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cc(jj, pU, sdu, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj, m-ii, ii-jj);
+		kernel_dtrsm_nt_rl_inv_12x4_vs_lib4ccc(jj, pU, sdu, C+jj, ldc, &d_1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj, m-ii, ii-jj);
 		kernel_dpack_nn_12_vs_lib4(4, C+ii+jj*ldc, ldc, pU+jj*bs, sdu, m-ii);
 		}
 	kernel_dpotrf_nt_l_12x4_vs_lib44c(jj, pU, sdu, pU, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj, m-ii, m-jj);
@@ -216,7 +222,7 @@ l_0_left_12:
 l_0_left_8:
 	for(jj=0; jj<ii; jj+=4)
 		{
-		kernel_dtrsm_nt_rl_inv_8x4_vs_lib4cc(jj, pU, sdu, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj, m-ii, ii-jj);
+		kernel_dtrsm_nt_rl_inv_8x4_vs_lib4ccc(jj, pU, sdu, C+jj, ldc, &d_1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj, m-ii, ii-jj);
 		kernel_dpack_nn_8_vs_lib4(4, C+ii+jj*ldc, ldc, pU+jj*bs, sdu, m-ii);
 		}
 	kernel_dpotrf_nt_l_8x4_vs_lib44c(jj, pU, sdu, pU, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj, m-ii, m-jj);
@@ -228,7 +234,7 @@ l_0_left_8:
 l_0_left_4:
 	for(jj=0; jj<ii; jj+=4)
 		{
-		kernel_dtrsm_nt_rl_inv_4x4_vs_lib4cc(jj, pU, C+jj, ldc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj, m-ii, ii-jj);
+		kernel_dtrsm_nt_rl_inv_4x4_vs_lib4ccc(jj, pU, C+jj, ldc, &d_1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pd+jj, m-ii, ii-jj);
 		kernel_dpack_nn_4_vs_lib4(4, C+ii+jj*ldc, ldc, pU+jj*bs, m-ii);
 		}
 	kernel_dpotrf_nt_l_4x4_vs_lib44c(jj, pU, pU, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pd+jj, m-ii, m-jj);
@@ -249,7 +255,9 @@ l_0_return:
 
 l_1:
 	
-	sC_size = blasfeo_memsize_dmat(m, m);
+	m1 = (m+128-1)/128*128;
+	sC_size = blasfeo_memsize_dmat(m1, m1);
+//	sC_size = blasfeo_memsize_dmat(m, m);
 	stot_size = sC_size;
 	smat_mem = malloc(stot_size+63);
 	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
@@ -264,12 +272,13 @@ l_1:
 		jj = 0;
 		for(; jj<ii; jj+=4)
 			{
-			kernel_dtrsm_nt_rl_inv_12x4_lib44c(jj, sC.pA+ii*sdc, sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pc+jj);
+			kernel_dtrsm_nt_rl_inv_12x4_lib44cc(jj, sC.pA+ii*sdc, sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pc+jj);
 			kernel_dpack_nn_12_lib4(4, C+ii+jj*ldc, ldc, sC.pA+ii*sdc+jj*bs, sdc);
 			}
 		kernel_dpotrf_nt_l_12x4_lib44c(jj, sC.pA+ii*sdc, sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pc+jj);
 		kernel_dpack_nn_8_lib4(4, C+ii+4+jj*ldc, ldc, sC.pA+(ii+4)*sdc+jj*bs, sdc);
 		kernel_dpotrf_nt_l_8x8_lib44c(jj+4, sC.pA+(ii+4)*sdc, sdc, sC.pA+(jj+4)*sdc, sdc, C+ii+4+(jj+4)*ldc, ldc, C+ii+4+(jj+4)*ldc, ldc, pc+jj+4);
+		kernel_dpack_nn_4_lib4(4, C+ii+8+(jj+4)*ldc, ldc, sC.pA+(ii+8)*sdc+(jj+4)*bs);
 		}
 	if(ii<m)
 		{
@@ -292,7 +301,7 @@ l_1:
 		jj = 0;
 		for(; jj<ii; jj+=4)
 			{
-			kernel_dtrsm_nt_rl_inv_8x4_lib44c(jj, sC.pA+ii*sdc, sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pc+jj);
+			kernel_dtrsm_nt_rl_inv_8x4_lib44cc(jj, sC.pA+ii*sdc, sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pc+jj);
 			kernel_dpack_nn_8_lib4(4, C+ii+jj*ldc, ldc, sC.pA+ii*sdc+jj*bs, sdc);
 			}
 		kernel_dpotrf_nt_l_8x4_lib44c(jj, sC.pA+ii*sdc, sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pc+jj);
@@ -316,7 +325,7 @@ l_1:
 		jj = 0;
 		for(; jj<ii; jj+=4)
 			{
-			kernel_dtrsm_nt_rl_inv_4x4_lib44c(jj, sC.pA+ii*sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pc+jj);
+			kernel_dtrsm_nt_rl_inv_4x4_lib44cc(jj, sC.pA+ii*sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pc+jj);
 			kernel_dpack_nn_4_lib4(4, C+ii+jj*ldc, ldc, sC.pA+ii*sdc+jj*bs);
 			}
 		kernel_dpotrf_nt_l_4x4_lib44c(jj, sC.pA+ii*sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pc+jj);
@@ -332,7 +341,7 @@ l_1:
 l_1_left_12:
 	for(jj=0; jj<ii; jj+=4)
 		{
-		kernel_dtrsm_nt_rl_inv_12x4_vs_lib44c(jj, sC.pA+ii*sdc, sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pc+jj, m-ii, ii-jj);
+		kernel_dtrsm_nt_rl_inv_12x4_vs_lib44cc(jj, sC.pA+ii*sdc, sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pc+jj, m-ii, ii-jj);
 		kernel_dpack_nn_12_vs_lib4(4, C+ii+jj*ldc, ldc, sC.pA+ii*sdc+jj*bs, sdc, m-ii);
 		}
 	kernel_dpotrf_nt_l_12x4_vs_lib44c(jj, sC.pA+ii*sdc, sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pc+jj, m-ii, m-jj);
@@ -346,7 +355,7 @@ l_1_left_12:
 l_1_left_8:
 	for(jj=0; jj<ii; jj+=4)
 		{
-		kernel_dtrsm_nt_rl_inv_8x4_vs_lib44c(jj, sC.pA+ii*sdc, sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pc+jj, m-ii, ii-jj);
+		kernel_dtrsm_nt_rl_inv_8x4_vs_lib44cc(jj, sC.pA+ii*sdc, sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pc+jj, m-ii, ii-jj);
 		kernel_dpack_nn_8_vs_lib4(4, C+ii+jj*ldc, ldc, sC.pA+ii*sdc+jj*bs, sdc, m-ii);
 		}
 	kernel_dpotrf_nt_l_8x4_vs_lib44c(jj, sC.pA+ii*sdc, sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pc+jj, m-ii, m-jj);
@@ -358,7 +367,7 @@ l_1_left_8:
 l_1_left_4:
 	for(jj=0; jj<ii; jj+=4)
 		{
-		kernel_dtrsm_nt_rl_inv_4x4_vs_lib44c(jj, sC.pA+ii*sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pc+jj, m-ii, ii-jj);
+		kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc(jj, sC.pA+ii*sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, C+jj+jj*ldc, ldc, pc+jj, m-ii, ii-jj);
 		kernel_dpack_nn_4_vs_lib4(4, C+ii+jj*ldc, ldc, sC.pA+ii*sdc+jj*bs, m-ii);
 		}
 	kernel_dpotrf_nt_l_4x4_vs_lib44c(jj, sC.pA+ii*sdc, sC.pA+jj*sdc, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, pc+jj, m-ii, m-jj);
@@ -599,7 +608,9 @@ u_0_return:
 
 u_1:
 
-	sC_size = blasfeo_memsize_dmat(m, m);
+	m1 = (m+128-1)/128*128;
+	sC_size = blasfeo_memsize_dmat(m1, m1);
+//	sC_size = blasfeo_memsize_dmat(m, m);
 	stot_size = sC_size;
 	smat_mem = malloc(stot_size+63);
 	blasfeo_align_64_byte(smat_mem, &smat_mem_align);

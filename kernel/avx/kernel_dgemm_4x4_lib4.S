@@ -982,8 +982,9 @@ inner_edge_dgemm_nn_4x4_lib4:
 // edge for B upper triangular
 //
 // input arguments:
-// r10   <- A
-// r11   <- B
+// r10   <- kmax
+// r11   <- A
+// r12   <- B
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
@@ -994,8 +995,9 @@ inner_edge_dgemm_nn_4x4_lib4:
 
 //
 // output arguments:
-// r10   <- A+4*4*sizeof(double)
-// r11   <- B+4*4*sizeof(double)
+// r10   <- kmax+4
+// r11   <- A+4*4*sizeof(double)
+// r12   <- B+4*4*sizeof(double)
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
@@ -1020,46 +1022,47 @@ inner_edge_dtrmm_nt_ru_4x4_lib4:
 #endif
 #endif
 
-	vmovapd			0(%r10), %ymm8
-	vbroadcastsd	0(%r11), %ymm12
+	vmovapd			0(%r11), %ymm8
+	vbroadcastsd	0(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm0, %ymm15, %ymm0
 
-	vmovapd			32(%r10), %ymm8
-	vbroadcastsd	32(%r11), %ymm12
+	vmovapd			32(%r11), %ymm8
+	vbroadcastsd	32(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm0, %ymm15, %ymm0
-	vbroadcastsd	40(%r11), %ymm12
+	vbroadcastsd	40(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm1, %ymm15, %ymm1
 
-	vmovapd			64(%r10), %ymm8
-	vbroadcastsd	64(%r11), %ymm12
+	vmovapd			64(%r11), %ymm8
+	vbroadcastsd	64(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm0, %ymm15, %ymm0
-	vbroadcastsd	72(%r11), %ymm12
+	vbroadcastsd	72(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm1, %ymm15, %ymm1
-	vbroadcastsd	80(%r11), %ymm12
+	vbroadcastsd	80(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm2, %ymm15, %ymm2
 
-	vmovapd			96(%r10), %ymm8
-	vbroadcastsd	96(%r11), %ymm12
+	vmovapd			96(%r11), %ymm8
+	vbroadcastsd	96(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm0, %ymm15, %ymm0
-	vbroadcastsd	104(%r11), %ymm12
+	vbroadcastsd	104(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm1, %ymm15, %ymm1
-	vbroadcastsd	112(%r11), %ymm12
+	vbroadcastsd	112(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm2, %ymm15, %ymm2
-	vbroadcastsd	120(%r11), %ymm12
+	vbroadcastsd	120(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm3, %ymm15, %ymm3
 
-	addq			$128, %r10
+	subl			$4, %r10d
 	addq			$128, %r11
+	addq			$128, %r12
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -7608,8 +7611,9 @@ kernel_dtrmm_nt_ru_4x4_lib4:
 
 	// initial triangle
 
-	movq	ARG3, %r10
-	movq	ARG4, %r11
+	movq	ARG1, %r10
+	movq	ARG3, %r11
+	movq	ARG4, %r12
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_4X4_LIB4

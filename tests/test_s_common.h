@@ -62,7 +62,7 @@
 
 #define ALLOCATE_STRMAT blasfeo_allocate_smat
 #define FREE_STRMAT blasfeo_free_smat
-#define GESE blasfeo_sgese
+#define GESE_LIBSTR blasfeo_sgese
 #define PACK_STRMAT blasfeo_pack_smat
 #define PRINT_STRMAT blasfeo_print_smat
 
@@ -73,5 +73,6 @@
 
 #define ALLOCATE_STRMAT_REF blasfeo_allocate_smat_ref
 #define FREE_STRMAT_REF blasfeo_free_smat_ref
+#define GESE_REF blasfeo_sgese_ref
 #define PACK_STRMAT_REF blasfeo_pack_smat_ref
 #define PRINT_STRMAT_REF blasfeo_print_smat_ref

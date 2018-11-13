@@ -53,6 +53,9 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 	int lda = *plda;
 	int ldc = *pldc;
 
+	if(m<=0)
+		return;
+
 	int ii, jj;
 
 	int bs = 4;
@@ -63,6 +66,7 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 	int sdu;
 	struct blasfeo_dmat sA;
 	int sA_size;
+	int m1, k1;
 
 
 	// stack memory allocation
@@ -92,7 +96,7 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 //			if(m>=300 | k>=300 | k>K_MAX_STACK)
 //			if(m>=0 | k>=0 | k>K_MAX_STACK)
 #if defined(TARGET_X64_INTEL_HASWELL)
-			if(m>=100 | k>=100 | k>K_MAX_STACK)
+			if(m>100 | k>100 | k>K_MAX_STACK)
 #else
 			if(m>=12 | k>=12 | k>K_MAX_STACK)
 #endif
@@ -109,7 +113,7 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 //			if(m>=300 | k>=300 | k>K_MAX_STACK)
 //			if(m>=0 | k>=0 | k>K_MAX_STACK)
 #if defined(TARGET_X64_INTEL_HASWELL)
-			if(m>=301 | k>=301 | k>K_MAX_STACK)
+			if(m>300 | k>300 | k>K_MAX_STACK)
 #else
 			if(m>=12 | k>=12 | k>K_MAX_STACK)
 #endif
@@ -134,7 +138,7 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 //			if(m>=300 | k>=300 | k>K_MAX_STACK)
 //			if(m>=0 | k>=0 | k>K_MAX_STACK)
 #if defined(TARGET_X64_INTEL_HASWELL)
-			if(m>=108 | k>=108 | k>K_MAX_STACK)
+			if(m>108 | k>108 | k>K_MAX_STACK)
 #else
 			if(m>=12 | k>=12 | k>K_MAX_STACK)
 #endif
@@ -151,7 +155,7 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 //			if(m>=300 | k>=300 | k>K_MAX_STACK)
 //			if(m>=0 | k>=0 | k>K_MAX_STACK)
 #if defined(TARGET_X64_INTEL_HASWELL)
-			if(m>=301 | k>=301 | k>K_MAX_STACK)
+			if(m>300 | k>300 | k>K_MAX_STACK)
 #else
 			if(m>=12 | k>=12 | k>K_MAX_STACK)
 #endif
@@ -649,8 +653,10 @@ ut_0_return:
 
 
 lx_1:
-	sA_size = blasfeo_memsize_dmat(m, k);
-	mem = malloc(sA_size+63);
+	k1 = (k+128-1)/128*128;
+	m1 = (m+128-1)/128*128;
+	sA_size = blasfeo_memsize_dmat(m1, k1);
+	mem = malloc(sA_size+64);
 	blasfeo_align_64_byte(mem, &mem_align);
 	blasfeo_create_dmat(m, k, &sA, mem_align);
 
@@ -769,8 +775,10 @@ lx_1_return:
 
 
 ux_1:
-	sA_size = blasfeo_memsize_dmat(m, k);
-	mem = malloc(sA_size+63);
+	k1 = (k+128-1)/128*128;
+	m1 = (m+128-1)/128*128;
+	sA_size = blasfeo_memsize_dmat(m1, k1);
+	mem = malloc(sA_size+64);
 	blasfeo_align_64_byte(mem, &mem_align);
 	blasfeo_create_dmat(m, k, &sA, mem_align);
 
