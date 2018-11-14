@@ -954,7 +954,7 @@ inner_store_u_8x8_lib:
 	.type inner_store_l_8x8_vs_lib, @function
 inner_store_l_8x8_vs_lib:
 #elif defined(OS_MAC)
-_inner_store_l_8x4_vs_lib:
+_inner_store_l_8x8_vs_lib:
 #elif defined(OS_WINDOWS)
 	.def inner_store_l_8x8_vs_lib; .scl 2; .type 32; .endef
 inner_store_l_8x8_vs_lib:
@@ -1059,7 +1059,7 @@ inner_store_l_8x8_vs_lib:
 	.type inner_store_u_8x8_vs_lib, @function
 inner_store_u_8x8_vs_lib:
 #elif defined(OS_MAC)
-_inner_store_u_8x4_vs_lib:
+_inner_store_u_8x8_vs_lib:
 #elif defined(OS_WINDOWS)
 	.def inner_store_u_8x8_vs_lib; .scl 2; .type 32; .endef
 inner_store_u_8x8_vs_lib:
