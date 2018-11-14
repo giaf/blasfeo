@@ -7869,7 +7869,7 @@ inner_edge_dtrsm_rut_one_12x4_vs_lib4:
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DTRSM_LLN_ONE_12X4_LIB4
+	.macro INNER_EDGE_DTRSM_LLN_INV_12X4_LIB4
 #else
 	.p2align 4,,15
 #if defined(OS_LINUX)

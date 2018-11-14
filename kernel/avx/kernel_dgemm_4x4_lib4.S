@@ -10645,7 +10645,7 @@ kernel_dtrsm_nn_lu_inv_4x4_vs_lib4:
 	movq	ARG5, %r10 // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_M4X4_LIB4
+	INNER_SCALE_M11_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_scale_m11_4x4_lib4

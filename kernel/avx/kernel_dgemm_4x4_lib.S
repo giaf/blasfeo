@@ -5328,7 +5328,7 @@ kernel_dsyrk_nt_l_4x4_lib44c:
 	movq	ARG4, %r12  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DDGEMM_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemm_nt_4x4_lib4
@@ -5420,7 +5420,7 @@ kernel_dsyrk_nt_l_4x4_vs_lib44c:
 	movq	ARG4, %r12  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DDGEMM_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemm_nt_4x4_lib4
@@ -5516,7 +5516,7 @@ kernel_dsyrk_nt_u_4x4_lib44c:
 	movq	ARG4, %r12  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DDGEMM_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemm_nt_4x4_lib4
@@ -5608,7 +5608,7 @@ kernel_dsyrk_nt_u_4x4_vs_lib44c:
 	movq	ARG4, %r12  // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DDGEMM_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemm_nt_4x4_lib4
@@ -5985,7 +5985,7 @@ kernel_dtrmm_nt_ru_4x4_lib44c:
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DDGEMM_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemm_nt_4x4_lib4
@@ -6120,7 +6120,7 @@ kernel_dtrmm_nt_ru_4x4_vs_lib44c:
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DDGEMM_NT_4X4_LIB4
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	call inner_kernel_dgemm_nt_4x4_lib4
