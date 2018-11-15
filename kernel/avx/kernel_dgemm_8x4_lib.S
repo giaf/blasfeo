@@ -7658,6 +7658,60 @@ kernel_dtrsm_nn_rl_inv_8x4_vs_lib4c4c:
 	movq	ARG5, %r14 // ldb
 	sall	$3, %r14d
 
+	movq	ARG15, %r15  // n1
+	cmpl	$1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X1_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nn_8x1_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nn_8x1_lib4c
+#endif
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG15, %r15  // n1
+	cmpl	$2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X2_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nn_8x2_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nn_8x2_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG15, %r15  // n1
+	cmpl	$3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X3_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nn_8x3_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nn_8x3_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+102:
+
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_8X4_LIB4C
 #else
@@ -7667,6 +7721,8 @@ kernel_dtrsm_nn_rl_inv_8x4_vs_lib4c4c:
 	callq _inner_kernel_dgemm_nn_8x4_lib4c
 #endif
 #endif
+
+103:
 
 
 	// call inner blender_loader nn
@@ -8189,6 +8245,60 @@ kernel_dtrsm_nn_rl_one_8x4_vs_lib4c4c:
 	movq	ARG5, %r14 // ldb
 	sall	$3, %r14d
 
+	movq	ARG14, %r15  // n1
+	cmpl	$1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X1_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nn_8x1_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nn_8x1_lib4c
+#endif
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG14, %r15  // n1
+	cmpl	$2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X2_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nn_8x2_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nn_8x2_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG14, %r15  // n1
+	cmpl	$3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X3_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nn_8x3_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nn_8x3_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+102:
+
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_8X4_LIB4C
 #else
@@ -8198,6 +8308,8 @@ kernel_dtrsm_nn_rl_one_8x4_vs_lib4c4c:
 	callq _inner_kernel_dgemm_nn_8x4_lib4c
 #endif
 #endif
+
+103:
 
 
 	// call inner blender_loader nn
@@ -8889,6 +9001,60 @@ kernel_dtrsm_nt_rl_inv_8x4_vs_lib4c4c:
 	movq	ARG5, %r14 // ldb
 	sall	$3, %r14d
 
+	movq	ARG15, %r15  // n1
+	cmpl	$1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X1_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x1_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x1_lib4c
+#endif
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG15, %r15  // n1
+	cmpl	$2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X2_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x2_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x2_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG15, %r15  // n1
+	cmpl	$3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X3_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x3_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x3_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+102:
+
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_8X4_LIB4C
 #else
@@ -8898,6 +9064,8 @@ kernel_dtrsm_nt_rl_inv_8x4_vs_lib4c4c:
 	callq _inner_kernel_dgemm_nt_8x4_lib4c
 #endif
 #endif
+
+103:
 
 
 	// call inner blender_loader nn
@@ -9648,6 +9816,60 @@ kernel_dtrsm_nt_rl_one_8x4_vs_lib4c4c:
 	movq	ARG5, %r14 // ldb
 	sall	$3, %r14d
 
+	movq	ARG14, %r15  // n1
+	cmpl	$1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X1_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x1_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x1_lib4c
+#endif
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG14, %r15  // n1
+	cmpl	$2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X2_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x2_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x2_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG14, %r15  // n1
+	cmpl	$3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X3_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x3_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x3_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+102:
+
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_8X4_LIB4C
 #else
@@ -9657,6 +9879,8 @@ kernel_dtrsm_nt_rl_one_8x4_vs_lib4c4c:
 	callq _inner_kernel_dgemm_nt_8x4_lib4c
 #endif
 #endif
+
+103:
 
 
 	// call inner blender_loader nn
@@ -10177,6 +10401,60 @@ kernel_dtrsm_nn_ru_inv_8x4_vs_lib4c4c:
 	movq	ARG5, %r14 // ldb
 	sall	$3, %r14d
 
+	movq	ARG15, %r15  // n1
+	cmpl	$1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X1_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nn_8x1_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nn_8x1_lib4c
+#endif
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG15, %r15  // n1
+	cmpl	$2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X2_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nn_8x2_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nn_8x2_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG15, %r15  // n1
+	cmpl	$3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X3_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nn_8x3_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nn_8x3_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+102:
+
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_8X4_LIB4C
 #else
@@ -10186,6 +10464,8 @@ kernel_dtrsm_nn_ru_inv_8x4_vs_lib4c4c:
 	callq _inner_kernel_dgemm_nn_8x4_lib4c
 #endif
 #endif
+
+103:
 
 
 	// call inner blender_loader nn
@@ -10413,6 +10693,60 @@ kernel_dtrsm_nn_ru_one_8x4_vs_lib4c4c:
 	movq	ARG5, %r14 // ldb
 	sall	$3, %r14d
 
+	movq	ARG14, %r15  // n1
+	cmpl	$1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X1_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nn_8x1_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nn_8x1_lib4c
+#endif
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG14, %r15  // n1
+	cmpl	$2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X2_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nn_8x2_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nn_8x2_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG14, %r15  // n1
+	cmpl	$3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X3_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nn_8x3_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nn_8x3_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+102:
+
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_8X4_LIB4C
 #else
@@ -10422,6 +10756,8 @@ kernel_dtrsm_nn_ru_one_8x4_vs_lib4c4c:
 	callq _inner_kernel_dgemm_nn_8x4_lib4c
 #endif
 #endif
+
+103:
 
 
 	// call inner blender_loader nn
@@ -10879,6 +11215,60 @@ kernel_dtrsm_nt_ru_inv_8x4_vs_lib4c4c:
 	movq	ARG5, %r14 // ldb
 	sall	$3, %r14d
 
+	movq	ARG15, %r15  // n1
+	cmpl	$1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X1_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x1_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x1_lib4c
+#endif
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG15, %r15  // n1
+	cmpl	$2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X2_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x2_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x2_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG15, %r15  // n1
+	cmpl	$3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X3_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x3_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x3_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+102:
+
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_8X4_LIB4C
 #else
@@ -10888,6 +11278,8 @@ kernel_dtrsm_nt_ru_inv_8x4_vs_lib4c4c:
 	callq _inner_kernel_dgemm_nt_8x4_lib4c
 #endif
 #endif
+
+103:
 
 
 	// call inner blender_loader nn
@@ -11188,14 +11580,16 @@ kernel_dtrsm_nt_ru_inv_8x4_vs_lib4ccc:
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
 	sall	$3, %r12d
+	movq	ARG14, %r13  // m1
+	movq	ARG15, %r14  // n1
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M1B_8X4_LIB
+	INNER_SCALE_M1B_8X4_VS_LIB
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_m1b_8x4_lib
+	call inner_scale_m1b_8x4_vs_lib
 #elif defined(OS_MAC)
-	callq _inner_scale_m1b_8x4_lib
+	callq _inner_scale_m1b_8x4_vs_lib
 #endif
 #endif
 
@@ -11228,12 +11622,12 @@ kernel_dtrsm_nt_ru_inv_8x4_vs_lib4ccc:
 	movq	ARG15, %r13  // n1
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_8X4_LIB
+	INNER_STORE_8X4_VS_LIB
 #else
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_8x4_lib
+	call inner_store_8x4_vs_lib
 #elif defined(OS_MAC)
-	callq _inner_store_8x4_lib
+	callq _inner_store_8x4_vs_lib
 #endif
 #endif
 
@@ -11406,6 +11800,60 @@ kernel_dtrsm_nt_ru_one_8x4_vs_lib4c4c:
 	movq	ARG5, %r14 // ldb
 	sall	$3, %r14d
 
+	movq	ARG14, %r15  // n1
+	cmpl	$1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X1_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x1_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x1_lib4c
+#endif
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG14, %r15  // n1
+	cmpl	$2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X2_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x2_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x2_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG14, %r15  // n1
+	cmpl	$3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X3_LIB4C
+#else
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	call inner_kernel_dgemm_nt_8x3_lib4c
+#elif defined(OS_MAC)
+	callq _inner_kernel_dgemm_nt_8x3_lib4c
+#endif
+#endif
+
+	jmp		103f
+
+102:
+
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_8X4_LIB4C
 #else
@@ -11415,6 +11863,8 @@ kernel_dtrsm_nt_ru_one_8x4_vs_lib4c4c:
 	callq _inner_kernel_dgemm_nt_8x4_lib4c
 #endif
 #endif
+
+103:
 
 
 	// call inner blender_loader nn
