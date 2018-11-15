@@ -95,6 +95,30 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 	int pack_tran = 0;
 
 
+#if defined(DIM_CHECK)
+	if( !(*side=='l' | *side=='L' | *side=='r' | *side=='R') )
+		{
+		printf("\nBLASFEO: dtrsm: wrong value for side\n");
+		return;
+		}
+	if( !(*uplo=='l' | *uplo=='L' | *uplo=='u' | *uplo=='U') )
+		{
+		printf("\nBLASFEO: dtrsm: wrong value for uplo\n");
+		return;
+		}
+	if( !(*transa=='c' | *transa=='C' | *transa=='n' | *transa=='N' | *transa=='t' | *transa=='T') )
+		{
+		printf("\nBLASFEO: dtrsm: wrong value for transa\n");
+		return;
+		}
+	if( !(*diag=='n' | *diag=='n' | *diag=='u' | *diag=='U') )
+		{
+		printf("\nBLASFEO: dtrsm: wrong value for diag\n");
+		return;
+		}
+#endif
+
+
 	if(*side=='l' | *side=='L') // _l
 		{
 		if(*uplo=='l' | *uplo=='L') // _ll
@@ -105,29 +129,24 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 					{
 					goto llnn;
 					}
-				else if(*diag=='u' | *diag=='U') // _llnu
+				else //if(*diag=='u' | *diag=='U') // _llnu
 					{
 					goto llnu;
 					}
 				}
-			else if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _llt
+			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _llt
 				{
 				if(*diag=='n' | *diag=='N') // _lltn
 					{
 					goto lltn;
 					}
-				else if(*diag=='u' | *diag=='U') // _lltu
+				else //if(*diag=='u' | *diag=='U') // _lltu
 					{
 					goto lltu;
 					}
 				}
-			else
-				{
-				printf("\nBLASFEO: dtrsm: wrong value for transa\n");
-				return;
-				}
 			}
-		else if(*uplo=='u' | *uplo=='U') // _lu
+		else //if(*uplo=='u' | *uplo=='U') // _lu
 			{
 			if(*transa=='n' | *transa=='N') // _lun
 				{
@@ -135,35 +154,25 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 					{
 					goto lunn;
 					}
-				else if(*diag=='u' | *diag=='U') // _lunu
+				else //if(*diag=='u' | *diag=='U') // _lunu
 					{
 					goto lunu;
 					}
 				}
-			else if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _lut
+			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _lut
 				{
 				if(*diag=='n' | *diag=='N') // _lutn
 					{
 					goto lutn;
 					}
-				else if(*diag=='u' | *diag=='U') // _lutu
+				else //if(*diag=='u' | *diag=='U') // _lutu
 					{
 					goto lutu;
 					}
 				}
-			else
-				{
-				printf("\nBLASFEO: dtrsm: wrong value for transa\n");
-				return;
-				}
-			}
-		else
-			{
-			printf("\nBLASFEO: dtrsm: wrong value for uplo\n");
-			return;
 			}
 		}
-	else if(*side=='r' | *side=='R') // _r
+	else //if(*side=='r' | *side=='R') // _r
 		{
 		if(*uplo=='l' | *uplo=='L') // _rl
 			{
@@ -173,30 +182,25 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 					{
 					goto rlnn;
 					}
-				else if(*diag=='u' | *diag=='U') // _rlnu
+				else //if(*diag=='u' | *diag=='U') // _rlnu
 					{
 					printf("\nBLASFEO: dtrsm_rlnu: not implemented yet\n");
 					return;
 					}
 				}
-			else if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _rlt
+			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _rlt
 				{
 				if(*diag=='n' | *diag=='N') // _rltn
 					{
 					goto rltn;
 					}
-				else if(*diag=='u' | *diag=='U') // _rltu
+				else //if(*diag=='u' | *diag=='U') // _rltu
 					{
 					goto rltu;
 					}
 				}
-			else
-				{
-				printf("\nBLASFEO: dtrsm: wrong value for transa\n");
-				return;
-				}
 			}
-		else if(*uplo=='u' | *uplo=='U') // _ru
+		else //if(*uplo=='u' | *uplo=='U') // _ru
 			{
 			if(*transa=='n' | *transa=='N') // _run
 				{
@@ -204,40 +208,25 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 					{
 					goto runn;
 					}
-				else if(*diag=='u' | *diag=='U') // _runu
+				else //if(*diag=='u' | *diag=='U') // _runu
 					{
 					printf("\nBLASFEO: dtrsm_runu: not implemented yet\n");
 					return;
 					}
 				}
-			else if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _rut
+			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _rut
 				{
 				if(*diag=='n' | *diag=='N') // _rutn
 					{
 					goto rutn;
 					}
-				else if(*diag=='u' | *diag=='U') // _rutu
+				else //if(*diag=='u' | *diag=='U') // _rutu
 					{
 					printf("\nBLASFEO: dtrsm_rutu: not implemented yet\n");
 					return;
 					}
 				}
-			else
-				{
-				printf("\nBLASFEO: dtrsm: wrong value for transa\n");
-				return;
-				}
 			}
-		else
-			{
-			printf("\nBLASFEO: dtrsm: wrong value for uplo\n");
-			return;
-			}
-		}
-	else
-		{
-		printf("\nBLASFEO: dtrsm: wrong value for side\n");
-		return;
 		}
 
 
@@ -246,11 +235,11 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 ************************************************/
 llnn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=128 | n>=128 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
 		pack_tran = 0;
@@ -565,11 +554,11 @@ llnn_1_return:
 ************************************************/
 llnu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=128 | n>=128 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
 		pack_tran = 0;
@@ -876,11 +865,11 @@ llnu_1_return:
 ***********************/
 lltn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=256 | n>=256 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
 		pack_tran = 1;
@@ -1057,11 +1046,11 @@ lltn_0_return:
 ***********************/
 lltu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=256 | n>=256 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
 		pack_tran = 1;
@@ -1234,11 +1223,11 @@ lltu_0_return:
 ************************************************/
 lunu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=128 | n>=128 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
 		pack_tran = 0;
@@ -1600,11 +1589,11 @@ lunu_1_return:
 ************************************************/
 lunn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=128 | n>=128 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
 		pack_tran = 0;
@@ -1974,11 +1963,11 @@ lunn_1_return:
 ************************************************/
 lutn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=256 | n>=256 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
 		pack_tran = 1;
@@ -2127,11 +2116,11 @@ lutn_0_return:
 ************************************************/
 lutu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=256 | n>=256 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
 		pack_tran = 1;
@@ -2276,19 +2265,180 @@ lutu_0_return:
 * rlnn
 ************************************************/
 rlnn:
-	pack_tran = 1;
-	goto rutn_1;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	if(m>300 | n>300 | n>K_MAX_STACK)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	if(m>=64 | n>=64 | n>K_MAX_STACK)
+#else
+	if(m>=12 | n>=12 | n>K_MAX_STACK)
+#endif
+		{
+		pack_tran = 1;
+		goto rutn_1;
+		}
+	else
+		{
+		goto rlnn_0;
+		}
+
+rlnn_0:
+	pU = pU0;
+	sdu = sdu0;
+	dA = pd0;
+
+	for(ii=0; ii<n; ii++)
+		dA[ii] = 1.0/A[ii+ii*lda];
+
+	nn4 = n%4;
+	n4 = n - nn4;
+
+	ii = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; ii<m-11; ii+=12)
+		{
+		if(nn4!=0)
+			{
+			idx = n4;
+			kernel_dtrsm_nn_rl_inv_12x4_vs_lib4ccc(0, pU+(idx+4)*ps, sdu, A+(idx+4)+idx*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx, m-ii, nn4);
+			kernel_dpack_nn_12_vs_lib4(nn4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu, m-ii);
+			}
+		for(jj=0; jj<n4-3; jj+=4)
+			{
+			idx = n4-jj-4;
+			kernel_dtrsm_nn_rl_inv_12x4_lib4ccc(jj+nn4, pU+(idx+4)*ps, sdu, A+(idx+4)+idx*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx);
+			kernel_dpack_nn_12_lib4(4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto rlnn_0_left_4;
+			}
+		else if(m-ii<=8)
+			{
+			goto rlnn_0_left_8;
+			}
+		else
+			{
+			goto rlnn_0_left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<m-7; ii+=8)
+		{
+		if(nn4!=0)
+			{
+			idx = n4;
+			kernel_dtrsm_nn_rl_inv_8x4_vs_lib4ccc(0, pU+(idx+4)*ps, sdu, A+(idx+4)+idx*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx, m-ii, nn4);
+			kernel_dpack_nn_8_vs_lib4(nn4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu, m-ii);
+			}
+		for(jj=0; jj<n4-3; jj+=4)
+			{
+			idx = n4-jj-4;
+			kernel_dtrsm_nn_rl_inv_8x4_lib4ccc(jj+nn4, pU+(idx+4)*ps, sdu, A+(idx+4)+idx*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx);
+			kernel_dpack_nn_8_lib4(4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto rlnn_0_left_4;
+			}
+		else
+			{
+			goto rlnn_0_left_8;
+			}
+		}
+#else
+	for(; ii<m-3; ii+=4)
+		{
+		if(nn4!=0)
+			{
+			idx = n4;
+			kernel_dtrsm_nn_rl_inv_4x4_vs_lib4ccc(0, pU+(idx+4)*ps, A+(idx+4)+idx*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx, m-ii, nn4);
+			kernel_dpack_nn_4_vs_lib4(nn4, B+ii+idx*ldb, ldb, pU+idx*ps, m-ii);
+			}
+		for(jj=0; jj<n4-3; jj+=4)
+			{
+			idx = n4-jj-4;
+			kernel_dtrsm_nn_rl_inv_4x4_lib4ccc(jj+nn4, pU+(idx+4)*ps, A+(idx+4)+idx*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx);
+			kernel_dpack_nn_4_lib4(4, B+ii+idx*ldb, ldb, pU+idx*ps);
+			}
+		}
+	if(ii<m)
+		{
+		goto rlnn_0_left_4;
+		}
+#endif
+	goto rlnn_0_return;
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+rlnn_0_left_12:
+	if(nn4!=0)
+		{
+		idx = n4;
+		kernel_dtrsm_nn_rl_inv_12x4_vs_lib4ccc(0, pU+(idx+4)*ps, sdu, A+(idx+4)+idx*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx, m-ii, nn4);
+		kernel_dpack_nn_12_vs_lib4(nn4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu, m-ii);
+		}
+	for(jj=0; jj<n4-3; jj+=4)
+		{
+		idx = n4-jj-4;
+		kernel_dtrsm_nn_rl_inv_12x4_vs_lib4ccc(jj+nn4, pU+(idx+4)*ps, sdu, A+(idx+4)+idx*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx, m-ii, 4);
+		kernel_dpack_nn_12_vs_lib4(4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu, m-ii);
+		}
+	goto rlnn_0_return;
+#endif
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+rlnn_0_left_8:
+	if(nn4!=0)
+		{
+		idx = n4;
+		kernel_dtrsm_nn_rl_inv_8x4_vs_lib4ccc(0, pU+(idx+4)*ps, sdu, A+(idx+4)+idx*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx, m-ii, nn4);
+		kernel_dpack_nn_8_vs_lib4(nn4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu, m-ii);
+		}
+	for(jj=0; jj<n4-3; jj+=4)
+		{
+		idx = n4-jj-4;
+		kernel_dtrsm_nn_rl_inv_8x4_vs_lib4ccc(jj+nn4, pU+(idx+4)*ps, sdu, A+(idx+4)+idx*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx, m-ii, 4);
+		kernel_dpack_nn_8_vs_lib4(4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu, m-ii);
+		}
+	goto rlnn_0_return;
+#endif
+
+rlnn_0_left_4:
+	if(nn4!=0)
+		{
+		idx = n4;
+		kernel_dtrsm_nn_rl_inv_4x4_vs_lib4ccc(0, pU+(idx+4)*ps, A+(idx+4)+idx*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx, m-ii, nn4);
+		kernel_dpack_nn_4_vs_lib4(nn4, B+ii+idx*ldb, ldb, pU+idx*ps, m-ii);
+		}
+	for(jj=0; jj<n4-3; jj+=4)
+		{
+		idx = n4-jj-4;
+		kernel_dtrsm_nn_rl_inv_4x4_vs_lib4ccc(jj+nn4, pU+(idx+4)*ps, A+(idx+4)+idx*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx, m-ii, 4);
+		kernel_dpack_nn_4_vs_lib4(4, B+ii+idx*ldb, ldb, pU+idx*ps, m-ii);
+		}
+	goto rlnn_0_return;
+
+rlnn_0_return:
+	free(mem);
+	return;
+
+
 
 /************************************************
 * rltn
 ************************************************/
 rltn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=128 | n>=128 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=12 | n>=12 | n>K_MAX_STACK)
 #endif
 		{
 		pack_tran = 0;
@@ -2585,11 +2735,11 @@ rltn_1_return:
 ************************************************/
 rltu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=128 | n>=128 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=12 | n>=12 | n>K_MAX_STACK)
 #endif
 		{
 		pack_tran = 0;
@@ -2878,11 +3028,11 @@ rltu_1_return:
 ************************************************/
 runn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-//	if(m>=128 | n>=128 | m>K_MAX_STACK) // XXX cond on m !!!!!
+//	if(m>=128 | n>=128 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-//	if(m>=64 | n>=64 | m>K_MAX_STACK) // XXX cond on m !!!!!
+//	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
-//	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
+//	if(m>=12 | n>=12 | n>K_MAX_STACK)
 #endif
 //		{
 		pack_tran = 1;
@@ -2900,11 +3050,11 @@ runn:
 ************************************************/
 rutn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=128 | n>=128 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
+	if(m>=12 | n>=12 | n>K_MAX_STACK)
 #endif
 		{
 		pack_tran = 0;
@@ -3031,13 +3181,13 @@ rutn_0_left_12:
 		{
 		idx = n4;
 		kernel_dtrsm_nt_ru_inv_12x4_vs_lib4ccc(0, pU+(idx+4)*ps, sdu, A+idx+(idx+4)*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx, m-ii, nn4);
-		kernel_dpack_nn_12_vs_lib4(nn4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu, m-ii-8);
+		kernel_dpack_nn_12_vs_lib4(nn4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu, m-ii);
 		}
 	for(jj=0; jj<n4-3; jj+=4)
 		{
 		idx = n4-jj-4;
 		kernel_dtrsm_nt_ru_inv_12x4_vs_lib4ccc(jj+nn4, pU+(idx+4)*ps, sdu, A+idx+(idx+4)*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx, m-ii, 4);
-		kernel_dpack_nn_12_vs_lib4(4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu, m-ii-8);
+		kernel_dpack_nn_12_vs_lib4(4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu, m-ii);
 		}
 	goto rutn_0_return;
 #endif
@@ -3048,13 +3198,13 @@ rutn_0_left_8:
 		{
 		idx = n4;
 		kernel_dtrsm_nt_ru_inv_8x4_vs_lib4ccc(0, pU+(idx+4)*ps, sdu, A+idx+(idx+4)*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx, m-ii, nn4);
-		kernel_dpack_nn_8_vs_lib4(nn4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu, m-ii-4);
+		kernel_dpack_nn_8_vs_lib4(nn4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu, m-ii);
 		}
 	for(jj=0; jj<n4-3; jj+=4)
 		{
 		idx = n4-jj-4;
 		kernel_dtrsm_nt_ru_inv_8x4_vs_lib4ccc(jj+nn4, pU+(idx+4)*ps, sdu, A+idx+(idx+4)*lda, lda, alpha, B+ii+idx*ldb, ldb, B+ii+idx*ldb, ldb, A+idx+idx*lda, lda, dA+idx, m-ii, 4);
-		kernel_dpack_nn_8_vs_lib4(4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu, m-ii-4);
+		kernel_dpack_nn_8_vs_lib4(4, B+ii+idx*ldb, ldb, pU+idx*ps, sdu, m-ii);
 		}
 	goto rutn_0_return;
 #endif
