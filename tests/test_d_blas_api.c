@@ -109,8 +109,8 @@ int main()
 	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
 //	blasfeo_dsyrk(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
 //	blasfeo_dpotrf(&c_l, &n, D, &n, &info);
-	dsyrk_(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
-	dpotrf_(&c_l, &n, D, &n, &info);
+	dsyrk_(&c_u, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
+	dpotrf_(&c_u, &n, D, &n, &info);
 	d_print_mat(n, n, D, n);
 //	return 0;
 
@@ -132,7 +132,7 @@ int main()
 
 #if 1
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	dtrsm_(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+	dtrsm_(&c_r, &c_u, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
 #if 0
@@ -163,7 +163,7 @@ int main()
 
 #if 1
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	blasfeo_dtrsm(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+	blasfeo_dtrsm(&c_r, &c_u, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
 #if 0
