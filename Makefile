@@ -782,6 +782,7 @@ shared_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd blasfeo_api; $(MAKE) obj)
 	( cd blas_api; $(MAKE) obj)
+	( cd cblas_api; $(MAKE) obj)
 ifeq ($(SANDBOX_MODE), 1)
 	( cd sandbox; $(MAKE) obj)
 endif
