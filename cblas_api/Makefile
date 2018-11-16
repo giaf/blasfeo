@@ -30,6 +30,10 @@
 include ../Makefile.rule
 
 obj: 
+	# TODO: add here new dependencies as 
+	# to other levels and precisions are
+	# fully supported in the BLAS API.
+	
 	( cd CBLAS/src; $(MAKE) dlib3 )
 
 clean:
