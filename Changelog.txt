@@ -4,7 +4,7 @@ BLASFEO ChangeLog
 
 ====================================================================
 Version 0.1.1-master
-08-Nov-2018
+16-Nov-2018
 
 common:
 	* example_d_riccati_recursion: add trf for blas_api
