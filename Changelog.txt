@@ -16,7 +16,7 @@ BLASFEO_API:
 BLAS_API:
 	* dsyrk for all targets
 	* dtrmm_rlnn for all targets
-	* dtrsm_{rltn, llnn, llrn} for all targets
+	* dtrsm for all targets
 	* dpotrf for all targets
 	* dpotrs for all targets
 	* dtrtrs for all targets
