@@ -108,7 +108,7 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 				goto ln_0;
 				}
 			}
-		else if(*ta=='t' | *ta=='T')
+		else if(*ta=='t' | *ta=='T' | *ta=='c'| *ta=='C')
 			{
 //			if(m>=300 | k>=300 | k>K_MAX_STACK)
 //			if(m>=0 | k>=0 | k>K_MAX_STACK)
@@ -150,7 +150,7 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 				goto un_0;
 				}
 			}
-		else if(*ta=='t' | *ta=='T')
+		else if(*ta=='t' | *ta=='T' | *ta=='c' | *ta=='C')
 			{
 //			if(m>=300 | k>=300 | k>K_MAX_STACK)
 //			if(m>=0 | k>=0 | k>K_MAX_STACK)
