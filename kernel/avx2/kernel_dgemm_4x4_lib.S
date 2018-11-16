@@ -5293,6 +5293,212 @@
 
 
 
+//                                         1      2          3          4        5             6          7        8          9        10         11
+// void kernel_dtrsm_nn_rl_one_4x4_lib4ccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrsm_nn_rl_one_4x4_lib4ccc)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt 
+
+	movq	ARG1, %r10
+	movq	ARG2, %r11
+	movq	ARG3, %r12
+	movq	ARG4, %r13 // ldb
+	sall	$3, %r13d
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_4x4_lib4c)
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	ARG5, %r10 // beta
+	movq	ARG6, %r11 // C
+	movq	ARG7, %r12 // ldc
+	sall	$3, %r12d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_LIB
+#else
+	CALL(inner_scale_m1b_4x4_lib)
+#endif
+
+
+	// solve
+
+	movq	ARG10, %r10  // E 
+	movq	ARG11, %r11 // lde
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RLN_ONE_4X4_LIB
+#else
+	CALL(inner_edge_dtrsm_rln_one_4x4_lib)
+#endif
+
+
+	// store
+
+	movq	ARG8, %r10 // D
+	movq	ARG9, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrsm_nn_rl_one_4x4_lib4ccc)
+
+
+
+
+
+//                                            1      2          3          4        5             6          7        8          9        10         11       12      13
+// void kernel_dtrsm_nn_rl_one_4x4_vs_lib4ccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrsm_nn_rl_one_4x4_vs_lib4ccc)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt 
+
+	movq	ARG1, %r10
+	movq	ARG2, %r11
+	movq	ARG3, %r12
+	movq	ARG4, %r13 // ldb
+	sall	$3, %r13d
+
+
+	movq	ARG13, %r14  // n1
+	cmpl	$1, %r14d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X1_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_4x1_lib4c)
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG13, %r14  // n1
+	cmpl	$2, %r14d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X2_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_4x2_lib4c)
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG13, %r14  // n1
+	cmpl	$3, %r14d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X3_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_4x3_lib4c)
+#endif
+
+	jmp		103f
+
+102:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_4x4_lib4c)
+#endif
+
+103:
+
+
+	// call inner blender_loader nn
+
+	movq	ARG5, %r10 // beta
+	movq	ARG6, %r11 // C
+	movq	ARG7, %r12 // ldc
+	sall	$3, %r12d
+	movq	ARG12, %r13 // m1
+	movq	ARG13, %r14 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_VS_LIB
+#else
+	CALL(inner_scale_m1b_4x4_vs_lib)
+#endif
+
+
+	// solve
+
+	movq	ARG10, %r10  // E 
+	movq	ARG11, %r11 // lde
+	sall	$3, %r11d
+	movq	ARG13, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RLN_ONE_4X4_VS_LIB
+#else
+	CALL(inner_edge_dtrsm_rln_one_4x4_vs_lib)
+#endif
+
+
+	// store
+
+	movq	ARG8, %r10 // D
+	movq	ARG9, %r11 // ldd
+	sall	$3, %r11d
+	movq	ARG12, %r12 // m1
+	movq	ARG13, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_vs_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrsm_nn_rl_one_4x4_vs_lib4ccc)
+
+
+
+
+
 //                                         1      2          3          4             5          6        7          8        9          10
 // void kernel_dtrsm_nt_rl_inv_4x4_lib44c4(int k, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E);
 
@@ -7162,6 +7368,211 @@
 
 
 
+//                                         1      2          3          4        5             6          7        8          9        10         11
+// void kernel_dtrsm_nn_ru_one_4x4_lib4ccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrsm_nn_ru_one_4x4_lib4ccc)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt 
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // B
+	movq	ARG4, %r13 // ldb
+	sall	$3, %r13d
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_4x4_lib4c)
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	ARG5, %r10 // beta
+	movq	ARG6, %r11 // C
+	movq	ARG7, %r12 // ldc
+	sall	$3, %r12d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_LIB
+#else
+	CALL(inner_scale_m1b_4x4_lib)
+#endif
+
+
+	// solve
+
+	movq	ARG10, %r10  // E 
+	movq	ARG11, %r11 // lde
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RUN_ONE_4X4_LIB
+#else
+	CALL(inner_edge_dtrsm_run_one_4x4_lib)
+#endif
+
+
+	// store
+
+	movq	ARG8, %r10 // D
+	movq	ARG9, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrsm_nn_ru_one_4x4_lib4ccc)
+
+
+
+
+
+//                                            1      2          3          4        5             6          7        8          9        10         11       12      13
+// void kernel_dtrsm_nn_ru_one_4x4_vs_lib4ccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrsm_nn_ru_one_4x4_vs_lib4ccc)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt 
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // B
+	movq	ARG4, %r13 // ldb
+	sall	$3, %r13d
+
+	movq	ARG13, %r14  // n1
+	cmpl	$1, %r14d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X1_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_4x1_lib4c)
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG13, %r14  // n1
+	cmpl	$2, %r14d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X2_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_4x2_lib4c)
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG13, %r14  // n1
+	cmpl	$3, %r14d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X3_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_4x3_lib4c)
+#endif
+
+	jmp		103f
+
+102:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_4x4_lib4c)
+#endif
+
+103:
+
+
+	// call inner blender_loader nn
+
+	movq	ARG5, %r10 // beta
+	movq	ARG6, %r11 // C
+	movq	ARG7, %r12 // ldc
+	sall	$3, %r12d
+	movq	ARG12, %r13 // m1
+	movq	ARG13, %r14 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_VS_LIB
+#else
+	CALL(inner_scale_m1b_4x4_vs_lib)
+#endif
+
+
+	// solve
+
+	movq	ARG10, %r10  // E 
+	movq	ARG11, %r11 // lde
+	sall	$3, %r11d
+	movq	ARG13, %r12 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RUN_ONE_4X4_VS_LIB
+#else
+	CALL(inner_edge_dtrsm_run_one_4x4_vs_lib)
+#endif
+
+
+	// store
+
+	movq	ARG8, %r10 // D
+	movq	ARG9, %r11 // ldd
+	sall	$3, %r11d
+	movq	ARG12, %r12 // m1
+	movq	ARG13, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrsm_nn_ru_one_4x4_vs_lib4ccc)
+
+
+
+
+
 //                                         1      2          3          4             5          6        7          8        9          10
 // void kernel_dtrsm_nt_ru_inv_4x4_lib44c4(int k, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E);
 
@@ -7269,11 +7680,13 @@
 	movq	ARG5, %r11 // C
 	movq	ARG6, %r12 // ldc
 	sall	$3, %r12d
+	movq	ARG11, %r13 // m1
+	movq	ARG12, %r14 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M1B_4X4_LIB
+	INNER_SCALE_M1B_4X4_VS_LIB
 #else
-	CALL(inner_scale_m1b_4x4_lib)
+	CALL(inner_scale_m1b_4x4_vs_lib)
 #endif
 
 
@@ -7719,6 +8132,159 @@
 
 
 
+//                                         1      2          3          4             5          6        7          8        9
+// void kernel_dtrsm_nt_ru_one_4x4_lib44c4(int k, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrsm_nt_ru_one_4x4_lib44c4)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt 
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_4x4_lib4)
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	ARG4, %r10 // beta
+	movq	ARG5, %r11 // C
+	movq	ARG6, %r12 // ldc
+	sall	$3, %r12d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_LIB
+#else
+	CALL(inner_scale_m1b_4x4_lib)
+#endif
+
+
+	// solve
+
+	movq	ARG9, %r10  // E 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RUT_ONE_4X4_LIB4
+#else
+	CALL(inner_edge_dtrsm_rut_one_4x4_lib4)
+#endif
+
+
+	// store
+
+	movq	ARG7, %r10 // D
+	movq	ARG8, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrsm_nt_ru_one_4x4_lib44c4)
+
+
+
+
+
+//                                            1      2          3          4             5          6        7          8        9          10      11
+// void kernel_dtrsm_nt_ru_one_4x4_vs_lib44c4(int k, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int m1, in1 n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrsm_nt_ru_one_4x4_vs_lib44c4)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt 
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_4x4_lib4)
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	ARG4, %r10 // beta
+	movq	ARG5, %r11 // C
+	movq	ARG6, %r12 // ldc
+	sall	$3, %r12d
+	movq	ARG10, %r13 // m1
+	movq	ARG11, %r14 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_VS_LIB
+#else
+	CALL(inner_scale_m1b_4x4_vs_lib)
+#endif
+
+
+	// solve
+
+	movq	ARG9, %r10  // E 
+	movq	ARG11, %r11 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RUT_ONE_4X4_VS_LIB4
+#else
+	CALL(inner_edge_dtrsm_rut_one_4x4_vs_lib4)
+#endif
+
+
+	// store
+
+	movq	ARG7, %r10 // D
+	movq	ARG8, %r11 // ldd
+	sall	$3, %r11d
+	movq	ARG10, %r12 // m1
+	movq	ARG11, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrsm_nt_ru_one_4x4_vs_lib44c4)
+
+
+
+
+
 //                                         1      2          3          4        5             6          7          8          9
 // void kernel_dtrsm_nt_ru_one_4x4_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde);
 
@@ -7909,6 +8475,212 @@
 	ret
 
 	FUN_END(kernel_dtrsm_nt_ru_one_4x4_vs_lib4c4c)
+
+
+
+
+
+//                                         1      2          3          4        5             6          7        8          9        10         11
+// void kernel_dtrsm_nt_ru_one_4x4_lib4ccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrsm_nt_ru_one_4x4_lib4ccc)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt 
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // B
+	movq	ARG4, %r13 // ldb
+	sall	$3, %r13d
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_4x4_lib4c)
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	ARG5, %r10 // beta
+	movq	ARG6, %r11 // C
+	movq	ARG7, %r12 // ldc
+	sall	$3, %r12d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_LIB
+#else
+	CALL(inner_scale_m1b_4x4_lib)
+#endif
+
+
+	// solve
+
+	movq	ARG10, %r10  // E 
+	movq	ARG11, %r11 // lde
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RUT_ONE_4X4_LIB
+#else
+	CALL(inner_edge_dtrsm_rut_one_4x4_lib)
+#endif
+
+
+	// store
+
+	movq	ARG8, %r10 // D
+	movq	ARG9, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrsm_nt_ru_one_4x4_lib4ccc)
+
+
+
+
+
+//                                            1      2          3          4        5             6          7        8          9        10         11       12      13
+// void kernel_dtrsm_nt_ru_one_4x4_vs_lib4ccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrsm_nt_ru_one_4x4_vs_lib4ccc)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt 
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // B
+	movq	ARG4, %r13 // ldb
+	sall	$3, %r13d
+
+	movq	ARG13, %r14  // n1
+	cmpl	$1, %r14d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X1_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_4x1_lib4c)
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG13, %r14  // n1
+	cmpl	$2, %r14d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X2_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_4x2_lib4c)
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG13, %r14  // n1
+	cmpl	$3, %r14d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X3_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_4x3_lib4c)
+#endif
+
+	jmp		103f
+
+102:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_4x4_lib4c)
+#endif
+
+103:
+
+
+	// call inner blender_loader nn
+
+	movq	ARG5, %r10 // beta
+	movq	ARG6, %r11 // C
+	movq	ARG7, %r12 // ldc
+	sall	$3, %r12d
+	movq	ARG12, %r13 // m1
+	movq	ARG13, %r14 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_VS_LIB
+#else
+	CALL(inner_scale_m1b_4x4_vs_lib)
+#endif
+
+
+	// solve
+
+	movq	ARG10, %r10  // E 
+	movq	ARG11, %r11 // lde
+	sall	$3, %r11d
+	movq	ARG13, %r12 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RUT_ONEINV_4X4_VS_LIB
+#else
+	CALL(inner_edge_dtrsm_rut_one_4x4_vs_lib)
+#endif
+
+
+	// store
+
+	movq	ARG8, %r10 // D
+	movq	ARG9, %r11 // ldd
+	sall	$3, %r11d
+	movq	ARG12, %r12 // m1
+	movq	ARG13, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrsm_nt_ru_one_4x4_vs_lib4ccc)
+
 
 
 

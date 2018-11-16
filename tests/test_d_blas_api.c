@@ -132,7 +132,7 @@ int main()
 
 #if 1
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	dtrsm_(&c_r, &c_u, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+	dtrsm_(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
 #if 0
@@ -163,7 +163,7 @@ int main()
 
 #if 1
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	blasfeo_dtrsm(&c_r, &c_u, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+	blasfeo_dtrsm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
 #if 0
