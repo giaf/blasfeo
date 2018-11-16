@@ -98,8 +98,10 @@ run:
 clean:
 	rm -rf ./*.o
 	rm -rf ./*.out
-	rm -rf ./$(BINARY_DIR)/*.o
-	rm -rf ./$(BINARY_DIR)/*.out
+	rm -rf ./$(BINARY_DIR)/BLASFEO_API/*.o
+	rm -rf ./$(BINARY_DIR)/BLASFEO_API/*.out
+	rm -rf ./$(BINARY_DIR)/BLAS_API/*.o
+	rm -rf ./$(BINARY_DIR)/BLAS_API/*.out
 	rm -rf ./$(BINARY_DIR)/libblasfeo.a
 
 clean_all: clean

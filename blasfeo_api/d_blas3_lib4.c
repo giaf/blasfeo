@@ -40,91 +40,6 @@
 * old interface
 ****************************/
 
-// D <= A^{-1} * B , with A upper triangular employing explicit inverse of diagonal
-void dtrsm_nn_lu_inv_lib(int m, int n, double *pA, int sda, double *inv_diag_A, double *pB, int sdb, double *pD, int sdd)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-
-	const int ps = 4;
-
-	int i, j, idx;
-//	double *dummy;
-
-	i = 0;
-	int rm = m%4;
-	if(rm>0)
-		{
-		// TODO code expliticly the final case
-		idx = m-rm; // position of the part to do
-		j = 0;
-		for( ; j<n; j+=4)
-			{
-//			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(0, dummy, dummy, 0, pB+idx*sdb+j*ps, pD+idx*sdd+j*ps, pA+idx*sda+idx*ps, inv_diag_A+idx, rm, n-j);
-			// XXX pA & pD are dummy and should not be used internally !!!
-			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(0, pA, pD, sdd, pB+idx*sdb+j*ps, pD+idx*sdd+j*ps, pA+idx*sda+idx*ps, inv_diag_A+idx, rm, n-j);
-			}
-		// TODO
-		i += rm;
-		}
-//	int em = m-rm;
-#if defined(TARGET_X64_INTEL_HASWELL)
-	for( ; i<m-8; i+=12)
-		{
-		idx = m-i; // position of already done part
-		j = 0;
-		for( ; j<n-3; j+=4)
-			{
-			kernel_dtrsm_nn_lu_inv_12x4_lib4(i, pA+(idx-12)*sda+idx*ps, sda, pD+idx*sdd+j*ps, sdd, pB+(idx-12)*sdb+j*ps, sdb, pD+(idx-12)*sdd+j*ps, sdd, pA+(idx-12)*sda+(idx-12)*ps, sda, inv_diag_A+(idx-12));
-			}
-		if(j<n)
-			{
-			kernel_dtrsm_nn_lu_inv_12x4_vs_lib4(i, pA+(idx-12)*sda+idx*ps, sda, pD+idx*sdd+j*ps, sdd, pB+(idx-12)*sdb+j*ps, sdb, pD+(idx-12)*sdd+j*ps, sdd, pA+(idx-12)*sda+(idx-12)*ps, sda, inv_diag_A+(idx-12), 12, n-j);
-//			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(i, pA+(idx-4)*sda+idx*ps, pD+idx*sdd+j*ps, sdd, pB+(idx-4)*sdb+j*ps, pD+(idx-4)*sdd+j*ps, pA+(idx-4)*sda+(idx-4)*ps, inv_diag_A+(idx-4), 4, n-j);
-//			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(i+4, pA+(idx-8)*sda+(idx-4)*ps, pD+(idx-4)*sdd+j*ps, sdd, pB+(idx-8)*sdb+j*ps, pD+(idx-8)*sdd+j*ps, pA+(idx-8)*sda+(idx-8)*ps, inv_diag_A+(idx-8), 4, n-j);
-//			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(i+8, pA+(idx-12)*sda+(idx-8)*ps, pD+(idx-8)*sdd+j*ps, sdd, pB+(idx-12)*sdb+j*ps, pD+(idx-12)*sdd+j*ps, pA+(idx-12)*sda+(idx-12)*ps, inv_diag_A+(idx-12), 4, n-j);
-			}
-		}
-#endif
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-	for( ; i<m-4; i+=8)
-		{
-		idx = m-i; // position of already done part
-		j = 0;
-		for( ; j<n-3; j+=4)
-			{
-			kernel_dtrsm_nn_lu_inv_8x4_lib4(i, pA+(idx-8)*sda+idx*ps, sda, pD+idx*sdd+j*ps, sdd, pB+(idx-8)*sdb+j*ps, sdb, pD+(idx-8)*sdd+j*ps, sdd, pA+(idx-8)*sda+(idx-8)*ps, sda, inv_diag_A+(idx-8));
-			}
-		if(j<n)
-			{
-			kernel_dtrsm_nn_lu_inv_8x4_vs_lib4(i, pA+(idx-8)*sda+idx*ps, sda, pD+idx*sdd+j*ps, sdd, pB+(idx-8)*sdb+j*ps, sdb, pD+(idx-8)*sdd+j*ps, sdd, pA+(idx-8)*sda+(idx-8)*ps, sda, inv_diag_A+(idx-8), 8, n-j);
-//			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(i, pA+(idx-4)*sda+idx*ps, pD+idx*sdd+j*ps, sdd, pB+(idx-4)*sdb+j*ps, pD+(idx-4)*sdd+j*ps, pA+(idx-4)*sda+(idx-4)*ps, inv_diag_A+(idx-4), 4, n-j);
-//			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(i+4, pA+(idx-8)*sda+(idx-4)*ps, pD+(idx-4)*sdd+j*ps, sdd, pB+(idx-8)*sdb+j*ps, pD+(idx-8)*sdd+j*ps, pA+(idx-8)*sda+(idx-8)*ps, inv_diag_A+(idx-8), 4, n-j);
-			}
-		}
-#endif
-	for( ; i<m; i+=4)
-		{
-		idx = m-i; // position of already done part
-		j = 0;
-		for( ; j<n-3; j+=4)
-			{
-			kernel_dtrsm_nn_lu_inv_4x4_lib4(i, pA+(idx-4)*sda+idx*ps, pD+idx*sdd+j*ps, sdd, pB+(idx-4)*sdb+j*ps, pD+(idx-4)*sdd+j*ps, pA+(idx-4)*sda+(idx-4)*ps, inv_diag_A+(idx-4));
-			}
-		if(j<n)
-			{
-			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(i, pA+(idx-4)*sda+idx*ps, pD+idx*sdd+j*ps, sdd, pB+(idx-4)*sdb+j*ps, pD+(idx-4)*sdd+j*ps, pA+(idx-4)*sda+(idx-4)*ps, inv_diag_A+(idx-4), 4, n-j);
-			}
-		}
-
-	// common return
-	return;
-
-	}
-
-
-
 #if 0
 void dlauum_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *pA, int sda, double *pB, int sdb, int alg, double *pC, int sdc, double *pD, int sdd)
 	{
@@ -3464,9 +3379,25 @@ void blasfeo_dtrsm_lltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 
 
 
+// dtrsm_lltu
+void blasfeo_dtrsm_lltu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_dtrsm_lltu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
 // dtrsm_lunn
 void blasfeo_dtrsm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
 	{
+
+	if(m<=0 || n<=0)
+		return;
+
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
 		printf("\nblasfeo_dtrsm_lunn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
@@ -3487,6 +3418,9 @@ void blasfeo_dtrsm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 	double *dA = sA->dA;
 	int ii;
 
+	int i, j, idx;
+//	double *dummy;
+
 	if(ai==0 & aj==0)
 		{
 		// recompute diagonal if size of operation grows
@@ -3506,8 +3440,135 @@ void blasfeo_dtrsm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 			dA[ii] = 1.0 / dA[ii];
 		sA->use_dA = 0;
 		}
-	dtrsm_nn_lu_inv_lib(m, n, pA, sda, dA, pB, sdb, pD, sdd);
 
+	i = 0;
+	int rm = m%4;
+	if(rm>0)
+		{
+		// TODO code expliticly the final case
+		idx = m-rm; // position of the part to do
+		j = 0;
+		for( ; j<n; j+=4)
+			{
+//			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(0, dummy, dummy, 0, pB+idx*sdb+j*ps, pD+idx*sdd+j*ps, pA+idx*sda+idx*ps, dA+idx, rm, n-j);
+			// XXX pA & pD are dummy and should not be used internally !!!
+			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(0, pA, pD, sdd, pB+idx*sdb+j*ps, pD+idx*sdd+j*ps, pA+idx*sda+idx*ps, dA+idx, rm, n-j);
+			}
+		// TODO
+		i += rm;
+		}
+//	int em = m-rm;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for( ; i<m-8; i+=12)
+		{
+		idx = m-i; // position of already done part
+		j = 0;
+		for( ; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nn_lu_inv_12x4_lib4(i, pA+(idx-12)*sda+idx*ps, sda, pD+idx*sdd+j*ps, sdd, pB+(idx-12)*sdb+j*ps, sdb, pD+(idx-12)*sdd+j*ps, sdd, pA+(idx-12)*sda+(idx-12)*ps, sda, dA+(idx-12));
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nn_lu_inv_12x4_vs_lib4(i, pA+(idx-12)*sda+idx*ps, sda, pD+idx*sdd+j*ps, sdd, pB+(idx-12)*sdb+j*ps, sdb, pD+(idx-12)*sdd+j*ps, sdd, pA+(idx-12)*sda+(idx-12)*ps, sda, dA+(idx-12), 12, n-j);
+//			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(i, pA+(idx-4)*sda+idx*ps, pD+idx*sdd+j*ps, sdd, pB+(idx-4)*sdb+j*ps, pD+(idx-4)*sdd+j*ps, pA+(idx-4)*sda+(idx-4)*ps, dA+(idx-4), 4, n-j);
+//			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(i+4, pA+(idx-8)*sda+(idx-4)*ps, pD+(idx-4)*sdd+j*ps, sdd, pB+(idx-8)*sdb+j*ps, pD+(idx-8)*sdd+j*ps, pA+(idx-8)*sda+(idx-8)*ps, dA+(idx-8), 4, n-j);
+//			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(i+8, pA+(idx-12)*sda+(idx-8)*ps, pD+(idx-8)*sdd+j*ps, sdd, pB+(idx-12)*sdb+j*ps, pD+(idx-12)*sdd+j*ps, pA+(idx-12)*sda+(idx-12)*ps, dA+(idx-12), 4, n-j);
+			}
+		}
+#endif
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+	for( ; i<m-4; i+=8)
+		{
+		idx = m-i; // position of already done part
+		j = 0;
+		for( ; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nn_lu_inv_8x4_lib4(i, pA+(idx-8)*sda+idx*ps, sda, pD+idx*sdd+j*ps, sdd, pB+(idx-8)*sdb+j*ps, sdb, pD+(idx-8)*sdd+j*ps, sdd, pA+(idx-8)*sda+(idx-8)*ps, sda, dA+(idx-8));
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nn_lu_inv_8x4_vs_lib4(i, pA+(idx-8)*sda+idx*ps, sda, pD+idx*sdd+j*ps, sdd, pB+(idx-8)*sdb+j*ps, sdb, pD+(idx-8)*sdd+j*ps, sdd, pA+(idx-8)*sda+(idx-8)*ps, sda, dA+(idx-8), 8, n-j);
+//			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(i, pA+(idx-4)*sda+idx*ps, pD+idx*sdd+j*ps, sdd, pB+(idx-4)*sdb+j*ps, pD+(idx-4)*sdd+j*ps, pA+(idx-4)*sda+(idx-4)*ps, dA+(idx-4), 4, n-j);
+//			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(i+4, pA+(idx-8)*sda+(idx-4)*ps, pD+(idx-4)*sdd+j*ps, sdd, pB+(idx-8)*sdb+j*ps, pD+(idx-8)*sdd+j*ps, pA+(idx-8)*sda+(idx-8)*ps, dA+(idx-8), 4, n-j);
+			}
+		}
+#endif
+	for( ; i<m; i+=4)
+		{
+		idx = m-i; // position of already done part
+		j = 0;
+		for( ; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nn_lu_inv_4x4_lib4(i, pA+(idx-4)*sda+idx*ps, pD+idx*sdd+j*ps, sdd, pB+(idx-4)*sdb+j*ps, pD+(idx-4)*sdd+j*ps, pA+(idx-4)*sda+(idx-4)*ps, dA+(idx-4));
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(i, pA+(idx-4)*sda+idx*ps, pD+idx*sdd+j*ps, sdd, pB+(idx-4)*sdb+j*ps, pD+(idx-4)*sdd+j*ps, pA+(idx-4)*sda+(idx-4)*ps, dA+(idx-4), 4, n-j);
+			}
+		}
+
+	// common return
+	return;
+
+	}
+
+
+
+// dtrsm_lunu
+void blasfeo_dtrsm_lunu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_dtrsm_lunu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// dtrsm_lutn
+void blasfeo_dtrsm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_dtrsm_lutn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// dtrsm_lutu
+void blasfeo_dtrsm_lutu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_dtrsm_lutu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// dtrsm_rlnn
+void blasfeo_dtrsm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_dtrsm_rlnn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// dtrsm_rlnu
+void blasfeo_dtrsm_rlnu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_dtrsm_rlnu: feature not implemented yet\n");
+	exit(1);
+#endif
 	return;
 	}
 
@@ -3878,6 +3939,30 @@ void blasfeo_dtrsm_rltu(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 
 
 
+// dtrsm_runn
+void blasfeo_dtrsm_runn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_dtrsm_runn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// dtrsm_runu
+void blasfeo_dtrsm_runu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_dtrsm_runu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
 // dtrsm_right_upper_transposed_notunit
 void blasfeo_dtrsm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
 	{
@@ -4070,6 +4155,18 @@ void blasfeo_dtrsm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 		idx = n-j-4;
 		kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(j, &pD[i*sdd+(idx+4)*ps], &pA[idx*sda+(idx+4)*ps], &alpha, &pB[i*sdb+idx*ps], &pD[i*sdd+idx*ps], &pA[idx*sda+idx*ps], &dA[idx], m-i, 4);
 		}
+	return;
+	}
+
+
+
+// dtrsm_rutu
+void blasfeo_dtrsm_rutu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_dtrsm_rutu: feature not implemented yet\n");
+	exit(1);
+#endif
 	return;
 	}
 

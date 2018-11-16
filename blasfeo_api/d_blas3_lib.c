@@ -64,10 +64,19 @@
 #define TRSM_LLNN blasfeo_dtrsm_llnn
 #define TRSM_LLNU blasfeo_dtrsm_llnu
 #define TRSM_LLTN blasfeo_dtrsm_lltn
+#define TRSM_LLTU blasfeo_dtrsm_lltu
 #define TRSM_LUNN blasfeo_dtrsm_lunn
+#define TRSM_LUNU blasfeo_dtrsm_lunu
+#define TRSM_LUTN blasfeo_dtrsm_lutn
+#define TRSM_LUTU blasfeo_dtrsm_lutu
+#define TRSM_RLNN blasfeo_dtrsm_rlnn
+#define TRSM_RLNU blasfeo_dtrsm_rlnu
 #define TRSM_RLTN blasfeo_dtrsm_rltn
 #define TRSM_RLTU blasfeo_dtrsm_rltu
+#define TRSM_RUNN blasfeo_dtrsm_runn
+#define TRSM_RUNU blasfeo_dtrsm_runu
 #define TRSM_RUTN blasfeo_dtrsm_rutn
+#define TRSM_RUTU blasfeo_dtrsm_rutu
 
 #define COPY dcopy_
 #define GEMM dgemm_

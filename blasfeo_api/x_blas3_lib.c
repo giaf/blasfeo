@@ -376,7 +376,7 @@ void GEMM_TT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 
 
 
-// dtrsm_left_lower_nottransposed_unit
+// dtrsm_left_lower_nottransposed_notunit
 void TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
@@ -411,7 +411,6 @@ void TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			dA[ii] = 1.0 / pA[ii+lda*ii];
 		sA->use_dA = 0; // nonzero offset makes diagonal dirty
 		}
-#if 1
 	// solve
 	jj = 0;
 	for(; jj<n-1; jj+=2)
@@ -424,22 +423,7 @@ void TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			d_01 = alpha * pB[ii+0+ldb*(jj+1)];
 			d_11 = alpha * pB[ii+1+ldb*(jj+1)];
 			kk = 0;
-#if 0
-			for(; kk<ii-1; kk+=2)
-				{
-				d_00 -= pA[ii+0+lda*(kk+0)] * pD[kk+ldd*(jj+0)];
-				d_10 -= pA[ii+1+lda*(kk+0)] * pD[kk+ldd*(jj+0)];
-				d_01 -= pA[ii+0+lda*(kk+0)] * pD[kk+ldd*(jj+1)];
-				d_11 -= pA[ii+1+lda*(kk+0)] * pD[kk+ldd*(jj+1)];
-				d_00 -= pA[ii+0+lda*(kk+1)] * pD[kk+ldd*(jj+0)];
-				d_10 -= pA[ii+1+lda*(kk+1)] * pD[kk+ldd*(jj+0)];
-				d_01 -= pA[ii+0+lda*(kk+1)] * pD[kk+ldd*(jj+1)];
-				d_11 -= pA[ii+1+lda*(kk+1)] * pD[kk+ldd*(jj+1)];
-				}
-			if(kk<ii)
-#else
 			for(; kk<ii; kk++)
-#endif
 				{
 				d_00 -= pA[ii+0+lda*kk] * pD[kk+ldd*(jj+0)];
 				d_10 -= pA[ii+1+lda*kk] * pD[kk+ldd*(jj+0)];
@@ -501,27 +485,6 @@ void TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			pD[ii+ldd*jj] = d_00;
 			}
 		}
-#else
-	// copy
-	if(!(pB==pD))
-		{
-		for(jj=0; jj<n; jj++)
-			for(ii=0; ii<m; ii++)
-				pD[ii+ldd*jj] = alpha * pB[ii+ldb*jj];
-		}
-	for(jj=0; jj<n; jj++)
-		{
-		ii = 0;
-		for(; ii<m; ii++)
-			{
-			d_00 = pD[ii+ldd*jj];
-			for(kk=ii+1; kk<m; kk++)
-				{
-				pD[kk+ldd*jj] -= pA[kk+lda*ii] * d_00;
-				}
-			}
-		}
-#endif
 	return;
 	}
 
@@ -546,7 +509,6 @@ void TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 	REAL *pA = sA->pA + ai + aj*lda; // triangular
 	REAL *pB = sB->pA + bi + bj*ldb;
 	REAL *pD = sD->pA + di + dj*ldd;
-#if 1
 	// solve
 	jj = 0;
 	for(; jj<n-1; jj+=2)
@@ -559,22 +521,7 @@ void TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			d_01 = alpha * pB[ii+0+ldb*(jj+1)];
 			d_11 = alpha * pB[ii+1+ldb*(jj+1)];
 			kk = 0;
-#if 0
-			for(; kk<ii-1; kk+=2)
-				{
-				d_00 -= pA[ii+0+lda*(kk+0)] * pD[kk+ldd*(jj+0)];
-				d_10 -= pA[ii+1+lda*(kk+0)] * pD[kk+ldd*(jj+0)];
-				d_01 -= pA[ii+0+lda*(kk+0)] * pD[kk+ldd*(jj+1)];
-				d_11 -= pA[ii+1+lda*(kk+0)] * pD[kk+ldd*(jj+1)];
-				d_00 -= pA[ii+0+lda*(kk+1)] * pD[kk+ldd*(jj+0)];
-				d_10 -= pA[ii+1+lda*(kk+1)] * pD[kk+ldd*(jj+0)];
-				d_01 -= pA[ii+0+lda*(kk+1)] * pD[kk+ldd*(jj+1)];
-				d_11 -= pA[ii+1+lda*(kk+1)] * pD[kk+ldd*(jj+1)];
-				}
-			if(kk<ii)
-#else
 			for(; kk<ii; kk++)
-#endif
 				{
 				d_00 -= pA[ii+0+lda*kk] * pD[kk+ldd*(jj+0)];
 				d_10 -= pA[ii+1+lda*kk] * pD[kk+ldd*(jj+0)];
@@ -627,27 +574,6 @@ void TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			pD[ii+ldd*jj] = d_00;
 			}
 		}
-#else
-	// copy
-	if(!(pB==pD))
-		{
-		for(jj=0; jj<n; jj++)
-			for(ii=0; ii<m; ii++)
-				pD[ii+ldd*jj] = alpha * pB[ii+ldb*jj];
-		}
-	for(jj=0; jj<n; jj++)
-		{
-		ii = 0;
-		for(; ii<m; ii++)
-			{
-			d_00 = pD[ii+ldd*jj];
-			for(kk=ii+1; kk<m; kk++)
-				{
-				pD[kk+ldd*jj] -= pA[kk+lda*ii] * d_00;
-				}
-			}
-		}
-#endif
 	return;
 	}
 
@@ -658,6 +584,18 @@ void TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 	{
 #ifndef BENCHMARKS_MODE
 	printf("\nblasfeo_xtrsm_lltn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// dtrsm_lltu
+void TRSM_LLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_xtrsm_lltu: feature not implemented yet\n");
 	exit(1);
 #endif
 	return;
@@ -789,119 +727,72 @@ void TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			pD[id+0+ldd*(jj+0)] = d_00;
 			}
 		}
-#if 0
-	// copy
-	if(!(pB==pD))
-		{
-		for(jj=0; jj<n; jj++)
-			for(ii=0; ii<m; ii++)
-				pD[ii+ldd*jj] = alpha * pB[ii+ldb*jj];
-		}
-	// solve
-	for(jj=0; jj<n; jj++)
-		{
-		for(ii=m-1; ii>=0; ii--)
-			{
-			d_00 = pD[ii+ldd*jj] * dA[ii];
-			pD[ii+ldd*jj] = d_00;
-			for(kk=0; kk<ii; kk++)
-				{
-				pD[kk+ldd*jj] -= pA[kk+lda*ii] * d_00;
-				}
-			}
-		}
+	return;
+	}
+
+
+
+// dtrsm_lunu
+void TRSM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_xtrsm_lunu: feature not implemented yet\n");
+	exit(1);
 #endif
 	return;
 	}
 
 
 
-// dtrsm_right_lower_transposed_unit
-void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+// dtrsm_lutn
+void TRSM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
-	if(m<=0 | n<=0)
-		return;
-
-	// invalidate stored inverse diagonal of result matrix
-	sD->use_dA = 0;
-
-	int ii, jj, kk;
-	int lda = sA->m;
-	int ldb = sB->m;
-	int ldd = sD->m;
-	REAL *pA = sA->pA + ai + aj*lda;
-	REAL *pB = sB->pA + bi + bj*ldb;
-	REAL *pD = sD->pA + di + dj*ldd;
-	REAL
-		f_10,
-		c_00, c_01,
-		c_10, c_11;
-
-	jj = 0;
-	for(; jj<n-1; jj+=2)
-		{
-		f_10 = pA[jj+1+lda*(jj+0)];
-		ii = 0;
-		for(; ii<m-1; ii+=2)
-			{
-
-			c_00 = alpha * pB[ii+0+ldb*(jj+0)];
-			c_10 = alpha * pB[ii+1+ldb*(jj+0)];
-			c_01 = alpha * pB[ii+0+ldb*(jj+1)];
-			c_11 = alpha * pB[ii+1+ldb*(jj+1)];
-
-			for(kk=0; kk<jj; kk++)
-				{
-				c_00 -= pD[ii+0+ldd*kk] * pA[jj+0+lda*kk];
-				c_10 -= pD[ii+1+ldd*kk] * pA[jj+0+lda*kk];
-				c_01 -= pD[ii+0+ldd*kk] * pA[jj+1+lda*kk];
-				c_11 -= pD[ii+1+ldd*kk] * pA[jj+1+lda*kk];
-				}
-
-			pD[ii+0+ldd*(jj+0)] = c_00;
-			pD[ii+1+ldd*(jj+0)] = c_10;
-			c_01 -= c_00 * f_10;
-			c_11 -= c_10 * f_10;
-			pD[ii+0+ldd*(jj+1)] = c_01;
-			pD[ii+1+ldd*(jj+1)] = c_11;
-			}
-
-		for(; ii<m; ii++)
-			{
-			c_00 = alpha * pB[ii+0+ldb*(jj+0)];
-			c_01 = alpha * pB[ii+0+ldb*(jj+1)];
-
-			for(kk=0; kk<jj; kk++)
-				{
-				c_00 -= pD[ii+0+ldd*kk] * pA[jj+0+lda*kk];
-				c_01 -= pD[ii+0+ldd*kk] * pA[jj+1+lda*kk];
-				}
-
-			pD[ii+0+ldd*(jj+0)] = c_00;
-			c_01 -= c_00 * f_10;
-			pD[ii+0+ldd*(jj+1)] = c_01;
-			}
-		}
-
-	for(; jj<n; jj++)
-		{
-
-		for(ii=0; ii<m; ii++)
-			{
-			c_00 = alpha * pB[ii+ldb*jj];
-			for(kk=0; kk<jj; kk++)
-				{
-				c_00 -= pD[ii+ldd*kk] * pA[jj+lda*kk];
-				}
-			pD[ii+ldd*jj] = c_00;
-			}
-		}
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_xtrsm_lutn: feature not implemented yet\n");
+	exit(1);
+#endif
 	return;
 	}
 
 
 
-// dtrsm_right_lower_transposed_unit
+// dtrsm_lutu
+void TRSM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_xtrsm_lutu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// dtrsm_rlnn
+void TRSM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_xtrsm_rlnn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// dtrsm_rlnu
+void TRSM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_xtrsm_rlnu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// dtrsm_right_lower_transposed_not-unit
 void TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
@@ -1000,6 +891,115 @@ void TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			pD[ii+ldd*jj] = c_00;
 			}
 		}
+	return;
+	}
+
+
+
+// dtrsm_right_lower_transposed_unit
+void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	REAL
+		f_10,
+		c_00, c_01,
+		c_10, c_11;
+
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		f_10 = pA[jj+1+lda*(jj+0)];
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+
+			c_00 = alpha * pB[ii+0+ldb*(jj+0)];
+			c_10 = alpha * pB[ii+1+ldb*(jj+0)];
+			c_01 = alpha * pB[ii+0+ldb*(jj+1)];
+			c_11 = alpha * pB[ii+1+ldb*(jj+1)];
+
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+0+ldd*kk] * pA[jj+0+lda*kk];
+				c_10 -= pD[ii+1+ldd*kk] * pA[jj+0+lda*kk];
+				c_01 -= pD[ii+0+ldd*kk] * pA[jj+1+lda*kk];
+				c_11 -= pD[ii+1+ldd*kk] * pA[jj+1+lda*kk];
+				}
+
+			pD[ii+0+ldd*(jj+0)] = c_00;
+			pD[ii+1+ldd*(jj+0)] = c_10;
+			c_01 -= c_00 * f_10;
+			c_11 -= c_10 * f_10;
+			pD[ii+0+ldd*(jj+1)] = c_01;
+			pD[ii+1+ldd*(jj+1)] = c_11;
+			}
+
+		for(; ii<m; ii++)
+			{
+			c_00 = alpha * pB[ii+0+ldb*(jj+0)];
+			c_01 = alpha * pB[ii+0+ldb*(jj+1)];
+
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+0+ldd*kk] * pA[jj+0+lda*kk];
+				c_01 -= pD[ii+0+ldd*kk] * pA[jj+1+lda*kk];
+				}
+
+			pD[ii+0+ldd*(jj+0)] = c_00;
+			c_01 -= c_00 * f_10;
+			pD[ii+0+ldd*(jj+1)] = c_01;
+			}
+		}
+
+	for(; jj<n; jj++)
+		{
+
+		for(ii=0; ii<m; ii++)
+			{
+			c_00 = alpha * pB[ii+ldb*jj];
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+ldd*kk] * pA[jj+lda*kk];
+				}
+			pD[ii+ldd*jj] = c_00;
+			}
+		}
+	return;
+	}
+
+
+
+// dtrsm_runn
+void TRSM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_xtrsm_runn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// dtrsm_runu
+void TRSM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_xtrsm_runu: feature not implemented yet\n");
+	exit(1);
+#endif
 	return;
 	}
 
@@ -1138,6 +1138,18 @@ void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			pD[ii+ldd*(id)] = d_00 * dA[id];
 			}
 		}
+	return;
+	}
+
+
+
+// dtrsm_rutu
+void TRSM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_xtrsm_rutu: feature not implemented yet\n");
+	exit(1);
+#endif
 	return;
 	}
 
@@ -1887,7 +1899,7 @@ void GEMM_TT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 
 
 
-// dtrsm_left_lower_nottransposed_unit
+// dtrsm_left_lower_nottransposed_notunit
 void TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 
@@ -1944,7 +1956,7 @@ void TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-// dtrsm_left_lower_transposed_unit
+// dtrsm_left_lower_transposed_notunit
 void TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 
@@ -1968,6 +1980,36 @@ void TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			COPY(&m, pB+jj*ldb, &i1, pD+jj*sD->m, &i1);
 		}
 	TRSM(&cl, &cl, &ct, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
+	return;
+	}
+
+
+
+// dtrsm_left_lower_transposed_unit
+void TRSM_LLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA+ai+aj*sA->m;
+	REAL *pB = sB->pA+bi+bj*sB->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*sD->m, &i1);
+		}
+	TRSM(&cl, &cl, &ct, &cu, &m, &n, &alpha, pA, &lda, pD, &ldd);
 	return;
 	}
 
@@ -2002,8 +2044,97 @@ void TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-// dtrsm_right_lower_transposed_unit
-void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+// dtrsm_left_upper_nottransposed_unit
+void TRSM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cu = 'u';
+	REAL *pA = sA->pA+ai+aj*sA->m;
+	REAL *pB = sB->pA+bi+bj*sB->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+		}
+	TRSM(&cl, &cu, &cn, &cu, &m, &n, &alpha, pA, &lda, pD, &ldd);
+	return;
+	}
+
+
+
+// dtrsm_left_upper_transposed_notunit
+void TRSM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA+ai+aj*sA->m;
+	REAL *pB = sB->pA+bi+bj*sB->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+		}
+	TRSM(&cl, &cu, &ct, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
+	return;
+	}
+
+
+
+// dtrsm_left_upper_transposed_unit
+void TRSM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA+ai+aj*sA->m;
+	REAL *pB = sB->pA+bi+bj*sB->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+		}
+	TRSM(&cl, &cu, &ct, &cu, &m, &n, &alpha, pA, &lda, pD, &ldd);
+	return;
+	}
+
+
+
+// dtrsm_right_lower_nottransposed_notunit
+void TRSM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 
 	// invalidate stored inverse diagonal of result matrix
@@ -2027,7 +2158,38 @@ void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 		for(jj=0; jj<n; jj++)
 			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 		}
-	TRSM(&cr, &cl, &ct, &cu, &m, &n, &alpha, pA, &lda, pD, &ldd);
+	TRSM(&cr, &cl, &cn, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
+	return;
+	}
+
+
+
+// dtrsm_right_lower_nottransposed_unit
+void TRSM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA+ai+aj*sA->m;
+	REAL *pB = sB->pA+bi+bj*sB->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+		}
+	TRSM(&cr, &cl, &cn, &cu, &m, &n, &alpha, pA, &lda, pD, &ldd);
 	return;
 	}
 
@@ -2064,6 +2226,99 @@ void TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
+// dtrsm_right_lower_transposed_unit
+void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA+ai+aj*sA->m;
+	REAL *pB = sB->pA+bi+bj*sB->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+		}
+	TRSM(&cr, &cl, &ct, &cu, &m, &n, &alpha, pA, &lda, pD, &ldd);
+	return;
+	}
+
+
+
+// dtrsm_right_upper_nottransposed_notunit
+void TRSM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA+ai+aj*sA->m;
+	REAL *pB = sB->pA+bi+bj*sB->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+		}
+	TRSM(&cr, &cu, &cn, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
+	return;
+	}
+
+
+
+// dtrsm_right_upper_nottransposed_unit
+void TRSM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA+ai+aj*sA->m;
+	REAL *pB = sB->pA+bi+bj*sB->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+		}
+	TRSM(&cr, &cu, &cn, &cu, &m, &n, &alpha, pA, &lda, pD, &ldd);
+	return;
+	}
+
+
+
 // dtrsm_right_upper_transposed_notunit
 void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -2090,6 +2345,37 @@ void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
 		}
 	TRSM(&cr, &cu, &ct, &cn, &m, &n, &alpha, pA, &lda, pD, &ldd);
+	return;
+	}
+
+
+
+// dtrsm_right_upper_transposed_unit
+void TRSM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA+ai+aj*sA->m;
+	REAL *pB = sB->pA+bi+bj*sB->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	if(!(pB==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pB+jj*ldb, &i1, pD+jj*ldd, &i1);
+		}
+	TRSM(&cr, &cu, &ct, &cu, &m, &n, &alpha, pA, &lda, pD, &ldd);
 	return;
 	}
 
