@@ -184,6 +184,7 @@ slev3 = cblas_sgemm.o cblas_ssymm.o cblas_ssyrk.o cblas_ssyr2k.o cblas_strmm.o\
 #
 # All object files for double real precision
 #
+
 dlev3 = cblas_dgemm.o cblas_dsymm.o cblas_dsyrk.o cblas_dsyr2k.o cblas_dtrmm.o\
         cblas_dtrsm.o  
 
