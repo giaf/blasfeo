@@ -34,7 +34,7 @@ obj:
 	# to other levels and precisions are
 	# fully supported in the BLAS API.
 	
-	( cd CBLAS/src; $(MAKE) dlib3 errhand )
+	( cd CBLAS/src; $(MAKE) dlib3 )
 
 clean:
 	( cd CBLAS; $(MAKE) cleanall )
