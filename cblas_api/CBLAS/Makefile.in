@@ -37,8 +37,8 @@ LOADER = $(FC)
 # Flags for Compilers
 #-----------------------------------------------------------------------------
 
-CFLAGS = -O3 -DADD_ # WATCH OUT: without -DADD flag CBLAS BLASFEO is not used
-FFLAGS = -O3  
+CFLAGS = -O3 -fPIC -DADD_ # WATCH OUT: without -DADD flag CBLAS BLASFEO is not used
+FFLAGS = -O3 -fPIC 
 
 #-----------------------------------------------------------------------------
 # Archive programs and flags
