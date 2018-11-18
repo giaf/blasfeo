@@ -43,8 +43,7 @@
 	.macro INNER_SCALE_AB_8X4_LIB
 #else
 	.align	4
-	.type inner_scale_ab_8x4_lib, %function
-inner_scale_ab_8x4_lib:
+	FUN_START(inner_scale_ab_8x4_lib)
 #endif
 
 	ld1		{v28.2d}, [x8]
@@ -106,7 +105,7 @@ inner_scale_ab_8x4_lib:
 #else
 	ret
 
-	.size	inner_scale_ab_8x4_lib, .-inner_scale_ab_8x4_lib
+	FUN_END(inner_scale_ab_8x4_lib)
 #endif
 
 
@@ -129,8 +128,7 @@ inner_scale_ab_8x4_lib:
 	.macro INNER_SCALE_AB_8X4_VS_LIB
 #else
 	.align	4
-	.type inner_scale_ab_8x4_vs_lib, %function
-inner_scale_ab_8x4_vs_lib:
+	FUN_START(inner_scale_ab_8x4_vs_lib)
 #endif
 
 	ld1		{v28.2d}, [x8]
@@ -342,7 +340,7 @@ inner_scale_ab_8x4_vs_lib:
 #else
 	ret
 
-	.size	inner_scale_ab_8x4_vs_lib, .-inner_scale_ab_8x4_vs_lib
+	FUN_END(inner_scale_ab_8x4_vs_lib)
 #endif
 
 
@@ -361,8 +359,7 @@ inner_scale_ab_8x4_vs_lib:
 	.macro INNER_STORE_8X4_LIB
 #else
 	.align 4
-	.type inner_store_8x4_lib, %function
-inner_store_8x4_lib:
+	FUN_START(inner_store_8x4_lib)
 #endif
 
 	stp		q0, q1, [x8, #0]
@@ -382,7 +379,7 @@ inner_store_8x4_lib:
 #else
 	ret
 
-	.size	inner_store_8x4_lib, .-inner_store_8x4_lib
+	FUN_END(inner_store_8x4_lib)
 #endif
 
 
@@ -403,8 +400,7 @@ inner_store_8x4_lib:
 	.macro INNER_STORE_8X4_VS_LIB
 #else
 	.align 4
-	.type inner_store_8x4_vs_lib, %function
-inner_store_8x4_vs_lib:
+	FUN_START(inner_store_8x4_vs_lib)
 #endif
 
 	cmp		w10, #8
@@ -477,7 +473,7 @@ inner_store_8x4_vs_lib:
 #else
 	ret
 
-	.size	inner_store_8x4_vs_lib, .-inner_store_8x4_vs_lib
+	FUN_END(inner_store_8x4_vs_lib)
 #endif
 
 
@@ -488,9 +484,7 @@ inner_store_8x4_vs_lib:
 // void kernel_dgemm_nt_8x4_lib44c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd)
 
 	.align	4
-	.global	kernel_dgemm_nt_8x4_lib44c
-	.type	kernel_dgemm_nt_8x4_lib44c, %function
-kernel_dgemm_nt_8x4_lib44c:
+	GLOB_FUN_START(kernel_dgemm_nt_8x4_lib44c)
 	
 
 
@@ -498,23 +492,7 @@ kernel_dgemm_nt_8x4_lib44c:
 
 
 
-	// TODO zero the entire 128-bit register ???
-	fmov	d0, xzr
-	fmov    d1, d0
-	fmov    d2, d0
-	fmov    d3, d0
-	fmov    d4, d0
-	fmov    d5, d0
-	fmov    d6, d0
-	fmov    d7, d0
-	fmov    d8, d0
-	fmov    d9, d0
-	fmov    d10, d0
-	fmov    d11, d0
-	fmov    d12, d0
-	fmov    d13, d0
-	fmov    d14, d0
-	fmov    d15, d0
+	ZERO_ACC
 
 
 
@@ -567,7 +545,7 @@ kernel_dgemm_nt_8x4_lib44c:
 
 	ret
 
-	.size	kernel_dgemm_nt_8x4_lib44c, .-kernel_dgemm_nt_8x4_lib44c
+	FUN_END(kernel_dgemm_nt_8x4_lib44c)
 
 
 
@@ -577,9 +555,7 @@ kernel_dgemm_nt_8x4_lib44c:
 // void kernel_dgemm_nt_8x4_vs_lib44c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 
 	.align	4
-	.global	kernel_dgemm_nt_8x4_vs_lib44c
-	.type	kernel_dgemm_nt_8x4_vs_lib44c, %function
-kernel_dgemm_nt_8x4_vs_lib44c:
+	GLOB_FUN_START(kernel_dgemm_nt_8x4_vs_lib44c)
 	
 
 
@@ -587,23 +563,7 @@ kernel_dgemm_nt_8x4_vs_lib44c:
 
 
 
-	// TODO zero the entire 128-bit register ???
-	fmov	d0, xzr
-	fmov    d1, d0
-	fmov    d2, d0
-	fmov    d3, d0
-	fmov    d4, d0
-	fmov    d5, d0
-	fmov    d6, d0
-	fmov    d7, d0
-	fmov    d8, d0
-	fmov    d9, d0
-	fmov    d10, d0
-	fmov    d11, d0
-	fmov    d12, d0
-	fmov    d13, d0
-	fmov    d14, d0
-	fmov    d15, d0
+	ZERO_ACC
 
 
 
@@ -660,7 +620,7 @@ kernel_dgemm_nt_8x4_vs_lib44c:
 
 	ret
 
-	.size	kernel_dgemm_nt_8x4_vs_lib44c, .-kernel_dgemm_nt_8x4_vs_lib44c
+	FUN_END(kernel_dgemm_nt_8x4_vs_lib44c)
 
 
 

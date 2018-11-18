@@ -1332,9 +1332,7 @@ NAME:
 #else
 	ret
 
-#if defined(OS_LINUX)
 	FUN_END(inner_edge_trsm_rlt_inv_4x4_lib4)
-#endif
 #endif
 
 
@@ -1416,9 +1414,7 @@ NAME:
 #else
 	ret
 
-#if defined(OS_LINUX)
 	FUN_END(inner_edge_trsm_rlt_inv_4x4_vs_lib4)
-#endif
 #endif
 
 
