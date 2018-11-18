@@ -1495,11 +1495,12 @@ NAME:
 3: // clean1-up loop
 
 	// unroll 0
-	ld1		{v20.2d, v21.2d}, [x9], #32
 	ldr		d28, [x11, #(0*8+0*32)]
 	ldr		d29, [x11, #(0*8+1*32)]
 	ldr		d30, [x11, #(0*8+2*32)]
 	ldr		d31, [x11, #(0*8+3*32)]
+	ld1		{v20.2d, v21.2d}, [x9], #32
+	ld1		{v22.2d, v23.2d}, [x13], #32
 	fmla	v0.2d, v20.2d, v28.2d[0]
 	fmla	v1.2d, v21.2d, v28.2d[0]
 	fmla	v2.2d, v20.2d, v29.2d[0]
@@ -1508,7 +1509,6 @@ NAME:
 	fmla	v5.2d, v21.2d, v30.2d[0]
 	fmla	v6.2d, v20.2d, v31.2d[0]
 	fmla	v7.2d, v21.2d, v31.2d[0]
-	ld1		{v22.2d, v23.2d}, [x13], #32
 	fmla	v8.2d, v22.2d, v28.2d[0]
 	fmla	v9.2d, v23.2d, v28.2d[0]
 	fmla	v10.2d, v22.2d, v29.2d[0]
