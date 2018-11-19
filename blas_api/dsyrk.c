@@ -93,37 +93,11 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 		{
 		if(*ta=='n' | *ta=='N')
 			{
-//			if(m>=300 | k>=300 | k>K_MAX_STACK)
-//			if(m>=0 | k>=0 | k>K_MAX_STACK)
-#if defined(TARGET_X64_INTEL_HASWELL)
-			if(m>100 | k>100 | k>K_MAX_STACK)
-#else
-			if(m>=12 | k>=12 | k>K_MAX_STACK)
-#endif
-				{
-				goto lx_1;
-				}
-			else
-				{
-				goto ln_0;
-				}
+			goto ln;
 			}
-		else if(*ta=='t' | *ta=='T' | *ta=='c'| *ta=='C')
+		else if(*ta=='t' | *ta=='T' | *ta=='c' | *ta=='C')
 			{
-//			if(m>=300 | k>=300 | k>K_MAX_STACK)
-//			if(m>=0 | k>=0 | k>K_MAX_STACK)
-#if defined(TARGET_X64_INTEL_HASWELL)
-			if(m>300 | k>300 | k>K_MAX_STACK)
-#else
-			if(m>=12 | k>=12 | k>K_MAX_STACK)
-#endif
-				{
-				goto lx_1;
-				}
-			else
-				{
-				goto lt_0;
-				}
+			goto lt;
 			}
 		else
 			{
@@ -135,37 +109,11 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 		{
 		if(*ta=='n' | *ta=='N')
 			{
-//			if(m>=300 | k>=300 | k>K_MAX_STACK)
-//			if(m>=0 | k>=0 | k>K_MAX_STACK)
-#if defined(TARGET_X64_INTEL_HASWELL)
-			if(m>108 | k>108 | k>K_MAX_STACK)
-#else
-			if(m>=12 | k>=12 | k>K_MAX_STACK)
-#endif
-				{
-				goto ux_1;
-				}
-			else
-				{
-				goto un_0;
-				}
+			goto un;
 			}
 		else if(*ta=='t' | *ta=='T' | *ta=='c' | *ta=='C')
 			{
-//			if(m>=300 | k>=300 | k>K_MAX_STACK)
-//			if(m>=0 | k>=0 | k>K_MAX_STACK)
-#if defined(TARGET_X64_INTEL_HASWELL)
-			if(m>300 | k>300 | k>K_MAX_STACK)
-#else
-			if(m>=12 | k>=12 | k>K_MAX_STACK)
-#endif
-				{
-				goto ux_1;
-				}
-			else
-				{
-				goto ut_0;
-				}
+			goto ut;
 			}
 		else
 			{
@@ -180,6 +128,25 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 		}
 
 
+
+/************************************************
+* ln
+************************************************/
+ln:
+#if defined(TARGET_X64_INTEL_HASWELL)
+	if(m>=100 | k>=100 | k>K_MAX_STACK)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	if(m>=64 | k>=64 | k>K_MAX_STACK)
+#else
+	if(m>=12 | k>=12 | k>K_MAX_STACK)
+#endif
+		{
+		goto lx_1;
+		}
+	else
+		{
+		goto ln_0;
+		}
 
 ln_0:
 	pU = pU0;
@@ -295,6 +262,25 @@ ln_0_return:
 	return;
 
 
+
+/************************************************
+* lt
+************************************************/
+lt:
+#if defined(TARGET_X64_INTEL_HASWELL)
+	if(m>300 | k>300 | k>K_MAX_STACK)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	if(m>=64 | k>=64 | k>K_MAX_STACK)
+#else
+	if(m>=12 | k>=12 | k>K_MAX_STACK)
+#endif
+		{
+		goto lx_1;
+		}
+	else
+		{
+		goto lt_0;
+		}
 
 lt_0:
 	pU = pU0;
@@ -416,6 +402,25 @@ lt_0_return:
 	return;
 
 
+/************************************************
+* un
+************************************************/
+un:
+#if defined(TARGET_X64_INTEL_HASWELL)
+	if(m>=108 | k>=108 | k>K_MAX_STACK)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	if(m>=64 | k>=64 | k>K_MAX_STACK)
+#else
+	if(m>=12 | k>=12 | k>K_MAX_STACK)
+#endif
+		{
+		goto ux_1;
+		}
+	else
+		{
+		goto un_0;
+		}
+
 un_0:
 	pU = pU0;
 	sdu = sdu0;
@@ -505,7 +510,7 @@ un_0_left_12:
 	kernel_dsyrk_nt_u_8x8_vs_lib44c(k, alpha, pU, sdu, pU, sdu, beta, C+ii+ii*ldc, ldc, C+ii+ii*ldc, ldc, m-ii, m-ii);
 //	kernel_dsyrk_nt_u_4x4_vs_lib44c(k, alpha, pU, pU, beta, C+ii+ii*ldc, ldc, C+ii+ii*ldc, ldc, m-ii, m-ii);
 //	kernel_dsyrk_nt_u_8x4_vs_lib44c(k, alpha, pU, sdu, pU+4*sdu, beta, C+ii+(ii+4)*ldc, ldc, C+ii+(ii+4)*ldc, ldc, m-ii, m-(ii+4));
-	kernel_dsyrk_nt_u_8x4_vs_lib44c(k, alpha, pU, sdu, pU+8*sdu, beta, C+ii+(ii+8)*ldc, ldc, C+ii+(ii+8)*ldc, ldc, m-ii, m-(ii+8));
+	kernel_dsyrk_nt_u_12x4_vs_lib44c(k, alpha, pU, sdu, pU+8*sdu, beta, C+ii+(ii+8)*ldc, ldc, C+ii+(ii+8)*ldc, ldc, m-ii, m-(ii+8));
 #endif
 	goto un_0_return;
 
@@ -530,6 +535,25 @@ un_0_return:
 	return;
 
 
+
+/************************************************
+* ut
+************************************************/
+ut:
+#if defined(TARGET_X64_INTEL_HASWELL)
+	if(m>300 | k>300 | k>K_MAX_STACK)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	if(m>=64 | k>=64 | k>K_MAX_STACK)
+#else
+	if(m>=12 | k>=12 | k>K_MAX_STACK)
+#endif
+		{
+		goto ux_1;
+		}
+	else
+		{
+		goto ut_0;
+		}
 
 ut_0:
 	pU = pU0;
