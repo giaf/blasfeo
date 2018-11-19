@@ -4,10 +4,11 @@ BLASFEO ChangeLog
 
 ====================================================================
 Version 0.1.1-master
-16-Nov-2018
+19-Nov-2018
 
 common:
 	* example_d_riccati_recursion: add trf for blas_api
+	* add CBLAS source (only add to libblasfeo what needed)
 
 BLASFEO_API:
 	* stable version of dsyrk_ln for all targets
@@ -21,6 +22,9 @@ BLAS_API:
 	* dpotrs for all targets
 	* dtrtrs for all targets
 	* dcopy for all targets
+
+CBLAS_API
+	* dgemm
 
 X64:
 	* AMD_BULLDOZER: fix performance bug (mix of legacy and VEX code)
