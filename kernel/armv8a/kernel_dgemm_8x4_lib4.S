@@ -1126,7 +1126,7 @@ NAME:
 
 	// prefetch
 	prfm	PLDL1KEEP, [x9, #0]
-	prfm	PLDL1KEEP, [x10, #0]
+	prfm	PLDL1KEEP, [x11, #0]
 	add		x13, x9, x10
 	prfm	PLDL1KEEP, [x13, #0]
 
@@ -1150,11 +1150,13 @@ NAME:
 
 	// prefetch
 	prfm	PLDL1KEEP, [x9, #64]
-//	prfm	PLDL1KEEP, [x11, #64]
+	prfm	PLDL1KEEP, [x11, #64]
 	prfm	PLDL1KEEP, [x13, #64]
 
 	cmp		w8, #4
 	ble		0f // consider clean up loop
+
+	add		x28, x11, x12
 
 	// main loop
 1:
@@ -1165,27 +1167,28 @@ NAME:
 	fmla	v0.2d, v16.2d, v24.2d[0]
 	ldr		x18, [x9, #(1*8+1*32)] // A0
 	fmla	v2.2d, v16.2d, v24.2d[1]
-	prfm	PLDL1KEEP, [x9, #128]
+	prfm	PLDL1KEEP, [x28]
 	fmla	v1.2d, v17.2d, v24.2d[0]
 	ldr		d26, [x11, #(1*8+0*32)] // B
 	ins		v21.d[1], x21
 	fmla	v3.2d, v17.2d, v24.2d[1]
 	ldr		x26, [x11, #(1*8+1*32)] // B
 	fmla	v4.2d, v16.2d, v25.2d[0]
-//	prfm	PLDL1KEEP, [x11, #128]
+	prfm	PLDL1KEEP, [x28, #64]
 	fmla	v6.2d, v16.2d, v25.2d[1]
 	ldr		d19, [x9, #(2*8+1*32)] // A0
 	ins		v18.d[1], x18
 	fmla	v5.2d, v17.2d, v25.2d[0]
 	ldr		x19, [x9, #(3*8+1*32)] // A0
 	fmla	v7.2d, v17.2d, v25.2d[1]
-	prfm	PLDL1KEEP, [x13, #128]
+	prfm	PLDL1KEEP, [x9, #128]
 	fmla	v8.2d, v20.2d, v24.2d[0]
 	ldr		d27, [x11, #(1*8+2*32)] // B
 	ins		v26.d[1], x26
 	fmla	v10.2d, v20.2d, v24.2d[1]
 	ldr		x27, [x11, #(1*8+3*32)] // B
 	fmla	v9.2d, v21.2d, v24.2d[0]
+	prfm	PLDL1KEEP, [x13, #128]
 	fmla	v11.2d, v21.2d, v24.2d[1]
 	ldr		d22, [x13, #(0*8+1*32)] // A1
 	ins		v19.d[1], x19
@@ -1222,6 +1225,7 @@ NAME:
 	fmla	v10.2d, v22.2d, v26.2d[1]
 	ldr		x25, [x11, #(2*8+3*32)] // B
 	fmla	v9.2d, v23.2d, v26.2d[0]
+	add		x28, x11, x12
 	fmla	v11.2d, v23.2d, v26.2d[1]
 	ldr		d20, [x13, #(0*8+2*32)] // A1
 	ins		v17.d[1], x17
@@ -1280,7 +1284,6 @@ NAME:
 	fmla	v0.2d, v18.2d, v26.2d[0]
 	ldr		x16, [x9, #(1*8+4*32)] // A0
 	fmla	v2.2d, v18.2d, v26.2d[1]
-//	add		x9, x9, #128
 	add		x11, x11, x12
 	fmla	v1.2d, v19.2d, v26.2d[0]
 	ldr		d24, [x11, #(0*8+0*32)] // B
@@ -1288,7 +1291,6 @@ NAME:
 	fmla	v3.2d, v19.2d, v26.2d[1]
 	ldr		x24, [x11, #(0*8+1*32)] // B
 	fmla	v4.2d, v18.2d, v27.2d[0]
-//	add		x11, x11, #128
 	add		x9, x9, #128
 	fmla	v6.2d, v18.2d, v27.2d[1]
 	ldr		d17, [x9, #(2*8+0*32)] // A0

@@ -888,7 +888,7 @@ NAME:
 	//                              // B1[0]
 	ldr		x27, [x11, #(0*8+3*32)] // B1[1]
 
-//	prfm	PLDL1KEEP, [x11, #64]
+	prfm	PLDL1KEEP, [x11, #64]
 	ins		v24.d[1], x20 // A0[1]
 	prfm	PLDL1KEEP, [x9, #64]
 	ins		v25.d[1], x21 // A1[1]
@@ -907,6 +907,8 @@ NAME:
 	cmp		w8, #4
 	ble		0f // consider clean up loop
 
+	add		x28, x11, x12
+
 	// main loop
 1:
 
@@ -924,7 +926,7 @@ NAME:
 	fmla	v0.2d, v24.2d, v30.2d[0]
 	ldr		x22, [x13, #(1*8+1*32)] // A2[1]
 	fmla	v2.2d, v24.2d, v30.2d[1]
-//	prfm	PLDL1KEEP, [x11, #128]
+	prfm	PLDL1KEEP, [x28]
 	fmla	v1.2d, v25.2d, v30.2d[0]
 
 	// load 28 ins 31
@@ -933,7 +935,6 @@ NAME:
 	fmla	v3.2d, v25.2d, v30.2d[1]
 	ldr		x27, [x11, #(1*8+3*32)] // B1[1]
 	fmla	v8.2d, v26.2d, v30.2d[0]
-	prfm	PLDL1KEEP, [x9, #128]
 	fmla	v10.2d, v26.2d, v30.2d[1]
 
 	// load 29 ins 27
@@ -942,7 +943,7 @@ NAME:
 	fmla	v4.2d, v24.2d, v31.2d[0]
 	ldr		x23, [x13, #(3*8+1*32)] // A3[1]
 	fmla	v6.2d, v24.2d, v31.2d[1]
-	prfm	PLDL1KEEP, [x13, #128]
+	prfm	PLDL1KEEP, [x28, #64]
 	fmla	v5.2d, v25.2d, v31.2d[0]
 
 	// load 24 ins 28
@@ -951,7 +952,7 @@ NAME:
 	fmla	v7.2d, v25.2d, v31.2d[1]
 	ldr		x24, [x14, #(1*8+1*32)] // A4[1]
 	fmla	v12.2d, v26.2d, v31.2d[0]
-	prfm	PLDL1KEEP, [x14, #128]
+	prfm	PLDL1KEEP, [x9, #128]
 	fmla	v14.2d, v26.2d, v31.2d[1]
 
 	// load 25 ins 29
@@ -960,7 +961,7 @@ NAME:
 	fmla	v9.2d, v27.2d, v30.2d[0]
 	ldr		x25, [x14, #(3*8+1*32)] // A5[1]
 	fmla	v11.2d, v27.2d, v30.2d[1]
-	add		x28, x11, x12
+	prfm	PLDL1KEEP, [x13, #128]
 	fmla	v16.2d, v28.2d, v30.2d[0]
 
 	// load 26 ins 24
@@ -969,6 +970,7 @@ NAME:
 	fmla	v18.2d, v28.2d, v30.2d[1]
 	ldr		x20, [x9, #(1*8+2*32)] // A0[1]
 	fmla	v17.2d, v29.2d, v30.2d[0]
+	prfm	PLDL1KEEP, [x14, #128]
 	fmla	v19.2d, v29.2d, v30.2d[1]
 
 	// load 30 ins 25
@@ -1063,7 +1065,7 @@ NAME:
 	fmla	v0.2d, v24.2d, v30.2d[0]
 	ldr		x22, [x13, #(1*8+3*32)] // A2[1]
 	fmla	v2.2d, v24.2d, v30.2d[1]
-//	prfm	PLDL1KEEP, [x11, #192]
+	prfm	PLDL1KEEP, [x9, #192]
 	fmla	v1.2d, v25.2d, v30.2d[0]
 
 	// load 28 ins 31
@@ -1072,7 +1074,7 @@ NAME:
 	fmla	v3.2d, v25.2d, v30.2d[1]
 	ldr		x27, [x11, #(3*8+3*32)] // B1[1]
 	fmla	v8.2d, v26.2d, v30.2d[0]
-	prfm	PLDL1KEEP, [x9, #192]
+	prfm	PLDL1KEEP, [x13, #192]
 	fmla	v10.2d, v26.2d, v30.2d[1]
 
 	// load 29 ins 27
@@ -1081,7 +1083,7 @@ NAME:
 	fmla	v4.2d, v24.2d, v31.2d[0]
 	ldr		x23, [x13, #(3*8+3*32)] // A3[1]
 	fmla	v6.2d, v24.2d, v31.2d[1]
-	prfm	PLDL1KEEP, [x13, #192]
+	prfm	PLDL1KEEP, [x14, #192]
 	fmla	v5.2d, v25.2d, v31.2d[0]
 
 	// load 24 ins 28
@@ -1090,7 +1092,6 @@ NAME:
 	fmla	v7.2d, v25.2d, v31.2d[1]
 	ldr		x24, [x14, #(1*8+3*32)] // A4[1]
 	fmla	v12.2d, v26.2d, v31.2d[0]
-	prfm	PLDL1KEEP, [x14, #192]
 	fmla	v14.2d, v26.2d, v31.2d[1]
 
 	// load 25 ins 29
@@ -1143,6 +1144,7 @@ NAME:
 	fmla	v3.2d, v25.2d, v30.2d[1]
 	ldr		x27, [x28, #(0*8+3*32)] // B1[1]
 	fmla	v8.2d, v26.2d, v30.2d[0]
+	sub		w8, w8, #4
 	fmla	v10.2d, v26.2d, v30.2d[1]
 
 	// load 29 ins 27
@@ -1151,7 +1153,7 @@ NAME:
 	fmla	v4.2d, v24.2d, v31.2d[0]
 	ldr		x23, [x13, #(3*8+4*32)] // A3[1]
 	fmla	v6.2d, v24.2d, v31.2d[1]
-	sub		w8, w8, #4
+	add		x13, x13, #(4*32) // A_1
 	fmla	v5.2d, v25.2d, v31.2d[0]
 
 	// load 24 ins 28
@@ -1160,7 +1162,7 @@ NAME:
 	fmla	v7.2d, v25.2d, v31.2d[1]
 	ldr		x24, [x14, #(1*8+4*32)] // A4[1]
 	fmla	v12.2d, v26.2d, v31.2d[0]
-	add		x13, x13, #(4*32) // A_1
+	add		x11, x11, x12 // B
 	fmla	v14.2d, v26.2d, v31.2d[1]
 
 	// load 25 ins 29
@@ -1169,7 +1171,7 @@ NAME:
 	fmla	v9.2d, v27.2d, v30.2d[0]
 	ldr		x25, [x14, #(3*8+4*32)] // A5[1]
 	fmla	v11.2d, v27.2d, v30.2d[1]
-	add		x11, x11, x12 // B
+	add		x28, x11, x12
 	fmla	v16.2d, v28.2d, v30.2d[0]
 
 	// load 26 ins 24
@@ -1182,7 +1184,7 @@ NAME:
 	fmla	v19.2d, v29.2d, v30.2d[1]
 
 	// load 30 ins 25
-	ldr		d30, [x28, #(0*8+0*32)] // B0[0]
+	ldr		d30, [x11, #(0*8+0*32)] // B0[0]
 	ins		v25.d[1], x21 // A1[1]
 	fmla	v13.2d, v27.2d, v31.2d[0]
 	ldr		x21, [x9, #(3*8+1*32)] // A1[1]
@@ -1194,7 +1196,7 @@ NAME:
 	ldr		d27, [x13, #(2*8+0*32)] // A3[0]
 	ins		v30.d[1], x26 // B0[1]
 	fmla	v22.2d, v28.2d, v31.2d[1]
-	ldr		x26, [x28, #(1*8+1*32)] // B0[1]
+	ldr		x26, [x11, #(1*8+1*32)] // B0[1]
 	fmla	v21.2d, v29.2d, v31.2d[0]
 	fmla	v23.2d, v29.2d, v31.2d[1]
 
