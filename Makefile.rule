@@ -96,10 +96,17 @@ BLAS_API = 0
 # Compile CBLAS API routines (experimental)
 # CBLAS_API = 0
 CBLAS_API = 1
-#
+
 # Export standard FORTRAN API for BLAS API routines (experimental)
 FORTRAN_BLAS_API = 0
 # FORTRAN_BLAS_API = 1
+
+ifeq ($(CBLAS_API), 1) 
+ifeq ($(FORTRAN_BLAS_API), 0)
+$(error Cannot expose non-FORTRAN style BLAS API when building CBLAS API. Exiting.)	
+endif
+endif
+
 
 # Maximum K value for stack buffer size (decrease this value if stack size is exceeded)
 K_MAX_STACK = 300
