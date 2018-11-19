@@ -22,7 +22,7 @@ PLAT = LINUX
 # Libraries and includes
 #-----------------------------------------------------------------------------
  
-BLLIB = /usr/lib/libblas/libblas.a ../../../lib/libblasfeo.a
+BLLIB = ../../../lib/libblasfeo.a
 CBLIB = ../lib/cblas_$(PLAT).a
 
 #-----------------------------------------------------------------------------
@@ -37,10 +37,8 @@ LOADER = $(FC)
 # Flags for Compilers
 #-----------------------------------------------------------------------------
 
-# CFLAGS = -O3 -DADD_
-# FFLAGS = -O3  
-CFLAGS = -g -DADD_
-FFLAGS = -g 
+CFLAGS = -O3 -fPIC -DADD_ # WATCH OUT: without -DADD flag CBLAS BLASFEO is not used
+FFLAGS = -O3 -fPIC 
 
 #-----------------------------------------------------------------------------
 # Archive programs and flags

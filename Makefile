@@ -626,6 +626,13 @@ OBJS += \
 
 endif
 
+ifeq ($(CBLAS_API), 1)
+OBJS += \
+		cblas_api/CBLAS/src/cblas_dgemm.o \
+		cblas_api/CBLAS/src/cblas_globals.o \
+
+endif
+
 else # LA_HIGH_PERFORMANCE vs LA_REFERENCE | LA_BLAS
 
 # aux
@@ -754,6 +761,7 @@ static_library: target
 	( cd auxiliary; $(MAKE) obj)
 	( cd blasfeo_api; $(MAKE) obj)
 	( cd blas_api; $(MAKE) obj)
+	( cd cblas_api; $(MAKE) obj)
 ifeq ($(SANDBOX_MODE), 1)
 	( cd sandbox; $(MAKE) obj)
 endif
@@ -777,6 +785,7 @@ shared_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd blasfeo_api; $(MAKE) obj)
 	( cd blas_api; $(MAKE) obj)
+	( cd cblas_api; $(MAKE) obj)
 ifeq ($(SANDBOX_MODE), 1)
 	( cd sandbox; $(MAKE) obj)
 endif
@@ -893,6 +902,11 @@ ifeq ($(FORTRAN_BLAS_API), 1)
 	echo "#define FORTRAN_BLAS_API" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
+ifeq ($(CBLAS_API), 1)
+	echo "#ifndef CBLAS_API" >> ./include/blasfeo_target.h
+	echo "#define CBLAS_API" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
 
 
 # install static library & headers
@@ -919,6 +933,7 @@ clean:
 	make -C kernel clean
 	make -C blasfeo_api clean
 	make -C blas_api clean
+	make -C cblas_api clean
 	make -C examples clean
 	make -C tests clean
 	make -C benchmarks clean

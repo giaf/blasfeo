@@ -1,6 +1,9 @@
 dlvl = ./.
 include $(dlvl)/Makefile.in
 
+# add system's BLAS in order to be able to run tests 
+BLLIB += /usr/lib/libblas/libblas.a 
+
 all: alllib alltst 
 
 help:
