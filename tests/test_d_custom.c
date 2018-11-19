@@ -48,7 +48,7 @@ int main()
 
 	int ii;
 
-	int n = 20;
+	int n = 16;
 
 	//
 	// matrices in column-major format
@@ -206,7 +206,7 @@ int main()
 
 
 
-#if 1
+#if 0
 	double *ptr = sA.pA+1;
 	printf("\n%f %p\n", *ptr, ptr);
 	blasfeo_align_64_byte(ptr, (void **) &ptr);
@@ -332,7 +332,7 @@ int main()
 	return 0;
 #endif
 
-#if 1
+#if 0
 	// syrk_ut
 	alpha = 1.0;
 	beta = 0.0;
@@ -364,6 +364,22 @@ int main()
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 
 	blasfeo_dtrmm_rlnn(9, n, alpha, &sA, 3, 0, &sB, 0, 0, &sD, 0, 0);
+
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+	return 0;
+#endif
+
+#if 1
+	// trsm_llnn
+	alpha = 2.0;
+	beta = 1.0;
+
+	blasfeo_dsyrk_ln(n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sC, 0, 0);
+	blasfeo_dpotrf_l(n, &sC, 0, 0, &sC, 0, 0);
+
+	blasfeo_print_dmat(n, n, &sC, 0, 0);
+
+	blasfeo_dtrsm_llnn(15, 15, alpha, &sC, 0, 0, &sB, 0, 0, &sD, 0, 0);
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	return 0;

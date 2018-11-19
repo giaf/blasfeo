@@ -158,209 +158,6 @@ void sgemm_nt_lib(int m, int n, int k, float alpha, float *pA, int sda, float *p
 
 
 
-// D <= B * A^{-T} , with A lower triangular with unit diagonal
-void strsm_nt_rl_one_lib(int m, int n, float *pA, int sda, float *pB, int sdb, float *pD, int sdd)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-	
-	const int bs = 4;
-	
-	int i, j;
-	
-	i = 0;
-
-	for(; i<m-3; i+=4)
-		{
-		j = 0;
-		for(; j<n-3; j+=4)
-			{
-			kernel_strsm_nt_rl_one_4x4_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda]);
-			}
-		if(j<n)
-			{
-			kernel_strsm_nt_rl_one_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda], m-i, n-j);
-			}
-		}
-	if(m>i)
-		{
-		goto left_4;
-		}
-
-	// common return if i==m
-	return;
-
-	left_4:
-	j = 0;
-	for(; j<n; j+=4)
-		{
-		kernel_strsm_nt_rl_one_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda], m-i, n-j);
-		}
-	return;
-
-	}
-
-
-
-// D <= B * A^{-T} , with A upper triangular employing explicit inverse of diagonal
-void strsm_nt_ru_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, float *pB, int sdb, float *pD, int sdd)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-
-	const int bs = 4;
-
-	int i, j, idx;
-
-	int rn = n%4;
-
-	// float *dummy;
-
-	i = 0;
-
-	for(; i<m-3; i+=4)
-		{
-		j = 0;
-		// clean at the end
-		if(rn>0)
-			{
-			idx = n-rn;
-			// XXX pA & pD are dummy and should not be used internally !!!
-			kernel_strsm_nt_ru_inv_4x4_vs_lib4(0, pD, pA, &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, rn);
-			j += rn;
-			}
-		for(; j<n; j+=4)
-			{
-			idx = n-j-4;
-			kernel_strsm_nt_ru_inv_4x4_lib4(j, &pD[i*sdd+(idx+4)*bs], &pA[idx*sda+(idx+4)*bs], &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx]);
-			}
-		}
-	if(m>i)
-		{
-		goto left_4;
-		}
-
-	// common return if i==m
-	return;
-
-	left_4:
-	j = 0;
-	// TODO
-	// clean at the end
-	if(rn>0)
-		{
-		idx = n-rn;
-		// XXX pA & pD are dummy and should not be used internally !!!
-		kernel_strsm_nt_ru_inv_4x4_vs_lib4(0, pD, pA, &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, rn);
-		j += rn;
-		}
-	for(; j<n; j+=4)
-		{
-		idx = n-j-4;
-		kernel_strsm_nt_ru_inv_4x4_vs_lib4(j, &pD[i*sdd+(idx+4)*bs], &pA[idx*sda+(idx+4)*bs], &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &inv_diag_A[idx], m-i, 4);
-		}
-	return;
-
-	}
-
-
-
-// D <= A^{-1} * B , with A lower triangular with unit diagonal
-void strsm_nn_ll_one_lib(int m, int n, float *pA, int sda, float *pB, int sdb, float *pD, int sdd)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-	
-	const int bs = 4;
-	
-	int i, j;
-	
-	i = 0;
-
-	for( ; i<m-3; i+=4)
-		{
-		j = 0;
-		for( ; j<n-3; j+=4)
-			{
-			kernel_strsm_nn_ll_one_4x4_lib4(i, pA+i*sda, pD+j*bs, sdd, pB+i*sdb+j*bs, pD+i*sdd+j*bs, pA+i*sda+i*bs);
-			}
-		if(j<n)
-			{
-			kernel_strsm_nn_ll_one_4x4_vs_lib4(i, pA+i*sda, pD+j*bs, sdd, pB+i*sdb+j*bs, pD+i*sdd+j*bs, pA+i*sda+i*bs, m-i, n-j);
-			}
-		}
-	if(i<m)
-		{
-		goto left_4;
-		}
-
-	// common return
-	return;
-
-	left_4:
-	j = 0;
-	for( ; j<n; j+=4)
-		{
-		kernel_strsm_nn_ll_one_4x4_vs_lib4(i, pA+i*sda, pD+j*bs, sdd, pB+i*sdb+j*bs, pD+i*sdd+j*bs, pA+i*sda+i*bs, m-i, n-j);
-		}
-	return;
-
-	}
-
-
-
-// D <= A^{-1} * B , with A upper triangular employing explicit inverse of diagonal
-void strsm_nn_lu_inv_lib(int m, int n, float *pA, int sda, float *inv_diag_A, float *pB, int sdb, float *pD, int sdd)
-	{
-
-	if(m<=0 || n<=0)
-		return;
-	
-	const int bs = 4;
-	
-	int i, j, idx;
-	float *dummy;
-	
-	i = 0;
-	int rm = m%4;
-	if(rm>0)
-		{
-		// TODO code expliticly the final case
-		idx = m-rm; // position of the part to do
-		j = 0;
-		for( ; j<n; j+=4)
-			{
-			// XXX pA & pD are dummy and should not be used internally !!!
-			kernel_strsm_nn_lu_inv_4x4_vs_lib4(0, pD, pA, 0, pB+idx*sdb+j*bs, pD+idx*sdd+j*bs, pA+idx*sda+idx*bs, inv_diag_A+idx, rm, n-j);
-			}
-		// TODO
-		i += rm;
-		}
-//	int em = m-rm;
-	for( ; i<m; i+=4)
-		{
-		idx = m-i; // position of already done part
-		j = 0;
-		for( ; j<n-3; j+=4)
-			{
-			kernel_strsm_nn_lu_inv_4x4_lib4(i, pA+(idx-4)*sda+idx*bs, pD+idx*sdd+j*bs, sdd, pB+(idx-4)*sdb+j*bs, pD+(idx-4)*sdd+j*bs, pA+(idx-4)*sda+(idx-4)*bs, inv_diag_A+(idx-4));
-			}
-		if(j<n)
-			{
-			kernel_strsm_nn_lu_inv_4x4_vs_lib4(i, pA+(idx-4)*sda+idx*bs, pD+idx*sdd+j*bs, sdd, pB+(idx-4)*sdb+j*bs, pD+(idx-4)*sdd+j*bs, pA+(idx-4)*sda+(idx-4)*bs, inv_diag_A+(idx-4), 4, n-j);
-			}
-		}
-
-	// common return
-	return;
-
-	}
-
-
-
 /****************************
 * new interface
 ****************************/
@@ -593,9 +390,24 @@ void blasfeo_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 
 
 
-// dtrsm_nn_llu
+// strsm_llnn
+void blasfeo_strsm_llnn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_strsm_llnn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strsm_llnu
 void blasfeo_strsm_llnu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
+	if(m<=0 || n<=0)
+		return;
+	
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
 		printf("\nblasfeo_strsm_llnu: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
@@ -613,15 +425,74 @@ void blasfeo_strsm_llnu(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 	float *pA = sA->pA + aj*bs;
 	float *pB = sB->pA + bj*bs;
 	float *pD = sD->pA + dj*bs;
-	strsm_nn_ll_one_lib(m, n, pA, sda, pB, sdb, pD, sdd);
+
+	int i, j;
+	
+	i = 0;
+
+	for( ; i<m-3; i+=4)
+		{
+		j = 0;
+		for( ; j<n-3; j+=4)
+			{
+			kernel_strsm_nn_ll_one_4x4_lib4(i, pA+i*sda, pD+j*bs, sdd, pB+i*sdb+j*bs, pD+i*sdd+j*bs, pA+i*sda+i*bs);
+			}
+		if(j<n)
+			{
+			kernel_strsm_nn_ll_one_4x4_vs_lib4(i, pA+i*sda, pD+j*bs, sdd, pB+i*sdb+j*bs, pD+i*sdd+j*bs, pA+i*sda+i*bs, m-i, n-j);
+			}
+		}
+	if(i<m)
+		{
+		goto left_4;
+		}
+
+	// common return
+	return;
+
+	left_4:
+	j = 0;
+	for( ; j<n; j+=4)
+		{
+		kernel_strsm_nn_ll_one_4x4_vs_lib4(i, pA+i*sda, pD+j*bs, sdd, pB+i*sdb+j*bs, pD+i*sdd+j*bs, pA+i*sda+i*bs, m-i, n-j);
+		}
+	return;
+
+	}
+
+
+
+// strsm_lltn
+void blasfeo_strsm_lltn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_strsm_lltn: feature not implemented yet\n");
+	exit(1);
+#endif
 	return;
 	}
 
 
 
-// dtrsm_nn_lun
+// strsm_lltu
+void blasfeo_strsm_lltu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_strsm_lltu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strsm_lunn
 void blasfeo_strsm_lunn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
+
+	if(m<=0 || n<=0)
+		return;
+
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
 		printf("\nblasfeo_strsm_lunn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
@@ -658,13 +529,108 @@ void blasfeo_strsm_lunn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 			dA[ii] = 1.0 / dA[ii];
 		sA->use_dA = 0;
 		}
-	strsm_nn_lu_inv_lib(m, n, pA, sda, dA, pB, sdb, pD, sdd);
+
+	int i, j, idx;
+	float *dummy;
+	
+	i = 0;
+	int rm = m%4;
+	if(rm>0)
+		{
+		// TODO code expliticly the final case
+		idx = m-rm; // position of the part to do
+		j = 0;
+		for( ; j<n; j+=4)
+			{
+			// XXX pA & pD are dummy and should not be used internally !!!
+			kernel_strsm_nn_lu_inv_4x4_vs_lib4(0, pD, pA, 0, pB+idx*sdb+j*bs, pD+idx*sdd+j*bs, pA+idx*sda+idx*bs, dA+idx, rm, n-j);
+			}
+		// TODO
+		i += rm;
+		}
+//	int em = m-rm;
+	for( ; i<m; i+=4)
+		{
+		idx = m-i; // position of already done part
+		j = 0;
+		for( ; j<n-3; j+=4)
+			{
+			kernel_strsm_nn_lu_inv_4x4_lib4(i, pA+(idx-4)*sda+idx*bs, pD+idx*sdd+j*bs, sdd, pB+(idx-4)*sdb+j*bs, pD+(idx-4)*sdd+j*bs, pA+(idx-4)*sda+(idx-4)*bs, dA+(idx-4));
+			}
+		if(j<n)
+			{
+			kernel_strsm_nn_lu_inv_4x4_vs_lib4(i, pA+(idx-4)*sda+idx*bs, pD+idx*sdd+j*bs, sdd, pB+(idx-4)*sdb+j*bs, pD+(idx-4)*sdd+j*bs, pA+(idx-4)*sda+(idx-4)*bs, dA+(idx-4), 4, n-j);
+			}
+		}
+
+	// common return
+	return;
+
+	}
+
+
+
+// strsm_lunu
+void blasfeo_strsm_lunu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_strsm_lunu: feature not implemented yet\n");
+	exit(1);
+#endif
 	return;
 	}
 
 
 
-// dtrsm_right_lower_transposed_notunit
+// strsm_lutn
+void blasfeo_strsm_lutn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_strsm_lutn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strsm_lutu
+void blasfeo_strsm_lutu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_strsm_lutu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strsm_rlnn
+void blasfeo_strsm_rlnn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_strsm_rlnn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strsm_rlnu
+void blasfeo_strsm_rlnu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_strsm_rlnu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strsm_right_lower_transposed_notunit
 void blasfeo_strsm_rltn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
@@ -746,10 +712,14 @@ void blasfeo_strsm_rltn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 
 
 
-// dtrsm_right_lower_transposed_unit
+// strsm_right_lower_transposed_unit
 void blasfeo_strsm_rltu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
-	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
+
+	if(m<=0 || n<=0)
+		return;
+
+		if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
 		printf("\nblasfeo_strsm_rltu: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
@@ -766,15 +736,74 @@ void blasfeo_strsm_rltu(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 	float *pA = sA->pA + aj*bs;
 	float *pB = sB->pA + bj*bs;
 	float *pD = sD->pA + dj*bs;
-	strsm_nt_rl_one_lib(m, n, pA, sda, pB, sdb, pD, sdd); 
+
+	int i, j;
+	
+	i = 0;
+
+	for(; i<m-3; i+=4)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_strsm_nt_rl_one_4x4_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda]);
+			}
+		if(j<n)
+			{
+			kernel_strsm_nt_rl_one_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda], m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		goto left_4;
+		}
+
+	// common return if i==m
+	return;
+
+	left_4:
+	j = 0;
+	for(; j<n; j+=4)
+		{
+		kernel_strsm_nt_rl_one_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &pB[j*bs+i*sdb], &pD[j*bs+i*sdd], &pA[j*bs+j*sda], m-i, n-j);
+		}
+	return;
+
+	}
+
+
+
+// strsm_runn
+void blasfeo_strsm_runn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_strsm_runn: feature not implemented yet\n");
+	exit(1);
+#endif
 	return;
 	}
 
 
 
-// dtrsm_right_upper_transposed_notunit
+// strsm_runu
+void blasfeo_strsm_runu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_strsm_runu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strsm_rutn
 void blasfeo_strsm_rutn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
+
+	if(m<=0 || n<=0)
+		return;
+
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
 		printf("\nblasfeo_strsm_rutn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
@@ -811,7 +840,69 @@ void blasfeo_strsm_rutn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 			dA[ii] = 1.0 / dA[ii];
 		sA->use_dA = 0;
 		}
-	strsm_nt_ru_inv_lib(m, n, pA, sda, dA, pB, sdb, pD, sdd); 
+
+	int i, j, idx;
+
+	int rn = n%4;
+
+	// float *dummy;
+
+	i = 0;
+
+	for(; i<m-3; i+=4)
+		{
+		j = 0;
+		// clean at the end
+		if(rn>0)
+			{
+			idx = n-rn;
+			// XXX pA & pD are dummy and should not be used internally !!!
+			kernel_strsm_nt_ru_inv_4x4_vs_lib4(0, pD, pA, &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &dA[idx], m-i, rn);
+			j += rn;
+			}
+		for(; j<n; j+=4)
+			{
+			idx = n-j-4;
+			kernel_strsm_nt_ru_inv_4x4_lib4(j, &pD[i*sdd+(idx+4)*bs], &pA[idx*sda+(idx+4)*bs], &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &dA[idx]);
+			}
+		}
+	if(m>i)
+		{
+		goto left_4;
+		}
+
+	// common return if i==m
+	return;
+
+	left_4:
+	j = 0;
+	// TODO
+	// clean at the end
+	if(rn>0)
+		{
+		idx = n-rn;
+		// XXX pA & pD are dummy and should not be used internally !!!
+		kernel_strsm_nt_ru_inv_4x4_vs_lib4(0, pD, pA, &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &dA[idx], m-i, rn);
+		j += rn;
+		}
+	for(; j<n; j+=4)
+		{
+		idx = n-j-4;
+		kernel_strsm_nt_ru_inv_4x4_vs_lib4(j, &pD[i*sdd+(idx+4)*bs], &pA[idx*sda+(idx+4)*bs], &pB[i*sdb+idx*bs], &pD[i*sdd+idx*bs], &pA[idx*sda+idx*bs], &dA[idx], m-i, 4);
+		}
+	return;
+
+	}
+
+
+
+// strsm_rutu
+void blasfeo_strsm_rutu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_strsm_rutu: feature not implemented yet\n");
+	exit(1);
+#endif
 	return;
 	}
 

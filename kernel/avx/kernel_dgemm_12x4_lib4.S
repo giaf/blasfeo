@@ -68,6 +68,87 @@
 	movq	40(%rsp), %r15; \
 	addq	$STACKSIZE, %rsp;
 
+#if defined(OS_LINUX)
+
+#define GLOB_FUN_START(NAME) \
+	.globl NAME; \
+	.type NAME, @function; \
+NAME:
+#define FUN_START(NAME) \
+	.type NAME, @function; \
+NAME:
+#define FUN_END(NAME) \
+	.size	NAME, .-NAME
+#define CALL(NAME) \
+	call NAME
+#define ZERO_ACC \
+	vxorpd	%ymm0, %ymm0, %ymm0; \
+	vmovapd	%ymm0, %ymm1; \
+	vmovapd	%ymm0, %ymm2; \
+	vmovapd	%ymm0, %ymm3; \
+	vmovapd	%ymm0, %ymm4; \
+	vmovapd	%ymm0, %ymm5; \
+	vmovapd	%ymm0, %ymm6; \
+	vmovapd	%ymm0, %ymm7; \
+	vmovapd	%ymm0, %ymm8; \
+	vmovapd	%ymm0, %ymm9; \
+	vmovapd	%ymm0, %ymm10; \
+	vmovapd	%ymm0, %ymm11
+#define NEG_ACC \
+	vmovapd		.LC13(%rip), %ymm15; \
+	vxorpd		%ymm15, %ymm0, %ymm0; \
+	vxorpd		%ymm15, %ymm1, %ymm1; \
+	vxorpd		%ymm15, %ymm2, %ymm2; \
+	vxorpd		%ymm15, %ymm3, %ymm3; \
+	vxorpd		%ymm15, %ymm4, %ymm4; \
+	vxorpd		%ymm15, %ymm5, %ymm5; \
+	vxorpd		%ymm15, %ymm6, %ymm6; \
+	vxorpd		%ymm15, %ymm7, %ymm7; \
+	vxorpd		%ymm15, %ymm8, %ymm8; \
+	vxorpd		%ymm15, %ymm9, %ymm9; \
+	vxorpd		%ymm15, %ymm10, %ymm10; \
+	vxorpd		%ymm15, %ymm11, %ymm11
+
+#else // defined(OS_MAC)
+
+#define GLOB_FUN_START(NAME) \
+	.globl _ ## NAME; \
+_ ## NAME:
+#define FUN_START(NAME) \
+_ ## NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	callq _ ## NAME
+#define ZERO_ACC \
+	vxorpd	%ymm0, %ymm0, %ymm0; \
+	vmovapd	%ymm0, %ymm1; \
+	vmovapd	%ymm0, %ymm2; \
+	vmovapd	%ymm0, %ymm3; \
+	vmovapd	%ymm0, %ymm4; \
+	vmovapd	%ymm0, %ymm5; \
+	vmovapd	%ymm0, %ymm6; \
+	vmovapd	%ymm0, %ymm7; \
+	vmovapd	%ymm0, %ymm8; \
+	vmovapd	%ymm0, %ymm9; \
+	vmovapd	%ymm0, %ymm10; \
+	vmovapd	%ymm0, %ymm11
+#define NEG_ACC \
+	vmovapd		LC13(%rip), %ymm15; \
+	vxorpd		%ymm15, %ymm0, %ymm0; \
+	vxorpd		%ymm15, %ymm1, %ymm1; \
+	vxorpd		%ymm15, %ymm2, %ymm2; \
+	vxorpd		%ymm15, %ymm3, %ymm3; \
+	vxorpd		%ymm15, %ymm4, %ymm4; \
+	vxorpd		%ymm15, %ymm5, %ymm5; \
+	vxorpd		%ymm15, %ymm6, %ymm6; \
+	vxorpd		%ymm15, %ymm7, %ymm7; \
+	vxorpd		%ymm15, %ymm8, %ymm8; \
+	vxorpd		%ymm15, %ymm9, %ymm9; \
+	vxorpd		%ymm15, %ymm10, %ymm10; \
+	vxorpd		%ymm15, %ymm11, %ymm11
+
+#endif
+
 #elif defined(OS_WINDOWS)
 
 #define STACKSIZE 256
@@ -131,6 +212,44 @@
 	vmovups	192(%rsp), %xmm14; \
 	vmovups	208(%rsp), %xmm15; \
 	addq	$STACKSIZE, %rsp;
+
+#define GLOB_FUN_START(NAME) \
+	.globl NAME; \
+	.def NAME; .scl 2; .type 32; .endef; \
+NAME:
+#define FUN_START(NAME) \
+	.def NAME; .scl 2; .type 32; .endef; \
+NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	call NAME
+#define ZERO_ACC \
+	vxorpd	%ymm0, %ymm0, %ymm0; \
+	vmovapd	%ymm0, %ymm1; \
+	vmovapd	%ymm0, %ymm2; \
+	vmovapd	%ymm0, %ymm3; \
+	vmovapd	%ymm0, %ymm4; \
+	vmovapd	%ymm0, %ymm5; \
+	vmovapd	%ymm0, %ymm6; \
+	vmovapd	%ymm0, %ymm7; \
+	vmovapd	%ymm0, %ymm8; \
+	vmovapd	%ymm0, %ymm9; \
+	vmovapd	%ymm0, %ymm10; \
+	vmovapd	%ymm0, %ymm11
+#define NEG_ACC \
+	vmovapd		.LC13(%rip), %ymm15; \
+	vxorpd		%ymm15, %ymm0, %ymm0; \
+	vxorpd		%ymm15, %ymm1, %ymm1; \
+	vxorpd		%ymm15, %ymm2, %ymm2; \
+	vxorpd		%ymm15, %ymm3, %ymm3; \
+	vxorpd		%ymm15, %ymm4, %ymm4; \
+	vxorpd		%ymm15, %ymm5, %ymm5; \
+	vxorpd		%ymm15, %ymm6, %ymm6; \
+	vxorpd		%ymm15, %ymm7, %ymm7; \
+	vxorpd		%ymm15, %ymm8, %ymm8; \
+	vxorpd		%ymm15, %ymm9, %ymm9; \
+	vxorpd		%ymm15, %ymm10, %ymm10; \
+	vxorpd		%ymm15, %ymm11, %ymm11
 
 #else
 
@@ -264,15 +383,7 @@
 	.macro INNER_KERNEL_DGEMM_ADD_NN_12X4_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dgemm_add_nn_12x4_lib4, @function
-inner_kernel_dgemm_add_nn_12x4_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dgemm_add_nn_12x4_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dgemm_add_nn_12x4_lib4; .scl 2; .type 32; .endef
-inner_kernel_dgemm_add_nn_12x4_lib4:
-#endif
+	FUN_START(inner_kernel_dgemm_add_nn_12x4_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -648,9 +759,7 @@ inner_kernel_dgemm_add_nn_12x4_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dgemm_add_nn_12x4_lib4, .-inner_kernel_dgemm_add_nn_12x4_lib4
-#endif
+	FUN_END(inner_kernel_dgemm_add_nn_12x4_lib4)
 #endif
 
 
@@ -683,15 +792,7 @@ inner_kernel_dgemm_add_nn_12x4_lib4:
 	.macro INNER_EDGE_DGEMM_ADD_NN_12X4_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_edge_dgemm_add_nn_12x4_lib4, @function
-inner_edge_dgemm_add_nn_12x4_lib4:
-#elif defined(OS_MAC)
-_inner_edge_dgemm_add_nn_12x4_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_edge_dgemm_add_nn_12x4_lib4; .scl 2; .type 32; .endef
-inner_edge_dgemm_add_nn_12x4_lib4:
-#endif
+	FUN_START(inner_edge_dgemm_add_nn_12x4_lib4)
 #endif
 	
 	cmpl			$0, %r15d // offset==0
@@ -769,9 +870,7 @@ inner_edge_dgemm_add_nn_12x4_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_edge_dgemm_add_nn_12x4_lib4, .-inner_edge_dgemm_add_nn_12x4_lib4
-#endif
+	FUN_END(inner_edge_dgemm_add_nn_12x4_lib4)
 #endif
 
 
@@ -826,15 +925,7 @@ inner_edge_dgemm_add_nn_12x4_lib4:
 	.macro INNER_SCALE_AB_12X4_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_scale_ab_12x4_lib4, @function
-inner_scale_ab_12x4_lib4:
-#elif defined(OS_MAC)
-_inner_scale_ab_12x4_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_scale_ab_12x4_lib4; .scl 2; .type 32; .endef
-inner_scale_ab_12x4_lib4:
-#endif
+	FUN_START(inner_scale_ab_12x4_lib4)
 #endif
 		
 	vbroadcastsd 0(%r10), %ymm15 // beta
@@ -913,9 +1004,7 @@ inner_scale_ab_12x4_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_scale_ab_12x4_lib4, .-inner_scale_ab_12x4_lib4
-#endif
+	FUN_END(inner_scale_ab_12x4_lib4)
 #endif
 
 
@@ -966,15 +1055,7 @@ inner_scale_ab_12x4_lib4:
 	.macro INNER_STORE_12X4_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_store_12x4_lib4, @function
-inner_store_12x4_lib4:
-#elif defined(OS_MAC)
-_inner_store_12x4_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_store_12x4_lib4; .scl 2; .type 32; .endef
-inner_store_12x4_lib4:
-#endif
+	FUN_START(inner_store_12x4_lib4)
 #endif
 	
 	vmovapd %ymm0,  0(%r10)
@@ -997,9 +1078,7 @@ inner_store_12x4_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_store_12x4_lib4, .-inner_store_12x4_lib4
-#endif
+	FUN_END(inner_store_12x4_lib4)
 #endif
 
 
@@ -1054,15 +1133,7 @@ inner_store_12x4_lib4:
 	.macro INNER_STORE_12X4_VS_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_store_12x4_vs_lib4, @function
-inner_store_12x4_vs_lib4:
-#elif defined(OS_MAC)
-_inner_store_12x4_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_store_12x4_vs_lib4; .scl 2; .type 32; .endef
-inner_store_12x4_vs_lib4:
-#endif
+	FUN_START(inner_store_12x4_vs_lib4)
 #endif
 	
 	vcvtsi2sd	%r12d, %xmm15, %xmm15
@@ -1100,9 +1171,7 @@ inner_store_12x4_vs_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_store_12x4_vs_lib4, .-inner_store_12x4_vs_lib4
-#endif
+	FUN_END(inner_store_12x4_vs_lib4)
 #endif
 
 
@@ -1113,35 +1182,13 @@ inner_store_12x4_vs_lib4:
 // void kernel_dgemm_nn_12x4_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dgemm_nn_12x4_lib4
-	.type kernel_dgemm_nn_12x4_lib4, @function
-kernel_dgemm_nn_12x4_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dgemm_nn_12x4_lib4
-_kernel_dgemm_nn_12x4_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dgemm_nn_12x4_lib4
-	.def kernel_dgemm_nn_12x4_lib4; .scl 2; .type 32; .endef
-kernel_dgemm_nn_12x4_lib4:
-#endif
+	GLOB_FUN_START(kernel_dgemm_nn_12x4_lib4)
 	
 	PROLOGUE
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
-	vmovapd	%ymm0, %ymm4
-	vmovapd	%ymm0, %ymm5
-	vmovapd	%ymm0, %ymm6
-	vmovapd	%ymm0, %ymm7
-	vmovapd	%ymm0, %ymm8
-	vmovapd	%ymm0, %ymm9
-	vmovapd	%ymm0, %ymm10
-	vmovapd	%ymm0, %ymm11
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt
@@ -1158,21 +1205,13 @@ kernel_dgemm_nn_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DGEMM_ADD_NN_12X4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dgemm_add_nn_12x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_edge_dgemm_add_nn_12x4_lib4
-#endif
+	CALL(inner_edge_dgemm_add_nn_12x4_lib4)
 #endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NN_12X4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-//	call inner_kernel_dgemm_add_nn_12x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nn_12x4_lib4
-#endif
+	CALL(inner_kernel_dgemm_add_nn_12x4_lib4)
 #endif
 
 
@@ -1187,11 +1226,7 @@ kernel_dgemm_nn_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_ab_12x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_scale_ab_12x4_lib4
-#endif
+	CALL(inner_scale_ab_12x4_lib4)
 #endif
 
 
@@ -1204,11 +1239,7 @@ kernel_dgemm_nn_12x4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_12x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_store_12x4_lib4
-#endif
+	CALL(inner_store_12x4_lib4)
 #endif
 
 
@@ -1216,9 +1247,7 @@ kernel_dgemm_nn_12x4_lib4:
 	
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dgemm_nn_12x4_lib4, .-kernel_dgemm_nn_12x4_lib4
-#endif
+	FUN_END(kernel_dgemm_nn_12x4_lib4)
 
 
 
@@ -1228,35 +1257,13 @@ kernel_dgemm_nn_12x4_lib4:
 // void kernel_dgemm_nn_12x4_vs_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dgemm_nn_12x4_vs_lib4
-	.type kernel_dgemm_nn_12x4_vs_lib4, @function
-kernel_dgemm_nn_12x4_vs_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dgemm_nn_12x4_vs_lib4
-_kernel_dgemm_nn_12x4_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dgemm_nn_12x4_vs_lib4
-	.def kernel_dgemm_nn_12x4_vs_lib4; .scl 2; .type 32; .endef
-kernel_dgemm_nn_12x4_vs_lib4:
-#endif
+	GLOB_FUN_START(kernel_dgemm_nn_12x4_vs_lib4)
 	
 	PROLOGUE
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
-	vmovapd	%ymm0, %ymm4
-	vmovapd	%ymm0, %ymm5
-	vmovapd	%ymm0, %ymm6
-	vmovapd	%ymm0, %ymm7
-	vmovapd	%ymm0, %ymm8
-	vmovapd	%ymm0, %ymm9
-	vmovapd	%ymm0, %ymm10
-	vmovapd	%ymm0, %ymm11
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt
@@ -1273,21 +1280,13 @@ kernel_dgemm_nn_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DGEMM_ADD_NN_12X4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dgemm_add_nn_12x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_edge_dgemm_add_nn_12x4_lib4
-#endif
+	CALL(inner_edge_dgemm_add_nn_12x4_lib4)
 #endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_ADD_NN_12X4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemm_add_nn_12x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dgemm_add_nn_12x4_lib4
-#endif
+	CALL(inner_kernel_dgemm_add_nn_12x4_lib4)
 #endif
 
 
@@ -1302,11 +1301,7 @@ kernel_dgemm_nn_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_ab_12x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_scale_ab_12x4_lib4
-#endif
+	CALL(inner_scale_ab_12x4_lib4)
 #endif
 
 
@@ -1322,11 +1317,7 @@ kernel_dgemm_nn_12x4_vs_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_VS_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_12x4_vs_lib4
-#elif defined(OS_MAC)
-	callq _inner_store_12x4_vs_lib4
-#endif
+	CALL(inner_store_12x4_vs_lib4)
 #endif
 
 
@@ -1334,9 +1325,7 @@ kernel_dgemm_nn_12x4_vs_lib4:
 	
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dgemm_nn_12x4_vs_lib4, .-kernel_dgemm_nn_12x4_vs_lib4
-#endif
+	FUN_END(kernel_dgemm_nn_12x4_vs_lib4)
 
 
 

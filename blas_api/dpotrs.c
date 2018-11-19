@@ -30,60 +30,56 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#if defined(LA_BLAS_WRAPPER)
-#if defined(REF_BLAS_BLIS)
-#include "blis.h"
-#elif defined(REF_BLAS_MKL)
-#include "mkl.h"
-#else
-#include "../include/d_blas.h"
-#endif
-#endif
 
+#include "../include/blasfeo_target.h"
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_aux.h"
+#include "../include/blasfeo_d_kernel.h"
+#include "../include/blasfeo_d_blas.h"
 
 
 
-#define REAL double
-
-#define XMAT blasfeo_dmat
-#define XVEC blasfeo_dvec
-
-#define GEMM_NN blasfeo_dgemm_nn
-#define GEMM_NT blasfeo_dgemm_nt
-#define GEMM_TN blasfeo_dgemm_tn
-#define GEMM_TT blasfeo_dgemm_tt
-#define SYRK_LN blasfeo_dsyrk_ln
-#define SYRK_LN_MN blasfeo_dsyrk_ln_mn
-#define SYRK_LT blasfeo_dsyrk_lt
-#define SYRK_UN blasfeo_dsyrk_un
-#define SYRK_UT blasfeo_dsyrk_ut
-#define TRMM_RLNN blasfeo_dtrmm_rlnn
-#define TRMM_RUTN blasfeo_dtrmm_rutn
-#define TRSM_LLNN blasfeo_dtrsm_llnn
-#define TRSM_LLNU blasfeo_dtrsm_llnu
-#define TRSM_LLTN blasfeo_dtrsm_lltn
-#define TRSM_LLTU blasfeo_dtrsm_lltu
-#define TRSM_LUNN blasfeo_dtrsm_lunn
-#define TRSM_LUNU blasfeo_dtrsm_lunu
-#define TRSM_LUTN blasfeo_dtrsm_lutn
-#define TRSM_LUTU blasfeo_dtrsm_lutu
-#define TRSM_RLNN blasfeo_dtrsm_rlnn
-#define TRSM_RLNU blasfeo_dtrsm_rlnu
-#define TRSM_RLTN blasfeo_dtrsm_rltn
-#define TRSM_RLTU blasfeo_dtrsm_rltu
-#define TRSM_RUNN blasfeo_dtrsm_runn
-#define TRSM_RUNU blasfeo_dtrsm_runu
-#define TRSM_RUTN blasfeo_dtrsm_rutn
-#define TRSM_RUTU blasfeo_dtrsm_rutu
-
-#define COPY dcopy_
-#define GEMM dgemm_
-#define SYRK dsyrk_
-#define TRMM dtrmm_
-#define TRSM dtrsm_
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_dtrsm dtrsm_
+#define blasfeo_dpotrs dpotrs_
+#endif
 
 
 
-#include "x_blas3_lib.c"
+void blasfeo_dpotrs(char *uplo, int *pm, int *pn, double *A, int *plda, double *B, int *pldb, int *info)
+	{
+
+//	printf("\nblasfeo_dpotrs\n");
+
+	int m = *pm;
+	int n = *pn;
+
+	char c_l = 'l';
+	char c_n = 'n';
+	char c_t = 't';
+	char c_u = 'u';
+
+	double d_1 = 1.0;
+
+	*info = 0;
+
+	if(m==0 | n==0)
+		return;
+	
+//	printf("\n%c\n", *uplo);
+	if(*uplo=='u' | *uplo=='U')
+		{
+		blasfeo_dtrsm(&c_l, &c_u, &c_t, &c_n, pm, pn, &d_1, A, plda, B, pldb);
+		blasfeo_dtrsm(&c_l, &c_u, &c_n, &c_n, pm, pn, &d_1, A, plda, B, pldb);
+		}
+	else
+		{
+		blasfeo_dtrsm(&c_l, &c_l, &c_n, &c_n, pm, pn, &d_1, A, plda, B, pldb);
+		blasfeo_dtrsm(&c_l, &c_l, &c_t, &c_n, pm, pn, &d_1, A, plda, B, pldb);
+		}
+
+	return;
+
+	}
+
+

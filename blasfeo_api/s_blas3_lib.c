@@ -60,11 +60,22 @@
 #define SYRK_UT blasfeo_ssyrk_ut
 #define TRMM_RLNN blasfeo_strmm_rlnn
 #define TRMM_RUTN blasfeo_strmm_rutn
+#define TRSM_LLNN blasfeo_strsm_llnn
 #define TRSM_LLNU blasfeo_strsm_llnu
+#define TRSM_LLTN blasfeo_strsm_lltn
+#define TRSM_LLTU blasfeo_strsm_lltu
 #define TRSM_LUNN blasfeo_strsm_lunn
+#define TRSM_LUNU blasfeo_strsm_lunu
+#define TRSM_LUTN blasfeo_strsm_lutn
+#define TRSM_LUTU blasfeo_strsm_lutu
+#define TRSM_RLNN blasfeo_strsm_rlnn
+#define TRSM_RLNU blasfeo_strsm_rlnu
 #define TRSM_RLTN blasfeo_strsm_rltn
 #define TRSM_RLTU blasfeo_strsm_rltu
+#define TRSM_RUNN blasfeo_strsm_runn
+#define TRSM_RUNU blasfeo_strsm_runu
 #define TRSM_RUTN blasfeo_strsm_rutn
+#define TRSM_RUTU blasfeo_strsm_rutu
 
 #define COPY scopy_
 #define GEMM sgemm_

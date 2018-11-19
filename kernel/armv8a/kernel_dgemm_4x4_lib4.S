@@ -1650,6 +1650,7 @@ inner_scale_ab_4x4_lib4:
 	fmul	v7.2d, v7.2d, v28.2d[0]
 
 	ld1		{v28.2d}, [x9]
+	// TODO check on beta
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
 	fmla	v0.2d, v24.2d, v28.2d[0]
@@ -1669,6 +1670,59 @@ inner_scale_ab_4x4_lib4:
 	ret
 
 	.size	inner_scale_ab_4x4_lib4, .-inner_scale_ab_4x4_lib4
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// x8  <- beta
+// x9  <- C
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_SCALE_M1B_4X4_LIB4
+#else
+	.align	4
+	.type inner_scale_m1b_4x4_lib4, %function
+inner_scale_m1b_4x4_lib4:
+#endif
+
+	ld1		{v28.2d}, [x8]
+	// TODO check on beta
+
+	fneg	v0.2d, v0.2d
+	fneg	v1.2d, v1.2d
+	fneg	v2.2d, v2.2d
+	fneg	v3.2d, v3.2d
+
+	fneg	v4.2d, v4.2d
+	fneg	v5.2d, v5.2d
+	fneg	v6.2d, v6.2d
+	fneg	v7.2d, v7.2d
+
+	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x9], #64
+	fmla	v0.2d, v24.2d, v28.2d[0]
+	fmla	v1.2d, v25.2d, v28.2d[0]
+	fmla	v2.2d, v26.2d, v28.2d[0]
+	fmla	v3.2d, v27.2d, v28.2d[0]
+
+	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x9], #64
+	fmla	v4.2d, v24.2d, v28.2d[0]
+	fmla	v5.2d, v25.2d, v28.2d[0]
+	fmla	v6.2d, v26.2d, v28.2d[0]
+	fmla	v7.2d, v27.2d, v28.2d[0]
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	.size	inner_scale_m1b_4x4_lib4, .-inner_scale_m1b_4x4_lib4
 #endif
 
 
@@ -2428,8 +2482,8 @@ kernel_dsyrk_nt_l_4x4_vs_lib4:
 
 
 
-//                                      w0        x1         x2         x3         x4         x5         x6
-// void kernel_dtrsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E);
+//                                      w0        x1         x2         x3            x4         x5         x6         x7
+// void kernel_dtrsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E);
 
 	.align	4
 	.globl kernel_dtrsm_nt_rl_inv_4x4_lib4
@@ -2467,20 +2521,21 @@ kernel_dtrsm_nt_rl_inv_4x4_lib4:
 
 
 
-	// call inner blend for alpha=1.0 and beta=1.0
-	mov		x8, x3 // C
+	// call inner blend for alpha=1.0 and beta
+	mov		x8, x3 // beta
+	mov		x9, x4 // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_4X4_LIB4
+	INNER_SCALE_M1B_4X4_LIB4
 #else
-	bl inner_scale_m11_4x4_lib4
+	bl inner_scale_m1b_4x4_lib4
 #endif
 
 
 
 	// solution
-	mov		x8, x5 // E
-	mov		x9, x6 // inv_diag_E
+	mov		x8, x6 // E
+	mov		x9, x7 // inv_diag_E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSM_RLT_INV_4X4_LIB4
@@ -2491,7 +2546,7 @@ kernel_dtrsm_nt_rl_inv_4x4_lib4:
 
 
 	// store
-	mov		x8, x4
+	mov		x8, x5 // D
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB4
@@ -2513,8 +2568,8 @@ kernel_dtrsm_nt_rl_inv_4x4_lib4:
 
 
 
-//                                         w0        x1         x2         x3         x4         x5         x6                  w7      sp+0
-// void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E, int m1, int n1);
+//                                         w0        x1         x2         x3            x4         x5         x6         w7                  sp+0    sp+8
+// void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E, int m1, int n1);
 
 	.align	4
 	.globl kernel_dtrsm_nt_rl_inv_4x4_vs_lib4
@@ -2552,21 +2607,22 @@ kernel_dtrsm_nt_rl_inv_4x4_vs_lib4:
 
 
 
-	// call inner blend for alpha=1.0 and beta=1.0
-	mov		x8, x3 // C
+	// call inner blend for alpha=1.0 and beta
+	mov		x8, x3 // beta
+	mov		x9, x4 // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_4X4_LIB4
+	INNER_SCALE_M1B_4X4_LIB4
 #else
-	bl inner_scale_m11_4x4_lib4
+	bl inner_scale_m1b_4x4_lib4
 #endif
 
 
 
 	// solution
-	mov		x8, x5 // E
-	mov		x9, x6 // inv_diag_E
-	ldr		w10, [sp, #(STACKSIZE + 0)] // n1
+	mov		x8, x6 // E
+	mov		x9, x7 // inv_diag_E
+	ldr		w10, [sp, #(STACKSIZE + 8)] // n1
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSM_RLT_INV_4X4_VS_LIB4
@@ -2577,9 +2633,9 @@ kernel_dtrsm_nt_rl_inv_4x4_vs_lib4:
 
 
 	// store
-	mov		x8, x4
-	mov		w9, w7 // m1
-	ldr		w10, [sp, #(STACKSIZE + 0)] // n1
+	mov		x8, x5 // D
+	ldr		w9, [sp, #(STACKSIZE + 0)] // m1
+	ldr		w10, [sp, #(STACKSIZE + 8)] // n1
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_VS_LIB4

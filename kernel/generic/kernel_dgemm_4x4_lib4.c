@@ -5375,7 +5375,7 @@ void kernel_dsyrk_dpotrf_nt_l_4x4_vs_lib4(int kp, double *Ap, double *Bp, int km
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA)
-void kernel_dtrsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E)
+void kernel_dtrsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -5393,9 +5393,8 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *C, 
 #endif
 
 	double alpha1 = -1.0;
-	double beta1  = 1.0;
 
-	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, C, CC);
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -5479,7 +5478,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *C, 
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E, int km, int kn)
+void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -5497,9 +5496,8 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *
 #endif
 
 	double alpha1 = -1.0;
-	double beta1  = 1.0;
 
-	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, C, CC);
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -5680,7 +5678,7 @@ void kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4(int kp, double *Ap, double *Bp, int k
 	double alpha = 1.0;
 	double beta  = 1.0;
 	kernel_dgemm_nt_4x4_lib4(kp, &alpha, Ap, Bp, &beta, C, D);
-	kernel_dtrsm_nt_rl_inv_4x4_lib4(km_, Am, Bm, D, D, E, inv_diag_E);
+	kernel_dtrsm_nt_rl_inv_4x4_lib4(km_, Am, Bm, &beta, D, D, E, inv_diag_E);
 	}
 #endif
 
@@ -5692,14 +5690,14 @@ void kernel_dgemm_dtrsm_nt_rl_inv_4x4_vs_lib4(int kp, double *Ap, double *Bp, in
 	double alpha = 1.0;
 	double beta  = 1.0;
 	kernel_dgemm_nt_4x4_vs_lib4(kp, &alpha, Ap, Bp, &beta, C, D, km, kn);
-	kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(km_, Am, Bm, D, D, E, inv_diag_E, km, kn);
+	kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(km_, Am, Bm, &beta, D, D, E, inv_diag_E, km, kn);
 	}
 #endif
 
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_rl_one_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *E)
+void kernel_dtrsm_nt_rl_one_4x4_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E)
 	{
 
 	const int bs = 4;
@@ -5717,9 +5715,8 @@ void kernel_dtrsm_nt_rl_one_4x4_lib4(int kmax, double *A, double *B, double *C, 
 #endif
 
 	double alpha1 = -1.0;
-	double beta1  = 1.0;
 
-	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, C, CC);
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
 
 	tmp = E[1+bs*0];
 	CC[0+bs*1] -= CC[0+bs*0] * tmp;
@@ -5782,7 +5779,7 @@ void kernel_dtrsm_nt_rl_one_4x4_lib4(int kmax, double *A, double *B, double *C, 
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_rl_one_4x4_vs_lib4(int kmax, double *A, double *B, double *C, double *D, double *E, int km, int kn)
+void kernel_dtrsm_nt_rl_one_4x4_vs_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -5800,9 +5797,8 @@ void kernel_dtrsm_nt_rl_one_4x4_vs_lib4(int kmax, double *A, double *B, double *
 #endif
 
 	double alpha1 = -1.0;
-	double beta1  = 1.0;
 
-	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, C, CC);
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
 
 	if(kn==1)
 		goto store;
@@ -5957,7 +5953,7 @@ void kernel_dtrsm_nt_rl_one_4x4_vs_lib4(int kmax, double *A, double *B, double *
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_ru_inv_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E)
+void kernel_dtrsm_nt_ru_inv_4x4_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -5975,9 +5971,8 @@ void kernel_dtrsm_nt_ru_inv_4x4_lib4(int kmax, double *A, double *B, double *C, 
 #endif
 
 	double alpha1 = -1.0;
-	double beta1  = 1.0;
 
-	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, C, CC);
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
 
 	tmp = inv_diag_E[3];
 	CC[0+bs*3] *= tmp;
@@ -6061,7 +6056,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_lib4(int kmax, double *A, double *B, double *C, 
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E, int km, int kn)
+void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -6079,9 +6074,8 @@ void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *
 #endif
 
 	double alpha1 = -1.0;
-	double beta1  = 1.0;
 
-	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, C, CC);
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
 
 	if(kn>3)
 		{
@@ -6145,6 +6139,264 @@ void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *
 	CC[1+bs*0] *= tmp;
 	CC[2+bs*0] *= tmp;
 	CC[3+bs*0] *= tmp;
+
+
+	store:
+
+	if(km>=4)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+		D[3+bs*0] = CC[3+bs*0];
+
+		if(kn==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+		D[3+bs*1] = CC[3+bs*1];
+
+		if(kn==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+		D[3+bs*2] = CC[3+bs*2];
+
+		if(kn==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		D[3+bs*3] = CC[3+bs*3];
+		}
+	else if(km>=3)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+
+		if(kn==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+
+		if(kn==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+
+		if(kn==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		}
+	else if(km>=2)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+
+		if(kn==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+
+		if(kn==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+
+		if(kn==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		}
+	else //if(km>=1)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+
+		if(kn==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+
+		if(kn==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+
+		if(kn==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		}
+	
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_ru_one_4x4_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
+
+	tmp = E[2+bs*3];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+	tmp = E[1+bs*3];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[0+bs*3];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+
+	tmp = E[1+bs*2];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+	tmp = E[0+bs*2];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+
+	tmp = E[0+bs*1];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+
+	D[0+bs*0] = CC[0+bs*0];
+	D[1+bs*0] = CC[1+bs*0];
+	D[2+bs*0] = CC[2+bs*0];
+	D[3+bs*0] = CC[3+bs*0];
+
+	D[0+bs*1] = CC[0+bs*1];
+	D[1+bs*1] = CC[1+bs*1];
+	D[2+bs*1] = CC[2+bs*1];
+	D[3+bs*1] = CC[3+bs*1];
+
+	D[0+bs*2] = CC[0+bs*2];
+	D[1+bs*2] = CC[1+bs*2];
+	D[2+bs*2] = CC[2+bs*2];
+	D[3+bs*2] = CC[3+bs*2];
+
+	D[0+bs*3] = CC[0+bs*3];
+	D[1+bs*3] = CC[1+bs*3];
+	D[2+bs*3] = CC[2+bs*3];
+	D[3+bs*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_ru_one_4x4_vs_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E, int km, int kn)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
+
+	if(kn>3)
+		{
+		tmp = E[2+bs*3];
+		CC[0+bs*2] -= CC[0+bs*3] * tmp;
+		CC[1+bs*2] -= CC[1+bs*3] * tmp;
+		CC[2+bs*2] -= CC[2+bs*3] * tmp;
+		CC[3+bs*2] -= CC[3+bs*3] * tmp;
+		tmp = E[1+bs*3];
+		CC[0+bs*1] -= CC[0+bs*3] * tmp;
+		CC[1+bs*1] -= CC[1+bs*3] * tmp;
+		CC[2+bs*1] -= CC[2+bs*3] * tmp;
+		CC[3+bs*1] -= CC[3+bs*3] * tmp;
+		tmp = E[0+bs*3];
+		CC[0+bs*0] -= CC[0+bs*3] * tmp;
+		CC[1+bs*0] -= CC[1+bs*3] * tmp;
+		CC[2+bs*0] -= CC[2+bs*3] * tmp;
+		CC[3+bs*0] -= CC[3+bs*3] * tmp;
+		}
+
+	if(kn>2)
+		{
+		tmp = E[1+bs*2];
+		CC[0+bs*1] -= CC[0+bs*2] * tmp;
+		CC[1+bs*1] -= CC[1+bs*2] * tmp;
+		CC[2+bs*1] -= CC[2+bs*2] * tmp;
+		CC[3+bs*1] -= CC[3+bs*2] * tmp;
+		tmp = E[0+bs*2];
+		CC[0+bs*0] -= CC[0+bs*2] * tmp;
+		CC[1+bs*0] -= CC[1+bs*2] * tmp;
+		CC[2+bs*0] -= CC[2+bs*2] * tmp;
+		CC[3+bs*0] -= CC[3+bs*2] * tmp;
+		}
+
+	if(kn>1)
+		{
+		tmp = E[0+bs*1];
+		CC[0+bs*0] -= CC[0+bs*1] * tmp;
+		CC[1+bs*0] -= CC[1+bs*1] * tmp;
+		CC[2+bs*0] -= CC[2+bs*1] * tmp;
+		CC[3+bs*0] -= CC[3+bs*1] * tmp;
+		}
 
 
 	store:
@@ -6550,7 +6802,317 @@ void kernel_dgetrf_nn_4x4_vs_lib4(int kmax, double *A, double *B, int sdb, doubl
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nn_ll_one_4x4_lib4(int kmax, double *A, double *B, int sdb, double *C, double *D, double *E)
+void kernel_dtrsm_nn_ll_inv_4x4_lib4(int kmax, double *A, double *B, int sdb, double *beta, double *C, double *D, double *E, double *inv_diag_E)
+	{
+
+	const int bs = 4;
+
+	int k;
+
+	double
+		tmp,
+		e_0, e_1, e_2, e_3;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+	
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nn_4x4_lib4(kmax, &alpha1, A, 0, B, sdb, beta, C, CC);
+
+	// solution
+
+	e_0 = inv_diag_E[0];
+	e_1 = E[1+bs*0];
+	e_2 = E[2+bs*0];
+	e_3 = E[3+bs*0];
+	CC[0+bs*0] *= e_0;
+	CC[1+bs*0] -= e_1 * CC[0+bs*0];
+	CC[2+bs*0] -= e_2 * CC[0+bs*0];
+	CC[3+bs*0] -= e_3 * CC[0+bs*0];
+	CC[0+bs*1] *= e_0;
+	CC[1+bs*1] -= e_1 * CC[0+bs*1];
+	CC[2+bs*1] -= e_2 * CC[0+bs*1];
+	CC[3+bs*1] -= e_3 * CC[0+bs*1];
+	CC[0+bs*2] *= e_0;
+	CC[1+bs*2] -= e_1 * CC[0+bs*2];
+	CC[2+bs*2] -= e_2 * CC[0+bs*2];
+	CC[3+bs*2] -= e_3 * CC[0+bs*2];
+	CC[0+bs*3] *= e_0;
+	CC[1+bs*3] -= e_1 * CC[0+bs*3];
+	CC[2+bs*3] -= e_2 * CC[0+bs*3];
+	CC[3+bs*3] -= e_3 * CC[0+bs*3];
+
+	e_1 = inv_diag_E[1];
+	e_2 = E[2+bs*1];
+	e_3 = E[3+bs*1];
+	CC[1+bs*0] *= e_1;
+	CC[2+bs*0] -= e_2 * CC[1+bs*0];
+	CC[3+bs*0] -= e_3 * CC[1+bs*0];
+	CC[1+bs*1] *= e_1;
+	CC[2+bs*1] -= e_2 * CC[1+bs*1];
+	CC[3+bs*1] -= e_3 * CC[1+bs*1];
+	CC[1+bs*2] *= e_1;
+	CC[2+bs*2] -= e_2 * CC[1+bs*2];
+	CC[3+bs*2] -= e_3 * CC[1+bs*2];
+	CC[1+bs*3] *= e_1;
+	CC[2+bs*3] -= e_2 * CC[1+bs*3];
+	CC[3+bs*3] -= e_3 * CC[1+bs*3];
+
+	e_2 = inv_diag_E[2];
+	e_3 = E[3+bs*2];
+	CC[2+bs*0] *= e_2;
+	CC[3+bs*0] -= e_3 * CC[2+bs*0];
+	CC[2+bs*1] *= e_2;
+	CC[3+bs*1] -= e_3 * CC[2+bs*1];
+	CC[2+bs*2] *= e_2;
+	CC[3+bs*2] -= e_3 * CC[2+bs*2];
+	CC[2+bs*3] *= e_2;
+	CC[3+bs*3] -= e_3 * CC[2+bs*3];
+
+	e_3 = inv_diag_E[3];
+	CC[3+bs*0] *= e_3;
+	CC[3+bs*1] *= e_3;
+	CC[3+bs*2] *= e_3;
+	CC[3+bs*3] *= e_3;
+
+	D[0+bs*0] = CC[0+bs*0];
+	D[1+bs*0] = CC[1+bs*0];
+	D[2+bs*0] = CC[2+bs*0];
+	D[3+bs*0] = CC[3+bs*0];
+
+	D[0+bs*1] = CC[0+bs*1];
+	D[1+bs*1] = CC[1+bs*1];
+	D[2+bs*1] = CC[2+bs*1];
+	D[3+bs*1] = CC[3+bs*1];
+
+	D[0+bs*2] = CC[0+bs*2];
+	D[1+bs*2] = CC[1+bs*2];
+	D[2+bs*2] = CC[2+bs*2];
+	D[3+bs*2] = CC[3+bs*2];
+
+	D[0+bs*3] = CC[0+bs*3];
+	D[1+bs*3] = CC[1+bs*3];
+	D[2+bs*3] = CC[2+bs*3];
+	D[3+bs*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nn_ll_inv_4x4_vs_lib4(int kmax, double *A, double *B, int sdb, double *beta, double *C, double *D, double *E, double *inv_diag_E, int km, int kn)
+	{
+
+	const int bs = 4;
+
+	int k;
+
+	double
+		tmp,
+		e_0, e_1, e_2, e_3;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+	
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nn_4x4_lib4(kmax, &alpha1, A, 0, B, sdb, beta, C, CC);
+
+	// solution
+
+	e_0 = inv_diag_E[0];
+	CC[0+bs*0] *= e_0;
+	CC[0+bs*1] *= e_0;
+	CC[0+bs*2] *= e_0;
+	CC[0+bs*3] *= e_0;
+
+	if(km==1)
+		goto store;
+	
+	e_0 = E[1+bs*0];
+	CC[1+bs*0] -= e_0 * CC[0+bs*0];
+	CC[1+bs*1] -= e_0 * CC[0+bs*1];
+	CC[1+bs*2] -= e_0 * CC[0+bs*2];
+	CC[1+bs*3] -= e_0 * CC[0+bs*3];
+	e_1 = inv_diag_E[1];
+	CC[1+bs*0] *= e_1;
+	CC[1+bs*1] *= e_1;
+	CC[1+bs*2] *= e_1;
+	CC[1+bs*3] *= e_1;
+
+	if(km==2)
+		goto store;
+	
+	e_0 = E[2+bs*0];
+	CC[2+bs*0] -= e_0 * CC[0+bs*0];
+	CC[2+bs*1] -= e_0 * CC[0+bs*1];
+	CC[2+bs*2] -= e_0 * CC[0+bs*2];
+	CC[2+bs*3] -= e_0 * CC[0+bs*3];
+	e_1 = E[2+bs*1];
+	CC[2+bs*0] -= e_1 * CC[1+bs*0];
+	CC[2+bs*1] -= e_1 * CC[1+bs*1];
+	CC[2+bs*2] -= e_1 * CC[1+bs*2];
+	CC[2+bs*3] -= e_1 * CC[1+bs*3];
+	e_2 = inv_diag_E[2];
+	CC[2+bs*0] *= e_2;
+	CC[2+bs*1] *= e_2;
+	CC[2+bs*2] *= e_2;
+	CC[2+bs*3] *= e_2;
+
+	if(km==3)
+		goto store;
+	
+	e_0 = E[3+bs*0];
+	CC[3+bs*0] -= e_0 * CC[0+bs*0];
+	CC[3+bs*1] -= e_0 * CC[0+bs*1];
+	CC[3+bs*2] -= e_0 * CC[0+bs*2];
+	CC[3+bs*3] -= e_0 * CC[0+bs*3];
+	e_1 = E[3+bs*1];
+	CC[3+bs*0] -= e_1 * CC[1+bs*0];
+	CC[3+bs*1] -= e_1 * CC[1+bs*1];
+	CC[3+bs*2] -= e_1 * CC[1+bs*2];
+	CC[3+bs*3] -= e_1 * CC[1+bs*3];
+	e_2 = E[3+bs*2];
+	CC[3+bs*0] -= e_2 * CC[2+bs*0];
+	CC[3+bs*1] -= e_2 * CC[2+bs*1];
+	CC[3+bs*2] -= e_2 * CC[2+bs*2];
+	CC[3+bs*3] -= e_2 * CC[2+bs*3];
+	e_3 = inv_diag_E[3];
+	CC[3+bs*0] *= e_3;
+	CC[3+bs*1] *= e_3;
+	CC[3+bs*2] *= e_3;
+	CC[3+bs*3] *= e_3;
+
+	store:
+
+	if(km>=4)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+		D[3+bs*0] = CC[3+bs*0];
+
+		if(kn==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+		D[3+bs*1] = CC[3+bs*1];
+
+		if(kn==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+		D[3+bs*2] = CC[3+bs*2];
+
+		if(kn==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		D[3+bs*3] = CC[3+bs*3];
+		}
+	else if(km>=3)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+
+		if(kn==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+
+		if(kn==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+
+		if(kn==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		}
+	else if(km>=2)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+
+		if(kn==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+
+		if(kn==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+
+		if(kn==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		}
+	else //if(km>=1)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+
+		if(kn==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+
+		if(kn==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+
+		if(kn==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nn_ll_one_4x4_lib4(int kmax, double *A, double *B, int sdb, double *beta, double *C, double *D, double *E)
 	{
 
 	const int bs = 4;
@@ -6572,9 +7134,8 @@ void kernel_dtrsm_nn_ll_one_4x4_lib4(int kmax, double *A, double *B, int sdb, do
 #endif
 	
 	double alpha1 = -1.0;
-	double beta1  = 1.0;
 
-	kernel_dgemm_nn_4x4_lib4(kmax, &alpha1, A, 0, B, sdb, &beta1, C, CC);
+	kernel_dgemm_nn_4x4_lib4(kmax, &alpha1, A, 0, B, sdb, beta, C, CC);
 
 	// solution
 
@@ -6639,7 +7200,7 @@ void kernel_dtrsm_nn_ll_one_4x4_lib4(int kmax, double *A, double *B, int sdb, do
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nn_ll_one_4x4_vs_lib4(int kmax, double *A, double *B, int sdb, double *C, double *D, double *E, int km, int kn)
+void kernel_dtrsm_nn_ll_one_4x4_vs_lib4(int kmax, double *A, double *B, int sdb, double *beta, double *C, double *D, double *E, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -6648,7 +7209,7 @@ void kernel_dtrsm_nn_ll_one_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 
 	double
 		tmp,
-		e_1, e_2, e_3;
+		e_0, e_1, e_2, e_3;
 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
@@ -6661,53 +7222,52 @@ void kernel_dtrsm_nn_ll_one_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 #endif
 	
 	double alpha1 = -1.0;
-	double beta1  = 1.0;
 
-	kernel_dgemm_nn_4x4_lib4(kmax, &alpha1, A, 0, B, sdb, &beta1, C, CC);
+	kernel_dgemm_nn_4x4_lib4(kmax, &alpha1, A, 0, B, sdb, beta, C, CC);
 
 	// solution
 
 	if(km==1)
 		goto store;
 	
-	e_1 = E[1+bs*0];
-	e_2 = E[2+bs*0];
-	e_3 = E[3+bs*0];
-	CC[1+bs*0] -= e_1 * CC[0+bs*0];
-	CC[2+bs*0] -= e_2 * CC[0+bs*0];
-	CC[3+bs*0] -= e_3 * CC[0+bs*0];
-	CC[1+bs*1] -= e_1 * CC[0+bs*1];
-	CC[2+bs*1] -= e_2 * CC[0+bs*1];
-	CC[3+bs*1] -= e_3 * CC[0+bs*1];
-	CC[1+bs*2] -= e_1 * CC[0+bs*2];
-	CC[2+bs*2] -= e_2 * CC[0+bs*2];
-	CC[3+bs*2] -= e_3 * CC[0+bs*2];
-	CC[1+bs*3] -= e_1 * CC[0+bs*3];
-	CC[2+bs*3] -= e_2 * CC[0+bs*3];
-	CC[3+bs*3] -= e_3 * CC[0+bs*3];
+	e_0 = E[1+bs*0];
+	CC[1+bs*0] -= e_0 * CC[0+bs*0];
+	CC[1+bs*1] -= e_0 * CC[0+bs*1];
+	CC[1+bs*2] -= e_0 * CC[0+bs*2];
+	CC[1+bs*3] -= e_0 * CC[0+bs*3];
 
 	if(km==2)
 		goto store;
 	
-	e_2 = E[2+bs*1];
-	e_3 = E[3+bs*1];
-	CC[2+bs*0] -= e_2 * CC[1+bs*0];
-	CC[3+bs*0] -= e_3 * CC[1+bs*0];
-	CC[2+bs*1] -= e_2 * CC[1+bs*1];
-	CC[3+bs*1] -= e_3 * CC[1+bs*1];
-	CC[2+bs*2] -= e_2 * CC[1+bs*2];
-	CC[3+bs*2] -= e_3 * CC[1+bs*2];
-	CC[2+bs*3] -= e_2 * CC[1+bs*3];
-	CC[3+bs*3] -= e_3 * CC[1+bs*3];
+	e_0 = E[2+bs*0];
+	CC[2+bs*0] -= e_0 * CC[0+bs*0];
+	CC[2+bs*1] -= e_0 * CC[0+bs*1];
+	CC[2+bs*2] -= e_0 * CC[0+bs*2];
+	CC[2+bs*3] -= e_0 * CC[0+bs*3];
+	e_1 = E[2+bs*1];
+	CC[2+bs*0] -= e_1 * CC[1+bs*0];
+	CC[2+bs*1] -= e_1 * CC[1+bs*1];
+	CC[2+bs*2] -= e_1 * CC[1+bs*2];
+	CC[2+bs*3] -= e_1 * CC[1+bs*3];
 
 	if(km==3)
 		goto store;
 	
-	e_3 = E[3+bs*2];
-	CC[3+bs*0] -= e_3 * CC[2+bs*0];
-	CC[3+bs*1] -= e_3 * CC[2+bs*1];
-	CC[3+bs*2] -= e_3 * CC[2+bs*2];
-	CC[3+bs*3] -= e_3 * CC[2+bs*3];
+	e_0 = E[3+bs*0];
+	CC[3+bs*0] -= e_0 * CC[0+bs*0];
+	CC[3+bs*1] -= e_0 * CC[0+bs*1];
+	CC[3+bs*2] -= e_0 * CC[0+bs*2];
+	CC[3+bs*3] -= e_0 * CC[0+bs*3];
+	e_1 = E[3+bs*1];
+	CC[3+bs*0] -= e_1 * CC[1+bs*0];
+	CC[3+bs*1] -= e_1 * CC[1+bs*1];
+	CC[3+bs*2] -= e_1 * CC[1+bs*2];
+	CC[3+bs*3] -= e_1 * CC[1+bs*3];
+	e_2 = E[3+bs*2];
+	CC[3+bs*0] -= e_2 * CC[2+bs*0];
+	CC[3+bs*1] -= e_2 * CC[2+bs*1];
+	CC[3+bs*2] -= e_2 * CC[2+bs*2];
+	CC[3+bs*3] -= e_2 * CC[2+bs*3];
 
 	store:
 

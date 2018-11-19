@@ -621,6 +621,8 @@ OBJS += \
 		blas_api/dtrmm.o \
 		blas_api/dtrsm.o \
 		blas_api/dpotrf.o \
+		blas_api/dpotrs.o \
+		blas_api/dtrtrs.o \
 
 endif
 

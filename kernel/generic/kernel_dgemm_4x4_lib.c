@@ -2324,8 +2324,8 @@ end:
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_rl_inv_4x4_lib44cc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nn_rl_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -2343,29 +2343,56 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib44cc(int kmax, double *A, double *B, double *
 #endif
 
 	double alpha1 = -1.0;
-	double beta1  = 1.0;
 
-	CC[0+bs*0] = C[0+ldc*0];
-	CC[1+bs*0] = C[1+ldc*0];
-	CC[2+bs*0] = C[2+ldc*0];
-	CC[3+bs*0] = C[3+ldc*0];
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
-	CC[0+bs*1] = C[0+ldc*1];
-	CC[1+bs*1] = C[1+ldc*1];
-	CC[2+bs*1] = C[2+ldc*1];
-	CC[3+bs*1] = C[3+ldc*1];
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+	tmp = E[3+lde*0];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
 
-	CC[0+bs*2] = C[0+ldc*2];
-	CC[1+bs*2] = C[1+ldc*2];
-	CC[2+bs*2] = C[2+ldc*2];
-	CC[3+bs*2] = C[3+ldc*2];
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+	tmp = E[2+lde*0];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
 
-	CC[0+bs*3] = C[0+ldc*3];
-	CC[1+bs*3] = C[1+ldc*3];
-	CC[2+bs*3] = C[2+ldc*3];
-	CC[3+bs*3] = C[3+ldc*3];
-
-	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, CC, CC);
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+	tmp = E[1+lde*0];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -2373,53 +2400,309 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib44cc(int kmax, double *A, double *B, double *
 	CC[2+bs*0] *= tmp;
 	CC[3+bs*0] *= tmp;
 
-	tmp = E[1+lde*0];
-	CC[0+bs*1] -= CC[0+bs*0] * tmp;
-	CC[1+bs*1] -= CC[1+bs*0] * tmp;
-	CC[2+bs*1] -= CC[2+bs*0] * tmp;
-	CC[3+bs*1] -= CC[3+bs*0] * tmp;
-	tmp = inv_diag_E[1];
-	CC[0+bs*1] *= tmp;
-	CC[1+bs*1] *= tmp;
-	CC[2+bs*1] *= tmp;
-	CC[3+bs*1] *= tmp;
 
-	tmp = E[2+lde*0];
-	CC[0+bs*2] -= CC[0+bs*0] * tmp;
-	CC[1+bs*2] -= CC[1+bs*0] * tmp;
-	CC[2+bs*2] -= CC[2+bs*0] * tmp;
-	CC[3+bs*2] -= CC[3+bs*0] * tmp;
-	tmp = E[2+lde*1];
-	CC[0+bs*2] -= CC[0+bs*1] * tmp;
-	CC[1+bs*2] -= CC[1+bs*1] * tmp;
-	CC[2+bs*2] -= CC[2+bs*1] * tmp;
-	CC[3+bs*2] -= CC[3+bs*1] * tmp;
-	tmp = inv_diag_E[2];
-	CC[0+bs*2] *= tmp;
-	CC[1+bs*2] *= tmp;
-	CC[2+bs*2] *= tmp;
-	CC[3+bs*2] *= tmp;
+	D[0+bs*0] = CC[0+bs*0];
+	D[1+bs*0] = CC[1+bs*0];
+	D[2+bs*0] = CC[2+bs*0];
+	D[3+bs*0] = CC[3+bs*0];
 
-	tmp = E[3+lde*0];
-	CC[0+bs*3] -= CC[0+bs*0] * tmp;
-	CC[1+bs*3] -= CC[1+bs*0] * tmp;
-	CC[2+bs*3] -= CC[2+bs*0] * tmp;
-	CC[3+bs*3] -= CC[3+bs*0] * tmp;
-	tmp = E[3+lde*1];
-	CC[0+bs*3] -= CC[0+bs*1] * tmp;
-	CC[1+bs*3] -= CC[1+bs*1] * tmp;
-	CC[2+bs*3] -= CC[2+bs*1] * tmp;
-	CC[3+bs*3] -= CC[3+bs*1] * tmp;
-	tmp = E[3+lde*2];
-	CC[0+bs*3] -= CC[0+bs*2] * tmp;
-	CC[1+bs*3] -= CC[1+bs*2] * tmp;
-	CC[2+bs*3] -= CC[2+bs*2] * tmp;
-	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+	D[0+bs*1] = CC[0+bs*1];
+	D[1+bs*1] = CC[1+bs*1];
+	D[2+bs*1] = CC[2+bs*1];
+	D[3+bs*1] = CC[3+bs*1];
+
+	D[0+bs*2] = CC[0+bs*2];
+	D[1+bs*2] = CC[1+bs*2];
+	D[2+bs*2] = CC[2+bs*2];
+	D[3+bs*2] = CC[3+bs*2];
+
+	D[0+bs*3] = CC[0+bs*3];
+	D[1+bs*3] = CC[1+bs*3];
+	D[2+bs*3] = CC[2+bs*3];
+	D[3+bs*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nn_rl_inv_4x4_vs_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+
+	if(n1<=3)
+		goto n3;
+
 	tmp = inv_diag_E[3];
 	CC[0+bs*3] *= tmp;
 	CC[1+bs*3] *= tmp;
 	CC[2+bs*3] *= tmp;
 	CC[3+bs*3] *= tmp;
+	tmp = E[3+lde*0];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+n3:
+	if(n1<=2)
+		goto n2;
+
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+	tmp = E[2+lde*0];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+n2:
+	if(n1<=1)
+		goto n1;
+
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+	tmp = E[1+lde*0];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+n1:
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+		D[3+bs*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+		D[3+bs*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+		D[3+bs*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		D[3+bs*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nn_rl_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+	tmp = E[3+lde*0];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+	tmp = E[2+lde*0];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+	tmp = E[1+lde*0];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
 
 	D[0+ldd*0] = CC[0+bs*0];
 	D[1+ldd*0] = CC[1+bs*0];
@@ -2449,7 +2732,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib44cc(int kmax, double *A, double *B, double *
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
+void kernel_dtrsm_nn_rl_inv_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -2467,174 +2750,75 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc(int kmax, double *A, double *B, doubl
 #endif
 
 	double alpha1 = -1.0;
-	double beta1  = 1.0;
 
-	if(m1>=4)
-		{
-		CC[0+bs*0] = C[0+ldc*0];
-		CC[1+bs*0] = C[1+ldc*0];
-		CC[2+bs*0] = C[2+ldc*0];
-		CC[3+bs*0] = C[3+ldc*0];
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
-		if(n1==1)
-			goto kernel;
+	if(n1<=3)
+		goto n3;
 
-		CC[0+bs*1] = C[0+ldc*1];
-		CC[1+bs*1] = C[1+ldc*1];
-		CC[2+bs*1] = C[2+ldc*1];
-		CC[3+bs*1] = C[3+ldc*1];
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+	tmp = E[3+lde*0];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
 
-		if(n1==2)
-			goto kernel;
+n3:
+	if(n1<=2)
+		goto n2;
 
-		CC[0+bs*2] = C[0+ldc*2];
-		CC[1+bs*2] = C[1+ldc*2];
-		CC[2+bs*2] = C[2+ldc*2];
-		CC[3+bs*2] = C[3+ldc*2];
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+	tmp = E[2+lde*0];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
 
-		if(n1==3)
-			goto kernel;
+n2:
+	if(n1<=1)
+		goto n1;
 
-		CC[0+bs*3] = C[0+ldc*3];
-		CC[1+bs*3] = C[1+ldc*3];
-		CC[2+bs*3] = C[2+ldc*3];
-		CC[3+bs*3] = C[3+ldc*3];
-		}
-	else if(m1>=3)
-		{
-		CC[0+bs*0] = C[0+ldc*0];
-		CC[1+bs*0] = C[1+ldc*0];
-		CC[2+bs*0] = C[2+ldc*0];
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+	tmp = E[1+lde*0];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
 
-		if(n1==1)
-			goto kernel;
-
-		CC[0+bs*1] = C[0+ldc*1];
-		CC[1+bs*1] = C[1+ldc*1];
-		CC[2+bs*1] = C[2+ldc*1];
-
-		if(n1==2)
-			goto kernel;
-
-		CC[0+bs*2] = C[0+ldc*2];
-		CC[1+bs*2] = C[1+ldc*2];
-		CC[2+bs*2] = C[2+ldc*2];
-
-		if(n1==3)
-			goto kernel;
-
-		CC[0+bs*3] = C[0+ldc*3];
-		CC[1+bs*3] = C[1+ldc*3];
-		CC[2+bs*3] = C[2+ldc*3];
-		}
-	else if(m1>=2)
-		{
-		CC[0+bs*0] = C[0+ldc*0];
-		CC[1+bs*0] = C[1+ldc*0];
-
-		if(n1==1)
-			goto kernel;
-
-		CC[0+bs*1] = C[0+ldc*1];
-		CC[1+bs*1] = C[1+ldc*1];
-
-		if(n1==2)
-			goto kernel;
-
-		CC[0+bs*2] = C[0+ldc*2];
-		CC[1+bs*2] = C[1+ldc*2];
-
-		if(n1==3)
-			goto kernel;
-
-		CC[0+bs*3] = C[0+ldc*3];
-		CC[1+bs*3] = C[1+ldc*3];
-		}
-	else //if(m1>=1)
-		{
-		CC[0+bs*0] = C[0+ldc*0];
-
-		if(n1==1)
-			goto kernel;
-
-		CC[0+bs*1] = C[0+ldc*1];
-
-		if(n1==2)
-			goto kernel;
-
-		CC[0+bs*2] = C[0+ldc*2];
-
-		if(n1==3)
-			goto kernel;
-
-		CC[0+bs*3] = C[0+ldc*3];
-		}
-
-kernel:
-	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, CC, CC);
+n1:
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
 	CC[1+bs*0] *= tmp;
 	CC[2+bs*0] *= tmp;
 	CC[3+bs*0] *= tmp;
-
-	if(n1==1)
-		goto store;
-	
-	tmp = E[1+lde*0];
-	CC[0+bs*1] -= CC[0+bs*0] * tmp;
-	CC[1+bs*1] -= CC[1+bs*0] * tmp;
-	CC[2+bs*1] -= CC[2+bs*0] * tmp;
-	CC[3+bs*1] -= CC[3+bs*0] * tmp;
-	tmp = inv_diag_E[1];
-	CC[0+bs*1] *= tmp;
-	CC[1+bs*1] *= tmp;
-	CC[2+bs*1] *= tmp;
-	CC[3+bs*1] *= tmp;
-
-	if(n1==2)
-		goto store;
-	
-	tmp = E[2+lde*0];
-	CC[0+bs*2] -= CC[0+bs*0] * tmp;
-	CC[1+bs*2] -= CC[1+bs*0] * tmp;
-	CC[2+bs*2] -= CC[2+bs*0] * tmp;
-	CC[3+bs*2] -= CC[3+bs*0] * tmp;
-	tmp = E[2+lde*1];
-	CC[0+bs*2] -= CC[0+bs*1] * tmp;
-	CC[1+bs*2] -= CC[1+bs*1] * tmp;
-	CC[2+bs*2] -= CC[2+bs*1] * tmp;
-	CC[3+bs*2] -= CC[3+bs*1] * tmp;
-	tmp = inv_diag_E[2];
-	CC[0+bs*2] *= tmp;
-	CC[1+bs*2] *= tmp;
-	CC[2+bs*2] *= tmp;
-	CC[3+bs*2] *= tmp;
-
-	if(n1==3)
-		goto store;
-	
-	tmp = E[3+lde*0];
-	CC[0+bs*3] -= CC[0+bs*0] * tmp;
-	CC[1+bs*3] -= CC[1+bs*0] * tmp;
-	CC[2+bs*3] -= CC[2+bs*0] * tmp;
-	CC[3+bs*3] -= CC[3+bs*0] * tmp;
-	tmp = E[3+lde*1];
-	CC[0+bs*3] -= CC[0+bs*1] * tmp;
-	CC[1+bs*3] -= CC[1+bs*1] * tmp;
-	CC[2+bs*3] -= CC[2+bs*1] * tmp;
-	CC[3+bs*3] -= CC[3+bs*1] * tmp;
-	tmp = E[3+lde*2];
-	CC[0+bs*3] -= CC[0+bs*2] * tmp;
-	CC[1+bs*3] -= CC[1+bs*2] * tmp;
-	CC[2+bs*3] -= CC[2+bs*2] * tmp;
-	CC[3+bs*3] -= CC[3+bs*2] * tmp;
-	tmp = inv_diag_E[3];
-	CC[0+bs*3] *= tmp;
-	CC[1+bs*3] *= tmp;
-	CC[2+bs*3] *= tmp;
-	CC[3+bs*3] *= tmp;
 
 	store:
 
@@ -2747,7 +2931,7 @@ kernel:
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_rl_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
+void kernel_dtrsm_nn_rl_one_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde)
 	{
 
 	const int bs = 4;
@@ -2766,61 +2950,302 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
-
-	tmp = inv_diag_E[0];
-	CC[0+bs*0] *= tmp;
-	CC[1+bs*0] *= tmp;
-	CC[2+bs*0] *= tmp;
-	CC[3+bs*0] *= tmp;
-
-	tmp = E[1+lde*0];
-	CC[0+bs*1] -= CC[0+bs*0] * tmp;
-	CC[1+bs*1] -= CC[1+bs*0] * tmp;
-	CC[2+bs*1] -= CC[2+bs*0] * tmp;
-	CC[3+bs*1] -= CC[3+bs*0] * tmp;
-	tmp = inv_diag_E[1];
-	CC[0+bs*1] *= tmp;
-	CC[1+bs*1] *= tmp;
-	CC[2+bs*1] *= tmp;
-	CC[3+bs*1] *= tmp;
-
-	tmp = E[2+lde*0];
-	CC[0+bs*2] -= CC[0+bs*0] * tmp;
-	CC[1+bs*2] -= CC[1+bs*0] * tmp;
-	CC[2+bs*2] -= CC[2+bs*0] * tmp;
-	CC[3+bs*2] -= CC[3+bs*0] * tmp;
-	tmp = E[2+lde*1];
-	CC[0+bs*2] -= CC[0+bs*1] * tmp;
-	CC[1+bs*2] -= CC[1+bs*1] * tmp;
-	CC[2+bs*2] -= CC[2+bs*1] * tmp;
-	CC[3+bs*2] -= CC[3+bs*1] * tmp;
-	tmp = inv_diag_E[2];
-	CC[0+bs*2] *= tmp;
-	CC[1+bs*2] *= tmp;
-	CC[2+bs*2] *= tmp;
-	CC[3+bs*2] *= tmp;
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	tmp = E[3+lde*0];
-	CC[0+bs*3] -= CC[0+bs*0] * tmp;
-	CC[1+bs*3] -= CC[1+bs*0] * tmp;
-	CC[2+bs*3] -= CC[2+bs*0] * tmp;
-	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
 	tmp = E[3+lde*1];
-	CC[0+bs*3] -= CC[0+bs*1] * tmp;
-	CC[1+bs*3] -= CC[1+bs*1] * tmp;
-	CC[2+bs*3] -= CC[2+bs*1] * tmp;
-	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
 	tmp = E[3+lde*2];
-	CC[0+bs*3] -= CC[0+bs*2] * tmp;
-	CC[1+bs*3] -= CC[1+bs*2] * tmp;
-	CC[2+bs*3] -= CC[2+bs*2] * tmp;
-	CC[3+bs*3] -= CC[3+bs*2] * tmp;
-	tmp = inv_diag_E[3];
-	CC[0+bs*3] *= tmp;
-	CC[1+bs*3] *= tmp;
-	CC[2+bs*3] *= tmp;
-	CC[3+bs*3] *= tmp;
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+	tmp = E[2+lde*0];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+	tmp = E[1+lde*0];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+
+	D[0+bs*0] = CC[0+bs*0];
+	D[1+bs*0] = CC[1+bs*0];
+	D[2+bs*0] = CC[2+bs*0];
+	D[3+bs*0] = CC[3+bs*0];
+
+	D[0+bs*1] = CC[0+bs*1];
+	D[1+bs*1] = CC[1+bs*1];
+	D[2+bs*1] = CC[2+bs*1];
+	D[3+bs*1] = CC[3+bs*1];
+
+	D[0+bs*2] = CC[0+bs*2];
+	D[1+bs*2] = CC[1+bs*2];
+	D[2+bs*2] = CC[2+bs*2];
+	D[3+bs*2] = CC[3+bs*2];
+
+	D[0+bs*3] = CC[0+bs*3];
+	D[1+bs*3] = CC[1+bs*3];
+	D[2+bs*3] = CC[2+bs*3];
+	D[3+bs*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nn_rl_one_4x4_vs_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+
+	if(n1<=3)
+		goto n3;
+
+	tmp = E[3+lde*0];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+n3:
+	if(n1<=2)
+		goto n2;
+
+	tmp = E[2+lde*0];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+n2:
+	if(n1<=1)
+		goto n1;
+
+	tmp = E[1+lde*0];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+n1:
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+		D[3+bs*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+		D[3+bs*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+		D[3+bs*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		D[3+bs*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nn_rl_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	tmp = E[3+lde*0];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+	tmp = E[2+lde*0];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+	tmp = E[1+lde*0];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
 
 	D[0+ldd*0] = CC[0+bs*0];
 	D[1+ldd*0] = CC[1+bs*0];
@@ -2850,7 +3275,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
+void kernel_dtrsm_nn_rl_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -2869,70 +3294,53 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4ccc(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
-	tmp = inv_diag_E[0];
-	CC[0+bs*0] *= tmp;
-	CC[1+bs*0] *= tmp;
-	CC[2+bs*0] *= tmp;
-	CC[3+bs*0] *= tmp;
+	if(n1<=3)
+		goto n3;
 
-	if(n1==1)
-		goto store;
-	
-	tmp = E[1+lde*0];
-	CC[0+bs*1] -= CC[0+bs*0] * tmp;
-	CC[1+bs*1] -= CC[1+bs*0] * tmp;
-	CC[2+bs*1] -= CC[2+bs*0] * tmp;
-	CC[3+bs*1] -= CC[3+bs*0] * tmp;
-	tmp = inv_diag_E[1];
-	CC[0+bs*1] *= tmp;
-	CC[1+bs*1] *= tmp;
-	CC[2+bs*1] *= tmp;
-	CC[3+bs*1] *= tmp;
-
-	if(n1==2)
-		goto store;
-	
-	tmp = E[2+lde*0];
-	CC[0+bs*2] -= CC[0+bs*0] * tmp;
-	CC[1+bs*2] -= CC[1+bs*0] * tmp;
-	CC[2+bs*2] -= CC[2+bs*0] * tmp;
-	CC[3+bs*2] -= CC[3+bs*0] * tmp;
-	tmp = E[2+lde*1];
-	CC[0+bs*2] -= CC[0+bs*1] * tmp;
-	CC[1+bs*2] -= CC[1+bs*1] * tmp;
-	CC[2+bs*2] -= CC[2+bs*1] * tmp;
-	CC[3+bs*2] -= CC[3+bs*1] * tmp;
-	tmp = inv_diag_E[2];
-	CC[0+bs*2] *= tmp;
-	CC[1+bs*2] *= tmp;
-	CC[2+bs*2] *= tmp;
-	CC[3+bs*2] *= tmp;
-
-	if(n1==3)
-		goto store;
-	
 	tmp = E[3+lde*0];
-	CC[0+bs*3] -= CC[0+bs*0] * tmp;
-	CC[1+bs*3] -= CC[1+bs*0] * tmp;
-	CC[2+bs*3] -= CC[2+bs*0] * tmp;
-	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
 	tmp = E[3+lde*1];
-	CC[0+bs*3] -= CC[0+bs*1] * tmp;
-	CC[1+bs*3] -= CC[1+bs*1] * tmp;
-	CC[2+bs*3] -= CC[2+bs*1] * tmp;
-	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
 	tmp = E[3+lde*2];
-	CC[0+bs*3] -= CC[0+bs*2] * tmp;
-	CC[1+bs*3] -= CC[1+bs*2] * tmp;
-	CC[2+bs*3] -= CC[2+bs*2] * tmp;
-	CC[3+bs*3] -= CC[3+bs*2] * tmp;
-	tmp = inv_diag_E[3];
-	CC[0+bs*3] *= tmp;
-	CC[1+bs*3] *= tmp;
-	CC[2+bs*3] *= tmp;
-	CC[3+bs*3] *= tmp;
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+n3:
+	if(n1<=2)
+		goto n2;
+
+	tmp = E[2+lde*0];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+n2:
+	if(n1<=1)
+		goto n1;
+
+	tmp = E[1+lde*0];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+n1:
 
 	store:
 
@@ -3464,8 +3872,8 @@ kernel:
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nn_ru_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *C, double *D, double *E, int lde, double *inv_diag_E)
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_rl_inv_4x4_lib44cc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -3485,7 +3893,1915 @@ void kernel_dtrsm_nn_ru_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb,
 	double alpha1 = -1.0;
 	double beta1  = 1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, &beta1, C, bs, CC, bs);
+	CC[0+bs*0] = C[0+ldc*0];
+	CC[1+bs*0] = C[1+ldc*0];
+	CC[2+bs*0] = C[2+ldc*0];
+	CC[3+bs*0] = C[3+ldc*0];
+
+	CC[0+bs*1] = C[0+ldc*1];
+	CC[1+bs*1] = C[1+ldc*1];
+	CC[2+bs*1] = C[2+ldc*1];
+	CC[3+bs*1] = C[3+ldc*1];
+
+	CC[0+bs*2] = C[0+ldc*2];
+	CC[1+bs*2] = C[1+ldc*2];
+	CC[2+bs*2] = C[2+ldc*2];
+	CC[3+bs*2] = C[3+ldc*2];
+
+	CC[0+bs*3] = C[0+ldc*3];
+	CC[1+bs*3] = C[1+ldc*3];
+	CC[2+bs*3] = C[2+ldc*3];
+	CC[3+bs*3] = C[3+ldc*3];
+
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, CC, CC);
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+	tmp = E[1+lde*0];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+
+	tmp = E[2+lde*0];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+
+	tmp = E[3+lde*0];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+
+	D[0+ldd*0] = CC[0+bs*0];
+	D[1+ldd*0] = CC[1+bs*0];
+	D[2+ldd*0] = CC[2+bs*0];
+	D[3+ldd*0] = CC[3+bs*0];
+
+	D[0+ldd*1] = CC[0+bs*1];
+	D[1+ldd*1] = CC[1+bs*1];
+	D[2+ldd*1] = CC[2+bs*1];
+	D[3+ldd*1] = CC[3+bs*1];
+
+	D[0+ldd*2] = CC[0+bs*2];
+	D[1+ldd*2] = CC[1+bs*2];
+	D[2+ldd*2] = CC[2+bs*2];
+	D[3+ldd*2] = CC[3+bs*2];
+
+	D[0+ldd*3] = CC[0+bs*3];
+	D[1+ldd*3] = CC[1+bs*3];
+	D[2+ldd*3] = CC[2+bs*3];
+	D[3+ldd*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+	double beta1  = 1.0;
+
+	if(m1>=4)
+		{
+		CC[0+bs*0] = C[0+ldc*0];
+		CC[1+bs*0] = C[1+ldc*0];
+		CC[2+bs*0] = C[2+ldc*0];
+		CC[3+bs*0] = C[3+ldc*0];
+
+		if(n1==1)
+			goto kernel;
+
+		CC[0+bs*1] = C[0+ldc*1];
+		CC[1+bs*1] = C[1+ldc*1];
+		CC[2+bs*1] = C[2+ldc*1];
+		CC[3+bs*1] = C[3+ldc*1];
+
+		if(n1==2)
+			goto kernel;
+
+		CC[0+bs*2] = C[0+ldc*2];
+		CC[1+bs*2] = C[1+ldc*2];
+		CC[2+bs*2] = C[2+ldc*2];
+		CC[3+bs*2] = C[3+ldc*2];
+
+		if(n1==3)
+			goto kernel;
+
+		CC[0+bs*3] = C[0+ldc*3];
+		CC[1+bs*3] = C[1+ldc*3];
+		CC[2+bs*3] = C[2+ldc*3];
+		CC[3+bs*3] = C[3+ldc*3];
+		}
+	else if(m1>=3)
+		{
+		CC[0+bs*0] = C[0+ldc*0];
+		CC[1+bs*0] = C[1+ldc*0];
+		CC[2+bs*0] = C[2+ldc*0];
+
+		if(n1==1)
+			goto kernel;
+
+		CC[0+bs*1] = C[0+ldc*1];
+		CC[1+bs*1] = C[1+ldc*1];
+		CC[2+bs*1] = C[2+ldc*1];
+
+		if(n1==2)
+			goto kernel;
+
+		CC[0+bs*2] = C[0+ldc*2];
+		CC[1+bs*2] = C[1+ldc*2];
+		CC[2+bs*2] = C[2+ldc*2];
+
+		if(n1==3)
+			goto kernel;
+
+		CC[0+bs*3] = C[0+ldc*3];
+		CC[1+bs*3] = C[1+ldc*3];
+		CC[2+bs*3] = C[2+ldc*3];
+		}
+	else if(m1>=2)
+		{
+		CC[0+bs*0] = C[0+ldc*0];
+		CC[1+bs*0] = C[1+ldc*0];
+
+		if(n1==1)
+			goto kernel;
+
+		CC[0+bs*1] = C[0+ldc*1];
+		CC[1+bs*1] = C[1+ldc*1];
+
+		if(n1==2)
+			goto kernel;
+
+		CC[0+bs*2] = C[0+ldc*2];
+		CC[1+bs*2] = C[1+ldc*2];
+
+		if(n1==3)
+			goto kernel;
+
+		CC[0+bs*3] = C[0+ldc*3];
+		CC[1+bs*3] = C[1+ldc*3];
+		}
+	else //if(m1>=1)
+		{
+		CC[0+bs*0] = C[0+ldc*0];
+
+		if(n1==1)
+			goto kernel;
+
+		CC[0+bs*1] = C[0+ldc*1];
+
+		if(n1==2)
+			goto kernel;
+
+		CC[0+bs*2] = C[0+ldc*2];
+
+		if(n1==3)
+			goto kernel;
+
+		CC[0+bs*3] = C[0+ldc*3];
+		}
+
+kernel:
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, CC, CC);
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+	if(n1==1)
+		goto store;
+	
+	tmp = E[1+lde*0];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+
+	if(n1==2)
+		goto store;
+	
+	tmp = E[2+lde*0];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+
+	if(n1==3)
+		goto store;
+	
+	tmp = E[3+lde*0];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+		D[3+ldd*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+		D[3+ldd*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+		D[3+ldd*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		D[3+ldd*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_rl_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+	tmp = E[1+lde*0];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+
+	tmp = E[2+lde*0];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+
+	tmp = E[3+lde*0];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+
+	D[0+bs*0] = CC[0+bs*0];
+	D[1+bs*0] = CC[1+bs*0];
+	D[2+bs*0] = CC[2+bs*0];
+	D[3+bs*0] = CC[3+bs*0];
+
+	D[0+bs*1] = CC[0+bs*1];
+	D[1+bs*1] = CC[1+bs*1];
+	D[2+bs*1] = CC[2+bs*1];
+	D[3+bs*1] = CC[3+bs*1];
+
+	D[0+bs*2] = CC[0+bs*2];
+	D[1+bs*2] = CC[1+bs*2];
+	D[2+bs*2] = CC[2+bs*2];
+	D[3+bs*2] = CC[3+bs*2];
+
+	D[0+bs*3] = CC[0+bs*3];
+	D[1+bs*3] = CC[1+bs*3];
+	D[2+bs*3] = CC[2+bs*3];
+	D[3+bs*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+	if(n1==1)
+		goto store;
+	
+	tmp = E[1+lde*0];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+
+	if(n1==2)
+		goto store;
+	
+	tmp = E[2+lde*0];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+
+	if(n1==3)
+		goto store;
+	
+	tmp = E[3+lde*0];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+		D[3+bs*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+		D[3+bs*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+		D[3+bs*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		D[3+bs*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_rl_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+	tmp = E[1+lde*0];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+
+	tmp = E[2+lde*0];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+
+	tmp = E[3+lde*0];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+
+	D[0+ldd*0] = CC[0+bs*0];
+	D[1+ldd*0] = CC[1+bs*0];
+	D[2+ldd*0] = CC[2+bs*0];
+	D[3+ldd*0] = CC[3+bs*0];
+
+	D[0+ldd*1] = CC[0+bs*1];
+	D[1+ldd*1] = CC[1+bs*1];
+	D[2+ldd*1] = CC[2+bs*1];
+	D[3+ldd*1] = CC[3+bs*1];
+
+	D[0+ldd*2] = CC[0+bs*2];
+	D[1+ldd*2] = CC[1+bs*2];
+	D[2+ldd*2] = CC[2+bs*2];
+	D[3+ldd*2] = CC[3+bs*2];
+
+	D[0+ldd*3] = CC[0+bs*3];
+	D[1+ldd*3] = CC[1+bs*3];
+	D[2+ldd*3] = CC[2+bs*3];
+	D[3+ldd*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+	if(n1==1)
+		goto store;
+	
+	tmp = E[1+lde*0];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+
+	if(n1==2)
+		goto store;
+	
+	tmp = E[2+lde*0];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+
+	if(n1==3)
+		goto store;
+	
+	tmp = E[3+lde*0];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+		D[3+ldd*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+		D[3+ldd*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+		D[3+ldd*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		D[3+ldd*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_rl_one_4x4_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	CC[0+bs*0] = C[0+ldc*0];
+	CC[1+bs*0] = C[1+ldc*0];
+	CC[2+bs*0] = C[2+ldc*0];
+	CC[3+bs*0] = C[3+ldc*0];
+
+	CC[0+bs*1] = C[0+ldc*1];
+	CC[1+bs*1] = C[1+ldc*1];
+	CC[2+bs*1] = C[2+ldc*1];
+	CC[3+bs*1] = C[3+ldc*1];
+
+	CC[0+bs*2] = C[0+ldc*2];
+	CC[1+bs*2] = C[1+ldc*2];
+	CC[2+bs*2] = C[2+ldc*2];
+	CC[3+bs*2] = C[3+ldc*2];
+
+	CC[0+bs*3] = C[0+ldc*3];
+	CC[1+bs*3] = C[1+ldc*3];
+	CC[2+bs*3] = C[2+ldc*3];
+	CC[3+bs*3] = C[3+ldc*3];
+
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, CC, CC);
+
+	tmp = E[1+bs*0];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+
+	tmp = E[2+bs*0];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[2+bs*1];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+
+	tmp = E[3+bs*0];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[3+bs*1];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[3+bs*2];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+
+	D[0+ldd*0] = CC[0+bs*0];
+	D[1+ldd*0] = CC[1+bs*0];
+	D[2+ldd*0] = CC[2+bs*0];
+	D[3+ldd*0] = CC[3+bs*0];
+
+	D[0+ldd*1] = CC[0+bs*1];
+	D[1+ldd*1] = CC[1+bs*1];
+	D[2+ldd*1] = CC[2+bs*1];
+	D[3+ldd*1] = CC[3+bs*1];
+
+	D[0+ldd*2] = CC[0+bs*2];
+	D[1+ldd*2] = CC[1+bs*2];
+	D[2+ldd*2] = CC[2+bs*2];
+	D[3+ldd*2] = CC[3+bs*2];
+
+	D[0+ldd*3] = CC[0+bs*3];
+	D[1+ldd*3] = CC[1+bs*3];
+	D[2+ldd*3] = CC[2+bs*3];
+	D[3+ldd*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_rl_one_4x4_vs_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	if(m1>=4)
+		{
+		CC[0+bs*0] = C[0+ldc*0];
+		CC[1+bs*0] = C[1+ldc*0];
+		CC[2+bs*0] = C[2+ldc*0];
+		CC[3+bs*0] = C[3+ldc*0];
+
+		if(n1==1)
+			goto kernel;
+
+		CC[0+bs*1] = C[0+ldc*1];
+		CC[1+bs*1] = C[1+ldc*1];
+		CC[2+bs*1] = C[2+ldc*1];
+		CC[3+bs*1] = C[3+ldc*1];
+
+		if(n1==2)
+			goto kernel;
+
+		CC[0+bs*2] = C[0+ldc*2];
+		CC[1+bs*2] = C[1+ldc*2];
+		CC[2+bs*2] = C[2+ldc*2];
+		CC[3+bs*2] = C[3+ldc*2];
+
+		if(n1==3)
+			goto kernel;
+
+		CC[0+bs*3] = C[0+ldc*3];
+		CC[1+bs*3] = C[1+ldc*3];
+		CC[2+bs*3] = C[2+ldc*3];
+		CC[3+bs*3] = C[3+ldc*3];
+		}
+	else if(m1>=3)
+		{
+		CC[0+bs*0] = C[0+ldc*0];
+		CC[1+bs*0] = C[1+ldc*0];
+		CC[2+bs*0] = C[2+ldc*0];
+
+		if(n1==1)
+			goto kernel;
+
+		CC[0+bs*1] = C[0+ldc*1];
+		CC[1+bs*1] = C[1+ldc*1];
+		CC[2+bs*1] = C[2+ldc*1];
+
+		if(n1==2)
+			goto kernel;
+
+		CC[0+bs*2] = C[0+ldc*2];
+		CC[1+bs*2] = C[1+ldc*2];
+		CC[2+bs*2] = C[2+ldc*2];
+
+		if(n1==3)
+			goto kernel;
+
+		CC[0+bs*3] = C[0+ldc*3];
+		CC[1+bs*3] = C[1+ldc*3];
+		CC[2+bs*3] = C[2+ldc*3];
+		}
+	else if(m1>=2)
+		{
+		CC[0+bs*0] = C[0+ldc*0];
+		CC[1+bs*0] = C[1+ldc*0];
+
+		if(n1==1)
+			goto kernel;
+
+		CC[0+bs*1] = C[0+ldc*1];
+		CC[1+bs*1] = C[1+ldc*1];
+
+		if(n1==2)
+			goto kernel;
+
+		CC[0+bs*2] = C[0+ldc*2];
+		CC[1+bs*2] = C[1+ldc*2];
+
+		if(n1==3)
+			goto kernel;
+
+		CC[0+bs*3] = C[0+ldc*3];
+		CC[1+bs*3] = C[1+ldc*3];
+		}
+	else //if(m1>=1)
+		{
+		CC[0+bs*0] = C[0+ldc*0];
+
+		if(n1==1)
+			goto kernel;
+
+		CC[0+bs*1] = C[0+ldc*1];
+
+		if(n1==2)
+			goto kernel;
+
+		CC[0+bs*2] = C[0+ldc*2];
+
+		if(n1==3)
+			goto kernel;
+
+		CC[0+bs*3] = C[0+ldc*3];
+		}
+
+kernel:
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, CC, CC);
+
+	if(n1==1)
+		goto store;
+	
+	tmp = E[1+bs*0];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+
+	if(n1==2)
+		goto store;
+	
+	tmp = E[2+bs*0];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[2+bs*1];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+
+	if(n1==3)
+		goto store;
+	
+	tmp = E[3+bs*0];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[3+bs*1];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[3+bs*2];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+		D[3+ldd*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+		D[3+ldd*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+		D[3+ldd*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		D[3+ldd*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_rl_one_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+
+	tmp = E[1+lde*0];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+
+	tmp = E[2+lde*0];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+
+	tmp = E[3+lde*0];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+
+
+	D[0+bs*0] = CC[0+bs*0];
+	D[1+bs*0] = CC[1+bs*0];
+	D[2+bs*0] = CC[2+bs*0];
+	D[3+bs*0] = CC[3+bs*0];
+
+	D[0+bs*1] = CC[0+bs*1];
+	D[1+bs*1] = CC[1+bs*1];
+	D[2+bs*1] = CC[2+bs*1];
+	D[3+bs*1] = CC[3+bs*1];
+
+	D[0+bs*2] = CC[0+bs*2];
+	D[1+bs*2] = CC[1+bs*2];
+	D[2+bs*2] = CC[2+bs*2];
+	D[3+bs*2] = CC[3+bs*2];
+
+	D[0+bs*3] = CC[0+bs*3];
+	D[1+bs*3] = CC[1+bs*3];
+	D[2+bs*3] = CC[2+bs*3];
+	D[3+bs*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_rl_one_4x4_vs_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+
+	if(n1==1)
+		goto store;
+	
+	tmp = E[1+lde*0];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+
+	if(n1==2)
+		goto store;
+	
+	tmp = E[2+lde*0];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+
+	if(n1==3)
+		goto store;
+	
+	tmp = E[3+lde*0];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+		D[3+bs*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+		D[3+bs*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+		D[3+bs*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		D[3+bs*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_rl_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	tmp = E[1+lde*0];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+
+	tmp = E[2+lde*0];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+
+	tmp = E[3+lde*0];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+
+	D[0+ldd*0] = CC[0+bs*0];
+	D[1+ldd*0] = CC[1+bs*0];
+	D[2+ldd*0] = CC[2+bs*0];
+	D[3+ldd*0] = CC[3+bs*0];
+
+	D[0+ldd*1] = CC[0+bs*1];
+	D[1+ldd*1] = CC[1+bs*1];
+	D[2+ldd*1] = CC[2+bs*1];
+	D[3+ldd*1] = CC[3+bs*1];
+
+	D[0+ldd*2] = CC[0+bs*2];
+	D[1+ldd*2] = CC[1+bs*2];
+	D[2+ldd*2] = CC[2+bs*2];
+	D[3+ldd*2] = CC[3+bs*2];
+
+	D[0+ldd*3] = CC[0+bs*3];
+	D[1+ldd*3] = CC[1+bs*3];
+	D[2+ldd*3] = CC[2+bs*3];
+	D[3+ldd*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_rl_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	if(n1==1)
+		goto store;
+	
+	tmp = E[1+lde*0];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+
+	if(n1==2)
+		goto store;
+	
+	tmp = E[2+lde*0];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[2+lde*1];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+
+	if(n1==3)
+		goto store;
+	
+	tmp = E[3+lde*0];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[3+lde*1];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[3+lde*2];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+		D[3+ldd*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+		D[3+ldd*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+		D[3+ldd*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		D[3+ldd*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nn_ru_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -3565,3 +5881,2786 @@ void kernel_dtrsm_nn_ru_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb,
 
 	}
 #endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+	if(n1==1)
+		goto store;
+	
+	tmp = E[0+lde*1];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+
+	if(n1==2)
+		goto store;
+	
+	tmp = E[0+lde*2];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[1+lde*2];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+
+	if(n1==3)
+		goto store;
+	
+	tmp = E[0+lde*3];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[1+lde*3];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[2+lde*3];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+		D[3+bs*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+		D[3+bs*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+		D[3+bs*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		D[3+bs*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nn_ru_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+	tmp = E[0+lde*1];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+
+	tmp = E[0+lde*2];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[1+lde*2];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+
+	tmp = E[0+lde*3];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[1+lde*3];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[2+lde*3];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+
+
+	D[0+ldd*0] = CC[0+bs*0];
+	D[1+ldd*0] = CC[1+bs*0];
+	D[2+ldd*0] = CC[2+bs*0];
+	D[3+ldd*0] = CC[3+bs*0];
+
+	D[0+ldd*1] = CC[0+bs*1];
+	D[1+ldd*1] = CC[1+bs*1];
+	D[2+ldd*1] = CC[2+bs*1];
+	D[3+ldd*1] = CC[3+bs*1];
+
+	D[0+ldd*2] = CC[0+bs*2];
+	D[1+ldd*2] = CC[1+bs*2];
+	D[2+ldd*2] = CC[2+bs*2];
+	D[3+ldd*2] = CC[3+bs*2];
+
+	D[0+ldd*3] = CC[0+bs*3];
+	D[1+ldd*3] = CC[1+bs*3];
+	D[2+ldd*3] = CC[2+bs*3];
+	D[3+ldd*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+	if(n1==1)
+		goto store;
+	
+	tmp = E[0+lde*1];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+
+	if(n1==2)
+		goto store;
+	
+	tmp = E[0+lde*2];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[1+lde*2];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+
+	if(n1==3)
+		goto store;
+	
+	tmp = E[0+lde*3];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[1+lde*3];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[2+lde*3];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+		D[3+ldd*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+		D[3+ldd*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+		D[3+ldd*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		D[3+ldd*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nn_ru_one_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+
+	tmp = E[0+lde*1];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+
+	tmp = E[0+lde*2];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[1+lde*2];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+
+	tmp = E[0+lde*3];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[1+lde*3];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[2+lde*3];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+
+	D[0+bs*0] = CC[0+bs*0];
+	D[1+bs*0] = CC[1+bs*0];
+	D[2+bs*0] = CC[2+bs*0];
+	D[3+bs*0] = CC[3+bs*0];
+
+	D[0+bs*1] = CC[0+bs*1];
+	D[1+bs*1] = CC[1+bs*1];
+	D[2+bs*1] = CC[2+bs*1];
+	D[3+bs*1] = CC[3+bs*1];
+
+	D[0+bs*2] = CC[0+bs*2];
+	D[1+bs*2] = CC[1+bs*2];
+	D[2+bs*2] = CC[2+bs*2];
+	D[3+bs*2] = CC[3+bs*2];
+
+	D[0+bs*3] = CC[0+bs*3];
+	D[1+bs*3] = CC[1+bs*3];
+	D[2+bs*3] = CC[2+bs*3];
+	D[3+bs*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nn_ru_one_4x4_vs_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+
+	if(n1==1)
+		goto store;
+	
+	tmp = E[0+lde*1];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+
+	if(n1==2)
+		goto store;
+	
+	tmp = E[0+lde*2];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[1+lde*2];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+
+	if(n1==3)
+		goto store;
+	
+	tmp = E[0+lde*3];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[1+lde*3];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[2+lde*3];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+		D[3+bs*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+		D[3+bs*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+		D[3+bs*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		D[3+bs*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nn_ru_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	tmp = E[0+lde*1];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+
+	tmp = E[0+lde*2];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[1+lde*2];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+
+	tmp = E[0+lde*3];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[1+lde*3];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[2+lde*3];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+
+
+	D[0+ldd*0] = CC[0+bs*0];
+	D[1+ldd*0] = CC[1+bs*0];
+	D[2+ldd*0] = CC[2+bs*0];
+	D[3+ldd*0] = CC[3+bs*0];
+
+	D[0+ldd*1] = CC[0+bs*1];
+	D[1+ldd*1] = CC[1+bs*1];
+	D[2+ldd*1] = CC[2+bs*1];
+	D[3+ldd*1] = CC[3+bs*1];
+
+	D[0+ldd*2] = CC[0+bs*2];
+	D[1+ldd*2] = CC[1+bs*2];
+	D[2+ldd*2] = CC[2+bs*2];
+	D[3+ldd*2] = CC[3+bs*2];
+
+	D[0+ldd*3] = CC[0+bs*3];
+	D[1+ldd*3] = CC[1+bs*3];
+	D[2+ldd*3] = CC[2+bs*3];
+	D[3+ldd*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nn_ru_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	if(n1==1)
+		goto store;
+	
+	tmp = E[0+lde*1];
+	CC[0+bs*1] -= CC[0+bs*0] * tmp;
+	CC[1+bs*1] -= CC[1+bs*0] * tmp;
+	CC[2+bs*1] -= CC[2+bs*0] * tmp;
+	CC[3+bs*1] -= CC[3+bs*0] * tmp;
+
+	if(n1==2)
+		goto store;
+	
+	tmp = E[0+lde*2];
+	CC[0+bs*2] -= CC[0+bs*0] * tmp;
+	CC[1+bs*2] -= CC[1+bs*0] * tmp;
+	CC[2+bs*2] -= CC[2+bs*0] * tmp;
+	CC[3+bs*2] -= CC[3+bs*0] * tmp;
+	tmp = E[1+lde*2];
+	CC[0+bs*2] -= CC[0+bs*1] * tmp;
+	CC[1+bs*2] -= CC[1+bs*1] * tmp;
+	CC[2+bs*2] -= CC[2+bs*1] * tmp;
+	CC[3+bs*2] -= CC[3+bs*1] * tmp;
+
+	if(n1==3)
+		goto store;
+	
+	tmp = E[0+lde*3];
+	CC[0+bs*3] -= CC[0+bs*0] * tmp;
+	CC[1+bs*3] -= CC[1+bs*0] * tmp;
+	CC[2+bs*3] -= CC[2+bs*0] * tmp;
+	CC[3+bs*3] -= CC[3+bs*0] * tmp;
+	tmp = E[1+lde*3];
+	CC[0+bs*3] -= CC[0+bs*1] * tmp;
+	CC[1+bs*3] -= CC[1+bs*1] * tmp;
+	CC[2+bs*3] -= CC[2+bs*1] * tmp;
+	CC[3+bs*3] -= CC[3+bs*1] * tmp;
+	tmp = E[2+lde*3];
+	CC[0+bs*3] -= CC[0+bs*2] * tmp;
+	CC[1+bs*3] -= CC[1+bs*2] * tmp;
+	CC[2+bs*3] -= CC[2+bs*2] * tmp;
+	CC[3+bs*3] -= CC[3+bs*2] * tmp;
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+		D[3+ldd*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+		D[3+ldd*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+		D[3+ldd*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		D[3+ldd*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_ru_inv_4x4_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	CC[0+bs*0] = C[0+ldc*0];
+	CC[1+bs*0] = C[1+ldc*0];
+	CC[2+bs*0] = C[2+ldc*0];
+	CC[3+bs*0] = C[3+ldc*0];
+
+	CC[0+bs*1] = C[0+ldc*1];
+	CC[1+bs*1] = C[1+ldc*1];
+	CC[2+bs*1] = C[2+ldc*1];
+	CC[3+bs*1] = C[3+ldc*1];
+
+	CC[0+bs*2] = C[0+ldc*2];
+	CC[1+bs*2] = C[1+ldc*2];
+	CC[2+bs*2] = C[2+ldc*2];
+	CC[3+bs*2] = C[3+ldc*2];
+
+	CC[0+bs*3] = C[0+ldc*3];
+	CC[1+bs*3] = C[1+ldc*3];
+	CC[2+bs*3] = C[2+ldc*3];
+	CC[3+bs*3] = C[3+ldc*3];
+
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, CC, CC);
+
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+	tmp = E[0+bs*3];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[1+bs*3];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[2+bs*3];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+	tmp = E[0+bs*2];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[1+bs*2];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+	tmp = E[0+bs*1];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+
+	D[0+ldd*0] = CC[0+bs*0];
+	D[1+ldd*0] = CC[1+bs*0];
+	D[2+ldd*0] = CC[2+bs*0];
+	D[3+ldd*0] = CC[3+bs*0];
+
+	D[0+ldd*1] = CC[0+bs*1];
+	D[1+ldd*1] = CC[1+bs*1];
+	D[2+ldd*1] = CC[2+bs*1];
+	D[3+ldd*1] = CC[3+bs*1];
+
+	D[0+ldd*2] = CC[0+bs*2];
+	D[1+ldd*2] = CC[1+bs*2];
+	D[2+ldd*2] = CC[2+bs*2];
+	D[3+ldd*2] = CC[3+bs*2];
+
+	D[0+ldd*3] = CC[0+bs*3];
+	D[1+ldd*3] = CC[1+bs*3];
+	D[2+ldd*3] = CC[2+bs*3];
+	D[3+ldd*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_ru_inv_4x4_vs_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	CC[0+bs*0] = C[0+ldc*0];
+	CC[1+bs*0] = C[1+ldc*0];
+	CC[2+bs*0] = C[2+ldc*0];
+	CC[3+bs*0] = C[3+ldc*0];
+
+	CC[0+bs*1] = C[0+ldc*1];
+	CC[1+bs*1] = C[1+ldc*1];
+	CC[2+bs*1] = C[2+ldc*1];
+	CC[3+bs*1] = C[3+ldc*1];
+
+	CC[0+bs*2] = C[0+ldc*2];
+	CC[1+bs*2] = C[1+ldc*2];
+	CC[2+bs*2] = C[2+ldc*2];
+	CC[3+bs*2] = C[3+ldc*2];
+
+	CC[0+bs*3] = C[0+ldc*3];
+	CC[1+bs*3] = C[1+ldc*3];
+	CC[2+bs*3] = C[2+ldc*3];
+	CC[3+bs*3] = C[3+ldc*3];
+
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, CC, CC);
+
+	if(n1<=3)
+		goto n3;
+
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+	tmp = E[0+bs*3];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[1+bs*3];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[2+bs*3];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+n3:
+	if(n1<=2)
+		goto n2;
+
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+	tmp = E[0+bs*2];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[1+bs*2];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+n2:
+	if(n1<=1)
+		goto n1;
+
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+	tmp = E[0+bs*1];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+n1:
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+		D[3+ldd*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+		D[3+ldd*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+		D[3+ldd*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		D[3+ldd*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_ru_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+	tmp = E[0+lde*3];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[1+lde*3];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[2+lde*3];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+	tmp = E[0+lde*2];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[1+lde*2];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+	tmp = E[0+lde*1];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+
+	D[0+bs*0] = CC[0+bs*0];
+	D[1+bs*0] = CC[1+bs*0];
+	D[2+bs*0] = CC[2+bs*0];
+	D[3+bs*0] = CC[3+bs*0];
+
+	D[0+bs*1] = CC[0+bs*1];
+	D[1+bs*1] = CC[1+bs*1];
+	D[2+bs*1] = CC[2+bs*1];
+	D[3+bs*1] = CC[3+bs*1];
+
+	D[0+bs*2] = CC[0+bs*2];
+	D[1+bs*2] = CC[1+bs*2];
+	D[2+bs*2] = CC[2+bs*2];
+	D[3+bs*2] = CC[3+bs*2];
+
+	D[0+bs*3] = CC[0+bs*3];
+	D[1+bs*3] = CC[1+bs*3];
+	D[2+bs*3] = CC[2+bs*3];
+	D[3+bs*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+
+	if(n1<=3)
+		goto n3;
+
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+	tmp = E[0+lde*3];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[1+lde*3];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[2+lde*3];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+n3:
+	if(n1<=2)
+		goto n2;
+
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+	tmp = E[0+lde*2];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[1+lde*2];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+n2:
+	if(n1<=1)
+		goto n1;
+
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+	tmp = E[0+lde*1];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+n1:
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+		D[3+bs*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+		D[3+bs*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+		D[3+bs*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		D[3+bs*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_ru_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+	tmp = E[0+lde*3];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[1+lde*3];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[2+lde*3];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+	tmp = E[0+lde*2];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[1+lde*2];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+	tmp = E[0+lde*1];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+
+	D[0+ldd*0] = CC[0+bs*0];
+	D[1+ldd*0] = CC[1+bs*0];
+	D[2+ldd*0] = CC[2+bs*0];
+	D[3+ldd*0] = CC[3+bs*0];
+
+	D[0+ldd*1] = CC[0+bs*1];
+	D[1+ldd*1] = CC[1+bs*1];
+	D[2+ldd*1] = CC[2+bs*1];
+	D[3+ldd*1] = CC[3+bs*1];
+
+	D[0+ldd*2] = CC[0+bs*2];
+	D[1+ldd*2] = CC[1+bs*2];
+	D[2+ldd*2] = CC[2+bs*2];
+	D[3+ldd*2] = CC[3+bs*2];
+
+	D[0+ldd*3] = CC[0+bs*3];
+	D[1+ldd*3] = CC[1+bs*3];
+	D[2+ldd*3] = CC[2+bs*3];
+	D[3+ldd*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	if(n1<=3)
+		goto n3;
+
+	tmp = inv_diag_E[3];
+	CC[0+bs*3] *= tmp;
+	CC[1+bs*3] *= tmp;
+	CC[2+bs*3] *= tmp;
+	CC[3+bs*3] *= tmp;
+	tmp = E[0+lde*3];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[1+lde*3];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[2+lde*3];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+n3:
+	if(n1<=2)
+		goto n2;
+
+	tmp = inv_diag_E[2];
+	CC[0+bs*2] *= tmp;
+	CC[1+bs*2] *= tmp;
+	CC[2+bs*2] *= tmp;
+	CC[3+bs*2] *= tmp;
+	tmp = E[0+lde*2];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[1+lde*2];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+n2:
+	if(n1<=1)
+		goto n1;
+
+	tmp = inv_diag_E[1];
+	CC[0+bs*1] *= tmp;
+	CC[1+bs*1] *= tmp;
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+	tmp = E[0+lde*1];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+n1:
+
+	tmp = inv_diag_E[0];
+	CC[0+bs*0] *= tmp;
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+		D[3+ldd*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+		D[3+ldd*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+		D[3+ldd*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		D[3+ldd*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_ru_one_4x4_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	CC[0+bs*0] = C[0+ldc*0];
+	CC[1+bs*0] = C[1+ldc*0];
+	CC[2+bs*0] = C[2+ldc*0];
+	CC[3+bs*0] = C[3+ldc*0];
+
+	CC[0+bs*1] = C[0+ldc*1];
+	CC[1+bs*1] = C[1+ldc*1];
+	CC[2+bs*1] = C[2+ldc*1];
+	CC[3+bs*1] = C[3+ldc*1];
+
+	CC[0+bs*2] = C[0+ldc*2];
+	CC[1+bs*2] = C[1+ldc*2];
+	CC[2+bs*2] = C[2+ldc*2];
+	CC[3+bs*2] = C[3+ldc*2];
+
+	CC[0+bs*3] = C[0+ldc*3];
+	CC[1+bs*3] = C[1+ldc*3];
+	CC[2+bs*3] = C[2+ldc*3];
+	CC[3+bs*3] = C[3+ldc*3];
+
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, CC, CC);
+
+	tmp = E[0+bs*3];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[1+bs*3];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[2+bs*3];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+	tmp = E[0+bs*2];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[1+bs*2];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+	tmp = E[0+bs*1];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+
+	D[0+ldd*0] = CC[0+bs*0];
+	D[1+ldd*0] = CC[1+bs*0];
+	D[2+ldd*0] = CC[2+bs*0];
+	D[3+ldd*0] = CC[3+bs*0];
+
+	D[0+ldd*1] = CC[0+bs*1];
+	D[1+ldd*1] = CC[1+bs*1];
+	D[2+ldd*1] = CC[2+bs*1];
+	D[3+ldd*1] = CC[3+bs*1];
+
+	D[0+ldd*2] = CC[0+bs*2];
+	D[1+ldd*2] = CC[1+bs*2];
+	D[2+ldd*2] = CC[2+bs*2];
+	D[3+ldd*2] = CC[3+bs*2];
+
+	D[0+ldd*3] = CC[0+bs*3];
+	D[1+ldd*3] = CC[1+bs*3];
+	D[2+ldd*3] = CC[2+bs*3];
+	D[3+ldd*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_ru_one_4x4_vs_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	CC[0+bs*0] = C[0+ldc*0];
+	CC[1+bs*0] = C[1+ldc*0];
+	CC[2+bs*0] = C[2+ldc*0];
+	CC[3+bs*0] = C[3+ldc*0];
+
+	CC[0+bs*1] = C[0+ldc*1];
+	CC[1+bs*1] = C[1+ldc*1];
+	CC[2+bs*1] = C[2+ldc*1];
+	CC[3+bs*1] = C[3+ldc*1];
+
+	CC[0+bs*2] = C[0+ldc*2];
+	CC[1+bs*2] = C[1+ldc*2];
+	CC[2+bs*2] = C[2+ldc*2];
+	CC[3+bs*2] = C[3+ldc*2];
+
+	CC[0+bs*3] = C[0+ldc*3];
+	CC[1+bs*3] = C[1+ldc*3];
+	CC[2+bs*3] = C[2+ldc*3];
+	CC[3+bs*3] = C[3+ldc*3];
+
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, CC, CC);
+
+	if(n1<=3)
+		goto n3;
+
+	tmp = E[0+bs*3];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[1+bs*3];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[2+bs*3];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+n3:
+	if(n1<=2)
+		goto n2;
+
+	tmp = E[0+bs*2];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[1+bs*2];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+n2:
+	if(n1<=1)
+		goto n1;
+
+	tmp = E[0+bs*1];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+n1:
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+		D[3+ldd*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+		D[3+ldd*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+		D[3+ldd*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		D[3+ldd*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_ru_one_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+
+	tmp = E[0+lde*3];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[1+lde*3];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[2+lde*3];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+	tmp = E[0+lde*2];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[1+lde*2];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+	tmp = E[0+lde*1];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+
+	D[0+bs*0] = CC[0+bs*0];
+	D[1+bs*0] = CC[1+bs*0];
+	D[2+bs*0] = CC[2+bs*0];
+	D[3+bs*0] = CC[3+bs*0];
+
+	D[0+bs*1] = CC[0+bs*1];
+	D[1+bs*1] = CC[1+bs*1];
+	D[2+bs*1] = CC[2+bs*1];
+	D[3+bs*1] = CC[3+bs*1];
+
+	D[0+bs*2] = CC[0+bs*2];
+	D[1+bs*2] = CC[1+bs*2];
+	D[2+bs*2] = CC[2+bs*2];
+	D[3+bs*2] = CC[3+bs*2];
+
+	D[0+bs*3] = CC[0+bs*3];
+	D[1+bs*3] = CC[1+bs*3];
+	D[2+bs*3] = CC[2+bs*3];
+	D[3+bs*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_ru_one_4x4_vs_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+
+	if(n1<=3)
+		goto n3;
+
+	tmp = E[0+lde*3];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[1+lde*3];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[2+lde*3];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+n3:
+	if(n1<=2)
+		goto n2;
+
+	tmp = E[0+lde*2];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[1+lde*2];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+n2:
+	if(n1<=1)
+		goto n1;
+
+	tmp = E[0+lde*1];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+n1:
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+		D[3+bs*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+		D[3+bs*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+		D[3+bs*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		D[3+bs*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_ru_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	tmp = E[0+lde*3];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[1+lde*3];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[2+lde*3];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+	tmp = E[0+lde*2];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[1+lde*2];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+	tmp = E[0+lde*1];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+
+	D[0+ldd*0] = CC[0+bs*0];
+	D[1+ldd*0] = CC[1+bs*0];
+	D[2+ldd*0] = CC[2+bs*0];
+	D[3+ldd*0] = CC[3+bs*0];
+
+	D[0+ldd*1] = CC[0+bs*1];
+	D[1+ldd*1] = CC[1+bs*1];
+	D[2+ldd*1] = CC[2+bs*1];
+	D[3+ldd*1] = CC[3+bs*1];
+
+	D[0+ldd*2] = CC[0+bs*2];
+	D[1+ldd*2] = CC[1+bs*2];
+	D[2+ldd*2] = CC[2+bs*2];
+	D[3+ldd*2] = CC[3+bs*2];
+
+	D[0+ldd*3] = CC[0+bs*3];
+	D[1+ldd*3] = CC[1+bs*3];
+	D[2+ldd*3] = CC[2+bs*3];
+	D[3+ldd*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrsm_nt_ru_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = -1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	if(n1<=3)
+		goto n3;
+
+	tmp = E[0+lde*3];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+	tmp = E[1+lde*3];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[2+lde*3];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+
+n3:
+	if(n1<=2)
+		goto n2;
+
+	tmp = E[0+lde*2];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+	tmp = E[1+lde*2];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+
+n2:
+	if(n1<=1)
+		goto n1;
+
+	tmp = E[0+lde*1];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+n1:
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+		D[3+ldd*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+		D[3+ldd*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+		D[3+ldd*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		D[3+ldd*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+

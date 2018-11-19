@@ -1606,6 +1606,66 @@ inner_scale_a0_4x2_lib4:
 
 // common inner routine with file scope
 //
+// blend for generic alpha=1 and beta
+//
+// input arguments:
+// eax   <- beta
+// ebx   <- C
+// xmm0 <- [d00 d10]
+// xmm1 <- [d01 d11]
+// xmm2 <- [d20 d30]
+// xmm3 <- [d21 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_M1B_4X2_LIB4
+#else
+	.align 16
+	.type inner_scale_m1b_4x2_lib4, @function
+inner_scale_m1b_4x2_lib4:
+#endif
+
+	// beta
+	movddup	0(%eax), %xmm6
+
+	xorpd		%xmm7, %xmm7 // 0.0
+	ucomisd		%xmm7, %xmm6 // beta==0.0 ?
+	je			0f // end
+
+	movapd		0(%ebx), %xmm7
+	mulpd		%xmm6, %xmm7
+	subpd		%xmm0, %xmm7
+	movapd		%xmm7, %xmm0
+	movapd		16(%ebx), %xmm7
+	mulpd		%xmm6, %xmm7
+	subpd		%xmm1, %xmm7
+	movapd		%xmm7, %xmm1
+	movapd		32(%ebx), %xmm7
+	mulpd		%xmm6, %xmm7
+	subpd		%xmm2, %xmm7
+	movapd		%xmm7, %xmm2
+	movapd		48(%ebx), %xmm7
+	mulpd		%xmm6, %xmm7
+	subpd		%xmm3, %xmm7
+	movapd		%xmm7, %xmm3
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	.size	inner_scale_m1b_4x2_lib4, .-inner_scale_m1b_4x2_lib4
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // blend for generic alpha=1 and beta=1
 //
 // input arguments:
@@ -1618,28 +1678,32 @@ inner_scale_a0_4x2_lib4:
 // output arguments:
 
 #if MACRO_LEVEL>=1
-	.macro INNER_SCALE_11_4X2_LIB4
+	.macro INNER_SCALE_M11_4X2_LIB4
 #else
 	.align 16
-	.type inner_scale_11_4x2_lib4, @function
-inner_scale_11_4x2_lib4:
+	.type inner_scale_m11_4x2_lib4, @function
+inner_scale_m11_4x2_lib4:
 #endif
 
 	movapd		0(%eax), %xmm7
-	addpd		%xmm7, %xmm0
+	subpd		%xmm0, %xmm7
+	movapd		%xmm7, %xmm0
 	movapd		16(%eax), %xmm7
-	addpd		%xmm7, %xmm2
+	subpd		%xmm1, %xmm7
+	movapd		%xmm7, %xmm1
 	movapd		32(%eax), %xmm7
-	addpd		%xmm7, %xmm1
+	subpd		%xmm2, %xmm7
+	movapd		%xmm7, %xmm2
 	movapd		48(%eax), %xmm7
-	addpd		%xmm7, %xmm3
+	subpd		%xmm3, %xmm7
+	movapd		%xmm7, %xmm3
 
 #if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
 
-	.size	inner_scale_11_4x2_lib4, .-inner_scale_11_4x2_lib4
+	.size	inner_scale_m11_4x2_lib4, .-inner_scale_m11_4x2_lib4
 #endif
 
 
@@ -2295,8 +2359,8 @@ kernel_dsyrk_nt_l_4x2_vs_lib4:
 
 
 
-//                                      1      2          3          4          5          6          7
-// void kernel_dtrsm_nt_rl_inv_4x2_lib4(int k, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E);
+//                                      1      2          3          4             5          6          7          8
+// void kernel_dtrsm_nt_rl_inv_4x2_lib4(int k, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E);
 
 	.align 16
 	.globl kernel_dtrsm_nt_rl_inv_4x2_lib4
@@ -2315,32 +2379,33 @@ kernel_dtrsm_nt_rl_inv_4x2_lib4:
 
 	// call inner dgemm kernel nt 
 
-	movl	ARG1, %eax
-	movl	ARG2, %ebx
-	movl	ARG3, %ecx
+	movl	ARG1, %eax // kmax
+	movl	ARG2, %ebx // A
+	movl	ARG3, %ecx // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_sub_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
 	// call inner blender_loader nn
 
-	movl	ARG4, %eax
+	movl	ARG4, %eax // beta
+	movl	ARG5, %ebx // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_4X2_LIB4
+	INNER_SCALE_M1B_4X2_LIB4
 #else
-	call inner_scale_11_4x2_lib4
+	call inner_scale_m1b_4x2_lib4
 #endif
 
 
 	// solve
 
-	movl	ARG6, %eax  // E 
-	movl	ARG7, %ebx  // inv_diag_E 
+	movl	ARG7, %eax  // E 
+	movl	ARG8, %ebx  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSM_RLT_INV_4X2_LIB4
@@ -2351,7 +2416,7 @@ kernel_dtrsm_nt_rl_inv_4x2_lib4:
 
 	// store
 
-	movl	ARG5, %eax // D
+	movl	ARG6, %eax // D
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X2_LIB4
@@ -2370,8 +2435,8 @@ kernel_dtrsm_nt_rl_inv_4x2_lib4:
 
 
 
-//                                         1      2          3          4          5          6          7                   8       9
-// void kernel_dtrsm_nt_rl_inv_4x2_vs_lib4(int k, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E, int m1, int n1);
+//                                         1      2          3          4             5          6          7          8                   9       10 
+// void kernel_dtrsm_nt_rl_inv_4x2_vs_lib4(int k, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E, int m1, int n1);
 
 	.align 16
 	.globl kernel_dtrsm_nt_rl_inv_4x2_vs_lib4
@@ -2390,33 +2455,34 @@ kernel_dtrsm_nt_rl_inv_4x2_vs_lib4:
 
 	// call inner dgemm kernel nt 
 
-	movl	ARG1, %eax
-	movl	ARG2, %ebx
-	movl	ARG3, %ecx
+	movl	ARG1, %eax // kmax
+	movl	ARG2, %ebx // A
+	movl	ARG3, %ecx // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_sub_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
 	// call inner blender_loader nn
 
-	movl	ARG4, %eax
+	movl	ARG4, %eax // beta
+	movl	ARG5, %ebx // beta
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_4X2_LIB4
+	INNER_SCALE_M1B_4X2_LIB4
 #else
-	call inner_scale_11_4x2_lib4
+	call inner_scale_m1b_4x2_lib4
 #endif
 
 
 	// solve
 
-	movl	ARG6, %eax  // E 
-	movl	ARG7, %ebx  // inv_diag_E 
-	movl	ARG9, %ecx // n1
+	movl	ARG7, %eax  // E 
+	movl	ARG8, %ebx  // inv_diag_E 
+	movl	ARG10, %ecx // n1
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSM_RLT_INV_4X2_VS_LIB4
@@ -2427,9 +2493,9 @@ kernel_dtrsm_nt_rl_inv_4x2_vs_lib4:
 
 	// store
 
-	movl	ARG5, %eax // D
-	movl	ARG8, %ebx // m1
-	movl	ARG9, %ecx // n1
+	movl	ARG6, %eax // D
+	movl	ARG9, %ebx // m1
+	movl	ARG10, %ecx // n1
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X2_VS_LIB4
@@ -2473,9 +2539,9 @@ kernel_dpotrf_nt_l_4x2_lib4:
 	movl	ARG3, %ecx
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_sub_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
@@ -2484,9 +2550,9 @@ kernel_dpotrf_nt_l_4x2_lib4:
 	movl	ARG4, %eax // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_4X2_LIB4
+	INNER_SCALE_M11_4X2_LIB4
 #else
-	call inner_scale_11_4x2_lib4
+	call inner_scale_m11_4x2_lib4
 #endif
 
 
@@ -2548,9 +2614,9 @@ kernel_dpotrf_nt_l_4x2_vs_lib4:
 	movl	ARG3, %ecx
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_sub_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
@@ -2559,9 +2625,9 @@ kernel_dpotrf_nt_l_4x2_vs_lib4:
 	movl	ARG4, %eax // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_4X2_LIB4
+	INNER_SCALE_M11_4X2_LIB4
 #else
-	call inner_scale_11_4x2_lib4
+	call inner_scale_m11_4x2_lib4
 #endif
 
 
@@ -2631,6 +2697,14 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x2_lib4:
 #endif
 
 
+	// change sign
+	movapd		.LC11, %xmm7
+	xorpd		%xmm7, %xmm0
+	xorpd		%xmm7, %xmm1
+	xorpd		%xmm7, %xmm2
+	xorpd		%xmm7, %xmm3
+
+
 	// call inner dgemm kernel nt sub
 
 	movl	ARG4, %eax // km
@@ -2638,9 +2712,9 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x2_lib4:
 	movl	ARG6, %ecx   // Bm
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_sub_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
@@ -2649,9 +2723,9 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x2_lib4:
 	movl	ARG7, %eax   // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_4X2_LIB4
+	INNER_SCALE_M11_4X2_LIB4
 #else
-	call inner_scale_11_4x2_lib4
+	call inner_scale_m11_4x2_lib4
 #endif
 
 
@@ -2721,6 +2795,14 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x2_vs_lib4:
 #endif
 
 
+	// change sign
+	movapd		.LC11, %xmm7
+	xorpd		%xmm7, %xmm0
+	xorpd		%xmm7, %xmm1
+	xorpd		%xmm7, %xmm2
+	xorpd		%xmm7, %xmm3
+
+
 	// call inner dgemm kernel nt sub
 
 	movl	ARG4, %eax // km
@@ -2728,9 +2810,9 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x2_vs_lib4:
 	movl	ARG6, %ecx   // Bm
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_sub_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
@@ -2739,9 +2821,9 @@ kernel_dgemm_dtrsm_nt_rl_inv_4x2_vs_lib4:
 	movl	ARG7, %eax  // C 
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_4X2_LIB4
+	INNER_SCALE_M11_4X2_LIB4
 #else
-	call inner_scale_11_4x2_lib4
+	call inner_scale_m11_4x2_lib4
 #endif
 
 
@@ -2814,6 +2896,14 @@ kernel_dsyrk_dpotrf_nt_l_4x2_lib4:
 #endif
 
 
+	// change sign
+	movapd		.LC11, %xmm7
+	xorpd		%xmm7, %xmm0
+	xorpd		%xmm7, %xmm1
+	xorpd		%xmm7, %xmm2
+	xorpd		%xmm7, %xmm3
+
+
 	// call inner dgemm kernel nt sub
 
 	movl	ARG4, %eax // km
@@ -2821,9 +2911,9 @@ kernel_dsyrk_dpotrf_nt_l_4x2_lib4:
 	movl	ARG6, %ecx   // Bm
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_sub_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
@@ -2832,9 +2922,9 @@ kernel_dsyrk_dpotrf_nt_l_4x2_lib4:
 	movl	ARG7, %eax   // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_4X2_LIB4
+	INNER_SCALE_M11_4X2_LIB4
 #else
-	call inner_scale_11_4x2_lib4
+	call inner_scale_m11_4x2_lib4
 #endif
 
 
@@ -2904,6 +2994,14 @@ kernel_dsyrk_dpotrf_nt_l_4x2_vs_lib4:
 #endif
 
 
+	// change sign
+	movapd		.LC11, %xmm7
+	xorpd		%xmm7, %xmm0
+	xorpd		%xmm7, %xmm1
+	xorpd		%xmm7, %xmm2
+	xorpd		%xmm7, %xmm3
+
+
 	// call inner dgemm kernel nt sub
 
 	movl	ARG4, %eax // km
@@ -2911,9 +3009,9 @@ kernel_dsyrk_dpotrf_nt_l_4x2_vs_lib4:
 	movl	ARG6, %ecx   // Bm
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_4X2_LIB4
+	INNER_KERNEL_GEMM_NT_4X2_LIB4
 #else
-	call inner_kernel_gemm_sub_nt_4x2_lib4
+	call inner_kernel_gemm_nt_4x2_lib4
 #endif
 
 
@@ -2922,9 +3020,9 @@ kernel_dsyrk_dpotrf_nt_l_4x2_vs_lib4:
 	movl	ARG7, %eax   // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_4X2_LIB4
+	INNER_SCALE_M11_4X2_LIB4
 #else
-	call inner_scale_11_4x2_lib4
+	call inner_scale_m11_4x2_lib4
 #endif
 
 
@@ -3140,6 +3238,24 @@ kernel_dtrmm_nn_rl_4x2_vs_lib4:
 	.long	1072693248
 	.long	0
 	.long	1072693248
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	.align 32
+.LC11:
+#elif defined(OS_MAC)
+	.align 5
+LC11:
+#endif
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
 
 
 
