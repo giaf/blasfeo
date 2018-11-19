@@ -773,6 +773,7 @@ NAME:
 	// unroll 0
 	ld1		{v20.2d, v21.2d}, [x9], #32
 	ld1		{v28.2d, v29.2d}, [x11], #32
+	ld1		{v22.2d, v23.2d}, [x12], #32
 	fmla	v0.2d, v20.2d, v28.2d[0]
 	fmla	v1.2d, v21.2d, v28.2d[0]
 	fmla	v2.2d, v20.2d, v28.2d[1]
@@ -781,7 +782,6 @@ NAME:
 	fmla	v5.2d, v21.2d, v29.2d[0]
 	fmla	v6.2d, v20.2d, v29.2d[1]
 	fmla	v7.2d, v21.2d, v29.2d[1]
-	ld1		{v22.2d, v23.2d}, [x12], #32
 	fmla	v8.2d, v22.2d, v28.2d[0]
 	fmla	v9.2d, v23.2d, v28.2d[0]
 	fmla	v10.2d, v22.2d, v28.2d[1]
