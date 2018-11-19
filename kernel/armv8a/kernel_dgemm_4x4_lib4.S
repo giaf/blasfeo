@@ -773,6 +773,10 @@ NAME:
 	cmp		w8, #0
 	ble		2f // return
 
+	// prefetch
+	prfm	PLDL1KEEP, [x9, #0]
+	prfm	PLDL1KEEP, [x10, #0]
+
 	// preload
 	ldr		d16, [x9, #(0*8+0*32)] // A
 	ldr		x16, [x9, #(1*8+0*32)] // A
@@ -797,7 +801,7 @@ NAME:
 
 	// prefetch
 	prfm	PLDL1KEEP, [x9, #64]
-//	prfm	PLDL1KEEP, [x10, #64]
+	prfm	PLDL1KEEP, [x10, #64]
 
 	cmp		w8, #4
 	ble		0f // consider clean up loop
@@ -835,7 +839,7 @@ NAME:
 	ldr		d23, [x9, #(2*8+3*32)] // A
 	ins		v28.d[1], x24
 	fmla	v5.2d, v17.2d, v25.2d[0]
-//	prfm	PLDL1KEEP, [x10, #128]
+	prfm	PLDL1KEEP, [x10]
 	fmla	v7.2d, v17.2d, v25.2d[1]
 	ldr		x25, [x10, #(2*8+3*32)] // B
 
@@ -848,7 +852,7 @@ NAME:
 	fmla	v1.2d, v19.2d, v26.2d[0]
 	ldr		x26, [x10, #(3*8+1*32)] // B
 	fmla	v3.2d, v19.2d, v26.2d[1]
-	sub		w8, w8, #4
+	prfm	PLDL1KEEP, [x28, #64]
 	ldr		d16, [x9, #(0*8+4*32)] // A
 	ins		v29.d[1], x25
 	fmla	v4.2d, v18.2d, v27.2d[0]
@@ -878,7 +882,7 @@ NAME:
 	fmla	v6.2d, v20.2d, v29.2d[1]
 	ldr		x23, [x28, #(0*8+3*32)] // B
 	fmla	v5.2d, v21.2d, v29.2d[0]
-//	prfm	PLDL1KEEP, [x10, #192]
+	sub		w8, w8, #4
 	fmla	v7.2d, v21.2d, v29.2d[1]
 	add		x10, x10, x11
 
