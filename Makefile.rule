@@ -94,8 +94,8 @@ BLAS_API = 0
 # BLAS_API = 1
 
 # Compile CBLAS API routines (experimental)
-# CBLAS_API = 0
-CBLAS_API = 1
+CBLAS_API = 0
+# CBLAS_API = 1
 
 # Export standard FORTRAN API for BLAS API routines (experimental)
 FORTRAN_BLAS_API = 0
