@@ -1524,17 +1524,16 @@ NAME:
 	ld1		{v24.2d, v25.2d}, [x14], #32
 	fmla	v16.2d, v24.2d, v28.2d[0]
 	fmla	v17.2d, v25.2d, v28.2d[0]
+	add		x11, x11, #8
 	fmla	v18.2d, v24.2d, v29.2d[0]
 	fmla	v19.2d, v25.2d, v29.2d[0]
+	sub		w8, w8, #1
 	fmla	v20.2d, v24.2d, v30.2d[0]
 	fmla	v21.2d, v25.2d, v30.2d[0]
+	cmp		w8, #0
 	fmla	v22.2d, v24.2d, v31.2d[0]
 	fmla	v23.2d, v25.2d, v31.2d[0]
 
-	add		x11, x11, #8
-
-	sub		w8, w8, #1
-	cmp		w8, #0
 	bgt		3b
 
 2: // return
