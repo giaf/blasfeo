@@ -209,6 +209,7 @@ NAME:
 	add		x12, x12, #128
 	fmla	v12.2d, v20.2d, v29.2d[0]
 	fmla	v13.2d, v21.2d, v29.2d[0]
+	cmp		w8, #4
 	fmla	v6.2d, v16.2d, v29.2d[1]
 	fmla	v7.2d, v17.2d, v29.2d[1]
 	ldp		q16, q17, [x9, #(0*8+0*32)]
@@ -238,7 +239,6 @@ NAME:
 	fmla	v15.2d, v23.2d, v31.2d[1]
 	ldp		q30, q31, [x11, #(0*8+3*32)]
 
-	cmp		w8, #4
 	bgt		1b
 
 0:
