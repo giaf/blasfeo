@@ -112,8 +112,6 @@ NAME:
 
 
 
-// TODO more aggressive preload of A !!!
-
 	// early return
 	cmp		w8, #0
 	ble		2f // return
@@ -853,7 +851,7 @@ NAME:
 
 
 	// prefetch
-	add		x14, x12, #32
+	add		x14, x12, #64
 
 //	prfm	PLDL1KEEP, [x11, x12]
 //	prfm	PLDL1KEEP, [x11, x14]
@@ -1099,7 +1097,7 @@ NAME:
 
 
 
-#else // cortex a53 TODO !!!!!
+#else // cortex a53
 
 
 
@@ -1835,7 +1833,7 @@ NAME:
 	FUN_START(inner_kernel_syrk_l_add_nt_8x4_lib4)
 #endif
 
-// TODO more aggressive preload of A !!!
+// TODO update with newly optimized kernels !!!
 
 	// early return
 	cmp		w8, #0
