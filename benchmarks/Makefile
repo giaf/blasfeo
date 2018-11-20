@@ -34,16 +34,16 @@ LIBS = $(BINARY_DIR)/libblasfeo.a
 
 include ../Makefile.blas
 
-ifeq ($(REF_BLAS), 0)
-get_refblas:
-	$(info )
-	$(info ERROR REF_BLAS is not set or invalid)
-	$(info )
-	$(error .)
-else
+#ifeq ($(REF_BLAS), 0)
+#get_refblas:
+#	$(info )
+#	$(info ERROR REF_BLAS is not set or invalid)
+#	$(info )
+#	$(error .)
+#else
 get_refblas:
 	@echo Using REF_BLAS=$(REF_BLAS)
-endif
+#endif
 
 ifdef GHZ_MAX
 CFLAGS += -DGHZ_MAX=$(GHZ_MAX)
@@ -63,9 +63,9 @@ endif
 endif
 
 # all benchmarks
-#ONE_OBJS = benchmark_d_blasfeo_api.o
+ONE_OBJS = benchmark_d_blasfeo_api.o
 #ONE_OBJS = benchmark_s_blasfeo_api.o
-ONE_OBJS = benchmark_d_blas_api.o
+#ONE_OBJS = benchmark_d_blas_api.o
 
 %.o: %.c
 	# build obj
