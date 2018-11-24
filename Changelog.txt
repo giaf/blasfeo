@@ -4,7 +4,7 @@ BLASFEO ChangeLog
 
 ====================================================================
 Version 0.1.1-master
-19-Nov-2018
+24-Nov-2018
 
 common:
 	* example_d_riccati_recursion: add trf for blas_api
@@ -26,11 +26,16 @@ BLAS_API:
 CBLAS_API
 	* dgemm
 
-X64:
-	* AMD_BULLDOZER: fix performance bug (mix of legacy and VEX code)
+x64:
+	* AMD_BULLDOZER:
+		- fix performance bug (mix of legacy and VEX code)
 
 ARMv8A:
-	* Cortex A53: add basic kernel_dgemm_nn_8x4_lib4
+	* Cortex A57:
+		- improve kernels dgemm_nn & dgemm_nt lib4
+		- add kernels dgemm_nn & dgemm_nt lib4c
+	* Cortex A53:
+		- add optimized kernels dgenn_nn lib4
 
 
 
