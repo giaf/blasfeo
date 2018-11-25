@@ -1561,12 +1561,9 @@ NAME:
 	sall			$3, %eax // offsetB*sizeof(double)
 	addq			%rax, %r13 // B+offsetB*sizeof(double)
 
-	movq			%r11, %rax // A1 <- A0
-	addq			%r12, %rax // A1 <- A0 + 4*sda*sizeof(double)
-
 1:
 	vmovapd			0(%r11), %ymm12 // A0[0]
-	vmovapd			0(%rax), %ymm14 // A1[0]
+	vmovapd			0(%r11, %r12), %ymm14 // A1[0]
 	vbroadcastsd	0(%r13), %ymm13 // B[0]
 	vfmadd231pd		%ymm12, %ymm13, %ymm0
 	vfmadd231pd		%ymm14, %ymm13, %ymm4
@@ -1583,7 +1580,6 @@ NAME:
 	subl			$1, %r10d // k-1
 	subl			$1, %ebx // kend-1
 	addq			$32, %r11 // A0+1*bs*sizeof(float)
-	addq			$32, %rax // A1+1*bs*sizeof(float)
 	addq			$8, %r13 // B+1*sizeof(float)
 
 	cmpl			$0, %ebx
@@ -6725,9 +6721,6 @@ NAME:
 	FUN_START(inner_store_l_8x4_lib4)
 #endif
 	
-	movq	%r10, %r15 // D1 <- D0
-	addq	%r11, %r15 // D1 <- D0 + 4*sdd*sizeof(double)
-
 	vmovapd		%ymm0,0(%r10)
 	vmovapd		32(%r10), %ymm14
 	vblendpd	$0x1, %ymm14, %ymm1, %ymm1	
@@ -6739,10 +6732,10 @@ NAME:
 	vblendpd	$0x7, %ymm14, %ymm3, %ymm3	
 	vmovapd		%ymm3, 96(%r10)
 
-	vmovapd		%ymm4, 0(%r15)
-	vmovapd		%ymm5, 32(%r15)
-	vmovapd		%ymm6, 64(%r15)
-	vmovapd		%ymm7, 96(%r15)
+	vmovapd		%ymm4, 0(%r10, %r11)
+	vmovapd		%ymm5, 32(%r10, %r11)
+	vmovapd		%ymm6, 64(%r10, %r11)
+	vmovapd		%ymm7, 96(%r10, %r11)
 
 0:
 
@@ -6752,6 +6745,62 @@ NAME:
 	ret
 
 	FUN_END(inner_store_l_8x4_lib4)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// store n upper triangular
+//
+// input arguments:
+// r10   <- D
+// r11  <- 4*sdd*sizeof(double)
+// ymm0  <- [d00 d11 d22 d33]
+// ymm1  <- [d01 d10 d23 d32]
+// ymm2  <- [d03 d12 d21 d30]
+// ymm3  <- [d02 d13 d20 d31]
+// ymm4 <- [d40 d50 d60 d70]
+// ymm5 <- [d41 d50 d61 d71]
+// ymm6 <- [d42 d52 d62 d72]
+// ymm7 <- [d43 d53 d63 d73]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_U_8X4_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_store_u_8x4_lib4)
+#endif
+	
+	//
+	vmovapd		0(%r10, %r11), %ymm14
+	vblendpd	$0x1, %ymm4, %ymm14, %ymm4
+	vmovapd		%ymm0, 0(%r10)
+	vmovapd		%ymm4, 0(%r10, %r11)
+	//
+	vmovapd		32(%r10, %r11), %ymm14
+	vblendpd	$0x3, %ymm5, %ymm14, %ymm5
+	vmovapd		%ymm1, 32(%r10)
+	vmovapd		%ymm5, 32(%r10, %r11)
+	//
+	vmovapd		64(%r10, %r11), %ymm14
+	vblendpd	$0x7, %ymm6, %ymm14, %ymm6
+	vmovapd		%ymm2, 64(%r10)
+	vmovapd		%ymm6, 64(%r10, %r11)
+	//
+	vmovapd		%ymm3, 96(%r10)
+	vmovapd		%ymm7, 96(%r10, %r11)
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_store_u_8x4_lib4)
 #endif
 
 
@@ -7011,6 +7060,78 @@ NAME:
 	ret
 
 	FUN_END(inner_store_l_8x4_vs_lib4)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// store upper n vs
+//
+// input arguments:
+// r10  <- D
+// r11  <- 4*sdd*sizeof(double)
+// r12d  <- km
+// r13d  <- kn
+// r15  <- dirty
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+// ymm4 <- [d40 d50 d60 d70]
+// ymm5 <- [d41 d50 d61 d71]
+// ymm6 <- [d42 d52 d62 d72]
+// ymm7 <- [d43 d53 d63 d73]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_U_8X4_VS_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_store_u_8x4_vs_lib4)
+#endif
+	
+	vcvtsi2sd	%r12d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC03(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC03(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
+
+	vmovapd		0(%r10, %r11), %ymm14
+	vblendpd	$0x1, %ymm4, %ymm14, %ymm4
+	vmovapd		%ymm0, 0(%r10)
+	vmaskmovpd	%ymm4, %ymm15,  0(%r10, %r11, 1)
+	cmpl		$2, %r13d
+	jl			0f // end
+	vmovapd		32(%r10, %r11), %ymm14
+	vblendpd	$0x3, %ymm5, %ymm14, %ymm5
+	vmovapd		%ymm1, 32(%r10)
+	vmaskmovpd	%ymm5, %ymm15, 32(%r10, %r11, 1)
+	cmpl		$3, %r13d
+	jl			0f // end
+	vmovapd		64(%r10, %r11), %ymm14
+	vblendpd	$0x7, %ymm6, %ymm14, %ymm6
+	vmovapd		%ymm2, 64(%r10)
+	vmaskmovpd	%ymm6, %ymm15, 64(%r10, %r11, 1)
+	je			0f // end
+	vmovapd		%ymm3, 96(%r10)
+	vmaskmovpd	%ymm7, %ymm15, 96(%r10, %r11, 1)
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_store_u_8x4_vs_lib4)
 #endif
 
 
@@ -8705,6 +8826,158 @@ NAME:
 	ret
 
 	FUN_END(kernel_dgemm_nn_8x4_gen_lib4)
+
+
+
+
+
+//                                 1      2              3          4        5            6          7        8             9          10       11         12
+// void kernel_dsyrk_nn_u_8x4_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dsyrk_nn_u_8x4_lib4)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movq	ARG6, %r13 // B
+	movq	ARG7, %r14 // sdb
+	sall	$5, %r14d // 4*sdb*sizeof(double)
+	movq	ARG5, %r15 // offsetB
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGEMM_NN_8X4_LIB4
+#else
+	CALL(inner_edge_dgemm_nn_8x4_lib4)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nn_8x4_lib4)
+#endif
+
+
+	// call inner scale
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG8, %r11 // beta
+	movq	ARG9, %r12 // C
+	movq	ARG10, %r13 // sdc
+	sall	$5, %r13d // 4*sdc*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_LIB4
+#else
+	CALL(inner_scale_ab_8x4_lib4)
+#endif
+
+
+	// store n
+
+	movq	ARG11, %r10 // D
+	movq	ARG12, %r11 // sdd
+	sall	$5, %r11d // 4*sdd*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_U_8X4_LIB4
+#else
+	CALL(inner_store_u_8x4_lib4)
+#endif
+
+
+	EPILOGUE
+	
+	ret
+
+	FUN_END(kernel_dsyrk_nn_u_8x4_lib4)
+
+
+
+
+
+//                                    1      2              3          4        5            6          7        8             9          10       11         12       13      14
+// void kernel_dsyrk_nn_u_8x4_vs_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dsyrk_nn_u_8x4_vs_lib4)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movq	ARG6, %r13 // B
+	movq	ARG7, %r14 // sdb
+	sall	$5, %r14d // 4*sdb*sizeof(double)
+	movq	ARG5, %r15 // offsetB
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGEMM_NN_8X4_LIB4
+#else
+	CALL(inner_edge_dgemm_nn_8x4_lib4)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nn_8x4_lib4)
+#endif
+
+
+	// call inner scale
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG8, %r11 // beta
+	movq	ARG9, %r12 // C
+	movq	ARG10, %r13 // sdc
+	sall	$5, %r13d // 4*sdc*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_LIB4
+#else
+	CALL(inner_scale_ab_8x4_lib4)
+#endif
+
+
+	// store n
+
+	movq	ARG11, %r10 // D
+	movq	ARG12, %r11 // sdd
+	sall	$5, %r11d // 4*sdd*sizeof(double)
+	movq	ARG13, %r12 // km 
+	movq	ARG14, %r13 // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_U_8X4_VS_LIB4
+#else
+	CALL(inner_store_u_8x4_vs_lib4)
+#endif
+
+
+	EPILOGUE
+	
+	ret
+
+	FUN_END(kernel_dsyrk_nn_u_8x4_vs_lib4)
 
 
 
