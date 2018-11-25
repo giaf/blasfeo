@@ -6058,6 +6058,11 @@ void blasfeo_dsyrk_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 	int idxB;
 
 
+	if(ci!=0 | di!=0)
+		{
+		printf("\nblasfeo_dsyrk_ut: feature not implemented yet: ci!=0 | di!=0\n");
+		exit(1);
+		}
 
 	// algorithm scheme
 	goto loop_00;
