@@ -8,14 +8,14 @@ void call_routines(struct RoutineArgs *args){
 	// routine call
 	//
 	BLASFEO(ROUTINE)(
-		&(args->ta), &(args->tb),
+		string(TRANSA), string(TRANSB),
 		&(args->m), &(args->m), &(args->m), &(args->alpha),
 		args->cA->pA, &(args->cA->m),
 		args->cB->pA, &(args->cB->m), &(args->beta),
 		args->cD->pA, &(args->cD->m));
 
 	BLAS(ROUTINE)(
-		&(args->ta), &(args->tb),
+		string(TRANSA), string(TRANSB),
 		&(args->m), &(args->m), &(args->m), &(args->alpha),
 		args->rA->pA, &(args->rA->m),
 		args->rB->pA, &(args->rB->m), &(args->beta),
@@ -26,7 +26,7 @@ void call_routines(struct RoutineArgs *args){
 void print_routine(struct RoutineArgs *args){
 	// unpack args
 
-	printf("%s ", string(ROUTINE));
+	printf("blas_%s_%s%s", string(ROUTINE), string(TRANSA), string(TRANSB));
 	printf(
 		"D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
 		args->di, args->m, args->dj, args->n,
@@ -69,9 +69,4 @@ void set_test_args(struct TestArgs *targs)
 	targs->nks = 5;
 
 	targs->alphas = 1;
-
-	targs->tas = 1;
-	targs->tbs = 1;
-	targs->uplos = 1;
-
 }

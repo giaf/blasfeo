@@ -1,12 +1,17 @@
 #! /usr/bin/python
 
-import subprocess
+import subprocess as sp
+import jinja2 as jn
 import sys
 import json
 import argparse
+import re
+from os.path import join
 
 RECIPE_SCHEMA="test_schema.json"
 RECIPE_JSON="recipe_default.json"
+TESTCLASSES_PATH="classes"
+TPL_PATH="Makefile.tpl"
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='BLAFEO tests scheduler')
@@ -23,17 +28,41 @@ def parse_arguments():
     return args
 
 
+def make_templated(cmd="", cflags={}, env_flags={}):
 
-def make(cmd="", make_flags={}, env_flags={}):
+    with open(TPL_PATH) as f:
+        template = jn.Template(f.read())
 
-    make_flags = " ".join(["{k}={v}".format(k=k, v=v) if v is not None else k for k, v in make_flags.items()])
+    makefile = template.render(cflags=cflags)
+
+    env_flags = " ".join(["{k}={v}".format(k=k, v=v) for k, v in env_flags.items()])
+    #  run_cmd = "{env_flags} make -f - {cmd}".format(env_flags=env_flags, cmd=cmd)
+    run_cmd = "make -s -f - {cmd}".format(cmd=cmd)
+    print(run_cmd)
+
+    make = sp.Popen(run_cmd.split(),
+        stdin=sp.PIPE,
+        stdout=sp.PIPE,
+        stderr=sp.PIPE
+        )
+
+    outs, errs = make.communicate(makefile.encode("utf8"))
+    print(outs.decode("utf8"))
+    print(errs.decode("utf8"))
+
+    return 1
+
+
+def make(cmd="", cflags={}, env_flags={}):
+
+    cflags = " ".join(["{k}={v}".format(k=k, v=v) if v is not None else k for k, v in cflags.items()])
     env_flags = " ".join(["{k}={v}".format(k=k, v=v) for k, v in env_flags.items()])
 
-    run_cmd = "{env_flags} make {make_flags} {cmd}".format(env_flags=env_flags, make_flags=make_flags, cmd=cmd)
+    run_cmd = "{env_flags} make {cflags} {cmd}".format(env_flags=env_flags, cflags=cflags, cmd=cmd)
 
     print(run_cmd,"\n")
-    make_process = subprocess.Popen(run_cmd,
-        shell=True, stdout=subprocess.PIPE, stderr=sys.stdout.fileno())
+    make_process = sp.Popen(run_cmd,
+        shell=True, stdout=sp.PIPE, stderr=sys.stdout.fileno())
 
     while True:
         line = make_process.stdout.readline()
@@ -61,10 +90,20 @@ class CookBook:
         self.TOTAL =\
             len(set(self.specs["routines"]))\
             * len(self.specs["targets"])\
-            * len(self.specs["precisions"])
+            * len(self.specs["precisions"])\
+            * len(self.specs["apis"])
 
         # build standard recipe skelethon
         self.build_recipe()
+
+
+    def parse_flags(self, routine_name, available_flags):
+        pattern = '(?P<routine_basename>[a-z]*)_'
+        for flag_name, flags_values in available_flags.items():
+            flags_values = '|'.join(flags_values)
+            pattern += '(?P<{flag_name}>[{flags_values}])'.format(flag_name=flag_name, flags_values=flags_values)
+        parsed_flags = re.search(pattern, routine_name).groupdict()
+        return parsed_flags
 
     def build_recipe(self):
         scheduled_routines = set(self.specs['routines'])
@@ -72,38 +111,61 @@ class CookBook:
         # create recipe with no global flags
         self.recipe = {
             'routines':{},
-            'make_flags':self.specs['make_flags'],
+            'cflags':self.specs['cflags'],
             'env_flags':self.specs['env_flags']
         }
 
 
-        available_classes = self.schema['routines']
+        available_groups = self.schema['routines']
 
-        for routine_class in available_classes:
-            available_subclasses = available_classes[routine_class]
+        # routine groups: blas1 blas2 ..
+        for group_name, available_classes in available_groups.items():
 
-            for routine_subclass in available_subclasses:
-                available_routines = available_subclasses[routine_subclass]
+            # routine classes: gemm, trsm, ...
+            for class_name, routine_class in available_classes.items():
+                available_routines = routine_class["routines"]
+                routine_flags = routine_class["flags"]
 
-                for available_routine in available_routines:
+                # routines: gemm_nn, gemm_nt, ...
+                for routine in available_routines:
 
-                    if available_routine in scheduled_routines:
-                        scheduled_routines = scheduled_routines - {available_routine}
+                    if routine not in scheduled_routines:
+                        continue
 
-                        for precision in self.specs["precisions"]:
+                    scheduled_routines = scheduled_routines - {routine}
+
+                    # precision
+                    for precision in self.specs["precisions"]:
+
+                        # apis
+                        for api in self.specs["apis"]:
 
                             flags = {}
-                            flags.update(self.specs['make_flags'])
+                            flags.update(self.specs['cflags'])
 
-                            routine_name = "{}{}".format(precision, available_routine)
-                            routine_fullname = routine_name
-                            flags["ROUTINE"] = routine_fullname
-                            flags["ROUTINE_CLASS"] = routine_subclass
-                            flags["PRECISION"] = precision
+                            flags["ROUTINE_CLASS"] = class_name
+                            flags["PRECISION_{}".format(precision.upper())] = None
 
-                            self.recipe["routines"][routine_name] = {
-                                "class": routine_class,
-                                "subclass": routine_subclass,
+
+                            if api=="blas":
+                                flags["TEST_BLAS_API"] = None
+                                routine_dict = self.parse_flags(routine, routine_flags)
+                                flags.update(routine_dict)
+                                routine_testclass_src = "blasapi_"+routine_class["testclass_src"]
+                                routine_name = "{precision}{routine}".format(precision=precision[0], routine=class_name)
+                            else:
+                                routine_name = "{precision}{routine}".format(precision=precision[0], routine=routine)
+
+                            routine_testclass_src = join(TESTCLASSES_PATH, routine_testclass_src)
+
+                            flags["ROUTINE_CLASS_C"] = routine_testclass_src
+                            flags["ROUTINE"] = routine_name
+
+                            # add blas_api flag arguments values
+
+                            self.recipe["routines"][routine] = {
+                                "group": group_name,
+                                "class": class_name,
                                 "make_cmd": "update",
                                 "flags": flags
                             }
@@ -117,7 +179,7 @@ class CookBook:
 
         for la in self.specs["las"]:
             print("Testing {la}".format(la=la))
-            self.recipe["make_flags"]["LA"]=la
+            self.recipe["cflags"]["LA"]=la
 
             if la=="REFERENCE":
                 self.run_recipe()
@@ -130,18 +192,19 @@ class CookBook:
             for target in self.specs["targets"]:
                 print("Testing {target}".format(target=target))
 
-                self.recipe["make_flags"]["TARGET"]=target
+                self.recipe["cflags"]["TARGET"]=target
                 self.run_recipe()
 
     def run_recipe(self):
         # preparation step
-        make_flags = self.recipe["make_flags"]
+        cflags = self.recipe["cflags"]
+        #  make_flags = self.recipe["make_flags"]
         env_flags = self.recipe["env_flags"]
 
-        if not self.VERBOSE: make_flags.update({"-s":None})
+        #  if not self.VERBOSE: make_flags.update({"-s":None})
 
-        _build_libblasfeo = make_flags.get("BUILD_LIBS")
-        _deploy_libblasfeo = make_flags.get("DEPLOY_LIBS")
+        _build_libblasfeo = cflags.get("BUILD_LIBS")
+        _deploy_libblasfeo = cflags.get("DEPLOY_LIBS")
 
 
         if self.cli_flags.rebuild:
@@ -150,17 +213,17 @@ class CookBook:
 
         if _build_libblasfeo:
             # compile also BLAS_API by default
-            libblasfeo_flags = dict(make_flags)
+            libblasfeo_flags = dict(cflags)
             libblasfeo_flags.update({"BLAS_API":1})
             make("-C .. ", libblasfeo_flags, env_flags)
         if _deploy_libblasfeo:
-            make("-C .. deploy_to_tests", make_flags, env_flags)
+            make("-C .. deploy_to_tests", cflags, env_flags)
 
         for routine_name, args in self.recipe['routines'].items():
             # update local flags with global flags
 
-            if args.get("flags"): args["flags"].update(make_flags)
-            else: args["flags"] = make_flags
+            if args.get("flags"): args["flags"].update(cflags)
+            else: args["flags"] = cflags
 
             if args.get("env_flags"): args["env_flags"].update(env_flags)
             else: args["env_flags"] = env_flags
@@ -169,19 +232,19 @@ class CookBook:
 
     def test_routine(self, routine_name, args):
 
-        make_flags = args["flags"]
+        cflags = args["flags"]
         env_flags = args["env_flags"]
 
-        print("\nTesting {}:{}\n".format(make_flags['TARGET'], routine_name))
+        print("\nTesting {}:{}\n".format(cflags['TARGET'], routine_name))
 
-        status = make(args["make_cmd"], make_flags, env_flags)
+        status = make_templated(args["make_cmd"], cflags, env_flags)
 
         if not status:
-            print("Error with {}:{} ({}/{})".format(make_flags['TARGET'], routine_name, self.DONE, self.TOTAL))
+            print("Error with {}:{} ({}/{})".format(cflags['TARGET'], routine_name, self.DONE, self.TOTAL))
             return status
 
         self.DONE += 1
-        print("\nTested {}:{} ({}/{})".format(make_flags['TARGET'], routine_name, self.DONE, self.TOTAL))
+        print("\nTested {}:{} ({}/{})".format(cflags['TARGET'], routine_name, self.DONE, self.TOTAL))
 
         return status
 

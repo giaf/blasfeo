@@ -3,21 +3,28 @@
     "CFLAGS":"-Wuninitialized"
   },
   "make_flags":{
+    "CFLAGS":"-Wuninitialized"
+  },
+  "cflags":{
     "CC":"clang",
-    "BUILD_LIBS":1,
-    "DEPLOY_LIBS":1,
+    "BUILD_LIBS":0,
+    "DEPLOY_LIBS":0,
     "VERBOSE":1,
     "TESTING_MODE":1,
-    "REF_BLAS":"0"
+    "REF_BLAS":"OPENBLAS"
   },
-  "precisions":["d"],
+  "precisions":["double"],
+  "apis":["blas"],
   "targets":[
-    "GENERIC"
+    "X64_INTEL_HASWELL"
   ],
   "las":[
     "HIGH_PERFORMANCE"
   ],
   "routines":[
-    "gemm_nn"
+    "gemm_nn",
+    "gemm_tn",
+    "gemm_nt",
+    "gemm_tt"
   ]
 }
