@@ -1502,23 +1502,26 @@ NAME:
 	vmovapd			0(%r11, %r12, 1), %ymm13
 	vbroadcastsd	0(%r13), %ymm14
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
-	vfmadd231pd		%ymm13, %ymm14, %ymm4
 	vbroadcastsd	128(%r13), %ymm15
+	vfmadd231pd		%ymm12, %ymm15, %ymm4
 	vfmadd231pd		%ymm13, %ymm15, %ymm8
+
 	vbroadcastsd	32(%r13), %ymm14
 	vfmadd231pd		%ymm12, %ymm14, %ymm1
-	vfmadd231pd		%ymm13, %ymm14, %ymm5
 	vbroadcastsd	160(%r13), %ymm15
+	vfmadd231pd		%ymm12, %ymm15, %ymm5
 	vfmadd231pd		%ymm13, %ymm15, %ymm9
+
 	vbroadcastsd	64(%r13), %ymm14
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
-	vfmadd231pd		%ymm13, %ymm14, %ymm6
 	vbroadcastsd	192(%r13), %ymm15
+	vfmadd231pd		%ymm12, %ymm15, %ymm6
 	vfmadd231pd		%ymm13, %ymm15, %ymm10
+
 	vbroadcastsd	96(%r13), %ymm14
 	vfmadd231pd		%ymm12, %ymm14, %ymm3
-	vfmadd231pd		%ymm13, %ymm14, %ymm7
 	vbroadcastsd	224(%r13), %ymm15
+	vfmadd231pd		%ymm12, %ymm15, %ymm7
 	vfmadd231pd		%ymm13, %ymm15, %ymm11
 
 	subl			$1, %r10d // k-1
