@@ -2421,7 +2421,6 @@ rlnn_0_left_4:
 	goto rlnn_0_return;
 
 rlnn_0_return:
-	free(mem);
 	return;
 
 
@@ -2585,7 +2584,6 @@ rlnu_0_left_4:
 	goto rlnu_0_return;
 
 rlnu_0_return:
-	free(mem);
 	return;
 
 
@@ -3629,7 +3627,6 @@ rutn_0_left_8:
 #endif
 
 rutn_0_return:
-	free(mem);
 	return;
 
 
@@ -3976,7 +3973,6 @@ rutu_0_left_8:
 #endif
 
 rutu_0_return:
-	free(mem);
 	return;
 
 
