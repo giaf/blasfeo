@@ -50,7 +50,7 @@ void dgetrf_nn_nopivot_lib(int m, int n, double *pC, int sdc, double *pD, int sd
 
 	const int ps = 4;
 
-	double d1;
+	double d1 = 1.0;
 
 	int ii, jj, ie;
 
@@ -1679,12 +1679,12 @@ void blasfeo_dsyrk_dpotrf_ln(int m, int k, struct blasfeo_dmat *sA, int ai, int 
 
 
 
-// dgetrf without pivoting
-void blasfeo_dgetrf_nopivot(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+// dgetrf no pivoting
+void blasfeo_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	if(ci!=0 | di!=0)
 		{
-		printf("\ndgetf_nopivot_libstr: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+		printf("\nblasfeo_dgetf_np: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
 	const int ps = 4;
@@ -1703,12 +1703,12 @@ void blasfeo_dgetrf_nopivot(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 
 
 
-// dgetrf pivoting
-void blasfeo_dgetrf_rowpivot(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv)
+// dgetrf row pivoting
+void blasfeo_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv)
 	{
 	if(ci!=0 | di!=0)
 		{
-		printf("\nblasfeo_dgetrf_rowpivot: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+		printf("\nblasfeo_dgetrf_rp: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
 		}
 	const int ps = 4;

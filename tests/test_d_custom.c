@@ -48,7 +48,7 @@ int main()
 
 	int ii;
 
-	int n = 16;
+	int n = 8;
 
 	//
 	// matrices in column-major format
@@ -336,9 +336,9 @@ int main()
 	// syrk_ut
 	alpha = 1.0;
 	beta = 0.0;
-	blasfeo_print_dmat(n, n, &sD, 0, 0);
+//	blasfeo_print_dmat(n, n, &sD, 0, 0);
 
-	blasfeo_dsyrk_ut(11, 11, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ut(11, 11, alpha, &sB, 0, 0, &sA, 1, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	return 0;
@@ -369,7 +369,7 @@ int main()
 	return 0;
 #endif
 
-#if 1
+#if 0
 	// trsm_llnn
 	alpha = 2.0;
 	beta = 1.0;
@@ -432,6 +432,17 @@ int main()
 	blasfeo_print_tran_dvec(n, &sx_n, 0);
 	blasfeo_dsymv_l(5, 5, 1.0, &sA, 1, 1, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
+	return 0;
+#endif
+
+#if 1
+	// getrf
+	blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
+
+	blasfeo_dgetrf_np(n, n, &sD, 0, 0, &sD, 0, 0);
+//	blasfeo_dgetrf_rp(n, n, &sD, 0, 0, &sD, 0, 0, ipiv);
+
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	return 0;
 #endif
 

@@ -858,11 +858,11 @@ void blasfeo_ssyrk_spotrf_ln(int m, int k, struct blasfeo_smat *sA, int ai, int 
 
 
 
-// dgetrf without pivoting
-void blasfeo_sgetrf_nopivot(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+// dgetrf no pivoting
+void blasfeo_sgetrf_np(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 #ifndef BENCHMARKS_MODE
-	printf("\nsgetf_nopivot_libstr: feature not implemented yet\n");
+	printf("\nblasfeo_sgetf_np: feature not implemented yet\n");
 	exit(1);
 #endif
 	return;
@@ -871,11 +871,11 @@ void blasfeo_sgetrf_nopivot(int m, int n, struct blasfeo_smat *sC, int ci, int c
 
 
 
-// dgetrf pivoting
-void blasfeo_sgetrf_rowpivot(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, int *ipiv)
+// dgetrf row pivoting
+void blasfeo_sgetrf_rp(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, int *ipiv)
 	{
 #ifndef BENCHMARKS_MODE
-	printf("\nblasfeo_sgetrf_rowpivot: feature not implemented yet\n");
+	printf("\nblasfeo_sgetrf_rp: feature not implemented yet\n");
 	exit(1);
 #endif
 	return;

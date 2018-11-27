@@ -60,8 +60,8 @@
 #define GEQRF_LIBSTR blasfeo_dgeqrf
 #define GEQRF_WORK_SIZE_LIBSTR blasfeo_dgeqrf_worksize
 #define GETF2_NOPIVOT dgetf2_nopivot
-#define GETRF_NOPIVOT_LIBSTR blasfeo_dgetrf_nopivot
-#define GETRF_LIBSTR blasfeo_dgetrf_rowpivot
+#define GETRF_NOPIVOT_LIBSTR blasfeo_dgetrf_np
+#define GETRF_LIBSTR blasfeo_dgetrf_rp
 #define POTRF_L_LIBSTR blasfeo_dpotrf_l
 #define POTRF_L_MN_LIBSTR blasfeo_dpotrf_l_mn
 #define PSTRF_L_LIBSTR dpstrf_l_libstr
