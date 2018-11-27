@@ -8642,8 +8642,8 @@ NAME:
 
 
 
-//                                      edi    rsi        rdx        ecx      r8         r9         rsp+8      rsp+16
-// void kernel_dtrsm_nn_ru_inv_4x4_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *E, double *inv_diag_E);
+//                                      1      2          3          4        5             6          7          8          9
+// void kernel_dtrsm_nn_ru_inv_4x4_lib4(int k, double *A, double *B, int sdb, double *beta, double *C, double *D, double *E, double *inv_diag_E);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_dtrsm_nn_ru_inv_4x4_lib4)
@@ -8672,19 +8672,20 @@ NAME:
 
 	// call inner blender_loader nn
 
-	movq	ARG5, %r10 // C
+	movq	ARG5, %r10 // beta
+	movq	ARG6, %r11 // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_4X4_LIB4
+	INNER_SCALE_M1B_4X4_LIB4
 #else
-	CALL(inner_scale_m11_4x4_lib4)
+	CALL(inner_scale_m1b_4x4_lib4)
 #endif
 
 
 	// solve
 
-	movq	ARG7, %r10  // E
-	movq	ARG8, %r11  // inv_diag_E
+	movq	ARG8, %r10  // E
+	movq	ARG9, %r11  // inv_diag_E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RUN_INV_4X4_LIB4
@@ -8695,7 +8696,7 @@ NAME:
 
 	// store
 
-	movq	ARG6, %r10 // D
+	movq	ARG7, %r10 // D
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB4
@@ -8714,8 +8715,8 @@ NAME:
 
 
 
-//                                         edi    rsi        rdx        ecx      r8         r9         rsp+8      rsp+16              rsp+24  rsp+32
-// void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *E, double *inv_diag_E, int km, int kn);
+//                                         1      2          3          4        5             6          7          8          9                  10      11
+// void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4(int k, double *A, double *B, int sdb, double *beta double *C, double *D, double *E, double *inv_diag_E, int km, int kn);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_dtrsm_nn_ru_inv_4x4_vs_lib4)
@@ -8744,19 +8745,20 @@ NAME:
 
 	// call inner blender_loader nn
 
-	movq	ARG5, %r10 // C
+	movq	ARG5, %r10 // beta
+	movq	ARG6, %r11 // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_4X4_LIB4
+	INNER_SCALE_M1B_4X4_LIB4
 #else
-	CALL(inner_scale_m11_4x4_lib4)
+	CALL(inner_scale_m1b_4x4_lib4)
 #endif
 
 
 	// solve
 
-	movq	ARG7, %r10  // E
-	movq	ARG8, %r11  // inv_diag_E
+	movq	ARG8, %r10  // E
+	movq	ARG9, %r11  // inv_diag_E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RUN_INV_4X4_LIB4
@@ -8767,10 +8769,10 @@ NAME:
 
 	// store
 
-	movq	ARG6, %r10 // D
+	movq	ARG7, %r10 // D
 
-	movq	ARG9, %r11  // km
-	movq	ARG10, %r12  // kn
+	movq	ARG10, %r11  // km
+	movq	ARG11, %r12  // kn
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_VS_LIB4
