@@ -1687,7 +1687,7 @@ tn_0_return:
 
 loop_00_1:
 	sAt_size = blasfeo_memsize_dmat(12, k);
-	smat_mem = malloc(sAt_size+63);
+	smat_mem = malloc(sAt_size+64);
 	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	blasfeo_create_dmat(12, k, &sAt, smat_mem_align);
 	pAt = sAt.pA;
@@ -1775,7 +1775,7 @@ loop_00_1:
 	// malloc algorith, C, D not aligned
 loop_CD_1:
 	sAt_size = blasfeo_memsize_dmat(12, k);
-	smat_mem = malloc(sAt_size+63);
+	smat_mem = malloc(sAt_size+64);
 	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	blasfeo_create_dmat(12, k, &sAt, smat_mem_align);
 	pAt = sAt.pA;
@@ -2542,7 +2542,7 @@ tt_0_return:
 
 loop_00_1:
 	sAt_size = blasfeo_memsize_dmat(12, k);
-	smat_mem = malloc(sAt_size+63);
+	smat_mem = malloc(sAt_size+64);
 	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	blasfeo_create_dmat(12, k, &sAt, smat_mem_align);
 	pAt = sAt.pA;
@@ -2739,7 +2739,7 @@ loop_00_1:
 	// main loop C, D not aligned
 loop_CD_1:
 	sAt_size = blasfeo_memsize_dmat(12, k);
-	smat_mem = malloc(sAt_size+63);
+	smat_mem = malloc(sAt_size+64);
 	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
 	blasfeo_create_dmat(12, k, &sAt, smat_mem_align);
 	pAt = sAt.pA;
