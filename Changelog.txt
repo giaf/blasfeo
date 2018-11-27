@@ -14,6 +14,7 @@ BLASFEO_API:
 	* stable version of dsyrk_ln for all targets
 	* dsyrk_ut for all targets
 	* dtrsm_llnn for all targets
+	* renamed blasfeo_{d/s}getrf_{no/row}pivot => blasfeo_{d/s}getrf_{n/r}p
 
 BLAS_API:
 	* dsyrk for all targets
