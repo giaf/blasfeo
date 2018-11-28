@@ -102,7 +102,7 @@ int main()
 
 	int m0 = 15;
 	int n0 = 15;
-	int k0 = 15;
+	int k0 = 9;
 
 
 
@@ -126,11 +126,15 @@ int main()
 	dpotrf_(&uplo, &m0, C, &n, &info);
 #endif
 
+#if 1
+	dgemm_(&c_n, &c_t, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
+#endif
+
 #if 0
 	dsyrk_(&uplo, &ta, &m0, &k0, &alpha, A, &n, &beta, C, &n);
 #endif
 
-#if 1
+#if 0
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
 	dtrsm_(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
@@ -157,11 +161,15 @@ int main()
 	blasfeo_dpotrf(&uplo, &m0, C, &n, &info);
 #endif
 
+#if 1
+	blasfeo_dgemm(&c_n, &c_t, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
+#endif
+
 #if 0
 	blasfeo_dsyrk(&uplo, &ta, &m0, &k0, &alpha, A, &n, &beta, C, &n);
 #endif
 
-#if 1
+#if 0
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
 	blasfeo_dtrsm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
 #endif

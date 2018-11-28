@@ -34,7 +34,9 @@ obj:
 	# to other levels and precisions are
 	# fully supported in the BLAS API.
 	
+ifeq ($(CBLAS_API), 1) 
 	( cd CBLAS/src; $(MAKE) dlib3 )
+endif
 
 clean:
 	( cd CBLAS; $(MAKE) cleanall )

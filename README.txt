@@ -12,6 +12,7 @@ The currently supported compter architectures (TARGET) are:
 - ARMV8A_ARM_CORTEX_A57: ARMv8A architecture, VFPv4 and NEONv2 ISAs, 64-bit OS.
 - ARMV8A_ARM_CORTEX_A53: ARMv8A architecture, VFPv4 and NEONv2 ISAs, 64-bit OS.
 - ARMV7A_ARM_CORTEX_A15: ARMv7A architecture, VFPv3 and NEON ISAs, 32-bit OS.
+- ARMV7A_ARM_CORTEX_A7: ARMv7A architecture, VFPv3 and NEON ISAs, 32-bit OS.
 - GENERIC: generic target, coded in C, giving better performance if the architecture provides more than 16 scalar FP registers (e.g. many RISC such as ARM).
 
 The BLASFEO backend provides three possible implementations of each linear algebra routine (LA):

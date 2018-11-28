@@ -1077,7 +1077,7 @@ STRSM_OBJS += blas_api_strsm_runu
 RUN_STRSM_OBJS += run_blas_api_strsm_runu
 
 blas_api_strsm_runu: common
-	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/strsm_runu_benchmark.o -DSINGLE -DTRSM -DTRSM_RUNU
+	$(CC) $(CFLAGS) -c x_benchmark_blas_api.c -o $(BINARY_DIR)/BLAS_API/strsm_runu_benchmark.o -DSINGLE_PRECISION -DTRSM -DTRSM_RUNU
 	$(CC) $(CFLAGS) $(BINARY_DIR)/BLAS_API/strsm_runu_benchmark.o -o $(BINARY_DIR)/BLAS_API/strsm_runu_benchmark.out $(LIBS)
 
 run_blas_api_strsm_runu:
