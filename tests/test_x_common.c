@@ -34,7 +34,12 @@ void print_compilation_flags()
 	SHOW_DEFINE(LA)
 	SHOW_DEFINE(TARGET)
 	SHOW_DEFINE(PRECISION)
-	SHOW_DEFINE(ROUTINE)
+	SHOW_DEFINE(ROUTINE_FULLNAME)
+	#ifdef TEST_BLAS_API
+	printf("API\t\t= blas\n");
+	#else
+	printf("API\t\t= BLASFEO\n");
+	#endif
 }
 
 void initialize_test_args(struct TestArgs * targs)
@@ -120,11 +125,6 @@ void initialize_args(struct RoutineArgs * args)
 
 	args->di = 0;
 	args->dj = 0;
-
-	args->ta = 'n';
-	args->tb = 't';
-	args->uplo = 'l';
-
 };
 
 /* prints a matrix in column-major format */

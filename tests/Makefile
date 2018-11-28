@@ -10,7 +10,7 @@
 # This program is free software: you can redistribute it and/or modify                            #
 # it under the terms of the GNU General Public License as published by                            #
 # the Free Software Foundation, either version 3 of the License, or                               #
-# (at your option) any later version                                                              #.
+# (at your option) any later version                                                              #
 #                                                                                                 #
 # This program is distributed in the hope that it will be useful,                                 #
 # but WITHOUT ANY WARRANTY; without even the implied warranty of                                  #
@@ -60,49 +60,20 @@ ifdef ROUTINE
 CFLAGS += -DROUTINE=$(ROUTINE)
 endif
 
+ifdef ROUTINE_CLASS_C
+CFLAGS += -DROUTINE_CLASS_C=$(ROUTINE_CLASS_C)
+endif
+
 ifeq ($(PRECISION), d)
 CFLAGS += -DPRECISION_DOUBLE
 endif
 ifeq ($(PRECISION), s)
 CFLAGS += -DPRECISION_SINGLE
 endif
-ifndef ROUTINE_CLASS
-ROUTINE_CLASS = GEMM
-endif
-ifeq ($(ROUTINE_CLASS), SYRK)
-CFLAGS += -DROUTINE_CLASS_SYRK
-endif
-ifeq ($(ROUTINE_CLASS), GEMM)
-CFLAGS += -DROUTINE_CLASS_GEMM
-endif
-ifeq ($(ROUTINE_CLASS), GEMM_BLAS)
-CFLAGS += -DROUTINE_CLASS_GEMM_BLAS
+
+ifeq ($(ROUTINE_API), BLAS)
 CFLAGS += -DTEST_BLAS_API
 TEST_BLAS_API=1
-endif
-ifeq ($(ROUTINE_CLASS), TRM)
-CFLAGS += -DROUTINE_CLASS_TRM
-endif
-ifeq ($(ROUTINE_CLASS), GETRF_ROWPIVOT)
-CFLAGS += -DROUTINE_CLASS_GETRF_ROWPIVOT
-endif
-ifeq ($(ROUTINE_CLASS), GETRF_NOPIVOT)
-CFLAGS += -DROUTINE_CLASS_GETRF_NOPIVOT
-endif
-ifeq ($(ROUTINE_CLASS), GEQF)
-CFLAGS += -DROUTINE_CLASS_GEQF
-endif
-ifeq ($(ROUTINE_CLASS), POTRF)
-CFLAGS += -DROUTINE_CLASS_POTRF
-endif
-ifeq ($(ROUTINE_CLASS), 1ARGS)
-CFLAGS += -DROUTINE_CLASS_1ARGS
-endif
-ifeq ($(ROUTINE_CLASS), 2ARGS)
-CFLAGS += -DROUTINE_CLASS_2ARGS
-endif
-ifeq ($(ROUTINE_CLASS), 3ARGS)
-CFLAGS += -DROUTINE_CLASS_3ARGS
 endif
 
 ifeq ($(TEST_BLAS_API), 1)

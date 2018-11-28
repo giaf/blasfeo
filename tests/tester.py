@@ -154,12 +154,12 @@ class CookBook:
                                 routine_testclass_src = "blasapi_"+routine_class["testclass_src"]
                                 routine_name = "{precision}{routine}".format(precision=precision[0], routine=class_name)
                             else:
+                                routine_testclass_src = routine_class["testclass_src"]
                                 routine_name = "{precision}{routine}".format(precision=precision[0], routine=routine)
 
-                            routine_testclass_src = join(TESTCLASSES_PATH, routine_testclass_src)
-
-                            flags["ROUTINE_CLASS_C"] = routine_testclass_src
+                            flags["ROUTINE_CLASS_C"] = join(TESTCLASSES_PATH, routine_testclass_src)
                             flags["ROUTINE"] = routine_name
+                            flags["ROUTINE_FULLNAME"] = routine
 
                             # add blas_api flag arguments values
 
