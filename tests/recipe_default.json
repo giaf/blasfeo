@@ -1,30 +1,47 @@
 {
-  "env_flags":{
-    "CFLAGS":"-Wuninitialized"
+  "env_flags": {
+    "CFLAGS": "-Wuninitialized"
   },
-  "make_flags":{
-    "CFLAGS":"-Wuninitialized"
+  "make_flags": {
+    "CFLAGS": "-Wuninitialized"
   },
-  "cflags":{
-    "CC":"clang",
-    "BUILD_LIBS":0,
-    "DEPLOY_LIBS":0,
-    "VERBOSE":1,
-    "TESTING_MODE":1,
-    "REF_BLAS":"OPENBLAS"
+  "cflags": {
+    "CC": "clang",
+    "BUILD_LIBS": 0,
+    "DEPLOY_LIBS": 0,
+    "VERBOSE": 2,
+    "TESTING_MODE": 1,
+    "REF_BLAS": "OPENBLAS"
   },
-  "precisions":["double"],
-  "apis":["blas"],
-  "targets":[
+  "precisions": [
+    "double"
+  ],
+  "apis": [
+    "blas", "blasfeo"
+  ],
+  "targets": [
     "X64_INTEL_HASWELL"
   ],
-  "las":[
+  "las": [
     "HIGH_PERFORMANCE"
   ],
-  "routines":[
-    "gemm_nn",
-    "gemm_tn",
-    "gemm_nt",
-    "gemm_tt"
-  ]
+  "routines": [
+     "trsm_llnu",
+     "trsm_llnn",
+     "trsm_lltu",
+     "trsm_lltn",
+     "trsm_lunu",
+     "trsm_lunn",
+     "trsm_lutu",
+     "trsm_lutn",
+     "trsm_rlnu",
+     "trsm_rlnn",
+     "trsm_rltu",
+     "trsm_rltn",
+     "trsm_runu",
+     "trsm_runn",
+     "trsm_rutu",
+     "trsm_rutn"
+  ],
+  "test": []
 }
