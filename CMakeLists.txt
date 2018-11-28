@@ -309,6 +309,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecpsc_lib8.S
 
+			${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
 			)
 
 		file(GLOB BLAS_SRC
@@ -370,6 +371,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib4.c
+
+			${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
 			)
 
 		file(GLOB BLAS_SRC
@@ -417,6 +420,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
+
+			${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
 			)
 
 		file(GLOB BLAS_SRC
@@ -464,6 +469,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
+
+			${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
 			)
 
 		file(GLOB BLAS_SRC
@@ -517,6 +524,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+
+			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
 			)
 
 		file(GLOB BLAS_SRC
@@ -570,6 +579,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+
+			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
 			)
 
 		file(GLOB BLAS_SRC
@@ -620,6 +631,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+
+			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
 			)
 
 		file(GLOB BLAS_SRC
@@ -670,6 +683,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+
+			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
 			)
 
 		file(GLOB BLAS_SRC
@@ -716,6 +731,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
+
+			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
 			)
 
 		file(GLOB BLAS_SRC
