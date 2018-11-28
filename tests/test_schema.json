@@ -134,15 +134,26 @@
         "flags":{
           "side":["l","r"],
           "uplo":["u","l"],
-          "transa":["n","t"],
+          "transa":["n","t","c"],
           "diag":["u","n"]
           },
         "routines": [
           "trsm_llnu",
+          "trsm_llnn",
+          "trsm_lltu",
+          "trsm_lltn",
+          "trsm_lunu",
+          "trsm_lunn",
+          "trsm_lutu",
+          "trsm_lutn",
+          "trsm_rlnu",
+          "trsm_rlnn",
           "trsm_rltu",
           "trsm_rltn",
-          "trsm_rutn",
-          "trsm_lunn"
+          "trsm_runu",
+          "trsm_runn",
+          "trsm_rutu",
+          "trsm_rutn"
         ]
       },
       "trmm": {
@@ -150,7 +161,7 @@
         "flags":{
           "side":["l","r"],
           "uplo":["u","l"],
-          "transa":["n","t"],
+          "transa":["n","t","c"],
           "diag":["u","n"]
           },
         "routines": [
