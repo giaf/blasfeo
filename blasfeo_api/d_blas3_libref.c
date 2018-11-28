@@ -47,13 +47,22 @@
 #define SYRK_LN    blasfeo_dsyrk_ln_ref
 #define SYRK_LN_MN blasfeo_dsyrk_ln_mn_ref
 
-#define TRSM_LLNU  blasfeo_dtrsm_llnu_ref
+#define TRSM_LUNU  blasfeo_dtrsm_lunu_ref
 #define TRSM_LUNN  blasfeo_dtrsm_lunn_ref
+#define TRSM_LUTU  blasfeo_dtrsm_lutu_ref
+#define TRSM_LUTN  blasfeo_dtrsm_lutn_ref
+#define TRSM_LLNU  blasfeo_dtrsm_llnu_ref
+#define TRSM_LLNN  blasfeo_dtrsm_llnn_ref
+#define TRSM_LLTU  blasfeo_dtrsm_lltu_ref
+#define TRSM_LLTN  blasfeo_dtrsm_lltn_ref
+#define TRSM_RUNU  blasfeo_dtrsm_runu_ref
+#define TRSM_RUNN  blasfeo_dtrsm_runn_ref
+#define TRSM_RUTU  blasfeo_dtrsm_rutu_ref
+#define TRSM_RUTN  blasfeo_dtrsm_rutn_ref
+#define TRSM_RLNU  blasfeo_dtrsm_rlnu_ref
+#define TRSM_RLNN  blasfeo_dtrsm_rlnn_ref
 #define TRSM_RLTU  blasfeo_dtrsm_rltu_ref
 #define TRSM_RLTN  blasfeo_dtrsm_rltn_ref
-#define TRSM_RUTN  blasfeo_dtrsm_rutn_ref
-#define TRMM_RUTN  blasfeo_dtrmm_rutn_ref
-#define TRMM_RLNN  blasfeo_dtrmm_rlnn_ref
 
 
 // TESTING_MODE
