@@ -9,10 +9,10 @@ import re
 from pathlib import Path
 
 BLASFEO_DIR=Path(__file__).absolute().parents[1]
-RECIPE_SCHEMA="test_schema.json"
+SCHEMA="test_schema.json"
 RECIPE_JSON="recipe_default.json"
 REPORTS_DIR="reports"
-TESTCLASSES_PATH="classes"
+TESTCLASSES_DIR="classes"
 TPL_PATH="Makefile.tpl"
 
 
@@ -108,7 +108,7 @@ class CookBook:
         with open(cli_flags.recipe_json) as f:
             self.specs = json.load(f)
 
-        with open(RECIPE_SCHEMA) as f:
+        with open(SCHEMA) as f:
             self.schema = json.load(f)
 
         self.DONE = 0
@@ -182,7 +182,7 @@ class CookBook:
                                 routine_testclass_src = routine_class["testclass_src"]
                                 routine_name = "{precision}{routine}".format(precision=precision[0], routine=routine)
 
-                            cflags["ROUTINE_CLASS_C"] = Path(TESTCLASSES_PATH, routine_testclass_src)
+                            cflags["ROUTINE_CLASS_C"] = Path(TESTCLASSES_DIR, routine_testclass_src)
                             cflags["ROUTINE"] = routine_name
                             cflags["ROUTINE_FULLNAME"] = routine
 
