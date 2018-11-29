@@ -6,13 +6,16 @@
     "SOC":"BACHMANN",
     "SOC":"DSPACE"
   },
+  "options":{
+    "rebuild": 0,
+    "silent": 1
+  },
+  "cflags":{
+    "REF_BLAS":"0",
+    "VERBOSE":1
+  },
   "make_flags":{
-    "CC":"clang",
-    "BUILD_LIBS":1,
-    "DEPLOY_LIBS":1,
-    "VERBOSE":1,
-    "BLAS_API":"1",
-    "REF_BLAS":"0"
+    "CC":"clang"
   },
   "precisions":["d"],
   "targets":[

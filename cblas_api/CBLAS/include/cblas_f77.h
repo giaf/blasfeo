@@ -7,7 +7,7 @@
  */
 
 #ifndef CBLAS_F77_H
-#define CBLAS_f77_H
+#define CBLAS_F77_H
 
 #ifdef CRAY
    #include <fortran.h>

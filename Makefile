@@ -761,19 +761,19 @@ static_library: target
 	( cd auxiliary; $(MAKE) obj)
 	( cd blasfeo_api; $(MAKE) obj)
 	( cd blas_api; $(MAKE) obj)
+ifeq ($(CBLAS_API), 1)
 	( cd cblas_api; $(MAKE) obj)
+endif
 ifeq ($(SANDBOX_MODE), 1)
 	( cd sandbox; $(MAKE) obj)
 endif
 	$(AR) rcs libblasfeo.a $(OBJS)
 	mv libblasfeo.a ./lib/
-ifeq ($(TESTING_MODE), 1)
-	$(AR) rcs libblasfeo_ref.a $(OBJS_REF)
-	mv libblasfeo_ref.a ./lib/
-endif
 	@echo
 	@echo " libblasfeo.a static library build complete."
 ifeq ($(TESTING_MODE), 1)
+	$(AR) rcs libblasfeo_ref.a $(OBJS_REF)
+	mv libblasfeo_ref.a ./lib/
 	@echo " libblasfeo_ref.a static library build complete."
 endif
 	@echo
@@ -785,18 +785,21 @@ shared_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd blasfeo_api; $(MAKE) obj)
 	( cd blas_api; $(MAKE) obj)
+ifeq ($(CBLAS_API), 1)
 	( cd cblas_api; $(MAKE) obj)
+endif
 ifeq ($(SANDBOX_MODE), 1)
 	( cd sandbox; $(MAKE) obj)
 endif
 	$(CC) -shared -o libblasfeo.so $(OBJS) #-Wl,-Bsymbolic
 	mv libblasfeo.so ./lib/
+	@echo
+	@echo " libblasfeo.so shared library build complete."
 ifeq ($(TESTING_MODE), 1)
 	$(CC) -shared -o libblasfeo_ref.so $(OBJS_REF)
 	mv libblasfeo_ref.so ./lib/
+	@echo " libblasfeo_ref.so shared library build complete."
 endif
-	@echo
-	@echo " libblasfeo.so shared library build complete."
 	@echo
 
 

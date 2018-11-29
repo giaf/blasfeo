@@ -217,47 +217,4 @@ int GECMP_BLASAPI(
 
 
 // template base on routine class
-//
-#ifdef ROUTINE_CLASS_GETRF_NOPIVOT
-#include "classes/getrf_nopivot.c"
-#endif
-
-#ifdef ROUTINE_CLASS_GETRF_ROWPIVOT
-#include "classes/getrf_rowpivot.c"
-#endif
-
-#ifdef ROUTINE_CLASS_GEQF
-#include "classes/geqf.c"
-#endif
-
-#ifdef ROUTINE_CLASS_POTRF
-#include "classes/potrf.c"
-#endif
-
-#ifdef ROUTINE_CLASS_GEMM
-#include "classes/gemm.c"
-#endif
-
-#ifdef ROUTINE_CLASS_GEMM_BLAS
-#include "classes/gemm-blasapi.c"
-#endif
-
-#ifdef ROUTINE_CLASS_SYRK
-#include "classes/syrk.c"
-#endif
-
-#ifdef ROUTINE_CLASS_TRM
-#include "classes/trm.c"
-#endif
-
-#ifdef ROUTINE_CLASS_1ARGS
-#include "classes/aux1args.c"
-#endif
-
-#ifdef ROUTINE_CLASS_2ARGS
-#include "classes/aux2args.c"
-#endif
-
-#ifdef ROUTINE_CLASS_3ARGS
-#include "classes/aux3args.c"
-#endif
+#include string(ROUTINE_CLASS_C)

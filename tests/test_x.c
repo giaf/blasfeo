@@ -38,22 +38,22 @@ int test_routine(struct RoutineArgs *args, int *bad_calls){
 
 	// routine test
 	#ifdef TEST_BLAS_API
-	int res = GECMP_BLASAPI(
+	int err = GECMP_BLASAPI(
 		args->n, args->m, args->ai, args->aj,
 		args->cD, args->rD,
 		&(args->err_i), &(args->err_j), VERBOSE);
 	#else
-	int res = GECMP_LIBSTR(
+	int err = GECMP_LIBSTR(
 		args->n, args->m, args->ai, args->aj,
 		args->sD, args->rD,
 		&(args->err_i), &(args->err_j), VERBOSE);
 	#endif
 
-	if (!res) *bad_calls += 1;
+	if (err) *bad_calls += 1;
 #if (VERBOSE==0)
 	// increment number of bad calls olny
 #else
-	if (!res)
+	if (err)
 		{
 #if (VERBOSE>1)
 		// print input matrices
@@ -68,11 +68,9 @@ int test_routine(struct RoutineArgs *args, int *bad_calls){
 
 		print_compilation_flags();
 		}
-
-	// terminate on error
-	return res;
 #endif
-
+	// terminate on error
+	return err;
 }
 
 int main()
@@ -147,6 +145,14 @@ int main()
 	PACK_STRMAT(n, n, B, n, &sB, 0, 0);
 	PACK_STRMAT(n, n, C, n, &sC, 0, 0);
 	PACK_STRMAT(n, n, D, n, &sD, 0, 0);
+	sA.m = n;
+	sA.n = n;
+	sB.m = n;
+	sB.n = n;
+	sC.m = n;
+	sC.n = n;
+	sD.m = n;
+	sD.n = n;
 
 	// Allocate BLASFEO_blasapi matrices
 	struct STRMAT_REF cA; ALLOCATE_STRMAT_REF(n, n, &cA);
@@ -229,7 +235,7 @@ int main()
 
 	bad_calls = 0;
 
-	printf("\n----------- TEST " string(ROUTINE) "\n");
+	printf("\n----------- TEST " string(ROUTINE_FULLNAME) "\n");
 
 	blasfeo_tic(&timer);
 
@@ -320,9 +326,9 @@ int main()
 
 									args.alpha = alpha;
 
-									int result = test_routine(&args, &bad_calls);
+									int error = test_routine(&args, &bad_calls);
 
-									if (!result) return 0;
+									if (error) return 1;
 									}
 								}
 							}
@@ -343,7 +349,7 @@ int main()
 			result_code = "FAILED";
 		}
 
-	printf("\n----------- TEST "string(ROUTINE)" %s, %d/%d Bad calls, Elapsed time: %4.4f s\n\n",
+	printf("\n----------- TEST "string(ROUTINE_FULLNAME)" %s, %d/%d Bad calls, Elapsed time: %4.4f s\n\n",
 			result_code, bad_calls, total_calls, test_elapsed_time);
 
 	#if (VERBOSE>1)
