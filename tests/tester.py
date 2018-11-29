@@ -8,10 +8,13 @@ import argparse
 import re
 from pathlib import Path
 
+BLASFEO_DIR=Path(__file__).absolute().parents[1]
 RECIPE_SCHEMA="test_schema.json"
 RECIPE_JSON="recipe_default.json"
+REPORTS_DIR="reports"
 TESTCLASSES_PATH="classes"
 TPL_PATH="Makefile.tpl"
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='BLAFEO tests scheduler')
@@ -28,35 +31,6 @@ def parse_arguments():
 
     args = parser.parse_args()
     return args
-
-
-def make_templated(cmd="", cflags={}, env_flags={}, make_flags={}):
-
-    with open(TPL_PATH) as f:
-        template = jn.Template(f.read())
-
-    makefile = template.render(cflags=cflags)
-
-    # flag to override default libblasfeo flags
-    make_flags_cmd = " ".join(["{k}={v}".format(k=k, v=v) if v is not None else k for k, v in make_flags.items()])
-
-    #  env_flags = " ".join(["{k}={v}".format(k=k, v=v) for k, v in env_flags.items()])
-    #  run_cmd = "{env_flags} make -f - {cmd}".format(env_flags=env_flags, cmd=cmd)
-    run_cmd = "make {make_flags_cmd} -f - {cmd}".format(cmd=cmd, make_flags_cmd=make_flags_cmd)
-    print(run_cmd)
-
-    make = sp.Popen(run_cmd.split(),
-        stdin=sp.PIPE,
-        stdout=sp.PIPE,
-        stderr=sp.PIPE
-        )
-
-    outs, errs = make.communicate(makefile.encode("utf8"))
-
-    if outs: print("Make infos:\n", outs.decode("utf8"))
-    if errs: print("Make errors:\n",errs.decode("utf8"))
-
-    return make.returncode
 
 
 def make(cmd="", cflags={}, make_flags={}, env_flags={}):
@@ -78,6 +52,54 @@ def make(cmd="", cflags={}, make_flags={}, env_flags={}):
     return make_process.returncode
 
 
+def make_templated(make_cmd="", cflags={}, env_flags={}, make_flags={}, **kargs):
+
+    run_id = "{la}_{target}_{routine_fullname}"\
+        .format(la=make_flags['LA'], target=make_flags['TARGET'], routine_fullname=kargs["fullname"])
+
+    print("\nTesting {run_id}\n".format(run_id=run_id))
+
+
+    with open(TPL_PATH) as f:
+        template = jn.Template(f.read())
+
+    makefile = template.render(cflags=cflags)
+
+    # flag to override default libblasfeo flags
+    make_flags_cmd = " ".join(["{k}={v}".format(k=k, v=v) if v is not None else k for k, v in make_flags.items()])
+
+    #  env_flags = " ".join(["{k}={v}".format(k=k, v=v) for k, v in env_flags.items()])
+    #  run_cmd = "{env_flags} make -f - {cmd}".format(env_flags=env_flags, cmd=cmd)
+    run_cmd = "make {make_flags_cmd} -f - {make_cmd}".format(make_cmd=make_cmd, make_flags_cmd=make_flags_cmd)
+    report_cmd = "make {make_flags_cmd} {make_cmd}".format(make_cmd=make_cmd, make_flags_cmd=make_flags_cmd)
+    make = sp.Popen(run_cmd.split(),
+        stdin=sp.PIPE,
+        stdout=sp.PIPE,
+        stderr=sp.PIPE
+        )
+
+    outs, errs = make.communicate(makefile.encode("utf8"))
+
+    if outs: print("Make infos:\n", outs.decode("utf8"))
+    if errs: print("Make errors:\n",errs.decode("utf8"))
+
+    if make.returncode:
+        # write report
+        report_dir_path = Path(REPORTS_DIR, run_id)
+        report_dir_path.mkdir(parents=True, exist_ok=True)
+        with open(Path(report_dir_path, "Makefile"), "w") as f:
+            f.write(makefile)
+        with open(Path(report_dir_path, "make.sh"), "w") as f:
+            f.write("#! /bin/bash\n")
+            f.write(report_cmd+"\n")
+
+        print("Error with {run_id}".format(run_id=run_id))
+
+    else:
+        print("Tested with {run_id}".format(run_id=run_id))
+
+    return make.returncode
+
 class CookBook:
     def __init__(self, cli_flags):
 
@@ -90,6 +112,7 @@ class CookBook:
             self.schema = json.load(f)
 
         self.DONE = 0
+        self.ERRORS = 0
 
         self.TOTAL =\
             len(set(self.specs["routines"]))\
@@ -114,6 +137,7 @@ class CookBook:
         # create recipe with no global flags
         self.recipe = dict(self.specs)
         self.recipe["scheduled_routines"] = {}
+        self.recipe["make_flags"].update({"BLASFEO_DIR":BLASFEO_DIR})
 
         available_groups = self.schema['routines']
 
@@ -170,6 +194,7 @@ class CookBook:
                                 "api": api,
                                 "precision": precision,
                                 "make_cmd": "update",
+                                "fullname": routine_fullname,
                                 "cflags": cflags
                             }
 
@@ -245,29 +270,20 @@ class CookBook:
                 args["make_flags"] = make_flags
 
             error =  self.test_routine(routine_name, args)
+
             if error and not self.cli_flags.run_all: break
 
-    def test_routine(self, routine_fullname, args):
+    def test_routine(self, routine_fullname, kargs):
 
-        cflags = args["cflags"]
-        env_flags = args["env_flags"]
-        make_flags = args["make_flags"]
+        error = make_templated(**kargs)
 
-        run_id = "{la}:{target}:{routine_fullname}"\
-            .format(la=make_flags['LA'], target=make_flags['TARGET'], routine_fullname=routine_fullname)
+        if not error:
+            self.DONE += 1
+        else:
+            self.ERRORS += 1
 
-        print("\nTesting {run_id}\n".format(run_id=run_id))
-
-        error = make_templated(args["make_cmd"], cflags, env_flags, make_flags)
-
-        if error:
-            print("Error with {run_id} ({done}/{total})"
-                .format(run_id=run_id, done=self.DONE, total=self.TOTAL))
-            return error
-
-        self.DONE += 1
-        print("Tested {run_id} ({done}/{total})"
-            .format(run_id=run_id, done=self.DONE, total=self.TOTAL))
+        print("({done}:Succeded, {errors}:Errors) / ({total}:Total)"
+            .format(done=self.DONE, errors=self.ERRORS, total=self.TOTAL))
 
         return error
 

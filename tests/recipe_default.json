@@ -19,14 +19,24 @@
   ],
   "apis": [
     "blasfeo"
+    ,"blas"
   ],
   "targets": [
     "X64_INTEL_SANDY_BRIDGE"
+    ,"GENERIC"
+    ,"X64_INTEL_CORE"
+    ,"X64_INTEL_HASWELL"
   ],
   "las": [
     "HIGH_PERFORMANCE"
   ],
   "routines": [
+    "gemm_nn",
+    "gemm_tn",
+    "gemm_nt",
+    "gemm_tt"
+  ],
+  "buffer": [
      "trsm_llnu",
      "trsm_llnn",
      "trsm_lunu",
@@ -43,12 +53,5 @@
      "trsm_runn",
      "trsm_rutu",
      "trsm_rutn"
-  ],
-  "test": [
-    "token"
-    ,"GENERIC"
-    ,"X64_INTEL_CORE"
-    ,"X64_INTEL_HASWELL"
-    ,"blas"
   ]
 }
