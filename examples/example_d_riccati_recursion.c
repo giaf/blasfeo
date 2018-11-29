@@ -880,6 +880,7 @@ int main()
 //	for(ii=0; ii<=N; ii++)
 //		blasfeo_print_exp_dmat(nu[ii]+nx[ii]+1, nu[ii]+nx[ii], &hsL[ii], 0, 0);
 
+#if ( REF_BLAS!=0 | defined(BLAS_API) )
 	printf("\nBLAS API\n\n");
 	printf("\nux = \n\n");
 	for(ii=0; ii<=N; ii++)
@@ -888,6 +889,7 @@ int main()
 	printf("\npi = \n\n");
 	for(ii=0; ii<N; ii++)
 		d_print_mat(1, nx[ii+1], hpi[ii], 1);
+#endif
 
 	printf("\n           \ttime sv\t\ttime trf\ttime trs\n");
 	printf("\nBLASFEO API\t%e\t%e\t%e\n", time_sv, time_trf, time_trs);
