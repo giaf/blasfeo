@@ -25,7 +25,7 @@ void print_routine(struct RoutineArgs *args){
 	//
 	printf("Called: %s with: ", string(ROUTINE));
 	printf(
-		"%f*A[%d,%d|%d,%d]*X[%d,%d] = %f*B[%d,%d]\n\n",
+		"%f*A[%d,%d|%d,%d]*X[%d,%d] = B[%d,%d]\n\n",
 		args->alpha, args->m, args->n, args->m, args->n,
 		args->m, args->n,args->m, args->n
 	);
