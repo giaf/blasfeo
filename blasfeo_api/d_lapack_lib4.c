@@ -113,6 +113,121 @@ void blasfeo_dgetrf_rp_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 
 
 #if defined(TARGET_X64_INTEL_HASWELL)
+	// 12 columns at a time
+	jj = 0;
+	for(; jj<n-11; jj+=12)
+		{
+
+		// pack
+		kernel_dpacp_tn_4_lib4(jj, 0, pD+jj*ps, sdc, pU);
+		kernel_dpacp_tn_4_lib4(jj, 0, pD+(jj+4)*ps, sdc, pU+4*sdu);
+		kernel_dpacp_tn_4_lib4(jj, 0, pD+(jj+8)*ps, sdc, pU+8*sdu);
+
+		// solve upper
+		for(ii=0; ii<jj; ii+=4)
+			{
+//			kernel_dpacp_tn_4_lib4(4, 0, pD+jj*ps+ii*sdd, sdc, pU+ii*ps);
+//			kernel_dpacp_tn_4_lib4(4, 0, pD+(jj+4)*ps+ii*sdd, sdc, pU+4*sdu+ii*ps);
+//			kernel_dpacp_tn_4_lib4(4, 0, pD+(jj+8)*ps+ii*sdd, sdc, pU+8*sdu+ii*ps);
+
+			kernel_dtrsm_nt_rl_one_12x4_lib4(ii, pU, sdu, pD+ii*sdd, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, pD+ii*ps+ii*sdd);
+
+//			kernel_dpacp_nt_4_lib4(4, pU+ii*ps, 0, pD+jj*ps+ii*sdd, sdd);
+//			kernel_dpacp_nt_4_lib4(4, pU+4*sdu+ii*ps, 0, pD+(jj+4)*ps+ii*sdd, sdd);
+//			kernel_dpacp_nt_4_lib4(4, pU+8*sdu+ii*ps, 0, pD+(jj+8)*ps+ii*sdd, sdd);
+			}
+
+		// pivot & factorize & solve lower
+		ii = jj;
+		for( ; ii<m-3; ii+=4)
+			{
+			kernel_dgemm_nt_4x12_lib4(jj, &dm1, pD+ii*sdd, pU, sdu, &d1, pD+jj*ps+ii*sdd, pD+jj*ps+ii*sdd);
+			}
+		if(m-ii>0)
+			{
+			kernel_dgemm_nt_4x12_vs_lib4(jj, &dm1, pD+ii*sdd, pU, sdu, &d1, pD+jj*ps+ii*sdd, pD+jj*ps+ii*sdd, m-ii, 12);
+			}
+
+		// unpack
+		kernel_dpacp_nt_4_lib4(jj, pU, 0, pD+jj*ps, sdd);
+		kernel_dpacp_nt_4_lib4(jj, pU+4*sdu, 0, pD+(jj+4)*ps, sdd);
+		kernel_dpacp_nt_4_lib4(jj, pU+8*sdu, 0, pD+(jj+8)*ps, sdd);
+
+#if 1
+		kernel_dgetrf_pivot_12_lib4(m-jj, &pD[jj*ps+jj*sdd], sdd, &dD[jj], &ipiv[jj]);
+
+		for(ii=0; ii<12; ii++)
+			{
+			ipiv[jj+ii] += jj;
+			if(ipiv[jj+ii]!=jj+ii)
+				{
+				drowsw_lib(jj, pD+(jj+ii)/ps*ps*sdd+(jj+ii)%ps, pD+(ipiv[jj+ii])/ps*ps*sdd+(ipiv[jj+ii])%ps);
+				drowsw_lib(n-jj-12, pD+(jj+ii)/ps*ps*sdd+(jj+ii)%ps+(jj+12)*ps, pD+(ipiv[jj+ii])/ps*ps*sdd+(ipiv[jj+ii])%ps+(jj+12)*ps);
+				}
+			}
+#else
+		kernel_dgetrf_pivot_8_lib4(m-jj, &pD[jj*ps+jj*sdd], sdd, &dD[jj], &ipiv[jj]);
+
+		for(ii=0; ii<8; ii++)
+			{
+			ipiv[jj+ii] += jj;
+			if(ipiv[jj+ii]!=jj+ii)
+				{
+				drowsw_lib(jj, pD+(jj+ii)/ps*ps*sdd+(jj+ii)%ps, pD+(ipiv[jj+ii])/ps*ps*sdd+(ipiv[jj+ii])%ps);
+				drowsw_lib(n-jj-8, pD+(jj+ii)/ps*ps*sdd+(jj+ii)%ps+(jj+8)*ps, pD+(ipiv[jj+ii])/ps*ps*sdd+(ipiv[jj+ii])%ps+(jj+8)*ps);
+				}
+			}
+
+		kernel_dtrsm_nn_ll_one_8x4_lib4(0, dummy, sdu, dummy, sdu, &d1, pD+jj*sdd+(jj+8)*ps, sdd, pD+jj*sdd+(jj+8)*ps, sdd, pD+jj*ps+jj*sdd, sdd);
+
+		ii = jj+8;
+		for( ; ii<m-11; ii+=12)
+			{
+			kernel_dgemm_nn_12x4_lib4(8, &dm1, pD+ii*sdd+jj*ps, sdd, 0, pD+jj*sdd+(jj+8)*ps, sdd, &d1, pD+ii*sdd+(jj+8)*ps, sdd, pD+ii*sdd+(jj+8)*ps, sdd);
+			}
+		for( ; ii<m-7; ii+=8)
+			{
+			kernel_dgemm_nn_8x4_lib4(8, &dm1, pD+ii*sdd+jj*ps, sdd, 0, pD+jj*sdd+(jj+8)*ps, sdd, &d1, pD+ii*sdd+(jj+8)*ps, sdd, pD+ii*sdd+(jj+8)*ps, sdd);
+			}
+		for( ; ii<m-3; ii+=4)
+			{
+			kernel_dgemm_nn_4x4_lib4(8, &dm1, pD+ii*sdd+jj*ps, 0, pD+jj*sdd+(jj+8)*ps, sdd, &d1, pD+ii*sdd+(jj+8)*ps, pD+ii*sdd+(jj+8)*ps);
+			}
+		if(ii<m)
+			{
+			kernel_dgemm_nn_4x4_vs_lib4(8, &dm1, pD+ii*sdd+jj*ps, 0, pD+jj*sdd+(jj+8)*ps, sdd, &d1, pD+ii*sdd+(jj+8)*ps, pD+ii*sdd+(jj+8)*ps, m-ii, 4);
+			}
+
+		kernel_dgetrf_pivot_4_lib4(m-jj-8, &pD[(jj+8)*ps+(jj+8)*sdd], sdd, &dD[jj+8], &ipiv[jj+8]);
+
+		for(ii=0; ii<4; ii++)
+			{
+			ipiv[(jj+8)+ii] += (jj+8);
+			if(ipiv[(jj+8)+ii]!=(jj+8)+ii)
+				{
+				drowsw_lib((jj+8), pD+((jj+8)+ii)/ps*ps*sdd+((jj+8)+ii)%ps, pD+(ipiv[(jj+8)+ii])/ps*ps*sdd+(ipiv[(jj+8)+ii])%ps);
+				drowsw_lib(n-(jj+8)-4, pD+((jj+8)+ii)/ps*ps*sdd+((jj+8)+ii)%ps+((jj+8)+4)*ps, pD+(ipiv[(jj+8)+ii])/ps*ps*sdd+(ipiv[(jj+8)+ii])%ps+((jj+8)+4)*ps);
+				}
+			}
+
+#endif
+
+//return;
+		}
+	if(jj<n)
+		{
+		if(n-jj<=4)
+			{
+			goto left_4;
+			}
+		else if(n-jj<=8)
+			{
+			goto left_8;
+			}
+		// TODO
+		}
+
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	// 8 columns at a time
 	jj = 0;
 	for(; jj<n-7; jj+=8)
@@ -139,7 +254,7 @@ void blasfeo_dgetrf_rp_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 			kernel_dgemm_nt_4x8_vs_lib4(jj, &dm1, pD+ii*sdd, pU, sdu, &d1, pD+jj*ps+ii*sdd, pD+jj*ps+ii*sdd, m-ii, 8);
 			}
 
-#if 1
+#if 0
 		kernel_dgetrf_pivot_8_lib4(m-jj, &pD[jj*ps+jj*sdd], sdd, &dD[jj], &ipiv[jj]);
 
 		for(ii=0; ii<8; ii++)
@@ -167,6 +282,10 @@ void blasfeo_dgetrf_rp_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 		kernel_dtrsm_nn_ll_one_4x4_lib4(0, dummy, dummy, sdu, &d1, pD+jj*sdd+(jj+4)*ps, pD+jj*sdd+(jj+4)*ps, pD+jj*ps+jj*sdd);
 
 		ii = jj+4;
+		for( ; ii<m-7; ii+=8)
+			{
+			kernel_dgemm_nn_8x4_lib4(4, &dm1, pD+ii*sdd+jj*ps, sdd, 0, pD+jj*sdd+(jj+4)*ps, sdd, &d1, pD+ii*sdd+(jj+4)*ps, sdd, pD+ii*sdd+(jj+4)*ps, sdd);
+			}
 		for( ; ii<m-3; ii+=4)
 			{
 			kernel_dgemm_nn_4x4_lib4(4, &dm1, pD+ii*sdd+jj*ps, 0, pD+jj*sdd+(jj+4)*ps, sdd, &d1, pD+ii*sdd+(jj+4)*ps, pD+ii*sdd+(jj+4)*ps);
@@ -198,7 +317,14 @@ void blasfeo_dgetrf_rp_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 		}
 	if(jj<n)
 		{
-		// TODO
+		if(n-jj<=4)
+			{
+			goto left_4;
+			}
+		else
+			{
+			goto left_8;
+			}
 		}
 #else
 	// 4 columns at a time
@@ -228,29 +354,15 @@ void blasfeo_dgetrf_rp_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 			}
 
 		kernel_dgetrf_pivot_4_lib4(m-i0, &pD[jj*ps+i0*sdd], sdd, &dD[jj], &ipiv[i0]);
-		ipiv[i0+0] += i0;
-		if(ipiv[i0+0]!=i0+0)
+
+		for(ii=0; ii<4; ii++)
 			{
-			drowsw_lib(jj, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps);
-			drowsw_lib(n-jj-4, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps+(jj+4)*ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps+(jj+4)*ps);
-			}
-		ipiv[i0+1] += i0;
-		if(ipiv[i0+1]!=i0+1)
-			{
-			drowsw_lib(jj, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps);
-			drowsw_lib(n-jj-4, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps+(jj+4)*ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps+(jj+4)*ps);
-			}
-		ipiv[i0+2] += i0;
-		if(ipiv[i0+2]!=i0+2)
-			{
-			drowsw_lib(jj, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps);
-			drowsw_lib(n-jj-4, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+4)*ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+4)*ps);
-			}
-		ipiv[i0+3] += i0;
-		if(ipiv[i0+3]!=i0+3)
-			{
-			drowsw_lib(jj, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps);
-			drowsw_lib(n-jj-4, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps+(jj+4)*ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps+(jj+4)*ps);
+			ipiv[jj+ii] += jj;
+			if(ipiv[jj+ii]!=jj+ii)
+				{
+				drowsw_lib(jj, pD+(jj+ii)/ps*ps*sdd+(jj+ii)%ps, pD+(ipiv[jj+ii])/ps*ps*sdd+(ipiv[jj+ii])%ps);
+				drowsw_lib(n-jj-4, pD+(jj+ii)/ps*ps*sdd+(jj+ii)%ps+(jj+4)*ps, pD+(ipiv[jj+ii])/ps*ps*sdd+(ipiv[jj+ii])%ps+(jj+4)*ps);
+				}
 			}
 
 		// unpack
@@ -259,10 +371,124 @@ void blasfeo_dgetrf_rp_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 		}
 	if(jj<n)
 		{
+		goto left_4;
 		// TODO
 		}
 #endif
+	goto end;
 
+
+
+left_8:
+	// pack
+	kernel_dpacp_tn_4_lib4(jj, 0, pD+jj*ps, sdc, pU);
+	kernel_dpacp_tn_4_lib4(jj, 0, pD+(jj+4)*ps, sdc, pU+4*sdu); // TODO vs
+
+	// solve upper
+	for(ii=0; ii<jj; ii+=4)
+		{
+		kernel_dtrsm_nt_rl_one_8x4_lib4(ii, pU, sdu, pD+ii*sdd, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, pD+ii*ps+ii*sdd);
+		}
+
+	// pivot & factorize & solve lower
+	ii = jj;
+	for( ; ii<m; ii+=4)
+		{
+		kernel_dgemm_nt_4x8_vs_lib4(jj, &dm1, pD+ii*sdd, pU, sdu, &d1, pD+jj*ps+ii*sdd, pD+jj*ps+ii*sdd, m-ii, n-jj);
+		}
+
+#if 0
+	kernel_dgetrf_pivot_8_lib4(m-jj, &pD[jj*ps+jj*sdd], sdd, &dD[jj], &ipiv[jj]); // TODO vs
+
+	for(ii=0; ii<8; ii++)
+		{
+		ipiv[jj+ii] += jj;
+		if(ipiv[jj+ii]!=jj+ii)
+			{
+			drowsw_lib(jj, pD+(jj+ii)/ps*ps*sdd+(jj+ii)%ps, pD+(ipiv[jj+ii])/ps*ps*sdd+(ipiv[jj+ii])%ps);
+			drowsw_lib(n-jj-8, pD+(jj+ii)/ps*ps*sdd+(jj+ii)%ps+(jj+8)*ps, pD+(ipiv[jj+ii])/ps*ps*sdd+(ipiv[jj+ii])%ps+(jj+8)*ps);
+			}
+		}
+#else
+	kernel_dgetrf_pivot_4_lib4(m-jj, &pD[jj*ps+jj*sdd], sdd, &dD[jj], &ipiv[jj]);
+
+	for(ii=0; ii<4; ii++)
+		{
+		ipiv[jj+ii] += jj;
+		if(ipiv[jj+ii]!=jj+ii)
+			{
+			drowsw_lib(jj, pD+(jj+ii)/ps*ps*sdd+(jj+ii)%ps, pD+(ipiv[jj+ii])/ps*ps*sdd+(ipiv[jj+ii])%ps);
+			drowsw_lib(n-jj-4, pD+(jj+ii)/ps*ps*sdd+(jj+ii)%ps+(jj+4)*ps, pD+(ipiv[jj+ii])/ps*ps*sdd+(ipiv[jj+ii])%ps+(jj+4)*ps);
+			}
+		}
+
+	kernel_dtrsm_nn_ll_one_4x4_vs_lib4(0, dummy, dummy, sdu, &d1, pD+jj*sdd+(jj+4)*ps, pD+jj*sdd+(jj+4)*ps, pD+jj*ps+jj*sdd, 4, n-jj);
+
+	ii = jj+4;
+	for( ; ii<m-4; ii+=8)
+		{
+		kernel_dgemm_nn_8x4_vs_lib4(4, &dm1, pD+ii*sdd+jj*ps, sdd, 0, pD+jj*sdd+(jj+4)*ps, sdd, &d1, pD+ii*sdd+(jj+4)*ps, sdd, pD+ii*sdd+(jj+4)*ps, sdd, m-ii, n-jj);
+		}
+	for( ; ii<m; ii+=4)
+		{
+		kernel_dgemm_nn_4x4_vs_lib4(4, &dm1, pD+ii*sdd+jj*ps, 0, pD+jj*sdd+(jj+4)*ps, sdd, &d1, pD+ii*sdd+(jj+4)*ps, pD+ii*sdd+(jj+4)*ps, m-ii, n-jj);
+		}
+
+	kernel_dgetrf_pivot_4_vs_lib4(m-jj-4, n-jj-4, &pD[(jj+4)*ps+(jj+4)*sdd], sdd, &dD[jj+4], &ipiv[jj+4]);
+
+	for(ii=0; ii<4; ii++)
+		{
+		ipiv[(jj+4)+ii] += (jj+4);
+		if(ipiv[(jj+4)+ii]!=(jj+4)+ii)
+			{
+			drowsw_lib((jj+4), pD+((jj+4)+ii)/ps*ps*sdd+((jj+4)+ii)%ps, pD+(ipiv[(jj+4)+ii])/ps*ps*sdd+(ipiv[(jj+4)+ii])%ps);
+			drowsw_lib(n-(jj+4)-4, pD+((jj+4)+ii)/ps*ps*sdd+((jj+4)+ii)%ps+((jj+4)+4)*ps, pD+(ipiv[(jj+4)+ii])/ps*ps*sdd+(ipiv[(jj+4)+ii])%ps+((jj+4)+4)*ps);
+			}
+		}
+
+#endif
+
+	// unpack
+	kernel_dpacp_nt_4_lib4(jj, pU, 0, pD+jj*ps, sdd); // TODO vs
+	kernel_dpacp_nt_4_lib4(jj, pU+4*sdu, 0, pD+(jj+4)*ps, sdd); // TODO vs
+
+	goto end;
+
+
+
+left_4:
+	// pack
+	kernel_dpacp_tn_4_lib4(jj, 0, pD+jj*ps, sdc, pU); // TODO vs
+
+	// solve upper
+	for(ii=0; ii<jj; ii+=4)
+		{
+		kernel_dtrsm_nt_rl_one_4x4_lib4(ii, pU, pD+ii*sdd, &d1, pU+ii*ps, pU+ii*ps, pD+ii*ps+ii*sdd);
+		}
+
+	// pivot & factorize & solve lower
+	ii = jj;
+	i0 = ii;
+	for( ; ii<m; ii+=4)
+		{
+		kernel_dgemm_nt_4x4_vs_lib4(jj, &dm1, pD+ii*sdd, pU, &d1, pD+jj*ps+ii*sdd, pD+jj*ps+ii*sdd, m-ii, n-jj);
+		}
+
+	kernel_dgetrf_pivot_4_vs_lib4(m-jj, n-jj, &pD[jj*ps+jj*sdd], sdd, &dD[jj], &ipiv[jj]);
+
+	for(ii=0; ii<4; ii++)
+		{
+		ipiv[jj+ii] += jj;
+		if(ipiv[jj+ii]!=jj+ii)
+			{
+			drowsw_lib(jj, pD+(jj+ii)/ps*ps*sdd+(jj+ii)%ps, pD+(ipiv[jj+ii])/ps*ps*sdd+(ipiv[jj+ii])%ps);
+			drowsw_lib(n-jj-4, pD+(jj+ii)/ps*ps*sdd+(jj+ii)%ps+(jj+4)*ps, pD+(ipiv[jj+ii])/ps*ps*sdd+(ipiv[jj+ii])%ps+(jj+4)*ps);
+			}
+		}
+
+	// unpack
+	kernel_dpacp_nt_4_lib4(jj, pU, 0, pD+jj*ps, sdd); // TODO vs
+	goto end;
 
 
 
