@@ -798,7 +798,7 @@ endif
 ifeq ($(TESTING_MODE), 1)
 	$(CC) -shared -o libblasfeo_ref.so $(OBJS_REF)
 	mv libblasfeo_ref.so ./lib/
-	@echo " libblasfeo_ref.a static library build complete."
+	@echo " libblasfeo_ref.so static library build complete."
 endif
 	@echo
 
