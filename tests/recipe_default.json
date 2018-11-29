@@ -1,15 +1,16 @@
 {
-  "env_flags": {
-    "CFLAGS": "-Wuninitialized"
+  "env_flags":{
+    "CFLAGS":"-Wuninitialized"
   },
-  "make_flags": {
-    "CFLAGS": "-Wuninitialized"
+  "options":{
+    "rebuild": 0,
+    "silent": 1
   },
-  "cflags": {
-    "CC": "clang",
-    "BUILD_LIBS": 0,
-    "DEPLOY_LIBS": 0,
-    "VERBOSE": 2,
+  "cflags":{
+    "VERBOSE":1
+  },
+  "make_flags":{
+    "CC":"clang",
     "TESTING_MODE": 1,
     "REF_BLAS": "OPENBLAS"
   },
@@ -17,10 +18,10 @@
     "double"
   ],
   "apis": [
-    "blas", "blasfeo"
+    "blasfeo"
   ],
   "targets": [
-    "X64_INTEL_HASWELL"
+    "X64_INTEL_SANDY_BRIDGE"
   ],
   "las": [
     "HIGH_PERFORMANCE"
@@ -28,10 +29,10 @@
   "routines": [
      "trsm_llnu",
      "trsm_llnn",
-     "trsm_lltu",
-     "trsm_lltn",
      "trsm_lunu",
      "trsm_lunn",
+     "trsm_lltu",
+     "trsm_lltn",
      "trsm_lutu",
      "trsm_lutn",
      "trsm_rlnu",
@@ -43,5 +44,11 @@
      "trsm_rutu",
      "trsm_rutn"
   ],
-  "test": []
+  "test": [
+    "token"
+    ,"GENERIC"
+    ,"X64_INTEL_CORE"
+    ,"X64_INTEL_HASWELL"
+    ,"blas"
+  ]
 }

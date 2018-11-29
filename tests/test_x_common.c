@@ -374,7 +374,7 @@ int GECMP_LIBSTR(
 				{
 					*err_i = ii;
 					*err_j = jj;
-					if (!debug) return 0;
+					if (!debug) return 1;
 
 					printf("\n\nFailed at index %d,%d, (HP) %2.18f != %2.18f (RF)\n", ii, jj, sbi, rbi);
 					printf("Absolute error: %3.5e\n", fabs(sbi-rbi));
@@ -390,12 +390,12 @@ int GECMP_LIBSTR(
 					blasfeo_print_xmat_debug(m, n, sD, bi, bj, ii, jj, 1);
 					print_xmat_debug(m, n, rD, bi, bj, ii, jj, 1);
 
-					return 0;
+					return 1;
 				}
 			}
 		}
 
-	return 1;
+	return 0;
 	}
 
 int GECMP_BLASAPI(
@@ -419,7 +419,7 @@ int GECMP_BLASAPI(
 				{
 					*err_i = ii;
 					*err_j = jj;
-					if (!debug) return 0;
+					if (!debug) return 1;
 
 					printf("\n\nFailed at index %d,%d, (HP) %2.18f != %2.18f (RF)\n", ii, jj, sbi, rbi);
 					printf("Absolute error: %3.5e\n", fabs(sbi-rbi));
@@ -435,10 +435,10 @@ int GECMP_BLASAPI(
 					print_xmat_debug(m, n, sD, bi, bj, ii, jj, 1);
 					print_xmat_debug(m, n, rD, bi, bj, ii, jj, 1);
 
-					return 0;
+					return 1;
 				}
 			}
 		}
 
-	return 1;
+	return 0;
 	}

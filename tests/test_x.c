@@ -38,22 +38,22 @@ int test_routine(struct RoutineArgs *args, int *bad_calls){
 
 	// routine test
 	#ifdef TEST_BLAS_API
-	int res = GECMP_BLASAPI(
+	int err = GECMP_BLASAPI(
 		args->n, args->m, args->ai, args->aj,
 		args->cD, args->rD,
 		&(args->err_i), &(args->err_j), VERBOSE);
 	#else
-	int res = GECMP_LIBSTR(
+	int err = GECMP_LIBSTR(
 		args->n, args->m, args->ai, args->aj,
 		args->sD, args->rD,
 		&(args->err_i), &(args->err_j), VERBOSE);
 	#endif
 
-	if (!res) *bad_calls += 1;
+	if (err) *bad_calls += 1;
 #if (VERBOSE==0)
 	// increment number of bad calls olny
 #else
-	if (!res)
+	if (err)
 		{
 #if (VERBOSE>1)
 		// print input matrices
@@ -68,11 +68,9 @@ int test_routine(struct RoutineArgs *args, int *bad_calls){
 
 		print_compilation_flags();
 		}
-
-	// terminate on error
-	return res;
 #endif
-
+	// terminate on error
+	return err;
 }
 
 int main()
@@ -328,9 +326,9 @@ int main()
 
 									args.alpha = alpha;
 
-									int result = test_routine(&args, &bad_calls);
+									int error = test_routine(&args, &bad_calls);
 
-									if (!result) return 0;
+									if (error) return 1;
 									}
 								}
 							}

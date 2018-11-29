@@ -15,14 +15,7 @@ SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
 include ../Makefile.blas
 
 {% for flag, value in cflags.items() %}
-
-{% if value %}
-CFLAGS += -D{{flag | upper}}={{value}}
-{% else %}
-CFLAGS += -D{{flag | upper}}
-{% endif %}
-
-{% endfor %}
+{% if value %} CFLAGS += -D{{flag | upper}}={{value}} {% else %} CFLAGS += -D{{flag | upper}} {% endif %} {% endfor %}
 
 {% if TEST_BLAS_API in cflags %}
 ifeq ($(REF_BLAS), 0)
