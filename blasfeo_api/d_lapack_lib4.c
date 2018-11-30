@@ -343,7 +343,6 @@ void blasfeo_dgetrf_rp_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 
 		// pivot & factorize & solve lower
 		ii = jj;
-		i0 = ii;
 		for( ; ii<m-3; ii+=4)
 			{
 			kernel_dgemm_nt_4x4_lib4(jj, &dm1, pD+ii*sdd, pU, &d1, pD+jj*ps+ii*sdd, pD+jj*ps+ii*sdd);
@@ -353,7 +352,7 @@ void blasfeo_dgetrf_rp_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 			kernel_dgemm_nt_4x4_vs_lib4(jj, &dm1, pD+ii*sdd, pU, &d1, pD+jj*ps+ii*sdd, pD+jj*ps+ii*sdd, m-ii, 4);
 			}
 
-		kernel_dgetrf_pivot_4_lib4(m-i0, &pD[jj*ps+i0*sdd], sdd, &dD[jj], &ipiv[i0]);
+		kernel_dgetrf_pivot_4_lib4(m-jj, &pD[jj*ps+jj*sdd], sdd, &dD[jj], &ipiv[jj]);
 
 		for(ii=0; ii<4; ii++)
 			{

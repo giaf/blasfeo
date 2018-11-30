@@ -195,6 +195,7 @@ openblas_set_num_threads(1);
 		int ldd = n;
 //		d_print_mat(n, n, C, ldc);
 
+		int *ipiv = malloc(n*sizeof(int));
 
 		int bs = 4;
 
@@ -321,11 +322,13 @@ openblas_set_num_threads(1);
 //				blasfeo_dtrsm(&c_r, &c_l, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
 //				blasfeo_dtrsm(&c_r, &c_l, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
 //				blasfeo_dtrsm(&c_r, &c_u, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
-				blasfeo_dtrsm(&c_r, &c_u, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_dtrsm(&c_r, &c_u, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
 //				blasfeo_dtrsm(&c_r, &c_u, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
 //				blasfeo_dtrsm(&c_r, &c_u, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
 
 //				blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
+
+				blasfeo_dgetrf(&n, &n, B, &n, ipiv, &info);
 
 //				for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 //				blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
@@ -419,8 +422,9 @@ openblas_set_num_threads(1);
 		double Gflops_max = flops_max * GHz_max;
 
 //		double flop_operation = 2.0*n*n*n; // gemm
-		double flop_operation = 1.0*n*n*n; // syrk trsm
+//		double flop_operation = 1.0*n*n*n; // syrk trsm
 //		double flop_operation = 1.0/3.0*n*n*n; // potrf
+		double flop_operation = 2.0/3.0*n*n*n; // getrf
 
 		double Gflops_blas      = 1e-9*flop_operation/time_blas;
 		double Gflops_blas_api  = 1e-9*flop_operation/time_blas_api;
@@ -441,6 +445,7 @@ openblas_set_num_threads(1);
 		free(B);
 		free(C);
 		free(D);
+		free(ipiv);
 		blasfeo_free_dmat(&sA);
 		blasfeo_free_dmat(&sB);
 		blasfeo_free_dmat(&sC);

@@ -29,103 +29,59 @@
 
 
 
-#ifndef BLASFEO_D_BLAS_API_H_
-#define BLASFEO_D_BLAS_API_H_
-
-
-
-#include "blasfeo_target.h"
-
-
-
-#ifdef __cplusplus
-extern "C" {
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_dlaswp dlaswp_
 #endif
 
 
 
-#ifdef BLAS_API
+void blasfeo_dlaswp(int *pn, double *A, int *plda, int *pk1, int *pk2, int *ipiv, int *pincx)
+	{
 
+	int n = *pn;
+	int lda = *plda;
+	int k1 = *pk1;
+	int k2 = *pk2;
+	int incx = *pincx;
 
+	int ix0, i1, i2, inc;
 
-#ifdef FORTRAN_BLAS_API
+	int ii, jj, ix, ip;
 
+	double tmp;
 
+	if(incx>=0)
+		{
+		ix0 = k1;
+		i1 = k1;
+		i2 = k2;
+		inc = 1;
+		}
+	else
+		{
+		ix0 = k1 + (k1-k2)*incx;
+		i1 = k2;
+		i2 = k1;
+		inc = -1;
+		}
+	
+	ix = ix0;
+	for(ii=i1; ii<=i2; ii+=inc)
+		{
+		ip = ipiv[ix];
+		if(ip!=ii)
+			{
+			for(jj=0; jj<n; jj++)
+				{
+				tmp = A[ii+jj*lda];
+				A[ii+jj*lda] = A[ip+jj*lda];
+				A[ip+jj*lda] = tmp;
+				}
+			}
+		ix = ix + incx;
+		}
 
-// BLAS 1
-//
-void dcopy_(int *n, double *x, int *incx, double *y, int *incy);
+	return;
 
-// BLAS 3
-//
-void dgemm_(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
-//
-void dsyrk_(char *uplo, char *ta, int *m, int *k, double *alpha, double *A, int *lda, double *beta, double *C, int *ldc);
-//
-void dtrmm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
-//
-void dtrsm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
+	}
 
-
-
-// LAPACK
-//
-void dgetrf_(int *m, int *n, double *A, int *lda, int *ipiv, int *info);
-//
-void dlaswp_(int *n, double *A, int *lda, int *k1, int *k2, int *ipiv, int *incx);
-//
-void dpotrf_(char *uplo, int *m, double *A, int *lda, int *info);
-//
-void dpotrs_(char *uplo, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
-//
-void dtrtrs_(char *uplo, char *trans, char *diag, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
-
-
-
-#else // BLASFEO_API
-
-
-
-// BLAS 1
-//
-void blasfeo_dcopy(int *n, double *x, int *incx, double *y, int *incy);
-
-// BLAS 3
-//
-void blasfeo_dgemm(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
-//
-void blasfeo_dsyrk(char *uplo, char *ta, int *m, int *k, double *alpha, double *A, int *lda, double *beta, double *C, int *ldc);
-//
-void blasfeo_dtrmm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
-//
-void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
-
-
-
-// LAPACK
-//
-void blasfeo_dgetrf(int *m, int *n, double *A, int *lda, int *ipiv, int *info);
-//
-void blasfeo_dlaswp(int *n, double *A, int *lda, int *k1, int *k2, int *ipiv, int *incx);
-//
-void blasfeo_dpotrf(char *uplo, int *m, double *A, int *lda, int *info);
-//
-void blasfeo_dpotrs(char *uplo, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
-//
-void blasfeo_dtrtrs(char *uplo, char *trans, char *diag, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
-
-
-
-#endif // BLASFEO_API
-
-
-
-#endif // BLAS_API
-
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif  // BLASFEO_D_BLAS_API_H_

@@ -3211,7 +3211,7 @@ void kernel_dgetrf_pivot_8_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 
 	}
 
-	
+
 
 // C numering (starting from zero) in the ipiv
 void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv)

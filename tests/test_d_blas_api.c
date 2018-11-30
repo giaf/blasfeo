@@ -80,6 +80,8 @@ int main()
 	int ldd = n;
 //	d_print_mat(n, n, C, ldc);
 
+	int *ipiv = malloc(n*sizeof(int));
+
 
 	int bs = 4;
 
@@ -100,9 +102,9 @@ int main()
 	char uplo = 'u';
 	int info = 0;
 
-	int m0 = 15;
-	int n0 = 15;
-	int k0 = 9;
+	int m0 = 16;
+	int n0 = 12;
+	int k0 = 16;
 
 
 
@@ -126,7 +128,7 @@ int main()
 	dpotrf_(&uplo, &m0, C, &n, &info);
 #endif
 
-#if 1
+#if 0
 	dgemm_(&c_n, &c_t, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
 #endif
 
@@ -142,6 +144,13 @@ int main()
 #if 0
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
 	dtrmm_(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
+#endif
+
+#if 1
+	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
+	dgemm_(&c_n, &c_t, &m0, &n0, &k0, &d_1, A, &n, A, &n, &d_1, C, &n);
+	dgetrf_(&m0, &n0, C, &n, ipiv, &info);
+	int_print_mat(1, n, ipiv, 1);
 #endif
 
 	printf("\ninfo %d\n", info);
@@ -161,7 +170,7 @@ int main()
 	blasfeo_dpotrf(&uplo, &m0, C, &n, &info);
 #endif
 
-#if 1
+#if 0
 	blasfeo_dgemm(&c_n, &c_t, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
 #endif
 
@@ -179,11 +188,27 @@ int main()
 	blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
 #endif
 
+#if 1
+	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
+	blasfeo_dgemm(&c_n, &c_t, &m0, &n0, &k0, &d_1, A, &n, A, &n, &d_1, C, &n);
+	blasfeo_dgetrf(&m0, &n0, C, &n, ipiv, &info);
+	int_print_mat(1, n, ipiv, 1);
+#endif
+
 	printf("\ninfo %d\n", info);
-//	d_print_mat(n, n, B, ldc);
+//	d_print_mat(n, n, A, lda);
+//	d_print_mat(n, n, B, ldb);
 	d_print_mat(n, n, C, ldc);
 //	d_print_mat(n, n, D, ldd);
 
+//	d_print_mat(n, n, A, lda);
+//	ipiv[0] = 15;
+//	ipiv[1] = 15;
+//	int i0 = 0;
+//	int i1 = 1;
+//	int i4 = 4;
+//	dlaswp(&i4, A, &lda, &i0, &i1, ipiv, &i1);
+//	d_print_mat(n, n, A, lda);
 
 	// free memory
 
@@ -191,6 +216,7 @@ int main()
 	free(B);
 	free(C);
 	free(D);
+	free(ipiv);
 
 
 	// return
