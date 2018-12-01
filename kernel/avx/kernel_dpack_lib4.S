@@ -4027,121 +4027,6 @@ kernel_dpack_nn_12_lib4:
 
 
 
-//                                1         2          3        4          5
-// void kernel_dunpack_nn_12_lib4(int kmax, double *A, int sda, double *C, int ldc)
-
-	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dunpack_nn_12_lib4
-	.type kernel_dunpack_nn_12_lib4, @function
-kernel_dunpack_nn_12_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dunpack_nn_12_lib4
-_kernel_dunpack_nn_12_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dunpack_nn_12_lib4
-	.def kernel_dunpack_nn_12_lib4; .scl 2; .type 32; .endef
-kernel_dunpack_nn_12_lib4:
-#endif
-
-	PROLOGUE
-
-
-	movq	ARG1, %r10 // kmax
-	movq	ARG2, %r11 // A
-	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
-	movq	ARG4, %r13 // C
-	movq	ARG5, %r14 // ldc
-	sall	$3, %r14d
-
-
-	cmpl	$0, %r10d
-	jle		0f // return
-
-
-	cmpl	$3, %r10d
-	jle		2f // clean-up loop
-
-
-	// main loop
-	.p2align 3
-1: // main loop
-	
-	vmovupd		0(%r11), %ymm0
-	vmovapd		%ymm0, 0(%r13)
-	vmovupd		0(%r11, %r12, 1), %ymm0
-	vmovapd		%ymm0, 32(%r13)
-	vmovupd		0(%r11, %r12, 2), %ymm0
-	vmovapd		%ymm0, 64(%r13)
-	addq	%r14, %r13
-
-	vmovupd		32(%r11), %ymm0
-	vmovapd		%ymm0, 0(%r13)
-	vmovupd		32(%r11, %r12, 1), %ymm0
-	vmovapd		%ymm0, 32(%r13)
-	vmovupd		32(%r11, %r12, 2), %ymm0
-	vmovapd		%ymm0, 64(%r13)
-	addq	%r14, %r13
-
-	vmovupd		64(%r11), %ymm0
-	vmovapd		%ymm0, 0(%r13)
-	vmovupd		64(%r11, %r12, 1), %ymm0
-	vmovapd		%ymm0, 32(%r13)
-	vmovupd		64(%r11, %r12, 2), %ymm0
-	vmovapd		%ymm0, 64(%r13)
-	addq	%r14, %r13
-
-	vmovupd		96(%r11), %ymm0
-	vmovapd		%ymm0, 0(%r13)
-	vmovupd		96(%r11, %r12, 1), %ymm0
-	vmovapd		%ymm0, 32(%r13)
-	vmovupd		96(%r11, %r12, 2), %ymm0
-	vmovapd		%ymm0, 64(%r13)
-	addq	%r14, %r13
-
-	subl	$4, %r10d
-	addq	$128, %r11
-
-	cmpl	$3, %r10d
-	jg		1b
-
-
-	cmpl	$0, %r10d
-	jle		0f // return
-
-
-2: // clean-up loop
-	
-	vmovupd		0(%r11), %ymm0
-	vmovapd		%ymm0, 0(%r13)
-	vmovupd		0(%r11, %r12, 1), %ymm0
-	vmovapd		%ymm0, 32(%r13)
-	vmovupd		0(%r11, %r12, 2), %ymm0
-	vmovapd		%ymm0, 64(%r13)
-	addq	%r14, %r13
-
-	subl	$1, %r10d
-	addq	$32, %r11
-
-	cmpl	$0, %r10d
-	jg		2b
-
-
-0: // return
-
-	EPILOGUE
-
-	ret
-
-#if defined(OS_LINUX)
-	.size	kernel_dunpack_nn_12_lib4, .-kernel_dunpack_nn_12_lib4
-#endif
-
-
-
-
-
 //                                 1         2          3        4          5        6
 // void kernel_dpack_nn_12_vs_lib4(int kmax, double *A, int lda, double *C, int sdc, int m1)
 
@@ -4838,6 +4723,327 @@ kernel_dpack_tn_4_vs_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_dpack_tn_4_vs_lib4, .-kernel_dpack_tn_4_vs_lib4
+#endif
+
+
+
+
+
+//                             1         2          3        4          5
+// void kernel_dpack_tt_4_lib4(int kmax, double *A, int lda, double *C, int sdc)
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dpack_tt_4_lib4
+	.type kernel_dpack_tt_4_lib4, @function
+kernel_dpack_tt_4_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dpack_tt_4_lib4
+_kernel_dpack_tt_4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dpack_tt_4_lib4
+	.def kernel_dpack_tt_4_lib4; .scl 2; .type 32; .endef
+kernel_dpack_tt_4_lib4:
+#endif
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$3, %r12d
+	movq	ARG4, %r13 // C
+	movq	ARG5, %r14 // sdc
+	sall	$5, %r14d
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	movq	%r11, %r15
+
+	vmovupd		0(%r15), %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovupd		0(%r15), %ymm0
+	vmovapd		%ymm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovupd		0(%r15), %ymm0
+	vmovapd		%ymm0, 64(%r13)
+	addq	%r12, %r15
+
+	vmovupd		0(%r15), %ymm0
+	vmovapd		%ymm0, 96(%r13)
+	addq	%r12, %r15
+
+	subl	$4, %r10d
+	addq	$32, %r11
+	addq	%r14, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	movq	%r11, %r15
+
+	vmovsd		0(%r15), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovsd		0(%r15), %xmm0
+	vmovsd		%xmm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovsd		0(%r15), %xmm0
+	vmovsd		%xmm0, 64(%r13)
+	addq	%r12, %r15
+
+	vmovsd		0(%r15), %xmm0
+	vmovsd		%xmm0, 96(%r13)
+	addq	%r12, %r15
+
+	subl	$1, %r10d
+	addq	$8, %r11
+	addq	$8, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dpack_tt_4_lib4, .-kernel_dpack_tt_4_lib4
+#endif
+
+
+
+
+
+//                                1         2          3        4          5
+// void kernel_dunpack_nn_12_lib4(int kmax, double *A, int sda, double *C, int ldc)
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dunpack_nn_12_lib4
+	.type kernel_dunpack_nn_12_lib4, @function
+kernel_dunpack_nn_12_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dunpack_nn_12_lib4
+_kernel_dunpack_nn_12_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dunpack_nn_12_lib4
+	.def kernel_dunpack_nn_12_lib4; .scl 2; .type 32; .endef
+kernel_dunpack_nn_12_lib4:
+#endif
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // sda
+	sall	$5, %r12d
+	movq	ARG4, %r13 // C
+	movq	ARG5, %r14 // ldc
+	sall	$3, %r14d
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r13)
+	vmovapd		0(%r11, %r12, 1), %ymm0
+	vmovupd		%ymm0, 32(%r13)
+	vmovapd		0(%r11, %r12, 2), %ymm0
+	vmovupd		%ymm0, 64(%r13)
+	addq	%r14, %r13
+
+	vmovapd		32(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r13)
+	vmovapd		32(%r11, %r12, 1), %ymm0
+	vmovupd		%ymm0, 32(%r13)
+	vmovapd		32(%r11, %r12, 2), %ymm0
+	vmovupd		%ymm0, 64(%r13)
+	addq	%r14, %r13
+
+	vmovapd		64(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r13)
+	vmovapd		64(%r11, %r12, 1), %ymm0
+	vmovupd		%ymm0, 32(%r13)
+	vmovapd		64(%r11, %r12, 2), %ymm0
+	vmovupd		%ymm0, 64(%r13)
+	addq	%r14, %r13
+
+	vmovapd		96(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r13)
+	vmovapd		96(%r11, %r12, 1), %ymm0
+	vmovupd		%ymm0, 32(%r13)
+	vmovapd		96(%r11, %r12, 2), %ymm0
+	vmovupd		%ymm0, 64(%r13)
+	addq	%r14, %r13
+
+	subl	$4, %r10d
+	addq	$128, %r11
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r13)
+	vmovapd		0(%r11, %r12, 1), %ymm0
+	vmovupd		%ymm0, 32(%r13)
+	vmovapd		0(%r11, %r12, 2), %ymm0
+	vmovupd		%ymm0, 64(%r13)
+	addq	%r14, %r13
+
+	subl	$1, %r10d
+	addq	$32, %r11
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dunpack_nn_12_lib4, .-kernel_dunpack_nn_12_lib4
+#endif
+
+
+
+
+
+//                               1         2          3          4
+// void kernel_dunpack_nn_4_lib4(int kmax, double *A, double *C, int ldc)
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl kernel_dunpack_nn_4_lib4
+	.type kernel_dunpack_nn_4_lib4, @function
+kernel_dunpack_nn_4_lib4:
+#elif defined(OS_MAC)
+	.globl _kernel_dunpack_nn_4_lib4
+_kernel_dunpack_nn_4_lib4:
+#elif defined(OS_WINDOWS)
+	.globl kernel_dunpack_nn_4_lib4
+	.def kernel_dunpack_nn_4_lib4; .scl 2; .type 32; .endef
+kernel_dunpack_nn_4_lib4:
+#endif
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // C
+	movq	ARG4, %r13 // ldc
+	sall	$3, %r13d
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r12)
+	addq	%r13, %r12
+
+	vmovapd		32(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r12)
+	addq	%r13, %r12
+
+	vmovapd		64(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r12)
+	addq	%r13, %r12
+
+	vmovapd		96(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r12)
+	addq	%r13, %r12
+
+	subl	$4, %r10d
+	addq	$128, %r11
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r12)
+	addq	%r13, %r12
+
+	subl	$1, %r10d
+	addq	$32, %r11
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	ret
+
+#if defined(OS_LINUX)
+	.size	kernel_dunpack_nn_4_lib4, .-kernel_dunpack_nn_4_lib4
 #endif
 
 

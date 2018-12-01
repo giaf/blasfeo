@@ -85,6 +85,56 @@ void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *C)
 
 
 
+void kernel_dunpack_nn_4_lib4(int kmax, double *A, double *C, int ldc)
+	{
+
+	const int ps = 4;
+
+	int ii;
+	ii = 0;
+
+	for(; ii<kmax-3; ii+=4)
+		{
+		C[0+ldc*0] = A[0+ps*0];
+		C[1+ldc*0] = A[1+ps*0];
+		C[2+ldc*0] = A[2+ps*0];
+		C[3+ldc*0] = A[3+ps*0];
+
+		C[0+ldc*1] = A[0+ps*1];
+		C[1+ldc*1] = A[1+ps*1];
+		C[2+ldc*1] = A[2+ps*1];
+		C[3+ldc*1] = A[3+ps*1];
+
+		C[0+ldc*2] = A[0+ps*2];
+		C[1+ldc*2] = A[1+ps*2];
+		C[2+ldc*2] = A[2+ps*2];
+		C[3+ldc*2] = A[3+ps*2];
+
+		C[0+ldc*3] = A[0+ps*3];
+		C[1+ldc*3] = A[1+ps*3];
+		C[2+ldc*3] = A[2+ps*3];
+		C[3+ldc*3] = A[3+ps*3];
+
+		A += 4*ps;
+		C += 4*ldc;
+		}
+	for(; ii<kmax; ii++)
+		{
+		C[0+ldc*0] = A[0+ps*0];
+		C[1+ldc*0] = A[1+ps*0];
+		C[2+ldc*0] = A[2+ps*0];
+		C[3+ldc*0] = A[3+ps*0];
+
+		A += 1*ps;
+		C += 1*ldc;
+		}
+
+	return;
+
+	}
+
+
+
 void kernel_dpack_nn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
 	{
 
@@ -419,6 +469,56 @@ l3:
 		A += 1;
 		C += 1*ps;
 		}
+	return;
+
+	}
+
+
+
+void kernel_dpack_tt_4_lib4(int kmax, double *A, int lda, double *C, int sdc)
+	{
+
+	const int ps = 4;
+
+	int ii;
+	ii = 0;
+
+	for(; ii<kmax-3; ii+=4)
+		{
+		C[0+ps*0] = A[0+lda*0];
+		C[1+ps*0] = A[1+lda*0];
+		C[2+ps*0] = A[2+lda*0];
+		C[3+ps*0] = A[3+lda*0];
+
+		C[0+ps*1] = A[0+lda*1];
+		C[1+ps*1] = A[1+lda*1];
+		C[2+ps*1] = A[2+lda*1];
+		C[3+ps*1] = A[3+lda*1];
+
+		C[0+ps*2] = A[0+lda*2];
+		C[1+ps*2] = A[1+lda*2];
+		C[2+ps*2] = A[2+lda*2];
+		C[3+ps*2] = A[3+lda*2];
+
+		C[0+ps*3] = A[0+lda*3];
+		C[1+ps*3] = A[1+lda*3];
+		C[2+ps*3] = A[2+lda*3];
+		C[3+ps*3] = A[3+lda*3];
+
+		A += 4;
+		C += 4*sdc;
+		}
+	for(; ii<kmax; ii++)
+		{
+		C[0+ps*0] = A[0+lda*0];
+		C[1+ps*0] = A[1+lda*0];
+		C[2+ps*0] = A[2+lda*0];
+		C[3+ps*0] = A[3+lda*0];
+
+		A += 1;
+		C += 1;
+		}
+
 	return;
 
 	}

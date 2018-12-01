@@ -408,6 +408,7 @@ llnn_1:
 		}
 	else // lower to lower
 		{
+		// TODO pack 8 or 12 ??? or pack tt
 		for(ii=0; ii<m-3; ii+=4)
 			{
 			kernel_dpack_nn_4_lib4(ii+4, A+ii, lda, pB+ii*sdb);
