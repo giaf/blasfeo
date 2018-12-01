@@ -153,8 +153,8 @@ openblas_set_num_threads(1);
 //	for(ll=0; ll<24; ll++)
 //	for(ll=0; ll<63; ll++) // up to 256
 	for(ll=0; ll<75; ll++) // up to 300
-//	for(ll=0; ll<115; ll++)
-//	for(ll=0; ll<120; ll++)
+//	for(ll=0; ll<115; ll++) // up to 460
+	for(ll=0; ll<120; ll++) // up to 700
 
 		{
 
@@ -328,7 +328,12 @@ openblas_set_num_threads(1);
 
 //				blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
 
+//				blasfeo_dpotrf(&c_l, &n, B, &n, &info);
+//				blasfeo_dpotrf(&c_u, &n, B, &n, &info);
+
 				blasfeo_dgetrf(&n, &n, B, &n, ipiv, &info);
+
+
 
 //				for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 //				blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
