@@ -570,9 +570,9 @@ int main()
 	int nnrep[] = {10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 400, 400, 400, 400, 400, 200, 200, 200, 200, 200, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20, 20, 20, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 4, 4, 4, 4, 4};
 
 //	for(ll=0; ll<24; ll++)
-	for(ll=0; ll<75; ll++)
-//	for(ll=0; ll<115; ll++)
-//	for(ll=0; ll<120; ll++)
+	for(ll=0; ll<75; ll++) // up to 300
+//	for(ll=0; ll<115; ll++) // up to 460
+//	for(ll=0; ll<120; ll++) // up to 700
 
 		{
 
@@ -760,7 +760,9 @@ int main()
 //				kernel_dgemm_nn_8x4_gen_lib4(n, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 8, 0, 4);
 //				kernel_dgemm_nn_4x4_gen_lib4(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, 0, sD.pA, sD.cn, 0, sD.pA, sD.cn, 0, 8, 0, 4);
 
-				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+
+
+//				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_tn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_tt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
@@ -770,7 +772,9 @@ int main()
 //				blasfeo_dpotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dgetrf_np(n, n, &sB, 0, 0, &sB, 0, 0);
-//				blasfeo_dgetrf_rp(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
+//				blasfeo_dgetrf_np_test(n, n, &sB, 0, 0, &sB, 0, 0);
+				blasfeo_dgetrf_rp(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
+//				blasfeo_dgetrf_rp_test(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 //				blasfeo_dgeqrf(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
 //				blasfeo_dcolin(n, &sx, 0, &sB3, 0, n-1);
 //				blasfeo_dgelqf(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
@@ -851,11 +855,11 @@ int main()
 //		float flop_operation = 1*16.0*2*n; // kernel 4x4
 //		float flop_operation = 0.5*16.0*2*n; // kernel 2x4
 
-		float flop_operation = 2.0*n*n*n; // gemm
+//		float flop_operation = 2.0*n*n*n; // gemm
 //		float flop_operation = 1.0*n*n*n; // syrk trmm trsm
 //		float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
-//		float flop_operation = 2.0/3.0*n*n*n; // getrf
-//		float flop_operation = 4.0/3.0*n*n*n; // geqrf
+		float flop_operation = 2.0/3.0*n*n*n; // getrf
+//		float flop_operation = 4.0/3.0*n*n*n; // geqrf gelqf
 //		float flop_operation = 2.0*n*n*n; // geqrf_la
 //		float flop_operation = 8.0/3.0*n*n*n; // geqrf_lla
 //		float flop_operation = 2.0*n*n; // gemv symv

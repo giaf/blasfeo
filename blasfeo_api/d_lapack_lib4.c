@@ -2368,6 +2368,36 @@ void blasfeo_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 	jj = 0;
 	for(; jj<p-11; jj+=12)
 		{
+#if 1
+		// correct
+		ii = jj;
+		i0 = ii;
+		for( ; ii<m-11; ii+=12)
+			{
+			kernel_dgemm_nn_12x4_lib4(jj, &dm1, pD+ii*sdd, sdd, 0, pD+jj*ps, sdd, &d1, pD+jj*ps+ii*sdd, sdd, pD+jj*ps+ii*sdd, sdd);
+			kernel_dgemm_nn_12x4_lib4(jj, &dm1, pD+ii*sdd, sdd, 0, pD+(jj+4)*ps, sdd, &d1, pD+(jj+4)*ps+ii*sdd, sdd, pD+(jj+4)*ps+ii*sdd, sdd);
+			kernel_dgemm_nn_12x4_lib4(jj, &dm1, pD+ii*sdd, sdd, 0, pD+(jj+8)*ps, sdd, &d1, pD+(jj+8)*ps+ii*sdd, sdd, pD+(jj+8)*ps+ii*sdd, sdd);
+			}
+		for( ; ii<m; ii+=4)
+			{
+			kernel_dgemm_nn_4x12_vs_lib4(jj, &dm1, pD+ii*sdd, 0, pD+jj*ps, sdd, &d1, pD+jj*ps+ii*sdd, pD+jj*ps+ii*sdd, m-ii, n-jj);
+			}
+
+		// factorize & find pivot
+		kernel_dgetrf_pivot_12_lib4(m-jj, &pD[jj*ps+jj*sdd], sdd, &dD[jj], &ipiv[jj]);
+
+		// apply pivot
+		for(ii=0; ii<12; ii++)
+			{
+			ipiv[jj+ii] += jj;
+			if(ipiv[jj+ii]!=jj+ii)
+				{
+				blasfeo_drowsw(jj, sD, jj+ii, 0, sD, ipiv[jj+ii], 0);
+				blasfeo_drowsw(n-jj-12, sD, jj+ii, jj+12, sD, ipiv[jj+ii], jj+12);
+				}
+			}
+//		return;
+#else
 		// pivot & factorize & solve lower
 		// left block-column
 		ii = jj;
@@ -2514,6 +2544,7 @@ void blasfeo_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 			drowsw_lib(jj+8, pD+(i1+3)/ps*ps*sdd+(i1+3)%ps, pD+(ipiv[i1+3])/ps*ps*sdd+(ipiv[i1+3])%ps);
 			drowsw_lib(n-jj-12, pD+(i1+3)/ps*ps*sdd+(i1+3)%ps+(jj+12)*ps, pD+(ipiv[i1+3])/ps*ps*sdd+(ipiv[i1+3])%ps+(jj+12)*ps);
 			}
+#endif
 
 		// solve upper
 //		i0 -= 8; // 4 ???
