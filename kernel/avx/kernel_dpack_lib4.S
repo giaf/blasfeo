@@ -70,6 +70,55 @@
 	movq	40(%rsp), %r15; \
 	addq	$STACKSIZE, %rsp;
 
+#if defined(OS_LINUX)
+
+#define GLOB_FUN_START(NAME) \
+	.globl NAME; \
+	.type NAME, @function; \
+NAME:
+#define FUN_START(NAME) \
+	.type NAME, @function; \
+NAME:
+#define FUN_END(NAME) \
+	.size	NAME, .-NAME
+#define CALL(NAME) \
+	call NAME
+#define ZERO_ACC \
+	vxorpd	%ymm0, %ymm0, %ymm0; \
+	vmovapd	%ymm0, %ymm1; \
+	vmovapd	%ymm0, %ymm2; \
+	vmovapd	%ymm0, %ymm3
+#define NEG_ACC \
+	vmovapd		.LC11(%rip), %ymm15; \
+	vxorpd		%ymm15, %ymm0, %ymm0; \
+	vxorpd		%ymm15, %ymm1, %ymm1; \
+	vxorpd		%ymm15, %ymm2, %ymm2; \
+	vxorpd		%ymm15, %ymm3, %ymm3
+
+#else // defined(OS_MAC)
+
+#define GLOB_FUN_START(NAME) \
+	.globl _ ## NAME; \
+_ ## NAME:
+#define FUN_START(NAME) \
+_ ## NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	callq _ ## NAME
+#define ZERO_ACC \
+	vxorpd	%ymm0, %ymm0, %ymm0; \
+	vmovapd	%ymm0, %ymm1; \
+	vmovapd	%ymm0, %ymm2; \
+	vmovapd	%ymm0, %ymm3
+#define NEG_ACC \
+	vmovapd		LC11(%rip), %ymm15; \
+	vxorpd		%ymm15, %ymm0, %ymm0; \
+	vxorpd		%ymm15, %ymm1, %ymm1; \
+	vxorpd		%ymm15, %ymm2, %ymm2; \
+	vxorpd		%ymm15, %ymm3, %ymm3
+
+#endif
+
 #elif defined(OS_WINDOWS)
 
 #define STACKSIZE 256
@@ -136,6 +185,28 @@
 	vmovups	208(%rsp), %xmm15; \
 	addq	$STACKSIZE, %rsp;
 
+#define GLOB_FUN_START(NAME) \
+	.globl NAME; \
+	.def NAME; .scl 2; .type 32; .endef; \
+NAME:
+#define FUN_START(NAME) \
+	.def NAME; .scl 2; .type 32; .endef; \
+NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	call NAME
+#define ZERO_ACC \
+	vxorpd	%ymm0, %ymm0, %ymm0; \
+	vmovapd	%ymm0, %ymm1; \
+	vmovapd	%ymm0, %ymm2; \
+	vmovapd	%ymm0, %ymm3
+#define NEG_ACC \
+	vmovapd		.LC11(%rip), %ymm15; \
+	vxorpd		%ymm15, %ymm0, %ymm0; \
+	vxorpd		%ymm15, %ymm1, %ymm1; \
+	vxorpd		%ymm15, %ymm2, %ymm2; \
+	vxorpd		%ymm15, %ymm3, %ymm3
+
 #else
 
 #error wrong OS
@@ -158,15 +229,7 @@
 	.macro INNER_KERNEL_DPACK_TN_4_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpack_tn_4_lib4, @function
-inner_kernel_dpack_tn_4_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpack_tn_4_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpack_tn_4_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpack_tn_4_lib4:
-#endif
+	FUN_START(inner_kernel_dpack_tn_4_lib4)
 #endif
 
 	cmpl	$0, %r10d
@@ -248,9 +311,7 @@ inner_kernel_dpack_tn_4_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpack_tn_4_lib4, .-inner_kernel_dpack_tn_4_lib4
-#endif
+	FUN_END(inner_kernel_dpack_tn_4_lib4)
 #endif
 
 
@@ -261,15 +322,7 @@ inner_kernel_dpack_tn_4_lib4:
 	.macro INNER_KERNEL_DPACK_TN_3_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpack_tn_3_lib4, @function
-inner_kernel_dpack_tn_3_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpack_tn_3_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpack_tn_3_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpack_tn_3_lib4:
-#endif
+	FUN_START(inner_kernel_dpack_tn_3_lib4)
 #endif
 
 	cmpl	$0, %r10d
@@ -345,9 +398,7 @@ inner_kernel_dpack_tn_3_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpack_tn_3_lib4, .-inner_kernel_dpack_tn_3_lib4
-#endif
+	FUN_END(inner_kernel_dpack_tn_3_lib4)
 #endif
 
 
@@ -358,15 +409,7 @@ inner_kernel_dpack_tn_3_lib4:
 	.macro INNER_KERNEL_DPACK_TN_2_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpack_tn_2_lib4, @function
-inner_kernel_dpack_tn_2_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpack_tn_2_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpack_tn_2_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpack_tn_2_lib4:
-#endif
+	FUN_START(inner_kernel_dpack_tn_2_lib4)
 #endif
 
 	cmpl	$0, %r10d
@@ -436,9 +479,7 @@ inner_kernel_dpack_tn_2_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpack_tn_2_lib4, .-inner_kernel_dpack_tn_2_lib4
-#endif
+	FUN_END(inner_kernel_dpack_tn_2_lib4)
 #endif
 
 
@@ -449,15 +490,7 @@ inner_kernel_dpack_tn_2_lib4:
 	.macro INNER_KERNEL_DPACK_TN_1_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpack_tn_1_lib4, @function
-inner_kernel_dpack_tn_1_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpack_tn_1_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpack_tn_1_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpack_tn_1_lib4:
-#endif
+	FUN_START(inner_kernel_dpack_tn_1_lib4)
 #endif
 
 	cmpl	$0, %r10d
@@ -514,9 +547,7 @@ inner_kernel_dpack_tn_1_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpack_tn_1_lib4, .-inner_kernel_dpack_tn_1_lib4
-#endif
+	FUN_END(inner_kernel_dpack_tn_1_lib4)
 #endif
 
 
@@ -527,15 +558,7 @@ inner_kernel_dpack_tn_1_lib4:
 	.macro INNER_KERNEL_DUNPACK_NT_4_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dunpack_nt_4_lib4, @function
-inner_kernel_dunpack_nt_4_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dunpack_nt_4_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dunpack_nt_4_lib4; .scl 2; .type 32; .endef
-inner_kernel_dunpack_nt_4_lib4:
-#endif
+	FUN_START(inner_kernel_dunpack_nt_4_lib4)
 #endif
 
 	cmpl	$0, %r10d
@@ -617,9 +640,7 @@ inner_kernel_dunpack_nt_4_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dunpack_nt_4_lib4, .-inner_kernel_dunpack_nt_4_lib4
-#endif
+	FUN_END(inner_kernel_dunpack_nt_4_lib4)
 #endif
 
 
@@ -630,15 +651,7 @@ inner_kernel_dunpack_nt_4_lib4:
 	.macro INNER_KERNEL_DUNPACK_NT_3_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dunpack_nt_3_lib4, @function
-inner_kernel_dunpack_nt_3_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dunpack_nt_3_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dunpack_nt_3_lib4; .scl 2; .type 32; .endef
-inner_kernel_dunpack_nt_3_lib4:
-#endif
+	FUN_START(inner_kernel_dunpack_nt_3_lib4)
 #endif
 
 	cmpl	$0, %r10d
@@ -709,9 +722,7 @@ inner_kernel_dunpack_nt_3_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dunpack_nt_3_lib4, .-inner_kernel_dunpack_nt_3_lib4
-#endif
+	FUN_END(inner_kernel_dunpack_nt_3_lib4)
 #endif
 
 
@@ -722,15 +733,7 @@ inner_kernel_dunpack_nt_3_lib4:
 	.macro INNER_KERNEL_DUNPACK_NT_2_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dunpack_nt_2_lib4, @function
-inner_kernel_dunpack_nt_2_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dunpack_nt_2_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dunpack_nt_2_lib4; .scl 2; .type 32; .endef
-inner_kernel_dunpack_nt_2_lib4:
-#endif
+	FUN_START(inner_kernel_dunpack_nt_2_lib4)
 #endif
 
 	cmpl	$0, %r10d
@@ -791,9 +794,7 @@ inner_kernel_dunpack_nt_2_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dunpack_nt_2_lib4, .-inner_kernel_dunpack_nt_2_lib4
-#endif
+	FUN_END(inner_kernel_dunpack_nt_2_lib4)
 #endif
 
 
@@ -804,15 +805,7 @@ inner_kernel_dunpack_nt_2_lib4:
 	.macro INNER_KERNEL_DUNPACK_NT_1_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dunpack_nt_1_lib4, @function
-inner_kernel_dunpack_nt_1_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dunpack_nt_1_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dunpack_nt_1_lib4; .scl 2; .type 32; .endef
-inner_kernel_dunpack_nt_1_lib4:
-#endif
+	FUN_START(inner_kernel_dunpack_nt_1_lib4)
 #endif
 
 	cmpl	$0, %r10d
@@ -868,9 +861,7 @@ inner_kernel_dunpack_nt_1_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dunpack_nt_1_lib4, .-inner_kernel_dunpack_nt_1_lib4
-#endif
+	FUN_END(inner_kernel_dunpack_nt_1_lib4)
 #endif
 
 
@@ -881,15 +872,7 @@ inner_kernel_dunpack_nt_1_lib4:
 	.macro INNER_KERNEL_DPACP_NT_4_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nt_4_lib4, @function
-inner_kernel_dpacp_nt_4_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nt_4_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nt_4_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nt_4_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nt_4_lib4)
 #endif
 
 	cmpl	$0, %r10d
@@ -1017,15 +1000,7 @@ inner_kernel_dpacp_nt_4_lib4:
 	.macro INNER_KERNEL_DPACP_TN_4_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_tn_4_lib4, @function
-inner_kernel_dpacp_tn_4_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_tn_4_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_tn_4_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_tn_4_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_tn_4_lib4)
 #endif
 
 	cmpl	$0, %r10d
@@ -1140,9 +1115,7 @@ inner_kernel_dpacp_tn_4_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_tn_4_lib4, .-inner_kernel_dpacp_tn_4_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_tn_4_lib4)
 #endif
 
 
@@ -1153,15 +1126,7 @@ inner_kernel_dpacp_tn_4_lib4:
 	.macro INNER_KERNEL_DPACP_NN_12_0_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_12_0_lib4, @function
-inner_kernel_dpacp_nn_12_0_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_12_0_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_12_0_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_12_0_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_12_0_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -1238,9 +1203,7 @@ inner_kernel_dpacp_nn_12_0_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_12_0_lib4, .-inner_kernel_dpacp_nn_12_0_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_12_0_lib4)
 #endif
 
 
@@ -1251,15 +1214,7 @@ inner_kernel_dpacp_nn_12_0_lib4:
 	.macro INNER_KERNEL_DPACP_NN_12_0_VS_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_12_0_vs_lib4, @function
-inner_kernel_dpacp_nn_12_0_vs_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_12_0_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_12_0_vs_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_12_0_vs_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_12_0_vs_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -1346,9 +1301,7 @@ inner_kernel_dpacp_nn_12_0_vs_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_12_0_vs_lib4, .-inner_kernel_dpacp_nn_12_0_vs_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_12_0_vs_lib4)
 #endif
 
 
@@ -1359,15 +1312,7 @@ inner_kernel_dpacp_nn_12_0_vs_lib4:
 	.macro INNER_KERNEL_DPACP_NN_12_1_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_12_1_lib4, @function
-inner_kernel_dpacp_nn_12_1_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_12_1_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_12_1_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_12_1_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_12_1_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -1484,9 +1429,7 @@ inner_kernel_dpacp_nn_12_1_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_12_1_lib4, .-inner_kernel_dpacp_nn_12_1_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_12_1_lib4)
 #endif
 
 
@@ -1497,15 +1440,7 @@ inner_kernel_dpacp_nn_12_1_lib4:
 	.macro INNER_KERNEL_DPACP_NN_12_1_VS_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_12_1_vs_lib4, @function
-inner_kernel_dpacp_nn_12_1_vs_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_12_1_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_12_1_vs_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_12_1_vs_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_12_1_vs_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -1632,9 +1567,7 @@ inner_kernel_dpacp_nn_12_1_vs_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_12_1_vs_lib4, .-inner_kernel_dpacp_nn_12_1_vs_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_12_1_vs_lib4)
 #endif
 
 
@@ -1645,15 +1578,7 @@ inner_kernel_dpacp_nn_12_1_vs_lib4:
 	.macro INNER_KERNEL_DPACP_NN_12_2_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_12_2_lib4, @function
-inner_kernel_dpacp_nn_12_2_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_12_2_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_12_2_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_12_2_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_12_2_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -1755,9 +1680,7 @@ inner_kernel_dpacp_nn_12_2_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_12_2_lib4, .-inner_kernel_dpacp_nn_12_2_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_12_2_lib4)
 #endif
 
 
@@ -1768,15 +1691,7 @@ inner_kernel_dpacp_nn_12_2_lib4:
 	.macro INNER_KERNEL_DPACP_NN_12_2_VS_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_12_2_vs_lib4, @function
-inner_kernel_dpacp_nn_12_2_vs_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_12_2_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_12_2_vs_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_12_2_vs_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_12_2_vs_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -1888,9 +1803,7 @@ inner_kernel_dpacp_nn_12_2_vs_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_12_2_vs_lib4, .-inner_kernel_dpacp_nn_12_2_vs_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_12_2_vs_lib4)
 #endif
 
 
@@ -1901,15 +1814,7 @@ inner_kernel_dpacp_nn_12_2_vs_lib4:
 	.macro INNER_KERNEL_DPACP_NN_12_3_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_12_3_lib4, @function
-inner_kernel_dpacp_nn_12_3_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_12_3_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_12_3_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_12_3_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_12_3_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -2026,9 +1931,7 @@ inner_kernel_dpacp_nn_12_3_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_12_3_lib4, .-inner_kernel_dpacp_nn_12_3_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_12_3_lib4)
 #endif
 
 
@@ -2039,15 +1942,7 @@ inner_kernel_dpacp_nn_12_3_lib4:
 	.macro INNER_KERNEL_DPACP_NN_12_3_VS_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_12_3_vs_lib4, @function
-inner_kernel_dpacp_nn_12_3_vs_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_12_3_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_12_3_vs_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_12_3_vs_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_12_3_vs_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -2174,9 +2069,7 @@ inner_kernel_dpacp_nn_12_3_vs_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_12_3_vs_lib4, .-inner_kernel_dpacp_nn_12_3_vs_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_12_3_vs_lib4)
 #endif
 
 
@@ -2187,15 +2080,7 @@ inner_kernel_dpacp_nn_12_3_vs_lib4:
 	.macro INNER_KERNEL_DPACP_NN_8_0_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_8_0_lib4, @function
-inner_kernel_dpacp_nn_8_0_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_8_0_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_8_0_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_8_0_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_8_0_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -2262,9 +2147,7 @@ inner_kernel_dpacp_nn_8_0_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_8_0_lib4, .-inner_kernel_dpacp_nn_8_0_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_8_0_lib4)
 #endif
 
 
@@ -2275,15 +2158,7 @@ inner_kernel_dpacp_nn_8_0_lib4:
 	.macro INNER_KERNEL_DPACP_NN_8_0_VS_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_8_0_vs_lib4, @function
-inner_kernel_dpacp_nn_8_0_vs_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_8_0_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_8_0_vs_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_8_0_vs_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_8_0_vs_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -2360,9 +2235,7 @@ inner_kernel_dpacp_nn_8_0_vs_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_8_0_vs_lib4, .-inner_kernel_dpacp_nn_8_0_vs_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_8_0_vs_lib4)
 #endif
 
 
@@ -2373,15 +2246,7 @@ inner_kernel_dpacp_nn_8_0_vs_lib4:
 	.macro INNER_KERNEL_DPACP_NN_8_1_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_8_1_lib4, @function
-inner_kernel_dpacp_nn_8_1_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_8_1_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_8_1_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_8_1_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_8_1_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -2473,9 +2338,7 @@ inner_kernel_dpacp_nn_8_1_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_8_1_lib4, .-inner_kernel_dpacp_nn_8_1_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_8_1_lib4)
 #endif
 
 
@@ -2486,15 +2349,7 @@ inner_kernel_dpacp_nn_8_1_lib4:
 	.macro INNER_KERNEL_DPACP_NN_8_1_VS_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_8_1_vs_lib4, @function
-inner_kernel_dpacp_nn_8_1_vs_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_8_1_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_8_1_vs_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_8_1_vs_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_8_1_vs_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -2596,9 +2451,7 @@ inner_kernel_dpacp_nn_8_1_vs_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_8_1_vs_lib4, .-inner_kernel_dpacp_nn_8_1_vs_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_8_1_vs_lib4)
 #endif
 
 
@@ -2609,15 +2462,7 @@ inner_kernel_dpacp_nn_8_1_vs_lib4:
 	.macro INNER_KERNEL_DPACP_NN_8_2_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_8_2_lib4, @function
-inner_kernel_dpacp_nn_8_2_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_8_2_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_8_2_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_8_2_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_8_2_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -2699,9 +2544,7 @@ inner_kernel_dpacp_nn_8_2_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_8_2_lib4, .-inner_kernel_dpacp_nn_8_2_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_8_2_lib4)
 #endif
 
 
@@ -2712,15 +2555,7 @@ inner_kernel_dpacp_nn_8_2_lib4:
 	.macro INNER_KERNEL_DPACP_NN_8_2_VS_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_8_2_vs_lib4, @function
-inner_kernel_dpacp_nn_8_2_vs_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_8_2_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_8_2_vs_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_8_2_vs_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_8_2_vs_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -2812,9 +2647,7 @@ inner_kernel_dpacp_nn_8_2_vs_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_8_2_vs_lib4, .-inner_kernel_dpacp_nn_8_2_vs_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_8_2_vs_lib4)
 #endif
 
 
@@ -2825,15 +2658,7 @@ inner_kernel_dpacp_nn_8_2_vs_lib4:
 	.macro INNER_KERNEL_DPACP_NN_8_3_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_8_3_lib4, @function
-inner_kernel_dpacp_nn_8_3_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_8_3_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_8_3_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_8_3_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_8_3_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -2925,9 +2750,7 @@ inner_kernel_dpacp_nn_8_3_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_8_3_lib4, .-inner_kernel_dpacp_nn_8_3_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_8_3_lib4)
 #endif
 
 
@@ -2938,15 +2761,7 @@ inner_kernel_dpacp_nn_8_3_lib4:
 	.macro INNER_KERNEL_DPACP_NN_8_3_VS_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_8_3_vs_lib4, @function
-inner_kernel_dpacp_nn_8_3_vs_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_8_3_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_8_3_vs_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_8_3_vs_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_8_3_vs_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -3048,9 +2863,7 @@ inner_kernel_dpacp_nn_8_3_vs_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_8_3_vs_lib4, .-inner_kernel_dpacp_nn_8_3_vs_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_8_3_vs_lib4)
 #endif
 
 
@@ -3061,15 +2874,7 @@ inner_kernel_dpacp_nn_8_3_vs_lib4:
 	.macro INNER_KERNEL_DPACP_NN_4_0_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_4_0_lib4, @function
-inner_kernel_dpacp_nn_4_0_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_4_0_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_4_0_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_4_0_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_4_0_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -3126,9 +2931,7 @@ inner_kernel_dpacp_nn_4_0_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_4_0_lib4, .-inner_kernel_dpacp_nn_4_0_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_4_0_lib4)
 #endif
 
 
@@ -3139,15 +2942,7 @@ inner_kernel_dpacp_nn_4_0_lib4:
 	.macro INNER_KERNEL_DPACP_NN_4_1_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_4_1_lib4, @function
-inner_kernel_dpacp_nn_4_1_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_4_1_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_4_1_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_4_1_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_4_1_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -3219,9 +3014,7 @@ inner_kernel_dpacp_nn_4_1_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_4_1_lib4, .-inner_kernel_dpacp_nn_4_1_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_4_1_lib4)
 #endif
 
 
@@ -3232,15 +3025,7 @@ inner_kernel_dpacp_nn_4_1_lib4:
 	.macro INNER_KERNEL_DPACP_NN_4_2_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_4_2_lib4, @function
-inner_kernel_dpacp_nn_4_2_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_4_2_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_4_2_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_4_2_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_4_2_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -3307,9 +3092,7 @@ inner_kernel_dpacp_nn_4_2_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_4_2_lib4, .-inner_kernel_dpacp_nn_4_2_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_4_2_lib4)
 #endif
 
 
@@ -3320,15 +3103,7 @@ inner_kernel_dpacp_nn_4_2_lib4:
 	.macro INNER_KERNEL_DPACP_NN_4_3_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_4_3_lib4, @function
-inner_kernel_dpacp_nn_4_3_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_4_3_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_4_3_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_4_3_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_4_3_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -3400,9 +3175,7 @@ inner_kernel_dpacp_nn_4_3_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_4_3_lib4, .-inner_kernel_dpacp_nn_4_3_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_4_3_lib4)
 #endif
 
 
@@ -3413,15 +3186,7 @@ inner_kernel_dpacp_nn_4_3_lib4:
 	.macro INNER_KERNEL_DPACP_NN_3_0_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_3_0_lib4, @function
-inner_kernel_dpacp_nn_3_0_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_3_0_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_3_0_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_3_0_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_3_0_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -3488,9 +3253,7 @@ inner_kernel_dpacp_nn_3_0_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_3_0_lib4, .-inner_kernel_dpacp_nn_3_0_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_3_0_lib4)
 #endif
 
 
@@ -3501,15 +3264,7 @@ inner_kernel_dpacp_nn_3_0_lib4:
 	.macro INNER_KERNEL_DPACP_NN_3_2_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_3_2_lib4, @function
-inner_kernel_dpacp_nn_3_2_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_3_2_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_3_2_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_3_2_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_3_2_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -3576,9 +3331,7 @@ inner_kernel_dpacp_nn_3_2_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_3_2_lib4, .-inner_kernel_dpacp_nn_3_2_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_3_2_lib4)
 #endif
 
 
@@ -3589,15 +3342,7 @@ inner_kernel_dpacp_nn_3_2_lib4:
 	.macro INNER_KERNEL_DPACP_NN_3_3_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_3_3_lib4, @function
-inner_kernel_dpacp_nn_3_3_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_3_3_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_3_3_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_3_3_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_3_3_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -3664,9 +3409,7 @@ inner_kernel_dpacp_nn_3_3_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_3_3_lib4, .-inner_kernel_dpacp_nn_3_3_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_3_3_lib4)
 #endif
 
 
@@ -3677,15 +3420,7 @@ inner_kernel_dpacp_nn_3_3_lib4:
 	.macro INNER_KERNEL_DPACP_NN_2_0_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_2_0_lib4, @function
-inner_kernel_dpacp_nn_2_0_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_2_0_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_2_0_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_2_0_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_2_0_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -3742,9 +3477,7 @@ inner_kernel_dpacp_nn_2_0_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_2_0_lib4, .-inner_kernel_dpacp_nn_2_0_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_2_0_lib4)
 #endif
 
 
@@ -3755,15 +3488,7 @@ inner_kernel_dpacp_nn_2_0_lib4:
 	.macro INNER_KERNEL_DPACP_NN_2_1_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_2_1_lib4, @function
-inner_kernel_dpacp_nn_2_1_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_2_1_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_2_1_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_2_1_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_2_1_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -3825,9 +3550,7 @@ inner_kernel_dpacp_nn_2_1_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_2_1_lib4, .-inner_kernel_dpacp_nn_2_1_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_2_1_lib4)
 #endif
 
 
@@ -3838,15 +3561,7 @@ inner_kernel_dpacp_nn_2_1_lib4:
 	.macro INNER_KERNEL_DPACP_NN_1_0_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dpacp_nn_1_0_lib4, @function
-inner_kernel_dpacp_nn_1_0_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dpacp_nn_1_0_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dpacp_nn_1_0_lib4; .scl 2; .type 32; .endef
-inner_kernel_dpacp_nn_1_0_lib4:
-#endif
+	FUN_START(inner_kernel_dpacp_nn_1_0_lib4)
 #endif
 	
 	cmpl	$0, %r10d
@@ -3903,9 +3618,7 @@ inner_kernel_dpacp_nn_1_0_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dpacp_nn_1_0_lib4, .-inner_kernel_dpacp_nn_1_0_lib4
-#endif
+	FUN_END(inner_kernel_dpacp_nn_1_0_lib4)
 #endif
 
 
@@ -3916,18 +3629,7 @@ inner_kernel_dpacp_nn_1_0_lib4:
 // void kernel_dpack_nn_12_lib4(int kmax, double *A, int lda, double *C, int sdc)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpack_nn_12_lib4
-	.type kernel_dpack_nn_12_lib4, @function
-kernel_dpack_nn_12_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpack_nn_12_lib4
-_kernel_dpack_nn_12_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpack_nn_12_lib4
-	.def kernel_dpack_nn_12_lib4; .scl 2; .type 32; .endef
-kernel_dpack_nn_12_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpack_nn_12_lib4)
 
 	PROLOGUE
 
@@ -4019,9 +3721,7 @@ kernel_dpack_nn_12_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpack_nn_12_lib4, .-kernel_dpack_nn_12_lib4
-#endif
+	FUN_END(kernel_dpack_nn_12_lib4)
 
 
 
@@ -4031,18 +3731,7 @@ kernel_dpack_nn_12_lib4:
 // void kernel_dpack_nn_12_vs_lib4(int kmax, double *A, int lda, double *C, int sdc, int m1)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpack_nn_12_vs_lib4
-	.type kernel_dpack_nn_12_vs_lib4, @function
-kernel_dpack_nn_12_vs_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpack_nn_12_vs_lib4
-_kernel_dpack_nn_12_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpack_nn_12_vs_lib4
-	.def kernel_dpack_nn_12_vs_lib4; .scl 2; .type 32; .endef
-kernel_dpack_nn_12_vs_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpack_nn_12_vs_lib4)
 
 	PROLOGUE
 
@@ -4146,9 +3835,7 @@ kernel_dpack_nn_12_vs_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpack_nn_12_vs_lib4, .-kernel_dpack_nn_12_vs_lib4
-#endif
+	FUN_END(kernel_dpack_nn_12_vs_lib4)
 
 
 
@@ -4158,18 +3845,7 @@ kernel_dpack_nn_12_vs_lib4:
 // void kernel_dpack_nn_8_lib4(int kmax, double *A, int lda, double *C, int sdc)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpack_nn_8_lib4
-	.type kernel_dpack_nn_8_lib4, @function
-kernel_dpack_nn_8_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpack_nn_8_lib4
-_kernel_dpack_nn_8_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpack_nn_8_lib4
-	.def kernel_dpack_nn_8_lib4; .scl 2; .type 32; .endef
-kernel_dpack_nn_8_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpack_nn_8_lib4)
 
 	PROLOGUE
 
@@ -4251,9 +3927,7 @@ kernel_dpack_nn_8_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpack_nn_8_lib4, .-kernel_dpack_nn_8_lib4
-#endif
+	FUN_END(kernel_dpack_nn_8_lib4)
 
 
 
@@ -4263,18 +3937,7 @@ kernel_dpack_nn_8_lib4:
 // void kernel_dpack_nn_8_vs_lib4(int kmax, double *A, int lda, double *C, int sdc, int m1)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpack_nn_8_vs_lib4
-	.type kernel_dpack_nn_8_vs_lib4, @function
-kernel_dpack_nn_8_vs_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpack_nn_8_vs_lib4
-_kernel_dpack_nn_8_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpack_nn_8_vs_lib4
-	.def kernel_dpack_nn_8_vs_lib4; .scl 2; .type 32; .endef
-kernel_dpack_nn_8_vs_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpack_nn_8_vs_lib4)
 
 	PROLOGUE
 
@@ -4368,9 +4031,7 @@ kernel_dpack_nn_8_vs_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpack_nn_8_vs_lib4, .-kernel_dpack_nn_8_vs_lib4
-#endif
+	FUN_END(kernel_dpack_nn_8_vs_lib4)
 
 
 
@@ -4380,18 +4041,7 @@ kernel_dpack_nn_8_vs_lib4:
 // void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *C)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpack_nn_4_lib4
-	.type kernel_dpack_nn_4_lib4, @function
-kernel_dpack_nn_4_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpack_nn_4_lib4
-_kernel_dpack_nn_4_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpack_nn_4_lib4
-	.def kernel_dpack_nn_4_lib4; .scl 2; .type 32; .endef
-kernel_dpack_nn_4_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpack_nn_4_lib4)
 
 	PROLOGUE
 
@@ -4461,9 +4111,7 @@ kernel_dpack_nn_4_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpack_nn_4_lib4, .-kernel_dpack_nn_4_lib4
-#endif
+	FUN_END(kernel_dpack_nn_4_lib4)
 
 
 
@@ -4473,18 +4121,7 @@ kernel_dpack_nn_4_lib4:
 // void kernel_dpack_nn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpack_nn_4_vs_lib4
-	.type kernel_dpack_nn_4_vs_lib4, @function
-kernel_dpack_nn_4_vs_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpack_nn_4_vs_lib4
-_kernel_dpack_nn_4_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpack_nn_4_vs_lib4
-	.def kernel_dpack_nn_4_vs_lib4; .scl 2; .type 32; .endef
-kernel_dpack_nn_4_vs_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpack_nn_4_vs_lib4)
 
 	PROLOGUE
 
@@ -4566,9 +4203,7 @@ kernel_dpack_nn_4_vs_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpack_nn_4_vs_lib4, .-kernel_dpack_nn_4_vs_lib4
-#endif
+	FUN_END(kernel_dpack_nn_4_vs_lib4)
 
 
 
@@ -4578,18 +4213,7 @@ kernel_dpack_nn_4_vs_lib4:
 // void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *C)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpack_tn_4_lib4
-	.type kernel_dpack_tn_4_lib4, @function
-kernel_dpack_tn_4_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpack_tn_4_lib4
-_kernel_dpack_tn_4_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpack_tn_4_lib4
-	.def kernel_dpack_tn_4_lib4; .scl 2; .type 32; .endef
-kernel_dpack_tn_4_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpack_tn_4_lib4)
 
 	PROLOGUE
 
@@ -4604,11 +4228,7 @@ kernel_dpack_tn_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACK_TN_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpack_tn_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpack_tn_4_lib4
-#endif
+	CALL(inner_kernel_dpack_tn_4_lib4)
 #endif
 
 
@@ -4616,9 +4236,7 @@ kernel_dpack_tn_4_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpack_tn_4_lib4, .-kernel_dpack_tn_4_lib4
-#endif
+	FUN_END(kernel_dpack_tn_4_lib4)
 
 
 
@@ -4628,18 +4246,7 @@ kernel_dpack_tn_4_lib4:
 // void kernel_dpack_tn_4_vs_lib4(int kmax, double *A, int lda, double *C, int m1)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpack_tn_4_vs_lib4
-	.type kernel_dpack_tn_4_vs_lib4, @function
-kernel_dpack_tn_4_vs_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpack_tn_4_vs_lib4
-_kernel_dpack_tn_4_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpack_tn_4_vs_lib4
-	.def kernel_dpack_tn_4_vs_lib4; .scl 2; .type 32; .endef
-kernel_dpack_tn_4_vs_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpack_tn_4_vs_lib4)
 
 	PROLOGUE
 
@@ -4657,11 +4264,7 @@ kernel_dpack_tn_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACK_TN_1_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpack_tn_1_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpack_tn_1_lib4
-#endif
+	CALL(inner_kernel_dpack_tn_1_lib4)
 #endif
 
 	jmp		103f
@@ -4675,11 +4278,7 @@ kernel_dpack_tn_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACK_TN_2_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpack_tn_2_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpack_tn_2_lib4
-#endif
+	CALL(inner_kernel_dpack_tn_2_lib4)
 #endif
 	
 	jmp		103f
@@ -4693,11 +4292,7 @@ kernel_dpack_tn_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACK_TN_3_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpack_tn_3_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpack_tn_3_lib4
-#endif
+	CALL(inner_kernel_dpack_tn_3_lib4)
 #endif
 
 	jmp		103f
@@ -4707,11 +4302,7 @@ kernel_dpack_tn_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACK_TN_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpack_tn_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpack_tn_4_lib4
-#endif
+	CALL(inner_kernel_dpack_tn_4_lib4)
 #endif
 
 103:
@@ -4721,9 +4312,7 @@ kernel_dpack_tn_4_vs_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpack_tn_4_vs_lib4, .-kernel_dpack_tn_4_vs_lib4
-#endif
+	FUN_END(kernel_dpack_tn_4_vs_lib4)
 
 
 
@@ -4733,18 +4322,7 @@ kernel_dpack_tn_4_vs_lib4:
 // void kernel_dpack_tt_12_lib4(int kmax, double *A, int lda, double *C, int sdc)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpack_tt_12_lib4
-	.type kernel_dpack_tt_12_lib4, @function
-kernel_dpack_tt_12_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpack_tt_12_lib4
-_kernel_dpack_tt_12_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpack_tt_12_lib4
-	.def kernel_dpack_tt_12_lib4; .scl 2; .type 32; .endef
-kernel_dpack_tt_12_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpack_tt_12_lib4)
 
 	PROLOGUE
 
@@ -4898,9 +4476,7 @@ kernel_dpack_tt_12_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpack_tt_12_lib4, .-kernel_dpack_tt_12_lib4
-#endif
+	FUN_END(kernel_dpack_tt_12_lib4)
 
 
 
@@ -4910,18 +4486,7 @@ kernel_dpack_tt_12_lib4:
 // void kernel_dpack_tt_8_lib4(int kmax, double *A, int lda, double *C, int sdc)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpack_tt_8_lib4
-	.type kernel_dpack_tt_8_lib4, @function
-kernel_dpack_tt_8_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpack_tt_8_lib4
-_kernel_dpack_tt_8_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpack_tt_8_lib4
-	.def kernel_dpack_tt_8_lib4; .scl 2; .type 32; .endef
-kernel_dpack_tt_8_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpack_tt_8_lib4)
 
 	PROLOGUE
 
@@ -5043,9 +4608,7 @@ kernel_dpack_tt_8_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpack_tt_8_lib4, .-kernel_dpack_tt_8_lib4
-#endif
+	FUN_END(kernel_dpack_tt_8_lib4)
 
 
 
@@ -5055,18 +4618,7 @@ kernel_dpack_tt_8_lib4:
 // void kernel_dpack_tt_4_lib4(int kmax, double *A, int lda, double *C, int sdc)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpack_tt_4_lib4
-	.type kernel_dpack_tt_4_lib4, @function
-kernel_dpack_tt_4_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpack_tt_4_lib4
-_kernel_dpack_tt_4_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpack_tt_4_lib4
-	.def kernel_dpack_tt_4_lib4; .scl 2; .type 32; .endef
-kernel_dpack_tt_4_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpack_tt_4_lib4)
 
 	PROLOGUE
 
@@ -5156,9 +4708,7 @@ kernel_dpack_tt_4_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpack_tt_4_lib4, .-kernel_dpack_tt_4_lib4
-#endif
+	FUN_END(kernel_dpack_tt_4_lib4)
 
 
 
@@ -5168,18 +4718,7 @@ kernel_dpack_tt_4_lib4:
 // void kernel_dunpack_nn_12_lib4(int kmax, double *A, int sda, double *C, int ldc)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dunpack_nn_12_lib4
-	.type kernel_dunpack_nn_12_lib4, @function
-kernel_dunpack_nn_12_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dunpack_nn_12_lib4
-_kernel_dunpack_nn_12_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dunpack_nn_12_lib4
-	.def kernel_dunpack_nn_12_lib4; .scl 2; .type 32; .endef
-kernel_dunpack_nn_12_lib4:
-#endif
+	GLOB_FUN_START(kernel_dunpack_nn_12_lib4)
 
 	PROLOGUE
 
@@ -5271,9 +4810,7 @@ kernel_dunpack_nn_12_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dunpack_nn_12_lib4, .-kernel_dunpack_nn_12_lib4
-#endif
+	FUN_END(kernel_dunpack_nn_12_lib4)
 
 
 
@@ -5283,18 +4820,7 @@ kernel_dunpack_nn_12_lib4:
 // void kernel_dunpack_nn_8_lib4(int kmax, double *A, int sda, double *C, int ldc)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dunpack_nn_8_lib4
-	.type kernel_dunpack_nn_8_lib4, @function
-kernel_dunpack_nn_8_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dunpack_nn_8_lib4
-_kernel_dunpack_nn_8_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dunpack_nn_8_lib4
-	.def kernel_dunpack_nn_8_lib4; .scl 2; .type 32; .endef
-kernel_dunpack_nn_8_lib4:
-#endif
+	GLOB_FUN_START(kernel_dunpack_nn_8_lib4)
 
 	PROLOGUE
 
@@ -5376,9 +4902,7 @@ kernel_dunpack_nn_8_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dunpack_nn_8_lib4, .-kernel_dunpack_nn_8_lib4
-#endif
+	FUN_END(kernel_dunpack_nn_8_lib4)
 
 
 
@@ -5388,18 +4912,7 @@ kernel_dunpack_nn_8_lib4:
 // void kernel_dunpack_nn_4_lib4(int kmax, double *A, double *C, int ldc)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dunpack_nn_4_lib4
-	.type kernel_dunpack_nn_4_lib4, @function
-kernel_dunpack_nn_4_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dunpack_nn_4_lib4
-_kernel_dunpack_nn_4_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dunpack_nn_4_lib4
-	.def kernel_dunpack_nn_4_lib4; .scl 2; .type 32; .endef
-kernel_dunpack_nn_4_lib4:
-#endif
+	GLOB_FUN_START(kernel_dunpack_nn_4_lib4)
 
 	PROLOGUE
 
@@ -5469,9 +4982,7 @@ kernel_dunpack_nn_4_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dunpack_nn_4_lib4, .-kernel_dunpack_nn_4_lib4
-#endif
+	FUN_END(kernel_dunpack_nn_4_lib4)
 
 
 
@@ -5481,18 +4992,7 @@ kernel_dunpack_nn_4_lib4:
 // void kernel_dunpack_nt_4_lib4(int kmax, double *C, double *A, int lda)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dunpack_nt_4_lib4
-	.type kernel_dunpack_nt_4_lib4, @function
-kernel_dunpack_nt_4_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dunpack_nt_4_lib4
-_kernel_dunpack_nt_4_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dunpack_nt_4_lib4
-	.def kernel_dunpack_nt_4_lib4; .scl 2; .type 32; .endef
-kernel_dunpack_nt_4_lib4:
-#endif
+	GLOB_FUN_START(kernel_dunpack_nt_4_lib4)
 
 	PROLOGUE
 
@@ -5507,11 +5007,7 @@ kernel_dunpack_nt_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DUNPACK_NT_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dunpack_nt_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dunpack_nt_4_lib4
-#endif
+	CALL(inner_kernel_dunpack_nt_4_lib4)
 #endif
 
 
@@ -5519,9 +5015,7 @@ kernel_dunpack_nt_4_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dunpack_nt_4_lib4, .-kernel_dunpack_nt_4_lib4
-#endif
+	FUN_END(kernel_dunpack_nt_4_lib4)
 
 
 
@@ -5531,18 +5025,7 @@ kernel_dunpack_nt_4_lib4:
 // void kernel_dunpack_nt_4_vs_lib4(int kmax, double *C, double *A, int lda, int m1)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dunpack_nt_4_vs_lib4
-	.type kernel_dunpack_nt_4_vs_lib4, @function
-kernel_dunpack_nt_4_vs_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dunpack_nt_4_vs_lib4
-_kernel_dunpack_nt_4_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dunpack_nt_4_vs_lib4
-	.def kernel_dunpack_nt_4_vs_lib4; .scl 2; .type 32; .endef
-kernel_dunpack_nt_4_vs_lib4:
-#endif
+	GLOB_FUN_START(kernel_dunpack_nt_4_vs_lib4)
 
 	PROLOGUE
 
@@ -5560,11 +5043,7 @@ kernel_dunpack_nt_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DUNPACK_NT_1_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dunpack_nt_1_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dunpack_nt_1_lib4
-#endif
+	CALL(inner_kernel_dunpack_nt_1_lib4)
 #endif
 
 	jmp		103f
@@ -5578,11 +5057,7 @@ kernel_dunpack_nt_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DUNPACK_NT_2_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dunpack_nt_2_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dunpack_nt_2_lib4
-#endif
+	CALL(inner_kernel_dunpack_nt_2_lib4)
 #endif
 	
 	jmp		103f
@@ -5596,11 +5071,7 @@ kernel_dunpack_nt_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DUNPACK_NT_3_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dunpack_nt_3_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dunpack_nt_3_lib4
-#endif
+	CALL(inner_kernel_dunpack_nt_3_lib4)
 #endif
 
 	jmp		103f
@@ -5610,11 +5081,7 @@ kernel_dunpack_nt_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DUNPACK_NT_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dunpack_nt_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dunpack_nt_4_lib4
-#endif
+	CALL(inner_kernel_dunpack_nt_4_lib4)
 #endif
 
 103:
@@ -5624,9 +5091,7 @@ kernel_dunpack_nt_4_vs_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dunpack_nt_4_vs_lib4, .-kernel_dunpack_nt_4_vs_lib4
-#endif
+	FUN_END(kernel_dunpack_nt_4_vs_lib4)
 
 
 
@@ -5636,18 +5101,7 @@ kernel_dunpack_nt_4_vs_lib4:
 // void kernel_dunpack_tt_12_lib4(int kmax, double *A, int sda, double *C, int ldc)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dunpack_tt_12_lib4
-	.type kernel_dunpack_tt_12_lib4, @function
-kernel_dunpack_tt_12_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dunpack_tt_12_lib4
-_kernel_dunpack_tt_12_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dunpack_tt_12_lib4
-	.def kernel_dunpack_tt_12_lib4; .scl 2; .type 32; .endef
-kernel_dunpack_tt_12_lib4:
-#endif
+	GLOB_FUN_START(kernel_dunpack_tt_12_lib4)
 
 	PROLOGUE
 
@@ -5801,9 +5255,7 @@ kernel_dunpack_tt_12_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dunpack_tt_12_lib4, .-kernel_dunpack_tt_12_lib4
-#endif
+	FUN_END(kernel_dunpack_tt_12_lib4)
 
 
 
@@ -5813,18 +5265,7 @@ kernel_dunpack_tt_12_lib4:
 // void kernel_dunpack_tt_8_lib4(int kmax, double *A, int sda, double *C, int ldc)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dunpack_tt_8_lib4
-	.type kernel_dunpack_tt_8_lib4, @function
-kernel_dunpack_tt_8_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dunpack_tt_8_lib4
-_kernel_dunpack_tt_8_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dunpack_tt_8_lib4
-	.def kernel_dunpack_tt_8_lib4; .scl 2; .type 32; .endef
-kernel_dunpack_tt_8_lib4:
-#endif
+	GLOB_FUN_START(kernel_dunpack_tt_8_lib4)
 
 	PROLOGUE
 
@@ -5946,9 +5387,7 @@ kernel_dunpack_tt_8_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dunpack_tt_8_lib4, .-kernel_dunpack_tt_8_lib4
-#endif
+	FUN_END(kernel_dunpack_tt_8_lib4)
 
 
 
@@ -5958,18 +5397,7 @@ kernel_dunpack_tt_8_lib4:
 // void kernel_dunpack_tt_4_lib4(int kmax, double *A, int sda, double *C, int ldc)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dunpack_tt_4_lib4
-	.type kernel_dunpack_tt_4_lib4, @function
-kernel_dunpack_tt_4_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dunpack_tt_4_lib4
-_kernel_dunpack_tt_4_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dunpack_tt_4_lib4
-	.def kernel_dunpack_tt_4_lib4; .scl 2; .type 32; .endef
-kernel_dunpack_tt_4_lib4:
-#endif
+	GLOB_FUN_START(kernel_dunpack_tt_4_lib4)
 
 	PROLOGUE
 
@@ -6062,9 +5490,7 @@ kernel_dunpack_tt_4_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dunpack_tt_4_lib4, .-kernel_dunpack_tt_4_lib4
-#endif
+	FUN_END(kernel_dunpack_tt_4_lib4)
 
 
 
@@ -6074,18 +5500,7 @@ kernel_dunpack_tt_4_lib4:
 // void kernel_dpacp_nt_4_lib4(int kmax, double *A, int offsetC, double *C, int sdc)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpacp_nt_4_lib4
-	.type kernel_dpacp_nt_4_lib4, @function
-kernel_dpacp_nt_4_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpacp_nt_4_lib4
-_kernel_dpacp_nt_4_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpacp_nt_4_lib4
-	.def kernel_dpacp_nt_4_lib4; .scl 2; .type 32; .endef
-kernel_dpacp_nt_4_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpacp_nt_4_lib4)
 
 	PROLOGUE
 
@@ -6100,11 +5515,7 @@ kernel_dpacp_nt_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NT_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nt_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nt_4_lib4
-#endif
+	CALL(inner_kernel_dpacp_nt_4_lib4)
 #endif
 
 
@@ -6112,9 +5523,7 @@ kernel_dpacp_nt_4_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpacp_nt_4_lib4, .-kernel_dpacp_nt_4_lib4
-#endif
+	FUN_END(kernel_dpacp_nt_4_lib4)
 
 
 
@@ -6124,18 +5533,7 @@ kernel_dpacp_nt_4_lib4:
 // void kernel_dpacp_tn_4_lib4(int kmax, int offsetA, double *A, int sda, double *C)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpacp_tn_4_lib4
-	.type kernel_dpacp_tn_4_lib4, @function
-kernel_dpacp_tn_4_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpacp_tn_4_lib4
-_kernel_dpacp_tn_4_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpacp_tn_4_lib4
-	.def kernel_dpacp_tn_4_lib4; .scl 2; .type 32; .endef
-kernel_dpacp_tn_4_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpacp_tn_4_lib4)
 
 	PROLOGUE
 
@@ -6150,11 +5548,7 @@ kernel_dpacp_tn_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_TN_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_tn_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_tn_4_lib4
-#endif
+	CALL(inner_kernel_dpacp_tn_4_lib4)
 #endif
 
 
@@ -6162,9 +5556,7 @@ kernel_dpacp_tn_4_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpacp_tn_4_lib4, .-kernel_dpacp_tn_4_lib4
-#endif
+	FUN_END(kernel_dpacp_tn_4_lib4)
 
 
 
@@ -6174,18 +5566,7 @@ kernel_dpacp_tn_4_lib4:
 // void kernel_dpacp_nn_12_lib4(int kmax, int offsetA, double *A, int sda, double *C, int ldc)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpacp_nn_12_lib4
-	.type kernel_dpacp_nn_12_lib4, @function
-kernel_dpacp_nn_12_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpacp_nn_12_lib4
-_kernel_dpacp_nn_12_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpacp_nn_12_lib4
-	.def kernel_dpacp_nn_12_lib4; .scl 2; .type 32; .endef
-kernel_dpacp_nn_12_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpacp_nn_12_lib4)
 
 	PROLOGUE
 
@@ -6214,11 +5595,7 @@ kernel_dpacp_nn_12_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_12_0_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_12_0_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_12_0_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_12_0_lib4)
 #endif
 	jmp		200f
 
@@ -6226,11 +5603,7 @@ kernel_dpacp_nn_12_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_12_1_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_12_1_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_12_1_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_12_1_lib4)
 #endif
 	jmp		200f
 
@@ -6238,11 +5611,7 @@ kernel_dpacp_nn_12_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_12_2_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_12_2_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_12_2_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_12_2_lib4)
 #endif
 	jmp		200f
 
@@ -6250,11 +5619,7 @@ kernel_dpacp_nn_12_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_12_3_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_12_3_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_12_3_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_12_3_lib4)
 #endif
 	jmp		200f
 
@@ -6264,9 +5629,7 @@ kernel_dpacp_nn_12_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpacp_nn_12_lib4, .-kernel_dpacp_nn_12_lib4
-#endif
+	FUN_END(kernel_dpacp_nn_12_lib4)
 
 
 
@@ -6276,18 +5639,7 @@ kernel_dpacp_nn_12_lib4:
 // void kernel_dpacp_nn_12_vs_lib4(int kmax, int offsetA, double *A, int sda, double *C, int ldc, int m1)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpacp_nn_12_vs_lib4
-	.type kernel_dpacp_nn_12_vs_lib4, @function
-kernel_dpacp_nn_12_vs_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpacp_nn_12_vs_lib4
-_kernel_dpacp_nn_12_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpacp_nn_12_vs_lib4
-	.def kernel_dpacp_nn_12_vs_lib4; .scl 2; .type 32; .endef
-kernel_dpacp_nn_12_vs_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpacp_nn_12_vs_lib4)
 
 	PROLOGUE
 
@@ -6317,11 +5669,7 @@ kernel_dpacp_nn_12_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_12_0_VS_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_12_0_vs_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_12_0_vs_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_12_0_vs_lib4)
 #endif
 	jmp		200f
 
@@ -6329,11 +5677,7 @@ kernel_dpacp_nn_12_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_12_1_VS_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_12_1_vs_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_12_1_vs_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_12_1_vs_lib4)
 #endif
 	jmp		200f
 
@@ -6341,11 +5685,7 @@ kernel_dpacp_nn_12_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_12_2_VS_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_12_2_vs_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_12_2_vs_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_12_2_vs_lib4)
 #endif
 	jmp		200f
 
@@ -6353,11 +5693,7 @@ kernel_dpacp_nn_12_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_12_3_VS_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_12_3_vs_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_12_3_vs_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_12_3_vs_lib4)
 #endif
 	jmp		200f
 
@@ -6367,9 +5703,7 @@ kernel_dpacp_nn_12_vs_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpacp_nn_12_vs_lib4, .-kernel_dpacp_nn_12_vs_lib4
-#endif
+	FUN_END(kernel_dpacp_nn_12_vs_lib4)
 
 
 
@@ -6379,18 +5713,7 @@ kernel_dpacp_nn_12_vs_lib4:
 // void kernel_dpacp_nn_8_lib4(int kmax, int offsetA, double *A, int sda, double *C, int ldc)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpacp_nn_8_lib4
-	.type kernel_dpacp_nn_8_lib4, @function
-kernel_dpacp_nn_8_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpacp_nn_8_lib4
-_kernel_dpacp_nn_8_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpacp_nn_8_lib4
-	.def kernel_dpacp_nn_8_lib4; .scl 2; .type 32; .endef
-kernel_dpacp_nn_8_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpacp_nn_8_lib4)
 
 	PROLOGUE
 
@@ -6419,11 +5742,7 @@ kernel_dpacp_nn_8_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_8_0_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_8_0_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_8_0_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_8_0_lib4)
 #endif
 	jmp		200f
 
@@ -6431,11 +5750,7 @@ kernel_dpacp_nn_8_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_8_1_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_8_1_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_8_1_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_8_1_lib4)
 #endif
 	jmp		200f
 
@@ -6443,11 +5758,7 @@ kernel_dpacp_nn_8_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_8_2_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_8_2_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_8_2_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_8_2_lib4)
 #endif
 	jmp		200f
 
@@ -6455,11 +5766,7 @@ kernel_dpacp_nn_8_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_8_3_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_8_3_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_8_3_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_8_3_lib4)
 #endif
 	jmp		200f
 
@@ -6469,9 +5776,7 @@ kernel_dpacp_nn_8_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpacp_nn_8_lib4, .-kernel_dpacp_nn_8_lib4
-#endif
+	FUN_END(kernel_dpacp_nn_8_lib4)
 
 
 
@@ -6481,18 +5786,7 @@ kernel_dpacp_nn_8_lib4:
 // void kernel_dpacp_nn_8_vs_lib4(int kmax, int offsetA, double *A, int sda, double *C, int ldc, int m1)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpacp_nn_8_vs_lib4
-	.type kernel_dpacp_nn_8_vs_lib4, @function
-kernel_dpacp_nn_8_vs_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpacp_nn_8_vs_lib4
-_kernel_dpacp_nn_8_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpacp_nn_8_vs_lib4
-	.def kernel_dpacp_nn_8_vs_lib4; .scl 2; .type 32; .endef
-kernel_dpacp_nn_8_vs_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpacp_nn_8_vs_lib4)
 
 	PROLOGUE
 
@@ -6522,11 +5816,7 @@ kernel_dpacp_nn_8_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_8_0_VS_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_8_0_vs_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_8_0_vs_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_8_0_vs_lib4)
 #endif
 	jmp		200f
 
@@ -6534,11 +5824,7 @@ kernel_dpacp_nn_8_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_8_1_VS_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_8_1_vs_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_8_1_vs_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_8_1_vs_lib4)
 #endif
 	jmp		200f
 
@@ -6546,11 +5832,7 @@ kernel_dpacp_nn_8_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_8_2_VS_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_8_2_vs_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_8_2_vs_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_8_2_vs_lib4)
 #endif
 	jmp		200f
 
@@ -6558,11 +5840,7 @@ kernel_dpacp_nn_8_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_8_3_VS_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_8_3_vs_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_8_3_vs_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_8_3_vs_lib4)
 #endif
 	jmp		200f
 
@@ -6572,9 +5850,7 @@ kernel_dpacp_nn_8_vs_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpacp_nn_8_vs_lib4, .-kernel_dpacp_nn_8_vs_lib4
-#endif
+	FUN_END(kernel_dpacp_nn_8_vs_lib4)
 
 
 
@@ -6584,18 +5860,7 @@ kernel_dpacp_nn_8_vs_lib4:
 // void kernel_dpacp_nn_4_lib4(int kmax, int offsetA, double *A, int sda, double *C)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpacp_nn_4_lib4
-	.type kernel_dpacp_nn_4_lib4, @function
-kernel_dpacp_nn_4_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpacp_nn_4_lib4
-_kernel_dpacp_nn_4_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpacp_nn_4_lib4
-	.def kernel_dpacp_nn_4_lib4; .scl 2; .type 32; .endef
-kernel_dpacp_nn_4_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpacp_nn_4_lib4)
 
 	PROLOGUE
 
@@ -6622,11 +5887,7 @@ kernel_dpacp_nn_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_4_0_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_4_0_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_4_0_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_4_0_lib4)
 #endif
 	jmp		200f
 
@@ -6634,11 +5895,7 @@ kernel_dpacp_nn_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_4_1_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_4_1_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_4_1_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_4_1_lib4)
 #endif
 	jmp		200f
 
@@ -6646,11 +5903,7 @@ kernel_dpacp_nn_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_4_2_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_4_2_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_4_2_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_4_2_lib4)
 #endif
 	jmp		200f
 
@@ -6658,11 +5911,7 @@ kernel_dpacp_nn_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_4_3_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_4_3_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_4_3_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_4_3_lib4)
 #endif
 	jmp		200f
 
@@ -6672,9 +5921,7 @@ kernel_dpacp_nn_4_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpacp_nn_4_lib4, .-kernel_dpacp_nn_4_lib4
-#endif
+	FUN_END(kernel_dpacp_nn_4_lib4)
 
 
 
@@ -6684,18 +5931,7 @@ kernel_dpacp_nn_4_lib4:
 // void kernel_dpacp_nn_4_vs_lib4(int kmax, int offsetA, double *A, int sda, double *C, int m1)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dpacp_nn_4_vs_lib4
-	.type kernel_dpacp_nn_4_vs_lib4, @function
-kernel_dpacp_nn_4_vs_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dpacp_nn_4_vs_lib4
-_kernel_dpacp_nn_4_vs_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dpacp_nn_4_vs_lib4
-	.def kernel_dpacp_nn_4_vs_lib4; .scl 2; .type 32; .endef
-kernel_dpacp_nn_4_vs_lib4:
-#endif
+	GLOB_FUN_START(kernel_dpacp_nn_4_vs_lib4)
 
 	PROLOGUE
 
@@ -6735,11 +5971,7 @@ kernel_dpacp_nn_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_1_0_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_1_0_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_1_0_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_1_0_lib4)
 #endif
 	jmp		200f
 
@@ -6760,11 +5992,7 @@ kernel_dpacp_nn_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_2_0_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_2_0_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_2_0_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_2_0_lib4)
 #endif
 	jmp		200f
 
@@ -6772,11 +6000,7 @@ kernel_dpacp_nn_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_2_1_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_2_1_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_2_1_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_2_1_lib4)
 #endif
 	jmp		200f
 
@@ -6799,11 +6023,7 @@ kernel_dpacp_nn_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_3_0_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_3_0_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_3_0_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_3_0_lib4)
 #endif
 	jmp		200f
 
@@ -6811,11 +6031,7 @@ kernel_dpacp_nn_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_3_2_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_3_2_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_3_2_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_3_2_lib4)
 #endif
 	jmp		200f
 
@@ -6823,11 +6039,7 @@ kernel_dpacp_nn_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_3_3_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_3_3_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_3_3_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_3_3_lib4)
 #endif
 	jmp		200f
 
@@ -6850,11 +6062,7 @@ kernel_dpacp_nn_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_4_0_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_4_0_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_4_0_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_4_0_lib4)
 #endif
 	jmp		200f
 
@@ -6862,11 +6070,7 @@ kernel_dpacp_nn_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_4_1_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_4_1_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_4_1_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_4_1_lib4)
 #endif
 	jmp		200f
 
@@ -6874,11 +6078,7 @@ kernel_dpacp_nn_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_4_2_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_4_2_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_4_2_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_4_2_lib4)
 #endif
 	jmp		200f
 
@@ -6886,11 +6086,7 @@ kernel_dpacp_nn_4_vs_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DPACP_NN_4_3_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dpacp_nn_4_3_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dpacp_nn_4_3_lib4
-#endif
+	CALL(inner_kernel_dpacp_nn_4_3_lib4)
 #endif
 	jmp		200f
 
@@ -6900,9 +6096,7 @@ kernel_dpacp_nn_4_vs_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dpacp_nn_4_vs_lib4, .-kernel_dpacp_nn_4_vs_lib4
-#endif
+	FUN_END(kernel_dpacp_nn_4_vs_lib4)
 
 
 
