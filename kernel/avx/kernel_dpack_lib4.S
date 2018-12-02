@@ -555,6 +555,322 @@ NAME:
 
 
 #if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACK_TT_4_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_dpack_tt_4_lib4)
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	movq	%r11, %r15
+
+	vmovupd		0(%r15), %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovupd		0(%r15), %ymm0
+	vmovapd		%ymm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovupd		0(%r15), %ymm0
+	vmovapd		%ymm0, 64(%r13)
+	addq	%r12, %r15
+
+	vmovupd		0(%r15), %ymm0
+	vmovapd		%ymm0, 96(%r13)
+	addq	%r12, %r15
+
+	subl	$4, %r10d
+	addq	$32, %r11
+	addq	%r14, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	movq	%r11, %r15
+
+	vmovsd		0(%r15), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovsd		0(%r15), %xmm0
+	vmovsd		%xmm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovsd		0(%r15), %xmm0
+	vmovsd		%xmm0, 64(%r13)
+	addq	%r12, %r15
+
+	vmovsd		0(%r15), %xmm0
+	vmovsd		%xmm0, 96(%r13)
+	addq	%r12, %r15
+
+	subl	$1, %r10d
+	addq	$8, %r11
+	addq	$8, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_dpack_tt_4_lib4)
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACK_TT_3_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_dpack_tt_3_lib4)
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	movq	%r11, %r15
+
+	vmovupd		0(%r15), %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovupd		0(%r15), %ymm0
+	vmovapd		%ymm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovupd		0(%r15), %ymm0
+	vmovapd		%ymm0, 64(%r13)
+	addq	%r12, %r15
+
+	subl	$4, %r10d
+	addq	$32, %r11
+	addq	%r14, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	movq	%r11, %r15
+
+	vmovsd		0(%r15), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovsd		0(%r15), %xmm0
+	vmovsd		%xmm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovsd		0(%r15), %xmm0
+	vmovsd		%xmm0, 64(%r13)
+	addq	%r12, %r15
+
+	subl	$1, %r10d
+	addq	$8, %r11
+	addq	$8, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_dpack_tt_3_lib4)
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACK_TT_2_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_dpack_tt_2_lib4)
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	movq	%r11, %r15
+
+	vmovupd		0(%r15), %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovupd		0(%r15), %ymm0
+	vmovapd		%ymm0, 32(%r13)
+	addq	%r12, %r15
+
+	subl	$4, %r10d
+	addq	$32, %r11
+	addq	%r14, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	movq	%r11, %r15
+
+	vmovsd		0(%r15), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovsd		0(%r15), %xmm0
+	vmovsd		%xmm0, 32(%r13)
+	addq	%r12, %r15
+
+	subl	$1, %r10d
+	addq	$8, %r11
+	addq	$8, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_dpack_tt_2_lib4)
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_DPACK_TT_1_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_dpack_tt_1_lib4)
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	movq	%r11, %r15
+
+	vmovupd		0(%r15), %ymm0
+	vmovapd		%ymm0, 0(%r13)
+	addq	%r12, %r15
+
+	subl	$4, %r10d
+	addq	$32, %r11
+	addq	%r14, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	movq	%r11, %r15
+
+	vmovsd		0(%r15), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+	addq	%r12, %r15
+
+	subl	$1, %r10d
+	addq	$8, %r11
+	addq	$8, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_dpack_tt_1_lib4)
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
 	.macro INNER_KERNEL_DUNPACK_NT_4_LIB4
 #else
 	.p2align 4,,15
@@ -4632,83 +4948,96 @@ NAME:
 	sall	$5, %r14d
 
 
-	cmpl	$0, %r10d
-	jle		0f // return
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACK_TT_4_LIB4
+#else
+	CALL(inner_kernel_dpack_tt_4_lib4)
+#endif
 
-
-	cmpl	$3, %r10d
-	jle		2f // clean-up loop
-
-
-	// main loop
-	.p2align 3
-1: // main loop
-	
-	movq	%r11, %r15
-
-	vmovupd		0(%r15), %ymm0
-	vmovapd		%ymm0, 0(%r13)
-	addq	%r12, %r15
-
-	vmovupd		0(%r15), %ymm0
-	vmovapd		%ymm0, 32(%r13)
-	addq	%r12, %r15
-
-	vmovupd		0(%r15), %ymm0
-	vmovapd		%ymm0, 64(%r13)
-	addq	%r12, %r15
-
-	vmovupd		0(%r15), %ymm0
-	vmovapd		%ymm0, 96(%r13)
-	addq	%r12, %r15
-
-	subl	$4, %r10d
-	addq	$32, %r11
-	addq	%r14, %r13
-
-	cmpl	$3, %r10d
-	jg		1b
-
-
-	cmpl	$0, %r10d
-	jle		0f // return
-
-
-2: // clean-up loop
-	
-	movq	%r11, %r15
-
-	vmovsd		0(%r15), %xmm0
-	vmovsd		%xmm0, 0(%r13)
-	addq	%r12, %r15
-
-	vmovsd		0(%r15), %xmm0
-	vmovsd		%xmm0, 32(%r13)
-	addq	%r12, %r15
-
-	vmovsd		0(%r15), %xmm0
-	vmovsd		%xmm0, 64(%r13)
-	addq	%r12, %r15
-
-	vmovsd		0(%r15), %xmm0
-	vmovsd		%xmm0, 96(%r13)
-	addq	%r12, %r15
-
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
-
-	cmpl	$0, %r10d
-	jg		2b
-
-
-0: // return
 
 	EPILOGUE
 
 	ret
 
 	FUN_END(kernel_dpack_tt_4_lib4)
+
+
+
+
+
+//                                1         2          3        4          5        6
+// void kernel_dpack_tt_4_vs_lib4(int kmax, double *A, int lda, double *C, int sdc, int m1)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dpack_tt_4_vs_lib4)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$3, %r12d
+	movq	ARG4, %r13 // C
+	movq	ARG5, %r14 // sdc
+	sall	$5, %r14d
+
+	movq	ARG5, %r15 // m1
+	cmpl	$1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACK_TT_1_LIB4
+#else
+	CALL(inner_kernel_dpack_tt_1_lib4)
+#endif
+
+	jmp		103f
+
+100:
+
+	movq	ARG5, %r15 // m1
+	cmpl	$2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACK_TT_2_LIB4
+#else
+	CALL(inner_kernel_dpack_tt_2_lib4)
+#endif
+	
+	jmp		103f
+
+101:
+
+	movq	ARG5, %r15 // m1
+	cmpl	$3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACK_TT_3_LIB4
+#else
+	CALL(inner_kernel_dpack_tt_3_lib4)
+#endif
+
+	jmp		103f
+
+102:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DPACK_TT_4_LIB4
+#else
+	CALL(inner_kernel_dpack_tt_4_lib4)
+#endif
+
+103:
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dpack_tt_4_vs_lib4)
 
 
 
@@ -4816,6 +5145,120 @@ NAME:
 
 
 
+//                                   1         2          3        4          5        6
+// void kernel_dunpack_nn_12_vs_lib4(int kmax, double *A, int sda, double *C, int ldc, int m1)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dunpack_nn_12_vs_lib4)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // sda
+	sall	$5, %r12d
+	movq	ARG4, %r13 // C
+	movq	ARG5, %r14 // ldc
+	sall	$3, %r14d
+	movq	ARG6, %r15 // m1
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	vcvtsi2sd	%r15d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC02(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r13)
+	vmovapd		0(%r11, %r12, 1), %ymm0
+	vmovupd		%ymm0, 32(%r13)
+	vmovapd		0(%r11, %r12, 2), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 64(%r13)
+	addq	%r14, %r13
+
+	vmovapd		32(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r13)
+	vmovapd		32(%r11, %r12, 1), %ymm0
+	vmovupd		%ymm0, 32(%r13)
+	vmovapd		32(%r11, %r12, 2), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 64(%r13)
+	addq	%r14, %r13
+
+	vmovapd		64(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r13)
+	vmovapd		64(%r11, %r12, 1), %ymm0
+	vmovupd		%ymm0, 32(%r13)
+	vmovapd		64(%r11, %r12, 2), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 64(%r13)
+	addq	%r14, %r13
+
+	vmovapd		96(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r13)
+	vmovapd		96(%r11, %r12, 1), %ymm0
+	vmovupd		%ymm0, 32(%r13)
+	vmovapd		96(%r11, %r12, 2), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 64(%r13)
+	addq	%r14, %r13
+
+	subl	$4, %r10d
+	addq	$128, %r11
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r13)
+	vmovapd		0(%r11, %r12, 1), %ymm0
+	vmovupd		%ymm0, 32(%r13)
+	vmovapd		0(%r11, %r12, 2), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 64(%r13)
+	addq	%r14, %r13
+
+	subl	$1, %r10d
+	addq	$32, %r11
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dunpack_nn_12_vs_lib4)
+
+
+
+
+
 //                               1         2          3        4          5
 // void kernel_dunpack_nn_8_lib4(int kmax, double *A, int sda, double *C, int ldc)
 
@@ -4908,6 +5351,110 @@ NAME:
 
 
 
+//                                  1         2          3        4          5        6
+// void kernel_dunpack_nn_8_vs_lib4(int kmax, double *A, int sda, double *C, int ldc, int m1)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dunpack_nn_8_vs_lib4)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // sda
+	sall	$5, %r12d
+	movq	ARG4, %r13 // C
+	movq	ARG5, %r14 // ldc
+	sall	$3, %r14d
+	movq	ARG6, %r15 // m1
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	vcvtsi2sd	%r15d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC01(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC01(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r13)
+	vmovapd		0(%r11, %r12, 1), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 32(%r13)
+	addq	%r14, %r13
+
+	vmovapd		32(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r13)
+	vmovapd		32(%r11, %r12, 1), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 32(%r13)
+	addq	%r14, %r13
+
+	vmovapd		64(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r13)
+	vmovapd		64(%r11, %r12, 1), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 32(%r13)
+	addq	%r14, %r13
+
+	vmovapd		96(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r13)
+	vmovapd		96(%r11, %r12, 1), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 32(%r13)
+	addq	%r14, %r13
+
+	subl	$4, %r10d
+	addq	$128, %r11
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r13)
+	vmovapd		0(%r11, %r12, 1), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 32(%r13)
+	addq	%r14, %r13
+
+	subl	$1, %r10d
+	addq	$32, %r11
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dunpack_nn_8_vs_lib4)
+
+
+
+
+
 //                               1         2          3          4
 // void kernel_dunpack_nn_4_lib4(int kmax, double *A, double *C, int ldc)
 
@@ -4983,6 +5530,98 @@ NAME:
 	ret
 
 	FUN_END(kernel_dunpack_nn_4_lib4)
+
+
+
+
+
+//                               1         2          3          4        5
+// void kernel_dunpack_nn_4_lib4(int kmax, double *A, double *C, int ldc, int m1)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dunpack_nn_4_vs_lib4)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // C
+	movq	ARG4, %r13 // ldc
+	sall	$3, %r13d
+	movq	ARG6, %r14 // m1
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	vcvtsi2sd	%r14d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC00(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC00(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 0(%r12)
+	addq	%r13, %r12
+
+	vmovapd		32(%r11), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 0(%r12)
+	addq	%r13, %r12
+
+	vmovapd		64(%r11), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 0(%r12)
+	addq	%r13, %r12
+
+	vmovapd		96(%r11), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 0(%r12)
+	addq	%r13, %r12
+
+	subl	$4, %r10d
+	addq	$128, %r11
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovapd		0(%r11), %ymm0
+	vmaskmovpd	%ymm0, %ymm15, 0(%r12)
+	addq	%r13, %r12
+
+	subl	$1, %r10d
+	addq	$32, %r11
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dunpack_nn_4_vs_lib4)
 
 
 

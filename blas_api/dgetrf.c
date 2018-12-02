@@ -595,6 +595,7 @@ alg1:
 			{
 			ipiv[jj+ii] += jj; // TODO +1 !!!
 			}
+		// unpack
 		kernel_dunpack_nn_4_lib4(4, pC+jj*sdc+jj*ps, C+jj+jj*ldc, ldc);
 
 		// pivot
@@ -638,8 +639,8 @@ left_12_1:
 	kernel_dunpack_nt_4_vs_lib4(jj, pU+8*sdu, C+(jj+8)*ldc, ldc, n-jj);
 
 	// pack
-	// TODO 12 vs
-	kernel_dpack_tt_12_lib4(m-jj, C+jj+jj*ldc, ldc, pC+jj*sdc+jj*ps, sdc);
+	kernel_dpack_tt_8_lib4(m-jj, C+jj+jj*ldc, ldc, pC+jj*sdc+jj*ps, sdc);
+	kernel_dpack_tt_4_vs_lib4(m-jj, C+jj+(jj+8)*ldc, ldc, pC+jj*sdc+(jj+8)*ps, sdc, n-jj-8);
 
 	// correct
 	ii = jj;
@@ -656,8 +657,7 @@ left_12_1:
 		ipiv[jj+ii] += jj; // TODO +1 !!!
 		}
 	// unpack
-	// TODO vs
-	kernel_dunpack_nn_12_lib4(12, pC+jj*sdc+jj*ps, sdc, C+jj+jj*ldc, ldc);
+	kernel_dunpack_nn_12_vs_lib4(12, pC+jj*sdc+jj*ps, sdc, C+jj+jj*ldc, ldc, m-jj);
 
 	// pivot
 	for(ii=0; ii<12; ii++)
@@ -692,8 +692,8 @@ left_8_1:
 	kernel_dunpack_nt_4_vs_lib4(jj, pU+4*sdu, C+(jj+4)*ldc, ldc, n-jj);
 
 	// pack
-	// TODO vs
-	kernel_dpack_tt_8_lib4(m-jj, C+jj+jj*ldc, ldc, pC+jj*sdc+jj*ps, sdc);
+	kernel_dpack_tt_4_lib4(m-jj, C+jj+jj*ldc, ldc, pC+jj*sdc+jj*ps, sdc);
+	kernel_dpack_tt_4_vs_lib4(m-jj, C+jj+(jj+4)*ldc, ldc, pC+jj*sdc+(jj+4)*ps, sdc, n-jj-4);
 
 	// correct
 	ii = jj;
@@ -710,8 +710,7 @@ left_8_1:
 		ipiv[jj+ii] += jj; // TODO +1 !!!
 		}
 	// unpack
-	// TODO vs
-	kernel_dunpack_nn_8_lib4(8, pC+jj*sdc+jj*ps, sdc, C+jj+jj*ldc, ldc);
+	kernel_dunpack_nn_8_vs_lib4(8, pC+jj*sdc+jj*ps, sdc, C+jj+jj*ldc, ldc, m-jj);
 
 	// pivot
 	for(ii=0; ii<8; ii++)
@@ -744,8 +743,7 @@ left_4_1:
 	kernel_dunpack_nt_4_vs_lib4(jj, pU, C+jj*ldc, ldc, n-jj);
 
 	// pack
-	// TODO vs
-	kernel_dpack_tt_4_lib4(m-jj, C+jj+jj*ldc, ldc, pC+jj*sdc+jj*ps, sdc);
+	kernel_dpack_tt_4_vs_lib4(m-jj, C+jj+jj*ldc, ldc, pC+jj*sdc+jj*ps, sdc, n-jj);
 
 	// correct
 	ii = jj;
@@ -761,7 +759,8 @@ left_4_1:
 		{
 		ipiv[jj+ii] += jj; // TODO +1 !!!
 		}
-	kernel_dunpack_nn_4_lib4(4, pC+jj*sdc+jj*ps, C+jj+jj*ldc, ldc);
+	// unpack
+	kernel_dunpack_nn_4_vs_lib4(4, pC+jj*sdc+jj*ps, C+jj+jj*ldc, ldc, m-jj);
 
 	// pivot
 	for(ii=0; ii<4; ii++)

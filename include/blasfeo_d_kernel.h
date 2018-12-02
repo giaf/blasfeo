@@ -478,17 +478,21 @@ void kernel_dpack_tt_8_lib4(int kmax, double *A, int lda, double *B, int sdb);
 void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *B);
 void kernel_dpack_nn_4_vs_lib4(int kmax, double *A, int lda, double *B, int m1);
 void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *B);
-void kernel_dpack_tn_4_vs_lib4(int kmax, double *A, int lda, double *B, int n1);
+void kernel_dpack_tn_4_vs_lib4(int kmax, double *A, int lda, double *B, int m1);
 void kernel_dpack_tt_4_lib4(int kmax, double *A, int lda, double *B, int sdb);
+void kernel_dpack_tt_4_vs_lib4(int kmax, double *A, int lda, double *B, int sdb, int m1);
 // unpack
 // 12
 void kernel_dunpack_nn_12_lib4(int kmax, double *A, int sda, double *B, int ldb);
+void kernel_dunpack_nn_12_vs_lib4(int kmax, double *A, int sda, double *B, int ldb, int m1);
 void kernel_dunpack_tt_12_lib4(int kmax, double *A, int sda, double *B, int ldb);
 // 8
 void kernel_dunpack_nn_8_lib4(int kmax, double *A, int sda, double *B, int ldb);
+void kernel_dunpack_nn_8_vs_lib4(int kmax, double *A, int sda, double *B, int ldb, int m1);
 void kernel_dunpack_tt_8_lib4(int kmax, double *A, int sda, double *B, int ldb);
 // 4
 void kernel_dunpack_nn_4_lib4(int kmax, double *A, double *B, int ldb);
+void kernel_dunpack_nn_4_vs_lib4(int kmax, double *A, double *B, int ldb, int m1);
 void kernel_dunpack_nt_4_lib4(int kmax, double *A, double *B, int ldb);
 void kernel_dunpack_nt_4_vs_lib4(int kmax, double *A, double *B, int ldb, int m1);
 void kernel_dunpack_tt_4_lib4(int kmax, double *A, int sda, double *B, int ldb);
