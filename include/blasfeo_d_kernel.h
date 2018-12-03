@@ -318,8 +318,6 @@ void kernel_dgetrf_nn_4x4_lib4(int k, double *A, double *B, int sdb, double *C, 
 void kernel_dgetrf_nn_4x4_vs_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *inv_diag_D, int km, int kn);
 void kernel_dgetrf_nt_4x4_lib4(int k, double *A, double *B, double *C, double *D, double *inv_diag_D);
 void kernel_dgetrf_nt_4x4_vs_lib4(int k, double *A, double *B, double *C, double *D, double *inv_diag_D, int km, int kn);
-void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv);
-void kernel_dgetrf_pivot_4_vs_lib4(int m, int n, double *pA, int sda, double *inv_diag_A, int* ipiv);
 void kernel_dgeqrf_4_lib4(int m, double *pD, int sdd, double *dD);
 void kernel_dgeqrf_vs_lib4(int m, int n, int k, int offD, double *pD, int sdd, double *dD);
 void kernel_dlarf_4_lib4(int m, int n, double *pV, int sdv, double *tau, double *pC, int sdc); // rank-4 reflector
@@ -360,6 +358,14 @@ void kernel_dpotrf_nt_l_4x2_vs_lib4(int k, double *A, double *B, double *C, doub
 // 2x2
 void kernel_dpotrf_nt_l_2x2_lib4(int k, double *A, double *B, double *C, double *D, double *inv_diag_D);
 void kernel_dpotrf_nt_l_2x2_vs_lib4(int k, double *A, double *B, double *C, double *D, double *inv_diag_D, int km, int kn);
+// 12
+void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv);
+// 8
+void kernel_dgetrf_pivot_8_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv);
+void kernel_dgetrf_pivot_8_vs_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv, int n1);
+// 4
+void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv);
+void kernel_dgetrf_pivot_4_vs_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv, int n1);
 
 
 
@@ -726,6 +732,15 @@ void kernel_dtrsm_nt_ru_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb,
 void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *dE, int m1, int n1);
 void kernel_dtrsm_nt_ru_one_4x4_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde);
 void kernel_dtrsm_nt_ru_one_4x4_vs_lib4c4c(int kmax, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, int m1, int n1);
+
+// A column-major
+// 12
+void kernel_dgetrf_pivot_12_lib(int m, double *pA, int lda, double *inv_diag_A, int* ipiv);
+// 8
+void kernel_dgetrf_pivot_8_lib(int m, double *pA, int lda, double *inv_diag_A, int* ipiv);
+// 4
+void kernel_dgetrf_pivot_4_lib(int m, double *pA, int lda, double *inv_diag_A, int* ipiv);
+void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A, int* ipiv, int n1);
 
 #endif // BLAS_API
 

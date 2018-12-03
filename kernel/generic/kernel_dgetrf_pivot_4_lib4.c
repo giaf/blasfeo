@@ -396,7 +396,7 @@ void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 
 
 // it process m>0 rows and 0<n<=4 cols
-void kernel_dgetrf_pivot_4_vs_lib4(int m, int n, double *pA, int sda, double *inv_diag_A, int* ipiv)
+void kernel_dgetrf_pivot_4_vs_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv, int n)
 	{
 
 	if(m<=0 || n<=0)

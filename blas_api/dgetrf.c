@@ -95,6 +95,7 @@ void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info
 	int arg0, arg1;
 
 
+	// TODO
 	if(1)
 		{
 		goto alg1;
@@ -378,8 +379,7 @@ left_4_0:
 		}
 
 	// pivot & factorize & solve
-	// TODO vs
-	kernel_dgetrf_pivot_4_lib(m-jj, C+jj+jj*ldc, ldc, pd+jj, ipiv+jj);
+	kernel_dgetrf_pivot_4_vs_lib(m-jj, C+jj+jj*ldc, ldc, pd+jj, ipiv+jj, n-jj);
 	for(ii=0; ii<4; ii++)
 		{
 		ipiv[jj+ii] += jj; // TODO +1 !!!
@@ -657,7 +657,7 @@ left_12_1:
 		ipiv[jj+ii] += jj; // TODO +1 !!!
 		}
 	// unpack
-	kernel_dunpack_nn_12_vs_lib4(12, pC+jj*sdc+jj*ps, sdc, C+jj+jj*ldc, ldc, m-jj);
+	kernel_dunpack_nn_12_vs_lib4(n-jj, pC+jj*sdc+jj*ps, sdc, C+jj+jj*ldc, ldc, m-jj);
 
 	// pivot
 	for(ii=0; ii<12; ii++)
@@ -703,14 +703,15 @@ left_8_1:
 		}
 
 	// pivot & factorize & solve
-	// TODO vs ???
-	kernel_dgetrf_pivot_8_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj);
+	// TODO vs
+//	kernel_dgetrf_pivot_8_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj);
+	kernel_dgetrf_pivot_8_vs_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj, n-jj);
 	for(ii=0; ii<8; ii++)
 		{
 		ipiv[jj+ii] += jj; // TODO +1 !!!
 		}
 	// unpack
-	kernel_dunpack_nn_8_vs_lib4(8, pC+jj*sdc+jj*ps, sdc, C+jj+jj*ldc, ldc, m-jj);
+	kernel_dunpack_nn_8_vs_lib4(n-jj, pC+jj*sdc+jj*ps, sdc, C+jj+jj*ldc, ldc, m-jj);
 
 	// pivot
 	for(ii=0; ii<8; ii++)
@@ -753,14 +754,13 @@ left_4_1:
 		}
 
 	// pivot & factorize & solve
-	// TODO vs ???
-	kernel_dgetrf_pivot_4_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj);
+	kernel_dgetrf_pivot_4_vs_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj, n-jj);
 	for(ii=0; ii<4; ii++)
 		{
 		ipiv[jj+ii] += jj; // TODO +1 !!!
 		}
 	// unpack
-	kernel_dunpack_nn_4_vs_lib4(4, pC+jj*sdc+jj*ps, C+jj+jj*ldc, ldc, m-jj);
+	kernel_dunpack_nn_4_vs_lib4(n-jj, pC+jj*sdc+jj*ps, C+jj+jj*ldc, ldc, m-jj);
 
 	// pivot
 	for(ii=0; ii<4; ii++)
@@ -787,6 +787,25 @@ end_1:
 		{
 		kernel_dunpack_nn_12_lib4(ii, pC+ii*sdc, sdc, C+ii, ldc);
 		}
+	for(; ii<m-11; ii+=12)
+		{
+		kernel_dunpack_nn_12_lib4(n, pC+ii*sdc, sdc, C+ii, ldc);
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			kernel_dunpack_nn_4_vs_lib4(n, pC+ii*sdc, C+ii, ldc, m-ii);
+			}
+		else if(m-ii<=8)
+			{
+			kernel_dunpack_nn_8_vs_lib4(n, pC+ii*sdc, sdc, C+ii, ldc, m-ii);
+			}
+		else //if(m-ii<=12)
+			{
+			kernel_dunpack_nn_12_vs_lib4(n, pC+ii*sdc, sdc, C+ii, ldc, m-ii);
+			}
+		}
 #else
 	for(; ii<n-11; ii+=12)
 		{
@@ -794,24 +813,41 @@ end_1:
 		kernel_dunpack_tt_4_lib4(m-ii-12, pC+(ii+12)*sdc+(ii+4)*ps, sdc, C+(ii+12)+(ii+4)*ldc, ldc);
 		kernel_dunpack_tt_4_lib4(m-ii-12, pC+(ii+12)*sdc+(ii+8)*ps, sdc, C+(ii+12)+(ii+8)*ldc, ldc);
 		}
+	// TODO
 #endif
 #elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<m-7 & ii<n-7; ii+=8)
 		{
 		kernel_dunpack_nn_8_lib4(ii, pC+ii*sdc, sdc, C+ii, ldc);
 		}
+	for(; ii<m-7; ii+=8)
+		{
+		kernel_dunpack_nn_8_lib4(n, pC+ii*sdc, sdc, C+ii, ldc);
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			kernel_dunpack_nn_4_vs_lib4(n, pC+ii*sdc, C+ii, ldc, m-ii);
+			}
+		else //if(m-ii<=8)
+			{
+			kernel_dunpack_nn_8_vs_lib4(n, pC+ii*sdc, sdc, C+ii, ldc, m-ii);
+			}
+		}
 #else
-#if 1
 	for(; ii<m-3, ii<n-3; ii+=4)
 		{
 		kernel_dunpack_nn_4_lib4(ii, pC+ii*sdc, C+ii, ldc);
 		}
-#else
-	for(; ii<n-3; ii+=4)
+	for(; ii<m-3; ii+=4)
 		{
-		kernel_dunpack_tt_4_lib4(m-ii-4, pC+(ii+4)*sdc+ii*ps, sdc, C+(ii+4)+ii*ldc, ldc);
+		kernel_dunpack_nn_4_lib4(n, pC+ii*sdc, C+ii, ldc);
 		}
-#endif
+	if(ii<m)
+		{
+		kernel_dunpack_nn_4_vs_lib4(n, pC+ii*sdc, C+ii, ldc, m-ii);
+		}
 #endif
 	// TODO clean loops
 
