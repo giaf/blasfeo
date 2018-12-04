@@ -40,11 +40,6 @@
 
 
 
-void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv);
-void kernel_dgetrf_pivot_4_vs_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv, int n);
-
-
-
 // C numering (starting from zero) in the ipiv
 void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv)
 	{
@@ -3211,60 +3206,6 @@ void kernel_dgetrf_pivot_8_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 		c_0 = _mm256_blendv_pd( tmp, c_0, msk );
 		_mm256_store_pd( &pB[0+bs*7], c_0 );
 //		pB += B_pref;
-		}
-
-	return;
-
-	}
-
-
-
-// C numering (starting from zero) in the ipiv
-void kernel_dgetrf_pivot_8_vs_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv, int n)
-	{
-
-	const int ps = 4;
-
-	double *dummy;
-
-	double d1 = 1.0;
-	double dm1 = -1.0;
-
-	int ii;
-
-	// fact left column
-	kernel_dgetrf_pivot_4_lib4(m, pA, sda, inv_diag_A, ipiv);
-
-	// apply pivot to right column
-	for(ii=0; ii<4; ii++)
-		{
-		if(ipiv[ii]!=ii)
-			{
-			drowsw_lib(4, pA+ii+4*ps, pA+ipiv[ii]/ps*ps*sda+ipiv[ii]%ps+4*ps);
-			}
-		}
-
-	// solve top right block
-	kernel_dtrsm_nn_ll_one_4x4_vs_lib4(0, dummy, dummy, 0, &d1, pA+4*ps, pA+4*ps, pA, m, n);
-
-	// correct rigth block
-	for(ii=4; ii<m; ii+=4)
-		{
-		kernel_dgemm_nn_4x4_vs_lib4(4, &dm1, pA+ii*sda, 0, pA+4*ps, sda, &d1, pA+ii*sda+4*ps, pA+ii*sda+4*ps, m-ii, n);
-		}
-
-	// fact right column
-	kernel_dgetrf_pivot_4_vs_lib4(m-4, pA+4*sda+4*ps, sda, inv_diag_A+4, ipiv+4, n-4);
-	for(ii=0; ii<n-4; ii++)
-		ipiv[4+ii] += 4;
-
-	// apply pivot to left column
-	for(ii=4; ii<n; ii++)
-		{
-		if(ipiv[ii]!=ii)
-			{
-			drowsw_lib(4, pA+ii/ps*ps*sda+ii%ps, pA+ipiv[ii]/ps*ps*sda+ipiv[ii]%ps);
-			}
 		}
 
 	return;

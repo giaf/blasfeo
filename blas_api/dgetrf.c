@@ -94,6 +94,8 @@ void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info
 
 	int arg0, arg1;
 
+	double *dummy;
+
 
 	// TODO
 	if(1)
@@ -620,6 +622,7 @@ alg1:
 
 
 
+#if defined(TARGET_X64_INTEL_HASWELL)
 left_12_1:
 
 	// pack
@@ -650,8 +653,79 @@ left_12_1:
 		}
 
 	// pivot & factorize & solve
-	// TODO vs
-	kernel_dgetrf_pivot_12_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj);
+#if 0
+	kernel_dgetrf_pivot_12_vs_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj, n-jj);
+#else
+	// fact left column
+	kernel_dgetrf_pivot_8_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj);
+
+	// apply pivot to right column
+	for(ii=0; ii<8; ii++)
+		{
+		if(ipiv[jj+ii]!=jj+ii)
+			{
+			blasfeo_drowsw(4, &sC, jj+ii, jj+8, &sC, ipiv[jj+ii], jj+8);
+			}
+		}
+
+	// solve top right block
+	kernel_dtrsm_nn_ll_one_8x4_vs_lib4(0, dummy, 0, dummy, 0, &d1, pC+jj*sdc+(jj+8)*ps, sdc, pC+jj*sdc+(jj+8)*ps, sdc, pC+jj*sdc+jj*ps, sdc, m-jj, n-jj-8);
+
+	// correct rigth block
+	ii = 8;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; ii<m-jj-11; ii+=12)
+		{
+		kernel_dgemm_nn_12x4_lib4(8, &dm1, pC+(jj+ii)*sdc+jj*ps, sdc, 0, pC+jj*sdc+(jj+8)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+8)*ps, sdc, pC+(jj+ii)*sdc+(jj+8)*ps, sdc);
+		}
+	if(ii<m-jj)
+		{
+		if(m-jj-ii<=4)
+			{
+			kernel_dgemm_nn_4x4_vs_lib4(8, &dm1, pC+(jj+ii)*sdc+jj*ps, 0, pC+jj*sdc+(jj+8)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+8)*ps, pC+(jj+ii)*sdc+(jj+8)*ps, m-jj-ii, n-jj);
+			}
+		else if(m-jj-ii<=8)
+			{
+			kernel_dgemm_nn_8x4_vs_lib4(8, &dm1, pC+(jj+ii)*sdc+jj*ps, sdc, 0, pC+jj*sdc+(jj+8)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+8)*ps, sdc, pC+(jj+ii)*sdc+(jj+8)*ps, sdc, m-jj-ii, n-jj);
+			}
+		else //if(m-jj-ii<=12)
+			{
+			kernel_dgemm_nn_12x4_vs_lib4(8, &dm1, pC+(jj+ii)*sdc+jj*ps, sdc, 0, pC+jj*sdc+(jj+8)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+8)*ps, sdc, pC+(jj+ii)*sdc+(jj+8)*ps, sdc, m-jj-ii, n-jj);
+			}
+		}
+#else
+	for(; ii<m-jj-7; ii+=8)
+		{
+		kernel_dgemm_nn_8x4_lib4(8, &dm1, pC+(jj+ii)*sdc+jj*ps, sdc, 0, pC+jj*sdc+(jj+8)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+8)*ps, sdc, pC+(jj+ii)*sdc+(jj+8)*ps, sdc);
+		}
+	if(ii<m-jj)
+		{
+		if(m-jj-ii<=4)
+			{
+			kernel_dgemm_nn_4x4_vs_lib4(8, &dm1, pC+(jj+ii)*sdc+jj*ps, 0, pC+jj*sdc+(jj+8)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+8)*ps, pC+(jj+ii)*sdc+(jj+8)*ps, m-jj-ii, n-jj);
+			}
+		else //if(m-jj-ii<=8)
+			{
+			kernel_dgemm_nn_8x4_vs_lib4(8, &dm1, pC+(jj+ii)*sdc+jj*ps, sdc, 0, pC+jj*sdc+(jj+8)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+8)*ps, sdc, pC+(jj+ii)*sdc+(jj+8)*ps, sdc, m-jj-ii, n-jj);
+			}
+		}
+#endif
+
+	// fact right column
+	kernel_dgetrf_pivot_4_vs_lib4(m-jj-8, pC+(jj+8)*sdc+(jj+8)*ps, sdc, pd+jj+8, ipiv+jj+8, n-jj-8);
+	for(ii=0; ii<n-jj-8; ii++)
+		ipiv[jj+8+ii] += 8;
+
+	// apply pivot to left column
+	for(ii=8; ii<n-jj; ii++)
+		{
+		if(ipiv[jj+ii]!=jj+ii)
+			{
+			blasfeo_drowsw(8, &sC, jj+ii, jj, &sC, ipiv[jj+ii], jj);
+			}
+		}
+#endif
+
 	for(ii=0; ii<12; ii++)
 		{
 		ipiv[jj+ii] += jj; // TODO +1 !!!
@@ -672,9 +746,11 @@ left_12_1:
 	blasfeo_dlaswp(&arg0, C+(jj+12)*ldc, &ldc, &jj, &arg1, ipiv, &i1);
 
 	goto end_1;
+#endif
 
 
 
+#if defined(TARGET_X64_INTEL_HASWELL) // | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 left_8_1:
 
 	// pack
@@ -703,9 +779,79 @@ left_8_1:
 		}
 
 	// pivot & factorize & solve
-	// TODO vs
-//	kernel_dgetrf_pivot_8_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj);
+#if 0
 	kernel_dgetrf_pivot_8_vs_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj, n-jj);
+#else
+	// fact left column
+	kernel_dgetrf_pivot_4_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj);
+
+	// apply pivot to right column
+	for(ii=0; ii<4; ii++)
+		{
+		if(ipiv[jj+ii]!=jj+ii)
+			{
+			blasfeo_drowsw(4, &sC, jj+ii, jj+4, &sC, ipiv[jj+ii], jj+4);
+			}
+		}
+
+	// solve top right block
+	kernel_dtrsm_nn_ll_one_4x4_vs_lib4(0, dummy, dummy, 0, &d1, pC+jj*sdc+(jj+4)*ps, pC+jj*sdc+(jj+4)*ps, pC+jj*sdc+jj*ps, m-jj, n-jj-4);
+
+	// correct rigth block
+	ii = 4;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; ii<m-jj-11; ii+=12)
+		{
+		kernel_dgemm_nn_12x4_lib4(4, &dm1, pC+(jj+ii)*sdc+jj*ps, sdc, 0, pC+jj*sdc+(jj+4)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+4)*ps, sdc, pC+(jj+ii)*sdc+(jj+4)*ps, sdc);
+		}
+	if(ii<m-jj)
+		{
+		if(m-jj-ii<=4)
+			{
+			kernel_dgemm_nn_4x4_vs_lib4(4, &dm1, pC+(jj+ii)*sdc+jj*ps, 0, pC+jj*sdc+(jj+4)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+4)*ps, pC+(jj+ii)*sdc+(jj+4)*ps, m-jj-ii, n-jj);
+			}
+		else if(m-jj-ii<=8)
+			{
+			kernel_dgemm_nn_8x4_vs_lib4(4, &dm1, pC+(jj+ii)*sdc+jj*ps, sdc, 0, pC+jj*sdc+(jj+4)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+4)*ps, sdc, pC+(jj+ii)*sdc+(jj+4)*ps, sdc, m-jj-ii, n-jj);
+			}
+		else //if(m-jj-ii<=12)
+			{
+			kernel_dgemm_nn_12x4_vs_lib4(4, &dm1, pC+(jj+ii)*sdc+jj*ps, sdc, 0, pC+jj*sdc+(jj+4)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+4)*ps, sdc, pC+(jj+ii)*sdc+(jj+4)*ps, sdc, m-jj-ii, n-jj);
+			}
+		}
+#else
+	for(; ii<m-jj-7; ii+=8)
+		{
+		kernel_dgemm_nn_8x4_lib4(4, &dm1, pC+(jj+ii)*sdc+jj*ps, sdc, 0, pC+jj*sdc+(jj+4)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+4)*ps, sdc, pC+(jj+ii)*sdc+(jj+4)*ps, sdc);
+		}
+	if(ii<m-jj)
+		{
+		if(m-jj-ii<=4)
+			{
+			kernel_dgemm_nn_4x4_vs_lib4(4, &dm1, pC+(jj+ii)*sdc+jj*ps, 0, pC+jj*sdc+(jj+4)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+4)*ps, pC+(jj+ii)*sdc+(jj+4)*ps, m-jj-ii, n-jj);
+			}
+		else //if(m-jj-ii<=8)
+			{
+			kernel_dgemm_nn_8x4_vs_lib4(4, &dm1, pC+(jj+ii)*sdc+jj*ps, sdc, 0, pC+jj*sdc+(jj+4)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+4)*ps, sdc, pC+(jj+ii)*sdc+(jj+4)*ps, sdc, m-jj-ii, n-jj);
+			}
+		}
+#endif
+
+	// fact right column
+	kernel_dgetrf_pivot_4_vs_lib4(m-jj-4, pC+(jj+4)*sdc+(jj+4)*ps, sdc, pd+jj+4, ipiv+jj+4, n-jj-4);
+	for(ii=0; ii<n-jj-4; ii++)
+		ipiv[jj+4+ii] += 4;
+
+	// apply pivot to left column
+	for(ii=4; ii<n-jj; ii++)
+		{
+		if(ipiv[jj+ii]!=jj+ii)
+			{
+			blasfeo_drowsw(4, &sC, jj+ii, jj, &sC, ipiv[jj+ii], jj);
+			}
+		}
+#endif
+
 	for(ii=0; ii<8; ii++)
 		{
 		ipiv[jj+ii] += jj; // TODO +1 !!!
@@ -726,6 +872,7 @@ left_8_1:
 	blasfeo_dlaswp(&arg0, C+(jj+8)*ldc, &ldc, &jj, &arg1, ipiv, &i1);
 
 	goto end_1;
+#endif
 
 
 
