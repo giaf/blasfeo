@@ -34,12 +34,13 @@ void print_compilation_flags()
 	SHOW_DEFINE(LA)
 	SHOW_DEFINE(TARGET)
 	SHOW_DEFINE(PRECISION)
-	SHOW_DEFINE(ROUTINE_FULLNAME)
 	#ifdef TEST_BLAS_API
 	printf("API\t\t= blas\n");
 	#else
 	printf("API\t\t= BLASFEO\n");
 	#endif
+	SHOW_DEFINE(K_MAX_STACK)
+	SHOW_DEFINE(ROUTINE_FULLNAME)
 }
 
 void initialize_test_args(struct TestArgs * targs)
