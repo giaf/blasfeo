@@ -92,13 +92,13 @@ void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info
 
 	int ii, jj;
 
-	int arg0, arg1;
+	int arg0, arg1, arg2;
 
 	double *dummy;
 
 
 	// TODO
-	if(1)
+	if(0)
 		{
 		goto alg1;
 		}
@@ -264,7 +264,7 @@ alg0:
 		// unpack
 		kernel_dunpack_nt_4_lib4(jj, pU, C+jj*ldc, ldc);
 
-		// pivot
+		// apply pivot
 		arg0 = n-jj-4;
 		arg1 = jj+3;
 		blasfeo_dlaswp(&jj, C, &ldc, &jj, &arg1, ipiv, &i1);
@@ -277,6 +277,8 @@ alg0:
 		}
 #endif
 	goto end_0;
+
+
 
 left_12_0:
 
@@ -299,8 +301,50 @@ left_12_0:
 		}
 
 	// pivot & factorize & solve
-	// TODO vs
-	kernel_dgetrf_pivot_12_lib(m-jj, C+jj+jj*ldc, ldc, pd+jj, ipiv+jj);
+#if 0
+	kernel_dgetrf_pivot_12_vs_lib(m-jj, C+jj+jj*ldc, ldc, pd+jj, ipiv+jj);
+#else
+	kernel_dgetrf_pivot_8_lib(m-jj, C+jj+jj*ldc, ldc, pd+jj, ipiv+jj);
+
+	// apply pivot to right column
+	arg0 = n-jj-8;
+	arg1 = jj+7;
+	blasfeo_dlaswp(&arg0, C+(jj+8)*ldc, &ldc, &jj, &arg1, ipiv, &i1);
+
+	// pack
+	kernel_dpack_tn_4_vs_lib4(8, C+jj+(jj+8)*ldc, ldc, pU+8*sdu+jj*ps, n-jj-8);
+
+	// solve top right block
+	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c4c(0, pU+8*sdu+jj*ps, C+jj, ldc, &d1, pU+8*sdu+jj*ps, pU+8*sdu+jj*ps, C+jj+jj*ldc, ldc, n-jj-8, m-jj);
+	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c4c(4, pU+8*sdu+jj*ps, C+jj+4, ldc, &d1, pU+8*sdu+(jj+4)*ps, pU+8*sdu+(jj+4)*ps, C+(jj+4)+(jj+4)*ldc, ldc, n-jj-8, m-jj-4);
+
+	// unpack
+	kernel_dunpack_nt_4_vs_lib4(8, pU+8*sdu+jj*ps, C+jj+(jj+8)*ldc, ldc, n-jj-8);
+
+	// correct rigth block
+	ii = 8;
+	// TODO larger kernels ???
+	for(; ii<m-jj-3; ii+=4)
+		{
+		kernel_dgemm_nt_4x4_libc4c(8, &dm1, C+jj+ii+jj*ldc, ldc, pU+8*sdu+jj*ps, &d1, C+jj+ii+(jj+8)*ldc, ldc, C+jj+ii+(jj+8)*ldc, ldc);
+		}
+	if(ii<m-jj)
+		{
+		kernel_dgemm_nt_4x4_vs_libc4c(8, &dm1, C+jj+ii+jj*ldc, ldc, pU+8*sdu+jj*ps, &d1, C+jj+ii+(jj+8)*ldc, ldc, C+jj+ii+(jj+8)*ldc, ldc, m-ii-8, n-jj-8);
+		}
+
+	// fact right column
+	kernel_dgetrf_pivot_4_vs_lib(m-(jj+8), C+(jj+8)+(jj+8)*ldc, ldc, pd+(jj+8), ipiv+(jj+8), n-jj-8);
+	for(ii=0; ii<n-jj-8; ii++)
+		ipiv[jj+8+ii] += 8;
+
+	// apply pivot to left column
+	arg0 = 8;
+	arg1 = jj+8;
+	arg2 = jj+n-1;
+	blasfeo_dlaswp(&arg0, C+(jj)*ldc, &ldc, &arg1, &arg2, ipiv, &i1);
+#endif
+
 	for(ii=0; ii<12; ii++)
 		{
 		ipiv[jj+ii] += jj; // TODO +1 !!!
@@ -321,6 +365,7 @@ left_12_0:
 
 
 
+#if defined(TARGET_X64_INTEL_HASWELL) // | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 left_8_0:
 
 	// pack
@@ -341,8 +386,49 @@ left_8_0:
 		}
 
 	// pivot & factorize & solve
-	// TODO vs
-	kernel_dgetrf_pivot_8_lib(m-jj, C+jj+jj*ldc, ldc, pd+jj, ipiv+jj);
+#if 0
+	kernel_dgetrf_pivot_8_vs_lib(m-jj, C+jj+jj*ldc, ldc, pd+jj, ipiv+jj, n-jj);
+#else
+	kernel_dgetrf_pivot_4_lib(m-jj, C+jj+jj*ldc, ldc, pd+jj, ipiv+jj);
+
+	// apply pivot to right column
+	arg0 = n-jj-4;
+	arg1 = jj+3;
+	blasfeo_dlaswp(&arg0, C+(jj+4)*ldc, &ldc, &jj, &arg1, ipiv, &i1);
+
+	// pack
+	kernel_dpack_tn_4_vs_lib4(4, C+jj+(jj+4)*ldc, ldc, pU+4*sdu+jj*ps, n-jj-4);
+
+	// solve top right block
+	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c4c(0, pU+4*sdu+jj*ps, C+jj, ldc, &d1, pU+4*sdu+jj*ps, pU+4*sdu+jj*ps, C+jj+jj*ldc, ldc, n-jj-4, m-jj);
+
+	// unpack
+	kernel_dunpack_nt_4_vs_lib4(4, pU+4*sdu+jj*ps, C+jj+(jj+4)*ldc, ldc, n-jj-4);
+
+	// correct rigth block
+	ii = 4;
+	// TODO larger kernels ???
+	for(; ii<m-jj-3; ii+=4)
+		{
+		kernel_dgemm_nt_4x4_libc4c(4, &dm1, C+jj+ii+jj*ldc, ldc, pU+4*sdu+jj*ps, &d1, C+jj+ii+(jj+4)*ldc, ldc, C+jj+ii+(jj+4)*ldc, ldc);
+		}
+	if(ii<m-jj)
+		{
+		kernel_dgemm_nt_4x4_vs_libc4c(4, &dm1, C+jj+ii+jj*ldc, ldc, pU+4*sdu+jj*ps, &d1, C+jj+ii+(jj+4)*ldc, ldc, C+jj+ii+(jj+4)*ldc, ldc, m-ii-4, n-jj-4);
+		}
+
+	// fact right column
+	kernel_dgetrf_pivot_4_vs_lib(m-(jj+4), C+(jj+4)+(jj+4)*ldc, ldc, pd+(jj+4), ipiv+(jj+4), n-jj-4);
+	for(ii=0; ii<n-jj-4; ii++)
+		ipiv[jj+4+ii] += 4;
+
+	// apply pivot to left column
+	arg0 = 4;
+	arg1 = jj+4;
+	arg2 = jj+n-1;
+	blasfeo_dlaswp(&arg0, C+(jj)*ldc, &ldc, &arg1, &arg2, ipiv, &i1);
+#endif
+
 	for(ii=0; ii<8; ii++)
 		{
 		ipiv[jj+ii] += jj; // TODO +1 !!!
@@ -359,6 +445,7 @@ left_8_0:
 	blasfeo_dlaswp(&arg0, C+(jj+8)*ldc, &ldc, &jj, &arg1, ipiv, &i1);
 
 	goto end_0;
+#endif
 
 
 

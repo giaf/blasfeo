@@ -3891,7 +3891,7 @@ void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A
 		{
 		if(ipiv[0]!=0)
 			{
-			ia0 = 4;
+			ia0 = n<4 ? n : 4;
 			ia1 = 0;
 			ia2 = ia1+1;
 			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
@@ -4036,7 +4036,7 @@ void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A
 			{
 			if(ipiv[1]!=1)
 				{
-				ia0 = 4;
+				ia0 = n<4 ? n : 4;
 				ia1 = 1;
 				ia2 = ia1+1;
 				blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
@@ -4194,7 +4194,7 @@ void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A
 			{
 			if(ipiv[2]!=2)
 				{
-				ia0 = 4;
+				ia0 = n<4 ? n : 4;
 				ia1 = 2;
 				ia2 = ia1+1;
 				blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
@@ -4367,7 +4367,7 @@ void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A
 			{
 			if(ipiv[3]!=3)
 				{
-				ia0 = 4;
+				ia0 = n<4 ? n : 4;
 				ia1 = 3;
 				ia2 = ia1+1;
 				blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
