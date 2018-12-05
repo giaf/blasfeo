@@ -1270,45 +1270,6 @@ void drowadin_libsp(int kmax, int *idx, double alpha, double *x, double *y, doub
 
 
 
-// swap two rows
-void drowsw_lib(int kmax, double *pA, double *pC)
-	{
-
-	const int bs = 4;
-
-	int ii;
-	double tmp;
-
-	for(ii=0; ii<kmax-3; ii+=4)
-		{
-		tmp = pA[0+bs*0];
-		pA[0+bs*0] = pC[0+bs*0];
-		pC[0+bs*0] = tmp;
-		tmp = pA[0+bs*1];
-		pA[0+bs*1] = pC[0+bs*1];
-		pC[0+bs*1] = tmp;
-		tmp = pA[0+bs*2];
-		pA[0+bs*2] = pC[0+bs*2];
-		pC[0+bs*2] = tmp;
-		tmp = pA[0+bs*3];
-		pA[0+bs*3] = pC[0+bs*3];
-		pC[0+bs*3] = tmp;
-		pA += 4*bs;
-		pC += 4*bs;
-		}
-	for( ; ii<kmax; ii++)
-		{
-		tmp = pA[0+bs*0];
-		pA[0+bs*0] = pC[0+bs*0];
-		pC[0+bs*0] = tmp;
-		pA += 1*bs;
-		pC += 1*bs;
-		}
-
-	}
-
-
-
 // extract vector from column
 void dcolex_lib(int kmax, int offset, double *pD, int sdd, double *x)
 	{
@@ -2780,7 +2741,7 @@ void blasfeo_drowsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
 	double *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	drowsw_lib(kmax, pA, pC);
+	kernel_drowsw_lib4(kmax, pA, pC);
 	return;
 	}
 

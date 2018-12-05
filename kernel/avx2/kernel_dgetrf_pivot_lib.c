@@ -39,6 +39,43 @@
 
 
 
+// swap two rows
+void kernel_drowsw_lib(int kmax, double *pA, int lda, double *pC, int ldc)
+	{
+
+	int ii;
+	double tmp;
+
+	for(ii=0; ii<kmax-3; ii+=4)
+		{
+		tmp = pA[0+lda*0];
+		pA[0+lda*0] = pC[0+ldc*0];
+		pC[0+ldc*0] = tmp;
+		tmp = pA[0+lda*1];
+		pA[0+lda*1] = pC[0+ldc*1];
+		pC[0+ldc*1] = tmp;
+		tmp = pA[0+lda*2];
+		pA[0+lda*2] = pC[0+ldc*2];
+		pC[0+ldc*2] = tmp;
+		tmp = pA[0+lda*3];
+		pA[0+lda*3] = pC[0+ldc*3];
+		pC[0+ldc*3] = tmp;
+		pA += 4*lda;
+		pC += 4*ldc;
+		}
+	for( ; ii<kmax; ii++)
+		{
+		tmp = pA[0+lda*0];
+		pA[0+lda*0] = pC[0+ldc*0];
+		pC[0+ldc*0] = tmp;
+		pA += 1*lda;
+		pC += 1*ldc;
+		}
+
+	}
+
+
+
 // C numering (starting from zero) in the ipiv
 void kernel_dgetrf_pivot_12_lib(int m, double *pA, int lda, double *inv_diag_A, int* ipiv)
 	{
@@ -137,10 +174,7 @@ void kernel_dgetrf_pivot_12_lib(int m, double *pA, int lda, double *inv_diag_A, 
 		{
 		if(ipiv[0]!=0)
 			{
-			ia0 = 12;
-			ia1 = 0;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(12, pA+0, lda, pA+ipiv[0], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[0+lda*0] );
@@ -375,10 +409,7 @@ void kernel_dgetrf_pivot_12_lib(int m, double *pA, int lda, double *inv_diag_A, 
 		{
 		if(ipiv[1]!=1)
 			{
-			ia0 = 12;
-			ia1 = 1;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(12, pA+1, lda, pA+ipiv[1], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[1+lda*1] );
@@ -601,10 +632,7 @@ void kernel_dgetrf_pivot_12_lib(int m, double *pA, int lda, double *inv_diag_A, 
 		{
 		if(ipiv[2]!=2)
 			{
-			ia0 = 12;
-			ia1 = 2;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(12, pA+2, lda, pA+ipiv[2], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[2+lda*2] );
@@ -814,10 +842,7 @@ void kernel_dgetrf_pivot_12_lib(int m, double *pA, int lda, double *inv_diag_A, 
 		{
 		if(ipiv[3]!=3)
 			{
-			ia0 = 12;
-			ia1 = 3;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(12, pA+3, lda, pA+ipiv[3], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[3+lda*3] );
@@ -1015,10 +1040,7 @@ void kernel_dgetrf_pivot_12_lib(int m, double *pA, int lda, double *inv_diag_A, 
 		{
 		if(ipiv[4]!=4)
 			{
-			ia0 = 12;
-			ia1 = 4;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(12, pA+4, lda, pA+ipiv[4], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[4+0+lda*4] );
@@ -1202,10 +1224,7 @@ void kernel_dgetrf_pivot_12_lib(int m, double *pA, int lda, double *inv_diag_A, 
 		{
 		if(ipiv[5]!=5)
 			{
-			ia0 = 12;
-			ia1 = 5;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(12, pA+5, lda, pA+ipiv[5], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[4+1+lda*5] );
@@ -1376,10 +1395,7 @@ void kernel_dgetrf_pivot_12_lib(int m, double *pA, int lda, double *inv_diag_A, 
 		{
 		if(ipiv[6]!=6)
 			{
-			ia0 = 12;
-			ia1 = 6;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(12, pA+6, lda, pA+ipiv[6], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[4+2+lda*6] );
@@ -1537,10 +1553,7 @@ void kernel_dgetrf_pivot_12_lib(int m, double *pA, int lda, double *inv_diag_A, 
 		{
 		if(ipiv[7]!=7)
 			{
-			ia0 = 12;
-			ia1 = 7;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(12, pA+7, lda, pA+ipiv[7], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[4+3+lda*7] );
@@ -1687,10 +1700,7 @@ void kernel_dgetrf_pivot_12_lib(int m, double *pA, int lda, double *inv_diag_A, 
 		{
 		if(ipiv[8]!=8)
 			{
-			ia0 = 12;
-			ia1 = 8;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(12, pA+8, lda, pA+ipiv[8], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[2*4+lda*8] );
@@ -1822,10 +1832,7 @@ void kernel_dgetrf_pivot_12_lib(int m, double *pA, int lda, double *inv_diag_A, 
 		{
 		if(ipiv[9]!=9)
 			{
-			ia0 = 12;
-			ia1 = 9;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(12, pA+9, lda, pA+ipiv[9], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[2*4+1+lda*9] );
@@ -1944,10 +1951,7 @@ void kernel_dgetrf_pivot_12_lib(int m, double *pA, int lda, double *inv_diag_A, 
 		{
 		if(ipiv[10]!=10)
 			{
-			ia0 = 12;
-			ia1 = 10;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(12, pA+10, lda, pA+ipiv[10], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[2*4+2+lda*10] );
@@ -2053,10 +2057,7 @@ void kernel_dgetrf_pivot_12_lib(int m, double *pA, int lda, double *inv_diag_A, 
 		{
 		if(ipiv[11]!=11)
 			{
-			ia0 = 12;
-			ia1 = 11;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(12, pA+11, lda, pA+ipiv[11], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[2*4+3+lda*11] );
@@ -2198,10 +2199,7 @@ void kernel_dgetrf_pivot_8_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[0]!=0)
 			{
-			ia0 = 8;
-			ia1 = 0;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(8, pA+0, lda, pA+ipiv[0], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[0+lda*0] );
@@ -2384,10 +2382,7 @@ void kernel_dgetrf_pivot_8_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[1]!=1)
 			{
-			ia0 = 8;
-			ia1 = 1;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(8, pA+1, lda, pA+ipiv[1], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[1+lda*1] );
@@ -2558,10 +2553,7 @@ void kernel_dgetrf_pivot_8_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[2]!=2)
 			{
-			ia0 = 8;
-			ia1 = 2;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(8, pA+2, lda, pA+ipiv[2], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[2+lda*2] );
@@ -2719,10 +2711,7 @@ void kernel_dgetrf_pivot_8_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[3]!=3)
 			{
-			ia0 = 8;
-			ia1 = 3;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(8, pA+3, lda, pA+ipiv[3], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[3+lda*3] );
@@ -2868,10 +2857,7 @@ void kernel_dgetrf_pivot_8_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[4]!=4)
 			{
-			ia0 = 8;
-			ia1 = 4;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(8, pA+4, lda, pA+ipiv[4], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[4+0+lda*4] );
@@ -3003,10 +2989,7 @@ void kernel_dgetrf_pivot_8_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[5]!=5)
 			{
-			ia0 = 8;
-			ia1 = 5;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(8, pA+5, lda, pA+ipiv[5], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[4+1+lda*5] );
@@ -3125,10 +3108,7 @@ void kernel_dgetrf_pivot_8_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[6]!=6)
 			{
-			ia0 = 8;
-			ia1 = 6;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(8, pA+6, lda, pA+ipiv[6], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[4+2+lda*6] );
@@ -3234,10 +3214,7 @@ void kernel_dgetrf_pivot_8_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[7]!=7)
 			{
-			ia0 = 8;
-			ia1 = 7;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(8, pA+7, lda, pA+ipiv[7], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[4+3+lda*7] );
@@ -3379,10 +3356,7 @@ void kernel_dgetrf_pivot_4_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[0]!=0)
 			{
-			ia0 = 4;
-			ia1 = 0;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(4, pA+0, lda, pA+ipiv[0], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[0+lda*0] );
@@ -3513,10 +3487,7 @@ void kernel_dgetrf_pivot_4_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[1]!=1)
 			{
-			ia0 = 4;
-			ia1 = 1;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(4, pA+1, lda, pA+ipiv[1], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[1+lda*1] );
@@ -3635,10 +3606,7 @@ void kernel_dgetrf_pivot_4_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[2]!=2)
 			{
-			ia0 = 4;
-			ia1 = 2;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(4, pA+2, lda, pA+ipiv[2], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[2+lda*2] );
@@ -3744,10 +3712,7 @@ void kernel_dgetrf_pivot_4_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[3]!=3)
 			{
-			ia0 = 4;
-			ia1 = 3;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(4, pA+3, lda, pA+ipiv[3], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[3+lda*3] );
@@ -3891,10 +3856,7 @@ void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A
 		{
 		if(ipiv[0]!=0)
 			{
-			ia0 = n<4 ? n : 4;
-			ia1 = 0;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(n, pA+0, lda, pA+ipiv[0], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[0+lda*0] );
@@ -4036,10 +3998,7 @@ void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A
 			{
 			if(ipiv[1]!=1)
 				{
-				ia0 = n<4 ? n : 4;
-				ia1 = 1;
-				ia2 = ia1+1;
-				blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+				kernel_drowsw_lib(n, pA+1, lda, pA+ipiv[1], lda);
 				}
 
 			inv = _mm_loaddup_pd( &pA[1+lda*1] );
@@ -4194,10 +4153,7 @@ void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A
 			{
 			if(ipiv[2]!=2)
 				{
-				ia0 = n<4 ? n : 4;
-				ia1 = 2;
-				ia2 = ia1+1;
-				blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+				kernel_drowsw_lib(n, pA+2, lda, pA+ipiv[2], lda);
 				}
 
 			inv = _mm_loaddup_pd( &pA[2+lda*2] );
@@ -4367,10 +4323,7 @@ void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A
 			{
 			if(ipiv[3]!=3)
 				{
-				ia0 = n<4 ? n : 4;
-				ia1 = 3;
-				ia2 = ia1+1;
-				blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+				kernel_drowsw_lib(n, pA+3, lda, pA+ipiv[3], lda);
 				}
 
 			inv = _mm_loaddup_pd( &pA[3+lda*3] );

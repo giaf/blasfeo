@@ -365,6 +365,8 @@ void kernel_dgetrf_pivot_8_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 // 4
 void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv);
 void kernel_dgetrf_pivot_4_vs_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv, int n1);
+// vector
+void kernel_drowsw_lib4(int kmax, double *pA, double *pC);
 
 
 
@@ -740,6 +742,9 @@ void kernel_dgetrf_pivot_8_lib(int m, double *pA, int lda, double *inv_diag_A, i
 // 4
 void kernel_dgetrf_pivot_4_lib(int m, double *pA, int lda, double *inv_diag_A, int* ipiv);
 void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A, int* ipiv, int n1);
+
+// vector
+void kernel_drowsw_lib(int kmax, double *pA, int lda, double *pC, int ldc);
 
 #endif // BLAS_API
 

@@ -40,6 +40,45 @@
 
 
 
+// swap two rows
+void kernel_drowsw_lib4(int kmax, double *pA, double *pC)
+	{
+
+	const int bs = 4;
+
+	int ii;
+	double tmp;
+
+	for(ii=0; ii<kmax-3; ii+=4)
+		{
+		tmp = pA[0+bs*0];
+		pA[0+bs*0] = pC[0+bs*0];
+		pC[0+bs*0] = tmp;
+		tmp = pA[0+bs*1];
+		pA[0+bs*1] = pC[0+bs*1];
+		pC[0+bs*1] = tmp;
+		tmp = pA[0+bs*2];
+		pA[0+bs*2] = pC[0+bs*2];
+		pC[0+bs*2] = tmp;
+		tmp = pA[0+bs*3];
+		pA[0+bs*3] = pC[0+bs*3];
+		pC[0+bs*3] = tmp;
+		pA += 4*bs;
+		pC += 4*bs;
+		}
+	for( ; ii<kmax; ii++)
+		{
+		tmp = pA[0+bs*0];
+		pA[0+bs*0] = pC[0+bs*0];
+		pC[0+bs*0] = tmp;
+		pA += 1*bs;
+		pC += 1*bs;
+		}
+
+	}
+
+
+
 // C numering (starting from zero) in the ipiv
 void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv)
 	{
@@ -157,7 +196,7 @@ void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A,
 	if(tmp0!=0.0)
 		{
 		if(ipiv[0]!=0)
-			drowsw_lib(12, pA+0, pA+ipiv[0]/bs*bs*sda+ipiv[0]%bs);
+			kernel_drowsw_lib4(12, pA+0, pA+ipiv[0]/bs*bs*sda+ipiv[0]%bs);
 
 		inv = _mm_loaddup_pd( &pA[0+bs*0] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -390,7 +429,7 @@ void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A,
 	if(tmp0!=0)
 		{
 		if(ipiv[1]!=1)
-			drowsw_lib(12, pA+1, pA+ipiv[1]/bs*bs*sda+ipiv[1]%bs);
+			kernel_drowsw_lib4(12, pA+1, pA+ipiv[1]/bs*bs*sda+ipiv[1]%bs);
 
 		inv = _mm_loaddup_pd( &pA[1+bs*1] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -611,7 +650,7 @@ void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A,
 	if(tmp0!=0)
 		{
 		if(ipiv[2]!=2)
-			drowsw_lib(12, pA+2, pA+ipiv[2]/bs*bs*sda+ipiv[2]%bs);
+			kernel_drowsw_lib4(12, pA+2, pA+ipiv[2]/bs*bs*sda+ipiv[2]%bs);
 
 		inv = _mm_loaddup_pd( &pA[2+bs*2] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -819,7 +858,7 @@ void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A,
 	if(tmp0!=0)
 		{
 		if(ipiv[3]!=3)
-			drowsw_lib(12, pA+3, pA+ipiv[3]/bs*bs*sda+ipiv[3]%bs);
+			kernel_drowsw_lib4(12, pA+3, pA+ipiv[3]/bs*bs*sda+ipiv[3]%bs);
 
 		inv = _mm_loaddup_pd( &pA[3+bs*3] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -1015,7 +1054,7 @@ void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A,
 	if(tmp0!=0)
 		{
 		if(ipiv[4]!=4)
-			drowsw_lib(12, pA+B_pref+0, pA+ipiv[4]/bs*bs*sda+ipiv[4]%bs);
+			kernel_drowsw_lib4(12, pA+B_pref+0, pA+ipiv[4]/bs*bs*sda+ipiv[4]%bs);
 
 		inv = _mm_loaddup_pd( &pA[B_pref+0+bs*4] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -1197,7 +1236,7 @@ void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A,
 	if(tmp0!=0)
 		{
 		if(ipiv[5]!=5)
-			drowsw_lib(12, pA+B_pref+1, pA+ipiv[5]/bs*bs*sda+ipiv[5]%bs);
+			kernel_drowsw_lib4(12, pA+B_pref+1, pA+ipiv[5]/bs*bs*sda+ipiv[5]%bs);
 
 		inv = _mm_loaddup_pd( &pA[B_pref+1+bs*5] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -1366,7 +1405,7 @@ void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A,
 	if(tmp0!=0)
 		{
 		if(ipiv[6]!=6)
-			drowsw_lib(12, pA+B_pref+2, pA+ipiv[6]/bs*bs*sda+ipiv[6]%bs);
+			kernel_drowsw_lib4(12, pA+B_pref+2, pA+ipiv[6]/bs*bs*sda+ipiv[6]%bs);
 
 		inv = _mm_loaddup_pd( &pA[B_pref+2+bs*6] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -1521,7 +1560,7 @@ void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A,
 	if(tmp0!=0)
 		{
 		if(ipiv[7]!=7)
-			drowsw_lib(12, pA+B_pref+3, pA+ipiv[7]/bs*bs*sda+ipiv[7]%bs);
+			kernel_drowsw_lib4(12, pA+B_pref+3, pA+ipiv[7]/bs*bs*sda+ipiv[7]%bs);
 
 		inv = _mm_loaddup_pd( &pA[B_pref+3+bs*7] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -1666,7 +1705,7 @@ void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A,
 	if(tmp0!=0)
 		{
 		if(ipiv[8]!=8)
-			drowsw_lib(12, pA+2*B_pref, pA+ipiv[8]/bs*bs*sda+ipiv[8]%bs);
+			kernel_drowsw_lib4(12, pA+2*B_pref, pA+ipiv[8]/bs*bs*sda+ipiv[8]%bs);
 
 		inv = _mm_loaddup_pd( &pA[2*B_pref+bs*8] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -1796,7 +1835,7 @@ void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A,
 	if(tmp0!=0)
 		{
 		if(ipiv[9]!=9)
-			drowsw_lib(12, pA+2*B_pref+1, pA+ipiv[9]/bs*bs*sda+ipiv[9]%bs);
+			kernel_drowsw_lib4(12, pA+2*B_pref+1, pA+ipiv[9]/bs*bs*sda+ipiv[9]%bs);
 
 		inv = _mm_loaddup_pd( &pA[2*B_pref+1+bs*9] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -1913,7 +1952,7 @@ void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A,
 	if(tmp0!=0)
 		{
 		if(ipiv[10]!=10)
-			drowsw_lib(12, pA+2*B_pref+2, pA+ipiv[10]/bs*bs*sda+ipiv[10]%bs);
+			kernel_drowsw_lib4(12, pA+2*B_pref+2, pA+ipiv[10]/bs*bs*sda+ipiv[10]%bs);
 
 		inv = _mm_loaddup_pd( &pA[2*B_pref+2+bs*10] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -2017,7 +2056,7 @@ void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A,
 	if(tmp0!=0)
 		{
 		if(ipiv[11]!=11)
-			drowsw_lib(12, pA+2*B_pref+3, pA+ipiv[11]/bs*bs*sda+ipiv[11]%bs);
+			kernel_drowsw_lib4(12, pA+2*B_pref+3, pA+ipiv[11]/bs*bs*sda+ipiv[11]%bs);
 
 		inv = _mm_loaddup_pd( &pA[2*B_pref+3+bs*11] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -2176,7 +2215,7 @@ void kernel_dgetrf_pivot_8_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp0!=0.0)
 		{
 		if(ipiv[0]!=0)
-			drowsw_lib(8, pA+0, pA+ipiv[0]/bs*bs*sda+ipiv[0]%bs);
+			kernel_drowsw_lib4(8, pA+0, pA+ipiv[0]/bs*bs*sda+ipiv[0]%bs);
 
 		inv = _mm_loaddup_pd( &pA[0+bs*0] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -2357,7 +2396,7 @@ void kernel_dgetrf_pivot_8_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp0!=0)
 		{
 		if(ipiv[1]!=1)
-			drowsw_lib(8, pA+1, pA+ipiv[1]/bs*bs*sda+ipiv[1]%bs);
+			kernel_drowsw_lib4(8, pA+1, pA+ipiv[1]/bs*bs*sda+ipiv[1]%bs);
 
 		inv = _mm_loaddup_pd( &pA[1+bs*1] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -2526,7 +2565,7 @@ void kernel_dgetrf_pivot_8_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp0!=0)
 		{
 		if(ipiv[2]!=2)
-			drowsw_lib(8, pA+2, pA+ipiv[2]/bs*bs*sda+ipiv[2]%bs);
+			kernel_drowsw_lib4(8, pA+2, pA+ipiv[2]/bs*bs*sda+ipiv[2]%bs);
 
 		inv = _mm_loaddup_pd( &pA[2+bs*2] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -2682,7 +2721,7 @@ void kernel_dgetrf_pivot_8_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp0!=0)
 		{
 		if(ipiv[3]!=3)
-			drowsw_lib(8, pA+3, pA+ipiv[3]/bs*bs*sda+ipiv[3]%bs);
+			kernel_drowsw_lib4(8, pA+3, pA+ipiv[3]/bs*bs*sda+ipiv[3]%bs);
 
 		inv = _mm_loaddup_pd( &pA[3+bs*3] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -2825,7 +2864,7 @@ void kernel_dgetrf_pivot_8_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp0!=0)
 		{
 		if(ipiv[4]!=4)
-			drowsw_lib(8, pA+B_pref+0, pA+ipiv[4]/bs*bs*sda+ipiv[4]%bs);
+			kernel_drowsw_lib4(8, pA+B_pref+0, pA+ipiv[4]/bs*bs*sda+ipiv[4]%bs);
 
 		inv = _mm_loaddup_pd( &pA[B_pref+0+bs*4] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -2954,7 +2993,7 @@ void kernel_dgetrf_pivot_8_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp0!=0)
 		{
 		if(ipiv[5]!=5)
-			drowsw_lib(8, pA+B_pref+1, pA+ipiv[5]/bs*bs*sda+ipiv[5]%bs);
+			kernel_drowsw_lib4(8, pA+B_pref+1, pA+ipiv[5]/bs*bs*sda+ipiv[5]%bs);
 
 		inv = _mm_loaddup_pd( &pA[B_pref+1+bs*5] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -3070,7 +3109,7 @@ void kernel_dgetrf_pivot_8_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp0!=0)
 		{
 		if(ipiv[6]!=6)
-			drowsw_lib(8, pA+B_pref+2, pA+ipiv[6]/bs*bs*sda+ipiv[6]%bs);
+			kernel_drowsw_lib4(8, pA+B_pref+2, pA+ipiv[6]/bs*bs*sda+ipiv[6]%bs);
 
 		inv = _mm_loaddup_pd( &pA[B_pref+2+bs*6] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -3173,7 +3212,7 @@ void kernel_dgetrf_pivot_8_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp0!=0)
 		{
 		if(ipiv[7]!=7)
-			drowsw_lib(8, pA+B_pref+3, pA+ipiv[7]/bs*bs*sda+ipiv[7]%bs);
+			kernel_drowsw_lib4(8, pA+B_pref+3, pA+ipiv[7]/bs*bs*sda+ipiv[7]%bs);
 
 		inv = _mm_loaddup_pd( &pA[B_pref+3+bs*7] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -3330,7 +3369,7 @@ void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp0!=0.0)
 		{
 		if(ipiv[0]!=0)
-			drowsw_lib(4, pA+0, pA+ipiv[0]/bs*bs*sda+ipiv[0]%bs);
+			kernel_drowsw_lib4(4, pA+0, pA+ipiv[0]/bs*bs*sda+ipiv[0]%bs);
 
 		inv = _mm_loaddup_pd( &pA[0+bs*0] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -3458,7 +3497,7 @@ void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp0!=0)
 		{
 		if(ipiv[1]!=1)
-			drowsw_lib(4, pA+1, pA+ipiv[1]/bs*bs*sda+ipiv[1]%bs);
+			kernel_drowsw_lib4(4, pA+1, pA+ipiv[1]/bs*bs*sda+ipiv[1]%bs);
 
 		inv = _mm_loaddup_pd( &pA[1+bs*1] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -3606,7 +3645,7 @@ void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp0!=0)
 		{
 		if(ipiv[2]!=2)
-			drowsw_lib(4, pA+2, pA+ipiv[2]/bs*bs*sda+ipiv[2]%bs);
+			kernel_drowsw_lib4(4, pA+2, pA+ipiv[2]/bs*bs*sda+ipiv[2]%bs);
 
 		inv = _mm_loaddup_pd( &pA[2+bs*2] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -3774,7 +3813,7 @@ void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp0!=0)
 		{
 		if(ipiv[3]!=3)
-			drowsw_lib(4, pA+3, pA+ipiv[3]/bs*bs*sda+ipiv[3]%bs);
+			kernel_drowsw_lib4(4, pA+3, pA+ipiv[3]/bs*bs*sda+ipiv[3]%bs);
 
 		inv = _mm_loaddup_pd( &pA[3+bs*3] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -3947,7 +3986,7 @@ void kernel_dgetrf_pivot_4_vs_lib4(int m, double *pA, int sda, double *inv_diag_
 	if(tmp0!=0.0)
 		{
 		if(ipiv[0]!=0)
-			drowsw_lib(4, pA+0, pA+ipiv[0]/bs*bs*sda+ipiv[0]%bs);
+			kernel_drowsw_lib4(4, pA+0, pA+ipiv[0]/bs*bs*sda+ipiv[0]%bs);
 
 		inv = _mm_loaddup_pd( &pA[0+bs*0] );
 		inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -4129,7 +4168,7 @@ void kernel_dgetrf_pivot_4_vs_lib4(int m, double *pA, int sda, double *inv_diag_
 		if(tmp0!=0)
 			{
 			if(ipiv[1]!=1)
-				drowsw_lib(4, pA+1, pA+ipiv[1]/bs*bs*sda+ipiv[1]%bs);
+				kernel_drowsw_lib4(4, pA+1, pA+ipiv[1]/bs*bs*sda+ipiv[1]%bs);
 
 			inv = _mm_loaddup_pd( &pA[1+bs*1] );
 			inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -4332,7 +4371,7 @@ void kernel_dgetrf_pivot_4_vs_lib4(int m, double *pA, int sda, double *inv_diag_
 		if(tmp0!=0)
 			{
 			if(ipiv[2]!=2)
-				drowsw_lib(4, pA+2, pA+ipiv[2]/bs*bs*sda+ipiv[2]%bs);
+				kernel_drowsw_lib4(4, pA+2, pA+ipiv[2]/bs*bs*sda+ipiv[2]%bs);
 
 			inv = _mm_loaddup_pd( &pA[2+bs*2] );
 			inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );
@@ -4556,7 +4595,7 @@ void kernel_dgetrf_pivot_4_vs_lib4(int m, double *pA, int sda, double *inv_diag_
 		if(tmp0!=0)
 			{
 			if(ipiv[3]!=3)
-				drowsw_lib(4, pA+3, pA+ipiv[3]/bs*bs*sda+ipiv[3]%bs);
+				kernel_drowsw_lib4(4, pA+3, pA+ipiv[3]/bs*bs*sda+ipiv[3]%bs);
 
 			inv = _mm_loaddup_pd( &pA[3+bs*3] );
 			inv = _mm_div_pd( _mm256_castpd256_pd128( ones ), inv );

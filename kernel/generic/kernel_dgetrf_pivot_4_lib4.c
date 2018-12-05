@@ -35,6 +35,45 @@
 
 
 
+// swap two rows
+void kernel_drowsw_lib4(int kmax, double *pA, double *pC)
+	{
+
+	const int bs = 4;
+
+	int ii;
+	double tmp;
+
+	for(ii=0; ii<kmax-3; ii+=4)
+		{
+		tmp = pA[0+bs*0];
+		pA[0+bs*0] = pC[0+bs*0];
+		pC[0+bs*0] = tmp;
+		tmp = pA[0+bs*1];
+		pA[0+bs*1] = pC[0+bs*1];
+		pC[0+bs*1] = tmp;
+		tmp = pA[0+bs*2];
+		pA[0+bs*2] = pC[0+bs*2];
+		pC[0+bs*2] = tmp;
+		tmp = pA[0+bs*3];
+		pA[0+bs*3] = pC[0+bs*3];
+		pC[0+bs*3] = tmp;
+		pA += 4*bs;
+		pC += 4*bs;
+		}
+	for( ; ii<kmax; ii++)
+		{
+		tmp = pA[0+bs*0];
+		pA[0+bs*0] = pC[0+bs*0];
+		pC[0+bs*0] = tmp;
+		pA += 1*bs;
+		pC += 1*bs;
+		}
+
+	}
+
+
+
 // C numbering, starting from 0
 void didamax_lib4(int n, int offset, double *pA, int sda, int *p_idamax, double *p_amax)
 	{
@@ -144,7 +183,7 @@ void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp0!=0.0)
 		{
 		if(ipiv[0]!=0)
-			drowsw_lib(4, pA+0, pA+ipiv[0]/bs*bs*sda+ipiv[0]%bs);
+			kernel_drowsw_lib4(4, pA+0, pA+ipiv[0]/bs*bs*sda+ipiv[0]%bs);
 
 		tmp0 = 1.0 / pA[0+bs*0];
 		inv_diag_A[0] = tmp0;
@@ -212,7 +251,7 @@ void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp1!=0)
 		{
 		if(ipiv[1]!=1)
-			drowsw_lib(4, pA+1, pA+ipiv[1]/bs*bs*sda+ipiv[1]%bs);
+			kernel_drowsw_lib4(4, pA+1, pA+ipiv[1]/bs*bs*sda+ipiv[1]%bs);
 
 		tmp1 = 1.0 / pA[1+bs*1];
 		inv_diag_A[1] = tmp1;
@@ -286,7 +325,7 @@ void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp2!=0)
 		{
 		if(ipiv[2]!=2)
-			drowsw_lib(4, pA+2, pA+ipiv[2]/bs*bs*sda+ipiv[2]%bs);
+			kernel_drowsw_lib4(4, pA+2, pA+ipiv[2]/bs*bs*sda+ipiv[2]%bs);
 
 		tmp2 = 1.0 / pA[2+bs*2];
 		inv_diag_A[2] = tmp2;
@@ -365,7 +404,7 @@ void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 	if(tmp3!=0)
 		{
 		if(ipiv[3]!=3)
-			drowsw_lib(4, pA+3, pA+ipiv[3]/bs*bs*sda+ipiv[3]%bs);
+			kernel_drowsw_lib4(4, pA+3, pA+ipiv[3]/bs*bs*sda+ipiv[3]%bs);
 
 		tmp3 = 1.0 / pA[3+bs*3];
 		inv_diag_A[3] = tmp3;
@@ -428,7 +467,7 @@ void kernel_dgetrf_pivot_4_vs_lib4(int m, double *pA, int sda, double *inv_diag_
 	if(tmp0!=0.0)
 		{
 		if(ipiv[0]!=0)
-			drowsw_lib(4, pA+0, pA+ipiv[0]/bs*bs*sda+ipiv[0]%bs);
+			kernel_drowsw_lib4(4, pA+0, pA+ipiv[0]/bs*bs*sda+ipiv[0]%bs);
 
 		tmp0 = 1.0 / pA[0+bs*0];
 		inv_diag_A[0] = tmp0;
@@ -530,7 +569,7 @@ void kernel_dgetrf_pivot_4_vs_lib4(int m, double *pA, int sda, double *inv_diag_
 	if(tmp1!=0)
 		{
 		if(ipiv[1]!=1)
-			drowsw_lib(4, pA+1, pA+ipiv[1]/bs*bs*sda+ipiv[1]%bs);
+			kernel_drowsw_lib4(4, pA+1, pA+ipiv[1]/bs*bs*sda+ipiv[1]%bs);
 
 		tmp1 = 1.0 / pA[1+bs*1];
 		inv_diag_A[1] = tmp1;
@@ -637,7 +676,7 @@ void kernel_dgetrf_pivot_4_vs_lib4(int m, double *pA, int sda, double *inv_diag_
 		if(tmp2!=0)
 			{
 			if(ipiv[2]!=2)
-				drowsw_lib(4, pA+2, pA+ipiv[2]/bs*bs*sda+ipiv[2]%bs);
+				kernel_drowsw_lib4(4, pA+2, pA+ipiv[2]/bs*bs*sda+ipiv[2]%bs);
 
 			tmp2 = 1.0 / pA[2+bs*2];
 			inv_diag_A[2] = tmp2;
@@ -745,7 +784,7 @@ void kernel_dgetrf_pivot_4_vs_lib4(int m, double *pA, int sda, double *inv_diag_
 		if(tmp3!=0)
 			{
 			if(ipiv[3]!=3)
-				drowsw_lib(4, pA+3, pA+ipiv[3]/bs*bs*sda+ipiv[3]%bs);
+				kernel_drowsw_lib4(4, pA+3, pA+ipiv[3]/bs*bs*sda+ipiv[3]%bs);
 
 			tmp3 = 1.0 / pA[3+bs*3];
 			inv_diag_A[3] = tmp3;

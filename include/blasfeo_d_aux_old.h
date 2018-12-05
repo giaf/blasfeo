@@ -60,7 +60,6 @@ void drowad_lib(int kmax, double alpha, double *x, double *pD);
 void drowin_libsp(int kmax, double alpha, int *idx, double *x, double *pD);
 void drowad_libsp(int kmax, int *idx, double alpha, double *x, double *pD);
 void drowadin_libsp(int kmax, int *idx, double alpha, double *x, double *y, double *pD);
-void drowsw_lib(int kmax, double *pA, double *pC);
 void dcolin_lib(int kmax, double *x, int offset, double *pD, int sdd);
 void dcolad_lib(int kmax, double alpha, double *x, int offset, double *pD, int sdd);
 void dcolin_libsp(int kmax, int *idx, double *x, double *pD, int sdd);

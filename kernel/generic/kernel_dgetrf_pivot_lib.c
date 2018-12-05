@@ -35,6 +35,43 @@
 
 
 
+// swap two rows
+void kernel_drowsw_lib(int kmax, double *pA, int lda, double *pC, int ldc)
+	{
+
+	int ii;
+	double tmp;
+
+	for(ii=0; ii<kmax-3; ii+=4)
+		{
+		tmp = pA[0+lda*0];
+		pA[0+lda*0] = pC[0+ldc*0];
+		pC[0+ldc*0] = tmp;
+		tmp = pA[0+lda*1];
+		pA[0+lda*1] = pC[0+ldc*1];
+		pC[0+ldc*1] = tmp;
+		tmp = pA[0+lda*2];
+		pA[0+lda*2] = pC[0+ldc*2];
+		pC[0+ldc*2] = tmp;
+		tmp = pA[0+lda*3];
+		pA[0+lda*3] = pC[0+ldc*3];
+		pC[0+ldc*3] = tmp;
+		pA += 4*lda;
+		pC += 4*ldc;
+		}
+	for( ; ii<kmax; ii++)
+		{
+		tmp = pA[0+lda*0];
+		pA[0+lda*0] = pC[0+ldc*0];
+		pC[0+ldc*0] = tmp;
+		pA += 1*lda;
+		pC += 1*ldc;
+		}
+
+	}
+
+
+
 // C numbering, starting from 0
 void didamax_lib(int n, double *pA, int *p_idamax, double *p_amax)
 	{
@@ -127,10 +164,7 @@ void kernel_dgetrf_pivot_4_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[0]!=0)
 			{
-			ia0 = 4;
-			ia1 = 0;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(4, pA+0, lda, pA+ipiv[0], lda);
 			}
 
 		tmp0 = 1.0 / pA[0+lda*0];
@@ -200,10 +234,7 @@ void kernel_dgetrf_pivot_4_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[1]!=1)
 			{
-			ia0 = 4;
-			ia1 = 1;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(4, pA+1, lda, pA+ipiv[1], lda);
 			}
 
 		tmp1 = 1.0 / pA[1+lda*1];
@@ -279,10 +310,7 @@ void kernel_dgetrf_pivot_4_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[2]!=2)
 			{
-			ia0 = 4;
-			ia1 = 2;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(4, pA+2, lda, pA+ipiv[2], lda);
 			}
 
 		tmp2 = 1.0 / pA[2+lda*2];
@@ -363,10 +391,7 @@ void kernel_dgetrf_pivot_4_lib(int m, double *pA, int lda, double *inv_diag_A, i
 		{
 		if(ipiv[3]!=3)
 			{
-			ia0 = 4;
-			ia1 = 3;
-			ia2 = ia1+1;
-			blasfeo_dlaswp(&ia0, pA, &lda, &ia1, &ia1, ipiv, &ia2);
+			kernel_drowsw_lib(4, pA+3, lda, pA+ipiv[3], lda);
 			}
 
 		tmp3 = 1.0 / pA[3+lda*3];
