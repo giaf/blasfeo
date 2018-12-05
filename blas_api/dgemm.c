@@ -626,7 +626,6 @@ nt_1:
 		for(jj=0; jj<n-3; jj+=4)
 			{
 			kernel_dgemm_nt_4x4_lib44c(k, alpha, sA.pA, sB.pA+jj*sdb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
-			d_print_mat(4, 4, C+ii+jj*ldc, ldc);
 			}
 		if(jj<n)
 			{

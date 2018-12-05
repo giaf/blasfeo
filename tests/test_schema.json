@@ -11,7 +11,7 @@
       "X64_INTEL_HASWELL"
     ],
     "default": [
-      "X64_INTEL_SANDY_BRIDGE"
+      "X64_INTEL_HASWELL"
     ]
   },
   "la": {
@@ -19,7 +19,7 @@
     "values": [
       "HIGH_PERFORMANCE",
       "REFERENCE",
-      "BLASF_WRAPPER"
+      "BLAS_WRAPPER"
     ],
     "default": [
       "HIGH_PERFORMANCE"
@@ -69,7 +69,6 @@
   "min_kernel_sizes": {
     "type": "list",
     "values": [
-      "2x2",
       "4x4"
     ],
     "default": [

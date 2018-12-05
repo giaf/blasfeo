@@ -66,6 +66,7 @@ endif
 ONE_OBJS = benchmark_d_blasfeo_api.o
 #ONE_OBJS = benchmark_s_blasfeo_api.o
 #ONE_OBJS = benchmark_d_blas_api.o
+#ONE_OBJS = benchmark_bandwidth.o
 
 %.o: %.c
 	# build obj
