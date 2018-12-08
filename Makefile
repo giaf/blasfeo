@@ -791,12 +791,12 @@ endif
 ifeq ($(SANDBOX_MODE), 1)
 	( cd sandbox; $(MAKE) obj)
 endif
-	$(CC) -shared -o libblasfeo.so $(OBJS) #-Wl,-Bsymbolic
+	$(CC) -shared -o libblasfeo.so $(OBJS) -lm #-Wl,-Bsymbolic
 	mv libblasfeo.so ./lib/
 	@echo
 	@echo " libblasfeo.so shared library build complete."
 ifeq ($(TESTING_MODE), 1)
-	$(CC) -shared -o libblasfeo_ref.so $(OBJS_REF)
+	$(CC) -shared -o libblasfeo_ref.so $(OBJS_REF) -lm
 	mv libblasfeo_ref.so ./lib/
 	@echo " libblasfeo_ref.so shared library build complete."
 endif
