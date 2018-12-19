@@ -404,7 +404,7 @@ int main()
 
 	struct blasfeo_dmat sBbt0;
 	blasfeo_allocate_dmat(nu_+nx_+1, nx_, &sBbt0);
-	blasfeo_pack_tran_dmat(nx_, nx_, B, nx_, &sBbt0, 0, 0);
+	blasfeo_pack_tran_dmat(nx_, nu_, B, nx_, &sBbt0, 0, 0);
 	blasfeo_drowin(nx_, 1.0, &sb0, 0, &sBbt0, nu_, 0);
 	printf("Bbt0:\n");
 	blasfeo_print_exp_dmat(nu_+1, nx_, &sBbt0, 0, 0);
@@ -567,6 +567,7 @@ int main()
 	d_free(b0);
 	blasfeo_free_dmat(&sA);
 	blasfeo_free_dvec(&sb);
+	blasfeo_free_dvec(&sx0);
 	blasfeo_free_dmat(&sBbt0);
 	blasfeo_free_dvec(&sb0);
 	blasfeo_free_dmat(&sBAbt1);
