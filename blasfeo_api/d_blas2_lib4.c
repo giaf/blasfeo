@@ -549,7 +549,8 @@ void blasfeo_dtrmv_lnn(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, st
 	double alpha = 1.0;
 	double beta = 1.0;
 
-	double zt[4];
+	double zt[4] = {0, 0, 0, 0};
+	double xt[4] = {0, 0, 0, 0};
 
 	int ii, jj, jj_end;
 
@@ -562,20 +563,24 @@ void blasfeo_dtrmv_lnn(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, st
 		m2 -= bs-ai%bs;
 		n2 += bs-ai%bs;
 		}
-	
+
 	pA2 += m2/bs*bs*sda;
 	z2 += m2/bs*bs;
 	n2 += m2/bs*bs;
 
-	if(m2%bs!=0)
+	if(m2%bs != 0)
 		{
 		//
 		pA3 = pA2 + bs*n2;
 		x3 = x + n2;
-		zt[3] = pA3[3+bs*0]*x3[0] + pA3[3+bs*1]*x3[1] + pA3[3+bs*2]*x3[2] + pA3[3+bs*3]*x3[3];
-		zt[2] = pA3[2+bs*0]*x3[0] + pA3[2+bs*1]*x3[1] + pA3[2+bs*2]*x3[2];
-		zt[1] = pA3[1+bs*0]*x3[0] + pA3[1+bs*1]*x3[1];
-		zt[0] = pA3[0+bs*0]*x3[0];
+
+		// access only valid memory
+		for(jj=0; jj<m2%bs; jj++)
+			xt[jj] = x3[jj];
+
+		zt[2] = pA3[2+bs*0]*xt[0] + pA3[2+bs*1]*xt[1] + pA3[2+bs*2]*xt[2];
+		zt[1] = pA3[1+bs*0]*xt[0] + pA3[1+bs*1]*xt[1];
+		zt[0] = pA3[0+bs*0]*xt[0];
 		kernel_dgemv_n_4_lib4(n2, &alpha, pA2, x, &beta, zt, zt);
 		for(jj=0; jj<m2%bs; jj++)
 			z2[jj] = zt[jj];
@@ -663,7 +668,7 @@ void blasfeo_dtrmv_lnu(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, st
 		m2 -= bs-ai%bs;
 		n2 += bs-ai%bs;
 		}
-	
+
 	pA2 += m2/bs*bs*sda;
 	z2 += m2/bs*bs;
 	n2 += m2/bs*bs;
