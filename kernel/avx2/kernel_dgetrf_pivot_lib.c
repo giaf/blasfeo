@@ -3802,6 +3802,8 @@ void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A
 	int
 		ia0, ia1, ia2;
 
+	int n4 = n<4 ? n : 4;
+	
 
 	// first column
 
@@ -3856,7 +3858,7 @@ void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A
 		{
 		if(ipiv[0]!=0)
 			{
-			kernel_drowsw_lib(n, pA+0, lda, pA+ipiv[0], lda);
+			kernel_drowsw_lib(n4, pA+0, lda, pA+ipiv[0], lda);
 			}
 
 		inv = _mm_loaddup_pd( &pA[0+lda*0] );
@@ -3998,7 +4000,7 @@ void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A
 			{
 			if(ipiv[1]!=1)
 				{
-				kernel_drowsw_lib(n, pA+1, lda, pA+ipiv[1], lda);
+				kernel_drowsw_lib(n4, pA+1, lda, pA+ipiv[1], lda);
 				}
 
 			inv = _mm_loaddup_pd( &pA[1+lda*1] );
@@ -4153,7 +4155,7 @@ void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A
 			{
 			if(ipiv[2]!=2)
 				{
-				kernel_drowsw_lib(n, pA+2, lda, pA+ipiv[2], lda);
+				kernel_drowsw_lib(n4, pA+2, lda, pA+ipiv[2], lda);
 				}
 
 			inv = _mm_loaddup_pd( &pA[2+lda*2] );
@@ -4323,7 +4325,7 @@ void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A
 			{
 			if(ipiv[3]!=3)
 				{
-				kernel_drowsw_lib(n, pA+3, lda, pA+ipiv[3], lda);
+				kernel_drowsw_lib(n4, pA+3, lda, pA+ipiv[3], lda);
 				}
 
 			inv = _mm_loaddup_pd( &pA[3+lda*3] );
