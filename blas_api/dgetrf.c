@@ -687,7 +687,7 @@ alg1:
 #else
 	for(; jj<n-3; jj+=4)
 		{
-		
+
 		// pack
 		kernel_dpack_tn_4_lib4(jj, C+jj*ldc, ldc, pU);
 

@@ -5549,7 +5549,7 @@ NAME:
 	movq	ARG3, %r12 // C
 	movq	ARG4, %r13 // ldc
 	sall	$3, %r13d
-	movq	ARG6, %r14 // m1
+	movq	ARG5, %r14 // m1
 
 
 	cmpl	$0, %r10d
