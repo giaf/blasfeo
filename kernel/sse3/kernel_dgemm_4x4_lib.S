@@ -208,31 +208,31 @@ inner_blend_scale_ab_4x4_lib:
 	ucomisd		%xmm15, %xmm14 // beta==0.0 ?
 	je			0f // end
 
-	movapd		0(%r12), %xmm15
+	movupd		0(%r12), %xmm15
 	mulpd		%xmm14, %xmm15
 	addpd		%xmm15, %xmm0
-	movapd		16(%r12), %xmm15
+	movupd		16(%r12), %xmm15
 	mulpd		%xmm14, %xmm15
 	addpd		%xmm15, %xmm4
 	addq		%r13, %r12
-	movapd		0(%r12), %xmm15
+	movupd		0(%r12), %xmm15
 	mulpd		%xmm14, %xmm15
 	addpd		%xmm15, %xmm1
-	movapd		16(%r12), %xmm15
+	movupd		16(%r12), %xmm15
 	mulpd		%xmm14, %xmm15
 	addpd		%xmm15, %xmm5
 	addq		%r13, %r12
-	movapd		0(%r12), %xmm15
+	movupd		0(%r12), %xmm15
 	mulpd		%xmm14, %xmm15
 	addpd		%xmm15, %xmm2
-	movapd		16(%r12), %xmm15
+	movupd		16(%r12), %xmm15
 	mulpd		%xmm14, %xmm15
 	addpd		%xmm15, %xmm6
 	addq		%r13, %r12
-	movapd		0(%r12), %xmm15
+	movupd		0(%r12), %xmm15
 	mulpd		%xmm14, %xmm15
 	addpd		%xmm15, %xmm3
-	movapd		16(%r12), %xmm15
+	movupd		16(%r12), %xmm15
 	mulpd		%xmm14, %xmm15
 	addpd		%xmm15, %xmm7
 //	addq		%r13, %r12
@@ -302,31 +302,31 @@ movapd	%xmm0, %xmm8
 	movsd	%xmm7, %xmm6
 	movsd	%xmm8, %xmm7
 
-	movapd		0(%r10), %xmm15
+	movupd		0(%r10), %xmm15
 	subpd		%xmm0, %xmm15
 	movapd		%xmm15, %xmm0
-	movapd		16(%r10), %xmm15
+	movupd		16(%r10), %xmm15
 	subpd		%xmm4, %xmm15
 	movapd		%xmm15, %xmm4
 	addq		%r11, %r10
-	movapd		0(%r10), %xmm15
+	movupd		0(%r10), %xmm15
 	subpd		%xmm1, %xmm15
 	movapd		%xmm15, %xmm1
-	movapd		16(%r10), %xmm15
+	movupd		16(%r10), %xmm15
 	subpd		%xmm5, %xmm15
 	movapd		%xmm15, %xmm5
 	addq		%r11, %r10
-	movapd		0(%r10), %xmm15
+	movupd		0(%r10), %xmm15
 	subpd		%xmm2, %xmm15
 	movapd		%xmm15, %xmm2
-	movapd		16(%r10), %xmm15
+	movupd		16(%r10), %xmm15
 	subpd		%xmm6, %xmm15
 	movapd		%xmm15, %xmm6
 	addq		%r11, %r10
-	movapd		0(%r10), %xmm15
+	movupd		0(%r10), %xmm15
 	subpd		%xmm3, %xmm15
 	movapd		%xmm15, %xmm3
-	movapd		16(%r10), %xmm15
+	movupd		16(%r10), %xmm15
 	subpd		%xmm7, %xmm15
 	movapd		%xmm15, %xmm7
 //	addq		%r11, %r10
@@ -380,17 +380,17 @@ inner_store_4x4_lib:
 #endif
 #endif
 
-	movapd		%xmm0, 0(%r10)
-	movapd		%xmm4, 16(%r10)
+	movupd		%xmm0, 0(%r10)
+	movupd		%xmm4, 16(%r10)
 	addq		%r11, %r10
-	movapd		%xmm1, 0(%r10)
-	movapd		%xmm5, 16(%r10)
+	movupd		%xmm1, 0(%r10)
+	movupd		%xmm5, 16(%r10)
 	addq		%r11, %r10
-	movapd		%xmm2, 0(%r10)
-	movapd		%xmm6, 16(%r10)
+	movupd		%xmm2, 0(%r10)
+	movupd		%xmm6, 16(%r10)
 	addq		%r11, %r10
-	movapd		%xmm3, 0(%r10)
-	movapd		%xmm7, 16(%r10)
+	movupd		%xmm3, 0(%r10)
+	movupd		%xmm7, 16(%r10)
 //	addq	%r11, %r10
 
 #if MACRO_LEVEL>=1
