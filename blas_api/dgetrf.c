@@ -102,6 +102,8 @@ void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info
 	// TODO
 #if defined(TARGET_X64_INTEL_HASWELL)
 	if(m>200 | n>200 | m>K_MAX_STACK)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	if(m>240 | n>240 | m>K_MAX_STACK)
 #else
 	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
@@ -186,7 +188,7 @@ alg0:
 			goto left_12_0;
 			}
 		}
-#elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; jj<n-7; jj+=8)
 		{
 
@@ -391,7 +393,7 @@ left_12_0:
 
 
 
-#if defined(TARGET_X64_INTEL_HASWELL) // | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 left_8_0:
 
 	// pack
@@ -618,7 +620,8 @@ alg1:
 			goto left_12_1;
 			}
 		}
-#elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+//#elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; jj<n-7; jj+=8)
 		{
 		
@@ -874,7 +877,7 @@ left_12_1:
 
 
 
-#if defined(TARGET_X64_INTEL_HASWELL) // | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 left_8_1:
 
 	// pack
