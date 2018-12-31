@@ -13917,9 +13917,9 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 	// call inner blender_loader nn
 
 	movq	ARG6, %r10 // beta
-	movq	ARG7, %r10 // C
-	movq	ARG8, %r11 // sdc
-	sall	$5, %r11d // 4*sdc*sizeof(double)
+	movq	ARG7, %r11 // C
+	movq	ARG8, %r12 // sdc
+	sall	$5, %r12d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
