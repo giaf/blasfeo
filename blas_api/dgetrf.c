@@ -85,6 +85,8 @@ void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info
 	void *smat_mem, *smat_mem_align;
 	int m1, n1;
 
+	int p = m<n ? m : n;
+
 
 	int i1 = 1;
 	double d1 = 1.0;
@@ -526,6 +528,8 @@ left_4_0:
 
 
 end_0:
+	for(ii=0; ii<p; ii++)
+		ipiv[ii] += 1;
 	return;
 
 
@@ -620,7 +624,6 @@ alg1:
 			goto left_12_1;
 			}
 		}
-//#elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; jj<n-7; jj+=8)
 		{
@@ -1093,7 +1096,7 @@ end_1:
 		}
 	// TODO
 #endif
-#elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<m-7 & ii<n-7; ii+=8)
 		{
 		kernel_dunpack_nn_8_lib4(ii, pC+ii*sdc, sdc, C+ii, ldc);
@@ -1130,6 +1133,8 @@ end_1:
 	// TODO clean loops
 
 	free(smat_mem);
+	for(ii=0; ii<p; ii++)
+		ipiv[ii] += 1;
 	return;
 
 	}
