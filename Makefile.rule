@@ -280,7 +280,7 @@ ifeq ($(REF_BLAS), OPENBLAS)
 CFLAGS  += -DREF_BLAS_OPENBLAS -I/opt/openblas/include
 endif
 ifeq ($(REF_BLAS), BLIS)
-CFLAGS  += -DREF_BLAS_BLIS -I/opt/blis/include/blis -std=c99
+CFLAGS  += -DREF_BLAS_BLIS -I/opt/blis/include/blis -std=gnu99
 endif
 ifeq ($(REF_BLAS), NETLIB)
 CFLAGS  += -DREF_BLAS_NETLIB
