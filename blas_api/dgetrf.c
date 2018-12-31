@@ -94,7 +94,7 @@ void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info
 
 	int arg0, arg1, arg2;
 
-	double *dummy;
+	double *dummy = NULL;
 
 	int ipiv_tmp[4] = {};
 
