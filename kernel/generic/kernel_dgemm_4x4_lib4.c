@@ -718,7 +718,7 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X64_AMD_BULLDOZER)
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) //|| defined(TARGET_X64_AMD_BULLDOZER)
 void kernel_dgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D)
 	{
 

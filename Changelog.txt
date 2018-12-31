@@ -31,6 +31,7 @@ CBLAS_API
 x64:
 	* AMD_BULLDOZER:
 		- fix performance bug (mix of legacy and VEX code)
+		- add optimized kernel_dgemm_nn_4x4_lib4
 
 ARMv8A:
 	* Cortex A57:

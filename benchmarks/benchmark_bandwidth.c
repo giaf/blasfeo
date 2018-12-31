@@ -29,41 +29,82 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
-
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
 
 
-#define REAL double
-#define XMAT blasfeo_dmat_ref
-#define XVEC blasfeo_dvec_ref
 
-#define GEMM_NN    blasfeo_dgemm_nn_ref
-#define GEMM_NT    blasfeo_dgemm_nt_ref
-#define GEMM_TN    blasfeo_dgemm_tn_ref
-#define GEMM_TT    blasfeo_dgemm_tt_ref
-
-#define SYRK_LN    blasfeo_dsyrk_ln_ref
-#define SYRK_LN_MN blasfeo_dsyrk_ln_mn_ref
-
-#define TRSM_LUNU  blasfeo_dtrsm_lunu_ref
-#define TRSM_LUNN  blasfeo_dtrsm_lunn_ref
-#define TRSM_LUTU  blasfeo_dtrsm_lutu_ref
-#define TRSM_LUTN  blasfeo_dtrsm_lutn_ref
-#define TRSM_LLNU  blasfeo_dtrsm_llnu_ref
-#define TRSM_LLNN  blasfeo_dtrsm_llnn_ref
-#define TRSM_LLTU  blasfeo_dtrsm_lltu_ref
-#define TRSM_LLTN  blasfeo_dtrsm_lltn_ref
-#define TRSM_RUNU  blasfeo_dtrsm_runu_ref
-#define TRSM_RUNN  blasfeo_dtrsm_runn_ref
-#define TRSM_RUTU  blasfeo_dtrsm_rutu_ref
-#define TRSM_RUTN  blasfeo_dtrsm_rutn_ref
-#define TRSM_RLNU  blasfeo_dtrsm_rlnu_ref
-#define TRSM_RLNN  blasfeo_dtrsm_rlnn_ref
-#define TRSM_RLTU  blasfeo_dtrsm_rltu_ref
-#define TRSM_RLTN  blasfeo_dtrsm_rltn_ref
+#include "../include/blasfeo.h"
+#include "benchmark_x_common.h"
 
 
-// TESTING_MODE
-#include "x_blas3_lib.c"
+
+int main()
+	{
+
+#if !defined(BENCHMARKS_MODE)
+	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n");
+	printf("On CMake use -DBLASFEO_BENCHMARKS=ON .\n\n");
+	return 0;
+#endif
+
+	int nn, ii, rep, nrep;
+
+	blasfeo_timer timer;
+	double tmp_time, bandwidth_set, bandwidth_copy;
+
+	int size[] = {16, 32, 48, 64, 80, 96, 112, 128, 256, 384, 512, 768, 1024, 1536, 2048, 2560, 3072, 3584, 4096, 4352, 4608, 5120, 6144, 8192, 16384, 24576, 32768, 40960, 49152, 65536};
+	int nnrep[] = {4000000, 4000000, 4000000, 2000000, 2000000, 1000000, 1000000, 1000000, 400000, 400000, 400000, 200000, 200000, 200000, 100000, 100000, 100000, 40000, 40000, 40000, 20000, 20000, 20000, 10000, 10000, 10000, 10000, 4000, 4000, 4000};
+	int n_size = 30;
+
+	for(nn=0; nn<n_size; nn++)
+		{
+
+		nrep = nnrep[nn];
+
+		double *x = malloc(size[nn]*sizeof(double));
+		double *y = malloc(size[nn]*sizeof(double));
+
+		// set to zero
+		blasfeo_tic(&timer);
+
+		for(rep=0; rep<nrep; rep++)
+			{
+
+			for(ii=0; ii<size[nn]; ii++)
+				{
+				x[ii] = 0.0;
+				}
+
+			}
+
+		tmp_time = blasfeo_toc(&timer) / nrep;
+
+		bandwidth_set = size[nn] * 8.0 / tmp_time;
+
+		// copy
+		blasfeo_tic(&timer);
+
+		for(rep=0; rep<nrep; rep++)
+			{
+
+			for(ii=0; ii<size[nn]; ii++)
+				{
+				y[ii] = x[ii];
+				}
+
+			}
+
+		tmp_time = blasfeo_toc(&timer) / nrep;
+
+		bandwidth_copy = size[nn] * 2 * 8.0 / tmp_time;
+
+		// print
+		printf("%f\t%e\t%e\n", size[nn]*8.0/1024.0, bandwidth_set, bandwidth_copy);
+
+		free(x);
+		free(y);
+
+		}
+	
+	return 0;
+
+	}

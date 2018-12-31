@@ -48,8 +48,8 @@
     "blas3":{
       "gemm_nn":{},
       "gemm_nt":{},
-      "gemm_dn":{},
-      "gemm_nd":{},
+      "gemm_tn":{},
+      "gemm_tt":{},
       "syrk_ln_mn":{},
       "syrk_ln":{},
       "trsm_llnu":{},

@@ -1,20 +1,37 @@
 #! /usr/bin/python
 
-import subprocess
+import subprocess as sp
+import jinja2 as jn
 import sys
 import json
 import argparse
+import re
+from hashlib import sha1
+from pathlib import Path
 
-RECIPE_SCHEMA="test_schema.json"
+BLASFEO_PATH=Path(__file__).absolute().parents[1]
+BLASFEO_TEST_PATH=Path(__file__).absolute().parents[0]
+
+SCHEMA="test_schema.json"
 RECIPE_JSON="recipe_default.json"
+BUILDS_DIR="build"
+REPORTS_DIR="reports"
+TESTCLASSES_DIR="classes"
+TPL_PATH="Makefile.tpl"
+LIB_BLASFEO_STATIC = "libblasfeo.a"
+LIB_BLASFEO_REF_STATIC = "libblasfeo_ref.a"
+MAKE_FLAGS={}
+SILENT=1
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='BLAFEO tests scheduler')
 
     parser.add_argument(dest='recipe_json', type=str, default=RECIPE_JSON, nargs='?',
         help='Run a batch of test from a specific recipe, i.e. recipe_all.json')
-    parser.add_argument('--verbose', type=int, default=0,
-        help='Verbosity level')
+    parser.add_argument('--silent', default=False, action='store_true',
+        help='Silent makefile output')
+    parser.add_argument('--run_all', default=False, action='store_true',
+        help='Do not interrupt tests sweep on error')
     parser.add_argument('--rebuild', default=False, action='store_true',
         help='Rebuild libblasfeo to take into account recent code '+
         'changes or addition of new target to the recipe batch')
@@ -23,25 +40,89 @@ def parse_arguments():
     return args
 
 
+def make_blasfeo(cmd="", env_flags={}, blasfeo_flags={}):
 
-def make(cmd="", make_flags={}, env_flags={}):
+    blasfeo_flags_str = " ".join(["{k}={v}".format(k=k, v=v) if v is not None else k for k, v in blasfeo_flags.items()])
+    env_flags_str = " ".join(["{k}={v}".format(k=k, v=v) for k, v in env_flags.items()])
+    make_flags_str = " ".join(["{k}={v}".format(k=k, v=v) if v is not None else k for k, v in MAKE_FLAGS.items()])
 
-    make_flags = " ".join(["{k}={v}".format(k=k, v=v) if v is not None else k for k, v in make_flags.items()])
-    env_flags = " ".join(["{k}={v}".format(k=k, v=v) for k, v in env_flags.items()])
+    run_cmd = "{env_flags} make {blasfeo_flags} {make_flags} -C .. {cmd}"\
+        .format(env_flags=env_flags_str, blasfeo_flags=blasfeo_flags_str, make_flags=make_flags_str, cmd=cmd)
 
-    run_cmd = "{env_flags} make {make_flags} {cmd}".format(env_flags=env_flags, make_flags=make_flags, cmd=cmd)
+    if not SILENT: print(run_cmd,"\n")
 
-    print(run_cmd,"\n")
-    make_process = subprocess.Popen(run_cmd,
-        shell=True, stdout=subprocess.PIPE, stderr=sys.stdout.fileno())
+    make = sp.Popen(run_cmd,
+        shell=True,
+        stdin=sp.PIPE,
+        stdout=sp.PIPE,
+        stderr=sp.PIPE
+        )
 
-    while True:
-        line = make_process.stdout.readline()
-        if not line: break
-        print(line.decode("utf-8").strip())
-        sys.stdout.flush()
-    return 1
+    outs, errs = make.communicate()
 
+    if outs and not SILENT: print("Make infos:\n{}".format(outs.decode("utf8")))
+    if errs: print("Make errors:\n{}".format(errs.decode("utf8")))
+
+    return make.returncode
+
+
+def make_templated(make_cmd="", env_flags={}, test_macros={}, blasfeo_flags={}, **kargs):
+
+    # compress run_id
+    la=blasfeo_flags['LA']
+    if la != "HIGH_PERFORMANCE": target=la
+
+    run_id = "{target}_{routine_fullname}_kstack{kstack}"\
+        .format(
+            target=blasfeo_flags['TARGET'],
+            routine_fullname=kargs["fullname"],
+            kstack=blasfeo_flags['K_MAX_STACK']
+            )
+
+    print("\nTesting {run_id}\n".format(run_id=run_id))
+
+    with open(TPL_PATH) as f:
+        template = jn.Template(f.read())
+
+    makefile = template.render(test_macros=test_macros)
+
+    # flag to override default libblasfeo flags
+    blasfeo_flags_cmd = " ".join(["{k}={v}".format(k=k, v=v) if v is not None else k for k, v in blasfeo_flags.items()])
+    make_flags = " ".join(["{k}={v}".format(k=k, v=v) if v is not None else k for k, v in MAKE_FLAGS.items()])
+
+    run_cmd = "make {blasfeo_flags_cmd} -f - {make_cmd}".format(make_cmd=make_cmd, blasfeo_flags_cmd=blasfeo_flags_cmd)
+    report_cmd = "make {blasfeo_flags_cmd} {make_flags} {make_cmd}"\
+        .format(make_cmd=make_cmd, make_flags=make_flags, blasfeo_flags_cmd=blasfeo_flags_cmd)
+
+    if not SILENT: print(run_cmd,"\n")
+
+    make = sp.Popen(run_cmd.split(),
+        stdin=sp.PIPE,
+        stdout=sp.PIPE,
+        stderr=sp.PIPE
+        )
+
+    outs, errs = make.communicate(makefile.encode("utf8"))
+
+    if outs and not SILENT: print("Make infos:\n{}".format(outs.decode("utf8")))
+    if errs: print("Make errors:\n{}".format(errs.decode("utf8")))
+
+    if make.returncode:
+        # write report
+        report_path = Path(REPORTS_DIR, run_id)
+        report_path.mkdir(parents=True, exist_ok=True)
+        with open(Path(report_path, "Makefile"), "w") as f:
+            f.write(makefile)
+        with open(Path(report_path, "make.sh"), "w") as f:
+            f.write("#! /bin/bash\n")
+            f.write(report_cmd+"\n")
+
+        print("Error with {run_id}".format(run_id=run_id))
+
+    else:
+        if not SILENT: print("Tested with {run_id}".format(run_id=run_id))
+
+    return make.returncode
 
 class CookBook:
     def __init__(self, cli_flags):
@@ -51,73 +132,106 @@ class CookBook:
         with open(cli_flags.recipe_json) as f:
             self.specs = json.load(f)
 
-        with open(RECIPE_SCHEMA) as f:
+        if self.specs["options"].get("silent") or self.cli_flags.silent: SILENT=1
+
+        with open(SCHEMA) as f:
             self.schema = json.load(f)
 
-        self.DONE = 0
+        self._success_n = 0
+        self._errors_n = 0
 
-        self.VERBOSE = self.cli_flags.verbose
-
-        self.TOTAL =\
+        self._total_n =\
             len(set(self.specs["routines"]))\
-            * len(self.specs["targets"])\
-            * len(self.specs["precisions"])
+            * len(self.specs["TARGET"])\
+            * len(self.specs["K_MAX_STACK"])\
+            * len(self.specs["precisions"])\
+            * len(self.specs["apis"])
 
         # build standard recipe skelethon
         self.build_recipe()
+
+    def parse_routine_options(self, routine_name, available_flags):
+        pattern = '(?P<routine_basename>[a-z]*)_'
+        for flag_name, flags_values in available_flags.items():
+            flags_values = '|'.join(flags_values)
+            pattern += '(?P<{flag_name}>[{flags_values}])'.format(flag_name=flag_name, flags_values=flags_values)
+        parsed_flags = re.search(pattern, routine_name).groupdict()
+        return parsed_flags
 
     def build_recipe(self):
         scheduled_routines = set(self.specs['routines'])
 
         # create recipe with no global flags
-        self.recipe = {
-            'routines':{},
-            'make_flags':self.specs['make_flags'],
-            'env_flags':self.specs['env_flags']
-        }
+        self.recipe = dict(self.specs)
+        self.recipe["scheduled_routines"] = {}
 
+        available_groups = self.schema['routines']
 
-        available_classes = self.schema['routines']
+        # routine groups: blas1 blas2 ..
+        for group_name, available_classes in available_groups.items():
 
-        for routine_class in available_classes:
-            available_subclasses = available_classes[routine_class]
+            # routine classes: gemm, trsm, ...
+            for class_name, routine_class in available_classes.items():
+                available_routines = routine_class["routines"]
+                routine_flags = routine_class["flags"]
 
-            for routine_subclass in available_subclasses:
-                available_routines = available_subclasses[routine_subclass]
+                # routines: gemm_nn, gemm_nt, ...
+                for routine  in available_routines:
 
-                for available_routine in available_routines:
+                    if routine not in scheduled_routines:
+                        continue
 
-                    if available_routine in scheduled_routines:
-                        scheduled_routines = scheduled_routines - {available_routine}
+                    scheduled_routines = scheduled_routines - {routine}
 
-                        for precision in self.specs["precisions"]:
+                    # precision
+                    for precision in self.specs["precisions"]:
 
-                            flags = {}
-                            flags.update(self.specs['make_flags'])
+                        # apis
+                        for api in self.specs["apis"]:
 
-                            routine_name = "{}{}".format(precision, available_routine)
-                            routine_fullname = routine_name
-                            flags["ROUTINE"] = routine_fullname
-                            flags["ROUTINE_CLASS"] = routine_subclass
-                            flags["PRECISION"] = precision
+                            test_macros = {}
 
-                            self.recipe["routines"][routine_name] = {
-                                "class": routine_class,
-                                "subclass": routine_subclass,
+                            test_macros["ROUTINE_CLASS"] = class_name
+                            test_macros["PRECISION_{}".format(precision.upper())] = None
+
+                            routine_fullname = "{api}_{precision}{routine}".format(
+                                api=api, precision=precision[0], routine=routine)
+
+                            if api=="blas":
+                                test_macros["TEST_BLAS_API"] = None
+                                routine_dict = self.parse_routine_options(routine, routine_flags)
+                                test_macros.update(routine_dict)
+                                routine_testclass_src = "blasapi_"+routine_class["testclass_src"]
+                                routine_name = "{precision}{routine}".format(precision=precision[0], routine=class_name)
+                            else:
+                                routine_testclass_src = routine_class["testclass_src"]
+                                routine_name = "{precision}{routine}".format(precision=precision[0], routine=routine)
+
+                            test_macros["ROUTINE_CLASS_C"] = Path(TESTCLASSES_DIR, routine_testclass_src)
+                            test_macros["ROUTINE"] = routine_name
+                            test_macros["ROUTINE_FULLNAME"] = routine
+
+                            # add blas_api flag arguments values
+
+                            self.recipe["scheduled_routines"][routine_fullname] = {
+                                "group": group_name,
+                                "class": class_name,
+                                "api": api,
+                                "precision": precision,
                                 "make_cmd": "update",
-                                "flags": flags
+                                "fullname": routine_fullname,
+                                "test_macros": test_macros
                             }
 
         if scheduled_routines:
             print("Some routines were not found in the schema ({}) {}"
                   .format(RECIPE_SCHEMA, scheduled_routines))
 
-    def run_all_recipes(self):
+    def run_all(self):
         # tune the recipe and run
 
-        for la in self.specs["las"]:
-            print("Testing {la}".format(la=la))
-            self.recipe["make_flags"]["LA"]=la
+        for la in self.specs["LA"]:
+            self.recipe["blasfeo_flags"]["LA"]=la
 
             if la=="REFERENCE":
                 self.run_recipe()
@@ -127,63 +241,105 @@ class CookBook:
                 self.run_recipe()
                 break
 
-            for target in self.specs["targets"]:
-                print("Testing {target}".format(target=target))
 
-                self.recipe["make_flags"]["TARGET"]=target
-                self.run_recipe()
+            for target in self.specs["TARGET"]:
+                self.recipe["blasfeo_flags"]["TARGET"]=target
+
+                for max_stack in self.specs["K_MAX_STACK"]:
+                    self.recipe["blasfeo_flags"]["K_MAX_STACK"]=max_stack
+                    print("Testing {la}:{target} kswitch={max_stack}".format(target=target, la=la, max_stack=max_stack))
+
+                    self.run_recipe()
+
+    def is_lib_updated(self):
+
+        target = self.recipe["blasfeo_flags"]["TARGET"]
+        la = self.recipe["blasfeo_flags"]["LA"]
+
+        if self.lib_static_dst.is_file() and self.libref_static_dst.is_file():
+            return 1
+
+        return 0
 
     def run_recipe(self):
         # preparation step
-        make_flags = self.recipe["make_flags"]
+        test_macros = self.recipe["test_macros"]
+        blasfeo_flags = self.recipe["blasfeo_flags"]
         env_flags = self.recipe["env_flags"]
 
-        if not self.VERBOSE: make_flags.update({"-s":None})
+        # always compile blas api
+        blasfeo_flags.update({"BLAS_API":1})
+        blasfeo_flags.update({"BLASFEO_PATH":str(BLASFEO_PATH)})
 
-        _build_libblasfeo = make_flags.get("BUILD_LIBS")
-        _deploy_libblasfeo = make_flags.get("DEPLOY_LIBS")
+        blasfeo_flags_str = "_".join(
+            ["{k}={v}".format(k=k, v=v) if v is not None else '' for k, v in blasfeo_flags.items()])
 
+        m = sha1(blasfeo_flags_str.encode("utf8"))
+        binary_dir = m.hexdigest()
+        binary_path = Path(BLASFEO_TEST_PATH, BUILDS_DIR, binary_dir)
+        # create directory
+        binary_path.mkdir(parents=True, exist_ok=True)
+        # update binary_dir flag
+        blasfeo_flags.update({"ABS_BINARY_PATH":str(binary_path)})
 
-        if self.cli_flags.rebuild:
-            _build_libblasfeo = 1
-            _deploy_libblasfeo = 1
+        lib_static_src = Path(BLASFEO_PATH, "lib", LIB_BLASFEO_STATIC)
+        libref_static_src = Path(BLASFEO_PATH, "lib", LIB_BLASFEO_REF_STATIC)
 
-        if _build_libblasfeo:
-            # compile also BLAS_API by default
-            libblasfeo_flags = dict(make_flags)
-            libblasfeo_flags.update({"BLAS_API":1})
-            make("-C .. ", libblasfeo_flags, env_flags)
-        if _deploy_libblasfeo:
-            make("-C .. deploy_to_tests", make_flags, env_flags)
+        self.lib_static_dst = Path(binary_path, LIB_BLASFEO_STATIC)
+        self.libref_static_dst = Path(binary_path, LIB_BLASFEO_REF_STATIC)
 
-        for routine_name, args in self.recipe['routines'].items():
+        lib_flags_json = Path(binary_path, "flags.json")
+
+        if self.cli_flags.silent or self.recipe["options"].get("silent"):
+            MAKE_FLAGS.update({"-s":None})
+
+        if self.cli_flags.rebuild or self.recipe["options"].get("rebuild") or not self.is_lib_updated():
+            # compile the library
+            make_blasfeo(blasfeo_flags=blasfeo_flags, env_flags=env_flags)
+
+            # write used flags
+            with open(lib_flags_json, "w") as f:
+                json.dump(blasfeo_flags, f, indent=4)
+
+            # copy library
+            self.lib_static_dst.write_bytes(lib_static_src.read_bytes())
+            self.libref_static_dst.write_bytes(libref_static_src.read_bytes())
+
+        for routine_name, args in self.recipe['scheduled_routines'].items():
             # update local flags with global flags
 
-            if args.get("flags"): args["flags"].update(make_flags)
-            else: args["flags"] = make_flags
+            if args.get("test_macros"):
+                args["test_macros"].update(test_macros)
+            else:
+                args["test_macros"] = test_macros
 
-            if args.get("env_flags"): args["env_flags"].update(env_flags)
-            else: args["env_flags"] = env_flags
+            if args.get("env_flags"):
+                args["env_flags"].update(env_flags)
+            else:
+                args["env_flags"] = env_flags
 
-            status =  self.test_routine(routine_name, args)
+            if args.get("blasfeo_flags"):
+                args["blasfeo_flags"].update(blasfeo_flags)
+            else:
+                args["blasfeo_flags"] = blasfeo_flags
 
-    def test_routine(self, routine_name, args):
+            error =  self.test_routine(routine_name, args)
 
-        make_flags = args["flags"]
-        env_flags = args["env_flags"]
+            if error and not self.cli_flags.run_all: break
 
-        print("\nTesting {}:{}\n".format(make_flags['TARGET'], routine_name))
+    def test_routine(self, routine_fullname, kargs):
 
-        status = make(args["make_cmd"], make_flags, env_flags)
+        error = make_templated(**kargs)
 
-        if not status:
-            print("Error with {}:{} ({}/{})".format(make_flags['TARGET'], routine_name, self.DONE, self.TOTAL))
-            return status
+        if not error:
+            self._success_n += 1
+        else:
+            self._errors_n += 1
 
-        self.DONE += 1
-        print("\nTested {}:{} ({}/{})".format(make_flags['TARGET'], routine_name, self.DONE, self.TOTAL))
+        print("({done}:Succeded, {errors}:Errors) / ({total}:Total)"
+            .format(done=self._success_n, errors=self._errors_n, total=self._total_n))
 
-        return status
+        return error
 
 
 
@@ -195,4 +351,4 @@ if __name__ == "__main__":
     # test set to be run in the given excution of the script
     cookbook = CookBook(cli_flags)
     #  print(json.dumps(cookbook.recipe, indent=4))
-    cookbook.run_all_recipes()
+    cookbook.run_all()

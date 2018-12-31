@@ -4,7 +4,6 @@
 *.out
 include/blasfeo_target.h
 octave-workspace
-build/
 *.local
 *_local.json
 *.aux
@@ -13,6 +12,10 @@ build/
 figures/
 libblasfeo.a
 cpu_freq.h
+
+# test
+tests/build
+tests/reports
 
 # CMake
 build*

@@ -22,14 +22,12 @@ void call_routines(struct RoutineArgs *args){
 
 void print_routine(struct RoutineArgs *args){
 	// unpack args
-
-	printf("%s\n", string(ROUTINE));
-	int maxn = (args->m > args->n)? args->m : args->n;
+	//
+	printf("Called: %s with: ", string(ROUTINE));
 	printf(
-		"Solving X: %f*A[%d:%d,%d:%d]*X[%d:%d,%d:%d] = %f*B[%d:%d,%d:%d]\n",
-		args->alpha, args->ai, maxn, args->aj,  maxn,
-		args->di, args->m, args->dj, args->n,
-		args->beta, args->bi, args->m, args->bj, args->n
+		"%f*A[%d,%d|%d,%d]*X[%d,%d] = B[%d,%d]\n\n",
+		args->alpha, args->m, args->n, args->m, args->n,
+		args->m, args->n,args->m, args->n
 	);
 
 }
@@ -52,12 +50,13 @@ void print_routine_matrices(struct RoutineArgs *args)
 
 void set_test_args(struct TestArgs *targs)
 {
-	targs->ais = 1;
-	targs->bis = 1;
-	targs->dis = 1;
-	targs->xjs = 9;
+	targs->nis = 20;
+	targs->njs = 20;
+	targs->nks = 20;
 
-	targs->nis = 9;
-	targs->njs = 9;
-	targs->nks = 9;
+	targs->ni0 = 10;
+	targs->nj0 = 10;
+	targs->nk0 = 10;
+
+	targs->alphas = 1;
 }
