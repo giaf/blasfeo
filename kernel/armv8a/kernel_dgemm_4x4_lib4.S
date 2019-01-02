@@ -2681,6 +2681,120 @@ NAME:
 
 
 
+// subroutine
+//
+// input arguments:
+// x8   <- D
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_STORE_U_4X4_LIB4
+#else
+	.align 4
+	FUN_START(inner_store_u_4x4_lib4)
+#endif
+
+	str		d0, [x8, #0]
+	str		q2, [x8, #32]
+	str		q4, [x8, #64]
+	str		d5, [x8, #80]
+	stp		q6, q7, [x8, #96]
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_store_u_4x4_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// x8   <- D
+// x9  <- km
+// x10  <- kn
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_U_4X4_VS_LIB4
+#else
+	.align 4
+	FUN_START(inner_store_u_4x4_vs_lib4)
+#endif
+
+	cmp		w9, #4
+	bge		1f
+
+	ldp		q24, q25, [x8, #(0*8+0*32)]
+	ldp		q26, q27, [x8, #(0*8+1*32)]
+	ldp		q28, q29, [x8, #(0*8+2*32)]
+	ldp		q30, q31, [x8, #(0*8+3*32)]
+
+	// 4th row
+	ins		v1.d[1], v25.d[1]
+	ins		v3.d[1], v27.d[1]
+	ins		v5.d[1], v29.d[1]
+	ins		v7.d[1], v31.d[1]
+	cmp		w9, #3
+	bge		1f
+	// 3th row
+	ins		v1.d[0], v25.d[0]
+	ins		v3.d[0], v27.d[0]
+	ins		v5.d[0], v29.d[0]
+	ins		v7.d[0], v31.d[0]
+	cmp		w9, #2
+	bge		1f
+	// 2nd row
+	ins		v0.d[1], v24.d[1]
+	ins		v2.d[1], v26.d[1]
+	ins		v4.d[1], v28.d[1]
+	ins		v6.d[1], v30.d[1]
+	cmp		w9, #1
+	bge		1f
+	// 1st row
+	ins		v0.d[0], v24.d[0]
+	ins		v2.d[0], v26.d[0]
+	ins		v4.d[0], v28.d[0]
+	ins		v6.d[0], v30.d[0]
+
+1:
+
+	// 1st col
+	str		d0, [x8, #0]
+	cmp		w10, #2
+	blt		0f
+	// 2nd col
+	str		q2, [x8, #32]
+	cmp		w10, #3
+	blt		0f
+	// 3rd col
+	str		q4, [x8, #64]
+	str		d5, [x8, #80]
+	beq		0f
+	// 4th col
+	stp		q6, q7, [x8, #96]
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_store_u_4x4_vs_lib4)
+#endif
+
+
+
+
+
 //                               w0        x1             x2         x3         x4            x5         x6
 // void kernel_dgemm_nt_4x4_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D)
 
@@ -2907,9 +3021,9 @@ NAME:
 	mov		w8, w0 // kmax
 	mov		x9, x2 // A
 	mov		x10, x4 // B
-	mov		w11, w5 // B
+	mov		w11, w5 // sdb
 	lsl		w11, w11, #5 // 32*sdb
-	mov		w12, w3 // B
+	mov		w12, w3 // offsetB
 
 // TODO offsetB
 
@@ -3092,6 +3206,288 @@ NAME:
 	ret
 
 	FUN_END(kernel_dsyrk_nt_l_4x4_vs_lib4)
+
+
+
+
+
+//                               w0        x1             x2         x3         x4            x5         x6
+// void kernel_dsyrk_nt_u_4x4_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D)
+
+	.align	4
+	GLOB_FUN_START(kernel_dsyrk_nt_u_4x4_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		x10, x3 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nt_4x4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x4 // beta
+	mov		x10, x5 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	bl inner_scale_ab_4x4_lib4
+#endif
+
+
+
+	// store n
+	mov		x8, x6
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_U_4X4_LIB4
+#else
+	bl inner_store_u_4x4_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dsyrk_nt_u_4x4_lib4)
+
+
+
+
+
+//                                  w0        x1             x2         x3         x4            x5         x6         w7      sp+0
+// void kernel_dsyrk_nt_u_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D, int m1, int n1)
+
+	.align	4
+	GLOB_FUN_START(kernel_dsyrk_nt_u_4x4_vs_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		x10, x3 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nt_4x4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x4 // beta
+	mov		x10, x5 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	bl inner_scale_ab_4x4_lib4
+#endif
+
+
+
+	// store n
+	mov		x8, x6 // D
+	mov		w9, w7 // m1
+	ldr		w10, [sp, #(STACKSIZE + 0)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_U_4X4_VS_LIB4
+#else
+	bl inner_store_u_4x4_vs_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dsyrk_nt_u_4x4_vs_lib4)
+
+
+
+
+
+//                                 w0        x1             x2         x3           x4         x5       x6            x7         sp+0
+// void kernel_dsyrk_nn_u_4x4_lib4(int kmax, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D)
+
+	.align	4
+	GLOB_FUN_START(kernel_dsyrk_nn_u_4x4_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		x10, x4 // B
+	mov		w11, w5 // sdb
+	lsl		w11, w11, #5 // 32*sdb
+	mov		w12, w3 // offsetB
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+#else
+	bl	inner_edge_gemm_add_nn_4x4_lib4
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nn_4x4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x6 // beta
+	mov		x10, x7 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	bl inner_scale_ab_4x4_lib4
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 0)] //D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_U_4X4_LIB4
+#else
+	bl inner_store_u_4x4_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dsyrk_nn_u_4x4_lib4)
+
+
+
+
+
+//                                    w0        x1             x2         x3           x4         x5       x6            x7         sp+0       sp+8    sp+16
+// void kernel_dsyrk_nn_u_4x4_vs_lib4(int kmax, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1)
+
+	.align	4
+	GLOB_FUN_START(kernel_dsyrk_nn_u_4x4_vs_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		x10, x4 // B
+	mov		w11, w5 // sdb
+	lsl		w11, w11, #5 // 32*sdb
+	mov		w12, w3 // offsetB
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+#else
+	bl	inner_edge_gemm_add_nn_4x4_lib4
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nn_4x4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x6 // beta
+	mov		x10, x7 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	bl inner_scale_ab_4x4_lib4
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 0)] // D
+	ldr		w9, [sp, #(STACKSIZE + 8)] // m1
+	ldr		w10, [sp, #(STACKSIZE + 16)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_U_4X4_VS_LIB4
+#else
+	bl inner_store_u_4x4_vs_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dsyrk_nn_u_4x4_vs_lib4)
 
 
 
