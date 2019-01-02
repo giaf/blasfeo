@@ -2077,10 +2077,10 @@ NAME:
 	ldr			d16, [x8, #56] // E[3+4*1]
 	fmls		v6.2d, v2.2d, v16.2d[0]
 	fmls		v7.2d, v3.2d, v16.2d[0]
-	ldr			d16, [x8, #88] // E[3+4*1]
+	ldr			d16, [x8, #88] // E[3+4*2]
 	fmls		v6.2d, v4.2d, v16.2d[0]
 	fmls		v7.2d, v5.2d, v16.2d[0]
-	ldr			d16, [x9, #24] // E_inv[2]
+	ldr			d16, [x9, #24] // E_inv[3]
 	fmul		v6.2d, v6.2d, v16.2d[0]
 	fmul		v7.2d, v7.2d, v16.2d[0]
 
