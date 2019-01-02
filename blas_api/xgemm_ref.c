@@ -50,7 +50,7 @@ void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, 
 			{
 			GEMM_NN(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
 			}
-		else if(*tb=='t' | *tb=='T' | *tb=='c'  *tb=='C')
+		else if(*tb=='t' | *tb=='T' | *tb=='c' | *tb=='C')
 			{
 			GEMM_NT(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
 			}

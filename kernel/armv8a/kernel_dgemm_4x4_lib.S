@@ -2484,6 +2484,215 @@
 // subroutine
 //
 // input arguments:
+// x8  <- C
+// x9  <- ldc*sizeof(double)
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_SCALE_M11_4X4_LIB
+#else
+	.align	4
+	FUN_START(inner_scale_m11_4x4_lib)
+#endif
+
+	ldp		q24, q25, [x8, #0]
+	add		x8, x8, x9
+	ldp		q26, q27, [x8, #0]
+	add		x8, x8, x9
+	fsub	v0.2d, v24.2d, v0.2d
+	fsub	v1.2d, v25.2d, v1.2d
+	fsub	v2.2d, v26.2d, v2.2d
+	fsub	v3.2d, v27.2d, v3.2d
+
+	ldp		q24, q25, [x8, #0]
+	add		x8, x8, x9
+	ldp		q26, q27, [x8, #0]
+	add		x8, x8, x9
+	fsub	v4.2d, v24.2d, v4.2d
+	fsub	v5.2d, v25.2d, v5.2d
+	fsub	v6.2d, v26.2d, v6.2d
+	fsub	v7.2d, v27.2d, v7.2d
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_scale_m11_4x4_lib)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// x8  <- C
+// x9  <- ldc*sizeof(double)
+// x10  <- km
+// x11  <- kn
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_SCALE_M11_4X4_VS_LIB
+#else
+	.align	4
+	FUN_START(inner_scale_m11_4x4_vs_lib)
+#endif
+
+	cmp		w10, #4
+	blt		1f
+
+	ldp		q24, q25, [x8, #0]
+	add		x8, x8, x9
+	fsub	v0.2d, v24.2d, v0.2d
+	fsub	v1.2d, v25.2d, v1.2d
+
+	cmp		w11, #1
+	ble		0f
+
+	ldp		q24, q25, [x8, #0]
+	add		x8, x8, x9
+	fsub	v2.2d, v24.2d, v2.2d
+	fsub	v3.2d, v25.2d, v3.2d
+
+	cmp		w11, #2
+	ble		0f
+
+	ldp		q24, q25, [x8, #0]
+	add		x8, x8, x9
+	fsub	v4.2d, v24.2d, v4.2d
+	fsub	v5.2d, v25.2d, v5.2d
+
+	cmp		w11, #3
+	ble		0f
+
+	ldp		q24, q25, [x8, #0]
+	add		x8, x8, x9
+	fsub	v6.2d, v24.2d, v6.2d
+	fsub	v7.2d, v25.2d, v7.2d
+
+	b 0f
+
+1:
+	cmp		w10, #3
+	blt		2f
+
+	ldr		q24, [x8, #0]
+	ldr		d25, [x8, #16]
+	add		x8, x8, x9
+	fsub	v0.2d, v24.2d, v0.2d
+	fsub	v1.2d, v25.2d, v1.2d
+
+	cmp		w11, #1
+	ble		0f
+
+	ldr		q24, [x8, #0]
+	ldr		d25, [x8, #16]
+	add		x8, x8, x9
+	fsub	v2.2d, v24.2d, v2.2d
+	fsub	v3.2d, v25.2d, v3.2d
+
+	cmp		w11, #2
+	ble		0f
+
+	ldr		q24, [x8, #0]
+	ldr		d25, [x8, #16]
+	add		x8, x8, x9
+	fsub	v4.2d, v24.2d, v4.2d
+	fsub	v5.2d, v25.2d, v5.2d
+
+	cmp		w11, #3
+	ble		0f
+
+	ldr		q24, [x8, #0]
+	ldr		d25, [x8, #16]
+	add		x8, x8, x9
+	fsub	v6.2d, v24.2d, v6.2d
+	fsub	v7.2d, v25.2d, v7.2d
+
+	b 0f
+
+2:
+	cmp		w10, #2
+	blt		3f
+
+	ldr		q24, [x8, #0]
+	add		x8, x8, x9
+	fsub	v0.2d, v24.2d, v0.2d
+
+	cmp		w11, #1
+	ble		0f
+
+	ldr		q24, [x8, #0]
+	add		x8, x8, x9
+	fsub	v2.2d, v24.2d, v2.2d
+
+	cmp		w11, #2
+	ble		0f
+
+	ldr		q24, [x8, #0]
+	add		x8, x8, x9
+	fsub	v4.2d, v24.2d, v4.2d
+
+	cmp		w11, #3
+	ble		0f
+
+	ldr		q24, [x8, #0]
+	add		x8, x8, x9
+	fsub	v6.2d, v24.2d, v6.2d
+
+	b 0f
+
+3:
+	cmp		w10, #1
+	blt		0f
+
+	ldr		d24, [x8, #0]
+	add		x8, x8, x9
+	fsub	v0.2d, v24.2d, v0.2d
+
+	cmp		w11, #1
+	ble		0f
+
+	ldr		d24, [x8, #0]
+	add		x8, x8, x9
+	fsub	v2.2d, v24.2d, v2.2d
+
+	cmp		w11, #2
+	ble		0f
+
+	ldr		d24, [x8, #0]
+	add		x8, x8, x9
+	fsub	v4.2d, v24.2d, v4.2d
+
+	cmp		w11, #3
+	ble		0f
+
+	ldr		d24, [x8, #0]
+	add		x8, x8, x9
+	fsub	v6.2d, v24.2d, v6.2d
+
+0:
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_scale_m11_4x4_vs_lib)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
 // x8   <- D
 // x9   <- ldd*sizeof(double)
 //
@@ -3682,6 +3891,168 @@
 	ret
 
 	FUN_END(kernel_dsyrk_nt_u_4x4_vs_lib44c)
+
+
+
+
+
+//                                    w0        x1         x2         x3         w4       x5         w6       x7
+// void kernel_dpotrf_nt_l_4x4_lib44c(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D)
+
+	.align	4
+	GLOB_FUN_START(kernel_dpotrf_nt_l_4x4_lib44c)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		x10, x2 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nt_4x4_lib4
+#endif
+
+
+
+	// call inner blend for alpha=1.0 and beta=1.0
+	mov		x8, x3 // C
+	mov		w9, w4 // ldc
+	lsl		w9, w9, #3 // 8*ldc
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M11_4X4_LIB
+#else
+	bl inner_scale_m11_4x4_lib
+#endif
+
+
+
+	// factorization
+	mov		x8, x7 // inv_diag_E
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_POTRF_4X4_LIB4
+#else
+	bl inner_edge_potrf_4x4_lib4
+#endif
+
+
+
+	// store l
+	mov		x8, x5 // D
+	mov		w9, w6 // ldd
+	lsl		w9, w9, #3 // 8*ldd
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X4_LIB
+#else
+	bl inner_store_l_4x4_lib
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dpotrf_nt_l_4x4_lib44c)
+
+
+
+
+
+
+//                                       w0        x1         x2         x3         w4       x5         w6       x7                  sp+0    sp+1
+// void kernel_dpotrf_nt_l_4x4_vs_lib44c(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D, int m1, int n1)
+
+	.align	4
+	GLOB_FUN_START(kernel_dpotrf_nt_l_4x4_vs_lib44c)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		x10, x2 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nt_4x4_lib4
+#endif
+
+
+
+	// call inner blend for alpha=1.0 and beta=1.0
+	mov		x8, x3 // C
+	mov		w9, w4 // ldc
+	lsl		w9, w9, #3 // 8*ldc
+	ldr		w10, [sp, #(STACKSIZE + 0)] // m1
+	ldr		w11, [sp, #(STACKSIZE + 8)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M11_4X4_VS_LIB
+#else
+	bl inner_scale_m11_4x4_vs_lib
+#endif
+
+
+
+	// factorization
+	mov		x8, x7 // inv_diag_E
+	ldr		w9, [sp, #(STACKSIZE + 8)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_POTRF_4X4_VS_LIB4
+#else
+	bl inner_edge_potrf_4x4_vs_lib4
+#endif
+
+
+
+	// store l
+	mov		x8, x5 // D
+	mov		w9, w6 // ldd
+	lsl		w9, w9, #3 // 8*ldd
+	ldr		w10, [sp, #(STACKSIZE + 0)] // m1
+	ldr		w11, [sp, #(STACKSIZE + 8)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X4_VS_LIB
+#else
+	bl inner_store_l_4x4_vs_lib
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dpotrf_nt_l_4x4_vs_lib44c)
 
 
 
