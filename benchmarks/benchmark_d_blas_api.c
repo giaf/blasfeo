@@ -154,7 +154,7 @@ openblas_set_num_threads(1);
 //	for(ll=0; ll<63; ll++) // up to 256
 	for(ll=0; ll<75; ll++) // up to 300
 //	for(ll=0; ll<115; ll++) // up to 460
-	for(ll=0; ll<120; ll++) // up to 700
+//	for(ll=0; ll<120; ll++) // up to 700
 
 		{
 
@@ -304,7 +304,7 @@ openblas_set_num_threads(1);
 //				blasfeo_dgemm(&c_t, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blasfeo_dgemm(&c_t, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 
-//				blasfeo_dsyrk(&c_l, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
+				blasfeo_dsyrk(&c_l, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
 //				blasfeo_dsyrk(&c_l, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
 //				blasfeo_dsyrk(&c_u, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
 //				blasfeo_dsyrk(&c_u, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
@@ -331,7 +331,7 @@ openblas_set_num_threads(1);
 //				blasfeo_dpotrf(&c_l, &n, B, &n, &info);
 //				blasfeo_dpotrf(&c_u, &n, B, &n, &info);
 
-				blasfeo_dgetrf(&n, &n, B, &n, ipiv, &info);
+//				blasfeo_dgetrf(&n, &n, B, &n, ipiv, &info);
 
 
 
@@ -427,9 +427,9 @@ openblas_set_num_threads(1);
 		double Gflops_max = flops_max * GHz_max;
 
 //		double flop_operation = 2.0*n*n*n; // gemm
-//		double flop_operation = 1.0*n*n*n; // syrk trsm
+		double flop_operation = 1.0*n*n*n; // syrk trsm
 //		double flop_operation = 1.0/3.0*n*n*n; // potrf
-		double flop_operation = 2.0/3.0*n*n*n; // getrf
+//		double flop_operation = 2.0/3.0*n*n*n; // getrf
 
 		double Gflops_blas      = 1e-9*flop_operation/time_blas;
 		double Gflops_blas_api  = 1e-9*flop_operation/time_blas_api;

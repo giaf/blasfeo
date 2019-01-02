@@ -2767,21 +2767,12 @@
 	FUN_START(inner_store_u_4x4_lib)
 #endif
 
-	mov		x12, x8
-
-	ldr		q16, [x12, #0]
-	add		x12, x12, x9
-	add		x12, x12, x9
-	ldr		q17, [x12, #16]
-
-	ins		v0.d[1], v16.d[1]
-	ins		v5.d[1], v17.d[1]
-
-	str		q0, [x8, #0]
+	str		d0, [x8, #0]
 	add		x8, x8, x9
 	str		q2, [x8, #0]
 	add		x8, x8, x9
-	stp		q4, q5, [x8, #0]
+	str		q4, [x8, #0]
+	str		d5, [x8, #16]
 	add		x8, x8, x9
 	stp		q6, q7, [x8, #0]
 
@@ -2855,18 +2846,8 @@
 	ins		v6.d[0], v30.d[0]
 
 1:
-	mov		x12, x8
-
-	ldr		q16, [x12, #0]
-	add		x12, x12, x9
-	add		x12, x12, x9
-	ldr		q17, [x12, #16]
-
-	ins		v0.d[1], v16.d[1]
-	ins		v5.d[1], v17.d[1]
-
 	// 1st col
-	str		q0, [x8, #0]
+	str		d0, [x8, #0]
 	add		x8, x8, x9
 	cmp		w11, #2
 	blt		0f
@@ -2876,7 +2857,8 @@
 	cmp		w11, #3
 	blt		0f
 	// 3rd col
-	stp		q4, q5, [x8, #0]
+	str		q4, [x8, #0]
+	str		d5, [x8, #16]
 	add		x8, x8, x9
 	beq		0f
 	// 4th col
