@@ -2099,6 +2099,128 @@ NAME:
 
 // subroutine
 //
+// triangular substitution:
+// side = right
+// uplo = lower
+// tran = transposed
+// requires explicit inverse of diagonal
+//
+// input arguments:
+// x8   <- E
+//
+// output arguments:
+// x8   <- E
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRSM_RLT_ONE_4X4_LIB4
+#else
+	.align 4
+	FUN_START(inner_edge_trsm_rlt_one_4x4_lib4)
+#endif
+	
+	ldr			d16, [x8, #8] // E[1+4*0]
+	fmls		v2.2d, v0.2d, v16.2d[0]
+	fmls		v3.2d, v1.2d, v16.2d[0]
+	ldr			d16, [x8, #16] // E[2+4*0]
+	fmls		v4.2d, v0.2d, v16.2d[0]
+	fmls		v5.2d, v1.2d, v16.2d[0]
+	ldr			d16, [x8, #24] // E[3+4*0]
+	fmls		v6.2d, v0.2d, v16.2d[0]
+	fmls		v7.2d, v1.2d, v16.2d[0]
+
+	ldr			d16, [x8, #48] // E[2+4*1]
+	fmls		v4.2d, v2.2d, v16.2d[0]
+	fmls		v5.2d, v3.2d, v16.2d[0]
+	ldr			d16, [x8, #56] // E[3+4*1]
+	fmls		v6.2d, v2.2d, v16.2d[0]
+	fmls		v7.2d, v3.2d, v16.2d[0]
+
+	ldr			d16, [x8, #88] // E[3+4*1]
+	fmls		v6.2d, v4.2d, v16.2d[0]
+	fmls		v7.2d, v5.2d, v16.2d[0]
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_trsm_rlt_one_4x4_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// triangular substitution:
+// side = right
+// uplo = lower
+// tran = transposed
+// requires explicit inverse of diagonal
+//
+// input arguments:
+// x8   <- E
+// w9   <- n1
+//
+// output arguments:
+// x8   <- E
+// w9   <- n1
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRSM_RLT_ONE_4X4_VS_LIB4
+#else
+	.align 4
+	FUN_START(inner_edge_trsm_rlt_one_4x4_vs_lib4)
+#endif
+	
+	// first column
+	cmp		w9, #2
+	blt		0f // return
+
+	// second column
+	ldr			d16, [x8, #8] // E[1+4*0]
+	fmls		v2.2d, v0.2d, v16.2d[0]
+	fmls		v3.2d, v1.2d, v16.2d[0]
+	cmp		w9, #3
+	blt		0f // return
+
+	// third column
+	ldr			d16, [x8, #16] // E[2+4*0]
+	fmls		v4.2d, v0.2d, v16.2d[0]
+	fmls		v5.2d, v1.2d, v16.2d[0]
+	ldr			d16, [x8, #48] // E[2+4*1]
+	fmls		v4.2d, v2.2d, v16.2d[0]
+	fmls		v5.2d, v3.2d, v16.2d[0]
+	cmp		w9, #4
+	blt		0f // return
+
+	// forth column
+	ldr			d16, [x8, #24] // E[3+4*0]
+	fmls		v6.2d, v0.2d, v16.2d[0]
+	fmls		v7.2d, v1.2d, v16.2d[0]
+	ldr			d16, [x8, #56] // E[3+4*1]
+	fmls		v6.2d, v2.2d, v16.2d[0]
+	fmls		v7.2d, v3.2d, v16.2d[0]
+	ldr			d16, [x8, #88] // E[3+4*2]
+	fmls		v6.2d, v4.2d, v16.2d[0]
+	fmls		v7.2d, v5.2d, v16.2d[0]
+
+0:
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_trsm_rlt_one_4x4_vs_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
 // cholesky factorization 
 //
 // input arguments:
@@ -3643,6 +3765,159 @@ NAME:
 	ret
 
 	FUN_END(kernel_dtrsm_nt_rl_inv_4x4_vs_lib4)
+
+
+
+
+
+//                                      w0        x1         x2         x3            x4         x5         x6
+// void kernel_dtrsm_nt_rl_one_4x4_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E);
+
+	.align	4
+	GLOB_FUN_START(kernel_dtrsm_nt_rl_one_4x4_lib4)
+
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		x10, x2 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nt_4x4_lib4
+#endif
+
+
+
+	// call inner blend for alpha=1.0 and beta
+	mov		x8, x3 // beta
+	mov		x9, x4 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_LIB4
+#else
+	bl inner_scale_m1b_4x4_lib4
+#endif
+
+
+
+	// solution
+	mov		x8, x6 // E
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRSM_RLT_ONE_4X4_LIB4
+#else
+	bl inner_edge_trsm_rlt_one_4x4_lib4
+#endif
+
+
+
+	// store
+	mov		x8, x5 // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB4
+#else
+	bl inner_store_4x4_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dtrsm_nt_rl_one_4x4_lib4)
+
+
+
+
+
+//                                         w0        x1         x2         x3            x4         x5         x6         w7      sp+0
+// void kernel_dtrsm_nt_rl_one_4x4_vs_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E, int m1, int n1);
+
+	.align	4
+	GLOB_FUN_START(kernel_dtrsm_nt_rl_one_4x4_vs_lib4)
+
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		x10, x2 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nt_4x4_lib4
+#endif
+
+
+
+	// call inner blend for alpha=1.0 and beta
+	mov		x8, x3 // beta
+	mov		x9, x4 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_LIB4
+#else
+	bl inner_scale_m1b_4x4_lib4
+#endif
+
+
+
+	// solution
+	mov		x8, x6 // E
+	ldr		w9, [sp, #(STACKSIZE + 0)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRSM_RLT_ONE_4X4_VS_LIB4
+#else
+	bl inner_edge_trsm_rlt_one_4x4_vs_lib4
+#endif
+
+
+
+	// store
+	mov		x8, x5 // D
+	mov		w9, w7 // m1
+	ldr		w10, [sp, #(STACKSIZE + 0)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB4
+#else
+	bl inner_store_4x4_vs_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dtrsm_nt_rl_one_4x4_vs_lib4)
 
 
 
