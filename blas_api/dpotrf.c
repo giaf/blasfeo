@@ -72,7 +72,7 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 #if defined(TARGET_X64_INTEL_HASWELL)
 	double pU[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 	double pD[4*16] __attribute__ ((aligned (64)));
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	double pU[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 	double pD[2*16] __attribute__ ((aligned (64)));
 #elif defined(TARGET_GENERIC)
@@ -295,7 +295,7 @@ l_1:
 			goto l_1_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	for(; ii<m-7; ii+=8)
 		{
 		jj = 0;
@@ -351,7 +351,7 @@ l_1_left_12:
 #endif
 
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 l_1_left_8:
 	for(jj=0; jj<ii; jj+=4)
 		{

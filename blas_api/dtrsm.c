@@ -3103,7 +3103,7 @@ rltu_1:
 			goto rltu_1_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	for(ii=0; ii<m-7; ii+=8)
 		{
 		for(jj=0; jj<n-3; jj+=4)
@@ -3159,7 +3159,7 @@ rltu_1_left_12:
 goto rltu_1_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 rltu_1_left_8:
 	for(jj=0; jj<n; jj+=4)
 		{

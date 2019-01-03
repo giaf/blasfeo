@@ -3914,7 +3914,7 @@
 #else
 	bl	inner_kernel_gemm_add_nn_4x1_lib4c
 #endif
-	
+
 	b		103f
 
 100:
