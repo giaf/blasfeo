@@ -472,12 +472,7 @@ nt_0:
 			}
 		if(jj<n)
 			{
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 			kernel_dgemm_nt_8x4_vs_lib4cc(k, alpha, pU, sdu, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
-#else
-			kernel_dgemm_nt_4x4_vs_lib4cc(k, alpha, pU, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
-			kernel_dgemm_nt_4x4_vs_lib4cc(k, alpha, pU+4*sdu, B+jj, ldb, beta, C+(ii+4)+jj*ldc, ldc, C+(ii+4)+jj*ldc, ldc, m-(ii+4), n-jj);
-#endif
 			}
 		}
 	if(ii<m)
@@ -526,12 +521,7 @@ nt_0_left_8:
 	kernel_dpack_nn_8_vs_lib4(k, A+ii+0, lda, pU, sdu, m-ii);
 	for(jj=0; jj<n; jj+=4)
 		{
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		kernel_dgemm_nt_8x4_vs_lib4cc(k, alpha, pU, sdu, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
-#else
-		kernel_dgemm_nt_4x4_vs_lib4cc(k, alpha, pU, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
-		kernel_dgemm_nt_4x4_vs_lib4cc(k, alpha, pU+4*sdu, B+jj, ldb, beta, C+(ii+4)+jj*ldc, ldc, C+(ii+4)+jj*ldc, ldc, m-(ii+4), n-jj);
-#endif
 		}
 	goto nt_0_return;
 #endif
@@ -971,12 +961,7 @@ tt_0:
 			}
 		if(jj<n)
 			{
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 			kernel_dgemm_nt_8x4_vs_lib4cc(k, alpha, pU, sdu, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
-#else
-			kernel_dgemm_nt_4x4_vs_lib4cc(k, alpha, pU, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
-			kernel_dgemm_nt_4x4_vs_lib4cc(k, alpha, pU+4*sdu, B+jj, ldb, beta, C+(ii+4)+jj*ldc, ldc, C+(ii+4)+jj*ldc, ldc, m-(ii+4), n-jj);
-#endif
 			}
 		}
 	if(ii<m)
@@ -1028,12 +1013,7 @@ tt_0_left_8:
 	kernel_dpack_tn_4_vs_lib4(k, A+(ii+4)*lda, lda, pU+4*sdu, m-ii-4);
 	for(jj=0; jj<n; jj+=4)
 		{
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		kernel_dgemm_nt_8x4_vs_lib4cc(k, alpha, pU, sdu, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
-#else
-		kernel_dgemm_nt_4x4_vs_lib4cc(k, alpha, pU, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
-		kernel_dgemm_nt_4x4_vs_lib4cc(k, alpha, pU+4*sdu, B+jj, ldb, beta, C+(ii+4)+jj*ldc, ldc, C+(ii+4)+jj*ldc, ldc, m-(ii+4), n-jj);
-#endif
 		}
 	goto tt_0_return;
 #endif
