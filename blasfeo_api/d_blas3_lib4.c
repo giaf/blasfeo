@@ -6082,15 +6082,18 @@ void blasfeo_dsyrk_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 	// main loop aligned
 loop_00:
 	i = 0;
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; i<m-11; i+=12)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+i*ps, sda, pU);
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(i+4)*ps, sda, pU+4*sdu);
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+(i+8)*ps, sda, pU+8*sdu);
+#if defined(TARGET_X64_INTEL_HASWELL)
 		kernel_dsyrk_nn_u_8x8_lib4(k, &alpha, pU, sdu, offsetB, pB+i*ps, sdb, &beta, pC+i*sdc+i*ps, sdc, pD+i*sdd+i*ps, sdd);
-//		kernel_dsyrk_nn_u_4x4_lib4(k, &alpha, pU, offsetB, pB+i*ps, sdb, &beta, pC+i*sdc+i*ps, pD+i*sdd+i*ps);
-//		kernel_dsyrk_nn_u_8x4_lib4(k, &alpha, pU, sdu, offsetB, pB+(i+4)*ps, sdb, &beta, pC+i*sdc+(i+4)*ps, sdc, pD+i*sdd+(i+4)*ps, sdd);
+#else
+		kernel_dsyrk_nn_u_4x4_lib4(k, &alpha, pU, offsetB, pB+i*ps, sdb, &beta, pC+i*sdc+i*ps, pD+i*sdd+i*ps);
+		kernel_dsyrk_nn_u_8x4_lib4(k, &alpha, pU, sdu, offsetB, pB+(i+4)*ps, sdb, &beta, pC+i*sdc+(i+4)*ps, sdc, pD+i*sdd+(i+4)*ps, sdd);
+#endif
 		kernel_dsyrk_nn_u_12x4_lib4(k, &alpha, pU, sdu, offsetB, pB+(i+8)*ps, sdb, &beta, pC+i*sdc+(i+8)*ps, sdc, pD+i*sdd+(i+8)*ps, sdd);
 		for(j=i+12; j<m-3; j+=4)
 			{
@@ -6116,7 +6119,7 @@ loop_00:
 			goto left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	for(; i<m-7; i+=8)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetA, pA+i*ps, sda, pU);
@@ -6164,14 +6167,17 @@ loop_00:
 #endif
 	goto end;
 
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 left_12:
 	kernel_dpacp_tn_4_lib4(k, offsetA, pA+i*ps, sda, pU);
 	kernel_dpacp_tn_4_lib4(k, offsetA, pA+(i+4)*ps, sda, pU+4*sdu);
 	kernel_dpacp_tn_4_lib4(k, offsetA, pA+(i+8)*ps, sda, pU+8*sdu);
-//	kernel_dsyrk_nn_u_4x4_lib4(k, &alpha, pU, offsetB, pB+i*ps, sdb, &beta, pC+i*sdc+i*ps, pD+i*sdd+i*ps);
-//	kernel_dsyrk_nn_u_8x4_lib4(k, &alpha, pU, sdu, offsetB, pB+(i+4)*ps, sdb, &beta, pC+i*sdc+(i+4)*ps, sdc, pD+i*sdd+(i+4)*ps, sdd);
+#if defined(TARGET_X64_INTEL_HASWELL)
 	kernel_dsyrk_nn_u_8x8_lib4(k, &alpha, pU, sdu, offsetB, pB+i*ps, sdb, &beta, pC+i*sdc+i*ps, sdc, pD+i*sdd+i*ps, sdd);
+#else
+	kernel_dsyrk_nn_u_4x4_lib4(k, &alpha, pU, offsetB, pB+i*ps, sdb, &beta, pC+i*sdc+i*ps, pD+i*sdd+i*ps);
+	kernel_dsyrk_nn_u_8x4_lib4(k, &alpha, pU, sdu, offsetB, pB+(i+4)*ps, sdb, &beta, pC+i*sdc+(i+4)*ps, sdc, pD+i*sdd+(i+4)*ps, sdd);
+#endif
 	kernel_dsyrk_nn_u_12x4_vs_lib4(k, &alpha, pU, sdu, offsetB, pB+(i+8)*ps, sdb, &beta, pC+i*sdc+(i+8)*ps, sdc, pD+i*sdd+(i+8)*ps, sdd, m-i, m-i-8);
 	goto end;
 #endif
