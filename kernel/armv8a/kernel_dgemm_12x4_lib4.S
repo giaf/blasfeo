@@ -1660,6 +1660,231 @@ NAME:
 // subroutine
 //
 // triangular substitution:
+// side = left
+// uplo = lower
+// tran = not-transposed
+// unit diagonal
+//
+// input arguments:
+// x8   <- E
+// x9   <- sde
+//
+// output arguments:
+// x8   <- E
+// x9   <- sde
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRSM_LLN_ONE_12X4_LIB4
+#else
+	.align 4
+	FUN_START(inner_edge_trsm_lln_one_12x4_lib4)
+#endif
+
+	add		x10, x8, x9
+	add		x11, x10, x9
+
+	ldp		q24, q25, [x8, #0] // E0[0+4*0]
+	ldp		q26, q27, [x10, #0] // E1[0+4*0]
+	ldp		q28, q29, [x11, #0] // E2[0+4*0]
+	ins		v24.d[0], xzr
+	fmls	v0.2d, v24.2d, v0.2d[0]
+	fmls	v1.2d, v25.2d, v0.2d[0]
+	fmls	v8.2d, v26.2d, v0.2d[0]
+	fmls	v9.2d, v27.2d, v0.2d[0]
+	fmls	v16.2d, v28.2d, v0.2d[0]
+	fmls	v17.2d, v29.2d, v0.2d[0]
+	fmls	v2.2d, v24.2d, v2.2d[0]
+	fmls	v3.2d, v25.2d, v2.2d[0]
+	fmls	v10.2d, v26.2d, v2.2d[0]
+	fmls	v11.2d, v27.2d, v2.2d[0]
+	fmls	v18.2d, v28.2d, v2.2d[0]
+	fmls	v19.2d, v29.2d, v2.2d[0]
+	fmls	v4.2d, v24.2d, v4.2d[0]
+	fmls	v5.2d, v25.2d, v4.2d[0]
+	fmls	v12.2d, v26.2d, v4.2d[0]
+	fmls	v13.2d, v27.2d, v4.2d[0]
+	fmls	v20.2d, v28.2d, v4.2d[0]
+	fmls	v21.2d, v29.2d, v4.2d[0]
+	fmls	v6.2d, v24.2d, v6.2d[0]
+	fmls	v7.2d, v25.2d, v6.2d[0]
+	fmls	v14.2d, v26.2d, v6.2d[0]
+	fmls	v15.2d, v27.2d, v6.2d[0]
+	fmls	v22.2d, v28.2d, v6.2d[0]
+	fmls	v23.2d, v29.2d, v6.2d[0]
+
+	ldr		q25, [x8, #48] // E[2+4*1]
+	ldp		q26, q27, [x10, #32] // E1[0+4*1]
+	ldp		q28, q29, [x11, #32] // E2[0+4*1]
+	fmls	v1.2d, v25.2d, v0.2d[1]
+	fmls	v8.2d, v26.2d, v0.2d[1]
+	fmls	v9.2d, v27.2d, v0.2d[1]
+	fmls	v16.2d, v28.2d, v0.2d[1]
+	fmls	v17.2d, v29.2d, v0.2d[1]
+	fmls	v3.2d, v25.2d, v2.2d[1]
+	fmls	v10.2d, v26.2d, v2.2d[1]
+	fmls	v11.2d, v27.2d, v2.2d[1]
+	fmls	v18.2d, v28.2d, v2.2d[1]
+	fmls	v19.2d, v29.2d, v2.2d[1]
+	fmls	v5.2d, v25.2d, v4.2d[1]
+	fmls	v12.2d, v26.2d, v4.2d[1]
+	fmls	v13.2d, v27.2d, v4.2d[1]
+	fmls	v20.2d, v28.2d, v4.2d[1]
+	fmls	v21.2d, v29.2d, v4.2d[1]
+	fmls	v7.2d, v25.2d, v6.2d[1]
+	fmls	v14.2d, v26.2d, v6.2d[1]
+	fmls	v15.2d, v27.2d, v6.2d[1]
+	fmls	v22.2d, v28.2d, v6.2d[1]
+	fmls	v23.2d, v29.2d, v6.2d[1]
+
+	ldr		q25, [x8, #80] // E[2+4*2]
+	ldp		q26, q27, [x10, #64] // E1[0+4*2]
+	ldp		q28, q29, [x11, #64] // E2[0+4*2]
+	ins		v25.d[0], xzr
+	fmls	v1.2d, v25.2d, v1.2d[0]
+	fmls	v8.2d, v26.2d, v1.2d[0]
+	fmls	v9.2d, v27.2d, v1.2d[0]
+	fmls	v16.2d, v28.2d, v1.2d[0]
+	fmls	v17.2d, v29.2d, v1.2d[0]
+	fmls	v3.2d, v25.2d, v3.2d[0]
+	fmls	v10.2d, v26.2d, v3.2d[0]
+	fmls	v11.2d, v27.2d, v3.2d[0]
+	fmls	v18.2d, v28.2d, v3.2d[0]
+	fmls	v19.2d, v29.2d, v3.2d[0]
+	fmls	v5.2d, v25.2d, v5.2d[0]
+	fmls	v12.2d, v26.2d, v5.2d[0]
+	fmls	v13.2d, v27.2d, v5.2d[0]
+	fmls	v20.2d, v28.2d, v5.2d[0]
+	fmls	v21.2d, v29.2d, v5.2d[0]
+	fmls	v7.2d, v25.2d, v7.2d[0]
+	fmls	v14.2d, v26.2d, v7.2d[0]
+	fmls	v15.2d, v27.2d, v7.2d[0]
+	fmls	v22.2d, v28.2d, v7.2d[0]
+	fmls	v23.2d, v29.2d, v7.2d[0]
+
+	ldp		q26, q27, [x10, #96] // E1[0+4*3]
+	ldp		q28, q29, [x11, #96] // E2[0+4*3]
+	fmls	v8.2d, v26.2d, v1.2d[1]
+	fmls	v9.2d, v27.2d, v1.2d[1]
+	fmls	v16.2d, v28.2d, v1.2d[1]
+	fmls	v17.2d, v29.2d, v1.2d[1]
+	fmls	v10.2d, v26.2d, v3.2d[1]
+	fmls	v11.2d, v27.2d, v3.2d[1]
+	fmls	v18.2d, v28.2d, v3.2d[1]
+	fmls	v19.2d, v29.2d, v3.2d[1]
+	fmls	v12.2d, v26.2d, v5.2d[1]
+	fmls	v13.2d, v27.2d, v5.2d[1]
+	fmls	v20.2d, v28.2d, v5.2d[1]
+	fmls	v21.2d, v29.2d, v5.2d[1]
+	fmls	v14.2d, v26.2d, v7.2d[1]
+	fmls	v15.2d, v27.2d, v7.2d[1]
+	fmls	v22.2d, v28.2d, v7.2d[1]
+	fmls	v23.2d, v29.2d, v7.2d[1]
+
+	add		x10, x10, #128
+	add		x11, x11, #128
+
+	ldp		q24, q25, [x10, #0] // E1[0+4*0]
+	ldp		q26, q27, [x11, #0] // E2[0+4*0]
+	ins		v24.d[0], xzr
+	fmls	v8.2d, v24.2d, v8.2d[0]
+	fmls	v9.2d, v25.2d, v8.2d[0]
+	fmls	v16.2d, v26.2d, v8.2d[0]
+	fmls	v17.2d, v27.2d, v8.2d[0]
+	fmls	v10.2d, v24.2d, v10.2d[0]
+	fmls	v11.2d, v25.2d, v10.2d[0]
+	fmls	v18.2d, v26.2d, v10.2d[0]
+	fmls	v19.2d, v27.2d, v10.2d[0]
+	fmls	v12.2d, v24.2d, v12.2d[0]
+	fmls	v13.2d, v25.2d, v12.2d[0]
+	fmls	v20.2d, v26.2d, v12.2d[0]
+	fmls	v21.2d, v27.2d, v12.2d[0]
+	fmls	v14.2d, v24.2d, v14.2d[0]
+	fmls	v15.2d, v25.2d, v14.2d[0]
+	fmls	v22.2d, v26.2d, v14.2d[0]
+	fmls	v23.2d, v27.2d, v14.2d[0]
+
+	ldr		q25, [x10, #48] // E1[2+4*1]
+	ldp		q26, q27, [x11, #32] // E2[0+4*1]
+	fmls	v9.2d, v25.2d, v8.2d[1]
+	fmls	v16.2d, v26.2d, v8.2d[1]
+	fmls	v17.2d, v27.2d, v8.2d[1]
+	fmls	v11.2d, v25.2d, v10.2d[1]
+	fmls	v18.2d, v26.2d, v10.2d[1]
+	fmls	v19.2d, v27.2d, v10.2d[1]
+	fmls	v13.2d, v25.2d, v12.2d[1]
+	fmls	v20.2d, v26.2d, v12.2d[1]
+	fmls	v21.2d, v27.2d, v12.2d[1]
+	fmls	v15.2d, v25.2d, v14.2d[1]
+	fmls	v22.2d, v26.2d, v14.2d[1]
+	fmls	v23.2d, v27.2d, v14.2d[1]
+
+	ldr		q25, [x10, #80] // E1[2+4*2]
+	ldp		q26, q27, [x11, #64] // E2[0+4*2]
+	ins		v25.d[0], xzr
+	fmls	v9.2d, v25.2d, v9.2d[0]
+	fmls	v16.2d, v26.2d, v9.2d[0]
+	fmls	v17.2d, v27.2d, v9.2d[0]
+	fmls	v11.2d, v25.2d, v11.2d[0]
+	fmls	v18.2d, v26.2d, v11.2d[0]
+	fmls	v19.2d, v27.2d, v11.2d[0]
+	fmls	v13.2d, v25.2d, v13.2d[0]
+	fmls	v20.2d, v26.2d, v13.2d[0]
+	fmls	v21.2d, v27.2d, v13.2d[0]
+	fmls	v15.2d, v25.2d, v15.2d[0]
+	fmls	v22.2d, v26.2d, v15.2d[0]
+	fmls	v23.2d, v27.2d, v15.2d[0]
+
+	ldp		q26, q27, [x11, #96] // E2[0+4*3]
+	fmls	v16.2d, v26.2d, v9.2d[1]
+	fmls	v17.2d, v27.2d, v9.2d[1]
+	fmls	v18.2d, v26.2d, v11.2d[1]
+	fmls	v19.2d, v27.2d, v11.2d[1]
+	fmls	v20.2d, v26.2d, v13.2d[1]
+	fmls	v21.2d, v27.2d, v13.2d[1]
+	fmls	v22.2d, v26.2d, v15.2d[1]
+	fmls	v23.2d, v27.2d, v15.2d[1]
+
+	add		x11, x11, #128
+
+	ldp		q24, q25, [x11, #0] // E2[0+4*4]
+	ins		v24.d[0], xzr
+	fmls	v16.2d, v24.2d, v16.2d[0]
+	fmls	v17.2d, v25.2d, v16.2d[0]
+	fmls	v18.2d, v24.2d, v18.2d[0]
+	fmls	v19.2d, v25.2d, v18.2d[0]
+	fmls	v20.2d, v24.2d, v20.2d[0]
+	fmls	v21.2d, v25.2d, v20.2d[0]
+	fmls	v22.2d, v24.2d, v22.2d[0]
+	fmls	v23.2d, v25.2d, v22.2d[0]
+
+	ldr		q25, [x11, #48] // E2[2+4*5]
+	fmls	v17.2d, v25.2d, v16.2d[1]
+	fmls	v19.2d, v25.2d, v18.2d[1]
+	fmls	v21.2d, v25.2d, v20.2d[1]
+	fmls	v23.2d, v25.2d, v22.2d[1]
+
+	ldr		q25, [x11, #80] // E2[2+4*6]
+	ins		v25.d[0], xzr
+	fmls	v17.2d, v25.2d, v17.2d[0]
+	fmls	v19.2d, v25.2d, v19.2d[0]
+	fmls	v21.2d, v25.2d, v21.2d[0]
+	fmls	v23.2d, v25.2d, v23.2d[0]
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_trsm_lln_one_12x4_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// triangular substitution:
 // side = right
 // uplo = lower
 // tran = transposed
@@ -1886,6 +2111,176 @@ NAME:
 #if defined(OS_LINUX)
 	FUN_END(inner_edge_trsm_rlt_inv_12x4_vs_lib4)
 #endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// triangular substitution:
+// side = right
+// uplo = lower
+// tran = transposed
+// requires explicit inverse of diagonal
+//
+// input arguments:
+// x8   <- E
+//
+// output arguments:
+// x8   <- E
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRSM_RLT_ONE_12X4_LIB4
+#else
+	.align 4
+	FUN_START(inner_edge_trsm_rlt_one_12x4_lib4)
+#endif
+	
+	// first column
+	ldr			d24, [x8, #8] // E[1+4*0]
+	fmls		v2.2d, v0.2d, v24.2d[0]
+	fmls		v3.2d, v1.2d, v24.2d[0]
+	fmls		v10.2d, v8.2d, v24.2d[0]
+	fmls		v11.2d, v9.2d, v24.2d[0]
+	fmls		v18.2d, v16.2d, v24.2d[0]
+	fmls		v19.2d, v17.2d, v24.2d[0]
+	ldr			d24, [x8, #16] // E[2+4*0]
+	fmls		v4.2d, v0.2d, v24.2d[0]
+	fmls		v5.2d, v1.2d, v24.2d[0]
+	fmls		v12.2d, v8.2d, v24.2d[0]
+	fmls		v13.2d, v9.2d, v24.2d[0]
+	fmls		v20.2d, v16.2d, v24.2d[0]
+	fmls		v21.2d, v17.2d, v24.2d[0]
+	ldr			d24, [x8, #24] // E[3+4*0]
+	fmls		v6.2d, v0.2d, v24.2d[0]
+	fmls		v7.2d, v1.2d, v24.2d[0]
+	fmls		v14.2d, v8.2d, v24.2d[0]
+	fmls		v15.2d, v9.2d, v24.2d[0]
+	fmls		v22.2d, v16.2d, v24.2d[0]
+	fmls		v23.2d, v17.2d, v24.2d[0]
+
+	ldr			d24, [x8, #48] // E[2+4*1]
+	fmls		v4.2d, v2.2d, v24.2d[0]
+	fmls		v5.2d, v3.2d, v24.2d[0]
+	fmls		v12.2d, v10.2d, v24.2d[0]
+	fmls		v13.2d, v11.2d, v24.2d[0]
+	fmls		v20.2d, v18.2d, v24.2d[0]
+	fmls		v21.2d, v19.2d, v24.2d[0]
+	ldr			d24, [x8, #56] // E[3+4*1]
+	fmls		v6.2d, v2.2d, v24.2d[0]
+	fmls		v7.2d, v3.2d, v24.2d[0]
+	fmls		v14.2d, v10.2d, v24.2d[0]
+	fmls		v15.2d, v11.2d, v24.2d[0]
+	fmls		v22.2d, v16.2d, v24.2d[0]
+	fmls		v23.2d, v17.2d, v24.2d[0]
+
+	ldr			d24, [x8, #88] // E[3+4*1]
+	fmls		v6.2d, v4.2d, v24.2d[0]
+	fmls		v7.2d, v5.2d, v24.2d[0]
+	fmls		v14.2d, v12.2d, v24.2d[0]
+	fmls		v15.2d, v13.2d, v24.2d[0]
+	fmls		v22.2d, v20.2d, v24.2d[0]
+	fmls		v23.2d, v21.2d, v24.2d[0]
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_trsm_rlt_one_12x4_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// triangular substitution:
+// side = right
+// uplo = lower
+// tran = transposed
+// requires explicit inverse of diagonal
+//
+// input arguments:
+// x8   <- E
+// w9   <- n1
+//
+// output arguments:
+// x8   <- E
+// w9   <- n1
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRSM_RLT_ONE_12X4_VS_LIB4
+#else
+	.align 4
+	FUN_START(inner_edge_trsm_rlt_one_12x4_vs_lib4)
+#endif
+	
+	// first column
+	cmp			w9, #2
+	blt			0f // return
+
+	// second column
+	ldr			d24, [x8, #8] // E[1+4*0]
+	fmls		v2.2d, v0.2d, v24.2d[0]
+	fmls		v3.2d, v1.2d, v24.2d[0]
+	fmls		v10.2d, v8.2d, v24.2d[0]
+	fmls		v11.2d, v9.2d, v24.2d[0]
+	fmls		v18.2d, v16.2d, v24.2d[0]
+	fmls		v19.2d, v17.2d, v24.2d[0]
+	cmp			w9, #3
+	blt			0f // return
+
+	// third column
+	ldr			d24, [x8, #16] // E[2+4*0]
+	fmls		v4.2d, v0.2d, v24.2d[0]
+	fmls		v5.2d, v1.2d, v24.2d[0]
+	fmls		v12.2d, v8.2d, v24.2d[0]
+	fmls		v13.2d, v9.2d, v24.2d[0]
+	fmls		v20.2d, v16.2d, v24.2d[0]
+	fmls		v21.2d, v17.2d, v24.2d[0]
+	ldr			d24, [x8, #48] // E[2+4*1]
+	fmls		v4.2d, v2.2d, v24.2d[0]
+	fmls		v5.2d, v3.2d, v24.2d[0]
+	fmls		v12.2d, v10.2d, v24.2d[0]
+	fmls		v13.2d, v11.2d, v24.2d[0]
+	fmls		v20.2d, v18.2d, v24.2d[0]
+	fmls		v21.2d, v19.2d, v24.2d[0]
+	cmp			w9, #4
+	blt			0f // return
+
+	// forth column
+	ldr			d24, [x8, #24] // E[3+4*0]
+	fmls		v6.2d, v0.2d, v24.2d[0]
+	fmls		v7.2d, v1.2d, v24.2d[0]
+	fmls		v14.2d, v8.2d, v24.2d[0]
+	fmls		v15.2d, v9.2d, v24.2d[0]
+	fmls		v22.2d, v16.2d, v24.2d[0]
+	fmls		v23.2d, v17.2d, v24.2d[0]
+	ldr			d24, [x8, #56] // E[3+4*1]
+	fmls		v6.2d, v2.2d, v24.2d[0]
+	fmls		v7.2d, v3.2d, v24.2d[0]
+	fmls		v14.2d, v10.2d, v24.2d[0]
+	fmls		v15.2d, v11.2d, v24.2d[0]
+	fmls		v22.2d, v18.2d, v24.2d[0]
+	fmls		v23.2d, v19.2d, v24.2d[0]
+	ldr			d24, [x8, #88] // E[3+4*1]
+	fmls		v6.2d, v4.2d, v24.2d[0]
+	fmls		v7.2d, v5.2d, v24.2d[0]
+	fmls		v14.2d, v12.2d, v24.2d[0]
+	fmls		v15.2d, v13.2d, v24.2d[0]
+	fmls		v22.2d, v20.2d, v24.2d[0]
+	fmls		v23.2d, v21.2d, v24.2d[0]
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_trsm_rlt_one_12x4_vs_lib4)
 #endif
 
 
@@ -3789,6 +4184,343 @@ NAME:
 	ret
 
 	FUN_END(kernel_dtrsm_nt_rl_inv_12x4_vs_lib4)
+
+
+
+
+
+//                                       w0        x1         w2        x3        x4            x5         w6       x7         sp+0     sp+8
+// void kernel_dtrsm_nt_rl_one_12x4_lib4(int kmax, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, double *E);
+
+	.align	4
+	GLOB_FUN_START(kernel_dtrsm_nt_rl_one_12x4_lib4)
+
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel dgemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		w10, w2 // sda
+	lsl		w10, w10, #5 // 32*sda
+	mov		x11, x3 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_12X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nt_12x4_lib4
+#endif
+
+
+
+	// call inner blend for alpha=1.0 and beta=1.0
+	mov		x8, x4 // beta
+	mov		x9, x5 // C
+	mov		w10, w6 // sdc
+	lsl		w10, w10, #5 // 32*sdc
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_12X4_LIB4
+#else
+	bl inner_scale_m1b_12x4_lib4
+#endif
+
+
+
+	// solution
+	ldr		x8, [sp, #(STACKSIZE + 8)] // E
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRSM_RLT_ONE_12X4_LIB4
+#else
+	bl inner_edge_trsm_rlt_one_12x4_lib4
+#endif
+
+
+
+	// store
+	mov		x8, x7 // D
+	ldr		w9, [sp, #(STACKSIZE + 0)] // sdc
+	lsl		w9, w9, #5 // 32*sdd
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_12X4_LIB4
+#else
+	bl inner_store_12x4_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dtrsm_nt_rl_one_12x4_lib4)
+
+
+
+
+
+//                                          w0        x1         w2        x3        x4            x5         w6       x7         sp+0     sp+8       sp+16   sp+24
+// void kernel_dtrsm_nt_rl_one_12x4_vs_lib4(int kmax, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, double *E, int m1, int n1);
+
+	.align	4
+	GLOB_FUN_START(kernel_dtrsm_nt_rl_one_12x4_vs_lib4)
+
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel dgemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		w10, w2 // sda
+	lsl		w10, w10, #5 // 32*sda
+	mov		x11, x3 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_12X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nt_12x4_lib4
+#endif
+
+
+
+	// call inner blend for alpha=1.0 and beta=1.0
+	mov		x8, x4 // beta
+	mov		x9, x5 // C
+	mov		w10, w6 // sdc
+	lsl		w10, w10, #5 // 32*sdc
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_12X4_LIB4
+#else
+	bl inner_scale_m1b_12x4_lib4
+#endif
+
+
+
+	// solution
+	ldr		x8, [sp, #(STACKSIZE + 8)] // E
+	ldr		w9, [sp, #(STACKSIZE + 24)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRSM_RLT_ONE_12X4_VS_LIB4
+#else
+	bl inner_edge_trsm_rlt_one_12x4_vs_lib4
+#endif
+
+
+
+	// store
+	mov		x8, x7 // D
+	ldr		w9, [sp, #(STACKSIZE + 0)] // sdd
+	lsl		w9, w9, #5 // 32*sdd
+	ldr		w10, [sp, #(STACKSIZE + 16)] // m1
+	ldr		w11, [sp, #(STACKSIZE + 24)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_12X4_VS_LIB4
+#else
+	bl inner_store_12x4_vs_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dtrsm_nt_rl_one_12x4_vs_lib4)
+
+
+
+
+
+//                                       w0        x1         w2        x3        w4       x5            x6         w7       sp+0       sp+8     sp+16      sp+24
+// void kernel_dtrsm_nn_ll_one_12x4_lib4(int kmax, double *A, int sda, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, double *E, int sde);
+
+	.align	4
+	GLOB_FUN_START(kernel_dtrsm_nn_ll_one_12x4_lib4)
+
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel dgemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		w10, w2 // sda
+	lsl		w10, w10, #5 // 32*sda
+	mov		x11, x3 // B
+	mov		w12, w4 // sdb
+	lsl		w12, w12, #5 // 32*sdb
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_12X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nn_12x4_lib4
+#endif
+
+
+
+	// call inner blend for alpha=1.0 and beta=1.0
+	mov		x8, x5 // beta
+	mov		x9, x6 // C
+	mov		w10, w7 // sdc
+	lsl		w10, w10, #5 // 32*sdc
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_12X4_LIB4
+#else
+	bl inner_scale_m1b_12x4_lib4
+#endif
+
+
+
+	// solution
+	ldr		x8, [sp, #(STACKSIZE + 16)] // E
+	ldr		w9, [sp, #(STACKSIZE + 24)] // sdr
+	lsl		w9, w9, #5 // 32*sdc
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRSM_LLN_ONE_12X4_LIB4
+#else
+	bl inner_edge_trsm_lln_one_12x4_lib4
+#endif
+
+
+
+	// store
+	ldr		x8, [sp, #(STACKSIZE + 0)] // D
+	ldr		w9, [sp, #(STACKSIZE + 8)] // sdd
+	lsl		w9, w9, #5 // 32*sdd
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_12X4_LIB4
+#else
+	bl inner_store_12x4_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dtrsm_nn_ll_one_12x4_lib4)
+
+
+
+
+
+//                                          w0        x1         w2        x3        w4       x5            x6         w7       sp+0       sp+8     sp+16      sp+24    sp+32   sp+40
+// void kernel_dtrsm_nn_ll_one_12x4_vs_lib4(int kmax, double *A, int sda, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, double *E, int sde, int m1, int n1);
+
+	.align	4
+	GLOB_FUN_START(kernel_dtrsm_nn_ll_one_12x4_vs_lib4)
+
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel dgemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		w10, w2 // sda
+	lsl		w10, w10, #5 // 32*sda
+	mov		x11, x3 // B
+	mov		w12, w4 // sdb
+	lsl		w12, w12, #5 // 32*sdb
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_12X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nn_12x4_lib4
+#endif
+
+
+
+	// call inner blend for alpha=1.0 and beta=1.0
+	mov		x8, x5 // beta
+	mov		x9, x6 // C
+	mov		w10, w7 // sdc
+	lsl		w10, w10, #5 // 32*sdc
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_12X4_LIB4
+#else
+	bl inner_scale_m1b_12x4_lib4
+#endif
+
+
+
+	// solution
+	ldr		x8, [sp, #(STACKSIZE + 16)] // E
+	ldr		w9, [sp, #(STACKSIZE + 24)] // sdr
+	lsl		w9, w9, #5 // 32*sdc
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRSM_LLN_ONE_12X4_LIB4
+#else
+	bl inner_edge_trsm_lln_one_12x4_lib4
+#endif
+
+
+
+	// store
+	ldr		x8, [sp, #(STACKSIZE + 0)] // D
+	ldr		w9, [sp, #(STACKSIZE + 8)] // sdd
+	lsl		w9, w9, #5 // 32*sdd
+	ldr		w10, [sp, #(STACKSIZE + 32)] // m1
+	ldr		w11, [sp, #(STACKSIZE + 40)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_12X4_VS_LIB4
+#else
+	bl inner_store_12x4_vs_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dtrsm_nn_ll_one_12x4_vs_lib4)
 
 
 
