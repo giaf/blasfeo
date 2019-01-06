@@ -3061,7 +3061,7 @@ rltu_1:
 		}
 
 	ii = 0;
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(ii=0; ii<m-11; ii+=12)
 		{
 #if 0
@@ -3149,7 +3149,7 @@ rltu_1:
 #endif
 	goto rltu_1_return;
 
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 rltu_1_left_12:
 	for(jj=0; jj<n; jj+=4)
 		{
@@ -3159,7 +3159,7 @@ rltu_1_left_12:
 goto rltu_1_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 rltu_1_left_8:
 	for(jj=0; jj<n; jj+=4)
 		{
