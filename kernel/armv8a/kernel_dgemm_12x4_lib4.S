@@ -2844,6 +2844,139 @@ NAME:
 
 
 
+// subroutine
+//
+// input arguments:
+// x8   <- alpha
+// x9   <- beta
+// x10  <- C
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_TRAN_SCALE_AB_4X12_LIB4
+#else
+	.align	4
+	FUN_START(inner_tran_scale_ab_4x12_lib4)
+#endif
+
+	trn1	v24.2d, v0.2d, v2.2d
+	trn2	v2.2d, v0.2d, v2.2d
+	trn1	v25.2d, v5.2d, v7.2d
+	trn2	v7.2d, v5.2d, v7.2d
+	trn1	v26.2d, v1.2d, v3.2d
+	trn2	v27.2d, v1.2d, v3.2d
+	trn1	v1.2d, v4.2d, v6.2d
+	trn2	v3.2d, v4.2d, v6.2d
+	mov		v0.16b, v24.16b
+	mov		v5.16b, v25.16b
+	mov		v4.16b, v26.16b
+	mov		v6.16b, v27.16b
+
+	trn1	v24.2d, v8.2d, v10.2d
+	trn2	v10.2d, v8.2d, v10.2d
+	trn1	v25.2d, v13.2d, v15.2d
+	trn2	v15.2d, v13.2d, v15.2d
+	trn1	v26.2d, v9.2d, v11.2d
+	trn2	v27.2d, v9.2d, v11.2d
+	trn1	v9.2d, v12.2d, v14.2d
+	trn2	v11.2d, v12.2d, v14.2d
+	mov		v8.16b, v24.16b
+	mov		v13.16b, v25.16b
+	mov		v12.16b, v26.16b
+	mov		v14.16b, v27.16b
+
+	trn1	v24.2d, v16.2d, v18.2d
+	trn2	v18.2d, v16.2d, v18.2d
+	trn1	v25.2d, v21.2d, v23.2d
+	trn2	v23.2d, v21.2d, v23.2d
+	trn1	v26.2d, v17.2d, v19.2d
+	trn2	v27.2d, v17.2d, v19.2d
+	trn1	v17.2d, v20.2d, v22.2d
+	trn2	v19.2d, v20.2d, v22.2d
+	mov		v16.16b, v24.16b
+	mov		v21.16b, v25.16b
+	mov		v20.16b, v26.16b
+	mov		v22.16b, v27.16b
+
+	ld1		{v28.2d}, [x8]
+	// TODO check on beta
+
+	fmul	v0.2d, v0.2d, v28.2d[0]
+	fmul	v1.2d, v1.2d, v28.2d[0]
+	fmul	v2.2d, v2.2d, v28.2d[0]
+	fmul	v3.2d, v3.2d, v28.2d[0]
+	fmul	v4.2d, v4.2d, v28.2d[0]
+	fmul	v5.2d, v5.2d, v28.2d[0]
+	fmul	v6.2d, v6.2d, v28.2d[0]
+	fmul	v7.2d, v7.2d, v28.2d[0]
+	fmul	v8.2d, v8.2d, v28.2d[0]
+	fmul	v9.2d, v9.2d, v28.2d[0]
+	fmul	v10.2d, v10.2d, v28.2d[0]
+	fmul	v11.2d, v11.2d, v28.2d[0]
+	fmul	v12.2d, v12.2d, v28.2d[0]
+	fmul	v13.2d, v13.2d, v28.2d[0]
+	fmul	v14.2d, v14.2d, v28.2d[0]
+	fmul	v15.2d, v15.2d, v28.2d[0]
+	fmul	v16.2d, v16.2d, v28.2d[0]
+	fmul	v17.2d, v17.2d, v28.2d[0]
+	fmul	v18.2d, v18.2d, v28.2d[0]
+	fmul	v19.2d, v19.2d, v28.2d[0]
+	fmul	v20.2d, v20.2d, v28.2d[0]
+	fmul	v21.2d, v21.2d, v28.2d[0]
+	fmul	v22.2d, v22.2d, v28.2d[0]
+	fmul	v23.2d, v23.2d, v28.2d[0]
+
+	ld1		{v28.2d}, [x9]
+
+	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
+	fmla	v0.2d, v24.2d, v28.2d[0]
+	fmla	v1.2d, v25.2d, v28.2d[0]
+	fmla	v2.2d, v26.2d, v28.2d[0]
+	fmla	v3.2d, v27.2d, v28.2d[0]
+
+	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
+	fmla	v4.2d, v24.2d, v28.2d[0]
+	fmla	v5.2d, v25.2d, v28.2d[0]
+	fmla	v6.2d, v26.2d, v28.2d[0]
+	fmla	v7.2d, v27.2d, v28.2d[0]
+
+	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
+	fmla	v8.2d, v24.2d, v28.2d[0]
+	fmla	v9.2d, v25.2d, v28.2d[0]
+	fmla	v10.2d, v26.2d, v28.2d[0]
+	fmla	v11.2d, v27.2d, v28.2d[0]
+
+	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
+	fmla	v12.2d, v24.2d, v28.2d[0]
+	fmla	v13.2d, v25.2d, v28.2d[0]
+	fmla	v14.2d, v26.2d, v28.2d[0]
+	fmla	v15.2d, v27.2d, v28.2d[0]
+
+	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
+	fmla	v16.2d, v24.2d, v28.2d[0]
+	fmla	v17.2d, v25.2d, v28.2d[0]
+	fmla	v18.2d, v26.2d, v28.2d[0]
+	fmla	v19.2d, v27.2d, v28.2d[0]
+
+	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
+	fmla	v20.2d, v24.2d, v28.2d[0]
+	fmla	v21.2d, v25.2d, v28.2d[0]
+	fmla	v22.2d, v26.2d, v28.2d[0]
+	fmla	v23.2d, v27.2d, v28.2d[0]
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_tran_scale_ab_4x12_lib4)
+#endif
+
+
+
+
+
 // subroutine INNER_STORE_12X4_LIB4
 //
 // input arguments:
@@ -2861,19 +2994,23 @@ NAME:
 	FUN_START(inner_store_12x4_lib4)
 #endif
 
-	// 2nd panel
 	add		x10, x8, x9
-	// 3rd panel
 	add		x11, x10, x9
 
-	st1		{v0.2d, v1.2d, v2.2d, v3.2d}, [x8], #64
-	st1		{v4.2d, v5.2d, v6.2d, v7.2d}, [x8], #64
+	stp		q0, q1, [x8, #0]
+	stp		q2, q3, [x8, #32]
+	stp		q4, q5, [x8, #64]
+	stp		q6, q7, [x8, #96]
 
-	st1		{v8.2d, v9.2d, v10.2d, v11.2d}, [x10], #64
-	st1		{v12.2d, v13.2d, v14.2d, v15.2d}, [x10], #64
+	stp		q8, q9, [x10, #0]
+	stp		q10, q11, [x10, #32]
+	stp		q12, q13, [x10, #64]
+	stp		q14, q15, [x10, #96]
 
-	st1		{v16.2d, v17.2d, v18.2d, v19.2d}, [x11], #64
-	st1		{v20.2d, v21.2d, v22.2d, v23.2d}, [x11], #64
+	stp		q16, q17, [x11, #0]
+	stp		q18, q19, [x11, #32]
+	stp		q20, q21, [x11, #64]
+	stp		q22, q23, [x11, #96]
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -3008,11 +3145,15 @@ NAME:
 	str		q5, [x8, #80]
 	str		q7, [x8, #112]
 
-	st1		{v8.2d, v9.2d, v10.2d, v11.2d}, [x10], #64
-	st1		{v12.2d, v13.2d, v14.2d, v15.2d}, [x10], #64
+	stp		q8, q9, [x10, #0]
+	stp		q10, q11, [x10, #32]
+	stp		q12, q13, [x10, #64]
+	stp		q14, q15, [x10, #96]
 
-	st1		{v16.2d, v17.2d, v18.2d, v19.2d}, [x11], #64
-	st1		{v20.2d, v21.2d, v22.2d, v23.2d}, [x11], #64
+	stp		q16, q17, [x11, #0]
+	stp		q18, q19, [x11, #32]
+	stp		q20, q21, [x11, #64]
+	stp		q22, q23, [x11, #96]
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -3142,11 +3283,15 @@ NAME:
 	add		x10, x8, x9
 	add		x11, x10, x9
 
-	st1		{v0.2d, v1.2d, v2.2d, v3.2d}, [x8], #64
-	st1		{v4.2d, v5.2d, v6.2d, v7.2d}, [x8], #64
+	stp		q0, q1, [x8, #0]
+	stp		q2, q3, [x8, #32]
+	stp		q4, q5, [x8, #64]
+	stp		q6, q7, [x8, #96]
 
-	st1		{v8.2d, v9.2d, v10.2d, v11.2d}, [x10], #64
-	st1		{v12.2d, v13.2d, v14.2d, v15.2d}, [x10], #64
+	stp		q8, q9, [x10, #0]
+	stp		q10, q11, [x10, #32]
+	stp		q12, q13, [x10, #64]
+	stp		q14, q15, [x10, #96]
 
 	str		d16, [x11, #0]
 	str		q18, [x11, #32]
@@ -3254,6 +3399,200 @@ NAME:
 	ret
 
 	FUN_END(inner_store_u_12x4_vs_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// x8   <- D
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_4X12_LIB4
+#else
+	.align 4
+	FUN_START(inner_store_4x12_lib4)
+#endif
+
+	stp		q0, q1, [x8, #(0*8+0*32)]
+	stp		q2, q3, [x8, #(0*8+1*32)]
+	stp		q4, q5, [x8, #(0*8+2*32)]
+	stp		q6, q7, [x8, #(0*8+3*32)]
+	stp		q8, q9, [x8, #(0*8+4*32)]
+	stp		q10, q11, [x8, #(0*8+5*32)]
+	stp		q12, q13, [x8, #(0*8+6*32)]
+	stp		q14, q15, [x8, #(0*8+7*32)]
+	stp		q16, q17, [x8, #(0*8+8*32)]
+	stp		q18, q19, [x8, #(0*8+9*32)]
+	stp		q20, q21, [x8, #(0*8+10*32)]
+	stp		q22, q23, [x8, #(0*8+11*32)]
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_store_4x12_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// x8   <- D
+// x9  <- km
+// x10  <- kn
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_4X12_VS_LIB4
+#else
+	.align 4
+	FUN_START(inner_store_4x12_vs_lib4)
+#endif
+
+	cmp		w9, #1
+	blt		0f
+	beq		1f
+	cmp		w9, #2
+	beq		2f
+	cmp		w9, #3
+	beq		3f
+	b		4f
+
+1:
+	// 1st-8th col
+	str		d0, [x8, #(0*8+0*32)]
+	str		d2, [x8, #(0*8+1*32)]
+	str		d4, [x8, #(0*8+2*32)]
+	str		d6, [x8, #(0*8+3*32)]
+	str		d8, [x8, #(0*8+4*32)]
+	str		d10, [x8, #(0*8+5*32)]
+	str		d12, [x8, #(0*8+6*32)]
+	str		d14, [x8, #(0*8+7*32)]
+	// 9th col
+	str		d16, [x8, #(0*8+8*32)]
+	cmp		w10, #10
+	blt		0f
+	// 10th col
+	str		d18, [x8, #(0*8+9*32)]
+	cmp		w10, #11
+	blt		0f
+	// 11th col
+	str		d20, [x8, #(0*8+10*32)]
+	beq		0f
+	// 12th col
+	str		d22, [x8, #(0*8+11*32)]
+
+	b		0f
+
+2:
+	// 1st-8th col
+	str		q0, [x8, #(0*8+0*32)]
+	str		q2, [x8, #(0*8+1*32)]
+	str		q4, [x8, #(0*8+2*32)]
+	str		q6, [x8, #(0*8+3*32)]
+	str		q8, [x8, #(0*8+4*32)]
+	str		q10, [x8, #(0*8+5*32)]
+	str		q12, [x8, #(0*8+6*32)]
+	str		q14, [x8, #(0*8+7*32)]
+	// 9th col
+	str		q16, [x8, #(0*8+8*32)]
+	cmp		w10, #10
+	blt		0f
+	// 10th col
+	str		q18, [x8, #(0*8+9*32)]
+	cmp		w10, #11
+	blt		0f
+	// 11th col
+	str		q20, [x8, #(0*8+10*32)]
+	beq		0f
+	// 12th col
+	str		q22, [x8, #(0*8+11*32)]
+
+	b		0f
+
+3:
+	// 1st-8th col
+	str		q0, [x8, #(0*8+0*32)]
+	str		d1, [x8, #(2*8+0*32)]
+	str		q2, [x8, #(0*8+1*32)]
+	str		d3, [x8, #(2*8+1*32)]
+	str		q4, [x8, #(0*8+2*32)]
+	str		d5, [x8, #(2*8+2*32)]
+	str		q6, [x8, #(0*8+3*32)]
+	str		d7, [x8, #(2*8+3*32)]
+	str		q8, [x8, #(0*8+4*32)]
+	str		d9, [x8, #(2*8+4*32)]
+	str		q10, [x8, #(0*8+5*32)]
+	str		d11, [x8, #(2*8+5*32)]
+	str		q12, [x8, #(0*8+6*32)]
+	str		d13, [x8, #(2*8+6*32)]
+	str		q14, [x8, #(0*8+7*32)]
+	str		d15, [x8, #(2*8+7*32)]
+	// 9th col
+	str		q16, [x8, #(0*8+8*32)]
+	str		d17, [x8, #(2*8+8*32)]
+	cmp		w10, #10
+	blt		0f
+	// 10th col
+	str		q18, [x8, #(0*8+9*32)]
+	str		d19, [x8, #(2*8+9*32)]
+	cmp		w10, #11
+	blt		0f
+	// 11th col
+	str		q20, [x8, #(0*8+10*32)]
+	str		d21, [x8, #(2*8+10*32)]
+	beq		0f
+	// 12th col
+	str		q22, [x8, #(0*8+11*32)]
+	str		d23, [x8, #(2*8+11*32)]
+
+	b		0f
+
+4:
+	// 1st-8th col
+	stp		q0, q1, [x8, #(0*8+0*32)]
+	stp		q2, q3, [x8, #(0*8+1*32)]
+	stp		q4, q5, [x8, #(0*8+2*32)]
+	stp		q6, q7, [x8, #(0*8+3*32)]
+	stp		q8, q9, [x8, #(0*8+4*32)]
+	stp		q10, q11, [x8, #(0*8+5*32)]
+	stp		q12, q13, [x8, #(0*8+6*32)]
+	stp		q14, q15, [x8, #(0*8+7*32)]
+	// 9th col
+	stp		q16, q17, [x8, #(0*8+8*32)]
+	cmp		w10, #10
+	blt		0f
+	// 10th col
+	stp		q18, q19, [x8, #(0*8+9*32)]
+	cmp		w10, #11
+	blt		0f
+	// 11th col
+	stp		q20, q21, [x8, #(0*8+10*32)]
+	beq		0f
+	// 12th col
+	stp		q22, q23, [x8, #(0*8+11*32)]
+
+//	b		0f
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_store_4x12_vs_lib4)
 #endif
 
 
@@ -4687,6 +5026,142 @@ NAME:
 	ret
 
 	FUN_END(kernel_dpotrf_nt_l_12x4_vs_lib4)
+
+
+
+
+
+//                                w0        x1             x2         x3         w4       x5            x6         x7
+// void kernel_dgemm_nt_4x12_lib4(int kmax, double *alpha, double *A, double *B, int sda, double *beta, double *C, double *D)
+
+	.align	4
+	GLOB_FUN_START(kernel_dgemm_nt_4x12_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x3 // B
+	mov		w10, w4 // sdb
+	lsl		w10, w10, #5 // 32*sdb
+	mov		x11, x2 // A
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_12X4_LIB4
+#else
+	bl inner_kernel_gemm_add_nt_12x4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x5 // beta
+	mov		x10, x6 // C
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_SCALE_AB_4X12_LIB4
+#else
+	bl inner_tran_scale_ab_4x12_lib4
+#endif
+
+
+
+	// store n
+	mov		x8, x7 // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X12_LIB4
+#else
+	bl inner_store_4x12_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dgemm_nt_4x12_lib4)
+
+
+
+
+
+//                                   w0        x1             x2         x3         w4       x5            x6         x7         sp+0    sp+8
+// void kernel_dgemm_nt_4x12_vs_lib4(int kmax, double *alpha, double *A, double *B, int sda, double *beta, double *C, double *D, int m1, int n1)
+
+	.align	4
+	GLOB_FUN_START(kernel_dgemm_nt_4x12_vs_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x3 // B
+	mov		w10, w4 // sdb
+	lsl		w10, w10, #5 // 32*sdb
+	mov		x11, x2 // A
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_12X4_LIB4
+#else
+	bl inner_kernel_gemm_add_nt_12x4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x5 // beta
+	mov		x10, x6 // C
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_SCALE_AB_4X12_LIB4
+#else
+	bl inner_tran_scale_ab_4x12_lib4
+#endif
+
+
+
+	// store n
+	mov		x8, x7 // D
+	ldr		w9, [sp, #(STACKSIZE + 0)] // m1
+	ldr		w10, [sp, #(STACKSIZE + 8)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X12_VS_LIB4
+#else
+	bl inner_store_4x12_vs_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dgemm_nt_4x12_vs_lib4)
 
 
 
