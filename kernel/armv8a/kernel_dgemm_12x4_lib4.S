@@ -2173,8 +2173,8 @@ NAME:
 	fmls		v7.2d, v3.2d, v24.2d[0]
 	fmls		v14.2d, v10.2d, v24.2d[0]
 	fmls		v15.2d, v11.2d, v24.2d[0]
-	fmls		v22.2d, v16.2d, v24.2d[0]
-	fmls		v23.2d, v17.2d, v24.2d[0]
+	fmls		v22.2d, v18.2d, v24.2d[0]
+	fmls		v23.2d, v19.2d, v24.2d[0]
 
 	ldr			d24, [x8, #88] // E[3+4*1]
 	fmls		v6.2d, v4.2d, v24.2d[0]
