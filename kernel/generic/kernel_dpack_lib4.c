@@ -469,6 +469,20 @@ l3:
 
 
 
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dunpack_nn_12_vs_lib4(int kmax, double *A, int sda, double *C, int ldc, int m1)
+	{
+
+	kernel_dunpack_nn_8_lib4(kmax, A+0*sda, sda, C+0, ldc);
+	kernel_dunpack_nn_4_vs_lib4(kmax, A+8*sda, C+8, ldc, m1-8);
+
+	return;
+
+	}
+#endif
+
+
+
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 void kernel_dunpack_nn_8_vs_lib4(int kmax, double *A, int sda, double *C, int ldc, int m1)
 	{

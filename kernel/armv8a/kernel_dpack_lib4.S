@@ -358,6 +358,172 @@ kernel_dpack_nn_4_lib4:
 
 
 
+//                              w0        x1         w2       x3         w4
+// void kernel_dpack_tt_12_lib4(int kmax, double *A, int lda, double *C, ind sdc)
+
+	.align	4
+	.globl kernel_dpack_tt_12_lib4
+	.type kernel_dpack_tt_12_lib4, @function
+kernel_dpack_tt_12_lib4:
+	
+
+
+	PROLOGUE
+
+
+
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		w10, w2 // A
+	lsl		w10, w10, #3 // 32*sda
+	mov		x11, x3 // A
+	mov		w12, w4 // sdc
+	lsl		w12, w12, #5 // 32*sdc
+
+
+	cmp		w8, #0
+	ble		0f
+
+	cmp		w8, #3
+	ble		2f
+
+
+1: // main loop
+	mov		x13, x9
+
+	ldp		q0, q1, [x13, #0]
+	add		x13, x13, x10
+	stp		q0, q1, [x11, #0]
+
+	ldp		q0, q1, [x13, #0]
+	add		x13, x13, x10
+	stp		q0, q1, [x11, #32]
+
+	ldp		q0, q1, [x13, #0]
+	add		x13, x13, x10
+	stp		q0, q1, [x11, #64]
+
+	ldp		q0, q1, [x13, #0]
+	add		x13, x13, x10
+	stp		q0, q1, [x11, #96]
+
+	ldp		q0, q1, [x13, #0]
+	add		x13, x13, x10
+	stp		q0, q1, [x11, #128]
+
+	ldp		q0, q1, [x13, #0]
+	add		x13, x13, x10
+	stp		q0, q1, [x11, #160]
+
+	ldp		q0, q1, [x13, #0]
+	add		x13, x13, x10
+	stp		q0, q1, [x11, #192]
+
+	ldp		q0, q1, [x13, #0]
+	add		x13, x13, x10
+	stp		q0, q1, [x11, #224]
+
+	ldp		q0, q1, [x13, #0]
+	add		x13, x13, x10
+	stp		q0, q1, [x11, #256]
+
+	ldp		q0, q1, [x13, #0]
+	add		x13, x13, x10
+	stp		q0, q1, [x11, #288]
+
+	ldp		q0, q1, [x13, #0]
+	add		x13, x13, x10
+	stp		q0, q1, [x11, #320]
+
+	ldp		q0, q1, [x13, #0]
+	add		x13, x13, x10
+	stp		q0, q1, [x11, #352]
+
+	sub		w8, w8, #4
+	add		x9, x9, #32
+	add		x11, x11, x12
+
+	cmp		w8, #3
+	bgt		1b
+
+
+	cmp		w8, #0
+	ble		0f
+
+
+2: // clean-up loop
+	mov		x13, x9
+
+	ldr		d0, [x13, #0]
+	add		x13, x13, x10
+	str		d0, [x11, #0]
+
+	ldr		d0, [x13, #0]
+	add		x13, x13, x10
+	str		d0, [x11, #32]
+
+	ldr		d0, [x13, #0]
+	add		x13, x13, x10
+	str		d0, [x11, #64]
+
+	ldr		d0, [x13, #0]
+	add		x13, x13, x10
+	str		d0, [x11, #96]
+
+	ldr		d0, [x13, #0]
+	add		x13, x13, x10
+	str		d0, [x11, #128]
+
+	ldr		d0, [x13, #0]
+	add		x13, x13, x10
+	str		d0, [x11, #160]
+
+	ldr		d0, [x13, #0]
+	add		x13, x13, x10
+	str		d0, [x11, #192]
+
+	ldr		d0, [x13, #0]
+	add		x13, x13, x10
+	str		d0, [x11, #224]
+
+	ldr		d0, [x13, #0]
+	add		x13, x13, x10
+	str		d0, [x11, #256]
+
+	ldr		d0, [x13, #0]
+	add		x13, x13, x10
+	str		d0, [x11, #288]
+
+	ldr		d0, [x13, #0]
+	add		x13, x13, x10
+	str		d0, [x11, #320]
+
+	ldr		d0, [x13, #0]
+	add		x13, x13, x10
+	str		d0, [x11, #352]
+
+	sub		w8, w8, #1
+	add		x9, x9, #8
+	add		x11, x11, #8
+
+	cmp		w8, #0
+	bgt		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	.size	kernel_dpack_tt_12_lib4, .-kernel_dpack_tt_12_lib4
+
+
+
+
+
 //                             w0        x1         w2       x3         w4
 // void kernel_dpack_tt_8_lib4(int kmax, double *A, int lda, double *C, ind sdc)
 
@@ -594,6 +760,117 @@ kernel_dpack_tt_4_lib4:
 
 
 
+//                                w0        x1         w2       x3         w4
+// void kernel_dunpack_nn_12_lib4(int kmax, double *A, int sda, double *C, int ldc)
+
+	.align	4
+	.globl kernel_dunpack_nn_12_lib4
+	.type kernel_dunpack_nn_12_lib4, @function
+kernel_dunpack_nn_12_lib4:
+	
+
+
+	PROLOGUE
+
+
+
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		w10, w2 // sda
+	lsl		w10, w10, #5 // 32*sda
+	mov		x11, x3 // C
+	mov		w12, w4 // ldc
+	lsl		w12, w12, #3 // 8*ldc
+
+
+	cmp		w8, #0
+	ble		0f
+
+	add		x13, x9, x10
+	add		x14, x13, x10
+
+	cmp		w8, #3
+	ble		2f
+
+
+1: // main loop
+	ldp		q0, q1, [x9, #0]
+	stp		q0, q1, [x11, #0]
+	ldp		q0, q1, [x13, #0]
+	stp		q0, q1, [x11, #32]
+	ldp		q0, q1, [x14, #0]
+	stp		q0, q1, [x11, #64]
+	add		x11, x11, x12
+
+	ldp		q0, q1, [x9, #32]
+	stp		q0, q1, [x11, #0]
+	ldp		q0, q1, [x13, #32]
+	stp		q0, q1, [x11, #32]
+	ldp		q0, q1, [x14, #32]
+	stp		q0, q1, [x11, #64]
+	add		x11, x11, x12
+
+	ldp		q0, q1, [x9, #64]
+	stp		q0, q1, [x11, #0]
+	ldp		q0, q1, [x13, #64]
+	stp		q0, q1, [x11, #32]
+	ldp		q0, q1, [x14, #64]
+	stp		q0, q1, [x11, #64]
+	add		x11, x11, x12
+
+	ldp		q0, q1, [x9, #96]
+	stp		q0, q1, [x11, #0]
+	ldp		q0, q1, [x13, #96]
+	stp		q0, q1, [x11, #32]
+	ldp		q0, q1, [x14, #96]
+	stp		q0, q1, [x11, #64]
+	add		x11, x11, x12
+
+	sub		w8, w8, #4
+	add		x9, x9, #128
+	add		x13, x13, #128
+	add		x14, x14, #128
+
+	cmp		w8, #3
+	bgt		1b
+
+
+	cmp		w8, #0
+	ble		0f
+
+
+2: // clean-up loop
+	ldp		q0, q1, [x9, #0]
+	stp		q0, q1, [x11, #0]
+	ldp		q0, q1, [x13, #0]
+	stp		q0, q1, [x11, #32]
+	ldp		q0, q1, [x14, #0]
+	stp		q0, q1, [x11, #64]
+	add		x11, x11, x12
+
+	sub		w8, w8, #1
+	add		x9, x9, #32
+	add		x13, x13, #32
+	add		x14, x14, #32
+
+	cmp		w8, #0
+	bgt		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	.size	kernel_dunpack_nn_12_lib4, .-kernel_dunpack_nn_12_lib4
+
+
+
+
+
 //                               w0        x1         w2       x3         w4
 // void kernel_dunpack_nn_8_lib4(int kmax, double *A, int sda, double *C, int ldc)
 
@@ -672,7 +949,7 @@ kernel_dunpack_nn_8_lib4:
 
 	sub		w8, w8, #1
 	add		x9, x9, #32
-	add		x13, x13, #128
+	add		x13, x13, #32
 
 	cmp		w8, #0
 	bgt		2b
