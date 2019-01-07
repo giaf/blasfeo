@@ -412,7 +412,7 @@
 	fmul	v22.2d, v22.2d, v28.2d[0]
 	fmul	v23.2d, v23.2d, v28.2d[0]
 
-	ld1		{v28.2d}, [x9]
+	ld1		{v30.2d}, [x9]
 
 	cmp		w12, #4
 	blt		1f
@@ -421,10 +421,10 @@
 	ldp		q26, q27, [x10, #32]
 	ldp		q28, q29, [x10, #64]
 	add		x10, x10, x11
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
-	fmla	v9.2d, v27.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v30.2d[0]
+	fmla	v1.2d, v25.2d, v30.2d[0]
+	fmla	v8.2d, v26.2d, v30.2d[0]
+	fmla	v9.2d, v27.2d, v30.2d[0]
 	fmla	v16.2d, v28.2d, v30.2d[0]
 	fmla	v17.2d, v29.2d, v30.2d[0]
 
@@ -435,10 +435,10 @@
 	ldp		q26, q27, [x10, #32]
 	ldp		q28, q29, [x10, #64]
 	add		x10, x10, x11
-	fmla	v2.2d, v24.2d, v28.2d[0]
-	fmla	v3.2d, v25.2d, v28.2d[0]
-	fmla	v10.2d, v26.2d, v28.2d[0]
-	fmla	v11.2d, v27.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v30.2d[0]
+	fmla	v3.2d, v25.2d, v30.2d[0]
+	fmla	v10.2d, v26.2d, v30.2d[0]
+	fmla	v11.2d, v27.2d, v30.2d[0]
 	fmla	v18.2d, v28.2d, v30.2d[0]
 	fmla	v19.2d, v29.2d, v30.2d[0]
 
@@ -449,10 +449,10 @@
 	ldp		q26, q27, [x10, #32]
 	ldp		q28, q29, [x10, #64]
 	add		x10, x10, x11
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v12.2d, v26.2d, v28.2d[0]
-	fmla	v13.2d, v27.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v30.2d[0]
+	fmla	v5.2d, v25.2d, v30.2d[0]
+	fmla	v12.2d, v26.2d, v30.2d[0]
+	fmla	v13.2d, v27.2d, v30.2d[0]
 	fmla	v20.2d, v28.2d, v30.2d[0]
 	fmla	v21.2d, v29.2d, v30.2d[0]
 
@@ -463,10 +463,10 @@
 	ldp		q26, q27, [x10, #32]
 	ldp		q28, q29, [x10, #64]
 	add		x10, x10, x11
-	fmla	v6.2d, v24.2d, v28.2d[0]
-	fmla	v7.2d, v25.2d, v28.2d[0]
-	fmla	v14.2d, v26.2d, v28.2d[0]
-	fmla	v15.2d, v27.2d, v28.2d[0]
+	fmla	v6.2d, v24.2d, v30.2d[0]
+	fmla	v7.2d, v25.2d, v30.2d[0]
+	fmla	v14.2d, v26.2d, v30.2d[0]
+	fmla	v15.2d, v27.2d, v30.2d[0]
 	fmla	v22.2d, v28.2d, v30.2d[0]
 	fmla	v23.2d, v29.2d, v30.2d[0]
 
@@ -481,10 +481,10 @@
 	ldr		q28, [x10, #64]
 	ldr		d29, [x10, #80]
 	add		x10, x10, x11
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
-	fmla	v9.2d, v27.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v30.2d[0]
+	fmla	v1.2d, v25.2d, v30.2d[0]
+	fmla	v8.2d, v26.2d, v30.2d[0]
+	fmla	v9.2d, v27.2d, v30.2d[0]
 	fmla	v16.2d, v28.2d, v30.2d[0]
 	fmla	v17.2d, v29.2d, v30.2d[0]
 
@@ -496,10 +496,10 @@
 	ldr		q28, [x10, #64]
 	ldr		d29, [x10, #80]
 	add		x10, x10, x11
-	fmla	v2.2d, v24.2d, v28.2d[0]
-	fmla	v3.2d, v25.2d, v28.2d[0]
-	fmla	v10.2d, v26.2d, v28.2d[0]
-	fmla	v11.2d, v27.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v30.2d[0]
+	fmla	v3.2d, v25.2d, v30.2d[0]
+	fmla	v10.2d, v26.2d, v30.2d[0]
+	fmla	v11.2d, v27.2d, v30.2d[0]
 	fmla	v18.2d, v28.2d, v30.2d[0]
 	fmla	v19.2d, v29.2d, v30.2d[0]
 
@@ -511,10 +511,10 @@
 	ldr		q28, [x10, #64]
 	ldr		d29, [x10, #80]
 	add		x10, x10, x11
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v12.2d, v26.2d, v28.2d[0]
-	fmla	v13.2d, v27.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v30.2d[0]
+	fmla	v5.2d, v25.2d, v30.2d[0]
+	fmla	v12.2d, v26.2d, v30.2d[0]
+	fmla	v13.2d, v27.2d, v30.2d[0]
 	fmla	v20.2d, v28.2d, v30.2d[0]
 	fmla	v21.2d, v29.2d, v30.2d[0]
 
@@ -526,10 +526,10 @@
 	ldr		q28, [x10, #64]
 	ldr		d29, [x10, #80]
 	add		x10, x10, x11
-	fmla	v6.2d, v24.2d, v28.2d[0]
-	fmla	v7.2d, v25.2d, v28.2d[0]
-	fmla	v14.2d, v26.2d, v28.2d[0]
-	fmla	v15.2d, v27.2d, v28.2d[0]
+	fmla	v6.2d, v24.2d, v30.2d[0]
+	fmla	v7.2d, v25.2d, v30.2d[0]
+	fmla	v14.2d, v26.2d, v30.2d[0]
+	fmla	v15.2d, v27.2d, v30.2d[0]
 	fmla	v22.2d, v28.2d, v30.2d[0]
 	fmla	v23.2d, v29.2d, v30.2d[0]
 
@@ -543,10 +543,10 @@
 	ldp		q26, q27, [x10, #32]
 	ldr		q28, [x10, #64]
 	add		x10, x10, x11
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
-	fmla	v9.2d, v27.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v30.2d[0]
+	fmla	v1.2d, v25.2d, v30.2d[0]
+	fmla	v8.2d, v26.2d, v30.2d[0]
+	fmla	v9.2d, v27.2d, v30.2d[0]
 	fmla	v16.2d, v28.2d, v30.2d[0]
 
 	cmp		w13, #1
@@ -556,10 +556,10 @@
 	ldp		q26, q27, [x10, #32]
 	ldr		q28, [x10, #64]
 	add		x10, x10, x11
-	fmla	v2.2d, v24.2d, v28.2d[0]
-	fmla	v3.2d, v25.2d, v28.2d[0]
-	fmla	v10.2d, v26.2d, v28.2d[0]
-	fmla	v11.2d, v27.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v30.2d[0]
+	fmla	v3.2d, v25.2d, v30.2d[0]
+	fmla	v10.2d, v26.2d, v30.2d[0]
+	fmla	v11.2d, v27.2d, v30.2d[0]
 	fmla	v18.2d, v28.2d, v30.2d[0]
 
 	cmp		w13, #2
@@ -569,10 +569,10 @@
 	ldp		q26, q27, [x10, #32]
 	ldr		q28, [x10, #64]
 	add		x10, x10, x11
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v12.2d, v26.2d, v28.2d[0]
-	fmla	v13.2d, v27.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v30.2d[0]
+	fmla	v5.2d, v25.2d, v30.2d[0]
+	fmla	v12.2d, v26.2d, v30.2d[0]
+	fmla	v13.2d, v27.2d, v30.2d[0]
 	fmla	v20.2d, v28.2d, v30.2d[0]
 
 	cmp		w13, #3
@@ -582,10 +582,10 @@
 	ldp		q26, q27, [x10, #32]
 	ldr		q28, [x10, #64]
 	add		x10, x10, x11
-	fmla	v6.2d, v24.2d, v28.2d[0]
-	fmla	v7.2d, v25.2d, v28.2d[0]
-	fmla	v14.2d, v26.2d, v28.2d[0]
-	fmla	v15.2d, v27.2d, v28.2d[0]
+	fmla	v6.2d, v24.2d, v30.2d[0]
+	fmla	v7.2d, v25.2d, v30.2d[0]
+	fmla	v14.2d, v26.2d, v30.2d[0]
+	fmla	v15.2d, v27.2d, v30.2d[0]
 	fmla	v22.2d, v28.2d, v30.2d[0]
 
 	b 0f
@@ -598,10 +598,10 @@
 	ldp		q26, q27, [x10, #32]
 	ldr		d28, [x10, #64]
 	add		x10, x10, x11
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
-	fmla	v9.2d, v27.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v30.2d[0]
+	fmla	v1.2d, v25.2d, v30.2d[0]
+	fmla	v8.2d, v26.2d, v30.2d[0]
+	fmla	v9.2d, v27.2d, v30.2d[0]
 	fmla	v16.2d, v28.2d, v30.2d[0]
 
 	cmp		w13, #1
@@ -611,10 +611,10 @@
 	ldp		q26, q27, [x10, #32]
 	ldr		d28, [x10, #64]
 	add		x10, x10, x11
-	fmla	v2.2d, v24.2d, v28.2d[0]
-	fmla	v3.2d, v25.2d, v28.2d[0]
-	fmla	v10.2d, v26.2d, v28.2d[0]
-	fmla	v11.2d, v27.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v30.2d[0]
+	fmla	v3.2d, v25.2d, v30.2d[0]
+	fmla	v10.2d, v26.2d, v30.2d[0]
+	fmla	v11.2d, v27.2d, v30.2d[0]
 	fmla	v18.2d, v28.2d, v30.2d[0]
 
 	cmp		w13, #2
@@ -624,10 +624,10 @@
 	ldp		q26, q27, [x10, #32]
 	ldr		d28, [x10, #64]
 	add		x10, x10, x11
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v12.2d, v26.2d, v28.2d[0]
-	fmla	v13.2d, v27.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v30.2d[0]
+	fmla	v5.2d, v25.2d, v30.2d[0]
+	fmla	v12.2d, v26.2d, v30.2d[0]
+	fmla	v13.2d, v27.2d, v30.2d[0]
 	fmla	v20.2d, v28.2d, v30.2d[0]
 
 	cmp		w13, #3
@@ -637,10 +637,10 @@
 	ldp		q26, q27, [x10, #32]
 	ldr		d28, [x10, #64]
 	add		x10, x10, x11
-	fmla	v6.2d, v24.2d, v28.2d[0]
-	fmla	v7.2d, v25.2d, v28.2d[0]
-	fmla	v14.2d, v26.2d, v28.2d[0]
-	fmla	v15.2d, v27.2d, v28.2d[0]
+	fmla	v6.2d, v24.2d, v30.2d[0]
+	fmla	v7.2d, v25.2d, v30.2d[0]
+	fmla	v14.2d, v26.2d, v30.2d[0]
+	fmla	v15.2d, v27.2d, v30.2d[0]
 	fmla	v22.2d, v28.2d, v30.2d[0]
 
 0:
