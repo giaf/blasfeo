@@ -139,6 +139,8 @@ ln:
 	if(m>=64 | k>=64 | k>K_MAX_STACK)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if(m>=32 | k>=32 | k>K_MAX_STACK)
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	if(m>16 | k>16 | k>K_MAX_STACK)
 #else
 	if(m>=12 | k>=12 | k>K_MAX_STACK)
 #endif
@@ -275,6 +277,8 @@ lt:
 	if(m>=64 | k>=64 | k>K_MAX_STACK)
 #elif  defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if(m>=32 | k>=32 | k>K_MAX_STACK)
+#elif  defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	if(m>16 | k>16 | k>K_MAX_STACK)
 #else
 	if(m>=12 | k>=12 | k>K_MAX_STACK)
 #endif
@@ -320,7 +324,7 @@ lt_0:
 			goto lt_0_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_dpack_tn_4_lib4(k, A+(ii+0)*lda, lda, pU+0*sdu);
@@ -376,7 +380,7 @@ lt_0_left_12:
 	goto ln_0_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 lt_0_left_8:
 	kernel_dpack_tn_4_lib4(k, A+(ii+0)*lda, lda, pU+0*sdu);
 	kernel_dpack_tn_4_vs_lib4(k, A+(ii+4)*lda, lda, pU+4*sdu, m-(ii+4));
@@ -416,6 +420,8 @@ un:
 	if(m>=64 | k>=64 | k>K_MAX_STACK)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if(m>=32 | k>=32 | k>K_MAX_STACK)
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	if(m>16 | k>16 | k>K_MAX_STACK)
 #else
 	if(m>=12 | k>=12 | k>K_MAX_STACK)
 #endif
@@ -552,6 +558,8 @@ ut:
 	if(m>=64 | k>=64 | k>K_MAX_STACK)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if(m>=32 | k>=32 | k>K_MAX_STACK)
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	if(m>16 | k>16 | k>K_MAX_STACK)
 #else
 	if(m>=12 | k>=12 | k>K_MAX_STACK)
 #endif
@@ -601,7 +609,7 @@ ut_0:
 			goto ut_0_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_dpack_tn_4_lib4(k, A+(ii+0)*lda, lda, pU+0*sdu);
@@ -661,7 +669,7 @@ ut_0_left_12:
 	goto ut_0_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 ut_0_left_8:
 	kernel_dpack_tn_4_lib4(k, A+(ii+0)*lda, lda, pU+0*sdu);
 	kernel_dpack_tn_4_vs_lib4(k, A+(ii+4)*lda, lda, pU+4*sdu, m-(ii+4));
