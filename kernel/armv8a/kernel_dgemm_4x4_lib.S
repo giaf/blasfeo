@@ -3003,6 +3003,66 @@
 // subroutine
 //
 // triangular substitution:
+// side = left
+// uplo = lower
+// tran = not-transposed
+// unit diagonal
+//
+// input arguments:
+// x8   <- E
+// x9   <- lde
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRSM_LLN_ONE_4X4_LIB
+#else
+	.align 4
+	FUN_START(inner_edge_trsm_lln_one_4x4_lib)
+#endif
+
+	ldp		q24, q25, [x8, #0] // E[0+4*0]
+	add		x8, x8, x9
+	ins		v24.d[0], xzr
+	fmls	v0.2d, v24.2d, v0.2d[0]
+	fmls	v1.2d, v25.2d, v0.2d[0]
+	fmls	v2.2d, v24.2d, v2.2d[0]
+	fmls	v3.2d, v25.2d, v2.2d[0]
+	fmls	v4.2d, v24.2d, v4.2d[0]
+	fmls	v5.2d, v25.2d, v4.2d[0]
+	fmls	v6.2d, v24.2d, v6.2d[0]
+	fmls	v7.2d, v25.2d, v6.2d[0]
+
+	ldr		q25, [x8, #16] // E[2+4*1]
+	add		x8, x8, x9
+	fmls	v1.2d, v25.2d, v0.2d[1]
+	fmls	v3.2d, v25.2d, v2.2d[1]
+	fmls	v5.2d, v25.2d, v4.2d[1]
+	fmls	v7.2d, v25.2d, v6.2d[1]
+
+	ldr		q25, [x8, #16] // E[2+4*2]
+//	add		x8, x8, x9
+	ins		v25.d[0], xzr
+	fmls	v1.2d, v25.2d, v1.2d[0]
+	fmls	v3.2d, v25.2d, v3.2d[0]
+	fmls	v5.2d, v25.2d, v5.2d[0]
+	fmls	v7.2d, v25.2d, v7.2d[0]
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_trsm_lln_one_4x4_lib)
+#endif
+
+
+
+
+
+// subroutine
+//
+// triangular substitution:
 // side = right
 // uplo = lower
 // tran = transposed
@@ -5530,6 +5590,178 @@
 	ret
 
 	FUN_END(kernel_dpotrf_nt_l_4x4_vs_lib44c)
+
+
+
+
+
+//                                         w0        x1         x2         x3       x4            x5         w6       x7         sp+0     sp+8       sp+16
+// void kernel_dtrsm_nn_ll_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
+
+	.align	4
+	GLOB_FUN_START(kernel_dtrsm_nn_ll_one_4x4_lib4ccc)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		x10, x2 // B
+	mov		w11, w3 // ldb
+	lsl		w11, w11, #3 // 8*ldb
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nn_4x4_lib4c
+#endif
+
+
+
+	// call inner blend for alpha=1.0 and beta=1.0
+	mov		x8, x4 // beta
+	mov		x9, x5 // C
+	mov		w10, w6 // ldc
+	lsl		w10, w10, #3 // 8*ldc
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_LIB
+#else
+	bl inner_scale_m1b_4x4_lib
+#endif
+
+
+
+	// solution
+	ldr		x8, [sp, #(STACKSIZE + 8)] // E
+	ldr		w9, [sp, #(STACKSIZE + 16)] // sde
+	lsl		w9, w9, #3 // 8*ldc
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRSM_LLN_ONE_4X4_LIB
+#else
+	bl inner_edge_trsm_lln_one_4x4_lib
+#endif
+
+
+
+	// store l
+	mov		x8, x7 // D
+	ldr		w9, [sp, #(STACKSIZE + 0)] // sdd
+	lsl		w9, w9, #3 // 8*ldd
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	bl inner_store_4x4_lib
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dtrsm_nn_ll_one_4x4_lib4ccc)
+
+
+
+
+
+
+//                                            w0        x1         x2         x3       x4            x5         w6       x7         sp+0     sp+8       sp+16    sp+24   sp+32
+// void kernel_dtrsm_nn_ll_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
+
+	.align	4
+	GLOB_FUN_START(kernel_dtrsm_nn_ll_one_4x4_vs_lib4ccc)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		x10, x2 // B
+	mov		w11, w3 // ldb
+	lsl		w11, w11, #3 // 8*ldb
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nn_4x4_lib4c
+#endif
+
+
+
+	// call inner blend for alpha=1.0 and beta=1.0
+	mov		x8, x4 // beta
+	mov		x9, x5 // C
+	mov		w10, w6 // ldc
+	lsl		w10, w10, #3 // 8*ldc
+	ldr		w11, [sp, #(STACKSIZE + 24)] // m1
+	ldr		w12, [sp, #(STACKSIZE + 32)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_VS_LIB
+#else
+	bl inner_scale_m1b_4x4_vs_lib
+#endif
+
+
+
+	// solution
+	ldr		x8, [sp, #(STACKSIZE + 8)] // E
+	ldr		w9, [sp, #(STACKSIZE + 16)] // sde
+	lsl		w9, w9, #3 // 8*ldc
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRSM_LLN_ONE_4X4_LIB
+#else
+	bl inner_edge_trsm_lln_one_4x4_lib
+#endif
+
+
+
+	// store l
+	mov		x8, x7 // D
+	ldr		w9, [sp, #(STACKSIZE + 0)] // sdd
+	lsl		w9, w9, #3 // 8*ldd
+	ldr		w10, [sp, #(STACKSIZE + 24)] // m1
+	ldr		w11, [sp, #(STACKSIZE + 32)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	bl inner_store_4x4_vs_lib
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dtrsm_nn_ll_one_4x4_vs_lib4ccc)
+
 
 
 

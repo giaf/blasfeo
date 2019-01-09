@@ -1958,7 +1958,6 @@ NAME:
 // x8   <- E
 //
 // output arguments:
-// x8   <- E
 
 #if MACRO_LEVEL>=1
 	.macro INNER_EDGE_TRSM_LLN_ONE_4X4_LIB4

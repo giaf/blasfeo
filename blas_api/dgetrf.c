@@ -105,7 +105,7 @@ void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info
 
 
 	// TODO
-	if(1)
+	if(0)
 #if defined(TARGET_X64_INTEL_HASWELL)
 //	if(m>200 | n>200 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -286,6 +286,7 @@ alg0:
 	for(; jj<n-3; jj+=4)
 		{
 
+// TODO fix for jj>m !!!
 		// pack
 		kernel_dpack_tn_4_lib4(jj, C+jj*ldc, ldc, pU);
 
@@ -307,8 +308,9 @@ alg0:
 			}
 
 		// pivot & factorize & solve
-		kernel_dgetrf_pivot_4_lib(m-jj, C+jj+jj*ldc, ldc, pd+jj, ipiv+jj);
-		for(ii=0; ii<4; ii++)
+		kernel_dgetrf_pivot_4_vs_lib(m-jj, C+jj+jj*ldc, ldc, pd+jj, ipiv+jj, n-jj);
+		n_max = p-jj<4 ? p-jj : 4;
+		for(ii=0; ii<n_max; ii++)
 			{
 			ipiv[jj+ii] += jj;
 			}
@@ -317,7 +319,8 @@ alg0:
 		kernel_dunpack_nt_4_lib4(jj, pU, C+jj*ldc, ldc);
 
 		// apply pivot
-		for(ii=0; ii<4; ii++)
+		n_max = p-jj<4 ? p-jj : 4;
+		for(ii=0; ii<n_max; ii++)
 			{
 			if(ipiv[jj+ii]!=jj+ii)
 				{
