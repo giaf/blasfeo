@@ -1799,6 +1799,104 @@
 // common inner routine with file scope
 //
 // triangular substitution:
+// side = left
+// uplo = lower
+// tran = not-transposed
+// unit diagonal
+//
+// input arguments:
+// r10  <- E
+// r11  <- lde
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSM_LLN_ONE_4X4_LIB
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_dtrsm_lln_one_4x4_lib)
+#endif
+
+	vxorpd		%ymm14, %ymm14, %ymm14
+
+	vmovupd		0(%r10), %ymm12
+	vblendpd	$0x1, %ymm14, %ymm12, %ymm12
+	vperm2f128	$0x00, %ymm0, %ymm0, %ymm13
+	vpermilpd	$0x0, %ymm13, %ymm13
+	vmulpd		%ymm12, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm0, %ymm0
+	vperm2f128	$0x00, %ymm1, %ymm1, %ymm13
+	vpermilpd	$0x0, %ymm13, %ymm13
+	vmulpd		%ymm12, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm1, %ymm1
+	vperm2f128	$0x00, %ymm2, %ymm2, %ymm13
+	vpermilpd	$0x0, %ymm13, %ymm13
+	vmulpd		%ymm12, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm2, %ymm2
+	vperm2f128	$0x00, %ymm3, %ymm3, %ymm13
+	vpermilpd	$0x0, %ymm13, %ymm13
+	vmulpd		%ymm12, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm3, %ymm3
+	add			%r11, %r10
+
+	vmovupd		0(%r10), %ymm12
+	vblendpd	$0x3, %ymm14, %ymm12, %ymm12
+	vperm2f128	$0x00, %ymm0, %ymm0, %ymm13
+	vpermilpd	$0xf, %ymm13, %ymm13
+	vmulpd		%ymm12, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm0, %ymm0
+	vperm2f128	$0x00, %ymm1, %ymm1, %ymm13
+	vpermilpd	$0xf, %ymm13, %ymm13
+	vmulpd		%ymm12, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm1, %ymm1
+	vperm2f128	$0x00, %ymm2, %ymm2, %ymm13
+	vpermilpd	$0xf, %ymm13, %ymm13
+	vmulpd		%ymm12, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm2, %ymm2
+	vperm2f128	$0x00, %ymm3, %ymm3, %ymm13
+	vpermilpd	$0xf, %ymm13, %ymm13
+	vmulpd		%ymm12, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm3, %ymm3
+	add			%r11, %r10
+
+	vmovupd		0(%r10), %ymm12
+	vblendpd	$0x7, %ymm14, %ymm12, %ymm12
+	vperm2f128	$0x11, %ymm0, %ymm0, %ymm13
+	vpermilpd	$0x0, %ymm13, %ymm13
+	vmulpd		%ymm12, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm0, %ymm0
+	vperm2f128	$0x11, %ymm1, %ymm1, %ymm13
+	vpermilpd	$0x0, %ymm13, %ymm13
+	vmulpd		%ymm12, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm1, %ymm1
+	vperm2f128	$0x11, %ymm2, %ymm2, %ymm13
+	vpermilpd	$0x0, %ymm13, %ymm13
+	vmulpd		%ymm12, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm2, %ymm2
+	vperm2f128	$0x11, %ymm3, %ymm3, %ymm13
+	vpermilpd	$0x0, %ymm13, %ymm13
+	vmulpd		%ymm12, %ymm13, %ymm15
+	vsubpd		%ymm15, %ymm3, %ymm3
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_dtrsm_lln_one_4x4_lib)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// triangular substitution:
 // side = right
 // uplo = lower
 // tran = not-transposed
@@ -9767,6 +9865,211 @@
 	ret
 
 	FUN_END(kernel_dtrsm_nt_ru_one_4x4_vs_lib4ccc)
+
+
+
+
+
+//                                         1      2          3          4        5             6          7        8          9        10         11
+// void kernel_dtrsm_nn_ll_one_4x4_lib4ccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrsm_nn_ll_one_4x4_lib4ccc)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt 
+
+	movq	ARG1, %r10 // k
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // B
+	movq	ARG4, %r13 // ldb
+	sall	$3, %r13d // ldb*sizeof(double)
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_4x4_lib4c)
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	ARG5, %r10 // beta
+	movq	ARG6, %r11 // C
+	movq	ARG7, %r12 // ldc
+	sall	$3, %r12d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_LIB
+#else
+	CALL(inner_scale_m1b_4x4_lib)
+#endif
+
+
+	// solve
+
+	movq	ARG10, %r10  // E 
+	movq	ARG11, %r11 // lde
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_LLN_ONE_4X4_LIB
+#else
+	CALL(inner_edge_dtrsm_lln_one_4x4_lib)
+#endif
+
+
+	// store
+
+	movq	ARG8, %r10 // D
+	movq	ARG9, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrsm_nn_ll_one_4x4_lib4ccc)
+
+
+
+
+
+//                                            1      2          3          4        5             6          7        8          9        10         11       12      13
+// void kernel_dtrsm_nn_ll_one_4x4_vs_lib4ccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrsm_nn_ll_one_4x4_vs_lib4ccc)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt 
+
+	movq	ARG1, %r10
+	movq	ARG2, %r11
+	movq	ARG3, %r12
+	movq	ARG4, %r13 // ldb
+	sall	$3, %r13d
+
+
+	movq	ARG14, %r14  // n1
+	cmpl	$1, %r14d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X1_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_4x1_lib4c)
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG14, %r14  // n1
+	cmpl	$2, %r14d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X2_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_4x2_lib4c)
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG14, %r14  // n1
+	cmpl	$3, %r14d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X3_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_4x3_lib4c)
+#endif
+
+	jmp		103f
+
+102:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_4x4_lib4c)
+#endif
+
+103:
+
+
+	// call inner blender_loader nn
+
+	movq	ARG5, %r10 // beta
+	movq	ARG6, %r11 // C
+	movq	ARG7, %r12 // ldc
+	sall	$3, %r12d
+	movq	ARG12, %r13 // m1
+	movq	ARG13, %r14 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_VS_LIB
+#else
+	CALL(inner_scale_m1b_4x4_vs_lib)
+#endif
+
+
+	// solve
+
+	movq	ARG10, %r10  // E 
+	movq	ARG11, %r11 // lde
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_LLN_ONE_4X4_LIB
+#else
+	CALL(inner_edge_dtrsm_lln_one_4x4_lib)
+#endif
+
+
+	// store
+
+	movq	ARG8, %r10 // D
+	movq	ARG9, %r11 // ldd
+	sall	$3, %r11d
+	movq	ARG12, %r12 // m1
+	movq	ARG13, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrsm_nn_ll_one_4x4_vs_lib4ccc)
 
 
 
