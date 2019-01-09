@@ -4,7 +4,7 @@ BLASFEO ChangeLog
 
 ====================================================================
 Version 0.1.1-master
-31-Dec-2018
+09-Jan-2019
 
 common:
 	* example_d_riccati_recursion: add trf for blas_api
@@ -39,7 +39,8 @@ ARMv8A:
 		- improve kernels dgemm_nn & dgemm_nt lib4
 		- add kernels dgemm_nn & dgemm_nt lib4c
 	* Cortex A53:
-		- add optimized kernels dgenn_nn lib4
+		- add optimized kernels dgemm_nn lib4
+		- add kernels dgemm_nn & dgemm_nt lib4c (not fully optimized)
 
 
 
