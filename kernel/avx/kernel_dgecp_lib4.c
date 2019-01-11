@@ -47,7 +47,7 @@
 
 
 // both A and B are aligned to 256-bit boundaries
-void kernel_dgecp_8_0_lib4(int tri, int kmax, double *A0, int sda, double *B0, int sdb)
+void kernel_dgecp_8_0_lib4(int tri, int kmax, double *A0, int sda, double *B, int sdb)
 	{
 
 	if(tri==1)
@@ -64,7 +64,7 @@ void kernel_dgecp_8_0_lib4(int tri, int kmax, double *A0, int sda, double *B0, i
 	const int bs = 4;
 
 	double *A1 = A0 + bs*sda;
-	double *B1 = B0 + bs*sdb;
+	double *B1 = B + bs*sdb;
 
 	__m256d
 		a_0;
@@ -79,19 +79,19 @@ void kernel_dgecp_8_0_lib4(int tri, int kmax, double *A0, int sda, double *B0, i
 
 		// 4x4
 		a_0 = _mm256_load_pd( &A0[0+bs*0] );
-		_mm256_store_pd( &B0[0+bs*0], a_0 );
+		_mm256_store_pd( &B[0+bs*0], a_0 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*1] );
-		_mm256_store_pd( &B0[0+bs*1], a_0 );
+		_mm256_store_pd( &B[0+bs*1], a_0 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*2] );
-		_mm256_store_pd( &B0[0+bs*2], a_0 );
+		_mm256_store_pd( &B[0+bs*2], a_0 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*3] );
-		_mm256_store_pd( &B0[0+bs*3], a_0 );
+		_mm256_store_pd( &B[0+bs*3], a_0 );
 
 		A0 += 16;
-		B0 += 16;
+		B += 16;
 
 		// 4x4
 		a_0 = _mm256_load_pd( &A1[0+bs*0] );
@@ -115,10 +115,10 @@ void kernel_dgecp_8_0_lib4(int tri, int kmax, double *A0, int sda, double *B0, i
 
 		// 4x1
 		a_0 = _mm256_load_pd( &A0[0+bs*0] );
-		_mm256_store_pd( &B0[0+bs*0], a_0 );
+		_mm256_store_pd( &B[0+bs*0], a_0 );
 
 		A0 += 4;
-		B0 += 4;
+		B += 4;
 
 		// 4x1
 		a_0 = _mm256_load_pd( &A1[0+bs*0] );
@@ -136,10 +136,10 @@ void kernel_dgecp_8_0_lib4(int tri, int kmax, double *A0, int sda, double *B0, i
 		// 7x1
 		// 1 SSE2
 		c_0 = _mm_load_sd( &A0[1+0*bs] );
-		_mm_store_sd( &B0[1+0*bs], c_0 );
+		_mm_store_sd( &B[1+0*bs], c_0 );
 		// 2 SSE2
 		c_0 = _mm_load_pd( &A0[2+0*bs] );
-		_mm_store_pd( &B0[2+0*bs], c_0 );
+		_mm_store_pd( &B[2+0*bs], c_0 );
 		// 4 AVX
 		a_0 = _mm256_load_pd( &A1[0+0*bs] );
 		_mm256_store_pd( &B1[0+0*bs], a_0 );
@@ -147,7 +147,7 @@ void kernel_dgecp_8_0_lib4(int tri, int kmax, double *A0, int sda, double *B0, i
 		// 6x1
 		// 2 SSE2
 		c_0 = _mm_load_pd( &A0[2+1*bs] );
-		_mm_store_pd( &B0[2+1*bs], c_0 );
+		_mm_store_pd( &B[2+1*bs], c_0 );
 		// 4 AVX
 		a_0 = _mm256_load_pd( &A1[0+1*bs] );
 		_mm256_store_pd( &B1[0+1*bs], a_0 );
@@ -155,7 +155,7 @@ void kernel_dgecp_8_0_lib4(int tri, int kmax, double *A0, int sda, double *B0, i
 		// 5x1
 		// 1 SSE2
 		c_0 = _mm_load_sd( &A0[3+2*bs] );
-		_mm_store_sd( &B0[3+2*bs], c_0 );
+		_mm_store_sd( &B[3+2*bs], c_0 );
 		// 4 AVX
 		a_0 = _mm256_load_pd( &A1[0+2*bs] );
 		_mm256_store_pd( &B1[0+2*bs], a_0 );
@@ -279,7 +279,7 @@ void kernel_dgecp_4_0_lib4(int tri, int kmax, double *A, double *B)
 
 
 // both A and B are aligned to 256-bit boundaries
-void kernel_dgecpsc_8_0_lib4(int tri, int kmax, double alpha, double *A0, int sda,  double *B0, int sdb)
+void kernel_dgecpsc_8_0_lib4(int tri, int kmax, double alpha, double *A0, int sda,  double *B, int sdb)
 	{
 
 	if(tri==1)
@@ -296,7 +296,7 @@ void kernel_dgecpsc_8_0_lib4(int tri, int kmax, double alpha, double *A0, int sd
 	const int bs = 4;
 
 	double *A1 = A0 + bs*sda;
-	double *B1 = B0 + bs*sdb;
+	double *B1 = B + bs*sdb;
 
 	__m256d
 		alpha_0,
@@ -314,22 +314,22 @@ void kernel_dgecpsc_8_0_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 		a_0 = _mm256_load_pd( &A0[0+bs*0] );
 		a_0 = _mm256_mul_pd( alpha_0, a_0 );
-		_mm256_store_pd( &B0[0+bs*0], a_0 );
+		_mm256_store_pd( &B[0+bs*0], a_0 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*1] );
 		a_0 = _mm256_mul_pd( alpha_0, a_0 );
-		_mm256_store_pd( &B0[0+bs*1], a_0 );
+		_mm256_store_pd( &B[0+bs*1], a_0 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*2] );
 		a_0 = _mm256_mul_pd( alpha_0, a_0 );
-		_mm256_store_pd( &B0[0+bs*2], a_0 );
+		_mm256_store_pd( &B[0+bs*2], a_0 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*3] );
 		a_0 = _mm256_mul_pd( alpha_0, a_0 );
-		_mm256_store_pd( &B0[0+bs*3], a_0 );
+		_mm256_store_pd( &B[0+bs*3], a_0 );
 
 		A0 += 16;
-		B0 += 16;
+		B += 16;
 
 		a_0 = _mm256_load_pd( &A1[0+bs*0] );
 		a_0 = _mm256_mul_pd( alpha_0, a_0 );
@@ -356,10 +356,10 @@ void kernel_dgecpsc_8_0_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 		a_0 = _mm256_load_pd( &A0[0+bs*0] );
 		a_0 = _mm256_mul_pd( alpha_0, a_0 );
-		_mm256_store_pd( &B0[0+bs*0], a_0 );
+		_mm256_store_pd( &B[0+bs*0], a_0 );
 
 		A0 += 4;
-		B0 += 4;
+		B += 4;
 
 		a_0 = _mm256_load_pd( &A1[0+bs*0] );
 		a_0 = _mm256_mul_pd( alpha_0, a_0 );
@@ -376,24 +376,24 @@ void kernel_dgecpsc_8_0_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 		c_0 = _mm_load_sd( &A0[1+0*bs] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_sd( &B0[1+0*bs], c_0 );
+		_mm_store_sd( &B[1+0*bs], c_0 );
 		c_0 = _mm_load_pd( &A0[2+0*bs] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_pd( &B0[2+0*bs], c_0 );
+		_mm_store_pd( &B[2+0*bs], c_0 );
 		a_0 = _mm256_load_pd( &A1[0+0*bs] );
 		a_0 = _mm256_mul_pd( alpha_0, a_0 );
 		_mm256_store_pd( &B1[0+0*bs], a_0 );
 
 		c_0 = _mm_load_pd( &A0[2+1*bs] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_pd( &B0[2+1*bs], c_0 );
+		_mm_store_pd( &B[2+1*bs], c_0 );
 		a_0 = _mm256_load_pd( &A1[0+1*bs] );
 		a_0 = _mm256_mul_pd( alpha_0, a_0 );
 		_mm256_store_pd( &B1[0+1*bs], a_0 );
 
 		c_0 = _mm_load_sd( &A0[3+2*bs] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_sd( &B0[3+2*bs], c_0 );
+		_mm_store_sd( &B[3+2*bs], c_0 );
 		a_0 = _mm256_load_pd( &A1[0+2*bs] );
 		a_0 = _mm256_mul_pd( alpha_0, a_0 );
 		_mm256_store_pd( &B1[0+2*bs], a_0 );
@@ -424,7 +424,7 @@ void kernel_dgecpsc_8_0_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 
 // both A and B are aligned to 256-bit boundaries, 1 element of A must be skipped
-void kernel_dgecpsc_8_1_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B0, int sdb)
+void kernel_dgecpsc_8_1_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B, int sdb)
 	{
 
 	if(tri==1)
@@ -442,7 +442,7 @@ void kernel_dgecpsc_8_1_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 	double *A1 = A0 + bs*sda;
 	double *A2 = A1 + bs*sda;
-	double *B1 = B0 + bs*sdb;
+	double *B1 = B + bs*sdb;
 
 	__m256d
 		alpha_0,
@@ -469,7 +469,7 @@ void kernel_dgecpsc_8_1_lib4(int tri, int kmax, double alpha, double *A0, int sd
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		_mm256_store_pd( &B1[0+bs*0], b_1 );
-		_mm256_store_pd( &B0[0+bs*0], b_0 );
+		_mm256_store_pd( &B[0+bs*0], b_0 );
 
 		a_2 = _mm256_load_pd( &A2[0+bs*1] );
 		a_1 = _mm256_load_pd( &A1[0+bs*1] );
@@ -481,7 +481,7 @@ void kernel_dgecpsc_8_1_lib4(int tri, int kmax, double alpha, double *A0, int sd
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		_mm256_store_pd( &B1[0+bs*1], b_1 );
-		_mm256_store_pd( &B0[0+bs*1], b_0 );
+		_mm256_store_pd( &B[0+bs*1], b_0 );
 
 		a_2 = _mm256_load_pd( &A2[0+bs*2] );
 		a_1 = _mm256_load_pd( &A1[0+bs*2] );
@@ -493,7 +493,7 @@ void kernel_dgecpsc_8_1_lib4(int tri, int kmax, double alpha, double *A0, int sd
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		_mm256_store_pd( &B1[0+bs*2], b_1 );
-		_mm256_store_pd( &B0[0+bs*2], b_0 );
+		_mm256_store_pd( &B[0+bs*2], b_0 );
 
 		a_2 = _mm256_load_pd( &A2[0+bs*3] );
 		a_1 = _mm256_load_pd( &A1[0+bs*3] );
@@ -505,12 +505,12 @@ void kernel_dgecpsc_8_1_lib4(int tri, int kmax, double alpha, double *A0, int sd
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		_mm256_store_pd( &B1[0+bs*3], b_1 );
-		_mm256_store_pd( &B0[0+bs*3], b_0 );
+		_mm256_store_pd( &B[0+bs*3], b_0 );
 
 		A0 += 16;
 		A1 += 16;
 		A2 += 16;
-		B0 += 16;
+		B += 16;
 		B1 += 16;
 
 		}
@@ -527,12 +527,12 @@ void kernel_dgecpsc_8_1_lib4(int tri, int kmax, double alpha, double *A0, int sd
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		_mm256_store_pd( &B1[0+bs*0], b_1 );
-		_mm256_store_pd( &B0[0+bs*0], b_0 );
+		_mm256_store_pd( &B[0+bs*0], b_0 );
 
 		A0 += 4;
 		A1 += 4;
 		A2 += 4;
-		B0 += 4;
+		B += 4;
 		B1 += 4;
 
 		}
@@ -543,10 +543,10 @@ void kernel_dgecpsc_8_1_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 		c_0 = _mm_load_pd( &A0[2+bs*0] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_storeu_pd( &B0[1+bs*0], c_0 );
+		_mm_storeu_pd( &B[1+bs*0], c_0 );
 		c_0 = _mm_load_sd( &A1[0+bs*0] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_sd( &B0[3+bs*0], c_0 );
+		_mm_store_sd( &B[3+bs*0], c_0 );
 		c_0 = _mm_load_sd( &A1[1+bs*0] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
 		_mm_store_sd( &B1[0+bs*0], c_0 );
@@ -559,10 +559,10 @@ void kernel_dgecpsc_8_1_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 		c_0 = _mm_load_sd( &A0[3+bs*1] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_sd( &B0[2+bs*1], c_0 );
+		_mm_store_sd( &B[2+bs*1], c_0 );
 		c_0 = _mm_load_sd( &A1[0+bs*1] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_sd( &B0[3+bs*1], c_0 );
+		_mm_store_sd( &B[3+bs*1], c_0 );
 		c_0 = _mm_load_sd( &A1[1+bs*1] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
 		_mm_store_sd( &B1[0+bs*1], c_0 );
@@ -575,7 +575,7 @@ void kernel_dgecpsc_8_1_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 		c_0 = _mm_load_sd( &A1[0+bs*2] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_sd( &B0[3+bs*2], c_0 );
+		_mm_store_sd( &B[3+bs*2], c_0 );
 		c_0 = _mm_load_sd( &A1[1+bs*2] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
 		_mm_store_sd( &B1[0+bs*2], c_0 );
@@ -620,7 +620,7 @@ void kernel_dgecpsc_8_1_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 
 // both A and B are aligned to 256-bit boundaries, 2 elements of A must be skipped
-void kernel_dgecpsc_8_2_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B0, int sdb)
+void kernel_dgecpsc_8_2_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B, int sdb)
 	{
 
 	if(tri==1)
@@ -638,7 +638,7 @@ void kernel_dgecpsc_8_2_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 	double *A1 = A0 + bs*sda;
 	double *A2 = A1 + bs*sda;
-	double *B1 = B0 + bs*sdb;
+	double *B1 = B + bs*sdb;
 
 	__m256d
 		alpha_0,
@@ -662,7 +662,7 @@ void kernel_dgecpsc_8_2_lib4(int tri, int kmax, double alpha, double *A0, int sd
 		b_1 = _mm256_permute2f128_pd( a_1, a_2, 0x21 );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
-		_mm256_store_pd( &B0[0+bs*0], b_0 );
+		_mm256_store_pd( &B[0+bs*0], b_0 );
 		_mm256_store_pd( &B1[0+bs*0], b_1 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*1] );
@@ -672,7 +672,7 @@ void kernel_dgecpsc_8_2_lib4(int tri, int kmax, double alpha, double *A0, int sd
 		b_1 = _mm256_permute2f128_pd( a_1, a_2, 0x21 );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
-		_mm256_store_pd( &B0[0+bs*1], b_0 );
+		_mm256_store_pd( &B[0+bs*1], b_0 );
 		_mm256_store_pd( &B1[0+bs*1], b_1 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*2] );
@@ -682,7 +682,7 @@ void kernel_dgecpsc_8_2_lib4(int tri, int kmax, double alpha, double *A0, int sd
 		b_1 = _mm256_permute2f128_pd( a_1, a_2, 0x21 );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
-		_mm256_store_pd( &B0[0+bs*2], b_0 );
+		_mm256_store_pd( &B[0+bs*2], b_0 );
 		_mm256_store_pd( &B1[0+bs*2], b_1 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*3] );
@@ -692,13 +692,13 @@ void kernel_dgecpsc_8_2_lib4(int tri, int kmax, double alpha, double *A0, int sd
 		b_1 = _mm256_permute2f128_pd( a_1, a_2, 0x21 );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
-		_mm256_store_pd( &B0[0+bs*3], b_0 );
+		_mm256_store_pd( &B[0+bs*3], b_0 );
 		_mm256_store_pd( &B1[0+bs*3], b_1 );
 
 		A0 += 16;
 		A1 += 16;
 		A2 += 16;
-		B0 += 16;
+		B += 16;
 		B1 += 16;
 
 		}
@@ -712,13 +712,13 @@ void kernel_dgecpsc_8_2_lib4(int tri, int kmax, double alpha, double *A0, int sd
 		b_1 = _mm256_permute2f128_pd( a_1, a_2, 0x21 );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
-		_mm256_store_pd( &B0[0+bs*0], b_0 );
+		_mm256_store_pd( &B[0+bs*0], b_0 );
 		_mm256_store_pd( &B1[0+bs*0], b_1 );
 
 		A0 += 4;
 		A1 += 4;
 		A2 += 4;
-		B0 += 4;
+		B += 4;
 		B1 += 4;
 
 		}
@@ -729,10 +729,10 @@ void kernel_dgecpsc_8_2_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 		c_0 = _mm_load_sd( &A0[3+bs*0] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_sd( &B0[1+bs*0], c_0 );
+		_mm_store_sd( &B[1+bs*0], c_0 );
 		c_0 = _mm_load_pd( &A1[0+bs*0] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_pd( &B0[2+bs*0], c_0 );
+		_mm_store_pd( &B[2+bs*0], c_0 );
 		c_0 = _mm_load_pd( &A1[2+bs*0] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
 		_mm_store_pd( &B1[0+bs*0], c_0 );
@@ -742,7 +742,7 @@ void kernel_dgecpsc_8_2_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 		c_0 = _mm_load_pd( &A1[0+bs*1] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_pd( &B0[2+bs*1], c_0 );
+		_mm_store_pd( &B[2+bs*1], c_0 );
 		c_0 = _mm_load_pd( &A1[2+bs*1] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
 		_mm_store_pd( &B1[0+bs*1], c_0 );
@@ -752,7 +752,7 @@ void kernel_dgecpsc_8_2_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 		c_0 = _mm_load_sd( &A1[1+bs*2] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_sd( &B0[3+bs*2], c_0 );
+		_mm_store_sd( &B[3+bs*2], c_0 );
 		c_0 = _mm_load_pd( &A1[2+bs*2] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
 		_mm_store_pd( &B1[0+bs*2], c_0 );
@@ -789,7 +789,7 @@ void kernel_dgecpsc_8_2_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 
 // both A and B are aligned to 256-bit boundaries, 3 elements of A must be skipped
-void kernel_dgecpsc_8_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B0, int sdb)
+void kernel_dgecpsc_8_3_lib4(int tri, int kmax, double alpha, double *A0, int sda, double *B, int sdb)
 	{
 
 	if(tri==1)
@@ -807,7 +807,7 @@ void kernel_dgecpsc_8_3_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 	double *A1 = A0 + bs*sda;
 	double *A2 = A1 + bs*sda;
-	double *B1 = B0 + bs*sdb;
+	double *B1 = B + bs*sdb;
 
 	__m256d
 		alpha_0,
@@ -833,7 +833,7 @@ void kernel_dgecpsc_8_3_lib4(int tri, int kmax, double alpha, double *A0, int sd
 		b_1 = _mm256_shuffle_pd( b_1, a_2, 0x5 );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
-		_mm256_store_pd( &B0[0+bs*0], b_0 );
+		_mm256_store_pd( &B[0+bs*0], b_0 );
 		_mm256_store_pd( &B1[0+bs*0], b_1 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*1] );
@@ -845,7 +845,7 @@ void kernel_dgecpsc_8_3_lib4(int tri, int kmax, double alpha, double *A0, int sd
 		b_1 = _mm256_shuffle_pd( b_1, a_2, 0x5 );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
-		_mm256_store_pd( &B0[0+bs*1], b_0 );
+		_mm256_store_pd( &B[0+bs*1], b_0 );
 		_mm256_store_pd( &B1[0+bs*1], b_1 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*2] );
@@ -857,7 +857,7 @@ void kernel_dgecpsc_8_3_lib4(int tri, int kmax, double alpha, double *A0, int sd
 		b_1 = _mm256_shuffle_pd( b_1, a_2, 0x5 );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
-		_mm256_store_pd( &B0[0+bs*2], b_0 );
+		_mm256_store_pd( &B[0+bs*2], b_0 );
 		_mm256_store_pd( &B1[0+bs*2], b_1 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*3] );
@@ -869,13 +869,13 @@ void kernel_dgecpsc_8_3_lib4(int tri, int kmax, double alpha, double *A0, int sd
 		b_1 = _mm256_shuffle_pd( b_1, a_2, 0x5 );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
-		_mm256_store_pd( &B0[0+bs*3], b_0 );
+		_mm256_store_pd( &B[0+bs*3], b_0 );
 		_mm256_store_pd( &B1[0+bs*3], b_1 );
 
 		A0 += 16;
 		A1 += 16;
 		A2 += 16;
-		B0 += 16;
+		B += 16;
 		B1 += 16;
 
 		}
@@ -891,13 +891,13 @@ void kernel_dgecpsc_8_3_lib4(int tri, int kmax, double alpha, double *A0, int sd
 		b_1 = _mm256_shuffle_pd( b_1, a_2, 0x5 );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
-		_mm256_store_pd( &B0[0+bs*0], b_0 );
+		_mm256_store_pd( &B[0+bs*0], b_0 );
 		_mm256_store_pd( &B1[0+bs*0], b_1 );
 
 		A0 += 4;
 		A1 += 4;
 		A2 += 4;
-		B0 += 4;
+		B += 4;
 		B1 += 4;
 
 		}
@@ -908,10 +908,10 @@ void kernel_dgecpsc_8_3_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 		c_0 = _mm_load_pd( &A1[0+bs*0] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_storeu_pd( &B0[1+bs*0], c_0 );
+		_mm_storeu_pd( &B[1+bs*0], c_0 );
 		c_0 = _mm_load_sd( &A1[2+bs*0] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_sd( &B0[3+bs*0], c_0 );
+		_mm_store_sd( &B[3+bs*0], c_0 );
 		c_0 = _mm_load_sd( &A1[3+bs*0] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
 		_mm_store_sd( &B1[0+bs*0], c_0 );
@@ -924,10 +924,10 @@ void kernel_dgecpsc_8_3_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 		c_0 = _mm_load_sd( &A1[1+bs*1] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_sd( &B0[2+bs*1], c_0 );
+		_mm_store_sd( &B[2+bs*1], c_0 );
 		c_0 = _mm_load_sd( &A1[2+bs*1] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_sd( &B0[3+bs*1], c_0 );
+		_mm_store_sd( &B[3+bs*1], c_0 );
 		c_0 = _mm_load_sd( &A1[3+bs*1] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
 		_mm_store_sd( &B1[0+bs*1], c_0 );
@@ -940,7 +940,7 @@ void kernel_dgecpsc_8_3_lib4(int tri, int kmax, double alpha, double *A0, int sd
 
 		c_0 = _mm_load_sd( &A1[2+bs*2] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
-		_mm_store_sd( &B0[3+bs*2], c_0 );
+		_mm_store_sd( &B[3+bs*2], c_0 );
 		c_0 = _mm_load_sd( &A1[3+bs*2] );
 		c_0 = _mm_mul_pd( _mm256_castpd256_pd128( alpha_0 ), c_0 );
 		_mm_store_sd( &B1[0+bs*2], c_0 );
@@ -1912,7 +1912,7 @@ void kernel_dgecpsc_1_0_lib4(int tri, int kmax, double alpha, double *A, double 
 
 
 // both A and B are aligned to 256-bit boundaries
-void kernel_dgead_8_0_lib4(int kmax, double alpha, double *A0, int sda,  double *B0, int sdb)
+void kernel_dgead_8_0_lib4(int kmax, double alpha, double *A0, int sda,  double *B, int sdb)
 	{
 
 	if(kmax<=0)
@@ -1921,7 +1921,7 @@ void kernel_dgead_8_0_lib4(int kmax, double alpha, double *A0, int sda,  double 
 	const int bs = 4;
 
 	double *A1 = A0 + bs*sda;
-	double *B1 = B0 + bs*sdb;
+	double *B1 = B + bs*sdb;
 
 	__m256d
 		a_0, c_0, alpha_0;
@@ -1934,31 +1934,31 @@ void kernel_dgead_8_0_lib4(int kmax, double alpha, double *A0, int sda,  double 
 		{
 
 		a_0 = _mm256_load_pd( &A0[0+bs*0] );
-		c_0 = _mm256_load_pd( &B0[0+bs*0] );
+		c_0 = _mm256_load_pd( &B[0+bs*0] );
 		a_0 = _mm256_mul_pd( alpha_0, a_0 );
 		a_0 = _mm256_add_pd( a_0, c_0 );
-		_mm256_store_pd( &B0[0+bs*0], a_0 );
+		_mm256_store_pd( &B[0+bs*0], a_0 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*1] );
-		c_0 = _mm256_load_pd( &B0[0+bs*1] );
+		c_0 = _mm256_load_pd( &B[0+bs*1] );
 		a_0 = _mm256_mul_pd( alpha_0, a_0 );
 		a_0 = _mm256_add_pd( a_0, c_0 );
-		_mm256_store_pd( &B0[0+bs*1], a_0 );
+		_mm256_store_pd( &B[0+bs*1], a_0 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*2] );
-		c_0 = _mm256_load_pd( &B0[0+bs*2] );
+		c_0 = _mm256_load_pd( &B[0+bs*2] );
 		a_0 = _mm256_mul_pd( alpha_0, a_0 );
 		a_0 = _mm256_add_pd( a_0, c_0 );
-		_mm256_store_pd( &B0[0+bs*2], a_0 );
+		_mm256_store_pd( &B[0+bs*2], a_0 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*3] );
-		c_0 = _mm256_load_pd( &B0[0+bs*3] );
+		c_0 = _mm256_load_pd( &B[0+bs*3] );
 		a_0 = _mm256_mul_pd( alpha_0, a_0 );
 		a_0 = _mm256_add_pd( a_0, c_0 );
-		_mm256_store_pd( &B0[0+bs*3], a_0 );
+		_mm256_store_pd( &B[0+bs*3], a_0 );
 
 		A0 += 16;
-		B0 += 16;
+		B += 16;
 
 		a_0 = _mm256_load_pd( &A1[0+bs*0] );
 		c_0 = _mm256_load_pd( &B1[0+bs*0] );
@@ -1992,13 +1992,13 @@ void kernel_dgead_8_0_lib4(int kmax, double alpha, double *A0, int sda,  double 
 		{
 
 		a_0 = _mm256_load_pd( &A0[0+bs*0] );
-		c_0 = _mm256_load_pd( &B0[0+bs*0] );
+		c_0 = _mm256_load_pd( &B[0+bs*0] );
 		a_0 = _mm256_mul_pd( alpha_0, a_0 );
 		a_0 = _mm256_add_pd( a_0, c_0 );
-		_mm256_store_pd( &B0[0+bs*0], a_0 );
+		_mm256_store_pd( &B[0+bs*0], a_0 );
 
 		A0 += 4;
-		B0 += 4;
+		B += 4;
 
 		a_0 = _mm256_load_pd( &A1[0+bs*0] );
 		c_0 = _mm256_load_pd( &B1[0+bs*0] );
@@ -2016,7 +2016,7 @@ void kernel_dgead_8_0_lib4(int kmax, double alpha, double *A0, int sda,  double 
 
 
 // both A and B are aligned to 256-bit boundaries, 1 element of A must be skipped
-void kernel_dgead_8_1_lib4(int kmax, double alpha, double *A0, int sda, double *B0, int sdb)
+void kernel_dgead_8_1_lib4(int kmax, double alpha, double *A0, int sda, double *B, int sdb)
 	{
 
 	if(kmax<=0)
@@ -2026,7 +2026,7 @@ void kernel_dgead_8_1_lib4(int kmax, double alpha, double *A0, int sda, double *
 
 	double *A1 = A0 + bs*sda;
 	double *A2 = A1 + bs*sda;
-	double *B1 = B0 + bs*sdb;
+	double *B1 = B + bs*sdb;
 
 	__m256d
 		a_0, a_1, a_2,
@@ -2048,13 +2048,13 @@ void kernel_dgead_8_1_lib4(int kmax, double alpha, double *A0, int sda, double *
 		b_1 = _mm256_shuffle_pd( a_1, a_2, 0x5 );
 		b_0 = _mm256_shuffle_pd( a_0, b_0, 0x5 );
 		c_1 = _mm256_load_pd( &B1[0+bs*0] );
-		c_0 = _mm256_load_pd( &B0[0+bs*0] );
+		c_0 = _mm256_load_pd( &B[0+bs*0] );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_add_pd ( c_1, b_1 );
 		b_0 = _mm256_add_pd ( c_0, b_0 );
 		_mm256_store_pd( &B1[0+bs*0], b_1 );
-		_mm256_store_pd( &B0[0+bs*0], b_0 );
+		_mm256_store_pd( &B[0+bs*0], b_0 );
 
 		a_2 = _mm256_load_pd( &A2[0+bs*1] );
 		a_1 = _mm256_load_pd( &A1[0+bs*1] );
@@ -2064,13 +2064,13 @@ void kernel_dgead_8_1_lib4(int kmax, double alpha, double *A0, int sda, double *
 		b_1 = _mm256_shuffle_pd( a_1, a_2, 0x5 );
 		b_0 = _mm256_shuffle_pd( a_0, b_0, 0x5 );
 		c_1 = _mm256_load_pd( &B1[0+bs*1] );
-		c_0 = _mm256_load_pd( &B0[0+bs*1] );
+		c_0 = _mm256_load_pd( &B[0+bs*1] );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_add_pd ( c_1, b_1 );
 		b_0 = _mm256_add_pd ( c_0, b_0 );
 		_mm256_store_pd( &B1[0+bs*1], b_1 );
-		_mm256_store_pd( &B0[0+bs*1], b_0 );
+		_mm256_store_pd( &B[0+bs*1], b_0 );
 
 		a_2 = _mm256_load_pd( &A2[0+bs*2] );
 		a_1 = _mm256_load_pd( &A1[0+bs*2] );
@@ -2080,13 +2080,13 @@ void kernel_dgead_8_1_lib4(int kmax, double alpha, double *A0, int sda, double *
 		b_1 = _mm256_shuffle_pd( a_1, a_2, 0x5 );
 		b_0 = _mm256_shuffle_pd( a_0, b_0, 0x5 );
 		c_1 = _mm256_load_pd( &B1[0+bs*2] );
-		c_0 = _mm256_load_pd( &B0[0+bs*2] );
+		c_0 = _mm256_load_pd( &B[0+bs*2] );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_add_pd ( c_1, b_1 );
 		b_0 = _mm256_add_pd ( c_0, b_0 );
 		_mm256_store_pd( &B1[0+bs*2], b_1 );
-		_mm256_store_pd( &B0[0+bs*2], b_0 );
+		_mm256_store_pd( &B[0+bs*2], b_0 );
 
 		a_2 = _mm256_load_pd( &A2[0+bs*3] );
 		a_1 = _mm256_load_pd( &A1[0+bs*3] );
@@ -2096,18 +2096,18 @@ void kernel_dgead_8_1_lib4(int kmax, double alpha, double *A0, int sda, double *
 		b_1 = _mm256_shuffle_pd( a_1, a_2, 0x5 );
 		b_0 = _mm256_shuffle_pd( a_0, b_0, 0x5 );
 		c_1 = _mm256_load_pd( &B1[0+bs*3] );
-		c_0 = _mm256_load_pd( &B0[0+bs*3] );
+		c_0 = _mm256_load_pd( &B[0+bs*3] );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_add_pd ( c_1, b_1 );
 		b_0 = _mm256_add_pd ( c_0, b_0 );
 		_mm256_store_pd( &B1[0+bs*3], b_1 );
-		_mm256_store_pd( &B0[0+bs*3], b_0 );
+		_mm256_store_pd( &B[0+bs*3], b_0 );
 
 		A0 += 16;
 		A1 += 16;
 		A2 += 16;
-		B0 += 16;
+		B += 16;
 		B1 += 16;
 
 		}
@@ -2122,18 +2122,18 @@ void kernel_dgead_8_1_lib4(int kmax, double alpha, double *A0, int sda, double *
 		b_1 = _mm256_shuffle_pd( a_1, a_2, 0x5 );
 		b_0 = _mm256_shuffle_pd( a_0, b_0, 0x5 );
 		c_1 = _mm256_load_pd( &B1[0+bs*0] );
-		c_0 = _mm256_load_pd( &B0[0+bs*0] );
+		c_0 = _mm256_load_pd( &B[0+bs*0] );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_add_pd ( c_1, b_1 );
 		b_0 = _mm256_add_pd ( c_0, b_0 );
 		_mm256_store_pd( &B1[0+bs*0], b_1 );
-		_mm256_store_pd( &B0[0+bs*0], b_0 );
+		_mm256_store_pd( &B[0+bs*0], b_0 );
 
 		A0 += 4;
 		A1 += 4;
 		A2 += 4;
-		B0 += 4;
+		B += 4;
 		B1 += 4;
 
 		}
@@ -2143,7 +2143,7 @@ void kernel_dgead_8_1_lib4(int kmax, double alpha, double *A0, int sda, double *
 
 
 // both A and B are aligned to 256-bit boundaries, 2 elements of A must be skipped
-void kernel_dgead_8_2_lib4(int kmax, double alpha, double *A0, int sda, double *B0, int sdb)
+void kernel_dgead_8_2_lib4(int kmax, double alpha, double *A0, int sda, double *B, int sdb)
 	{
 
 	if(kmax<=0)
@@ -2153,7 +2153,7 @@ void kernel_dgead_8_2_lib4(int kmax, double alpha, double *A0, int sda, double *
 
 	double *A1 = A0 + bs*sda;
 	double *A2 = A1 + bs*sda;
-	double *B1 = B0 + bs*sdb;
+	double *B1 = B + bs*sdb;
 
 	__m256d
 		a_0, a_1, a_2,
@@ -2172,13 +2172,13 @@ void kernel_dgead_8_2_lib4(int kmax, double alpha, double *A0, int sda, double *
 		a_2 = _mm256_load_pd( &A2[0+bs*0] );
 		b_0 = _mm256_permute2f128_pd( a_0, a_1, 0x21 );
 		b_1 = _mm256_permute2f128_pd( a_1, a_2, 0x21 );
-		c_0 = _mm256_load_pd( &B0[0+bs*0] );
+		c_0 = _mm256_load_pd( &B[0+bs*0] );
 		c_1 = _mm256_load_pd( &B1[0+bs*0] );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		b_0 = _mm256_add_pd ( c_0, b_0 );
 		b_1 = _mm256_add_pd ( c_1, b_1 );
-		_mm256_store_pd( &B0[0+bs*0], b_0 );
+		_mm256_store_pd( &B[0+bs*0], b_0 );
 		_mm256_store_pd( &B1[0+bs*0], b_1 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*1] );
@@ -2186,13 +2186,13 @@ void kernel_dgead_8_2_lib4(int kmax, double alpha, double *A0, int sda, double *
 		a_2 = _mm256_load_pd( &A2[0+bs*1] );
 		b_0 = _mm256_permute2f128_pd( a_0, a_1, 0x21 );
 		b_1 = _mm256_permute2f128_pd( a_1, a_2, 0x21 );
-		c_0 = _mm256_load_pd( &B0[0+bs*1] );
+		c_0 = _mm256_load_pd( &B[0+bs*1] );
 		c_1 = _mm256_load_pd( &B1[0+bs*1] );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		b_0 = _mm256_add_pd ( c_0, b_0 );
 		b_1 = _mm256_add_pd ( c_1, b_1 );
-		_mm256_store_pd( &B0[0+bs*1], b_0 );
+		_mm256_store_pd( &B[0+bs*1], b_0 );
 		_mm256_store_pd( &B1[0+bs*1], b_1 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*2] );
@@ -2200,13 +2200,13 @@ void kernel_dgead_8_2_lib4(int kmax, double alpha, double *A0, int sda, double *
 		a_2 = _mm256_load_pd( &A2[0+bs*2] );
 		b_0 = _mm256_permute2f128_pd( a_0, a_1, 0x21 );
 		b_1 = _mm256_permute2f128_pd( a_1, a_2, 0x21 );
-		c_0 = _mm256_load_pd( &B0[0+bs*2] );
+		c_0 = _mm256_load_pd( &B[0+bs*2] );
 		c_1 = _mm256_load_pd( &B1[0+bs*2] );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		b_0 = _mm256_add_pd ( c_0, b_0 );
 		b_1 = _mm256_add_pd ( c_1, b_1 );
-		_mm256_store_pd( &B0[0+bs*2], b_0 );
+		_mm256_store_pd( &B[0+bs*2], b_0 );
 		_mm256_store_pd( &B1[0+bs*2], b_1 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*3] );
@@ -2214,19 +2214,19 @@ void kernel_dgead_8_2_lib4(int kmax, double alpha, double *A0, int sda, double *
 		a_2 = _mm256_load_pd( &A2[0+bs*3] );
 		b_0 = _mm256_permute2f128_pd( a_0, a_1, 0x21 );
 		b_1 = _mm256_permute2f128_pd( a_1, a_2, 0x21 );
-		c_0 = _mm256_load_pd( &B0[0+bs*3] );
+		c_0 = _mm256_load_pd( &B[0+bs*3] );
 		c_1 = _mm256_load_pd( &B1[0+bs*3] );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		b_0 = _mm256_add_pd ( c_0, b_0 );
 		b_1 = _mm256_add_pd ( c_1, b_1 );
-		_mm256_store_pd( &B0[0+bs*3], b_0 );
+		_mm256_store_pd( &B[0+bs*3], b_0 );
 		_mm256_store_pd( &B1[0+bs*3], b_1 );
 
 		A0 += 16;
 		A1 += 16;
 		A2 += 16;
-		B0 += 16;
+		B += 16;
 		B1 += 16;
 
 		}
@@ -2238,19 +2238,19 @@ void kernel_dgead_8_2_lib4(int kmax, double alpha, double *A0, int sda, double *
 		a_2 = _mm256_load_pd( &A2[0+bs*0] );
 		b_0 = _mm256_permute2f128_pd( a_0, a_1, 0x21 );
 		b_1 = _mm256_permute2f128_pd( a_1, a_2, 0x21 );
-		c_0 = _mm256_load_pd( &B0[0+bs*0] );
+		c_0 = _mm256_load_pd( &B[0+bs*0] );
 		c_1 = _mm256_load_pd( &B1[0+bs*0] );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		b_0 = _mm256_add_pd ( c_0, b_0 );
 		b_1 = _mm256_add_pd ( c_1, b_1 );
-		_mm256_store_pd( &B0[0+bs*0], b_0 );
+		_mm256_store_pd( &B[0+bs*0], b_0 );
 		_mm256_store_pd( &B1[0+bs*0], b_1 );
 
 		A0 += 4;
 		A1 += 4;
 		A2 += 4;
-		B0 += 4;
+		B += 4;
 		B1 += 4;
 
 		}
@@ -2260,7 +2260,7 @@ void kernel_dgead_8_2_lib4(int kmax, double alpha, double *A0, int sda, double *
 
 
 // both A and B are aligned to 256-bit boundaries, 3 elements of A must be skipped
-void kernel_dgead_8_3_lib4(int kmax, double alpha, double *A0, int sda, double *B0, int sdb)
+void kernel_dgead_8_3_lib4(int kmax, double alpha, double *A0, int sda, double *B, int sdb)
 	{
 
 	if(kmax<=0)
@@ -2270,7 +2270,7 @@ void kernel_dgead_8_3_lib4(int kmax, double alpha, double *A0, int sda, double *
 
 	double *A1 = A0 + bs*sda;
 	double *A2 = A1 + bs*sda;
-	double *B1 = B0 + bs*sdb;
+	double *B1 = B + bs*sdb;
 
 	__m256d
 		a_0, a_1, a_2,
@@ -2291,13 +2291,13 @@ void kernel_dgead_8_3_lib4(int kmax, double alpha, double *A0, int sda, double *
 		b_1 = _mm256_permute2f128_pd( a_1, a_2, 0x21 );
 		b_0 = _mm256_shuffle_pd( a_0, a_1, 0x5 );
 		b_1 = _mm256_shuffle_pd( b_1, a_2, 0x5 );
-		c_0 = _mm256_load_pd( &B0[0+bs*0] );
+		c_0 = _mm256_load_pd( &B[0+bs*0] );
 		c_1 = _mm256_load_pd( &B1[0+bs*0] );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		b_0 = _mm256_add_pd ( c_0, b_0 );
 		b_1 = _mm256_add_pd ( c_1, b_1 );
-		_mm256_store_pd( &B0[0+bs*0], b_0 );
+		_mm256_store_pd( &B[0+bs*0], b_0 );
 		_mm256_store_pd( &B1[0+bs*0], b_1 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*1] );
@@ -2307,13 +2307,13 @@ void kernel_dgead_8_3_lib4(int kmax, double alpha, double *A0, int sda, double *
 		b_1 = _mm256_permute2f128_pd( a_1, a_2, 0x21 );
 		b_0 = _mm256_shuffle_pd( a_0, a_1, 0x5 );
 		b_1 = _mm256_shuffle_pd( b_1, a_2, 0x5 );
-		c_0 = _mm256_load_pd( &B0[0+bs*1] );
+		c_0 = _mm256_load_pd( &B[0+bs*1] );
 		c_1 = _mm256_load_pd( &B1[0+bs*1] );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		b_0 = _mm256_add_pd ( c_0, b_0 );
 		b_1 = _mm256_add_pd ( c_1, b_1 );
-		_mm256_store_pd( &B0[0+bs*1], b_0 );
+		_mm256_store_pd( &B[0+bs*1], b_0 );
 		_mm256_store_pd( &B1[0+bs*1], b_1 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*2] );
@@ -2323,13 +2323,13 @@ void kernel_dgead_8_3_lib4(int kmax, double alpha, double *A0, int sda, double *
 		b_1 = _mm256_permute2f128_pd( a_1, a_2, 0x21 );
 		b_0 = _mm256_shuffle_pd( a_0, a_1, 0x5 );
 		b_1 = _mm256_shuffle_pd( b_1, a_2, 0x5 );
-		c_0 = _mm256_load_pd( &B0[0+bs*2] );
+		c_0 = _mm256_load_pd( &B[0+bs*2] );
 		c_1 = _mm256_load_pd( &B1[0+bs*2] );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		b_0 = _mm256_add_pd ( c_0, b_0 );
 		b_1 = _mm256_add_pd ( c_1, b_1 );
-		_mm256_store_pd( &B0[0+bs*2], b_0 );
+		_mm256_store_pd( &B[0+bs*2], b_0 );
 		_mm256_store_pd( &B1[0+bs*2], b_1 );
 
 		a_0 = _mm256_load_pd( &A0[0+bs*3] );
@@ -2339,19 +2339,19 @@ void kernel_dgead_8_3_lib4(int kmax, double alpha, double *A0, int sda, double *
 		b_1 = _mm256_permute2f128_pd( a_1, a_2, 0x21 );
 		b_0 = _mm256_shuffle_pd( a_0, a_1, 0x5 );
 		b_1 = _mm256_shuffle_pd( b_1, a_2, 0x5 );
-		c_0 = _mm256_load_pd( &B0[0+bs*3] );
+		c_0 = _mm256_load_pd( &B[0+bs*3] );
 		c_1 = _mm256_load_pd( &B1[0+bs*3] );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		b_0 = _mm256_add_pd ( c_0, b_0 );
 		b_1 = _mm256_add_pd ( c_1, b_1 );
-		_mm256_store_pd( &B0[0+bs*3], b_0 );
+		_mm256_store_pd( &B[0+bs*3], b_0 );
 		_mm256_store_pd( &B1[0+bs*3], b_1 );
 
 		A0 += 16;
 		A1 += 16;
 		A2 += 16;
-		B0 += 16;
+		B += 16;
 		B1 += 16;
 
 		}
@@ -2365,19 +2365,19 @@ void kernel_dgead_8_3_lib4(int kmax, double alpha, double *A0, int sda, double *
 		b_1 = _mm256_permute2f128_pd( a_1, a_2, 0x21 );
 		b_0 = _mm256_shuffle_pd( a_0, a_1, 0x5 );
 		b_1 = _mm256_shuffle_pd( b_1, a_2, 0x5 );
-		c_0 = _mm256_load_pd( &B0[0+bs*0] );
+		c_0 = _mm256_load_pd( &B[0+bs*0] );
 		c_1 = _mm256_load_pd( &B1[0+bs*0] );
 		b_0 = _mm256_mul_pd( alpha_0, b_0 );
 		b_1 = _mm256_mul_pd( alpha_0, b_1 );
 		b_0 = _mm256_add_pd ( c_0, b_0 );
 		b_1 = _mm256_add_pd ( c_1, b_1 );
-		_mm256_store_pd( &B0[0+bs*0], b_0 );
+		_mm256_store_pd( &B[0+bs*0], b_0 );
 		_mm256_store_pd( &B1[0+bs*0], b_1 );
 
 		A0 += 4;
 		A1 += 4;
 		A2 += 4;
-		B0 += 4;
+		B += 4;
 		B1 += 4;
 
 		}
