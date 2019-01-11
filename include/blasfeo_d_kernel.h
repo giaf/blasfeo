@@ -360,8 +360,10 @@ void kernel_dpotrf_nt_l_2x2_lib4(int k, double *A, double *B, double *C, double 
 void kernel_dpotrf_nt_l_2x2_vs_lib4(int k, double *A, double *B, double *C, double *D, double *inv_diag_D, int km, int kn);
 // 12
 void kernel_dgetrf_pivot_12_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv);
+void kernel_dgetrf_pivot_12_vs_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv, int n);
 // 8
 void kernel_dgetrf_pivot_8_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv);
+void kernel_dgetrf_pivot_8_vs_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv, int n);
 // 4
 void kernel_dgetrf_pivot_4_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv);
 void kernel_dgetrf_pivot_4_vs_lib4(int m, double *pA, int sda, double *inv_diag_A, int* ipiv, int n1);

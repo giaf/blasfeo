@@ -816,21 +816,28 @@ alg1:
 	for(; jj<n-11; jj+=12)
 		{
 		
+		m_max = m<jj ? m : jj;
+		n_max = p-jj<12 ? p-jj : 12;
+
 		// pack
-		kernel_dpack_tn_4_lib4(jj, C+jj*ldc, ldc, pU);
-		kernel_dpack_tn_4_lib4(jj, C+(jj+4)*ldc, ldc, pU+4*sdu);
-		kernel_dpack_tn_4_lib4(jj, C+(jj+8)*ldc, ldc, pU+8*sdu);
+		kernel_dpack_tn_4_lib4(m_max, C+jj*ldc, ldc, pU);
+		kernel_dpack_tn_4_lib4(m_max, C+(jj+4)*ldc, ldc, pU+4*sdu);
+		kernel_dpack_tn_4_lib4(m_max, C+(jj+8)*ldc, ldc, pU+8*sdu);
 
 		// solve upper
-		for(ii=0; ii<jj; ii+=4)
+		for(ii=0; ii<m_max-3; ii+=4)
 			{
 			kernel_dtrsm_nt_rl_one_12x4_lib4(ii, pU, sdu, pC+ii*sdc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, pC+ii*sdc+ii*ps);
 			}
+		if(ii<m_max)
+			{
+			kernel_dtrsm_nt_rl_one_12x4_vs_lib4(ii, pU, sdu, pC+ii*sdc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, pC+ii*sdc+ii*ps, 12, m_max-ii);
+			}
 
 		// unpack
-		kernel_dunpack_nt_4_lib4(jj, pU, C+jj*ldc, ldc);
-		kernel_dunpack_nt_4_lib4(jj, pU+4*sdu, C+(jj+4)*ldc, ldc);
-		kernel_dunpack_nt_4_lib4(jj, pU+8*sdu, C+(jj+8)*ldc, ldc);
+		kernel_dunpack_nt_4_lib4(m_max, pU, C+jj*ldc, ldc);
+		kernel_dunpack_nt_4_lib4(m_max, pU+4*sdu, C+(jj+4)*ldc, ldc);
+		kernel_dunpack_nt_4_lib4(m_max, pU+8*sdu, C+(jj+8)*ldc, ldc);
 
 		// pack
 		kernel_dpack_tt_12_lib4(m-jj, C+jj+jj*ldc, ldc, pC+jj*sdc+jj*ps, sdc);
@@ -847,25 +854,31 @@ alg1:
 			}
 
 		// pivot & factorize & solve
-		kernel_dgetrf_pivot_12_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj);
-		for(ii=0; ii<12; ii++)
+		if(m-jj>=12)
+			{
+			kernel_dgetrf_pivot_12_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj);
+			}
+		else
+			{
+			kernel_dgetrf_pivot_12_vs_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj, n-jj);
+			}
+		for(ii=0; ii<n_max; ii++)
 			{
 			ipiv[jj+ii] += jj;
 			}
 		// unpack
-		kernel_dunpack_nn_12_lib4(12, pC+jj*sdc+jj*ps, sdc, C+jj+jj*ldc, ldc);
+		kernel_dunpack_nn_12_vs_lib4(12, pC+jj*sdc+jj*ps, sdc, C+jj+jj*ldc, ldc, m-jj);
 
 		// pivot
-		for(ii=0; ii<12; ii++)
+		for(ii=0; ii<n_max; ii++)
 			{
 			if(ipiv[jj+ii]!=jj+ii)
 				{
+				// TODO use kernel
 				blasfeo_drowsw(jj, &sC, jj+ii, 0, &sC, ipiv[jj+ii], 0);
+				kernel_drowsw_lib(n-jj-12, C+jj+ii+(jj+12)*ldc, ldc, C+ipiv[jj+ii]+(jj+12)*ldc, ldc);
 				}
 			}
-		arg0 = n-jj-12;
-		arg1 = jj+11;
-		blasfeo_dlaswp(&arg0, C+(jj+12)*ldc, &ldc, &jj, &arg1, ipiv, &i1);
 
 		}
 	if(jj<n)
@@ -1054,21 +1067,24 @@ alg1:
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 left_12_1:
 
+	m_max = m<jj ? m : jj;
+	n_max = p-jj<12 ? p-jj : 12;
+
 	// pack
-	kernel_dpack_tn_4_lib4(jj, C+jj*ldc, ldc, pU);
-	kernel_dpack_tn_4_lib4(jj, C+(jj+4)*ldc, ldc, pU+4*sdu);
-	kernel_dpack_tn_4_vs_lib4(jj, C+(jj+8)*ldc, ldc, pU+8*sdu, n-jj);
+	kernel_dpack_tn_4_lib4(m_max, C+jj*ldc, ldc, pU);
+	kernel_dpack_tn_4_lib4(m_max, C+(jj+4)*ldc, ldc, pU+4*sdu);
+	kernel_dpack_tn_4_vs_lib4(m_max, C+(jj+8)*ldc, ldc, pU+8*sdu, n-jj);
 
 	// solve upper
-	for(ii=0; ii<jj; ii+=4)
+	for(ii=0; ii<m_max; ii+=4)
 		{
-		kernel_dtrsm_nt_rl_one_12x4_lib4(ii, pU, sdu, pC+ii*sdc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, pC+ii*sdc+ii*ps);
+		kernel_dtrsm_nt_rl_one_12x4_vs_lib4(ii, pU, sdu, pC+ii*sdc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, pC+ii*sdc+ii*ps, n-jj, m_max-ii);
 		}
 
 	// unpack
-	kernel_dunpack_nt_4_lib4(jj, pU, C+jj*ldc, ldc);
-	kernel_dunpack_nt_4_lib4(jj, pU+4*sdu, C+(jj+4)*ldc, ldc);
-	kernel_dunpack_nt_4_vs_lib4(jj, pU+8*sdu, C+(jj+8)*ldc, ldc, n-jj);
+	kernel_dunpack_nt_4_lib4(m_max, pU, C+jj*ldc, ldc);
+	kernel_dunpack_nt_4_lib4(m_max, pU+4*sdu, C+(jj+4)*ldc, ldc);
+	kernel_dunpack_nt_4_vs_lib4(m_max, pU+8*sdu, C+(jj+8)*ldc, ldc, n-jj);
 
 	// pack
 	kernel_dpack_tt_8_lib4(m-jj, C+jj+jj*ldc, ldc, pC+jj*sdc+jj*ps, sdc);
@@ -1082,63 +1098,8 @@ left_12_1:
 		}
 
 	// pivot & factorize & solve
-#if 0
 	kernel_dgetrf_pivot_12_vs_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj, n-jj);
-#else
-	// fact left column
-	kernel_dgetrf_pivot_8_lib4(m-jj, pC+jj*sdc+jj*ps, sdc, pd+jj, ipiv+jj);
-
-	// apply pivot to right column
-	for(ii=jj; ii<jj+8; ii++)
-		{
-		if(ipiv[ii]!=ii)
-			{
-			blasfeo_drowsw(4, &sC, ii, jj+8, &sC, ipiv[ii]+jj, jj+8);
-			}
-		}
-
-	// solve top right block
-	kernel_dtrsm_nn_ll_one_8x4_vs_lib4(0, dummy, 0, dummy, 0, &d1, pC+jj*sdc+(jj+8)*ps, sdc, pC+jj*sdc+(jj+8)*ps, sdc, pC+jj*sdc+jj*ps, sdc, m-jj, n-jj-8);
-
-	// correct rigth block
-	ii = 8;
-	for(; ii<m-jj-11; ii+=12)
-		{
-		kernel_dgemm_nn_12x4_lib4(8, &dm1, pC+(jj+ii)*sdc+jj*ps, sdc, 0, pC+jj*sdc+(jj+8)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+8)*ps, sdc, pC+(jj+ii)*sdc+(jj+8)*ps, sdc);
-		}
-	if(ii<m-jj)
-		{
-		if(m-jj-ii<=4)
-			{
-			kernel_dgemm_nn_4x4_vs_lib4(8, &dm1, pC+(jj+ii)*sdc+jj*ps, 0, pC+jj*sdc+(jj+8)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+8)*ps, pC+(jj+ii)*sdc+(jj+8)*ps, m-jj-ii, n-jj);
-			}
-		else if(m-jj-ii<=8)
-			{
-			kernel_dgemm_nn_8x4_vs_lib4(8, &dm1, pC+(jj+ii)*sdc+jj*ps, sdc, 0, pC+jj*sdc+(jj+8)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+8)*ps, sdc, pC+(jj+ii)*sdc+(jj+8)*ps, sdc, m-jj-ii, n-jj);
-			}
-		else //if(m-jj-ii<=12)
-			{
-			kernel_dgemm_nn_12x4_vs_lib4(8, &dm1, pC+(jj+ii)*sdc+jj*ps, sdc, 0, pC+jj*sdc+(jj+8)*ps, sdc, &d1, pC+(jj+ii)*sdc+(jj+8)*ps, sdc, pC+(jj+ii)*sdc+(jj+8)*ps, sdc, m-jj-ii, n-jj);
-			}
-		}
-
-	// fact right column
-	kernel_dgetrf_pivot_4_vs_lib4(m-jj-8, pC+(jj+8)*sdc+(jj+8)*ps, sdc, pd+jj+8, ipiv+jj+8, n-jj-8);
-
-	for(ii=jj+8; ii<n; ii++)
-		ipiv[ii] += 8;
-
-	// apply pivot to left column
-	for(ii=jj+8; ii<n; ii++)
-		{
-		if(ipiv[ii]!=ii)
-			{
-			blasfeo_drowsw(8, &sC, ii, jj, &sC, ipiv[ii]+jj, jj);
-			}
-		}
-#endif
-
-	for(ii=0; ii<n-jj; ii++)
+	for(ii=0; ii<n_max; ii++)
 		{
 		ipiv[jj+ii] += jj;
 		}
@@ -1146,16 +1107,15 @@ left_12_1:
 	kernel_dunpack_nn_12_vs_lib4(n-jj, pC+jj*sdc+jj*ps, sdc, C+jj+jj*ldc, ldc, m-jj);
 
 	// pivot
-	for(ii=jj; ii<n; ii++)
+	for(ii=jj; ii<n_max; ii++)
 		{
 		if(ipiv[ii]!=ii)
 			{
+			// TODO use kernel instead
 			blasfeo_drowsw(jj, &sC, ii, 0, &sC, ipiv[ii], 0);
+//			kernel_drowsw_lib(n-jj-12, C+jj+ii+(jj+12)*ldc, ldc, C+ipiv[jj+ii]+(jj+12)*ldc, ldc);
 			}
 		}
-//	arg0 = n-jj-12;
-//	arg1 = jj+11;
-//	blasfeo_dlaswp(&arg0, C+(jj+12)*ldc, &ldc, &jj, &arg1, ipiv, &i1);
 
 	goto end_n_1;
 #endif
