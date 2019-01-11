@@ -7007,11 +7007,55 @@
 	mov		w12, w4 // ldb
 	lsl		w12, w12, #3 // 8*ldb
 
+	ldr		w13, [sp, #(STACKSIZE + 40)] // n1
+	cmp		w13, #1
+	bgt		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_8X1_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nn_8x1_lib4c
+#endif
+
+	b		103f
+
+100:
+
+	ldr		w13, [sp, #(STACKSIZE + 40)] // n1
+	cmp		w13, #2
+	bgt		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_8X2_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nn_8x2_lib4c
+#endif
+	
+	b		103f
+
+101:
+
+	ldr		w13, [sp, #(STACKSIZE + 40)] // n1
+	cmp		w13, #3
+	bgt		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_8X3_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nn_8x3_lib4c
+#endif
+	
+	b		103f
+
+102:
+
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMM_ADD_NN_8X4_LIB4C
 #else
 	bl	inner_kernel_gemm_add_nn_8x4_lib4c
 #endif
+
+103:
 
 
 
