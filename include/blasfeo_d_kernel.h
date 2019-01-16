@@ -745,11 +745,13 @@ void kernel_dtrsm_nt_ru_one_4x4_vs_lib4c4c(int kmax, double *A, double *B, int l
 // A column-major
 // 12
 void kernel_dgetrf_pivot_12_lib(int m, double *pA, int lda, double *inv_diag_A, int* ipiv);
+void kernel_dgetrf_pivot_12_vs_lib(int m, double *pA, int lda, double *inv_diag_A, int* ipiv, int n);
 // 8
 void kernel_dgetrf_pivot_8_lib(int m, double *pA, int lda, double *inv_diag_A, int* ipiv);
+void kernel_dgetrf_pivot_8_vs_lib(int m, double *pA, int lda, double *inv_diag_A, int* ipiv, int n);
 // 4
 void kernel_dgetrf_pivot_4_lib(int m, double *pA, int lda, double *inv_diag_A, int* ipiv);
-void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A, int* ipiv, int n1);
+void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A, int* ipiv, int n);
 
 // vector
 void kernel_drowsw_lib(int kmax, double *pA, int lda, double *pC, int ldc);
