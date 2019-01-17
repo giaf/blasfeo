@@ -44,7 +44,7 @@ void blasfeo_dlaswp(int *pn, double *A, int *plda, int *pk1, int *pk2, int *ipiv
 	int k2 = *pk2;
 	int incx = *pincx;
 
-	int ix0, i1, i2, inc;
+	int ix0, i1, i2;
 
 	int ii, jj, ix, ip;
 
@@ -55,31 +55,45 @@ void blasfeo_dlaswp(int *pn, double *A, int *plda, int *pk1, int *pk2, int *ipiv
 		ix0 = k1;
 		i1 = k1;
 		i2 = k2;
-		inc = 1;
+		ix = ix0;
+		for(ii=i1; ii<=i2; ii++)
+			{
+			ip = ipiv[-1+ix];
+			if(ip!=ii)
+				{
+				for(jj=0; jj<n; jj++)
+					{
+					tmp = A[-1+ii+jj*lda];
+					A[-1+ii+jj*lda] = A[-1+ip+jj*lda];
+					A[-1+ip+jj*lda] = tmp;
+					}
+				}
+			ix = ix + incx;
+			}
 		}
 	else
 		{
-		ix0 = k1 + (k1-k2)*incx;
+//		ix0 = k1 + (k1-k2)*incx;
+		ix0 = 1 + (1-k2)*incx;
 		i1 = k2;
 		i2 = k1;
-		inc = -1;
-		}
-	
-	ix = ix0;
-	for(ii=i1; ii<=i2; ii+=inc)
-		{
-		ip = ipiv[ix];
-		if(ip!=ii)
+		ix = ix0;
+		for(ii=i1; ii>=i2; ii--)
 			{
-			for(jj=0; jj<n; jj++)
+			ip = ipiv[-1+ix];
+			if(ip!=ii)
 				{
-				tmp = A[ii+jj*lda];
-				A[ii+jj*lda] = A[ip+jj*lda];
-				A[ip+jj*lda] = tmp;
+				for(jj=0; jj<n; jj++)
+					{
+					tmp = A[-1+ii+jj*lda];
+					A[-1+ii+jj*lda] = A[-1+ip+jj*lda];
+					A[-1+ip+jj*lda] = tmp;
+					}
 				}
+			ix = ix + incx;
 			}
-		ix = ix + incx;
 		}
+
 
 	return;
 

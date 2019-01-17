@@ -27,61 +27,45 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
 
 
-void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, int *plda, REAL *B, int *pldb, REAL *pbeta, REAL *C, int *pldc)
+#include "../include/blasfeo_target.h"
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_d_aux.h"
+#include "../include/blasfeo_d_kernel.h"
+#include "../include/blasfeo_d_blas.h"
+
+
+
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_dgesv dgesv_
+#define blasfeo_dgetrf dgetrf_
+#define blasfeo_dgetrs dgetrs_
+#endif
+
+
+
+void blasfeo_dgesv(int *pm, int *pn, double *A, int *plda, int *ipiv, double *B, int *pldb, int *info)
 	{
 
-	struct MAT sA;
-	sA.pA = A;
-	sA.m = *plda;
+//	printf("\nblasfeo_dpotrs\n");
 
-	struct MAT sB;
-	sB.pA = B;
-	sB.m = *pldb;
+	char c_n = 'n';
 
-	struct MAT sC;
-	sC.pA = C;
-	sC.m = *pldc;
+	*info = 0;
 
-	if(*ta=='n' | *ta=='N')
+	blasfeo_dgetrf(pm, pm, A, plda, ipiv, info);
+
+	if(*info==0)
 		{
-		if(*tb=='n' | *tb=='N')
-			{
-			GEMM_NN(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		else if(*tb=='t' | *tb=='T' | *tb=='c' | *tb=='C')
-			{
-			GEMM_NT(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		else
-			{
-			printf("\nBLASFEO: gemm: wrong value for tb\n");
-			return;
-			}
-		}
-	else if(*ta=='t' | *ta=='T' | *ta=='c' | *ta=='C')
-		{
-		if(*tb=='n' | *tb=='N')
-			{
-			GEMM_TN(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		else if(*tb=='t' | *tb=='T' | *tb=='c'| *tb=='C')
-			{
-			GEMM_TT(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		else
-			{
-			printf("\nBLASFEO: gemm: wrong value for tb\n");
-			return;
-			}
-		}
-	else
-		{
-		printf("\nBLASFEO: gemm: wrong value for ta\n");
-		return;
+		blasfeo_dgetrs(&c_n, pm, pn, A, plda, ipiv, B, pldb, info);
 		}
 
 	return;
 
 	}
+
+
+

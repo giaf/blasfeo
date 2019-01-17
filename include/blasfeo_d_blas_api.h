@@ -70,9 +70,15 @@ void dtrsm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, do
 
 // LAPACK
 //
+void dgesv_(int *m, int *n, double *A, int *lda, int *ipiv, double *B, int *ldb, int *info);
+//
 void dgetrf_(int *m, int *n, double *A, int *lda, int *ipiv, int *info);
 //
+void dgetrs_(char *trans, int *m, int *n, double *A, int *lda, int *ipiv, double *B, int *ldb, int *info);
+//
 void dlaswp_(int *n, double *A, int *lda, int *k1, int *k2, int *ipiv, int *incx);
+//
+void dposv_(char *uplo, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
 //
 void dpotrf_(char *uplo, int *m, double *A, int *lda, int *info);
 //
@@ -104,9 +110,15 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *m, int
 
 // LAPACK
 //
+void blasfeo_dgesv(int *m, int *n, double *A, int *lda, int *ipiv, double *B, int *ldb, int *info);
+//
 void blasfeo_dgetrf(int *m, int *n, double *A, int *lda, int *ipiv, int *info);
 //
+void blasfeo_dgetrs(char *trans, int *m, int *n, double *A, int *lda, int *ipiv, double *B, int *ldb, int *info);
+//
 void blasfeo_dlaswp(int *n, double *A, int *lda, int *k1, int *k2, int *ipiv, int *incx);
+//
+void blasfeo_dposv(char *uplo, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
 //
 void blasfeo_dpotrf(char *uplo, int *m, double *A, int *lda, int *info);
 //

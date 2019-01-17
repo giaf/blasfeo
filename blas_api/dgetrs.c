@@ -27,61 +27,65 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
 
 
-void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, int *plda, REAL *B, int *pldb, REAL *pbeta, REAL *C, int *pldc)
+#include "../include/blasfeo_target.h"
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_d_aux.h"
+#include "../include/blasfeo_d_kernel.h"
+#include "../include/blasfeo_d_blas.h"
+
+
+
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_dgetrs dgetrs_
+#define blasfeo_dlaswp dlaswp_
+#define blasfeo_dtrsm dtrsm_
+#endif
+
+
+
+void blasfeo_dgetrs(char *trans, int *pm, int *pn, double *A, int *plda, int *ipiv, double *B, int *pldb, int *info)
 	{
 
-	struct MAT sA;
-	sA.pA = A;
-	sA.m = *plda;
+//	printf("\nblasfeo_dpotrs\n");
 
-	struct MAT sB;
-	sB.pA = B;
-	sB.m = *pldb;
+	int m = *pm;
+	int n = *pn;
 
-	struct MAT sC;
-	sC.pA = C;
-	sC.m = *pldc;
+	char c_l = 'l';
+	char c_n = 'n';
+	char c_t = 't';
+	char c_u = 'u';
 
-	if(*ta=='n' | *ta=='N')
+	int i_1 = 1;
+	int i_m1 = -1;
+
+	double d_1 = 1.0;
+
+	*info = 0;
+
+	if(m==0 | n==0)
+		return;
+	
+//	printf("\n%c\n", *trans);
+	if(*trans=='n' | *trans=='N')
 		{
-		if(*tb=='n' | *tb=='N')
-			{
-			GEMM_NN(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		else if(*tb=='t' | *tb=='T' | *tb=='c' | *tb=='C')
-			{
-			GEMM_NT(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		else
-			{
-			printf("\nBLASFEO: gemm: wrong value for tb\n");
-			return;
-			}
-		}
-	else if(*ta=='t' | *ta=='T' | *ta=='c' | *ta=='C')
-		{
-		if(*tb=='n' | *tb=='N')
-			{
-			GEMM_TN(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		else if(*tb=='t' | *tb=='T' | *tb=='c'| *tb=='C')
-			{
-			GEMM_TT(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		else
-			{
-			printf("\nBLASFEO: gemm: wrong value for tb\n");
-			return;
-			}
+		blasfeo_dlaswp(pm, B, pldb, &i_1, pm, ipiv, &i_1);
+		blasfeo_dtrsm(&c_l, &c_l, &c_n, &c_u, pm, pn, &d_1, A, plda, B, pldb);
+		blasfeo_dtrsm(&c_l, &c_u, &c_n, &c_n, pm, pn, &d_1, A, plda, B, pldb);
 		}
 	else
 		{
-		printf("\nBLASFEO: gemm: wrong value for ta\n");
-		return;
+		blasfeo_dtrsm(&c_l, &c_u, &c_t, &c_n, pm, pn, &d_1, A, plda, B, pldb);
+		blasfeo_dtrsm(&c_l, &c_l, &c_t, &c_u, pm, pn, &d_1, A, plda, B, pldb);
+		blasfeo_dlaswp(pm, B, pldb, &i_1, pm, ipiv, &i_m1);
 		}
 
 	return;
 
 	}
+
+

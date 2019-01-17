@@ -33,6 +33,36 @@
 
 
 
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dpack_nn_12_vs_lib4(int kmax, double *A, int lda, double *C, int sdc, int m1)
+	{
+
+	const int ps = 4;
+
+	kernel_dpack_nn_8_lib4(kmax, A+0, lda, C+0*sdc, sdc);
+	kernel_dpack_nn_4_vs_lib4(kmax, A+8, lda, C+8*sdc, m1-8);
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dpack_nn_8_vs_lib4(int kmax, double *A, int lda, double *C, int sdc, int m1)
+	{
+
+	kernel_dpack_nn_4_lib4(kmax, A+0, lda, C+0*sdc);
+	kernel_dpack_nn_4_vs_lib4(kmax, A+4, lda, C+4*sdc, m1-4);
+
+	return;
+
+	}
+#endif
+
+
+
 #if ! ( defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) )
 void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *C)
 	{
@@ -152,36 +182,6 @@ l3:
 	return;
 
 	}
-
-
-
-#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dpack_nn_8_vs_lib4(int kmax, double *A, int lda, double *C, int sdc, int m1)
-	{
-
-	kernel_dpack_nn_4_lib4(kmax, A+0, lda, C+0*sdc);
-	kernel_dpack_nn_4_vs_lib4(kmax, A+4, lda, C+4*sdc, m1-4);
-
-	return;
-
-	}
-#endif
-
-
-
-#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dpack_nn_12_vs_lib4(int kmax, double *A, int lda, double *C, int sdc, int m1)
-	{
-
-	const int ps = 4;
-
-	kernel_dpack_nn_8_lib4(kmax, A+0, lda, C+0*sdc, sdc);
-	kernel_dpack_nn_4_vs_lib4(kmax, A+8, lda, C+8*sdc, m1-8);
-
-	return;
-
-	}
-#endif
 
 
 
@@ -305,6 +305,7 @@ l3:
 
 
 
+#if ! ( defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) )
 void kernel_dpack_tt_4_lib4(int kmax, double *A, int lda, double *C, int sdc)
 	{
 
@@ -352,6 +353,7 @@ void kernel_dpack_tt_4_lib4(int kmax, double *A, int lda, double *C, int sdc)
 	return;
 
 	}
+#endif
 
 
 
@@ -467,6 +469,35 @@ l3:
 
 
 
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dunpack_nn_12_vs_lib4(int kmax, double *A, int sda, double *C, int ldc, int m1)
+	{
+
+	kernel_dunpack_nn_8_lib4(kmax, A+0*sda, sda, C+0, ldc);
+	kernel_dunpack_nn_4_vs_lib4(kmax, A+8*sda, C+8, ldc, m1-8);
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dunpack_nn_8_vs_lib4(int kmax, double *A, int sda, double *C, int ldc, int m1)
+	{
+
+	kernel_dunpack_nn_4_lib4(kmax, A+0*sda, C+0, ldc);
+	kernel_dunpack_nn_4_vs_lib4(kmax, A+4*sda, C+4, ldc, m1-4);
+
+	return;
+
+	}
+#endif
+
+
+
+#if ! ( defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) )
 void kernel_dunpack_nn_4_lib4(int kmax, double *A, double *C, int ldc)
 	{
 
@@ -514,6 +545,7 @@ void kernel_dunpack_nn_4_lib4(int kmax, double *A, double *C, int ldc)
 	return;
 
 	}
+#endif
 
 
 

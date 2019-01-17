@@ -36,6 +36,7 @@
 
 #include "../../include/blasfeo_common.h"
 #include "../../include/blasfeo_d_aux.h"
+#include "../../include/blasfeo_d_kernel.h"
 
 
 
@@ -1309,6 +1310,82 @@ void kernel_dgetrf_pivot_8_lib4(int m, double *pA, int sda, double *inv_diag_A, 
 		c_0 = _mm256_blendv_pd( tmp, c_0, msk );
 		_mm256_store_pd( &pB[0+bs*7], c_0 );
 //		pB += B_pref;
+		}
+
+	return;
+
+	}
+
+
+
+// m>=1 and n={5,6,7,8}
+void kernel_dgetrf_pivot_8_vs_lib4(int m, double *pC, int sdc, double *pd, int *ipiv, int n)
+	{
+
+	const int ps = 4;
+
+	int ii;
+
+	double *dummy = NULL;
+
+	double d1 = 1.0;
+	double dm1 = -1.0;
+
+	// saturate n to 8
+	n = 8<n ? 8 : n;
+
+	int p = m<n ? m : n;
+
+	int n_max;
+
+	// fact left column
+	kernel_dgetrf_pivot_4_vs_lib4(m, pC, sdc, pd, ipiv, 4);
+
+	n_max = p<4 ? p : 4;
+
+	// apply pivot to right column
+	for(ii=0; ii<n_max; ii++)
+		{
+		if(ipiv[ii]!=ii)
+			{
+			kernel_drowsw_lib4(n-4, pC+ii/ps*ps*sdc+ii%ps+4*ps, pC+ipiv[ii]/ps*ps*sdc+ipiv[ii]%ps+4*ps);
+			}
+		}
+
+	// solve top right block
+	kernel_dtrsm_nn_ll_one_4x4_vs_lib4(0, dummy, dummy, 0, &d1, pC+4*ps, pC+4*ps, pC, m, n-4);
+
+	if(m>4)
+		{
+
+		// correct rigth block
+		ii = 4;
+		for(; ii<m-4; ii+=8)
+			{
+			kernel_dgemm_nn_8x4_vs_lib4(4, &dm1, pC+ii*sdc, sdc, 0, pC+4*ps, sdc, &d1, pC+ii*sdc+4*ps, sdc, pC+ii*sdc+4*ps, sdc, m-ii, n-4);
+			}
+		if(ii<m)
+			{
+			kernel_dgemm_nn_4x4_vs_lib4(4, &dm1, pC+ii*sdc, 0, pC+4*ps, sdc, &d1, pC+ii*sdc+4*ps, pC+ii*sdc+4*ps, m-ii, n-4);
+			}
+
+		// fact right column
+		kernel_dgetrf_pivot_4_vs_lib4(m-4, pC+4*sdc+4*ps, sdc, pd+4, ipiv+4, n-4);
+
+		n_max = p;
+
+		for(ii=4; ii<n_max; ii++)
+			ipiv[ii] += 4;
+
+		// apply pivot to left column
+		for(ii=4; ii<n_max; ii++)
+			{
+			if(ipiv[ii]!=ii)
+				{
+				kernel_drowsw_lib4(4, pC+ii/ps*ps*sdc+ii%ps, pC+ipiv[ii]/ps*ps*sdc+ipiv[ii]%ps);
+				}
+			}
+
 		}
 
 	return;
