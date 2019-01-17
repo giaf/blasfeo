@@ -4,7 +4,7 @@ BLASFEO ChangeLog
 
 ====================================================================
 Version 0.1.1-master
-09-Jan-2019
+17-Jan-2019
 
 common:
 	* example_d_riccati_recursion: add trf for blas_api
@@ -20,7 +20,10 @@ BLAS_API:
 	* dsyrk for all targets
 	* dtrmm_rlnn for all targets
 	* dtrsm for all targets
+	* dgesv for all targets
 	* dgetrf for all targets
+	* dgetrs for all targets
+	* dposv for all targets
 	* dpotrf for all targets
 	* dpotrs for all targets
 	* dtrtrs for all targets
