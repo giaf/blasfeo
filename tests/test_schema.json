@@ -201,9 +201,10 @@
       },
       "potrf": {
         "testclass_src": "potrf.c",
-        "flags":{},
+        "flags":{"uplo":["l", "u"]},
         "routines": [
-          "potrf_l"
+          "potrf_l",
+          "potrf_u"
         ]
       }    },
     "aux": {
