@@ -27,75 +27,48 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
+
+
+#include "../include/blasfeo_target.h"
+#include "../include/blasfeo_common.h"
+#include "../include/blasfeo_d_aux.h"
+#include "../include/blasfeo_d_kernel.h"
+#include "../include/blasfeo_d_blas.h"
+
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_dlaswp dlaswp_
+#define blasfeo_dgesv dgesv_
+#define blasfeo_dgetrf dgetrf_
+#define blasfeo_dgetrs dgetrs_
 #endif
 
 
 
-void blasfeo_dlaswp(int *pn, double *A, int *plda, int *pk1, int *pk2, int *ipiv, int *pincx)
+void blasfeo_dgesv(int *pm, int *pn, double *A, int *plda, int *ipiv, double *B, int *pldb, int *info)
 	{
 
+//	printf("\nblasfeo_dpotrs\n");
+
+	int m = *pm;
 	int n = *pn;
-	int lda = *plda;
-	int k1 = *pk1;
-	int k2 = *pk2;
-	int incx = *pincx;
 
-	int ix0, i1, i2;
+	char c_n = 'n';
 
-	int ii, jj, ix, ip;
+	*info = 0;
 
-	double tmp;
+	blasfeo_dgetrf(pm, pm, A, plda, ipiv, info);
 
-	if(incx>=0)
+	if(*info==0)
 		{
-		ix0 = k1;
-		i1 = k1;
-		i2 = k2;
-		ix = ix0;
-		for(ii=i1; ii<=i2; ii++)
-			{
-			ip = ipiv[-1+ix];
-			if(ip!=ii)
-				{
-				for(jj=0; jj<n; jj++)
-					{
-					tmp = A[-1+ii+jj*lda];
-					A[-1+ii+jj*lda] = A[-1+ip+jj*lda];
-					A[-1+ip+jj*lda] = tmp;
-					}
-				}
-			ix = ix + incx;
-			}
+		blasfeo_dgetrs(&c_n, pm, pn, A, plda, ipiv, B, pldb, info);
 		}
-	else
-		{
-//		ix0 = k1 + (k1-k2)*incx;
-		ix0 = 1 + (1-k2)*incx;
-		i1 = k2;
-		i2 = k1;
-		ix = ix0;
-		for(ii=i1; ii>=i2; ii--)
-			{
-			ip = ipiv[-1+ix];
-			if(ip!=ii)
-				{
-				for(jj=0; jj<n; jj++)
-					{
-					tmp = A[-1+ii+jj*lda];
-					A[-1+ii+jj*lda] = A[-1+ip+jj*lda];
-					A[-1+ip+jj*lda] = tmp;
-					}
-				}
-			ix = ix + incx;
-			}
-		}
-
 
 	return;
 
 	}
+
+
 
