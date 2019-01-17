@@ -3,38 +3,41 @@
 * This file is part of BLASFEO.                                                                   *
 *                                                                                                 *
 * BLASFEO -- BLAS For Embedded Optimization.                                                      *
-* Copyright (C) 2016-2017 by Gianluca Frison.                                                     *
+* Copyright (C) 2016-2018 by Gianluca Frison.                                                     *
 * Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              *
 * All rights reserved.                                                                            *
 *                                                                                                 *
-* HPMPC is free software; you can redistribute it and/or                                          *
-* modify it under the terms of the GNU Lesser General Public                                      *
-* License as published by the Free Software Foundation; either                                    *
-* version 2.1 of the License, or (at your option) any later version.                              *
+* This program is free software: you can redistribute it and/or modify                            *
+* it under the terms of the GNU General Public License as published by                            *
+* the Free Software Foundation, either version 3 of the License, or                               *
+* (at your option) any later version                                                              *.
 *                                                                                                 *
-* HPMPC is distributed in the hope that it will be useful,                                        *
+* This program is distributed in the hope that it will be useful,                                 *
 * but WITHOUT ANY WARRANTY; without even the implied warranty of                                  *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-* See the GNU Lesser General Public License for more details.                                     *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                   *
+* GNU General Public License for more details.                                                    *
 *                                                                                                 *
-* You should have received a copy of the GNU Lesser General Public                                *
-* License along with HPMPC; if not, write to the Free Software                                    *
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA                  *
+* You should have received a copy of the GNU General Public License                               *
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.                          *
 *                                                                                                 *
-* Author: Gianluca Frison, giaf (at) dtu.dk                                                       *
-*                          gianluca.frison (at) imtek.uni-freiburg.de                             *
+* The authors designate this particular file as subject to the "Classpath" exception              *
+* as provided by the authors in the LICENSE file that accompained this code.                      *
+*                                                                                                 *
+* Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             *
 *                                                                                                 *
 **************************************************************************************************/
 
 int test_routine(struct RoutineArgs *args, int *bad_calls){
 
-#if (VERBOSE>2)
+#if (VERBOSE > 2)
+	// (err=0 || err=1) && VERBOSE = 3
 	print_routine(args);
 #endif
 
 	// execute both HP routine and REF routine
 	// templated call
 	call_routines(args);
+	// the result is expected to be in matrix D inside struct args
 
 	// routine test
 	#ifdef TEST_BLAS_API
@@ -49,26 +52,27 @@ int test_routine(struct RoutineArgs *args, int *bad_calls){
 		&(args->err_i), &(args->err_j), VERBOSE);
 	#endif
 
-	if (err) *bad_calls += 1;
-#if (VERBOSE==0)
-	// increment number of bad calls olny
-#else
 	if (err)
 		{
+#if (VERBOSE==0)
+		// err=1 && VERBOSE = 0
+		// increment number of bad calls olny
+		*bad_calls += 1;
+#else
 #if (VERBOSE>1)
+		// err=1 && VERBOSE=2
 		// print input matrices
 		// templated call
 		print_routine_matrices(args);
 #endif
-
-		// VERBOSE 1 if error
+		// err=1 && VERBOSE=1
 		// print routine name and signature
 		// templated call
 		print_routine(args);
 
 		print_compilation_flags();
-		}
 #endif
+		}
 	// terminate on error
 	return err;
 }
@@ -320,8 +324,8 @@ int main()
 									args.di = di;
 									args.dj = xj;
 
-									args.n = ni;
-									args.m = nj;
+									args.m = ni;
+									args.n = nj;
 									args.k = nk;
 
 									args.alpha = alpha;

@@ -23,9 +23,9 @@ void call_routines(struct RoutineArgs *args){
 void print_routine(struct RoutineArgs *args){
 	// unpack args
 
-	printf("%s\n", string(ROUTINE));
+	printf("%s: ", string(ROUTINE));
 	printf(
-		"Solving A[%d:%d,%d:%d] = LL*[%d:%d,%d:%d]\n",
+		"solving A[%d:%d,%d:%d] = LL^T[%d:%d,%d:%d]\n",
 		args->ai, args->m, args->aj,  args->m,
 		args->di, args->m, args->dj, args->m
 	);

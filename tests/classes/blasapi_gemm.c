@@ -26,9 +26,9 @@ void call_routines(struct RoutineArgs *args){
 void print_routine(struct RoutineArgs *args){
 	// unpack args
 
-	printf("blas_%s_%s%s", string(ROUTINE), string(TRANSA), string(TRANSB));
+	printf("blas_%s_%s%s: ", string(ROUTINE), string(TRANSA), string(TRANSB));
 	printf(
-		"D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
+		"solving D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
 		args->di, args->m, args->dj, args->n,
 		args->alpha, args->ai, args->m, args->aj, args->k,
 		args->bi, args->k, args->bj, args->n,

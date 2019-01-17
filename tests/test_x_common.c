@@ -49,17 +49,19 @@ void initialize_test_args(struct TestArgs * targs)
 	targs->ai0 = 0;
 	targs->bi0 = 0;
 	targs->di0 = 0;
+
 	targs->xj0 = 0;
 
 	targs->ais = 1;
 	targs->bis = 1;
 	targs->dis = 1;
+
 	targs->xjs = 1;
 
 	// sub-matrix dimensions, sweep start
-	targs->ni0 = 4;
-	targs->nj0 = 4;
-	targs->nk0 = 4;
+	targs->ni0 = 1;
+	targs->nj0 = 1;
+	targs->nk0 = 1;
 
 	// sub-matrix dimensions, sweep lenght
 	targs->nis = 1;

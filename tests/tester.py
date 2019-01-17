@@ -21,7 +21,7 @@ TPL_PATH="Makefile.tpl"
 LIB_BLASFEO_STATIC = "libblasfeo.a"
 LIB_BLASFEO_REF_STATIC = "libblasfeo_ref.a"
 MAKE_FLAGS={}
-SILENT=1
+SILENT=0
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='BLAFEO tests scheduler')
@@ -126,13 +126,15 @@ def make_templated(make_cmd="", env_flags={}, test_macros={}, blasfeo_flags={}, 
 
 class CookBook:
     def __init__(self, cli_flags):
+        global SILENT
 
         self.cli_flags=cli_flags
 
         with open(cli_flags.recipe_json) as f:
             self.specs = json.load(f)
 
-        if self.specs["options"].get("silent") or self.cli_flags.silent: SILENT=1
+        if self.specs["options"].get("silent") or self.cli_flags.silent:
+            SILENT=1
 
         with open(TEST_SCHEMA) as f:
             self.schema = json.load(f)
