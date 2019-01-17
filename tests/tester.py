@@ -12,7 +12,7 @@ from pathlib import Path
 BLASFEO_PATH=Path(__file__).absolute().parents[1]
 BLASFEO_TEST_PATH=Path(__file__).absolute().parents[0]
 
-SCHEMA="test_schema.json"
+TEST_SCHEMA="test_schema.json"
 RECIPE_JSON="recipe_default.json"
 BUILDS_DIR="build"
 REPORTS_DIR="reports"
@@ -134,7 +134,7 @@ class CookBook:
 
         if self.specs["options"].get("silent") or self.cli_flags.silent: SILENT=1
 
-        with open(SCHEMA) as f:
+        with open(TEST_SCHEMA) as f:
             self.schema = json.load(f)
 
         self._success_n = 0
@@ -151,10 +151,17 @@ class CookBook:
         self.build_recipe()
 
     def parse_routine_options(self, routine_name, available_flags):
-        pattern = '(?P<routine_basename>[a-z]*)_'
+
+        # routine without any flag
+        if not available_flags:
+            return {'routine_basename': routine_name}
+
+        pattern = '(?P<routine_basename>[a-z]*)'
+
         for flag_name, flags_values in available_flags.items():
             flags_values = '|'.join(flags_values)
             pattern += '(?P<{flag_name}>[{flags_values}])'.format(flag_name=flag_name, flags_values=flags_values)
+
         parsed_flags = re.search(pattern, routine_name).groupdict()
         return parsed_flags
 
@@ -175,7 +182,7 @@ class CookBook:
                 available_routines = routine_class["routines"]
                 routine_flags = routine_class["flags"]
 
-                # routines: gemm_nn, gemm_nt, ...
+                # routines: gemm, gemm_nn, gemm_nt, ...
                 for routine  in available_routines:
 
                     if routine not in scheduled_routines:
@@ -225,7 +232,7 @@ class CookBook:
 
         if scheduled_routines:
             print("Some routines were not found in the schema ({}) {}"
-                  .format(RECIPE_SCHEMA, scheduled_routines))
+                  .format(TEST_SCHEMA, scheduled_routines))
 
     def run_all(self):
         # tune the recipe and run

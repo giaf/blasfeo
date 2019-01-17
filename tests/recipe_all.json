@@ -31,6 +31,10 @@
     "ARMV7A_ARM_CORTEX_A7",
     "GENERIC"
   ],
+  "apis": [
+    "blasfeo",
+    "blas"
+  ],
   "las":[
     "HIGH_PERFORMANCE",
     "REFERENCE",
