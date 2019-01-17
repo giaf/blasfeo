@@ -1410,7 +1410,7 @@ end_1:
 			}
 		}
 #else
-	for(; ii<m-3, ii<n-3; ii+=4)
+	for(; ii<m-3 && ii<n-3; ii+=4)
 		{
 		kernel_dunpack_nn_4_lib4(ii, pC+ii*sdc, C+ii, ldc);
 		}
