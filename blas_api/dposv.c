@@ -40,27 +40,25 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_dgesv dgesv_
-#define blasfeo_dgetrf dgetrf_
-#define blasfeo_dgetrs dgetrs_
+#define blasfeo_dposv dposv_
+#define blasfeo_dpotrf dpotrf_
+#define blasfeo_dpotrs dpotrs_
 #endif
 
 
 
-void blasfeo_dgesv(int *pm, int *pn, double *A, int *plda, int *ipiv, double *B, int *pldb, int *info)
+void blasfeo_dposv(char *uplo, int *pm, int *pn, double *A, int *plda, double *B, int *pldb, int *info)
 	{
 
 //	printf("\nblasfeo_dpotrs\n");
 
-	char c_n = 'n';
-
 	*info = 0;
 
-	blasfeo_dgetrf(pm, pm, A, plda, ipiv, info);
+	blasfeo_dpotrf(uplo, pm, A, plda, info);
 
 	if(*info==0)
 		{
-		blasfeo_dgetrs(&c_n, pm, pn, A, plda, ipiv, B, pldb, info);
+		blasfeo_dpotrs(uplo, pm, pn, A, plda, B, pldb, info);
 		}
 
 	return;

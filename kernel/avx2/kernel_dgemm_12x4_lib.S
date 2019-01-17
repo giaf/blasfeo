@@ -7176,22 +7176,6 @@
 
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
-	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
-	movq	ARG14, %r13 // m1
-	movq	ARG15, %r14 // n1
-
-#if MACRO_LEVEL>=1
-	INNER_SCALE_M1B_12X4_VS_LIB
-#else
-	CALL(inner_scale_m1b_12x4_vs_lib)
-#endif
-
-
-	// call inner blender_loader nn
-
-	movq	ARG6, %r10 // beta
-	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // sdc
 	sall	$5, %r12d
 

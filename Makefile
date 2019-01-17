@@ -635,6 +635,7 @@ OBJS += \
 		blas_api/dgetrf.o \
 		blas_api/dgetrs.o \
 		blas_api/dlaswp.o \
+		blas_api/dposv.o \
 		blas_api/dpotrf.o \
 		blas_api/dpotrs.o \
 		blas_api/dtrtrs.o \
