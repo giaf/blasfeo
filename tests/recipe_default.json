@@ -1,11 +1,12 @@
 {
   "options":{
     "rebuild": 0,
-    "silent": 1
+    "silent": 1,
+    "continue": 0
   },
   "test_macros":
   {
-    "VERBOSE":1
+    "VERBOSE":2
   },
   "env_flags":{
     "CFLAGS": "-Wuninitialized"
@@ -20,14 +21,13 @@
     "double"
   ],
   "apis": [
-    "blasfeo",
-    "blas"
+    "blas",
+    "blasfeo"
   ],
   "K_MAX_STACK":[
     0, 400
   ],
   "TARGET": [
-    "GENERIC",
     "X64_INTEL_CORE",
     "X64_INTEL_SANDY_BRIDGE",
     "X64_INTEL_HASWELL"
@@ -36,6 +36,9 @@
     "HIGH_PERFORMANCE"
   ],
   "routines": [
+    "getrf"
+  ],
+  "buffer": [
     "gemm_nn",
     "gemm_tn",
     "gemm_nt",
@@ -56,7 +59,5 @@
     "trsm_runn",
     "trsm_rutu",
     "trsm_rutn"
-  ],
-  "buffer": [
   ]
 }

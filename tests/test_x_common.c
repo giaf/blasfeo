@@ -192,9 +192,9 @@ void print_xmat_debug(
 
 			if ((i==err_i) && (j==err_j) && ERR)
 				printf(ANSI_COLOR_RED"%6.2f\t"ANSI_COLOR_RESET, pA[i+lda*j]);
-			else if ((i >= ai) && (i < ai+m) && (j >= aj) && (j < aj+n))
+			else if ((i >= ai) && (i <= ai+m) && (j >= aj) && (j < aj+n))
 				printf(ANSI_COLOR_GREEN"%6.2f\t"ANSI_COLOR_RESET, pA[i+lda*j]);
-			else printf("%6.2f\t", pA[i+lda*j]);
+			else printf(ANSI_COLOR_BLUE"%6.2f\t"ANSI_COLOR_RESET, pA[i+lda*j]);
 
 			}
 		printf("\n");
@@ -294,52 +294,6 @@ void blasfeo_print_xmat_debug(
 	#endif
 	return;
 	}
-
-
-void print_input_matrices(
-	const char* routine, int m, int n, int k, struct STRMAT *sA, struct STRMAT_REF *rA,
-	struct STRMAT *sB, struct STRMAT_REF *rB, struct STRMAT *sC, struct STRMAT_REF *rC,
-	int ai, int aj, int bi, int bj, int ci, int cj)
-{
-	if (strcmp(routine, "blasfeo_dgemm_nn") == 0)
-	{
-		printf("\nPrint A:\n");
-		blasfeo_print_xmat_debug(m, k, sA, ai, aj, 0, 0, 0);
-		print_xmat_debug(m, k, rA, ai, aj, 0, 0, 0);
-		printf("\nPrint B:\n");
-		blasfeo_print_xmat_debug(k, n, sB, bi, bj, 0, 0, 0);
-		print_xmat_debug(k, n, rB, bi, bj, 0, 0, 0);
-		printf("\nPrint C:\n");
-		blasfeo_print_xmat_debug(m, n, sC, ci, cj, 0, 0, 0);
-		print_xmat_debug(m, n, rC, ci, cj, 0, 0, 0);
-	}
-	else if (strcmp(routine, "blasfeo_dgemm_nt") == 0)
-	{
-		printf("\nPrint A:\n");
-		blasfeo_print_xmat_debug(m, k, sA, ai, aj, 0, 0, 0);
-		print_xmat_debug(m, k, rA, ai, aj, 0, 0, 0);
-		printf("\nPrint B:\n");
-		blasfeo_print_xmat_debug(n, k, sB, bi, bj, 0, 0, 0);
-		print_xmat_debug(n, k, rB, bi, bj, 0, 0, 0);
-		printf("\nPrint C:\n");
-		blasfeo_print_xmat_debug(m, n, sC, ci, cj, 0, 0, 0);
-		print_xmat_debug(m, n, rC, ci, cj, 0, 0, 0);
-	}
-	else if (strncmp(routine, "blasfeo_trsm", 13) == 0)
-	{
-		printf("\nPrint A:\n\n");
-		int maxn = (m > n)? m : n;
-		blasfeo_print_xmat_debug(maxn, maxn, sA, ai, aj, 0, 0, 0);
-		print_xmat_debug(maxn, maxn, rA, ai, aj, 0, 0, 0);
-		printf("\nPrint B:\n\n");
-		blasfeo_print_xmat_debug(m, n, sB, bi, bj, 0, 0, 0);
-		print_xmat_debug(m, n, rB, bi, bj, 0, 0, 0);
-	}
-	else
-	{
-	}
-}
-
 
 static void printbits(void *c, size_t n)
 {

@@ -1,23 +1,33 @@
 {
+  "options":{
+    "rebuild": 0,
+    "silent": 1,
+    "continue": 0
+  },
   "env_flags":{
     "CFLAGS":"-Wuninitialized"
   },
-  "available_make_flags":{
-    "SOC":"BACHMANN",
-    "SOC":"DSPACE"
-  },
-  "options":{
-    "rebuild": 0,
-    "silent": 1
-  },
-  "cflags":{
-    "REF_BLAS":"0",
+  "test_macros":
+  {
     "VERBOSE":1
   },
-  "make_flags":{
-    "CC":"clang"
+  "blasfeo_flags":{
+    "CC":"clang",
+    "TESTING_MODE": 1,
+    "BENCHMARK_MODE": 0,
+    "REF_BLAS": "OPENBLAS"
   },
-  "precisions":["d"],
+  "available_blasfeo_flags":{
+    "SOC":["DSPACE", "BACHMANN"],
+    "CC": ["clang"],
+    "TESTING_MODE": [1, 0],
+    "BENCHMARK_MODE": [1, 0],
+    "REF_BLAS": ["OPENBLAS"]
+  },
+  "precisions":[
+    "d",
+    "s"
+  ],
   "targets":[
     "X64_INTEL_HASWELL",
     "X64_INTEL_SANDY_BRIDGE",

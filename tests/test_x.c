@@ -121,6 +121,10 @@ int main()
 	for(ii=0; ii<n*n; ii++) B[ii] = 2*(ii+1);
 	for(ii=0; ii<n*n; ii++) C[ii] = 0.5*(ii+1);
 
+	// A non singular matrix
+	// A[i,i] = A[i,i] + 1
+	for(ii=0; ii<n; ii++) A[(ii*n)+ii] = A[(ii*n)+ii] + 1;
+
 	// Create positive definite matrix
 	// A_po = A * A'
 	REAL c;
@@ -134,6 +138,7 @@ int main()
 			A_po[ii+n*jj] = c;
 		}
 	}
+
 	// A_po[i,i] = A_po[i,i] + 1E6 + i
 	// Well conditioned positive definite matrix
 	for(ii=0; ii<n; ii++) A_po[(ii*n)+ii] = A_po[(ii*n)+ii] + 1E6+ii;

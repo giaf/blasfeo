@@ -2,29 +2,33 @@
 //
 void call_routines(struct RoutineArgs *args){
 
-	// unpack args
+	// copy input matrix A in C
+	GECP_REF(args->m, args->m, args->cA, 0, 0, args->cC, 0, 0);
+	GECP_REF(args->m, args->m, args->rA, 0, 0, args->rC, 0, 0);
 
 	// routine call
 	//
 	BLASFEO(ROUTINE)(
 		&(args->m), &(args->n),
-		args->cA->pA, &(args->cA->m),
+		args->cC->pA, &(args->cC->m),
 		args->cipiv, &(args->info));
 
 	BLAS(ROUTINE)(
 		&(args->m), &(args->n),
-		args->rA->pA, &(args->rA->m),
+		args->rC->pA, &(args->rC->m),
 		args->ripiv, &(args->info));
 
-	// copy result in D
-	GECP_REF(args->m, args->m, args->cA, 0, 0, args->cD, 0, 0);
-	GECP_REF(args->m, args->m, args->rA, 0, 0, args->rD, 0, 0);
+	// C matrix is overwritten with the solution
+
+	// copy result matrix C in D
+	GECP_REF(args->m, args->m, args->cC, 0, 0, args->cD, 0, 0);
+	GECP_REF(args->m, args->m, args->rC, 0, 0, args->rD, 0, 0);
 
 }
 
 void print_routine(struct RoutineArgs *args){
-	// unpack args
 
+	// unpack args
 	printf(
 		"blas_%s: solving A[%d,%d] = P * LU[%d,%d]\n",
 		string(ROUTINE),
@@ -36,9 +40,14 @@ void print_routine(struct RoutineArgs *args){
 
 void print_routine_matrices(struct RoutineArgs *args)
 {
-		printf("\nPrint A:\n");
-		print_xmat_debug(args->m, args->n, args->cA, 0, 0, 0, 0, 0);
-		print_xmat_debug(args->m, args->n, args->rA, 0, 0, 0, 0, 0);
+	printf("\nInput matrix:\n");
+	print_xmat_debug(args->m, args->n, args->cA, 0, 0, 0, 0, 0);
+	print_xmat_debug(args->m, args->n, args->rA, 0, 0, 0, 0, 0);
+
+	printf("\nRow pivot vector:\n");
+	int size = args->m < args->n ? args->m : args->n;
+	int_print_mat(1, size, args->cipiv, 1);
+	int_print_mat(1, size, args->ripiv, 1);
 }
 
 void set_test_args(struct TestArgs *targs)
