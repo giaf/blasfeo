@@ -55,6 +55,8 @@
 void blasfeo_dcopy(int *pn, double *x, int *pincx, double *y, int *pincy)
 	{
 
+//	printf("\nblasfeo_dcopy\n");
+
 	int n = *pn;
 	int incx = *pincx;
 	int incy = *pincy;

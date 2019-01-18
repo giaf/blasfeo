@@ -48,6 +48,8 @@
 void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	{
 
+//	printf("\nblasfeo_dpotrf\n");
+
 	int m = *pm;
 	int ldc = *pldc;
 

@@ -38,6 +38,8 @@
 void blasfeo_dlaswp(int *pn, double *A, int *plda, int *pk1, int *pk2, int *ipiv, int *pincx)
 	{
 
+//	printf("\nblasfeo_dlaswp\n");
+
 	int n = *pn;
 	int lda = *plda;
 	int k1 = *pk1;

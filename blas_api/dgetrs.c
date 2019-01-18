@@ -50,10 +50,12 @@
 void blasfeo_dgetrs(char *trans, int *pm, int *pn, double *A, int *plda, int *ipiv, double *B, int *pldb, int *info)
 	{
 
-//	printf("\nblasfeo_dpotrs\n");
+//	printf("\nblasfeo_dgetrs\n");
 
 	int m = *pm;
 	int n = *pn;
+
+//	printf("\nm %d n %d lda %d ldb %d\n", m, n, *plda, *pldb);
 
 	char c_l = 'l';
 	char c_n = 'n';

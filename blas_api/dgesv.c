@@ -50,7 +50,7 @@
 void blasfeo_dgesv(int *pm, int *pn, double *A, int *plda, int *ipiv, double *B, int *pldb, int *info)
 	{
 
-//	printf("\nblasfeo_dpotrs\n");
+//	printf("\nblasfeo_dgesv\n");
 
 	char c_n = 'n';
 

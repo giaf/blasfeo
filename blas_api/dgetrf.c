@@ -49,9 +49,16 @@
 void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info)
 	{
 
+//	printf("\nblasfeo_dgetrf\n");
+
 	int m = *pm;
 	int n = *pn;
 	int ldc = *pldc;
+
+//	d_print_mat(m, n, C, ldc);
+//	printf("\nm %d n %d ldc %d\n", m, n, ldc);
+
+	*info = 0;
 
 	if(m<=0 | n<=0)
 		return;
@@ -711,6 +718,8 @@ end_0:
 	// from 0-index to 1-index
 	for(ii=0; ii<p; ii++)
 		ipiv[ii] += 1;
+//	int_print_mat(1, p, ipiv, 1);
+//	d_print_mat(m, n, C, ldc);
 	return;
 
 
