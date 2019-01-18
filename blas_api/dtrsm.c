@@ -43,6 +43,13 @@
 
 
 
+#if defined(FALLBACK_TO_EXT_BLAS)
+void dtrsv_(char *uplo, char *transa, char *diag, int *m, double *A, int *lda, double *x, int *incx);
+void dscal_(int *m, double *alpha, double *x, int *incx);
+#endif
+
+
+
 void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, double *alpha, double *A, int *plda, double *B, int *pldb)
 	{
 
@@ -94,6 +101,10 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 	int idx, m4, mn4, n4, nn4;
 	int pack_tran = 0;
 
+	char c_n = 'n';
+	char c_t = 't';
+	int i_1 = 1;
+
 
 #if defined(DIM_CHECK)
 	if( !(*side=='l' | *side=='L' | *side=='r' | *side=='R') )
@@ -117,6 +128,41 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 		return;
 		}
 #endif
+
+
+
+#if defined(FALLBACK_TO_EXT_BLAS)
+	// fallback to dtrsv if B is a vector
+	if(n==1 & (*side=='l' | *side=='L'))
+		{
+		dtrsv_(uplo, transa, diag, pm, A, plda, B, &i_1);
+		if(*alpha!=1.0)
+			{
+			dscal_(pm, alpha, B, &i_1);
+			}
+		}
+	else if(m==1 & (*side=='r' | *side=='r'))
+		{
+		if(*transa=='n' | *transa=='N')
+			{
+			dtrsv_(uplo, &c_t, diag, pn, A, plda, B, pldb);
+			if(*alpha!=1.0)
+				{
+				dscal_(pn, alpha, B, pldb);
+				}
+			}
+		else
+			{
+			dtrsv_(uplo, &c_n, diag, pn, A, plda, B, pldb);
+			if(*alpha!=1.0)
+				{
+				dscal_(pn, alpha, B, pldb);
+				}
+			}
+		}
+	return;
+#endif
+
 
 
 	if(*side=='l' | *side=='L') // _l

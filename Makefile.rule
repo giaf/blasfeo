@@ -107,6 +107,9 @@ $(error Cannot expose non-FORTRAN style BLAS API when building CBLAS API. Exitin
 endif
 endif
 
+# In BLAS API, fallback to external BLAS library for some sub-routines
+# FALLBACK_TO_EXT_BLAS = 0
+FALLBACK_TO_EXT_BLAS = 1
 
 # Maximum K value for stack buffer size (decrease this value if stack size is exceeded)
 K_MAX_STACK = 300
@@ -204,11 +207,15 @@ CFLAGS  += -DLA=$(LA)
 ifeq ($(BLAS_API), 1)
 CFLAGS += -DBLAS_API
 ASFLAGS += -DBLAS_API
-endif
 ifeq ($(FORTRAN_BLAS_API), 1)
-CFLAGS += -DBLAS_API -DFORTRAN_BLAS_API
-ASFLAGS += -DBLAS_API
-endif
+CFLAGS += -DFORTRAN_BLAS_API
+ASFLAGS +=
+endif # FORTRAN_BLAS_API
+ifeq ($(FALLBACK_TO_EXT_BLAS), 1)
+CFLAGS += -DFALLBACK_TO_EXT_BLAS
+ASFLAGS += -DFALLBACK_TO_EXT_BLAS
+endif # FALLBACK_TO_EXT_BLAS
+endif # BLAS_API
 
 CFLAGS  += -DK_MAX_STACK=$(K_MAX_STACK)
 
