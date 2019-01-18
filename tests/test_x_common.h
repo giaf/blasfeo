@@ -118,8 +118,11 @@ struct RoutineArgs{
 	int dj;
 
 	// indexes arrays
+	// struct signature
 	int *sipiv;
+	// ref signature
 	int *ripiv;
+	// ref compare signature
 	int *cipiv;
 
 	// matrices
@@ -142,6 +145,7 @@ struct RoutineArgs{
 	struct STRMAT_REF *cD;
 
 	void * work;
+	int info;
 
 	// blas_api
 	char ta;

@@ -8,11 +8,13 @@ import argparse
 import re
 from hashlib import sha1
 from pathlib import Path
+from collections import OrderedDict
+import shutil
 
-BLASFEO_PATH=Path(__file__).absolute().parents[1]
-BLASFEO_TEST_PATH=Path(__file__).absolute().parents[0]
+BLASFEO_PATH=str(Path(__file__).absolute().parents[1])
+BLASFEO_TEST_PATH=str(Path(__file__).absolute().parents[0])
 
-SCHEMA="test_schema.json"
+TEST_SCHEMA="test_schema.json"
 RECIPE_JSON="recipe_default.json"
 BUILDS_DIR="build"
 REPORTS_DIR="reports"
@@ -21,7 +23,7 @@ TPL_PATH="Makefile.tpl"
 LIB_BLASFEO_STATIC = "libblasfeo.a"
 LIB_BLASFEO_REF_STATIC = "libblasfeo_ref.a"
 MAKE_FLAGS={}
-SILENT=1
+SILENT=0
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='BLAFEO tests scheduler')
@@ -30,7 +32,7 @@ def parse_arguments():
         help='Run a batch of test from a specific recipe, i.e. recipe_all.json')
     parser.add_argument('--silent', default=False, action='store_true',
         help='Silent makefile output')
-    parser.add_argument('--run_all', default=False, action='store_true',
+    parser.add_argument('--continue', dest='continue_test', default=False, action='store_true',
         help='Do not interrupt tests sweep on error')
     parser.add_argument('--rebuild', default=False, action='store_true',
         help='Rebuild libblasfeo to take into account recent code '+
@@ -111,9 +113,9 @@ def make_templated(make_cmd="", env_flags={}, test_macros={}, blasfeo_flags={}, 
         # write report
         report_path = Path(REPORTS_DIR, run_id)
         report_path.mkdir(parents=True, exist_ok=True)
-        with open(Path(report_path, "Makefile"), "w") as f:
+        with open(str(Path(report_path, "Makefile")), "w") as f:
             f.write(makefile)
-        with open(Path(report_path, "make.sh"), "w") as f:
+        with open(str(Path(report_path, "make.sh")), "w") as f:
             f.write("#! /bin/bash\n")
             f.write(report_cmd+"\n")
 
@@ -126,15 +128,18 @@ def make_templated(make_cmd="", env_flags={}, test_macros={}, blasfeo_flags={}, 
 
 class CookBook:
     def __init__(self, cli_flags):
+        global SILENT
 
         self.cli_flags=cli_flags
 
         with open(cli_flags.recipe_json) as f:
-            self.specs = json.load(f)
+            self.specs = json.load(f, object_pairs_hook=OrderedDict)
 
-        if self.specs["options"].get("silent") or self.cli_flags.silent: SILENT=1
 
-        with open(SCHEMA) as f:
+        if self.specs["options"].get("silent") or self.cli_flags.silent:
+            SILENT=1
+
+        with open(TEST_SCHEMA) as f:
             self.schema = json.load(f)
 
         self._success_n = 0
@@ -151,10 +156,17 @@ class CookBook:
         self.build_recipe()
 
     def parse_routine_options(self, routine_name, available_flags):
-        pattern = '(?P<routine_basename>[a-z]*)_'
+
+        # routine without any flag
+        if not available_flags:
+            return {'routine_basename': routine_name}
+
+        pattern = '(?P<routine_basename>[a-z]*)'
+
         for flag_name, flags_values in available_flags.items():
             flags_values = '|'.join(flags_values)
             pattern += '(?P<{flag_name}>[{flags_values}])'.format(flag_name=flag_name, flags_values=flags_values)
+
         parsed_flags = re.search(pattern, routine_name).groupdict()
         return parsed_flags
 
@@ -162,7 +174,7 @@ class CookBook:
         scheduled_routines = set(self.specs['routines'])
 
         # create recipe with no global flags
-        self.recipe = dict(self.specs)
+        self.recipe = OrderedDict(self.specs)
         self.recipe["scheduled_routines"] = {}
 
         available_groups = self.schema['routines']
@@ -175,7 +187,7 @@ class CookBook:
                 available_routines = routine_class["routines"]
                 routine_flags = routine_class["flags"]
 
-                # routines: gemm_nn, gemm_nt, ...
+                # routines: gemm, gemm_nn, gemm_nt, ...
                 for routine  in available_routines:
 
                     if routine not in scheduled_routines:
@@ -207,7 +219,7 @@ class CookBook:
                                 routine_testclass_src = routine_class["testclass_src"]
                                 routine_name = "{precision}{routine}".format(precision=precision[0], routine=routine)
 
-                            test_macros["ROUTINE_CLASS_C"] = Path(TESTCLASSES_DIR, routine_testclass_src)
+                            test_macros["ROUTINE_CLASS_C"] = str(Path(TESTCLASSES_DIR, routine_testclass_src))
                             test_macros["ROUTINE"] = routine_name
                             test_macros["ROUTINE_FULLNAME"] = routine
 
@@ -225,7 +237,7 @@ class CookBook:
 
         if scheduled_routines:
             print("Some routines were not found in the schema ({}) {}"
-                  .format(RECIPE_SCHEMA, scheduled_routines))
+                  .format(TEST_SCHEMA, scheduled_routines))
 
     def run_all(self):
         # tune the recipe and run
@@ -282,13 +294,13 @@ class CookBook:
         # update binary_dir flag
         blasfeo_flags.update({"ABS_BINARY_PATH":str(binary_path)})
 
-        lib_static_src = Path(BLASFEO_PATH, "lib", LIB_BLASFEO_STATIC)
-        libref_static_src = Path(BLASFEO_PATH, "lib", LIB_BLASFEO_REF_STATIC)
+        self.lib_static_src = Path(BLASFEO_PATH, "lib", LIB_BLASFEO_STATIC)
+        self.libref_static_src = Path(BLASFEO_PATH, "lib", LIB_BLASFEO_REF_STATIC)
 
         self.lib_static_dst = Path(binary_path, LIB_BLASFEO_STATIC)
         self.libref_static_dst = Path(binary_path, LIB_BLASFEO_REF_STATIC)
 
-        lib_flags_json = Path(binary_path, "flags.json")
+        lib_flags_json = str(Path(binary_path, "flags.json"))
 
         if self.cli_flags.silent or self.recipe["options"].get("silent"):
             MAKE_FLAGS.update({"-s":None})
@@ -302,8 +314,11 @@ class CookBook:
                 json.dump(blasfeo_flags, f, indent=4)
 
             # copy library
-            self.lib_static_dst.write_bytes(lib_static_src.read_bytes())
-            self.libref_static_dst.write_bytes(libref_static_src.read_bytes())
+            shutil.copyfile(str(self.lib_static_src), str(self.lib_static_dst))
+            shutil.copyfile(str(self.libref_static_src), str(self.libref_static_dst))
+
+            #  self.lib_static_dst.write_bytes(lib_static_src.read_bytes())
+            #  self.libref_static_dst.write_bytes(libref_static_src.read_bytes())
 
         for routine_name, args in self.recipe['scheduled_routines'].items():
             # update local flags with global flags
@@ -325,7 +340,10 @@ class CookBook:
 
             error =  self.test_routine(routine_name, args)
 
-            if error and not self.cli_flags.run_all: break
+            if error \
+                and not self.specs["options"].get("continue") \
+                and not self.cli_flags.continue_test:
+                break
 
     def test_routine(self, routine_fullname, kargs):
 

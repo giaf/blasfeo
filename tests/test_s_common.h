@@ -74,5 +74,6 @@
 #define ALLOCATE_STRMAT_REF blasfeo_allocate_smat_ref
 #define FREE_STRMAT_REF blasfeo_free_smat_ref
 #define GESE_REF blasfeo_sgese_ref
+#define GECP_REF blasfeo_sgecp_ref
 #define PACK_STRMAT_REF blasfeo_pack_smat_ref
 #define PRINT_STRMAT_REF blasfeo_print_smat_ref
