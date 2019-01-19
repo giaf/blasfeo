@@ -53,10 +53,75 @@ void dscal_(int *m, double *alpha, double *x, int *incx);
 void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, double *alpha, double *A, int *plda, double *B, int *pldb)
 	{
 
+#if defined(PRINT_NAME)
+	printf("\nblasfeo_dtrsm %c %c %c %c %d %d %f %p %d %p %d\n", *side, *uplo, *transa, *diag, *pm, *pn, *alpha, A, *plda, B, *pldb);
+#endif
+
 	int m = *pm;
 	int n = *pn;
 	int lda = *plda;
 	int ldb = *pldb;
+
+#if defined(DIM_CHECK)
+	if( !(*side=='l' | *side=='L' | *side=='r' | *side=='R') )
+		{
+		printf("\nBLASFEO: dtrsm: wrong value for side\n");
+		return;
+		}
+	if( !(*uplo=='l' | *uplo=='L' | *uplo=='u' | *uplo=='U') )
+		{
+		printf("\nBLASFEO: dtrsm: wrong value for uplo\n");
+		return;
+		}
+	if( !(*transa=='c' | *transa=='C' | *transa=='n' | *transa=='N' | *transa=='t' | *transa=='T') )
+		{
+		printf("\nBLASFEO: dtrsm: wrong value for transa\n");
+		return;
+		}
+	if( !(*diag=='n' | *diag=='n' | *diag=='u' | *diag=='U') )
+		{
+		printf("\nBLASFEO: dtrsm: wrong value for diag\n");
+		return;
+		}
+#endif
+
+	char c_n = 'n';
+	char c_t = 't';
+	int i_1 = 1;
+
+#if defined(FALLBACK_TO_EXT_BLAS)
+	// fallback to dtrsv if B is a vector
+	if(n==1 & (*side=='l' | *side=='L'))
+		{
+		dtrsv_(uplo, transa, diag, pm, A, plda, B, &i_1);
+		if(*alpha!=1.0)
+			{
+			dscal_(pm, alpha, B, &i_1);
+			}
+		}
+	else if(m==1 & (*side=='r' | *side=='r'))
+		{
+		if(*transa=='n' | *transa=='N')
+			{
+			dtrsv_(uplo, &c_t, diag, pn, A, plda, B, pldb);
+			if(*alpha!=1.0)
+				{
+				dscal_(pn, alpha, B, pldb);
+				}
+			}
+		else
+			{
+			dtrsv_(uplo, &c_n, diag, pn, A, plda, B, pldb);
+			if(*alpha!=1.0)
+				{
+				dscal_(pn, alpha, B, pldb);
+				}
+			}
+		}
+	return;
+#endif
+
+
 
 	int ii, jj;
 
@@ -100,68 +165,6 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 	int m1, n1;
 	int idx, m4, mn4, n4, nn4;
 	int pack_tran = 0;
-
-	char c_n = 'n';
-	char c_t = 't';
-	int i_1 = 1;
-
-
-#if defined(DIM_CHECK)
-	if( !(*side=='l' | *side=='L' | *side=='r' | *side=='R') )
-		{
-		printf("\nBLASFEO: dtrsm: wrong value for side\n");
-		return;
-		}
-	if( !(*uplo=='l' | *uplo=='L' | *uplo=='u' | *uplo=='U') )
-		{
-		printf("\nBLASFEO: dtrsm: wrong value for uplo\n");
-		return;
-		}
-	if( !(*transa=='c' | *transa=='C' | *transa=='n' | *transa=='N' | *transa=='t' | *transa=='T') )
-		{
-		printf("\nBLASFEO: dtrsm: wrong value for transa\n");
-		return;
-		}
-	if( !(*diag=='n' | *diag=='n' | *diag=='u' | *diag=='U') )
-		{
-		printf("\nBLASFEO: dtrsm: wrong value for diag\n");
-		return;
-		}
-#endif
-
-
-
-#if defined(FALLBACK_TO_EXT_BLAS)
-	// fallback to dtrsv if B is a vector
-	if(n==1 & (*side=='l' | *side=='L'))
-		{
-		dtrsv_(uplo, transa, diag, pm, A, plda, B, &i_1);
-		if(*alpha!=1.0)
-			{
-			dscal_(pm, alpha, B, &i_1);
-			}
-		}
-	else if(m==1 & (*side=='r' | *side=='r'))
-		{
-		if(*transa=='n' | *transa=='N')
-			{
-			dtrsv_(uplo, &c_t, diag, pn, A, plda, B, pldb);
-			if(*alpha!=1.0)
-				{
-				dscal_(pn, alpha, B, pldb);
-				}
-			}
-		else
-			{
-			dtrsv_(uplo, &c_n, diag, pn, A, plda, B, pldb);
-			if(*alpha!=1.0)
-				{
-				dscal_(pn, alpha, B, pldb);
-				}
-			}
-		}
-	return;
-#endif
 
 
 

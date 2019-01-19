@@ -50,7 +50,9 @@
 void blasfeo_dgetrs(char *trans, int *pm, int *pn, double *A, int *plda, int *ipiv, double *B, int *pldb, int *info)
 	{
 
-//	printf("\nblasfeo_dgetrs\n");
+#if defined(PRINT_NAME)
+	printf("\nblasfeo_dgetrs %c %d %d %p %d %p %p %d %d\n", *trans, *pm, *pn, A, *plda, ipiv, B, *pldb, *info);
+#endif
 
 	int m = *pm;
 	int n = *pn;

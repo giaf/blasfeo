@@ -48,6 +48,10 @@
 void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double *A, int *plda, double *beta, double *C, int *pldc)
 	{
 
+#if defined(PRINT_NAME)
+	printf("\nblasfeo_dsyrk %c %c %d %d %f %p %d %f %p %d\n", *uplo, *ta, *pm, *pk, *alpha, A, *plda, *beta, C, *pldc);
+#endif
+
 	int m = *pm;
 	int k = *pk;
 	int lda = *plda;

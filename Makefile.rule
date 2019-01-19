@@ -141,6 +141,10 @@ SANDBOX_MODE = 0
 RUNTIME_CHECKS = 0
 # RUNTIME_CHECKS = 1
 
+# Print name of BLAS API routines when called (for debugging purposes)
+PRINT_NAME = 0
+# PRINT_NAME = 1
+
 # Operating system (automatic selection)
 #
 UNAME_S := $(shell uname -s)
@@ -248,6 +252,10 @@ ASFLAGS += -DMACRO_LEVEL=1
 endif
 ifeq ($(MACRO_LEVEL), 2)
 ASFLAGS += -DMACRO_LEVEL=2
+endif
+
+ifeq ($(PRINT_NAME), 1)
+CFLAGS += -DPRINT_NAME
 endif
 
 ifeq ($(OS), LINUX)

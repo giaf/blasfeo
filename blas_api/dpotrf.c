@@ -48,7 +48,9 @@
 void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	{
 
-//	printf("\nblasfeo_dpotrf\n");
+#if defined(PRINT_NAME)
+	printf("\nblasfeo_dpotrf %c %d %p %d %d\n", *uplo, *pm, C, *pldc, *info);
+#endif
 
 	int m = *pm;
 	int ldc = *pldc;

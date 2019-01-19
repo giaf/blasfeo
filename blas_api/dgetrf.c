@@ -49,7 +49,9 @@
 void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info)
 	{
 
-//	printf("\nblasfeo_dgetrf\n");
+#if defined(PRINT_NAME)
+	printf("\nblasfeo_dgetrf %d %d %p %d %p %d\n", *pm, *pn, C, *pldc, ipiv, *info);
+#endif
 
 	int m = *pm;
 	int n = *pn;

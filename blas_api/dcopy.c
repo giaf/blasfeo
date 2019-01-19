@@ -55,7 +55,9 @@
 void blasfeo_dcopy(int *pn, double *x, int *pincx, double *y, int *pincy)
 	{
 
-//	printf("\nblasfeo_dcopy\n");
+#if defined(PRINT_NAME)
+	printf("\nblasfeo_dcopy %d %p %d %p %d\n", *pn, x, *pincx, y, *pincy);
+#endif
 
 	int n = *pn;
 	int incx = *pincx;

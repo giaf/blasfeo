@@ -50,7 +50,9 @@
 void blasfeo_dgesv(int *pm, int *pn, double *A, int *plda, int *ipiv, double *B, int *pldb, int *info)
 	{
 
-//	printf("\nblasfeo_dgesv\n");
+#if defined(PRINT_NAME)
+	printf("\nblasfeo_dgesv %d %d %p %d %p %p %d %d\n", *pm, *pn, A, *plda, ipiv, B, *pldb, *info);
+#endif
 
 	char c_n = 'n';
 
