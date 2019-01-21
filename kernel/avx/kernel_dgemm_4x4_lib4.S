@@ -8327,7 +8327,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_ONE_4X4_VS_LIB4
 #else
-//	CALL(inner_edge_dtrsm_rlt_one_4x4_vs_lib4)
+	CALL(inner_edge_dtrsm_rlt_one_4x4_vs_lib4)
 #endif
 
 

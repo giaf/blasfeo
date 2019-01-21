@@ -929,7 +929,7 @@ alg1:
 			{
 			goto left_4_1;
 			}
-		else if(n-jj<=8)
+		else //if(n-jj<=8)
 			{
 			goto left_8_1;
 			}

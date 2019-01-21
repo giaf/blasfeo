@@ -40,10 +40,12 @@
 void sidamax_lib4(int n, int offset, float *pA, int sda, int *p_idamax, float *p_amax)
 	{
 
-	int idamax, ii;
+	int ii;
 	float tmp, amax;
 		
-	p_idamax[0] = -1;
+	int idamax = -1;
+
+	p_idamax[0] = idamax;
 	if(n<1)
 		return;
 
