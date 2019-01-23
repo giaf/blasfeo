@@ -6,7 +6,7 @@
   },
   "test_macros":
   {
-    "VERBOSE":3
+    "VERBOSE":2
   },
   "env_flags":{
     "CFLAGS": "-Wuninitialized"
@@ -14,7 +14,7 @@
   "blasfeo_flags":{
     "CC":"gcc",
     "TESTING_MODE": 1,
-    "BENCHMARK_MODE": 0,
+    "BENCHMARKS_MODE": 1,
     "REF_BLAS": "OPENBLAS"
   },
   "precisions": [
@@ -33,12 +33,29 @@
     "HIGH_PERFORMANCE"
   ],
   "routines": [
-    "getrf",
     "gemm_nn",
     "gemm_tn",
     "gemm_nt",
     "gemm_tt",
-    "potrf_l"
+    "trsm_llnu",
+    "trsm_llnn",
+    "trsm_lunu",
+    "trsm_lunn",
+    "trsm_lltu",
+    "trsm_lltn",
+    "trsm_lutu",
+    "trsm_lutn",
+    "trsm_rlnu",
+    "trsm_rlnn",
+    "trsm_rltu",
+    "trsm_rltn",
+    "trsm_runu",
+    "trsm_runn",
+    "trsm_rutu",
+    "trsm_rutn",
+    "getrf",
+    "potrf_l",
+    "potrf_u"
   ],
   "buffer": [
     "blasfeo",
@@ -66,6 +83,7 @@
     "trsm_rutu",
     "trsm_rutn",
     "getrf",
-    "potrf_l"
+    "potrf_l",
+    "potrf_u"
   ]
 }
