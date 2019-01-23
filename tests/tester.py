@@ -140,7 +140,7 @@ class CookBook:
             SILENT=1
 
         with open(TEST_SCHEMA) as f:
-            self.schema = json.load(f)
+            self.schema = json.load(f, object_pairs_hook=OrderedDict)
 
         self._success_n = 0
         self._errors_n = 0
@@ -161,14 +161,19 @@ class CookBook:
         if not available_flags:
             return {'routine_basename': routine_name}
 
-        pattern = '(?P<routine_basename>[a-z]*)'
+        pattern = '(?P<routine_basename>[a-z]*)_'
 
         for flag_name, flags_values in available_flags.items():
             flags_values = '|'.join(flags_values)
             pattern += '(?P<{flag_name}>[{flags_values}])'.format(flag_name=flag_name, flags_values=flags_values)
 
-        parsed_flags = re.search(pattern, routine_name).groupdict()
-        return parsed_flags
+        parsed_flags = re.search(pattern, routine_name)
+
+        if not parsed_flags:
+            print("Error parsing flags of routine: {routine_name}".format(routine_name=routine_name))
+            return {}
+
+        return parsed_flags.groupdict()
 
     def build_recipe(self):
         scheduled_routines = set(self.specs['routines'])
@@ -212,6 +217,7 @@ class CookBook:
                             if api=="blas":
                                 test_macros["TEST_BLAS_API"] = None
                                 routine_dict = self.parse_routine_options(routine, routine_flags)
+                                if not routine_dict: continue
                                 test_macros.update(routine_dict)
                                 routine_testclass_src = "blasapi_"+routine_class["testclass_src"]
                                 routine_name = "{precision}{routine}".format(precision=precision[0], routine=class_name)
