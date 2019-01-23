@@ -76,10 +76,12 @@ void kernel_drowsw_lib(int kmax, double *pA, int lda, double *pC, int ldc)
 void didamax_lib(int n, double *pA, int *p_idamax, double *p_amax)
 	{
 
-	int idamax, ii;
+	int ii;
 	double tmp, amax;
 		
-	p_idamax[0] = -1;
+	int idamax = -1;
+
+	p_idamax[0] = idamax;
 	if(n<1)
 		return;
 

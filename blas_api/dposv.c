@@ -50,7 +50,9 @@
 void blasfeo_dposv(char *uplo, int *pm, int *pn, double *A, int *plda, double *B, int *pldb, int *info)
 	{
 
-//	printf("\nblasfeo_dpotrs\n");
+#if defined(PRINT_NAME)
+	printf("\nblasfeo_dposv %c %d %d %p %d %p %d %d\n", *uplo, *pm, *pn, A, *plda, B, *pldb, *info);
+#endif
 
 	*info = 0;
 

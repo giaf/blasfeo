@@ -49,7 +49,10 @@
 void blasfeo_dtrtrs(char *uplo, char *trans, char *diag, int *pm, int *pn, double *A, int *plda, double *B, int *pldb, int *info)
 	{
 
-//	printf("\nblasfeo_dtrtrs\n");
+#if defined(PRINT_NAME)
+	printf("\nblasfeo_dtrtrs %c %c %c %d %d %p %d %p %d %d\n", *uplo, *trans, *diag, *pm, *pn, A, *plda, B, *pldb, *info);
+#endif
+
 
 	int m = *pm;
 	int lda = *plda;

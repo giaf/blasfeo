@@ -46,6 +46,10 @@
 void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha, double *A, int *plda, double *B, int *pldb, double *beta, double *C, int *pldc)
 	{
 
+#if defined(PRINT_NAME)
+	printf("\nblasfeo_dgemm %c %c %d %d %d %f %p %d %p %d %f %p %d\n", *ta, *tb, *pm, *pn, *pk, *alpha, A, *plda, B, *pldb, *beta, C, *pldc);
+#endif
+
 	int m = *pm;
 	int n = *pn;
 	int k = *pk;

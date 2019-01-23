@@ -1337,6 +1337,22 @@ void kernel_dgetrf_pivot_8_vs_lib(int m, double *C, int ldc, double *pd, int* ip
 	double *pU = pU0;
 	int sdu = sdu0;
 
+	double *tmp_pU;
+	int m4;
+
+	if(m>K_MAX_STACK)
+		{
+		m4 = (m+3)/4*4;
+		tmp_pU = malloc(3*4*m4*sizeof(double)+64);
+		blasfeo_align_64_byte(tmp_pU, (void **) &pU);
+		sdu = m4;
+		}
+	else
+		{
+		pU = pU0;
+		sdu = sdu0;
+		}
+
 	int ii;
 
 	double *dummy = NULL;
@@ -1402,6 +1418,12 @@ void kernel_dgetrf_pivot_8_vs_lib(int m, double *C, int ldc, double *pd, int* ip
 				}
 			}
 
+		}
+
+	end:
+	if(m>K_MAX_STACK)
+		{
+		free(tmp_pU);
 		}
 
 	return;

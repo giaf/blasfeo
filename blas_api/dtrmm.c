@@ -46,6 +46,10 @@
 void blasfeo_dtrmm(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, double *alpha, double *A, int *plda, double *B, int *pldb)
 	{
 
+#if defined(PRINT_NAME)
+	printf("\nblasfeo_dtrmm %c %c %c %c %d %d %f %p %d %p %d\n", *side, *uplo, *transa, *diag, *pm, *pn, *alpha, A, *plda, B, *pldb);
+#endif
+
 	int m = *pm;
 	int n = *pn;
 	int lda = *plda;
