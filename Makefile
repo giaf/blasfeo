@@ -52,7 +52,6 @@ OBJS += \
 		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/avx2/kernel_dsymv_6_lib4.o \
 		kernel/avx2/kernel_dgetrf_pivot_lib4.o \
-		kernel/avx2/kernel_dgetrf_pivot_lib.o \
 		kernel/avx/kernel_dgeqrf_4_lib4.o \
 		kernel/avx2/kernel_dgebp_lib4.o \
 		kernel/avx2/kernel_dgelqf_4_lib4.o \
@@ -112,7 +111,6 @@ OBJS += \
 		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/avx/kernel_dsymv_6_lib4.o \
 		kernel/avx/kernel_dgetrf_pivot_lib4.o \
-		kernel/avx/kernel_dgetrf_pivot_lib.o \
 		kernel/avx/kernel_dgeqrf_4_lib4.o \
 		kernel/avx/kernel_dgebp_lib4.o \
 		kernel/avx/kernel_dgecp_lib4.o \
@@ -166,7 +164,6 @@ OBJS += \
 		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_dsymv_4_lib4.o \
 		kernel/generic/kernel_dgetrf_pivot_lib4.o \
-		kernel/generic/kernel_dgetrf_pivot_lib.o \
 		kernel/generic/kernel_dgeqrf_4_lib4.o \
 		kernel/generic/kernel_dgecp_lib4.o \
 		kernel/generic/kernel_dgetr_lib4.o \
@@ -217,7 +214,6 @@ OBJS += \
 		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_dsymv_4_lib4.o \
 		kernel/generic/kernel_dgetrf_pivot_lib4.o \
-		kernel/generic/kernel_dgetrf_pivot_lib.o \
 		kernel/generic/kernel_dgeqrf_4_lib4.o \
 		kernel/generic/kernel_dgecp_lib4.o \
 		kernel/generic/kernel_dgetr_lib4.o \
@@ -268,7 +264,6 @@ OBJS += \
 		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_dsymv_4_lib4.o \
 		kernel/generic/kernel_dgetrf_pivot_lib4.o \
-		kernel/generic/kernel_dgetrf_pivot_lib.o \
 		kernel/generic/kernel_dgeqrf_4_lib4.o \
 		kernel/generic/kernel_dgecp_lib4.o \
 		kernel/generic/kernel_dgetr_lib4.o \
@@ -322,7 +317,6 @@ OBJS += \
 		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_dsymv_4_lib4.o \
 		kernel/generic/kernel_dgetrf_pivot_lib4.o \
-		kernel/generic/kernel_dgetrf_pivot_lib.o \
 		kernel/generic/kernel_dgeqrf_4_lib4.o \
 		kernel/generic/kernel_dgecp_lib4.o \
 		kernel/generic/kernel_dgetr_lib4.o \
@@ -374,7 +368,6 @@ OBJS += \
 		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_dsymv_4_lib4.o \
 		kernel/generic/kernel_dgetrf_pivot_lib4.o \
-		kernel/generic/kernel_dgetrf_pivot_lib.o \
 		kernel/generic/kernel_dgeqrf_4_lib4.o \
 		kernel/generic/kernel_dgecp_lib4.o \
 		kernel/generic/kernel_dgetr_lib4.o \
@@ -432,7 +425,6 @@ OBJS += \
 		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_dsymv_4_lib4.o \
 		kernel/generic/kernel_dgetrf_pivot_lib4.o \
-		kernel/generic/kernel_dgetrf_pivot_lib.o \
 		kernel/generic/kernel_dgeqrf_4_lib4.o \
 		kernel/generic/kernel_dgecp_lib4.o \
 		kernel/generic/kernel_dgetr_lib4.o \
@@ -486,7 +478,6 @@ OBJS += \
 		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_dsymv_4_lib4.o \
 		kernel/generic/kernel_dgetrf_pivot_lib4.o \
-		kernel/generic/kernel_dgetrf_pivot_lib.o \
 		kernel/generic/kernel_dgeqrf_4_lib4.o \
 		kernel/generic/kernel_dgecp_lib4.o \
 		kernel/generic/kernel_dgetr_lib4.o \
@@ -538,7 +529,6 @@ OBJS += \
 		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_dsymv_4_lib4.o \
 		kernel/generic/kernel_dgetrf_pivot_lib4.o \
-		kernel/generic/kernel_dgetrf_pivot_lib.o \
 		kernel/generic/kernel_dgeqrf_4_lib4.o \
 		kernel/generic/kernel_dgecp_lib4.o \
 		kernel/generic/kernel_dgetr_lib4.o \
@@ -592,7 +582,6 @@ OBJS += \
 		kernel/generic/kernel_dgecp_lib4.o \
 		kernel/generic/kernel_dgetr_lib4.o \
 		kernel/generic/kernel_dgetrf_pivot_lib4.o \
-		kernel/generic/kernel_dgetrf_pivot_lib.o \
 		kernel/generic/kernel_dgeqrf_4_lib4.o \
 		kernel/generic/kernel_dpack_lib4.o \
 		\
