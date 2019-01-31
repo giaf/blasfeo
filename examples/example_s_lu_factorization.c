@@ -134,7 +134,7 @@ int main()
 	blasfeo_print_smat(n, n, &sD, 0, 0);
 
 //	blasfeo_sgetrf_nopivot(n, n, &sD, 0, 0, &sD, 0, 0);
-	blasfeo_sgetrf_rowpivot(n, n, &sD, 0, 0, &sLU, 0, 0, ipiv);
+	blasfeo_sgetrf_rp(n, n, &sD, 0, 0, &sLU, 0, 0, ipiv);
 	printf("\nLU = \n");
 	blasfeo_print_smat(n, n, &sLU, 0, 0);
 	printf("\nipiv = \n");

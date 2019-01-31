@@ -1,7 +1,7 @@
 {
   "options":{
-    "rebuild": 0,
-    "silent": 1,
+    "rebuild": 1,
+    "silent": 0,
     "continue": 0
   },
   "test_macros":
@@ -12,33 +12,27 @@
     "CFLAGS": "-Wuninitialized"
   },
   "blasfeo_flags":{
-    "CC":"clang",
+    "CC":"gcc",
     "TESTING_MODE": 1,
-    "BENCHMARK_MODE": 0,
+    "BENCHMARKS_MODE": 1,
     "REF_BLAS": "OPENBLAS"
   },
   "precisions": [
     "double"
   ],
   "apis": [
-    "blas",
-    "blasfeo"
+    "blas"
   ],
   "K_MAX_STACK":[
     0, 400
   ],
   "TARGET": [
-    "X64_INTEL_CORE",
-    "X64_INTEL_SANDY_BRIDGE",
-    "X64_INTEL_HASWELL"
+    "X64_INTEL_SANDY_BRIDGE"
   ],
   "LA": [
     "HIGH_PERFORMANCE"
   ],
   "routines": [
-    "getrf"
-  ],
-  "buffer": [
     "gemm_nn",
     "gemm_tn",
     "gemm_nt",
@@ -58,6 +52,38 @@
     "trsm_runu",
     "trsm_runn",
     "trsm_rutu",
-    "trsm_rutn"
+    "trsm_rutn",
+    "getrf",
+    "potrf_l",
+    "potrf_u"
+  ],
+  "buffer": [
+    "blasfeo",
+    "X64_INTEL_HASWELL",
+    "X64_INTEL_CORE",
+	"GENERIC",
+    "gemm_nn",
+    "gemm_tn",
+    "gemm_nt",
+    "gemm_tt",
+    "trsm_llnu",
+    "trsm_llnn",
+    "trsm_lunu",
+    "trsm_lunn",
+    "trsm_lltu",
+    "trsm_lltn",
+    "trsm_lutu",
+    "trsm_lutn",
+    "trsm_rlnu",
+    "trsm_rlnn",
+    "trsm_rltu",
+    "trsm_rltn",
+    "trsm_runu",
+    "trsm_runn",
+    "trsm_rutu",
+    "trsm_rutn",
+    "getrf",
+    "potrf_l",
+    "potrf_u"
   ]
 }

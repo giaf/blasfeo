@@ -4166,24 +4166,32 @@
 	je			0f // end
 
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm0
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm0, %ymm15, %ymm0
 	vmovupd		32(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm4
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm4, %ymm15, %ymm4
 	addq		%r12, %r11
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm1
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm1, %ymm15, %ymm1
 	vmovupd		32(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm5
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm5, %ymm15, %ymm5
 	addq		%r12, %r11
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm2
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm2, %ymm15, %ymm2
 	vmovupd		32(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm6
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm6, %ymm15, %ymm6
 	addq		%r12, %r11
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm3
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm3, %ymm15, %ymm3
 	vmovupd		32(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm7
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm7, %ymm15, %ymm7
 //	addq		%r12, %r11
 
 0:
@@ -4268,30 +4276,38 @@
 
 
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm0
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm0, %ymm15, %ymm0
 	vmaskmovpd	32(%r11), %ymm13, %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm4
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm4, %ymm15, %ymm4
 	addq		%r12, %r11
 	cmpl		$2, %r14d
 	jl			0f // end
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm1
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm1, %ymm15, %ymm1
 	vmaskmovpd	32(%r11), %ymm13, %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm5
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm5, %ymm15, %ymm5
 	addq		%r12, %r11
 	cmpl		$3, %r14d
 	jl			0f // end
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm2
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm2, %ymm15, %ymm2
 	vmaskmovpd	32(%r11), %ymm13, %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm6
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm6, %ymm15, %ymm6
 	addq		%r12, %r11
 	cmpl		$3, %r14d
 	je			0f // end
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm3
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm3, %ymm15, %ymm3
 	vmaskmovpd	32(%r11), %ymm13, %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm7
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm7, %ymm15, %ymm7
 //	addq		%r12, %r11
 
 0:
@@ -4964,24 +4980,32 @@
 	je			0f // end
 
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm0
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm0, %ymm15, %ymm0
 	vmovupd		32(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm4
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm4, %ymm15, %ymm4
 	addq		%r12, %r11
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm1
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm1, %ymm15, %ymm1
 	vmovupd		32(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm5
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm5, %ymm15, %ymm5
 	addq		%r12, %r11
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm2
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm2, %ymm15, %ymm2
 	vmovupd		32(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm6
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm6, %ymm15, %ymm6
 	addq		%r12, %r11
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm3
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm3, %ymm15, %ymm3
 	vmovupd		32(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm7
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm7, %ymm15, %ymm7
 //	addq		%r12, %r11
 
 0:
@@ -5046,30 +5070,38 @@
 
 
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm0
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm0, %ymm15, %ymm0
 	vmaskmovpd	32(%r11), %ymm13, %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm4
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm4, %ymm15, %ymm4
 	addq		%r12, %r11
 	cmpl		$2, %r14d
 	jl			0f // end
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm1
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm1, %ymm15, %ymm1
 	vmaskmovpd	32(%r11), %ymm13, %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm5
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm5, %ymm15, %ymm5
 	addq		%r12, %r11
 	cmpl		$3, %r14d
 	jl			0f // end
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm2
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm2, %ymm15, %ymm2
 	vmaskmovpd	32(%r11), %ymm13, %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm6
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm6, %ymm15, %ymm6
 	addq		%r12, %r11
 	cmpl		$3, %r14d
 	je			0f // end
 	vmovupd		0(%r11), %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm3
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm3, %ymm15, %ymm3
 	vmaskmovpd	32(%r11), %ymm13, %ymm15
-	vfmsub231pd	%ymm14, %ymm15, %ymm7
+	vmulpd		%ymm14, %ymm15, %ymm15
+	vsubpd		%ymm7, %ymm15, %ymm7
 //	addq		%r12, %r11
 
 0:

@@ -42,7 +42,6 @@ OBJS += \
 		kernel_dgemv_8_lib4.o \
 		kernel_dsymv_6_lib4.o \
 		kernel_dgetrf_pivot_lib4.o \
-		kernel_dgetrf_pivot_lib.o \
 		kernel_dgebp_lib4.o \
 		kernel_dgelqf_4_lib4.o \
 		kernel_dgetr_lib4.o \
