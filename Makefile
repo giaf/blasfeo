@@ -958,7 +958,6 @@ clean:
 	make -C benchmarks clean
 	make -C sandbox clean
 
-
 # deep clean
 deep_clean: clean
 	rm -f ./include/blasfeo_target.h
@@ -968,6 +967,9 @@ deep_clean: clean
 	make -C examples clean_all
 	make -C tests clean_all
 	make -C benchmarks clean_all
+
+clean_blas_api:
+	make -C blas_api clean
 
 
 
