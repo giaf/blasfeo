@@ -953,9 +953,9 @@ deep_clean: clean
 	rm -f ./lib/libblasfeo.a
 	rm -f ./lib/libblasfeo.so
 	rm -f ./lib/libblasfeo_ref.a
-	make -C examples clean_all
-	make -C tests clean_all
-	make -C benchmarks clean_all
+	make -C examples deep_clean
+	make -C tests deep_clean
+	make -C benchmarks deep_clean
 
 clean_blas_api:
 	make -C blas_api clean

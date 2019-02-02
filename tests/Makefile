@@ -83,9 +83,9 @@ endif
 endif
 
 # select one single test
-ONE_OBJS = test_d_custom.o
+# ONE_OBJS = test_d_custom.o
 # ONE_OBJS = test_s_custom.o
-# ONE_OBJS = test_d_blas_api.o
+ONE_OBJS = test_d_blas_api.o
 
 OBJS = test.o
 
@@ -131,5 +131,6 @@ clean:
 	rm -rf ./*.out
 	rm -rf ./$(BINARY_DIR)/*
 
-clean_all: clean
-	rm -rf ./build/*
+deep_clean: clean
+	rm -rf ./build/
+	rm -rf ./reports/

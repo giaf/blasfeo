@@ -65,3 +65,5 @@ run:
 clean:
 	rm -rf ./*.o
 	rm -rf ./*.out
+
+deep_clean: clean

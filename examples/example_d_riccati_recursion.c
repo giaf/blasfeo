@@ -190,7 +190,7 @@ static void d_back_ric_trf(int N, int *nx, int *nu, double **hBAbt, double **hRS
 
 static void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *hsBAbt, struct blasfeo_dvec *hsb, struct blasfeo_dvec *hsrq, struct blasfeo_dmat *hsL, struct blasfeo_dvec *hsPb, struct blasfeo_dvec *hsux, struct blasfeo_dvec *hspi, struct blasfeo_dvec *hswork_vec)
 	{
-	printf("\nblasfeo api\n");
+//	printf("\nblasfeo api\n");
 
 	int nn;
 
@@ -259,7 +259,7 @@ static void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *
 #if ( REF_BLAS!=0 | defined(BLAS_API) )
 static void d_back_ric_trs(int N, int *nx, int *nu, double **hBAbt, double **hb, double **hrq, double **hL, double **hPb, double **hux, double **hpi, double **hwork_vec)
 	{
-	printf("\nblas api\n");
+//	printf("\nblas api\n");
 
 	int m, n, lda;
 	int inc = 1;

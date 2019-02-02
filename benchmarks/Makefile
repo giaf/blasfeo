@@ -105,8 +105,9 @@ clean:
 	rm -rf ./$(BINARY_DIR)/BLAS_API/*.out
 	rm -rf ./$(BINARY_DIR)/libblasfeo.a
 
-clean_all: clean
-	rm -rf ./build/*
+deep_clean: clean
+	rm -rf ./figures/
+	rm -rf ./build/
 
 
 
