@@ -36,14 +36,14 @@ void print_routine(struct RoutineArgs *args){
 	// print signature and dimensions
 
 	printf("blas_%s_%s%s: ", string(ROUTINE), string(UPLO), string(TRANS));
-	if (string(TRANS) == 'n')
+	if (string(TRANS)[0] == 'n') {
 	printf(
 		"solving D[%d:%d] =  %f*A[%d:%d]*A[%d:%d]' + %f*B[%d:%d]\n",
 		args->m, args->m,
 		args->alpha, args->m, args->n, args->n, args->m,
 		args->beta, args->m, args->m
 		);
-	} else if (string(TRANS) == 't') {
+	} else if (string(TRANS)[0] == 't') {
 	printf(
 		"solving D[%d:%d] =  %f*A[%d:%d]'*A[%d:%d] + %f*B[%d:%d]\n",
 		args->m, args->m,
@@ -68,8 +68,8 @@ void print_routine_matrices(struct RoutineArgs *args)
 		print_xmat_debug(args->m, args->m, args->rB, 0, 0, 0, 0, 0);
 
 		printf("\nPrint D:\n");
-		print_xmat_debug(args->m, args->n, args->cD, 0, 0, 0, 0, 0);
-		print_xmat_debug(args->m, args->n, args->rD, 0, 0, 0, 0, 0);
+		print_xmat_debug(args->m, args->m, args->cD, 0, 0, 0, 0, 0);
+		print_xmat_debug(args->m, args->m, args->rD, 0, 0, 0, 0, 0);
 }
 
 
