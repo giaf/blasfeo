@@ -131,13 +131,17 @@ class CookBook:
         global SILENT
 
         self.cli_flags=cli_flags
+        self.continue_test = 0
 
         with open(cli_flags.recipe_json) as f:
             self.specs = json.load(f, object_pairs_hook=OrderedDict)
 
 
         if self.specs["options"].get("silent") or self.cli_flags.silent:
-            SILENT=1
+            SILENT = 1
+
+        if self.specs["options"].get("continue") or  self.cli_flags.continue_test:
+            self.continue_test = 1
 
         with open(TEST_SCHEMA) as f:
             self.schema = json.load(f, object_pairs_hook=OrderedDict)
@@ -265,7 +269,7 @@ class CookBook:
 
                 for max_stack in self.specs["K_MAX_STACK"]:
                     self.recipe["blasfeo_flags"]["K_MAX_STACK"]=max_stack
-                    print("Testing {la}:{target} kswitch={max_stack}".format(target=target, la=la, max_stack=max_stack))
+                    print("\n## Testing {la}:{target} kswitch={max_stack}".format(target=target, la=la, max_stack=max_stack))
 
                     self.run_recipe()
 
@@ -334,6 +338,9 @@ class CookBook:
             else:
                 args["test_macros"] = test_macros
 
+            if self.continue_test:
+                args["test_macros"].update({"CONTINUE_ON_ERROR":1})
+
             if args.get("env_flags"):
                 args["env_flags"].update(env_flags)
             else:
@@ -346,9 +353,7 @@ class CookBook:
 
             error =  self.test_routine(routine_name, args)
 
-            if error \
-                and not self.specs["options"].get("continue") \
-                and not self.cli_flags.continue_test:
+            if error and not self.continue_test:
                 break
 
     def test_routine(self, routine_fullname, kargs):

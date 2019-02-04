@@ -105,8 +105,8 @@ int compute_total_calls(struct TestArgs * targs)
 
 void initialize_args(struct RoutineArgs * args)
 {
-	args->alpha = 0;
-	args->beta = 0;
+	args->alpha = 1.5;
+	args->beta = 1.5;
 
 	args->err_i = 0;
 	args->err_j = 0;
