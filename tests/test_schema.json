@@ -125,7 +125,10 @@
           "trans":["n","t"]
           },
         "routines": [
-          "syrk_ln"
+          "syrk_ln",
+          "syrk_lt",
+          "syrk_un",
+          "syrk_ut"
         ]
       },
       "trsm": {
