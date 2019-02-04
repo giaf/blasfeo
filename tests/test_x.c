@@ -29,10 +29,10 @@
 
 int test_routine(struct RoutineArgs *args, int *bad_calls){
 
-#if (VERBOSE > 2)
+	#if (VERBOSE > 2)
 	// (err=0 || err=1) && VERBOSE = 3
 	print_routine(args);
-#endif
+	#endif
 
 	// execute both HP routine and REF routine
 	// templated call
@@ -54,24 +54,27 @@ int test_routine(struct RoutineArgs *args, int *bad_calls){
 
 	if (err)
 		{
-#if (VERBOSE==0)
-		// err=1 && VERBOSE = 0
+		#if (VERBOSE>=0)
+		// err=1 && VERBOSE = any
 		// increment number of bad calls olny
 		*bad_calls += 1;
-#else
-#if (VERBOSE>1)
-		// err=1 && VERBOSE=2
-		// print input matrices
-		// templated call
-		print_routine_matrices(args);
-#endif
+		#endif
+
+		#if (VERBOSE==1) ||  (VERBOSE==2)
 		// err=1 && VERBOSE=1
 		// print routine name and signature
 		// templated call
 		print_routine(args);
+		# endif
+
+		#if (VERBOSE>1)
+		// err=1 && VERBOSE=2
+		// print input matrices
+		// templated call
+		print_routine_matrices(args);
+		# endif
 
 		print_compilation_flags();
-#endif
 		}
 	// terminate on error
 	return err;
@@ -337,7 +340,7 @@ int main()
 
 									int error = test_routine(&args, &bad_calls);
 
-									if (error) return 1;
+									if (!CONTINUE_ON_ERROR && error) return 1;
 									}
 								}
 							}
@@ -385,6 +388,9 @@ int main()
 	FREE_STRMAT_REF(&rC);
 	FREE_STRMAT_REF(&rD);
 
-	return 0;
+	if (bad_calls > 0)
+		return 1;
+	else
+		return 0;
 
 	}
