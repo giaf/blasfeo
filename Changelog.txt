@@ -3,7 +3,7 @@ BLASFEO ChangeLog
 
 
 ====================================================================
-Version 0.1.1-master
+Version 0.1.1
 04-Feb-2019
 
 common:
@@ -17,17 +17,17 @@ BLASFEO_API:
 	* renamed blasfeo_{d/s}getrf_{no/row}pivot => blasfeo_{d/s}getrf_{n/r}p
 
 BLAS_API:
-	* dsyrk for all targets
+	* stable version of dsyrk for all targets
 	* dtrmm_rlnn for all targets
-	* dtrsm for all targets
-	* dgesv for all targets
-	* dgetrf for all targets
-	* dgetrs for all targets
-	* dposv for all targets
+	* stable version of dtrsm for all targets
+	* stable version of dgesv for all targets
+	* stable version of dgetrf for all targets
+	* stable version of dgetrs for all targets
+	* stable version of dposv for all targets
 	* dpotrf for all targets
-	* dpotrs for all targets
-	* dtrtrs for all targets
-	* dcopy for all targets
+	* stable version of dpotrs for all targets
+	* stable version of dtrtrs for all targets
+	* stable version of dcopy for all targets
 
 CBLAS_API
 	* dgemm
