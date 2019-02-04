@@ -53,6 +53,10 @@
 	#error ROUTINE undefined
 #endif
 
+#ifndef CONTINUE_ON_ERROR
+	#define CONTINUE_ON_ERROR 0
+#endif
+
 #define concatenate(var, post) var ## post
 #define string(var) STR(var)
 

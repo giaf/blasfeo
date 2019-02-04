@@ -1,0 +1,46 @@
+{
+  "options":{
+    "rebuild": 0,
+    "silent": 0,
+    "continue": 1
+  },
+  "test_macros":
+  {
+    "VERBOSE":1
+  },
+  "env_flags":{
+    "CFLAGS": "-Wuninitialized"
+  },
+  "blasfeo_flags":{
+    "CC":"clang",
+    "TESTING_MODE": 1,
+    "BENCHMARK_MODE": 0,
+    "REF_BLAS": "OPENBLAS"
+  },
+  "precisions": [
+    "double"
+  ],
+  "apis": [
+    "blas"
+  ],
+  "K_MAX_STACK":[
+    0, 400
+  ],
+  "TARGET": [
+    "X64_INTEL_HASWELL"
+    ,"X64_INTEL_SANDY_BRIDGE"
+    ,"X64_INTEL_CORE"
+    ,"GENERIC"
+  ],
+  "LA": [
+    "HIGH_PERFORMANCE"
+  ],
+  "routines": [
+    "syrk_ln",
+    "syrk_lt",
+    "syrk_un",
+    "syrk_ut"
+  ],
+  "buffer": [
+  ]
+}
