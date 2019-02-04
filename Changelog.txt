@@ -4,7 +4,7 @@ BLASFEO ChangeLog
 
 ====================================================================
 Version 0.1.1-master
-17-Jan-2019
+04-Feb-2019
 
 common:
 	* example_d_riccati_recursion: add trf for blas_api
@@ -31,6 +31,8 @@ BLAS_API:
 
 CBLAS_API
 	* dgemm
+	* dsyrk
+	* dtrsm
 
 x64:
 	* AMD_BULLDOZER:
