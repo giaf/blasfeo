@@ -1,4 +1,4 @@
-// CLASS_GEMM
+// CLASS_SYRK
 //
 
 void call_routines(struct RoutineArgs *args){
