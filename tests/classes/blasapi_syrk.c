@@ -33,24 +33,35 @@ void call_routines(struct RoutineArgs *args){
 }
 
 void print_routine(struct RoutineArgs *args){
-	// unpack args
+	// print signature and dimensions
 
 	printf("blas_%s_%s%s: ", string(ROUTINE), string(UPLO), string(TRANS));
+	if (string(TRANS) == 'n')
 	printf(
 		"solving D[%d:%d] =  %f*A[%d:%d]*A[%d:%d]' + %f*B[%d:%d]\n",
-		args->m, args->n,
-		args->alpha, args->m, args->k,
-		args->k, args->n,
-		args->beta, args->m, args->n
-	);
-
+		args->m, args->m,
+		args->alpha, args->m, args->n, args->n, args->m,
+		args->beta, args->m, args->m
+		);
+	} else if (string(TRANS) == 't') {
+	printf(
+		"solving D[%d:%d] =  %f*A[%d:%d]'*A[%d:%d] + %f*B[%d:%d]\n",
+		args->m, args->m,
+		args->alpha, args->n, args->m, args->m, args->n,
+		args->beta, args->m, args->m
+		);
+	} else {
+		printf("Wrong TRANS flag\n");
+	}
 }
 
 void print_routine_matrices(struct RoutineArgs *args)
 {
+		int maxn = (args->m > args->n)? args->m : args->n;
+
 		printf("\nPrint A:\n");
-		print_xmat_debug(args->m, args->n, args->cA, 0, 0, 0, 0, 0);
-		print_xmat_debug(args->m, args->n, args->rA, 0, 0, 0, 0, 0);
+		print_xmat_debug(maxn, maxn, args->cA, 0, 0, 0, 0, 0);
+		print_xmat_debug(maxn, maxn, args->rA, 0, 0, 0, 0, 0);
 
 		printf("\nPrint B:\n");
 		print_xmat_debug(args->m, args->m, args->cB, 0, 0, 0, 0, 0);
