@@ -633,10 +633,10 @@ endif
 
 ifeq ($(CBLAS_API), 1)
 OBJS += \
+		cblas_api/CBLAS/src/cblas_globals.o \
 		cblas_api/CBLAS/src/cblas_dgemm.o \
 		cblas_api/CBLAS/src/cblas_dsyrk.o \
 		cblas_api/CBLAS/src/cblas_dtrsm.o \
-		cblas_api/CBLAS/src/cblas_globals.o \
 
 endif
 
