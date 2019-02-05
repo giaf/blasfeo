@@ -89,6 +89,9 @@ void blasfeo_sgemm_tt_ref(int m, int n, int k, float alpha, struct blasfeo_smat_
 
 void blasfeo_ssyrk_ln_mn_ref( int m, int n, int k, float alpha, struct blasfeo_smat_ref *sA, int ai, int aj, struct blasfeo_smat_ref *sB, int bi, int bj, float beta, struct blasfeo_smat_ref *sC, int ci, int cj, struct blasfeo_smat_ref *sD, int di, int dj);
 void blasfeo_ssyrk_ln_ref( int m, int k, float alpha, struct blasfeo_smat_ref *sA, int ai, int aj, struct blasfeo_smat_ref *sB, int bi, int bj, float beta, struct blasfeo_smat_ref *sC, int ci, int cj, struct blasfeo_smat_ref *sD, int di, int dj);
+void blasfeo_ssyrk_lt_ref( int m, int k, float alpha, struct blasfeo_smat_ref *sA, int ai, int aj, struct blasfeo_smat_ref *sB, int bi, int bj, float beta, struct blasfeo_smat_ref *sC, int ci, int cj, struct blasfeo_smat_ref *sD, int di, int dj);
+void blasfeo_ssyrk_un_ref( int m, int k, float alpha, struct blasfeo_smat_ref *sA, int ai, int aj, struct blasfeo_smat_ref *sB, int bi, int bj, float beta, struct blasfeo_smat_ref *sC, int ci, int cj, struct blasfeo_smat_ref *sD, int di, int dj);
+void blasfeo_ssyrk_ut_ref( int m, int k, float alpha, struct blasfeo_smat_ref *sA, int ai, int aj, struct blasfeo_smat_ref *sB, int bi, int bj, float beta, struct blasfeo_smat_ref *sC, int ci, int cj, struct blasfeo_smat_ref *sD, int di, int dj);
 
 void blasfeo_strmm_rutn_ref( int m, int n, float alpha, struct blasfeo_smat_ref *sA, int ai, int aj, struct blasfeo_smat_ref *sB, int bi, int bj, struct blasfeo_smat_ref *sD, int di, int dj);
 void blasfeo_strmm_rlnn_ref( int m, int n, float alpha, struct blasfeo_smat_ref *sA, int ai, int aj, struct blasfeo_smat_ref *sB, int bi, int bj, struct blasfeo_smat_ref *sD, int di, int dj);

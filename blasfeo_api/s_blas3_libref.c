@@ -49,6 +49,9 @@
 
 #define SYRK_LN    blasfeo_ssyrk_ln_ref
 #define SYRK_LN_MN blasfeo_ssyrk_ln_mn_ref
+#define SYRK_UN    blasfeo_ssyrk_un_ref
+#define SYRK_LT    blasfeo_ssyrk_lt_ref
+#define SYRK_UT    blasfeo_ssyrk_ut_ref
 
 #define TRSM_LLNU  blasfeo_strsm_llnu_ref
 #define TRSM_LUNN  blasfeo_strsm_lunn_ref

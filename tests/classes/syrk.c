@@ -59,12 +59,6 @@ void print_routine_matrices(struct RoutineArgs *args)
 
 void set_test_args(struct TestArgs *targs)
 {
-	targs->ais = 1;
-	targs->bis = 1;
-	targs->dis = 1;
-	targs->xjs = 9;
-
-	targs->nis = 9;
-	targs->njs = 9;
-	targs->nks = 9;
+	targs->njs = 13;
+	targs->nks = 13;
 }
