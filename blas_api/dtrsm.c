@@ -98,6 +98,7 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 			{
 			dscal_(pm, alpha, B, &i_1);
 			}
+		return;
 		}
 	else if(m==1 & (*side=='r' | *side=='r'))
 		{
@@ -117,8 +118,8 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 				dscal_(pn, alpha, B, pldb);
 				}
 			}
+		return;
 		}
-	return;
 #endif
 
 
