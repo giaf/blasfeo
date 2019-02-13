@@ -131,9 +131,9 @@ openblas_set_num_threads(1);
 	FILE *f;
 	f = fopen("./build/benchmark_one.m", "w"); // a
 
-	fprintf(f, "A = [%f %f];\n", GHz_max, flops_max);
-	fprintf(f, "\n");
-	fprintf(f, "B = [\n");
+//	fprintf(f, "A = [%f %f];\n", GHz_max, flops_max);
+//	fprintf(f, "\n");
+//	fprintf(f, "B = [\n");
 
 	printf("\nn\t Gflops\t    %%\t Gflops\n\n");
 
@@ -141,7 +141,7 @@ openblas_set_num_threads(1);
 	int ii, jj, ll;
 
 	int rep, rep_in;
-	int nrep_in = 10; // number of benchmark batches
+	int nrep_in = 4; // number of benchmark batches
 
 	int nn[] = {4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 148, 152, 156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224, 228, 232, 236, 240, 244, 248, 252, 256, 260, 264, 268, 272, 276, 280, 284, 288, 292, 296, 300, 304, 308, 312, 316, 320, 324, 328, 332, 336, 340, 344, 348, 352, 356, 360, 364, 368, 372, 376, 380, 384, 388, 392, 396, 400, 404, 408, 412, 416, 420, 424, 428, 432, 436, 440, 444, 448, 452, 456, 460, 500, 550, 600, 650, 700};
 	int nnrep[] = {10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 400, 400, 400, 400, 400, 200, 200, 200, 200, 200, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20, 20, 20, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 4, 4, 4, 4, 4};
@@ -160,7 +160,7 @@ openblas_set_num_threads(1);
 
 		int n = nn[ll];
 //		int n = 12;
-		int nrep = nnrep[ll]/nrep_in;
+		int nrep = nnrep[ll];
 		nrep = nrep>1 ? nrep : 1;
 //		int n = ll+1;
 //		int nrep = nnrep[0];
@@ -169,13 +169,13 @@ openblas_set_num_threads(1);
 //		nrep = 1;
 
 
-		double *A = malloc(n*n*sizeof(double));
+		double *A; d_zeros_align(&A, n, n);
 		for(ii=0; ii<n*n; ii++)
 			A[ii] = ii;
 		int lda = n;
 //		d_print_mat(n, n, A, n);
 
-		double *B = malloc(n*n*sizeof(double));
+		double *B; d_zeros_align(&B, n, n);
 		for(ii=0; ii<n*n; ii++)
 			B[ii] = 0;
 		for(ii=0; ii<n; ii++)
@@ -183,13 +183,13 @@ openblas_set_num_threads(1);
 		int ldb = n;
 //		d_print_mat(n, n, B, ldb);
 
-		double *C = malloc(n*n*sizeof(double));
+		double *C; d_zeros_align(&C, n, n);
 		for(ii=0; ii<n*n; ii++)
 			C[ii] = -1;
 		int ldc = n;
 //		d_print_mat(n, n, C, ldc);
 
-		double *D = malloc(n*n*sizeof(double));
+		double *D; d_zeros_align(&D, n, n);
 		for(ii=0; ii<n*n; ii++)
 			D[ii] = -1;
 		int ldd = n;
@@ -299,12 +299,12 @@ openblas_set_num_threads(1);
 			for(rep=0; rep<nrep; rep++)
 				{
 
-//				blasfeo_dgemm(&c_n, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+				blasfeo_dgemm(&c_n, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blasfeo_dgemm(&c_n, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blasfeo_dgemm(&c_t, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blasfeo_dgemm(&c_t, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 
-				blasfeo_dsyrk(&c_l, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
+//				blasfeo_dsyrk(&c_l, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
 //				blasfeo_dsyrk(&c_l, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
 //				blasfeo_dsyrk(&c_u, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
 //				blasfeo_dsyrk(&c_u, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
@@ -426,8 +426,8 @@ openblas_set_num_threads(1);
 
 		double Gflops_max = flops_max * GHz_max;
 
-//		double flop_operation = 2.0*n*n*n; // gemm
-		double flop_operation = 1.0*n*n*n; // syrk trsm
+		double flop_operation = 2.0*n*n*n; // gemm
+//		double flop_operation = 1.0*n*n*n; // syrk trsm
 //		double flop_operation = 1.0/3.0*n*n*n; // potrf
 //		double flop_operation = 2.0/3.0*n*n*n; // getrf
 
@@ -440,16 +440,16 @@ openblas_set_num_threads(1);
 			Gflops_blas_api, 100.0*Gflops_blas_api/Gflops_max,
 			Gflops_blas, 100.0*Gflops_blas/Gflops_max,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max);
-		fprintf(f, "%d\t%7.3f\t%7.3f\t%7.3f\t%7.3f\t%7.3f\t%7.3f\n",
-			n,
-			Gflops_blas_api, 100.0*Gflops_blas_api/Gflops_max,
-			Gflops_blas, 100.0*Gflops_blas/Gflops_max,
-			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max);
+//		fprintf(f, "%d\t%7.3f\t%7.3f\t%7.3f\t%7.3f\t%7.3f\t%7.3f\n",
+//			n,
+//			Gflops_blas_api, 100.0*Gflops_blas_api/Gflops_max,
+//			Gflops_blas, 100.0*Gflops_blas/Gflops_max,
+//			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max);
 
-		free(A);
-		free(B);
-		free(C);
-		free(D);
+		d_free_align(A);
+		d_free_align(B);
+		d_free_align(C);
+		d_free_align(D);
 		free(ipiv);
 		blasfeo_free_dmat(&sA);
 		blasfeo_free_dmat(&sB);
@@ -459,7 +459,7 @@ openblas_set_num_threads(1);
 		}
 
 	printf("\n");
-	fprintf(f, "];\n");
+//	fprintf(f, "];\n");
 
 	fclose(f);
 
