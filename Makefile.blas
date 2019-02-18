@@ -53,6 +53,7 @@ LIBS += /opt/netlib/liblapack.a /opt/netlib/libblas.a -lgfortran -lm
 else
 ifeq ($(REF_BLAS), MKL)
 LIBS += -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/mkl/lib/intel64/libmkl_core.a /opt/intel/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm
+#LIBS += -Wl,--start-group /opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/lib/intel64/libmkl_core.a /opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm
 
 else
 ifeq ($(REF_BLAS), ATLAS)
