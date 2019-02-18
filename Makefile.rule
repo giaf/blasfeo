@@ -302,6 +302,7 @@ CFLAGS  += -DREF_BLAS_NETLIB
 endif
 ifeq ($(REF_BLAS), MKL)
 CFLAGS  += -DREF_BLAS_MKL -DMKL_DIRECT_CALL_SEQ -std=c99 -m64 -I/opt/intel/mkl/include
+#CFLAGS  += -DREF_BLAS_MKL -DMKL_DIRECT_CALL_SEQ -std=c99 -m64 -I/opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/include
 endif
 ifeq ($(REF_BLAS), ATLAS)
 CFLAGS  += -DREF_BLAS_ATLAS
