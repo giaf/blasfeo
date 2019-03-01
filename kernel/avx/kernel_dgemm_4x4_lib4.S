@@ -1211,6 +1211,191 @@ NAME:
 
 // common inner routine with file scope
 //
+// edge for B upper triangular
+//
+// input arguments:
+// r10   <- kmax
+// r11   <- A
+// r12   <- B
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm8  <- dirty
+// ymm12 <- dirty
+// ymm15 <- dirty
+
+//
+// output arguments:
+// r10   <- kmax+4
+// r11   <- A+4*4*sizeof(double)
+// r12   <- B+4*4*sizeof(double)
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm8  <- dirty
+// ymm12 <- dirty
+// ymm15 <- dirty
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRMM_NT_RU_ONE_4X4_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_dtrmm_nt_ru_one_4x4_lib4)
+#endif
+
+	vmovapd			0(%r11), %ymm8
+	vaddpd			%ymm0, %ymm8, %ymm0
+
+	vmovapd			32(%r11), %ymm8
+	vbroadcastsd	32(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm0, %ymm15, %ymm0
+	vaddpd			%ymm1, %ymm8, %ymm1
+
+	vmovapd			64(%r11), %ymm8
+	vbroadcastsd	64(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm0, %ymm15, %ymm0
+	vbroadcastsd	72(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm1, %ymm15, %ymm1
+	vaddpd			%ymm2, %ymm8, %ymm2
+
+	vmovapd			96(%r11), %ymm8
+	vbroadcastsd	96(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm0, %ymm15, %ymm0
+	vbroadcastsd	104(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm1, %ymm15, %ymm1
+	vbroadcastsd	112(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm2, %ymm15, %ymm2
+	vaddpd			%ymm3, %ymm8, %ymm3
+
+	subl			$4, %r10d
+	addq			$128, %r11
+	addq			$128, %r12
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_dtrmm_nt_ru_one_4x4_lib4)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B upper triangular
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm8  <- dirty
+// ymm12 <- dirty
+// ymm15 <- dirty
+
+//
+// output arguments:
+// r10d  <- max(k-4,0)
+// r11   <- A+4*4*sizeof(double)
+// r12   <- B+4*4*sizeof(double)
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm8  <- dirty
+// ymm12 <- dirty
+// ymm15 <- dirty
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRMM_NT_RU_ONE_4X4_VS_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_dtrmm_nt_ru_one_4x4_vs_lib4)
+#endif
+
+	vmovapd			0(%r11), %ymm8
+	subl			$1, %r10d
+	vaddpd			%ymm0, %ymm8, %ymm0
+	addq			$32, %r11
+	addq			$32, %r12
+
+	cmpl	$0, %r10d
+	jle		0f
+
+	vmovapd			0(%r11), %ymm8
+	subl			$1, %r10d
+	vbroadcastsd	0(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm0, %ymm15, %ymm0
+	addq			$32, %r11
+	vaddpd			%ymm1, %ymm8, %ymm1
+	addq			$32, %r12
+
+	cmpl	$0, %r10d
+	jle		0f
+
+	vmovapd			0(%r11), %ymm8
+	subl			$1, %r10d
+	vbroadcastsd	0(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm0, %ymm15, %ymm0
+	vbroadcastsd	8(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm1, %ymm15, %ymm1
+	addq			$32, %r11
+	vaddpd			%ymm2, %ymm8, %ymm2
+	addq			$32, %r12
+
+	cmpl	$0, %r10d
+	jle		0f
+
+	vmovapd			0(%r11), %ymm8
+	subl			$1, %r10d
+	vbroadcastsd	0(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm0, %ymm15, %ymm0
+	vbroadcastsd	8(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm1, %ymm15, %ymm1
+	vbroadcastsd	16(%r12), %ymm12
+	vmulpd			%ymm8, %ymm12, %ymm15
+	vaddpd			%ymm2, %ymm15, %ymm2
+	addq			$32, %r11
+	vaddpd			%ymm3, %ymm8, %ymm3
+	addq			$32, %r12
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_dtrmm_nt_ru_one_4x4_vs_lib4)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // edge for B lower triangular
 //
 // input arguments:

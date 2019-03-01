@@ -180,8 +180,7 @@ void blasfeo_dtrmm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 					}
 				else if(*diag=='u' | *diag=='U') // _rlnu
 					{
-					printf("\nBLASFEO: dtrmm_rlnu: not implemented yet\n");
-					return;
+					goto rlnu;
 					}
 				}
 			else if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _rlt
@@ -251,6 +250,9 @@ void blasfeo_dtrmm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 
 
 
+/************************************************
+* rlnn
+************************************************/
 rlnn:
 #if defined(TARGET_X64_INTEL_HASWELL)
 	if(m>300 | n>300 | m>K_MAX_STACK) // XXX cond on m !!!!!
@@ -260,7 +262,7 @@ rlnn:
 	if(m>=12 | n>=12 | m>K_MAX_STACK) // XXX cond on m !!!!!
 #endif
 		{
-		goto rlnn_1;
+		goto rlnn_1; // TODO rutn_1 & n>K_MAX_STACK above !!!!!!!!
 		}
 	else
 		{
@@ -506,4 +508,6 @@ rlnn_1_return:
 	return;
 
 	}
+
+
 
