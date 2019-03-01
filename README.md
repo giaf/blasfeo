@@ -1,6 +1,6 @@
 BLASFEO - BLAS For Embedded Optimization
 
-BLASFEO provides a set of basic linear algebra routines, performance-optimized for matrices of moderate size (up to a couple hundreds size in each dimension), as typically encountered in embedded optimization applications.
+BLASFEO provides a set of basic linear algebra routines, performance-optimized for matrices fitting in cache (i.e. generally up to a couple hundreds size in each dimension), as typically encountered in embedded optimization applications.
 
 The currently supported compter architectures (TARGET) are:
 - X64_INTEL_HASWELL: Intel Haswell architecture or newer, AVX2 and FMA ISA, 64-bit OS.
@@ -16,22 +16,24 @@ The currently supported compter architectures (TARGET) are:
 - GENERIC: generic target, coded in C, giving better performance if the architecture provides more than 16 scalar FP registers (e.g. many RISC such as ARM).
 
 The BLASFEO backend provides three possible implementations of each linear algebra routine (LA):
-- HIGH_PERFORMANCE: target-tailored; performance-optimized for cache resident matrices; panel-major matrix format
+- HIGH_PERFORMANCE: target-tailored; performance-optimized for cache resident matrices; panel-major matrix format. Currently provided for OS_LINUX (x86_64 64-bit, x86 32-bit, ARMv8A 64-bit, ARMv7A 32-bit), OS_WINDOWS (x86_64 64-bit) and OS_MAC (x86_64 64-bit).
 - REFERENCE: target-unspecific lightly-optimizated; small code footprint; column-major matrix format
 - BLAS_WRAPPER: call to external BLAS and LAPACK libraries; column-major matrix format
 
-The optimized linear algebra kernels are currently provided for OS_LINUX (x86_64 64-bit, x86 32-bit, ARMv8A 64-bit, ARMv7A 32-bit), OS_WINDOWS (x86_64 64-bit) and OS_MAC (x86_64 64-bit).
+BLASFEO prodives two APIs:
+- BLAS API: the standard BLAS and LAPACK APIs, with matrices stored in column-major.
+- BLASFEO API: this API is optimized to reduce overhead for small matrices. It employes structures to describe matrices (blasfeo_dmat) and vectors (blasfeo_dvec), defined in include/blasfeo_common.h. The actual implementation of blasfeo_dmat and blasfeo_dvec depends on the LA and TARGET choice. The API is non-destructive, and compared to the BLAS API it has an additional matrix/vector arguments reserved for the output.
 
-BLASFEO employes structures to describe matrices (blasfeo_dmat) and vectors (blasfeo_dvec), defined in include/blasfeo_common.h.
-The actual implementation of blasfeo_dmat and blasfeo_dvec depends on the LA and TARGET choice.
+--------------------------------------------------
 
 The BLASFEO wiki can be found at the page
 https://blasfeo.syscop.de
 providing more detailed installation instructions and examples, and a rich collection of benchmarks and comparisions.
 
-More scientific information about BLASFEO can be found in the ArXiv paper at the URL
+More scientific information can be found in the original BLASFEO paper on ArXiv at the URL
 https://arxiv.org/abs/1704.02457
-or in the slides at the URL
+The BLAS API is described in the paper on ArXiv at the URL
+Additional material can be found in the slides at the URL
 www.cs.utexas.edu/users/flame/BLISRetreat2017/slides/Gianluca_BLIS_Retreat_2017.pdf
 or in the video at the URL
 https://utexas.app.box.com/s/yt2d693v8xc37yyjklnf4a4y1ldvyzon
