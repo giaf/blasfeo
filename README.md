@@ -35,13 +35,15 @@ https://blasfeo.syscop.de
 and it provides more detailed installation instructions and examples, and a rich collection of benchmarks and comparisions.
 
 More scientific information can be found in:
-- the original BLASFEO paper *BLASFEO: basic linear algebra subroutines for embedded optimization* describes the BLASFEO API and the beckend (comprising the panel-major matrix format) (ArXiv preprint):
-https://arxiv.org/abs/1704.02457
-- the paper *The BLAS API of BLASFEO: optimizing performance for small matrices* describes the BLAS API implementation (ArXiv preprint):
-https://arxiv.org/abs/1902.08115
-- the slides introduce BLASFEO:
+- the original BLASFEO paper describes the BLASFEO API and the beckend (comprising the panel-major matrix format)<br/>
+G. Frison, D. Kouzoupis, T. Sartor, A. Zanelli, M. Diehl, *BLASFEO: basic linear algebra subroutines for embedded optimization*. ACM Transactions on Mathematical Software (TOMS), 2018.<br/>
+(arXiv preprint https://arxiv.org/abs/1704.02457 )
+- the second BLASFEO paper describes the BLAS API implementation and the assembly framework with its custom function calling convention<br/>
+G. Frison, T. Sartor, A. Zanelli, M. Diehl, *The BLAS API of BLASFEO: optimizing performance for small matrices*, 2019.<br/>
+(arXiv preprint https://arxiv.org/abs/1902.08115 )
+- the slides introduce BLASFEO:<br/>
 www.cs.utexas.edu/users/flame/BLISRetreat2017/slides/Gianluca_BLIS_Retreat_2017.pdf
-- video with comment to the slides:
+- video with comments to the slides:<br/>
 https://utexas.app.box.com/s/yt2d693v8xc37yyjklnf4a4y1ldvyzon
 
 --------------------------------------------------
