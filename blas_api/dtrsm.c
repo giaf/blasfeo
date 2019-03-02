@@ -105,18 +105,14 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 		if(*transa=='n' | *transa=='N')
 			{
 			dtrsv_(uplo, &c_t, diag, pn, A, plda, B, pldb);
-			if(*alpha!=1.0)
-				{
-				dscal_(pn, alpha, B, pldb);
-				}
 			}
 		else
 			{
 			dtrsv_(uplo, &c_n, diag, pn, A, plda, B, pldb);
-			if(*alpha!=1.0)
-				{
-				dscal_(pn, alpha, B, pldb);
-				}
+			}
+		if(*alpha!=1.0)
+			{
+			dscal_(pn, alpha, B, pldb);
 			}
 		return;
 		}

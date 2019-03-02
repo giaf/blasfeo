@@ -42,6 +42,12 @@
 
 
 
+double globA[] = {2, 2, 3, 4, 5, 6, 7, 8, 9, 61, 63, 63, 64, 65, 66, 67, 68, 69, 121, 122, 124, 124, 125, 126, 127, 128, 129, 181, 182, 183, 185, 185, 186, 187, 188, 189, 241, 242, 243, 244, 246, 246, 247, 248, 249};
+int globm = 9;
+int globn = 5;
+
+
+
 int main()
 	{
 
@@ -62,7 +68,7 @@ int main()
 
 	double *B = malloc(n*n*sizeof(double));
 	for(ii=0; ii<n*n; ii++)
-		B[ii] = 0;
+		B[ii] = -0.0;
 	for(ii=0; ii<n; ii++)
 		B[ii*(n+1)] = 1.0;
 	int ldb = n;
@@ -102,9 +108,9 @@ int main()
 	char uplo = 'u';
 	int info = 0;
 
-	int m0 = 16;
-	int n0 = 12;
-	int k0 = 16;
+	int m0 = 5;
+	int n0 = 5;
+	int k0 = 5;
 
 
 
@@ -124,8 +130,12 @@ int main()
 #if 0
 //	dgemm_(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
 	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
+	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
 	dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
-	dpotrf_(&uplo, &m0, C, &n, &info);
+//	dpotrf_(&c_l, &m0, C, &n, &info);
+	dposv_(&c_u, &m0, &n0, C, &n, D, &n, &info);
+	d_print_mat(n, n, C, ldc);
+	d_print_mat(n, n, D, ldd);
 #endif
 
 #if 0
@@ -133,7 +143,7 @@ int main()
 #endif
 
 #if 0
-	dsyrk_(&uplo, &ta, &m0, &k0, &alpha, A, &n, &beta, C, &n);
+	dsyrk_(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C, &n);
 #endif
 
 #if 0
@@ -141,22 +151,39 @@ int main()
 	dtrsm_(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
-#if 0
-	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	dtrmm_(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-#endif
-
 #if 1
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	dgemm_(&c_n, &c_t, &m0, &n0, &k0, &d_1, A, &n, A, &n, &d_1, C, &n);
-	dgetrf_(&m0, &n0, C, &n, ipiv, &info);
-	int_print_mat(1, n, ipiv, 1);
+//	dtrmm_(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
+//	dtrmm_(&c_r, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
+//	dtrmm_(&c_r, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
+	dtrmm_(&c_r, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
 #endif
 
-	printf("\ninfo %d\n", info);
+#if 0
+	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
+	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
+	dgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, A, &n, &d_1, C, &n);
+	dgetrf_(&m0, &n0, C, &n, ipiv, &info);
+//	dgetrs_(&c_t, &m0, &n0, C, &n, ipiv, D, &n, &info);
+//	dgesv_(&m0, &n0, C, &n, ipiv, D, &n, &info);
+	int_print_mat(1, n, ipiv, 1);
+	d_print_mat(n, n, C, ldc);
+//	d_print_mat(n, n, D, ldd);
+#endif
+
+//	printf("\ninfo %d\n", info);
 //	d_print_mat(n, n, B, ldb);
 	d_print_mat(n, n, C, ldc);
 //	d_print_mat(n, n, D, ldd);
+
+#if 0
+	for(ii=0; ii<globm*globn; ii++)
+		C[ii] = globA[ii];
+	d_print_mat(globm, globn, C, globm);
+	dgetrf_(&globm, &globn, C, &globm, ipiv, &info);
+	d_print_mat(globm, globn, C, globm);
+	int_print_mat(1, n, ipiv, 1);
+#endif
 
 
 	// blasfeo blas
@@ -166,8 +193,12 @@ int main()
 #if 0
 //	blasfeo_dgemm(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
 	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
+	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
 	blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
-	blasfeo_dpotrf(&uplo, &m0, C, &n, &info);
+//	blasfeo_dpotrf(&c_l, &m0, C, &n, &info);
+	blasfeo_dposv(&c_u, &m0, &n0, C, &n, D, &n, &info);
+	d_print_mat(n, n, C, ldc);
+	d_print_mat(n, n, D, ldd);
 #endif
 
 #if 0
@@ -175,7 +206,7 @@ int main()
 #endif
 
 #if 0
-	blasfeo_dsyrk(&uplo, &ta, &m0, &k0, &alpha, A, &n, &beta, C, &n);
+	blasfeo_dsyrk(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C, &n);
 #endif
 
 #if 0
@@ -183,32 +214,40 @@ int main()
 	blasfeo_dtrsm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
-#if 0
-	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-#endif
-
 #if 1
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	blasfeo_dgemm(&c_n, &c_t, &m0, &n0, &k0, &d_1, A, &n, A, &n, &d_1, C, &n);
-	blasfeo_dgetrf(&m0, &n0, C, &n, ipiv, &info);
-	int_print_mat(1, n, ipiv, 1);
+//	blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
+//	blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
+//	blasfeo_dtrmm(&c_r, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
+	blasfeo_dtrmm(&c_r, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
 #endif
 
-	printf("\ninfo %d\n", info);
+#if 0
+	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
+	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
+	blasfeo_dgemm(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, A, &n, &d_1, C, &n);
+	blasfeo_dgetrf(&m0, &n0, C, &n, ipiv, &info);
+//	blasfeo_dgetrs(&c_t, &m0, &n0, C, &n, ipiv, D, &n, &info);
+//	blasfeo_dgesv(&m0, &n0, C, &n, ipiv, D, &n, &info);
+	int_print_mat(1, n, ipiv, 1);
+	d_print_mat(n, n, C, ldc);
+//	d_print_mat(n, n, D, ldd);
+#endif
+
+//	printf("\ninfo %d\n", info);
 //	d_print_mat(n, n, A, lda);
 //	d_print_mat(n, n, B, ldb);
 	d_print_mat(n, n, C, ldc);
 //	d_print_mat(n, n, D, ldd);
 
-//	d_print_mat(n, n, A, lda);
-//	ipiv[0] = 15;
-//	ipiv[1] = 15;
-//	int i0 = 0;
-//	int i1 = 1;
-//	int i4 = 4;
-//	dlaswp(&i4, A, &lda, &i0, &i1, ipiv, &i1);
-//	d_print_mat(n, n, A, lda);
+#if 0
+	for(ii=0; ii<globm*globn; ii++)
+		C[ii] = globA[ii];
+	d_print_mat(globm, globn, C, globm);
+	blasfeo_dgetrf(&globm, &globn, C, &globm, ipiv, &info);
+	d_print_mat(globm, globn, C, globm);
+	int_print_mat(1, n, ipiv, 1);
+#endif
 
 	// free memory
 
