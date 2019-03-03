@@ -2399,6 +2399,395 @@
 
 // common inner routine with file scope
 //
+// edge for B upper triangular
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- 4*sda*sizeof(double)
+// r13   <- B
+// r14   <- ldb
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm4  <- [d40 d50 d60 d70]
+// ymm5  <- [d41 d51 d61 d71]
+// ymm6  <- [d42 d52 d62 d72]
+// ymm7  <- [d43 d53 d63 d73]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRMM_NT_RU_8X4_LIB4C
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_dtrmm_nt_ru_8x4_lib4c)
+#endif
+	
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			0(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			0(%r11, %r12, 1), %ymm9
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	addq			%r14, %r13
+
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			32(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			32(%r11, %r12, 1), %ymm9
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vbroadcastsd	8(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	addq			%r14, %r13
+
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			64(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			64(%r11, %r12, 1), %ymm9
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vbroadcastsd	8(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	vbroadcastsd	16(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	vfmadd231pd		%ymm9, %ymm12, %ymm6
+	addq			%r14, %r13
+
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			96(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			96(%r11, %r12, 1), %ymm9
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vbroadcastsd	8(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	vbroadcastsd	16(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	vfmadd231pd		%ymm9, %ymm12, %ymm6
+	vbroadcastsd	24(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm3
+	vfmadd231pd		%ymm9, %ymm12, %ymm7
+	addq			%r14, %r13
+
+	subl	$4, %r10d
+	addq	$128, %r11
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_dtrmm_nt_ru_8x4_lib4c)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B upper triangular
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- 4*sda*sizeof(double)
+// r13   <- B
+// r14   <- ldb
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm4  <- [d40 d50 d60 d70]
+// ymm5  <- [d41 d51 d61 d71]
+// ymm6  <- [d42 d52 d62 d72]
+// ymm7  <- [d43 d53 d63 d73]
+
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRMM_NT_RU_8X4_VS_LIB4C
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_dtrmm_nt_ru_8x4_vs_lib4c)
+#endif
+	
+	cmp		$0, %r10d
+	jle		0f
+
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			0(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			0(%r11, %r12, 1), %ymm9
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	subl			$1, %r10d
+	addq			$32, %r11
+	addq			%r14, %r13
+
+	cmpl	$0, %r10d
+	jle		0f
+
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			0(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			0(%r11, %r12, 1), %ymm9
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vbroadcastsd	8(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	subl			$1, %r10d
+	addq			$32, %r11
+	addq			%r14, %r13
+
+	cmpl	$0, %r10d
+	jle		0f
+
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			0(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			0(%r11, %r12, 1), %ymm9
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vbroadcastsd	8(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	vbroadcastsd	16(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	vfmadd231pd		%ymm9, %ymm12, %ymm6
+	subl			$1, %r10d
+	addq			$32, %r11
+	addq			%r14, %r13
+
+	cmpl	$0, %r10d
+	jle		0f
+
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			0(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			0(%r11, %r12, 1), %ymm9
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vbroadcastsd	8(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	vbroadcastsd	16(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	vfmadd231pd		%ymm9, %ymm12, %ymm6
+	vbroadcastsd	24(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm3
+	vfmadd231pd		%ymm9, %ymm12, %ymm7
+	subl			$1, %r10d
+	addq			$32, %r11
+	addq			%r14, %r13
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_dtrmm_nt_ru_8x4_vs_lib4c)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B upper triangular
+//
+// input arguments:
+// r10   <- kmax
+// r11   <- A
+// r12   <- 4*sda*sizeof(double)
+// r13   <- B
+// r14   <- ldb
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm4  <- [d40 d50 d60 d70]
+// ymm5  <- [d41 d51 d61 d71]
+// ymm6  <- [d42 d52 d62 d72]
+// ymm7  <- [d43 d53 d63 d73]
+
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRMM_NT_RU_ONE_8X4_LIB4C
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_dtrmm_nt_ru_one_8x4_lib4c)
+#endif
+	
+	vmovapd			0(%r11), %ymm8
+	vaddpd			%ymm0, %ymm8, %ymm0
+	vmovapd			0(%r11, %r12, 1), %ymm9
+	vaddpd			%ymm4, %ymm9, %ymm4
+	addq			%r14, %r13
+
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			32(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			32(%r11, %r12, 1), %ymm9
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vaddpd			%ymm1, %ymm8, %ymm1
+	vaddpd			%ymm5, %ymm9, %ymm5
+	addq			%r14, %r13
+
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			64(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			64(%r11, %r12, 1), %ymm9
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vbroadcastsd	8(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	vaddpd			%ymm2, %ymm8, %ymm2
+	vaddpd			%ymm6, %ymm9, %ymm6
+	addq			%r14, %r13
+
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			96(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			96(%r11, %r12, 1), %ymm9
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vbroadcastsd	8(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	vbroadcastsd	16(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	vfmadd231pd		%ymm9, %ymm12, %ymm6
+	vaddpd			%ymm3, %ymm8, %ymm3
+	vaddpd			%ymm7, %ymm9, %ymm7
+	addq			%r14, %r13
+
+	subl	$4, %r10d
+	addq	$128, %r11
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_dtrmm_nt_ru_one_8x4_lib4c)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B upper triangular
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- 4*sda*sizeof(double)
+// r13   <- B
+// r14   <- ldb
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm4  <- [d40 d50 d60 d70]
+// ymm5  <- [d41 d51 d61 d71]
+// ymm6  <- [d42 d52 d62 d72]
+// ymm7  <- [d43 d53 d63 d73]
+
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRMM_NT_RU_ONE_8X4_VS_LIB4C
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_dtrmm_nt_ru_one_8x4_vs_lib4c)
+#endif
+	
+	cmp		$0, %r10d
+	jle		0f
+
+	vmovapd			0(%r11), %ymm8
+	vaddpd			%ymm0, %ymm8, %ymm0
+	vmovapd			0(%r11, %r12, 1), %ymm9
+	vaddpd			%ymm4, %ymm9, %ymm4
+	subl			$1, %r10d
+	addq			$32, %r11
+	addq			%r14, %r13
+
+	cmpl	$0, %r10d
+	jle		0f
+
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			0(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			0(%r11, %r12, 1), %ymm9
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vaddpd			%ymm1, %ymm8, %ymm1
+	vaddpd			%ymm5, %ymm9, %ymm5
+	subl			$1, %r10d
+	addq			$32, %r11
+	addq			%r14, %r13
+
+	cmpl	$0, %r10d
+	jle		0f
+
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			0(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			0(%r11, %r12, 1), %ymm9
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vbroadcastsd	8(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	vaddpd			%ymm2, %ymm8, %ymm2
+	vaddpd			%ymm6, %ymm9, %ymm6
+	subl			$1, %r10d
+	addq			$32, %r11
+	addq			%r14, %r13
+
+	cmpl	$0, %r10d
+	jle		0f
+
+	vbroadcastsd	0(%r13), %ymm12
+	vmovapd			0(%r11), %ymm8
+	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			0(%r11, %r12, 1), %ymm9
+	vfmadd231pd		%ymm9, %ymm12, %ymm4
+	vbroadcastsd	8(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	vfmadd231pd		%ymm9, %ymm12, %ymm5
+	vbroadcastsd	16(%r13), %ymm12
+	vfmadd231pd		%ymm8, %ymm12, %ymm2
+	vfmadd231pd		%ymm9, %ymm12, %ymm6
+	vaddpd			%ymm3, %ymm8, %ymm3
+	vaddpd			%ymm7, %ymm9, %ymm7
+	subl			$1, %r10d
+	addq			$32, %r11
+	addq			%r14, %r13
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_dtrmm_nt_ru_one_8x4_vs_lib4c)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // triangular substitution:
 // side = left
 // uplo = lower
@@ -6553,6 +6942,202 @@
 
 
 
+//                                 1      2              3          4        5          6        7             8          9        10         11
+// void kernel_dtrmm_nt_ru_8x4_lib4cc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd,);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrmm_nt_ru_8x4_lib4cc)
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movq	ARG5, %r13  // B
+	movq	ARG6, %r14  // ldb
+	sall	$3, %r14d
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_DTRMM_NT_RU_8X4_LIB4C
+#else
+	CALL(inner_edge_dtrmm_nt_ru_8x4_lib4c)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x4_lib4c)
+#endif
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+	movq	ARG9, %r13   // ldc
+	sall	$3, %r13d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_LIB
+#else
+	CALL(inner_scale_ab_8x4_lib)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_LIB
+#else
+	CALL(inner_store_8x4_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrmm_nt_ru_8x4_lib4cc)
+
+
+
+
+
+//                                    1      2              3          4        5          6        7             8          9        10         11       12      13
+// void kernel_dtrmm_nt_ru_8x4_vs_lib4cc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrmm_nt_ru_8x4_vs_lib4cc)
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movq	ARG5, %r13  // B
+	movq	ARG6, %r14  // ldb
+	sall	$3, %r14d
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_DTRMM_NT_RU_8X4_VS_LIB4C
+#else
+	CALL(inner_edge_dtrmm_nt_ru_8x4_vs_lib4c)
+#endif
+
+	movq	ARG13, %r15  // n1
+	cmpl	$1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X1_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x1_lib4c)
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG13, %r15  // n1
+	cmpl	$2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X2_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x2_lib4c)
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG13, %r15  // n1
+	cmpl	$3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X3_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x3_lib4c)
+#endif
+
+	jmp		103f
+
+102:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x4_lib4c)
+#endif
+
+103:
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+	movq	ARG9, %r13   // ldc
+	sall	$3, %r13d
+	movq	ARG12, %r14 // m1
+	movq	ARG13, %r15 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_VS_LIB
+#else
+	CALL(inner_scale_ab_8x4_vs_lib)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$3, %r11d
+	movq	ARG12, %r12 // m1
+	movq	ARG13, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_VS_LIB
+#else
+	CALL(inner_store_8x4_vs_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrmm_nt_ru_8x4_vs_lib4cc)
+
+
+
+
+
 //                                           1      2              3          4        5          6             7          8        9          10       11      12
 // void kernel_dtrmm_nt_ru_one_8x4_vs_lib44c(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
@@ -6727,6 +7312,202 @@
 	ret
 
 	FUN_END(kernel_dpotrf_nt_l_8x4_lib44c)
+
+
+
+
+
+//                                        1      2              3          4        5          6        7             8          9        10         11
+// void kernel_dtrmm_nt_ru_one_8x4_lib4cc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd,);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrmm_nt_ru_one_8x4_lib4cc)
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movq	ARG5, %r13  // B
+	movq	ARG6, %r14  // ldb
+	sall	$3, %r14d
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_DTRMM_NT_RU_ONE_8X4_LIB4C
+#else
+	CALL(inner_edge_dtrmm_nt_ru_one_8x4_lib4c)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x4_lib4c)
+#endif
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+	movq	ARG9, %r13   // ldc
+	sall	$3, %r13d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_LIB
+#else
+	CALL(inner_scale_ab_8x4_lib)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_LIB
+#else
+	CALL(inner_store_8x4_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrmm_nt_ru_one_8x4_lib4cc)
+
+
+
+
+
+//                                           1      2              3          4        5          6        7             8          9        10         11       12      13
+// void kernel_dtrmm_nt_ru_one_8x4_vs_lib4cc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrmm_nt_ru_one_8x4_vs_lib4cc)
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$5, %r12d // 4*sda*sizeof(double)
+	movq	ARG5, %r13  // B
+	movq	ARG6, %r14  // ldb
+	sall	$3, %r14d
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_DTRMM_NT_RU_ONE_8X4_VS_LIB4C
+#else
+	CALL(inner_edge_dtrmm_nt_ru_one_8x4_vs_lib4c)
+#endif
+
+	movq	ARG13, %r15  // n1
+	cmpl	$1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X1_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x1_lib4c)
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG13, %r15  // n1
+	cmpl	$2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X2_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x2_lib4c)
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG13, %r15  // n1
+	cmpl	$3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X3_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x3_lib4c)
+#endif
+
+	jmp		103f
+
+102:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x4_lib4c)
+#endif
+
+103:
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+	movq	ARG9, %r13   // ldc
+	sall	$3, %r13d
+	movq	ARG12, %r14 // m1
+	movq	ARG13, %r15 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_VS_LIB
+#else
+	CALL(inner_scale_ab_8x4_vs_lib)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$3, %r11d
+	movq	ARG12, %r12 // m1
+	movq	ARG13, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_VS_LIB
+#else
+	CALL(inner_store_8x4_vs_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrmm_nt_ru_one_8x4_vs_lib4cc)
 
 
 
