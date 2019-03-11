@@ -258,8 +258,9 @@ void blasfeo_dtrmm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 					}
 				else //if(*diag=='u' | *diag=='U') // _runu
 					{
-					printf("\nBLASFEO: dtrmm_runu: not implemented yet\n");
-					return;
+					goto runu;
+//					printf("\nBLASFEO: dtrmm_runu: not implemented yet\n");
+//					return;
 					}
 				}
 			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _rut
@@ -605,6 +606,77 @@ runn_0_left_4:
 goto runn_0_return;
 
 runn_0_return:
+	return;
+
+
+
+/************************************************
+* runu
+************************************************/
+runu:
+#if defined(TARGET_X64_INTEL_HASWELL)
+	if(m>=256 | n>=256 | n>K_MAX_STACK)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	if(m>=64 | n>=64 | n>K_MAX_STACK)
+#else
+	if(m>=12 | n>=12 | n>K_MAX_STACK)
+#endif
+		{
+// TODO
+//		pack_tran = 0;
+//		goto rltu_1;
+		}
+	else
+		{
+		goto runu_0;
+		}
+
+runu_0:
+	pU = pU0;
+	sdu = sdu0;
+
+	ii = 0;
+#if 0//defined(TARGET_X64_INTEL_HASWELL)
+#elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#else
+	for(; ii<m-3; ii+=4)
+		{
+		kernel_dpack_nn_4_lib4(n, B+ii, ldb, pU);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dtrmm_nn_ru_one_4x4_lib4cc(jj, alpha, pU, A+jj*lda, lda, &d_0, B+ii+jj*ldb, ldb, B+ii+jj*ldb, ldb);
+			}
+		if(jj<n)
+			{
+			kernel_dtrmm_nn_ru_one_4x4_vs_lib4cc(jj, alpha, pU, A+jj*lda, lda, &d_0, B+ii+jj*ldb, ldb, B+ii+jj*ldb, ldb, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		goto runu_0_left_4;
+		}
+#endif
+goto runu_0_return;
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+runu_0_left_12:
+goto runu_0_return;
+#endif
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+runu_0_left_8:
+goto runu_0_return;
+#endif
+
+runu_0_left_4:
+	kernel_dpack_nn_4_vs_lib4(n, B+ii, ldb, pU, m-ii);
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dtrmm_nn_ru_one_4x4_vs_lib4cc(jj, alpha, pU, A+jj*lda, lda, &d_0, B+ii+jj*ldb, ldb, B+ii+jj*ldb, ldb, m-ii, n-jj);
+		}
+goto runu_0_return;
+
+runu_0_return:
 	return;
 
 
