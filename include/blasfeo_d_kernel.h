@@ -605,6 +605,8 @@ void kernel_dtrmm_nn_ru_one_4x4_lib4cc(int kmax, double *alpha, double *A, doubl
 void kernel_dtrmm_nn_ru_one_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dtrmm_nt_rl_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dtrmm_nt_rl_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+void kernel_dtrmm_nt_rl_one_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dtrmm_nt_rl_one_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dtrmm_nt_ru_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dtrmm_nt_ru_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dtrmm_nt_ru_one_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
