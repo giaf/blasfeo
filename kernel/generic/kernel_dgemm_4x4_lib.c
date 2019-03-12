@@ -3262,6 +3262,608 @@ void kernel_dtrmm_nn_rl_one_4x4_vs_lib4cc(int kmax, double *alpha, double *A, do
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrmm_nt_rl_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+	{
+
+	const int bs = 4;
+
+	double
+		a_0, a_1, a_2, a_3,
+		b_0, b_1, b_2, b_3;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = 1.0;
+
+	// assume always kmax>=4 !!!
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	A += kmax*bs;
+	B += kmax*ldb;
+
+	// k = 0
+
+	a_0 = A[0];
+	a_1 = A[1];
+	a_2 = A[2];
+	a_3 = A[3];
+
+	b_0 = B[0+0*ldb];
+	CC[0+bs*0] += a_0 * b_0;
+	CC[1+bs*0] += a_1 * b_0;
+	CC[2+bs*0] += a_2 * b_0;
+	CC[3+bs*0] += a_3 * b_0;
+
+	b_0 = B[1+0*ldb];
+	CC[0+bs*1] += a_0 * b_0;
+	CC[1+bs*1] += a_1 * b_0;
+	CC[2+bs*1] += a_2 * b_0;
+	CC[3+bs*1] += a_3 * b_0;
+
+	b_0 = B[2+0*ldb];
+	CC[0+bs*2] += a_0 * b_0;
+	CC[1+bs*2] += a_1 * b_0;
+	CC[2+bs*2] += a_2 * b_0;
+	CC[3+bs*2] += a_3 * b_0;
+
+	b_0 = B[3+0*ldb];
+	CC[0+bs*3] += a_0 * b_0;
+	CC[1+bs*3] += a_1 * b_0;
+	CC[2+bs*3] += a_2 * b_0;
+	CC[3+bs*3] += a_3 * b_0;
+
+	A += bs;
+	B += ldb;
+//	k += 1;
+
+	// k = 1
+
+	a_0 = A[0];
+	a_1 = A[1];
+	a_2 = A[2];
+	a_3 = A[3];
+
+	b_0 = B[1+0*ldb];
+	CC[0+bs*1] += a_0 * b_0;
+	CC[1+bs*1] += a_1 * b_0;
+	CC[2+bs*1] += a_2 * b_0;
+	CC[3+bs*1] += a_3 * b_0;
+
+	b_0 = B[2+0*ldb];
+	CC[0+bs*2] += a_0 * b_0;
+	CC[1+bs*2] += a_1 * b_0;
+	CC[2+bs*2] += a_2 * b_0;
+	CC[3+bs*2] += a_3 * b_0;
+
+	b_0 = B[3+0*ldb];
+	CC[0+bs*3] += a_0 * b_0;
+	CC[1+bs*3] += a_1 * b_0;
+	CC[2+bs*3] += a_2 * b_0;
+	CC[3+bs*3] += a_3 * b_0;
+
+	A += bs;
+	B += ldb;
+//	k += 1;
+
+	// k = 2
+
+	a_0 = A[0];
+	a_1 = A[1];
+	a_2 = A[2];
+	a_3 = A[3];
+
+	b_0 = B[2+0*ldb];
+	CC[0+bs*2] += a_0 * b_0;
+	CC[1+bs*2] += a_1 * b_0;
+	CC[2+bs*2] += a_2 * b_0;
+	CC[3+bs*2] += a_3 * b_0;
+
+	b_0 = B[3+0*ldb];
+	CC[0+bs*3] += a_0 * b_0;
+	CC[1+bs*3] += a_1 * b_0;
+	CC[2+bs*3] += a_2 * b_0;
+	CC[3+bs*3] += a_3 * b_0;
+
+	A += bs;
+	B += ldb;
+//	k += 1;
+
+	// k = 3
+
+	a_0 = A[0];
+	a_1 = A[1];
+	a_2 = A[2];
+	a_3 = A[3];
+
+	b_0 = B[3+0*ldb];
+	CC[0+bs*3] += a_0 * b_0;
+	CC[1+bs*3] += a_1 * b_0;
+	CC[2+bs*3] += a_2 * b_0;
+	CC[3+bs*3] += a_3 * b_0;
+
+	A += bs;
+	B += ldb;
+//	k += 1;
+
+	store:
+
+	D[0+ldd*0] = alpha[0]*CC[0+bs*0];
+	D[1+ldd*0] = alpha[0]*CC[1+bs*0];
+	D[2+ldd*0] = alpha[0]*CC[2+bs*0];
+	D[3+ldd*0] = alpha[0]*CC[3+bs*0];
+
+	D[0+ldd*1] = alpha[0]*CC[0+bs*1];
+	D[1+ldd*1] = alpha[0]*CC[1+bs*1];
+	D[2+ldd*1] = alpha[0]*CC[2+bs*1];
+	D[3+ldd*1] = alpha[0]*CC[3+bs*1];
+
+	D[0+ldd*2] = alpha[0]*CC[0+bs*2];
+	D[1+ldd*2] = alpha[0]*CC[1+bs*2];
+	D[2+ldd*2] = alpha[0]*CC[2+bs*2];
+	D[3+ldd*2] = alpha[0]*CC[3+bs*2];
+
+	D[0+ldd*3] = alpha[0]*CC[0+bs*3];
+	D[1+ldd*3] = alpha[0]*CC[1+bs*3];
+	D[2+ldd*3] = alpha[0]*CC[2+bs*3];
+	D[3+ldd*3] = alpha[0]*CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dtrmm_nt_rl_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	double
+		a_0, a_1, a_2, a_3,
+		b_0, b_1, b_2, b_3;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	double alpha1 = 1.0;
+
+	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+
+	A += kmax*bs;
+	B += kmax*ldb;
+
+	if(n1>=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[0+0*ldb];
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+		CC[3+bs*0] += a_3 * b_0;
+
+		b_0 = B[1+0*ldb];
+		CC[0+bs*1] += a_0 * b_0;
+		CC[1+bs*1] += a_1 * b_0;
+		CC[2+bs*1] += a_2 * b_0;
+		CC[3+bs*1] += a_3 * b_0;
+
+		b_0 = B[2+0*ldb];
+		CC[0+bs*2] += a_0 * b_0;
+		CC[1+bs*2] += a_1 * b_0;
+		CC[2+bs*2] += a_2 * b_0;
+		CC[3+bs*2] += a_3 * b_0;
+
+		b_0 = B[3+0*ldb];
+		CC[0+bs*3] += a_0 * b_0;
+		CC[1+bs*3] += a_1 * b_0;
+		CC[2+bs*3] += a_2 * b_0;
+		CC[3+bs*3] += a_3 * b_0;
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+
+		// k = 1
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[1+0*ldb];
+		CC[0+bs*1] += a_0 * b_0;
+		CC[1+bs*1] += a_1 * b_0;
+		CC[2+bs*1] += a_2 * b_0;
+		CC[3+bs*1] += a_3 * b_0;
+
+		b_0 = B[2+0*ldb];
+		CC[0+bs*2] += a_0 * b_0;
+		CC[1+bs*2] += a_1 * b_0;
+		CC[2+bs*2] += a_2 * b_0;
+		CC[3+bs*2] += a_3 * b_0;
+
+		b_0 = B[3+0*ldb];
+		CC[0+bs*3] += a_0 * b_0;
+		CC[1+bs*3] += a_1 * b_0;
+		CC[2+bs*3] += a_2 * b_0;
+		CC[3+bs*3] += a_3 * b_0;
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+
+		// k = 2
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[2+0*ldb];
+		CC[0+bs*2] += a_0 * b_0;
+		CC[1+bs*2] += a_1 * b_0;
+		CC[2+bs*2] += a_2 * b_0;
+		CC[3+bs*2] += a_3 * b_0;
+
+		b_0 = B[3+0*ldb];
+		CC[0+bs*3] += a_0 * b_0;
+		CC[1+bs*3] += a_1 * b_0;
+		CC[2+bs*3] += a_2 * b_0;
+		CC[3+bs*3] += a_3 * b_0;
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+
+		// k = 3
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[3+0*ldb];
+		CC[0+bs*3] += a_0 * b_0;
+		CC[1+bs*3] += a_1 * b_0;
+		CC[2+bs*3] += a_2 * b_0;
+		CC[3+bs*3] += a_3 * b_0;
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+		
+		}
+	else if(n1==3)
+		{
+
+		// k = 0
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[0+0*ldb];
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+		CC[3+bs*0] += a_3 * b_0;
+
+		b_0 = B[1+0*ldb];
+		CC[0+bs*1] += a_0 * b_0;
+		CC[1+bs*1] += a_1 * b_0;
+		CC[2+bs*1] += a_2 * b_0;
+		CC[3+bs*1] += a_3 * b_0;
+
+		b_0 = B[2+0*ldb];
+		CC[0+bs*2] += a_0 * b_0;
+		CC[1+bs*2] += a_1 * b_0;
+		CC[2+bs*2] += a_2 * b_0;
+		CC[3+bs*2] += a_3 * b_0;
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+
+		// k = 1
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[1+0*ldb];
+		CC[0+bs*1] += a_0 * b_0;
+		CC[1+bs*1] += a_1 * b_0;
+		CC[2+bs*1] += a_2 * b_0;
+		CC[3+bs*1] += a_3 * b_0;
+
+		b_0 = B[2+0*ldb];
+		CC[0+bs*2] += a_0 * b_0;
+		CC[1+bs*2] += a_1 * b_0;
+		CC[2+bs*2] += a_2 * b_0;
+		CC[3+bs*2] += a_3 * b_0;
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+
+		// k = 2
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[2+0*ldb];
+		CC[0+bs*2] += a_0 * b_0;
+		CC[1+bs*2] += a_1 * b_0;
+		CC[2+bs*2] += a_2 * b_0;
+		CC[3+bs*2] += a_3 * b_0;
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+
+		// k = 3
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+		
+		}
+	else if(n1==2)
+		{
+
+		// k = 0
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[0+0*ldb];
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+		CC[3+bs*0] += a_3 * b_0;
+
+		b_0 = B[1+0*ldb];
+		CC[0+bs*1] += a_0 * b_0;
+		CC[1+bs*1] += a_1 * b_0;
+		CC[2+bs*1] += a_2 * b_0;
+		CC[3+bs*1] += a_3 * b_0;
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+
+		// k = 1
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[1+0*ldb];
+		CC[0+bs*1] += a_0 * b_0;
+		CC[1+bs*1] += a_1 * b_0;
+		CC[2+bs*1] += a_2 * b_0;
+		CC[3+bs*1] += a_3 * b_0;
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+
+		// k = 2
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+
+		// k = 3
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+		
+		}
+	else if(n1==1)
+		{
+
+		// k = 0
+
+		a_0 = A[0];
+		a_1 = A[1];
+		a_2 = A[2];
+		a_3 = A[3];
+
+		b_0 = B[0+0*ldb];
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+		CC[3+bs*0] += a_3 * b_0;
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+
+		// k = 1
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+
+		// k = 2
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+
+		// k = 3
+
+		A += bs;
+		B += ldb;
+//		k += 1;
+		
+		}
+
+	store:
+
+	CC[0+bs*0] = alpha[0]*CC[0+bs*0];
+	CC[1+bs*0] = alpha[0]*CC[1+bs*0];
+	CC[2+bs*0] = alpha[0]*CC[2+bs*0];
+	CC[3+bs*0] = alpha[0]*CC[3+bs*0];
+
+	CC[0+bs*1] = alpha[0]*CC[0+bs*1];
+	CC[1+bs*1] = alpha[0]*CC[1+bs*1];
+	CC[2+bs*1] = alpha[0]*CC[2+bs*1];
+	CC[3+bs*1] = alpha[0]*CC[3+bs*1];
+
+	CC[0+bs*2] = alpha[0]*CC[0+bs*2];
+	CC[1+bs*2] = alpha[0]*CC[1+bs*2];
+	CC[2+bs*2] = alpha[0]*CC[2+bs*2];
+	CC[3+bs*2] = alpha[0]*CC[3+bs*2];
+
+	CC[0+bs*3] = alpha[0]*CC[0+bs*3];
+	CC[1+bs*3] = alpha[0]*CC[1+bs*3];
+	CC[2+bs*3] = alpha[0]*CC[2+bs*3];
+	CC[3+bs*3] = alpha[0]*CC[3+bs*3];
+
+	if(m1>=4)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+		D[3+ldd*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+		D[3+ldd*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+		D[3+ldd*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		D[3+ldd*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 void kernel_dtrmm_nn_ru_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
