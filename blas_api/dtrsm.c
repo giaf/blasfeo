@@ -449,7 +449,7 @@ llnn_1:
 			}
 		if(ii<m)
 			{
-			kernel_dpack_tn_4_vs_lib4(ii+4, A+ii*lda, lda, pB+ii*sdb, m-ii);
+			kernel_dpack_tn_4_vs_lib4(m, A+ii*lda, lda, pB+ii*sdb, m-ii);
 			}
 		}
 	else // lower to lower
@@ -461,7 +461,7 @@ llnn_1:
 			}
 		if(ii<m)
 			{
-			kernel_dpack_nn_4_vs_lib4(ii+4, A+ii, lda, pB+ii*sdb, m-ii);
+			kernel_dpack_nn_4_vs_lib4(m, A+ii, lda, pB+ii*sdb, m-ii);
 			}
 		}
 
@@ -764,7 +764,7 @@ llnu_1:
 			}
 		if(ii<m)
 			{
-			kernel_dpack_tn_4_vs_lib4(ii+4, A+ii*lda, lda, pB+ii*sdb, m-ii);
+			kernel_dpack_tn_4_vs_lib4(m, A+ii*lda, lda, pB+ii*sdb, m-ii);
 			}
 		}
 	else // lower to lower
@@ -775,7 +775,7 @@ llnu_1:
 			}
 		if(ii<m)
 			{
-			kernel_dpack_nn_4_vs_lib4(ii+4, A+ii, lda, pB+ii*sdb, m-ii);
+			kernel_dpack_nn_4_vs_lib4(m, A+ii, lda, pB+ii*sdb, m-ii);
 			}
 		}
 
@@ -2795,7 +2795,7 @@ rltn_1:
 			}
 		if(ii<n)
 			{
-			kernel_dpack_tn_4_vs_lib4(ii+4, A+ii*lda, lda, pB+ii*sdb, n-ii);
+			kernel_dpack_tn_4_vs_lib4(n, A+ii*lda, lda, pB+ii*sdb, n-ii);
 			}
 		}
 	else // lower to lower
@@ -2806,7 +2806,7 @@ rltn_1:
 			}
 		if(ii<n)
 			{
-			kernel_dpack_nn_4_vs_lib4(ii+4, A+ii, lda, pB+ii*sdb, n-ii);
+			kernel_dpack_nn_4_vs_lib4(n, A+ii, lda, pB+ii*sdb, n-ii);
 			}
 		}
 
@@ -3091,7 +3091,7 @@ rltu_1:
 			}
 		if(ii<n)
 			{
-			kernel_dpack_tn_4_vs_lib4(ii+4, A+ii*lda, lda, pB+ii*sdb, n-ii);
+			kernel_dpack_tn_4_vs_lib4(n, A+ii*lda, lda, pB+ii*sdb, n-ii);
 			}
 		}
 	else // lower to lower
@@ -3102,7 +3102,7 @@ rltu_1:
 			}
 		if(ii<n)
 			{
-			kernel_dpack_nn_4_vs_lib4(ii+4, A+ii, lda, pB+ii*sdb, n-ii);
+			kernel_dpack_nn_4_vs_lib4(n, A+ii, lda, pB+ii*sdb, n-ii);
 			}
 		}
 
