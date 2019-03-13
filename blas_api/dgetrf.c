@@ -169,11 +169,11 @@ alg0:
 		// solve upper
 		for(ii=0; ii<m_max-3; ii+=4)
 			{
-			kernel_dtrsm_nt_rl_one_12x4_lib4c4c(ii, pU, sdu, C+ii, ldc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, C+ii+ii*ldc, ldc);
+			kernel_dtrsm_nt_rl_one_12x4_lib4c44c(ii, pU, sdu, C+ii, ldc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, C+ii+ii*ldc, ldc);
 			}
 		if(ii<m_max)
 			{
-			kernel_dtrsm_nt_rl_one_12x4_vs_lib4c4c(ii, pU, sdu, C+ii, ldc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, C+ii+ii*ldc, ldc, 12, m_max-ii);
+			kernel_dtrsm_nt_rl_one_12x4_vs_lib4c44c(ii, pU, sdu, C+ii, ldc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, C+ii+ii*ldc, ldc, 12, m_max-ii);
 			}
 
 		// unpack
@@ -185,11 +185,11 @@ alg0:
 		ii = jj;
 		for( ; ii<m-3; ii+=4)
 			{
-			kernel_dgemm_nt_4x12_libc4c(jj, &dm1, C+ii, ldc, pU, sdu, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
+			kernel_dgemm_nt_4x12_libc4cc(jj, &dm1, C+ii, ldc, pU, sdu, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
 			}
 		if(m-ii>0)
 			{
-			kernel_dgemm_nt_4x12_vs_libc4c(jj, &dm1, C+ii, ldc, pU, sdu, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+			kernel_dgemm_nt_4x12_vs_libc4cc(jj, &dm1, C+ii, ldc, pU, sdu, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 			}
 
 		// pivot & factorize & solve
@@ -257,11 +257,11 @@ alg0:
 		// solve upper
 		for(ii=0; ii<m_max-3; ii+=4)
 			{
-			kernel_dtrsm_nt_rl_one_8x4_lib4c4c(ii, pU, sdu, C+ii, ldc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, C+ii+ii*ldc, ldc);
+			kernel_dtrsm_nt_rl_one_8x4_lib4c44c(ii, pU, sdu, C+ii, ldc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, C+ii+ii*ldc, ldc);
 			}
 		if(ii<m_max)
 			{
-			kernel_dtrsm_nt_rl_one_8x4_vs_lib4c4c(ii, pU, sdu, C+ii, ldc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, C+ii+ii*ldc, ldc, 8, m_max-ii);
+			kernel_dtrsm_nt_rl_one_8x4_vs_lib4c44c(ii, pU, sdu, C+ii, ldc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, C+ii+ii*ldc, ldc, 8, m_max-ii);
 			}
 
 		// unpack
@@ -272,11 +272,11 @@ alg0:
 		ii = jj;
 		for( ; ii<m-3; ii+=4)
 			{
-			kernel_dgemm_nt_4x8_libc4c(jj, &dm1, C+ii, ldc, pU, sdu, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
+			kernel_dgemm_nt_4x8_libc4cc(jj, &dm1, C+ii, ldc, pU, sdu, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
 			}
 		if(m-ii>0)
 			{
-			kernel_dgemm_nt_4x8_vs_libc4c(jj, &dm1, C+ii, ldc, pU, sdu, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+			kernel_dgemm_nt_4x8_vs_libc4cc(jj, &dm1, C+ii, ldc, pU, sdu, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 			}
 
 		// pivot & factorize & solve
@@ -332,11 +332,11 @@ alg0:
 		// solve upper
 		for(ii=0; ii<m_max-3; ii+=4)
 			{
-			kernel_dtrsm_nt_rl_one_4x4_lib4c4c(ii, pU, C+ii, ldc, &d1, pU+ii*ps, pU+ii*ps, C+ii+ii*ldc, ldc);
+			kernel_dtrsm_nt_rl_one_4x4_lib4c44c(ii, pU, C+ii, ldc, &d1, pU+ii*ps, pU+ii*ps, C+ii+ii*ldc, ldc);
 			}
 		if(ii<m_max)
 			{
-			kernel_dtrsm_nt_rl_one_4x4_vs_lib4c4c(ii, pU, C+ii, ldc, &d1, pU+ii*ps, pU+ii*ps, C+ii+ii*ldc, ldc, 4, m_max-ii);
+			kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(ii, pU, C+ii, ldc, &d1, pU+ii*ps, pU+ii*ps, C+ii+ii*ldc, ldc, 4, m_max-ii);
 			}
 
 		// unpack
@@ -346,11 +346,11 @@ alg0:
 		ii = jj;
 		for( ; ii<m-3; ii+=4)
 			{
-			kernel_dgemm_nt_4x4_libc4c(jj, &dm1, C+ii, ldc, pU, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
+			kernel_dgemm_nt_4x4_libc4cc(jj, &dm1, C+ii, ldc, pU, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc);
 			}
 		if(m-ii>0)
 			{
-			kernel_dgemm_nt_4x4_vs_libc4c(jj, &dm1, C+ii, ldc, pU, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+			kernel_dgemm_nt_4x4_vs_libc4cc(jj, &dm1, C+ii, ldc, pU, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 			}
 
 		// pivot & factorize & solve
@@ -400,7 +400,7 @@ left_12_0:
 	// solve upper
 	for(ii=0; ii<m_max; ii+=4)
 		{
-		kernel_dtrsm_nt_rl_one_12x4_lib4c4c(ii, pU, sdu, C+ii, ldc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, C+ii+ii*ldc, ldc);
+		kernel_dtrsm_nt_rl_one_12x4_lib4c44c(ii, pU, sdu, C+ii, ldc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, C+ii+ii*ldc, ldc);
 		}
 
 	// unpack
@@ -412,7 +412,7 @@ left_12_0:
 	ii = jj;
 	for( ; ii<m; ii+=4)
 		{
-		kernel_dgemm_nt_4x12_vs_libc4c(jj, &dm1, C+ii, ldc, pU, sdu, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+		kernel_dgemm_nt_4x12_vs_libc4cc(jj, &dm1, C+ii, ldc, pU, sdu, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 		}
 
 	// pivot & factorize & solve
@@ -449,7 +449,7 @@ left_8_0:
 	// solve upper
 	for(ii=0; ii<m_max; ii+=4)
 		{
-		kernel_dtrsm_nt_rl_one_8x4_lib4c4c(ii, pU, sdu, C+ii, ldc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, C+ii+ii*ldc, ldc);
+		kernel_dtrsm_nt_rl_one_8x4_lib4c44c(ii, pU, sdu, C+ii, ldc, &d1, pU+ii*ps, sdu, pU+ii*ps, sdu, C+ii+ii*ldc, ldc);
 		}
 
 	// unpack
@@ -460,7 +460,7 @@ left_8_0:
 	ii = jj;
 	for( ; ii<m; ii+=4)
 		{
-		kernel_dgemm_nt_4x8_vs_libc4c(jj, &dm1, C+ii, ldc, pU, sdu, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+		kernel_dgemm_nt_4x8_vs_libc4cc(jj, &dm1, C+ii, ldc, pU, sdu, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 		}
 
 	// pivot & factorize & solve
@@ -497,7 +497,7 @@ left_4_0:
 	// solve upper
 	for(ii=0; ii<m_max; ii+=4)
 		{
-		kernel_dtrsm_nt_rl_one_4x4_vs_lib4c4c(ii, pU, C+ii, ldc, &d1, pU+ii*ps, pU+ii*ps, C+ii+ii*ldc, ldc, n-jj, m_max-ii);
+		kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(ii, pU, C+ii, ldc, &d1, pU+ii*ps, pU+ii*ps, C+ii+ii*ldc, ldc, n-jj, m_max-ii);
 		}
 
 	// unpack
@@ -507,7 +507,7 @@ left_4_0:
 	ii = jj;
 	for( ; ii<m; ii+=4)
 		{
-		kernel_dgemm_nt_4x4_vs_libc4c(jj, &dm1, C+ii, ldc, pU, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+		kernel_dgemm_nt_4x4_vs_libc4cc(jj, &dm1, C+ii, ldc, pU, &d1, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 		}
 
 	// pivot & factorize & solve

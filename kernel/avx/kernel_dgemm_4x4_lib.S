@@ -6479,10 +6479,10 @@
 
 
 //                                 1      2              3          4        5          6             7          8        9          10
-// void kernel_dgemm_nt_4x4_libc4c(int k, double *alpha, double *A, int lda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+// void kernel_dgemm_nt_4x4_libc4cc(int k, double *alpha, double *A, int lda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dgemm_nt_4x4_libc4c)
+	GLOB_FUN_START(kernel_dgemm_nt_4x4_libc4cc)
 
 	PROLOGUE
 
@@ -6538,17 +6538,17 @@
 
 	ret
 
-	FUN_END(kernel_dgemm_nt_4x4_libc4c)
+	FUN_END(kernel_dgemm_nt_4x4_libc4cc)
 
 
 
 
 
 //                                    1      2              3          4        5          6             7          8        9          10       11      12
-// void kernel_dgemm_nt_4x4_vs_libc4c(int k, double *alpha, double *A, int lda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+// void kernel_dgemm_nt_4x4_vs_libc4cc(int k, double *alpha, double *A, int lda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dgemm_nt_4x4_vs_libc4c)
+	GLOB_FUN_START(kernel_dgemm_nt_4x4_vs_libc4cc)
 
 	PROLOGUE
 
@@ -6610,7 +6610,7 @@
 
 	ret
 
-	FUN_END(kernel_dgemm_nt_4x4_vs_libc4c)
+	FUN_END(kernel_dgemm_nt_4x4_vs_libc4cc)
 
 
 
@@ -8025,10 +8025,10 @@
 
 
 //                                    1      2              3          4          5             6          7        8          9
-// void kernel_dtrmm_nt_rl_4x4_tran_lib44cc(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int ldd);
+// void kernel_dtrmm_nt_rl_4x4_tran_lib444c(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int ldd);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrmm_nt_rl_4x4_tran_lib44cc)
+	GLOB_FUN_START(kernel_dtrmm_nt_rl_4x4_tran_lib444c)
 
 	PROLOGUE
 
@@ -8108,17 +8108,17 @@
 
 	ret
 
-	FUN_END(kernel_dtrmm_nt_rl_4x4_tran_lib44cc)
+	FUN_END(kernel_dtrmm_nt_rl_4x4_tran_lib444c)
 
 
 
 
 
 //                                       1      2              3          4          5             6          7        8          9        10      11
-// void kernel_dtrmm_nt_rl_4x4_tran_vs_lib44cc(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int ldd, int m1, int n1);
+// void kernel_dtrmm_nt_rl_4x4_tran_vs_lib444c(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrmm_nt_rl_4x4_tran_vs_lib44cc)
+	GLOB_FUN_START(kernel_dtrmm_nt_rl_4x4_tran_vs_lib444c)
 
 	PROLOGUE
 
@@ -8204,7 +8204,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrmm_nt_rl_4x4_tran_vs_lib44cc)
+	FUN_END(kernel_dtrmm_nt_rl_4x4_tran_vs_lib444c)
 
 
 
@@ -8597,10 +8597,10 @@
 
 
 //                                         1      2              3          4          5        6             7          8          9
-// void kernel_dtrmm_nt_rl_4x4_tran_lib4ccc(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, double *D, int ldd);
+// void kernel_dtrmm_nt_rl_4x4_tran_lib4c4c(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, double *D, int ldd);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrmm_nt_rl_4x4_tran_lib4ccc)
+	GLOB_FUN_START(kernel_dtrmm_nt_rl_4x4_tran_lib4c4c)
 
 	PROLOGUE
 
@@ -8660,17 +8660,17 @@
 
 	ret
 
-	FUN_END(kernel_dtrmm_nt_rl_4x4_tran_lib4ccc)
+	FUN_END(kernel_dtrmm_nt_rl_4x4_tran_lib4c4c)
 
 
 
 
 
 //                                            1      2              3          4          5        6             7          8          9        10      11
-// void kernel_dtrmm_nt_rl_4x4_tran_vs_lib4ccc(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, double *D, int ldd, int m1, int n1);
+// void kernel_dtrmm_nt_rl_4x4_tran_vs_lib4c4c(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrmm_nt_rl_4x4_tran_vs_lib4ccc)
+	GLOB_FUN_START(kernel_dtrmm_nt_rl_4x4_tran_vs_lib4c4c)
 
 	PROLOGUE
 
@@ -8778,7 +8778,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrmm_nt_rl_4x4_tran_vs_lib4ccc)
+	FUN_END(kernel_dtrmm_nt_rl_4x4_tran_vs_lib4c4c)
 
 
 
@@ -9903,10 +9903,10 @@
 
 
 //                                         1      2          3          4        5             6          7          8          9        10
-// void kernel_dtrsm_nn_rl_inv_4x4_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E);
+// void kernel_dtrsm_nn_rl_inv_4x4_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nn_rl_inv_4x4_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nn_rl_inv_4x4_lib4c44c)
 	
 	PROLOGUE
 
@@ -9971,17 +9971,17 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nn_rl_inv_4x4_lib4c4c)
+	FUN_END(kernel_dtrsm_nn_rl_inv_4x4_lib4c44c)
 
 
 
 
 
 //                                            1      2          3          4        5             6          7          8          9        10                  11      12
-// void kernel_dtrsm_nn_rl_inv_4x4_vs_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E, int m1, int n1);
+// void kernel_dtrsm_nn_rl_inv_4x4_vs_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E, int m1, int n1);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nn_rl_inv_4x4_vs_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nn_rl_inv_4x4_vs_lib4c44c)
 	
 	PROLOGUE
 
@@ -10093,7 +10093,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nn_rl_inv_4x4_vs_lib4c4c)
+	FUN_END(kernel_dtrsm_nn_rl_inv_4x4_vs_lib4c44c)
 
 
 
@@ -10308,10 +10308,10 @@
 
 
 //                                         1      2          3          4        5             6          7          8          9
-// void kernel_dtrsm_nn_rl_one_4x4_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde);
+// void kernel_dtrsm_nn_rl_one_4x4_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nn_rl_one_4x4_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nn_rl_one_4x4_lib4c44c)
 	
 	PROLOGUE
 
@@ -10375,17 +10375,17 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nn_rl_one_4x4_lib4c4c)
+	FUN_END(kernel_dtrsm_nn_rl_one_4x4_lib4c44c)
 
 
 
 
 
 //                                            1      2          3          4        5             6          7          8          9        10      11
-// void kernel_dtrsm_nn_rl_one_4x4_vs_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, int m1, int n1);
+// void kernel_dtrsm_nn_rl_one_4x4_vs_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, int m1, int n1);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nn_rl_one_4x4_vs_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nn_rl_one_4x4_vs_lib4c44c)
 	
 	PROLOGUE
 
@@ -10496,7 +10496,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nn_rl_one_4x4_vs_lib4c4c)
+	FUN_END(kernel_dtrsm_nn_rl_one_4x4_vs_lib4c44c)
 
 
 
@@ -11020,10 +11020,10 @@
 
 
 //                                         1      2          3          4        5             6          7          8          9        10
-// void kernel_dtrsm_nt_rl_inv_4x4_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E);
+// void kernel_dtrsm_nt_rl_inv_4x4_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nt_rl_inv_4x4_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nt_rl_inv_4x4_lib4c44c)
 	
 	PROLOGUE
 
@@ -11088,17 +11088,17 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nt_rl_inv_4x4_lib4c4c)
+	FUN_END(kernel_dtrsm_nt_rl_inv_4x4_lib4c44c)
 
 
 
 
 
 //                                            1      2          3          4        5             6          7          8          9        10                  11      12
-// void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E, int m1, int n1);
+// void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E, int m1, int n1);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nt_rl_inv_4x4_vs_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nt_rl_inv_4x4_vs_lib4c44c)
 	
 	PROLOGUE
 
@@ -11210,7 +11210,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nt_rl_inv_4x4_vs_lib4c4c)
+	FUN_END(kernel_dtrsm_nt_rl_inv_4x4_vs_lib4c44c)
 
 
 
@@ -11578,10 +11578,10 @@
 
 
 //                                         1      2          3          4        5             6          7          8          9
-// void kernel_dtrsm_nt_rl_one_4x4_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde);
+// void kernel_dtrsm_nt_rl_one_4x4_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nt_rl_one_4x4_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nt_rl_one_4x4_lib4c44c)
 	
 	PROLOGUE
 
@@ -11645,17 +11645,17 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nt_rl_one_4x4_lib4c4c)
+	FUN_END(kernel_dtrsm_nt_rl_one_4x4_lib4c44c)
 
 
 
 
 
 //                                            1      2          3          4        5             6          7          8          9        10      11
-// void kernel_dtrsm_nt_rl_one_4x4_vs_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, int m1, int n1);
+// void kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, int m1, int n1);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nt_rl_one_4x4_vs_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c)
 	
 	PROLOGUE
 
@@ -11766,7 +11766,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nt_rl_one_4x4_vs_lib4c4c)
+	FUN_END(kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c)
 
 
 
@@ -11979,10 +11979,10 @@
 
 
 //                                         1      2          3          4        5             6          7          8          9        10
-// void kernel_dtrsm_nn_ru_inv_4x4_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E);
+// void kernel_dtrsm_nn_ru_inv_4x4_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nn_ru_inv_4x4_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nn_ru_inv_4x4_lib4c44c)
 	
 	PROLOGUE
 
@@ -12047,17 +12047,17 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nn_ru_inv_4x4_lib4c4c)
+	FUN_END(kernel_dtrsm_nn_ru_inv_4x4_lib4c44c)
 
 
 
 
 
 //                                            1      2          3          4        5             6          7          8          9        10                  11      12
-// void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E, int m1, int n1);
+// void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E, int m1, int n1);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nn_ru_inv_4x4_vs_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nn_ru_inv_4x4_vs_lib4c44c)
 	
 	PROLOGUE
 
@@ -12169,7 +12169,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nn_ru_inv_4x4_vs_lib4c4c)
+	FUN_END(kernel_dtrsm_nn_ru_inv_4x4_vs_lib4c44c)
 
 
 
@@ -12383,10 +12383,10 @@
 
 
 //                                         1      2          3          4        5             6          7          8          9
-// void kernel_dtrsm_nn_ru_one_4x4_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde);
+// void kernel_dtrsm_nn_ru_one_4x4_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nn_ru_one_4x4_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nn_ru_one_4x4_lib4c44c)
 	
 	PROLOGUE
 
@@ -12450,17 +12450,17 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nn_ru_one_4x4_lib4c4c)
+	FUN_END(kernel_dtrsm_nn_ru_one_4x4_lib4c44c)
 
 
 
 
 
 //                                            1      2          3          4        5             6          7          8          9        10      11
-// void kernel_dtrsm_nn_ru_one_4x4_vs_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, int m1, int n1);
+// void kernel_dtrsm_nn_ru_one_4x4_vs_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, int m1, int n1);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nn_ru_one_4x4_vs_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nn_ru_one_4x4_vs_lib4c44c)
 	
 	PROLOGUE
 
@@ -12571,7 +12571,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nn_ru_one_4x4_vs_lib4c4c)
+	FUN_END(kernel_dtrsm_nn_ru_one_4x4_vs_lib4c44c)
 
 
 
@@ -12938,10 +12938,10 @@
 
 
 //                                         1      2          3          4        5             6          7          8          9        10
-// void kernel_dtrsm_nt_ru_inv_4x4_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E);
+// void kernel_dtrsm_nt_ru_inv_4x4_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nt_ru_inv_4x4_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nt_ru_inv_4x4_lib4c44c)
 	
 	PROLOGUE
 
@@ -13006,17 +13006,17 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nt_ru_inv_4x4_lib4c4c)
+	FUN_END(kernel_dtrsm_nt_ru_inv_4x4_lib4c44c)
 
 
 
 
 
 //                                            1      2          3          4        5             6          7          8          9        10                  11      12
-// void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E, int m1, int n1);
+// void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, double *inv_diag_E, int m1, int n1);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nt_ru_inv_4x4_vs_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nt_ru_inv_4x4_vs_lib4c44c)
 	
 	PROLOGUE
 
@@ -13128,7 +13128,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nt_ru_inv_4x4_vs_lib4c4c)
+	FUN_END(kernel_dtrsm_nt_ru_inv_4x4_vs_lib4c44c)
 
 
 
@@ -13494,10 +13494,10 @@
 
 
 //                                         1      2          3          4        5             6          7          8          9
-// void kernel_dtrsm_nt_ru_one_4x4_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde);
+// void kernel_dtrsm_nt_ru_one_4x4_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nt_ru_one_4x4_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nt_ru_one_4x4_lib4c44c)
 	
 	PROLOGUE
 
@@ -13561,17 +13561,17 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nt_ru_one_4x4_lib4c4c)
+	FUN_END(kernel_dtrsm_nt_ru_one_4x4_lib4c44c)
 
 
 
 
 
 //                                            1      2          3          4        5             6          7          8          9        10      11
-// void kernel_dtrsm_nt_ru_one_4x4_vs_lib4c4c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, int m1, int n1);
+// void kernel_dtrsm_nt_ru_one_4x4_vs_lib4c44c(int k, double *A, double *B, int ldb, double *beta, double *C, double *D, double *E, int lde, int m1, int n1);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dtrsm_nt_ru_one_4x4_vs_lib4c4c)
+	GLOB_FUN_START(kernel_dtrsm_nt_ru_one_4x4_vs_lib4c44c)
 	
 	PROLOGUE
 
@@ -13682,7 +13682,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nt_ru_one_4x4_vs_lib4c4c)
+	FUN_END(kernel_dtrsm_nt_ru_one_4x4_vs_lib4c44c)
 
 
 

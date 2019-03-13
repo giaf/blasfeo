@@ -2171,8 +2171,8 @@ void kernel_dgetrf_pivot_12_vs_lib(int m, double *C, int ldc, double *pd, int* i
 	kernel_dpack_tn_4_vs_lib4(8, C+8*ldc, ldc, pU+8*sdu, n-8);
 
 	// solve top right block
-	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c4c(0, pU+8*sdu, C, ldc, &d1, pU+8*sdu, pU+8*sdu, C, ldc, n-8, m);
-	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c4c(4, pU+8*sdu, C+4, ldc, &d1, pU+8*sdu+4*ps, pU+8*sdu+4*ps, C+4+4*ldc, ldc, n-8, m-4);
+	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(0, pU+8*sdu, C, ldc, &d1, pU+8*sdu, pU+8*sdu, C, ldc, n-8, m);
+	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(4, pU+8*sdu, C+4, ldc, &d1, pU+8*sdu+4*ps, pU+8*sdu+4*ps, C+4+4*ldc, ldc, n-8, m-4);
 
 	// unpack
 	kernel_dunpack_nt_4_vs_lib4(8, pU+8*sdu, C+8*ldc, ldc, n-8);
@@ -2185,7 +2185,7 @@ void kernel_dgetrf_pivot_12_vs_lib(int m, double *C, int ldc, double *pd, int* i
 		// TODO larger kernels ???
 		for(; ii<m; ii+=4)
 			{
-			kernel_dgemm_nt_4x4_vs_libc4c(8, &dm1, C+ii, ldc, pU+8*sdu, &d1, C+ii+8*ldc, ldc, C+ii+8*ldc, ldc, m-ii, n-8);
+			kernel_dgemm_nt_4x4_vs_libc4cc(8, &dm1, C+ii, ldc, pU+8*sdu, &d1, C+ii+8*ldc, ldc, C+ii+8*ldc, ldc, m-ii, n-8);
 			}
 
 		// fact right column
@@ -3443,7 +3443,7 @@ void kernel_dgetrf_pivot_8_vs_lib(int m, double *C, int ldc, double *pd, int* ip
 	kernel_dpack_tn_4_vs_lib4(4, C+4*ldc, ldc, pU+4*sdu, n-4);
 
 	// solve top right block
-	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c4c(0, dummy, dummy, 0, &d1, pU+4*sdu, pU+4*sdu, C, ldc, n-4, m);
+	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(0, dummy, dummy, 0, &d1, pU+4*sdu, pU+4*sdu, C, ldc, n-4, m);
 
 	// unpack
 	kernel_dunpack_nt_4_vs_lib4(4, pU+4*sdu, C+4*ldc, ldc, n-4);
@@ -3456,7 +3456,7 @@ void kernel_dgetrf_pivot_8_vs_lib(int m, double *C, int ldc, double *pd, int* ip
 		// TODO larger kernels ???
 		for(; ii<m; ii+=4)
 			{
-			kernel_dgemm_nt_4x4_vs_libc4c(4, &dm1, C+ii, ldc, pU+4*sdu, &d1, C+ii+4*ldc, ldc, C+ii+4*ldc, ldc, m-ii, n-4);
+			kernel_dgemm_nt_4x4_vs_libc4cc(4, &dm1, C+ii, ldc, pU+4*sdu, &d1, C+ii+4*ldc, ldc, C+ii+4*ldc, ldc, m-ii, n-4);
 			}
 
 		// fact right column
