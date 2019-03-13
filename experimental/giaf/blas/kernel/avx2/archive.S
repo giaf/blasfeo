@@ -2204,20 +2204,20 @@ kernel_dgemm_nn_12x4_lib:
 
 
 //                                       1      2          3          4        5          6        7          8        9                   10      11
-// void kernel_dpotrf_nt_l_4x4_vs_lib4cc(int k, double *A, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *inv_diag_D, int m1, int n1);
+// void kernel_dpotrf_nt_l_4x4_vs_lib4ccc(int k, double *A, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *inv_diag_D, int m1, int n1);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dpotrf_nt_l_4x4_vs_lib4cc
-	.type kernel_dpotrf_nt_l_4x4_vs_lib4cc, @function
-kernel_dpotrf_nt_l_4x4_vs_lib4cc:
+	.globl kernel_dpotrf_nt_l_4x4_vs_lib4ccc
+	.type kernel_dpotrf_nt_l_4x4_vs_lib4ccc, @function
+kernel_dpotrf_nt_l_4x4_vs_lib4ccc:
 #elif defined(OS_MAC)
-	.globl _kernel_dpotrf_nt_l_4x4_vs_lib4cc
-_kernel_dpotrf_nt_l_4x4_vs_lib4cc:
+	.globl _kernel_dpotrf_nt_l_4x4_vs_lib4ccc
+_kernel_dpotrf_nt_l_4x4_vs_lib4ccc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dpotrf_nt_l_4x4_vs_lib4cc
-	.def kernel_dpotrf_nt_l_4x4_vs_lib4cc; .scl 2; .type 32; .endef
-kernel_dpotrf_nt_l_4x4_vs_lib4cc:
+	.globl kernel_dpotrf_nt_l_4x4_vs_lib4ccc
+	.def kernel_dpotrf_nt_l_4x4_vs_lib4ccc; .scl 2; .type 32; .endef
+kernel_dpotrf_nt_l_4x4_vs_lib4ccc:
 #endif
 	
 	PROLOGUE
@@ -2308,7 +2308,7 @@ kernel_dpotrf_nt_l_4x4_vs_lib4cc:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dpotrf_nt_l_4x4_vs_lib4cc, .-kernel_dpotrf_nt_l_4x4_vs_lib4cc
+	.size	kernel_dpotrf_nt_l_4x4_vs_lib4ccc, .-kernel_dpotrf_nt_l_4x4_vs_lib4ccc
 #endif
 
 
@@ -2316,20 +2316,20 @@ kernel_dpotrf_nt_l_4x4_vs_lib4cc:
 
 
 //                                    1      2          3          4        5          6        7          8        9
-// void kernel_dpotrf_nt_l_4x4_lib4cc(int k, double *A, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
+// void kernel_dpotrf_nt_l_4x4_lib4ccc(int k, double *A, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dpotrf_nt_l_4x4_lib4cc
-	.type kernel_dpotrf_nt_l_4x4_lib4cc, @function
-kernel_dpotrf_nt_l_4x4_lib4cc:
+	.globl kernel_dpotrf_nt_l_4x4_lib4ccc
+	.type kernel_dpotrf_nt_l_4x4_lib4ccc, @function
+kernel_dpotrf_nt_l_4x4_lib4ccc:
 #elif defined(OS_MAC)
-	.globl _kernel_dpotrf_nt_l_4x4_lib4cc
-_kernel_dpotrf_nt_l_4x4_lib4cc:
+	.globl _kernel_dpotrf_nt_l_4x4_lib4ccc
+_kernel_dpotrf_nt_l_4x4_lib4ccc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dpotrf_nt_l_4x4_lib4cc
-	.def kernel_dpotrf_nt_l_4x4_lib4cc; .scl 2; .type 32; .endef
-kernel_dpotrf_nt_l_4x4_lib4cc:
+	.globl kernel_dpotrf_nt_l_4x4_lib4ccc
+	.def kernel_dpotrf_nt_l_4x4_lib4ccc; .scl 2; .type 32; .endef
+kernel_dpotrf_nt_l_4x4_lib4ccc:
 #endif
 	
 	PROLOGUE
@@ -2416,7 +2416,7 @@ kernel_dpotrf_nt_l_4x4_lib4cc:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dpotrf_nt_l_4x4_lib4cc, .-kernel_dpotrf_nt_l_4x4_lib4cc
+	.size	kernel_dpotrf_nt_l_4x4_lib4ccc, .-kernel_dpotrf_nt_l_4x4_lib4ccc
 #endif
 
 
@@ -2424,20 +2424,20 @@ kernel_dpotrf_nt_l_4x4_lib4cc:
 
 
 //                                    1      2          3        4          5        6          7        8          9        10
-// void kernel_dpotrf_nt_l_8x4_lib4cc(int k, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
+// void kernel_dpotrf_nt_l_8x4_lib4ccc(int k, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dpotrf_nt_l_8x4_lib4cc
-	.type kernel_dpotrf_nt_l_8x4_lib4cc, @function
-kernel_dpotrf_nt_l_8x4_lib4cc:
+	.globl kernel_dpotrf_nt_l_8x4_lib4ccc
+	.type kernel_dpotrf_nt_l_8x4_lib4ccc, @function
+kernel_dpotrf_nt_l_8x4_lib4ccc:
 #elif defined(OS_MAC)
-	.globl _kernel_dpotrf_nt_l_8x4_lib4cc
-_kernel_dpotrf_nt_l_8x4_lib4cc:
+	.globl _kernel_dpotrf_nt_l_8x4_lib4ccc
+_kernel_dpotrf_nt_l_8x4_lib4ccc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dpotrf_nt_l_8x4_lib4cc
-	.def kernel_dpotrf_nt_l_8x4_lib4cc; .scl 2; .type 32; .endef
-kernel_dpotrf_nt_l_8x4_lib4cc:
+	.globl kernel_dpotrf_nt_l_8x4_lib4ccc
+	.def kernel_dpotrf_nt_l_8x4_lib4ccc; .scl 2; .type 32; .endef
+kernel_dpotrf_nt_l_8x4_lib4ccc:
 #endif
 	
 	PROLOGUE
@@ -2530,7 +2530,7 @@ kernel_dpotrf_nt_l_8x4_lib4cc:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dpotrf_nt_l_8x4_lib4cc, .-kernel_dpotrf_nt_l_8x4_lib4cc
+	.size	kernel_dpotrf_nt_l_8x4_lib4ccc, .-kernel_dpotrf_nt_l_8x4_lib4ccc
 #endif
 
 
@@ -2538,20 +2538,20 @@ kernel_dpotrf_nt_l_8x4_lib4cc:
 
 
 //                                     1      2          3        4          5        6          7        8          9        10
-// void kernel_dpotrf_nt_l_12x4_lib4cc(int k, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
+// void kernel_dpotrf_nt_l_12x4_lib4ccc(int k, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dpotrf_nt_l_12x4_lib4cc
-	.type kernel_dpotrf_nt_l_12x4_lib4cc, @function
-kernel_dpotrf_nt_l_12x4_lib4cc:
+	.globl kernel_dpotrf_nt_l_12x4_lib4ccc
+	.type kernel_dpotrf_nt_l_12x4_lib4ccc, @function
+kernel_dpotrf_nt_l_12x4_lib4ccc:
 #elif defined(OS_MAC)
-	.globl _kernel_dpotrf_nt_l_12x4_lib4cc
-_kernel_dpotrf_nt_l_12x4_lib4cc:
+	.globl _kernel_dpotrf_nt_l_12x4_lib4ccc
+_kernel_dpotrf_nt_l_12x4_lib4ccc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dpotrf_nt_l_12x4_lib4cc
-	.def kernel_dpotrf_nt_l_12x4_lib4cc; .scl 2; .type 32; .endef
-kernel_dpotrf_nt_l_12x4_lib4cc:
+	.globl kernel_dpotrf_nt_l_12x4_lib4ccc
+	.def kernel_dpotrf_nt_l_12x4_lib4ccc; .scl 2; .type 32; .endef
+kernel_dpotrf_nt_l_12x4_lib4ccc:
 #endif
 	
 	PROLOGUE
@@ -2648,7 +2648,7 @@ kernel_dpotrf_nt_l_12x4_lib4cc:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dpotrf_nt_l_12x4_lib4cc, .-kernel_dpotrf_nt_l_12x4_lib4cc
+	.size	kernel_dpotrf_nt_l_12x4_lib4ccc, .-kernel_dpotrf_nt_l_12x4_lib4ccc
 #endif
 
 

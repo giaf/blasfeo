@@ -3482,20 +3482,20 @@ inner_store_l_12x4_vs_lib:
 
 
 //                                  1      2              3          4        5          6        7             8          9        10         11
-// void kernel_dgemm_nt_12x4_lib4cc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+// void kernel_dgemm_nt_12x4_lib4ccc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dgemm_nt_12x4_lib4cc
-	.type kernel_dgemm_nt_12x4_lib4cc, @function
-kernel_dgemm_nt_12x4_lib4cc:
+	.globl kernel_dgemm_nt_12x4_lib4ccc
+	.type kernel_dgemm_nt_12x4_lib4ccc, @function
+kernel_dgemm_nt_12x4_lib4ccc:
 #elif defined(OS_MAC)
-	.globl _kernel_dgemm_nt_12x4_lib4cc
-_kernel_dgemm_nt_12x4_lib4cc:
+	.globl _kernel_dgemm_nt_12x4_lib4ccc
+_kernel_dgemm_nt_12x4_lib4ccc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dgemm_nt_12x4_lib4cc
-	.def kernel_dgemm_nt_12x4_lib4cc; .scl 2; .type 32; .endef
-kernel_dgemm_nt_12x4_lib4cc:
+	.globl kernel_dgemm_nt_12x4_lib4ccc
+	.def kernel_dgemm_nt_12x4_lib4ccc; .scl 2; .type 32; .endef
+kernel_dgemm_nt_12x4_lib4ccc:
 #endif
 
 	PROLOGUE
@@ -3578,7 +3578,7 @@ kernel_dgemm_nt_12x4_lib4cc:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dgemm_nt_12x4_lib4cc, .-kernel_dgemm_nt_12x4_lib4cc
+	.size	kernel_dgemm_nt_12x4_lib4ccc, .-kernel_dgemm_nt_12x4_lib4ccc
 #endif
 
 
@@ -3586,20 +3586,20 @@ kernel_dgemm_nt_12x4_lib4cc:
 
 
 //                                     1      2              3          4        5          6        7             8          9        10         11       12      13
-// void kernel_dgemm_nt_12x4_vs_lib4cc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+// void kernel_dgemm_nt_12x4_vs_lib4ccc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dgemm_nt_12x4_vs_lib4cc
-	.type kernel_dgemm_nt_12x4_vs_lib4cc, @function
-kernel_dgemm_nt_12x4_vs_lib4cc:
+	.globl kernel_dgemm_nt_12x4_vs_lib4ccc
+	.type kernel_dgemm_nt_12x4_vs_lib4ccc, @function
+kernel_dgemm_nt_12x4_vs_lib4ccc:
 #elif defined(OS_MAC)
-	.globl _kernel_dgemm_nt_12x4_vs_lib4cc
-_kernel_dgemm_nt_12x4_vs_lib4cc:
+	.globl _kernel_dgemm_nt_12x4_vs_lib4ccc
+_kernel_dgemm_nt_12x4_vs_lib4ccc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dgemm_nt_12x4_vs_lib4cc
-	.def kernel_dgemm_nt_12x4_vs_lib4cc; .scl 2; .type 32; .endef
-kernel_dgemm_nt_12x4_vs_lib4cc:
+	.globl kernel_dgemm_nt_12x4_vs_lib4ccc
+	.def kernel_dgemm_nt_12x4_vs_lib4ccc; .scl 2; .type 32; .endef
+kernel_dgemm_nt_12x4_vs_lib4ccc:
 #endif
 
 	PROLOGUE
@@ -3742,7 +3742,7 @@ kernel_dgemm_nt_12x4_vs_lib4cc:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dgemm_nt_12x4_vs_lib4cc, .-kernel_dgemm_nt_12x4_vs_lib4cc
+	.size	kernel_dgemm_nt_12x4_vs_lib4ccc, .-kernel_dgemm_nt_12x4_vs_lib4ccc
 #endif
 
 
@@ -3750,20 +3750,20 @@ kernel_dgemm_nt_12x4_vs_lib4cc:
 
 
 //                                  1      2              3          4        5          6             7          8        9          10
-// void kernel_dgemm_nt_12x4_lib44c(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+// void kernel_dgemm_nt_12x4_lib44cc(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dgemm_nt_12x4_lib44c
-	.type kernel_dgemm_nt_12x4_lib44c, @function
-kernel_dgemm_nt_12x4_lib44c:
+	.globl kernel_dgemm_nt_12x4_lib44cc
+	.type kernel_dgemm_nt_12x4_lib44cc, @function
+kernel_dgemm_nt_12x4_lib44cc:
 #elif defined(OS_MAC)
-	.globl _kernel_dgemm_nt_12x4_lib44c
-_kernel_dgemm_nt_12x4_lib44c:
+	.globl _kernel_dgemm_nt_12x4_lib44cc
+_kernel_dgemm_nt_12x4_lib44cc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dgemm_nt_12x4_lib44c
-	.def kernel_dgemm_nt_12x4_lib44c; .scl 2; .type 32; .endef
-kernel_dgemm_nt_12x4_lib44c:
+	.globl kernel_dgemm_nt_12x4_lib44cc
+	.def kernel_dgemm_nt_12x4_lib44cc; .scl 2; .type 32; .endef
+kernel_dgemm_nt_12x4_lib44cc:
 #endif
 
 	PROLOGUE
@@ -3844,7 +3844,7 @@ kernel_dgemm_nt_12x4_lib44c:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dgemm_nt_12x4_lib44c, .-kernel_dgemm_nt_12x4_lib44c
+	.size	kernel_dgemm_nt_12x4_lib44cc, .-kernel_dgemm_nt_12x4_lib44cc
 #endif
 
 
@@ -3852,20 +3852,20 @@ kernel_dgemm_nt_12x4_lib44c:
 
 
 //                                     1      2              3          4        5          6             7          8        9          10       11      12
-// void kernel_dgemm_nt_12x4_vs_lib44c(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+// void kernel_dgemm_nt_12x4_vs_lib44cc(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dgemm_nt_12x4_vs_lib44c
-	.type kernel_dgemm_nt_12x4_vs_lib44c, @function
-kernel_dgemm_nt_12x4_vs_lib44c:
+	.globl kernel_dgemm_nt_12x4_vs_lib44cc
+	.type kernel_dgemm_nt_12x4_vs_lib44cc, @function
+kernel_dgemm_nt_12x4_vs_lib44cc:
 #elif defined(OS_MAC)
-	.globl _kernel_dgemm_nt_12x4_vs_lib44c
-_kernel_dgemm_nt_12x4_vs_lib44c:
+	.globl _kernel_dgemm_nt_12x4_vs_lib44cc
+_kernel_dgemm_nt_12x4_vs_lib44cc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dgemm_nt_12x4_vs_lib44c
-	.def kernel_dgemm_nt_12x4_vs_lib44c; .scl 2; .type 32; .endef
-kernel_dgemm_nt_12x4_vs_lib44c:
+	.globl kernel_dgemm_nt_12x4_vs_lib44cc
+	.def kernel_dgemm_nt_12x4_vs_lib44cc; .scl 2; .type 32; .endef
+kernel_dgemm_nt_12x4_vs_lib44cc:
 #endif
 
 	PROLOGUE
@@ -3950,7 +3950,7 @@ kernel_dgemm_nt_12x4_vs_lib44c:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dgemm_nt_12x4_vs_lib44c, .-kernel_dgemm_nt_12x4_vs_lib44c
+	.size	kernel_dgemm_nt_12x4_vs_lib44cc, .-kernel_dgemm_nt_12x4_vs_lib44cc
 #endif
 
 
@@ -3958,20 +3958,20 @@ kernel_dgemm_nt_12x4_vs_lib44c:
 
 
 //                                 1      2              3          4        5          6        7             8          9        10         11
-// void kernel_dgemm_nn_12x4_lib4cc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+// void kernel_dgemm_nn_12x4_lib4ccc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dgemm_nn_12x4_lib4cc
-	.type kernel_dgemm_nn_12x4_lib4cc, @function
-kernel_dgemm_nn_12x4_lib4cc:
+	.globl kernel_dgemm_nn_12x4_lib4ccc
+	.type kernel_dgemm_nn_12x4_lib4ccc, @function
+kernel_dgemm_nn_12x4_lib4ccc:
 #elif defined(OS_MAC)
-	.globl _kernel_dgemm_nn_12x4_lib4cc
-_kernel_dgemm_nn_12x4_lib4cc:
+	.globl _kernel_dgemm_nn_12x4_lib4ccc
+_kernel_dgemm_nn_12x4_lib4ccc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dgemm_nn_12x4_lib4cc
-	.def kernel_dgemm_nn_12x4_lib4cc; .scl 2; .type 32; .endef
-kernel_dgemm_nn_12x4_lib4cc:
+	.globl kernel_dgemm_nn_12x4_lib4ccc
+	.def kernel_dgemm_nn_12x4_lib4ccc; .scl 2; .type 32; .endef
+kernel_dgemm_nn_12x4_lib4ccc:
 #endif
 
 	PROLOGUE
@@ -4054,7 +4054,7 @@ kernel_dgemm_nn_12x4_lib4cc:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dgemm_nn_12x4_lib4cc, .-kernel_dgemm_nn_12x4_lib4cc
+	.size	kernel_dgemm_nn_12x4_lib4ccc, .-kernel_dgemm_nn_12x4_lib4ccc
 #endif
 
 
@@ -4062,20 +4062,20 @@ kernel_dgemm_nn_12x4_lib4cc:
 
 
 //                                    1      2              3          4        5          6        7             8          9        10         11        12      13
-// void kernel_dgemm_nn_12x4_vs_lib4cc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+// void kernel_dgemm_nn_12x4_vs_lib4ccc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dgemm_nn_12x4_vs_lib4cc
-	.type kernel_dgemm_nn_12x4_vs_lib4cc, @function
-kernel_dgemm_nn_12x4_vs_lib4cc:
+	.globl kernel_dgemm_nn_12x4_vs_lib4ccc
+	.type kernel_dgemm_nn_12x4_vs_lib4ccc, @function
+kernel_dgemm_nn_12x4_vs_lib4ccc:
 #elif defined(OS_MAC)
-	.globl _kernel_dgemm_nn_12x4_vs_lib4cc
-_kernel_dgemm_nn_12x4_vs_lib4cc:
+	.globl _kernel_dgemm_nn_12x4_vs_lib4ccc
+_kernel_dgemm_nn_12x4_vs_lib4ccc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dgemm_nn_12x4_vs_lib4cc
-	.def kernel_dgemm_nn_12x4_vs_lib4cc; .scl 2; .type 32; .endef
-kernel_dgemm_nn_12x4_vs_lib4cc:
+	.globl kernel_dgemm_nn_12x4_vs_lib4ccc
+	.def kernel_dgemm_nn_12x4_vs_lib4ccc; .scl 2; .type 32; .endef
+kernel_dgemm_nn_12x4_vs_lib4ccc:
 #endif
 
 	PROLOGUE
@@ -4218,7 +4218,7 @@ kernel_dgemm_nn_12x4_vs_lib4cc:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dgemm_nn_12x4_vs_lib4cc, .-kernel_dgemm_nn_12x4_vs_lib4cc
+	.size	kernel_dgemm_nn_12x4_vs_lib4ccc, .-kernel_dgemm_nn_12x4_vs_lib4ccc
 #endif
 
 
@@ -4226,20 +4226,20 @@ kernel_dgemm_nn_12x4_vs_lib4cc:
 
 
 //                                     1      2          3        4          5          6        7          8        9
-// void kernel_dpotrf_nt_l_12x4_lib44c(int k, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
+// void kernel_dpotrf_nt_l_12x4_lib44cc(int k, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dpotrf_nt_l_12x4_lib44c
-	.type kernel_dpotrf_nt_l_12x4_lib44c, @function
-kernel_dpotrf_nt_l_12x4_lib44c:
+	.globl kernel_dpotrf_nt_l_12x4_lib44cc
+	.type kernel_dpotrf_nt_l_12x4_lib44cc, @function
+kernel_dpotrf_nt_l_12x4_lib44cc:
 #elif defined(OS_MAC)
-	.globl _kernel_dpotrf_nt_l_12x4_lib44c
-_kernel_dpotrf_nt_l_12x4_lib44c:
+	.globl _kernel_dpotrf_nt_l_12x4_lib44cc
+_kernel_dpotrf_nt_l_12x4_lib44cc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dpotrf_nt_l_12x4_lib44c
-	.def kernel_dpotrf_nt_l_12x4_lib44c; .scl 2; .type 32; .endef
-kernel_dpotrf_nt_l_12x4_lib44c:
+	.globl kernel_dpotrf_nt_l_12x4_lib44cc
+	.def kernel_dpotrf_nt_l_12x4_lib44cc; .scl 2; .type 32; .endef
+kernel_dpotrf_nt_l_12x4_lib44cc:
 #endif
 	
 	PROLOGUE
@@ -4334,7 +4334,7 @@ kernel_dpotrf_nt_l_12x4_lib44c:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dpotrf_nt_l_12x4_lib44c, .-kernel_dpotrf_nt_l_12x4_lib44c
+	.size	kernel_dpotrf_nt_l_12x4_lib44cc, .-kernel_dpotrf_nt_l_12x4_lib44cc
 #endif
 
 
@@ -4342,20 +4342,20 @@ kernel_dpotrf_nt_l_12x4_lib44c:
 
 
 //                                        1      2          3        4          5          6        7          8        9                   10      11
-// void kernel_dpotrf_nt_l_12x4_vs_lib44c(int k, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D, int m1, int n1);
+// void kernel_dpotrf_nt_l_12x4_vs_lib44cc(int k, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D, int m1, int n1);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dpotrf_nt_l_12x4_vs_lib44c
-	.type kernel_dpotrf_nt_l_12x4_vs_lib44c, @function
-kernel_dpotrf_nt_l_12x4_vs_lib44c:
+	.globl kernel_dpotrf_nt_l_12x4_vs_lib44cc
+	.type kernel_dpotrf_nt_l_12x4_vs_lib44cc, @function
+kernel_dpotrf_nt_l_12x4_vs_lib44cc:
 #elif defined(OS_MAC)
-	.globl _kernel_dpotrf_nt_l_12x4_vs_lib44c
-_kernel_dpotrf_nt_l_12x4_vs_lib44c:
+	.globl _kernel_dpotrf_nt_l_12x4_vs_lib44cc
+_kernel_dpotrf_nt_l_12x4_vs_lib44cc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dpotrf_nt_l_12x4_vs_lib44c
-	.def kernel_dpotrf_nt_l_12x4_vs_lib44c; .scl 2; .type 32; .endef
-kernel_dpotrf_nt_l_12x4_vs_lib44c:
+	.globl kernel_dpotrf_nt_l_12x4_vs_lib44cc
+	.def kernel_dpotrf_nt_l_12x4_vs_lib44cc; .scl 2; .type 32; .endef
+kernel_dpotrf_nt_l_12x4_vs_lib44cc:
 #endif
 	
 	PROLOGUE
@@ -4454,7 +4454,7 @@ kernel_dpotrf_nt_l_12x4_vs_lib44c:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dpotrf_nt_l_12x4_vs_lib44c, .-kernel_dpotrf_nt_l_12x4_vs_lib44c
+	.size	kernel_dpotrf_nt_l_12x4_vs_lib44cc, .-kernel_dpotrf_nt_l_12x4_vs_lib44cc
 #endif
 
 
@@ -4462,20 +4462,20 @@ kernel_dpotrf_nt_l_12x4_vs_lib44c:
 
 
 //                                         1      2          3        4          5        6          7        8          9        10         11       12
-// void kernel_dtrsm_nt_rl_inv_12x4_lib4cc(int k, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
+// void kernel_dtrsm_nt_rl_inv_12x4_lib4ccc(int k, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dtrsm_nt_rl_inv_12x4_lib4cc
-	.type kernel_dtrsm_nt_rl_inv_12x4_lib4cc, @function
-kernel_dtrsm_nt_rl_inv_12x4_lib4cc:
+	.globl kernel_dtrsm_nt_rl_inv_12x4_lib4ccc
+	.type kernel_dtrsm_nt_rl_inv_12x4_lib4ccc, @function
+kernel_dtrsm_nt_rl_inv_12x4_lib4ccc:
 #elif defined(OS_MAC)
-	.globl _kernel_dtrsm_nt_rl_inv_12x4_lib4cc
-_kernel_dtrsm_nt_rl_inv_12x4_lib4cc:
+	.globl _kernel_dtrsm_nt_rl_inv_12x4_lib4ccc
+_kernel_dtrsm_nt_rl_inv_12x4_lib4ccc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dtrsm_nt_rl_inv_12x4_lib4cc
-	.def kernel_dtrsm_nt_rl_inv_12x4_lib4cc; .scl 2; .type 32; .endef
-kernel_dtrsm_nt_rl_inv_12x4_lib4cc:
+	.globl kernel_dtrsm_nt_rl_inv_12x4_lib4ccc
+	.def kernel_dtrsm_nt_rl_inv_12x4_lib4ccc; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_rl_inv_12x4_lib4ccc:
 #endif
 	
 	PROLOGUE
@@ -4574,7 +4574,7 @@ kernel_dtrsm_nt_rl_inv_12x4_lib4cc:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dtrsm_nt_rl_inv_12x4_lib4cc, .-kernel_dtrsm_nt_rl_inv_12x4_lib4cc
+	.size	kernel_dtrsm_nt_rl_inv_12x4_lib4ccc, .-kernel_dtrsm_nt_rl_inv_12x4_lib4ccc
 #endif
 
 
@@ -4582,20 +4582,20 @@ kernel_dtrsm_nt_rl_inv_12x4_lib4cc:
 
 
 //                                           1      2          3        4          5        6          7        8          9        10         11       12                  13      14
-// void kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cc(int k, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1);
+// void kernel_dtrsm_nt_rl_inv_12x4_vs_lib4ccc(int k, double *A, int sda, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cc
-	.type kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cc, @function
-kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cc:
+	.globl kernel_dtrsm_nt_rl_inv_12x4_vs_lib4ccc
+	.type kernel_dtrsm_nt_rl_inv_12x4_vs_lib4ccc, @function
+kernel_dtrsm_nt_rl_inv_12x4_vs_lib4ccc:
 #elif defined(OS_MAC)
-	.globl _kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cc
-_kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cc:
+	.globl _kernel_dtrsm_nt_rl_inv_12x4_vs_lib4ccc
+_kernel_dtrsm_nt_rl_inv_12x4_vs_lib4ccc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cc
-	.def kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cc; .scl 2; .type 32; .endef
-kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cc:
+	.globl kernel_dtrsm_nt_rl_inv_12x4_vs_lib4ccc
+	.def kernel_dtrsm_nt_rl_inv_12x4_vs_lib4ccc; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_rl_inv_12x4_vs_lib4ccc:
 #endif
 	
 	PROLOGUE
@@ -4755,7 +4755,7 @@ kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cc:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cc, .-kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cc
+	.size	kernel_dtrsm_nt_rl_inv_12x4_vs_lib4ccc, .-kernel_dtrsm_nt_rl_inv_12x4_vs_lib4ccc
 #endif
 
 
@@ -4763,20 +4763,20 @@ kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cc:
 
 
 //                                         1      2          3        4          5          6        7          8        9          10       11
-// void kernel_dtrsm_nt_rl_inv_12x4_lib44c(int k, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
+// void kernel_dtrsm_nt_rl_inv_12x4_lib44cc(int k, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dtrsm_nt_rl_inv_12x4_lib44c
-	.type kernel_dtrsm_nt_rl_inv_12x4_lib44c, @function
-kernel_dtrsm_nt_rl_inv_12x4_lib44c:
+	.globl kernel_dtrsm_nt_rl_inv_12x4_lib44cc
+	.type kernel_dtrsm_nt_rl_inv_12x4_lib44cc, @function
+kernel_dtrsm_nt_rl_inv_12x4_lib44cc:
 #elif defined(OS_MAC)
-	.globl _kernel_dtrsm_nt_rl_inv_12x4_lib44c
-_kernel_dtrsm_nt_rl_inv_12x4_lib44c:
+	.globl _kernel_dtrsm_nt_rl_inv_12x4_lib44cc
+_kernel_dtrsm_nt_rl_inv_12x4_lib44cc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dtrsm_nt_rl_inv_12x4_lib44c
-	.def kernel_dtrsm_nt_rl_inv_12x4_lib44c; .scl 2; .type 32; .endef
-kernel_dtrsm_nt_rl_inv_12x4_lib44c:
+	.globl kernel_dtrsm_nt_rl_inv_12x4_lib44cc
+	.def kernel_dtrsm_nt_rl_inv_12x4_lib44cc; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_rl_inv_12x4_lib44cc:
 #endif
 	
 	PROLOGUE
@@ -4873,7 +4873,7 @@ kernel_dtrsm_nt_rl_inv_12x4_lib44c:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dtrsm_nt_rl_inv_12x4_lib44c, .-kernel_dtrsm_nt_rl_inv_12x4_lib44c
+	.size	kernel_dtrsm_nt_rl_inv_12x4_lib44cc, .-kernel_dtrsm_nt_rl_inv_12x4_lib44cc
 #endif
 
 
@@ -4881,20 +4881,20 @@ kernel_dtrsm_nt_rl_inv_12x4_lib44c:
 
 
 //                                           1      2          3        4          5          6        7          8        9          10       11                 12      13
-// void kernel_dtrsm_nt_rl_inv_12x4_vs_lib44c(int k, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1);
+// void kernel_dtrsm_nt_rl_inv_12x4_vs_lib44cc(int k, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dtrsm_nt_rl_inv_12x4_vs_lib44c
-	.type kernel_dtrsm_nt_rl_inv_12x4_vs_lib44c, @function
-kernel_dtrsm_nt_rl_inv_12x4_vs_lib44c:
+	.globl kernel_dtrsm_nt_rl_inv_12x4_vs_lib44cc
+	.type kernel_dtrsm_nt_rl_inv_12x4_vs_lib44cc, @function
+kernel_dtrsm_nt_rl_inv_12x4_vs_lib44cc:
 #elif defined(OS_MAC)
-	.globl _kernel_dtrsm_nt_rl_inv_12x4_vs_lib44c
-_kernel_dtrsm_nt_rl_inv_12x4_vs_lib44c:
+	.globl _kernel_dtrsm_nt_rl_inv_12x4_vs_lib44cc
+_kernel_dtrsm_nt_rl_inv_12x4_vs_lib44cc:
 #elif defined(OS_WINDOWS)
-	.globl kernel_dtrsm_nt_rl_inv_12x4_vs_lib44c
-	.def kernel_dtrsm_nt_rl_inv_vs_12x4_lib44c; .scl 2; .type 32; .endef
-kernel_dtrsm_nt_rl_inv_12x4_vs_lib44c:
+	.globl kernel_dtrsm_nt_rl_inv_12x4_vs_lib44cc
+	.def kernel_dtrsm_nt_rl_inv_vs_12x4_lib44cc; .scl 2; .type 32; .endef
+kernel_dtrsm_nt_rl_inv_12x4_vs_lib44cc:
 #endif
 	
 	PROLOGUE
@@ -4996,7 +4996,7 @@ kernel_dtrsm_nt_rl_inv_12x4_vs_lib44c:
 	ret
 
 #if defined(OS_LINUX)
-	.size	kernel_dtrsm_nt_rl_inv_12x4_vs_lib44c, .-kernel_dtrsm_nt_rl_inv_12x4_vs_lib44c
+	.size	kernel_dtrsm_nt_rl_inv_12x4_vs_lib44cc, .-kernel_dtrsm_nt_rl_inv_12x4_vs_lib44cc
 #endif
 
 

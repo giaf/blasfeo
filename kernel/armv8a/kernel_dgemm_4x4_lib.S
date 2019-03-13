@@ -4296,10 +4296,10 @@
 
 
 //                                 w0        x1             x2         x3         x4            x5         w6       x7         sp+0
-// void kernel_dgemm_nt_4x4_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
+// void kernel_dgemm_nt_4x4_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
 
 	.align	4
-	GLOB_FUN_START(kernel_dgemm_nt_4x4_lib44c)
+	GLOB_FUN_START(kernel_dgemm_nt_4x4_lib44cc)
 	
 
 
@@ -4358,17 +4358,17 @@
 
 	ret
 
-	FUN_END(kernel_dgemm_nt_4x4_lib44c)
+	FUN_END(kernel_dgemm_nt_4x4_lib44cc)
 
 
 
 
 
 //                                    w0        x1             x2         x3         x4            x5         w6       x7         sp+0     sp+8    sp+16
-// void kernel_dgemm_nt_4x4_vs_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+// void kernel_dgemm_nt_4x4_vs_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 
 	.align	4
-	GLOB_FUN_START(kernel_dgemm_nt_4x4_vs_lib44c)
+	GLOB_FUN_START(kernel_dgemm_nt_4x4_vs_lib44cc)
 	
 
 
@@ -4431,17 +4431,17 @@
 
 	ret
 
-	FUN_END(kernel_dgemm_nt_4x4_vs_lib44c)
+	FUN_END(kernel_dgemm_nt_4x4_vs_lib44cc)
 
 
 
 
 
 //                                 w0        x1             x2         x3         x4       x5            w6         x7       sp+0       sp+8
-// void kernel_dgemm_nt_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+// void kernel_dgemm_nt_4x4_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 
 	.align	4
-	GLOB_FUN_START(kernel_dgemm_nt_4x4_lib4cc)
+	GLOB_FUN_START(kernel_dgemm_nt_4x4_lib4ccc)
 	
 
 
@@ -4502,7 +4502,7 @@
 
 	ret
 
-	FUN_END(kernel_dgemm_nt_4x4_lib4cc)
+	FUN_END(kernel_dgemm_nt_4x4_lib4ccc)
 
 
 
@@ -4510,10 +4510,10 @@
 
 
 //                                    w0        x1             x2         x3         x4       x5            w6         x7       sp+0       sp+8     sp+16   sp+24
-// void kernel_dgemm_nt_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+// void kernel_dgemm_nt_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 
 	.align	4
-	GLOB_FUN_START(kernel_dgemm_nt_4x4_vs_lib4cc)
+	GLOB_FUN_START(kernel_dgemm_nt_4x4_vs_lib4ccc)
 	
 
 
@@ -4622,7 +4622,7 @@
 
 	ret
 
-	FUN_END(kernel_dgemm_nt_4x4_vs_lib4cc)
+	FUN_END(kernel_dgemm_nt_4x4_vs_lib4ccc)
 
 
 
@@ -4630,10 +4630,10 @@
 
 
 //                                 w0        x1             x2         x3         x4       x5            w6         x7       sp+0       sp+8
-// void kernel_dgemm_nn_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+// void kernel_dgemm_nn_4x4_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 
 	.align	4
-	GLOB_FUN_START(kernel_dgemm_nn_4x4_lib4cc)
+	GLOB_FUN_START(kernel_dgemm_nn_4x4_lib4ccc)
 	
 
 
@@ -4694,17 +4694,17 @@
 
 	ret
 
-	FUN_END(kernel_dgemm_nn_4x4_lib4cc)
+	FUN_END(kernel_dgemm_nn_4x4_lib4ccc)
 
 
 
 
 
 //                                    w0        x1             x2         x3         x4       x5            w6         x7       sp+0       sp+8     sp+16   sp+24
-// void kernel_dgemm_nn_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+// void kernel_dgemm_nn_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 
 	.align	4
-	GLOB_FUN_START(kernel_dgemm_nn_4x4_vs_lib4cc)
+	GLOB_FUN_START(kernel_dgemm_nn_4x4_vs_lib4ccc)
 	
 
 
@@ -4813,17 +4813,17 @@
 
 	ret
 
-	FUN_END(kernel_dgemm_nn_4x4_vs_lib4cc)
+	FUN_END(kernel_dgemm_nn_4x4_vs_lib4ccc)
 
 
 
 
 
 //                                   w0        x1             x2         x3         x4            x5         w6       x7         sp+0
-// void kernel_dsyrk_nt_l_4x4_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
+// void kernel_dsyrk_nt_l_4x4_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
 
 	.align	4
-	GLOB_FUN_START(kernel_dsyrk_nt_l_4x4_lib44c)
+	GLOB_FUN_START(kernel_dsyrk_nt_l_4x4_lib44cc)
 	
 
 
@@ -4882,17 +4882,17 @@
 
 	ret
 
-	FUN_END(kernel_dsyrk_nt_l_4x4_lib44c)
+	FUN_END(kernel_dsyrk_nt_l_4x4_lib44cc)
 
 
 
 
 
 //                                      w0        x1             x2         x3         x4            x5         w6       x7         sp+0     sp+8    sp+16
-// void kernel_dsyrk_nt_l_4x4_vs_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+// void kernel_dsyrk_nt_l_4x4_vs_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 
 	.align	4
-	GLOB_FUN_START(kernel_dsyrk_nt_l_4x4_vs_lib44c)
+	GLOB_FUN_START(kernel_dsyrk_nt_l_4x4_vs_lib44cc)
 	
 
 
@@ -4955,7 +4955,7 @@
 
 	ret
 
-	FUN_END(kernel_dsyrk_nt_l_4x4_vs_lib44c)
+	FUN_END(kernel_dsyrk_nt_l_4x4_vs_lib44cc)
 
 
 
@@ -4963,10 +4963,10 @@
 
 
 //                                   w0        x1             x2         x3         x4            x5         w6       x7         sp+0
-// void kernel_dsyrk_nt_u_4x4_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
+// void kernel_dsyrk_nt_u_4x4_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
 
 	.align	4
-	GLOB_FUN_START(kernel_dsyrk_nt_u_4x4_lib44c)
+	GLOB_FUN_START(kernel_dsyrk_nt_u_4x4_lib44cc)
 	
 
 
@@ -5025,17 +5025,17 @@
 
 	ret
 
-	FUN_END(kernel_dsyrk_nt_u_4x4_lib44c)
+	FUN_END(kernel_dsyrk_nt_u_4x4_lib44cc)
 
 
 
 
 
 //                                      w0        x1             x2         x3         x4            x5         w6       x7         sp+0     sp+8    sp+16
-// void kernel_dsyrk_nt_u_4x4_vs_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+// void kernel_dsyrk_nt_u_4x4_vs_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 
 	.align	4
-	GLOB_FUN_START(kernel_dsyrk_nt_u_4x4_vs_lib44c)
+	GLOB_FUN_START(kernel_dsyrk_nt_u_4x4_vs_lib44cc)
 	
 
 
@@ -5098,17 +5098,17 @@
 
 	ret
 
-	FUN_END(kernel_dsyrk_nt_u_4x4_vs_lib44c)
+	FUN_END(kernel_dsyrk_nt_u_4x4_vs_lib44cc)
 
 
 
 
 
 //                                         w0        x1         x2         x3         w4       x5         w6       x7         sp+0     sp+8
-// void kernel_dtrsm_nt_rl_inv_4x4_lib44cc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
+// void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
 
 	.align	4
-	GLOB_FUN_START(kernel_dtrsm_nt_rl_inv_4x4_lib44cc)
+	GLOB_FUN_START(kernel_dtrsm_nt_rl_inv_4x4_lib44ccc)
 	
 
 
@@ -5179,17 +5179,17 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nt_rl_inv_4x4_lib44cc)
+	FUN_END(kernel_dtrsm_nt_rl_inv_4x4_lib44ccc)
 
 
 
 
 
 //                                            w0        x1         x2         x3         w4       x5         w6       x7         sp+0     sp+8                sp+16   sp+24
-// void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
+// void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44ccc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
 
 	.align	4
-	GLOB_FUN_START(kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc)
+	GLOB_FUN_START(kernel_dtrsm_nt_rl_inv_4x4_vs_lib44ccc)
 	
 
 
@@ -5265,17 +5265,17 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc)
+	FUN_END(kernel_dtrsm_nt_rl_inv_4x4_vs_lib44ccc)
 
 
 
 
 
 //                                         w0        x1         x2         x3            x4         w5       x6         w7       sp+0
-// void kernel_dtrsm_nt_rl_one_4x4_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E)
+// void kernel_dtrsm_nt_rl_one_4x4_lib44cc4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E)
 
 	.align	4
-	GLOB_FUN_START(kernel_dtrsm_nt_rl_one_4x4_lib44c4)
+	GLOB_FUN_START(kernel_dtrsm_nt_rl_one_4x4_lib44cc4)
 	
 
 
@@ -5344,17 +5344,17 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nt_rl_one_4x4_lib44c4)
+	FUN_END(kernel_dtrsm_nt_rl_one_4x4_lib44cc4)
 
 
 
 
 
 //                                            w0        x1         x2         x3            x4         w5       x6         w7       sp+0       sp+8    sp+16
-// void kernel_dtrsm_nt_rl_one_4x4_vs_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int m1, int n1)
+// void kernel_dtrsm_nt_rl_one_4x4_vs_lib44cc4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int m1, int n1)
 
 	.align	4
-	GLOB_FUN_START(kernel_dtrsm_nt_rl_one_4x4_vs_lib44c4)
+	GLOB_FUN_START(kernel_dtrsm_nt_rl_one_4x4_vs_lib44cc4)
 	
 
 
@@ -5428,17 +5428,17 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nt_rl_one_4x4_vs_lib44c4)
+	FUN_END(kernel_dtrsm_nt_rl_one_4x4_vs_lib44cc4)
 
 
 
 
 
 //                                    w0        x1         x2         x3         w4       x5         w6       x7
-// void kernel_dpotrf_nt_l_4x4_lib44c(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D)
+// void kernel_dpotrf_nt_l_4x4_lib44cc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D)
 
 	.align	4
-	GLOB_FUN_START(kernel_dpotrf_nt_l_4x4_lib44c)
+	GLOB_FUN_START(kernel_dpotrf_nt_l_4x4_lib44cc)
 	
 
 
@@ -5506,17 +5506,17 @@
 
 	ret
 
-	FUN_END(kernel_dpotrf_nt_l_4x4_lib44c)
+	FUN_END(kernel_dpotrf_nt_l_4x4_lib44cc)
 
 
 
 
 
 //                                       w0        x1         x2         x3         w4       x5         w6       x7                  sp+0    sp+1
-// void kernel_dpotrf_nt_l_4x4_vs_lib44c(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D, int m1, int n1)
+// void kernel_dpotrf_nt_l_4x4_vs_lib44cc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D, int m1, int n1)
 
 	.align	4
-	GLOB_FUN_START(kernel_dpotrf_nt_l_4x4_vs_lib44c)
+	GLOB_FUN_START(kernel_dpotrf_nt_l_4x4_vs_lib44cc)
 	
 
 
@@ -5589,17 +5589,17 @@
 
 	ret
 
-	FUN_END(kernel_dpotrf_nt_l_4x4_vs_lib44c)
+	FUN_END(kernel_dpotrf_nt_l_4x4_vs_lib44cc)
 
 
 
 
 
 //                                         w0        x1         x2         x3       x4            x5         w6       x7         sp+0     sp+8       sp+16
-// void kernel_dtrsm_nn_ll_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
+// void kernel_dtrsm_nn_ll_one_4x4_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
 
 	.align	4
-	GLOB_FUN_START(kernel_dtrsm_nn_ll_one_4x4_lib4ccc)
+	GLOB_FUN_START(kernel_dtrsm_nn_ll_one_4x4_lib4cccc)
 	
 
 
@@ -5672,7 +5672,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nn_ll_one_4x4_lib4ccc)
+	FUN_END(kernel_dtrsm_nn_ll_one_4x4_lib4cccc)
 
 
 
@@ -5680,10 +5680,10 @@
 
 
 //                                            w0        x1         x2         x3       x4            x5         w6       x7         sp+0     sp+8       sp+16    sp+24   sp+32
-// void kernel_dtrsm_nn_ll_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
+// void kernel_dtrsm_nn_ll_one_4x4_vs_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
 
 	.align	4
-	GLOB_FUN_START(kernel_dtrsm_nn_ll_one_4x4_vs_lib4ccc)
+	GLOB_FUN_START(kernel_dtrsm_nn_ll_one_4x4_vs_lib4cccc)
 	
 
 
@@ -5804,7 +5804,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nn_ll_one_4x4_vs_lib4ccc)
+	FUN_END(kernel_dtrsm_nn_ll_one_4x4_vs_lib4cccc)
 
 
 

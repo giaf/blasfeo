@@ -441,16 +441,16 @@ _inner_store_l_4x4_lib4:
 
 
 //                                 r0        r1             r2         r3         sp+0          sp+4       sp+8     sp+12      sp+16
-// void kernel_dgemm_nt_4x4_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
+// void kernel_dgemm_nt_4x4_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
 
 //	.p2align 4,,15
 #if defined(OS_LINUX)
-	.global	kernel_dgemm_nt_4x4_lib44c
-	.type	kernel_dgemm_nt_4x4_lib44c, %function
-kernel_dgemm_nt_4x4_lib44c:
+	.global	kernel_dgemm_nt_4x4_lib44cc
+	.type	kernel_dgemm_nt_4x4_lib44cc, %function
+kernel_dgemm_nt_4x4_lib44cc:
 #elif defined(OS_MAC)
-	.global	kernel_dgemm_nt_4x4_lib44c
-_kernel_dgemm_nt_4x4_lib44c:
+	.global	kernel_dgemm_nt_4x4_lib44cc
+_kernel_dgemm_nt_4x4_lib44cc:
 #endif
 
 	// prologue
@@ -548,7 +548,7 @@ _kernel_dgemm_nt_4x4_lib44c:
 	ldmia	sp!, {r4 - r10, fp, pc} // load registers and return
 
 #if defined(OS_LINUX)
-	.size	kernel_dgemm_nt_4x4_lib44c, .-kernel_dgemm_nt_4x4_lib44c
+	.size	kernel_dgemm_nt_4x4_lib44cc, .-kernel_dgemm_nt_4x4_lib44cc
 #endif
 
 
@@ -556,16 +556,16 @@ _kernel_dgemm_nt_4x4_lib44c:
 
 
 //                                    r0        r1         r2         r3         sp+0     sp+4       sp+8     sp+12
-// void kernel_dpotrf_nt_l_4x4_lib44c(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
+// void kernel_dpotrf_nt_l_4x4_lib44cc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
 
 //	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dpotrf_nt_l_4x4_lib44c
-	.type kernel_dpotrf_nt_l_4x4_lib44c, %function
-kernel_dpotrf_nt_l_4x4_lib44c:
+	.globl kernel_dpotrf_nt_l_4x4_lib44cc
+	.type kernel_dpotrf_nt_l_4x4_lib44cc, %function
+kernel_dpotrf_nt_l_4x4_lib44cc:
 #elif defined(OS_MAC)
-	.globl _kernel_dpotrf_nt_l_4x4_lib44c
-_kernel_dpotrf_nt_l_4x4_lib44c:
+	.globl _kernel_dpotrf_nt_l_4x4_lib44cc
+_kernel_dpotrf_nt_l_4x4_lib44cc:
 #endif
 
 	// prologue
@@ -676,23 +676,23 @@ _kernel_dpotrf_nt_l_4x4_lib44c:
 	ldmia	sp!, {r4 - r10, fp, pc} // load registers and return
 
 #if defined(OS_LINUX)
-	.size	kernel_dpotrf_nt_l_4x4_lib44c, .-kernel_dpotrf_nt_l_4x4_lib44c
+	.size	kernel_dpotrf_nt_l_4x4_lib44cc, .-kernel_dpotrf_nt_l_4x4_lib44cc
 #endif
 
 
 
 
 //                                        r0        r1         r2         r3         sp+0     sp+4       rsp+8    rsp+12     rsp+16   rsp+20
-// void kernel_dtrsm_nt_rl_inv_4x4_lib44cc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
+// void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
 
 //	.p2align 4,,15
 #if defined(OS_LINUX)
-	.globl kernel_dtrsm_nt_rl_inv_4x4_lib44cc
-	.type kernel_dtrsm_nt_rl_inv_4x4_lib44cc, %function
-kernel_dtrsm_nt_rl_inv_4x4_lib44cc:
+	.globl kernel_dtrsm_nt_rl_inv_4x4_lib44ccc
+	.type kernel_dtrsm_nt_rl_inv_4x4_lib44ccc, %function
+kernel_dtrsm_nt_rl_inv_4x4_lib44ccc:
 #elif defined(OS_MAC)
-	.globl _kernel_dtrsm_nt_rl_inv_4x4_lib44cc
-_kernel_dtrsm_nt_rl_inv_4x4_lib44cc:
+	.globl _kernel_dtrsm_nt_rl_inv_4x4_lib44ccc
+_kernel_dtrsm_nt_rl_inv_4x4_lib44ccc:
 #endif
 
 	// prologue
@@ -806,7 +806,7 @@ _kernel_dtrsm_nt_rl_inv_4x4_lib44cc:
 	ldmia	sp!, {r4 - r10, fp, pc} // load registers and return
 
 #if defined(OS_LINUX)
-	.size	kernel_dtrsm_nt_rl_inv_4x4_lib44cc, .-kernel_dtrsm_nt_rl_inv_4x4_lib44cc
+	.size	kernel_dtrsm_nt_rl_inv_4x4_lib44ccc, .-kernel_dtrsm_nt_rl_inv_4x4_lib44ccc
 #endif
 
 

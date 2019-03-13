@@ -1041,10 +1041,10 @@
 
 
 //                                   1      2              3          4        5          6        7             8          9        10         11
-// void kernel_dsyrk_nt_l_8x8_lib44c(int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
+// void kernel_dsyrk_nt_l_8x8_lib44cc(int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dsyrk_nt_l_8x8_lib44c)
+	GLOB_FUN_START(kernel_dsyrk_nt_l_8x8_lib44cc)
 	
 	PROLOGUE
 
@@ -1102,17 +1102,17 @@
 	
 	ret
 
-	FUN_END(kernel_dsyrk_nt_l_8x8_lib44c)
+	FUN_END(kernel_dsyrk_nt_l_8x8_lib44cc)
 
 
 
 
 
 //                                      1      2              3          4        5          6        7             8          9        10         11       12      13
-// void kernel_dsyrk_nt_l_8x8_vs_lib44c(int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+// void kernel_dsyrk_nt_l_8x8_vs_lib44cc(int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dsyrk_nt_l_8x8_vs_lib44c)
+	GLOB_FUN_START(kernel_dsyrk_nt_l_8x8_vs_lib44cc)
 	
 	PROLOGUE
 
@@ -1174,17 +1174,17 @@
 	
 	ret
 
-	FUN_END(kernel_dsyrk_nt_l_8x8_vs_lib44c)
+	FUN_END(kernel_dsyrk_nt_l_8x8_vs_lib44cc)
 
 
 
 
 
 //                                      1      2              3          4        5          6        7             8          9        10         11       12      13
-// void kernel_dsyrk_nt_u_8x8_vs_lib44c(int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+// void kernel_dsyrk_nt_u_8x8_vs_lib44cc(int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dsyrk_nt_u_8x8_vs_lib44c)
+	GLOB_FUN_START(kernel_dsyrk_nt_u_8x8_vs_lib44cc)
 	
 	PROLOGUE
 
@@ -1246,17 +1246,17 @@
 	
 	ret
 
-	FUN_END(kernel_dsyrk_nt_u_8x8_vs_lib44c)
+	FUN_END(kernel_dsyrk_nt_u_8x8_vs_lib44cc)
 
 
 
 
 
 //                                   1      2              3          4        5          6        7             8          9        10         11
-// void kernel_dsyrk_nt_u_8x8_lib44c(int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
+// void kernel_dsyrk_nt_u_8x8_lib44cc(int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dsyrk_nt_u_8x8_lib44c)
+	GLOB_FUN_START(kernel_dsyrk_nt_u_8x8_lib44cc)
 	
 	PROLOGUE
 
@@ -1314,17 +1314,17 @@
 	
 	ret
 
-	FUN_END(kernel_dsyrk_nt_u_8x8_lib44c)
+	FUN_END(kernel_dsyrk_nt_u_8x8_lib44cc)
 
 
 
 
 
 //                                    1      2          3        4          5        6          7        8          9        10
-// void kernel_dpotrf_nt_l_8x8_lib44c(int k, double *A, int sda, double *B, int sdb, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
+// void kernel_dpotrf_nt_l_8x8_lib44cc(int k, double *A, int sda, double *B, int sdb, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dpotrf_nt_l_8x8_lib44c)
+	GLOB_FUN_START(kernel_dpotrf_nt_l_8x8_lib44cc)
 	
 	PROLOGUE
 
@@ -1392,17 +1392,17 @@
 	
 	ret
 
-	FUN_END(kernel_dpotrf_nt_l_8x8_lib44c)
+	FUN_END(kernel_dpotrf_nt_l_8x8_lib44cc)
 
 
 
 
 
 //                                       1      2          3        4          5        6          7        8          9        10                  11      12
-// void kernel_dpotrf_nt_l_8x8_vs_lib44c(int k, double *A, int sda, double *B, int sdb, double *C, int ldc, double *D, int ldd, double *inv_diag_D, int m1, int n1);
+// void kernel_dpotrf_nt_l_8x8_vs_lib44cc(int k, double *A, int sda, double *B, int sdb, double *C, int ldc, double *D, int ldd, double *inv_diag_D, int m1, int n1);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dpotrf_nt_l_8x8_vs_lib44c)
+	GLOB_FUN_START(kernel_dpotrf_nt_l_8x8_vs_lib44cc)
 	
 	PROLOGUE
 
@@ -1474,7 +1474,7 @@
 	
 	ret
 
-	FUN_END(kernel_dpotrf_nt_l_8x8_vs_lib44c)
+	FUN_END(kernel_dpotrf_nt_l_8x8_vs_lib44cc)
 
 
 

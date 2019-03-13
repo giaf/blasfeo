@@ -29,7 +29,7 @@
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dgemm_nt_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dgemm_nt_4x4_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -256,7 +256,7 @@ void kernel_dgemm_nt_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, i
 
 
 
-static void kernel_dgemm_nt_4x3_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+static void kernel_dgemm_nt_4x3_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -447,7 +447,7 @@ static void kernel_dgemm_nt_4x3_lib4cc(int kmax, double *alpha, double *A, doubl
 
 
 
-static void kernel_dgemm_nt_4x2_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+static void kernel_dgemm_nt_4x2_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -603,7 +603,7 @@ static void kernel_dgemm_nt_4x2_lib4cc(int kmax, double *alpha, double *A, doubl
 
 
 
-static void kernel_dgemm_nt_4x1_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+static void kernel_dgemm_nt_4x1_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -725,7 +725,7 @@ static void kernel_dgemm_nt_4x1_lib4cc(int kmax, double *alpha, double *A, doubl
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dgemm_nt_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dgemm_nt_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -745,19 +745,19 @@ void kernel_dgemm_nt_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B
 
 	if(n1<=1)
 		{
-		kernel_dgemm_nt_4x1_lib4cc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+		kernel_dgemm_nt_4x1_lib4ccc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
 		}
 	else if(n1==2)
 		{
-		kernel_dgemm_nt_4x2_lib4cc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+		kernel_dgemm_nt_4x2_lib4ccc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
 		}
 	else if(n1==3)
 		{
-		kernel_dgemm_nt_4x3_lib4cc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+		kernel_dgemm_nt_4x3_lib4ccc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
 		}
 	else //if(n1==1)
 		{
-		kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+		kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
 		}
 
 	if(m1>=4)
@@ -869,12 +869,12 @@ void kernel_dgemm_nt_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B
 
 
 #if defined(TARGET_GENERIC) | defined(TARGET_X86_AMD_BARCELONA)
-void kernel_dgemm_nt_4x4_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dgemm_nt_4x4_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 #if defined(TARGET_X86_AMD_BARCELONA)
-	kernel_dgemm_nt_4x2_lib44c(kmax, alpha, A, B+0, beta, C+0*ldc, ldc, D+0*ldd, ldd);
-	kernel_dgemm_nt_4x2_lib44c(kmax, alpha, A, B+2, beta, C+2*ldc, ldc, D+2*ldd, ldd);
+	kernel_dgemm_nt_4x2_lib44cc(kmax, alpha, A, B+0, beta, C+0*ldc, ldc, D+0*ldd, ldd);
+	kernel_dgemm_nt_4x2_lib44cc(kmax, alpha, A, B+2, beta, C+2*ldc, ldc, D+2*ldd, ldd);
 	return;
 #endif
 
@@ -923,7 +923,7 @@ void kernel_dgemm_nt_4x4_lib44c(int kmax, double *alpha, double *A, double *B, d
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dgemm_nt_4x4_vs_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dgemm_nt_4x4_vs_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -1070,7 +1070,7 @@ void kernel_dgemm_nt_4x4_libc4c(int kmax, double *alpha, double *A, int lda, dou
 	double alpha1 = 1.0;
 	double beta1 = 0.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, B, A, lda, &beta1, CC, bs, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, B, A, lda, &beta1, CC, bs, CC, bs);
 
 	double tmp;
 	tmp = CC[1+bs*0]; CC[1+bs*0] = CC[0+bs*1]; CC[0+bs*1] = tmp;
@@ -1126,7 +1126,7 @@ void kernel_dgemm_nt_4x4_vs_libc4c(int kmax, double *alpha, double *A, int lda, 
 	double alpha1 = 1.0;
 	double beta1 = 0.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, B, A, lda, &beta1, CC, bs, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, B, A, lda, &beta1, CC, bs, CC, bs);
 
 	double tmp;
 	tmp = CC[1+bs*0]; CC[1+bs*0] = CC[0+bs*1]; CC[0+bs*1] = tmp;
@@ -1245,7 +1245,7 @@ void kernel_dgemm_nt_4x4_vs_libc4c(int kmax, double *alpha, double *A, int lda, 
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dgemm_nn_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dgemm_nn_4x4_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -1472,7 +1472,7 @@ void kernel_dgemm_nn_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, i
 
 
 
-static void kernel_dgemm_nn_4x3_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+static void kernel_dgemm_nn_4x3_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -1663,7 +1663,7 @@ static void kernel_dgemm_nn_4x3_lib4cc(int kmax, double *alpha, double *A, doubl
 
 
 
-static void kernel_dgemm_nn_4x2_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+static void kernel_dgemm_nn_4x2_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -1819,7 +1819,7 @@ static void kernel_dgemm_nn_4x2_lib4cc(int kmax, double *alpha, double *A, doubl
 
 
 
-static void kernel_dgemm_nn_4x1_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+static void kernel_dgemm_nn_4x1_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -1941,7 +1941,7 @@ static void kernel_dgemm_nn_4x1_lib4cc(int kmax, double *alpha, double *A, doubl
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dgemm_nn_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dgemm_nn_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -1961,19 +1961,19 @@ void kernel_dgemm_nn_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B
 
 	if(n1<=1)
 		{
-		kernel_dgemm_nn_4x1_lib4cc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+		kernel_dgemm_nn_4x1_lib4ccc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
 		}
 	else if(n1==2)
 		{
-		kernel_dgemm_nn_4x2_lib4cc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+		kernel_dgemm_nn_4x2_lib4ccc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
 		}
 	else if(n1==3)
 		{
-		kernel_dgemm_nn_4x3_lib4cc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+		kernel_dgemm_nn_4x3_lib4ccc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
 		}
 	else //if(n1==4)
 		{
-		kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+		kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
 		}
 
 	if(m1>=4)
@@ -2084,7 +2084,7 @@ void kernel_dgemm_nn_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dsyrk_nt_l_4x4_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dsyrk_nt_l_4x4_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -2126,7 +2126,7 @@ void kernel_dsyrk_nt_l_4x4_lib44c(int kmax, double *alpha, double *A, double *B,
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_AMD_BULLDOZER)  || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dsyrk_nt_l_4x4_vs_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dsyrk_nt_l_4x4_vs_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -2211,7 +2211,7 @@ void kernel_dsyrk_nt_l_4x4_vs_lib44c(int kmax, double *alpha, double *A, double 
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dsyrk_nt_u_4x4_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dsyrk_nt_u_4x4_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -2259,7 +2259,7 @@ void kernel_dsyrk_nt_u_4x4_lib44c(int kmax, double *alpha, double *A, double *B,
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dsyrk_nt_u_4x4_vs_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dsyrk_nt_u_4x4_vs_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -2388,7 +2388,7 @@ void kernel_dsyrk_nt_u_4x4_vs_lib44c(int kmax, double *alpha, double *A, double 
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nn_rl_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dtrmm_nn_rl_4x4_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -2548,7 +2548,7 @@ void kernel_dtrmm_nn_rl_4x4_lib4cc(int kmax, double *alpha, double *A, double *B
 
 	double beta1 = 1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, D, ldd);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, D, ldd);
 
 	return;
 
@@ -2558,7 +2558,7 @@ void kernel_dtrmm_nn_rl_4x4_lib4cc(int kmax, double *alpha, double *A, double *B
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nn_rl_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dtrmm_nn_rl_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -2718,7 +2718,7 @@ void kernel_dtrmm_nn_rl_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double
 
 	double beta1 = 1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, CC, bs);
 
 	if(m1>=4)
 		{
@@ -2829,7 +2829,7 @@ void kernel_dtrmm_nn_rl_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nn_rl_one_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dtrmm_nn_rl_one_4x4_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -2985,7 +2985,7 @@ void kernel_dtrmm_nn_rl_one_4x4_lib4cc(int kmax, double *alpha, double *A, doubl
 
 	double beta1 = 1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, D, ldd);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, D, ldd);
 
 	return;
 
@@ -2995,7 +2995,7 @@ void kernel_dtrmm_nn_rl_one_4x4_lib4cc(int kmax, double *alpha, double *A, doubl
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nn_rl_one_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dtrmm_nn_rl_one_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -3151,7 +3151,7 @@ void kernel_dtrmm_nn_rl_one_4x4_vs_lib4cc(int kmax, double *alpha, double *A, do
 
 	double beta1 = 1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, CC, bs);
 
 	if(m1>=4)
 		{
@@ -3262,7 +3262,7 @@ void kernel_dtrmm_nn_rl_one_4x4_vs_lib4cc(int kmax, double *alpha, double *A, do
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nn_ru_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dtrmm_nn_ru_4x4_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -3285,7 +3285,7 @@ void kernel_dtrmm_nn_ru_4x4_lib4cc(int kmax, double *alpha, double *A, double *B
 
 	// assume always kmax>=4 !!!
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	A += kmax*bs;
 	B += kmax;
@@ -3424,7 +3424,7 @@ void kernel_dtrmm_nn_ru_4x4_lib4cc(int kmax, double *alpha, double *A, double *B
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nn_ru_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dtrmm_nn_ru_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -3445,7 +3445,7 @@ void kernel_dtrmm_nn_ru_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double
 
 	double alpha1 = 1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	A += kmax*bs;
 	B += kmax;
@@ -3864,7 +3864,7 @@ void kernel_dtrmm_nn_ru_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nn_ru_one_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dtrmm_nn_ru_one_4x4_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -3887,7 +3887,7 @@ void kernel_dtrmm_nn_ru_one_4x4_lib4cc(int kmax, double *alpha, double *A, doubl
 
 	// assume always kmax>=4 !!!
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	A += kmax*bs;
 	B += kmax;
@@ -4022,7 +4022,7 @@ void kernel_dtrmm_nn_ru_one_4x4_lib4cc(int kmax, double *alpha, double *A, doubl
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nn_ru_one_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dtrmm_nn_ru_one_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -4043,7 +4043,7 @@ void kernel_dtrmm_nn_ru_one_4x4_vs_lib4cc(int kmax, double *alpha, double *A, do
 
 	double alpha1 = 1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	A += kmax*bs;
 	B += kmax;
@@ -4452,7 +4452,7 @@ void kernel_dtrmm_nn_ru_one_4x4_vs_lib4cc(int kmax, double *alpha, double *A, do
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_rl_4x4_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dtrmm_nt_rl_4x4_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -4615,7 +4615,7 @@ void kernel_dtrmm_nt_rl_4x4_lib44c(int kmax, double *alpha, double *A, double *B
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_rl_4x4_vs_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dtrmm_nt_rl_4x4_vs_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -5056,7 +5056,7 @@ void kernel_dtrmm_nt_rl_4x4_vs_lib44c(int kmax, double *alpha, double *A, double
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_rl_4x4_tran_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D, int ldd)
+void kernel_dtrmm_nt_rl_4x4_tran_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -5221,7 +5221,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_lib44c(int kmax, double *alpha, double *A, doub
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_rl_4x4_tran_vs_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D, int ldd, int m1, int n1)
+void kernel_dtrmm_nt_rl_4x4_tran_vs_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -5675,7 +5675,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_vs_lib44c(int kmax, double *alpha, double *A, d
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_rl_one_4x4_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dtrmm_nt_rl_one_4x4_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -5834,7 +5834,7 @@ void kernel_dtrmm_nt_rl_one_4x4_lib44c(int kmax, double *alpha, double *A, doubl
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_rl_one_4x4_vs_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dtrmm_nt_rl_one_4x4_vs_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -6265,7 +6265,7 @@ void kernel_dtrmm_nt_rl_one_4x4_vs_lib44c(int kmax, double *alpha, double *A, do
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_rl_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dtrmm_nt_rl_4x4_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -6288,7 +6288,7 @@ void kernel_dtrmm_nt_rl_4x4_lib4cc(int kmax, double *alpha, double *A, double *B
 
 	// assume always kmax>=4 !!!
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	A += kmax*bs;
 	B += kmax*ldb;
@@ -6427,7 +6427,7 @@ void kernel_dtrmm_nt_rl_4x4_lib4cc(int kmax, double *alpha, double *A, double *B
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_rl_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dtrmm_nt_rl_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -6448,7 +6448,7 @@ void kernel_dtrmm_nt_rl_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double
 
 	double alpha1 = 1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	A += kmax*bs;
 	B += kmax*ldb;
@@ -6867,7 +6867,7 @@ void kernel_dtrmm_nt_rl_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_rl_4x4_tran_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, double *D, int ldd)
+void kernel_dtrmm_nt_rl_4x4_tran_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -6891,7 +6891,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_lib4cc(int kmax, double *alpha, double *A, doub
 
 	// assume always kmax>=4 !!!
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	A += kmax*bs;
 	B += kmax*ldb;
@@ -7031,7 +7031,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_lib4cc(int kmax, double *alpha, double *A, doub
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_rl_4x4_tran_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, double *D, int ldd, int m1, int n1)
+void kernel_dtrmm_nt_rl_4x4_tran_vs_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -7053,7 +7053,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_vs_lib4cc(int kmax, double *alpha, double *A, d
 
 	double alpha1 = 1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	A += kmax*bs;
 	B += kmax*ldb;
@@ -7484,7 +7484,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_vs_lib4cc(int kmax, double *alpha, double *A, d
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_rl_one_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dtrmm_nt_rl_one_4x4_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -7507,7 +7507,7 @@ void kernel_dtrmm_nt_rl_one_4x4_lib4cc(int kmax, double *alpha, double *A, doubl
 
 	// assume always kmax>=4 !!!
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	A += kmax*bs;
 	B += kmax*ldb;
@@ -7642,7 +7642,7 @@ void kernel_dtrmm_nt_rl_one_4x4_lib4cc(int kmax, double *alpha, double *A, doubl
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_rl_one_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dtrmm_nt_rl_one_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -7663,7 +7663,7 @@ void kernel_dtrmm_nt_rl_one_4x4_vs_lib4cc(int kmax, double *alpha, double *A, do
 
 	double alpha1 = 1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	A += kmax*bs;
 	B += kmax*ldb;
@@ -8072,7 +8072,7 @@ void kernel_dtrmm_nt_rl_one_4x4_vs_lib4cc(int kmax, double *alpha, double *A, do
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_ru_4x4_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dtrmm_nt_ru_4x4_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -8262,7 +8262,7 @@ void kernel_dtrmm_nt_ru_4x4_lib44c(int kmax, double *alpha, double *A, double *B
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_ru_4x4_vs_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dtrmm_nt_ru_4x4_vs_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -8533,7 +8533,7 @@ void kernel_dtrmm_nt_ru_4x4_vs_lib44c(int kmax, double *alpha, double *A, double
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_ru_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dtrmm_nt_ru_4x4_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -8693,7 +8693,7 @@ void kernel_dtrmm_nt_ru_4x4_lib4cc(int kmax, double *alpha, double *A, double *B
 
 	double beta1 = 1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, D, ldd);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, D, ldd);
 
 	return;
 
@@ -8703,7 +8703,7 @@ void kernel_dtrmm_nt_ru_4x4_lib4cc(int kmax, double *alpha, double *A, double *B
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_ru_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dtrmm_nt_ru_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -8863,7 +8863,7 @@ void kernel_dtrmm_nt_ru_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double
 
 	double beta1 = 1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, CC, bs);
 
 	if(m1>=4)
 		{
@@ -8974,7 +8974,7 @@ void kernel_dtrmm_nt_ru_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_ru_one_4x4_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dtrmm_nt_ru_one_4x4_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -9160,7 +9160,7 @@ void kernel_dtrmm_nt_ru_one_4x4_lib44c(int kmax, double *alpha, double *A, doubl
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_ru_one_4x4_vs_lib44c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dtrmm_nt_ru_one_4x4_vs_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -9427,7 +9427,7 @@ void kernel_dtrmm_nt_ru_one_4x4_vs_lib44c(int kmax, double *alpha, double *A, do
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_ru_one_4x4_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+void kernel_dtrmm_nt_ru_one_4x4_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	const int bs = 4;
@@ -9583,7 +9583,7 @@ void kernel_dtrmm_nt_ru_one_4x4_lib4cc(int kmax, double *alpha, double *A, doubl
 
 	double beta1 = 1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, D, ldd);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, D, ldd);
 
 	return;
 
@@ -9593,7 +9593,7 @@ void kernel_dtrmm_nt_ru_one_4x4_lib4cc(int kmax, double *alpha, double *A, doubl
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrmm_nt_ru_one_4x4_vs_lib4cc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+void kernel_dtrmm_nt_ru_one_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -9749,7 +9749,7 @@ void kernel_dtrmm_nt_ru_one_4x4_vs_lib4cc(int kmax, double *alpha, double *A, do
 
 	double beta1 = 1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax-k, alpha, A, B, ldb, &beta1, CC, bs, CC, bs);
 
 	if(m1>=4)
 		{
@@ -9860,7 +9860,7 @@ void kernel_dtrmm_nt_ru_one_4x4_vs_lib4cc(int kmax, double *alpha, double *A, do
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
-void kernel_dpotrf_nt_l_4x4_lib44c(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D)
+void kernel_dpotrf_nt_l_4x4_lib44cc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D)
 	{
 
 	const int bs = 4;
@@ -9913,7 +9913,7 @@ void kernel_dpotrf_nt_l_4x4_lib44c(int kmax, double *A, double *B, double *C, in
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dpotrf_nt_l_4x4_vs_lib44c(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D, int m1, int n1)
+void kernel_dpotrf_nt_l_4x4_vs_lib44cc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -10073,7 +10073,7 @@ void kernel_dtrsm_nn_rl_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	tmp = inv_diag_E[3];
 	CC[0+bs*3] *= tmp;
@@ -10177,7 +10177,7 @@ void kernel_dtrsm_nn_rl_inv_4x4_vs_lib4c4c(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	if(n1<=3)
 		goto n3;
@@ -10357,7 +10357,7 @@ n1:
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nn_rl_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
+void kernel_dtrsm_nn_rl_inv_4x4_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -10376,7 +10376,7 @@ void kernel_dtrsm_nn_rl_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	tmp = inv_diag_E[3];
 	CC[0+bs*3] *= tmp;
@@ -10461,7 +10461,7 @@ void kernel_dtrsm_nn_rl_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nn_rl_inv_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
+void kernel_dtrsm_nn_rl_inv_4x4_vs_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -10480,7 +10480,7 @@ void kernel_dtrsm_nn_rl_inv_4x4_vs_lib4ccc(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	if(n1<=3)
 		goto n3;
@@ -10679,7 +10679,7 @@ void kernel_dtrsm_nn_rl_one_4x4_lib4c4c(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	tmp = E[3+lde*0];
 	CC[0+bs*0] -= CC[0+bs*3] * tmp;
@@ -10762,7 +10762,7 @@ void kernel_dtrsm_nn_rl_one_4x4_vs_lib4c4c(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	if(n1<=3)
 		goto n3;
@@ -10921,7 +10921,7 @@ n1:
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nn_rl_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
+void kernel_dtrsm_nn_rl_one_4x4_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
 	{
 
 	const int bs = 4;
@@ -10940,7 +10940,7 @@ void kernel_dtrsm_nn_rl_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	tmp = E[3+lde*0];
 	CC[0+bs*0] -= CC[0+bs*3] * tmp;
@@ -11004,7 +11004,7 @@ void kernel_dtrsm_nn_rl_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nn_rl_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
+void kernel_dtrsm_nn_rl_one_4x4_vs_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -11023,7 +11023,7 @@ void kernel_dtrsm_nn_rl_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	if(n1<=3)
 		goto n3;
@@ -11182,7 +11182,7 @@ n1:
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_rl_inv_4x4_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E)
+void kernel_dtrsm_nt_rl_inv_4x4_lib44cc4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -11305,7 +11305,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib44c4(int kmax, double *A, double *B, double *
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E, int m1, int n1)
+void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -11602,7 +11602,7 @@ kernel:
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_AMD_BULLDOZER)
-void kernel_dtrsm_nt_rl_inv_4x4_lib44cc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
+void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -11726,7 +11726,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib44cc(int kmax, double *A, double *B, double *
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
+void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44ccc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -12043,7 +12043,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -12146,7 +12146,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4c4c(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -12322,7 +12322,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4c4c(int kmax, double *A, double *B, int l
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_rl_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
+void kernel_dtrsm_nt_rl_inv_4x4_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -12341,7 +12341,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -12425,7 +12425,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
+void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -12444,7 +12444,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4ccc(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -12620,7 +12620,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4ccc(int kmax, double *A, double *B, int l
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dtrsm_nt_rl_one_4x4_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E)
+void kernel_dtrsm_nt_rl_one_4x4_lib44cc4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E)
 	{
 
 	const int bs = 4;
@@ -12722,7 +12722,7 @@ void kernel_dtrsm_nt_rl_one_4x4_lib44c4(int kmax, double *A, double *B, double *
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dtrsm_nt_rl_one_4x4_vs_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int m1, int n1)
+void kernel_dtrsm_nt_rl_one_4x4_vs_lib44cc4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -13017,7 +13017,7 @@ void kernel_dtrsm_nt_rl_one_4x4_lib4c4c(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	tmp = E[1+lde*0];
 	CC[0+bs*1] -= CC[0+bs*0] * tmp;
@@ -13100,7 +13100,7 @@ void kernel_dtrsm_nt_rl_one_4x4_vs_lib4c4c(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	if(n1==1)
 		goto store;
@@ -13255,7 +13255,7 @@ void kernel_dtrsm_nt_rl_one_4x4_vs_lib4c4c(int kmax, double *A, double *B, int l
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_rl_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
+void kernel_dtrsm_nt_rl_one_4x4_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
 	{
 
 	const int bs = 4;
@@ -13274,7 +13274,7 @@ void kernel_dtrsm_nt_rl_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	tmp = E[1+lde*0];
 	CC[0+bs*1] -= CC[0+bs*0] * tmp;
@@ -13337,7 +13337,7 @@ void kernel_dtrsm_nt_rl_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_rl_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
+void kernel_dtrsm_nt_rl_one_4x4_vs_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -13356,7 +13356,7 @@ void kernel_dtrsm_nt_rl_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	if(n1==1)
 		goto store;
@@ -13530,7 +13530,7 @@ void kernel_dtrsm_nn_ru_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -13633,7 +13633,7 @@ void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4c4c(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -13809,7 +13809,7 @@ void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4c4c(int kmax, double *A, double *B, int l
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nn_ru_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
+void kernel_dtrsm_nn_ru_inv_4x4_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -13828,7 +13828,7 @@ void kernel_dtrsm_nn_ru_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -13913,7 +13913,7 @@ void kernel_dtrsm_nn_ru_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
+void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -13932,7 +13932,7 @@ void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4ccc(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -14127,7 +14127,7 @@ void kernel_dtrsm_nn_ru_one_4x4_lib4c4c(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	tmp = E[0+lde*1];
 	CC[0+bs*1] -= CC[0+bs*0] * tmp;
@@ -14209,7 +14209,7 @@ void kernel_dtrsm_nn_ru_one_4x4_vs_lib4c4c(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	if(n1==1)
 		goto store;
@@ -14364,7 +14364,7 @@ void kernel_dtrsm_nn_ru_one_4x4_vs_lib4c4c(int kmax, double *A, double *B, int l
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nn_ru_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
+void kernel_dtrsm_nn_ru_one_4x4_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
 	{
 
 	const int bs = 4;
@@ -14383,7 +14383,7 @@ void kernel_dtrsm_nn_ru_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	tmp = E[0+lde*1];
 	CC[0+bs*1] -= CC[0+bs*0] * tmp;
@@ -14447,7 +14447,7 @@ void kernel_dtrsm_nn_ru_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nn_ru_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
+void kernel_dtrsm_nn_ru_one_4x4_vs_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -14466,7 +14466,7 @@ void kernel_dtrsm_nn_ru_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	if(n1==1)
 		goto store;
@@ -14621,7 +14621,7 @@ void kernel_dtrsm_nn_ru_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int l
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_ru_inv_4x4_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E)
+void kernel_dtrsm_nt_ru_inv_4x4_lib44cc4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -14745,7 +14745,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_lib44c4(int kmax, double *A, double *B, double *
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_ru_inv_4x4_vs_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E, int m1, int n1)
+void kernel_dtrsm_nt_ru_inv_4x4_vs_lib44cc4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -14983,7 +14983,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_lib4c4c(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	tmp = inv_diag_E[3];
 	CC[0+bs*3] *= tmp;
@@ -15087,7 +15087,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4c4c(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	if(n1<=3)
 		goto n3;
@@ -15267,7 +15267,7 @@ n1:
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_ru_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
+void kernel_dtrsm_nt_ru_inv_4x4_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -15286,7 +15286,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	tmp = inv_diag_E[3];
 	CC[0+bs*3] *= tmp;
@@ -15371,7 +15371,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
+void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -15390,7 +15390,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4ccc(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	if(n1<=3)
 		goto n3;
@@ -15570,7 +15570,7 @@ n1:
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_ru_one_4x4_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E)
+void kernel_dtrsm_nt_ru_one_4x4_lib44cc4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E)
 	{
 
 	const int bs = 4;
@@ -15673,7 +15673,7 @@ void kernel_dtrsm_nt_ru_one_4x4_lib44c4(int kmax, double *A, double *B, double *
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_ru_one_4x4_vs_lib44c4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int m1, int n1)
+void kernel_dtrsm_nt_ru_one_4x4_vs_lib44cc4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -15890,7 +15890,7 @@ void kernel_dtrsm_nt_ru_one_4x4_lib4c4c(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	tmp = E[0+lde*3];
 	CC[0+bs*0] -= CC[0+bs*3] * tmp;
@@ -15973,7 +15973,7 @@ void kernel_dtrsm_nt_ru_one_4x4_vs_lib4c4c(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, bs, CC, bs);
 
 	if(n1<=3)
 		goto n3;
@@ -16132,7 +16132,7 @@ n1:
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_ru_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
+void kernel_dtrsm_nt_ru_one_4x4_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
 	{
 
 	const int bs = 4;
@@ -16151,7 +16151,7 @@ void kernel_dtrsm_nt_ru_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	tmp = E[0+lde*3];
 	CC[0+bs*0] -= CC[0+bs*3] * tmp;
@@ -16215,7 +16215,7 @@ void kernel_dtrsm_nt_ru_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dtrsm_nt_ru_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
+void kernel_dtrsm_nt_ru_one_4x4_vs_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -16234,7 +16234,7 @@ void kernel_dtrsm_nt_ru_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nt_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nt_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	if(n1<=3)
 		goto n3;
@@ -16393,7 +16393,7 @@ n1:
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dtrsm_nn_ll_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
+void kernel_dtrsm_nn_ll_one_4x4_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde)
 	{
 
 	const int bs = 4;
@@ -16413,7 +16413,7 @@ void kernel_dtrsm_nn_ll_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	e_1 = E[1+lde*0];
 	e_2 = E[2+lde*0];
@@ -16477,7 +16477,7 @@ void kernel_dtrsm_nn_ll_one_4x4_lib4ccc(int kmax, double *A, double *B, int ldb,
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-void kernel_dtrsm_nn_ll_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
+void kernel_dtrsm_nn_ll_one_4x4_vs_lib4cccc(int kmax, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -16497,7 +16497,7 @@ void kernel_dtrsm_nn_ll_one_4x4_vs_lib4ccc(int kmax, double *A, double *B, int l
 
 	double alpha1 = -1.0;
 
-	kernel_dgemm_nn_4x4_lib4cc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, beta, C, ldc, CC, bs);
 
 	e_1 = E[1+lde*0];
 	e_2 = E[2+lde*0];

@@ -140,12 +140,12 @@ inner_store_4x2_lib:
 
 
 //                                 1      2              3          4          5             6          7        8          9
-// void kernel_dgemm_nt_4x2_lib44c(int k, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+// void kernel_dgemm_nt_4x2_lib44cc(int k, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 
 	.align 16
-	.globl kernel_dgemm_nt_4x2_lib44c
-	.type kernel_dgemm_nt_4x2_lib44c, @function
-kernel_dgemm_nt_4x2_lib44c:
+	.globl kernel_dgemm_nt_4x2_lib44cc
+	.type kernel_dgemm_nt_4x2_lib44cc, @function
+kernel_dgemm_nt_4x2_lib44cc:
 
 	PROLOGUE
 
@@ -202,7 +202,7 @@ kernel_dgemm_nt_4x2_lib44c:
 
 	ret
 
-	.size	kernel_dgemm_nt_4x2_lib44c, .-kernel_dgemm_nt_4x2_lib44c
+	.size	kernel_dgemm_nt_4x2_lib44cc, .-kernel_dgemm_nt_4x2_lib44cc
 
 
 

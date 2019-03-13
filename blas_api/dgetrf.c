@@ -541,7 +541,7 @@ edge_m_12_0:
 		}
 	for(ii=12; ii<n; ii+=4)
 		{
-		kernel_dtrsm_nn_ll_one_12x4_vs_lib4ccc(0, dummy, 0, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
+		kernel_dtrsm_nn_ll_one_12x4_vs_lib4cccc(0, dummy, 0, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
 		}
 	goto end_0;
 #endif
@@ -558,7 +558,7 @@ edge_m_8_0:
 		}
 	for(ii=8; ii<n; ii+=4)
 		{
-		kernel_dtrsm_nn_ll_one_8x4_vs_lib4ccc(0, dummy, 0, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
+		kernel_dtrsm_nn_ll_one_8x4_vs_lib4cccc(0, dummy, 0, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
 		}
 	goto end_0;
 #endif
@@ -574,7 +574,7 @@ edge_m_4_0:
 		}
 	for(ii=4; ii<n; ii+=4)
 		{
-		kernel_dtrsm_nn_ll_one_4x4_vs_lib4ccc(0, dummy, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
+		kernel_dtrsm_nn_ll_one_4x4_vs_lib4cccc(0, dummy, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
 		}
 	goto end_0;
 
@@ -1052,7 +1052,7 @@ edge_m_12_1:
 		}
 	for(ii=12; ii<n; ii+=4)
 		{
-		kernel_dtrsm_nn_ll_one_12x4_vs_lib4ccc(0, dummy, 0, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
+		kernel_dtrsm_nn_ll_one_12x4_vs_lib4cccc(0, dummy, 0, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
 		}
 	goto end_m_1;
 #endif
@@ -1069,7 +1069,7 @@ edge_m_8_1:
 		}
 	for(ii=8; ii<n; ii+=4)
 		{
-		kernel_dtrsm_nn_ll_one_8x4_vs_lib4ccc(0, dummy, 0, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
+		kernel_dtrsm_nn_ll_one_8x4_vs_lib4cccc(0, dummy, 0, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
 		}
 	goto end_m_1;
 #endif
@@ -1085,7 +1085,7 @@ edge_m_4_1:
 		}
 	for(ii=4; ii<n; ii+=4)
 		{
-		kernel_dtrsm_nn_ll_one_4x4_vs_lib4ccc(0, dummy, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
+		kernel_dtrsm_nn_ll_one_4x4_vs_lib4cccc(0, dummy, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
 		}
 	goto end_m_1;
 
