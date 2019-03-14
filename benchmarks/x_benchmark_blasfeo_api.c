@@ -382,10 +382,10 @@ int main()
 				blasfeo_dgeqrf(n, n, &sB2, 0, 0, &sB2, 0, 0, qr_work);
 #elif defined(GETRF_NOPIVOT)
 #if !defined(LA_BLAS_WRAPPER)
-				blasfeo_dgetrf_nopivot(n, n, &sB, 0, 0, &sB, 0, 0);
+				blasfeo_dgetrf_np(n, n, &sB, 0, 0, &sB, 0, 0);
 #endif
 #elif defined(GETRF_ROWPIVOT)
-				blasfeo_dgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
+				blasfeo_dgetrf_rp(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 #elif defined(POTRF_L)
 				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 #elif defined(POTRF_U)
@@ -473,10 +473,10 @@ int main()
 				blasfeo_sgeqrf(n, n, &sB2, 0, 0, &sB2, 0, 0, qr_work);
 #elif defined(GETRF_NOPIVOT)
 #if !defined(LA_BLAS_WRAPPER)
-				blasfeo_sgetrf_nopivot(n, n, &sB, 0, 0, &sB, 0, 0);
+				blasfeo_sgetrf_np(n, n, &sB, 0, 0, &sB, 0, 0);
 #endif
 #elif defined(GETRF_ROWPIVOT)
-				blasfeo_sgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
+				blasfeo_sgetrf_rp(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 #elif defined(POTRF_L)
 				blasfeo_spotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 #elif defined(POTRF_U)
