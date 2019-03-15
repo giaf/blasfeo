@@ -16,6 +16,7 @@ cpu_freq.h
 # test
 tests/build
 tests/reports
+tests/libblasfeo_ref.a
 
 # CMake
 build*
