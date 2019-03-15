@@ -3,6 +3,13 @@ BLASFEO ChangeLog
 
 
 ====================================================================
+Version 0.1.2-master
+15-Mar-2019
+
+BLAS_API:
+	* dtrmm for all targets (mainly based on 4x4 kernels for now)
+
+====================================================================
 Version 0.1.1
 04-Feb-2019
 
