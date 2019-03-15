@@ -287,9 +287,38 @@ int main()
 				blasfeo_dsyrk(&c_u, &c_n, &n, &n, &r_1, A, &n, &r_0, D, &n);
 #elif defined(SYRK_UT)
 				blasfeo_dsyrk(&c_u, &c_t, &n, &n, &r_1, A, &n, &r_0, D, &n);
+#elif defined(TRMM_LLNN)
+				blasfeo_dtrmm(&c_l, &c_l, &c_n, &c_n, &n, &n, &r_1, B, &n, D, &n);
+#elif defined(TRMM_LLNU)
+				blasfeo_dtrmm(&c_l, &c_l, &c_n, &c_u, &n, &n, &r_1, B, &n, D, &n);
+#elif defined(TRMM_LLTN)
+				blasfeo_dtrmm(&c_l, &c_l, &c_t, &c_n, &n, &n, &r_1, B, &n, D, &n);
+#elif defined(TRMM_LLTU)
+				blasfeo_dtrmm(&c_l, &c_l, &c_t, &c_u, &n, &n, &r_1, B, &n, D, &n);
+#elif defined(TRMM_LUNN)
+				blasfeo_dtrmm(&c_l, &c_u, &c_n, &c_n, &n, &n, &r_1, B, &n, D, &n);
+#elif defined(TRMM_LUNU)
+				blasfeo_dtrmm(&c_l, &c_u, &c_n, &c_u, &n, &n, &r_1, B, &n, D, &n);
+#elif defined(TRMM_LUTN)
+				blasfeo_dtrmm(&c_l, &c_u, &c_t, &c_n, &n, &n, &r_1, B, &n, D, &n);
+#elif defined(TRMM_LUTU)
+				blasfeo_dtrmm(&c_l, &c_u, &c_t, &c_u, &n, &n, &r_1, B, &n, D, &n);
 #elif defined(TRMM_RLNN)
 				blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &n, &n, &r_1, B, &n, D, &n);
+#elif defined(TRMM_RLNU)
+				blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_u, &n, &n, &r_1, B, &n, D, &n);
+#elif defined(TRMM_RLTN)
+				blasfeo_dtrmm(&c_r, &c_l, &c_t, &c_n, &n, &n, &r_1, B, &n, D, &n);
+#elif defined(TRMM_RLTU)
+				blasfeo_dtrmm(&c_r, &c_l, &c_t, &c_u, &n, &n, &r_1, B, &n, D, &n);
+#elif defined(TRMM_RUNN)
+				blasfeo_dtrmm(&c_r, &c_u, &c_n, &c_n, &n, &n, &r_1, B, &n, D, &n);
+#elif defined(TRMM_RUNU)
+				blasfeo_dtrmm(&c_r, &c_u, &c_n, &c_u, &n, &n, &r_1, B, &n, D, &n);
 #elif defined(TRMM_RUTN)
+				blasfeo_dtrmm(&c_r, &c_u, &c_t, &c_n, &n, &n, &r_1, B, &n, D, &n);
+#elif defined(TRMM_RUTU)
+				blasfeo_dtrmm(&c_r, &c_u, &c_t, &c_u, &n, &n, &r_1, B, &n, D, &n);
 #elif defined(TRSM_LLNN)
 				blasfeo_dtrsm(&c_l, &c_l, &c_n, &c_n, &n, &n, &r_1, B, &n, D, &n);
 #elif defined(TRSM_LLNU)
@@ -352,8 +381,22 @@ int main()
 #elif defined(SYRK_LT)
 #elif defined(SYRK_UN)
 #elif defined(SYRK_UT)
+#elif defined(TRMM_LLNN)
+#elif defined(TRMM_LLNU)
+#elif defined(TRMM_LLTN)
+#elif defined(TRMM_LLTU)
+#elif defined(TRMM_LUNN)
+#elif defined(TRMM_LUNU)
+#elif defined(TRMM_LUTN)
+#elif defined(TRMM_LUTU)
 #elif defined(TRMM_RLNN)
+#elif defined(TRMM_RLNU)
+#elif defined(TRMM_RLTN)
+#elif defined(TRMM_RLTU)
+#elif defined(TRMM_RUNN)
+#elif defined(TRMM_RUNU)
 #elif defined(TRMM_RUTN)
+#elif defined(TRMM_RUTU)
 #elif defined(TRSM_LLNN)
 #elif defined(TRSM_LLNU)
 #elif defined(TRSM_LLTN)
@@ -402,7 +445,7 @@ int main()
 
 #if defined(GEMM_NN) | defined(GEMM_NT) | defined(GEMM_TN) | defined(GEMM_TT)
 		double flop_operation = 2.0*n*n*n;
-#elif defined(SYRK_LN) | defined(SYRK_LT) | defined(SYRK_UN) | defined(SYRK_UT) | defined(TRMM_RLNN) | defined(TRMM_RUTN) | defined(TRSM)
+#elif defined(SYRK_LN) | defined(SYRK_LT) | defined(SYRK_UN) | defined(SYRK_UT) | defined(TRMM) | defined(TRSM)
 		double flop_operation = 1.0*n*n*n;
 #elif defined(GELQF) | defined(GEQRF)
 		double flop_operation = 4.0/3.0*n*n*n;

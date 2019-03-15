@@ -338,10 +338,24 @@ int main()
 				blasfeo_dsyrk_un(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 #elif defined(SYRK_UT)
 				blasfeo_dsyrk_ut(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+#elif defined(TRMM_LLNN)
+#elif defined(TRMM_LLNU)
+#elif defined(TRMM_LLTN)
+#elif defined(TRMM_LLTU)
+#elif defined(TRMM_LUNN)
+#elif defined(TRMM_LUNU)
+#elif defined(TRMM_LUTN)
+#elif defined(TRMM_LUTU)
 #elif defined(TRMM_RLNN)
 				blasfeo_dtrmm_rlnn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
+#elif defined(TRMM_RLNU)
+#elif defined(TRMM_RLTN)
+#elif defined(TRMM_RLTU)
+#elif defined(TRMM_RUNN)
+#elif defined(TRMM_RUNU)
 #elif defined(TRMM_RUTN)
 				blasfeo_dtrmm_rutn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
+#elif defined(TRMM_RUTU)
 #elif defined(TRSM_LLNN)
 				blasfeo_dtrsm_llnn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_LLNU)
@@ -429,10 +443,24 @@ int main()
 				blasfeo_ssyrk_un(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 #elif defined(SYRK_UT)
 				blasfeo_ssyrk_ut(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+#elif defined(TRMM_LLNN)
+#elif defined(TRMM_LLNU)
+#elif defined(TRMM_LLTN)
+#elif defined(TRMM_LLTU)
+#elif defined(TRMM_LUNN)
+#elif defined(TRMM_LUNU)
+#elif defined(TRMM_LUTN)
+#elif defined(TRMM_LUTU)
 #elif defined(TRMM_RLNN)
 				blasfeo_strmm_rlnn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
+#elif defined(TRMM_RLNU)
+#elif defined(TRMM_RLTN)
+#elif defined(TRMM_RLTU)
+#elif defined(TRMM_RUNN)
+#elif defined(TRMM_RUNU)
 #elif defined(TRMM_RUTN)
 				blasfeo_strmm_rutn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
+#elif defined(TRMM_RUTU)
 #elif defined(TRSM_LLNN)
 				blasfeo_strsm_llnn(n, n, 1.0, &sB, 0, 0, &sA, 0, 0, &sD, 0, 0);
 #elif defined(TRSM_LLNU)
@@ -516,7 +544,7 @@ int main()
 
 #if defined(GEMM_NN) | defined(GEMM_NT) | defined(GEMM_TN) | defined(GEMM_TT)
 		double flop_operation = 2.0*n*n*n;
-#elif defined(SYRK_LN) | defined(SYRK_LT) | defined(SYRK_UN) | defined(SYRK_UT) | defined(TRMM_RLNN) | defined(TRMM_RUTN) | defined(TRSM)
+#elif defined(SYRK_LN) | defined(SYRK_LT) | defined(SYRK_UN) | defined(SYRK_UT) | defined(TRMM) | defined(TRSM)
 		double flop_operation = 1.0*n*n*n;
 #elif defined(GELQF) | defined(GEQRF)
 		double flop_operation = 4.0/3.0*n*n*n;
