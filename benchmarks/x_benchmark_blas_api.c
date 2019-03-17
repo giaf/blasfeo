@@ -43,25 +43,25 @@
 
 
 
-#if defined(REF_BLAS_NETLIB)
+#if defined(EXTERNAL_BLAS_NETLIB)
 //#include "cblas.h"
 //#include "lapacke.h"
 #include "../include/d_blas.h"
 #endif
 
-#if defined(REF_BLAS_OPENBLAS)
+#if defined(EXTERNAL_BLAS_OPENBLAS)
 void openblas_set_num_threads(int num_threads);
 //#include "cblas.h"
 //#include "lapacke.h"
 #include "../include/d_blas.h"
 #endif
 
-#if defined(REF_BLAS_BLIS)
+#if defined(EXTERNAL_BLAS_BLIS)
 //void omp_set_num_threads(int num_threads);
 #include "blis.h"
 #endif
 
-#if defined(REF_BLAS_MKL)
+#if defined(EXTERNAL_BLAS_MKL)
 #include "mkl.h"
 #endif
 
@@ -73,13 +73,13 @@ void openblas_set_num_threads(int num_threads);
 int main()
 	{
 
-#if defined(REF_BLAS_OPENBLAS)
+#if defined(EXTERNAL_BLAS_OPENBLAS)
 	openblas_set_num_threads(1);
 #endif
-#if defined(REF_BLAS_BLIS)
+#if defined(EXTERNAL_BLAS_BLIS)
 //	omp_set_num_threads(1);
 #endif
-#if defined(REF_BLAS_MKL)
+#if defined(EXTERNAL_BLAS_MKL)
 	mkl_set_num_threads(1);
 #endif
 

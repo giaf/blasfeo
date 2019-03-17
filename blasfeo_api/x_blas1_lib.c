@@ -251,7 +251,7 @@ void ROWROT_LIBSTR(int m, struct STRMAT *sA, int ai0, int ai1, int aj, REAL c, R
 
 
 
-#elif defined(LA_BLAS_WRAPPER)
+#elif defined(LA_EXTERNAL_BLAS_WRAPPER)
 
 
 

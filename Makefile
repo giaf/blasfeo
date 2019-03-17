@@ -885,11 +885,11 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 	echo "#endif" >> ./include/blasfeo_target.h
 #	echo "#define LA HIGH_PERFORMANCE" >> ./include/blasfeo_target.h
 endif
-ifeq ($(LA), BLAS_WRAPPER)
-	echo "#ifndef LA_BLAS_WRAPPER" >> ./include/blasfeo_target.h
-	echo "#define LA_BLAS_WRAPPER" >> ./include/blasfeo_target.h
+ifeq ($(LA), EXTERNAL_BLAS_WRAPPER)
+	echo "#ifndef LA_EXTERNAL_BLAS_WRAPPER" >> ./include/blasfeo_target.h
+	echo "#define LA_EXTERNAL_BLAS_WRAPPER" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define LA BLAS_WRAPPER" >> ./include/blasfeo_target.h
+#	echo "#define LA EXTERNAL_BLAS_WRAPPER" >> ./include/blasfeo_target.h
 endif
 ifeq ($(LA), REFERENCE)
 	echo "#ifndef LA_REFERENCE" >> ./include/blasfeo_target.h

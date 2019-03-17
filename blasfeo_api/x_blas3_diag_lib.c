@@ -29,7 +29,7 @@
 
 
 
-#if defined(LA_REFERENCE) | defined(LA_BLAS_WRAPPER) | defined(TESTING_MODE)
+#if defined(LA_REFERENCE) | defined(LA_EXTERNAL_BLAS_WRAPPER) | defined(TESTING_MODE)
 
 
 

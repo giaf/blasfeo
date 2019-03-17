@@ -27,7 +27,21 @@
 #                                                                                                 #
 ###################################################################################################
 
-# Target architecture list
+# Do something in this makefile
+$(info Parsing Makefile.rule)
+
+# Get path of Makefile.rule as main project directory 
+#CURRENT_DIR  := $(dir $(lastword $(MAKEFILE_LIST)))
+MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+CURRENT_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
+
+
+
+#################################################
+### main makefile options
+#################################################
+
+# Select target architecture (TARGET)
 #
 # X64_INTEL_HASWELL: x86_64 architecture with AVX2 and FMA ISA (64 bit OS)
 # code optimized for Intel Haswell and Intel Skylake architectures.
@@ -35,20 +49,32 @@
 # X64_INTEL_SANDY_BRIDGE : x86_64 architecture with AVX ISA (64 bit OS)
 # code optimized for Intel Sandy-Bridge architecture.
 #
-# X64_INTEL_CORE : x86_64 architecture with SSE3 (64 bit OS)
+# X64_INTEL_CORE : x86_64 architecture with SSE3 ISA (64 bit OS)
 # code optimized for Intel Core archiecture.
 #
 # X64_AMD_BULLDOZER : x86_64 architecture with AVX and FMA ISA (64 bit OS)
 # code optimized for AMD Bulldozer.
 #
+# X86_AMD_JAGUAR : x86 architecture with AVX ISA (32 bit OS)
+# code optimized for AMD Jaguar.
+#
+# X86_AMD_BARCELONA : x86 architecture with SSE3 ISA (32 bit OS)
+# code optimized for AMD Barcelona.
+#
+# ARMV8A_ARM_CORTEX_A57 : ARMv8A architecture with NEON (64 bit OS)
+# code optimized for ARM Cortex A57.
+#
+# ARMV8A_ARM_CORTEX_A53 : ARMv8A architecture with NEON (64 bit OS)
+# code optimized for ARM Cortex A53.
+#
 # ARMV7A_ARM_CORTEX_A15 : ARMv7A architecture with NEON-VFPv4 ISA (32 bit OS)
 # code optimized for ARM Cortex A15.
 #
-# ARMV8A_ARM_CORTEX_A57
+# ARMV7A_ARM_CORTEX_A7 : ARMv7A architecture with NEON-VFPv4 ISA (32 bit OS)
+# code optimized for ARM Cortex A7.
 #
-# GENERIC : generic C code
-
-# Select target architecture
+# GENERIC : generic architecture, plain C code.
+#
 #
 TARGET = X64_INTEL_HASWELL
 # TARGET = X64_INTEL_SANDY_BRIDGE
@@ -65,54 +91,85 @@ TARGET = X64_INTEL_HASWELL
 #
 # TARGET = GENERIC
 
-# Select back-end LA version:
-# high_performance: target-tailored; performance-optimized for cache resident matrices; panel-major matrix format
-# reference: target-unspecific lightly-optimized; small code footprint; column-major matrix format
-# BLAS_wrapper: call to external BLAS and LAPACK libraries; column-major matrix format
+# Select back-end linear lagebra version (LA):
+# HIGH_PERFORMANCE : target-tailored; performance-optimized for cache resident matrices; panel-major matrix format
+# REFERENCE : target-unspecific lightly-optimized; small code footprint; column-major matrix format
+# EXTERNAL_BLAS_WRAPPER : call to external BLAS and LAPACK libraries; column-major matrix format
 #
 LA = HIGH_PERFORMANCE
 # LA = REFERENCE
-# LA = BLAS_WRAPPER
+# LA = EXTERNAL_BLAS_WRAPPER
 
-# For LA=BLAS_WRAPPER, select external BLAS and LAPACK implementation
+# Select external BLAS and LAPACK implementation (to be provided by the user).
+# Edit Makefile.external_blas to specify installation location (default /opt).
+# It is used by the BLASFEO library if LA=EXTERNAL_BLAS_WRAPPER.
+# It may also be used as a comparison in some benchmarks and tests.
 #
-REF_BLAS = 0
-# REF_BLAS = SYSTEM
-# REF_BLAS = OPENBLAS
-# REF_BLAS = NETLIB
-# REF_BLAS = MKL
-# REF_BLAS = BLIS
-# REF_BLAS = ATLAS
+EXTERNAL_BLAS = 0
+# EXTERNAL_BLAS = SYSTEM
+# EXTERNAL_BLAS = OPENBLAS
+# EXTERNAL_BLAS = NETLIB
+# EXTERNAL_BLAS = MKL
+# EXTERNAL_BLAS = BLIS
+# EXTERNAL_BLAS = ATLAS
+include $(CURRENT_DIR)/Makefile.external_blas
 
-# Macro level (code size vs performance in assembly kernels):
-# 0 (no macro), 1 (all macro but gemm kernel), 2 (all macro)
+# Select operating system (automatic selection for LINUX and MAC)
 #
-MACRO_LEVEL = 0
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S), Linux)
+    OS = LINUX
+endif
+ifeq ($(UNAME_S), Darwin)
+    OS = MAC
+endif
+#
+# Select operating system (manual selection)
+#
+# OS = LINUX
+# OS = MAC
+# OS = WINDOWS
 
-# Compile BLAS API routines (experimental)
+# Compile the BLAS API routines provided by BLASFEO
+#
 BLAS_API = 0
 # BLAS_API = 1
 
-# Compile CBLAS API routines (experimental)
-CBLAS_API = 0
-# CBLAS_API = 1
-
-# Export standard FORTRAN API for BLAS API routines (experimental)
+# Export standard FORTRAN namings for BLAS API routines
+# 0 : routines namings are in the form blasfeo_dgemm
+# 1 : routines namings are in the form dgemm_
+#
 FORTRAN_BLAS_API = 0
 # FORTRAN_BLAS_API = 1
 
-ifeq ($(CBLAS_API), 1) 
-ifeq ($(FORTRAN_BLAS_API), 0)
-$(error Cannot expose non-FORTRAN style BLAS API when building CBLAS API. Exiting.)	
-endif
-endif
+# TODO complement with netlib
 
-# In BLAS API, fallback to external BLAS library for some sub-routines
-# FALLBACK_TO_EXT_BLAS = 0
-FALLBACK_TO_EXT_BLAS = 1
+# Compile the CBLAS API routines provided by BLASFEO
+#
+CBLAS_API = 0
+# CBLAS_API = 1
 
-# Maximum K value for stack buffer size (decrease this value if stack size is exceeded)
+
+
+#################################################
+### other makefile options and settings
+#################################################
+
+# In BLAS API, fallback to external BLAS library for some not-yet-implemented routines
+#
+# FALLBACK_TO_EXTERNAL_BLAS = 0
+FALLBACK_TO_EXTERNAL_BLAS = 1
+
+# Maximum inner product length K for buffer allocation on stack (decrease this value if stack size is exceeded)
+#
 K_MAX_STACK = 300
+
+# Macro level (code size vs performance in assembly kernels):
+# 0 : no macro (min code size)
+# 1 : all macro but gemm kernel
+# 2 : all macro (max performance)
+#
+MACRO_LEVEL = 0
 
 # Use C99 extension to math library
 #
@@ -126,48 +183,45 @@ EXT_DEP = 1
 
 # Compile reference implementations with test_ prefix
 # in order to check HIGH_PERFORMANCE routines against reference
+# TODO bug: if LA=EXTERNAL_BLAS_WRAPPER and TESTING_MODE=1, reference code is used for libblasfeo.a
+# Also enables the compilation of tests
 #
 TESTING_MODE = 0
 # TESTING_MODE = 1
 
+# Compile not-yet-implemented routine with just-return instead of print-and-exit
+# Also enables the compilation of benchmarks
+#
 BENCHMARKS_MODE = 0
 # BENCHMARKS_MODE = 1
 
+# Enables the compilation of sandbox (experimental)
+#
 SANDBOX_MODE = 0
 # SANDBOX_MODE = 1
 
-# Enable on-line checks for matrix and vector dimensions
+# Enable on-line checks for matrix and vector dimensions (experimental)
 #
 RUNTIME_CHECKS = 0
 # RUNTIME_CHECKS = 1
 
 # Print name of BLAS API routines when called (for debugging purposes)
+#
 PRINT_NAME = 0
 # PRINT_NAME = 1
-
-# Operating system (automatic selection)
-#
-UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Linux)
-    OS = LINUX
-endif
-ifeq ($(UNAME_S),Darwin)
-    OS = MAC
-endif
-# Operating system (manual selection)
-#
-# OS = LINUX
-# OS = MAC
-# OS = WINDOWS
 
 # C Compiler
 #
 CC = gcc
 # CC = clang
 # CC = x86_64-w64-mingw32-gcc
+
+# archive routine
+#
 AR = ar
 
 # Installation directory
+#
 PREFIX = /opt
 
 # compiler / assembler / linker flags
@@ -186,13 +240,14 @@ CFLAGS  += #-g #-Wall -pedantic -Wfloat-equal #-pg
 ASFLAGS += #-g
 
 
-# Support local options
-mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
-current_dir := $(patsubst %/,%,$(dir $(mkfile_path)))
-# Do not complain if Makefile.local does not exisist
--include $(current_dir)/Makefile.local
 
-# Conditional Definitions
+# Support local options
+# TODO move somewhere else ???
+-include $(CURRENT_DIR)/Makefile.local
+
+
+
+# Conditional definitions and checks
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 CFLAGS  += -DLA_HIGH_PERFORMANCE
@@ -202,11 +257,14 @@ ifeq ($(LA), REFERENCE)
 CFLAGS  += -DLA_REFERENCE
 BINARY_DIR = build/$(LA)/$(TARGET)
 endif
-ifeq ($(LA), BLAS_WRAPPER)
-CFLAGS  += -DLA_BLAS_WRAPPER
-BINARY_DIR = build/$(LA)/$(REF_BLAS)
+ifeq ($(LA), EXTERNAL_BLAS_WRAPPER)
+ifeq ($(EXTERNAL_BLAS), 0)
+$(error No EXTERNAL_BLAS selected for LA=EXTERNAL_BLAS_WRAPPER)
 endif
-CFLAGS  += -DLA=$(LA)
+CFLAGS  += -DLA_EXTERNAL_BLAS_WRAPPER
+BINARY_DIR = build/$(LA)/$(EXTERNAL_BLAS)
+endif
+#CFLAGS  += -DLA=$(LA)
 
 ifeq ($(BLAS_API), 1)
 CFLAGS += -DBLAS_API
@@ -215,11 +273,17 @@ ifeq ($(FORTRAN_BLAS_API), 1)
 CFLAGS += -DFORTRAN_BLAS_API
 ASFLAGS +=
 endif # FORTRAN_BLAS_API
-ifeq ($(FALLBACK_TO_EXT_BLAS), 1)
-CFLAGS += -DFALLBACK_TO_EXT_BLAS
-ASFLAGS += -DFALLBACK_TO_EXT_BLAS
-endif # FALLBACK_TO_EXT_BLAS
+ifeq ($(FALLBACK_TO_EXTERNAL_BLAS), 1)
+CFLAGS += -DFALLBACK_TO_EXTERNAL_BLAS
+ASFLAGS += -DFALLBACK_TO_EXTERNAL_BLAS
+endif # FALLBACK_TO_EXTERNAL_BLAS
 endif # BLAS_API
+
+ifeq ($(CBLAS_API), 1) 
+ifeq ($(FORTRAN_BLAS_API), 0)
+$(error Cannot expose non-FORTRAN style BLAS API when building CBLAS API. Exiting.)	
+endif
+endif
 
 CFLAGS  += -DK_MAX_STACK=$(K_MAX_STACK)
 
@@ -279,36 +343,35 @@ CFLAGS  += -D__BACHMANN__
 ASFLAGS += -D__BACHMANN__
 endif
 
-# REF_BLAS
+# EXTERNAL_BLAS
 
-ifndef REF_BLAS
-    REF_BLAS = 0
+ifndef EXTERNAL_BLAS
+    EXTERNAL_BLAS = 0
 endif
 
-ifeq ($(REF_BLAS), 0)
+CFLAGS += $(INCLUDE_EXTERNAL_BLAS)
+ifeq ($(EXTERNAL_BLAS), 0)
 CFLAGS  +=
 endif
-ifeq ($(REF_BLAS), SYSTEM)
-CFLAGS  += -DREF_BLAS_SYSTEM
+ifeq ($(EXTERNAL_BLAS), SYSTEM)
+CFLAGS  += -DEXTERNAL_BLAS_SYSTEM
 endif
-ifeq ($(REF_BLAS), OPENBLAS)
-CFLAGS  += -DREF_BLAS_OPENBLAS -I/opt/openblas/include
+ifeq ($(EXTERNAL_BLAS), OPENBLAS)
+CFLAGS  += -DEXTERNAL_BLAS_OPENBLAS
 endif
-ifeq ($(REF_BLAS), BLIS)
-CFLAGS  += -DREF_BLAS_BLIS -I/opt/blis/include/blis -std=gnu99
+ifeq ($(EXTERNAL_BLAS), BLIS)
+CFLAGS  += -DEXTERNAL_BLAS_BLIS -std=gnu99
 endif
-ifeq ($(REF_BLAS), NETLIB)
-CFLAGS  += -DREF_BLAS_NETLIB
+ifeq ($(EXTERNAL_BLAS), NETLIB)
+CFLAGS  += -DEXTERNAL_BLAS_NETLIB
 endif
-ifeq ($(REF_BLAS), MKL)
-CFLAGS  += -DREF_BLAS_MKL -DMKL_DIRECT_CALL_SEQ -std=c99 -m64 -I/opt/intel/mkl/include
-#CFLAGS  += -DREF_BLAS_MKL -DMKL_DIRECT_CALL_SEQ -std=c99 -m64 -I/opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/include
+ifeq ($(EXTERNAL_BLAS), MKL)
+CFLAGS  += -DEXTERNAL_BLAS_MKL -std=c99 -m64 -DMKL_DIRECT_CALL_SEQ
 endif
-ifeq ($(REF_BLAS), ATLAS)
-CFLAGS  += -DREF_BLAS_ATLAS
+ifeq ($(EXTERNAL_BLAS), ATLAS)
+CFLAGS  += -DEXTERNAL_BLAS_ATLAS
 endif
-
-CFLAGS  += -DREF_BLAS=$(REF_BLAS)
+#CFLAGS  += -DEXTERNAL_BLAS=$(EXTERNAL_BLAS)
 
 # Architecture-specific flags
 ifeq ($(TARGET), X64_INTEL_HASWELL)
@@ -351,4 +414,4 @@ ifeq ($(TARGET), GENERIC)
 CFLAGS  += -DTARGET_GENERIC
 endif
 #
-CFLAGS  += -DTARGET=$(TARGET)
+#CFLAGS  += -DTARGET=$(TARGET)

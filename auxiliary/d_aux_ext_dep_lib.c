@@ -62,7 +62,7 @@
 #include "x_aux_ext_dep_lib.c"
 
 
-#if defined(LA_BLAS_WRAPPER) | defined(LA_REFERENCE)
+#if defined(LA_EXTERNAL_BLAS_WRAPPER) | defined(LA_REFERENCE)
 
 
 #define ALLOCATE_STRMAT blasfeo_allocate_dmat

@@ -259,7 +259,7 @@ class CookBook:
                 self.run_recipe()
                 break
 
-            if la=="BLAS_WRAPPER":
+            if la=="EXTERNAL_BLAS_WRAPPER":
                 self.run_recipe()
                 break
 

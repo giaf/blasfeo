@@ -34,10 +34,10 @@
 
 #include <blasfeo.h>
 
-#ifdef REF_BLAS_MKL
+#ifdef EXTERNAL_BLAS_MKL
 #include <mkl.h>
 #endif
-#ifdef REF_BLAS_OPENBLAS
+#ifdef EXTERNAL_BLAS_OPENBLAS
 #include <d_blas.h>
 #endif
 
@@ -129,7 +129,7 @@ static void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *
 
 
 
-#if ( REF_BLAS!=0 | defined(BLAS_API) )
+#if ( EXTERNAL_BLAS!=0 | defined(BLAS_API) )
 static void d_back_ric_trf(int N, int *nx, int *nu, double **hBAbt, double **hRSQrq, double **hL, double **hwork_mat)
 	{
 
@@ -256,7 +256,7 @@ static void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *
 
 
 
-#if ( REF_BLAS!=0 | defined(BLAS_API) )
+#if ( EXTERNAL_BLAS!=0 | defined(BLAS_API) )
 static void d_back_ric_trs(int N, int *nx, int *nu, double **hBAbt, double **hb, double **hrq, double **hL, double **hPb, double **hux, double **hpi, double **hwork_vec)
 	{
 //	printf("\nblas api\n");
@@ -696,7 +696,7 @@ int main()
 * BLAS API
 ************************************************/
 	
-#if ( REF_BLAS!=0 | defined(BLAS_API) )
+#if ( EXTERNAL_BLAS!=0 | defined(BLAS_API) )
 
 	printf("\n*** BLAS_API ***\n\n");
 
@@ -842,7 +842,7 @@ int main()
 	time_trs = blasfeo_toc(&timer) / nrep;
 
 	/* BLAS API */
-#if ( REF_BLAS!=0 | defined(BLAS_API) )
+#if ( EXTERNAL_BLAS!=0 | defined(BLAS_API) )
 
 	// factorization
 	blasfeo_tic(&timer);
@@ -880,7 +880,7 @@ int main()
 //	for(ii=0; ii<=N; ii++)
 //		blasfeo_print_exp_dmat(nu[ii]+nx[ii]+1, nu[ii]+nx[ii], &hsL[ii], 0, 0);
 
-#if ( REF_BLAS!=0 | defined(BLAS_API) )
+#if ( EXTERNAL_BLAS!=0 | defined(BLAS_API) )
 	printf("\nBLAS API\n\n");
 	printf("\nux = \n\n");
 	for(ii=0; ii<=N; ii++)

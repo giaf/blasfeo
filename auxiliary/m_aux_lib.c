@@ -35,7 +35,7 @@
 
 
 
-#if defined(LA_REFERENCE) | defined(LA_BLAS_WRAPPER)
+#if defined(LA_REFERENCE) | defined(LA_EXTERNAL_BLAS_WRAPPER)
 
 
 

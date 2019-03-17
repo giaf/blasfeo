@@ -51,26 +51,26 @@
 
 
 
-#if defined(REF_BLAS_NETLIB)
+#if defined(EXTERNAL_BLAS_NETLIB)
 //#include "cblas.h"
 //#include "lapacke.h"
 #include "../include/d_blas.h"
 #endif
 
-#if defined(REF_BLAS_OPENBLAS)
+#if defined(EXTERNAL_BLAS_OPENBLAS)
 void openblas_set_num_threads(int num_threads);
 //#include "cblas.h"
 //#include "lapacke.h"
 #include "../include/d_blas.h"
 #endif
 
-#if defined(REF_BLAS_BLIS)
+#if defined(EXTERNAL_BLAS_BLIS)
 void omp_set_num_threads(int num_threads);
 #include "blis.h"
 //#include "../include/d_blas_64.h"
 #endif
 
-#if defined(REF_BLAS_MKL)
+#if defined(EXTERNAL_BLAS_MKL)
 #include "mkl.h"
 #endif
 
@@ -483,13 +483,13 @@ int main()
 
 
 
-#if defined(REF_BLAS_OPENBLAS)
+#if defined(EXTERNAL_BLAS_OPENBLAS)
 	openblas_set_num_threads(1);
 #endif
-#if defined(REF_BLAS_BLIS)
+#if defined(EXTERNAL_BLAS_BLIS)
 //	omp_set_num_threads(1);
 #endif
-#if defined(REF_BLAS_MKL)
+#if defined(EXTERNAL_BLAS_MKL)
 	mkl_set_num_threads(1);
 #endif
 
@@ -762,13 +762,13 @@ int main()
 
 
 
-//				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_tn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_tt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ln_mn(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
-				blasfeo_dsyrk_lt(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_dsyrk_lt(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_un(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ut(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dpotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
@@ -806,7 +806,7 @@ int main()
 
 			for(rep=0; rep<nrep; rep++)
 				{
-				#if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
+				#if defined(EXTERNAL_BLAS_OPENBLAS) || defined(EXTERNAL_BLAS_NETLIB) || defined(EXTERNAL_BLAS_MKL)
 //				dpotrf_(&c_l, &n, B2, &n, &info);
 				// dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, B, &n, &d_0, C, &n);
 				// dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
@@ -831,7 +831,7 @@ int main()
 				// dpotrf_(&c_l, &n, C, &n, &info);
 				#endif
 
-				#if defined(REF_BLAS_BLIS)
+				#if defined(EXTERNAL_BLAS_BLIS)
 				// dgemm_(&c_n, &c_t, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
 				// dgemm_(&c_n, &c_n, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
 				// dsyrk_(&c_l, &c_n, &n77, &n77, &d_1, A, &n77, &d_0, C, &n77);
@@ -857,8 +857,8 @@ int main()
 //		float flop_operation = 1*16.0*2*n; // kernel 4x4
 //		float flop_operation = 0.5*16.0*2*n; // kernel 2x4
 
-//		float flop_operation = 2.0*n*n*n; // gemm
-		float flop_operation = 1.0*n*n*n; // syrk trmm trsm
+		float flop_operation = 2.0*n*n*n; // gemm
+//		float flop_operation = 1.0*n*n*n; // syrk trmm trsm
 //		float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
 //		float flop_operation = 2.0/3.0*n*n*n; // getrf
 //		float flop_operation = 4.0/3.0*n*n*n; // geqrf gelqf
@@ -871,7 +871,7 @@ int main()
 
 		float Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
 
-		#ifndef REF_BLAS_NONE
+		#ifndef EXTERNAL_BLAS_NONE
 		float Gflops_blas     = 1e-9*flop_operation/time_blas;
 		#else
 		float Gflops_blas     = 0;

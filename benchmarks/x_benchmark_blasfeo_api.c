@@ -43,23 +43,23 @@
 
 
 
-#if defined(REF_BLAS_NETLIB)
+#if defined(EXTERNAL_BLAS_NETLIB)
 //#include "cblas.h"
 //#include "lapacke.h"
 #endif
 
-#if defined(REF_BLAS_OPENBLAS)
+#if defined(EXTERNAL_BLAS_OPENBLAS)
 void openblas_set_num_threads(int num_threads);
 //#include "cblas.h"
 //#include "lapacke.h"
 #endif
 
-#if defined(REF_BLAS_BLIS)
+#if defined(EXTERNAL_BLAS_BLIS)
 //void omp_set_num_threads(int num_threads);
 #include "blis.h"
 #endif
 
-#if defined(REF_BLAS_MKL)
+#if defined(EXTERNAL_BLAS_MKL)
 #include "mkl.h"
 #endif
 
@@ -69,13 +69,13 @@ void openblas_set_num_threads(int num_threads);
 int main()
 	{
 
-#if defined(REF_BLAS_OPENBLAS)
+#if defined(EXTERNAL_BLAS_OPENBLAS)
 	openblas_set_num_threads(1);
 #endif
-#if defined(REF_BLAS_BLIS)
+#if defined(EXTERNAL_BLAS_BLIS)
 //	omp_set_num_threads(1);
 #endif
-#if defined(REF_BLAS_MKL)
+#if defined(EXTERNAL_BLAS_MKL)
 	mkl_set_num_threads(1);
 #endif
 
@@ -395,7 +395,7 @@ int main()
 				blasfeo_drowin(n, 1.0, &sx2, 0, &sB2, n-1, 0);
 				blasfeo_dgeqrf(n, n, &sB2, 0, 0, &sB2, 0, 0, qr_work);
 #elif defined(GETRF_NOPIVOT)
-#if !defined(LA_BLAS_WRAPPER)
+#if !defined(LA_EXTERNAL_BLAS_WRAPPER)
 				blasfeo_dgetrf_np(n, n, &sB, 0, 0, &sB, 0, 0);
 #endif
 #elif defined(GETRF_ROWPIVOT)
@@ -416,7 +416,7 @@ int main()
 #elif defined(TRSV_LTN)
 				blasfeo_dtrsv_ltn(n, &sB, 0, 0, &sx, 0, &sz, 0);
 #elif defined(GEMV_NT)
-#if !defined(LA_BLAS_WRAPPER)
+#if !defined(LA_EXTERNAL_BLAS_WRAPPER)
 				blasfeo_dgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sz, 0, &sz, 0, &sz, 0, &sz, 0);
 #endif
 #elif defined(SYMV_L)
@@ -500,7 +500,7 @@ int main()
 				blasfeo_srowin(n, 1.0, &sx2, 0, &sB2, n-1, 0);
 				blasfeo_sgeqrf(n, n, &sB2, 0, 0, &sB2, 0, 0, qr_work);
 #elif defined(GETRF_NOPIVOT)
-#if !defined(LA_BLAS_WRAPPER)
+#if !defined(LA_EXTERNAL_BLAS_WRAPPER)
 				blasfeo_sgetrf_np(n, n, &sB, 0, 0, &sB, 0, 0);
 #endif
 #elif defined(GETRF_ROWPIVOT)
@@ -521,7 +521,7 @@ int main()
 #elif defined(TRSV_LTN)
 				blasfeo_strsv_ltn(n, &sB, 0, 0, &sx, 0, &sz, 0);
 #elif defined(GEMV_NT)
-#if !defined(LA_BLAS_WRAPPER)
+#if !defined(LA_EXTERNAL_BLAS_WRAPPER)
 				blasfeo_sgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sz, 0, &sz, 0, &sz, 0, &sz, 0);
 #endif
 #elif defined(SYMV_L)

@@ -19,7 +19,7 @@
     "values": [
       "HIGH_PERFORMANCE",
       "REFERENCE",
-      "BLAS_WRAPPER"
+      "EXTERNAL_BLAS_WRAPPER"
     ],
     "default": [
       "HIGH_PERFORMANCE"

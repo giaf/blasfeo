@@ -30,7 +30,7 @@ add_executable(benchmark_d_blas benchmark_d_blas.c)
 add_executable(benchmark_s_blas benchmark_s_blas.c)
 
 # link blas external blas implementations
-if(${REF_BLAS} MATCHES OPENBLAS)
+if(${EXTERNAL_BLAS} MATCHES OPENBLAS)
 	target_link_libraries(benchmark_d_blas
 		/opt/openblas/lib/libopenblas.a
 		-pthread -lgfortran -lm)
@@ -38,7 +38,7 @@ if(${REF_BLAS} MATCHES OPENBLAS)
 		/opt/openblas/lib/libopenblas.a
 		-pthread -lgfortran -lm)
 
-elseif(${REF_BLAS} MATCHES BLIS)
+elseif(${EXTERNAL_BLAS} MATCHES BLIS)
 	target_link_libraries(benchmark_d_blas
 		/opt/netlib/liblapack.a
 		/opt/blis/lib/libblis.a
@@ -48,7 +48,7 @@ elseif(${REF_BLAS} MATCHES BLIS)
 		/opt/blis/lib/libblis.a
 		-fopenmp -lgfortran -lm)
 
-elseif(${REF_BLAS} MATCHES NETLIB)
+elseif(${EXTERNAL_BLAS} MATCHES NETLIB)
 	target_link_libraries(benchmark_d_blas
 		/opt/netlib/liblapack.a
 		/opt/netlib/libblas.a
@@ -58,7 +58,7 @@ elseif(${REF_BLAS} MATCHES NETLIB)
 		/opt/netlib/libblas.a
 		-lgfortran -lm)
 
-elseif(${REF_BLAS} MATCHES MKL)
+elseif(${EXTERNAL_BLAS} MATCHES MKL)
 	target_link_libraries(benchmark_d_blas
 		-Wl,--start-group
 		/opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a
@@ -72,7 +72,7 @@ elseif(${REF_BLAS} MATCHES MKL)
 		/opt/intel/mkl/lib/intel64/libmkl_sequential.a
 		-Wl,--end-group -ldl -lpthread -lm)
 
-elseif(${REF_BLAS} MATCHES ATLAS)
+elseif(${EXTERNAL_BLAS} MATCHES ATLAS)
 	target_link_libraries(benchmark_d_blas
 		/opt/atlas/lib/liblapack.a
 		/opt/atlas/lib/libcblas.a
@@ -86,13 +86,13 @@ elseif(${REF_BLAS} MATCHES ATLAS)
 		/opt/atlas/lib/libatlas.a
 		-lgfortran -lm)
 
-elseif(${REF_BLAS} MATCHES 0)
+elseif(${EXTERNAL_BLAS} MATCHES 0)
 	target_link_libraries(benchmark_d_blas blasfeo -lm)
 	target_link_libraries(benchmark_s_blas blasfeo -lm)
 
 else()
 	message(FATAL_ERROR
 		"\nBENCHMARKS_MODE: No reference blas selected"
-		"\nUse i.e. -DREF_BLAS=OPENBLAS or -DREF_BLAS=0 to disable the comparison")
+		"\nUse i.e. -DEXTERNAL_BLAS=OPENBLAS or -DEXTERNAL_BLAS=0 to disable the comparison")
 
 endif()

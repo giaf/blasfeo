@@ -46,7 +46,7 @@
 #define VEC blasfeo_dvec
 
 
-#if defined(LA_REFERENCE) | defined(LA_BLAS_WRAPPER)
+#if defined(LA_REFERENCE) | defined(LA_EXTERNAL_BLAS_WRAPPER)
 
 
 #define MEMSIZE_MAT blasfeo_memsize_dmat
@@ -918,5 +918,5 @@ double dtrcon_1ln_libstr(int n, struct blasfeo_dmat *sA, int ai, int aj, double 
 
 #endif
 
-// LA_REFERENCE | LA_BLAS_WRAPPER
+// LA_REFERENCE | LA_EXTERNAL_BLAS_WRAPPER
 #include "x_aux_lib.c"

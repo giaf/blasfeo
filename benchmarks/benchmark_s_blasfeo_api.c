@@ -50,25 +50,25 @@
 
 
 
-#if defined(REF_BLAS_NETLIB)
+#if defined(EXTERNAL_BLAS_NETLIB)
 //#include "cblas.h"
 //#include "lapacke.h"
 #include "../include/d_blas.h"
 #endif
 
-#if defined(REF_BLAS_OPENBLAS)
+#if defined(EXTERNAL_BLAS_OPENBLAS)
 void openblas_set_num_threads(int num_threads);
 //#include "cblas.h"
 //#include "lapacke.h"
 #include "../include/d_blas.h"
 #endif
 
-#if defined(REF_BLAS_BLIS)
+#if defined(EXTERNAL_BLAS_BLIS)
 void omp_set_num_threads(int num_threads);
 #include "blis.h"
 #endif
 
-#if defined(REF_BLAS_MKL)
+#if defined(EXTERNAL_BLAS_MKL)
 #include "mkl.h"
 #endif
 
@@ -80,13 +80,13 @@ void omp_set_num_threads(int num_threads);
 int main()
 	{
 
-#if defined(REF_BLAS_OPENBLAS)
+#if defined(EXTERNAL_BLAS_OPENBLAS)
 	openblas_set_num_threads(1);
 #endif
-#if defined(REF_BLAS_BLIS)
+#if defined(EXTERNAL_BLAS_BLIS)
 //	omp_set_num_threads(1);
 #endif
-#if defined(REF_BLAS_MKL)
+#if defined(EXTERNAL_BLAS_MKL)
 	mkl_set_num_threads(1);
 #endif
 
@@ -372,7 +372,7 @@ int main()
 
 			for(rep=0; rep<nrep; rep++)
 				{
-				#if defined(REF_BLAS_OPENBLAS) || defined(REF_BLAS_NETLIB) || defined(REF_BLAS_MKL)
+				#if defined(EXTERNAL_BLAS_OPENBLAS) || defined(EXTERNAL_BLAS_NETLIB) || defined(EXTERNAL_BLAS_MKL)
 
 //				sgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
 //				sgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);
@@ -399,7 +399,7 @@ int main()
 //				spotrf_(&c_l, &n, C, &n, &info);
 				#endif
 
-				#if defined(REF_BLAS_BLIS)
+				#if defined(EXTERNAL_BLAS_BLIS)
 				// sgemm_(&c_n, &c_t, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
 				// sgemm_(&c_n, &c_n, &n77, &n77, &n77, &d_1, A, &n77, B, &n77, &d_0, C, &n77);
 				// ssyrk_(&c_l, &c_n, &n77, &n77, &d_1, A, &n77, &d_0, C, &n77);
@@ -441,7 +441,7 @@ int main()
 
 		float Gflops_blasfeo  = 1e-9*flop_operation/time_blasfeo;
 
-		#ifndef REF_BLAS_NONE
+		#ifndef EXTERNAL_BLAS_NONE
 		float Gflops_blas     = 1e-9*flop_operation/time_blas;
 		#else
 		float Gflops_blas     = 0;

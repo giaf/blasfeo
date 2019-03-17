@@ -43,7 +43,7 @@
 
 
 
-#if defined(FALLBACK_TO_EXT_BLAS)
+#if defined(FALLBACK_TO_EXTERNAL_BLAS)
 void dtrmv_(char *uplo, char *transa, char *diag, int *m, double *A, int *lda, double *x, int *incx);
 void dscal_(int *m, double *alpha, double *x, int *incx);
 #endif
@@ -89,7 +89,7 @@ void blasfeo_dtrmm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 	char c_t = 't';
 	int i_1 = 1;
 
-#if defined(FALLBACK_TO_EXT_BLAS)
+#if defined(FALLBACK_TO_EXTERNAL_BLAS)
 	// fallback to dtrmv if B is a vector
 	if(n==1 & (*side=='l' | *side=='L'))
 		{

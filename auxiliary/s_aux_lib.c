@@ -39,7 +39,7 @@
 
 
 
-#if defined(LA_REFERENCE) | defined(LA_BLAS_WRAPPER)
+#if defined(LA_REFERENCE) | defined(LA_EXTERNAL_BLAS_WRAPPER)
 
 
 #define MEMSIZE_MAT blasfeo_memsize_smat
@@ -870,5 +870,5 @@ void blasfeo_svecpei(int kmax, int *ipiv, struct blasfeo_svec *sx, int xi)
 
 #endif
 
-// LA_REFERENCE | LA_BLAS_WRAPPER
+// LA_REFERENCE | LA_EXTERNAL_BLAS_WRAPPER
 #include "x_aux_lib.c"

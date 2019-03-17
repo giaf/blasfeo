@@ -15,7 +15,7 @@
     "CC":"gcc",
     "TESTING_MODE": 1,
     "BENCHMARKS_MODE": 1,
-    "REF_BLAS": "OPENBLAS"
+    "EXTERNAL_BLAS": "OPENBLAS"
   },
   "precisions": [
     "double"

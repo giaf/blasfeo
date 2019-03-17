@@ -43,7 +43,12 @@ endif
 LIBS += $(BINARY_DIR)/libblasfeo.a
 SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
 
-include ../Makefile.blas
+#include ../Makefile.external_blas
+LIBS += $(LIBS_EXTERNAL_BLAS)
+SHARED_LIBS += $(SHARED_LIBS_EXTERNAL_BLAS)
+
+LIBS += -lm
+SHARED_LIBS += -lm
 
 # set test verbosity
 ifdef VERBOSE
@@ -77,8 +82,8 @@ TEST_BLAS_API=1
 endif
 
 ifeq ($(TEST_BLAS_API), 1)
-ifeq ($(REF_BLAS), 0)
-$(error No REF_BLAS specified, install specify one reference blas implementation i.e. OPENBLAS)
+ifeq ($(EXTERNAL_BLAS), 0)
+$(error No EXTERNAL_BLAS specified, install specify one reference blas implementation i.e. OPENBLAS)
 endif
 endif
 

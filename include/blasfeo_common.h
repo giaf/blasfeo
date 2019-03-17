@@ -93,7 +93,7 @@ struct blasfeo_svec
 #define BLASFEO_DVECEL(sa,ai) ((sa)->pa[ai])
 #define BLASFEO_SVECEL(sa,ai) ((sa)->pa[ai])
 
-#elif defined(LA_BLAS_WRAPPER) | defined(LA_REFERENCE)
+#elif defined(LA_EXTERNAL_BLAS_WRAPPER) | defined(LA_REFERENCE)
 
 // matrix structure
 struct blasfeo_dmat

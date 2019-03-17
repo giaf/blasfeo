@@ -3085,7 +3085,7 @@ void GELQF_PD_LLA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struc
 
 
 
-#elif defined(LA_BLAS_WRAPPER)
+#elif defined(LA_EXTERNAL_BLAS_WRAPPER)
 
 
 

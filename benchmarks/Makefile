@@ -30,19 +30,24 @@
 # ----------- Include
 include ../Makefile.rule
 
-LIBS = $(BINARY_DIR)/libblasfeo.a
+LIBS =
 
-include ../Makefile.blas
+LIBS += $(BINARY_DIR)/libblasfeo.a
 
-#ifeq ($(REF_BLAS), 0)
+#include ../Makefile.external_blas
+LIBS += $(LIBS_EXTERNAL_BLAS)
+
+LIBS += -lm
+
+#ifeq ($(EXTERNAL_BLAS), 0)
 #get_refblas:
 #	$(info )
-#	$(info ERROR REF_BLAS is not set or invalid)
+#	$(info ERROR EXTERNAL_BLAS is not set or invalid)
 #	$(info )
 #	$(error .)
 #else
 get_refblas:
-	@echo Using REF_BLAS=$(REF_BLAS)
+	@echo Using EXTERNAL_BLAS=$(EXTERNAL_BLAS)
 #endif
 
 ifdef GHZ_MAX

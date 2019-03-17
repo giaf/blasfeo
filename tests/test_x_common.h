@@ -84,7 +84,7 @@
 // Panel major element extraction macro
 #define MATEL_LIBSTR(sA,ai,aj) ((sA)->pA[((ai)-((ai)&(PS-1)))*(sA)->cn+(aj)*PS+((ai)&(PS-1))])
 #define MATEL_LIB(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
-#elif defined(LA_BLAS_WRAPPER) | defined(LA_REFERENCE)
+#elif defined(LA_EXTERNAL_BLAS_WRAPPER) | defined(LA_REFERENCE)
 #define MATEL_LIBSTR(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
 #else
 #error : wrong LA choice

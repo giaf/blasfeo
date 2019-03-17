@@ -28,7 +28,7 @@
 **************************************************************************************************/
 
 
-#if defined(LA_BLAS_WRAPPER) | defined(LA_REFERENCE) | defined(TESTING_MODE)
+#if defined(LA_EXTERNAL_BLAS_WRAPPER) | defined(LA_REFERENCE) | defined(TESTING_MODE)
 
 
 
@@ -38,7 +38,7 @@ void ALLOCATE_STRMAT(int m, int n, struct STRMAT *sA)
 	sA->m = m;
 	sA->n = n;
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
-#if defined(LA_BLAS_WRAPPER)
+#if defined(LA_EXTERNAL_BLAS_WRAPPER)
 	ZEROS_ALIGN(&(sA->pA), sA->m, sA->n);
 	ZEROS_ALIGN(&(sA->dA), tmp, 1);
 #else
@@ -55,7 +55,7 @@ void ALLOCATE_STRMAT(int m, int n, struct STRMAT *sA)
 // free memory of a matrix structure
 void FREE_STRMAT(struct STRMAT *sA)
 	{
-#if defined(LA_BLAS_WRAPPER)
+#if defined(LA_EXTERNAL_BLAS_WRAPPER)
 	FREE_ALIGN(sA->pA);
 	FREE_ALIGN(sA->dA);
 #else
@@ -71,7 +71,7 @@ void FREE_STRMAT(struct STRMAT *sA)
 void ALLOCATE_STRVEC(int m, struct STRVEC *sa)
 	{
 	sa->m = m;
-#if defined(LA_BLAS_WRAPPER)
+#if defined(LA_EXTERNAL_BLAS_WRAPPER)
 	ZEROS_ALIGN(&(sa->pa), sa->m, 1);
 #else
 	ZEROS(&(sa->pa), sa->m, 1);
@@ -85,7 +85,7 @@ void ALLOCATE_STRVEC(int m, struct STRVEC *sa)
 // free memory of a vector structure
 void FREE_STRVEC(struct STRVEC *sa)
 	{
-#if defined(LA_BLAS_WRAPPER)
+#if defined(LA_EXTERNAL_BLAS_WRAPPER)
 	FREE_ALIGN(sa->pa);
 #else
 	FREE(sa->pa);

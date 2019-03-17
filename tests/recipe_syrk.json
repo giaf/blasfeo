@@ -15,7 +15,7 @@
     "CC":"clang",
     "TESTING_MODE": 1,
     "BENCHMARK_MODE": 0,
-    "REF_BLAS": "OPENBLAS"
+    "EXTERNAL_BLAS": "OPENBLAS"
   },
   "precisions": [
     "double"

@@ -19,7 +19,7 @@ The BLASFEO backend provides three possible implementations of each linear algeb
 - HIGH_PERFORMANCE: target-tailored; performance-optimized for cache resident matrices; panel-major matrix format.
 Currently provided for OS_LINUX (x86_64 64-bit, x86 32-bit, ARMv8A 64-bit, ARMv7A 32-bit), OS_WINDOWS (x86_64 64-bit) and OS_MAC (x86_64 64-bit).
 - REFERENCE: target-unspecific lightly-optimizated; small code footprint; column-major matrix format
-- BLAS_WRAPPER: call to external BLAS and LAPACK libraries; column-major matrix format
+- EXTERNAL_BLAS_WRAPPER: call to external BLAS and LAPACK libraries; column-major matrix format
 
 BLASFEO prodives two APIs:
 - BLAS API: the standard BLAS and LAPACK APIs, with matrices stored in column-major.

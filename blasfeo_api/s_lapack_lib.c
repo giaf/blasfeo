@@ -31,10 +31,10 @@
 #include <stdio.h>
 #include <math.h>
 
-#if defined(LA_BLAS_WRAPPER)
-#if defined(REF_BLAS_BLIS)
+#if defined(LA_EXTERNAL_BLAS_WRAPPER)
+#if defined(EXTERNAL_BLAS_BLIS)
 #include <blis.h>
-#elif defined(REF_BLAS_MKL)
+#elif defined(EXTERNAL_BLAS_MKL)
 //#include <mkl.h>
 #else
 #include "../include/s_blas.h"

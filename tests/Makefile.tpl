@@ -28,8 +28,8 @@ include $(BLASFEO_PATH)/Makefile.blas
 {%- endfor -%}
 
 {% if TEST_BLAS_API in test_macros -%}
-ifeq ($(REF_BLAS), 0)
-$(error No REF_BLAS specified, install specify one reference blas implementation i.e. OPENBLAS)
+ifeq ($(EXTERNAL_BLAS), 0)
+$(error No EXTERNAL_BLAS specified, install specify one reference blas implementation i.e. OPENBLAS)
 {%- endif %}
 
 test.o:

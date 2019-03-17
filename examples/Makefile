@@ -29,10 +29,15 @@
 
 include ../Makefile.rule
 
-LIBS = libblasfeo.a
+LIBS =
 
-# add different link library for different REF_BLAS implementation
-include ../Makefile.blas
+LIBS += libblasfeo.a
+
+# add different link library for different EXTERNAL_BLAS implementation
+#include ../Makefile.external_blas
+LIBS += $(LIBS_EXTERNAL_BLAS)
+
+LIBS += -lm
 
 ## dgemm kernel
 # OBJS = example_kernel_dgemm.o

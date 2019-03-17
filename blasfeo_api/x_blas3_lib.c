@@ -1776,7 +1776,7 @@ void SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct X
 
 
 
-#elif defined(LA_BLAS_WRAPPER)
+#elif defined(LA_EXTERNAL_BLAS_WRAPPER)
 
 
 

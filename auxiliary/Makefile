@@ -99,7 +99,7 @@ OBJS += s_aux_lib4.o
 OBJS += m_aux_lib44.o
 endif
 
-else # LA_REFERENCE | LA_BLAS_WRAPPER
+else # LA_REFERENCE | LA_EXTERNAL_BLAS_WRAPPER
 
 OBJS += d_aux_lib.o
 OBJS += s_aux_lib.o
