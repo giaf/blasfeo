@@ -629,6 +629,11 @@ OBJS += \
 		blas_api/dpotrs.o \
 		blas_api/dtrtrs.o \
 
+ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
+include $(CURRENT_DIR)/netlib/Makefile.netlib_blas
+OBJS += $(NETLIB_BLAS_OBJ)
+endif
+
 endif
 
 ifeq ($(CBLAS_API), 1)
@@ -767,7 +772,12 @@ static_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd auxiliary; $(MAKE) obj)
 	( cd blasfeo_api; $(MAKE) obj)
+ifeq ($(BLAS_API), 1)
 	( cd blas_api; $(MAKE) obj)
+ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
+	( cd netlib; $(MAKE) obj)
+endif
+endif
 ifeq ($(CBLAS_API), 1)
 	( cd cblas_api; $(MAKE) obj)
 endif
@@ -791,7 +801,12 @@ shared_library: target
 	( cd auxiliary; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
 	( cd blasfeo_api; $(MAKE) obj)
+ifeq ($(BLAS_API), 1)
 	( cd blas_api; $(MAKE) obj)
+ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
+	( cd netlib; $(MAKE) obj)
+endif
+endif
 ifeq ($(CBLAS_API), 1)
 	( cd cblas_api; $(MAKE) obj)
 endif
@@ -943,6 +958,7 @@ clean:
 	make -C kernel clean
 	make -C blasfeo_api clean
 	make -C blas_api clean
+	make -C netlib clean
 	make -C cblas_api clean
 	make -C examples clean
 	make -C tests clean
@@ -955,6 +971,7 @@ deep_clean: clean
 	rm -f ./lib/libblasfeo.a
 	rm -f ./lib/libblasfeo.so
 	rm -f ./lib/libblasfeo_ref.a
+	make -C netlib deep_clean
 	make -C examples deep_clean
 	make -C tests deep_clean
 	make -C benchmarks deep_clean
