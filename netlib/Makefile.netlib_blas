@@ -65,7 +65,7 @@ DBLAS1 =
 DBLAS1 += netlib/blas/idamax.o
 DBLAS1 += netlib/blas/dasum.o
 DBLAS1 += netlib/blas/daxpy.o
-DBLAS1 += netlib/blas/dcopy.o
+#DBLAS1 += netlib/blas/dcopy.o
 DBLAS1 += netlib/blas/ddot.o
 DBLAS1 += netlib/blas/dnrm2.o
 DBLAS1 += netlib/blas/drot.o
@@ -221,6 +221,5 @@ ZBLAS3 += netlib/blas/zhemm.o
 ZBLAS3 += netlib/blas/zherk.o
 ZBLAS3 += netlib/blas/zher2k.o
 
-NETLIB_BLAS_OBJ = $(SBLAS1) $(SBLAS2) $(SBLAS3) $(DBLAS1) $(DBLAS2) $(DBLAS3) $(CBLAS1) $(CBLAS2) $(CBLAS3) $(ZBLAS1) $(ZBLAS2) $(ZBLAS3) $(ALLBLAS)
-
+NETLIB_BLAS_OBJS = $(SBLAS1) $(SBLAS2) $(SBLAS3) $(DBLAS1) $(DBLAS2) $(DBLAS3) $(CBLAS1) $(CBLAS2) $(CBLAS3) $(ZBLAS1) $(ZBLAS2) $(ZBLAS3) $(ALLBLAS)
 

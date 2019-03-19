@@ -631,19 +631,21 @@ OBJS += \
 
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
 include $(CURRENT_DIR)/netlib/Makefile.netlib_blas
-OBJS += $(NETLIB_BLAS_OBJ)
-endif
-
-endif
+OBJS += $(NETLIB_BLAS_OBJS)
+endif # COMPLEMENT_WITH_NETLIB_BLAS
 
 ifeq ($(CBLAS_API), 1)
-OBJS += \
-		cblas_api/CBLAS/src/cblas_globals.o \
-		cblas_api/CBLAS/src/cblas_dgemm.o \
-		cblas_api/CBLAS/src/cblas_dsyrk.o \
-		cblas_api/CBLAS/src/cblas_dtrsm.o \
+include $(CURRENT_DIR)/netlib/Makefile.netlib_cblas
+OBJS += $(NETLIB_CBLAS_OBJS)
+#OBJS += \
+#		cblas_api/CBLAS/src/cblas_globals.o \
+#		cblas_api/CBLAS/src/cblas_dgemm.o \
+#		cblas_api/CBLAS/src/cblas_dsyrk.o \
+#		cblas_api/CBLAS/src/cblas_dtrsm.o \
 
-endif
+endif # CBLAS_API
+
+endif # BLAS_API
 
 else # LA_HIGH_PERFORMANCE vs LA_REFERENCE | LA_BLAS
 
@@ -775,11 +777,12 @@ static_library: target
 ifeq ($(BLAS_API), 1)
 	( cd blas_api; $(MAKE) obj)
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
-	( cd netlib; $(MAKE) obj)
-endif
+	( cd netlib; $(MAKE) obj_blas)
 endif
 ifeq ($(CBLAS_API), 1)
-	( cd cblas_api; $(MAKE) obj)
+#	( cd cblas_api; $(MAKE) obj)
+	( cd netlib; $(MAKE) obj_cblas)
+endif
 endif
 ifeq ($(SANDBOX_MODE), 1)
 	( cd sandbox; $(MAKE) obj)
@@ -804,11 +807,12 @@ shared_library: target
 ifeq ($(BLAS_API), 1)
 	( cd blas_api; $(MAKE) obj)
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
-	( cd netlib; $(MAKE) obj)
-endif
+	( cd netlib; $(MAKE) obj_blas)
 endif
 ifeq ($(CBLAS_API), 1)
-	( cd cblas_api; $(MAKE) obj)
+#	( cd cblas_api; $(MAKE) obj)
+	( cd netlib; $(MAKE) obj_cblas)
+endif
 endif
 ifeq ($(SANDBOX_MODE), 1)
 	( cd sandbox; $(MAKE) obj)
@@ -927,11 +931,11 @@ ifeq ($(FORTRAN_BLAS_API), 1)
 	echo "#define FORTRAN_BLAS_API" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
-ifeq ($(CBLAS_API), 1)
-	echo "#ifndef CBLAS_API" >> ./include/blasfeo_target.h
-	echo "#define CBLAS_API" >> ./include/blasfeo_target.h
-	echo "#endif" >> ./include/blasfeo_target.h
-endif
+#ifeq ($(CBLAS_API), 1)
+#	echo "#ifndef CBLAS_API" >> ./include/blasfeo_target.h
+#	echo "#define CBLAS_API" >> ./include/blasfeo_target.h
+#	echo "#endif" >> ./include/blasfeo_target.h
+#endif
 
 
 # install static library & headers
