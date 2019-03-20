@@ -1,3 +1,5 @@
 blas
 cblas
+lapack
 *.tgz
+*.gz

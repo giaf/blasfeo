@@ -35,6 +35,9 @@ BLAS_DIR = blas
 CBLAS_NETLIB = cblas
 CBLAS_DIR = cblas
 
+LAPACK_NETLIB = lapack-3.8.0
+LAPACK_DIR = lapack
+
 
 obj_blas: | $(BLAS_DIR)
 	@echo "compiling BLAS ..."
@@ -72,6 +75,26 @@ $(CBLAS_DIR):
 	@echo "BLLIB = $(BLAS_DIR)/blas_LINUX.a" >> $(CBLAS_DIR)/Makefile.in
 
 
+obj_lapack: | $(LAPACK_DIR)
+	@echo "compiling LAPACK ..."
+	(cd $(LAPACK_DIR); $(MAKE) lib)
+
+
+$(LAPACK_DIR):
+	@echo "downloading LAPACK ..."
+	wget www.netlib.org/lapack/$(LAPACK_NETLIB).tar.gz -O $(LAPACK_NETLIB).tar.gz
+	mkdir -p $(LAPACK_DIR)
+	tar -xzf $(LAPACK_NETLIB).tar.gz -C $(LAPACK_DIR) --strip-components 1
+	cp $(LAPACK_DIR)/make.inc.example $(LAPACK_DIR)/make.inc
+	@echo "" >> $(LAPACK_DIR)/make.inc
+	@echo "#" >> $(LAPACK_DIR)/make.inc
+	@echo "# BLASFEO's custom flags" >> $(LAPACK_DIR)/make.inc
+	@echo "#" >> $(LAPACK_DIR)/make.inc
+	@echo "OPTS = $(CFLAGS) -O2 -frecursive" >> $(LAPACK_DIR)/make.inc
+	@echo "DRVOPTS = $(OPTS)" >> $(LAPACK_DIR)/make.inc
+	@echo "NOOPT = $(CFLAGS) -O0 -frecursive" >> $(LAPACK_DIR)/make.inc
+
+
 clean:
 ifneq ($(wildcard $(BLAS_DIR)), )
 	make -C $(BLAS_DIR) clean
@@ -82,6 +105,9 @@ endif
 ifneq ($(wildcard $(CBLAS_DIR)), )
 	make -C $(CBLAS_DIR) cleanall
 endif
+ifneq ($(wildcard $(LAPACK_DIR)), )
+	make -C $(LAPACK_DIR) clean
+endif
 
 
 deep_clean:
@@ -89,6 +115,8 @@ deep_clean:
 	rm -rf $(BLAS_NETLIB).tgz
 	rm -rf $(CBLAS_DIR)
 	rm -rf $(CBLAS_NETLIB).tgz
+	rm -rf $(LAPACK_DIR)
+	rm -rf $(LAPACK_NETLIB).tar.gz
 
 
-.PHONY: obj_blas obj_cblas clean deep_clean
+.PHONY: obj_blas obj_cblas obj_lapack clean deep_clean

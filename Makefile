@@ -634,6 +634,11 @@ include $(CURRENT_DIR)/netlib/Makefile.netlib_blas
 OBJS += $(NETLIB_BLAS_OBJS)
 endif # COMPLEMENT_WITH_NETLIB_BLAS
 
+ifeq ($(COMPLEMENT_WITH_NETLIB_LAPACK), 1)
+include $(CURRENT_DIR)/netlib/Makefile.netlib_lapack
+OBJS += $(NETLIB_LAPACK_OBJS)
+endif # COMPLEMENT_WITH_NETLIB_LAPACK
+
 ifeq ($(CBLAS_API), 1)
 include $(CURRENT_DIR)/netlib/Makefile.netlib_cblas
 OBJS += $(NETLIB_CBLAS_OBJS)
@@ -773,6 +778,9 @@ ifeq ($(BLAS_API), 1)
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
 	( cd netlib; $(MAKE) obj_blas)
 endif
+ifeq ($(COMPLEMENT_WITH_NETLIB_LAPACK), 1)
+	( cd netlib; $(MAKE) obj_lapack)
+endif
 ifeq ($(CBLAS_API), 1)
 	( cd netlib; $(MAKE) obj_cblas)
 endif
@@ -801,6 +809,9 @@ ifeq ($(BLAS_API), 1)
 	( cd blas_api; $(MAKE) obj)
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
 	( cd netlib; $(MAKE) obj_blas)
+endif
+ifeq ($(COMPLEMENT_WITH_NETLIB_LAPACK), 1)
+	( cd netlib; $(MAKE) obj_lapack)
 endif
 ifeq ($(CBLAS_API), 1)
 	( cd netlib; $(MAKE) obj_cblas)
