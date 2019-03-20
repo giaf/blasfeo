@@ -637,12 +637,6 @@ endif # COMPLEMENT_WITH_NETLIB_BLAS
 ifeq ($(CBLAS_API), 1)
 include $(CURRENT_DIR)/netlib/Makefile.netlib_cblas
 OBJS += $(NETLIB_CBLAS_OBJS)
-#OBJS += \
-#		cblas_api/CBLAS/src/cblas_globals.o \
-#		cblas_api/CBLAS/src/cblas_dgemm.o \
-#		cblas_api/CBLAS/src/cblas_dsyrk.o \
-#		cblas_api/CBLAS/src/cblas_dtrsm.o \
-
 endif # CBLAS_API
 
 endif # BLAS_API
@@ -780,7 +774,6 @@ ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
 	( cd netlib; $(MAKE) obj_blas)
 endif
 ifeq ($(CBLAS_API), 1)
-#	( cd cblas_api; $(MAKE) obj)
 	( cd netlib; $(MAKE) obj_cblas)
 endif
 endif
@@ -810,7 +803,6 @@ ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
 	( cd netlib; $(MAKE) obj_blas)
 endif
 ifeq ($(CBLAS_API), 1)
-#	( cd cblas_api; $(MAKE) obj)
 	( cd netlib; $(MAKE) obj_cblas)
 endif
 endif
@@ -931,11 +923,6 @@ ifeq ($(FORTRAN_BLAS_API), 1)
 	echo "#define FORTRAN_BLAS_API" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
-#ifeq ($(CBLAS_API), 1)
-#	echo "#ifndef CBLAS_API" >> ./include/blasfeo_target.h
-#	echo "#define CBLAS_API" >> ./include/blasfeo_target.h
-#	echo "#endif" >> ./include/blasfeo_target.h
-#endif
 
 
 # install static library & headers
@@ -963,7 +950,6 @@ clean:
 	make -C blasfeo_api clean
 	make -C blas_api clean
 	make -C netlib clean
-	make -C cblas_api clean
 	make -C examples clean
 	make -C tests clean
 	make -C benchmarks clean

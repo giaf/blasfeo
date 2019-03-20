@@ -37,7 +37,12 @@ LIBS += libblasfeo.a
 #include ../Makefile.external_blas
 LIBS += $(LIBS_EXTERNAL_BLAS)
 
+ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
+LIBS += -lgfortran
+endif
+
 LIBS += -lm
+
 
 ## dgemm kernel
 # OBJS = example_kernel_dgemm.o
