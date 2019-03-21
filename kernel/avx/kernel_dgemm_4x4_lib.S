@@ -13368,7 +13368,7 @@
 
 
 
-//                                            1      2          3          4             5          6        7          8        9          10      11
+//                                             1      2          3          4             5          6        7          8        9          10      11
 // void kernel_dtrsm_nt_rl_one_4x4_vs_lib44cc4(int k, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int m1, int n1);
 
 	.p2align 4,,15
@@ -13400,8 +13400,8 @@
 	movq	ARG5, %r11 // C
 	movq	ARG6, %r12 // ldc
 	sall	$3, %r12d
-	movq	ARG11, %r13 // m1
-	movq	ARG12, %r14 // n1
+	movq	ARG10, %r13 // m1
+	movq	ARG11, %r14 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_M1B_4X4_VS_LIB

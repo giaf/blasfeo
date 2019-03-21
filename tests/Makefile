@@ -90,7 +90,8 @@ endif
 # select one single test
 # ONE_OBJS = test_d_custom.o
 # ONE_OBJS = test_s_custom.o
-ONE_OBJS = test_d_blas_api.o
+# ONE_OBJS = test_d_blas_api.o
+ONE_OBJS = test_valgrind.o
 
 OBJS = test.o
 

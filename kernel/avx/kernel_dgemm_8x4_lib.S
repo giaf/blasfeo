@@ -10383,8 +10383,8 @@
 	movq	ARG6, %r11 // C
 	movq	ARG7, %r12 // ldc
 	sall	$3, %r12d
-	movq	ARG12, %r13 // m1
-	movq	ARG13, %r14 // n1
+	movq	ARG11, %r13 // m1
+	movq	ARG12, %r14 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_M1B_8X4_VS_LIB
@@ -10409,8 +10409,8 @@
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
 	sall	$3, %r11d
-	movq	ARG12, %r12 // m1
-	movq	ARG13, %r13 // n1
+	movq	ARG11, %r12 // m1
+	movq	ARG12, %r13 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_VS_LIB
@@ -12380,7 +12380,7 @@
 	// solve
 
 	movq	ARG10, %r10  // E 
-	movq	ARG13, %r11 // n1
+	movq	ARG12, %r11 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RUT_ONE_8X4_VS_LIB4
@@ -12394,8 +12394,8 @@
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
 	sall	$3, %r11d
-	movq	ARG12, %r12 // m1
-	movq	ARG13, %r13 // n1
+	movq	ARG11, %r12 // m1
+	movq	ARG12, %r13 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_VS_LIB

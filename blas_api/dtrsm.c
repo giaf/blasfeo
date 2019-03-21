@@ -3108,7 +3108,7 @@ rltu_1:
 
 	ii = 0;
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	for(ii=0; ii<m-11; ii+=12)
+	for(; ii<m-11; ii+=12)
 		{
 #if 0
 		kernel_dpack_nn_12_lib4(n, B+ii, ldb, pU, sdu);
@@ -3150,7 +3150,7 @@ rltu_1:
 			}
 		}
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	for(ii=0; ii<m-7; ii+=8)
+	for(; ii<m-7; ii+=8)
 		{
 		for(jj=0; jj<n-3; jj+=4)
 			{
@@ -3175,7 +3175,7 @@ rltu_1:
 			}
 		}
 #else
-	for(ii=0; ii<m-3; ii+=4)
+	for(; ii<m-3; ii+=4)
 		{
 		for(jj=0; jj<n-3; jj+=4)
 			{
