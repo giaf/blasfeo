@@ -836,7 +836,7 @@ lunn_1:
 			kernel_dtrmm_nt_ru_4x4_tran_vs_lib444c(m-jj, alpha, pU+jj*ps, pB+jj*ps+jj*sdb, &d_0, pU+jj*ps, B+jj+ii*ldb, ldb, m-jj, n-ii);
 			}
 		}
-	if(jj<m)
+	if(ii<n)
 		{
 		goto lunn_1_left_4;
 		}
@@ -990,7 +990,7 @@ lunu_1:
 			kernel_dtrmm_nt_ru_one_4x4_tran_vs_lib444c(m-jj, alpha, pU+jj*ps, pB+jj*ps+jj*sdb, &d_0, pU+jj*ps, B+jj+ii*ldb, ldb, m-jj, n-ii);
 			}
 		}
-	if(jj<m)
+	if(ii<n)
 		{
 		goto lunu_1_left_4;
 		}
