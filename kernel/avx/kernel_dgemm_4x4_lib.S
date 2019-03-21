@@ -6231,7 +6231,7 @@
 
 
 
-//                                    1      2              3          4          5        6             7          8        9          10       11      12
+//                                     1      2              3          4          5        6             7          8        9          10       11      12
 // void kernel_dgemm_nt_4x4_vs_lib4ccc(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -6410,7 +6410,7 @@
 
 
 
-//                                    1      2              3          4          5             6          7        8          9        10      11
+//                                     1      2              3          4          5             6          7        8          9        10      11
 // void kernel_dgemm_nt_4x4_vs_lib44cc(int k, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -6544,7 +6544,7 @@
 
 
 
-//                                    1      2              3          4        5          6             7          8        9          10       11      12
+//                                     1      2              3          4        5          6             7          8        9          10       11      12
 // void kernel_dgemm_nt_4x4_vs_libc4cc(int k, double *alpha, double *A, int lda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -6682,7 +6682,7 @@
 
 
 
-//                                    1      2              3          4          5        6             7          8        9          10       11      12
+//                                     1      2              3          4          5        6             7          8        9          10       11      12
 // void kernel_dgemm_nn_4x4_vs_lib4ccc(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -7132,7 +7132,7 @@
 
 
 
-//                                       1      2              3          4          5        6             7          8        9          10       11      12
+//                                        1      2              3          4          5        6             7          8        9          10       11      12
 // void kernel_dtrmm_nn_rl_4x4_vs_lib4ccc(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -7510,7 +7510,7 @@
 
 
 
-//                                       1      2              3          4          5        6             7          8        9          10       11      12
+//                                            1      2              3          4          5        6             7          8        9          10       11      12
 // void kernel_dtrmm_nn_rl_4x4_one_vs_lib4ccc(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -7888,7 +7888,7 @@
 
 
 
-//                                       1      2              3          4          5        6             7          8        9          10       11      12
+//                                        1      2              3          4          5        6             7          8        9          10       11      12
 // void kernel_dtrmm_nn_ru_4x4_vs_lib4ccc(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -8270,7 +8270,7 @@
 
 
 
-//                                       1      2              3          4          5        6             7          8        9          10       11      12
+//                                            1      2              3          4          5        6             7          8        9          10       11      12
 // void kernel_dtrmm_nn_ru_one_4x4_vs_lib4ccc(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -8672,7 +8672,7 @@
 
 
 
-//                                       1      2              3          4          5             6          7        8          9        10      11
+//                                        1      2              3          4          5             6          7        8          9        10      11
 // void kernel_dtrmm_nt_rl_4x4_vs_lib44cc(int k, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -9050,7 +9050,7 @@
 
 
 
-//                                       1      2              3          4          5             6          7        8          9        10      11
+//                                            1      2              3          4          5             6          7        8          9        10      11
 // void kernel_dtrmm_nt_rl_one_4x4_vs_lib44cc(int k, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -9408,7 +9408,7 @@
 
 
 
-//                                       1      2              3          4          5        6             7          8        9          10       11      12
+//                                        1      2              3          4          5        6             7          8        9          10       11      12
 // void kernel_dtrmm_nt_rl_4x4_vs_lib4ccc(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -9790,7 +9790,7 @@
 
 
 
-//                                       1      2              3          4          5        6             7          8        9          10       11      12
+//                                            1      2              3          4          5        6             7          8        9          10       11      12
 // void kernel_dtrmm_nt_rl_one_4x4_vs_lib4ccc(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -10195,7 +10195,7 @@
 
 
 
-//                                       1      2              3          4          5             6          7        8          9        10      11
+//                                        1      2              3          4          5             6          7        8          9        10      11
 // void kernel_dtrmm_nt_ru_4x4_vs_lib44cc(int k, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -10554,7 +10554,7 @@
 
 
 
-//                                       1      2              3          4          5        6             7          8        9          10       11      12
+//                                        1      2              3          4          5        6             7          8        9          10       11      12
 // void kernel_dtrmm_nt_ru_4x4_vs_lib4ccc(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -11314,7 +11314,7 @@
 
 
 
-//                                           1      2              3          4          5        6             7          8        9          10       11      12
+//                                            1      2              3          4          5        6             7          8        9          10       11      12
 // void kernel_dtrmm_nt_ru_one_4x4_vs_lib4ccc(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -12048,7 +12048,7 @@
 
 
 
-//                                            1      2          3          4        5             6          7        8          9        10         11       12                  13      14
+//                                             1      2          3          4        5             6          7        8          9        10         11       12                  13      14
 // void kernel_dtrsm_nn_rl_inv_4x4_vs_lib4cccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1);
 
 	.p2align 4,,15
@@ -12161,7 +12161,7 @@
 	movq	ARG14, %r13 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_4X4_vs_LIB
+	INNER_STORE_4X4_VS_LIB
 #else
 	CALL(inner_store_4x4_vs_lib)
 #endif
@@ -12450,7 +12450,7 @@
 
 
 
-//                                            1      2          3          4        5             6          7        8          9        10         11       12      13
+//                                             1      2          3          4        5             6          7        8          9        10         11       12      13
 // void kernel_dtrsm_nn_rl_one_4x4_vs_lib4cccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1);
 
 	.p2align 4,,15
@@ -12562,7 +12562,7 @@
 	movq	ARG13, %r13 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_4X4_vs_LIB
+	INNER_STORE_4X4_VS_LIB
 #else
 	CALL(inner_store_4x4_vs_lib)
 #endif
@@ -12653,7 +12653,7 @@
 
 
 
-//                                            1      2          3          4             5          6        7          8        9          10                  11      12
+//                                             1      2          3          4             5          6        7          8        9          10                  11      12
 // void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc4(int k, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E, int m1, int n1);
 
 	.p2align 4,,15
@@ -12808,7 +12808,7 @@
 
 
 
-//                                            1      2          3          4         5        6          7        8          9        10                  11      12
+//                                             1      2          3          4         5        6          7        8          9        10                  11      12
 // void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44ccc(int k, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1);
 
 	.p2align 4,,15
@@ -13165,7 +13165,7 @@
 
 
 
-//                                            1      2          3          4        5             6          7        8          9        10         11       12                  13      14
+//                                             1      2          3          4        5             6          7        8          9        10         11       12                  13      14
 // void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4cccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1);
 
 	.p2align 4,,15
@@ -13278,7 +13278,7 @@
 	movq	ARG14, %r13 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_4X4_vs_LIB
+	INNER_STORE_4X4_VS_LIB
 #else
 	CALL(inner_store_4x4_vs_lib)
 #endif
@@ -13720,7 +13720,7 @@
 
 
 
-//                                            1      2          3          4        5             6          7        8          9        10         11       12      13
+//                                             1      2          3          4        5             6          7        8          9        10         11       12      13
 // void kernel_dtrsm_nt_rl_one_4x4_vs_lib4cccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1);
 
 	.p2align 4,,15
@@ -13828,11 +13828,11 @@
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
 	sall	$3, %r11d
-	movq	ARG13, %r12 // m1
-	movq	ARG14, %r13 // n1
+	movq	ARG12, %r12 // m1
+	movq	ARG13, %r13 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_4X4_vs_LIB
+	INNER_STORE_4X4_VS_LIB
 #else
 	CALL(inner_store_4x4_vs_lib)
 #endif
@@ -14124,7 +14124,7 @@
 
 
 
-//                                            1      2          3          4        5             6          7        8          9        10         11       12                  13      14
+//                                             1      2          3          4        5             6          7        8          9        10         11       12                  13      14
 // void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4cccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1);
 
 	.p2align 4,,15
@@ -14525,7 +14525,7 @@
 
 
 
-//                                            1      2          3          4        5             6          7        8          9        10         11       12      13
+//                                             1      2          3          4        5             6          7        8          9        10         11       12      13
 // void kernel_dtrsm_nn_ru_one_4x4_vs_lib4cccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1);
 
 	.p2align 4,,15
@@ -14727,7 +14727,7 @@
 
 
 
-//                                            1      2          3          4             5          6        7          8        9          10                  11      12
+//                                             1      2          3          4             5          6        7          8        9          10                  11      12
 // void kernel_dtrsm_nt_ru_inv_4x4_vs_lib44cc4(int k, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E, int m1, in1 n1);
 
 	.p2align 4,,15
@@ -15082,7 +15082,7 @@
 
 
 
-//                                            1      2          3          4        5             6          7        8          9        10         11       12                  13      14
+//                                             1      2          3          4        5             6          7        8          9        10         11       12                  13      14
 // void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4cccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1);
 
 	.p2align 4,,15
@@ -15284,7 +15284,7 @@
 
 
 
-//                                            1      2          3          4             5          6        7          8        9          10      11
+//                                             1      2          3          4             5          6        7          8        9          10      11
 // void kernel_dtrsm_nt_ru_one_4x4_vs_lib44cc4(int k, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int m1, in1 n1);
 
 	.p2align 4,,15
@@ -15636,7 +15636,7 @@
 
 
 
-//                                            1      2          3          4        5             6          7        8          9        10         11       12      13
+//                                             1      2          3          4        5             6          7        8          9        10         11       12      13
 // void kernel_dtrsm_nt_ru_one_4x4_vs_lib4cccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1);
 
 	.p2align 4,,15
@@ -15841,7 +15841,7 @@
 
 
 
-//                                            1      2          3          4        5             6          7        8          9        10         11       12      13
+//                                             1      2          3          4        5             6          7        8          9        10         11       12      13
 // void kernel_dtrsm_nn_ll_one_4x4_vs_lib4cccc(int k, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1);
 
 	.p2align 4,,15
