@@ -11228,7 +11228,7 @@
 
 
 
-//                                            1      2          3        4          5             6          7        8          9        10         11      12
+//                                             1      2          3        4          5             6          7        8          9        10         11      12
 // void kernel_dtrsm_nt_ru_one_8x4_vs_lib44cc4(int k, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int m1, int n1);
 
 	.p2align 4,,15
@@ -11275,7 +11275,7 @@
 	// solve
 
 	movq	ARG10, %r10  // E 
-	movq	ARG13, %r11 // n1
+	movq	ARG12, %r11 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RUT_ONE_8X4_VS_LIB4
@@ -11289,8 +11289,8 @@
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
 	sall	$3, %r11d
-	movq	ARG12, %r12 // m1
-	movq	ARG13, %r13 // n1
+	movq	ARG11, %r12 // m1
+	movq	ARG12, %r13 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_VS_LIB

@@ -1446,7 +1446,7 @@
 	// factorization
 
 	movq	ARG10, %r10  // inv_diag_D 
-	movl	$8, %r11d
+	movq	ARG12, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DPOTRF_8X8_VS_LIB4

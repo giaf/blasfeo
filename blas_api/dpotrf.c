@@ -761,7 +761,7 @@ u_1_left_12:
 	kernel_dpack_tn_4_vs_lib4(4, C+ii+4+(ii+8)*ldc, ldc, sC.pA+(ii+8)*sdc+(ii+4)*bs, m-ii-8);
 #if defined(TARGET_X64_INTEL_HASWELL)
 	kernel_dpack_tn_4_vs_lib4(4, C+ii+8+(ii+8)*ldc, ldc, sC.pA+(ii+8)*sdc+(ii+8)*bs, m-ii-8); // TODO triangle
-	kernel_dpotrf_nt_l_8x8_lib4(ii+4, sC.pA+(ii+4)*sdc, sdc, sC.pA+(ii+4)*sdc, sdc, sC.pA+(ii+4)*sdc+(ii+4)*bs, sdc, sC.pA+(ii+4)*sdc+(ii+4)*bs, sdc, pc+ii+4);
+	kernel_dpotrf_nt_l_8x8_vs_lib4(ii+4, sC.pA+(ii+4)*sdc, sdc, sC.pA+(ii+4)*sdc, sdc, sC.pA+(ii+4)*sdc+(ii+4)*bs, sdc, sC.pA+(ii+4)*sdc+(ii+4)*bs, sdc, pc+ii+4, m-ii-4, m-ii-4);
 	kernel_dunpack_nt_4_lib4(4, sC.pA+(ii+4)*sdc+(ii+4)*bs, C+ii+4+(ii+4)*ldc, ldc);
 	kernel_dunpack_nt_4_vs_lib4(4, sC.pA+(ii+8)*sdc+(ii+4)*bs, C+ii+4+(ii+8)*ldc, ldc, m-ii-8);
 	kernel_dunpack_nt_4_vs_lib4(4, sC.pA+(ii+8)*sdc+(ii+8)*bs, C+ii+8+(ii+8)*ldc, ldc, m-ii-8); // TODO triangle
