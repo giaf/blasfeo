@@ -54,6 +54,9 @@ int main()
 
 	int ii;
 
+
+	/* colunm-major matrices */
+
 	double *A = malloc(n*n*sizeof(double));
 	for(ii=0; ii<n*n; ii++)
 		A[ii] = ii;
@@ -83,7 +86,27 @@ int main()
 	int *ipiv = malloc(n*sizeof(int));
 
 
-	int bs = 4;
+	/* panel-major matrices */
+
+	struct blasfeo_dmat sA;
+	blasfeo_allocate_dmat(n, n, &sA);
+	blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
+
+	struct blasfeo_dmat sB;
+	blasfeo_allocate_dmat(n, n, &sB);
+	blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
+
+	struct blasfeo_dmat sC;
+	blasfeo_allocate_dmat(n, n, &sC);
+	blasfeo_pack_dmat(n, n, C, n, &sC, 0, 0);
+
+	struct blasfeo_dmat sD;
+	blasfeo_allocate_dmat(n, n, &sD);
+	blasfeo_pack_dmat(n, n, D, n, &sD, 0, 0);
+
+
+
+//	int bs = 4;
 
 	double d_0 = 0.0;
 	double d_1 = 1.0;
@@ -102,99 +125,11 @@ int main()
 	char uplo = 'u';
 	int info = 0;
 
-	int m0 = 11;
-	int n0 = 11;
-	int k0 = 11;
+	int m0, n0, k0;
 
 
 
-//	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
-//	blasfeo_dsyrk(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
-//	blasfeo_dpotrf(&c_l, &n, D, &n, &info);
-//	dsyrk_(&c_u, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
-//	dpotrf_(&c_u, &n, D, &n, &info);
-//	d_print_mat(n, n, D, n);
-//	return 0;
-//	d_print_mat(n, n, A, n);
-
-
-	// blas
-
-	for(ii=0; ii<n*n; ii++) C[ii] = -1;
-
-#if 0
-//	dgemm_(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
-	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
-	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
-	dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
-//	dpotrf_(&c_l, &m0, C, &n, &info);
-	dposv_(&c_u, &m0, &n0, C, &n, D, &n, &info);
-	d_print_mat(n, n, C, ldc);
-	d_print_mat(n, n, D, ldd);
-#endif
-
-#if 0
-	dgemm_(&c_n, &c_t, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
-#endif
-
-#if 0
-	dsyrk_(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C, &n);
-#endif
-
-#if 0
-	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	dtrsm_(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
-#endif
-
-#if 0
-	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-//	dtrmm_(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	dtrmm_(&c_l, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	dtrmm_(&c_l, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	dtrmm_(&c_l, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	dtrmm_(&c_l, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-	dtrmm_(&c_l, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	dtrmm_(&c_l, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	dtrmm_(&c_l, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	dtrmm_(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	dtrmm_(&c_r, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	dtrmm_(&c_r, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	dtrmm_(&c_r, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	dtrmm_(&c_r, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	dtrmm_(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	dtrmm_(&c_r, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	dtrmm_(&c_r, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-#endif
-
-#if 0
-	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
-	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
-	dgemm_(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, A, &n, &d_1, C, &n);
-	dgetrf_(&m0, &n0, C, &n, ipiv, &info);
-//	dgetrs_(&c_t, &m0, &n0, C, &n, ipiv, D, &n, &info);
-//	dgesv_(&m0, &n0, C, &n, ipiv, D, &n, &info);
-	int_print_mat(1, n, ipiv, 1);
-	d_print_mat(n, n, C, ldc);
-//	d_print_mat(n, n, D, ldd);
-#endif
-
-//	printf("\ninfo %d\n", info);
-//	d_print_mat(n, n, B, ldb);
-//	d_print_mat(n, n, C, ldc);
-//	d_print_mat(n, n, D, ldd);
-
-#if 0
-	for(ii=0; ii<globm*globn; ii++)
-		C[ii] = globA[ii];
-	d_print_mat(globm, globn, C, globm);
-	dgetrf_(&globm, &globn, C, &globm, ipiv, &info);
-	d_print_mat(globm, globn, C, globm);
-	int_print_mat(1, n, ipiv, 1);
-#endif
-
-
-	// blasfeo blas
-
+	/* BLAS API */
 
 	// dgemm
 	m0 = 3; n0 = 3; k0 = 3;
@@ -654,78 +589,160 @@ int main()
 
 
 
-#if 0
-//	blasfeo_dgemm(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
-	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
-	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
-	blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
-//	blasfeo_dpotrf(&c_l, &m0, C, &n, &info);
-	blasfeo_dposv(&c_u, &m0, &n0, C, &n, D, &n, &info);
-	d_print_mat(n, n, C, ldc);
-	d_print_mat(n, n, D, ldd);
-#endif
+	/* BLAS API */
 
-#if 0
-	blasfeo_dgemm(&c_n, &c_t, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
-#endif
+	// dgemm
+	m0 = 3; n0 = 3; k0 = 3;
+	blasfeo_dgemm_nn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_nt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	m0 = 6; n0 = 6; k0 = 6;
+	blasfeo_dgemm_nn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_nt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	m0 = 9; n0 = 9; k0 = 9;
+	blasfeo_dgemm_nn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_nt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	m0 = 12; n0 = 12; k0 = 12;
+	blasfeo_dgemm_nn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_nt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	m0 = 15; n0 = 15; k0 = 15;
+	blasfeo_dgemm_nn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_nt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	m0 = 18; n0 = 18; k0 = 18;
+	blasfeo_dgemm_nn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_nt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	m0 = 21; n0 = 21; k0 = 21;
+	blasfeo_dgemm_nn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_nt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	m0 = 24; n0 = 24; k0 = 24;
+	blasfeo_dgemm_nn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_nt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tt(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
 
-#if 0
-	blasfeo_dsyrk(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C, &n);
-#endif
+	// dsyrk
+	m0 = 3; n0 = 3; k0 = 3;
+	blasfeo_dsyrk_ln(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ln_mn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_lt(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_un(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ut(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	m0 = 6; n0 = 6; k0 = 6;
+	blasfeo_dsyrk_ln(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ln_mn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_lt(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_un(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ut(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	m0 = 9; n0 = 9; k0 = 9;
+	blasfeo_dsyrk_ln(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ln_mn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_lt(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_un(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ut(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	m0 = 12; n0 = 12; k0 = 12;
+	blasfeo_dsyrk_ln(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ln_mn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_lt(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_un(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ut(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	m0 = 15; n0 = 15; k0 = 15;
+	blasfeo_dsyrk_ln(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ln_mn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_lt(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_un(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ut(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	m0 = 18; n0 = 18; k0 = 18;
+	blasfeo_dsyrk_ln(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ln_mn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_lt(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_un(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ut(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	m0 = 21; n0 = 21; k0 = 21;
+	blasfeo_dsyrk_ln(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ln_mn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_lt(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_un(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ut(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	m0 = 24; n0 = 24; k0 = 24;
+	blasfeo_dsyrk_ln(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ln_mn(m0, n0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_lt(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_un(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ut(m0, k0, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sC, 0, 0, &sD, 0, 0);
 
-#if 0
-	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	blasfeo_dtrsm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
-#endif
+	// dgetrf
+	m0 = 3; n0 = 3;
+	blasfeo_dgetrf_np(m0, n0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dgetrf_rp(m0, n0, &sB, 0, 0, &sD, 0, 0, ipiv);
+	m0 = 6; n0 = 6;
+	blasfeo_dgetrf_np(m0, n0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dgetrf_rp(m0, n0, &sB, 0, 0, &sD, 0, 0, ipiv);
+	m0 = 9; n0 = 9;
+	blasfeo_dgetrf_np(m0, n0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dgetrf_rp(m0, n0, &sB, 0, 0, &sD, 0, 0, ipiv);
+	m0 = 12; n0 = 12;
+	blasfeo_dgetrf_np(m0, n0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dgetrf_rp(m0, n0, &sB, 0, 0, &sD, 0, 0, ipiv);
+	m0 = 15; n0 = 15;
+	blasfeo_dgetrf_np(m0, n0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dgetrf_rp(m0, n0, &sB, 0, 0, &sD, 0, 0, ipiv);
+	m0 = 18; n0 = 18;
+	blasfeo_dgetrf_np(m0, n0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dgetrf_rp(m0, n0, &sB, 0, 0, &sD, 0, 0, ipiv);
+	m0 = 21; n0 = 21;
+	blasfeo_dgetrf_np(m0, n0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dgetrf_rp(m0, n0, &sB, 0, 0, &sD, 0, 0, ipiv);
+	m0 = 24; n0 = 24;
+	blasfeo_dgetrf_np(m0, n0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dgetrf_rp(m0, n0, &sB, 0, 0, &sD, 0, 0, ipiv);
 
-#if 0
-	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-//	blasfeo_dtrmm(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_l, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_l, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_l, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_l, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-	blasfeo_dtrmm(&c_l, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_l, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_l, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-#endif
+	// dpotrf
+	m0 = 3; n0 = 3;
+	blasfeo_dpotrf_l(m0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dpotrf_l_mn(m0, n0, &sB, 0, 0, &sD, 0, 0);
+	m0 = 6; n0 = 6;
+	blasfeo_dpotrf_l(m0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dpotrf_l_mn(m0, n0, &sB, 0, 0, &sD, 0, 0);
+	m0 = 9; n0 = 9;
+	blasfeo_dpotrf_l(m0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dpotrf_l_mn(m0, n0, &sB, 0, 0, &sD, 0, 0);
+	m0 = 12; n0 = 12;
+	blasfeo_dpotrf_l(m0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dpotrf_l_mn(m0, n0, &sB, 0, 0, &sD, 0, 0);
+	m0 = 15; n0 = 15;
+	blasfeo_dpotrf_l(m0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dpotrf_l_mn(m0, n0, &sB, 0, 0, &sD, 0, 0);
+	m0 = 18; n0 = 18;
+	blasfeo_dpotrf_l(m0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dpotrf_l_mn(m0, n0, &sB, 0, 0, &sD, 0, 0);
+	m0 = 21; n0 = 21;
+	blasfeo_dpotrf_l(m0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dpotrf_l_mn(m0, n0, &sB, 0, 0, &sD, 0, 0);
+	m0 = 24; n0 = 24;
+	blasfeo_dpotrf_l(m0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dpotrf_l_mn(m0, n0, &sB, 0, 0, &sD, 0, 0);
 
-#if 0
-	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
-	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
-	blasfeo_dgemm(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, A, &n, &d_1, C, &n);
-	blasfeo_dgetrf(&m0, &n0, C, &n, ipiv, &info);
-//	blasfeo_dgetrs(&c_t, &m0, &n0, C, &n, ipiv, D, &n, &info);
-//	blasfeo_dgesv(&m0, &n0, C, &n, ipiv, D, &n, &info);
-	int_print_mat(1, n, ipiv, 1);
-	d_print_mat(n, n, C, ldc);
-//	d_print_mat(n, n, D, ldd);
-#endif
 
-//	printf("\ninfo %d\n", info);
-//	d_print_mat(n, n, A, lda);
-//	d_print_mat(n, n, B, ldb);
-//	d_print_mat(n, n, C, ldc);
-//	d_print_mat(n, n, D, ldd);
 
-#if 0
-	for(ii=0; ii<globm*globn; ii++)
-		C[ii] = globA[ii];
-	d_print_mat(globm, globn, C, globm);
-	blasfeo_dgetrf(&globm, &globn, C, &globm, ipiv, &info);
-	d_print_mat(globm, globn, C, globm);
-	int_print_mat(1, n, ipiv, 1);
-#endif
+	/* free memory */
 
-	// free memory
+	blasfeo_free_dmat(&sA);
+	blasfeo_free_dmat(&sB);
+	blasfeo_free_dmat(&sC);
+	blasfeo_free_dmat(&sD);
 
 	free(A);
 	free(B);

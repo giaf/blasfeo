@@ -968,9 +968,12 @@ int main()
 		{
 		free(hL[ii]);
 		free(hPb[ii]);
+		free(hux[ii]);
+		free(hpi[ii]);
 		}
 	ii = N;
 	free(hL[ii]);
+	free(hux[ii]);
 
 	free(hBAbt);
 	free(hb);
