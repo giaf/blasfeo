@@ -122,6 +122,11 @@ ifeq ($(TARGET), GENERIC)
 endif
 
 clean:
+	rm -f *.o
+	rm -f *.s
+	rm -f *.gcda
+	rm -f *.gcno
+	rm -f *.gcov
 	make -C avx2 clean
 	make -C avx clean
 	make -C avx_x86 clean

@@ -245,6 +245,10 @@ CFLAGS += -O2 -fPIC
 CFLAGS  += #-g #-Wall -pedantic -Wfloat-equal #-pg
 ASFLAGS += #-g
 
+# Profiling flags
+#
+#CFLAGS += --coverage
+
 
 
 # Support local options

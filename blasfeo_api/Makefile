@@ -108,6 +108,9 @@ obj: $(OBJS)
 clean:
 	rm -f *.o
 	rm -f *.s
+	rm -f *.gcda
+	rm -f *.gcno
+	rm -f *.gcov
 
 d_blas1_lib.o: d_blas1_lib.c x_blas1_lib.c
 s_blas1_lib.o: s_blas1_lib.c x_blas1_lib.c

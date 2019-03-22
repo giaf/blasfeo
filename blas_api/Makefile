@@ -64,5 +64,8 @@ obj: $(OBJS)
 clean:
 	rm -f *.o
 	rm -f *.s
+	rm -f *.gcda
+	rm -f *.gcno
+	rm -f *.gcov
 
 dgemm_ref.o: dgemm_ref.c xgemm_ref.c
