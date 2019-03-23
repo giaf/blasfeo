@@ -41,6 +41,12 @@ LAPACK_DIR = lapack
 
 obj_blas: | $(BLAS_DIR)
 	@echo "compiling BLAS ..."
+	cp $(BLAS_DIR)/make.inc.bkp $(BLAS_DIR)/make.inc
+	@echo "" >> $(BLAS_DIR)/make.inc
+	@echo "#" >> $(BLAS_DIR)/make.inc
+	@echo "# BLASFEO's custom flags" >> $(BLAS_DIR)/make.inc
+	@echo "#" >> $(BLAS_DIR)/make.inc
+	@echo "OPTS = $(CFLAGS) -O3" >> $(BLAS_DIR)/make.inc
 	(cd $(BLAS_DIR); $(MAKE) all)
 
 
@@ -49,15 +55,19 @@ $(BLAS_DIR):
 	wget www.netlib.org/blas/$(BLAS_NETLIB).tgz -O $(BLAS_NETLIB).tgz
 	mkdir -p $(BLAS_DIR)
 	tar -xzf $(BLAS_NETLIB).tgz -C $(BLAS_DIR) --strip-components 1
-	@echo "" >> $(BLAS_DIR)/make.inc
-	@echo "#" >> $(BLAS_DIR)/make.inc
-	@echo "# BLASFEO's custom flags" >> $(BLAS_DIR)/make.inc
-	@echo "#" >> $(BLAS_DIR)/make.inc
-	@echo "OPTS = $(CFLAGS) -O3" >> $(BLAS_DIR)/make.inc
+	cp $(BLAS_DIR)/make.inc $(BLAS_DIR)/make.inc.bkp
 
 
 obj_cblas: | $(CBLAS_DIR)
 	@echo "compiling CBLAS ..."
+	cp $(CBLAS_DIR)/Makefile.in.bkp $(CBLAS_DIR)/Makefile.in
+	@echo "" >> $(CBLAS_DIR)/Makefile.in
+	@echo "#" >> $(CBLAS_DIR)/Makefile.in
+	@echo "# BLASFEO's custom flags" >> $(CBLAS_DIR)/Makefile.in
+	@echo "#" >> $(CBLAS_DIR)/Makefile.in
+	@echo "CFLAGS = $(CFLAGS) -DADD_" >> $(CBLAS_DIR)/Makefile.in
+	@echo "FFLAGS = $(CFLAGS)" >> $(CBLAS_DIR)/Makefile.in
+	@echo "BLLIB = $(BLAS_DIR)/blas_LINUX.a" >> $(CBLAS_DIR)/Makefile.in
 	(cd $(CBLAS_DIR); $(MAKE) alllib)
 
 
@@ -66,25 +76,11 @@ $(CBLAS_DIR):
 	wget www.netlib.org/blas/blast-forum/$(CBLAS_NETLIB).tgz -O $(CBLAS_NETLIB).tgz
 	mkdir -p $(CBLAS_DIR)
 	tar -xzf $(CBLAS_NETLIB).tgz -C $(CBLAS_DIR) --strip-components 1
-	@echo "" >> $(CBLAS_DIR)/Makefile.in
-	@echo "#" >> $(CBLAS_DIR)/Makefile.in
-	@echo "# BLASFEO's custom flags" >> $(CBLAS_DIR)/Makefile.in
-	@echo "#" >> $(CBLAS_DIR)/Makefile.in
-	@echo "CFLAGS = $(CFLAGS) -DADD_" >> $(CBLAS_DIR)/Makefile.in
-	@echo "FFLAGS = $(CFLAGS)" >> $(CBLAS_DIR)/Makefile.in
-	@echo "BLLIB = $(BLAS_DIR)/blas_LINUX.a" >> $(CBLAS_DIR)/Makefile.in
+	cp $(CBLAS_DIR)/Makefile.in $(CBLAS_DIR)/Makefile.in.bkp
 
 
 obj_lapack: | $(LAPACK_DIR)
 	@echo "compiling LAPACK ..."
-	(cd $(LAPACK_DIR); $(MAKE) lib)
-
-
-$(LAPACK_DIR):
-	@echo "downloading LAPACK ..."
-	wget www.netlib.org/lapack/$(LAPACK_NETLIB).tar.gz -O $(LAPACK_NETLIB).tar.gz
-	mkdir -p $(LAPACK_DIR)
-	tar -xzf $(LAPACK_NETLIB).tar.gz -C $(LAPACK_DIR) --strip-components 1
 	cp $(LAPACK_DIR)/make.inc.example $(LAPACK_DIR)/make.inc
 	@echo "" >> $(LAPACK_DIR)/make.inc
 	@echo "#" >> $(LAPACK_DIR)/make.inc
@@ -93,6 +89,14 @@ $(LAPACK_DIR):
 	@echo "OPTS = $(CFLAGS) -O2 -frecursive" >> $(LAPACK_DIR)/make.inc
 	@echo "DRVOPTS = $(OPTS)" >> $(LAPACK_DIR)/make.inc
 	@echo "NOOPT = $(CFLAGS) -O0 -frecursive" >> $(LAPACK_DIR)/make.inc
+	(cd $(LAPACK_DIR); $(MAKE) lib)
+
+
+$(LAPACK_DIR):
+	@echo "downloading LAPACK ..."
+	wget www.netlib.org/lapack/$(LAPACK_NETLIB).tar.gz -O $(LAPACK_NETLIB).tar.gz
+	mkdir -p $(LAPACK_DIR)
+	tar -xzf $(LAPACK_NETLIB).tar.gz -C $(LAPACK_DIR) --strip-components 1
 
 
 clean:
