@@ -1105,7 +1105,7 @@ NAME:
 #endif
 	
 	// unroll 0
-	vmovupd			0(%r11), %ymm13 // A
+	vmovapd			0(%r11), %ymm13 // A
 	vbroadcastsd	0(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
 	vbroadcastsd	8(%r12), %ymm12 // B
@@ -1116,7 +1116,7 @@ NAME:
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 
 	// unroll 1
-	vmovupd			32(%r11), %ymm13 // A
+	vmovapd			32(%r11), %ymm13 // A
 	vbroadcastsd	40(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	vbroadcastsd	48(%r12), %ymm12 // B
@@ -1125,14 +1125,14 @@ NAME:
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 
 	// unroll 2
-	vmovupd			64(%r11), %ymm13 // A
+	vmovapd			64(%r11), %ymm13 // A
 	vbroadcastsd	80(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
 	vbroadcastsd	88(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 
 	// unroll 3
-	vmovupd			96(%r11), %ymm13 // A
+	vmovapd			96(%r11), %ymm13 // A
 	vbroadcastsd	120(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 
@@ -1160,8 +1160,7 @@ NAME:
 // r10d  <- k
 // r11   <- A
 // r12   <- B
-// r13   <- ldb
-// r14   <- n1
+// r13   <- n1
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
@@ -1183,7 +1182,7 @@ NAME:
 	jl		1f // end
 
 	// unroll 0
-	vmovupd			0(%r11), %ymm13 // A
+	vmovapd			0(%r11), %ymm13 // A
 	vbroadcastsd	0(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
 	vbroadcastsd	8(%r12), %ymm12 // B
@@ -1194,7 +1193,7 @@ NAME:
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 
 	// unroll 1
-	vmovupd			32(%r11), %ymm13 // A
+	vmovapd			32(%r11), %ymm13 // A
 	vbroadcastsd	40(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	vbroadcastsd	48(%r12), %ymm12 // B
@@ -1203,14 +1202,14 @@ NAME:
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 
 	// unroll 2
-	vmovupd			64(%r11), %ymm13 // A
+	vmovapd			64(%r11), %ymm13 // A
 	vbroadcastsd	80(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
 	vbroadcastsd	88(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 
 	// unroll 3
-	vmovupd			96(%r11), %ymm13 // A
+	vmovapd			96(%r11), %ymm13 // A
 	vbroadcastsd	120(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 
@@ -1226,7 +1225,7 @@ NAME:
 	jl		2f // end
 
 	// unroll 0
-	vmovupd			0(%r11), %ymm13 // A
+	vmovapd			0(%r11), %ymm13 // A
 	vbroadcastsd	0(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
 	vbroadcastsd	8(%r12), %ymm12 // B
@@ -1235,14 +1234,14 @@ NAME:
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
 
 	// unroll 1
-	vmovupd			32(%r11), %ymm13 // A
+	vmovapd			32(%r11), %ymm13 // A
 	vbroadcastsd	40(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	vbroadcastsd	48(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
 
 	// unroll 2
-	vmovupd			64(%r11), %ymm13 // A
+	vmovapd			64(%r11), %ymm13 // A
 	vbroadcastsd	80(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
 
@@ -1260,14 +1259,14 @@ NAME:
 	jl		3f // end
 
 	// unroll 0
-	vmovupd			0(%r11), %ymm13 // A
+	vmovapd			0(%r11), %ymm13 // A
 	vbroadcastsd	0(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
 	vbroadcastsd	8(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 
 	// unroll 1
-	vmovupd			32(%r11), %ymm13 // A
+	vmovapd			32(%r11), %ymm13 // A
 	vbroadcastsd	40(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 
@@ -1287,7 +1286,7 @@ NAME:
 //	jl		0f // end
 
 	// unroll 0
-	vmovupd			0(%r11), %ymm13 // A
+	vmovapd			0(%r11), %ymm13 // A
 	vbroadcastsd	0(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
 
@@ -1337,7 +1336,7 @@ NAME:
 #endif
 	
 	// unroll 0
-	vmovupd			0(%r11), %ymm13 // A
+	vmovapd			0(%r11), %ymm13 // A
 	vaddpd			%ymm0, %ymm13, %ymm0
 	vbroadcastsd	8(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
@@ -1347,7 +1346,7 @@ NAME:
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 
 	// unroll 1
-	vmovupd			32(%r11), %ymm13 // A
+	vmovapd			32(%r11), %ymm13 // A
 	vaddpd			%ymm1, %ymm13, %ymm1
 	vbroadcastsd	48(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
@@ -1355,13 +1354,13 @@ NAME:
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 
 	// unroll 2
-	vmovupd			64(%r11), %ymm13 // A
+	vmovapd			64(%r11), %ymm13 // A
 	vaddpd			%ymm2, %ymm13, %ymm2
 	vbroadcastsd	88(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 
 	// unroll 3
-	vmovupd			96(%r11), %ymm13 // A
+	vmovapd			96(%r11), %ymm13 // A
 	vaddpd			%ymm3, %ymm13, %ymm3
 
 	subl	$4, %r10d
@@ -1388,8 +1387,7 @@ NAME:
 // r10d  <- k
 // r11   <- A
 // r12   <- B
-// r13   <- ldb
-// r14   <- n1
+// r13   <- n1
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
@@ -1411,7 +1409,7 @@ NAME:
 	jl		1f // end
 
 	// unroll 0
-	vmovupd			0(%r11), %ymm13 // A
+	vmovapd			0(%r11), %ymm13 // A
 	vaddpd			%ymm0, %ymm13, %ymm0
 	vbroadcastsd	8(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
@@ -1421,7 +1419,7 @@ NAME:
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 
 	// unroll 1
-	vmovupd			32(%r11), %ymm13 // A
+	vmovapd			32(%r11), %ymm13 // A
 	vaddpd			%ymm1, %ymm13, %ymm1
 	vbroadcastsd	48(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
@@ -1429,13 +1427,13 @@ NAME:
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 
 	// unroll 2
-	vmovupd			64(%r11), %ymm13 // A
+	vmovapd			64(%r11), %ymm13 // A
 	vaddpd			%ymm2, %ymm13, %ymm2
 	vbroadcastsd	88(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 
 	// unroll 3
-	vmovupd			96(%r11), %ymm13 // A
+	vmovapd			96(%r11), %ymm13 // A
 	vaddpd			%ymm3, %ymm13, %ymm3
 
 	subl	$4, %r10d
@@ -1450,7 +1448,7 @@ NAME:
 	jl		2f // end
 
 	// unroll 0
-	vmovupd			0(%r11), %ymm13 // A
+	vmovapd			0(%r11), %ymm13 // A
 	vaddpd			%ymm0, %ymm13, %ymm0
 	vbroadcastsd	8(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
@@ -1458,13 +1456,13 @@ NAME:
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
 
 	// unroll 1
-	vmovupd			32(%r11), %ymm13 // A
+	vmovapd			32(%r11), %ymm13 // A
 	vaddpd			%ymm1, %ymm13, %ymm1
 	vbroadcastsd	48(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
 
 	// unroll 2
-	vmovupd			64(%r11), %ymm13 // A
+	vmovapd			64(%r11), %ymm13 // A
 	vaddpd			%ymm2, %ymm13, %ymm2
 
 	// unroll 3
@@ -1481,13 +1479,13 @@ NAME:
 	jl		3f // end
 
 	// unroll 0
-	vmovupd			0(%r11), %ymm13 // A
+	vmovapd			0(%r11), %ymm13 // A
 	vaddpd			%ymm0, %ymm13, %ymm0
 	vbroadcastsd	8(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 
 	// unroll 1
-	vmovupd			32(%r11), %ymm13 // A
+	vmovapd			32(%r11), %ymm13 // A
 	vaddpd			%ymm1, %ymm13, %ymm1
 
 	// unroll 2
@@ -1506,7 +1504,7 @@ NAME:
 //	jl		0f // end
 
 	// unroll 0
-	vmovupd			0(%r11), %ymm13 // A
+	vmovapd			0(%r11), %ymm13 // A
 	vaddpd			%ymm0, %ymm13, %ymm0
 
 	// unroll 1

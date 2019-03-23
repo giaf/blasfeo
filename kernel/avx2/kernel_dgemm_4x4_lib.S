@@ -7725,7 +7725,7 @@
 
 	// final triangle
 
-	movq	ARG11, %r13
+	movq	ARG11, %r13 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RL_4X4_VS_LIB4
@@ -8019,7 +8019,7 @@
 
 	// final triangle
 
-	movq	ARG11, %r13
+	movq	ARG11, %r13 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RL_ONE_4X4_VS_LIB4
