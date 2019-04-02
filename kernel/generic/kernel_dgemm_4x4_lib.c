@@ -4960,7 +4960,8 @@ void kernel_dtrmm_nn_ru_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double *A, 
 	A += kmax*bs;
 	B += kmax;
 
-	if(n1>=4)
+	// XXX m1 and n1 are swapped !!!!!
+	if(m1>=4)
 		{
 
 		// k = 0
@@ -5068,7 +5069,7 @@ void kernel_dtrmm_nn_ru_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double *A, 
 //		k += 1;
 		
 		}
-	else if(n1==3)
+	else if(m1==3)
 		{
 
 		// k = 0
@@ -5147,7 +5148,7 @@ void kernel_dtrmm_nn_ru_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double *A, 
 //		k += 1;
 		
 		}
-	else if(n1==2)
+	else if(m1==2)
 		{
 
 		// k = 0
@@ -5203,7 +5204,7 @@ void kernel_dtrmm_nn_ru_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double *A, 
 //		k += 1;
 		
 		}
-	else if(n1==1)
+	else if(m1==1)
 		{
 
 		// k = 0
@@ -6160,7 +6161,8 @@ void kernel_dtrmm_nn_ru_one_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double 
 	A += kmax*bs;
 	B += kmax;
 
-	if(n1>=4)
+	// XXX m1 and n1 are swapped !!!!!
+	if(m1>=4)
 		{
 
 		// k = 0
@@ -6264,7 +6266,7 @@ void kernel_dtrmm_nn_ru_one_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double 
 //		k += 1;
 		
 		}
-	else if(n1==3)
+	else if(m1==3)
 		{
 
 		// k = 0
@@ -6340,7 +6342,7 @@ void kernel_dtrmm_nn_ru_one_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double 
 //		k += 1;
 		
 		}
-	else if(n1==2)
+	else if(m1==2)
 		{
 
 		// k = 0
@@ -6394,7 +6396,7 @@ void kernel_dtrmm_nn_ru_one_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double 
 //		k += 1;
 		
 		}
-	else if(n1==1)
+	else if(m1==1)
 		{
 
 		// k = 0
@@ -7373,7 +7375,8 @@ void kernel_dtrmm_nt_rl_4x4_tran_vs_lib444c(int kmax, double *alpha, double *A, 
 	A += kmax*bs;
 	B += kmax*bs;
 
-	if(n1>=4)
+	// XXX m1 and n1 are swapped !!!!!
+	if(m1>=4)
 		{
 
 		// k = 0
@@ -7481,7 +7484,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_vs_lib444c(int kmax, double *alpha, double *A, 
 //		k += 1;
 		
 		}
-	else if(n1==3)
+	else if(m1==3)
 		{
 
 		// k = 0
@@ -7560,7 +7563,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_vs_lib444c(int kmax, double *alpha, double *A, 
 //		k += 1;
 		
 		}
-	else if(n1==2)
+	else if(m1==2)
 		{
 
 		// k = 0
@@ -7616,7 +7619,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_vs_lib444c(int kmax, double *alpha, double *A, 
 //		k += 1;
 		
 		}
-	else if(n1==1)
+	else if(m1==1)
 		{
 
 		// k = 0
@@ -8578,7 +8581,8 @@ void kernel_dtrmm_nt_rl_one_4x4_tran_vs_lib444c(int kmax, double *alpha, double 
 	A += kmax*bs;
 	B += kmax*bs;
 
-	if(n1>=4)
+	// XXX m1 and n1 are swapped !!!!!
+	if(m1>=4)
 		{
 
 		// k = 0
@@ -8682,7 +8686,7 @@ void kernel_dtrmm_nt_rl_one_4x4_tran_vs_lib444c(int kmax, double *alpha, double 
 //		k += 1;
 		
 		}
-	else if(n1==3)
+	else if(m1==3)
 		{
 
 		// k = 0
@@ -8758,7 +8762,7 @@ void kernel_dtrmm_nt_rl_one_4x4_tran_vs_lib444c(int kmax, double *alpha, double 
 //		k += 1;
 		
 		}
-	else if(n1==2)
+	else if(m1==2)
 		{
 
 		// k = 0
@@ -8812,7 +8816,7 @@ void kernel_dtrmm_nt_rl_one_4x4_tran_vs_lib444c(int kmax, double *alpha, double 
 //		k += 1;
 		
 		}
-	else if(n1==1)
+	else if(m1==1)
 		{
 
 		// k = 0
@@ -9786,7 +9790,8 @@ void kernel_dtrmm_nt_rl_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double *A, 
 	A += kmax*bs;
 	B += kmax*ldb;
 
-	if(n1>=4)
+	// XXX m1 and n1 are swapped !!!!!
+	if(m1>=4)
 		{
 
 		// k = 0
@@ -9894,7 +9899,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double *A, 
 //		k += 1;
 		
 		}
-	else if(n1==3)
+	else if(m1==3)
 		{
 
 		// k = 0
@@ -9973,7 +9978,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double *A, 
 //		k += 1;
 		
 		}
-	else if(n1==2)
+	else if(m1==2)
 		{
 
 		// k = 0
@@ -10029,7 +10034,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double *A, 
 //		k += 1;
 		
 		}
-	else if(n1==1)
+	else if(m1==1)
 		{
 
 		// k = 0
@@ -10987,7 +10992,8 @@ void kernel_dtrmm_nt_rl_one_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double 
 	A += kmax*bs;
 	B += kmax*ldb;
 
-	if(n1>=4)
+	// XXX m1 and n1 are swapped !!!!!
+	if(m1>=4)
 		{
 
 		// k = 0
@@ -11091,7 +11097,7 @@ void kernel_dtrmm_nt_rl_one_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double 
 //		k += 1;
 		
 		}
-	else if(n1==3)
+	else if(m1==3)
 		{
 
 		// k = 0
@@ -11167,7 +11173,7 @@ void kernel_dtrmm_nt_rl_one_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double 
 //		k += 1;
 		
 		}
-	else if(n1==2)
+	else if(m1==2)
 		{
 
 		// k = 0
@@ -11221,7 +11227,7 @@ void kernel_dtrmm_nt_rl_one_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double 
 //		k += 1;
 		
 		}
-	else if(n1==1)
+	else if(m1==1)
 		{
 
 		// k = 0

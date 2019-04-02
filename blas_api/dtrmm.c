@@ -1051,7 +1051,7 @@ lutn_0:
 #else
 	for(; ii<n-3; ii+=4)
 		{
-		kernel_dpack_tn_4_lib4(n, B+ii*ldb, ldb, pU);
+		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
 		for(jj=0; jj<m-3; jj+=4)
 			{
 			kernel_dtrmm_nn_ru_4x4_tran_lib4c4c(jj, alpha, pU, A+jj*lda, lda, &d_0, pU+jj*ps, B+jj+ii*ldb, ldb);
@@ -1079,7 +1079,7 @@ goto lutn_0_return;
 #endif
 
 lutn_0_left_4:
-	kernel_dpack_tn_4_vs_lib4(n, B+ii*ldb, ldb, pU, n-ii);
+	kernel_dpack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	for(jj=0; jj<m; jj+=4)
 		{
 		kernel_dtrmm_nn_ru_4x4_tran_vs_lib4c4c(jj, alpha, pU, A+jj*lda, lda, &d_0, pU+jj*ps, B+jj+ii*ldb, ldb, m-jj, n-ii);
@@ -1121,7 +1121,7 @@ lutu_0:
 #else
 	for(; ii<n-3; ii+=4)
 		{
-		kernel_dpack_tn_4_lib4(n, B+ii*ldb, ldb, pU);
+		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
 		for(jj=0; jj<m-3; jj+=4)
 			{
 			kernel_dtrmm_nn_ru_one_4x4_tran_lib4c4c(jj, alpha, pU, A+jj*lda, lda, &d_0, pU+jj*ps, B+jj+ii*ldb, ldb);
@@ -1149,7 +1149,7 @@ goto lutu_0_return;
 #endif
 
 lutu_0_left_4:
-	kernel_dpack_tn_4_vs_lib4(n, B+ii*ldb, ldb, pU, n-ii);
+	kernel_dpack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	for(jj=0; jj<m; jj+=4)
 		{
 		kernel_dtrmm_nn_ru_one_4x4_tran_vs_lib4c4c(jj, alpha, pU, A+jj*lda, lda, &d_0, pU+jj*ps, B+jj+ii*ldb, ldb, m-jj, n-ii);
