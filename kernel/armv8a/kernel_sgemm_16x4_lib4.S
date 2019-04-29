@@ -54,6 +54,32 @@
 	ldp x28, x29, [sp, #(9 * 16)]; \
 	ldr x30, [sp, #(10 * 16)]; \
 	add sp, sp, #(11 * 16);
+#define GLOB_FUN_START(NAME) \
+	.global	NAME; \
+	.type NAME, %function; \
+NAME:
+#define FUN_START(NAME) \
+	.type NAME, %function; \
+NAME:
+#define FUN_END(NAME) \
+	.size	NAME, .-NAME
+#define ZERO_ACC \
+	fmov	d0, xzr; \
+	fmov    d1, d0; \
+	fmov    d2, d0; \
+	fmov    d3, d0; \
+	fmov    d4, d0; \
+	fmov    d5, d0; \
+	fmov    d6, d0; \
+	fmov    d7, d0; \
+	fmov    d8, d0; \
+	fmov    d9, d0; \
+	fmov    d10, d0; \
+	fmov    d11, d0; \
+	fmov    d12, d0; \
+	fmov    d13, d0; \
+	fmov    d14, d0; \
+	fmov    d15, d0
 
 
 
@@ -79,8 +105,7 @@
 	.macro INNER_KERNEL_GEMM_ADD_NT_16X4_LIB4
 #else
 	.align	4
-	.type inner_kernel_gemm_add_nt_16x4_lib4, %function
-inner_kernel_gemm_add_nt_16x4_lib4:
+	FUN_START(inner_kernel_gemm_add_nt_16x4_lib4)
 #endif
 
 // TODO more aggressive preload of A !!!
@@ -391,341 +416,7 @@ inner_kernel_gemm_add_nt_16x4_lib4:
 #else
 	ret
 
-	.size	inner_kernel_gemm_add_nt_16x4_lib4, .-inner_kernel_gemm_add_nt_16x4_lib4
-#endif
-
-
-
-
-
-
-// subroutine
-//
-// input arguments:
-// w8   <- k
-// x9   <- A
-// x10  <- sda
-// x11  <- B
-//
-// output arguments:
-
-#if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_SUB_NT_16X4_LIB4
-#else
-	.align	4
-	.type inner_kernel_gemm_sub_nt_16x4_lib4, %function
-inner_kernel_gemm_sub_nt_16x4_lib4:
-#endif
-
-// TODO more aggressive preload of A !!!
-
-	// early return
-	cmp		w8, #0
-	ble		2f // return
-
-	add		x12, x9, x10
-	add		x13, x12, x10
-	add		x14, x13, x10
-
-	// prefetch
-	prfm	PLDL1KEEP, [x11, #0]
-	prfm	PLDL1KEEP, [x9, #0]
-	prfm	PLDL1KEEP, [x12, #0]
-	prfm	PLDL1KEEP, [x13, #0]
-	prfm	PLDL1KEEP, [x14, #0]
-
-	// preload
-	ldp		s24, s25, [x11], #8
-	ldp		s26, s27, [x11], #8
-	ldr		q16, [x9], #16
-	ldr		q17, [x12], #16
-	ldr		q18, [x13], #16
-	ldr		q19, [x14], #16
-
-	cmp		w8, #4
-	ble		0f // consider clean up loop
-
-	// prefetch
-	prfm	PLDL1KEEP, [x11, #32]
-	prfm	PLDL1KEEP, [x9, #32]
-	prfm	PLDL1KEEP, [x12, #32]
-	prfm	PLDL1KEEP, [x13, #32]
-	prfm	PLDL1KEEP, [x14, #32]
-
-	// main loop
-1:
-	
-	// unroll 0
-	ldp		s28, s29, [x11], #8
-	fmls	v0.4s, v16.4s, v24.4s[0]
-	fmls	v1.4s, v16.4s, v25.4s[0]
-	ldp		s30, s31, [x11], #8
-	fmls	v2.4s, v16.4s, v26.4s[0]
-	fmls	v3.4s, v16.4s, v27.4s[0]
-	ldr		q20, [x9], #16
-	fmls	v4.4s, v17.4s, v24.4s[0]
-	fmls	v5.4s, v17.4s, v25.4s[0]
-	ldr		q21, [x12], #16
-	fmls	v6.4s, v17.4s, v26.4s[0]
-	fmls	v7.4s, v17.4s, v27.4s[0]
-	ldr		q22, [x13], #16
-	fmls	v8.4s, v18.4s, v24.4s[0]
-	fmls	v9.4s, v18.4s, v25.4s[0]
-	ldr		q23, [x14], #16
-	fmls	v10.4s, v18.4s, v26.4s[0]
-	fmls	v11.4s, v18.4s, v27.4s[0]
-	prfm	PLDL1KEEP, [x11, #64]
-	fmls	v12.4s, v19.4s, v24.4s[0]
-	fmls	v13.4s, v19.4s, v25.4s[0]
-	prfm	PLDL1KEEP, [x9, #64]
-	fmls	v14.4s, v19.4s, v26.4s[0]
-	prfm	PLDL1KEEP, [x12, #64]
-	fmls	v15.4s, v19.4s, v27.4s[0]
-
-
-	// unroll 1
-	ldp		s24, s25, [x11], #8
-	fmls	v0.4s, v20.4s, v28.4s[0]
-	fmls	v1.4s, v20.4s, v29.4s[0]
-	ldp		s26, s27, [x11], #8
-	fmls	v2.4s, v20.4s, v30.4s[0]
-	fmls	v3.4s, v20.4s, v31.4s[0]
-	ldr		q16, [x9], #16
-	fmls	v4.4s, v21.4s, v28.4s[0]
-	fmls	v5.4s, v21.4s, v29.4s[0]
-	ldr		q17, [x12], #16
-	fmls	v6.4s, v21.4s, v30.4s[0]
-	fmls	v7.4s, v21.4s, v31.4s[0]
-	ldr		q18, [x13], #16
-	fmls	v8.4s, v22.4s, v28.4s[0]
-	fmls	v9.4s, v22.4s, v29.4s[0]
-	ldr		q19, [x14], #16
-	fmls	v10.4s, v22.4s, v30.4s[0]
-	fmls	v11.4s, v22.4s, v31.4s[0]
-	prfm	PLDL1KEEP, [x13, #32]
-	fmls	v12.4s, v23.4s, v28.4s[0]
-	fmls	v13.4s, v23.4s, v29.4s[0]
-	prfm	PLDL1KEEP, [x14, #32]
-	fmls	v14.4s, v23.4s, v30.4s[0]
-	fmls	v15.4s, v23.4s, v31.4s[0]
-
-	// unroll 2
-	ldp		s28, s29, [x11], #8
-	fmls	v0.4s, v16.4s, v24.4s[0]
-	fmls	v1.4s, v16.4s, v25.4s[0]
-	ldp		s30, s31, [x11], #8
-	fmls	v2.4s, v16.4s, v26.4s[0]
-	fmls	v3.4s, v16.4s, v27.4s[0]
-	ldr		q20, [x9], #16
-	fmls	v4.4s, v17.4s, v24.4s[0]
-	fmls	v5.4s, v17.4s, v25.4s[0]
-	ldr		q21, [x12], #16
-	fmls	v6.4s, v17.4s, v26.4s[0]
-	fmls	v7.4s, v17.4s, v27.4s[0]
-	ldr		q22, [x13], #16
-	fmls	v8.4s, v18.4s, v24.4s[0]
-	fmls	v9.4s, v18.4s, v25.4s[0]
-	ldr		q23, [x14], #16
-	fmls	v10.4s, v18.4s, v26.4s[0]
-	fmls	v11.4s, v18.4s, v27.4s[0]
-	fmls	v12.4s, v19.4s, v24.4s[0]
-	fmls	v13.4s, v19.4s, v25.4s[0]
-	fmls	v14.4s, v19.4s, v26.4s[0]
-	fmls	v15.4s, v19.4s, v27.4s[0]
-
-
-	// unroll 3
-	ldp		s24, s25, [x11], #8
-	fmls	v0.4s, v20.4s, v28.4s[0]
-	fmls	v1.4s, v20.4s, v29.4s[0]
-	ldp		s26, s27, [x11], #8
-	fmls	v2.4s, v20.4s, v30.4s[0]
-	fmls	v3.4s, v20.4s, v31.4s[0]
-	ldr		q16, [x9], #16
-	fmls	v4.4s, v21.4s, v28.4s[0]
-	fmls	v5.4s, v21.4s, v29.4s[0]
-	ldr		q17, [x12], #16
-	fmls	v6.4s, v21.4s, v30.4s[0]
-	fmls	v7.4s, v21.4s, v31.4s[0]
-	ldr		q18, [x13], #16
-	fmls	v8.4s, v22.4s, v28.4s[0]
-	fmls	v9.4s, v22.4s, v29.4s[0]
-	ldr		q19, [x14], #16
-	fmls	v10.4s, v22.4s, v30.4s[0]
-	fmls	v11.4s, v22.4s, v31.4s[0]
-	sub		w8, w8, #4
-	fmls	v12.4s, v23.4s, v28.4s[0]
-	fmls	v13.4s, v23.4s, v29.4s[0]
-	cmp		w8, #4
-	fmls	v14.4s, v23.4s, v30.4s[0]
-	fmls	v15.4s, v23.4s, v31.4s[0]
-
-	bgt		1b
-
-0:
-
-	cmp		w8, #3
-	ble		4f
-
-	
-	// unroll 0
-	ldp		s28, s29, [x11], #8
-	fmls	v0.4s, v16.4s, v24.4s[0]
-	fmls	v1.4s, v16.4s, v25.4s[0]
-	ldp		s30, s31, [x11], #8
-	fmls	v2.4s, v16.4s, v26.4s[0]
-	fmls	v3.4s, v16.4s, v27.4s[0]
-	ldr		q20, [x9], #16
-	fmls	v4.4s, v17.4s, v24.4s[0]
-	fmls	v5.4s, v17.4s, v25.4s[0]
-	ldr		q21, [x12], #16
-	fmls	v6.4s, v17.4s, v26.4s[0]
-	fmls	v7.4s, v17.4s, v27.4s[0]
-	ldr		q22, [x13], #16
-	fmls	v8.4s, v18.4s, v24.4s[0]
-	fmls	v9.4s, v18.4s, v25.4s[0]
-	ldr		q23, [x14], #16
-	fmls	v10.4s, v18.4s, v26.4s[0]
-	fmls	v11.4s, v18.4s, v27.4s[0]
-//	prfm	PLDL1KEEP, [x11, #64]
-	fmls	v12.4s, v19.4s, v24.4s[0]
-	fmls	v13.4s, v19.4s, v25.4s[0]
-//	prfm	PLDL1KEEP, [x9, #64]
-	fmls	v14.4s, v19.4s, v26.4s[0]
-	fmls	v15.4s, v19.4s, v27.4s[0]
-
-
-	// unroll 1
-	ldp		s24, s25, [x11], #8
-	fmls	v0.4s, v20.4s, v28.4s[0]
-	fmls	v1.4s, v20.4s, v29.4s[0]
-	ldp		s26, s27, [x11], #8
-	fmls	v2.4s, v20.4s, v30.4s[0]
-	fmls	v3.4s, v20.4s, v31.4s[0]
-	ldr		q16, [x9], #16
-	fmls	v4.4s, v21.4s, v28.4s[0]
-	fmls	v5.4s, v21.4s, v29.4s[0]
-	ldr		q17, [x12], #16
-	fmls	v6.4s, v21.4s, v30.4s[0]
-	fmls	v7.4s, v21.4s, v31.4s[0]
-	ldr		q18, [x13], #16
-	fmls	v8.4s, v22.4s, v28.4s[0]
-	fmls	v9.4s, v22.4s, v29.4s[0]
-	ldr		q19, [x14], #16
-	fmls	v10.4s, v22.4s, v30.4s[0]
-	fmls	v11.4s, v22.4s, v31.4s[0]
-//	prfm	PLDL1KEEP, [x12, #64]
-	fmls	v12.4s, v23.4s, v28.4s[0]
-	fmls	v13.4s, v23.4s, v29.4s[0]
-//	prfm	PLDL1KEEP, [x13, #64]
-	fmls	v14.4s, v23.4s, v30.4s[0]
-	fmls	v15.4s, v23.4s, v31.4s[0]
-
-	// unroll 2
-	ldp		s28, s29, [x11], #8
-	fmls	v0.4s, v16.4s, v24.4s[0]
-	fmls	v1.4s, v16.4s, v25.4s[0]
-	ldp		s30, s31, [x11], #8
-	fmls	v2.4s, v16.4s, v26.4s[0]
-	fmls	v3.4s, v16.4s, v27.4s[0]
-	ldr		q20, [x9], #16
-	fmls	v4.4s, v17.4s, v24.4s[0]
-	fmls	v5.4s, v17.4s, v25.4s[0]
-	ldr		q21, [x12], #16
-	fmls	v6.4s, v17.4s, v26.4s[0]
-	fmls	v7.4s, v17.4s, v27.4s[0]
-	ldr		q22, [x13], #16
-	fmls	v8.4s, v18.4s, v24.4s[0]
-	fmls	v9.4s, v18.4s, v25.4s[0]
-	ldr		q23, [x14], #16
-	fmls	v10.4s, v18.4s, v26.4s[0]
-	fmls	v11.4s, v18.4s, v27.4s[0]
-//	prfm	PLDL1KEEP, [x14, #64]
-	fmls	v12.4s, v19.4s, v24.4s[0]
-	fmls	v13.4s, v19.4s, v25.4s[0]
-	fmls	v14.4s, v19.4s, v26.4s[0]
-	fmls	v15.4s, v19.4s, v27.4s[0]
-
-
-	// unroll 3
-	ldp		s24, s25, [x11], #8
-	fmls	v0.4s, v20.4s, v28.4s[0]
-	fmls	v1.4s, v20.4s, v29.4s[0]
-	ldp		s26, s27, [x11], #8
-	fmls	v2.4s, v20.4s, v30.4s[0]
-	fmls	v3.4s, v20.4s, v31.4s[0]
-	ldr		q16, [x9], #16
-	fmls	v4.4s, v21.4s, v28.4s[0]
-	fmls	v5.4s, v21.4s, v29.4s[0]
-	ldr		q17, [x12], #16
-	fmls	v6.4s, v21.4s, v30.4s[0]
-	fmls	v7.4s, v21.4s, v31.4s[0]
-	ldr		q18, [x13], #16
-	fmls	v8.4s, v22.4s, v28.4s[0]
-	fmls	v9.4s, v22.4s, v29.4s[0]
-	ldr		q19, [x14], #16
-	fmls	v10.4s, v22.4s, v30.4s[0]
-	fmls	v11.4s, v22.4s, v31.4s[0]
-//	sub		w8, w8, #4
-	fmls	v12.4s, v23.4s, v28.4s[0]
-	fmls	v13.4s, v23.4s, v29.4s[0]
-//	cmp		w8, #4
-	fmls	v14.4s, v23.4s, v30.4s[0]
-	fmls	v15.4s, v23.4s, v31.4s[0]
-
-	b		2f // return
-
-4: // consider clean1-up loop
-
-	cmp		w8, #0
-	ble		2f // return
-
-	sub		x9, x9, #16
-	sub		x11, x11, #16
-	sub		x12, x12, #16
-	sub		x13, x13, #16
-	sub		x14, x14, #16
-
-3: // clean1-up loop
-
-	// unroll 0
-	// TODO
-	ldp		s24, s25, [x11], #8
-	ldr		q16, [x9], #16
-	fmls	v0.4s, v16.4s, v24.4s[0]
-	fmls	v1.4s, v16.4s, v25.4s[0]
-	ldp		s26, s27, [x11], #8
-	fmls	v2.4s, v16.4s, v26.4s[0]
-	fmls	v3.4s, v16.4s, v27.4s[0]
-	ldr		q17, [x12], #16
-	fmls	v4.4s, v17.4s, v24.4s[0]
-	fmls	v5.4s, v17.4s, v25.4s[0]
-	fmls	v6.4s, v17.4s, v26.4s[0]
-	fmls	v7.4s, v17.4s, v27.4s[0]
-	ldr		q18, [x13], #16
-	fmls	v8.4s, v18.4s, v24.4s[0]
-	fmls	v9.4s, v18.4s, v25.4s[0]
-	fmls	v10.4s, v18.4s, v26.4s[0]
-	fmls	v11.4s, v18.4s, v27.4s[0]
-	ldr		q19, [x14], #16
-	fmls	v12.4s, v19.4s, v24.4s[0]
-	fmls	v13.4s, v19.4s, v25.4s[0]
-	fmls	v14.4s, v19.4s, v26.4s[0]
-	fmls	v15.4s, v19.4s, v27.4s[0]
-
-	sub		w8, w8, #1
-	cmp		w8, #0
-	bgt		3b
-
-2: // return
-
-	
-#if MACRO_LEVEL>=2
-	.endm
-#else
-	ret
-
-	.size	inner_kernel_gemm_sub_nt_16x4_lib4, .-inner_kernel_gemm_sub_nt_16x4_lib4
+	FUN_END(inner_kernel_gemm_add_nt_16x4_lib4)
 #endif
 
 
@@ -753,8 +444,7 @@ inner_kernel_gemm_sub_nt_16x4_lib4:
 	.macro INNER_EDGE_TRSM_RLT_INV_16X4_LIB4
 #else
 	.align 4
-	.type inner_edge_trsm_rlt_inv_16x4_lib4, %function
-inner_edge_trsm_rlt_inv_16x4_lib4:
+	FUN_START(inner_edge_trsm_rlt_inv_16x4_lib4)
 #endif
 	
 	// first column
@@ -821,7 +511,7 @@ inner_edge_trsm_rlt_inv_16x4_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_trsm_rlt_inv_16x4_lib4, .-inner_edge_trsm_rlt_inv_16x4_lib4
+	FUN_END(inner_edge_trsm_rlt_inv_16x4_lib4)
 #endif
 #endif
 
@@ -843,8 +533,7 @@ inner_edge_trsm_rlt_inv_16x4_lib4:
 	.macro INNER_EDGE_POTRF_16X4_LIB4
 #else
 	.p2align 4
-	.type inner_edge_potrf_16x4_lib4, %function
-inner_edge_potrf_16x4_lib4:
+	FUN_START(inner_edge_potrf_16x4_lib4)
 #endif
 	
 	fmov		s16, 1.0e+0 // 1.0
@@ -949,7 +638,7 @@ inner_edge_potrf_16x4_lib4:
 #else
 	ret
 
-	.size	inner_edge_potrf_16x4_lib4, .-inner_edge_potrf_16x4_lib4
+	FUN_END(inner_edge_potrf_16x4_lib4)
 #endif
 
 
@@ -970,8 +659,7 @@ inner_edge_potrf_16x4_lib4:
 	.macro INNER_SCALE_AB_16X4_LIB4
 #else
 	.align	4
-	.type inner_scale_ab_16x4_lib4, %function
-inner_scale_ab_16x4_lib4:
+	FUN_START(inner_scale_ab_16x4_lib4)
 #endif
 
 	ld1		{v28.4s}, [x8]
@@ -1028,7 +716,7 @@ inner_scale_ab_16x4_lib4:
 #else
 	ret
 
-	.size	inner_scale_ab_16x4_lib4, .-inner_scale_ab_16x4_lib4
+	FUN_END(inner_scale_ab_16x4_lib4)
 #endif
 
 
@@ -1047,8 +735,7 @@ inner_scale_ab_16x4_lib4:
 	.macro INNER_SCALE_11_16X4_LIB4
 #else
 	.align	4
-	.type inner_scale_11_16x4_lib4, %function
-inner_scale_11_16x4_lib4:
+	FUN_START(inner_scale_11_16x4_lib4)
 #endif
 
 	add		x12, x8, x9
@@ -1084,7 +771,62 @@ inner_scale_11_16x4_lib4:
 #else
 	ret
 
-	.size	inner_scale_11_16x4_lib4, .-inner_scale_11_16x4_lib4
+	FUN_END(inner_scale_11_16x4_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// x8  <- C
+// x9  <- sdc
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_SCALE_M11_16X4_LIB4
+#else
+	.align	4
+	FUN_START(inner_scale_m11_16x4_lib4)
+#endif
+
+	add		x12, x8, x9
+	add		x13, x12, x9
+	add		x14, x13, x9
+
+	ld1		{v24.4s, v25.4s, v26.4s, v27.4s}, [x8], #64
+	fsub	v0.4s, v24.4s, v0.4s
+	fsub	v1.4s, v25.4s, v1.4s
+	fsub	v2.4s, v26.4s, v2.4s
+	fsub	v3.4s, v27.4s, v3.4s
+
+	ld1		{v24.4s, v25.4s, v26.4s, v27.4s}, [x12], #64
+	fsub	v4.4s, v24.4s, v4.4s
+	fsub	v5.4s, v25.4s, v5.4s
+	fsub	v6.4s, v26.4s, v6.4s
+	fsub	v7.4s, v27.4s, v7.4s
+
+	ld1		{v24.4s, v25.4s, v26.4s, v27.4s}, [x13], #64
+	fsub	v8.4s, v24.4s, v8.4s
+	fsub	v9.4s, v25.4s, v9.4s
+	fsub	v10.4s, v26.4s, v10.4s
+	fsub	v11.4s, v27.4s, v11.4s
+
+	ld1		{v24.4s, v25.4s, v26.4s, v27.4s}, [x14], #64
+	fsub	v12.4s, v24.4s, v12.4s
+	fsub	v13.4s, v25.4s, v13.4s
+	fsub	v14.4s, v26.4s, v14.4s
+	fsub	v15.4s, v27.4s, v15.4s
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_scale_m11_16x4_lib4)
 #endif
 
 
@@ -1103,8 +845,7 @@ inner_scale_11_16x4_lib4:
 	.macro INNER_STORE_16X4_LIB4
 #else
 	.align 4
-	.type inner_store_16x4_lib4, %function
-inner_store_16x4_lib4:
+	FUN_START(inner_store_16x4_lib4)
 #endif
 
 	add		x10, x8, x9
@@ -1121,7 +862,7 @@ inner_store_16x4_lib4:
 #else
 	ret
 
-	.size	inner_store_16x4_lib4, .-inner_store_16x4_lib4
+	FUN_END(inner_store_16x4_lib4)
 #endif
 
 
@@ -1140,8 +881,7 @@ inner_store_16x4_lib4:
 	.macro INNER_STORE_L_16X4_LIB4
 #else
 	.align 4
-	.type inner_store_l_16x4_lib4, %function
-inner_store_l_16x4_lib4:
+	FUN_START(inner_store_l_16x4_lib4)
 #endif
 
 	ldr		q16, [x8, #16]
@@ -1167,7 +907,7 @@ inner_store_l_16x4_lib4:
 #else
 	ret
 
-	.size	inner_store_l_16x4_lib4, .-inner_store_l_16x4_lib4
+	FUN_END(inner_store_l_16x4_lib4)
 #endif
 
 
@@ -1178,9 +918,7 @@ inner_store_l_16x4_lib4:
 // void kernel_sgemm_nt_16x4_lib4(int kmax, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd)
 
 	.align	4
-	.global	kernel_sgemm_nt_16x4_lib4
-	.type	kernel_sgemm_nt_16x4_lib4, %function
-kernel_sgemm_nt_16x4_lib4:
+	GLOB_FUN_START(kernel_sgemm_nt_16x4_lib4)
 	
 
 
@@ -1188,23 +926,7 @@ kernel_sgemm_nt_16x4_lib4:
 
 
 
-	// TODO zero the entire 128-bit register ???
-	fmov	d0, xzr
-	fmov    d1, d0
-	fmov    d2, d0
-	fmov    d3, d0
-	fmov    d4, d0
-	fmov    d5, d0
-	fmov    d6, d0
-	fmov    d7, d0
-	fmov    d8, d0
-	fmov    d9, d0
-	fmov    d10, d0
-	fmov    d11, d0
-	fmov    d12, d0
-	fmov    d13, d0
-	fmov    d14, d0
-	fmov    d15, d0
+	ZERO_ACC
 
 
 
@@ -1257,7 +979,7 @@ kernel_sgemm_nt_16x4_lib4:
 
 	ret
 
-	.size	kernel_sgemm_nt_16x4_lib4, .-kernel_sgemm_nt_16x4_lib4
+	FUN_END(kernel_sgemm_nt_16x4_lib4)
 
 
 
@@ -1267,9 +989,7 @@ kernel_sgemm_nt_16x4_lib4:
 // void kernel_strsm_nt_rl_inv_16x4_lib4(int kmax, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
 
 	.align	4
-	.globl kernel_strsm_nt_rl_inv_16x4_lib4
-	.type kernel_strsm_nt_rl_inv_16x4_lib4, %function
-kernel_strsm_nt_rl_inv_16x4_lib4:
+	GLOB_FUN_START(kernel_strsm_nt_rl_inv_16x4_lib4)
 
 
 
@@ -1277,23 +997,7 @@ kernel_strsm_nt_rl_inv_16x4_lib4:
 
 
 
-	// TODO zero the entire 128-bit register ???
-	fmov	d0, xzr
-	fmov    d1, d0
-	fmov    d2, d0
-	fmov    d3, d0
-	fmov    d4, d0
-	fmov    d5, d0
-	fmov    d6, d0
-	fmov    d7, d0
-	fmov    d8, d0
-	fmov    d9, d0
-	fmov    d10, d0
-	fmov    d11, d0
-	fmov    d12, d0
-	fmov    d13, d0
-	fmov    d14, d0
-	fmov    d15, d0
+	ZERO_ACC
 
 
 
@@ -1305,9 +1009,9 @@ kernel_strsm_nt_rl_inv_16x4_lib4:
 	mov		x11, x3 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_16X4_LIB4
+	INNER_KERNEL_GEMM_ADD_NT_16X4_LIB4
 #else
-	bl	inner_kernel_gemm_sub_nt_16x4_lib4
+	bl	inner_kernel_gemm_add_nt_16x4_lib4
 #endif
 
 
@@ -1318,9 +1022,9 @@ kernel_strsm_nt_rl_inv_16x4_lib4:
 	lsl		w9, w9, #4 // 16*sdc
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_16X4_LIB4
+	INNER_SCALE_M11_16X4_LIB4
 #else
-	bl inner_scale_11_16x4_lib4
+	bl inner_scale_m11_16x4_lib4
 #endif
 
 
@@ -1356,7 +1060,7 @@ kernel_strsm_nt_rl_inv_16x4_lib4:
 
 	ret
 
-	.size	kernel_strsm_nt_rl_inv_16x4_lib4, .-kernel_strsm_nt_rl_inv_16x4_lib4
+	FUN_END(kernel_strsm_nt_rl_inv_16x4_lib4)
 
 
 
@@ -1366,9 +1070,7 @@ kernel_strsm_nt_rl_inv_16x4_lib4:
 // void kernel_spotrf_nt_l_16x4_lib4(int kmax, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
 
 	.align	4
-	.globl kernel_spotrf_nt_l_16x4_lib4
-	.type kernel_spotrf_nt_l_16x4_lib4, %function
-kernel_spotrf_nt_l_16x4_lib4:
+	GLOB_FUN_START(kernel_spotrf_nt_l_16x4_lib4)
 
 
 
@@ -1376,23 +1078,7 @@ kernel_spotrf_nt_l_16x4_lib4:
 
 
 
-	// TODO zero the entire 128-bit register ???
-	fmov	d0, xzr
-	fmov    d1, d0
-	fmov    d2, d0
-	fmov    d3, d0
-	fmov    d4, d0
-	fmov    d5, d0
-	fmov    d6, d0
-	fmov    d7, d0
-	fmov    d8, d0
-	fmov    d9, d0
-	fmov    d10, d0
-	fmov    d11, d0
-	fmov    d12, d0
-	fmov    d13, d0
-	fmov    d14, d0
-	fmov    d15, d0
+	ZERO_ACC
 
 
 
@@ -1404,9 +1090,9 @@ kernel_spotrf_nt_l_16x4_lib4:
 	mov		x11, x3 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_16X4_LIB4
+	INNER_KERNEL_GEMM_ADD_NT_16X4_LIB4
 #else
-	bl	inner_kernel_gemm_sub_nt_16x4_lib4
+	bl	inner_kernel_gemm_add_nt_16x4_lib4
 #endif
 
 
@@ -1417,9 +1103,9 @@ kernel_spotrf_nt_l_16x4_lib4:
 	lsl		w9, w9, #4 // 16*sdc
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_16X4_LIB4
+	INNER_SCALE_M11_16X4_LIB4
 #else
-	bl inner_scale_11_16x4_lib4
+	bl inner_scale_m11_16x4_lib4
 #endif
 
 
@@ -1454,7 +1140,7 @@ kernel_spotrf_nt_l_16x4_lib4:
 
 	ret
 
-	.size	kernel_spotrf_nt_l_16x4_lib4, .-kernel_spotrf_nt_l_16x4_lib4
+	FUN_END(kernel_spotrf_nt_l_16x4_lib4)
 
 
 
