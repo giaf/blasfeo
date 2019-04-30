@@ -54,6 +54,24 @@
 	ldp x28, x29, [sp, #(9 * 16)]; \
 	ldr x30, [sp, #(10 * 16)]; \
 	add sp, sp, #(11 * 16);
+#define GLOB_FUN_START(NAME) \
+	.global	NAME; \
+	.type NAME, %function; \
+NAME:
+#define FUN_START(NAME) \
+	.type NAME, %function; \
+NAME:
+#define FUN_END(NAME) \
+	.size	NAME, .-NAME
+#define ZERO_ACC \
+	fmov	d0, xzr; \
+	fmov    d1, d0; \
+	fmov    d2, d0; \
+	fmov    d3, d0; \
+	fmov    d4, d0; \
+	fmov    d5, d0; \
+	fmov    d6, d0; \
+	fmov    d7, d0
 
 
 
@@ -79,8 +97,7 @@
 	.macro INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4
 #else
 	.align	4
-	.type inner_kernel_gemm_add_nt_8x4_lib4, %function
-inner_kernel_gemm_add_nt_8x4_lib4:
+	FUN_START(inner_kernel_gemm_add_nt_8x4_lib4)
 #endif
 
 	// early return
@@ -258,7 +275,7 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 #else
 	ret
 
-	.size	inner_kernel_gemm_add_nt_8x4_lib4, .-inner_kernel_gemm_add_nt_8x4_lib4
+	FUN_END(inner_kernel_gemm_add_nt_8x4_lib4)
 #endif
 
 
@@ -279,8 +296,7 @@ inner_kernel_gemm_add_nt_8x4_lib4:
 	.macro INNER_KERNEL_GEMM_SUB_NT_8X4_LIB4
 #else
 	.align	4
-	.type inner_kernel_gemm_sub_nt_8x4_lib4, %function
-inner_kernel_gemm_sub_nt_8x4_lib4:
+	FUN_START(inner_kernel_gemm_sub_nt_8x4_lib4)
 #endif
 
 	// early return
@@ -458,7 +474,7 @@ inner_kernel_gemm_sub_nt_8x4_lib4:
 #else
 	ret
 
-	.size	inner_kernel_gemm_sub_nt_8x4_lib4, .-inner_kernel_gemm_sub_nt_8x4_lib4
+	FUN_END(inner_kernel_gemm_sub_nt_8x4_lib4)
 #endif
 
 
@@ -485,8 +501,7 @@ inner_kernel_gemm_sub_nt_8x4_lib4:
 	.macro INNER_EDGE_TRSM_RLT_INV_8X4_LIB4
 #else
 	.align 4
-	.type inner_edge_trsm_rlt_inv_8x4_lib4, %function
-inner_edge_trsm_rlt_inv_8x4_lib4:
+	FUN_START(inner_edge_trsm_rlt_inv_8x4_lib4)
 #endif
 	
 	// first column
@@ -533,7 +548,7 @@ inner_edge_trsm_rlt_inv_8x4_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_trsm_rlt_inv_8x4_lib4, .-inner_edge_trsm_rlt_inv_8x4_lib4
+	FUN_END(inner_edge_trsm_rlt_inv_8x4_lib4)
 #endif
 #endif
 
@@ -555,8 +570,7 @@ inner_edge_trsm_rlt_inv_8x4_lib4:
 	.macro INNER_EDGE_POTRF_8X4_LIB4
 #else
 	.p2align 4
-	.type inner_edge_potrf_8x4_lib4, %function
-inner_edge_potrf_8x4_lib4:
+	FUN_START(inner_edge_potrf_8x4_lib4)
 #endif
 	
 	fmov		s16, 1.0e+0 // 1.0
@@ -641,7 +655,7 @@ inner_edge_potrf_8x4_lib4:
 #else
 	ret
 
-	.size	inner_edge_potrf_8x4_lib4, .-inner_edge_potrf_8x4_lib4
+	FUN_END(inner_edge_potrf_8x4_lib4)
 #endif
 
 
@@ -662,8 +676,7 @@ inner_edge_potrf_8x4_lib4:
 	.macro INNER_SCALE_AB_8X4_LIB4
 #else
 	.align	4
-	.type inner_scale_ab_8x4_lib4, %function
-inner_scale_ab_8x4_lib4:
+	FUN_START(inner_scale_ab_8x4_lib4)
 #endif
 
 	ld1		{v28.4s}, [x8]
@@ -698,7 +711,7 @@ inner_scale_ab_8x4_lib4:
 #else
 	ret
 
-	.size	inner_scale_ab_8x4_lib4, .-inner_scale_ab_8x4_lib4
+	FUN_END(inner_scale_ab_8x4_lib4)
 #endif
 
 
@@ -717,8 +730,7 @@ inner_scale_ab_8x4_lib4:
 	.macro INNER_SCALE_11_8X4_LIB4
 #else
 	.align	4
-	.type inner_scale_11_8x4_lib4, %function
-inner_scale_11_8x4_lib4:
+	FUN_START(inner_scale_11_8x4_lib4)
 #endif
 
 	add		x12, x8, x9
@@ -740,7 +752,7 @@ inner_scale_11_8x4_lib4:
 #else
 	ret
 
-	.size	inner_scale_11_8x4_lib4, .-inner_scale_11_8x4_lib4
+	FUN_END(inner_scale_11_8x4_lib4)
 #endif
 
 
@@ -759,8 +771,7 @@ inner_scale_11_8x4_lib4:
 	.macro INNER_STORE_8X4_LIB4
 #else
 	.align 4
-	.type inner_store_8x4_lib4, %function
-inner_store_8x4_lib4:
+	FUN_START(inner_store_8x4_lib4)
 #endif
 
 	add		x10, x8, x9
@@ -773,7 +784,7 @@ inner_store_8x4_lib4:
 #else
 	ret
 
-	.size	inner_store_8x4_lib4, .-inner_store_8x4_lib4
+	FUN_END(inner_store_8x4_lib4)
 #endif
 
 
@@ -792,8 +803,7 @@ inner_store_8x4_lib4:
 	.macro INNER_STORE_L_8X4_LIB4
 #else
 	.align 4
-	.type inner_store_l_8x4_lib4, %function
-inner_store_l_8x4_lib4:
+	FUN_START(inner_store_l_8x4_lib4)
 #endif
 
 	ldr		q16, [x8, #16]
@@ -815,7 +825,7 @@ inner_store_l_8x4_lib4:
 #else
 	ret
 
-	.size	inner_store_l_8x4_lib4, .-inner_store_l_8x4_lib4
+	FUN_END(inner_store_l_8x4_lib4)
 #endif
 
 
@@ -826,9 +836,7 @@ inner_store_l_8x4_lib4:
 // void kernel_sgemm_nt_8x4_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd)
 
 	.align	4
-	.global	kernel_sgemm_nt_8x4_lib4
-	.type	kernel_sgemm_nt_8x4_lib4, %function
-kernel_sgemm_nt_8x4_lib4:
+	GLOB_FUN_START(kernel_sgemm_nt_8x4_lib4)
 	
 
 
@@ -836,15 +844,7 @@ kernel_sgemm_nt_8x4_lib4:
 
 
 
-	// TODO zero the entire 128-bit register ???
-	fmov	d0, xzr
-	fmov    d1, d0
-	fmov    d2, d0
-	fmov    d3, d0
-	fmov    d4, d0
-	fmov    d5, d0
-	fmov    d6, d0
-	fmov    d7, d0
+	ZERO_ACC
 
 
 
@@ -897,7 +897,7 @@ kernel_sgemm_nt_8x4_lib4:
 
 	ret
 
-	.size	kernel_sgemm_nt_8x4_lib4, .-kernel_sgemm_nt_8x4_lib4
+	FUN_END(kernel_sgemm_nt_8x4_lib4)
 
 
 
@@ -907,9 +907,7 @@ kernel_sgemm_nt_8x4_lib4:
 // void kernel_strsm_nt_rl_inv_8x4_lib4(int kmax, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
 
 	.align	4
-	.globl kernel_strsm_nt_rl_inv_8x4_lib4
-	.type kernel_strsm_nt_rl_inv_8x4_lib4, %function
-kernel_strsm_nt_rl_inv_8x4_lib4:
+	GLOB_FUN_START(kernel_strsm_nt_rl_inv_8x4_lib4)
 
 
 
@@ -917,15 +915,7 @@ kernel_strsm_nt_rl_inv_8x4_lib4:
 
 
 
-	// TODO zero the entire 128-bit register ???
-	fmov	d0, xzr
-	fmov    d1, d0
-	fmov    d2, d0
-	fmov    d3, d0
-	fmov    d4, d0
-	fmov    d5, d0
-	fmov    d6, d0
-	fmov    d7, d0
+	ZERO_ACC
 
 
 
@@ -988,7 +978,7 @@ kernel_strsm_nt_rl_inv_8x4_lib4:
 
 	ret
 
-	.size	kernel_strsm_nt_rl_inv_8x4_lib4, .-kernel_strsm_nt_rl_inv_8x4_lib4
+	FUN_END(kernel_strsm_nt_rl_inv_8x4_lib4)
 
 
 
@@ -998,9 +988,7 @@ kernel_strsm_nt_rl_inv_8x4_lib4:
 // void kernel_spotrf_nt_l_8x4_lib4(int kmax, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
 
 	.align	4
-	.globl kernel_spotrf_nt_l_8x4_lib4
-	.type kernel_spotrf_nt_l_8x4_lib4, %function
-kernel_spotrf_nt_l_8x4_lib4:
+	GLOB_FUN_START(kernel_spotrf_nt_l_8x4_lib4)
 
 
 
@@ -1008,15 +996,7 @@ kernel_spotrf_nt_l_8x4_lib4:
 
 
 
-	// TODO zero the entire 128-bit register ???
-	fmov	d0, xzr
-	fmov    d1, d0
-	fmov    d2, d0
-	fmov    d3, d0
-	fmov    d4, d0
-	fmov    d5, d0
-	fmov    d6, d0
-	fmov    d7, d0
+	ZERO_ACC
 
 
 
@@ -1078,7 +1058,7 @@ kernel_spotrf_nt_l_8x4_lib4:
 
 	ret
 
-	.size	kernel_spotrf_nt_l_8x4_lib4, .-kernel_spotrf_nt_l_8x4_lib4
+	FUN_END(kernel_spotrf_nt_l_8x4_lib4)
 
 
 

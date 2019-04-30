@@ -29,7 +29,7 @@
 
 #define STACKSIZE 11*16
 #define PROLOGUE \
-	add sp, sp, #-(11 * 16); \
+	sub sp, sp, #(11 * 16); \
 	stp d8, d9, [sp, #(0 * 16)]; \
 	stp d10, d11, [sp, #(1 * 16)]; \
 	stp d12, d13, [sp, #(2 * 16)]; \
@@ -54,6 +54,20 @@
 	ldp x28, x29, [sp, #(9 * 16)]; \
 	ldr x30, [sp, #(10 * 16)]; \
 	add sp, sp, #(11 * 16);
+#define GLOB_FUN_START(NAME) \
+	.global	NAME; \
+	.type NAME, %function; \
+NAME:
+#define FUN_START(NAME) \
+	.type NAME, %function; \
+NAME:
+#define FUN_END(NAME) \
+	.size	NAME, .-NAME
+#define ZERO_ACC \
+	fmov	d0, xzr; \
+	fmov    d1, d0; \
+	fmov    d2, d0; \
+	fmov    d3, d0
 
 
 
@@ -78,8 +92,7 @@
 	.macro INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
 #else
 	.align	4
-	.type inner_kernel_gemm_add_nt_4x4_lib4, %function
-inner_kernel_gemm_add_nt_4x4_lib4:
+	FUN_START(inner_kernel_gemm_add_nt_4x4_lib4)
 #endif
 
 // TODO more aggressive preload of A !!!
@@ -208,7 +221,7 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 #else
 	ret
 
-	.size	inner_kernel_gemm_add_nt_4x4_lib4, .-inner_kernel_gemm_add_nt_4x4_lib4
+	FUN_END(inner_kernel_gemm_add_nt_4x4_lib4)
 #endif
 
 
@@ -228,8 +241,7 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 	.macro INNER_KERNEL_GEMM_SUB_NT_4X4_LIB4
 #else
 	.align	4
-	.type inner_kernel_gemm_sub_nt_4x4_lib4, %function
-inner_kernel_gemm_sub_nt_4x4_lib4:
+	FUN_START(inner_kernel_gemm_sub_nt_4x4_lib4)
 #endif
 
 // TODO more aggressive preload of A !!!
@@ -358,7 +370,7 @@ inner_kernel_gemm_sub_nt_4x4_lib4:
 #else
 	ret
 
-	.size	inner_kernel_gemm_sub_nt_4x4_lib4, .-inner_kernel_gemm_sub_nt_4x4_lib4
+	FUN_END(inner_kernel_gemm_sub_nt_4x4_lib4)
 #endif
 
 
@@ -385,8 +397,7 @@ inner_kernel_gemm_sub_nt_4x4_lib4:
 	.macro INNER_EDGE_TRSM_RLT_INV_4X4_LIB4
 #else
 	.align 4
-	.type inner_edge_trsm_rlt_inv_4x4_lib4, %function
-inner_edge_trsm_rlt_inv_4x4_lib4:
+	FUN_START(inner_edge_trsm_rlt_inv_4x4_lib4)
 #endif
 	
 	// first column
@@ -423,7 +434,7 @@ inner_edge_trsm_rlt_inv_4x4_lib4:
 	ret
 
 #if defined(OS_LINUX)
-	.size	inner_edge_trsm_rlt_inv_4x4_lib4, .-inner_edge_trsm_rlt_inv_4x4_lib4
+	FUN_END(inner_edge_trsm_rlt_inv_4x4_lib4)
 #endif
 #endif
 
@@ -445,8 +456,7 @@ inner_edge_trsm_rlt_inv_4x4_lib4:
 	.macro INNER_EDGE_POTRF_4X4_LIB4
 #else
 	.p2align 4
-	.type inner_edge_potrf_4x4_lib4, %function
-inner_edge_potrf_4x4_lib4:
+	FUN_START(inner_edge_potrf_4x4_lib4)
 #endif
 	
 	fmov		s16, 1.0e+0 // 1.0
@@ -521,7 +531,7 @@ inner_edge_potrf_4x4_lib4:
 #else
 	ret
 
-	.size	inner_edge_potrf_4x4_lib4, .-inner_edge_potrf_4x4_lib4
+	FUN_END(inner_edge_potrf_4x4_lib4)
 #endif
 
 
@@ -541,8 +551,7 @@ inner_edge_potrf_4x4_lib4:
 	.macro INNER_SCALE_AB_4X4_LIB4
 #else
 	.align	4
-	.type inner_scale_ab_4x4_lib4, %function
-inner_scale_ab_4x4_lib4:
+	FUN_START(inner_scale_ab_4x4_lib4)
 #endif
 
 	ld1		{v28.2d}, [x8]
@@ -565,7 +574,7 @@ inner_scale_ab_4x4_lib4:
 #else
 	ret
 
-	.size	inner_scale_ab_4x4_lib4, .-inner_scale_ab_4x4_lib4
+	FUN_END(inner_scale_ab_4x4_lib4)
 #endif
 
 
@@ -583,8 +592,7 @@ inner_scale_ab_4x4_lib4:
 	.macro INNER_SCALE_11_4X4_LIB4
 #else
 	.align	4
-	.type inner_scale_11_4x4_lib4, %function
-inner_scale_11_4x4_lib4:
+	FUN_START(inner_scale_11_4x4_lib4)
 #endif
 
 	ld1		{v24.4s, v25.4s, v26.4s, v27.4s}, [x8], #64
@@ -598,7 +606,7 @@ inner_scale_11_4x4_lib4:
 #else
 	ret
 
-	.size	inner_scale_11_4x4_lib4, .-inner_scale_11_4x4_lib4
+	FUN_END(inner_scale_11_4x4_lib4)
 #endif
 
 
@@ -616,8 +624,7 @@ inner_scale_11_4x4_lib4:
 	.macro INNER_STORE_4X4_LIB4
 #else
 	.align 4
-	.type inner_store_4x4_lib4, %function
-inner_store_4x4_lib4:
+	FUN_START(inner_store_4x4_lib4)
 #endif
 
 	st1		{v0.4s, v1.4s, v2.4s, v3.4s}, [x8], #64
@@ -627,7 +634,7 @@ inner_store_4x4_lib4:
 #else
 	ret
 
-	.size	inner_store_4x4_lib4, .-inner_store_4x4_lib4
+	FUN_END(inner_store_4x4_lib4)
 #endif
 
 
@@ -645,8 +652,7 @@ inner_store_4x4_lib4:
 	.macro INNER_STORE_L_4X4_LIB4
 #else
 	.align 4
-	.type inner_store_l_4x4_lib4, %function
-inner_store_l_4x4_lib4:
+	FUN_START(inner_store_l_4x4_lib4)
 #endif
 
 	ldr		q16, [x8, #16]
@@ -666,7 +672,7 @@ inner_store_l_4x4_lib4:
 #else
 	ret
 
-	.size	inner_store_l_4x4_lib4, .-inner_store_l_4x4_lib4
+	FUN_END(inner_store_l_4x4_lib4)
 #endif
 
 
@@ -676,9 +682,7 @@ inner_store_l_4x4_lib4:
 // void kernel_sgemm_nt_4x4_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D)
 
 	.align	4
-	.global	kernel_sgemm_nt_4x4_lib4
-	.type	kernel_sgemm_nt_4x4_lib4, %function
-kernel_sgemm_nt_4x4_lib4:
+	GLOB_FUN_START(kernel_sgemm_nt_4x4_lib4)
 	
 
 
@@ -686,11 +690,7 @@ kernel_sgemm_nt_4x4_lib4:
 
 
 
-	// TODO zero the entire 128-bit register ???
-	fmov	d0, xzr
-	fmov    d1, d0
-	fmov    d2, d0
-	fmov    d3, d0
+	ZERO_ACC
 
 
 
@@ -737,7 +737,7 @@ kernel_sgemm_nt_4x4_lib4:
 
 	ret
 
-	.size	kernel_sgemm_nt_4x4_lib4, .-kernel_sgemm_nt_4x4_lib4
+	FUN_END(kernel_sgemm_nt_4x4_lib4)
 
 
 
@@ -747,9 +747,7 @@ kernel_sgemm_nt_4x4_lib4:
 // void kernel_strsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E);
 
 	.align	4
-	.globl kernel_strsm_nt_rl_inv_4x4_lib4
-	.type kernel_strsm_nt_rl_inv_4x4_lib4, %function
-kernel_strsm_nt_rl_inv_4x4_lib4:
+	GLOB_FUN_START(kernel_strsm_nt_rl_inv_4x4_lib4)
 
 
 
@@ -757,11 +755,7 @@ kernel_strsm_nt_rl_inv_4x4_lib4:
 
 
 
-	// TODO zero the entire 128-bit register ???
-	fmov	d0, xzr
-	fmov    d1, d0
-	fmov    d2, d0
-	fmov    d3, d0
+	ZERO_ACC
 
 
 
@@ -818,7 +812,7 @@ kernel_strsm_nt_rl_inv_4x4_lib4:
 
 	ret
 
-	.size	kernel_strsm_nt_rl_inv_4x4_lib4, .-kernel_strsm_nt_rl_inv_4x4_lib4
+	FUN_END(kernel_strsm_nt_rl_inv_4x4_lib4)
 
 
 
@@ -828,9 +822,7 @@ kernel_strsm_nt_rl_inv_4x4_lib4:
 // void kernel_spotrf_nt_l_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *inv_diag_D);
 
 	.align	4
-	.globl kernel_spotrf_nt_l_4x4_lib4
-	.type kernel_spotrf_nt_l_4x4_lib4, %function
-kernel_spotrf_nt_l_4x4_lib4:
+	GLOB_FUN_START(kernel_spotrf_nt_l_4x4_lib4)
 
 
 
@@ -838,11 +830,7 @@ kernel_spotrf_nt_l_4x4_lib4:
 
 
 
-	// TODO zero the entire 128-bit register ???
-	fmov	d0, xzr
-	fmov    d1, d0
-	fmov    d2, d0
-	fmov    d3, d0
+	ZERO_ACC
 
 
 
@@ -898,7 +886,7 @@ kernel_spotrf_nt_l_4x4_lib4:
 
 	ret
 
-	.size	kernel_spotrf_nt_l_4x4_lib4, .-kernel_spotrf_nt_l_4x4_lib4
+	FUN_END(kernel_spotrf_nt_l_4x4_lib4)
 
 
 
