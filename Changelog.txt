@@ -4,10 +4,16 @@ BLASFEO ChangeLog
 
 ====================================================================
 Version 0.1.2-master
-15-Mar-2019
+30-Apr-2019
 
 BLAS_API:
 	* dtrmm for all targets (mainly based on 4x4 kernels for now)
+	* use netlib BLAS & LAPACK & CBLAS to provide missing routines
+
+ARMv8A:
+	* Cortex A57:
+		- improve kernels sgemm_nt lib4
+		- add optimized kernels sgemm_nn lib4
 
 ====================================================================
 Version 0.1.1
