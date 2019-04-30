@@ -95,7 +95,7 @@ NAME:
 	FUN_START(inner_kernel_gemm_add_nt_4x4_lib4)
 #endif
 
-// TODO more aggressive preload of A !!!
+
 
 	// early return
 	cmp		w8, #0
@@ -171,9 +171,9 @@ NAME:
 	ldp		q26, q27, [x9, #(2*16)]
 	fmla	v1.4s, v24.4s, v28.4s[1]
 	fmla	v2.4s, v24.4s, v28.4s[2]
-	prfm	PLDL1KEEP, [x9, #128]
+//	prfm	PLDL1KEEP, [x9, #128]
 	fmla	v3.4s, v24.4s, v28.4s[3]
-	prfm	PLDL1KEEP, [x10, #128]
+//	prfm	PLDL1KEEP, [x10, #128]
 
 	// unroll 1
 	fmla	v0.4s, v25.4s, v29.4s[0]
@@ -232,6 +232,241 @@ NAME:
 	FUN_END(inner_kernel_gemm_add_nt_4x4_lib4)
 #endif
 
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10   <- B
+// x11   <- 16*sdb
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_4x4_lib4)
+#endif
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	// prefetch
+	prfm	PLDL1KEEP, [x9, #0]
+	prfm	PLDL1KEEP, [x10, #0]
+
+	// preload
+	ldp		q28, q29, [x10, #(0*16)]
+	ldp		q30, q31, [x10, #(2*16)]
+
+	ldp		q24, q25, [x9, #(0*16)]
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+	prfm	PLDL1KEEP, [x9, #64]
+	prfm	PLDL1KEEP, [x10, #64]
+
+	// main loop
+1:
+	
+
+	// unroll 0
+	fmla	v0.4s, v24.4s, v28.4s[0]
+	ldp		q26, q27, [x9, #(2*16)]
+	fmla	v1.4s, v24.4s, v29.4s[0]
+	add		x10, x10, x11
+	fmla	v2.4s, v24.4s, v30.4s[0]
+	prfm	PLDL1KEEP, [x9, #128]
+	fmla	v3.4s, v24.4s, v31.4s[0]
+	prfm	PLDL1KEEP, [x10, x11]
+
+	// unroll 1
+	fmla	v0.4s, v25.4s, v28.4s[1]
+	add		x9, x9, #64
+	fmla	v1.4s, v25.4s, v29.4s[1]
+	fmla	v2.4s, v25.4s, v30.4s[1]
+	fmla	v3.4s, v25.4s, v31.4s[1]
+	ldp		q24, q25, [x9, #(0*16)]
+
+	// unroll 2
+	fmla	v0.4s, v26.4s, v28.4s[2]
+	fmla	v1.4s, v26.4s, v29.4s[2]
+	fmla	v2.4s, v26.4s, v30.4s[2]
+	fmla	v3.4s, v26.4s, v31.4s[2]
+	sub		w8, w8, #4
+
+	// unroll 3
+	fmla	v0.4s, v27.4s, v28.4s[3]
+	fmla	v1.4s, v27.4s, v29.4s[3]
+	ldp		q28, q29, [x10, #(0*16)]
+	fmla	v2.4s, v27.4s, v30.4s[3]
+	fmla	v3.4s, v27.4s, v31.4s[3]
+	ldp		q30, q31, [x10, #(2*16)]
+
+	cmp		w8, #4
+	bgt		1b
+
+//	sub		x9, x9, #32
+//	sub		x10, x10, #32
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// unroll 0
+	fmla	v0.4s, v24.4s, v28.4s[0]
+	ldp		q26, q27, [x9, #(2*16)]
+	fmla	v1.4s, v24.4s, v29.4s[0]
+	add		x10, x10, x11
+	fmla	v2.4s, v24.4s, v30.4s[0]
+//	prfm	PLDL1KEEP, [x9, #128]
+	fmla	v3.4s, v24.4s, v31.4s[0]
+//	prfm	PLDL1KEEP, [x10, x11]
+
+	// unroll 1
+	fmla	v0.4s, v25.4s, v28.4s[1]
+	add		x9, x9, #64
+	fmla	v1.4s, v25.4s, v29.4s[1]
+	fmla	v2.4s, v25.4s, v30.4s[1]
+	fmla	v3.4s, v25.4s, v31.4s[1]
+//	ldp		q24, q25, [x9, #(0*16)]
+
+	// unroll 2
+	fmla	v0.4s, v26.4s, v28.4s[2]
+	fmla	v1.4s, v26.4s, v29.4s[2]
+	fmla	v2.4s, v26.4s, v30.4s[2]
+	fmla	v3.4s, v26.4s, v31.4s[2]
+	sub		w8, w8, #4
+
+	// unroll 3
+	fmla	v0.4s, v27.4s, v28.4s[3]
+	fmla	v1.4s, v27.4s, v29.4s[3]
+//	ldp		q28, q29, [x10, #(0*16)]
+	fmla	v2.4s, v27.4s, v30.4s[3]
+	fmla	v3.4s, v27.4s, v31.4s[3]
+//	ldp		q30, q31, [x10, #(2*16)]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// unroll 0
+	ldr		q24, [x9], #16
+	ldr		s28, [x10, #(0*16)]
+	ldr		s29, [x10, #(1*16)]
+	ldr		s30, [x10, #(2*16)]
+	ldr		s31, [x10, #(3*16)]
+	fmla	v0.4s, v24.4s, v28.4s[0]
+	fmla	v1.4s, v24.4s, v29.4s[0]
+	fmla	v2.4s, v24.4s, v30.4s[0]
+	fmla	v3.4s, v24.4s, v31.4s[0]
+
+	add		x10, x10, #4
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+	
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_4x4_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10   <- B
+// x11   <- 16*sdb
+// w12   <- offsetB
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+#else
+	.align	4
+	FUN_START(inner_edge_gemm_add_nn_4x4_lib4)
+#endif
+
+	cmp		w12, #0
+	ble		2f // return
+
+	cmp		w8, #0
+	ble		2f // return
+
+	mov		w13, #4
+	sub		w14, w13, w12 // 4-offsetB
+	cmp		w14, w8
+	ble		0f
+	mov		w14, w8 // kend=min(k,4-offsetB)
+0:
+//	movgt	w14, w8 // kend=min(k,4-offsetB)
+	
+	add		x10, x10, x12, LSL #2 // B + offsetB*sizeof(float)
+
+1:
+	ldr		q24, [x9], #16
+	ldr		s28, [x10, #(0*16)]
+	ldr		s29, [x10, #(1*16)]
+	ldr		s30, [x10, #(2*16)]
+	ldr		s31, [x10, #(3*16)]
+	fmla	v0.4s, v24.4s, v28.4s[0]
+	fmla	v1.4s, v24.4s, v29.4s[0]
+	fmla	v2.4s, v24.4s, v30.4s[0]
+	fmla	v3.4s, v24.4s, v31.4s[0]
+
+	add		x10, x10, #4
+
+	sub		w8, w8, #1
+
+	sub		w14, w14, #1
+
+	cmp		w14, #0
+	bgt		1b
+
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x10, x10, x11
+	sub		x10, x10, #16
+
+2: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_add_nn_4x4_lib4)
+#endif
+	
 
 
 
@@ -629,6 +864,81 @@ NAME:
 	ret
 
 	FUN_END(kernel_sgemm_nt_4x4_lib4)
+
+
+
+
+
+//                               w0        x1             x2         w3           x4         w5       x6            x7         sp+0
+// void kernel_sgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D)
+
+	.align	4
+	GLOB_FUN_START(kernel_sgemm_nn_4x4_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel dgemm nn
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		x10, x4 // B
+	mov		w11, w5 // kmax
+	lsl		w11, w11, #4 // 16*sda
+	mov		w12, w3 // offsetB
+
+	// TODO
+#if MACRO_LEVEL>=2
+	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+#else
+	bl	inner_edge_gemm_add_nn_4x4_lib4
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nn_4x4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x6 // beta
+	mov		x10, x7 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	bl inner_scale_ab_4x4_lib4
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 0)] // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB4
+#else
+	bl inner_store_4x4_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_sgemm_nn_4x4_lib4)
 
 
 
