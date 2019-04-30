@@ -108,8 +108,6 @@ NAME:
 	FUN_START(inner_kernel_gemm_add_nt_16x4_lib4)
 #endif
 
-// TODO more aggressive preload of A !!!
-
 
 
 #if 1
@@ -135,10 +133,6 @@ NAME:
 	ldp		q28, q29, [x11, #(0*16)]
 	ldp		q30, q31, [x11, #(2*16)]
 
-//	ldp		q16, q17, [x9, #(0*16)]
-//	ldp		q18, q19, [x12, #(0*16)]
-//	ldp		q20, q21, [x13, #(0*16)]
-//	ldp		q22, q23, [x14, #(0*16)]
 	ldr		q16, [x9, #(0*16)]
 	ldr		q18, [x12, #(0*16)]
 	ldr		q20, [x13, #(0*16)]
