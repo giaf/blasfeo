@@ -206,6 +206,7 @@ int main()
 
 		int n = nn[ll];
 		int nrep = nnrep[ll]/10;
+		nrep = nrep>1 ? nrep : 1;
 //		int n = ll+1;
 //		int nrep = nnrep[0];
 //		n = n<16 ? 16 : n;
