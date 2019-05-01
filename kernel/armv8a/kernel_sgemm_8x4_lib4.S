@@ -952,10 +952,10 @@ NAME:
 	FUN_START(inner_store_8x4_vs_lib4)
 #endif
 
+	add		x12, x8, x9
+
 	cmp		w10, #8
 	bge		1f
-
-	add		x12, x8, x9
 
 	ldp		q24, q25, [x12, #(0*16)]
 	ldp		q26, q27, [x12, #(2*16)]
@@ -1281,6 +1281,88 @@ NAME:
 	ret
 
 	FUN_END(kernel_sgemm_nn_8x4_lib4)
+
+
+
+
+
+//                                  w0        x1             x2         w3       w4           x5         w6       x7            sp+0       sp+8     sp+16      sp+24    sp+32   sp+40
+// void kernel_sgemm_nn_8x4_vs_lib4(int kmax, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1)
+
+	.align	4
+	GLOB_FUN_START(kernel_sgemm_nn_8x4_vs_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nn
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		w10, w3 // sda
+	lsl		w10, w10, #4 // 16*sda
+	mov		x11, x5 // B
+	mov		w12, w6 // sdb
+	lsl		w12, w12, #4 // 16*sda
+	mov		w13, w4 // offsetB
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_GEMM_ADD_NN_8X4_LIB4
+#else
+	bl	inner_edge_gemm_add_nn_8x4_lib4
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_GEMM_ADD_NN_8X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nn_8x4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x7 // beta
+	ldr		x10, [sp, #(STACKSIZE + 0)] // C
+	ldr		w11, [sp, #(STACKSIZE + 8)] // sdc
+	lsl		w11, w11, #4 // 16*sdc
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_LIB4
+#else
+	bl inner_scale_ab_8x4_lib4
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 16)] // D
+	ldr		w9, [sp, #(STACKSIZE + 24)] // sdd
+	lsl		w9, w9, #4 // 16*sdd
+	ldr		w10, [sp, #(STACKSIZE + 32)] // m1
+	ldr		w11, [sp, #(STACKSIZE + 40)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_VS_LIB4
+#else
+	bl inner_store_8x4_vs_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_sgemm_nn_8x4_vs_lib4)
 
 
 
