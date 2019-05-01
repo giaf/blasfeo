@@ -241,8 +241,8 @@ NAME:
 // input arguments:
 // w8   <- k
 // x9   <- A
-// x10   <- B
-// x11   <- 16*sdb
+// x10  <- B
+// x11  <- 16*sdb
 //
 // output arguments:
 
@@ -274,7 +274,7 @@ NAME:
 
 	// prefetch
 	prfm	PLDL1KEEP, [x9, #64]
-	prfm	PLDL1KEEP, [x10, #64]
+	prfm	PLDL1KEEP, [x10, x11]
 
 	// main loop
 1:
@@ -1035,7 +1035,7 @@ NAME:
 	mov		w8, w0 // kmax
 	mov		x9, x2 // A
 	mov		x10, x4 // B
-	mov		w11, w5 // kmax
+	mov		w11, w5 // sdb
 	lsl		w11, w11, #4 // 16*sda
 	mov		w12, w3 // offsetB
 
