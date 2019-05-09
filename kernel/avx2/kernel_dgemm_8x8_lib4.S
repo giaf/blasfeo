@@ -1561,7 +1561,6 @@ NAME:
 // r11   <- &beta
 // r12   <- C
 // r13   <- 4*sdc*sizeof(double)
-// r14   <- dirty
 // r15   <- dirty
 // ymm0  <- [d00 d11 d22 d33]
 // ymm1  <- [d01 d10 d23 d32]
@@ -1575,18 +1574,12 @@ NAME:
 // ymm9  <- [d81 d90 da3 db2]
 // ymm10 <- [d83 d92 da1 db0]
 // ymm11 <- [d82 d93 da0 db1]
-// ymm12 <- dirty
-// ymm13 <- dirty
-// ymm14 <- dirty
-// ymm15 <- dirty
 //
 // output arguments:
 // r10   <- &alpha
 // r11   <- &beta
 // r12   <- C
 // r13   <- 4*sdc*sizeof(double)
-// r14   <- dirty
-// r15   <- dirty
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
 // ymm2  <- [d02 d12 d22 d32]
@@ -1599,16 +1592,12 @@ NAME:
 // ymm9  <- [d81 d91 da1 db1]
 // ymm10 <- [d82 d92 da2 db2]
 // ymm11 <- [d83 d93 da3 db3]
-// ymm12 <- dirty
-// ymm13 <- dirty
-// ymm14 <- dirty
-// ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_SCALE_AB_8X8_LIB4
+	.macro INNER_SCALE_AB_8X8L_LIB4
 #else
 	.p2align 4,,15
-	FUN_START(inner_scale_ab_8x8_lib4)
+	FUN_START(inner_scale_ab_8x8l_lib4)
 #endif
 		
 
@@ -1670,7 +1659,121 @@ NAME:
 #else
 	ret
 
-	FUN_END(inner_scale_ab_8x8_lib4)
+	FUN_END(inner_scale_ab_8x8l_lib4)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// scale for generic alpha and beta
+//
+// input arguments:
+// r10   <- &alpha
+// r11   <- &beta
+// r12   <- C
+// r13   <- 4*sdc*sizeof(double)
+// r15   <- dirty
+// ymm0  <- [d00 d11 d22 d33]
+// ymm1  <- [d01 d10 d23 d32]
+// ymm2  <- [d03 d12 d21 d30]
+// ymm3  <- [d02 d13 d20 d31]
+// ymm4  <- [d40 d51 d62 d73]
+// ymm5  <- [d41 d50 d63 d72]
+// ymm6  <- [d43 d52 d61 d70]
+// ymm7  <- [d42 d53 d60 d71]
+// ymm8  <- [d80 d91 da2 db3]
+// ymm9  <- [d81 d90 da3 db2]
+// ymm10 <- [d83 d92 da1 db0]
+// ymm11 <- [d82 d93 da0 db1]
+//
+// output arguments:
+// r10   <- &alpha
+// r11   <- &beta
+// r12   <- C
+// r13   <- 4*sdc*sizeof(double)
+// ymm0  <- [d00 d10 d20 d30]
+// ymm1  <- [d01 d11 d21 d31]
+// ymm2  <- [d02 d12 d22 d32]
+// ymm3  <- [d03 d13 d23 d33]
+// ymm4  <- [d40 d50 d60 d70]
+// ymm5  <- [d41 d51 d61 d71]
+// ymm6  <- [d42 d52 d62 d72]
+// ymm7  <- [d43 d53 d63 d73]
+// ymm8  <- [d80 d90 da0 db0]
+// ymm9  <- [d81 d91 da1 db1]
+// ymm10 <- [d82 d92 da2 db2]
+// ymm11 <- [d83 d93 da3 db3]
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_AB_8X8U_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_scale_ab_8x8u_lib4)
+#endif
+		
+
+	vbroadcastsd 0(%r10), %ymm15 // alpha
+
+	vmulpd		%ymm0, %ymm15, %ymm0
+	vmulpd		%ymm1, %ymm15, %ymm1
+	vmulpd		%ymm2, %ymm15, %ymm2
+	vmulpd		%ymm3, %ymm15, %ymm3
+
+	vmulpd		%ymm4, %ymm15, %ymm4
+	vmulpd		%ymm5, %ymm15, %ymm5
+	vmulpd		%ymm6, %ymm15, %ymm6
+	vmulpd		%ymm7, %ymm15, %ymm7
+
+	vmulpd		%ymm8, %ymm15, %ymm8
+	vmulpd		%ymm9, %ymm15, %ymm9
+	vmulpd		%ymm10, %ymm15, %ymm10
+	vmulpd		%ymm11, %ymm15, %ymm11
+
+	vbroadcastsd 0(%r11), %ymm14 // beta
+
+	vxorpd		%ymm15, %ymm15, %ymm15 // 0.0
+
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			0f // end
+
+	vmovapd		0(%r12), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm0
+	vmovapd		32(%r12), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm1
+	vmovapd		64(%r12), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm2
+	vmovapd		96(%r12), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm3
+
+	vmovapd		128(%r12), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm4
+	vmovapd		160(%r12), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm5
+	vmovapd		192(%r12), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm6
+	vmovapd		224(%r12), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm7
+
+	vmovapd		128(%r12, %r13, 1), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm8
+	vmovapd		160(%r12, %r13, 1), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm9
+	vmovapd		192(%r12, %r13, 1), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm10
+	vmovapd		224(%r12, %r13, 1), %ymm15
+	vfmadd231pd	%ymm14, %ymm15, %ymm11
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_scale_ab_8x8u_lib4)
 #endif
 
 
@@ -4132,9 +4235,9 @@ NAME:
 	sall	$5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_8X8_LIB4
+	INNER_SCALE_AB_8X8L_LIB4
 #else
-	CALL(inner_scale_ab_8x8_lib4)
+	CALL(inner_scale_ab_8x8l_lib4)
 #endif
 
 
@@ -4268,9 +4371,9 @@ NAME:
 	sall	$5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_8X8_LIB4
+	INNER_SCALE_AB_8X8L_LIB4
 #else
-	CALL(inner_scale_ab_8x8_lib4)
+	CALL(inner_scale_ab_8x8l_lib4)
 #endif
 
 
@@ -4409,9 +4512,9 @@ NAME:
 	sall	$5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_8X8_LIB4
+	INNER_SCALE_AB_8X8L_LIB4
 #else
-	CALL(inner_scale_ab_8x8_lib4)
+	CALL(inner_scale_ab_8x8l_lib4)
 #endif
 
 
@@ -4422,9 +4525,9 @@ NAME:
 	sall	$5, %r11d // 4*sdd*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_8X8_LIB4
+	INNER_STORE_8X8L_LIB4
 #else
-	CALL(inner_store_8x8_lib4)
+	CALL(inner_store_8x8l_lib4)
 #endif
 
 
@@ -4432,7 +4535,7 @@ NAME:
 	
 	ret
 
-	FUN_END(kernel_dgemm_nt_8x8_lib4)
+	FUN_END(kernel_dgemm_nt_8x8_gen_lib4)
 #endif
 
 
@@ -4485,9 +4588,9 @@ NAME:
 	sall	$5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_8X8_LIB4
+	INNER_SCALE_AB_8X8U_LIB4
 #else
-	CALL(inner_scale_ab_8x8_lib4)
+	CALL(inner_scale_ab_8x8u_lib4)
 #endif
 
 
@@ -4560,9 +4663,9 @@ NAME:
 	sall	$5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_8X8_LIB4
+	INNER_SCALE_AB_8X8U_LIB4
 #else
-	CALL(inner_scale_ab_8x8_lib4)
+	CALL(inner_scale_ab_8x8u_lib4)
 #endif
 
 
@@ -4630,9 +4733,9 @@ NAME:
 	sall	$5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_8X8_LIB4
+	INNER_SCALE_AB_8X8L_LIB4
 #else
-	CALL(inner_scale_ab_8x8_lib4)
+	CALL(inner_scale_ab_8x8l_lib4)
 #endif
 
 
@@ -4699,9 +4802,9 @@ NAME:
 	sall	$5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_8X8_LIB4
+	INNER_SCALE_AB_8X8L_LIB4
 #else
-	CALL(inner_scale_ab_8x8_lib4)
+	CALL(inner_scale_ab_8x8l_lib4)
 #endif
 
 
