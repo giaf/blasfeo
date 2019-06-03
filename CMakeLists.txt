@@ -31,6 +31,8 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(blasfeo C ASM)
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
 # enable_language(C ASM)
 
 
@@ -92,7 +94,7 @@ configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 # set(CC_COMPILER x86_64-w64-mingw32-gcc)
 
 # build shared library
-#set(BUILD_SHARED_LIBS ON CACHE STRING "Build shared libraries")
+set(BUILD_SHARED_LIBS OFF CACHE STRING "Build shared libraries")
 
 # installation directory
 if(CMAKE_INSTALL_PREFIX MATCHES "/usr/local")
@@ -100,8 +102,7 @@ if(CMAKE_INSTALL_PREFIX MATCHES "/usr/local")
 endif()
 
 # headers installation directory
-set(BLASFEO_HEADERS_INSTALLATION_DIRECTORY "include"
-	CACHE STRING "Headers local installation directory")
+set(BLASFEO_HEADERS_INSTALLATION_DIRECTORY "include" CACHE STRING "Headers local installation directory")
 
 # Macro level (code size vs performance in assembly kernels): 0 (no macro),
 # 1 (all macro but gemm kernel), 2 (all macro)
