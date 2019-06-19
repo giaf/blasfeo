@@ -168,7 +168,7 @@ FALLBACK_TO_EXTERNAL_BLAS = 1
 
 # Maximum inner product length K for buffer allocation on stack (decrease this value if stack size is exceeded)
 #
-K_MAX_STACK = 300
+K_MAX_STACK = 500
 
 # Macro level (code size vs performance in assembly kernels):
 # 0 : no macro (min code size)
@@ -274,6 +274,7 @@ endif
 CFLAGS  += -DLA_EXTERNAL_BLAS_WRAPPER
 BINARY_DIR = build/$(LA)/$(EXTERNAL_BLAS)
 endif
+# TODO remove and fix tests
 #CFLAGS  += -DLA=$(LA)
 
 ifeq ($(BLAS_API), 1)
@@ -393,6 +394,7 @@ endif
 ifeq ($(EXTERNAL_BLAS), ATLAS)
 CFLAGS  += -DEXTERNAL_BLAS_ATLAS
 endif
+# TODO remove and fix tests
 #CFLAGS  += -DEXTERNAL_BLAS=$(EXTERNAL_BLAS)
 
 # Architecture-specific flags
@@ -435,5 +437,5 @@ endif
 ifeq ($(TARGET), GENERIC)
 CFLAGS  += -DTARGET_GENERIC
 endif
-#
+# TODO remove and fix tests
 #CFLAGS  += -DTARGET=$(TARGET)
