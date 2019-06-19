@@ -45,6 +45,7 @@ OBJS += \
 		kernel/avx2/kernel_dgemm_12x4_lib4.o \
 		kernel/avx2/kernel_dgemm_8x8_lib4.o \
 		kernel/avx2/kernel_dgemm_8x4_lib4.o \
+		kernel/avx2/kernel_dgemm_4x8_lib4.o \
 		kernel/avx2/kernel_dgemm_4x4_lib4.o \
 		kernel/avx/kernel_dgemm_diag_lib4.o \
 		kernel/avx2/kernel_dgemv_8_lib4.o \
