@@ -5402,7 +5402,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 // ymm14 <- dirty
 // ymm15 <- dirty
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	.macro INNER_TRAN_12X4_LIB4
 #else
 	.p2align 4,,15

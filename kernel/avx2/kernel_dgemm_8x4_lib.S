@@ -6836,7 +6836,7 @@
 	movq	ARG6, %r14  // ldb
 	sall	$3, %r14d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_8X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_rl_8x4_lib4c)
@@ -6910,7 +6910,7 @@
 	movq	ARG6, %r14  // ldb
 	sall	$3, %r14d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_8X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_rl_8x4_vs_lib4c)
@@ -7032,7 +7032,7 @@
 	movq	ARG6, %r14  // ldb
 	sall	$3, %r14d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_ONE_8X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_rl_one_8x4_lib4c)
@@ -7106,7 +7106,7 @@
 	movq	ARG6, %r14  // ldb
 	sall	$3, %r14d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_ONE_8X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_rl_one_8x4_vs_lib4c)
@@ -7534,7 +7534,7 @@
 	CALL(inner_kernel_dgemm_nt_8x4_lib4c)
 #endif
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RL_8X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_rl_8x4_lib4c)
@@ -7654,7 +7654,7 @@
 
 	movq	ARG13, %r15  // n1
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RL_8X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_rl_8x4_vs_lib4c)
@@ -7732,7 +7732,7 @@
 	CALL(inner_kernel_dgemm_nt_8x4_lib4c)
 #endif
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RL_ONE_8X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_rl_one_8x4_lib4c)
@@ -7852,7 +7852,7 @@
 
 	movq	ARG13, %r15  // n1
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RL_ONE_8X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_rl_one_8x4_vs_lib4c)
@@ -8220,7 +8220,7 @@
 	movq	ARG6, %r14  // ldb
 	sall	$3, %r14d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_8X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_ru_8x4_lib4c)
@@ -8294,7 +8294,7 @@
 	movq	ARG6, %r14  // ldb
 	sall	$3, %r14d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_8X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_ru_8x4_vs_lib4c)
@@ -8492,7 +8492,7 @@
 	movq	ARG6, %r14  // ldb
 	sall	$3, %r14d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_ONE_8X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_ru_one_8x4_lib4c)
@@ -8566,7 +8566,7 @@
 	movq	ARG6, %r14  // ldb
 	sall	$3, %r14d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_ONE_8X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_ru_one_8x4_vs_lib4c)

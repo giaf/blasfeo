@@ -7081,7 +7081,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_rl_4x4_lib4c)
@@ -7153,7 +7153,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_rl_4x4_vs_lib4c)
@@ -7273,7 +7273,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_rl_4x4_lib4c)
@@ -7343,7 +7343,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_rl_4x4_vs_lib4c)
@@ -7459,7 +7459,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_ONE_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_rl_one_4x4_lib4c)
@@ -7531,7 +7531,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_ONE_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_rl_one_4x4_vs_lib4c)
@@ -7651,7 +7651,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_ONE_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_rl_one_4x4_lib4c)
@@ -7721,7 +7721,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_ONE_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_rl_one_4x4_vs_lib4c)
@@ -7843,7 +7843,7 @@
 	CALL(inner_kernel_dgemm_nn_4x4_lib4c)
 #endif
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RU_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_ru_4x4_lib4c)
@@ -7961,7 +7961,7 @@
 
 	movq	ARG12, %r14 // n1
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RU_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_ru_4x4_vs_lib4c)
@@ -8037,7 +8037,7 @@
 	CALL(inner_kernel_dgemm_nn_4x4_lib4c)
 #endif
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RU_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_ru_4x4_lib4c)
@@ -8153,7 +8153,7 @@
 
 	movq	ARG10, %r14 // m1
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RU_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_ru_4x4_vs_lib4c)
@@ -8225,7 +8225,7 @@
 	CALL(inner_kernel_dgemm_nn_4x4_lib4c)
 #endif
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RU_ONE_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_ru_one_4x4_lib4c)
@@ -8343,7 +8343,7 @@
 
 	movq	ARG12, %r14 // n1
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RU_ONE_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_ru_one_4x4_vs_lib4c)
@@ -8419,7 +8419,7 @@
 	CALL(inner_kernel_dgemm_nn_4x4_lib4c)
 #endif
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RU_ONE_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_ru_one_4x4_lib4c)
@@ -8535,7 +8535,7 @@
 
 	movq	ARG10, %r14 // m1
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RU_ONE_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_ru_one_4x4_vs_lib4c)
@@ -9363,7 +9363,7 @@
 	CALL(inner_kernel_dgemm_nt_4x4_lib4c)
 #endif
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RL_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_rl_4x4_lib4c)
@@ -9481,7 +9481,7 @@
 
 	movq	ARG12, %r14 // n1
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RL_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_rl_4x4_vs_lib4c)
@@ -9557,7 +9557,7 @@
 	CALL(inner_kernel_dgemm_nt_4x4_lib4c)
 #endif
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RL_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_rl_4x4_lib4c)
@@ -9673,7 +9673,7 @@
 
 	movq	ARG10, %r14 // m1
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RL_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_rl_4x4_vs_lib4c)
@@ -9745,7 +9745,7 @@
 	CALL(inner_kernel_dgemm_nt_4x4_lib4c)
 #endif
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RL_ONE_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_rl_one_4x4_lib4c)
@@ -9863,7 +9863,7 @@
 
 	movq	ARG12, %r14 // n1
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RL_ONE_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_rl_one_4x4_vs_lib4c)
@@ -9939,7 +9939,7 @@
 	CALL(inner_kernel_dgemm_nt_4x4_lib4c)
 #endif
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RL_ONE_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_rl_one_4x4_lib4c)
@@ -10055,7 +10055,7 @@
 
 	movq	ARG10, %r14 // m1
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RL_ONE_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_rl_one_4x4_vs_lib4c)
@@ -10503,7 +10503,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_ru_4x4_lib4c)
@@ -10575,7 +10575,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_ru_4x4_vs_lib4c)
@@ -10695,7 +10695,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_ru_4x4_lib4c)
@@ -10765,7 +10765,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_ru_4x4_vs_lib4c)
@@ -11263,7 +11263,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_ONE_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_ru_one_4x4_lib4c)
@@ -11335,7 +11335,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_ONE_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_ru_one_4x4_vs_lib4c)
@@ -11455,7 +11455,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_ONE_4X4_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_ru_one_4x4_lib4c)
@@ -11525,7 +11525,7 @@
 	movq	ARG5, %r13  // ldb
 	sall	$3, %r13d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_ONE_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nt_ru_one_4x4_vs_lib4c)
