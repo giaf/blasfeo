@@ -89,17 +89,17 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 		if(*tb=='n' | *tb=='N')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
-			if(n>256 | k>256 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>2*12 & ((long long) n)*((long long) k)>256*256))
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-			if(n>=56 | k>=56 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>2*8 & ((long long) n)*((long long) k)>56*56))
 #elif defined(TARGET_X64_INTEL_CORE)
-			if(n>=8 | k>=8 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>1*4 & ((long long) n)*((long long) k)>8*8))
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-			if(n>64 | k>64 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>2*8 & ((long long) n)*((long long) k)>64*64))
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-			if(n>16 | k>16 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>1*12 & ((long long) n)*((long long) k)>16*16))
 #else
-			if(n>=12 | k>=12 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>1*4 & ((long long) n)*((long long) k)>12*12))
 #endif
 				{
 				goto nn_1;
@@ -112,18 +112,17 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 		else if(*tb=='t' | *tb=='T' | *tb=='c' | *tb=='C')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
-//			if(n>96 | k>96 | k>K_MAX_STACK)
-			if(1)
+			if(k>K_MAX_STACK | (m>2*12 & ((long long) n)*((long long) k)>96*96))
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-			if(n>=56 | k>=56 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>2*8 & ((long long) n)*((long long) k)>56*56))
 #elif defined(TARGET_X64_INTEL_CORE)
-			if(n>=8 | k>=8 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>1*4 & ((long long) n)*((long long) k)>8*8))
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-			if(n>64 | k>64 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>2*8 & ((long long) n)*((long long) k)>64*64))
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-			if(n>16 | k>16 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>1*12 & ((long long) n)*((long long) k)>16*16))
 #else
-			if(n>=12 | k>=12 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>1*4 & ((long long) n)*((long long) k)>12*12))
 #endif
 				{
 				goto nt_1;
@@ -144,17 +143,17 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 		if(*tb=='n' | *tb=='N')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
-			if(n>256 | k>256 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>2*12 & ((long long) n)*((long long) k)>256*256))
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-			if(n>=56 | k>=56 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>2*8 & ((long long) n)*((long long) k)>56*56))
 #elif defined(TARGET_X64_INTEL_CORE)
-			if(n>=8 | k>=8 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>1*4 & ((long long) n)*((long long) k)>8*8))
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-			if(n>64 | k>64 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>2*8 & ((long long) n)*((long long) k)>64*64))
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-			if(n>16 | k>16 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>1*12 & ((long long) n)*((long long) k)>16*16))
 #else
-			if(n>=12 | k>=12 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>1*4 & ((long long) n)*((long long) k)>12*12))
 #endif
 				{
 				goto tn_1;
@@ -167,17 +166,17 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 		else if(*tb=='t' | *tb=='T' | *tb=='c' | *tb=='C')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
-			if(n>=96 | k>=96 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>2*12 & ((long long) n)*((long long) k)>96*96))
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-			if(n>=56 | k>=56 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>2*8 & ((long long) n)*((long long) k)>56*56))
 #elif defined(TARGET_X64_INTEL_CORE)
-			if(n>=8 | k>=8 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>1*4 & ((long long) n)*((long long) k)>8*8))
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-			if(n>64 | k>64 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>2*8 & ((long long) n)*((long long) k)>64*64))
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-			if(n>16 | k>16 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>1*12 & ((long long) n)*((long long) k)>16*16))
 #else
-			if(n>=12 | k>=12 | k>K_MAX_STACK)
+			if(k>K_MAX_STACK | (m>1*4 & ((long long) n)*((long long) k)>12*12))
 #endif
 				{
 				goto tt_1;
