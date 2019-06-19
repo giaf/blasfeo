@@ -6578,7 +6578,7 @@
 	sall	$3, %r13d
 
 #if MACRO_LEVEL>=2
-	INNER_EDGE_DTRMM_NN_RL_4X4_ONE_VS_LIB4C
+	INNER_EDGE_DTRMM_NN_RL_ONE_4X4_VS_LIB4C
 #else
 	CALL(inner_edge_dtrmm_nn_rl_one_4x4_vs_lib4c)
 #endif
@@ -14460,7 +14460,7 @@
 	movq	ARG13, %r12 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRSM_RUT_ONEINV_4X4_VS_LIB
+	INNER_EDGE_DTRSM_RUT_ONE_4X4_VS_LIB
 #else
 	CALL(inner_edge_dtrsm_rut_one_4x4_vs_lib)
 #endif

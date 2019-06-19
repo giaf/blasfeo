@@ -15732,7 +15732,7 @@
 	movq	ARG13, %r12 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRSM_RUT_ONEINV_4X4_VS_LIB
+	INNER_EDGE_DTRSM_RUT_ONE_4X4_VS_LIB
 #else
 	CALL(inner_edge_dtrsm_rut_one_4x4_vs_lib)
 #endif
