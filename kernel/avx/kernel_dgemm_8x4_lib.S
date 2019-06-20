@@ -7504,11 +7504,55 @@
 	movq	ARG4, %r14  // lda
 	sall	$3, %r14d
 
+	movq	ARG12, %r15  // m1
+	cmpl	$1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X1_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x1_lib4c)
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG12, %r15  // m1
+	cmpl	$2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X2_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x2_lib4c)
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG12, %r15  // m1
+	cmpl	$3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X3_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x3_lib4c)
+#endif
+
+	jmp		103f
+
+102:
+
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_8X4_LIB4C
 #else
 	CALL(inner_kernel_dgemm_nt_8x4_lib4c)
 #endif
+
+103:
 
 
 	// call inner blend

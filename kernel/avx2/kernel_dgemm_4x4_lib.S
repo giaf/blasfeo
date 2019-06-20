@@ -5611,13 +5611,55 @@
 	movq	ARG4, %r13  // lda
 	sall	$3, %r13d
 
-	// TODO kernel ?x4 ???
+	movq	ARG11, %r14  // m1
+	cmpl	$1, %r14d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X1_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_4x1_lib4c)
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG11, %r14  // m1
+	cmpl	$2, %r14d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X2_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_4x2_lib4c)
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG11, %r14  // m1
+	cmpl	$3, %r14d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X3_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_4x3_lib4c)
+#endif
+
+	jmp		103f
+
+102:
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_4X4_LIB4C
 #else
 	CALL(inner_kernel_dgemm_nt_4x4_lib4c)
 #endif
+
+103:
 
 
 	// call inner blend
