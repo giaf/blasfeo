@@ -5211,6 +5211,45 @@
 
 
 
+// common inner routine with file scope
+//
+// store n
+//
+// input arguments:
+// r10  <- D
+// r11  <- ldd
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_PREFETCH_4X4_LIB
+#else
+	.p2align 4,,15
+	FUN_START(inner_prefetch_4x4_lib)
+#endif
+
+	leaq		0(%r11, %r11, 2), %r12
+	prefetcht0	0(%r10)
+	prefetcht0	0(%r10, %r11, 1)
+	prefetcht0	0(%r10, %r11, 2)
+	prefetcht0	0(%r10, %r12, 1)
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_prefetch_4x4_lib)
+#endif
+
+
+
+
+
 //                                 1      2              3          4          5        6             7          8        9          10
 // void kernel_dgemm_nt_4x4_lib4ccc(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 
@@ -5236,6 +5275,19 @@
 	INNER_KERNEL_DGEMM_NT_4X4_LIB4C
 #else
 	CALL(inner_kernel_dgemm_nt_4x4_lib4c)
+#endif
+
+
+	// prefetch D
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_4X4_LIB
+#else
+	CALL(inner_prefetch_4x4_lib)
 #endif
 
 
@@ -5348,6 +5400,19 @@
 #endif
 
 103:
+
+
+	// prefetch D
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_4X4_LIB
+#else
+	CALL(inner_prefetch_4x4_lib)
+#endif
 
 
 	// call inner blend
@@ -5524,7 +5589,7 @@
 
 
 
-//                                 1      2              3          4        5          6             7          8        9          10
+//                                  1      2              3          4        5          6             7          8        9          10
 // void kernel_dgemm_nt_4x4_libc4cc(int k, double *alpha, double *A, int lda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 
 	.p2align 4,,15
@@ -5549,6 +5614,19 @@
 	INNER_KERNEL_DGEMM_NT_4X4_LIB4C
 #else
 	CALL(inner_kernel_dgemm_nt_4x4_lib4c)
+#endif
+
+
+	// prefetch D
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_4X4_LIB
+#else
+	CALL(inner_prefetch_4x4_lib)
 #endif
 
 
@@ -5662,6 +5740,19 @@
 103:
 
 
+	// prefetch D
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_4X4_LIB
+#else
+	CALL(inner_prefetch_4x4_lib)
+#endif
+
+
 	// call inner blend
 
 	movq	ARG2, %r10 // alpha
@@ -5729,6 +5820,19 @@
 	INNER_KERNEL_DGEMM_NN_4X4_LIB4C
 #else
 	CALL(inner_kernel_dgemm_nn_4x4_lib4c)
+#endif
+
+
+	// prefetch D
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_4X4_LIB
+#else
+	CALL(inner_prefetch_4x4_lib)
 #endif
 
 
@@ -5840,6 +5944,19 @@
 #endif
 
 103:
+
+
+	// prefetch D
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_4X4_LIB
+#else
+	CALL(inner_prefetch_4x4_lib)
+#endif
 
 
 	// call inner blend
