@@ -129,7 +129,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 					goto nt_m0; // small matrix: pack A
 					}
 #if defined(TARGET_X64_INTEL_HASWELL)
-				if( m<=2*12 | n<=2*12 | ml*kl<96*96 | nl*kl<96*96)
+				if( m<=2*12 | n<=2*12 | ml*kl<200*200 | nl*kl<200*200)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 				if( m<=2*8 | n<=2*8 | ml*kl<56*56 | nl*kl<56*56)
 #elif defined(TARGET_X64_INTEL_CORE)
@@ -188,7 +188,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 		else if(*tb=='t' | *tb=='T' | *tb=='c' | *tb=='C')
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
-			if(k>K_MAX_STACK | (m>2*12 & ((long long) n)*((long long) k)>96*96))
+			if(k>K_MAX_STACK | (m>2*12 & ((long long) n)*((long long) k)>200*200))
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 			if(k>K_MAX_STACK | (m>2*8 & ((long long) n)*((long long) k)>56*56))
 #elif defined(TARGET_X64_INTEL_CORE)

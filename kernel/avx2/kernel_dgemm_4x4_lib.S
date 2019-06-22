@@ -65,11 +65,9 @@
 	.p2align 3
 1: // main loop
 
-//	prefetcht0	0(%r12, %r13, 2) // software prefetch
-//	prefetcht0	64(%r12, %r13, 2) // software prefetch
-
 	// unroll 0
 	vmovupd			0(%r11), %ymm13 // A
+	prefetcht0		0(%r12, %r13, 8)
 	vbroadcastsd	0(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
 	vbroadcastsd	8(%r12), %ymm12 // B
@@ -82,6 +80,7 @@
 
 	// unroll 1
 	vmovupd			32(%r11), %ymm13 // A
+	prefetcht0		0(%r12, %r13, 8)
 	vbroadcastsd	0(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm4
 	vbroadcastsd	8(%r12), %ymm12 // B
@@ -94,6 +93,7 @@
 
 	// unroll 2
 	vmovupd			64(%r11), %ymm13 // A
+	prefetcht0		0(%r12, %r13, 8)
 	vbroadcastsd	0(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
 	vbroadcastsd	8(%r12), %ymm12 // B
@@ -106,6 +106,7 @@
 
 	// unroll 3
 	vmovupd			96(%r11), %ymm13 // A
+	prefetcht0		0(%r12, %r13, 8)
 	vbroadcastsd	0(%r12), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm4
 	vbroadcastsd	8(%r12), %ymm12 // B
