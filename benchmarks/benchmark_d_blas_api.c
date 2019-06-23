@@ -152,9 +152,9 @@ openblas_set_num_threads(1);
 //	for(ll=0; ll<4; ll++) // up to 16
 //	for(ll=0; ll<24; ll++)
 //	for(ll=0; ll<63; ll++) // up to 256
-	for(ll=0; ll<75; ll++) // up to 300
+//	for(ll=0; ll<75; ll++) // up to 300
 //	for(ll=0; ll<115; ll++) // up to 460
-//	for(ll=0; ll<120; ll++) // up to 700
+	for(ll=0; ll<120; ll++) // up to 700
 
 		{
 
@@ -164,29 +164,31 @@ openblas_set_num_threads(1);
 		nrep = nrep>1 ? nrep : 1;
 //		int n = ll+1;
 //		int nrep = nnrep[0];
-//		n = n<12 ? 12 : n;
+//		n = n<24 ? 24 : n;
+		n = n<12 ? 12 : n;
 //		n = n<8 ? 8 : n;
 //		nrep = 1;
 
+int n8 = (n+7)/8*8;
 
-		double *A; d_zeros_align(&A, n, n);
-		for(ii=0; ii<n*n; ii++)
+		double *A; d_zeros_align(&A, n8, n8);
+		for(ii=0; ii<n8*n8; ii++)
 			A[ii] = ii;
-		int lda = n;
+		int lda = n8;
 //		d_print_mat(n, n, A, n);
 
-		double *B; d_zeros_align(&B, n, n);
-		for(ii=0; ii<n*n; ii++)
+		double *B; d_zeros_align(&B, n8, n8);
+		for(ii=0; ii<n8*n8; ii++)
 			B[ii] = 0;
-		for(ii=0; ii<n; ii++)
+		for(ii=0; ii<n8; ii++)
 			B[ii*(n+1)] = 1.0;
-		int ldb = n;
+		int ldb = n8;
 //		d_print_mat(n, n, B, ldb);
 
-		double *C; d_zeros_align(&C, n, n);
-		for(ii=0; ii<n*n; ii++)
+		double *C; d_zeros_align(&C, n8, n8);
+		for(ii=0; ii<n8*n8; ii++)
 			C[ii] = -1;
-		int ldc = n;
+		int ldc = n8;
 //		d_print_mat(n, n, C, ldc);
 
 		double *D; d_zeros_align(&D, n, n);
@@ -238,6 +240,8 @@ openblas_set_num_threads(1);
 		char c_r = 'r';
 		char c_t = 't';
 		char c_u = 'u';
+
+		int fix_dim_0;
 
 
 
@@ -292,6 +296,8 @@ openblas_set_num_threads(1);
 //			for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 //			blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
 
+			fix_dim_0 = 4;
+
 			// BENCHMARK_BLASFEO
 			blasfeo_tic(&timer);
 
@@ -299,10 +305,11 @@ openblas_set_num_threads(1);
 			for(rep=0; rep<nrep; rep++)
 				{
 
-				blasfeo_dgemm(&c_n, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blasfeo_dgemm(&c_n, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blasfeo_dgemm(&c_n, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blasfeo_dgemm(&c_t, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blasfeo_dgemm(&c_t, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+				blasfeo_dgemm(&c_n, &c_t, &fix_dim_0, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 
 //				blasfeo_dsyrk(&c_l, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
 //				blasfeo_dsyrk(&c_l, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
@@ -426,10 +433,12 @@ openblas_set_num_threads(1);
 
 		double Gflops_max = flops_max * GHz_max;
 
-		double flop_operation = 2.0*n*n*n; // gemm
+//		double flop_operation = 2.0*n*n*n; // gemm
 //		double flop_operation = 1.0*n*n*n; // syrk trsm
 //		double flop_operation = 1.0/3.0*n*n*n; // potrf
 //		double flop_operation = 2.0/3.0*n*n*n; // getrf
+
+		double flop_operation = 2.0*fix_dim_0*n*n; // gemm
 
 		double Gflops_blas      = 1e-9*flop_operation/time_blas;
 		double Gflops_blas_api  = 1e-9*flop_operation/time_blas_api;

@@ -5402,7 +5402,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 // ymm14 <- dirty
 // ymm15 <- dirty
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_TRAN_12X4_LIB4
 #else
 	.p2align 4,,15
@@ -17613,13 +17613,19 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 	movq	%r13, %r12
 	movq	%r14, %r13
 
-#if MACRO_LEVEL>=2
-	INNER_TRAN_12X4_LIB4
-	INNER_KERNEL_DGEMM_NT_12X4_LIB4
+#if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB4
 #else
 	CALL(inner_tran_12x4_lib4)
+#endif
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_12X4_LIB4
+#else
 	CALL(inner_kernel_dgemm_nt_12x4_lib4)
+#endif
+#if MACRO_LEVEL>=1
+	INNER_TRAN_12X4_LIB4
+#else
 	CALL(inner_tran_12x4_lib4)
 #endif
 

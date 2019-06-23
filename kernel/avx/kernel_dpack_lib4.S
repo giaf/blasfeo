@@ -3972,34 +3972,42 @@ NAME:
 1: // main loop
 	
 	vmovupd		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
 	vmovapd		%ymm0, 0(%r13)
 	vmovupd		32(%r11), %ymm0
 	vmovapd		%ymm0, 0(%r13, %r14, 1)
 	vmovupd		64(%r11), %ymm0
+	prefetcht0	64(%r11, %r12, 8)
 	vmovapd		%ymm0, 0(%r13, %r14, 2)
 	addq	%r12, %r11
 
 	vmovupd		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
 	vmovapd		%ymm0, 32(%r13)
 	vmovupd		32(%r11), %ymm0
 	vmovapd		%ymm0, 32(%r13, %r14, 1)
 	vmovupd		64(%r11), %ymm0
+	prefetcht0	64(%r11, %r12, 8)
 	vmovapd		%ymm0, 32(%r13, %r14, 2)
 	addq	%r12, %r11
 
 	vmovupd		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
 	vmovapd		%ymm0, 64(%r13)
 	vmovupd		32(%r11), %ymm0
 	vmovapd		%ymm0, 64(%r13, %r14, 1)
 	vmovupd		64(%r11), %ymm0
+	prefetcht0	64(%r11, %r12, 8)
 	vmovapd		%ymm0, 64(%r13, %r14, 2)
 	addq	%r12, %r11
 
 	vmovupd		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
 	vmovapd		%ymm0, 96(%r13)
 	vmovupd		32(%r11), %ymm0
 	vmovapd		%ymm0, 96(%r13, %r14, 1)
 	vmovupd		64(%r11), %ymm0
+	prefetcht0	64(%r11, %r12, 8)
 	vmovapd		%ymm0, 96(%r13, %r14, 2)
 	addq	%r12, %r11
 
@@ -4188,26 +4196,34 @@ NAME:
 1: // main loop
 	
 	vmovupd		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
 	vmovapd		%ymm0, 0(%r13)
 	vmovupd		32(%r11), %ymm0
+	prefetcht0	32(%r11, %r12, 8)
 	vmovapd		%ymm0, 0(%r13, %r14, 1)
 	addq	%r12, %r11
 
 	vmovupd		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
 	vmovapd		%ymm0, 32(%r13)
 	vmovupd		32(%r11), %ymm0
+	prefetcht0	32(%r11, %r12, 8)
 	vmovapd		%ymm0, 32(%r13, %r14, 1)
 	addq	%r12, %r11
 
 	vmovupd		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
 	vmovapd		%ymm0, 64(%r13)
 	vmovupd		32(%r11), %ymm0
+	prefetcht0	32(%r11, %r12, 8)
 	vmovapd		%ymm0, 64(%r13, %r14, 1)
 	addq	%r12, %r11
 
 	vmovupd		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
 	vmovapd		%ymm0, 96(%r13)
 	vmovupd		32(%r11), %ymm0
+	prefetcht0	32(%r11, %r12, 8)
 	vmovapd		%ymm0, 96(%r13, %r14, 1)
 	addq	%r12, %r11
 
@@ -4382,18 +4398,22 @@ NAME:
 1: // main loop
 	
 	vmovupd		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
 	vmovapd		%ymm0, 0(%r13)
 	addq	%r12, %r11
 
 	vmovupd		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
 	vmovapd		%ymm0, 32(%r13)
 	addq	%r12, %r11
 
 	vmovupd		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
 	vmovapd		%ymm0, 64(%r13)
 	addq	%r12, %r11
 
 	vmovupd		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
 	vmovapd		%ymm0, 96(%r13)
 	addq	%r12, %r11
 
