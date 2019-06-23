@@ -564,6 +564,8 @@ void kernel_dtrsm_nt_ru_inv_12x4_vs_lib4cccc(int kmax, double *A, int sda, doubl
 void kernel_dtrsm_nt_ru_one_12x4_lib4cccc(int kmax, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde);
 void kernel_dtrsm_nt_ru_one_12x4_vs_lib4cccc(int kmax, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, int m1, int n1);
 // 4x12
+void kernel_dgemm_nn_4x12_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nn_4x12_vs_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dgemm_nt_4x12_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_4x12_vs_lib4ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 // 8x4

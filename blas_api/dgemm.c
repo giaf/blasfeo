@@ -102,7 +102,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 					goto nn_m0; // small matrix: pack A
 					}
 #if defined(TARGET_X64_INTEL_HASWELL)
-				if( m<=2*12 | n<=2*12 | k<256 )
+				if( m<=2*12 | n<=2*12 | k<448 )
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 				if( m<=2*8 | n<=2*8 | k<56 )
 #elif defined(TARGET_X64_INTEL_CORE)
@@ -336,11 +336,15 @@ nn_m0_left_8:
 nn_m0_left_4:
 	kernel_dpack_nn_4_vs_lib4(k, A+ii, lda, pU, m-ii);
 #if defined(TARGET_X64_INTEL_HASWELL)
-	for(jj=0; jj<n-4; jj+=8)
+	for(jj=0; jj<n-8; jj+=12)
+		{
+		kernel_dgemm_nn_4x12_vs_lib4ccc(k, alpha, pU, B+jj*ldb, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+		}
+	if(jj<n-4)
 		{
 		kernel_dgemm_nn_4x8_vs_lib4ccc(k, alpha, pU, B+jj*ldb, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 		}
-	if(jj<n)
+	else if(jj<n)
 		{
 		kernel_dgemm_nn_4x4_vs_lib4ccc(k, alpha, pU, B+jj*ldb, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 		}
@@ -1116,11 +1120,15 @@ tn_0_left_8:
 tn_0_left_4:
 	kernel_dpack_tn_4_vs_lib4(k, A+ii*lda, lda, pU, m-ii);
 #if defined(TARGET_X64_INTEL_HASWELL)
-	for(jj=0; jj<n-4; jj+=8)
+	for(jj=0; jj<n-8; jj+=12)
+		{
+		kernel_dgemm_nn_4x12_vs_lib4ccc(k, alpha, pU, B+jj*ldb, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+		}
+	if(jj<n-4)
 		{
 		kernel_dgemm_nn_4x8_vs_lib4ccc(k, alpha, pU, B+jj*ldb, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 		}
-	if(jj<n)
+	else if(jj<n)
 		{
 		kernel_dgemm_nn_4x4_vs_lib4ccc(k, alpha, pU, B+jj*ldb, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 		}
