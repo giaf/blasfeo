@@ -64,10 +64,6 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 
 	const int bs = 4;
 
-	long long ml = (m+bs-1)/bs*bs;
-	long long nl = (n+bs-1)/bs*bs;
-	long long kl = (k+bs-1)/bs*bs;
-
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	double pU[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
@@ -129,17 +125,17 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 					goto nt_m0; // small matrix: pack A
 					}
 #if defined(TARGET_X64_INTEL_HASWELL)
-				if( m<=2*12 | n<=2*12 | ml*kl<200*200 | nl*kl<200*200)
+				if( m<=2*12 | n<=2*12 | k<200 )
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-				if( m<=2*8 | n<=2*8 | ml*kl<56*56 | nl*kl<56*56)
+				if( m<=2*8 | n<=2*8 | k<56 )
 #elif defined(TARGET_X64_INTEL_CORE)
-				if( m<=1*4 | n<=1*4 | ml*kl<8*8 | nl*kl<8*8)
+				if( m<=1*4 | n<=1*4 | k<8 )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-				if( m<=2*8 | n<=2*8 | ml*kl<64*64 | nl*kl<64*64)
+				if( m<=2*8 | n<=2*8 | k<64 )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-				if( m<=1*12 | n<=1*12 | ml*kl<16*16 | nl*kl<16*16)
+				if( m<=1*12 | n<=1*12 | k<16 )
 #else
-				if( m<=1*4 | n<=1*4 | ml*kl<12*12 | nl*kl<12*12)
+				if( m<=1*4 | n<=1*4 | k<12 )
 #endif
 					{
 					if( m<=n )
@@ -587,11 +583,15 @@ nt_m0_left_8:
 nt_m0_left_4:
 	kernel_dpack_nn_4_vs_lib4(k, A+ii, lda, pU, m-ii);
 #if defined(TARGET_X64_INTEL_HASWELL)
-	for(jj=0; jj<n-4; jj+=8)
+	for(jj=0; jj<n-8; jj+=12)
+		{
+		kernel_dgemm_nt_4x12_vs_lib4ccc(k, alpha, pU, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+		}
+	if(jj<n-4)
 		{
 		kernel_dgemm_nt_4x8_vs_lib4ccc(k, alpha, pU, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 		}
-	if(jj<n)
+	else if(jj<n)
 		{
 		kernel_dgemm_nt_4x4_vs_lib4ccc(k, alpha, pU, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 		}
@@ -1241,11 +1241,15 @@ tt_0_left_8:
 tt_0_left_4:
 	kernel_dpack_tn_4_vs_lib4(k, A+ii*lda, lda, pU, m-ii);
 #if defined(TARGET_X64_INTEL_HASWELL)
-	for(jj=0; jj<n-4; jj+=8)
+	for(jj=0; jj<n-8; jj+=12)
+		{
+		kernel_dgemm_nt_4x12_vs_lib4ccc(k, alpha, pU, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+		}
+	if(jj<n-4)
 		{
 		kernel_dgemm_nt_4x8_vs_lib4ccc(k, alpha, pU, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 		}
-	if(jj<n)
+	else if(jj<n)
 		{
 		kernel_dgemm_nt_4x4_vs_lib4ccc(k, alpha, pU, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 		}
