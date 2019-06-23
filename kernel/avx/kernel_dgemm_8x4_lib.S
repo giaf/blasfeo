@@ -5221,6 +5221,65 @@
 
 // common inner routine with file scope
 //
+// transpose
+//
+// input arguments:
+// r10   <- alpha
+// r11   <- beta
+// r12   <- C
+// r13   <- ldc
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+// ymm4  <- [d40 d50 d60 d70]
+// ymm5  <- [d41 d51 d61 d71]
+// ymm6  <- [d42 d52 d62 d72]
+// ymm7  <- [d43 d53 d63 d73]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_TRAN_8X4_LIB
+#else
+	.p2align 4,,15
+	FUN_START(inner_tran_8x4_lib)
+#endif
+
+	vunpcklpd	%ymm1, %ymm0, %ymm12
+	vunpckhpd	%ymm1, %ymm0, %ymm13
+	vunpcklpd	%ymm3, %ymm2, %ymm14
+	vunpckhpd	%ymm3, %ymm2, %ymm15
+
+	vperm2f128	$0x20, %ymm14, %ymm12, %ymm0
+	vperm2f128	$0x31, %ymm14, %ymm12, %ymm2
+	vperm2f128	$0x20, %ymm15, %ymm13, %ymm1
+	vperm2f128	$0x31, %ymm15, %ymm13, %ymm3
+
+	vunpcklpd	%ymm5, %ymm4, %ymm12
+	vunpckhpd	%ymm5, %ymm4, %ymm13
+	vunpcklpd	%ymm7, %ymm6, %ymm14
+	vunpckhpd	%ymm7, %ymm6, %ymm15
+
+	vperm2f128	$0x20, %ymm14, %ymm12, %ymm4
+	vperm2f128	$0x31, %ymm14, %ymm12, %ymm6
+	vperm2f128	$0x20, %ymm15, %ymm13, %ymm5
+	vperm2f128	$0x31, %ymm15, %ymm13, %ymm7
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_tran_8x4_lib)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // scale for generic alpha and beta
 //
 // input arguments:
@@ -5959,31 +6018,11 @@
 // output arguments:
 
 #if MACRO_LEVEL>=1
-	.macro INNER_TRAN_SCALE_AB_4X8_LIB
+	.macro INNER_SCALE_AB_4X8_LIB
 #else
 	.p2align 4,,15
-	FUN_START(inner_tran_scale_ab_4x8_lib)
+	FUN_START(inner_scale_ab_4x8_lib)
 #endif
-
-	vunpcklpd	%ymm1, %ymm0, %ymm12
-	vunpckhpd	%ymm1, %ymm0, %ymm13
-	vunpcklpd	%ymm3, %ymm2, %ymm14
-	vunpckhpd	%ymm3, %ymm2, %ymm15
-
-	vperm2f128	$0x20, %ymm14, %ymm12, %ymm0
-	vperm2f128	$0x31, %ymm14, %ymm12, %ymm2
-	vperm2f128	$0x20, %ymm15, %ymm13, %ymm1
-	vperm2f128	$0x31, %ymm15, %ymm13, %ymm3
-
-	vunpcklpd	%ymm5, %ymm4, %ymm12
-	vunpckhpd	%ymm5, %ymm4, %ymm13
-	vunpcklpd	%ymm7, %ymm6, %ymm14
-	vunpckhpd	%ymm7, %ymm6, %ymm15
-
-	vperm2f128	$0x20, %ymm14, %ymm12, %ymm4
-	vperm2f128	$0x31, %ymm14, %ymm12, %ymm6
-	vperm2f128	$0x20, %ymm15, %ymm13, %ymm5
-	vperm2f128	$0x31, %ymm15, %ymm13, %ymm7
 
 	// alpha
 	vbroadcastsd	0(%r10), %ymm15
@@ -6043,7 +6082,7 @@
 #else
 	ret
 
-	FUN_END(inner_tran_scale_ab_4x8_lib)
+	FUN_END(inner_scale_ab_4x8_lib)
 #endif
 
 
@@ -6182,31 +6221,11 @@
 // output arguments:
 
 #if MACRO_LEVEL>=1
-	.macro INNER_TRAN_SCALE_AB_4X8_VS_LIB
+	.macro INNER_SCALE_AB_4X8_VS_LIB
 #else
 	.p2align 4,,15
-	FUN_START(inner_tran_scale_ab_4x8_vs_lib)
+	FUN_START(inner_scale_ab_4x8_vs_lib)
 #endif
-
-	vunpcklpd	%ymm1, %ymm0, %ymm12
-	vunpckhpd	%ymm1, %ymm0, %ymm13
-	vunpcklpd	%ymm3, %ymm2, %ymm14
-	vunpckhpd	%ymm3, %ymm2, %ymm15
-
-	vperm2f128	$0x20, %ymm14, %ymm12, %ymm0
-	vperm2f128	$0x31, %ymm14, %ymm12, %ymm2
-	vperm2f128	$0x20, %ymm15, %ymm13, %ymm1
-	vperm2f128	$0x31, %ymm15, %ymm13, %ymm3
-
-	vunpcklpd	%ymm5, %ymm4, %ymm12
-	vunpckhpd	%ymm5, %ymm4, %ymm13
-	vunpcklpd	%ymm7, %ymm6, %ymm14
-	vunpckhpd	%ymm7, %ymm6, %ymm15
-
-	vperm2f128	$0x20, %ymm14, %ymm12, %ymm4
-	vperm2f128	$0x31, %ymm14, %ymm12, %ymm6
-	vperm2f128	$0x20, %ymm15, %ymm13, %ymm5
-	vperm2f128	$0x31, %ymm15, %ymm13, %ymm7
 
 	// alpha
 	vbroadcastsd	0(%r10), %ymm15
@@ -6284,7 +6303,7 @@
 #else
 	ret
 
-	FUN_END(inner_tran_scale_ab_4x8_vs_lib)
+	FUN_END(inner_scale_ab_4x8_vs_lib)
 #endif
 
 
@@ -6936,6 +6955,8 @@
 	je			0f // end
 	vmaskmovpd	%ymm7, %ymm15, 0(%r10)
 
+0:
+
 #if MACRO_LEVEL>=1
 	.endm
 #else
@@ -7093,6 +7114,93 @@
 
 
 
+// common inner routine with file scope
+//
+// prefetch
+//
+// input arguments:
+// r10  <- D
+// r11  <- ldd
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_PREFETCH_8X4_LIB
+#else
+	.p2align 4,,15
+	FUN_START(inner_prefetch_8x4_lib)
+#endif
+
+	leaq		0(%r11, %r11, 2), %r12
+	prefetcht0	0(%r10)				// 0
+	prefetcht0	32(%r10)			// 0
+	prefetcht0	0(%r10, %r11, 1)	// 1
+	prefetcht0	32(%r10, %r11, 1)	// 1
+	prefetcht0	0(%r10, %r11, 2)	// 2
+	prefetcht0	32(%r10, %r11, 2)	// 2
+	prefetcht0	0(%r10, %r12, 1)	// 3
+	prefetcht0	32(%r10, %r12, 1)	// 3
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_prefetch_8x4_lib)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// prefetch
+//
+// input arguments:
+// r10  <- D
+// r11  <- ldd
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_PREFETCH_4X8_LIB
+#else
+	.p2align 4,,15
+	FUN_START(inner_prefetch_4x8_lib)
+#endif
+
+	leaq		0(%r11, %r11, 2), %r12
+	leaq		0(%r10, %r11, 4), %r13
+	prefetcht0	0(%r10)				// 0
+	prefetcht0	0(%r10, %r11, 1)	// 1
+	prefetcht0	0(%r10, %r11, 2)	// 2
+	prefetcht0	0(%r10, %r12, 1)	// 3
+	prefetcht0	0(%r13)				// 4
+	prefetcht0	0(%r13, %r11, 1)	// 5
+	prefetcht0	0(%r13, %r11, 2)	// 6
+	prefetcht0	0(%r13, %r12, 1)	// 7
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_prefetch_4x8_lib)
+#endif
+
+
+
+
+
 //                                 1      2              3          4        5          6        7             8          9        10         11
 // void kernel_dgemm_nt_8x4_lib4ccc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 
@@ -7120,6 +7228,19 @@
 	INNER_KERNEL_DGEMM_NT_8X4_LIB4C
 #else
 	CALL(inner_kernel_dgemm_nt_8x4_lib4c)
+#endif
+
+
+	// prefetch D
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_8X4_LIB
+#else
+	CALL(inner_prefetch_8x4_lib)
 #endif
 
 
@@ -7233,6 +7354,19 @@
 #endif
 
 103:
+
+
+	// prefetch D
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_8X4_LIB
+#else
+	CALL(inner_prefetch_8x4_lib)
+#endif
 
 
 	// call inner blend
@@ -7414,190 +7548,6 @@
 
 
 //                                 1      2              3          4        5          6        7             8          9        10         11
-// void kernel_dgemm_nt_4x8_libc4cc(int k, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
-
-	.p2align 4,,15
-	GLOB_FUN_START(kernel_dgemm_nt_4x8_libc4cc)
-
-	PROLOGUE
-
-	// zero accumulation registers
-
-	ZERO_ACC
-
-
-	// call inner dgemm kernel nn
-
-	movq	ARG1, %r10 // k
-	movq	ARG5, %r11  // B
-	movq	ARG6, %r12  // sdb
-	sall	$5, %r12d
-	movq	ARG3, %r13  // A
-	movq	ARG4, %r14  // lda
-	sall	$3, %r14d
-
-#if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_NT_8X4_LIB4C
-#else
-	CALL(inner_kernel_dgemm_nt_8x4_lib4c)
-#endif
-
-
-	// call inner blend
-
-	movq	ARG2, %r10 // alpha
-	movq	ARG7, %r11 // beta
-	movq	ARG8, %r12   // C
-	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
-
-#if MACRO_LEVEL>=1
-	INNER_TRAN_SCALE_AB_4X8_LIB
-#else
-	CALL(inner_tran_scale_ab_4x8_lib)
-#endif
-
-
-	// store n
-
-	movq	ARG10, %r10 // D
-	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
-
-#if MACRO_LEVEL>=1
-	INNER_STORE_4X8_LIB
-#else
-	CALL(inner_store_4x8_lib)
-#endif
-
-
-	EPILOGUE
-
-	ret
-
-	FUN_END(kernel_dgemm_nt_4x8_libc4cc)
-
-
-
-
-
-//                                    1      2              3          4        5          6        7             8          9        10         11       12      13
-// void kernel_dgemm_nt_4x8_vs_libc4cc(int k, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
-
-	.p2align 4,,15
-	GLOB_FUN_START(kernel_dgemm_nt_4x8_vs_libc4cc)
-
-	PROLOGUE
-
-	// zero accumulation registers
-
-	ZERO_ACC
-
-
-	// call inner dgemm kernel nn
-
-	movq	ARG1, %r10 // k
-	movq	ARG5, %r11  // B
-	movq	ARG6, %r12  // sdb
-	sall	$5, %r12d
-	movq	ARG3, %r13  // A
-	movq	ARG4, %r14  // lda
-	sall	$3, %r14d
-
-	movq	ARG12, %r15  // m1
-	cmpl	$1, %r15d
-	jg		100f
-
-#if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_NT_8X1_LIB4C
-#else
-	CALL(inner_kernel_dgemm_nt_8x1_lib4c)
-#endif
-	
-	jmp		103f
-
-100:
-
-	movq	ARG12, %r15  // m1
-	cmpl	$2, %r15d
-	jg		101f
-
-#if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_NT_8X2_LIB4C
-#else
-	CALL(inner_kernel_dgemm_nt_8x2_lib4c)
-#endif
-
-	jmp		103f
-
-101:
-
-	movq	ARG12, %r15  // m1
-	cmpl	$3, %r15d
-	jg		102f
-
-#if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_NT_8X3_LIB4C
-#else
-	CALL(inner_kernel_dgemm_nt_8x3_lib4c)
-#endif
-
-	jmp		103f
-
-102:
-
-#if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_NT_8X4_LIB4C
-#else
-	CALL(inner_kernel_dgemm_nt_8x4_lib4c)
-#endif
-
-103:
-
-
-	// call inner blend
-
-	movq	ARG2, %r10 // alpha
-	movq	ARG7, %r11 // beta
-	movq	ARG8, %r12   // C
-	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
-	movq	ARG12, %r14   // m1
-	movq	ARG13, %r15   // n1
-
-#if MACRO_LEVEL>=1
-	INNER_TRAN_SCALE_AB_4X8_VS_LIB
-#else
-	CALL(inner_tran_scale_ab_4x8_vs_lib)
-#endif
-
-
-	// store n
-
-	movq	ARG10, %r10 // D
-	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
-	movq	ARG12, %r12   // m1
-	movq	ARG13, %r13   // n1
-
-#if MACRO_LEVEL>=1
-	INNER_STORE_4X8_VS_LIB
-#else
-	CALL(inner_store_4x8_vs_lib)
-#endif
-
-
-	EPILOGUE
-
-	ret
-
-	FUN_END(kernel_dgemm_nt_4x8_vs_libc4cc)
-
-
-
-
-
-//                                 1      2              3          4        5          6        7             8          9        10         11
 // void kernel_dgemm_nn_8x4_lib4ccc(int k, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd,);
 
 	.p2align 4,,15
@@ -7624,6 +7574,19 @@
 	INNER_KERNEL_DGEMM_NN_8X4_LIB4C
 #else
 	CALL(inner_kernel_dgemm_nn_8x4_lib4c)
+#endif
+
+
+	// prefetch D
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_8X4_LIB
+#else
+	CALL(inner_prefetch_8x4_lib)
 #endif
 
 
@@ -7737,6 +7700,19 @@
 #endif
 
 103:
+
+
+	// prefetch D
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_8X4_LIB
+#else
+	CALL(inner_prefetch_8x4_lib)
+#endif
 
 
 	// call inner blend
@@ -14535,6 +14511,429 @@
 	ret
 
 	FUN_END(kernel_dtrsm_nn_ll_one_8x4_vs_lib4cccc)
+
+
+
+
+
+//                                 1      2              3          4        5          6        7             8          9        10         11
+// void kernel_dgemm_nt_4x8_libc4cc(int k, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemm_nt_4x8_libc4cc)
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG5, %r11  // B
+	movq	ARG6, %r12  // sdb
+	sall	$5, %r12d
+	movq	ARG3, %r13  // A
+	movq	ARG4, %r14  // lda
+	sall	$3, %r14d
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x4_lib4c)
+#endif
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+	movq	ARG9, %r13   // ldc
+	sall	$3, %r13d
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_8X4_LIB
+#else
+	CALL(inner_tran_8x4_lib)
+#endif
+
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X8_LIB
+#else
+	CALL(inner_scale_ab_4x8_lib)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X8_LIB
+#else
+	CALL(inner_store_4x8_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dgemm_nt_4x8_libc4cc)
+
+
+
+
+
+//                                    1      2              3          4        5          6        7             8          9        10         11       12      13
+// void kernel_dgemm_nt_4x8_vs_libc4cc(int k, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemm_nt_4x8_vs_libc4cc)
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG5, %r11  // B
+	movq	ARG6, %r12  // sdb
+	sall	$5, %r12d
+	movq	ARG3, %r13  // A
+	movq	ARG4, %r14  // lda
+	sall	$3, %r14d
+
+	movq	ARG12, %r15  // m1
+	cmpl	$1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X1_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x1_lib4c)
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG12, %r15  // m1
+	cmpl	$2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X2_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x2_lib4c)
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG12, %r15  // m1
+	cmpl	$3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X3_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x3_lib4c)
+#endif
+
+	jmp		103f
+
+102:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nt_8x4_lib4c)
+#endif
+
+103:
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+	movq	ARG9, %r13   // ldc
+	sall	$3, %r13d
+	movq	ARG12, %r14   // m1
+	movq	ARG13, %r15   // n1
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_8X4_LIB
+#else
+	CALL(inner_tran_8x4_lib)
+#endif
+
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X8_VS_LIB
+#else
+	CALL(inner_scale_ab_4x8_vs_lib)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$3, %r11d
+	movq	ARG12, %r12   // m1
+	movq	ARG13, %r13   // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X8_VS_LIB
+#else
+	CALL(inner_store_4x8_vs_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dgemm_nt_4x8_vs_libc4cc)
+
+
+
+
+
+
+//                                 1      2              3          4        5          6        7             8          9        10         11
+// void kernel_dgemm_tt_4x8_libc4cc(int k, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemm_tt_4x8_libc4cc)
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG5, %r11  // B
+	movq	ARG6, %r12  // sdb
+	sall	$5, %r12d
+	movq	ARG3, %r13  // A
+	movq	ARG4, %r14  // lda
+	sall	$3, %r14d
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_8x4_lib4c)
+#endif
+
+
+	// prefetch D
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_4X8_LIB
+#else
+	CALL(inner_prefetch_4x8_lib)
+#endif
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+	movq	ARG9, %r13   // ldc
+	sall	$3, %r13d
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_8X4_LIB
+#else
+	CALL(inner_tran_8x4_lib)
+#endif
+
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X8_LIB
+#else
+	CALL(inner_scale_ab_4x8_lib)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X8_LIB
+#else
+	CALL(inner_store_4x8_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dgemm_tt_4x8_libc4cc)
+
+
+
+
+
+//                                    1      2              3          4        5          6        7             8          9        10         11       12      13
+// void kernel_dgemm_tt_4x8_vs_libc4cc(int k, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemm_tt_4x8_vs_libc4cc)
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG5, %r11  // B
+	movq	ARG6, %r12  // sdb
+	sall	$5, %r12d
+	movq	ARG3, %r13  // A
+	movq	ARG4, %r14  // lda
+	sall	$3, %r14d
+
+	movq	ARG12, %r15  // m1
+	cmpl	$1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X1_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_8x1_lib4c)
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG12, %r15  // m1
+	cmpl	$2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X2_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_8x2_lib4c)
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG12, %r15  // m1
+	cmpl	$3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X3_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_8x3_lib4c)
+#endif
+
+	jmp		103f
+
+102:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_8x4_lib4c)
+#endif
+
+103:
+
+
+	// prefetch D
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_4X8_LIB
+#else
+	CALL(inner_prefetch_4x8_lib)
+#endif
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+	movq	ARG9, %r13   // ldc
+	sall	$3, %r13d
+	movq	ARG12, %r14   // m1
+	movq	ARG13, %r15   // n1
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_8X4_LIB
+#else
+	CALL(inner_tran_8x4_lib)
+#endif
+
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X8_VS_LIB
+#else
+	CALL(inner_scale_ab_4x8_vs_lib)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$3, %r11d
+	movq	ARG12, %r12   // m1
+	movq	ARG13, %r13   // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X8_VS_LIB
+#else
+	CALL(inner_store_4x8_vs_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dgemm_tt_4x8_vs_libc4cc)
 
 
 
