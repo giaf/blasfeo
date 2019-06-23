@@ -168,14 +168,14 @@ FALLBACK_TO_EXTERNAL_BLAS = 1
 
 # Maximum inner product length K for buffer allocation on stack (decrease this value if stack size is exceeded)
 #
-K_MAX_STACK = 500
+K_MAX_STACK = 1000
 
 # Macro level (code size vs performance in assembly kernels):
 # 0 : no macro (min code size)
 # 1 : all macro but gemm kernel
 # 2 : all macro (max performance)
 #
-MACRO_LEVEL = 0
+MACRO_LEVEL = 1
 
 # Use C99 extension to math library
 #
@@ -308,6 +308,11 @@ $(error Cannot expose non-FORTRAN style BLAS_API when complementing with Netlib 
 endif
 endif
 
+STACK_SIZE := $(shell ulimit -s)
+STACK_SIZE_EXCEEDED := $(shell echo $(K_MAX_STACK)*12*8*2 \> $(STACK_SIZE)*1024 | bc )
+ifeq ($(STACK_SIZE_EXCEEDED), 1)
+$(error stack size likely to be exceeded, please decrease the value of K_MAX_STACK )
+endif
 CFLAGS  += -DK_MAX_STACK=$(K_MAX_STACK)
 
 ifeq ($(USE_C99_MATH), 1)
