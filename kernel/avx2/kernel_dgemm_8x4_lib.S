@@ -6276,10 +6276,6 @@
 // transpose
 //
 // input arguments:
-// r10   <- alpha
-// r11   <- beta
-// r12   <- C
-// r13   <- ldc
 // ymm0 <- [d00 d11 d22 d33]
 // ymm1 <- [d01 d10 d23 d32]
 // ymm2 <- [d03 d12 d21 d30]
@@ -7726,15 +7722,16 @@
 
 
 	// prefetch D
+	// TODO prefetch vs !!!
 
-	movq	ARG10, %r10 // D
-	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+//	movq	ARG10, %r10 // D
+//	movq	ARG11, %r11 // ldd
+//	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+//	INNER_PREFETCH_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+//	CALL(inner_prefetch_8x4_lib)
 #endif
 
 
@@ -8075,15 +8072,16 @@
 
 
 	// prefetch D
+	// TODO prefetch vs !!!
 
-	movq	ARG9, %r10 // D
-	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+//	movq	ARG9, %r10 // D
+//	movq	ARG10, %r11 // ldd
+//	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+//	INNER_PREFETCH_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+//	CALL(inner_prefetch_8x4_lib)
 #endif
 
 
@@ -8292,15 +8290,16 @@
 
 
 	// prefetch D
+	// TODO prefetch vs !!!
 
-	movq	ARG10, %r10 // D
-	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+//	movq	ARG10, %r10 // D
+//	movq	ARG11, %r11 // ldd
+//	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+//	INNER_PREFETCH_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+//	CALL(inner_prefetch_8x4_lib)
 #endif
 
 
@@ -8505,15 +8504,16 @@
 
 
 	// prefetch D
+	// TODO prefetch vs !!!
 
-	movq	ARG9, %r10 // D
-	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+//	movq	ARG9, %r10 // D
+//	movq	ARG10, %r11 // ldd
+//	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+//	INNER_PREFETCH_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+//	CALL(inner_prefetch_8x4_lib)
 #endif
 
 
@@ -15454,15 +15454,16 @@
 
 
 	// prefetch D
+	// TODO prefetch vs !!!
 
-	movq	ARG10, %r10 // D
-	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+//	movq	ARG10, %r10 // D
+//	movq	ARG11, %r11 // ldd
+//	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+//	INNER_PREFETCH_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+//	CALL(inner_prefetch_4x8_lib)
 #endif
 
 
@@ -15667,15 +15668,16 @@
 
 
 	// prefetch D
+	// TODO prefetch vs !!!
 
-	movq	ARG10, %r10 // D
-	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+//	movq	ARG10, %r10 // D
+//	movq	ARG11, %r11 // ldd
+//	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+//	INNER_PREFETCH_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+//	CALL(inner_prefetch_4x8_lib)
 #endif
 
 
@@ -15884,15 +15886,16 @@
 
 
 	// prefetch D
+	// TODO prefetch vs !!!
 
-	movq	ARG10, %r10 // D
-	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+//	movq	ARG10, %r10 // D
+//	movq	ARG11, %r11 // ldd
+//	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+//	INNER_PREFETCH_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+//	CALL(inner_prefetch_4x8_lib)
 #endif
 
 
