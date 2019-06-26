@@ -7303,7 +7303,7 @@
 
 
 //                                 w0        x1             x2         w3       x4         w5       x6            x7         sp+0     sp+8       sp+16
-// void kernel_dgemm_nt_4x8_libc4cc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+// void kernel_dgemm_nt_4x8_libc4cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd)
 
 	.align	4
 	GLOB_FUN_START(kernel_dgemm_nt_4x8_libc4cc)
@@ -7324,7 +7324,7 @@
 	mov		w10, w5 // sdb
 	lsl		w10, w10, #5 // 32*sdb
 	mov		x11, x2 // A
-	mov		w12, w3 // sda
+	mov		w12, w3 // lda
 	lsl		w12, w12, #3 // 8*lda
 
 #if MACRO_LEVEL>=2
