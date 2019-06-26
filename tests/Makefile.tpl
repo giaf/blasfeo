@@ -17,7 +17,10 @@ SHARED_LIBS += -Wl,-rpath=$(ABS_BINARY_PATH) -L $(ABS_BINARY_PATH) -lblasfeo_ref
 LIBS += $(ABS_BINARY_PATH)/libblasfeo.a
 SHARED_LIBS += -Wl,-rpath=$(ABS_BINARY_PATH) -L $(ABS_BINARY_PATH) -lblasfeo
 
-include $(BLASFEO_PATH)/Makefile.blas
+#LIBS += -lblas -lm
+#SHARED_LIBS += -lblas -lm
+
+include $(BLASFEO_PATH)/Makefile.external_blas
 
 {% for flag, value in test_macros.items() %}
 {%- if value -%}
