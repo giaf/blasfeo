@@ -3284,6 +3284,45 @@
 
 
 
+// subroutine
+//
+// input arguments:
+// x8   <- D
+// x9   <- ldd*sizeof(double)
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_PREFETCH_12X4_LIB
+#else
+	.align 4
+	FUN_START(inner_prefetch_12x4_lib)
+#endif
+
+	prfm	PLDL1KEEP, [x8, #0]
+	prfm	PLDL1KEEP, [x8, #64]
+	add		x8, x8, x9
+	prfm	PLDL1KEEP, [x8, #0]
+	prfm	PLDL1KEEP, [x8, #64]
+	add		x8, x8, x9
+	prfm	PLDL1KEEP, [x8, #0]
+	prfm	PLDL1KEEP, [x8, #64]
+	add		x8, x8, x9
+	prfm	PLDL1KEEP, [x8, #0]
+	prfm	PLDL1KEEP, [x8, #64]
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_prefetch_12x4_lib)
+#endif
+
+
+
+
+
 //                                  w0        x1             x2         w3       x4         x5            x6         w7       sp+0       sp+8
 // void kernel_dgemm_nt_12x4_lib44cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd)
 
@@ -3463,6 +3502,19 @@
 
 
 
+	// prefetch
+	ldr		x8, [sp, #(STACKSIZE + 8)] // D
+	ldr		w9, [sp, #(STACKSIZE + 16)] // ldd
+	lsl		w9, w9, #3 // 8*sdd
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_12X4_LIB
+#else
+	bl inner_prefetch_12x4_lib
+#endif
+
+
+
 	// call inner blend for generic alpha and beta
 	mov		x8, x1 // alpha
 	mov		x9, x6 // beta
@@ -3577,6 +3629,20 @@
 #endif
 
 103:
+
+
+
+	// prefetch
+	// TODO prefethc vs
+//	ldr		x8, [sp, #(STACKSIZE + 8)] // D
+//	ldr		w9, [sp, #(STACKSIZE + 16)] // ldd
+//	lsl		w9, w9, #3 // 8*sdd
+
+#if MACRO_LEVEL>=1
+//	INNER_PREFETCH_12X4_LIB
+#else
+//	bl inner_prefetch_12x4_lib
+#endif
 
 
 
