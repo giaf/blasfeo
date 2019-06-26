@@ -1719,6 +1719,8 @@
 
 	ld1		{v28.2d}, [x8]
 
+	ld1		{v30.2d}, [x9]
+
 	fmul	v0.2d, v0.2d, v28.2d[0]
 	fmul	v1.2d, v1.2d, v28.2d[0]
 	fmul	v2.2d, v2.2d, v28.2d[0]
@@ -1744,7 +1746,8 @@
 	fmul	v22.2d, v22.2d, v28.2d[0]
 	fmul	v23.2d, v23.2d, v28.2d[0]
 
-	ld1		{v30.2d}, [x9]
+	fcmpe	d30, #0
+	beq		0f
 
 	ldp		q24, q25, [x10, #0]
 	ldp		q26, q27, [x10, #32]
@@ -1790,6 +1793,7 @@
 	fmla	v22.2d, v28.2d, v30.2d[0]
 	fmla	v23.2d, v29.2d, v30.2d[0]
 
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -1824,6 +1828,8 @@
 
 	ld1		{v28.2d}, [x8]
 
+	ld1		{v30.2d}, [x9]
+
 	fmul	v0.2d, v0.2d, v28.2d[0]
 	fmul	v1.2d, v1.2d, v28.2d[0]
 	fmul	v2.2d, v2.2d, v28.2d[0]
@@ -1849,7 +1855,8 @@
 	fmul	v22.2d, v22.2d, v28.2d[0]
 	fmul	v23.2d, v23.2d, v28.2d[0]
 
-	ld1		{v30.2d}, [x9]
+	fcmpe	d30, #0
+	beq		0f
 
 	cmp		w12, #4
 	blt		1f
@@ -2111,7 +2118,6 @@
 #endif
 
 	ld1		{v30.2d}, [x8]
-	// TODO check on beta
 
 	fneg	v0.2d, v0.2d
 	fneg	v1.2d, v1.2d
@@ -2142,6 +2148,9 @@
 	fneg	v21.2d, v21.2d
 	fneg	v22.2d, v22.2d
 	fneg	v23.2d, v23.2d
+
+	fcmpe	d30, #0
+	beq		0f
 
 	ldp		q24, q25, [x9, #0]
 	ldp		q26, q27, [x9, #32]
@@ -2186,6 +2195,8 @@
 	fmla	v15.2d, v27.2d, v30.2d[0]
 	fmla	v22.2d, v28.2d, v30.2d[0]
 	fmla	v23.2d, v29.2d, v30.2d[0]
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -2248,6 +2259,9 @@
 	fneg	v21.2d, v21.2d
 	fneg	v22.2d, v22.2d
 	fneg	v23.2d, v23.2d
+
+	fcmpe	d30, #0
+	beq		0f
 
 	cmp		w11, #4
 	blt		1f

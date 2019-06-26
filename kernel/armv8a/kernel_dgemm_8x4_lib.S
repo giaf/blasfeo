@@ -4305,6 +4305,8 @@
 
 	ld1		{v28.2d}, [x8]
 
+	ld1		{v29.2d}, [x9]
+
 	fmul	v0.2d, v0.2d, v28.2d[0]
 	fmul	v1.2d, v1.2d, v28.2d[0]
 	fmul	v2.2d, v2.2d, v28.2d[0]
@@ -4322,40 +4324,42 @@
 	fmul	v14.2d, v14.2d, v28.2d[0]
 	fmul	v15.2d, v15.2d, v28.2d[0]
 
-	ld1		{v28.2d}, [x9]
+	fcmpe	d29, #0
+	beq		0f
 
 	ldp		q24, q25, [x10, #0]
 	ldp		q26, q27, [x10, #32]
 	add		x10, x10, x11
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
-	fmla	v9.2d, v27.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v29.2d[0]
+	fmla	v1.2d, v25.2d, v29.2d[0]
+	fmla	v8.2d, v26.2d, v29.2d[0]
+	fmla	v9.2d, v27.2d, v29.2d[0]
 
 	ldp		q24, q25, [x10, #0]
 	ldp		q26, q27, [x10, #32]
 	add		x10, x10, x11
-	fmla	v2.2d, v24.2d, v28.2d[0]
-	fmla	v3.2d, v25.2d, v28.2d[0]
-	fmla	v10.2d, v26.2d, v28.2d[0]
-	fmla	v11.2d, v27.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v10.2d, v26.2d, v29.2d[0]
+	fmla	v11.2d, v27.2d, v29.2d[0]
 
 	ldp		q24, q25, [x10, #0]
 	ldp		q26, q27, [x10, #32]
 	add		x10, x10, x11
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v12.2d, v26.2d, v28.2d[0]
-	fmla	v13.2d, v27.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v29.2d[0]
+	fmla	v5.2d, v25.2d, v29.2d[0]
+	fmla	v12.2d, v26.2d, v29.2d[0]
+	fmla	v13.2d, v27.2d, v29.2d[0]
 
 	ldp		q24, q25, [x10, #0]
 	ldp		q26, q27, [x10, #32]
 	add		x10, x10, x11
-	fmla	v6.2d, v24.2d, v28.2d[0]
-	fmla	v7.2d, v25.2d, v28.2d[0]
-	fmla	v14.2d, v26.2d, v28.2d[0]
-	fmla	v15.2d, v27.2d, v28.2d[0]
+	fmla	v6.2d, v24.2d, v29.2d[0]
+	fmla	v7.2d, v25.2d, v29.2d[0]
+	fmla	v14.2d, v26.2d, v29.2d[0]
+	fmla	v15.2d, v27.2d, v29.2d[0]
 
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -4390,6 +4394,8 @@
 
 	ld1		{v28.2d}, [x8]
 
+	ld1		{v29.2d}, [x9]
+
 	fmul	v0.2d, v0.2d, v28.2d[0]
 	fmul	v1.2d, v1.2d, v28.2d[0]
 	fmul	v2.2d, v2.2d, v28.2d[0]
@@ -4407,7 +4413,8 @@
 	fmul	v14.2d, v14.2d, v28.2d[0]
 	fmul	v15.2d, v15.2d, v28.2d[0]
 
-	ld1		{v28.2d}, [x9]
+	fcmpe	d29, #0
+	beq		0f
 
 	cmp		w12, #4
 	blt		1f
@@ -4415,10 +4422,10 @@
 	ldp		q24, q25, [x10, #0]
 	ldp		q26, q27, [x10, #32]
 	add		x10, x10, x11
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
-	fmla	v9.2d, v27.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v29.2d[0]
+	fmla	v1.2d, v25.2d, v29.2d[0]
+	fmla	v8.2d, v26.2d, v29.2d[0]
+	fmla	v9.2d, v27.2d, v29.2d[0]
 
 	cmp		w13, #1
 	ble		0f
@@ -4426,10 +4433,10 @@
 	ldp		q24, q25, [x10, #0]
 	ldp		q26, q27, [x10, #32]
 	add		x10, x10, x11
-	fmla	v2.2d, v24.2d, v28.2d[0]
-	fmla	v3.2d, v25.2d, v28.2d[0]
-	fmla	v10.2d, v26.2d, v28.2d[0]
-	fmla	v11.2d, v27.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v10.2d, v26.2d, v29.2d[0]
+	fmla	v11.2d, v27.2d, v29.2d[0]
 
 	cmp		w13, #2
 	ble		0f
@@ -4437,10 +4444,10 @@
 	ldp		q24, q25, [x10, #0]
 	ldp		q26, q27, [x10, #32]
 	add		x10, x10, x11
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v12.2d, v26.2d, v28.2d[0]
-	fmla	v13.2d, v27.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v29.2d[0]
+	fmla	v5.2d, v25.2d, v29.2d[0]
+	fmla	v12.2d, v26.2d, v29.2d[0]
+	fmla	v13.2d, v27.2d, v29.2d[0]
 
 	cmp		w13, #3
 	ble		0f
@@ -4448,10 +4455,10 @@
 	ldp		q24, q25, [x10, #0]
 	ldp		q26, q27, [x10, #32]
 	add		x10, x10, x11
-	fmla	v6.2d, v24.2d, v28.2d[0]
-	fmla	v7.2d, v25.2d, v28.2d[0]
-	fmla	v14.2d, v26.2d, v28.2d[0]
-	fmla	v15.2d, v27.2d, v28.2d[0]
+	fmla	v6.2d, v24.2d, v29.2d[0]
+	fmla	v7.2d, v25.2d, v29.2d[0]
+	fmla	v14.2d, v26.2d, v29.2d[0]
+	fmla	v15.2d, v27.2d, v29.2d[0]
 
 	b 0f
 
@@ -4463,10 +4470,10 @@
 	ldr		q26, [x10, #32]
 	ldr		d27, [x10, #48]
 	add		x10, x10, x11
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
-	fmla	v9.2d, v27.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v29.2d[0]
+	fmla	v1.2d, v25.2d, v29.2d[0]
+	fmla	v8.2d, v26.2d, v29.2d[0]
+	fmla	v9.2d, v27.2d, v29.2d[0]
 
 	cmp		w13, #1
 	ble		0f
@@ -4475,10 +4482,10 @@
 	ldr		q26, [x10, #32]
 	ldr		d27, [x10, #48]
 	add		x10, x10, x11
-	fmla	v2.2d, v24.2d, v28.2d[0]
-	fmla	v3.2d, v25.2d, v28.2d[0]
-	fmla	v10.2d, v26.2d, v28.2d[0]
-	fmla	v11.2d, v27.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v10.2d, v26.2d, v29.2d[0]
+	fmla	v11.2d, v27.2d, v29.2d[0]
 
 	cmp		w13, #2
 	ble		0f
@@ -4487,10 +4494,10 @@
 	ldr		q26, [x10, #32]
 	ldr		d27, [x10, #48]
 	add		x10, x10, x11
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v12.2d, v26.2d, v28.2d[0]
-	fmla	v13.2d, v27.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v29.2d[0]
+	fmla	v5.2d, v25.2d, v29.2d[0]
+	fmla	v12.2d, v26.2d, v29.2d[0]
+	fmla	v13.2d, v27.2d, v29.2d[0]
 
 	cmp		w13, #3
 	ble		0f
@@ -4499,10 +4506,10 @@
 	ldr		q26, [x10, #32]
 	ldr		d27, [x10, #48]
 	add		x10, x10, x11
-	fmla	v6.2d, v24.2d, v28.2d[0]
-	fmla	v7.2d, v25.2d, v28.2d[0]
-	fmla	v14.2d, v26.2d, v28.2d[0]
-	fmla	v15.2d, v27.2d, v28.2d[0]
+	fmla	v6.2d, v24.2d, v29.2d[0]
+	fmla	v7.2d, v25.2d, v29.2d[0]
+	fmla	v14.2d, v26.2d, v29.2d[0]
+	fmla	v15.2d, v27.2d, v29.2d[0]
 
 	b 0f
 
@@ -4513,9 +4520,9 @@
 	ldp		q24, q25, [x10, #0]
 	ldr		q26, [x10, #32]
 	add		x10, x10, x11
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v29.2d[0]
+	fmla	v1.2d, v25.2d, v29.2d[0]
+	fmla	v8.2d, v26.2d, v29.2d[0]
 
 	cmp		w13, #1
 	ble		0f
@@ -4523,9 +4530,9 @@
 	ldp		q24, q25, [x10, #0]
 	ldr		q26, [x10, #32]
 	add		x10, x10, x11
-	fmla	v2.2d, v24.2d, v28.2d[0]
-	fmla	v3.2d, v25.2d, v28.2d[0]
-	fmla	v10.2d, v26.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v10.2d, v26.2d, v29.2d[0]
 
 	cmp		w13, #2
 	ble		0f
@@ -4533,9 +4540,9 @@
 	ldp		q24, q25, [x10, #0]
 	ldr		q26, [x10, #32]
 	add		x10, x10, x11
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v12.2d, v26.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v29.2d[0]
+	fmla	v5.2d, v25.2d, v29.2d[0]
+	fmla	v12.2d, v26.2d, v29.2d[0]
 
 	cmp		w13, #3
 	ble		0f
@@ -4543,9 +4550,9 @@
 	ldp		q24, q25, [x10, #0]
 	ldr		q26, [x10, #32]
 	add		x10, x10, x11
-	fmla	v6.2d, v24.2d, v28.2d[0]
-	fmla	v7.2d, v25.2d, v28.2d[0]
-	fmla	v14.2d, v26.2d, v28.2d[0]
+	fmla	v6.2d, v24.2d, v29.2d[0]
+	fmla	v7.2d, v25.2d, v29.2d[0]
+	fmla	v14.2d, v26.2d, v29.2d[0]
 
 	b 0f
 
@@ -4556,9 +4563,9 @@
 	ldp		q24, q25, [x10, #0]
 	ldr		d26, [x10, #32]
 	add		x10, x10, x11
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v29.2d[0]
+	fmla	v1.2d, v25.2d, v29.2d[0]
+	fmla	v8.2d, v26.2d, v29.2d[0]
 
 	cmp		w13, #1
 	ble		0f
@@ -4566,9 +4573,9 @@
 	ldp		q24, q25, [x10, #0]
 	ldr		d26, [x10, #32]
 	add		x10, x10, x11
-	fmla	v2.2d, v24.2d, v28.2d[0]
-	fmla	v3.2d, v25.2d, v28.2d[0]
-	fmla	v10.2d, v26.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v10.2d, v26.2d, v29.2d[0]
 
 	cmp		w13, #2
 	ble		0f
@@ -4576,9 +4583,9 @@
 	ldp		q24, q25, [x10, #0]
 	ldr		d26, [x10, #32]
 	add		x10, x10, x11
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v12.2d, v26.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v29.2d[0]
+	fmla	v5.2d, v25.2d, v29.2d[0]
+	fmla	v12.2d, v26.2d, v29.2d[0]
 
 	cmp		w13, #3
 	ble		0f
@@ -4586,9 +4593,9 @@
 	ldp		q24, q25, [x10, #0]
 	ldr		q26, [x10, #32]
 	add		x10, x10, x11
-	fmla	v6.2d, v24.2d, v28.2d[0]
-	fmla	v7.2d, v25.2d, v28.2d[0]
-	fmla	v14.2d, v26.2d, v28.2d[0]
+	fmla	v6.2d, v24.2d, v29.2d[0]
+	fmla	v7.2d, v25.2d, v29.2d[0]
+	fmla	v14.2d, v26.2d, v29.2d[0]
 
 0:
 
@@ -4620,8 +4627,7 @@
 	FUN_START(inner_scale_m1b_8x4_lib)
 #endif
 
-	ld1		{v28.2d}, [x8]
-	// TODO check on beta
+	ld1		{v29.2d}, [x8]
 
 	fneg	v0.2d, v0.2d
 	fneg	v1.2d, v1.2d
@@ -4643,37 +4649,42 @@
 	fneg	v14.2d, v14.2d
 	fneg	v15.2d, v15.2d
 
-	ldp		q24, q25, [x9, #0]
-	ldp		q26, q27, [x9, #32]
-	add		x9, x9, x10
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
-	fmla	v9.2d, v27.2d, v28.2d[0]
+	fcmpe	d29, #0
+	beq		0f
 
 	ldp		q24, q25, [x9, #0]
 	ldp		q26, q27, [x9, #32]
 	add		x9, x9, x10
-	fmla	v2.2d, v24.2d, v28.2d[0]
-	fmla	v3.2d, v25.2d, v28.2d[0]
-	fmla	v10.2d, v26.2d, v28.2d[0]
-	fmla	v11.2d, v27.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v29.2d[0]
+	fmla	v1.2d, v25.2d, v29.2d[0]
+	fmla	v8.2d, v26.2d, v29.2d[0]
+	fmla	v9.2d, v27.2d, v29.2d[0]
 
 	ldp		q24, q25, [x9, #0]
 	ldp		q26, q27, [x9, #32]
 	add		x9, x9, x10
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v12.2d, v26.2d, v28.2d[0]
-	fmla	v13.2d, v27.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v10.2d, v26.2d, v29.2d[0]
+	fmla	v11.2d, v27.2d, v29.2d[0]
 
 	ldp		q24, q25, [x9, #0]
 	ldp		q26, q27, [x9, #32]
 	add		x9, x9, x10
-	fmla	v6.2d, v24.2d, v28.2d[0]
-	fmla	v7.2d, v25.2d, v28.2d[0]
-	fmla	v14.2d, v26.2d, v28.2d[0]
-	fmla	v15.2d, v27.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v29.2d[0]
+	fmla	v5.2d, v25.2d, v29.2d[0]
+	fmla	v12.2d, v26.2d, v29.2d[0]
+	fmla	v13.2d, v27.2d, v29.2d[0]
+
+	ldp		q24, q25, [x9, #0]
+	ldp		q26, q27, [x9, #32]
+	add		x9, x9, x10
+	fmla	v6.2d, v24.2d, v29.2d[0]
+	fmla	v7.2d, v25.2d, v29.2d[0]
+	fmla	v14.2d, v26.2d, v29.2d[0]
+	fmla	v15.2d, v27.2d, v29.2d[0]
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -4705,7 +4716,7 @@
 	FUN_START(inner_scale_m1b_8x4_vs_lib)
 #endif
 
-	ld1		{v28.2d}, [x8]
+	ld1		{v29.2d}, [x8]
 
 	fneg	v0.2d, v0.2d
 	fneg	v1.2d, v1.2d
@@ -4727,16 +4738,19 @@
 	fneg	v14.2d, v14.2d
 	fneg	v15.2d, v15.2d
 
+	fcmpe	d29, #0
+	beq		0f
+
 	cmp		w11, #4
 	blt		1f
 
 	ldp		q24, q25, [x9, #0]
 	ldp		q26, q27, [x9, #32]
 	add		x9, x9, x10
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
-	fmla	v9.2d, v27.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v29.2d[0]
+	fmla	v1.2d, v25.2d, v29.2d[0]
+	fmla	v8.2d, v26.2d, v29.2d[0]
+	fmla	v9.2d, v27.2d, v29.2d[0]
 
 	cmp		w12, #1
 	ble		0f
@@ -4744,10 +4758,10 @@
 	ldp		q24, q25, [x9, #0]
 	ldp		q26, q27, [x9, #32]
 	add		x9, x9, x10
-	fmla	v2.2d, v24.2d, v28.2d[0]
-	fmla	v3.2d, v25.2d, v28.2d[0]
-	fmla	v10.2d, v26.2d, v28.2d[0]
-	fmla	v11.2d, v27.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v10.2d, v26.2d, v29.2d[0]
+	fmla	v11.2d, v27.2d, v29.2d[0]
 
 	cmp		w12, #2
 	ble		0f
@@ -4755,10 +4769,10 @@
 	ldp		q24, q25, [x9, #0]
 	ldp		q26, q27, [x9, #32]
 	add		x9, x9, x10
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v12.2d, v26.2d, v28.2d[0]
-	fmla	v13.2d, v27.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v29.2d[0]
+	fmla	v5.2d, v25.2d, v29.2d[0]
+	fmla	v12.2d, v26.2d, v29.2d[0]
+	fmla	v13.2d, v27.2d, v29.2d[0]
 
 	cmp		w12, #3
 	ble		0f
@@ -4766,10 +4780,10 @@
 	ldp		q24, q25, [x9, #0]
 	ldp		q26, q27, [x9, #32]
 	add		x9, x9, x10
-	fmla	v6.2d, v24.2d, v28.2d[0]
-	fmla	v7.2d, v25.2d, v28.2d[0]
-	fmla	v14.2d, v26.2d, v28.2d[0]
-	fmla	v15.2d, v27.2d, v28.2d[0]
+	fmla	v6.2d, v24.2d, v29.2d[0]
+	fmla	v7.2d, v25.2d, v29.2d[0]
+	fmla	v14.2d, v26.2d, v29.2d[0]
+	fmla	v15.2d, v27.2d, v29.2d[0]
 
 	b 0f
 
@@ -4781,10 +4795,10 @@
 	ldr		q26, [x9, #32]
 	ldr		d27, [x9, #48]
 	add		x9, x9, x10
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
-	fmla	v9.2d, v27.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v29.2d[0]
+	fmla	v1.2d, v25.2d, v29.2d[0]
+	fmla	v8.2d, v26.2d, v29.2d[0]
+	fmla	v9.2d, v27.2d, v29.2d[0]
 
 	cmp		w12, #1
 	ble		0f
@@ -4793,10 +4807,10 @@
 	ldr		q26, [x9, #32]
 	ldr		d27, [x9, #48]
 	add		x9, x9, x10
-	fmla	v2.2d, v24.2d, v28.2d[0]
-	fmla	v3.2d, v25.2d, v28.2d[0]
-	fmla	v10.2d, v26.2d, v28.2d[0]
-	fmla	v11.2d, v27.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v10.2d, v26.2d, v29.2d[0]
+	fmla	v11.2d, v27.2d, v29.2d[0]
 
 	cmp		w12, #2
 	ble		0f
@@ -4805,10 +4819,10 @@
 	ldr		q26, [x9, #32]
 	ldr		d27, [x9, #48]
 	add		x9, x9, x10
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v12.2d, v26.2d, v28.2d[0]
-	fmla	v13.2d, v27.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v29.2d[0]
+	fmla	v5.2d, v25.2d, v29.2d[0]
+	fmla	v12.2d, v26.2d, v29.2d[0]
+	fmla	v13.2d, v27.2d, v29.2d[0]
 
 	cmp		w12, #3
 	ble		0f
@@ -4817,10 +4831,10 @@
 	ldr		q26, [x9, #32]
 	ldr		d27, [x9, #48]
 	add		x9, x9, x10
-	fmla	v6.2d, v24.2d, v28.2d[0]
-	fmla	v7.2d, v25.2d, v28.2d[0]
-	fmla	v14.2d, v26.2d, v28.2d[0]
-	fmla	v15.2d, v27.2d, v28.2d[0]
+	fmla	v6.2d, v24.2d, v29.2d[0]
+	fmla	v7.2d, v25.2d, v29.2d[0]
+	fmla	v14.2d, v26.2d, v29.2d[0]
+	fmla	v15.2d, v27.2d, v29.2d[0]
 
 	b 0f
 
@@ -4831,9 +4845,9 @@
 	ldp		q24, q25, [x9, #0]
 	ldr		q26, [x9, #32]
 	add		x9, x9, x10
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v29.2d[0]
+	fmla	v1.2d, v25.2d, v29.2d[0]
+	fmla	v8.2d, v26.2d, v29.2d[0]
 
 	cmp		w12, #1
 	ble		0f
@@ -4841,9 +4855,9 @@
 	ldp		q24, q25, [x9, #0]
 	ldr		q26, [x9, #32]
 	add		x9, x9, x10
-	fmla	v2.2d, v24.2d, v28.2d[0]
-	fmla	v3.2d, v25.2d, v28.2d[0]
-	fmla	v10.2d, v26.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v10.2d, v26.2d, v29.2d[0]
 
 	cmp		w12, #2
 	ble		0f
@@ -4851,9 +4865,9 @@
 	ldp		q24, q25, [x9, #0]
 	ldr		q26, [x9, #32]
 	add		x9, x9, x10
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v12.2d, v26.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v29.2d[0]
+	fmla	v5.2d, v25.2d, v29.2d[0]
+	fmla	v12.2d, v26.2d, v29.2d[0]
 
 	cmp		w12, #3
 	ble		0f
@@ -4861,9 +4875,9 @@
 	ldp		q24, q25, [x9, #0]
 	ldr		q26, [x9, #32]
 	add		x9, x9, x10
-	fmla	v6.2d, v24.2d, v28.2d[0]
-	fmla	v7.2d, v25.2d, v28.2d[0]
-	fmla	v14.2d, v26.2d, v28.2d[0]
+	fmla	v6.2d, v24.2d, v29.2d[0]
+	fmla	v7.2d, v25.2d, v29.2d[0]
+	fmla	v14.2d, v26.2d, v29.2d[0]
 
 	b 0f
 
@@ -4874,9 +4888,9 @@
 	ldp		q24, q25, [x9, #0]
 	ldr		d26, [x9, #32]
 	add		x9, x9, x10
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v29.2d[0]
+	fmla	v1.2d, v25.2d, v29.2d[0]
+	fmla	v8.2d, v26.2d, v29.2d[0]
 
 	cmp		w12, #1
 	ble		0f
@@ -4884,9 +4898,9 @@
 	ldp		q24, q25, [x9, #0]
 	ldr		d26, [x9, #32]
 	add		x9, x9, x10
-	fmla	v2.2d, v24.2d, v28.2d[0]
-	fmla	v3.2d, v25.2d, v28.2d[0]
-	fmla	v10.2d, v26.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v10.2d, v26.2d, v29.2d[0]
 
 	cmp		w12, #2
 	ble		0f
@@ -4894,9 +4908,9 @@
 	ldp		q24, q25, [x9, #0]
 	ldr		d26, [x9, #32]
 	add		x9, x9, x10
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v12.2d, v26.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v29.2d[0]
+	fmla	v5.2d, v25.2d, v29.2d[0]
+	fmla	v12.2d, v26.2d, v29.2d[0]
 
 	cmp		w12, #3
 	ble		0f
@@ -4904,9 +4918,9 @@
 	ldp		q24, q25, [x9, #0]
 	ldr		d26, [x9, #32]
 	add		x9, x9, x10
-	fmla	v6.2d, v24.2d, v28.2d[0]
-	fmla	v7.2d, v25.2d, v28.2d[0]
-	fmla	v14.2d, v26.2d, v28.2d[0]
+	fmla	v6.2d, v24.2d, v29.2d[0]
+	fmla	v7.2d, v25.2d, v29.2d[0]
+	fmla	v14.2d, v26.2d, v29.2d[0]
 
 0:
 
@@ -5212,6 +5226,8 @@
 
 	ld1		{v28.2d}, [x8]
 
+	ld1		{v29.2d}, [x9]
+
 	fmul	v0.2d, v0.2d, v28.2d[0]
 	fmul	v1.2d, v1.2d, v28.2d[0]
 	fmul	v2.2d, v2.2d, v28.2d[0]
@@ -5229,48 +5245,50 @@
 	fmul	v14.2d, v14.2d, v28.2d[0]
 	fmul	v15.2d, v15.2d, v28.2d[0]
 
-	ld1		{v28.2d}, [x9]
+	fcmpe	d29, #0
+	beq		0f
 
 	ldp		q24, q25, [x10, #0]
 	add		x10, x10, x11
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v29.2d[0]
+	fmla	v1.2d, v25.2d, v29.2d[0]
 
 	ldp		q24, q25, [x10, #0]
 	add		x10, x10, x11
-	fmla	v2.2d, v24.2d, v28.2d[0]
-	fmla	v3.2d, v25.2d, v28.2d[0]
+	fmla	v2.2d, v24.2d, v29.2d[0]
+	fmla	v3.2d, v25.2d, v29.2d[0]
 
 	ldp		q24, q25, [x10, #0]
 	add		x10, x10, x11
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v29.2d[0]
+	fmla	v5.2d, v25.2d, v29.2d[0]
 
 	ldp		q24, q25, [x10, #0]
 	add		x10, x10, x11
-	fmla	v6.2d, v24.2d, v28.2d[0]
-	fmla	v7.2d, v25.2d, v28.2d[0]
+	fmla	v6.2d, v24.2d, v29.2d[0]
+	fmla	v7.2d, v25.2d, v29.2d[0]
 
 	ldp		q24, q25, [x10, #0]
 	add		x10, x10, x11
-	fmla	v8.2d, v24.2d, v28.2d[0]
-	fmla	v9.2d, v25.2d, v28.2d[0]
+	fmla	v8.2d, v24.2d, v29.2d[0]
+	fmla	v9.2d, v25.2d, v29.2d[0]
 
 	ldp		q24, q25, [x10, #0]
 	add		x10, x10, x11
-	fmla	v10.2d, v24.2d, v28.2d[0]
-	fmla	v11.2d, v25.2d, v28.2d[0]
+	fmla	v10.2d, v24.2d, v29.2d[0]
+	fmla	v11.2d, v25.2d, v29.2d[0]
 
 	ldp		q24, q25, [x10, #0]
 	add		x10, x10, x11
-	fmla	v12.2d, v24.2d, v28.2d[0]
-	fmla	v13.2d, v25.2d, v28.2d[0]
+	fmla	v12.2d, v24.2d, v29.2d[0]
+	fmla	v13.2d, v25.2d, v29.2d[0]
 
 	ldp		q24, q25, [x10, #0]
 	add		x10, x10, x11
-	fmla	v14.2d, v24.2d, v28.2d[0]
-	fmla	v15.2d, v25.2d, v28.2d[0]
+	fmla	v14.2d, v24.2d, v29.2d[0]
+	fmla	v15.2d, v25.2d, v29.2d[0]
 
+0:
 
 #if MACRO_LEVEL>=1
 	.endm

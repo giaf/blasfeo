@@ -2499,6 +2499,8 @@ NAME:
 
 	ld1		{v28.2d}, [x8]
 
+	ld1		{v29.2d}, [x9]
+
 	fmul	v0.2d, v0.2d, v28.2d[0]
 	fmul	v1.2d, v1.2d, v28.2d[0]
 	fmul	v2.2d, v2.2d, v28.2d[0]
@@ -2508,20 +2510,22 @@ NAME:
 	fmul	v6.2d, v6.2d, v28.2d[0]
 	fmul	v7.2d, v7.2d, v28.2d[0]
 
-	ld1		{v28.2d}, [x9]
-	// TODO check on beta
+	fcmpe	d29, #0
+	beq		0f
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v2.2d, v26.2d, v28.2d[0]
-	fmla	v3.2d, v27.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v29.2d[0]
+	fmla	v1.2d, v25.2d, v29.2d[0]
+	fmla	v2.2d, v26.2d, v29.2d[0]
+	fmla	v3.2d, v27.2d, v29.2d[0]
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v6.2d, v26.2d, v28.2d[0]
-	fmla	v7.2d, v27.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v29.2d[0]
+	fmla	v5.2d, v25.2d, v29.2d[0]
+	fmla	v6.2d, v26.2d, v29.2d[0]
+	fmla	v7.2d, v27.2d, v29.2d[0]
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -2550,8 +2554,7 @@ NAME:
 	FUN_START(inner_scale_m1b_4x4_lib4)
 #endif
 
-	ld1		{v28.2d}, [x8]
-	// TODO check on beta
+	ld1		{v29.2d}, [x8]
 
 	fneg	v0.2d, v0.2d
 	fneg	v1.2d, v1.2d
@@ -2563,17 +2566,22 @@ NAME:
 	fneg	v6.2d, v6.2d
 	fneg	v7.2d, v7.2d
 
-	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x9], #64
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v2.2d, v26.2d, v28.2d[0]
-	fmla	v3.2d, v27.2d, v28.2d[0]
+	fcmpe	d29, #0
+	beq		0f
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x9], #64
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v6.2d, v26.2d, v28.2d[0]
-	fmla	v7.2d, v27.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v29.2d[0]
+	fmla	v1.2d, v25.2d, v29.2d[0]
+	fmla	v2.2d, v26.2d, v29.2d[0]
+	fmla	v3.2d, v27.2d, v29.2d[0]
+
+	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x9], #64
+	fmla	v4.2d, v24.2d, v29.2d[0]
+	fmla	v5.2d, v25.2d, v29.2d[0]
+	fmla	v6.2d, v26.2d, v29.2d[0]
+	fmla	v7.2d, v27.2d, v29.2d[0]
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm

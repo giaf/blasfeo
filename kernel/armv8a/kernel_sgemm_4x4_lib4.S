@@ -650,18 +650,23 @@ NAME:
 
 	ld1		{v28.2d}, [x8]
 
+	ld1		{v29.2d}, [x9]
+
 	fmul	v0.4s, v0.4s, v28.4s[0]
 	fmul	v1.4s, v1.4s, v28.4s[0]
 	fmul	v2.4s, v2.4s, v28.4s[0]
 	fmul	v3.4s, v3.4s, v28.4s[0]
 
-	ld1		{v28.2d}, [x9]
+	fcmpe	s29, #0
+	beq		0f
 
 	ld1		{v24.4s, v25.4s, v26.4s, v27.4s}, [x10], #64
-	fmla	v0.4s, v24.4s, v28.4s[0]
-	fmla	v1.4s, v25.4s, v28.4s[0]
-	fmla	v2.4s, v26.4s, v28.4s[0]
-	fmla	v3.4s, v27.4s, v28.4s[0]
+	fmla	v0.4s, v24.4s, v29.4s[0]
+	fmla	v1.4s, v25.4s, v29.4s[0]
+	fmla	v2.4s, v26.4s, v29.4s[0]
+	fmla	v3.4s, v27.4s, v29.4s[0]
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
