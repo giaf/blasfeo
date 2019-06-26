@@ -17,8 +17,10 @@ SHARED_LIBS += -Wl,-rpath=$(ABS_BINARY_PATH) -L $(ABS_BINARY_PATH) -lblasfeo_ref
 LIBS += $(ABS_BINARY_PATH)/libblasfeo.a
 SHARED_LIBS += -Wl,-rpath=$(ABS_BINARY_PATH) -L $(ABS_BINARY_PATH) -lblasfeo
 
-#LIBS += -lblas -lm
-#SHARED_LIBS += -lblas -lm
+#LIBS += -lblas
+#SHARED_LIBS += -lblas
+LIBS += -lm
+SHARED_LIBS += -lm
 
 include $(BLASFEO_PATH)/Makefile.external_blas
 
