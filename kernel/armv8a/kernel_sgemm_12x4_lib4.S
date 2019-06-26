@@ -818,7 +818,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_12X4_LIB4
 #else
 	.align	4
@@ -863,7 +863,7 @@ NAME:
 	fmla	v10.4s, v26.4s, v28.4s[0]
 	fmla	v11.4s, v27.4s, v28.4s[0]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -883,7 +883,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_11_12X4_LIB4
 #else
 	.align	4
@@ -911,7 +911,7 @@ NAME:
 	fadd	v10.4s, v26.4s, v10.4s
 	fadd	v11.4s, v27.4s, v11.4s
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -931,7 +931,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_12X4_LIB4
 #else
 	.align 4
@@ -945,7 +945,7 @@ NAME:
 	st1		{v4.4s, v5.4s, v6.4s, v7.4s}, [x10], #64
 	st1		{v8.4s, v9.4s, v10.4s, v11.4s}, [x11], #64
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -965,7 +965,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_L_12X4_LIB4
 #else
 	.align 4
@@ -988,7 +988,7 @@ NAME:
 	st1		{v4.4s, v5.4s, v6.4s, v7.4s}, [x10], #64
 	st1		{v8.4s, v9.4s, v10.4s, v11.4s}, [x11], #64
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret

@@ -4359,7 +4359,7 @@ NAME:
 	lsl		w12, w12, #5 // 32*sdb
 	mov		w13, w4 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_8X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_8x4_lib4
@@ -4439,7 +4439,7 @@ NAME:
 	lsl		w12, w12, #5 // 32*sdb
 	mov		w13, w4 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_8X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_8x4_lib4
@@ -4809,7 +4809,7 @@ NAME:
 	lsl		w12, w12, #5 // 32*sdb
 	mov		w13, w4 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_8X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_8x4_lib4
@@ -4889,7 +4889,7 @@ NAME:
 	lsl		w12, w12, #5 // 32*sdb
 	mov		w13, w4 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_8X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_8x4_lib4

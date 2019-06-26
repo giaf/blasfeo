@@ -772,7 +772,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_8X4_LIB4
 #else
 	.align	4
@@ -806,7 +806,7 @@ NAME:
 	fmla	v6.4s, v26.4s, v28.4s[0]
 	fmla	v7.4s, v27.4s, v28.4s[0]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -826,7 +826,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_11_8X4_LIB4
 #else
 	.align	4
@@ -847,7 +847,7 @@ NAME:
 	fadd	v6.4s, v26.4s, v6.4s
 	fadd	v7.4s, v27.4s, v7.4s
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -867,7 +867,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M11_8X4_LIB4
 #else
 	.align	4
@@ -888,7 +888,7 @@ NAME:
 	fsub	v6.4s, v26.4s, v6.4s
 	fsub	v7.4s, v27.4s, v7.4s
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -908,7 +908,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_8X4_LIB4
 #else
 	.align 4
@@ -923,7 +923,7 @@ NAME:
 	stp		q4, q5, [x10, #0]
 	stp		q6, q7, [x10, #32]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -1028,7 +1028,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_L_8X4_LIB4
 #else
 	.align 4
@@ -1049,7 +1049,7 @@ NAME:
 	st1		{v0.4s, v1.4s, v2.4s, v3.4s}, [x8], #64
 	st1		{v4.4s, v5.4s, v6.4s, v7.4s}, [x10], #64
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -1231,14 +1231,13 @@ NAME:
 	lsl		w12, w12, #4 // 16*sda
 	mov		w13, w4 // offsetB
 
-	// TODO
 #if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_8X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_8x4_lib4
 #endif
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMM_ADD_NN_8X4_LIB4
 #else
 	bl	inner_kernel_gemm_add_nn_8x4_lib4
@@ -1318,7 +1317,7 @@ NAME:
 	bl	inner_edge_gemm_add_nn_8x4_lib4
 #endif
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMM_ADD_NN_8X4_LIB4
 #else
 	bl	inner_kernel_gemm_add_nn_8x4_lib4

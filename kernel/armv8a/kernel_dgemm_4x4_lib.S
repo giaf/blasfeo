@@ -3224,7 +3224,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_4X4_LIB
 #else
 	.align	4
@@ -3262,7 +3262,7 @@
 	fmla	v6.2d, v26.2d, v28.2d[0]
 	fmla	v7.2d, v27.2d, v28.2d[0]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3286,7 +3286,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_4X4_VS_LIB
 #else
 	.align	4
@@ -3441,7 +3441,7 @@
 
 0:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3462,7 +3462,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M1B_4X4_LIB
 #else
 	.align	4
@@ -3500,7 +3500,7 @@
 	fmla	v6.2d, v26.2d, v28.2d[0]
 	fmla	v7.2d, v27.2d, v28.2d[0]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3523,7 +3523,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M1B_4X4_VS_LIB
 #else
 	.align	4
@@ -3677,7 +3677,7 @@
 
 0:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3697,7 +3697,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M11_4X4_LIB
 #else
 	.align	4
@@ -3722,7 +3722,7 @@
 	fsub	v6.2d, v26.2d, v6.2d
 	fsub	v7.2d, v27.2d, v7.2d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3744,7 +3744,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M11_4X4_VS_LIB
 #else
 	.align	4
@@ -3886,7 +3886,7 @@
 
 0:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3906,7 +3906,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_4X4_LIB
 #else
 	.align 4
@@ -3921,7 +3921,7 @@
 	add		x8, x8, x9
 	stp		q6, q7, [x8, #0]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -4031,7 +4031,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_L_4X4_LIB
 #else
 	.align 4
@@ -4057,7 +4057,7 @@
 	add		x8, x8, x9
 	str		q7, [x8, #16]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -4177,7 +4177,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_U_4X4_LIB
 #else
 	.align 4
@@ -4193,7 +4193,7 @@
 	add		x8, x8, x9
 	stp		q6, q7, [x8, #0]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret

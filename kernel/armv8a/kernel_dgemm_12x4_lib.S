@@ -1710,7 +1710,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_12X4_LIB
 #else
 	.align	4
@@ -1791,7 +1791,7 @@
 	fmla	v23.2d, v29.2d, v30.2d[0]
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -1815,7 +1815,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_12X4_VS_LIB
 #else
 	.align	4
@@ -2082,7 +2082,7 @@
 
 0:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2103,7 +2103,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M1B_12X4_LIB
 #else
 	.align	4
@@ -2187,7 +2187,7 @@
 	fmla	v22.2d, v28.2d, v30.2d[0]
 	fmla	v23.2d, v29.2d, v30.2d[0]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2210,7 +2210,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M1B_12X4_VS_LIB
 #else
 	.align	4
@@ -2480,7 +2480,7 @@
 
 0:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2500,7 +2500,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M11_12X4_LIB
 #else
 	.align	4
@@ -2551,7 +2551,7 @@
 	fsub	v22.2d, v28.2d, v22.2d
 	fsub	v23.2d, v29.2d, v23.2d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2573,7 +2573,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M11_12X4_VS_LIB
 #else
 	.align	4
@@ -2811,7 +2811,7 @@
 
 0:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2831,7 +2831,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_12X4_LIB
 #else
 	.align 4
@@ -2854,7 +2854,7 @@
 	stp		q14, q15, [x8, #32]
 	stp		q22, q23, [x8, #64]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2972,7 +2972,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_L_12X4_LIB
 #else
 	.align 4
@@ -3006,7 +3006,7 @@
 	stp		q14, q15, [x8, #32]
 	stp		q22, q23, [x8, #64]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3135,7 +3135,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_U_12X4_LIB
 #else
 	.align 4
@@ -3159,7 +3159,7 @@
 	stp		q14, q15, [x8, #32]
 	stp		q22, q23, [x8, #64]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret

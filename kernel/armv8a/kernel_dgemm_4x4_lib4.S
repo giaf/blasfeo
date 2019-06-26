@@ -2490,7 +2490,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_4X4_LIB4
 #else
 	.align	4
@@ -2523,7 +2523,7 @@ NAME:
 	fmla	v6.2d, v26.2d, v28.2d[0]
 	fmla	v7.2d, v27.2d, v28.2d[0]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2543,7 +2543,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M1B_4X4_LIB4
 #else
 	.align	4
@@ -2575,7 +2575,7 @@ NAME:
 	fmla	v6.2d, v26.2d, v28.2d[0]
 	fmla	v7.2d, v27.2d, v28.2d[0]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2594,7 +2594,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M11_4X4_LIB4
 #else
 	.align	4
@@ -2613,7 +2613,7 @@ NAME:
 	fsub	v6.2d, v26.2d, v6.2d
 	fsub	v7.2d, v27.2d, v7.2d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2632,7 +2632,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_4X4_LIB4
 #else
 	.align 4
@@ -2644,7 +2644,7 @@ NAME:
 	stp		q4, q5, [x8, #64]
 	stp		q6, q7, [x8, #96]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2743,7 +2743,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_L_4X4_LIB4
 #else
 	.align 4
@@ -2761,7 +2761,7 @@ NAME:
 	str		q5, [x8, #80]
 	str		q7, [x8, #112]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2866,7 +2866,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_U_4X4_LIB4
 #else
 	.align 4
@@ -2879,7 +2879,7 @@ NAME:
 	str		d5, [x8, #80]
 	stp		q6, q7, [x8, #96]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3129,7 +3129,7 @@ NAME:
 	lsl		w11, w11, #5 // 32*sdb
 	mov		w12, w3 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_4x4_lib4
@@ -3205,7 +3205,7 @@ NAME:
 
 // TODO offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_4x4_lib4
@@ -3545,7 +3545,7 @@ NAME:
 	lsl		w11, w11, #5 // 32*sdb
 	mov		w12, w3 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_4x4_lib4
@@ -3619,7 +3619,7 @@ NAME:
 	lsl		w11, w11, #5 // 32*sdb
 	mov		w12, w3 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_4x4_lib4

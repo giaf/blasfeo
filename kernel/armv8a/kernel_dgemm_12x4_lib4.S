@@ -100,7 +100,7 @@ NAME:
 
 
 
-// subroutine INNER_KERNEL_GEMM_ADD_NT_12X4_LIB4
+// subroutine
 //
 // input arguments:
 // w8   <- k
@@ -831,7 +831,7 @@ NAME:
 
 
 
-// subroutine INNER_KERNEL_GEMM_ADD_NN_12X4_LIB4
+// subroutine
 //
 // input arguments:
 // w8   <- k
@@ -2573,7 +2573,7 @@ NAME:
 
 
 
-// subroutine INNER_SCALE_AB_12X4_LIB4
+// subroutine
 //
 // input arguments:
 // v00..v23 <- D
@@ -2776,7 +2776,7 @@ NAME:
 
 
 
-// subroutine INNER_SCALE_11_12X4_LIB4
+// subroutine
 //
 // input arguments:
 // x8  <- C
@@ -2977,7 +2977,7 @@ NAME:
 
 
 
-// subroutine INNER_STORE_12X4_LIB4
+// subroutine
 //
 // input arguments:
 // x8   <- D
@@ -3771,7 +3771,7 @@ NAME:
 	lsl		w12, w12, #5 // 32*sdb
 	mov		w13, w4 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_12X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_12x4_lib4
@@ -3851,7 +3851,7 @@ NAME:
 	lsl		w12, w12, #5 // 32*sdb
 	mov		w13, w4 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_12X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_12x4_lib4
@@ -4225,7 +4225,7 @@ NAME:
 	lsl		w12, w12, #5 // 32*sdb
 	mov		w13, w4 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_12X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_12x4_lib4
@@ -4305,7 +4305,7 @@ NAME:
 	lsl		w12, w12, #5 // 32*sdb
 	mov		w13, w4 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_12X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_12x4_lib4
