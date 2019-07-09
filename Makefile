@@ -758,6 +758,9 @@ ifeq ($(TARGET), GENERIC)
 OBJS += sandbox/kernel_generic.o
 endif
 
+#OBJS += sandbox/kernel_c_dummy.o
+#OBJS += sandbox/kernel_asm_dummy.o
+
 endif
 
 

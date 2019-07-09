@@ -79,6 +79,9 @@ OBJS += kernel_generic.o
 SRCS += kernel_generic.c
 endif
 
+#OBJS += kernel_c_dummy.o
+#OBJS += kernel_asm_dummy.o
+
 endif
 
 obj: $(OBJS)
