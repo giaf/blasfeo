@@ -11632,7 +11632,7 @@
 	movq	ARG13, %r13 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_4X4_vs_LIB
+	INNER_STORE_4X4_VS_LIB
 #else
 	CALL(inner_store_4x4_vs_lib)
 #endif

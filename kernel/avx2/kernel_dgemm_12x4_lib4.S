@@ -15000,7 +15000,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 	movq	ARG13, %r13  // km 
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRSM_LUN_INV_12X4_vs_LIB4
+	INNER_EDGE_DTRSM_LUN_INV_12X4_VS_LIB4
 #else
 	CALL(inner_edge_dtrsm_lun_inv_12x4_vs_lib4)
 #endif
