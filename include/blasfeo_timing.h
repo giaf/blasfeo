@@ -30,7 +30,7 @@
 #ifndef BLASFEO_TIMING_H_
 #define BLASFEO_TIMING_H_
 
-#include <stdbool.h>
+//#include <stdbool.h>
 
 #if (defined _WIN32 || defined _WIN64) && !(defined __MINGW32__ || defined __MINGW64__)
 
