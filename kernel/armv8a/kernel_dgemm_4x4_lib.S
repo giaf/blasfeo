@@ -5993,7 +5993,7 @@
 #if MACRO_LEVEL>=1
 	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_4x4_lib)
+	bl inner_tran_4x4_lib
 #endif
 
 
@@ -6117,7 +6117,7 @@
 #if MACRO_LEVEL>=1
 	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_4x4_lib)
+	bl inner_tran_4x4_lib
 #endif
 
 
@@ -6197,7 +6197,7 @@
 #if MACRO_LEVEL>=1
 	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_4x4_lib)
+	bl inner_tran_4x4_lib
 #endif
 
 
@@ -6321,7 +6321,7 @@
 #if MACRO_LEVEL>=1
 	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_4x4_lib)
+	bl inner_tran_4x4_lib
 #endif
 
 

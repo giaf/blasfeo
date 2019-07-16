@@ -7512,7 +7512,7 @@
 #if MACRO_LEVEL>=1
 	INNER_TRAN_8X4_LIB
 #else
-	CALL(inner_tran_8x4_lib)
+	bl inner_tran_8x4_lib
 #endif
 
 
@@ -7606,7 +7606,7 @@
 #if MACRO_LEVEL>=1
 	INNER_TRAN_8X4_LIB
 #else
-	CALL(inner_tran_8x4_lib)
+	bl inner_tran_8x4_lib
 #endif
 
 
