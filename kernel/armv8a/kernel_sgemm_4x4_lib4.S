@@ -1044,7 +1044,7 @@ NAME:
 	lsl		w11, w11, #4 // 16*sda
 	mov		w12, w3 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_4x4_lib4
@@ -1118,7 +1118,7 @@ NAME:
 	lsl		w11, w11, #4 // 16*sda
 	mov		w12, w3 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_4x4_lib4
