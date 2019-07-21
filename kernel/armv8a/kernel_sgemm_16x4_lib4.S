@@ -1047,6 +1047,8 @@ NAME:
 	fmla	v14.4s, v26.4s, v29.4s[0]
 	fmla	v15.4s, v27.4s, v29.4s[0]
 
+0:
+
 #if MACRO_LEVEL>=1
 	.endm
 #else
