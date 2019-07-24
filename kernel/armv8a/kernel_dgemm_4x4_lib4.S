@@ -2490,7 +2490,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_4X4_LIB4
 #else
 	.align	4
@@ -2498,6 +2498,8 @@ NAME:
 #endif
 
 	ld1		{v28.2d}, [x8]
+
+	ld1		{v29.2d}, [x9]
 
 	fmul	v0.2d, v0.2d, v28.2d[0]
 	fmul	v1.2d, v1.2d, v28.2d[0]
@@ -2508,22 +2510,24 @@ NAME:
 	fmul	v6.2d, v6.2d, v28.2d[0]
 	fmul	v7.2d, v7.2d, v28.2d[0]
 
-	ld1		{v28.2d}, [x9]
-	// TODO check on beta
+	fcmpe	d29, #0
+	beq		0f
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v2.2d, v26.2d, v28.2d[0]
-	fmla	v3.2d, v27.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v29.2d[0]
+	fmla	v1.2d, v25.2d, v29.2d[0]
+	fmla	v2.2d, v26.2d, v29.2d[0]
+	fmla	v3.2d, v27.2d, v29.2d[0]
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v6.2d, v26.2d, v28.2d[0]
-	fmla	v7.2d, v27.2d, v28.2d[0]
+	fmla	v4.2d, v24.2d, v29.2d[0]
+	fmla	v5.2d, v25.2d, v29.2d[0]
+	fmla	v6.2d, v26.2d, v29.2d[0]
+	fmla	v7.2d, v27.2d, v29.2d[0]
 
-#if MACRO_LEVEL>=2
+0:
+
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2543,15 +2547,14 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M1B_4X4_LIB4
 #else
 	.align	4
 	FUN_START(inner_scale_m1b_4x4_lib4)
 #endif
 
-	ld1		{v28.2d}, [x8]
-	// TODO check on beta
+	ld1		{v29.2d}, [x8]
 
 	fneg	v0.2d, v0.2d
 	fneg	v1.2d, v1.2d
@@ -2563,19 +2566,24 @@ NAME:
 	fneg	v6.2d, v6.2d
 	fneg	v7.2d, v7.2d
 
-	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x9], #64
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v2.2d, v26.2d, v28.2d[0]
-	fmla	v3.2d, v27.2d, v28.2d[0]
+	fcmpe	d29, #0
+	beq		0f
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x9], #64
-	fmla	v4.2d, v24.2d, v28.2d[0]
-	fmla	v5.2d, v25.2d, v28.2d[0]
-	fmla	v6.2d, v26.2d, v28.2d[0]
-	fmla	v7.2d, v27.2d, v28.2d[0]
+	fmla	v0.2d, v24.2d, v29.2d[0]
+	fmla	v1.2d, v25.2d, v29.2d[0]
+	fmla	v2.2d, v26.2d, v29.2d[0]
+	fmla	v3.2d, v27.2d, v29.2d[0]
 
-#if MACRO_LEVEL>=2
+	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x9], #64
+	fmla	v4.2d, v24.2d, v29.2d[0]
+	fmla	v5.2d, v25.2d, v29.2d[0]
+	fmla	v6.2d, v26.2d, v29.2d[0]
+	fmla	v7.2d, v27.2d, v29.2d[0]
+
+0:
+
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2594,7 +2602,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M11_4X4_LIB4
 #else
 	.align	4
@@ -2613,7 +2621,7 @@ NAME:
 	fsub	v6.2d, v26.2d, v6.2d
 	fsub	v7.2d, v27.2d, v7.2d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2632,7 +2640,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_4X4_LIB4
 #else
 	.align 4
@@ -2644,7 +2652,7 @@ NAME:
 	stp		q4, q5, [x8, #64]
 	stp		q6, q7, [x8, #96]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2743,7 +2751,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_L_4X4_LIB4
 #else
 	.align 4
@@ -2761,7 +2769,7 @@ NAME:
 	str		q5, [x8, #80]
 	str		q7, [x8, #112]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2866,7 +2874,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_U_4X4_LIB4
 #else
 	.align 4
@@ -2879,7 +2887,7 @@ NAME:
 	str		d5, [x8, #80]
 	stp		q6, q7, [x8, #96]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3129,7 +3137,7 @@ NAME:
 	lsl		w11, w11, #5 // 32*sdb
 	mov		w12, w3 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_4x4_lib4
@@ -3205,7 +3213,7 @@ NAME:
 
 // TODO offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_4x4_lib4
@@ -3545,7 +3553,7 @@ NAME:
 	lsl		w11, w11, #5 // 32*sdb
 	mov		w12, w3 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_4x4_lib4
@@ -3619,7 +3627,7 @@ NAME:
 	lsl		w11, w11, #5 // 32*sdb
 	mov		w12, w3 // offsetB
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
 #else
 	bl	inner_edge_gemm_add_nn_4x4_lib4

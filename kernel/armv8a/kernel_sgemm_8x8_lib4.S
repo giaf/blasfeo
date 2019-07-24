@@ -790,7 +790,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_8X8_LIB4
 #else
 	.align	4
@@ -844,7 +844,7 @@ NAME:
 	fmla	v14.4s, v26.4s, v28.4s[0]
 	fmla	v15.4s, v27.4s, v28.4s[0]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -864,7 +864,7 @@ NAME:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_8X8_LIB4
 #else
 	.align 4
@@ -883,7 +883,7 @@ NAME:
 	stp		q12, q13, [x10, #64]
 	stp		q14, q15, [x10, #96]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret

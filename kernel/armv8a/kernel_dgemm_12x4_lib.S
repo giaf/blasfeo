@@ -1710,7 +1710,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_12X4_LIB
 #else
 	.align	4
@@ -1718,6 +1718,8 @@
 #endif
 
 	ld1		{v28.2d}, [x8]
+
+	ld1		{v30.2d}, [x9]
 
 	fmul	v0.2d, v0.2d, v28.2d[0]
 	fmul	v1.2d, v1.2d, v28.2d[0]
@@ -1744,7 +1746,8 @@
 	fmul	v22.2d, v22.2d, v28.2d[0]
 	fmul	v23.2d, v23.2d, v28.2d[0]
 
-	ld1		{v30.2d}, [x9]
+	fcmpe	d30, #0
+	beq		0f
 
 	ldp		q24, q25, [x10, #0]
 	ldp		q26, q27, [x10, #32]
@@ -1790,8 +1793,9 @@
 	fmla	v22.2d, v28.2d, v30.2d[0]
 	fmla	v23.2d, v29.2d, v30.2d[0]
 
+0:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -1815,7 +1819,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_12X4_VS_LIB
 #else
 	.align	4
@@ -1823,6 +1827,8 @@
 #endif
 
 	ld1		{v28.2d}, [x8]
+
+	ld1		{v30.2d}, [x9]
 
 	fmul	v0.2d, v0.2d, v28.2d[0]
 	fmul	v1.2d, v1.2d, v28.2d[0]
@@ -1849,7 +1855,8 @@
 	fmul	v22.2d, v22.2d, v28.2d[0]
 	fmul	v23.2d, v23.2d, v28.2d[0]
 
-	ld1		{v30.2d}, [x9]
+	fcmpe	d30, #0
+	beq		0f
 
 	cmp		w12, #4
 	blt		1f
@@ -2082,7 +2089,7 @@
 
 0:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2103,7 +2110,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M1B_12X4_LIB
 #else
 	.align	4
@@ -2111,7 +2118,6 @@
 #endif
 
 	ld1		{v30.2d}, [x8]
-	// TODO check on beta
 
 	fneg	v0.2d, v0.2d
 	fneg	v1.2d, v1.2d
@@ -2142,6 +2148,9 @@
 	fneg	v21.2d, v21.2d
 	fneg	v22.2d, v22.2d
 	fneg	v23.2d, v23.2d
+
+	fcmpe	d30, #0
+	beq		0f
 
 	ldp		q24, q25, [x9, #0]
 	ldp		q26, q27, [x9, #32]
@@ -2187,7 +2196,9 @@
 	fmla	v22.2d, v28.2d, v30.2d[0]
 	fmla	v23.2d, v29.2d, v30.2d[0]
 
-#if MACRO_LEVEL>=2
+0:
+
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2210,7 +2221,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M1B_12X4_VS_LIB
 #else
 	.align	4
@@ -2248,6 +2259,9 @@
 	fneg	v21.2d, v21.2d
 	fneg	v22.2d, v22.2d
 	fneg	v23.2d, v23.2d
+
+	fcmpe	d30, #0
+	beq		0f
 
 	cmp		w11, #4
 	blt		1f
@@ -2480,7 +2494,7 @@
 
 0:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2500,7 +2514,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M11_12X4_LIB
 #else
 	.align	4
@@ -2551,7 +2565,7 @@
 	fsub	v22.2d, v28.2d, v22.2d
 	fsub	v23.2d, v29.2d, v23.2d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2573,7 +2587,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M11_12X4_VS_LIB
 #else
 	.align	4
@@ -2811,7 +2825,7 @@
 
 0:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2831,7 +2845,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_12X4_LIB
 #else
 	.align 4
@@ -2854,7 +2868,7 @@
 	stp		q14, q15, [x8, #32]
 	stp		q22, q23, [x8, #64]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2972,7 +2986,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_L_12X4_LIB
 #else
 	.align 4
@@ -3006,7 +3020,7 @@
 	stp		q14, q15, [x8, #32]
 	stp		q22, q23, [x8, #64]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3135,7 +3149,7 @@
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_U_12X4_LIB
 #else
 	.align 4
@@ -3159,7 +3173,7 @@
 	stp		q14, q15, [x8, #32]
 	stp		q22, q23, [x8, #64]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3264,6 +3278,45 @@
 	ret
 
 	FUN_END(inner_store_u_12x4_vs_lib)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// x8   <- D
+// x9   <- ldd*sizeof(double)
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_PREFETCH_12X4_LIB
+#else
+	.align 4
+	FUN_START(inner_prefetch_12x4_lib)
+#endif
+
+	prfm	PLDL1KEEP, [x8, #0]
+	prfm	PLDL1KEEP, [x8, #64]
+	add		x8, x8, x9
+	prfm	PLDL1KEEP, [x8, #0]
+	prfm	PLDL1KEEP, [x8, #64]
+	add		x8, x8, x9
+	prfm	PLDL1KEEP, [x8, #0]
+	prfm	PLDL1KEEP, [x8, #64]
+	add		x8, x8, x9
+	prfm	PLDL1KEEP, [x8, #0]
+	prfm	PLDL1KEEP, [x8, #64]
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_prefetch_12x4_lib)
 #endif
 
 
@@ -3449,6 +3502,19 @@
 
 
 
+	// prefetch
+	ldr		x8, [sp, #(STACKSIZE + 8)] // D
+	ldr		w9, [sp, #(STACKSIZE + 16)] // ldd
+	lsl		w9, w9, #3 // 8*sdd
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_12X4_LIB
+#else
+	bl inner_prefetch_12x4_lib
+#endif
+
+
+
 	// call inner blend for generic alpha and beta
 	mov		x8, x1 // alpha
 	mov		x9, x6 // beta
@@ -3563,6 +3629,20 @@
 #endif
 
 103:
+
+
+
+	// prefetch
+	// TODO prefethc vs
+//	ldr		x8, [sp, #(STACKSIZE + 8)] // D
+//	ldr		w9, [sp, #(STACKSIZE + 16)] // ldd
+//	lsl		w9, w9, #3 // 8*sdd
+
+#if MACRO_LEVEL>=1
+//	INNER_PREFETCH_12X4_LIB
+#else
+//	bl inner_prefetch_12x4_lib
+#endif
 
 
 

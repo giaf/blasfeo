@@ -27,73 +27,124 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#ifndef BLASFEO_TIMING_H_
-#define BLASFEO_TIMING_H_
+#include "../../include/blasfeo_common.h"
+#include "../../include/blasfeo_d_aux.h"
+#include "../../include/blasfeo_d_kernel.h"
 
-//#include <stdbool.h>
 
-#if (defined _WIN32 || defined _WIN64) && !(defined __MINGW32__ || defined __MINGW64__)
 
-	/* Use Windows QueryPerformanceCounter for timing. */
-	#include <Windows.h>
+// m>=1 and n={5,6,7,8}
+void kernel_dgetrf_pivot_8_vs_lib(int m, double *C, int ldc, double *pd, int* ipiv, int n)
+	{
 
-	/** A structure for keeping internal timer data. */
-	typedef struct blasfeo_timer_ {
-		LARGE_INTEGER tic;
-		LARGE_INTEGER toc;
-		LARGE_INTEGER freq;
-	} blasfeo_timer;
-
-#elif(defined __APPLE__)
-
-	#include <mach/mach_time.h>
-
-	/** A structure for keeping internal timer data. */
-	typedef struct blasfeo_timer_ {
-		uint64_t tic;
-		uint64_t toc;
-		mach_timebase_info_data_t tinfo;
-	} blasfeo_timer;
-
-#elif(defined __DSPACE__)
-
-	#include <brtenv.h>
-
-	typedef struct blasfeo_timer_ {
-		double time;
-	} blasfeo_timer;
-
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#elif defined(TARGET_GENERIC)
+	double pU0[1*4*K_MAX_STACK];
 #else
+	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
+	int sdu0 = (m+3)/4*4;
+	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
 
-	/* Use POSIX clock_gettime() for timing on non-Windows machines. */
-	#include <time.h>
+	double *pU = pU0;
+	int sdu = sdu0;
 
-	#if __STDC_VERSION__ >= 199901L  // C99 Mode
+	double *tmp_pU;
+	int m4;
 
-		#include <sys/stat.h>
-		#include <sys/time.h>
+	if(m>K_MAX_STACK)
+		{
+		m4 = (m+3)/4*4;
+		tmp_pU = malloc(3*4*m4*sizeof(double)+64);
+		blasfeo_align_64_byte(tmp_pU, (void **) &pU);
+		sdu = m4;
+		}
+	else
+		{
+		pU = pU0;
+		sdu = sdu0;
+		}
 
-		typedef struct blasfeo_timer_ {
-			struct timeval tic;
-			struct timeval toc;
-		} blasfeo_timer;
+	int ii;
 
-	#else  // ANSI C Mode
+	double *dummy = NULL;
 
-		/** A structure for keeping internal timer data. */
-		typedef struct blasfeo_timer_ {
-			struct timespec tic;
-			struct timespec toc;
-		} blasfeo_timer;
+	double d1 = 1.0;
+	double dm1 = -1.0;
 
-	#endif  // __STDC_VERSION__ >= 199901L
+	// saturate n to 8
+	n = 8<n ? 8 : n;
 
-#endif  // (defined _WIN32 || defined _WIN64)
+	int p = m<n ? m : n;
 
-/** A function for measurement of the current time. */
-void blasfeo_tic(blasfeo_timer* t);
+	int n_max;
 
-/** A function which returns the elapsed time. */
-double blasfeo_toc(blasfeo_timer* t);
+	// fact left column
+	kernel_dgetrf_pivot_4_vs_lib(m, C, ldc, pd, ipiv, n);
 
-#endif  // BLASFEO_TIMING_H_
+	n_max = p<4 ? p : 4;
+
+	// apply pivot to right column
+	for(ii=0; ii<n_max; ii++)
+		{
+		if(ipiv[ii]!=ii)
+			{
+			kernel_drowsw_lib(n-4, C+ii+4*ldc, ldc, C+ipiv[ii]+4*ldc, ldc);
+			}
+		}
+
+	// pack
+	kernel_dpack_tn_4_vs_lib4(4, C+4*ldc, ldc, pU+4*sdu, n-4);
+
+	// solve top right block
+	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(0, dummy, dummy, 0, &d1, pU+4*sdu, pU+4*sdu, C, ldc, n-4, m);
+
+	// unpack
+	kernel_dunpack_nt_4_vs_lib4(4, pU+4*sdu, C+4*ldc, ldc, n-4);
+
+	if(m>4)
+		{
+
+		// correct rigth block
+		ii = 4;
+		// TODO larger kernels ???
+		for(; ii<m; ii+=4)
+			{
+			kernel_dgemm_nt_4x4_vs_libc4cc(4, &dm1, C+ii, ldc, pU+4*sdu, &d1, C+ii+4*ldc, ldc, C+ii+4*ldc, ldc, m-ii, n-4);
+			}
+
+		// fact right column
+		kernel_dgetrf_pivot_4_vs_lib(m-4, C+4+4*ldc, ldc, pd+4, ipiv+4, n-4);
+
+		n_max = p;
+
+		for(ii=4; ii<n_max; ii++)
+			ipiv[ii] += 4;
+
+		// apply pivot to left column
+		for(ii=4; ii<n_max; ii++)
+			{
+			if(ipiv[ii]!=ii)
+				{
+				kernel_drowsw_lib(4, C+ii, ldc, C+ipiv[ii], ldc);
+				}
+			}
+
+		}
+
+	end:
+	if(m>K_MAX_STACK)
+		{
+		free(tmp_pU);
+		}
+
+	return;
+
+	}
+
+
+
+
