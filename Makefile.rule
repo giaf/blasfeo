@@ -132,32 +132,32 @@ endif
 
 # Compile the BLAS API routines provided by BLASFEO
 #
-#BLAS_API = 0
-BLAS_API = 1
+BLAS_API = 0
+# BLAS_API = 1
 
 # Export standard FORTRAN namings for BLAS API routines
 # 0 : routines namings are in the form blasfeo_dgemm
 # 1 : routines namings are in the form dgemm_
 #
-#FORTRAN_BLAS_API = 0
- FORTRAN_BLAS_API = 1
+FORTRAN_BLAS_API = 0
+# FORTRAN_BLAS_API = 1
 
 # Complement the BLAS_API with the Netlib BLAS (only for FORTAN_BLAS_API=1)
-#COMPLEMENT_WITH_NETLIB_BLAS = 0
-COMPLEMENT_WITH_NETLIB_BLAS = 1
+COMPLEMENT_WITH_NETLIB_BLAS = 0
+# COMPLEMENT_WITH_NETLIB_BLAS = 1
 
 # Complement the BLAS_API with the Netlib LAPACK (only for FORTAN_BLAS_API=1)
-#COMPLEMENT_WITH_NETLIB_LAPACK = 0
-COMPLEMENT_WITH_NETLIB_LAPACK = 1
+COMPLEMENT_WITH_NETLIB_LAPACK = 0
+# COMPLEMENT_WITH_NETLIB_LAPACK = 1
 
 # Compile the CBLAS API routines provided by BLASFEO
 #
-#CBLAS_API = 0
-CBLAS_API = 1
+CBLAS_API = 0
+# CBLAS_API = 1
 
 #Compile the LAPACKE API from Netlib
-#LAPACKE_API = 0
-LAPACKE_API = 1
+LAPACKE_API = 0
+# LAPACKE_API = 1
 
 
 
@@ -297,6 +297,12 @@ endif # BLAS_API
 ifeq ($(CBLAS_API), 1) 
 ifeq ($(FORTRAN_BLAS_API), 0)
 $(error Cannot expose non-FORTRAN style BLAS_API when building CBLAS_API)
+endif
+endif
+
+ifeq ($(LAPACKE_API), 1) 
+ifeq ($(FORTRAN_BLAS_API), 0)
+$(error Cannot expose non-FORTRAN style BLAS_API when building LAPACKE_API)
 endif
 endif
 

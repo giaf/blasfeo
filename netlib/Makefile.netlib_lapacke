@@ -1108,7 +1108,7 @@ lapacke_dsytri2x.o \
 lapacke_dsytri2x_work.o \
 lapacke_dsytri_work.o
 
-OBJ_B = \
+OBJ_B = lapacke_dsytrf_aa_work.o lapacke_ssytrf_aa_work.o \
 lapacke_dsytrs.o \
 lapacke_dsytrs_rook.o \
 lapacke_dsytrs2.o \
