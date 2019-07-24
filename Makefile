@@ -644,6 +644,11 @@ include $(CURRENT_DIR)/netlib/Makefile.netlib_cblas
 OBJS += $(NETLIB_CBLAS_OBJS)
 endif # CBLAS_API
 
+ifeq ($(LAPACKE_API), 1)
+include $(CURRENT_DIR)/netlib/Makefile.netlib_lapacke
+OBJS += $(NETLIB_LAPACKE_OBJS)
+endif # LAPACKE_API
+
 endif # BLAS_API
 
 else # LA_HIGH_PERFORMANCE vs LA_REFERENCE | LA_BLAS
@@ -784,6 +789,9 @@ endif
 ifeq ($(CBLAS_API), 1)
 	( cd netlib; $(MAKE) obj_cblas)
 endif
+ifeq ($(LAPACKE_API), 1)
+	( cd netlib; $(MAKE) obj_lapacke)
+endif
 endif
 ifeq ($(SANDBOX_MODE), 1)
 	( cd sandbox; $(MAKE) obj)
@@ -815,6 +823,9 @@ ifeq ($(COMPLEMENT_WITH_NETLIB_LAPACK), 1)
 endif
 ifeq ($(CBLAS_API), 1)
 	( cd netlib; $(MAKE) obj_cblas)
+endif
+ifeq ($(LAPACKE_API), 1)
+	( cd netlib; $(MAKE) obj_lapacke)
 endif
 endif
 ifeq ($(SANDBOX_MODE), 1)

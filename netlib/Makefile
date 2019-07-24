@@ -99,6 +99,11 @@ $(LAPACK_DIR):
 	tar -xzf $(LAPACK_NETLIB).tar.gz -C $(LAPACK_DIR) --strip-components 1
 
 
+obj_lapacke: obj_lapack
+	@echo "compiling LAPACKE ..."
+	(cd $(LAPACK_DIR); $(MAKE) lapackelib)
+
+
 clean:
 ifneq ($(wildcard $(BLAS_DIR)), )
 	make -C $(BLAS_DIR) clean
@@ -123,4 +128,4 @@ deep_clean:
 	rm -rf $(LAPACK_NETLIB).tar.gz
 
 
-.PHONY: obj_blas obj_cblas obj_lapack clean deep_clean
+.PHONY: obj_blas obj_cblas obj_lapack clean deep_clean obj_lapacke
