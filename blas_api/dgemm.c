@@ -2194,10 +2194,25 @@ tt_2_left_8:
 
 #if ! defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 tt_2_left_4:
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(ii=0; ii<m-8; ii+=12)
+		{
+		kernel_dgemm_tt_12x4_vs_libcccc(k, alpha, A+ii*lda, lda, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+		}
+	if(ii<m-4)
+		{
+		kernel_dgemm_tt_8x4_vs_libcccc(k, alpha, A+ii*lda, lda, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+		}
+	else if(ii<m)
+		{
+		kernel_dgemm_tt_4x4_vs_libcccc(k, alpha, A+ii*lda, lda, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+		}
+#else
 	for(ii=0; ii<m; ii+=4)
 		{
 		kernel_dgemm_tt_4x4_vs_libcccc(k, alpha, A+ii*lda, lda, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 		}
+#endif
 	goto tt_2_return;
 #endif
 
