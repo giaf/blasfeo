@@ -211,16 +211,17 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 //			goto tn_1; // pack A and B
 			if( k<=K_MAX_STACK )
 				{
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-				if( m<=48 & n<=48 )
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-				if( m<=24 & n<=24 )
-#else
-				if( m<=8 & n<=8 )
-#endif
-					{
-					goto tn_m0; // small matrix: pack A
-					}
+				// no algorithm for small matrix
+//#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+//				if( m<=48 & n<=48 )
+//#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+//				if( m<=24 & n<=24 )
+//#else
+//				if( m<=8 & n<=8 )
+//#endif
+//					{
+//					goto tn_m0; // small matrix: pack A
+//					}
 #if defined(TARGET_X64_INTEL_HASWELL)
 				if( m<=2*12 | n<=2*12 | k<448 )
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
