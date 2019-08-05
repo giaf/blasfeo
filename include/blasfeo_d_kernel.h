@@ -852,6 +852,8 @@ void kernel_dgemm_nn_12x4_vs_libcccc(int kmax, double *alpha, double *A, int lda
 void kernel_dgemm_nt_12x4_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_12x4_vs_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 // 4x12
+void kernel_dgemm_nt_4x12_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nt_4x12_vs_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dgemm_tt_4x12_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_tt_4x12_vs_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 // 8x4
@@ -860,6 +862,8 @@ void kernel_dgemm_nn_8x4_vs_libcccc(int kmax, double *alpha, double *A, int lda,
 void kernel_dgemm_nt_8x4_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_8x4_vs_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 // 4x8
+void kernel_dgemm_nt_4x8_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nt_4x8_vs_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dgemm_tt_4x8_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_tt_4x8_vs_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 // 4x4

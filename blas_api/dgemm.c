@@ -1260,10 +1260,25 @@ nt_2_left_8:
 
 #if ! defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 nt_2_left_4:
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(jj=0; jj<n-8; jj+=12)
+		{
+		kernel_dgemm_nt_4x12_vs_libcccc(k, alpha, A+ii, lda, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+		}
+	if(jj<n-4)
+		{
+		kernel_dgemm_nt_4x8_vs_libcccc(k, alpha, A+ii, lda, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+		}
+	else if(jj<n)
+		{
+		kernel_dgemm_nt_4x4_vs_libcccc(k, alpha, A+ii, lda, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
+		}
+#else
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dgemm_nt_4x4_vs_libcccc(k, alpha, A+ii, lda, B+jj, ldb, beta, C+ii+jj*ldc, ldc, C+ii+jj*ldc, ldc, m-ii, n-jj);
 		}
+#endif
 	goto nt_2_return;
 #endif
 
