@@ -94,6 +94,11 @@ configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 # set(CC_COMPILER gcc CACHE STRING "compiler")
 # set(CC_COMPILER clang)
 # set(CC_COMPILER x86_64-w64-mingw32-gcc)
+if(CMAKE_C_COMPILER_ID MATCHES MSVC)
+	if(NOT ${TARGET} MATCHES GENERIC)
+		message( FATAL_ERROR "MSVC compiler only supported for TARGET=GENERIC")
+	endif()
+endif()
 
 # build shared library
 set(BUILD_SHARED_LIBS OFF CACHE STRING "Build shared libraries")
