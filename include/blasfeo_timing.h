@@ -63,6 +63,15 @@
 		double time;
 	} blasfeo_timer;
 
+#elif(defined __XILINX_NONE_ELF__)
+
+	#include "xtime_l.h"
+
+	typedef struct blasfeo_timer_ {
+		uint64_t tic;
+		uint64_t toc;
+	} blasfeo_timer;
+
 #else
 
 	/* Use POSIX clock_gettime() for timing on non-Windows machines. */

@@ -72,6 +72,20 @@
 		return ds1401_tic_read() - t->time;
 	}
 
+#elif defined(__XILINX_NONE_ELF__)
+
+	void blasfeo_tic(blasfeo_timer* t) {
+		XTime_GetTime(&(t->tic));
+	}
+
+	double blasfeo_toc(blasfeo_timer* t) {
+		uint64_t toc;
+		XTime_GetTime(&toc);
+		t->toc = toc;
+
+		/* time in s */
+		return (double) (toc - t->tic) / (COUNTS_PER_SECOND);  
+	}
 #else
 
 	#if __STDC_VERSION__ >= 199901L  // C99 Mode

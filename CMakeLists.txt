@@ -84,7 +84,7 @@ set(EXT_DEP ON CACHE BOOL "Compile external dependencies in BLASFEO")
 if(CMAKE_SYSTEM MATCHES "dSpace" OR CMAKE_BUILD_TYPE MATCHES "Release")
 	set(BLASFEO_TESTING OFF CACHE BOOL "Examples disabled" FORCE)
 	set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled" FORCE)
-	set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled" FORCE)
+	#set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled" FORCE)
 endif()
 
 configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
@@ -575,8 +575,13 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB KERNEL_SRC
+
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_12x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_8x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dpack_lib4.S
+
+
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
@@ -833,6 +838,10 @@ set(BLASFEO_SRC ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
 
 # add library
 add_library(blasfeo ${BLASFEO_SRC})
+
+if(EMBEDDED_TARGET MATCHES XILINX_NONE_ELF )
+	target_link_libraries(blasfeo PUBLIC -Wl,--start-group xil c gcc -Wl,--end-group)
+endif()
 
 
 target_include_directories(blasfeo
