@@ -27,7 +27,7 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include "../include/platforms.h"
+#include "../include/blasfeo_stdlib.h"
 
 #if ! defined(OS_WINDOWS)
 int posix_memalign(void **memptr, size_t alignment, size_t size);
@@ -49,8 +49,7 @@ void ZEROS(REAL **pA, int row, int col)
 /* creates a zero matrix aligned to a cache line */
 void ZEROS_ALIGN(REAL **pA, int row, int col)
 	{
-    MEMALIGN(pA,(row*col)*sizeof(REAL));
-//TODO:Gianluca: why is (REAL *) needed here?
+    blasfeo_malloc_align((void **) pA, (row*col)*sizeof(REAL));
 	REAL *A = *pA;
 	int i;
 	for(i=0; i<row*col; i++) A[i] = 0.0;
@@ -69,11 +68,7 @@ void FREE(REAL *pA)
 /* frees aligned matrix */
 void FREE_ALIGN(REAL *pA)
 	{
-#if defined(OS_WINDOWS)
-	_aligned_free( pA );
-#else
-	free( pA );
-#endif
+	blasfeo_free_align(pA);
 	}
 
 

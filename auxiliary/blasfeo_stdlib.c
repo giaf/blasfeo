@@ -27,89 +27,59 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_stdlib.h"
 
-#if 0
-#include <malloc.h>
+
+// allocate memory aligned to typical cache line size (64 bytes)
+void blasfeo_malloc_align(void **ptr, size_t size)
+	{
+
+#if defined(OS_WINDOWS)
+
+	*ptr = _aligned_malloc( size, 64 );
+
+#elif defined(__DSPACE__)
+
+	// XXX fix this hack !!! (Andrea?)
+	*ptr = malloc( size );
+
+#elif defined(__XILINX_NONE_ELF__)
+
+	*ptr = memalign( 64, size )
+
+#else
+
+	int err = posix_memalign( ptr, 64, size );
+	if(err!=0)
+		{
+		printf("Memory allocation error");
+		exit(1);
+		}
+
 #endif
 
-#if ! defined(OS_WINDOWS)
-int posix_memalign(void **memptr, size_t alignment, size_t size);
-#endif
-
-
-
-/* creates a zero matrix aligned */
-void int_zeros(int **pA, int row, int col)
-	{
-	void *temp = malloc((row*col)*sizeof(int));
-	*pA = temp;
-	int *A = *pA;
-	int i;
-	for(i=0; i<row*col; i++) A[i] = 0;
-	}
-
-
-
-/* creates a zero matrix aligned to a cache line */
-void int_zeros_align(int **pA, int row, int col)
-	{
-	blasfeo_malloc_align((void **) pA, (row*col)*sizeof(int));
-	int *A = *pA;
-	int i;
-	for(i=0; i<row*col; i++) A[i] = 0.0;
-	}
-
-
-
-/* frees matrix */
-void int_free(int *pA)
-	{
-	free( pA );
-	}
-
-
-
-/* frees aligned matrix */
-void int_free_align(int *pA)
-	{
-	blasfeo_free_align(pA);
-	}
-
-
-
-/* prints a matrix in column-major format */
-void int_print_mat(int row, int col, int *A, int lda)
-	{
-	int i, j;
-	for(i=0; i<row; i++)
-		{
-		for(j=0; j<col; j++)
-			{
-			printf("%d ", A[i+lda*j]);
-			}
-		printf("\n");
-		}
-	printf("\n");
-	}	
-
-
-
-/* prints a matrix in column-major format */
-void int_print_to_string_mat(char **buf_out, int row, int col, int *A, int lda)
-	{
-	int i, j;
-	for(i=0; i<row; i++)
-		{
-		for(j=0; j<col; j++)
-			{
-			*buf_out += sprintf(*buf_out, "%d ", A[i+lda*j]);
-			}
-		*buf_out += sprintf(*buf_out, "\n");
-		}
-	*buf_out += sprintf(*buf_out, "\n");
 	return;
-	}	
+
+	}
+
+
+
+void blasfeo_free_align(void *ptr)
+	{
+
+#if defined(OS_WINDOWS)
+
+	_aligned_free( ptr );
+
+#else
+
+	free( ptr );
+
+#endif
+
+	return;
+
+	}

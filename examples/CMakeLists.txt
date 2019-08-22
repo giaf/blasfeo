@@ -33,8 +33,8 @@ add_executable(example_s_riccati_recursion example_s_riccati_recursion.c tools.c
 add_executable(example_d_lu_factorization example_d_lu_factorization.c)
 add_executable(example_s_lu_factorization example_s_lu_factorization.c)
 
-target_link_libraries(example_s_riccati_recursion blasfeo m )
 target_link_libraries(example_d_riccati_recursion blasfeo m )
+target_link_libraries(example_s_riccati_recursion blasfeo m )
 target_link_libraries(example_d_lu_factorization blasfeo m)
 target_link_libraries(example_s_lu_factorization blasfeo m)
 

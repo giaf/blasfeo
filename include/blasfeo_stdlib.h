@@ -27,29 +27,19 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#ifndef PLATFORMS_H_
-#define PLATFORMS_H_
+#ifndef BLASFEO_STDLIB_H_
+#define BLASFEO_STDLIB_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// header for embedded platforms
 
-#if defined(OS_WINDOWS)
-#define MEMALIGN(ptrA,size) _aligned_malloc( size, 64 )
 
-#elif defined(__DSPACE__)
-// XXX fix this hack !!! (Andrea?)
-#define MEMALIGN(ptrA,size) *ptrA = malloc(size);
-	
-#elif defined(__XILINX_NONE_ELF__)
-#define MEMALIGN(ptrA,size) *ptrA = memalign( 64, size )
-
-#else
-#define MEMALIGN(ptrA,size) posix_memalign(ptrA, 64, size )
-
-#endif
+//
+void blasfeo_malloc_align(void **ptr, size_t size);
+//
+void blasfeo_free_align(void *ptr);
 
 
 
@@ -57,4 +47,4 @@ extern "C" {
 }
 #endif
 
-#endif  //PLATFORMS_H_
+#endif // BLASFEO_STDLIB_H_

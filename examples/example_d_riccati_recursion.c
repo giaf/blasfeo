@@ -812,14 +812,7 @@ int main()
 	/* BLASFEO API */
 
 	// factorization + solution
-	double testtimer;
-	int i,j=0;
 	blasfeo_tic(&timer);
-	for(i=0; i<100; i++)
-		j = (j+i)*2;
-	testtimer = blasfeo_toc(&timer);
-	printf("\nvery short time: \t%u\t-\t%u\t=\t%e\n\n",timer.toc,timer.tic,testtimer);
-	printf("j = %i",j);
 
 	for(rep=0; rep<nrep; rep++)
 		{

@@ -29,7 +29,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "../include/platforms.h"
+
+#include "../include/blasfeo_stdlib.h"
+
 #if 0
 #include <malloc.h>
 #endif
@@ -55,7 +57,7 @@ void v_zeros(void **ptrA, int size)
 void v_zeros_align(void **ptrA, int size)
 	{
 	// allocate memory
-	MEMALIGN(ptrA,size);
+	blasfeo_malloc_align(ptrA, size);
 	// zero allocated memory
 	int i;
 	double *dA = (double *) *ptrA;
@@ -77,11 +79,7 @@ void v_free(void *pA)
 /* frees aligned matrix */
 void v_free_align(void *pA)
 	{
-#if defined(OS_WINDOWS)
-	_aligned_free( pA );
-#else
-	free( pA );
-#endif
+	blasfeo_free_align(pA);
 	}
 
 
@@ -105,7 +103,7 @@ void c_zeros(char **ptrA, int size)
 void c_zeros_align(char **ptrA, int size)
 	{
 	// allocate memory
-	MEMALIGN(ptrA,size);
+	blasfeo_malloc_align((void **) ptrA, size);
 	// zero allocated memory
 	int i;
 	double *dA = (double *) *ptrA;
@@ -127,9 +125,5 @@ void c_free(char *pA)
 /* frees aligned matrix */
 void c_free_align(char *pA)
 	{
-#if defined(OS_WINDOWS)
-	_aligned_free( pA );
-#else
-	free( pA );
-#endif
+	blasfeo_free_align(pA);
 	}

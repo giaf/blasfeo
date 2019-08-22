@@ -31,6 +31,8 @@ include ../Makefile.rule
 
 OBJS =
 
+OBJS += blasfeo_stdlib.o
+
 ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)

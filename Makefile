@@ -36,7 +36,9 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 
 # aux
-OBJS += auxiliary/d_aux_lib4.o \
+OBJS += \
+		auxiliary/blasfeo_stdlib.o \
+		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib8.o \
 		auxiliary/m_aux_lib48.o \
 
@@ -95,6 +97,7 @@ ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 
 # aux
 OBJS += \
+		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib8.o \
 		auxiliary/m_aux_lib48.o \
@@ -151,6 +154,7 @@ endif
 ifeq ($(TARGET), X64_INTEL_CORE)
 # aux
 OBJS += \
+		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -202,6 +206,7 @@ ifeq ($(TARGET), X64_AMD_BULLDOZER)
 
 # aux
 OBJS += \
+		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -251,6 +256,7 @@ ifeq ($(TARGET), X86_AMD_JAGUAR)
 
 # aux
 OBJS += \
+		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -303,6 +309,7 @@ ifeq ($(TARGET), X86_AMD_BARCELONA)
 
 # aux
 OBJS += \
+		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -354,6 +361,7 @@ ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
 
 # aux
 OBJS += \
+		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -411,6 +419,7 @@ ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
 
 # aux
 OBJS += \
+		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -468,6 +477,7 @@ endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 # aux
 OBJS += \
+		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -519,6 +529,7 @@ endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
 # aux
 OBJS += \
+		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -571,6 +582,7 @@ ifeq ($(TARGET), GENERIC)
 
 # aux
 OBJS += \
+		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
