@@ -48,7 +48,7 @@ void blasfeo_malloc_align(void **ptr, size_t size)
 
 #elif defined(__XILINX_NONE_ELF__)
 
-	*ptr = memalign( 64, size )
+	*ptr = memalign( 64, size );
 
 #else
 
