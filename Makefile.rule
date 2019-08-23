@@ -319,9 +319,11 @@ endif
 endif
 
 STACK_SIZE := $(shell ulimit -s)
+ifneq ($(STACK_SIZE), unlimited)
 STACK_SIZE_EXCEEDED := $(shell echo $(K_MAX_STACK)*12*8*2 \> $(STACK_SIZE)*1024 | bc )
 ifeq ($(STACK_SIZE_EXCEEDED), 1)
 $(error stack size likely to be exceeded, please decrease the value of K_MAX_STACK )
+endif
 endif
 CFLAGS  += -DK_MAX_STACK=$(K_MAX_STACK)
 
