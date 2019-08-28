@@ -5648,6 +5648,49 @@
 
 // common inner routine with file scope
 //
+// transpose
+//
+// input arguments:
+// r10  <- D
+// r11  <- ldd
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_TRAN_4X4_LIB
+#else
+	.p2align 4,,15
+	FUN_START(inner_tran_4x4_lib)
+#endif
+
+	vunpcklpd	%ymm1, %ymm0, %ymm12
+	vunpckhpd	%ymm1, %ymm0, %ymm13
+	vunpcklpd	%ymm3, %ymm2, %ymm14
+	vunpckhpd	%ymm3, %ymm2, %ymm15
+
+	vperm2f128	$0x20, %ymm14, %ymm12, %ymm0
+	vperm2f128	$0x31, %ymm14, %ymm12, %ymm2
+	vperm2f128	$0x20, %ymm15, %ymm13, %ymm1
+	vperm2f128	$0x31, %ymm15, %ymm13, %ymm3
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_tran_4x4_lib)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // scale for generic alpha and beta
 //
 // input arguments:
@@ -6273,58 +6316,6 @@
 // output arguments:
 
 #if MACRO_LEVEL>=1
-	.macro INNER_TRAN_STORE_4X4_LIB
-#else
-	.p2align 4,,15
-	FUN_START(inner_tran_store_4x4_lib)
-#endif
-
-	vunpcklpd	%ymm1, %ymm0, %ymm12
-	vunpckhpd	%ymm1, %ymm0, %ymm13
-	vunpcklpd	%ymm3, %ymm2, %ymm14
-	vunpckhpd	%ymm3, %ymm2, %ymm15
-
-	vperm2f128	$0x20, %ymm14, %ymm12, %ymm0
-	vperm2f128	$0x31, %ymm14, %ymm12, %ymm2
-	vperm2f128	$0x20, %ymm15, %ymm13, %ymm1
-	vperm2f128	$0x31, %ymm15, %ymm13, %ymm3
-
-	vmovupd		%ymm0, 0(%r10)
-	addq		%r11, %r10
-	vmovupd		%ymm1, 0(%r10)
-	addq		%r11, %r10
-	vmovupd		%ymm2, 0(%r10)
-	addq		%r11, %r10
-	vmovupd		%ymm3, 0(%r10)
-//	addq	%r11, %r10
-
-#if MACRO_LEVEL>=1
-	.endm
-#else
-	ret
-
-	FUN_END(inner_tran_store_4x4_lib)
-#endif
-
-
-
-
-
-// common inner routine with file scope
-//
-// store n
-//
-// input arguments:
-// r10  <- D
-// r11  <- ldd
-// ymm0 <- [d00 d11 d22 d33]
-// ymm1 <- [d01 d10 d23 d32]
-// ymm2 <- [d03 d12 d21 d30]
-// ymm3 <- [d02 d13 d20 d31]
-//
-// output arguments:
-
-#if MACRO_LEVEL>=1
 	.macro INNER_STORE_L_4X4_LIB
 #else
 	.p2align 4,,15
@@ -6462,78 +6453,6 @@
 	ret
 
 	FUN_END(inner_store_4x4_vs_lib)
-#endif
-
-
-
-
-
-// common inner routine with file scope
-//
-// store n vs
-//
-// input arguments:
-// r10   <- D
-// r11  <- ldd
-// r12d   <- km
-// r13d   <- kn
-// ymm0  <- [d00 d11 d22 d33]
-// ymm1  <- [d01 d10 d23 d32]
-// ymm2  <- [d03 d12 d21 d30]
-// ymm3  <- [d02 d13 d20 d31]
-//
-// output arguments:
-
-#if MACRO_LEVEL>=1
-	.macro INNER_TRAN_STORE_4X4_VS_LIB
-#else
-	.p2align 4,,15
-	FUN_START(inner_tran_store_4x4_vs_lib)
-#endif
-	
-	vunpcklpd	%ymm1, %ymm0, %ymm12
-	vunpckhpd	%ymm1, %ymm0, %ymm13
-	vunpcklpd	%ymm3, %ymm2, %ymm14
-	vunpckhpd	%ymm3, %ymm2, %ymm15
-
-	vperm2f128	$0x20, %ymm14, %ymm12, %ymm0
-	vperm2f128	$0x31, %ymm14, %ymm12, %ymm2
-	vperm2f128	$0x20, %ymm15, %ymm13, %ymm1
-	vperm2f128	$0x31, %ymm15, %ymm13, %ymm3
-
-	vcvtsi2sd	%r12d, %xmm15, %xmm15
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC02(%rip), %ymm14
-#elif defined(OS_MAC)
-	vmovupd		LC02(%rip), %ymm14
-#endif
-	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
-	vsubpd		%ymm15, %ymm14, %ymm15
-
-	vmaskmovpd	%ymm0, %ymm15, 0(%r10)
-	addq		%r11, %r10
-	cmpl		$2, %r13d
-	jl			0f // end
-	vmaskmovpd	%ymm1, %ymm15, 0(%r10)
-	addq		%r11, %r10
-	cmpl		$3, %r13d
-	jl			0f // end
-	vmaskmovpd	%ymm2, %ymm15, 0(%r10)
-	addq		%r11, %r10
-	cmpl		$3, %r13d
-	je			0f // end
-	vmaskmovpd	%ymm3, %ymm15, 0(%r10)
-//	addq	%r11, %r10
-
-0:
-
-#if MACRO_LEVEL>=1
-	.endm
-#else
-	ret
-
-	FUN_END(inner_tran_store_4x4_vs_lib)
 #endif
 
 
@@ -8792,9 +8711,15 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
 #endif
 
 
@@ -8908,9 +8833,15 @@
 	movq	ARG11, %r13 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_VS_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_vs_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
 #endif
 
 
@@ -9170,9 +9101,15 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
 #endif
 
 
@@ -9286,9 +9223,15 @@
 	movq	ARG11, %r13 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_VS_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_vs_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
 #endif
 
 
@@ -9550,9 +9493,15 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
 #endif
 
 
@@ -9668,9 +9617,15 @@
 	movq	ARG11, %r13 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_VS_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_vs_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
 #endif
 
 
@@ -9932,9 +9887,15 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
 #endif
 
 
@@ -10050,9 +10011,15 @@
 	movq	ARG11, %r13 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_VS_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_vs_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
 #endif
 
 
@@ -10270,9 +10237,15 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
 #endif
 
 
@@ -10286,7 +10259,7 @@
 
 
 
-//                                       1      2              3          4          5             6          7        8          9        10      11
+//                                            1      2              3          4          5             6          7        8          9        10
 // void kernel_dtrmm_nt_rl_4x4_tran_vs_lib444c(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
@@ -10344,9 +10317,15 @@
 	movq	ARG10, %r13   // n1
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_VS_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_vs_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
 #endif
 
 
@@ -10564,9 +10543,15 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
 #endif
 
 
@@ -10638,9 +10623,15 @@
 	movq	ARG10, %r13   // n1
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_VS_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_vs_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
 #endif
 
 
@@ -10902,9 +10893,15 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
 #endif
 
 
@@ -11020,9 +11017,15 @@
 	movq	ARG11, %r13 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_VS_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_vs_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
 #endif
 
 
@@ -11284,9 +11287,15 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
 #endif
 
 
@@ -11402,9 +11411,15 @@
 	movq	ARG11, %r13 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_VS_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_vs_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
 #endif
 
 
@@ -11614,9 +11629,15 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
 #endif
 
 
@@ -11684,9 +11705,15 @@
 	movq	ARG10, %r13   // n1
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_VS_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_vs_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
 #endif
 
 
@@ -11946,9 +11973,15 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
 #endif
 
 
@@ -12062,9 +12095,15 @@
 	movq	ARG11, %r13 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_VS_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_vs_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
 #endif
 
 
@@ -12323,9 +12362,15 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
 #endif
 
 
@@ -12393,9 +12438,15 @@
 	movq	ARG10, %r13   // n1
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_VS_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_vs_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
 #endif
 
 
@@ -12655,9 +12706,15 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
 #endif
 
 
@@ -12771,9 +12828,15 @@
 	movq	ARG11, %r13 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_TRAN_STORE_4X4_VS_LIB
+	INNER_TRAN_4X4_LIB
 #else
-	CALL(inner_tran_store_4x4_vs_lib)
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
 #endif
 
 
