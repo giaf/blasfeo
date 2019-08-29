@@ -96,6 +96,8 @@ void kernel_dgemm_nt_12x4_gen_lib4(int k, double *alpha, double *A, int sda, dou
 void kernel_dgemm_nn_12x4_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd); //
 void kernel_dgemm_nn_12x4_vs_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, int km, int kn); //
 void kernel_dgemm_nn_12x4_gen_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, int offsetC, double *C, int sdc, int offsetD, double *D, int sdd, int m0, int m1, int n0, int n1); //
+void kernel_dgemm_tt_12x4_lib4(int k, double *alpha, int offsetA, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd); //
+void kernel_dgemm_tt_12x4_vs_lib4(int k, double *alpha, int offsetA, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1); //
 void kernel_dsyrk_nn_u_12x4_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd); //
 void kernel_dsyrk_nn_u_12x4_vs_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1); //
 void kernel_dsyrk_nt_l_12x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd); //
@@ -125,6 +127,8 @@ void kernel_dgemm_nt_4x12_lib4(int k, double *alpha, double *A, double *B, int s
 void kernel_dgemm_nt_4x12_vs_lib4(int k, double *alpha, double *A, double *B, int sdb, double *beta, double *C, double *D, int km, int kn); //
 void kernel_dgemm_nn_4x12_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D); //
 void kernel_dgemm_nn_4x12_vs_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1); //
+void kernel_dgemm_tt_4x12_lib4(int k, double *alpha, int offsetA, double *A, int sda, double *B, int sdb, double *beta, double *C, double *D); //
+void kernel_dgemm_tt_4x12_vs_lib4(int k, double *alpha, int offsetA, double *A, int sda, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1); //
 void kernel_dtrsm_nt_rl_inv_4x12_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *E, int sed, double *inv_diag_E);
 void kernel_dtrsm_nt_rl_inv_4x12_vs_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *E, int sed, double *inv_diag_E, int km, int kn);
 // 8x8
@@ -147,6 +151,8 @@ void kernel_dgemm_nt_8x4_gen_lib4(int k, double *alpha, double *A, int sda, doub
 void kernel_dgemm_nn_8x4_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd); //
 void kernel_dgemm_nn_8x4_vs_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1); //
 void kernel_dgemm_nn_8x4_gen_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, int offsetC, double *C, int sdc, int offsetD, double *D, int sdd, int m0, int m1, int n0, int n1); //
+void kernel_dgemm_tt_8x4_lib4(int k, double *alpha, int offsetA, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd); //
+void kernel_dgemm_tt_8x4_vs_lib4(int k, double *alpha, int offsetA, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1); //
 void kernel_dsyrk_nn_u_8x4_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd); //
 void kernel_dsyrk_nn_u_8x4_vs_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1); //
 void kernel_dsyrk_nt_l_8x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd); //
@@ -178,6 +184,8 @@ void kernel_dgemm_nt_4x8_lib4(int k, double *alpha, double *A, double *B, int sd
 void kernel_dgemm_nt_4x8_vs_lib4(int k, double *alpha, double *A, double *B, int sdb, double *beta, double *C, double *D, int km, int kn); //
 void kernel_dgemm_nn_4x8_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D); //
 void kernel_dgemm_nn_4x8_vs_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1); //
+void kernel_dgemm_tt_4x8_lib4(int k, double *alpha, int offsetA, double *A, int sda, double *B, int sdb, double *beta, double *C, double *D); //
+void kernel_dgemm_tt_4x8_vs_lib4(int k, double *alpha, int offsetA, double *A, int sda, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1); //
 void kernel_dtrsm_nt_rl_inv_4x8_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *E, int sed, double *inv_diag_E);
 void kernel_dtrsm_nt_rl_inv_4x8_vs_lib4(int k, double *A, double *B, int sdb, double *C, double *D, double *E, int sed, double *inv_diag_E, int km, int kn);
 // 8x2
@@ -209,6 +217,9 @@ void kernel_dgemm_nt_4x4_gen_lib4(int k, double *alpha, double *A, double *B, do
 void kernel_dgemm_nn_4x4_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D); //
 void kernel_dgemm_nn_4x4_vs_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1); //
 void kernel_dgemm_nn_4x4_gen_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, int offsetC, double *C, int sdc, int offsetD, double *D, int sdd, int m0, int m1, int n0, int n1); //
+void kernel_dgemm_tt_4x4_lib4(int k, double *alpha, int offsetA, double *A, int sda, double *B, double *beta, double *C, double *D); //
+void kernel_dgemm_tt_4x4_vs_lib4(int k, double *alpha, int offsetA, double *A, int sda, double *B, double *beta, double *C, double *D, int m1, int n1); //
+void kernel_dgemm_tt_4x4_gen_lib4(int k, double *alpha, int offsetA, double *A, int sda, double *B, double *beta, int offsetC, double *C, int sdc, int offsetD, double *D, int sdd, int m0, int m1, int n0, int n1); //
 void kernel_dsyrk_nn_u_4x4_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D); //
 void kernel_dsyrk_nn_u_4x4_vs_lib4(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1); //
 void kernel_dsyrk_nt_l_4x4_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D); //

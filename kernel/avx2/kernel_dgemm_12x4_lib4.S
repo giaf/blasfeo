@@ -12340,6 +12340,322 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 
 
 
+//                               1      2              3          4        5            6          7        8             9          10
+// void kernel_dgemm_tt_4x12_lib4(int k, double *alpha, int offsetA, double *A, int sda, double *B, int sdb, double *beta, double *C, double *D);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemm_tt_4x12_lib4)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG6, %r11 // B
+	movq	ARG7, %r12 // sdb
+	sall	$5, %r12d // 4*sdb*sizeof(double)
+	movq	ARG4, %r13 // A
+	movq	ARG5, %r14 // sda
+	sall	$5, %r14d // 4*sda*sizeof(double)
+	movq	ARG3, %r15 // offsetA
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGEMM_NN_12X4_LIB4
+#else
+	CALL(inner_edge_dgemm_nn_12x4_lib4)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_12X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nn_12x4_lib4)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_12X4_LIB4
+#else
+	CALL(inner_tran_12x4_lib4)
+#endif
+
+
+	// call inner scale
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG8, %r11 // beta
+	movq	ARG9, %r12 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X12_LIB4
+#else
+	CALL(inner_scale_ab_4x12_lib4)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X12_LIB4
+#else
+	CALL(inner_store_4x12_lib4)
+#endif
+
+
+	EPILOGUE
+	
+	ret
+
+	FUN_END(kernel_dgemm_tt_4x12_lib4)
+
+
+
+
+
+//                               1      2              3          4            5          6        7             8          9        10         11
+// void kernel_dgemm_tt_12x4_lib4(int k, double *alpha, int offsetA, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemm_tt_12x4_lib4)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG6, %r11  // B
+	movq	ARG4, %r12  // A
+	movq	ARG5, %r13 // sda
+	sall	$5, %r13d // 4*sda*sizeof(double)
+	movq	ARG3, %r14 // offsetA
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGEMM_NN_4X12_LIB4
+#else
+	CALL(inner_edge_dgemm_nn_4x12_lib4)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X12_LIB4
+#else
+	CALL(inner_kernel_dgemm_nn_4x12_lib4)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_12X4_LIB4
+#else
+	CALL(inner_tran_12x4_lib4)
+#endif
+
+
+	// call inner blend 
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+	movq	ARG9, %r13 // sdc
+	sall	$5, %r13d // 4*sdc*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_12X4_LIB4
+#else
+	CALL(inner_scale_ab_12x4_lib4)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // sdd
+	sall	$5, %r11d // 4*sdd*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_12X4_LIB4
+#else
+	CALL(inner_store_12x4_lib4)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dgemm_tt_12x4_lib4)
+
+
+
+
+
+//                                  1      2              3          4        5            6          7        8             9          10         11      12
+// void kernel_dgemm_tt_4x12_vs_lib4(int k, double *alpha, int offsetA, double *A, int sda, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemm_tt_4x12_vs_lib4)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG6, %r11 // B
+	movq	ARG7, %r12 // sdb
+	sall	$5, %r12d // 4*sdb*sizeof(double)
+	movq	ARG4, %r13 // A
+	movq	ARG5, %r14 // sda
+	sall	$5, %r14d // 4*sda*sizeof(double)
+	movq	ARG3, %r15 // offsetA
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGEMM_NN_12X4_LIB4
+#else
+	CALL(inner_edge_dgemm_nn_12x4_lib4)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_12X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nn_12x4_lib4)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_12X4_LIB4
+#else
+	CALL(inner_tran_12x4_lib4)
+#endif
+
+
+	// call inner scale
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG8, %r11 // beta
+	movq	ARG9, %r12 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X12_LIB4
+#else
+	CALL(inner_scale_ab_4x12_lib4)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // km 
+	movq	ARG12, %r12 // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X12_VS_LIB4
+#else
+	CALL(inner_store_4x12_vs_lib4)
+#endif
+
+
+	EPILOGUE
+	
+	ret
+
+	FUN_END(kernel_dgemm_tt_4x12_vs_lib4)
+
+
+
+
+
+//                                  1      2              3          4            5          6        7             8          9          10      11        12     13
+// void kernel_dgemm_tt_12x4_vs_lib4(int k, double *alpha, int offsetA, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemm_tt_12x4_vs_lib4)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG6, %r11  // B
+	movq	ARG4, %r12  // A
+	movq	ARG5, %r13 // sda
+	sall	$5, %r13d // 4*sda*sizeof(double)
+	movq	ARG3, %r14 // offsetA
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGEMM_NN_4X12_LIB4
+#else
+	CALL(inner_edge_dgemm_nn_4x12_lib4)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_4X12_LIB4
+#else
+	CALL(inner_kernel_dgemm_nn_4x12_lib4)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_12X4_LIB4
+#else
+	CALL(inner_tran_12x4_lib4)
+#endif
+
+
+	// call inner blend 
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+	movq	ARG9, %r13 // sdc
+	sall	$5, %r13d // 4*sdc*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_12X4_LIB4
+#else
+	CALL(inner_scale_ab_12x4_lib4)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // sdc
+	sall	$5, %r11d // 4*sdc*sizeof(double)
+	movq	ARG12, %r12 // m1
+	movq	ARG13, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_12X4_LIB4
+#else
+	CALL(inner_store_12x4_lib4)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dgemm_tt_12x4_vs_lib4)
+
+
+
+
+
 //                                  1      2              3          4        5            6          7        8             9          10       11         12
 // void kernel_dsyrk_nn_u_12x4_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd);
 
