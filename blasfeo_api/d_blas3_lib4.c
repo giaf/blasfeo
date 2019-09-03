@@ -1933,7 +1933,7 @@ tn_1_return:
 
 
 // dgemm_tt
-#if 0
+#if defined(TARGET_X64_INTEL_HASWELL)
 void blasfeo_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	if(m<=0 || n<=0)
@@ -2011,33 +2011,33 @@ select_loop:
 
 	// clean up at the beginning
 clear_bir:
-#if 0//defined(TARGET_X64_INTEL_HASWELL)
-	if(air+m>8)
+#if defined(TARGET_X64_INTEL_HASWELL)
+	if(bir+n>8) // (m>9)
 		{
-		j = 0;
-		for(; j<n; j+=4)
+		i = 0;
+		for(; i<m; i+=4)
 			{
-			kernel_dgemm_nn_12x4_gen_lib4(k, &alpha, &pA[0], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
+			kernel_dgemm_tt_4x12_gen_lib4(k, &alpha, offsetA, &pA[i*ps], sda, &pB[0], sdb, &beta, offsetC, &pC[i*sdc], sdc, offsetD, &pD[i*sdd], sdd, 0, m-i, bir, bir+n);
 			}
-		m -= 3*ps-air;
-		pA += 3*ps*sda;
-		pC += 3*ps*sdc;
-		pD += 3*ps*sdd;
+		n -= 3*ps-bir;
+		pB += 3*ps*sdb;
+		pC += 3*4*ps;
+		pD += 3*4*ps;
 		}
-	else // air+m<=8
+	else // bir+n<=8
 #endif
-#if 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
-	if(air+m>4) // (m>5)
+#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	if(bir+n>4) // (m>5)
 		{
-		j = 0;
-		for(; j<n; j+=4)
+		i = 0;
+		for(; i<m; i+=4)
 			{
-			kernel_dgemm_nn_8x4_gen_lib4(k, &alpha, &pA[0], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
+			kernel_dgemm_tt_4x8_gen_lib4(k, &alpha, offsetA, &pA[i*ps], sda, &pB[0], sdb, &beta, offsetC, &pC[i*sdc], sdc, offsetD, &pD[i*sdd], sdd, 0, m-i, bir, bir+n);
 			}
-		m -= 2*ps-air;
-		pA += 2*ps*sda;
-		pC += 2*ps*sdc;
-		pD += 2*ps*sdd;
+		n -= 2*ps-bir;
+		pB += 2*ps*sdb;
+		pC += 2*4*ps;
+		pD += 2*4*ps;
 		}
 	else // air+m<=4 // m-i<=4
 		{
@@ -2049,9 +2049,9 @@ clear_bir:
 			}
 		n -= 1*ps-bir;
 		pB += 1*ps*sdb;
-		pC += 4*ps;
-		pD += 4*ps;
-#if 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+		pC += 1*4*ps;
+		pD += 1*4*ps;
+#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		// nothing more to do
 		}
 #endif
