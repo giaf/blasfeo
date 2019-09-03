@@ -11766,8 +11766,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 	subl	%r15d, %eax
 	movl	%eax, %r15d
 
-//	cmpl	$0, %r15d
-//	jle		4f
+	cmpl	$0, %r15d
+	jle		4f
 
 
 	cmpl	$0, %r10d
@@ -11776,12 +11776,26 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 	// offset==0
 
 	vmaskmovpd	%ymm0, %ymm15, 0(%r11)
+	cmpl		$2, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm1, %ymm15, 32(%r11)
+	cmpl		$3, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm2, %ymm15, 64(%r11)
+	cmpl		$4, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm3, %ymm15, 96(%r11)
+	cmpl		$5, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm4, %ymm15, 128(%r11)
+	cmpl		$6, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm5, %ymm15, 160(%r11)
+	cmpl		$7, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm6, %ymm15, 192(%r11)
+	cmpl		$8, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm7, %ymm15, 224(%r11)
 	cmpl		$9, %r15d
 	jl			4f // end
@@ -11957,18 +11971,32 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12)
+	cmpl		$2, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
 	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12)
+	cmpl		$3, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
 	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12)
+	cmpl		$4, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm3, %ymm12, 96(%r11)
 	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12)
+	cmpl		$5, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm4, %ymm12, 128(%r11)
 	vmaskmovpd	%ymm4, %ymm13, 128(%r11, %r12)
+	cmpl		$6, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm5, %ymm12, 160(%r11)
 	vmaskmovpd	%ymm5, %ymm13, 160(%r11, %r12)
+	cmpl		$7, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm6, %ymm12, 192(%r11)
 	vmaskmovpd	%ymm6, %ymm13, 192(%r11, %r12)
+	cmpl		$8, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm7, %ymm12, 224(%r11)
 	vmaskmovpd	%ymm7, %ymm13, 224(%r11, %r12)
 	cmpl		$9, %r15d
@@ -13347,9 +13375,9 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 	movq	ARG13, %r13 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_12X4_LIB4
+	INNER_STORE_12X4_VS_LIB4
 #else
-	CALL(inner_store_12x4_lib4)
+	CALL(inner_store_12x4_vs_lib4)
 #endif
 
 

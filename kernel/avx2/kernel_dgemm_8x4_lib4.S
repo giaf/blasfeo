@@ -8754,8 +8754,8 @@ NAME:
 	subl	%r15d, %eax
 	movl	%eax, %r15d
 
-//	cmpl	$0, %r15d
-//	jle		4f
+	cmpl	$0, %r15d
+	jle		4f
 
 
 	cmpl	$0, %r10d
@@ -8764,8 +8764,14 @@ NAME:
 	// offset==0
 
 	vmaskmovpd	%ymm0, %ymm15, 0(%r11)
+	cmpl		$2, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm1, %ymm15, 32(%r11)
+	cmpl		$3, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm2, %ymm15, 64(%r11)
+	cmpl		$4, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm3, %ymm15, 96(%r11)
 	cmpl		$5, %r15d
 	jl			4f // end
@@ -8909,10 +8915,16 @@ NAME:
 
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
 	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12)
+	cmpl		$2, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
 	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12)
+	cmpl		$3, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
 	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12)
+	cmpl		$4, %r15d
+	jl			4f // end
 	vmaskmovpd	%ymm3, %ymm12, 96(%r11)
 	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12)
 	cmpl		$5, %r15d
@@ -10694,9 +10706,9 @@ NAME:
 	movq	ARG13, %r13 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_8X4_LIB4
+	INNER_STORE_8X4_VS_LIB4
 #else
-	CALL(inner_store_8x4_lib4)
+	CALL(inner_store_8x4_vs_lib4)
 #endif
 
 
