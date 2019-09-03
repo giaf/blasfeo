@@ -2185,18 +2185,18 @@ loop_00:
 	// main loop C, D not aligned
 loop_CD:
 	j = 0;
-#if 0//defined(TARGET_X64_INTEL_HASWELL)
-	for(; i<m-8; i+=12)
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; j<n-8; j+=12)
 		{
-		j = 0;
-		for(; j<n; j+=4)
+		i = 0;
+		for(; i<m; i+=4)
 			{
-			kernel_dgemm_nn_12x4_gen_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			kernel_dgemm_tt_4x12_gen_lib4(k, &alpha, offsetA, &pA[i*ps], sda, &pB[j*sdb], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
 			}
 		}
-	if(m>i)
+	if(n>j)
 		{
-		if(m-i<=4)
+		if(n-j<=4)
 			{
 			goto left_4_g;
 			}
@@ -2206,15 +2206,15 @@ loop_CD:
 			}
 		}
 #elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	for(; i<m-4; i+=8)
+	for(; j<n-4; j+=8)
 		{
-		j = 0;
-		for(; j<n; j+=4)
+		i = 0;
+		for(; i<m; i+=4)
 			{
-			kernel_dgemm_nn_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			kernel_dgemm_tt_4x8_gen_lib4(k, &alpha, offsetA, &pA[i*ps], sda, &pB[j*sdb], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
 			}
 		}
-	if(m>i)
+	if(n>j)
 		{
 		goto left_4_g;
 		}
@@ -2235,12 +2235,12 @@ loop_CD:
 
 	// clean up loops definitions
 
-#if 0//defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL)
 	left_12_g:
-	j = 0;
-	for(; j<n; j+=4)
+	i = 0;
+	for(; i<m; i+=4)
 		{
-		kernel_dgemm_nn_12x4_gen_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+		kernel_dgemm_tt_4x12_gen_lib4(k, &alpha, offsetA, &pA[i*ps], sda, &pB[j*sdb], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
 		}
 	return;
 #endif
@@ -2259,19 +2259,19 @@ loop_CD:
 
 
 
-#if 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	left_8_g:
-	j = 0;
-	for(; j<n; j+=4)
+	i = 0;
+	for(; i<m; i+=4)
 		{
-		kernel_dgemm_nn_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+		kernel_dgemm_tt_4x8_gen_lib4(k, &alpha, offsetA, &pA[i*ps], sda, &pB[j*sdb], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
 		}
 	return;
 #endif
 
 
 
-#if 1//defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	left_8:
 	i = 0;
 	for(; i<m; i+=4)
