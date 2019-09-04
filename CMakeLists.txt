@@ -47,10 +47,32 @@ set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A7 CACHE STRING "Target architecture")
 # set(TARGET GENERIC)
 
+# Populate a list of allowable targets and link it to the option
+set(ALLOWED_TARGETS
+		X64_INTEL_HASWELL
+		X64_INTEL_SANDY_BRIDGE
+		X64_INTEL_CORE
+		X64_AMD_BULLDOZER
+		ARMV8A_ARM_CORTEX_A57
+		ARMV8A_ARM_CORTEX_A53
+		ARMV7A_ARM_CORTEX_A15
+		ARMV7A_ARM_CORTEX_A7
+		GENERIC
+		)
+set_property(CACHE TARGET PROPERTY STRINGS ${ALLOWED_TARGETS})
+
 # Linear Algebra backend
 set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
 # set(LA REFERENCE CACHE STRING "Linear algebra backend")
 # set(LA BLAS CACHE STRING "Linear algebra backend")
+
+# Populate the list of allowed LA backends and link it to the option
+set(ALLOWED_BACKENDS
+	  HIGH_PERFORMANCE
+	  REFERENCE
+	  BLAS
+	  )
+set_property(CACHE LA PROPERTY STRINGS ${ALLOWED_BACKENDS})
 
 # BLAS and LAPACK version (for LA=BLAS in BLASFEO or for BLASFEO_BENCHMARS=ON)
 set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
@@ -59,6 +81,25 @@ set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
 # set(EXTERNAL_BLAS MKL CACHE STRING "Reference blas to use")
 # set(EXTERNAL_BLAS BLIS CACHE STRING "Reference blas to use")
 # set(EXTERNAL_BLAS ATLAS CACHE STRING "Reference blas to use")
+
+# Populate the list of allowed exernal BLAS tools and link it to the option
+set(ALLOWED_EXTERNAL_BLAS
+		0
+		OPENBLAS
+		NETLIB
+		MKL
+		BLIS
+		ATLAS
+		)
+set_property(CACHE EXTERNAL_BLAS PROPERTY STRINGS ${ALLOWED_EXTERNAL_BLAS})
+
+# Pass the allowed items up to the parent scope (if there is one)
+# This is detected by comparing the project name to the one set earlier in this file
+if(NOT ${CMAKE_PROJECT_NAME} STREQUAL blasfeo)
+	set(BLASFEO_ALLOWED_TARGETS ${ALLOWED_TARGETS} PARENT_SCOPE)
+	set(BLASFEO_ALLOWED_BACKENDS ${ALLOWED_BACKENDS} PARENT_SCOPE)
+	set(BLASFEO_ALLOWED_EXTERNAL_BLAS ${ALLOWED_EXTERNAL_BLAS} PARENT_SCOPE)
+endif()
 
 # Stack buffer size (malloc for larger)
 set(K_MAX_STACK 300 CACHE STRING "Maximum k value using stack memory")
