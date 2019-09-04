@@ -61,6 +61,11 @@ set(ALLOWED_TARGETS
 		)
 set_property(CACHE TARGET PROPERTY STRINGS ${ALLOWED_TARGETS})
 
+list(FIND ALLOWED_TARGETS ${TARGET} isvalid)
+if(${isvalid} EQUAL -1)
+	message(FATAL_ERROR "Target ${TARGET} is not supported")
+endif()
+
 # Linear Algebra backend
 set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
 # set(LA REFERENCE CACHE STRING "Linear algebra backend")
@@ -73,6 +78,11 @@ set(ALLOWED_BACKENDS
 	  BLAS
 	  )
 set_property(CACHE LA PROPERTY STRINGS ${ALLOWED_BACKENDS})
+
+list(FIND ALLOWED_BACKENDS ${LA} isvalid)
+if(${isvalid} EQUAL -1)
+	message(FATAL_ERROR "LA backend ${LA} is not supported")
+endif()
 
 # BLAS and LAPACK version (for LA=BLAS in BLASFEO or for BLASFEO_BENCHMARS=ON)
 set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
@@ -92,6 +102,11 @@ set(ALLOWED_EXTERNAL_BLAS
 		ATLAS
 		)
 set_property(CACHE EXTERNAL_BLAS PROPERTY STRINGS ${ALLOWED_EXTERNAL_BLAS})
+
+list(FIND ALLOWED_EXTERNAL_BLAS ${EXTERNAL_BLAS} isvalid)
+if(${isvalid} EQUAL -1)
+	message(FATAL_ERROR "External BLAS ${EXTERNAL_BLAS} is not supported")
+endif()
 
 # Pass the allowed items up to the parent scope (if there is one)
 # This is detected by comparing the project name to the one set earlier in this file
