@@ -49,6 +49,7 @@ set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")
 
 # Populate a list of allowable targets and link it to the option
 set(ALLOWED_TARGETS
+		X64_AUTOMATIC
 		X64_INTEL_HASWELL
 		X64_INTEL_SANDY_BRIDGE
 		X64_INTEL_CORE
@@ -60,6 +61,19 @@ set(ALLOWED_TARGETS
 		GENERIC
 		)
 set_property(CACHE TARGET PROPERTY STRINGS ${ALLOWED_TARGETS})
+
+# This list contains the targets to try when the user sets the target to
+# X64_AUTOMATIC. The order they appear in this list is the order in which
+# they are tested, and the first working (both compile and run) will be
+# selected for use
+set(X64_AUTOMATIC_TARGETS
+		X64_INTEL_HASWELL
+		X64_AMD_BULLDOZER
+		X64_INTEL_SANDY_BRIDGE
+		X64_INTEL_CORE
+		GENERIC
+		)
+
 
 list(FIND ALLOWED_TARGETS ${TARGET} isvalid)
 if(${isvalid} EQUAL -1)
@@ -268,10 +282,21 @@ set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A15  "-mfpu=neon-vfpv4")
 set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A7   "-mfpu=neon-vfpv4")
 set(ASM_FLAGS_TARGET_GENERIC                "")
 
-add_subdirectory(cmake)
+
+if(${TARGET} MATCHES X64_AUTOMATIC)
+	include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/X64AutomaticTargetSelection.cmake)
+	X64AutomaticTargetSelection()
+	message(STATUS "Detected target ${TARGET}")
+else()
+	include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/TestSingleTarget.cmake)
+	TestSingleTarget()
+	message(STATUS "Compiling for target: ${TARGET}")
+endif()
+
+
+
 
 # Append the appropriate flags based on the architecture and compiler
-message(STATUS "Compiling for target: ${TARGET}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_${TARGET}")
 set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_${TARGET}")
 

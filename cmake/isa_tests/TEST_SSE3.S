@@ -15,7 +15,7 @@ test_sse3:
 #endif
 
   // Call the ADDSUBPD function to see if it works
-  // The actual values in the registers don't matter, so just pick three
+  // The actual values in the registers don't matter, so just pick two
   addsubpd %xmm1, %xmm0
 
   ret
