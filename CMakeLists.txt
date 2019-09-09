@@ -47,10 +47,32 @@ set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A7 CACHE STRING "Target architecture")
 # set(TARGET GENERIC)
 
+# Populate a list of allowable targets and link it to the option
+set(ALLOWED_TARGETS
+		X64_INTEL_HASWELL
+		X64_INTEL_SANDY_BRIDGE
+		X64_INTEL_CORE
+		X64_AMD_BULLDOZER
+		ARMV8A_ARM_CORTEX_A57
+		ARMV8A_ARM_CORTEX_A53
+		ARMV7A_ARM_CORTEX_A15
+		ARMV7A_ARM_CORTEX_A7
+		GENERIC
+		)
+set_property(CACHE TARGET PROPERTY STRINGS ${ALLOWED_TARGETS})
+
 # Linear Algebra backend
 set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
 # set(LA REFERENCE CACHE STRING "Linear algebra backend")
 # set(LA BLAS CACHE STRING "Linear algebra backend")
+
+# Populate the list of allowed LA backends and link it to the option
+set(ALLOWED_BACKENDS
+	  HIGH_PERFORMANCE
+	  REFERENCE
+	  BLAS
+	  )
+set_property(CACHE LA PROPERTY STRINGS ${ALLOWED_BACKENDS})
 
 # BLAS and LAPACK version (for LA=BLAS in BLASFEO or for BLASFEO_BENCHMARS=ON)
 set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
@@ -59,6 +81,25 @@ set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
 # set(EXTERNAL_BLAS MKL CACHE STRING "Reference blas to use")
 # set(EXTERNAL_BLAS BLIS CACHE STRING "Reference blas to use")
 # set(EXTERNAL_BLAS ATLAS CACHE STRING "Reference blas to use")
+
+# Populate the list of allowed exernal BLAS tools and link it to the option
+set(ALLOWED_EXTERNAL_BLAS
+		0
+		OPENBLAS
+		NETLIB
+		MKL
+		BLIS
+		ATLAS
+		)
+set_property(CACHE EXTERNAL_BLAS PROPERTY STRINGS ${ALLOWED_EXTERNAL_BLAS})
+
+# Pass the allowed items up to the parent scope (if there is one)
+# This is detected by comparing the project name to the one set earlier in this file
+if(NOT ${CMAKE_PROJECT_NAME} STREQUAL blasfeo)
+	set(BLASFEO_ALLOWED_TARGETS ${ALLOWED_TARGETS} PARENT_SCOPE)
+	set(BLASFEO_ALLOWED_BACKENDS ${ALLOWED_BACKENDS} PARENT_SCOPE)
+	set(BLASFEO_ALLOWED_EXTERNAL_BLAS ${ALLOWED_EXTERNAL_BLAS} PARENT_SCOPE)
+endif()
 
 # Stack buffer size (malloc for larger)
 set(K_MAX_STACK 300 CACHE STRING "Maximum k value using stack memory")
@@ -94,6 +135,11 @@ configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 # set(CC_COMPILER gcc CACHE STRING "compiler")
 # set(CC_COMPILER clang)
 # set(CC_COMPILER x86_64-w64-mingw32-gcc)
+if(CMAKE_C_COMPILER_ID MATCHES MSVC)
+	if(NOT ${TARGET} MATCHES GENERIC)
+		message( FATAL_ERROR "MSVC compiler only supported for TARGET=GENERIC")
+	endif()
+endif()
 
 # build shared library
 set(BUILD_SHARED_LIBS OFF CACHE STRING "Build shared libraries")
@@ -240,7 +286,7 @@ if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV8A_ARM_CORTEX_A57")
 	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV8A_ARM_CORTEX_A57")
 	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc+crypto+fp+simd")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc+crypto+simd")
 	endif()
 endif()
 
@@ -248,7 +294,7 @@ if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV8A_ARM_CORTEX_A53")
 	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV8A_ARM_CORTEX_A53")
 	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc+crypto+fp+simd")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc+crypto+simd")
 	endif()
 endif()
 
@@ -283,6 +329,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES X64_INTEL_HASWELL)
 
 		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib8.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib48.c
@@ -348,6 +395,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
 
 		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib8.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib48.c
@@ -377,6 +425,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_16x4_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x8_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x4_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_8x4_lib8.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_diag_lib8.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_8_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_4_lib8.S
@@ -411,6 +460,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES X64_INTEL_CORE)
 
 		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
@@ -460,6 +510,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES X64_AMD_BULLDOZER)
 
 		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
@@ -509,6 +560,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
 
 		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
@@ -564,14 +616,20 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53)
 
 		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
 			)
 
 		file(GLOB KERNEL_SRC
+
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_12x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_8x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dpack_lib4.S
+
+
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
@@ -619,6 +677,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
 
 		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
@@ -671,6 +730,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
 
 		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
@@ -723,6 +783,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES GENERIC)
 
 		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
@@ -771,6 +832,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 
 	file(GLOB AUX_SRC
+		${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib.c
 		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib.c
 		${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib.c
@@ -828,6 +890,10 @@ set(BLASFEO_SRC ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
 
 # add library
 add_library(blasfeo ${BLASFEO_SRC})
+
+if(EMBEDDED_TARGET MATCHES XILINX_NONE_ELF )
+	target_link_libraries(blasfeo PUBLIC -Wl,--start-group xil c gcc -Wl,--end-group)
+endif()
 
 
 target_include_directories(blasfeo

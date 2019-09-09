@@ -62,7 +62,7 @@ int main()
 
 	double *A = malloc(n*n*sizeof(double));
 	for(ii=0; ii<n*n; ii++)
-		A[ii] = ii;
+		A[ii] = ii+1;
 	int lda = n;
 //	d_print_mat(n, n, A, n);
 
@@ -78,6 +78,12 @@ int main()
 	for(ii=0; ii<n*n; ii++)
 		C[ii] = -1;
 	int ldc = n;
+//	d_print_mat(n, n, C, ldc);
+
+	double *C2 = malloc(n*n*sizeof(double));
+	for(ii=0; ii<n*n; ii++)
+		C2[ii] = -1;
+//	int ldc = n;
 //	d_print_mat(n, n, C, ldc);
 
 	double *D = malloc(n*n*sizeof(double));
@@ -104,13 +110,13 @@ int main()
 	double beta = 1.0;
 
 	char ta = 'n';
-	char tb = 't';
+	char tb = 'n';
 	char uplo = 'u';
 	int info = 0;
 
 	int m0 = 11;
 	int n0 = 11;
-	int k0 = 11;
+	int k0 = 8;
 
 
 
@@ -140,7 +146,7 @@ int main()
 #endif
 
 #if 0
-	dgemm_(&c_n, &c_t, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
+	dgemm_(&c_t, &c_t, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C, &n);
 #endif
 
 #if 0
@@ -153,13 +159,13 @@ int main()
 #endif
 
 #if 1
-	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-//	dtrmm_(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
+	for(ii=0; ii<n*n;  ii++) C[ii] = A[ii];
+	dtrmm_(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
 //	dtrmm_(&c_l, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
 //	dtrmm_(&c_l, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
 //	dtrmm_(&c_l, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
 //	dtrmm_(&c_l, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-	dtrmm_(&c_l, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
+//	dtrmm_(&c_l, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
 //	dtrmm_(&c_l, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
 //	dtrmm_(&c_l, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
 //	dtrmm_(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
@@ -185,6 +191,7 @@ int main()
 #endif
 
 //	printf("\ninfo %d\n", info);
+//	d_print_mat(n, n, A, lda);
 //	d_print_mat(n, n, B, ldb);
 	d_print_mat(n, n, C, ldc);
 //	d_print_mat(n, n, D, ldd);
@@ -201,7 +208,7 @@ int main()
 
 	// blasfeo blas
 
-	for(ii=0; ii<n*n; ii++) C[ii] = -1;
+	for(ii=0; ii<n*n; ii++) C2[ii] = -1;
 
 #if 0
 //	blasfeo_dgemm(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
@@ -215,7 +222,7 @@ int main()
 #endif
 
 #if 0
-	blasfeo_dgemm(&c_n, &c_t, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
+	blasfeo_dgemm(&c_t, &c_t, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C, &n);
 #endif
 
 #if 0
@@ -228,23 +235,23 @@ int main()
 #endif
 
 #if 1
-	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-//	blasfeo_dtrmm(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_l, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_l, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_l, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_l, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-	blasfeo_dtrmm(&c_l, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_l, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_l, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
-//	blasfeo_dtrmm(&c_r, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
+	for(ii=0; ii<n*n;  ii++) C2[ii] = A[ii];
+	blasfeo_dtrmm(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_dtrmm(&c_l, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_dtrmm(&c_l, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_dtrmm(&c_l, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_dtrmm(&c_l, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_dtrmm(&c_l, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_dtrmm(&c_l, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_dtrmm(&c_l, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_dtrmm(&c_r, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_dtrmm(&c_r, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_dtrmm(&c_r, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_dtrmm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_dtrmm(&c_r, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_dtrmm(&c_r, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
 #endif
 
 #if 0
@@ -262,7 +269,7 @@ int main()
 //	printf("\ninfo %d\n", info);
 //	d_print_mat(n, n, A, lda);
 //	d_print_mat(n, n, B, ldb);
-	d_print_mat(n, n, C, ldc);
+	d_print_mat(n, n, C2, ldc);
 //	d_print_mat(n, n, D, ldd);
 
 #if 0
@@ -274,11 +281,18 @@ int main()
 	int_print_mat(1, n, ipiv, 1);
 #endif
 
+	// compute and print difference
+	for(ii=0; ii<n*n; ii++)
+		C2[ii] -= C[ii];
+
+	d_print_mat(n, n, C2, ldc);
+
 	// free memory
 
 	free(A);
 	free(B);
 	free(C);
+	free(C2);
 	free(D);
 	free(ipiv);
 

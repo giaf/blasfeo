@@ -138,7 +138,7 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 ************************************************/
 ln:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=100 | k>=100 | k>K_MAX_STACK)
+	if(m>=200 | k>=200 | k>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | k>=64 | k>K_MAX_STACK)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
@@ -425,7 +425,7 @@ lt_0_return:
 ************************************************/
 un:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=108 | k>=108 | k>K_MAX_STACK)
+	if(m>=200 | k>=200 | k>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | k>=64 | k>K_MAX_STACK)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)

@@ -155,6 +155,10 @@ COMPLEMENT_WITH_NETLIB_LAPACK = 0
 CBLAS_API = 0
 # CBLAS_API = 1
 
+#Compile the LAPACKE API from Netlib
+LAPACKE_API = 0
+# LAPACKE_API = 1
+
 
 
 #################################################
@@ -296,6 +300,12 @@ $(error Cannot expose non-FORTRAN style BLAS_API when building CBLAS_API)
 endif
 endif
 
+ifeq ($(LAPACKE_API), 1) 
+ifeq ($(FORTRAN_BLAS_API), 0)
+$(error Cannot expose non-FORTRAN style BLAS_API when building LAPACKE_API)
+endif
+endif
+
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
 ifeq ($(FORTRAN_BLAS_API), 0)
 $(error Cannot expose non-FORTRAN style BLAS_API when complementing with Netlib BLAS)
@@ -309,9 +319,11 @@ endif
 endif
 
 STACK_SIZE := $(shell ulimit -s)
+ifneq ($(STACK_SIZE), unlimited)
 STACK_SIZE_EXCEEDED := $(shell echo $(K_MAX_STACK)*12*8*2 \> $(STACK_SIZE)*1024 | bc )
 ifeq ($(STACK_SIZE_EXCEEDED), 1)
 $(error stack size likely to be exceeded, please decrease the value of K_MAX_STACK )
+endif
 endif
 CFLAGS  += -DK_MAX_STACK=$(K_MAX_STACK)
 
@@ -424,11 +436,11 @@ CFLAGS  += -m32 -msse3 -DTARGET_X86_AMD_BARCELONA
 ASFLAGS += -m32 -msse3 -DTARGET_X86_AMD_BARCELONA
 endif
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
-CFLAGS  += -march=armv8-a+crc+crypto+fp+simd -DTARGET_ARMV8A_ARM_CORTEX_A57
+CFLAGS  += -march=armv8-a+crc+crypto+simd -DTARGET_ARMV8A_ARM_CORTEX_A57
 ASFLAGS += -DTARGET_ARMV8A_ARM_CORTEX_A57
 endif
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
-CFLAGS  += -march=armv8-a+crc+crypto+fp+simd -DTARGET_ARMV8A_ARM_CORTEX_A53
+CFLAGS  += -march=armv8-a+crc+crypto+simd -DTARGET_ARMV8A_ARM_CORTEX_A53
 ASFLAGS += -DTARGET_ARMV8A_ARM_CORTEX_A53
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)

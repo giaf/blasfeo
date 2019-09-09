@@ -29,6 +29,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+
+#include "../include/blasfeo_stdlib.h"
+
 #if 0
 #include <malloc.h>
 #endif
@@ -54,20 +57,7 @@ void int_zeros(int **pA, int row, int col)
 /* creates a zero matrix aligned to a cache line */
 void int_zeros_align(int **pA, int row, int col)
 	{
-#if defined(OS_WINDOWS)
-	*pA = (int *) _aligned_malloc( (row*col)*sizeof(int), 64 );
-#elif defined(__DSPACE__)
-	*pA = malloc((row*col)*sizeof(int));
-#else
-	void *temp;
-	int err = posix_memalign(&temp, 64, (row*col)*sizeof(int));
-	if(err!=0)
-		{
-		printf("Memory allocation error");
-		exit(1);
-		}
-	*pA = temp;
-#endif
+	blasfeo_malloc_align((void **) pA, (row*col)*sizeof(int));
 	int *A = *pA;
 	int i;
 	for(i=0; i<row*col; i++) A[i] = 0.0;
@@ -86,11 +76,7 @@ void int_free(int *pA)
 /* frees aligned matrix */
 void int_free_align(int *pA)
 	{
-#if defined(OS_WINDOWS)
-	_aligned_free( pA );
-#else
-	free( pA );
-#endif
+	blasfeo_free_align(pA);
 	}
 
 

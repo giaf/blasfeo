@@ -99,6 +99,15 @@ $(LAPACK_DIR):
 	tar -xzf $(LAPACK_NETLIB).tar.gz -C $(LAPACK_DIR) --strip-components 1
 
 
+obj_lapacke: obj_lapack
+	@echo "compiling LAPACKE ..."
+	@echo "CFLAGS = $(CFLAGS)" >> $(LAPACK_DIR)/make.inc
+	# XXX hack to fix a bug in lapacke in lapack-3.8.0
+	sed -i 's/OBJ_B = \\/OBJ_B = lapacke_dsytrf_aa_work.o lapacke_ssytrf_aa_work.o \\/g' $(LAPACK_DIR)/LAPACKE/src/Makefile
+	# XXX hack till here
+	(cd $(LAPACK_DIR); $(MAKE) lapackelib)
+
+
 clean:
 ifneq ($(wildcard $(BLAS_DIR)), )
 	make -C $(BLAS_DIR) clean
@@ -123,4 +132,4 @@ deep_clean:
 	rm -rf $(LAPACK_NETLIB).tar.gz
 
 
-.PHONY: obj_blas obj_cblas obj_lapack clean deep_clean
+.PHONY: obj_blas obj_cblas obj_lapack clean deep_clean obj_lapacke

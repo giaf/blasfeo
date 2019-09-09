@@ -33,7 +33,6 @@
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_aux_ext_dep.h"
 
-
 #define REAL double
 #define STRMAT blasfeo_dmat
 #define STRVEC blasfeo_dvec
