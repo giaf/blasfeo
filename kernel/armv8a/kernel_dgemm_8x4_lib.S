@@ -5897,14 +5897,14 @@
 
 
 	// prefetch
-//	ldr		x8, [sp, #(STACKSIZE + 0)] // D
-//	ldr		w9, [sp, #(STACKSIZE + 8)] // ldd
-//	lsl		w9, w9, #3 // 8*sdd
+	ldr		x8, [sp, #(STACKSIZE + 0)] // D
+	ldr		w9, [sp, #(STACKSIZE + 8)] // ldd
+	lsl		w9, w9, #3 // 8*sdd
 
 #if MACRO_LEVEL>=1
-//	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH_8X4_LIB
 #else
-//	bl inner_prefetch_8x4_lib
+	bl inner_prefetch_8x4_lib
 #endif
 
 

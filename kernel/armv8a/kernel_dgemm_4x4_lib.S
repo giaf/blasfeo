@@ -4413,14 +4413,14 @@
 
 
 	// prefetch
-//	mov		x8, x7 // D
-//	ldr		w9, [sp, #(STACKSIZE + 0)] // ldd
-//	lsl		w9, w9, #3 // 8*ldd
+	mov		x8, x7 // D
+	ldr		w9, [sp, #(STACKSIZE + 0)] // ldd
+	lsl		w9, w9, #3 // 8*ldd
 
 #if MACRO_LEVEL>=1
-//	INNER_PREFETCH_4X4_LIB
+	INNER_PREFETCH_4X4_LIB
 #else
-//	bl inner_prefetch_4x4_lib
+	bl inner_prefetch_4x4_lib
 #endif
 
 
