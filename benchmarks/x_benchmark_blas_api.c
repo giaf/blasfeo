@@ -222,6 +222,8 @@ int main()
 		float *D; s_zeros_align(&D, n, n); // = malloc(n*n*sizeof(float));
 #endif
 
+		int *ipiv = malloc(n*sizeof(int));
+
 		// A
 		for(ii=0; ii<n*n; ii++)
 			A[ii] = ii;
@@ -355,6 +357,7 @@ int main()
 #elif defined(GEQRF)
 #elif defined(GETRF_NOPIVOT)
 #elif defined(GETRF_ROWPIVOT)
+				blasfeo_dgetrf(&n, &n, B, &n, ipiv, &info);
 #elif defined(POTRF_L)
 				blasfeo_dpotrf(&c_l, &n, B, &n, &info);
 #elif defined(POTRF_U)
@@ -481,6 +484,7 @@ int main()
 		s_free_align(B);
 		s_free_align(D);
 #endif
+		free(ipiv);
 
 		}
 
