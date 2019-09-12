@@ -3354,6 +3354,19 @@
 
 
 
+	// prefetch
+	ldr		x8, [sp, #(STACKSIZE + 0)] // D
+	ldr		w9, [sp, #(STACKSIZE + 8)] // ldd
+	lsl		w9, w9, #3 // 8*sdd
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_12X4_LIB
+#else
+	bl inner_prefetch_12x4_lib
+#endif
+
+
+
 	// call inner blend for generic alpha and beta
 	mov		x8, x1 // alpha
 	mov		x9, x5 // beta
