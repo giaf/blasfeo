@@ -928,7 +928,7 @@ void blasfeo_dpotrf_l(int m, struct blasfeo_dmat *sC, int ci, int cj, struct bla
 	double *dD = sD->dA;
 
 	if(di==0 & dj==0) // XXX what to do if di and dj are not zero
-		sD->use_dA = 1;
+		sD->use_dA = m;
 	else
 		sD->use_dA = 0;
 

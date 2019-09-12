@@ -4018,6 +4018,7 @@ void blasfeo_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 
 	int i, j;
 
+	// TODO to avoid touching A, better temporarely use sD.dA ?????
 	if(ai==0 & aj==0)
 		{
 		if(sA->use_dA<n)
