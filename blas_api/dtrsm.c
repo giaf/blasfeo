@@ -278,7 +278,7 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 ************************************************/
 llnn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | m>K_MAX_STACK)
+	if(m>=200 | n>=200 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
@@ -598,7 +598,7 @@ llnn_1_return:
 ************************************************/
 llnu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | m>K_MAX_STACK)
+	if(m>=200 | n>=200 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
@@ -909,7 +909,7 @@ llnu_1_return:
 ***********************/
 lltn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | m>K_MAX_STACK)
+	if(m>=300 | n>=300 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
@@ -1090,7 +1090,7 @@ lltn_0_return:
 ***********************/
 lltu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | m>K_MAX_STACK)
+	if(m>=300 | n>=300 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
@@ -1267,7 +1267,7 @@ lltu_0_return:
 ************************************************/
 lunu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | m>K_MAX_STACK)
+	if(m>=200 | n>=200 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
@@ -1633,7 +1633,7 @@ lunu_1_return:
 ************************************************/
 lunn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | m>K_MAX_STACK)
+	if(m>=200 | n>=200 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
@@ -2007,7 +2007,7 @@ lunn_1_return:
 ************************************************/
 lutn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | m>K_MAX_STACK)
+	if(m>=300 | n>=300 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
@@ -2160,7 +2160,7 @@ lutn_0_return:
 ************************************************/
 lutu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | m>K_MAX_STACK)
+	if(m>=300 | n>=300 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
@@ -2640,7 +2640,7 @@ rlnu_0_return:
 ************************************************/
 rltn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | n>K_MAX_STACK)
+	if(m>=200 | n>=200 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -2941,7 +2941,7 @@ rltn_1_return:
 ************************************************/
 rltu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | n>K_MAX_STACK)
+	if(m>=200 | n>=200 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -3234,7 +3234,7 @@ rltu_1_return:
 ************************************************/
 runn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | n>K_MAX_STACK)
+	if(m>=300 | n>=300 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -3376,7 +3376,7 @@ runn_0_return:
 ************************************************/
 runu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | n>K_MAX_STACK)
+	if(m>=300 | n>=300 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -3514,7 +3514,7 @@ runu_0_return:
 ************************************************/
 rutn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | n>K_MAX_STACK)
+	if(m>=200 | n>=200 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -3864,7 +3864,7 @@ rutn_1_return:
 ************************************************/
 rutu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | n>K_MAX_STACK)
+	if(m>=200 | n>=200 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else

@@ -270,7 +270,7 @@ void blasfeo_dtrmm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 ************************************************/
 llnn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | n>K_MAX_STACK)
+	if(m>=200 | n>=200 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -428,6 +428,16 @@ llnn_1:
 		}
 	else // lower to lower
 		{
+#if 1
+		for(ii=0; ii<m-3; ii+=4)
+			{
+			kernel_dpack_tt_4_lib4(m-ii, A+ii+ii*lda, lda, pB+ii*sdb+ii*ps, sdb);
+			}
+		if(ii<m)
+			{
+			kernel_dpack_tt_4_vs_lib4(m-ii, A+ii+ii*lda, lda, pB+ii*sdb+ii*ps, sdb, m-ii);
+			}
+#else
 		for(ii=0; ii<m-3; ii+=4)
 			{
 			kernel_dpack_nn_4_lib4(ii+4, A+ii, lda, pB+ii*sdb);
@@ -436,6 +446,7 @@ llnn_1:
 			{
 			kernel_dpack_nn_4_vs_lib4(m, A+ii, lda, pB+ii*sdb, m-ii);
 			}
+#endif
 		}
 
 	ii = 0;
@@ -556,7 +567,7 @@ llnn_1_return:
 ************************************************/
 llnu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | n>K_MAX_STACK)
+	if(m>=200 | n>=200 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -714,14 +725,25 @@ llnu_1:
 		}
 	else // lower to lower
 		{
+#if 1
+		for(ii=0; ii<m-3; ii+=4)
+			{
+			kernel_dpack_tt_4_lib4(m-ii, A+ii+ii*lda, lda, pB+ii*sdb+ii*ps, sdb);
+			}
+		if(ii<m)
+			{
+			kernel_dpack_tt_4_vs_lib4(m-ii, A+ii+ii*lda, lda, pB+ii*sdb+ii*ps, sdb, m-ii);
+			}
+#else
 		for(ii=0; ii<m-3; ii+=4)
 			{
 			kernel_dpack_nn_4_lib4(ii+4, A+ii, lda, pB+ii*sdb);
 			}
-		if(ii<n)
+		if(ii<m)
 			{
 			kernel_dpack_nn_4_vs_lib4(m, A+ii, lda, pB+ii*sdb, m-ii);
 			}
+#endif
 		}
 
 	ii = 0;
@@ -842,7 +864,7 @@ llnu_1_return:
 ************************************************/
 lltn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | n>K_MAX_STACK)
+	if(m>=300 | n>=300 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -978,7 +1000,7 @@ lltn_0_return:
 ************************************************/
 lltu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | n>K_MAX_STACK)
+	if(m>=300 | n>=300 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -1114,7 +1136,7 @@ lltu_0_return:
 ************************************************/
 lunn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | n>K_MAX_STACK)
+	if(m>=200 | n>=200 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -1272,6 +1294,16 @@ lunn_1:
 		}
 	else // upper to upper
 		{
+#if 1
+		for(ii=0; ii<m-3; ii+=4)
+			{
+			kernel_dpack_tt_4_lib4(ii+4, A+ii*lda, lda, pB+ii*ps, sdb);
+			}
+		if(ii<m)
+			{
+			kernel_dpack_tt_4_vs_lib4(ii+4, A+ii*lda, lda, pB+ii*ps, sdb, m-ii);
+			}
+#else
 		for(ii=0; ii<m-3; ii+=4)
 			{
 			kernel_dpack_nn_4_lib4(m-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb);
@@ -1280,6 +1312,7 @@ lunn_1:
 			{
 			kernel_dpack_nn_4_vs_lib4(m-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb, m-ii);
 			}
+#endif
 		}
 
 	ii = 0;
@@ -1400,7 +1433,7 @@ lunn_1_return:
 ************************************************/
 lunu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | n>K_MAX_STACK)
+	if(m>=200 | n>=200 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -1558,6 +1591,16 @@ lunu_1:
 		}
 	else // upper to upper
 		{
+#if 1
+		for(ii=0; ii<m-3; ii+=4)
+			{
+			kernel_dpack_tt_4_lib4(ii+4, A+ii*lda, lda, pB+ii*ps, sdb);
+			}
+		if(ii<m)
+			{
+			kernel_dpack_tt_4_vs_lib4(ii+4, A+ii*lda, lda, pB+ii*ps, sdb, m-ii);
+			}
+#else
 		for(ii=0; ii<m-3; ii+=4)
 			{
 			kernel_dpack_nn_4_lib4(m-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb);
@@ -1566,6 +1609,7 @@ lunu_1:
 			{
 			kernel_dpack_nn_4_vs_lib4(m-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb, m-ii);
 			}
+#endif
 		}
 
 	ii = 0;
@@ -1686,7 +1730,7 @@ lunu_1_return:
 ************************************************/
 lutn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | n>K_MAX_STACK)
+	if(m>=300 | n>=300 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -1822,7 +1866,7 @@ lutn_0_return:
 ************************************************/
 lutu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | n>K_MAX_STACK)
+	if(m>=300 | n>=300 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -2218,7 +2262,7 @@ rlnu_0_return:
 ************************************************/
 rltn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | n>K_MAX_STACK)
+	if(m>=200 | n>=200 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -2370,6 +2414,16 @@ rltn_1:
 		}
 	else // lower to lower
 		{
+#if 1
+		for(ii=0; ii<n-3; ii+=4)
+			{
+			kernel_dpack_tt_4_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*sdb+ii*ps, sdb);
+			}
+		if(ii<n)
+			{
+			kernel_dpack_tt_4_vs_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*sdb+ii*ps, sdb, n-ii);
+			}
+#else
 		for(ii=0; ii<n-3; ii+=4)
 			{
 			kernel_dpack_nn_4_lib4(ii+4, A+ii, lda, pB+ii*sdb);
@@ -2378,6 +2432,7 @@ rltn_1:
 			{
 			kernel_dpack_nn_4_vs_lib4(n, A+ii, lda, pB+ii*sdb, n-ii);
 			}
+#endif
 		}
 
 	ii = 0;
@@ -2492,7 +2547,7 @@ rltn_1_return:
 ************************************************/
 rltu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | n>K_MAX_STACK)
+	if(m>=200 | n>=200 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -2644,6 +2699,16 @@ rltu_1:
 		}
 	else // lower to lower
 		{
+#if 1
+		for(ii=0; ii<n-3; ii+=4)
+			{
+			kernel_dpack_tt_4_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*sdb+ii*ps, sdb);
+			}
+		if(ii<n)
+			{
+			kernel_dpack_tt_4_vs_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*sdb+ii*ps, sdb, n-ii);
+			}
+#else
 		for(ii=0; ii<n-3; ii+=4)
 			{
 			kernel_dpack_nn_4_lib4(ii+4, A+ii, lda, pB+ii*sdb);
@@ -2652,6 +2717,7 @@ rltu_1:
 			{
 			kernel_dpack_nn_4_vs_lib4(n, A+ii, lda, pB+ii*sdb, n-ii);
 			}
+#endif
 		}
 
 	ii = 0;
@@ -2766,7 +2832,7 @@ rltu_1_return:
 ************************************************/
 runn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | n>K_MAX_STACK)
+	if(m>=300 | n>=300 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -2896,7 +2962,7 @@ runn_0_return:
 ************************************************/
 runu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=256 | n>=256 | n>K_MAX_STACK)
+	if(m>=300 | n>=300 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -3026,7 +3092,7 @@ runu_0_return:
 ************************************************/
 rutn:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | n>K_MAX_STACK)
+	if(m>=200 | n>=200 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -3178,6 +3244,16 @@ rutn_1:
 		}
 	else // upper to upper
 		{
+#if 1
+		for(ii=0; ii<n-3; ii+=4)
+			{
+			kernel_dpack_tt_4_lib4(ii+4, A+ii*lda, lda, pB+ii*ps, sdb);
+			}
+		if(ii<n)
+			{
+			kernel_dpack_tt_4_vs_lib4(ii+4, A+ii*lda, lda, pB+ii*ps, sdb, n-ii);
+			}
+#else
 		for(ii=0; ii<n-3; ii+=4)
 			{
 			kernel_dpack_nn_4_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb);
@@ -3186,6 +3262,7 @@ rutn_1:
 			{
 			kernel_dpack_nn_4_vs_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb, n-ii);
 			}
+#endif
 		}
 
 	ii = 0;
@@ -3300,7 +3377,7 @@ rutn_1_return:
 ************************************************/
 rutu:
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=128 | n>=128 | n>K_MAX_STACK)
+	if(m>=200 | n>=200 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -3452,6 +3529,16 @@ rutu_1:
 		}
 	else // upper to upper
 		{
+#if 1
+		for(ii=0; ii<n-3; ii+=4)
+			{
+			kernel_dpack_tt_4_lib4(ii+4, A+ii*lda, lda, pB+ii*ps, sdb);
+			}
+		if(ii<n)
+			{
+			kernel_dpack_tt_4_vs_lib4(ii+4, A+ii*lda, lda, pB+ii*ps, sdb, n-ii);
+			}
+#else
 		for(ii=0; ii<n-3; ii+=4)
 			{
 			kernel_dpack_nn_4_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb);
@@ -3460,6 +3547,7 @@ rutu_1:
 			{
 			kernel_dpack_nn_4_vs_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb, n-ii);
 			}
+#endif
 		}
 
 	ii = 0;
