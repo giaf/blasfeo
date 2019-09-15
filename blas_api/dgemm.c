@@ -84,6 +84,24 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 	int m1, n1, k1;
 	int pack_B;
 
+#if defined(TARGET_X64_INTEL_HASWELL)
+	// L1 data cache size: 32 kB
+	// data cache size: 64 bytes
+	const int l1_cache_el = 32*1024/8;
+	const int m_kernel = 12;
+#else // assume generic target
+	// L1 data cache size: 32 kB
+	// data cache size: 64 bytes
+	const int l1_cache_el = 32*1024/8;
+	const int m_kernel = 4;
+#endif
+	const int m_cache = (m+7)/8*8;
+	const int n_cache = (n+7)/8*8;
+	const int k_cache = (k+7)/8*8;
+	const int m_kernel_cache = (m_kernel+7)/8*8;
+	int m_min = m_cache<m_kernel_cache ? m_cache : m_kernel_cache;
+//	int n_min = n_cache<m_kernel_cache ? n_cache : m_kernel_cache;
+
 	if(*ta=='n' | *ta=='N')
 		{
 		if(*tb=='n' | *tb=='N')
@@ -95,7 +113,9 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 			if( k<=K_MAX_STACK )
 				{
 #if defined(TARGET_X64_INTEL_HASWELL)
-				if( m<=48 & n<=48 )
+//				if( m<=48 & n<=48 )
+//				if( (m<=12 & n<=12) | (m_min*k_cache + n_cache*k_cache <= l1_cache_el) )
+				if( (m<=m_kernel & n<=m_kernel) | (m_kernel_cache*k_cache + n_cache*k_cache <= l1_cache_el) | (m<m_kernel & (m_cache*k_cache + m_kernel_cache*k_cache <= l1_cache_el) ) )
 					{
 					goto nn_2; // small matrix: no pack
 					}
@@ -150,8 +170,10 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 			if( k<=K_MAX_STACK )
 				{
 #if defined(TARGET_X64_INTEL_HASWELL)
-				if( m<=48 & n<=48 )
+//				if( m<=48 & n<=48 )
+				if( (m<=m_kernel & n<=m_kernel) | (m_kernel_cache*k_cache + n_cache*k_cache <= l1_cache_el) | (m<m_kernel & (m_cache*k_cache + m_kernel_cache*k_cache <= l1_cache_el) ) )
 					{
+//					printf("%d %d %d\n", m, n, k);
 					goto nt_2; // small matrix: no pack
 					}
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -257,7 +279,8 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 			if( k<=K_MAX_STACK )
 				{
 #if defined(TARGET_X64_INTEL_HASWELL)
-				if( m<=48 & n<=48 )
+//				if( m<=48 & n<=48 )
+				if( (m<=m_kernel & n<=m_kernel) | (m_cache*k_cache + m_kernel_cache*k_cache <= l1_cache_el) | (n<m_kernel & (m_kernel_cache*k_cache + n_cache*k_cache <= l1_cache_el) ) )
 					{
 					goto tt_2; // small matrix: no pack
 					}
