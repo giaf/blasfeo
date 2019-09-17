@@ -70,15 +70,35 @@ function(TestForISA)
       string(APPEND C_FLAGS_CHK " -D${CHECK}")
   endforeach()
 
-  try_run( CHK_TARGET_RUN_${TEST_TARGET}                     # Variable to save the run result to
-           CHK_TARGET_BUILD_${TEST_TARGET}                   # Variable to save the build result to
-           "${CMAKE_BINARY_DIR}/compilerTest/${TEST_TARGET}" # Directory to compile in
-           SOURCES ${CMP_CHECK_SRCS}                         # Source to compile
-           CMAKE_FLAGS
-            "-DCOMPILE_DEFINITIONS=${C_FLAGS_CHK}"
-            "-DCMAKE_ASM_FLAGS=\"${CMAKE_ASM_FLAGS} ${ASM_FLAGS_TARGET_${TEST_TARGET}}\" "
-           OUTPUT_VARIABLE CHK_OUTPUT${TEST_TARGET}
-          )
+  if(${BLASFEO_CROSSCOMPILING})
+    set(CHK_TARGET_RUN_${TEST_TARGET} "1")
+
+    # Only tell CMake to compile the files, not link them since we are doing cross-compilation
+    if (${CMAKE_VERSION} VERSION_EQUAL "3.6.0" OR ${CMAKE_VERSION} VERSION_GREATER "3.6")
+      set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+    elseif()
+      set(CMAKE_EXE_LINKER_FLAGS_INIT "--specs=nosys.specs")
+    endif()
+
+    try_compile( CHK_TARGET_BUILD_${TEST_TARGET}                   # Variable to save the build result to
+                 "${CMAKE_BINARY_DIR}/compilerTest/${TEST_TARGET}" # Directory to compile in
+                 SOURCES ${CMP_CHECK_SRCS}                         # Source to compile
+                 CMAKE_FLAGS
+                   "-DCOMPILE_DEFINITIONS=${C_FLAGS_CHK}"
+                   "-DCMAKE_ASM_FLAGS=\"${CMAKE_ASM_FLAGS} ${ASM_FLAGS_TARGET_${TEST_TARGET}}\" "
+                 OUTPUT_VARIABLE CHK_OUTPUT${TEST_TARGET}
+                )
+  else()
+    try_run( CHK_TARGET_RUN_${TEST_TARGET}                     # Variable to save the run result to
+             CHK_TARGET_BUILD_${TEST_TARGET}                   # Variable to save the build result to
+             "${CMAKE_BINARY_DIR}/compilerTest/${TEST_TARGET}" # Directory to compile in
+             SOURCES ${CMP_CHECK_SRCS}                         # Source to compile
+             CMAKE_FLAGS
+              "-DCOMPILE_DEFINITIONS=${C_FLAGS_CHK}"
+              "-DCMAKE_ASM_FLAGS=\"${CMAKE_ASM_FLAGS} ${ASM_FLAGS_TARGET_${TEST_TARGET}}\" "
+             OUTPUT_VARIABLE CHK_OUTPUT${TEST_TARGET}
+            )
+  endif()
 
   if(${CHK_TARGET_BUILD_${TEST_TARGET}})
     set(CHK_TARGET_BUILD TRUE PARENT_SCOPE)
@@ -91,7 +111,7 @@ function(TestForISA)
 
   else()
     set(CHK_TARGET_BUILD FALSE PARENT_SCOPE)
+    set(CHK_TARGET_OUTPUT ${CHK_OUTPUT${TEST_TARGET}} PARENT_SCOPE)
   endif()
-
 
 endfunction()
