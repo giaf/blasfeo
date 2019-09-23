@@ -62,13 +62,18 @@ function(TestForISA)
       ${CMAKE_SOURCE_DIR}/cmake/isa_tests/isa_test.c
       )
 
-  set(C_FLAGS_CHK "${CMAKE_C_FLAGS} ${C_FLAGS_TARGET_${TEST_TARGET}}")
+  set(C_DEFS_CHK "")
 
   # Add the assembly test files and the compile definitions
   foreach(CHECK ${CMP_CHECK_${TEST_TARGET}})
       list( APPEND CMP_CHECK_SRCS ${CMAKE_SOURCE_DIR}/cmake/isa_tests/${CHECK}.S )
-      string(APPEND C_FLAGS_CHK " -D${CHECK}")
+      string(APPEND C_DEFS_CHK " -D${CHECK}")
   endforeach()
+
+
+  # Populate the flags to use for the testing
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_FLAGS_TARGET_${TEST_TARGET}}")
+  set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${ASM_FLAGS_TARGET_${TEST_TARGET}}")
 
   if(${BLASFEO_CROSSCOMPILING})
     set(CHK_TARGET_RUN_${TEST_TARGET} "1")
@@ -84,8 +89,7 @@ function(TestForISA)
                  "${CMAKE_BINARY_DIR}/compilerTest/${TEST_TARGET}" # Directory to compile in
                  SOURCES ${CMP_CHECK_SRCS}                         # Source to compile
                  CMAKE_FLAGS
-                   "-DCOMPILE_DEFINITIONS=${C_FLAGS_CHK}"
-                   "-DCMAKE_ASM_FLAGS=\"${CMAKE_ASM_FLAGS} ${ASM_FLAGS_TARGET_${TEST_TARGET}}\" "
+                   "-DCOMPILE_DEFINITIONS=${C_DEFS_CHK}"
                  OUTPUT_VARIABLE CHK_OUTPUT${TEST_TARGET}
                 )
   else()
@@ -94,8 +98,7 @@ function(TestForISA)
              "${CMAKE_BINARY_DIR}/compilerTest/${TEST_TARGET}" # Directory to compile in
              SOURCES ${CMP_CHECK_SRCS}                         # Source to compile
              CMAKE_FLAGS
-              "-DCOMPILE_DEFINITIONS=${C_FLAGS_CHK}"
-              "-DCMAKE_ASM_FLAGS=\"${CMAKE_ASM_FLAGS} ${ASM_FLAGS_TARGET_${TEST_TARGET}}\" "
+              "-DCOMPILE_DEFINITIONS=${C_DEFS_CHK}"
              OUTPUT_VARIABLE CHK_OUTPUT${TEST_TARGET}
             )
   endif()
