@@ -11,6 +11,9 @@ _test_neon:
 #endif
 
 
+// Test for the presence of the vector absolute value instruction
+vabs.f32 d0, d1
+
 
 #if defined(OS_LINUX)
   .size test_neon, .-test_neon
