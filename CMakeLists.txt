@@ -162,9 +162,6 @@ if(CMAKE_SYSTEM MATCHES "dSpace" OR CMAKE_BUILD_TYPE MATCHES "Release")
 	set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled" FORCE)
 endif()
 
-configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
-	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
-
 # C Compiler
 # set(CC_COMPILER gcc CACHE STRING "compiler")
 # set(CC_COMPILER clang)
@@ -299,6 +296,9 @@ else()
 endif()
 
 
+# Create the target.h file with the proper target definition
+configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
+	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
 
 
 # Append the appropriate flags based on the architecture and compiler
