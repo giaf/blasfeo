@@ -37,8 +37,8 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 
 
 # Target architecture
-set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")
-# set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")
+# set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")
+set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")
 # set(TARGET X64_INTEL_SANDY_BRIDGE CACHE STRING "Target architecture")
 # set(TARGET X64_INTEL_CORE CACHE STRING "Target architecture")
 # set(TARGET X64_AMD_BULLDOZER CACHE STRING "Target architecture")
