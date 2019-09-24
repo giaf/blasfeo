@@ -49,6 +49,7 @@ set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")
 
 # Populate a list of allowable targets and link it to the option
 set(ALLOWED_TARGETS
+		X64_AUTOMATIC
 		X64_INTEL_HASWELL
 		X64_INTEL_SANDY_BRIDGE
 		X64_INTEL_CORE
@@ -60,6 +61,24 @@ set(ALLOWED_TARGETS
 		GENERIC
 		)
 set_property(CACHE TARGET PROPERTY STRINGS ${ALLOWED_TARGETS})
+
+# This list contains the targets to try when the user sets the target to
+# X64_AUTOMATIC. The order they appear in this list is the order in which
+# they are tested, and the first working (both compile and run) will be
+# selected for use
+set(X64_AUTOMATIC_TARGETS
+		X64_INTEL_HASWELL
+		X64_AMD_BULLDOZER
+		X64_INTEL_SANDY_BRIDGE
+		X64_INTEL_CORE
+		GENERIC
+		)
+
+
+list(FIND ALLOWED_TARGETS ${TARGET} isvalid)
+if(${isvalid} EQUAL -1)
+	message(FATAL_ERROR "Target ${TARGET} is not supported")
+endif()
 
 # Linear Algebra backend
 set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
@@ -73,6 +92,11 @@ set(ALLOWED_BACKENDS
 	  BLAS
 	  )
 set_property(CACHE LA PROPERTY STRINGS ${ALLOWED_BACKENDS})
+
+list(FIND ALLOWED_BACKENDS ${LA} isvalid)
+if(${isvalid} EQUAL -1)
+	message(FATAL_ERROR "LA backend ${LA} is not supported")
+endif()
 
 # BLAS and LAPACK version (for LA=BLAS in BLASFEO or for BLASFEO_BENCHMARS=ON)
 set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
@@ -93,12 +117,21 @@ set(ALLOWED_EXTERNAL_BLAS
 		)
 set_property(CACHE EXTERNAL_BLAS PROPERTY STRINGS ${ALLOWED_EXTERNAL_BLAS})
 
+list(FIND ALLOWED_EXTERNAL_BLAS ${EXTERNAL_BLAS} isvalid)
+if(${isvalid} EQUAL -1)
+	message(FATAL_ERROR "External BLAS ${EXTERNAL_BLAS} is not supported")
+endif()
+
 # Pass the allowed items up to the parent scope (if there is one)
 # This is detected by comparing the project name to the one set earlier in this file
 if(NOT ${CMAKE_PROJECT_NAME} STREQUAL blasfeo)
 	set(BLASFEO_ALLOWED_TARGETS ${ALLOWED_TARGETS} PARENT_SCOPE)
 	set(BLASFEO_ALLOWED_BACKENDS ${ALLOWED_BACKENDS} PARENT_SCOPE)
 	set(BLASFEO_ALLOWED_EXTERNAL_BLAS ${ALLOWED_EXTERNAL_BLAS} PARENT_SCOPE)
+endif()
+
+if(NOT DEFINED(BLASFEO_CROSSCOMPILING))
+	set(BLASFEO_CROSSCOMPILING ${CMAKE_CROSSCOMPILING})
 endif()
 
 # Stack buffer size (malloc for larger)
@@ -169,16 +202,10 @@ endif()
 # search directories
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${BLASFEO_PATH}/include")
 
-#
-if(${LA} MATCHES HIGH_PERFORMANCE)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_HIGH_PERFORMANCE")
-endif()
-if(${LA} MATCHES REFERENCE)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_REFERENCE")
-endif()
-if(${LA} MATCHES BLAS)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_BLAS")
-endif()
+# Specify the linear algebra package to use
+message(STATUS "Using linear algebra: ${LA}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_${LA}")
+
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DK_MAX_STACK=${K_MAX_STACK}")
 
@@ -205,121 +232,82 @@ if(${MACRO_LEVEL} MATCHES 2)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMACRO_LEVEL=2")
 endif()
 
-#
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+# Detect the host system
+if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Linux")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOS_LINUX")
-	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DOS_LINUX")
+	set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DOS_LINUX")
 endif()
-if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Darwin")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOS_MAC")
-	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DOS_MAC")
+	set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DOS_MAC")
 endif()
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOS_WINDOWS")
-	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DOS_WINDOWS")
+	set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DOS_WINDOWS")
 endif()
 
-#
-if(${EXTERNAL_BLAS} MATCHES 0)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DEXTERNAL_BLAS_NONE")
-endif(${EXTERNAL_BLAS} MATCHES 0)
+# External BLAS flags
+set(C_FLAGS_BLAS_0        "-DEXTERNAL_BLAS_NONE")
+set(C_FLAGS_BLAS_OPENBLAS "-DEXTERNAL_BLAS_OPENBLAS -I/opt/openblas/include")
+set(C_FLAGS_BLAS_BLIS     "-DEXTERNAL_BLAS_BLIS -std=c99 -I/opt/blis/include/blis")
+set(C_FLAGS_BLAS_NETLIB   "-DEXTERNAL_BLAS_NETLIB -I/opt/netlib/include")
+set(C_FLAGS_BLAS_MKL      "-DEXTERNAL_BLAS_MKL -m64 -I/opt/intel/mkl/include")
+set(C_FLAGS_BLAS_ATLAS    "-DEXTERNAL_BLAS_ATLAS")
 
-if(${EXTERNAL_BLAS} MATCHES OPENBLAS)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DEXTERNAL_BLAS_OPENBLAS -I/opt/openblas/include")
-endif(${EXTERNAL_BLAS} MATCHES OPENBLAS)
+message(STATUS "Using external BLAS: ${EXTERNAL_BLAS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_FLAGS_BLAS_${EXTERNAL_BLAS}}")
 
-if(${EXTERNAL_BLAS} MATCHES BLIS)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DEXTERNAL_BLAS_BLIS -std=c99 -I/opt/blis/include/blis")
-endif(${EXTERNAL_BLAS} MATCHES BLIS)
 
-if(${EXTERNAL_BLAS} MATCHES NETLIB)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DEXTERNAL_BLAS_NETLIB -I/opt/netlib/include")
-endif(${EXTERNAL_BLAS} MATCHES NETLIB)
-
-if(${EXTERNAL_BLAS} MATCHES MKL)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DEXTERNAL_BLAS_MKL -m64 -I/opt/intel/mkl/include")
-endif(${EXTERNAL_BLAS} MATCHES MKL)
-
-if(${EXTERNAL_BLAS} MATCHES ATLAS)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DEXTERNAL_BLAS_ATLAS")
-endif(${EXTERNAL_BLAS} MATCHES ATLAS)
-
-# common flags
+# common C flags
 if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -fPIC")
 endif()
 
-# architecture-specific flags
-if(${TARGET} MATCHES X64_INTEL_HASWELL)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_INTEL_HASWELL")
-	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_INTEL_HASWELL")
-	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx -mavx2 -mfma")
-	endif()
+
+# architecture-specific C flags
+set(C_FLAGS_TARGET_X64_INTEL_HASWELL      "-m64 -mavx -mavx2 -mfma")
+set(C_FLAGS_TARGET_X64_INTEL_SANDY_BRIDGE "-m64 -mavx")
+set(C_FLAGS_TARGET_X64_INTEL_CORE         "-m64 -msse3")
+set(C_FLAGS_TARGET_X64_AMD_BULLDOZER      "-m64 -mavx -mfma")
+set(C_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A57  "-march=armv8-a+crc+crypto+simd -mcpu=cortex-a57")
+set(C_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A53  "-march=armv8-a+crc+crypto+simd -mcpu=cortex-a53")
+set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A15  "-marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15")
+set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A7   "-marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a7")
+set(C_FLAGS_TARGET_GENERIC                "")
+
+# architecture-specific assembly flags
+set(ASM_FLAGS_TARGET_X64_INTEL_HASWELL      "")
+set(ASM_FLAGS_TARGET_X64_INTEL_SANDY_BRIDGE "")
+set(ASM_FLAGS_TARGET_X64_INTEL_CORE         "")
+set(ASM_FLAGS_TARGET_X64_AMD_BULLDOZER      "")
+set(ASM_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A57  "")
+set(ASM_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A53  "")
+set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A15  "-mfpu=neon-vfpv4 -mcpu=cortex-a15")
+set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A7   "-mfpu=neon-vfpv4 -mcpu=cortex-a7")
+set(ASM_FLAGS_TARGET_GENERIC                "")
+
+
+if(${TARGET} MATCHES X64_AUTOMATIC)
+	include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/X64AutomaticTargetSelection.cmake)
+	X64AutomaticTargetSelection()
+	message(STATUS "Detected target ${TARGET}")
+else()
+	include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/TestSingleTarget.cmake)
+	TestSingleTarget()
+	message(STATUS "Compiling for target: ${TARGET}")
 endif()
 
-if(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_INTEL_SANDY_BRIDGE")
-	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_INTEL_SANDY_BRIDGE")
-	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx")
-	endif()
-endif()
 
-if(${TARGET} MATCHES X64_INTEL_CORE)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_INTEL_CORE")
-	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_INTEL_CORE")
-	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -msse3")
-	endif()
-endif()
 
-if(${TARGET} MATCHES X64_AMD_BULLDOZER)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_AMD_BULLDOZER")
-	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_X64_AMD_BULLDOZER")
-	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mavx -mfma")
-	endif()
-endif()
 
-if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV8A_ARM_CORTEX_A57")
-	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV8A_ARM_CORTEX_A57")
-	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc+crypto+simd")
-	endif()
-endif()
+# Append the appropriate flags based on the architecture and compiler
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_${TARGET}")
+set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DTARGET_${TARGET}")
 
-if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV8A_ARM_CORTEX_A53")
-	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV8A_ARM_CORTEX_A53")
-	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc+crypto+simd")
-	endif()
+if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_FLAGS_TARGET_${TARGET}}")
+	set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${ASM_FLAGS_TARGET_${TARGET}}")
 endif()
-
-if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV7A_ARM_CORTEX_A15")
-	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV7A_ARM_CORTEX_A15")
-	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15")
-		set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -mfpu=neon-vfpv4")
-	endif()
-endif()
-
-if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV7A_ARM_CORTEX_A7")
-	set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -DTARGET_ARMV7A_ARM_CORTEX_A7")
-	if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a7")
-		set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -mfpu=neon-vfpv4")
-	endif()
-endif()
-
-if(${TARGET} MATCHES GENERIC)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_GENERIC")
-endif()
-
 
 
 # source files
@@ -569,6 +557,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		file(GLOB KERNEL_SRC
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_8x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dpack_lib4.S
+
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
