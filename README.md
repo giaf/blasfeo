@@ -51,6 +51,11 @@ It employes structures to describe matrices (blasfeo_dmat) and vectors (blasfeo_
 The actual implementation of blasfeo_dmat and blasfeo_dvec depends on the LA and TARGET choice.
 The API is non-destructive, and compared to the BLAS API it has an additional matrix/vector argument reserved for the output.
 
+## Recommended guidelines
+
+Guidelines to use of BLASFEO routines and avoid known performance issues can be found here <br/>
+[BLASFEO guidelines](https://github.com/giaf/blasfeo/blob/master/guidelines.md) <br/>
+We strongly recommend the user to read it.
 
 ## More Information
 
@@ -70,7 +75,7 @@ https://utexas.app.box.com/s/yt2d693v8xc37yyjklnf4a4y1ldvyzon
 
 --------------------------------------------------
 
-Notes:
+## Notes
 
 - BLASFEO is released under the GPL+CE (Gnu General Public License version 3.0 with Classpath Exception).
 This license has been chosen to avoid the issues that the LGPL license implies in case of static linking.
