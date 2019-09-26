@@ -11,4 +11,4 @@ For similar reasons, in the BLAS API it is recommended to have a leading dimensi
 - __memory alignment__.
 The memory passed to create BLASFEO matrices or vectors has minimum alignment requirements which vary between architecture.
 Additionally, if the memory is not aligned to cache size boundaries, there may be little performance degradations.
-As a good practice, it is __recommended to align to cache line boundaries__ (typically 64 bytes) the memory passed to create a BLASFEO memory or vector in the BLASFEO API, or the matrix used for the array of doubles of floats in the BLAS API.
+As a good practice, it is __recommended to align to cache line boundaries__ (typically 64 bytes) the memory passed to create a BLASFEO matrix or vector in the BLASFEO API, or the memory used for the array of doubles of floats in the BLAS API.
