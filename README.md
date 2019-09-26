@@ -53,8 +53,8 @@ The API is non-destructive, and compared to the BLAS API it has an additional ma
 
 ## Recommended guidelines
 
-Guidelines to use of BLASFEO routines and avoid known performance issues can be found here 
-[BLASFEO guidelines](https://github.com/giaf/blasfeo/blob/master/guidelines.md) . <br/>
+Guidelines to use of BLASFEO routines and avoid known performance issues can be found in the file
+[guidelines.md](https://github.com/giaf/blasfeo/blob/master/guidelines.md) . <br/>
 We strongly recommend the user to read it.
 
 ## More Information
