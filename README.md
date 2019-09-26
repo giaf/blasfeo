@@ -53,8 +53,8 @@ The API is non-destructive, and compared to the BLAS API it has an additional ma
 
 ## Recommended guidelines
 
-Guidelines to use of BLASFEO routines and avoid known performance issues can be found here <br/>
-[BLASFEO guidelines](https://github.com/giaf/blasfeo/blob/master/guidelines.md) <br/>
+Guidelines to use of BLASFEO routines and avoid known performance issues can be found here 
+[BLASFEO guidelines](https://github.com/giaf/blasfeo/blob/master/guidelines.md) . <br/>
 We strongly recommend the user to read it.
 
 ## More Information
@@ -72,8 +72,6 @@ G. Frison, T. Sartor, A. Zanelli, M. Diehl, *The BLAS API of BLASFEO: optimizing
 www.cs.utexas.edu/users/flame/BLISRetreat2017/slides/Gianluca_BLIS_Retreat_2017.pdf
 - video with comments to the slides: <br/>
 https://utexas.app.box.com/s/yt2d693v8xc37yyjklnf4a4y1ldvyzon
-
---------------------------------------------------
 
 ## Notes
 
