@@ -42,7 +42,7 @@ The BLASFEO backend provides three possible implementations of each linear algeb
 | ```REFERENCE```             | Target-unspecific lightly-optimizated; small code footprint; column-major matrix format |
 | ```EXTERNAL_BLAS_WRAPPER``` | Call to external BLAS and LAPACK libraries; column-major matrix format |
 
-## BLASFEO API
+## BLASFEO APIs
 
 BLASFEO provides two APIs:
 - BLAS API: the standard BLAS and LAPACK APIs, with matrices stored in column-major.
@@ -54,7 +54,7 @@ The API is non-destructive, and compared to the BLAS API it has an additional ma
 ## Recommended guidelines
 
 Guidelines to use of BLASFEO routines and avoid known performance issues can be found in the file
-[guidelines.md](https://github.com/giaf/blasfeo/blob/master/guidelines.md) . <br/>
+[guidelines.md](https://github.com/giaf/blasfeo/blob/master/guidelines.md). <br/>
 We strongly recommend the user to read it.
 
 ## More Information
