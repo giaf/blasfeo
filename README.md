@@ -30,6 +30,12 @@ The API is non-destructive, and compared to the BLAS API it has an additional ma
 
 --------------------------------------------------
 
+Guidelines to use of BLASFEO routines and avoid known performance issues can be found here
+https://github.com/giaf/blasfeo/blob/master/guidelines.md
+We strongly recommend the user to read it.
+
+--------------------------------------------------
+
 The BLASFEO wiki can be found at the page <br/>
 https://blasfeo.syscop.de <br/>
 and it provides more detailed installation instructions and examples, and a rich collection of benchmarks and comparisions.
