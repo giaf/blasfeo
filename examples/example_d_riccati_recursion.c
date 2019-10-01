@@ -43,6 +43,10 @@
 
 
 
+//#define PRINT_DATA
+
+
+
 static void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *hsBAbt, struct blasfeo_dmat *hsRSQrq, struct blasfeo_dmat *hsL, struct blasfeo_dvec *hsux, struct blasfeo_dvec *hspi, struct blasfeo_dmat *hswork_mat, struct blasfeo_dvec *hswork_vec)
 	{
 
@@ -498,8 +502,8 @@ int main()
 
 	// problem size
 	int N = 10;
-	int nx_ = 8;
-	int nu_ = 3;
+	int nx_ = 64;
+	int nu_ = 32;
 
 	// stage-wise variant size
 	int *nx = malloc((N+1)*sizeof(int));
@@ -535,6 +539,7 @@ int main()
 	x0[0] = 2.5;
 	x0[1] = 2.5;
 
+#ifdef PRINT_DATA
 	printf("A:\n");
 	d_print_exp_mat(nx_, nx_, A, nx_);
 	printf("B:\n");
@@ -543,6 +548,7 @@ int main()
 	d_print_exp_mat(1, nx_, b, 1);
 	printf("x0:\n");
 	d_print_exp_mat(1, nx_, x0, 1);
+#endif
 
 /************************************************
 * cost function
@@ -562,6 +568,7 @@ int main()
 	double *q; d_zeros(&q, nx_, 1);
 	for(ii=0; ii<nx_; ii++) q[ii] = 0.1;
 
+#ifdef PRINT_DATA
 	printf("R:\n");
 	d_print_exp_mat(nu_, nu_, R, nu_);
 	printf("S:\n");
@@ -572,6 +579,7 @@ int main()
 	d_print_exp_mat(1, nu_, r, 1);
 	printf("q:\n");
 	d_print_exp_mat(1, nx_, q, 1);
+#endif
 
 /************************************************
 * BLASFEO API
@@ -593,23 +601,29 @@ int main()
 	struct blasfeo_dvec sb0;
 	blasfeo_allocate_dvec(nx_, &sb0);
 	blasfeo_dgemv_n(nx_, nx_, 1.0, &sA, 0, 0, &sx0, 0, 1.0, &sb, 0, &sb0, 0);
+#ifdef PRINT_DATA
 	printf("b0:\n");
 	blasfeo_print_tran_dvec(nx_, &sb0, 0);
+#endif
 
 	struct blasfeo_dmat sBbt0;
 	blasfeo_allocate_dmat(nu_+nx_+1, nx_, &sBbt0);
 	blasfeo_pack_tran_dmat(nx_, nu_, B, nx_, &sBbt0, 0, 0);
 	blasfeo_drowin(nx_, 1.0, &sb0, 0, &sBbt0, nu_, 0);
+#ifdef PRINT_DATA
 	printf("Bbt0:\n");
 	blasfeo_print_exp_dmat(nu_+1, nx_, &sBbt0, 0, 0);
+#endif
 
 	struct blasfeo_dmat sBAbt1;
 	blasfeo_allocate_dmat(nu_+nx_+1, nx_, &sBAbt1);
 	blasfeo_pack_tran_dmat(nx_, nu_, B, nx_, &sBAbt1, 0, 0);
 	blasfeo_pack_tran_dmat(nx_, nx_, A, nx_, &sBAbt1, nu_, 0);
 	blasfeo_pack_tran_dmat(nx_, 1, b, nx_, &sBAbt1, nu_+nx_, 0);
+#ifdef PRINT_DATA
 	printf("BAbt1:\n");
 	blasfeo_print_exp_dmat(nu_+nx_+1, nx_, &sBAbt1, 0, 0);
+#endif
 
 	struct blasfeo_dvec sr0; // XXX no need to update r0 since S=0
 	blasfeo_allocate_dvec(nu_, &sr0);
@@ -619,8 +633,10 @@ int main()
 	blasfeo_allocate_dmat(nu_+1, nu_, &sRr0);
 	blasfeo_pack_dmat(nu_, nu_, R, nu_, &sRr0, 0, 0);
 	blasfeo_drowin(nu_, 1.0, &sr0, 0, &sRr0, nu_, 0);
+#ifdef PRINT_DATA
 	printf("sRr0:\n");
 	blasfeo_print_exp_dmat(nu_+1, nu_, &sRr0, 0, 0);
+#endif
 
 	struct blasfeo_dvec srq1;
 	blasfeo_allocate_dvec(nu_+nx_, &srq1);
@@ -633,8 +649,10 @@ int main()
 	blasfeo_pack_tran_dmat(nu_, nx_, S, nu_, &sRSQrq1, nu_, 0);
 	blasfeo_pack_dmat(nx_, nx_, Q, nx_, &sRSQrq1, nu_, nu_);
 	blasfeo_drowin(nu_+nx_, 1.0, &srq1, 0, &sRSQrq1, nu_+nx_, 0);
+#ifdef PRINT_DATA
 	printf("RSQrq1:\n");
 	blasfeo_print_exp_dmat(nu_+nx_+1, nu_+nx_, &sRSQrq1, 0, 0);
+#endif
 
 	struct blasfeo_dvec sqN;
 	blasfeo_allocate_dvec(nx_, &sqN);
@@ -644,8 +662,10 @@ int main()
 	blasfeo_allocate_dmat(nx_+1, nx_, &sQqN);
 	blasfeo_pack_dmat(nx_, nx_, Q, nx_, &sQqN, 0, 0);
 	blasfeo_drowin(nx_, 1.0, &sqN, 0, &sQqN, nx_, 0);
+#ifdef PRINT_DATA
 	printf("QqN:\n");
 	blasfeo_print_exp_dmat(nx_+1, nx_, &sQqN, 0, 0);
+#endif
 
 /************************************************
 * array of matrices
@@ -698,59 +718,81 @@ int main()
 	
 #if ( EXTERNAL_BLAS!=0 | defined(BLAS_API) )
 
+#ifdef PRINT_DATA
 	printf("\n*** BLAS_API ***\n\n");
+#endif
 
 //	int incx, incy;
 
 	double *Bbt0 = malloc((nu_+1)*nx_*sizeof(double));
 	blasfeo_unpack_dmat(nu_+1, nx_, &sBbt0, 0, 0, Bbt0, nu_+1);
+#ifdef PRINT_DATA
 	printf("Bbt0:\n");
 	d_print_exp_mat(nu_+1, nx_, Bbt0, nu_+1);
+#endif
 
 	double *b0 = malloc(nx_*sizeof(double));
 	blasfeo_unpack_dvec(nx_, &sb0, 0, b0);
+#ifdef PRINT_DATA
 	printf("b0:\n");
 	d_print_exp_mat(1, nx_, b0, 1);
+#endif
 
 	double *BAbt1 = malloc((nu_+nx_+1)*nx_*sizeof(double));
 	blasfeo_unpack_dmat(nu_+nx_+1, nx_, &sBAbt1, 0, 0, BAbt1, nu_+nx_+1);
+#ifdef PRINT_DATA
 	printf("BAbt1:\n");
 	d_print_exp_mat(nu_+nx_+1, nx_, BAbt1, nu_+nx_+1);
+#endif
 
 	double *b1 = malloc(nx_*sizeof(double));
 	blasfeo_unpack_dvec(nx_, &sb, 0, b1);
+#ifdef PRINT_DATA
 	printf("b1:\n");
 	d_print_exp_mat(1, nx_, b1, 1);
+#endif
 
 	double *Rr0 = malloc((nu_+1)*nu_*sizeof(double));
 	blasfeo_unpack_dmat(nu_+1, nu_, &sRr0, 0, 0, Rr0, nu_+1);
+#ifdef PRINT_DATA
 	printf("Rr0:\n");
 	d_print_exp_mat(nu_+1, nu_, Rr0, nu_+1);
+#endif
 
 	double *r0 = malloc(nu_*sizeof(double));
 	blasfeo_unpack_dvec(nu_, &sr0, 0, r0);
+#ifdef PRINT_DATA
 	printf("r0:\n");
 	d_print_exp_mat(1, nu_, r0, 1);
+#endif
 
 	double *RSQrq1 = malloc((nu_+nx_+1)*(nu_+nx_)*sizeof(double));
 	blasfeo_unpack_dmat(nu_+nx_+1, nu_+nx_, &sRSQrq1, 0, 0, RSQrq1, nu_+nx_+1);
+#ifdef PRINT_DATA
 	printf("RSQrq1:\n");
 	d_print_exp_mat(nu_+nx_+1, nu_+nx_, RSQrq1, nu_+nx_+1);
+#endif
 
 	double *rq1 = malloc((nu_+nx_)*sizeof(double));
 	blasfeo_unpack_dvec(nu_+nx_, &srq1, 0, rq1);
+#ifdef PRINT_DATA
 	printf("rq1:\n");
 	d_print_exp_mat(1, nu_+nx_, rq1, 1);
+#endif
 
 	double *QqN = malloc((nx_+1)*nx_*sizeof(double));
 	blasfeo_unpack_dmat(nx_+1, nx_, &sQqN, 0, 0, QqN, nx_+1);
+#ifdef PRINT_DATA
 	printf("RSQrq1:\n");
 	d_print_exp_mat(nx_+1, nx_, QqN, nx_+1);
+#endif
 
 	double *qN = malloc((nx_)*sizeof(double));
 	blasfeo_unpack_dvec(nx_, &sqN, 0, qN);
+#ifdef PRINT_DATA
 	printf("qN:\n");
 	d_print_exp_mat(1, nx_, qN, 1);
+#endif
 
 
 

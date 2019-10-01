@@ -152,9 +152,9 @@ openblas_set_num_threads(1);
 //	for(ll=0; ll<4; ll++) // up to 16
 //	for(ll=0; ll<24; ll++)
 //	for(ll=0; ll<63; ll++) // up to 256
-//	for(ll=0; ll<75; ll++) // up to 300
+	for(ll=0; ll<75; ll++) // up to 300
 //	for(ll=0; ll<115; ll++) // up to 460
-	for(ll=0; ll<120; ll++) // up to 700
+//	for(ll=0; ll<120; ll++) // up to 700
 
 		{
 
@@ -164,6 +164,7 @@ openblas_set_num_threads(1);
 		nrep = nrep>1 ? nrep : 1;
 //		int n = ll+1;
 //		int nrep = nnrep[0];
+//		n = n<64 ? 64 : n;
 //		n = n<48 ? 48 : n;
 //		n = n<24 ? 24 : n;
 //		n = n<12 ? 12 : n;
@@ -307,11 +308,15 @@ openblas_set_num_threads(1);
 			for(rep=0; rep<nrep; rep++)
 				{
 
+//				blasfeo_dgemm(&c_n, &c_n, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
+				blasfeo_dgemm(&c_n, &c_t, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blasfeo_dgemm(&c_t, &c_n, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blasfeo_dgemm(&c_t, &c_t, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
+
 //				blasfeo_dgemm(&c_n, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blasfeo_dgemm(&c_n, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blasfeo_dgemm(&c_t, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blasfeo_dgemm(&c_t, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
-				blasfeo_dgemm(&c_t, &c_n, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
 
 //				blasfeo_dsyrk(&c_l, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
 //				blasfeo_dsyrk(&c_l, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
@@ -435,12 +440,12 @@ openblas_set_num_threads(1);
 
 		double Gflops_max = flops_max * GHz_max;
 
+		double flop_operation = 2.0*fix_m*fix_n*fix_k; // gemm
+
 //		double flop_operation = 2.0*n*n*n; // gemm
 //		double flop_operation = 1.0*n*n*n; // syrk trsm
 //		double flop_operation = 1.0/3.0*n*n*n; // potrf
 //		double flop_operation = 2.0/3.0*n*n*n; // getrf
-
-		double flop_operation = 2.0*fix_m*fix_n*fix_k; // gemm
 
 		double Gflops_blas      = 1e-9*flop_operation/time_blas;
 		double Gflops_blas_api  = 1e-9*flop_operation/time_blas_api;
