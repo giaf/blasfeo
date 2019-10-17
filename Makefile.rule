@@ -79,6 +79,9 @@ CURRENT_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 # ARMV7A_ARM_CORTEX_A7 : ARMv7A architecture with NEON-VFPv4 ISA (32 bit OS)
 # code optimized for ARM Cortex A7.
 #
+# ARMV7A_ARM_CORTEX_A9 : ARMv7A architecture with NEON-VFPv3 ISA (32 bit OS)
+# code optimized for ARM Cortex A9.
+#
 # GENERIC : generic architecture, plain C code.
 #
 #
@@ -94,6 +97,7 @@ TARGET = X64_INTEL_HASWELL
 # TARGET = ARMV8A_ARM_CORTEX_A53
 # TARGET = ARMV7A_ARM_CORTEX_A15
 # TARGET = ARMV7A_ARM_CORTEX_A7
+# TARGET = ARMV7A_ARM_CORTEX_A9
 #
 # TARGET = GENERIC
 
@@ -457,6 +461,10 @@ endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
 CFLAGS  += -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a7 -DTARGET_ARMV7A_ARM_CORTEX_A7
 ASFLAGS += -mfpu=neon-vfpv4 -DTARGET_ARMV7A_ARM_CORTEX_A7
+endif
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A9)
+CFLAGS  += -marm -mfloat-abi=hard -mfpu=neon-vfpv3 -mcpu=cortex-a9 -DTARGET_ARMV7A_ARM_CORTEX_A9
+ASFLAGS += -mfpu=neon-vfpv3 -DTARGET_ARMV7A_ARM_CORTEX_A9
 endif
 ifeq ($(TARGET), GENERIC)
 CFLAGS  += -DTARGET_GENERIC

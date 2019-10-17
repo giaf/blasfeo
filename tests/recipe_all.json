@@ -39,6 +39,7 @@
     "ARMV8A_ARM_CORTEX_A53",
     "ARMV7A_ARM_CORTEX_A15",
     "ARMV7A_ARM_CORTEX_A7",
+    "ARMV7A_ARM_CORTEX_A9",
     "GENERIC"
   ],
   "apis": [

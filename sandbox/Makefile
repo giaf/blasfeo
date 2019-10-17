@@ -80,6 +80,10 @@ ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
 OBJS += kernel_armv7a.o
 SRCS += kernel_armv7a.c
 endif
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A9)
+OBJS += kernel_armv7a.o
+SRCS += kernel_armv7a.c
+endif
 ifeq ($(TARGET), GENERIC)
 OBJS += kernel_generic.o
 SRCS += kernel_generic.c

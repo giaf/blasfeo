@@ -67,6 +67,9 @@ endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
 OBJS += kernel_align_generic.o
 endif
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A9)
+OBJS += kernel_align_generic.o
+endif
 ifeq ($(TARGET), GENERIC)
 OBJS += kernel_align_generic.o
 endif
@@ -119,6 +122,11 @@ ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 endif
 
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
+	( cd armv7a; $(MAKE) obj)
+	( cd generic; $(MAKE) obj)
+endif
+
+ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A9)
 	( cd armv7a; $(MAKE) obj)
 	( cd generic; $(MAKE) obj)
 endif
