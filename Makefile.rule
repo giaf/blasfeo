@@ -228,7 +228,7 @@ PRINT_NAME = 0
 
 # C Compiler
 #
-CC = gcc
+CC ?= gcc
 # CC = clang
 # CC = x86_64-w64-mingw32-gcc
 
@@ -248,7 +248,8 @@ LDFLAGS =
 
 # Common optimization flags
 #
-CFLAGS += -O2 -fPIC
+CFLAGS ?= -O2
+CFLAGS += -fPIC
 
 # Debugging flags
 #
