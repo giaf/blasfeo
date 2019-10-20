@@ -722,8 +722,13 @@ _inner_edge_gemm_add_nn_4x4_lib4:
 // r4   <- inv_diag_D
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_POTRF_4X4_LIB4
+	.macro INNER_EDGE_POTRF_4X4_LIB4 lc_zero
 #else
+	.align 3
+.LC00_inner_edge_potrf_8x4_lib4: // { 0 }
+	.word 0
+	.word 0
+
 	.p2align 4,,15
 #if defined(OS_LINUX)
 	.type inner_edge_potrf_4x4_lib4, %function
@@ -734,7 +739,11 @@ _inner_edge_potrf_4x4_lib4:
 #endif
 	
 	fconsts		s1, #112 // 1.0
-	flds		s0, .LC01 // 0.0
+#if MACRO_LEVEL>=1
+	flds		s0, \lc_zero // 0.0
+#else
+	flds		s0, .LC00_inner_edge_potrf_8x4_lib4 // 0.0
+#endif
 
 #if 0 // scalar
 
@@ -840,19 +849,35 @@ _inner_edge_potrf_4x4_lib4:
 	b			0f
 
 1:
-	flds		s16, .LC01
+#if MACRO_LEVEL>=1
+	flds		s16, \lc_zero // 0.0
+#else
+	flds		s16, .LC00_inner_edge_potrf_8x4_lib4 // 0.0
+#endif
 	b			2b
 
 3:
-	flds		s21, .LC01
+#if MACRO_LEVEL>=1
+	flds		s21, \lc_zero // 0.0
+#else
+	flds		s21, .LC00_inner_edge_potrf_8x4_lib4 // 0.0
+#endif
 	b			4b
 
 5:
-	flds		s26, .LC01
+#if MACRO_LEVEL>=1
+	flds		s26, \lc_zero // 0.0
+#else
+	flds		s26, .LC00_inner_edge_potrf_8x4_lib4 // 0.0
+#endif
 	b			6b
 
 7:
-	flds		s31, .LC01
+#if MACRO_LEVEL>=1
+	flds		s31, \lc_zero // 0.0
+#else
+	flds		s31, .LC00_inner_edge_potrf_8x4_lib4 // 0.0
+#endif
 
 0:
 	
@@ -865,14 +890,6 @@ _inner_edge_potrf_4x4_lib4:
 	.size	inner_edge_potrf_4x4_lib4, .-inner_edge_potrf_4x4_lib4
 #endif
 #endif
-
-	.align 3
-.LC01: // { 0 }
-	.word 0
-	.word 0
-
-
-
 
 
 // subroutine
@@ -955,8 +972,12 @@ inner_edge_trsm_rlt_inv_4x4_lib4:
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_SCALE_AB_4X4_LIB4
+	.macro INNER_SCALE_AB_4X4_LIB4 lc_zero
 #else
+	.align 3
+.LC00_inner_scale_ab_4x4_lib4: // { 0 }
+	.word 0
+	.word 0
 //	.p2align 4,,15
 #if defined(OS_LINUX)
 	.type inner_scale_ab_4x4_lib4, %function
@@ -971,7 +992,11 @@ _inner_scale_ab_4x4_lib4:
 	vmul.f32	q4, q4, d4[0]
 	flds		s9, [r5, #0] // beta
 	vmul.f32	q5, q5, d4[0]
-	flds		s10, .LC00 // 0.0
+#if MACRO_LEVEL>=2
+	flds		s10, \lc_zero // 0.0
+#else
+	flds		s10, .LC00_inner_scale_ab_4x4_lib4 // 0.0
+#endif
 	vmul.f32	q6, q6, d4[0]
 	fcmpes		s9, s10
 	vmul.f32	q7, q7, d4[0]
@@ -1120,15 +1145,11 @@ _inner_store_4x4_l_lib4:
 
 
 
+       .align 3
+.LC00_kernel_sgemm_nt_4x4_lib4: // { 0 }
+	.word 0
+	.word 0
 
-
-// zero double word
-	.align 3
-.LC00: // { 0 }
-	.word 0
-	.word 0
-	.word 0
-	.word 0
 
 //                               r0        r1             r2         r3         sp+0          sp+4       sp+8
 // void kernel_sgemm_nt_4x4_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D)
@@ -1148,8 +1169,8 @@ _kernel_sgemm_nt_4x4_lib4:
 
 
 	// zero accumulation registers
-	vldr	d8, .LC00
-	vldr	d9, .LC00+8
+	vldr	d8, .LC00_kernel_sgemm_nt_4x4_lib4
+	vldr	d9, .LC00_kernel_sgemm_nt_4x4_lib4
 	vmov	q5, q4
 	vmov	q6, q4
 	vmov	q7, q4
@@ -1179,7 +1200,7 @@ _kernel_sgemm_nt_4x4_lib4:
 	ldr		r6, [fp, #4] // C
 
 #if MACRO_LEVEL>=2
-	INNER_SCALE_AB_4X4_LIB4
+	INNER_SCALE_AB_4X4_LIB4 .LC00_kernel_sgemm_nt_4x4_lib4
 #else
 #if defined(OS_LINUX)
 	bl inner_scale_ab_4x4_lib4
@@ -1212,6 +1233,11 @@ _kernel_sgemm_nt_4x4_lib4:
 #endif
 
 
+	.align 3
+.LC00_kernel_sgemm_nn_4x4_lib4: // { 0 }
+	.word 0
+	.word 0
+
 
 //                               r0        r1             r2         r3           sp+0       sp+4     sp+8          sp+12      sp+16
 // void kernel_sgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D)
@@ -1231,8 +1257,8 @@ _kernel_sgemm_nn_4x4_lib4:
 
 
 	// zero accumulation registers
-	vldr	d8, .LC00
-	vldr	d9, .LC00+8
+	vldr	d8, .LC00_kernel_sgemm_nn_4x4_lib4
+	vldr	d9, .LC00_kernel_sgemm_nn_4x4_lib4
 	vmov	q5, q4
 	vmov	q6, q4
 	vmov	q7, q4
@@ -1275,7 +1301,7 @@ _kernel_sgemm_nn_4x4_lib4:
 	ldr		r6, [fp, #12] // C
 
 #if MACRO_LEVEL>=2
-	INNER_SCALE_AB_4X4_LIB4
+	INNER_SCALE_AB_4X4_LIB4 .LC00_kernel_sgemm_nn_4x4_lib4
 #else
 #if defined(OS_LINUX)
 	bl inner_scale_ab_4x4_lib4
@@ -1308,6 +1334,11 @@ _kernel_sgemm_nn_4x4_lib4:
 #endif
 
 
+	.align 3
+.LC00_kernel_strsm_nt_rl_inv_4x4_lib4: // { 0 }
+	.word 0
+	.word 0
+
 
 //                                      r0        r1         r2         r3         sp+0       sp+4       rsp+8
 // void kernel_strsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E);
@@ -1327,8 +1358,8 @@ _kernel_strsm_nt_rl_inv_4x4_lib4:
 
 
 	// zero accumulation registers
-	vldr	d8, .LC00
-	vldr	d9, .LC00+8
+	vldr	d8, .LC00_kernel_strsm_nt_rl_inv_4x4_lib4
+	vldr	d9, .LC00_kernel_strsm_nt_rl_inv_4x4_lib4
 	vmov	q5, q4
 	vmov	q6, q4
 	vmov	q7, q4
@@ -1405,6 +1436,11 @@ _kernel_strsm_nt_rl_inv_4x4_lib4:
 #endif
 
 
+	.align 3
+.LC00_kernel_spotrf_nt_l_4x4_lib4: // { 0 }
+	.word 0
+	.word 0
+
 
 //                                  r0        r1         r2         r3         sp+0       sp+4
 // void kernel_spotrf_nt_l_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *inv_diag_D);
@@ -1424,8 +1460,8 @@ _kernel_spotrf_nt_l_4x4_lib4:
 
 
 	// zero accumulation registers
-	vldr	d8, .LC00
-	vldr	d9, .LC00+8
+	vldr	d8, .LC00_kernel_spotrf_nt_l_4x4_lib4
+	vldr	d9, .LC00_kernel_spotrf_nt_l_4x4_lib4
 	vmov	q5, q4
 	vmov	q6, q4
 	vmov	q7, q4
@@ -1468,7 +1504,7 @@ _kernel_spotrf_nt_l_4x4_lib4:
 	ldr		r4, [fp, #4] // inv_diag_D
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_POTRF_4X4_LIB4
+	INNER_EDGE_POTRF_4X4_LIB4 .LC00_kernel_spotrf_nt_l_4x4_lib4
 #else
 #if defined(OS_LINUX)
 	bl inner_edge_potrf_4x4_lib4
@@ -1500,6 +1536,11 @@ _kernel_spotrf_nt_l_4x4_lib4:
 	.size	kernel_spotrf_nt_l_4x4_lib4, .-kernel_spotrf_nt_l_4x4_lib4
 #endif
 
+// 	.align 3
+// .LC00_kernel_spotrf_nt_l_4x4_lib4_post: // { 0 }
+// 	.word 0
+// 	.word 0
+// 
 
 
 
