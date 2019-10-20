@@ -1178,7 +1178,7 @@ _kernel_sgemm_nt_4x4_lib4:
 	ldr		r5, [fp, #0] // beta
 	ldr		r6, [fp, #4] // C
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_SCALE_AB_4X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1193,7 +1193,7 @@ _kernel_sgemm_nt_4x4_lib4:
 	// store n
 	ldr		r4, [fp, #8] // D
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_STORE_4X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1274,7 +1274,7 @@ _kernel_sgemm_nn_4x4_lib4:
 	ldr		r5, [fp, #8] // beta
 	ldr		r6, [fp, #12] // C
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_SCALE_AB_4X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1289,7 +1289,7 @@ _kernel_sgemm_nn_4x4_lib4:
 	// store n
 	ldr		r4, [fp, #16] // D
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_STORE_4X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1355,7 +1355,7 @@ _kernel_strsm_nt_rl_inv_4x4_lib4:
 	// call inner blend for alpha=1.0 and beta=1.0
 	mov		r4, r3 // C
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_SCALE_M11_4X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1386,7 +1386,7 @@ _kernel_strsm_nt_rl_inv_4x4_lib4:
 	// store l
 	ldr		r4, [fp, #0] // D
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_STORE_4X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1452,7 +1452,7 @@ _kernel_spotrf_nt_l_4x4_lib4:
 	// call inner blend for alpha=1.0 and beta=1.0
 	mov		r4, r3 // C
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_SCALE_M11_4X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1482,7 +1482,7 @@ _kernel_spotrf_nt_l_4x4_lib4:
 	// store l
 	ldr		r4, [fp, #0] // D
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_STORE_4X4_L_LIB4
 #else
 #if defined(OS_LINUX)

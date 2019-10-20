@@ -1386,7 +1386,7 @@ _kernel_sgemm_nt_8x4_lib4:
 	ldr		r7, [fp, #12] // sdc
 	lsl		r7, r7, #4 // 4*sizeof(float)*sdc
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_SCALE_AB_8X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1403,7 +1403,7 @@ _kernel_sgemm_nt_8x4_lib4:
 	ldr		r5, [fp, #20] // sdd
 	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_STORE_8X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1486,7 +1486,7 @@ _kernel_sgemm_nn_8x4_lib4:
 	ldr		r7, [fp, #20] // sdc
 	lsl		r7, r7, #4 // 4*sizeof(float)*sdc
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_SCALE_AB_8X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1503,7 +1503,7 @@ _kernel_sgemm_nn_8x4_lib4:
 	ldr		r5, [fp, #28] // sdd
 	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_STORE_8X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1579,7 +1579,7 @@ _kernel_strsm_nt_rl_inv_8x4_lib4:
 	ldr		r5, [fp, #4] // sdd
 	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_SCALE_M11_8X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1612,7 +1612,7 @@ _kernel_strsm_nt_rl_inv_8x4_lib4:
 	ldr		r5, [fp, #12] // sdd
 	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_STORE_8X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1688,7 +1688,7 @@ _kernel_spotrf_nt_l_8x4_lib4:
 	ldr		r5, [fp, #4] // sdd
 	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_SCALE_M11_8X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1720,7 +1720,7 @@ _kernel_spotrf_nt_l_8x4_lib4:
 	ldr		r5, [fp, #12] // sdd
 	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_STORE_8X4_L_LIB4
 #else
 #if defined(OS_LINUX)
