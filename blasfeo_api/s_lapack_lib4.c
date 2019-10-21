@@ -524,7 +524,6 @@ void blasfeo_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct bla
 		}
 #endif
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
-#if 1
 	for(; i<m-11; i+=12)
 		{
 		j = 0;
@@ -551,7 +550,7 @@ void blasfeo_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct bla
 			goto left_12;
 			}
 		}
-#else
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
@@ -573,7 +572,6 @@ void blasfeo_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct bla
 			goto left_8;
 			}
 		}
-#endif
 #else
 	for(; i<m-3; i+=4)
 		{
@@ -657,7 +655,7 @@ void blasfeo_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct bla
 	return;
 #endif
 
-#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53) || defined(TARGET_ARMV7A_ARM_CORTEX_A15)
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) | defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
 	left_8:
 	if(m-i==8)
 		{
