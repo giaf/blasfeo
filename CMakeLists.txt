@@ -51,8 +51,8 @@ set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")
 # set(TARGET ARMV8A_ARM_CORTEX_A57 CACHE STRING "Target architecture")
 # set(TARGET ARMV8A_ARM_CORTEX_A53 CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A15 CACHE STRING "Target architecture")
-# set(TARGET ARMV7A_ARM_CORTEX_A7 CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A9 CACHE STRING "Target architecture")
+# set(TARGET ARMV7A_ARM_CORTEX_A7 CACHE STRING "Target architecture")
 # set(TARGET GENERIC)
 
 # Populate a list of allowable targets and link it to the option
@@ -65,8 +65,8 @@ set(ALLOWED_TARGETS
 		ARMV8A_ARM_CORTEX_A57
 		ARMV8A_ARM_CORTEX_A53
 		ARMV7A_ARM_CORTEX_A15
-		ARMV7A_ARM_CORTEX_A7
 		ARMV7A_ARM_CORTEX_A9
+		ARMV7A_ARM_CORTEX_A7
 		GENERIC
 		)
 set_property(CACHE TARGET PROPERTY STRINGS ${ALLOWED_TARGETS})
@@ -278,8 +278,8 @@ set(C_FLAGS_TARGET_X64_AMD_BULLDOZER      "-m64 -mavx -mfma")
 set(C_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A57  "-march=armv8-a+crc+crypto+simd -mcpu=cortex-a57")
 set(C_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A53  "-march=armv8-a+crc+crypto+simd -mcpu=cortex-a53")
 set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A15  "-marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15")
-set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A7   "-marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a7")
 set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A9   "-marm -mfloat-abi=hard -mfpu=neon-vfpv3 -mcpu=cortex-a9")
+set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A7   "-marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a7")
 set(C_FLAGS_TARGET_GENERIC                "")
 
 # architecture-specific assembly flags
@@ -290,8 +290,8 @@ set(ASM_FLAGS_TARGET_X64_AMD_BULLDOZER      "")
 set(ASM_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A57  "")
 set(ASM_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A53  "")
 set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A15  "-mfpu=neon-vfpv4 -mcpu=cortex-a15")
-set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A7   "-mfpu=neon-vfpv4 -mcpu=cortex-a7")
 set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A9   "-mfpu=neon-vfpv3 -mcpu=cortex-a9")
+set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A7   "-mfpu=neon-vfpv4 -mcpu=cortex-a7")
 set(ASM_FLAGS_TARGET_GENERIC                "")
 
 
