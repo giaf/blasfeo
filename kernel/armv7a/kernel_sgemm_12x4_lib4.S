@@ -686,7 +686,7 @@ _inner_kernel_gemm_sub_nt_12x4_lib4:
 	.macro INNER_EDGE_POTRF_12X4_LIB4 lc_zero
 #else
 	.align 3
-.LC00_inner_edge_potrf_12x4_lib4: // { 0 }
+99: // { 0 }
 	.word 0
 	.word 0
 
@@ -703,7 +703,7 @@ _inner_edge_potrf_12x4_lib4:
 #if MACRO_LEVEL>=1
 	flds		s0, \lc_zero // 0.0
 #else
-	flds		s0, .LC00_inner_edge_potrf_12x4_lib4 // 0.0
+	flds		s0, 99b // 0.0
 #endif
 
 	// first column
@@ -777,7 +777,7 @@ _inner_edge_potrf_12x4_lib4:
 #if MACRO_LEVEL>=1
 	flds		s16, \lc_zero // 0.0
 #else
-	flds		s16, .LC00_inner_edge_potrf_12x4_lib4 // 0.0
+	flds		s16, 99b // 0.0
 #endif
 	b			2b
 
@@ -785,7 +785,7 @@ _inner_edge_potrf_12x4_lib4:
 #if MACRO_LEVEL>=1
 	flds		s21, \lc_zero // 0.0
 #else
-	flds		s21, .LC00_inner_edge_potrf_12x4_lib4 // 0.0
+	flds		s21, 99b // 0.0
 #endif
 	b			4b
 
@@ -793,7 +793,7 @@ _inner_edge_potrf_12x4_lib4:
 #if MACRO_LEVEL>=1
 	flds		s26, \lc_zero // 0.0
 #else
-	flds		s26, .LC00_inner_edge_potrf_12x4_lib4 // 0.0
+	flds		s26, 99b // 0.0
 #endif
 	b			6b
 
@@ -801,7 +801,7 @@ _inner_edge_potrf_12x4_lib4:
 #if MACRO_LEVEL>=1
 	flds		s31, \lc_zero // 0.0
 #else
-	flds		s31, .LC00_inner_edge_potrf_12x4_lib4 // 0.0
+	flds		s31, 99b // 0.0
 #endif
 	b			8b
 
@@ -908,10 +908,15 @@ inner_edge_trsm_rlt_inv_12x4_lib4:
 
 
 
-       .align 3
-.LC00_inner_scale_ab_12x4_lib4: // { 0 }
+
+
+	.align 3
+99: // { 0 }
 	.word 0
 	.word 0
+
+
+
 
 
 // subroutine
@@ -941,7 +946,7 @@ _inner_scale_ab_12x4_lib4:
 	vmul.f32	q4, q4, d4[0]
 	flds		s9, [r5, #0] // beta
 	vmul.f32	q5, q5, d4[0]
-	flds		s10, .LC00_inner_scale_ab_12x4_lib4 // 0.0
+	flds		s10, 99b // 0.0
 	vmul.f32	q6, q6, d4[0]
 	vmul.f32	q7, q7, d4[0]
 	fcmpes		s9, s10
@@ -1153,11 +1158,15 @@ _inner_store_12x4_l_lib4:
 
 // zero double word
 	.align 3
-.LC00_kernel_sgemm_nt_12x4_lib4: // { 0 }
+99: // { 0 }
 	.word 0
 	.word 0
 	.word 0
 	.word 0
+
+
+
+
 
 //                                r0        r1             r2         r3       sp+0       sp+4          sp+8       sp+12    sp+16   sp+20
 // void kernel_sgemm_nt_12x4_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd)
@@ -1184,8 +1193,8 @@ _kernel_sgemm_nt_12x4_lib4:
 
 
 	// zero accumulation registers
-	vldr	d8, .LC00_kernel_sgemm_nt_12x4_lib4
-	vldr	d9, .LC00_kernel_sgemm_nt_12x4_lib4
+	vldr	d8, 99b
+	vldr	d9, 99b
 	vmov	q5, q4
 	vmov	q6, q4
 	vmov	q7, q4
@@ -1271,8 +1280,10 @@ _kernel_sgemm_nt_12x4_lib4:
 
 
 
-       .align 3
-.LC00_kernel_strsm_nt_rl_inv_12x4_lib4: // { 0 }
+
+
+	.align 3
+99: // 0
 	.word 0
 	.word 0
 
@@ -1295,8 +1306,8 @@ _kernel_strsm_nt_rl_inv_12x4_lib4:
 
 
 	// zero accumulation registers
-	vldr	d8, .LC00_kernel_strsm_nt_rl_inv_12x4_lib4
-	vldr	d9, .LC00_kernel_strsm_nt_rl_inv_12x4_lib4
+	vldr	d8, 99b
+	vldr	d9, 99b
 	vmov	q5, q4
 	vmov	q6, q4
 	vmov	q7, q4
@@ -1388,10 +1399,15 @@ _kernel_strsm_nt_rl_inv_12x4_lib4:
 
 
 
-       .align 3
-.LC00_kernel_spotrf_nt_l_12x4_lib4: // { 0 }
-       .word 0
-       .word 0
+
+
+	.align 3
+99: // 0
+	.word 0
+	.word 0
+
+
+
 
 
 //                                  r0        r1         r2       r3         sp+0       sp+4     sp+8       sp+12    sp+16
@@ -1412,8 +1428,8 @@ _kernel_spotrf_nt_l_12x4_lib4:
 
 
 	// zero accumulation registers
-	vldr	d8, .LC00_kernel_spotrf_nt_l_12x4_lib4
-	vldr	d9, .LC00_kernel_spotrf_nt_l_12x4_lib4
+	vldr	d8, 99b
+	vldr	d9, 99b
 	vmov	q5, q4
 	vmov	q6, q4
 	vmov	q7, q4
@@ -1468,7 +1484,7 @@ _kernel_spotrf_nt_l_12x4_lib4:
 	ldr		r4, [fp, #16] // inv_diag_D
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_POTRF_12X4_LIB4 .LC00_kernel_spotrf_nt_l_12x4_lib4_post
+	INNER_EDGE_POTRF_12X4_LIB4 99f
 #else
 #if defined(OS_LINUX)
 	bl inner_edge_potrf_12x4_lib4
@@ -1502,10 +1518,14 @@ _kernel_spotrf_nt_l_12x4_lib4:
 	.size	kernel_spotrf_nt_l_12x4_lib4, .-kernel_spotrf_nt_l_12x4_lib4
 #endif
 
-       .align 3
-.LC00_kernel_spotrf_nt_l_12x4_lib4_post: // { 0 }
-       .word 0
-       .word 0
+
+
+
+
+	.align 3
+99: // { 0 }
+	.word 0
+	.word 0
 
 
 

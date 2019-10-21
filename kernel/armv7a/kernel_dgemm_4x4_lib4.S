@@ -1285,7 +1285,7 @@ inner_edge_dtrsm_rlt_inv_4x4_lib4:
 	.macro INNER_EDGE_DPOTRF_4X4_LIB4 lc_zero
 #else
 	.align 3
-.LC00_inner_edge_dpotrf_4x4_lib4: // 0
+99: // 0
 	.word 0
 	.word 0
 
@@ -1302,7 +1302,7 @@ _inner_edge_dpotrf_4x4_lib4:
 #if MACRO_LEVEL>=1
 	fldd		d17, \lc_zero // 0.0
 #else
-	fldd		d17, .LC00_inner_edge_dpotrf_4x4_lib4 // 0.0
+	fldd		d17, 99b // 0.0
 #endif
 
 	// first column
@@ -1362,7 +1362,7 @@ _inner_edge_dpotrf_4x4_lib4:
 #if MACRO_LEVEL>=1
 	fldd		d0, \lc_zero // 0.0
 #else
-	fldd		d0, .LC00_inner_edge_dpotrf_4x4_lib4 // 0.0
+	fldd		d0, 99b // 0.0
 #endif
 	b			2b
 
@@ -1370,7 +1370,7 @@ _inner_edge_dpotrf_4x4_lib4:
 #if MACRO_LEVEL>=1
 	fldd		d5, \lc_zero // 0.0
 #else
-	fldd		d5, .LC00_inner_edge_dpotrf_4x4_lib4 // 0.0
+	fldd		d5, 99b // 0.0
 #endif
 	b			4b
 
@@ -1378,7 +1378,7 @@ _inner_edge_dpotrf_4x4_lib4:
 #if MACRO_LEVEL>=1
 	fldd		d10, \lc_zero // 0.0
 #else
-	fldd		d10, .LC00_inner_edge_dpotrf_4x4_lib4 // 0.0
+	fldd		d10, 99b // 0.0
 #endif
 	b			6b
 
@@ -1386,7 +1386,7 @@ _inner_edge_dpotrf_4x4_lib4:
 #if MACRO_LEVEL>=1
 	fldd		d15, \lc_zero // 0.0
 #else
-	fldd		d15, .LC00_inner_edge_dpotrf_4x4_lib4 // 0.0
+	fldd		d15, 99b // 0.0
 #endif
 
 0:
@@ -1416,7 +1416,7 @@ _inner_edge_dpotrf_4x4_lib4:
 	.macro INNER_SCALE_AB_4X4_LIB4 lc_zero
 #else
 	.align 3
-.LC00_inner_scale_ab_4x4_lib4: // { 0 }
+99: // { 0 }
 	.word 0
 	.word 0
 //	.p2align 4,,15
@@ -1436,7 +1436,7 @@ _inner_scale_ab_4x4_lib4:
 #if MACRO_LEVEL>=2
 	fldd		d17, \lc_zero // 0.0
 #else
-	fldd		d17, .LC00_inner_scale_ab_4x4_lib4 // 0.0
+	fldd		d17, 99b // 0.0
 #endif
 	fmuld	d2, d2, d16
 	fmuld	d3, d3, d16
@@ -1524,7 +1524,7 @@ _inner_scale_ab_4x4_lib4:
 	.macro INNER_SCALE_M1B_4X4_LIB4 lc_zero
 #else
 	.align 3
-.LC00_inner_scale_m1b_4x4_lib4: // { 0 }
+99: // { 0 }
 	.word 0
 	.word 0
 //	.p2align 4,,15
@@ -1540,7 +1540,7 @@ _inner_scale_m1b_4x4_lib4:
 #if MACRO_LEVEL>=2
 	fldd		d17, \lc_zero // 0.0
 #else
-	fldd		d17, .LC00_inner_scale_m1b_4x4_lib4 // 0.0
+	fldd		d17, 99b // 0.0
 #endif
 	fcmped	d18, d17
 	fmstat
@@ -1776,7 +1776,7 @@ _inner_store_l_4x4_lib4:
 
 // zero double word
 	.align 3
-.LC00_kernel_dgemm_nt_4x4_lib4: // 0
+99: // 0
 	.word 0
 	.word 0
 
@@ -1805,7 +1805,7 @@ _kernel_dgemm_nt_4x4_lib4:
 
 
 	// zero accumulation registers
-	fldd	d0, .LC00_kernel_dgemm_nt_4x4_lib4
+	fldd	d0, 99b
 	fcpyd	d1, d0
 	fcpyd	d2, d0
 	fcpyd	d3, d0
@@ -1847,7 +1847,7 @@ _kernel_dgemm_nt_4x4_lib4:
 	ldr		r6, [fp, #4] // C
 
 #if MACRO_LEVEL>=2
-	INNER_SCALE_AB_4X4_LIB4 .LC00_kernel_dgemm_nt_4x4_lib4_end
+	INNER_SCALE_AB_4X4_LIB4 99f
 #else
 #if defined(OS_LINUX)
 	bl inner_scale_ab_4x4_lib4
@@ -1887,20 +1887,18 @@ _kernel_dgemm_nt_4x4_lib4:
 	.size	kernel_dgemm_nt_4x4_lib4, .-kernel_dgemm_nt_4x4_lib4
 #endif
 
-// zero double word
-	.align 3
-.LC00_kernel_dgemm_nt_4x4_lib4_end: // 0
-	.word 0
-	.word 0
-
 
 
 
 
 	.align 3
-.LC00_kernel_dgemm_nn_4x4_lib4: // 0
+99: // 0
 	.word 0
 	.word 0
+
+
+
+
 
 //                               r0        r1             r2         r3           sp+0       sp+4     sp+8          sp+12      sp+16
 // void kernel_dgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D)
@@ -1927,7 +1925,7 @@ _kernel_dgemm_nn_4x4_lib4:
 
 
 	// zero accumulation registers
-	fldd	d0, .LC00_kernel_dgemm_nn_4x4_lib4
+	fldd	d0, 99b
 	fcpyd	d1, d0
 	fcpyd	d2, d0
 	fcpyd	d3, d0
@@ -1982,7 +1980,7 @@ _kernel_dgemm_nn_4x4_lib4:
 	ldr		r6, [fp, #12] // C
 
 #if MACRO_LEVEL>=2
-	INNER_SCALE_AB_4X4_LIB4 .LC00_kernel_dgemm_nn_4x4_lib4_end
+	INNER_SCALE_AB_4X4_LIB4 99f
 #else
 #if defined(OS_LINUX)
 	bl inner_scale_ab_4x4_lib4
@@ -2022,19 +2020,18 @@ _kernel_dgemm_nn_4x4_lib4:
 	.size	kernel_dgemm_nn_4x4_lib4, .-kernel_dgemm_nn_4x4_lib4
 #endif
 
-	.align 3
-.LC00_kernel_dgemm_nn_4x4_lib4_end: // 0
-	.word 0
-	.word 0
-
 
 
 
 
 	.align 3
-.LC00_kernel_dsyrk_nt_l_4x4_lib4: // 0
+99: // 0
 	.word 0
 	.word 0
+
+
+
+
 
 //                                 r0        r1             r2         r3         sp+0          sp+4       sp+8
 // void kernel_dsyrk_nt_l_4x4_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D);
@@ -2061,7 +2058,7 @@ _kernel_dsyrk_nt_l_4x4_lib4:
 
 
 	// zero accumulation registers
-	fldd	d0, .LC00_kernel_dsyrk_nt_l_4x4_lib4
+	fldd	d0, 99b
 	fcpyd	d1, d0
 	fcpyd	d2, d0
 	fcpyd	d3, d0
@@ -2103,7 +2100,7 @@ _kernel_dsyrk_nt_l_4x4_lib4:
 	ldr		r6, [fp, #4] // C
 
 #if MACRO_LEVEL>=2
-	INNER_SCALE_AB_4X4_LIB4 .LC00_kernel_dsyrk_nt_l_4x4_lib4_end
+	INNER_SCALE_AB_4X4_LIB4 99f
 #else
 #if defined(OS_LINUX)
 	bl inner_scale_ab_4x4_lib4
@@ -2143,19 +2140,18 @@ _kernel_dsyrk_nt_l_4x4_lib4:
 	.size	kernel_dsyrk_nt_l_4x4_lib4, .-kernel_dsyrk_nt_l_4x4_lib4
 #endif
 
-	.align 3
-.LC00_kernel_dsyrk_nt_l_4x4_lib4_end: // 0
-	.word 0
-	.word 0
-
 
 
 
 
 	.align 3
-.LC00_kernel_dtrsm_nt_rl_inv_4x4_lib4: // 0
+99: // 0
 	.word 0
 	.word 0
+
+
+
+
 
 //                                      r0        r1         r2         r3            sp+0       sp+4       sp+8       sp+12
 // void kernel_dtrsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E);
@@ -2182,7 +2178,7 @@ _kernel_dtrsm_nt_rl_inv_4x4_lib4:
 
 
 	// zero accumulation registers
-	fldd	d0, .LC00_kernel_dtrsm_nt_rl_inv_4x4_lib4
+	fldd	d0, 99b
 	fcpyd	d1, d0
 	fcpyd	d2, d0
 	fcpyd	d3, d0
@@ -2223,7 +2219,7 @@ _kernel_dtrsm_nt_rl_inv_4x4_lib4:
 	ldr		r5, [fp, #0] // C
 
 #if MACRO_LEVEL>=2
-	INNER_SCALE_M1B_4X4_LIB4 .LC00_kernel_dtrsm_nt_rl_inv_4x4_lib4_end
+	INNER_SCALE_M1B_4X4_LIB4 99f
 #else
 #if defined(OS_LINUX)
 	bl inner_scale_m1b_4x4_lib4
@@ -2279,19 +2275,18 @@ _kernel_dtrsm_nt_rl_inv_4x4_lib4:
 	.size	kernel_dtrsm_nt_rl_inv_4x4_lib4, .-kernel_dtrsm_nt_rl_inv_4x4_lib4
 #endif
 
-	.align 3
-.LC00_kernel_dtrsm_nt_rl_inv_4x4_lib4_end: // 0
-	.word 0
-	.word 0
-
 
 
 
 
 	.align 3
-.LC00_kernel_dpotrf_nt_l_4x4_lib4: // 0
+99: // 0
 	.word 0
 	.word 0
+
+
+
+
 
 //                                  r0        r1         r2         r3         sp+0       sp+4
 // void kernel_dpotrf_nt_l_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *inv_diag_D);
@@ -2318,7 +2313,7 @@ _kernel_dpotrf_nt_l_4x4_lib4:
 
 
 	// zero accumulation registers
-	fldd	d0, .LC00_kernel_dpotrf_nt_l_4x4_lib4
+	fldd	d0, 99b
 	fcpyd	d1, d0
 	fcpyd	d2, d0
 	fcpyd	d3, d0
@@ -2373,7 +2368,7 @@ _kernel_dpotrf_nt_l_4x4_lib4:
 	ldr		r4, [fp, #4] // inv_diag_D
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DPOTRF_4X4_LIB4 .LC00_kernel_dpotrf_nt_l_4x4_lib4_end
+	INNER_EDGE_DPOTRF_4X4_LIB4 99f
 #else
 #if defined(OS_LINUX)
 	bl inner_edge_dpotrf_4x4_lib4
@@ -2413,19 +2408,18 @@ _kernel_dpotrf_nt_l_4x4_lib4:
 	.size	kernel_dpotrf_nt_l_4x4_lib4, .-kernel_dpotrf_nt_l_4x4_lib4
 #endif
 
-	.align 3
-.LC00_kernel_dpotrf_nt_l_4x4_lib4_end: // 0
-	.word 0
-	.word 0
-
 
 
 
 
 	.align 3
-.LC00_kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4: // 0
+99: // 0
 	.word 0
 	.word 0
+
+
+
+
 
 //                                            r0      r1          r2          r3      sp+0        sp+4        sp+8       sp+12      sp+16      sp+20
 // void kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *E, double *inv_diag_E);
@@ -2452,7 +2446,7 @@ _kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4:
 
 
 	// zero accumulation registers
-	fldd	d0, .LC00_kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4
+	fldd	d0, 99b
 	fcpyd	d1, d0
 	fcpyd	d2, d0
 	fcpyd	d3, d0
@@ -2584,19 +2578,18 @@ _kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4:
 	.size	kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4, .-kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4
 #endif
 
-	.align 3
-.LC00_kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4_end: // 0
-	.word 0
-	.word 0
-
 
 
 
 
 	.align 3
-.LC00_kernel_dsyrk_dpotrf_nt_l_4x4_lib4: // 0
+99: // 0
 	.word 0
 	.word 0
+
+
+
+
 
 //                                        r0      r1          r2          r3      sp+0        sp+4        sp+8       sp+12      sp+16
 // void kernel_dsyrk_dpotrf_nt_l_4x4_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *inv_diag_D);
@@ -2623,7 +2616,7 @@ _kernel_dsyrk_dpotrf_nt_l_4x4_lib4:
 
 
 	// zero accumulation registers
-	fldd	d0, .LC00_kernel_dsyrk_dpotrf_nt_l_4x4_lib4
+	fldd	d0, 99b
 	fcpyd	d1, d0
 	fcpyd	d2, d0
 	fcpyd	d3, d0
@@ -2714,7 +2707,7 @@ _kernel_dsyrk_dpotrf_nt_l_4x4_lib4:
 	ldr		r4, [fp, #16] // inv_diag_D
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DPOTRF_4X4_LIB4 .LC00_kernel_dsyrk_dpotrf_nt_l_4x4_lib4_end
+	INNER_EDGE_DPOTRF_4X4_LIB4 99f
 #else
 #if defined(OS_LINUX)
 	bl inner_edge_dpotrf_4x4_lib4
@@ -2754,8 +2747,12 @@ _kernel_dsyrk_dpotrf_nt_l_4x4_lib4:
 	.size	kernel_dsyrk_dpotrf_nt_l_4x4_lib4, .-kernel_dsyrk_dpotrf_nt_l_4x4_lib4
 #endif
 
+
+
+
+
 	.align 3
-.LC00_kernel_dsyrk_dpotrf_nt_l_4x4_lib4_end: // 0
+99: // 0
 	.word 0
 	.word 0
 

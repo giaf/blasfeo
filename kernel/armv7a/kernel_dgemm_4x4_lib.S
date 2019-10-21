@@ -151,7 +151,7 @@ inner_edge_dtrsm_rlt_inv_4x4_lib:
 	.macro INNER_SCALE_AB_4X4_LIB lc_zero
 #else
 	.align 3
-.LC00_inner_edge_dtrsm_rlt_inv_4x4_lib: // 0
+99: // 0
 	.word 0
 	.word 0
 
@@ -172,7 +172,7 @@ _inner_scale_ab_4x4_lib:
 #if MACRO_LEVEL>=1
 	fldd	d17, \lc_zero // 0.0
 #else
-	fldd	d17, .LC00_inner_edge_dtrsm_rlt_inv_4x4_lib // 0.0
+	fldd	d17, 99b // 0.0
 #endif
 	fmuld	d2, d2, d16
 	fmuld	d3, d3, d16
@@ -440,9 +440,12 @@ _inner_store_l_4x4_lib4:
 
 
 	.align 3
-.LC00_kernel_dgemm_nt_4x4_lib44cc: // 0
+99: // 0
 	.word 0
 	.word 0
+
+
+
 
 //                                 r0        r1             r2         r3         sp+0          sp+4       sp+8     sp+12      sp+16
 // void kernel_dgemm_nt_4x4_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
@@ -469,7 +472,7 @@ _kernel_dgemm_nt_4x4_lib44cc:
 
 
 	// zero accumulation registers
-	fldd	d0, .LC00_kernel_dgemm_nt_4x4_lib44cc
+	fldd	d0, 99b
 	fcpyd	d1, d0
 	fcpyd	d2, d0
 	fcpyd	d3, d0
@@ -513,7 +516,7 @@ _kernel_dgemm_nt_4x4_lib44cc:
 	lsl		r7, r7, #3 // ldc*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_4X4_LIB .LC00_kernel_dgemm_nt_4x4_lib44cc_end
+	INNER_SCALE_AB_4X4_LIB 99f
 #else
 #if defined(OS_LINUX)
 	bl inner_scale_ab_4x4_lib
@@ -555,19 +558,18 @@ _kernel_dgemm_nt_4x4_lib44cc:
 	.size	kernel_dgemm_nt_4x4_lib44cc, .-kernel_dgemm_nt_4x4_lib44cc
 #endif
 
-	.align 3
-.LC00_kernel_dgemm_nt_4x4_lib44cc_end: // 0
-	.word 0
-	.word 0
-
 
 
 
 
 	.align 3
-.LC00_kernel_dpotrf_nt_l_4x4_lib44cc: // 0
+99: // 0
 	.word 0
 	.word 0
+
+
+
+
 
 //                                    r0        r1         r2         r3         sp+0     sp+4       sp+8     sp+12
 // void kernel_dpotrf_nt_l_4x4_lib44cc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
@@ -594,7 +596,7 @@ _kernel_dpotrf_nt_l_4x4_lib44cc:
 
 
 	// zero accumulation registers
-	fldd	d0, .LC00_kernel_dpotrf_nt_l_4x4_lib44cc
+	fldd	d0, 99b
 	fcpyd	d1, d0
 	fcpyd	d2, d0
 	fcpyd	d3, d0
@@ -651,7 +653,7 @@ _kernel_dpotrf_nt_l_4x4_lib44cc:
 	ldr		r4, [fp, #12] // inv_diag_D
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DPOTRF_4X4_LIB4 .LC00_kernel_dpotrf_nt_l_4x4_lib44cc_end
+	INNER_EDGE_DPOTRF_4X4_LIB4 99f
 #else
 #if defined(OS_LINUX)
 	bl inner_edge_dpotrf_4x4_lib4
@@ -693,18 +695,17 @@ _kernel_dpotrf_nt_l_4x4_lib44cc:
 	.size	kernel_dpotrf_nt_l_4x4_lib44cc, .-kernel_dpotrf_nt_l_4x4_lib44cc
 #endif
 
-	.align 3
-.LC00_kernel_dpotrf_nt_l_4x4_lib44cc_end: // 0
-	.word 0
-	.word 0
 
 
 
 
 	.align 3
-.LC00_kernel_dtrsm_nt_rl_inv_4x4_lib44ccc: // 0
+99: // 0
 	.word 0
 	.word 0
+
+
+
 
 //                                        r0        r1         r2         r3         sp+0     sp+4       rsp+8    rsp+12     rsp+16   rsp+20
 // void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
@@ -731,7 +732,7 @@ _kernel_dtrsm_nt_rl_inv_4x4_lib44ccc:
 
 
 	// zero accumulation registers
-	fldd	d0, .LC00_kernel_dtrsm_nt_rl_inv_4x4_lib44ccc
+	fldd	d0, 99b
 	fcpyd	d1, d0
 	fcpyd	d2, d0
 	fcpyd	d3, d0
@@ -833,8 +834,12 @@ _kernel_dtrsm_nt_rl_inv_4x4_lib44ccc:
 	.size	kernel_dtrsm_nt_rl_inv_4x4_lib44ccc, .-kernel_dtrsm_nt_rl_inv_4x4_lib44ccc
 #endif
 
+
+
+
+
 	.align 3
-.LC00_kernel_dtrsm_nt_rl_inv_4x4_lib44ccc_end: // 0
+99: // 0
 	.word 0
 	.word 0
 
