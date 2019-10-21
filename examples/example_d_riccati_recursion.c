@@ -508,8 +508,8 @@ int main()
 
 	// problem size
 	int N = 10;
-	int nx_ = 64;
-	int nu_ = 32;
+	int nx_ = 8;
+	int nu_ = 3;
 
 	// stage-wise variant size
 	int *nx = malloc((N+1)*sizeof(int));

@@ -532,7 +532,7 @@ OBJS += \
 
 endif
 
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
+ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
 # aux
 OBJS += \
 		auxiliary/blasfeo_stdlib.o \
@@ -553,59 +553,6 @@ OBJS += \
 		kernel/generic/kernel_dgetr_lib4.o \
 		kernel/generic/kernel_dpack_lib4.o \
 		\
-		kernel/armv7a/kernel_sgemm_12x4_lib4.o \
-		kernel/armv7a/kernel_sgemm_8x4_lib4.o \
-		kernel/armv7a/kernel_sgemm_4x4_lib4.o \
-		kernel/generic/kernel_sgemm_4x4_lib4.o \
-		kernel/generic/kernel_sgemm_diag_lib4.o \
-		kernel/generic/kernel_sgemv_4_lib4.o \
-		kernel/generic/kernel_ssymv_4_lib4.o \
-		kernel/generic/kernel_sgetrf_pivot_lib4.o \
-		kernel/generic/kernel_sgecp_lib4.o \
-		kernel/generic/kernel_sgetr_lib4.o \
-		\
-		kernel/kernel_align_generic.o\
-
-# blas
-OBJS += \
-		blasfeo_api/d_blas1_lib4.o \
-		blasfeo_api/d_blas2_lib4.o \
-		blasfeo_api/d_blas2_diag_lib.o \
-		blasfeo_api/d_blas3_lib4.o \
-		blasfeo_api/d_blas3_diag_lib4.o \
-		blasfeo_api/d_lapack_lib4.o \
-		\
-		blasfeo_api/s_blas1_lib4.o \
-		blasfeo_api/s_blas2_lib4.o \
-		blasfeo_api/s_blas2_diag_lib.o \
-		blasfeo_api/s_blas3_lib4.o \
-		blasfeo_api/s_blas3_diag_lib4.o \
-		blasfeo_api/s_lapack_lib4.o \
-
-endif
-
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A9)
-# aux
-OBJS += \
-		auxiliary/blasfeo_stdlib.o \
-		auxiliary/d_aux_lib4.o \
-		auxiliary/s_aux_lib4.o \
-		auxiliary/m_aux_lib44.o \
-
-# kernels
-OBJS += \
-		kernel/armv7a/kernel_dgemm_4x4_lib4.o \
-		kernel/generic/kernel_dgemm_4x4_lib4.o \
-		kernel/generic/kernel_dgemm_diag_lib4.o \
-		kernel/generic/kernel_dgemv_4_lib4.o \
-		kernel/generic/kernel_dsymv_4_lib4.o \
-		kernel/generic/kernel_dgetrf_pivot_lib4.o \
-		kernel/generic/kernel_dgeqrf_4_lib4.o \
-		kernel/generic/kernel_dgecp_lib4.o \
-		kernel/generic/kernel_dgetr_lib4.o \
-		kernel/generic/kernel_dpack_lib4.o \
-		\
-		kernel/armv7a/kernel_sgemm_12x4_lib4.o \
 		kernel/armv7a/kernel_sgemm_8x4_lib4.o \
 		kernel/armv7a/kernel_sgemm_4x4_lib4.o \
 		kernel/generic/kernel_sgemm_4x4_lib4.o \

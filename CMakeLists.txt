@@ -278,7 +278,7 @@ set(C_FLAGS_TARGET_X64_AMD_BULLDOZER      "-m64 -mavx -mfma")
 set(C_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A57  "-march=armv8-a+crc+crypto+simd -mcpu=cortex-a57")
 set(C_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A53  "-march=armv8-a+crc+crypto+simd -mcpu=cortex-a53")
 set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A15  "-marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15")
-set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A9   "-marm -mfloat-abi=hard -mfpu=neon-vfpv3 -mcpu=cortex-a9")
+set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A9   "-marm -mfloat-abi=hard -mfpu=neon -mcpu=cortex-a9")
 set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A7   "-marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a7")
 set(C_FLAGS_TARGET_GENERIC                "")
 
@@ -290,7 +290,7 @@ set(ASM_FLAGS_TARGET_X64_AMD_BULLDOZER      "")
 set(ASM_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A57  "")
 set(ASM_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A53  "")
 set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A15  "-mfpu=neon-vfpv4 -mcpu=cortex-a15")
-set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A9   "-mfpu=neon-vfpv3 -mcpu=cortex-a9")
+set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A9   "-mfpu=neon -mcpu=cortex-a9")
 set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A7   "-mfpu=neon-vfpv4 -mcpu=cortex-a7")
 set(ASM_FLAGS_TARGET_GENERIC                "")
 
@@ -747,7 +747,6 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
 
-			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_12x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
@@ -801,7 +800,6 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
 
-			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_12x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c

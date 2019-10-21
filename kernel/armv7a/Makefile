@@ -44,14 +44,9 @@ OBJS += kernel_dgemm_4x4_lib4.o
 OBJS += kernel_sgemm_12x4_lib4.o kernel_sgemm_8x4_lib4.o kernel_sgemm_4x4_lib4.o
 endif
 
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
+ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
 OBJS += kernel_dgemm_4x4_lib4.o
-OBJS += kernel_sgemm_12x4_lib4.o kernel_sgemm_8x4_lib4.o kernel_sgemm_4x4_lib4.o
-endif
-
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A9)
-OBJS += kernel_dgemm_4x4_lib4.o
-OBJS += kernel_sgemm_12x4_lib4.o kernel_sgemm_8x4_lib4.o kernel_sgemm_4x4_lib4.o
+OBJS += kernel_sgemm_8x4_lib4.o kernel_sgemm_4x4_lib4.o
 endif
 
 else # LA_REFERENCE | LA_BLAS

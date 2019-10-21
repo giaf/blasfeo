@@ -55,19 +55,10 @@ endif
 ifeq ($(TARGET), X86_AMD_BARCELONA)
 OBJS += kernel_align_x86.o
 endif
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
+ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A53))
 OBJS += kernel_align_generic.o
 endif
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
-OBJS += kernel_align_generic.o
-endif
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-OBJS += kernel_align_generic.o
-endif
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
-OBJS += kernel_align_generic.o
-endif
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A9)
+ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
 OBJS += kernel_align_generic.o
 endif
 ifeq ($(TARGET), GENERIC)
@@ -106,27 +97,12 @@ ifeq ($(TARGET), X86_AMD_BARCELONA)
 	( cd generic; $(MAKE) obj)
 endif
 
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
+ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A53))
 	( cd armv8a; $(MAKE) obj)
 	( cd generic; $(MAKE) obj)
 endif
 
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
-	( cd armv8a; $(MAKE) obj)
-	( cd generic; $(MAKE) obj)
-endif
-
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-	( cd armv7a; $(MAKE) obj)
-	( cd generic; $(MAKE) obj)
-endif
-
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
-	( cd armv7a; $(MAKE) obj)
-	( cd generic; $(MAKE) obj)
-endif
-
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A9)
+ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
 	( cd armv7a; $(MAKE) obj)
 	( cd generic; $(MAKE) obj)
 endif

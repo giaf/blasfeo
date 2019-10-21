@@ -64,23 +64,11 @@ ifeq ($(TARGET), X86_AMD_BARCELONA)
 OBJS += kernel_sse3_x86.o
 SRCS += kernel_sse3_x86.c
 endif
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
+ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A53))
 OBJS += kernel_armv8a.o
 SRCS += kernel_armv8a.c
 endif
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
-OBJS += kernel_armv8a.o
-SRCS += kernel_armv8a.c
-endif
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-OBJS += kernel_armv7a.o
-SRCS += kernel_armv7a.c
-endif
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
-OBJS += kernel_armv7a.o
-SRCS += kernel_armv7a.c
-endif
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A9)
+ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
 OBJS += kernel_armv7a.o
 SRCS += kernel_armv7a.c
 endif
