@@ -56,6 +56,11 @@ function(TestForISA)
       TEST_NEON
       )
 
+  # For the Cortex A9, test for if the VFPv3 and NEON ISAs work
+  set(CMP_CHECK_ARMV7A_ARM_CORTEX_A9
+      TEST_VFPv3
+      TEST_NEON
+      )
 
   # The main source file to test with
   set(CMP_CHECK_SRCS

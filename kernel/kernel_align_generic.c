@@ -33,10 +33,10 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-
+#include <stdint.h>
 
 void blasfeo_align_64_byte(void *ptr, void **ptr_align)
 	{
-	*ptr_align = (void *) ( ( ( (unsigned long long) ptr ) + 63) / 64 * 64 );
+	*ptr_align = (void *) ( ( ( (uintptr_t) ptr ) + 63) / 64 * 64 );
 	return;
 	}

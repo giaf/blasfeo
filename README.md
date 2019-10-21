@@ -18,6 +18,7 @@ The architecture for BLASFEO to use is specified using the ```TARGET``` build va
 | ```ARMV8A_ARM_CORTEX_A53```  | ARMv8A architecture, VFPv4 and NEONv2 ISAs, 64-bit OS |
 | ```ARMV7A_ARM_CORTEX_A15```  | ARMv7A architecture, VFPv3 and NEON ISAs, 32-bit OS |
 | ```ARMV7A_ARM_CORTEX_A7```   | ARMv7A architecture, VFPv3 and NEON ISAs, 32-bit OS |
+| ```ARMV7A_ARM_CORTEX_A9```   | ARMv7A architecture, VFPv3 and NEON ISAs, 32-bit OS |
 | ```GENERIC```                | Generic target, coded in C, giving better performance if the architecture provides more than 16 scalar FP registers (e.g. many RISC such as ARM) |
 
 Note that the ```X86_AMD_JAGUAR``` and ```X86_AMD_BARCELONA``` architectures are not supported by the CMake build system and can only be used through the included Makefile.

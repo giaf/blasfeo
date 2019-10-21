@@ -52,6 +52,7 @@ set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")
 # set(TARGET ARMV8A_ARM_CORTEX_A53 CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A15 CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A7 CACHE STRING "Target architecture")
+# set(TARGET ARMV7A_ARM_CORTEX_A9 CACHE STRING "Target architecture")
 # set(TARGET GENERIC)
 
 # Populate a list of allowable targets and link it to the option
@@ -65,6 +66,7 @@ set(ALLOWED_TARGETS
 		ARMV8A_ARM_CORTEX_A53
 		ARMV7A_ARM_CORTEX_A15
 		ARMV7A_ARM_CORTEX_A7
+		ARMV7A_ARM_CORTEX_A9
 		GENERIC
 		)
 set_property(CACHE TARGET PROPERTY STRINGS ${ALLOWED_TARGETS})
@@ -277,6 +279,7 @@ set(C_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A57  "-march=armv8-a+crc+crypto+simd -mcpu=
 set(C_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A53  "-march=armv8-a+crc+crypto+simd -mcpu=cortex-a53")
 set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A15  "-marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15")
 set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A7   "-marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a7")
+set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A9   "-marm -mfloat-abi=hard -mfpu=neon-vfpv3 -mcpu=cortex-a9")
 set(C_FLAGS_TARGET_GENERIC                "")
 
 # architecture-specific assembly flags
@@ -288,6 +291,7 @@ set(ASM_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A57  "")
 set(ASM_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A53  "")
 set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A15  "-mfpu=neon-vfpv4 -mcpu=cortex-a15")
 set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A7   "-mfpu=neon-vfpv4 -mcpu=cortex-a7")
+set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A9   "-mfpu=neon-vfpv3 -mcpu=cortex-a9")
 set(ASM_FLAGS_TARGET_GENERIC                "")
 
 
@@ -776,6 +780,60 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 	endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
+
+
+	if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9)
+
+		file(GLOB AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
+			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
+			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
+			)
+
+		file(GLOB KERNEL_SRC
+			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_dgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+
+			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_12x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+
+			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
+			)
+
+		file(GLOB BLAS_SRC
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
+			)
+
+	endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9)
 
 	if(${TARGET} MATCHES GENERIC)
 

@@ -119,6 +119,8 @@ int main()
 	const double flops_max = 0.5;
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	const double flops_max = 2;
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+	const double flops_max = 1;
 #elif defined(TARGET_GENERIC)
 	const double flops_max = 2;
 #else
@@ -147,6 +149,8 @@ int main()
 	const double flops_max = 2; // 1x32 bit fma
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15)
 	const double flops_max = 8; // 1x128 bit fma
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+	const double flops_max = 4; // 1x64 bit mul
 #elif defined(TARGET_GENERIC)
 	const double flops_max = 2; // 1x32 bit mul + 1x32 bit add ???
 #endif
