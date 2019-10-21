@@ -69,6 +69,10 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 	// prefetch
 	pld		[r5, #0]
 	pld		[r6, #0]
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+	pld		[r5, #32]
+	pld		[r6, #32]
+#endif
 
 	// preload A even
 	fldd	d16, [r5, #0]
@@ -97,6 +101,10 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 	// prefetch
 	pld		[r5, #64]
 	pld		[r6, #64]
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+	pld		[r5, #96]
+	pld		[r6, #96]
+#endif
 
 	cmp		r4, #4
 	ble		0f // consider clean up loop
@@ -137,7 +145,13 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 
 	// unroll 1
 	fmacd	d0, d24, d28
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+	pld		[r5, #160] // prefetch
+#endif
 	fmacd	d1, d25, d28
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+	pld		[r6, #160] // prefetch
+#endif
 	fmacd	d2, d26, d28
 	fmacd	d3, d27, d28
 	fldd	d28, [r6, #96] // B
@@ -199,7 +213,13 @@ _inner_kernel_dgemm_add_nt_4x4_lib4:
 
 	// unroll 3
 	fmacd	d0, d24, d28
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+	pld		[r5, #96] // prefetch
+#endif
 	fmacd	d1, d25, d28
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+	pld		[r6, #96] // prefetch
+#endif
 	fmacd	d2, d26, d28
 	fmacd	d3, d27, d28
 	fldd	d28, [r6, #32] // B
@@ -431,7 +451,14 @@ _inner_kernel_dgemm_add_nn_4x4_lib4:
 	// prefetch
 	pld		[r5, #0]
 	pld		[r6, #0]
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+	pld		[r5, #32]
+	pld		[r6, #32]
+#endif
 	pld		[r6, #64]
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+	pld		[r6, #96]
+#endif
 
 	// preload A even
 	fldd	d16, [r5, #0]
@@ -459,6 +486,9 @@ _inner_kernel_dgemm_add_nn_4x4_lib4:
 
 	// prefetch
 	pld		[r5, #64]
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+	pld		[r5, #96]
+#endif
 
 	// B next
 	add		r9, r7, r6
@@ -475,12 +505,22 @@ _inner_kernel_dgemm_add_nn_4x4_lib4:
 	fmacd	d1, d17, d20
 	pld		[r9, #0]
 	fmacd	d2, d18, d20
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+	pld		[r9, #32]
+#else // cortex a7 a15
 	pld		[r9, #64]
+#endif
 	fmacd	d3, d19, d20
 	fldd	d20, [r6, #16] // B
 
 	fmacd	d4, d16, d21
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+	pld		[r9, #64]
+#endif
 	fmacd	d5, d17, d21
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+	pld		[r9, #96]
+#endif
 	fmacd	d6, d18, d21
 	fmacd	d7, d19, d21
 	fldd	d21, [r6, #48] // B
