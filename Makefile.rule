@@ -459,8 +459,8 @@ CFLAGS  += -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15 -DTARGET_ARM
 ASFLAGS += -mfpu=neon-vfpv4 -DTARGET_ARMV7A_ARM_CORTEX_A15
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A9)
-CFLAGS  += -marm -mfloat-abi=hard -mfpu=neon-vfpv3 -mcpu=cortex-a9 -DTARGET_ARMV7A_ARM_CORTEX_A9
-ASFLAGS += -mfpu=neon-vfpv3 -DTARGET_ARMV7A_ARM_CORTEX_A9
+CFLAGS  += -marm -mfloat-abi=hard -mfpu=neon -mcpu=cortex-a9 -DTARGET_ARMV7A_ARM_CORTEX_A9
+ASFLAGS += -mfpu=neon -DTARGET_ARMV7A_ARM_CORTEX_A9
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
 CFLAGS  += -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a7 -DTARGET_ARMV7A_ARM_CORTEX_A7
