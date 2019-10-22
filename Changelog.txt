@@ -4,7 +4,7 @@ BLASFEO ChangeLog
 
 ====================================================================
 Version 0.1.2-master
-01-Oct-2019
+22-Oct-2019
 
 common:
 	* change license to BFD-2
@@ -21,7 +21,10 @@ BLAS_API:
 ARMv8A:
 	* Cortex A57:
 		- improve kernels sgemm_nt lib4
-		- add optimized kernels sgemm_nn lib4
+
+ARMv7A:
+	* Cortex A9:
+		- add support (based on A7 with some optimizations to handle 32-bytes cache line size)
 
 ====================================================================
 Version 0.1.1
