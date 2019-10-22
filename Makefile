@@ -187,6 +187,7 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_spack_lib4.o \
 		\
 		kernel/kernel_align_x64.o\
 
@@ -237,6 +238,7 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_spack_lib4.o \
 		\
 		kernel/kernel_align_x64.o\
 
@@ -290,6 +292,7 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_spack_lib4.o \
 		\
 		kernel/kernel_align_x86.o\
 
@@ -342,6 +345,7 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_spack_lib4.o \
 		\
 		kernel/kernel_align_x86.o\
 
@@ -400,6 +404,7 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_spack_lib4.o \
 		\
 		kernel/kernel_align_generic.o\
 
@@ -459,6 +464,7 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_spack_lib4.o \
 		\
 		kernel/kernel_align_generic.o\
 
@@ -511,6 +517,7 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_spack_lib4.o \
 		\
 		kernel/kernel_align_generic.o\
 
@@ -562,6 +569,7 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_spack_lib4.o \
 		\
 		kernel/kernel_align_generic.o\
 
@@ -611,6 +619,7 @@ OBJS += \
 		kernel/generic/kernel_sgetrf_pivot_lib4.o \
 		kernel/generic/kernel_sgecp_lib4.o \
 		kernel/generic/kernel_sgetr_lib4.o \
+		kernel/generic/kernel_spack_lib4.o \
 		\
 		kernel/kernel_align_generic.o\
 
@@ -647,6 +656,8 @@ OBJS += \
 		blas_api/dpotrf.o \
 		blas_api/dpotrs.o \
 		blas_api/dtrtrs.o \
+		\
+		blas_api/sgemm.o
 
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
 include $(CURRENT_DIR)/netlib/Makefile.netlib_blas

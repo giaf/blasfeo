@@ -39,18 +39,12 @@
 #include "../include/blasfeo_target.h"
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_timing.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_d_aux_ext_dep.h"
-#include "../include/blasfeo_d_kernel.h"
-#include "../include/blasfeo_d_blas.h"
+#include "../include/blasfeo_s_aux.h"
+#include "../include/blasfeo_s_aux_ext_dep.h"
+#include "../include/blasfeo_s_kernel.h"
+#include "../include/blasfeo_s_blas.h"
 
-#include "../include/d_blas.h"
-
-
-
-double globA[] = {2, 2, 3, 4, 5, 6, 7, 8, 9, 61, 63, 63, 64, 65, 66, 67, 68, 69, 121, 122, 124, 124, 125, 126, 127, 128, 129, 181, 182, 183, 185, 185, 186, 187, 188, 189, 241, 242, 243, 244, 246, 246, 247, 248, 249};
-int globm = 9;
-int globn = 5;
+#include "../include/s_blas.h"
 
 
 
@@ -66,45 +60,45 @@ int main()
 
 	int ii;
 
-	double *A = malloc(n*n*sizeof(double));
+	float *A = malloc(n*n*sizeof(float));
 	for(ii=0; ii<n*n; ii++)
 		A[ii] = ii+1;
 	int lda = n;
-//	d_print_mat(n, n, A, n);
+//	s_print_mat(n, n, A, n);
 
-	double *B = malloc(n*n*sizeof(double));
+	float *B = malloc(n*n*sizeof(float));
 	for(ii=0; ii<n*n; ii++)
 		B[ii] = -0.0;
 	for(ii=0; ii<n; ii++)
 		B[ii*(n+1)] = 1.0;
 	int ldb = n;
-//	d_print_mat(n, n, B, ldb);
+//	s_print_mat(n, n, B, ldb);
 
-	double *C = malloc(n*n*sizeof(double));
+	float *C = malloc(n*n*sizeof(float));
 	for(ii=0; ii<n*n; ii++)
 		C[ii] = -1;
 	int ldc = n;
-//	d_print_mat(n, n, C, ldc);
+//	s_print_mat(n, n, C, ldc);
 
-	double *C2 = malloc(n*n*sizeof(double));
+	float *C2 = malloc(n*n*sizeof(float));
 	for(ii=0; ii<n*n; ii++)
 		C2[ii] = -1;
 //	int ldc = n;
-//	d_print_mat(n, n, C, ldc);
+//	s_print_mat(n, n, C, ldc);
 
-	double *D = malloc(n*n*sizeof(double));
+	float *D = malloc(n*n*sizeof(float));
 	for(ii=0; ii<n*n; ii++)
 		D[ii] = -1;
 	int ldd = n;
-//	d_print_mat(n, n, C, ldc);
+//	s_print_mat(n, n, C, ldc);
 
 	int *ipiv = malloc(n*sizeof(int));
 
 
 	int bs = 4;
 
-	double d_0 = 0.0;
-	double d_1 = 1.0;
+	float d_0 = 0.0;
+	float d_1 = 1.0;
 
 	char c_l = 'l';
 	char c_n = 'n';
@@ -112,8 +106,8 @@ int main()
 	char c_t = 't';
 	char c_u = 'u';
 
-	double alpha = 2.0;
-	double beta = 1.0;
+	float alpha = 2.0;
+	float beta = 1.0;
 
 	char ta = 'n';
 	char tb = 'n';
@@ -131,12 +125,14 @@ int main()
 //	blasfeo_dpotrf(&c_l, &n, D, &n, &info);
 //	dsyrk_(&c_u, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
 //	dpotrf_(&c_u, &n, D, &n, &info);
-//	d_print_mat(n, n, D, n);
+//	s_print_mat(n, n, D, n);
 //	return 0;
-	d_print_mat(n, n, A, n);
+	s_print_mat(n, n, A, n);
 
 
 	// blas
+
+	printf("\nBLAS\n");
 
 	for(ii=0; ii<n*n; ii++) C[ii] = -1;
 
@@ -147,12 +143,12 @@ int main()
 	dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
 //	dpotrf_(&c_l, &m0, C, &n, &info);
 	dposv_(&c_u, &m0, &n0, C, &n, D, &n, &info);
-	d_print_mat(n, n, C, ldc);
-	d_print_mat(n, n, D, ldd);
+	s_print_mat(n, n, C, ldc);
+	s_print_mat(n, n, D, ldd);
 #endif
 
-#if 0
-	dgemm_(&c_t, &c_t, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C, &n);
+#if 1
+	sgemm_(&c_t, &c_t, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C, &n);
 #endif
 
 #if 0
@@ -164,7 +160,7 @@ int main()
 	dtrsm_(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
-#if 1
+#if 0
 	for(ii=0; ii<n*n;  ii++) C[ii] = A[ii];
 	dtrmm_(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
 //	dtrmm_(&c_l, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
@@ -192,27 +188,29 @@ int main()
 //	dgetrs_(&c_t, &m0, &n0, C, &n, ipiv, D, &n, &info);
 //	dgesv_(&m0, &n0, C, &n, ipiv, D, &n, &info);
 	int_print_mat(1, n, ipiv, 1);
-	d_print_mat(n, n, C, ldc);
-//	d_print_mat(n, n, D, ldd);
+	s_print_mat(n, n, C, ldc);
+//	s_print_mat(n, n, D, ldd);
 #endif
 
 //	printf("\ninfo %d\n", info);
-//	d_print_mat(n, n, A, lda);
-//	d_print_mat(n, n, B, ldb);
-	d_print_mat(n, n, C, ldc);
-//	d_print_mat(n, n, D, ldd);
+//	s_print_mat(n, n, A, lda);
+//	s_print_mat(n, n, B, ldb);
+	s_print_mat(n, n, C, ldc);
+//	s_print_mat(n, n, D, ldd);
 
 #if 0
 	for(ii=0; ii<globm*globn; ii++)
 		C[ii] = globA[ii];
-	d_print_mat(globm, globn, C, globm);
+	s_print_mat(globm, globn, C, globm);
 	dgetrf_(&globm, &globn, C, &globm, ipiv, &info);
-	d_print_mat(globm, globn, C, globm);
+	s_print_mat(globm, globn, C, globm);
 	int_print_mat(1, n, ipiv, 1);
 #endif
 
 
 	// blasfeo blas
+
+	printf("\nBLASFEO BLAS API\n");
 
 	for(ii=0; ii<n*n; ii++) C2[ii] = -1;
 
@@ -223,12 +221,12 @@ int main()
 	blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
 //	blasfeo_dpotrf(&c_l, &m0, C, &n, &info);
 	blasfeo_dposv(&c_u, &m0, &n0, C, &n, D, &n, &info);
-	d_print_mat(n, n, C, ldc);
-	d_print_mat(n, n, D, ldd);
+	s_print_mat(n, n, C, ldc);
+	s_print_mat(n, n, D, ldd);
 #endif
 
-#if 0
-	blasfeo_dgemm(&c_t, &c_t, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C, &n);
+#if 1
+	blasfeo_sgemm(&c_t, &c_t, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C2, &n);
 #endif
 
 #if 0
@@ -240,7 +238,7 @@ int main()
 	blasfeo_dtrsm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
-#if 1
+#if 0
 	for(ii=0; ii<n*n;  ii++) C2[ii] = A[ii];
 	blasfeo_dtrmm(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
 //	blasfeo_dtrmm(&c_l, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
@@ -268,30 +266,31 @@ int main()
 //	blasfeo_dgetrs(&c_t, &m0, &n0, C, &n, ipiv, D, &n, &info);
 //	blasfeo_dgesv(&m0, &n0, C, &n, ipiv, D, &n, &info);
 	int_print_mat(1, n, ipiv, 1);
-	d_print_mat(n, n, C, ldc);
-//	d_print_mat(n, n, D, ldd);
+	s_print_mat(n, n, C, ldc);
+//	s_print_mat(n, n, D, ldd);
 #endif
 
 //	printf("\ninfo %d\n", info);
-//	d_print_mat(n, n, A, lda);
-//	d_print_mat(n, n, B, ldb);
-	d_print_mat(n, n, C2, ldc);
-//	d_print_mat(n, n, D, ldd);
+//	s_print_mat(n, n, A, lda);
+//	s_print_mat(n, n, B, ldb);
+	s_print_mat(n, n, C2, ldc);
+//	s_print_mat(n, n, D, ldd);
 
 #if 0
 	for(ii=0; ii<globm*globn; ii++)
 		C[ii] = globA[ii];
-	d_print_mat(globm, globn, C, globm);
+	s_print_mat(globm, globn, C, globm);
 	blasfeo_dgetrf(&globm, &globn, C, &globm, ipiv, &info);
-	d_print_mat(globm, globn, C, globm);
+	s_print_mat(globm, globn, C, globm);
 	int_print_mat(1, n, ipiv, 1);
 #endif
 
 	// compute and print difference
+	printf("\nerror\n");
 	for(ii=0; ii<n*n; ii++)
 		C2[ii] -= C[ii];
 
-	d_print_mat(n, n, C2, ldc);
+	s_print_mat(n, n, C2, ldc);
 
 	// free memory
 
@@ -308,3 +307,4 @@ int main()
 	return 0;
 
 	}
+

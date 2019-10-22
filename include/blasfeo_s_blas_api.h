@@ -60,6 +60,7 @@ extern "C" {
 
 // BLAS 3
 //
+void sgemm_(char *ta, char *tb, int *m, int *n, int *k, float *alpha, float *A, int *lda, float *B, int *ldb, float *beta, float *C, int *ldc);
 
 
 
@@ -74,6 +75,7 @@ extern "C" {
 
 // BLAS 3
 //
+void blasfeo_sgemm(char *ta, char *tb, int *m, int *n, int *k, float *alpha, float *A, int *lda, float *B, int *ldb, float *beta, float *C, int *ldc);
 
 
 

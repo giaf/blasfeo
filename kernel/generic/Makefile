@@ -84,6 +84,7 @@ OBJS += \
 		kernel_sgetrf_pivot_lib4.o \
 		kernel_sgecp_lib4.o \
 		kernel_sgetr_lib4.o \
+		kernel_spack_lib4.o \
 
 endif
 
@@ -106,6 +107,7 @@ OBJS += \
 		kernel_sgetrf_pivot_lib4.o \
 		kernel_sgecp_lib4.o \
 		kernel_sgetr_lib4.o \
+		kernel_spack_lib4.o \
 
 endif
 
@@ -128,6 +130,7 @@ OBJS += \
 		kernel_sgetrf_pivot_lib4.o \
 		kernel_sgecp_lib4.o \
 		kernel_sgetr_lib4.o \
+		kernel_spack_lib4.o \
 
 endif
 
@@ -150,6 +153,7 @@ OBJS += \
 		kernel_sgetrf_pivot_lib4.o \
 		kernel_sgecp_lib4.o \
 		kernel_sgetr_lib4.o \
+		kernel_spack_lib4.o \
 
 endif
 
@@ -172,6 +176,7 @@ OBJS += \
 		kernel_sgetrf_pivot_lib4.o \
 		kernel_sgecp_lib4.o \
 		kernel_sgetr_lib4.o \
+		kernel_spack_lib4.o \
 
 endif
 
@@ -194,6 +199,7 @@ OBJS += \
 		kernel_sgetrf_pivot_lib4.o \
 		kernel_sgecp_lib4.o \
 		kernel_sgetr_lib4.o \
+		kernel_spack_lib4.o \
 
 endif
 
@@ -216,6 +222,7 @@ OBJS += \
 		kernel_sgetrf_pivot_lib4.o \
 		kernel_sgecp_lib4.o \
 		kernel_sgetr_lib4.o \
+		kernel_spack_lib4.o \
 
 endif
 
@@ -238,6 +245,7 @@ OBJS += \
 		kernel_sgetrf_pivot_lib4.o \
 		kernel_sgecp_lib4.o \
 		kernel_sgetr_lib4.o \
+		kernel_spack_lib4.o \
 
 endif
 
@@ -260,6 +268,7 @@ OBJS += \
 		kernel_sgetrf_pivot_lib4.o \
 		kernel_sgecp_lib4.o \
 		kernel_sgetr_lib4.o \
+		kernel_spack_lib4.o \
 
 endif
 
@@ -282,6 +291,7 @@ OBJS += \
 		kernel_sgetrf_pivot_lib4.o \
 		kernel_sgecp_lib4.o \
 		kernel_sgetr_lib4.o \
+		kernel_spack_lib4.o \
 
 endif
 
@@ -299,3 +309,4 @@ clean:
 	rm -f *.gcov
 
 kernel_dgemm_4x4_lib4.o: kernel_dgemm_4x4_lib4.c kernel_dgemm_4x4_lib.c
+kernel_sgemm_4x4_lib4.o: kernel_sgemm_4x4_lib4.c kernel_sgemm_4x4_lib.c

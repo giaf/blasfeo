@@ -55,6 +55,8 @@ OBJS += dpotrf.o
 OBJS += dpotrs.o
 OBJS += dtrtrs.o
 
+OBJS += sgemm.o
+
 #endif # HIGH_PERFROMANCE
 
 else #ifeq ($(LA), REFERENCE)

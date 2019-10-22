@@ -146,14 +146,14 @@ int main()
 	const float flops_max = 8; // 1x128 bit fma
 	const float memops_max = 4; // ???
 	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A15): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
-#elif defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-	const float flops_max = 2; // 1x32 bit fma
-	const float memops_max = 2; // ???
-	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A7): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A9)
 	const float flops_max = 4; // 1x64 bit fma
 	const float memops_max = 2; // ???
 	printf("Testing BLAS version for VFPv3 instruction set, 32 bit (optimized for ARM Cortex A9): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+	const float flops_max = 2; // 1x32 bit fma
+	const float memops_max = 2; // ???
+	printf("Testing BLAS version for VFPv4 instruction set, 32 bit (optimized for ARM Cortex A7): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_GENERIC)
 	const float flops_max = 2; // 1x32 bit mul + 1x32 bit add ???
 	const float memops_max = 1; // ???

@@ -44,6 +44,11 @@ extern "C" {
 
 
 
+// utils
+void blasfeo_align_64_byte(void *ptr, void **ptr_align);
+
+
+
 //
 // lib8
 //
@@ -430,13 +435,51 @@ void kernel_sgetr_1_lib4(int tri, int kmax, int kna, float alpha, float *A, floa
 
 
 
+// pack
+// 4
+void kernel_spack_nn_4_lib4(int kmax, float *A, int lda, float *B);
+void kernel_spack_nn_4_vs_lib4(int kmax, float *A, int lda, float *B, int m1);
+void kernel_spack_tn_4_lib4(int kmax, float *A, int lda, float *B);
+void kernel_spack_tn_4_vs_lib4(int kmax, float *A, int lda, float *B, int m1);
+void kernel_spack_tt_4_lib4(int kmax, float *A, int lda, float *B, int sdb);
+void kernel_spack_tt_4_vs_lib4(int kmax, float *A, int lda, float *B, int sdb, int m1);
+
+
+
 /************************************************
 * BLAS API kernels
 ************************************************/
 
 #ifdef BLAS_API
 
-// TODO
+// B panel-major bs=4; A, C, D column-major
+// 4x4
+void kernel_sgemm_nt_4x4_libc4cc(int kmax, float *alpha, float *A, int lda, float *B, float *beta, float *C, int ldc, float *D, int ldd);
+void kernel_sgemm_nt_4x4_vs_libc4cc(int kmax, float *alpha, float *A, int lda, float *B, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
+void kernel_sgemm_tt_4x4_libc4cc(int kmax, float *alpha, float *A, int lda, float *B, float *beta, float *C, int ldc, float *D, int ldd);
+void kernel_sgemm_tt_4x4_vs_libc4cc(int kmax, float *alpha, float *A, int lda, float *B, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
+
+// A panel-major bs=4; B, C, D column-major
+// 4x4
+void kernel_sgemm_nn_4x4_lib4ccc(int kmax, float *alpha, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd);
+void kernel_sgemm_nn_4x4_vs_lib4ccc(int kmax, float *alpha, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
+void kernel_sgemm_nt_4x4_lib4ccc(int kmax, float *alpha, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd);
+void kernel_sgemm_nt_4x4_vs_lib4ccc(int kmax, float *alpha, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
+
+// B panel-major bs=4; A, C, D column-major
+// 4x4
+void kernel_sgemm_nt_4x4_lib44cc(int kmax, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd);
+void kernel_sgemm_nt_4x4_vs_lib44cc(int kmax, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
+
+// A, B, C, D column-major
+void kernel_sgemm_nn_4x4_libcccc(int kmax, float *alpha, float *A, int lda, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd);
+void kernel_sgemm_nn_4x4_vs_libcccc(int kmax, float *alpha, float *A, int lda, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
+void kernel_sgemm_nt_4x4_libcccc(int kmax, float *alpha, float *A, int lda, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd);
+void kernel_sgemm_nt_4x4_vs_libcccc(int kmax, float *alpha, float *A, int lda, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
+void kernel_sgemm_tt_4x4_libcccc(int kmax, float *alpha, float *A, int lda, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd);
+void kernel_sgemm_tt_4x4_vs_libcccc(int kmax, float *alpha, float *A, int lda, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
+
+
 
 #endif // BLAS_API
 
