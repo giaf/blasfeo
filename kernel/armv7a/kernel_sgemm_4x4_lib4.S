@@ -1000,7 +1000,7 @@ inner_edge_trsm_rlt_inv_4x4_lib4:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_4X4_LIB4 lc_zero
 #else
 	.align 3
@@ -1017,15 +1017,15 @@ _inner_scale_ab_4x4_lib4:
 #endif
 
 	flds		s8, [r4, #0] // alpha
-
-	vmul.f32	q4, q4, d4[0]
 	flds		s9, [r5, #0] // beta
-	vmul.f32	q5, q5, d4[0]
 #if MACRO_LEVEL>=2
 	flds		s10, \lc_zero // 0.0
 #else
 	flds		s10, 99b // 0.0
 #endif
+
+	vmul.f32	q4, q4, d4[0]
+	vmul.f32	q5, q5, d4[0]
 	vmul.f32	q6, q6, d4[0]
 	fcmpes		s9, s10
 	vmul.f32	q7, q7, d4[0]
@@ -1042,7 +1042,7 @@ _inner_scale_ab_4x4_lib4:
 
 0:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	mov		pc, lr // return
@@ -1063,7 +1063,7 @@ _inner_scale_ab_4x4_lib4:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M11_4X4_LIB4
 #else
 //	.p2align 4,,15
@@ -1082,7 +1082,7 @@ _inner_scale_11_4x4_lib4:
 	vsub.f32	q6, q0, q6
 	vsub.f32	q7, q1, q7
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	mov		pc, lr // return
@@ -1103,7 +1103,7 @@ _inner_scale_11_4x4_lib4:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_4X4_LIB4
 #else
 //	.p2align 4,,15
@@ -1118,7 +1118,7 @@ _inner_store_4x4_lib4:
 	vst1.64		{d8, d9, d10, d11}, [r4:128]!
 	vst1.64		{d12, d13, d14, d15}, [r4:128]!
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	mov		pc, lr // return
@@ -1139,7 +1139,7 @@ _inner_store_4x4_lib4:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_4X4_L_LIB4
 #else
 //	.p2align 4,,15
@@ -1162,7 +1162,7 @@ _inner_store_4x4_l_lib4:
 	// fourth column
 	vstr.64		s31, [r4, #60]
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	mov		pc, lr // return
@@ -1233,7 +1233,7 @@ _kernel_sgemm_nt_4x4_lib4:
 	ldr		r5, [fp, #0] // beta
 	ldr		r6, [fp, #4] // C
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_SCALE_AB_4X4_LIB4 99f
 #else
 #if defined(OS_LINUX)
@@ -1248,7 +1248,7 @@ _kernel_sgemm_nt_4x4_lib4:
 	// store n
 	ldr		r4, [fp, #8] // D
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1340,7 +1340,7 @@ _kernel_sgemm_nn_4x4_lib4:
 	ldr		r5, [fp, #8] // beta
 	ldr		r6, [fp, #12] // C
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_SCALE_AB_4X4_LIB4 99f
 #else
 #if defined(OS_LINUX)
@@ -1355,7 +1355,7 @@ _kernel_sgemm_nn_4x4_lib4:
 	// store n
 	ldr		r4, [fp, #16] // D
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1432,7 +1432,7 @@ _kernel_strsm_nt_rl_inv_4x4_lib4:
 	// call inner blend for alpha=1.0 and beta=1.0
 	mov		r4, r3 // C
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_SCALE_M11_4X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1463,7 +1463,7 @@ _kernel_strsm_nt_rl_inv_4x4_lib4:
 	// store l
 	ldr		r4, [fp, #0] // D
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1540,7 +1540,7 @@ _kernel_spotrf_nt_l_4x4_lib4:
 	// call inner blend for alpha=1.0 and beta=1.0
 	mov		r4, r3 // C
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_SCALE_M11_4X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1570,7 +1570,7 @@ _kernel_spotrf_nt_l_4x4_lib4:
 	// store l
 	ldr		r4, [fp, #0] // D
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_STORE_4X4_L_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1597,3 +1597,12 @@ _kernel_spotrf_nt_l_4x4_lib4:
 	.word 0
 	.word 0
  
+
+
+
+
+#if defined(BLAS_API)
+
+#include "kernel_sgemm_4x4_lib.S"
+
+#endif

@@ -927,14 +927,9 @@ void kernel_sgemm_nt_4x4_vs_libc4cc(int kmax, float *alpha, float *A, int lda, f
 
 
 //#if defined(TARGET_GENERIC) | defined(TARGET_X86_AMD_BARCELONA)
+#if ! ( defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9)  | defined(TARGET_ARMV7A_ARM_CORTEX_A7) )
 void kernel_sgemm_nt_4x4_lib44cc(int kmax, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd)
 	{
-
-#if 0//defined(TARGET_X86_AMD_BARCELONA)
-	kernel_sgemm_nt_4x2_lib44cc(kmax, alpha, A, B+0, beta, C+0*ldc, ldc, D+0*ldd, ldd);
-	kernel_sgemm_nt_4x2_lib44cc(kmax, alpha, A, B+2, beta, C+2*ldc, ldc, D+2*ldd, ldd);
-	return;
-#endif
 
 	const int bs = 4;
 
@@ -976,7 +971,7 @@ void kernel_sgemm_nt_4x4_lib44cc(int kmax, float *alpha, float *A, float *B, flo
 	return;
 
 	}
-//#endif
+#endif
 
 
 
