@@ -50,37 +50,37 @@ CURRENT_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 # Select target architecture (TARGET)
 #
 # X64_INTEL_HASWELL: x86_64 architecture with AVX2 and FMA ISA (64 bit OS)
-# code optimized for Intel Haswell and Intel Skylake architectures.
+# Code optimized for Intel Haswell, Intel Skylake and AMD Zen architectures.
 #
 # X64_INTEL_SANDY_BRIDGE : x86_64 architecture with AVX ISA (64 bit OS)
-# code optimized for Intel Sandy-Bridge architecture.
+# Code optimized for Intel Sandy-Bridge architecture.
 #
 # X64_INTEL_CORE : x86_64 architecture with SSE3 ISA (64 bit OS)
-# code optimized for Intel Core archiecture.
+# Code optimized for Intel Core archiecture.
 #
 # X64_AMD_BULLDOZER : x86_64 architecture with AVX and FMA ISA (64 bit OS)
-# code optimized for AMD Bulldozer.
+# Code optimized for AMD Bulldozer.
 #
 # X86_AMD_JAGUAR : x86 architecture with AVX ISA (32 bit OS)
-# code optimized for AMD Jaguar.
+# Code optimized for AMD Jaguar.
 #
 # X86_AMD_BARCELONA : x86 architecture with SSE3 ISA (32 bit OS)
-# code optimized for AMD Barcelona.
+# Code optimized for AMD Barcelona.
 #
 # ARMV8A_ARM_CORTEX_A57 : ARMv8A architecture with NEON (64 bit OS)
-# code optimized for ARM Cortex A57.
+# Code optimized for ARM Cortex A57.
 #
 # ARMV8A_ARM_CORTEX_A53 : ARMv8A architecture with NEON (64 bit OS)
-# code optimized for ARM Cortex A53.
+# Code optimized for ARM Cortex A53.
 #
 # ARMV7A_ARM_CORTEX_A15 : ARMv7A architecture with NEON-VFPv4 ISA (32 bit OS)
-# code optimized for ARM Cortex A15.
+# Code optimized for ARM Cortex A15.
 #
 # ARMV7A_ARM_CORTEX_A9 : ARMv7A architecture with NEON-VFPv3 ISA (32 bit OS)
-# code optimized for ARM Cortex A9.
+# Code optimized for ARM Cortex A9.
 #
 # ARMV7A_ARM_CORTEX_A7 : ARMv7A architecture with NEON-VFPv4 ISA (32 bit OS)
-# code optimized for ARM Cortex A7.
+# Code optimized for ARM Cortex A7.
 #
 # GENERIC : generic architecture, plain C code.
 #

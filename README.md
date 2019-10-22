@@ -8,7 +8,7 @@ The architecture for BLASFEO to use is specified using the ```TARGET``` build va
 
 | TARGET                       | Description |
 | ---------------------------- | ------------------------------------------------------------- |
-| ```X64_INTEL_HASWELL```      | Intel Haswell architecture or newer, AVX2 and FMA ISA, 64-bit OS |
+| ```X64_INTEL_HASWELL```      | Intel Haswell or AMD Zen architectures or newer, AVX2 and FMA ISA, 64-bit OS |
 | ```X64_INTEL_SANDY_BRIDGE``` | Intel Sandy-Bridge architecture or newer, AVX ISA, 64-bit OS |
 | ```X64_INTEL_CORE```         | Intel Core architecture or newer, SSE3 ISA, 64-bit OS |
 | ```X64_AMD_BULLDOZER```      | AMD Bulldozer architecture, AVX and FMA ISAs, 64-bit OS |
