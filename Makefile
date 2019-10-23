@@ -644,6 +644,8 @@ endif # GENERIC
 ifeq ($(BLAS_API), 1)
 OBJS += \
 		blas_api/dcopy.o \
+		blas_api/daxpy.o \
+		blas_api/ddot.o \
 		blas_api/dgemm.o \
 		blas_api/dsyrk.o \
 		blas_api/dtrmm.o \
@@ -657,6 +659,8 @@ OBJS += \
 		blas_api/dpotrs.o \
 		blas_api/dtrtrs.o \
 		\
+		blas_api/saxpy.o \
+		blas_api/sdot.o \
 		blas_api/sgemm.o
 
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
