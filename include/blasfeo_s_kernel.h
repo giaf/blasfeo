@@ -500,6 +500,7 @@ void kernel_sgemm_tt_4x4_vs_libcccc(int kmax, float *alpha, float *A, int lda, f
 
 // vector
 void kernel_sdot_11_lib(int n, float *x, float *y, float *res);
+void kernel_saxpy_11_lib(int n, float *alpha, float *x, float *y);
 
 
 #endif // BLAS_API

@@ -47,8 +47,12 @@
 #endif
 
 
-void blasfeo_daxpy(int n, double *alpha, double *x, int ix, double *y, int iy)
+void blasfeo_daxpy(int *ptr_n, double *alpha, double *x, int *ptr_ix, double *y, int *ptr_iy)
 	{
+	int n = *ptr_n;
+	int ix = *ptr_ix;
+	int iy = *ptr_iy;
+
 	if(n<=0)
 		return;
 	if(*alpha==0.0)

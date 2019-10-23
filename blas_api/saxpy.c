@@ -47,8 +47,12 @@
 #endif
 
 
-void blasfeo_saxpy(int n, float *alpha, float *x, int ix, float *y, int iy)
+void blasfeo_saxpy(int *ptr_n, float *alpha, float *x, int *ptr_ix, float *y, int *ptr_iy)
 	{
+	int n = *ptr_n;
+	int ix = *ptr_ix;
+	int iy = *ptr_iy;
+
 	if(n<=0)
 		return;
 	if(*alpha==0.0)

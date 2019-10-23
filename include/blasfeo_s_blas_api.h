@@ -61,6 +61,7 @@ extern "C" {
 // BLAS 1
 //
 float sdot_(int *n, float *x, int *incx, float *y, int *incy);
+float saxpy_(int *n, float *alpha, float *x, int *incx, float *y, int *incy);
 
 // BLAS 3
 //

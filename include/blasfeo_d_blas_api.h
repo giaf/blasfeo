@@ -61,6 +61,7 @@ extern "C" {
 // BLAS 1
 //
 double ddot_(int *n, double *x, int *incx, double *y, int *incy);
+double saxpy_(int *n, double *alpha, double *x, int *incx, double *y, int *incy);
 //
 void dcopy_(int *n, double *x, int *incx, double *y, int *incy);
 
