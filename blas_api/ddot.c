@@ -57,7 +57,6 @@ double blasfeo_ddot_blas(int *ptr_n, double *x, int *ptr_ix, double *y, int *ptr
 
 	if(n<=0)
 		return res;
-	
 	int ii;
 	if ((ix==1) & (iy==1))
 		{
@@ -70,7 +69,6 @@ double blasfeo_ddot_blas(int *ptr_n, double *x, int *ptr_ix, double *y, int *ptr
 		for(ii=0; ii<n; ii++)
 			res += y[ii*iy]*x[ii*ix];
 		}
-	
 	return res;
 
 	}
