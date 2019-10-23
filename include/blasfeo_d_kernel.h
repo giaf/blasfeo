@@ -971,6 +971,7 @@ void kernel_dgetrf_pivot_4_lib(int m, double *pA, int lda, double *inv_diag_A, i
 void kernel_dgetrf_pivot_4_vs_lib(int m, double *pA, int lda, double *inv_diag_A, int* ipiv, int n);
 
 // vector
+void kernel_ddot_11_lib(int n, double *x, double *y, double *res);
 void kernel_drowsw_lib(int kmax, double *pA, int lda, double *pC, int ldc);
 
 #endif // BLAS_API

@@ -60,6 +60,8 @@ extern "C" {
 
 // BLAS 1
 //
+double ddot_(int *n, double *x, int *incx, double *y, int *incy);
+//
 void dcopy_(int *n, double *x, int *incx, double *y, int *incy);
 
 // BLAS 3
@@ -99,6 +101,8 @@ void dtrtrs_(char *uplo, char *trans, char *diag, int *m, int *n, double *A, int
 
 
 // BLAS 1
+//
+double blasfeo_ddot_blas(int *n, double *x, int *incx, double *y, int *incy);
 //
 void blasfeo_dcopy(int *n, double *x, int *incx, double *y, int *incy);
 

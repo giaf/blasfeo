@@ -2,7 +2,7 @@
 *                                                                                                 *
 * This file is part of BLASFEO.                                                                   *
 *                                                                                                 *
-* BLASFEO -- BLAS For Embedded Optimization.                                                      *
+* BLASFEO -- BLAS for embedded optimization.                                                      *
 * Copyright (C) 2019 by Gianluca Frison.                                                          *
 * Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              *
 * All rights reserved.                                                                            *
@@ -33,75 +33,43 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-
-
-#ifndef BLASFEO_S_BLAS_API_H_
-#define BLASFEO_S_BLAS_API_H_
-
-
-
-#include "blasfeo_target.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+void kernel_sdot_11_lib(int n, float *x, float *y, float *res)
+	{
 
+	int ii;
 
+	float tmp_res[4] = {};
 
-#ifdef BLAS_API
+	tmp_res[0] = 0.0;
+	tmp_res[1] = 0.0;
+	tmp_res[2] = 0.0;
+	tmp_res[3] = 0.0;
 
+	ii = 0;
+	for(; ii<n-3; ii+=4)
+		{
+		tmp_res[0] += y[0]*x[0];
+		tmp_res[1] += y[1]*x[1];
+		tmp_res[2] += y[2]*x[2];
+		tmp_res[3] += y[3]*x[3];
+		x += 4;
+		y += 4;
+		}
+	for(; ii<n; ii++)
+		{
+		tmp_res[0] += y[0]*x[0];
+		x += 1;
+		y += 1;
+		}
+	
+	*res = tmp_res[0]+tmp_res[1]+tmp_res[2]+tmp_res[3];
 
+	return;
 
-#ifdef FORTRAN_BLAS_API
+	}
 
-
-
-// BLAS 1
-//
-float sdot_(int *n, float *x, int *incx, float *y, int *incy);
-
-// BLAS 3
-//
-void sgemm_(char *ta, char *tb, int *m, int *n, int *k, float *alpha, float *A, int *lda, float *B, int *ldb, float *beta, float *C, int *ldc);
-
-
-
-// LAPACK
-//
-
-
-
-#else // BLASFEO_API
-
-
-
-// BLAS 1
-//
-float blasfeo_sdot_blas(int *n, float *x, int *incx, float *y, int *incy);
-
-// BLAS 3
-//
-void blasfeo_sgemm(char *ta, char *tb, int *m, int *n, int *k, float *alpha, float *A, int *lda, float *B, int *ldb, float *beta, float *C, int *ldc);
-
-
-
-// LAPACK
-//
-
-
-
-#endif // BLASFEO_API
-
-
-
-#endif // BLAS_API
-
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif  // BLASFEO_S_BLAS_API_H_

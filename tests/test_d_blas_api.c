@@ -103,8 +103,12 @@ int main()
 
 	int bs = 4;
 
+	double res;
+
 	double d_0 = 0.0;
 	double d_1 = 1.0;
+
+	int i_1 = 1;
 
 	char c_l = 'l';
 	char c_n = 'n';
@@ -164,7 +168,7 @@ int main()
 	dtrsm_(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
-#if 1
+#if 0
 	for(ii=0; ii<n*n;  ii++) C[ii] = A[ii];
 	dtrmm_(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C, &n);
 //	dtrmm_(&c_l, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C, &n);
@@ -194,6 +198,11 @@ int main()
 	int_print_mat(1, n, ipiv, 1);
 	d_print_mat(n, n, C, ldc);
 //	d_print_mat(n, n, D, ldd);
+#endif
+
+#if 1
+	d_print_mat(1, n, A, 1);
+	C[0] = ddot_(&n, A, &i_1, A, &i_1);
 #endif
 
 //	printf("\ninfo %d\n", info);
@@ -240,7 +249,7 @@ int main()
 	blasfeo_dtrsm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
-#if 1
+#if 0
 	for(ii=0; ii<n*n;  ii++) C2[ii] = A[ii];
 	blasfeo_dtrmm(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
 //	blasfeo_dtrmm(&c_l, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
@@ -270,6 +279,10 @@ int main()
 	int_print_mat(1, n, ipiv, 1);
 	d_print_mat(n, n, C, ldc);
 //	d_print_mat(n, n, D, ldd);
+#endif
+
+#if 1
+	C2[0] = blasfeo_ddot_blas(&n, A, &i_1, A, &i_1);
 #endif
 
 //	printf("\ninfo %d\n", info);

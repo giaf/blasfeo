@@ -43,29 +43,35 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_sdot sdot_
+#define blasfeo_sdot_blas sdot_
 #endif
 
 
-float blasfeo_sdot(int n, float *x, int ix, float *y, int iy)
+float blasfeo_sdot_blas(int *ptr_n, float *x, int *ptr_ix, float *y, int *ptr_iy)
 	{
+	int n = *ptr_n;
+	int ix = *ptr_ix;
+	int iy = *ptr_iy;
+
 	float res = 0.0;
 
 	if(n<=0)
 		return res;
 
 	int ii;
-	ii = 0;
-	if ((ix==1) && (iy==1))
+	if ((ix==1) & (iy==1))
 		{
-		for(; ii<n; ii++)
-			res += y[ii]*x[ii];
+		kernel_sdot_11_lib(n, x, y, &res);
+//		for(ii=0; ii<n; ii++)
+//			res += y[ii]*x[ii];
 		}
 	else
 		{
-		for(; ii<n; ii++)
+		for(ii=0; ii<n; ii++)
 			res += y[ii*iy]*x[ii*ix];
 		}
+
 	return res;
+
 	}
 
