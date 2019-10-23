@@ -42,6 +42,8 @@ ifeq ($(BLAS_API), 1)
 ifeq ($(LA), HIGH_PERFORMANCE)
 
 OBJS += dcopy.o
+OBJS += daxpy.o
+OBJS += ddot.o
 OBJS += dgemm.o
 OBJS += dsyrk.o
 OBJS += dtrmm.o
@@ -55,6 +57,8 @@ OBJS += dpotrf.o
 OBJS += dpotrs.o
 OBJS += dtrtrs.o
 
+OBJS += saxpy.o
+OBJS += sdot.o
 OBJS += sgemm.o
 
 #endif # HIGH_PERFROMANCE
