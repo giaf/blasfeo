@@ -54,6 +54,10 @@ int globn = 5;
 
 
 
+//double cblas_ddot(int, double*, int, double*, int);
+
+
+
 int main()
 	{
 
@@ -200,9 +204,14 @@ int main()
 //	d_print_mat(n, n, D, ldd);
 #endif
 
+//	int n1 = n-1;
 #if 1
-	int n1 = n-1;
-//	C[0] = ddot_(&n, A, &i_1, A, &i_1);
+	C[0] = ddot_(&n, A, &i_1, A, &i_1);
+//	C[0] = ddot_(&n, A, &n, A, &n);
+//	C[0] = cblas_ddot(n, A, i_1, A, i_1);
+#endif
+
+#if 0
 	for(ii=0; ii<n; ii++) C[ii] = A[ii];
 	daxpy_(&n, &d_1, A, &i_1, C, &i_1);
 #endif
@@ -284,7 +293,11 @@ int main()
 #endif
 
 #if 1
-//	C2[0] = blasfeo_ddot_blas(&n, A, &i_1, A, &i_1);
+	C2[0] = blasfeo_ddot_blas(&n, A, &i_1, A, &i_1);
+//	C2[0] = blasfeo_ddot_blas(&n, A, &n, A, &n);
+#endif
+
+#if 0
 	for(ii=0; ii<n; ii++) C2[ii] = A[ii];
 	blasfeo_daxpy_blas(&n, &d_1, A, &i_1, C2, &i_1);
 #endif

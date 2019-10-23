@@ -48,6 +48,10 @@
 
 
 
+//float cblas_sdot(int, float*, int, float*, int);
+
+
+
 int main()
 	{
 
@@ -100,6 +104,8 @@ int main()
 	float d_0 = 0.0;
 	float d_1 = 1.0;
 
+	int i_1 = 1;
+
 	char c_l = 'l';
 	char c_n = 'n';
 	char c_r = 'r';
@@ -147,7 +153,7 @@ int main()
 	s_print_mat(n, n, D, ldd);
 #endif
 
-#if 1
+#if 0
 	sgemm_(&c_t, &c_t, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C, &n);
 #endif
 
@@ -192,6 +198,18 @@ int main()
 //	s_print_mat(n, n, D, ldd);
 #endif
 
+//	int n1 = n-1;
+#if 1
+	C[0] = sdot_(&n, A, &i_1, A, &i_1);
+//	C[0] = sdot_(&n, A, &n, A, &n);
+//	C[0] = cblas_sdot(n, A, i_1, A, i_1);
+#endif
+
+#if 0
+	for(ii=0; ii<n; ii++) C[ii] = A[ii];
+	saxpy_(&n, &d_1, A, &i_1, C, &i_1);
+#endif
+
 //	printf("\ninfo %d\n", info);
 //	s_print_mat(n, n, A, lda);
 //	s_print_mat(n, n, B, ldb);
@@ -225,7 +243,7 @@ int main()
 	s_print_mat(n, n, D, ldd);
 #endif
 
-#if 1
+#if 0
 	blasfeo_sgemm(&c_t, &c_t, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C2, &n);
 #endif
 
@@ -268,6 +286,16 @@ int main()
 	int_print_mat(1, n, ipiv, 1);
 	s_print_mat(n, n, C, ldc);
 //	s_print_mat(n, n, D, ldd);
+#endif
+
+#if 1
+	C2[0] = blasfeo_sdot_blas(&n, A, &i_1, A, &i_1);
+//	C2[0] = blasfeo_sdot_blas(&n, A, &n, A, &n);
+#endif
+
+#if 0
+	for(ii=0; ii<n; ii++) C2[ii] = A[ii];
+	blasfeo_saxpy_blas(&n, &d_1, A, &i_1, C2, &i_1);
 #endif
 
 //	printf("\ninfo %d\n", info);
