@@ -35,7 +35,7 @@
 
 
 
-#include "../../include/blasfeo_d_kernel.h"
+#include "../../include/blasfeo_s_kernel.h"
 
 
 
@@ -55,7 +55,21 @@ void kernel_spack_nn_12_vs_lib4(int kmax, float *A, int lda, float *C, int sdc, 
 
 
 
-#if 0//defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+void kernel_spack_nn_8_lib4(int kmax, float *A, int lda, float *C, int sdc)
+	{
+
+	kernel_spack_nn_4_lib4(kmax, A+0, lda, C+0*sdc);
+	kernel_spack_nn_4_lib4(kmax, A+4, lda, C+4*sdc);
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
 void kernel_spack_nn_8_vs_lib4(int kmax, float *A, int lda, float *C, int sdc, int m1)
 	{
 
@@ -489,7 +503,21 @@ void kernel_sunpack_nn_12_vs_lib4(int kmax, float *A, int sda, float *C, int ldc
 
 
 
-#if 0//defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+void kernel_sunpack_nn_8_lib4(int kmax, float *A, int sda, float *C, int ldc)
+	{
+
+	kernel_sunpack_nn_4_lib4(kmax, A+0*sda, C+0, ldc);
+	kernel_sunpack_nn_4_lib4(kmax, A+4*sda, C+4, ldc);
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
 void kernel_sunpack_nn_8_vs_lib4(int kmax, float *A, int sda, float *C, int ldc, int m1)
 	{
 

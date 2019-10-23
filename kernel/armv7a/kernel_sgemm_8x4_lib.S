@@ -48,7 +48,7 @@
 // output arguments:
 
 #if MACRO_LEVEL>=1
-	.macro INNER_SCALE_AB_4X4_LIB lc_zero
+	.macro INNER_SCALE_AB_8X4_LIB lc_zero
 #else
 	.align 3
 99: // 0
@@ -56,17 +56,17 @@
 	.word 0
 //	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_scale_ab_4x4_lib, %function
-inner_scale_ab_4x4_lib:
+	.type inner_scale_ab_8x4_lib, %function
+inner_scale_ab_8x4_lib:
 #elif defined(OS_MAC)
-_inner_scale_ab_4x4_lib:
+_inner_scale_ab_8x4_lib:
 #endif
 #endif
 
 	flds		s8, [r4, #0] // alpha
 	flds		s9, [r5, #0] // beta
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	flds		s10, \lc_zero // 0.0
 #else
 	flds		s10, 99b // 0.0
@@ -75,20 +75,34 @@ _inner_scale_ab_4x4_lib:
 	vmul.f32	q4, q4, d4[0]
 	vmul.f32	q5, q5, d4[0]
 	vmul.f32	q6, q6, d4[0]
-	fcmpes		s9, s10
 	vmul.f32	q7, q7, d4[0]
+	fcmpes		s9, s10
+	vmul.f32	q8, q8, d4[0]
+	vmul.f32	q9, q9, d4[0]
+	vmul.f32	q10, q10, d4[0]
+	vmul.f32	q11, q11, d4[0]
 	fmstat
 
 	beq		0f // end
 
+	add		r8, r6, #16
+
 	vld1.64		{d0, d1}, [r6], r7
-	vld1.64		{d2, d3}, [r6], r7
+	vld1.64		{d2, d3}, [r8], r7
 	vmla.f32	q4, q0, d4[1]
-	vmla.f32	q5, q1, d4[1]
+	vmla.f32	q8, q1, d4[1]
 	vld1.64		{d0, d1}, [r6], r7
-	vld1.64		{d2, d3}, [r6], r7
+	vld1.64		{d2, d3}, [r8], r7
+	vmla.f32	q5, q0, d4[1]
+	vmla.f32	q9, q1, d4[1]
+	vld1.64		{d0, d1}, [r6], r7
+	vld1.64		{d2, d3}, [r8], r7
 	vmla.f32	q6, q0, d4[1]
-	vmla.f32	q7, q1, d4[1]
+	vmla.f32	q10, q1, d4[1]
+	vld1.64		{d0, d1}, [r6], r7
+	vld1.64		{d2, d3}, [r8], r7
+	vmla.f32	q7, q0, d4[1]
+	vmla.f32	q11, q1, d4[1]
 
 0:
 
@@ -98,7 +112,7 @@ _inner_scale_ab_4x4_lib:
 	mov		pc, lr // return
 
 #if defined(OS_LINUX)
-	.size	inner_scale_ab_4x4_lib, .-inner_scale_ab_4x4_lib
+	.size	inner_scale_ab_8x4_lib, .-inner_scale_ab_8x4_lib
 #endif
 #endif
 
@@ -115,21 +129,27 @@ _inner_scale_ab_4x4_lib:
 // output arguments:
 
 #if MACRO_LEVEL>=1
-	.macro INNER_STORE_4X4_LIB
+	.macro INNER_STORE_8X4_LIB
 #else
 //	.p2align 4,,15
 #if defined(OS_LINUX)
-	.type inner_store_4x4_lib, %function
-inner_store_4x4_lib:
+	.type inner_store_8x4_lib, %function
+inner_store_8x4_lib:
 #elif defined(OS_MAC)
-_inner_store_4x4_lib4:
+_inner_store_8x4_lib4:
 #endif
 #endif
 
+	add		r6, r4, #16
+
 	vst1.64		{d8, d9}, [r4], r5
+	vst1.64		{d16, d17}, [r6], r5
 	vst1.64		{d10, d11}, [r4], r5
+	vst1.64		{d18, d19}, [r6], r5
 	vst1.64		{d12, d13}, [r4], r5
+	vst1.64		{d20, d21}, [r6], r5
 	vst1.64		{d14, d15}, [r4], r5
+	vst1.64		{d22, d23}, [r6], r5
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -137,7 +157,7 @@ _inner_store_4x4_lib4:
 	mov		pc, lr // return
 
 #if defined(OS_LINUX)
-	.size	inner_store_4x4_lib, .-inner_store_4x4_lib
+	.size	inner_store_8x4_lib, .-inner_store_8x4_lib
 #endif
 #endif
 
@@ -153,20 +173,21 @@ _inner_store_4x4_lib4:
 
 
 
-//                                 r0        r1             r2         r3         sp+0          sp+4       sp+8     sp+12      sp+16
-// void kernel_dgemm_nt_4x4_lib44cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd)
+//                               r0        r1             r2         r3       sp+0       sp+4          sp+8       sp+12    sp+16   sp+20
+// void kernel_sgemm_nt_8x4_lib44cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd)
 
 //	.p2align 4,,15
 #if defined(OS_LINUX)
-	.global	kernel_sgemm_nt_4x4_lib44cc
-	.type	kernel_sgemm_nt_4x4_lib44cc, %function
-kernel_sgemm_nt_4x4_lib44cc:
+	.global	kernel_sgemm_nt_8x4_lib44cc
+	.type	kernel_sgemm_nt_8x4_lib44cc, %function
+kernel_sgemm_nt_8x4_lib44cc:
 #elif defined(OS_MAC)
-	.global	kernel_sgemm_nt_4x4_lib44cc
-_kernel_sgemm_nt_4x4_lib44cc:
+	.global	kernel_sgemm_nt_8x4_lib44cc
+_kernel_sgemm_nt_8x4_lib44cc:
 #endif
 
 	PROLOGUE
+
 
 
 	// zero accumulation registers
@@ -175,21 +196,27 @@ _kernel_sgemm_nt_4x4_lib44cc:
 	vmov	q5, q4
 	vmov	q6, q4
 	vmov	q7, q4
+	vmov	q8, q4
+	vmov	q9, q4
+	vmov	q10, q4
+	vmov	q11, q4
 
 
 
 	// call inner kernel dgemm nt
 	mov		r4, r0 // kmax
 	mov		r5, r2 // A
-	mov		r6, r3 // B
+	mov		r6, r3 // sda
+	lsl		r6, r6, #4 // 4*sizeof(float)*sda
+	ldr		r7, [fp, #0] // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4
 #else
 #if defined(OS_LINUX)
-	bl	inner_kernel_gemm_add_nt_4x4_lib4
+	bl	inner_kernel_gemm_add_nt_8x4_lib4
 #elif defined(OS_MAC)
-	bl	_inner_kernel_gemm_add_nt_4x4_lib4
+	bl	_inner_kernel_gemm_add_nt_8x4_lib4
 #endif
 #endif
 
@@ -197,35 +224,35 @@ _kernel_sgemm_nt_4x4_lib44cc:
 
 	// call inner blend for generic alpha and beta
 	mov		r4, r1 // alpha
-	ldr		r5, [fp, #0] // beta
-	ldr		r6, [fp, #4] // C
-	ldr		r7, [fp, #8] // ldc
-	lsl		r7, r7, #2 // ldc*sizeof(float)
+	ldr		r5, [fp, #4] // beta
+	ldr		r6, [fp, #8] // C
+	ldr		r7, [fp, #12] // ldc
+	lsl		r7, r7, #2 // sizeof(float)*ldc
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_4X4_LIB 99f
+	INNER_SCALE_AB_8X4_LIB 99f
 #else
 #if defined(OS_LINUX)
-	bl inner_scale_ab_4x4_lib
+	bl inner_scale_ab_8x4_lib
 #elif defined(OS_MAC)
-	bl _inner_scale_ab_4x4_lib
+	bl _inner_scale_ab_8x4_lib
 #endif
 #endif
 
 
 
 	// store n
-	ldr		r4, [fp, #12] // D
-	ldr		r5, [fp, #16] // ldd
-	lsl		r5, r5, #2 // ldd*sizeof(float)
+	ldr		r4, [fp, #16] // D
+	ldr		r5, [fp, #20] // ldd
+	lsl		r5, r5, #2 // sizeof(float)*ldd
 
 #if MACRO_LEVEL>=1
-	INNER_STORE_4X4_LIB
+	INNER_STORE_8X4_LIB
 #else
 #if defined(OS_LINUX)
-	bl inner_store_4x4_lib
+	bl inner_store_8x4_lib
 #elif defined(OS_MAC)
-	bl _inner_store_4x4_lib
+	bl _inner_store_8x4_lib
 #endif
 #endif
 
@@ -234,7 +261,7 @@ _kernel_sgemm_nt_4x4_lib44cc:
 	EPILOGUE
 
 #if defined(OS_LINUX)
-	.size	kernel_sgemm_nt_4x4_lib44cc, .-kernel_sgemm_nt_4x4_lib44cc
+	.size	kernel_sgemm_nt_8x4_lib44cc, .-kernel_sgemm_nt_8x4_lib44cc
 #endif
 
 
@@ -245,6 +272,7 @@ _kernel_sgemm_nt_4x4_lib44cc:
 99: // 0
 	.word 0
 	.word 0
+
 
 
 

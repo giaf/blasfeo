@@ -1176,7 +1176,7 @@ inner_edge_trsm_rlt_inv_8x4_lib4:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_8X4_LIB4 lc_zero
 #else
 	.align 3
@@ -1198,7 +1198,7 @@ _inner_scale_ab_8x4_lib4:
 	vmul.f32	q4, q4, d4[0]
 	flds		s9, [r5, #0] // beta
 	vmul.f32	q5, q5, d4[0]
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	flds		s10, \lc_zero // 0.0
 #else
 	flds		s10, 99b // 0.0
@@ -1231,7 +1231,7 @@ _inner_scale_ab_8x4_lib4:
 
 0:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	mov		pc, lr // return
@@ -1253,7 +1253,7 @@ _inner_scale_ab_8x4_lib4:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_M11_8X4_LIB4
 #else
 //	.p2align 4,,15
@@ -1280,7 +1280,7 @@ _inner_scale_m11_8x4_lib4:
 	vsub.f32	q10, q0, q10
 	vsub.f32	q11, q1, q11
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	mov		pc, lr // return
@@ -1302,7 +1302,7 @@ _inner_scale_m11_8x4_lib4:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_8X4_LIB4
 #else
 //	.p2align 4,,15
@@ -1321,7 +1321,7 @@ _inner_store_8x4_lib4:
 	vst1.64		{d16, d17, d18, d19}, [r6:128]!
 	vst1.64		{d20, d21, d22, d23}, [r6:128]!
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	mov		pc, lr // return
@@ -1343,7 +1343,7 @@ _inner_store_8x4_lib4:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_8X4_L_LIB4
 #else
 //	.p2align 4,,15
@@ -1373,7 +1373,7 @@ _inner_store_8x4_l_lib4:
 	vst1.64		{d20, d21, d22, d23}, [r6:128]!
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	mov		pc, lr // return
@@ -1452,7 +1452,7 @@ _kernel_sgemm_nt_8x4_lib4:
 	ldr		r7, [fp, #12] // sdc
 	lsl		r7, r7, #4 // 4*sizeof(float)*sdc
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X4_LIB4 99f
 #else
 #if defined(OS_LINUX)
@@ -1469,7 +1469,7 @@ _kernel_sgemm_nt_8x4_lib4:
 	ldr		r5, [fp, #20] // sdd
 	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_STORE_8X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1561,7 +1561,7 @@ _kernel_sgemm_nn_8x4_lib4:
 	ldr		r7, [fp, #20] // sdc
 	lsl		r7, r7, #4 // 4*sizeof(float)*sdc
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X4_LIB4 99f
 #else
 #if defined(OS_LINUX)
@@ -1578,7 +1578,7 @@ _kernel_sgemm_nn_8x4_lib4:
 	ldr		r5, [fp, #28] // sdd
 	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_STORE_8X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1663,7 +1663,7 @@ _kernel_strsm_nt_rl_inv_8x4_lib4:
 	ldr		r5, [fp, #4] // sdd
 	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_SCALE_M11_8X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1696,7 +1696,7 @@ _kernel_strsm_nt_rl_inv_8x4_lib4:
 	ldr		r5, [fp, #12] // sdd
 	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_STORE_8X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1778,7 +1778,7 @@ _kernel_spotrf_nt_l_8x4_lib4:
 	ldr		r5, [fp, #4] // sdd
 	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_SCALE_M11_8X4_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1810,7 +1810,7 @@ _kernel_spotrf_nt_l_8x4_lib4:
 	ldr		r5, [fp, #12] // sdd
 	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_STORE_8X4_L_LIB4
 #else
 #if defined(OS_LINUX)
@@ -1837,3 +1837,12 @@ _kernel_spotrf_nt_l_8x4_lib4:
 	.word 0
 	.word 0
  
+ 
+
+
+
+#if defined(BLAS_API)
+
+#include "kernel_sgemm_8x4_lib.S"
+
+#endif
