@@ -516,7 +516,7 @@ _inner_kernel_gemm_add_nn_8x4_lib4:
 
 	add		r9, r5, r6 // A1
 
-	add		r11, r8, #32
+//	add		r11, r8, #32
 
 	// prefetch
 	pld		[r7, #0] // B
@@ -525,16 +525,16 @@ _inner_kernel_gemm_add_nn_8x4_lib4:
 #if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
 	pld		[r7, #32]
 	pld		[r5, #32]
-	pld		[r8, #32]
+	pld		[r9, #32]
 #endif
 	pld		[r7, r8] // B
 #if defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
 	pld		[r5, #64] // A0
 	pld		[r9, #64] // A1
 #if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
-	pld		[r7, r11]
+//	pld		[r7, r11]
 	pld		[r5, #96]
-	pld		[r8, #96]
+	pld		[r9, #96]
 #endif
 #else // cortex a15
 	// TODO prefetch???
@@ -557,7 +557,7 @@ _inner_kernel_gemm_add_nn_8x4_lib4:
 #endif
 
 	add		r10, r8, r8
-	add		r11, r11, r8
+//	add		r11, r11, r8
 
 	cmp		r4, #4
 	ble		0f // consider clean up loop
@@ -587,8 +587,9 @@ _inner_kernel_gemm_add_nn_8x4_lib4:
 	vmla.f32	q5, q12, d2[0]
 	pld		[r5, #96]
 	vmla.f32	q6, q12, d4[0]
-	pld		[r8, #96]
+	pld		[r9, #96]
 	vmla.f32	q7, q12, d6[0]
+	add		r10, r10, #32
 	vmla.f32	q8, q14, d0[0]
 	vmla.f32	q9, q14, d2[0]
 	vmla.f32	q10, q14, d4[0]
@@ -613,7 +614,8 @@ _inner_kernel_gemm_add_nn_8x4_lib4:
 	// unroll 2
 	vmla.f32	q4, q12, d1[0]
 #if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
-	pld		[r7, r11]
+//	pld		[r7, r11]
+	pld		[r7, r10]
 #endif
 	vmla.f32	q5, q12, d3[0]
 #if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
@@ -621,9 +623,10 @@ _inner_kernel_gemm_add_nn_8x4_lib4:
 #endif
 	vmla.f32	q6, q12, d5[0]
 #if defined(TARGET_ARMV7A_ARM_CORTEX_A9)
-	pld		[r8, #96]
+	pld		[r9, #96]
 #endif
 	vmla.f32	q7, q12, d7[0]
+	add		r10, r8, r8
 	vmla.f32	q8, q14, d1[0]
 	vmla.f32	q9, q14, d3[0]
 	vmla.f32	q10, q14, d5[0]
