@@ -71,6 +71,8 @@ obj_cblas: | $(CBLAS_DIR)
 	@echo "#" >> $(CBLAS_DIR)/Makefile.in
 	@echo "# BLASFEO's custom flags" >> $(CBLAS_DIR)/Makefile.in
 	@echo "#" >> $(CBLAS_DIR)/Makefile.in
+	@echo "CC = $(CC)" >> $(CBLAS_DIR)/Makefile.in
+	@echo "FC = $(CC:gcc=gfortran)" >> $(CBLAS_DIR)/Makefile.in
 	@echo "CFLAGS = $(CFLAGS) -DADD_" >> $(CBLAS_DIR)/Makefile.in
 	@echo "FFLAGS = $(CFLAGS)" >> $(CBLAS_DIR)/Makefile.in
 	@echo "BLLIB = $(BLAS_DIR)/blas_LINUX.a" >> $(CBLAS_DIR)/Makefile.in
