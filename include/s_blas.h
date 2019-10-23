@@ -42,6 +42,7 @@ extern "C" {
 // headers to reference BLAS and LAPACK routines employed in BLASFEO WR
 
 // level 1
+float sdot_(int *m, float *x, int *incx, float *y, int *incy);
 void scopy_(int *m, float *x, int *incx, float *y, int *incy);
 void saxpy_(int *m, float *alpha, float *x, int *incx, float *y, int *incy);
 void sscal_(int *m, float *alpha, float *x, int *incx);

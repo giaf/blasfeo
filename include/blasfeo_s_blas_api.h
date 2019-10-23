@@ -60,8 +60,9 @@ extern "C" {
 
 // BLAS 1
 //
+void saxpy_(int *n, float *alpha, float *x, int *incx, float *y, int *incy);
+//
 float sdot_(int *n, float *x, int *incx, float *y, int *incy);
-float saxpy_(int *n, float *alpha, float *x, int *incx, float *y, int *incy);
 
 // BLAS 3
 //
@@ -79,6 +80,8 @@ void sgemm_(char *ta, char *tb, int *m, int *n, int *k, float *alpha, float *A, 
 
 
 // BLAS 1
+//
+void blasfeo_saxpy_blas(int *n, float *alpha, float *x, int *incx, float *y, int *incy);
 //
 float blasfeo_sdot_blas(int *n, float *x, int *incx, float *y, int *incy);
 

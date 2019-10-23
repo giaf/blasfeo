@@ -60,10 +60,11 @@ extern "C" {
 
 // BLAS 1
 //
-double ddot_(int *n, double *x, int *incx, double *y, int *incy);
-double saxpy_(int *n, double *alpha, double *x, int *incx, double *y, int *incy);
+void daxpy_(int *n, double *alpha, double *x, int *incx, double *y, int *incy);
 //
 void dcopy_(int *n, double *x, int *incx, double *y, int *incy);
+//
+double ddot_(int *n, double *x, int *incx, double *y, int *incy);
 
 // BLAS 3
 //
@@ -102,6 +103,8 @@ void dtrtrs_(char *uplo, char *trans, char *diag, int *m, int *n, double *A, int
 
 
 // BLAS 1
+//
+void blasfeo_daxpy_blas(int *n, double *alpha, double *x, int *incx, double *y, int *incy);
 //
 double blasfeo_ddot_blas(int *n, double *x, int *incx, double *y, int *incy);
 //

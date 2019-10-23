@@ -43,11 +43,11 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_daxpy daxpy_
+#define blasfeo_daxpy_blas daxpy_
 #endif
 
 
-void blasfeo_daxpy(int *ptr_n, double *alpha, double *x, int *ptr_ix, double *y, int *ptr_iy)
+void blasfeo_daxpy_blas(int *ptr_n, double *alpha, double *x, int *ptr_ix, double *y, int *ptr_iy)
 	{
 	int n = *ptr_n;
 	int ix = *ptr_ix;
@@ -62,8 +62,9 @@ void blasfeo_daxpy(int *ptr_n, double *alpha, double *x, int *ptr_ix, double *y,
 	ii = 0;
 	if ((ix == 1) && (iy ==1))
 		{
-		for(; ii<n; ii++)
-			y[ii] = y[ii] + *alpha*x[ii];
+//		for(; ii<n; ii++)
+//			y[ii] = y[ii] + *alpha*x[ii];
+		kernel_daxpy_11_lib(n, alpha, x, y);
 		}
 	else
 		{

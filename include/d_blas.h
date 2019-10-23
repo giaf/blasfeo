@@ -42,6 +42,7 @@ extern "C" {
 // headers to reference BLAS and LAPACK routines employed in BLASFEO WR
 
 // level 1
+double ddot_(int *m, double *x, int *incx, double *y, int *incy);
 void dcopy_(int *m, double *x, int *incx, double *y, int *incy);
 void daxpy_(int *m, double *alpha, double *x, int *incx, double *y, int *incy);
 void dscal_(int *m, double *alpha, double *x, int *incx);

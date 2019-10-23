@@ -43,11 +43,11 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_saxpy saxpy_
+#define blasfeo_saxpy_blas saxpy_
 #endif
 
 
-void blasfeo_saxpy(int *ptr_n, float *alpha, float *x, int *ptr_ix, float *y, int *ptr_iy)
+void blasfeo_saxpy_blas(int *ptr_n, float *alpha, float *x, int *ptr_ix, float *y, int *ptr_iy)
 	{
 	int n = *ptr_n;
 	int ix = *ptr_ix;
@@ -62,8 +62,9 @@ void blasfeo_saxpy(int *ptr_n, float *alpha, float *x, int *ptr_ix, float *y, in
 	ii = 0;
 	if ((ix == 1) && (iy ==1))
 		{
-		for(; ii<n; ii++)
-			y[ii] = y[ii] + *alpha*x[ii];
+//		for(; ii<n; ii++)
+//			y[ii] = y[ii] + *alpha*x[ii];
+		kernel_saxpy_11_lib(n, alpha, x, y);
 		}
 	else
 		{
