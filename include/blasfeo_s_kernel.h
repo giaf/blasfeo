@@ -469,6 +469,14 @@ void kernel_sunpack_tt_4_lib4(int kmax, float *A, int sda, float *B, int ldb);
 #ifdef BLAS_API
 
 // B panel-major bs=4; A, C, D column-major
+// 8x4
+void kernel_sgemm_nt_8x4_lib44cc(int kmax, float *alpha, float *A, int sda, float *B, float *beta, float *C, int ldc, float *D, int ldd);
+//void kernel_sgemm_nt_8x4_vs_lib44cc(int kmax, float *alpha, float *A, int sda, float *B, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
+// 4x4
+void kernel_sgemm_nt_4x4_lib44cc(int kmax, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd);
+void kernel_sgemm_nt_4x4_vs_lib44cc(int kmax, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
+
+// B panel-major bs=4; A, C, D column-major
 // 4x4
 void kernel_sgemm_nt_4x4_libc4cc(int kmax, float *alpha, float *A, int lda, float *B, float *beta, float *C, int ldc, float *D, int ldd);
 void kernel_sgemm_nt_4x4_vs_libc4cc(int kmax, float *alpha, float *A, int lda, float *B, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
@@ -481,11 +489,6 @@ void kernel_sgemm_nn_4x4_lib4ccc(int kmax, float *alpha, float *A, float *B, int
 void kernel_sgemm_nn_4x4_vs_lib4ccc(int kmax, float *alpha, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
 void kernel_sgemm_nt_4x4_lib4ccc(int kmax, float *alpha, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd);
 void kernel_sgemm_nt_4x4_vs_lib4ccc(int kmax, float *alpha, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
-
-// B panel-major bs=4; A, C, D column-major
-// 4x4
-void kernel_sgemm_nt_4x4_lib44cc(int kmax, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd);
-void kernel_sgemm_nt_4x4_vs_lib44cc(int kmax, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
 
 // A, B, C, D column-major
 void kernel_sgemm_nn_4x4_libcccc(int kmax, float *alpha, float *A, int lda, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd);
