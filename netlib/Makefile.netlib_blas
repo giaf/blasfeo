@@ -44,9 +44,9 @@
 SBLAS1 = 
 SBLAS1 += netlib/blas/isamax.o
 SBLAS1 += netlib/blas/sasum.o
-SBLAS1 += netlib/blas/saxpy.o
+#SBLAS1 += netlib/blas/saxpy.o
 SBLAS1 += netlib/blas/scopy.o
-SBLAS1 += netlib/blas/sdot.o
+#SBLAS1 += netlib/blas/sdot.o
 SBLAS1 += netlib/blas/snrm2.o
 SBLAS1 += netlib/blas/srot.o
 SBLAS1 += netlib/blas/srotg.o
@@ -74,9 +74,9 @@ CBLAS1 += netlib/blas/csrot.o
 DBLAS1 =
 DBLAS1 += netlib/blas/idamax.o
 DBLAS1 += netlib/blas/dasum.o
-DBLAS1 += netlib/blas/daxpy.o
+#DBLAS1 += netlib/blas/daxpy.o
 #DBLAS1 += netlib/blas/dcopy.o
-DBLAS1 += netlib/blas/ddot.o
+#DBLAS1 += netlib/blas/ddot.o
 DBLAS1 += netlib/blas/dnrm2.o
 DBLAS1 += netlib/blas/drot.o
 DBLAS1 += netlib/blas/drotg.o
@@ -194,7 +194,7 @@ ZBLAS2 += netlib/blas/zhpr2.o
 #  the Level 3 BLAS.
 #---------------------------------------------------------
 SBLAS3 =
-SBLAS3 += netlib/blas/sgemm.o
+#SBLAS3 += netlib/blas/sgemm.o
 SBLAS3 += netlib/blas/ssymm.o
 SBLAS3 += netlib/blas/ssyrk.o
 SBLAS3 += netlib/blas/ssyr2k.o
