@@ -292,7 +292,7 @@ inner_blend_scale_m11_4x4_lib:
 #endif
 #endif
 
-movapd	%xmm0, %xmm8
+	movapd	%xmm0, %xmm8
 	movsd	%xmm1, %xmm0
 	movsd	%xmm8, %xmm1
 

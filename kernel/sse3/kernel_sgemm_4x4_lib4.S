@@ -921,6 +921,10 @@ inner_blend_scale_ab_4x4_lib4:
 	movss		0(%r11), %xmm14
 	shufps		$0x00, %xmm14, %xmm14
 
+	xorps		%xmm15, %xmm15 // 0.0
+	ucomiss		%xmm15, %xmm14 // beta==0.0 ?
+	je			0f // end
+
 	movaps		0(%r12), %xmm15
 	mulps		%xmm14, %xmm15
 	addps		%xmm15, %xmm0
@@ -933,6 +937,8 @@ inner_blend_scale_ab_4x4_lib4:
 	movaps		48(%r12), %xmm15
 	mulps		%xmm14, %xmm15
 	addps		%xmm15, %xmm3
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -998,6 +1004,10 @@ inner_scale_ab_4x4_lib4:
 	movss		0(%r11), %xmm14
 	shufps		$0x00, %xmm14, %xmm14
 
+	xorps		%xmm15, %xmm15 // 0.0
+	ucomiss		%xmm15, %xmm14 // beta==0.0 ?
+	je			0f // end
+
 	movaps		0(%r12), %xmm15
 	mulps		%xmm14, %xmm15
 	addps		%xmm15, %xmm0
@@ -1010,6 +1020,8 @@ inner_scale_ab_4x4_lib4:
 	movaps		48(%r12), %xmm15
 	mulps		%xmm14, %xmm15
 	addps		%xmm15, %xmm3
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -1260,6 +1272,16 @@ kernel_sgemm_nn_4x4_lib4:
 
 #if defined(OS_LINUX)
 	.size	kernel_sgemm_nn_4x4_lib4, .-kernel_sgemm_nn_4x4_lib4
+#endif
+
+
+
+
+
+#if defined(BLAS_API)
+
+#include "kernel_sgemm_4x4_lib.S"
+
 #endif
 
 

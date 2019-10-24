@@ -58,3 +58,4 @@ clean:
 	rm -f *.gcov
 
 kernel_dgemm_4x4_lib4.o: kernel_dgemm_4x4_lib4.S kernel_dgemm_4x4_lib.S
+kernel_sgemm_4x4_lib4.o: kernel_sgemm_4x4_lib4.S kernel_sgemm_4x4_lib.S
