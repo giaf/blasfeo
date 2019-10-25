@@ -441,6 +441,8 @@ void kernel_spack_nn_8_lib8(int kmax, float *A, int lda, float *B);
 void kernel_spack_nn_8_vs_lib8(int kmax, float *A, int lda, float *B, int m1);
 void kernel_spack_tn_8_lib8(int kmax, float *A, int lda, float *B);
 void kernel_spack_tn_8_vs_lib8(int kmax, float *A, int lda, float *B, int m1);
+void kernel_spack_tt_8_lib8(int kmax, float *A, int lda, float *B, int sdb);
+void kernel_spack_tt_8_vs_lib8(int kmax, float *A, int lda, float *B, int sdb, int m1);
 // 8 lib 4
 void kernel_spack_nn_8_lib4(int kmax, float *A, int lda, float *B, int sdb);
 void kernel_spack_nn_8_vs_lib4(int kmax, float *A, int lda, float *B, int sdb, int m1);

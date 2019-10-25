@@ -5008,7 +5008,7 @@ NAME:
 	movq	ARG5, %r14 // sdc
 	sall	$5, %r14d
 
-	movq	ARG5, %r15 // m1
+	movq	ARG6, %r15 // m1
 	cmpl	$1, %r15d
 	jg		100f
 
@@ -5022,7 +5022,7 @@ NAME:
 
 100:
 
-	movq	ARG5, %r15 // m1
+	movq	ARG6, %r15 // m1
 	cmpl	$2, %r15d
 	jg		101f
 
@@ -5036,7 +5036,7 @@ NAME:
 
 101:
 
-	movq	ARG5, %r15 // m1
+	movq	ARG6, %r15 // m1
 	cmpl	$3, %r15d
 	jg		102f
 

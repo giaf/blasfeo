@@ -246,7 +246,7 @@ NAME:
 	leaq	0(%r12, %r12, 2), %r15
 
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jle		2f // clean-up loop
 
 
@@ -301,7 +301,7 @@ NAME:
 	addq	$32, %r14
 	addq	$256, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jg		1b
 
 
@@ -329,8 +329,8 @@ NAME:
 	vmovss		%xmm0, 28(%r13)
 
 	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r14
+	addq	$4, %r11
+	addq	$4, %r14
 	addq	$32, %r13
 
 	cmpl	$0, %r10d
@@ -366,7 +366,7 @@ NAME:
 	leaq	0(%r12, %r12, 2), %r15
 
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jle		2f // clean-up loop
 
 
@@ -430,7 +430,7 @@ NAME:
 	addq	$32, %r14
 	addq	$256, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jg		1b
 
 
@@ -458,8 +458,8 @@ NAME:
 //	vmovss		%xmm0, 28(%r13)
 
 	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r14
+	addq	$4, %r11
+	addq	$4, %r14
 	addq	$32, %r13
 
 	cmpl	$0, %r10d
@@ -495,7 +495,7 @@ NAME:
 	leaq	0(%r12, %r12, 2), %r15
 
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jle		2f // clean-up loop
 
 
@@ -559,7 +559,7 @@ NAME:
 	addq	$32, %r14
 	addq	$256, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jg		1b
 
 
@@ -587,8 +587,8 @@ NAME:
 //	vmovss		%xmm0, 28(%r13)
 
 	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r14
+	addq	$4, %r11
+	addq	$4, %r14
 	addq	$32, %r13
 
 	cmpl	$0, %r10d
@@ -624,7 +624,7 @@ NAME:
 	leaq	0(%r12, %r12, 2), %r15
 
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jle		2f // clean-up loop
 
 
@@ -688,7 +688,7 @@ NAME:
 	addq	$32, %r14
 	addq	$256, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jg		1b
 
 
@@ -716,8 +716,8 @@ NAME:
 //	vmovss		%xmm0, 28(%r13)
 
 	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r14
+	addq	$4, %r11
+	addq	$4, %r14
 	addq	$32, %r13
 
 	cmpl	$0, %r10d
@@ -753,7 +753,7 @@ NAME:
 	leaq	0(%r12, %r12, 2), %r15
 
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jle		2f // clean-up loop
 
 
@@ -792,7 +792,7 @@ NAME:
 	addq	$32, %r14
 	addq	$256, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jg		1b
 
 
@@ -812,8 +812,8 @@ NAME:
 	vmovss		%xmm0, 12(%r13)
 
 	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r14
+	addq	$4, %r11
+	addq	$4, %r14
 	addq	$32, %r13
 
 	cmpl	$0, %r10d
@@ -849,7 +849,7 @@ NAME:
 	leaq	0(%r12, %r12, 2), %r15
 
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jle		2f // clean-up loop
 
 
@@ -897,7 +897,7 @@ NAME:
 	addq	$32, %r14
 	addq	$256, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jg		1b
 
 
@@ -917,8 +917,8 @@ NAME:
 //	vmovss		%xmm0, 12(%r13)
 
 	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r14
+	addq	$4, %r11
+	addq	$4, %r14
 	addq	$32, %r13
 
 	cmpl	$0, %r10d
@@ -954,7 +954,7 @@ NAME:
 	leaq	0(%r12, %r12, 2), %r15
 
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jle		2f // clean-up loop
 
 
@@ -1002,7 +1002,7 @@ NAME:
 	addq	$32, %r14
 	addq	$256, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jg		1b
 
 
@@ -1022,8 +1022,8 @@ NAME:
 //	vmovss		%xmm0, 12(%r13)
 
 	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r14
+	addq	$4, %r11
+	addq	$4, %r14
 	addq	$32, %r13
 
 	cmpl	$0, %r10d
@@ -1059,7 +1059,7 @@ NAME:
 	leaq	0(%r12, %r12, 2), %r15
 
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jle		2f // clean-up loop
 
 
@@ -1107,7 +1107,7 @@ NAME:
 	addq	$32, %r14
 	addq	$256, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$7, %r10d
 	jg		1b
 
 
@@ -1127,8 +1127,8 @@ NAME:
 //	vmovss		%xmm0, 12(%r13)
 
 	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r14
+	addq	$4, %r11
+	addq	$4, %r14
 	addq	$32, %r13
 
 	cmpl	$0, %r10d
@@ -1143,6 +1143,766 @@ NAME:
 	ret
 
 	FUN_END(inner_kernel_spack_tn_1_lib8)
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_KERNEL_SPACK_TT_8_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_spack_tt_8_lib8)
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$7, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	movq	%r11, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 64(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 96(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 128(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 160(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 192(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 224(%r13)
+	addq	%r12, %r15
+
+	subl	$8, %r10d
+	addq	$32, %r11
+	addq	%r14, %r13
+
+	cmpl	$7, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	movq	%r11, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 64(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 96(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 128(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 160(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 192(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 224(%r13)
+	addq	%r12, %r15
+
+	subl	$1, %r10d
+	addq	$4, %r11
+	addq	$4, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_spack_tt_8_lib8)
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_KERNEL_SPACK_TT_7_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_spack_tt_7_lib8)
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$7, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	movq	%r11, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 64(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 96(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 128(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 160(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 192(%r13)
+	addq	%r12, %r15
+
+	subl	$8, %r10d
+	addq	$32, %r11
+	addq	%r14, %r13
+
+	cmpl	$7, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	movq	%r11, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 64(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 96(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 128(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 160(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 192(%r13)
+	addq	%r12, %r15
+
+	subl	$1, %r10d
+	addq	$4, %r11
+	addq	$4, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_spack_tt_7_lib8)
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_KERNEL_SPACK_TT_6_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_spack_tt_6_lib8)
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$7, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	movq	%r11, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 64(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 96(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 128(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 160(%r13)
+	addq	%r12, %r15
+
+	subl	$8, %r10d
+	addq	$32, %r11
+	addq	%r14, %r13
+
+	cmpl	$7, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	movq	%r11, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 64(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 96(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 128(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 160(%r13)
+	addq	%r12, %r15
+
+	subl	$1, %r10d
+	addq	$4, %r11
+	addq	$4, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_spack_tt_6_lib8)
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_KERNEL_SPACK_TT_5_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_spack_tt_5_lib8)
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$7, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	movq	%r11, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 64(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 96(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 128(%r13)
+	addq	%r12, %r15
+
+	subl	$8, %r10d
+	addq	$32, %r11
+	addq	%r14, %r13
+
+	cmpl	$7, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	movq	%r11, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 64(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 96(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 128(%r13)
+	addq	%r12, %r15
+
+	subl	$1, %r10d
+	addq	$4, %r11
+	addq	$4, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_spack_tt_5_lib8)
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_KERNEL_SPACK_TT_4_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_spack_tt_4_lib8)
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$7, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	movq	%r11, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 64(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 96(%r13)
+	addq	%r12, %r15
+
+	subl	$8, %r10d
+	addq	$32, %r11
+	addq	%r14, %r13
+
+	cmpl	$7, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	movq	%r11, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 64(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 96(%r13)
+	addq	%r12, %r15
+
+	subl	$1, %r10d
+	addq	$4, %r11
+	addq	$4, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_spack_tt_4_lib8)
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_KERNEL_SPACK_TT_3_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_spack_tt_3_lib8)
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$7, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	movq	%r11, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 64(%r13)
+	addq	%r12, %r15
+
+	subl	$8, %r10d
+	addq	$32, %r11
+	addq	%r14, %r13
+
+	cmpl	$7, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	movq	%r11, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 32(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 64(%r13)
+	addq	%r12, %r15
+
+	subl	$1, %r10d
+	addq	$4, %r11
+	addq	$4, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_spack_tt_3_lib8)
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_KERNEL_SPACK_TT_2_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_spack_tt_2_lib8)
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$7, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	movq	%r11, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 32(%r13)
+	addq	%r12, %r15
+
+	subl	$8, %r10d
+	addq	$32, %r11
+	addq	%r14, %r13
+
+	cmpl	$7, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	movq	%r11, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 0(%r13)
+	addq	%r12, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 32(%r13)
+	addq	%r12, %r15
+
+	subl	$1, %r10d
+	addq	$4, %r11
+	addq	$4, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_spack_tt_2_lib8)
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_KERNEL_SPACK_TT_1_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_spack_tt_1_lib8)
+#endif
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$7, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	movq	%r11, %r15
+
+	vmovups		0(%r15), %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	addq	%r12, %r15
+
+	subl	$8, %r10d
+	addq	$32, %r11
+	addq	%r14, %r13
+
+	cmpl	$7, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	movq	%r11, %r15
+
+	vmovss		0(%r15), %xmm0
+	vmovss		%xmm0, 0(%r13)
+	addq	%r12, %r15
+
+	subl	$1, %r10d
+	addq	$4, %r11
+	addq	$4, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_spack_tt_1_lib8)
 #endif
 
 
@@ -1485,6 +2245,175 @@ NAME:
 	ret
 
 	FUN_END(kernel_spack_tn_8_vs_lib8)
+
+
+
+
+
+//                             1         2          3        4          5
+// void kernel_spack_tt_8_lib8(int kmax, float *A, int lda, float *C, int sdc)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_spack_tt_8_lib8)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$2, %r12d
+	movq	ARG4, %r13 // C
+	movq	ARG5, %r14 // sdc
+	sall	$5, %r14d
+
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SPACK_TT_8_LIB8
+#else
+	CALL(inner_kernel_spack_tt_8_lib8)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_spack_tt_8_lib8)
+
+
+
+
+
+//                                1         2          3        4          5        6
+// void kernel_spack_tt_8_vs_lib8(int kmax, float *A, int lda, float *C, int sdc, int m1)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_spack_tt_8_vs_lib8)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$2, %r12d
+	movq	ARG4, %r13 // C
+	movq	ARG5, %r14 // sdc
+	sall	$5, %r14d
+
+	movq	ARG6, %r15 // m1
+	cmpl	$1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SPACK_TT_1_LIB8
+#else
+	CALL(inner_kernel_spack_tt_1_lib8)
+#endif
+
+	jmp		107f
+
+100:
+
+	movq	ARG6, %r15 // m1
+	cmpl	$2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SPACK_TT_2_LIB8
+#else
+	CALL(inner_kernel_spack_tt_2_lib8)
+#endif
+	
+	jmp		107f
+
+101:
+
+	movq	ARG6, %r15 // m1
+	cmpl	$3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SPACK_TT_3_LIB8
+#else
+	CALL(inner_kernel_spack_tt_3_lib8)
+#endif
+
+	jmp		107f
+
+102:
+
+	movq	ARG6, %r15 // m1
+	cmpl	$4, %r15d
+	jg		103f
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SPACK_TT_4_LIB8
+#else
+	CALL(inner_kernel_spack_tt_4_lib8)
+#endif
+
+	jmp		107f
+
+103:
+
+	movq	ARG6, %r15 // m1
+	cmpl	$5, %r15d
+	jg		104f
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SPACK_TT_5_LIB8
+#else
+	CALL(inner_kernel_spack_tt_5_lib8)
+#endif
+
+	jmp		107f
+
+104:
+
+	movq	ARG6, %r15 // m1
+	cmpl	$6, %r15d
+	jg		105f
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SPACK_TT_6_LIB8
+#else
+	CALL(inner_kernel_spack_tt_6_lib8)
+#endif
+
+	jmp		107f
+
+105:
+
+	movq	ARG6, %r15 // m1
+	cmpl	$7, %r15d
+	jg		106f
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SPACK_TT_7_LIB8
+#else
+	CALL(inner_kernel_spack_tt_7_lib8)
+#endif
+
+	jmp		107f
+
+106:
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_SPACK_TT_8_LIB8
+#else
+	CALL(inner_kernel_spack_tt_8_lib8)
+#endif
+
+107:
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_spack_tt_8_vs_lib8)
 
 
 
