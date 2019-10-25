@@ -74,6 +74,59 @@
 	movq	40(%rsp), %r15; \
 	addq	$STACKSIZE, %rsp;
 
+#if defined(OS_LINUX)
+
+#define GLOB_FUN_START(NAME) \
+	.p2align 4,,15; \
+	.globl NAME; \
+	.type NAME, @function; \
+NAME:
+#define FUN_START(NAME) \
+	.p2align 4,,15; \
+	.type NAME, @function; \
+NAME:
+#define FUN_END(NAME) \
+	.size	NAME, .-NAME
+#define CALL(NAME) \
+	call NAME
+#define ZERO_ACC \
+	vxorps	%ymm0, %ymm0, %ymm0; \
+	vmovaps	%ymm0, %ymm1; \
+	vmovaps	%ymm0, %ymm2; \
+	vmovaps	%ymm0, %ymm3
+//#define NEG_ACC \
+//	vmovapd		.LC11(%rip), %ymm15; \
+//	vxorpd		%ymm15, %ymm0, %ymm0; \
+//	vxorpd		%ymm15, %ymm1, %ymm1; \
+//	vxorpd		%ymm15, %ymm2, %ymm2; \
+//	vxorpd		%ymm15, %ymm3, %ymm3
+
+#else // defined(OS_MAC)
+
+#define GLOB_FUN_START(NAME) \
+	.p2align 4,,15; \
+	.globl _ ## NAME; \
+_ ## NAME:
+#define FUN_START(NAME) \
+	.p2align 4,,15; \
+_ ## NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	callq _ ## NAME
+#define ZERO_ACC \
+	vxorps	%ymm0, %ymm0, %ymm0; \
+	vmovaps	%ymm0, %ymm1; \
+	vmovaps	%ymm0, %ymm2; \
+	vmovaps	%ymm0, %ymm3
+//#define NEG_ACC \
+//	vmovapd		LC11(%rip), %ymm15; \
+//	vxorpd		%ymm15, %ymm0, %ymm0; \
+//	vxorpd		%ymm15, %ymm1, %ymm1; \
+//	vxorpd		%ymm15, %ymm2, %ymm2; \
+//	vxorpd		%ymm15, %ymm3, %ymm3
+
+#endif
+
 #elif defined(OS_WINDOWS)
 
 #define STACKSIZE 256
@@ -137,6 +190,30 @@
 	vmovups	192(%rsp), %xmm14; \
 	vmovups	208(%rsp), %xmm15; \
 	addq	$STACKSIZE, %rsp;
+
+#define GLOB_FUN_START(NAME) \
+	.p2align 4,,15; \
+	.globl NAME; \
+	.def NAME; .scl 2; .type 32; .endef; \
+NAME:
+#define FUN_START(NAME) \
+	.p2align 4,,15; \
+	.def NAME; .scl 2; .type 32; .endef; \
+NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	call NAME
+#define ZERO_ACC \
+	vxorps	%ymm0, %ymm0, %ymm0; \
+	vmovaps	%ymm0, %ymm1; \
+	vmovaps	%ymm0, %ymm2; \
+	vmovaps	%ymm0, %ymm3
+//#define NEG_ACC \
+//	vmovapd		.LC11(%rip), %ymm15; \
+//	vxorpd		%ymm15, %ymm0, %ymm0; \
+//	vxorpd		%ymm15, %ymm1, %ymm1; \
+//	vxorpd		%ymm15, %ymm2, %ymm2; \
+//	vxorpd		%ymm15, %ymm3, %ymm3
 
 #else
 
@@ -6591,6 +6668,16 @@ kernel_strmm_nn_rl_8x4_gen_lib8:
 
 #if defined(OS_LINUX)
 	.size	kernel_strmm_nn_rl_8x4_gen_lib8, .-kernel_strmm_nn_rl_8x4_gen_lib8
+#endif
+
+
+
+
+
+#if defined(BLAS_API)
+
+#include "kernel_sgemm_8x4_lib.S"
+
 #endif
 
 
