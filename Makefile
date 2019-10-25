@@ -54,18 +54,18 @@ OBJS += \
 		kernel/avx2/kernel_dgemm_8x8_lib4.o \
 		kernel/avx2/kernel_dgemm_8x4_lib4.o \
 		kernel/avx2/kernel_dgemm_4x4_lib4.o \
-		kernel/avx/kernel_dgemm_diag_lib4.o \
 		kernel/avx2/kernel_dgemv_8_lib4.o \
-		kernel/avx/kernel_dgemv_4_lib4.o \
-		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/avx2/kernel_dsymv_6_lib4.o \
 		kernel/avx2/kernel_dgetrf_pivot_lib4.o \
-		kernel/avx/kernel_dgeqrf_4_lib4.o \
 		kernel/avx2/kernel_dgebp_lib4.o \
 		kernel/avx2/kernel_dgelqf_4_lib4.o \
 		kernel/avx2/kernel_dgetr_lib4.o \
+		kernel/avx/kernel_dgeqrf_4_lib4.o \
+		kernel/avx/kernel_dgemv_4_lib4.o \
+		kernel/avx/kernel_dgemm_diag_lib4.o \
 		kernel/avx/kernel_dgecp_lib4.o \
 		kernel/avx/kernel_dpack_lib4.o \
+		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_ddot_lib.o \
 		kernel/generic/kernel_daxpy_lib.o \
 		\
@@ -73,13 +73,15 @@ OBJS += \
 		kernel/avx2/kernel_sgemm_16x4_lib8.o \
 		kernel/avx2/kernel_sgemm_8x8_lib8.o \
 		kernel/avx2/kernel_sgemm_8x4_lib8.o \
-		kernel/generic/kernel_sgemm_8x4_lib8.o \
 		kernel/avx/kernel_sgemm_diag_lib8.o \
 		kernel/avx/kernel_sgemv_8_lib8.o \
 		kernel/avx/kernel_sgemv_4_lib8.o \
 		kernel/avx/kernel_sgecpsc_lib8.o \
 		kernel/avx/kernel_sgetr_lib8.o \
 		kernel/avx/kernel_sgead_lib8.o \
+		kernel/generic/kernel_sgemm_8x4_lib8.o \
+		kernel/generic/kernel_sgemm_4x4_lib4.o \
+		kernel/generic/kernel_spack_lib4.o \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
@@ -121,7 +123,6 @@ OBJS += \
 		kernel/avx/kernel_dgemv_12_lib4.o \
 		kernel/avx/kernel_dgemv_8_lib4.o \
 		kernel/avx/kernel_dgemv_4_lib4.o \
-		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/avx/kernel_dsymv_6_lib4.o \
 		kernel/avx/kernel_dgetrf_pivot_lib4.o \
 		kernel/avx/kernel_dgeqrf_4_lib4.o \
@@ -129,19 +130,22 @@ OBJS += \
 		kernel/avx/kernel_dgecp_lib4.o \
 		kernel/avx/kernel_dgetr_lib4.o \
 		kernel/avx/kernel_dpack_lib4.o \
+		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_ddot_lib.o \
 		kernel/generic/kernel_daxpy_lib.o \
 		\
 		kernel/avx/kernel_sgemm_16x4_lib8.o \
 		kernel/avx/kernel_sgemm_8x8_lib8.o \
 		kernel/avx/kernel_sgemm_8x4_lib8.o \
-		kernel/generic/kernel_sgemm_8x4_lib8.o \
 		kernel/avx/kernel_sgemm_diag_lib8.o \
 		kernel/avx/kernel_sgemv_8_lib8.o \
 		kernel/avx/kernel_sgemv_4_lib8.o \
 		kernel/avx/kernel_sgecpsc_lib8.o \
 		kernel/avx/kernel_sgetr_lib8.o \
 		kernel/avx/kernel_sgead_lib8.o \
+		kernel/generic/kernel_spack_lib4.o \
+		kernel/generic/kernel_sgemm_8x4_lib8.o \
+		kernel/generic/kernel_sgemm_4x4_lib4.o \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\

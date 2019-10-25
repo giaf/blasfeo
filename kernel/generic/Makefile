@@ -49,6 +49,7 @@ OBJS += kernel_dgemv_4_lib4.o \
 		kernel_sgemv_4_lib4.o \
 		kernel_ssymv_4_lib4.o \
 		kernel_sgetrf_pivot_lib4.o \
+		kernel_spack_lib4.o \
 		kernel_sdot_lib.o \
 		kernel_saxpy_lib.o \
 		\
@@ -66,6 +67,7 @@ OBJS += kernel_dgemv_4_lib4.o \
 		kernel_sgemv_4_lib4.o \
 		kernel_ssymv_4_lib4.o \
 		kernel_sgetrf_pivot_lib4.o \
+		kernel_spack_lib4.o \
 		kernel_sdot_lib.o \
 		kernel_saxpy_lib.o \
 		\
