@@ -476,6 +476,9 @@ void kernel_sunpack_tt_4_lib4(int kmax, float *A, int sda, float *B, int ldb);
 #ifdef BLAS_API
 
 // A, B panel-major bs=8; C, D column-major
+// 8x8
+void kernel_sgemm_nt_8x8_lib88cc(int kmax, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd);
+void kernel_sgemm_nt_8x8_vs_lib88cc(int kmax, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
 // 8x4
 void kernel_sgemm_nt_8x4_lib88cc(int kmax, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd);
 void kernel_sgemm_nt_8x4_vs_lib88cc(int kmax, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);

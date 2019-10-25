@@ -1775,7 +1775,6 @@ NAME:
 	vmulps		%ymm1, %ymm11, %ymm1
 	vmulps		%ymm2, %ymm11, %ymm2
 	vmulps		%ymm3, %ymm11, %ymm3
-
 	vmulps		%ymm4, %ymm11, %ymm4
 	vmulps		%ymm5, %ymm11, %ymm5
 	vmulps		%ymm6, %ymm11, %ymm6
@@ -4693,6 +4692,16 @@ NAME:
 	ret
 
 	FUN_END(kernel_ssyrk_spotrf_nt_l_8x8_vs_lib8)
+
+
+
+
+
+#if defined(BLAS_API)
+
+#include "kernel_sgemm_8x8_lib.S"
+
+#endif
 
 
 
