@@ -54,6 +54,7 @@ OBJS += \
 		kernel_sgecpsc_lib8.o \
 		kernel_sgemv_8_lib8.o \
 		kernel_sgemv_4_lib8.o \
+		kernel_spack_lib8.o \
 
 endif
 
@@ -84,6 +85,7 @@ OBJS += \
 		kernel_sgetr_lib8.o \
 		kernel_sgemv_8_lib8.o \
 		kernel_sgemv_4_lib8.o \
+		kernel_spack_lib8.o \
 
 endif
 

@@ -167,8 +167,8 @@
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm13
 #endif
-	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm13, %ymm13
 
 
@@ -287,18 +287,19 @@
 	vsubps		%ymm14, %ymm12, %ymm14
 
 	// offset==0
-	vmaskmovps	%ymm0, %ymm14,  0(%r10)
+	vmaskmovps	%ymm0, %ymm14, 0(%r10)
 	addq		%r11, %r10
 	cmpl		$2, %r13d
 	jl			0f // end
-	vmaskmovps	%ymm1, %ymm14, 32(%r10)
+	vmaskmovps	%ymm1, %ymm14, 0(%r10)
 	addq		%r11, %r10
 	cmpl		$3, %r13d
 	jl			0f // end
-	vmaskmovps	%ymm2, %ymm14, 64(%r10)
+	vmaskmovps	%ymm2, %ymm14, 0(%r10)
 	addq		%r11, %r10
+	cmpl		$3, %r13d
 	je			0f // end
-	vmaskmovps	%ymm3, %ymm14, 96(%r10)
+	vmaskmovps	%ymm3, %ymm14, 0(%r10)
 //	addq		%r11, %r10
 
 0:
@@ -410,7 +411,7 @@
 	movq	ARG5, %r11 // beta
 	movq	ARG6, %r12   // C
 	movq	ARG7, %r13   // ldc
-	sall	$3, %r13d
+	sall	$2, %r13d
 	movq	ARG10, %r14 // m1
 	movq	ARG11, %r15 // n1
 
@@ -425,7 +426,7 @@
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$2, %r11d
 	movq	ARG10, %r12 // m1
 	movq	ARG11, %r13 // n1
 

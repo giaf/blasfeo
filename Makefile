@@ -79,6 +79,7 @@ OBJS += \
 		kernel/avx/kernel_sgecpsc_lib8.o \
 		kernel/avx/kernel_sgetr_lib8.o \
 		kernel/avx/kernel_sgead_lib8.o \
+		kernel/avx/kernel_spack_lib8.o \
 		kernel/generic/kernel_sgemm_8x4_lib8.o \
 		kernel/generic/kernel_sgemm_4x4_lib4.o \
 		kernel/generic/kernel_spack_lib4.o \
@@ -143,9 +144,10 @@ OBJS += \
 		kernel/avx/kernel_sgecpsc_lib8.o \
 		kernel/avx/kernel_sgetr_lib8.o \
 		kernel/avx/kernel_sgead_lib8.o \
-		kernel/generic/kernel_spack_lib4.o \
+		kernel/avx/kernel_spack_lib8.o \
 		kernel/generic/kernel_sgemm_8x4_lib8.o \
 		kernel/generic/kernel_sgemm_4x4_lib4.o \
+		kernel/generic/kernel_spack_lib4.o \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\

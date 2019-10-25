@@ -231,7 +231,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACK_TN_4_LIB4
 #else
 	.p2align 4,,15
@@ -312,7 +312,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -324,7 +324,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACK_TN_3_LIB4
 #else
 	.p2align 4,,15
@@ -399,7 +399,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -411,7 +411,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACK_TN_2_LIB4
 #else
 	.p2align 4,,15
@@ -480,7 +480,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -492,7 +492,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACK_TN_1_LIB4
 #else
 	.p2align 4,,15
@@ -548,7 +548,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -560,7 +560,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACK_TT_4_LIB4
 #else
 	.p2align 4,,15
@@ -639,7 +639,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -651,7 +651,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACK_TT_3_LIB4
 #else
 	.p2align 4,,15
@@ -722,7 +722,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -734,7 +734,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACK_TT_2_LIB4
 #else
 	.p2align 4,,15
@@ -797,7 +797,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -809,7 +809,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACK_TT_1_LIB4
 #else
 	.p2align 4,,15
@@ -864,7 +864,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -876,7 +876,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DUNPACK_NT_4_LIB4
 #else
 	.p2align 4,,15
@@ -957,7 +957,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -969,7 +969,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DUNPACK_NT_3_LIB4
 #else
 	.p2align 4,,15
@@ -1039,7 +1039,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -1051,7 +1051,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DUNPACK_NT_2_LIB4
 #else
 	.p2align 4,,15
@@ -1111,7 +1111,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -1123,7 +1123,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DUNPACK_NT_1_LIB4
 #else
 	.p2align 4,,15
@@ -1178,7 +1178,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -1190,7 +1190,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NT_4_LIB4
 #else
 	.p2align 4,,15
@@ -1304,7 +1304,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -1318,7 +1318,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_TN_4_LIB4
 #else
 	.p2align 4,,15
@@ -1432,7 +1432,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -1444,7 +1444,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_12_0_LIB4
 #else
 	.p2align 4,,15
@@ -1520,7 +1520,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -1532,7 +1532,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_12_0_VS_LIB4
 #else
 	.p2align 4,,15
@@ -1549,7 +1549,7 @@ NAME:
 	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	cmpl	$3, %r10d
@@ -1618,7 +1618,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -1630,7 +1630,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_12_1_LIB4
 #else
 	.p2align 4,,15
@@ -1746,7 +1746,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -1758,7 +1758,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_12_1_VS_LIB4
 #else
 	.p2align 4,,15
@@ -1775,7 +1775,7 @@ NAME:
 	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	movq	%r11, %rax
@@ -1884,7 +1884,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -1896,7 +1896,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_12_2_LIB4
 #else
 	.p2align 4,,15
@@ -1997,7 +1997,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2009,7 +2009,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_12_2_VS_LIB4
 #else
 	.p2align 4,,15
@@ -2026,7 +2026,7 @@ NAME:
 	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	movq	%r11, %rax
@@ -2120,7 +2120,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2132,7 +2132,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_12_3_LIB4
 #else
 	.p2align 4,,15
@@ -2248,7 +2248,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2260,7 +2260,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_12_3_VS_LIB4
 #else
 	.p2align 4,,15
@@ -2280,7 +2280,7 @@ NAME:
 	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	cmpl	$3, %r10d
@@ -2386,7 +2386,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2398,7 +2398,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_8_0_LIB4
 #else
 	.p2align 4,,15
@@ -2464,7 +2464,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2476,7 +2476,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_8_0_VS_LIB4
 #else
 	.p2align 4,,15
@@ -2493,7 +2493,7 @@ NAME:
 	vmovupd		LC01(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	cmpl	$3, %r10d
@@ -2552,7 +2552,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2564,7 +2564,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_8_1_LIB4
 #else
 	.p2align 4,,15
@@ -2655,7 +2655,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2667,7 +2667,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_8_1_VS_LIB4
 #else
 	.p2align 4,,15
@@ -2684,7 +2684,7 @@ NAME:
 	vmovupd		LC01(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	cmpl	$3, %r10d
@@ -2768,7 +2768,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2780,7 +2780,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_8_2_LIB4
 #else
 	.p2align 4,,15
@@ -2861,7 +2861,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2873,7 +2873,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_8_2_VS_LIB4
 #else
 	.p2align 4,,15
@@ -2890,7 +2890,7 @@ NAME:
 	vmovupd		LC01(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	cmpl	$3, %r10d
@@ -2964,7 +2964,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2976,7 +2976,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_8_3_LIB4
 #else
 	.p2align 4,,15
@@ -3067,7 +3067,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3079,7 +3079,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_8_3_VS_LIB4
 #else
 	.p2align 4,,15
@@ -3096,7 +3096,7 @@ NAME:
 	vmovupd		LC01(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	cmpl	$3, %r10d
@@ -3180,7 +3180,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3192,7 +3192,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_4_0_LIB4
 #else
 	.p2align 4,,15
@@ -3248,7 +3248,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3260,7 +3260,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_4_1_LIB4
 #else
 	.p2align 4,,15
@@ -3331,7 +3331,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3343,7 +3343,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_4_2_LIB4
 #else
 	.p2align 4,,15
@@ -3409,7 +3409,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3421,7 +3421,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_4_3_LIB4
 #else
 	.p2align 4,,15
@@ -3492,7 +3492,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3504,7 +3504,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_3_0_LIB4
 #else
 	.p2align 4,,15
@@ -3570,7 +3570,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3582,7 +3582,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_3_2_LIB4
 #else
 	.p2align 4,,15
@@ -3648,7 +3648,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3660,7 +3660,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_3_3_LIB4
 #else
 	.p2align 4,,15
@@ -3726,7 +3726,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3738,7 +3738,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_2_0_LIB4
 #else
 	.p2align 4,,15
@@ -3794,7 +3794,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3806,7 +3806,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_2_1_LIB4
 #else
 	.p2align 4,,15
@@ -3867,7 +3867,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -3879,7 +3879,7 @@ NAME:
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_1_0_LIB4
 #else
 	.p2align 4,,15
@@ -3935,7 +3935,7 @@ NAME:
 
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -4087,7 +4087,7 @@ NAME:
 	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 
@@ -4301,7 +4301,7 @@ NAME:
 	vmovupd		LC01(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 
@@ -4487,7 +4487,7 @@ NAME:
 	vmovupd		LC00(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 
@@ -4567,7 +4567,7 @@ NAME:
 	movq	ARG4, %r13 // C
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACK_TN_4_LIB4
 #else
 	CALL(inner_kernel_dpack_tn_4_lib4)
@@ -4603,7 +4603,7 @@ NAME:
 	cmpl	$1, %r14d
 	jg		100f
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACK_TN_1_LIB4
 #else
 	CALL(inner_kernel_dpack_tn_1_lib4)
@@ -4617,7 +4617,7 @@ NAME:
 	cmpl	$2, %r14d
 	jg		101f
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACK_TN_2_LIB4
 #else
 	CALL(inner_kernel_dpack_tn_2_lib4)
@@ -4631,7 +4631,7 @@ NAME:
 	cmpl	$3, %r14d
 	jg		102f
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACK_TN_3_LIB4
 #else
 	CALL(inner_kernel_dpack_tn_3_lib4)
@@ -4641,7 +4641,7 @@ NAME:
 
 102:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACK_TN_4_LIB4
 #else
 	CALL(inner_kernel_dpack_tn_4_lib4)
@@ -4974,7 +4974,7 @@ NAME:
 	sall	$5, %r14d
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACK_TT_4_LIB4
 #else
 	CALL(inner_kernel_dpack_tt_4_lib4)
@@ -5012,7 +5012,7 @@ NAME:
 	cmpl	$1, %r15d
 	jg		100f
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACK_TT_1_LIB4
 #else
 	CALL(inner_kernel_dpack_tt_1_lib4)
@@ -5026,7 +5026,7 @@ NAME:
 	cmpl	$2, %r15d
 	jg		101f
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACK_TT_2_LIB4
 #else
 	CALL(inner_kernel_dpack_tt_2_lib4)
@@ -5040,7 +5040,7 @@ NAME:
 	cmpl	$3, %r15d
 	jg		102f
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACK_TT_3_LIB4
 #else
 	CALL(inner_kernel_dpack_tt_3_lib4)
@@ -5050,7 +5050,7 @@ NAME:
 
 102:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACK_TT_4_LIB4
 #else
 	CALL(inner_kernel_dpack_tt_4_lib4)
@@ -5201,7 +5201,7 @@ NAME:
 	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 
@@ -5407,7 +5407,7 @@ NAME:
 	vmovupd		LC01(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 
@@ -5589,7 +5589,7 @@ NAME:
 	vmovupd		LC00(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 
@@ -5669,7 +5669,7 @@ NAME:
 	sall	$3, %r13d
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DUNPACK_NT_4_LIB4
 #else
 	CALL(inner_kernel_dunpack_nt_4_lib4)
@@ -5705,7 +5705,7 @@ NAME:
 	cmpl	$1, %r14d
 	jg		100f
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DUNPACK_NT_1_LIB4
 #else
 	CALL(inner_kernel_dunpack_nt_1_lib4)
@@ -5719,7 +5719,7 @@ NAME:
 	cmpl	$2, %r14d
 	jg		101f
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DUNPACK_NT_2_LIB4
 #else
 	CALL(inner_kernel_dunpack_nt_2_lib4)
@@ -5733,7 +5733,7 @@ NAME:
 	cmpl	$3, %r14d
 	jg		102f
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DUNPACK_NT_3_LIB4
 #else
 	CALL(inner_kernel_dunpack_nt_3_lib4)
@@ -5743,7 +5743,7 @@ NAME:
 
 102:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DUNPACK_NT_4_LIB4
 #else
 	CALL(inner_kernel_dunpack_nt_4_lib4)
@@ -6177,7 +6177,7 @@ NAME:
 	movq	ARG5, %r14 // sdc
 	sall	$5, %r14d
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NT_4_LIB4
 #else
 	CALL(inner_kernel_dpacp_nt_4_lib4)
@@ -6210,7 +6210,7 @@ NAME:
 	sall	$5, %r13d
 	movq	ARG5, %r14 // C
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_TN_4_LIB4
 #else
 	CALL(inner_kernel_dpacp_tn_4_lib4)
@@ -6257,7 +6257,7 @@ NAME:
 	jmp		200f
 
 100:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_12_0_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_12_0_lib4)
@@ -6265,7 +6265,7 @@ NAME:
 	jmp		200f
 
 101:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_12_1_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_12_1_lib4)
@@ -6273,7 +6273,7 @@ NAME:
 	jmp		200f
 
 102:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_12_2_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_12_2_lib4)
@@ -6281,7 +6281,7 @@ NAME:
 	jmp		200f
 
 103:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_12_3_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_12_3_lib4)
@@ -6331,7 +6331,7 @@ NAME:
 	jmp		200f
 
 100:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_12_0_VS_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_12_0_vs_lib4)
@@ -6339,7 +6339,7 @@ NAME:
 	jmp		200f
 
 101:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_12_1_VS_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_12_1_vs_lib4)
@@ -6347,7 +6347,7 @@ NAME:
 	jmp		200f
 
 102:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_12_2_VS_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_12_2_vs_lib4)
@@ -6355,7 +6355,7 @@ NAME:
 	jmp		200f
 
 103:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_12_3_VS_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_12_3_vs_lib4)
@@ -6404,7 +6404,7 @@ NAME:
 	jmp		200f
 
 100:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_8_0_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_8_0_lib4)
@@ -6412,7 +6412,7 @@ NAME:
 	jmp		200f
 
 101:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_8_1_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_8_1_lib4)
@@ -6420,7 +6420,7 @@ NAME:
 	jmp		200f
 
 102:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_8_2_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_8_2_lib4)
@@ -6428,7 +6428,7 @@ NAME:
 	jmp		200f
 
 103:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_8_3_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_8_3_lib4)
@@ -6478,7 +6478,7 @@ NAME:
 	jmp		200f
 
 100:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_8_0_VS_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_8_0_vs_lib4)
@@ -6486,7 +6486,7 @@ NAME:
 	jmp		200f
 
 101:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_8_1_VS_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_8_1_vs_lib4)
@@ -6494,7 +6494,7 @@ NAME:
 	jmp		200f
 
 102:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_8_2_VS_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_8_2_vs_lib4)
@@ -6502,7 +6502,7 @@ NAME:
 	jmp		200f
 
 103:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_8_3_VS_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_8_3_vs_lib4)
@@ -6549,7 +6549,7 @@ NAME:
 	jmp		200f
 
 100:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_4_0_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_4_0_lib4)
@@ -6557,7 +6557,7 @@ NAME:
 	jmp		200f
 
 101:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_4_1_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_4_1_lib4)
@@ -6565,7 +6565,7 @@ NAME:
 	jmp		200f
 
 102:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_4_2_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_4_2_lib4)
@@ -6573,7 +6573,7 @@ NAME:
 	jmp		200f
 
 103:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_4_3_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_4_3_lib4)
@@ -6633,7 +6633,7 @@ NAME:
 	movq	ARG2, %r14
 	sall	$3, %r14d
 	addq	%r14, %r11
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_1_0_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_1_0_lib4)
@@ -6641,7 +6641,7 @@ NAME:
 	jmp		200f
 
 
-	// m1==2
+	// m1==1
 105:
 	cmpl	$2, ARG2L
 	jle		100f
@@ -6654,7 +6654,7 @@ NAME:
 	movq	ARG2, %r14
 	sall	$3, %r14d
 	addq	%r14, %r11
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_2_0_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_2_0_lib4)
@@ -6662,7 +6662,7 @@ NAME:
 	jmp		200f
 
 103:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_2_1_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_2_1_lib4)
@@ -6685,7 +6685,7 @@ NAME:
 	movq	ARG2, %r14
 	sall	$3, %r14d
 	addq	%r14, %r11
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_3_0_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_3_0_lib4)
@@ -6693,7 +6693,7 @@ NAME:
 	jmp		200f
 
 102:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_3_2_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_3_2_lib4)
@@ -6701,7 +6701,7 @@ NAME:
 	jmp		200f
 
 103:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_3_3_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_3_3_lib4)
@@ -6724,7 +6724,7 @@ NAME:
 	jmp		200f
 
 100:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_4_0_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_4_0_lib4)
@@ -6732,7 +6732,7 @@ NAME:
 	jmp		200f
 
 101:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_4_1_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_4_1_lib4)
@@ -6740,7 +6740,7 @@ NAME:
 	jmp		200f
 
 102:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_4_2_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_4_2_lib4)
@@ -6748,7 +6748,7 @@ NAME:
 	jmp		200f
 
 103:
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_4_3_LIB4
 #else
 	CALL(inner_kernel_dpacp_nn_4_3_lib4)
