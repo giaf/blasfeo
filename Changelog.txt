@@ -4,7 +4,7 @@ BLASFEO ChangeLog
 
 ====================================================================
 Version 0.1.2-master
-22-Oct-2019
+25-Oct-2019
 
 common:
 	* change license to BFD-2
@@ -17,6 +17,7 @@ BLAS_API:
 	  (e.g. add algorithm version with A colunm-major and B panel-major)
 	* improve performance for dgemm_{nn,nt,tt} for small matrices
 	  (e.g. add algorithm version with A, B and C colunm-major)
+	* sgemm for all targets (partially optimized for avx2, avx, armv7a, based on generic for others)
 
 ARMv8A:
 	* Cortex A57:
