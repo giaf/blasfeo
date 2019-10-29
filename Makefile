@@ -739,6 +739,7 @@ else # LA_HIGH_PERFORMANCE vs LA_REFERENCE | LA_BLAS
 
 # aux
 OBJS += \
+		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib.o \
 		auxiliary/s_aux_lib.o \
 		auxiliary/m_aux_lib.o \
