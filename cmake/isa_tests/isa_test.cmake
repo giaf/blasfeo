@@ -91,7 +91,7 @@ function(TestForISA)
     endif()
 
     try_compile( CHK_TARGET_BUILD_${TEST_TARGET}                   # Variable to save the build result to
-                 "${CMAKE_BINARY_DIR}/compilerTest/${TEST_TARGET}" # Directory to compile in
+                 "${PROJECT_BINARY_DIR}/compilerTest/${TEST_TARGET}" # Directory to compile in
                  SOURCES ${CMP_CHECK_SRCS}                         # Source to compile
                  CMAKE_FLAGS
                    "-DCOMPILE_DEFINITIONS=${C_DEFS_CHK}"
@@ -100,7 +100,7 @@ function(TestForISA)
   else()
     try_run( CHK_TARGET_RUN_${TEST_TARGET}                     # Variable to save the run result to
              CHK_TARGET_BUILD_${TEST_TARGET}                   # Variable to save the build result to
-             "${CMAKE_BINARY_DIR}/compilerTest/${TEST_TARGET}" # Directory to compile in
+             "${PROJECT_BINARY_DIR}/compilerTest/${TEST_TARGET}" # Directory to compile in
              SOURCES ${CMP_CHECK_SRCS}                         # Source to compile
              CMAKE_FLAGS
               "-DCOMPILE_DEFINITIONS=${C_DEFS_CHK}"
