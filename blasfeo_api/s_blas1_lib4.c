@@ -191,6 +191,28 @@ float blasfeo_svecmuldot(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_
 
 
 
+// compute dot product
+float blasfeo_sdot(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi)
+	{
+
+	if(m<=0)
+		return 0.0;
+
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+	int ii;
+	float dot = 0.0;
+
+	ii = 0;
+	for(; ii<m; ii++)
+		{
+		dot += x[ii+0] * y[ii+0];
+		}
+	return dot;
+	}
+
+
+
 #else
 
 #error : wrong LA choice
