@@ -296,11 +296,11 @@ set(ASM_FLAGS_TARGET_GENERIC                "")
 
 
 if(${TARGET} MATCHES X64_AUTOMATIC)
-	include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/X64AutomaticTargetSelection.cmake)
+	include(${PROJECT_SOURCE_DIR}/cmake/X64AutomaticTargetSelection.cmake)
 	X64AutomaticTargetSelection()
 	message(STATUS "Detected target ${TARGET}")
 else()
-	include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/TestSingleTarget.cmake)
+	include(${PROJECT_SOURCE_DIR}/cmake/TestSingleTarget.cmake)
 	TestSingleTarget()
 	message(STATUS "Compiling for target: ${TARGET}")
 endif()

@@ -1,4 +1,4 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/isa_tests/isa_test.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/isa_tests/isa_test.cmake)
 
 function(X64AutomaticTargetSelection)
 
