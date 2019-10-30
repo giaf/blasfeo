@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/cmake/isa_tests/isa_test.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/isa_tests/isa_test.cmake)
 
 function(TestSingleTarget)
   set(TEST_TARGET ${TARGET})
