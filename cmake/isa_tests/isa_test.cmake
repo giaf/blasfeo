@@ -64,14 +64,14 @@ function(TestForISA)
 
   # The main source file to test with
   set(CMP_CHECK_SRCS
-      ${CMAKE_SOURCE_DIR}/cmake/isa_tests/isa_test.c
+      ${PROJECT_SOURCE_DIR}/cmake/isa_tests/isa_test.c
       )
 
   set(C_DEFS_CHK "")
 
   # Add the assembly test files and the compile definitions
   foreach(CHECK ${CMP_CHECK_${TEST_TARGET}})
-      list( APPEND CMP_CHECK_SRCS ${CMAKE_SOURCE_DIR}/cmake/isa_tests/${CHECK}.S )
+      list( APPEND CMP_CHECK_SRCS ${PROJECT_SOURCE_DIR}/cmake/isa_tests/${CHECK}.S )
       string(APPEND C_DEFS_CHK " -D${CHECK}")
   endforeach()
 
@@ -91,7 +91,7 @@ function(TestForISA)
     endif()
 
     try_compile( CHK_TARGET_BUILD_${TEST_TARGET}                   # Variable to save the build result to
-                 "${PROJECT_BINARY_DIR}/compilerTest/${TEST_TARGET}" # Directory to compile in
+                 "${CMAKE_BINARY_DIR}/compilerTest/${TEST_TARGET}" # Directory to compile in
                  SOURCES ${CMP_CHECK_SRCS}                         # Source to compile
                  CMAKE_FLAGS
                    "-DCOMPILE_DEFINITIONS=${C_DEFS_CHK}"
@@ -100,7 +100,7 @@ function(TestForISA)
   else()
     try_run( CHK_TARGET_RUN_${TEST_TARGET}                     # Variable to save the run result to
              CHK_TARGET_BUILD_${TEST_TARGET}                   # Variable to save the build result to
-             "${PROJECT_BINARY_DIR}/compilerTest/${TEST_TARGET}" # Directory to compile in
+             "${CMAKE_BINARY_DIR}/compilerTest/${TEST_TARGET}" # Directory to compile in
              SOURCES ${CMP_CHECK_SRCS}                         # Source to compile
              CMAKE_FLAGS
               "-DCOMPILE_DEFINITIONS=${C_DEFS_CHK}"
