@@ -14537,6 +14537,10 @@ NAME:
 
 //	ZERO_ACC
 
+	movq	ARG6, %r10 // D
+	movq	ARG7, %r11 // sdd
+	sall	$5, %r11d
+
 	//
 	vmovapd			0(%r10), %ymm0
 	vmovapd			0(%r10, %r11, 1), %ymm4
