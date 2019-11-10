@@ -14537,8 +14537,8 @@ NAME:
 
 //	ZERO_ACC
 
-	movq	ARG6, %r10 // D
-	movq	ARG7, %r11 // sdd
+	movq	ARG4, %r10 // D
+	movq	ARG5, %r11 // sdd
 	sall	$5, %r11d
 
 	//
@@ -14555,8 +14555,8 @@ NAME:
 	vmovapd			96(%r10, %r11, 1), %ymm7
 
 	movq	ARG1, %r10 // k
-	movq	ARG6, %r11 // D
-	movq	ARG7, %r12 // sdd
+	movq	ARG6, %r11 // A
+	movq	ARG7, %r12 // sda
 	sall	$5, %r12d
 	movq	ARG2, %r13 // V
 
