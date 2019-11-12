@@ -13205,10 +13205,10 @@ NAME:
 
 
 //                             1         2           3           4           5
-// void kernel_dlarfb4_r_8_lib4(int kmax, double *pV, double *pT, double *pD, int sdd);
+// void kernel_dlarfb4_rn_8_lib4(int kmax, double *pV, double *pT, double *pD, int sdd);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dlarfb4_r_8_lib4)
+	GLOB_FUN_START(kernel_dlarfb4_rn_8_lib4)
 
 	PROLOGUE
 
@@ -13423,17 +13423,17 @@ NAME:
 
 	ret
 
-	FUN_END(kernel_dlarfb4_r_8_lib4)
+	FUN_END(kernel_dlarfb4_rn_8_lib4)
 
 
 
 
 
 //                                 1         2           3           4           5        6           7
-// void kernel_dlarfb4_r_8_la_lib4(int kmax, double *pV, double *pT, double *pD, int sdd, double *pA, int sda);
+// void kernel_dlarfb4_rn_8_la_lib4(int kmax, double *pV, double *pT, double *pD, int sdd, double *pA, int sda);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dlarfb4_r_8_la_lib4)
+	GLOB_FUN_START(kernel_dlarfb4_rn_8_la_lib4)
 
 		PROLOGUE
 
@@ -13582,17 +13582,17 @@ NAME:
 
 	ret
 
-	FUN_END(kernel_dlarfb4_r_8_la_lib4)
+	FUN_END(kernel_dlarfb4_rn_8_la_lib4)
 
 
 
 
 
 //                                  1       2       3            4            5           6           7        8           9        10          11
-// void kernel_dlarfb4_r_4_lla_lib4(int n0, int n1, double *pVL, double *pVA, double *pT, double *pD, int sdd, double *pL, int sdl, double *pA, int sda);
+// void kernel_dlarfb4_rn_4_lla_lib4(int n0, int n1, double *pVL, double *pVA, double *pT, double *pD, int sdd, double *pL, int sdl, double *pA, int sda);
 
 	.p2align 4,,15
-	GLOB_FUN_START(kernel_dlarfb4_r_8_lla_lib4)
+	GLOB_FUN_START(kernel_dlarfb4_rn_8_lla_lib4)
 
 		PROLOGUE
 
@@ -13934,7 +13934,7 @@ NAME:
 
 	ret
 
-	FUN_END(kernel_dlarfb4_r_8_lla_lib4)
+	FUN_END(kernel_dlarfb4_rn_8_lla_lib4)
 
 
 
