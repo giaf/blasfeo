@@ -38,6 +38,10 @@
 
 
 
+#include <stdio.h>
+
+
+
 #include "blasfeo_common.h"
 
 
