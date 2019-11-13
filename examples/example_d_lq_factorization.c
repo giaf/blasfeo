@@ -65,16 +65,33 @@ int main()
 
 	int ii;
 
-	int m = 3;
-	int n = 2;
+	int m = 13;
+	int n = 12;
 
 	/* matrices in column-major format */
 
 	double *A; d_zeros(&A, n, m);
+	for(ii=0; ii<n; ii++)
+		{
+		A[ii+n*ii] = 1.0;
+		A[ii+n*(ii/2)] = 1.0;
+		A[(ii/3)+n*ii] = 1.0;
+		A[ii+n*(m-1)] = 1.0;
+		}
+#if 0
 	A[0+n*0] = 1.0;
 	A[0+n*2] = 1.0;
+	A[0+n*5] = 1.0;
 	A[1+n*1] = 1.0;
-	A[1+n*2] = 1.0;
+	A[1+n*3] = 1.0;
+	A[1+n*5] = 1.0;
+	A[2+n*2] = 1.0;
+	A[2+n*5] = 1.0;
+	A[3+n*3] = 1.0;
+	A[3+n*5] = 1.0;
+	A[4+n*4] = 1.0;
+	A[4+n*5] = 1.0;
+#endif
 
 	printf("\nA = \n");
 	d_print_mat(n, m, A, n);
@@ -95,7 +112,6 @@ int main()
 	/* LQ factorization */
 
 	int lq_size = blasfeo_dgelqf_worksize(n, m);
-//	printf("\nLQ worksize %d\n", lq_size);
 	void *lq_work = malloc(lq_size);
 
 	blasfeo_dgelqf(n, m, &sA, 0, 0, &sA, 0, 0, lq_work);
@@ -104,16 +120,41 @@ int main()
 	blasfeo_print_dmat(n, m, &sA, 0, 0);
 	d_print_mat(1, n, sA.dA, 1);
 
-	double *pT; d_zeros_align(&pT, 4, 4);
-	kernel_dlarft_2_lib4(m, sA.pA, sA.dA, pT);
-	d_print_mat(4, 4, pT, 4);
+	/* compute Q */
 
-	double *Q; d_zeros_align(&Q, 4, 4);
-	Q[0+4*0] = 1.0;
-	Q[1+4*1] = 1.0;
-	Q[2+4*2] = 1.0;
-	Q[3+4*3] = 1.0;
-	d_print_mat(4, 4, Q, 4);
+	struct blasfeo_dmat sQ;
+	int sQ_size = blasfeo_memsize_dmat(m, m);
+	void *sQ_mem; v_zeros_align(&sQ_mem, sQ_size);
+	blasfeo_create_dmat(m, m, &sQ, sQ_mem);
+
+#if 1
+	int orglq_size = blasfeo_dorglq_worksize(n, m);
+	void *orglq_work = malloc(orglq_size);
+
+	blasfeo_dorglq(m, m, n, &sA, 0, 0, &sQ, 0, 0, orglq_work);
+
+	free(orglq_work);
+#else
+	for(ii=0; ii<m; ii++)
+		BLASFEO_DMATEL(&sQ, ii, ii) = 1.0;
+	blasfeo_print_dmat(m, m, &sQ, 0, 0);
+
+	double *pT; d_zeros_align(&pT, 4, 4);
+
+	// last 1
+	kernel_dlarft_1_lib4(m-4, sA.pA+1*sA.cn*4+1*4*4, sA.dA+4, pT);
+	d_print_mat(4, 4, pT, 4);
+	kernel_dlarfb1_rt_1_lib4(m-4, sA.pA+1*sA.cn*4+1*4*4, pT, sQ.pA+1*sQ.cn*4+1*4*4+0);
+	kernel_dlarfb1_rt_1_lib4(m-4, sA.pA+1*sA.cn*4+1*4*4, pT, sQ.pA+1*sQ.cn*4+1*4*4+1);
+
+	// first 4
+	kernel_dlarft_4_lib4(m, sA.pA, sA.dA, pT);
+	d_print_mat(4, 4, pT, 4);
+	kernel_dlarfb4_rt_4_lib4(m, sA.pA+0, pT, sQ.pA+0*sQ.cn*4+0);
+	kernel_dlarfb4_rt_1_lib4(m, sA.pA+0, pT, sQ.pA+1*sQ.cn*4+0);
+	kernel_dlarfb4_rt_1_lib4(m, sA.pA+0, pT, sQ.pA+1*sQ.cn*4+1);
+
+	d_free_align(pT);
 
 //	kernel_dlarfb3_rt_1_lib4(m, sA.pA, pT, Q+0+4*0);
 //	kernel_dlarfb3_rt_1_lib4(m, sA.pA, pT, Q+1+4*0);
@@ -121,15 +162,17 @@ int main()
 //	kernel_dlarfb3_r_4_lib4(m, sA.pA, pT, Q+0+4*0);
 //	kernel_dlarfb4_r_4_lib4(m, sA.pA, pT, Q+0+4*0);
 //	kernel_dlarfb4_rt_4_lib4(m, sA.pA, pT, Q+0+4*0);
-	kernel_dlarfb4_rt_4_lib4(m, sA.pA, pT, Q+0+4*0);
-	d_print_mat(4, 4, Q, 4);
+//	kernel_dlarfb4_rt_4_lib4(m, sA.pA, pT, Q+0+4*0);
+//	d_print_mat(4, 4, Q, 4);
+#endif
+
+	blasfeo_print_dmat(m, m, &sQ, 0, 0);
 
 	/* free memory */
 
 	d_free(A);
-	d_free_align(pT);
-	d_free_align(Q);
 	v_free_align(sA_mem);
+	v_free_align(sQ_mem);
 	free(lq_work);
 
 	return 0;

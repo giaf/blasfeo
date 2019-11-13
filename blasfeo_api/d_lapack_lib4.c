@@ -3658,6 +3658,122 @@ void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 
 
 
+int blasfeo_dorglq_worksize(int m, int n)
+	{
+	return 0;
+	}
+
+
+
+void blasfeo_dorglq(int m, int n, int k, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
+	{
+	if(m<=0 | n<=0)
+		return;
+	
+	// TODO check that k <= m <= n
+	
+	if(di!=0)
+		{
+		printf("\nblasfeo_dorglq: feature not implemented yet: di=%d\n", di);
+		exit(1);
+		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	const int ps = 4;
+
+	// extract dimensions
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+
+	// go to submatrix
+	double *pC = &(BLASFEO_DMATEL(sC,ci,cj));
+	double *dC = sC->dA + ci;
+	double *pD = &(BLASFEO_DMATEL(sD,di,dj));
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined (_MSC_VER)
+	double pT[144] __declspec(align(64)) = {0};
+	double pK[144] __declspec(align(64)) = {0};
+#else
+	double pT[144] __attribute__ ((aligned (64))) = {0};
+	double pK[144] __attribute__ ((aligned (64))) = {0};
+#endif
+#else
+	double pT[144] = {0}; // XXX smaller ?
+	double pK[96] = {0}; // XXX smaller ?
+#endif
+
+	int ii, jj, ll, idx;
+
+	// set result matrix to the identity
+	blasfeo_dgese(m, n, 0.0, sD, di, dj);
+	blasfeo_ddiare(m, 1.0, sD, di, dj);
+
+	int kr4 = k%4;
+	int km4 = k-kr4;
+
+	// clear out the end
+	if(kr4>0)
+		{
+		if(kr4==1)
+			{
+			kernel_dlarft_1_lib4(n-km4, pC+km4*sdc+km4*ps, dC+km4, pT);
+			for(jj=0; jj<m-km4-3; jj+=4)
+				{
+				kernel_dlarfb1_rt_4_lib4(n-km4, pC+km4*sdc+km4*ps, pT, pD+(km4+jj)*sdd+km4*ps);
+				}
+			for(ll=0; ll<m-km4-jj; ll++)
+				{
+				kernel_dlarfb1_rt_1_lib4(n-km4, pC+km4*sdc+km4*ps, pT, pD+(km4+jj)*sdd+km4*ps+ll);
+				}
+			}
+		else if(kr4==2)
+			{
+			kernel_dlarft_2_lib4(n-km4, pC+km4*sdc+km4*ps, dC+km4, pT);
+			for(jj=0; jj<m-km4-3; jj+=4)
+				{
+				kernel_dlarfb2_rt_4_lib4(n-km4, pC+km4*sdc+km4*ps, pT, pD+(km4+jj)*sdd+km4*ps);
+				}
+			for(ll=0; ll<m-km4-jj; ll++)
+				{
+				kernel_dlarfb2_rt_1_lib4(n-km4, pC+km4*sdc+km4*ps, pT, pD+(km4+jj)*sdd+km4*ps+ll);
+				}
+			}
+		else // kr4==3
+			{
+			kernel_dlarft_3_lib4(n-km4, pC+km4*sdc+km4*ps, dC+km4, pT);
+			for(jj=0; jj<m-km4-3; jj+=4)
+				{
+				kernel_dlarfb3_rt_4_lib4(n-km4, pC+km4*sdc+km4*ps, pT, pD+(km4+jj)*sdd+km4*ps);
+				}
+			for(ll=0; ll<m-km4-jj; ll++)
+				{
+				kernel_dlarfb3_rt_1_lib4(n-km4, pC+km4*sdc+km4*ps, pT, pD+(km4+jj)*sdd+km4*ps+ll);
+				}
+			}
+		}
+	// main loop
+	for(ii=0; ii<km4; ii+=4)
+		{
+		idx = km4-ii-4;
+		kernel_dlarft_4_lib4(n-idx, pC+idx*sdc+idx*ps, dC+idx, pT);
+		for(jj=0; jj<m-idx-3; jj+=4)
+			{
+			kernel_dlarfb4_rt_4_lib4(n-idx, pC+idx*sdc+idx*ps, pT, pD+(idx+jj)*sdd+idx*ps);
+			}
+		for(ll=0; ll<m-idx-jj; ll++)
+			{
+			kernel_dlarfb4_rt_1_lib4(n-idx, pC+idx*sdc+idx*ps, pT, pD+(idx+jj)*sdd+idx*ps+ll);
+			}
+		}
+
+	return;
+	}
+
+
+
 // LQ factorization with positive diagonal elements
 void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
 	{

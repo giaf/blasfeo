@@ -56,11 +56,11 @@ LIBS += -lm
 
 ## factorization
 # OBJS = example_d_lu_factorization.o
-# OBJS = example_d_lq_factorization.o
+OBJS = example_d_lq_factorization.o
 # OBJS = example_s_lu_factorization.o
 
 ## riccati
-OBJS = example_d_riccati_recursion.o tools.o
+# OBJS = example_d_riccati_recursion.o tools.o
 # OBJS = example_s_riccati_recursion.o tools.o
 
 ## getting started

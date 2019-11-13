@@ -1926,6 +1926,27 @@ void GELQF_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT
 
 
 
+// generate Q matrix
+int ORGLQ_WORK_SIZE_LIBSTR(int m, int n)
+	{
+	printf("\nblasfeo_orglq_worksize: feature not implemented yet\n");
+	exit(1);
+	return 0;
+	}
+
+
+
+// generate Q matrix
+void ORGLQ_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, void *work)
+	{
+	if(m<=0 | n<=0)
+		return;
+	printf("\nblasfeo_orglq: feature not implemented yet\n");
+	exit(1);
+	}
+
+
+
 // LQ factorization with positive diagonal elements
 void GELQF_PD_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT *sD, int di, int dj, void *work)
 	{
@@ -3437,6 +3458,27 @@ void GELQF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 	lwork = dwork[0];
 	GELQF(&m, &n, pD, &ldd, dD, dwork, &lwork, &info);
 	return;
+	}
+
+
+
+// generate Q matrix
+int ORGLQ_WORK_SIZE_LIBSTR(int m, int n)
+	{
+	printf("\nblasfeo_orglq_worksize: feature not implemented yet\n");
+	exit(1);
+	return 0;
+	}
+
+
+
+// generate Q matrix
+void ORGLQ_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, void *work)
+	{
+	if(m<=0 | n<=0)
+		return;
+	printf("\nblasfeo_orglq: feature not implemented yet\n");
+	exit(1);
 	}
 
 
