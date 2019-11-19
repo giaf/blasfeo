@@ -205,6 +205,9 @@ void blasfeo_sgetrf_rp(int m, int n, struct blasfeo_smat *sC, int ci, int cj, st
 // D <= qr( C )
 void blasfeo_sgeqrf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work);
 int blasfeo_sgeqrf_worksize(int m, int n); // in bytes
+// D <= Q factor, where C is the output of the LQ factorization
+int blasfeo_sorglq_worksize(int m, int n); // in bytes
+void blasfeo_sorglq(int m, int n, int k, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work);
 // D <= lq( C )
 void blasfeo_sgelqf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work);
 int blasfeo_sgelqf_worksize(int m, int n); // in bytes
