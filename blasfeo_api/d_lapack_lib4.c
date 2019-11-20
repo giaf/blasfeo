@@ -3658,7 +3658,7 @@ void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 
 
 
-int blasfeo_dorglq_worksize(int m, int n)
+int blasfeo_dorglq_worksize(int m, int n, int k)
 	{
 	return 0;
 	}

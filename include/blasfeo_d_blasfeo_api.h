@@ -214,7 +214,7 @@ void blasfeo_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 int blasfeo_dgeqrf_worksize(int m, int n); // in bytes
 void blasfeo_dgeqrf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work);
 // D <= Q factor, where C is the output of the LQ factorization
-int blasfeo_dorglq_worksize(int m, int n); // in bytes
+int blasfeo_dorglq_worksize(int m, int n, int k); // in bytes
 void blasfeo_dorglq(int m, int n, int k, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work);
 // D <= lq( C )
 void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work);

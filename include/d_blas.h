@@ -68,6 +68,7 @@ void dgetrf_(int *m, int *n, double *A, int *lda, int *ipiv, int *info);
 void dgeqrf_(int *m, int *n, double *A, int *lda, double *tau, double *work, int *lwork, int *info);
 void dgeqr2_(int *m, int *n, double *A, int *lda, double *tau, double *work, int *info);
 void dgelqf_(int *m, int *n, double *A, int *lda, double *tau, double *work, int *lwork, int *info);
+void dorglq_(int *m, int *n, int *k, double *A, int *lda, double *tau, double *work, int *lwork, int *info);
 
 
 

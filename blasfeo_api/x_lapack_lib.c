@@ -3463,22 +3463,56 @@ void GELQF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 
 
 // generate Q matrix
-int ORGLQ_WORK_SIZE_LIBSTR(int m, int n)
+int ORGLQ_WORK_SIZE_LIBSTR(int m, int n, int k)
 	{
-	printf("\nblasfeo_orglq_worksize: feature not implemented yet\n");
-	exit(1);
-	return 0;
+//	printf("\nblasfeo_orglq_worksize: feature not implemented yet\n");
+//	exit(1);
+	REAL dwork;
+	REAL *pD, *dD;
+	int lwork = -1;
+	int info;
+	int ldd = m;
+	ORGLQ(&m, &n, &k, pD, &ldd, dD, &dwork, &lwork, &info);
+	int size = dwork;
+	return size*sizeof(REAL);
 	}
 
 
 
 // generate Q matrix
-void ORGLQ_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, void *work)
+void ORGLQ_LIBSTR(int m, int n, int k, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
-	printf("\nblasfeo_orglq: feature not implemented yet\n");
-	exit(1);
+
+//	printf("\nblasfeo_orglq: feature not implemented yet\n");
+//	exit(1);
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	REAL *pC = sC->pA+ci+cj*sC->m;
+	REAL *dC = sC->dA+ci;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	REAL *dD = sD->dA+di;
+	REAL *dwork = (REAL *) work;
+	int i1 = 1;
+	int info = -1;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(pC==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+		COPY(&k, dC, &i1, dD, &i1);
+		}
+//	GEQR2(&m, &n, pD, &ldd, dD, dwork, &info);
+	int lwork = -1;
+	ORGLQ(&m, &n, &k, pD, &ldd, dD, dwork, &lwork, &info);
+	lwork = dwork[0];
+	ORGLQ(&m, &n, &k, pD, &ldd, dD, dwork, &lwork, &info);
+	return;
 	}
 
 

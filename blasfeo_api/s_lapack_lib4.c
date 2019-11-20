@@ -944,7 +944,7 @@ void blasfeo_sgelqf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struc
 
 
 
-int blasfeo_sorglq_worksize(int m, int n)
+int blasfeo_sorglq_worksize(int m, int n, int k)
 	{
 	return 0;
 	}

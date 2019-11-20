@@ -68,6 +68,7 @@ void sgetrf_(int *m, int *n, float *A, int *lda, int *ipiv, int *info);
 void sgeqrf_(int *m, int *n, float *A, int *lda, float *tau, float *work, int *lwork, int *info);
 void sgeqr2_(int *m, int *n, float *A, int *lda, float *tau, float *work, int *info);
 void sgelqf_(int *m, int *n, float *A, int *lda, float *tau, float *work, int *lwork, int *info);
+void sorglq_(int *m, int *n, int *k, float *A, int *lda, float *tau, float *work, int *lwork, int *info);
 
 
 

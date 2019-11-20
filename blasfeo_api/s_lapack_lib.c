@@ -78,7 +78,7 @@
 
 #define COPY scopy_
 #define GELQF sgelqf_
-#define ORGLQ dorglq_
+#define ORGLQ sorglq_
 #define GEMM sgemm_
 #define GER sger_
 #define GEQRF sgeqrf_
