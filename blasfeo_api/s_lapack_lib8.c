@@ -929,6 +929,26 @@ void blasfeo_sgelqf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struc
 
 
 
+int blasfeo_sorglq_worksize(int m, int n)
+	{
+	return 0;
+	}
+
+
+
+void blasfeo_sorglq(int m, int n, int k, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
+	{
+	if(m<=0 | n<=0)
+		return;
+#ifndef BENCHMARKS_MODE
+	printf("\nblasfeo_sorglq: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
 // LQ factorization with positive diagonal elements
 void blasfeo_sgelqf_pd(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
 	{

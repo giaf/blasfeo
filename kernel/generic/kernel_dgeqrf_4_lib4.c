@@ -2985,7 +2985,7 @@ void kernel_dlarfb1_rn_1_lib4(int kmax, double *pV, double *pT, double *pD)
 
 
 
-void kernel_dlarfb4_rn_4_lib4(int kmax, double *pV, double *pT, double *pD)
+void kernel_dlarfb4_rt_4_lib4(int kmax, double *pV, double *pT, double *pD)
 	{
 	const int ps = 4;
 	double pW[16];
