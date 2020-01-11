@@ -36,7 +36,7 @@
 #include <stdio.h>
 
 #include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_kernel.h"
+#include "../include/blasfeo_s_kernel.h"
 
 
 

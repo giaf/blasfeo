@@ -79,7 +79,7 @@ void s_print_to_file_mat(FILE *file, int row, int col, float *A, int lda);
 // print to file a column-major matrix in exponential format
 void s_print_to_file_exp_mat(FILE *file, int row, int col, float *A, int lda);
 // print to string a column-major matrix
-int s_print_to_string_mat(char **buf_out, int row, int col, float *A, int lda);
+void s_print_to_string_mat(char **buf_out, int row, int col, float *A, int lda);
 // print to file the transposed of a column-major matrix
 void s_print_tran_to_file_mat(FILE *file, int row, int col, float *A, int lda);
 // print to file the transposed of a column-major matrix in exponential format

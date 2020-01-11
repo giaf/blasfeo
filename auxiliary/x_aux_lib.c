@@ -33,6 +33,8 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include "../../include/blasfeo_d_aux.h"
+
 
 // return memory size (in bytes) needed for a strmat
 int MEMSIZE_MAT(int m, int n)

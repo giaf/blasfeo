@@ -39,7 +39,7 @@
 #include <pmmintrin.h>  // SSE3
 #include <smmintrin.h>  // SSE4
 #include <immintrin.h>  // AVX
-
+#include "../../include/blasfeo_s_kernel.h"
 
 
 // B is the diagonal of a matrix, beta==0.0 case

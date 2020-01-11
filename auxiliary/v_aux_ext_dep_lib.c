@@ -37,6 +37,7 @@
 #include <stdio.h>
 
 #include "../include/blasfeo_stdlib.h"
+#include "../include/blasfeo_v_aux_ext_dep.h"
 
 #if 0
 #include <malloc.h>
