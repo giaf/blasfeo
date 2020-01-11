@@ -94,7 +94,7 @@ void v_free_align(void *pA)
 void c_zeros(char **ptrA, int size)
 	{
 	// allocate memory
-	*ptrA = malloc(size);
+	*ptrA = (char *)malloc(size);
 	// zero memory
 	int i;
 	double *dA = (double *) *ptrA;
