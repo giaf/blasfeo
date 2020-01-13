@@ -33,7 +33,7 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include "../../include/blasfeo_d_aux.h"
+#include "../include/blasfeo_d_aux.h"
 
 
 // return memory size (in bytes) needed for a strmat
