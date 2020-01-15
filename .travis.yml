@@ -21,7 +21,7 @@ cache:
 
 install:
   - sudo apt-get update -yqq;
-  - sudo apt-get --allow-unauthenticated install -yqq build-essentials python3.5 python3.5-tk python3.5-dev;
+  - sudo apt-get --allow-unauthenticated install -yqq build-essential python3.5 python3.5-tk python3.5-dev;
 
 script:
   - cd "${TRAVIS_BUILD_DIR}"/tests
