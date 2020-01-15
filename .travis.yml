@@ -2,27 +2,13 @@ language: c
 
 os: linux
 sudo: required
-dist: xenial
+dist: bionic 
 
 group: travis_latest
 
-services:
-
-addons:
-  apt:
-    sources:
-      - deadsnakes
-
-
 cache:
   ccache: true
-  directories:
-
-
-install:
-  - sudo apt-get update -yqq;
-  - sudo apt-get --allow-unauthenticated install -yqq build-essential python3.5 python3.5-tk python3.5-dev;
 
 script:
   - cd "${TRAVIS_BUILD_DIR}"/tests
-  - python3 tester recipe_travis.json
+  - python3 tester.py recipe_travis.json
