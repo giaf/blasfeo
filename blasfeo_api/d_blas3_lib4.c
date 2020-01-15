@@ -1792,7 +1792,7 @@ left_4_n0:
 	goto tn_return;
 #elif defined(TARGET_GENERIC)
 left_4_n0:
-	kernel_dpacp_tn_4_lib4(k, offsetB, pB+ii*ps, sdb, pU);
+	kernel_dpacp_tn_4_lib4(k, offsetB, pB+jj*ps, sdb, pU);
 	for(ii=0; ii<m; ii+=4)
 		{
 		kernel_dgemm_tt_4x4_vs_lib4(k, &alpha, offsetA, pA+ii*ps, sda, pU, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
