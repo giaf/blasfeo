@@ -388,6 +388,11 @@ class BlasfeoTestset:
 
         return error
 
+    def get_returncode(self):
+        if self._errors_n > 0:
+            return 1
+        return 0
+
 
 
 if __name__ == "__main__":
@@ -399,3 +404,4 @@ if __name__ == "__main__":
     testset = BlasfeoTestset(cli_flags)
     #  print(json.dumps(testset.testset, indent=4))
     testset.run_all()
+    sys.exit(testset.get_returncode())
