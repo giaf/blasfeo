@@ -1,12 +1,12 @@
 {
   "options":{
     "rebuild": 0,
-    "silent": 0,
+    "silent": 1,
     "continue": 0
   },
   "test_macros":
   {
-    "VERBOSE":3
+    "VERBOSE":2
   },
   "env_flags":{
     "CFLAGS": "-Wuninitialized"
