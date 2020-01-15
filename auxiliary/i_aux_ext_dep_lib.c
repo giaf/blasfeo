@@ -52,7 +52,7 @@ int posix_memalign(void **memptr, size_t alignment, size_t size);
 void int_zeros(int **pA, int row, int col)
 	{
 	void *temp = malloc((row*col)*sizeof(int));
-	*pA = temp;
+	*pA = (int *)temp;
 	int *A = *pA;
 	int i;
 	for(i=0; i<row*col; i++) A[i] = 0;

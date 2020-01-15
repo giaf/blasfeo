@@ -37,6 +37,7 @@
 #include <stdio.h>
 
 #include "../include/blasfeo_stdlib.h"
+#include "../include/blasfeo_v_aux_ext_dep.h"
 
 #if 0
 #include <malloc.h>
@@ -93,7 +94,7 @@ void v_free_align(void *pA)
 void c_zeros(char **ptrA, int size)
 	{
 	// allocate memory
-	*ptrA = malloc(size);
+	*ptrA = (char *)malloc(size);
 	// zero memory
 	int i;
 	double *dA = (double *) *ptrA;

@@ -44,7 +44,7 @@ int posix_memalign(void **memptr, size_t alignment, size_t size);
 /* creates a zero matrix */
 void ZEROS(REAL **pA, int row, int col)
 	{
-	*pA = malloc((row*col)*sizeof(REAL));
+	*pA = (REAL *)malloc((row*col)*sizeof(REAL));
 	REAL *A = *pA;
 	int i;
 	for(i=0; i<row*col; i++) A[i] = 0.0;
