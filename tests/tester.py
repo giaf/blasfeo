@@ -42,11 +42,11 @@ def parse_arguments():
     return args
 
 
-def test_runcmd(run_cmd, stdinput=""):
+def run_cmd(cmd, stdinput=""):
 
-    if not SILENT: print(run_cmd,"\n")
+    if not SILENT: print(cmd,"\n")
 
-    cmd_proc = sp.Popen(run_cmd,
+    cmd_proc = sp.Popen(cmd,
         shell=True,
         stdin=sp.PIPE,
         stdout=sp.PIPE,
@@ -83,64 +83,18 @@ def make_blasfeo(cmd="", env_flags={}, blasfeo_flags={}):
     ])
 
     # clean build folder
-    run_cmd = "make deep_clean -C .. "
-    cmd_proc = test_runcmd(run_cmd)
+    clean_cmd = "make deep_clean -C .. "
+    cmd_proc = run_cmd(clean_cmd)
 
     # make blasfeo with selected flag set
-    run_cmd = "{env_flags} make {blasfeo_flags} {make_flags} -C .. static_library"\
+    make_cmd = "{env_flags} make {blasfeo_flags} {make_flags} -C .. static_library"\
         .format(env_flags=env_flags_str,
                 blasfeo_flags=blasfeo_flags_str,
                 make_flags=make_flags_str, cmd=cmd)
-    cmd_proc = test_runcmd(run_cmd)
+    cmd_proc = run_cmd(make_cmd)
 
     return cmd_proc.returncode
 
-def make_templated(make_cmd="", env_flags={}, test_macros={}, blasfeo_flags={}, **kargs):
-
-    # compress run_id
-    la=blasfeo_flags['LA']
-    if la != "HIGH_PERFORMANCE": target=la
-
-    run_id = "{target}_{routine_fullname}_kstack{kstack}"\
-        .format(
-            target=blasfeo_flags['TARGET'],
-            routine_fullname=kargs["fullname"],
-            kstack=blasfeo_flags['K_MAX_STACK']
-            )
-
-    print("\nTesting {run_id}\n".format(run_id=run_id))
-
-    with open(TPL_PATH) as f:
-        template = jn.Template(f.read())
-
-    makefile = template.render(test_macros=test_macros)
-
-    # flag to override default libblasfeo flags
-    blasfeo_flags_cmd = " ".join(["{k}={v}".format(k=k, v=v) if v is not None else k for k, v in blasfeo_flags.items()])
-    make_flags = " ".join(["{k}={v}".format(k=k, v=v) if v is not None else k for k, v in MAKE_FLAGS.items()])
-
-    run_cmd = "make {blasfeo_flags_cmd} -f - {make_cmd}".format(make_cmd=make_cmd, blasfeo_flags_cmd=blasfeo_flags_cmd)
-    report_cmd = "make {blasfeo_flags_cmd} {make_flags} {make_cmd}"\
-        .format(make_cmd=make_cmd, make_flags=make_flags, blasfeo_flags_cmd=blasfeo_flags_cmd)
-
-    cmd_proc = test_runcmd(run_cmd, stdinput=makefile)
-
-    if cmd_proc.returncode:
-        # write report
-        report_path = Path(REPORTS_DIR, run_id)
-        report_path.mkdir(parents=True, exist_ok=True)
-        with open(str(Path(report_path, "Makefile")), "w") as f:
-            f.write(makefile)
-        with open(str(Path(report_path, "make.sh")), "w") as f:
-            f.write("#! /bin/bash\n")
-            f.write(report_cmd+"\n")
-
-        print("Error with {run_id}".format(run_id=run_id))
-
-    else:
-        if not SILENT: print("Tested with {run_id}".format(run_id=run_id))
-
-    return cmd_proc.returncode
 
 class BlasfeoTestset:
     def __init__(self, cli_flags):
@@ -149,15 +103,21 @@ class BlasfeoTestset:
         self.cli_flags=cli_flags
         self.continue_test = 0
 
+        self.scheduled_routines = {}
+        self.test_routines = {}
+
         with open(cli_flags.testset_json) as f:
             self.specs = json.load(f, object_pairs_hook=OrderedDict)
 
+        with open(TPL_PATH) as f:
+            self.makefile_template = jn.Template(f.read())
 
         if self.specs["options"].get("silent") or self.cli_flags.silent:
             SILENT = 1
 
         if self.specs["options"].get("continue") or  self.cli_flags.continue_test:
             self.continue_test = 1
+
 
         with open(TEST_SCHEMA) as f:
             self.schema = json.load(f, object_pairs_hook=OrderedDict)
@@ -369,24 +329,101 @@ class BlasfeoTestset:
             else:
                 args["blasfeo_flags"] = blasfeo_flags
 
-            error =  self.run_testroutine(routine_name, args)
+            error =  self.run_routine(routine_name, args)
 
             if error and not self.continue_test:
                 break
 
-    def run_testroutine(self, routine_fullname, kargs):
+    def render_routine(self, make_cmd="", env_flags={}, test_macros={}, blasfeo_flags={},
+                       **kargs):
 
-        error = make_templated(**kargs)
+        # compress run_id
+        la=blasfeo_flags['LA']
+        if la != "HIGH_PERFORMANCE": target=la
 
-        if not error:
-            self._success_n += 1
-        else:
+        run_id = "{target}_{routine_fullname}_stack{kstack}"\
+            .format(
+                target=blasfeo_flags['TARGET'],
+                routine_fullname=kargs["fullname"],
+                kstack=blasfeo_flags['K_MAX_STACK']
+                )
+
+        print("Testing {run_id}".format(run_id=run_id))
+
+        makefile = self.makefile_template.render(test_macros=test_macros)
+
+        # flag to override default libblasfeo flags
+        blasfeo_flags_cmd = " ".join(["{k}={v}"\
+            .format(k=k, v=v) if v is not None else k for k, v in blasfeo_flags.items()])
+        make_flags = " ".join(["{k}={v}"\
+            .format(k=k, v=v) if v is not None else k for k, v in MAKE_FLAGS.items()])
+
+        make_cmd = "make {blasfeo_flags_cmd} -f - {make_cmd}"\
+            .format(make_cmd=make_cmd, blasfeo_flags_cmd=blasfeo_flags_cmd)
+
+        # render command to write on reports folder for later inspection
+        report_cmd = "make {blasfeo_flags_cmd} {make_flags} {make_cmd}"\
+            .format(make_cmd=make_cmd,
+                    make_flags=make_flags,
+                    blasfeo_flags_cmd=blasfeo_flags_cmd)
+
+        # add entry in tested_routine
+        self.test_routines[run_id] = {}
+        self.test_routines[run_id]["make_cmd"] = make_cmd
+        self.test_routines[run_id]["report_cmd"] = report_cmd
+        self.test_routines[run_id]["makefile"] = makefile
+
+        return run_id
+
+    def run_routine(self, routine_fullname, kargs):
+
+        run_id = self.render_routine(**kargs)
+
+        make_cmd = self.test_routines[run_id]["make_cmd"]
+        report_cmd = self.test_routines[run_id]["report_cmd"]
+        makefile = self.test_routines[run_id]["makefile"]
+
+        cmd_proc = run_cmd(make_cmd, stdinput=makefile)
+
+        if cmd_proc.returncode:
             self._errors_n += 1
+            self.test_routines[run_id]["success"]=0
 
-        print("({done}:Succeded, {errors}:Errors) / ({total}:Total)"
+            # on error write report for future inspection
+            report_path = Path(REPORTS_DIR, run_id)
+            report_path.mkdir(parents=True, exist_ok=True)
+            with open(str(Path(report_path, "Makefile")), "w") as f:
+                f.write(makefile)
+            with open(str(Path(report_path, "make.sh")), "w") as f:
+                f.write("#! /bin/bash\n")
+                f.write(report_cmd+"\n")
+
+            print("Error with {run_id}".format(run_id=run_id))
+
+        else:
+            self.test_routines[run_id]["success"]=1
+            self._success_n += 1
+            if not SILENT: print("Tested with {run_id}".format(run_id=run_id))
+
+        # print partial
+        if not SILENT: print("({done}:Succeded, {errors}:Errors) / ({total}:Total)"
             .format(done=self._success_n, errors=self._errors_n, total=self._total_n))
 
-        return error
+        return cmd_proc.returncode
+
+    def print_summary(self):
+
+        print("\n\n### Testset Summary:\n")
+        summary_lines = [
+            "Error with {run_id}".format(run_id=run_id)
+            for (run_id, values) in self.test_routines.items() if not values["success"]
+        ]
+
+        print("\n".join(summary_lines))
+        print("({done}:Succeded, {errors}:Errors) / ({total}:Total)"
+            .format(done=self._success_n, errors=self._errors_n, total=self._total_n))
+        print("See blasfeo/tests/reports to inspect specific errors")
+
 
     def get_returncode(self):
         if self._errors_n > 0:
@@ -404,4 +441,5 @@ if __name__ == "__main__":
     testset = BlasfeoTestset(cli_flags)
     #  print(json.dumps(testset.testset, indent=4))
     testset.run_all()
+    testset.print_summary()
     sys.exit(testset.get_returncode())
