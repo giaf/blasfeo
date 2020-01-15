@@ -2,7 +2,7 @@
   "options":{
     "rebuild": 0,
     "silent": 1,
-    "continue": 0
+    "continue": 1
   },
   "test_macros":
   {

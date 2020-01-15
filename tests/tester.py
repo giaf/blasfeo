@@ -15,7 +15,7 @@ BLASFEO_PATH=str(Path(__file__).absolute().parents[1])
 BLASFEO_TEST_PATH=str(Path(__file__).absolute().parents[0])
 
 TEST_SCHEMA="test_schema.json"
-RECIPE_JSON="recipe_default.json"
+TESTSET_JSON="testset_default.json"
 BUILDS_DIR="build"
 REPORTS_DIR="reports"
 TESTCLASSES_DIR="classes"
@@ -28,15 +28,15 @@ SILENT=0
 def parse_arguments():
     parser = argparse.ArgumentParser(description='BLAFEO tests scheduler')
 
-    parser.add_argument(dest='recipe_json', type=str, default=RECIPE_JSON, nargs='?',
-        help='Run a batch of test from a specific recipe, i.e. recipe_all.json')
+    parser.add_argument(dest='testset_json', type=str, default=TESTSET_JSON, nargs='?',
+        help='Run a batch of test from a specific testset, i.e. testset_all.json')
     parser.add_argument('--silent', default=False, action='store_true',
         help='Silent makefile output')
     parser.add_argument('--continue', dest='continue_test', default=False, action='store_true',
         help='Do not interrupt tests sweep on error')
     parser.add_argument('--rebuild', default=False, action='store_true',
         help='Rebuild libblasfeo to take into account recent code '+
-        'changes or addition of new target to the recipe batch')
+        'changes or addition of new target to the testset batch')
 
     args = parser.parse_args()
     return args
@@ -142,14 +142,14 @@ def make_templated(make_cmd="", env_flags={}, test_macros={}, blasfeo_flags={}, 
 
     return cmd_proc.returncode
 
-class CookBook:
+class BlasfeoTestset:
     def __init__(self, cli_flags):
         global SILENT
 
         self.cli_flags=cli_flags
         self.continue_test = 0
 
-        with open(cli_flags.recipe_json) as f:
+        with open(cli_flags.testset_json) as f:
             self.specs = json.load(f, object_pairs_hook=OrderedDict)
 
 
@@ -172,8 +172,8 @@ class CookBook:
             * len(self.specs["precisions"])\
             * len(self.specs["apis"])
 
-        # build standard recipe skelethon
-        self.build_recipe()
+        # build standard testset skelethon
+        self.build_testset()
 
     def parse_routine_options(self, routine_name, available_flags):
 
@@ -195,12 +195,12 @@ class CookBook:
 
         return parsed_flags.groupdict()
 
-    def build_recipe(self):
+    def build_testset(self):
         scheduled_routines = set(self.specs['routines'])
 
-        # create recipe with no global flags
-        self.recipe = OrderedDict(self.specs)
-        self.recipe["scheduled_routines"] = {}
+        # create testset with no global flags
+        self.testset = OrderedDict(self.specs)
+        self.testset["scheduled_routines"] = {}
 
         available_groups = self.schema['routines']
 
@@ -251,7 +251,7 @@ class CookBook:
 
                             # add blas_api flag arguments values
 
-                            self.recipe["scheduled_routines"][routine_fullname] = {
+                            self.testset["scheduled_routines"][routine_fullname] = {
                                 "group": group_name,
                                 "class": class_name,
                                 "api": api,
@@ -266,44 +266,44 @@ class CookBook:
                   .format(TEST_SCHEMA, scheduled_routines))
 
     def run_all(self):
-        # tune the recipe and run
+        # tune the testset and run
 
         for la in self.specs["LA"]:
-            self.recipe["blasfeo_flags"]["LA"]=la
+            self.testset["blasfeo_flags"]["LA"]=la
 
             if la=="REFERENCE":
-                self.run_recipe()
+                self.run_testset()
                 break
 
             if la=="EXTERNAL_BLAS_WRAPPER":
-                self.run_recipe()
+                self.run_testset()
                 break
 
 
             for target in self.specs["TARGET"]:
-                self.recipe["blasfeo_flags"]["TARGET"]=target
+                self.testset["blasfeo_flags"]["TARGET"]=target
 
                 for max_stack in self.specs["K_MAX_STACK"]:
-                    self.recipe["blasfeo_flags"]["K_MAX_STACK"]=max_stack
+                    self.testset["blasfeo_flags"]["K_MAX_STACK"]=max_stack
                     print("\n## Testing {la}:{target} kswitch={max_stack}".format(target=target, la=la, max_stack=max_stack))
 
-                    self.run_recipe()
+                    self.run_testset()
 
     def is_lib_updated(self):
 
-        target = self.recipe["blasfeo_flags"]["TARGET"]
-        la = self.recipe["blasfeo_flags"]["LA"]
+        target = self.testset["blasfeo_flags"]["TARGET"]
+        la = self.testset["blasfeo_flags"]["LA"]
 
         if self.lib_static_dst.is_file() and self.libref_static_dst.is_file():
             return 1
 
         return 0
 
-    def run_recipe(self):
+    def run_testset(self):
         # preparation step
-        test_macros = self.recipe["test_macros"]
-        blasfeo_flags = self.recipe["blasfeo_flags"]
-        env_flags = self.recipe["env_flags"]
+        test_macros = self.testset["test_macros"]
+        blasfeo_flags = self.testset["blasfeo_flags"]
+        env_flags = self.testset["env_flags"]
 
         # always compile blas api
         blasfeo_flags.update({"BLAS_API":1})
@@ -330,10 +330,10 @@ class CookBook:
 
         lib_flags_json = str(Path(binary_path, "flags.json"))
 
-        if self.cli_flags.silent or self.recipe["options"].get("silent"):
+        if self.cli_flags.silent or self.testset["options"].get("silent"):
             MAKE_FLAGS.update({"-s":None})
 
-        if self.cli_flags.rebuild or self.recipe["options"].get("rebuild") or not self.is_lib_updated():
+        if self.cli_flags.rebuild or self.testset["options"].get("rebuild") or not self.is_lib_updated():
             # compile the library
             make_blasfeo(blasfeo_flags=blasfeo_flags, env_flags=env_flags)
 
@@ -348,7 +348,7 @@ class CookBook:
             #  self.lib_static_dst.write_bytes(lib_static_src.read_bytes())
             #  self.libref_static_dst.write_bytes(libref_static_src.read_bytes())
 
-        for routine_name, args in self.recipe['scheduled_routines'].items():
+        for routine_name, args in self.testset['scheduled_routines'].items():
             # update local flags with global flags
 
             if args.get("test_macros"):
@@ -369,12 +369,12 @@ class CookBook:
             else:
                 args["blasfeo_flags"] = blasfeo_flags
 
-            error =  self.test_routine(routine_name, args)
+            error =  self.run_testroutine(routine_name, args)
 
             if error and not self.continue_test:
                 break
 
-    def test_routine(self, routine_fullname, kargs):
+    def run_testroutine(self, routine_fullname, kargs):
 
         error = make_templated(**kargs)
 
@@ -394,8 +394,8 @@ if __name__ == "__main__":
 
     cli_flags = parse_arguments()
 
-    # generate recipes
-    # test set to be run in the given excution of the script
-    cookbook = CookBook(cli_flags)
-    #  print(json.dumps(cookbook.recipe, indent=4))
-    cookbook.run_all()
+    # generate test set
+    # collection of routines/lib combinations to be run in the given excution of the tester.py
+    testset = BlasfeoTestset(cli_flags)
+    #  print(json.dumps(testset.testset, indent=4))
+    testset.run_all()

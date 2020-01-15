@@ -2,7 +2,7 @@ language: c
 
 os: linux
 sudo: required
-dist: bionic 
+dist: bionic
 
 group: travis_latest
 
@@ -11,4 +11,4 @@ cache:
 
 script:
   - cd "${TRAVIS_BUILD_DIR}"/tests
-  - python3 tester.py recipe_travis.json
+  - python3 tester.py testset_travis.json
