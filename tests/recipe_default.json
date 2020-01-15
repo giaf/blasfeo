@@ -1,7 +1,7 @@
 {
   "options":{
     "rebuild": 1,
-    "silent": 0,
+    "silent": 1,
     "continue": 0
   },
   "test_macros":
@@ -14,6 +14,7 @@
   "blasfeo_flags":{
     "CC":"gcc",
     "TESTING_MODE": 1,
+    "BLAS_API": 1,
     "BENCHMARKS_MODE": 1,
     "EXTERNAL_BLAS": "OPENBLAS"
   },
@@ -21,20 +22,27 @@
     "double"
   ],
   "apis": [
-    "blas"
+    "blasfeo"
   ],
   "K_MAX_STACK":[
-    0, 400
+    0
   ],
   "TARGET": [
-    "X64_INTEL_SANDY_BRIDGE"
+    "X64_INTEL_SANDY_BRIDGE",
+    "X64_INTEL_HASWELL",
+    "GENERIC"
   ],
   "LA": [
     "HIGH_PERFORMANCE"
   ],
   "routines": [
-    "gemm_nn",
-    "gemm_tn",
+    "gemm_tn"
+  ],
+  "buffer": [
+    "blasfeo",
+    "X64_INTEL_HASWELL",
+    "X64_INTEL_CORE",
+    "GENERIC",
     "gemm_nt",
     "gemm_tt",
     "trsm_llnu",
@@ -55,13 +63,7 @@
     "trsm_rutn",
     "getrf",
     "potrf_l",
-    "potrf_u"
-  ],
-  "buffer": [
-    "blasfeo",
-    "X64_INTEL_HASWELL",
-    "X64_INTEL_CORE",
-	"GENERIC",
+    "potrf_u",
     "gemm_nn",
     "gemm_tn",
     "gemm_nt",

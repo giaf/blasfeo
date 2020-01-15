@@ -290,7 +290,7 @@ CFLAGS  += -DLA_EXTERNAL_BLAS_WRAPPER
 BINARY_DIR = build/$(LA)/$(EXTERNAL_BLAS)
 endif
 # TODO remove and fix tests
-#CFLAGS  += -DLA=$(LA)
+CFLAGS  += -DLA=$(LA)
 
 ifeq ($(BLAS_API), 1)
 CFLAGS += -DBLAS_API
@@ -470,4 +470,4 @@ ifeq ($(TARGET), GENERIC)
 CFLAGS  += -DTARGET_GENERIC
 endif
 # TODO remove and fix tests
-#CFLAGS  += -DTARGET=$(TARGET)
+CFLAGS  += -DTARGET=$(TARGET)

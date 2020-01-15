@@ -43,6 +43,8 @@
 #define STR(x) #x
 #define SHOW_DEFINE(x) printf("%-16s= %s\n", #x, STR(x));
 
+
+
 #ifndef LA
 	#error LA undefined
 #endif
