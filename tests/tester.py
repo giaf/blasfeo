@@ -230,6 +230,7 @@ class BlasfeoTestset:
 
         for la in self.specs["LA"]:
             self.testset["blasfeo_flags"]["LA"]=la
+            self.testset["test_macros"]["BLASFEO_LA"]=la
 
             if la=="REFERENCE":
                 self.run_testset()
@@ -242,6 +243,7 @@ class BlasfeoTestset:
 
             for target in self.specs["TARGET"]:
                 self.testset["blasfeo_flags"]["TARGET"]=target
+                self.testset["test_macros"]["BLASFEO_TARGET"]=target
 
                 for max_stack in self.specs["K_MAX_STACK"]:
                     self.testset["blasfeo_flags"]["K_MAX_STACK"]=max_stack

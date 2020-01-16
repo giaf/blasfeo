@@ -37,8 +37,8 @@
 
 void print_compilation_flags()
 {
-	SHOW_DEFINE(LA)
-	SHOW_DEFINE(TARGET)
+	SHOW_DEFINE(BLASFEO_LA)
+	SHOW_DEFINE(BLASFEO_TARGET)
 	SHOW_DEFINE(PRECISION)
 	#ifdef TEST_BLAS_API
 	printf("API\t\t= blas\n");

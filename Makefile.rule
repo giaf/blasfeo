@@ -290,7 +290,7 @@ CFLAGS  += -DLA_EXTERNAL_BLAS_WRAPPER
 BINARY_DIR = build/$(LA)/$(EXTERNAL_BLAS)
 endif
 # TODO remove and fix tests
-CFLAGS  += -DLA=$(LA)
+# CFLAGS  += -DBLASFEO_LA=$(LA)
 
 ifeq ($(BLAS_API), 1)
 CFLAGS += -DBLAS_API
@@ -423,7 +423,7 @@ ifeq ($(EXTERNAL_BLAS), ATLAS)
 CFLAGS  += -DEXTERNAL_BLAS_ATLAS
 endif
 # TODO remove and fix tests
-#CFLAGS  += -DEXTERNAL_BLAS=$(EXTERNAL_BLAS)
+# CFLAGS  += -DEXTERNAL_BLAS=$(EXTERNAL_BLAS)
 
 # Architecture-specific flags
 ifeq ($(TARGET), X64_INTEL_HASWELL)
@@ -470,4 +470,4 @@ ifeq ($(TARGET), GENERIC)
 CFLAGS  += -DTARGET_GENERIC
 endif
 # TODO remove and fix tests
-CFLAGS  += -DTARGET=$(TARGET)
+# CFLAGS  += -DBLASFEO_TARGET=$(TARGET)

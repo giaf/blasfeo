@@ -1,18 +1,18 @@
 {
   "options":{
-    "rebuild": 0,
+    "rebuild": 1,
     "silent": 1,
-    "continue": 1
+    "continue": 0
   },
   "test_macros":
   {
     "VERBOSE":2
   },
   "env_flags":{
+    "CC":"gcc",
     "CFLAGS": "-Wuninitialized"
   },
   "blasfeo_flags":{
-    "CC":"gcc",
     "TESTING_MODE": 1,
     "BLAS_API": 1,
     "BENCHMARKS_MODE": 1,
