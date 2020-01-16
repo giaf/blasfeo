@@ -444,4 +444,5 @@ if __name__ == "__main__":
     #  print(json.dumps(testset.testset, indent=4))
     testset.run_all()
     testset.print_summary()
+
     sys.exit(testset.get_returncode())
