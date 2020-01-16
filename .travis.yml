@@ -18,6 +18,15 @@ jobs:
       os: osx
       osx_image: xcode9.4
 
+
+python:
+  - "3.6"
+
+install:
+  - virtualenv --python=python3.6 blasfeotests_env
+  - source blasfeotests_env/bin/activate
+  - pip install jinja2
+
 cache:
   ccache: true
 
