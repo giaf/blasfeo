@@ -65,6 +65,7 @@ int main()
 
 	int ii;
 
+#if 0
 	int m = 13;
 	int n = 12;
 
@@ -78,6 +79,21 @@ int main()
 		A[(ii/3)+n*ii] = 1.0;
 		A[ii+n*(m-1)] = 1.0;
 		}
+#else
+	int n = 3;
+	int m = 3;
+	double *A; d_zeros(&A, n, m);
+	A[0+0*n] = 1;
+	A[1+0*n] = 2;
+	A[2+0*n] = 1;
+	A[0+1*n] = 1;
+	A[1+1*n] = 2;
+	A[2+1*n] = 2;
+	A[0+2*n] = 2;
+	A[1+2*n] = 4;
+	A[2+2*n] = 3;
+#endif
+
 #if 0
 	A[0+n*0] = 1.0;
 	A[0+n*2] = 1.0;
@@ -120,6 +136,18 @@ int main()
 	blasfeo_print_dmat(n, m, &sA, 0, 0);
 	d_print_mat(1, n, sA.dA, 1);
 
+	/* extract L */
+
+	struct blasfeo_dmat sL;
+	int sL_size = blasfeo_memsize_dmat(n, n);
+	void *sL_mem; v_zeros_align(&sL_mem, sL_size);
+	blasfeo_create_dmat(n, n, &sL, sL_mem);
+
+	blasfeo_dtrcp_l(n, &sA, 0, 0, &sL, 0, 0);
+
+	printf("\nL = \n");
+	blasfeo_print_dmat(n, n, &sL, 0, 0);
+
 	/* compute Q */
 
 	struct blasfeo_dmat sQ;
@@ -128,7 +156,7 @@ int main()
 	blasfeo_create_dmat(m, m, &sQ, sQ_mem);
 
 #if 1
-	int orglq_size = blasfeo_dorglq_worksize(n, m);
+	int orglq_size = blasfeo_dorglq_worksize(m, m, n);
 	void *orglq_work = malloc(orglq_size);
 
 	blasfeo_dorglq(m, m, n, &sA, 0, 0, &sQ, 0, 0, orglq_work);
@@ -166,12 +194,14 @@ int main()
 //	d_print_mat(4, 4, Q, 4);
 #endif
 
+	printf("\nQ = \n");
 	blasfeo_print_dmat(m, m, &sQ, 0, 0);
 
 	/* free memory */
 
 	d_free(A);
 	v_free_align(sA_mem);
+	v_free_align(sL_mem);
 	v_free_align(sQ_mem);
 	free(lq_work);
 
