@@ -1450,6 +1450,7 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	// algorithm scheme
 	if(offsetC==0 & offsetD==0)
 		{
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_GENERIC)
 		if(m<=n)
 			{
 			goto loop_00_m0; // transpose A
@@ -1458,6 +1459,9 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 			{
 			goto loop_00_n0; // transpose B
 			}
+#else
+		goto loop_00_m0; // transpose A
+#endif
 		}
 	else
 		{
