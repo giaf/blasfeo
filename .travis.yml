@@ -18,7 +18,7 @@ jobs:
         - pip install jinja2
         - python tester.py testset_travis.json
 
-    - name: "MacOS Build 10.2"
+    - name: "MacOS Build"
       os: osx
       osx_image: xcode10.2
       language: shell
