@@ -1162,11 +1162,7 @@ NAME:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_n_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_n_4_lib4
-#endif
+	CALL(inner_kernel_dgemv_add_n_4_lib4)
 #endif
 
 
@@ -1179,11 +1175,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_SCALE_AB_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_n_scale_ab_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_blend_n_scale_ab_4_lib4
-#endif
+	CALL(inner_blend_n_scale_ab_4_lib4)
 #endif
 
 
@@ -1194,11 +1186,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_store_4_lib4
-#endif
+	CALL(inner_store_4_lib4)
 #endif
 
 
@@ -1234,11 +1222,7 @@ NAME:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_N_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_n_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_n_4_lib4
-#endif
+	CALL(inner_kernel_dgemv_add_n_4_lib4)
 #endif
 
 
@@ -1251,11 +1235,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_SCALE_AB_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_n_scale_ab_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_blend_n_scale_ab_4_lib4
-#endif
+	CALL(inner_blend_n_scale_ab_4_lib4)
 #endif
 
 
@@ -1267,11 +1247,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_4_vs_lib4
-#elif defined(OS_MAC)
-	callq _inner_store_4_vs_lib4
-#endif
+	CALL(inner_store_4_vs_lib4)
 #endif
 
 
@@ -1310,11 +1286,7 @@ NAME:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_t_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_t_4_lib4
-#endif
+	CALL(inner_kernel_dgemv_add_t_4_lib4)
 #endif
 
 
@@ -1327,11 +1299,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_t_scale_ab_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_blend_t_scale_ab_4_lib4
-#endif
+	CALL(inner_blend_t_scale_ab_4_lib4)
 #endif
 
 
@@ -1342,11 +1310,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_store_4_lib4
-#endif
+	CALL(inner_store_4_lib4)
 #endif
 
 
@@ -1385,11 +1349,7 @@ NAME:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_T_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_t_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_t_4_lib4
-#endif
+	CALL(inner_kernel_dgemv_add_t_4_lib4)
 #endif
 
 
@@ -1402,11 +1362,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_t_scale_ab_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_blend_t_scale_ab_4_lib4
-#endif
+	CALL(inner_blend_t_scale_ab_4_lib4)
 #endif
 
 
@@ -1418,11 +1374,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_4_vs_lib4
-#elif defined(OS_MAC)
-	callq _inner_store_4_vs_lib4
-#endif
+	CALL(inner_store_4_vs_lib4)
 #endif
 
 
@@ -1477,11 +1429,7 @@ NAME:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_NT_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_nt_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_nt_4_lib4
-#endif
+	CALL(inner_kernel_dgemv_add_nt_4_lib4)
 #endif
 
 
@@ -1494,11 +1442,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_t_scale_ab_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_blend_t_scale_ab_4_lib4
-#endif
+	CALL(inner_blend_t_scale_ab_4_lib4)
 #endif
 
 
@@ -1509,11 +1453,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_store_4_lib4
-#endif
+	CALL(inner_store_4_lib4)
 #endif
 
 
@@ -1582,11 +1522,7 @@ NAME:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_NT_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_nt_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_nt_4_lib4
-#endif
+	CALL(inner_kernel_dgemv_add_nt_4_lib4)
 #endif
 
 
@@ -1599,11 +1535,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_t_scale_ab_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_blend_t_scale_ab_4_lib4
-#endif
+	CALL(inner_blend_t_scale_ab_4_lib4)
 #endif
 
 
@@ -1615,11 +1547,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_4_vs_lib4
-#elif defined(OS_MAC)
-	callq _inner_store_4_vs_lib4
-#endif
+	CALL(inner_store_4_vs_lib4)
 #endif
 
 
@@ -1673,21 +1601,13 @@ NAME:
 #if MACRO_LEVEL>=2
 	INNER_EDGE_DSYMV_ADD_NT_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dsymv_add_nt_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_edge_dsymv_add_nt_4_lib4
-#endif
+	CALL(inner_edge_dsymv_add_nt_4_lib4)
 #endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_NT_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_nt_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_nt_4_lib4
-#endif
+	CALL(inner_kernel_dgemv_add_nt_4_lib4)
 #endif
 
 
@@ -1699,11 +1619,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_A1_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_t_scale_a1_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_blend_t_scale_a1_4_lib4
-#endif
+	CALL(inner_blend_t_scale_a1_4_lib4)
 #endif
 
 
@@ -1714,11 +1630,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_store_4_lib4
-#endif
+	CALL(inner_store_4_lib4)
 #endif
 
 

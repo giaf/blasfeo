@@ -1134,11 +1134,7 @@ NAME:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_NT_4X4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_sgemm_nt_4x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_sgemm_nt_4x4_lib4
-#endif
+	CALL(inner_kernel_sgemm_nt_4x4_lib4)
 #endif
 
 
@@ -1151,11 +1147,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_AB_4X4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_scale_ab_4x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_blend_scale_ab_4x4_lib4
-#endif
+	CALL(inner_blend_scale_ab_4x4_lib4)
 #endif
 
 
@@ -1166,11 +1158,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_4x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_store_4x4_lib4
-#endif
+	CALL(inner_store_4x4_lib4)
 #endif
 
 
@@ -1209,21 +1197,13 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_SGEMM_NN_4X4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_sgemm_nn_4x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_edge_sgemm_nn_4x4_lib4
-#endif
+	CALL(inner_edge_sgemm_nn_4x4_lib4)
 #endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_SGEMM_NN_4X4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_sgemm_nn_4x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_sgemm_nn_4x4_lib4
-#endif
+	CALL(inner_kernel_sgemm_nn_4x4_lib4)
 #endif
 
 
@@ -1236,11 +1216,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_4X4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_scale_ab_4x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_scale_ab_4x4_lib4
-#endif
+	CALL(inner_scale_ab_4x4_lib4)
 #endif
 
 
@@ -1251,11 +1227,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_4x4_lib4
-#elif defined(OS_MAC)
-	callq _inner_store_4x4_lib4
-#endif
+	CALL(inner_store_4x4_lib4)
 #endif
 
 
