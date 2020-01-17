@@ -25,18 +25,22 @@
     "blasfeo"
   ],
   "K_MAX_STACK":[
-    0
+    0, 400
   ],
   "TARGET": [
-    "X64_INTEL_SANDY_BRIDGE",
     "X64_INTEL_HASWELL",
+    "X64_INTEL_SANDY_BRIDGE",
+    "X64_INTEL_CORE",
     "GENERIC"
   ],
   "LA": [
     "HIGH_PERFORMANCE"
   ],
   "routines": [
-    "gemm_tn"
+    "gemm_nn",
+    "gemm_nt",
+    "gemm_tn",
+    "gemm_tt"
   ],
   "buffer": [
     "blasfeo",

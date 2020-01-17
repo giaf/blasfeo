@@ -4867,10 +4867,10 @@ NAME:
 	movhpd	32(%rbx), %xmm1
 	movhpd	64(%rbx), %xmm2
 	movhpd	96(%rbx), %xmm3
-	movlpd	8(%r11), %xmm4
-	movlpd	40(%r11), %xmm5
-	movlpd	72(%r11), %xmm6
-	movlpd	104(%r11), %xmm7
+	movlpd	8(%rbx), %xmm4
+	movlpd	40(%rbx), %xmm5
+	movlpd	72(%rbx), %xmm6
+	movlpd	104(%rbx), %xmm7
 
 	jmp		4f
 
@@ -4884,10 +4884,10 @@ NAME:
 	movhpd	32(%rbx), %xmm1
 	movhpd	64(%rbx), %xmm2
 	movhpd	96(%rbx), %xmm3
-	movupd	8(%r11), %xmm4
-	movupd	40(%r11), %xmm5
-	movupd	72(%r11), %xmm6
-	movupd	104(%r11), %xmm7
+	movupd	8(%rbx), %xmm4
+	movupd	40(%rbx), %xmm5
+	movupd	72(%rbx), %xmm6
+	movupd	104(%rbx), %xmm7
 
 4:
 	cmpl		$2, %r14d
