@@ -1450,7 +1450,7 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	// algorithm scheme
 	if(offsetC==0 & offsetD==0)
 		{
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_GENERIC)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_X64_INTEL_CORE) | defined(TARGET_GENERIC)
 		if(m<=n)
 			{
 			goto loop_00_m0; // transpose A
@@ -1663,7 +1663,7 @@ loop_00_n0:
 			goto left_8_n0;
 			}
 		}
-#elif defined(TARGET_GENERIC)
+#elif defined(TARGET_GENERIC) | defined(TARGET_X64_INTEL_CORE)
 	for(; jj<n-3; jj+=4)
 		{
 		kernel_dpacp_tn_4_lib4(k, offsetB, pB+jj*ps, sdb, pU);
@@ -1831,7 +1831,7 @@ left_4_n0:
 		kernel_dgemm_tt_4x4_vs_lib4(k, &alpha, offsetA, pA+ii*ps, sda, pU, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
 		}
 	goto tn_return;
-#elif defined(TARGET_GENERIC)
+#elif defined(TARGET_GENERIC) | defined(TARGET_X64_INTEL_CORE)
 left_4_n0:
 	kernel_dpacp_tn_4_lib4(k, offsetB, pB+jj*ps, sdb, pU);
 	for(ii=0; ii<m; ii+=4)
@@ -1855,7 +1855,7 @@ tn_return:
 
 
 // dgemm_tt
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_GENERIC)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_X64_INTEL_CORE) | defined(TARGET_GENERIC)
 void blasfeo_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	if(m<=0 || n<=0)
