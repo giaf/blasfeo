@@ -50,7 +50,6 @@
 #ifdef PRECISION_DOUBLE
 #include "test_d_common.h"
 #else
-
 #ifdef PRECISION_SINGLE
 #include "test_s_common.h"
 #else

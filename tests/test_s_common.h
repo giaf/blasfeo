@@ -55,6 +55,7 @@
 #include "../include/blasfeo_s_aux_test.h"
 #include "../include/s_blas.h"
 
+// Macros specific for Float type
 #define PRECISION Single
 #define GECMP_LIBSTR sgecmp_libstr
 #define GECMP_BLASAPI sgecmp_blasapi

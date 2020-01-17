@@ -1,0 +1,33 @@
+language: c
+
+sudo: required
+
+group: travis_latest
+
+jobs:
+  include:
+    - name: Linux Build
+      os: linux
+      dist: bionic
+
+    - name: MacOS Build 10.2
+      os: osx
+      osx_image: xcode10.2
+
+    - name: MacOS Build 9.4
+      os: osx
+      osx_image: xcode9.4
+
+
+python:
+  - "3.6"
+
+install:
+  - python3 -m pip install --user jinja2
+
+cache:
+  ccache: true
+
+script:
+  - cd "${TRAVIS_BUILD_DIR}"/tests
+  - python3 tester.py testset_travis.json

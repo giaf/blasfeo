@@ -43,12 +43,14 @@
 #define STR(x) #x
 #define SHOW_DEFINE(x) printf("%-16s= %s\n", #x, STR(x));
 
-#ifndef LA
-	#error LA undefined
+
+
+#ifndef BLASFEO_LA
+	#error BLASFEO_LA undefined
 #endif
 
-#ifndef TARGET
-	#error TARGET undefined
+#ifndef BLASFEO_TARGET
+	#error BLASFEO_TARGET undefined
 #endif
 
 #ifndef PRECISION
