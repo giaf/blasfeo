@@ -2,28 +2,40 @@ language: c
 
 sudo: required
 
-group: travis_latest
-
-jobs:
-  include:
-    - name: Linux Build
-      os: linux
-      dist: bionic
-
-    - name: MacOS Build 10.2
-      os: osx
-      osx_image: xcode10.2
-
-
-python:
-  - "3.6"
-
-install:
-  - pip3 install --user jinja2
-
 cache:
   ccache: true
 
-script:
-  - cd "${TRAVIS_BUILD_DIR}"/tests
-  - python3 tester.py testset_travis.json
+
+jobs:
+  include:
+    - name: "Linux Build"
+      os: linux
+      dist: bionic
+      group: travis_latest
+      python: "3.6"
+      script:
+        - cd "${TRAVIS_BUILD_DIR}"/tests
+        - python tester.py testset_travis.json
+
+    - name: "MacOS Build 10.2"
+      os: osx
+      osx_image: xcode10.2
+      language: shell
+      script:
+        - cd "${TRAVIS_BUILD_DIR}"/tests
+        - python3 -m pip install --user jinja2
+        - python3 tester.py testset_travis.json
+
+    - name: "Windows Build"
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.6
+        - python -m pip install --upgrade pip
+      env: PATH=/c/Python36:/c/Python36/Scripts:$PATH
+      script:
+        - cd "${TRAVIS_BUILD_DIR}"/tests
+        - pip install --user jinja2
+        - python tester.py testset_travis.json
+
+
