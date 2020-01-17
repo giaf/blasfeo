@@ -15,7 +15,7 @@ jobs:
       python: "3.6"
       script:
         - cd "${TRAVIS_BUILD_DIR}"/tests
-        - pip install --user jinja2
+        - pip install jinja2
         - python tester.py testset_travis.json
 
     - name: "MacOS Build 10.2"
