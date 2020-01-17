@@ -14,16 +14,12 @@ jobs:
       os: osx
       osx_image: xcode10.2
 
-    - name: MacOS Build 9.4
-      os: osx
-      osx_image: xcode9.4
-
 
 python:
   - "3.6"
 
 install:
-  - python3 -m pip install --user jinja2
+  - pip3 install --user jinja2
 
 cache:
   ccache: true
