@@ -29,6 +29,7 @@
   ],
   "TARGET": [
     "GENERIC",
+    "X64_INTEL_CORE",
     "X64_INTEL_HASWELL",
     "X64_INTEL_SANDY_BRIDGE"
   ],
