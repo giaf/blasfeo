@@ -19,6 +19,7 @@ jobs:
         - python tester.py testset_travis.json
 
     - name: "MacOS Build"
+      if: branch = mac_build
       os: osx
       osx_image: xcode10.2
       language: shell
@@ -28,6 +29,7 @@ jobs:
         - python3 tester.py testset_travis.json
 
     - name: "Windows Build"
+      if: branch = windows_build
       os: windows
       language: shell
       before_install:
