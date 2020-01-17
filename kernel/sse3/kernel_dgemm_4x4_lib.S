@@ -64,15 +64,7 @@
 	.macro INNER_EDGE_DTRSM_RLT_INV_4X4_LIB
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_edge_dtrsm_rlt_inv_4x4_lib, @function
-inner_edge_dtrsm_rlt_inv_4x4_lib:
-#elif defined(OS_MAC)
-_inner_edge_dtrsm_rlt_inv_4x4_lib:
-#elif defined(OS_WINDOWS)
-	.def inner_edge_dtrsm_rlt_inv_4x4_lib; .scl 2; .type 32; .endef
-inner_edge_dtrsm_rlt_inv_4x4_lib:
-#endif
+	FUN_START(inner_edge_dtrsm_rlt_inv_4x4_lib)
 #endif
 	
 	movddup			0(%r12), %xmm13
@@ -135,9 +127,7 @@ inner_edge_dtrsm_rlt_inv_4x4_lib:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_edge_dtrsm_rlt_inv_4x4_lib, .-inner_edge_dtrsm_rlt_inv_4x4_lib
-#endif
+	FUN_END(inner_edge_dtrsm_rlt_inv_4x4_lib)
 #endif
 
 
@@ -168,15 +158,7 @@ inner_edge_dtrsm_rlt_inv_4x4_lib:
 	.macro INNER_BLEND_SCALE_AB_4X4_LIB
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_blend_scale_ab_4x4_lib, @function
-inner_blend_scale_ab_4x4_lib:
-#elif defined(OS_MAC)
-_inner_blend_scale_ab_4x4_lib:
-#elif defined(OS_WINDOWS)
-	.def inner_blend_scale_ab_4x4_lib; .scl 2; .type 32; .endef
-inner_blend_scale_ab_4x4_lib:
-#endif
+	FUN_START(inner_blend_scale_ab_4x4_lib)
 #endif
 
 	movapd	%xmm0, %xmm8
@@ -250,9 +232,7 @@ inner_blend_scale_ab_4x4_lib:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_blend_scale_ab_4x4_lib, .-inner_blend_scale_ab_4x4_lib
-#endif
+	FUN_END(inner_blend_scale_ab_4x4_lib)
 #endif
 
 
@@ -281,15 +261,7 @@ inner_blend_scale_ab_4x4_lib:
 	.macro INNER_BLEND_SCALE_M11_4X4_LIB
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_blend_scale_m11_4x4_lib, @function
-inner_blend_scale_m11_4x4_lib:
-#elif defined(OS_MAC)
-_inner_blend_scale_m11_4x4_lib:
-#elif defined(OS_WINDOWS)
-	.def inner_blend_scale_m11_4x4_lib; .scl 2; .type 32; .endef
-inner_blend_scale_m11_4x4_lib:
-#endif
+	FUN_START(inner_blend_scale_m11_4x4_lib)
 #endif
 
 	movapd	%xmm0, %xmm8
@@ -344,9 +316,7 @@ inner_blend_scale_m11_4x4_lib:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_blend_scale_m11_4x4_lib, .-inner_blend_scale_m11_4x4_lib
-#endif
+	FUN_END(inner_blend_scale_m11_4x4_lib)
 #endif
 
 
@@ -375,15 +345,7 @@ inner_blend_scale_m11_4x4_lib:
 	.macro INNER_STORE_4X4_LIB
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_store_4x4_lib, @function
-inner_store_4x4_lib:
-#elif defined(OS_MAC)
-_inner_store_4x4_lib:
-#elif defined(OS_WINDOWS)
-	.def inner_store_4x4_lib; .scl 2; .type 32; .endef
-inner_store_4x4_lib:
-#endif
+	FUN_START(inner_store_4x4_lib)
 #endif
 
 	movupd		%xmm0, 0(%r10)
@@ -404,9 +366,7 @@ inner_store_4x4_lib:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_store_4x4_lib, .-inner_store_4x4_lib
-#endif
+	FUN_END(inner_store_4x4_lib)
 #endif
 
 
@@ -417,31 +377,13 @@ inner_store_4x4_lib:
 // void kernel_dgemm_nt_4x4_lib44cc(int k, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dgemm_nt_4x4_lib44cc
-	.type kernel_dgemm_nt_4x4_lib44cc, @function
-kernel_dgemm_nt_4x4_lib44cc:
-#elif defined(OS_MAC)
-	.globl _kernel_dgemm_nt_4x4_lib44cc
-_kernel_dgemm_nt_4x4_lib44cc:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dgemm_nt_4x4_lib44cc
-	.def kernel_dgemm_nt_4x4_lib44cc; .scl 2; .type 32; .endef
-kernel_dgemm_nt_4x4_lib44cc:
-#endif
+	GLOB_FUN_START(kernel_dgemm_nt_4x4_lib44cc)
 
 	PROLOGUE
 
 	// zero accumulation registers
 
-	xorpd	%xmm0, %xmm0
-	movapd	%xmm0, %xmm1
-	movapd	%xmm0, %xmm2
-	movapd	%xmm0, %xmm3
-	movapd	%xmm0, %xmm4
-	movapd	%xmm0, %xmm5
-	movapd	%xmm0, %xmm6
-	movapd	%xmm0, %xmm7
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nn
@@ -501,9 +443,7 @@ kernel_dgemm_nt_4x4_lib44cc:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dgemm_nt_4x4_lib44cc, .-kernel_dgemm_nt_4x4_lib44cc
-#endif
+	FUN_END(kernel_dgemm_nt_4x4_lib44cc)
 
 
 
@@ -513,32 +453,14 @@ kernel_dgemm_nt_4x4_lib44cc:
 // void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int k, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dtrsm_nt_rl_inv_4x4_lib44ccc
-	.type kernel_dtrsm_nt_rl_inv_4x4_lib44ccc, @function
-kernel_dtrsm_nt_rl_inv_4x4_lib44ccc:
-#elif defined(OS_MAC)
-	.globl _kernel_dtrsm_nt_rl_inv_4x4_lib44ccc
-_kernel_dtrsm_nt_rl_inv_4x4_lib44ccc:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dtrsm_nt_rl_inv_4x4_lib44ccc
-	.def kernel_dtrsm_nt_rl_inv_4x4_lib44ccc; .scl 2; .type 32; .endef
-kernel_dtrsm_nt_rl_inv_4x4_lib44ccc:
-#endif
+	GLOB_FUN_START(kernel_dtrsm_nt_rl_inv_4x4_lib44ccc)
 	
 	PROLOGUE
 
 	// zero accumulation registers
 
 
-	xorpd	%xmm0, %xmm0
-	movapd	%xmm0, %xmm1
-	movapd	%xmm0, %xmm2
-	movapd	%xmm0, %xmm3
-	movapd	%xmm0, %xmm4
-	movapd	%xmm0, %xmm5
-	movapd	%xmm0, %xmm6
-	movapd	%xmm0, %xmm7
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt 
@@ -614,9 +536,7 @@ kernel_dtrsm_nt_rl_inv_4x4_lib44ccc:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dtrsm_nt_rl_inv_4x4_lib44ccc, .-kernel_dtrsm_nt_rl_inv_4x4_lib44ccc
-#endif
+	FUN_END(kernel_dtrsm_nt_rl_inv_4x4_lib44ccc)
 
 
 

@@ -64,15 +64,7 @@
 	.macro INNER_BLEND_SCALE_AB_4X4_LIB
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_blend_scale_ab_4x4_lib, @function
-inner_blend_scale_ab_4x4_lib:
-#elif defined(OS_MAC)
-_inner_blend_scale_ab_4x4_lib:
-#elif defined(OS_WINDOWS)
-	.def inner_blend_scale_ab_4x4_lib; .scl 2; .type 32; .endef
-inner_blend_scale_ab_4x4_lib:
-#endif
+	FUN_START(inner_blend_scale_ab_4x4_lib)
 #endif
 
 	movaps		%xmm1, %xmm12
@@ -129,9 +121,7 @@ inner_blend_scale_ab_4x4_lib:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_blend_scale_ab_4x4_lib, .-inner_blend_scale_ab_4x4_lib
-#endif
+	FUN_END(inner_blend_scale_ab_4x4_lib)
 #endif
 
 
@@ -162,15 +152,7 @@ inner_blend_scale_ab_4x4_lib:
 	.macro INNER_STORE_4X4_LIB
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_store_4x4_lib, @function
-inner_store_4x4_lib:
-#elif defined(OS_MAC)
-_inner_store_4x4_lib:
-#elif defined(OS_WINDOWS)
-	.def inner_store_4x4_lib; .scl 2; .type 32; .endef
-inner_store_4x4_lib:
-#endif
+	FUN_START(inner_store_4x4_lib)
 #endif
 	
 	movapd		%xmm0,   0(%r10)
@@ -187,9 +169,7 @@ inner_store_4x4_lib:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_store_4x4_lib, .-inner_store_4x4_lib
-#endif
+	FUN_END(inner_store_4x4_lib)
 #endif
 
 
@@ -200,27 +180,13 @@ inner_store_4x4_lib:
 // void kernel_sgemm_nt_4x4_lib4(int k, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_sgemm_nt_4x4_lib44cc
-	.type kernel_sgemm_nt_4x4_lib44cc, @function
-kernel_sgemm_nt_4x4_lib44cc:
-#elif defined(OS_MAC)
-	.globl _kernel_sgemm_nt_4x4_lib44cc
-_kernel_sgemm_nt_4x4_lib44cc:
-#elif defined(OS_WINDOWS)
-	.globl kernel_sgemm_nt_4x4_lib44cc
-	.def kernel_sgemm_nt_4x4_lib44cc; .scl 2; .type 32; .endef
-kernel_sgemm_nt_4x4_lib44cc:
-#endif
+	GLOB_FUN_START(kernel_sgemm_nt_4x4_lib44cc)
 	
 	PROLOGUE
 
 	// zero accumulation registers
 
-	xorpd	%xmm0, %xmm0
-	movapd	%xmm0, %xmm1
-	movapd	%xmm0, %xmm2
-	movapd	%xmm0, %xmm3
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt
@@ -280,9 +246,7 @@ kernel_sgemm_nt_4x4_lib44cc:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_sgemm_nt_4x4_lib44cc, .-kernel_sgemm_nt_4x4_lib44cc
-#endif
+	FUN_END(kernel_sgemm_nt_4x4_lib44cc)
 
 
 
