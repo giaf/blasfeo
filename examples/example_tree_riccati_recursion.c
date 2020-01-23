@@ -67,7 +67,7 @@ void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *hsBAbt, 
 #endif
 		blasfeo_dtrtr_l(nx[N-nn-1], &hsL[N-nn-1], nu[N-nn-1], nu[N-nn-1], &hsLxt[N-nn-1], 0, 0);
 		}
-	
+
 	// forward substitution
 
 	// first stage
@@ -166,7 +166,7 @@ void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *hsBAbt,
 		{
 		d_back_ric_trf_step1_libstr(&nx[N-nn-1], &nu[N-nn-1], &hsBAbt[N-nn-1], &hsRSQrq[N-nn-1], &hsL[N-nn-1], &hsLxt[N-nn-1], hswork_mat);
 		}
-	
+
 	return;
 
 	}
@@ -238,8 +238,8 @@ void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *hsBAbt,
 
 
 
-/************************************************ 
-Mass-spring system: nx/2 masses connected each other with springs (in a row), and the first and the last one to walls. nu (<=nx) controls act on the first nu masses. The system is sampled with sampling time Ts. 
+/************************************************
+Mass-spring system: nx/2 masses connected each other with springs (in a row), and the first and the last one to walls. nu (<=nx) controls act on the first nu masses. The system is sampled with sampling time Ts.
 ************************************************/
 void mass_spring_system(double Ts, int nx, int nu, int N, double *A, double *B, double *b, double *x0)
 	{
@@ -249,11 +249,11 @@ void mass_spring_system(double Ts, int nx, int nu, int N, double *A, double *B, 
 	int info = 0;
 
 	int pp = nx/2; // number of masses
-	
+
 /************************************************
-* build the continuous time system 
+* build the continuous time system
 ************************************************/
-	
+
 	double *T; d_zeros(&T, pp, pp);
 	int ii;
 	for(ii=0; ii<pp; ii++) T[ii*(pp+1)] = -2;
@@ -266,27 +266,27 @@ void mass_spring_system(double Ts, int nx, int nu, int N, double *A, double *B, 
 	dmcopy(pp, pp, Z, pp, Ac, nx);
 	dmcopy(pp, pp, T, pp, Ac+pp, nx);
 	dmcopy(pp, pp, I, pp, Ac+pp*nx, nx);
-	dmcopy(pp, pp, Z, pp, Ac+pp*(nx+1), nx); 
+	dmcopy(pp, pp, Z, pp, Ac+pp*(nx+1), nx);
 	free(T);
 	free(Z);
 	free(I);
-	
+
 	d_zeros(&I, nu, nu); for(ii=0; ii<nu; ii++) I[ii*(nu+1)]=1.0; //I = eye(nu);
 	double *Bc; d_zeros(&Bc, nx, nu);
 	dmcopy(nu, nu, I, nu, Bc+pp, nx);
 	free(I);
-	
+
 /************************************************
-* compute the discrete time system 
+* compute the discrete time system
 ************************************************/
 
 	double *bb; d_zeros(&bb, nx, 1);
 	dmcopy(nx, 1, bb, nx, b, nx);
-		
+
 	dmcopy(nx, nx, Ac, nx, A, nx);
 	dscal_3l(nx2, Ts, A);
 	expm(nx, A);
-	
+
 	d_zeros(&T, nx, nx);
 	d_zeros(&I, nx, nx); for(ii=0; ii<nx; ii++) I[ii*(nx+1)]=1.0; //I = eye(nx);
 	dmcopy(nx, nx, A, nx, T, nx);
@@ -294,7 +294,7 @@ void mass_spring_system(double Ts, int nx, int nu, int N, double *A, double *B, 
 	dgemm_nn_3l(nx, nu, nx, T, nx, Bc, nx, B, nx);
 	free(T);
 	free(I);
-	
+
 	int *ipiv = (int *) malloc(nx*sizeof(int));
 	dgesv_3l(nx, nu, Ac, nx, ipiv, B, nx, &info);
 	free(ipiv);
@@ -302,12 +302,12 @@ void mass_spring_system(double Ts, int nx, int nu, int N, double *A, double *B, 
 	free(Ac);
 	free(Bc);
 	free(bb);
-	
-			
+
+
 /************************************************
-* initial state 
+* initial state
 ************************************************/
-	
+
 	if(nx==4)
 		{
 		x0[0] = 5;
@@ -346,12 +346,30 @@ int main()
 
 #endif
 
+	printf( "Testing processor\n" );
+
+	char supportString[50];
+	blasfeo_processor_library_string( supportString );
+	printf( "Library requires processor features:%s\n", supportString );
+
+	int features = 0;
+	int procCheckSucceed = blasfeo_processor_cpu_features( &features );
+	blasfeo_processor_feature_string( features, supportString );
+	printf( "Processor supports features:%s\n", supportString );
+
+	if( !procCheckSucceed )
+	{
+		printf("Current processor does not support the current compiled BLASFEO library.\n");
+		printf("Please get a BLASFEO library compatible with this processor.\n");
+		exit(3);
+	}
+
 	// loop index
 	int ii;
 
 /************************************************
 * problem size
-************************************************/	
+************************************************/
 
 	// problem size
 	int N = 4;
@@ -372,7 +390,7 @@ int main()
 
 /************************************************
 * dynamical system
-************************************************/	
+************************************************/
 
 	double *A; d_zeros(&A, nx_, nx_); // states update matrix
 
@@ -383,10 +401,10 @@ int main()
 
 	double Ts = 0.5; // sampling time
 	mass_spring_system(Ts, nx_, nu_, N, A, B, b, x0);
-	
+
 	for(ii=0; ii<nx_; ii++)
 		b[ii] = 0.1;
-	
+
 	for(ii=0; ii<nx_; ii++)
 		x0[ii] = 0;
 	x0[0] = 2.5;
@@ -399,7 +417,7 @@ int main()
 
 /************************************************
 * cost function
-************************************************/	
+************************************************/
 
 	double *R; d_zeros(&R, nu_, nu_);
 	for(ii=0; ii<nu_; ii++) R[ii*(nu_+1)] = 2.0;
@@ -423,7 +441,7 @@ int main()
 
 /************************************************
 * matrices as strmat
-************************************************/	
+************************************************/
 
 	struct blasfeo_dmat sA;
 	blasfeo_allocate_dmat(nx_, nx_, &sA);
@@ -488,8 +506,8 @@ int main()
 
 /************************************************
 * array of matrices
-************************************************/	
-	
+************************************************/
+
 	struct blasfeo_dmat hsBAbt[N];
 	struct blasfeo_dvec hsb[N];
 	struct blasfeo_dmat hsRSQrq[N+1];
@@ -537,9 +555,9 @@ int main()
 
 /************************************************
 * call Riccati solver
-************************************************/	
-	
-	// timing 
+************************************************/
+
+	// timing
 	struct timeval tv0, tv1, tv2, tv3;
 	int nrep = 1000;
 	int rep;
@@ -586,7 +604,7 @@ int main()
 
 /************************************************
 * free memory
-************************************************/	
+************************************************/
 
 	d_free(A);
 	d_free(B);
@@ -631,7 +649,7 @@ int main()
 
 /************************************************
 * return
-************************************************/	
+************************************************/
 
 	return 0;
 

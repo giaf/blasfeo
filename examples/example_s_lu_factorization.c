@@ -63,6 +63,24 @@ int main()
 
 #endif
 
+	printf( "Testing processor\n" );
+
+	char supportString[50];
+	blasfeo_processor_library_string( supportString );
+	printf( "Library requires processor features:%s\n", supportString );
+
+	int features = 0;
+	int procCheckSucceed = blasfeo_processor_cpu_features( &features );
+	blasfeo_processor_feature_string( features, supportString );
+	printf( "Processor supports features:%s\n", supportString );
+
+	if( !procCheckSucceed )
+	{
+		printf("Current processor does not support the current compiled BLASFEO library.\n");
+		printf("Please get a BLASFEO library compatible with this processor.\n");
+		exit(3);
+	}
+
 	int ii;
 
 	int n = 16;
@@ -206,6 +224,6 @@ int main()
 	v_free_align(memory_strmat);
 
 	return 0;
-	
+
 	}
 
