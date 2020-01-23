@@ -72,9 +72,10 @@ function(TestForISA)
   # Add the assembly test files and the compile definitions
   foreach(CHECK ${CMP_CHECK_${TEST_TARGET}})
       list( APPEND CMP_CHECK_SRCS ${PROJECT_SOURCE_DIR}/cmake/isa_tests/${CHECK}.S )
-      string(APPEND C_DEFS_CHK " -D${CHECK}")
+      list( APPEND C_DEFS_CHK "-D${CHECK}" )
   endforeach()
 
+  string( REPLACE ";" "" C_DEFS_CHK "${C_DEFS_CHK}" )
 
   # Populate the flags to use for the testing
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_FLAGS_TARGET_${TEST_TARGET}}")
