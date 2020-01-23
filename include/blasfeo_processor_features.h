@@ -29,22 +29,60 @@
 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS                   *
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                                    *
 *                                                                                                 *
-* Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             *
+* Author: Ian McInerney                                                                           *
 *                                                                                                 *
 **************************************************************************************************/
 
-#include "blasfeo_processor_features.h"
-#include "blasfeo_target.h"
-#include "blasfeo_block_size.h"
-#include "blasfeo_common.h"
-#include "blasfeo_d_aux.h"
-#include "blasfeo_d_aux_ext_dep.h"
-#include "blasfeo_d_kernel.h"
-#include "blasfeo_d_blas.h"
-#include "blasfeo_s_aux.h"
-#include "blasfeo_s_aux_ext_dep.h"
-#include "blasfeo_s_kernel.h"
-#include "blasfeo_s_blas.h"
-#include "blasfeo_i_aux_ext_dep.h"
-#include "blasfeo_v_aux_ext_dep.h"
-#include "blasfeo_timing.h"
+#ifndef BLASFEO_PROCESSOR_FEATURES_H_
+#define BLASFEO_PROCESSOR_FEATURES_H_
+
+/**
+ * Flags to indicate the different processor features
+ */
+enum
+{
+    // x86-64 CPU features
+    BLASFEO_PROCESSOR_FEATURE_AVX  = 0x0001,    /// AVX instruction set
+    BLASFEO_PROCESSOR_FEATURE_AVX2 = 0x0002,    /// AVX2 instruction set
+    BLASFEO_PROCESSOR_FEATURE_FMA  = 0x0004,    /// FMA instruction set
+    BLASFEO_PROCESSOR_FEATURE_SSE3 = 0x0008,    /// SSE3 instruction set
+
+    // ARM CPU features
+    BLASFEO_PROCESSOR_FEATURE_VFPv3  = 0x0100,  /// VFPv3 instruction set
+    BLASFEO_PROCESSOR_FEATURE_NEON   = 0x0100,  /// NEON instruction set
+    BLASFEO_PROCESSOR_FEATURE_VFPv4  = 0x0100,  /// VFPv4 instruction set
+    BLASFEO_PROCESSOR_FEATURE_NEONv2 = 0x0100,  /// NEONv2 instruction set
+} BLASFEO_PROCESSOR_FEATURES;
+
+/**
+ * Test the features that this processor provides against what the library was compiled with.
+ *
+ * @param features - Pointer to an integer to store the supported feature set (using the flags in the BLASFEO_PROCESSOR_FEATURES enum)
+ * @return 0 if current processor doesn't support all features required for this library, 1 otherwise
+ */
+int blasfeo_processor_cpu_features( int* features );
+
+/**
+ * Test the features that this processor provides against what the library was compiled with.
+ *
+ * @param features - Pointer to an integer to store the supported feature set (using the flags in the BLASFEO_PROCESSOR_FEATURES enum)
+ * @return 0 if current processor doesn't support all features required for this library, 1 otherwise
+ */
+void blasfeo_processor_library_features( int* features );
+
+/**
+ * Create a string listing the features the current processor supports.
+ *
+ * @param features - Flags from the BLASFEO_PROCESSOR_FEATURES enum indicating the features supported
+ * @param featureString - Character array to store the feature string in
+ */
+void blasfeo_processor_feature_string( int features, char* featureString );
+
+/**
+ * Get a string listing the processor features that this library version needs to run.
+ *
+ * @param featureString - Character array to store the feature string in
+ */
+void blasfeo_processor_library_string( char* featureString );
+
+#endif  // BLASFEO_PROCESSOR_FEATURES_H_

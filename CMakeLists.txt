@@ -306,6 +306,51 @@ else()
 endif()
 
 
+
+if(${TARGET} MATCHES X64_INTEL_HASWELL)
+  set(TARGET_NEED_FEATURE_AVX2 1)
+  set(TARGET_NEED_FEATURE_FMA  1)
+endif()
+
+if(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
+  set(TARGET_NEED_FEATURE_AVX 1)
+endif()
+
+if(${TARGET} MATCHES X64_INTEL_CORE)
+  set(TARGET_NEED_FEATURE_SSE3 1)
+endif()
+
+if(${TARGET} MATCHES X64_AMD_BULLDOZER)
+  set(TARGET_NEED_FEATURE_AVX 1)
+  set(TARGET_NEED_FEATURE_FMA 1)
+endif()
+
+if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
+  set(TARGET_NEED_FEATURE_VFPv4 1)
+  set(TARGET_NEED_FEATURE_NEONv2 1)
+endif()
+
+if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53)
+  set(TARGET_NEED_FEATURE_VFPv4 1)
+  set(TARGET_NEED_FEATURE_NEONv2 1)
+endif()
+
+if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
+  set(TARGET_NEED_FEATURE_VFPv3 1)
+  set(TARGET_NEED_FEATURE_NEON 1)
+endif()
+
+if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
+  set(TARGET_NEED_FEATURE_VFPv3 1)
+  set(TARGET_NEED_FEATURE_NEON 1)
+endif()
+
+if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9)
+  set(TARGET_NEED_FEATURE_VFPv3 1)
+  set(TARGET_NEED_FEATURE_NEON 1)
+endif()
+
+
 # Create the target.h file with the proper target definition
 configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
@@ -323,12 +368,16 @@ endif()
 
 # source files
 
+file(GLOB CMN_SRC
+	${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_processor_features.c
+	${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
+	)
+
 if(${LA} MATCHES HIGH_PERFORMANCE)
 
 	if(${TARGET} MATCHES X64_INTEL_HASWELL)
 
 		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib8.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib48.c
@@ -394,7 +443,6 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
 
 		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib8.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib48.c
@@ -459,7 +507,6 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES X64_INTEL_CORE)
 
 		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
@@ -509,7 +556,6 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES X64_AMD_BULLDOZER)
 
 		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
@@ -559,7 +605,6 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
 
 		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
@@ -617,7 +662,6 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53)
 
 		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
@@ -678,7 +722,6 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
 
 		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
@@ -731,7 +774,6 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
 
 		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
@@ -784,7 +826,6 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9)
 
 		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
@@ -836,7 +877,6 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${TARGET} MATCHES GENERIC)
 
 		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
 			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
@@ -885,7 +925,6 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 
 	file(GLOB AUX_SRC
-		${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib.c
 		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib.c
 		${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib.c
@@ -939,7 +978,7 @@ if(BLASFEO_TESTING MATCHES ON)
 	set_target_properties(blasfeo_ref PROPERTIES LINKER_LANGUAGE C)
 endif()
 
-set(BLASFEO_SRC ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
+set(BLASFEO_SRC ${CMN_SRC} ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
 
 # add library
 add_library(blasfeo ${BLASFEO_SRC})

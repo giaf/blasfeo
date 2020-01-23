@@ -37,13 +37,16 @@ include ./Makefile.rule
 
 OBJS =
 
+OBJS += \
+		auxiliary/blasfeo_processor_features.o \
+		auxiliary/blasfeo_stdlib.o \
+
 ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 
 # aux
 OBJS += \
-		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib8.o \
 		auxiliary/m_aux_lib48.o \
@@ -110,7 +113,6 @@ ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 
 # aux
 OBJS += \
-		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib8.o \
 		auxiliary/m_aux_lib48.o \
@@ -174,7 +176,6 @@ endif
 ifeq ($(TARGET), X64_INTEL_CORE)
 # aux
 OBJS += \
-		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -231,7 +232,6 @@ ifeq ($(TARGET), X64_AMD_BULLDOZER)
 
 # aux
 OBJS += \
-		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -286,7 +286,6 @@ ifeq ($(TARGET), X86_AMD_JAGUAR)
 
 # aux
 OBJS += \
-		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -344,7 +343,6 @@ ifeq ($(TARGET), X86_AMD_BARCELONA)
 
 # aux
 OBJS += \
-		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -401,7 +399,6 @@ ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
 
 # aux
 OBJS += \
-		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -464,7 +461,6 @@ ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
 
 # aux
 OBJS += \
-		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -527,7 +523,6 @@ endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
 # aux
 OBJS += \
-		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -584,7 +579,6 @@ endif
 ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
 # aux
 OBJS += \
-		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -641,7 +635,6 @@ ifeq ($(TARGET), GENERIC)
 
 # aux
 OBJS += \
-		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib4.o \
 		auxiliary/m_aux_lib44.o \
@@ -739,7 +732,6 @@ else # LA_HIGH_PERFORMANCE vs LA_REFERENCE | LA_BLAS
 
 # aux
 OBJS += \
-		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_lib.o \
 		auxiliary/s_aux_lib.o \
 		auxiliary/m_aux_lib.o \
@@ -938,93 +930,126 @@ endif
 target:
 	touch ./include/blasfeo_target.h
 ifeq ($(TARGET), X64_INTEL_HASWELL)
-	echo "#ifndef TARGET_X64_INTEL_HASWELL" > ./include/blasfeo_target.h
+	echo "#ifndef TARGET_X64_INTEL_HASWELL" >  ./include/blasfeo_target.h
 	echo "#define TARGET_X64_INTEL_HASWELL" >> ./include/blasfeo_target.h
-	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define TARGET X64_INTEL_HASWELL" >> ./include/blasfeo_target.h
+	echo "#endif"                           >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_AVX2" >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_AVX2" >> ./include/blasfeo_target.h
+	echo "#endif"                           >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_FMA"  >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_FMA"  >> ./include/blasfeo_target.h
+	echo "#endif"                           >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-	echo "#ifndef TARGET_X64_INTEL_SANDY_BRIDGE" > ./include/blasfeo_target.h
+	echo "#ifndef TARGET_X64_INTEL_SANDY_BRIDGE" >  ./include/blasfeo_target.h
 	echo "#define TARGET_X64_INTEL_SANDY_BRIDGE" >> ./include/blasfeo_target.h
-	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define TARGET X64_INTEL_SANDY_BRIDGE" >> ./include/blasfeo_target.h
+	echo "#endif"                                >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_AVX"       >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_AVX"       >> ./include/blasfeo_target.h
+	echo "#endif"                                >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), X64_INTEL_CORE)
-	echo "#ifndef TARGET_X64_INTEL_CORE" > ./include/blasfeo_target.h
-	echo "#define TARGET_X64_INTEL_CORE" >> ./include/blasfeo_target.h
-	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define TARGET X64_INTEL_CORE" >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_X64_INTEL_CORE"    >  ./include/blasfeo_target.h
+	echo "#define TARGET_X64_INTEL_CORE"    >> ./include/blasfeo_target.h
+	echo "#endif"                           >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_SSE3" >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_SSE3" >> ./include/blasfeo_target.h
+	echo "#endif"                           >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
-	echo "#ifndef TARGET_X64_AMD_BULLDOZER" > ./include/blasfeo_target.h
+	echo "#ifndef TARGET_X64_AMD_BULLDOZER" >  ./include/blasfeo_target.h
 	echo "#define TARGET_X64_AMD_BULLDOZER" >> ./include/blasfeo_target.h
-	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define TARGET X64_AMD_BULLDOZER" >> ./include/blasfeo_target.h
+	echo "#endif"                           >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_AVX"  >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_AVX"  >> ./include/blasfeo_target.h
+	echo "#endif"                           >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_FMA"  >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_FMA"  >> ./include/blasfeo_target.h
+	echo "#endif"                           >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), X86_AMD_JAGUAR)
-	echo "#ifndef TARGET_X86_AMD_JAGUAR" > ./include/blasfeo_target.h
+	echo "#ifndef TARGET_X86_AMD_JAGUAR" >  ./include/blasfeo_target.h
 	echo "#define TARGET_X86_AMD_JAGUAR" >> ./include/blasfeo_target.h
-	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define TARGET X86_AMD_JAGUAR" >> ./include/blasfeo_target.h
+	echo "#endif"                        >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), X86_AMD_BARCELONA)
-	echo "#ifndef TARGET_X86_AMD_BARCELONA" > ./include/blasfeo_target.h
+	echo "#ifndef TARGET_X86_AMD_BARCELONA" >  ./include/blasfeo_target.h
 	echo "#define TARGET_X86_AMD_BARCELONA" >> ./include/blasfeo_target.h
-	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define TARGET X86_AMD_BARCELONA" >> ./include/blasfeo_target.h
+	echo "#endif"                           >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
-	echo "#ifndef TARGET_ARMV8A_ARM_CORTEX_A57" > ./include/blasfeo_target.h
+	echo "#ifndef TARGET_ARMV8A_ARM_CORTEX_A57" >  ./include/blasfeo_target.h
 	echo "#define TARGET_ARMV8A_ARM_CORTEX_A57" >> ./include/blasfeo_target.h
-	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define TARGET ARMV8A_ARM_CORTEX_A57" >> ./include/blasfeo_target.h
+	echo "#endif"                               >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_VFPv4"    >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_VFPv4"    >> ./include/blasfeo_target.h
+	echo "#endif"                               >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_NEONv2"   >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_NEONv2"   >> ./include/blasfeo_target.h
+	echo "#endif"                               >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
-	echo "#ifndef TARGET_ARMV8A_ARM_CORTEX_A53" > ./include/blasfeo_target.h
+	echo "#ifndef TARGET_ARMV8A_ARM_CORTEX_A53" >  ./include/blasfeo_target.h
 	echo "#define TARGET_ARMV8A_ARM_CORTEX_A53" >> ./include/blasfeo_target.h
-	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define TARGET ARMV8A_ARM_CORTEX_A53" >> ./include/blasfeo_target.h
+	echo "#endif"                               >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_VFPv4"    >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_VFPv4"    >> ./include/blasfeo_target.h
+	echo "#endif"                               >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_NEONv2"   >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_NEONv2"   >> ./include/blasfeo_target.h
+	echo "#endif"                               >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-	echo "#ifndef TARGET_ARMV7A_ARM_CORTEX_A15" > ./include/blasfeo_target.h
+	echo "#ifndef TARGET_ARMV7A_ARM_CORTEX_A15" >  ./include/blasfeo_target.h
 	echo "#define TARGET_ARMV7A_ARM_CORTEX_A15" >> ./include/blasfeo_target.h
-	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define TARGET ARMV7A_ARM_CORTEX_A15" >> ./include/blasfeo_target.h
+	echo "#endif"                               >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_VFPv3"    >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_VFPv3"    >> ./include/blasfeo_target.h
+	echo "#endif"                               >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_NEON"     >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_NEON"     >> ./include/blasfeo_target.h
+	echo "#endif"                               >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
-	echo "#ifndef TARGET_ARMV7A_ARM_CORTEX_A7" > ./include/blasfeo_target.h
+	echo "#ifndef TARGET_ARMV7A_ARM_CORTEX_A7" >  ./include/blasfeo_target.h
 	echo "#define TARGET_ARMV7A_ARM_CORTEX_A7" >> ./include/blasfeo_target.h
-	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define TARGET ARMV7A_ARM_CORTEX_A7" >> ./include/blasfeo_target.h
+	echo "#endif"                              >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_VFPv3"   >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_VFPv3"   >> ./include/blasfeo_target.h
+	echo "#endif"                              >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_NEON"    >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_NEON"    >> ./include/blasfeo_target.h
+	echo "#endif"                              >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A9)
-	echo "#ifndef TARGET_ARMV7A_ARM_CORTEX_A9" > ./include/blasfeo_target.h
+	echo "#ifndef TARGET_ARMV7A_ARM_CORTEX_A9" >  ./include/blasfeo_target.h
 	echo "#define TARGET_ARMV7A_ARM_CORTEX_A9" >> ./include/blasfeo_target.h
-	echo "#endif" >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_VFPv3"   >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_VFPv3"   >> ./include/blasfeo_target.h
+	echo "#endif"                              >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_NEON"    >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_NEON"    >> ./include/blasfeo_target.h
+	echo "#endif"                              >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), GENERIC)
-	echo "#ifndef TARGET_GENERIC" > ./include/blasfeo_target.h
+	echo "#ifndef TARGET_GENERIC" >  ./include/blasfeo_target.h
 	echo "#define TARGET_GENERIC" >> ./include/blasfeo_target.h
-	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define TARGET GENERIC" >> ./include/blasfeo_target.h
+	echo "#endif"                 >> ./include/blasfeo_target.h
 endif
 ifeq ($(LA), HIGH_PERFORMANCE)
 	echo "#ifndef LA_HIGH_PERFORMANCE" >> ./include/blasfeo_target.h
 	echo "#define LA_HIGH_PERFORMANCE" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define LA HIGH_PERFORMANCE" >> ./include/blasfeo_target.h
 endif
 ifeq ($(LA), EXTERNAL_BLAS_WRAPPER)
 	echo "#ifndef LA_EXTERNAL_BLAS_WRAPPER" >> ./include/blasfeo_target.h
 	echo "#define LA_EXTERNAL_BLAS_WRAPPER" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define LA EXTERNAL_BLAS_WRAPPER" >> ./include/blasfeo_target.h
 endif
 ifeq ($(LA), REFERENCE)
 	echo "#ifndef LA_REFERENCE" >> ./include/blasfeo_target.h
 	echo "#define LA_REFERENCE" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
-#	echo "#define LA REFERENCE" >> ./include/blasfeo_target.h
 endif
 ifeq ($(EXT_DEP), 1)
 	echo "#ifndef EXT_DEP" >> ./include/blasfeo_target.h
