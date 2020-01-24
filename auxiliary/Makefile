@@ -37,7 +37,8 @@ include ../Makefile.rule
 
 OBJS =
 
-OBJS += blasfeo_stdlib.o
+OBJS += blasfeo_stdlib.o \
+        blasfeo_processor_features.o
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 

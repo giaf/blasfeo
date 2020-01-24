@@ -153,7 +153,7 @@ static void d_back_ric_trf(int N, int *nx, int *nu, double **hBAbt, double **hRS
 	int inc = 1;
 	int lda, ldb;
 	int info;
-	
+
 	int ii, nn;
 
 	// factorization
@@ -165,7 +165,7 @@ static void d_back_ric_trf(int N, int *nx, int *nu, double **hBAbt, double **hRS
 	for(ii=0; ii<nx[N]; ii++)
 		dcopy_(&m, hRSQrq[N]+ii*lda, &inc, hL[N]+ii*ldb, &inc);
 	dpotrf_(&c_l, &m, hL[N], &ldb, &info);
-	
+
 	// middle stages
 	for(nn=0; nn<N; nn++)
 		{
@@ -343,7 +343,7 @@ static void d_back_ric_trs(int N, int *nx, int *nu, double **hBAbt, double **hb,
 	dcopy_(&m, hux[nn+1]+nu[nn+1], &inc, hpi[nn], &inc);
 	m = nu[nn]+nx[nn];
 	dscal_(&m, &d_m1, hux[nn], &inc);
-	lda = nu[nn]+nx[nn]; 
+	lda = nu[nn]+nx[nn];
 	dtrsv_(&c_l, &c_t, &c_n, &m, hL[nn], &lda, hux[nn], &inc);
 	m = nu[nn]+nx[nn];
 	n = nx[nn+1];
@@ -355,7 +355,7 @@ static void d_back_ric_trs(int N, int *nx, int *nu, double **hBAbt, double **hb,
 	dtrmv_(&c_l, &c_t, &c_n, &n, hL[nn+1]+nu[nn+1]*(lda+1), &lda, hwork_vec[0], &inc);
 	dtrmv_(&c_l, &c_n, &c_n, &n, hL[nn+1]+nu[nn+1]*(lda+1), &lda, hwork_vec[0], &inc);
 	daxpy_(&n, &d_1, hwork_vec[0], &inc, hpi[nn], &inc);
-	
+
 	// middle stages
 	for(nn=1; nn<N; nn++)
 		{
@@ -363,7 +363,7 @@ static void d_back_ric_trs(int N, int *nx, int *nu, double **hBAbt, double **hb,
 		dcopy_(&m, hux[nn+1]+nu[nn+1], &inc, hpi[nn], &inc);
 		m = nu[nn];
 		dscal_(&m, &d_m1, hux[nn], &inc);
-		lda = nu[nn]+nx[nn]; 
+		lda = nu[nn]+nx[nn];
 		m = nx[nn];
 		n = nu[nn];
 		dgemv_(&c_t, &m, &n, &d_m1, hL[nn]+nu[nn], &lda, hux[nn]+nu[nn], &inc, &d_1, hux[nn], &inc);
@@ -498,6 +498,24 @@ int main()
 	exit(2);
 
 #endif
+
+	printf( "Testing processor\n" );
+
+	char supportString[50];
+	blasfeo_processor_library_string( supportString );
+	printf( "Library requires processor features:%s\n", supportString );
+
+	int features = 0;
+	int procCheckSucceed = blasfeo_processor_cpu_features( &features );
+	blasfeo_processor_feature_string( features, supportString );
+	printf( "Processor supports features:%s\n", supportString );
+
+	if( !procCheckSucceed )
+	{
+		printf("Current processor does not support the current compiled BLASFEO library.\n");
+		printf("Please get a BLASFEO library compatible with this processor.\n");
+		exit(3);
+	}
 
 	// loop index
 	int ii, jj;
@@ -721,7 +739,7 @@ int main()
 /************************************************
 * BLAS API
 ************************************************/
-	
+
 #if ( EXTERNAL_BLAS!=0 | defined(BLAS_API) )
 
 #ifdef PRINT_DATA

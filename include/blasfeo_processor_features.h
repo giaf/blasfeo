@@ -29,85 +29,60 @@
 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS                   *
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                                    *
 *                                                                                                 *
-* Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             *
+* Author: Ian McInerney                                                                           *
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
+#ifndef BLASFEO_PROCESSOR_FEATURES_H_
+#define BLASFEO_PROCESSOR_FEATURES_H_
 
-#include <blasfeo.h>
+/**
+ * Flags to indicate the different processor features
+ */
+enum
+{
+    // x86-64 CPU features
+    BLASFEO_PROCESSOR_FEATURE_AVX  = 0x0001,    /// AVX instruction set
+    BLASFEO_PROCESSOR_FEATURE_AVX2 = 0x0002,    /// AVX2 instruction set
+    BLASFEO_PROCESSOR_FEATURE_FMA  = 0x0004,    /// FMA instruction set
+    BLASFEO_PROCESSOR_FEATURE_SSE3 = 0x0008,    /// SSE3 instruction set
 
-int main()
-    {
+    // ARM CPU features
+    BLASFEO_PROCESSOR_FEATURE_VFPv3  = 0x0100,  /// VFPv3 instruction set
+    BLASFEO_PROCESSOR_FEATURE_NEON   = 0x0100,  /// NEON instruction set
+    BLASFEO_PROCESSOR_FEATURE_VFPv4  = 0x0100,  /// VFPv4 instruction set
+    BLASFEO_PROCESSOR_FEATURE_NEONv2 = 0x0100,  /// NEONv2 instruction set
+} BLASFEO_PROCESSOR_FEATURES;
 
-    printf( "Testing processor\n" );
+/**
+ * Test the features that this processor provides against what the library was compiled with.
+ *
+ * @param features - Pointer to an integer to store the supported feature set (using the flags in the BLASFEO_PROCESSOR_FEATURES enum)
+ * @return 0 if current processor doesn't support all features required for this library, 1 otherwise
+ */
+int blasfeo_processor_cpu_features( int* features );
 
-    char supportString[50];
-    blasfeo_processor_library_string( supportString );
-    printf( "Library requires processor features:%s\n", supportString );
+/**
+ * Test the features that this processor provides against what the library was compiled with.
+ *
+ * @param features - Pointer to an integer to store the supported feature set (using the flags in the BLASFEO_PROCESSOR_FEATURES enum)
+ * @return 0 if current processor doesn't support all features required for this library, 1 otherwise
+ */
+void blasfeo_processor_library_features( int* features );
 
-    int features = 0;
-    int procCheckSucceed = blasfeo_processor_cpu_features( &features );
-    blasfeo_processor_feature_string( features, supportString );
-    printf( "Processor supports features:%s\n", supportString );
+/**
+ * Create a string listing the features the current processor supports.
+ *
+ * @param features - Flags from the BLASFEO_PROCESSOR_FEATURES enum indicating the features supported
+ * @param featureString - Character array to store the feature string in
+ */
+void blasfeo_processor_feature_string( int features, char* featureString );
 
-    if( !procCheckSucceed )
-    {
-        printf("Current processor does not support the current compiled BLASFEO library.\n");
-        printf("Please get a BLASFEO library compatible with this processor.\n");
-        exit(3);
-    }
+/**
+ * Get a string listing the processor features that this library version needs to run.
+ *
+ * @param featureString - Character array to store the feature string in
+ */
+void blasfeo_processor_library_string( char* featureString );
 
-    int ii;  // loop index
-
-    int n = 12;  // matrix size
-
-    // A
-    struct blasfeo_dmat sA;            // matrix structure
-    blasfeo_allocate_dmat(n, n, &sA);  // allocate and assign memory needed by A
-
-    // B
-    struct blasfeo_dmat sB;                       // matrix structure
-    int B_size = blasfeo_memsize_dmat(n, n);      // size of memory needed by B
-    void *B_mem_align;
-    v_zeros_align(&B_mem_align, B_size);          // allocate memory needed by B
-    blasfeo_create_dmat(n, n, &sB, B_mem_align);  // assign aligned memory to struct
-
-    // C
-    struct blasfeo_dmat sC;                                                  // matrix structure
-    int C_size = blasfeo_memsize_dmat(n, n);                                 // size of memory needed by C
-    C_size += 64;                                                            // 64-bytes alignment
-    void *C_mem = malloc(C_size);
-    void *C_mem_align = (void *) ((((unsigned long long) C_mem)+63)/64*64);  // align memory pointer
-    blasfeo_create_dmat(n, n, &sC, C_mem_align);                             // assign aligned memory to struct
-
-    // A
-    double *A = malloc(n*n*sizeof(double));
-    for(ii=0; ii<n*n; ii++)
-        A[ii] = ii;
-    int lda = n;
-    blasfeo_pack_dmat(n, n, A, lda, &sA, 0, 0);  // convert from column-major to BLASFEO dmat
-    free(A);
-
-    // B
-    blasfeo_dgese(n, n, 0.0, &sB, 0, 0);    // set B to zero
-    for(ii=0; ii<n; ii++)
-        BLASFEO_DMATEL(&sB, ii, ii) = 1.0;  // set B diagonal to 1.0 accessing dmat elements
-
-    // C
-    blasfeo_dgese(n, n, -1.0, &sC, 0, 0);  // set C to -1.0
-
-    blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sC, 0, 0, &sC, 0, 0);
-
-    printf("\nC = \n");
-    blasfeo_print_dmat(n, n, &sC, 0, 0);
-
-    blasfeo_free_dmat(&sA);
-    v_free_align(B_mem_align);
-    free(C_mem);
-
-    return 0;
-
-    }
-
+#endif  // BLASFEO_PROCESSOR_FEATURES_H_
