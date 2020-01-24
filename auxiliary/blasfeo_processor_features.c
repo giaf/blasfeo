@@ -143,7 +143,16 @@ int blasfeo_processor_cpu_features( int* features )
         *features |= BLASFEO_PROCESSOR_FEATURE_SSE3;
 
     // Test for extended features next in leaf 7 (subleaf 0)
+#if __GNUC__>5
     __get_cpuid_count( 7, 0, &reg_eax, &reg_ebx, &reg_ecx, &reg_edx );
+#else
+	reg_eax = 7;
+	reg_ecx = 0;
+	asm volatile(
+		"cpuid\n"
+		: "=a" (reg_eax), "=b" (reg_ebx), "=c" (reg_ecx), "=d" (reg_edx)
+		: "a" (reg_eax), "c" (reg_ecx));
+#endif
 
     // AVX2 is in the EBX register of leaf 7
     if( reg_ebx & bit_AVX2 )
