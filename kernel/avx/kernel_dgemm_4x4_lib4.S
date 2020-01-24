@@ -11042,6 +11042,165 @@ NAME:
 
 
 
+//                             1         2           3           4
+// void kernel_dlarfb4_rt_4_lib4(int kmax, double *pV, double *pT, double *pD);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dlarfb4_rt_4_lib4)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+	movq	ARG1, %r10 // k
+	movq	ARG4, %r11 // D
+	movq	ARG2, %r12 // V
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r12
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_4x4_lib4)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_4X4_LIB4
+#else
+	CALL(inner_blend_4x4_lib4)
+#endif
+
+	movq	ARG1, %r10 // k
+	movq	ARG4, %r11 // D
+	movq	ARG2, %r12 // V
+
+	//
+	vmovapd			0(%r11), %ymm12
+	vaddpd			%ymm12, %ymm0, %ymm0
+	//
+	vmovapd			32(%r11), %ymm12
+	vaddpd			%ymm12, %ymm1, %ymm1
+	vbroadcastsd	32(%r12), %ymm13
+	vmulpd			%ymm13, %ymm12, %ymm15
+	vaddpd			%ymm15, %ymm0, %ymm0
+	//
+	vmovapd			64(%r11), %ymm12
+	vaddpd			%ymm12, %ymm2, %ymm2
+	vbroadcastsd	64(%r12), %ymm13
+	vmulpd			%ymm13, %ymm12, %ymm15
+	vaddpd			%ymm15, %ymm0, %ymm0
+	vbroadcastsd	72(%r12), %ymm13
+	vmulpd			%ymm13, %ymm12, %ymm15
+	vaddpd			%ymm15, %ymm1, %ymm1
+	//
+	vmovapd			96(%r11), %ymm12
+	vaddpd			%ymm12, %ymm3, %ymm3
+	vbroadcastsd	96(%r12), %ymm13
+	vmulpd			%ymm13, %ymm12, %ymm15
+	vaddpd			%ymm15, %ymm0, %ymm0
+	vbroadcastsd	104(%r12), %ymm13
+	vmulpd			%ymm13, %ymm12, %ymm15
+	vaddpd			%ymm15, %ymm1, %ymm1
+	vbroadcastsd	112(%r12), %ymm13
+	vmulpd			%ymm13, %ymm12, %ymm15
+	vaddpd			%ymm15, %ymm2, %ymm2
+
+	movq	ARG3, %r10 // T
+
+	//
+	vbroadcastsd	0(%r10), %ymm12
+	vmulpd			%ymm0, %ymm12, %ymm0
+	//
+	vbroadcastsd	32(%r10), %ymm12
+	vmulpd			%ymm1, %ymm12, %ymm15
+	vaddpd			%ymm5, %ymm0, %ymm0
+	vbroadcastsd	40(%r10), %ymm12
+	vmulpd			%ymm1, %ymm12, %ymm1
+	//
+	vbroadcastsd	64(%r10), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm15
+	vaddpd			%ymm5, %ymm0, %ymm0
+	vbroadcastsd	72(%r10), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm15
+	vaddpd			%ymm5, %ymm1, %ymm1
+	vbroadcastsd	80(%r10), %ymm12
+	vmulpd			%ymm2, %ymm12, %ymm2
+	//
+	vbroadcastsd	96(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm15
+	vaddpd			%ymm5, %ymm0, %ymm0
+	vbroadcastsd	104(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm15
+	vaddpd			%ymm5, %ymm1, %ymm1
+	vbroadcastsd	112(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm15
+	vaddpd			%ymm5, %ymm2, %ymm2
+	vbroadcastsd	120(%r10), %ymm12
+	vmulpd			%ymm3, %ymm12, %ymm3
+
+	movq	ARG1, %r10 // k
+	movq	ARG2, %r11 // V
+	movq	ARG4, %r12 // D
+
+	//
+	vmovapd			0(%r12), %ymm12
+	vaddpd			%ymm12, %ymm0, %ymm12
+	vmovapd			%ymm12, 0(%r12)
+	//
+	vmovapd			32(%r12), %ymm12
+	vbroadcastsd	32(%r11), %ymm13
+	vmulpd			%ymm0, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vaddpd			%ymm12, %ymm1, %ymm12
+	vmovapd			%ymm12, 32(%r12)
+	//
+	vmovapd			64(%r12), %ymm12
+	vbroadcastsd	64(%r11), %ymm13
+	vmulpd			%ymm0, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vbroadcastsd	72(%r11), %ymm13
+	vmulpd			%ymm1, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vaddpd			%ymm12, %ymm2, %ymm12
+	vmovapd			%ymm12, 64(%r12)
+	//
+	vmovapd			96(%r12), %ymm12
+	vbroadcastsd	96(%r11), %ymm13
+	vmulpd			%ymm0, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vbroadcastsd	104(%r11), %ymm13
+	vmulpd			%ymm1, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vbroadcastsd	112(%r11), %ymm13
+	vmulpd			%ymm2, %ymm13, %ymm15
+	vaddpd			%ymm15, %ymm12, %ymm12
+	vaddpd			%ymm12, %ymm3, %ymm12
+	vmovapd			%ymm12, 96(%r12)
+
+	subl	$4, %r10d
+	addq	$128, %r11
+	addq	$128, %r12
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEBP_ADD_NN_4X4_LIB4
+#else
+	CALL(inner_kernel_dgebp_add_nn_4x4_lib4)
+#endif
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dlarfb4_rt_4_lib4)
+
+
+
+
+
 #if defined(BLAS_API)
 
 #include "kernel_dgemm_4x4_lib.S"
