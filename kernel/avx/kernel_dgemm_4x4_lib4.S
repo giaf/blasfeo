@@ -11117,28 +11117,28 @@ NAME:
 	//
 	vbroadcastsd	32(%r10), %ymm12
 	vmulpd			%ymm1, %ymm12, %ymm15
-	vaddpd			%ymm5, %ymm0, %ymm0
+	vaddpd			%ymm15, %ymm0, %ymm0
 	vbroadcastsd	40(%r10), %ymm12
 	vmulpd			%ymm1, %ymm12, %ymm1
 	//
 	vbroadcastsd	64(%r10), %ymm12
 	vmulpd			%ymm2, %ymm12, %ymm15
-	vaddpd			%ymm5, %ymm0, %ymm0
+	vaddpd			%ymm15, %ymm0, %ymm0
 	vbroadcastsd	72(%r10), %ymm12
 	vmulpd			%ymm2, %ymm12, %ymm15
-	vaddpd			%ymm5, %ymm1, %ymm1
+	vaddpd			%ymm15, %ymm1, %ymm1
 	vbroadcastsd	80(%r10), %ymm12
 	vmulpd			%ymm2, %ymm12, %ymm2
 	//
 	vbroadcastsd	96(%r10), %ymm12
 	vmulpd			%ymm3, %ymm12, %ymm15
-	vaddpd			%ymm5, %ymm0, %ymm0
+	vaddpd			%ymm15, %ymm0, %ymm0
 	vbroadcastsd	104(%r10), %ymm12
 	vmulpd			%ymm3, %ymm12, %ymm15
-	vaddpd			%ymm5, %ymm1, %ymm1
+	vaddpd			%ymm15, %ymm1, %ymm1
 	vbroadcastsd	112(%r10), %ymm12
 	vmulpd			%ymm3, %ymm12, %ymm15
-	vaddpd			%ymm5, %ymm2, %ymm2
+	vaddpd			%ymm15, %ymm2, %ymm2
 	vbroadcastsd	120(%r10), %ymm12
 	vmulpd			%ymm3, %ymm12, %ymm3
 
