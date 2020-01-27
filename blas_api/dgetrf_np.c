@@ -58,7 +58,7 @@ void blas_dgetrf_np(int *pm, int *pn, double *C, int *pldc, int *info)
 	printf("\nblas_dgetrf_np %d %d %p %d %d\n", *pm, *pn, C, *pldc, *info);
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #else
 	printf("\nblas_dgetrf_np: not implemented yet\n");
 	exit(1);
