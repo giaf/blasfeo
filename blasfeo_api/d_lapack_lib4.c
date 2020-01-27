@@ -2324,7 +2324,6 @@ void blasfeo_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 		{
 		kernel_dtrsm_nn_ll_one_4x4_vs_lib4(ii, &pD[ii*sdd], &pD[jj*ps], sdd, &d1, &pC[jj*ps+ii*sdc], &pD[jj*ps+ii*sdd], &pD[ii*ps+ii*sdd], m-ii, n-jj);
 		}
-
 	return;
 
 	}

@@ -884,6 +884,10 @@ void kernel_dgemm_nt_4x4_libc4cc(int kmax, double *alpha, double *A, int lda, do
 void kernel_dgemm_nt_4x4_vs_libc4cc(int kmax, double *alpha, double *A, int lda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dgemm_tt_4x4_libc4cc(int kmax, double *alpha, double *A, int lda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_tt_4x4_vs_libc4cc(int kmax, double *alpha, double *A, int lda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+void kernel_dgetrf_nt_4x4_libc4cc(int kmax, double *A, int lda, double *B, double *C, int ldc, double *D, int ldd, double *diag);
+void kernel_dgetrf_nt_4x4_vs_libc4cc(int kmax, double *A, int lda, double *B, double *C, int ldc, double *D, int ldd, double *diag, int m1, int n1);
+void kernel_dtrsm_nt_run_inv_4x4_libc4ccc(int kmax, double *A, int lda, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE);
+void kernel_dtrsm_nt_run_inv_4x4_vs_libc4ccc(int kmax, double *A, int lda, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *dE, int m1, int n1);
 
 // A, C, D panel-major; B, E column-major
 // TODO merge with above

@@ -120,7 +120,6 @@ void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info
 	int ipiv_tmp[4] = {};
 
 
-	// TODO
 #if defined(TARGET_X64_INTEL_HASWELL)
 	if(m>300 | n>300 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)

@@ -84,6 +84,8 @@ void dgesv_(int *m, int *n, double *A, int *lda, int *ipiv, double *B, int *ldb,
 //
 void dgetrf_(int *m, int *n, double *A, int *lda, int *ipiv, int *info);
 //
+void dgetrf_np_(int *m, int *n, double *A, int *lda, int *info);
+//
 void dgetrs_(char *trans, int *m, int *n, double *A, int *lda, int *ipiv, double *B, int *ldb, int *info);
 //
 void dlaswp_(int *n, double *A, int *lda, int *k1, int *k2, int *ipiv, int *incx);
@@ -127,6 +129,8 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *m, int
 void blasfeo_dgesv(int *m, int *n, double *A, int *lda, int *ipiv, double *B, int *ldb, int *info);
 //
 void blasfeo_dgetrf(int *m, int *n, double *A, int *lda, int *ipiv, int *info);
+//
+void blas_dgetrf_np(int *m, int *n, double *A, int *lda, int *info);
 //
 void blasfeo_dgetrs(char *trans, int *m, int *n, double *A, int *lda, int *ipiv, double *B, int *ldb, int *info);
 //

@@ -51,6 +51,7 @@ OBJS += dtrsm.o
 OBJS += dlaswp.o
 OBJS += dgesv.o
 OBJS += dgetrf.o
+OBJS += dgetrf_np.o
 OBJS += dgetrs.o
 OBJS += dposv.o
 OBJS += dpotrf.o
