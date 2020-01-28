@@ -119,20 +119,23 @@ void blas_dgetrf_np(int *pm, int *pn, double *C, int *pldc, int *info)
 	int ii, jj;
 
 	// TODO
+	if(m>K_MAX_STACK)
 #if defined(TARGET_X64_INTEL_HASWELL)
-///	if(m>300 | n>300 | m>K_MAX_STACK)
+//	if(m>300 | n>300 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-///	if(m>240 | n>240 | m>K_MAX_STACK)
+//	if(m>240 | n>240 | m>K_MAX_STACK)
 #else
-///	if(m>=12 | n>=12 | m>K_MAX_STACK)
+//	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
-///		{
-///		goto alg1;
-///		}
-///	else
-///		{
+		{
+		printf("\nblas_dgetrf_np: not implemented yet for m>K_MAX_STACK\n");
+		exit(1);
+//		goto alg1;
+		}
+	else
+		{
 		goto alg0;
-///		}
+		}
 
 
 
