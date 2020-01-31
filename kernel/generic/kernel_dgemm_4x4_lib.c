@@ -22068,6 +22068,298 @@ void kernel_dtrsm_nn_ll_one_4x4_vs_lib4cccc(int kmax, double *A, double *B, int 
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dgetrf_nn_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *inv_diag_D)
+	{
+
+	const int bs = 4;
+
+	int k;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+	
+	double alpha1 = -1.0;
+	double beta1  = 1.0;
+
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, &beta1, C, ldc, CC, bs);
+
+	// factorization
+
+	// first column
+	tmp = 1.0 / CC[0+bs*0];
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+	inv_diag_D[0] = tmp;
+
+	// second column
+	CC[1+bs*1] -= CC[1+bs*0] * CC[0+bs*1];
+	CC[2+bs*1] -= CC[2+bs*0] * CC[0+bs*1];
+	CC[3+bs*1] -= CC[3+bs*0] * CC[0+bs*1];
+
+	tmp = 1.0 / CC[1+bs*1];
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+	
+	inv_diag_D[1] = tmp;
+
+	// third column
+	CC[1+bs*2] -= CC[1+bs*0] * CC[0+bs*2];
+	CC[2+bs*2] -= CC[2+bs*0] * CC[0+bs*2];
+	CC[3+bs*2] -= CC[3+bs*0] * CC[0+bs*2];
+
+	CC[2+bs*2] -= CC[2+bs*1] * CC[1+bs*2];
+	CC[3+bs*2] -= CC[3+bs*1] * CC[1+bs*2];
+
+	tmp = 1.0 / CC[2+bs*2];
+	CC[3+bs*2] *= tmp;
+
+	inv_diag_D[2] = tmp;
+
+	// fourth column
+	CC[1+bs*3] -= CC[1+bs*0] * CC[0+bs*3];
+	CC[2+bs*3] -= CC[2+bs*0] * CC[0+bs*3];
+	CC[3+bs*3] -= CC[3+bs*0] * CC[0+bs*3];
+
+	CC[2+bs*3] -= CC[2+bs*1] * CC[1+bs*3];
+	CC[3+bs*3] -= CC[3+bs*1] * CC[1+bs*3];
+
+	CC[3+bs*3] -= CC[3+bs*2] * CC[2+bs*3];
+
+	tmp = 1.0 / CC[3+bs*3];
+
+	inv_diag_D[3] = tmp;
+
+	D[0+ldd*0] = CC[0+bs*0];
+	D[1+ldd*0] = CC[1+bs*0];
+	D[2+ldd*0] = CC[2+bs*0];
+	D[3+ldd*0] = CC[3+bs*0];
+
+	D[0+ldd*1] = CC[0+bs*1];
+	D[1+ldd*1] = CC[1+bs*1];
+	D[2+ldd*1] = CC[2+bs*1];
+	D[3+ldd*1] = CC[3+bs*1];
+
+	D[0+ldd*2] = CC[0+bs*2];
+	D[1+ldd*2] = CC[1+bs*2];
+	D[2+ldd*2] = CC[2+bs*2];
+	D[3+ldd*2] = CC[3+bs*2];
+
+	D[0+ldd*3] = CC[0+bs*3];
+	D[1+ldd*3] = CC[1+bs*3];
+	D[2+ldd*3] = CC[2+bs*3];
+	D[3+ldd*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dgetrf_nn_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, double *C, int ldc, double *D, int ldd, double *inv_diag_D, int m1, int n1)
+	{
+
+	const int bs = 4;
+
+	int k;
+
+	double tmp;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	double CC[16] __declspec(align(64)) = {0};
+#else
+	double CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+	
+	double alpha1 = -1.0;
+	double beta1  = 1.0;
+
+	kernel_dgemm_nn_4x4_lib4ccc(kmax, &alpha1, A, B, ldb, &beta1, C, ldc, CC, bs);
+
+	// factorization
+
+	// first column
+	tmp = 1.0 / CC[0+bs*0];
+	CC[1+bs*0] *= tmp;
+	CC[2+bs*0] *= tmp;
+	CC[3+bs*0] *= tmp;
+
+	inv_diag_D[0] = tmp;
+
+	if(n1==1)
+		goto store;
+
+	// second column
+	CC[1+bs*1] -= CC[1+bs*0] * CC[0+bs*1];
+	CC[2+bs*1] -= CC[2+bs*0] * CC[0+bs*1];
+	CC[3+bs*1] -= CC[3+bs*0] * CC[0+bs*1];
+
+	tmp = 1.0 / CC[1+bs*1];
+	CC[2+bs*1] *= tmp;
+	CC[3+bs*1] *= tmp;
+	
+	inv_diag_D[1] = tmp;
+
+	if(n1==2)
+		goto store;
+
+	// third column
+	CC[1+bs*2] -= CC[1+bs*0] * CC[0+bs*2];
+	CC[2+bs*2] -= CC[2+bs*0] * CC[0+bs*2];
+	CC[3+bs*2] -= CC[3+bs*0] * CC[0+bs*2];
+
+	CC[2+bs*2] -= CC[2+bs*1] * CC[1+bs*2];
+	CC[3+bs*2] -= CC[3+bs*1] * CC[1+bs*2];
+
+	tmp = 1.0 / CC[2+bs*2];
+	CC[3+bs*2] *= tmp;
+
+	inv_diag_D[2] = tmp;
+
+	if(n1==3)
+		goto store;
+
+	// fourth column
+	CC[1+bs*3] -= CC[1+bs*0] * CC[0+bs*3];
+	CC[2+bs*3] -= CC[2+bs*0] * CC[0+bs*3];
+	CC[3+bs*3] -= CC[3+bs*0] * CC[0+bs*3];
+
+	CC[2+bs*3] -= CC[2+bs*1] * CC[1+bs*3];
+	CC[3+bs*3] -= CC[3+bs*1] * CC[1+bs*3];
+
+	CC[3+bs*3] -= CC[3+bs*2] * CC[2+bs*3];
+
+	tmp = 1.0 / CC[3+bs*3];
+
+	inv_diag_D[3] = tmp;
+
+	store:
+
+	if(m1>=4)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+		D[3+ldd*0] = CC[3+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+		D[3+ldd*1] = CC[3+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+		D[3+ldd*2] = CC[3+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		D[3+ldd*3] = CC[3+bs*3];
+		}
+	else if(m1>=3)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+		D[2+ldd*0] = CC[2+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+		D[2+ldd*1] = CC[2+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+		D[2+ldd*2] = CC[2+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		D[2+ldd*3] = CC[2+bs*3];
+		}
+	else if(m1>=2)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+		D[1+ldd*0] = CC[1+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+		D[1+ldd*1] = CC[1+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+		D[1+ldd*2] = CC[1+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		D[1+ldd*3] = CC[1+bs*3];
+		}
+	else //if(m1>=1)
+		{
+		D[0+ldd*0] = CC[0+bs*0];
+
+		if(n1==1)
+			return;
+
+		D[0+ldd*1] = CC[0+bs*1];
+
+		if(n1==2)
+			return;
+
+		D[0+ldd*2] = CC[0+bs*2];
+
+		if(n1==3)
+			return;
+
+		D[0+ldd*3] = CC[0+bs*3];
+		}
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 void kernel_dgetrf_nt_4x4_libc4cc(int kmax, double *A, int lda, double *B, double *C, int ldc, double *D, int ldd, double *inv_diag_D)
 	{
 
