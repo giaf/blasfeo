@@ -71,6 +71,7 @@ void blas_dgetrf_np(int *pm, int *pn, double *C, int *pldc, int *info)
 //	d_print_mat(m, n, C, ldc);
 //	printf("\nm %d n %d ldc %d\n", m, n, ldc);
 
+	// XXX nothing checked for now
 	*info = 0;
 
 	if(m<=0 | n<=0)

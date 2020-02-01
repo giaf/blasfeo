@@ -222,8 +222,6 @@ int main()
 
 		int rep_in;
 
-		int *ipiv = malloc(n*sizeof(int));
-
 #if defined(DOUBLE_PRECISION)
 		double *A; d_zeros_align(&A, n, n); // = malloc(n*n*sizeof(double));
 		double *B; d_zeros_align(&B, n, n); // = malloc(n*n*sizeof(double));
@@ -368,6 +366,7 @@ int main()
 #elif defined(GELQF)
 #elif defined(GEQRF)
 #elif defined(GETRF_NOPIVOT)
+				blas_dgetrf_np(&n, &n, B, &n, &info);
 #elif defined(GETRF_ROWPIVOT)
 				blasfeo_dgetrf(&n, &n, B, &n, ipiv, &info);
 #elif defined(POTRF_L)
@@ -389,9 +388,13 @@ int main()
 #elif defined(SINGLE_PRECISION)
 
 #if defined(GEMM_NN)
+				blasfeo_sgemm(&c_n, &c_n, &n, &n, &n, &r_1, A, &n, B, &n, &r_0, D, &n);
 #elif defined(GEMM_NT)
+				blasfeo_sgemm(&c_n, &c_t, &n, &n, &n, &r_1, A, &n, B, &n, &r_0, D, &n);
 #elif defined(GEMM_TN)
+				blasfeo_sgemm(&c_t, &c_n, &n, &n, &n, &r_1, A, &n, B, &n, &r_0, D, &n);
 #elif defined(GEMM_TT)
+				blasfeo_sgemm(&c_t, &c_t, &n, &n, &n, &r_1, A, &n, B, &n, &r_0, D, &n);
 #elif defined(SYRK_LN)
 #elif defined(SYRK_LT)
 #elif defined(SYRK_UN)
