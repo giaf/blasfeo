@@ -9500,7 +9500,7 @@
 	negq	%r13
 	leaq	0(%r10, %r13, 4), %r10
 	leaq	0(%r11, %r11, 2), %r14
-	
+
 	// solve upper 4x4 & correct lower 4x4
 
 	vxorpd			%ymm15, %ymm15, %ymm15
