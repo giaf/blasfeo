@@ -109,6 +109,8 @@ void blasfeo_print_to_file_smat(FILE *file, int m, int n, struct blasfeo_smat *s
 void blasfeo_print_to_file_exp_smat(FILE *file, int m, int n, struct blasfeo_smat *sA, int ai, int aj);
 // print to string a strmat
 void blasfeo_print_to_string_smat(char **buf_out, int m, int n, struct blasfeo_smat *sA, int ai, int aj);
+// print the transpose of a strmat
+void blasfeo_print_tran_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj);
 // print a strvec
 void blasfeo_print_svec(int m, struct blasfeo_svec *sa, int ai);
 // print in exponential notation a strvec

@@ -148,6 +148,54 @@ void PRINT_STRMAT(int m, int n, struct STRMAT *sA, int ai, int aj)
 
 
 
+// print the transposed of a matrix structure
+void PRINT_TRAN_STRMAT(int m, int n, struct STRMAT *sA, int ai, int aj)
+	{
+	const int ps = PS;
+	int sda = sA->cn;
+	REAL *pA = sA->pA + aj*ps + ai/ps*ps*sda + ai%ps;
+	int ii, i, j, tmp;
+	REAL *pA_bkp = pA;
+	int m_bkp = m;
+	ii = 0;
+	for(j=0; j<n; j++)
+		{
+		if(ai%ps>0)
+			{
+			pA = pA_bkp;
+			m = m_bkp;
+			tmp = ps-ai%ps;
+			tmp = m<tmp ? m : tmp;
+			for(i=0; i<tmp; i++)
+				{
+				printf("%9.5f ", pA[i+ps*j]);
+				}
+			pA += tmp + ps*(sda-1);
+			m -= tmp;
+			}
+		for( ; ii<m-(ps-1); ii+=ps)
+			{
+			for(i=0; i<ps; i++)
+				{
+				printf("%9.5f ", pA[i+ps*j+sda*ii]);
+				}
+			}
+		if(ii<m)
+			{
+			tmp = m-ii;
+			for(i=0; i<tmp; i++)
+				{
+				printf("%9.5f ", pA[i+ps*j+sda*ii]);
+				}
+			}
+		printf("\n");
+		}
+	printf("\n");
+	return;
+	}
+
+
+
 // print a vector structure
 void PRINT_STRVEC(int m, struct STRVEC *sa, int ai)
 	{

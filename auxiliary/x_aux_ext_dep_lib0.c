@@ -112,6 +112,17 @@ void PRINT_STRMAT(int m, int n, struct STRMAT *sA, int ai, int aj)
 
 
 
+// print the transposed of a matrix structure
+void PRINT_TRAN_STRMAT(int m, int n, struct STRMAT *sA, int ai, int aj)
+	{
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	PRINT_TRAN_MAT(m, n, pA, lda);
+	return;
+	}
+
+
+
 // print a vector structure
 void PRINT_STRVEC(int m, struct STRVEC *sa, int ai)
 	{
@@ -122,7 +133,7 @@ void PRINT_STRVEC(int m, struct STRVEC *sa, int ai)
 
 
 
-// print and transpose a vector structure
+// print the transposed of a vector structure
 void PRINT_TRAN_STRVEC(int m, struct STRVEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;

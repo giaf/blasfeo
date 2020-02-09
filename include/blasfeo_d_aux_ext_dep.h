@@ -115,6 +115,8 @@ void blasfeo_print_to_file_dmat(FILE *file, int m, int n, struct blasfeo_dmat *s
 void blasfeo_print_to_file_exp_dmat(FILE *file, int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 // print to string a strmat
 void blasfeo_print_to_string_dmat(char **buf_out, int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
+// print the transposed of a strmat
+void blasfeo_print_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj);
 // print a strvec
 void blasfeo_print_dvec(int m, struct blasfeo_dvec *sa, int ai);
 // print in exponential notation a strvec
