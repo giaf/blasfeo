@@ -611,6 +611,49 @@ void srowsw_lib(int kmax, float *pA, float *pC)
 
 
 
+// extract vector from column
+void scolex_lib(int kmax, int offset, float *pD, int sdd, float *x)
+	{
+
+	const int bs = 8;
+
+	int kna = (bs-offset%bs)%bs;
+	kna = kmax<kna ? kmax : kna;
+
+	int jj, ll;
+
+	if(kna>0)
+		{
+		for(ll=0; ll<kna; ll++)
+			{
+			x[ll] = pD[ll];
+			}
+		pD += kna + bs*(sdd-1);
+		x  += kna;
+		kmax -= kna;
+		}
+	for(jj=0; jj<kmax-7; jj+=8)
+		{
+		x[0] = pD[0];
+		x[1] = pD[1];
+		x[2] = pD[2];
+		x[3] = pD[3];
+		x[4] = pD[4];
+		x[5] = pD[5];
+		x[6] = pD[6];
+		x[7] = pD[7];
+		pD += bs*sdd;
+		x += bs;
+		}
+	for(ll=0; ll<kmax-jj; ll++)
+		{
+		x[ll] = pD[ll];
+		}
+
+	}
+
+
+
 // insert vector to column
 void scolin_lib(int kmax, float *x, int offset, float *pD, int sdd)
 	{

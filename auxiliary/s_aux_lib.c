@@ -289,6 +289,23 @@ void blasfeo_srowpei(int kmax, int *ipiv, struct blasfeo_smat *sA)
 
 
 
+// extract a vector from a column of a matrix struct
+void blasfeo_scolex(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi)
+	{
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
+	int lda = sA->m;
+	float *pA = sA->pA + ai + aj*lda;
+	float *x = sx->pa + xi;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		x[ii] = pA[ii];
+	return;
+	}
+
+
+
 // insert a vector into a column of a matrix struct
 void blasfeo_scolin(int kmax, struct blasfeo_svec *sx, int xi, struct blasfeo_smat *sA, int ai, int aj)
 	{

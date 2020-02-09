@@ -103,6 +103,7 @@ void blasfeo_srowsw(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct bl
 void blasfeo_srowpe(int kmax, int *ipiv, struct blasfeo_smat *sA);
 void blasfeo_srowpei(int kmax, int *ipiv, struct blasfeo_smat *sA);
 // col
+void blasfeo_scolex(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi);
 void blasfeo_scolin(int kmax, struct blasfeo_svec *sx, int xi, struct blasfeo_smat *sA, int ai, int aj);
 void blasfeo_scolad(int kmax, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_smat *sA, int ai, int aj);
 void blasfeo_scolsc(int kmax, float alpha, struct blasfeo_smat *sA, int ai, int aj);
