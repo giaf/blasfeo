@@ -306,6 +306,23 @@ void blasfeo_scolin(int kmax, struct blasfeo_svec *sx, int xi, struct blasfeo_sm
 
 
 
+// add a scaled vector to a column of a matrix struct
+void blasfeo_scolad(int kmax, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_smat *sA, int ai, int aj)
+	{
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
+	int lda = sA->m;
+	float *pA = sA->pA + ai + aj*lda;
+	float *x = sx->pa + xi;
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		pA[ii] += alpha*x[ii];
+	return;
+	}
+
+
+
 // scale a column
 void blasfeo_scolsc(int kmax, float alpha, struct blasfeo_smat *sA, int ai, int aj)
 	{

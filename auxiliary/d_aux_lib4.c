@@ -2866,6 +2866,23 @@ void blasfeo_dcolin(int kmax, struct blasfeo_dvec *sx, int xi, struct blasfeo_dm
 
 
 
+// add scaled vector to column
+void blasfeo_dcolad(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj)
+	{
+
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
+	const int bs = 4;
+	int sda = sA->cn;
+	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	double *x = sx->pa + xi;
+	dcolad_lib(kmax, alpha, x, ai%bs, pA, sda);
+	return;
+	}
+
+
+
 // scale a column
 void blasfeo_dcolsc(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int aj)
 	{
