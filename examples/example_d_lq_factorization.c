@@ -84,7 +84,7 @@ int main()
 
 	int ii;
 
-#if 0
+#if 1
 	int m = 13;
 	int n = 12;
 
@@ -146,14 +146,18 @@ int main()
 
 	/* LQ factorization */
 
+	struct blasfeo_dmat sA_fact;
+	void *sA_fact_mem; v_zeros_align(&sA_fact_mem, sA_size);
+	blasfeo_create_dmat(n, m, &sA_fact, sA_fact_mem);
+
 	int lq_size = blasfeo_dgelqf_worksize(n, m);
 	void *lq_work = malloc(lq_size);
 
-	blasfeo_dgelqf(n, m, &sA, 0, 0, &sA, 0, 0, lq_work);
+	blasfeo_dgelqf(n, m, &sA, 0, 0, &sA_fact, 0, 0, lq_work);
 
 	printf("\nLQ fact of sA = \n");
-	blasfeo_print_dmat(n, m, &sA, 0, 0);
-	d_print_mat(1, n, sA.dA, 1);
+	blasfeo_print_dmat(n, m, &sA_fact, 0, 0);
+	d_print_mat(1, n, sA_fact.dA, 1);
 
 	/* extract L */
 
@@ -162,7 +166,7 @@ int main()
 	void *sL_mem; v_zeros_align(&sL_mem, sL_size);
 	blasfeo_create_dmat(n, n, &sL, sL_mem);
 
-	blasfeo_dtrcp_l(n, &sA, 0, 0, &sL, 0, 0);
+	blasfeo_dtrcp_l(n, &sA_fact, 0, 0, &sL, 0, 0);
 
 	printf("\nL = \n");
 	blasfeo_print_dmat(n, n, &sL, 0, 0);
@@ -178,7 +182,7 @@ int main()
 	int orglq_size = blasfeo_dorglq_worksize(m, m, n);
 	void *orglq_work = malloc(orglq_size);
 
-	blasfeo_dorglq(m, m, n, &sA, 0, 0, &sQ, 0, 0, orglq_work);
+	blasfeo_dorglq(m, m, n, &sA_fact, 0, 0, &sQ, 0, 0, orglq_work);
 
 	free(orglq_work);
 #else
@@ -216,12 +220,25 @@ int main()
 	printf("\nQ = \n");
 	blasfeo_print_dmat(m, m, &sQ, 0, 0);
 
+	/* compute A-LQ */
+
+	struct blasfeo_dmat sE;
+	int sE_size = blasfeo_memsize_dmat(n, m);
+	void *sE_mem; v_zeros_align(&sE_mem, sE_size);
+	blasfeo_create_dmat(n, m, &sE, sE_mem);
+
+	blasfeo_dgemm_nn(n, m, n, -1.0, &sL, 0, 0, &sQ, 0, 0, 1.0, &sA, 0, 0, &sE, 0, 0);
+
+	printf("\nA - L * Q = \n");
+	blasfeo_print_dmat(n, m, &sE, 0, 0);
+
 	/* free memory */
 
 	d_free(A);
 	v_free_align(sA_mem);
 	v_free_align(sL_mem);
 	v_free_align(sQ_mem);
+	v_free_align(sE_mem);
 	free(lq_work);
 
 	return 0;
