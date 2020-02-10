@@ -36,8 +36,15 @@
 #include "../include/blasfeo_processor_features.h"
 #include "../include/blasfeo_target.h"
 
+#if defined(TARGET_X64_INTEL_HASWELL) \
+    || defined(TARGET_X64_INTEL_SANDY_BRIDGE) \
+    || defined(TARGET_X64_INTEL_CORE) \
+    || defined(TARGET_X64_AMD_BULLDOZER) \
+    || defined(TARGET_X86_AMD_JAGUAR) \
+    || defined(TARGET_X86_AMD_BARCELONA)
 #if defined(__GNUC__) || defined(__clang__)
 #include <cpuid.h>
+#endif
 #endif
 
 
