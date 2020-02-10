@@ -8,7 +8,7 @@ cache:
 jobs:
   include:
     - name: "Linux Build"
-	  arch: amd64
+      arch: amd64
       os: linux
       dist: bionic
       group: travis_latest
@@ -20,7 +20,7 @@ jobs:
         - python tester.py testset_travis.json
 
     - name: "Linux Build"
-	  arch: arm64
+      arch: arm64
       os: linux
       dist: bionic
       group: travis_latest
