@@ -7,7 +7,7 @@ cache:
 
 jobs:
   include:
-    - name: "Linux Build"
+    - name: "Linux AMD64 Build"
       arch: amd64
       os: linux
       dist: bionic
@@ -17,9 +17,9 @@ jobs:
       script:
         - cd "${TRAVIS_BUILD_DIR}"/tests
         - pip install jinja2
-        - python tester.py testset_travis.json
+        - python tester.py testset_travis_amd64.json
 
-    - name: "Linux Build"
+    - name: "Linux ARM64 Build"
       arch: arm64
       os: linux
       dist: bionic
