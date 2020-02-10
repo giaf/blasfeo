@@ -78,6 +78,7 @@
 #define FREE_STRVEC blasfeo_free_svec
 
 #define PRINT_STRMAT blasfeo_print_smat
+#define PRINT_TRAN_STRMAT blasfeo_print_tran_smat
 #define PRINT_STRVEC blasfeo_print_svec
 #define PRINT_TRAN_STRVEC blasfeo_print_tran_svec
 
