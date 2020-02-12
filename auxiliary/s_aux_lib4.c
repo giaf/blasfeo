@@ -2121,6 +2121,23 @@ void blasfeo_srowad(int kmax, float alpha, struct blasfeo_svec *sx, int xi, stru
 
 
 
+// extract vector from column
+void blasfeo_scolex(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi)
+	{
+
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
+	const int bs = 4;
+	int sda = sA->cn;
+	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	float *x = sx->pa + xi;
+	scolex_lib(kmax, ai%bs, pA, sda, x);
+	return;
+	}
+
+
+
 // insert as vector as a column
 void blasfeo_scolin(int kmax, struct blasfeo_svec *sx, int xi, struct blasfeo_smat *sA, int ai, int aj)
 	{

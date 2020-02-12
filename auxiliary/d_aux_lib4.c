@@ -2839,6 +2839,10 @@ void blasfeo_drowad(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, str
 // extract vector from column
 void blasfeo_dcolex(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi)
 	{
+
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
