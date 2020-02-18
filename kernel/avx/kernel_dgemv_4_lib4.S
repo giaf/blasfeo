@@ -2712,8 +2712,8 @@ NAME:
 
 
 
-//                            1      2              3          4        5          6             7         8
-// void kernel_dgemv_t_4_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
+//                            1      2              3          4        5          6             7         8          9
+// void kernel_dgemv_t_4_lib4(int k, double *alpha, int offa, double *A, int sda, double *x, double *beta, double *y, double *z);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_dgemv_t_4_lib4)
@@ -2731,11 +2731,18 @@ NAME:
 	// call inner dgemv kernel n
 
 	movq	ARG1, %r10 // k
-	movq	ARG3, %r11  // A
-	movq	ARG4, %r12 // sda
+	movq	ARG4, %r11  // A
+	movq	ARG5, %r12 // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
-	movq	ARG5, %r13  // x
+	movq	ARG6, %r13  // x
+	movq	ARG3, %r14 // offA
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_GEMV_ADD_T_4_LIB4
+#else
+	CALL(inner_edge_dgemv_add_t_4_lib4)
+#endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_T_4_LIB4
@@ -2747,8 +2754,8 @@ NAME:
 	// call inner blender t
 
 	movq	ARG2, %r10 // alpha
-	movq	ARG6, %r11   // beta
-	movq	ARG7, %r12 // y 
+	movq	ARG7, %r11   // beta
+	movq	ARG8, %r12 // y 
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_4_LIB4
@@ -2759,7 +2766,7 @@ NAME:
 
 	// store
 
-	movq	ARG8, %r10 // z 
+	movq	ARG9, %r10 // z 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
@@ -2778,78 +2785,11 @@ NAME:
 
 
 
-//                               1      2              3          4        5          6             7         8           9
-// void kernel_dgemv_t_4_vs_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z, int km);
+//                               1      2              3          4        5          6             7         8           9         10
+// void kernel_dgemv_t_4_vs_lib4(int k, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z, int km);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_dgemv_t_4_vs_lib4)
-	
-	PROLOGUE
-
-	// zero accumulation registers
-
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovapd	%ymm0, %ymm1
-	vmovapd	%ymm0, %ymm2
-	vmovapd	%ymm0, %ymm3
-
-
-	// call inner dgemv kernel n
-
-	movq	ARG1, %r10 // k
-	movq	ARG3, %r11  // A
-	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
-//	movslq	%r12d, %r12
-	movq	ARG5, %r13  // x
-
-#if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMV_ADD_T_4_LIB4
-#else
-	CALL(inner_kernel_gemv_add_t_4_lib4)
-#endif
-
-
-	// call inner blender t
-
-	movq	ARG2, %r10 // alpha
-	movq	ARG6, %r11   // beta
-	movq	ARG7, %r12 // y 
-
-#if MACRO_LEVEL>=1
-	INNER_BLEND_T_SCALE_AB_4_LIB4
-#else
-	CALL(inner_blend_t_scale_ab_4_lib4)
-#endif
-
-
-	// store
-
-	movq	ARG8, %r10 // z 
-	movq	ARG9, %r11 // km 
-
-#if MACRO_LEVEL>=1
-	INNER_STORE_4_VS_LIB4
-#else
-	CALL(inner_store_4_vs_lib4)
-#endif
-
-
-	EPILOGUE
-
-	ret
-
-	FUN_END(kernel_dgemv_t_4_vs_lib4)
-
-
-
-
-
-//                                1      2              3         4          5        6          7             8          9          10
-// void kernel_dgemv_t_4_gen_lib4(int k, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z, int km);
-
-	.p2align 4,,15
-	GLOB_FUN_START(kernel_dgemv_t_4_gen_lib4)
 	
 	PROLOGUE
 
@@ -2913,7 +2853,7 @@ NAME:
 
 	ret
 
-	FUN_END(kernel_dgemv_t_4_gen_lib4)
+	FUN_END(kernel_dgemv_t_4_vs_lib4)
 
 
 
