@@ -74,6 +74,55 @@
 	movq	40(%rsp), %r15; \
 	addq	$STACKSIZE, %rsp;
 
+#if defined(OS_LINUX)
+
+#define GLOB_FUN_START(NAME) \
+	.globl NAME; \
+	.type NAME, @function; \
+NAME:
+#define FUN_START(NAME) \
+	.type NAME, @function; \
+NAME:
+#define FUN_END(NAME) \
+	.size	NAME, .-NAME
+#define CALL(NAME) \
+	call NAME
+//#define ZERO_ACC \
+//	vxorpd	%ymm0, %ymm0, %ymm0; \
+//	vmovapd	%ymm0, %ymm1; \
+//	vmovapd	%ymm0, %ymm2; \
+//	vmovapd	%ymm0, %ymm3
+//#define NEG_ACC \
+//	vmovapd		.LC11(%rip), %ymm15; \
+//	vxorpd		%ymm15, %ymm0, %ymm0; \
+//	vxorpd		%ymm15, %ymm1, %ymm1; \
+//	vxorpd		%ymm15, %ymm2, %ymm2; \
+//	vxorpd		%ymm15, %ymm3, %ymm3
+
+#else // defined(OS_MAC)
+
+#define GLOB_FUN_START(NAME) \
+	.globl _ ## NAME; \
+_ ## NAME:
+#define FUN_START(NAME) \
+_ ## NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	callq _ ## NAME
+//#define ZERO_ACC \
+//	vxorpd	%ymm0, %ymm0, %ymm0; \
+//	vmovapd	%ymm0, %ymm1; \
+//	vmovapd	%ymm0, %ymm2; \
+//	vmovapd	%ymm0, %ymm3
+//#define NEG_ACC \
+//	vmovapd		LC11(%rip), %ymm15; \
+//	vxorpd		%ymm15, %ymm0, %ymm0; \
+//	vxorpd		%ymm15, %ymm1, %ymm1; \
+//	vxorpd		%ymm15, %ymm2, %ymm2; \
+//	vxorpd		%ymm15, %ymm3, %ymm3
+
+#endif
+
 #elif defined(OS_WINDOWS)
 
 #define STACKSIZE 256
@@ -137,6 +186,28 @@
 	vmovups	192(%rsp), %xmm14; \
 	vmovups	208(%rsp), %xmm15; \
 	addq	$STACKSIZE, %rsp;
+
+#define GLOB_FUN_START(NAME) \
+	.globl NAME; \
+	.def NAME; .scl 2; .type 32; .endef; \
+NAME:
+#define FUN_START(NAME) \
+	.def NAME; .scl 2; .type 32; .endef; \
+NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	call NAME
+//#define ZERO_ACC \
+//	vxorpd	%ymm0, %ymm0, %ymm0; \
+//	vmovapd	%ymm0, %ymm1; \
+//	vmovapd	%ymm0, %ymm2; \
+//	vmovapd	%ymm0, %ymm3
+//#define NEG_ACC \
+//	vmovapd		.LC11(%rip), %ymm15; \
+//	vxorpd		%ymm15, %ymm0, %ymm0; \
+//	vxorpd		%ymm15, %ymm1, %ymm1; \
+//	vxorpd		%ymm15, %ymm2, %ymm2; \
+//	vxorpd		%ymm15, %ymm3, %ymm3
 
 #else
 
@@ -205,15 +276,7 @@
 	.macro INNER_KERNEL_DGEMV_ADD_NT_6_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_dgemv_add_nt_6_lib4, @function
-inner_kernel_dgemv_add_nt_6_lib4:
-#elif defined(OS_MAC)
-_inner_kernel_dgemv_add_nt_6_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_dgemv_add_nt_6_lib4; .scl 2; .type 32; .endef
-inner_kernel_dgemv_add_nt_6_lib4:
-#endif
+	FUN_START(inner_kernel_dgemv_add_nt_6_lib4)
 #endif
 
 	cmpl	$0, %r10d
@@ -325,9 +388,7 @@ inner_kernel_dgemv_add_nt_6_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_dgemv_add_nt_6_lib4, .-inner_kernel_dgemv_add_nt_6_lib4
-#endif
+	FUN_END(inner_kernel_dgemv_add_nt_6_lib4)
 #endif
 
 
@@ -387,15 +448,7 @@ inner_kernel_dgemv_add_nt_6_lib4:
 	.macro INNER_EDGE_DSYMV_ADD_NT_4_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_edge_dsymv_add_nt_4_lib4, @function
-inner_edge_dsymv_add_nt_4_lib4:
-#elif defined(OS_MAC)
-_inner_edge_dsymv_add_nt_4_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_edge_dsymv_add_nt_4_lib4; .scl 2; .type 32; .endef
-inner_edge_dsymv_add_nt_4_lib4:
-#endif
+	FUN_START(inner_edge_dsymv_add_nt_4_lib4)
 #endif
 
 	vmovupd		0(%r13), %ymm12
@@ -452,9 +505,7 @@ inner_edge_dsymv_add_nt_4_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_edge_dsymv_add_nt_4_lib4, .-inner_edge_dsymv_add_nt_4_lib4
-#endif
+	FUN_END(inner_edge_dsymv_add_nt_4_lib4)
 #endif
 
 #endif
@@ -502,15 +553,7 @@ inner_edge_dsymv_add_nt_4_lib4:
 	.macro INNER_BLEND_T_SCALE_AB_6_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_blend_t_scale_ab_6_lib4, @function
-inner_blend_t_scale_ab_6_lib4:
-#elif defined(OS_MAC)
-_inner_blend_t_scale_ab_6_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_blend_t_scale_ab_6_lib4; .scl 2; .type 32; .endef
-inner_blend_t_scale_ab_6_lib4:
-#endif
+	FUN_START(inner_blend_t_scale_ab_6_lib4)
 #endif
 
 	// reduction
@@ -544,9 +587,7 @@ inner_blend_t_scale_ab_6_lib4:
 #else
 	ret
 	
-#if defined(OS_LINUX)
-	.size	inner_blend_t_scale_ab_6_lib4, .-inner_blend_t_scale_ab_6_lib4
-#endif
+	FUN_END(inner_blend_t_scale_ab_6_lib4)
 #endif
 
 
@@ -590,15 +631,7 @@ inner_blend_t_scale_ab_6_lib4:
 	.macro INNER_BLEND_T_SCALE_A1_4_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_blend_t_scale_a1_4_lib4, @function
-inner_blend_t_scale_a1_4_lib4:
-#elif defined(OS_MAC)
-_inner_blend_t_scale_a1_4_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_blend_t_scale_a1_4_lib4; .scl 2; .type 32; .endef
-inner_blend_t_scale_a1_4_lib4:
-#endif
+	FUN_START(inner_blend_t_scale_a1_4_lib4)
 #endif
 
 	// reduction
@@ -621,9 +654,7 @@ inner_blend_t_scale_a1_4_lib4:
 #else
 	ret
 	
-#if defined(OS_LINUX)
-	.size	inner_blend_t_scale_a1_4_lib4, .-inner_blend_t_scale_a1_4_lib4
-#endif
+	FUN_END(inner_blend_t_scale_a1_4_lib4)
 #endif
 
 #endif
@@ -647,15 +678,7 @@ inner_blend_t_scale_a1_4_lib4:
 	.macro INNER_STORE_6_LIB4
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_store_6_lib4, @function
-inner_store_6_lib4:
-#elif defined(OS_MAC)
-_inner_store_6_lib4:
-#elif defined(OS_WINDOWS)
-	.def inner_store_6_lib4; .scl 2; .type 32; .endef
-inner_store_6_lib4:
-#endif
+	FUN_START(inner_store_6_lib4)
 #endif
 	
 	vmovupd %ymm0, 0(%r10)
@@ -666,9 +689,7 @@ inner_store_6_lib4:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_store_6_lib4, .-inner_store_6_lib4
-#endif
+	FUN_END(inner_store_6_lib4)
 #endif
 
 
@@ -679,18 +700,7 @@ inner_store_6_lib4:
 // void kernel_dgemv_nt_6_lib4(int k, double *alpha_n, double *alpha_t, double *A, int sda, double *x_n, double *x_t, double *beta_t, double *y_t, double *z_n, double *z_t);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dgemv_nt_6_lib4
-	.type kernel_dgemv_nt_6_lib4, @function
-kernel_dgemv_nt_6_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dgemv_nt_6_lib4
-_kernel_dgemv_nt_6_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dgemv_nt_6_lib4
-	.def kernel_dgemv_nt_6_lib4; .scl 2; .type 32; .endef
-kernel_dgemv_nt_6_lib4:
-#endif
+	GLOB_FUN_START(kernel_dgemv_nt_6_lib4)
 	
 	PROLOGUE
 
@@ -736,11 +746,7 @@ kernel_dgemv_nt_6_lib4:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_NT_6_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_nt_6_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_nt_6_lib4
-#endif
+	CALL(inner_kernel_dgemv_add_nt_6_lib4)
 #endif
 
 
@@ -753,11 +759,7 @@ kernel_dgemv_nt_6_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_6_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_t_scale_ab_6_lib4
-#elif defined(OS_MAC)
-	callq _inner_blend_t_scale_ab_6_lib4
-#endif
+	CALL(inner_blend_t_scale_ab_6_lib4)
 #endif
 
 
@@ -768,11 +770,7 @@ kernel_dgemv_nt_6_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_6_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_6_lib4
-#elif defined(OS_MAC)
-	callq _inner_store_6_lib4
-#endif
+	CALL(inner_store_6_lib4)
 #endif
 
 
@@ -780,9 +778,7 @@ kernel_dgemv_nt_6_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dgemv_nt_6_lib4, .-kernel_dgemv_nt_6_lib4
-#endif
+	FUN_END(kernel_dgemv_nt_6_lib4)
 
 
 
@@ -794,18 +790,7 @@ kernel_dgemv_nt_6_lib4:
 // void kernel_dsymv_l_4_lib4(int k, double *alpha, double *A, int sda, double *x_n, double *x_t, double *z_n, double *z_t);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dsymv_l_4_lib4
-	.type kernel_dsymv_l_4_lib4, @function
-kernel_dsymv_l_4_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dsymv_l_4_lib4
-_kernel_dsymv_l_4_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dsymv_l_4_lib4
-	.def kernel_dsymv_l_4_lib4; .scl 2; .type 32; .endef
-kernel_dsymv_l_4_lib4:
-#endif
+	GLOB_FUN_START(kernel_dsymv_l_4_lib4)
 	
 	PROLOGUE
 
@@ -845,21 +830,13 @@ kernel_dsymv_l_4_lib4:
 #if MACRO_LEVEL>=2
 	INNER_EDGE_DSYMV_ADD_NT_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_dsymv_add_nt_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_edge_dsymv_add_nt_4_lib4
-#endif
+	CALL(inner_edge_dsymv_add_nt_4_lib4)
 #endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMV_ADD_NT_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_dgemv_add_nt_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_kernel_dgemv_add_nt_4_lib4
-#endif
+	CALL(inner_kernel_dgemv_add_nt_4_lib4)
 #endif
 
 
@@ -871,11 +848,7 @@ kernel_dsymv_l_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_A1_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_t_scale_a1_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_blend_t_scale_a1_4_lib4
-#endif
+	CALL(inner_blend_t_scale_a1_4_lib4)
 #endif
 
 
@@ -886,11 +859,7 @@ kernel_dsymv_l_4_lib4:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_4_lib4
-#elif defined(OS_MAC)
-	callq _inner_store_4_lib4
-#endif
+	CALL(inner_store_4_lib4)
 #endif
 
 
@@ -898,9 +867,7 @@ kernel_dsymv_l_4_lib4:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dsymv_l_4_lib4, .-kernel_dsymv_l_4_lib4
-#endif
+	FUN_END(kernel_dsymv_l_4_lib4)
 
 #endif
 

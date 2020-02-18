@@ -74,6 +74,55 @@
 	movq	40(%rsp), %r15; \
 	addq	$STACKSIZE, %rsp;
 
+#if defined(OS_LINUX)
+
+#define GLOB_FUN_START(NAME) \
+	.globl NAME; \
+	.type NAME, @function; \
+NAME:
+#define FUN_START(NAME) \
+	.type NAME, @function; \
+NAME:
+#define FUN_END(NAME) \
+	.size	NAME, .-NAME
+#define CALL(NAME) \
+	call NAME
+//#define ZERO_ACC \
+//	vxorpd	%ymm0, %ymm0, %ymm0; \
+//	vmovapd	%ymm0, %ymm1; \
+//	vmovapd	%ymm0, %ymm2; \
+//	vmovapd	%ymm0, %ymm3
+//#define NEG_ACC \
+//	vmovapd		.LC11(%rip), %ymm15; \
+//	vxorpd		%ymm15, %ymm0, %ymm0; \
+//	vxorpd		%ymm15, %ymm1, %ymm1; \
+//	vxorpd		%ymm15, %ymm2, %ymm2; \
+//	vxorpd		%ymm15, %ymm3, %ymm3
+
+#else // defined(OS_MAC)
+
+#define GLOB_FUN_START(NAME) \
+	.globl _ ## NAME; \
+_ ## NAME:
+#define FUN_START(NAME) \
+_ ## NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	callq _ ## NAME
+//#define ZERO_ACC \
+//	vxorpd	%ymm0, %ymm0, %ymm0; \
+//	vmovapd	%ymm0, %ymm1; \
+//	vmovapd	%ymm0, %ymm2; \
+//	vmovapd	%ymm0, %ymm3
+//#define NEG_ACC \
+//	vmovapd		LC11(%rip), %ymm15; \
+//	vxorpd		%ymm15, %ymm0, %ymm0; \
+//	vxorpd		%ymm15, %ymm1, %ymm1; \
+//	vxorpd		%ymm15, %ymm2, %ymm2; \
+//	vxorpd		%ymm15, %ymm3, %ymm3
+
+#endif
+
 #elif defined(OS_WINDOWS)
 
 #define STACKSIZE 256
@@ -138,6 +187,28 @@
 	vmovups	208(%rsp), %xmm15; \
 	addq	$STACKSIZE, %rsp;
 
+#define GLOB_FUN_START(NAME) \
+	.globl NAME; \
+	.def NAME; .scl 2; .type 32; .endef; \
+NAME:
+#define FUN_START(NAME) \
+	.def NAME; .scl 2; .type 32; .endef; \
+NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	call NAME
+//#define ZERO_ACC \
+//	vxorpd	%ymm0, %ymm0, %ymm0; \
+//	vmovapd	%ymm0, %ymm1; \
+//	vmovapd	%ymm0, %ymm2; \
+//	vmovapd	%ymm0, %ymm3
+//#define NEG_ACC \
+//	vmovapd		.LC11(%rip), %ymm15; \
+//	vxorpd		%ymm15, %ymm0, %ymm0; \
+//	vxorpd		%ymm15, %ymm1, %ymm1; \
+//	vxorpd		%ymm15, %ymm2, %ymm2; \
+//	vxorpd		%ymm15, %ymm3, %ymm3
+
 #else
 
 #error wrong OS
@@ -197,15 +268,7 @@
 	.macro INNER_KERNEL_GEMV_ADD_N_8_LIB8
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_gemv_add_n_8_lib8, @function
-inner_kernel_gemv_add_n_8_lib8:
-#elif defined(OS_MAC)
-_inner_kernel_gemv_add_n_8_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_gemv_add_n_8_lib8; .scl 2; .type 32; .endef
-inner_kernel_gemv_add_n_8_lib8:
-#endif
+	FUN_START(inner_kernel_gemv_add_n_8_lib8)
 #endif
 	
 	cmpl	$0, %r10d
@@ -274,9 +337,7 @@ inner_kernel_gemv_add_n_8_lib8:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_gemv_add_n_8_lib8, .-inner_kernel_gemv_add_n_8_lib8
-#endif
+	FUN_END(inner_kernel_gemv_add_n_8_lib8)
 #endif
 
 
@@ -326,15 +387,7 @@ inner_kernel_gemv_add_n_8_lib8:
 	.macro INNER_KERNEL_GEMV_ADD_T_8_LIB8
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_kernel_gemv_add_t_8_lib8, @function
-inner_kernel_gemv_add_t_8_lib8:
-#elif defined(OS_MAC)
-_inner_kernel_gemv_add_t_8_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_kernel_gemv_add_t_8_lib8; .scl 2; .type 32; .endef
-inner_kernel_gemv_add_t_8_lib8:
-#endif
+	FUN_START(inner_kernel_gemv_add_t_8_lib8)
 #endif
 
 	cmpl	$0, %r10d
@@ -454,9 +507,7 @@ inner_kernel_gemv_add_t_8_lib8:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_kernel_gemv_add_t_8_lib8, .-inner_kernel_gemv_add_t_8_lib8
-#endif
+	FUN_END(inner_kernel_gemv_add_t_8_lib8)
 #endif
 
 
@@ -508,15 +559,7 @@ inner_kernel_gemv_add_t_8_lib8:
 	.macro INNER_EDGE_GEMV_ADD_T_8_LIB8
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_edge_gemv_add_t_8_lib8, @function
-inner_edge_gemv_add_t_8_lib8:
-#elif defined(OS_MAC)
-_inner_edge_gemv_add_t_8_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_edge_gemv_add_t_8_lib8; .scl 2; .type 32; .endef
-inner_edge_gemv_add_t_8_lib8:
-#endif
+	FUN_START(inner_edge_gemv_add_t_8_lib8)
 #endif
 
 	cmpl	$0, %r14d
@@ -593,9 +636,7 @@ inner_edge_gemv_add_t_8_lib8:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_edge_gemv_add_t_8_lib8, .-inner_edge_gemv_add_t_8_lib8
-#endif
+	FUN_END(inner_edge_gemv_add_t_8_lib8)
 #endif
 
 
@@ -624,15 +665,7 @@ inner_edge_gemv_add_t_8_lib8:
 	.macro INNER_EDGE_TRSV_LN_INV_8_LIB8
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_edge_trsv_ln_inv_8_lib8, @function
-inner_edge_trsv_ln_inv_8_lib8:
-#elif defined(OS_MAC)
-_inner_edge_trsv_ln_inv_8_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_edge_trsv_ln_inv_8_lib8; .scl 2; .type 32; .endef
-inner_edge_trsv_ln_inv_8_lib8:
-#endif
+	FUN_START(inner_edge_trsv_ln_inv_8_lib8)
 #endif
 	
 	vxorps			%ymm14, %ymm14, %ymm14
@@ -716,9 +749,7 @@ inner_edge_trsv_ln_inv_8_lib8:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_edge_trsv_ln_inv_8_lib8, .-inner_edge_trsv_ln_inv_8_lib8
-#endif
+	FUN_END(inner_edge_trsv_ln_inv_8_lib8)
 #endif
 
 
@@ -749,15 +780,7 @@ inner_edge_trsv_ln_inv_8_lib8:
 	.macro INNER_EDGE_TRSV_LN_INV_8_VS_LIB8
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_edge_trsv_ln_inv_8_vs_lib8, @function
-inner_edge_trsv_ln_inv_8_vs_lib8:
-#elif defined(OS_MAC)
-_inner_edge_trsv_ln_inv_8_vs_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_edge_trsv_ln_inv_8_vs_lib8; .scl 2; .type 32; .endef
-inner_edge_trsv_ln_inv_8_vs_lib8:
-#endif
+	FUN_START(inner_edge_trsv_ln_inv_8_vs_lib8)
 #endif
 	
 	vxorps			%ymm14, %ymm14, %ymm14
@@ -864,9 +887,7 @@ inner_edge_trsv_ln_inv_8_vs_lib8:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_edge_trsv_ln_inv_8_vs_lib8, .-inner_edge_trsv_ln_inv_8_vs_lib8
-#endif
+	FUN_END(inner_edge_trsv_ln_inv_8_vs_lib8)
 #endif
 
 
@@ -895,15 +916,7 @@ inner_edge_trsv_ln_inv_8_vs_lib8:
 	.macro INNER_EDGE_TRSV_LT_INV_8_LIB8
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_edge_trsv_lt_inv_8_lib8, @function
-inner_edge_trsv_lt_inv_8_lib8:
-#elif defined(OS_MAC)
-_inner_edge_trsv_lt_inv_8_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_edge_trsv_lt_inv_8_lib8; .scl 2; .type 32; .endef
-inner_edge_trsv_lt_inv_8_lib8:
-#endif
+	FUN_START(inner_edge_trsv_lt_inv_8_lib8)
 #endif
 	
 	vxorps			%ymm14, %ymm14, %ymm14
@@ -1021,9 +1034,7 @@ inner_edge_trsv_lt_inv_8_lib8:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_edge_trsv_lt_inv_8_lib8, .-inner_edge_trsv_lt_inv_8_lib8
-#endif
+	FUN_END(inner_edge_trsv_lt_inv_8_lib8)
 #endif
 
 
@@ -1058,15 +1069,7 @@ inner_edge_trsv_lt_inv_8_lib8:
 	.macro INNER_EDGE_TRSV_LT_INV_8_VS_LIB8
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_edge_trsv_lt_inv_8_vs_lib8, @function
-inner_edge_trsv_lt_inv_8_vs_lib8:
-#elif defined(OS_MAC)
-_inner_edge_trsv_lt_inv_8_vs_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_edge_trsv_lt_inv_8_vs_lib8; .scl 2; .type 32; .endef
-inner_edge_trsv_lt_inv_8_vs_lib8:
-#endif
+	FUN_START(inner_edge_trsv_lt_inv_8_vs_lib8)
 #endif
 	
 	vcvtsi2ss	%r13d, %xmm14, %xmm14
@@ -1322,9 +1325,7 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_edge_trsv_lt_inv_8_vs_lib8, .-inner_edge_trsv_lt_inv_8_vs_lib8
-#endif
+	FUN_END(inner_edge_trsv_lt_inv_8_vs_lib8)
 #endif
 
 
@@ -1367,15 +1368,7 @@ inner_edge_trsv_lt_inv_8_vs_lib8:
 	.macro INNER_BLEND_N_SCALE_AB_8_LIB8
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_blend_n_scale_ab_8_lib8, @function
-inner_blend_n_scale_ab_8_lib8:
-#elif defined(OS_MAC)
-_inner_blend_n_scale_ab_8_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_blend_n_scale_ab_8_lib8; .scl 2; .type 32; .endef
-inner_blend_n_scale_ab_8_lib8:
-#endif
+	FUN_START(inner_blend_n_scale_ab_8_lib8)
 #endif
 
 	// reduction
@@ -1398,9 +1391,7 @@ inner_blend_n_scale_ab_8_lib8:
 #else
 	ret
 	
-#if defined(OS_LINUX)
-	.size	inner_blend_n_scale_ab_8_lib8, .-inner_blend_n_scale_ab_8_lib8
-#endif
+	FUN_END(inner_blend_n_scale_ab_8_lib8)
 #endif
 
 
@@ -1439,15 +1430,7 @@ inner_blend_n_scale_ab_8_lib8:
 	.macro INNER_BLEND_N_SCALE_M11_8_LIB8
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_blend_n_scale_m11_8_lib8, @function
-inner_blend_n_scale_m11_8_lib8:
-#elif defined(OS_MAC)
-_inner_blend_n_scale_m11_8_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_blend_n_scale_m11_8_lib8; .scl 2; .type 32; .endef
-inner_blend_n_scale_m11_8_lib8:
-#endif
+	FUN_START(inner_blend_n_scale_m11_8_lib8)
 #endif
 
 	// reduction
@@ -1464,9 +1447,7 @@ inner_blend_n_scale_m11_8_lib8:
 #else
 	ret
 	
-#if defined(OS_LINUX)
-	.size	inner_blend_n_scale_m11_8_lib8, .-inner_blend_n_scale_m11_8_lib8
-#endif
+	FUN_END(inner_blend_n_scale_m11_8_lib8)
 #endif
 
 
@@ -1509,15 +1490,7 @@ inner_blend_n_scale_m11_8_lib8:
 	.macro INNER_BLEND_T_SCALE_AB_8_LIB8
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_blend_t_scale_ab_8_lib8, @function
-inner_blend_t_scale_ab_8_lib8:
-#elif defined(OS_MAC)
-_inner_blend_t_scale_ab_8_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_blend_t_scale_ab_8_lib8; .scl 2; .type 32; .endef
-inner_blend_t_scale_ab_8_lib8:
-#endif
+	FUN_START(inner_blend_t_scale_ab_8_lib8)
 #endif
 
 	// reduction
@@ -1549,9 +1522,7 @@ inner_blend_t_scale_ab_8_lib8:
 #else
 	ret
 	
-#if defined(OS_LINUX)
-	.size	inner_blend_t_scale_ab_8_lib8, .-inner_blend_t_scale_ab_8_lib8
-#endif
+	FUN_END(inner_blend_t_scale_ab_8_lib8)
 #endif
 
 
@@ -1590,15 +1561,7 @@ inner_blend_t_scale_ab_8_lib8:
 	.macro INNER_BLEND_T_SCALE_M11_8_LIB8
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_blend_t_scale_m11_8_lib8, @function
-inner_blend_t_scale_m11_8_lib8:
-#elif defined(OS_MAC)
-_inner_blend_t_scale_m11_8_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_blend_t_scale_m11_8_lib8; .scl 2; .type 32; .endef
-inner_blend_t_scale_m11_8_lib8:
-#endif
+	FUN_START(inner_blend_t_scale_m11_8_lib8)
 #endif
 
 	// reduction
@@ -1624,9 +1587,7 @@ inner_blend_t_scale_m11_8_lib8:
 #else
 	ret
 	
-#if defined(OS_LINUX)
-	.size	inner_blend_t_scale_m11_8_lib8, .-inner_blend_t_scale_m11_8_lib8
-#endif
+	FUN_END(inner_blend_t_scale_m11_8_lib8)
 #endif
 
 
@@ -1649,15 +1610,7 @@ inner_blend_t_scale_m11_8_lib8:
 	.macro INNER_STORE_8_LIB8
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_store_8_lib8, @function
-inner_store_8_lib8:
-#elif defined(OS_MAC)
-_inner_store_8_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_store_8_lib8; .scl 2; .type 32; .endef
-inner_store_8_lib8:
-#endif
+	FUN_START(inner_store_8_lib8)
 #endif
 	
 	vmovups %ymm0,  0(%r10)
@@ -1667,9 +1620,7 @@ inner_store_8_lib8:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_store_8_lib8, .-inner_store_8_lib8
-#endif
+	FUN_END(inner_store_8_lib8)
 #endif
 
 
@@ -1698,15 +1649,7 @@ inner_store_8_lib8:
 	.macro INNER_STORE_8_VS_LIB8
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_store_8_vs_lib8, @function
-inner_store_8_vs_lib8:
-#elif defined(OS_MAC)
-_inner_store_8_vs_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_store_8_vs_lib8; .scl 2; .type 32; .endef
-inner_store_8_vs_lib8:
-#endif
+	FUN_START(inner_store_8_vs_lib8)
 #endif
 	
 	vcvtsi2ss	%r11d, %xmm15, %xmm15
@@ -1726,9 +1669,7 @@ inner_store_8_vs_lib8:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_store_8_vs_lib8, .-inner_store_8_vs_lib8
-#endif
+	FUN_END(inner_store_8_vs_lib8)
 #endif
 
 
@@ -1759,15 +1700,7 @@ inner_store_8_vs_lib8:
 	.macro INNER_STORE_8_GEN_LIB8
 #else
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.type inner_store_8_gen_lib8, @function
-inner_store_8_gen_lib8:
-#elif defined(OS_MAC)
-_inner_store_8_gen_lib8:
-#elif defined(OS_WINDOWS)
-	.def inner_store_8_gen_lib8; .scl 2; .type 32; .endef
-inner_store_8_gen_lib8:
-#endif
+	FUN_START(inner_store_8_gen_lib8)
 #endif
 	
 	// compute mask for rows
@@ -1793,9 +1726,7 @@ inner_store_8_gen_lib8:
 #else
 	ret
 
-#if defined(OS_LINUX)
-	.size	inner_store_8_gen_lib8, .-inner_store_8_gen_lib8
-#endif
+	FUN_END(inner_store_8_gen_lib8)
 #endif
 
 
@@ -1806,18 +1737,7 @@ inner_store_8_gen_lib8:
 // void kernel_sgemv_n_8_lib8(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_sgemv_n_8_lib8
-	.type kernel_sgemv_n_8_lib8, @function
-kernel_sgemv_n_8_lib8:
-#elif defined(OS_MAC)
-	.globl _kernel_sgemv_n_8_lib8
-_kernel_sgemv_n_8_lib8:
-#elif defined(OS_WINDOWS)
-	.globl kernel_sgemv_n_8_lib8
-	.def kernel_sgemv_n_8_lib8; .scl 2; .type 32; .endef
-kernel_sgemv_n_8_lib8:
-#endif
+	GLOB_FUN_START(kernel_sgemv_n_8_lib8)
 	
 	PROLOGUE
 
@@ -1838,11 +1758,7 @@ kernel_sgemv_n_8_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_N_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_gemv_add_n_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_kernel_gemv_add_n_8_lib8
-#endif
+	CALL(inner_kernel_gemv_add_n_8_lib8)
 #endif
 
 
@@ -1855,11 +1771,7 @@ kernel_sgemv_n_8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_SCALE_AB_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_n_scale_ab_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_blend_n_scale_ab_8_lib8
-#endif
+	CALL(inner_blend_n_scale_ab_8_lib8)
 #endif
 
 
@@ -1870,11 +1782,7 @@ kernel_sgemv_n_8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_store_8_lib8
-#endif
+	CALL(inner_store_8_lib8)
 #endif
 
 
@@ -1882,9 +1790,7 @@ kernel_sgemv_n_8_lib8:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_sgemv_n_8_lib8, .-kernel_sgemv_n_8_lib8
-#endif
+	FUN_END(kernel_sgemv_n_8_lib8)
 
 
 
@@ -1894,18 +1800,7 @@ kernel_sgemv_n_8_lib8:
 // void kernel_sgemv_n_8_vs_lib8(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int k1);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_sgemv_n_8_vs_lib8
-	.type kernel_sgemv_n_8_vs_lib8, @function
-kernel_sgemv_n_8_vs_lib8:
-#elif defined(OS_MAC)
-	.globl _kernel_sgemv_n_8_vs_lib8
-_kernel_sgemv_n_8_vs_lib8:
-#elif defined(OS_WINDOWS)
-	.globl kernel_sgemv_n_8_vs_lib8
-	.def kernel_sgemv_n_8_vs_lib8; .scl 2; .type 32; .endef
-kernel_sgemv_n_8_vs_lib8:
-#endif
+	GLOB_FUN_START(kernel_sgemv_n_8_vs_lib8)
 	
 	PROLOGUE
 
@@ -1926,11 +1821,7 @@ kernel_sgemv_n_8_vs_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_N_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_gemv_add_n_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_kernel_gemv_add_n_8_lib8
-#endif
+	CALL(inner_kernel_gemv_add_n_8_lib8)
 #endif
 
 
@@ -1943,11 +1834,7 @@ kernel_sgemv_n_8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_SCALE_AB_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_n_scale_ab_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_blend_n_scale_ab_8_lib8
-#endif
+	CALL(inner_blend_n_scale_ab_8_lib8)
 #endif
 
 
@@ -1959,11 +1846,7 @@ kernel_sgemv_n_8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_VS_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_8_vs_lib8
-#elif defined(OS_MAC)
-	callq _inner_store_8_vs_lib8
-#endif
+	CALL(inner_store_8_vs_lib8)
 #endif
 
 
@@ -1971,9 +1854,7 @@ kernel_sgemv_n_8_vs_lib8:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_sgemv_n_8_vs_lib8, .-kernel_sgemv_n_8_vs_lib8
-#endif
+	FUN_END(kernel_sgemv_n_8_vs_lib8)
 
 
 
@@ -1983,18 +1864,7 @@ kernel_sgemv_n_8_vs_lib8:
 // void kernel_sgemv_n_8_gen_lib8(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int k0, int kq);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_sgemv_n_8_gen_lib8
-	.type kernel_sgemv_n_8_gen_lib8, @function
-kernel_sgemv_n_8_gen_lib8:
-#elif defined(OS_MAC)
-	.globl _kernel_sgemv_n_8_gen_lib8
-_kernel_sgemv_n_8_gen_lib8:
-#elif defined(OS_WINDOWS)
-	.globl kernel_sgemv_n_8_gen_lib8
-	.def kernel_sgemv_n_8_gen_lib8; .scl 2; .type 32; .endef
-kernel_sgemv_n_8_gen_lib8:
-#endif
+	GLOB_FUN_START(kernel_sgemv_n_8_gen_lib8)
 	
 	PROLOGUE
 
@@ -2015,11 +1885,7 @@ kernel_sgemv_n_8_gen_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_N_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_gemv_add_n_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_kernel_gemv_add_n_8_lib8
-#endif
+	CALL(inner_kernel_gemv_add_n_8_lib8)
 #endif
 
 
@@ -2032,11 +1898,7 @@ kernel_sgemv_n_8_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_SCALE_AB_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_n_scale_ab_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_blend_n_scale_ab_8_lib8
-#endif
+	CALL(inner_blend_n_scale_ab_8_lib8)
 #endif
 
 
@@ -2049,11 +1911,7 @@ kernel_sgemv_n_8_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_GEN_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_8_gen_lib8
-#elif defined(OS_MAC)
-	callq _inner_store_8_gen_lib8
-#endif
+	CALL(inner_store_8_gen_lib8)
 #endif
 
 
@@ -2061,9 +1919,7 @@ kernel_sgemv_n_8_gen_lib8:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_sgemv_n_8_gen_lib8, .-kernel_sgemv_n_8_gen_lib8
-#endif
+	FUN_END(kernel_sgemv_n_8_gen_lib8)
 
 
 
@@ -2073,18 +1929,7 @@ kernel_sgemv_n_8_gen_lib8:
 // void kernel_sgemv_t_8_lib8(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_sgemv_t_8_lib8
-	.type kernel_sgemv_t_8_lib8, @function
-kernel_sgemv_t_8_lib8:
-#elif defined(OS_MAC)
-	.globl _kernel_sgemv_t_8_lib8
-_kernel_sgemv_t_8_lib8:
-#elif defined(OS_WINDOWS)
-	.globl kernel_sgemv_t_8_lib8
-	.def kernel_sgemv_t_8_lib8; .scl 2; .type 32; .endef
-kernel_sgemv_t_8_lib8:
-#endif
+	GLOB_FUN_START(kernel_sgemv_t_8_lib8)
 	
 	PROLOGUE
 
@@ -2111,11 +1956,7 @@ kernel_sgemv_t_8_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_T_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_gemv_add_t_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_kernel_gemv_add_t_8_lib8
-#endif
+	CALL(inner_kernel_gemv_add_t_8_lib8)
 #endif
 
 
@@ -2128,11 +1969,7 @@ kernel_sgemv_t_8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_t_scale_ab_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_blend_t_scale_ab_8_lib8
-#endif
+	CALL(inner_blend_t_scale_ab_8_lib8)
 #endif
 
 
@@ -2143,11 +1980,7 @@ kernel_sgemv_t_8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_store_8_lib8
-#endif
+	CALL(inner_store_8_lib8)
 #endif
 
 
@@ -2155,9 +1988,7 @@ kernel_sgemv_t_8_lib8:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_sgemv_t_8_lib8, .-kernel_sgemv_t_8_lib8
-#endif
+	FUN_END(kernel_sgemv_t_8_lib8)
 
 
 
@@ -2167,18 +1998,7 @@ kernel_sgemv_t_8_lib8:
 // void kernel_sgemv_t_8_vs_lib8(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z, int k1);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_sgemv_t_8_vs_lib8
-	.type kernel_sgemv_t_8_vs_lib8, @function
-kernel_sgemv_t_8_vs_lib8:
-#elif defined(OS_MAC)
-	.globl _kernel_sgemv_t_8_vs_lib8
-_kernel_sgemv_t_8_vs_lib8:
-#elif defined(OS_WINDOWS)
-	.globl kernel_sgemv_t_8_vs_lib8
-	.def kernel_sgemv_t_8_vs_lib8; .scl 2; .type 32; .endef
-kernel_sgemv_t_8_vs_lib8:
-#endif
+	GLOB_FUN_START(kernel_sgemv_t_8_vs_lib8)
 	
 	PROLOGUE
 
@@ -2205,11 +2025,7 @@ kernel_sgemv_t_8_vs_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_T_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_gemv_add_t_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_kernel_gemv_add_t_8_lib8
-#endif
+	CALL(inner_kernel_gemv_add_t_8_lib8)
 #endif
 
 
@@ -2222,11 +2038,7 @@ kernel_sgemv_t_8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_t_scale_ab_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_blend_t_scale_ab_8_lib8
-#endif
+	CALL(inner_blend_t_scale_ab_8_lib8)
 #endif
 
 
@@ -2238,11 +2050,7 @@ kernel_sgemv_t_8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_VS_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_8_vs_lib8
-#elif defined(OS_MAC)
-	callq _inner_store_8_vs_lib8
-#endif
+	CALL(inner_store_8_vs_lib8)
 #endif
 
 
@@ -2250,9 +2058,7 @@ kernel_sgemv_t_8_vs_lib8:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_sgemv_t_8_vs_lib8, .-kernel_sgemv_t_8_vs_lib8
-#endif
+	FUN_END(kernel_sgemv_t_8_vs_lib8)
 
 
 
@@ -2262,18 +2068,7 @@ kernel_sgemv_t_8_vs_lib8:
 // void kernel_sgemv_t_8_gen_lib8(int k, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z, int km);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_sgemv_t_8_gen_lib8
-	.type kernel_sgemv_t_8_gen_lib8, @function
-kernel_sgemv_t_8_gen_lib8:
-#elif defined(OS_MAC)
-	.globl _kernel_sgemv_t_8_gen_lib8
-_kernel_sgemv_t_8_gen_lib8:
-#elif defined(OS_WINDOWS)
-	.globl kernel_sgemv_t_8_gen_lib8
-	.def kernel_sgemv_t_8_gen_lib8; .scl 2; .type 32; .endef
-kernel_sgemv_t_8_gen_lib8:
-#endif
+	GLOB_FUN_START(kernel_sgemv_t_8_gen_lib8)
 	
 	PROLOGUE
 
@@ -2301,21 +2096,13 @@ kernel_sgemv_t_8_gen_lib8:
 #if MACRO_LEVEL>=2
 	INNER_EDGE_GEMV_ADD_T_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_gemv_add_t_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_edge_gemv_add_t_8_lib8
-#endif
+	CALL(inner_edge_gemv_add_t_8_lib8)
 #endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_T_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_gemv_add_t_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_kernel_gemv_add_t_8_lib8
-#endif
+	CALL(inner_kernel_gemv_add_t_8_lib8)
 #endif
 
 
@@ -2328,11 +2115,7 @@ kernel_sgemv_t_8_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_t_scale_ab_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_blend_t_scale_ab_8_lib8
-#endif
+	CALL(inner_blend_t_scale_ab_8_lib8)
 #endif
 
 
@@ -2344,11 +2127,7 @@ kernel_sgemv_t_8_gen_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_VS_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_8_vs_lib8
-#elif defined(OS_MAC)
-	callq _inner_store_8_vs_lib8
-#endif
+	CALL(inner_store_8_vs_lib8)
 #endif
 
 
@@ -2356,9 +2135,7 @@ kernel_sgemv_t_8_gen_lib8:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_sgemv_t_8_gen_lib8, .-kernel_sgemv_t_8_gen_lib8
-#endif
+	FUN_END(kernel_sgemv_t_8_gen_lib8)
 
 
 
@@ -2368,18 +2145,7 @@ kernel_sgemv_t_8_gen_lib8:
 // void kernel_strsv_ln_inv_8_lib8(int k, double *A, double *inv_diag_A, double *x, double *y, double *z);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_strsv_ln_inv_8_lib8
-	.type kernel_strsv_ln_inv_8_lib8, @function
-kernel_strsv_ln_inv_8_lib8:
-#elif defined(OS_MAC)
-	.globl _kernel_strsv_ln_inv_8_lib8
-_kernel_strsv_ln_inv_8_lib8:
-#elif defined(OS_WINDOWS)
-	.globl kernel_strsv_ln_inv_8_lib8
-	.def kernel_strsv_ln_inv_8_lib8; .scl 2; .type 32; .endef
-kernel_strsv_ln_inv_8_lib8:
-#endif
+	GLOB_FUN_START(kernel_strsv_ln_inv_8_lib8)
 	
 	PROLOGUE
 
@@ -2404,11 +2170,7 @@ kernel_strsv_ln_inv_8_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_N_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_gemv_add_n_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_kernel_gemv_add_n_8_lib8
-#endif
+	CALL(inner_kernel_gemv_add_n_8_lib8)
 #endif
 
 	movq	%r11, %r13 // A+k*sizeof(double)
@@ -2421,11 +2183,7 @@ kernel_strsv_ln_inv_8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_SCALE_M11_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_n_scale_m11_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_blend_n_scale_m11_8_lib8
-#endif
+	CALL(inner_blend_n_scale_m11_8_lib8)
 #endif
 
 
@@ -2437,11 +2195,7 @@ kernel_strsv_ln_inv_8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSV_LN_INV_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_trsv_ln_inv_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_edge_trsv_ln_inv_8_lib8
-#endif
+	CALL(inner_edge_trsv_ln_inv_8_lib8)
 #endif
 
 
@@ -2452,11 +2206,7 @@ kernel_strsv_ln_inv_8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_store_8_lib8
-#endif
+	CALL(inner_store_8_lib8)
 #endif
 
 
@@ -2464,9 +2214,7 @@ kernel_strsv_ln_inv_8_lib8:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_strsv_ln_inv_8_lib8, .-kernel_strsv_ln_inv_8_lib8
-#endif
+	FUN_END(kernel_strsv_ln_inv_8_lib8)
 
 
 
@@ -2476,18 +2224,7 @@ kernel_strsv_ln_inv_8_lib8:
 // void kernel_strsv_ln_inv_8_vs_lib8(int k, double *A, double *inv_diag_A, double *x, double *y, double *z, int km, int kn);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_strsv_ln_inv_8_vs_lib8
-	.type kernel_strsv_ln_inv_8_vs_lib8, @function
-kernel_strsv_ln_inv_8_vs_lib8:
-#elif defined(OS_MAC)
-	.globl _kernel_strsv_ln_inv_8_vs_lib8
-_kernel_strsv_ln_inv_8_vs_lib8:
-#elif defined(OS_WINDOWS)
-	.globl kernel_strsv_ln_inv_8_vs_lib8
-	.def kernel_strsv_ln_inv_8_vs_lib8; .scl 2; .type 32; .endef
-kernel_strsv_ln_inv_8_vs_lib8:
-#endif
+	GLOB_FUN_START(kernel_strsv_ln_inv_8_vs_lib8)
 	
 	PROLOGUE
 
@@ -2512,11 +2249,7 @@ kernel_strsv_ln_inv_8_vs_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_N_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_gemv_add_n_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_kernel_gemv_add_n_8_lib8
-#endif
+	CALL(inner_kernel_gemv_add_n_8_lib8)
 #endif
 
 	movq	%r11, %r13 // A+k*sizeof(double)
@@ -2529,11 +2262,7 @@ kernel_strsv_ln_inv_8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_SCALE_M11_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_n_scale_m11_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_blend_n_scale_m11_8_lib8
-#endif
+	CALL(inner_blend_n_scale_m11_8_lib8)
 #endif
 
 
@@ -2546,11 +2275,7 @@ kernel_strsv_ln_inv_8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSV_LN_INV_8_VS_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_trsv_ln_inv_8_vs_lib8
-#elif defined(OS_MAC)
-	callq _inner_edge_trsv_ln_inv_8_vs_lib8
-#endif
+	CALL(inner_edge_trsv_ln_inv_8_vs_lib8)
 #endif
 
 
@@ -2562,11 +2287,7 @@ kernel_strsv_ln_inv_8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_VS_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_8_vs_lib8
-#elif defined(OS_MAC)
-	callq _inner_store_8_vs_lib8
-#endif
+	CALL(inner_store_8_vs_lib8)
 #endif
 
 
@@ -2574,9 +2295,7 @@ kernel_strsv_ln_inv_8_vs_lib8:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_strsv_ln_inv_8_vs_lib8, .-kernel_strsv_ln_inv_8_vs_lib8
-#endif
+	FUN_END(kernel_strsv_ln_inv_8_vs_lib8)
 
 
 
@@ -2586,18 +2305,7 @@ kernel_strsv_ln_inv_8_vs_lib8:
 // void kernel_strsv_lt_inv_8_lib8(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_strsv_lt_inv_8_lib8
-	.type kernel_strsv_lt_inv_8_lib8, @function
-kernel_strsv_lt_inv_8_lib8:
-#elif defined(OS_MAC)
-	.globl _kernel_strsv_lt_inv_8_lib8
-_kernel_strsv_lt_inv_8_lib8:
-#elif defined(OS_WINDOWS)
-	.globl kernel_strsv_lt_inv_8_lib8
-	.def kernel_strsv_lt_inv_8_lib8; .scl 2; .type 32; .endef
-kernel_strsv_lt_inv_8_lib8:
-#endif
+	GLOB_FUN_START(kernel_strsv_lt_inv_8_lib8)
 	
 	PROLOGUE
 
@@ -2627,11 +2335,7 @@ kernel_strsv_lt_inv_8_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_T_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_gemv_add_t_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_kernel_gemv_add_t_8_lib8
-#endif
+	CALL(inner_kernel_gemv_add_t_8_lib8)
 #endif
 
 
@@ -2642,11 +2346,7 @@ kernel_strsv_lt_inv_8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_M11_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_t_scale_m11_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_blend_t_scale_m11_8_lib8
-#endif
+	CALL(inner_blend_t_scale_m11_8_lib8)
 #endif
 
 
@@ -2658,11 +2358,7 @@ kernel_strsv_lt_inv_8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSV_LT_INV_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_trsv_lt_inv_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_edge_trsv_lt_inv_8_lib8
-#endif
+	CALL(inner_edge_trsv_lt_inv_8_lib8)
 #endif
 
 
@@ -2673,11 +2369,7 @@ kernel_strsv_lt_inv_8_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_store_8_lib8
-#endif
+	CALL(inner_store_8_lib8)
 #endif
 
 
@@ -2685,9 +2377,7 @@ kernel_strsv_lt_inv_8_lib8:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_strsv_lt_inv_8_lib8, .-kernel_strsv_lt_inv_8_lib8
-#endif
+	FUN_END(kernel_strsv_lt_inv_8_lib8)
 
 
 
@@ -2697,18 +2387,7 @@ kernel_strsv_lt_inv_8_lib8:
 // void kernel_strsv_lt_inv_8_vs_lib8(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z, int km, int kn);
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_strsv_lt_inv_8_vs_lib8
-	.type kernel_strsv_lt_inv_8_vs_lib8, @function
-kernel_strsv_lt_inv_8_vs_lib8:
-#elif defined(OS_MAC)
-	.globl _kernel_strsv_lt_inv_8_vs_lib8
-_kernel_strsv_lt_inv_8_vs_lib8:
-#elif defined(OS_WINDOWS)
-	.globl kernel_strsv_lt_inv_8_vs_lib8
-	.def kernel_strsv_lt_inv_8_vs_lib8; .scl 2; .type 32; .endef
-kernel_strsv_lt_inv_8_vs_lib8:
-#endif
+	GLOB_FUN_START(kernel_strsv_lt_inv_8_vs_lib8)
 	
 	PROLOGUE
 
@@ -2738,11 +2417,7 @@ kernel_strsv_lt_inv_8_vs_lib8:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_T_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_kernel_gemv_add_t_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_kernel_gemv_add_t_8_lib8
-#endif
+	CALL(inner_kernel_gemv_add_t_8_lib8)
 #endif
 
 
@@ -2753,11 +2428,7 @@ kernel_strsv_lt_inv_8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_M11_8_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_blend_t_scale_m11_8_lib8
-#elif defined(OS_MAC)
-	callq _inner_blend_t_scale_m11_8_lib8
-#endif
+	CALL(inner_blend_t_scale_m11_8_lib8)
 #endif
 
 
@@ -2772,11 +2443,7 @@ kernel_strsv_lt_inv_8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSV_LT_INV_8_VS_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_edge_trsv_lt_inv_8_vs_lib8
-#elif defined(OS_MAC)
-	callq _inner_edge_trsv_lt_inv_8_vs_lib8
-#endif
+	CALL(inner_edge_trsv_lt_inv_8_vs_lib8)
 #endif
 
 
@@ -2788,11 +2455,7 @@ kernel_strsv_lt_inv_8_vs_lib8:
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_VS_LIB8
 #else
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	call inner_store_8_vs_lib8
-#elif defined(OS_MAC)
-	callq _inner_store_8_vs_lib8
-#endif
+	CALL(inner_store_8_vs_lib8)
 #endif
 
 
@@ -2800,9 +2463,7 @@ kernel_strsv_lt_inv_8_vs_lib8:
 
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_strsv_lt_inv_8_vs_lib8, .-kernel_strsv_lt_inv_8_vs_lib8
-#endif
+	FUN_END(kernel_strsv_lt_inv_8_vs_lib8)
 
 
 
