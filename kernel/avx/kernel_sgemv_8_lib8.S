@@ -1925,8 +1925,8 @@ NAME:
 
 
 
-//                            1      2              3          4        5          6             7         8
-// void kernel_sgemv_t_8_lib8(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
+//                            1      2              3          4        5          6             7         8      9
+// void kernel_sgemv_t_8_lib8(int k, double *alpha, offA, double *A, int sda, double *x, double *beta, double *y, double *z);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_sgemv_t_8_lib8)
@@ -1948,10 +1948,17 @@ NAME:
 	// call inner sgemv kernel n
 
 	movq	ARG1, %r10 // k
-	movq	ARG3, %r11  // A
-	movq	ARG4, %r12 // sda
+	movq	ARG4, %r11  // A
+	movq	ARG5, %r12 // sda
 	sall	$5, %r12d // 8*sda*sizeof(float)
-	movq	ARG5, %r13  // x
+	movq	ARG6, %r13  // x
+	movq	ARG3, %r14 // offA
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_GEMV_ADD_T_8_LIB8
+#else
+	CALL(inner_edge_gemv_add_t_8_lib8)
+#endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_T_8_LIB8
@@ -1963,8 +1970,8 @@ NAME:
 	// call inner blender t
 
 	movq	ARG2, %r10 // alpha
-	movq	ARG6, %r11   // beta
-	movq	ARG7, %r12 // y 
+	movq	ARG7, %r11   // beta
+	movq	ARG8, %r12 // y 
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_8_LIB8
@@ -1975,7 +1982,7 @@ NAME:
 
 	// store
 
-	movq	ARG8, %r10 // z 
+	movq	ARG9, %r10 // z 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB8
@@ -1994,81 +2001,11 @@ NAME:
 
 
 
-//                               1      2              3          4        5          6             7         8           9
-// void kernel_sgemv_t_8_vs_lib8(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z, int k1);
+//                               1      2              3          4        5          6             7         8           9     10
+// void kernel_sgemv_t_8_vs_lib8(int k, double *alpha, offA, double *A, int sda, double *x, double *beta, double *y, double *z, int k1);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_sgemv_t_8_vs_lib8)
-	
-	PROLOGUE
-
-	// zero accumulation registers
-
-	vxorps	%ymm0, %ymm0, %ymm0
-	vmovaps	%ymm0, %ymm1
-	vmovaps	%ymm0, %ymm2
-	vmovaps	%ymm0, %ymm3
-	vmovaps	%ymm0, %ymm4
-	vmovaps	%ymm0, %ymm5
-	vmovaps	%ymm0, %ymm6
-	vmovaps	%ymm0, %ymm7
-
-
-	// call inner sgemv kernel n
-
-	movq	ARG1, %r10 // k
-	movq	ARG3, %r11  // A
-	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
-	movq	ARG5, %r13  // x
-
-#if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMV_ADD_T_8_LIB8
-#else
-	CALL(inner_kernel_gemv_add_t_8_lib8)
-#endif
-
-
-	// call inner blender t
-
-	movq	ARG2, %r10 // alpha
-	movq	ARG6, %r11   // beta
-	movq	ARG7, %r12 // y 
-
-#if MACRO_LEVEL>=1
-	INNER_BLEND_T_SCALE_AB_8_LIB8
-#else
-	CALL(inner_blend_t_scale_ab_8_lib8)
-#endif
-
-
-	// store
-
-	movq	ARG8, %r10 // z 
-	movq	ARG9, %r11 // k1 
-
-#if MACRO_LEVEL>=1
-	INNER_STORE_8_VS_LIB8
-#else
-	CALL(inner_store_8_vs_lib8)
-#endif
-
-
-	EPILOGUE
-
-	ret
-
-	FUN_END(kernel_sgemv_t_8_vs_lib8)
-
-
-
-
-
-//                                1      2              3         4          5        6          7             8          9          10
-// void kernel_sgemv_t_8_gen_lib8(int k, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z, int km);
-
-	.p2align 4,,15
-	GLOB_FUN_START(kernel_sgemv_t_8_gen_lib8)
 	
 	PROLOGUE
 
@@ -2135,7 +2072,7 @@ NAME:
 
 	ret
 
-	FUN_END(kernel_sgemv_t_8_gen_lib8)
+	FUN_END(kernel_sgemv_t_8_vs_lib8)
 
 
 

@@ -163,7 +163,7 @@ void kernel_sgemv_n_4_gen_lib4(int kmax, float *alpha, float *A, float *x, float
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_sgemv_t_4_lib4(int kmax, float *alpha, int offsetA, float *A, int sda, float *x, float *beta, float *y, float *z)
+void kernel_sgemv_t_4_lib4(int kmax, float *alpha, int offA, float *A, int sda, float *x, float *beta, float *y, float *z)
 	{
 
 	const int bs  = 4;

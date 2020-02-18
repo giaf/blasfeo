@@ -158,12 +158,10 @@ void kernel_strsm_nt_rl_inv_4x8_vs_lib8(int k, float *A, float *B, float *C, flo
 void kernel_sgemv_n_8_lib8(int k, float *alpha, float *A, float *x, float *beta, float *y, float *z);
 void kernel_sgemv_n_8_vs_lib8(int k, float *alpha, float *A, float *x, float *beta, float *y, float *z, int k1);
 void kernel_sgemv_n_8_gen_lib8(int kmax, float *alpha, float *A, float *x, float *beta, float *y, float *z, int k0, int k1);
-void kernel_sgemv_t_8_lib8(int k, float *alpha, float *A, int sda, float *x, float *beta, float *y, float *z);
-void kernel_sgemv_t_8_vs_lib8(int k, float *alpha, float *A, int sda, float *x, float *beta, float *y, float *z, int k1);
-void kernel_sgemv_t_8_gen_lib8(int k, float *alpha, int offA, float *A, int sda, float *x, float *beta, float *C, float *D, int km);
-void kernel_sgemv_t_4_lib8(int k, float *alpha, float *A, int sda, float *x, float *beta, float *y, float *z);
-void kernel_sgemv_t_4_vs_lib8(int k, float *alpha, float *A, int sda, float *x, float *beta, float *y, float *z, int k1);
-void kernel_sgemv_t_4_gen_lib8(int k, float *alpha, int offA, float *A, int sda, float *x, float *beta, float *C, float *D, int km);
+void kernel_sgemv_t_8_lib8(int k, float *alpha, int offsetA, float *A, int sda, float *x, float *beta, float *y, float *z);
+void kernel_sgemv_t_8_vs_lib8(int k, float *alpha, int offsetA, float *A, int sda, float *x, float *beta, float *y, float *z, int k1);
+void kernel_sgemv_t_4_lib8(int k, float *alpha, int offsetA, float *A, int sda, float *x, float *beta, float *y, float *z);
+void kernel_sgemv_t_4_vs_lib8(int k, float *alpha, int offsetA, float *A, int sda, float *x, float *beta, float *y, float *z, int k1);
 void kernel_strsv_ln_inv_8_lib8(int k, float *A, float *inv_diag_A, float *x, float *y, float *z);
 void kernel_strsv_ln_inv_8_vs_lib8(int k, float *A, float *inv_diag_A, float *x, float *y, float *z, int km, int kn);
 void kernel_strsv_lt_inv_8_lib8(int k, float *A, int sda, float *inv_diag_A, float *x, float *y, float *z);
