@@ -109,7 +109,7 @@ int main()
 	// tests
 	//
 
-#if 1
+#if 0
 	// gemm_nt
 	alpha = 1.0;
 	beta = 0.0;
@@ -189,11 +189,13 @@ int main()
 	alpha = 1.0;
 	beta = 0.0;
 
+#if 1
 //	blasfeo_sgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);
 	blasfeo_sgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);
 	blasfeo_print_tran_svec(n, &sz0, 0);
 	return 0;
-	
+#endif
+
 //	kernel_sgemm_nt_4x4_lib4(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
 //	kernel_sgemm_nn_4x4_lib4(n, &alpha, sA.pA, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 //	blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);

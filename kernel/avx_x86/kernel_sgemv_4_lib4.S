@@ -77,6 +77,29 @@
 
 #endif
 
+#define GLOB_FUN_START(NAME) \
+	.globl NAME; \
+	.type NAME, @function; \
+NAME:
+#define FUN_START(NAME) \
+	.type NAME, @function; \
+NAME:
+#define FUN_END(NAME) \
+	.size	NAME, .-NAME
+#define CALL(NAME) \
+	call NAME
+//#define ZERO_ACC \
+//	vxorpd	%ymm0, %ymm0, %ymm0; \
+//	vmovapd	%ymm0, %ymm1; \
+//	vmovapd	%ymm0, %ymm2; \
+//	vmovapd	%ymm0, %ymm3
+//#define NEG_ACC \
+//	vmovapd		.LC11(%rip), %ymm15; \
+//	vxorpd		%ymm15, %ymm0, %ymm0; \
+//	vxorpd		%ymm15, %ymm1, %ymm1; \
+//	vxorpd		%ymm15, %ymm2, %ymm2; \
+//	vxorpd		%ymm15, %ymm3, %ymm3
+
 #else
 
 #error wrong OS
@@ -262,7 +285,7 @@ inner_kernel_gemv_add_t_4_lib4:
 	
 	vcvtsi2ss	%eax, %xmm6, %xmm6
 	vmovups		.LC00, %xmm5
-	vshufps		$0x00, %xmm7, %xmm7, %xmm7
+	vshufps		$0x00, %xmm6, %xmm6, %xmm6
 	vsubps		%xmm6, %xmm5, %xmm6
 
 	vmaskmovps	0(%edx), %xmm6, %xmm4
@@ -282,7 +305,7 @@ inner_kernel_gemv_add_t_4_lib4:
 	vmaskmovps	48(%ebx), %xmm6, %xmm5
 	vmulps	%xmm5, %xmm4, %xmm7
 	vaddps	%xmm3, %xmm7, %xmm3
-		
+
 	sall	$3, %eax
 	addl	%eax, %ebx
 	addl	%eax, %edx
@@ -299,6 +322,97 @@ inner_kernel_gemv_add_t_4_lib4:
 #if defined(OS_LINUX)
 	.size	inner_kernel_gemv_add_t_4_lib4, .-inner_kernel_gemv_add_t_4_lib4
 #endif
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// input arguments:
+// eax   <- k
+// ebx   <- A
+// ecx   <- bs*sda*sizeof(double) = 32*sda
+// edx   <- x
+// esi   <- offA
+// ymm0  <- [z0a z0b z0c z0d]
+// ymm1  <- [z1a z1b z1c z1d]
+// ymm2  <- [z2a z2b z2c z2d]
+// ymm3  <- [z3a z3b z3c z3d]
+
+//
+// output arguments:
+// eax   <- 
+// ebx   <- 
+// ecx   <- 
+// edx   <- 
+// esi   <- offA
+// ymm0  <- [z0a z0b z0c z0d]
+// ymm1  <- [z1a z1b z1c z1d]
+// ymm2  <- [z2a z2b z2c z2d]
+// ymm3  <- [z3a z3b z3c z3d]
+
+#if MACRO_LEVEL>=2
+	.macro INNER_EDGE_GEMV_ADD_T_4_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemv_add_t_4_lib4)
+#endif
+
+	cmpl	$0, %esi
+	jle		0f // return
+
+	movl	%esi, %edi
+	sall	$2, %edi // offA*sizeof(float)
+
+	subl	%edi, %ebx // A - offA
+	subl	%edi, %edx // x - offA
+
+	movl	%eax, %edi // kmax
+	addl	%esi, %edi // kmax + offA
+
+	vcvtsi2ss	%esi, %xmm6, %xmm6 // offA
+	vcvtsi2ss	%edi, %xmm7, %xmm7 // offA + kmax
+	vmovupd		.LC00, %ymm5
+	vshufps		$0x00, %xmm6, %xmm6, %xmm6
+	vshufps		$0x00, %xmm7, %xmm7, %xmm7
+	vsubpd		%xmm5, %xmm6, %xmm6
+	vsubpd		%xmm7, %xmm5, %xmm7
+	vandpd		%xmm7, %xmm6, %xmm6
+
+	vmaskmovps	0(%edx), %xmm6, %xmm4
+
+	vmaskmovps	0(%ebx), %xmm6, %xmm5
+	vmulps	%xmm5, %xmm4, %xmm7
+	vaddps	%xmm0, %xmm7, %xmm0
+	
+	vmaskmovps	16(%ebx), %xmm6, %xmm5
+	vmulps	%xmm5, %xmm4, %xmm7
+	vaddps	%xmm1, %xmm7, %xmm1
+	
+	vmaskmovps	32(%ebx), %xmm6, %xmm5
+	vmulps	%xmm5, %xmm4, %xmm7
+	vaddps	%xmm2, %xmm7, %xmm2
+
+	vmaskmovps	48(%ebx), %xmm6, %xmm5
+	vmulps	%xmm5, %xmm4, %xmm7
+	vaddps	%xmm3, %xmm7, %xmm3
+
+	addl	$16, %edx // x + 4
+	addl	%ecx, %ebx // A + bs*sda
+		
+	addl	%esi, %eax
+	subl	$4, %eax // kmax - (4-offA)
+	
+0: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemv_add_t_4_lib4)
 #endif
 
 
@@ -621,8 +735,8 @@ kernel_sgemv_n_4_vs_lib4:
 
 
 
-//                            1      2              3          4        5          6             7         8
-// void kernel_sgemv_t_4_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
+//                            1      2              3          4        5          6             7         8          9
+// void kernel_sgemv_t_4_lib4(int k, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z);
 
 	.align 16
 	.globl kernel_sgemv_t_4_lib4
@@ -642,10 +756,17 @@ kernel_sgemv_t_4_lib4:
 	// call inner sgemv kernel n
 
 	movl	ARG1, %eax // k
-	movl	ARG3, %ebx  // A
-	movl	ARG4, %ecx // sda
+	movl	ARG4, %ebx  // A
+	movl	ARG5, %ecx // sda
 	sall	$5, %ecx // 4*sda*sizeof(double)
-	movl	ARG5, %edx  // x
+	movl	ARG6, %edx  // x
+	movl	ARG3, %esi  // offA
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_GEMV_ADD_T_4_LIB4
+#else
+	CALL(inner_edge_gemv_add_t_4_lib4)
+#endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_T_4_LIB4
@@ -657,8 +778,8 @@ kernel_sgemv_t_4_lib4:
 	// call inner blender t
 
 	movl	ARG2, %eax // alpha
-	movl	ARG6, %ebx   // beta
-	movl	ARG7, %ecx // y 
+	movl	ARG7, %ebx   // beta
+	movl	ARG8, %ecx // y 
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_4_LIB4
@@ -669,7 +790,7 @@ kernel_sgemv_t_4_lib4:
 
 	// store
 
-	movl	ARG8, %eax // z 
+	movl	ARG9, %eax // z 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
@@ -688,8 +809,8 @@ kernel_sgemv_t_4_lib4:
 
 
 
-//                               1      2              3          4        5          6             7         8           9
-// void kernel_sgemv_t_4_vs_lib4(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z, int k1);
+//                               1      2              3          4        5          6             7         8           9     10
+// void kernel_sgemv_t_4_vs_lib4(int k, double *alpha, offA, double *A, int sda, double *x, double *beta, double *y, double *z, int k1);
 
 	.align 16
 	.globl kernel_sgemv_t_4_vs_lib4
@@ -709,10 +830,17 @@ kernel_sgemv_t_4_vs_lib4:
 	// call inner sgemv kernel n
 
 	movl	ARG1, %eax // k
-	movl	ARG3, %ebx  // A
-	movl	ARG4, %ecx // sda
+	movl	ARG4, %ebx  // A
+	movl	ARG5, %ecx // sda
 	sall	$5, %ecx // 4*sda*sizeof(double)
-	movl	ARG5, %edx  // x
+	movl	ARG6, %edx  // x
+	movl	ARG3, %esi  // offA
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_GEMV_ADD_T_4_LIB4
+#else
+	CALL(inner_edge_gemv_add_t_4_lib4)
+#endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_T_4_LIB4
@@ -724,8 +852,8 @@ kernel_sgemv_t_4_vs_lib4:
 	// call inner blender t
 
 	movl	ARG2, %eax // alpha
-	movl	ARG6, %ebx   // beta
-	movl	ARG7, %ecx // y 
+	movl	ARG7, %ebx   // beta
+	movl	ARG8, %ecx // y 
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_SCALE_AB_4_LIB4
@@ -736,8 +864,8 @@ kernel_sgemv_t_4_vs_lib4:
 
 	// store
 
-	movl	ARG8, %eax // z 
-	movl	ARG9, %ebx // k1 
+	movl	ARG9, %eax // z 
+	movl	ARG10, %ebx // k1 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4

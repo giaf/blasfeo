@@ -282,64 +282,6 @@ void kernel_dgemv_t_4_vs_lib4(int kmax, double *alpha, int offA, double *A, int 
 
 
 
-//#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-//void kernel_dgemv_t_4_gen_lib4(int kmax, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z, int m1)
-//	{
-//
-//	const int bs  = 4;
-//	
-//	int k, kend;
-//	
-//	double
-//		x_0, x_1, x_2, x_3;
-//	
-//	double yy[4] = {0.0, 0.0, 0.0, 0.0};
-//	
-//	k=0;
-//	if(offA!=0) // 1, 2, 3
-//		{
-//		kend = 4-offA<kmax ? 4-offA : kmax;
-//		for(; k<kend; k++)
-//			{
-//			
-//			x_0 = x[0];
-//		
-//			yy[0] += A[0+bs*0] * x_0;
-//			yy[1] += A[0+bs*1] * x_0;
-//			yy[2] += A[0+bs*2] * x_0;
-//			yy[3] += A[0+bs*3] * x_0;
-//		
-//			A += 1;
-//			x += 1;
-//			
-//			}
-//		A += bs*(sda-1);
-//		}
-//
-//	yy[0] = alpha[0]*yy[0] + beta[0]*y[0];
-//	yy[1] = alpha[0]*yy[1] + beta[0]*y[1];
-//	yy[2] = alpha[0]*yy[2] + beta[0]*y[2];
-//	yy[3] = alpha[0]*yy[3] + beta[0]*y[3];
-//
-//	double beta1 = 1.0;
-//
-//	kernel_dgemv_t_4_lib4(kmax-k, alpha, A, sda, x, &beta1, yy, yy);
-//
-//	z[0] = yy[0];
-//	if(m1<2) return;
-//	z[1] = yy[1];
-//	if(m1<3) return;
-//	z[2] = yy[2];
-//	if(m1<4) return;
-//	z[3] = yy[3];
-//
-//	return;
-//
-//	}
-//#endif
-	
-	
-	
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 void kernel_dtrsv_ln_inv_4_vs_lib4(int kmax, double *A, double *inv_diag_A, double *x, double *y, double *z, int m1, int n1)
 	{

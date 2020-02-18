@@ -686,7 +686,7 @@ NAME:
 	.macro INNER_EDGE_GEMV_ADD_T_12_LIB4
 #else
 	.p2align 4,,15
-	FUN_START(inner_edge_dgemv_add_t_12_lib4)
+	FUN_START(inner_edge_gemv_add_t_12_lib4)
 #endif
 
 	cmpl	$0, %r14d
@@ -779,7 +779,7 @@ NAME:
 #else
 	ret
 
-	FUN_END(inner_edge_dgemv_add_t_12_lib4)
+	FUN_END(inner_edge_gemv_add_t_12_lib4)
 #endif
 
 
@@ -1276,7 +1276,7 @@ NAME:
 #if MACRO_LEVEL>=2
 	INNER_EDGE_GEMV_ADD_T_12_LIB4
 #else
-	CALL(inner_edge_dgemv_add_t_12_lib4)
+	CALL(inner_edge_gemv_add_t_12_lib4)
 #endif
 
 #if MACRO_LEVEL>=2

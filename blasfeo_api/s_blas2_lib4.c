@@ -101,29 +101,19 @@ void blasfeo_sgemv_t(int m, int n, float alpha, struct blasfeo_smat *sA, int ai,
 
 	int sda = sA->cn;
 	float *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	int offsetA = ai%bs;
 	float *x = sx->pa + xi;
 	float *y = sy->pa + yi;
 	float *z = sz->pa + zi;
 
-	if(ai%bs==0)
+	i = 0;
+	for( ; i<n-3; i+=4)
 		{
-		i = 0;
-		for( ; i<n-3; i+=4)
-			{
-			kernel_sgemv_t_4_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i]);
-			}
-		if(i<n)
-			{
-			kernel_sgemv_t_4_vs_lib4(m, &alpha, &pA[i*bs], sda, x, &beta, &y[i], &z[i], n-i);
-			}
+		kernel_sgemv_t_4_lib4(m, &alpha, offsetA, &pA[i*bs], sda, x, &beta, &y[i], &z[i]);
 		}
-	else // TODO kernel 8
+	if(i<n)
 		{
-		i = 0;
-		for( ; i<n; i+=4)
-			{
-			kernel_sgemv_t_4_gen_lib4(m, &alpha, ai%bs, &pA[i*bs], sda, x, &beta, &y[i], &z[i], n-i);
-			}
+		kernel_sgemv_t_4_vs_lib4(m, &alpha, offsetA, &pA[i*bs], sda, x, &beta, &y[i], &z[i], n-i);
 		}
 	
 	return;
@@ -386,7 +376,7 @@ void blasfeo_strmv_ltn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, st
 			zt[2] = pA[2+bs*2]*xt[2];
 			pA += bs*sda - 1;
 			x += 3;
-			kernel_sgemv_t_4_lib4(m-3-jj, &alpha, pA, sda, x, &beta, zt, zt);
+			kernel_sgemv_t_4_lib4(m-3-jj, &alpha, 0, pA, sda, x, &beta, zt, zt);
 			ll_max = n-jj<3 ? n-jj : 3;
 			for(ll=0; ll<ll_max; ll++)
 				z[ll] = zt[ll];
@@ -405,7 +395,7 @@ void blasfeo_strmv_ltn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, st
 			zt[1] = pA[1+bs*1]*xt[1];
 			pA += bs*sda - 2;
 			x += 2;
-			kernel_sgemv_t_4_lib4(m-2-jj, &alpha, pA, sda, x, &beta, zt, zt);
+			kernel_sgemv_t_4_lib4(m-2-jj, &alpha, 0, pA, sda, x, &beta, zt, zt);
 			ll_max = n-jj<2 ? n-jj : 2;
 			for(ll=0; ll<ll_max; ll++)
 				z[ll] = zt[ll];
@@ -423,7 +413,7 @@ void blasfeo_strmv_ltn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, st
 			zt[0] = pA[0+bs*0]*xt[0];
 			pA += bs*sda - 3;
 			x += 1;
-			kernel_sgemv_t_4_lib4(m-1-jj, &alpha, pA, sda, x, &beta, zt, zt);
+			kernel_sgemv_t_4_lib4(m-1-jj, &alpha, 0, pA, sda, x, &beta, zt, zt);
 			ll_max = n-jj<1 ? n-jj : 1;
 			for(ll=0; ll<ll_max; ll++)
 				z[ll] = zt[ll];
@@ -442,7 +432,7 @@ void blasfeo_strmv_ltn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, st
 		zt[3] = pA[3+bs*3]*x[3];
 		pA += bs*sda;
 		x += 4;
-		kernel_sgemv_t_4_lib4(m-4-jj, &alpha, pA, sda, x, &beta, zt, z);
+		kernel_sgemv_t_4_lib4(m-4-jj, &alpha, 0, pA, sda, x, &beta, zt, z);
 		pA += bs*4;
 		z += 4;
 		}
@@ -459,7 +449,7 @@ void blasfeo_strmv_ltn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, st
 		zt[3] = pA[3+bs*3]*xt[3];
 		pA += bs*sda;
 		x += 4;
-		kernel_sgemv_t_4_lib4(m-4-jj, &alpha, pA, sda, x, &beta, zt, zt);
+		kernel_sgemv_t_4_lib4(m-4-jj, &alpha, 0, pA, sda, x, &beta, zt, zt);
 		for(ll=0; ll<n-jj; ll++)
 			z[ll] = zt[ll];
 //		pA += bs*4;
