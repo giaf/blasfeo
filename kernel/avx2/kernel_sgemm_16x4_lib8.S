@@ -2848,18 +2848,18 @@ NAME:
 	vmovaps		%ymm0, 0(%r10)
 	vmaskmovps	%ymm4, %ymm15, 0(%r10, %r11, 1)
 	cmpl		$2, %r13d
-	jl			7f // end
+	jl			0f // end
 	vmovaps		%ymm1, 32(%r10)
 	vmaskmovps	%ymm5, %ymm15, 32(%r10, %r11, 1)
 	cmpl		$3, %r13d
-	jl			7f // end
+	jl			0f // end
 	vmovaps		%ymm2, 64(%r10)
 	vmaskmovps	%ymm6, %ymm15, 64(%r10, %r11, 1)
-	je			7f // end
+	je			0f // end
 	vmovaps		%ymm3, 96(%r10)
 	vmaskmovps	%ymm7, %ymm15, 96(%r10, %r11, 1)
 	//
-	jmp		0f
+//	jmp		0f
 
 0:
 
@@ -5755,6 +5755,16 @@ NAME:
 	ret
 
 	FUN_END(kernel_strmm_nn_rl_16x4_gen_lib8)
+
+
+
+
+
+#if defined(BLAS_API)
+
+#include "kernel_sgemm_16x4_lib.S"
+
+#endif
 
 
 
