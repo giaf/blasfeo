@@ -433,6 +433,9 @@ void kernel_sgetr_1_lib4(int tri, int kmax, int kna, float alpha, float *A, floa
 
 
 // pack
+// 16 lib 8
+void kernel_spack_nn_16_lib8(int kmax, float *A, int lda, float *B, int sdb);
+void kernel_spack_nn_16_vs_lib8(int kmax, float *A, int lda, float *B, int sdb, int m1);
 // 8 lib 8
 void kernel_spack_nn_8_lib8(int kmax, float *A, int lda, float *B);
 void kernel_spack_nn_8_vs_lib8(int kmax, float *A, int lda, float *B, int m1);

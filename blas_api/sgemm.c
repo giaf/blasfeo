@@ -594,11 +594,12 @@ nn_1:
 	pack_B = 1;
 
 	ii = 0;
-#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<m-15; ii+=16)
 		{
-		kernel_spack_nn_8_lib8(k, A+ii, lda, sA.pA); // TODO 16
-		kernel_spack_nn_8_lib8(k, A+ii+8, lda, sA.pA+sda*ps_8); // TODO 16
+		kernel_spack_nn_16_lib8(k, A+ii, lda, sA.pA, sda);
+//		kernel_spack_nn_8_lib8(k, A+ii, lda, sA.pA); // TODO 16
+//		kernel_spack_nn_8_lib8(k, A+ii+8, lda, sA.pA+sda*ps_8); // TODO 16
 		for(jj=0; jj<n-7; jj+=8)
 			{
 			if(pack_B)
@@ -636,7 +637,7 @@ nn_1:
 			goto nn_1_left_16;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_spack_nn_8_lib8(k, A+ii, lda, sA.pA);
@@ -738,10 +739,11 @@ nn_1_left_12:
 	goto nn_1_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 nn_1_left_16:
-	kernel_spack_nn_8_lib8(k, A+ii, lda, sA.pA); // TODO 16
-	kernel_spack_nn_8_vs_lib8(k, A+ii+8, lda, sA.pA+sda*ps_8, m-ii-8); // TODO 16
+	kernel_spack_nn_16_vs_lib8(k, A+ii, lda, sA.pA, sda, m-ii);
+//	kernel_spack_nn_8_lib8(k, A+ii, lda, sA.pA); // TODO 16
+//	kernel_spack_nn_8_vs_lib8(k, A+ii+8, lda, sA.pA+sda*ps_8, m-ii-8); // TODO 16
 	for(jj=0; jj<n-4; jj+=8)
 		{
 		if(pack_B)

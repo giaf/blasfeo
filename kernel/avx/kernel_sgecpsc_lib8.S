@@ -167,7 +167,7 @@
 
 // src matrix aligned
 
-// void INNER_KERNEL_SGECPSC_8_0_LIB8
+// INNER_KERNEL_SGECPSC_8_0_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -255,7 +255,7 @@ inner_kernel_sgecpsc_8_0_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_0_LIB8
+// INNER_KERNEL_SGECP_8_0_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -340,7 +340,7 @@ inner_kernel_sgecp_8_0_lib8:
 
 // src matrix not aligned
 
-// void INNER_KERNEL_SGECPSC_8_1_LIB8
+// INNER_KERNEL_SGECPSC_8_1_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -473,7 +473,7 @@ inner_kernel_sgecpsc_8_1_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_1_LIB8
+// INNER_KERNEL_SGECP_8_1_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -620,7 +620,7 @@ inner_kernel_sgecp_8_1_lib8:
 
 
 
-// void INNER_KERNEL_SGECPSC_8_2_LIB8
+// INNER_KERNEL_SGECPSC_8_2_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -753,7 +753,7 @@ inner_kernel_sgecpsc_8_2_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_2_LIB8
+// INNER_KERNEL_SGECP_8_2_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -864,7 +864,7 @@ inner_kernel_sgecp_8_2_lib8:
 
 
 
-// void INNER_KERNEL_SGECPSC_8_3_LIB8
+// INNER_KERNEL_SGECPSC_8_3_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -997,7 +997,7 @@ inner_kernel_sgecpsc_8_3_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_3_LIB8
+// INNER_KERNEL_SGECP_8_3_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -1108,7 +1108,7 @@ inner_kernel_sgecp_8_3_lib8:
 
 
 
-// void INNER_KERNEL_SGECPSC_8_4_LIB8
+// INNER_KERNEL_SGECPSC_8_4_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -1216,7 +1216,7 @@ inner_kernel_sgecpsc_8_4_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_4_LIB8
+// INNER_KERNEL_SGECP_8_4_LIB8
 // subroutine
 //
 // input arguments:
@@ -1317,7 +1317,7 @@ inner_kernel_sgecp_8_4_lib8:
 
 
 
-// void INNER_KERNEL_SGECPSC_8_5_LIB8
+// INNER_KERNEL_SGECPSC_8_5_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -1450,7 +1450,7 @@ inner_kernel_sgecpsc_8_5_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_5_LIB8
+// INNER_KERNEL_SGECP_8_5_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -1561,7 +1561,7 @@ inner_kernel_sgecp_8_5_lib8:
 
 
 
-// void INNER_KERNEL_SGECPSC_8_6_LIB8
+// INNER_KERNEL_SGECPSC_8_6_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -1694,7 +1694,7 @@ inner_kernel_sgecpsc_8_6_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_6_LIB8
+// INNER_KERNEL_SGECP_8_6_LIB8
 // subroutine
 //
 // input arguments:
@@ -1806,7 +1806,7 @@ inner_kernel_sgecp_8_6_lib8:
 
 
 
-// void INNER_KERNEL_SGECPSC_8_7_LIB8
+// INNER_KERNEL_SGECPSC_8_7_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -1939,7 +1939,7 @@ inner_kernel_sgecpsc_8_7_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_7_LIB8
+// INNER_KERNEL_SGECP_8_7_LIB8
 // subroutine
 //
 // input arguments:
@@ -2055,7 +2055,7 @@ inner_kernel_sgecp_8_7_lib8:
 
 // src matrix aligned
 
-// void INNER_KERNEL_SGECPSC_8_0_GEN_LIB8
+// INNER_KERNEL_SGECPSC_8_0_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -2158,7 +2158,7 @@ inner_kernel_sgecpsc_8_0_gen_lib8:
 
 
 
-// void INNER_KERNEL_SGECPSC_8_0_GEN_U_LIB8
+// INNER_KERNEL_SGECPSC_8_0_GEN_U_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -2261,7 +2261,7 @@ inner_kernel_sgecpsc_8_0_gen_u_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_0_GEN_LIB8
+// INNER_KERNEL_SGECP_8_0_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -2356,7 +2356,7 @@ inner_kernel_sgecp_8_0_gen_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_0_GEN_U_LIB8
+// INNER_KERNEL_SGECP_8_0_GEN_U_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -2450,7 +2450,7 @@ inner_kernel_sgecp_8_0_gen_u_lib8:
 
 // src matrix not aligned
 
-// void INNER_KERNEL_SGECPSC_8_1_GEN_LIB8
+// INNER_KERNEL_SGECPSC_8_1_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -2582,7 +2582,7 @@ inner_kernel_sgecpsc_8_1_gen_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_1_GEN_LIB8
+// INNER_KERNEL_SGECP_8_1_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -2705,7 +2705,7 @@ inner_kernel_sgecp_8_1_gen_lib8:
 
 
 
-// void INNER_KERNEL_SGECPSC_8_2_GEN_LIB8
+// INNER_KERNEL_SGECPSC_8_2_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -2837,7 +2837,7 @@ inner_kernel_sgecpsc_8_2_gen_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_2_GEN_LIB8
+// INNER_KERNEL_SGECP_8_2_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -2960,7 +2960,7 @@ inner_kernel_sgecp_8_2_gen_lib8:
 
 
 
-// void INNER_KERNEL_SGECPSC_8_3_GEN_LIB8
+// INNER_KERNEL_SGECPSC_8_3_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -3091,7 +3091,7 @@ inner_kernel_sgecpsc_8_3_gen_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_3_GEN_LIB8
+// INNER_KERNEL_SGECP_8_3_GEN_LIB8
 // subroutine
 //
 // input arguments:
@@ -3215,7 +3215,7 @@ inner_kernel_sgecp_8_3_gen_lib8:
 
 
 
-// void INNER_KERNEL_SGECPSC_8_4_GEN_LIB8
+// INNER_KERNEL_SGECPSC_8_4_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -3331,7 +3331,7 @@ inner_kernel_sgecpsc_8_4_gen_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_4_GEN_LIB8
+// INNER_KERNEL_SGECP_8_4_GEN_LIB8
 // subroutine
 //
 // input arguments:
@@ -3440,7 +3440,7 @@ inner_kernel_sgecp_8_4_gen_lib8:
 
 
 
-// void INNER_KERNEL_SGECPSC_8_5_GEN_LIB8
+// INNER_KERNEL_SGECPSC_8_5_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -3571,7 +3571,7 @@ inner_kernel_sgecpsc_8_5_gen_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_5_GEN_LIB8
+// INNER_KERNEL_SGECP_8_5_GEN_LIB8
 // subroutine
 //
 // input arguments:
@@ -3695,7 +3695,7 @@ inner_kernel_sgecp_8_5_gen_lib8:
 
 
 
-// void INNER_KERNEL_SGECPSC_8_6_GEN_LIB8
+// INNER_KERNEL_SGECPSC_8_6_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -3826,7 +3826,7 @@ inner_kernel_sgecpsc_8_6_gen_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_6_GEN_LIB8
+// INNER_KERNEL_SGECP_8_6_GEN_LIB8
 // subroutine
 //
 // input arguments:
@@ -3950,7 +3950,7 @@ inner_kernel_sgecp_8_6_gen_lib8:
 
 
 
-// void INNER_KERNEL_SGECPSC_8_7_GEN_LIB8
+// INNER_KERNEL_SGECPSC_8_7_GEN_LIB8
 //
 // input arguments:
 // r10d   <- k
@@ -4081,7 +4081,7 @@ inner_kernel_sgecpsc_8_7_gen_lib8:
 
 
 
-// void INNER_KERNEL_SGECP_8_7_GEN_LIB8
+// INNER_KERNEL_SGECP_8_7_GEN_LIB8
 // subroutine
 //
 // input arguments:

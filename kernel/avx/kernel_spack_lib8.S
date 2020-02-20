@@ -1909,6 +1909,210 @@ NAME:
 
 
 
+//                              1         2          3        4        5
+// void kernel_spack_nn_16_lib8(int kmax, float *A, int lda, float *C, int sdc)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_spack_nn_16_lib8)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$2, %r12d
+	movq	ARG4, %r13 // C
+	movq	ARG5, %r14 // sdc
+	sall	$5, %r14d
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovups		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
+	vmovaps		%ymm0, 0(%r13)
+	vmovups		32(%r11), %ymm0
+	prefetcht0	32(%r11, %r12, 4)
+	vmovaps		%ymm0, 0(%r13, %r14)
+	addq	%r12, %r11
+
+	vmovups		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
+	vmovaps		%ymm0, 32(%r13)
+	vmovups		32(%r11), %ymm0
+	prefetcht0	32(%r11, %r12, 4)
+	vmovaps		%ymm0, 32(%r13, %r14)
+	addq	%r12, %r11
+
+	vmovups		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
+	vmovaps		%ymm0, 64(%r13)
+	vmovups		32(%r11), %ymm0
+	prefetcht0	32(%r11, %r12, 4)
+	vmovaps		%ymm0, 64(%r13, %r14)
+	addq	%r12, %r11
+
+	vmovups		0(%r11), %ymm0
+	prefetcht0	0(%r11, %r12, 4)
+	vmovaps		%ymm0, 96(%r13)
+	vmovups		32(%r11), %ymm0
+	prefetcht0	32(%r11, %r12, 4)
+	vmovaps		%ymm0, 96(%r13, %r14)
+	addq	%r12, %r11
+
+	subl	$4, %r10d
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovups		0(%r11), %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	vmovups		32(%r11), %ymm0
+	vmovaps		%ymm0, 0(%r13, %r14)
+	addq	%r12, %r11
+
+	subl	$1, %r10d
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_spack_nn_16_lib8)
+
+
+
+
+
+//                                 1         2         3        4          5       6
+// void kernel_spack_nn_16_vs_lib8(int kmax, float *A, int lda, float *C, int sdb, int m1)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_spack_nn_16_vs_lib8)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$2, %r12d
+	movq	ARG4, %r13 // C
+	movq	ARG5, %r14 // sdc
+	sall	$5, %r14d
+	movq	ARG6, %r15 // m1
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+	vcvtsi2ss	%r15d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovups		.LC01(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovups		LC00(%rip), %ymm14
+#endif
+	vshufps		$0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vsubps		%ymm15, %ymm14, %ymm15
+
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovups		0(%r11), %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	vmaskmovps	32(%r11), %ymm15, %ymm0
+	vmovaps		%ymm0, 0(%r13, %r14)
+	addq	%r12, %r11
+
+	vmovups		0(%r11), %ymm0
+	vmovaps		%ymm0, 32(%r13)
+	vmaskmovps	32(%r11), %ymm15, %ymm0
+	vmovaps		%ymm0, 32(%r13, %r14)
+	addq	%r12, %r11
+
+	vmovups		0(%r11), %ymm0
+	vmovaps		%ymm0, 64(%r13)
+	vmaskmovps	32(%r11), %ymm15, %ymm0
+	vmovaps		%ymm0, 64(%r13, %r14)
+	addq	%r12, %r11
+
+	vmovups		0(%r11), %ymm0
+	vmovaps		%ymm0, 96(%r13)
+	vmaskmovps	32(%r11), %ymm15, %ymm0
+	vmovaps		%ymm0, 96(%r13, %r14)
+	addq	%r12, %r11
+
+	subl	$4, %r10d
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovups		0(%r11), %ymm0
+	vmovaps		%ymm0, 0(%r13)
+	vmaskmovps	32(%r11), %ymm15, %ymm0
+	vmovaps		%ymm0, 0(%r13, %r14)
+	addq	%r12, %r11
+
+	subl	$1, %r10d
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_spack_nn_16_vs_lib8)
+
+
+
+
+
 //                             1         2          3        4
 // void kernel_spack_nn_8_lib8(int kmax, float *A, int lda, float *C)
 
