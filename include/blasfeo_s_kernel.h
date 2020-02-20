@@ -433,6 +433,9 @@ void kernel_sgetr_1_lib4(int tri, int kmax, int kna, float alpha, float *A, floa
 
 
 // pack
+// 24 lib 8
+void kernel_spack_nn_24_lib8(int kmax, float *A, int lda, float *B, int sdb);
+void kernel_spack_nn_24_vs_lib8(int kmax, float *A, int lda, float *B, int sdb, int m1);
 // 16 lib 8
 void kernel_spack_nn_16_lib8(int kmax, float *A, int lda, float *B, int sdb);
 void kernel_spack_nn_16_vs_lib8(int kmax, float *A, int lda, float *B, int sdb, int m1);
@@ -476,6 +479,9 @@ void kernel_sunpack_tt_4_lib4(int kmax, float *A, int sda, float *B, int ldb);
 #ifdef BLAS_API
 
 // A, B panel-major bs=8; C, D column-major
+// 24x4
+void kernel_sgemm_nt_24x4_lib88cc(int kmax, float *alpha, float *A, int sda, float *B, float *beta, float *C, int ldc, float *D, int ldd);
+void kernel_sgemm_nt_24x4_vs_lib88cc(int kmax, float *alpha, float *A, int sda, float *B, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
 // 16x4
 void kernel_sgemm_nt_16x4_lib88cc(int kmax, float *alpha, float *A, int sda, float *B, float *beta, float *C, int ldc, float *D, int ldd);
 void kernel_sgemm_nt_16x4_vs_lib88cc(int kmax, float *alpha, float *A, int sda, float *B, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
