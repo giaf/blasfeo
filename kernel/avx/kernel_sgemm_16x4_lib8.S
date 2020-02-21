@@ -4197,7 +4197,7 @@ inner_store_l_12x4_gen_lib8:
 
 
 
-//                                rdi    rsi           rdx       rcx      r8        r9           rsp+8     rsp+16   rsp+24    rsp+32
+//                                1      2             3         4        5         6            7         8        9         10
 // void kernel_sgemm_nt_16x4_lib8(int k, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd);
 
 	.p2align 4,,15

@@ -75,6 +75,7 @@ OBJS += \
 		kernel_dgetr_lib4.o \
 		kernel_dpack_lib4.o \
 		\
+		kernel_sgemm_16x8_lib8.o \
 		kernel_sgemm_16x4_lib8.o \
 		kernel_sgemm_8x8_lib8.o \
 		kernel_sgemm_8x4_lib8.o \
