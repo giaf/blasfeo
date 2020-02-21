@@ -154,6 +154,7 @@ OBJS += \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
 		kernel/kernel_align_x64.o\
+#		kernel/avx/kernel_sgemm_16x8_lib8.o \
 
 # blas
 OBJS  += \
