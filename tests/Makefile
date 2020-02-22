@@ -137,15 +137,14 @@ run:
 	#
 
 update: build run
+
 full: common build run
 
 clean:
 	rm -rf ./*.o
 	rm -rf ./*.out
 	rm -rf ./$(BINARY_DIR)/*
-
-deep_clean: clean
-
-reports_clean: clean
 	rm -rf ./build/
 	rm -rf ./reports/
+
+deep_clean: clean
