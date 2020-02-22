@@ -145,5 +145,7 @@ clean:
 	rm -rf ./$(BINARY_DIR)/*
 
 deep_clean: clean
+
+purge: deep_clean
 	rm -rf ./build/
 	rm -rf ./reports/

@@ -1114,6 +1114,9 @@ deep_clean: clean
 	make -C tests deep_clean
 	make -C benchmarks deep_clean
 
+purge: deep_clean
+	make -C tests purge
+
 clean_blas_api:
 	make -C blas_api clean
 
