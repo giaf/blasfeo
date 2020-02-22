@@ -15,6 +15,7 @@ jobs:
       language: python
       python: "3.6"
       script:
+		- sudo apt install libblas-dev liblapack-dev
         - cd "${TRAVIS_BUILD_DIR}"/tests
         - pip install jinja2
         - python tester.py testset_travis_blasfeo_double_amd64.json
@@ -29,6 +30,7 @@ jobs:
       language: python
       python: "3.6"
       script:
+		- sudo apt install libblas-dev liblapack-dev
         - cd "${TRAVIS_BUILD_DIR}"/tests
         - pip install jinja2
         - python tester.py testset_travis_blasfeo_double_arm64.json
