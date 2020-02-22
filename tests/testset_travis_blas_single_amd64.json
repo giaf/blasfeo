@@ -16,7 +16,7 @@
     "TESTING_MODE": 1,
     "BLAS_API": 1,
     "BENCHMARKS_MODE": 1,
-    "EXTERNAL_BLAS": "OPENBLAS"
+    "EXTERNAL_BLAS": "SYSTEM"
   },
   "precisions": [
     "single"
