@@ -17,7 +17,9 @@ jobs:
       script:
         - cd "${TRAVIS_BUILD_DIR}"/tests
         - pip install jinja2
-        - python tester.py testset_travis_amd64.json
+        - python tester.py testset_travis_blasfeo_double_amd64.json
+        - python tester.py testset_travis_blas_double_amd64.json
+        - python tester.py testset_travis_blas_single_amd64.json
 
     - name: "Linux ARM64 Build"
       arch: arm64
@@ -29,7 +31,9 @@ jobs:
       script:
         - cd "${TRAVIS_BUILD_DIR}"/tests
         - pip install jinja2
-        - python tester.py testset_travis_arm64.json
+        - python tester.py testset_travis_blasfeo_double_arm64.json
+        - python tester.py testset_travis_blas_double_arm64.json
+        - python tester.py testset_travis_blas_single_arm64.json
 
     - name: "MacOS Build"
       if: branch = mac_build
