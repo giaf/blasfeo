@@ -25,7 +25,7 @@
     "blas"
   ],
   "K_MAX_STACK":[
-    0, 400
+    0, 500
   ],
   "TARGET": [
     "GENERIC",
