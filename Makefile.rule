@@ -68,7 +68,7 @@ CURRENT_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 # Code optimized for AMD Barcelona.
 #
 # ARMV8A_ARM_CORTEX_A57 : ARMv8A architecture with NEON (64 bit OS)
-# Code optimized for ARM Cortex A57.
+# Code optimized for ARM Cortex A57, A72, A73.
 #
 # ARMV8A_ARM_CORTEX_A53 : ARMv8A architecture with NEON (64 bit OS)
 # Code optimized for ARM Cortex A53.
