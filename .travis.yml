@@ -19,6 +19,7 @@ jobs:
           packages:
           - libblas-dev
           - liblapack-dev
+          - bc
       script:
         - cd "${TRAVIS_BUILD_DIR}"/tests
         - pip install jinja2
@@ -38,6 +39,7 @@ jobs:
           packages:
           - libblas-dev
           - liblapack-dev
+          - bc
       script:
         - cd "${TRAVIS_BUILD_DIR}"/tests
         - pip install jinja2
