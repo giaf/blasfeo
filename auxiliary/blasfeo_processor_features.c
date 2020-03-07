@@ -155,7 +155,8 @@ int blasfeo_processor_cpu_features( int* features )
 #else
 	reg_eax = 7;
 	reg_ecx = 0;
-	asm volatile(
+//	asm volatile(
+	__asm__ volatile(
 		"cpuid\n"
 		: "=a" (reg_eax), "=b" (reg_ebx), "=c" (reg_ecx), "=d" (reg_edx)
 		: "a" (reg_eax), "c" (reg_ecx));
