@@ -514,6 +514,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 
 		file(GLOB KERNEL_SRC
 			${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_dgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_dgemv_4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
@@ -524,6 +525,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
 
+			${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_sgemm_4x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
