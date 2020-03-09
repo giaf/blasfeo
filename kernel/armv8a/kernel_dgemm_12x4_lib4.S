@@ -1593,7 +1593,7 @@ NAME:
 	add		x11, x11, x13, LSL #3 // B + offsetB*sizeof(double)
 
 	add		x14, x9, x10
-	add		x15, x14, x10
+	add		x16, x14, x10
 
 1:
 	ldp		q24, q25, [x9, #0]
@@ -1621,7 +1621,7 @@ NAME:
 	fmla	v14.2d, v26.2d, v31.2d[0]
 	fmla	v15.2d, v27.2d, v31.2d[0]
 
-	ldp		q24, q25, [x15, #0]
+	ldp		q24, q25, [x16, #0]
 
 	fmla	v16.2d, v24.2d, v28.2d[0]
 	fmla	v17.2d, v25.2d, v28.2d[0]
@@ -1634,7 +1634,7 @@ NAME:
 
 	add		x9, x9, #32
 	add		x14, x14, #32
-	add		x15, x15, #32
+	add		x16, x16, #32
 	add		x11, x11, #8
 	sub		w8, w8, #1
 
