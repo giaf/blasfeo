@@ -142,8 +142,8 @@ endif
 
 # Compile the BLAS API routines provided by BLASFEO
 #
-BLAS_API = 0
-# BLAS_API = 1
+# BLAS_API = 0
+BLAS_API = 1
 
 # Export standard FORTRAN namings for BLAS API routines
 # 0 : routines namings are in the form blasfeo_dgemm
@@ -177,8 +177,8 @@ LAPACKE_API = 0
 
 # In BLAS API, fallback to external BLAS library for some not-yet-implemented routines
 #
-# FALLBACK_TO_EXTERNAL_BLAS = 0
-FALLBACK_TO_EXTERNAL_BLAS = 1
+FALLBACK_TO_EXTERNAL_BLAS = 0
+# FALLBACK_TO_EXTERNAL_BLAS = 1
 
 # Maximum inner product length K for buffer allocation on stack (decrease this value if stack size is exceeded)
 #
