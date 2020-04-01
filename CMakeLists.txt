@@ -55,6 +55,56 @@ set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A7 CACHE STRING "Target architecture")
 # set(TARGET GENERIC)
 
+# Linear Algebra backend
+set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
+# set(LA REFERENCE CACHE STRING "Linear algebra backend")
+# set(LA BLAS CACHE STRING "Linear algebra backend")
+
+# BLAS and LAPACK version (for LA=BLAS in BLASFEO or for BLASFEO_BENCHMARS=ON)
+set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
+# set(EXTERNAL_BLAS OPENBLAS CACHE STRING "Reference blas to use")
+# set(EXTERNAL_BLAS NETLIB CACHE STRING "Reference blas to use")
+# set(EXTERNAL_BLAS MKL CACHE STRING "Reference blas to use")
+# set(EXTERNAL_BLAS BLIS CACHE STRING "Reference blas to use")
+# set(EXTERNAL_BLAS ATLAS CACHE STRING "Reference blas to use")
+
+# Compile the BLAS API routines provided by BLASFEO
+set(BLAS_API ON CACHE BOOL "Compile BLAS API")
+
+# Export standard FORTRAN namings for BLAS API routines
+# OFF : routines namings are in the form blasfeo_dgemm
+# ON  : routines namings are in the form dgemm_
+set(FORTRAN_BLAS_API OFF CACHE BOOL "Standard fortran BLAS API")
+
+# Stack buffer size (malloc for larger)
+set(K_MAX_STACK 300 CACHE STRING "Maximum k value using stack memory")
+
+# Macro level (code size vs performance in assembly kernels): 0 (no macro),
+# 1 (all macro but gemm kernel), 2 (all macro)
+set(MACRO_LEVEL 1)
+
+# Use C99 extension to math library
+set(USE_C99_MATH ON CACHE BOOL "Use C99 extension to math library")
+
+# Compile auxiliary functions with external dependencies
+# (for memory allocation and printing)
+set(EXT_DEP ON CACHE BOOL "Compile external dependencies in BLASFEO")
+
+# Options
+# set(BLASFEO_TESTING ON CACHE BOOL "Tests enabled")
+set(BLASFEO_TESTING OFF CACHE BOOL "Tests disabled")
+
+# set(BLASFEO_BENCHMARKS ON CACHE BOOL "Benchmarks enabled")
+set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled")
+
+# enable runtine checks
+set(RUNTIME_CHECKS OFF)
+
+set(BLASFEO_EXAMPLES ON CACHE BOOL "Examples enabled")
+# set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled")
+
+
+
 # Populate a list of allowable targets and link it to the option
 set(ALLOWED_TARGETS
 		X64_AUTOMATIC
@@ -89,10 +139,6 @@ if(${isvalid} EQUAL -1)
 	message(FATAL_ERROR "Target ${TARGET} is not supported")
 endif()
 
-# Linear Algebra backend
-set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
-# set(LA REFERENCE CACHE STRING "Linear algebra backend")
-# set(LA BLAS CACHE STRING "Linear algebra backend")
 
 # Populate the list of allowed LA backends and link it to the option
 set(ALLOWED_BACKENDS
@@ -107,13 +153,6 @@ if(${isvalid} EQUAL -1)
 	message(FATAL_ERROR "LA backend ${LA} is not supported")
 endif()
 
-# BLAS and LAPACK version (for LA=BLAS in BLASFEO or for BLASFEO_BENCHMARS=ON)
-set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS OPENBLAS CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS NETLIB CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS MKL CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS BLIS CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS ATLAS CACHE STRING "Reference blas to use")
 
 # Populate the list of allowed exernal BLAS tools and link it to the option
 set(ALLOWED_EXTERNAL_BLAS
@@ -143,26 +182,6 @@ if(NOT DEFINED(BLASFEO_CROSSCOMPILING))
 	set(BLASFEO_CROSSCOMPILING ${CMAKE_CROSSCOMPILING})
 endif()
 
-# Stack buffer size (malloc for larger)
-set(K_MAX_STACK 300 CACHE STRING "Maximum k value using stack memory")
-
-# Options
-# set(BLASFEO_TESTING ON CACHE BOOL "Tests enabled")
-set(BLASFEO_TESTING OFF CACHE BOOL "Tests disabled")
-
-# set(BLASFEO_BENCHMARKS ON CACHE BOOL "Benchmarks enabled")
-set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled")
-
-set(BLASFEO_EXAMPLES ON CACHE BOOL "Examples enabled")
-# set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled")
-
-# Use C99 extension to math library
-set(USE_C99_MATH ON CACHE BOOL "Use C99 extension to math library")
-
-# Compile auxiliary functions with external dependencies
-# (for memory allocation and printing)
-set(EXT_DEP ON CACHE BOOL "Compile external dependencies in BLASFEO")
-
 # Skip BLASFEO utils for unsupported systems and for Realease build
 if(CMAKE_SYSTEM MATCHES "dSpace" OR CMAKE_BUILD_TYPE MATCHES "Release")
 	set(BLASFEO_TESTING OFF CACHE BOOL "Examples disabled" FORCE)
@@ -174,6 +193,7 @@ endif()
 # set(CC_COMPILER gcc CACHE STRING "compiler")
 # set(CC_COMPILER clang)
 # set(CC_COMPILER x86_64-w64-mingw32-gcc)
+# set(CMAKE_C_COMPILER clang)
 if(CMAKE_C_COMPILER_ID MATCHES MSVC)
 	if(NOT ${TARGET} MATCHES GENERIC)
 		message( FATAL_ERROR "MSVC compiler only supported for TARGET=GENERIC")
@@ -188,13 +208,6 @@ set(CMAKE_INSTALL_PREFIX "/opt/blasfeo" CACHE STRING "Installation path")
 
 # headers installation directory
 set(BLASFEO_HEADERS_INSTALLATION_DIRECTORY "include" CACHE STRING "Headers local installation directory")
-
-# Macro level (code size vs performance in assembly kernels): 0 (no macro),
-# 1 (all macro but gemm kernel), 2 (all macro)
-set(MACRO_LEVEL 0)
-
-# enable runtine checks
-set(RUNTIME_CHECKS OFF)
 
 # testing
 if(BLASFEO_TESTING MATCHES ON)
@@ -214,6 +227,15 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_${LA}")
 
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DK_MAX_STACK=${K_MAX_STACK}")
+
+#
+if(${BLAS_API})
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBLAS_API")
+	set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DBLAS_API")
+	if(${FORTRAN_BLAS_API})
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DFORTRAN_BLAS_API")
+	endif()
+endif()
 
 #
 if(${RUNTIME_CHECKS})
@@ -364,6 +386,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_FLAGS_TARGET_${TARGET}}")
 	set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${ASM_FLAGS_TARGET_${TARGET}}")
 endif()
+
 
 
 # source files
@@ -923,6 +946,34 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 	endif(${TARGET} MATCHES GENERIC)
+
+	if(${BLAS_API})
+
+#		file(GLOB BLAS_SRC
+		list(APPEND ${BLAS_SRC}
+			${PROJECT_SOURCE_DIR}/blas_api/dcopy.c
+			${PROJECT_SOURCE_DIR}/blas_api/daxpy.c
+			${PROJECT_SOURCE_DIR}/blas_api/ddot.c
+			${PROJECT_SOURCE_DIR}/blas_api/dgemm.c
+			${PROJECT_SOURCE_DIR}/blas_api/dsyrk.c
+			${PROJECT_SOURCE_DIR}/blas_api/dtrmm.c
+			${PROJECT_SOURCE_DIR}/blas_api/dtrsm.c
+			${PROJECT_SOURCE_DIR}/blas_api/dgesv.c
+			${PROJECT_SOURCE_DIR}/blas_api/dgetrf.c
+			${PROJECT_SOURCE_DIR}/blas_api/dgetrf_np.c
+			${PROJECT_SOURCE_DIR}/blas_api/dgetrs.c
+			${PROJECT_SOURCE_DIR}/blas_api/dlaswp.c
+			${PROJECT_SOURCE_DIR}/blas_api/dposv.c
+			${PROJECT_SOURCE_DIR}/blas_api/dpotrf.c
+			${PROJECT_SOURCE_DIR}/blas_api/dpotrs.c
+			${PROJECT_SOURCE_DIR}/blas_api/dtrtrs.c
+
+			${PROJECT_SOURCE_DIR}/blas_api/saxpy.c
+			${PROJECT_SOURCE_DIR}/blas_api/sdot.c
+			${PROJECT_SOURCE_DIR}/blas_api/sgemm.c
+			)
+
+	endif(${BLAS_API})
 
 else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 
