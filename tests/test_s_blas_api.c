@@ -120,9 +120,9 @@ int main()
 	char uplo = 'u';
 	int info = 0;
 
-	int m0 = 11;
-	int n0 = 11;
-	int k0 = 8;
+	int m0 = n;
+	int n0 = n;
+	int k0 = n;
 
 
 
@@ -161,9 +161,24 @@ int main()
 	dsyrk_(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C, &n);
 #endif
 
-#if 0
+#if 1
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	dtrsm_(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
+//	strsm_(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+//	strsm_(&c_l, &c_l, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
+//	strsm_(&c_l, &c_l, &c_t, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+//	strsm_(&c_l, &c_l, &c_t, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
+//	strsm_(&c_l, &c_u, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+//	strsm_(&c_l, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
+//	strsm_(&c_l, &c_u, &c_t, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+//	strsm_(&c_l, &c_u, &c_t, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
+	strsm_(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+//	strsm_(&c_r, &c_l, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
+//	strsm_(&c_r, &c_l, &c_t, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+//	strsm_(&c_r, &c_l, &c_t, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
+//	strsm_(&c_r, &c_u, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+//	strsm_(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
+//	strsm_(&c_r, &c_u, &c_t, &c_n, &m0, &n0, &alpha, D, &n, C, &n);
+//	strsm_(&c_r, &c_u, &c_t, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
 #if 0
@@ -199,7 +214,7 @@ int main()
 #endif
 
 //	int n1 = n-1;
-#if 1
+#if 0
 	C[0] = sdot_(&n, A, &i_1, A, &i_1);
 //	C[0] = sdot_(&n, A, &n, A, &n);
 //	C[0] = cblas_sdot(n, A, i_1, A, i_1);
@@ -251,9 +266,24 @@ int main()
 	blasfeo_dsyrk(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C, &n);
 #endif
 
-#if 0
-	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	blasfeo_dtrsm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
+#if 1
+	for(ii=0; ii<n*n;  ii++) C2[ii] = B[ii];
+//	blasfeo_strsm(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C2, &n);
+//	blasfeo_strsm(&c_l, &c_l, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C2, &n);
+//	blasfeo_strsm(&c_l, &c_l, &c_t, &c_n, &m0, &n0, &alpha, D, &n, C2, &n);
+//	blasfeo_strsm(&c_l, &c_l, &c_t, &c_u, &m0, &n0, &alpha, D, &n, C2, &n);
+//	blasfeo_strsm(&c_l, &c_u, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C2, &n);
+//	blasfeo_strsm(&c_l, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C2, &n);
+//	blasfeo_strsm(&c_l, &c_u, &c_t, &c_n, &m0, &n0, &alpha, D, &n, C2, &n);
+//	blasfeo_strsm(&c_l, &c_u, &c_t, &c_u, &m0, &n0, &alpha, D, &n, C2, &n);
+	blasfeo_strsm(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C2, &n);
+//	blasfeo_strsm(&c_r, &c_l, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C2, &n);
+//	blasfeo_strsm(&c_r, &c_l, &c_t, &c_n, &m0, &n0, &alpha, D, &n, C2, &n);
+//	blasfeo_strsm(&c_r, &c_l, &c_t, &c_u, &m0, &n0, &alpha, D, &n, C2, &n);
+//	blasfeo_strsm(&c_r, &c_u, &c_n, &c_n, &m0, &n0, &alpha, D, &n, C2, &n);
+//	blasfeo_strsm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C2, &n);
+//	blasfeo_strsm(&c_r, &c_u, &c_t, &c_n, &m0, &n0, &alpha, D, &n, C2, &n);
+//	blasfeo_strsm(&c_r, &c_u, &c_t, &c_u, &m0, &n0, &alpha, D, &n, C2, &n);
 #endif
 
 #if 0
@@ -288,7 +318,7 @@ int main()
 //	s_print_mat(n, n, D, ldd);
 #endif
 
-#if 1
+#if 0
 	C2[0] = blasfeo_sdot_blas(&n, A, &i_1, A, &i_1);
 //	C2[0] = blasfeo_sdot_blas(&n, A, &n, A, &n);
 #endif

@@ -689,6 +689,51 @@ NAME:
 // subroutine
 //
 // input arguments:
+// x9   <- beta
+// x10  <- C
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_M1B_4X4_LIB4
+#else
+	.align	4
+	FUN_START(inner_scale_m1b_4x4_lib4)
+#endif
+
+	ld1		{v29.2d}, [x8]
+
+	fneg	v0.4s, v0.4s
+	fneg	v1.4s, v1.4s
+	fneg	v2.4s, v2.4s
+	fneg	v3.4s, v3.4s
+
+	fcmpe	s29, #0
+	beq		0f
+
+	ld1		{v24.4s, v25.4s, v26.4s, v27.4s}, [x9], #64
+	fmla	v0.4s, v24.4s, v29.4s[0]
+	fmla	v1.4s, v25.4s, v29.4s[0]
+	fmla	v2.4s, v26.4s, v29.4s[0]
+	fmla	v3.4s, v27.4s, v29.4s[0]
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_scale_m1b_4x4_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
 // x8  <- C
 //
 // output arguments:
@@ -1176,8 +1221,8 @@ NAME:
 
 
 
-//                                      w0        x1         x2         x3         x4         x5         x6
-// void kernel_strsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E);
+//                                      w0        x1         x2         x3         x4         x5         x6            x7
+// void kernel_strsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E);
 
 	.align	4
 	GLOB_FUN_START(kernel_strsm_nt_rl_inv_4x4_lib4)
@@ -1205,20 +1250,21 @@ NAME:
 
 
 
-	// call inner blend for alpha=1.0 and beta=1.0
-	mov		x8, x3 // C
+	// call inner blend for alpha=1.0 and beta
+	mov		x8, x3 // beta
+	mov		x9, x4 // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_4X4_LIB4
+	INNER_SCALE_M1B_4X4_LIB4
 #else
-	bl inner_scale_m11_4x4_lib4
+	bl inner_scale_m1b_4x4_lib4
 #endif
 
 
 
 	// solution
-	mov		x8, x5 // E
-	mov		x9, x6 // inv_diag_E
+	mov		x8, x6 // E
+	mov		x9, x7 // inv_diag_E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSM_RLT_INV_4X4_LIB4
@@ -1229,7 +1275,7 @@ NAME:
 
 
 	// store
-	mov		x8, x4
+	mov		x8, x5
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB4

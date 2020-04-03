@@ -4923,8 +4923,8 @@ void kernel_ssyrk_spotrf_nt_l_4x4_vs_lib4(int kp, float *Ap, float *Bp, int km_,
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
-void kernel_strsm_nt_rl_inv_4x4_lib4(int kmax, float *A, float *B, float *C, float *D, float *E, float *inv_diag_E)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER)
+void kernel_strsm_nt_rl_inv_4x4_lib4(int kmax, float *A, float *B, float *beta, float *C, float *D, float *E, float *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -4942,9 +4942,8 @@ void kernel_strsm_nt_rl_inv_4x4_lib4(int kmax, float *A, float *B, float *C, flo
 #endif
 
 	float alpha1 = -1.0;
-	float beta1  = 1.0;
 
-	kernel_sgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, C, CC);
+	kernel_sgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -5027,8 +5026,8 @@ void kernel_strsm_nt_rl_inv_4x4_lib4(int kmax, float *A, float *B, float *C, flo
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_strsm_nt_rl_inv_4x4_vs_lib4(int kmax, float *A, float *B, float *C, float *D, float *E, float *inv_diag_E, int km, int kn)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_strsm_nt_rl_inv_4x4_vs_lib4(int kmax, float *A, float *B, float *beta, float *C, float *D, float *E, float *inv_diag_E, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -5046,9 +5045,8 @@ void kernel_strsm_nt_rl_inv_4x4_vs_lib4(int kmax, float *A, float *B, float *C, 
 #endif
 
 	float alpha1 = -1.0;
-	float beta1  = 1.0;
 
-	kernel_sgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, C, CC);
+	kernel_sgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -5229,7 +5227,7 @@ void kernel_sgemm_strsm_nt_rl_inv_4x4_lib4(int kp, float *Ap, float *Bp, int km_
 	float alpha = 1.0;
 	float beta  = 1.0;
 	kernel_sgemm_nt_4x4_lib4(kp, &alpha, Ap, Bp, &beta, C, D);
-	kernel_strsm_nt_rl_inv_4x4_lib4(km_, Am, Bm, D, D, E, inv_diag_E);
+	kernel_strsm_nt_rl_inv_4x4_lib4(km_, Am, Bm, &beta, D, D, E, inv_diag_E);
 	}
 #endif
 
@@ -5241,14 +5239,14 @@ void kernel_sgemm_strsm_nt_rl_inv_4x4_vs_lib4(int kp, float *Ap, float *Bp, int 
 	float alpha = 1.0;
 	float beta  = 1.0;
 	kernel_sgemm_nt_4x4_vs_lib4(kp, &alpha, Ap, Bp, &beta, C, D, km, kn);
-	kernel_strsm_nt_rl_inv_4x4_vs_lib4(km_, Am, Bm, D, D, E, inv_diag_E, km, kn);
+	kernel_strsm_nt_rl_inv_4x4_vs_lib4(km_, Am, Bm, &beta, D, D, E, inv_diag_E, km, kn);
 	}
 #endif
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_strsm_nt_rl_one_4x4_lib4(int kmax, float *A, float *B, float *C, float *D, float *E)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_strsm_nt_rl_one_4x4_lib4(int kmax, float *A, float *B, float *beta, float *C, float *D, float *E)
 	{
 
 	const int bs = 4;
@@ -5266,9 +5264,8 @@ void kernel_strsm_nt_rl_one_4x4_lib4(int kmax, float *A, float *B, float *C, flo
 #endif
 
 	float alpha1 = -1.0;
-	float beta1  = 1.0;
 
-	kernel_sgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, C, CC);
+	kernel_sgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
 
 	tmp = E[1+bs*0];
 	CC[0+bs*1] -= CC[0+bs*0] * tmp;
@@ -5330,8 +5327,8 @@ void kernel_strsm_nt_rl_one_4x4_lib4(int kmax, float *A, float *B, float *C, flo
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_strsm_nt_rl_one_4x4_vs_lib4(int kmax, float *A, float *B, float *C, float *D, float *E, int km, int kn)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_strsm_nt_rl_one_4x4_vs_lib4(int kmax, float *A, float *B, float *beta, float *C, float *D, float *E, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -5349,9 +5346,8 @@ void kernel_strsm_nt_rl_one_4x4_vs_lib4(int kmax, float *A, float *B, float *C, 
 #endif
 
 	float alpha1 = -1.0;
-	float beta1  = 1.0;
 
-	kernel_sgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, C, CC);
+	kernel_sgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
 
 	if(kn==1)
 		goto store;
@@ -5505,8 +5501,8 @@ void kernel_strsm_nt_rl_one_4x4_vs_lib4(int kmax, float *A, float *B, float *C, 
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_strsm_nt_ru_inv_4x4_lib4(int kmax, float *A, float *B, float *C, float *D, float *E, float *inv_diag_E)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_strsm_nt_ru_inv_4x4_lib4(int kmax, float *A, float *B, float *beta, float *C, float *D, float *E, float *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -5524,9 +5520,8 @@ void kernel_strsm_nt_ru_inv_4x4_lib4(int kmax, float *A, float *B, float *C, flo
 #endif
 
 	float alpha1 = -1.0;
-	float beta1  = 1.0;
 
-	kernel_sgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, C, CC);
+	kernel_sgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
 
 	tmp = inv_diag_E[3];
 	CC[0+bs*3] *= tmp;
@@ -5609,8 +5604,8 @@ void kernel_strsm_nt_ru_inv_4x4_lib4(int kmax, float *A, float *B, float *C, flo
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_strsm_nt_ru_inv_4x4_vs_lib4(int kmax, float *A, float *B, float *C, float *D, float *E, float *inv_diag_E, int km, int kn)
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_strsm_nt_ru_inv_4x4_vs_lib4(int kmax, float *A, float *B, float *beta, float *C, float *D, float *E, float *inv_diag_E, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -5628,9 +5623,8 @@ void kernel_strsm_nt_ru_inv_4x4_vs_lib4(int kmax, float *A, float *B, float *C, 
 #endif
 
 	float alpha1 = -1.0;
-	float beta1  = 1.0;
 
-	kernel_sgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, C, CC);
+	kernel_sgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
 
 	if(kn>3)
 		{
@@ -6098,6 +6092,264 @@ void kernel_sgetrf_nn_4x4_vs_lib4(int kmax, float *A, float *B, int sdb, float *
 
 
 
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_strsm_nt_ru_one_4x4_lib4(int kmax, float *A, float *B, float *beta, float *C, float *D, float *E)
+	{
+
+	const int bs = 4;
+
+	float tmp;
+
+#if defined(TARGET_GENERIC)
+	float CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	float CC[16] __declspec(align(64)) = {0};
+#else
+	float CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	float alpha1 = -1.0;
+
+	kernel_sgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
+
+	tmp = E[2+bs*3];
+	CC[0+bs*2] -= CC[0+bs*3] * tmp;
+	CC[1+bs*2] -= CC[1+bs*3] * tmp;
+	CC[2+bs*2] -= CC[2+bs*3] * tmp;
+	CC[3+bs*2] -= CC[3+bs*3] * tmp;
+	tmp = E[1+bs*3];
+	CC[0+bs*1] -= CC[0+bs*3] * tmp;
+	CC[1+bs*1] -= CC[1+bs*3] * tmp;
+	CC[2+bs*1] -= CC[2+bs*3] * tmp;
+	CC[3+bs*1] -= CC[3+bs*3] * tmp;
+	tmp = E[0+bs*3];
+	CC[0+bs*0] -= CC[0+bs*3] * tmp;
+	CC[1+bs*0] -= CC[1+bs*3] * tmp;
+	CC[2+bs*0] -= CC[2+bs*3] * tmp;
+	CC[3+bs*0] -= CC[3+bs*3] * tmp;
+
+	tmp = E[1+bs*2];
+	CC[0+bs*1] -= CC[0+bs*2] * tmp;
+	CC[1+bs*1] -= CC[1+bs*2] * tmp;
+	CC[2+bs*1] -= CC[2+bs*2] * tmp;
+	CC[3+bs*1] -= CC[3+bs*2] * tmp;
+	tmp = E[0+bs*2];
+	CC[0+bs*0] -= CC[0+bs*2] * tmp;
+	CC[1+bs*0] -= CC[1+bs*2] * tmp;
+	CC[2+bs*0] -= CC[2+bs*2] * tmp;
+	CC[3+bs*0] -= CC[3+bs*2] * tmp;
+
+	tmp = E[0+bs*1];
+	CC[0+bs*0] -= CC[0+bs*1] * tmp;
+	CC[1+bs*0] -= CC[1+bs*1] * tmp;
+	CC[2+bs*0] -= CC[2+bs*1] * tmp;
+	CC[3+bs*0] -= CC[3+bs*1] * tmp;
+
+
+	D[0+bs*0] = CC[0+bs*0];
+	D[1+bs*0] = CC[1+bs*0];
+	D[2+bs*0] = CC[2+bs*0];
+	D[3+bs*0] = CC[3+bs*0];
+
+	D[0+bs*1] = CC[0+bs*1];
+	D[1+bs*1] = CC[1+bs*1];
+	D[2+bs*1] = CC[2+bs*1];
+	D[3+bs*1] = CC[3+bs*1];
+
+	D[0+bs*2] = CC[0+bs*2];
+	D[1+bs*2] = CC[1+bs*2];
+	D[2+bs*2] = CC[2+bs*2];
+	D[3+bs*2] = CC[3+bs*2];
+
+	D[0+bs*3] = CC[0+bs*3];
+	D[1+bs*3] = CC[1+bs*3];
+	D[2+bs*3] = CC[2+bs*3];
+	D[3+bs*3] = CC[3+bs*3];
+
+	return;
+
+	}
+#endif
+
+
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_strsm_nt_ru_one_4x4_vs_lib4(int kmax, float *A, float *B, float *beta, float *C, float *D, float *E, int km, int kn)
+	{
+
+	const int bs = 4;
+
+	float tmp;
+
+#if defined(TARGET_GENERIC)
+	float CC[16] = {0};
+#else
+#if defined (_MSC_VER)
+	float CC[16] __declspec(align(64)) = {0};
+#else
+	float CC[16] __attribute__ ((aligned (64))) = {0};
+#endif
+#endif
+
+	float alpha1 = -1.0;
+
+	kernel_sgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, C, CC);
+
+	if(kn>3)
+		{
+		tmp = E[2+bs*3];
+		CC[0+bs*2] -= CC[0+bs*3] * tmp;
+		CC[1+bs*2] -= CC[1+bs*3] * tmp;
+		CC[2+bs*2] -= CC[2+bs*3] * tmp;
+		CC[3+bs*2] -= CC[3+bs*3] * tmp;
+		tmp = E[1+bs*3];
+		CC[0+bs*1] -= CC[0+bs*3] * tmp;
+		CC[1+bs*1] -= CC[1+bs*3] * tmp;
+		CC[2+bs*1] -= CC[2+bs*3] * tmp;
+		CC[3+bs*1] -= CC[3+bs*3] * tmp;
+		tmp = E[0+bs*3];
+		CC[0+bs*0] -= CC[0+bs*3] * tmp;
+		CC[1+bs*0] -= CC[1+bs*3] * tmp;
+		CC[2+bs*0] -= CC[2+bs*3] * tmp;
+		CC[3+bs*0] -= CC[3+bs*3] * tmp;
+		}
+
+	if(kn>2)
+		{
+		tmp = E[1+bs*2];
+		CC[0+bs*1] -= CC[0+bs*2] * tmp;
+		CC[1+bs*1] -= CC[1+bs*2] * tmp;
+		CC[2+bs*1] -= CC[2+bs*2] * tmp;
+		CC[3+bs*1] -= CC[3+bs*2] * tmp;
+		tmp = E[0+bs*2];
+		CC[0+bs*0] -= CC[0+bs*2] * tmp;
+		CC[1+bs*0] -= CC[1+bs*2] * tmp;
+		CC[2+bs*0] -= CC[2+bs*2] * tmp;
+		CC[3+bs*0] -= CC[3+bs*2] * tmp;
+		}
+
+	if(kn>1)
+		{
+		tmp = E[0+bs*1];
+		CC[0+bs*0] -= CC[0+bs*1] * tmp;
+		CC[1+bs*0] -= CC[1+bs*1] * tmp;
+		CC[2+bs*0] -= CC[2+bs*1] * tmp;
+		CC[3+bs*0] -= CC[3+bs*1] * tmp;
+		}
+
+
+	store:
+
+	if(km>=4)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+		D[3+bs*0] = CC[3+bs*0];
+
+		if(kn==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+		D[3+bs*1] = CC[3+bs*1];
+
+		if(kn==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+		D[3+bs*2] = CC[3+bs*2];
+
+		if(kn==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		D[3+bs*3] = CC[3+bs*3];
+		}
+	else if(km>=3)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+		D[2+bs*0] = CC[2+bs*0];
+
+		if(kn==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+		D[2+bs*1] = CC[2+bs*1];
+
+		if(kn==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+		D[2+bs*2] = CC[2+bs*2];
+
+		if(kn==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		D[2+bs*3] = CC[2+bs*3];
+		}
+	else if(km>=2)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+		D[1+bs*0] = CC[1+bs*0];
+
+		if(kn==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+		D[1+bs*1] = CC[1+bs*1];
+
+		if(kn==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+		D[1+bs*2] = CC[1+bs*2];
+
+		if(kn==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		D[1+bs*3] = CC[1+bs*3];
+		}
+	else //if(km>=1)
+		{
+		D[0+bs*0] = CC[0+bs*0];
+
+		if(kn==1)
+			return;
+
+		D[0+bs*1] = CC[0+bs*1];
+
+		if(kn==2)
+			return;
+
+		D[0+bs*2] = CC[0+bs*2];
+
+		if(kn==3)
+			return;
+
+		D[0+bs*3] = CC[0+bs*3];
+		}
+	
+	return;
+
+	}
+#endif
+
+
+
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 void kernel_strsm_nn_ll_one_4x4_lib4(int kmax, float *A, float *B, int sdb, float *C, float *D, float *E)
 	{
@@ -6369,7 +6621,7 @@ void kernel_strsm_nn_ll_one_4x4_vs_lib4(int kmax, float *A, float *B, int sdb, f
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_strsm_nn_ru_inv_4x4_lib4(int kmax, float *A, float *B, int sdb, float *C, float *D, float *E, float *inv_diag_E)
+void kernel_strsm_nn_ru_inv_4x4_lib4(int kmax, float *A, float *B, int sdb, float *beta, float *C, float *D, float *E, float *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -6394,9 +6646,8 @@ void kernel_strsm_nn_ru_inv_4x4_lib4(int kmax, float *A, float *B, int sdb, floa
 #endif
 	
 	float alpha1 = -1.0;
-	float beta1  = 1.0;
 
-	kernel_sgemm_nn_4x4_lib4(kmax, &alpha1, A, 0, B, sdb, &beta1, C, CC);
+	kernel_sgemm_nn_4x4_lib4(kmax, &alpha1, A, 0, B, sdb, beta, C, CC);
 
 	// solve
 
@@ -6482,7 +6733,7 @@ void kernel_strsm_nn_ru_inv_4x4_lib4(int kmax, float *A, float *B, int sdb, floa
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_strsm_nn_ru_inv_4x4_vs_lib4(int kmax, float *A, float *B, int sdb, float *C, float *D, float *E, float *inv_diag_E, int km, int kn)
+void kernel_strsm_nn_ru_inv_4x4_vs_lib4(int kmax, float *A, float *B, int sdb, float *beta, float *C, float *D, float *E, float *inv_diag_E, int km, int kn)
 	{
 
 	const int bs = 4;
@@ -6507,9 +6758,8 @@ void kernel_strsm_nn_ru_inv_4x4_vs_lib4(int kmax, float *A, float *B, int sdb, f
 #endif
 	
 	float alpha1 = -1.0;
-	float beta1  = 1.0;
 
-	kernel_sgemm_nn_4x4_lib4(kmax, &alpha1, A, 0, B, sdb, &beta1, C, CC);
+	kernel_sgemm_nn_4x4_lib4(kmax, &alpha1, A, 0, B, sdb, beta, C, CC);
 
 	// solve
 

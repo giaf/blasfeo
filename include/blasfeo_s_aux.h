@@ -54,12 +54,14 @@ extern "C" {
 
 // returns the memory size (in bytes) needed for a smat
 int blasfeo_memsize_smat(int m, int n);
+int blasfeo_memsize_smat_ps(int ps, int m, int n);
 // returns the memory size (in bytes) needed for the diagonal of a smat
 int blasfeo_memsize_diag_smat(int m, int n);
 // returns the memory size (in bytes) needed for a svec
 int blasfeo_memsize_svec(int m);
 // create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
 void blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memory);
+void blasfeo_create_smat_ps(int ps, int m, int n, struct blasfeo_smat *sA, void *memory);
 // create a strvec for a vector of size m by using memory passed by a pointer (pointer is not updated)
 void blasfeo_create_svec(int m, struct blasfeo_svec *sA, void *memory);
 void blasfeo_pack_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);

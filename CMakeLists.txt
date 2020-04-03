@@ -971,6 +971,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/blas_api/saxpy.c
 			${PROJECT_SOURCE_DIR}/blas_api/sdot.c
 			${PROJECT_SOURCE_DIR}/blas_api/sgemm.c
+			${PROJECT_SOURCE_DIR}/blas_api/strsm.c
 			)
 
 	endif(${BLAS_API})

@@ -909,6 +909,19 @@ int blasfeo_memsize_smat(int m, int n)
 
 
 
+int blasfeo_memsize_smat_ps(int ps, int m, int n)
+	{
+	int nc = S_NC;
+	int al = ps*nc;
+	int pm = (m+ps-1)/ps*ps;
+	int cn = (n+nc-1)/nc*nc;
+	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
+	int memsize = (pm*cn+tmp)*sizeof(float);
+	return memsize;
+	}
+
+
+
 // return the memory size (in bytes) needed for the digonal of a strmat
 int blasfeo_memsize_diag_smat(int m, int n)
 	{
@@ -941,6 +954,32 @@ void blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memory)
 	sA->dA = ptr;
 	ptr += tmp;
 	sA->use_dA = 0;
+	sA->memsize = (pm*cn+tmp)*sizeof(float);
+	return;
+	}
+
+
+
+void blasfeo_create_smat_ps(int ps, int m, int n, struct blasfeo_smat *sA, void *memory)
+	{
+
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
+	int nc = S_NC;
+	int al = ps*nc;
+	sA->m = m;
+	sA->n = n;
+	int pm = (m+ps-1)/ps*ps;
+	int cn = (n+nc-1)/nc*nc;
+	sA->pm = pm;
+	sA->cn = cn;
+	float *ptr = (float *) memory;
+	sA->pA = ptr;
+	ptr += pm*cn;
+	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
+	sA->dA = ptr;
+	ptr += tmp;
 	sA->memsize = (pm*cn+tmp)*sizeof(float);
 	return;
 	}

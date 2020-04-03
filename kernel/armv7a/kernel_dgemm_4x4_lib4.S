@@ -1578,9 +1578,9 @@ _inner_scale_m1b_4x4_lib4:
 
 	fldd	d18, [r4, #0] // beta
 #if MACRO_LEVEL>=2
-	fldd		d17, \lc_zero // 0.0
+	fldd	d17, \lc_zero // 0.0
 #else
-	fldd		d17, 99b // 0.0
+	fldd	d17, 99b // 0.0
 #endif
 	fcmped	d18, d17
 	fmstat

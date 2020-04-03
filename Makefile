@@ -709,7 +709,8 @@ OBJS += \
 		\
 		blas_api/saxpy.o \
 		blas_api/sdot.o \
-		blas_api/sgemm.o
+		blas_api/sgemm.o \
+		blas_api/strsm.o
 
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
 include $(CURRENT_DIR)/netlib/Makefile.netlib_blas
