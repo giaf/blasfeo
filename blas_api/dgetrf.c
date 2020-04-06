@@ -392,6 +392,7 @@ alg0:
 
 
 
+#if defined(TARGET_X64_INTEL_HASWELL)
 left_12_0:
 
 	m_max = m<jj ? m : jj;
@@ -438,6 +439,7 @@ left_12_0:
 		}
 
 	goto end_0;
+#endif
 
 
 
