@@ -84,7 +84,7 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 		printf("\nBLASFEO: dtrsm: wrong value for transa\n");
 		return;
 		}
-	if( !(*diag=='n' | *diag=='n' | *diag=='u' | *diag=='U') )
+	if( !(*diag=='n' | *diag=='N' | *diag=='u' | *diag=='U') )
 		{
 		printf("\nBLASFEO: dtrsm: wrong value for diag\n");
 		return;
