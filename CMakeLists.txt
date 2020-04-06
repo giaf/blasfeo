@@ -950,7 +950,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 	if(${BLAS_API})
 
 #		file(GLOB BLAS_SRC
-		list(APPEND ${BLAS_SRC}
+		list(APPEND BLAS_SRC
 			${PROJECT_SOURCE_DIR}/blas_api/dcopy.c
 			${PROJECT_SOURCE_DIR}/blas_api/daxpy.c
 			${PROJECT_SOURCE_DIR}/blas_api/ddot.c
