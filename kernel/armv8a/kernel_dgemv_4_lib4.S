@@ -643,7 +643,7 @@ NAME:
 	// solution
 	mov		x8, x1 // A+k*sizeof(double)
 	mov		w9, w0 // k
-	lsl		w0, w0, #5 // k*sizeof(double)
+	lsl		w9, w9, #5 // k*sizeof(double)
 	add		x8, x8, x9
 	mov		x9, x2 // inv_diag_A
 
