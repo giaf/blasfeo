@@ -269,6 +269,61 @@ NAME:
 
 
 
+// subroutine
+//
+// input arguments:
+// x8   <- z
+// x9   <- m1
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_4_VS_LIB4
+#else
+	.align 4
+	FUN_START(inner_store_4_vs_lib4)
+#endif
+
+	cmp		w9, #4
+	bge		1f
+	cmp		w9, #2
+	bgt		2f
+	beq		3f
+
+	// 1
+	str		d0, [x8, #0]
+	b		0f
+
+3:
+	// 2
+	str		q0, [x8, #0]
+	b		0f
+
+2:
+	// 3
+	str		q0, [x8, #0]
+	str		d1, [x8, #16]
+	b		0f
+
+1:
+	// 4
+	stp		q0, q1, [x8, #0]
+	b		0f
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_store_4_vs_lib4)
+#endif
+
+
+
+
+
 //                            w0        x1             x2         x3         x4            x5         x6
 // void kernel_dgemv_n_4_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z)
 
@@ -329,6 +384,72 @@ NAME:
 	ret
 
 	FUN_END(kernel_dgemv_n_4_lib4)
+
+
+
+
+
+//                               w0        x1             x2         x3         x4            x5         x6         w7
+// void kernel_dgemv_n_4_vs_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z, int m1)
+
+	.align	4
+	GLOB_FUN_START(kernel_dgemv_n_4_vs_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		x10, x3 // x
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_N_4_LIB4
+#else
+	bl	inner_kernel_gemv_n_4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x4 // beta
+	mov		x10, x5 // y
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4_LIB4
+#else
+	bl inner_scale_ab_4_lib4
+#endif
+
+
+
+	// store n
+	mov		x8, x6 // z
+	mov		w9, w7 // m1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_VS_LIB4
+#else
+	bl inner_store_4_vs_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dgemv_n_4_vs_lib4)
 
 
 
