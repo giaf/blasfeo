@@ -497,6 +497,60 @@ NAME:
 
 // subroutine
 //
+// triangular substitution with vector RHS
+//
+// input arguments:
+// x8  <- E
+// x9  <- inv_diag_E
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSV_LT_INV_4_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_dtrsv_lt_inv_4_lib4)
+#endif
+
+	ldr		d16, [x9, #24]
+	fmul	v20.2d, v1.2d, v16.2d[0]
+
+	ldr		d25, [x8, #(2*32+24)]
+	ldr		d16, [x9, #16]
+	fmls	v1.2d, v25.2d, v20.2d[1]
+	fmul	v1.2d, v1.2d, v16.2d[0]
+	ins		v1.d[1], v20.d[1]
+
+	ldr		q24, [x8, #(0*32+16)]
+	ldr		q25, [x8, #(1*32+16)]
+	trn1	v26.2d, v24.2d, v25.2d
+	trn2	v27.2d, v24.2d, v25.2d
+	fmls	v0.2d, v26.2d, v1.2d[0]
+	fmls	v0.2d, v27.2d, v1.2d[1]
+
+	ldr		d16, [x9, #8]
+	fmul	v20.2d, v0.2d, v16.2d[0]
+
+	ldr		d25, [x8, #(0+8)]
+	ldr		d16, [x9, #0]
+	fmls	v0.2d, v25.2d, v20.2d[1]
+	fmul	v0.2d, v0.2d, v16.2d[0]
+	ins		v0.d[1], v20.d[1]
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_dtrsv_lt_inv_4_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
 // input arguments:
 //
 // output arguments:
@@ -687,13 +741,10 @@ NAME:
 	GLOB_FUN_START(kernel_dgemv_n_4_lib4)
 	
 
-
 	PROLOGUE
 
 
-
 	ZERO_ACC_N
-
 
 
 	// call inner kernel gemm nt
@@ -708,7 +759,6 @@ NAME:
 #endif
 
 
-
 	// call inner blend for generic alpha and beta
 	mov		x8, x1 // alpha
 	mov		x9, x4 // beta
@@ -721,7 +771,6 @@ NAME:
 #endif
 
 
-
 	// store n
 	mov		x8, x6 // z
 
@@ -730,7 +779,6 @@ NAME:
 #else
 	bl inner_store_4_lib4
 #endif
-
 
 
 	EPILOGUE
@@ -752,13 +800,10 @@ NAME:
 	GLOB_FUN_START(kernel_dgemv_n_4_vs_lib4)
 	
 
-
 	PROLOGUE
 
 
-
 	ZERO_ACC_N
-
 
 
 	// call inner kernel gemm nt
@@ -773,7 +818,6 @@ NAME:
 #endif
 
 
-
 	// call inner blend for generic alpha and beta
 	mov		x8, x1 // alpha
 	mov		x9, x4 // beta
@@ -786,7 +830,6 @@ NAME:
 #endif
 
 
-
 	// store n
 	mov		x8, x6 // z
 	mov		w9, w7 // m1
@@ -796,7 +839,6 @@ NAME:
 #else
 	bl inner_store_4_vs_lib4
 #endif
-
 
 
 	EPILOGUE
@@ -818,13 +860,10 @@ NAME:
 	GLOB_FUN_START(kernel_dgemv_t_4_lib4)
 	
 
-
 	PROLOGUE
 
 
-
 	ZERO_ACC_T
-
 
 
 	// call inner kernel gemm nt
@@ -834,8 +873,6 @@ NAME:
 	lsl		w10, w10, #5 // 32*sda
 	mov		x11, x5 // x
 	mov		w12, w2 // offA
-
-	// TODO offA
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_GEMV_T_4_LIB4
@@ -848,7 +885,6 @@ NAME:
 #else
 	bl	inner_kernel_gemv_t_4_lib4
 #endif
-
 
 
 	// call inner blend for generic alpha and beta
@@ -875,7 +911,6 @@ NAME:
 #endif
 
 
-
 	EPILOGUE
 
 	mov	x0, #0
@@ -893,15 +928,12 @@ NAME:
 
 	.align	4
 	GLOB_FUN_START(kernel_dgemv_t_4_vs_lib4)
-	
 
 
 	PROLOGUE
 
 
-
 	ZERO_ACC_T
-
 
 
 	// call inner kernel gemm nt
@@ -911,8 +943,6 @@ NAME:
 	lsl		w10, w10, #5 // 32*sda
 	mov		x11, x5 // x
 	mov		w12, w2 // offA
-
-	// TODO offA
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_GEMV_T_4_LIB4
@@ -925,7 +955,6 @@ NAME:
 #else
 	bl	inner_kernel_gemv_t_4_lib4
 #endif
-
 
 
 	// call inner blend for generic alpha and beta
@@ -953,7 +982,6 @@ NAME:
 #endif
 
 
-
 	EPILOGUE
 
 	mov	x0, #0
@@ -971,15 +999,12 @@ NAME:
 
 	.p2align 4
 	GLOB_FUN_START(kernel_dtrsv_ln_inv_4_lib4)
-	
 
 
 	PROLOGUE
 
 
-
 	ZERO_ACC_N
-
 
 
 	// call inner dgemv kernel n
@@ -992,7 +1017,6 @@ NAME:
 #else
 	bl	inner_kernel_gemv_n_4_lib4
 #endif
-
 
 
 	// call inner blender n
@@ -1049,13 +1073,10 @@ NAME:
 	GLOB_FUN_START(kernel_dtrsv_ln_inv_4_vs_lib4)
 	
 
-
 	PROLOGUE
 
 
-
 	ZERO_ACC_N
-
 
 
 	// call inner dgemv kernel n
@@ -1068,7 +1089,6 @@ NAME:
 #else
 	bl	inner_kernel_gemv_n_4_lib4
 #endif
-
 
 
 	// call inner blender n
@@ -1114,6 +1134,82 @@ NAME:
 	ret
 
 	FUN_END(kernel_dtrsv_ln_inv_4_vs_lib4)
+
+
+
+
+
+//                                 w0     x1         w2       x3                  x4         x5         x6
+// void kernel_dtrsv_lt_inv_4_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
+
+	.p2align 4
+	GLOB_FUN_START(kernel_dtrsv_lt_inv_4_lib4)
+	
+
+	PROLOGUE
+
+
+	ZERO_ACC_T
+
+
+	// call inner dgemv kernel n
+	mov		w8, w0 // k
+	sub		w8, w8, #4
+	mov		x9, x1  // A
+	mov		w10, w2 // sda
+	lsl		w10, w10, #5 // 32*sda
+	add		x9, x9, x10 // A+bs*sda
+	mov		x11, x4  // x
+	add		x11, x11, #32 // x+4
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_T_4_LIB4
+#else
+	bl	inner_kernel_gemv_t_4_lib4
+#endif
+
+
+	// call inner blender n
+	mov		x8, x5   // y
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_T_4_LIB4
+	INNER_SCALE_M11_4_LIB4
+#else
+	INNER_BLEND_T_4_LIB4
+	bl	inner_scale_m11_4_lib4
+#endif
+
+
+	// solution
+	mov		x8, x1 // A
+	mov		x9, x3 // inv_diag_A
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSV_LT_INV_4_LIB4
+#else
+	bl	inner_edge_dtrsv_lt_inv_4_lib4
+#endif
+
+
+	// store
+	mov		x8, x6 // z 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_LIB4
+#else
+	bl	inner_store_4_lib4
+#endif
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dtrsv_lt_inv_4_lib4)
+
 
 
 
