@@ -471,13 +471,13 @@ void kernel_dtrsv_ln_one_4_vs_lib4(int kmax, double *A, double *x, double *y, do
 		{
 		if(m1==1)
 			return;
-		y[1] = yy[1];
+		z[1] = yy[1];
 		if(m1==2)
 			return;
-		y[2] = yy[2];
+		z[2] = yy[2];
 		if(m1==3)
 			return;
-		y[3] = yy[3];
+		z[3] = yy[3];
 		return;
 		}
 
@@ -494,10 +494,10 @@ void kernel_dtrsv_ln_one_4_vs_lib4(int kmax, double *A, double *x, double *y, do
 		{
 		if(m1==2)
 			return;
-		y[2] = yy[2];
+		z[2] = yy[2];
 		if(m1==3)
 			return;
-		y[3] = yy[3];
+		z[3] = yy[3];
 		return;
 		}
 
@@ -512,7 +512,7 @@ void kernel_dtrsv_ln_one_4_vs_lib4(int kmax, double *A, double *x, double *y, do
 		{
 		if(m1==3)
 			return;
-		y[3] = yy[3];
+		z[3] = yy[3];
 
 		return;
 		}
@@ -1293,13 +1293,13 @@ void kernel_dtrsv_ut_inv_4_vs_lib4(int kmax, double *A, int sda, double *inv_dia
 		{
 		if(m1==1)
 			return;
-		y[1] = yy[1];
+		z[1] = yy[1];
 		if(m1==2)
 			return;
-		y[2] = yy[2];
+		z[2] = yy[2];
 		if(m1==3)
 			return;
-		y[3] = yy[3];
+		z[3] = yy[3];
 		return;
 		}
 
@@ -1316,10 +1316,10 @@ void kernel_dtrsv_ut_inv_4_vs_lib4(int kmax, double *A, int sda, double *inv_dia
 		{
 		if(m1==2)
 			return;
-		y[2] = yy[2];
+		z[2] = yy[2];
 		if(m1==3)
 			return;
-		y[3] = yy[3];
+		z[3] = yy[3];
 		return;
 		}
 
@@ -1334,7 +1334,7 @@ void kernel_dtrsv_ut_inv_4_vs_lib4(int kmax, double *A, int sda, double *inv_dia
 		{
 		if(m1==3)
 			return;
-		y[3] = yy[3];
+		z[3] = yy[3];
 
 		return;
 		}

@@ -318,13 +318,13 @@ void kernel_strsv_ln_inv_4_vs_lib4(int kmax, float *A, float *inv_diag_A, float 
 		{
 		if(m1==1)
 			return;
-		y[1] = yy[1];
+		z[1] = yy[1];
 		if(m1==2)
 			return;
-		y[2] = yy[2];
+		z[2] = yy[2];
 		if(m1==3)
 			return;
-		y[3] = yy[3];
+		z[3] = yy[3];
 		return;
 		}
 
@@ -341,10 +341,10 @@ void kernel_strsv_ln_inv_4_vs_lib4(int kmax, float *A, float *inv_diag_A, float 
 		{
 		if(m1==2)
 			return;
-		y[2] = yy[2];
+		z[2] = yy[2];
 		if(m1==3)
 			return;
-		y[3] = yy[3];
+		z[3] = yy[3];
 		return;
 		}
 
@@ -359,7 +359,7 @@ void kernel_strsv_ln_inv_4_vs_lib4(int kmax, float *A, float *inv_diag_A, float 
 		{
 		if(m1==3)
 			return;
-		y[3] = yy[3];
+		z[3] = yy[3];
 
 		return;
 		}
@@ -471,13 +471,13 @@ void kernel_strsv_ln_one_4_vs_lib4(int kmax, float *A, float *x, float *y, float
 		{
 		if(m1==1)
 			return;
-		y[1] = yy[1];
+		z[1] = yy[1];
 		if(m1==2)
 			return;
-		y[2] = yy[2];
+		z[2] = yy[2];
 		if(m1==3)
 			return;
-		y[3] = yy[3];
+		z[3] = yy[3];
 		return;
 		}
 
@@ -494,10 +494,10 @@ void kernel_strsv_ln_one_4_vs_lib4(int kmax, float *A, float *x, float *y, float
 		{
 		if(m1==2)
 			return;
-		y[2] = yy[2];
+		z[2] = yy[2];
 		if(m1==3)
 			return;
-		y[3] = yy[3];
+		z[3] = yy[3];
 		return;
 		}
 
@@ -512,7 +512,7 @@ void kernel_strsv_ln_one_4_vs_lib4(int kmax, float *A, float *x, float *y, float
 		{
 		if(m1==3)
 			return;
-		y[3] = yy[3];
+		z[3] = yy[3];
 
 		return;
 		}
@@ -1293,13 +1293,13 @@ void kernel_strsv_ut_inv_4_vs_lib4(int kmax, float *A, int sda, float *inv_diag_
 		{
 		if(m1==1)
 			return;
-		y[1] = yy[1];
+		z[1] = yy[1];
 		if(m1==2)
 			return;
-		y[2] = yy[2];
+		z[2] = yy[2];
 		if(m1==3)
 			return;
-		y[3] = yy[3];
+		z[3] = yy[3];
 		return;
 		}
 
@@ -1316,10 +1316,10 @@ void kernel_strsv_ut_inv_4_vs_lib4(int kmax, float *A, int sda, float *inv_diag_
 		{
 		if(m1==2)
 			return;
-		y[2] = yy[2];
+		z[2] = yy[2];
 		if(m1==3)
 			return;
-		y[3] = yy[3];
+		z[3] = yy[3];
 		return;
 		}
 
@@ -1334,7 +1334,7 @@ void kernel_strsv_ut_inv_4_vs_lib4(int kmax, float *A, int sda, float *inv_diag_
 		{
 		if(m1==3)
 			return;
-		y[3] = yy[3];
+		z[3] = yy[3];
 
 		return;
 		}
