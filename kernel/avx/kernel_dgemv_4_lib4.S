@@ -700,7 +700,7 @@ NAME:
 // ymm14 <- dirty
 // ymm15 <- dirty
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_EDGE_GEMV_ADD_T_4_LIB4
 #else
 	.p2align 4,,15
@@ -760,7 +760,7 @@ NAME:
 	
 0: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -2738,7 +2738,7 @@ NAME:
 	movq	ARG6, %r13  // x
 	movq	ARG3, %r14 // offA
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMV_ADD_T_4_LIB4
 #else
 	CALL(inner_edge_gemv_add_t_4_lib4)
@@ -2811,7 +2811,7 @@ NAME:
 	movq	ARG6, %r13  // x
 	movq	ARG3, %r14 // offA
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_EDGE_GEMV_ADD_T_4_LIB4
 #else
 	CALL(inner_edge_gemv_add_t_4_lib4)

@@ -71,9 +71,14 @@ NAME:
 NAME:
 #define FUN_END(NAME) \
 	.size	NAME, .-NAME
-#define ZERO_ACC \
+#define ZERO_ACC_N \
 	fmov	d0, xzr; \
 	fmov    d1, d0
+#define ZERO_ACC_T \
+	fmov	d0, xzr; \
+	fmov    d1, d0; \
+	fmov    d2, d0; \
+	fmov    d3, d0
 
 
 
@@ -129,6 +134,7 @@ NAME:
 	ldp		q22, q23, [x9, #(3*32)]
 
 	// unroll 0
+//	ldp		q16, q17, [x9, #(0*32)]
 //	ldr		q20, [x9, #(0*16)]
 	fmla	v0.2d, v16.2d, v24.2d[0]
 //	prfm	PLDL1KEEP, [x9, #(2*128+0)]
@@ -137,6 +143,7 @@ NAME:
 	add		x10, x10, #32
 
 	// unroll 1
+//	ldp		q18, q19, [x9, #(1*32)]
 //	ldr		q22, [x9, #(2*16)]
 	fmla	v8.2d, v18.2d, v24.2d[1]
 //	prfm	PLDL1KEEP, [x9, #(2*128+64)]
@@ -145,13 +152,16 @@ NAME:
 	sub		w8, w8, #4
 
 	// unroll 2
+//	ldp		q20, q21, [x9, #(2*32)]
 //	ldr		q16, [x9, #(4*16)]
 	fmla	v0.2d, v20.2d, v25.2d[0]
+//	prfm	PLDL1KEEP, [x10, #(1*32)]
 //	ldr		q17, [x9, #(5*16)]
 	fmla	v1.2d, v21.2d, v25.2d[0]
 	cmp		w8, #4
 
 	// unroll 3
+//	ldp		q22, q23, [x9, #(3*32)]
 //	ldr		q18, [x9, #(6*16)]
 	fmla	v8.2d, v22.2d, v25.2d[1]
 //	ldr		q19, [x9, #(7*16)]
@@ -191,6 +201,178 @@ NAME:
 	ret
 
 	FUN_END(inner_kernel_gemv_n_4_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// w10  <- 32*sda
+// x11  <- x
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMV_T_4_LIB4
+#else
+	.align	4
+	FUN_START(inner_kernel_gemv_t_4_lib4)
+#endif
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	// prefetch
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+
+	// main loop
+1:
+	
+	ldp		q24, q25, [x11, #(0*32)]
+
+	ldp		q16, q17, [x9, #(0*32)]
+	ldp		q18, q19, [x9, #(1*32)]
+	ldp		q20, q21, [x9, #(2*32)]
+	ldp		q22, q23, [x9, #(3*32)]
+
+	// unroll x4
+	fmla	v0.2d, v16.2d, v24.2d
+	add		x9, x9, x10
+	fmla	v1.2d, v18.2d, v24.2d
+//	prfm	PLDL1KEEP, [x9, #0]
+
+	fmla	v2.2d, v20.2d, v24.2d
+//	prfm	PLDL1KEEP, [x9, #63]
+	fmla	v3.2d, v22.2d, v24.2d
+	add		x11, x11, #32
+
+	fmla	v0.2d, v17.2d, v25.2d
+//	prfm	PLDL1KEEP, [x11, #0]
+	fmla	v1.2d, v19.2d, v25.2d
+	sub		w8, w8, #4
+
+	fmla	v2.2d, v21.2d, v25.2d
+	cmp		w8, #4
+	fmla	v3.2d, v23.2d, v25.2d
+
+	bgt		1b
+
+0:
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// unroll 0
+	ldr		d24, [x11], #8
+	ldr		d16, [x9, #(0*32)]
+	ldr		d18, [x9, #(1*32)]
+	ldr		d20, [x9, #(2*32)]
+	ldr		d22, [x9, #(3*32)]
+	fmla	v0.2d, v16.2d, v24.2d
+	fmla	v1.2d, v18.2d, v24.2d
+	fmla	v2.2d, v20.2d, v24.2d
+	fmla	v3.2d, v22.2d, v24.2d
+	add		x9, x9, #8
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemv_t_4_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// w10  <- 32*sda
+// x11  <- x
+// w12  <- offA
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMV_T_4_LIB4
+#else
+	.align	4
+	FUN_START(inner_edge_gemv_t_4_lib4)
+#endif
+
+	cmp		w12, #0
+	ble		2f // return
+
+	cmp		w8, #0
+	ble		2f // return
+
+	mov		w13, #4
+	sub		w14, w13, w12 // 4-offsetB
+	cmp		w14, w8
+	ble		0f
+	mov		w14, w8 // kend=min(k,4-offsetB(
+0:
+//	movgt	w14, w8 // kend=min(k,4-offsetB(
+	
+//	add		x9, x9, x12, LSL #3 // A + offA*sizeof(double)
+
+1:
+	ldr		d24, [x11], #8
+	ldr		d16, [x9, #(0*32)]
+	ldr		d18, [x9, #(1*32)]
+	ldr		d20, [x9, #(2*32)]
+	ldr		d22, [x9, #(3*32)]
+	fmla	v0.2d, v16.2d, v24.2d
+	fmla	v1.2d, v18.2d, v24.2d
+	fmla	v2.2d, v20.2d, v24.2d
+	fmla	v3.2d, v22.2d, v24.2d
+	add		x9, x9, #8
+	sub		w8, w8, #1
+
+	sub		w14, w14, #1
+
+	cmp		w14, #0
+	bgt		1b
+
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x9, x9, x10
+	sub		x9, x9, #32
+
+2: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemv_t_4_lib4)
 #endif
 
 
@@ -307,6 +489,34 @@ NAME:
 	ret
 
 	FUN_END(inner_edge_dtrsv_ln_inv_4_vs_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_T_4_LIB4
+#else
+	.align	4
+	FUN_START(inner_blend_t_4_lib4)
+#endif
+
+	faddp	v0.2d, v0.2d, v1.2d
+	faddp	v1.2d, v2.2d, v3.2d
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_blend_t_4_lib4)
 #endif
 
 
@@ -482,7 +692,7 @@ NAME:
 
 
 
-	ZERO_ACC
+	ZERO_ACC_N
 
 
 
@@ -547,7 +757,7 @@ NAME:
 
 
 
-	ZERO_ACC
+	ZERO_ACC_N
 
 
 
@@ -601,6 +811,161 @@ NAME:
 
 
 
+//                            w0        x1             w2         x3         w4      x5         x6            x7         sp+0
+// void kernel_dgemv_t_4_lib4(int kmax, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z)
+
+	.align	4
+	GLOB_FUN_START(kernel_dgemv_t_4_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC_T
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x3 // A
+	mov		w10, w4 // sda
+	lsl		w10, w10, #5 // 32*sda
+	mov		x11, x5 // x
+	mov		w12, w2 // offA
+
+	// TODO offA
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_GEMV_T_4_LIB4
+#else
+	bl	inner_edge_gemv_t_4_lib4
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_T_4_LIB4
+#else
+	bl	inner_kernel_gemv_t_4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x6 // beta
+	mov		x10, x7 // y
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_T_4_LIB4
+	INNER_SCALE_AB_4_LIB4
+#else
+	bl inner_blend_t_4_lib4
+	bl inner_scale_ab_4_lib4
+#endif
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 0)] // z
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_LIB4
+#else
+	bl inner_store_4_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dgemv_t_4_lib4)
+
+
+
+
+
+//                            w0        x1             w2         x3         w4      x5         x6            x7         sp+0          sp+8
+// void kernel_dgemv_t_4_vs_lib4(int kmax, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z, int m1)
+
+	.align	4
+	GLOB_FUN_START(kernel_dgemv_t_4_vs_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC_T
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x3 // A
+	mov		w10, w4 // sda
+	lsl		w10, w10, #5 // 32*sda
+	mov		x11, x5 // x
+	mov		w12, w2 // offA
+
+	// TODO offA
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_GEMV_T_4_LIB4
+#else
+	bl	inner_edge_gemv_t_4_lib4
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_T_4_LIB4
+#else
+	bl	inner_kernel_gemv_t_4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x6 // beta
+	mov		x10, x7 // y
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_T_4_LIB4
+	INNER_SCALE_AB_4_LIB4
+#else
+	bl inner_blend_t_4_lib4
+	bl inner_scale_ab_4_lib4
+#endif
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 0)] // z
+	ldr		w9, [sp, #(STACKSIZE + 8)] // m1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_VS_LIB4
+#else
+	bl inner_store_4_vs_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dgemv_t_4_vs_lib4)
+
+
+
+
+
 //                                 w0     x1         x2                  x3         x4         x5
 // void kernel_dtrsv_ln_inv_4_lib4(int k, double *A, double *inv_diag_A, double *x, double *y, double *z);
 
@@ -613,7 +978,7 @@ NAME:
 
 
 
-	ZERO_ACC
+	ZERO_ACC_N
 
 
 
@@ -689,7 +1054,7 @@ NAME:
 
 
 
-	ZERO_ACC
+	ZERO_ACC_N
 
 
 
