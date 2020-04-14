@@ -410,37 +410,38 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_12x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_8x8_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_8x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_8x4_lib4.c
-#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_10xX_lib4.S
-#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_8x2_lib4.S
-#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_6xX_lib4.S
-#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_4x2_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemv_8_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dsymv_6_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgebp_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgelqf_4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_24x4_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_16x4_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_8x8_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_8x4_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_8x4_lib8.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_diag_lib8.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_8_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_4_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib8.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecpsc_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgead_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecpsc_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_spack_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_8x4_lib8.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
 			)
@@ -473,38 +474,38 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 
 		file(GLOB KERNEL_SRC
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_12x4_lib4.S
-#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_10xX_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_8x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_8x4_lib4.c
-#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_8x2_lib4.S
-#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_6xX_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_4x4_lib4.S
-#			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_4x2_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_12_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_8_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dsymv_6_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dsymv_6_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgebp_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgelqf_4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_16x4_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x8_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x4_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_8x4_lib8.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_diag_lib8.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_8_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_4_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib8.c
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgead_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecpsc_lib8.S
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgead_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_spack_lib8.S
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_8x4_lib8.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
 			)
@@ -547,6 +548,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_sgemm_4x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
@@ -556,6 +559,9 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
 			)
@@ -594,7 +600,11 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
@@ -602,9 +612,10 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
 			)
@@ -639,15 +650,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_8x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_4x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dpack_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgetrf_pivot_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemv_4_lib4.S
-
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_16x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_12x4_lib4.S
@@ -661,8 +676,9 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
 			)
@@ -699,15 +715,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_8x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_4x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dpack_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgetrf_pivot_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemv_4_lib4.S
-
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_16x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_12x4_lib4.S
@@ -721,8 +741,9 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
 			)
@@ -761,7 +782,11 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_12x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
@@ -773,8 +798,9 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
 			)
@@ -813,7 +839,11 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
@@ -824,8 +854,9 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
 			)
@@ -865,7 +896,11 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
@@ -876,8 +911,9 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
 			)
@@ -913,11 +949,13 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
@@ -926,6 +964,9 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
 			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
 			)
