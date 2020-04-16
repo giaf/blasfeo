@@ -2152,7 +2152,7 @@ void kernel_dgetrf_pivot_12_vs_lib(int m, double *C, int ldc, double *pd, int* i
 	double d1 = 1.0;
 	double dm1 = -1.0;
 
-	// saturate n to 8
+	// saturate n to 12
 	n = 12<n ? 12 : n;
 
 	int p = m<n ? m : n;
