@@ -246,7 +246,7 @@ static void sgemm_nt_lib(int m, int n, int k, float alpha, float *pA, int sda, f
 
 
 
-// dgemm nt
+// sgemm nt
 void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
@@ -356,18 +356,12 @@ void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 
 
 
-// dgemm nn
+// sgemm nn
 void blasfeo_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)
 		return;
-
-	if(ai!=0 | ci!=0 | di!=0)
-		{
-		printf("\nblasfeo_sgemm_nn: feature not implemented yet: ai=%d, ci=%d, di=%d\n", ai, ci, di);
-		exit(1);
-		}
 
 	// invalidate stored inverse diagonal of result matrix
 	sD->use_dA = 0;
@@ -379,19 +373,84 @@ void blasfeo_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 	int sdc = sC->cn;
 	int sdd = sD->cn;
 
+	int air = ai & (ps-1);
 	int bir = bi & (ps-1);
 
-	float *pA = sA->pA + aj*ps;
+	// pA, pB point to panels edges
+	float *pA = sA->pA + aj*ps + (ai-air)*sda;
 	float *pB = sB->pA + bj*ps + (bi-bir)*sdb;
 	float *pC = sC->pA + cj*ps;
 	float *pD = sD->pA + dj*ps;
 
 	int offsetB = bir;
 
+	int ci0 = ci-air;
+	int di0 = di-air;
+	int offsetC;
+	int offsetD;
+	if(ci0>=0)
+		{
+		pC += ci0/ps*ps*sdd;
+		offsetC = ci0%ps;
+		}
+	else
+		{
+		pC += -ps*sdc;
+		offsetC = ps+ci0;
+		}
+
+	if(di0>=0)
+		{
+		pD += di0/ps*ps*sdd;
+		offsetD = di0%ps;
+		}
+	else
+		{
+		pD += -ps*sdd;
+		offsetD = ps+di0;
+		}
+
 	int i, j, l;
 
-	i = 0;
 
+
+	// algorithm scheme
+	if(air!=0)
+		{
+		goto clear_air;
+		}
+select_loop:
+	if(offsetC==0 & offsetD==0)
+		{
+		goto loop_00;
+		}
+	else
+		{
+		goto loop_CD;
+		}
+	// should never get here
+	return;
+
+
+
+	// clean up at the beginning
+clear_air:
+	j = 0;
+	for(; j<n; j+=4)
+		{
+		kernel_sgemm_nn_4x4_gen_lib4(k, &alpha, &pA[0], offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
+		}
+	m -= 1*ps-air;
+	pA += 1*ps*sda;
+	pC += 1*ps*sdc;
+	pD += 1*ps*sdd;
+	goto select_loop;
+
+
+
+	// main loop aligned
+loop_00:
+	i = 0;
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; i<m-7; i+=8)
 		{
@@ -471,9 +530,26 @@ void blasfeo_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 		goto left_4;
 		}
 #endif
-
 	// common return if i==m
 	return;
+
+
+
+	// main loop C, D not aligned
+loop_CD:
+	i = 0;
+	for(; i<m; i+=4)
+		{
+		j = 0;
+		for(; j<n; j+=4)
+			{
+			kernel_sgemm_nn_4x4_gen_lib4(k, &alpha, &pA[i*sda], offsetB, &pB[j*ps], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			}
+		}
+	// common return if i==m
+	return;
+
+
 
 	// clean up loops definitions
 
@@ -1313,7 +1389,7 @@ void blasfeo_ssyrk_ln_mn(int m, int n, int k, float alpha, struct blasfeo_smat *
 			}
 		if(j<n)
 			{
-			if(j<i) // dgemm
+			if(j<i) // sgemm
 				{
 				kernel_sgemm_nt_4x4_vs_lib4(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*bs+i*sdc], &pD[j*bs+i*sdd], m-i, n-j);
 				}
@@ -1356,7 +1432,7 @@ void blasfeo_ssyrk_ln_mn(int m, int n, int k, float alpha, struct blasfeo_smat *
 
 
 
-void blasfeo_ssyrk_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_ssyrk_lt(int m, int k, float alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, float beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 #ifndef BENCHMARKS_MODE
 	printf("\nblasfeo_ssyrk_lt: feature not implemented yet\n");
@@ -1367,7 +1443,7 @@ void blasfeo_ssyrk_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 
 
 
-void blasfeo_ssyrk_un(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_ssyrk_un(int m, int k, float alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, float beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 #ifndef BENCHMARKS_MODE
 	printf("\nblasfeo_ssyrk_un: feature not implemented yet\n");
@@ -1378,7 +1454,7 @@ void blasfeo_ssyrk_un(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 
 
 
-void blasfeo_ssyrk_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_ssyrk_ut(int m, int k, float alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, float beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 #ifndef BENCHMARKS_MODE
 	printf("\nblasfeo_ssyrk_ut: feature not implemented yet\n");

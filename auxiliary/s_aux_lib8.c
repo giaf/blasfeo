@@ -46,7 +46,7 @@
 // copies a lower triangular packed matrix into a lower triangular packed matrix
 void strcp_l_lib(int m, int offsetA, float *A, int sda, int offsetB, float *B, int sdb)
 	{
-	printf("\nstrcp_;l_lib: feature not implemented yet\n");
+	printf("\nstrcp_l_lib: feature not implemented yet\n");
 	exit(1);
 	}
 
