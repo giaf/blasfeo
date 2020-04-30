@@ -1188,7 +1188,7 @@ void blasfeo_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, 
 				}
 			else // dpptrf
 				{
-				if(n<j-11)
+				if(j<n-11)
 					{
 					kernel_dpotrf_nt_l_12x4_lib4(j, &pD[i*sdd], sdd, &pD[j*sdd], &pC[j*ps+j*sdc], sdc, &pD[j*ps+j*sdd], sdd, &dD[j]);
 #if defined(TARGET_X64_INTEL_HASWELL)

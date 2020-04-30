@@ -331,7 +331,8 @@ void kernel_sgemm_nt_16x4_lib4(int k, float *alpha, float *A, int sda, float *B,
 void kernel_strsm_nt_rl_inv_16x4_lib4(int k, float *A, int sda, float *B, float *C, int sdc, float *D, int sdd, float *E, float *inv_diag_E);
 // 12x4
 void kernel_sgemm_nt_12x4_lib4(int k, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd); //
-void kernel_strsm_nt_rl_inv_12x4_lib4(int k, float *A, int sda, float *B, float *C, int sdc, float *D, int sdd, float *E, float *inv_diag_E);
+void kernel_strsm_nt_rl_inv_12x4_lib4(int k, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd, float *E, float *inv_diag_E);
+void kernel_strsm_nt_rl_inv_12x4_vs_lib4(int k, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd, float *E, float *inv_diag_E, int m1, int n1);
 // 8x8
 void kernel_sgemm_nt_8x8_lib4(int k, float *alpha, float *A, int sda, float *B, int sdb, float *beta, float *C, int sdc, float *D, int sdd); //
 void kernel_sgemm_nt_8x8_vs_lib4(int k, float *alpha, float *A, int sda, float *B, int sdb, float *beta, float *C, int sdc, float *D, int sdd, int m1, int n1); //
@@ -391,6 +392,7 @@ void kernel_sgemm_diag_left_1_lib4(int kmax, float *alpha, float *A, float *B, f
 void kernel_spotrf_nt_l_16x4_lib4(int k, float *A, int sda, float *B, float *C, int sdc, float *D, int sdd, float *inv_diag_D);
 // 12x4
 void kernel_spotrf_nt_l_12x4_lib4(int k, float *A, int sda, float *B, float *C, int sdc, float *D, int sdd, float *inv_diag_D);
+void kernel_spotrf_nt_l_12x4_vs_lib4(int k, float *A, int sda, float *B, float *C, int sdc, float *D, int sdd, float *inv_diag_D, int m1, int n1);
 // 8x4
 void kernel_spotrf_nt_l_8x4_lib4(int k, float *A, int sda, float *B, float *C, int sdc, float *D, int sdd, float *inv_diag_D);
 void kernel_spotrf_nt_l_8x4_vs_lib4(int k, float *A, int sda, float *B, float *C, int sdc, float *D, int sdd, float *inv_diag_D, int m1, int n1);
