@@ -2921,6 +2921,8 @@ NAME:
 	fmul		v14.2d, v14.2d, v16.2d[0]
 	fmul		v15.2d, v15.2d, v16.2d[0]
 
+0:
+
 #if MACRO_LEVEL>=1
 	.endm
 #else
@@ -3066,6 +3068,8 @@ NAME:
 	fmls		v7.2d, v5.2d, v16.2d[0]
 	fmls		v14.2d, v12.2d, v16.2d[0]
 	fmls		v15.2d, v13.2d, v16.2d[0]
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm

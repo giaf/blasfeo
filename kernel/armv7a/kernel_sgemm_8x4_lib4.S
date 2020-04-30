@@ -1251,6 +1251,86 @@ _inner_scale_ab_8x4_lib4:
 // subroutine
 //
 // input arguments:
+// r4   <- beta
+// r5   <- C
+// r7   <- sdc
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_M1B_8X4_LIB4 lc_zero
+#else
+	.align 3
+99: // 00
+	.word 0
+	.word 0
+
+//	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_m1b_8x4_lib4, %function
+inner_scale_m1b_8x4_lib4:
+#elif defined(OS_MAC)
+_inner_scale_m1b_8x4_lib4:
+#endif
+#endif
+
+	vldr	d0, 99b
+	vldr	d1, 99b
+
+	vsub.f32	q4, q0, q4
+	vsub.f32	q5, q0, q5
+	vsub.f32	q6, q0, q6
+	vsub.f32	q7, q0, q7
+	vsub.f32	q8, q0, q8
+	vsub.f32	q9, q0, q9
+	vsub.f32	q10, q0, q10
+	vsub.f32	q11, q0, q11
+
+	flds		s9, [r4, #0] // beta
+#if MACRO_LEVEL>=1
+	flds		s10, \lc_zero // 0.0
+#else
+	flds		s10, 99b // 0.0
+#endif
+	fcmpes		s9, s10
+	fmstat
+
+	beq		0f // end
+
+	add		r8, r5, r6
+
+	vld1.64		{d0, d1, d2, d3}, [r5:128]!
+	vmla.f32	q4, q0, d4[1]
+	vmla.f32	q5, q1, d4[1]
+	vld1.64		{d0, d1, d2, d3}, [r5:128]!
+	vmla.f32	q6, q0, d4[1]
+	vmla.f32	q7, q1, d4[1]
+	vld1.64		{d0, d1, d2, d3}, [r8:128]!
+	vmla.f32	q8, q0, d4[1]
+	vmla.f32	q9, q1, d4[1]
+	vld1.64		{d0, d1, d2, d3}, [r8:128]!
+	vmla.f32	q10, q0, d4[1]
+	vmla.f32	q11, q1, d4[1]
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	mov		pc, lr // return
+
+#if defined(OS_LINUX)
+	.size	inner_scale_m1b_8x4_lib4, .-inner_scale_m1b_8x4_lib4
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
 // r4   <- C
 // r5   <- sdc
 //
@@ -1612,8 +1692,8 @@ _kernel_sgemm_nn_8x4_lib4:
 
 
 
-//                                      r0        r1         r2       r3         sp+0       sp+4     rsp+8      rsp+12   rsp+16     rsp+20
-// void kernel_strsm_nt_rl_inv_8x4_lib4(int kmax, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
+//                                      r0        r1         r2       r3         sp+0       sp+4     rsp+8      rsp+12   rsp+16     rsp+20        rsp+24
+// void kernel_strsm_nt_rl_inv_8x4_lib4(int kmax, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
 
 //	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1662,25 +1742,26 @@ _kernel_strsm_nt_rl_inv_8x4_lib4:
 
 
 	// call inner blend for alpha=1.0 and beta=1.0
-	ldr		r4, [fp, #0] // C
-	ldr		r5, [fp, #4] // sdd
-	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
+	ldr		r4, [fp, #0] // beta
+	ldr		r5, [fp, #4] // C
+	ldr		r6, [fp, #8] // sdd
+	lsl		r6, r6, #4 // 4*sizeof(float)*sdd
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_8X4_LIB4
+	INNER_SCALE_M1B_8X4_LIB4 99f
 #else
 #if defined(OS_LINUX)
-	bl inner_scale_m11_8x4_lib4
+	bl inner_scale_m1b_8x4_lib4
 #elif defined(OS_MAC)
-	bl _inner_scale_m11_8x4_lib4
+	bl _inner_scale_m1b_8x4_lib4
 #endif
 #endif
 
 
 
 	// factorization
-	ldr		r4, [fp, #16] // E
-	ldr		r5, [fp, #20] // inv_diag_E
+	ldr		r4, [fp, #20] // E
+	ldr		r5, [fp, #24] // inv_diag_E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSM_RLT_INV_8X4_LIB4
@@ -1695,8 +1776,8 @@ _kernel_strsm_nt_rl_inv_8x4_lib4:
 
 
 	// store l
-	ldr		r4, [fp, #8] // D
-	ldr		r5, [fp, #12] // sdd
+	ldr		r4, [fp, #12] // D
+	ldr		r5, [fp, #16] // sdd
 	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
 #if MACRO_LEVEL>=1

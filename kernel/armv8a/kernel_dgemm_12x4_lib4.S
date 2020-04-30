@@ -2109,6 +2109,8 @@ NAME:
 	fmul		v22.2d, v22.2d, v24.2d[0]
 	fmul		v23.2d, v23.2d, v24.2d[0]
 
+0:
+
 #if MACRO_LEVEL>=1
 	.endm
 #else
@@ -2280,6 +2282,8 @@ NAME:
 	fmls		v15.2d, v13.2d, v24.2d[0]
 	fmls		v22.2d, v20.2d, v24.2d[0]
 	fmls		v23.2d, v21.2d, v24.2d[0]
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
