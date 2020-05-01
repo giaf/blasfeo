@@ -45,8 +45,8 @@ extern "C" {
 
 // expose reference BLASFEO for testing
 
-void blasfeo_create_smat_ref  (int m, int n, struct blasfeo_smat_ref *sA, char *memory);
-void blasfeo_create_svec_ref  (int m, int n, struct blasfeo_svec_ref *sA, char *memory);
+void blasfeo_create_smat_ref  (int m, int n, struct blasfeo_smat_ref *sA, void *memory);
+void blasfeo_create_svec_ref  (int m, int n, struct blasfeo_svec_ref *sA, void *memory);
 
 void blasfeo_free_smat_ref(struct blasfeo_smat_ref *sA);
 void blasfeo_free_svec_ref(struct blasfeo_svec_ref *sa);

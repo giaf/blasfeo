@@ -156,7 +156,7 @@ struct RoutineArgs{
 	struct STRMAT_REF *cC;
 	struct STRMAT_REF *cD;
 
-	char * work;
+	void * work;
 	int info;
 
 	// blas_api

@@ -54,8 +54,8 @@ int test_blasfeo_memsize_smat(int m, int n);
 int test_blasfeo_memsize_diag_smat(int m, int n);
 int test_blasfeo_memsize_svec(int m);
 
-void test_blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, char *memory);
-void test_blasfeo_create_svec(int m, struct blasfeo_svec *sA, char *memory);
+void test_blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memory);
+void test_blasfeo_create_svec(int m, struct blasfeo_svec *sA, void *memory);
 
 void test_blasfeo_pack_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
 void test_blasfeo_pack_svec(int m, float *a, struct blasfeo_svec *sa, int ai);

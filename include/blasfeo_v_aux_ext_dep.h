@@ -54,13 +54,13 @@ extern "C" {
 
 #ifdef EXT_DEP
 
-void v_zeros(char **ptrA, int size);
+void v_zeros(void **ptrA, int size);
 // dynamically allocate size bytes of memory aligned to 64-byte boundaries and set accordingly a pointer to void; set allocated memory to zero
-void v_zeros_align(char **ptrA, int size);
+void v_zeros_align(void **ptrA, int size);
 // free the memory allocated by v_zeros
-void v_free(char *ptrA);
+void v_free(void *ptrA);
 // free the memory allocated by v_zeros_aligned
-void v_free_align(char *ptrA);
+void v_free_align(void *ptrA);
 // dynamically allocate size bytes of memory and set accordingly a pointer to char; set allocated memory to zero
 void c_zeros(char **ptrA, int size);
 // dynamically allocate size bytes of memory aligned to 64-byte boundaries and set accordingly a pointer to char; set allocated memory to zero

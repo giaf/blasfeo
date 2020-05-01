@@ -375,8 +375,8 @@ openblas_set_num_threads(1);
 
 				int memsize = 64+memsize_A+memsize_B+memsize_C;
 
-				char *mem = calloc(memsize, 1);
-				char *mem_align = (char *) ( ( ( (unsigned long long) mem ) + 63) / 64 * 64 );
+				void *mem = calloc(memsize, 1);
+				void *mem_align = (void *) ( ( ( (unsigned long long) mem ) + 63) / 64 * 64 );
 
 				struct blasfeo_dmat sA, sB, sC;
 

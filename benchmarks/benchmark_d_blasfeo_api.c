@@ -697,11 +697,11 @@ int main()
 			}
 
 		int qr_work_size = blasfeo_dgeqrf_worksize(n, n);
-		char *qr_work;
+		void *qr_work;
 		v_zeros_align(&qr_work, qr_work_size);
 
 		int lq_work_size = blasfeo_dgelqf_worksize(n, n);
-		char *lq_work;
+		void *lq_work;
 		v_zeros_align(&lq_work, lq_work_size);
 
 		// create matrix to pivot all the time

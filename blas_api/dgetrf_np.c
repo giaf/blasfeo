@@ -103,7 +103,7 @@ void blas_dgetrf_np(int *pm, int *pn, double *C, int *pldc, int *info)
 	int sdu, sdc;
 	double *pU, *pC, *pd;
 	int sC_size, stot_size;
-	char *smat_mem, *smat_mem_align;
+	void *smat_mem, *smat_mem_align;
 	int m1, n1;
 
 //	int n4 = n<4 ? n : 4;

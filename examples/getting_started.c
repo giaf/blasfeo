@@ -70,7 +70,7 @@ int main()
     // B
     struct blasfeo_dmat sB;                       // matrix structure
     int B_size = blasfeo_memsize_dmat(n, n);      // size of memory needed by B
-    char *B_mem_align;
+    void *B_mem_align;
     v_zeros_align(&B_mem_align, B_size);          // allocate memory needed by B
     blasfeo_create_dmat(n, n, &sB, B_mem_align);  // assign aligned memory to struct
 
@@ -78,8 +78,8 @@ int main()
     struct blasfeo_dmat sC;                                                  // matrix structure
     int C_size = blasfeo_memsize_dmat(n, n);                                 // size of memory needed by C
     C_size += 64;                                                            // 64-bytes alignment
-    char *C_mem = malloc(C_size);
-    char *C_mem_align = (char *) ((((unsigned long long) C_mem)+63)/64*64);  // align memory pointer
+    void *C_mem = malloc(C_size);
+    void *C_mem_align = (void *) ((((unsigned long long) C_mem)+63)/64*64);  // align memory pointer
     blasfeo_create_dmat(n, n, &sC, C_mem_align);                             // assign aligned memory to struct
 
     // A

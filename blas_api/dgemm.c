@@ -86,7 +86,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 	struct blasfeo_dmat sA, sB;
 	int sda, sdb;
 	int sA_size, sB_size;
-	char *smat_mem, *smat_mem_align;
+	void *smat_mem, *smat_mem_align;
 	int m1, n1, k1;
 	int pack_B;
 

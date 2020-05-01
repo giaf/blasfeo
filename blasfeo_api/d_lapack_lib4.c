@@ -77,7 +77,7 @@ void blasfeo_dgetrf_rp_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 	if(m<=0 | n<=0)
 		return;
 
-	char *mem;
+	void *mem;
 	double *pU, *pA2;
 	int sdu, sda2;
 
@@ -99,7 +99,7 @@ void blasfeo_dgetrf_rp_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 		{
 		sdu = (n+ps-1)/ps*ps;
 		mem = malloc(12*sdu*sizeof(double)+64);
-		blasfeo_align_64_byte(mem, (char **) &pU);
+		blasfeo_align_64_byte(mem, (void **) &pU);
 		}
 	else
 		{
@@ -539,7 +539,7 @@ void blasfeo_dgetrf_np_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 	if(m<=0 | n<=0)
 		return;
 
-	char *mem;
+	void *mem;
 	double *pU, *pA2;
 	int sdu, sda2;
 
@@ -561,7 +561,7 @@ void blasfeo_dgetrf_np_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 		{
 		sdu = (n+ps-1)/ps*ps;
 		mem = malloc(12*sdu*sizeof(double)+63);
-		blasfeo_align_64_byte(mem, (char **) &pU);
+		blasfeo_align_64_byte(mem, (void **) &pU);
 		}
 	else
 		{
@@ -3375,7 +3375,7 @@ int blasfeo_dgeqrf_worksize(int m, int n)
 
 
 
-void blasfeo_dgeqrf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, char *v_work)
+void blasfeo_dgeqrf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *v_work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3459,7 +3459,7 @@ int blasfeo_dgelqf_worksize(int m, int n)
 
 
 
-void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, char *work)
+void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3668,7 +3668,7 @@ int blasfeo_dorglq_worksize(int m, int n, int k)
 
 
 
-void blasfeo_dorglq(int m, int n, int k, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, char *work)
+void blasfeo_dorglq(int m, int n, int k, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3778,7 +3778,7 @@ void blasfeo_dorglq(int m, int n, int k, struct blasfeo_dmat *sC, int ci, int cj
 
 
 // LQ factorization with positive diagonal elements
-void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, char *work)
+void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3954,7 +3954,7 @@ void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 // [L, A] <= lq( [L. A] )
 // L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
-void blasfeo_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dmat *sA, int ai, int aj, char *work)
+void blasfeo_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dmat *sA, int ai, int aj, void *work)
 	{
 	if(m<=0)
 		return;
@@ -4066,7 +4066,7 @@ void blasfeo_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj
 // [L, L, A] <= lq( [L. L, A] )
 // L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
-void blasfeo_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dmat *sL, int li, int lj, struct blasfeo_dmat *sA, int ai, int aj, char *work)
+void blasfeo_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dmat *sL, int li, int lj, struct blasfeo_dmat *sA, int ai, int aj, void *work)
 	{
 	if(m<=0)
 		return;

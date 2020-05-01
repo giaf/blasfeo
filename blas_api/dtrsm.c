@@ -164,7 +164,7 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 	double *pU, *pB, *dA, *dB;
 	int sda, sdb, sdu;
 	int sA_size, sB_size;
-	char *mem, *mem_align;
+	void *mem, *mem_align;
 	int m1, n1;
 	int idx, m4, mn4, n4, nn4;
 	int pack_tran = 0;

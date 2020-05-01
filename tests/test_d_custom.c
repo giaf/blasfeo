@@ -105,7 +105,7 @@ int main()
 	// matrices in matrix struct format
 	//
 	int size_strmat = 5*blasfeo_memsize_dmat(n, n);
-	char *memory_strmat; v_zeros_align(&memory_strmat, size_strmat);
+	void *memory_strmat; v_zeros_align(&memory_strmat, size_strmat);
 	char *ptr_memory_strmat = (char *) memory_strmat;
 
 	struct blasfeo_dmat sA;
@@ -215,7 +215,7 @@ int main()
 #if 0
 	double *ptr = sA.pA+1;
 	printf("\n%f %p\n", *ptr, ptr);
-	blasfeo_align_64_byte(ptr, (char **) &ptr);
+	blasfeo_align_64_byte(ptr, (void **) &ptr);
 	printf("\n%f %p\n", *ptr, ptr);
 	return 0;
 #endif
@@ -471,7 +471,7 @@ int main()
 	struct blasfeo_dmat lq0; blasfeo_allocate_dmat(n, 2*n, &lq0);
 	struct blasfeo_dmat lq1; blasfeo_allocate_dmat(n, 2*n, &lq1);
 
-	char *lq0_work = malloc(blasfeo_dgelqf_worksize(n, 2*n));
+	void *lq0_work = malloc(blasfeo_dgelqf_worksize(n, 2*n));
 
 	blasfeo_pack_dmat(n, n, A, n, &lq0, 0, n);
 	blasfeo_pack_dmat(n, n, B, n, &lq0, 0, 0);
@@ -901,7 +901,7 @@ int main()
 //	printf("\n%f\n", DGEEL_LIBSTR(&sA, 0, 0));
 //	int qr_work_size = blasfeo_dgeqrf_worksize(n, n);
 	int qr_work_size = blasfeo_dgelqf_worksize(n, n);
-	char *qr_work;
+	void *qr_work;
 	v_zeros_align(&qr_work, qr_work_size);
 //	blasfeo_dgeqrf(10, 10, &sC, 0, 0, &sD, 0, 0, qr_work);
 	blasfeo_dgelqf(17, 17, &sC, 0, 0, &sD, 0, 0, qr_work);

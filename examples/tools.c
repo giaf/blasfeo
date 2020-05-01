@@ -45,7 +45,7 @@
 //void daxpy_(int *n, double *da, double *dx, int *incx, double *dy, int *incy);
 //void dscal_(int *n, double *da, double *dx, int *incx);
 
-int posix_memalign(char **memptr, size_t alignment, size_t size);
+int posix_memalign(void **memptr, size_t alignment, size_t size);
 
 
 

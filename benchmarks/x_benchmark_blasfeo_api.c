@@ -231,9 +231,9 @@ int main()
 //		struct blasfeo_dvec sy; blasfeo_allocate_dvec(n, &sy);
 		struct blasfeo_dvec sz; blasfeo_allocate_dvec(n, &sz);
 
-		char *qr_work;
+		void *qr_work;
 		v_zeros_align(&qr_work, blasfeo_dgeqrf_worksize(n, n));
-		char *lq_work;
+		void *lq_work;
 		v_zeros_align(&lq_work, blasfeo_dgelqf_worksize(n, n));
 
 		for(ii=0; ii<n; ii++)
@@ -255,9 +255,9 @@ int main()
 //		struct blasfeo_svec sy; blasfeo_allocate_svec(n, &sy);
 		struct blasfeo_svec sz; blasfeo_allocate_svec(n, &sz);
 
-		char *qr_work;
+		void *qr_work;
 		v_zeros_align(&qr_work, blasfeo_sgeqrf_worksize(n, n));
-		char *lq_work;
+		void *lq_work;
 		v_zeros_align(&lq_work, blasfeo_sgelqf_worksize(n, n));
 
 		for(ii=0; ii<n; ii++)

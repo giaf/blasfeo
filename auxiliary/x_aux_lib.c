@@ -67,7 +67,7 @@ int MEMSIZE_VEC(int m)
 
 
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
-void CREATE_MAT(int m, int n, struct MAT *sA, char *memory)
+void CREATE_MAT(int m, int n, struct MAT *sA, void *memory)
 	{
 	sA->m = m;
 	sA->n = n;
@@ -85,7 +85,7 @@ void CREATE_MAT(int m, int n, struct MAT *sA, char *memory)
 
 
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
-void CREATE_VEC(int m, struct VEC *sa, char *memory)
+void CREATE_VEC(int m, struct VEC *sa, void *memory)
 	{
 	sa->m = m;
 	REAL *ptr = (REAL *) memory;

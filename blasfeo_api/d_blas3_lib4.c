@@ -1424,7 +1424,7 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 	struct blasfeo_dmat sAt;
 	int sAt_size;
-	char *smat_mem, *smat_mem_align;
+	void *smat_mem, *smat_mem_align;
 
 	double *pU;
 	int sdu;
@@ -2312,7 +2312,7 @@ void blasfeo_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	struct blasfeo_dmat sAt;
 	int sdat;
 	int sAt_size;
-	char *smat_mem, *smat_mem_align;
+	void *smat_mem, *smat_mem_align;
 	double *pAt;
 
 	int ii, jj;
@@ -4929,7 +4929,7 @@ void blasfeo_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 		offsetD = ps+di0;
 		}
 
-	char *mem;
+	void *mem;
 	double *pU, *pA2;
 	int sdu, sda2;
 
@@ -4951,7 +4951,7 @@ void blasfeo_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 		{
 		sdu = (k+ps-1)/ps*ps;
 		mem = malloc(12*sdu*sizeof(double)+63);
-		blasfeo_align_64_byte(mem, (char **) &pU);
+		blasfeo_align_64_byte(mem, (void **) &pU);
 		}
 	else
 		{
@@ -6369,7 +6369,7 @@ void blasfeo_dsyrk_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 	int offsetC = cir;
 	int offsetD = dir;
 
-	char *mem;
+	void *mem;
 	double *pU, *pA2;
 	int sdu, sda2;
 
@@ -6391,7 +6391,7 @@ void blasfeo_dsyrk_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 		{
 		sdu = (k+ps-1)/ps*ps;
 		mem = malloc(12*sdu*sizeof(double)+63);
-		blasfeo_align_64_byte(mem, (char **) &pU);
+		blasfeo_align_64_byte(mem, (void **) &pU);
 		}
 	else
 		{

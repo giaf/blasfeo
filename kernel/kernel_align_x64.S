@@ -157,7 +157,7 @@
 
 
 //               1          2
-// void align_64(char *ptr, char **ptr_align);
+// void align_64(void *ptr, void **ptr_align);
 
 	.p2align 4,,15
 #if defined(OS_LINUX)
