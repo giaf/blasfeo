@@ -35,8 +35,8 @@
 
 #include <stdint.h>
 
-void blasfeo_align_64_byte(void *ptr, void **ptr_align)
+void blasfeo_align_64_byte(char *ptr, char **ptr_align)
 	{
-	*ptr_align = (void *) ( ( ( (uintptr_t) ptr ) + 63) / 64 * 64 );
+	*ptr_align = (char *) ( ( ( (uintptr_t) ptr ) + 63) / 64 * 64 );
 	return;
 	}

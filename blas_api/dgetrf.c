@@ -97,7 +97,7 @@ void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info
 	int sdu, sdc;
 	double *pU, *pC, *pd;
 	int sC_size, stot_size;
-	void *smat_mem, *smat_mem_align;
+	char *smat_mem, *smat_mem_align;
 	int m1, n1;
 
 //	int n4 = n<4 ? n : 4;
@@ -117,7 +117,7 @@ void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info
 
 	double *dummy = NULL;
 
-	int ipiv_tmp[4] = {};
+	int ipiv_tmp[4];
 
 
 #if defined(TARGET_X64_INTEL_HASWELL)

@@ -43,7 +43,7 @@
 #endif
 
 #if ! defined(OS_WINDOWS)
-int posix_memalign(void **memptr, size_t alignment, size_t size);
+int posix_memalign(char **memptr, size_t alignment, size_t size);
 #endif
 
 
@@ -51,7 +51,7 @@ int posix_memalign(void **memptr, size_t alignment, size_t size);
 /* creates a zero matrix aligned */
 void int_zeros(int **pA, int row, int col)
 	{
-	void *temp = malloc((row*col)*sizeof(int));
+	char *temp = malloc((row*col)*sizeof(int));
 	*pA = (int *)temp;
 	int *A = *pA;
 	int i;
@@ -63,7 +63,7 @@ void int_zeros(int **pA, int row, int col)
 /* creates a zero matrix aligned to a cache line */
 void int_zeros_align(int **pA, int row, int col)
 	{
-	blasfeo_malloc_align((void **) pA, (row*col)*sizeof(int));
+	blasfeo_malloc_align((char **) pA, (row*col)*sizeof(int));
 	int *A = *pA;
 	int i;
 	for(i=0; i<row*col; i++) A[i] = 0.0;

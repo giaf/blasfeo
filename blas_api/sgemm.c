@@ -99,7 +99,7 @@ void blasfeo_sgemm(char *ta, char *tb, int *pm, int *pn, int *pk, float *alpha, 
 	struct blasfeo_smat sA, sB;
 	int sda, sdb;
 	int sA_size, sB_size;
-	void *smat_mem, *smat_mem_align;
+	char *smat_mem, *smat_mem_align;
 	int m1, n1, k1;
 	int pack_B;
 

@@ -100,7 +100,7 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	int sdc;
 	double *pc;
 	int sC_size, stot_size;
-	void *smat_mem, *smat_mem_align;
+	char *smat_mem, *smat_mem_align;
 	int m1;
 
 

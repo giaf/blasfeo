@@ -116,7 +116,7 @@ int main()
 
 	// work space enough for 5 matrix structs for size n times n
 	int size_strmat = 5*blasfeo_memsize_smat(n, n);
-	void *memory_strmat; v_zeros_align(&memory_strmat, size_strmat);
+	char *memory_strmat; v_zeros_align(&memory_strmat, size_strmat);
 	char *ptr_memory_strmat = (char *) memory_strmat;
 
 	struct blasfeo_smat sA;

@@ -71,7 +71,7 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 	int bs = 4;
 
 
-	void *mem, *mem_align;
+	char *mem, *mem_align;
 	double *pU;
 	int sdu;
 	struct blasfeo_dmat sA;

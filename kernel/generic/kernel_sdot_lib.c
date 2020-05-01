@@ -43,7 +43,7 @@ void kernel_sdot_11_lib(int n, float *x, float *y, float *res)
 
 	int ii;
 
-	float tmp_res[4] = {};
+	float tmp_res[4];
 
 	tmp_res[0] = 0.0;
 	tmp_res[1] = 0.0;
