@@ -301,7 +301,7 @@ void blasfeo_print_xmat_debug(
 	return;
 	}
 
-static void printbits(void *c, size_t n)
+static void printbits(char *c, size_t n)
 {
 	unsigned char *t = c;
 	if (c == NULL)

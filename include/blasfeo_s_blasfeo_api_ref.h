@@ -122,11 +122,11 @@ void blasfeo_ssyrk_dpotrf_ln_ref(int m, int k, struct blasfeo_smat_ref *sA, int 
 void blasfeo_ssyrk_dpotrf_ln_mn_ref(int m, int n, int k, struct blasfeo_smat_ref *sA, int ai, int aj, struct blasfeo_smat_ref *sB, int bi, int bj, struct blasfeo_smat_ref *sC, int ci, int cj, struct blasfeo_smat_ref *sD, int di, int dj);
 void blasfeo_sgetrf_nopivot_ref(int m, int n, struct blasfeo_smat_ref *sC, int ci, int cj, struct blasfeo_smat_ref *sD, int di, int dj);
 void blasfeo_sgetrf_rowpivot_ref(int m, int n, struct blasfeo_smat_ref *sC, int ci, int cj, struct blasfeo_smat_ref *sD, int di, int dj, int *ipiv);
-void blasfeo_sgeqrf_ref(int m, int n, struct blasfeo_smat_ref *sC, int ci, int cj, struct blasfeo_smat_ref *sD, int di, int dj, void *work);
-void blasfeo_sgelqf_ref(int m, int n, struct blasfeo_smat_ref *sC, int ci, int cj, struct blasfeo_smat_ref *sD, int di, int dj, void *work);
-void blasfeo_sgelqf_pd_ref(int m, int n, struct blasfeo_smat_ref *sC, int ci, int cj, struct blasfeo_smat_ref *sD, int di, int dj, void *work);
-void blasfeo_sgelqf_pd_la_ref(int m, int n1, struct blasfeo_smat_ref *sL, int li, int lj, struct blasfeo_smat_ref *sA, int ai, int aj, void *work);
-void blasfeo_sgelqf_pd_lla_ref(int m, int n1, struct blasfeo_smat_ref *sL0, int l0i, int l0j, struct blasfeo_smat_ref *sL1, int l1i, int l1j, struct blasfeo_smat_ref *sA, int ai, int aj, void *work);
+void blasfeo_sgeqrf_ref(int m, int n, struct blasfeo_smat_ref *sC, int ci, int cj, struct blasfeo_smat_ref *sD, int di, int dj, char *work);
+void blasfeo_sgelqf_ref(int m, int n, struct blasfeo_smat_ref *sC, int ci, int cj, struct blasfeo_smat_ref *sD, int di, int dj, char *work);
+void blasfeo_sgelqf_pd_ref(int m, int n, struct blasfeo_smat_ref *sC, int ci, int cj, struct blasfeo_smat_ref *sD, int di, int dj, char *work);
+void blasfeo_sgelqf_pd_la_ref(int m, int n1, struct blasfeo_smat_ref *sL, int li, int lj, struct blasfeo_smat_ref *sA, int ai, int aj, char *work);
+void blasfeo_sgelqf_pd_lla_ref(int m, int n1, struct blasfeo_smat_ref *sL0, int l0i, int l0j, struct blasfeo_smat_ref *sL1, int l1i, int l1j, struct blasfeo_smat_ref *sA, int ai, int aj, char *work);
 
 #ifdef __cplusplus
 }

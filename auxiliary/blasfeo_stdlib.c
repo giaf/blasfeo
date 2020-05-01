@@ -41,7 +41,7 @@
 
 
 // allocate memory aligned to typical cache line size (64 bytes)
-void blasfeo_malloc_align(void **ptr, size_t size)
+void blasfeo_malloc_align(char **ptr, size_t size)
 	{
 
 #if defined(OS_WINDOWS)
@@ -74,7 +74,7 @@ void blasfeo_malloc_align(void **ptr, size_t size)
 
 
 
-void blasfeo_free_align(void *ptr)
+void blasfeo_free_align(char *ptr)
 	{
 
 #if defined(OS_WINDOWS)

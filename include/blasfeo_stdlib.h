@@ -43,9 +43,9 @@ extern "C" {
 
 
 //
-void blasfeo_malloc_align(void **ptr, size_t size);
+void blasfeo_malloc_align(char **ptr, size_t size);
 //
-void blasfeo_free_align(void *ptr);
+void blasfeo_free_align(char *ptr);
 
 
 

@@ -65,7 +65,7 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc) // TODO int *info
 	int sdc;
 	double *pc;
 	int sC_size, stot_size;
-	void *smat_mem, *smat_mem_align;
+	char *smat_mem, *smat_mem_align;
 
 
 	if(*uplo=='l')
@@ -204,7 +204,7 @@ l_1:
 	sC_size = blasfeo_memsize_dmat(m, m);
 	stot_size = sC_size + m*sizeof(double);
 	smat_mem = malloc(stot_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	smat_mem_align = (char *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
 	blasfeo_create_dmat(m, m, &sC, smat_mem_align);
 	sdc = sC.cn;
 	pc = smat_mem_align + sC_size; // TODO use the memory in sC for that !!!
@@ -333,7 +333,7 @@ u:
 	sC_size = blasfeo_memsize_dmat(m, m);
 	stot_size = sC_size;
 	smat_mem = malloc(stot_size+63);
-	smat_mem_align = (void *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
+	smat_mem_align = (char *) ( ( ( (unsigned long long) smat_mem ) + 63) / 64 * 64 );
 	blasfeo_create_dmat(m, m, &sC, smat_mem_align);
 	sdc = sC.cn;
 

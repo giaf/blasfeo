@@ -91,7 +91,7 @@
 
 
 //               1          2
-// void align_64(void *ptr, void **ptr_align);
+// void align_64(char *ptr, char **ptr_align);
 
 	.align 16
 #if defined(OS_LINUX)

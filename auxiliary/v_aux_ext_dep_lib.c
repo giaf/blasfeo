@@ -45,10 +45,10 @@
 
 
 /* creates a zero matrix given the size in bytes */
-void v_zeros(void **ptrA, int size)
+void v_zeros(char **ptrA, int size)
 	{
 	// allocate memory
-	*ptrA = (void *) malloc(size);
+	*ptrA = (char *) malloc(size);
 	// zero memory
 	int i;
 	double *dA = (double *) *ptrA;
@@ -61,7 +61,7 @@ void v_zeros(void **ptrA, int size)
 
 
 /* creates a zero matrix aligned to a cache line given the size in bytes */
-void v_zeros_align(void **ptrA, int size)
+void v_zeros_align(char **ptrA, int size)
 	{
 	// allocate memory
 	blasfeo_malloc_align(ptrA, size);
@@ -77,14 +77,14 @@ void v_zeros_align(void **ptrA, int size)
 
 
 /* frees matrix */
-void v_free(void *pA)
+void v_free(char *pA)
 	{
 	free( pA );
 	}
 
 
 /* frees aligned matrix */
-void v_free_align(void *pA)
+void v_free_align(char *pA)
 	{
 	blasfeo_free_align(pA);
 	}
@@ -110,7 +110,7 @@ void c_zeros(char **ptrA, int size)
 void c_zeros_align(char **ptrA, int size)
 	{
 	// allocate memory
-	blasfeo_malloc_align((void **) ptrA, size);
+	blasfeo_malloc_align((char **) ptrA, size);
 	// zero allocated memory
 	int i;
 	double *dA = (double *) *ptrA;

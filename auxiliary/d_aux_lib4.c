@@ -1561,7 +1561,7 @@ int blasfeo_memsize_diag_dmat(int m, int n)
 
 
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
-void blasfeo_create_dmat(int m, int n, struct blasfeo_dmat *sA, void *memory)
+void blasfeo_create_dmat(int m, int n, struct blasfeo_dmat *sA, char *memory)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1601,7 +1601,7 @@ int blasfeo_memsize_dvec(int m)
 
 
 // create a vector structure for a vector of size m by using memory passed by a pointer
-void blasfeo_create_dvec(int m, struct blasfeo_dvec *sa, void *memory)
+void blasfeo_create_dvec(int m, struct blasfeo_dvec *sa, char *memory)
 	{
 	const int bs = 4;
 //	int nc = D_NC;

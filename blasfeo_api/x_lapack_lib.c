@@ -1398,7 +1398,7 @@ int GEQRF_WORK_SIZE_LIBSTR(int m, int n)
 
 
 
-void GEQRF_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT *sD, int di, int dj, void *work)
+void GEQRF_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT *sD, int di, int dj, char *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1665,7 +1665,7 @@ int GELQF_WORK_SIZE_LIBSTR(int m, int n)
 
 
 
-void GELQF_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT *sD, int di, int dj, void *work)
+void GELQF_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT *sD, int di, int dj, char *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1937,7 +1937,7 @@ int ORGLQ_WORK_SIZE_LIBSTR(int m, int n)
 
 
 // generate Q matrix
-void ORGLQ_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, void *work)
+void ORGLQ_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, char *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1948,7 +1948,7 @@ void ORGLQ_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT
 
 
 // LQ factorization with positive diagonal elements
-void GELQF_PD_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT *sD, int di, int dj, void *work)
+void GELQF_PD_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRMAT *sD, int di, int dj, char *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -2223,7 +2223,7 @@ void GELQF_PD_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STR
 // array of matrices [D, A] with
 // D diagonal (on input), of size (m)x(m)
 // A full of size (m)x(n1)
-void GELQF_PD_DA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct STRMAT *sA, int ai, int aj, void *work)
+void GELQF_PD_DA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct STRMAT *sA, int ai, int aj, char *work)
 	{
 	if(m<=0)
 		return;
@@ -2491,7 +2491,7 @@ void GELQF_PD_DA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct
 // [L, A] <= lq( [L. A] )
 // L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
-void GELQF_PD_LA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct STRMAT *sA, int ai, int aj, void *work)
+void GELQF_PD_LA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct STRMAT *sA, int ai, int aj, char *work)
 	{
 	if(m<=0)
 		return;
@@ -2750,7 +2750,7 @@ void GELQF_PD_LA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct
 // [L, L, A] <= lq( [L. L, A] )
 // L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
-void GELQF_PD_LLA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct STRMAT *sL, int li, int lj, struct STRMAT *sA, int ai, int aj, void *work)
+void GELQF_PD_LLA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct STRMAT *sL, int li, int lj, struct STRMAT *sA, int ai, int aj, char *work)
 	{
 	if(m<=0)
 		return;
@@ -3384,7 +3384,7 @@ int GEQRF_WORK_SIZE_LIBSTR(int m, int n)
 
 
 
-void GEQRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, void *work)
+void GEQRF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, char *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3430,7 +3430,7 @@ int GELQF_WORK_SIZE_LIBSTR(int m, int n)
 
 
 
-void GELQF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, void *work)
+void GELQF_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, char *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3480,7 +3480,7 @@ int ORGLQ_WORK_SIZE_LIBSTR(int m, int n, int k)
 
 
 // generate Q matrix
-void ORGLQ_LIBSTR(int m, int n, int k, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, void *work)
+void ORGLQ_LIBSTR(int m, int n, int k, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, char *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3518,7 +3518,7 @@ void ORGLQ_LIBSTR(int m, int n, int k, struct STRMAT *sC, int ci, int cj, struct
 
 
 // LQ factorization with positive diagonal elements
-void GELQF_PD_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, void *work)
+void GELQF_PD_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj, char *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3532,7 +3532,7 @@ void GELQF_PD_LIBSTR(int m, int n, struct STRMAT *sC, int ci, int cj, struct STR
 // [L, A] <= lq( [L. A] )
 // L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
-void GELQF_PD_LA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct STRMAT *sA, int ai, int aj, void *work)
+void GELQF_PD_LA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct STRMAT *sA, int ai, int aj, char *work)
 
 	{
 	if(m<=0)
@@ -3547,7 +3547,7 @@ void GELQF_PD_LA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct
 // [L, L, A] <= lq( [L. L, A] )
 // L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
-void GELQF_PD_LLA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct STRMAT *sL, int li, int lj, struct STRMAT *sA, int ai, int aj, void *work)
+void GELQF_PD_LLA_LIBSTR(int m, int n1, struct STRMAT *sD, int di, int dj, struct STRMAT *sL, int li, int lj, struct STRMAT *sA, int ai, int aj, char *work)
 
 	{
 	if(m<=0)

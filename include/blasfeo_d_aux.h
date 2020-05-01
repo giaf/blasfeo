@@ -67,9 +67,9 @@ int blasfeo_memsize_dvec(int m);
 // --- creation
 //
 // create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
-void blasfeo_create_dmat(int m, int n, struct blasfeo_dmat *sA, void *memory);
+void blasfeo_create_dmat(int m, int n, struct blasfeo_dmat *sA, char *memory);
 // create a strvec for a vector of size m by using memory passed by a pointer (pointer is not updated)
-void blasfeo_create_dvec(int m, struct blasfeo_dvec *sA, void *memory);
+void blasfeo_create_dvec(int m, struct blasfeo_dvec *sA, char *memory);
 
 // --- packing
 // pack the column-major matrix A into the matrix struct B

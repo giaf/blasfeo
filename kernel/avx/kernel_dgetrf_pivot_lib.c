@@ -1350,7 +1350,7 @@ void kernel_dgetrf_pivot_8_vs_lib(int m, double *C, int ldc, double *pd, int* ip
 		{
 		m4 = (m+3)/4*4;
 		tmp_pU = malloc(3*4*m4*sizeof(double)+64);
-		blasfeo_align_64_byte(tmp_pU, (void **) &pU);
+		blasfeo_align_64_byte(tmp_pU, (char **) &pU);
 		sdu = m4;
 		}
 	else

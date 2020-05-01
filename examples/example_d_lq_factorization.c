@@ -136,7 +136,7 @@ int main()
 
 	struct blasfeo_dmat sA;
 	int sA_size = blasfeo_memsize_dmat(n, m);
-	void *sA_mem; v_zeros_align(&sA_mem, sA_size);
+	char *sA_mem; v_zeros_align(&sA_mem, sA_size);
 	blasfeo_create_dmat(n, m, &sA, sA_mem);
 	blasfeo_pack_dmat(n, m, A, n, &sA, 0, 0);
 
@@ -147,11 +147,11 @@ int main()
 	/* LQ factorization */
 
 	struct blasfeo_dmat sA_fact;
-	void *sA_fact_mem; v_zeros_align(&sA_fact_mem, sA_size);
+	char *sA_fact_mem; v_zeros_align(&sA_fact_mem, sA_size);
 	blasfeo_create_dmat(n, m, &sA_fact, sA_fact_mem);
 
 	int lq_size = blasfeo_dgelqf_worksize(n, m);
-	void *lq_work = malloc(lq_size);
+	char *lq_work = malloc(lq_size);
 
 	blasfeo_dgelqf(n, m, &sA, 0, 0, &sA_fact, 0, 0, lq_work);
 
@@ -163,7 +163,7 @@ int main()
 
 	struct blasfeo_dmat sL;
 	int sL_size = blasfeo_memsize_dmat(n, n);
-	void *sL_mem; v_zeros_align(&sL_mem, sL_size);
+	char *sL_mem; v_zeros_align(&sL_mem, sL_size);
 	blasfeo_create_dmat(n, n, &sL, sL_mem);
 
 	blasfeo_dtrcp_l(n, &sA_fact, 0, 0, &sL, 0, 0);
@@ -175,12 +175,12 @@ int main()
 
 	struct blasfeo_dmat sQ;
 	int sQ_size = blasfeo_memsize_dmat(m, m);
-	void *sQ_mem; v_zeros_align(&sQ_mem, sQ_size);
+	char *sQ_mem; v_zeros_align(&sQ_mem, sQ_size);
 	blasfeo_create_dmat(m, m, &sQ, sQ_mem);
 
 #if 1
 	int orglq_size = blasfeo_dorglq_worksize(m, m, n);
-	void *orglq_work = malloc(orglq_size);
+	char *orglq_work = malloc(orglq_size);
 
 	blasfeo_dorglq(m, m, n, &sA_fact, 0, 0, &sQ, 0, 0, orglq_work);
 
@@ -224,7 +224,7 @@ int main()
 
 	struct blasfeo_dmat sE;
 	int sE_size = blasfeo_memsize_dmat(n, m);
-	void *sE_mem; v_zeros_align(&sE_mem, sE_size);
+	char *sE_mem; v_zeros_align(&sE_mem, sE_size);
 	blasfeo_create_dmat(n, m, &sE, sE_mem);
 
 	blasfeo_dgemm_nn(n, m, n, -1.0, &sL, 0, 0, &sQ, 0, 0, 1.0, &sA, 0, 0, &sE, 0, 0);

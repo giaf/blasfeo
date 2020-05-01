@@ -56,8 +56,8 @@ int test_blasfeo_memsize_diag_dmat(int m, int n);
 int test_blasfeo_memsize_dvec(int m);
 
 // --- creation
-void test_blasfeo_create_dmat(int m, int n, struct blasfeo_dmat *sA, void *memory);
-void test_blasfeo_create_dvec(int m, struct blasfeo_dvec *sA, void *memory);
+void test_blasfeo_create_dmat(int m, int n, struct blasfeo_dmat *sA, char *memory);
+void test_blasfeo_create_dvec(int m, struct blasfeo_dvec *sA, char *memory);
 
 // --- conversion
 void test_blasfeo_pack_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj);
