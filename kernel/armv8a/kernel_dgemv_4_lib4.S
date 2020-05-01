@@ -229,13 +229,21 @@ NAME:
 	ble		2f // return
 
 	// prefetch
+	prfm	PLDL1KEEP, [x9, #0]
+	prfm	PLDL1KEEP, [x9, #64]
+	prfm	PLDL1KEEP, [x11, #0]
 
 	// preload
 
 	cmp		w8, #4
 	ble		0f // consider clean up loop
 
+	add		x12, x10, #64
+
 	// prefetch
+	prfm	PLDL1KEEP, [x9, x10]
+	prfm	PLDL1KEEP, [x9, x12]
+//	prfm	PLDL1KEEP, [x11, #32]
 
 	// main loop
 1:
@@ -252,14 +260,17 @@ NAME:
 	add		x9, x9, x10
 	fmla	v1.2d, v18.2d, v24.2d
 //	prfm	PLDL1KEEP, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x10]
 
 	fmla	v2.2d, v20.2d, v24.2d
-//	prfm	PLDL1KEEP, [x9, #63]
+//	prfm	PLDL1KEEP, [x9, #64]
+	prfm	PLDL1KEEP, [x9, x12]
 	fmla	v3.2d, v22.2d, v24.2d
 	add		x11, x11, #32
 
 	fmla	v0.2d, v17.2d, v25.2d
 //	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x11, #32]
 	fmla	v1.2d, v19.2d, v25.2d
 	sub		w8, w8, #4
 
