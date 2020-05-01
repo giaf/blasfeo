@@ -346,6 +346,8 @@ void kernel_sgemm_nt_8x4_lib4(int k, float *alpha, float *A, int sda, float *B, 
 void kernel_sgemm_nt_8x4_vs_lib4(int k, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd, int m1, int n1); //
 void kernel_sgemm_nn_8x4_lib4(int k, float *alpha, float *A, int sda, int offsetB, float *B, int sdb, float *beta, float *C, int sdc, float *D, int sdd); //
 void kernel_sgemm_nn_8x4_vs_lib4(int k, float *alpha, float *A, int sda, int offsetB, float *B, int sdb, float *beta, float *C, int sdc, float *D, int sdd, int m1, int n1); //
+void kernel_ssyrk_nt_l_8x4_lib4(int k, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd); //
+void kernel_ssyrk_nt_l_8x4_vs_lib4(int k, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd, int km, int kn); //
 void kernel_strsm_nt_rl_inv_8x4_lib4(int k, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd, float *E, float *inv_diag_E);
 void kernel_strsm_nt_rl_inv_8x4_vs_lib4(int k, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd, float *E, float *inv_diag_E, int m1, int n1);
 // 4x4
