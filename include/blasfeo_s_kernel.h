@@ -489,6 +489,12 @@ void kernel_sunpack_nt_4_lib4(int kmax, float *A, float *B, int ldb);
 void kernel_sunpack_nt_4_vs_lib4(int kmax, float *A, float *B, int ldb, int m1);
 void kernel_sunpack_tt_4_lib4(int kmax, float *A, int sda, float *B, int ldb);
 
+// panel copy
+// 4
+void kernel_spacp_nt_4_lib4(int kmax, float *A, int offsetB, float *B, int sdb);
+void kernel_spacp_tn_4_lib4(int kmax, int offsetA, float *A, int sda, float *B);
+void kernel_spacp_nn_4_lib4(int kmax, int offsetA, float *A, int sda, float *B);
+void kernel_spacp_nn_4_vs_lib4(int kmax, int offsetA, float *A, int sda, float *B, int m1);
 
 
 
