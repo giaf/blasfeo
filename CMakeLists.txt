@@ -669,6 +669,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x8_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemv_4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
@@ -734,6 +735,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x8_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_4x4_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemv_4_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c

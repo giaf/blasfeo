@@ -72,8 +72,7 @@ NAME:
 #define FUN_END(NAME) \
 	.size	NAME, .-NAME
 #define ZERO_ACC_N \
-	fmov	d0, xzr; \
-	fmov    d1, d0
+	fmov	d0, xzr
 #define ZERO_ACC_T \
 	fmov	d0, xzr; \
 	fmov    d1, d0; \
@@ -122,58 +121,39 @@ NAME:
 	// zero tmp acc
 	fmov	d8, xzr
 	fmov    d9, d8
+	fmov    d10, d8
 
 	// main loop
 1:
 	
-	ldp		q24, q25, [x10, #0]
+	ldr		q24, [x10, #0]
 
 	ldp		q16, q17, [x9, #(0*32)]
 	ldp		q18, q19, [x9, #(1*32)]
-	ldp		q20, q21, [x9, #(2*32)]
-	ldp		q22, q23, [x9, #(3*32)]
 
 	// unroll 0
-//	ldp		q16, q17, [x9, #(0*32)]
-//	ldr		q20, [x9, #(0*16)]
-	fmla	v0.2d, v16.2d, v24.2d[0]
-//	prfm	PLDL1KEEP, [x9, #(2*128+0)]
-//	ldr		q21, [x9, #(1*16)]
-	fmla	v1.2d, v17.2d, v24.2d[0]
-	add		x10, x10, #32
+	fmla	v0.4s, v16.4s, v24.4s[0]
+	add		x10, x10, #16
 
 	// unroll 1
-//	ldp		q18, q19, [x9, #(1*32)]
-//	ldr		q22, [x9, #(2*16)]
-	fmla	v8.2d, v18.2d, v24.2d[1]
-//	prfm	PLDL1KEEP, [x9, #(2*128+64)]
-//	ldr		q23, [x9, #(3*16)]
-	fmla	v9.2d, v19.2d, v24.2d[1]
+	fmla	v8.4s, v17.4s, v24.4s[1]
 	sub		w8, w8, #4
 
 	// unroll 2
-//	ldp		q20, q21, [x9, #(2*32)]
-//	ldr		q16, [x9, #(4*16)]
-	fmla	v0.2d, v20.2d, v25.2d[0]
-//	prfm	PLDL1KEEP, [x10, #(1*32)]
-//	ldr		q17, [x9, #(5*16)]
-	fmla	v1.2d, v21.2d, v25.2d[0]
+	fmla	v9.4s, v18.4s, v24.4s[2]
 	cmp		w8, #4
 
 	// unroll 3
-//	ldp		q22, q23, [x9, #(3*32)]
-//	ldr		q18, [x9, #(6*16)]
-	fmla	v8.2d, v22.2d, v25.2d[1]
-//	ldr		q19, [x9, #(7*16)]
-	fmla	v9.2d, v23.2d, v25.2d[1]
-	add		x9, x9, #128
+	fmla	v10.4s, v19.4s, v24.4s[3]
+	add		x9, x9, #64
 
 	bgt		1b
 
 
 	// reduce
-	fadd	v0.2d, v0.2d, v8.2d
-	fadd	v1.2d, v1.2d, v9.2d
+	fadd	v0.4s, v0.4s, v8.4s
+	fadd	v9.4s, v9.4s, v10.4s
+	fadd	v0.4s, v0.4s, v9.4s
 
 0:
 
@@ -183,10 +163,10 @@ NAME:
 3: // clean1-up loop
 
 	// unroll 0
-	ld1		{v24.1d}, [x10], #8
-	ld1		{v16.2d, v17.2d}, [x9], #32
-	fmla	v0.2d, v16.2d, v24.2d[0]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	ldr		s24, [x10]
+	ld1		{v16.4s}, [x9], #16
+	fmla	v0.4s, v16.4s, v24.4s[0]
+	add		x10, x10, #4
 
 	sub		w8, w8, #1
 	cmp		w8, #0
@@ -212,7 +192,7 @@ NAME:
 // input arguments:
 // w8   <- k
 // x9   <- A
-// w10  <- 32*sda
+// w10  <- 16*sda
 // x11  <- x
 //
 // output arguments:
@@ -230,8 +210,7 @@ NAME:
 
 	// prefetch
 	prfm	PLDL1KEEP, [x9, #0]
-	prfm	PLDL1KEEP, [x9, #64]
-	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x9, #0]
 
 	// preload
 
@@ -242,41 +221,32 @@ NAME:
 
 	// prefetch
 	prfm	PLDL1KEEP, [x9, x10]
-	prfm	PLDL1KEEP, [x9, x12]
-//	prfm	PLDL1KEEP, [x11, #32]
+//	prfm	PLDL1KEEP, [x11, #16]
 
 	// main loop
 1:
 	
-	ldp		q24, q25, [x11, #(0*32)]
+	ldr		q24, [x11, #(0*32)]
 
 	ldp		q16, q17, [x9, #(0*32)]
 	ldp		q18, q19, [x9, #(1*32)]
-	ldp		q20, q21, [x9, #(2*32)]
-	ldp		q22, q23, [x9, #(3*32)]
 
 	// unroll x4
-	fmla	v0.2d, v16.2d, v24.2d
+	fmla	v0.4s, v16.4s, v24.4s
 	add		x9, x9, x10
-	fmla	v1.2d, v18.2d, v24.2d
 //	prfm	PLDL1KEEP, [x9, #0]
 	prfm	PLDL1KEEP, [x9, x10]
 
-	fmla	v2.2d, v20.2d, v24.2d
-//	prfm	PLDL1KEEP, [x9, #64]
-	prfm	PLDL1KEEP, [x9, x12]
-	fmla	v3.2d, v22.2d, v24.2d
-	add		x11, x11, #32
+	fmla	v1.4s, v17.4s, v24.4s
+	add		x11, x11, #16
 
-	fmla	v0.2d, v17.2d, v25.2d
+	fmla	v2.4s, v18.4s, v24.4s
 //	prfm	PLDL1KEEP, [x11, #0]
-	prfm	PLDL1KEEP, [x11, #32]
-	fmla	v1.2d, v19.2d, v25.2d
+	prfm	PLDL1KEEP, [x11, #16]
 	sub		w8, w8, #4
 
-	fmla	v2.2d, v21.2d, v25.2d
+	fmla	v3.4s, v19.4s, v24.4s
 	cmp		w8, #4
-	fmla	v3.2d, v23.2d, v25.2d
 
 	bgt		1b
 
@@ -288,16 +258,16 @@ NAME:
 3: // clean1-up loop
 
 	// unroll 0
-	ldr		d24, [x11], #8
-	ldr		d16, [x9, #(0*32)]
-	ldr		d18, [x9, #(1*32)]
-	ldr		d20, [x9, #(2*32)]
-	ldr		d22, [x9, #(3*32)]
-	fmla	v0.2d, v16.2d, v24.2d
-	fmla	v1.2d, v18.2d, v24.2d
-	fmla	v2.2d, v20.2d, v24.2d
-	fmla	v3.2d, v22.2d, v24.2d
-	add		x9, x9, #8
+	ldr		s24, [x11], #4
+	ldr		s16, [x9, #(0*16)]
+	ldr		s18, [x9, #(1*16)]
+	ldr		s20, [x9, #(2*16)]
+	ldr		s22, [x9, #(3*16)]
+	fmla	v0.4s, v16.4s, v24.4s
+	fmla	v1.4s, v18.4s, v24.4s
+	fmla	v2.4s, v20.4s, v24.4s
+	fmla	v3.4s, v22.4s, v24.4s
+	add		x9, x9, #4
 
 	sub		w8, w8, #1
 	cmp		w8, #0
@@ -323,7 +293,7 @@ NAME:
 // input arguments:
 // w8   <- k
 // x9   <- A
-// w10  <- 32*sda
+// w10  <- 16*sda
 // x11  <- x
 // w12  <- offA
 //
@@ -346,23 +316,23 @@ NAME:
 	sub		w14, w13, w12 // 4-offsetB
 	cmp		w14, w8
 	ble		0f
-	mov		w14, w8 // kend=min(k,4-offsetB(
+	mov		w14, w8 // kend=min(k,4-offsetB)
 0:
-//	movgt	w14, w8 // kend=min(k,4-offsetB(
+//	movgt	w14, w8 // kend=min(k,4-offsetB)
 	
-//	add		x9, x9, x12, LSL #3 // A + offA*sizeof(double)
+//	add		x9, x9, x12, LSL #2 // A + offA*sizeof(float)
 
 1:
-	ldr		d24, [x11], #8
-	ldr		d16, [x9, #(0*32)]
-	ldr		d18, [x9, #(1*32)]
-	ldr		d20, [x9, #(2*32)]
-	ldr		d22, [x9, #(3*32)]
-	fmla	v0.2d, v16.2d, v24.2d
-	fmla	v1.2d, v18.2d, v24.2d
-	fmla	v2.2d, v20.2d, v24.2d
-	fmla	v3.2d, v22.2d, v24.2d
-	add		x9, x9, #8
+	ldr		s24, [x11], #4
+	ldr		s16, [x9, #(0*16)]
+	ldr		s18, [x9, #(1*16)]
+	ldr		s20, [x9, #(2*16)]
+	ldr		s22, [x9, #(3*16)]
+	fmla	v0.4s, v16.4s, v24.4s
+	fmla	v1.4s, v18.4s, v24.4s
+	fmla	v2.4s, v20.4s, v24.4s
+	fmla	v3.4s, v22.4s, v24.4s
+	add		x9, x9, #4
 	sub		w8, w8, #1
 
 	sub		w14, w14, #1
@@ -374,7 +344,7 @@ NAME:
 	ble		2f // return
 
 	add		x9, x9, x10
-	sub		x9, x9, #32
+	sub		x9, x9, #16
 
 2: // return
 
@@ -407,28 +377,29 @@ NAME:
 	FUN_START(inner_edge_trsv_ln_inv_4_lib4)
 #endif
 	
-	ldp		q24, q25, [x8, #0]
-	ldr		d16, [x9, #0]
-	fmul	v17.2d, v0.2d, v16.2d[0]
-	fmls	v0.2d, v24.2d, v17.2d[0]
-	fmls	v1.2d, v25.2d, v17.2d[0]
-	ins		v0.d[0], v17.d[0]
+	ldr		q24, [x8, #0]
+	ldr		s16, [x9, #0]
+	fmul	v17.4s, v0.4s, v16.4s[0]
+	fmls	v0.4s, v24.4s, v17.4s[0]
 
-	ldr		q25, [x8, #(32+16)]
-	ldr		d16, [x9, #8]
-	fmul	v18.2d, v0.2d, v16.2d[0]
-	fmls	v1.2d, v25.2d, v18.2d[1]
-	ins		v0.d[1], v18.d[1]
+	ldr		q24, [x8, #16]
+	ldr		s16, [x9, #4]
+	fmul	v18.4s, v0.4s, v16.4s[0]
+	fmls	v0.4s, v24.4s, v18.4s[1]
 
-	ldr		q25, [x8, #(64+16)]
-	ldr		d16, [x9, #16]
-	fmul	v19.2d, v1.2d, v16.2d[0]
-	fmls	v1.2d, v25.2d, v19.2d[0]
-	ins		v1.d[0], v19.d[0]
+	ldr		q24, [x8, #32]
+	ldr		s16, [x9, #8]
+	fmul	v19.4s, v0.4s, v16.4s[0]
+	fmls	v0.4s, v24.4s, v19.4s[2]
 
-	ldr		d16, [x9, #24]
-	fmul	v20.2d, v1.2d, v16.2d[0]
-	ins		v1.d[1], v20.d[1]
+	ldr		s16, [x9, #12]
+//	fmul	v20.4s, v0.4s, v16.4s[0]
+	fmul	v0.4s, v0.4s, v16.4s[0]
+
+//	ins		v0.s[3], v20.s[3]
+	ins		v0.s[2], v19.s[2]
+	ins		v0.s[1], v18.s[1]
+	ins		v0.s[0], v17.s[0]
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -460,40 +431,43 @@ NAME:
 	FUN_START(inner_edge_trsv_ln_inv_4_vs_lib4)
 #endif
 	
-	ldp		q24, q25, [x8, #0]
-	ldr		d16, [x9, #0]
-	fmul	v17.2d, v0.2d, v16.2d
-	fmls	v0.2d, v24.2d, v17.2d[0]
-	fmls	v1.2d, v25.2d, v17.2d[0]
-	ins		v0.d[0], v17.d[0]
+	ldr		q24, [x8, #0]
+	ldr		s16, [x9, #0]
+	fmul	v17.4s, v0.4s, v16.4s[0]
+	fmls	v0.4s, v24.4s, v17.4s[0]
 
 	cmp		w10, #2
-	blt		0f // return
+	blt		1f // return
 
-	ldr		q25, [x8, #(32+16)]
-	ldr		d16, [x9, #8]
-	fmul	v18.2d, v0.2d, v16.2d[0]
-	fmls	v1.2d, v25.2d, v18.2d[1]
-	ins		v0.d[1], v18.d[1]
+	ldr		q24, [x8, #16]
+	ldr		s16, [x9, #4]
+	fmul	v18.4s, v0.4s, v16.4s[0]
+	fmls	v0.4s, v24.4s, v18.4s[1]
 
 	cmp		w10, #3
-	blt		0f // return
+	blt		2f // return
 
-	ldr		q25, [x8, #(64+16)]
-	ldr		d16, [x9, #16]
-	fmul	v19.2d, v1.2d, v16.2d[0]
-	fmls	v1.2d, v25.2d, v19.2d[0]
-	ins		v1.d[0], v19.d[0]
+	ldr		q24, [x8, #32]
+	ldr		s16, [x9, #8]
+	fmul	v19.4s, v0.4s, v16.4s[0]
+	fmls	v0.4s, v24.4s, v19.4s[2]
 
 	cmp		w10, #4
-	blt		0f // return
+	blt		3f // return
 
-	ldr		d16, [x9, #24]
-	fmul	v20.2d, v1.2d, v16.2d[0]
-	ins		v1.d[1], v20.d[1]
+	ldr		s16, [x9, #12]
+//	fmul	v20.4s, v0.4s, v16.4s[0]
+	fmul	v0.4s, v0.4s, v16.4s[0]
+
+//	ins		v0.s[3], v20.s[3]
+3:
+	ins		v0.s[2], v19.s[2]
+2:
+	ins		v0.s[1], v18.s[1]
+1:
+	ins		v0.s[0], v17.s[0]
 
 0:
-
 #if MACRO_LEVEL>=1
 	.endm
 #else
@@ -506,6 +480,8 @@ NAME:
 
 
 
+#if 0
+// TODO
 // subroutine
 //
 // triangular substitution with vector RHS
@@ -555,6 +531,7 @@ NAME:
 
 	FUN_END(inner_edge_trsv_lt_inv_4_lib4)
 #endif
+#endif
 
 
 
@@ -573,8 +550,9 @@ NAME:
 	FUN_START(inner_blend_t_4_lib4)
 #endif
 
-	faddp	v0.2d, v0.2d, v1.2d
-	faddp	v1.2d, v2.2d, v3.2d
+	faddp	v0.4s, v0.4s, v1.4s
+	faddp	v2.4s, v2.4s, v3.4s
+	faddp	v0.4s, v0.4s, v2.4s
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -604,19 +582,17 @@ NAME:
 	FUN_START(inner_scale_ab_4_lib4)
 #endif
 
-	ldr		d28, [x8]
+	ldr		s28, [x8]
 
-	ldr		d29, [x9]
+	ldr		s29, [x9]
 
-	fmul	v0.2d, v0.2d, v28.2d[0]
-	fmul	v1.2d, v1.2d, v28.2d[0]
+	fmul	v0.4s, v0.4s, v28.4s[0]
 
 	fcmpe	d29, #0
 	beq		0f
 
-	ldp		q24, q25, [x10, #0]
-	fmla	v0.2d, v24.2d, v29.2d[0]
-	fmla	v1.2d, v25.2d, v29.2d[0]
+	ldr		q24, [x10, #0]
+	fmla	v0.4s, v24.4s, v29.4s[0]
 
 0:
 
@@ -646,9 +622,8 @@ NAME:
 	FUN_START(inner_scale_m11_4_lib4)
 #endif
 
-	ldp		q24, q25, [x8, #0]
-	fsub	v0.2d, v24.2d, v0.2d
-	fsub	v1.2d, v25.2d, v1.2d
+	ldr		q24, [x8, #0]
+	fsub	v0.4s, v24.4s, v0.4s
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -676,7 +651,7 @@ NAME:
 	FUN_START(inner_store_4_lib4)
 #endif
 
-	stp		q0, q1, [x8, #0]
+	str		q0, [x8, #0]
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -712,23 +687,24 @@ NAME:
 	beq		3f
 
 	// 1
-	str		d0, [x8, #0]
+	str		s0, [x8, #0]
 	b		0f
 
 3:
 	// 2
-	str		q0, [x8, #0]
+	str		d0, [x8, #0]
 	b		0f
 
 2:
 	// 3
-	str		q0, [x8, #0]
-	str		d1, [x8, #16]
+	ins		v1.s[0], v0.s[2]
+	str		d0, [x8, #0]
+	str		s1, [x8, #8]
 	b		0f
 
 1:
 	// 4
-	stp		q0, q1, [x8, #0]
+	str		q0, [x8, #0]
 	b		0f
 
 0:
@@ -746,10 +722,10 @@ NAME:
 
 
 //                            w0        x1             x2         x3         x4            x5         x6
-// void kernel_dgemv_n_4_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z)
+// void kernel_sgemv_n_4_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z)
 
 	.align	4
-	GLOB_FUN_START(kernel_dgemv_n_4_lib4)
+	GLOB_FUN_START(kernel_sgemv_n_4_lib4)
 	
 
 	PROLOGUE
@@ -798,17 +774,17 @@ NAME:
 
 	ret
 
-	FUN_END(kernel_dgemv_n_4_lib4)
+	FUN_END(kernel_sgemv_n_4_lib4)
 
 
 
 
 
 //                               w0        x1             x2         x3         x4            x5         x6         w7
-// void kernel_dgemv_n_4_vs_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z, int m1)
+// void kernel_sgemv_n_4_vs_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z, int m1)
 
 	.align	4
-	GLOB_FUN_START(kernel_dgemv_n_4_vs_lib4)
+	GLOB_FUN_START(kernel_sgemv_n_4_vs_lib4)
 	
 
 	PROLOGUE
@@ -858,17 +834,17 @@ NAME:
 
 	ret
 
-	FUN_END(kernel_dgemv_n_4_vs_lib4)
+	FUN_END(kernel_sgemv_n_4_vs_lib4)
 
 
 
 
 
 //                            w0        x1             w2         x3         w4      x5         x6            x7         sp+0
-// void kernel_dgemv_t_4_lib4(int kmax, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z)
+// void kernel_sgemv_t_4_lib4(int kmax, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z)
 
 	.align	4
-	GLOB_FUN_START(kernel_dgemv_t_4_lib4)
+	GLOB_FUN_START(kernel_sgemv_t_4_lib4)
 	
 
 	PROLOGUE
@@ -881,7 +857,7 @@ NAME:
 	mov		w8, w0 // kmax
 	mov		x9, x3 // A
 	mov		w10, w4 // sda
-	lsl		w10, w10, #5 // 32*sda
+	lsl		w10, w10, #4 // 16*sda
 	mov		x11, x5 // x
 	mov		w12, w2 // offA
 
@@ -928,17 +904,17 @@ NAME:
 
 	ret
 
-	FUN_END(kernel_dgemv_t_4_lib4)
+	FUN_END(kernel_sgemv_t_4_lib4)
 
 
 
 
 
 //                            w0        x1             w2         x3         w4      x5         x6            x7         sp+0          sp+8
-// void kernel_dgemv_t_4_vs_lib4(int kmax, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z, int m1)
+// void kernel_sgemv_t_4_vs_lib4(int kmax, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z, int m1)
 
 	.align	4
-	GLOB_FUN_START(kernel_dgemv_t_4_vs_lib4)
+	GLOB_FUN_START(kernel_sgemv_t_4_vs_lib4)
 
 
 	PROLOGUE
@@ -951,7 +927,7 @@ NAME:
 	mov		w8, w0 // kmax
 	mov		x9, x3 // A
 	mov		w10, w4 // sda
-	lsl		w10, w10, #5 // 32*sda
+	lsl		w10, w10, #4 // 16*sda
 	mov		x11, x5 // x
 	mov		w12, w2 // offA
 
@@ -999,17 +975,17 @@ NAME:
 
 	ret
 
-	FUN_END(kernel_dgemv_t_4_vs_lib4)
+	FUN_END(kernel_sgemv_t_4_vs_lib4)
 
 
 
 
 
 //                                 w0     x1         x2                  x3         x4         x5
-// void kernel_dtrsv_ln_inv_4_lib4(int k, double *A, double *inv_diag_A, double *x, double *y, double *z);
+// void kernel_strsv_ln_inv_4_lib4(int k, double *A, double *inv_diag_A, double *x, double *y, double *z);
 
 	.p2align 4
-	GLOB_FUN_START(kernel_dtrsv_ln_inv_4_lib4)
+	GLOB_FUN_START(kernel_strsv_ln_inv_4_lib4)
 
 
 	PROLOGUE
@@ -1070,7 +1046,7 @@ NAME:
 
 	ret
 
-	FUN_END(kernel_dtrsv_ln_inv_4_lib4)
+	FUN_END(kernel_strsv_ln_inv_4_lib4)
 
 
 
@@ -1078,10 +1054,10 @@ NAME:
 
 
 //                                    w0     x1         x2                  x3         x4         x5         w6      w7
-// void kernel_dtrsv_ln_inv_4_vs_lib4(int k, double *A, double *inv_diag_A, double *x, double *y, double *z, int m1, int n1);
+// void kernel_strsv_ln_inv_4_vs_lib4(int k, double *A, double *inv_diag_A, double *x, double *y, double *z, int m1, int n1);
 
 	.p2align 4
-	GLOB_FUN_START(kernel_dtrsv_ln_inv_4_vs_lib4)
+	GLOB_FUN_START(kernel_strsv_ln_inv_4_vs_lib4)
 	
 
 	PROLOGUE
@@ -1144,17 +1120,19 @@ NAME:
 
 	ret
 
-	FUN_END(kernel_dtrsv_ln_inv_4_vs_lib4)
+	FUN_END(kernel_strsv_ln_inv_4_vs_lib4)
 
 
 
 
 
+#if 0
+// TODO
 //                                 w0     x1         w2       x3                  x4         x5         x6
-// void kernel_dtrsv_lt_inv_4_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
+// void kernel_strsv_lt_inv_4_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
 
 	.p2align 4
-	GLOB_FUN_START(kernel_dtrsv_lt_inv_4_lib4)
+	GLOB_FUN_START(kernel_strsv_lt_inv_4_lib4)
 	
 
 	PROLOGUE
@@ -1168,10 +1146,10 @@ NAME:
 	sub		w8, w8, #4
 	mov		x9, x1  // A
 	mov		w10, w2 // sda
-	lsl		w10, w10, #5 // 32*sda
+	lsl		w10, w10, #4 // 16*sda
 	add		x9, x9, x10 // A+bs*sda
 	mov		x11, x4  // x
-	add		x11, x11, #32 // x+4
+	add		x11, x11, #16 // x+4
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_T_4_LIB4
@@ -1219,7 +1197,9 @@ NAME:
 
 	ret
 
-	FUN_END(kernel_dtrsv_lt_inv_4_lib4)
+	FUN_END(kernel_strsv_lt_inv_4_lib4)
+#endif
+
 
 
 

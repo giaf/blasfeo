@@ -431,6 +431,7 @@ OBJS += \
 		kernel/armv8a/kernel_sgemm_8x8_lib4.o \
 		kernel/armv8a/kernel_sgemm_8x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_4x4_lib4.o \
+		kernel/armv8a/kernel_sgemv_4_lib4.o \
 		kernel/generic/kernel_sgemm_4x4_lib4.o \
 		kernel/generic/kernel_sgemm_diag_lib4.o \
 		kernel/generic/kernel_sgemv_4_lib4.o \
@@ -495,6 +496,7 @@ OBJS += \
 		kernel/armv8a/kernel_sgemm_8x8_lib4.o \
 		kernel/armv8a/kernel_sgemm_8x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_4x4_lib4.o \
+		kernel/armv8a/kernel_sgemv_4_lib4.o \
 		kernel/generic/kernel_sgemm_4x4_lib4.o \
 		kernel/generic/kernel_sgemm_diag_lib4.o \
 		kernel/generic/kernel_sgemv_4_lib4.o \
