@@ -587,7 +587,7 @@ nn_1:
 	mem = malloc(sA_size+sB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_create_smat(m_kernel, k, &sA, (void *) mem_align);
-	blasfeo_create_smat(n, k, &sB, (void *) mem_align+sA_size);
+	blasfeo_create_smat(n, k, &sB, (void *) (mem_align+sA_size));
 
 	sda = sA.cn;
 	sdb = sB.cn;
@@ -1232,7 +1232,7 @@ nt_1:
 	mem = malloc(sA_size+sB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_create_smat(m_kernel, k, &sA, (void *) mem_align);
-	blasfeo_create_smat(n, k, &sB, (void *) mem_align+sA_size);
+	blasfeo_create_smat(n, k, &sB, (void *) (mem_align+sA_size));
 
 	sda = sA.cn;
 	sdb = sB.cn;
@@ -1855,7 +1855,7 @@ tn_1:
 	mem = malloc(sA_size+sB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_create_smat(m_kernel, k, &sA, (void *) mem_align);
-	blasfeo_create_smat(n, k, &sB, (void *) mem_align+sA_size);
+	blasfeo_create_smat(n, k, &sB, (void *) (mem_align+sA_size));
 
 	sda = sA.cn;
 	sdb = sB.cn;
@@ -2412,7 +2412,7 @@ tt_1:
 	mem = malloc(sA_size+sB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_create_smat(m_kernel, k, &sA, (void *) mem_align);
-	blasfeo_create_smat(n, k, &sB, (void *) mem_align+sA_size);
+	blasfeo_create_smat(n, k, &sB, (void *) (mem_align+sA_size));
 
 	sda = sA.cn;
 	sdb = sB.cn;

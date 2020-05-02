@@ -440,7 +440,7 @@ llnn_1:
 	mem = malloc(sA_size+sB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_create_dmat(12, m, &sA, (void *) mem_align);
-	blasfeo_create_dmat(m, m, &sB, (void *) mem_align+sA_size);
+	blasfeo_create_dmat(m, m, &sB, (void *) (mem_align+sA_size));
 
 	pU = sA.pA;
 	sdu = sA.cn;
@@ -756,7 +756,7 @@ llnu_1:
 	mem = malloc(sA_size+sB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_create_dmat(12, m, &sA, (void *) mem_align);
-	blasfeo_create_dmat(m, m, &sB, (void *) mem_align+sA_size);
+	blasfeo_create_dmat(m, m, &sB, (void *) (mem_align+sA_size));
 
 	pU = sA.pA;
 	sdu = sA.cn;
@@ -1453,7 +1453,7 @@ lunu_1:
 	mem = malloc(sA_size+sB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_create_dmat(12, m, &sA, (void *) mem_align);
-	blasfeo_create_dmat(m, m, &sB, (void *) mem_align+sA_size);
+	blasfeo_create_dmat(m, m, &sB, (void *) (mem_align+sA_size));
 
 	pU = sA.pA;
 	sdu = sA.cn;
@@ -1823,7 +1823,7 @@ lunn_1:
 	mem = malloc(sA_size+sB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_create_dmat(12, m, &sA, (void *) mem_align);
-	blasfeo_create_dmat(m, m, &sB, (void *) mem_align+sA_size);
+	blasfeo_create_dmat(m, m, &sB, (void *) (mem_align+sA_size));
 
 	pU = sA.pA;
 	sdu = sA.cn;
@@ -2786,7 +2786,7 @@ rltn_1:
 	mem = malloc(sA_size+sB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_create_dmat(12, n, &sA, (void *) mem_align);
-	blasfeo_create_dmat(n, n, &sB, (void *) mem_align+sA_size);
+	blasfeo_create_dmat(n, n, &sB, (void *) (mem_align+sA_size));
 
 	pU = sA.pA;
 	sdu = sA.cn;
@@ -3083,7 +3083,7 @@ rltu_1:
 	mem = malloc(sA_size+sB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_create_dmat(12, n, &sA, (void *) mem_align);
-	blasfeo_create_dmat(n, n, &sB, (void *) mem_align+sA_size);
+	blasfeo_create_dmat(n, n, &sB, (void *) (mem_align+sA_size));
 
 	pU = sA.pA;
 	sdu = sA.cn;
@@ -3692,7 +3692,7 @@ rutn_1:
 	mem = malloc(sA_size+sB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_create_dmat(12, n, &sA, (void *) mem_align);
-	blasfeo_create_dmat(n, n, &sB, (void *) mem_align+sA_size);
+	blasfeo_create_dmat(n, n, &sB, (void *) (mem_align+sA_size));
 
 	pU = sA.pA;
 	sdu = sA.cn;
@@ -4038,7 +4038,7 @@ rutu_1:
 	mem = malloc(sA_size+sB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_create_dmat(12, n, &sA, (void *) mem_align);
-	blasfeo_create_dmat(n, n, &sB, (void *) mem_align+sA_size);
+	blasfeo_create_dmat(n, n, &sB, (void *) (mem_align+sA_size));
 
 	pU = sA.pA;
 	sdu = sA.cn;
