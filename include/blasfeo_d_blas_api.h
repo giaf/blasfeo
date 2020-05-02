@@ -54,6 +54,12 @@ extern "C" {
 
 
 
+// BLAS 3
+//
+void blasfeo_dgemm(char ta, char tb, int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc, double *D, int ldd);
+
+
+
 #ifdef FORTRAN_BLAS_API
 
 
@@ -114,7 +120,7 @@ void blasfeo_dcopy(int *n, double *x, int *incx, double *y, int *incy);
 
 // BLAS 3
 //
-void blasfeo_dgemm(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
+void blas_dgemm(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
 //
 void blasfeo_dsyrk(char *uplo, char *ta, int *m, int *k, double *alpha, double *A, int *lda, double *beta, double *C, int *ldc);
 //
