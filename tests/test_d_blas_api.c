@@ -161,11 +161,11 @@ int main()
 	d_print_mat(n, n, D, ldd);
 #endif
 
-#if 1
+#if 0
 	dgemm_(&c_t, &c_t, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C, &n);
 #endif
 
-#if 0
+#if 1
 	dsyrk_(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C, &n);
 #endif
 
@@ -251,13 +251,14 @@ int main()
 	d_print_mat(n, n, D, ldd);
 #endif
 
-#if 1
+#if 0
 //	blas_dgemm(&c_t, &c_t, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C2, &n);
 	blasfeo_dgemm(c_t, c_t, m0, n0, k0, alpha, B, n, A, n, beta, C2, n, C2, n);
 #endif
 
-#if 0
-	blasfeo_dsyrk(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C, &n);
+#if 1
+//	blas_dsyrk(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C2, &n);
+	blasfeo_dsyrk3(c_u, c_t, m0, k0, alpha, A, n, beta, C2, n, C2, n);
 #endif
 
 #if 0
