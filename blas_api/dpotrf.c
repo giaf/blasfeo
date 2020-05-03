@@ -100,7 +100,8 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	int sdc;
 	double *pc;
 	int sC_size, stot_size;
-	void *smat_mem, *smat_mem_align;
+	void *mem;
+	char *mem_align;
 	int m1;
 
 
@@ -269,9 +270,9 @@ l_1:
 	sC_size = blasfeo_memsize_dmat(m1, m1);
 //	sC_size = blasfeo_memsize_dmat(m, m);
 	stot_size = sC_size;
-	smat_mem = malloc(stot_size+64);
-	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
-	blasfeo_create_dmat(m, m, &sC, smat_mem_align);
+	mem = malloc(stot_size+64);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_create_dmat(m, m, &sC, (void *) mem_align);
 	sdc = sC.cn;
 	pc = sC.dA;
 
@@ -401,11 +402,11 @@ l_1_return:
 		if(pc[ii]==0.0)
 			{
 			*info = ii+1;
-			free(smat_mem);
+			free(mem);
 			return;
 			}
 		}
-	free(smat_mem);
+	free(mem);
 	return;
 
 
@@ -634,9 +635,9 @@ u_1:
 	sC_size = blasfeo_memsize_dmat(m1, m1);
 //	sC_size = blasfeo_memsize_dmat(m, m);
 	stot_size = sC_size;
-	smat_mem = malloc(stot_size+64);
-	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
-	blasfeo_create_dmat(m, m, &sC, smat_mem_align);
+	mem = malloc(stot_size+64);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_create_dmat(m, m, &sC, (void *) mem_align);
 	sdc = sC.cn;
 	pc = sC.dA;
 
@@ -821,11 +822,11 @@ u_1_return:
 		if(pc[ii]==0.0)
 			{
 			*info = ii+1;
-			free(smat_mem);
+			free(mem);
 			return;
 			}
 		}
-	free(smat_mem);
+	free(mem);
 	return;
 
 	}

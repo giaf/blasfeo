@@ -1424,7 +1424,8 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 	struct blasfeo_dmat sAt;
 	int sAt_size;
-	void *smat_mem, *smat_mem_align;
+	void *mem;
+	char *mem_align;
 
 	double *pU;
 	int sdu;
@@ -1434,9 +1435,9 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	if(k>K_MAX_STACK)
 		{
 		sAt_size = blasfeo_memsize_dmat(12, k);
-		smat_mem = malloc(sAt_size+64);
-		blasfeo_align_64_byte(smat_mem, &smat_mem_align);
-		blasfeo_create_dmat(12, k, &sAt, smat_mem_align);
+		mem = malloc(sAt_size+64);
+		blasfeo_align_64_byte(mem, (void **) &mem_align);
+		blasfeo_create_dmat(12, k, &sAt, (void *) mem_align);
 		pU = sAt.pA;
 		sdu = sAt.cn;
 		}
@@ -1846,7 +1847,7 @@ left_4_n0:
 tn_return:
 	if(k>K_MAX_STACK)
 		{
-		free(smat_mem);
+		free(mem);
 		}
 	return;
 
@@ -2312,7 +2313,8 @@ void blasfeo_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 	struct blasfeo_dmat sAt;
 	int sdat;
 	int sAt_size;
-	void *smat_mem, *smat_mem_align;
+	void *mem;
+	char *mem_align;
 	double *pAt;
 
 	int ii, jj;
@@ -2875,9 +2877,9 @@ tt_0_return:
 
 loop_00_1:
 	sAt_size = blasfeo_memsize_dmat(12, k);
-	smat_mem = malloc(sAt_size+64);
-	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
-	blasfeo_create_dmat(12, k, &sAt, smat_mem_align);
+	mem = malloc(sAt_size+64);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_create_dmat(12, k, &sAt, (void *) mem_align);
 	pAt = sAt.pA;
 	sdat = sAt.cn;
 
@@ -3072,9 +3074,9 @@ loop_00_1:
 	// main loop C, D not aligned
 loop_CD_1:
 	sAt_size = blasfeo_memsize_dmat(12, k);
-	smat_mem = malloc(sAt_size+64);
-	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
-	blasfeo_create_dmat(12, k, &sAt, smat_mem_align);
+	mem = malloc(sAt_size+64);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_create_dmat(12, k, &sAt, (void *) mem_align);
 	pAt = sAt.pA;
 	sdat = sAt.cn;
 
@@ -3406,7 +3408,7 @@ left_4_1_g:
 
 
 tt_1_return:
-	free(smat_mem);
+	free(mem);
 	return;
 
 	}

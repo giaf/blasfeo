@@ -71,7 +71,8 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 	int bs = 4;
 
 
-	void *mem, *mem_align;
+	void *mem;
+	char *mem_align;
 	double *pU;
 	int sdu;
 	struct blasfeo_dmat sA;
@@ -719,8 +720,8 @@ lx_1:
 	m1 = (m+128-1)/128*128;
 	sA_size = blasfeo_memsize_dmat(m1, k1);
 	mem = malloc(sA_size+64);
-	blasfeo_align_64_byte(mem, &mem_align);
-	blasfeo_create_dmat(m, k, &sA, mem_align);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_create_dmat(m, k, &sA, (void *) mem_align);
 
 	if(*ta=='n' | *ta=='N')
 		blasfeo_pack_dmat(m, k, A, lda, &sA, 0, 0);
@@ -847,8 +848,8 @@ ux_1:
 	m1 = (m+128-1)/128*128;
 	sA_size = blasfeo_memsize_dmat(m1, k1);
 	mem = malloc(sA_size+64);
-	blasfeo_align_64_byte(mem, &mem_align);
-	blasfeo_create_dmat(m, k, &sA, mem_align);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_create_dmat(m, k, &sA, (void *) mem_align);
 
 	if(*ta=='n' | *ta=='N')
 		blasfeo_pack_dmat(m, k, A, lda, &sA, 0, 0);
