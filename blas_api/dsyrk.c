@@ -83,16 +83,28 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 	// stack memory allocation
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined (_MSC_VER)
+	double pU0[3*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 //	double pD0[4*16] __attribute__ ((aligned (64)));
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined (_MSC_VER)
+	double pU0[2*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 //	double pD0[2*16] __attribute__ ((aligned (64)));
 #elif defined(TARGET_GENERIC)
 	double pU0[1*4*K_MAX_STACK];
 //	double pD0[1*16];
 #else
+#if defined (_MSC_VER)
+	double pU0[1*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 //	double pD0[1*16] __attribute__ ((aligned (64)));
 #endif
 	int sdu0 = (k+3)/4*4;

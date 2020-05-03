@@ -76,21 +76,40 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 #if defined(TARGET_GENERIC)
 	double pd[K_MAX_STACK];
 #else
+#if defined (_MSC_VER)
+	double pd[K_MAX_STACK] __declspec(align(64));
+#else
 	double pd[K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined (_MSC_VER)
+	double pU[3*4*K_MAX_STACK] __declspec(align(64));
+	double pD[4*16] __declspec(align(64));
+#else
 	double pU[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 	double pD[4*16] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined (_MSC_VER)
+	double pU[2*4*K_MAX_STACK] __declspec(align(64));
+	double pD[2*16] __declspec(align(64));
+#else
 	double pU[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 	double pD[2*16] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_GENERIC)
 	double pU[1*4*K_MAX_STACK];
 	double pD[1*16];
 #else
+#if defined (_MSC_VER)
+	double pU[1*4*K_MAX_STACK] __declspec(align(64));
+	double pD[1*16] __declspec(align(64));
+#else
 	double pU[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 	double pD[1*16] __attribute__ ((aligned (64)));
+#endif
 #endif
 	int sdu = (m+3)/4*4;
 	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;

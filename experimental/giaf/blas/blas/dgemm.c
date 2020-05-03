@@ -60,7 +60,11 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 
 	int bs = 4;
 
+#if defined (_MSC_VER)
+	double pU[12*256] __declspec(align(64));
+#else
 	double pU[12*256] __attribute__ ((aligned (64)));
+#endif
 	int sdu = 256;
 
 	struct blasfeo_dmat sA, sB;

@@ -1329,13 +1329,25 @@ void kernel_dgetrf_pivot_8_vs_lib(int m, double *C, int ldc, double *pd, int* ip
 	{
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined (_MSC_VER)
+	double pU0[3*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined (_MSC_VER)
+	double pU0[2*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_GENERIC)
 	double pU0[1*4*K_MAX_STACK];
 #else
+#if defined (_MSC_VER)
+	double pU0[1*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #endif
 	int sdu0 = (m+3)/4*4;
 	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;

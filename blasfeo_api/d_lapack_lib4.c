@@ -83,13 +83,25 @@ void blasfeo_dgetrf_rp_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined (_MSC_VER)
+	double pU0[3*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined (_MSC_VER)
+	double pU0[2*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_GENERIC)
 	double pU0[1*4*K_MAX_STACK];
 #else
+#if defined (_MSC_VER)
+	double pU0[1*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #endif
 	int sdu0 = (n+3)/4*4;
 	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
@@ -545,13 +557,25 @@ void blasfeo_dgetrf_np_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined (_MSC_VER)
+	double pU0[3*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined (_MSC_VER)
+	double pU0[2*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_GENERIC)
 	double pU0[1*4*K_MAX_STACK];
 #else
+#if defined (_MSC_VER)
+	double pU0[1*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #endif
 	int sdu0 = (n+3)/4*4;
 	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
@@ -3483,8 +3507,16 @@ void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 	double pT[144] __declspec(align(64)) = {0};
 	double pK[144] __declspec(align(64)) = {0};
 #else
+#if defined (_MSC_VER)
+	double pT[144] __declspec(align(64)) = {0};
+#else
 	double pT[144] __attribute__ ((aligned (64))) = {0};
+#endif
+#if defined (_MSC_VER)
+	double pK[144] __declspec(align(64)) = {0};
+#else
 	double pK[144] __attribute__ ((aligned (64))) = {0};
+#endif
 #endif
 #else
 	double pT[144] = {0}; // XXX smaller ?
@@ -3700,8 +3732,16 @@ void blasfeo_dorglq(int m, int n, int k, struct blasfeo_dmat *sC, int ci, int cj
 	double pT[144] __declspec(align(64)) = {0};
 	double pK[144] __declspec(align(64)) = {0};
 #else
+#if defined (_MSC_VER)
+	double pT[144] __declspec(align(64)) = {0};
+#else
 	double pT[144] __attribute__ ((aligned (64))) = {0};
+#endif
+#if defined (_MSC_VER)
+	double pK[144] __declspec(align(64)) = {0};
+#else
 	double pK[144] __attribute__ ((aligned (64))) = {0};
+#endif
 #endif
 #else
 	double pT[144] = {0}; // XXX smaller ?
@@ -3802,8 +3842,16 @@ void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 	double pT[144] __declspec(align(64)) = {0};
 	double pK[144] __declspec(align(64)) = {0};
 #else
+#if defined (_MSC_VER)
+	double pT[144] __declspec(align(64)) = {0};
+#else
 	double pT[144] __attribute__ ((aligned (64))) = {0};
+#endif
+#if defined (_MSC_VER)
+	double pK[144] __declspec(align(64)) = {0};
+#else
 	double pK[144] __attribute__ ((aligned (64))) = {0};
+#endif
 #endif
 #else
 	double pT[144] = {0};
@@ -3981,8 +4029,16 @@ void blasfeo_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj
 	double pT[144] __declspec(align(64)) = {0};
 	double pK[96] __declspec(align(64)) = {0};
 #else
+#if defined (_MSC_VER)
+	double pT[144] __declspec(align(64)) = {0};
+#else
 	double pT[144] __attribute__ ((aligned (64))) = {0};
+#endif
+#if defined (_MSC_VER)
+	double pK[96] __declspec(align(64)) = {0};
+#else
 	double pK[96] __attribute__ ((aligned (64))) = {0};
+#endif
 #endif
 #else
 	double pT[144] = {0};
@@ -4102,8 +4158,16 @@ void blasfeo_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, int d
 	double pT[144] __declspec(align(64)) = {0};
 	double pK[96] __declspec(align(64)) = {0};
 #else
+#if defined (_MSC_VER)
+	double pT[144] __declspec(align(64)) = {0};
+#else
 	double pT[144] __attribute__ ((aligned (64))) = {0};
+#endif
+#if defined (_MSC_VER)
+	double pK[96] __declspec(align(64)) = {0};
+#else
 	double pK[96] __attribute__ ((aligned (64))) = {0};
+#endif
 #endif
 #else
 	double pT[144] = {0};

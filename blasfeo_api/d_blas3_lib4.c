@@ -1411,13 +1411,25 @@ void blasfeo_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined (_MSC_VER)
+	double pU0[3*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined (_MSC_VER)
+	double pU0[2*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_GENERIC)
 	double pU0[1*4*K_MAX_STACK];
 #else
+#if defined (_MSC_VER)
+	double pU0[1*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #endif
 	int sdu0 = (k+3)/4*4;
 	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
@@ -2299,13 +2311,25 @@ void blasfeo_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined (_MSC_VER)
+	double pU[3*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined (_MSC_VER)
+	double pU[2*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_GENERIC)
 	double pU[1*4*K_MAX_STACK];
 #else
+#if defined (_MSC_VER)
+	double pU[1*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #endif
 	int sdu = (k+3)/4*4;
 	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;
@@ -4937,13 +4961,25 @@ void blasfeo_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined (_MSC_VER)
+	double pU0[3*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined (_MSC_VER)
+	double pU0[2*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_GENERIC)
 	double pU0[1*4*K_MAX_STACK];
 #else
+#if defined (_MSC_VER)
+	double pU0[1*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #endif
 	int sdu0 = (k+3)/4*4;
 	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
@@ -6377,13 +6413,25 @@ void blasfeo_dsyrk_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined (_MSC_VER)
+	double pU0[3*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined (_MSC_VER)
+	double pU0[2*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #elif defined(TARGET_GENERIC)
 	double pU0[1*4*K_MAX_STACK];
 #else
+#if defined (_MSC_VER)
+	double pU0[1*4*K_MAX_STACK] __declspec(align(64));
+#else
 	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+#endif
 #endif
 	int sdu0 = (k+3)/4*4;
 	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
