@@ -109,6 +109,8 @@ function(TestForISA)
             )
   endif()
 
+#  message(${CHK_OUTPUT${TEST_TARGET}})
+
   if(${CHK_TARGET_BUILD_${TEST_TARGET}})
     set(CHK_TARGET_BUILD TRUE PARENT_SCOPE)
 
