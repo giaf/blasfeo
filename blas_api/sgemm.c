@@ -80,21 +80,21 @@ void blasfeo_sgemm(char *ta, char *tb, int *pm, int *pn, int *pk, float *alpha, 
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL)
 #if defined (_MSC_VER)
-	float pU[3*8*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) float pU[3*8*K_MAX_STACK];
 #else
 	float pU[3*8*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
 	int sdu = (k+ps_8-1)/ps_8*ps_8;
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #if defined (_MSC_VER)
-	float pU[2*8*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) float pU[2*8*K_MAX_STACK];
 #else
 	float pU[2*8*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
 	int sdu = (k+ps_8-1)/ps_8*ps_8;
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
 #if defined (_MSC_VER)
-	float pU[2*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) float pU[2*4*K_MAX_STACK];
 #else
 	float pU[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
@@ -104,7 +104,7 @@ void blasfeo_sgemm(char *ta, char *tb, int *pm, int *pn, int *pk, float *alpha, 
 	int sdu = (k+ps_4-1)/ps_4*ps_4;
 #else
 #if defined (_MSC_VER)
-	float pU[1*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) float pU[1*4*K_MAX_STACK];
 #else
 	float pU[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif

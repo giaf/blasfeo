@@ -1454,7 +1454,7 @@ void blasfeo_ssyrk_ln(int m, int k, float alpha, struct blasfeo_smat *sA, int ai
 // TODO visual studio alignment
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 #if defined (_MSC_VER)
-	float pU0[2*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) float pU0[2*4*K_MAX_STACK];
 #else
 	float pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
@@ -1462,7 +1462,7 @@ void blasfeo_ssyrk_ln(int m, int k, float alpha, struct blasfeo_smat *sA, int ai
 	float pU0[1*4*K_MAX_STACK];
 #else
 #if defined (_MSC_VER)
-	float pU0[1*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) float pU0[1*4*K_MAX_STACK];
 #else
 	float pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif

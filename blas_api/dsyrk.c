@@ -84,14 +84,14 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 #if defined (_MSC_VER)
-	double pU0[3*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) double pU0[3*4*K_MAX_STACK];
 #else
 	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
 //	double pD0[4*16] __attribute__ ((aligned (64)));
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 #if defined (_MSC_VER)
-	double pU0[2*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) double pU0[2*4*K_MAX_STACK];
 #else
 	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
@@ -101,7 +101,7 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 //	double pD0[1*16];
 #else
 #if defined (_MSC_VER)
-	double pU0[1*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) double pU0[1*4*K_MAX_STACK];
 #else
 	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif

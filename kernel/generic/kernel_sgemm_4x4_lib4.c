@@ -53,7 +53,7 @@ void kernel_sgemm_nt_4x4_lib4(int kmax, float *alpha, float *A, float *B, float 
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -277,7 +277,7 @@ void kernel_sgemm_nt_4x4_vs_lib4(int kmax, float *alpha, float *A, float *B, flo
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -403,7 +403,7 @@ void kernel_sgemm_nt_4x4_gen_lib4(int kmax, float *alpha, float *A, float *B, fl
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -727,7 +727,7 @@ void kernel_sgemm_nn_4x4_lib4(int kmax, float *alpha, float *A, int offsetB, flo
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -1193,7 +1193,7 @@ void kernel_sgemm_nn_4x4_vs_lib4(int kmax, float *alpha, float *A, int offsetB, 
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -1319,7 +1319,7 @@ void kernel_sgemm_nn_4x4_gen_lib4(int kmax, float *alpha, float *A, int offsetB,
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -1637,7 +1637,7 @@ void kernel_ssyrk_nt_l_4x4_lib4(int kmax, float *alpha, float *A, float *B, floa
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -1676,7 +1676,7 @@ void kernel_ssyrk_nt_l_4x4_vs_lib4(int kmax, float *alpha, float *A, float *B, f
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -1758,7 +1758,7 @@ void kernel_ssyrk_nt_l_4x4_gen_lib4(int kmax, float *alpha, float *A, float *B, 
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -2201,7 +2201,7 @@ void kernel_strmm_nt_ru_4x4_lib4(int kmax, float *alpha, float *A, float *B, flo
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -2312,7 +2312,7 @@ void kernel_strmm_nt_ru_4x4_vs_lib4(int kmax, float *alpha, float *A, float *B, 
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -2525,7 +2525,7 @@ void kernel_strmm_nn_rl_4x4_lib4(int kmax, float *alpha, float *A, int offsetB, 
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -3131,7 +3131,7 @@ void kernel_strmm_nn_rl_4x4_vs_lib4(int kmax, float *alpha, float *A, int offset
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -3838,7 +3838,7 @@ void kernel_strmm_nn_rl_4x4_gen_lib4(int kmax, float *alpha, float *A, int offse
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -4638,7 +4638,7 @@ void kernel_spotrf_nt_l_4x4_lib4(int kmax, float *A, float *B, float *C, float *
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -4748,7 +4748,7 @@ void kernel_spotrf_nt_l_4x4_vs_lib4(int kmax, float *A, float *B, float *C, floa
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -4935,7 +4935,7 @@ void kernel_strsm_nt_rl_inv_4x4_lib4(int kmax, float *A, float *B, float *beta, 
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -5038,7 +5038,7 @@ void kernel_strsm_nt_rl_inv_4x4_vs_lib4(int kmax, float *A, float *B, float *bet
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -5257,7 +5257,7 @@ void kernel_strsm_nt_rl_one_4x4_lib4(int kmax, float *A, float *B, float *beta, 
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -5339,7 +5339,7 @@ void kernel_strsm_nt_rl_one_4x4_vs_lib4(int kmax, float *A, float *B, float *bet
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -5513,7 +5513,7 @@ void kernel_strsm_nt_ru_inv_4x4_lib4(int kmax, float *A, float *B, float *beta, 
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -5616,7 +5616,7 @@ void kernel_strsm_nt_ru_inv_4x4_vs_lib4(int kmax, float *A, float *B, float *bet
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -5814,7 +5814,7 @@ void kernel_sgetrf_nn_4x4_lib4(int kmax, float *A, float *B, int sdb, float *C, 
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -5914,7 +5914,7 @@ void kernel_sgetrf_nn_4x4_vs_lib4(int kmax, float *A, float *B, int sdb, float *
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -6104,7 +6104,7 @@ void kernel_strsm_nt_ru_one_4x4_lib4(int kmax, float *A, float *B, float *beta, 
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -6187,7 +6187,7 @@ void kernel_strsm_nt_ru_one_4x4_vs_lib4(int kmax, float *A, float *B, float *bet
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -6366,7 +6366,7 @@ void kernel_strsm_nn_ll_one_4x4_lib4(int kmax, float *A, float *B, int sdb, floa
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -6455,7 +6455,7 @@ void kernel_strsm_nn_ll_one_4x4_vs_lib4(int kmax, float *A, float *B, int sdb, f
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -6639,7 +6639,7 @@ void kernel_strsm_nn_ru_inv_4x4_lib4(int kmax, float *A, float *B, int sdb, floa
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -6751,7 +6751,7 @@ void kernel_strsm_nn_ru_inv_4x4_vs_lib4(int kmax, float *A, float *B, int sdb, f
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -6957,7 +6957,7 @@ void kernel_strsm_nn_lu_inv_4x4_lib4(int kmax, float *A, float *B, int sdb, floa
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -7072,7 +7072,7 @@ void kernel_strsm_nn_lu_inv_4x4_vs_lib4(int kmax, float *A, float *B, int sdb, f
 	float CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[16] = {0};
 #else
 	float CC[16] __attribute__ ((aligned (64))) = {0};
 #endif

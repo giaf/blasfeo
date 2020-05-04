@@ -73,13 +73,13 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 #if defined (_MSC_VER)
-	double pU[3*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) double pU[3*4*K_MAX_STACK];
 #else
 	double pU[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 #if defined (_MSC_VER)
-	double pU[2*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) double pU[2*4*K_MAX_STACK];
 #else
 	double pU[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
@@ -87,7 +87,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 	double pU[1*4*K_MAX_STACK];
 #else
 #if defined (_MSC_VER)
-	double pU[1*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) double pU[1*4*K_MAX_STACK];
 #else
 	double pU[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif

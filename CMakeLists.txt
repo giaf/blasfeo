@@ -288,7 +288,10 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_FLAGS_BLAS_${EXTERNAL_BLAS}}")
 
 # common C flags
 if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -fPIC")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
+	if(NOT CMAKE_C_SIMULATE_ID MATCHES "MSVC") # See https://stackoverflow.com/questions/49480535
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC") # Windows is always position independent code
+	endif()
 endif()
 
 
