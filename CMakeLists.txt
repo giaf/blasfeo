@@ -53,7 +53,7 @@ set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A15 CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A9 CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A7 CACHE STRING "Target architecture")
-# set(TARGET GENERIC)
+# set(TARGET GENERIC CACHE STRING "Target architecture")
 
 # Linear Algebra backend
 set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
