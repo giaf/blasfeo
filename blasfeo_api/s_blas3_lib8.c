@@ -95,7 +95,7 @@ void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 	int i, j, l;
 
 	// register spil space
-//	ALIGN( float spil[32], 64 );
+//	ALIGNED( float spil[32], 64 );
 
 	i = 0;
 

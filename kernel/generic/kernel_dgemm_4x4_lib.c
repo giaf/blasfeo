@@ -47,7 +47,7 @@ void kernel_dgemm_nt_4x4_libcccc(int kmax, double *alpha, double *A, int lda, do
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -270,7 +270,7 @@ static void kernel_dgemm_nt_4x3_libcccc(int kmax, double *alpha, double *A, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -457,7 +457,7 @@ static void kernel_dgemm_nt_4x2_libcccc(int kmax, double *alpha, double *A, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -609,7 +609,7 @@ static void kernel_dgemm_nt_4x1_libcccc(int kmax, double *alpha, double *A, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -723,7 +723,7 @@ void kernel_dgemm_nt_4x4_vs_libcccc(int kmax, double *alpha, double *A, int lda,
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -921,7 +921,7 @@ void kernel_dgemm_nt_4x4_lib44cc(int kmax, double *alpha, double *A, double *B, 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -965,7 +965,7 @@ void kernel_dgemm_nt_4x4_vs_lib44cc(int kmax, double *alpha, double *A, double *
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -1094,7 +1094,7 @@ void kernel_dgemm_nn_4x4_libcccc(int kmax, double *alpha, double *A, int lda, do
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -1317,7 +1317,7 @@ static void kernel_dgemm_nn_4x3_libcccc(int kmax, double *alpha, double *A, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -1504,7 +1504,7 @@ static void kernel_dgemm_nn_4x2_libcccc(int kmax, double *alpha, double *A, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -1656,7 +1656,7 @@ static void kernel_dgemm_nn_4x1_libcccc(int kmax, double *alpha, double *A, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -1770,7 +1770,7 @@ void kernel_dgemm_nn_4x4_vs_libcccc(int kmax, double *alpha, double *A, int lda,
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -1934,7 +1934,7 @@ void kernel_dgemm_tt_4x4_libcccc(int kmax, double *alpha, double *A, int lda, do
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -1986,7 +1986,7 @@ void kernel_dgemm_tt_4x4_vs_libcccc(int kmax, double *alpha, double *A, int lda,
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -2119,7 +2119,7 @@ void kernel_dgemm_tt_4x4_libc4cc(int kmax, double *alpha, double *A, int lda, do
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -2171,7 +2171,7 @@ void kernel_dgemm_tt_4x4_vs_libc4cc(int kmax, double *alpha, double *A, int lda,
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -2304,7 +2304,7 @@ void kernel_dsyrk_nt_l_4x4_lib44cc(int kmax, double *alpha, double *A, double *B
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -2342,7 +2342,7 @@ void kernel_dsyrk_nt_l_4x4_vs_lib44cc(int kmax, double *alpha, double *A, double
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -2423,7 +2423,7 @@ void kernel_dsyrk_nt_u_4x4_lib44cc(int kmax, double *alpha, double *A, double *B
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -2467,7 +2467,7 @@ void kernel_dsyrk_nt_u_4x4_vs_lib44cc(int kmax, double *alpha, double *A, double
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -2596,7 +2596,7 @@ void kernel_dtrmm_nn_rl_4x4_lib4ccc(int kmax, double *alpha, double *A, double *
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -2762,7 +2762,7 @@ void kernel_dtrmm_nn_rl_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, doubl
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -3029,7 +3029,7 @@ void kernel_dtrmm_nn_rl_4x4_tran_lib4c4c(int kmax, double *alpha, double *A, dou
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -3198,7 +3198,7 @@ void kernel_dtrmm_nn_rl_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double *A, 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -3478,7 +3478,7 @@ void kernel_dtrmm_nn_rl_one_4x4_lib4ccc(int kmax, double *alpha, double *A, doub
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -3640,7 +3640,7 @@ void kernel_dtrmm_nn_rl_one_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, d
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -3903,7 +3903,7 @@ void kernel_dtrmm_nn_rl_one_4x4_tran_lib4c4c(int kmax, double *alpha, double *A,
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -4068,7 +4068,7 @@ void kernel_dtrmm_nn_rl_one_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -4344,7 +4344,7 @@ void kernel_dtrmm_nn_ru_4x4_lib4ccc(int kmax, double *alpha, double *A, double *
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -4502,7 +4502,7 @@ void kernel_dtrmm_nn_ru_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, doubl
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -4938,7 +4938,7 @@ void kernel_dtrmm_nn_ru_4x4_tran_lib4c4c(int kmax, double *alpha, double *A, dou
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -5098,7 +5098,7 @@ void kernel_dtrmm_nn_ru_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double *A, 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -5547,7 +5547,7 @@ void kernel_dtrmm_nn_ru_one_4x4_lib4ccc(int kmax, double *alpha, double *A, doub
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -5701,7 +5701,7 @@ void kernel_dtrmm_nn_ru_one_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, d
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -6127,7 +6127,7 @@ void kernel_dtrmm_nn_ru_one_4x4_tran_lib4c4c(int kmax, double *alpha, double *A,
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -6283,7 +6283,7 @@ void kernel_dtrmm_nn_ru_one_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -6722,7 +6722,7 @@ void kernel_dtrmm_nt_rl_4x4_lib44cc(int kmax, double *alpha, double *A, double *
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -6881,7 +6881,7 @@ void kernel_dtrmm_nt_rl_4x4_vs_lib44cc(int kmax, double *alpha, double *A, doubl
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -7319,7 +7319,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_lib444c(int kmax, double *alpha, double *A, dou
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -7480,7 +7480,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_vs_lib444c(int kmax, double *alpha, double *A, 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -7930,7 +7930,7 @@ void kernel_dtrmm_nt_rl_one_4x4_lib44cc(int kmax, double *alpha, double *A, doub
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -8085,7 +8085,7 @@ void kernel_dtrmm_nt_rl_one_4x4_vs_lib44cc(int kmax, double *alpha, double *A, d
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -8513,7 +8513,7 @@ void kernel_dtrmm_nt_rl_one_4x4_tran_lib444c(int kmax, double *alpha, double *A,
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -8670,7 +8670,7 @@ void kernel_dtrmm_nt_rl_one_4x4_tran_vs_lib444c(int kmax, double *alpha, double 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -9110,7 +9110,7 @@ void kernel_dtrmm_nt_rl_4x4_lib4ccc(int kmax, double *alpha, double *A, double *
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -9268,7 +9268,7 @@ void kernel_dtrmm_nt_rl_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, doubl
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -9704,7 +9704,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_lib4c4c(int kmax, double *alpha, double *A, dou
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -9864,7 +9864,7 @@ void kernel_dtrmm_nt_rl_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double *A, 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -10313,7 +10313,7 @@ void kernel_dtrmm_nt_rl_one_4x4_lib4ccc(int kmax, double *alpha, double *A, doub
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -10467,7 +10467,7 @@ void kernel_dtrmm_nt_rl_one_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, d
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -10894,7 +10894,7 @@ void kernel_dtrmm_nt_rl_one_4x4_tran_lib4c4c(int kmax, double *alpha, double *A,
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -11050,7 +11050,7 @@ void kernel_dtrmm_nt_rl_one_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = 1.0;
@@ -11489,7 +11489,7 @@ void kernel_dtrmm_nt_ru_4x4_lib44cc(int kmax, double *alpha, double *A, double *
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -11675,7 +11675,7 @@ void kernel_dtrmm_nt_ru_4x4_vs_lib44cc(int kmax, double *alpha, double *A, doubl
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -11942,7 +11942,7 @@ void kernel_dtrmm_nt_ru_4x4_tran_lib444c(int kmax, double *alpha, double *A, dou
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -12111,7 +12111,7 @@ void kernel_dtrmm_nt_ru_4x4_tran_vs_lib444c(int kmax, double *alpha, double *A, 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -12391,7 +12391,7 @@ void kernel_dtrmm_nt_ru_4x4_lib4ccc(int kmax, double *alpha, double *A, double *
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -12557,7 +12557,7 @@ void kernel_dtrmm_nt_ru_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, doubl
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -12824,7 +12824,7 @@ void kernel_dtrmm_nt_ru_4x4_tran_lib4c4c(int kmax, double *alpha, double *A, dou
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -12993,7 +12993,7 @@ void kernel_dtrmm_nt_ru_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double *A, 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -13273,7 +13273,7 @@ void kernel_dtrmm_nt_ru_one_4x4_lib44cc(int kmax, double *alpha, double *A, doub
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -13455,7 +13455,7 @@ void kernel_dtrmm_nt_ru_one_4x4_vs_lib44cc(int kmax, double *alpha, double *A, d
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -13718,7 +13718,7 @@ void kernel_dtrmm_nt_ru_one_4x4_tran_lib444c(int kmax, double *alpha, double *A,
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -13883,7 +13883,7 @@ void kernel_dtrmm_nt_ru_one_4x4_tran_vs_lib444c(int kmax, double *alpha, double 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -14159,7 +14159,7 @@ void kernel_dtrmm_nt_ru_one_4x4_lib4ccc(int kmax, double *alpha, double *A, doub
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -14321,7 +14321,7 @@ void kernel_dtrmm_nt_ru_one_4x4_vs_lib4ccc(int kmax, double *alpha, double *A, d
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -14584,7 +14584,7 @@ void kernel_dtrmm_nt_ru_one_4x4_tran_lib4c4c(int kmax, double *alpha, double *A,
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -14749,7 +14749,7 @@ void kernel_dtrmm_nt_ru_one_4x4_tran_vs_lib4c4c(int kmax, double *alpha, double 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	int k;
@@ -15021,7 +15021,7 @@ void kernel_dpotrf_nt_l_4x4_lib44cc(int kmax, double *A, double *B, double *C, i
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	CC[0+bs*0] = C[0+ldc*0];
@@ -15070,7 +15070,7 @@ void kernel_dpotrf_nt_l_4x4_vs_lib44cc(int kmax, double *A, double *B, double *C
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	if(m1>=4)
@@ -15209,7 +15209,7 @@ void kernel_dtrsm_nn_rl_inv_4x4_lib4c44c(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -15309,7 +15309,7 @@ void kernel_dtrsm_nn_rl_inv_4x4_vs_lib4c44c(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -15504,7 +15504,7 @@ void kernel_dtrsm_nn_rl_inv_4x4_lib4cccc(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -15604,7 +15604,7 @@ void kernel_dtrsm_nn_rl_inv_4x4_vs_lib4cccc(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -15799,7 +15799,7 @@ void kernel_dtrsm_nn_rl_one_4x4_lib4c44c(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -15878,7 +15878,7 @@ void kernel_dtrsm_nn_rl_one_4x4_vs_lib4c44c(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -16052,7 +16052,7 @@ void kernel_dtrsm_nn_rl_one_4x4_lib4cccc(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -16131,7 +16131,7 @@ void kernel_dtrsm_nn_rl_one_4x4_vs_lib4cccc(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -16305,7 +16305,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib44cc4(int kmax, double *A, double *B, double 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -16424,7 +16424,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44cc4(int kmax, double *A, double *B, doub
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -16717,7 +16717,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int kmax, double *A, double *B, double 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -16837,7 +16837,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44ccc(int kmax, double *A, double *B, doub
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -17131,7 +17131,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib4c44c(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -17230,7 +17230,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4c44c(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -17421,7 +17421,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib4cccc(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -17520,7 +17520,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4cccc(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -17711,7 +17711,7 @@ void kernel_dtrsm_nt_rl_one_4x4_lib44cc4(int kmax, double *A, double *B, double 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -17809,7 +17809,7 @@ void kernel_dtrsm_nt_rl_one_4x4_vs_lib44cc4(int kmax, double *A, double *B, doub
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -18081,7 +18081,7 @@ void kernel_dtrsm_nt_rl_one_4x4_lib4c44c(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -18160,7 +18160,7 @@ void kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -18330,7 +18330,7 @@ void kernel_dtrsm_nt_rl_one_4x4_lib4cccc(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -18408,7 +18408,7 @@ void kernel_dtrsm_nt_rl_one_4x4_vs_lib4cccc(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -18578,7 +18578,7 @@ void kernel_dtrsm_nn_ru_inv_4x4_lib4c44c(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -18677,7 +18677,7 @@ void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4c44c(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -18868,7 +18868,7 @@ void kernel_dtrsm_nn_ru_inv_4x4_lib4cccc(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -18968,7 +18968,7 @@ void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4cccc(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -19159,7 +19159,7 @@ void kernel_dtrsm_nn_ru_one_4x4_lib4c44c(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -19237,7 +19237,7 @@ void kernel_dtrsm_nn_ru_one_4x4_vs_lib4c44c(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -19407,7 +19407,7 @@ void kernel_dtrsm_nn_ru_one_4x4_lib4cccc(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -19486,7 +19486,7 @@ void kernel_dtrsm_nn_ru_one_4x4_vs_lib4cccc(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -19656,7 +19656,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_lib44cc4(int kmax, double *A, double *B, double 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -19776,7 +19776,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_vs_lib44cc4(int kmax, double *A, double *B, doub
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -19991,7 +19991,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_lib4c44c(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -20091,7 +20091,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4c44c(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -20286,7 +20286,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_lib4cccc(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -20386,7 +20386,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4cccc(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -20581,7 +20581,7 @@ void kernel_dtrsm_nt_ru_one_4x4_lib44cc4(int kmax, double *A, double *B, double 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -20680,7 +20680,7 @@ void kernel_dtrsm_nt_ru_one_4x4_vs_lib44cc4(int kmax, double *A, double *B, doub
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -20874,7 +20874,7 @@ void kernel_dtrsm_nt_ru_one_4x4_lib4c44c(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -20953,7 +20953,7 @@ void kernel_dtrsm_nt_ru_one_4x4_vs_lib4c44c(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -21127,7 +21127,7 @@ void kernel_dtrsm_nt_ru_one_4x4_lib4cccc(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -21206,7 +21206,7 @@ void kernel_dtrsm_nt_ru_one_4x4_vs_lib4cccc(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -21381,7 +21381,7 @@ void kernel_dtrsm_nn_ll_one_4x4_lib4cccc(int kmax, double *A, double *B, int ldb
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -21461,7 +21461,7 @@ void kernel_dtrsm_nn_ll_one_4x4_vs_lib4cccc(int kmax, double *A, double *B, int 
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 
 	double alpha1 = -1.0;
@@ -21624,7 +21624,7 @@ void kernel_dgetrf_nn_4x4_lib4ccc(int kmax, double *A, double *B, int ldb, doubl
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 	
 	double alpha1 = -1.0;
@@ -21720,7 +21720,7 @@ void kernel_dgetrf_nn_4x4_vs_lib4ccc(int kmax, double *A, double *B, int ldb, do
 #if defined(TARGET_GENERIC)
 	double CC[16] = {0};
 #else
-	ALIGN( double CC[16], 64 ) = {0};
+	ALIGNED( double CC[16], 64 ) = {0};
 #endif
 	
 	double alpha1 = -1.0;
