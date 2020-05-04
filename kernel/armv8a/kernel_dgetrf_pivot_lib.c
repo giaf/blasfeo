@@ -48,13 +48,13 @@ void kernel_dgetrf_pivot_12_vs_lib(int m, double *C, int ldc, double *pd, int* i
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 #if defined (_MSC_VER)
-	double pU0[3*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) double pU0[3*4*K_MAX_STACK];
 #else
 	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 #if defined (_MSC_VER)
-	double pU0[2*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) double pU0[2*4*K_MAX_STACK];
 #else
 	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
@@ -62,7 +62,7 @@ void kernel_dgetrf_pivot_12_vs_lib(int m, double *C, int ldc, double *pd, int* i
 	double pU0[1*4*K_MAX_STACK];
 #else
 #if defined (_MSC_VER)
-	double pU0[1*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) double pU0[1*4*K_MAX_STACK];
 #else
 	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
@@ -176,13 +176,13 @@ void kernel_dgetrf_pivot_8_vs_lib(int m, double *C, int ldc, double *pd, int* ip
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 #if defined (_MSC_VER)
-	double pU0[3*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) double pU0[3*4*K_MAX_STACK];
 #else
 	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 #if defined (_MSC_VER)
-	double pU0[2*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) double pU0[2*4*K_MAX_STACK];
 #else
 	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif
@@ -190,7 +190,7 @@ void kernel_dgetrf_pivot_8_vs_lib(int m, double *C, int ldc, double *pd, int* ip
 	double pU0[1*4*K_MAX_STACK];
 #else
 #if defined (_MSC_VER)
-	double pU0[1*4*K_MAX_STACK] __declspec(align(64));
+	__declspec(align(64)) double pU0[1*4*K_MAX_STACK];
 #else
 	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
 #endif

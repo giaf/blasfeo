@@ -64,7 +64,7 @@ void kernel_dgemm_nt_4x4_lib4(int kmax, double *alpha, double *A, double *B, dou
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -288,7 +288,7 @@ void kernel_dgemm_nt_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B, 
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -414,7 +414,7 @@ void kernel_dgemm_nt_4x4_gen_lib4(int kmax, double *alpha, double *A, double *B,
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -745,7 +745,7 @@ void kernel_dgemm_nn_4x4_lib4(int kmax, double *alpha, double *A, int offsetB, d
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -1211,7 +1211,7 @@ void kernel_dgemm_nn_4x4_vs_lib4(int kmax, double *alpha, double *A, int offsetB
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -1337,7 +1337,7 @@ void kernel_dgemm_nn_4x4_gen_lib4(int kmax, double *alpha, double *A, int offset
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -1655,7 +1655,7 @@ void kernel_dgemm_tt_4x4_lib4(int kmax, double *alpha, int offsetA, double *A, i
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -1713,7 +1713,7 @@ void kernel_dgemm_tt_4x4_vs_lib4(int kmax, double *alpha, int offsetA, double *A
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -1852,7 +1852,7 @@ void kernel_dgemm_tt_4x4_gen_lib4(int kmax, double *alpha, int offsetA, double *
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -2183,7 +2183,7 @@ void kernel_dsyrk_nn_u_4x4_lib4(int kmax, double *alpha, double *A, int offsetB,
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -2222,7 +2222,7 @@ void kernel_dsyrk_nn_u_4x4_vs_lib4(int kmax, double *alpha, double *A, int offse
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -2338,7 +2338,7 @@ void kernel_dsyrk_nt_l_4x4_lib4(int kmax, double *alpha, double *A, double *B, d
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -2377,7 +2377,7 @@ void kernel_dsyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -2459,7 +2459,7 @@ void kernel_dsyrk_nt_l_4x4_gen_lib4(int kmax, double *alpha, double *A, double *
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -2898,7 +2898,7 @@ void kernel_dsyrk_nt_u_4x4_lib4(int kmax, double *alpha, double *A, double *B, d
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -2937,7 +2937,7 @@ void kernel_dsyrk_nt_u_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -3053,7 +3053,7 @@ void kernel_dsyrk_nt_u_4x4_gen_lib4(int kmax, double *alpha, double *A, double *
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -3339,7 +3339,7 @@ void kernel_dtrmm_nt_ru_4x4_lib4(int kmax, double *alpha, double *A, double *B, 
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -3450,7 +3450,7 @@ void kernel_dtrmm_nt_ru_4x4_vs_lib4(int kmax, double *alpha, double *A, double *
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -3663,7 +3663,7 @@ void kernel_dtrmm_nn_rl_4x4_lib4(int kmax, double *alpha, double *A, int offsetB
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -4269,7 +4269,7 @@ void kernel_dtrmm_nn_rl_4x4_vs_lib4(int kmax, double *alpha, double *A, int offs
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -4976,7 +4976,7 @@ void kernel_dtrmm_nn_rl_4x4_gen_lib4(int kmax, double *alpha, double *A, int off
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -5776,7 +5776,7 @@ void kernel_dpotrf_nt_l_4x4_lib4(int kmax, double *A, double *B, double *C, doub
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -5886,7 +5886,7 @@ void kernel_dpotrf_nt_l_4x4_vs_lib4(int kmax, double *A, double *B, double *C, d
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -6073,7 +6073,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *bet
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -6176,7 +6176,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -6395,7 +6395,7 @@ void kernel_dtrsm_nt_rl_one_4x4_lib4(int kmax, double *A, double *B, double *bet
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -6477,7 +6477,7 @@ void kernel_dtrsm_nt_rl_one_4x4_vs_lib4(int kmax, double *A, double *B, double *
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -6651,7 +6651,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_lib4(int kmax, double *A, double *B, double *bet
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -6754,7 +6754,7 @@ void kernel_dtrsm_nt_ru_inv_4x4_vs_lib4(int kmax, double *A, double *B, double *
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -6950,7 +6950,7 @@ void kernel_dtrsm_nt_ru_one_4x4_lib4(int kmax, double *A, double *B, double *bet
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -7033,7 +7033,7 @@ void kernel_dtrsm_nt_ru_one_4x4_vs_lib4(int kmax, double *A, double *B, double *
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -7210,7 +7210,7 @@ void kernel_dgetrf_nn_4x4_lib4(int kmax, double *A, double *B, int sdb, double *
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -7310,7 +7310,7 @@ void kernel_dgetrf_nn_4x4_vs_lib4(int kmax, double *A, double *B, int sdb, doubl
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -7502,7 +7502,7 @@ void kernel_dgetrf_nt_4x4_lib4(int kmax, double *A, double *B, double *C, double
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -7602,7 +7602,7 @@ void kernel_dgetrf_nt_4x4_vs_lib4(int kmax, double *A, double *B, double *C, dou
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -7796,7 +7796,7 @@ void kernel_dtrsm_nn_ll_inv_4x4_lib4(int kmax, double *A, double *B, int sdb, do
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -7905,7 +7905,7 @@ void kernel_dtrsm_nn_ll_inv_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -8106,7 +8106,7 @@ void kernel_dtrsm_nn_ll_one_4x4_lib4(int kmax, double *A, double *B, int sdb, do
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -8194,7 +8194,7 @@ void kernel_dtrsm_nn_ll_one_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -8377,7 +8377,7 @@ void kernel_dtrsm_nn_ru_inv_4x4_lib4(int kmax, double *A, double *B, int sdb, do
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -8489,7 +8489,7 @@ void kernel_dtrsm_nn_ru_inv_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -8695,7 +8695,7 @@ void kernel_dtrsm_nn_lu_inv_4x4_lib4(int kmax, double *A, double *B, int sdb, do
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -8810,7 +8810,7 @@ void kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 	double CC[16] = {0};
 #else
 #if defined (_MSC_VER)
-	double CC[16] __declspec(align(64)) = {0};
+	__declspec(align(64)) double CC[16] = {0};
 #else
 	double CC[16] __attribute__ ((aligned (64))) = {0};
 #endif

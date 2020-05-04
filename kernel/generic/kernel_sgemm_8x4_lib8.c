@@ -54,7 +54,7 @@ void kernel_strmm_nt_ru_8x4_lib8(int kmax, float *alpha, float *A, float *B, flo
 	float CC[32] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[32] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[32] = {0};
 #else
 	float CC[32] __attribute__ ((aligned (64))) = {0};
 #endif
@@ -202,7 +202,7 @@ void kernel_strmm_nt_ru_8x4_vs_lib8(int kmax, float *alpha, float *A, float *B, 
 	float CC[32] = {0};
 #else
 #if defined (_MSC_VER)
-	float CC[32] __declspec(align(64)) = {0};
+	__declspec(align(64)) float CC[32] = {0};
 #else
 	float CC[32] __attribute__ ((aligned (64))) = {0};
 #endif

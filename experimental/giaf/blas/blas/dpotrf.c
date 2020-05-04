@@ -57,13 +57,13 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc) // TODO int *info
 	int bs = 4;
 
 #if defined (_MSC_VER)
-	double pd[256] __declspec(align(64));
+	__declspec(align(64)) double pd[256];
 #else
 	double pd[256] __attribute__ ((aligned (64)));
 #endif
 
 #if defined (_MSC_VER)
-	double pU[12*256] __declspec(align(64));
+	__declspec(align(64)) double pU[12*256];
 #else
 	double pU[12*256] __attribute__ ((aligned (64)));
 #endif
