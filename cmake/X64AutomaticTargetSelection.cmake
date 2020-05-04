@@ -6,12 +6,12 @@ function(X64AutomaticTargetSelection)
   foreach(TEST_TARGET ${X64_AUTOMATIC_TARGETS})
     # This function will test the compilation and running of the
     # target specified in TEST_TARGET
-    TestForISA()
+    TestISA( ${TEST_TARGET} )
 
-    if(${CHK_TARGET_BUILD})
+    if(${CHKISA_TARGET_BUILD})
       message(STATUS "Testing target ${TEST_TARGET}: compilation [success]")
 
-      if(${CHK_TARGET_RUN})
+      if(${CHKISA_TARGET_RUN})
         message(STATUS "Testing target ${TEST_TARGET}: run [success]")
 
         # It both compiles and runs, so pass it up to the parent to use

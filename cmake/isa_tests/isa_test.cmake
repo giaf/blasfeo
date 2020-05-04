@@ -6,10 +6,12 @@
 # The assembly files contain an exemplar instruction for the ISA,
 # so if they fail to run it means the specific ISA is not supported.
 #
+# The requested target to test is passed as the argument to the function.
+#
 # The results of the test are stored as the variables
-#  CHK_TARGET_BUILD - True if the target built without error
-#  CHK_TARGET_RUN   - True if the test ran without error
-function(TestForISA)
+#  CHKISA_TARGET_BUILD - True if the target built without error
+#  CHKISA_TARGET_RUN   - True if the test ran without error
+function(TestISA TEST_TARGET)
   # For Intel Haswell, test for if the AVX2 and FMA ISAs work
   set(CMP_CHECK_X64_INTEL_HASWELL
       TEST_AVX2
@@ -82,7 +84,7 @@ function(TestForISA)
   set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${ASM_FLAGS_TARGET_${TEST_TARGET}}")
 
   if(${BLASFEO_CROSSCOMPILING})
-    set(CHK_TARGET_RUN_${TEST_TARGET} "1")
+    set(CHKISA_TARGET_RUN_${TEST_TARGET} "1")
 
     # Only tell CMake to compile the files, not link them since we are doing cross-compilation
     if (${CMAKE_VERSION} VERSION_EQUAL "3.6.0" OR ${CMAKE_VERSION} VERSION_GREATER "3.6")
@@ -91,36 +93,36 @@ function(TestForISA)
       set(CMAKE_EXE_LINKER_FLAGS_INIT "--specs=nosys.specs")
     endif()
 
-    try_compile( CHK_TARGET_BUILD_${TEST_TARGET}                   # Variable to save the build result to
+    try_compile( CHKISA_TARGET_BUILD_${TEST_TARGET}                   # Variable to save the build result to
                  "${CMAKE_BINARY_DIR}/compilerTest/${TEST_TARGET}" # Directory to compile in
                  SOURCES ${CMP_CHECK_SRCS}                         # Source to compile
                  CMAKE_FLAGS
                    "-DCOMPILE_DEFINITIONS=${C_DEFS_CHK}"
-                 OUTPUT_VARIABLE CHK_OUTPUT${TEST_TARGET}
+                 OUTPUT_VARIABLE CHK_OUTPUT_${TEST_TARGET}
                 )
   else()
-    try_run( CHK_TARGET_RUN_${TEST_TARGET}                     # Variable to save the run result to
-             CHK_TARGET_BUILD_${TEST_TARGET}                   # Variable to save the build result to
+    try_run( CHKISA_TARGET_RUN_${TEST_TARGET}                     # Variable to save the run result to
+             CHKISA_TARGET_BUILD_${TEST_TARGET}                   # Variable to save the build result to
              "${CMAKE_BINARY_DIR}/compilerTest/${TEST_TARGET}" # Directory to compile in
              SOURCES ${CMP_CHECK_SRCS}                         # Source to compile
              CMAKE_FLAGS
               "-DCOMPILE_DEFINITIONS=${C_DEFS_CHK}"
-             OUTPUT_VARIABLE CHK_OUTPUT${TEST_TARGET}
+             OUTPUT_VARIABLE CHK_OUTPUT_${TEST_TARGET}
             )
   endif()
 
-  if(${CHK_TARGET_BUILD_${TEST_TARGET}})
-    set(CHK_TARGET_BUILD TRUE PARENT_SCOPE)
+  if(${CHKISA_TARGET_BUILD_${TEST_TARGET}})
+    set(CHKISA_TARGET_BUILD TRUE PARENT_SCOPE)
 
-    if(${CHK_TARGET_RUN_${TEST_TARGET}} STREQUAL "0")
-      set(CHK_TARGET_RUN TRUE PARENT_SCOPE)
+    if(${CHKISA_TARGET_RUN_${TEST_TARGET}} STREQUAL "0")
+      set(CHKISA_TARGET_RUN TRUE PARENT_SCOPE)
     else()
-      set(CHK_TARGET_RUN FALSE PARENT_SCOPE)
+      set(CHKISA_TARGET_RUN FALSE PARENT_SCOPE)
     endif()
 
   else()
-    set(CHK_TARGET_BUILD FALSE PARENT_SCOPE)
-    set(CHK_TARGET_OUTPUT ${CHK_OUTPUT${TEST_TARGET}} PARENT_SCOPE)
+    set(CHKISA_TARGET_BUILD FALSE PARENT_SCOPE)
+    set(CHKISA_TARGET_OUTPUT ${CHK_OUTPUT_${TEST_TARGET}} PARENT_SCOPE)
   endif()
 
 endfunction()
