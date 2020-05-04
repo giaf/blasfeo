@@ -83,33 +83,17 @@ void blas_dgetrf_np(int *pm, int *pn, double *C, int *pldc, int *info)
 #if defined(TARGET_GENERIC)
 	double pd0[K_MAX_STACK];
 #else
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pd0[K_MAX_STACK];
-#else
-	double pd0[K_MAX_STACK] __attribute__ ((aligned (64)));
-#endif
+	ALIGNED( double pd0[K_MAX_STACK], 64 );
 #endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pU0[3*4*K_MAX_STACK];
-#else
-	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
-#endif
+	ALIGNED( double pU0[3*4*K_MAX_STACK], 64 );
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pU0[2*4*K_MAX_STACK];
-#else
-	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
-#endif
+	ALIGNED( double pU0[2*4*K_MAX_STACK], 64 );
 #elif defined(TARGET_GENERIC)
 	double pU0[1*4*K_MAX_STACK];
 #else
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pU0[1*4*K_MAX_STACK];
-#else
-	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
-#endif
+	ALIGNED( double pU0[1*4*K_MAX_STACK], 64 );
 #endif
 	int sdu0 = (m+3)/4*4;
 	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;

@@ -83,25 +83,13 @@ void blasfeo_dgetrf_rp_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pU0[3*4*K_MAX_STACK];
-#else
-	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
-#endif
+	ALIGNED( double pU0[3*4*K_MAX_STACK], 64 );
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pU0[2*4*K_MAX_STACK];
-#else
-	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
-#endif
+	ALIGNED( double pU0[2*4*K_MAX_STACK], 64 );
 #elif defined(TARGET_GENERIC)
 	double pU0[1*4*K_MAX_STACK];
 #else
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pU0[1*4*K_MAX_STACK];
-#else
-	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
-#endif
+	ALIGNED( double pU0[1*4*K_MAX_STACK], 64 );
 #endif
 	int sdu0 = (n+3)/4*4;
 	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
@@ -557,25 +545,13 @@ void blasfeo_dgetrf_np_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pU0[3*4*K_MAX_STACK];
-#else
-	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
-#endif
+	ALIGNED( double pU0[3*4*K_MAX_STACK], 64 );
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pU0[2*4*K_MAX_STACK];
-#else
-	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
-#endif
+	ALIGNED( double pU0[2*4*K_MAX_STACK], 64 );
 #elif defined(TARGET_GENERIC)
 	double pU0[1*4*K_MAX_STACK];
 #else
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pU0[1*4*K_MAX_STACK];
-#else
-	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
-#endif
+	ALIGNED( double pU0[1*4*K_MAX_STACK], 64 );
 #endif
 	int sdu0 = (n+3)/4*4;
 	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
@@ -3503,21 +3479,8 @@ void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_HASWELL)
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pT[144] = {0};
-	__declspec(align(64)) double pK[144] = {0};
-#else
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pT[144] = {0};
-#else
-	double pT[144] __attribute__ ((aligned (64))) = {0};
-#endif
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pK[144] = {0};
-#else
-	double pK[144] __attribute__ ((aligned (64))) = {0};
-#endif
-#endif
+	ALIGNED( double pT[144], 64 ) = {0};
+	ALIGNED( double pK[144], 64 ) = {0};
 #else
 	double pT[144] = {0}; // XXX smaller ?
 	double pK[96] = {0}; // XXX smaller ?
@@ -3728,21 +3691,8 @@ void blasfeo_dorglq(int m, int n, int k, struct blasfeo_dmat *sC, int ci, int cj
 	double *pD = &(BLASFEO_DMATEL(sD,di,dj));
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pT[144] = {0};
-	__declspec(align(64)) double pK[144] = {0};
-#else
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pT[144] = {0};
-#else
-	double pT[144] __attribute__ ((aligned (64))) = {0};
-#endif
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pK[144] = {0};
-#else
-	double pK[144] __attribute__ ((aligned (64))) = {0};
-#endif
-#endif
+	ALIGNED( double pT[144], 64 ) = {0};
+	ALIGNED( double pK[144], 64 ) = {0};
 #else
 	double pT[144] = {0}; // XXX smaller ?
 	double pK[96] = {0}; // XXX smaller ?
@@ -3838,21 +3788,8 @@ void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_HASWELL)
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pT[144] = {0};
-	__declspec(align(64)) double pK[144] = {0};
-#else
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pT[144] = {0};
-#else
-	double pT[144] __attribute__ ((aligned (64))) = {0};
-#endif
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pK[144] = {0};
-#else
-	double pK[144] __attribute__ ((aligned (64))) = {0};
-#endif
-#endif
+	ALIGNED( double pT[144], 64 ) = {0};
+	ALIGNED( double pK[144], 64 ) = {0};
 #else
 	double pT[144] = {0};
 	double pK[96] = {0};
@@ -4025,21 +3962,8 @@ void blasfeo_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj
 
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_HASWELL)
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pT[144] = {0};
-	__declspec(align(64)) double pK[96] = {0};
-#else
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pT[144] = {0};
-#else
-	double pT[144] __attribute__ ((aligned (64))) = {0};
-#endif
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pK[96] = {0};
-#else
-	double pK[96] __attribute__ ((aligned (64))) = {0};
-#endif
-#endif
+	ALIGNED( double pT[144], 64 ) = {0};
+	ALIGNED( double pK[96], 64 ) = {0};
 #else
 	double pT[144] = {0};
 	double pK[96] = {0};
@@ -4154,21 +4078,8 @@ void blasfeo_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, int d
 
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_HASWELL)
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pT[144] = {0};
-	__declspec(align(64)) double pK[96] = {0};
-#else
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pT[144] = {0};
-#else
-	double pT[144] __attribute__ ((aligned (64))) = {0};
-#endif
-#if defined (_MSC_VER)
-	__declspec(align(64)) double pK[96] = {0};
-#else
-	double pK[96] __attribute__ ((aligned (64))) = {0};
-#endif
-#endif
+	ALIGNED( double pT[144], 64 ) = {0};
+	ALIGNED( double pK[96], 64 ) = {0};
 #else
 	double pT[144] = {0};
 	double pK[96] = {0};

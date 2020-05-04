@@ -266,9 +266,15 @@ ASFLAGS += #-g
 
 
 
+# Installation directory
+TOP = $(CURRENT_DIR)
+
 # Support local options
 # TODO move somewhere else ???
 -include $(CURRENT_DIR)/Makefile.local
+
+# search directories
+CFLAGS += -I$(TOP)/include
 
 
 

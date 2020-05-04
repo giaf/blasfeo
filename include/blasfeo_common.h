@@ -48,6 +48,17 @@ extern "C" {
 
 
 
+#if defined(USING_INTEL_COMPILER) || defined(__GCC__) || defined(__clang__)
+#define ALIGNED(VEC, BYTES) VEC __attribute__ ((aligned ( BYTES )))
+#elif defined (_MSC_VER)
+#define ALIGNED(VEC, BYTES) __declspec(align( BYTES )) VEC
+#else
+#define ALIGNED(VEC, BYTES) VEC
+#endif
+
+
+
+
 #if defined(LA_HIGH_PERFORMANCE)
 
 #include "blasfeo_block_size.h"

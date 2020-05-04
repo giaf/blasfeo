@@ -35,7 +35,8 @@
 
 #include <math.h>
 
-#include "../../include/blasfeo_s_kernel.h"
+#include <blasfeo_common.h>
+#include <blasfeo_s_kernel.h>
 
 
 
@@ -53,11 +54,7 @@ void kernel_strmm_nt_ru_8x4_lib8(int kmax, float *alpha, float *A, float *B, flo
 #if defined(TARGET_GENERIC)
 	float CC[32] = {0};
 #else
-#if defined (_MSC_VER)
-	__declspec(align(64)) float CC[32] = {0};
-#else
-	float CC[32] __attribute__ ((aligned (64))) = {0};
-#endif
+	ALIGNED( float CC[32], 64 ) = {0};
 #endif
 
 	int k;
@@ -201,11 +198,7 @@ void kernel_strmm_nt_ru_8x4_vs_lib8(int kmax, float *alpha, float *A, float *B, 
 #if defined(TARGET_GENERIC)
 	float CC[32] = {0};
 #else
-#if defined (_MSC_VER)
-	__declspec(align(64)) float CC[32] = {0};
-#else
-	float CC[32] __attribute__ ((aligned (64))) = {0};
-#endif
+	ALIGNED( float CC[32], 64 ) = {0};
 #endif
 
 	int k;
