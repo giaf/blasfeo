@@ -48,7 +48,7 @@ extern "C" {
 
 
 
-#if defined(__GCC__) || defined(__clang__) || defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__INTEL_LLVM_COMPILER)
+#if defined(__GNUC__) || defined(__clang__) || defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__INTEL_LLVM_COMPILER)
 #define ALIGNED(VEC, BYTES) VEC __attribute__ ((aligned ( BYTES )))
 #elif defined (_MSC_VER)
 #define ALIGNED(VEC, BYTES) __declspec(align( BYTES )) VEC
