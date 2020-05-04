@@ -27,6 +27,7 @@ int main()
     __m256i testVal_AVX2_1 = _mm256_set_epi32( 1, 2, 3, 4, 5, 6, 7, 8 );
     __m256i testVal_AVX2_2 = _mm256_set_epi32( 2, 3, 4, 5, 6, 7, 8, 9 );
 
+    // This subtraction is AVX2 minimum
     __m256i retVal_AVX2 = _mm256_sub_epi32( testVal_AVX2_1, testVal_AVX2_2 );
 #endif
 
@@ -61,7 +62,6 @@ int main()
 
 #ifdef TEST_NEONv2
     // Test for working NEONv2 intrinsics
-    test_neonv2();
 
     //TODO
 #endif
