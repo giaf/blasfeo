@@ -63,8 +63,8 @@ jobs:
       os: windows
       language: shell
       script:
-        - ls C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild
-        - export PATH="C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin":$PATH
+        - ls /C/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild
+        - export PATH="/C/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin":$PATH
         - mkdir "${TRAVIS_BUILD_DIR}"/build
         - cd "${TRAVIS_BUILD_DIR}"/build
         - cmake -DTARGET=GENERIC ..
@@ -77,8 +77,8 @@ jobs:
       os: windows
       language: bash
       script:
-        - ls C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild
-        - export PATH="C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin":$PATH
+        - ls /C/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild
+        - export PATH="/C/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin":$PATH
         - mkdir "${TRAVIS_BUILD_DIR}"/build
         - cd "${TRAVIS_BUILD_DIR}"/build
         - cmake -DTARGET=GENERIC ..
