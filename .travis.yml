@@ -60,7 +60,7 @@ jobs:
         - cd examples
         - ./getting_started
 
-    - name: "Windows AMD64 Build"
+    - name: "Windows AMD64 cmake Build"
       os: windows
       language: bash
       script:
