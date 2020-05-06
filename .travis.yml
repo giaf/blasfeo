@@ -61,7 +61,6 @@ jobs:
         - ./getting_started
 
     - name: "Windows AMD64 Build"
-      if: branch = windows_support
       os: windows
       language: bash
       script:
@@ -69,15 +68,11 @@ jobs:
         - mkdir "${TRAVIS_BUILD_DIR}"/build
         - cd "${TRAVIS_BUILD_DIR}"/build
         - cmake -DTARGET=GENERIC ..
-        - ls
         - MSBuild.exe blasfeo.vcxproj
-        - ls
+        - ls Debug
         - cd examples
-        - ls
         - MSBuild.exe getting_started.vcxproj
-        - ls
         - cd Debug
-        - ls
         - ./getting_started.exe
 
     - name: "MacOS Build"
