@@ -78,7 +78,7 @@ jobs:
         - ls
         - cd Debug
         - ls
-        - getting_started.exe
+        - ./getting_started.exe
 
     - name: "MacOS Build"
       if: branch = mac_build
