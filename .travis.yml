@@ -47,6 +47,17 @@ jobs:
         - python tester.py testset_travis_blas_double_arm64.json
         - python tester.py testset_travis_blas_single_arm64.json
 
+    - name: "Linux AMD64 cmake Build"
+      arch: amd64
+      os: linux
+      dist: bionic
+      group: travis_latest
+      script:
+        - mkdir "${TRAVIS_BUILD_DIR}"/build
+        - cd "${TRAVIS_BUILD_DIR}"/build
+        - cmake ..
+        - make
+
     - name: "Windows AMD64 Build shell"
       if: branch = windows_support
       os: windows
@@ -55,7 +66,7 @@ jobs:
         - mkdir "${TRAVIS_BUILD_DIR}"/build
         - cd "${TRAVIS_BUILD_DIR}"/build
         - cmake -DTARGET=GENERIC ..
-        - make
+        - mingw32-make
 
     - name: "Windows AMD64 Build bash"
       if: branch = windows_support
