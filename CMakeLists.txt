@@ -91,17 +91,26 @@ set(USE_C99_MATH ON CACHE BOOL "Use C99 extension to math library")
 set(EXT_DEP ON CACHE BOOL "Compile external dependencies in BLASFEO")
 
 # Options
+# enable runtine checks
+set(RUNTIME_CHECKS OFF)
+
 # set(BLASFEO_TESTING ON CACHE BOOL "Tests enabled")
 set(BLASFEO_TESTING OFF CACHE BOOL "Tests disabled")
 
 # set(BLASFEO_BENCHMARKS ON CACHE BOOL "Benchmarks enabled")
 set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled")
 
-# enable runtine checks
-set(RUNTIME_CHECKS OFF)
-
 set(BLASFEO_EXAMPLES ON CACHE BOOL "Examples enabled")
 # set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled")
+
+# build shared library
+set(BUILD_SHARED_LIBS OFF CACHE STRING "Build shared libraries")
+
+# installation directory
+set(CMAKE_INSTALL_PREFIX "/opt/blasfeo" CACHE STRING "Installation path")
+
+# headers installation directory
+set(BLASFEO_HEADERS_INSTALLATION_DIRECTORY "include" CACHE STRING "Headers local installation directory")
 
 
 
@@ -182,8 +191,8 @@ if(NOT DEFINED(BLASFEO_CROSSCOMPILING))
 	set(BLASFEO_CROSSCOMPILING ${CMAKE_CROSSCOMPILING})
 endif()
 
-# Skip BLASFEO utils for unsupported systems and for Realease build
-if(CMAKE_SYSTEM MATCHES "dSpace" OR CMAKE_BUILD_TYPE MATCHES "Release")
+# Skip BLASFEO examples for unsupported systems and for Realease build
+if(CMAKE_SYSTEM MATCHES "dSpace") # OR CMAKE_BUILD_TYPE MATCHES "Release")
 	set(BLASFEO_TESTING OFF CACHE BOOL "Examples disabled" FORCE)
 	set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled" FORCE)
 	set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled" FORCE)
@@ -199,15 +208,6 @@ if(CMAKE_C_COMPILER_ID MATCHES MSVC)
 		message( FATAL_ERROR "MSVC compiler only supported for TARGET=GENERIC")
 	endif()
 endif()
-
-# build shared library
-set(BUILD_SHARED_LIBS OFF CACHE STRING "Build shared libraries")
-
-# installation directory
-set(CMAKE_INSTALL_PREFIX "/opt/blasfeo" CACHE STRING "Installation path")
-
-# headers installation directory
-set(BLASFEO_HEADERS_INSTALLATION_DIRECTORY "include" CACHE STRING "Headers local installation directory")
 
 # testing
 if(BLASFEO_TESTING MATCHES ON)
