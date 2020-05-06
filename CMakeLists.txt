@@ -35,6 +35,9 @@
 
 cmake_minimum_required(VERSION 2.8.11)
 
+# installation directory ( has to be before `project()` )
+set(CMAKE_INSTALL_PREFIX "/opt/blasfeo" CACHE STRING "Installation path")
+
 project(blasfeo C ASM)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
@@ -105,9 +108,6 @@ set(BLASFEO_EXAMPLES ON CACHE BOOL "Examples enabled")
 
 # build shared library
 set(BUILD_SHARED_LIBS OFF CACHE STRING "Build shared libraries")
-
-# installation directory
-set(CMAKE_INSTALL_PREFIX "/opt/blasfeo" CACHE STRING "Installation path")
 
 # headers installation directory
 set(BLASFEO_HEADERS_INSTALLATION_DIRECTORY "include" CACHE STRING "Headers local installation directory")
@@ -1092,7 +1092,8 @@ endif()
 target_include_directories(blasfeo
 	PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-		$<INSTALL_INTERFACE:include/blasfeo/include>)
+		$<INSTALL_INTERFACE:${BLASFEO_HEADERS_INSTALLATION_DIRECTORY}>)
+#		$<INSTALL_INTERFACE:include/blasfeo/include>)
 
 
 install(TARGETS blasfeo EXPORT blasfeoConfig
