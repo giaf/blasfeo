@@ -57,6 +57,9 @@ jobs:
         - cd "${TRAVIS_BUILD_DIR}"/build
         - cmake ..
         - make
+        - ls
+        - cd examples
+        - ls
 
     - name: "Windows AMD64 Build"
       if: branch = windows_support
@@ -71,6 +74,8 @@ jobs:
         - MSBuild.exe blasfeo.vcxproj
         - ls
         - cd examples
+        - ls
+        - MSBuild.exe getting_started.vcxproj
         - ls
 
     - name: "MacOS Build"
