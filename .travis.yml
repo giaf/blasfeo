@@ -63,10 +63,12 @@ jobs:
       os: windows
       language: shell
       script:
+        - export MAKE=mingw32-make
         - mkdir "${TRAVIS_BUILD_DIR}"/build
         - cd "${TRAVIS_BUILD_DIR}"/build
         - cmake -DTARGET=GENERIC ..
-        - mingw32-make
+        - ls
+        - make
 
     - name: "Windows AMD64 Build bash"
       if: branch = windows_support
@@ -76,7 +78,8 @@ jobs:
         - mkdir "${TRAVIS_BUILD_DIR}"/build
         - cd "${TRAVIS_BUILD_DIR}"/build
         - cmake -DTARGET=GENERIC ..
-        - make
+        - ls
+        - MSBuild.exe
 
     - name: "MacOS Build"
       if: branch = mac_build
