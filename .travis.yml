@@ -52,20 +52,20 @@ jobs:
       os: windows
       language: shell
       script:
-		- mkdir "${TRAVIS_BUILD_DIR}"/build
-		- cd "${TRAVIS_BUILD_DIR}"/build
-		- cmake ..
-		- make
+        - mkdir "${TRAVIS_BUILD_DIR}"/build
+        - cd "${TRAVIS_BUILD_DIR}"/build
+        - cmake ..
+        - make
 
     - name: "Windows AMD64 Build bash"
       if: branch = windows_support
       os: windows
       language: bash
       script:
-		- mkdir "${TRAVIS_BUILD_DIR}"/build
-		- cd "${TRAVIS_BUILD_DIR}"/build
-		- cmake ..
-		- make
+        - mkdir "${TRAVIS_BUILD_DIR}"/build
+        - cd "${TRAVIS_BUILD_DIR}"/build
+        - cmake ..
+        - make
 
     - name: "MacOS Build"
       if: branch = mac_build
