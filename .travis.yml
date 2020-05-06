@@ -47,20 +47,25 @@ jobs:
         - python tester.py testset_travis_blas_double_arm64.json
         - python tester.py testset_travis_blas_single_arm64.json
 
-    - name: "Windows AMD64 Build"
+    - name: "Windows AMD64 Build shell"
       if: branch = windows_support
       os: windows
       language: shell
-      before_install:
-        - choco install python --version 3.6
-        - python -m pip install --upgrade pip
-      env: PATH=/c/Python36:/c/Python36/Scripts:$PATH
       script:
-        - cd "${TRAVIS_BUILD_DIR}"/tests
-        - pip install --user jinja2
-        - python tester.py testset_travis_blasfeo_double_amd64.json
-        - python tester.py testset_travis_blas_double_amd64.json
-        - python tester.py testset_travis_blas_single_amd64.json
+		- mkdir "${TRAVIS_BUILD_DIR}"/build
+		- cd "${TRAVIS_BUILD_DIR}"/build
+		- cmake ..
+		- make
+
+    - name: "Windows AMD64 Build bash"
+      if: branch = windows_support
+      os: windows
+      language: bash
+      script:
+		- mkdir "${TRAVIS_BUILD_DIR}"/build
+		- cd "${TRAVIS_BUILD_DIR}"/build
+		- cmake ..
+		- make
 
     - name: "MacOS Build"
       if: branch = mac_build
@@ -71,5 +76,18 @@ jobs:
         - cd "${TRAVIS_BUILD_DIR}"/tests
         - python3 -m pip install --user jinja2
         - python3 tester.py testset_travis.json
+
+    - name: "Windows Build"
+      if: branch = windows_build
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.6
+        - python -m pip install --upgrade pip
+      env: PATH=/c/Python36:/c/Python36/Scripts:$PATH
+      script:
+        - cd "${TRAVIS_BUILD_DIR}"/tests
+        - pip install --user jinja2
+        - python tester.py testset_travis.json
 
 
