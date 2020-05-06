@@ -58,19 +58,7 @@ jobs:
         - cmake ..
         - make
 
-    - name: "Windows AMD64 Build shell"
-      if: branch = windows_support
-      os: windows
-      language: shell
-      script:
-        - export PATH="/C/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin":$PATH
-        - mkdir "${TRAVIS_BUILD_DIR}"/build
-        - cd "${TRAVIS_BUILD_DIR}"/build
-        - cmake -DTARGET=GENERIC ..
-        - ls
-        - MSBuild.exe blasfeo.vcxproj
-
-    - name: "Windows AMD64 Build bash"
+    - name: "Windows AMD64 Build"
       if: branch = windows_support
       os: windows
       language: bash
@@ -81,6 +69,9 @@ jobs:
         - cmake -DTARGET=GENERIC ..
         - ls
         - MSBuild.exe blasfeo.vcxproj
+        - ls
+        - cd examples
+        - ls
 
     - name: "MacOS Build"
       if: branch = mac_build
