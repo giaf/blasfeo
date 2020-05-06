@@ -54,7 +54,7 @@ jobs:
       script:
         - mkdir "${TRAVIS_BUILD_DIR}"/build
         - cd "${TRAVIS_BUILD_DIR}"/build
-        - cmake ..
+        - cmake -DTARGET=GENERIC ..
         - make
 
     - name: "Windows AMD64 Build bash"
@@ -64,7 +64,7 @@ jobs:
       script:
         - mkdir "${TRAVIS_BUILD_DIR}"/build
         - cd "${TRAVIS_BUILD_DIR}"/build
-        - cmake ..
+        - cmake -DTARGET=GENERIC ..
         - make
 
     - name: "MacOS Build"
