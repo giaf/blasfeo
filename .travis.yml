@@ -7,7 +7,7 @@ cache:
 
 jobs:
   include:
-    - name: "Linux AMD64 Build"
+    - name: "Linux AMD64 build"
       arch: amd64
       os: linux
       dist: bionic
@@ -27,7 +27,7 @@ jobs:
         - python tester.py testset_travis_blas_double_amd64.json
         - python tester.py testset_travis_blas_single_amd64.json
 
-    - name: "Linux ARM64 Build"
+    - name: "Linux ARM64 build"
       arch: arm64
       os: linux
       dist: bionic
@@ -47,7 +47,7 @@ jobs:
         - python tester.py testset_travis_blas_double_arm64.json
         - python tester.py testset_travis_blas_single_arm64.json
 
-    - name: "Linux AMD64 cmake Build"
+    - name: "Linux AMD64 cmake build"
       arch: amd64
       os: linux
       dist: bionic
@@ -60,22 +60,22 @@ jobs:
         - cd examples
         - ./getting_started
 
-    - name: "Windows AMD64 cmake Build"
+    - name: "Windows AMD64 cmake build"
       os: windows
       language: bash
+      group: travis_latest
       script:
         - export PATH="/C/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin":$PATH
         - mkdir "${TRAVIS_BUILD_DIR}"/build
         - cd "${TRAVIS_BUILD_DIR}"/build
         - cmake -DTARGET=GENERIC ..
         - MSBuild.exe blasfeo.vcxproj
-        - ls Debug
         - cd examples
         - MSBuild.exe getting_started.vcxproj
         - cd Debug
         - ./getting_started.exe
 
-    - name: "MacOS Build"
+    - name: "MacOS build"
       if: branch = mac_build
       os: osx
       osx_image: xcode10.2
@@ -85,7 +85,7 @@ jobs:
         - python3 -m pip install --user jinja2
         - python3 tester.py testset_travis.json
 
-    - name: "Windows Build"
+    - name: "Windows build"
       if: branch = windows_build
       os: windows
       language: shell
