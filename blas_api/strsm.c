@@ -138,13 +138,13 @@ void blasfeo_strsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 #if defined(TARGET_GENERIC)
 	float pd0[K_MAX_STACK];
 #else
-	float pd0[K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( float pd0[K_MAX_STACK], 64 );
 #endif
 
 #if defined(TARGET_GENERIC)
 	float pU0[1*4*K_MAX_STACK];
 #else
-	float pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( float pU0[1*4*K_MAX_STACK], 64 );
 #endif
 
 	// XXX !!!!!!!!!!!!!!!!!!!!!!!!
