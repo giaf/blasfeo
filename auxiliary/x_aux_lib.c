@@ -235,7 +235,7 @@ void UNPACK_VEC(int m, struct VEC *sa, int ai, REAL *x, int xi)
 	if(xi==1)
 		{
 		for(ii=0; ii<m; ii++)
-			a[ii] = pa[ii];
+			x[ii] = pa[ii];
 		}
 	else
 		{
