@@ -2492,12 +2492,20 @@ void blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int
 
 
 // convert a vector structure into a vector
-void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sa, int ai, double *a)
+void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sa, int ai, double *x, int xi)
 	{
 	double *pa = sa->pa + ai;
 	int ii;
-	for(ii=0; ii<m; ii++)
-		a[ii] = pa[ii];
+	if(xi==1)
+		{
+		for(ii=0; ii<m; ii++)
+			x[ii] = pa[ii];
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			x[ii*xi] = pa[ii];
+		}
 	return;
 	}
 

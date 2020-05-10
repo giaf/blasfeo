@@ -68,8 +68,8 @@ void blasfeo_pack_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA,
 void blasfeo_pack_svec(int m, float *a, struct blasfeo_svec *sa, int ai);
 void blasfeo_pack_tran_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
 void blasfeo_unpack_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj, float *A, int lda);
-void blasfeo_unpack_svec(int m, struct blasfeo_svec *sa, int ai, float *a);
 void blasfeo_unpack_tran_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj, float *A, int lda);
+void blasfeo_unpack_svec(int m, struct blasfeo_svec *sa, int ai, float *x, int xi);
 void s_cast_mat2strmat(float *A, struct blasfeo_smat *sA);
 void s_cast_diag_mat2strmat(float *dA, struct blasfeo_smat *sA);
 void s_cast_vec2vecmat(float *a, struct blasfeo_svec *sa);

@@ -1518,12 +1518,20 @@ void blasfeo_unpack_tran_smat(int m, int n, struct blasfeo_smat *sA, int ai, int
 
 
 // convert a vector structure into a vector
-void blasfeo_unpack_svec(int m, struct blasfeo_svec *sa, int ai, float *a)
+void blasfeo_unpack_svec(int m, struct blasfeo_svec *sa, int ai, float *x, int xi)
 	{
 	float *pa = sa->pa + ai;
 	int ii;
-	for(ii=0; ii<m; ii++)
-		a[ii] = pa[ii];
+	if(xi==1)
+		{
+		for(ii=0; ii<m; ii++)
+			x[ii] = pa[ii];
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			x[ii*xi] = pa[ii];
+		}
 	return;
 	}
 

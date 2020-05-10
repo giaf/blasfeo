@@ -220,12 +220,20 @@ void UNPACK_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *A, int 
 
 
 // convert a vector structure into a vector
-void UNPACK_VEC(int m, struct VEC *sa, int ai, REAL *a)
+void UNPACK_VEC(int m, struct VEC *sa, int ai, REAL *x, int xi)
 	{
 	REAL *pa = sa->pa + ai;
 	int ii;
-	for(ii=0; ii<m; ii++)
-		a[ii] = pa[ii];
+	if(xi==1)
+		{
+		for(ii=0; ii<m; ii++)
+			a[ii] = pa[ii];
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			x[ii*xi] = pa[ii];
+		}
 	return;
 	}
 

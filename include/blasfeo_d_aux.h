@@ -87,7 +87,7 @@ void blasfeo_unpack_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, 
 // transpose and unpack the matrix structure A into the column-major matrix B
 void blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *B, int ldb);
 // pack the vector structure x into the vector y
-void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sx, int xi, double *y);
+void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sx, int xi, double *y,  int yi);
 
 // --- cast
 //
