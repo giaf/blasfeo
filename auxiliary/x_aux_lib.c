@@ -156,12 +156,20 @@ void PACK_TRAN_MAT(int m, int n, REAL *A, int lda, struct MAT *sA, int ai, int a
 
 
 // convert a vector into a vector structure
-void PACK_VEC(int m, REAL *a, struct VEC *sa, int ai)
+void PACK_VEC(int m, REAL *x, int xi, struct VEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;
 	int ii;
-	for(ii=0; ii<m; ii++)
-		pa[ii] = a[ii];
+	if(xi==1)
+		{
+		for(ii=0; ii<m; ii++)
+			pa[ii] = x[ii];
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			pa[ii] = x[ii*xi];
+		}
 	return;
 	}
 

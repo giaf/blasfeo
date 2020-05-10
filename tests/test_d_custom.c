@@ -141,27 +141,27 @@ int main()
 
 	struct blasfeo_dvec sx_n;
 	blasfeo_allocate_dvec(n, &sx_n);
-	blasfeo_pack_dvec(n, x_n, &sx_n, 0);
+	blasfeo_pack_dvec(n, x_n, 1, &sx_n, 0);
 
 	struct blasfeo_dvec sx_t;
 	blasfeo_allocate_dvec(n, &sx_t);
-	blasfeo_pack_dvec(n, x_t, &sx_t, 0);
+	blasfeo_pack_dvec(n, x_t, 1, &sx_t, 0);
 
 	struct blasfeo_dvec sy_n;
 	blasfeo_allocate_dvec(n, &sy_n);
-	blasfeo_pack_dvec(n, y_n, &sy_n, 0);
+	blasfeo_pack_dvec(n, y_n, 1, &sy_n, 0);
 
 	struct blasfeo_dvec sy_t;
 	blasfeo_allocate_dvec(n, &sy_t);
-	blasfeo_pack_dvec(n, y_t, &sy_t, 0);
+	blasfeo_pack_dvec(n, y_t, 1, &sy_t, 0);
 
 	struct blasfeo_dvec sz_n;
 	blasfeo_allocate_dvec(n, &sz_n);
-	blasfeo_pack_dvec(n, z_n, &sz_n, 0);
+	blasfeo_pack_dvec(n, z_n, 1, &sz_n, 0);
 
 	struct blasfeo_dvec sz_t;
 	blasfeo_allocate_dvec(n, &sz_t);
-	blasfeo_pack_dvec(n, z_t, &sz_t, 0);
+	blasfeo_pack_dvec(n, z_t, 1, &sz_t, 0);
 
 	struct blasfeo_dvec sx0; blasfeo_create_dvec(n, &sx0, x0);
 	struct blasfeo_dvec sx1; blasfeo_create_dvec(n, &sx1, x1);

@@ -2223,12 +2223,20 @@ void blasfeo_pack_tran_dmat(int m, int n, double *A, int lda, struct blasfeo_dma
 
 
 // convert a vector into a vector structure
-void blasfeo_pack_dvec(int m, double *a, struct blasfeo_dvec *sa, int ai)
+void blasfeo_pack_dvec(int m, double *x, int xi, struct blasfeo_dvec *sa, int ai)
 	{
 	double *pa = sa->pa + ai;
 	int ii;
-	for(ii=0; ii<m; ii++)
-		pa[ii] = a[ii];
+	if(xi==1)
+		{
+		for(ii=0; ii<m; ii++)
+			pa[ii] = x[ii];
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			pa[ii] = x[ii*xi];
+		}
 	return;
 	}
 
