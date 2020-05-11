@@ -356,6 +356,7 @@ int main()
 				blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_sgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_ssyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_ssyrk_ln_mn(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_spotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_spotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_sgetr(n, n, &sA, 0, 0, &sB, 0, 0);
