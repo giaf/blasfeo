@@ -122,10 +122,6 @@ NAME:
 	prfm	PLDL1KEEP, [x12, #0]
 
 	// preload
-	ldp		q28, q29, [x11, #(0*16)]
-
-	ldp		q24, q25, [x9, #(0*16)]
-	ldp		q20, q21, [x12, #(0*16)]
 
 	cmp		w8, #4
 	ble		0f // consider clean up loop
@@ -138,21 +134,25 @@ NAME:
 	// main loop
 1:
 
-	ldp		q26, q27, [x9, #(2*16)]
+	ldp		q28, q29, [x11, #(0*16)]
+	ldp		q24, q25, [x9, #(0*16)]
+	ldp		q20, q21, [x12, #(0*16)]
+
 	ldp		q30, q31, [x11, #(2*16)]
+	ldp		q26, q27, [x9, #(2*16)]
 	ldp		q22, q23, [x12, #(2*16)]
 
 	// unroll 0
 	fmla	v0.4s, v24.4s, v28.4s[0]
 	fmla	v1.4s, v24.4s, v28.4s[1]
+	prfm	PLDL1KEEP, [x12, #128]
 	fmla	v2.4s, v24.4s, v28.4s[2]
 	fmla	v3.4s, v24.4s, v28.4s[3]
-	fmla	v4.4s, v20.4s, v28.4s[0]
-	prfm	PLDL1KEEP, [x12, #128]
-	fmla	v5.4s, v20.4s, v28.4s[1]
 	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v6.4s, v20.4s, v28.4s[2]
+	fmla	v4.4s, v20.4s, v28.4s[0]
+	fmla	v5.4s, v20.4s, v28.4s[1]
 	prfm	PLDL1KEEP, [x11, #128]
+	fmla	v6.4s, v20.4s, v28.4s[2]
 	fmla	v7.4s, v20.4s, v28.4s[3]
 
 	// unroll 1
@@ -166,10 +166,6 @@ NAME:
 	add		x12, x12, #64
 	fmla	v6.4s, v21.4s, v29.4s[2]
 	fmla	v7.4s, v21.4s, v29.4s[3]
-
-	ldp		q28, q29, [x11, #(0*16)]
-	ldp		q24, q25, [x9, #(0*16)]
-	ldp		q20, q21, [x12, #(0*16)]
 
 	// unroll 2
 	fmla	v0.4s, v26.4s, v30.4s[0]
@@ -201,6 +197,10 @@ NAME:
 	cmp		w8, #3
 	ble		4f
 
+	ldp		q28, q29, [x11, #(0*16)]
+	ldp		q24, q25, [x9, #(0*16)]
+	ldp		q20, q21, [x12, #(0*16)]
+
 	ldp		q26, q27, [x9, #(2*16)]
 	ldp		q30, q31, [x11, #(2*16)]
 	ldp		q22, q23, [x12, #(2*16)]
@@ -229,10 +229,6 @@ NAME:
 	add		x12, x12, #64
 	fmla	v6.4s, v21.4s, v29.4s[2]
 	fmla	v7.4s, v21.4s, v29.4s[3]
-
-	ldp		q28, q29, [x11, #(0*16)]
-	ldp		q24, q25, [x9, #(0*16)]
-	ldp		q20, q21, [x12, #(0*16)]
 
 	// unroll 2
 	fmla	v0.4s, v26.4s, v30.4s[0]
@@ -522,9 +518,6 @@ NAME:
 
 	// preload
 
-	ldp		q24, q25, [x9, #(0*16)]
-	ldp		q20, q21, [x13, #(0*16)]
-
 	cmp		w8, #4
 	ble		0f // consider clean up loop
 
@@ -537,6 +530,9 @@ NAME:
 1:
 
 	ldp		q28, q29, [x11, #(0*16)]
+	ldp		q24, q25, [x9, #(0*16)]
+	ldp		q20, q21, [x13, #(0*16)]
+
 	ldp		q30, q31, [x11, #(2*16)]
 	ldp		q26, q27, [x9, #(2*16)]
 	ldp		q22, q23, [x13, #(2*16)]
@@ -568,9 +564,6 @@ NAME:
 	fmla	v3.4s, v25.4s, v31.4s[1]
 	fmla	v7.4s, v21.4s, v31.4s[1]
 
-	ldp		q24, q25, [x9, #(0*16)]
-	ldp		q20, q21, [x13, #(0*16)]
-
 	// unroll 2
 	fmla	v0.4s, v26.4s, v28.4s[2]
 	fmla	v4.4s, v22.4s, v28.4s[2]
@@ -601,6 +594,9 @@ NAME:
 	ble		4f
 
 	ldp		q28, q29, [x11, #(0*16)]
+	ldp		q24, q25, [x9, #(0*16)]
+	ldp		q20, q21, [x13, #(0*16)]
+
 	ldp		q30, q31, [x11, #(2*16)]
 	ldp		q26, q27, [x9, #(2*16)]
 	ldp		q22, q23, [x13, #(2*16)]
@@ -631,9 +627,6 @@ NAME:
 	add		x13, x13, #64
 	fmla	v3.4s, v25.4s, v31.4s[1]
 	fmla	v7.4s, v21.4s, v31.4s[1]
-
-//	ldp		q24, q25, [x9, #(0*16)]
-//	ldp		q20, q21, [x13, #(0*16)]
 
 	// unroll 2
 	fmla	v0.4s, v26.4s, v28.4s[2]
