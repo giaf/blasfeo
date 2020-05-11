@@ -139,7 +139,7 @@ static void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *
 
 
 
-#if ( EXTERNAL_BLAS!=0 | defined(BLAS_API) )
+#if ( EXTERNAL_BLAS!=0 | (defined(BLAS_API) & defined(FORTRAN_BLAS_API)) )
 static void d_back_ric_trf(int N, int *nx, int *nu, double **hBAbt, double **hRSQrq, double **hL, double **hwork_mat)
 	{
 
@@ -266,7 +266,7 @@ static void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *
 
 
 
-#if ( EXTERNAL_BLAS!=0 | defined(BLAS_API) )
+#if ( EXTERNAL_BLAS!=0 | (defined(BLAS_API) & defined(FORTRAN_BLAS_API)) )
 static void d_back_ric_trs(int N, int *nx, int *nu, double **hBAbt, double **hb, double **hrq, double **hL, double **hPb, double **hux, double **hpi, double **hwork_vec)
 	{
 //	printf("\nblas api\n");
@@ -618,10 +618,10 @@ int main()
 	blasfeo_pack_dmat(nx_, nx_, A, nx_, &sA, 0, 0);
 	struct blasfeo_dvec sb;
 	blasfeo_allocate_dvec(nx_, &sb);
-	blasfeo_pack_dvec(nx_, b, &sb, 0);
+	blasfeo_pack_dvec(nx_, b, 1, &sb, 0);
 	struct blasfeo_dvec sx0;
 	blasfeo_allocate_dvec(nx_, &sx0);
-	blasfeo_pack_dvec(nx_, x0, &sx0, 0);
+	blasfeo_pack_dvec(nx_, x0, 1, &sx0, 0);
 	struct blasfeo_dvec sb0;
 	blasfeo_allocate_dvec(nx_, &sb0);
 	blasfeo_dgemv_n(nx_, nx_, 1.0, &sA, 0, 0, &sx0, 0, 1.0, &sb, 0, &sb0, 0);
@@ -651,7 +651,7 @@ int main()
 
 	struct blasfeo_dvec sr0; // XXX no need to update r0 since S=0
 	blasfeo_allocate_dvec(nu_, &sr0);
-	blasfeo_pack_dvec(nu_, r, &sr0, 0);
+	blasfeo_pack_dvec(nu_, r, 1, &sr0, 0);
 
 	struct blasfeo_dmat sRr0;
 	blasfeo_allocate_dmat(nu_+1, nu_, &sRr0);
@@ -664,8 +664,8 @@ int main()
 
 	struct blasfeo_dvec srq1;
 	blasfeo_allocate_dvec(nu_+nx_, &srq1);
-	blasfeo_pack_dvec(nu_, r, &srq1, 0);
-	blasfeo_pack_dvec(nx_, q, &srq1, nu_);
+	blasfeo_pack_dvec(nu_, r, 1, &srq1, 0);
+	blasfeo_pack_dvec(nx_, q, 1, &srq1, nu_);
 
 	struct blasfeo_dmat sRSQrq1;
 	blasfeo_allocate_dmat(nu_+nx_+1, nu_+nx_, &sRSQrq1);
@@ -680,7 +680,7 @@ int main()
 
 	struct blasfeo_dvec sqN;
 	blasfeo_allocate_dvec(nx_, &sqN);
-	blasfeo_pack_dvec(nx_, q, &sqN, 0);
+	blasfeo_pack_dvec(nx_, q, 1, &sqN, 0);
 
 	struct blasfeo_dmat sQqN;
 	blasfeo_allocate_dmat(nx_+1, nx_, &sQqN);
@@ -740,7 +740,7 @@ int main()
 * BLAS API
 ************************************************/
 
-#if ( EXTERNAL_BLAS!=0 | defined(BLAS_API) )
+#if ( EXTERNAL_BLAS!=0 | (defined(BLAS_API) & defined(FORTRAN_BLAS_API)) )
 
 #ifdef PRINT_DATA
 	printf("\n*** BLAS_API ***\n\n");
@@ -756,7 +756,7 @@ int main()
 #endif
 
 	double *b0 = malloc(nx_*sizeof(double));
-	blasfeo_unpack_dvec(nx_, &sb0, 0, b0);
+	blasfeo_unpack_dvec(nx_, &sb0, 0, b0, 1);
 #ifdef PRINT_DATA
 	printf("b0:\n");
 	d_print_exp_mat(1, nx_, b0, 1);
@@ -770,7 +770,7 @@ int main()
 #endif
 
 	double *b1 = malloc(nx_*sizeof(double));
-	blasfeo_unpack_dvec(nx_, &sb, 0, b1);
+	blasfeo_unpack_dvec(nx_, &sb, 0, b1, 1);
 #ifdef PRINT_DATA
 	printf("b1:\n");
 	d_print_exp_mat(1, nx_, b1, 1);
@@ -784,7 +784,7 @@ int main()
 #endif
 
 	double *r0 = malloc(nu_*sizeof(double));
-	blasfeo_unpack_dvec(nu_, &sr0, 0, r0);
+	blasfeo_unpack_dvec(nu_, &sr0, 0, r0, 1);
 #ifdef PRINT_DATA
 	printf("r0:\n");
 	d_print_exp_mat(1, nu_, r0, 1);
@@ -798,7 +798,7 @@ int main()
 #endif
 
 	double *rq1 = malloc((nu_+nx_)*sizeof(double));
-	blasfeo_unpack_dvec(nu_+nx_, &srq1, 0, rq1);
+	blasfeo_unpack_dvec(nu_+nx_, &srq1, 0, rq1, 1);
 #ifdef PRINT_DATA
 	printf("rq1:\n");
 	d_print_exp_mat(1, nu_+nx_, rq1, 1);
@@ -812,7 +812,7 @@ int main()
 #endif
 
 	double *qN = malloc((nx_)*sizeof(double));
-	blasfeo_unpack_dvec(nx_, &sqN, 0, qN);
+	blasfeo_unpack_dvec(nx_, &sqN, 0, qN, 1);
 #ifdef PRINT_DATA
 	printf("qN:\n");
 	d_print_exp_mat(1, nx_, qN, 1);
@@ -908,7 +908,7 @@ int main()
 	time_trs = blasfeo_toc(&timer) / nrep;
 
 	/* BLAS API */
-#if ( EXTERNAL_BLAS!=0 | defined(BLAS_API) )
+#if ( EXTERNAL_BLAS!=0 | (defined(BLAS_API) & defined(FORTRAN_BLAS_API)) )
 
 	// factorization
 	blasfeo_tic(&timer);
@@ -946,7 +946,7 @@ int main()
 //	for(ii=0; ii<=N; ii++)
 //		blasfeo_print_exp_dmat(nu[ii]+nx[ii]+1, nu[ii]+nx[ii], &hsL[ii], 0, 0);
 
-#if ( EXTERNAL_BLAS!=0 | defined(BLAS_API) )
+#if ( EXTERNAL_BLAS!=0 | (defined(BLAS_API) & defined(FORTRAN_BLAS_API)) )
 	printf("\nBLAS API\n\n");
 	printf("\nux = \n\n");
 	for(ii=0; ii<=N; ii++)
@@ -1016,7 +1016,7 @@ int main()
 	free(hswork_mat);
 	free(hswork_vec);
 
-#if defined(BLAS_API)
+#if (defined(BLAS_API) & defined(FORTRAN_BLAS_API))
 	free(Bbt0);
 	free(b0);
 	free(BAbt1);

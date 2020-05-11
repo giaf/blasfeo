@@ -1593,7 +1593,7 @@ NAME:
 	add		x11, x11, x13, LSL #3 // B + offsetB*sizeof(double)
 
 	add		x14, x9, x10
-	add		x15, x14, x10
+	add		x16, x14, x10
 
 1:
 	ldp		q24, q25, [x9, #0]
@@ -1621,7 +1621,7 @@ NAME:
 	fmla	v14.2d, v26.2d, v31.2d[0]
 	fmla	v15.2d, v27.2d, v31.2d[0]
 
-	ldp		q24, q25, [x15, #0]
+	ldp		q24, q25, [x16, #0]
 
 	fmla	v16.2d, v24.2d, v28.2d[0]
 	fmla	v17.2d, v25.2d, v28.2d[0]
@@ -1634,7 +1634,7 @@ NAME:
 
 	add		x9, x9, #32
 	add		x14, x14, #32
-	add		x15, x15, #32
+	add		x16, x16, #32
 	add		x11, x11, #8
 	sub		w8, w8, #1
 
@@ -2109,6 +2109,8 @@ NAME:
 	fmul		v22.2d, v22.2d, v24.2d[0]
 	fmul		v23.2d, v23.2d, v24.2d[0]
 
+0:
+
 #if MACRO_LEVEL>=1
 	.endm
 #else
@@ -2280,6 +2282,8 @@ NAME:
 	fmls		v15.2d, v13.2d, v24.2d[0]
 	fmls		v22.2d, v20.2d, v24.2d[0]
 	fmls		v23.2d, v21.2d, v24.2d[0]
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -3206,7 +3210,7 @@ NAME:
 	add		x12, x8, x9
 	add		x13, x12, x9
 
-	cmp		w10, #8
+	cmp		w10, #12
 	bge		1f
 
 	ldp		q24, q25, [x13, #(0*8+0*32)]
@@ -3261,12 +3265,12 @@ NAME:
 	cmp		w11, #3
 	blt		0f
 	// 3rd col
-	stp		q4, q5, [x8, #(0*8+2*32)]
+	str		q5, [x8, #(2*8+2*32)]
 	stp		q12, q13, [x12, #(0*8+2*32)]
 	stp		q20, q21, [x13, #(0*8+2*32)]
 	beq		0f
 	// 4th col
-	stp		q6, q7, [x8, #(0*8+3*32)]
+	str		q7, [x8, #(2*8+3*32)]
 	stp		q14, q15, [x12, #(0*8+3*32)]
 	stp		q22, q23, [x13, #(0*8+3*32)]
 

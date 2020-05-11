@@ -68,7 +68,7 @@ CURRENT_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 # Code optimized for AMD Barcelona.
 #
 # ARMV8A_ARM_CORTEX_A57 : ARMv8A architecture with NEON (64 bit OS)
-# Code optimized for ARM Cortex A57.
+# Code optimized for ARM Cortex A57, A72, A73.
 #
 # ARMV8A_ARM_CORTEX_A53 : ARMv8A architecture with NEON (64 bit OS)
 # Code optimized for ARM Cortex A53.
@@ -142,8 +142,8 @@ endif
 
 # Compile the BLAS API routines provided by BLASFEO
 #
-BLAS_API = 0
-# BLAS_API = 1
+# BLAS_API = 0
+BLAS_API = 1
 
 # Export standard FORTRAN namings for BLAS API routines
 # 0 : routines namings are in the form blasfeo_dgemm
@@ -177,8 +177,8 @@ LAPACKE_API = 0
 
 # In BLAS API, fallback to external BLAS library for some not-yet-implemented routines
 #
-# FALLBACK_TO_EXTERNAL_BLAS = 0
-FALLBACK_TO_EXTERNAL_BLAS = 1
+FALLBACK_TO_EXTERNAL_BLAS = 0
+# FALLBACK_TO_EXTERNAL_BLAS = 1
 
 # Maximum inner product length K for buffer allocation on stack (decrease this value if stack size is exceeded)
 #
@@ -266,9 +266,15 @@ ASFLAGS += #-g
 
 
 
+# Installation directory
+TOP = $(CURRENT_DIR)
+
 # Support local options
 # TODO move somewhere else ???
 -include $(CURRENT_DIR)/Makefile.local
+
+# search directories
+CFLAGS += -I$(TOP)/include
 
 
 

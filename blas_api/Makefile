@@ -61,6 +61,7 @@ OBJS += dtrtrs.o
 OBJS += saxpy.o
 OBJS += sdot.o
 OBJS += sgemm.o
+OBJS += strsm.o
 
 #endif # HIGH_PERFROMANCE
 

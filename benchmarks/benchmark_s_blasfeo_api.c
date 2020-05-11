@@ -297,7 +297,7 @@ int main()
 
 		blasfeo_pack_smat(n, n, A, n, &sA, 0, 0);
 		blasfeo_pack_smat(n, n, B, n, &sB, 0, 0);
-		blasfeo_pack_svec(n, x, &sx, 0);
+		blasfeo_pack_svec(n, x, 1, &sx, 0);
 
 		// create matrix to pivot all the time
 		// blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);

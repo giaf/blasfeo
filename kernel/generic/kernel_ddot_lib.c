@@ -47,8 +47,7 @@ void kernel_ddot_11_lib(int n, double *x, double *y, double *res)
 
 	int ii;
 
-	double tmp_res[4] = {};
-
+	double tmp_res[4];
 	tmp_res[0] = 0.0;
 	tmp_res[1] = 0.0;
 	tmp_res[2] = 0.0;

@@ -4,7 +4,7 @@ BLASFEO ChangeLog
 
 ====================================================================
 Version 0.1.2-master
-01-Feb-2020
+03-Apr-2020
 
 common:
 	* change license to BFD-2
@@ -23,6 +23,7 @@ BLAS_API:
 	  (e.g. add algorithm version with A, B and C colunm-major)
 	* sgemm for all targets (partially optimized for avx2, avx, armv7a, based on generic for others)
 	* dgetrf_np alg0 for all targets (optimized for avx2, partially optimized avx, generic the others)
+	* strsm for all targets (generic kernels for all targets)
 
 ARMv8A:
 	* Cortex A57:

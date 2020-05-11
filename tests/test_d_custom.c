@@ -141,27 +141,27 @@ int main()
 
 	struct blasfeo_dvec sx_n;
 	blasfeo_allocate_dvec(n, &sx_n);
-	blasfeo_pack_dvec(n, x_n, &sx_n, 0);
+	blasfeo_pack_dvec(n, x_n, 1, &sx_n, 0);
 
 	struct blasfeo_dvec sx_t;
 	blasfeo_allocate_dvec(n, &sx_t);
-	blasfeo_pack_dvec(n, x_t, &sx_t, 0);
+	blasfeo_pack_dvec(n, x_t, 1, &sx_t, 0);
 
 	struct blasfeo_dvec sy_n;
 	blasfeo_allocate_dvec(n, &sy_n);
-	blasfeo_pack_dvec(n, y_n, &sy_n, 0);
+	blasfeo_pack_dvec(n, y_n, 1, &sy_n, 0);
 
 	struct blasfeo_dvec sy_t;
 	blasfeo_allocate_dvec(n, &sy_t);
-	blasfeo_pack_dvec(n, y_t, &sy_t, 0);
+	blasfeo_pack_dvec(n, y_t, 1, &sy_t, 0);
 
 	struct blasfeo_dvec sz_n;
 	blasfeo_allocate_dvec(n, &sz_n);
-	blasfeo_pack_dvec(n, z_n, &sz_n, 0);
+	blasfeo_pack_dvec(n, z_n, 1, &sz_n, 0);
 
 	struct blasfeo_dvec sz_t;
 	blasfeo_allocate_dvec(n, &sz_t);
-	blasfeo_pack_dvec(n, z_t, &sz_t, 0);
+	blasfeo_pack_dvec(n, z_t, 1, &sz_t, 0);
 
 	struct blasfeo_dvec sx0; blasfeo_create_dvec(n, &sx0, x0);
 	struct blasfeo_dvec sx1; blasfeo_create_dvec(n, &sx1, x1);
@@ -233,7 +233,7 @@ int main()
 	
 #endif
 
-#if 1
+#if 0
 	// gemm_nt
 	alpha = 1.0;
 	beta = 0.0;
@@ -423,7 +423,7 @@ int main()
 	return 0;
 #endif
 
-#if 0
+#if 1
 	// gemv_t
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
@@ -442,8 +442,17 @@ int main()
 #if 0
 	// symv_l
 	blasfeo_print_tran_dvec(n, &sx_n, 0);
-	blasfeo_dsymv_l(5, 5, 1.0, &sA, 1, 1, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
+	blasfeo_dsymv_l(2, 2, 1.0, &sA, 1, 1, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
+	return 0;
+#endif
+
+#if 0
+	// gemv_nt
+	blasfeo_print_tran_dvec(n, &sx_n, 0);
+	blasfeo_dgemv_nt(6, 6, 1.0, 1.0, &sA, 1, 0, &sx_n, 0, &sx_t, 0, 0.0, 0.0, &sy_n, 0, &sy_t, 0, &sz_n, 0, &sz_t, 0);
+	blasfeo_print_tran_dvec(n, &sz_n, 0);
+	blasfeo_print_tran_dvec(n, &sz_t, 0);
 	return 0;
 #endif
 

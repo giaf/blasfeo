@@ -114,7 +114,7 @@ OBJS = test.o
 .DEFAULT_GOAL := obj
 .PHONY: obj
 
-obj: one aux blas
+obj: one
 
 bin_dir:
 	mkdir -p $(BINARY_DIR)/
@@ -146,6 +146,6 @@ clean:
 
 deep_clean: clean
 
-reports_clean: clean
+purge: deep_clean
 	rm -rf ./build/
 	rm -rf ./reports/

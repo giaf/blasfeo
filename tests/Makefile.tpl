@@ -1,12 +1,7 @@
-# ----------- Include
-
-
 TESTS_DIR=$(BLASFEO_PATH)/tests
 ABS_BINARY_PATH=$(TESTS_DIR)/$(BINARY_DIR)
 
 include $(BLASFEO_PATH)/Makefile.rule
-# ----------- Envs
-
 
 LIBS =
 SHARED_LIBS =
@@ -17,12 +12,11 @@ SHARED_LIBS += -Wl,-rpath=$(ABS_BINARY_PATH) -L $(ABS_BINARY_PATH) -lblasfeo_ref
 LIBS += $(ABS_BINARY_PATH)/libblasfeo.a
 SHARED_LIBS += -Wl,-rpath=$(ABS_BINARY_PATH) -L $(ABS_BINARY_PATH) -lblasfeo
 
-#LIBS += -lblas
-#SHARED_LIBS += -lblas
 LIBS += -lm
 SHARED_LIBS += -lm
 
-include $(BLASFEO_PATH)/Makefile.external_blas
+LIBS += $(LIBS_EXTERNAL_BLAS)
+SHARED_LIBS += $(SHARED_LIBS_EXTERNAL_BLAS)
 
 {% for flag, value in test_macros.items() %}
 {%- if value -%}

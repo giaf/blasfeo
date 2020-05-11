@@ -60,7 +60,7 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 
 	int bs = 4;
 
-	double pU[12*256] __attribute__ ((aligned (64)));
+	ALIGNED( double pU[12*256], 64 );
 	int sdu = 256;
 
 	struct blasfeo_dmat sA, sB;

@@ -7,12 +7,19 @@ void call_routines(struct RoutineArgs *args){
 	//
 	// routine call
 	//
+//	BLASFEO(ROUTINE)(
+//		string(TRANSA), string(TRANSB),
+//		&(args->m), &(args->m), &(args->m), &(args->alpha),
+//		args->cA->pA, &(args->cA->m),
+//		args->cB->pA, &(args->cB->m), &(args->beta),
+//		args->cD->pA, &(args->cD->m));
 	BLASFEO(ROUTINE)(
-		string(TRANSA), string(TRANSB),
-		&(args->m), &(args->m), &(args->m), &(args->alpha),
-		args->cA->pA, &(args->cA->m),
-		args->cB->pA, &(args->cB->m), &(args->beta),
-		args->cD->pA, &(args->cD->m));
+		*string(TRANSA), *string(TRANSB),
+		args->m, args->m, args->m, args->alpha,
+		args->cA->pA, args->cA->m,
+		args->cB->pA, args->cB->m, args->beta,
+		args->cD->pA, args->cD->m,
+		args->cD->pA, args->cD->m);
 
 	BLAS(ROUTINE)(
 		string(TRANSA), string(TRANSB),

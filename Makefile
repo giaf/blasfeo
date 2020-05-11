@@ -90,6 +90,8 @@ OBJS += \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
 		kernel/kernel_align_x64.o\
+		\
+#		kernel/avx2/kernel_sgemm_16x8_lib8.o \
 
 # blas
 OBJS += \
@@ -154,6 +156,8 @@ OBJS += \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
 		kernel/kernel_align_x64.o\
+		\
+#		kernel/avx/kernel_sgemm_16x8_lib8.o \
 
 # blas
 OBJS  += \
@@ -409,6 +413,7 @@ OBJS += \
 		kernel/armv8a/kernel_dgemm_4x4_lib4.o \
 		kernel/armv8a/kernel_dpack_lib4.o \
 		kernel/armv8a/kernel_dgetrf_pivot_lib4.o \
+		kernel/armv8a/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_dgemm_4x4_lib4.o \
 		kernel/generic/kernel_dgemm_diag_lib4.o \
 		kernel/generic/kernel_dgemv_4_lib4.o \
@@ -426,6 +431,7 @@ OBJS += \
 		kernel/armv8a/kernel_sgemm_8x8_lib4.o \
 		kernel/armv8a/kernel_sgemm_8x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_4x4_lib4.o \
+		kernel/armv8a/kernel_sgemv_4_lib4.o \
 		kernel/generic/kernel_sgemm_4x4_lib4.o \
 		kernel/generic/kernel_sgemm_diag_lib4.o \
 		kernel/generic/kernel_sgemv_4_lib4.o \
@@ -472,6 +478,7 @@ OBJS += \
 		kernel/armv8a/kernel_dgemm_4x4_lib4.o \
 		kernel/armv8a/kernel_dpack_lib4.o \
 		kernel/armv8a/kernel_dgetrf_pivot_lib4.o \
+		kernel/armv8a/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_dgemm_4x4_lib4.o \
 		kernel/generic/kernel_dgemm_diag_lib4.o \
 		kernel/generic/kernel_dgemv_4_lib4.o \
@@ -489,6 +496,7 @@ OBJS += \
 		kernel/armv8a/kernel_sgemm_8x8_lib4.o \
 		kernel/armv8a/kernel_sgemm_8x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_4x4_lib4.o \
+		kernel/armv8a/kernel_sgemv_4_lib4.o \
 		kernel/generic/kernel_sgemm_4x4_lib4.o \
 		kernel/generic/kernel_sgemm_diag_lib4.o \
 		kernel/generic/kernel_sgemv_4_lib4.o \
@@ -705,7 +713,8 @@ OBJS += \
 		\
 		blas_api/saxpy.o \
 		blas_api/sdot.o \
-		blas_api/sgemm.o
+		blas_api/sgemm.o \
+		blas_api/strsm.o
 
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
 include $(CURRENT_DIR)/netlib/Makefile.netlib_blas
@@ -1109,6 +1118,9 @@ deep_clean: clean
 	make -C examples deep_clean
 	make -C tests deep_clean
 	make -C benchmarks deep_clean
+
+purge: deep_clean
+	make -C tests purge
 
 clean_blas_api:
 	make -C blas_api clean

@@ -640,6 +640,110 @@ NAME:
 
 // subroutine
 //
+// cholesky factorization 
+//
+// input arguments:
+// x8   <- inv_diag_D
+// x9   <- n1
+//
+// output arguments:
+// x8   <- inv_diag_D
+// x9   <- n1
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_POTRF_4X4_VS_LIB4
+#else
+	.p2align 4
+	FUN_START(inner_edge_potrf_4x4_vs_lib4)
+#endif
+	
+	fmov		s16, 1.0e+0 // 1.0
+
+	// first column
+	ins			v17.s[0], v0.s[0]
+	fcmpe		s17, #0
+	ble			1f
+	fsqrt		s17, s17
+	fdiv		s18, s16, s17
+2:
+	str			s18, [x8, #0]
+	fmul		v0.4s, v0.4s, v18.4s[0]
+	cmp		w9, #2
+	blt		0f // return
+
+	// second column
+	fmls		v1.4s, v0.4s, v0.4s[1]
+	ins			v17.s[0], v1.s[1]
+	fcmpe		s17, #0
+	ble			3f
+	fsqrt		s17, s17
+	fdiv		s18, s16, s17
+4:
+	str			s18, [x8, #4]
+	fmul		v1.4s, v1.4s, v18.4s[0]
+	cmp		w9, #3
+	blt		0f // return
+
+	// third column
+	fmls		v2.4s, v0.4s, v0.4s[2]
+	fmls		v2.4s, v1.4s, v1.4s[2]
+	ins			v17.s[0], v2.s[2]
+	fcmpe		s17, #0
+	ble			5f
+	fsqrt		s17, s17
+	fdiv		s18, s16, s17
+6:
+	str			s18, [x8, #8]
+	fmul		v2.4s, v2.4s, v18.4s[0]
+	cmp		w9, #4
+	blt		0f // return
+
+	// fourth column
+	fmls		v3.4s, v0.4s, v0.4s[3]
+	fmls		v3.4s, v1.4s, v1.4s[3]
+	fmls		v3.4s, v2.4s, v2.4s[3]
+	ins			v17.s[0], v3.s[3]
+	fcmpe		s17, #0
+	ble			7f
+	fsqrt		s17, s17
+	fdiv		s18, s16, s17
+8:
+	str			s18, [x8, #12]
+	fmul		v3.4s, v3.4s, v18.4s[0]
+
+	b			0f
+
+1:
+	fmov		d18, xzr
+	b			2b
+
+3:
+	fmov		d18, xzr
+	b			4b
+
+5:
+	fmov		d18, xzr
+	b			6b
+
+7:
+	fmov		d18, xzr
+
+0:
+	
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_potrf_4x4_vs_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
 // input arguments:
 // x8   <- alpha
 // x9   <- beta
@@ -680,6 +784,51 @@ NAME:
 	ret
 
 	FUN_END(inner_scale_ab_4x4_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// x9   <- beta
+// x10  <- C
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_M1B_4X4_LIB4
+#else
+	.align	4
+	FUN_START(inner_scale_m1b_4x4_lib4)
+#endif
+
+	ld1		{v29.2d}, [x8]
+
+	fneg	v0.4s, v0.4s
+	fneg	v1.4s, v1.4s
+	fneg	v2.4s, v2.4s
+	fneg	v3.4s, v3.4s
+
+	fcmpe	s29, #0
+	beq		0f
+
+	ld1		{v24.4s, v25.4s, v26.4s, v27.4s}, [x9], #64
+	fmla	v0.4s, v24.4s, v29.4s[0]
+	fmla	v1.4s, v25.4s, v29.4s[0]
+	fmla	v2.4s, v26.4s, v29.4s[0]
+	fmla	v3.4s, v27.4s, v29.4s[0]
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_scale_m1b_4x4_lib4)
 #endif
 
 
@@ -889,6 +1038,92 @@ NAME:
 	ret
 
 	FUN_END(inner_store_l_4x4_lib4)
+#endif
+
+
+
+
+// subroutine
+//
+// input arguments:
+// x8   <- D
+// x9  <- km
+// x10  <- kn
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_L_4X4_VS_LIB4
+#else
+	.align 4
+	FUN_START(inner_store_l_4x4_vs_lib4)
+#endif
+
+	cmp		w9, #4
+	bge		1f
+
+	ldp		q24, q25, [x8, #(0*16)]
+	ldp		q26, q27, [x8, #(2*16)]
+
+	// 4th row
+	ins		v0.s[3], v24.s[3]
+	ins		v1.s[3], v25.s[3]
+	ins		v2.s[3], v26.s[3]
+	ins		v3.s[3], v27.s[3]
+	cmp		w9, #3
+	bge		1f
+	// 3th row
+	ins		v0.s[2], v24.s[2]
+	ins		v1.s[2], v25.s[2]
+	ins		v2.s[2], v26.s[2]
+	ins		v3.s[2], v27.s[2]
+	cmp		w9, #2
+	bge		1f
+	// 2nd row
+	ins		v0.s[1], v24.s[1]
+	ins		v1.s[1], v25.s[1]
+	ins		v2.s[1], v26.s[1]
+	ins		v3.s[1], v27.s[1]
+	cmp		w9, #1
+	bge		1f
+	// 1st row
+	ins		v0.s[0], v24.s[0]
+	ins		v1.s[0], v25.s[0]
+	ins		v2.s[0], v26.s[0]
+	ins		v3.s[0], v27.s[0]
+
+1:
+	ldr		q16, [x8, #16]
+	ldr		q17, [x8, #32]
+	ldr		q18, [x8, #48]
+
+	ins		v1.s[0], v16.s[0]
+	ins		v2.d[0], v17.d[0]
+	ins		v3.d[0], v18.d[0]
+	ins		v3.s[2], v18.s[2]
+
+	// 1st col
+	str		q0, [x8, #(0*16)]
+	cmp		w10, #2
+	blt		0f
+	// 2nd col
+	str		q1, [x8, #(1*16)]
+	cmp		w10, #3
+	blt		0f
+	// 3rd col
+	str		q2, [x8, #(2*16)]
+	beq		0f
+	// 4th col
+	str		q3, [x8, #(3*16)]
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_store_l_4x4_vs_lib4)
 #endif
 
 
@@ -1176,8 +1411,140 @@ NAME:
 
 
 
-//                                      w0        x1         x2         x3         x4         x5         x6
-// void kernel_strsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E);
+//                                 w0        x1             x2         x3         x4            x5         x6
+// void kernel_ssyrk_nt_l_4x4_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D)
+
+	.align	4
+	GLOB_FUN_START(kernel_ssyrk_nt_l_4x4_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		x10, x3 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nt_4x4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x4 // beta
+	mov		x10, x5 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	bl inner_scale_ab_4x4_lib4
+#endif
+
+
+
+	// store n
+	mov		x8, x6
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X4_LIB4
+#else
+	bl inner_store_l_4x4_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_ssyrk_nt_l_4x4_lib4)
+
+
+
+
+
+//                                    w0        x1             x2         x3         x4            x5         x6         w7      sp+0
+// void kernel_ssyrk_nt_l_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D, int m1, int n1)
+
+	.align	4
+	GLOB_FUN_START(kernel_ssyrk_nt_l_4x4_vs_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		x10, x3 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nt_4x4_lib4
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x4 // beta
+	mov		x10, x5 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	bl inner_scale_ab_4x4_lib4
+#endif
+
+
+
+	// store n
+	mov		x8, x6
+	mov		w9, w7 // m1
+	ldr		w10, [sp, #(STACKSIZE + 0)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X4_VS_LIB4
+#else
+	bl inner_store_l_4x4_vs_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_ssyrk_nt_l_4x4_vs_lib4)
+
+
+
+
+
+//                                      w0        x1         x2         x3         x4         x5         x6            x7
+// void kernel_strsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E);
 
 	.align	4
 	GLOB_FUN_START(kernel_strsm_nt_rl_inv_4x4_lib4)
@@ -1205,20 +1572,21 @@ NAME:
 
 
 
-	// call inner blend for alpha=1.0 and beta=1.0
-	mov		x8, x3 // C
+	// call inner blend for alpha=1.0 and beta
+	mov		x8, x3 // beta
+	mov		x9, x4 // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_4X4_LIB4
+	INNER_SCALE_M1B_4X4_LIB4
 #else
-	bl inner_scale_m11_4x4_lib4
+	bl inner_scale_m1b_4x4_lib4
 #endif
 
 
 
 	// solution
-	mov		x8, x5 // E
-	mov		x9, x6 // inv_diag_E
+	mov		x8, x6 // E
+	mov		x9, x7 // inv_diag_E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSM_RLT_INV_4X4_LIB4
@@ -1229,7 +1597,7 @@ NAME:
 
 
 	// store
-	mov		x8, x4
+	mov		x8, x5
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB4
@@ -1320,6 +1688,84 @@ NAME:
 	ret
 
 	FUN_END(kernel_spotrf_nt_l_4x4_lib4)
+
+
+
+
+
+//                                     w0        x1         x2         x3         x4         x5                  w6      w7
+// void kernel_spotrf_nt_l_4x4_vs_lib4(int kmax, double *A, double *B, double *C, double *D, double *inv_diag_D, int m1, int n1);
+
+	.align	4
+	GLOB_FUN_START(kernel_spotrf_nt_l_4x4_vs_lib4)
+
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel syrk l nt
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		x10, x2 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+#else
+	bl	inner_kernel_gemm_add_nt_4x4_lib4
+#endif
+
+
+
+	// call inner blend for alpha=1.0 and beta=1.0
+	mov		x8, x3 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M11_4X4_LIB4
+#else
+	bl inner_scale_m11_4x4_lib4
+#endif
+
+
+
+	// factorization
+	mov		x8, x5 // inv_diag_E
+	mov		w9, w7 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_POTRF_4X4_VS_LIB4
+#else
+	bl inner_edge_potrf_4x4_vs_lib4
+#endif
+
+
+
+	// store l
+	mov		x8, x4
+	mov		w9, w6 // m1
+	mov		w10, w7 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X4_VS_LIB4
+#else
+	bl inner_store_l_4x4_vs_lib4
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_spotrf_nt_l_4x4_vs_lib4)
+
 
 
 

@@ -1024,10 +1024,10 @@ _inner_scale_ab_4x4_lib4:
 	flds		s10, 99b // 0.0
 #endif
 
+	fcmpes		s9, s10
 	vmul.f32	q4, q4, d4[0]
 	vmul.f32	q5, q5, d4[0]
 	vmul.f32	q6, q6, d4[0]
-	fcmpes		s9, s10
 	vmul.f32	q7, q7, d4[0]
 	fmstat
 
@@ -1049,6 +1049,69 @@ _inner_scale_ab_4x4_lib4:
 
 #if defined(OS_LINUX)
 	.size	inner_scale_ab_4x4_lib4, .-inner_scale_ab_4x4_lib4
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r4   <- beta
+// r5   <- C
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_M1B_4X4_LIB4 lc_zero
+#else
+	.align 3
+99: // 0
+	.word 0
+	.word 0
+//	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_m1b_4x4_lib4, %function
+inner_scale_m1b_4x4_lib4:
+#elif defined(OS_MAC)
+_inner_scale_m1b_4x4_lib4:
+#endif
+#endif
+
+	flds		s8, [r4, #0] // beta
+#if MACRO_LEVEL>=2
+	flds		s9, \lc_zero // 0.0
+#else
+	flds		s9, 99b // 0.0
+#endif
+
+	fcmpes		d8, d9
+	vneg.f32	q4, q4
+	vneg.f32	q5, q5
+	vneg.f32	q6, q6
+	vneg.f32	q7, q7
+	fmstat
+
+	beq			0f // end
+
+	vld1.64		{d0, d1, d2, d3}, [r5:128]!
+	vmla.f32	q4, q0, d4[0]
+	vmla.f32	q5, q1, d4[0]
+	vld1.64		{d0, d1, d2, d3}, [r5:128]!
+	vmla.f32	q6, q0, d4[0]
+	vmla.f32	q7, q1, d4[0]
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	mov		pc, lr // return
+
+#if defined(OS_LINUX)
+	.size	inner_scale_m1b_4x4_lib4, .-inner_scale_m1b_4x4_lib4
 #endif
 #endif
 
@@ -1386,8 +1449,8 @@ _kernel_sgemm_nn_4x4_lib4:
 
 
 
-//                                      r0        r1         r2         r3         sp+0       sp+4       rsp+8
-// void kernel_strsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *C, double *D, double *E, double *inv_diag_E);
+//                                      r0        r1         r2         r3         sp+0       sp+4       rsp+8         esp+12
+// void kernel_strsm_nt_rl_inv_4x4_lib4(int kmax, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E);
 
 //	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -1430,23 +1493,24 @@ _kernel_strsm_nt_rl_inv_4x4_lib4:
 
 
 	// call inner blend for alpha=1.0 and beta=1.0
-	mov		r4, r3 // C
+	mov		r4, r3 // beta
+	ldr		r5, [fp, #0] // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_4X4_LIB4
+	INNER_SCALE_M1B_4X4_LIB4
 #else
 #if defined(OS_LINUX)
-	bl inner_scale_m11_4x4_lib4
+	bl inner_scale_m1b_4x4_lib4
 #elif defined(OS_MAC)
-	bl _inner_scale_m11_4x4_lib4
+	bl _inner_scale_m1b_4x4_lib4
 #endif
 #endif
 
 
 
 	// factorization
-	ldr		r4, [fp, #4] // E
-	ldr		r5, [fp, #8] // inv_diag_E
+	ldr		r4, [fp, #8] // E
+	ldr		r5, [fp, #12] // inv_diag_E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSM_RLT_INV_4X4_LIB4
@@ -1461,7 +1525,7 @@ _kernel_strsm_nt_rl_inv_4x4_lib4:
 
 
 	// store l
-	ldr		r4, [fp, #0] // D
+	ldr		r4, [fp, #4] // D
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB4

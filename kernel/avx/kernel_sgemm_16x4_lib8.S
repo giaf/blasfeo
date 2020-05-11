@@ -74,6 +74,63 @@
 	movq	40(%rsp), %r15; \
 	addq	$STACKSIZE, %rsp;
 
+#if defined(OS_LINUX)
+
+#define GLOB_FUN_START(NAME) \
+	.globl NAME; \
+	.type NAME, @function; \
+NAME:
+#define FUN_START(NAME) \
+	.type NAME, @function; \
+NAME:
+#define FUN_END(NAME) \
+	.size	NAME, .-NAME
+#define CALL(NAME) \
+	call NAME
+#define ZERO_ACC \
+	vxorps	%ymm0, %ymm0, %ymm0; \
+	vmovaps	%ymm0, %ymm1; \
+	vmovaps	%ymm0, %ymm2; \
+	vmovaps	%ymm0, %ymm3; \
+	vmovaps	%ymm0, %ymm4; \
+	vmovaps	%ymm0, %ymm5; \
+	vmovaps	%ymm0, %ymm6; \
+	vmovaps	%ymm0, %ymm7
+//#define NEG_ACC \
+//	vmovapd		.LC11(%rip), %ymm15; \
+//	vxorpd		%ymm15, %ymm0, %ymm0; \
+//	vxorpd		%ymm15, %ymm1, %ymm1; \
+//	vxorpd		%ymm15, %ymm2, %ymm2; \
+//	vxorpd		%ymm15, %ymm3, %ymm3
+
+#else // defined(OS_MAC)
+
+#define GLOB_FUN_START(NAME) \
+	.globl _ ## NAME; \
+_ ## NAME:
+#define FUN_START(NAME) \
+_ ## NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	callq _ ## NAME
+#define ZERO_ACC \
+	vxorps	%ymm0, %ymm0, %ymm0; \
+	vmovaps	%ymm0, %ymm1; \
+	vmovaps	%ymm0, %ymm2; \
+	vmovaps	%ymm0, %ymm3; \
+	vmovaps	%ymm0, %ymm4; \
+	vmovaps	%ymm0, %ymm5; \
+	vmovaps	%ymm0, %ymm6; \
+	vmovaps	%ymm0, %ymm7
+//#define NEG_ACC \
+//	vmovapd		LC11(%rip), %ymm15; \
+//	vxorpd		%ymm15, %ymm0, %ymm0; \
+//	vxorpd		%ymm15, %ymm1, %ymm1; \
+//	vxorpd		%ymm15, %ymm2, %ymm2; \
+//	vxorpd		%ymm15, %ymm3, %ymm3
+
+#endif
+
 #elif defined(OS_WINDOWS)
 
 #define STACKSIZE 256
@@ -137,6 +194,32 @@
 	vmovups	192(%rsp), %xmm14; \
 	vmovups	208(%rsp), %xmm15; \
 	addq	$STACKSIZE, %rsp;
+
+#define GLOB_FUN_START(NAME) \
+	.globl NAME; \
+	.def NAME; .scl 2; .type 32; .endef; \
+NAME:
+#define FUN_START(NAME) \
+	.def NAME; .scl 2; .type 32; .endef; \
+NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	call NAME
+#define ZERO_ACC \
+	vxorps	%ymm0, %ymm0, %ymm0; \
+	vmovaps	%ymm0, %ymm1; \
+	vmovaps	%ymm0, %ymm2; \
+	vmovaps	%ymm0, %ymm3; \
+	vmovaps	%ymm0, %ymm4; \
+	vmovaps	%ymm0, %ymm5; \
+	vmovaps	%ymm0, %ymm6; \
+	vmovaps	%ymm0, %ymm7
+//#define NEG_ACC \
+//	vmovapd		.LC11(%rip), %ymm15; \
+//	vxorpd		%ymm15, %ymm0, %ymm0; \
+//	vxorpd		%ymm15, %ymm1, %ymm1; \
+//	vxorpd		%ymm15, %ymm2, %ymm2; \
+//	vxorpd		%ymm15, %ymm3, %ymm3
 
 #else
 
@@ -4114,7 +4197,7 @@ inner_store_l_12x4_gen_lib8:
 
 
 
-//                                rdi    rsi           rdx       rcx      r8        r9           rsp+8     rsp+16   rsp+24    rsp+32
+//                                1      2             3         4        5         6            7         8        9         10
 // void kernel_sgemm_nt_16x4_lib8(int k, float *alpha, float *A, int sda, float *B, float *beta, float *C, int sdc, float *D, int sdd);
 
 	.p2align 4,,15
@@ -6975,6 +7058,16 @@ kernel_strmm_nn_rl_16x4_gen_lib8:
 
 #if defined(OS_LINUX)
 	.size	kernel_strmm_nn_rl_16x4_gen_lib8, .-kernel_strmm_nn_rl_16x4_gen_lib8
+#endif
+
+
+
+
+
+#if defined(BLAS_API)
+
+#include "kernel_sgemm_16x4_lib.S"
+
 #endif
 
 

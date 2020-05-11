@@ -685,7 +685,7 @@ int main()
 		blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
 		blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
 		blasfeo_pack_dmat(n, n, B2, n, &sB2, 0, 0);
-		blasfeo_pack_dvec(n, x, &sx, 0);
+		blasfeo_pack_dvec(n, x, 1, &sx, 0);
 		int ii;
 
 		for(ii=0; ii<n; ii++)

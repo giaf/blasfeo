@@ -34,22 +34,26 @@
 ###################################################################################################
 
 
+add_executable(getting_started getting_started.c)
+add_executable(example_d_lu_factorization example_d_lu_factorization.c)
+add_executable(example_s_lu_factorization example_s_lu_factorization.c)
+add_executable(example_d_lq_factorization example_d_lq_factorization.c)
 add_executable(example_d_riccati_recursion example_d_riccati_recursion.c tools.c)
 add_executable(example_s_riccati_recursion example_s_riccati_recursion.c tools.c)
 
-add_executable(example_d_lu_factorization example_d_lu_factorization.c)
-add_executable(example_s_lu_factorization example_s_lu_factorization.c)
+if(CMAKE_C_COMPILER_ID MATCHES MSVC) # no explicit math library
+	target_link_libraries(getting_started blasfeo)
+	target_link_libraries(example_d_lu_factorization blasfeo)
+	target_link_libraries(example_s_lu_factorization blasfeo)
+	target_link_libraries(example_d_lq_factorization blasfeo)
+	target_link_libraries(example_d_riccati_recursion blasfeo)
+	target_link_libraries(example_s_riccati_recursion blasfeo)
+else() # add explicit math library
+	target_link_libraries(getting_started blasfeo m)
+	target_link_libraries(example_d_lu_factorization blasfeo m)
+	target_link_libraries(example_s_lu_factorization blasfeo m)
+	target_link_libraries(example_d_lq_factorization blasfeo m)
+	target_link_libraries(example_d_riccati_recursion blasfeo m)
+	target_link_libraries(example_s_riccati_recursion blasfeo m)
+endif()
 
-add_executable(example_d_lq_factorization example_d_lq_factorization.c)
-
-add_executable(getting_started getting_started.c)
-
-target_link_libraries(example_d_riccati_recursion blasfeo m )
-target_link_libraries(example_s_riccati_recursion blasfeo m )
-
-target_link_libraries(example_d_lu_factorization blasfeo m)
-target_link_libraries(example_s_lu_factorization blasfeo m)
-
-target_link_libraries(example_d_lq_factorization blasfeo m)
-
-target_link_libraries(getting_started blasfeo m)

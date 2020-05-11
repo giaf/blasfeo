@@ -46,7 +46,7 @@
 // copies a lower triangular packed matrix into a lower triangular packed matrix
 void strcp_l_lib(int m, int offsetA, float *A, int sda, int offsetB, float *B, int sdb)
 	{
-	printf("\nstrcp_;l_lib: feature not implemented yet\n");
+	printf("\nstrcp_l_lib: feature not implemented yet\n");
 	exit(1);
 	}
 
@@ -909,6 +909,19 @@ int blasfeo_memsize_smat(int m, int n)
 
 
 
+int blasfeo_memsize_smat_ps(int ps, int m, int n)
+	{
+	int nc = S_NC;
+	int al = ps*nc;
+	int pm = (m+ps-1)/ps*ps;
+	int cn = (n+nc-1)/nc*nc;
+	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
+	int memsize = (pm*cn+tmp)*sizeof(float);
+	return memsize;
+	}
+
+
+
 // return the memory size (in bytes) needed for the digonal of a strmat
 int blasfeo_memsize_diag_smat(int m, int n)
 	{
@@ -941,6 +954,32 @@ void blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memory)
 	sA->dA = ptr;
 	ptr += tmp;
 	sA->use_dA = 0;
+	sA->memsize = (pm*cn+tmp)*sizeof(float);
+	return;
+	}
+
+
+
+void blasfeo_create_smat_ps(int ps, int m, int n, struct blasfeo_smat *sA, void *memory)
+	{
+
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
+	int nc = S_NC;
+	int al = ps*nc;
+	sA->m = m;
+	sA->n = n;
+	int pm = (m+ps-1)/ps*ps;
+	int cn = (n+nc-1)/nc*nc;
+	sA->pm = pm;
+	sA->cn = cn;
+	float *ptr = (float *) memory;
+	sA->pA = ptr;
+	ptr += pm*cn;
+	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
+	sA->dA = ptr;
+	ptr += tmp;
 	sA->memsize = (pm*cn+tmp)*sizeof(float);
 	return;
 	}
@@ -1223,12 +1262,20 @@ void blasfeo_pack_tran_smat(int m, int n, float *A, int lda, struct blasfeo_smat
 
 
 // convert a vector into a vector structure
-void blasfeo_pack_svec(int m, float *a, struct blasfeo_svec *sa, int ai)
+void blasfeo_pack_svec(int m, float *x, int xi, struct blasfeo_svec *sa, int ai)
 	{
 	float *pa = sa->pa + ai;
 	int ii;
-	for(ii=0; ii<m; ii++)
-		pa[ii] = a[ii];
+	if(xi==1)
+		{
+		for(ii=0; ii<m; ii++)
+			pa[ii] = x[ii];
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			pa[ii] = x[ii*xi];
+		}
 	return;
 	}
 
@@ -1479,12 +1526,20 @@ void blasfeo_unpack_tran_smat(int m, int n, struct blasfeo_smat *sA, int ai, int
 
 
 // convert a vector structure into a vector
-void blasfeo_unpack_svec(int m, struct blasfeo_svec *sa, int ai, float *a)
+void blasfeo_unpack_svec(int m, struct blasfeo_svec *sa, int ai, float *x, int xi)
 	{
 	float *pa = sa->pa + ai;
 	int ii;
-	for(ii=0; ii<m; ii++)
-		a[ii] = pa[ii];
+	if(xi==1)
+		{
+		for(ii=0; ii<m; ii++)
+			x[ii] = pa[ii];
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			x[ii*xi] = pa[ii];
+		}
 	return;
 	}
 
@@ -1764,6 +1819,23 @@ void blasfeo_srowad(int kmax, float alpha, struct blasfeo_svec *sx, int xi, stru
 	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	float *x = sx->pa + xi;
 	srowad_lib(kmax, alpha, x, pA);
+	return;
+	}
+
+
+
+// extract vector from column
+void blasfeo_scolex(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi)
+	{
+
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
+	const int bs = 8;
+	int sda = sA->cn;
+	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
+	float *x = sx->pa + xi;
+	scolex_lib(kmax, ai%bs, pA, sda, x);
 	return;
 	}
 

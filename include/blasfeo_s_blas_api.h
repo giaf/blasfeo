@@ -54,6 +54,12 @@ extern "C" {
 
 
 
+// BLAS 3
+//
+void blasfeo_sgemm(char ta, char tb, int m, int n, int k, float alpha, float *A, int lda, float *B, int ldb, float beta, float *C, int ldc, float *D, int ldd);
+
+
+
 #ifdef FORTRAN_BLAS_API
 
 
@@ -67,6 +73,8 @@ float sdot_(int *n, float *x, int *incx, float *y, int *incy);
 // BLAS 3
 //
 void sgemm_(char *ta, char *tb, int *m, int *n, int *k, float *alpha, float *A, int *lda, float *B, int *ldb, float *beta, float *C, int *ldc);
+//
+void strsm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, float *alpha, float *A, int *lda, float *B, int *ldb);
 
 
 
@@ -87,7 +95,9 @@ float blasfeo_sdot_blas(int *n, float *x, int *incx, float *y, int *incy);
 
 // BLAS 3
 //
-void blasfeo_sgemm(char *ta, char *tb, int *m, int *n, int *k, float *alpha, float *A, int *lda, float *B, int *ldb, float *beta, float *C, int *ldc);
+void blas_sgemm(char *ta, char *tb, int *m, int *n, int *k, float *alpha, float *A, int *lda, float *B, int *ldb, float *beta, float *C, int *ldc);
+//
+void blasfeo_strsm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, float *alpha, float *A, int *lda, float *B, int *ldb);
 
 
 

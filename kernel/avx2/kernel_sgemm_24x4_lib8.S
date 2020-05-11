@@ -6625,6 +6625,16 @@ NAME:
 
 
 
+#if defined(BLAS_API)
+
+#include "kernel_sgemm_24x4_lib.S"
+
+#endif
+
+
+
+
+
 	// read-only data
 #if defined(OS_LINUX)
 	.section	.rodata.cst32,"aM",@progbits,32

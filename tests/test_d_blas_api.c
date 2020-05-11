@@ -128,9 +128,9 @@ int main()
 	char uplo = 'u';
 	int info = 0;
 
-	int m0 = 11;
-	int n0 = 11;
-	int k0 = 8;
+	int m0 = n;
+	int n0 = n;
+	int k0 = n;
 
 
 
@@ -146,6 +146,8 @@ int main()
 
 	// blas
 
+	printf("\nBLAS\n");
+
 	for(ii=0; ii<n*n; ii++) C[ii] = -1;
 
 #if 0
@@ -154,7 +156,7 @@ int main()
 	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
 	dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
 //	dpotrf_(&c_l, &m0, C, &n, &info);
-	dposv_(&c_u, &m0, &n0, C, &n, D, &n, &info);
+//	dposv_(&c_u, &m0, &n0, C, &n, D, &n, &info);
 	d_print_mat(n, n, C, ldc);
 	d_print_mat(n, n, D, ldd);
 #endif
@@ -163,7 +165,7 @@ int main()
 	dgemm_(&c_t, &c_t, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C, &n);
 #endif
 
-#if 0
+#if 1
 	dsyrk_(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C, &n);
 #endif
 
@@ -205,7 +207,7 @@ int main()
 #endif
 
 //	int n1 = n-1;
-#if 1
+#if 0
 	C[0] = ddot_(&n, A, &i_1, A, &i_1);
 //	C[0] = ddot_(&n, A, &n, A, &n);
 //	C[0] = cblas_ddot(n, A, i_1, A, i_1);
@@ -234,6 +236,8 @@ int main()
 
 	// blasfeo blas
 
+	printf("\nBLASFEO BLAS API\n");
+
 	for(ii=0; ii<n*n; ii++) C2[ii] = -1;
 
 #if 0
@@ -242,17 +246,19 @@ int main()
 	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
 	blasfeo_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
 //	blasfeo_dpotrf(&c_l, &m0, C, &n, &info);
-	blasfeo_dposv(&c_u, &m0, &n0, C, &n, D, &n, &info);
+//	blasfeo_dposv(&c_u, &m0, &n0, C, &n, D, &n, &info);
 	d_print_mat(n, n, C, ldc);
 	d_print_mat(n, n, D, ldd);
 #endif
 
 #if 0
-	blasfeo_dgemm(&c_t, &c_t, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C, &n);
+//	blas_dgemm(&c_t, &c_t, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C2, &n);
+	blasfeo_dgemm(c_t, c_t, m0, n0, k0, alpha, B, n, A, n, beta, C2, n, C2, n);
 #endif
 
-#if 0
-	blasfeo_dsyrk(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C, &n);
+#if 1
+//	blas_dsyrk(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C2, &n);
+	blasfeo_dsyrk3(c_u, c_t, m0, k0, alpha, A, n, beta, C2, n, C2, n);
 #endif
 
 #if 0
@@ -292,7 +298,7 @@ int main()
 //	d_print_mat(n, n, D, ldd);
 #endif
 
-#if 1
+#if 0
 	C2[0] = blasfeo_ddot_blas(&n, A, &i_1, A, &i_1);
 //	C2[0] = blasfeo_ddot_blas(&n, A, &n, A, &n);
 #endif
@@ -318,6 +324,7 @@ int main()
 #endif
 
 	// compute and print difference
+	printf("\nerror\n");
 	for(ii=0; ii<n*n; ii++)
 		C2[ii] -= C[ii];
 

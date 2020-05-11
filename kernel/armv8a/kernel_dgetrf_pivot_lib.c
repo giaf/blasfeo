@@ -39,18 +39,137 @@
 
 
 
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+// m>=1 and n={9,10,11,12}
+void kernel_dgetrf_pivot_12_vs_lib(int m, double *C, int ldc, double *pd, int* ipiv, int n)
+	{
+
+	const int ps = 4;
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	ALIGNED( double pU0[3*4*K_MAX_STACK], 64 );
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	ALIGNED( double pU0[2*4*K_MAX_STACK], 64 );
+#elif defined(TARGET_GENERIC)
+	double pU0[1*4*K_MAX_STACK];
+#else
+	ALIGNED( double pU0[1*4*K_MAX_STACK], 64 );
+#endif
+	int sdu0 = (m+3)/4*4;
+	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
+
+	double *pU;
+	int sdu;
+
+	double *tmp_pU;
+	int m4;
+
+	if(m>K_MAX_STACK)
+		{
+		m4 = (m+3)/4*4;
+		tmp_pU = malloc(3*4*m4*sizeof(double)+64);
+		blasfeo_align_64_byte(tmp_pU, (void **) &pU);
+		sdu = m4;
+		}
+	else
+		{
+		pU = pU0;
+		sdu = sdu0;
+		}
+
+	int ii;
+
+	double *dummy = NULL;
+
+	double d1 = 1.0;
+	double dm1 = -1.0;
+
+	// saturate n to 12
+	n = 12<n ? 12 : n;
+
+	int p = m<n ? m : n;
+
+	int n_max;
+
+	// fact left column
+	kernel_dgetrf_pivot_8_vs_lib(m, C, ldc, pd, ipiv, n);
+
+	n_max = p<8 ? p : 8;
+
+	// apply pivot to right column
+	for(ii=0; ii<n_max; ii++)
+		{
+		if(ipiv[ii]!=ii)
+			{
+			kernel_drowsw_lib(n-8, C+ii+8*ldc, ldc, C+ipiv[ii]+8*ldc, ldc);
+			}
+		}
+
+	// pack
+	kernel_dpack_tn_4_vs_lib4(8, C+8*ldc, ldc, pU+8*sdu, n-8);
+
+	// solve top right block
+	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(0, pU+8*sdu, C, ldc, &d1, pU+8*sdu, pU+8*sdu, C, ldc, n-8, m);
+	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(4, pU+8*sdu, C+4, ldc, &d1, pU+8*sdu+4*ps, pU+8*sdu+4*ps, C+4+4*ldc, ldc, n-8, m-4);
+
+	// unpack
+	kernel_dunpack_nt_4_vs_lib4(8, pU+8*sdu, C+8*ldc, ldc, n-8);
+
+	if(m>8)
+		{
+
+		// correct rigth block
+		ii = 8;
+		// TODO larger kernels ???
+		for(; ii<m; ii+=4)
+			{
+			kernel_dgemm_nt_4x4_vs_libc4cc(8, &dm1, C+ii, ldc, pU+8*sdu, &d1, C+ii+8*ldc, ldc, C+ii+8*ldc, ldc, m-ii, n-8);
+			}
+
+		// fact right column
+		kernel_dgetrf_pivot_4_vs_lib(m-8, C+8+8*ldc, ldc, pd+8, ipiv+8, n-8);
+
+		n_max = p;
+
+		for(ii=8; ii<n_max; ii++)
+			ipiv[ii] += 8;
+
+		// apply pivot to left column
+		for(ii=8; ii<n_max; ii++)
+			{
+			if(ipiv[ii]!=ii)
+				{
+				kernel_drowsw_lib(8, C+ii, ldc, C+ipiv[ii], ldc);
+				}
+			}
+
+		}
+
+	end:
+	if(m>K_MAX_STACK)
+		{
+		free(tmp_pU);
+		}
+
+	return;
+
+	}
+#endif
+
+
+
 // m>=1 and n={5,6,7,8}
 void kernel_dgetrf_pivot_8_vs_lib(int m, double *C, int ldc, double *pd, int* ipiv, int n)
 	{
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( double pU0[3*4*K_MAX_STACK], 64 );
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( double pU0[2*4*K_MAX_STACK], 64 );
 #elif defined(TARGET_GENERIC)
 	double pU0[1*4*K_MAX_STACK];
 #else
-	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( double pU0[1*4*K_MAX_STACK], 64 );
 #endif
 	int sdu0 = (m+3)/4*4;
 	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;

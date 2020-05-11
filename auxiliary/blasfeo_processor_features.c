@@ -36,8 +36,19 @@
 #include "../include/blasfeo_processor_features.h"
 #include "../include/blasfeo_target.h"
 
+#if defined(TARGET_X64_INTEL_HASWELL) \
+    || defined(TARGET_X64_INTEL_SANDY_BRIDGE) \
+    || defined(TARGET_X64_INTEL_CORE) \
+    || defined(TARGET_X64_AMD_BULLDOZER) \
+    || defined(TARGET_X86_AMD_JAGUAR) \
+    || defined(TARGET_X86_AMD_BARCELONA)
 #if defined(__GNUC__) || defined(__clang__)
 #include <cpuid.h>
+// define missing bit_AVX2 (e.g. in case of clang compiler)
+#ifndef bit_AVX2
+#define bit_AVX2 (1 << 5)
+#endif
+#endif
 #endif
 
 
@@ -148,7 +159,8 @@ int blasfeo_processor_cpu_features( int* features )
 #else
 	reg_eax = 7;
 	reg_ecx = 0;
-	asm volatile(
+//	asm volatile(
+	__asm__ volatile(
 		"cpuid\n"
 		: "=a" (reg_eax), "=b" (reg_ebx), "=c" (reg_ecx), "=d" (reg_edx)
 		: "a" (reg_eax), "c" (reg_ecx));

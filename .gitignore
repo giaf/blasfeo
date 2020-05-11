@@ -20,3 +20,4 @@ tests/libblasfeo_ref.a
 
 # CMake
 build*
+Build*

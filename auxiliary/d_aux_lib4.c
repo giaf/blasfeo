@@ -2223,12 +2223,20 @@ void blasfeo_pack_tran_dmat(int m, int n, double *A, int lda, struct blasfeo_dma
 
 
 // convert a vector into a vector structure
-void blasfeo_pack_dvec(int m, double *a, struct blasfeo_dvec *sa, int ai)
+void blasfeo_pack_dvec(int m, double *x, int xi, struct blasfeo_dvec *sa, int ai)
 	{
 	double *pa = sa->pa + ai;
 	int ii;
-	for(ii=0; ii<m; ii++)
-		pa[ii] = a[ii];
+	if(xi==1)
+		{
+		for(ii=0; ii<m; ii++)
+			pa[ii] = x[ii];
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			pa[ii] = x[ii*xi];
+		}
 	return;
 	}
 
@@ -2492,12 +2500,20 @@ void blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int
 
 
 // convert a vector structure into a vector
-void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sa, int ai, double *a)
+void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sa, int ai, double *x, int xi)
 	{
 	double *pa = sa->pa + ai;
 	int ii;
-	for(ii=0; ii<m; ii++)
-		a[ii] = pa[ii];
+	if(xi==1)
+		{
+		for(ii=0; ii<m; ii++)
+			x[ii] = pa[ii];
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			x[ii*xi] = pa[ii];
+		}
 	return;
 	}
 
@@ -2839,6 +2855,10 @@ void blasfeo_drowad(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, str
 // extract vector from column
 void blasfeo_dcolex(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi)
 	{
+
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
