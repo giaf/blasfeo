@@ -61,7 +61,7 @@ void set_test_args(struct TestArgs *targs)
 	targs->dis = 5;
 	targs->xjs = 2;
 
-	targs->nis = 5;
+	targs->nis = 9;
 	targs->njs = 5;
 	targs->nks = 5;
 
