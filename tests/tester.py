@@ -10,6 +10,7 @@ from hashlib import sha1
 from pathlib import Path
 from collections import OrderedDict
 import shutil
+import multiprocessing
 
 
 
@@ -24,7 +25,8 @@ TESTCLASSES_DIR="classes"
 TPL_PATH="Makefile.tpl"
 LIB_BLASFEO_STATIC = "libblasfeo.a"
 LIB_BLASFEO_REF_STATIC = "libblasfeo_ref.a"
-MAKE_FLAGS={"--jobs":"8"}
+#MAKE_FLAGS={"--jobs":"8"}
+MAKE_FLAGS={"--jobs": multiprocessing.cpu_count()}
 SILENT=0
 
 
