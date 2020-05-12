@@ -2906,7 +2906,7 @@ loop_00_1:
 			}
 		if(jj<n)
 			{
-			kernel_dgemm_nt_12x4_vs_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, pC+ii*sdc+jj*ps, sdat, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			kernel_dgemm_nt_12x4_vs_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
 			}
 		}
 	if(ii<m)
@@ -2948,7 +2948,7 @@ loop_00_1:
 			}
 		if(jj<n)
 			{
-			kernel_dgemm_nt_12x4_vs_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, pC+ii*sdc+jj*ps, sdat, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			kernel_dgemm_nt_12x4_vs_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
 			}
 		}
 	if(ii<m)
@@ -2992,7 +2992,7 @@ loop_00_1:
 			}
 		if(jj<n)
 			{
-			kernel_dgemm_nt_8x4_vs_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, pC+ii*sdc+jj*ps, sdat, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
+			kernel_dgemm_nt_8x4_vs_lib4(k, &alpha, pAt, sdat, pB+idxB*sdb, &beta, pC+ii*sdc+jj*ps, sdc, pD+ii*sdd+jj*ps, sdd, m-ii, n-jj);
 			}
 		}
 	if(ii<m)
