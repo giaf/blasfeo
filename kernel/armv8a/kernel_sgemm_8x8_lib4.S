@@ -1291,17 +1291,16 @@ NAME:
 	add		x11, x11, x13, LSL #2 // B + offsetB*sizeof(float)
 
 	add		x14, x9, x10
-	add		x16, x11, x12
 
 1:
 	ldr		s28, [x11, #(0*16)]
 	ldr		s29, [x11, #(1*16)]
 	ldr		s30, [x11, #(2*16)]
 	ldr		s31, [x11, #(3*16)]
-	ldr		s16, [x16, #(0*16)]
-	ldr		s17, [x16, #(1*16)]
-	ldr		s18, [x16, #(2*16)]
-	ldr		s19, [x16, #(3*16)]
+	ldr		s16, [x11, #(4*16)]
+	ldr		s17, [x11, #(5*16)]
+	ldr		s18, [x11, #(6*16)]
+	ldr		s19, [x11, #(7*16)]
 	ld1		{v24.4s}, [x9], #16
 	ld1		{v20.4s}, [x14], #16
 	fmla	v0.4s, v24.4s, v28.4s[0]
@@ -1322,7 +1321,6 @@ NAME:
 	fmla	v15.4s, v20.4s, v19.4s[0]
 
 	add		x11, x11, #4
-	add		x16, x16, #4
 
 	sub		w8, w8, #1
 

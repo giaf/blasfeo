@@ -689,7 +689,7 @@ NAME:
 
 
 
-#else
+#else // cortex a53
 
 
 
@@ -738,24 +738,23 @@ NAME:
 	fmla	v7.4s, v20.4s, v31.4s[0]
 	prfm	PLDL1KEEP, [x11, x12]
 
-
 	// unroll 1
 	fmla	v0.4s, v25.4s, v28.4s[1]
 	fmla	v4.4s, v21.4s, v28.4s[1]
 	add		x9, x9, #64
 	fmla	v1.4s, v25.4s, v29.4s[1]
 	fmla	v5.4s, v21.4s, v29.4s[1]
-	ldp		q24, q25, [x9, #(0*16)]
 	fmla	v2.4s, v25.4s, v30.4s[1]
 	fmla	v6.4s, v21.4s, v30.4s[1]
 	add		x13, x13, #64
 	fmla	v3.4s, v25.4s, v31.4s[1]
 	fmla	v7.4s, v21.4s, v31.4s[1]
-	ldp		q20, q21, [x13, #(0*16)]
+	ldp		q24, q25, [x9, #(0*16)]
 
 	// unroll 2
 	fmla	v0.4s, v26.4s, v28.4s[2]
 	fmla	v4.4s, v22.4s, v28.4s[2]
+	ldp		q20, q21, [x13, #(0*16)]
 	fmla	v1.4s, v26.4s, v29.4s[2]
 	fmla	v5.4s, v22.4s, v29.4s[2]
 	fmla	v2.4s, v26.4s, v30.4s[2]
@@ -807,17 +806,17 @@ NAME:
 	add		x9, x9, #64
 	fmla	v1.4s, v25.4s, v29.4s[1]
 	fmla	v5.4s, v21.4s, v29.4s[1]
-//	ldp		q24, q25, [x9, #(0*16)]
 	fmla	v2.4s, v25.4s, v30.4s[1]
 	fmla	v6.4s, v21.4s, v30.4s[1]
 	add		x13, x13, #64
 	fmla	v3.4s, v25.4s, v31.4s[1]
 	fmla	v7.4s, v21.4s, v31.4s[1]
-//	ldp		q20, q21, [x13, #(0*16)]
+//	ldp		q24, q25, [x9, #(0*16)]
 
 	// unroll 2
 	fmla	v0.4s, v26.4s, v28.4s[2]
 	fmla	v4.4s, v22.4s, v28.4s[2]
+//	ldp		q20, q21, [x13, #(0*16)]
 	fmla	v1.4s, v26.4s, v29.4s[2]
 	fmla	v5.4s, v22.4s, v29.4s[2]
 	fmla	v2.4s, v26.4s, v30.4s[2]
