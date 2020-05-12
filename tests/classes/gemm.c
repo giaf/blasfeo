@@ -25,14 +25,14 @@ void call_routines(struct RoutineArgs *args){
 void print_routine(struct RoutineArgs *args){
 	// unpack args
 
-	printf("%s ", string(ROUTINE));
-	printf(
-		"D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
-		args->di, args->m, args->dj, args->n,
-		args->alpha, args->ai, args->m, args->aj, args->k,
-		args->bi, args->k, args->bj, args->n,
-		args->beta, args->ci, args->m, args->cj, args->n
-	);
+	printf("blasfeo_%s (%d, %d, %d, %f, A, %d, %d, B, %d, %d, %f, C, %d, %d, D, %d, %d);\n", string(ROUTINE), args->m, args->n, args->k, args->alpha, args->ai, args->aj, args->bi, args->bj, args->beta, args->ci, args->cj, args->di, args->dj);
+//	printf(
+//		"D[%d:%d,%d:%d] =  %f*A[%d:%d,%d:%d]*B[%d:%d,%d:%d] + %f*C[%d:%d,%d:%d]\n",
+//		args->di, args->m, args->dj, args->n,
+//		args->alpha, args->ai, args->m, args->aj, args->k,
+//		args->bi, args->k, args->bj, args->n,
+//		args->beta, args->ci, args->m, args->cj, args->n
+//	);
 
 }
 
