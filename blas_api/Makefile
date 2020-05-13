@@ -68,6 +68,7 @@ OBJS += strsm.o
 else #ifeq ($(LA), REFERENCE)
 
 OBJS += dgemm_ref.o
+OBJS += sgemm_ref.o
 
 endif # REFERENCE
 

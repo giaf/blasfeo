@@ -37,21 +37,22 @@
 #include <stdio.h>
 
 #include <blasfeo_common.h>
-#include <blasfeo_d_blasfeo_api.h>
+#include <blasfeo_s_blasfeo_api.h>
 
 
 
-#define GEMM_NN blasfeo_dgemm_nn
-#define GEMM_NT blasfeo_dgemm_nt
-#define GEMM_TN blasfeo_dgemm_tn
-#define GEMM_TT blasfeo_dgemm_tt
-#define MAT blasfeo_dmat
-#define REAL double
+#define GEMM_NN blasfeo_sgemm_nn
+#define GEMM_NT blasfeo_sgemm_nt
+#define GEMM_TN blasfeo_sgemm_tn
+#define GEMM_TT blasfeo_sgemm_tt
+#define MAT blasfeo_smat
+#define REAL float
 
 
 
-#define GEMM blasfeo_dgemm
+#define GEMM blasfeo_sgemm
 
 
 
 #include "xgemm_ref.c"
+
