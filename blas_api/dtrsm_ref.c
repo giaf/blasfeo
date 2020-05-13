@@ -33,63 +33,38 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
+
+#include <blasfeo_common.h>
+#include <blasfeo_d_blasfeo_api.h>
 
 
-void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, int *plda, REAL *B, int *pldb, REAL *pbeta, REAL *C, int *pldc)
-	{
 
-#if defined(DIM_CHECK)
-	if( !(*ta=='c' | *ta=='C' | *ta=='n' | *ta=='N' | *ta=='t' | *ta=='T') )
-		{
-		printf("\nBLASFEO: gemm: wrong value for ta\n");
-		return;
-		}
-	if( !(*tb=='c' | *tb=='C' | *tb=='n' | *tb=='N' | *tb=='t' | *tb=='T') )
-		{
-		printf("\nBLASFEO: gemm: wrong value for tb\n");
-		return;
-		}
-#endif
+#define TRSM_LLNN blasfeo_dtrsm_llnn
+#define TRSM_LLNU blasfeo_dtrsm_llnu
+#define TRSM_LLTN blasfeo_dtrsm_lltn
+#define TRSM_LLTU blasfeo_dtrsm_lltu
+#define TRSM_LUNN blasfeo_dtrsm_lunn
+#define TRSM_LUNU blasfeo_dtrsm_lunu
+#define TRSM_LUTN blasfeo_dtrsm_lutn
+#define TRSM_LUTU blasfeo_dtrsm_lutu
+#define TRSM_RLNN blasfeo_dtrsm_rlnn
+#define TRSM_RLNU blasfeo_dtrsm_rlnu
+#define TRSM_RLTN blasfeo_dtrsm_rltn
+#define TRSM_RLTU blasfeo_dtrsm_rltu
+#define TRSM_RUNN blasfeo_dtrsm_runn
+#define TRSM_RUNU blasfeo_dtrsm_runu
+#define TRSM_RUTN blasfeo_dtrsm_rutn
+#define TRSM_RUTU blasfeo_dtrsm_rutu
+#define MAT blasfeo_dmat
+#define REAL double
 
-#if defined(FALLBACK_TO_EXTERNAL_BLAS)
-	// TODO
-#endif
 
-	struct MAT sA;
-	sA.pA = A;
-	sA.m = *plda;
 
-	struct MAT sB;
-	sB.pA = B;
-	sB.m = *pldb;
+#define TRSM blasfeo_dtrsm
 
-	struct MAT sC;
-	sC.pA = C;
-	sC.m = *pldc;
 
-	if(*ta=='n' | *ta=='N')
-		{
-		if(*tb=='n' | *tb=='N')
-			{
-			GEMM_NN(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		else
-			{
-			GEMM_NT(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		}
-	else
-		{
-		if(*tb=='n' | *tb=='N')
-			{
-			GEMM_TN(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		else
-			{
-			GEMM_TT(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		}
 
-	return;
+#include "xtrsm_ref.c"
 
-	}

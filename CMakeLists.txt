@@ -1054,7 +1054,10 @@ else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 		if(${BLAS_API})
 			list(APPEND BLAS_SRC
 				${PROJECT_SOURCE_DIR}/blas_api/dgemm_ref.c
+				${PROJECT_SOURCE_DIR}/blas_api/dtrsm_ref.c
+
 				${PROJECT_SOURCE_DIR}/blas_api/sgemm_ref.c
+				${PROJECT_SOURCE_DIR}/blas_api/strsm_ref.c
 				)
 		endif() # BLAS_API
 	endif() # REFERENCE
