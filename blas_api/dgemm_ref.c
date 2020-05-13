@@ -36,8 +36,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_blasfeo_api.h"
+#include <blasfeo_common.h>
+#include <blasfeo_d_blasfeo_api.h>
 
 
 

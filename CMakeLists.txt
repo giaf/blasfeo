@@ -1050,6 +1050,18 @@ else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 		${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib.c
 		)
 
+	if(${LA} MATCHES REFERENCE) # REFERENCE
+		if(${BLAS_API})
+			list(APPEND BLAS_SRC
+				${PROJECT_SOURCE_DIR}/blas_api/dgemm_ref.c
+				${PROJECT_SOURCE_DIR}/blas_api/dtrsm_ref.c
+
+				${PROJECT_SOURCE_DIR}/blas_api/sgemm_ref.c
+				${PROJECT_SOURCE_DIR}/blas_api/strsm_ref.c
+				)
+		endif() # BLAS_API
+	endif() # REFERENCE
+
 endif(${LA} MATCHES HIGH_PERFORMANCE)
 
 if(${EXT_DEP})

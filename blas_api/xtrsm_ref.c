@@ -35,18 +35,28 @@
 
 
 
-void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, int *plda, REAL *B, int *pldb, REAL *pbeta, REAL *C, int *pldc)
+void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, REAL *alpha, REAL *A, int *plda, REAL *B, int *pldb)
 	{
 
 #if defined(DIM_CHECK)
-	if( !(*ta=='c' | *ta=='C' | *ta=='n' | *ta=='N' | *ta=='t' | *ta=='T') )
+	if( !(*side=='l' | *side=='L' | *side=='r' | *side=='R') )
 		{
-		printf("\nBLASFEO: gemm: wrong value for ta\n");
+		printf("\nBLASFEO: dtrsm: wrong value for side\n");
 		return;
 		}
-	if( !(*tb=='c' | *tb=='C' | *tb=='n' | *tb=='N' | *tb=='t' | *tb=='T') )
+	if( !(*uplo=='l' | *uplo=='L' | *uplo=='u' | *uplo=='U') )
 		{
-		printf("\nBLASFEO: gemm: wrong value for tb\n");
+		printf("\nBLASFEO: dtrsm: wrong value for uplo\n");
+		return;
+		}
+	if( !(*transa=='c' | *transa=='C' | *transa=='n' | *transa=='N' | *transa=='t' | *transa=='T') )
+		{
+		printf("\nBLASFEO: dtrsm: wrong value for transa\n");
+		return;
+		}
+	if( !(*diag=='n' | *diag=='N' | *diag=='u' | *diag=='U') )
+		{
+		printf("\nBLASFEO: dtrsm: wrong value for diag\n");
 		return;
 		}
 #endif
@@ -63,33 +73,115 @@ void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, 
 	sB.pA = B;
 	sB.m = *pldb;
 
-	struct MAT sC;
-	sC.pA = C;
-	sC.m = *pldc;
-
-	if(*ta=='n' | *ta=='N')
+	if(*side=='l' | *side=='L') // _l
 		{
-		if(*tb=='n' | *tb=='N')
+		if(*uplo=='l' | *uplo=='L') // _ll
 			{
-			GEMM_NN(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
+			if(*transa=='n' | *transa=='N') // _lln
+				{
+				if(*diag=='n' | *diag=='N') // _llnn
+					{
+					TRSM_LLNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				else //if(*diag=='u' | *diag=='U') // _llnu
+					{
+					TRSM_LLNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				}
+			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _llt
+				{
+				if(*diag=='n' | *diag=='N') // _lltn
+					{
+					TRSM_LLTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				else //if(*diag=='u' | *diag=='U') // _lltu
+					{
+					TRSM_LLTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				}
 			}
-		else
+		else //if(*uplo=='u' | *uplo=='U') // _lu
 			{
-			GEMM_NT(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
+			if(*transa=='n' | *transa=='N') // _lun
+				{
+				if(*diag=='n' | *diag=='N') // _lunn
+					{
+					TRSM_LUNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				else //if(*diag=='u' | *diag=='U') // _lunu
+					{
+					TRSM_LUNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				}
+			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _lut
+				{
+				if(*diag=='n' | *diag=='N') // _lutn
+					{
+					TRSM_LUTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				else //if(*diag=='u' | *diag=='U') // _lutu
+					{
+					TRSM_LUTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				}
 			}
 		}
-	else
+	else //if(*side=='r' | *side=='R') // _r
 		{
-		if(*tb=='n' | *tb=='N')
+		if(*uplo=='l' | *uplo=='L') // _rl
 			{
-			GEMM_TN(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
+			if(*transa=='n' | *transa=='N') // _rln
+				{
+				if(*diag=='n' | *diag=='N') // _rlnn
+					{
+					TRSM_RLNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				else //if(*diag=='u' | *diag=='U') // _rlnu
+					{
+					TRSM_RLNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				}
+			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _rlt
+				{
+				if(*diag=='n' | *diag=='N') // _rltn
+					{
+					TRSM_RLTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				else //if(*diag=='u' | *diag=='U') // _rltu
+					{
+					TRSM_RLTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				}
 			}
-		else
+		else //if(*uplo=='u' | *uplo=='U') // _ru
 			{
-			GEMM_TT(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
+			if(*transa=='n' | *transa=='N') // _run
+				{
+				if(*diag=='n' | *diag=='N') // _runn
+					{
+					TRSM_RUNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				else //if(*diag=='u' | *diag=='U') // _runu
+					{
+					TRSM_RUNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				}
+			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _rut
+				{
+				if(*diag=='n' | *diag=='N') // _rutn
+					{
+					TRSM_RUTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				else //if(*diag=='u' | *diag=='U') // _rutu
+					{
+					TRSM_RUTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					}
+				}
 			}
 		}
-
+	
 	return;
 
 	}
+
+

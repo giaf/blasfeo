@@ -33,63 +33,26 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
+
+#include <blasfeo_common.h>
+#include <blasfeo_s_blasfeo_api.h>
 
 
-void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, int *plda, REAL *B, int *pldb, REAL *pbeta, REAL *C, int *pldc)
-	{
 
-#if defined(DIM_CHECK)
-	if( !(*ta=='c' | *ta=='C' | *ta=='n' | *ta=='N' | *ta=='t' | *ta=='T') )
-		{
-		printf("\nBLASFEO: gemm: wrong value for ta\n");
-		return;
-		}
-	if( !(*tb=='c' | *tb=='C' | *tb=='n' | *tb=='N' | *tb=='t' | *tb=='T') )
-		{
-		printf("\nBLASFEO: gemm: wrong value for tb\n");
-		return;
-		}
-#endif
+#define GEMM_NN blasfeo_sgemm_nn
+#define GEMM_NT blasfeo_sgemm_nt
+#define GEMM_TN blasfeo_sgemm_tn
+#define GEMM_TT blasfeo_sgemm_tt
+#define MAT blasfeo_smat
+#define REAL float
 
-#if defined(FALLBACK_TO_EXTERNAL_BLAS)
-	// TODO
-#endif
 
-	struct MAT sA;
-	sA.pA = A;
-	sA.m = *plda;
 
-	struct MAT sB;
-	sB.pA = B;
-	sB.m = *pldb;
+#define GEMM blasfeo_sgemm
 
-	struct MAT sC;
-	sC.pA = C;
-	sC.m = *pldc;
 
-	if(*ta=='n' | *ta=='N')
-		{
-		if(*tb=='n' | *tb=='N')
-			{
-			GEMM_NN(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		else
-			{
-			GEMM_NT(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		}
-	else
-		{
-		if(*tb=='n' | *tb=='N')
-			{
-			GEMM_TN(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		else
-			{
-			GEMM_TT(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
-			}
-		}
 
-	return;
+#include "xgemm_ref.c"
 
-	}
