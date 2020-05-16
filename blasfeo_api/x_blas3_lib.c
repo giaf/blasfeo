@@ -137,20 +137,19 @@ void GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if 1
-	struct XMAT sAA = *sA;
-	struct XMAT sBB = *sB;
-	struct XMAT sCC = *sC;
-	struct XMAT sDD = *sD;
 #if defined(LA_REFERENCE)
-	sAA.pA = &XMATEL(sA, ai, aj);
-	sBB.pA = &XMATEL(sB, bi, bj);
-	sCC.pA = &XMATEL(sC, ci, cj);
-	sDD.pA = &XMATEL(sD, di, dj);
-	int aai=0; int aaj=0;
-	int bbi=0; int bbj=0;
-	int cci=0; int ccj=0;
-	int ddi=0; int ddj=0;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pC = sC->pA + ci + cj*ldc;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int cci=0; const int ccj=0;
+	const int ddi=0; const int ddj=0;
 #else
 	int aai=ai; int aaj=aj;
 	int bbi=bi; int bbj=bj;
@@ -170,15 +169,15 @@ void GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 			c_11 = 0.0;
 			for(kk=0; kk<k; kk++)
 				{
-				c_00 += XMATEL(&sAA, aai+ii+0, aaj+kk) * XMATEL(&sBB, bbi+jj+0, bbj+kk);
-				c_10 += XMATEL(&sAA, aai+ii+1, aaj+kk) * XMATEL(&sBB, bbi+jj+0, bbj+kk);
-				c_01 += XMATEL(&sAA, aai+ii+0, aaj+kk) * XMATEL(&sBB, bbi+jj+1, bbj+kk);
-				c_11 += XMATEL(&sAA, aai+ii+1, aaj+kk) * XMATEL(&sBB, bbi+jj+1, bbj+kk);
+				c_00 += XMATEL_A(aai+ii+0, aaj+kk) * XMATEL_B(bbi+jj+0, bbj+kk);
+				c_10 += XMATEL_A(aai+ii+1, aaj+kk) * XMATEL_B(bbi+jj+0, bbj+kk);
+				c_01 += XMATEL_A(aai+ii+0, aaj+kk) * XMATEL_B(bbi+jj+1, bbj+kk);
+				c_11 += XMATEL_A(aai+ii+1, aaj+kk) * XMATEL_B(bbi+jj+1, bbj+kk);
 				}
-			XMATEL(&sDD, ddi+(ii+0), ddj+(jj+0)) = alpha * c_00 + beta * XMATEL(&sCC, cci+(ii+0), ccj+(jj+0));
-			XMATEL(&sDD, ddi+(ii+1), ddj+(jj+0)) = alpha * c_10 + beta * XMATEL(&sCC, cci+(ii+1), ccj+(jj+0));
-			XMATEL(&sDD, ddi+(ii+0), ddj+(jj+1)) = alpha * c_01 + beta * XMATEL(&sCC, cci+(ii+0), ccj+(jj+1));
-			XMATEL(&sDD, ddi+(ii+1), ddj+(jj+1)) = alpha * c_11 + beta * XMATEL(&sCC, cci+(ii+1), ccj+(jj+1));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00 + beta * XMATEL_C(cci+(ii+0), ccj+(jj+0));
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10 + beta * XMATEL_C(cci+(ii+1), ccj+(jj+0));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01 + beta * XMATEL_C(cci+(ii+0), ccj+(jj+1));
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11 + beta * XMATEL_C(cci+(ii+1), ccj+(jj+1));
 			}
 		for(; ii<m; ii++)
 			{
@@ -186,11 +185,11 @@ void GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 			c_01 = 0.0;
 			for(kk=0; kk<k; kk++)
 				{
-				c_00 += XMATEL(&sAA, aai+(ii+0), aaj+kk) * XMATEL(&sBB, bbi+(jj+0), bbj+kk);
-				c_01 += XMATEL(&sAA, aai+(ii+0), aaj+kk) * XMATEL(&sBB, bbi+(jj+1), bbj+kk);
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+(jj+0), bbj+kk);
+				c_01 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+(jj+1), bbj+kk);
 				}
-			XMATEL(&sDD, ddi+(ii+0), ddj+(jj+0)) = alpha * c_00 + beta * XMATEL(&sCC, cci+(ii+0), ccj+(jj+0));
-			XMATEL(&sDD, ddi+(ii+0), ddj+(jj+1)) = alpha * c_01 + beta * XMATEL(&sCC, cci+(ii+0), ccj+(jj+1));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00 + beta * XMATEL_C(cci+(ii+0), ccj+(jj+0));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01 + beta * XMATEL_C(cci+(ii+0), ccj+(jj+1));
 			}
 		}
 	for(; jj<n; jj++)
@@ -202,92 +201,22 @@ void GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 			c_10 = 0.0;
 			for(kk=0; kk<k; kk++)
 				{
-				c_00 += XMATEL(&sAA, aai+(ii+0), aaj+kk) * XMATEL(&sBB, bbi+(jj+0), bbj+kk);
-				c_10 += XMATEL(&sAA, aai+(ii+1), aaj+kk) * XMATEL(&sBB, bbi+(jj+0), bbj+kk);
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+(jj+0), bbj+kk);
+				c_10 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+(jj+0), bbj+kk);
 				}
-			XMATEL(&sDD, ddi+(ii+0), ddj+(jj+0)) = alpha * c_00 + beta * XMATEL(&sCC, cci+(ii+0), ccj+(jj+0));
-			XMATEL(&sDD, ddi+(ii+1), ddj+(jj+0)) = alpha * c_10 + beta * XMATEL(&sCC, cci+(ii+1), ccj+(jj+0));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00 + beta * XMATEL_C(cci+(ii+0), ccj+(jj+0));
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10 + beta * XMATEL_C(cci+(ii+1), ccj+(jj+0));
 			}
 		for(; ii<m; ii++)
 			{
 			c_00 = 0.0;
 			for(kk=0; kk<k; kk++)
 				{
-				c_00 += XMATEL(&sAA, aai+(ii+0), aaj+kk) * XMATEL(&sBB, bbi+(jj+0), bbj+kk);
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+(jj+0), bbj+kk);
 				}
-			XMATEL(&sDD, ddi+(ii+0), ddj+(jj+0)) = alpha * c_00 + beta * XMATEL(&sCC, cci+(ii+0), ccj+(jj+0));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00 + beta * XMATEL_C(cci+(ii+0), ccj+(jj+0));
 			}
 		}
-#else
-	int lda = sA->m;
-	int ldb = sB->m;
-	int ldc = sC->m;
-	int ldd = sD->m;
-	REAL *pA = sA->pA + ai + aj*lda;
-	REAL *pB = sB->pA + bi + bj*ldb;
-	REAL *pC = sC->pA + ci + cj*ldc;
-	REAL *pD = sD->pA + di + dj*ldd;
-	jj = 0;
-	for(; jj<n-1; jj+=2)
-		{
-		ii = 0;
-		for(; ii<m-1; ii+=2)
-			{
-			c_00 = 0.0;
-			c_10 = 0.0;
-			c_01 = 0.0;
-			c_11 = 0.0;
-			for(kk=0; kk<k; kk++)
-				{
-				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
-				c_10 += pA[(ii+1)+lda*kk] * pB[(jj+0)+ldb*kk];
-				c_01 += pA[(ii+0)+lda*kk] * pB[(jj+1)+ldb*kk];
-				c_11 += pA[(ii+1)+lda*kk] * pB[(jj+1)+ldb*kk];
-				}
-			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
-			pD[(ii+1)+ldd*(jj+0)] = alpha * c_10 + beta * pC[(ii+1)+ldc*(jj+0)];
-			pD[(ii+0)+ldd*(jj+1)] = alpha * c_01 + beta * pC[(ii+0)+ldc*(jj+1)];
-			pD[(ii+1)+ldd*(jj+1)] = alpha * c_11 + beta * pC[(ii+1)+ldc*(jj+1)];
-			}
-		for(; ii<m; ii++)
-			{
-			c_00 = 0.0;
-			c_01 = 0.0;
-			for(kk=0; kk<k; kk++)
-				{
-				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
-				c_01 += pA[(ii+0)+lda*kk] * pB[(jj+1)+ldb*kk];
-				}
-			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
-			pD[(ii+0)+ldd*(jj+1)] = alpha * c_01 + beta * pC[(ii+0)+ldc*(jj+1)];
-			}
-		}
-	for(; jj<n; jj++)
-		{
-		ii = 0;
-		for(; ii<m-1; ii+=2)
-			{
-			c_00 = 0.0;
-			c_10 = 0.0;
-			for(kk=0; kk<k; kk++)
-				{
-				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
-				c_10 += pA[(ii+1)+lda*kk] * pB[(jj+0)+ldb*kk];
-				}
-			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
-			pD[(ii+1)+ldd*(jj+0)] = alpha * c_10 + beta * pC[(ii+1)+ldc*(jj+0)];
-			}
-		for(; ii<m; ii++)
-			{
-			c_00 = 0.0;
-			for(kk=0; kk<k; kk++)
-				{
-				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
-				}
-			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
-			}
-		}
-#endif
 	return;
 	}
 
