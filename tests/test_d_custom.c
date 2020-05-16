@@ -233,13 +233,13 @@ int main()
 	
 #endif
 
-#if 0
+#if 1
 	// gemm_nt
 	alpha = 1.0;
 	beta = 0.0;
 
-//	blasfeo_print_dmat(n, n, &sD, 0, 0);
-	d_print_mat(n, n, D, n);
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+//	d_print_mat(n, n, D, n);
 
 //	kernel_dgemm_nt_4x2_lib4(4, &alpha, sA.pA, sB.pA, &beta, sA.pA, sD.pA);
 //	kernel_dgemm_nt_4x4_lib4(4, &alpha, sA.pA, sB.pA, &beta, sA.pA, sD.pA);
@@ -252,12 +252,12 @@ int main()
 
 //	kernel_dgemm_nt_12x4_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, sD.pA, sD.cn, sD.pA, sD.cn);
 //	kernel_dgemm_nt_12x4_gen_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, 0, sA.pA, sD.cn, 3, sD.pA, sD.cn, 0, 12, 0, 4);
-	kernel_dgemm_nt_4x12_lib4ccc(n, &alpha, sA.pA, B, n, &beta, D, n, D, n);
+//	kernel_dgemm_nt_4x12_lib4ccc(n, &alpha, sA.pA, B, n, &beta, D, n, D, n);
 
-//	blasfeo_dgemm_nt(8, 8, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
-//	blasfeo_print_dmat(n, n, &sD, 0, 0);
-	d_print_mat(n, n, D, n);
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+//	d_print_mat(n, n, D, n);
 	return 0;
 #endif
 
@@ -423,7 +423,7 @@ int main()
 	return 0;
 #endif
 
-#if 1
+#if 0
 	// gemv_t
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);

@@ -137,6 +137,89 @@ void GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
+#if 1
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pC = sC->pA + ci + cj*ldc;
+	REAL *pD = sD->pA + di + dj*ldd;
+	struct XMAT sAA; sAA.pA=pA; sAA.m=lda;
+	struct XMAT sBB; sBB.pA=pB; sBB.m=ldb;
+	int aai=0;
+	int aaj=0;
+	int bbi=0;
+	int bbj=0;
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+#if 1
+				c_00 += XMATEL(&sAA, aai+ii+0, aaj+kk) * XMATEL(&sBB, bbi+jj+0, bbj+kk);
+				c_10 += XMATEL(&sAA, aai+ii+1, aaj+kk) * XMATEL(&sBB, bbi+jj+0, bbj+kk);
+				c_01 += XMATEL(&sAA, aai+ii+0, aaj+kk) * XMATEL(&sBB, bbi+jj+1, bbj+kk);
+				c_11 += XMATEL(&sAA, aai+ii+1, aaj+kk) * XMATEL(&sBB, bbi+jj+1, bbj+kk);
+#else
+				c_00 += XMATEL(sA, ai+ii+0, aj+kk) * XMATEL(sB, bi+jj+0, bj+kk);
+				c_10 += XMATEL(sA, ai+ii+1, aj+kk) * XMATEL(sB, bi+jj+0, bj+kk);
+				c_01 += XMATEL(sA, ai+ii+0, aj+kk) * XMATEL(sB, bi+jj+1, bj+kk);
+				c_11 += XMATEL(sA, ai+ii+1, aj+kk) * XMATEL(sB, bi+jj+1, bj+kk);
+#endif
+				}
+			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
+			pD[(ii+1)+ldd*(jj+0)] = alpha * c_10 + beta * pC[(ii+1)+ldc*(jj+0)];
+			pD[(ii+0)+ldd*(jj+1)] = alpha * c_01 + beta * pC[(ii+0)+ldc*(jj+1)];
+			pD[(ii+1)+ldd*(jj+1)] = alpha * c_11 + beta * pC[(ii+1)+ldc*(jj+1)];
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+				c_01 += pA[(ii+0)+lda*kk] * pB[(jj+1)+ldb*kk];
+				}
+			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
+			pD[(ii+0)+ldd*(jj+1)] = alpha * c_01 + beta * pC[(ii+0)+ldc*(jj+1)];
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+				c_10 += pA[(ii+1)+lda*kk] * pB[(jj+0)+ldb*kk];
+				}
+			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
+			pD[(ii+1)+ldd*(jj+0)] = alpha * c_10 + beta * pC[(ii+1)+ldc*(jj+0)];
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[(ii+0)+lda*kk] * pB[(jj+0)+ldb*kk];
+				}
+			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
+			}
+		}
+#else
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
@@ -205,6 +288,7 @@ void GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 			pD[(ii+0)+ldd*(jj+0)] = alpha * c_00 + beta * pC[(ii+0)+ldc*(jj+0)];
 			}
 		}
+#endif
 	return;
 	}
 
