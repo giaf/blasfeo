@@ -1749,13 +1749,13 @@ void GELQF_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD
 	int ldb = 2;
 	int imax, jmax, kmax;
 	// copy if needed
-	if(pA!=pD)
+	if(&XMATEL_A(aai, aaj)!=&XMATEL_D(ddi, ddj))
 		{
 		for(jj=0; jj<n; jj++)
 			{
 			for(ii=0; ii<m; ii++)
 				{
-				pD[ii+ldd*jj] = pA[ii+lda*jj];
+				XMATEL_D(ddi+ii, ddj+jj) = XMATEL_A(aai+ii, aaj+jj);
 				}
 			}
 		}
@@ -2029,13 +2029,13 @@ void GELQF_PD_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT 
 	int ldb = 2;
 	int imax, jmax, kmax;
 	// copy if needed
-	if(pA!=pD)
+	if(&XMATEL_A(aai, aaj)!=&XMATEL_D(ddi, ddj))
 		{
 		for(jj=0; jj<n; jj++)
 			{
 			for(ii=0; ii<m; ii++)
 				{
-				pD[ii+ldd*jj] = pA[ii+lda*jj];
+				XMATEL_D(ddi+ii, ddj+jj) = XMATEL_A(aai+ii, aaj+jj);
 				}
 			}
 		}
