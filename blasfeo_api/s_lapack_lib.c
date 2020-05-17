@@ -52,10 +52,29 @@
 
 
 
-#define REAL float
+#if defined(LA_REFERENCE)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+	#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
+	#define XMATEL_L(X, Y) pL[(X)+ldl*(Y)]
+#else
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
+	#define XMATEL_C(X, Y) XMATEL(sC, X, Y)
+	#define XMATEL_D(X, Y) XMATEL(sD, X, Y)
+	#define XMATEL_L(X, Y) XMATEL(sL, X, Y)
+#endif
 
-#define STRMAT blasfeo_smat
-#define STRVEC blasfeo_svec
+
+
+#define REAL float
+#define XMAT blasfeo_smat
+#define XMATEL BLASFEO_SMATEL
+#define XVEC blasfeo_svec
+#define XMATEL BLASFEO_SMATEL
+
+
 
 #define GELQF_WORK_SIZE_LIBSTR blasfeo_sgelqf_worksize
 #define GELQF_LIBSTR blasfeo_sgelqf
@@ -65,23 +84,23 @@
 #define GELQF_PD_DA_LIBSTR blasfeo_sgelqf_pd_da
 #define GELQF_PD_LA_LIBSTR blasfeo_sgelqf_pd_la
 #define GELQF_PD_LLA_LIBSTR blasfeo_sgelqf_pd_lla
-#define GEQRF_LIBSTR blasfeo_sgeqrf
-#define GEQRF_WORK_SIZE_LIBSTR blasfeo_sgeqrf_worksize
-#define GETF2_NOPIVOT sgetf2_nopivot
-#define GETRF_NOPIVOT_LIBSTR blasfeo_sgetrf_np
-#define GETRF_LIBSTR blasfeo_sgetrf_rp
-#define POTRF_L_LIBSTR blasfeo_spotrf_l
-#define POTRF_L_MN_LIBSTR blasfeo_spotrf_l_mn
-#define PSTRF_L_LIBSTR spstrf_l_libstr
-#define SYRK_POTRF_LN_LIBSTR blasfeo_ssyrk_spotrf_ln
-#define SYRK_POTRF_LN_MN_LIBSTR blasfeo_ssyrk_spotrf_ln_mn
+#define GEQRF blasfeo_sgeqrf
+#define GEQRF_WORK_SIZE blasfeo_sgeqrf_worksize
+//#define GETF2_NOPIVOT sgetf2_nopivot
+#define GETRF_NOPIVOT blasfeo_sgetrf_np
+#define GETRF_ROWPIVOT blasfeo_sgetrf_rp
+#define POTRF_L blasfeo_spotrf_l
+#define POTRF_L_MN blasfeo_spotrf_l_mn
+#define PSTRF_L spstrf_l_libstr
+#define SYRK_POTRF_LN blasfeo_ssyrk_spotrf_ln
+#define SYRK_POTRF_LN_MN blasfeo_ssyrk_spotrf_ln_mn
 
 #define COPY scopy_
 #define GELQF sgelqf_
 #define ORGLQ sorglq_
 #define GEMM sgemm_
 #define GER sger_
-#define GEQRF sgeqrf_
+#define GEQRF_ sgeqrf_
 #define GEQR2 sgeqr2_
 #define GETRF sgetrf_
 #define POTRF spotrf_

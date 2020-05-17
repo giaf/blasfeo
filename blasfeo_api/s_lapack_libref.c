@@ -40,10 +40,31 @@
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_s_aux.h"
 
-#define REAL float
 
-#define STRMAT blasfeo_smat_ref
-#define STRVEC blasfeo_svec_ref
+
+#if defined(LA_REFERENCE)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+	#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
+	#define XMATEL_L(X, Y) pL[(X)+ldl*(Y)]
+#else
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
+	#define XMATEL_C(X, Y) XMATEL(sC, X, Y)
+	#define XMATEL_D(X, Y) XMATEL(sD, X, Y)
+	#define XMATEL_L(X, Y) XMATEL(sL, X, Y)
+#endif
+
+
+
+#define REAL float
+#define XMAT blasfeo_smat
+#define XMATEL MATEL_REF
+#define XVEC blasfeo_svec
+#define XMATEL MATEL_REF
+
+
 
 #define GELQF_PD_DA_LIBSTR blasfeo_sgelqf_pd_da_ref
 #define GELQF_PD_LA_LIBSTR blasfeo_sgelqf_pd_la_ref
@@ -51,16 +72,16 @@
 #define GELQF_PD_LIBSTR blasfeo_sgelqf_pd_ref
 #define GELQF_LIBSTR blasfeo_sgelqf_ref
 #define GELQF_WORK_SIZE_LIBSTR blasfeo_sgelqf_worksize_ref
-#define GEQRF_LIBSTR blasfeo_sgeqrf_ref
-#define GEQRF_WORK_SIZE_LIBSTR blasfeo_sgeqrf_worksize_ref
-#define GETF2_NOPIVOT sgetf2_nopivot_ref
-#define GETRF_NOPIVOT_LIBSTR blasfeo_sgetrf_nopivot_ref
-#define GETRF_LIBSTR blasfeo_sgetrf_rowpivot_ref
-#define POTRF_L_LIBSTR blasfeo_spotrf_l_ref
-#define POTRF_L_MN_LIBSTR blasfeo_spotrf_l_mn_ref
-#define PSTRF_L_LIBSTR spstrf_l_libstr_ref
-#define SYRK_POTRF_LN_LIBSTR blasfeo_ssyrk_spotrf_ln_ref
-#define SYRK_POTRF_LN_MN_LIBSTR blasfeo_ssyrk_spotrf_ln_mn_ref
+#define GEQRF blasfeo_sgeqrf_ref
+#define GEQRF_WORK_SIZE blasfeo_sgeqrf_worksize_ref
+//#define GETF2_NOPIVOT sgetf2_nopivot_ref
+#define GETRF_NOPIVOT blasfeo_sgetrf_nopivot_ref
+#define GETRF_ROWPIVOT blasfeo_sgetrf_rowpivot_ref
+#define POTRF_L blasfeo_spotrf_l_ref
+#define POTRF_L_MN blasfeo_spotrf_l_mn_ref
+#define PSTRF_L spstrf_l_libstr_ref
+#define SYRK_POTRF_LN blasfeo_ssyrk_spotrf_ln_ref
+#define SYRK_POTRF_LN_MN blasfeo_ssyrk_spotrf_ln_mn_ref
 
 
 #include "x_lapack_lib.c"

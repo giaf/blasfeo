@@ -40,9 +40,31 @@
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_d_aux.h"
 
+
+
+#if defined(LA_REFERENCE)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+	#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
+	#define XMATEL_L(X, Y) pL[(X)+ldl*(Y)]
+#else
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
+	#define XMATEL_C(X, Y) XMATEL(sC, X, Y)
+	#define XMATEL_D(X, Y) XMATEL(sD, X, Y)
+	#define XMATEL_L(X, Y) XMATEL(sL, X, Y)
+#endif
+
+
+
 #define REAL double
-#define STRMAT blasfeo_dmat_ref
-#define STRVEC blasfeo_dvec_ref
+#define XMAT blasfeo_dmat
+#define XMATEL MATEL_REF
+#define XVEC blasfeo_dvec
+#define XVECEL VECEL_REF
+
+
 
 #define GELQF_PD_DA_LIBSTR blasfeo_dgelqf_pd_da_ref
 #define GELQF_PD_LA_LIBSTR blasfeo_dgelqf_pd_la_ref
@@ -50,16 +72,16 @@
 #define GELQF_PD_LIBSTR blasfeo_dgelqf_pd_ref
 #define GELQF_LIBSTR blasfeo_dgelqf_ref
 #define GELQF_WORK_SIZE_LIBSTR blasfeo_dgelqf_worksize_ref
-#define GEQRF_LIBSTR blasfeo_dgeqrf_ref
-#define GEQRF_WORK_SIZE_LIBSTR blasfeo_dgeqrf_worksize_ref
-#define GETF2_NOPIVOT dgetf2_nopivot_ref
-#define GETRF_NOPIVOT_LIBSTR blasfeo_dgetrf_nopivot_ref
-#define GETRF_LIBSTR blasfeo_dgetrf_rowpivot_ref
-#define POTRF_L_LIBSTR blasfeo_dpotrf_l_ref
-#define POTRF_L_MN_LIBSTR blasfeo_dpotrf_l_mn_ref
-#define PSTRF_L_LIBSTR dpstrf_l_libstr_ref
-#define SYRK_POTRF_LN_LIBSTR blasfeo_dsyrk_dpotrf_ln_ref
-#define SYRK_POTRF_LN_MN_LIBSTR blasfeo_dsyrk_dpotrf_ln_mn_ref
+#define GEQRF blasfeo_dgeqrf_ref
+#define GEQRF_WORK_SIZE blasfeo_dgeqrf_worksize_ref
+//#define GETF2_NOPIVOT dgetf2_nopivot_ref
+#define GETRF_NOPIVOT blasfeo_dgetrf_nopivot_ref
+#define GETRF_ROWPIVOT blasfeo_dgetrf_rowpivot_ref
+#define POTRF_L blasfeo_dpotrf_l_ref
+#define POTRF_L_MN blasfeo_dpotrf_l_mn_ref
+#define PSTRF_L dpstrf_l_libstr_ref
+#define SYRK_POTRF_LN blasfeo_dsyrk_dpotrf_ln_ref
+#define SYRK_POTRF_LN_MN blasfeo_dsyrk_dpotrf_ln_mn_ref
 
 // TESTING_MODE
 #include "x_lapack_lib.c"
