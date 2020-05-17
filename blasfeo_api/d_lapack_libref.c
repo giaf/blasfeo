@@ -66,12 +66,14 @@
 
 
 
-#define GELQF_PD_DA_LIBSTR blasfeo_dgelqf_pd_da_ref
-#define GELQF_PD_LA_LIBSTR blasfeo_dgelqf_pd_la_ref
-#define GELQF_PD_LLA_LIBSTR blasfeo_dgelqf_pd_lla_ref
-#define GELQF_PD_LIBSTR blasfeo_dgelqf_pd_ref
+#define GELQF_PD_DA blasfeo_dgelqf_pd_da_ref
+#define GELQF_PD_LA blasfeo_dgelqf_pd_la_ref
+#define ORGLQ_WORK_SIZE blasfeo_dorglq_worksize_ref
+#define ORGLQ blasfeo_dorglq_ref
+#define GELQF_PD_LLA blasfeo_dgelqf_pd_lla_ref
+#define GELQF_PD blasfeo_dgelqf_pd_ref
 #define GELQF_LIBSTR blasfeo_dgelqf_ref
-#define GELQF_WORK_SIZE_LIBSTR blasfeo_dgelqf_worksize_ref
+#define GELQF_WORK_SIZE blasfeo_dgelqf_worksize_ref
 #define GEQRF blasfeo_dgeqrf_ref
 #define GEQRF_WORK_SIZE blasfeo_dgeqrf_worksize_ref
 //#define GETF2_NOPIVOT dgetf2_nopivot_ref

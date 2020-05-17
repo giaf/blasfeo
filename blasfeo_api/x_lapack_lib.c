@@ -1714,7 +1714,7 @@ void GEQRF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 
 
 
-int GELQF_WORK_SIZE_LIBSTR(int m, int n)
+int GELQF_WORK_SIZE(int m, int n)
 	{
 	return 0;
 	}
@@ -1980,7 +1980,7 @@ void GELQF_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD
 
 
 // generate Q matrix
-int ORGLQ_WORK_SIZE_LIBSTR(int m, int n)
+int ORGLQ_WORK_SIZE(int m, int n)
 	{
 	printf("\nblasfeo_orglq_worksize: feature not implemented yet\n");
 	exit(1);
@@ -1990,7 +1990,7 @@ int ORGLQ_WORK_SIZE_LIBSTR(int m, int n)
 
 
 // generate Q matrix
-void ORGLQ_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
+void ORGLQ(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -2001,7 +2001,7 @@ void ORGLQ_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD
 
 
 // LQ factorization with positive diagonal elements
-void GELQF_PD_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int di, int dj, void *work)
+void GELQF_PD(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -2273,7 +2273,7 @@ void GELQF_PD_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT 
 // array of matrices [D, A] with
 // D diagonal (on input), of size (m)x(m)
 // A full of size (m)x(n1)
-void GELQF_PD_DA_LIBSTR(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sA, int ai, int aj, void *work)
+void GELQF_PD_DA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sA, int ai, int aj, void *work)
 	{
 	if(m<=0)
 		return;
@@ -2541,7 +2541,7 @@ void GELQF_PD_DA_LIBSTR(int m, int n1, struct XMAT *sD, int di, int dj, struct X
 // [L, A] <= lq( [L. A] )
 // L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
-void GELQF_PD_LA_LIBSTR(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sA, int ai, int aj, void *work)
+void GELQF_PD_LA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sA, int ai, int aj, void *work)
 	{
 	if(m<=0)
 		return;
@@ -2798,7 +2798,7 @@ void GELQF_PD_LA_LIBSTR(int m, int n1, struct XMAT *sD, int di, int dj, struct X
 // [L, L, A] <= lq( [L. L, A] )
 // L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
-void GELQF_PD_LLA_LIBSTR(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sL, int li, int lj, struct XMAT *sA, int ai, int aj, void *work)
+void GELQF_PD_LLA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sL, int li, int lj, struct XMAT *sA, int ai, int aj, void *work)
 	{
 	if(m<=0)
 		return;
@@ -3458,7 +3458,7 @@ void GEQRF_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD
 
 
 
-int GELQF_WORK_SIZE_LIBSTR(int m, int n)
+int GELQF_WORK_SIZE(int m, int n)
 	{
 	REAL dwork;
 	REAL *pD, *dD;
@@ -3505,7 +3505,7 @@ void GELQF_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD
 
 
 // generate Q matrix
-int ORGLQ_WORK_SIZE_LIBSTR(int m, int n, int k)
+int ORGLQ_WORK_SIZE(int m, int n, int k)
 	{
 //	printf("\nblasfeo_orglq_worksize: feature not implemented yet\n");
 //	exit(1);
@@ -3514,7 +3514,7 @@ int ORGLQ_WORK_SIZE_LIBSTR(int m, int n, int k)
 	int lwork = -1;
 	int info;
 	int ldd = m;
-	ORGLQ(&m, &n, &k, pD, &ldd, dD, &dwork, &lwork, &info);
+	ORGLQ_(&m, &n, &k, pD, &ldd, dD, &dwork, &lwork, &info);
 	int size = dwork;
 	return size*sizeof(REAL);
 	}
@@ -3522,7 +3522,7 @@ int ORGLQ_WORK_SIZE_LIBSTR(int m, int n, int k)
 
 
 // generate Q matrix
-void ORGLQ_LIBSTR(int m, int n, int k, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
+void ORGLQ(int m, int n, int k, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3551,16 +3551,16 @@ void ORGLQ_LIBSTR(int m, int n, int k, struct XMAT *sC, int ci, int cj, struct X
 		}
 //	GEQR2(&m, &n, pD, &ldd, dD, dwork, &info);
 	int lwork = -1;
-	ORGLQ(&m, &n, &k, pD, &ldd, dD, dwork, &lwork, &info);
+	ORGLQ_(&m, &n, &k, pD, &ldd, dD, dwork, &lwork, &info);
 	lwork = dwork[0];
-	ORGLQ(&m, &n, &k, pD, &ldd, dD, dwork, &lwork, &info);
+	ORGLQ_(&m, &n, &k, pD, &ldd, dD, dwork, &lwork, &info);
 	return;
 	}
 
 
 
 // LQ factorization with positive diagonal elements
-void GELQF_PD_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
+void GELQF_PD(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3574,7 +3574,7 @@ void GELQF_PD_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT 
 // [L, A] <= lq( [L. A] )
 // L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
-void GELQF_PD_LA_LIBSTR(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sA, int ai, int aj, void *work)
+void GELQF_PD_LA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sA, int ai, int aj, void *work)
 
 	{
 	if(m<=0)
@@ -3589,7 +3589,7 @@ void GELQF_PD_LA_LIBSTR(int m, int n1, struct XMAT *sD, int di, int dj, struct X
 // [L, L, A] <= lq( [L. L, A] )
 // L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
-void GELQF_PD_LLA_LIBSTR(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sL, int li, int lj, struct XMAT *sA, int ai, int aj, void *work)
+void GELQF_PD_LLA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sL, int li, int lj, struct XMAT *sA, int ai, int aj, void *work)
 
 	{
 	if(m<=0)
