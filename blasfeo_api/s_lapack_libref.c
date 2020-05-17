@@ -59,9 +59,9 @@
 
 
 #define REAL float
-#define XMAT blasfeo_smat
+#define XMAT blasfeo_smat_ref
 #define XMATEL MATEL_REF
-#define XVEC blasfeo_svec
+#define XVEC blasfeo_svec_ref
 #define XMATEL MATEL_REF
 
 
