@@ -1721,7 +1721,7 @@ int GELQF_WORK_SIZE(int m, int n)
 
 
 
-void GELQF_LIBSTR(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int di, int dj, void *work)
+void GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3159,7 +3159,7 @@ void GELQF_PD_LLA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *s
 
 
 // dpotrf
-void POTRF_L_LIBSTR(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void POTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0)
 		return;
@@ -3195,7 +3195,7 @@ void POTRF_L_LIBSTR(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int
 
 
 // dpotrf
-void POTRF_L_MN_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3233,7 +3233,7 @@ void POTRF_L_MN_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMA
 
 
 // dsyrk dpotrf
-void SYRK_POTRF_LN_LIBSTR(int m, int k, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void SYRK_POTRF_LN(int m, int k, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0)
 		return;
@@ -3279,7 +3279,7 @@ void SYRK_POTRF_LN_LIBSTR(int m, int k, struct XMAT *sA, int ai, int aj, struct 
 
 
 // dsyrk dpotrf
-void SYRK_POTRF_LN_MN_LIBSTR(int m, int n, int k, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void SYRK_POTRF_LN_MN(int m, int n, int k, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3353,7 +3353,7 @@ static void GETF2_NOPIVOT(int m, int n, REAL *A, int lda)
 
 
 // dgetrf without pivoting
-void GETRF_NOPIVOT_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void GETRF_NOPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	// TODO with custom level 2 LAPACK + level 3 BLAS
 	if(m<=0 | n<=0)
@@ -3381,7 +3381,7 @@ void GETRF_NOPIVOT_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct 
 
 
 // dgetrf pivoting
-void GETRF_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv)
+void GETRF(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv)
 	{
 	// TODO with custom level 2 LAPACK + level 3 BLAS
 	if(m<=0 | n<=0)
@@ -3412,7 +3412,7 @@ void GETRF_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD
 
 
 
-int GEQRF_WORK_SIZE_LIBSTR(int m, int n)
+int GEQRF_WORK_SIZE(int m, int n)
 	{
 	REAL dwork;
 	REAL *pD, *dD;
@@ -3426,7 +3426,7 @@ int GEQRF_WORK_SIZE_LIBSTR(int m, int n)
 
 
 
-void GEQRF_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
+void GEQRF(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3465,14 +3465,14 @@ int GELQF_WORK_SIZE(int m, int n)
 	int lwork = -1;
 	int info;
 	int ldd = m;
-	GELQF(&m, &n, pD, &ldd, dD, &dwork, &lwork, &info);
+	GELQF_(&m, &n, pD, &ldd, dD, &dwork, &lwork, &info);
 	int size = dwork;
 	return size*sizeof(REAL);
 	}
 
 
 
-void GELQF_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
+void GELQF(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3496,9 +3496,9 @@ void GELQF_LIBSTR(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD
 		}
 //	GEQR2(&m, &n, pD, &ldd, dD, dwork, &info);
 	int lwork = -1;
-	GELQF(&m, &n, pD, &ldd, dD, dwork, &lwork, &info);
+	GELQF_(&m, &n, pD, &ldd, dD, dwork, &lwork, &info);
 	lwork = dwork[0];
-	GELQF(&m, &n, pD, &ldd, dD, dwork, &lwork, &info);
+	GELQF_(&m, &n, pD, &ldd, dD, dwork, &lwork, &info);
 	return;
 	}
 

@@ -41,27 +41,38 @@
 
 
 
+#if defined(LA_REFERENCE)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+#else
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+#endif
+
+
+
 #define REAL float
+#define XMAT blasfeo_smat_ref
+#define XMATEL MATEL_REF
+#define XVEC blasfeo_svec_ref
+#define XVECEL VECEL_REF
 
-#define STRMAT blasfeo_smat_ref
-#define STRVEC blasfeo_svec_ref
 
-#define GEMV_N_LIBSTR blasfeo_sgemv_n_ref
-#define GEMV_NT_LIBSTR blasfeo_sgemv_nt_ref
-#define GEMV_T_LIBSTR blasfeo_sgemv_t_ref
-#define SYMV_L_LIBSTR blasfeo_ssymv_l_ref
-#define TRMV_LNN_LIBSTR blasfeo_strmv_lnn_ref
-#define TRMV_LTN_LIBSTR blasfeo_strmv_ltn_ref
-#define TRMV_UNN_LIBSTR blasfeo_strmv_unn_ref
-#define TRMV_UTN_LIBSTR blasfeo_strmv_utn_ref
-#define TRSV_LNN_LIBSTR blasfeo_strsv_lnn_ref
-#define TRSV_LNN_MN_LIBSTR blasfeo_strsv_lnn_mn_ref
-#define TRSV_LNU_LIBSTR blasfeo_strsv_lnu_ref
-#define TRSV_LTN_LIBSTR blasfeo_strsv_ltn_ref
-#define TRSV_LTN_MN_LIBSTR blasfeo_strsv_ltn_mn_ref
-#define TRSV_LTU_LIBSTR blasfeo_strsv_ltu_ref
-#define TRSV_UNN_LIBSTR blasfeo_strsv_unn_ref
-#define TRSV_UTN_LIBSTR blasfeo_strsv_utn_ref
+
+#define GEMV_N blasfeo_sgemv_n_ref
+#define GEMV_NT blasfeo_sgemv_nt_ref
+#define GEMV_T blasfeo_sgemv_t_ref
+#define SYMV_L blasfeo_ssymv_l_ref
+#define TRMV_LNN blasfeo_strmv_lnn_ref
+#define TRMV_LTN blasfeo_strmv_ltn_ref
+#define TRMV_UNN blasfeo_strmv_unn_ref
+#define TRMV_UTN blasfeo_strmv_utn_ref
+#define TRSV_LNN blasfeo_strsv_lnn_ref
+#define TRSV_LNN_MN blasfeo_strsv_lnn_mn_ref
+#define TRSV_LNU blasfeo_strsv_lnu_ref
+#define TRSV_LTN blasfeo_strsv_ltn_ref
+#define TRSV_LTN_MN blasfeo_strsv_ltn_mn_ref
+#define TRSV_LTU blasfeo_strsv_ltu_ref
+#define TRSV_UNN blasfeo_strsv_unn_ref
+#define TRSV_UTN blasfeo_strsv_utn_ref
 
 
 #include "x_blas2_lib.c"

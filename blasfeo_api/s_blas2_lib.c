@@ -51,27 +51,38 @@
 
 
 
+#if defined(LA_REFERENCE)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+#else
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+#endif
+
+
+
 #define REAL float
+#define XMAT blasfeo_smat
+#define XMATEL BLASFEO_SMATEL
+#define XVEC blasfeo_svec
+#define XVECEL BLASFEO_SVECEL
 
-#define STRMAT blasfeo_smat
-#define STRVEC blasfeo_svec
 
-#define GEMV_N_LIBSTR blasfeo_sgemv_n
-#define GEMV_NT_LIBSTR blasfeo_sgemv_nt
-#define GEMV_T_LIBSTR blasfeo_sgemv_t
-#define SYMV_L_LIBSTR blasfeo_ssymv_l
-#define TRMV_LNN_LIBSTR blasfeo_strmv_lnn
-#define TRMV_LTN_LIBSTR blasfeo_strmv_ltn
-#define TRMV_UNN_LIBSTR blasfeo_strmv_unn
-#define TRMV_UTN_LIBSTR blasfeo_strmv_utn
-#define TRSV_LNN_LIBSTR blasfeo_strsv_lnn
-#define TRSV_LNN_MN_LIBSTR blasfeo_strsv_lnn_mn
-#define TRSV_LNU_LIBSTR blasfeo_strsv_lnu
-#define TRSV_LTN_LIBSTR blasfeo_strsv_ltn
-#define TRSV_LTN_MN_LIBSTR blasfeo_strsv_ltn_mn
-#define TRSV_LTU_LIBSTR blasfeo_strsv_ltu
-#define TRSV_UNN_LIBSTR blasfeo_strsv_unn
-#define TRSV_UTN_LIBSTR blasfeo_strsv_utn
+
+#define GEMV_N blasfeo_sgemv_n
+#define GEMV_NT blasfeo_sgemv_nt
+#define GEMV_T blasfeo_sgemv_t
+#define SYMV_L blasfeo_ssymv_l
+#define TRMV_LNN blasfeo_strmv_lnn
+#define TRMV_LTN blasfeo_strmv_ltn
+#define TRMV_UNN blasfeo_strmv_unn
+#define TRMV_UTN blasfeo_strmv_utn
+#define TRSV_LNN blasfeo_strsv_lnn
+#define TRSV_LNN_MN blasfeo_strsv_lnn_mn
+#define TRSV_LNU blasfeo_strsv_lnu
+#define TRSV_LTN blasfeo_strsv_ltn
+#define TRSV_LTN_MN blasfeo_strsv_ltn_mn
+#define TRSV_LTU blasfeo_strsv_ltu
+#define TRSV_UNN blasfeo_strsv_unn
+#define TRSV_UTN blasfeo_strsv_utn
 
 #define COPY scopy_
 #define GEMV sgemv_

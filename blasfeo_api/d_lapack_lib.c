@@ -77,7 +77,7 @@
 
 
 #define GELQF_WORK_SIZE blasfeo_dgelqf_worksize
-#define GELQF_LIBSTR blasfeo_dgelqf
+#define GELQF blasfeo_dgelqf
 #define ORGLQ_WORK_SIZE blasfeo_dorglq_worksize
 #define ORGLQ blasfeo_dorglq
 #define GELQF_PD blasfeo_dgelqf_pd
@@ -96,7 +96,7 @@
 #define SYRK_POTRF_LN_MN blasfeo_dsyrk_dpotrf_ln_mn
 
 #define COPY dcopy_
-#define GELQF dgelqf_
+#define GELQF_ dgelqf_
 #define ORGLQ_ dorglq_
 #define GEMM dgemm_
 #define GER dger_

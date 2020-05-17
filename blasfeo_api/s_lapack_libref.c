@@ -72,7 +72,7 @@
 #define ORGLQ blasfeo_sorglq_ref
 #define GELQF_PD_LLA blasfeo_sgelqf_pd_lla_ref
 #define GELQF_PD blasfeo_sgelqf_pd_ref
-#define GELQF_LIBSTR blasfeo_sgelqf_ref
+#define GELQF blasfeo_sgelqf_ref
 #define GELQF_WORK_SIZE blasfeo_sgelqf_worksize_ref
 #define GEQRF blasfeo_sgeqrf_ref
 #define GEQRF_WORK_SIZE blasfeo_sgeqrf_worksize_ref

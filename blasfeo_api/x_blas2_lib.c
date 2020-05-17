@@ -39,14 +39,19 @@
 
 
 
-void GEMV_N_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+void GEMV_N(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL 
 		y_0, y_1, y_2, y_3,
 		x_0, x_1;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *x = sx->pa + xi;
 	REAL *y = sy->pa + yi;
 	REAL *z = sz->pa + zi;
@@ -59,13 +64,13 @@ void GEMV_N_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 		jj = 0;
 		for(; jj<n-1; jj+=2)
 			{
-			y_0 += pA[ii+0+lda*(jj+0)] * x[jj+0] + pA[ii+0+lda*(jj+1)] * x[jj+1];
-			y_1 += pA[ii+1+lda*(jj+0)] * x[jj+0] + pA[ii+1+lda*(jj+1)] * x[jj+1];
+			y_0 += XMATEL_A(aai+ii+0, aaj+(jj+0)) * x[jj+0] + XMATEL_A(aai+ii+0, aaj+(jj+1)) * x[jj+1];
+			y_1 += XMATEL_A(aai+ii+1, aaj+(jj+0)) * x[jj+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * x[jj+1];
 			}
 		if(jj<n)
 			{
-			y_0 += pA[ii+0+lda*jj] * x[jj];
-			y_1 += pA[ii+1+lda*jj] * x[jj];
+			y_0 += XMATEL_A(aai+ii+0, aaj+jj) * x[jj];
+			y_1 += XMATEL_A(aai+ii+1, aaj+jj) * x[jj];
 			}
 		z[ii+0] = beta * y[ii+0] + alpha * y_0;
 		z[ii+1] = beta * y[ii+1] + alpha * y_1;
@@ -75,7 +80,7 @@ void GEMV_N_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 		y_0 = 0.0;
 		for(jj=0; jj<n; jj++)
 			{
-			y_0 += pA[ii+lda*jj] * x[jj];
+			y_0 += XMATEL_A(aai+ii, aaj+jj) * x[jj];
 			}
 		z[ii] = beta * y[ii] + alpha * y_0;
 		}
@@ -92,13 +97,13 @@ void GEMV_N_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 		ii = 0;
 		for(; ii<m-1; ii+=2)
 			{
-			z[ii+0] += pA[ii+0+lda*(jj+0)] * x_0 + pA[ii+0+lda*(jj+1)] * x_1;
-			z[ii+1] += pA[ii+1+lda*(jj+0)] * x_0 + pA[ii+1+lda*(jj+1)] * x_1;
+			z[ii+0] += XMATEL_A(aai+ii+0, aaj+(jj+0)) * x_0 + XMATEL_A(aai+ii+0, aaj+(jj+1)) * x_1;
+			z[ii+1] += XMATEL_A(aai+ii+1, aaj+(jj+0)) * x_0 + XMATEL_A(aai+ii+1, aaj+(jj+1)) * x_1;
 			}
 		for(; ii<m; ii++)
 			{
-			z[ii] += pA[ii+lda*(jj+0)] * x_0;
-			z[ii] += pA[ii+lda*(jj+1)] * x_1;
+			z[ii] += XMATEL_A(aai+ii, aaj+(jj+0)) * x_0;
+			z[ii] += XMATEL_A(aai+ii, aaj+(jj+1)) * x_1;
 			}
 		}
 	for(; jj<n; jj++)
@@ -106,7 +111,7 @@ void GEMV_N_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 		x_0 = alpha * x[jj+0];
 		for(ii=0; ii<m; ii++)
 			{
-			z[ii] += pA[ii+lda*(jj+0)] * x_0;
+			z[ii] += XMATEL_A(aai+ii, aaj+(jj+0)) * x_0;
 			}
 		}
 #endif
@@ -115,13 +120,18 @@ void GEMV_N_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 
 
 
-void GEMV_T_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+void GEMV_T(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL 
 		y_0, y_1;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *x = sx->pa + xi;
 	REAL *y = sy->pa + yi;
 	REAL *z = sz->pa + zi;
@@ -133,13 +143,13 @@ void GEMV_T_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 		ii = 0;
 		for(; ii<m-1; ii+=2)
 			{
-			y_0 += pA[ii+0+lda*(jj+0)] * x[ii+0] + pA[ii+1+lda*(jj+0)] * x[ii+1];
-			y_1 += pA[ii+0+lda*(jj+1)] * x[ii+0] + pA[ii+1+lda*(jj+1)] * x[ii+1];
+			y_0 += XMATEL_A(aai+ii+0, aaj+(jj+0)) * x[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+0)) * x[ii+1];
+			y_1 += XMATEL_A(aai+ii+0, aaj+(jj+1)) * x[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * x[ii+1];
 			}
 		if(ii<m)
 			{
-			y_0 += pA[ii+lda*(jj+0)] * x[ii];
-			y_1 += pA[ii+lda*(jj+1)] * x[ii];
+			y_0 += XMATEL_A(aai+ii, aaj+(jj+0)) * x[ii];
+			y_1 += XMATEL_A(aai+ii, aaj+(jj+1)) * x[ii];
 			}
 		z[jj+0] = beta * y[jj+0] + alpha * y_0;
 		z[jj+1] = beta * y[jj+1] + alpha * y_1;
@@ -149,7 +159,7 @@ void GEMV_T_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 		y_0 = 0.0;
 		for(ii=0; ii<m; ii++)
 			{
-			y_0 += pA[ii+lda*(jj+0)] * x[ii];
+			y_0 += XMATEL_A(aai+ii, aaj+(jj+0)) * x[ii];
 			}
 		z[jj+0] = beta * y[jj+0] + alpha * y_0;
 		}
@@ -159,15 +169,20 @@ void GEMV_T_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 
 
 // TODO optimize !!!!!
-void GEMV_NT_LIBSTR(int m, int n, REAL alpha_n, REAL alpha_t, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx_n, int xi_n, struct STRVEC *sx_t, int xi_t, REAL beta_n, REAL beta_t, struct STRVEC *sy_n, int yi_n, struct STRVEC *sy_t, int yi_t, struct STRVEC *sz_n, int zi_n, struct STRVEC *sz_t, int zi_t)
+void GEMV_NT(int m, int n, REAL alpha_n, REAL alpha_t, struct XMAT *sA, int ai, int aj, struct XVEC *sx_n, int xi_n, struct XVEC *sx_t, int xi_t, REAL beta_n, REAL beta_t, struct XVEC *sy_n, int yi_n, struct XVEC *sy_t, int yi_t, struct XVEC *sz_n, int zi_n, struct XVEC *sz_t, int zi_t)
 	{
 	int ii, jj;
 	REAL
 		a_00,
 		x_n_0,
 		y_t_0;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *x_n = sx_n->pa + xi_n;
 	REAL *x_t = sx_t->pa + xi_t;
 	REAL *y_n = sy_n->pa + yi_n;
@@ -184,7 +199,7 @@ void GEMV_NT_LIBSTR(int m, int n, REAL alpha_n, REAL alpha_t, struct STRMAT *sA,
 		x_n_0 = alpha_n * x_n[jj];
 		for(ii=0; ii<m; ii++)
 			{
-			a_00 = pA[ii+lda*jj];
+			a_00 = XMATEL_A(aai+ii, aaj+jj);
 			z_n[ii] += a_00 * x_n_0;
 			y_t_0 += a_00 * x_t[ii];
 			}
@@ -196,13 +211,18 @@ void GEMV_NT_LIBSTR(int m, int n, REAL alpha_n, REAL alpha_t, struct STRMAT *sA,
 
 
 // TODO optimize !!!!!
-void SYMV_L_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+void SYMV_L(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
 		y_0;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *x = sx->pa + xi;
 	REAL *y = sy->pa + yi;
 	REAL *z = sz->pa + zi;
@@ -212,11 +232,11 @@ void SYMV_L_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 		jj = 0;
 		for(; jj<=ii; jj++)
 			{
-			y_0 += pA[ii+lda*jj] * x[jj];
+			y_0 += XMATEL_A(aai+ii, aaj+jj) * x[jj];
 			}
 		for( ; jj<m; jj++)
 			{
-			y_0 += pA[jj+lda*ii] * x[jj];
+			y_0 += XMATEL_A(aai+jj, aaj+ii) * x[jj];
 			}
 		z[ii] = beta * y[ii] + alpha * y_0;
 		}
@@ -225,27 +245,32 @@ void SYMV_L_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 
 
 
-void TRMV_LNN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_LNN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
 		y_0, y_1;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
 	if(m-n>0)
 		{
-		GEMV_N_LIBSTR(m-n, n, 1.0, sA, ai+n, aj, sx, xi, 0.0, sz, zi+n, sz, zi+n);
+		GEMV_N(m-n, n, 1.0, sA, ai+n, aj, sx, xi, 0.0, sz, zi+n, sz, zi+n);
 		}
 	if(n%2!=0)
 		{
 		ii = n-1;
 		y_0 = x[ii];
-		y_0 *= pA[ii+lda*ii];
+		y_0 *= XMATEL_A(aai+ii, aaj+ii);
 		for(jj=0; jj<ii; jj++)
 			{
-			y_0 += pA[ii+lda*jj] * x[jj];
+			y_0 += XMATEL_A(aai+ii, aaj+jj) * x[jj];
 			}
 		z[ii] = y_0;
 		n -= 1;
@@ -254,20 +279,20 @@ void TRMV_LNN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STR
 		{
 		y_0 = x[ii+0];
 		y_1 = x[ii+1];
-		y_1 *= pA[ii+1+lda*(ii+1)];
-		y_1 += pA[ii+1+lda*(ii+0)] * y_0;
-		y_0 *= pA[ii+0+lda*(ii+0)];
+		y_1 *= XMATEL_A(aai+ii+1, aaj+(ii+1));
+		y_1 += XMATEL_A(aai+ii+1, aaj+(ii+0)) * y_0;
+		y_0 *= XMATEL_A(aai+ii+0, aaj+(ii+0));
 		jj = 0;
 		for(; jj<ii-1; jj+=2)
 			{
-			y_0 += pA[ii+0+lda*(jj+0)] * x[jj+0] + pA[ii+0+lda*(jj+1)] * x[jj+1];
-			y_1 += pA[ii+1+lda*(jj+0)] * x[jj+0] + pA[ii+1+lda*(jj+1)] * x[jj+1];
+			y_0 += XMATEL_A(aai+ii+0, aaj+(jj+0)) * x[jj+0] + XMATEL_A(aai+ii+0, aaj+(jj+1)) * x[jj+1];
+			y_1 += XMATEL_A(aai+ii+1, aaj+(jj+0)) * x[jj+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * x[jj+1];
 			}
 //	XXX there is no clean up loop !!!!!
 //		for(; jj<ii; jj++)
 //			{
-//			y_0 += pA[ii+0+lda*jj] * x[jj];
-//			y_1 += pA[ii+1+lda*jj] * x[jj];
+//			y_0 += XMATEL_A(aai+ii+0, aaj+jj) * x[jj];
+//			y_1 += XMATEL_A(aai+ii+1, aaj+jj) * x[jj];
 //			}
 		z[ii+0] = y_0;
 		z[ii+1] = y_1;
@@ -277,13 +302,18 @@ void TRMV_LNN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STR
 
 
 	
-void TRMV_LTN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_LTN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
 		y_0, y_1;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
 	jj = 0;
@@ -291,19 +321,19 @@ void TRMV_LTN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STR
 		{
 		y_0 = x[jj+0];
 		y_1 = x[jj+1];
-		y_0 *= pA[jj+0+lda*(jj+0)];
-		y_0 += pA[jj+1+lda*(jj+0)] * y_1;
-		y_1 *= pA[jj+1+lda*(jj+1)];
+		y_0 *= XMATEL_A(aai+jj+0, aaj+(jj+0));
+		y_0 += XMATEL_A(aai+jj+1, aaj+(jj+0)) * y_1;
+		y_1 *= XMATEL_A(aai+jj+1, aaj+(jj+1));
 		ii = jj+2;
 		for(; ii<m-1; ii+=2)
 			{
-			y_0 += pA[ii+0+lda*(jj+0)] * x[ii+0] + pA[ii+1+lda*(jj+0)] * x[ii+1];
-			y_1 += pA[ii+0+lda*(jj+1)] * x[ii+0] + pA[ii+1+lda*(jj+1)] * x[ii+1];
+			y_0 += XMATEL_A(aai+ii+0, aaj+(jj+0)) * x[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+0)) * x[ii+1];
+			y_1 += XMATEL_A(aai+ii+0, aaj+(jj+1)) * x[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * x[ii+1];
 			}
 		for(; ii<m; ii++)
 			{
-			y_0 += pA[ii+lda*(jj+0)] * x[ii];
-			y_1 += pA[ii+lda*(jj+1)] * x[ii];
+			y_0 += XMATEL_A(aai+ii, aaj+(jj+0)) * x[ii];
+			y_1 += XMATEL_A(aai+ii, aaj+(jj+1)) * x[ii];
 			}
 		z[jj+0] = y_0;
 		z[jj+1] = y_1;
@@ -311,10 +341,10 @@ void TRMV_LTN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STR
 	for(; jj<n; jj++)
 		{
 		y_0 = x[jj];
-		y_0 *= pA[jj+lda*jj];
+		y_0 *= XMATEL_A(aai+jj, aaj+jj);
 		for(ii=jj+1; ii<m; ii++)
 			{
-			y_0 += pA[ii+lda*jj] * x[ii];
+			y_0 += XMATEL_A(aai+ii, aaj+jj) * x[ii];
 			}
 		z[jj] = y_0;
 		}
@@ -323,14 +353,19 @@ void TRMV_LTN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STR
 
 
 
-void TRMV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
 		y_0, y_1,
 		x_0, x_1;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
 #if 1 // y reg version
@@ -339,29 +374,29 @@ void TRMV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		{
 		y_0 = x[jj+0];
 		y_1 = x[jj+1];
-		y_0 = pA[jj+0+lda*(jj+0)] * y_0;
-		y_0 += pA[jj+0+lda*(jj+1)] * y_1;
-		y_1 = pA[jj+1+lda*(jj+1)] * y_1;
+		y_0 = XMATEL_A(aai+jj+0, aaj+(jj+0)) * y_0;
+		y_0 += XMATEL_A(aai+jj+0, aaj+(jj+1)) * y_1;
+		y_1 = XMATEL_A(aai+jj+1, aaj+(jj+1)) * y_1;
 		ii = jj+2;
 		for(; ii<m-1; ii+=2)
 			{
-			y_0 += pA[jj+0+lda*(ii+0)] * x[ii+0] + pA[jj+0+lda*(ii+1)] * x[ii+1];
-			y_1 += pA[jj+1+lda*(ii+0)] * x[ii+0] + pA[jj+1+lda*(ii+1)] * x[ii+1];
+			y_0 += XMATEL_A(aai+jj+0, aaj+(ii+0)) * x[ii+0] + XMATEL_A(aai+jj+0, aaj+(ii+1)) * x[ii+1];
+			y_1 += XMATEL_A(aai+jj+1, aaj+(ii+0)) * x[ii+0] + XMATEL_A(aai+jj+1, aaj+(ii+1)) * x[ii+1];
 			}
 		if(ii<m)
 			{
-			y_0 += pA[jj+0+lda*(ii+0)] * x[ii+0];
-			y_1 += pA[jj+1+lda*(ii+0)] * x[ii+0];
+			y_0 += XMATEL_A(aai+jj+0, aaj+(ii+0)) * x[ii+0];
+			y_1 += XMATEL_A(aai+jj+1, aaj+(ii+0)) * x[ii+0];
 			}
 		z[jj+0] = y_0;
 		z[jj+1] = y_1;
 		}
 	for(; jj<m; jj++)
 		{
-		y_0 = pA[jj+lda*jj] * x[jj];
+		y_0 = XMATEL_A(aai+jj, aaj+jj) * x[jj];
 		for(ii=jj+1; ii<m; ii++)
 			{
-			y_0 += pA[jj+lda*ii] * x[ii];
+			y_0 += XMATEL_A(aai+jj, aaj+ii) * x[ii];
 			}
 		z[jj] = y_0;
 		}
@@ -379,17 +414,17 @@ void TRMV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		ii = 0;
 		for(; ii<jj-1; ii+=2)
 			{
-			z[ii+0] += pA[ii+0+lda*(jj+0)] * x_0 + pA[ii+0+lda*(jj+1)] * x_1;
-			z[ii+1] += pA[ii+1+lda*(jj+0)] * x_0 + pA[ii+1+lda*(jj+1)] * x_1;
+			z[ii+0] += XMATEL_A(aai+ii+0, aaj+(jj+0)) * x_0 + XMATEL_A(aai+ii+0, aaj+(jj+1)) * x_1;
+			z[ii+1] += XMATEL_A(aai+ii+1, aaj+(jj+0)) * x_0 + XMATEL_A(aai+ii+1, aaj+(jj+1)) * x_1;
 			}
 //	XXX there is no clean-up loop, since jj+=2 !!!!!
 //		for(; ii<jj; ii++)
 //			{
-//			z[ii+0] += pA[ii+0+lda*(jj+0)] * x_0 + pA[ii+0+lda*(jj+1)] * x_1;
+//			z[ii+0] += XMATEL_A(aai+ii+0, aaj+(jj+0)) * x_0 + XMATEL_A(aai+ii+0, aaj+(jj+1)) * x_1;
 //			}
-		x_0 *= pA[jj+0+lda*(jj+0)];
-		x_0 += pA[jj+0+lda*(jj+1)] * x_1;
-		x_1 *= pA[jj+1+lda*(jj+1)];
+		x_0 *= XMATEL_A(aai+jj+0, aaj+(jj+0));
+		x_0 += XMATEL_A(aai+jj+0, aaj+(jj+1)) * x_1;
+		x_1 *= XMATEL_A(aai+jj+1, aaj+(jj+1));
 		z[jj+0] = x_0;
 		z[jj+1] = x_1;
 		}
@@ -398,9 +433,9 @@ void TRMV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		x_0 = z[jj];
 		for(ii=0; ii<jj; ii++)
 			{
-			z[ii] += pA[ii+lda*jj] * x_0;
+			z[ii] += XMATEL_A(aai+ii, aaj+jj) * x_0;
 			}
-		x_0 *= pA[jj+lda*jj];
+		x_0 *= XMATEL_A(aai+jj, aaj+jj);
 		z[jj] = x_0;
 		}
 #endif
@@ -409,41 +444,46 @@ void TRMV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRMV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
 		y_0, y_1;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
 	if(m%2!=0)
 		{
 		jj = m-1;
-		y_0 = pA[jj+lda*jj] * x[jj];
+		y_0 = XMATEL_A(aai+jj, aaj+jj) * x[jj];
 		for(ii=0; ii<jj; ii++)
 			{
-			y_0 += pA[ii+lda*jj] * x[ii];
+			y_0 += XMATEL_A(aai+ii, aaj+jj) * x[ii];
 			}
 		z[jj] = y_0;
 		m -= 1; // XXX
 		}
 	for(jj=m-2; jj>=0; jj-=2)
 		{
-		y_1 = pA[jj+1+lda*(jj+1)] * x[jj+1];
-		y_1 += pA[jj+0+lda*(jj+1)] * x[jj+0];
-		y_0 = pA[jj+0+lda*(jj+0)] * x[jj+0];
+		y_1 = XMATEL_A(aai+jj+1, aaj+(jj+1)) * x[jj+1];
+		y_1 += XMATEL_A(aai+jj+0, aaj+(jj+1)) * x[jj+0];
+		y_0 = XMATEL_A(aai+jj+0, aaj+(jj+0)) * x[jj+0];
 		for(ii=0; ii<jj-1; ii+=2)
 			{
-			y_0 += pA[ii+0+lda*(jj+0)] * x[ii+0] + pA[ii+1+lda*(jj+0)] * x[ii+1];
-			y_1 += pA[ii+0+lda*(jj+1)] * x[ii+0] + pA[ii+1+lda*(jj+1)] * x[ii+1];
+			y_0 += XMATEL_A(aai+ii+0, aaj+(jj+0)) * x[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+0)) * x[ii+1];
+			y_1 += XMATEL_A(aai+ii+0, aaj+(jj+1)) * x[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * x[ii+1];
 			}
 //	XXX there is no clean-up loop !!!!!
 //		if(ii<jj)
 //			{
-//			y_0 += pA[ii+lda*(jj+0)] * x[ii];
-//			y_1 += pA[ii+lda*(jj+1)] * x[ii];
+//			y_0 += XMATEL_A(aai+ii, aaj+(jj+0)) * x[ii];
+//			y_1 += XMATEL_A(aai+ii, aaj+(jj+1)) * x[ii];
 //			}
 		z[jj+0] = y_0;
 		z[jj+1] = y_1;
@@ -453,7 +493,7 @@ void TRMV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LNN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0 | n==0)
 		return;
@@ -479,8 +519,13 @@ void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 	REAL
 		y_0, y_1,
 		x_0, x_1;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *dA = sA->dA;
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
@@ -489,14 +534,14 @@ void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 		if(sA->use_dA!=1)
 			{
 			for(ii=0; ii<n; ii++)
-				dA[ii] = 1.0 / pA[ii+lda*ii];
+				dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 			sA->use_dA = 1;
 			}
 		}
 	else
 		{
 		for(ii=0; ii<n; ii++)
-			dA[ii] = 1.0 / pA[ii+lda*ii];
+			dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 		sA->use_dA = 0;
 		}
 #if 1 // y reg version
@@ -508,17 +553,17 @@ void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 		jj = 0;
 		for(; jj<ii-1; jj+=2)
 			{
-			y_0 -= pA[ii+0+lda*(jj+0)] * z[jj+0] + pA[ii+0+lda*(jj+1)] * z[jj+1];
-			y_1 -= pA[ii+1+lda*(jj+0)] * z[jj+0] + pA[ii+1+lda*(jj+1)] * z[jj+1];
+			y_0 -= XMATEL_A(aai+ii+0, aaj+(jj+0)) * z[jj+0] + XMATEL_A(aai+ii+0, aaj+(jj+1)) * z[jj+1];
+			y_1 -= XMATEL_A(aai+ii+1, aaj+(jj+0)) * z[jj+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * z[jj+1];
 			}
 //	XXX there is no clean-up loop !!!!!
 //		if(jj<ii)
 //			{
-//			y_0 -= pA[ii+0+lda*(jj+0)] * z[jj+0];
-//			y_1 -= pA[ii+1+lda*(jj+0)] * z[jj+0];
+//			y_0 -= XMATEL_A(aai+ii+0, aaj+(jj+0)) * z[jj+0];
+//			y_1 -= XMATEL_A(aai+ii+1, aaj+(jj+0)) * z[jj+0];
 //			}
 		y_0 *= dA[ii+0];
-		y_1 -= pA[ii+1+lda*(jj+0)] * y_0;
+		y_1 -= XMATEL_A(aai+ii+1, aaj+(jj+0)) * y_0;
 		y_1 *= dA[ii+1];
 		z[ii+0] = y_0;
 		z[ii+1] = y_1;
@@ -528,7 +573,7 @@ void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 		y_0 = x[ii];
 		for(jj=0; jj<ii; jj++)
 			{
-			y_0 -= pA[ii+lda*jj] * z[jj];
+			y_0 -= XMATEL_A(aai+ii, aaj+jj) * z[jj];
 			}
 		y_0 *= dA[ii];
 		z[ii] = y_0;
@@ -540,13 +585,13 @@ void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 		jj = 0;
 		for(; jj<n-1; jj+=2)
 			{
-			y_0 -= pA[ii+0+lda*(jj+0)] * z[jj+0] + pA[ii+0+lda*(jj+1)] * z[jj+1];
-			y_1 -= pA[ii+1+lda*(jj+0)] * z[jj+0] + pA[ii+1+lda*(jj+1)] * z[jj+1];
+			y_0 -= XMATEL_A(aai+ii+0, aaj+(jj+0)) * z[jj+0] + XMATEL_A(aai+ii+0, aaj+(jj+1)) * z[jj+1];
+			y_1 -= XMATEL_A(aai+ii+1, aaj+(jj+0)) * z[jj+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * z[jj+1];
 			}
 		if(jj<n)
 			{
-			y_0 -= pA[ii+0+lda*(jj+0)] * z[jj+0];
-			y_1 -= pA[ii+1+lda*(jj+0)] * z[jj+0];
+			y_0 -= XMATEL_A(aai+ii+0, aaj+(jj+0)) * z[jj+0];
+			y_1 -= XMATEL_A(aai+ii+1, aaj+(jj+0)) * z[jj+0];
 			}
 		z[ii+0] = y_0;
 		z[ii+1] = y_1;
@@ -556,7 +601,7 @@ void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 		y_0 = x[ii];
 		for(jj=0; jj<n; jj++)
 			{
-			y_0 -= pA[ii+lda*jj] * z[jj];
+			y_0 -= XMATEL_A(aai+ii, aaj+jj) * z[jj];
 			}
 		z[ii] = y_0;
 		}
@@ -570,19 +615,19 @@ void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 	for(; jj<n-1; jj+=2)
 		{
 		x_0 = dA[jj+0] * z[jj+0];
-		x_1 = z[jj+1] - pA[jj+1+lda*(jj+0)] * x_0;
+		x_1 = z[jj+1] - XMATEL_A(aai+jj+1, aaj+(jj+0)) * x_0;
 		x_1 = dA[jj+1] * x_1;
 		z[jj+0] = x_0;
 		z[jj+1] = x_1;
 		ii = jj+2;
 		for(; ii<m-1; ii+=2)
 			{
-			z[ii+0] -= pA[ii+0+lda*(jj+0)] * x_0 + pA[ii+0+lda*(jj+1)] * x_1;
-			z[ii+1] -= pA[ii+1+lda*(jj+0)] * x_0 + pA[ii+1+lda*(jj+1)] * x_1;
+			z[ii+0] -= XMATEL_A(aai+ii+0, aaj+(jj+0)) * x_0 + XMATEL_A(aai+ii+0, aaj+(jj+1)) * x_1;
+			z[ii+1] -= XMATEL_A(aai+ii+1, aaj+(jj+0)) * x_0 + XMATEL_A(aai+ii+1, aaj+(jj+1)) * x_1;
 			}
 		for(; ii<m; ii++)
 			{
-			z[ii] -= pA[ii+lda*(jj+0)] * x_0 + pA[ii+lda*(jj+1)] * x_1;
+			z[ii] -= XMATEL_A(aai+ii, aaj+(jj+0)) * x_0 + XMATEL_A(aai+ii, aaj+(jj+1)) * x_1;
 			}
 		}
 	for(; jj<n; jj++)
@@ -591,7 +636,7 @@ void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 		z[jj] = x_0;
 		for(ii=jj+1; ii<m; ii++)
 			{
-			z[ii] -= pA[ii+lda*jj] * x_0;
+			z[ii] -= XMATEL_A(aai+ii, aaj+jj) * x_0;
 			}
 		}
 #endif
@@ -600,7 +645,7 @@ void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 
 
 
-void TRSV_LTN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -625,8 +670,13 @@ void TRSV_LTN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 	int ii, jj;
 	REAL
 		y_0, y_1;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *dA = sA->dA;
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
@@ -635,14 +685,14 @@ void TRSV_LTN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 		if(sA->use_dA!=1)
 			{
 			for(ii=0; ii<n; ii++)
-				dA[ii] = 1.0 / pA[ii+lda*ii];
+				dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 			sA->use_dA = 1;
 			}
 		}
 	else
 		{
 		for(ii=0; ii<n; ii++)
-			dA[ii] = 1.0 / pA[ii+lda*ii];
+			dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 		sA->use_dA = 0;
 		}
 	if(n%2!=0)
@@ -651,7 +701,7 @@ void TRSV_LTN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 		y_0 = x[jj];
 		for(ii=jj+1; ii<m; ii++)
 			{
-			y_0 -= pA[ii+lda*jj] * z[ii];
+			y_0 -= XMATEL_A(aai+ii, aaj+jj) * z[ii];
 			}
 		y_0 *= dA[jj];
 		z[jj] = y_0;
@@ -668,16 +718,16 @@ void TRSV_LTN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 		ii = jj+2;
 		for(; ii<m-1; ii+=2)
 			{
-			y_0 -= pA[ii+0+lda*(jj+0)] * z[ii+0] + pA[ii+1+lda*(jj+0)] * z[ii+1];
-			y_1 -= pA[ii+0+lda*(jj+1)] * z[ii+0] + pA[ii+1+lda*(jj+1)] * z[ii+1];
+			y_0 -= XMATEL_A(aai+ii+0, aaj+(jj+0)) * z[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+0)) * z[ii+1];
+			y_1 -= XMATEL_A(aai+ii+0, aaj+(jj+1)) * z[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * z[ii+1];
 			}
 		if(ii<m)
 			{
-			y_0 -= pA[ii+lda*(jj+0)] * z[ii];
-			y_1 -= pA[ii+lda*(jj+1)] * z[ii];
+			y_0 -= XMATEL_A(aai+ii, aaj+(jj+0)) * z[ii];
+			y_1 -= XMATEL_A(aai+ii, aaj+(jj+1)) * z[ii];
 			}
 		y_1 *= dA[jj+1];
-		y_0 -= pA[jj+1+lda*(jj+0)] * y_1;
+		y_0 -= XMATEL_A(aai+jj+1, aaj+(jj+0)) * y_1;
 		y_0 *= dA[jj+0];
 		z[jj+0] = y_0;
 		z[jj+1] = y_1;
@@ -687,7 +737,7 @@ void TRSV_LTN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 
 
 
-void TRSV_LNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -712,8 +762,13 @@ void TRSV_LNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 	REAL
 		y_0, y_1,
 		x_0, x_1;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *dA = sA->dA;
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
@@ -722,14 +777,14 @@ void TRSV_LNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		if(sA->use_dA!=1)
 			{
 			for(ii=0; ii<m; ii++)
-				dA[ii] = 1.0 / pA[ii+lda*ii];
+				dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 			sA->use_dA = 1;
 			}
 		}
 	else
 		{
 		for(ii=0; ii<m; ii++)
-			dA[ii] = 1.0 / pA[ii+lda*ii];
+			dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 		sA->use_dA = 0;
 		}
 	ii = 0;
@@ -740,11 +795,11 @@ void TRSV_LNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		jj = 0;
 		for(; jj<ii-1; jj+=2)
 			{
-			y_0 -= pA[ii+0+lda*(jj+0)] * z[jj+0] + pA[ii+0+lda*(jj+1)] * z[jj+1];
-			y_1 -= pA[ii+1+lda*(jj+0)] * z[jj+0] + pA[ii+1+lda*(jj+1)] * z[jj+1];
+			y_0 -= XMATEL_A(aai+ii+0, aaj+(jj+0)) * z[jj+0] + XMATEL_A(aai+ii+0, aaj+(jj+1)) * z[jj+1];
+			y_1 -= XMATEL_A(aai+ii+1, aaj+(jj+0)) * z[jj+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * z[jj+1];
 			}
 		y_0 *= dA[ii+0];
-		y_1 -= pA[ii+1+lda*(jj+0)] * y_0;
+		y_1 -= XMATEL_A(aai+ii+1, aaj+(jj+0)) * y_0;
 		y_1 *= dA[ii+1];
 		z[ii+0] = y_0;
 		z[ii+1] = y_1;
@@ -754,7 +809,7 @@ void TRSV_LNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		y_0 = x[ii];
 		for(jj=0; jj<ii; jj++)
 			{
-			y_0 -= pA[ii+lda*jj] * z[jj];
+			y_0 -= XMATEL_A(aai+ii, aaj+jj) * z[jj];
 			}
 		y_0 *= dA[ii];
 		z[ii] = y_0;
@@ -764,7 +819,7 @@ void TRSV_LNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LNU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -789,8 +844,13 @@ void TRSV_LNU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 	REAL
 		y_0, y_1,
 		x_0, x_1;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
 	ii = 0;
@@ -801,10 +861,10 @@ void TRSV_LNU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		jj = 0;
 		for(; jj<ii-1; jj+=2)
 			{
-			y_0 -= pA[ii+0+lda*(jj+0)] * z[jj+0] + pA[ii+0+lda*(jj+1)] * z[jj+1];
-			y_1 -= pA[ii+1+lda*(jj+0)] * z[jj+0] + pA[ii+1+lda*(jj+1)] * z[jj+1];
+			y_0 -= XMATEL_A(aai+ii+0, aaj+(jj+0)) * z[jj+0] + XMATEL_A(aai+ii+0, aaj+(jj+1)) * z[jj+1];
+			y_1 -= XMATEL_A(aai+ii+1, aaj+(jj+0)) * z[jj+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * z[jj+1];
 			}
-		y_1 -= pA[ii+1+lda*(jj+0)] * y_0;
+		y_1 -= XMATEL_A(aai+ii+1, aaj+(jj+0)) * y_0;
 		z[ii+0] = y_0;
 		z[ii+1] = y_1;
 		}
@@ -813,7 +873,7 @@ void TRSV_LNU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		y_0 = x[ii];
 		for(jj=0; jj<ii; jj++)
 			{
-			y_0 -= pA[ii+lda*jj] * z[jj];
+			y_0 -= XMATEL_A(aai+ii, aaj+jj) * z[jj];
 			}
 		z[ii] = y_0;
 		}
@@ -822,7 +882,7 @@ void TRSV_LNU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -846,8 +906,13 @@ void TRSV_LTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 	int ii, jj;
 	REAL
 		y_0, y_1;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *dA = sA->dA;
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
@@ -856,14 +921,14 @@ void TRSV_LTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		if(sA->use_dA!=1)
 			{
 			for(ii=0; ii<m; ii++)
-				dA[ii] = 1.0 / pA[ii+lda*ii];
+				dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 			sA->use_dA = 1;
 			}
 		}
 	else
 		{
 		for(ii=0; ii<m; ii++)
-			dA[ii] = 1.0 / pA[ii+lda*ii];
+			dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 		sA->use_dA = 0;
 		}
 	if(m%2!=0)
@@ -885,16 +950,16 @@ void TRSV_LTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		ii = jj+2;
 		for(; ii<m-1; ii+=2)
 			{
-			y_0 -= pA[ii+0+lda*(jj+0)] * z[ii+0] + pA[ii+1+lda*(jj+0)] * z[ii+1];
-			y_1 -= pA[ii+0+lda*(jj+1)] * z[ii+0] + pA[ii+1+lda*(jj+1)] * z[ii+1];
+			y_0 -= XMATEL_A(aai+ii+0, aaj+(jj+0)) * z[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+0)) * z[ii+1];
+			y_1 -= XMATEL_A(aai+ii+0, aaj+(jj+1)) * z[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * z[ii+1];
 			}
 		if(ii<m)
 			{
-			y_0 -= pA[ii+lda*(jj+0)] * z[ii];
-			y_1 -= pA[ii+lda*(jj+1)] * z[ii];
+			y_0 -= XMATEL_A(aai+ii, aaj+(jj+0)) * z[ii];
+			y_1 -= XMATEL_A(aai+ii, aaj+(jj+1)) * z[ii];
 			}
 		y_1 *= dA[jj+1];
-		y_0 -= pA[jj+1+lda*(jj+0)] * y_1;
+		y_0 -= XMATEL_A(aai+jj+1, aaj+(jj+0)) * y_1;
 		y_0 *= dA[jj+0];
 		z[jj+0] = y_0;
 		z[jj+1] = y_1;
@@ -904,7 +969,7 @@ void TRSV_LTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LTU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -928,8 +993,13 @@ void TRSV_LTU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 	int ii, jj;
 	REAL
 		y_0, y_1;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
 	if(m%2!=0)
@@ -950,15 +1020,15 @@ void TRSV_LTU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		ii = jj+2;
 		for(; ii<m-1; ii+=2)
 			{
-			y_0 -= pA[ii+0+lda*(jj+0)] * z[ii+0] + pA[ii+1+lda*(jj+0)] * z[ii+1];
-			y_1 -= pA[ii+0+lda*(jj+1)] * z[ii+0] + pA[ii+1+lda*(jj+1)] * z[ii+1];
+			y_0 -= XMATEL_A(aai+ii+0, aaj+(jj+0)) * z[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+0)) * z[ii+1];
+			y_1 -= XMATEL_A(aai+ii+0, aaj+(jj+1)) * z[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * z[ii+1];
 			}
 		if(ii<m)
 			{
-			y_0 -= pA[ii+lda*(jj+0)] * z[ii];
-			y_1 -= pA[ii+lda*(jj+1)] * z[ii];
+			y_0 -= XMATEL_A(aai+ii, aaj+(jj+0)) * z[ii];
+			y_1 -= XMATEL_A(aai+ii, aaj+(jj+1)) * z[ii];
 			}
-		y_0 -= pA[jj+1+lda*(jj+0)] * y_1;
+		y_0 -= XMATEL_A(aai+jj+1, aaj+(jj+0)) * y_1;
 		z[jj+0] = y_0;
 		z[jj+1] = y_1;
 		}
@@ -967,7 +1037,7 @@ void TRSV_LTU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -991,8 +1061,13 @@ void TRSV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 	int ii, jj;
 	REAL
 		y_0, y_1;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *dA = sA->dA;
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
@@ -1001,14 +1076,14 @@ void TRSV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		if(sA->use_dA!=1)
 			{
 			for(ii=0; ii<m; ii++)
-				dA[ii] = 1.0 / pA[ii+lda*ii];
+				dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 			sA->use_dA = 1;
 			}
 		}
 	else
 		{
 		for(ii=0; ii<m; ii++)
-			dA[ii] = 1.0 / pA[ii+lda*ii];
+			dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 		sA->use_dA = 0;
 		}
 	if(m%2!=0)
@@ -1030,16 +1105,16 @@ void TRSV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		ii = jj+2;
 		for(; ii<m-1; ii+=2)
 			{
-			y_0 -= pA[jj+0+lda*(ii+0)] * z[ii+0] + pA[jj+0+lda*(ii+1)] * z[ii+1];
-			y_1 -= pA[jj+1+lda*(ii+0)] * z[ii+0] + pA[jj+1+lda*(ii+1)] * z[ii+1];
+			y_0 -= XMATEL_A(aai+jj+0, aaj+(ii+0)) * z[ii+0] + XMATEL_A(aai+jj+0, aaj+(ii+1)) * z[ii+1];
+			y_1 -= XMATEL_A(aai+jj+1, aaj+(ii+0)) * z[ii+0] + XMATEL_A(aai+jj+1, aaj+(ii+1)) * z[ii+1];
 			}
 		if(ii<m)
 			{
-			y_0 -= pA[jj+0+lda*(ii+0)] * z[ii];
-			y_1 -= pA[jj+1+lda*(ii+0)] * z[ii];
+			y_0 -= XMATEL_A(aai+jj+0, aaj+(ii+0)) * z[ii];
+			y_1 -= XMATEL_A(aai+jj+1, aaj+(ii+0)) * z[ii];
 			}
 		y_1 *= dA[jj+1];
-		y_0 -= pA[jj+0+lda*(jj+1)] * y_1;
+		y_0 -= XMATEL_A(aai+jj+0, aaj+(jj+1)) * y_1;
 		y_0 *= dA[jj+0];
 		z[jj+0] = y_0;
 		z[jj+1] = y_1;
@@ -1049,7 +1124,7 @@ void TRSV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1074,8 +1149,13 @@ void TRSV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 	REAL
 		y_0, y_1,
 		x_0, x_1;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	REAL *dA = sA->dA;
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
@@ -1084,14 +1164,14 @@ void TRSV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		if(sA->use_dA!=1)
 			{
 			for(ii=0; ii<m; ii++)
-				dA[ii] = 1.0 / pA[ii+lda*ii];
+				dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 			sA->use_dA = 1;
 			}
 		}
 	else
 		{
 		for(ii=0; ii<m; ii++)
-			dA[ii] = 1.0 / pA[ii+lda*ii];
+			dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 		sA->use_dA = 0;
 		}
 	ii = 0;
@@ -1102,11 +1182,11 @@ void TRSV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		jj = 0;
 		for(; jj<ii-1; jj+=2)
 			{
-			y_0 -= pA[jj+0+lda*(ii+0)] * z[jj+0] + pA[jj+1+lda*(ii+0)] * z[jj+1];
-			y_1 -= pA[jj+0+lda*(ii+1)] * z[jj+0] + pA[jj+1+lda*(ii+1)] * z[jj+1];
+			y_0 -= XMATEL_A(aai+jj+0, aaj+(ii+0)) * z[jj+0] + XMATEL_A(aai+jj+1, aaj+(ii+0)) * z[jj+1];
+			y_1 -= XMATEL_A(aai+jj+0, aaj+(ii+1)) * z[jj+0] + XMATEL_A(aai+jj+1, aaj+(ii+1)) * z[jj+1];
 			}
 		y_0 *= dA[ii+0];
-		y_1 -= pA[jj+0+lda*(ii+1)] * y_0;
+		y_1 -= XMATEL_A(aai+jj+0, aaj+(ii+1)) * y_0;
 		y_1 *= dA[ii+1];
 		z[ii+0] = y_0;
 		z[ii+1] = y_1;
@@ -1116,7 +1196,7 @@ void TRSV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 		y_0 = x[ii];
 		for(jj=0; jj<ii; jj++)
 			{
-			y_0 -= pA[jj+lda*ii] * z[jj];
+			y_0 -= XMATEL_A(aai+jj, aaj+ii) * z[jj];
 			}
 		y_0 *= dA[ii];
 		z[ii] = y_0;
@@ -1130,7 +1210,7 @@ void TRSV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void GEMV_N_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+void GEMV_N(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1150,7 +1230,7 @@ void GEMV_N_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 
 
 
-void GEMV_T_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+void GEMV_T(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1170,7 +1250,7 @@ void GEMV_T_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 
 
 
-void GEMV_NT_LIBSTR(int m, int n, REAL alpha_n, REAL alpha_t, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx_n, int xi_n, struct STRVEC *sx_t, int xi_t, REAL beta_n, REAL beta_t, struct STRVEC *sy_n, int yi_n, struct STRVEC *sy_t, int yi_t, struct STRVEC *sz_n, int zi_n, struct STRVEC *sz_t, int zi_t)
+void GEMV_NT(int m, int n, REAL alpha_n, REAL alpha_t, struct XMAT *sA, int ai, int aj, struct XVEC *sx_n, int xi_n, struct XVEC *sx_t, int xi_t, REAL beta_n, REAL beta_t, struct XVEC *sy_n, int yi_n, struct XVEC *sy_t, int yi_t, struct XVEC *sz_n, int zi_n, struct XVEC *sz_t, int zi_t)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1195,7 +1275,7 @@ void GEMV_NT_LIBSTR(int m, int n, REAL alpha_n, REAL alpha_t, struct STRMAT *sA,
 
 
 
-void SYMV_L_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, REAL beta, struct STRVEC *sy, int yi, struct STRVEC *sz, int zi)
+void SYMV_L(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1219,7 +1299,7 @@ void SYMV_L_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, 
 
 
 
-void TRMV_LNN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_LNN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1244,7 +1324,7 @@ void TRMV_LNN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STR
 
 
 
-void TRMV_LTN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_LTN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1268,7 +1348,7 @@ void TRMV_LTN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STR
 
 
 
-void TRMV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1289,7 +1369,7 @@ void TRMV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRMV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRMV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -1310,7 +1390,7 @@ void TRMV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LNN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0 | n==0)
 		return;
@@ -1353,7 +1433,7 @@ void TRSV_LNN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 
 
 
-void TRSV_LTN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1396,7 +1476,7 @@ void TRSV_LTN_MN_LIBSTR(int m, int n, struct STRMAT *sA, int ai, int aj, struct 
 
 
 
-void TRSV_LNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1436,7 +1516,7 @@ void TRSV_LNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LNU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1476,7 +1556,7 @@ void TRSV_LNU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1516,7 +1596,7 @@ void TRSV_LTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_LTU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_LTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1556,7 +1636,7 @@ void TRSV_LTU_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1596,7 +1676,7 @@ void TRSV_UNN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx
 
 
 
-void TRSV_UTN_LIBSTR(int m, struct STRMAT *sA, int ai, int aj, struct STRVEC *sx, int xi, struct STRVEC *sz, int zi)
+void TRSV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
