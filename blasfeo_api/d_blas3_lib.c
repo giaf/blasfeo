@@ -67,9 +67,9 @@
 
 #define REAL double
 #define XMAT blasfeo_dmat
+#define XMATEL BLASFEO_DMATEL
 #define XVEC blasfeo_dvec
 #define XVECEL BLASFEO_DVECEL
-#define XMATEL BLASFEO_DMATEL
 
 
 

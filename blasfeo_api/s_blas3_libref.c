@@ -46,26 +46,54 @@
 #include "../include/blasfeo_s_aux.h"
 
 
+
+#if defined(LA_REFERENCE)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+	#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
+#else
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
+	#define XMATEL_C(X, Y) XMATEL(sC, X, Y)
+	#define XMATEL_D(X, Y) XMATEL(sD, X, Y)
+#endif
+
 #define REAL float
 #define XMAT blasfeo_smat_ref
+#define XMATEL BLASFEO_SMATEL
 #define XVEC blasfeo_svec_ref
+#define XMATEL BLASFEO_SMATEL
+
+
 
 #define GEMM_NN    blasfeo_sgemm_nn_ref
 #define GEMM_NT    blasfeo_sgemm_nt_ref
-
+#define GEMM_TN    blasfeo_sgemm_tn_ref
+#define GEMM_TT    blasfeo_sgemm_tt_ref
 #define SYRK_LN    blasfeo_ssyrk_ln_ref
 #define SYRK_LN_MN blasfeo_ssyrk_ln_mn_ref
-#define SYRK_UN    blasfeo_ssyrk_un_ref
 #define SYRK_LT    blasfeo_ssyrk_lt_ref
+#define SYRK_UN    blasfeo_ssyrk_un_ref
 #define SYRK_UT    blasfeo_ssyrk_ut_ref
-
-#define TRSM_LLNU  blasfeo_strsm_llnu_ref
+#define TRSM_LUNU  blasfeo_strsm_lunu_ref
 #define TRSM_LUNN  blasfeo_strsm_lunn_ref
+#define TRSM_LUTU  blasfeo_strsm_lutu_ref
+#define TRSM_LUTN  blasfeo_strsm_lutn_ref
+#define TRSM_LLNU  blasfeo_strsm_llnu_ref
+#define TRSM_LLNN  blasfeo_strsm_llnn_ref
+#define TRSM_LLTU  blasfeo_strsm_lltu_ref
+#define TRSM_LLTN  blasfeo_strsm_lltn_ref
+#define TRSM_RUNU  blasfeo_strsm_runu_ref
+#define TRSM_RUNN  blasfeo_strsm_runn_ref
+#define TRSM_RUTU  blasfeo_strsm_rutu_ref
+#define TRSM_RUTN  blasfeo_strsm_rutn_ref
+#define TRSM_RLNU  blasfeo_strsm_rlnu_ref
+#define TRSM_RLNN  blasfeo_strsm_rlnn_ref
 #define TRSM_RLTU  blasfeo_strsm_rltu_ref
 #define TRSM_RLTN  blasfeo_strsm_rltn_ref
-#define TRSM_RUTN  blasfeo_strsm_rutn_ref
-#define TRMM_RUTN  blasfeo_strmm_rutn_ref
-#define TRMM_RLNN  blasfeo_strmm_rlnn_ref
+
+
 
 // TESTING_MODE
 #include "x_blas3_lib.c"
