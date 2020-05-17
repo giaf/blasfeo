@@ -40,7 +40,7 @@
 
 
 // dgemm with A diagonal matrix (stored as strvec)
-void GEMM_L_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRVEC *sA, int ai, struct STRMAT *sB, int bi, int bj, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_L_DIAG(int m, int n, REAL alpha, struct XVEC *sA, int ai, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -49,11 +49,22 @@ void GEMM_L_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRVEC *sA, int ai, str
 	sD->use_dA = 0;
 
 	int ii, jj;
+#if defined(LA_REFERENCE)
 	int ldb = sB->m;
+	int ldc = sC->m;
 	int ldd = sD->m;
-	REAL *dA = sA->pa + ai;
 	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pC = sC->pA + ci + cj*ldc;
 	REAL *pD = sD->pA + di + dj*ldd;
+	const int bbi=0; const int bbj=0;
+	const int cci=0; const int ccj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int bbi=bi; int bbj=bj;
+	int cci=ci; int ccj=cj;
+	int ddi=di; int ddj=dj;
+#endif
+	REAL *dA = sA->pa + ai;
 	REAL a0, a1;
 	if(beta==0.0)
 		{
@@ -64,8 +75,8 @@ void GEMM_L_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRVEC *sA, int ai, str
 			a1 = alpha * dA[ii+1];
 			for(jj=0; jj<n; jj++)
 				{
-				pD[ii+0+ldd*jj] = a0 * pB[ii+0+ldb*jj];
-				pD[ii+1+ldd*jj] = a1 * pB[ii+1+ldb*jj];
+				XMATEL_D(ddi+ii+0, ddj+jj) = a0 * XMATEL_B(bbi+ii+0, bbj+jj);
+				XMATEL_D(ddi+ii+1, ddj+jj) = a1 * XMATEL_B(bbi+ii+1, bbj+jj);
 				}
 			}
 		for(; ii<m; ii++)
@@ -73,14 +84,12 @@ void GEMM_L_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRVEC *sA, int ai, str
 			a0 = alpha * dA[ii];
 			for(jj=0; jj<n; jj++)
 				{
-				pD[ii+0+ldd*jj] = a0 * pB[ii+0+ldb*jj];
+				XMATEL_D(ddi+ii+0, ddj+jj) = a0 * XMATEL_B(bbi+ii+0, bbj+jj);
 				}
 			}
 		}
 	else
 		{
-		int ldc = sC->m;
-		REAL *pC = sC->pA + ci + cj*ldc;
 		ii = 0;
 		for(; ii<m-1; ii+=2)
 			{
@@ -88,8 +97,8 @@ void GEMM_L_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRVEC *sA, int ai, str
 			a1 = alpha * dA[ii+1];
 			for(jj=0; jj<n; jj++)
 				{
-				pD[ii+0+ldd*jj] = a0 * pB[ii+0+ldb*jj] + beta * pC[ii+0+ldc*jj];
-				pD[ii+1+ldd*jj] = a1 * pB[ii+1+ldb*jj] + beta * pC[ii+1+ldc*jj];
+				XMATEL_D(ddi+ii+0, ddj+jj) = a0 * XMATEL_B(bbi+ii+0, bbj+jj) + beta * XMATEL_C(cci+ii+0, ccj+jj);
+				XMATEL_D(ddi+ii+1, ddj+jj) = a1 * XMATEL_B(bbi+ii+1, bbj+jj) + beta * XMATEL_C(cci+ii+1, ccj+jj);
 				}
 			}
 		for(; ii<m; ii++)
@@ -97,7 +106,7 @@ void GEMM_L_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRVEC *sA, int ai, str
 			a0 = alpha * dA[ii];
 			for(jj=0; jj<n; jj++)
 				{
-				pD[ii+0+ldd*jj] = a0 * pB[ii+0+ldb*jj] + beta * pC[ii+0+ldc*jj];
+				XMATEL_D(ddi+ii+0, ddj+jj) = a0 * XMATEL_B(bbi+ii+0, bbj+jj) + beta * XMATEL_C(cci+ii+0, ccj+jj);
 				}
 			}
 		}
@@ -107,7 +116,7 @@ void GEMM_L_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRVEC *sA, int ai, str
 
 
 // dgemm with B diagonal matrix (stored as strvec)
-void GEMM_R_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int aj, struct STRVEC *sB, int bi, REAL beta, struct STRMAT *sC, int ci, int cj, struct STRMAT *sD, int di, int dj)
+void GEMM_R_DIAG(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sB, int bi, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -116,11 +125,22 @@ void GEMM_R_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int
 	sD->use_dA = 0;
 
 	int ii, jj;
+#if defined(LA_REFERENCE)
 	int lda = sA->m;
+	int ldc = sC->m;
 	int ldd = sD->m;
 	REAL *pA = sA->pA + ai + aj*lda;
-	REAL *dB = sB->pa + bi;
+	REAL *pC = sC->pA + ci + cj*ldc;
 	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int cci=0; const int ccj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int cci=ci; int ccj=cj;
+	int ddi=di; int ddj=dj;
+#endif
+	REAL *dB = sB->pa + bi;
 	REAL a0, a1;
 	if(beta==0.0)
 		{
@@ -131,8 +151,8 @@ void GEMM_R_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int
 			a1 = alpha * dB[jj+1];
 			for(ii=0; ii<m; ii++)
 				{
-				pD[ii+ldd*(jj+0)] = a0 * pA[ii+lda*(jj+0)];
-				pD[ii+ldd*(jj+1)] = a1 * pA[ii+lda*(jj+1)];
+				XMATEL_D(ddi+ii, ddj+(jj+0)) = a0 * XMATEL_A(aai+ii, aaj+(jj+0));
+				XMATEL_D(ddi+ii, ddj+(jj+1)) = a1 * XMATEL_A(aai+ii, aaj+(jj+1));
 				}
 			}
 		for(; jj<n; jj++)
@@ -140,14 +160,12 @@ void GEMM_R_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int
 			a0 = alpha * dB[jj+0];
 			for(ii=0; ii<m; ii++)
 				{
-				pD[ii+ldd*(jj+0)] = a0 * pA[ii+lda*(jj+0)];
+				XMATEL_D(ddi+ii, ddj+(jj+0)) = a0 * XMATEL_A(aai+ii, aaj+(jj+0));
 				}
 			}
 		}
 	else
 		{
-		int ldc = sC->m;
-		REAL *pC = sC->pA + ci + cj*ldc;
 		jj = 0;
 		for(; jj<n-1; jj+=2)
 			{
@@ -155,8 +173,8 @@ void GEMM_R_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int
 			a1 = alpha * dB[jj+1];
 			for(ii=0; ii<m; ii++)
 				{
-				pD[ii+ldd*(jj+0)] = a0 * pA[ii+lda*(jj+0)] + beta * pC[ii+ldc*(jj+0)];
-				pD[ii+ldd*(jj+1)] = a1 * pA[ii+lda*(jj+1)] + beta * pC[ii+ldc*(jj+1)];
+				XMATEL_D(ddi+ii, ddj+(jj+0)) = a0 * XMATEL_A(aai+ii, aaj+(jj+0)) + beta * XMATEL_C(cci+ii, ccj+(jj+0));
+				XMATEL_D(ddi+ii, ddj+(jj+1)) = a1 * XMATEL_A(aai+ii, aaj+(jj+1)) + beta * XMATEL_C(cci+ii, ccj+(jj+1));
 				}
 			}
 		for(; jj<n; jj++)
@@ -164,7 +182,7 @@ void GEMM_R_DIAG_LIBSTR(int m, int n, REAL alpha, struct STRMAT *sA, int ai, int
 			a0 = alpha * dB[jj+0];
 			for(ii=0; ii<m; ii++)
 				{
-				pD[ii+ldd*(jj+0)] = a0 * pA[ii+lda*(jj+0)] + beta * pC[ii+ldc*(jj+0)];
+				XMATEL_D(ddi+ii, ddj+(jj+0)) = a0 * XMATEL_A(aai+ii, aaj+(jj+0)) + beta * XMATEL_C(cci+ii, ccj+(jj+0));
 				}
 			}
 		}

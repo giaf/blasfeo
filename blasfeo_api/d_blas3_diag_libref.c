@@ -41,13 +41,30 @@
 
 
 
+#if defined(LA_REFERENCE)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+	#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
+#else
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
+	#define XMATEL_C(X, Y) XMATEL(sC, X, Y)
+	#define XMATEL_D(X, Y) XMATEL(sD, X, Y)
+#endif
+
+
+
 #define REAL double
+#define XMAT blasfeo_dmat
+#define XMATEL MATEL_REF
+#define XVEC blasfeo_dvec
+#define XVECEL VECEL_REF
 
-#define STRMAT blasfeo_dmat_ref
-#define STRVEC blasfeo_dvec_ref
 
-#define GEMM_R_DIAG_LIBSTR blasfeo_dgemm_nd_ref
-#define GEMM_L_DIAG_LIBSTR blasfeo_dgemm_dn_ref
+
+#define GEMM_R_DIAG blasfeo_dgemm_nd_ref
+#define GEMM_L_DIAG blasfeo_dgemm_dn_ref
 
 
 
