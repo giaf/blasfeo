@@ -622,7 +622,7 @@ inner_edge_trsm_rlt_inv_12x4_lib4:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_12X4_LIB4 lc_zero
 #else
 	.align 3
@@ -688,7 +688,7 @@ _inner_scale_ab_12x4_lib4:
 
 0:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	mov		pc, lr // return
@@ -857,7 +857,7 @@ _inner_scale_m11_12x4_lib4:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_SCALE_11_12X4_LIB4
 #else
 //	.p2align 4,,15
@@ -891,7 +891,7 @@ _inner_scale_11_12x4_lib4:
 	vadd.f32	q14, q0, q14
 	vadd.f32	q15, q1, q15
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	mov		pc, lr // return
@@ -913,7 +913,7 @@ _inner_scale_11_12x4_lib4:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_12X4_LIB4
 #else
 //	.p2align 4,,15
@@ -935,7 +935,7 @@ _inner_store_12x4_lib4:
 	vst1.64		{d24, d25, d26, d27}, [r7:128]!
 	vst1.64		{d28, d29, d30, d31}, [r7:128]!
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	mov		pc, lr // return
@@ -957,7 +957,7 @@ _inner_store_12x4_lib4:
 //
 // output arguments:
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_STORE_12X4_L_LIB4
 #else
 //	.p2align 4,,15
@@ -991,7 +991,7 @@ _inner_store_12x4_l_lib4:
 	vst1.64		{d28, d29, d30, d31}, [r7:128]!
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	mov		pc, lr // return
@@ -1084,8 +1084,8 @@ _kernel_sgemm_nt_12x4_lib4:
 	ldr		r7, [fp, #12] // sdc
 	lsl		r7, r7, #4 // 4*sizeof(float)*sdc
 
-#if MACRO_LEVEL>=2
-	INNER_SCALE_AB_12X4_LIB4
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_12X4_LIB4 99f
 #else
 #if defined(OS_LINUX)
 	bl inner_scale_ab_12x4_lib4
@@ -1101,7 +1101,7 @@ _kernel_sgemm_nt_12x4_lib4:
 	ldr		r5, [fp, #20] // sdd
 	lsl		r5, r5, #4 // 4*sizeof(float)*sdd
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
 #else
 #if defined(OS_LINUX)
