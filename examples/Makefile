@@ -50,6 +50,8 @@ endif
 LIBS += -lm
 
 
+### select one single test ###
+
 ## dgemm kernel
 # OBJS = example_kernel_dgemm.o
 # OBJS = kernel_dgemm.o
@@ -65,6 +67,22 @@ OBJS = example_d_lq_factorization.o
 
 ## getting started
 # OBJS = getting_started.o
+
+### all individual tests ###
+
+example_d_lu_factorization \
+example_d_lq_factorization \
+example_s_lu_factorization \
+: %: %.o
+	$(CC) -o $@.out $^ $(LIBS)
+	./$@.out
+
+example_d_riccati_recursion \
+example_s_riccati_recursion \
+: %: tools.o %.o
+	$(CC) -o $@.out $^ $(LIBS)
+	./$@.out
+
 
 
 CFLAGS += -I../include/

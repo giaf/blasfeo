@@ -66,6 +66,7 @@ jobs:
       script:
         - make CC=arm-linux-gnueabihf-gcc TARGET=ARMV7A_ARM_CORTEX_A15 static_library -j 8
         - make CC=arm-linux-gnueabihf-gcc TARGET=ARMV7A_ARM_CORTEX_A15 shared_library -j 8
+        - make CC=arm-linux-gnueabihf-gcc TARGET=ARMV7A_ARM_CORTEX_A15 -C examples/ example_d_riccati_recursion
 
     - name: "Linux AMD64 cmake build"
       arch: amd64
