@@ -235,6 +235,7 @@ PRINT_NAME = 0
 CC ?= gcc
 # CC = clang
 # CC = x86_64-w64-mingw32-gcc
+# CC = arm-linux-gnueabihf-gcc
 
 # archive routine
 #
