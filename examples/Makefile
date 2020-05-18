@@ -37,7 +37,8 @@ include ../Makefile.rule
 
 LIBS =
 
-LIBS += libblasfeo.a
+#LIBS += libblasfeo.a
+LIBS += $(CURRENT_DIR)/lib/libblasfeo.a
 
 # add different link library for different EXTERNAL_BLAS implementation
 #include ../Makefile.external_blas
