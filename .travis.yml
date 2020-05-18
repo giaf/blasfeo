@@ -1,13 +1,11 @@
 
-sudo: required
-
 cache:
   ccache: true
 
 
 jobs:
   include:
-    - name: "Linux AMD64 build"
+    - name: "Linux AMD64 tests"
       arch: amd64
       os: linux
       dist: bionic
@@ -27,7 +25,7 @@ jobs:
         - python tester.py testset_travis_blas_double_amd64.json
         - python tester.py testset_travis_blas_single_amd64.json
 
-    - name: "Linux ARM64 build"
+    - name: "Linux ARM64 tests"
       arch: arm64
       os: linux
       dist: bionic
@@ -48,11 +46,35 @@ jobs:
         - python tester.py testset_travis_blas_double_arm64.json
         - python tester.py testset_travis_blas_single_arm64.json
 
+    - name: "Linux ARM32 make build"
+      arch: arm64
+      os: linux
+      dist: bionic
+      group: travis_latest
+      addons:
+        apt:
+          packages:
+          - gcc-arm-linux-gnueabihf
+          - bc
+      install:
+        - sudo dpkg --add-architecture armhf
+        - sudo apt update
+        - sudo apt install libc6:armhf
+        - sudo dpkg --print-architecture
+        - sudo dpkg --print-foreign-architectures
+      script:
+        - make CC=arm-linux-gnueabihf-gcc TARGET=ARMV7A_ARM_CORTEX_A15 static_library -j 8
+        - make CC=arm-linux-gnueabihf-gcc TARGET=ARMV7A_ARM_CORTEX_A15 shared_library -j 8
+
     - name: "Linux AMD64 cmake build"
       arch: amd64
       os: linux
       dist: bionic
       group: travis_latest
+      addons:
+        apt:
+          packages:
+          - bc
       script:
         - mkdir "${TRAVIS_BUILD_DIR}"/build
         - cd "${TRAVIS_BUILD_DIR}"/build
@@ -65,6 +87,10 @@ jobs:
       os: windows
       language: bash
       group: travis_latest
+      addons:
+        apt:
+          packages:
+          - bc
       script:
         - export PATH="/C/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin":$PATH
         - mkdir "${TRAVIS_BUILD_DIR}"/build
