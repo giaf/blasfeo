@@ -1087,7 +1087,7 @@ _inner_scale_m1b_4x4_lib4:
 	flds		s9, 99b // 0.0
 #endif
 
-	fcmpes		d8, d9
+	fcmpes		s8, s9
 	vneg.f32	q4, q4
 	vneg.f32	q5, q5
 	vneg.f32	q6, q6
