@@ -55,6 +55,7 @@ jobs:
         apt:
           packages:
           - gcc-arm-linux-gnueabihf
+          - libc6-dev-armhf-cross
           - bc
       install:
         - sudo dpkg --add-architecture armhf
