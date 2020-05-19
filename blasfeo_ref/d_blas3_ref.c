@@ -36,62 +36,69 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#if defined(LA_EXTERNAL_BLAS_WRAPPER)
-#if defined(EXTERNAL_BLAS_BLIS)
-#include "blis.h"
-#elif defined(EXTERNAL_BLAS_MKL)
-#include "mkl.h"
+
+#define MF_COLMAJ
+
+
+#include <blasfeo_common.h>
+#include <blasfeo_d_aux.h>
+
+
+
+#if defined(MF_COLMAJ)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+	#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
 #else
-#include "../include/s_blas.h"
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
+	#define XMATEL_C(X, Y) XMATEL(sC, X, Y)
+	#define XMATEL_D(X, Y) XMATEL(sD, X, Y)
 #endif
-#endif
-
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux.h"
 
 
 
-#define REAL float
-#define XMAT blasfeo_smat
-#define XVEC blasfeo_svec
+#define REAL double
+#define XMAT blasfeo_dmat
+#define XMATEL BLASFEO_DMATEL
+#define XVEC blasfeo_dvec
+#define XVECEL BLASFEO_DVECEL
 
 
 
-#define GEMM_NN blasfeo_sgemm_nn
-#define GEMM_NT blasfeo_sgemm_nt
-#define GEMM_TN blasfeo_sgemm_tn
-#define GEMM_TT blasfeo_sgemm_tt
-#define SYRK_LN blasfeo_ssyrk_ln
-#define SYRK_LN_MN blasfeo_ssyrk_ln_mn
-#define SYRK_LT blasfeo_ssyrk_lt
-#define SYRK_UN blasfeo_ssyrk_un
-#define SYRK_UT blasfeo_ssyrk_ut
-#define TRMM_RLNN blasfeo_strmm_rlnn
-#define TRMM_RUTN blasfeo_strmm_rutn
-#define TRSM_LLNN blasfeo_strsm_llnn
-#define TRSM_LLNU blasfeo_strsm_llnu
-#define TRSM_LLTN blasfeo_strsm_lltn
-#define TRSM_LLTU blasfeo_strsm_lltu
-#define TRSM_LUNN blasfeo_strsm_lunn
-#define TRSM_LUNU blasfeo_strsm_lunu
-#define TRSM_LUTN blasfeo_strsm_lutn
-#define TRSM_LUTU blasfeo_strsm_lutu
-#define TRSM_RLNN blasfeo_strsm_rlnn
-#define TRSM_RLNU blasfeo_strsm_rlnu
-#define TRSM_RLTN blasfeo_strsm_rltn
-#define TRSM_RLTU blasfeo_strsm_rltu
-#define TRSM_RUNN blasfeo_strsm_runn
-#define TRSM_RUNU blasfeo_strsm_runu
-#define TRSM_RUTN blasfeo_strsm_rutn
-#define TRSM_RUTU blasfeo_strsm_rutu
-
-#define COPY scopy_
-#define GEMM sgemm_
-#define SYRK ssyrk_
-#define TRMM strmm_
-#define TRSM strsm_
+// gemm
+#define GEMM_NN blasfeo_dgemm_nn
+#define GEMM_NT blasfeo_dgemm_nt
+#define GEMM_TN blasfeo_dgemm_tn
+#define GEMM_TT blasfeo_dgemm_tt
+// syrk
+#define SYRK_LN blasfeo_dsyrk_ln
+#define SYRK_LN_MN blasfeo_dsyrk_ln_mn
+#define SYRK_LT blasfeo_dsyrk_lt
+#define SYRK_UN blasfeo_dsyrk_un
+#define SYRK_UT blasfeo_dsyrk_ut
+// trmm
+#define TRMM_RLNN blasfeo_dtrmm_rlnn
+#define TRMM_RUTN blasfeo_dtrmm_rutn
+// trsm
+#define TRSM_LLNN blasfeo_dtrsm_llnn
+#define TRSM_LLNU blasfeo_dtrsm_llnu
+#define TRSM_LLTN blasfeo_dtrsm_lltn
+#define TRSM_LLTU blasfeo_dtrsm_lltu
+#define TRSM_LUNN blasfeo_dtrsm_lunn
+#define TRSM_LUNU blasfeo_dtrsm_lunu
+#define TRSM_LUTN blasfeo_dtrsm_lutn
+#define TRSM_LUTU blasfeo_dtrsm_lutu
+#define TRSM_RLNN blasfeo_dtrsm_rlnn
+#define TRSM_RLNU blasfeo_dtrsm_rlnu
+#define TRSM_RLTN blasfeo_dtrsm_rltn
+#define TRSM_RLTU blasfeo_dtrsm_rltu
+#define TRSM_RUNN blasfeo_dtrsm_runn
+#define TRSM_RUNU blasfeo_dtrsm_runu
+#define TRSM_RUTN blasfeo_dtrsm_rutn
+#define TRSM_RUTU blasfeo_dtrsm_rutu
 
 
 
-#include "x_blas3_lib.c"
-
+#include "x_blas3_ref.c"

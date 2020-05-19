@@ -33,51 +33,49 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-/*
- * blas3 functions for LA:REFERENCE (column major)
- *
- */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux.h"
+#include <blasfeo_common.h>
+#include <blasfeo_s_aux.h>
 
 
 
-#if defined(LA_REFERENCE)
-	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
-	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
-	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
-	#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
-#else
-	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
-	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
-	#define XMATEL_C(X, Y) XMATEL(sC, X, Y)
-	#define XMATEL_D(X, Y) XMATEL(sD, X, Y)
-#endif
+#define MF_COLMAJ
+
+
+
+#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
+
+
 
 #define REAL float
 #define XMAT blasfeo_smat_ref
 #define XMATEL MATEL_REF
 #define XVEC blasfeo_svec_ref
-#define XMATEL MATEL_REF
+#define XVECEL VECEL_REF
 
 
 
+// gemm
 #define GEMM_NN    blasfeo_sgemm_nn_ref
 #define GEMM_NT    blasfeo_sgemm_nt_ref
 #define GEMM_TN    blasfeo_sgemm_tn_ref
 #define GEMM_TT    blasfeo_sgemm_tt_ref
+// syrk
 #define SYRK_LN    blasfeo_ssyrk_ln_ref
 #define SYRK_LN_MN blasfeo_ssyrk_ln_mn_ref
 #define SYRK_LT    blasfeo_ssyrk_lt_ref
 #define SYRK_UN    blasfeo_ssyrk_un_ref
 #define SYRK_UT    blasfeo_ssyrk_ut_ref
+// trmm
 #define TRMM_RLNN  blasfeo_strmm_rlnn_ref
 #define TRMM_RUTN  blasfeo_strmm_rutn_ref
+// trss
 #define TRSM_LUNU  blasfeo_strsm_lunu_ref
 #define TRSM_LUNN  blasfeo_strsm_lunn_ref
 #define TRSM_LUTU  blasfeo_strsm_lutu_ref
@@ -98,4 +96,6 @@
 
 
 // TESTING_MODE
-#include "x_blas3_lib.c"
+#include "x_blas3_ref.c"
+
+

@@ -36,38 +36,52 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#if defined(LA_EXTERNAL_BLAS_WRAPPER)
-#if defined(EXTERNAL_BLAS_BLIS)
-#include "blis.h"
-#elif defined(EXTERNAL_BLAS_MKL)
-#include "mkl.h"
-#else
-#include "../include/s_blas.h"
-#endif
-#endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux.h"
+#define MF_COLMAJ
+
+
+#include <blasfeo_common.h>
+#include <blasfeo_s_aux.h>
+
+
+
+#if defined(MF_COLMAJ)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+	#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
+#else
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
+	#define XMATEL_C(X, Y) XMATEL(sC, X, Y)
+	#define XMATEL_D(X, Y) XMATEL(sD, X, Y)
+#endif
 
 
 
 #define REAL float
 #define XMAT blasfeo_smat
+#define XMATEL BLASFEO_SMATEL
 #define XVEC blasfeo_svec
+#define XMATEL BLASFEO_SMATEL
 
 
 
+// gemm
 #define GEMM_NN blasfeo_sgemm_nn
 #define GEMM_NT blasfeo_sgemm_nt
 #define GEMM_TN blasfeo_sgemm_tn
 #define GEMM_TT blasfeo_sgemm_tt
+// syrk
 #define SYRK_LN blasfeo_ssyrk_ln
 #define SYRK_LN_MN blasfeo_ssyrk_ln_mn
 #define SYRK_LT blasfeo_ssyrk_lt
 #define SYRK_UN blasfeo_ssyrk_un
 #define SYRK_UT blasfeo_ssyrk_ut
+// trmm
 #define TRMM_RLNN blasfeo_strmm_rlnn
 #define TRMM_RUTN blasfeo_strmm_rutn
+// trsm
 #define TRSM_LLNN blasfeo_strsm_llnn
 #define TRSM_LLNU blasfeo_strsm_llnu
 #define TRSM_LLTN blasfeo_strsm_lltn
@@ -85,13 +99,7 @@
 #define TRSM_RUTN blasfeo_strsm_rutn
 #define TRSM_RUTU blasfeo_strsm_rutu
 
-#define COPY scopy_
-#define GEMM sgemm_
-#define SYRK ssyrk_
-#define TRMM strmm_
-#define TRSM strsm_
 
 
-
-#include "x_blas3_lib.c"
+#include "x_blas3_ref.c"
 

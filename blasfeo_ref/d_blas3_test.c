@@ -37,22 +37,19 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
+#include <blasfeo_common.h>
+#include <blasfeo_d_aux.h>
 
 
 
-#if defined(LA_REFERENCE)
-	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
-	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
-	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
-	#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
-#else
-	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
-	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
-	#define XMATEL_C(X, Y) XMATEL(sC, X, Y)
-	#define XMATEL_D(X, Y) XMATEL(sD, X, Y)
-#endif
+#define MF_COLMAJ
+
+
+
+#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
 
 
 
@@ -64,17 +61,21 @@
 
 
 
+// gemm
 #define GEMM_NN    blasfeo_dgemm_nn_ref
 #define GEMM_NT    blasfeo_dgemm_nt_ref
 #define GEMM_TN    blasfeo_dgemm_tn_ref
 #define GEMM_TT    blasfeo_dgemm_tt_ref
+// syrk
 #define SYRK_LN    blasfeo_dsyrk_ln_ref
 #define SYRK_LN_MN blasfeo_dsyrk_ln_mn_ref
 #define SYRK_LT    blasfeo_dsyrk_lt_ref
 #define SYRK_UN    blasfeo_dsyrk_un_ref
 #define SYRK_UT    blasfeo_dsyrk_ut_ref
+// trmm
 #define TRMM_RLNN  blasfeo_dtrmm_rlnn_ref
 #define TRMM_RUTN  blasfeo_dtrmm_rutn_ref
+// trsm
 #define TRSM_LUNU  blasfeo_dtrsm_lunu_ref
 #define TRSM_LUNN  blasfeo_dtrsm_lunn_ref
 #define TRSM_LUTU  blasfeo_dtrsm_lutu_ref
@@ -95,4 +96,5 @@
 
 
 // TESTING_MODE
-#include "x_blas3_lib.c"
+#include "x_blas3_ref.c"
+
