@@ -1111,6 +1111,7 @@ install_shared:
 clean:
 	make -C auxiliary clean
 	make -C kernel clean
+	make -C blasfeo_ref clean
 	make -C blasfeo_api clean
 	make -C blas_api clean
 	make -C netlib clean

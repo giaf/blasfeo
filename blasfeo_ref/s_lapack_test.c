@@ -77,8 +77,8 @@
 #define POTRF_L blasfeo_spotrf_l_ref
 #define POTRF_L_MN blasfeo_spotrf_l_mn_ref
 #define PSTRF_L spstrf_l_libstr_ref
-#define SYRK_POTRF_LN blasfeo_ssyrk_dpotrf_ln_ref
-#define SYRK_POTRF_LN_MN blasfeo_ssyrk_dpotrf_ln_mn_ref
+#define SYRK_POTRF_LN blasfeo_ssyrk_spotrf_ln_ref
+#define SYRK_POTRF_LN_MN blasfeo_ssyrk_spotrf_ln_mn_ref
 
 // TESTING_MODE
 #include "x_lapack_ref.c"
