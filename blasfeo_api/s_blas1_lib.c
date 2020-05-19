@@ -50,31 +50,29 @@
 #endif
 #endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_kernel.h"
+#include <blasfeo_common.h>
 
 
 
 #define REAL float
+#define XMAT blasfeo_smat
+#define XVEC blasfeo_svec
 
-#define STRMAT blasfeo_smat
-#define STRVEC blasfeo_svec
+#define AXPY blasfeo_saxpy
+#define AXPBY blasfeo_saxpby
+#define VECMUL blasfeo_svecmul
+#define VECMULACC blasfeo_svecmulacc
+#define VECMULDOT blasfeo_svecmuldot
+#define DOT blasfeo_sdot
+#define ROTG blasfeo_srotg
+#define COLROT blasfeo_scolrot
+#define ROWROT blasfeo_srowrot
 
-#define AXPY_LIBSTR blasfeo_saxpy
-#define AXPBY_LIBSTR blasfeo_saxpby
-#define VECMUL_LIBSTR blasfeo_svecmul
-#define VECMULACC_LIBSTR blasfeo_svecmulacc
-#define VECMULDOT_LIBSTR blasfeo_svecmuldot
-#define DOT_LIBSTR blasfeo_sdot
-#define ROTG_LIBSTR blasfeo_srotg
-#define COLROT_LIBSTR blasfeo_scolrot
-#define ROWROT_LIBSTR blasfeo_srowrot
-
-#define AXPY saxpy_
-#define COPY scopy_
-#define SCAL sscal_
-#define ROT srot_
-#define ROTG srotg_
+#define AXPY_ saxpy_
+#define COPY_ scopy_
+#define SCAL_ sscal_
+#define ROT_ srot_
+#define ROTG_ srotg_
 
 
 #include "x_blas1_lib.c"

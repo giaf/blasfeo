@@ -40,24 +40,37 @@
 #define FABS fabs
 #define SQRT sqrt
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_kernel.h"
+#if defined(LA_EXTERNAL_BLAS_WRAPPER)
+#if defined(EXTERNAL_BLAS_BLIS)
+#include "blis.h"
+#elif defined(EXTERNAL_BLAS_MKL)
+#include "mkl.h"
+#else
+#include "../include/s_blas.h"
+#endif
+#endif
+
+#include <blasfeo_common.h>
 
 
 
-#define REAL double
+#define REAL float
+#define XMAT blasfeo_smat_ref
+#define XVEC blasfeo_svec_ref
 
-#define STRMAT blasfeo_dmat_ref
-#define STRVEC blasfeo_dvec_ref
+#define AXPY blasfeo_saxpy
+#define AXPBY blasfeo_saxpby
+#define VECMUL blasfeo_svecmul
+#define VECMULACC blasfeo_svecmulacc
+#define VECMULDOT blasfeo_svecmuldot
+#define DOT blasfeo_sdot
+#define ROTG blasfeo_srotg
+#define COLROT blasfeo_scolrot
+#define ROWROT blasfeo_srowrot
 
-#define AXPY_LIBSTR blasfeo_daxpy_ref
-#define AXPBY_LIBSTR blasfeo_daxpby_ref
-#define VECMUL_LIBSTR blasfeo_dvecmul_ref
-#define VECMULACC_LIBSTR blasfeo_dvecmulacc_ref
-#define VECMULDOT_LIBSTR blasfeo_dvecmuldot_ref
-#define DOT_LIBSTR blasfeo_ddot_ref
-#define ROTG_LIBSTR blasfeo_drotg_ref
-#define COLROT_LIBSTR blasfeo_dcolrot_ref
-#define ROWROT_LIBSTR blasfeo_drowrot_ref
 
-#include "x_blas1_lib.c"
+
+#include "x_blas1_ref.c"
+
+
+

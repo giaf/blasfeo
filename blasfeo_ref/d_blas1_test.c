@@ -55,8 +55,8 @@
 
 
 #define REAL double
-#define XMAT blasfeo_dmat
-#define XVEC blasfeo_dvec
+#define XMAT blasfeo_dmat_ref
+#define XVEC blasfeo_dvec_ref
 
 #define AXPY blasfeo_daxpy
 #define AXPBY blasfeo_daxpby
@@ -68,11 +68,8 @@
 #define COLROT blasfeo_dcolrot
 #define ROWROT blasfeo_drowrot
 
-#define AXPY_ daxpy_
-#define COPY_ dcopy_
-#define SCAL_ dscal_
-#define ROT_ drot_
-#define ROTG_ drotg_
 
 
-#include "x_blas1_lib.c"
+#include "x_blas1_ref.c"
+
+

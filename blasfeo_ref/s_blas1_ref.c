@@ -37,12 +37,12 @@
 #include <stdio.h>
 #include <math.h>
 
-#define FABS fabsf
-#define SQRT sqrtf
+#define FABS fabs
+#define SQRT sqrt
 
 #if defined(LA_EXTERNAL_BLAS_WRAPPER)
 #if defined(EXTERNAL_BLAS_BLIS)
-#include "../include/s_blas_64.h"
+#include "blis.h"
 #elif defined(EXTERNAL_BLAS_MKL)
 #include "mkl.h"
 #else
@@ -50,25 +50,26 @@
 #endif
 #endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_kernel.h"
+#include <blasfeo_common.h>
 
 
 
 #define REAL float
+#define XMAT blasfeo_smat
+#define XVEC blasfeo_svec
 
-#define STRMAT blasfeo_smat_ref
-#define STRVEC blasfeo_svec_ref
-
-#define AXPY_LIBSTR blasfeo_saxpy_ref
-#define AXPBY_LIBSTR blasfeo_saxpby_ref
-#define VECMUL_LIBSTR blasfeo_svecmul_ref
-#define VECMULACC_LIBSTR blasfeo_svecmulacc_ref
-#define VECMULDOT_LIBSTR blasfeo_svecmuldot_ref
-#define DOT_LIBSTR blasfeo_sdot_ref
-#define ROTG_LIBSTR blasfeo_srotg_ref
-#define COLROT_LIBSTR blasfeo_scolrot_ref
-#define ROWROT_LIBSTR blasfeo_srowrot_ref
+#define AXPY blasfeo_saxpy
+#define AXPBY blasfeo_saxpby
+#define VECMUL blasfeo_svecmul
+#define VECMULACC blasfeo_svecmulacc
+#define VECMULDOT blasfeo_svecmuldot
+#define DOT blasfeo_sdot
+#define ROTG blasfeo_srotg
+#define COLROT blasfeo_scolrot
+#define ROWROT blasfeo_srowrot
 
 
-#include "x_blas1_lib.c"
+
+#include "x_blas1_ref.c"
+
+

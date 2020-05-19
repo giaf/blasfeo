@@ -68,11 +68,7 @@
 #define COLROT blasfeo_dcolrot
 #define ROWROT blasfeo_drowrot
 
-#define AXPY_ daxpy_
-#define COPY_ dcopy_
-#define SCAL_ dscal_
-#define ROT_ drot_
-#define ROTG_ drotg_
 
 
-#include "x_blas1_lib.c"
+#include "x_blas1_ref.c"
+
