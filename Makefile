@@ -748,20 +748,20 @@ OBJS += \
 
 # blas
 OBJS += \
+		blasfeo_ref/d_blas2_ref.o \
 		blasfeo_ref/d_blas2_diag_ref.o \
 		blasfeo_ref/d_blas3_ref.o \
 		blasfeo_ref/d_blas3_diag_ref.o \
 		\
+		blasfeo_ref/s_blas2_ref.o \
 		blasfeo_ref/s_blas2_diag_ref.o \
 		blasfeo_ref/s_blas3_ref.o \
 		blasfeo_ref/s_blas3_diag_ref.o \
 		\
 		blasfeo_api/d_blas1_lib.o \
-		blasfeo_api/d_blas2_lib.o \
 		blasfeo_api/d_lapack_lib.o \
 		\
 		blasfeo_api/s_blas1_lib.o \
-		blasfeo_api/s_blas2_lib.o \
 		blasfeo_api/s_lapack_lib.o \
 
 ifeq ($(LA), REFERENCE)
@@ -802,10 +802,12 @@ OBJS_REF =
 # aux
 OBJS_REF += \
 		\
+		blasfeo_ref/d_blas2_test.o \
 		blasfeo_ref/d_blas2_diag_test.o \
 		blasfeo_ref/d_blas3_test.o \
 		blasfeo_ref/d_blas3_diag_test.o \
 		\
+		blasfeo_ref/s_blas2_test.o \
 		blasfeo_ref/s_blas2_diag_test.o \
 		blasfeo_ref/s_blas3_test.o \
 		blasfeo_ref/s_blas3_diag_test.o \
@@ -815,10 +817,8 @@ OBJS_REF += \
 		auxiliary/d_aux_ext_dep_libref.o \
 		auxiliary/s_aux_ext_dep_libref.o \
 		blasfeo_api/d_blas1_libref.o \
-		blasfeo_api/d_blas2_libref.o \
 		blasfeo_api/d_lapack_libref.o \
 		blasfeo_api/s_blas1_libref.o \
-		blasfeo_api/s_blas2_libref.o \
 		blasfeo_api/s_lapack_libref.o \
 #
 endif

@@ -46,24 +46,13 @@
 #endif
 #endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
-
-
-
-#if defined(LA_REFERENCE)
-	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
-#else
-	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
-#endif
+#include <blasfeo_common.h>
 
 
 
 #define REAL double
 #define XMAT blasfeo_dmat
-#define XMATEL BLASFEO_DMATEL
 #define XVEC blasfeo_dvec
-#define XVECEL BLASFEO_DVECEL
 
 
 

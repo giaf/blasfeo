@@ -46,8 +46,7 @@
 #endif
 #endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux.h"
+#include <blasfeo_common.h>
 
 
 

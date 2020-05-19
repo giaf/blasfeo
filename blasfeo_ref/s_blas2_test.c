@@ -36,50 +36,44 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#if defined(LA_EXTERNAL_BLAS_WRAPPER)
-#if defined(EXTERNAL_BLAS_BLIS)
-#include "blis.h"
-#elif defined(EXTERNAL_BLAS_MKL)
-#include "mkl.h"
-#else
-#include "../include/s_blas.h"
-#endif
-#endif
-
 #include <blasfeo_common.h>
 
 
 
+#define MF_COLMAJ
+
+
+
+#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+
+
+
 #define REAL float
-#define XMAT blasfeo_smat
-#define XVEC blasfeo_svec
+#define XMAT blasfeo_smat_ref
+#define XMATEL MATEL_REF
+#define XVEC blasfeo_svec_ref
+#define XVECEL VECEL_REF
 
 
 
-#define GEMV_N blasfeo_sgemv_n
-#define GEMV_NT blasfeo_sgemv_nt
-#define GEMV_T blasfeo_sgemv_t
-#define SYMV_L blasfeo_ssymv_l
-#define TRMV_LNN blasfeo_strmv_lnn
-#define TRMV_LTN blasfeo_strmv_ltn
-#define TRMV_UNN blasfeo_strmv_unn
-#define TRMV_UTN blasfeo_strmv_utn
-#define TRSV_LNN blasfeo_strsv_lnn
-#define TRSV_LNN_MN blasfeo_strsv_lnn_mn
-#define TRSV_LNU blasfeo_strsv_lnu
+#define GEMV_N blasfeo_sgemv_n_ref
+#define GEMV_NT blasfeo_sgemv_nt_ref
+#define GEMV_T blasfeo_sgemv_t_ref
+#define SYMV_L blasfeo_ssymv_l_ref
+#define TRMV_LNN blasfeo_strmv_lnn_ref
+#define TRMV_LTN blasfeo_strmv_ltn_ref
+#define TRMV_UNN blasfeo_strmv_unn_ref
+#define TRMV_UTN blasfeo_strmv_utn_ref
+#define TRSV_LNN blasfeo_strsv_lnn_ref
+#define TRSV_LNN_MN blasfeo_strsv_lnn_mn_ref
+#define TRSV_LNU blasfeo_strsv_lnu_ref
 #define TRSV_LTN blasfeo_strsv_ltn
-#define TRSV_LTN_MN blasfeo_strsv_ltn_mn
-#define TRSV_LTU blasfeo_strsv_ltu
-#define TRSV_UNN blasfeo_strsv_unn
-#define TRSV_UTN blasfeo_strsv_utn
-
-#define COPY scopy_
-#define GEMV sgemv_
-#define SYMV ssymv_
-#define TRMV strmv_
-#define TRSV strsv_
+#define TRSV_LTN_MN blasfeo_strsv_ltn_mn_ref
+#define TRSV_LTU blasfeo_strsv_ltu_ref
+#define TRSV_UNN blasfeo_strsv_unn_ref
+#define TRSV_UTN blasfeo_strsv_utn_ref
 
 
+#include "x_blas2_ref.c"
 
-#include "x_blas2_lib.c"
 
