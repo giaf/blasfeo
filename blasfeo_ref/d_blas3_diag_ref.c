@@ -33,159 +33,43 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
 
 
-#if defined(LA_EXTERNAL_BLAS_WRAPPER)
+#define MF_COLMAJ
 
 
-
-// dgemm with A diagonal matrix (stored as strvec)
-void GEMM_L_DIAG(int m, int n, REAL alpha, struct XVEC *sA, int ai, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
-	{
-	if(m<=0 | n<=0)
-		return;
-
-	// invalidate stored inverse diagonal of result matrix
-	sD->use_dA = 0;
-
-	int ii, jj;
-	int ldb = sB->m;
-	int ldc = sC->m;
-	int ldd = sD->m;
-	REAL *pB = sB->pA + bi + bj*ldb;
-	REAL *pC = sC->pA + ci + cj*ldc;
-	REAL *pD = sD->pA + di + dj*ldd;
-	const int bbi=0; const int bbj=0;
-	const int cci=0; const int ccj=0;
-	const int ddi=0; const int ddj=0;
-	REAL *dA = sA->pa + ai;
-	REAL a0, a1;
-	if(beta==0.0)
-		{
-		ii = 0;
-		for(; ii<m-1; ii+=2)
-			{
-			a0 = alpha * dA[ii+0];
-			a1 = alpha * dA[ii+1];
-			for(jj=0; jj<n; jj++)
-				{
-				XMATEL_D(ddi+ii+0, ddj+jj) = a0 * XMATEL_B(bbi+ii+0, bbj+jj);
-				XMATEL_D(ddi+ii+1, ddj+jj) = a1 * XMATEL_B(bbi+ii+1, bbj+jj);
-				}
-			}
-		for(; ii<m; ii++)
-			{
-			a0 = alpha * dA[ii];
-			for(jj=0; jj<n; jj++)
-				{
-				XMATEL_D(ddi+ii+0, ddj+jj) = a0 * XMATEL_B(bbi+ii+0, bbj+jj);
-				}
-			}
-		}
-	else
-		{
-		ii = 0;
-		for(; ii<m-1; ii+=2)
-			{
-			a0 = alpha * dA[ii+0];
-			a1 = alpha * dA[ii+1];
-			for(jj=0; jj<n; jj++)
-				{
-				XMATEL_D(ddi+ii+0, ddj+jj) = a0 * XMATEL_B(bbi+ii+0, bbj+jj) + beta * XMATEL_C(cci+ii+0, ccj+jj);
-				XMATEL_D(ddi+ii+1, ddj+jj) = a1 * XMATEL_B(bbi+ii+1, bbj+jj) + beta * XMATEL_C(cci+ii+1, ccj+jj);
-				}
-			}
-		for(; ii<m; ii++)
-			{
-			a0 = alpha * dA[ii];
-			for(jj=0; jj<n; jj++)
-				{
-				XMATEL_D(ddi+ii+0, ddj+jj) = a0 * XMATEL_B(bbi+ii+0, bbj+jj) + beta * XMATEL_C(cci+ii+0, ccj+jj);
-				}
-			}
-		}
-	return;
-	}
+#include <blasfeo_common.h>
 
 
 
-// dgemm with B diagonal matrix (stored as strvec)
-void GEMM_R_DIAG(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sB, int bi, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
-	{
-	if(m<=0 | n<=0)
-		return;
-
-	// invalidate stored inverse diagonal of result matrix
-	sD->use_dA = 0;
-
-	int ii, jj;
-	int lda = sA->m;
-	int ldc = sC->m;
-	int ldd = sD->m;
-	REAL *pA = sA->pA + ai + aj*lda;
-	REAL *pC = sC->pA + ci + cj*ldc;
-	REAL *pD = sD->pA + di + dj*ldd;
-	const int aai=0; const int aaj=0;
-	const int cci=0; const int ccj=0;
-	const int ddi=0; const int ddj=0;
-	REAL *dB = sB->pa + bi;
-	REAL a0, a1;
-	if(beta==0.0)
-		{
-		jj = 0;
-		for(; jj<n-1; jj+=2)
-			{
-			a0 = alpha * dB[jj+0];
-			a1 = alpha * dB[jj+1];
-			for(ii=0; ii<m; ii++)
-				{
-				XMATEL_D(ddi+ii, ddj+(jj+0)) = a0 * XMATEL_A(aai+ii, aaj+(jj+0));
-				XMATEL_D(ddi+ii, ddj+(jj+1)) = a1 * XMATEL_A(aai+ii, aaj+(jj+1));
-				}
-			}
-		for(; jj<n; jj++)
-			{
-			a0 = alpha * dB[jj+0];
-			for(ii=0; ii<m; ii++)
-				{
-				XMATEL_D(ddi+ii, ddj+(jj+0)) = a0 * XMATEL_A(aai+ii, aaj+(jj+0));
-				}
-			}
-		}
-	else
-		{
-		jj = 0;
-		for(; jj<n-1; jj+=2)
-			{
-			a0 = alpha * dB[jj+0];
-			a1 = alpha * dB[jj+1];
-			for(ii=0; ii<m; ii++)
-				{
-				XMATEL_D(ddi+ii, ddj+(jj+0)) = a0 * XMATEL_A(aai+ii, aaj+(jj+0)) + beta * XMATEL_C(cci+ii, ccj+(jj+0));
-				XMATEL_D(ddi+ii, ddj+(jj+1)) = a1 * XMATEL_A(aai+ii, aaj+(jj+1)) + beta * XMATEL_C(cci+ii, ccj+(jj+1));
-				}
-			}
-		for(; jj<n; jj++)
-			{
-			a0 = alpha * dB[jj+0];
-			for(ii=0; ii<m; ii++)
-				{
-				XMATEL_D(ddi+ii, ddj+(jj+0)) = a0 * XMATEL_A(aai+ii, aaj+(jj+0)) + beta * XMATEL_C(cci+ii, ccj+(jj+0));
-				}
-			}
-		}
-	return;
-	}
-
-
-
+#if defined(MF_COLMAJ)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+	#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
 #else
-
-#error : wrong LA choice
-
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
+	#define XMATEL_C(X, Y) XMATEL(sC, X, Y)
+	#define XMATEL_D(X, Y) XMATEL(sD, X, Y)
 #endif
 
 
 
+#define REAL double
+#define XMAT blasfeo_dmat
+#define XMATEL BLASFEO_DMATEL
+#define XVEC blasfeo_dvec
+#define XVECEL BLASFEO_DVECEL
 
+
+
+#define GEMM_R_DIAG blasfeo_dgemm_nd
+#define GEMM_L_DIAG blasfeo_dgemm_dn
+
+
+
+#include "x_blas3_diag_ref.c"
 

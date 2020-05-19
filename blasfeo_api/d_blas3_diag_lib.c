@@ -36,22 +36,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_kernel.h"
+#include <blasfeo_common.h>
 
 
 
-#if defined(LA_REFERENCE)
-	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
-	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
-	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
-	#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
-#else
-	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
-	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
-	#define XMATEL_C(X, Y) XMATEL(sC, X, Y)
-	#define XMATEL_D(X, Y) XMATEL(sD, X, Y)
-#endif
+#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
 
 
 

@@ -35,10 +35,6 @@
 
 
 
-#if defined(LA_EXTERNAL_BLAS_WRAPPER)
-
-
-
 // dgemm with A diagonal matrix (stored as strvec)
 void GEMM_L_DIAG(int m, int n, REAL alpha, struct XVEC *sA, int ai, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -49,6 +45,7 @@ void GEMM_L_DIAG(int m, int n, REAL alpha, struct XVEC *sA, int ai, struct XMAT 
 	sD->use_dA = 0;
 
 	int ii, jj;
+#if defined(MF_COLMAJ)
 	int ldb = sB->m;
 	int ldc = sC->m;
 	int ldd = sD->m;
@@ -58,6 +55,11 @@ void GEMM_L_DIAG(int m, int n, REAL alpha, struct XVEC *sA, int ai, struct XMAT 
 	const int bbi=0; const int bbj=0;
 	const int cci=0; const int ccj=0;
 	const int ddi=0; const int ddj=0;
+#else
+	int bbi=bi; int bbj=bj;
+	int cci=ci; int ccj=cj;
+	int ddi=di; int ddj=dj;
+#endif
 	REAL *dA = sA->pa + ai;
 	REAL a0, a1;
 	if(beta==0.0)
@@ -119,6 +121,7 @@ void GEMM_R_DIAG(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 	sD->use_dA = 0;
 
 	int ii, jj;
+#if defined(MF_COLMAJ)
 	int lda = sA->m;
 	int ldc = sC->m;
 	int ldd = sD->m;
@@ -128,6 +131,11 @@ void GEMM_R_DIAG(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 	const int aai=0; const int aaj=0;
 	const int cci=0; const int ccj=0;
 	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int cci=ci; int ccj=cj;
+	int ddi=di; int ddj=dj;
+#endif
 	REAL *dB = sB->pa + bi;
 	REAL a0, a1;
 	if(beta==0.0)
@@ -176,16 +184,4 @@ void GEMM_R_DIAG(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 		}
 	return;
 	}
-
-
-
-#else
-
-#error : wrong LA choice
-
-#endif
-
-
-
-
 

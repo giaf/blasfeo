@@ -1,3 +1,4 @@
+
 /**************************************************************************************************
 *                                                                                                 *
 * This file is part of BLASFEO.                                                                   *
@@ -63,7 +64,7 @@
 #define XMAT blasfeo_smat
 #define XMATEL BLASFEO_SMATEL
 #define XVEC blasfeo_svec
-#define XMATEL BLASFEO_SMATEL
+#define XVECEL BLASFEO_SVECEL
 
 
 

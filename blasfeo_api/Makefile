@@ -76,10 +76,19 @@ OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_
 OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
 endif
 
-else # LA_REFERENCE | LA_BLAS
+endif
 
-OBJS += d_blas1_lib.o d_blas2_lib.o d_blas2_diag_lib.o d_blas3_diag_lib.o d_lapack_lib.o
-OBJS += s_blas1_lib.o s_blas2_lib.o s_blas2_diag_lib.o s_blas3_diag_lib.o s_lapack_lib.o
+ifeq ($(LA), EXTERNAL_BLAS_WRAPPER)
+
+OBJS += d_blas1_lib.o d_blas2_lib.o d_blas2_diag_lib.o d_blas3_lib.o d_blas3_diag_lib.o d_lapack_lib.o
+OBJS += s_blas1_lib.o s_blas2_lib.o s_blas2_diag_lib.o s_blas3_lib.o s_blas3_diag_lib.o s_lapack_lib.o
+
+endif # LA choice
+
+ifeq ($(LA), REFERENCE)
+
+OBJS += d_blas1_lib.o d_blas2_lib.o d_blas2_diag_lib.o d_lapack_lib.o
+OBJS += s_blas1_lib.o s_blas2_lib.o s_blas2_diag_lib.o s_lapack_lib.o
 
 endif # LA choice
 
@@ -88,13 +97,11 @@ ifeq ($(TESTING_MODE), 1)
 OBJS += s_blas1_libref.o
 OBJS += s_blas2_libref.o
 OBJS += s_blas2_diag_libref.o
-OBJS += s_blas3_diag_libref.o
 OBJS += s_lapack_libref.o
 
 OBJS += d_blas1_libref.o
 OBJS += d_blas2_libref.o
 OBJS += d_blas2_diag_libref.o
-OBJS += d_blas3_diag_libref.o
 OBJS += d_lapack_libref.o
 endif
 
@@ -114,8 +121,8 @@ d_blas2_lib.o: d_blas2_lib.c x_blas2_lib.c
 s_blas2_lib.o: s_blas2_lib.c x_blas2_lib.c
 d_blas2_diag_lib.o: d_blas2_diag_lib.c x_blas2_diag_lib.c
 s_blas2_diag_lib.o: s_blas2_diag_lib.c x_blas2_diag_lib.c
-#d_blas3_lib.o: d_blas3_lib.c x_blas3_lib.c
-#s_blas3_lib.o: s_blas3_lib.c x_blas3_lib.c
+d_blas3_lib.o: d_blas3_lib.c x_blas3_lib.c
+s_blas3_lib.o: s_blas3_lib.c x_blas3_lib.c
 d_blas3_diag_lib.o: d_blas3_diag_lib.c x_blas3_diag_lib.c
 s_blas3_diag_lib.o: s_blas3_diag_lib.c x_blas3_diag_lib.c
 d_lapack_lib.o: d_lapack_lib.c x_lapack_lib.c

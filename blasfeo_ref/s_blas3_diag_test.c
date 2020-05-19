@@ -40,6 +40,10 @@
 
 
 
+#define MF_COLMAJ
+
+
+
 #define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
 #define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
 #define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
@@ -47,17 +51,19 @@
 
 
 
-#define REAL float
-#define XMAT blasfeo_smat
-#define XMATEL BLASFEO_SMATEL
-#define XVEC blasfeo_svec
-#define XVECEL BLASFEO_SVECEL
+#define REAL double
+#define XMAT blasfeo_smat_ref
+#define XMATEL MATEL_REF
+#define XVEC blasfeo_svec_ref
+#define XVECEL VECEL_REF
 
 
 
-#define GEMM_L_DIAG blasfeo_sgemm_dn
-#define GEMM_R_DIAG blasfeo_sgemm_nd
+#define GEMM_R_DIAG blasfeo_sgemm_nd_ref
+#define GEMM_L_DIAG blasfeo_sgemm_dn_ref
 
 
 
-#include "x_blas3_diag_lib.c"
+#include "x_blas3_diag_ref.c"
+
+
