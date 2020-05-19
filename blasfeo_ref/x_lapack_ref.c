@@ -1577,17 +1577,17 @@ void GEQRF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 		for(; jj<jmax-1; jj+=2)
 			{
 			// compute W^T = C^T * V
-			pW[0+ldw*0] = XMATEL_D(ddi+0, ddj+(jj+0+2)) + XMATEL_D(ddi+1, ddj+(jj+0+2)) * XMATEL_D(ddi+ii+1, ddj+ii);
-			pW[1+ldw*0] = XMATEL_D(ddi+0, ddj+(jj+1+2)) + XMATEL_D(ddi+1, ddj+(jj+1+2)) * XMATEL_D(ddi+ii+1, ddj+ii);
-			pW[0+ldw*1] =                        XMATEL_D(ddi+1, ddj+(jj+0+2));
-			pW[1+ldw*1] =                        XMATEL_D(ddi+1, ddj+(jj+1+2));
+			pW[0+ldw*0] = XMATEL_D(ddi+ii+0, ddj+ii+(jj+0+2)) + XMATEL_D(ddi+ii+1, ddj+ii+(jj+0+2)) * XMATEL_D(ddi+ii+1, ddj+ii);
+			pW[1+ldw*0] = XMATEL_D(ddi+ii+0, ddj+ii+(jj+1+2)) + XMATEL_D(ddi+ii+1, ddj+ii+(jj+1+2)) * XMATEL_D(ddi+ii+1, ddj+ii);
+			pW[0+ldw*1] =                        XMATEL_D(ddi+ii+1, ddj+ii+(jj+0+2));
+			pW[1+ldw*1] =                        XMATEL_D(ddi+ii+1, ddj+ii+(jj+1+2));
 			kk = 2;
 			for(; kk<kmax; kk++)
 				{
-				tmp = XMATEL_D(ddi+kk, ddj+(jj+0+2));
+				tmp = XMATEL_D(ddi+ii+kk, ddj+ii+(jj+0+2));
 				pW[0+ldw*0] += tmp * XMATEL_D(ddi+ii+kk, ddj+ii);
 				pW[0+ldw*1] += tmp * XMATEL_D(ddi+ii+kk, ddj+ii+1);
-				tmp = XMATEL_D(ddi+kk, ddj+(jj+1+2));
+				tmp = XMATEL_D(ddi+ii+kk, ddj+ii+(jj+1+2));
 				pW[1+ldw*0] += tmp * XMATEL_D(ddi+ii+kk, ddj+ii);
 				pW[1+ldw*1] += tmp * XMATEL_D(ddi+ii+kk, ddj+ii+1);
 				}
@@ -1597,43 +1597,43 @@ void GEQRF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 			pW[0+ldw*0] = pT[0+ldb*0]*pW[0+ldw*0];
 			pW[1+ldw*0] = pT[0+ldb*0]*pW[1+ldw*0];
 			// compute C -= V * W^T
-			XMATEL_D(ddi+0, ddj+(jj+0+2)) -= pW[0+ldw*0];
-			XMATEL_D(ddi+0, ddj+(jj+1+2)) -= pW[1+ldw*0];
-			XMATEL_D(ddi+1, ddj+(jj+0+2)) -= XMATEL_D(ddi+ii+1, ddj+ii)*pW[0+ldw*0] + pW[0+ldw*1];
-			XMATEL_D(ddi+1, ddj+(jj+1+2)) -= XMATEL_D(ddi+ii+1, ddj+ii)*pW[1+ldw*0] + pW[1+ldw*1];
+			XMATEL_D(ddi+ii+0, ddj+ii+(jj+0+2)) -= pW[0+ldw*0];
+			XMATEL_D(ddi+ii+0, ddj+ii+(jj+1+2)) -= pW[1+ldw*0];
+			XMATEL_D(ddi+ii+1, ddj+ii+(jj+0+2)) -= XMATEL_D(ddi+ii+1, ddj+ii)*pW[0+ldw*0] + pW[0+ldw*1];
+			XMATEL_D(ddi+ii+1, ddj+ii+(jj+1+2)) -= XMATEL_D(ddi+ii+1, ddj+ii)*pW[1+ldw*0] + pW[1+ldw*1];
 			kk = 2;
 			for(; kk<kmax-1; kk+=2)
 				{
-				XMATEL_D(ddi+kk+0, ddj+(jj+0+2)) -= XMATEL_D(ddi+ii+kk+0, ddj+ii)*pW[0+ldw*0] + XMATEL_D(ddi+ii+kk+0, ddj+ii+1)*pW[0+ldw*1];
-				XMATEL_D(ddi+kk+1, ddj+(jj+0+2)) -= XMATEL_D(ddi+ii+kk+1, ddj+ii)*pW[0+ldw*0] + XMATEL_D(ddi+ii+kk+1, ddj+ii+1)*pW[0+ldw*1];
-				XMATEL_D(ddi+kk+0, ddj+(jj+1+2)) -= XMATEL_D(ddi+ii+kk+0, ddj+ii)*pW[1+ldw*0] + XMATEL_D(ddi+ii+kk+0, ddj+ii+1)*pW[1+ldw*1];
-				XMATEL_D(ddi+kk+1, ddj+(jj+1+2)) -= XMATEL_D(ddi+ii+kk+1, ddj+ii)*pW[1+ldw*0] + XMATEL_D(ddi+ii+kk+1, ddj+ii+1)*pW[1+ldw*1];
+				XMATEL_D(ddi+ii+kk+0, ddj+ii+(jj+0+2)) -= XMATEL_D(ddi+ii+kk+0, ddj+ii)*pW[0+ldw*0] + XMATEL_D(ddi+ii+kk+0, ddj+ii+1)*pW[0+ldw*1];
+				XMATEL_D(ddi+ii+kk+1, ddj+ii+(jj+0+2)) -= XMATEL_D(ddi+ii+kk+1, ddj+ii)*pW[0+ldw*0] + XMATEL_D(ddi+ii+kk+1, ddj+ii+1)*pW[0+ldw*1];
+				XMATEL_D(ddi+ii+kk+0, ddj+ii+(jj+1+2)) -= XMATEL_D(ddi+ii+kk+0, ddj+ii)*pW[1+ldw*0] + XMATEL_D(ddi+ii+kk+0, ddj+ii+1)*pW[1+ldw*1];
+				XMATEL_D(ddi+ii+kk+1, ddj+ii+(jj+1+2)) -= XMATEL_D(ddi+ii+kk+1, ddj+ii)*pW[1+ldw*0] + XMATEL_D(ddi+ii+kk+1, ddj+ii+1)*pW[1+ldw*1];
 				}
 			for(; kk<kmax; kk++)
 				{
-				XMATEL_D(ddi+kk, ddj+(jj+0+2)) -= XMATEL_D(ddi+ii+kk, ddj+ii)*pW[0+ldw*0] + XMATEL_D(ddi+ii+kk, ddj+ii+1)*pW[0+ldw*1];
-				XMATEL_D(ddi+kk, ddj+(jj+1+2)) -= XMATEL_D(ddi+ii+kk, ddj+ii)*pW[1+ldw*0] + XMATEL_D(ddi+ii+kk, ddj+ii+1)*pW[1+ldw*1];
+				XMATEL_D(ddi+ii+kk, ddj+ii+(jj+0+2)) -= XMATEL_D(ddi+ii+kk, ddj+ii)*pW[0+ldw*0] + XMATEL_D(ddi+ii+kk, ddj+ii+1)*pW[0+ldw*1];
+				XMATEL_D(ddi+ii+kk, ddj+ii+(jj+1+2)) -= XMATEL_D(ddi+ii+kk, ddj+ii)*pW[1+ldw*0] + XMATEL_D(ddi+ii+kk, ddj+ii+1)*pW[1+ldw*1];
 				}
 			}
 		for(; jj<jmax; jj++)
 			{
 			// compute W = T * V^T * C
-			pW[0+ldw*0] = XMATEL_D(ddi+0, ddj+(jj+0+2)) + XMATEL_D(ddi+1, ddj+(jj+0+2)) * XMATEL_D(ddi+ii+1, ddj+ii);
-			pW[0+ldw*1] =                        XMATEL_D(ddi+1, ddj+(jj+0+2));
+			pW[0+ldw*0] = XMATEL_D(ddi+ii+0, ddj+ii+(jj+0+2)) + XMATEL_D(ddi+ii+1, ddj+ii+(jj+0+2)) * XMATEL_D(ddi+ii+1, ddj+ii);
+			pW[0+ldw*1] =                        XMATEL_D(ddi+ii+1, ddj+ii+(jj+0+2));
 			for(kk=2; kk<kmax; kk++)
 				{
-				tmp = XMATEL_D(ddi+kk, ddj+(jj+0+2));
+				tmp = XMATEL_D(ddi+ii+kk, ddj+ii+(jj+0+2));
 				pW[0+ldw*0] += tmp * XMATEL_D(ddi+ii+kk, ddj+ii);
 				pW[0+ldw*1] += tmp * XMATEL_D(ddi+ii+kk, ddj+ii+1);
 				}
 			pW[0+ldw*1] = pT[1+ldb*0]*pW[0+ldw*0] + pT[1+ldb*1]*pW[0+ldw*1];
 			pW[0+ldw*0] = pT[0+ldb*0]*pW[0+ldw*0];
 			// compute C -= V * W^T
-			XMATEL_D(ddi+0, ddj+(jj+0+2)) -= pW[0+ldw*0];
-			XMATEL_D(ddi+1, ddj+(jj+0+2)) -= XMATEL_D(ddi+ii+1, ddj+ii)*pW[0+ldw*0] + pW[0+ldw*1];
+			XMATEL_D(ddi+ii+0, ddj+ii+(jj+0+2)) -= pW[0+ldw*0];
+			XMATEL_D(ddi+ii+1, ddj+ii+(jj+0+2)) -= XMATEL_D(ddi+ii+1, ddj+ii)*pW[0+ldw*0] + pW[0+ldw*1];
 			for(kk=2; kk<kmax; kk++)
 				{
-				XMATEL_D(ddi+kk, ddj+(jj+0+2)) -= XMATEL_D(ddi+ii+kk, ddj+ii)*pW[0+ldw*0] + XMATEL_D(ddi+ii+kk, ddj+ii+1)*pW[0+ldw*1];
+				XMATEL_D(ddi+ii+kk, ddj+ii+(jj+0+2)) -= XMATEL_D(ddi+ii+kk, ddj+ii)*pW[0+ldw*0] + XMATEL_D(ddi+ii+kk, ddj+ii+1)*pW[0+ldw*1];
 				}
 			}
 		}
@@ -1643,7 +1643,7 @@ void GEQRF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 		beta = 0.0;
 		for(jj=1; jj<m-ii; jj++)
 			{
-			tmp = XMATEL_D(ddi+jj, ddj+0);
+			tmp = XMATEL_D(ddi+ii+jj, ddj+ii+0);
 			beta += tmp*tmp;
 			}
 		if(beta==0.0)
@@ -1652,7 +1652,7 @@ void GEQRF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 			}
 		else
 			{
-			alpha = XMATEL_D(ddi+0, ddj+0);
+			alpha = XMATEL_D(ddi+ii+0, ddj+ii+0);
 			beta += alpha*alpha;
 			beta = sqrt(beta);
 			if(alpha>0)
@@ -1660,8 +1660,8 @@ void GEQRF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 			dD[ii] = (beta-alpha) / beta;
 			tmp = 1.0 / (alpha-beta);
 			for(jj=1; jj<m-ii; jj++)
-				XMATEL_D(ddi+jj, ddj+0) *= tmp;
-			XMATEL_D(ddi+0, ddj+0) = beta;
+				XMATEL_D(ddi+ii+jj, ddj+ii+0) *= tmp;
+			XMATEL_D(ddi+ii+0, ddj+ii+0) = beta;
 			}
 		if(ii<n)
 			{
@@ -1763,7 +1763,7 @@ void GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 		beta = 0.0;
 		for(jj=1; jj<n-ii; jj++)
 			{
-			tmp = XMATEL_D(ddi+0, ddj+jj);
+			tmp = XMATEL_D(ddi+ii+0, ddj+ii+jj);
 			beta += tmp*tmp;
 			}
 		if(beta==0.0)
@@ -1773,7 +1773,7 @@ void GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 			}
 		else
 			{
-			alpha = XMATEL_D(ddi+0, ddj+0);
+			alpha = XMATEL_D(ddi+ii+0, ddj+ii+0);
 			beta += alpha*alpha;
 			beta = sqrt(beta);
 			if(alpha>0)
@@ -1782,10 +1782,10 @@ void GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 			dD[ii] = (beta-alpha) / beta;
 			tmp = 1.0 / (alpha-beta);
 			// compute v0
-			XMATEL_D(ddi+0, ddj+0) = beta;
+			XMATEL_D(ddi+ii+0, ddj+ii+0) = beta;
 			for(jj=1; jj<n-ii; jj++)
 				{
-				XMATEL_D(ddi+0, ddj+jj) *= tmp;
+				XMATEL_D(ddi+ii+0, ddj+ii+jj) *= tmp;
 				}
 			}
 		// gemv_t & ger
@@ -1842,17 +1842,17 @@ void GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 		for(; jj<jmax-1; jj+=2)
 			{
 			// compute W^T = C^T * V
-			pW[0+ldw*0] = XMATEL_D(ddi+jj+0+2, ddj+0) + XMATEL_D(ddi+jj+0+2, ddj+1) * XMATEL_D(ddi+ii+0, ddj+ii+1);
-			pW[1+ldw*0] = XMATEL_D(ddi+jj+1+2, ddj+0) + XMATEL_D(ddi+jj+1+2, ddj+1) * XMATEL_D(ddi+ii+0, ddj+ii+1);
-			pW[0+ldw*1] =                      XMATEL_D(ddi+jj+0+2, ddj+1);
-			pW[1+ldw*1] =                      XMATEL_D(ddi+jj+1+2, ddj+1);
+			pW[0+ldw*0] = XMATEL_D(ddi+ii+jj+0+2, ddj+ii+0) + XMATEL_D(ddi+ii+jj+0+2, ddj+ii+1) * XMATEL_D(ddi+ii+0, ddj+ii+1);
+			pW[1+ldw*0] = XMATEL_D(ddi+ii+jj+1+2, ddj+ii+0) + XMATEL_D(ddi+ii+jj+1+2, ddj+ii+1) * XMATEL_D(ddi+ii+0, ddj+ii+1);
+			pW[0+ldw*1] =                      XMATEL_D(ddi+ii+jj+0+2, ddj+ii+1);
+			pW[1+ldw*1] =                      XMATEL_D(ddi+ii+jj+1+2, ddj+ii+1);
 			kk = 2;
 			for(; kk<kmax; kk++)
 				{
-				tmp = XMATEL_D(ddi+jj+0+2, ddj+kk);
+				tmp = XMATEL_D(ddi+ii+jj+0+2, ddj+ii+kk);
 				pW[0+ldw*0] += tmp * XMATEL_D(ddi+ii+0, ddj+ii+kk);
 				pW[0+ldw*1] += tmp * XMATEL_D(ddi+ii+1, ddj+ii+kk);
-				tmp = XMATEL_D(ddi+jj+1+2, ddj+kk);
+				tmp = XMATEL_D(ddi+ii+jj+1+2, ddj+ii+kk);
 				pW[1+ldw*0] += tmp * XMATEL_D(ddi+ii+0, ddj+ii+kk);
 				pW[1+ldw*1] += tmp * XMATEL_D(ddi+ii+1, ddj+ii+kk);
 				}
@@ -1862,43 +1862,43 @@ void GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 			pW[0+ldw*0] = pT[0+ldb*0]*pW[0+ldw*0];
 			pW[1+ldw*0] = pT[0+ldb*0]*pW[1+ldw*0];
 			// compute C -= V * W^T
-			XMATEL_D(ddi+jj+0+2, ddj+0) -= pW[0+ldw*0];
-			XMATEL_D(ddi+jj+1+2, ddj+0) -= pW[1+ldw*0];
-			XMATEL_D(ddi+jj+0+2, ddj+1) -= XMATEL_D(ddi+ii+0, ddj+ii+1)*pW[0+ldw*0] + pW[0+ldw*1];
-			XMATEL_D(ddi+jj+1+2, ddj+1) -= XMATEL_D(ddi+ii+0, ddj+ii+1)*pW[1+ldw*0] + pW[1+ldw*1];
+			XMATEL_D(ddi+ii+jj+0+2, ddj+ii+0) -= pW[0+ldw*0];
+			XMATEL_D(ddi+ii+jj+1+2, ddj+ii+0) -= pW[1+ldw*0];
+			XMATEL_D(ddi+ii+jj+0+2, ddj+ii+1) -= XMATEL_D(ddi+ii+0, ddj+ii+1)*pW[0+ldw*0] + pW[0+ldw*1];
+			XMATEL_D(ddi+ii+jj+1+2, ddj+ii+1) -= XMATEL_D(ddi+ii+0, ddj+ii+1)*pW[1+ldw*0] + pW[1+ldw*1];
 			kk = 2;
 			for(; kk<kmax-1; kk+=2)
 				{
-				XMATEL_D(ddi+jj+0+2, ddj+(kk+0)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+0))*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+0))*pW[0+ldw*1];
-				XMATEL_D(ddi+jj+0+2, ddj+(kk+1)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+1))*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+1))*pW[0+ldw*1];
-				XMATEL_D(ddi+jj+1+2, ddj+(kk+0)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+0))*pW[1+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+0))*pW[1+ldw*1];
-				XMATEL_D(ddi+jj+1+2, ddj+(kk+1)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+1))*pW[1+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+1))*pW[1+ldw*1];
+				XMATEL_D(ddi+ii+jj+0+2, ddj+ii+(kk+0)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+0))*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+0))*pW[0+ldw*1];
+				XMATEL_D(ddi+ii+jj+0+2, ddj+ii+(kk+1)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+1))*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+1))*pW[0+ldw*1];
+				XMATEL_D(ddi+ii+jj+1+2, ddj+ii+(kk+0)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+0))*pW[1+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+0))*pW[1+ldw*1];
+				XMATEL_D(ddi+ii+jj+1+2, ddj+ii+(kk+1)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+1))*pW[1+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+1))*pW[1+ldw*1];
 				}
 			for(; kk<kmax; kk++)
 				{
-				XMATEL_D(ddi+jj+0+2, ddj+kk) -= XMATEL_D(ddi+ii+0, ddj+ii+kk)*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+kk)*pW[0+ldw*1];
-				XMATEL_D(ddi+jj+1+2, ddj+kk) -= XMATEL_D(ddi+ii+0, ddj+ii+kk)*pW[1+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+kk)*pW[1+ldw*1];
+				XMATEL_D(ddi+ii+jj+0+2, ddj+ii+kk) -= XMATEL_D(ddi+ii+0, ddj+ii+kk)*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+kk)*pW[0+ldw*1];
+				XMATEL_D(ddi+ii+jj+1+2, ddj+ii+kk) -= XMATEL_D(ddi+ii+0, ddj+ii+kk)*pW[1+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+kk)*pW[1+ldw*1];
 				}
 			}
 		for(; jj<jmax; jj++)
 			{
 			// compute W = T * V^T * C
-			pW[0+ldw*0] = XMATEL_D(ddi+jj+0+2, ddj+0) + XMATEL_D(ddi+jj+0+2, ddj+1) * XMATEL_D(ddi+ii+0, ddj+ii+1);
-			pW[0+ldw*1] =                      XMATEL_D(ddi+jj+0+2, ddj+1);
+			pW[0+ldw*0] = XMATEL_D(ddi+ii+jj+0+2, ddj+ii+0) + XMATEL_D(ddi+ii+jj+0+2, ddj+ii+1) * XMATEL_D(ddi+ii+0, ddj+ii+1);
+			pW[0+ldw*1] =                      XMATEL_D(ddi+ii+jj+0+2, ddj+ii+1);
 			for(kk=2; kk<kmax; kk++)
 				{
-				tmp = XMATEL_D(ddi+jj+0+2, ddj+kk);
+				tmp = XMATEL_D(ddi+ii+jj+0+2, ddj+ii+kk);
 				pW[0+ldw*0] += tmp * XMATEL_D(ddi+ii+0, ddj+ii+kk);
 				pW[0+ldw*1] += tmp * XMATEL_D(ddi+ii+1, ddj+ii+kk);
 				}
 			pW[0+ldw*1] = pT[1+ldb*0]*pW[0+ldw*0] + pT[1+ldb*1]*pW[0+ldw*1];
 			pW[0+ldw*0] = pT[0+ldb*0]*pW[0+ldw*0];
 			// compute C -= V * W^T
-			XMATEL_D(ddi+jj+0+2, ddj+0) -= pW[0+ldw*0];
-			XMATEL_D(ddi+jj+0+2, ddj+1) -= XMATEL_D(ddi+ii+0, ddj+ii+1)*pW[0+ldw*0] + pW[0+ldw*1];
+			XMATEL_D(ddi+ii+jj+0+2, ddj+ii+0) -= pW[0+ldw*0];
+			XMATEL_D(ddi+ii+jj+0+2, ddj+ii+1) -= XMATEL_D(ddi+ii+0, ddj+ii+1)*pW[0+ldw*0] + pW[0+ldw*1];
 			for(kk=2; kk<kmax; kk++)
 				{
-				XMATEL_D(ddi+jj+0+2, ddj+kk) -= XMATEL_D(ddi+ii+0, ddj+ii+kk)*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+kk)*pW[0+ldw*1];
+				XMATEL_D(ddi+ii+jj+0+2, ddj+ii+kk) -= XMATEL_D(ddi+ii+0, ddj+ii+kk)*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+kk)*pW[0+ldw*1];
 				}
 			}
 		}
@@ -1908,7 +1908,7 @@ void GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 		sigma = 0.0;
 		for(jj=1; jj<n-ii; jj++)
 			{
-			tmp = XMATEL_D(ddi+0, ddj+jj);
+			tmp = XMATEL_D(ddi+ii+0, ddj+ii+jj);
 			sigma += tmp*tmp;
 			}
 		if(sigma==0.0)
@@ -1917,7 +1917,7 @@ void GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 			}
 		else
 			{
-			alpha = XMATEL_D(ddi+0, ddj+0);
+			alpha = XMATEL_D(ddi+ii+0, ddj+ii+0);
 			beta = sigma + alpha*alpha;
 			beta = sqrt(beta);
 			if(alpha>0)
@@ -1925,8 +1925,8 @@ void GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 			dD[ii] = (beta-alpha) / beta;
 			tmp = 1.0 / (alpha-beta);
 			for(jj=1; jj<n-ii; jj++)
-				XMATEL_D(ddi+0, ddj+jj) *= tmp;
-			XMATEL_D(ddi+0, ddj+0) = beta;
+				XMATEL_D(ddi+ii+0, ddj+ii+jj) *= tmp;
+			XMATEL_D(ddi+ii+0, ddj+ii+0) = beta;
 			}
 		if(ii<n)
 			{
@@ -2043,7 +2043,7 @@ void GELQF_PD(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, in
 		sigma = 0.0;
 		for(jj=1; jj<n-ii; jj++)
 			{
-			tmp = XMATEL_D(ddi+0, ddj+jj);
+			tmp = XMATEL_D(ddi+ii+0, ddj+ii+jj);
 			sigma += tmp*tmp;
 			}
 		if(sigma==0.0)
@@ -2053,7 +2053,7 @@ void GELQF_PD(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, in
 			}
 		else
 			{
-			alpha = XMATEL_D(ddi+0, ddj+0);
+			alpha = XMATEL_D(ddi+ii+0, ddj+ii+0);
 			beta = sigma + alpha*alpha;
 			beta = sqrt(beta);
 			if(alpha<=0)
@@ -2064,9 +2064,9 @@ void GELQF_PD(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, in
 			dD[ii] = 2*tmp*tmp/(sigma+tmp*tmp);
 			tmp = 1.0/tmp;
 			// compute v0
-			XMATEL_D(ddi+0, ddj+0) = beta;
+			XMATEL_D(ddi+ii+0, ddj+ii+0) = beta;
 			for(jj=1; jj<n-ii; jj++)
-				XMATEL_D(ddi+0, ddj+jj) *= tmp;
+				XMATEL_D(ddi+ii+0, ddj+ii+jj) *= tmp;
 			}
 		// gemv_t & ger
 		kmax = n-ii;
@@ -2124,17 +2124,17 @@ void GELQF_PD(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, in
 		for(; jj<jmax-1; jj+=2)
 			{
 			// compute W^T = C^T * V
-			pW[0+ldw*0] = XMATEL_D(ddi+jj+0+2, ddj+0) + XMATEL_D(ddi+jj+0+2, ddj+1) * XMATEL_D(ddi+ii+0, ddj+ii+1);
-			pW[1+ldw*0] = XMATEL_D(ddi+jj+1+2, ddj+0) + XMATEL_D(ddi+jj+1+2, ddj+1) * XMATEL_D(ddi+ii+0, ddj+ii+1);
-			pW[0+ldw*1] =                      XMATEL_D(ddi+jj+0+2, ddj+1);
-			pW[1+ldw*1] =                      XMATEL_D(ddi+jj+1+2, ddj+1);
+			pW[0+ldw*0] = XMATEL_D(ddi+ii+jj+0+2, ddj+ii+0) + XMATEL_D(ddi+ii+jj+0+2, ddj+ii+1) * XMATEL_D(ddi+ii+0, ddj+ii+1);
+			pW[1+ldw*0] = XMATEL_D(ddi+ii+jj+1+2, ddj+ii+0) + XMATEL_D(ddi+ii+jj+1+2, ddj+ii+1) * XMATEL_D(ddi+ii+0, ddj+ii+1);
+			pW[0+ldw*1] =                      XMATEL_D(ddi+jj+ii+0+2, ddj+ii+1);
+			pW[1+ldw*1] =                      XMATEL_D(ddi+jj+ii+1+2, ddj+ii+1);
 			kk = 2;
 			for(; kk<kmax; kk++)
 				{
-				tmp = XMATEL_D(ddi+jj+0+2, ddj+kk);
+				tmp = XMATEL_D(ddi+ii+jj+0+2, ddj+ii+kk);
 				pW[0+ldw*0] += tmp * XMATEL_D(ddi+ii+0, ddj+ii+kk);
 				pW[0+ldw*1] += tmp * XMATEL_D(ddi+ii+1, ddj+ii+kk);
-				tmp = XMATEL_D(ddi+jj+1+2, ddj+kk);
+				tmp = XMATEL_D(ddi+ii+jj+1+2, ddj+ii+kk);
 				pW[1+ldw*0] += tmp * XMATEL_D(ddi+ii+0, ddj+ii+kk);
 				pW[1+ldw*1] += tmp * XMATEL_D(ddi+ii+1, ddj+ii+kk);
 				}
@@ -2144,43 +2144,43 @@ void GELQF_PD(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, in
 			pW[0+ldw*0] = pT[0+ldb*0]*pW[0+ldw*0];
 			pW[1+ldw*0] = pT[0+ldb*0]*pW[1+ldw*0];
 			// compute C -= V * W^T
-			XMATEL_D(ddi+jj+0+2, ddj+0) -= pW[0+ldw*0];
-			XMATEL_D(ddi+jj+1+2, ddj+0) -= pW[1+ldw*0];
-			XMATEL_D(ddi+jj+0+2, ddj+1) -= XMATEL_D(ddi+ii+0, ddj+ii+1)*pW[0+ldw*0] + pW[0+ldw*1];
-			XMATEL_D(ddi+jj+1+2, ddj+1) -= XMATEL_D(ddi+ii+0, ddj+ii+1)*pW[1+ldw*0] + pW[1+ldw*1];
+			XMATEL_D(ddi+ii+jj+0+2, ddj+ii+0) -= pW[0+ldw*0];
+			XMATEL_D(ddi+ii+jj+1+2, ddj+ii+0) -= pW[1+ldw*0];
+			XMATEL_D(ddi+ii+jj+0+2, ddj+ii+1) -= XMATEL_D(ddi+ii+0, ddj+ii+1)*pW[0+ldw*0] + pW[0+ldw*1];
+			XMATEL_D(ddi+ii+jj+1+2, ddj+ii+1) -= XMATEL_D(ddi+ii+0, ddj+ii+1)*pW[1+ldw*0] + pW[1+ldw*1];
 			kk = 2;
 			for(; kk<kmax-1; kk+=2)
 				{
-				XMATEL_D(ddi+jj+0+2, ddj+(kk+0)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+0))*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+0))*pW[0+ldw*1];
-				XMATEL_D(ddi+jj+0+2, ddj+(kk+1)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+1))*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+1))*pW[0+ldw*1];
-				XMATEL_D(ddi+jj+1+2, ddj+(kk+0)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+0))*pW[1+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+0))*pW[1+ldw*1];
-				XMATEL_D(ddi+jj+1+2, ddj+(kk+1)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+1))*pW[1+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+1))*pW[1+ldw*1];
+				XMATEL_D(ddi+ii+jj+0+2, ddj+ii+(kk+0)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+0))*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+0))*pW[0+ldw*1];
+				XMATEL_D(ddi+ii+jj+0+2, ddj+ii+(kk+1)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+1))*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+1))*pW[0+ldw*1];
+				XMATEL_D(ddi+ii+jj+1+2, ddj+ii+(kk+0)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+0))*pW[1+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+0))*pW[1+ldw*1];
+				XMATEL_D(ddi+ii+jj+1+2, ddj+ii+(kk+1)) -= XMATEL_D(ddi+ii+0, ddj+ii+(kk+1))*pW[1+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+(kk+1))*pW[1+ldw*1];
 				}
 			for(; kk<kmax; kk++)
 				{
-				XMATEL_D(ddi+jj+0+2, ddj+kk) -= XMATEL_D(ddi+ii+0, ddj+ii+kk)*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+kk)*pW[0+ldw*1];
-				XMATEL_D(ddi+jj+1+2, ddj+kk) -= XMATEL_D(ddi+ii+0, ddj+ii+kk)*pW[1+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+kk)*pW[1+ldw*1];
+				XMATEL_D(ddi+ii+jj+0+2, ddj+ii+kk) -= XMATEL_D(ddi+ii+0, ddj+ii+kk)*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+kk)*pW[0+ldw*1];
+				XMATEL_D(ddi+ii+jj+1+2, ddj+ii+kk) -= XMATEL_D(ddi+ii+0, ddj+ii+kk)*pW[1+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+kk)*pW[1+ldw*1];
 				}
 			}
 		for(; jj<jmax; jj++)
 			{
 			// compute W = T * V^T * C
-			pW[0+ldw*0] = XMATEL_D(ddi+jj+0+2, ddj+0) + XMATEL_D(ddi+jj+0+2, ddj+1) * XMATEL_D(ddi+ii+0, ddj+ii+1);
-			pW[0+ldw*1] =                      XMATEL_D(ddi+jj+0+2, ddj+1);
+			pW[0+ldw*0] = XMATEL_D(ddi+ii+jj+0+2, ddj+ii+0) + XMATEL_D(ddi+ii+jj+0+2, ddj+ii+1) * XMATEL_D(ddi+ii+0, ddj+ii+1);
+			pW[0+ldw*1] =                      XMATEL_D(ddi+ii+jj+0+2, ddj+ii+1);
 			for(kk=2; kk<kmax; kk++)
 				{
-				tmp = XMATEL_D(ddi+jj+0+2, ddj+kk);
+				tmp = XMATEL_D(ddi+ii+jj+0+2, ddj+ii+kk);
 				pW[0+ldw*0] += tmp * XMATEL_D(ddi+ii+0, ddj+ii+kk);
 				pW[0+ldw*1] += tmp * XMATEL_D(ddi+ii+1, ddj+ii+kk);
 				}
 			pW[0+ldw*1] = pT[1+ldb*0]*pW[0+ldw*0] + pT[1+ldb*1]*pW[0+ldw*1];
 			pW[0+ldw*0] = pT[0+ldb*0]*pW[0+ldw*0];
 			// compute C -= V * W^T
-			XMATEL_D(ddi+jj+0+2, ddj+0) -= pW[0+ldw*0];
-			XMATEL_D(ddi+jj+0+2, ddj+1) -= XMATEL_D(ddi+ii+0, ddj+ii+1)*pW[0+ldw*0] + pW[0+ldw*1];
+			XMATEL_D(ddi+ii+jj+0+2, ddj+ii+0) -= pW[0+ldw*0];
+			XMATEL_D(ddi+ii+jj+0+2, ddj+ii+1) -= XMATEL_D(ddi+ii+0, ddj+ii+1)*pW[0+ldw*0] + pW[0+ldw*1];
 			for(kk=2; kk<kmax; kk++)
 				{
-				XMATEL_D(ddi+jj+0+2, ddj+kk) -= XMATEL_D(ddi+ii+0, ddj+ii+kk)*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+kk)*pW[0+ldw*1];
+				XMATEL_D(ddi+ii+jj+0+2, ddj+ii+kk) -= XMATEL_D(ddi+ii+0, ddj+ii+kk)*pW[0+ldw*0] + XMATEL_D(ddi+ii+1, ddj+ii+kk)*pW[0+ldw*1];
 				}
 			}
 		}
@@ -2190,7 +2190,7 @@ void GELQF_PD(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, in
 		sigma = 0.0;
 		for(jj=1; jj<n-ii; jj++)
 			{
-			tmp = XMATEL_D(ddi+0, ddj+jj);
+			tmp = XMATEL_D(ddi+ii+0, ddj+ii+jj);
 			sigma += tmp*tmp;
 			}
 		if(sigma==0.0)
@@ -2199,7 +2199,7 @@ void GELQF_PD(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, in
 			}
 		else
 			{
-			alpha = XMATEL_D(ddi+0, ddj+0);
+			alpha = XMATEL_D(ddi+ii+0, ddj+ii+0);
 			beta = sigma + alpha*alpha;
 			beta = sqrt(beta);
 			if(alpha<=0)
@@ -2210,9 +2210,9 @@ void GELQF_PD(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, in
 			dD[ii] = 2*tmp*tmp/(sigma+tmp*tmp);
 			tmp = 1.0/tmp;
 			// compute v0
-			XMATEL_D(ddi+0, ddj+0) = beta;
+			XMATEL_D(ddi+ii+0, ddj+ii+0) = beta;
 			for(jj=1; jj<n-ii; jj++)
-				XMATEL_D(ddi+0, ddj+jj) *= tmp;
+				XMATEL_D(ddi+ii+0, ddj+ii+jj) *= tmp;
 			}
 		if(ii<n)
 			{

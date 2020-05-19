@@ -37,6 +37,7 @@ include ../Makefile.rule
 
 OBJS =
 
+ifeq ($(LA), REFERENCE)
 #
 OBJS += d_blas1_ref.o
 OBJS += d_blas2_ref.o
@@ -51,6 +52,7 @@ OBJS += s_blas2_diag_ref.o
 OBJS += s_blas3_ref.o
 OBJS += s_blas3_diag_ref.o
 OBJS += s_lapack_ref.o
+endif
 
 
 ifeq ($(TESTING_MODE), 1)
