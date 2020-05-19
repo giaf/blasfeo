@@ -87,8 +87,8 @@ endif # LA choice
 
 ifeq ($(LA), REFERENCE)
 
-OBJS += d_blas1_lib.o d_blas2_lib.o d_blas2_diag_lib.o d_lapack_lib.o
-OBJS += s_blas1_lib.o s_blas2_lib.o s_blas2_diag_lib.o s_lapack_lib.o
+OBJS += d_blas1_lib.o d_blas2_lib.o d_lapack_lib.o
+OBJS += s_blas1_lib.o s_blas2_lib.o s_lapack_lib.o
 
 endif # LA choice
 
@@ -96,12 +96,10 @@ ifeq ($(TESTING_MODE), 1)
 #testing against reference
 OBJS += s_blas1_libref.o
 OBJS += s_blas2_libref.o
-OBJS += s_blas2_diag_libref.o
 OBJS += s_lapack_libref.o
 
 OBJS += d_blas1_libref.o
 OBJS += d_blas2_libref.o
-OBJS += d_blas2_diag_libref.o
 OBJS += d_lapack_libref.o
 endif
 

@@ -38,18 +38,22 @@ include ../Makefile.rule
 OBJS =
 
 #
+OBJS += d_blas2_diag_ref.o
 OBJS += d_blas3_ref.o
 OBJS += d_blas3_diag_ref.o
 #
+OBJS += s_blas2_diag_ref.o
 OBJS += s_blas3_ref.o
 OBJS += s_blas3_diag_ref.o
 
 
 ifeq ($(TESTING_MODE), 1)
 #
+OBJS += d_blas2_diag_test.o
 OBJS += d_blas3_test.o
 OBJS += d_blas3_diag_test.o
 #
+OBJS += s_blas2_diag_test.o
 OBJS += s_blas3_test.o
 OBJS += s_blas3_diag_test.o
 endif
@@ -61,13 +65,19 @@ clean:
 	rm -f *.o
 	rm -f *.s
 
+d_blas2_diag_ref.o: d_blas2_diag_ref.c x_blas2_diag_ref.c
 d_blas3_ref.o: d_blas3_ref.c x_blas3_ref.c
 d_blas3_diag_ref.o: d_blas3_diag_ref.c x_blas3_diag_ref.c
+
+s_blas2_diag_ref.o: s_blas2_diag_ref.c x_blas2_diag_ref.c
 s_blas3_ref.o: s_blas3_ref.c x_blas3_ref.c
 s_blas3_diag_ref.o: s_blas3_diag_ref.c x_blas3_diag_ref.c
 
+d_blas2_diag_test.o: d_blas2_diag_test.c x_blas2_diag_ref.c
 d_blas3_test.o: d_blas3_test.c x_blas3_ref.c
 d_blas3_diag_test.o: d_blas3_diag_test.c x_blas3_diag_ref.c
+
+s_blas2_diag_test.o: s_blas2_diag_test.c x_blas2_diag_ref.c
 s_blas3_test.o: s_blas3_test.c x_blas3_ref.c
 s_blas3_diag_test.o: s_blas3_diag_test.c x_blas3_diag_ref.c
 

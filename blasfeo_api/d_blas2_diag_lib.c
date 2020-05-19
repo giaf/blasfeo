@@ -36,16 +36,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_kernel.h"
+#include <blasfeo_common.h>
 
 
 
 #define REAL double
 
-#define STRVEC blasfeo_dvec
+#define XVEC blasfeo_dvec
 
-#define GEMV_DIAG_LIBSTR blasfeo_dgemv_d
+#define GEMV_D blasfeo_dgemv_d
 
 
 

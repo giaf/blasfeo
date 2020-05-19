@@ -33,26 +33,21 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-void GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
-	{
-	if(m<=0)
-		return;
-	int ii;
-	REAL *a = sA->pa + ai;
-	REAL *x = sx->pa + xi;
-	REAL *y = sy->pa + yi;
-	REAL *z = sz->pa + zi;
-	if(alpha==1.0 & beta==1.0)
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = a[ii]*x[ii] + y[ii];
-		}
-	else
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = alpha*a[ii]*x[ii] + beta*y[ii];
-		}
+#include <stdlib.h>
+#include <stdio.h>
 
-	return;
+#include <blasfeo_common.h>
 
-	}
+
+
+#define REAL float
+
+#define XVEC blasfeo_svec
+
+#define GEMV_D blasfeo_sgemv_d
+
+
+
+#include "x_blas2_diag_ref.c"
+
+
