@@ -37,12 +37,17 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
+
+
+#define MF_COLMAJ
 
 
 
-#if defined(LA_REFERENCE)
+#include <blasfeo_common.h>
+
+
+
+#if defined(MF_COLMAJ)
 	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
 	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
 	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
@@ -58,32 +63,35 @@
 
 
 
-#define REAL double
-#define XMAT blasfeo_dmat_ref
-#define XMATEL MATEL_REF
-#define XVEC blasfeo_dvec_ref
-#define XVECEL VECEL_REF
+#define REAL float
+#define XMAT blasfeo_smat
+#define XMATEL BLASFEO_SMATEL
+#define XVEC blasfeo_svec
+#define XVECEL BLASFEO_SVECEL
 
 
 
-#define GELQF_PD_DA blasfeo_dgelqf_pd_da_ref
-#define GELQF_PD_LA blasfeo_dgelqf_pd_la_ref
-#define ORGLQ_WORK_SIZE blasfeo_dorglq_worksize_ref
-#define ORGLQ blasfeo_dorglq_ref
-#define GELQF_PD_LLA blasfeo_dgelqf_pd_lla_ref
-#define GELQF_PD blasfeo_dgelqf_pd_ref
-#define GELQF blasfeo_dgelqf_ref
-#define GELQF_WORK_SIZE blasfeo_dgelqf_worksize_ref
-#define GEQRF blasfeo_dgeqrf_ref
-#define GEQRF_WORK_SIZE blasfeo_dgeqrf_worksize_ref
-//#define GETF2_NOPIVOT dgetf2_nopivot_ref
-#define GETRF_NOPIVOT blasfeo_dgetrf_nopivot_ref
-#define GETRF_ROWPIVOT blasfeo_dgetrf_rowpivot_ref
-#define POTRF_L blasfeo_dpotrf_l_ref
-#define POTRF_L_MN blasfeo_dpotrf_l_mn_ref
-#define PSTRF_L dpstrf_l_libstr_ref
-#define SYRK_POTRF_LN blasfeo_dsyrk_dpotrf_ln_ref
-#define SYRK_POTRF_LN_MN blasfeo_dsyrk_dpotrf_ln_mn_ref
+#define GELQF_WORK_SIZE blasfeo_sgelqf_worksize
+#define GELQF blasfeo_sgelqf
+#define ORGLQ_WORK_SIZE blasfeo_sorglq_worksize
+#define ORGLQ blasfeo_sorglq
+#define GELQF_PD blasfeo_sgelqf_pd
+#define GELQF_PD_DA blasfeo_sgelqf_pd_da
+#define GELQF_PD_LA blasfeo_sgelqf_pd_la
+#define GELQF_PD_LLA blasfeo_sgelqf_pd_lla
+#define GEQRF blasfeo_sgeqrf
+#define GEQRF_WORK_SIZE blasfeo_sgeqrf_worksize
+//#define GETF2_NOPIVOT dgetf2_nopivot
+#define GETRF_NOPIVOT blasfeo_sgetrf_np
+#define GETRF_ROWPIVOT blasfeo_sgetrf_rp
+#define POTRF_L blasfeo_spotrf_l
+#define POTRF_L_MN blasfeo_spotrf_l_mn
+#define PSTRF_L spstrf_l_libstr
+#define SYRK_POTRF_LN blasfeo_ssyrk_dpotrf_ln
+#define SYRK_POTRF_LN_MN blasfeo_ssyrk_dpotrf_ln_mn
 
-// TESTING_MODE
-#include "x_lapack_lib.c"
+
+
+#include "x_lapack_ref.c"
+
+

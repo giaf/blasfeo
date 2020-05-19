@@ -37,59 +37,50 @@
 #include <stdio.h>
 #include <math.h>
 
-#if defined(LA_EXTERNAL_BLAS_WRAPPER)
-#if defined(EXTERNAL_BLAS_BLIS)
-#include <blis.h>
-#elif defined(EXTERNAL_BLAS_MKL)
-//#include <mkl.h>
-#else
-#include "../include/d_blas.h"
-#endif
-#endif
-
 #include <blasfeo_common.h>
 
 
 
-#define REAL double
-#define XMAT blasfeo_dmat
-#define XMATEL BLASFEO_DMATEL
-#define XVEC blasfeo_dvec
-#define XVECEL BLASFEO_DVECEL
+#define MF_COLMAJ
 
 
 
-#define GELQF_WORK_SIZE blasfeo_dgelqf_worksize
-#define GELQF blasfeo_dgelqf
-#define ORGLQ_WORK_SIZE blasfeo_dorglq_worksize
-#define ORGLQ blasfeo_dorglq
-#define GELQF_PD blasfeo_dgelqf_pd
-#define GELQF_PD_DA blasfeo_dgelqf_pd_da
-#define GELQF_PD_LA blasfeo_dgelqf_pd_la
-#define GELQF_PD_LLA blasfeo_dgelqf_pd_lla
-#define GEQRF blasfeo_dgeqrf
-#define GEQRF_WORK_SIZE blasfeo_dgeqrf_worksize
-//#define GETF2_NOPIVOT dgetf2_nopivot
-#define GETRF_NOPIVOT blasfeo_dgetrf_np
-#define GETRF_ROWPIVOT blasfeo_dgetrf_rp
-#define POTRF_L blasfeo_dpotrf_l
-#define POTRF_L_MN blasfeo_dpotrf_l_mn
-#define PSTRF_L dpstrf_l_libstr
-#define SYRK_POTRF_LN blasfeo_dsyrk_dpotrf_ln
-#define SYRK_POTRF_LN_MN blasfeo_dsyrk_dpotrf_ln_mn
-
-#define COPY dcopy_
-#define GELQF_ dgelqf_
-#define ORGLQ_ dorglq_
-#define GEMM dgemm_
-#define GER dger_
-#define GEQRF_ dgeqrf_
-#define GEQR2 dgeqr2_
-#define GETRF dgetrf_
-#define POTRF dpotrf_
-#define SCAL dscal_
-#define SYRK dsyrk_
-#define TRSM dtrsm_
+#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
+#define XMATEL_L(X, Y) pL[(X)+ldl*(Y)]
 
 
-#include "x_lapack_lib.c"
+
+#define REAL float
+#define XMAT blasfeo_smat_ref
+#define XMATEL MATEL_REF
+#define XVEC blasfeo_svec_ref
+#define XVECEL VECEL_REF
+
+
+
+#define GELQF_PD_DA blasfeo_sgelqf_pd_da_ref
+#define GELQF_PD_LA blasfeo_sgelqf_pd_la_ref
+#define ORGLQ_WORK_SIZE blasfeo_sorglq_worksize_ref
+#define ORGLQ blasfeo_sorglq_ref
+#define GELQF_PD_LLA blasfeo_sgelqf_pd_lla_ref
+#define GELQF_PD blasfeo_sgelqf_pd_ref
+#define GELQF blasfeo_sgelqf_ref
+#define GELQF_WORK_SIZE blasfeo_sgelqf_worksize_ref
+#define GEQRF blasfeo_sgeqrf_ref
+#define GEQRF_WORK_SIZE blasfeo_sgeqrf_worksize_ref
+//#define GETF2_NOPIVOT dgetf2_nopivot_ref
+#define GETRF_NOPIVOT blasfeo_sgetrf_nopivot_ref
+#define GETRF_ROWPIVOT blasfeo_sgetrf_rowpivot_ref
+#define POTRF_L blasfeo_spotrf_l_ref
+#define POTRF_L_MN blasfeo_spotrf_l_mn_ref
+#define PSTRF_L spstrf_l_libstr_ref
+#define SYRK_POTRF_LN blasfeo_ssyrk_dpotrf_ln_ref
+#define SYRK_POTRF_LN_MN blasfeo_ssyrk_dpotrf_ln_mn_ref
+
+// TESTING_MODE
+#include "x_lapack_ref.c"
+
+

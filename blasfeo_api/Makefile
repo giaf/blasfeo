@@ -85,20 +85,6 @@ OBJS += s_blas1_lib.o s_blas2_lib.o s_blas2_diag_lib.o s_blas3_lib.o s_blas3_dia
 
 endif # LA choice
 
-ifeq ($(LA), REFERENCE)
-
-OBJS += d_lapack_lib.o
-OBJS += s_lapack_lib.o
-
-endif # LA choice
-
-ifeq ($(TESTING_MODE), 1)
-#testing against reference
-OBJS += s_lapack_libref.o
-
-OBJS += d_lapack_libref.o
-endif
-
 
 obj: $(OBJS)
 
@@ -120,5 +106,4 @@ s_blas3_lib.o: s_blas3_lib.c x_blas3_lib.c
 d_blas3_diag_lib.o: d_blas3_diag_lib.c x_blas3_diag_lib.c
 s_blas3_diag_lib.o: s_blas3_diag_lib.c x_blas3_diag_lib.c
 d_lapack_lib.o: d_lapack_lib.c x_lapack_lib.c
-d_lapack_libref.o: d_lapack_libref.c x_lapack_lib.c
 s_lapack_lib.o: s_lapack_lib.c x_lapack_lib.c

@@ -1040,16 +1040,14 @@ else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_diag_ref.c
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_ref.c
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_diag_ref.c
+		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_ref.c
 
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas1_ref.c
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_ref.c
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_diag_ref.c
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_ref.c
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_diag_ref.c
-
-		${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib.c
-
-		${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib.c
+		${PROJECT_SOURCE_DIR}/blasfeo_ref/s_lapack_ref.c
 		)
 
 	if(${LA} MATCHES REFERENCE) # REFERENCE
@@ -1089,12 +1087,14 @@ if(BLASFEO_TESTING MATCHES ON)
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_diag_test.c
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_test.c
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_diag_test.c
+		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_test.c
 
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas1_test.c
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_test.c
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_diag_test.c
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_test.c
 		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_diag_test.c
+		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_test.c
 
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_libref.c
 		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_libref.c
