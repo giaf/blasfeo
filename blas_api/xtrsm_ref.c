@@ -79,7 +79,7 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 		{
 		if( *pm>K_MAX_STACK )
 			{
-			mem = malloc(*pm*sizeof(REAL));
+			dA = malloc(*pm*sizeof(REAL));
 //			mem = malloc(*pm*sizeof(REAL)+64);
 //			blasfeo_align_64_byte(mem, (void **) &dA);
 			}
@@ -88,7 +88,7 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 		{
 		if( *pn>K_MAX_STACK )
 			{
-			mem = malloc(*pn*sizeof(REAL));
+			dA = malloc(*pn*sizeof(REAL));
 //			mem = malloc(*pn*sizeof(REAL)+64);
 //			blasfeo_align_64_byte(mem, (void **) &dA);
 			}
@@ -97,10 +97,8 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 	struct MAT sA;
 	sA.pA = A;
 	sA.m = *plda;
-
-	struct MAT sB;
-	sB.pA = B;
-	sB.m = *pldb;
+	sA.dA = dA;
+	sA.use_dA = 0;
 
 	if(*side=='l' | *side=='L') // _l
 		{
