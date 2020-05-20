@@ -100,6 +100,10 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 	sA.dA = dA;
 	sA.use_dA = 0;
 
+	struct MAT sB;
+	sB.pA = B;
+	sB.m = *pldb;
+
 	if(*side=='l' | *side=='L') // _l
 		{
 		if(*uplo=='l' | *uplo=='L') // _ll
