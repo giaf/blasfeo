@@ -38,6 +38,7 @@
 
 #include <blasfeo_common.h>
 #include <blasfeo_s_blasfeo_api.h>
+#include <blasfeo_s_kernel.h>
 
 
 
