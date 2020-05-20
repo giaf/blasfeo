@@ -79,16 +79,18 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 		{
 		if( *pm>K_MAX_STACK )
 			{
-			mem = malloc(*pm*sizeof(REAL)+64);
-			blasfeo_align_64_byte(mem, (void **) &dA);
+			mem = malloc(*pm*sizeof(REAL));
+//			mem = malloc(*pm*sizeof(REAL)+64);
+//			blasfeo_align_64_byte(mem, (void **) &dA);
 			}
 		}
 	else
 		{
 		if( *pn>K_MAX_STACK )
 			{
-			mem = malloc(*pn*sizeof(REAL)+64);
-			blasfeo_align_64_byte(mem, (void **) &dA);
+			mem = malloc(*pn*sizeof(REAL));
+//			mem = malloc(*pn*sizeof(REAL)+64);
+//			blasfeo_align_64_byte(mem, (void **) &dA);
 			}
 		}
 
