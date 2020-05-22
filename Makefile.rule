@@ -264,6 +264,7 @@ ASFLAGS += #-g
 # Profiling flags
 #
 #CFLAGS += --coverage
+#CFLAGS += -fopenmp
 
 
 
