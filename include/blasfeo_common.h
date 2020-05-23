@@ -66,24 +66,26 @@ extern "C" {
 // matrix structure
 struct blasfeo_dmat
 	{
+	double *mem; // pointer to passed chunk of memory
+	double *pA; // pointer to a pm*pn array of doubles, the first is aligned to cache line size
+	double *dA; // pointer to a min(m,n) (or max???) array of doubles
 	int m; // rows
 	int n; // cols
 	int pm; // packed number or rows
 	int cn; // packed number or cols
-	double *pA; // pointer to a pm*pn array of doubles, the first is aligned to cache line size
-	double *dA; // pointer to a min(m,n) (or max???) array of doubles
 	int use_dA; // flag to tell if dA can be used
 	int memsize; // size of needed memory
 	};
 
 struct blasfeo_smat
 	{
+	float *mem; // pointer to passed chunk of memory
+	float *pA; // pointer to a pm*pn array of floats, the first is aligned to cache line size
+	float *dA; // pointer to a min(m,n) (or max???) array of floats
 	int m; // rows
 	int n; // cols
 	int pm; // packed number or rows
 	int cn; // packed number or cols
-	float *pA; // pointer to a pm*pn array of floats, the first is aligned to cache line size
-	float *dA; // pointer to a min(m,n) (or max???) array of floats
 	int use_dA; // flag to tell if dA can be used
 	int memsize; // size of needed memory
 	};
@@ -91,17 +93,19 @@ struct blasfeo_smat
 // vector structure
 struct blasfeo_dvec
 	{
+	double *mem; // pointer to passed chunk of memory
+	double *pa; // pointer to a pm array of doubles, the first is aligned to cache line size
 	int m; // size
 	int pm; // packed size
-	double *pa; // pointer to a pm array of doubles, the first is aligned to cache line size
 	int memsize; // size of needed memory
 	};
 
 struct blasfeo_svec
 	{
+	float *mem; // pointer to passed chunk of memory
+	float *pa; // pointer to a pm array of floats, the first is aligned to cache line size
 	int m; // size
 	int pm; // packed size
-	float *pa; // pointer to a pm array of floats, the first is aligned to cache line size
 	int memsize; // size of needed memory
 	};
 
@@ -115,20 +119,22 @@ struct blasfeo_svec
 // matrix structure
 struct blasfeo_dmat
 	{
-	int m; // rows
-	int n; // cols
+	double *mem; // pointer to passed chunk of memory
 	double *pA; // pointer to a m*n array of doubles
 	double *dA; // pointer to a min(m,n) (or max???) array of doubles
+	int m; // rows
+	int n; // cols
 	int use_dA; // flag to tell if dA can be used
 	int memsize; // size of needed memory
 	};
 
 struct blasfeo_smat
 	{
-	int m; // rows
-	int n; // cols
+	float *mem; // pointer to passed chunk of memory
 	float *pA; // pointer to a m*n array of floats
 	float *dA; // pointer to a min(m,n) (or max???) array of floats
+	int m; // rows
+	int n; // cols
 	int use_dA; // flag to tell if dA can be used
 	int memsize; // size of needed memory
 	};
@@ -136,15 +142,17 @@ struct blasfeo_smat
 // vector structure
 struct blasfeo_dvec
 	{
-	int m; // size
+	double *mem; // pointer to passed chunk of memory
 	double *pa; // pointer to a m array of doubles, the first is aligned to cache line size
+	int m; // size
 	int memsize; // size of needed memory
 	};
 
 struct blasfeo_svec
 	{
-	int m; // size
+	float *mem; // pointer to passed chunk of memory
 	float *pa; // pointer to a m array of floats, the first is aligned to cache line size
+	int m; // size
 	int memsize; // size of needed memory
 	};
 
@@ -166,20 +174,22 @@ struct blasfeo_svec
 // matrix structure
 struct blasfeo_dmat_ref
 	{
-	int m; // rows
-	int n; // cols
+	double *mem; // pointer to passed chunk of memory
 	double *pA; // pointer to a m*n array of doubles
 	double *dA; // pointer to a min(m,n) (or max???) array of doubles
+	int m; // rows
+	int n; // cols
 	int use_dA; // flag to tell if dA can be used
 	int memsize; // size of needed memory
 	};
 
 struct blasfeo_smat_ref
 	{
-	int m; // rows
-	int n; // cols
+	float *mem; // pointer to passed chunk of memory
 	float *pA; // pointer to a m*n array of floats
 	float *dA; // pointer to a min(m,n) (or max???) array of floats
+	int m; // rows
+	int n; // cols
 	int use_dA; // flag to tell if dA can be used
 	int memsize; // size of needed memory
 	};
@@ -187,15 +197,17 @@ struct blasfeo_smat_ref
 // vector structure
 struct blasfeo_dvec_ref
 	{
-	int m; // size
+	double *mem; // pointer to passed chunk of memory
 	double *pa; // pointer to a m array of doubles, the first is aligned to cache line size
+	int m; // size
 	int memsize; // size of needed memory
 	};
 
 struct blasfeo_svec_ref
 	{
-	int m; // size
+	float *mem; // pointer to passed chunk of memory
 	float *pa; // pointer to a m array of floats, the first is aligned to cache line size
+	int m; // size
 	int memsize; // size of needed memory
 	};
 

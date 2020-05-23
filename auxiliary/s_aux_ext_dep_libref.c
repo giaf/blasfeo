@@ -33,51 +33,52 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <blasfeo_block_size.h>
 #include <blasfeo_common.h>
+#include <blasfeo_stdlib.h>
 #include <blasfeo_s_aux_ext_dep.h>
+#include <blasfeo_s_aux.h>
+#include <blasfeo_s_aux_ref.h>
 
 
 
-#define FREE s_free
-#define FREE_ALIGN s_free_align
-#define PRINT_EXP_MAT s_print_exp_mat
-#define PRINT_MAT s_print_mat
-#define PRINT_TO_FILE_EXP_MAT s_print_to_file_exp_mat
-#define PRINT_TO_FILE_MAT s_print_to_file_mat
-#define PRINT_TO_STRING_MAT s_print_to_string_mat
-#define PRINT_TRAN_MAT s_print_tran_mat
-#define PS S_PS
+#define CREATE_MAT blasfeo_create_smat_ref
+#define CREATE_VEC blasfeo_create_svec_ref
+#define MEMSIZE_MAT blasfeo_memsize_smat_ref
+#define MEMSIZE_VEC blasfeo_memsize_svec_ref
 #define REAL float
-#define XMAT blasfeo_smat_ref
-#define XVEC blasfeo_svec_ref
-#define ZEROS s_zeros
-#define ZEROS_ALIGN s_zeros_align
+#define MAT blasfeo_smat_ref
+#define MATEL MATEL_REF
+#define VEC blasfeo_svec_ref
+#define VECEL VECEL_REF
 
 
 
-#define ALLOCATE_XMAT blasfeo_allocate_smat_ref
-#define ALLOCATE_XVEC blasfeo_allocate_svec_ref
-#define FREE_XMAT blasfeo_free_smat_ref
-#define FREE_XVEC blasfeo_free_svec_ref
-#define PRINT_XMAT blasfeo_print_smat_ref
-#define PRINT_TRAN_XMAT blasfeo_print_tran_smat_ref
-#define PRINT_XVEC blasfeo_print_svec_ref
-#define PRINT_TRAN_XVEC blasfeo_print_tran_svec_ref
-#define PRINT_TO_FILE_XMAT blasfeo_print_to_file_smat_ref
-#define PRINT_TO_FILE_EXP_XMAT blasfeo_print_to_file_exp_smat_ref
-#define PRINT_TO_FILE_XVEC blasfeo_print_to_file_svec_ref
-#define PRINT_TO_FILE_TRAN_XVEC blasfeo_s_print_to_file_tran_strvec_ref
-#define PRINT_TO_STRING_XMAT blasfeo_print_to_string_smat_ref
-#define PRINT_TO_STRING_XVEC blasfeo_print_to_string_svec_ref
-#define PRINT_TO_STRING_TRAN_XVEC blasfeo_print_to_string_tran_svec_ref
-#define PRINT_EXP_XMAT blasfeo_print_exp_smat_ref
-#define PRINT_EXP_XVEC blasfeo_print_exp_svec_ref
-#define PRINT_EXP_TRAN_XVEC blasfeo_print_exp_tran_svec_ref
+#define ALLOCATE_MAT blasfeo_allocate_smat_ref
+#define ALLOCATE_VEC blasfeo_allocate_svec_ref
+#define FREE_MAT blasfeo_free_smat_ref
+#define FREE_VEC blasfeo_free_svec_ref
+#define PRINT_MAT blasfeo_print_smat_ref
+#define PRINT_TRAN_MAT blasfeo_print_tran_smat_ref
+#define PRINT_VEC blasfeo_print_svec_ref
+#define PRINT_TRAN_VEC blasfeo_print_tran_svec_ref
+#define PRINT_TO_FILE_MAT blasfeo_print_to_file_smat_ref
+#define PRINT_TO_FILE_EXP_MAT blasfeo_print_to_file_exp_smat_ref
+#define PRINT_TO_FILE_VEC blasfeo_print_to_file_svec_ref
+#define PRINT_TO_FILE_TRAN_VEC d_print_to_file_tran_svec_ref
+#define PRINT_TO_STRING_MAT blasfeo_print_to_string_smat_ref
+#define PRINT_TO_STRING_VEC blasfeo_print_to_string_svec_ref
+#define PRINT_TO_STRING_TRAN_VEC blasfeo_print_to_string_tran_svec_ref
+#define PRINT_EXP_MAT blasfeo_print_exp_smat_ref
+#define PRINT_EXP_TRAN_MAT blasfeo_print_exp_tran_smat_ref
+#define PRINT_EXP_VEC blasfeo_print_exp_svec_ref
+#define PRINT_EXP_TRAN_VEC blasfeo_print_exp_tran_svec_ref
 
 
 
-#include "x_aux_ext_dep_lib0.c"
+#include "x_aux_ext_dep.c"
 

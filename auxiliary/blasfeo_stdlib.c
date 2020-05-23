@@ -40,9 +40,10 @@
 
 
 
-void *blasfeo_malloc(size_t size)
+void blasfeo_malloc(void **ptr, size_t size)
 	{
-	return malloc(size);
+	*ptr = malloc(size);
+	return;
 	}
 
 

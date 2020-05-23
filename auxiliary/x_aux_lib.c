@@ -37,30 +37,29 @@
 
 
 // return memory size (in bytes) needed for a strmat
-int MEMSIZE_MAT(int m, int n)
+size_t MEMSIZE_MAT(int m, int n)
 	{
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
-	int size = (m*n+tmp)*sizeof(REAL);
+	size_t size = (m*n+tmp)*sizeof(REAL);
 	return size;
 	}
 
 
 
 // return memory size (in bytes) needed for the diagonal of a strmat
-int MEMSIZE_DIAG_MAT(int m, int n)
+size_t MEMSIZE_DIAG_MAT(int m, int n)
 	{
-	int size = 0;
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
-	size = tmp*sizeof(REAL);
+	size_t size = tmp*sizeof(REAL);
 	return size;
 	}
 
 
 
 // return memory size (in bytes) needed for a strvec
-int MEMSIZE_VEC(int m)
+size_t MEMSIZE_VEC(int m)
 	{
-	int size = m*sizeof(REAL);
+	size_t size = m*sizeof(REAL);
 	return size;
 	}
 
@@ -69,6 +68,7 @@ int MEMSIZE_VEC(int m)
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
 void CREATE_MAT(int m, int n, struct MAT *sA, void *memory)
 	{
+	sA->mem = memory;
 	sA->m = m;
 	sA->n = n;
 	REAL *ptr = (REAL *) memory;
@@ -87,6 +87,7 @@ void CREATE_MAT(int m, int n, struct MAT *sA, void *memory)
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
 void CREATE_VEC(int m, struct VEC *sa, void *memory)
 	{
+	sa->mem = memory;
 	sa->m = m;
 	REAL *ptr = (REAL *) memory;
 	sa->pa = ptr;

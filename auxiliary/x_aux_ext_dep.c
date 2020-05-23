@@ -34,212 +34,278 @@
 **************************************************************************************************/
 
 
-#if defined(LA_EXTERNAL_BLAS_WRAPPER) | defined(LA_REFERENCE) | defined(TESTING_MODE)
 
-
-
-// create a matrix structure for a matrix of size m*n
-void ALLOCATE_XMAT(int m, int n, struct XMAT *sA)
+// create a matrix structure for a matrix of size m*n by dynamically allocating the memory
+void ALLOCATE_MAT(int m, int n, struct MAT *sA)
 	{
-	sA->m = m;
-	sA->n = n;
-	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
-#if defined(LA_EXTERNAL_BLAS_WRAPPER)
-	ZEROS_ALIGN(&(sA->pA), sA->m, sA->n);
-	ZEROS_ALIGN(&(sA->dA), tmp, 1);
-#else
-	ZEROS(&(sA->pA), sA->m, sA->n);
-	ZEROS(&(sA->dA), tmp, 1);
-#endif
-	sA->memsize = (m*n+tmp)*sizeof(REAL);
-	sA->use_dA = 0;
+	size_t size = MEMSIZE_MAT(m, n);
+	void *mem;
+	blasfeo_malloc_align(&mem, size);
+	CREATE_MAT(m, n, sA, mem);
 	return;
 	}
 
 
 
 // free memory of a matrix structure
-void FREE_XMAT(struct XMAT *sA)
+void FREE_MAT(struct MAT *sA)
 	{
-#if defined(LA_EXTERNAL_BLAS_WRAPPER)
-	FREE_ALIGN(sA->pA);
-	FREE_ALIGN(sA->dA);
-#else
-	FREE(sA->pA);
-	FREE(sA->dA);
-#endif
+	blasfeo_free_align(sA->mem);
 	return;
 	}
 
 
 
-// create a vector structure for a vector of size m
-void ALLOCATE_XVEC(int m, struct XVEC *sa)
+// create a vector structure for a vector of size m by dynamically allocating the memory
+void ALLOCATE_VEC(int m, struct VEC *sa)
 	{
-	sa->m = m;
-#if defined(LA_EXTERNAL_BLAS_WRAPPER)
-	ZEROS_ALIGN(&(sa->pa), sa->m, 1);
-#else
-	ZEROS(&(sa->pa), sa->m, 1);
-#endif
-	sa->memsize = m*sizeof(REAL);
+	size_t size = MEMSIZE_VEC(m);
+	void *mem;
+	blasfeo_malloc_align(&mem, size);
+	CREATE_VEC(m, sa, mem);
 	return;
 	}
 
 
 
-// free memory of a vector structure
-void FREE_XVEC(struct XVEC *sa)
+// free memory of a matrix structure
+void FREE_VEC(struct VEC *sa)
 	{
-#if defined(LA_EXTERNAL_BLAS_WRAPPER)
-	FREE_ALIGN(sa->pa);
-#else
-	FREE(sa->pa);
-#endif
+	blasfeo_free_align(sa->mem);
 	return;
 	}
 
 
 
 // print a matrix structure
-void PRINT_XMAT(int m, int n, struct XMAT *sA, int ai, int aj)
+void PRINT_MAT(int m, int n, struct MAT *sA, int ai, int aj)
 	{
-	int lda = sA->m;
-	REAL *pA = sA->pA + ai + aj*lda;
-	PRINT_MAT(m, n, pA, lda);
+	int ii, jj;
+	for(ii=0; ii<m; ii++)
+		{
+		for(jj=0; jj<n; jj++)
+			{
+			printf("%9.5f ", MATEL(sA, ai+ii, aj+jj));
+			}
+		printf("\n");
+		}
+	printf("\n");
 	return;
 	}
 
 
 
 // print the transposed of a matrix structure
-void PRINT_TRAN_XMAT(int m, int n, struct XMAT *sA, int ai, int aj)
+void PRINT_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj)
 	{
-	int lda = sA->m;
-	REAL *pA = sA->pA + ai + aj*lda;
-	PRINT_TRAN_MAT(m, n, pA, lda);
+	int ii, jj;
+	for(jj=0; jj<n; jj++)
+		{
+		for(ii=0; ii<m; ii++)
+			{
+			printf("%9.5f ", MATEL(sA, ai+ii, aj+jj));
+			}
+		printf("\n");
+		}
+	printf("\n");
 	return;
 	}
 
 
 
 // print a vector structure
-void PRINT_XVEC(int m, struct XVEC *sa, int ai)
+void PRINT_VEC(int m, struct VEC *sa, int ai)
 	{
-	REAL *pa = sa->pa + ai;
-	PRINT_MAT(m, 1, pa, m);
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		printf("%9.5f\n", VECEL(sa, ai+ii));
+		}
+	printf("\n");
 	return;
 	}
 
 
 
 // print the transposed of a vector structure
-void PRINT_TRAN_XVEC(int m, struct XVEC *sa, int ai)
+void PRINT_TRAN_VEC(int m, struct VEC *sa, int ai)
 	{
-	REAL *pa = sa->pa + ai;
-	PRINT_MAT(1, m, pa, 1);
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		printf("%9.5f ", VECEL(sa, ai+ii));
+		}
+	printf("\n\n");
+	return;
+	}
+
+
+// print a matrix structure
+void PRINT_TO_FILE_MAT(FILE * file, int m, int n, struct MAT *sA, int ai, int aj)
+	{
+	int ii, jj;
+	for(ii=0; ii<m; ii++)
+		{
+		for(jj=0; jj<n; jj++)
+			{
+			fprintf(file, "%9.5f ", MATEL(sA, ai+ii, aj+jj));
+			}
+		fprintf(file, "\n");
+		}
+	fprintf(file, "\n");
 	return;
 	}
 
 
 
 // print a matrix structure
-void PRINT_TO_FILE_XMAT(FILE *file, int m, int n, struct XMAT *sA, int ai, int aj)
+void PRINT_TO_FILE_EXP_MAT(FILE * file, int m, int n, struct MAT *sA, int ai, int aj)
 	{
-	int lda = sA->m;
-	REAL *pA = sA->pA + ai + aj*lda;
-	PRINT_TO_FILE_MAT(file, m, n, pA, lda);
+	int ii, jj;
+	for(ii=0; ii<m; ii++)
+		{
+		for(jj=0; jj<n; jj++)
+			{
+			fprintf(file, "%9.5e ", MATEL(sA, ai+ii, aj+jj));
+			}
+		fprintf(file, "\n");
+		}
+	fprintf(file, "\n");
 	return;
 	}
 
 
 // print a matrix structure
-void PRINT_TO_FILE_EXP_XMAT(FILE *file, int m, int n, struct XMAT *sA, int ai, int aj)
+void PRINT_TO_STRING_MAT(char **buf_out, int m, int n, struct MAT *sA, int ai, int aj)
 	{
-	int lda = sA->m;
-	REAL *pA = sA->pA + ai + aj*lda;
-	PRINT_TO_FILE_EXP_MAT(file, m, n, pA, lda);
+	int ii, jj;
+	for(ii=0; ii<m; ii++)
+		{
+		for(jj=0; jj<n; jj++)
+			{
+			*buf_out += sprintf(*buf_out, "%9.5f ", MATEL(sA, ai+ii, aj+jj));
+			}
+		*buf_out += sprintf(*buf_out, "\n");
+		}
+	*buf_out += sprintf(*buf_out, "\n");
 	return;
 	}
 
 
-// print a matrix structure
-void PRINT_TO_STRING_XMAT(char **out_buf, int m, int n, struct XMAT *sA, int ai, int aj)
+// print a vector structure
+void PRINT_TO_FILE_VEC(FILE * file, int m, struct VEC *sa, int ai)
 	{
-	int lda = sA->m;
-	REAL *pA = sA->pA + ai + aj*lda;
-	PRINT_TO_STRING_MAT(out_buf, m, n, pA, lda);
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		fprintf(file, "%9.5f\n", VECEL(sa, ai+ii));
+		}
+	fprintf(file, "\n");
 	return;
 	}
 
 
 
 // print a vector structure
-void PRINT_TO_FILE_XVEC(FILE *file, int m, struct XVEC *sa, int ai)
+void PRINT_TO_STRING_VEC(char **buf_out, int m, struct VEC *sa, int ai)
 	{
-	REAL *pa = sa->pa + ai;
-	PRINT_TO_FILE_MAT(file, m, 1, pa, m);
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		*buf_out += sprintf(*buf_out, "%9.5f\n", VECEL(sa, ai+ii));
+		}
+	*buf_out += sprintf(*buf_out, "\n");
 	return;
 	}
 
 
-// print a vector structure
-void PRINT_TO_STRING_XVEC(char **out_buf, int m, struct XVEC *sa, int ai)
+// print the transposed of a vector structure
+void PRINT_TO_FILE_TRAN_VEC(FILE * file, int m, struct VEC *sa, int ai)
 	{
-	REAL *pa = sa->pa + ai;
-	PRINT_TO_STRING_MAT(out_buf, m, 1, pa, m);
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		fprintf(file, "%9.5f ", VECEL(sa, ai+ii));
+		}
+	fprintf(file, "\n\n");
 	return;
 	}
 
 
 
-// print and transpose a vector structure
-void PRINT_TO_FILE_TRAN_XVEC(FILE *file, int m, struct XVEC *sa, int ai)
+// print the transposed of a vector structure
+void PRINT_TO_STRING_TRAN_VEC(char **buf_out, int m, struct VEC *sa, int ai)
 	{
-	REAL *pa = sa->pa + ai;
-	PRINT_TO_FILE_MAT(file, 1, m, pa, 1);
-	return;
-	}
-
-
-
-// print and transpose a vector structure
-void PRINT_TO_STRING_TRAN_XVEC(char **buf_out, int m, struct XVEC *sa, int ai)
-	{
-	REAL *pa = sa->pa + ai;
-	PRINT_TO_STRING_MAT(buf_out, 1, m, pa, 1);
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		*buf_out += sprintf(*buf_out, "%9.5f ", VECEL(sa, ai+ii));
+		}
+	*buf_out += sprintf(*buf_out, "\n\n");
 	return;
 	}
 
 
 // print a matrix structure
-void PRINT_EXP_XMAT(int m, int n, struct XMAT *sA, int ai, int aj)
+void PRINT_EXP_MAT(int m, int n, struct MAT *sA, int ai, int aj)
 	{
-	int lda = sA->m;
-	REAL *pA = sA->pA + ai + aj*lda;
-	PRINT_EXP_MAT(m, n, pA, lda);
+	int ii, jj;
+	for(ii=0; ii<m; ii++)
+		{
+		for(jj=0; jj<n; jj++)
+			{
+			printf("%9.5e ", MATEL(sA, ai+ii, aj+jj));
+			}
+		printf("\n");
+		}
+	printf("\n");
+	return;
+	}
+
+
+
+// print the transposed of a matrix structure
+void PRINT_EXP_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj)
+	{
+	int ii, jj;
+	for(jj=0; jj<n; jj++)
+		{
+		for(ii=0; ii<m; ii++)
+			{
+			printf("%9.5e ", MATEL(sA, ai+ii, aj+jj));
+			}
+		printf("\n");
+		}
+	printf("\n");
 	return;
 	}
 
 
 
 // print a vector structure
-void PRINT_EXP_XVEC(int m, struct XVEC *sa, int ai)
+void PRINT_EXP_VEC(int m, struct VEC *sa, int ai)
 	{
-	REAL *pa = sa->pa + ai;
-	PRINT_EXP_MAT(m, 1, pa, m);
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		printf("%9.5e\n", VECEL(sa, ai+ii));
+		}
+	printf("\n");
 	return;
 	}
 
 
 
-// print and transpose a vector structure
-void PRINT_EXP_TRAN_XVEC(int m, struct XVEC *sa, int ai)
+// print the transposed of a vector structure
+void PRINT_EXP_TRAN_VEC(int m, struct VEC *sa, int ai)
 	{
-	REAL *pa = sa->pa + ai;
-	PRINT_EXP_MAT(1, m, pa, 1);
+	int ii;
+	for(ii=0; ii<m; ii++)
+		{
+		printf("%9.5e ", VECEL(sa, ai+ii));
+		}
+	printf("\n\n");
 	return;
 	}
 
 
-#endif

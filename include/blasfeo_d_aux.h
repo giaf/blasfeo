@@ -58,11 +58,11 @@ extern "C" {
 // --- memory calculations
 //
 // returns the memory size (in bytes) needed for a dmat
-int blasfeo_memsize_dmat(int m, int n);
+size_t blasfeo_memsize_dmat(int m, int n);
 // returns the memory size (in bytes) needed for the diagonal of a dmat
-int blasfeo_memsize_diag_dmat(int m, int n);
+size_t blasfeo_memsize_diag_dmat(int m, int n);
 // returns the memory size (in bytes) needed for a dvec
-int blasfeo_memsize_dvec(int m);
+size_t blasfeo_memsize_dvec(int m);
 
 // --- creation
 //

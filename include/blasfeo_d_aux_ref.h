@@ -45,14 +45,15 @@ extern "C" {
 
 // expose reference BLASFEO for testing
 
+size_t blasfeo_memsize_dmat_ref (int m, int n);
+size_t blasfeo_memsize_dvec_ref (int m);
 void blasfeo_create_dmat_ref  (int m, int n, struct blasfeo_dmat_ref *sA, void *memory);
-void blasfeo_create_dvec_ref  (int m, int n, struct blasfeo_dvec_ref *sA, void *memory);
+void blasfeo_create_dvec_ref  (int m, struct blasfeo_dvec_ref *sA, void *memory);
 
 void blasfeo_free_dmat_ref(struct blasfeo_dmat_ref *sA);
 void blasfeo_free_dvec_ref(struct blasfeo_dvec_ref *sa);
 
 void blasfeo_pack_dmat_ref    (int m, int n, double *A, int lda, struct blasfeo_dmat_ref *sA, int ai, int aj);
-int  blasfeo_memsize_dmat_ref (int m, int n);
 
 void blasfeo_dgead_ref(int m, int n, double alpha, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dmat_ref *sB, int bi, int bj);
 void blasfeo_dgecp_ref(int m, int n, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dmat_ref *sB, int bi, int bj);

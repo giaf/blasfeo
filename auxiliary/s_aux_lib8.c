@@ -895,7 +895,7 @@ void svecad_libsp(int kmax, int *idx, float alpha, float *x, float *y)
 
 
 // return the memory size (in bytes) needed for a strmat
-int blasfeo_memsize_smat(int m, int n)
+size_t blasfeo_memsize_smat(int m, int n)
 	{
 	const int bs = 8;
 	int nc = S_NC;
@@ -903,33 +903,33 @@ int blasfeo_memsize_smat(int m, int n)
 	int pm = (m+bs-1)/bs*bs;
 	int cn = (n+nc-1)/nc*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
-	int memsize = (pm*cn+tmp)*sizeof(float);
+	size_t memsize = (pm*cn+tmp)*sizeof(float);
 	return memsize;
 	}
 
 
 
-int blasfeo_memsize_smat_ps(int ps, int m, int n)
+size_t blasfeo_memsize_smat_ps(int ps, int m, int n)
 	{
 	int nc = S_NC;
 	int al = ps*nc;
 	int pm = (m+ps-1)/ps*ps;
 	int cn = (n+nc-1)/nc*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
-	int memsize = (pm*cn+tmp)*sizeof(float);
+	size_t memsize = (pm*cn+tmp)*sizeof(float);
 	return memsize;
 	}
 
 
 
 // return the memory size (in bytes) needed for the digonal of a strmat
-int blasfeo_memsize_diag_smat(int m, int n)
+size_t blasfeo_memsize_diag_smat(int m, int n)
 	{
 	const int bs = 8;
 	int nc = S_NC;
 	int al = bs*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
-	int memsize = tmp*sizeof(float);
+	size_t memsize = tmp*sizeof(float);
 	return memsize;
 	}
 
@@ -938,6 +938,7 @@ int blasfeo_memsize_diag_smat(int m, int n)
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
 void blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memory)
 	{
+	sA->mem = memory;
 	const int bs = 8;
 	int nc = S_NC;
 	int al = bs*nc;
@@ -955,6 +956,7 @@ void blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memory)
 	ptr += tmp;
 	sA->use_dA = 0;
 	sA->memsize = (pm*cn+tmp)*sizeof(float);
+	sA->use_dA = 0; // invalidate stored inverse diagonal
 	return;
 	}
 
@@ -962,10 +964,7 @@ void blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memory)
 
 void blasfeo_create_smat_ps(int ps, int m, int n, struct blasfeo_smat *sA, void *memory)
 	{
-
-	// invalidate stored inverse diagonal
-	sA->use_dA = 0;
-
+	sA->mem = memory;
 	int nc = S_NC;
 	int al = ps*nc;
 	sA->m = m;
@@ -981,19 +980,20 @@ void blasfeo_create_smat_ps(int ps, int m, int n, struct blasfeo_smat *sA, void 
 	sA->dA = ptr;
 	ptr += tmp;
 	sA->memsize = (pm*cn+tmp)*sizeof(float);
+	sA->use_dA = 0; // invalidate stored inverse diagonal
 	return;
 	}
 
 
 
 // return memory size (in bytes) needed for a strvec
-int blasfeo_memsize_svec(int m)
+size_t blasfeo_memsize_svec(int m)
 	{
 	const int bs = 8;
 //	int nc = S_NC;
 //	int al = bs*nc;
 	int pm = (m+bs-1)/bs*bs;
-	int memsize = pm*sizeof(float);
+	size_t memsize = pm*sizeof(float);
 	return memsize;
 	}
 
@@ -1002,6 +1002,7 @@ int blasfeo_memsize_svec(int m)
 // create a vector structure for a vector of size m by using memory passed by a pointer
 void blasfeo_create_svec(int m, struct blasfeo_svec *sa, void *memory)
 	{
+	sa->mem = memory;
 	const int bs = 8;
 //	int nc = S_NC;
 //	int al = bs*nc;

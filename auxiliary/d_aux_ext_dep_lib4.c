@@ -1,3 +1,4 @@
+
 /**************************************************************************************************
 *                                                                                                 *
 * This file is part of BLASFEO.                                                                   *
@@ -36,60 +37,47 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux_ext_dep.h"
+#include <blasfeo_block_size.h>
+#include <blasfeo_common.h>
+#include <blasfeo_stdlib.h>
+#include <blasfeo_d_aux_ext_dep.h>
+#include <blasfeo_d_aux.h>
 
+
+
+#define CREATE_MAT blasfeo_create_dmat
+#define CREATE_VEC blasfeo_create_dvec
+#define MEMSIZE_MAT blasfeo_memsize_dmat
+#define MEMSIZE_VEC blasfeo_memsize_dvec
 #define REAL double
-#define STRMAT blasfeo_dmat
-#define STRVEC blasfeo_dvec
-#define PS D_PS
+#define MAT blasfeo_dmat
+#define MATEL BLASFEO_DMATEL
+#define VEC blasfeo_dvec
+#define VECEL BLASFEO_DVECEL
 
-#if defined(LA_HIGH_PERFORMANCE)
 
-#include "../include/blasfeo_block_size.h"
 
-#define ZEROS d_zeros
-#define ZEROS_ALIGN d_zeros_align
+#define ALLOCATE_MAT blasfeo_allocate_dmat
+#define ALLOCATE_VEC blasfeo_allocate_dvec
+#define FREE_MAT blasfeo_free_dmat
+#define FREE_VEC blasfeo_free_dvec
+#define PRINT_MAT blasfeo_print_dmat
+#define PRINT_TRAN_MAT blasfeo_print_tran_dmat
+#define PRINT_VEC blasfeo_print_dvec
+#define PRINT_TRAN_VEC blasfeo_print_tran_dvec
+#define PRINT_TO_FILE_MAT blasfeo_print_to_file_dmat
+#define PRINT_TO_FILE_EXP_MAT blasfeo_print_to_file_exp_dmat
+#define PRINT_TO_FILE_VEC blasfeo_print_to_file_dvec
+#define PRINT_TO_FILE_TRAN_VEC d_print_to_file_tran_dvec
+#define PRINT_TO_STRING_MAT blasfeo_print_to_string_dmat
+#define PRINT_TO_STRING_VEC blasfeo_print_to_string_dvec
+#define PRINT_TO_STRING_TRAN_VEC blasfeo_print_to_string_tran_dvec
+#define PRINT_EXP_MAT blasfeo_print_exp_dmat
+#define PRINT_EXP_TRAN_MAT blasfeo_print_exp_tran_dmat
+#define PRINT_EXP_VEC blasfeo_print_exp_dvec
+#define PRINT_EXP_TRAN_VEC blasfeo_print_exp_tran_dvec
 
-#define FREE d_free
-#define FREE_ALIGN d_free_align
 
-#define PRINT_MAT d_print_mat
-#define PRINT_TRAN_MAT d_print_tran_mat
 
-#define PRINT_TO_FILE_MAT d_print_to_file_mat
-#define PRINT_TO_FILE_EXP_MAT d_print_to_file_exp_mat
+#include "x_aux_ext_dep.c"
 
-#define PRINT_TO_STRING_MAT d_print_to_string_mat
-#define PRINT_TO_FILE_TRAN_MAT d_print_to_file_tran_mat
-
-#define PRINT_EXP_MAT d_print_exp_mat
-#define PRINT_EXP_TRAN_MAT d_print_exp_tran_mat
-
-#define ALLOCATE_STRMAT blasfeo_allocate_dmat
-#define ALLOCATE_STRVEC blasfeo_allocate_dvec
-
-#define FREE_STRMAT blasfeo_free_dmat
-#define FREE_STRVEC blasfeo_free_dvec
-
-#define PRINT_STRMAT blasfeo_print_dmat
-#define PRINT_TRAN_STRMAT blasfeo_print_tran_dmat
-#define PRINT_STRVEC blasfeo_print_dvec
-#define PRINT_TRAN_STRVEC blasfeo_print_tran_dvec
-
-#define PRINT_TO_FILE_STRMAT blasfeo_print_to_file_dmat
-#define PRINT_TO_FILE_EXP_STRMAT blasfeo_print_to_file_exp_dmat
-
-#define PRINT_TO_FILE_STRVEC blasfeo_print_to_file_dvec
-#define PRINT_TO_FILE_TRAN_STRVEC d_print_to_file_tran_strvec
-#define PRINT_TO_STRING_STRMAT blasfeo_print_to_string_dmat
-#define PRINT_TO_STRING_STRVEC blasfeo_print_to_string_dvec
-#define PRINT_TO_STRING_TRAN_STRVEC blasfeo_print_to_string_tran_dvec
-
-#define PRINT_EXP_STRMAT blasfeo_print_exp_dmat
-#define PRINT_EXP_STRVEC blasfeo_print_exp_dvec
-#define PRINT_EXP_TRAN_STRVEC blasfeo_print_exp_tran_dvec
-
-#include "x_aux_ext_dep_lib4.c"
-
-#endif

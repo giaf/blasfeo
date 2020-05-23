@@ -38,7 +38,7 @@
 /* creates a zero matrix */
 void ZEROS(REAL **pA, int row, int col)
 	{
-	*pA = (REAL *) blasfeo_malloc((row*col)*sizeof(REAL));
+	blasfeo_malloc((void **) pA, (row*col)*sizeof(REAL));
 	REAL *A = *pA;
 	int i;
 	for(i=0; i<row*col; i++) A[i] = 0.0;

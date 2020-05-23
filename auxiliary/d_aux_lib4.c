@@ -1533,7 +1533,7 @@ void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y)
 
 
 // return the memory size (in bytes) needed for a strmat
-int blasfeo_memsize_dmat(int m, int n)
+size_t blasfeo_memsize_dmat(int m, int n)
 	{
 	const int bs = 4;
 	int nc = D_NC;
@@ -1541,20 +1541,20 @@ int blasfeo_memsize_dmat(int m, int n)
 	int pm = (m+bs-1)/bs*bs;
 	int cn = (n+nc-1)/nc*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
-	int memsize = (pm*cn+tmp)*sizeof(double);
+	size_t memsize = (pm*cn+tmp)*sizeof(double);
 	return memsize;
 	}
 
 
 
 // return the memory size (in bytes) needed for the digonal of a strmat
-int blasfeo_memsize_diag_dmat(int m, int n)
+size_t blasfeo_memsize_diag_dmat(int m, int n)
 	{
 	const int bs = 4;
 	int nc = D_NC;
 	int al = bs*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
-	int memsize = tmp*sizeof(double);
+	size_t memsize = tmp*sizeof(double);
 	return memsize;
 	}
 
@@ -1563,9 +1563,7 @@ int blasfeo_memsize_diag_dmat(int m, int n)
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
 void blasfeo_create_dmat(int m, int n, struct blasfeo_dmat *sA, void *memory)
 	{
-	// invalidate stored inverse diagonal
-	sA->use_dA = 0;
-
+	sA->mem = memory;
 	const int bs = 4;
 	int nc = D_NC;
 	int al = bs*nc;
@@ -1582,19 +1580,20 @@ void blasfeo_create_dmat(int m, int n, struct blasfeo_dmat *sA, void *memory)
 	sA->dA = ptr;
 	ptr += tmp;
 	sA->memsize = (pm*cn+tmp)*sizeof(double);
+	sA->use_dA = 0; // invalidate stored inverse diagonal
 	return;
 	}
 
 
 
 // return memory size (in bytes) needed for a strvec
-int blasfeo_memsize_dvec(int m)
+size_t blasfeo_memsize_dvec(int m)
 	{
 	const int bs = 4;
 //	int nc = D_NC;
 //	int al = bs*nc;
 	int pm = (m+bs-1)/bs*bs;
-	int memsize = pm*sizeof(double);
+	size_t memsize = pm*sizeof(double);
 	return memsize;
 	}
 
@@ -1603,6 +1602,7 @@ int blasfeo_memsize_dvec(int m)
 // create a vector structure for a vector of size m by using memory passed by a pointer
 void blasfeo_create_dvec(int m, struct blasfeo_dvec *sa, void *memory)
 	{
+	sa->mem = memory;
 	const int bs = 4;
 //	int nc = D_NC;
 //	int al = bs*nc;
