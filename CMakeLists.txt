@@ -1072,7 +1072,7 @@ if(${EXT_DEP})
 		${PROJECT_SOURCE_DIR}/auxiliary/timing.c
 		)
 
-endif(${LA} MATCHES HIGH_PERFORMANCE)
+if(${LA} MATCHES HIGH_PERFORMANCE)
 	list(APPEND EXT_SRC
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_lib4.c
 		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_lib4.c
