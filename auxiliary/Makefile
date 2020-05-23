@@ -114,15 +114,19 @@ endif
 #ext dep
 ifeq ($(EXT_DEP), 1)
 
-ifeq ($(LA), HIGH_PERFORMANCE)
-OBJS += d_aux_ext_dep_lib4.o
-OBJS += s_aux_ext_dep_lib4.o
-endif
-OBJS += d_aux_ext_dep_lib.o
-OBJS += s_aux_ext_dep_lib.o
+OBJS += d_aux_ext_dep_common.o
+OBJS += s_aux_ext_dep_common.o
 OBJS += v_aux_ext_dep_lib.o
 OBJS += i_aux_ext_dep_lib.o
 OBJS += timing.o
+
+ifeq ($(LA), HIGH_PERFORMANCE)
+OBJS += d_aux_ext_dep_lib4.o
+OBJS += s_aux_ext_dep_lib4.o
+else
+OBJS += d_aux_ext_dep_lib.o
+OBJS += s_aux_ext_dep_lib.o
+endif
 
 ifeq ($(TESTING_MODE), 1)
 OBJS += d_aux_libref.o
@@ -145,7 +149,9 @@ clean:
 
 d_aux_lib.o: d_aux_lib.c x_aux_lib.c
 s_aux_lib.o: s_aux_lib.c x_aux_lib.c
-d_aux_ext_dep_lib.o: d_aux_ext_dep_lib.c x_aux_ext_dep_lib0.c x_aux_ext_dep_lib.c
-s_aux_ext_dep_lib.o: s_aux_ext_dep_lib.c x_aux_ext_dep_lib0.c x_aux_ext_dep_lib.c
+d_aux_ext_dep_common.o: d_aux_ext_dep_common.c x_aux_ext_dep_common.c
+s_aux_ext_dep_common.o: s_aux_ext_dep_common.c x_aux_ext_dep_common.c
+d_aux_ext_dep_lib.o: d_aux_ext_dep_lib.c x_aux_ext_dep_lib0.c
+s_aux_ext_dep_lib.o: s_aux_ext_dep_lib.c x_aux_ext_dep_lib0.c
 d_aux_ext_dep_lib4.o: d_aux_ext_dep_lib4.c x_aux_ext_dep_lib4.c
 s_aux_ext_dep_lib4.o: s_aux_ext_dep_lib4.c x_aux_ext_dep_lib4.c

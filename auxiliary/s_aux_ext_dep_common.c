@@ -33,181 +33,32 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include "../include/blasfeo_stdlib.h"
+#include <stdlib.h>
+#include <stdio.h>
 
-#if ! defined(OS_WINDOWS)
-int posix_memalign(void **memptr, size_t alignment, size_t size);
-#endif
-
-
-
-/* creates a zero matrix */
-void ZEROS(REAL **pA, int row, int col)
-	{
-	*pA = (REAL *)malloc((row*col)*sizeof(REAL));
-	REAL *A = *pA;
-	int i;
-	for(i=0; i<row*col; i++) A[i] = 0.0;
-	}
+#include <blasfeo_stdlib.h>
 
 
 
-/* creates a zero matrix aligned to a cache line */
-void ZEROS_ALIGN(REAL **pA, int row, int col)
-	{
-    blasfeo_malloc_align((void **) pA, (row*col)*sizeof(REAL));
-	REAL *A = *pA;
-	int i;
-	for(i=0; i<row*col; i++) A[i] = 0.0;
-	}
+#define REAL float
 
 
 
-/* frees matrix */
-void FREE(REAL *pA)
-	{
-	free( pA );
-	}
+#define ZEROS s_zeros
+#define ZEROS_ALIGN s_zeros_align
+#define FREE s_free
+#define FREE_ALIGN s_free_align
+#define PRINT_MAT s_print_mat
+#define PRINT_TRAN_MAT s_print_tran_mat
+#define PRINT_TO_FILE_MAT s_print_to_file_mat
+#define PRINT_TO_FILE_EXP_MAT s_print_to_file_exp_mat
+#define PRINT_TO_STRING_MAT s_print_to_string_mat
+#define PRINT_TO_FILE_TRAN_MAT s_print_to_file_tran_mat
+#define PRINT_EXP_MAT s_print_exp_mat
+#define PRINT_EXP_TRAN_MAT s_print_exp_tran_mat
 
 
 
-/* frees aligned matrix */
-void FREE_ALIGN(REAL *pA)
-	{
-	blasfeo_free_align(pA);
-	}
+#include "x_aux_ext_dep_common.c"
 
 
-
-/* prints a matrix in column-major format */
-void PRINT_MAT(int m, int n, REAL *A, int lda)
-	{
-	int i, j;
-	for(i=0; i<m; i++)
-		{
-		for(j=0; j<n; j++)
-			{
-			printf("%9.5f ", A[i+lda*j]);
-			}
-		printf("\n");
-		}
-	printf("\n");
-	return;
-	}
-
-
-
-/* prints the transposed of a matrix in column-major format */
-void PRINT_TRAN_MAT(int row, int col, REAL *A, int lda)
-	{
-	int i, j;
-	for(j=0; j<col; j++)
-		{
-		for(i=0; i<row; i++)
-			{
-			printf("%9.5f ", A[i+lda*j]);
-			}
-		printf("\n");
-		}
-	printf("\n");
-	}
-
-
-
-/* prints a matrix in column-major format */
-void PRINT_TO_FILE_MAT(FILE *file, int row, int col, REAL *A, int lda)
-	{
-	int i, j;
-	for(i=0; i<row; i++)
-		{
-		for(j=0; j<col; j++)
-			{
-			fprintf(file, "%9.5f ", A[i+lda*j]);
-			}
-		fprintf(file, "\n");
-		}
-	fprintf(file, "\n");
-	}
-
-/* prints a matrix in column-major format */
-void PRINT_TO_FILE_EXP_MAT(FILE *file, int row, int col, REAL *A, int lda)
-	{
-	int i, j;
-	for(i=0; i<row; i++)
-		{
-		for(j=0; j<col; j++)
-			{
-			fprintf(file, "%9.5e ", A[i+lda*j]);
-			}
-		fprintf(file, "\n");
-		}
-	fprintf(file, "\n");
-	}
-
-
-/* prints a matrix in column-major format */
-void PRINT_TO_STRING_MAT(char **buf_out, int row, int col, REAL *A, int lda)
-	{
-	int i, j;
-	for(i=0; i<row; i++)
-		{
-		for(j=0; j<col; j++)
-			{
-			*buf_out += sprintf(*buf_out, "%9.5f ", A[i+lda*j]);
-			}
-		*buf_out += sprintf(*buf_out, "\n");
-		}
-	*buf_out += sprintf(*buf_out, "\n");
-	return;
-	}
-
-
-
-/* prints the transposed of a matrix in column-major format */
-void PRINT_TO_FILE_TRAN_MAT(FILE *file, int row, int col, REAL *A, int lda)
-	{
-	int i, j;
-	for(j=0; j<col; j++)
-		{
-		for(i=0; i<row; i++)
-			{
-			fprintf(file, "%9.5f ", A[i+lda*j]);
-			}
-		fprintf(file, "\n");
-		}
-	fprintf(file, "\n");
-	}
-
-
-
-/* prints a matrix in column-major format (exponential notation) */
-void PRINT_EXP_MAT(int m, int n, REAL *A, int lda)
-	{
-	int i, j;
-	for(i=0; i<m; i++)
-		{
-		for(j=0; j<n; j++)
-			{
-			printf("%e\t", A[i+lda*j]);
-			}
-		printf("\n");
-		}
-	printf("\n");
-	}
-
-
-
-/* prints the transposed of a matrix in column-major format (exponential notation) */
-void PRINT_EXP_TRAN_MAT(int row, int col, REAL *A, int lda)
-	{
-	int i, j;
-	for(j=0; j<col; j++)
-		{
-		for(i=0; i<row; i++)
-			{
-			printf("%e\t", A[i+lda*j]);
-			}
-		printf("\n");
-		}
-	printf("\n");
-	}

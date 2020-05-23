@@ -36,51 +36,28 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#if defined(LA_HIGH_PERFORMANCE)
-#include <blasfeo_block_size.h>
-#endif
-
-#include <blasfeo_common.h>
-#include <blasfeo_d_aux_ext_dep.h>
+#include <blasfeo_stdlib.h>
 
 
 
-#define FREE d_free
-#define FREE_ALIGN d_free_align
-#define PRINT_EXP_MAT d_print_exp_mat
-#define PRINT_MAT d_print_mat
-#define PRINT_TO_FILE_EXP_MAT d_print_to_file_exp_mat
-#define PRINT_TO_FILE_MAT d_print_to_file_mat
-#define PRINT_TO_STRING_MAT d_print_to_string_mat
-#define PRINT_TRAN_MAT d_print_tran_mat
-#define PS D_PS
 #define REAL double
-#define XMAT blasfeo_dmat
-#define XVEC blasfeo_dvec
+
+
+
 #define ZEROS d_zeros
 #define ZEROS_ALIGN d_zeros_align
+#define FREE d_free
+#define FREE_ALIGN d_free_align
+#define PRINT_MAT d_print_mat
+#define PRINT_TRAN_MAT d_print_tran_mat
+#define PRINT_TO_FILE_MAT d_print_to_file_mat
+#define PRINT_TO_FILE_EXP_MAT d_print_to_file_exp_mat
+#define PRINT_TO_STRING_MAT d_print_to_string_mat
+#define PRINT_TO_FILE_TRAN_MAT d_print_to_file_tran_mat
+#define PRINT_EXP_MAT d_print_exp_mat
+#define PRINT_EXP_TRAN_MAT d_print_exp_tran_mat
 
 
 
-#define ALLOCATE_XMAT blasfeo_allocate_dmat
-#define ALLOCATE_XVEC blasfeo_allocate_dvec
-#define FREE_XMAT blasfeo_free_dmat
-#define FREE_XVEC blasfeo_free_dvec
-#define PRINT_XMAT blasfeo_print_dmat
-#define PRINT_TRAN_XMAT blasfeo_print_tran_dmat
-#define PRINT_XVEC blasfeo_print_dvec
-#define PRINT_TRAN_XVEC blasfeo_print_tran_dvec
-#define PRINT_TO_FILE_XMAT blasfeo_print_to_file_dmat
-#define PRINT_TO_FILE_EXP_XMAT blasfeo_print_to_file_exp_dmat
-#define PRINT_TO_FILE_XVEC blasfeo_print_to_file_dvec
-#define PRINT_TO_FILE_TRAN_XVEC d_print_to_file_tran_strvec
-#define PRINT_TO_STRING_XMAT blasfeo_print_to_string_dmat
-#define PRINT_TO_STRING_XVEC blasfeo_print_to_string_dvec
-#define PRINT_TO_STRING_TRAN_XVEC blasfeo_print_to_string_tran_dvec
-#define PRINT_EXP_XMAT blasfeo_print_exp_dmat
-#define PRINT_EXP_XVEC blasfeo_print_exp_dvec
-#define PRINT_EXP_TRAN_XVEC blasfeo_print_exp_tran_dvec
+#include "x_aux_ext_dep_common.c"
 
-
-
-#include "x_aux_ext_dep_lib0.c"

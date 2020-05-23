@@ -778,17 +778,22 @@ endif # LA choice
 
 ifeq ($(EXT_DEP), 1)
 # ext dep
+OBJS += \
+		auxiliary/d_aux_ext_dep_common.o \
+		auxiliary/s_aux_ext_dep_common.o \
+		auxiliary/v_aux_ext_dep_lib.o \
+		auxiliary/i_aux_ext_dep_lib.o \
+		auxiliary/timing.o
+
 ifeq ($(LA), HIGH_PERFORMANCE)
 OBJS += \
 		auxiliary/d_aux_ext_dep_lib4.o \
 		auxiliary/s_aux_ext_dep_lib4.o
-endif
+else
 OBJS += \
 		auxiliary/d_aux_ext_dep_lib.o \
-		auxiliary/s_aux_ext_dep_lib.o \
-		auxiliary/v_aux_ext_dep_lib.o \
-		auxiliary/i_aux_ext_dep_lib.o \
-		auxiliary/timing.o
+		auxiliary/s_aux_ext_dep_lib.o
+endif
 
 endif
 

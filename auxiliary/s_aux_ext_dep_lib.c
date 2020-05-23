@@ -37,65 +37,50 @@
 #include <stdio.h>
 
 #if defined(LA_HIGH_PERFORMANCE)
-#include "../include/blasfeo_block_size.h"
+#include <blasfeo_block_size.h>
 #endif
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux_ext_dep.h"
-
-#define REAL float
-#define STRMAT blasfeo_smat
-#define STRVEC blasfeo_svec
-#define PS S_PS
+#include <blasfeo_common.h>
+#include <blasfeo_s_aux_ext_dep.h>
 
 
-#define ZEROS s_zeros
-#define ZEROS_ALIGN s_zeros_align
+
 
 #define FREE s_free
 #define FREE_ALIGN s_free_align
-
-#define PRINT_MAT s_print_mat
-#define PRINT_TO_FILE_MAT s_print_to_file_mat
-#define PRINT_TO_FILE_EXP_MAT s_print_to_file_exp_mat
-#define PRINT_TO_STRING_MAT s_print_to_string_mat
-
-#define PRINT_TRAN_MAT s_print_tran_mat
-#define PRINT_TO_FILE_TRAN_MAT s_print_to_file_tran_mat
-
 #define PRINT_EXP_MAT s_print_exp_mat
-#define PRINT_EXP_TRAN_MAT s_print_exp_tran_mat
+#define PRINT_MAT s_print_mat
+#define PRINT_TO_FILE_EXP_MAT s_print_to_file_exp_mat
+#define PRINT_TO_FILE_MAT s_print_to_file_mat
+#define PRINT_TO_STRING_MAT s_print_to_string_mat
+#define PRINT_TRAN_MAT s_print_tran_mat
+#define PS S_PS
+#define REAL float
+#define XMAT blasfeo_smat
+#define XVEC blasfeo_svec
+#define ZEROS s_zeros
+#define ZEROS_ALIGN s_zeros_align
 
-#include "x_aux_ext_dep_lib.c"
 
 
-#if defined(LA_EXTERNAL_BLAS_WRAPPER) | defined(LA_REFERENCE)
+#define ALLOCATE_XMAT blasfeo_allocate_smat
+#define ALLOCATE_XVEC blasfeo_allocate_svec
+#define FREE_XMAT blasfeo_free_smat
+#define FREE_XVEC blasfeo_free_svec
+#define PRINT_XMAT blasfeo_print_smat
+#define PRINT_TRAN_XMAT blasfeo_print_tran_smat
+#define PRINT_XVEC blasfeo_print_svec
+#define PRINT_TRAN_XVEC blasfeo_print_tran_svec
+#define PRINT_TO_FILE_XMAT blasfeo_print_to_file_smat
+#define PRINT_TO_FILE_EXP_XMAT blasfeo_print_to_file_exp_smat
+#define PRINT_TO_FILE_XVEC blasfeo_print_to_file_svec
+#define PRINT_TO_FILE_TRAN_XVEC s_print_to_file_tran_strvec
+#define PRINT_TO_STRING_XMAT blasfeo_print_to_string_smat
+#define PRINT_TO_STRING_XVEC blasfeo_print_to_string_svec
+#define PRINT_TO_STRING_TRAN_XVEC s_print_to_string_tran_strvec
+#define PRINT_EXP_XMAT blasfeo_print_exp_smat
+#define PRINT_EXP_XVEC blasfeo_print_exp_svec
+#define PRINT_EXP_TRAN_XVEC blasfeo_print_exp_tran_svec
 
-
-#define ALLOCATE_STRMAT blasfeo_allocate_smat
-#define ALLOCATE_STRVEC blasfeo_allocate_svec
-
-#define FREE_STRMAT blasfeo_free_smat
-#define FREE_STRVEC blasfeo_free_svec
-
-#define PRINT_STRMAT blasfeo_print_smat
-#define PRINT_TRAN_STRMAT blasfeo_print_tran_smat
-#define PRINT_STRVEC blasfeo_print_svec
-#define PRINT_TRAN_STRVEC blasfeo_print_tran_svec
-
-#define PRINT_TO_FILE_STRMAT blasfeo_print_to_file_smat
-#define PRINT_TO_FILE_EXP_STRMAT blasfeo_print_to_file_exp_smat
-#define PRINT_TO_FILE_STRVEC blasfeo_print_to_file_svec
-#define PRINT_TO_FILE_TRAN_STRVEC s_print_to_file_tran_strvec
-#define PRINT_TO_STRING_STRMAT blasfeo_print_to_string_smat
-#define PRINT_TO_STRING_STRVEC blasfeo_print_to_string_svec
-#define PRINT_TO_STRING_TRAN_STRVEC s_print_to_string_tran_strvec
-
-#define PRINT_EXP_STRMAT blasfeo_print_exp_smat
-#define PRINT_EXP_STRVEC blasfeo_print_exp_svec
-#define PRINT_EXP_TRAN_STRVEC blasfeo_print_exp_tran_svec
 
 
 #include "x_aux_ext_dep_lib0.c"
-
-#endif
-
