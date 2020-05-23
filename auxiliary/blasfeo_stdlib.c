@@ -53,7 +53,7 @@ void blasfeo_malloc_align(void **ptr, size_t size)
 	// XXX fix this hack !!! (Andrea?)
 	*ptr = malloc( size );
 
-#elif defined(__XILINX_NONE_ELF__)
+#elif(defined __XILINX_NONE_ELF__ || defined __XILINX_ULTRASCALE_NONE_ELF_JAILHOUSE__)
 
 	*ptr = memalign( 64, size );
 

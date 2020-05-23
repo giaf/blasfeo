@@ -1112,10 +1112,32 @@ set(BLASFEO_SRC ${CMN_SRC} ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
 # add library
 add_library(blasfeo ${BLASFEO_SRC})
 
-if(EMBEDDED_TARGET MATCHES XILINX_NONE_ELF )
-	target_link_libraries(blasfeo PUBLIC -Wl,--start-group xil c gcc -Wl,--end-group)
-endif()
+# 1) *XILINX_NONE_ELF*:
+#		Xilinx standalone (any core, e.g. A53,R5,..; *untested*)
+# 2) *XILINX_ULTRASCALE_NONE_ELF_JAILHOUSE*:
+#		special Ultrascale+ targets solution for running standalone as
+#		an inmate of a Jailhouse cell (no secure domain registers)
+if(SOC MATCHES XILINX)
+	message(STATUS "Compiling for SOC: ${SOC}")
 
+	if(NOT XILINX_BSP_PATH)
+		message(FATAL_ERROR "XILINX_BSP_PATH not set")
+	endif()
+	include_directories(${XILINX_BSP_PATH}/include)
+
+	find_library(XIL NAMES libxil.a HINTS ${XILINX_BSP_PATH}/lib)
+	if(NOT XIL)
+	  message(FATAL_ERROR "libxil.a not found")
+	endif()
+
+	if(SOC MATCHES XILINX_ULTRASCALE_NONE_ELF_JAILHOUSE )
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__XILINX_ULTRASCALE_NONE_ELF_JAILHOUSE__")
+	elseif(SOC MATCHES XILINX_NONE_ELF )
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__XILINX_NONE_ELF__")
+	endif()
+
+	target_link_libraries(blasfeo PUBLIC -Wl,--start-group ${XIL} c gcc -Wl,--end-group)
+endif()
 
 target_include_directories(blasfeo
 	PUBLIC

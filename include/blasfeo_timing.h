@@ -69,7 +69,7 @@
 		double time;
 	} blasfeo_timer;
 
-#elif(defined __XILINX_NONE_ELF__)
+#elif(defined __XILINX_NONE_ELF__ || defined __XILINX_ULTRASCALE_NONE_ELF_JAILHOUSE__)
 
 	#include "xtime_l.h"
 
