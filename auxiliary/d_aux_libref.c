@@ -44,20 +44,36 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "../include/blasfeo_common.h"
+#include <blasfeo_common.h>
+
+
+#define MF_COLMAJ
+
+
+
+#if defined(MF_COLMAJ)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+#else
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
+#endif
+
 
 
 #define REAL double
 #define MAT blasfeo_dmat_ref
+#define MATEL BLASFEO_DMATEL
 #define VEC blasfeo_dvec_ref
+#define VECEL BLASFEO_DVECEL
+
+
 
 #define MEMSIZE_MAT blasfeo_memsize_dmat_ref
 #define MEMSIZE_DIAG_MAT blasfeo_memsize_diag_dmat_ref
 #define MEMSIZE_VEC blasfeo_memsize_dvec_ref
-
 #define CREATE_MAT blasfeo_create_dmat_ref
 #define CREATE_VEC blasfeo_create_dvec_ref
-
 #define PACK_MAT blasfeo_pack_dmat_ref
 #define PACK_TRAN_MAT blasfeo_pack_tran_dmat_ref
 #define PACK_VEC blasfeo_pack_dvec_ref
@@ -67,12 +83,11 @@
 #define CAST_MAT2STRMAT blasfeo_d_cast_mat2strmat_ref
 #define CAST_DIAG_MAT2STRMAT blasfeo_d_cast_diag_mat2strmat_ref
 #define CAST_VEC2VECMAT blasfeo_d_cast_vec2vecmat_ref
-
-#define GEAD_LIBSTR blasfeo_dgead_ref
-#define GECP_LIBSTR blasfeo_dgecp_ref
-#define GECPSC_LIBSTR blasfeo_dgecpsc_ref
-#define GESC_LIBSTR blasfeo_dgesc_ref
-#define GESE_LIBSTR blasfeo_dgese_ref
+#define GEAD blasfeo_dgead_ref
+#define GECP blasfeo_dgecp_ref
+#define GECPSC blasfeo_dgecpsc_ref
+#define GESC blasfeo_dgesc_ref
+#define GESE blasfeo_dgese_ref
 
 
 

@@ -44,43 +44,57 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
+
+
+#define MF_COLMAJ
+
+
+
+#include <blasfeo_common.h>
+
+
+
+#if defined(MF_COLMAJ)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+#else
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
+#endif
 
 
 
 #define REAL double
 #define MAT blasfeo_dmat
+#define MATEL BLASFEO_DMATEL
 #define VEC blasfeo_dvec
+#define VECEL BLASFEO_DVECEL
+
 
 
 #if defined(LA_REFERENCE) | defined(LA_EXTERNAL_BLAS_WRAPPER)
 
 
+
 #define MEMSIZE_MAT blasfeo_memsize_dmat
 #define MEMSIZE_DIAG_MAT blasfeo_memsize_diag_dmat
 #define MEMSIZE_VEC blasfeo_memsize_dvec
-
 #define CREATE_MAT blasfeo_create_dmat
 #define CREATE_VEC blasfeo_create_dvec
-
 #define PACK_MAT blasfeo_pack_dmat
 #define PACK_TRAN_MAT blasfeo_pack_tran_dmat
 #define PACK_VEC blasfeo_pack_dvec
 #define UNPACK_MAT blasfeo_unpack_dmat
 #define UNPACK_TRAN_MAT blasfeo_unpack_tran_dmat
 #define UNPACK_VEC blasfeo_unpack_dvec
-
 #define CAST_MAT2STRMAT d_cast_mat2strmat
 #define CAST_DIAG_MAT2STRMAT d_cast_diag_mat2strmat
 #define CAST_VEC2VECMAT d_cast_vec2vecmat
-
-
-#define GEAD_LIBSTR blasfeo_dgead
-#define GECP_LIBSTR blasfeo_dgecp
-#define GECPSC_LIBSTR blasfeo_dgecpsc
-#define GESC_LIBSTR blasfeo_dgesc
-#define GESE_LIBSTR blasfeo_dgese
+#define GEAD blasfeo_dgead
+#define GECP blasfeo_dgecp
+#define GECPSC blasfeo_dgecpsc
+#define GESC blasfeo_dgesc
+#define GESE blasfeo_dgese
 
 
 

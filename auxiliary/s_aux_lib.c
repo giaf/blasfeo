@@ -37,24 +37,43 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "../include/blasfeo_common.h"
+
+
+#define MF_COLMAJ
+
+
+
+#include <blasfeo_common.h>
+
+
+
+#if defined(MF_COLMAJ)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+#else
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
+#endif
+
+
 
 #define REAL float
 #define MAT blasfeo_smat
+#define MATEL BLASFEO_SMATEL
 #define VEC blasfeo_svec
+#define VECEL BLASFEO_SVECEL
 
 
 
 #if defined(LA_REFERENCE) | defined(LA_EXTERNAL_BLAS_WRAPPER)
 
 
+
 #define MEMSIZE_MAT blasfeo_memsize_smat
 #define MEMSIZE_DIAG_MAT blasfeo_memsize_diag_smat
 #define MEMSIZE_VEC blasfeo_memsize_svec
-
 #define CREATE_MAT blasfeo_create_smat
 #define CREATE_VEC blasfeo_create_svec
-
 #define PACK_MAT blasfeo_pack_smat
 #define PACK_TRAN_MAT blasfeo_pack_tran_smat
 #define PACK_VEC blasfeo_pack_svec
@@ -64,13 +83,11 @@
 #define CAST_MAT2STRMAT s_cast_mat2strmat
 #define CAST_DIAG_MAT2STRMAT s_cast_diag_mat2strmat
 #define CAST_VEC2VECMAT s_cast_vec2vecmat
-
-
-#define GEAD_LIBSTR blasfeo_sgead
-#define GECP_LIBSTR blasfeo_sgecp
-#define GECPSC_LIBSTR blasfeo_sgecpsc
-#define GESC_LIBSTR blasfeo_sgesc
-#define GESE_LIBSTR blasfeo_sgese
+#define GEAD blasfeo_sgead
+#define GECP blasfeo_sgecp
+#define GECPSC blasfeo_sgecpsc
+#define GESC blasfeo_sgesc
+#define GESE blasfeo_sgese
 
 
 

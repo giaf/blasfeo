@@ -99,27 +99,32 @@ void CREATE_VEC(int m, struct VEC *sa, void *memory)
 
 
 // convert a matrix into a matrix structure
-void PACK_MAT(int m, int n, REAL *A, int lda, struct MAT *sA, int ai, int aj)
+void PACK_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
-	sA->use_dA = 0;
+	sB->use_dA = 0;
 
 	int ii, jj;
-	int lda2 = sA->m;
-	REAL *pA = sA->pA + ai + aj*lda2;
+#if defined(MF_COLMAJ)
+	int ldb = sB->m;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	const int bbi=0; const int bbj=0;
+#else
+	int bbi=bi; int bbj=bj;
+#endif
 	for(jj=0; jj<n; jj++)
 		{
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			pA[ii+0+jj*lda2] = A[ii+0+jj*lda];
-			pA[ii+1+jj*lda2] = A[ii+1+jj*lda];
-			pA[ii+2+jj*lda2] = A[ii+2+jj*lda];
-			pA[ii+3+jj*lda2] = A[ii+3+jj*lda];
+			XMATEL_B(bbi+ii+0, bbj+jj) = A[ii+0+jj*lda];
+			XMATEL_B(bbi+ii+1, bbj+jj) = A[ii+1+jj*lda];
+			XMATEL_B(bbi+ii+2, bbj+jj) = A[ii+2+jj*lda];
+			XMATEL_B(bbi+ii+3, bbj+jj) = A[ii+3+jj*lda];
 			}
 		for(; ii<m; ii++)
 			{
-			pA[ii+0+jj*lda2] = A[ii+0+jj*lda];
+			XMATEL_B(bbi+ii+0, bbj+jj) = A[ii+0+jj*lda];
 			}
 		}
 	return;
@@ -128,27 +133,32 @@ void PACK_MAT(int m, int n, REAL *A, int lda, struct MAT *sA, int ai, int aj)
 
 
 // convert and transpose a matrix into a matrix structure
-void PACK_TRAN_MAT(int m, int n, REAL *A, int lda, struct MAT *sA, int ai, int aj)
+void PACK_TRAN_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
-	sA->use_dA = 0;
+	sB->use_dA = 0;
 
 	int ii, jj;
-	int lda2 = sA->m;
-	REAL *pA = sA->pA + ai + aj*lda2;
+#if defined(MF_COLMAJ)
+	int ldb = sB->m;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	const int bbi=0; const int bbj=0;
+#else
+	int bbi=bi; int bbj=bj;
+#endif
 	for(jj=0; jj<n; jj++)
 		{
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			pA[jj+(ii+0)*lda2] = A[ii+0+jj*lda];
-			pA[jj+(ii+1)*lda2] = A[ii+1+jj*lda];
-			pA[jj+(ii+2)*lda2] = A[ii+2+jj*lda];
-			pA[jj+(ii+3)*lda2] = A[ii+3+jj*lda];
+			XMATEL_B(bbi+jj, bbj+(ii+0)) = A[ii+0+jj*lda];
+			XMATEL_B(bbi+jj, bbj+(ii+1)) = A[ii+1+jj*lda];
+			XMATEL_B(bbi+jj, bbj+(ii+2)) = A[ii+2+jj*lda];
+			XMATEL_B(bbi+jj, bbj+(ii+3)) = A[ii+3+jj*lda];
 			}
 		for(; ii<m; ii++)
 			{
-			pA[jj+(ii+0)*lda2] = A[ii+0+jj*lda];
+			XMATEL_B(bbi+jj, bbj+(ii+0)) = A[ii+0+jj*lda];
 			}
 		}
 	return;
@@ -177,24 +187,29 @@ void PACK_VEC(int m, REAL *x, int xi, struct VEC *sa, int ai)
 
 
 // convert a matrix structure into a matrix
-void UNPACK_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *A, int lda)
+void UNPACK_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *B, int ldb)
 	{
 	int ii, jj;
-	int lda2 = sA->m;
-	REAL *pA = sA->pA + ai + aj*lda2;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	for(jj=0; jj<n; jj++)
 		{
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			A[ii+0+jj*lda] = pA[ii+0+jj*lda2];
-			A[ii+1+jj*lda] = pA[ii+1+jj*lda2];
-			A[ii+2+jj*lda] = pA[ii+2+jj*lda2];
-			A[ii+3+jj*lda] = pA[ii+3+jj*lda2];
+			B[ii+0+jj*ldb] = XMATEL_A(aai+ii+0, aaj+jj);
+			B[ii+1+jj*ldb] = XMATEL_A(aai+ii+1, aaj+jj);
+			B[ii+2+jj*ldb] = XMATEL_A(aai+ii+2, aaj+jj);
+			B[ii+3+jj*ldb] = XMATEL_A(aai+ii+3, aaj+jj);
 			}
 		for(; ii<m; ii++)
 			{
-			A[ii+0+jj*lda] = pA[ii+0+jj*lda2];
+			B[ii+0+jj*ldb] = XMATEL_A(aai+ii+0, aaj+jj);
 			}
 		}
 	return;
@@ -203,24 +218,29 @@ void UNPACK_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *A, int lda)
 
 
 // convert and transpose a matrix structure into a matrix
-void UNPACK_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *A, int lda)
+void UNPACK_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *B, int ldb)
 	{
 	int ii, jj;
-	int lda2 = sA->m;
-	REAL *pA = sA->pA + ai + aj*lda2;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	for(jj=0; jj<n; jj++)
 		{
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			A[jj+(ii+0)*lda] = pA[ii+0+jj*lda2];
-			A[jj+(ii+1)*lda] = pA[ii+1+jj*lda2];
-			A[jj+(ii+2)*lda] = pA[ii+2+jj*lda2];
-			A[jj+(ii+3)*lda] = pA[ii+3+jj*lda2];
+			B[jj+(ii+0)*ldb] = XMATEL_A(aai+ii+0, aaj+jj);
+			B[jj+(ii+1)*ldb] = XMATEL_A(aai+ii+1, aaj+jj);
+			B[jj+(ii+2)*ldb] = XMATEL_A(aai+ii+2, aaj+jj);
+			B[jj+(ii+3)*ldb] = XMATEL_A(aai+ii+3, aaj+jj);
 			}
 		for(; ii<m; ii++)
 			{
-			A[jj+(ii+0)*lda] = pA[ii+0+jj*lda2];
+			B[jj+(ii+0)*ldb] = XMATEL_A(aai+ii+0, aaj+jj);
 			}
 		}
 	return;
@@ -249,24 +269,24 @@ void UNPACK_VEC(int m, struct VEC *sa, int ai, REAL *x, int xi)
 
 
 // cast a matrix into a matrix structure
-void CAST_MAT2STRMAT(REAL *A, struct MAT *sA)
+void CAST_MAT2STRMAT(REAL *A, struct MAT *sB)
 	{
 	// invalidate stored inverse diagonal
-	sA->use_dA = 0;
+	sB->use_dA = 0;
 
-	sA->pA = A;
+	sB->pA = A;
 	return;
 	}
 
 
 
 // cast a matrix into the diagonal of a matrix structure
-void CAST_DIAG_MAT2STRMAT(REAL *dA, struct MAT *sA)
+void CAST_DIAG_MAT2STRMAT(REAL *dA, struct MAT *sB)
 	{
 	// invalidate stored inverse diagonal
-	sA->use_dA = 0;
+	sB->use_dA = 0;
 
-	sA->dA = dA;
+	sB->dA = dA;
 	return;
 	}
 
@@ -282,29 +302,36 @@ void CAST_VEC2VECMAT(REAL *a, struct VEC *sa)
 
 
 // copy a generic strmat into a generic strmat
-void GECP_LIBSTR(int m, int n, struct MAT *sA, int ai, int aj, struct MAT *sC, int ci, int cj)
+void GECP(int m, int n, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
-	sC->use_dA = 0;
+	sB->use_dA = 0;
 
+#if defined(MF_COLMAJ)
 	int lda = sA->m;
+	int ldb = sB->m;
 	REAL *pA = sA->pA + ai + aj*lda;
-	int ldc = sC->m;
-	REAL *pC = sC->pA + ci + cj*ldc;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+#endif
 	int ii, jj;
 	for(jj=0; jj<n; jj++)
 		{
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
-			pC[ii+1+jj*ldc] = pA[ii+1+jj*lda];
-			pC[ii+2+jj*ldc] = pA[ii+2+jj*lda];
-			pC[ii+3+jj*ldc] = pA[ii+3+jj*lda];
+			XMATEL_B(bbi+ii+0, bbj+jj) = XMATEL_A(aai+ii+0, aaj+jj);
+			XMATEL_B(bbi+ii+1, bbj+jj) = XMATEL_A(aai+ii+1, aaj+jj);
+			XMATEL_B(bbi+ii+2, bbj+jj) = XMATEL_A(aai+ii+2, aaj+jj);
+			XMATEL_B(bbi+ii+3, bbj+jj) = XMATEL_A(aai+ii+3, aaj+jj);
 			}
 		for(; ii<m; ii++)
 			{
-			pC[ii+0+jj*ldc] = pA[ii+0+jj*lda];
+			XMATEL_B(bbi+ii+0, bbj+jj) = XMATEL_A(aai+ii+0, aaj+jj);
 			}
 		}
 	return;
@@ -313,27 +340,32 @@ void GECP_LIBSTR(int m, int n, struct MAT *sA, int ai, int aj, struct MAT *sC, i
 
 
 // scale a generic strmat
-void GESC_LIBSTR(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
+void GESC(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
 
+#if defined(MF_COLMAJ)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	int ii, jj;
 	for(jj=0; jj<n; jj++)
 		{
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			pA[ii+0+jj*lda] *= alpha;
-			pA[ii+1+jj*lda] *= alpha;
-			pA[ii+2+jj*lda] *= alpha;
-			pA[ii+3+jj*lda] *= alpha;
+			XMATEL_A(aai+ii+0, aaj+jj) *= alpha;
+			XMATEL_A(aai+ii+1, aaj+jj) *= alpha;
+			XMATEL_A(aai+ii+2, aaj+jj) *= alpha;
+			XMATEL_A(aai+ii+3, aaj+jj) *= alpha;
 			}
 		for(; ii<m; ii++)
 			{
-			pA[ii+0+jj*lda] *= alpha;
+			XMATEL_A(aai+ii+0, aaj+jj) *= alpha;
 			}
 		}
 	return;
@@ -342,31 +374,36 @@ void GESC_LIBSTR(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
 
 
 // scale an generic strmat and copy into generic strmat
-void GECPSC_LIBSTR(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+void GECPSC(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
 	sB->use_dA = 0;
 
+#if defined(MF_COLMAJ)
 	int lda = sA->m;
-	REAL *pA = sA->pA + ai + aj*lda;
-
 	int ldb = sB->m;
+	REAL *pA = sA->pA + ai + aj*lda;
 	REAL *pB = sB->pA + bi + bj*ldb;
-
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+#endif
 	int ii, jj;
 	for(jj=0; jj<n; jj++)
 		{
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			pB[ii+0+jj*ldb] = pA[ii+0+jj*lda] * alpha;
-			pB[ii+1+jj*ldb] = pA[ii+1+jj*lda] * alpha;
-			pB[ii+2+jj*ldb] = pA[ii+2+jj*lda] * alpha;
-			pB[ii+3+jj*ldb] = pA[ii+3+jj*lda] * alpha;
+			XMATEL_B(bbi+ii+0, bbj+jj) = XMATEL_A(aai+ii+0, aaj+jj) * alpha;
+			XMATEL_B(bbi+ii+1, bbj+jj) = XMATEL_A(aai+ii+1, aaj+jj) * alpha;
+			XMATEL_B(bbi+ii+2, bbj+jj) = XMATEL_A(aai+ii+2, aaj+jj) * alpha;
+			XMATEL_B(bbi+ii+3, bbj+jj) = XMATEL_A(aai+ii+3, aaj+jj) * alpha;
 			}
 		for(; ii<m; ii++)
 			{
-			pB[ii+0+jj*ldb] = pA[ii+0+jj*lda] * alpha;
+			XMATEL_B(bbi+ii+0, bbj+jj) = XMATEL_A(aai+ii+0, aaj+jj) * alpha;
 			}
 		}
 	return;
@@ -375,29 +412,36 @@ void GECPSC_LIBSTR(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj, str
 
 
 // scale and add a generic strmat into a generic strmat
-void GEAD_LIBSTR(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj, struct MAT *sC, int ci, int cj)
+void GEAD(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
-	sC->use_dA = 0;
+	sB->use_dA = 0;
 
+#if defined(MF_COLMAJ)
 	int lda = sA->m;
+	int ldb = sB->m;
 	REAL *pA = sA->pA + ai + aj*lda;
-	int ldc = sC->m;
-	REAL *pC = sC->pA + ci + cj*ldc;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+#endif
 	int ii, jj;
 	for(jj=0; jj<n; jj++)
 		{
 		ii = 0;
 		for(; ii<m-3; ii+=4)
 			{
-			pC[ii+0+jj*ldc] += alpha*pA[ii+0+jj*lda];
-			pC[ii+1+jj*ldc] += alpha*pA[ii+1+jj*lda];
-			pC[ii+2+jj*ldc] += alpha*pA[ii+2+jj*lda];
-			pC[ii+3+jj*ldc] += alpha*pA[ii+3+jj*lda];
+			XMATEL_B(bbi+ii+0, bbj+jj) += alpha*XMATEL_A(aai+ii+0, aaj+jj);
+			XMATEL_B(bbi+ii+1, bbj+jj) += alpha*XMATEL_A(aai+ii+1, aaj+jj);
+			XMATEL_B(bbi+ii+2, bbj+jj) += alpha*XMATEL_A(aai+ii+2, aaj+jj);
+			XMATEL_B(bbi+ii+3, bbj+jj) += alpha*XMATEL_A(aai+ii+3, aaj+jj);
 			}
 		for(; ii<m; ii++)
 			{
-			pC[ii+0+jj*ldc] += alpha*pA[ii+0+jj*lda];
+			XMATEL_B(bbi+ii+0, bbj+jj) += alpha*XMATEL_A(aai+ii+0, aaj+jj);
 			}
 		}
 	return;
@@ -405,19 +449,31 @@ void GEAD_LIBSTR(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj, struc
 
 
 // set all elements of a strmat to a value
-void GESE_LIBSTR(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
+void GESE(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
 
+#if defined(MF_COLMAJ)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
 	int ii, jj;
 	for(jj=0; jj<n; jj++)
 		{
-		for(ii=0; ii<m; ii++)
+		for(ii=0; ii<m-3; ii+=4)
 			{
-			pA[ii+lda*jj] = alpha;
+			XMATEL_A(aai+ii+0, aaj+jj) = alpha;
+			XMATEL_A(aai+ii+1, aaj+jj) = alpha;
+			XMATEL_A(aai+ii+2, aaj+jj) = alpha;
+			XMATEL_A(aai+ii+3, aaj+jj) = alpha;
+			}
+		for(; ii<m; ii++)
+			{
+			XMATEL_A(aai+ii+0, aaj+jj) = alpha;
 			}
 		}
 	return;
