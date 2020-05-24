@@ -63,9 +63,9 @@
 
 #define REAL float
 #define MAT blasfeo_smat_ref
-#define MATEL BLASFEO_SMATEL
+#define MATEL MATEL_REF
 #define VEC blasfeo_svec_ref
-#define VECEL BLASFEO_SVECEL
+#define VECEL VECEL_REF
 
 
 
@@ -88,6 +88,51 @@
 #define GECPSC blasfeo_sgecpsc_ref
 #define GESC blasfeo_sgesc_ref
 #define GESE blasfeo_sgese_ref
+
+#define GETR blasfeo_sgetr_ref
+#define GEIN1 blasfeo_sgein1_ref
+#define GEEX1 blasfeo_sgeex1_ref
+#define TRCP_L blasfeo_strcp_l_ref
+#define TRTR_L blasfeo_strtr_l_ref
+#define TRTR_U blasfeo_strtr_u_ref
+#define VECSE blasfeo_svecse_ref
+#define VECCP blasfeo_sveccp_ref
+#define VECSC blasfeo_svecsc_ref
+#define VECCPSC blasfeo_sveccpsc_ref
+#define VECAD blasfeo_svecad_ref
+#define VECAD_SP blasfeo_svecad_sp_ref
+#define VECIN_SP blasfeo_svecin_sp_ref
+#define VECEX_SP blasfeo_svecex_sp_ref
+#define VECIN1 blasfeo_svecin1_ref
+#define VECEX1 blasfeo_svecex1_ref
+#define VECPE blasfeo_svecpe_ref
+#define VECPEI blasfeo_svecpei_ref
+#define VECCL blasfeo_sveccl_ref
+#define VECCL_MASK blasfeo_sveccl_mask_ref
+#define VECZE blasfeo_svecze_ref
+#define VECNRM_INF blasfeo_svecnrm_inf_ref
+#define DIAIN blasfeo_sdiain_ref
+#define DIAIN_SP blasfeo_sdiain_sp_ref
+#define DIAEX blasfeo_sdiaex_ref
+#define DIAEX_SP blasfeo_sdiaex_sp_ref
+#define DIAAD blasfeo_sdiaad_ref
+#define DIAAD_SP blasfeo_sdiaad_sp_ref
+#define DIAADIN_SP blasfeo_sdiaadin_sp_ref
+#define DIARE blasfeo_sdiare_ref
+#define ROWEX blasfeo_srowex_ref
+#define ROWIN blasfeo_srowin_ref
+#define ROWAD blasfeo_srowad_ref
+#define ROWAD_SP blasfeo_srowad_sp_ref
+#define ROWSW blasfeo_srowsw_ref
+#define ROWPE blasfeo_srowpe_ref
+#define ROWPEI blasfeo_srowpei_ref
+#define COLEX blasfeo_scolex_ref
+#define COLIN blasfeo_scolin_ref
+#define COLAD blasfeo_scolad_ref
+#define COLSC blasfeo_scolsc_ref
+#define COLSW blasfeo_scolsw_ref
+#define COLPE blasfeo_scolpe_ref
+#define COLPEI blasfeo_scolpei_ref
 
 
 
