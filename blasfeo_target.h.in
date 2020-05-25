@@ -38,6 +38,10 @@
 #define LA_@LA@
 #endif
 
+#ifndef MF_@MF@
+#define MF_@MF@
+#endif
+
 #ifndef EXT_DEP
 #define ON 1
 #define OFF 0

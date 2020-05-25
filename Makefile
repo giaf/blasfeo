@@ -1077,6 +1077,16 @@ ifeq ($(LA), REFERENCE)
 	echo "#define LA_REFERENCE" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
+ifeq ($(MF), COLMAJ)
+	echo "#ifndef MF_COLMAJ" >> ./include/blasfeo_target.h
+	echo "#define MF_COLMAJ" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
+ifeq ($(MF), PANELMAJ)
+	echo "#ifndef MF_PANELMAJ" >> ./include/blasfeo_target.h
+	echo "#define MF_PANELMAJ" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
 ifeq ($(EXT_DEP), 1)
 	echo "#ifndef EXT_DEP" >> ./include/blasfeo_target.h
 	echo "#define EXT_DEP" >> ./include/blasfeo_target.h

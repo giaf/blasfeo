@@ -110,6 +110,13 @@ LA = HIGH_PERFORMANCE
 # LA = REFERENCE
 # LA = EXTERNAL_BLAS_WRAPPER
 
+# Select the Matrix Format internally used in the blasfeo_{d,s}mat structure
+# COLMAJ : column-major matrix format
+# PANELMAJ : panel-major matrix format
+# (work in progress, limited to LA=REFERENCE for now !!!)
+MF = COLMAJ
+# MF = PANELMAJ
+
 # Select external BLAS and LAPACK implementation (to be provided by the user).
 # Edit Makefile.external_blas to specify installation location (default /opt).
 # It is used by the BLASFEO library if LA=EXTERNAL_BLAS_WRAPPER.
@@ -299,6 +306,13 @@ BINARY_DIR = build/$(LA)/$(EXTERNAL_BLAS)
 endif
 # TODO remove and fix tests
 # CFLAGS  += -DBLASFEO_LA=$(LA)
+
+ifeq ($(MF), COLMAJ)
+CFLAGS  += -DMF_COLMAJ
+endif
+ifeq ($(MF), PANELMAJ)
+CFLAGS  += -DMF_PANELMAJ
+endif
 
 ifeq ($(BLAS_API), 1)
 CFLAGS += -DBLAS_API

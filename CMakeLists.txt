@@ -59,9 +59,16 @@ set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")
 # set(TARGET GENERIC CACHE STRING "Target architecture")
 
 # Linear Algebra backend
-set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
-# set(LA REFERENCE CACHE STRING "Linear algebra backend")
+# set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
+set(LA REFERENCE CACHE STRING "Linear algebra backend")
 # set(LA BLAS CACHE STRING "Linear algebra backend")
+
+# Select the Matrix Format internally used in the blasfeo_{d,s}mat structure
+# COLMAJ : column-major matrix format
+# PANELMAJ : panel-major matrix format
+# (work in progress, limited to LA=REFERENCE for now !!!)
+# set(MF COLMAJ CACHE STRING "Matrix Format internally used in blasfeo_{d,s}mat struct (work in progress, limited to LA=REFERENCE for now")
+set(MF PANELMAJ CACHE STRING "Matrix Format internally used in blasfeo_{d,s}mat struct (work in progress, limited to LA=REFERENCE for now")
 
 # BLAS and LAPACK version (for LA=BLAS in BLASFEO or for BLASFEO_BENCHMARS=ON)
 set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
@@ -163,6 +170,19 @@ if(${isvalid} EQUAL -1)
 endif()
 
 
+# Populate the list of allowed Matrix Formats and link it to the option
+set(ALLOWED_MATRIX_FORMAT
+	  COLMAJ
+	  PANELMAJ
+	  )
+set_property(CACHE MF PROPERTY STRINGS ${ALLOWED_MATRIX_FORMAT})
+
+list(FIND ALLOWED_MATRIX_FORMAT ${MF} isvalid)
+if(${isvalid} EQUAL -1)
+	message(FATAL_ERROR "Matrix Format ${MF} is not supported")
+endif()
+
+
 # Populate the list of allowed exernal BLAS tools and link it to the option
 set(ALLOWED_EXTERNAL_BLAS
 		0
@@ -221,9 +241,13 @@ endif()
 # search directories
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${BLASFEO_PATH}/include")
 
-# Specify the linear algebra package to use
+# Specify the linear algebra backend to use
 message(STATUS "Using linear algebra: ${LA}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_${LA}")
+
+# Specify the matrix format to use
+message(STATUS "Using matrix format: ${MF}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMF_${MF}")
 
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DK_MAX_STACK=${K_MAX_STACK}")

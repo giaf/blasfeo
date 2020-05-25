@@ -59,7 +59,7 @@ extern "C" {
 
 
 
-#if defined(LA_HIGH_PERFORMANCE)
+#if defined(LA_HIGH_PERFORMANCE) | ( defined(LA_REFERENCE) & defined(MF_PANELMAJ) )
 
 #include "blasfeo_block_size.h"
 
@@ -114,7 +114,7 @@ struct blasfeo_svec
 #define BLASFEO_DVECEL(sa,ai) ((sa)->pa[ai])
 #define BLASFEO_SVECEL(sa,ai) ((sa)->pa[ai])
 
-#elif defined(LA_EXTERNAL_BLAS_WRAPPER) | defined(LA_REFERENCE)
+#elif defined(LA_EXTERNAL_BLAS_WRAPPER) | ( defined(LA_REFERENCE) & defined(MF_COLMAJ) )
 
 // matrix structure
 struct blasfeo_dmat
@@ -163,7 +163,7 @@ struct blasfeo_svec
 
 #else
 
-#error : wrong LA choice
+#error : wrong LA or MF choice
 
 #endif
 

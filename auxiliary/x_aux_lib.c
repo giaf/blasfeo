@@ -33,14 +33,24 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include "../include/blasfeo_d_aux.h"
+//#include "../include/blasfeo_d_aux.h"
 
 
 // return memory size (in bytes) needed for a strmat
 size_t MEMSIZE_MAT(int m, int n)
 	{
+#if defined(MF_COLMAJ)
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
 	size_t size = (m*n+tmp)*sizeof(REAL);
+#else // MF_PANELMAJ
+	const int bs = PS;
+	const int nc = NC;
+	const int al = bs*nc;
+	int pm = (m+bs-1)/bs*bs;
+	int cn = (n+nc-1)/nc*nc;
+	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
+	size_t size = (pm*cn+tmp)*sizeof(REAL);
+#endif
 	return size;
 	}
 
@@ -49,8 +59,16 @@ size_t MEMSIZE_MAT(int m, int n)
 // return memory size (in bytes) needed for the diagonal of a strmat
 size_t MEMSIZE_DIAG_MAT(int m, int n)
 	{
+#if defined(MF_COLMAJ)
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
 	size_t size = tmp*sizeof(REAL);
+#else // MF_PANELMAJ
+	const int bs = PS;
+	const int nc = NC;
+	const int al = bs*nc;
+	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
+	size_t size = tmp*sizeof(REAL);
+#endif
 	return size;
 	}
 
@@ -59,7 +77,15 @@ size_t MEMSIZE_DIAG_MAT(int m, int n)
 // return memory size (in bytes) needed for a strvec
 size_t MEMSIZE_VEC(int m)
 	{
+#if defined(MF_COLMAJ)
 	size_t size = m*sizeof(REAL);
+#else // MF_PANELMAJ
+	const int bs = PS;
+//	const int nc = NC;
+//	const int al = bs*nc;
+	int pm = (m+bs-1)/bs*bs;
+	size_t size = pm*sizeof(REAL);
+#endif
 	return size;
 	}
 
@@ -71,6 +97,8 @@ void CREATE_MAT(int m, int n, struct MAT *sA, void *memory)
 	sA->mem = memory;
 	sA->m = m;
 	sA->n = n;
+	sA->use_dA = 0; // invalidate stored inverse diagonal
+#if defined(MF_COLMAJ)
 	REAL *ptr = (REAL *) memory;
 	sA->pA = ptr;
 	ptr += m*n;
@@ -79,6 +107,22 @@ void CREATE_MAT(int m, int n, struct MAT *sA, void *memory)
 	ptr += tmp;
 	sA->use_dA = 0;
 	sA->memsize = (m*n+tmp)*sizeof(REAL);
+#else // MF_PANELMAJ
+	const int bs = PS; // 4
+	const int nc = NC;
+	const int al = bs*nc;
+	int pm = (m+bs-1)/bs*bs;
+	int cn = (n+nc-1)/nc*nc;
+	sA->pm = pm;
+	sA->cn = cn;
+	REAL *ptr = (REAL *) memory;
+	sA->pA = ptr;
+	ptr += pm*cn;
+	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
+	sA->dA = ptr;
+	ptr += tmp;
+	sA->memsize = (pm*cn+tmp)*sizeof(REAL);
+#endif
 	return;
 	}
 
@@ -89,10 +133,21 @@ void CREATE_VEC(int m, struct VEC *sa, void *memory)
 	{
 	sa->mem = memory;
 	sa->m = m;
+#if defined(MF_COLMAJ)
 	REAL *ptr = (REAL *) memory;
 	sa->pa = ptr;
-//	ptr += m * n;
 	sa->memsize = m*sizeof(REAL);
+#else // MF_PANELMAJ
+	const int bs = PS; // 4
+//	const int nc = NC;
+//	const int al = bs*nc;
+	int pm = (m+bs-1)/bs*bs;
+	sa->pm = pm;
+	REAL *ptr = (REAL *) memory;
+	sa->pa = ptr;
+//	ptr += pm;
+	sa->memsize = pm*sizeof(REAL);
+#endif
 	return;
 	}
 

@@ -71,6 +71,7 @@ OBJS = example_d_lq_factorization.o
 
 ### all individual tests ###
 
+getting_started \
 example_d_lu_factorization \
 example_d_lq_factorization \
 example_s_lu_factorization \

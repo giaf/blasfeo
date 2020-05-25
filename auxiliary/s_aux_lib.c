@@ -37,12 +37,6 @@
 #include <stdio.h>
 #include <math.h>
 
-
-
-#define MF_COLMAJ
-
-
-
 #include <blasfeo_common.h>
 
 
@@ -50,9 +44,11 @@
 #if defined(MF_COLMAJ)
 	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
 	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
-#else
-	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
-	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
+#else // MF_PANELMAJ
+	#define XMATEL_A(X, Y) MATEL(sA, X, Y)
+	#define XMATEL_B(X, Y) MATEL(sB, X, Y)
+	#define PS S_PS
+	#define NC S_NC
 #endif
 
 
