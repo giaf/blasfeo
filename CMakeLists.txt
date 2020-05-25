@@ -59,16 +59,16 @@ set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")
 # set(TARGET GENERIC CACHE STRING "Target architecture")
 
 # Linear Algebra backend
-# set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
-set(LA REFERENCE CACHE STRING "Linear algebra backend")
+set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
+# set(LA REFERENCE CACHE STRING "Linear algebra backend")
 # set(LA BLAS CACHE STRING "Linear algebra backend")
 
 # Select the Matrix Format internally used in the blasfeo_{d,s}mat structure
 # COLMAJ : column-major matrix format
 # PANELMAJ : panel-major matrix format
 # (work in progress, limited to LA=REFERENCE for now !!!)
-# set(MF COLMAJ CACHE STRING "Matrix Format internally used in blasfeo_{d,s}mat struct (work in progress, limited to LA=REFERENCE for now")
-set(MF PANELMAJ CACHE STRING "Matrix Format internally used in blasfeo_{d,s}mat struct (work in progress, limited to LA=REFERENCE for now")
+set(MF COLMAJ CACHE STRING "Matrix Format internally used in blasfeo_{d,s}mat struct (work in progress, limited to LA=REFERENCE for now")
+# set(MF PANELMAJ CACHE STRING "Matrix Format internally used in blasfeo_{d,s}mat struct (work in progress, limited to LA=REFERENCE for now")
 
 # BLAS and LAPACK version (for LA=BLAS in BLASFEO or for BLASFEO_BENCHMARS=ON)
 set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
