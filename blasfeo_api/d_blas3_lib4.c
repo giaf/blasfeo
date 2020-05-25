@@ -3853,11 +3853,101 @@ void blasfeo_dtrsm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 // dtrsm_lunu
 void blasfeo_dtrsm_lunu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
-	printf("\nblasfeo_dtrsm_lunu: feature not implemented yet\n");
-	exit(1);
+
+	if(m<=0 || n<=0)
+		return;
+
+	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
+		{
+		printf("\nblasfeo_dtrsm_lunu: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
+		exit(1);
+		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	const int ps = 4;
+	// TODO alpha
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdd = sD->cn;
+	double *pA = sA->pA + aj*ps;
+	double *pB = sB->pA + bj*ps;
+	double *pD = sD->pA + dj*ps;
+	int ii;
+
+	int i, j, idx;
+//	double *dummy;
+
+	i = 0;
+	int rm = m%4;
+	if(rm>0)
+		{
+		// TODO code expliticly the final case
+		idx = m-rm; // position of the part to do
+		j = 0;
+		for( ; j<n; j+=4)
+			{
+//			kernel_dtrsm_nn_lu_inv_4x4_vs_lib4(0, dummy, dummy, 0, pB+idx*sdb+j*ps, pD+idx*sdd+j*ps, pA+idx*sda+idx*ps, dA+idx, rm, n-j);
+			// XXX pA & pD are dummy and should not be used internally !!!
+			kernel_dtrsm_nn_lu_one_4x4_vs_lib4(0, pA, pD, sdd, pB+idx*sdb+j*ps, pD+idx*sdd+j*ps, pA+idx*sda+idx*ps, rm, n-j);
+			}
+		// TODO
+		i += rm;
+		}
+//	int em = m-rm;
+#if 0//defined(TARGET_X64_INTEL_HASWELL)
+	for( ; i<m-8; i+=12)
+		{
+		idx = m-i; // position of already done part
+		j = 0;
+		for( ; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nn_lu_one_12x4_lib4(i, pA+(idx-12)*sda+idx*ps, sda, pD+idx*sdd+j*ps, sdd, pB+(idx-12)*sdb+j*ps, sdb, pD+(idx-12)*sdd+j*ps, sdd, pA+(idx-12)*sda+(idx-12)*ps, sda);
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nn_lu_one_12x4_vs_lib4(i, pA+(idx-12)*sda+idx*ps, sda, pD+idx*sdd+j*ps, sdd, pB+(idx-12)*sdb+j*ps, sdb, pD+(idx-12)*sdd+j*ps, sdd, pA+(idx-12)*sda+(idx-12)*ps, sda, 12, n-j);
+//			kernel_dtrsm_nn_lu_one_4x4_vs_lib4(i, pA+(idx-4)*sda+idx*ps, pD+idx*sdd+j*ps, sdd, pB+(idx-4)*sdb+j*ps, pD+(idx-4)*sdd+j*ps, pA+(idx-4)*sda+(idx-4)*ps, 4, n-j);
+//			kernel_dtrsm_nn_lu_one_4x4_vs_lib4(i+4, pA+(idx-8)*sda+(idx-4)*ps, pD+(idx-4)*sdd+j*ps, sdd, pB+(idx-8)*sdb+j*ps, pD+(idx-8)*sdd+j*ps, pA+(idx-8)*sda+(idx-8)*ps, 4, n-j);
+//			kernel_dtrsm_nn_lu_one_4x4_vs_lib4(i+8, pA+(idx-12)*sda+(idx-8)*ps, pD+(idx-8)*sdd+j*ps, sdd, pB+(idx-12)*sdb+j*ps, pD+(idx-12)*sdd+j*ps, pA+(idx-12)*sda+(idx-12)*ps, 4, n-j);
+			}
+		}
 #endif
+#if 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+	for( ; i<m-4; i+=8)
+		{
+		idx = m-i; // position of already done part
+		j = 0;
+		for( ; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nn_lu_one_8x4_lib4(i, pA+(idx-8)*sda+idx*ps, sda, pD+idx*sdd+j*ps, sdd, pB+(idx-8)*sdb+j*ps, sdb, pD+(idx-8)*sdd+j*ps, sdd, pA+(idx-8)*sda+(idx-8)*ps, sda));
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nn_lu_one_8x4_vs_lib4(i, pA+(idx-8)*sda+idx*ps, sda, pD+idx*sdd+j*ps, sdd, pB+(idx-8)*sdb+j*ps, sdb, pD+(idx-8)*sdd+j*ps, sdd, pA+(idx-8)*sda+(idx-8)*ps, sda, 8, n-j);
+//			kernel_dtrsm_nn_lu_one_4x4_vs_lib4(i, pA+(idx-4)*sda+idx*ps, pD+idx*sdd+j*ps, sdd, pB+(idx-4)*sdb+j*ps, pD+(idx-4)*sdd+j*ps, pA+(idx-4)*sda+(idx-4)*ps, 4, n-j);
+//			kernel_dtrsm_nn_lu_one_4x4_vs_lib4(i+4, pA+(idx-8)*sda+(idx-4)*ps, pD+(idx-4)*sdd+j*ps, sdd, pB+(idx-8)*sdb+j*ps, pD+(idx-8)*sdd+j*ps, pA+(idx-8)*sda+(idx-8)*ps, 4, n-j);
+			}
+		}
+#endif
+	for( ; i<m; i+=4)
+		{
+		idx = m-i; // position of already done part
+		j = 0;
+		for( ; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nn_lu_one_4x4_lib4(i, pA+(idx-4)*sda+idx*ps, pD+idx*sdd+j*ps, sdd, pB+(idx-4)*sdb+j*ps, pD+(idx-4)*sdd+j*ps, pA+(idx-4)*sda+(idx-4)*ps);
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nn_lu_one_4x4_vs_lib4(i, pA+(idx-4)*sda+idx*ps, pD+idx*sdd+j*ps, sdd, pB+(idx-4)*sdb+j*ps, pD+(idx-4)*sdd+j*ps, pA+(idx-4)*sda+(idx-4)*ps, 4, n-j);
+			}
+		}
+
+	// common return
 	return;
+
 	}
 
 
