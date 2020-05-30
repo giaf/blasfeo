@@ -35,7 +35,7 @@
 
 
 
-void GEMV_N(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void REF_GEMV_N(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL 
@@ -116,7 +116,7 @@ void GEMV_N(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XV
 
 
 
-void GEMV_T(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void REF_GEMV_T(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL 
@@ -165,7 +165,7 @@ void GEMV_T(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XV
 
 
 // TODO optimize !!!!!
-void GEMV_NT(int m, int n, REAL alpha_n, REAL alpha_t, struct XMAT *sA, int ai, int aj, struct XVEC *sx_n, int xi_n, struct XVEC *sx_t, int xi_t, REAL beta_n, REAL beta_t, struct XVEC *sy_n, int yi_n, struct XVEC *sy_t, int yi_t, struct XVEC *sz_n, int zi_n, struct XVEC *sz_t, int zi_t)
+void REF_GEMV_NT(int m, int n, REAL alpha_n, REAL alpha_t, struct XMAT *sA, int ai, int aj, struct XVEC *sx_n, int xi_n, struct XVEC *sx_t, int xi_t, REAL beta_n, REAL beta_t, struct XVEC *sy_n, int yi_n, struct XVEC *sy_t, int yi_t, struct XVEC *sz_n, int zi_n, struct XVEC *sz_t, int zi_t)
 	{
 	int ii, jj;
 	REAL
@@ -207,7 +207,7 @@ void GEMV_NT(int m, int n, REAL alpha_n, REAL alpha_t, struct XMAT *sA, int ai, 
 
 
 // TODO optimize !!!!!
-void SYMV_L(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void REF_SYMV_L(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
@@ -241,7 +241,7 @@ void SYMV_L(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XV
 
 
 
-void TRMV_LNN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void REF_TRMV_LNN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
@@ -257,7 +257,7 @@ void TRMV_LNN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, in
 	REAL *z = sz->pa + zi;
 	if(m-n>0)
 		{
-		GEMV_N(m-n, n, 1.0, sA, ai+n, aj, sx, xi, 0.0, sz, zi+n, sz, zi+n);
+		REF_GEMV_N(m-n, n, 1.0, sA, ai+n, aj, sx, xi, 0.0, sz, zi+n, sz, zi+n);
 		}
 	if(n%2!=0)
 		{
@@ -298,7 +298,7 @@ void TRMV_LNN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, in
 
 
 	
-void TRMV_LTN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void REF_TRMV_LTN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
@@ -349,7 +349,7 @@ void TRMV_LTN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, in
 
 
 
-void TRMV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void REF_TRMV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
@@ -440,7 +440,7 @@ void TRMV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 
 
 
-void TRMV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void REF_TRMV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
@@ -489,7 +489,7 @@ void TRMV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 
 
 
-void TRSV_LNN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void REF_TRSV_LNN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0 | n==0)
 		return;
@@ -641,7 +641,7 @@ void TRSV_LNN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx,
 
 
 
-void TRSV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void REF_TRSV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -733,7 +733,7 @@ void TRSV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx,
 
 
 
-void TRSV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void REF_TRSV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -815,7 +815,7 @@ void TRSV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 
 
 
-void TRSV_LNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void REF_TRSV_LNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -878,7 +878,7 @@ void TRSV_LNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 
 
 
-void TRSV_LTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void REF_TRSV_LTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -965,7 +965,7 @@ void TRSV_LTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 
 
 
-void TRSV_LTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void REF_TRSV_LTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1033,7 +1033,7 @@ void TRSV_LTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 
 
 
-void TRSV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void REF_TRSV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1120,7 +1120,7 @@ void TRSV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 
 
 
-void TRSV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void REF_TRSV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	if(m==0)
 		return;
@@ -1200,3 +1200,125 @@ void TRSV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 	return;
 	}
 
+
+
+#if defined(LA_REFERENCE)
+
+
+
+void GEMV_N(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+	{
+	REF_GEMV_N(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	}
+
+
+
+void GEMV_T(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+	{
+	REF_GEMV_T(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	}
+
+
+
+void GEMV_NT(int m, int n, REAL alpha_n, REAL alpha_t, struct XMAT *sA, int ai, int aj, struct XVEC *sx_n, int xi_n, struct XVEC *sx_t, int xi_t, REAL beta_n, REAL beta_t, struct XVEC *sy_n, int yi_n, struct XVEC *sy_t, int yi_t, struct XVEC *sz_n, int zi_n, struct XVEC *sz_t, int zi_t)
+	{
+	REF_GEMV_NT(m, n, alpha_n, alpha_t, sA, ai, aj, sx_n, xi_n, sx_t, xi_t, beta_n, beta_t, sy_n, yi_n, sy_t, yi_t, sz_n, zi_n, sz_t, zi_t);
+	}
+
+
+
+// TODO mn & remove n !!!!!
+void SYMV_L(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+	{
+	REF_SYMV_L(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	}
+
+
+
+// TODO mn & remove n !!!!!
+void TRMV_LNN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_LNN(m, n, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+// TODO mn & remove n !!!!!
+void TRMV_LTN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_LTN(m, n, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void TRMV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_UNN(m, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void TRMV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_UTN(m, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void TRSV_LNN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRSV_LNN_MN(m, n, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void TRSV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRSV_LTN_MN(m, n, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void TRSV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRSV_LNN(m, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void TRSV_LNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRSV_LNU(m, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void TRSV_LTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRSV_LNN(m, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void TRSV_LTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRSV_LNU(m, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void TRSV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRSV_UNN(m, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void TRSV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRSV_UTN(m, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+#endif

@@ -9,11 +9,12 @@
     "VERBOSE":2
   },
   "env_flags":{
-    "CC":"gcc",
+    "CC": "gcc",
     "CFLAGS": "-Wuninitialized"
   },
   "blasfeo_flags":{
-    "TESTING_MODE": 1,
+    "BLASFEO_REF_API": 1,
+    "MF": "PANELMAJ",
     "BLAS_API": 1,
     "BENCHMARKS_MODE": 1,
     "EXTERNAL_BLAS": "SYSTEM"

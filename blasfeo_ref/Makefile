@@ -35,25 +35,35 @@
 
 include ../Makefile.rule
 
+
+REF_OBJS =
+#
+REF_OBJS += d_blas1_ref.o
+REF_OBJS += d_blas2_ref.o
+REF_OBJS += d_blas2_diag_ref.o
+REF_OBJS += d_blas3_ref.o
+REF_OBJS += d_blas3_diag_ref.o
+REF_OBJS += d_lapack_ref.o
+#
+REF_OBJS += s_blas1_ref.o
+REF_OBJS += s_blas2_ref.o
+REF_OBJS += s_blas2_diag_ref.o
+REF_OBJS += s_blas3_ref.o
+REF_OBJS += s_blas3_diag_ref.o
+REF_OBJS += s_lapack_ref.o
+
+
 OBJS =
 
 ifeq ($(LA), REFERENCE)
-#
-OBJS += d_blas1_ref.o
-OBJS += d_blas2_ref.o
-OBJS += d_blas2_diag_ref.o
-OBJS += d_blas3_ref.o
-OBJS += d_blas3_diag_ref.o
-OBJS += d_lapack_ref.o
-#
-OBJS += s_blas1_ref.o
-OBJS += s_blas2_ref.o
-OBJS += s_blas2_diag_ref.o
-OBJS += s_blas3_ref.o
-OBJS += s_blas3_diag_ref.o
-OBJS += s_lapack_ref.o
+OBJS += $(REF_OBJS)
+else
+
+ifeq ($(BLASFEO_REF_API), 1)
+OBJS += $(REF_OBJS)
 endif
 
+endif
 
 ifeq ($(TESTING_MODE), 1)
 #

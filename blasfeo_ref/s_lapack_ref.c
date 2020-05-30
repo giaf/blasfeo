@@ -65,6 +65,24 @@
 
 
 
+#define REF_GELQF_WORK_SIZE blasfeo_ref_sgelqf_worksize
+#define REF_GELQF blasfeo_ref_sgelqf
+#define REF_ORGLQ_WORK_SIZE blasfeo_ref_sorglq_worksize
+#define REF_ORGLQ blasfeo_ref_sorglq
+#define REF_GELQF_PD blasfeo_ref_sgelqf_pd
+#define REF_GELQF_PD_DA blasfeo_ref_sgelqf_pd_da
+#define REF_GELQF_PD_LA blasfeo_ref_sgelqf_pd_la
+#define REF_GELQF_PD_LLA blasfeo_ref_sgelqf_pd_lla
+#define REF_GEQRF blasfeo_ref_sgeqrf
+#define REF_GEQRF_WORK_SIZE blasfeo_ref_sgeqrf_worksize
+#define REF_GETRF_NOPIVOT blasfeo_ref_sgetrf_np
+#define REF_GETRF_ROWPIVOT blasfeo_ref_sgetrf_rp
+#define REF_POTRF_L blasfeo_ref_spotrf_l
+#define REF_POTRF_L_MN blasfeo_ref_spotrf_l_mn
+#define REF_PSTRF_L blasfeo_ref_spstrf_l
+#define REF_SYRK_POTRF_LN blasfeo_ref_ssyrk_spotrf_ln
+#define REF_SYRK_POTRF_LN_MN blasfeo_ref_ssyrk_spotrf_ln_mn
+
 #define GELQF_WORK_SIZE blasfeo_sgelqf_worksize
 #define GELQF blasfeo_sgelqf
 #define ORGLQ_WORK_SIZE blasfeo_sorglq_worksize
@@ -75,12 +93,11 @@
 #define GELQF_PD_LLA blasfeo_sgelqf_pd_lla
 #define GEQRF blasfeo_sgeqrf
 #define GEQRF_WORK_SIZE blasfeo_sgeqrf_worksize
-//#define GETF2_NOPIVOT dgetf2_nopivot
 #define GETRF_NOPIVOT blasfeo_sgetrf_np
 #define GETRF_ROWPIVOT blasfeo_sgetrf_rp
 #define POTRF_L blasfeo_spotrf_l
 #define POTRF_L_MN blasfeo_spotrf_l_mn
-#define PSTRF_L spstrf_l_libstr
+#define PSTRF_L blasfeo_spstrf_l
 #define SYRK_POTRF_LN blasfeo_ssyrk_spotrf_ln
 #define SYRK_POTRF_LN_MN blasfeo_ssyrk_spotrf_ln_mn
 

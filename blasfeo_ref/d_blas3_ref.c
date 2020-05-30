@@ -64,6 +64,38 @@
 
 
 // gemm
+#define REF_GEMM_NN blasfeo_ref_dgemm_nn
+#define REF_GEMM_NT blasfeo_ref_dgemm_nt
+#define REF_GEMM_TN blasfeo_ref_dgemm_tn
+#define REF_GEMM_TT blasfeo_ref_dgemm_tt
+// syrk
+#define REF_SYRK_LN blasfeo_ref_dsyrk_ln
+#define REF_SYRK_LN_MN blasfeo_ref_dsyrk_ln_mn
+#define REF_SYRK_LT blasfeo_ref_dsyrk_lt
+#define REF_SYRK_UN blasfeo_ref_dsyrk_un
+#define REF_SYRK_UT blasfeo_ref_dsyrk_ut
+// trmm
+#define REF_TRMM_RLNN blasfeo_ref_dtrmm_rlnn
+#define REF_TRMM_RUTN blasfeo_ref_dtrmm_rutn
+// trsm
+#define REF_TRSM_LLNN blasfeo_ref_dtrsm_llnn
+#define REF_TRSM_LLNU blasfeo_ref_dtrsm_llnu
+#define REF_TRSM_LLTN blasfeo_ref_dtrsm_lltn
+#define REF_TRSM_LLTU blasfeo_ref_dtrsm_lltu
+#define REF_TRSM_LUNN blasfeo_ref_dtrsm_lunn
+#define REF_TRSM_LUNU blasfeo_ref_dtrsm_lunu
+#define REF_TRSM_LUTN blasfeo_ref_dtrsm_lutn
+#define REF_TRSM_LUTU blasfeo_ref_dtrsm_lutu
+#define REF_TRSM_RLNN blasfeo_ref_dtrsm_rlnn
+#define REF_TRSM_RLNU blasfeo_ref_dtrsm_rlnu
+#define REF_TRSM_RLTN blasfeo_ref_dtrsm_rltn
+#define REF_TRSM_RLTU blasfeo_ref_dtrsm_rltu
+#define REF_TRSM_RUNN blasfeo_ref_dtrsm_runn
+#define REF_TRSM_RUNU blasfeo_ref_dtrsm_runu
+#define REF_TRSM_RUTN blasfeo_ref_dtrsm_rutn
+#define REF_TRSM_RUTU blasfeo_ref_dtrsm_rutu
+
+// gemm
 #define GEMM_NN blasfeo_dgemm_nn
 #define GEMM_NT blasfeo_dgemm_nt
 #define GEMM_TN blasfeo_dgemm_tn

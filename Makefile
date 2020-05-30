@@ -43,6 +43,32 @@ OBJS += \
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 
+# blasfeo_ref
+ifeq ($(BLASFEO_REF_API), 1)
+
+# aux
+OBJS += \
+		auxiliary/d_aux_ref.o \
+		auxiliary/s_aux_ref.o \
+
+# blas
+OBJS += \
+		blasfeo_ref/d_blas1_ref.o \
+		blasfeo_ref/d_blas2_ref.o \
+		blasfeo_ref/d_blas2_diag_ref.o \
+		blasfeo_ref/d_blas3_ref.o \
+		blasfeo_ref/d_blas3_diag_ref.o \
+		blasfeo_ref/d_lapack_ref.o \
+		\
+		blasfeo_ref/s_blas1_ref.o \
+		blasfeo_ref/s_blas2_ref.o \
+		blasfeo_ref/s_blas2_diag_ref.o \
+		blasfeo_ref/s_blas3_ref.o \
+		blasfeo_ref/s_blas3_diag_ref.o \
+		blasfeo_ref/s_lapack_ref.o \
+
+endif
+
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 
 # aux
@@ -738,13 +764,15 @@ endif # LAPACKE_API
 
 endif # BLAS_API
 
-else # LA_HIGH_PERFORMANCE vs LA_REFERENCE | LA_BLAS
+else # LA_HIGH_PERFORMANCE vs LA_REFERENCE | LA_EXTERNAL_BLAS_WRAPPER
 
 # aux
 OBJS += \
-		auxiliary/d_aux_lib.o \
-		auxiliary/s_aux_lib.o \
+		auxiliary/d_aux_ref.o \
+		auxiliary/s_aux_ref.o \
 		auxiliary/m_aux_lib.o \
+
+ifeq ($(LA), REFERENCE)
 
 # blas
 OBJS += \
@@ -762,7 +790,6 @@ OBJS += \
 		blasfeo_ref/s_blas3_diag_ref.o \
 		blasfeo_ref/s_lapack_ref.o \
 
-ifeq ($(LA), REFERENCE)
 ifeq ($(BLAS_API), 1)
 OBJS += \
 		blas_api/dgemm_ref.o \
@@ -772,7 +799,26 @@ OBJS += \
 		blas_api/strsm_ref.o \
 
 endif
-endif
+
+else # LA_EXTERNAL_BLAS_WRAPPER
+
+# blas
+OBJS += \
+		blasfeo_ref/d_blas1_lib.o \
+		blasfeo_ref/d_blas2_lib.o \
+		blasfeo_ref/d_blas2_diag_lib.o \
+		blasfeo_ref/d_blas3_lib.o \
+		blasfeo_ref/d_blas3_diag_lib.o \
+		blasfeo_ref/d_lapack_lib.o \
+		\
+		blasfeo_ref/s_blas1_lib.o \
+		blasfeo_ref/s_blas2_lib.o \
+		blasfeo_ref/s_blas2_diag_lib.o \
+		blasfeo_ref/s_blas3_lib.o \
+		blasfeo_ref/s_blas3_diag_lib.o \
+		blasfeo_ref/s_lapack_lib.o \
+
+endif # LA REFERENCE vs EXTERNAL_BLAS_WAPPER
 
 endif # LA choice
 
@@ -791,8 +837,8 @@ OBJS += \
 		auxiliary/s_aux_ext_dep_lib4.o
 else
 OBJS += \
-		auxiliary/d_aux_ext_dep_lib.o \
-		auxiliary/s_aux_ext_dep_lib.o
+		auxiliary/d_aux_ext_dep_ref.o \
+		auxiliary/s_aux_ext_dep_ref.o
 endif
 
 endif

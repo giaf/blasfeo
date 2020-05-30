@@ -24,7 +24,6 @@ REPORTS_DIR="reports"
 TESTCLASSES_DIR="classes"
 TPL_PATH="Makefile.tpl"
 LIB_BLASFEO_STATIC = "libblasfeo.a"
-LIB_BLASFEO_REF_STATIC = "libblasfeo_ref.a"
 #MAKE_FLAGS={"--jobs":"8"}
 MAKE_FLAGS={"--jobs": multiprocessing.cpu_count()}
 SILENT=0
@@ -266,7 +265,7 @@ class BlasfeoTestset:
 		target = self.testset["blasfeo_flags"]["TARGET"]
 		la = self.testset["blasfeo_flags"]["LA"]
 
-		if self.lib_static_dst.is_file() and self.libref_static_dst.is_file():
+		if self.lib_static_dst.is_file():
 			return 1
 
 		return 0
@@ -295,10 +294,8 @@ class BlasfeoTestset:
 		blasfeo_flags.update({"ABS_BINARY_PATH":str(binary_path)})
 
 		self.lib_static_src = Path(BLASFEO_PATH, "lib", LIB_BLASFEO_STATIC)
-		self.libref_static_src = Path(BLASFEO_PATH, "lib", LIB_BLASFEO_REF_STATIC)
 
 		self.lib_static_dst = Path(binary_path, LIB_BLASFEO_STATIC)
-		self.libref_static_dst = Path(binary_path, LIB_BLASFEO_REF_STATIC)
 
 		lib_flags_json = str(Path(binary_path, "flags.json"))
 
@@ -315,10 +312,8 @@ class BlasfeoTestset:
 
 			# copy library
 			shutil.copyfile(str(self.lib_static_src), str(self.lib_static_dst))
-			shutil.copyfile(str(self.libref_static_src), str(self.libref_static_dst))
 
 			#  self.lib_static_dst.write_bytes(lib_static_src.read_bytes())
-			#  self.libref_static_dst.write_bytes(libref_static_src.read_bytes())
 
 		for routine_name, args in self.testset['scheduled_routines'].items():
 			# update local flags with global flags

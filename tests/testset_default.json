@@ -12,8 +12,9 @@
     "CFLAGS": "-Wuninitialized"
   },
   "blasfeo_flags":{
-    "CC":"gcc",
-    "TESTING_MODE": 1,
+    "CC": "gcc",
+    "MF": "PANELMAJ",
+    "BLASFEO_REF_API": 1,
     "BLAS_API": 1,
     "BENCHMARKS_MODE": 1,
     "EXTERNAL_BLAS": "OPENBLAS"
@@ -29,8 +30,6 @@
   ],
   "TARGET": [
     "X64_INTEL_HASWELL",
-    "X64_INTEL_SANDY_BRIDGE",
-    "X64_INTEL_CORE",
     "GENERIC"
   ],
   "LA": [
@@ -45,6 +44,7 @@
   "buffer": [
     "blasfeo",
     "X64_INTEL_HASWELL",
+    "X64_INTEL_SANDY_BRIDGE",
     "X64_INTEL_CORE",
     "GENERIC",
     "gemm_nt",

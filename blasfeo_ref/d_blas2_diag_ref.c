@@ -41,8 +41,11 @@
 
 
 #define REAL double
-
 #define XVEC blasfeo_dvec
+
+
+
+#define REF_GEMV_D blasfeo_ref_dgemv_d
 
 #define GEMV_D blasfeo_dgemv_d
 

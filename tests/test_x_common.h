@@ -68,7 +68,8 @@
 #define concatenate(var, post) var ## post
 #define string(var) STR(var)
 
-#define REF(fun) concatenate(fun, _ref)
+//#define REF(fun) concatenate(fun, _ref)
+#define REF(fun) concatenate(ref_, fun)
 #define BLASFEO(fun) concatenate(blasfeo_, fun)
 #define BLAS(fun) concatenate(fun, _)
 
@@ -88,20 +89,44 @@
 
 // Collection of macros  and functions inteded to be used to compute compare and check matrices
 
-#if defined(LA_HIGH_PERFORMANCE)
-// Panel major element extraction macro
-#define MATEL_LIBSTR(sA,ai,aj) ((sA)->pA[((ai)-((ai)&(PS-1)))*(sA)->cn+(aj)*PS+((ai)&(PS-1))])
-#define MATEL_LIB(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
-#elif defined(LA_EXTERNAL_BLAS_WRAPPER) | defined(LA_REFERENCE)
-#define MATEL_LIBSTR(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
+#ifdef PRECISION_DOUBLE
+
+#define MATEL_LIBSTR BLASFEO_DMATEL
+#define MATEL_REF BLASFEO_DMATEL
+#define VECEL_LIBSTR BLASFEO_DVECEL
+#define VECEL_REF BLASFEO_DVECEL
+
 #else
-#error : wrong LA choice
+
+#ifdef PRECISION_SINGLE
+
+#define MATEL_LIBSTR BLASFEO_SMATEL
+#define MATEL_REF BLASFEO_SMATEL
+#define VECEL_LIBSTR BLASFEO_SVECEL
+#define VECEL_REF BLASFEO_SVECEL
+
+#else
+
+#error None of double and single precision defined !!!
+
 #endif
+
+#endif
+
+//#if defined(LA_HIGH_PERFORMANCE)
+// Panel major element extraction macro
+//#define MATEL_LIBSTR(sA,ai,aj) ((sA)->pA[((ai)-((ai)&(PS-1)))*(sA)->cn+(aj)*PS+((ai)&(PS-1))])
+//#define MATEL_LIB(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
+//#elif defined(LA_EXTERNAL_BLAS_WRAPPER) | defined(LA_REFERENCE)
+//#define MATEL_LIBSTR(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
+//#else
+//#error : wrong LA choice
+//#endif
 
 // Column major element extraction macro
 //
-#define VECEL_LIBSTR(sa,ai) ((sa)->pa[ai])
-#define VECEL_LIB(sa,ai) ((sa)->pa[ai])
+//#define VECEL_LIBSTR(sa,ai) ((sa)->pa[ai])
+//#define VECEL_LIB(sa,ai) ((sa)->pa[ai])
 
 struct RoutineArgs{
 	// coefficients

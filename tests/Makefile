@@ -41,11 +41,6 @@ include ../Makefile.rule
 LIBS =
 SHARED_LIBS =
 
-ifeq ($(TESTING_MODE), 1)
-LIBS += $(BINARY_DIR)/libblasfeo_ref.a
-SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo_ref
-endif
-
 LIBS += $(BINARY_DIR)/libblasfeo.a
 SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
 
@@ -121,9 +116,6 @@ bin_dir:
 
 common: bin_dir
 	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
-ifeq ($(TESTING_MODE), 1)
-	cp ../lib/libblasfeo_ref.a ./$(BINARY_DIR)
-endif
 
 one: common $(ONE_OBJS)
 

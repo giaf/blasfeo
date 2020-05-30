@@ -96,10 +96,15 @@ OBJS += s_aux_lib4.o
 OBJS += m_aux_lib44.o
 endif
 
+ifeq ($(BLASFEO_REF_API), 1)
+OBJS += d_aux_ref.o
+OBJS += s_aux_ref.o
+endif
+
 else # LA_REFERENCE | LA_EXTERNAL_BLAS_WRAPPER
 
-OBJS += d_aux_lib.o
-OBJS += s_aux_lib.o
+OBJS += d_aux_ref.o
+OBJS += s_aux_ref.o
 OBJS += m_aux_lib.o
 
 endif # LA choice
@@ -121,11 +126,13 @@ OBJS += i_aux_ext_dep_lib.o
 OBJS += timing.o
 
 ifeq ($(LA), HIGH_PERFORMANCE)
+
 OBJS += d_aux_ext_dep_lib4.o
 OBJS += s_aux_ext_dep_lib4.o
+
 else
-OBJS += d_aux_ext_dep_lib.o
-OBJS += s_aux_ext_dep_lib.o
+OBJS += d_aux_ext_dep_ref.o
+OBJS += s_aux_ext_dep_ref.o
 endif
 
 ifeq ($(TESTING_MODE), 1)
@@ -144,11 +151,11 @@ clean:
 	rm -f *.o
 	rm -f *.s
 
-d_aux_lib.o: d_aux_lib.c x_aux_lib.c
-s_aux_lib.o: s_aux_lib.c x_aux_lib.c
+d_aux_ref.o: d_aux_ref.c x_aux_ref.c
+s_aux_ref.o: s_aux_ref.c x_aux_ref.c
 d_aux_ext_dep_common.o: d_aux_ext_dep_common.c x_aux_ext_dep_common.c
 s_aux_ext_dep_common.o: s_aux_ext_dep_common.c x_aux_ext_dep_common.c
-d_aux_ext_dep_lib.o: d_aux_ext_dep_lib.c x_aux_ext_dep.c
-s_aux_ext_dep_lib.o: s_aux_ext_dep_lib.c x_aux_ext_dep.c
+d_aux_ext_dep_ref.o: d_aux_ext_dep_ref.c x_aux_ext_dep.c
+s_aux_ext_dep_ref.o: s_aux_ext_dep_ref.c x_aux_ext_dep.c
 d_aux_ext_dep_lib4.o: d_aux_ext_dep_lib4.c x_aux_ext_dep.c
 s_aux_ext_dep_lib4.o: s_aux_ext_dep_lib4.c x_aux_ext_dep.c

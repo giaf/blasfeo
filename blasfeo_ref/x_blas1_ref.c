@@ -35,7 +35,7 @@
 
 
 
-void AXPY(int m, REAL alpha, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void REF_AXPY(int m, REAL alpha, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	if(m<=0)
 		return;
@@ -58,7 +58,7 @@ void AXPY(int m, REAL alpha, struct XVEC *sx, int xi, struct XVEC *sy, int yi, s
 
 
 
-void AXPBY(int m, REAL alpha, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void REF_AXPBY(int m, REAL alpha, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	if(m<=0)
 		return;
@@ -82,7 +82,7 @@ void AXPBY(int m, REAL alpha, struct XVEC *sx, int xi, REAL beta, struct XVEC *s
 
 
 // multiply two vectors
-void VECMUL(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void REF_VECMUL(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	if(m<=0)
 		return;
@@ -108,7 +108,7 @@ void VECMUL(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC
 
 
 // multiply two vectors and add result to another vector
-void VECMULACC(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void REF_VECMULACC(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	if(m<=0)
 		return;
@@ -134,7 +134,7 @@ void VECMULACC(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct X
 
 
 // multiply two vectors and compute dot product
-REAL VECMULDOT(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+REAL REF_VECMULDOT(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	if(m<=0)
 		return 0.0;
@@ -163,7 +163,7 @@ REAL VECMULDOT(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct X
 
 
 // compute dot product of two vectors
-REAL DOT(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi)
+REAL REF_DOT(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi)
 	{
 	if(m<=0)
 		return 0.0;
@@ -189,7 +189,7 @@ REAL DOT(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi)
 
 
 // construct givens plane rotation
-void ROTG(REAL a, REAL b, REAL *c, REAL *s)
+void REF_ROTG(REAL a, REAL b, REAL *c, REAL *s)
 	{
 	REAL aa = FABS(a);
 	REAL bb = FABS(b);
@@ -216,7 +216,7 @@ void ROTG(REAL a, REAL b, REAL *c, REAL *s)
 
 
 // apply plane rotation to the aj0 and aj1 columns of A at row index ai
-void COLROT(int m, struct XMAT *sA, int ai, int aj0, int aj1, REAL c, REAL s)
+void REF_COLROT(int m, struct XMAT *sA, int ai, int aj0, int aj1, REAL c, REAL s)
 	{
 	int lda = sA->m;
 	REAL *px = sA->pA + ai + aj0*lda;
@@ -235,7 +235,7 @@ void COLROT(int m, struct XMAT *sA, int ai, int aj0, int aj1, REAL c, REAL s)
 
 
 // apply plane rotation to the ai0 and ai1 rows of A at column index aj
-void ROWROT(int m, struct XMAT *sA, int ai0, int ai1, int aj, REAL c, REAL s)
+void REF_ROWROT(int m, struct XMAT *sA, int ai0, int ai1, int aj, REAL c, REAL s)
 	{
 	int lda = sA->m;
 	REAL *px = sA->pA + ai0 + aj*lda;
@@ -252,3 +252,72 @@ void ROWROT(int m, struct XMAT *sA, int ai0, int ai1, int aj, REAL c, REAL s)
 	}
 
 
+
+#if defined(LA_REFERENCE)
+
+
+
+void AXPY(int m, REAL alpha, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+	{
+	REF_AXPY(m, alpha, sx, xi, sy, yi, sz, zi);
+	}
+
+
+
+void AXPBY(int m, REAL alpha, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+	{
+	REF_AXPBY(m, alpha, sx, xi, beta, sy, yi, sz, zi);
+	}
+
+
+
+void VECMUL(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+	{
+	REF_VECMUL(m, sx, xi, sy, yi, sz, zi);
+	}
+
+
+
+void VECMULACC(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+	{
+	REF_VECMULACC(m, sx, xi, sy, yi, sz, zi);
+	}
+
+
+
+REAL VECMULDOT(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+	{
+	return REF_VECMULDOT(m, sx, xi, sy, yi, sz, zi);
+	}
+
+
+
+REAL DOT(int m, struct XVEC *sx, int xi, struct XVEC *sy, int yi)
+	{
+	return REF_DOT(m, sx, xi, sy, yi);
+	}
+
+
+
+void ROTG(REAL a, REAL b, REAL *c, REAL *s)
+	{
+	REF_ROTG(a, b, c, s);
+	}
+
+
+
+void COLROT(int m, struct XMAT *sA, int ai, int aj0, int aj1, REAL c, REAL s)
+	{
+	REF_COLROT(m, sA, ai, aj0, aj1, c, s);
+	}
+
+
+
+void ROWROT(int m, struct XMAT *sA, int ai0, int ai1, int aj, REAL c, REAL s)
+	{
+	REF_ROWROT(m, sA, ai0, ai1, aj, c, s);
+	}
+
+
+
+#endif

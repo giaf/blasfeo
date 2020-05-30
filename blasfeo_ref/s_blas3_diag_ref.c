@@ -62,6 +62,9 @@
 
 
 
+#define REF_GEMM_R_DIAG blasfeo_ref_sgemm_nd
+#define REF_GEMM_L_DIAG blasfeo_ref_sgemm_dn
+
 #define GEMM_R_DIAG blasfeo_sgemm_nd
 #define GEMM_L_DIAG blasfeo_sgemm_dn
 

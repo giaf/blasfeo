@@ -37,7 +37,7 @@
 
 
 // return memory size (in bytes) needed for a strmat
-size_t MEMSIZE_MAT(int m, int n)
+size_t REF_MEMSIZE_MAT(int m, int n)
 	{
 #if defined(MF_COLMAJ)
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
@@ -57,7 +57,7 @@ size_t MEMSIZE_MAT(int m, int n)
 
 
 // return memory size (in bytes) needed for the diagonal of a strmat
-size_t MEMSIZE_DIAG_MAT(int m, int n)
+size_t REF_MEMSIZE_DIAG_MAT(int m, int n)
 	{
 #if defined(MF_COLMAJ)
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
@@ -75,7 +75,7 @@ size_t MEMSIZE_DIAG_MAT(int m, int n)
 
 
 // return memory size (in bytes) needed for a strvec
-size_t MEMSIZE_VEC(int m)
+size_t REF_MEMSIZE_VEC(int m)
 	{
 #if defined(MF_COLMAJ)
 	size_t size = m*sizeof(REAL);
@@ -92,7 +92,7 @@ size_t MEMSIZE_VEC(int m)
 
 
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
-void CREATE_MAT(int m, int n, struct MAT *sA, void *memory)
+void REF_CREATE_MAT(int m, int n, struct MAT *sA, void *memory)
 	{
 	sA->mem = memory;
 	sA->m = m;
@@ -129,7 +129,7 @@ void CREATE_MAT(int m, int n, struct MAT *sA, void *memory)
 
 
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
-void CREATE_VEC(int m, struct VEC *sa, void *memory)
+void REF_CREATE_VEC(int m, struct VEC *sa, void *memory)
 	{
 	sa->mem = memory;
 	sa->m = m;
@@ -154,7 +154,7 @@ void CREATE_VEC(int m, struct VEC *sa, void *memory)
 
 
 // convert a matrix into a matrix structure
-void PACK_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj)
+void REF_PACK_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
 	sB->use_dA = 0;
@@ -187,7 +187,7 @@ void PACK_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj)
 
 
 // convert and transpose a matrix into a matrix structure
-void PACK_TRAN_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj)
+void REF_PACK_TRAN_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
 	sB->use_dA = 0;
@@ -220,7 +220,7 @@ void PACK_TRAN_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int b
 
 
 // convert a vector into a vector structure
-void PACK_VEC(int m, REAL *x, int xi, struct VEC *sa, int ai)
+void REF_PACK_VEC(int m, REAL *x, int xi, struct VEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;
 	int ii;
@@ -240,7 +240,7 @@ void PACK_VEC(int m, REAL *x, int xi, struct VEC *sa, int ai)
 
 
 // convert a matrix structure into a matrix
-void UNPACK_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *B, int ldb)
+void REF_UNPACK_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *B, int ldb)
 	{
 	int ii, jj;
 #if defined(MF_COLMAJ)
@@ -271,7 +271,7 @@ void UNPACK_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *B, int ldb)
 
 
 // convert and transpose a matrix structure into a matrix
-void UNPACK_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *B, int ldb)
+void REF_UNPACK_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *B, int ldb)
 	{
 	int ii, jj;
 #if defined(MF_COLMAJ)
@@ -302,7 +302,7 @@ void UNPACK_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *B, int 
 
 
 // convert a vector structure into a vector
-void UNPACK_VEC(int m, struct VEC *sa, int ai, REAL *x, int xi)
+void REF_UNPACK_VEC(int m, struct VEC *sa, int ai, REAL *x, int xi)
 	{
 	REAL *pa = sa->pa + ai;
 	int ii;
@@ -322,7 +322,7 @@ void UNPACK_VEC(int m, struct VEC *sa, int ai, REAL *x, int xi)
 
 
 // cast a matrix into a matrix structure
-void CAST_MAT2STRMAT(REAL *A, struct MAT *sB)
+void REF_CAST_MAT2STRMAT(REAL *A, struct MAT *sB)
 	{
 	// invalidate stored inverse diagonal
 	sB->use_dA = 0;
@@ -333,7 +333,7 @@ void CAST_MAT2STRMAT(REAL *A, struct MAT *sB)
 
 
 // cast a matrix into the diagonal of a matrix structure
-void CAST_DIAG_MAT2STRMAT(REAL *dA, struct MAT *sB)
+void REF_CAST_DIAG_MAT2STRMAT(REAL *dA, struct MAT *sB)
 	{
 	// invalidate stored inverse diagonal
 	sB->use_dA = 0;
@@ -344,7 +344,7 @@ void CAST_DIAG_MAT2STRMAT(REAL *dA, struct MAT *sB)
 
 
 // cast a vector into a vector structure
-void CAST_VEC2VECMAT(REAL *a, struct VEC *sa)
+void REF_CAST_VEC2VECMAT(REAL *a, struct VEC *sa)
 	{
 	sa->pa = a;
 	return;
@@ -353,7 +353,7 @@ void CAST_VEC2VECMAT(REAL *a, struct VEC *sa)
 
 
 // copy a generic strmat into a generic strmat
-void GECP(int m, int n, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+void REF_GECP(int m, int n, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
 	sB->use_dA = 0;
@@ -390,7 +390,7 @@ void GECP(int m, int n, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, 
 
 
 // scale a generic strmat
-void GESC(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
+void REF_GESC(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -423,7 +423,7 @@ void GESC(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
 
 
 // scale an generic strmat and copy into generic strmat
-void GECPSC(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+void REF_GECPSC(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
 	sB->use_dA = 0;
@@ -460,7 +460,7 @@ void GECPSC(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj, struct MAT
 
 
 // scale and add a generic strmat into a generic strmat
-void GEAD(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+void REF_GEAD(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
 	sB->use_dA = 0;
@@ -496,7 +496,7 @@ void GEAD(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj, struct MAT *
 
 
 // set all elements of a strmat to a value
-void GESE(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
+void REF_GESE(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -528,7 +528,7 @@ void GESE(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
 
 
 // copy and transpose a generic strmat into a generic strmat
-void GETR(int m, int n, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+void REF_GETR(int m, int n, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
 	sB->use_dA = 0;
@@ -565,7 +565,7 @@ void GETR(int m, int n, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, 
 
 
 // insert element into strmat
-void GEIN1(REAL alpha, struct MAT *sA, int ai, int aj)
+void REF_GEIN1(REAL alpha, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -576,7 +576,7 @@ void GEIN1(REAL alpha, struct MAT *sA, int ai, int aj)
 
 
 // extract element from strmat
-REAL GEEX1(struct MAT *sA, int ai, int aj)
+REAL REF_GEEX1(struct MAT *sA, int ai, int aj)
 	{
 	return MATEL(sA, ai, aj);
 	}
@@ -584,7 +584,7 @@ REAL GEEX1(struct MAT *sA, int ai, int aj)
 
 
 // copy a lower triangular strmat into a lower triangular strmat
-void TRCP_L(int m, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+void REF_TRCP_L(int m, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
 	sB->use_dA = 0;
@@ -614,7 +614,7 @@ void TRCP_L(int m, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int b
 
 
 // copy and transpose a lower triangular strmat into an upper triangular strmat
-void TRTR_L(int m, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+void REF_TRTR_L(int m, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
 	sB->use_dA = 0;
@@ -644,7 +644,7 @@ void TRTR_L(int m, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int b
 
 
 // copy and transpose an upper triangular strmat into a lower triangular strmat
-void TRTR_U(int m, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+void REF_TRTR_U(int m, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
 	sB->use_dA = 0;
@@ -674,7 +674,7 @@ void TRTR_U(int m, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int b
 
 
 // set all elements of a strvec to a value
-void VECSE(int m, REAL alpha, struct VEC *sx, int xi)
+void REF_VECSE(int m, REAL alpha, struct VEC *sx, int xi)
 	{
 	REAL *x = sx->pa + xi;
 	int ii;
@@ -686,7 +686,7 @@ void VECSE(int m, REAL alpha, struct VEC *sx, int xi)
 
 
 // copy a strvec into a strvec
-void VECCP(int m, struct VEC *sa, int ai, struct VEC *sc, int ci)
+void REF_VECCP(int m, struct VEC *sa, int ai, struct VEC *sc, int ci)
 	{
 	REAL *pa = sa->pa + ai;
 	REAL *pc = sc->pa + ci;
@@ -709,7 +709,7 @@ void VECCP(int m, struct VEC *sa, int ai, struct VEC *sc, int ci)
 
 
 // scale a strvec
-void VECSC(int m, REAL alpha, struct VEC *sa, int ai)
+void REF_VECSC(int m, REAL alpha, struct VEC *sa, int ai)
 	{
 	REAL *pa = sa->pa + ai;
 	int ii;
@@ -731,7 +731,7 @@ void VECSC(int m, REAL alpha, struct VEC *sa, int ai)
 
 
 // copy and scale a strvec into a strvec
-void VECCPSC(int m, REAL alpha, struct VEC *sa, int ai, struct VEC *sc, int ci)
+void REF_VECCPSC(int m, REAL alpha, struct VEC *sa, int ai, struct VEC *sc, int ci)
 	{
 	REAL *pa = sa->pa + ai;
 	REAL *pc = sc->pa + ci;
@@ -754,7 +754,7 @@ void VECCPSC(int m, REAL alpha, struct VEC *sa, int ai, struct VEC *sc, int ci)
 
 
 // scales and adds a strvec into a strvec
-void VECAD(int m, REAL alpha, struct VEC *sa, int ai, struct VEC *sc, int ci)
+void REF_VECAD(int m, REAL alpha, struct VEC *sa, int ai, struct VEC *sc, int ci)
 	{
 	REAL *pa = sa->pa + ai;
 	REAL *pc = sc->pa + ci;
@@ -777,7 +777,7 @@ void VECAD(int m, REAL alpha, struct VEC *sa, int ai, struct VEC *sc, int ci)
 
 
 // add scaled strvec to strvec, sparse formulation
-void VECAD_SP(int m, REAL alpha, struct VEC *sx, int xi, int *idx, struct VEC *sz, int zi)
+void REF_VECAD_SP(int m, REAL alpha, struct VEC *sx, int xi, int *idx, struct VEC *sz, int zi)
 	{
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
@@ -789,7 +789,7 @@ void VECAD_SP(int m, REAL alpha, struct VEC *sx, int xi, int *idx, struct VEC *s
 
 
 // insert scaled strvec to strvec, sparse formulation
-void VECIN_SP(int m, REAL alpha, struct VEC *sx, int xi, int *idx, struct VEC *sz, int zi)
+void REF_VECIN_SP(int m, REAL alpha, struct VEC *sx, int xi, int *idx, struct VEC *sz, int zi)
 	{
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
@@ -802,7 +802,7 @@ void VECIN_SP(int m, REAL alpha, struct VEC *sx, int xi, int *idx, struct VEC *s
 
 
 // extract scaled strvec to strvec, sparse formulation
-void VECEX_SP(int m, REAL alpha, int *idx, struct VEC *sx, int xi, struct VEC *sz, int zi)
+void REF_VECEX_SP(int m, REAL alpha, int *idx, struct VEC *sx, int xi, struct VEC *sz, int zi)
 	{
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
@@ -814,7 +814,7 @@ void VECEX_SP(int m, REAL alpha, int *idx, struct VEC *sx, int xi, struct VEC *s
 
 
 // insert element into strvec
-void VECIN1(REAL alpha, struct VEC *sx, int xi)
+void REF_VECIN1(REAL alpha, struct VEC *sx, int xi)
 	{
 	VECEL(sx, xi) = alpha;
 	return;
@@ -823,7 +823,7 @@ void VECIN1(REAL alpha, struct VEC *sx, int xi)
 
 
 // extract element from strvec
-REAL VECEX1(struct VEC *sx, int xi)
+REAL REF_VECEX1(struct VEC *sx, int xi)
 	{
 	return VECEL(sx, xi);
 	}
@@ -831,7 +831,7 @@ REAL VECEX1(struct VEC *sx, int xi)
 
 
 // permute elements of a vector struct
-void VECPE(int kmax, int *ipiv, struct VEC *sx, int xi)
+void REF_VECPE(int kmax, int *ipiv, struct VEC *sx, int xi)
 	{
 	int ii;
 	REAL tmp;
@@ -851,7 +851,7 @@ void VECPE(int kmax, int *ipiv, struct VEC *sx, int xi)
 
 
 // inverse permute elements of a vector struct
-void VECPEI(int kmax, int *ipiv, struct VEC *sx, int xi)
+void REF_VECPEI(int kmax, int *ipiv, struct VEC *sx, int xi)
 	{
 	int ii;
 	REAL tmp;
@@ -871,7 +871,7 @@ void VECPEI(int kmax, int *ipiv, struct VEC *sx, int xi)
 
 
 // clip strvec between two strvec
-void VECCL(int m, struct VEC *sxm, int xim, struct VEC *sx, int xi, struct VEC *sxp, int xip, struct VEC *sz, int zi)
+void REF_VECCL(int m, struct VEC *sxm, int xim, struct VEC *sx, int xi, struct VEC *sxp, int xip, struct VEC *sz, int zi)
 	{
 	REAL *xm = sxm->pa + xim;
 	REAL *x  = sx->pa + xi;
@@ -899,7 +899,7 @@ void VECCL(int m, struct VEC *sxm, int xim, struct VEC *sx, int xi, struct VEC *
 
 
 // clip strvec between two strvec, with mask
-void VECCL_MASK(int m, struct VEC *sxm, int xim, struct VEC *sx, int xi, struct VEC *sxp, int xip, struct VEC *sz, int zi, struct VEC *sm, int mi)
+void REF_VECCL_MASK(int m, struct VEC *sxm, int xim, struct VEC *sx, int xi, struct VEC *sxp, int xip, struct VEC *sz, int zi, struct VEC *sm, int mi)
 	{
 	REAL *xm = sxm->pa + xim;
 	REAL *x  = sx->pa + xi;
@@ -930,7 +930,7 @@ void VECCL_MASK(int m, struct VEC *sxm, int xim, struct VEC *sx, int xi, struct 
 
 
 // zero out strvec, with mask
-void VECZE(int m, struct VEC *sm, int mi, struct VEC *sv, int vi, struct VEC *se, int ei)
+void REF_VECZE(int m, struct VEC *sm, int mi, struct VEC *sv, int vi, struct VEC *se, int ei)
 	{
 	REAL *mask = sm->pa + mi;
 	REAL *v = sv->pa + vi;
@@ -952,7 +952,7 @@ void VECZE(int m, struct VEC *sm, int mi, struct VEC *sv, int vi, struct VEC *se
 
 
 // compute inf norm of strvec
-void VECNRM_INF(int m, struct VEC *sx, int xi, REAL *ptr_norm)
+void REF_VECNRM_INF(int m, struct VEC *sx, int xi, REAL *ptr_norm)
 	{
 	int ii;
 	REAL *x = sx->pa + xi;
@@ -974,7 +974,7 @@ void VECNRM_INF(int m, struct VEC *sx, int xi, REAL *ptr_norm)
 
 
 // insert a vector into diagonal
-void DIAIN(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
+void REF_DIAIN(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -995,7 +995,7 @@ void DIAIN(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai,
 
 
 // insert a strvec to the diagonal of a strmat, sparse formulation
-void DIAIN_SP(int kmax, REAL alpha, struct VEC *sx, int xi, int *idx, struct MAT *sA, int ai, int aj)
+void REF_DIAIN_SP(int kmax, REAL alpha, struct VEC *sx, int xi, int *idx, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1019,7 +1019,7 @@ void DIAIN_SP(int kmax, REAL alpha, struct VEC *sx, int xi, int *idx, struct MAT
 
 
 // extract a vector from diagonal
-void DIAEX(int kmax, REAL alpha, struct MAT *sA, int ai, int aj, struct VEC *sx, int xi)
+void REF_DIAEX(int kmax, REAL alpha, struct MAT *sA, int ai, int aj, struct VEC *sx, int xi)
 	{
 #if defined(MF_COLMAJ)
 	int lda = sA->m;
@@ -1038,7 +1038,7 @@ void DIAEX(int kmax, REAL alpha, struct MAT *sA, int ai, int aj, struct VEC *sx,
 
 
 // extract the diagonal of a strmat from a strvec, sparse formulation
-void DIAEX_SP(int kmax, REAL alpha, int *idx, struct MAT *sA, int ai, int aj, struct VEC *sx, int xi)
+void REF_DIAEX_SP(int kmax, REAL alpha, int *idx, struct MAT *sA, int ai, int aj, struct VEC *sx, int xi)
 	{
 #if defined(MF_COLMAJ)
 	int lda = sA->m;
@@ -1060,7 +1060,7 @@ void DIAEX_SP(int kmax, REAL alpha, int *idx, struct MAT *sA, int ai, int aj, st
 
 
 // add a vector to diagonal
-void DIAAD(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
+void REF_DIAAD(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1081,7 +1081,7 @@ void DIAAD(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai,
 
 
 // add scaled strvec to another strvec and add to diagonal of strmat, sparse formulation
-void DIAAD_SP(int kmax, REAL alpha, struct VEC *sx, int xi, int *idx, struct MAT *sA, int ai, int aj)
+void REF_DIAAD_SP(int kmax, REAL alpha, struct VEC *sx, int xi, int *idx, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1105,7 +1105,7 @@ void DIAAD_SP(int kmax, REAL alpha, struct VEC *sx, int xi, int *idx, struct MAT
 
 
 // add scaled strvec to another strvec and insert to diagonal of strmat, sparse formulation
-void DIAADIN_SP(int kmax, REAL alpha, struct VEC *sx, int xi, struct VEC *sy, int yi, int *idx, struct MAT *sA, int ai, int aj)
+void REF_DIAADIN_SP(int kmax, REAL alpha, struct VEC *sx, int xi, struct VEC *sy, int yi, int *idx, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1130,7 +1130,7 @@ void DIAADIN_SP(int kmax, REAL alpha, struct VEC *sx, int xi, struct VEC *sy, in
 
 
 // add scalar to diagonal
-void DIARE(int kmax, REAL alpha, struct MAT *sA, int ai, int aj)
+void REF_DIARE(int kmax, REAL alpha, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1150,7 +1150,7 @@ void DIARE(int kmax, REAL alpha, struct MAT *sA, int ai, int aj)
 
 
 // extract a row into a vector
-void ROWEX(int kmax, REAL alpha, struct MAT *sA, int ai, int aj, struct VEC *sx, int xi)
+void REF_ROWEX(int kmax, REAL alpha, struct MAT *sA, int ai, int aj, struct VEC *sx, int xi)
 	{
 #if defined(MF_COLMAJ)
 	int lda = sA->m;
@@ -1169,7 +1169,7 @@ void ROWEX(int kmax, REAL alpha, struct MAT *sA, int ai, int aj, struct VEC *sx,
 
 
 // insert a vector into a row
-void ROWIN(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
+void REF_ROWIN(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1190,7 +1190,7 @@ void ROWIN(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai,
 
 
 // add a vector to a row
-void ROWAD(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
+void REF_ROWAD(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1211,7 +1211,7 @@ void ROWAD(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai,
 
 
 // add scaled strvec to row of strmat, sparse formulation
-void ROWAD_SP(int kmax, REAL alpha, struct VEC *sx, int xi, int *idx, struct MAT *sA, int ai, int aj)
+void REF_ROWAD_SP(int kmax, REAL alpha, struct VEC *sx, int xi, int *idx, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1234,7 +1234,7 @@ void ROWAD_SP(int kmax, REAL alpha, struct VEC *sx, int xi, int *idx, struct MAT
 
 
 // swap two rows of two matrix structs
-void ROWSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+void REF_ROWSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1264,7 +1264,7 @@ void ROWSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int
 
 
 // permute the rows of a matrix struct
-void ROWPE(int kmax, int *ipiv, struct MAT *sA)
+void REF_ROWPE(int kmax, int *ipiv, struct MAT *sA)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1272,7 +1272,7 @@ void ROWPE(int kmax, int *ipiv, struct MAT *sA)
 	for(ii=0; ii<kmax; ii++)
 		{
 		if(ipiv[ii]!=ii)
-			ROWSW(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+			REF_ROWSW(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
 		}
 	return;
 	}
@@ -1280,7 +1280,7 @@ void ROWPE(int kmax, int *ipiv, struct MAT *sA)
 
 
 // inverse permute the rows of a matrix struct
-void ROWPEI(int kmax, int *ipiv, struct MAT *sA)
+void REF_ROWPEI(int kmax, int *ipiv, struct MAT *sA)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1288,7 +1288,7 @@ void ROWPEI(int kmax, int *ipiv, struct MAT *sA)
 	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
-			ROWSW(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+			REF_ROWSW(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
 		}
 	return;
 	}
@@ -1296,7 +1296,7 @@ void ROWPEI(int kmax, int *ipiv, struct MAT *sA)
 
 
 // extract vector from column
-void COLEX(int kmax, struct MAT *sA, int ai, int aj, struct VEC *sx, int xi)
+void REF_COLEX(int kmax, struct MAT *sA, int ai, int aj, struct VEC *sx, int xi)
 	{
 #if defined(MF_COLMAJ)
 	int lda = sA->m;
@@ -1315,7 +1315,7 @@ void COLEX(int kmax, struct MAT *sA, int ai, int aj, struct VEC *sx, int xi)
 
 
 // insert a vector into a calumn
-void COLIN(int kmax, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
+void REF_COLIN(int kmax, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1336,7 +1336,7 @@ void COLIN(int kmax, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
 
 
 // add a scaled vector to a calumn
-void COLAD(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
+void REF_COLAD(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1357,7 +1357,7 @@ void COLAD(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai,
 
 
 // scale a column
-void COLSC(int kmax, REAL alpha, struct MAT *sA, int ai, int aj)
+void REF_COLSC(int kmax, REAL alpha, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1377,7 +1377,7 @@ void COLSC(int kmax, REAL alpha, struct MAT *sA, int ai, int aj)
 
 
 // swap two cols of two matrix structs
-void COLSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+void REF_COLSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1407,7 +1407,7 @@ void COLSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int
 
 
 // permute the cols of a matrix struct
-void COLPE(int kmax, int *ipiv, struct MAT *sA)
+void REF_COLPE(int kmax, int *ipiv, struct MAT *sA)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1415,7 +1415,7 @@ void COLPE(int kmax, int *ipiv, struct MAT *sA)
 	for(ii=0; ii<kmax; ii++)
 		{
 		if(ipiv[ii]!=ii)
-			COLSW(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
+			REF_COLSW(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
 		}
 	return;
 	}
@@ -1423,7 +1423,7 @@ void COLPE(int kmax, int *ipiv, struct MAT *sA)
 
 
 // inverse permute the cols of a matrix struct
-void COLPEI(int kmax, int *ipiv, struct MAT *sA)
+void REF_COLPEI(int kmax, int *ipiv, struct MAT *sA)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1431,7 +1431,7 @@ void COLPEI(int kmax, int *ipiv, struct MAT *sA)
 	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
-			COLSW(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
+			REF_COLSW(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
 		}
 	return;
 	}
@@ -1471,4 +1471,449 @@ REAL dtrcon_1ln_libstr(int n, struct MAT *sA, int ai, int aj, REAL *work, int *i
 
 
 
+#if defined(LA_REFERENCE) | defined(LA_EXTERNAL_BLAS_WRAPPER)
 
+
+
+size_t MEMSIZE_MAT(int m, int n)
+	{
+	return REF_MEMSIZE_MAT(m, n);
+	}
+
+
+
+size_t MEMSIZE_DIAG_MAT(int m, int n)
+	{
+	return REF_MEMSIZE_DIAG_MAT(m, n);
+	}
+
+
+
+size_t MEMSIZE_VEC(int m)
+	{
+	return REF_MEMSIZE_VEC(m);
+	}
+
+
+
+void CREATE_MAT(int m, int n, struct MAT *sA, void *memory)
+	{
+	REF_CREATE_MAT(m, n, sA, memory);
+	}
+
+
+
+void CREATE_VEC(int m, struct VEC *sa, void *memory)
+	{
+	REF_CREATE_VEC(m, sa, memory);
+	}
+
+
+
+void PACK_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj)
+	{
+	REF_PACK_MAT(m, n, A, lda, sB, bi, bj);
+	}
+
+
+
+void PACK_TRAN_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj)
+	{
+	REF_PACK_TRAN_MAT(m, n, A, lda, sB, bi, bj);
+	}
+
+
+
+void PACK_VEC(int m, REAL *x, int xi, struct VEC *sa, int ai)
+	{
+	REF_PACK_VEC(m, x, xi, sa, ai);
+	}
+
+
+
+void UNPACK_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *B, int ldb)
+	{
+	REF_UNPACK_MAT(m, n, sA, ai, aj, B, ldb);
+	}
+
+
+
+void UNPACK_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *B, int ldb)
+	{
+	REF_UNPACK_TRAN_MAT(m, n, sA, ai, aj, B, ldb);
+	}
+
+
+
+void UNPACK_VEC(int m, struct VEC *sa, int ai, REAL *x, int xi)
+	{
+	REF_UNPACK_VEC(m, sa, ai, x, xi);
+	}
+
+
+
+void CAST_MAT2STRMAT(REAL *A, struct MAT *sB)
+	{
+	REF_CAST_MAT2STRMAT(A, sB);
+	}
+
+
+
+void CAST_DIAG_MAT2STRMAT(REAL *dA, struct MAT *sB)
+	{
+	REF_CAST_DIAG_MAT2STRMAT(dA, sB);
+	}
+
+
+
+void CAST_VEC2VECMAT(REAL *a, struct VEC *sa)
+	{
+	REF_CAST_VEC2VECMAT(a, sa);
+	}
+
+
+
+void GECP(int m, int n, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+	{
+	REF_GECP(m, n, sA, ai, aj, sB, bi, bj);
+	}
+
+
+
+void GESC(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
+	{
+	REF_GESC(m, n, alpha, sA, ai, aj);
+	}
+
+
+
+void GECPSC(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+	{
+	REF_GECPSC(m, n, alpha, sA, ai, aj, sB, bi, bj);
+	}
+
+
+
+void GEAD(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+	{
+	REF_GEAD(m, n, alpha, sA, ai, aj, sB, bi, bj);
+	}
+
+
+
+void GESE(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
+	{
+	REF_GESE(m, n, alpha, sA, ai, aj);
+	}
+
+
+
+void GETR(int m, int n, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+	{
+	REF_GETR(m, n, sA, ai, aj, sB, bi, bj);
+	}
+
+
+
+void GEIN1(REAL alpha, struct MAT *sA, int ai, int aj)
+	{
+	REF_GEIN1(alpha, sA, ai, aj);
+	}
+
+
+
+REAL GEEX1(struct MAT *sA, int ai, int aj)
+	{
+	return REF_GEEX1(sA, ai, aj);
+	}
+
+
+
+void TRCP_L(int m, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+	{
+	TRCP_L(m, sA, ai, aj, sB, bi, bj);
+	}
+
+
+
+void TRTR_L(int m, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+	{
+	TRTR_L(m, sA, ai, aj, sB, bi, bj);
+	}
+
+
+
+void TRTR_U(int m, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+	{
+	TRTR_U(m, sA, ai, aj, sB, bi, bj);
+	}
+
+
+
+void VECSE(int m, REAL alpha, struct VEC *sx, int xi)
+	{
+	REF_VECSE(m, alpha, sx, xi);
+	}
+
+
+
+void VECCP(int m, struct VEC *sa, int ai, struct VEC *sc, int ci)
+	{
+	REF_VECCP(m, sa, ai, sc, ci);
+	}
+
+
+
+void VECSC(int m, REAL alpha, struct VEC *sa, int ai)
+	{
+	REF_VECSC(m, alpha, sa, ai);
+	}
+
+
+
+void VECCPSC(int m, REAL alpha, struct VEC *sa, int ai, struct VEC *sc, int ci)
+	{
+	REF_VECCPSC(m, alpha, sa, ai, sc, ci);
+	}
+
+
+
+void VECAD(int m, REAL alpha, struct VEC *sa, int ai, struct VEC *sc, int ci)
+	{
+	REF_VECAD(m, alpha, sa, ai, sc, ci);
+	}
+
+
+
+void VECAD_SP(int m, REAL alpha, struct VEC *sx, int xi, int *idx, struct VEC *sz, int zi)
+	{
+	REF_VECAD_SP(m, alpha, sx, xi, idx, sz, zi);
+	}
+
+
+
+void VECIN_SP(int m, REAL alpha, struct VEC *sx, int xi, int *idx, struct VEC *sz, int zi)
+	{
+	REF_VECIN_SP(m, alpha, sx, xi, idx, sz, zi);
+	}
+
+
+
+void VECEX_SP(int m, REAL alpha, int *idx, struct VEC *sx, int xi, struct VEC *sz, int zi)
+	{
+	REF_VECEX_SP(m, alpha, idx, sx, xi, sz, zi);
+	}
+
+
+
+void VECIN1(REAL alpha, struct VEC *sx, int xi)
+	{
+	REF_VECIN1(alpha, sx, xi);
+	}
+
+
+
+REAL VECEX1(struct VEC *sx, int xi)
+	{
+	return REF_VECEX1(sx, xi);
+	}
+
+
+
+void VECPE(int kmax, int *ipiv, struct VEC *sx, int xi)
+	{
+	REF_VECPE(kmax, ipiv, sx, xi);
+	}
+
+
+
+void VECPEI(int kmax, int *ipiv, struct VEC *sx, int xi)
+	{
+	REF_VECPEI(kmax, ipiv, sx, xi);
+	}
+
+
+
+void VECCL(int m, struct VEC *sxm, int xim, struct VEC *sx, int xi, struct VEC *sxp, int xip, struct VEC *sz, int zi)
+	{
+	REF_VECCL(m, sxm, xim, sx, xi, sxp, xip, sz, zi);
+	}
+
+
+
+void VECCL_MASK(int m, struct VEC *sxm, int xim, struct VEC *sx, int xi, struct VEC *sxp, int xip, struct VEC *sz, int zi, struct VEC *sm, int mi)
+	{
+	REF_VECCL_MASK(m, sxm, xim, sx, xi, sxp, xip, sz, zi, sm, mi);
+	}
+
+
+
+void VECZE(int m, struct VEC *sm, int mi, struct VEC *sv, int vi, struct VEC *se, int ei)
+	{
+	REF_VECZE(m, sm, mi, sv, vi, se, ei);
+	}
+
+
+
+void VECNRM_INF(int m, struct VEC *sx, int xi, REAL *ptr_norm)
+	{
+	REF_VECNRM_INF(m, sx, xi, ptr_norm);
+	}
+
+
+
+void DIAIN(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
+	{
+	REF_DIAIN(kmax, alpha, sx, xi, sA, ai, aj);
+	}
+
+
+
+void DIAIN_SP(int kmax, REAL alpha, struct VEC *sx, int xi, int *idx, struct MAT *sA, int ai, int aj)
+	{
+	REF_DIAIN_SP(kmax, alpha, sx, xi, idx, sA, ai, aj);
+	}
+
+
+
+void DIAEX(int kmax, REAL alpha, struct MAT *sA, int ai, int aj, struct VEC *sx, int xi)
+	{
+	REF_DIAEX(kmax, alpha, sA, ai, aj, sx, xi);
+	}
+
+
+
+void DIAEX_SP(int kmax, REAL alpha, int *idx, struct MAT *sA, int ai, int aj, struct VEC *sx, int xi)
+	{
+	REF_DIAEX_SP(kmax, alpha, idx, sA, ai, aj, sx, xi);
+	}
+
+
+
+void DIAAD(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
+	{
+	REF_DIAAD(kmax, alpha, sx, xi, sA, ai, aj);
+	}
+
+
+
+void DIAAD_SP(int kmax, REAL alpha, struct VEC *sx, int xi, int *idx, struct MAT *sA, int ai, int aj)
+	{
+	REF_DIAAD_SP(kmax, alpha, sx, xi, idx, sA, ai, aj);
+	}
+
+
+
+void DIAADIN_SP(int kmax, REAL alpha, struct VEC *sx, int xi, struct VEC *sy, int yi, int *idx, struct MAT *sA, int ai, int aj)
+	{
+	REF_DIAADIN_SP(kmax, alpha, sx, xi, sy, yi, idx, sA, ai, aj);
+	}
+
+
+
+void DIARE(int kmax, REAL alpha, struct MAT *sA, int ai, int aj)
+	{
+	REF_DIARE(kmax, alpha, sA, ai, aj);
+	}
+
+
+
+void ROWEX(int kmax, REAL alpha, struct MAT *sA, int ai, int aj, struct VEC *sx, int xi)
+	{
+	REF_ROWEX(kmax, alpha, sA, ai, aj, sx, xi);
+	}
+
+
+
+void ROWIN(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
+	{
+	REF_ROWIN(kmax, alpha, sx, xi, sA, ai, aj);
+	}
+
+
+
+void ROWAD(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
+	{
+	REF_ROWAD(kmax, alpha, sx, xi, sA, ai, aj);
+	}
+
+
+
+void ROWAD_SP(int kmax, REAL alpha, struct VEC *sx, int xi, int *idx, struct MAT *sA, int ai, int aj)
+	{
+	REF_ROWAD_SP(kmax, alpha, sx, xi, idx, sA, ai, aj);
+	}
+
+
+
+void ROWSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+	{
+	REF_ROWSW(kmax, sA, ai, aj, sB, bi, bj);
+	}
+
+
+
+void ROWPE(int kmax, int *ipiv, struct MAT *sA)
+	{
+	REF_ROWPE(kmax, ipiv, sA);
+	}
+
+
+
+void ROWPEI(int kmax, int *ipiv, struct MAT *sA)
+	{
+	REF_ROWPEI(kmax, ipiv, sA);
+	}
+
+
+
+void COLEX(int kmax, struct MAT *sA, int ai, int aj, struct VEC *sx, int xi)
+	{
+	REF_COLEX(kmax, sA, ai, aj, sx, xi);
+	}
+
+
+
+void COLIN(int kmax, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
+	{
+	REF_COLIN(kmax, sx, xi, sA, ai, aj);
+	}
+
+
+
+void COLAD(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
+	{
+	REF_COLAD(kmax, alpha, sx, xi, sA, ai, aj);
+	}
+
+
+
+void COLSC(int kmax, REAL alpha, struct MAT *sA, int ai, int aj)
+	{
+	REF_COLSC(kmax, alpha, sA, ai, aj);
+	}
+
+
+
+void COLSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
+	{
+	REF_COLSW(kmax, sA, ai, aj, sB, bi, bj);
+	}
+
+
+
+void COLPE(int kmax, int *ipiv, struct MAT *sA)
+	{
+	REF_COLPE(kmax, ipiv, sA);
+	}
+
+
+
+void COLPEI(int kmax, int *ipiv, struct MAT *sA)
+	{
+	REF_COLPEI(kmax, ipiv, sA);
+	}
+
+
+
+#endif

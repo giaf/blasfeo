@@ -36,7 +36,7 @@
 
 
 // dgemm with A diagonal matrix (stored as strvec)
-void GEMM_L_DIAG(int m, int n, REAL alpha, struct XVEC *sA, int ai, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void REF_GEMM_L_DIAG(int m, int n, REAL alpha, struct XVEC *sA, int ai, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -112,7 +112,7 @@ void GEMM_L_DIAG(int m, int n, REAL alpha, struct XVEC *sA, int ai, struct XMAT 
 
 
 // dgemm with B diagonal matrix (stored as strvec)
-void GEMM_R_DIAG(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sB, int bi, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void REF_GEMM_R_DIAG(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sB, int bi, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -185,3 +185,24 @@ void GEMM_R_DIAG(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 	return;
 	}
 
+
+
+#if defined(LA_REFERENCE)
+
+
+
+void GEMM_L_DIAG(int m, int n, REAL alpha, struct XVEC *sA, int ai, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_GEMM_L_DIAG(m, n, alpha, sA, ai, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void GEMM_R_DIAG(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sB, int bi, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_GEMM_R_DIAG(m, n, alpha, sA, ai, aj, sB, bi, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+#endif

@@ -13,7 +13,8 @@
     "CFLAGS": "-Wuninitialized"
   },
   "blasfeo_flags":{
-    "TESTING_MODE": 1,
+    "BLASFEO_REF_API": 0,
+    "MF": "COLMAJ",
     "BLAS_API": 1,
     "BENCHMARKS_MODE": 1,
     "EXTERNAL_BLAS": "SYSTEM"

@@ -58,10 +58,16 @@ set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A7 CACHE STRING "Target architecture")
 # set(TARGET GENERIC CACHE STRING "Target architecture")
 
-# Linear Algebra backend
+# Select back-end linear lagebra version (LA) to implement BLASFEO API:
+# HIGH_PERFORMANCE : target-tailored; performance-optimized for cache resident matrices; panel-major matrix format
+# REFERENCE : target-unspecific lightly-optimized; small code footprint; {panel,column}-major matrix format(s)
+# EXTERNAL_BLAS_WRAPPER : call to external BLAS and LAPACK libraries; column-major matrix format
 set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
 # set(LA REFERENCE CACHE STRING "Linear algebra backend")
 # set(LA BLAS CACHE STRING "Linear algebra backend")
+
+# Export additional back-ends with different naming
+set(BLASFEO_REF_API OFF)
 
 # Select the Matrix Format internally used in the blasfeo_{d,s}mat structure
 # COLMAJ : column-major matrix format
@@ -182,6 +188,13 @@ if(${isvalid} EQUAL -1)
 	message(FATAL_ERROR "Matrix Format ${MF} is not supported")
 endif()
 
+if(${LA} MATCHES HIGH_PERFORMANCE)
+	if(${BLASFEO_REF_API})
+		if(${MF} MATCHES COLMAJ)
+			message(FATAL_ERROR "As of now, with LA=HIGH_PERFORMANCE only MF=PANELMAJ is supported for the additional BLASFEO_REF_API")
+		endif()
+	endif()
+endif()
 
 # Populate the list of allowed exernal BLAS tools and link it to the option
 set(ALLOWED_EXTERNAL_BLAS
@@ -244,6 +257,10 @@ endif()
 # Specify the linear algebra backend to use
 message(STATUS "Using linear algebra: ${LA}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_${LA}")
+
+if(${BLASFEO_REF_API})
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBLASREF_REF_API")
+endif()
 
 # Specify the matrix format to use
 message(STATUS "Using matrix format: ${MF}")
@@ -1050,31 +1067,59 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 
 	endif(${BLAS_API})
 
+	if(${BLASFEO_REF_API})
+
+#		file(GLOB AUX_SRC
+		list(APPEND AUX_SRC
+			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ref.c
+			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ref.c
+			)
+
+#		file(GLOB BLAS_SRC
+		list(APPEND BLAS_SRC
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas1_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_diag_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_diag_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_ref.c
+
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas1_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_diag_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_diag_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_lapack_ref.c
+			)
+
+	endif(${BLASFEO_REF_API})
+
 else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 
 	file(GLOB AUX_SRC
-		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib.c
-		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib.c
+		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ref.c
+		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ref.c
 		${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib.c
 		)
 
-	file(GLOB BLAS_SRC
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas1_ref.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_ref.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_diag_ref.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_ref.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_diag_ref.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_ref.c
-
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas1_ref.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_ref.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_diag_ref.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_ref.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_diag_ref.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/s_lapack_ref.c
-		)
-
 	if(${LA} MATCHES REFERENCE) # REFERENCE
+
+		file(GLOB BLAS_SRC
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas1_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_diag_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_diag_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_ref.c
+
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas1_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_diag_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_diag_ref.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_lapack_ref.c
+			)
+
 		if(${BLAS_API})
 			list(APPEND BLAS_SRC
 				${PROJECT_SOURCE_DIR}/blas_api/dgemm_ref.c
@@ -1084,6 +1129,25 @@ else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 				${PROJECT_SOURCE_DIR}/blas_api/strsm_ref.c
 				)
 		endif() # BLAS_API
+
+	else() # EXTERNAL_BLAS_WRAPPER
+
+		file(GLOB BLAS_SRC
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas1_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_lib.c
+
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas1_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_ref/s_lapack_lib.c
+			)
+
 	endif() # REFERENCE
 
 endif(${LA} MATCHES HIGH_PERFORMANCE)
@@ -1105,8 +1169,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		)
 else()
 	list(APPEND EXT_SRC
-		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_lib.c
-		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_lib.c
+		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_ref.c
+		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_ref.c
 		)
 endif()
 

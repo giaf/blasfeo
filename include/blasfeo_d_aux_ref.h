@@ -1,3 +1,4 @@
+
 /**************************************************************************************************
 *                                                                                                 *
 * This file is part of BLASFEO.                                                                   *
@@ -36,96 +37,164 @@
 #ifndef BLASFEO_D_AUX_REF_H_
 #define BLASFEO_D_AUX_REF_H_
 
+
+
 #include "blasfeo_common.h"
+#include "blasfeo_d_aux_old.h"
+
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-// expose reference BLASFEO for testing
+// --- memory calculations
+//
+// returns the memory size (in bytes) needed for a dmat
+size_t blasfeo_ref_memsize_dmat(int m, int n);
+// returns the memory size (in bytes) needed for the diagonal of a dmat
+size_t blasfeo_ref_memsize_diag_dmat(int m, int n);
+// returns the memory size (in bytes) needed for a dvec
+size_t blasfeo_ref_memsize_dvec(int m);
 
-size_t blasfeo_memsize_dmat_ref (int m, int n);
-size_t blasfeo_memsize_dvec_ref (int m);
-void blasfeo_create_dmat_ref  (int m, int n, struct blasfeo_dmat_ref *sA, void *memory);
-void blasfeo_create_dvec_ref  (int m, struct blasfeo_dvec_ref *sA, void *memory);
+// --- creation
+//
+// create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
+void blasfeo_ref_create_dmat(int m, int n, struct blasfeo_dmat *sA, void *memory);
+// create a strvec for a vector of size m by using memory passed by a pointer (pointer is not updated)
+void blasfeo_ref_create_dvec(int m, struct blasfeo_dvec *sA, void *memory);
 
-void blasfeo_free_dmat_ref(struct blasfeo_dmat_ref *sA);
-void blasfeo_free_dvec_ref(struct blasfeo_dvec_ref *sa);
+// --- packing
+// pack the column-major matrix A into the matrix struct B
+void blasfeo_ref_pack_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sB, int bi, int bj);
+// pack the lower-triangular column-major matrix A into the matrix struct B
+void blasfeo_ref_pack_l_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sB, int bi, int bj);
+// pack the upper-triangular column-major matrix A into the matrix struct B
+void blasfeo_ref_pack_u_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sB, int bi, int bj);
+// transpose and pack the column-major matrix A into the matrix struct B
+void blasfeo_ref_pack_tran_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sB, int bi, int bj);
+// pack the vector x into the vector structure y
+void blasfeo_ref_pack_dvec(int m, double *x, int xi, struct blasfeo_dvec *sy, int yi);
+// unpack the matrix structure A into the column-major matrix B
+void blasfeo_ref_unpack_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *B, int ldb);
+// transpose and unpack the matrix structure A into the column-major matrix B
+void blasfeo_ref_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *B, int ldb);
+// pack the vector structure x into the vector y
+void blasfeo_ref_unpack_dvec(int m, struct blasfeo_dvec *sx, int xi, double *y,  int yi);
 
-void blasfeo_pack_dmat_ref    (int m, int n, double *A, int lda, struct blasfeo_dmat_ref *sA, int ai, int aj);
+// --- cast
+//
+void ref_d_cast_mat2strmat(double *A, struct blasfeo_dmat *sA); // TODO
+void ref_d_cast_diag_mat2strmat(double *dA, struct blasfeo_dmat *sA); // TODO
+void ref_d_cast_vec2vecmat(double *a, struct blasfeo_dvec *sx); // TODO
 
-void blasfeo_dgead_ref(int m, int n, double alpha, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dmat_ref *sB, int bi, int bj);
-void blasfeo_dgecp_ref(int m, int n, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dmat_ref *sB, int bi, int bj);
-void blasfeo_dgesc_ref(int m, int n, double alpha, struct blasfeo_dmat_ref *sA, int ai, int aj);
-void blasfeo_dgecpsc_ref(int m, int n, double alpha, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dmat_ref *sB, int bi, int bj);
-void blasfeo_dgese_ref(int m, int n, double alpha, struct blasfeo_dmat_ref *sA, int ai, int aj);
 
 // ge
-void blasfeo_dgecp_ref(int m, int n, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dmat_ref *sB, int bi, int bj);
-void blasfeo_dgesc_ref(int m, int n, double alpha, struct blasfeo_dmat_ref *sA, int ai, int aj);
-void blasfeo_dgecpsc_ref(int m, int n, double alpha, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dmat_ref *sB, int bi, int bj);
-void blasfeo_dtrcp_l_ref(int m, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dmat_ref *sB, int bi, int bj);
-void blasfeo_dtrcpsc_l_ref(int m, double alpha, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dmat_ref *sB, int bi, int bj);
-void blasfeo_dtrsc_l_ref(int m, double alpha, struct blasfeo_dmat_ref *sA, int ai, int aj);
-void blasfeo_dgead_ref(int m, int n, double alpha, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dmat_ref *sC, int yi, int cj);
+// --- insert/extract
+//
+// sA[ai, aj] <= a
+void blasfeo_ref_dgein1(double a, struct blasfeo_dmat *sA, int ai, int aj);
+// <= sA[ai, aj]
+double blasfeo_ref_dgeex1(struct blasfeo_dmat *sA, int ai, int aj);
 
-void blasfeo_dgetr_ref(int m, int n, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dmat_ref *sB, int bi, int bj);
-void blasfeo_dtrtr_l_ref(int m, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dmat_ref *sB, int bi, int bj);
-void blasfeo_dtrtr_u_ref(int m, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dmat_ref *sB, int bi, int bj);
+// --- set
+// A <= alpha
+void blasfeo_ref_dgese(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj);
+
+// --- copy / scale
+// B <= A
+void blasfeo_ref_dgecp(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj);
+// A <= alpha*A
+void blasfeo_ref_dgesc(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj);
+// B <= alpha*A
+void blasfeo_ref_dgecpsc(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj);
+// B <= A, A lower triangular
+void blasfeo_ref_dtrcp_l(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj);
+void blasfeo_ref_dtrcpsc_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj);
+void blasfeo_ref_dtrsc_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj);
+
+// --- sum
+// B <= B + alpha*A
+void blasfeo_ref_dgead(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int yi, int cj);
+// y <= y + alpha*x
+void blasfeo_ref_dvecad(int m, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi);
+
+// --- traspositions
+// B <= A'
+void blasfeo_ref_dgetr(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj);
+// B <= A', A lower triangular
+void blasfeo_ref_dtrtr_l(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj);
+// B <= A', A upper triangular
+void blasfeo_ref_dtrtr_u(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj);
 
 // dia
-void blasfeo_ddiare_ref(int kmax, double alpha, struct blasfeo_dmat_ref *sA, int ai, int aj);
-void blasfeo_ddiain_ref(int kmax, double alpha, struct blasfeo_dvec_ref *sx, int xi, struct blasfeo_dmat_ref *sA, int ai, int aj);
-void blasfeo_ddiain_sp_ref(int kmax, double alpha, struct blasfeo_dvec_ref *sx, int xi, int *idx, struct blasfeo_dmat_ref *sD, int di, int dj);
-void blasfeo_ddiaex_ref(int kmax, double alpha, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dvec_ref *sx, int xi);
-void blasfeo_ddiaex_sp_ref(int kmax, double alpha, int *idx, struct blasfeo_dmat_ref *sD, int di, int dj, struct blasfeo_dvec_ref *sx, int xi);
-void blasfeo_ddiaad_ref(int kmax, double alpha, struct blasfeo_dvec_ref *sx, int xi, struct blasfeo_dmat_ref *sA, int ai, int aj);
-void blasfeo_ddiaad_sp_ref(int kmax, double alpha, struct blasfeo_dvec_ref *sx, int xi, int *idx, struct blasfeo_dmat_ref *sD, int di, int dj);
-void blasfeo_ddiaadin_sp_ref(int kmax, double alpha, struct blasfeo_dvec_ref *sx, int xi, struct blasfeo_dvec_ref *sy, int yi, int *idx, struct blasfeo_dmat_ref *sD, int di, int dj);
+// diag(A) += alpha
+void blasfeo_ref_ddiare(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int aj);
+// diag(A) <= alpha*x
+void blasfeo_ref_ddiain(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj);
+// diag(A)[idx] <= alpha*x
+void blasfeo_ref_ddiain_sp(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dmat *sD, int di, int dj);
+// x <= diag(A)
+void blasfeo_ref_ddiaex(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi);
+// x <= diag(A)[idx]
+void blasfeo_ref_ddiaex_sp(int kmax, double alpha, int *idx, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dvec *sx, int xi);
+// diag(A) += alpha*x
+void blasfeo_ref_ddiaad(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj);
+// diag(A)[idx] += alpha*x
+void blasfeo_ref_ddiaad_sp(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dmat *sD, int di, int dj);
+// diag(A)[idx] = y + alpha*x
+void blasfeo_ref_ddiaadin_sp(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, int *idx, struct blasfeo_dmat *sD, int di, int dj);
 
 // row
-void blasfeo_drowin_ref(int kmax, double alpha, struct blasfeo_dvec_ref *sx, int xi, struct blasfeo_dmat_ref *sA, int ai, int aj);
-void blasfeo_drowex_ref(int kmax, double alpha, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dvec_ref *sx, int xi);
-void blasfeo_drowad_ref(int kmax, double alpha, struct blasfeo_dvec_ref *sx, int xi, struct blasfeo_dmat_ref *sA, int ai, int aj);
-void blasfeo_drowad_sp_ref(int kmax, double alpha, struct blasfeo_dvec_ref *sx, int xi, int *idx, struct blasfeo_dmat_ref *sD, int di, int dj);
-void blasfeo_drowsw_ref(int kmax, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dmat_ref *sC, int ci, int cj);
-void blasfeo_drowpe_ref(int kmax, int *ipiv, struct blasfeo_dmat_ref *sA);
-void blasfeo_drowpei_ref(int kmax, int *ipiv, struct blasfeo_dmat_ref *sA);
+void blasfeo_ref_drowin(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj);
+void blasfeo_ref_drowex(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi);
+void blasfeo_ref_drowad(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj);
+void blasfeo_ref_drowad_sp(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dmat *sD, int di, int dj);
+void blasfeo_ref_drowsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj);
+void blasfeo_ref_drowpe(int kmax, int *ipiv, struct blasfeo_dmat *sA);
+void blasfeo_ref_drowpei(int kmax, int *ipiv, struct blasfeo_dmat *sA);
 
 // col
-void blasfeo_dcolex_ref(int kmax, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dvec_ref *sx, int xi);
-void blasfeo_dcolin_ref(int kmax, struct blasfeo_dvec_ref *sx, int xi, struct blasfeo_dmat_ref *sA, int ai, int aj);
-void blasfeo_dcolsc_ref(int kmax, double alpha, struct blasfeo_dmat_ref *sA, int ai, int aj);
-void blasfeo_dcolsw_ref(int kmax, struct blasfeo_dmat_ref *sA, int ai, int aj, struct blasfeo_dmat_ref *sC, int ci, int cj);
-void blasfeo_dcolpe_ref(int kmax, int *ipiv, struct blasfeo_dmat_ref *sA);
-void blasfeo_dcolpei_ref(int kmax, int *ipiv, struct blasfeo_dmat_ref *sA);
+void blasfeo_ref_dcolex(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi);
+void blasfeo_ref_dcolin(int kmax, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj);
+void blasfeo_ref_dcolad(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj);
+void blasfeo_ref_dcolsc(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int aj);
+void blasfeo_ref_dcolsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj);
+void blasfeo_ref_dcolpe(int kmax, int *ipiv, struct blasfeo_dmat *sA);
+void blasfeo_ref_dcolpei(int kmax, int *ipiv, struct blasfeo_dmat *sA);
 
 // vec
-void blasfeo_dvecad_ref(int m, double alpha, struct blasfeo_dvec_ref *sx, int xi, struct blasfeo_dvec_ref *sy, int yi);
-void blasfeo_dvecse_ref(int m, double alpha, struct blasfeo_dvec_ref *sx, int xi);
-void blasfeo_dvecin1_ref(double a, struct blasfeo_dvec_ref *sx, int xi);
-double blasfeo_dvecex1_ref(struct blasfeo_dvec_ref *sx, int xi);
-void blasfeo_dveccp_ref(int m, struct blasfeo_dvec_ref *sx, int xi, struct blasfeo_dvec_ref *sy, int yi);
-void blasfeo_dvecsc_ref(int m, double alpha, struct blasfeo_dvec_ref *sx, int xi);
-void blasfeo_dveccpsc_ref(int m, double alpha, struct blasfeo_dvec_ref *sx, int xi, struct blasfeo_dvec_ref *sy, int yi);
-void blasfeo_dvecad_sp_ref(int m, double alpha, struct blasfeo_dvec_ref *sx, int xi, int *idx, struct blasfeo_dvec_ref *sz, int zi);
-void blasfeo_dvecin_sp_ref(int m, double alpha, struct blasfeo_dvec_ref *sx, int xi, int *idx, struct blasfeo_dvec_ref *sz, int zi);
-void blasfeo_dvecex_sp_ref(int m, double alpha, int *idx, struct blasfeo_dvec_ref *sx, int x, struct blasfeo_dvec_ref *sz, int zi);
+// a <= alpha
+void blasfeo_ref_dvecse(int m, double alpha, struct blasfeo_dvec *sx, int xi);
+// sx[xi] <= a
+void blasfeo_ref_dvecin1(double a, struct blasfeo_dvec *sx, int xi);
+// <= sx[xi]
+double blasfeo_ref_dvecex1(struct blasfeo_dvec *sx, int xi);
+// y <= x
+void blasfeo_ref_dveccp(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi);
+// x <= alpha*x
+void blasfeo_ref_dvecsc(int m, double alpha, struct blasfeo_dvec *sx, int xi);
+// y <= alpha*x
+void blasfeo_ref_dveccpsc(int m, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi);
+void blasfeo_ref_dvecad_sp(int m, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dvec *sz, int zi);
+void blasfeo_ref_dvecin_sp(int m, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dvec *sz, int zi);
+void blasfeo_ref_dvecex_sp(int m, double alpha, int *idx, struct blasfeo_dvec *sx, int x, struct blasfeo_dvec *sz, int zi);
 
-void blasfeo_dveccl_ref(int m,
-	struct blasfeo_dvec_ref *sxm, int xim, struct blasfeo_dvec_ref *sx, int xi,
-	struct blasfeo_dvec_ref *sxp, int xip, struct blasfeo_dvec_ref *sz, int zi);
+void blasfeo_ref_dveccl(int m,
+	struct blasfeo_dvec *sxm, int xim, struct blasfeo_dvec *sx, int xi,
+	struct blasfeo_dvec *sxp, int xip, struct blasfeo_dvec *sz, int zi);
 
-void blasfeo_dveccl_mask_ref(int m,
-	struct blasfeo_dvec_ref *sxm, int xim, struct blasfeo_dvec_ref *sx, int xi,
-	struct blasfeo_dvec_ref *sxp, int xip, struct blasfeo_dvec_ref *sz, int zi,
-	struct blasfeo_dvec_ref *sm, int mi);
+void blasfeo_ref_dveccl_mask(int m,
+	struct blasfeo_dvec *sxm, int xim, struct blasfeo_dvec *sx, int xi,
+	struct blasfeo_dvec *sxp, int xip, struct blasfeo_dvec *sz, int zi,
+	struct blasfeo_dvec *sm, int mi);
 
-void blasfeo_dvecze_ref(int m, struct blasfeo_dvec_ref *sm, int mi, struct blasfeo_dvec_ref *sv, int vi, struct blasfeo_dvec_ref *se, int ei);
-void blasfeo_dvecnrm_inf_ref(int m, struct blasfeo_dvec_ref *sx, int xi, double *ptr_norm);
-void blasfeo_dvecpe_ref(int kmax, int *ipiv, struct blasfeo_dvec_ref *sx, int xi);
-void blasfeo_dvecpei_ref(int kmax, int *ipiv, struct blasfeo_dvec_ref *sx, int xi);
+void blasfeo_ref_dvecze(int m, struct blasfeo_dvec *sm, int mi, struct blasfeo_dvec *sv, int vi, struct blasfeo_dvec *se, int ei);
+void blasfeo_ref_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_norm);
+void blasfeo_ref_dvecpe(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi);
+void blasfeo_ref_dvecpei(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi);
+
 
 
 #ifdef __cplusplus

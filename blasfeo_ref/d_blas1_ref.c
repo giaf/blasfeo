@@ -58,6 +58,18 @@
 #define XMAT blasfeo_dmat
 #define XVEC blasfeo_dvec
 
+
+
+#define REF_AXPY blasfeo_ref_daxpy
+#define REF_AXPBY blasfeo_ref_daxpby
+#define REF_VECMUL blasfeo_ref_dvecmul
+#define REF_VECMULACC blasfeo_ref_dvecmulacc
+#define REF_VECMULDOT blasfeo_ref_dvecmuldot
+#define REF_DOT blasfeo_ref_ddot
+#define REF_ROTG blasfeo_ref_drotg
+#define REF_COLROT blasfeo_ref_dcolrot
+#define REF_ROWROT blasfeo_ref_drowrot
+
 #define AXPY blasfeo_daxpy
 #define AXPBY blasfeo_daxpby
 #define VECMUL blasfeo_dvecmul

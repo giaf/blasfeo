@@ -68,6 +68,70 @@
 
 
 
+#define REF_MEMSIZE_MAT blasfeo_ref_memsize_dmat
+#define REF_MEMSIZE_DIAG_MAT blasfeo_ref_memsize_diag_dmat
+#define REF_MEMSIZE_VEC blasfeo_ref_memsize_dvec
+#define REF_CREATE_MAT blasfeo_ref_create_dmat
+#define REF_CREATE_VEC blasfeo_ref_create_dvec
+#define REF_PACK_MAT blasfeo_ref_pack_dmat
+#define REF_PACK_TRAN_MAT blasfeo_ref_pack_tran_dmat
+#define REF_PACK_VEC blasfeo_ref_pack_dvec
+#define REF_UNPACK_MAT blasfeo_ref_unpack_dmat
+#define REF_UNPACK_TRAN_MAT blasfeo_ref_unpack_tran_dmat
+#define REF_UNPACK_VEC blasfeo_ref_unpack_dvec
+#define REF_CAST_MAT2STRMAT ref_d_cast_mat2strmat
+#define REF_CAST_DIAG_MAT2STRMAT ref_d_cast_diag_mat2strmat
+#define REF_CAST_VEC2VECMAT ref_d_cast_vec2vecmat
+#define REF_GECP blasfeo_ref_dgecp
+#define REF_GESC blasfeo_ref_dgesc
+#define REF_GECPSC blasfeo_ref_dgecpsc
+#define REF_GEAD blasfeo_ref_dgead
+#define REF_GESE blasfeo_ref_dgese
+#define REF_GETR blasfeo_ref_dgetr
+#define REF_GEIN1 blasfeo_ref_dgein1
+#define REF_GEEX1 blasfeo_ref_dgeex1
+#define REF_TRCP_L blasfeo_ref_dtrcp_l
+#define REF_TRTR_L blasfeo_ref_dtrtr_l
+#define REF_TRTR_U blasfeo_ref_dtrtr_u
+#define REF_VECSE blasfeo_ref_dvecse
+#define REF_VECCP blasfeo_ref_dveccp
+#define REF_VECSC blasfeo_ref_dvecsc
+#define REF_VECCPSC blasfeo_ref_dveccpsc
+#define REF_VECAD blasfeo_ref_dvecad
+#define REF_VECAD_SP blasfeo_ref_dvecad_sp
+#define REF_VECIN_SP blasfeo_ref_dvecin_sp
+#define REF_VECEX_SP blasfeo_ref_dvecex_sp
+#define REF_VECIN1 blasfeo_ref_dvecin1
+#define REF_VECEX1 blasfeo_ref_dvecex1
+#define REF_VECPE blasfeo_ref_dvecpe
+#define REF_VECPEI blasfeo_ref_dvecpei
+#define REF_VECCL blasfeo_ref_dveccl
+#define REF_VECCL_MASK blasfeo_ref_dveccl_mask
+#define REF_VECZE blasfeo_ref_dvecze
+#define REF_VECNRM_INF blasfeo_ref_dvecnrm_inf
+#define REF_DIAIN blasfeo_ref_ddiain
+#define REF_DIAIN_SP blasfeo_ref_ddiain_sp
+#define REF_DIAEX blasfeo_ref_ddiaex
+#define REF_DIAEX_SP blasfeo_ref_ddiaex_sp
+#define REF_DIAAD blasfeo_ref_ddiaad
+#define REF_DIAAD_SP blasfeo_ref_ddiaad_sp
+#define REF_DIAADIN_SP blasfeo_ref_ddiaadin_sp
+#define REF_DIARE blasfeo_ref_ddiare
+#define REF_ROWEX blasfeo_ref_drowex
+#define REF_ROWIN blasfeo_ref_drowin
+#define REF_ROWAD blasfeo_ref_drowad
+#define REF_ROWAD_SP blasfeo_ref_drowad_sp
+#define REF_ROWSW blasfeo_ref_drowsw
+#define REF_ROWPE blasfeo_ref_drowpe
+#define REF_ROWPEI blasfeo_ref_drowpei
+#define REF_COLEX blasfeo_ref_dcolex
+#define REF_COLIN blasfeo_ref_dcolin
+#define REF_COLAD blasfeo_ref_dcolad
+#define REF_COLSC blasfeo_ref_dcolsc
+#define REF_COLSW blasfeo_ref_dcolsw
+#define REF_COLPE blasfeo_ref_dcolpe
+#define REF_COLPEI blasfeo_ref_dcolpei
+
 #define MEMSIZE_MAT blasfeo_memsize_dmat
 #define MEMSIZE_DIAG_MAT blasfeo_memsize_diag_dmat
 #define MEMSIZE_VEC blasfeo_memsize_dvec
@@ -82,12 +146,11 @@
 #define CAST_MAT2STRMAT d_cast_mat2strmat
 #define CAST_DIAG_MAT2STRMAT d_cast_diag_mat2strmat
 #define CAST_VEC2VECMAT d_cast_vec2vecmat
-#define GEAD blasfeo_dgead
 #define GECP blasfeo_dgecp
-#define GECPSC blasfeo_dgecpsc
 #define GESC blasfeo_dgesc
+#define GECPSC blasfeo_dgecpsc
+#define GEAD blasfeo_dgead
 #define GESE blasfeo_dgese
-
 #define GETR blasfeo_dgetr
 #define GEIN1 blasfeo_dgein1
 #define GEEX1 blasfeo_dgeex1
@@ -136,4 +199,4 @@
 
 
 // LA_REFERENCE | LA_EXTERNAL_BLAS_WRAPPER
-#include "x_aux_lib.c"
+#include "x_aux_ref.c"

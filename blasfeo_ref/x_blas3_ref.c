@@ -36,7 +36,7 @@
 
 
 // dgemm nn
-void GEMM_NN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void REF_GEMM_NN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -133,7 +133,7 @@ void GEMM_NN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 
 
 // dgemm nt
-void GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void REF_GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -230,7 +230,7 @@ void GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 
 
 // dgemm tn
-void GEMM_TN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void REF_GEMM_TN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -327,7 +327,7 @@ void GEMM_TN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 
 
 // dgemm tt
-void GEMM_TT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void REF_GEMM_TT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -424,7 +424,7 @@ void GEMM_TT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 
 
 // dtrsm_left_lower_nottransposed_notunit
-void TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -547,7 +547,7 @@ void TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 // dtrsm_left_lower_nottransposed_unit
-void TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -645,7 +645,7 @@ void TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 // dtrsm_lltn
-void TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -777,7 +777,7 @@ void TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 // dtrsm_lltu
-void TRSM_LLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_LLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -883,7 +883,7 @@ void TRSM_LLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 // dtrsm_left_upper_nottransposed_notunit
-void TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1015,7 +1015,7 @@ void TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 // dtrsm_lunu
-void TRSM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1120,7 +1120,7 @@ void TRSM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 // dtrsm_lutn
-void TRSM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1243,7 +1243,7 @@ void TRSM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 // dtrsm_lutu
-void TRSM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1341,7 +1341,7 @@ void TRSM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 // dtrsm_rlnn
-void TRSM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1474,7 +1474,7 @@ void TRSM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 // dtrsm_rlnu
-void TRSM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1580,7 +1580,7 @@ void TRSM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 // dtrsm_right_lower_transposed_not-unit
-void TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1694,7 +1694,7 @@ void TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 // dtrsm_right_lower_transposed_unit
-void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1780,7 +1780,7 @@ void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 // dtrsm_runn
-void TRSM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1894,7 +1894,7 @@ void TRSM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 // dtrsm_runu
-void TRSM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1981,7 +1981,7 @@ void TRSM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 // dtrsm_right_upper_transposed_notunit
-void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -2114,7 +2114,7 @@ void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 // dtrsm_rutu
-void TRSM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRSM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -2219,108 +2219,8 @@ void TRSM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-// dtrmm_right_upper_transposed_notunit (A triangular !!!)
-void TRMM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
-	{
-	if(m<=0 | n<=0)
-		return;
-
-	// invalidate stored inverse diagonal of result matrix
-	sD->use_dA = 0;
-
-	int ii, jj, kk;
-	REAL
-		c_00, c_01,
-		c_10, c_11;
-#if defined(MF_COLMAJ)
-	int lda = sA->m;
-	int ldb = sB->m;
-	int ldd = sD->m;
-	REAL *pA = sA->pA + ai + aj*lda;
-	REAL *pB = sB->pA + bi + bj*ldb;
-	REAL *pD = sD->pA + di + dj*ldd;
-	const int aai=0; const int aaj=0;
-	const int bbi=0; const int bbj=0;
-	const int ddi=0; const int ddj=0;
-#else
-	int aai=ai; int aaj=aj;
-	int bbi=bi; int bbj=bj;
-	int ddi=di; int ddj=dj;
-#endif
-	jj = 0;
-	for(; jj<n-1; jj+=2)
-		{
-		ii = 0;
-		for(; ii<m-1; ii+=2)
-			{
-			c_00 = 0.0;
-			c_10 = 0.0;
-			c_01 = 0.0;
-			c_11 = 0.0;
-			kk = jj;
-			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
-			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
-			kk++;
-			for(; kk<n; kk++)
-				{
-				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
-				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
-				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
-				c_11 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
-				}
-			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
-			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
-			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
-			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
-			}
-		for(; ii<m; ii++)
-			{
-			c_00 = 0.0;
-			c_01 = 0.0;
-			kk = jj;
-			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
-			kk++;
-			for(; kk<n; kk++)
-				{
-				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
-				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
-				}
-			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
-			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
-			}
-		}
-	for(; jj<n; jj++)
-		{
-		ii = 0;
-		for(; ii<m-1; ii+=2)
-			{
-			c_00 = 0.0;
-			c_10 = 0.0;
-			for(kk=jj; kk<n; kk++)
-				{
-				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
-				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
-				}
-			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
-			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
-			}
-		for(; ii<m; ii++)
-			{
-			c_00 = 0.0;
-			for(kk=jj; kk<n; kk++)
-				{
-				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
-				}
-			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
-			}
-		}	
-	return;
-	}
-
-
-
 // dtrmm_right_lower_nottransposed_notunit (A triangular !!!)
-void TRMM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+void REF_TRMM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -2419,8 +2319,108 @@ void TRMM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
+// dtrmm_right_upper_transposed_notunit (A triangular !!!)
+void REF_TRMM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+	int ddi=di; int ddj=dj;
+#endif
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+			kk++;
+			for(; kk<n; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+				c_11 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+			kk++;
+			for(; kk<n; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			for(kk=jj; kk<n; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			for(kk=jj; kk<n; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			}
+		}	
+	return;
+	}
+
+
+
 // dsyrk_lower not-transposed
-void SYRK_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void REF_SYRK_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0)
 		return;
@@ -2516,7 +2516,7 @@ void SYRK_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct X
 
 
 // dsyrk_lower not-transposed
-void SYRK_LN_MN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void REF_SYRK_LN_MN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -2622,7 +2622,7 @@ void SYRK_LN_MN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj
 
 
 // dsyrk_lower transposed
-void SYRK_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void REF_SYRK_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0)
 		return;
@@ -2718,7 +2718,7 @@ void SYRK_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct X
 
 
 // dsyrk_upper not-transposed
-void SYRK_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void REF_SYRK_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0)
 		return;
@@ -2816,7 +2816,7 @@ void SYRK_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct X
 
 
 // dsyrk_upper transposed
-void SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+void REF_SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0)
 		return;
@@ -2910,3 +2910,200 @@ void SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct X
 		}
 	return;
 	}
+
+
+
+#if defined(LA_REFERENCE)
+
+
+
+void GEMM_NN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_GEMM_NN(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_GEMM_NT(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void GEMM_TN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_GEMM_TN(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void GEMM_TT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_GEMM_NN(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_LLNN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_LLNU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_LLTN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRSM_LLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_LLTU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_LUNN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRSM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_LUNU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRSM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_LUTN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRSM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_LUTU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRSM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_RLNN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRSM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_RLNU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_RLTN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_RLTU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRSM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_RUNN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRSM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_RUNU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_RUTN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRSM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRSM_RUTU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRMM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_RLNN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void TRMM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_RUTN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void SYRK_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_SYRK_LN(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void SYRK_LN_MN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_SYRK_LN_MN(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void SYRK_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_SYRK_LT(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void SYRK_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_SYRK_UN(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_SYRK_UT(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+#endif

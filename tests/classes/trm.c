@@ -12,7 +12,7 @@ void call_routines(struct RoutineArgs *args){
 		args->sB, args->bi, args->bj,
 		args->sD, args->di, args->dj);
 
-	REF(BLASFEO(ROUTINE))(
+	BLASFEO(REF(ROUTINE))(
 		args->m, args->n, args->alpha,
 		args->rA, args->ai, args->aj,
 		args->rB, args->bi, args->bj,

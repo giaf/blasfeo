@@ -41,8 +41,11 @@
 
 
 #define REAL float
-
 #define XVEC blasfeo_svec
+
+
+
+#define REF_GEMV_D blasfeo_ref_sgemv_d
 
 #define GEMV_D blasfeo_sgemv_d
 

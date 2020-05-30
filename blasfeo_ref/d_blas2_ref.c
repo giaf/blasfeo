@@ -56,6 +56,23 @@
 
 
 
+#define REF_GEMV_N blasfeo_ref_dgemv_n
+#define REF_GEMV_NT blasfeo_ref_dgemv_nt
+#define REF_GEMV_T blasfeo_ref_dgemv_t
+#define REF_SYMV_L blasfeo_ref_dsymv_l
+#define REF_TRMV_LNN blasfeo_ref_dtrmv_lnn
+#define REF_TRMV_LTN blasfeo_ref_dtrmv_ltn
+#define REF_TRMV_UNN blasfeo_ref_dtrmv_unn
+#define REF_TRMV_UTN blasfeo_ref_dtrmv_utn
+#define REF_TRSV_LNN blasfeo_ref_dtrsv_lnn
+#define REF_TRSV_LNN_MN blasfeo_ref_dtrsv_lnn_mn
+#define REF_TRSV_LNU blasfeo_ref_dtrsv_lnu
+#define REF_TRSV_LTN blasfeo_ref_dtrsv_ltn
+#define REF_TRSV_LTN_MN blasfeo_ref_dtrsv_ltn_mn
+#define REF_TRSV_LTU blasfeo_ref_dtrsv_ltu
+#define REF_TRSV_UNN blasfeo_ref_dtrsv_unn
+#define REF_TRSV_UTN blasfeo_ref_dtrsv_utn
+
 #define GEMV_N blasfeo_dgemv_n
 #define GEMV_NT blasfeo_dgemv_nt
 #define GEMV_T blasfeo_dgemv_t

@@ -48,9 +48,9 @@
 #include "../include/blasfeo_timing.h"
 
 // BLASFEO LA:REFERENCE routines
-#include "../include/blasfeo_s_blasfeo_api_ref.h"
+#include "../include/blasfeo_s_aux_ext_dep.h"
 #include "../include/blasfeo_s_aux_ref.h"
-#include "../include/blasfeo_s_aux_ext_dep_ref.h"
+#include "../include/blasfeo_s_blasfeo_ref_api.h"
 
 #include "../include/blasfeo_s_aux_test.h"
 #include "../include/s_blas.h"
@@ -80,7 +80,8 @@
 
 #define ALLOCATE_STRMAT_REF blasfeo_allocate_smat_ref
 #define FREE_STRMAT_REF blasfeo_free_smat_ref
-#define GESE_REF blasfeo_sgese_ref
-#define GECP_REF blasfeo_sgecp_ref
-#define PACK_STRMAT_REF blasfeo_pack_smat_ref
-#define PRINT_STRMAT_REF blasfeo_print_smat_ref
+
+#define GESE_REF blasfeo_ref_sgese_ref
+#define GECP_REF blasfeo_ref_sgecp_ref
+#define PACK_STRMAT_REF blasfeo_ref_pack_smat_ref
+#define PRINT_STRMAT_REF blasfeo_ref_print_smat_ref
