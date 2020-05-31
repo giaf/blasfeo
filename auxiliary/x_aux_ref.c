@@ -186,6 +186,56 @@ void REF_PACK_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj
 
 
 
+// convert a lower triangualr matrix into a matrix structure
+void REF_PACK_L_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj)
+	{
+	// invalidate stored inverse diagonal
+	sB->use_dA = 0;
+	int ii, jj;
+#if defined(MF_COLMAJ)
+	int ldb = sB->m;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	const int bbi=0; const int bbj=0;
+#else
+	int bbi=bi; int bbj=bj;
+#endif
+	for(jj=0; jj<n; jj++)
+		{
+		for(ii=jj; ii<m; ii++)
+			{
+			XMATEL_B(bbi+ii+0, bbj+jj) = A[ii+0+jj*lda];
+			}
+		}
+	return;
+	}
+
+
+
+// convert an upper triangualr matrix into a matrix structure
+void REF_PACK_U_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj)
+	{
+	// invalidate stored inverse diagonal
+	sB->use_dA = 0;
+	int ii, jj;
+#if defined(MF_COLMAJ)
+	int ldb = sB->m;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	const int bbi=0; const int bbj=0;
+#else
+	int bbi=bi; int bbj=bj;
+#endif
+	for(jj=0; jj<n; jj++)
+		{
+		for(ii=0; ii<=jj; ii++)
+			{
+			XMATEL_B(bbi+ii+0, bbj+jj) = A[ii+0+jj*lda];
+			}
+		}
+	return;
+	}
+
+
+
 // convert and transpose a matrix into a matrix structure
 void REF_PACK_TRAN_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj)
 	{
@@ -1513,6 +1563,20 @@ void CREATE_VEC(int m, struct VEC *sa, void *memory)
 void PACK_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj)
 	{
 	REF_PACK_MAT(m, n, A, lda, sB, bi, bj);
+	}
+
+
+
+void PACK_L_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj)
+	{
+	REF_PACK_L_MAT(m, n, A, lda, sB, bi, bj);
+	}
+
+
+
+void PACK_U_MAT(int m, int n, REAL *A, int lda, struct MAT *sB, int bi, int bj)
+	{
+	REF_PACK_U_MAT(m, n, A, lda, sB, bi, bj);
 	}
 
 

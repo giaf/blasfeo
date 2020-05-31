@@ -74,6 +74,8 @@
 #define REF_CREATE_MAT blasfeo_ref_create_dmat
 #define REF_CREATE_VEC blasfeo_ref_create_dvec
 #define REF_PACK_MAT blasfeo_ref_pack_dmat
+#define REF_PACK_L_MAT blasfeo_ref_pack_l_dmat
+#define REF_PACK_U_MAT blasfeo_ref_pack_u_dmat
 #define REF_PACK_TRAN_MAT blasfeo_ref_pack_tran_dmat
 #define REF_PACK_VEC blasfeo_ref_pack_dvec
 #define REF_UNPACK_MAT blasfeo_ref_unpack_dmat
@@ -138,6 +140,8 @@
 #define CREATE_MAT blasfeo_create_dmat
 #define CREATE_VEC blasfeo_create_dvec
 #define PACK_MAT blasfeo_pack_dmat
+#define PACK_L_MAT blasfeo_pack_l_dmat
+#define PACK_U_MAT blasfeo_pack_u_dmat
 #define PACK_TRAN_MAT blasfeo_pack_tran_dmat
 #define PACK_VEC blasfeo_pack_dvec
 #define UNPACK_MAT blasfeo_unpack_dmat

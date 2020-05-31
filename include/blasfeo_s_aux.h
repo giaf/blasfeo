@@ -65,6 +65,8 @@ void blasfeo_create_smat_ps(int ps, int m, int n, struct blasfeo_smat *sA, void 
 // create a strvec for a vector of size m by using memory passed by a pointer (pointer is not updated)
 void blasfeo_create_svec(int m, struct blasfeo_svec *sA, void *memory);
 void blasfeo_pack_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
+void blasfeo_pack_l_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
+void blasfeo_pack_u_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
 void blasfeo_pack_tran_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
 void blasfeo_pack_svec(int m, float *x, int xi, struct blasfeo_svec *sa, int ai);
 void blasfeo_unpack_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj, float *A, int lda);
