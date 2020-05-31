@@ -211,14 +211,6 @@ USE_C99_MATH = 1
 # EXT_DEP = 0
 EXT_DEP = 1
 
-# Compile reference implementations with test_ prefix
-# in order to check HIGH_PERFORMANCE routines against reference
-# TODO bug: if LA=EXTERNAL_BLAS_WRAPPER and TESTING_MODE=1, reference code is used for libblasfeo.a
-# Also enables the compilation of tests
-#
-TESTING_MODE = 0
-# TESTING_MODE = 1
-
 # Compile not-yet-implemented routine with just-return instead of print-and-exit
 # Also enables the compilation of benchmarks
 #
@@ -385,10 +377,6 @@ endif
 
 ifeq ($(EXT_DEP), 1)
 CFLAGS += -DEXT_DEP
-endif
-
-ifeq ($(TESTING_MODE), 1)
-CFLAGS += -DTESTING_MODE
 endif
 
 ifeq ($(BENCHMARKS_MODE), 1)

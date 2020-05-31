@@ -1177,34 +1177,6 @@ endif()
 endif()
 
 
-if(BLASFEO_TESTING MATCHES ON)
-
-	file(GLOB AUX_REF_SRC
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas1_test.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_test.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_diag_test.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_test.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_diag_test.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_test.c
-
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas1_test.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_test.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_diag_test.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_test.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_diag_test.c
-		${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_test.c
-
-		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_libref.c
-		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_libref.c
-		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_libref.c
-		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_libref.c
-		)
-
-	set(BLASFEO_REF_SRC ${AUX_REF_SRC})
-	add_library(blasfeo_ref ${BLASFEO_REF_SRC})
-	set_target_properties(blasfeo_ref PROPERTIES LINKER_LANGUAGE C)
-endif()
-
 set(BLASFEO_SRC ${CMN_SRC} ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
 
 # add library

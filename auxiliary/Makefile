@@ -109,12 +109,6 @@ OBJS += m_aux_lib.o
 
 endif # LA choice
 
-ifeq ($(TESTING_MODE), 1)
-#testing against reference
-OBJS += d_aux_libref.o
-OBJS += s_aux_libref.o
-endif
-
 
 #ext dep
 ifeq ($(EXT_DEP), 1)
@@ -133,13 +127,6 @@ OBJS += s_aux_ext_dep_lib4.o
 else
 OBJS += d_aux_ext_dep_ref.o
 OBJS += s_aux_ext_dep_ref.o
-endif
-
-ifeq ($(TESTING_MODE), 1)
-OBJS += d_aux_libref.o
-OBJS += s_aux_libref.o
-OBJS += d_aux_ext_dep_libref.o
-OBJS += s_aux_ext_dep_libref.o
 endif
 
 endif

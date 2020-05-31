@@ -65,23 +65,6 @@ endif
 
 endif
 
-ifeq ($(TESTING_MODE), 1)
-#
-OBJS += d_blas1_test.o
-OBJS += d_blas2_test.o
-OBJS += d_blas2_diag_test.o
-OBJS += d_blas3_test.o
-OBJS += d_blas3_diag_test.o
-OBJS += d_lapack_test.o
-#
-OBJS += s_blas1_test.o
-OBJS += s_blas2_test.o
-OBJS += s_blas2_diag_test.o
-OBJS += s_blas3_test.o
-OBJS += s_blas3_diag_test.o
-OBJS += s_lapack_test.o
-endif
-
 
 obj: $(OBJS)
 
@@ -102,18 +85,4 @@ s_blas2_diag_ref.o: s_blas2_diag_ref.c x_blas2_diag_ref.c
 s_blas3_ref.o: s_blas3_ref.c x_blas3_ref.c
 s_blas3_diag_ref.o: s_blas3_diag_ref.c x_blas3_diag_ref.c
 s_lapack_ref.o: s_lapack_ref.c x_lapack_ref.c
-
-d_blas1_test.o: d_blas1_test.c x_blas1_ref.c
-d_blas2_test.o: d_blas2_test.c x_blas2_ref.c
-d_blas2_diag_test.o: d_blas2_diag_test.c x_blas2_diag_ref.c
-d_blas3_test.o: d_blas3_test.c x_blas3_ref.c
-d_blas3_diag_test.o: d_blas3_diag_test.c x_blas3_diag_ref.c
-d_lapack_test.o: d_lapack_test.c x_lapack_ref.c
-
-s_blas1_test.o: s_blas1_test.c x_blas1_ref.c
-s_blas2_test.o: s_blas2_test.c x_blas2_ref.c
-s_blas2_diag_test.o: s_blas2_diag_test.c x_blas2_diag_ref.c
-s_blas3_test.o: s_blas3_test.c x_blas3_ref.c
-s_blas3_diag_test.o: s_blas3_diag_test.c x_blas3_diag_ref.c
-s_lapack_test.o: s_lapack_test.c x_lapack_ref.c
 

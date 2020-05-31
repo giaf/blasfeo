@@ -845,35 +845,6 @@ endif
 
 
 
-ifeq ($(TESTING_MODE), 1)
-# reference routine for testing
-OBJS_REF =
-# aux
-OBJS_REF += \
-		\
-		blasfeo_ref/d_blas1_test.o \
-		blasfeo_ref/d_blas2_test.o \
-		blasfeo_ref/d_blas2_diag_test.o \
-		blasfeo_ref/d_blas3_test.o \
-		blasfeo_ref/d_blas3_diag_test.o \
-		blasfeo_ref/d_lapack_test.o \
-		\
-		blasfeo_ref/s_blas1_test.o \
-		blasfeo_ref/s_blas2_test.o \
-		blasfeo_ref/s_blas2_diag_test.o \
-		blasfeo_ref/s_blas3_test.o \
-		blasfeo_ref/s_blas3_diag_test.o \
-		blasfeo_ref/s_lapack_test.o \
-		\
-		auxiliary/d_aux_libref.o \
-		auxiliary/s_aux_libref.o \
-		auxiliary/d_aux_ext_dep_libref.o \
-		auxiliary/s_aux_ext_dep_libref.o \
-#
-endif
-
-
-
 ifeq ($(SANDBOX_MODE), 1)
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
@@ -954,11 +925,6 @@ endif
 	mv libblasfeo.a ./lib/
 	@echo
 	@echo " libblasfeo.a static library build complete."
-ifeq ($(TESTING_MODE), 1)
-	$(AR) rcs libblasfeo_ref.a $(OBJS_REF)
-	mv libblasfeo_ref.a ./lib/
-	@echo " libblasfeo_ref.a static library build complete."
-endif
 	@echo
 
 
@@ -990,11 +956,6 @@ endif
 	mv libblasfeo.so ./lib/
 	@echo
 	@echo " libblasfeo.so shared library build complete."
-ifeq ($(TESTING_MODE), 1)
-	$(CC) -shared -o libblasfeo_ref.so $(OBJS_REF) -lm
-	mv libblasfeo_ref.so ./lib/
-	@echo " libblasfeo_ref.so shared library build complete."
-endif
 	@echo
 
 
@@ -1306,9 +1267,6 @@ run_sandbox:
 deploy_to_tests:
 	mkdir -p ./tests/$(BINARY_DIR)
 	cp ./lib/libblasfeo.a ./tests/$(BINARY_DIR)/
-ifeq ($(TESTING_MODE), 1)
-	cp ./lib/libblasfeo_ref.a ./tests/$(BINARY_DIR)/
-endif
 
 # test one, one single test
 
