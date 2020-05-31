@@ -22,6 +22,7 @@ jobs:
         - cd "${TRAVIS_BUILD_DIR}"/tests
         - pip install jinja2
         - python tester.py testset_travis_blasfeo_double_amd64.json
+        - python tester.py testset_travis_blasfeo_single_amd64.json
         - python tester.py testset_travis_blas_double_amd64.json
         - python tester.py testset_travis_blas_single_amd64.json
 

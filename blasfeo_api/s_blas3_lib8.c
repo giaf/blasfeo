@@ -84,6 +84,17 @@ void blasfeo_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 	if(dj+n > sD->n) printf("\n***** blasfeo_sgemm_nt : dj+n > col(D) : %d+%d > %d *****\n", dj, k, sD->n);
 #endif
 
+	if(ai>0 | bi>0 | ci>0 | di>0)
+		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_sgemm_nt(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+		return;
+#else
+		printf("\nblasfeo_sgemm_nt: feature not implemented yet: ai>0, bi>0, ci>0, di>0\n");
+		exit(1);
+#endif
+		}
+
 	const int bs = 8;
 
 	int sda = sA->cn;
@@ -331,6 +342,17 @@ void blasfeo_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 	if(di+m > sD->m) printf("\n***** blasfeo_sgemm_nn : di+m > row(D) : %d+%d > %d *****\n\n", di, n, sD->m);
 	if(dj+n > sD->n) printf("\n***** blasfeo_sgemm_nn : dj+n > col(D) : %d+%d > %d *****\n\n", dj, k, sD->n);
 #endif
+
+	if(ai>0 | ci>0 | di>0)
+		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_sgemm_nn(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+		return;
+#else
+		printf("\nblasfeo_sgemm_nn: feature not implemented yet: ai>0, ci>0, di>0\n");
+		exit(1);
+#endif
+		}
 
 	const int bs = 8;
 

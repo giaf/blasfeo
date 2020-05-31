@@ -1,0 +1,45 @@
+{
+  "options":{
+    "rebuild": 1,
+    "silent": 1,
+    "continue": 0
+  },
+  "test_macros":
+  {
+    "VERBOSE":2
+  },
+  "env_flags":{
+    "CC":"gcc",
+    "CFLAGS": "-Wuninitialized"
+  },
+  "blasfeo_flags":{
+    "BLASFEO_REF_API": 1,
+    "MF": "PANELMAJ",
+    "BLAS_API": 1,
+    "EXTERNAL_BLAS": "SYSTEM"
+  },
+  "precisions": [
+    "single"
+  ],
+  "apis": [
+    "blasfeo"
+  ],
+  "K_MAX_STACK":[
+    0, 500
+  ],
+  "TARGET": [
+    "GENERIC",
+    "X64_INTEL_CORE",
+    "X64_INTEL_HASWELL",
+    "X64_INTEL_SANDY_BRIDGE"
+  ],
+  "LA": [
+    "HIGH_PERFORMANCE"
+  ],
+  "routines": [
+    "gemm_nn",
+    "gemm_nt",
+    "potrf_l"
+  ]
+}
+
