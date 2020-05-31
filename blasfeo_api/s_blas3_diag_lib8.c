@@ -36,8 +36,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_kernel.h"
+#include <blasfeo_common.h>
+#include <blasfeo_s_kernel.h>
+#if defined(BLASFEO_REF_API)
+#include <blasfeo_s_blasfeo_ref_api.h>
+#endif
 
 
 
@@ -51,8 +54,13 @@ void blasfeo_sgemm_dn(int m, int n, double alpha, struct blasfeo_svec *sA, int a
 	{
 	if(m<=0 | n<=0)
 		return;
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_sgemm_dn(m, n, alpha, sA, ai, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_dgemm_dn: feature not implemented yet: bi=%d, ci=%d, di=%d\n", bi, ci, di);
 	exit(1);
+#endif
 	return;
 	}
 
@@ -67,8 +75,13 @@ void blasfeo_sgemm_nd(int m, int n, float alpha, struct blasfeo_smat *sA, int ai
 
 	if(ai!=0 | ci!=0 | di!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_sgemm_nd(m, n, alpha, sA, ai, aj, sB, bi, beta, sC, ci, cj, sD, di, dj);
+		return;
+#else
 		printf("\nblasfeo_sgemm_nd: feature not implemented yet: ai=%d, ci=%d, di=%d\n", ai, ci, di);
 		exit(1);
+#endif
 		}
 
 	// invalidate stored inverse diagonal of result matrix

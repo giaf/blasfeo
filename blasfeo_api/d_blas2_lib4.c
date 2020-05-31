@@ -36,10 +36,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_kernel.h"
-#include "../include/blasfeo_d_blas.h"
-#include "../include/blasfeo_d_aux.h"
+#include <blasfeo_common.h>
+#include <blasfeo_d_kernel.h>
+#include <blasfeo_d_blas.h>
+#include <blasfeo_d_aux.h>
+#if defined(BLASFEO_REF_API)
+#include <blasfeo_d_blasfeo_ref_api.h>
+#endif
 
 
 
@@ -309,8 +312,13 @@ void blasfeo_dgemv_nt(int m, int n, double alpha_n, double alpha_t, struct blasf
 	{
 	if(ai!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dgemv_nt(m, n, alpha_n, alpha_t, sA, ai, aj, sx_n, xi_n, sx_t, xi_t, beta_n, beta_t, sy_n, yi_n, sy_t, yi_t, sz_n, zi_n, sz_t, zi_t);
+		return;
+#else
 		printf("\nblasfeo_dgemv_nt: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
+#endif
 		}
 	const int bs = 4;
 #if defined(TARGET_X86_AMD_BARCELONA) | defined(TARGET_X86_AMD_JAGUAR)
@@ -984,8 +992,13 @@ void blasfeo_dtrmv_unn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 
 	if(ai!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dtrmv_unn(m, sA, ai, aj, sx, xi, sz, zi);
+		return;
+#else
 		printf("\nblasfeo_dtrmv_unn: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
+#endif
 		}
 
 	const int bs = 4;
@@ -1047,8 +1060,13 @@ void blasfeo_dtrmv_utn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 
 	if(ai!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dtrmv_utn(m, sA, ai, aj, sx, xi, sz, zi);
+		return;
+#else
 		printf("\nblasfeo_dtrmv_utn: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
+#endif
 		}
 
 	const int bs = 4;
@@ -1106,8 +1124,13 @@ void blasfeo_dtrsv_lnn_mn(int m, int n, struct blasfeo_dmat *sA, int ai, int aj,
 #endif
 	if(ai!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dtrsv_lnn_mn(m, n, sA, ai, aj, sx, xi, sz, zi);
+		return;
+#else
 		printf("\nblasfeo_dtrsv_lnn_mn: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
+#endif
 		}
 	const int bs = 4;
 	int sda = sA->cn;
@@ -1163,8 +1186,13 @@ void blasfeo_dtrsv_ltn_mn(int m, int n, struct blasfeo_dmat *sA, int ai, int aj,
 #endif
 	if(ai!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dtrsv_ltn_mn(m, n, sA, ai, aj, sx, xi, sz, zi);
+		return;
+#else
 		printf("\nblasfeo_dtrsv_ltn_mn: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
+#endif
 		}
 	const int bs = 4;
 	int sda = sA->cn;
@@ -1219,8 +1247,13 @@ void blasfeo_dtrsv_lnn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 #endif
 	if(ai!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dtrsv_lnn(m, sA, ai, aj, sx, xi, sz, zi);
+		return;
+#else
 		printf("\nblasfeo_dtrsv_lnn: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
+#endif
 		}
 	const int bs = 4;
 	int sda = sA->cn;
@@ -1273,12 +1306,15 @@ void blasfeo_dtrsv_lnu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 	// z: m
 	if(zi+m > sz->m) printf("\n***** blasfeo_dtrsv_lnu : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-//	printf("\n***** blasfeo_dtrsv_lnu : feature not implemented yet *****\n");
-//	exit(1);
 	if(ai!=0)
 		{
-		printf("\nblasfeo_dtrsv_lnn: feature not implemented yet: ai=%d\n", ai);
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dtrsv_lnu(m, sA, ai, aj, sx, xi, sz, zi);
+		return;
+#else
+		printf("\nblasfeo_dtrsv_lnu: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
+#endif
 		}
 	const int bs = 4;
 	int sda = sA->cn;
@@ -1330,8 +1366,13 @@ void blasfeo_dtrsv_ltn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 #endif
 	if(ai!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dtrsv_ltn(m, sA, ai, aj, sx, xi, sz, zi);
+		return;
+#else
 		printf("\nblasfeo_dtrsv_ltn: feature not implemented yet: ai=%d\n", ai);
 		exit(1);
+#endif
 		}
 	const int bs = 4;
 	int sda = sA->cn;
@@ -1384,8 +1425,16 @@ void blasfeo_dtrsv_ltu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 	// z: m
 	if(zi+m > sz->m) printf("\n***** blasfeo_dtrsv_ltu : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-//	printf("\n***** blasfeo_dtrsv_ltu : feature not implemented yet *****\n");
-//	exit(1);
+	if(ai!=0)
+		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dtrsv_ltu(m, sA, ai, aj, sx, xi, sz, zi);
+		return;
+#else
+		printf("\nblasfeo_dtrsv_ltu: feature not implemented yet: ai=%d\n", ai);
+		exit(1);
+#endif
+		}
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs; // TODO ai
@@ -1442,8 +1491,16 @@ void blasfeo_dtrsv_unn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 	// z: m
 	if(zi+m > sz->m) printf("\n***** blasfeo_dtrsv_unn : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-//	printf("\n***** blasfeo_dtrsv_unn : feature not implemented yet *****\n");
-//	exit(1);
+	if(ai!=0)
+		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dtrsv_unn(m, sA, ai, aj, sx, xi, sz, zi);
+		return;
+#else
+		printf("\nblasfeo_dtrsv_unn: feature not implemented yet: ai=%d\n", ai);
+		exit(1);
+#endif
+		}
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs; // TODO ai
@@ -1527,8 +1584,16 @@ void blasfeo_dtrsv_utn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 	// z: m
 	if(zi+m > sz->m) printf("\n***** blasfeo_dtrsv_utn : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
-//	printf("\n***** blasfeo_dtrsv_utn : feature not implemented yet *****\n");
-//	exit(1);
+	if(ai!=0)
+		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dtrsv_utn(m, sA, ai, aj, sx, xi, sz, zi);
+		return;
+#else
+		printf("\nblasfeo_dtrsv_utn: feature not implemented yet: ai=%d\n", ai);
+		exit(1);
+#endif
+		}
 	const int bs = 4;
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*bs; // TODO ai

@@ -52,10 +52,13 @@
 #include <immintrin.h>  // AVX
 #endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_block_size.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_d_kernel.h"
+#include <blasfeo_common.h>
+#include <blasfeo_block_size.h>
+#include <blasfeo_d_aux.h>
+#include <blasfeo_d_kernel.h>
+#if defined(BLASFEO_REF_API)
+#include <blasfeo_d_aux_ref.h>
+#endif
 
 
 /*
@@ -1805,8 +1808,13 @@ void blasfeo_pack_l_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *
 	m1 = m - m0;
 	if(m0>0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_pack_l_dmat(m, n, A, lda, sA, ai, aj);
+		return;
+#else
 		printf("\nblasfeo_pack_l_dmat: feature not implemented yet: ai!=0\n");
 		exit(1);
+#endif
 		}
 	jj = 0;
 	for( ; jj<n-3; jj+=4)
@@ -2955,6 +2963,13 @@ void blasfeo_dcolsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 	sC->use_dA = 0;
 
 	const int bs = 4;
+#if defined(BLASFEO_REF_API)
+	if(ai%bs!=ci%bs)
+		{
+		blasfeo_ref_dcolsw(kmax, sA, ai, aj, sC, ci, cj);
+		return;
+		}
+#endif
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;

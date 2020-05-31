@@ -111,14 +111,14 @@ LA = HIGH_PERFORMANCE
 # LA = EXTERNAL_BLAS_WRAPPER
 
 # Export additional back-ends with different naming
-BLASFEO_REF_API = 0
+BLASFEO_REF_API = 1
 
 # Select the Matrix Format internally used in the blasfeo_{d,s}mat structure
 # COLMAJ : column-major matrix format
 # PANELMAJ : panel-major matrix format
 # (work in progress, limited to LA=REFERENCE for now !!!)
-MF = COLMAJ
-# MF = PANELMAJ
+# MF = COLMAJ
+MF = PANELMAJ
 
 # Select external BLAS and LAPACK implementation (to be provided by the user).
 # Edit Makefile.external_blas to specify installation location (default /opt).

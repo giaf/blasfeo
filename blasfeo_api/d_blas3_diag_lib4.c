@@ -36,8 +36,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_kernel.h"
+#include <blasfeo_common.h>
+#include <blasfeo_d_kernel.h>
+#if defined(BLASFEO_REF_API)
+#include <blasfeo_d_blasfeo_ref_api.h>
+#endif
 
 
 
@@ -140,8 +143,13 @@ void blasfeo_dgemm_dn(int m, int n, double alpha, struct blasfeo_dvec *sA, int a
 		return;
 	if(bi!=0 | ci!=0 | di!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dgemm_dn(m, n, alpha, sA, ai, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+		return;
+#else
 		printf("\nblasfeo_dgemm_dn: feature not implemented yet: bi=%d, ci=%d, di=%d\n", bi, ci, di);
 		exit(1);
+#endif
 		}
 
 	// invalidate stored inverse diagonal of result matrix
@@ -168,8 +176,13 @@ void blasfeo_dgemm_nd(int m, int n, double alpha, struct blasfeo_dmat *sA, int a
 		return;
 	if(ai!=0 | ci!=0 | di!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dgemm_nd(m, n, alpha, sA, ai, aj, sB, bi, beta, sC, ci, cj, sD, di, dj);
+		return;
+#else
 		printf("\nblasfeo_dgemm_nd: feature not implemented yet: ai=%d, ci=%d, di=%d\n", ai, ci, di);
 		exit(1);
+#endif
 		}
 
 	// invalidate stored inverse diagonal of result matrix

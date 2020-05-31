@@ -36,9 +36,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_kernel.h"
-#include "../include/blasfeo_s_aux.h"
+#include <blasfeo_common.h>
+#include <blasfeo_s_kernel.h>
+#include <blasfeo_s_aux.h>
+#if defined(BLASFEO_REF_API)
+#include <blasfeo_s_blasfeo_ref_api.h>
+#endif
 
 
 
@@ -687,7 +690,10 @@ loop_CD:
 // sgemm_tn
 void blasfeo_sgemm_tn(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_sgemm_tn(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_sgemm_tn: feature not implemented yet\n");
 	exit(1);
 #endif
@@ -699,7 +705,10 @@ void blasfeo_sgemm_tn(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 // sgemm_tt
 void blasfeo_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_sgemm_tt(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_sgemm_tt: feature not implemented yet\n");
 	exit(1);
 #endif
@@ -711,7 +720,10 @@ void blasfeo_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 // strsm_llnn
 void blasfeo_strsm_llnn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strsm_llnn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_strsm_llnn: feature not implemented yet\n");
 	exit(1);
 #endif
@@ -728,8 +740,13 @@ void blasfeo_strsm_llnu(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 	
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_strsm_llnn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+		return;
+#else
 		printf("\nblasfeo_strsm_llnu: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
+#endif
 		}
 
 	// invalidate stored inverse diagonal of result matrix
@@ -783,7 +800,10 @@ void blasfeo_strsm_llnu(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 // strsm_lltn
 void blasfeo_strsm_lltn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strsm_lltn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_strsm_lltn: feature not implemented yet\n");
 	exit(1);
 #endif
@@ -795,7 +815,10 @@ void blasfeo_strsm_lltn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 // strsm_lltu
 void blasfeo_strsm_lltu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strsm_lltu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_strsm_lltu: feature not implemented yet\n");
 	exit(1);
 #endif
@@ -813,8 +836,13 @@ void blasfeo_strsm_lunn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_strsm_lunn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+		return;
+#else
 		printf("\nblasfeo_strsm_lunn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
 		exit(1);
+#endif
 		}
 
 	// invalidate stored inverse diagonal of result matrix
@@ -891,7 +919,10 @@ void blasfeo_strsm_lunn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 // strsm_lunu
 void blasfeo_strsm_lunu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strsm_lunu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_strsm_lunu: feature not implemented yet\n");
 	exit(1);
 #endif
@@ -903,7 +934,10 @@ void blasfeo_strsm_lunu(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 // strsm_lutn
 void blasfeo_strsm_lutn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strsm_lutn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_strsm_lutn: feature not implemented yet\n");
 	exit(1);
 #endif
@@ -915,7 +949,10 @@ void blasfeo_strsm_lutn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 // strsm_lutu
 void blasfeo_strsm_lutu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strsm_lutu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_strsm_lutu: feature not implemented yet\n");
 	exit(1);
 #endif
@@ -927,7 +964,10 @@ void blasfeo_strsm_lutu(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 // strsm_rlnn
 void blasfeo_strsm_rlnn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strsm_rlnn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_strsm_rlnn: feature not implemented yet\n");
 	exit(1);
 #endif
@@ -939,7 +979,10 @@ void blasfeo_strsm_rlnn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 // strsm_rlnu
 void blasfeo_strsm_rlnu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strsm_rlnu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_strsm_rlnu: feature not implemented yet\n");
 	exit(1);
 #endif
@@ -954,8 +997,13 @@ void blasfeo_strsm_rltn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 
 	if(ai!=0 | bi!=0 | di!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_strsm_rltn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+		return;
+#else
 		printf("\nblasfeo_strsm_rltn: feature not implemented yet: ai=%d, bi=%d, di=%d\n", ai, bi, di);
 		exit(1);
+#endif
 		}
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1152,8 +1200,13 @@ void blasfeo_strsm_rltu(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 
 		if(ai!=0 | bi!=0 | di!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_strsm_rltu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+		return;
+#else
 		printf("\nblasfeo_strsm_rltu: feature not implemented yet: ai=%d, bi=%d, di=%d\n", ai, bi, di);
 		exit(1);
+#endif
 		}
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1207,7 +1260,10 @@ void blasfeo_strsm_rltu(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 // strsm_runn
 void blasfeo_strsm_runn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strsm_runn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_strsm_runn: feature not implemented yet\n");
 	exit(1);
 #endif
@@ -1219,7 +1275,10 @@ void blasfeo_strsm_runn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 // strsm_runu
 void blasfeo_strsm_runu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strsm_runu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_strsm_runu: feature not implemented yet\n");
 	exit(1);
 #endif
@@ -1237,8 +1296,13 @@ void blasfeo_strsm_rutn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 
 	if(ai!=0 | bi!=0 | di!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_strsm_rutn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+		return;
+#else
 		printf("\nblasfeo_strsm_rutn: feature not implemented yet: ai=%d, bi=%d, di=%d\n", ai, bi, di);
 		exit(1);
+#endif
 		}
 
 	// invalidate stored inverse diagonal of result matrix
@@ -1330,7 +1394,10 @@ void blasfeo_strsm_rutn(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 // strsm_rutu
 void blasfeo_strsm_rutu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strsm_rutu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_strsm_rutu: feature not implemented yet\n");
 	exit(1);
 #endif
@@ -1344,8 +1411,13 @@ void blasfeo_strmm_rutn(int m, int n, float alpha, struct blasfeo_smat *sB, int 
 	{
 	if(ai!=0 | bi!=0 | di!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_strmm_rutn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+		return;
+#else
 		printf("\nblasfeo_strmm_rutn: feature not implemented yet: ai=%d, bi=%d, di=%d\n", ai, bi, di);
 		exit(1);
+#endif
 		}
 
 	if(m<=0 || n<=0)
@@ -1930,8 +2002,13 @@ void blasfeo_ssyrk_ln_mn(int m, int n, int k, float alpha, struct blasfeo_smat *
 
 	if(ai!=0 | bi!=0)
 		{
-		printf("\nblasfeo_dsyrk_ln: feature not implemented yet: ai=%d, bi=%d\n", ai, bi);
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_ssyrk_ln_mn(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+		return;
+#else
+		printf("\nblasfeo_dsyrk_ln_mn: feature not implemented yet: ai=%d, bi=%d\n", ai, bi);
 		exit(1);
+#endif
 		}
 
 	// invalidate stored inverse diagonal of result matrix
@@ -2121,9 +2198,12 @@ void blasfeo_ssyrk_ln_mn(int m, int n, int k, float alpha, struct blasfeo_smat *
 
 
 
-void blasfeo_ssyrk_lt(int m, int k, float alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, float beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_ssyrk_lt(int m, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_ssyrk_lt(m,  k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_ssyrk_lt: feature not implemented yet\n");
 	exit(1);
 #endif
@@ -2132,9 +2212,12 @@ void blasfeo_ssyrk_lt(int m, int k, float alpha, struct blasfeo_dmat *sA, int ai
 
 
 
-void blasfeo_ssyrk_un(int m, int k, float alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, float beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_ssyrk_un(int m, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_ssyrk_un(m,  k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_ssyrk_un: feature not implemented yet\n");
 	exit(1);
 #endif
@@ -2143,9 +2226,12 @@ void blasfeo_ssyrk_un(int m, int k, float alpha, struct blasfeo_dmat *sA, int ai
 
 
 
-void blasfeo_ssyrk_ut(int m, int k, float alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, float beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_ssyrk_ut(int m, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_ssyrk_ut(m,  k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	return;
+#else
 	printf("\nblasfeo_ssyrk_ut: feature not implemented yet\n");
 	exit(1);
 #endif

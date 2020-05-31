@@ -37,18 +37,12 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_block_size.h"
-#include "../include/blasfeo_s_kernel.h"
-
-
-
-// copies a lower triangular packed matrix into a lower triangular packed matrix
-void strcp_l_lib(int m, int offsetA, float *A, int sda, int offsetB, float *B, int sdb)
-	{
-	printf("\nstrcp_l_lib: feature not implemented yet\n");
-	exit(1);
-	}
+#include <blasfeo_common.h>
+#include <blasfeo_block_size.h>
+#include <blasfeo_s_kernel.h>
+#if defined(BLASFEO_REF_API)
+#include <blasfeo_s_aux_ref.h>
+#endif
 
 
 
@@ -71,24 +65,6 @@ void blasfeo_svecad(int m, float alpha, struct blasfeo_svec *sa, int ai, struct 
 		pc[ii+0] += alpha*pa[ii+0];
 		}
 	return;
-	}
-
-
-
-// transpose lower triangular matrix
-void strtr_l_lib(int m, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc)
-	{
-	printf("\nstrtr_l_lib: feature not implemented yet\n");
-	exit(1);
-	}
-
-
-
-// transpose an aligned upper triangular matrix into an aligned lower triangular matrix
-void strtr_u_lib(int m, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc)
-	{
-	printf("\nstrtr_u_lib: feature not implemented yet\n");
-	exit(1);
 	}
 
 
@@ -1932,6 +1908,13 @@ void blasfeo_scolsw(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct bl
 	sC->use_dA = 0;
 
 	const int bs = 8;
+#if defined(BLASFEO_REF_API)
+	if(ai%bs!=ci%bs)
+		{
+		blasfeo_ref_scolsw(kmax, sA, ai, aj, sC, ci, cj);
+		return;
+		}
+#endif
 	int sda = sA->cn;
 	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
@@ -2633,18 +2616,15 @@ void blasfeo_sveccpsc(int m, float alpha, struct blasfeo_svec *sa, int ai, struc
 // copy a lower triangular strmat into a lower triangular strmat
 void blasfeo_strcp_l(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj)
 	{
-
 	// invalidate stored inverse diagonal
 	sC->use_dA = 0;
-
-	const int bs = 8;
-	int sda = sA->cn;
-	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	int sdc = sC->cn;
-	float *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	strcp_l_lib(m, ai%bs, pA, sda, ci%bs, pC, sdc);
-	// XXX uses full matrix copy !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//	blasfeo_sgecp(m, m, sA, ai, aj, sC, ci, cj);
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strcp_l(m, sA, ai, aj, sC, ci, cj);
+	return;
+#else
+	printf("\nblasfeo_strcp_l: feature not implemented yet\n");
+	exit(1);
+#endif
 	return;
 	}
 
@@ -3132,16 +3112,15 @@ void blasfeo_sgetr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct
 // copy and transpose a lower triangular strmat into an upper triangular strmat
 void blasfeo_strtr_l(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj)
 	{
-
 	// invalidate stored inverse diagonal
 	sC->use_dA = 0;
-
-	const int bs = 8;
-	int sda = sA->cn;
-	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	int sdc = sC->cn;
-	float *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	strtr_l_lib(m, 1.0, ai%bs, pA, sda, ci%bs, pC, sdc); // TODO remove alpha !!!
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strtr_l(m, sA, ai, aj, sC, ci, cj);
+	return;
+#else
+	printf("\nblasfeo_strtr_l: feature not implemented yet\n");
+	exit(1);
+#endif
 	return;
 	}
 
@@ -3150,16 +3129,15 @@ void blasfeo_strtr_l(int m, struct blasfeo_smat *sA, int ai, int aj, struct blas
 // copy and transpose an upper triangular strmat into a lower triangular strmat
 void blasfeo_strtr_u(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj)
 	{
-
 	// invalidate stored inverse diagonal
 	sC->use_dA = 0;
-
-	const int bs = 8;
-	int sda = sA->cn;
-	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	int sdc = sC->cn;
-	float *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	strtr_u_lib(m, 1.0, ai%bs, pA, sda, ci%bs, pC, sdc); // TODO remove alpha !!!
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strtr_u(m, sA, ai, aj, sC, ci, cj);
+	return;
+#else
+	printf("\nblasfeo_strtr_u: feature not implemented yet\n");
+	exit(1);
+#endif
 	return;
 	}
 

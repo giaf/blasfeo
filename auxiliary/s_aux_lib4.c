@@ -37,9 +37,12 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_block_size.h"
-#include "../include/blasfeo_s_kernel.h"
+#include <blasfeo_common.h>
+#include <blasfeo_block_size.h>
+#include <blasfeo_s_kernel.h>
+#if defined(BLASFEO_REF_API)
+#include <blasfeo_s_aux_ref.h>
+#endif
 
 
 
@@ -2276,6 +2279,13 @@ void blasfeo_scolsw(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct bl
 	sC->use_dA = 0;
 
 	const int bs = 4;
+#if defined(BLASFEO_REF_API)
+	if(ai%bs!=ci%bs)
+		{
+		blasfeo_ref_scolsw(kmax, sA, ai, aj, sC, ci, cj);
+		return;
+		}
+#endif
 	int sda = sA->cn;
 	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;

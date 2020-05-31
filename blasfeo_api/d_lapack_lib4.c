@@ -37,10 +37,13 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_d_kernel.h"
-#include "../include/blasfeo_d_blasfeo_api.h"
+#include <blasfeo_common.h>
+#include <blasfeo_d_aux.h>
+#include <blasfeo_d_kernel.h>
+#include <blasfeo_d_blasfeo_api.h>
+#if defined(BLASFEO_REF_API)
+#include <blasfeo_d_blasfeo_ref_api.h>
+#endif
 
 
 
@@ -920,8 +923,13 @@ void blasfeo_dpotrf_l(int m, struct blasfeo_dmat *sC, int ci, int cj, struct bla
 
 	if(ci!=0 | di!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dpotrf_l(m, sC, ci, cj, sD, di, dj);
+		return;
+#else
 		printf("\nblasfeo_dpotrf_l: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
+#endif
 		}
 
 	const int ps = 4;
@@ -1150,8 +1158,13 @@ void blasfeo_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, 
 
 	if(ci!=0 | di!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dpotrf_l_mn(m, n, sC, ci, cj, sD, di, dj);
+		return;
+#else
 		printf("\nblasfeo_dpotrf_l_mn: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
+#endif
 		}
 
 	const int ps = 4;
@@ -1480,8 +1493,13 @@ void blasfeo_dsyrk_dpotrf_ln_mn(int m, int n, int k, struct blasfeo_dmat *sA, in
 
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dsyrk_dpotrf_ln_mn(m, n, k, sA, ai, aj, sB, bi, bj, sC, ci, cj, sD, di, dj);
+		return;
+#else
 		printf("\nblasfeo_dsyrk_dpotrf_ln_mn: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
+#endif
 		}
 
 	const int ps = 4;
@@ -1810,8 +1828,13 @@ void blasfeo_dsyrk_dpotrf_ln(int m, int k, struct blasfeo_dmat *sA, int ai, int 
 
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dsyrk_dpotrf_ln(m, k, sA, ai, aj, sB, bi, bj, sC, ci, cj, sD, di, dj);
+		return;
+#else
 		printf("\nblasfeo_dsyrk_dpotrf_ln: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
 		exit(1);
+#endif
 		}
 
 	const int ps = 4;
@@ -2028,8 +2051,13 @@ void blasfeo_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 
 	if(ci!=0 | di!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dgetrf_np(m, n, sC, ci, cj, sD, di, dj);
+		return;
+#else
 		printf("\nblasfeo_dgetf_np: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
+#endif
 		}
 
 	const int ps = 4;
@@ -2339,8 +2367,13 @@ void blasfeo_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 
 	if(ci!=0 | di!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dgetrf_rp(m, n, sC, ci, cj, sD, di, dj, ipiv);
+		return;
+#else
 		printf("\nblasfeo_dgetrf_rp: feature not implemented yet: ci=%d, di=%d\n", ci, di);
 		exit(1);
+#endif
 		}
 
 	const int ps = 4;
@@ -3672,8 +3705,13 @@ void blasfeo_dorglq(int m, int n, int k, struct blasfeo_dmat *sC, int ci, int cj
 	
 	if(di!=0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dorglq(m, n, k, sC, ci, cj, sD, di, dj, work);
+		return;
+#else
 		printf("\nblasfeo_dorglq: feature not implemented yet: di=%d\n", di);
 		exit(1);
+#endif
 		}
 
 	// invalidate stored inverse diagonal of result matrix
@@ -4055,8 +4093,13 @@ void blasfeo_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, int d
 
 	if(li!=ai)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dgelqf_pd_lla(m, n1, sD, di, dj, sL, li, lj, sA, ai, aj, work);
+		return;
+#else
 		printf("\nblasfeo_dgelqf_pd_lla: feature not implemented yet: li!=ai\n");
 		exit(1);
+#endif
 		}
 
 	// invalidate stored inverse diagonal of result matrix
