@@ -16,7 +16,6 @@
     "MF": "PANELMAJ",
     "BLASFEO_REF_API": 1,
     "BLAS_API": 1,
-    "BENCHMARKS_MODE": 1,
     "EXTERNAL_BLAS": "OPENBLAS"
   },
   "precisions": [

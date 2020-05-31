@@ -481,14 +481,6 @@ void dgemm_nn_24_24_24(double alpha, double *A, int sda, double *B, int sdb, dou
 int main()
 	{
 
-#if !defined(BENCHMARKS_MODE)
-	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n");
-	printf("On CMake use -DBLASFEO_BENCHMARKS=ON .\n\n");
-	return 0;
-#endif
-
-
-
 #if defined(EXTERNAL_BLAS_OPENBLAS)
 	openblas_set_num_threads(1);
 #endif

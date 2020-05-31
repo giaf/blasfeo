@@ -14,14 +14,12 @@
   "blasfeo_flags":{
     "CC": "clang",
     "BLASFEO_REF_API": 1,
-    "BENCHMARK_MODE": 0,
     "EXTERNAL_BLAS": "OPENBLAS"
   },
   "available_blasfeo_flags":{
     "SOC":["DSPACE", "BACHMANN"],
     "CC": ["clang"],
     "BLASFEO_REF_API": [1, 0],
-    "BENCHMARK_MODE": [1, 0],
     "EXTERNAL_BLAS": ["OPENBLAS"]
   },
   "precisions":[

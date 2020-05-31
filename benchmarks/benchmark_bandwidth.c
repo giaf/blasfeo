@@ -49,12 +49,6 @@
 int main()
 	{
 
-#if !defined(BENCHMARKS_MODE)
-	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n");
-	printf("On CMake use -DBLASFEO_BENCHMARKS=ON .\n\n");
-	return 0;
-#endif
-
 	int nn, ii, rep, nrep;
 
 	blasfeo_timer timer;

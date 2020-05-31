@@ -33,8 +33,6 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#if defined(BENCHMARKS_MODE)
-
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -615,15 +613,3 @@ int main()
 
 	}
 
-#else
-
-#include <stdio.h>
-
-int main()
-	{
-	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n");
-	printf("On CMake use -DBLASFEO_BENCHMARKS=ON .\n\n");
-	return 0;
-	}
-
-#endif

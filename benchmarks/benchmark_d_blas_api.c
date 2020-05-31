@@ -74,11 +74,6 @@ int main()
 openblas_set_num_threads(1);
 #endif
 
-#if !defined(BENCHMARKS_MODE)
-	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n");
-	printf("On CMake use -DBLASFEO_BENCHMARKS=ON .\n\n");
-	return 0;
-#endif
 #if !defined(BLAS_API)
 	printf("\nRecompile with BLAS_API=1 to run this benchmark!\n\n");
 	return 0;

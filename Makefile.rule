@@ -211,12 +211,6 @@ USE_C99_MATH = 1
 # EXT_DEP = 0
 EXT_DEP = 1
 
-# Compile not-yet-implemented routine with just-return instead of print-and-exit
-# Also enables the compilation of benchmarks
-#
-BENCHMARKS_MODE = 0
-# BENCHMARKS_MODE = 1
-
 # Enables the compilation of sandbox (experimental)
 #
 SANDBOX_MODE = 0
@@ -377,10 +371,6 @@ endif
 
 ifeq ($(EXT_DEP), 1)
 CFLAGS += -DEXT_DEP
-endif
-
-ifeq ($(BENCHMARKS_MODE), 1)
-CFLAGS += -DBENCHMARKS_MODE
 endif
 
 ifeq ($(SANDBOX_MODE), 1)
