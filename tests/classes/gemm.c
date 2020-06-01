@@ -38,51 +38,51 @@ void print_routine_matrices(struct RoutineArgs *args)
 	if(!strcmp(string(ROUTINE), "dgemm_nn") || !strcmp(string(ROUTINE), "sgemm_nn"))
 		{
 		printf("\nPrint A:\n");
-		blasfeo_print_xmat_debug(args->m, args->k, args->sA, args->ai, args->aj, 0, 0, 0);
-		print_xmat_debug(args->m, args->k, args->rA, args->ai, args->aj, 0, 0, 0);
+		blasfeo_print_xmat_debug(args->m, args->k, args->sA, args->ai, args->aj, 0, 0, 0, "HP");
+		blasfeo_print_xmat_debug(args->m, args->k, args->rA, args->ai, args->aj, 0, 0, 0, "REF");
 
 		printf("\nPrint B:\n");
-		blasfeo_print_xmat_debug(args->k, args->n, args->sB, args->ai, args->aj, 0, 0, 0);
-		print_xmat_debug(args->k, args->n, args->rB, args->ai, args->aj, 0, 0, 0);
+		blasfeo_print_xmat_debug(args->k, args->n, args->sB, args->ai, args->aj, 0, 0, 0, "HP");
+		blasfeo_print_xmat_debug(args->k, args->n, args->rB, args->ai, args->aj, 0, 0, 0, "REF");
 		}
 	if(!strcmp(string(ROUTINE), "dgemm_nt") || !strcmp(string(ROUTINE), "sgemm_nt"))
 		{
 		printf("\nPrint A:\n");
-		blasfeo_print_xmat_debug(args->m, args->k, args->sA, args->ai, args->aj, 0, 0, 0);
-		print_xmat_debug(args->m, args->k, args->rA, args->ai, args->aj, 0, 0, 0);
+		blasfeo_print_xmat_debug(args->m, args->k, args->sA, args->ai, args->aj, 0, 0, 0, "HP");
+		blasfeo_print_xmat_debug(args->m, args->k, args->rA, args->ai, args->aj, 0, 0, 0, "REF");
 
 		printf("\nPrint B:\n");
-		blasfeo_print_xmat_debug(args->n, args->k, args->sB, args->ai, args->aj, 0, 0, 0);
-		print_xmat_debug(args->n, args->k, args->rB, args->ai, args->aj, 0, 0, 0);
+		blasfeo_print_xmat_debug(args->n, args->k, args->sB, args->ai, args->aj, 0, 0, 0, "HP");
+		blasfeo_print_xmat_debug(args->n, args->k, args->rB, args->ai, args->aj, 0, 0, 0, "REF");
 		}
 	if(!strcmp(string(ROUTINE), "dgemm_tn") || !strcmp(string(ROUTINE), "sgemm_tn"))
 		{
 		printf("\nPrint A:\n");
-		blasfeo_print_xmat_debug(args->k, args->m, args->sA, args->ai, args->aj, 0, 0, 0);
-		print_xmat_debug(args->k, args->m, args->rA, args->ai, args->aj, 0, 0, 0);
+		blasfeo_print_xmat_debug(args->k, args->m, args->sA, args->ai, args->aj, 0, 0, 0, "HP");
+		blasfeo_print_xmat_debug(args->k, args->m, args->rA, args->ai, args->aj, 0, 0, 0, "REF");
 
 		printf("\nPrint B:\n");
-		blasfeo_print_xmat_debug(args->k, args->n, args->sB, args->ai, args->aj, 0, 0, 0);
-		print_xmat_debug(args->k, args->n, args->rB, args->ai, args->aj, 0, 0, 0);
+		blasfeo_print_xmat_debug(args->k, args->n, args->sB, args->ai, args->aj, 0, 0, 0, "HP");
+		blasfeo_print_xmat_debug(args->k, args->n, args->rB, args->ai, args->aj, 0, 0, 0, "REF");
 		}
 	if(!strcmp(string(ROUTINE), "dgemm_tt") || !strcmp(string(ROUTINE), "sgemm_tt"))
 		{
 		printf("\nPrint A:\n");
-		blasfeo_print_xmat_debug(args->k, args->m, args->sA, args->ai, args->aj, 0, 0, 0);
-		print_xmat_debug(args->k, args->m, args->rA, args->ai, args->aj, 0, 0, 0);
+		blasfeo_print_xmat_debug(args->k, args->m, args->sA, args->ai, args->aj, 0, 0, 0, "HP");
+		blasfeo_print_xmat_debug(args->k, args->m, args->rA, args->ai, args->aj, 0, 0, 0, "REF");
 
 		printf("\nPrint B:\n");
-		blasfeo_print_xmat_debug(args->n, args->k, args->sB, args->ai, args->aj, 0, 0, 0);
-		print_xmat_debug(args->n, args->k, args->rB, args->ai, args->aj, 0, 0, 0);
+		blasfeo_print_xmat_debug(args->n, args->k, args->sB, args->ai, args->aj, 0, 0, 0, "HP");
+		blasfeo_print_xmat_debug(args->n, args->k, args->rB, args->ai, args->aj, 0, 0, 0, "REF");
 		}
 
 	printf("\nPrint C:\n");
-	blasfeo_print_xmat_debug(args->m, args->n, args->sC, args->ai, args->aj, 0, 0, 0);
-	print_xmat_debug(args->m, args->n, args->rC, args->ai, args->aj, 0, 0, 0);
+	blasfeo_print_xmat_debug(args->m, args->n, args->sC, args->ai, args->aj, 0, 0, 0, "HP");
+	blasfeo_print_xmat_debug(args->m, args->n, args->rC, args->ai, args->aj, 0, 0, 0, "REF");
 
 	printf("\nPrint D:\n");
-	blasfeo_print_xmat_debug(args->m, args->n, args->sD, args->ai, args->aj, 0, 0, 0);
-	print_xmat_debug(args->m, args->n, args->rD, args->ai, args->aj, 0, 0, 0);
+	blasfeo_print_xmat_debug(args->m, args->n, args->sD, args->ai, args->aj, 0, 0, 0, "HP");
+	blasfeo_print_xmat_debug(args->m, args->n, args->rD, args->ai, args->aj, 0, 0, 0, "REF");
 	}
 
 

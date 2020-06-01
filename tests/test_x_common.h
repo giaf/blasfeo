@@ -244,9 +244,7 @@ void print_xmat_debug(
 	int m, int n, struct STRMAT_REF *sA,
 	int ai, int aj, int err_i, int err_j, int ERR);
 
-void blasfeo_print_xmat_debug(
-	int m, int n, struct STRMAT *sA,
-	int ai, int aj, int err_i, int err_j, int ERR);
+void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, int err_i, int err_j, int ERR, char *label);
 
 int GECMP_LIBSTR(
 	int n, int m, int bi, int bj, struct STRMAT *sC,

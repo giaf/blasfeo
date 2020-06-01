@@ -137,6 +137,7 @@ void initialize_args(struct RoutineArgs * args)
 };
 
 /* prints a matrix in column-major format */
+// TODO remove !!!!!!!!!!!!!!!!!!!!
 void print_xmat_debug(
 	int m, int n, struct STRMAT_REF *sA,
 	int ai, int aj, int err_i, int err_j, int ERR)
@@ -209,18 +210,13 @@ void print_xmat_debug(
 	return;
 	}
 
-/* prints a matrix in panel-major format */
-void blasfeo_print_xmat_debug(
-	int m, int n, struct STRMAT *sA,
-	int ai, int aj, int err_i, int err_j, int ERR)
-	{
-	#if defined(LA_EXTERNAL_BLAS_WRAPPER) || defined(LA_REFERENCE)
-	/* print_xmat_debug(m, n, sA->pA, ai, aj, err_i, err_j); */
-	#else
-	const int ps = PS;
 
+
+/* prints a blasfeo matrix */
+void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, int err_i, int err_j, int ERR, char *label)
+	{
 	int i0, j0, ie, je;
-	int ii, j, ip0, ipe, ip;
+	int ii, jj, j, ip0, ipe, ip;
 
 	const int max_rows = 16;
 	const int max_cols = 9;
@@ -242,19 +238,6 @@ void blasfeo_print_xmat_debug(
 		je = err_j + ((int)(max_rows/2)) ;
 	}
 
-	/* const int subsize = 6; */
-	/* i0 = err_i-subsize; */
-	/* j0 = err_j-subsize; */
-
-	/* if (i0 < ai) i0 = ai; */
-	/* if (j0 < aj) j0 = aj; */
-
-	/* ie = err_i+subsize; */
-	/* je = err_j+subsize; */
-
-	/* if (ie > ai+m) ie = ai+m; */
-	/* if (je > aj+n) je = aj+n; */
-
 	if (!ERR)
 	{
 		i0 = ai;
@@ -266,40 +249,32 @@ void blasfeo_print_xmat_debug(
 	int sda = sA->cn;
 	REAL *pA = sA->pA;
 
-	printf("%s\t", "HP");
+	printf("%s\t", label);
 	for(j=j0; j<je; j++) printf("%7d\t", j);
 	printf("\n");
 	for(j=j0; j<je+1; j++) printf("-------\t");
 	printf("\n");
 
-	ii = i0-i0%ps;
-	ip0 = i0%ps;
-	for( ; ii<ie; ii+=ps)
+	for(ii=i0; ii<ie; ii++)
 		{
-		ipe = (ie-ii)<ps ? (ie-ii): ps;
-		for(ip=ip0; ip<ipe; ip++)
+		if(j0<je)
+			printf("%3d |\t", ii);
+		for(jj=j0; jj<je; jj++)
 			{
-			for(j=j0; j<je; j++)
-				{
-				if (j == j0) printf("%3d |\t", ii+ip);
-
-				if ((ii+ip==err_i) && (j==err_j) && ERR)
-					printf(ANSI_COLOR_RED"%6.2f\t"ANSI_COLOR_RESET, pA[ip+ps*j+sda*ii]);
-				else if ((ii+ip >= ai) && (ii+ip < ai+m) && (j >= aj) && (j < aj+n))
-					printf(ANSI_COLOR_GREEN"%6.2f\t"ANSI_COLOR_RESET, pA[ip+ps*j+sda*ii]);
-				else printf("%6.2f\t", pA[ip+ps*j+sda*ii]);
-
-				}
-			printf("\n");
-			ip0 = 0;
+			if((ii==err_i) & (jj==err_j) & ERR)
+				printf(ANSI_COLOR_RED"%6.2f\t"ANSI_COLOR_RESET, MATEL_LIBSTR(sA, ii, jj));
+			else if((ii >= ai) & (ii < ai+m) & (jj >= aj) && (jj < aj+n))
+				printf(ANSI_COLOR_GREEN"%6.2f\t"ANSI_COLOR_RESET, MATEL_LIBSTR(sA, ii, jj));
+			else printf("%6.2f\t", MATEL_LIBSTR(sA, ii, jj));
 			}
-		if (ipe == ps) for(j=j0; j<je+1; j++) printf(ANSI_COLOR_CYAN"-------\t"ANSI_COLOR_RESET);
 		printf("\n");
 		}
 	printf("\n");
-	#endif
+
 	return;
 	}
+
+
 
 static void printbits(void *c, size_t n)
 {
@@ -314,6 +289,8 @@ static void printbits(void *c, size_t n)
 	}
 	printf("\n");
 }
+
+
 
 // 1 to 1 comparison of every element
 int GECMP_LIBSTR(
@@ -350,8 +327,8 @@ int GECMP_LIBSTR(
 					printf("\n");
 
 					printf("\nResult matrix:\n");
-					blasfeo_print_xmat_debug(m, n, sD, bi, bj, ii, jj, 1);
-					print_xmat_debug(m, n, rD, bi, bj, ii, jj, 1);
+					blasfeo_print_xmat_debug(m, n, sD, bi, bj, ii, jj, 1, "HP");
+					blasfeo_print_xmat_debug(m, n, rD, bi, bj, ii, jj, 1, "REF");
 
 					return 1;
 				}
