@@ -1557,6 +1557,7 @@ inner_edge_gemm_add_nn_8x8_lib8:
 	sall			$2, %eax // offsetB*sizeof(float)
 	addq			%rax, %r12 // B+offsetB*sizeof(float)
 
+1:
 	// unroll 0
 	vmovaps			0(%r11), %ymm12 // A[0]
 	vbroadcastss	0(%r12), %ymm13 // B[0]
