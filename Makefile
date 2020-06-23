@@ -67,7 +67,7 @@ OBJS += \
 		blasfeo_ref/s_blas3_diag_ref.o \
 		blasfeo_ref/s_lapack_ref.o \
 
-endif
+endif # BLASFEO_REF_API
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 

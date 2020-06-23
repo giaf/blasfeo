@@ -910,12 +910,8 @@ void dlauum_dpotrf_blk_nt_l_lib(int m, int n, int nv, int *rv, int *cv, double *
 
 
 
-#if defined(LA_HIGH_PERFORMANCE)
-
-
-
 // dpotrf
-void blasfeo_dpotrf_l(int m, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_hp_dpotrf_l(int m, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0)
@@ -1150,7 +1146,7 @@ void blasfeo_dpotrf_l(int m, struct blasfeo_dmat *sC, int ci, int cj, struct bla
 
 
 // dpotrf
-void blasfeo_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_hp_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)
@@ -1485,7 +1481,7 @@ void blasfeo_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, 
 
 
 // dsyrk dpotrf
-void blasfeo_dsyrk_dpotrf_ln_mn(int m, int n, int k, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_hp_dsyrk_dpotrf_ln_mn(int m, int n, int k, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(m<=0 || n<=0)
@@ -1818,7 +1814,7 @@ void blasfeo_dsyrk_dpotrf_ln_mn(int m, int n, int k, struct blasfeo_dmat *sA, in
 
 
 
-void blasfeo_dsyrk_dpotrf_ln(int m, int k, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_hp_dsyrk_dpotrf_ln(int m, int k, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 //	blasfeo_dsyrk_dpotrf_ln_mn(m, m, k, sA, ai, aj, sB, bi, bj, sC, ci, cj, sD, di, dj);
 //	return;
@@ -2046,7 +2042,7 @@ void blasfeo_dsyrk_dpotrf_ln(int m, int k, struct blasfeo_dmat *sA, int ai, int 
 
 
 // dgetrf no pivoting
-void blasfeo_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+void blasfeo_hp_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
 	if(ci!=0 | di!=0)
@@ -2362,7 +2358,7 @@ void blasfeo_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 
 
 // dgetrf row pivoting
-void blasfeo_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv)
+void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv)
 	{
 
 	if(ci!=0 | di!=0)
@@ -3397,7 +3393,7 @@ void blasfeo_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 
 
 
-int blasfeo_dgeqrf_worksize(int m, int n)
+int blasfeo_hp_dgeqrf_worksize(int m, int n)
 	{
 	const int ps = 4;
 	int cm = (m+ps-1)/ps*ps;
@@ -3408,7 +3404,7 @@ int blasfeo_dgeqrf_worksize(int m, int n)
 
 
 
-void blasfeo_dgeqrf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *v_work)
+void blasfeo_hp_dgeqrf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *v_work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3485,14 +3481,14 @@ void blasfeo_dgeqrf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 
 
 
-int blasfeo_dgelqf_worksize(int m, int n)
+int blasfeo_hp_dgelqf_worksize(int m, int n)
 	{
 	return 0;
 	}
 
 
 
-void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
+void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3689,14 +3685,14 @@ void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struc
 
 
 
-int blasfeo_dorglq_worksize(int m, int n, int k)
+int blasfeo_hp_dorglq_worksize(int m, int n, int k)
 	{
 	return 0;
 	}
 
 
 
-void blasfeo_dorglq(int m, int n, int k, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
+void blasfeo_hp_dorglq(int m, int n, int k, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3806,7 +3802,7 @@ void blasfeo_dorglq(int m, int n, int k, struct blasfeo_dmat *sC, int ci, int cj
 
 
 // LQ factorization with positive diagonal elements
-void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
+void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3977,7 +3973,7 @@ void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 // [L, A] <= lq( [L. A] )
 // L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
-void blasfeo_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dmat *sA, int ai, int aj, void *work)
+void blasfeo_hp_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dmat *sA, int ai, int aj, void *work)
 	{
 	if(m<=0)
 		return;
@@ -4084,7 +4080,7 @@ void blasfeo_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj
 // [L, L, A] <= lq( [L. L, A] )
 // L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
-void blasfeo_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dmat *sL, int li, int lj, struct blasfeo_dmat *sA, int ai, int aj, void *work)
+void blasfeo_hp_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dmat *sL, int li, int lj, struct blasfeo_dmat *sA, int ai, int aj, void *work)
 	{
 	if(m<=0)
 		return;
@@ -4202,8 +4198,113 @@ void blasfeo_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, int d
 
 
 
-#else
+#if defined(LA_HIGH_PERFORMANCE)
 
-#error : wrong LA choice
+
+
+void blasfeo_dpotrf_l(int m, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	blasfeo_hp_dpotrf_l(m, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void blasfeo_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	blasfeo_hp_dpotrf_l_mn(m, n, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void blasfeo_dsyrk_dpotrf_ln_mn(int m, int n, int k, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	blasfeo_hp_dsyrk_dpotrf_ln_mn(m, n, k, sA, ai, aj, sB, bi, bj, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void blasfeo_dsyrk_dpotrf_ln(int m, int k, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	blasfeo_hp_dsyrk_dpotrf_ln(m, k, sA, ai, aj, sB, bi, bj, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void blasfeo_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	blasfeo_hp_dgetrf_np(m, n, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void blasfeo_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv)
+	{
+	blasfeo_hp_dgetrf_rp(m, n, sC, ci, cj, sD, di, dj, ipiv);
+	}
+
+
+
+int blasfeo_dgeqrf_worksize(int m, int n)
+	{
+	blasfeo_hp_dgeqrf_worksize(m, n);
+	}
+
+
+
+void blasfeo_dgeqrf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *v_work)
+	{
+	blasfeo_hp_dgeqrf(m, n, sC, ci, cj, sD, di, dj, v_work);
+	}
+
+
+
+int blasfeo_dgelqf_worksize(int m, int n)
+	{
+	blasfeo_hp_dgelqf_worksize(m, n);
+	}
+
+
+
+void blasfeo_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
+	{
+	blasfeo_hp_dgelqf(m, n, sC, ci, cj, sD, di, dj, work);
+	}
+
+
+
+int blasfeo_dorglq_worksize(int m, int n, int k)
+	{
+	blasfeo_hp_dorglq_worksize(m, n, k);
+	}
+
+
+
+void blasfeo_dorglq(int m, int n, int k, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
+	{
+	blasfeo_hp_dorglq(m, n, k, sC, ci, cj, sD, di, dj, work);
+	}
+
+
+
+void blasfeo_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
+	{
+	blasfeo_hp_dgelqf_pd(m, n, sC, ci, cj, sD, di, cj, work);
+	}
+
+
+
+void blasfeo_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dmat *sA, int ai, int aj, void *work)
+	{
+	blasfeo_hp_dgelqf_pd_la(m, n1, sD, di, dj, sA, ai, aj, work);
+	}
+
+
+
+void blasfeo_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dmat *sL, int li, int lj, struct blasfeo_dmat *sA, int ai, int aj, void *work)
+	{
+	blasfeo_hp_dgelqf_pd_lla(m, n1, sD, di, dj, sL, li, lj, sA, ai, aj, work);
+	}
+
+
 
 #endif

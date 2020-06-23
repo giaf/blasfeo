@@ -46,7 +46,7 @@
 
 
 
-void blasfeo_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+void blasfeo_hp_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(m<=0)
@@ -237,7 +237,7 @@ void blasfeo_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct bla
 
 
 
-void blasfeo_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+void blasfeo_hp_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(m<=0 | n<=0)
@@ -554,7 +554,7 @@ void blasfeo_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int cj, 
 
 
 
-void blasfeo_ssyrk_spotrf_ln_mn(int m, int n, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+void blasfeo_hp_ssyrk_spotrf_ln_mn(int m, int n, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
@@ -874,16 +874,16 @@ void blasfeo_ssyrk_spotrf_ln_mn(int m, int n, int k, struct blasfeo_smat *sA, in
 
 
 
-void blasfeo_ssyrk_spotrf_ln(int m, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+void blasfeo_hp_ssyrk_spotrf_ln(int m, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
-	blasfeo_ssyrk_spotrf_ln_mn(m, m, k, sA, ai, aj, sB, bi, bj, sC, ci, cj, sD, di, dj);
+	blasfeo_hp_ssyrk_spotrf_ln_mn(m, m, k, sA, ai, aj, sB, bi, bj, sC, ci, cj, sD, di, dj);
 	return;
 	}
 
 
 
 // dgetrf no pivoting
-void blasfeo_sgetrf_np(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+void blasfeo_hp_sgetrf_np(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_sgetrf_np(m, n, sC, ci, cj, sD, di, dj);
@@ -899,7 +899,7 @@ void blasfeo_sgetrf_np(int m, int n, struct blasfeo_smat *sC, int ci, int cj, st
 
 
 // dgetrf row pivoting
-void blasfeo_sgetrf_rp(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, int *ipiv)
+void blasfeo_hp_sgetrf_rp(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, int *ipiv)
 	{
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_sgetrf_rp(m, n, sC, ci, cj, sD, di, dj, ipiv);
@@ -913,14 +913,14 @@ void blasfeo_sgetrf_rp(int m, int n, struct blasfeo_smat *sC, int ci, int cj, st
 
 
 
-int blasfeo_sgeqrf_worksize(int m, int n)
+int blasfeo_hp_sgeqrf_worksize(int m, int n)
 	{
 	return 0;
 	}
 
 
 
-void blasfeo_sgeqrf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
+void blasfeo_hp_sgeqrf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -936,14 +936,14 @@ void blasfeo_sgeqrf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struc
 
 
 
-int blasfeo_sgelqf_worksize(int m, int n)
+int blasfeo_hp_sgelqf_worksize(int m, int n)
 	{
 	return 0;
 	}
 
 
 
-void blasfeo_sgelqf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
+void blasfeo_hp_sgelqf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -959,14 +959,14 @@ void blasfeo_sgelqf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struc
 
 
 
-int blasfeo_sorglq_worksize(int m, int n, int k)
+int blasfeo_hp_sorglq_worksize(int m, int n, int k)
 	{
 	return 0;
 	}
 
 
 
-void blasfeo_sorglq(int m, int n, int k, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
+void blasfeo_hp_sorglq(int m, int n, int k, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -983,7 +983,7 @@ void blasfeo_sorglq(int m, int n, int k, struct blasfeo_smat *sC, int ci, int cj
 
 
 // LQ factorization with positive diagonal elements
-void blasfeo_sgelqf_pd(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
+void blasfeo_hp_sgelqf_pd(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -1003,7 +1003,7 @@ void blasfeo_sgelqf_pd(int m, int n, struct blasfeo_smat *sC, int ci, int cj, st
 // [L, A] <= lq( [L. A] )
 // L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
-void blasfeo_sgelqf_pd_la(int m, int n1, struct blasfeo_smat *sD, int di, int dj, struct blasfeo_smat *sA, int ai, int aj, void *work)
+void blasfeo_hp_sgelqf_pd_la(int m, int n1, struct blasfeo_smat *sD, int di, int dj, struct blasfeo_smat *sA, int ai, int aj, void *work)
 	{
 	if(m<=0)
 		return;
@@ -1023,7 +1023,7 @@ void blasfeo_sgelqf_pd_la(int m, int n1, struct blasfeo_smat *sD, int di, int dj
 // [L, L, A] <= lq( [L. L, A] )
 // L lower triangular, of size (m)x(m)
 // A full of size (m)x(n1)
-void blasfeo_sgelqf_pd_lla(int m, int n1, struct blasfeo_smat *sD, int di, int dj, struct blasfeo_smat *sL, int li, int lj, struct blasfeo_smat *sA, int ai, int aj, void *work)
+void blasfeo_hp_sgelqf_pd_lla(int m, int n1, struct blasfeo_smat *sD, int di, int dj, struct blasfeo_smat *sL, int li, int lj, struct blasfeo_smat *sA, int ai, int aj, void *work)
 	{
 	if(m<=0)
 		return;
@@ -1038,4 +1038,114 @@ void blasfeo_sgelqf_pd_lla(int m, int n1, struct blasfeo_smat *sD, int di, int d
 
 
 
+#if defined(LA_HIGH_PERFORMANCE)
+
+
+
+void blasfeo_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_spotrf_l(m, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void blasfeo_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_spotrf_l_mn(m, n, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void blasfeo_ssyrk_spotrf_ln_mn(int m, int n, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_ssyrk_spotrf_ln_mn(m, n, k, sA, ai, aj, sB, bi, bj, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void blasfeo_ssyrk_spotrf_ln(int m, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_ssyrk_spotrf_ln(m, k, sA, ai, aj, sB, bi, bj, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void blasfeo_sgetrf_np(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_sgetrf_np(m, n, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void blasfeo_sgetrf_rp(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, int *ipiv)
+	{
+	blasfeo_hp_sgetrf_rp(m, n, sC, ci, cj, sD, di, dj, ipiv);
+	}
+
+
+
+int blasfeo_sgeqrf_worksize(int m, int n)
+	{
+	blasfeo_hp_sgeqrf_worksize(m, n);
+	}
+
+
+
+void blasfeo_sgeqrf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *v_work)
+	{
+	blasfeo_hp_sgeqrf(m, n, sC, ci, cj, sD, di, dj, v_work);
+	}
+
+
+
+int blasfeo_sgelqf_worksize(int m, int n)
+	{
+	blasfeo_hp_sgelqf_worksize(m, n);
+	}
+
+
+
+void blasfeo_sgelqf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
+	{
+	blasfeo_hp_sgelqf(m, n, sC, ci, cj, sD, di, dj, work);
+	}
+
+
+
+int blasfeo_sorglq_worksize(int m, int n, int k)
+	{
+	blasfeo_hp_sorglq_worksize(m, n, k);
+	}
+
+
+
+void blasfeo_sorglq(int m, int n, int k, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
+	{
+	blasfeo_hp_sorglq(m, n, k, sC, ci, cj, sD, di, dj, work);
+	}
+
+
+
+void blasfeo_sgelqf_pd(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, void *work)
+	{
+	blasfeo_hp_sgelqf_pd(m, n, sC, ci, cj, sD, di, cj, work);
+	}
+
+
+
+void blasfeo_sgelqf_pd_la(int m, int n1, struct blasfeo_smat *sD, int di, int dj, struct blasfeo_smat *sA, int ai, int aj, void *work)
+	{
+	blasfeo_hp_sgelqf_pd_la(m, n1, sD, di, dj, sA, ai, aj, work);
+	}
+
+
+
+void blasfeo_sgelqf_pd_lla(int m, int n1, struct blasfeo_smat *sD, int di, int dj, struct blasfeo_smat *sL, int li, int lj, struct blasfeo_smat *sA, int ai, int aj, void *work)
+	{
+	blasfeo_hp_sgelqf_pd_lla(m, n1, sD, di, dj, sL, li, lj, sA, ai, aj, work);
+	}
+
+
+
+#endif
 

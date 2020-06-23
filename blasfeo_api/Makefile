@@ -35,43 +35,45 @@
 
 include ../Makefile.rule
 
+# TODO
+
+HP_OBJS =
+
+ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE))
+#
+HP_OBJS += d_blas3_lib4.o
+HP_OBJS += d_blas3_diag_lib4.o
+HP_OBJS += d_lapack_lib4.o
+#
+HP_OBJS += s_blas3_lib8.o
+HP_OBJS += s_blas3_diag_lib8.o
+HP_OBJS += s_lapack_lib8.o
+endif
+
+ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_CORE X64_AMD_BULLDOZER X86_AMD_JAGUAR X86_AMD_BARCELONA ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A53 ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7 GENERIC))
+#
+HP_OBJS += d_blas3_lib4.o
+HP_OBJS += d_blas3_diag_lib4.o
+HP_OBJS += d_lapack_lib4.o
+#
+HP_OBJS += s_blas3_lib4.o
+HP_OBJS += s_blas3_diag_lib4.o
+HP_OBJS += s_lapack_lib4.o
+endif
+
+# TODO end
+
+
+
 OBJS =
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 
-ifeq ($(TARGET), X64_INTEL_HASWELL)
+ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE))
 OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
 OBJS += s_blas1_lib8.o s_blas2_lib8.o s_blas2_diag_lib.o s_blas3_lib8.o s_blas3_diag_lib8.o s_lapack_lib8.o
 endif
-ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
-OBJS += s_blas1_lib8.o s_blas2_lib8.o s_blas2_diag_lib.o s_blas3_lib8.o s_blas3_diag_lib8.o s_lapack_lib8.o
-endif
-ifeq ($(TARGET), X64_INTEL_CORE)
-OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
-OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
-endif
-ifeq ($(TARGET), X64_AMD_BULLDOZER)
-OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
-OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
-endif
-ifeq ($(TARGET), X86_AMD_JAGUAR)
-OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
-OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
-endif
-ifeq ($(TARGET), X86_AMD_BARCELONA)
-OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
-OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
-endif
-ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A53))
-OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
-OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
-endif
-ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
-OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
-OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
-endif
-ifeq ($(TARGET), GENERIC)
+ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_CORE X64_AMD_BULLDOZER X86_AMD_JAGUAR X86_AMD_BARCELONA ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A53 ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7 GENERIC))
 OBJS += d_blas1_lib4.o d_blas2_lib4.o d_blas2_diag_lib.o d_blas3_lib4.o d_blas3_diag_lib4.o d_lapack_lib4.o
 OBJS += s_blas1_lib4.o s_blas2_lib4.o s_blas2_diag_lib.o s_blas3_lib4.o s_blas3_diag_lib4.o s_lapack_lib4.o
 endif

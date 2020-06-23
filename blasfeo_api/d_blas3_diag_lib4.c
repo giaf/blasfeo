@@ -44,17 +44,33 @@
 
 
 
-/****************************
-* old interface
-****************************/
-
-void dgemm_diag_left_lib(int m, int n, double alpha, double *dA, double *pB, int sdb, double beta, double *pC, int sdc, double *pD, int sdd)
+// dgemm with A diagonal matrix (stored as strvec)
+void blasfeo_hp_dgemm_dn(int m, int n, double alpha, struct blasfeo_dvec *sA, int ai, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
-
-	if(m<=0 || n<=0)
+	if(m<=0 | n<=0)
 		return;
+	if(bi!=0 | ci!=0 | di!=0)
+		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dgemm_dn(m, n, alpha, sA, ai, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+		return;
+#else
+		printf("\nblasfeo_dgemm_dn: feature not implemented yet: bi=%d, ci=%d, di=%d\n", bi, ci, di);
+		exit(1);
+#endif
+		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int bs = 4;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	double *dA = sA->pa + ai;
+	double *pB = sB->pA + bj*bs;
+	double *pC = sC->pA + cj*bs;
+	double *pD = sD->pA + dj*bs;
 
 	int ii;
 
@@ -82,18 +98,40 @@ void dgemm_diag_left_lib(int m, int n, double alpha, double *dA, double *pB, int
 		else // if(m-ii==3)
 			kernel_dgemm_diag_left_3_lib4(n, &alpha, &dA[ii], &pB[ii*sdb], &beta, &pC[ii*sdc], &pD[ii*sdd]);
 		}
-	
+
+	return;
+
 	}
 
 
 
-void dgemm_diag_right_lib(int m, int n, double alpha, double *pA, int sda, double *dB, double beta, double *pC, int sdc, double *pD, int sdd)
+// dgemm with B diagonal matrix (stored as strvec)
+void blasfeo_hp_dgemm_nd(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sB, int bi, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
-
-	if(m<=0 || n<=0)
+	if(m<=0 | n<=0)
 		return;
+	if(ai!=0 | ci!=0 | di!=0)
+		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dgemm_nd(m, n, alpha, sA, ai, aj, sB, bi, beta, sC, ci, cj, sD, di, dj);
+		return;
+#else
+		printf("\nblasfeo_dgemm_nd: feature not implemented yet: ai=%d, ci=%d, di=%d\n", ai, ci, di);
+		exit(1);
+#endif
+		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
 
 	const int bs = 4;
+	int sda = sA->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	double *pA = sA->pA + aj*bs;
+	double *dB = sB->pa + bi;
+	double *pC = sC->pA + cj*bs;
+	double *pD = sD->pA + dj*bs;
 
 	int ii;
 
@@ -121,14 +159,10 @@ void dgemm_diag_right_lib(int m, int n, double alpha, double *pA, int sda, doubl
 		else // if(n-ii==3)
 			kernel_dgemm_diag_right_3_lib4(m, &alpha, &pA[ii*bs], sda, &dB[ii], &beta, &pC[ii*bs], sdc, &pD[ii*bs], sdd);
 		}
-	
+
+	return;
+
 	}
-
-
-
-/****************************
-* new interface
-****************************/
 
 
 
@@ -136,77 +170,18 @@ void dgemm_diag_right_lib(int m, int n, double alpha, double *pA, int sda, doubl
 
 
 
-// dgemm with A diagonal matrix (stored as strvec)
 void blasfeo_dgemm_dn(int m, int n, double alpha, struct blasfeo_dvec *sA, int ai, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
-	if(m<=0 | n<=0)
-		return;
-	if(bi!=0 | ci!=0 | di!=0)
-		{
-#if defined(BLASFEO_REF_API)
-		blasfeo_ref_dgemm_dn(m, n, alpha, sA, ai, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
-		return;
-#else
-		printf("\nblasfeo_dgemm_dn: feature not implemented yet: bi=%d, ci=%d, di=%d\n", bi, ci, di);
-		exit(1);
-#endif
-		}
-
-	// invalidate stored inverse diagonal of result matrix
-	sD->use_dA = 0;
-
-	const int bs = 4;
-	int sdb = sB->cn;
-	int sdc = sC->cn;
-	int sdd = sD->cn;
-	double *dA = sA->pa + ai;
-	double *pB = sB->pA + bj*bs;
-	double *pC = sC->pA + cj*bs;
-	double *pD = sD->pA + dj*bs;
-	dgemm_diag_left_lib(m, n, alpha, dA, pB, sdb, beta, pC, sdc, pD, sdd);
-	return;
+	blasfeo_hp_dgemm_dn(m, n, alpha, sA, ai, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 	}
 
 
 
-// dgemm with B diagonal matrix (stored as strvec)
 void blasfeo_dgemm_nd(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sB, int bi, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
-	if(m<=0 | n<=0)
-		return;
-	if(ai!=0 | ci!=0 | di!=0)
-		{
-#if defined(BLASFEO_REF_API)
-		blasfeo_ref_dgemm_nd(m, n, alpha, sA, ai, aj, sB, bi, beta, sC, ci, cj, sD, di, dj);
-		return;
-#else
-		printf("\nblasfeo_dgemm_nd: feature not implemented yet: ai=%d, ci=%d, di=%d\n", ai, ci, di);
-		exit(1);
-#endif
-		}
-
-	// invalidate stored inverse diagonal of result matrix
-	sD->use_dA = 0;
-
-	const int bs = 4;
-	int sda = sA->cn;
-	int sdc = sC->cn;
-	int sdd = sD->cn;
-	double *pA = sA->pA + aj*bs;
-	double *dB = sB->pa + bi;
-	double *pC = sC->pA + cj*bs;
-	double *pD = sD->pA + dj*bs;
-	dgemm_diag_right_lib(m, n, alpha, pA, sda, dB, beta, pC, sdc, pD, sdd);
-	return;
+	blasfeo_hp_dgemm_nd(m, n, alpha, sA, ai, aj, sB, bi, beta, sC, ci, cj, sD, di, dj);
 	}
 
 
 
-#else
-
-#error : wrong LA choice
-
 #endif
-
-
-
