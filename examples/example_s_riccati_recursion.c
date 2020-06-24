@@ -288,13 +288,13 @@ int main()
 
 	printf("\nLA provided by BLASFEO\n\n");
 
-#elif defined(LA_BLAS)
-
-	printf("\nLA provided by BLAS\n\n");
-
 #elif defined(LA_REFERENCE)
 
 	printf("\nLA provided by REFERENCE\n\n");
+
+#elif defined(LA_EXTERNAL_BLAS_WRAPPER)
+
+	printf("\nLA provided by EXTERNAL_BLAS_WRAPPER\n\n");
 
 #else
 

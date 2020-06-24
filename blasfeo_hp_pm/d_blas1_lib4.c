@@ -46,16 +46,12 @@
 #include <immintrin.h>  // AVX
 #endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_kernel.h"
+#include <blasfeo_common.h>
+#include <blasfeo_d_kernel.h>
 
 
 
-#if defined(LA_HIGH_PERFORMANCE)
-
-
-
-void blasfeo_daxpy(int m, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+void blasfeo_hp_daxpy(int m, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -126,7 +122,7 @@ void blasfeo_daxpy(int m, double alpha, struct blasfeo_dvec *sx, int xi, struct 
 
 
 
-void blasfeo_daxpby(int m, double alpha, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+void blasfeo_hp_daxpby(int m, double alpha, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -210,7 +206,7 @@ void blasfeo_daxpby(int m, double alpha, struct blasfeo_dvec *sx, int xi, double
 
 
 // multiply two vectors
-void blasfeo_dvecmul(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+void blasfeo_hp_dvecmul(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -247,7 +243,7 @@ void blasfeo_dvecmul(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec
 
 
 // multiply two vectors and add result to another vector
-void blasfeo_dvecmulacc(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+void blasfeo_hp_dvecmulacc(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -286,7 +282,7 @@ void blasfeo_dvecmulacc(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_d
 
 
 // multiply two vectors and compute dot product
-double blasfeo_dvecmuldot(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+double blasfeo_hp_dvecmuldot(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -338,7 +334,7 @@ double blasfeo_dvecmuldot(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo
 
 
 // compute dot product of two vectors
-double blasfeo_ddot(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi)
+double blasfeo_hp_ddot(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi)
 	{
 
 	if(m<=0)
@@ -423,7 +419,7 @@ double blasfeo_ddot(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec 
 
 
 
-void blasfeo_drotg(double a, double b, double *c, double *s)
+void blasfeo_hp_drotg(double a, double b, double *c, double *s)
 	{
 	double aa = fabs(a);
 	double bb = fabs(b);
@@ -449,7 +445,7 @@ void blasfeo_drotg(double a, double b, double *c, double *s)
 
 
 
-void blasfeo_dcolrot(int m, struct blasfeo_dmat *sA, int ai, int aj0, int aj1, double c, double s)
+void blasfeo_hp_dcolrot(int m, struct blasfeo_dmat *sA, int ai, int aj0, int aj1, double c, double s)
 	{
 	const int ps = 4;
 	int sda = sA->cn;
@@ -509,7 +505,7 @@ void blasfeo_dcolrot(int m, struct blasfeo_dmat *sA, int ai, int aj0, int aj1, d
 	
 
 
-void blasfeo_drowrot(int m, struct blasfeo_dmat *sA, int ai0, int ai1, int aj, double c, double s)
+void blasfeo_hp_drowrot(int m, struct blasfeo_dmat *sA, int ai0, int ai1, int aj, double c, double s)
 	{
 	const int ps = 4;
 	int sda = sA->cn;
@@ -555,8 +551,71 @@ void blasfeo_drowrot(int m, struct blasfeo_dmat *sA, int ai0, int ai1, int aj, d
 	
 
 
-#else
+#if defined(LA_HIGH_PERFORMANCE)
 
-#error : wrong LA choice
+
+
+void blasfeo_daxpy(int m, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+	{
+	blasfeo_hp_daxpy(m, alpha, sx, xi, sy, yi, sz, zi);
+	}
+
+
+
+void blasfeo_daxpby(int m, double alpha, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+	{
+	blasfeo_hp_daxpby(m, alpha, sx, xi, beta, sy, yi, sz, zi);
+	}
+
+
+
+void blasfeo_dvecmul(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+	{
+	blasfeo_hp_dvecmul(m, sx, xi, sy, yi, sz, zi);
+	}
+
+
+
+void blasfeo_dvecmulacc(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+	{
+	blasfeo_hp_dvecmulacc(m, sx, xi, sy, yi, sz, zi);
+	}
+
+
+
+double blasfeo_dvecmuldot(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+	{
+	return blasfeo_hp_dvecmuldot(m, sx, xi, sy, yi, sz, zi);
+	}
+
+
+
+double blasfeo_ddot(int m, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi)
+	{
+	return blasfeo_hp_ddot(m, sx, xi, sy, yi);
+	}
+
+
+
+void blasfeo_drotg(double a, double b, double *c, double *s)
+	{
+	blasfeo_hp_drotg(a, b, c, s);
+	}
+
+
+
+void blasfeo_dcolrot(int m, struct blasfeo_dmat *sA, int ai, int aj0, int aj1, double c, double s)
+	{
+	blasfeo_hp_dcolrot(m, sA, ai, aj0, aj1, c, s);
+	}
+
+
+
+void blasfeo_drowrot(int m, struct blasfeo_dmat *sA, int ai0, int ai1, int aj, double c, double s)
+	{
+	blasfeo_hp_drowrot(m, sA, ai0, ai1, aj, c, s);
+	}
+
+
 
 #endif

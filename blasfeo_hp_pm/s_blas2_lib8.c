@@ -45,11 +45,7 @@
 
 
 
-#if defined(LA_HIGH_PERFORMANCE)
-
-
-
-void blasfeo_sgemv_n(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+void blasfeo_hp_sgemv_n(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<0)
@@ -91,7 +87,7 @@ void blasfeo_sgemv_n(int m, int n, float alpha, struct blasfeo_smat *sA, int ai,
 
 
 
-void blasfeo_sgemv_t(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+void blasfeo_hp_sgemv_t(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(n<=0)
@@ -132,7 +128,7 @@ void blasfeo_sgemv_t(int m, int n, float alpha, struct blasfeo_smat *sA, int ai,
 
 
 // m >= n
-void blasfeo_strmv_lnn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_hp_strmv_lnn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -146,7 +142,7 @@ void blasfeo_strmv_lnn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, st
 	float *z = sz->pa + zi;
 
 	if(m-n>0)
-		blasfeo_sgemv_n(m-n, n, 1.0, sA, ai+n, aj, sx, xi, 0.0, sz, zi+n, sz, zi+n);
+		blasfeo_hp_sgemv_n(m-n, n, 1.0, sA, ai+n, aj, sx, xi, 0.0, sz, zi+n, sz, zi+n);
 
 	float *pA2 = pA;
 	float *z2 = z;
@@ -287,7 +283,7 @@ void blasfeo_strmv_lnn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, st
 
 
 // m >= n
-void blasfeo_strmv_ltn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_hp_strmv_ltn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m<=0)
@@ -531,7 +527,7 @@ void blasfeo_strmv_ltn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, st
 
 
 
-void blasfeo_strsv_lnn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_hp_strsv_lnn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m==0)
@@ -619,7 +615,7 @@ void blasfeo_strsv_lnn(int m, struct blasfeo_smat *sA, int ai, int aj, struct bl
 
 
 
-void blasfeo_strsv_lnn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_hp_strsv_lnn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m==0 | n==0)
@@ -723,7 +719,7 @@ void blasfeo_strsv_lnn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int aj,
 
 
 
-void blasfeo_strsv_ltn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_hp_strsv_ltn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m==0)
@@ -810,7 +806,7 @@ void blasfeo_strsv_ltn(int m, struct blasfeo_smat *sA, int ai, int aj, struct bl
 
 
 
-void blasfeo_strsv_ltn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+void blasfeo_hp_strsv_ltn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
 	{
 
 	if(m==0)
@@ -901,7 +897,7 @@ void blasfeo_strsv_ltn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int aj,
 
 
 
-void blasfeo_sgemv_nt(int m, int n, float alpha_n, float alpha_t, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx_n, int xi_n, struct blasfeo_svec *sx_t, int xi_t, float beta_n, float beta_t, struct blasfeo_svec *sy_n, int yi_n, struct blasfeo_svec *sy_t, int yi_t, struct blasfeo_svec *sz_n, int zi_n, struct blasfeo_svec *sz_t, int zi_t)
+void blasfeo_hp_sgemv_nt(int m, int n, float alpha_n, float alpha_t, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx_n, int xi_n, struct blasfeo_svec *sx_t, int xi_t, float beta_n, float beta_t, struct blasfeo_svec *sy_n, int yi_n, struct blasfeo_svec *sy_t, int yi_t, struct blasfeo_svec *sz_n, int zi_n, struct blasfeo_svec *sz_t, int zi_t)
 	{
 
 	if(ai!=0)
@@ -960,7 +956,7 @@ void blasfeo_sgemv_nt(int m, int n, float alpha_n, float alpha_t, struct blasfeo
 
 
 
-void blasfeo_ssymv_l(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+void blasfeo_hp_ssymv_l(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
 //	if(m<=0 | n<=0)
@@ -1022,8 +1018,134 @@ void blasfeo_ssymv_l(int m, int n, float alpha, struct blasfeo_smat *sA, int ai,
 
 
 
-#else
+#if defined(LA_HIGH_PERFORMANCE)
 
-#error : wrong LA choice
+
+
+void blasfeo_sgemv_n(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+	{
+	blasfeo_hp_sgemv_n(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	}
+
+
+
+void blasfeo_sgemv_t(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+	{
+	blasfeo_hp_sgemv_t(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	}
+
+
+
+void blasfeo_sgemv_nt(int m, int n, float alpha_n, float alpha_t, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx_n, int xi_n, struct blasfeo_svec *sx_t, int xi_t, float beta_n, float beta_t, struct blasfeo_svec *sy_n, int yi_n, struct blasfeo_svec *sy_t, int yi_t, struct blasfeo_svec *sz_n, int zi_n, struct blasfeo_svec *sz_t, int zi_t)
+	{
+	blasfeo_hp_sgemv_nt(m, n, alpha_n, alpha_t, sA, ai, aj, sx_n, xi_n, sx_t, xi_t, beta_n, beta_t, sy_n, yi_n, sy_t, yi_t, sz_n, zi_n, sz_t, zi_t);
+	}
+
+
+
+void blasfeo_ssymv_l(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+	{
+	blasfeo_hp_ssymv_l(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	}
+
+
+
+void blasfeo_strmv_lnn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+	blasfeo_hp_strmv_lnn(m, n, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+//void blasfeo_strmv_lnu(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+//	{
+//	blasfeo_hp_strmv_lnu(m, n, sA, ai, aj, sx, xi, sz, zi);
+//	}
+
+
+
+void blasfeo_strmv_ltn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+	blasfeo_hp_strmv_ltn(m, n, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+//void blasfeo_strmv_ltu(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+//	{
+//	blasfeo_hp_strmv_ltu(m, n, sA, ai, aj, sx, xi, sz, zi);
+//	}
+
+
+
+//void blasfeo_strmv_unn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+//	{
+//	blasfeo_hp_strmv_unn(m, sA, ai, aj, sx, xi, sz, zi);
+//	}
+
+
+
+//void blasfeo_strmv_utn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+//	{
+//	blasfeo_hp_strmv_utn(m, sA, ai, aj, sx, xi, sz, zi);
+//	}
+
+
+
+void blasfeo_strsv_lnn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+	blasfeo_hp_strsv_lnn_mn(m, n, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void blasfeo_strsv_lnn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+	blasfeo_hp_strsv_lnn(m, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+//void blasfeo_strsv_lnu(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+//	{
+//	blasfeo_hp_strsv_lnu(m, sA, ai, aj, sx, xi, sz, zi);
+//	}
+
+
+
+void blasfeo_strsv_ltn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+	blasfeo_hp_strsv_ltn_mn(m, n, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void blasfeo_strsv_ltn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+	blasfeo_hp_strsv_ltn(m, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+//void blasfeo_strsv_ltu(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+//	{
+//	blasfeo_hp_strsv_ltu(m, sA, ai, aj, sx, xi, sz, zi);
+//	}
+
+
+
+//void blasfeo_strsv_unn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+//	{
+//	blasfeo_hp_strsv_unn(m, sA, ai, aj, sx, xi, sz, zi);
+//	}
+
+
+
+//void blasfeo_strsv_utn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+//	{
+//	blasfeo_hp_strsv_utn(m, sA, ai, aj, sx, xi, sz, zi);
+//	}
+
+
 
 #endif

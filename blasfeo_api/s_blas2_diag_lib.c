@@ -44,6 +44,8 @@
 
 #define XVEC blasfeo_svec
 
+#define HP_GEMV_D blasfeo_hp_sgemv_d
+
 #define GEMV_D blasfeo_sgemv_d
 
 
