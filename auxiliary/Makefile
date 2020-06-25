@@ -42,55 +42,13 @@ OBJS += blasfeo_stdlib.o \
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 
-ifeq ($(TARGET), X64_INTEL_HASWELL)
+ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE))
 OBJS += d_aux_lib4.o
 OBJS += s_aux_lib8.o
 OBJS += m_aux_lib48.o
 endif
 
-ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib8.o
-OBJS += m_aux_lib48.o
-endif
-
-ifeq ($(TARGET), X64_INTEL_CORE)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
-ifeq ($(TARGET), X64_AMD_BULLDOZER)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
-ifeq ($(TARGET), X86_AMD_JAGUAR)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
-ifeq ($(TARGET), X86_AMD_BARCELONA)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
-ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A53))
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
-ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
-ifeq ($(TARGET), GENERIC)
+ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_CORE X64_AMD_BULLDOZER X86_AMD_JAGUAR X86_AMD_BARCELONA ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A53 ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7 GENERIC))
 OBJS += d_aux_lib4.o
 OBJS += s_aux_lib4.o
 OBJS += m_aux_lib44.o
@@ -115,19 +73,11 @@ ifeq ($(EXT_DEP), 1)
 
 OBJS += d_aux_ext_dep_common.o
 OBJS += s_aux_ext_dep_common.o
+OBJS += d_aux_ext_dep.o
+OBJS += s_aux_ext_dep.o
 OBJS += v_aux_ext_dep_lib.o
 OBJS += i_aux_ext_dep_lib.o
 OBJS += timing.o
-
-ifeq ($(LA), HIGH_PERFORMANCE)
-
-OBJS += d_aux_ext_dep_lib4.o
-OBJS += s_aux_ext_dep_lib4.o
-
-else
-OBJS += d_aux_ext_dep_ref.o
-OBJS += s_aux_ext_dep_ref.o
-endif
 
 endif
 
@@ -142,7 +92,5 @@ d_aux_ref.o: d_aux_ref.c x_aux_ref.c
 s_aux_ref.o: s_aux_ref.c x_aux_ref.c
 d_aux_ext_dep_common.o: d_aux_ext_dep_common.c x_aux_ext_dep_common.c
 s_aux_ext_dep_common.o: s_aux_ext_dep_common.c x_aux_ext_dep_common.c
-d_aux_ext_dep_ref.o: d_aux_ext_dep_ref.c x_aux_ext_dep.c
-s_aux_ext_dep_ref.o: s_aux_ext_dep_ref.c x_aux_ext_dep.c
-d_aux_ext_dep_lib4.o: d_aux_ext_dep_lib4.c x_aux_ext_dep.c
-s_aux_ext_dep_lib4.o: s_aux_ext_dep_lib4.c x_aux_ext_dep.c
+d_aux_ext_dep.o: d_aux_ext_dep.c x_aux_ext_dep.c
+s_aux_ext_dep.o: s_aux_ext_dep.c x_aux_ext_dep.c

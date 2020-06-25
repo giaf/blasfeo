@@ -1153,22 +1153,12 @@ if(${EXT_DEP})
 	file(GLOB EXT_SRC
 		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_common.c
 		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_common.c
+		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep.c
+		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep.c
 		${PROJECT_SOURCE_DIR}/auxiliary/v_aux_ext_dep_lib.c
 		${PROJECT_SOURCE_DIR}/auxiliary/i_aux_ext_dep_lib.c
 		${PROJECT_SOURCE_DIR}/auxiliary/timing.c
 		)
-
-if(${LA} MATCHES HIGH_PERFORMANCE)
-	list(APPEND EXT_SRC
-		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_lib4.c
-		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_lib4.c
-		)
-else()
-	list(APPEND EXT_SRC
-		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_ref.c
-		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_ref.c
-		)
-endif()
 
 endif()
 

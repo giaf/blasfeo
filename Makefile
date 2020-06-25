@@ -42,6 +42,16 @@ AUX_COMMON_OBJS = \
 		auxiliary/blasfeo_processor_features.o \
 		auxiliary/blasfeo_stdlib.o \
 
+### AUX EXT DEP ###
+AUX_EXT_DEP_OBJS = \
+		auxiliary/d_aux_ext_dep_common.o \
+		auxiliary/s_aux_ext_dep_common.o \
+		auxiliary/d_aux_ext_dep.o \
+		auxiliary/s_aux_ext_dep.o \
+		auxiliary/v_aux_ext_dep_lib.o \
+		auxiliary/i_aux_ext_dep_lib.o \
+		auxiliary/timing.o
+
 ### BLASFEO REFERENCE ###
 BLASFEO_REF_OBJS = \
 		blasfeo_ref/d_blas1_ref.o \
@@ -639,23 +649,7 @@ endif # LA EXTERNAL_BLAS_WAPPER
 
 ifeq ($(EXT_DEP), 1)
 # ext dep
-OBJS += \
-		auxiliary/d_aux_ext_dep_common.o \
-		auxiliary/s_aux_ext_dep_common.o \
-		auxiliary/v_aux_ext_dep_lib.o \
-		auxiliary/i_aux_ext_dep_lib.o \
-		auxiliary/timing.o
-
-ifeq ($(LA), HIGH_PERFORMANCE)
-OBJS += \
-		auxiliary/d_aux_ext_dep_lib4.o \
-		auxiliary/s_aux_ext_dep_lib4.o
-else
-OBJS += \
-		auxiliary/d_aux_ext_dep_ref.o \
-		auxiliary/s_aux_ext_dep_ref.o
-endif
-
+OBJS += $(AUX_EXT_DEP_OBJS)
 endif
 
 
