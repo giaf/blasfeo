@@ -490,19 +490,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib4.c
 
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_diag_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib8.c
 			)
 
 	endif(${TARGET} MATCHES X64_INTEL_HASWELL)
@@ -554,19 +554,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib4.c
 
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_diag_lib8.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib8.c
 			)
 
 	endif(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
@@ -610,19 +610,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib4.c
 
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib4.c
 			)
 
 	endif(${TARGET} MATCHES X64_INTEL_CORE)
@@ -664,19 +664,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib4.c
 
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib4.c
 			)
 
 	endif(${TARGET} MATCHES X64_AMD_BULLDOZER)
@@ -728,19 +728,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib4.c
 
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib4.c
 			)
 
 	endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
@@ -794,19 +794,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib4.c
 
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib4.c
 			)
 
 	endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53)
@@ -851,19 +851,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib4.c
 
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib4.c
 			)
 
 	endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
@@ -907,19 +907,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib4.c
 
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib4.c
 			)
 
 	endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
@@ -964,19 +964,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib4.c
 
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib4.c
 			)
 
 	endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9)
@@ -1017,19 +1017,19 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			)
 
 		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib4.c
 
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_diag_lib4.c
+			${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib4.c
 			)
 
 	endif(${TARGET} MATCHES GENERIC)
