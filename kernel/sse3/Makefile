@@ -41,7 +41,7 @@ KERNEL_OBJS = \
 		kernel_dgemm_4x4_lib4.o \
 		kernel_dgemv_4_lib4.o \
 		\
-		kernel_sgemm_4x4_lib4.o \ 
+		kernel_sgemm_4x4_lib4.o \
 
 endif
 
