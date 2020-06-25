@@ -298,6 +298,9 @@ ifeq ($(LA), EXTERNAL_BLAS_WRAPPER)
 ifeq ($(EXTERNAL_BLAS), 0)
 $(error No EXTERNAL_BLAS selected for LA=EXTERNAL_BLAS_WRAPPER)
 endif
+ifeq ($(MF), PANELMAJ)
+$(error As of now, with LA=EXTERNAL_BLAS_WRAPPER only MF=COLMAJ is supported)
+endif
 CFLAGS  += -DLA_EXTERNAL_BLAS_WRAPPER
 BINARY_DIR = build/$(LA)/$(EXTERNAL_BLAS)
 endif
