@@ -572,6 +572,7 @@ OBJS =
 OBJS += $(AUX_COMMON_OBJS)
 
 
+### LA HIGH PERFORMANCE ###
 ifeq ($(LA), HIGH_PERFORMANCE)
 
 # aux
@@ -617,12 +618,22 @@ endif # BLAS_API
 endif # LA HIGH_PERFORMANCE
 
 
+### LA REFERENCE ###
 ifeq ($(LA), REFERENCE)
 
 # aux
 OBJS += $(AUX_REF_OBJS)
 # blas
 OBJS += $(BLASFEO_REF_OBJS)
+
+# blasfeo_ref
+ifeq ($(BLASFEO_HP_API), 1)
+# TODO aux hp
+# kernel
+OBJS += $(KERNEL_OBJS)
+# blas
+OBJS += $(BLASFEO_HP_PM_OBJS)
+endif # BLASFEO_HP_API
 
 ifeq ($(BLAS_API), 1)
 OBJS += \
@@ -637,6 +648,7 @@ endif
 endif # LA REFERENCE
 
 
+### LA EXTERNAL BLAS WRAPPER ###
 ifeq ($(LA), EXTERNAL_BLAS_WRAPPER)
 
 # aux

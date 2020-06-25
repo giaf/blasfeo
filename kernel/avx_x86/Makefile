@@ -35,12 +35,9 @@
 
 include ../../Makefile.rule
 
-OBJS =
-
-ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), X86_AMD_JAGUAR)
-OBJS += \
+KERNEL_OBJS = \
 		kernel_dgemm_4x4_lib4.o \
 		kernel_dgemv_4_lib4.o \
 		\
@@ -49,9 +46,17 @@ OBJS += \
 
 endif
 
-else # LA_REFERENCE | LA_BLAS
 
+OBJS =
+
+ifeq ($(LA), HIGH_PERFORMANCE)
+OBJS += $(KERNEL_OBJS)
 endif # LA choice
+
+ifeq ($(BLASFEO_HP_API), 1)
+OBJS += $(KERNEL_OBJS)
+endif # LA choice
+
 
 obj: $(OBJS)
 

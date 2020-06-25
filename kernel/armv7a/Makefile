@@ -35,23 +35,37 @@
 
 include ../../Makefile.rule
 
-OBJS = 
-
-ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-OBJS += kernel_dgemm_4x4_lib4.o
-OBJS += kernel_sgemm_12x4_lib4.o kernel_sgemm_8x4_lib4.o kernel_sgemm_4x4_lib4.o
+KERNEL_OBJS = \
+		kernel_dgemm_4x4_lib4.o \
+		\
+		kernel_sgemm_12x4_lib4.o \
+		kernel_sgemm_8x4_lib4.o \
+		kernel_sgemm_4x4_lib4.o \
+
 endif
 
 ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
-OBJS += kernel_dgemm_4x4_lib4.o
-OBJS += kernel_sgemm_8x4_lib4.o kernel_sgemm_4x4_lib4.o
+KERNEL_OBJS = \
+		kernel_dgemm_4x4_lib4.o \
+		\
+		kernel_sgemm_8x4_lib4.o \
+		kernel_sgemm_4x4_lib4.o \
+
 endif
 
-else # LA_REFERENCE | LA_BLAS
 
+OBJS = 
+
+ifeq ($(LA), HIGH_PERFORMANCE)
+OBJS += $(KERNEL_OBJS)
 endif # LA choice
+
+ifeq ($(BLASFEO_HP_API), 1)
+OBJS += $(KERNEL_OBJS)
+endif # LA choice
+
 
 obj: $(OBJS)
 
@@ -65,3 +79,4 @@ clean:
 kernel_dgemm_4x4_lib4.o: kernel_dgemm_4x4_lib4.S kernel_dgemm_4x4_lib.S
 kernel_sgemm_4x4_lib4.o: kernel_sgemm_4x4_lib4.S kernel_sgemm_4x4_lib.S
 kernel_sgemm_8x4_lib4.o: kernel_sgemm_8x4_lib4.S kernel_sgemm_8x4_lib.S
+kernel_sgemm_12x4_lib4.o: kernel_sgemm_12x4_lib4.S kernel_sgemm_12x4_lib.S

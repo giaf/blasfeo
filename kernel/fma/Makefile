@@ -35,18 +35,24 @@
 
 include ../../Makefile.rule
 
+
+ifeq ($(TARGET), X64_AMD_BULLDOZER)
+KERNEL_OBJS = \
+		kernel_dgemm_4x4_lib4.o \
+
+endif
+
+
 OBJS = 
 
 ifeq ($(LA), HIGH_PERFORMANCE)
-
-ifeq ($(TARGET), X64_AMD_BULLDOZER)
-OBJS += kernel_dgemm_4x4_lib4.o
-OBJS +=
-endif
-
-else # LA_REFERENCE | LA_BLAS
-
+OBJS += $(KERNEL_OBJS)
 endif # LA choice
+
+ifeq ($(BLASFEO_HP_API), 1)
+OBJS += $(KERNEL_OBJS)
+endif # LA choice
+
 
 obj: $(OBJS)
 

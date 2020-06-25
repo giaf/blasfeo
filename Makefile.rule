@@ -111,7 +111,12 @@ LA = HIGH_PERFORMANCE
 # LA = EXTERNAL_BLAS_WRAPPER
 
 # Export additional back-ends with different naming
-BLASFEO_REF_API = 1
+# BLASFEO reference with blasfeo_ref_xxx naming
+BLASFEO_REF_API = 0
+# BLASFEO_REF_API = 1
+# BLASFEO high-performance with blasfeo_hp_xxx naming
+BLASFEO_HP_API = 0
+# BLASFEO_HP_API = 1
 
 # Select the Matrix Format internally used in the blasfeo_{d,s}mat structure
 # COLMAJ : column-major matrix format
