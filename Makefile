@@ -75,19 +75,19 @@ AUX_REF_OBJS = \
 
 ### BLASFEO WRAPPER TO BLAS ###
 BLASFEO_WR_OBJS = \
-		blasfeo_api/d_blas1_lib.o \
-		blasfeo_api/d_blas2_lib.o \
-		blasfeo_api/d_blas2_diag_lib.o \
-		blasfeo_api/d_blas3_lib.o \
-		blasfeo_api/d_blas3_diag_lib.o \
-		blasfeo_api/d_lapack_lib.o \
+		blasfeo_wr/d_blas1_lib.o \
+		blasfeo_wr/d_blas2_lib.o \
+		blasfeo_wr/d_blas2_diag_lib.o \
+		blasfeo_wr/d_blas3_lib.o \
+		blasfeo_wr/d_blas3_diag_lib.o \
+		blasfeo_wr/d_lapack_lib.o \
 		\
-		blasfeo_api/s_blas1_lib.o \
-		blasfeo_api/s_blas2_lib.o \
-		blasfeo_api/s_blas2_diag_lib.o \
-		blasfeo_api/s_blas3_lib.o \
-		blasfeo_api/s_blas3_diag_lib.o \
-		blasfeo_api/s_lapack_lib.o \
+		blasfeo_wr/s_blas1_lib.o \
+		blasfeo_wr/s_blas2_lib.o \
+		blasfeo_wr/s_blas2_diag_lib.o \
+		blasfeo_wr/s_blas3_lib.o \
+		blasfeo_wr/s_blas3_diag_lib.o \
+		blasfeo_wr/s_lapack_lib.o \
 
 ### BLAS ###
 BLAS_OBJS += \
@@ -722,7 +722,7 @@ all: clean static_library
 static_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd auxiliary; $(MAKE) obj)
-	( cd blasfeo_api; $(MAKE) obj)
+	( cd blasfeo_wr; $(MAKE) obj)
 	( cd blasfeo_ref; $(MAKE) obj)
 	( cd blasfeo_hp_pm; $(MAKE) obj)
 ifeq ($(BLAS_API), 1)
@@ -754,7 +754,7 @@ endif
 shared_library: target
 	( cd auxiliary; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
-	( cd blasfeo_api; $(MAKE) obj)
+	( cd blasfeo_wr; $(MAKE) obj)
 	( cd blasfeo_hp_pm; $(MAKE) obj)
 ifeq ($(BLAS_API), 1)
 	( cd blas_api; $(MAKE) obj)
@@ -957,7 +957,7 @@ clean:
 	make -C kernel clean
 	make -C blasfeo_ref clean
 	make -C blasfeo_hp_pm clean
-	make -C blasfeo_api clean
+	make -C blasfeo_wr clean
 	make -C blas_api clean
 	make -C netlib clean
 	make -C examples clean
