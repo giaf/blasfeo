@@ -562,7 +562,8 @@ void kernel_dpacp_nn_4_vs_lib4(int kmax, int offsetA, double *A, int sda, double
 * BLAS API kernels
 ************************************************/
 
-#ifdef BLAS_API
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
 
 // A, B panel-major bs=4; C, D column-major
 // 12x4

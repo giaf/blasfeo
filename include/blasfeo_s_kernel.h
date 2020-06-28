@@ -502,7 +502,8 @@ void kernel_spacp_nn_4_vs_lib4(int kmax, int offsetA, float *A, int sda, float *
 * BLAS API kernels
 ************************************************/
 
-#ifdef BLAS_API
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
 
 // A, B panel-major bs=8; C, D column-major
 // 24x4

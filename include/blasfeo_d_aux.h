@@ -55,7 +55,7 @@ extern "C" {
 #endif
 
 
-// --- memory calculations
+// --- memory size calculations
 //
 // returns the memory size (in bytes) needed for a dmat
 size_t blasfeo_memsize_dmat(int m, int n);
@@ -201,6 +201,18 @@ void blasfeo_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_nor
 void blasfeo_dvecpe(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi);
 void blasfeo_dvecpei(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi);
 
+
+
+
+
+/*
+* Explicitly panel-major matrix format
+*/
+
+// returns the memory size (in bytes) needed for a dmat
+size_t blasfeo_pm_memsize_dmat(int ps, int m, int n);
+// create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
+void blasfeo_pm_create_dmat(int ps, int m, int n, struct blasfeo_pm_dmat *sA, void *memory);
 
 
 #ifdef __cplusplus

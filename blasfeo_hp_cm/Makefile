@@ -35,63 +35,29 @@
 
 include ../Makefile.rule
 
+HP_OBJS =
+
+
+HP_OBJS =
+
+HP_OBJS += dgemm.o
+
+
 OBJS =
 
-OBJS += blasfeo_stdlib.o \
-        blasfeo_processor_features.o \
-		d_aux_common.o \
-		s_aux_common.o
+ifeq ($(MF), COLMAJ)
 
 ifeq ($(LA), HIGH_PERFORMANCE)
-
-ifeq ($(MF), PANELMAJ)
-
-ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE))
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib8.o
-OBJS += m_aux_lib48.o
-endif
-
-ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_CORE X64_AMD_BULLDOZER X86_AMD_JAGUAR X86_AMD_BARCELONA ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A53 ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7 GENERIC))
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
+OBJS += $(HP_OBJS)
 else
 
-# TODO optimized hp cm version
-OBJS += d_aux_hp_cm.o
-OBJS += s_aux_hp_cm.o
-
+ifeq ($(BLASFEO_HP_API), 1)
+OBJS += $(HP_OBJS)
 endif
 
-ifeq ($(BLASFEO_REF_API), 1)
-OBJS += d_aux_ref.o
-OBJS += s_aux_ref.o
-endif
+endif # LA HP
 
-else # LA_REFERENCE | LA_EXTERNAL_BLAS_WRAPPER
-
-OBJS += d_aux_ref.o
-OBJS += s_aux_ref.o
-OBJS += m_aux_lib.o
-
-endif # LA choice
-
-
-#ext dep
-ifeq ($(EXT_DEP), 1)
-
-OBJS += d_aux_ext_dep_common.o
-OBJS += s_aux_ext_dep_common.o
-OBJS += d_aux_ext_dep.o
-OBJS += s_aux_ext_dep.o
-OBJS += v_aux_ext_dep_lib.o
-OBJS += i_aux_ext_dep_lib.o
-OBJS += timing.o
-
-endif
+endif # MF COLMAJ
 
 
 obj: $(OBJS)
@@ -99,10 +65,7 @@ obj: $(OBJS)
 clean:
 	rm -f *.o
 	rm -f *.s
+	rm -f *.gcda
+	rm -f *.gcno
+	rm -f *.gcov
 
-d_aux_ref.o: d_aux_ref.c x_aux_ref.c
-s_aux_ref.o: s_aux_ref.c x_aux_ref.c
-d_aux_ext_dep_common.o: d_aux_ext_dep_common.c x_aux_ext_dep_common.c
-s_aux_ext_dep_common.o: s_aux_ext_dep_common.c x_aux_ext_dep_common.c
-d_aux_ext_dep.o: d_aux_ext_dep.c x_aux_ext_dep.c
-s_aux_ext_dep.o: s_aux_ext_dep.c x_aux_ext_dep.c

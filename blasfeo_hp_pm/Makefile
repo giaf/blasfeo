@@ -75,6 +75,8 @@ endif
 
 OBJS =
 
+ifeq ($(MF), PANELMAJ)
+
 ifeq ($(LA), HIGH_PERFORMANCE)
 OBJS += $(HP_OBJS)
 else
@@ -83,7 +85,9 @@ ifeq ($(BLASFEO_HP_API), 1)
 OBJS += $(HP_OBJS)
 endif
 
-endif
+endif # LA HP
+
+endif # MF PANELMAJ
 
 
 obj: $(OBJS)

@@ -286,6 +286,7 @@ CFLAGS += -I$(TOP)/include
 # LA high performance
 ifeq ($(LA), HIGH_PERFORMANCE)
 CFLAGS  += -DLA_HIGH_PERFORMANCE
+ASFLAGS  += -DLA_HIGH_PERFORMANCE
 BINARY_DIR = build/$(LA)/$(TARGET)
 ifeq ($(BLASFEO_REF_API), 1)
 ifeq ($(MF), COLMAJ)
@@ -318,12 +319,17 @@ endif
 
 ifeq ($(MF), COLMAJ)
 CFLAGS  += -DMF_COLMAJ
+ASFLAGS  += -DMF_COLMAJ
 endif
 ifeq ($(MF), PANELMAJ)
 CFLAGS  += -DMF_PANELMAJ
+ASFLAGS  += -DMF_PANELMAJ
 endif
 
 ifeq ($(BLAS_API), 1)
+ifeq ($(MF), COLMAJ)
+$(error As of now, with BLAS_API=1 only MF=PANELMAJ is supported)
+endif
 CFLAGS += -DBLAS_API
 ASFLAGS += -DBLAS_API
 ifeq ($(FORTRAN_BLAS_API), 1)

@@ -41,6 +41,8 @@ include ./Makefile.rule
 AUX_COMMON_OBJS = \
 		auxiliary/blasfeo_processor_features.o \
 		auxiliary/blasfeo_stdlib.o \
+		auxiliary/d_aux_common.o \
+		auxiliary/s_aux_common.o \
 
 ### AUX EXT DEP ###
 AUX_EXT_DEP_OBJS = \
@@ -72,6 +74,11 @@ BLASFEO_REF_OBJS = \
 AUX_REF_OBJS = \
 		auxiliary/d_aux_ref.o \
 		auxiliary/s_aux_ref.o \
+
+### AUX HP CM ###
+AUX_HP_CM_OBJS = \
+		auxiliary/d_aux_hp_cm.o \
+		auxiliary/s_aux_hp_cm.o \
 
 ### BLASFEO WRAPPER TO BLAS ###
 BLASFEO_WR_OBJS = \
@@ -112,6 +119,10 @@ BLAS_OBJS += \
 		blas_api/sdot.o \
 		blas_api/sgemm.o \
 		blas_api/strsm.o
+
+### BLASFEO HP, COLUM-MAJOR ###
+BLASFEO_HP_CM_OBJS = \
+		blasfeo_hp_cm/dgemm.o \
 
 ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE))
 
@@ -575,12 +586,19 @@ OBJS += $(AUX_COMMON_OBJS)
 ### LA HIGH PERFORMANCE ###
 ifeq ($(LA), HIGH_PERFORMANCE)
 
-# aux
-OBJS += $(AUX_HP_PM_OBJS)
 # kernel
 OBJS += $(KERNEL_OBJS)
+ifeq ($(MF), PANELMAJ)
+# aux
+OBJS += $(AUX_HP_PM_OBJS)
 # blas
 OBJS += $(BLASFEO_HP_PM_OBJS)
+else # COLMAJ
+# aux
+OBJS += $(AUX_HP_CM_OBJS)
+# blas
+OBJS += $(BLASFEO_HP_CM_OBJS)
+endif
 
 # blasfeo_ref
 ifeq ($(BLASFEO_REF_API), 1)
@@ -626,13 +644,18 @@ OBJS += $(AUX_REF_OBJS)
 # blas
 OBJS += $(BLASFEO_REF_OBJS)
 
-# blasfeo_ref
+# blasfeo_hp
 ifeq ($(BLASFEO_HP_API), 1)
 # TODO aux hp
 # kernel
 OBJS += $(KERNEL_OBJS)
+ifeq ($(MF), PANELMAJ)
 # blas
 OBJS += $(BLASFEO_HP_PM_OBJS)
+else
+# blas
+OBJS += $(BLASFEO_HP_CM_OBJS)
+endif
 endif # BLASFEO_HP_API
 
 ifeq ($(BLAS_API), 1)
@@ -725,6 +748,7 @@ static_library: target
 	( cd blasfeo_wr; $(MAKE) obj)
 	( cd blasfeo_ref; $(MAKE) obj)
 	( cd blasfeo_hp_pm; $(MAKE) obj)
+	( cd blasfeo_hp_cm; $(MAKE) obj)
 ifeq ($(BLAS_API), 1)
 	( cd blas_api; $(MAKE) obj)
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
@@ -756,6 +780,7 @@ shared_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd blasfeo_wr; $(MAKE) obj)
 	( cd blasfeo_hp_pm; $(MAKE) obj)
+	( cd blasfeo_hp_cm; $(MAKE) obj)
 ifeq ($(BLAS_API), 1)
 	( cd blas_api; $(MAKE) obj)
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
@@ -957,6 +982,7 @@ clean:
 	make -C kernel clean
 	make -C blasfeo_ref clean
 	make -C blasfeo_hp_pm clean
+	make -C blasfeo_hp_cm clean
 	make -C blasfeo_wr clean
 	make -C blas_api clean
 	make -C netlib clean

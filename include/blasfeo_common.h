@@ -59,7 +59,7 @@ extern "C" {
 
 
 
-#if defined(LA_HIGH_PERFORMANCE) | ( defined(LA_REFERENCE) & defined(MF_PANELMAJ) )
+#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_PANELMAJ) ) | ( defined(LA_REFERENCE) & defined(MF_PANELMAJ) )
 
 #include "blasfeo_block_size.h"
 
@@ -114,7 +114,7 @@ struct blasfeo_svec
 #define BLASFEO_DVECEL(sa,ai) ((sa)->pa[ai])
 #define BLASFEO_SVECEL(sa,ai) ((sa)->pa[ai])
 
-#elif defined(LA_EXTERNAL_BLAS_WRAPPER) | ( defined(LA_REFERENCE) & defined(MF_COLMAJ) )
+#elif ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) | ( defined(LA_REFERENCE) & defined(MF_COLMAJ) ) | defined(LA_EXTERNAL_BLAS_WRAPPER)
 
 // matrix structure
 struct blasfeo_dmat
@@ -169,52 +169,39 @@ struct blasfeo_svec
 
 
 
-#if defined(TESTING_MODE)
-
-// matrix structure
-struct blasfeo_dmat_ref
+// Explicitly panel-major matrix structure
+struct blasfeo_pm_dmat
 	{
 	double *mem; // pointer to passed chunk of memory
-	double *pA; // pointer to a m*n array of doubles
+	double *pA; // pointer to a pm*pn array of doubles, the first is aligned to cache line size
 	double *dA; // pointer to a min(m,n) (or max???) array of doubles
 	int m; // rows
 	int n; // cols
+	int pm; // packed number or rows
+	int cn; // packed number or cols
 	int use_dA; // flag to tell if dA can be used
+	int ps; // panel size
 	int memsize; // size of needed memory
 	};
 
-struct blasfeo_smat_ref
+struct blasfeo_pm_smat
 	{
 	float *mem; // pointer to passed chunk of memory
-	float *pA; // pointer to a m*n array of floats
+	float *pA; // pointer to a pm*pn array of floats, the first is aligned to cache line size
 	float *dA; // pointer to a min(m,n) (or max???) array of floats
 	int m; // rows
 	int n; // cols
+	int pm; // packed number or rows
+	int cn; // packed number or cols
 	int use_dA; // flag to tell if dA can be used
+	int ps; // panel size
 	int memsize; // size of needed memory
 	};
 
-// vector structure
-struct blasfeo_dvec_ref
-	{
-	double *mem; // pointer to passed chunk of memory
-	double *pa; // pointer to a m array of doubles, the first is aligned to cache line size
-	int m; // size
-	int memsize; // size of needed memory
-	};
+#define BLASFEO_PM_DMATEL(sA,ai,aj) ((sA)->pA[((ai)-((ai)&((sA)->ps-1)))*(sA)->cn+(aj)*((sA)->ps)+((ai)&((sA)->ps-1))])
+#define BLASFEO_PM_SMATEL(sA,ai,aj) ((sA)->pA[((ai)-((ai)&((sA)->ps-1)))*(sA)->cn+(aj)*((sA)->ps)+((ai)&((sA)->ps-1))])
 
-struct blasfeo_svec_ref
-	{
-	float *mem; // pointer to passed chunk of memory
-	float *pa; // pointer to a m array of floats, the first is aligned to cache line size
-	int m; // size
-	int memsize; // size of needed memory
-	};
 
-#define MATEL_REF(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
-#define VECEL_REF(sa,ai) ((sa)->pa[ai])
-
-#endif // TESTING_MODE
 
 #ifdef __cplusplus
 }
