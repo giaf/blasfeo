@@ -9093,7 +9093,8 @@ void kernel_dtrsm_nn_lu_one_4x4_vs_lib4(int kmax, double *A, double *B, int sdb,
 
 
 
-#if defined(BLAS_API)
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
 
 #include "kernel_dgemm_4x4_lib.c"
 

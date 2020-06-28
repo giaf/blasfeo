@@ -385,7 +385,8 @@ void kernel_dgetrf_pivot_8_vs_lib4(int m, double *pC, int sdc, double *pd, int *
 
 
 
-#if defined(BLAS_API)
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
 
 #include "kernel_dgetrf_pivot_lib.c"
 
