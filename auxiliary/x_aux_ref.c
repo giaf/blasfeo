@@ -1521,7 +1521,7 @@ REAL dtrcon_1ln_libstr(int n, struct MAT *sA, int ai, int aj, REAL *work, int *i
 
 
 
-#if defined(LA_REFERENCE) | defined(LA_EXTERNAL_BLAS_WRAPPER) TODO fix !!!!!!!!!!!!!!!
+#if defined(LA_REFERENCE) | defined(LA_EXTERNAL_BLAS_WRAPPER)
 
 
 
