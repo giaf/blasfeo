@@ -5503,7 +5503,7 @@
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 	vbroadcastsd	24(%r13, %r15, 1), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
-	prefetcht0		64(%rbx, %ax, 1)
+	prefetcht0		64(%rbx, %rax, 1)
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
