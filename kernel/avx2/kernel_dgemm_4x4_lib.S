@@ -7332,7 +7332,7 @@
 	movq	ARG12, %r15  // m1
 
 	movq	ARG13, %rax  // n1
-	cmpl	$1, %r15d
+	cmpl	$1, %eax
 	jg		100f
 
 #if MACRO_LEVEL>=2
