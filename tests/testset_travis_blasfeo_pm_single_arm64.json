@@ -9,29 +9,28 @@
     "VERBOSE":2
   },
   "env_flags":{
-    "CC":"gcc",
+    "CC": "gcc",
     "CFLAGS": "-Wuninitialized"
   },
   "blasfeo_flags":{
-    "BLASFEO_REF_API": 0,
+    "BLASFEO_REF_API": 1,
     "MF": "PANELMAJ",
-    "BLAS_API": 1,
+    "BLAS_API": 0,
     "EXTERNAL_BLAS": "SYSTEM"
   },
   "precisions": [
     "single"
   ],
   "apis": [
-    "blas"
+    "blasfeo"
   ],
   "K_MAX_STACK":[
     0, 500
   ],
   "TARGET": [
-    "GENERIC",
-    "X64_INTEL_CORE",
-    "X64_INTEL_HASWELL",
-    "X64_INTEL_SANDY_BRIDGE"
+    "ARMV8A_ARM_CORTEX_A57",
+    "ARMV8A_ARM_CORTEX_A53",
+    "GENERIC"
   ],
   "LA": [
     "HIGH_PERFORMANCE"
@@ -39,8 +38,7 @@
   "routines": [
     "gemm_nn",
     "gemm_nt",
-    "gemm_tn",
-    "gemm_tt"
+    "potrf_l"
   ]
 }
 

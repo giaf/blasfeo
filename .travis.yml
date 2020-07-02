@@ -21,8 +21,9 @@ jobs:
       script:
         - cd "${TRAVIS_BUILD_DIR}"/tests
         - pip install jinja2
-        - python tester.py testset_travis_blasfeo_double_amd64.json
-        - python tester.py testset_travis_blasfeo_single_amd64.json
+        - python tester.py testset_travis_blasfeo_pm_double_amd64.json
+        - python tester.py testset_travis_blasfeo_pm_single_amd64.json
+        - python tester.py testset_travis_blasfeo_cm_double_amd64.json
         - python tester.py testset_travis_blas_double_amd64.json
         - python tester.py testset_travis_blas_single_amd64.json
 
@@ -42,8 +43,9 @@ jobs:
       script:
         - cd "${TRAVIS_BUILD_DIR}"/tests
         - pip install jinja2
-        - python tester.py testset_travis_blasfeo_double_arm64.json
-        - python tester.py testset_travis_blasfeo_single_arm64.json
+        - python tester.py testset_travis_blasfeo_pm_double_arm64.json
+        - python tester.py testset_travis_blasfeo_pm_single_arm64.json
+        - python tester.py testset_travis_blasfeo_cm_double_arm64.json
         - python tester.py testset_travis_blas_double_arm64.json
         - python tester.py testset_travis_blas_single_arm64.json
 

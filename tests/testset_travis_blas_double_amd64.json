@@ -14,7 +14,7 @@
   },
   "blasfeo_flags":{
     "BLASFEO_REF_API": 0,
-    "MF": "COLMAJ",
+    "MF": "PANELMAJ",
     "BLAS_API": 1,
     "EXTERNAL_BLAS": "SYSTEM"
   },

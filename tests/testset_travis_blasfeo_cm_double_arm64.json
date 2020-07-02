@@ -14,12 +14,12 @@
   },
   "blasfeo_flags":{
     "BLASFEO_REF_API": 1,
-    "MF": "PANELMAJ",
-    "BLAS_API": 1,
+    "MF": "COLMAJ",
+    "BLAS_API": 0,
     "EXTERNAL_BLAS": "SYSTEM"
   },
   "precisions": [
-    "single"
+    "double"
   ],
   "apis": [
     "blasfeo"
@@ -28,10 +28,9 @@
     0, 500
   ],
   "TARGET": [
-    "GENERIC",
-    "X64_INTEL_CORE",
-    "X64_INTEL_HASWELL",
-    "X64_INTEL_SANDY_BRIDGE"
+    "ARMV8A_ARM_CORTEX_A57",
+    "ARMV8A_ARM_CORTEX_A53",
+    "GENERIC"
   ],
   "LA": [
     "HIGH_PERFORMANCE"
@@ -39,6 +38,8 @@
   "routines": [
     "gemm_nn",
     "gemm_nt",
+    "gemm_tn",
+    "gemm_tt",
     "potrf_l"
   ]
 }

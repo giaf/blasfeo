@@ -13,16 +13,16 @@
     "CFLAGS": "-Wuninitialized"
   },
   "blasfeo_flags":{
-    "BLASFEO_REF_API": 0,
+    "BLASFEO_REF_API": 1,
     "MF": "PANELMAJ",
-    "BLAS_API": 1,
+    "BLAS_API": 0,
     "EXTERNAL_BLAS": "SYSTEM"
   },
   "precisions": [
-    "single"
+    "double"
   ],
   "apis": [
-    "blas"
+    "blasfeo"
   ],
   "K_MAX_STACK":[
     0, 500
@@ -40,8 +40,7 @@
     "gemm_nn",
     "gemm_nt",
     "gemm_tn",
-    "gemm_tt"
+    "gemm_tt",
+    "potrf_l"
   ]
 }
-
-
