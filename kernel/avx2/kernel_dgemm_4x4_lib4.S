@@ -5821,18 +5821,18 @@ NAME:
 3:
 
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
-	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
+	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12)
 	cmpl		$2, %r15d
 	jl			4f // end
 	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
-	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 1)
+	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12)
 	cmpl		$3, %r15d
 	jl			4f // end
 	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
-	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 1)
+	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12)
 	je			4f // end
 	vmaskmovpd	%ymm3, %ymm12, 96(%r11)
-	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 1)
+	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12)
 
 4:
 
@@ -6064,50 +6064,50 @@ NAME:
 20:
 	vblendpd	$0x1, %ymm14, %ymm12, %ymm12
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
-	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
+	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12)
 	cmpl		$2, %r15d
 	jl			3f // end
 	vblendpd	$0x2, %ymm14, %ymm12, %ymm12
 	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
-	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 1)
+	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12)
 	cmpl		$3, %r15d
 	jl			3f // end
 	vblendpd	$0x4, %ymm14, %ymm12, %ymm12
 	vmaskmovpd	%ymm2, %ymm12, 64(%r11)
-	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 1)
+	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12)
 	cmpl		$4, %r15d
 	jl			3f // end
-	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 1)
+	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12)
 
 	jmp 3f
 
 21:
 	vblendpd	$0x3, %ymm14, %ymm12, %ymm12
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
-	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
+	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12)
 	cmpl		$2, %r15d
 	jl			3f // end
 	vblendpd	$0x4, %ymm14, %ymm12, %ymm12
 	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
-	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 1)
+	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12)
 	cmpl		$3, %r15d
 	jl			3f // end
-	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 1)
+	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12)
 
 	jmp 3f
 
 22:
 	vblendpd	$0x7, %ymm14, %ymm12, %ymm12
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
-	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
+	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12)
 	cmpl		$2, %r15d
 	jl			3f // end
-	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 1)
+	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12)
 
 	jmp 3f
 
 23:
-	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
+	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12)
 
 	jmp 3f
 
@@ -6155,48 +6155,48 @@ NAME:
 20:
 	vblendpd	$0x3, %ymm14, %ymm12, %ymm12
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
-	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
+	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12)
 	cmpl		$2, %r15d
 	jl			3f // end
 	vblendpd	$0x4, %ymm14, %ymm12, %ymm12
 	vmaskmovpd	%ymm1, %ymm12, 32(%r11)
-	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 1)
+	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12)
 	cmpl		$3, %r15d
 	jl			3f // end
-	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 1)
+	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12)
 	cmpl		$4, %r15d
 	jl			3f // end
 	vblendpd	$0x1, %ymm14, %ymm13, %ymm13
-	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 1)
+	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12)
 
 	jmp		3f
 
 21:
 	vblendpd	$0x7, %ymm14, %ymm12, %ymm12
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
-	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
+	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12)
 	cmpl		$2, %r15d
 	jl			3f // end
-	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 1)
+	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12)
 	cmpl		$3, %r15d
 	jl			3f // end
 	vblendpd	$0x1, %ymm14, %ymm13, %ymm13
-	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 1)
+	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12)
 
 	jmp		3f
 
 22:
-	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
+	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12)
 	cmpl		$2, %r15d
 	jl			3f // end
 	vblendpd	$0x1, %ymm14, %ymm13, %ymm13
-	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 1)
+	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12)
 
 	jmp		3f
 
 23:
 	vblendpd	$0x1, %ymm14, %ymm13, %ymm13
-	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
+	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12)
 
 	jmp		3f
 
@@ -6249,47 +6249,47 @@ NAME:
 20:
 	vblendpd	$0x7, %ymm14, %ymm12, %ymm12
 	vmaskmovpd	%ymm0, %ymm12, 0(%r11)
-	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
+	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12)
 	cmpl		$2, %r15d
 	jl			3f // end
-	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 1)
+	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12)
 	cmpl		$3, %r15d
 	jl			3f // end
 	vblendpd	$0x1, %ymm14, %ymm13, %ymm13
-	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 1)
+	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12)
 	cmpl		$4, %r15d
 	jl			3f // end
 	vblendpd	$0x2, %ymm14, %ymm13, %ymm13
-	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12, 1)
+	vmaskmovpd	%ymm3, %ymm13, 96(%r11, %r12)
 
 	jmp 3f
 
 21:
-	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
+	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12)
 	cmpl		$2, %r15d
 	jl			3f // end
 	vblendpd	$0x1, %ymm14, %ymm13, %ymm13
-	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 1)
+	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12)
 	cmpl		$3, %r15d
 	jl			3f // end
 	vblendpd	$0x2, %ymm14, %ymm13, %ymm13
-	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12, 1)
+	vmaskmovpd	%ymm2, %ymm13, 64(%r11, %r12)
 
 	jmp 3f
 
 22:
 	vblendpd	$0x1, %ymm14, %ymm13, %ymm13
-	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
+	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12)
 	cmpl		$2, %r15d
 	jl			3f // end
 	vblendpd	$0x2, %ymm14, %ymm13, %ymm13
-	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12, 1)
+	vmaskmovpd	%ymm1, %ymm13, 32(%r11, %r12)
 
 	jmp 3f
 
 23:
 	vblendpd	$0x3, %ymm14, %ymm13, %ymm13
-	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12, 1)
+	vmaskmovpd	%ymm0, %ymm13, 0(%r11, %r12)
 
 	jmp 3f
 
@@ -6462,25 +6462,25 @@ NAME:
 10:
 	vblendpd	$0x2, %ymm12, %ymm14, %ymm14
 	vmaskmovpd	%ymm0, %ymm14, 0(%r11)
-//	vmaskmovpd	%ymm0, %ymm15, 0(%r11, %r12, 1)
+//	vmaskmovpd	%ymm0, %ymm15, 0(%r11, %r12)
 11:
 	cmpl		$2, %eax
 	jl			3f // end
 	vblendpd	$0x4, %ymm12, %ymm14, %ymm14
 	vmaskmovpd	%ymm1, %ymm14, 32(%r11)
-//	vmaskmovpd	%ymm1, %ymm15, 32(%r11, %r12, 1)
+//	vmaskmovpd	%ymm1, %ymm15, 32(%r11, %r12)
 12:
 	cmpl		$3, %eax
 	jl			3f // end
 	vblendpd	$0x8, %ymm12, %ymm14, %ymm14
 	vmaskmovpd	%ymm2, %ymm14, 64(%r11)
-//	vmaskmovpd	%ymm2, %ymm15, 64(%r11, %r12, 1)
+//	vmaskmovpd	%ymm2, %ymm15, 64(%r11, %r12)
 13:
 	cmpl		$4, %eax
 	jl			3f // end
 	vblendpd	$0x1, %ymm13, %ymm15, %ymm15
 	vmaskmovpd	%ymm3, %ymm14, 96(%r11)
-	vmaskmovpd	%ymm3, %ymm15, 96(%r11, %r12, 1)
+	vmaskmovpd	%ymm3, %ymm15, 96(%r11, %r12)
 
 	jmp		3f
 
@@ -6534,25 +6534,25 @@ NAME:
 10:
 	vblendpd	$0x4, %ymm12, %ymm14, %ymm14
 	vmaskmovpd	%ymm0, %ymm14, 0(%r11)
-//	vmaskmovpd	%ymm0, %ymm15, 0(%r11, %r12, 1)
+//	vmaskmovpd	%ymm0, %ymm15, 0(%r11, %r12)
 11:
 	cmpl		$2, %eax
 	jl			3f // end
 	vblendpd	$0x8, %ymm12, %ymm14, %ymm14
 	vmaskmovpd	%ymm1, %ymm14, 32(%r11)
-//	vmaskmovpd	%ymm1, %ymm15, 32(%r11, %r12, 1)
+//	vmaskmovpd	%ymm1, %ymm15, 32(%r11, %r12)
 12:
 	cmpl		$3, %eax
 	jl			3f // end
 	vblendpd	$0x1, %ymm13, %ymm15, %ymm15
 	vmaskmovpd	%ymm2, %ymm14, 64(%r11)
-	vmaskmovpd	%ymm2, %ymm15, 64(%r11, %r12, 1)
+	vmaskmovpd	%ymm2, %ymm15, 64(%r11, %r12)
 13:
 	cmpl		$4, %eax
 	jl			3f // end
 	vblendpd	$0x2, %ymm13, %ymm15, %ymm15
 	vmaskmovpd	%ymm3, %ymm14, 96(%r11)
-	vmaskmovpd	%ymm3, %ymm15, 96(%r11, %r12, 1)
+	vmaskmovpd	%ymm3, %ymm15, 96(%r11, %r12)
 
 	jmp		3f
 
@@ -6608,25 +6608,25 @@ NAME:
 10:
 	vblendpd	$0x8, %ymm12, %ymm14, %ymm14
 	vmaskmovpd	%ymm0, %ymm14, 0(%r11)
-//	vmaskmovpd	%ymm0, %ymm15, 0(%r11, %r12, 1)
+//	vmaskmovpd	%ymm0, %ymm15, 0(%r11, %r12)
 11:
 	cmpl		$2, %eax
 	jl			3f // end
 	vblendpd	$0x1, %ymm13, %ymm15, %ymm15
 	vmaskmovpd	%ymm1, %ymm14, 32(%r11)
-	vmaskmovpd	%ymm1, %ymm15, 32(%r11, %r12, 1)
+	vmaskmovpd	%ymm1, %ymm15, 32(%r11, %r12)
 12:
 	cmpl		$3, %eax
 	jl			3f // end
 	vblendpd	$0x2, %ymm13, %ymm15, %ymm15
 	vmaskmovpd	%ymm2, %ymm14, 64(%r11)
-	vmaskmovpd	%ymm2, %ymm15, 64(%r11, %r12, 1)
+	vmaskmovpd	%ymm2, %ymm15, 64(%r11, %r12)
 13:
 	cmpl		$4, %eax
 	jl			3f // end
 	vblendpd	$0x4, %ymm13, %ymm15, %ymm15
 	vmaskmovpd	%ymm3, %ymm14, 96(%r11)
-	vmaskmovpd	%ymm3, %ymm15, 96(%r11, %r12, 1)
+	vmaskmovpd	%ymm3, %ymm15, 96(%r11, %r12)
 
 3:
 
