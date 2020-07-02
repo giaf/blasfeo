@@ -4721,9 +4721,9 @@
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC03(%rip), %ymm13
+	vmovupd		.LC04(%rip), %ymm13
 #elif defined(OS_MAC)
-	vmovupd		LC03(%rip), %ymm13
+	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
 	vinsertf128	$1, %xmm15, %ymm15, %ymm15
@@ -5053,9 +5053,9 @@
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC03(%rip), %ymm13
+	vmovupd		.LC04(%rip), %ymm13
 #elif defined(OS_MAC)
-	vmovupd		LC03(%rip), %ymm13
+	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
 	vinsertf128	$1, %xmm15, %ymm15, %ymm15
@@ -5345,9 +5345,9 @@
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC03(%rip), %ymm13
+	vmovupd		.LC04(%rip), %ymm13
 #elif defined(OS_MAC)
-	vmovupd		LC03(%rip), %ymm13
+	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
 	vinsertf128	$1, %xmm15, %ymm15, %ymm15
@@ -5601,9 +5601,9 @@
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC03(%rip), %ymm13
+	vmovupd		.LC04(%rip), %ymm13
 #elif defined(OS_MAC)
-	vmovupd		LC03(%rip), %ymm13
+	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
 	vinsertf128	$1, %xmm15, %ymm15, %ymm15
@@ -6111,9 +6111,9 @@
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC03(%rip), %ymm13
+	vmovupd		.LC04(%rip), %ymm13
 #elif defined(OS_MAC)
-	vmovupd		LC03(%rip), %ymm13
+	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
 	vinsertf128	$1, %xmm15, %ymm15, %ymm15
@@ -6432,9 +6432,9 @@
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC03(%rip), %ymm13
+	vmovupd		.LC04(%rip), %ymm13
 #elif defined(OS_MAC)
-	vmovupd		LC03(%rip), %ymm13
+	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
 	vinsertf128	$1, %xmm15, %ymm15, %ymm15
@@ -6713,9 +6713,9 @@
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC03(%rip), %ymm13
+	vmovupd		.LC04(%rip), %ymm13
 #elif defined(OS_MAC)
-	vmovupd		LC03(%rip), %ymm13
+	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
 	vinsertf128	$1, %xmm15, %ymm15, %ymm15
@@ -6958,9 +6958,9 @@
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC03(%rip), %ymm13
+	vmovupd		.LC04(%rip), %ymm13
 #elif defined(OS_MAC)
-	vmovupd		LC03(%rip), %ymm13
+	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
 	vinsertf128	$1, %xmm15, %ymm15, %ymm15
