@@ -43,6 +43,7 @@
 
 
 #define HP_CM
+#define SP
 
 
 
