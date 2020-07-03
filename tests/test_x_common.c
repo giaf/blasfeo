@@ -36,21 +36,23 @@
 // Test {double,single} precision common
 
 void print_compilation_flags()
-{
+	{
 	SHOW_DEFINE(BLASFEO_LA)
 	SHOW_DEFINE(BLASFEO_TARGET)
 	SHOW_DEFINE(PRECISION)
-	#ifdef TEST_BLAS_API
+#ifdef TEST_BLAS_API
 	printf("API\t\t= blas\n");
-	#else
+#else
 	printf("API\t\t= BLASFEO\n");
-	#endif
+#endif
 	SHOW_DEFINE(K_MAX_STACK)
 	SHOW_DEFINE(ROUTINE_FULLNAME)
-}
+	}
+
+
 
 void initialize_test_args(struct TestArgs * targs)
-{
+	{
 	// sub-mastrix offset, sweep start
 	targs->ai0 = 0;
 	targs->bi0 = 0;
@@ -91,10 +93,12 @@ void initialize_test_args(struct TestArgs * targs)
 	targs->beta_l[5] = 50000.0;
 
 	targs->total_calls = 1;
-};
+	}
+
+
 
 int compute_total_calls(struct TestArgs * targs)
-{
+	{
 	int total_calls =
 		targs->alphas *
 		targs->betas *
@@ -107,10 +111,12 @@ int compute_total_calls(struct TestArgs * targs)
 		targs->xjs;
 
 	return total_calls;
-}
+	}
+
+
 
 void initialize_args(struct RoutineArgs * args)
-{
+	{
 	args->alpha = 1.5;
 	args->beta = 1.5;
 
@@ -134,13 +140,13 @@ void initialize_args(struct RoutineArgs * args)
 
 	args->di = 0;
 	args->dj = 0;
-};
+	}
+
+
 
 /* prints a matrix in column-major format */
 // TODO remove !!!!!!!!!!!!!!!!!!!!
-void print_xmat_debug(
-	int m, int n, struct STRMAT_REF *sA,
-	int ai, int aj, int err_i, int err_j, int ERR)
+void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int err_i, int err_j, int ERR)
 	{
 
 	/* REAL *pA = sA->pA + ai + aj*lda; */
@@ -246,9 +252,6 @@ void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, i
 		je = aj+n;
 	}
 
-	int sda = sA->cn;
-	REAL *pA = sA->pA;
-
 	printf("%s\t", label);
 	for(j=j0; j<je; j++) printf("%7d\t", j);
 	printf("\n");
@@ -338,10 +341,8 @@ int GECMP_LIBSTR(
 	return 0;
 	}
 
-int GECMP_BLASAPI(
-	int m, int n, int bi, int bj,
-	struct STRMAT_REF *sD, struct STRMAT_REF *rD,
-	int* err_i, int* err_j, int debug)
+
+int GECMP_BLASAPI(int m, int n, int bi, int bj, struct STRMAT_REF *sD, struct STRMAT_REF *rD, int* err_i, int* err_j, int debug)
 	{
 	int ii, jj;
 

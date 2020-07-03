@@ -73,8 +73,6 @@
 #define PACK_STRMAT blasfeo_pack_dmat
 #define PRINT_STRMAT blasfeo_print_dmat
 
-#define PS D_PS
-
 #define STRMAT_REF blasfeo_dmat
 #define STRVEC_REF blasfeo_dvec
 

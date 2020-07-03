@@ -81,9 +81,6 @@
 #define HP_UNPACK_MAT blasfeo_hp_unpack_dmat
 #define HP_UNPACK_TRAN_MAT blasfeo_hp_unpack_tran_dmat
 #define HP_UNPACK_VEC blasfeo_hp_unpack_dvec
-#define HP_CAST_MAT2STRMAT ref_d_cast_mat2strmat
-#define HP_CAST_DIAG_MAT2STRMAT ref_d_cast_diag_mat2strmat
-#define HP_CAST_VEC2VECMAT ref_d_cast_vec2vecmat
 #define HP_GECP blasfeo_hp_dgecp
 #define HP_GESC blasfeo_hp_dgesc
 #define HP_GECPSC blasfeo_hp_dgecpsc
@@ -147,9 +144,6 @@
 #define UNPACK_MAT blasfeo_unpack_dmat
 #define UNPACK_TRAN_MAT blasfeo_unpack_tran_dmat
 #define UNPACK_VEC blasfeo_unpack_dvec
-#define CAST_MAT2STRMAT d_cast_mat2strmat
-#define CAST_DIAG_MAT2STRMAT d_cast_diag_mat2strmat
-#define CAST_VEC2VECMAT d_cast_vec2vecmat
 #define GECP blasfeo_dgecp
 #define GESC blasfeo_dgesc
 #define GECPSC blasfeo_dgecpsc
@@ -536,37 +530,6 @@ void HP_UNPACK_VEC(int m, struct VEC *sa, int ai, REAL *x, int xi)
 		for(ii=0; ii<m; ii++)
 			x[ii*xi] = pa[ii];
 		}
-	return;
-	}
-
-
-
-// cast a matrix into a matrix structure
-void HP_CAST_MAT2STRMAT(REAL *A, struct MAT *sB)
-	{
-	// invalidate stored inverse diagonal
-	sB->use_dA = 0;
-	sB->pA = A;
-	return;
-	}
-
-
-
-// cast a matrix into the diagonal of a matrix structure
-void HP_CAST_DIAG_MAT2STRMAT(REAL *dA, struct MAT *sB)
-	{
-	// invalidate stored inverse diagonal
-	sB->use_dA = 0;
-	sB->dA = dA;
-	return;
-	}
-
-
-
-// cast a vector into a vector structure
-void HP_CAST_VEC2VECMAT(REAL *a, struct VEC *sa)
-	{
-	sa->pa = a;
 	return;
 	}
 
@@ -1782,27 +1745,6 @@ void UNPACK_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *B, int 
 void UNPACK_VEC(int m, struct VEC *sa, int ai, REAL *x, int xi)
 	{
 	HP_UNPACK_VEC(m, sa, ai, x, xi);
-	}
-
-
-
-void CAST_MAT2STRMAT(REAL *A, struct MAT *sB)
-	{
-	HP_CAST_MAT2STRMAT(A, sB);
-	}
-
-
-
-void CAST_DIAG_MAT2STRMAT(REAL *dA, struct MAT *sB)
-	{
-	HP_CAST_DIAG_MAT2STRMAT(dA, sB);
-	}
-
-
-
-void CAST_VEC2VECMAT(REAL *a, struct VEC *sa)
-	{
-	HP_CAST_VEC2VECMAT(a, sa);
 	}
 
 

@@ -38,7 +38,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../include/blasfeo_common.h"
+#include <blasfeo_common.h>
+
+
 
 #define STR(x) #x
 #define SHOW_DEFINE(x) printf("%-16s= %s\n", #x, STR(x));
@@ -72,6 +74,7 @@
 #define REF(fun) concatenate(ref_, fun)
 #define BLASFEO(fun) concatenate(blasfeo_, fun)
 #define BLAS(fun) concatenate(fun, _)
+#define WORKSIZE(fun) concatenate(fun, _worksize)
 
 #ifndef VERBOSE
 #define VERBOSE 0
@@ -128,7 +131,8 @@
 //#define VECEL_LIBSTR(sa,ai) ((sa)->pa[ai])
 //#define VECEL_LIB(sa,ai) ((sa)->pa[ai])
 
-struct RoutineArgs{
+struct RoutineArgs
+	{
 	// coefficients
 	REAL alpha;
 	REAL beta;
@@ -181,16 +185,19 @@ struct RoutineArgs{
 	struct STRMAT_REF *cC;
 	struct STRMAT_REF *cD;
 
-	void * work;
+//	void * work;
 	int info;
 
 	// blas_api
 	char ta;
 	char tb;
 	char uplo;
-};
+	};
 
-struct TestArgs{
+
+
+struct TestArgs
+	{
 
 	// sub-mastrix offset, sweep start
 	int ai0;
@@ -231,7 +238,9 @@ struct TestArgs{
 
 	// statistics
 	int total_calls;
-};
+	};
+
+
 
 void initialize_args(struct RoutineArgs * args);
 void set_test_args(struct TestArgs * targs);
