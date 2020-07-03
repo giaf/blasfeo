@@ -277,7 +277,7 @@ class BlasfeoTestset:
 		env_flags = self.testset["env_flags"]
 
 		# always compile blas api
-		blasfeo_flags.update({"BLAS_API":1})
+#		blasfeo_flags.update({"BLAS_API":1})
 		blasfeo_flags.update({"BLASFEO_PATH":str(BLASFEO_PATH)})
 
 		blasfeo_flags_str = "_".join(
