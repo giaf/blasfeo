@@ -42,6 +42,10 @@
 
 
 
+#define REF
+
+
+
 #if defined(MF_COLMAJ)
 	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
 	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]

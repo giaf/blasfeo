@@ -55,6 +55,10 @@
 
 
 
+#define REF
+
+
+
 #define REAL double
 #define XMAT blasfeo_dmat
 #define XMATEL BLASFEO_DMATEL

@@ -503,7 +503,6 @@ void kernel_spacp_nn_4_vs_lib4(int kmax, int offsetA, float *A, int sda, float *
 ************************************************/
 
 //#if defined(BLAS_API)
-#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
 
 // A, B panel-major bs=8; C, D column-major
 // 24x4
@@ -600,7 +599,7 @@ void kernel_sdot_11_lib(int n, float *x, float *y, float *res);
 void kernel_saxpy_11_lib(int n, float *alpha, float *x, float *y);
 
 
-#endif // BLAS_API
+//#endif // BLAS_API
 
 
 

@@ -2921,7 +2921,7 @@ void REF_SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 
 
 
-#if defined(LA_REFERENCE) | defined(HP_CM)
+#if (defined(LA_REFERENCE) & defined(REF)) | (defined(LA_HIGH_PERFORMANCE) & defined(HP_CM))
 
 
 

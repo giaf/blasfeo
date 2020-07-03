@@ -40,6 +40,10 @@
 
 
 
+#define REF
+
+
+
 #define REAL double
 #define XVEC blasfeo_dvec
 

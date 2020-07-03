@@ -253,7 +253,7 @@ void REF_ROWROT(int m, struct XMAT *sA, int ai0, int ai1, int aj, REAL c, REAL s
 
 
 
-#if defined(LA_REFERENCE) | defined(HP_CM)
+#if (defined(LA_REFERENCE) & defined(REF)) | (defined(LA_HIGH_PERFORMANCE) & defined(HP_CM))
 
 
 

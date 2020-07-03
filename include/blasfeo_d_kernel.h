@@ -563,7 +563,6 @@ void kernel_dpacp_nn_4_vs_lib4(int kmax, int offsetA, double *A, int sda, double
 ************************************************/
 
 //#if defined(BLAS_API)
-#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
 
 // A, B panel-major bs=4; C, D column-major
 // 12x4
@@ -1006,7 +1005,7 @@ void kernel_ddot_11_lib(int n, double *x, double *y, double *res);
 void kernel_daxpy_11_lib(int n, double *alpha, double *x, double *y);
 void kernel_drowsw_lib(int kmax, double *pA, int lda, double *pC, int ldc);
 
-#endif // BLAS_API
+//#endif // BLAS_API
 
 
 

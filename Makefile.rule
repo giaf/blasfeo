@@ -121,7 +121,6 @@ BLASFEO_HP_API = 0
 # Select the Matrix Format internally used in the blasfeo_{d,s}mat structure
 # COLMAJ : column-major matrix format
 # PANELMAJ : panel-major matrix format
-# (work in progress, limited to LA=REFERENCE for now !!!)
 # MF = COLMAJ
 MF = PANELMAJ
 

@@ -54,6 +54,10 @@
 
 
 
+#define REF
+
+
+
 #define REAL double
 #define XMAT blasfeo_dmat
 #define XVEC blasfeo_dvec

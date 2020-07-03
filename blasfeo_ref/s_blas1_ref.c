@@ -54,6 +54,10 @@
 
 
 
+#define REF
+
+
+
 #define REAL float
 #define XMAT blasfeo_smat
 #define XVEC blasfeo_svec

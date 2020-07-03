@@ -59,7 +59,7 @@ void REF_GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int
 
 
 
-#if defined(LA_REFERENCE) | defined(HP_CM)
+#if (defined(LA_REFERENCE) & defined(REF)) | (defined(LA_HIGH_PERFORMANCE) & defined(HP_CM))
 
 
 

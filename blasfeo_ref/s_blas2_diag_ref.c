@@ -40,6 +40,10 @@
 
 
 
+#define REF
+
+
+
 #define REAL float
 #define XVEC blasfeo_svec
 
