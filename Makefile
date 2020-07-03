@@ -90,6 +90,13 @@ BLASFEO_HP_CM_OBJS = \
 		blasfeo_ref/d_blas3_hp_cm.o \
 		blasfeo_ref/d_blas3_diag_hp_cm.o \
 		blasfeo_ref/d_lapack_hp_cm.o \
+		\
+		blasfeo_ref/s_blas1_hp_cm.o \
+		blasfeo_ref/s_blas2_hp_cm.o \
+		blasfeo_ref/s_blas2_diag_hp_cm.o \
+		blasfeo_ref/s_blas3_hp_cm.o \
+		blasfeo_ref/s_blas3_diag_hp_cm.o \
+		blasfeo_ref/s_lapack_hp_cm.o \
 
 ### BLASFEO WRAPPER TO BLAS ###
 BLASFEO_WR_OBJS = \
