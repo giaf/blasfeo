@@ -91,9 +91,9 @@ void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sx, int xi, double *y,  int
 
 // --- cast
 //
-void d_cast_mat2strmat(double *A, struct blasfeo_dmat *sA); // TODO
-void d_cast_diag_mat2strmat(double *dA, struct blasfeo_dmat *sA); // TODO
-void d_cast_vec2vecmat(double *a, struct blasfeo_dvec *sx); // TODO
+//void d_cast_mat2strmat(double *A, struct blasfeo_dmat *sA); // TODO
+//void d_cast_diag_mat2strmat(double *dA, struct blasfeo_dmat *sA); // TODO
+//void d_cast_vec2vecmat(double *a, struct blasfeo_dvec *sx); // TODO
 
 
 // ge

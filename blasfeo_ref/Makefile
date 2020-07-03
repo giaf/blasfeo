@@ -120,4 +120,17 @@ s_blas3_diag_ref.o: s_blas3_diag_ref.c x_blas3_diag_ref.c
 s_lapack_ref.o: s_lapack_ref.c x_lapack_ref.c
 
 
+d_blas1_hp_cm.o: d_blas1_hp_cm.c x_blas1_ref.c
+d_blas2_hp_cm.o: d_blas2_hp_cm.c x_blas2_ref.c
+d_blas2_diag_hp_cm.o: d_blas2_diag_hp_cm.c x_blas2_diag_ref.c
 d_blas3_hp_cm.o: d_blas3_hp_cm.c x_blas3_ref.c
+d_blas3_diag_hp_cm.o: d_blas3_diag_hp_cm.c x_blas3_diag_ref.c
+d_lapack_hp_cm.o: d_lapack_hp_cm.c x_lapack_ref.c
+
+s_blas1_hp_cm.o: s_blas1_hp_cm.c x_blas1_ref.c
+s_blas2_hp_cm.o: s_blas2_hp_cm.c x_blas2_ref.c
+s_blas2_diag_hp_cm.o: s_blas2_diag_hp_cm.c x_blas2_diag_ref.c
+s_blas3_hp_cm.o: s_blas3_hp_cm.c x_blas3_ref.c
+s_blas3_diag_hp_cm.o: s_blas3_diag_hp_cm.c x_blas3_diag_ref.c
+s_lapack_hp_cm.o: s_lapack_hp_cm.c x_lapack_ref.c
+

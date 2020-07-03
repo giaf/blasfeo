@@ -371,37 +371,6 @@ void REF_UNPACK_VEC(int m, struct VEC *sa, int ai, REAL *x, int xi)
 
 
 
-// cast a matrix into a matrix structure
-void REF_CAST_MAT2STRMAT(REAL *A, struct MAT *sB)
-	{
-	// invalidate stored inverse diagonal
-	sB->use_dA = 0;
-	sB->pA = A;
-	return;
-	}
-
-
-
-// cast a matrix into the diagonal of a matrix structure
-void REF_CAST_DIAG_MAT2STRMAT(REAL *dA, struct MAT *sB)
-	{
-	// invalidate stored inverse diagonal
-	sB->use_dA = 0;
-	sB->dA = dA;
-	return;
-	}
-
-
-
-// cast a vector into a vector structure
-void REF_CAST_VEC2VECMAT(REAL *a, struct VEC *sa)
-	{
-	sa->pa = a;
-	return;
-	}
-
-
-
 // copy a generic strmat into a generic strmat
 void REF_GECP(int m, int n, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
@@ -1521,7 +1490,7 @@ REAL dtrcon_1ln_libstr(int n, struct MAT *sA, int ai, int aj, REAL *work, int *i
 
 
 
-#if defined(LA_REFERENCE) | defined(LA_EXTERNAL_BLAS_WRAPPER)
+#if (defined(LA_REFERENCE) & defined(REF)) | (defined(LA_HIGH_PERFORMANCE) & defined(HP_CM)) | defined(LA_EXTERNAL_BLAS_WRAPPER)
 
 
 
@@ -1612,27 +1581,6 @@ void UNPACK_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj, REAL *B, int 
 void UNPACK_VEC(int m, struct VEC *sa, int ai, REAL *x, int xi)
 	{
 	REF_UNPACK_VEC(m, sa, ai, x, xi);
-	}
-
-
-
-void CAST_MAT2STRMAT(REAL *A, struct MAT *sB)
-	{
-	REF_CAST_MAT2STRMAT(A, sB);
-	}
-
-
-
-void CAST_DIAG_MAT2STRMAT(REAL *dA, struct MAT *sB)
-	{
-	REF_CAST_DIAG_MAT2STRMAT(dA, sB);
-	}
-
-
-
-void CAST_VEC2VECMAT(REAL *a, struct VEC *sa)
-	{
-	REF_CAST_VEC2VECMAT(a, sa);
 	}
 
 

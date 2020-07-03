@@ -2527,6 +2527,7 @@ void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sa, int ai, double *x, int 
 
 
 
+#if 0
 // cast a matrix into a matrix structure
 void d_cast_mat2strmat(double *A, struct blasfeo_dmat *sA)
 	{
@@ -2559,6 +2560,7 @@ void d_cast_vec2vecmat(double *a, struct blasfeo_dvec *sa)
 	sa->pa = a;
 	return;
 	}
+#endif
 
 
 

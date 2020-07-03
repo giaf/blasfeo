@@ -58,13 +58,13 @@ OBJS += s_aux_lib4.o
 OBJS += m_aux_lib44.o
 endif
 
-else
+else # MF COLMAJ
 
 # TODO optimized hp cm version
 OBJS += d_aux_hp_cm.o
 OBJS += s_aux_hp_cm.o
 
-endif
+endif # MF choice
 
 ifeq ($(BLASFEO_REF_API), 1)
 OBJS += d_aux_ref.o
@@ -106,3 +106,6 @@ d_aux_ext_dep_common.o: d_aux_ext_dep_common.c x_aux_ext_dep_common.c
 s_aux_ext_dep_common.o: s_aux_ext_dep_common.c x_aux_ext_dep_common.c
 d_aux_ext_dep.o: d_aux_ext_dep.c x_aux_ext_dep.c
 s_aux_ext_dep.o: s_aux_ext_dep.c x_aux_ext_dep.c
+
+d_aux_hp_cm.o: d_aux_hp_cm.c x_aux_ref.c
+s_aux_hp_cm.o: s_aux_hp_cm.c x_aux_ref.c

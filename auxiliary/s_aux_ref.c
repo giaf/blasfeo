@@ -41,6 +41,10 @@
 
 
 
+#define REF
+
+
+
 #if defined(MF_COLMAJ)
 	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
 	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
@@ -74,9 +78,6 @@
 #define REF_UNPACK_MAT blasfeo_ref_unpack_smat
 #define REF_UNPACK_TRAN_MAT blasfeo_ref_unpack_tran_smat
 #define REF_UNPACK_VEC blasfeo_ref_unpack_svec
-#define REF_CAST_MAT2STRMAT ref_s_cast_mat2strmat
-#define REF_CAST_DIAG_MAT2STRMAT ref_s_cast_diag_mat2strmat
-#define REF_CAST_VEC2VECMAT ref_s_cast_vec2vecmat
 #define REF_GECPSC blasfeo_ref_sgecpsc
 #define REF_GECP blasfeo_ref_sgecp
 #define REF_GESC blasfeo_ref_sgesc
@@ -140,9 +141,6 @@
 #define UNPACK_MAT blasfeo_unpack_smat
 #define UNPACK_TRAN_MAT blasfeo_unpack_tran_smat
 #define UNPACK_VEC blasfeo_unpack_svec
-#define CAST_MAT2STRMAT s_cast_mat2strmat
-#define CAST_DIAG_MAT2STRMAT s_cast_diag_mat2strmat
-#define CAST_VEC2VECMAT s_cast_vec2vecmat
 #define GECPSC blasfeo_sgecpsc
 #define GECP blasfeo_sgecp
 #define GESC blasfeo_sgesc

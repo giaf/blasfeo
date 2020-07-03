@@ -1830,6 +1830,7 @@ void blasfeo_unpack_svec(int m, struct blasfeo_svec *sa, int ai, float *x, int x
 
 
 
+#if 0
 // cast a matrix into a matrix structure
 void s_cast_mat2strmat(float *A, struct blasfeo_smat *sA)
 	{
@@ -1862,6 +1863,7 @@ void s_cast_vec2vecmat(float *a, struct blasfeo_svec *sa)
 	sa->pa = a;
 	return;
 	}
+#endif
 
 
 
