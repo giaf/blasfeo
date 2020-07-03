@@ -187,7 +187,7 @@ void REF_GEMM_R_DIAG(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, 
 
 
 
-#if defined(LA_REFERENCE)
+#if defined(LA_REFERENCE) | defined(HP_CM)
 
 
 

@@ -1202,7 +1202,7 @@ void REF_TRSV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int x
 
 
 
-#if defined(LA_REFERENCE)
+#if defined(LA_REFERENCE) | defined(HP_CM)
 
 
 

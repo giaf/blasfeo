@@ -33,41 +33,60 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-void REF_GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
-	{
-	if(m<=0)
-		return;
-	int ii;
-	REAL *a = sA->pa + ai;
-	REAL *x = sx->pa + xi;
-	REAL *y = sy->pa + yi;
-	REAL *z = sz->pa + zi;
-	if(alpha==1.0 & beta==1.0)
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = a[ii]*x[ii] + y[ii];
-		}
-	else
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = alpha*a[ii]*x[ii] + beta*y[ii];
-		}
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 
-	return;
+#define FABS fabs
+#define SQRT sqrt
 
-	}
-
-
-
-#if defined(LA_REFERENCE) | defined(HP_CM)
-
-
-
-void GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
-	{
-	REF_GEMV_D(m, alpha, sA, ai, sx, xi, beta, sy, yi, sz, zi);
-	}
-
-
-
+#if defined(LA_EXTERNAL_BLAS_WRAPPER)
+#if defined(EXTERNAL_BLAS_BLIS)
+#include "blis.h"
+#elif defined(EXTERNAL_BLAS_MKL)
+#include "mkl.h"
+#else
+#include "../include/s_blas.h"
 #endif
+#endif
+
+#include <blasfeo_common.h>
+
+
+
+#define HP_CM
+
+
+
+#define REAL float
+#define XMAT blasfeo_smat
+#define XVEC blasfeo_svec
+
+
+
+#define REF_AXPY blasfeo_hp_saxpy
+#define REF_AXPBY blasfeo_hp_saxpby
+#define REF_VECMUL blasfeo_hp_svecmul
+#define REF_VECMULACC blasfeo_hp_svecmulacc
+#define REF_VECMULDOT blasfeo_hp_svecmuldot
+#define REF_DOT blasfeo_hp_sdot
+#define REF_ROTG blasfeo_hp_srotg
+#define REF_COLROT blasfeo_hp_scolrot
+#define REF_ROWROT blasfeo_hp_srowrot
+
+#define AXPY blasfeo_saxpy
+#define AXPBY blasfeo_saxpby
+#define VECMUL blasfeo_svecmul
+#define VECMULACC blasfeo_svecmulacc
+#define VECMULDOT blasfeo_svecmuldot
+#define DOT blasfeo_sdot
+#define ROTG blasfeo_srotg
+#define COLROT blasfeo_scolrot
+#define ROWROT blasfeo_srowrot
+
+
+
+#include "x_blas1_ref.c"
+
+
+

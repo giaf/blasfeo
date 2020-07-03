@@ -33,41 +33,70 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-void REF_GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
-	{
-	if(m<=0)
-		return;
-	int ii;
-	REAL *a = sA->pa + ai;
-	REAL *x = sx->pa + xi;
-	REAL *y = sy->pa + yi;
-	REAL *z = sz->pa + zi;
-	if(alpha==1.0 & beta==1.0)
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = a[ii]*x[ii] + y[ii];
-		}
-	else
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = alpha*a[ii]*x[ii] + beta*y[ii];
-		}
+#include <stdlib.h>
+#include <stdio.h>
 
-	return;
-
-	}
+#include <blasfeo_common.h>
 
 
 
-#if defined(LA_REFERENCE) | defined(HP_CM)
+#define HP_CM
 
 
 
-void GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
-	{
-	REF_GEMV_D(m, alpha, sA, ai, sx, xi, beta, sy, yi, sz, zi);
-	}
-
-
-
+#if defined(MF_COLMAJ)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+#else // MF_PANELMAJ
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
 #endif
+
+
+
+#define REAL float
+#define XMAT blasfeo_smat
+#define XMATEL BLASFEO_SMATEL
+#define XVEC blasfeo_svec
+#define XVECEL BLASFEO_SVECEL
+
+
+
+#define REF_GEMV_N blasfeo_hp_sgemv_n
+#define REF_GEMV_NT blasfeo_hp_sgemv_nt
+#define REF_GEMV_T blasfeo_hp_sgemv_t
+#define REF_SYMV_L blasfeo_hp_ssymv_l
+#define REF_TRMV_LNN blasfeo_hp_strmv_lnn
+#define REF_TRMV_LTN blasfeo_hp_strmv_ltn
+#define REF_TRMV_UNN blasfeo_hp_strmv_unn
+#define REF_TRMV_UTN blasfeo_hp_strmv_utn
+#define REF_TRSV_LNN blasfeo_hp_strsv_lnn
+#define REF_TRSV_LNN_MN blasfeo_hp_strsv_lnn_mn
+#define REF_TRSV_LNU blasfeo_hp_strsv_lnu
+#define REF_TRSV_LTN blasfeo_hp_strsv_ltn
+#define REF_TRSV_LTN_MN blasfeo_hp_strsv_ltn_mn
+#define REF_TRSV_LTU blasfeo_hp_strsv_ltu
+#define REF_TRSV_UNN blasfeo_hp_strsv_unn
+#define REF_TRSV_UTN blasfeo_hp_strsv_utn
+
+#define GEMV_N blasfeo_sgemv_n
+#define GEMV_NT blasfeo_sgemv_nt
+#define GEMV_T blasfeo_sgemv_t
+#define SYMV_L blasfeo_ssymv_l
+#define TRMV_LNN blasfeo_strmv_lnn
+#define TRMV_LTN blasfeo_strmv_ltn
+#define TRMV_UNN blasfeo_strmv_unn
+#define TRMV_UTN blasfeo_strmv_utn
+#define TRSV_LNN blasfeo_strsv_lnn
+#define TRSV_LNN_MN blasfeo_strsv_lnn_mn
+#define TRSV_LNU blasfeo_strsv_lnu
+#define TRSV_LTN blasfeo_strsv_ltn
+#define TRSV_LTN_MN blasfeo_strsv_ltn_mn
+#define TRSV_LTU blasfeo_strsv_ltu
+#define TRSV_UNN blasfeo_strsv_unn
+#define TRSV_UTN blasfeo_strsv_utn
+
+
+
+#include "x_blas2_ref.c"
+
+
+

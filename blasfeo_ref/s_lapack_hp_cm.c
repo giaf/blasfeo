@@ -33,41 +33,81 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-void REF_GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
-	{
-	if(m<=0)
-		return;
-	int ii;
-	REAL *a = sA->pa + ai;
-	REAL *x = sx->pa + xi;
-	REAL *y = sy->pa + yi;
-	REAL *z = sz->pa + zi;
-	if(alpha==1.0 & beta==1.0)
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = a[ii]*x[ii] + y[ii];
-		}
-	else
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = alpha*a[ii]*x[ii] + beta*y[ii];
-		}
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 
-	return;
-
-	}
+#include <blasfeo_common.h>
 
 
 
-#if defined(LA_REFERENCE) | defined(HP_CM)
+#define HP_CM
 
 
 
-void GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
-	{
-	REF_GEMV_D(m, alpha, sA, ai, sx, xi, beta, sy, yi, sz, zi);
-	}
-
-
-
+#if defined(MF_COLMAJ)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+	#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
+	#define XMATEL_L(X, Y) pL[(X)+ldl*(Y)]
+#else // MF_PANELMAJ
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
+	#define XMATEL_C(X, Y) XMATEL(sC, X, Y)
+	#define XMATEL_D(X, Y) XMATEL(sD, X, Y)
+	#define XMATEL_L(X, Y) XMATEL(sL, X, Y)
 #endif
+
+
+
+#define REAL float
+#define XMAT blasfeo_smat
+#define XMATEL BLASFEO_SMATEL
+#define XVEC blasfeo_svec
+#define XVECEL BLASFEO_SVECEL
+
+
+
+#define REF_GELQF_WORK_SIZE blasfeo_hp_sgelqf_worksize
+#define REF_GELQF blasfeo_hp_sgelqf
+#define REF_ORGLQ_WORK_SIZE blasfeo_hp_sorglq_worksize
+#define REF_ORGLQ blasfeo_hp_sorglq
+#define REF_GELQF_PD blasfeo_hp_sgelqf_pd
+#define REF_GELQF_PD_DA blasfeo_hp_sgelqf_pd_da
+#define REF_GELQF_PD_LA blasfeo_hp_sgelqf_pd_la
+#define REF_GELQF_PD_LLA blasfeo_hp_sgelqf_pd_lla
+#define REF_GEQRF blasfeo_hp_sgeqrf
+#define REF_GEQRF_WORK_SIZE blasfeo_hp_sgeqrf_worksize
+#define REF_GETRF_NOPIVOT blasfeo_hp_sgetrf_np
+#define REF_GETRF_ROWPIVOT blasfeo_hp_sgetrf_rp
+#define REF_POTRF_L blasfeo_hp_spotrf_l
+#define REF_POTRF_L_MN blasfeo_hp_spotrf_l_mn
+#define REF_PSTRF_L blasfeo_hp_spstrf_l
+#define REF_SYRK_POTRF_LN blasfeo_hp_ssyrk_spotrf_ln
+#define REF_SYRK_POTRF_LN_MN blasfeo_hp_ssyrk_spotrf_ln_mn
+
+#define GELQF_WORK_SIZE blasfeo_sgelqf_worksize
+#define GELQF blasfeo_sgelqf
+#define ORGLQ_WORK_SIZE blasfeo_sorglq_worksize
+#define ORGLQ blasfeo_sorglq
+#define GELQF_PD blasfeo_sgelqf_pd
+#define GELQF_PD_DA blasfeo_sgelqf_pd_da
+#define GELQF_PD_LA blasfeo_sgelqf_pd_la
+#define GELQF_PD_LLA blasfeo_sgelqf_pd_lla
+#define GEQRF blasfeo_sgeqrf
+#define GEQRF_WORK_SIZE blasfeo_sgeqrf_worksize
+#define GETRF_NOPIVOT blasfeo_sgetrf_np
+#define GETRF_ROWPIVOT blasfeo_sgetrf_rp
+#define POTRF_L blasfeo_spotrf_l
+#define POTRF_L_MN blasfeo_spotrf_l_mn
+#define PSTRF_L blasfeo_spstrf_l
+#define SYRK_POTRF_LN blasfeo_ssyrk_spotrf_ln
+#define SYRK_POTRF_LN_MN blasfeo_ssyrk_spotrf_ln_mn
+
+
+
+#include "x_lapack_ref.c"
+
+
+

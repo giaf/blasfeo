@@ -35,12 +35,12 @@
 
 include ../Makefile.rule
 
-HP_OBJS =
+HP_CM_OBJS =
 
 
-HP_OBJS =
+HP_CM_OBJS =
 
-HP_OBJS += dgemm.o
+HP_CM_OBJS += dgemm.o
 
 
 OBJS =
@@ -48,11 +48,11 @@ OBJS =
 ifeq ($(MF), COLMAJ)
 
 ifeq ($(LA), HIGH_PERFORMANCE)
-OBJS += $(HP_OBJS)
+OBJS += $(HP_CM_OBJS)
 else
 
 ifeq ($(BLASFEO_HP_API), 1)
-OBJS += $(HP_OBJS)
+OBJS += $(HP_CM_OBJS)
 endif
 
 endif # LA HP

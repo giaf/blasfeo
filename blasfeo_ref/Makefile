@@ -53,8 +53,26 @@ REF_OBJS += s_blas3_diag_ref.o
 REF_OBJS += s_lapack_ref.o
 
 
+HP_CM_OBJS =
+#
+HP_CM_OBJS += d_blas1_hp_cm.o
+HP_CM_OBJS += d_blas2_hp_cm.o
+HP_CM_OBJS += d_blas2_diag_hp_cm.o
+HP_CM_OBJS += d_blas3_hp_cm.o
+HP_CM_OBJS += d_blas3_diag_hp_cm.o
+HP_CM_OBJS += d_lapack_hp_cm.o
+#
+HP_CM_OBJS += s_blas1_hp_cm.o
+HP_CM_OBJS += s_blas2_hp_cm.o
+HP_CM_OBJS += s_blas2_diag_hp_cm.o
+HP_CM_OBJS += s_blas3_hp_cm.o
+HP_CM_OBJS += s_blas3_diag_hp_cm.o
+HP_CM_OBJS += s_lapack_hp_cm.o
+
+
 OBJS =
 
+# REFERENCE
 ifeq ($(LA), REFERENCE)
 OBJS += $(REF_OBJS)
 else
@@ -64,6 +82,21 @@ OBJS += $(REF_OBJS)
 endif
 
 endif
+
+# HIGH-PERFORMANCE COLMAJ
+ifeq ($(MF), COLMAJ)
+
+ifeq ($(LA), HIGH_PERFORMANCE)
+OBJS += $(HP_CM_OBJS)
+else
+
+ifeq ($(BLASFEO_HP_API), 1)
+OBJS += $(HP_CM_OBJS)
+endif
+
+endif # LA HP
+
+endif # MF COLMAJ
 
 
 obj: $(OBJS)
@@ -86,3 +119,5 @@ s_blas3_ref.o: s_blas3_ref.c x_blas3_ref.c
 s_blas3_diag_ref.o: s_blas3_diag_ref.c x_blas3_diag_ref.c
 s_lapack_ref.o: s_lapack_ref.c x_lapack_ref.c
 
+
+d_blas3_hp_cm.o: d_blas3_hp_cm.c x_blas3_ref.c

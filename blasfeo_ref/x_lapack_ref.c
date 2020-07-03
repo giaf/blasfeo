@@ -3149,7 +3149,7 @@ void REF_GELQF_PD_LLA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMA
 
 
 
-#if defined(LA_REFERENCE)
+#if defined(LA_REFERENCE) | defined(HP_CM)
 
 
 

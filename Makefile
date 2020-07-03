@@ -54,6 +54,11 @@ AUX_EXT_DEP_OBJS = \
 		auxiliary/i_aux_ext_dep_lib.o \
 		auxiliary/timing.o
 
+### AUX REFERENCE ###
+AUX_REF_OBJS = \
+		auxiliary/d_aux_ref.o \
+		auxiliary/s_aux_ref.o \
+
 ### BLASFEO REFERENCE ###
 BLASFEO_REF_OBJS = \
 		blasfeo_ref/d_blas1_ref.o \
@@ -70,15 +75,21 @@ BLASFEO_REF_OBJS = \
 		blasfeo_ref/s_blas3_diag_ref.o \
 		blasfeo_ref/s_lapack_ref.o \
 
-### AUX REFERENCE ###
-AUX_REF_OBJS = \
-		auxiliary/d_aux_ref.o \
-		auxiliary/s_aux_ref.o \
-
 ### AUX HP CM ###
 AUX_HP_CM_OBJS = \
 		auxiliary/d_aux_hp_cm.o \
 		auxiliary/s_aux_hp_cm.o \
+
+### BLASFEO HP, COLUM-MAJOR ###
+BLASFEO_HP_CM_OBJS = \
+		blasfeo_hp_cm/dgemm.o \
+		\
+		blasfeo_ref/d_blas1_hp_cm.o \
+		blasfeo_ref/d_blas2_hp_cm.o \
+		blasfeo_ref/d_blas2_diag_hp_cm.o \
+		blasfeo_ref/d_blas3_hp_cm.o \
+		blasfeo_ref/d_blas3_diag_hp_cm.o \
+		blasfeo_ref/d_lapack_hp_cm.o \
 
 ### BLASFEO WRAPPER TO BLAS ###
 BLASFEO_WR_OBJS = \
@@ -119,10 +130,6 @@ BLAS_OBJS += \
 		blas_api/sdot.o \
 		blas_api/sgemm.o \
 		blas_api/strsm.o
-
-### BLASFEO HP, COLUM-MAJOR ###
-BLASFEO_HP_CM_OBJS = \
-		blasfeo_hp_cm/dgemm.o \
 
 ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE))
 

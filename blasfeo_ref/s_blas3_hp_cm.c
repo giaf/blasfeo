@@ -1,3 +1,4 @@
+
 /**************************************************************************************************
 *                                                                                                 *
 * This file is part of BLASFEO.                                                                   *
@@ -33,41 +34,106 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-void REF_GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
-	{
-	if(m<=0)
-		return;
-	int ii;
-	REAL *a = sA->pa + ai;
-	REAL *x = sx->pa + xi;
-	REAL *y = sy->pa + yi;
-	REAL *z = sz->pa + zi;
-	if(alpha==1.0 & beta==1.0)
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = a[ii]*x[ii] + y[ii];
-		}
-	else
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = alpha*a[ii]*x[ii] + beta*y[ii];
-		}
+#include <stdlib.h>
+#include <stdio.h>
 
-	return;
-
-	}
+#include <blasfeo_common.h>
+#include <blasfeo_s_aux.h>
 
 
 
-#if defined(LA_REFERENCE) | defined(HP_CM)
+#define HP_CM
 
 
 
-void GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
-	{
-	REF_GEMV_D(m, alpha, sA, ai, sx, xi, beta, sy, yi, sz, zi);
-	}
-
-
-
+#if defined(MF_COLMAJ)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+	#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
+#else // MF_PANELMAJ
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
+	#define XMATEL_C(X, Y) XMATEL(sC, X, Y)
+	#define XMATEL_D(X, Y) XMATEL(sD, X, Y)
 #endif
+
+
+
+#define REAL float
+#define XMAT blasfeo_smat
+#define XMATEL BLASFEO_SMATEL
+#define XVEC blasfeo_svec
+#define XVECEL BLASFEO_SVECEL
+
+
+
+// gemm
+#define REF_GEMM_NN blasfeo_hp_sgemm_nn
+#define REF_GEMM_NT blasfeo_hp_sgemm_nt
+#define REF_GEMM_TN blasfeo_hp_sgemm_tn
+#define REF_GEMM_TT blasfeo_hp_sgemm_tt
+// syrk
+#define REF_SYRK_LN blasfeo_hp_ssyrk_ln
+#define REF_SYRK_LN_MN blasfeo_hp_ssyrk_ln_mn
+#define REF_SYRK_LT blasfeo_hp_ssyrk_lt
+#define REF_SYRK_UN blasfeo_hp_ssyrk_un
+#define REF_SYRK_UT blasfeo_hp_ssyrk_ut
+// trmm
+#define REF_TRMM_RLNN blasfeo_hp_strmm_rlnn
+#define REF_TRMM_RUTN blasfeo_hp_strmm_rutn
+// trsm
+#define REF_TRSM_LLNN blasfeo_hp_strsm_llnn
+#define REF_TRSM_LLNU blasfeo_hp_strsm_llnu
+#define REF_TRSM_LLTN blasfeo_hp_strsm_lltn
+#define REF_TRSM_LLTU blasfeo_hp_strsm_lltu
+#define REF_TRSM_LUNN blasfeo_hp_strsm_lunn
+#define REF_TRSM_LUNU blasfeo_hp_strsm_lunu
+#define REF_TRSM_LUTN blasfeo_hp_strsm_lutn
+#define REF_TRSM_LUTU blasfeo_hp_strsm_lutu
+#define REF_TRSM_RLNN blasfeo_hp_strsm_rlnn
+#define REF_TRSM_RLNU blasfeo_hp_strsm_rlnu
+#define REF_TRSM_RLTN blasfeo_hp_strsm_rltn
+#define REF_TRSM_RLTU blasfeo_hp_strsm_rltu
+#define REF_TRSM_RUNN blasfeo_hp_strsm_runn
+#define REF_TRSM_RUNU blasfeo_hp_strsm_runu
+#define REF_TRSM_RUTN blasfeo_hp_strsm_rutn
+#define REF_TRSM_RUTU blasfeo_hp_strsm_rutu
+
+// gemm
+#define GEMM_NN blasfeo_sgemm_nn
+#define GEMM_NT blasfeo_sgemm_nt
+#define GEMM_TN blasfeo_sgemm_tn
+#define GEMM_TT blasfeo_sgemm_tt
+// syrk
+#define SYRK_LN blasfeo_ssyrk_ln
+#define SYRK_LN_MN blasfeo_ssyrk_ln_mn
+#define SYRK_LT blasfeo_ssyrk_lt
+#define SYRK_UN blasfeo_ssyrk_un
+#define SYRK_UT blasfeo_ssyrk_ut
+// trmm
+#define TRMM_RLNN blasfeo_strmm_rlnn
+#define TRMM_RUTN blasfeo_strmm_rutn
+// trsm
+#define TRSM_LLNN blasfeo_strsm_llnn
+#define TRSM_LLNU blasfeo_strsm_llnu
+#define TRSM_LLTN blasfeo_strsm_lltn
+#define TRSM_LLTU blasfeo_strsm_lltu
+#define TRSM_LUNN blasfeo_strsm_lunn
+#define TRSM_LUNU blasfeo_strsm_lunu
+#define TRSM_LUTN blasfeo_strsm_lutn
+#define TRSM_LUTU blasfeo_strsm_lutu
+#define TRSM_RLNN blasfeo_strsm_rlnn
+#define TRSM_RLNU blasfeo_strsm_rlnu
+#define TRSM_RLTN blasfeo_strsm_rltn
+#define TRSM_RLTU blasfeo_strsm_rltu
+#define TRSM_RUNN blasfeo_strsm_runn
+#define TRSM_RUNU blasfeo_strsm_runu
+#define TRSM_RUTN blasfeo_strsm_rutn
+#define TRSM_RUTU blasfeo_strsm_rutu
+
+
+
+#include "x_blas3_ref.c"
+
+

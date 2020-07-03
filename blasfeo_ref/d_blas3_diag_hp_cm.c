@@ -33,41 +33,47 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-void REF_GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
-	{
-	if(m<=0)
-		return;
-	int ii;
-	REAL *a = sA->pa + ai;
-	REAL *x = sx->pa + xi;
-	REAL *y = sy->pa + yi;
-	REAL *z = sz->pa + zi;
-	if(alpha==1.0 & beta==1.0)
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = a[ii]*x[ii] + y[ii];
-		}
-	else
-		{
-		for(ii=0; ii<m; ii++)
-			z[ii] = alpha*a[ii]*x[ii] + beta*y[ii];
-		}
+#include <stdlib.h>
+#include <stdio.h>
 
-	return;
-
-	}
+#include <blasfeo_common.h>
 
 
 
-#if defined(LA_REFERENCE) | defined(HP_CM)
+#define HP_CM
 
 
 
-void GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
-	{
-	REF_GEMV_D(m, alpha, sA, ai, sx, xi, beta, sy, yi, sz, zi);
-	}
-
-
-
+#if defined(MF_COLMAJ)
+	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+	#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+	#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
+#else // MF_PANELMAJ
+	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+	#define XMATEL_B(X, Y) XMATEL(sB, X, Y)
+	#define XMATEL_C(X, Y) XMATEL(sC, X, Y)
+	#define XMATEL_D(X, Y) XMATEL(sD, X, Y)
 #endif
+
+
+
+#define REAL double
+#define XMAT blasfeo_dmat
+#define XMATEL BLASFEO_DMATEL
+#define XVEC blasfeo_dvec
+#define XVECEL BLASFEO_DVECEL
+
+
+
+#define REF_GEMM_R_DIAG blasfeo_hp_dgemm_nd
+#define REF_GEMM_L_DIAG blasfeo_hp_dgemm_dn
+
+#define GEMM_R_DIAG blasfeo_dgemm_nd
+#define GEMM_L_DIAG blasfeo_dgemm_dn
+
+
+
+#include "x_blas3_diag_ref.c"
+
+
