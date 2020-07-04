@@ -100,7 +100,7 @@ int main()
 	printf("\n");
 	printf("\n");
 
-	printf("BLAS performance test - float precision\n");
+	printf("BLAS performance test - single precision\n");
 	printf("\n");
 
 	// maximum frequency of the processor
