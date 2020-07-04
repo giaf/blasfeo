@@ -38,6 +38,23 @@
 void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, int *plda, REAL *B, int *pldb, REAL *pbeta, REAL *C, int *pldc)
 	{
 
+#if defined(DIM_CHECK)
+	if( !(*ta=='c' | *ta=='C' | *ta=='n' | *ta=='N' | *ta=='t' | *ta=='T') )
+		{
+		printf("\nBLASFEO: gemm: wrong value for ta\n");
+		return;
+		}
+	if( !(*tb=='c' | *tb=='C' | *tb=='n' | *tb=='N' | *tb=='t' | *tb=='T') )
+		{
+		printf("\nBLASFEO: gemm: wrong value for tb\n");
+		return;
+		}
+#endif
+
+#if defined(FALLBACK_TO_EXTERNAL_BLAS)
+	// TODO
+#endif
+
 	struct MAT sA;
 	sA.pA = A;
 	sA.m = *plda;
@@ -56,36 +73,21 @@ void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, 
 			{
 			GEMM_NN(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
 			}
-		else if(*tb=='t' | *tb=='T' | *tb=='c' | *tb=='C')
+		else
 			{
 			GEMM_NT(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
 			}
-		else
-			{
-			printf("\nBLASFEO: gemm: wrong value for tb\n");
-			return;
-			}
 		}
-	else if(*ta=='t' | *ta=='T' | *ta=='c' | *ta=='C')
+	else
 		{
 		if(*tb=='n' | *tb=='N')
 			{
 			GEMM_TN(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
 			}
-		else if(*tb=='t' | *tb=='T' | *tb=='c'| *tb=='C')
+		else
 			{
 			GEMM_TT(*pm, *pn, *pk, *palpha, &sA, 0, 0, &sB, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
 			}
-		else
-			{
-			printf("\nBLASFEO: gemm: wrong value for tb\n");
-			return;
-			}
-		}
-	else
-		{
-		printf("\nBLASFEO: gemm: wrong value for ta\n");
-		return;
 		}
 
 	return;

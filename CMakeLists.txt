@@ -35,6 +35,9 @@
 
 cmake_minimum_required(VERSION 2.8.11)
 
+# installation directory ( has to be before `project()` )
+set(CMAKE_INSTALL_PREFIX "/opt/blasfeo" CACHE STRING "Installation path")
+
 project(blasfeo C ASM)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
@@ -53,7 +56,7 @@ set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A15 CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A9 CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A7 CACHE STRING "Target architecture")
-# set(TARGET GENERIC)
+# set(TARGET GENERIC CACHE STRING "Target architecture")
 
 # Linear Algebra backend
 set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
@@ -91,17 +94,23 @@ set(USE_C99_MATH ON CACHE BOOL "Use C99 extension to math library")
 set(EXT_DEP ON CACHE BOOL "Compile external dependencies in BLASFEO")
 
 # Options
+# enable runtine checks
+set(RUNTIME_CHECKS OFF)
+
 # set(BLASFEO_TESTING ON CACHE BOOL "Tests enabled")
 set(BLASFEO_TESTING OFF CACHE BOOL "Tests disabled")
 
 # set(BLASFEO_BENCHMARKS ON CACHE BOOL "Benchmarks enabled")
 set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled")
 
-# enable runtine checks
-set(RUNTIME_CHECKS OFF)
-
 set(BLASFEO_EXAMPLES ON CACHE BOOL "Examples enabled")
 # set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled")
+
+# build shared library
+set(BUILD_SHARED_LIBS OFF CACHE STRING "Build shared libraries")
+
+# headers installation directory
+set(BLASFEO_HEADERS_INSTALLATION_DIRECTORY "include" CACHE STRING "Headers local installation directory")
 
 
 
@@ -182,8 +191,8 @@ if(NOT DEFINED(BLASFEO_CROSSCOMPILING))
 	set(BLASFEO_CROSSCOMPILING ${CMAKE_CROSSCOMPILING})
 endif()
 
-# Skip BLASFEO utils for unsupported systems and for Realease build
-if(CMAKE_SYSTEM MATCHES "dSpace" OR CMAKE_BUILD_TYPE MATCHES "Release")
+# Skip BLASFEO examples for unsupported systems and for Realease build
+if(CMAKE_SYSTEM MATCHES "dSpace") # OR CMAKE_BUILD_TYPE MATCHES "Release")
 	set(BLASFEO_TESTING OFF CACHE BOOL "Examples disabled" FORCE)
 	set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled" FORCE)
 	set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled" FORCE)
@@ -199,15 +208,6 @@ if(CMAKE_C_COMPILER_ID MATCHES MSVC)
 		message( FATAL_ERROR "MSVC compiler only supported for TARGET=GENERIC")
 	endif()
 endif()
-
-# build shared library
-set(BUILD_SHARED_LIBS OFF CACHE STRING "Build shared libraries")
-
-# installation directory
-set(CMAKE_INSTALL_PREFIX "/opt/blasfeo" CACHE STRING "Installation path")
-
-# headers installation directory
-set(BLASFEO_HEADERS_INSTALLATION_DIRECTORY "include" CACHE STRING "Headers local installation directory")
 
 # testing
 if(BLASFEO_TESTING MATCHES ON)
@@ -272,6 +272,9 @@ endif()
 if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOS_WINDOWS")
 	set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DOS_WINDOWS")
+	if(${BUILD_SHARED_LIBS} MATCHES ON)
+		set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+	endif()
 endif()
 
 # External BLAS flags
@@ -288,7 +291,10 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_FLAGS_BLAS_${EXTERNAL_BLAS}}")
 
 # common C flags
 if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -fPIC")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
+	if(NOT CMAKE_C_SIMULATE_ID MATCHES "MSVC") # See https://stackoverflow.com/questions/49480535
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC") # Windows is always position independent code
+	endif()
 endif()
 
 
@@ -1044,6 +1050,18 @@ else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
 		${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib.c
 		)
 
+	if(${LA} MATCHES REFERENCE) # REFERENCE
+		if(${BLAS_API})
+			list(APPEND BLAS_SRC
+				${PROJECT_SOURCE_DIR}/blas_api/dgemm_ref.c
+				${PROJECT_SOURCE_DIR}/blas_api/dtrsm_ref.c
+
+				${PROJECT_SOURCE_DIR}/blas_api/sgemm_ref.c
+				${PROJECT_SOURCE_DIR}/blas_api/strsm_ref.c
+				)
+		endif() # BLAS_API
+	endif() # REFERENCE
+
 endif(${LA} MATCHES HIGH_PERFORMANCE)
 
 if(${EXT_DEP})
@@ -1089,7 +1107,8 @@ endif()
 target_include_directories(blasfeo
 	PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-		$<INSTALL_INTERFACE:include/blasfeo/include>)
+		$<INSTALL_INTERFACE:${BLASFEO_HEADERS_INSTALLATION_DIRECTORY}>)
+#		$<INSTALL_INTERFACE:include/blasfeo/include>)
 
 
 install(TARGETS blasfeo EXPORT blasfeoConfig

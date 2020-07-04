@@ -36,46 +36,37 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
-
-#if defined(BLAS_API)
-
-
-
-void kernel_ddot_11_lib(int n, double *x, double *y, double *res)
-	{
-
-	int ii;
-
-	double tmp_res[4];
-	tmp_res[0] = 0.0;
-	tmp_res[1] = 0.0;
-	tmp_res[2] = 0.0;
-	tmp_res[3] = 0.0;
-
-	ii = 0;
-	for(; ii<n-3; ii+=4)
-		{
-		tmp_res[0] += y[0]*x[0];
-		tmp_res[1] += y[1]*x[1];
-		tmp_res[2] += y[2]*x[2];
-		tmp_res[3] += y[3]*x[3];
-		x += 4;
-		y += 4;
-		}
-	for(; ii<n; ii++)
-		{
-		tmp_res[0] += y[0]*x[0];
-		x += 1;
-		y += 1;
-		}
-
-	*res = tmp_res[0]+tmp_res[1]+tmp_res[2]+tmp_res[3];
-
-	return;
-
-	}
+#include <blasfeo_common.h>
+#include <blasfeo_s_blasfeo_api.h>
+#include <blasfeo_s_kernel.h>
 
 
 
-#endif
+#define TRSM_LLNN blasfeo_strsm_llnn
+#define TRSM_LLNU blasfeo_strsm_llnu
+#define TRSM_LLTN blasfeo_strsm_lltn
+#define TRSM_LLTU blasfeo_strsm_lltu
+#define TRSM_LUNN blasfeo_strsm_lunn
+#define TRSM_LUNU blasfeo_strsm_lunu
+#define TRSM_LUTN blasfeo_strsm_lutn
+#define TRSM_LUTU blasfeo_strsm_lutu
+#define TRSM_RLNN blasfeo_strsm_rlnn
+#define TRSM_RLNU blasfeo_strsm_rlnu
+#define TRSM_RLTN blasfeo_strsm_rltn
+#define TRSM_RLTU blasfeo_strsm_rltu
+#define TRSM_RUNN blasfeo_strsm_runn
+#define TRSM_RUNU blasfeo_strsm_runu
+#define TRSM_RUTN blasfeo_strsm_rutn
+#define TRSM_RUTU blasfeo_strsm_rutu
+#define MAT blasfeo_smat
+#define REAL float
+
+
+
+#define TRSM blasfeo_strsm
+
+
+
+#include "xtrsm_ref.c"
+
+

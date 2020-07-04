@@ -71,7 +71,8 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 	int bs = 4;
 
 
-	void *mem, *mem_align;
+	void *mem;
+	char *mem_align;
 	double *pU;
 	int sdu;
 	struct blasfeo_dmat sA;
@@ -82,17 +83,17 @@ void blasfeo_dsyrk(char *uplo, char *ta, int *pm, int *pk, double *alpha, double
 	// stack memory allocation
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
-//	double pD0[4*16] __attribute__ ((aligned (64)));
+	ALIGNED( double pU0[3*4*K_MAX_STACK], 64 );
+//	ALIGNED( double pD0[4*16], 64 );
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
-//	double pD0[2*16] __attribute__ ((aligned (64)));
+	ALIGNED( double pU0[2*4*K_MAX_STACK], 64 );
+//	ALIGNED( double pD0[2*16], 64 );
 #elif defined(TARGET_GENERIC)
 	double pU0[1*4*K_MAX_STACK];
 //	double pD0[1*16];
 #else
-	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
-//	double pD0[1*16] __attribute__ ((aligned (64)));
+	ALIGNED( double pU0[1*4*K_MAX_STACK], 64 );
+//	ALIGNED( double pD0[1*16], 64 );
 #endif
 	int sdu0 = (k+3)/4*4;
 	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
@@ -719,8 +720,8 @@ lx_1:
 	m1 = (m+128-1)/128*128;
 	sA_size = blasfeo_memsize_dmat(m1, k1);
 	mem = malloc(sA_size+64);
-	blasfeo_align_64_byte(mem, &mem_align);
-	blasfeo_create_dmat(m, k, &sA, mem_align);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_create_dmat(m, k, &sA, (void *) mem_align);
 
 	if(*ta=='n' | *ta=='N')
 		blasfeo_pack_dmat(m, k, A, lda, &sA, 0, 0);
@@ -847,8 +848,8 @@ ux_1:
 	m1 = (m+128-1)/128*128;
 	sA_size = blasfeo_memsize_dmat(m1, k1);
 	mem = malloc(sA_size+64);
-	blasfeo_align_64_byte(mem, &mem_align);
-	blasfeo_create_dmat(m, k, &sA, mem_align);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_create_dmat(m, k, &sA, (void *) mem_align);
 
 	if(*ta=='n' | *ta=='N')
 		blasfeo_pack_dmat(m, k, A, lda, &sA, 0, 0);

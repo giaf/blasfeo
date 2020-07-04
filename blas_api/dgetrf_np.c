@@ -83,17 +83,17 @@ void blas_dgetrf_np(int *pm, int *pn, double *C, int *pldc, int *info)
 #if defined(TARGET_GENERIC)
 	double pd0[K_MAX_STACK];
 #else
-	double pd0[K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( double pd0[K_MAX_STACK], 64 );
 #endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( double pU0[3*4*K_MAX_STACK], 64 );
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( double pU0[2*4*K_MAX_STACK], 64 );
 #elif defined(TARGET_GENERIC)
 	double pU0[1*4*K_MAX_STACK];
 #else
-	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( double pU0[1*4*K_MAX_STACK], 64 );
 #endif
 	int sdu0 = (m+3)/4*4;
 	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
@@ -103,7 +103,8 @@ void blas_dgetrf_np(int *pm, int *pn, double *C, int *pldc, int *info)
 	int sdu, sdc;
 	double *pU, *pC, *pd;
 	int sC_size, stot_size;
-	void *smat_mem, *smat_mem_align;
+	void *mem;
+	char *mem_align;
 	int m1, n1;
 
 //	int n4 = n<4 ? n : 4;

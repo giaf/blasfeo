@@ -79,19 +79,19 @@ void blasfeo_sgemm(char *ta, char *tb, int *pm, int *pn, int *pk, float *alpha, 
 
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL)
-	float pU[3*8*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( float pU[3*8*K_MAX_STACK], 64 );
 	int sdu = (k+ps_8-1)/ps_8*ps_8;
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	float pU[2*8*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( float pU[2*8*K_MAX_STACK], 64 );
 	int sdu = (k+ps_8-1)/ps_8*ps_8;
 #elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-	float pU[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( float pU[2*4*K_MAX_STACK], 64 );
 	int sdu = (k+ps_4-1)/ps_4*ps_4;
 #elif defined(TARGET_GENERIC)
 	float pU[1*4*K_MAX_STACK];
 	int sdu = (k+ps_4-1)/ps_4*ps_4;
 #else
-	float pU[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( float pU[1*4*K_MAX_STACK], 64 );
 	int sdu = (k+ps_4-1)/ps_4*ps_4;
 #endif
 	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;
@@ -99,7 +99,8 @@ void blasfeo_sgemm(char *ta, char *tb, int *pm, int *pn, int *pk, float *alpha, 
 	struct blasfeo_smat sA, sB;
 	int sda, sdb;
 	int sA_size, sB_size;
-	void *smat_mem, *smat_mem_align;
+	void *mem;
+	char *mem_align;
 	int m1, n1, k1;
 	int pack_B;
 
@@ -583,10 +584,10 @@ nn_1:
 	n1 = (n+128-1)/128*128;
 	sA_size = blasfeo_memsize_smat(m_kernel, k1);
 	sB_size = blasfeo_memsize_smat(n1, k1);
-	smat_mem = malloc(sA_size+sB_size+64);
-	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
-	blasfeo_create_smat(m_kernel, k, &sA, smat_mem_align);
-	blasfeo_create_smat(n, k, &sB, smat_mem_align+sA_size);
+	mem = malloc(sA_size+sB_size+64);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_create_smat(m_kernel, k, &sA, (void *) mem_align);
+	blasfeo_create_smat(n, k, &sB, (void *) (mem_align+sA_size));
 
 	sda = sA.cn;
 	sdb = sB.cn;
@@ -865,7 +866,7 @@ nn_1_left_4:
 	goto nn_1_return;
 
 nn_1_return:
-	free(smat_mem);
+	free(mem);
 	return;
 
 
@@ -1228,10 +1229,10 @@ nt_1:
 	n1 = (n+128-1)/128*128;
 	sA_size = blasfeo_memsize_smat(m_kernel, k1);
 	sB_size = blasfeo_memsize_smat(n1, k1);
-	smat_mem = malloc(sA_size+sB_size+64);
-	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
-	blasfeo_create_smat(m_kernel, k, &sA, smat_mem_align);
-	blasfeo_create_smat(n, k, &sB, smat_mem_align+sA_size);
+	mem = malloc(sA_size+sB_size+64);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_create_smat(m_kernel, k, &sA, (void *) mem_align);
+	blasfeo_create_smat(n, k, &sB, (void *) (mem_align+sA_size));
 
 	sda = sA.cn;
 	sdb = sB.cn;
@@ -1476,7 +1477,7 @@ nt_1_left_4:
 	goto nt_1_return;
 
 nt_1_return:
-	free(smat_mem);
+	free(mem);
 	return;
 
 
@@ -1851,10 +1852,10 @@ tn_1:
 	n1 = (n+128-1)/128*128;
 	sA_size = blasfeo_memsize_smat(m_kernel, k1);
 	sB_size = blasfeo_memsize_smat(n1, k1);
-	smat_mem = malloc(sA_size+sB_size+64);
-	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
-	blasfeo_create_smat(m_kernel, k, &sA, smat_mem_align);
-	blasfeo_create_smat(n, k, &sB, smat_mem_align+sA_size);
+	mem = malloc(sA_size+sB_size+64);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_create_smat(m_kernel, k, &sA, (void *) mem_align);
+	blasfeo_create_smat(n, k, &sB, (void *) (mem_align+sA_size));
 
 	sda = sA.cn;
 	sdb = sB.cn;
@@ -2134,7 +2135,7 @@ tn_1_left_4:
 	goto tn_1_return;
 
 tn_1_return:
-free(smat_mem);
+free(mem);
 	return;
 
 
@@ -2408,10 +2409,10 @@ tt_1:
 	n1 = (n+128-1)/128*128;
 	sA_size = blasfeo_memsize_smat(m_kernel, k1);
 	sB_size = blasfeo_memsize_smat(n1, k1);
-	smat_mem = malloc(sA_size+sB_size+64);
-	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
-	blasfeo_create_smat(m_kernel, k, &sA, smat_mem_align);
-	blasfeo_create_smat(n, k, &sB, smat_mem_align+sA_size);
+	mem = malloc(sA_size+sB_size+64);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_create_smat(m_kernel, k, &sA, (void *) mem_align);
+	blasfeo_create_smat(n, k, &sB, (void *) (mem_align+sA_size));
 
 	sda = sA.cn;
 	sdb = sB.cn;
@@ -2666,7 +2667,7 @@ tt_1_left_4:
 	goto tt_1_return;
 
 tt_1_return:
-	free(smat_mem);
+	free(mem);
 	return;
 
 

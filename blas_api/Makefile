@@ -68,6 +68,10 @@ OBJS += strsm.o
 else #ifeq ($(LA), REFERENCE)
 
 OBJS += dgemm_ref.o
+OBJS += dtrsm_ref.o
+
+OBJS += sgemm_ref.o
+OBJS += strsm_ref.o
 
 endif # REFERENCE
 
@@ -83,3 +87,7 @@ clean:
 	rm -f *.gcov
 
 dgemm_ref.o: dgemm_ref.c xgemm_ref.c
+dtrsm_ref.o: dtrsm_ref.c xtrsm_ref.c
+
+sgemm_ref.o: sgemm_ref.c xgemm_ref.c
+strsm_ref.o: strsm_ref.c xtrsm_ref.c

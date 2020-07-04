@@ -56,9 +56,9 @@ void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc) // TODO int *info
 
 	int bs = 4;
 
-	double pd[256] __attribute__ ((aligned (64)));
+	ALIGNED( double pd[256], 64 );
 
-	double pU[12*256] __attribute__ ((aligned (64)));
+	ALIGNED( double pU[12*256], 64 );
 	int sdu = 256;
 
 	struct blasfeo_dmat sC;

@@ -762,10 +762,16 @@ OBJS += \
 		blasfeo_api/s_blas3_diag_lib.o \
 		blasfeo_api/s_lapack_lib.o \
 
+ifeq ($(LA), REFERENCE)
 ifeq ($(BLAS_API), 1)
 OBJS += \
 		blas_api/dgemm_ref.o \
+		blas_api/dtrsm_ref.o \
+		\
+		blas_api/sgemm_ref.o \
+		blas_api/strsm_ref.o \
 
+endif
 endif
 
 endif # LA choice

@@ -114,7 +114,7 @@ OBJS = test.o
 .DEFAULT_GOAL := obj
 .PHONY: obj
 
-obj: one aux blas
+obj: one
 
 bin_dir:
 	mkdir -p $(BINARY_DIR)/

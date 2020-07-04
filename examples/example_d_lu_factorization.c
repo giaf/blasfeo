@@ -114,8 +114,8 @@ int main()
 	// matrices in matrix struct format
 	//
 
-	// work space enough for 5 matrix structs for size n times n
-	int size_strmat = 5*blasfeo_memsize_dmat(n, n);
+	// work space enough for 6 matrix structs for size n times n
+	int size_strmat = 6*blasfeo_memsize_dmat(n, n);
 	void *memory_strmat; v_zeros_align(&memory_strmat, size_strmat);
 	char *ptr_memory_strmat = (char *) memory_strmat;
 
@@ -153,6 +153,11 @@ int main()
 	blasfeo_create_dmat(n, n, &sLU, ptr_memory_strmat);
 	ptr_memory_strmat += sLU.memsize;
 
+	struct blasfeo_dmat sLUt;
+//	blasfeo_allocate_dmat(n, n, &sD);
+	blasfeo_create_dmat(n, n, &sLUt, ptr_memory_strmat);
+	ptr_memory_strmat += sLUt.memsize;
+
 	blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
 	printf("\nB+A*A' = \n");
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
@@ -164,7 +169,7 @@ int main()
 	printf("\nipiv = \n");
 	int_print_mat(1, n, ipiv, 1);
 
-#if 0 // solve P L U X = P B
+#if 0 // solve A X = P L U X = B  =>  L U X = P^T B
 	blasfeo_pack_dmat(n, n, I, n, &sI, 0, 0);
 	printf("\nI = \n");
 	blasfeo_print_dmat(n, n, &sI, 0, 0);
@@ -182,7 +187,7 @@ int main()
 
 	// convert from strmat to column major matrix
 	blasfeo_unpack_dmat(n, n, &sD, 0, 0, D, n);
-#else // solve X^T (P L U)^T = B^T P^T
+#elif 0 // solve X^T A^T = X^T (P L U)^T = B^T  =>  X^T U^T L^T = B^T P
 	blasfeo_pack_tran_dmat(n, n, I, n, &sI, 0, 0);
 	printf("\nI' = \n");
 	blasfeo_print_dmat(n, n, &sI, 0, 0);
@@ -200,6 +205,27 @@ int main()
 
 	// convert from strmat to column major matrix
 	blasfeo_unpack_tran_dmat(n, n, &sD, 0, 0, D, n);
+#else // solve A^T X = (P L U)^T X = U^T L^T P^T X = B
+	blasfeo_dgetr(n, n, &sLU, 0, 0, &sLUt, 0, 0);
+
+	blasfeo_pack_dmat(n, n, I, n, &sI, 0, 0);
+	printf("\nI = \n");
+	blasfeo_print_dmat(n, n, &sI, 0, 0);
+
+	blasfeo_dtrsm_llnn(n, n, 1.0, &sLUt, 0, 0, &sI, 0, 0, &sD, 0, 0);
+	printf("\ninv(U^T) = \n");
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+
+	blasfeo_dtrsm_lunu(n, n, 1.0, &sLUt, 0, 0, &sD, 0, 0, &sD, 0, 0);
+	printf("\n(inv(L^T)*inv(U^T)) = \n");
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+
+	blasfeo_drowpei(n, ipiv, &sD);
+	printf("\nperm(inv(L^T)*inv(U^T)) = \n");
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
+
+	// convert from strmat to column major matrix
+	blasfeo_unpack_dmat(n, n, &sD, 0, 0, D, n);
 #endif
 
 	// print matrix in column-major format

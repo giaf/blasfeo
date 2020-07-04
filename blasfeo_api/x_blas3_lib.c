@@ -588,10 +588,121 @@ void TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 // dtrsm_lltn
 void TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
-	printf("\nblasfeo_xtrsm_lltn: feature not implemented yet\n");
-	exit(1);
-#endif
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk, id;
+	REAL
+		d_00, d_01,
+		d_10, d_11;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda; // triangular
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	REAL *dA = sA->dA;
+	if(ai==0 & aj==0)
+		{
+		if (sA->use_dA<m)
+			{
+			// invert diagonal of pA
+			for(ii=0; ii<m; ii++)
+				dA[ii] = 1.0/pA[ii+lda*ii];
+			// use only now
+			sA->use_dA = m;
+			}
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			dA[ii] = 1.0 / pA[ii+lda*ii];
+		sA->use_dA = 0; // nonzero offset makes diagonal dirty
+		}
+	// solve
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			id = m-ii-2;
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
+			d_10 = alpha * pB[id+1+ldb*(jj+0)];
+			d_01 = alpha * pB[id+0+ldb*(jj+1)];
+			d_11 = alpha * pB[id+1+ldb*(jj+1)];
+			kk = id+2;
+			for(; kk<m; kk++)
+				{
+				d_00 -= pA[kk+0+lda*(id+0)] * pD[kk+0+ldd*(jj+0)];
+				d_10 -= pA[kk+0+lda*(id+1)] * pD[kk+0+ldd*(jj+0)];
+				d_01 -= pA[kk+0+lda*(id+0)] * pD[kk+0+ldd*(jj+1)];
+				d_11 -= pA[kk+0+lda*(id+1)] * pD[kk+0+ldd*(jj+1)];
+				}
+			d_10 *= dA[id+1];
+			d_11 *= dA[id+1];
+			d_00 -= pA[id+1+lda*(id+0)] * d_10;
+			d_01 -= pA[id+1+lda*(id+0)] * d_11;
+			d_00 *= dA[id+0];
+			d_01 *= dA[id+0];
+			pD[id+0+ldd*(jj+0)] = d_00;
+			pD[id+1+ldd*(jj+0)] = d_10;
+			pD[id+0+ldd*(jj+1)] = d_01;
+			pD[id+1+ldd*(jj+1)] = d_11;
+			}
+		for(; ii<m; ii++)
+			{
+			id = m-ii-1;
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
+			d_01 = alpha * pB[id+0+ldb*(jj+1)];
+			kk = id+1;
+			for(; kk<m; kk++)
+				{
+				d_00 -= pA[kk+0+lda*(id+0)] * pD[kk+0+ldd*(jj+0)];
+				d_01 -= pA[kk+0+lda*(id+0)] * pD[kk+0+ldd*(jj+1)];
+				}
+			d_00 *= dA[id+0];
+			d_01 *= dA[id+0];
+			pD[id+0+ldd*(jj+0)] = d_00;
+			pD[id+0+ldd*(jj+1)] = d_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			id = m-ii-2;
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
+			d_10 = alpha * pB[id+1+ldb*(jj+0)];
+			kk = id+2;
+			for(; kk<m; kk++)
+				{
+				d_00 -= pA[kk+0+lda*(id+0)] * pD[kk+0+ldd*(jj+0)];
+				d_10 -= pA[kk+0+lda*(id+1)] * pD[kk+0+ldd*(jj+0)];
+				}
+			d_10 *= dA[id+1];
+			d_00 -= pA[id+1+lda*(id+0)] * d_10;
+			d_00 *= dA[id+0];
+			pD[id+0+ldd*(jj+0)] = d_00;
+			pD[id+1+ldd*(jj+0)] = d_10;
+			}
+		for(; ii<m; ii++)
+			{
+			id = m-ii-1;
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
+			kk = id+1;
+			for(; kk<m; kk++)
+				{
+				d_00 -= pA[kk+0+lda*(id+0)] * pD[kk+0+ldd*(jj+0)];
+				}
+			d_00 *= dA[id+0];
+			pD[id+0+ldd*(jj+0)] = d_00;
+			}
+		}
 	return;
 	}
 
@@ -600,10 +711,95 @@ void TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 // dtrsm_lltu
 void TRSM_LLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
-	printf("\nblasfeo_xtrsm_lltu: feature not implemented yet\n");
-	exit(1);
-#endif
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk, id;
+	REAL
+		d_00, d_01,
+		d_10, d_11;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda; // triangular
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	// solve
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			id = m-ii-2;
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
+			d_10 = alpha * pB[id+1+ldb*(jj+0)];
+			d_01 = alpha * pB[id+0+ldb*(jj+1)];
+			d_11 = alpha * pB[id+1+ldb*(jj+1)];
+			kk = id+2;
+
+			for(; kk<m; kk++)
+				{
+				d_00 -= pA[kk+0+lda*(id+0)] * pD[kk+0+ldd*(jj+0)];
+				d_10 -= pA[kk+0+lda*(id+1)] * pD[kk+0+ldd*(jj+0)];
+				d_01 -= pA[kk+0+lda*(id+0)] * pD[kk+0+ldd*(jj+1)];
+				d_11 -= pA[kk+0+lda*(id+1)] * pD[kk+0+ldd*(jj+1)];
+				}
+			d_00 -= pA[id+1+lda*(id+0)] * d_10;
+			d_01 -= pA[id+1+lda*(id+0)] * d_11;
+			pD[id+0+ldd*(jj+0)] = d_00;
+			pD[id+1+ldd*(jj+0)] = d_10;
+			pD[id+0+ldd*(jj+1)] = d_01;
+			pD[id+1+ldd*(jj+1)] = d_11;
+			}
+		for(; ii<m; ii++)
+			{
+			id = m-ii-1;
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
+			d_01 = alpha * pB[id+0+ldb*(jj+1)];
+			kk = id+1;
+			for(; kk<m; kk++)
+				{
+				d_00 -= pA[kk+0+lda*(id+0)] * pD[kk+0+ldd*(jj+0)];
+				d_01 -= pA[kk+0+lda*(id+0)] * pD[kk+0+ldd*(jj+1)];
+				}
+			pD[id+0+ldd*(jj+0)] = d_00;
+			pD[id+0+ldd*(jj+1)] = d_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			id = m-ii-2;
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
+			d_10 = alpha * pB[id+1+ldb*(jj+0)];
+			kk = id+2;
+			for(; kk<m; kk++)
+				{
+				d_00 -= pA[kk+0+lda*(id+0)] * pD[kk+0+ldd*(jj+0)];
+				d_10 -= pA[kk+0+lda*(id+1)] * pD[kk+0+ldd*(jj+0)];
+				}
+			d_00 -= pA[id+1+lda*(id+0)] * d_10;
+			pD[id+0+ldd*(jj+0)] = d_00;
+			pD[id+1+ldd*(jj+0)] = d_10;
+			}
+		for(; ii<m; ii++)
+			{
+			id = m-ii-1;
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
+			kk = id+1;
+			for(; kk<m; kk++)
+				{
+				d_00 -= pA[kk+0+lda*(id+0)] * pD[kk+0+ldd*(jj+0)];
+				}
+			pD[id+0+ldd*(jj+0)] = d_00;
+			}
+		}
 	return;
 	}
 
@@ -646,9 +842,8 @@ void TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			dA[ii] = 1.0 / pA[ii+lda*ii];
 		sA->use_dA = 0; // nonzero offset makes diagonal dirty
 		}
-
+	// solve
 	jj = 0;
-
 	for(; jj<n-1; jj+=2)
 		{
 		ii = 0;
@@ -660,7 +855,6 @@ void TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			d_01 = alpha * pB[id+0+ldb*(jj+1)];
 			d_11 = alpha * pB[id+1+ldb*(jj+1)];
 			kk = id+2;
-
 			for(; kk<m; kk++)
 				{
 				d_00 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
@@ -668,16 +862,12 @@ void TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 				d_01 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+1)];
 				d_11 -= pA[id+1+lda*(kk+0)] * pD[kk+0+ldd*(jj+1)];
 				}
-
 			d_10 *= dA[id+1];
 			d_11 *= dA[id+1];
-
 			d_00 -= pA[id+0+lda*(id+1)] * d_10;
 			d_01 -= pA[id+0+lda*(id+1)] * d_11;
-
 			d_00 *= dA[id+0];
 			d_01 *= dA[id+0];
-
 			pD[id+0+ldd*(jj+0)] = d_00;
 			pD[id+1+ldd*(jj+0)] = d_10;
 			pD[id+0+ldd*(jj+1)] = d_01;
@@ -741,10 +931,95 @@ void TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 // dtrsm_lunu
 void TRSM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
-	printf("\nblasfeo_xtrsm_lunu: feature not implemented yet\n");
-	exit(1);
-#endif
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk, id;
+	REAL
+		d_00, d_01,
+		d_10, d_11;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda; // triangular
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	// solve
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			id = m-ii-2;
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
+			d_10 = alpha * pB[id+1+ldb*(jj+0)];
+			d_01 = alpha * pB[id+0+ldb*(jj+1)];
+			d_11 = alpha * pB[id+1+ldb*(jj+1)];
+			kk = id+2;
+			for(; kk<m; kk++)
+				{
+				d_00 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
+				d_10 -= pA[id+1+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
+				d_01 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+1)];
+				d_11 -= pA[id+1+lda*(kk+0)] * pD[kk+0+ldd*(jj+1)];
+				}
+			d_00 -= pA[id+0+lda*(id+1)] * d_10;
+			d_01 -= pA[id+0+lda*(id+1)] * d_11;
+			pD[id+0+ldd*(jj+0)] = d_00;
+			pD[id+1+ldd*(jj+0)] = d_10;
+			pD[id+0+ldd*(jj+1)] = d_01;
+			pD[id+1+ldd*(jj+1)] = d_11;
+			}
+		for(; ii<m; ii++)
+			{
+			id = m-ii-1;
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
+			d_01 = alpha * pB[id+0+ldb*(jj+1)];
+			kk = id+1;
+			for(; kk<m; kk++)
+				{
+				d_00 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
+				d_01 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+1)];
+				}
+			pD[id+0+ldd*(jj+0)] = d_00;
+			pD[id+0+ldd*(jj+1)] = d_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			id = m-ii-2;
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
+			d_10 = alpha * pB[id+1+ldb*(jj+0)];
+			kk = id+2;
+			for(; kk<m; kk++)
+				{
+				d_00 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
+				d_10 -= pA[id+1+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
+				}
+			d_00 -= pA[id+0+lda*(id+1)] * d_10;
+			pD[id+0+ldd*(jj+0)] = d_00;
+			pD[id+1+ldd*(jj+0)] = d_10;
+			}
+		for(; ii<m; ii++)
+			{
+			id = m-ii-1;
+			d_00 = alpha * pB[id+0+ldb*(jj+0)];
+			kk = id+1;
+			for(; kk<m; kk++)
+				{
+				d_00 -= pA[id+0+lda*(kk+0)] * pD[kk+0+ldd*(jj+0)];
+				}
+			pD[id+0+ldd*(jj+0)] = d_00;
+			}
+		}
+	return;
 	return;
 	}
 
@@ -753,10 +1028,112 @@ void TRSM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 // dtrsm_lutn
 void TRSM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
-	printf("\nblasfeo_xtrsm_lutn: feature not implemented yet\n");
-	exit(1);
-#endif
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL
+		d_00, d_01,
+		d_10, d_11;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda; // triangular
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	REAL *dA = sA->dA;
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA<n)
+			{
+			for(ii=0; ii<n; ii++)
+				dA[ii] = 1.0 / pA[ii+lda*ii];
+			sA->use_dA = n;
+			}
+		}
+	else
+		{
+		for(ii=0; ii<n; ii++)
+			dA[ii] = 1.0 / pA[ii+lda*ii];
+		sA->use_dA = 0; // nonzero offset makes diagonal dirty
+		}
+	// solve
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			d_00 = alpha * pB[ii+0+ldb*(jj+0)];
+			d_10 = alpha * pB[ii+1+ldb*(jj+0)];
+			d_01 = alpha * pB[ii+0+ldb*(jj+1)];
+			d_11 = alpha * pB[ii+1+ldb*(jj+1)];
+			kk = 0;
+			for(; kk<ii; kk++)
+				{
+				d_00 -= pA[kk+lda*(ii+0)] * pD[kk+ldd*(jj+0)];
+				d_10 -= pA[kk+lda*(ii+1)] * pD[kk+ldd*(jj+0)];
+				d_01 -= pA[kk+lda*(ii+0)] * pD[kk+ldd*(jj+1)];
+				d_11 -= pA[kk+lda*(ii+1)] * pD[kk+ldd*(jj+1)];
+				}
+			d_00 *= dA[ii+0];
+			d_01 *= dA[ii+0];
+			d_10 -= pA[ii+lda*(ii+1)] * d_00;
+			d_11 -= pA[ii+lda*(ii+1)] * d_01;
+			d_10 *= dA[ii+1];
+			d_11 *= dA[ii+1];
+			pD[ii+0+ldd*(jj+0)] = d_00;
+			pD[ii+1+ldd*(jj+0)] = d_10;
+			pD[ii+0+ldd*(jj+1)] = d_01;
+			pD[ii+1+ldd*(jj+1)] = d_11;
+			}
+		for(; ii<m; ii++)
+			{
+			d_00 = alpha * pB[ii+ldb*(jj+0)];
+			d_01 = alpha * pB[ii+ldb*(jj+1)];
+			for(kk=0; kk<ii; kk++)
+				{
+				d_00 -= pA[kk+lda*ii] * pD[kk+ldd*(jj+0)];
+				d_01 -= pA[kk+lda*ii] * pD[kk+ldd*(jj+1)];
+				}
+			d_00 *= dA[ii+0];
+			d_01 *= dA[ii+0];
+			pD[ii+ldd*(jj+0)] = d_00;
+			pD[ii+ldd*(jj+1)] = d_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			d_00 = alpha * pB[ii+0+ldb*jj];
+			d_10 = alpha * pB[ii+1+ldb*jj];
+			for(kk=0; kk<ii; kk++)
+				{
+				d_00 -= pA[kk+lda*(ii+0)] * pD[kk+ldd*jj];
+				d_10 -= pA[kk+lda*(ii+1)] * pD[kk+ldd*jj];
+				}
+			d_00 *= dA[ii+0];
+			d_10 -= pA[kk+lda*(ii+1)] * d_00;
+			d_10 *= dA[ii+1];
+			pD[ii+0+ldd*jj] = d_00;
+			pD[ii+1+ldd*jj] = d_10;
+			}
+		for(; ii<m; ii++)
+			{
+			d_00 = alpha * pB[ii+ldb*jj];
+			for(kk=0; kk<ii; kk++)
+				{
+				d_00 -= pA[kk+lda*ii] * pD[kk+ldd*jj];
+				}
+			d_00 *= dA[ii+0];
+			pD[ii+ldd*jj] = d_00;
+			}
+		}
 	return;
 	}
 
@@ -765,10 +1142,87 @@ void TRSM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 // dtrsm_lutu
 void TRSM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
-	printf("\nblasfeo_xtrsm_lutu: feature not implemented yet\n");
-	exit(1);
-#endif
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL
+		d_00, d_01,
+		d_10, d_11;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda; // triangular
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	// solve
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			d_00 = alpha * pB[ii+0+ldb*(jj+0)];
+			d_10 = alpha * pB[ii+1+ldb*(jj+0)];
+			d_01 = alpha * pB[ii+0+ldb*(jj+1)];
+			d_11 = alpha * pB[ii+1+ldb*(jj+1)];
+			kk = 0;
+			for(; kk<ii; kk++)
+				{
+				d_00 -= pA[kk+lda*(ii+0)] * pD[kk+ldd*(jj+0)];
+				d_10 -= pA[kk+lda*(ii+1)] * pD[kk+ldd*(jj+0)];
+				d_01 -= pA[kk+lda*(ii+0)] * pD[kk+ldd*(jj+1)];
+				d_11 -= pA[kk+lda*(ii+1)] * pD[kk+ldd*(jj+1)];
+				}
+			d_10 -= pA[ii+lda*(ii+1)] * d_00;
+			d_11 -= pA[ii+lda*(ii+1)] * d_01;
+			pD[ii+0+ldd*(jj+0)] = d_00;
+			pD[ii+1+ldd*(jj+0)] = d_10;
+			pD[ii+0+ldd*(jj+1)] = d_01;
+			pD[ii+1+ldd*(jj+1)] = d_11;
+			}
+		for(; ii<m; ii++)
+			{
+			d_00 = alpha * pB[ii+ldb*(jj+0)];
+			d_01 = alpha * pB[ii+ldb*(jj+1)];
+			for(kk=0; kk<ii; kk++)
+				{
+				d_00 -= pA[kk+lda*ii] * pD[kk+ldd*(jj+0)];
+				d_01 -= pA[kk+lda*ii] * pD[kk+ldd*(jj+1)];
+				}
+			pD[ii+ldd*(jj+0)] = d_00;
+			pD[ii+ldd*(jj+1)] = d_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			d_00 = alpha * pB[ii+0+ldb*jj];
+			d_10 = alpha * pB[ii+1+ldb*jj];
+			for(kk=0; kk<ii; kk++)
+				{
+				d_00 -= pA[kk+lda*(ii+0)] * pD[kk+ldd*jj];
+				d_10 -= pA[kk+lda*(ii+1)] * pD[kk+ldd*jj];
+				}
+			d_10 -= pA[kk+lda*(ii+1)] * d_00;
+			pD[ii+0+ldd*jj] = d_00;
+			pD[ii+1+ldd*jj] = d_10;
+			}
+		for(; ii<m; ii++)
+			{
+			d_00 = alpha * pB[ii+ldb*jj];
+			for(kk=0; kk<ii; kk++)
+				{
+				d_00 -= pA[kk+lda*ii] * pD[kk+ldd*jj];
+				}
+			pD[ii+ldd*jj] = d_00;
+			}
+		}
 	return;
 	}
 
@@ -777,10 +1231,122 @@ void TRSM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 // dtrsm_rlnn
 void TRSM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
-	printf("\nblasfeo_xtrsm_rlnn: feature not implemented yet\n");
-	exit(1);
-#endif
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	int ii, jj, kk, id;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL
+		d_00, d_01,
+		d_10, d_11;
+	REAL *pA = sA->pA+ai+aj*lda;
+	REAL *pB = sB->pA+bi+bj*ldb;
+	REAL *pD = sD->pA+di+dj*ldd;
+	REAL *dA = sA->dA;
+	if(ai==0 & aj==0)
+		{
+		if (sA->use_dA<n)
+			{
+			// invert diagonal of pA
+			for(ii=0; ii<n; ii++)
+				dA[ii] = 1.0/pA[ii+lda*ii];
+			// use only now
+			sA->use_dA = n;
+			}
+		}
+	else
+		{
+		for(ii=0; ii<n; ii++)
+			dA[ii] = 1.0 / pA[ii+lda*ii];
+		sA->use_dA = 0; // nonzero offset makes diagonal dirty
+		}
+	// solve
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		id = n-jj-2;
+		for(; ii<m-1; ii+=2)
+			{
+			d_00 = alpha * pB[ii+0+ldb*(id+0)];
+			d_10 = alpha * pB[ii+1+ldb*(id+0)];
+			d_01 = alpha * pB[ii+0+ldb*(id+1)];
+			d_11 = alpha * pB[ii+1+ldb*(id+1)];
+			kk = id+2;
+			for(; kk<n; kk++)
+				{
+				d_00 -= pA[kk+0+lda*(id+0)] * pD[ii+0+ldd*(kk+0)];
+				d_10 -= pA[kk+0+lda*(id+0)] * pD[ii+1+ldd*(kk+0)];
+				d_01 -= pA[kk+0+lda*(id+1)] * pD[ii+0+ldd*(kk+0)];
+				d_11 -= pA[kk+0+lda*(id+1)] * pD[ii+1+ldd*(kk+0)];
+				}
+			d_01 *= dA[id+1];
+			d_11 *= dA[id+1];
+			d_00 -= pA[id+1+lda*(id+0)] * d_01;
+			d_10 -= pA[id+1+lda*(id+0)] * d_11;
+			d_00 *= dA[id+0];
+			d_10 *= dA[id+0];
+			pD[ii+0+ldd*(id+0)] = d_00;
+			pD[ii+1+ldd*(id+0)] = d_10;
+			pD[ii+0+ldd*(id+1)] = d_01;
+			pD[ii+1+ldd*(id+1)] = d_11;
+			}
+		for(; ii<m; ii++)
+			{
+			d_00 = alpha * pB[ii+0+ldb*(id+0)];
+			d_01 = alpha * pB[ii+0+ldb*(id+1)];
+			kk = id+2;
+			for(; kk<n; kk++)
+				{
+				d_00 -= pA[kk+0+lda*(id+0)] * pD[ii+0+ldd*(kk+0)];
+				d_01 -= pA[kk+0+lda*(id+1)] * pD[ii+0+ldd*(kk+0)];
+				}
+			d_01 *= dA[id+1];
+			d_00 -= pA[id+1+lda*(id+0)] * d_01;
+			d_00 *= dA[id+0];
+			pD[ii+0+ldd*(id+0)] = d_00;
+			pD[ii+0+ldd*(id+1)] = d_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		id = n-jj-1;
+		for(; ii<m-1; ii+=2)
+			{
+			d_00 = alpha * pB[ii+0+ldb*(id+0)];
+			d_10 = alpha * pB[ii+1+ldb*(id+0)];
+			kk = id+1;
+			for(; kk<n; kk++)
+				{
+				d_00 -= pA[kk+0+lda*(id+0)] * pD[ii+0+ldd*(kk+0)];
+				d_10 -= pA[kk+0+lda*(id+0)] * pD[ii+1+ldd*(kk+0)];
+				}
+			d_00 *= dA[id+0];
+			d_10 *= dA[id+0];
+			pD[ii+0+ldd*(id+0)] = d_00;
+			pD[ii+1+ldd*(id+0)] = d_10;
+			}
+		for(; ii<m; ii++)
+			{
+			d_00 = alpha * pB[ii+ldb*(id)];
+			kk = id+1;
+			for(; kk<n; kk++)
+				d_00 -= pA[kk+lda*(id)] * pD[ii+ldd*(kk)];
+			pD[ii+ldd*(id)] = d_00 * dA[id];
+			}
+		}
 	return;
 	}
 
@@ -789,10 +1355,95 @@ void TRSM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 // dtrsm_rlnu
 void TRSM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
-	printf("\nblasfeo_xtrsm_rlnu: feature not implemented yet\n");
-	exit(1);
-#endif
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	int ii, jj, kk, id;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL
+		d_00, d_01,
+		d_10, d_11;
+	REAL *pA = sA->pA+ai+aj*lda;
+	REAL *pB = sB->pA+bi+bj*ldb;
+	REAL *pD = sD->pA+di+dj*ldd;
+	// solve
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		id = n-jj-2;
+		for(; ii<m-1; ii+=2)
+			{
+			d_00 = alpha * pB[ii+0+ldb*(id+0)];
+			d_10 = alpha * pB[ii+1+ldb*(id+0)];
+			d_01 = alpha * pB[ii+0+ldb*(id+1)];
+			d_11 = alpha * pB[ii+1+ldb*(id+1)];
+			kk = id+2;
+			for(; kk<n; kk++)
+				{
+				d_00 -= pA[kk+0+lda*(id+0)] * pD[ii+0+ldd*(kk+0)];
+				d_10 -= pA[kk+0+lda*(id+0)] * pD[ii+1+ldd*(kk+0)];
+				d_01 -= pA[kk+0+lda*(id+1)] * pD[ii+0+ldd*(kk+0)];
+				d_11 -= pA[kk+0+lda*(id+1)] * pD[ii+1+ldd*(kk+0)];
+				}
+			d_00 -= pA[id+1+lda*(id+0)] * d_01;
+			d_10 -= pA[id+1+lda*(id+0)] * d_11;
+			pD[ii+0+ldd*(id+0)] = d_00;
+			pD[ii+1+ldd*(id+0)] = d_10;
+			pD[ii+0+ldd*(id+1)] = d_01;
+			pD[ii+1+ldd*(id+1)] = d_11;
+			}
+		for(; ii<m; ii++)
+			{
+			d_00 = alpha * pB[ii+0+ldb*(id+0)];
+			d_01 = alpha * pB[ii+0+ldb*(id+1)];
+			kk = id+2;
+			for(; kk<n; kk++)
+				{
+				d_00 -= pA[kk+0+lda*(id+0)] * pD[ii+0+ldd*(kk+0)];
+				d_01 -= pA[kk+0+lda*(id+1)] * pD[ii+0+ldd*(kk+0)];
+				}
+			d_00 -= pA[id+1+lda*(id+0)] * d_01;
+			pD[ii+0+ldd*(id+0)] = d_00;
+			pD[ii+0+ldd*(id+1)] = d_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		id = n-jj-1;
+		for(; ii<m-1; ii+=2)
+			{
+			d_00 = alpha * pB[ii+0+ldb*(id+0)];
+			d_10 = alpha * pB[ii+1+ldb*(id+0)];
+			kk = id+1;
+			for(; kk<n; kk++)
+				{
+				d_00 -= pA[kk+0+lda*(id+0)] * pD[ii+0+ldd*(kk+0)];
+				d_10 -= pA[kk+0+lda*(id+0)] * pD[ii+1+ldd*(kk+0)];
+				}
+			pD[ii+0+ldd*(id+0)] = d_00;
+			pD[ii+1+ldd*(id+0)] = d_10;
+			}
+		for(; ii<m; ii++)
+			{
+			d_00 = alpha * pB[ii+ldb*(id)];
+			kk = id+1;
+			for(; kk<n; kk++)
+				d_00 -= pA[kk+lda*(id)] * pD[ii+ldd*(kk)];
+			}
+		}
 	return;
 	}
 
@@ -835,6 +1486,7 @@ void TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 		f_10, f_11_inv,
 		c_00, c_01,
 		c_10, c_11;
+	// solve
 	jj = 0;
 	for(; jj<n-1; jj+=2)
 		{
@@ -922,7 +1574,7 @@ void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 		f_10,
 		c_00, c_01,
 		c_10, c_11;
-
+	// solve
 	jj = 0;
 	for(; jj<n-1; jj+=2)
 		{
@@ -930,12 +1582,10 @@ void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 		ii = 0;
 		for(; ii<m-1; ii+=2)
 			{
-
 			c_00 = alpha * pB[ii+0+ldb*(jj+0)];
 			c_10 = alpha * pB[ii+1+ldb*(jj+0)];
 			c_01 = alpha * pB[ii+0+ldb*(jj+1)];
 			c_11 = alpha * pB[ii+1+ldb*(jj+1)];
-
 			for(kk=0; kk<jj; kk++)
 				{
 				c_00 -= pD[ii+0+ldd*kk] * pA[jj+0+lda*kk];
@@ -943,7 +1593,6 @@ void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 				c_01 -= pD[ii+0+ldd*kk] * pA[jj+1+lda*kk];
 				c_11 -= pD[ii+1+ldd*kk] * pA[jj+1+lda*kk];
 				}
-
 			pD[ii+0+ldd*(jj+0)] = c_00;
 			pD[ii+1+ldd*(jj+0)] = c_10;
 			c_01 -= c_00 * f_10;
@@ -951,27 +1600,22 @@ void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			pD[ii+0+ldd*(jj+1)] = c_01;
 			pD[ii+1+ldd*(jj+1)] = c_11;
 			}
-
 		for(; ii<m; ii++)
 			{
 			c_00 = alpha * pB[ii+0+ldb*(jj+0)];
 			c_01 = alpha * pB[ii+0+ldb*(jj+1)];
-
 			for(kk=0; kk<jj; kk++)
 				{
 				c_00 -= pD[ii+0+ldd*kk] * pA[jj+0+lda*kk];
 				c_01 -= pD[ii+0+ldd*kk] * pA[jj+1+lda*kk];
 				}
-
 			pD[ii+0+ldd*(jj+0)] = c_00;
 			c_01 -= c_00 * f_10;
 			pD[ii+0+ldd*(jj+1)] = c_01;
 			}
 		}
-
 	for(; jj<n; jj++)
 		{
-
 		for(ii=0; ii<m; ii++)
 			{
 			c_00 = alpha * pB[ii+ldb*jj];
@@ -990,10 +1634,103 @@ void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 // dtrsm_runn
 void TRSM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
-	printf("\nblasfeo_xtrsm_runn: feature not implemented yet\n");
-	exit(1);
-#endif
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	REAL *dA = sA->dA;
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA<n)
+			{
+			for(ii=0; ii<n; ii++)
+				dA[ii] = 1.0 / pA[ii+lda*ii];
+			sA->use_dA = n;
+			}
+		}
+	else
+		{
+		for(ii=0; ii<n; ii++)
+			dA[ii] = 1.0 / pA[ii+lda*ii];
+		sA->use_dA = 0; // nonzero offset makes diagonal dirty
+		}
+	REAL
+		f_00_inv,
+		f_10, f_11_inv,
+		c_00, c_01,
+		c_10, c_11;
+	// solve
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		f_00_inv = dA[jj+0];
+		f_10 = pA[jj+0+lda*(jj+1)];
+		f_11_inv = dA[jj+1];
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = alpha * pB[ii+0+ldb*(jj+0)];
+			c_10 = alpha * pB[ii+1+ldb*(jj+0)];
+			c_01 = alpha * pB[ii+0+ldb*(jj+1)];
+			c_11 = alpha * pB[ii+1+ldb*(jj+1)];
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+0+ldd*kk] * pA[kk+lda*(jj+0)];
+				c_10 -= pD[ii+1+ldd*kk] * pA[kk+lda*(jj+0)];
+				c_01 -= pD[ii+0+ldd*kk] * pA[kk+lda*(jj+1)];
+				c_11 -= pD[ii+1+ldd*kk] * pA[kk+lda*(jj+1)];
+				}
+			c_00 *= f_00_inv;
+			c_10 *= f_00_inv;
+			pD[ii+0+ldd*(jj+0)] = c_00;
+			pD[ii+1+ldd*(jj+0)] = c_10;
+			c_01 -= c_00 * f_10;
+			c_11 -= c_10 * f_10;
+			c_01 *= f_11_inv;
+			c_11 *= f_11_inv;
+			pD[ii+0+ldd*(jj+1)] = c_01;
+			pD[ii+1+ldd*(jj+1)] = c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = alpha * pB[ii+0+ldb*(jj+0)];
+			c_01 = alpha * pB[ii+0+ldb*(jj+1)];
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+0+ldd*kk] * pA[kk+lda*(jj+0)];
+				c_01 -= pD[ii+0+ldd*kk] * pA[kk+lda*(jj+1)];
+				}
+			c_00 *= f_00_inv;
+			pD[ii+0+ldd*(jj+0)] = c_00;
+			c_01 -= c_00 * f_10;
+			c_01 *= f_11_inv;
+			pD[ii+0+ldd*(jj+1)] = c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		// factorize diagonal
+		f_00_inv = dA[jj];
+		for(ii=0; ii<m; ii++)
+			{
+			c_00 = alpha * pB[ii+ldb*jj];
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+ldd*kk] * pA[kk+lda*jj];
+				}
+			c_00 *= f_00_inv;
+			pD[ii+ldd*jj] = c_00;
+			}
+		}
 	return;
 	}
 
@@ -1002,10 +1739,76 @@ void TRSM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 // dtrsm_runu
 void TRSM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
-	printf("\nblasfeo_xtrsm_runu: feature not implemented yet\n");
-	exit(1);
-#endif
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	REAL
+		f_10,
+		c_00, c_01,
+		c_10, c_11;
+	// solve
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		f_10 = pA[jj+0+lda*(jj+1)];
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = alpha * pB[ii+0+ldb*(jj+0)];
+			c_10 = alpha * pB[ii+1+ldb*(jj+0)];
+			c_01 = alpha * pB[ii+0+ldb*(jj+1)];
+			c_11 = alpha * pB[ii+1+ldb*(jj+1)];
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+0+ldd*kk] * pA[kk+lda*(jj+0)];
+				c_10 -= pD[ii+1+ldd*kk] * pA[kk+lda*(jj+0)];
+				c_01 -= pD[ii+0+ldd*kk] * pA[kk+lda*(jj+1)];
+				c_11 -= pD[ii+1+ldd*kk] * pA[kk+lda*(jj+1)];
+				}
+			pD[ii+0+ldd*(jj+0)] = c_00;
+			pD[ii+1+ldd*(jj+0)] = c_10;
+			c_01 -= c_00 * f_10;
+			c_11 -= c_10 * f_10;
+			pD[ii+0+ldd*(jj+1)] = c_01;
+			pD[ii+1+ldd*(jj+1)] = c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = alpha * pB[ii+0+ldb*(jj+0)];
+			c_01 = alpha * pB[ii+0+ldb*(jj+1)];
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+0+ldd*kk] * pA[kk+lda*(jj+0)];
+				c_01 -= pD[ii+0+ldd*kk] * pA[kk+lda*(jj+1)];
+				}
+			pD[ii+0+ldd*(jj+0)] = c_00;
+			c_01 -= c_00 * f_10;
+			pD[ii+0+ldd*(jj+1)] = c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		// factorize diagonal
+		for(ii=0; ii<m; ii++)
+			{
+			c_00 = alpha * pB[ii+ldb*jj];
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= pD[ii+ldd*kk] * pA[kk+lda*jj];
+				}
+			pD[ii+ldd*jj] = c_00;
+			}
+		}
 	return;
 	}
 
@@ -1037,7 +1840,6 @@ void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 	REAL *pB = sB->pA+bi+bj*ldb;
 	REAL *pD = sD->pA+di+dj*ldd;
 	REAL *dA = sA->dA;
-
 	if(ai==0 & aj==0)
 		{
 		if (sA->use_dA<n)
@@ -1055,7 +1857,7 @@ void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			dA[ii] = 1.0 / pA[ii+lda*ii];
 		sA->use_dA = 0; // nonzero offset makes diagonal dirty
 		}
-
+	// solve
 	jj = 0;
 	for(; jj<n-1; jj+=2)
 		{
@@ -1068,7 +1870,6 @@ void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			d_01 = alpha * pB[ii+0+ldb*(id+1)];
 			d_11 = alpha * pB[ii+1+ldb*(id+1)];
 			kk = id+2;
-
 			for(; kk<n; kk++)
 				{
 				d_00 -= pA[id+0+lda*(kk+0)] * pD[ii+0+ldd*(kk+0)];
@@ -1076,22 +1877,17 @@ void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 				d_01 -= pA[id+1+lda*(kk+0)] * pD[ii+0+ldd*(kk+0)];
 				d_11 -= pA[id+1+lda*(kk+0)] * pD[ii+1+ldd*(kk+0)];
 				}
-
 			d_01 *= dA[id+1];
 			d_11 *= dA[id+1];
-
 			d_00 -= pA[id+0+lda*(id+1)] * d_01;
 			d_10 -= pA[id+0+lda*(id+1)] * d_11;
-
 			d_00 *= dA[id+0];
 			d_10 *= dA[id+0];
-
 			pD[ii+0+ldd*(id+0)] = d_00;
 			pD[ii+1+ldd*(id+0)] = d_10;
 			pD[ii+0+ldd*(id+1)] = d_01;
 			pD[ii+1+ldd*(id+1)] = d_11;
 			}
-
 		for(; ii<m; ii++)
 			{
 			d_00 = alpha * pB[ii+0+ldb*(id+0)];
@@ -1102,14 +1898,11 @@ void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 				d_00 -= pA[id+0+lda*(kk+0)] * pD[ii+0+ldd*(kk+0)];
 				d_01 -= pA[id+1+lda*(kk+0)] * pD[ii+0+ldd*(kk+0)];
 				}
-
 			d_01 *= dA[id+1];
 			d_00 -= pA[id+0+lda*(id+1)] * d_01;
 			d_00 *= dA[id+0];
-
 			pD[ii+0+ldd*(id+0)] = d_00;
 			pD[ii+0+ldd*(id+1)] = d_01;
-
 			}
 		}
 	for(; jj<n; jj++)
@@ -1121,16 +1914,13 @@ void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			d_00 = alpha * pB[ii+0+ldb*(id+0)];
 			d_10 = alpha * pB[ii+1+ldb*(id+0)];
 			kk = id+1;
-
 			for(; kk<n; kk++)
 				{
 				d_00 -= pA[id+0+lda*(kk+0)] * pD[ii+0+ldd*(kk+0)];
 				d_10 -= pA[id+0+lda*(kk+0)] * pD[ii+1+ldd*(kk+0)];
 				}
-
 			d_00 *= dA[id+0];
 			d_10 *= dA[id+0];
-
 			pD[ii+0+ldd*(id+0)] = d_00;
 			pD[ii+1+ldd*(id+0)] = d_10;
 			}
@@ -1140,7 +1930,6 @@ void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 			kk = id+1;
 			for(; kk<n; kk++)
 				d_00 -= pA[id+lda*(kk)] * pD[ii+ldd*(kk)];
-
 			pD[ii+ldd*(id)] = d_00 * dA[id];
 			}
 		}
@@ -1152,10 +1941,95 @@ void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 // dtrsm_rutu
 void TRSM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
-#ifndef BENCHMARKS_MODE
-	printf("\nblasfeo_xtrsm_rutu: feature not implemented yet\n");
-	exit(1);
-#endif
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	int ii, jj, kk, id;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL
+		d_00, d_01,
+		d_10, d_11;
+	REAL *pA = sA->pA+ai+aj*lda;
+	REAL *pB = sB->pA+bi+bj*ldb;
+	REAL *pD = sD->pA+di+dj*ldd;
+	// solve
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		id = n-jj-2;
+		for(; ii<m-1; ii+=2)
+			{
+			d_00 = alpha * pB[ii+0+ldb*(id+0)];
+			d_10 = alpha * pB[ii+1+ldb*(id+0)];
+			d_01 = alpha * pB[ii+0+ldb*(id+1)];
+			d_11 = alpha * pB[ii+1+ldb*(id+1)];
+			kk = id+2;
+			for(; kk<n; kk++)
+				{
+				d_00 -= pA[id+0+lda*(kk+0)] * pD[ii+0+ldd*(kk+0)];
+				d_10 -= pA[id+0+lda*(kk+0)] * pD[ii+1+ldd*(kk+0)];
+				d_01 -= pA[id+1+lda*(kk+0)] * pD[ii+0+ldd*(kk+0)];
+				d_11 -= pA[id+1+lda*(kk+0)] * pD[ii+1+ldd*(kk+0)];
+				}
+			d_00 -= pA[id+0+lda*(id+1)] * d_01;
+			d_10 -= pA[id+0+lda*(id+1)] * d_11;
+			pD[ii+0+ldd*(id+0)] = d_00;
+			pD[ii+1+ldd*(id+0)] = d_10;
+			pD[ii+0+ldd*(id+1)] = d_01;
+			pD[ii+1+ldd*(id+1)] = d_11;
+			}
+		for(; ii<m; ii++)
+			{
+			d_00 = alpha * pB[ii+0+ldb*(id+0)];
+			d_01 = alpha * pB[ii+0+ldb*(id+1)];
+			kk = id+2;
+			for(; kk<n; kk++)
+				{
+				d_00 -= pA[id+0+lda*(kk+0)] * pD[ii+0+ldd*(kk+0)];
+				d_01 -= pA[id+1+lda*(kk+0)] * pD[ii+0+ldd*(kk+0)];
+				}
+			d_00 -= pA[id+0+lda*(id+1)] * d_01;
+			pD[ii+0+ldd*(id+0)] = d_00;
+			pD[ii+0+ldd*(id+1)] = d_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		id = n-jj-1;
+		for(; ii<m-1; ii+=2)
+			{
+			d_00 = alpha * pB[ii+0+ldb*(id+0)];
+			d_10 = alpha * pB[ii+1+ldb*(id+0)];
+			kk = id+1;
+			for(; kk<n; kk++)
+				{
+				d_00 -= pA[id+0+lda*(kk+0)] * pD[ii+0+ldd*(kk+0)];
+				d_10 -= pA[id+0+lda*(kk+0)] * pD[ii+1+ldd*(kk+0)];
+				}
+			pD[ii+0+ldd*(id+0)] = d_00;
+			pD[ii+1+ldd*(id+0)] = d_10;
+			}
+		for(; ii<m; ii++)
+			{
+			d_00 = alpha * pB[ii+ldb*(id)];
+			kk = id+1;
+			for(; kk<n; kk++)
+				d_00 -= pA[id+lda*(kk)] * pD[ii+ldd*(kk)];
+			}
+		}
 	return;
 	}
 

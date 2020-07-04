@@ -77,17 +77,17 @@ void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info
 #if defined(TARGET_GENERIC)
 	double pd0[K_MAX_STACK];
 #else
-	double pd0[K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( double pd0[K_MAX_STACK], 64 );
 #endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	double pU0[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( double pU0[3*4*K_MAX_STACK], 64 );
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	double pU0[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( double pU0[2*4*K_MAX_STACK], 64 );
 #elif defined(TARGET_GENERIC)
 	double pU0[1*4*K_MAX_STACK];
 #else
-	double pU0[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( double pU0[1*4*K_MAX_STACK], 64 );
 #endif
 	int sdu0 = (m+3)/4*4;
 	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
@@ -97,7 +97,8 @@ void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info
 	int sdu, sdc;
 	double *pU, *pC, *pd;
 	int sC_size, stot_size;
-	void *smat_mem, *smat_mem_align;
+	void *mem;
+	char *mem_align;
 	int m1, n1;
 
 //	int n4 = n<4 ? n : 4;
@@ -117,7 +118,11 @@ void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info
 
 	double *dummy = NULL;
 
-	int ipiv_tmp[4] = {};
+	int ipiv_tmp[4];
+	ipiv[0] = 0;
+	ipiv[1] = 0;
+	ipiv[2] = 0;
+	ipiv[3] = 0;
 
 
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -604,11 +609,11 @@ alg1:
 	sC_size = blasfeo_memsize_dmat(m1, n1) + 12*m1*sizeof(double);
 //	sC_size = blasfeo_memsize_dmat(m, m);
 	stot_size = sC_size;
-	smat_mem = malloc(stot_size+64);
-	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
-	pU = smat_mem_align;
+	mem = malloc(stot_size+64);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	pU = (double *) mem_align;
 	sdu = (m+3)/4*4;
-	blasfeo_create_dmat(m, n, &sC, smat_mem_align+12*m1*sizeof(double));
+	blasfeo_create_dmat(m, n, &sC, mem_align+12*m1*sizeof(double));
 	pC = sC.pA;
 	sdc = sC.cn;
 	pd = sC.dA;
@@ -1172,7 +1177,7 @@ end_1:
 	// TODO clean loops
 
 end_m_1:
-	free(smat_mem);
+	free(mem);
 	// from 0-index to 1-index
 	for(ii=0; ii<p; ii++)
 		ipiv[ii] += 1;

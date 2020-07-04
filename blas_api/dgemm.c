@@ -72,13 +72,13 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 
 // TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	double pU[3*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( double pU[3*4*K_MAX_STACK], 64 );
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	double pU[2*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( double pU[2*4*K_MAX_STACK], 64 );
 #elif defined(TARGET_GENERIC)
 	double pU[1*4*K_MAX_STACK];
 #else
-	double pU[1*4*K_MAX_STACK] __attribute__ ((aligned (64)));
+	ALIGNED( double pU[1*4*K_MAX_STACK], 64 );
 #endif
 	int sdu = (k+3)/4*4;
 	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;
@@ -86,7 +86,8 @@ void blasfeo_dgemm(char *ta, char *tb, int *pm, int *pn, int *pk, double *alpha,
 	struct blasfeo_dmat sA, sB;
 	int sda, sdb;
 	int sA_size, sB_size;
-	void *smat_mem, *smat_mem_align;
+	void *mem;
+	char *mem_align;
 	int m1, n1, k1;
 	int pack_B;
 
@@ -622,11 +623,11 @@ nn_1:
 	n1 = (n+128-1)/128*128;
 	sA_size = blasfeo_memsize_dmat(m_kernel, k1);
 	sB_size = blasfeo_memsize_dmat(n1, k1);
-	smat_mem = malloc(sA_size+sB_size+64);
-	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
+	mem = malloc(sA_size+sB_size+64);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	// TODO smaller for non-haswell !!!
-	blasfeo_create_dmat(m_kernel, k, &sA, smat_mem_align);
-	blasfeo_create_dmat(n, k, &sB, smat_mem_align+sA_size);
+	blasfeo_create_dmat(m_kernel, k, &sA, (void *) mem_align);
+	blasfeo_create_dmat(n, k, &sB, (void *) (mem_align+sA_size));
 
 	sda = sA.cn;
 	sdb = sB.cn;
@@ -757,7 +758,7 @@ nn_1_left_4:
 	goto nn_1_return;
 
 nn_1_return:
-	free(smat_mem);
+	free(mem);
 	return;
 
 
@@ -1120,10 +1121,10 @@ nt_1:
 	n1 = (n+128-1)/128*128;
 	sA_size = blasfeo_memsize_dmat(m_kernel, k1);
 	sB_size = blasfeo_memsize_dmat(n1, k1);
-	smat_mem = malloc(sA_size+sB_size+64);
-	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
-	blasfeo_create_dmat(m_kernel, k, &sA, smat_mem_align);
-	blasfeo_create_dmat(n, k, &sB, smat_mem_align+sA_size);
+	mem = malloc(sA_size+sB_size+64);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_create_dmat(m_kernel, k, &sA, (void *) mem_align);
+	blasfeo_create_dmat(n, k, &sB, (void *) (mem_align+sA_size));
 
 	sda = sA.cn;
 	sdb = sB.cn;
@@ -1240,7 +1241,7 @@ nt_1_left_4:
 	goto nt_1_return;
 
 nt_1_return:
-	free(smat_mem);
+	free(mem);
 	return;
 
 
@@ -1615,10 +1616,10 @@ tn_1:
 	n1 = (n+128-1)/128*128;
 	sA_size = blasfeo_memsize_dmat(m_kernel, k1);
 	sB_size = blasfeo_memsize_dmat(n1, k1);
-	smat_mem = malloc(sA_size+sB_size+64);
-	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
-	blasfeo_create_dmat(m_kernel, k, &sA, smat_mem_align);
-	blasfeo_create_dmat(n, k, &sB, smat_mem_align+sA_size);
+	mem = malloc(sA_size+sB_size+64);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_create_dmat(m_kernel, k, &sA, (void *) mem_align);
+	blasfeo_create_dmat(n, k, &sB, (void *) (mem_align+sA_size));
 
 	sda = sA.cn;
 	sdb = sB.cn;
@@ -1755,7 +1756,7 @@ tn_1_left_4:
 	goto tn_1_return;
 
 tn_1_return:
-free(smat_mem);
+free(mem);
 	return;
 
 
@@ -2029,10 +2030,10 @@ tt_1:
 	n1 = (n+128-1)/128*128;
 	sA_size = blasfeo_memsize_dmat(m_kernel, k1);
 	sB_size = blasfeo_memsize_dmat(n1, k1);
-	smat_mem = malloc(sA_size+sB_size+64);
-	blasfeo_align_64_byte(smat_mem, &smat_mem_align);
-	blasfeo_create_dmat(m_kernel, k, &sA, smat_mem_align);
-	blasfeo_create_dmat(n, k, &sB, smat_mem_align+sA_size);
+	mem = malloc(sA_size+sB_size+64);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_create_dmat(m_kernel, k, &sA, (void *) mem_align);
+	blasfeo_create_dmat(n, k, &sB, (void *) (mem_align+sA_size));
 
 	sda = sA.cn;
 	sdb = sB.cn;
@@ -2155,7 +2156,7 @@ tt_1_left_4:
 	goto tt_1_return;
 
 tt_1_return:
-	free(smat_mem);
+	free(mem);
 	return;
 
 
