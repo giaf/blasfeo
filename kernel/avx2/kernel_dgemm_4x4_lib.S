@@ -2367,7 +2367,7 @@
 //	vmovupd			0(%r11, %r12, 2), %ymm13 // A
 	vmaskmovpd		0(%r11, %r12, 2), %ymm15, %ymm13 // A
 	vbroadcastsd	0(%r13), %ymm12 // B
-	vfmadd231pd		%ymm13, %ymm12, %ymm1
+	vfmadd231pd		%ymm13, %ymm12, %ymm0
 	prefetcht0		0(%r13, %r14, 8)
 	prefetcht0		0(%rax, %r12, 2)
 	addq	%r14, %r13
@@ -2376,7 +2376,7 @@
 //	vmovupd			0(%r11, %rbx), %ymm13 // A
 	vmaskmovpd		0(%r11, %rbx), %ymm15, %ymm13 // A
 	vbroadcastsd	0(%r13), %ymm12 // B
-	vfmadd231pd		%ymm13, %ymm12, %ymm5
+	vfmadd231pd		%ymm13, %ymm12, %ymm4
 	prefetcht0		0(%r13, %r14, 8)
 	prefetcht0		0(%rax, %rbx)
 	addq	%r14, %r13
