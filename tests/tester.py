@@ -413,7 +413,7 @@ class BlasfeoTestset:
 			if not SILENT: print("Tested with {run_id}".format(run_id=run_id))
 
 		# print partial
-		if not SILENT: print("({done}:Succeded, {errors}:Errors) / ({total}:Total)"
+		if not SILENT: print("({done}:Succeded, {errors}:Errors) / ({total}:Total)\n"
 			.format(done=self._success_n, errors=self._errors_n, total=self._total_n))
 
 		return cmd_proc.returncode
@@ -427,7 +427,7 @@ class BlasfeoTestset:
 		]
 
 		print("\n".join(summary_lines))
-		print("({done}:Succeded, {errors}:Errors) / ({total}:Total)"
+		print("({done}:Succeded, {errors}:Errors) / ({total}:Total\n)"
 			.format(done=self._success_n, errors=self._errors_n, total=self._total_n))
 		print("See blasfeo/tests/reports to inspect specific errors")
 

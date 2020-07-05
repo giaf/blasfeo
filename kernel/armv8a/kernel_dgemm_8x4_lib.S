@@ -873,8 +873,8 @@
 
 	// unroll 0
 	ld1		{v20.2d, v21.2d}, [x9], #32
-	ldr		q28, [x11]
-	ldr		d29, [x11]
+	ldr		q28, [x11, #(0*8)]
+	ldr		d29, [x11, #(2*8)]
 	fmla	v0.2d, v20.2d, v28.2d[0]
 	fmla	v1.2d, v21.2d, v28.2d[0]
 	add		x11, x11, x12
@@ -3534,7 +3534,6 @@
 	fmla	v8.2d, v22.2d, v25.2d[1]
 	fmla	v9.2d, v23.2d, v25.2d[1]
 	ldp		q24, q25, [x11], #32
-	ldp		q26, q27, [x14], #32
 
 	bgt		1b
 
