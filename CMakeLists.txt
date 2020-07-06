@@ -1111,13 +1111,21 @@ target_include_directories(blasfeo
 #		$<INSTALL_INTERFACE:include/blasfeo/include>)
 
 
-install(TARGETS blasfeo EXPORT blasfeoConfig
+install(TARGETS blasfeo EXPORT blasfeo_export
 	LIBRARY DESTINATION lib
 	ARCHIVE DESTINATION lib
 	RUNTIME DESTINATION bin)
 
 
-install(EXPORT blasfeoConfig DESTINATION cmake)
+install(EXPORT blasfeo_export DESTINATION cmake)
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+  cmake/blasfeoConfig.cmake.in
+  ${PROJECT_BINARY_DIR}/blasfeoConfig.cmake
+  INSTALL_DESTINATION cmake
+)
+install(FILES ${PROJECT_BINARY_DIR}/blasfeoConfig.cmake DESTINATION cmake)
 
 file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
 install(FILES ${BLASFEO_HEADERS} DESTINATION ${BLASFEO_HEADERS_INSTALLATION_DIRECTORY})
