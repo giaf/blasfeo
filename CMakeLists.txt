@@ -490,8 +490,8 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetrf_pivot_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgebp_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib4.S
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
+			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
 			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
