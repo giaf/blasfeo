@@ -73,8 +73,8 @@ set(BLASFEO_HP_API OFF)
 # Select the Matrix Format internally used in the blasfeo_{d,s}mat structure
 # COLMAJ : column-major matrix format
 # PANELMAJ : panel-major matrix format
-set(MF COLMAJ CACHE STRING "Matrix Format internally used in blasfeo_{d,s}mat struct")
-# set(MF PANELMAJ CACHE STRING "Matrix Format internally used in blasfeo_{d,s}mat struct")
+# set(MF COLMAJ CACHE STRING "Matrix Format internally used in blasfeo_{d,s}mat struct")
+set(MF PANELMAJ CACHE STRING "Matrix Format internally used in blasfeo_{d,s}mat struct")
 
 # BLAS and LAPACK version (for LA=BLAS in BLASFEO or for BLASFEO_BENCHMARS=ON)
 set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
@@ -85,8 +85,8 @@ set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
 # set(EXTERNAL_BLAS ATLAS CACHE STRING "Reference blas to use")
 
 # Compile the BLAS API routines provided by BLASFEO
-#set(BLAS_API ON CACHE BOOL "Compile BLAS API")
-set(BLAS_API OFF CACHE BOOL "Compile BLAS API")
+set(BLAS_API ON CACHE BOOL "Compile BLAS API")
+#set(BLAS_API OFF CACHE BOOL "Compile BLAS API")
 
 # Export standard FORTRAN namings for BLAS API routines
 # OFF : routines namings are in the form blasfeo_dgemm
@@ -539,7 +539,7 @@ file(GLOB BLAS_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/strsm.c
 	)
 
-if(${TARGET} MATCHES X64_INTEL_HASWELL OR ${TARGET} MATCHES X64_INTEL_HASWELL)
+if(${TARGET} MATCHES X64_INTEL_HASWELL OR ${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
 
 file(GLOB BLASFEO_HP_PM_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
@@ -647,8 +647,8 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetrf_pivot_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgebp_lib4.S
-	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.S
-	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
