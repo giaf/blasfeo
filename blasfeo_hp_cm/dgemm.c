@@ -86,6 +86,8 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 
 	int ii, jj;
 
+	const int ps = 4; //D_PS;
+
 #if defined(TARGET_GENERIC)
 	double pU[4*K_MAX_STACK];
 #else
@@ -102,7 +104,6 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	int m1, n1, k1;
 	int pack_B;
 
-	const int ps = D_PS;
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
 	const int reals_per_cache_line = CACHE_LINE_EL;

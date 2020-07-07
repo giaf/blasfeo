@@ -482,6 +482,7 @@ file(GLOB AUX_HP_CM_SRC
 
 file(GLOB BLASFEO_HP_CM_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dgemm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dpotrf.c
 
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas1_hp_cm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_hp_cm.c

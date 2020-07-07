@@ -40,6 +40,7 @@
     "gemm_nn",
     "gemm_nt",
     "gemm_tn",
-    "gemm_tt"
+    "gemm_tt",
+    "potrf_l"
   ]
 }
