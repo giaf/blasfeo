@@ -1643,21 +1643,21 @@ REAL GEEX1(struct MAT *sA, int ai, int aj)
 
 void TRCP_L(int m, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
-	TRCP_L(m, sA, ai, aj, sB, bi, bj);
+	REF_TRCP_L(m, sA, ai, aj, sB, bi, bj);
 	}
 
 
 
 void TRTR_L(int m, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
-	TRTR_L(m, sA, ai, aj, sB, bi, bj);
+	REF_TRTR_L(m, sA, ai, aj, sB, bi, bj);
 	}
 
 
 
 void TRTR_U(int m, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
-	TRTR_U(m, sA, ai, aj, sB, bi, bj);
+	REF_TRTR_U(m, sA, ai, aj, sB, bi, bj);
 	}
 
 
