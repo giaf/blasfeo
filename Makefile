@@ -673,13 +673,16 @@ OBJS += $(BLASFEO_HP_CM_OBJS)
 endif
 endif # BLASFEO_HP_API
 
+# XXX only works for MF=COLMAJ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ifeq ($(BLAS_API), 1)
 OBJS += \
 		blas_api/dgemm_ref.o \
 		blas_api/dtrsm_ref.o \
+		blas_api/dpotrf_ref.o \
 		\
 		blas_api/sgemm_ref.o \
 		blas_api/strsm_ref.o \
+		blas_api/spotrf_ref.o \
 
 endif
 

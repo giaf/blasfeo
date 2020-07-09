@@ -69,9 +69,11 @@ else #ifeq ($(LA), REFERENCE)
 
 OBJS += dgemm_ref.o
 OBJS += dtrsm_ref.o
+OBJS += dpotrf_ref.o
 
 OBJS += sgemm_ref.o
 OBJS += strsm_ref.o
+OBJS += spotrf_ref.o
 
 endif # REFERENCE
 
@@ -88,6 +90,8 @@ clean:
 
 dgemm_ref.o: dgemm_ref.c xgemm_ref.c
 dtrsm_ref.o: dtrsm_ref.c xtrsm_ref.c
+dpotrf_ref.o: dpotrf_ref.c xpotrf_ref.c
 
 sgemm_ref.o: sgemm_ref.c xgemm_ref.c
 strsm_ref.o: strsm_ref.c xtrsm_ref.c
+spotrf_ref.o: spotrf_ref.c xpotrf_ref.c
