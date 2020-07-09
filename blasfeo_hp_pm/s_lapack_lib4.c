@@ -708,6 +708,25 @@ void blasfeo_hp_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int c
 
 
 
+// spotrf
+void blasfeo_hp_spotrf_u(int m, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+	{
+
+	if(m<=0)
+		return;
+
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_spotrf_u(m, sC, ci, cj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_spotrf_u: feature not implemented yet\n");
+	exit(1);
+#endif
+	
+	}
+
+
+
 // dsyrk dpotrf
 void blasfeo_hp_ssyrk_spotrf_ln(int m, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
@@ -1367,6 +1386,13 @@ void blasfeo_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct bla
 void blasfeo_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 	blasfeo_hp_spotrf_l_mn(m, n, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void blasfeo_spotrf_u(int m, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_spotrf_u(m, sC, ci, cj, sD, di, dj);
 	}
 
 

@@ -36,7 +36,7 @@
 
 
 #if ! ( defined(HP_CM) & defined(DP) )
-// dpotrf
+// dpotrf_l
 void REF_POTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	if(m<=0)
@@ -309,6 +309,71 @@ void REF_POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *
 				c_00 -= XMATEL_D(ddi+ii, ddj+kk) * XMATEL_D(ddi+jj, ddj+kk);
 				}
 			XMATEL_D(ddi+ii, ddj+jj) = c_00 * f_00_inv;
+			}
+		}
+	return;
+	}
+
+
+
+// dpotrf_u
+void REF_POTRF_U(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0)
+		return;
+
+	int ii, jj, kk;
+	REAL
+		f_00_inv,
+		f_10, f_11_inv,
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int ldc = sC->m;
+	int ldd = sD->m;
+	REAL *pC = sC->pA + ci + cj*ldc;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int cci=0; const int ccj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int cci=ci; int ccj=cj;
+	int ddi=di; int ddj=dj;
+#endif
+	REAL *dD = sD->dA;
+	if(di==0 & dj==0)
+		// if zero offset potrf recomputes the right values
+		// for the stored inverse diagonal of sD
+		sD->use_dA = 1;
+	else
+		sD->use_dA = 0;
+	jj = 0;
+	for(; jj<m; jj++)
+		{
+		// factorize diagonal
+		c_00 = XMATEL_C(cci+jj, ccj+jj);;
+		for(kk=0; kk<jj; kk++)
+			{
+			c_00 -= XMATEL_D(ddi+kk, ddj+jj) * XMATEL_D(ddi+kk, ddj+jj);
+			}
+		if(c_00>0)
+			{
+			f_00_inv = 1.0/sqrt(c_00);
+			}
+		else
+			{
+			f_00_inv = 0.0;
+			}
+		dD[jj] = f_00_inv;
+		XMATEL_D(ddi+jj, ddj+jj) = c_00 * f_00_inv;
+		// solve lower
+		for(ii=jj+1; ii<m; ii++)
+			{
+			c_00 = XMATEL_C(cci+jj, ccj+ii);
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 -= XMATEL_D(ddi+kk, ddj+ii) * XMATEL_D(ddi+kk, ddj+jj);
+				}
+			XMATEL_D(ddi+jj, ddj+ii) = c_00 * f_00_inv;
 			}
 		}
 	return;
@@ -3167,6 +3232,13 @@ void POTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, in
 void POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_POTRF_L_MN(m, n, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void POTRF_U(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_POTRF_U(m, sC, ci, cj, sD, di, dj);
 	}
 
 

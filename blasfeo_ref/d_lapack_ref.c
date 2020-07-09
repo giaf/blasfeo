@@ -83,6 +83,7 @@
 #define REF_GETRF_ROWPIVOT blasfeo_ref_dgetrf_rp
 #define REF_POTRF_L blasfeo_ref_dpotrf_l
 #define REF_POTRF_L_MN blasfeo_ref_dpotrf_l_mn
+#define REF_POTRF_U blasfeo_ref_dpotrf_u
 #define REF_PSTRF_L blasfeo_ref_dpstrf_l
 #define REF_SYRK_POTRF_LN blasfeo_ref_dsyrk_dpotrf_ln
 #define REF_SYRK_POTRF_LN_MN blasfeo_ref_dsyrk_dpotrf_ln_mn
@@ -101,6 +102,7 @@
 #define GETRF_ROWPIVOT blasfeo_dgetrf_rp
 #define POTRF_L blasfeo_dpotrf_l
 #define POTRF_L_MN blasfeo_dpotrf_l_mn
+#define POTRF_U blasfeo_dpotrf_u
 #define PSTRF_L blasfeo_dpstrf_l
 #define SYRK_POTRF_LN blasfeo_dsyrk_dpotrf_ln
 #define SYRK_POTRF_LN_MN blasfeo_dsyrk_dpotrf_ln_mn
