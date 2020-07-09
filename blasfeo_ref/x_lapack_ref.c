@@ -176,6 +176,7 @@ void REF_POTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dpotrf
 void REF_POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -313,6 +314,7 @@ void REF_POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *
 		}
 	return;
 	}
+#endif
 
 
 
@@ -3231,10 +3233,12 @@ void POTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, in
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_POTRF_L_MN(m, n, sC, ci, cj, sD, di, dj);
 	}
+#endif
 
 
 
