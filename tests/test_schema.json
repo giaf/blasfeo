@@ -209,6 +209,13 @@
           "potrf_l",
           "potrf_u"
         ]
+      },
+      "potrf_mn": {
+        "testclass_src": "potrf_mn.c",
+        "flags":{},
+        "routines": [
+          "potrf_l_mn"
+        ]
       }    },
     "aux": {
       "1args": {

@@ -6,7 +6,7 @@
   },
   "test_macros":
   {
-    "VERBOSE":2
+    "VERBOSE": 2
   },
   "env_flags":{
     "CC":"gcc",
@@ -40,7 +40,8 @@
     "gemm_nt",
     "gemm_tn",
     "gemm_tt",
-    "potrf_l"
+    "potrf_l",
+    "potrf_l_mn"
   ]
 }
 

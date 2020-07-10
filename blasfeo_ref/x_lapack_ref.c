@@ -182,6 +182,8 @@ void REF_POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *
 	{
 	if(m<=0 | n<=0)
 		return;
+	if(n>m)
+		n = m;
 	int ii, jj, kk;
 	REAL
 		f_00_inv, 
