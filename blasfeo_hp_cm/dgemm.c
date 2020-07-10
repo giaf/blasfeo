@@ -46,14 +46,17 @@
 
 // TODO move to a header file to reuse across routines
 #define EL_SIZE 8 // double precision
+
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 #define M_KERNEL 12 // max kernel: 12x4
 #define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
+
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 #define M_KERNEL 8 // max kernel: 8x4
 #define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
+
 #else // assume generic target
 #define M_KERNEL 4 // max kernel: 4x4
 #define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
@@ -89,7 +92,7 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	const int ps = 4; //D_PS;
 
 #if defined(TARGET_GENERIC)
-	double pU[4*K_MAX_STACK];
+	double pU[M_KERNEL*K_MAX_STACK];
 #else
 	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 64 );
 #endif

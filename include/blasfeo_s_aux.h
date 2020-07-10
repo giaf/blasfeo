@@ -134,6 +134,17 @@ void blasfeo_svecpei(int kmax, int *ipiv, struct blasfeo_svec *sx, int xi);
 
 
 
+/*
+* Explicitly panel-major matrix format
+*/
+
+// returns the memory size (in bytes) needed for a dmat
+size_t blasfeo_pm_memsize_smat(int ps, int m, int n);
+// create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
+void blasfeo_pm_create_smat(int ps, int m, int n, struct blasfeo_pm_smat *sA, void *memory);
+
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -43,6 +43,8 @@ HP_CM_OBJS =
 HP_CM_OBJS += dgemm.o
 HP_CM_OBJS += dpotrf.o
 
+HP_CM_OBJS += sgemm.o
+
 
 OBJS =
 

@@ -85,6 +85,8 @@ BLASFEO_HP_CM_OBJS = \
 		blasfeo_hp_cm/dgemm.o \
 		blasfeo_hp_cm/dpotrf.o \
 		\
+		blasfeo_hp_cm/sgemm.o \
+		\
 		blasfeo_ref/d_blas1_hp_cm.o \
 		blasfeo_ref/d_blas2_hp_cm.o \
 		blasfeo_ref/d_blas2_diag_hp_cm.o \
