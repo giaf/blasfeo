@@ -135,7 +135,8 @@ void REF_GEMM_NN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int a
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dgemm nt
 void REF_GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -234,7 +235,8 @@ void REF_GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int a
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dgemm tn
 void REF_GEMM_TN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -333,7 +335,8 @@ void REF_GEMM_TN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int a
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dgemm tt
 void REF_GEMM_TT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -2936,7 +2939,8 @@ void GEMM_NN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_GEMM_NT(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
@@ -2945,7 +2949,8 @@ void GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void GEMM_TN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_GEMM_TN(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
@@ -2954,7 +2959,8 @@ void GEMM_TN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void GEMM_TT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_GEMM_TT(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);

@@ -215,6 +215,7 @@ size_t blasfeo_pm_memsize_dmat(int ps, int m, int n);
 void blasfeo_pm_create_dmat(int ps, int m, int n, struct blasfeo_pm_dmat *sA, void *memory);
 
 
+
 #ifdef __cplusplus
 }
 #endif

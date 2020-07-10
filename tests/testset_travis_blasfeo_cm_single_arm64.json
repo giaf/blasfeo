@@ -36,7 +36,10 @@
     "HIGH_PERFORMANCE"
   ],
   "routines": [
-    "gemm_nn"
+    "gemm_nn",
+    "gemm_nt",
+    "gemm_tn",
+    "gemm_tt"
   ]
 }
 
