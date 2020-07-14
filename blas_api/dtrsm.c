@@ -133,7 +133,6 @@ void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, in
 	if(m<=0 | n<=0)
 		return;
 
-// TODO visual studio alignment
 #if defined(TARGET_GENERIC)
 	double pd0[K_MAX_STACK];
 #else

@@ -483,6 +483,7 @@ file(GLOB AUX_HP_CM_SRC
 file(GLOB BLASFEO_HP_CM_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dgemm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dsyrk.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dtrsm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dpotrf.c
 
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/sgemm.c
