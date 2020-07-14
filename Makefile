@@ -83,6 +83,7 @@ AUX_HP_CM_OBJS = \
 ### BLASFEO HP, COLUM-MAJOR ###
 BLASFEO_HP_CM_OBJS = \
 		blasfeo_hp_cm/dgemm.o \
+		blasfeo_hp_cm/dsyrk.o \
 		blasfeo_hp_cm/dpotrf.o \
 		\
 		blasfeo_hp_cm/sgemm.o \
