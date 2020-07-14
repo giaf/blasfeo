@@ -198,8 +198,34 @@ struct blasfeo_pm_smat
 	int memsize; // size of needed memory
 	};
 
+// Explicitly column-major matrix structure
+struct blasfeo_cm_dmat
+	{
+	double *mem; // pointer to passed chunk of memory
+	double *pA; // pointer to a m*n array of doubles
+	double *dA; // pointer to a min(m,n) (or max???) array of doubles
+	int m; // rows
+	int n; // cols
+	int use_dA; // flag to tell if dA can be used
+	int memsize; // size of needed memory
+	};
+
+struct blasfeo_cm_smat
+	{
+	float *mem; // pointer to passed chunk of memory
+	float *pA; // pointer to a m*n array of floats
+	float *dA; // pointer to a min(m,n) (or max???) array of floats
+	int m; // rows
+	int n; // cols
+	int use_dA; // flag to tell if dA can be used
+	int memsize; // size of needed memory
+	};
+
+
 #define BLASFEO_PM_DMATEL(sA,ai,aj) ((sA)->pA[((ai)-((ai)&((sA)->ps-1)))*(sA)->cn+(aj)*((sA)->ps)+((ai)&((sA)->ps-1))])
 #define BLASFEO_PM_SMATEL(sA,ai,aj) ((sA)->pA[((ai)-((ai)&((sA)->ps-1)))*(sA)->cn+(aj)*((sA)->ps)+((ai)&((sA)->ps-1))])
+#define BLASFEO_CM_DMATEL(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
+#define BLASFEO_CM_SMATEL(sA,ai,aj) ((sA)->pA[(ai)+(aj)*(sA)->m])
 
 
 

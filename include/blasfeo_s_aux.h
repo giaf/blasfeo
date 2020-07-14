@@ -145,6 +145,17 @@ void blasfeo_pm_create_smat(int ps, int m, int n, struct blasfeo_pm_smat *sA, vo
 
 
 
+/*
+* Explicitly column-major matrix format
+*/
+
+// returns the memory size (in bytes) needed for a dmat
+size_t blasfeo_cm_memsize_smat(int m, int n);
+// create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
+void blasfeo_cm_create_smat(int m, int n, struct blasfeo_pm_smat *sA, void *memory);
+
+
+
 #ifdef __cplusplus
 }
 #endif
