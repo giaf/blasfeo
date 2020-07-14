@@ -349,11 +349,11 @@ lt_0:
 		{
 		if(m-ii<=4)
 			{
-			goto ln_0_left_4;
+			goto lt_0_left_4;
 			}
 		else
 			{
-			goto ln_0_left_8;
+			goto lt_0_left_8;
 			}
 		}
 #else
