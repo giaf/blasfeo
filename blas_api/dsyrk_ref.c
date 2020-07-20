@@ -41,6 +41,10 @@
 
 
 
+#define DOUBLE_PRECISION
+
+
+
 #define SYRK_LN blasfeo_dsyrk_ln
 #define SYRK_LT blasfeo_dsyrk_lt
 #define SYRK_UN blasfeo_dsyrk_un

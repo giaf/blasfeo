@@ -67,7 +67,7 @@ void SYRK(char *uplo, char *trans, int *pm, int *pk, REAL *palpha, REAL *A, int 
 		{
 		if(*trans=='n' | *trans=='N')
 			{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) )
+#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
 			SYRK3_LN(*pm, *pk, *palpha, &sA, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
 #else
 			SYRK_LN(*pm, *pk, *palpha, &sA, 0, 0, &sA, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
@@ -75,7 +75,7 @@ void SYRK(char *uplo, char *trans, int *pm, int *pk, REAL *palpha, REAL *A, int 
 			}
 		else
 			{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) )
+#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
 			SYRK3_LT(*pm, *pk, *palpha, &sA, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
 #else
 			SYRK_LT(*pm, *pk, *palpha, &sA, 0, 0, &sA, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
@@ -86,7 +86,7 @@ void SYRK(char *uplo, char *trans, int *pm, int *pk, REAL *palpha, REAL *A, int 
 		{
 		if(*trans=='n' | *trans=='N')
 			{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) )
+#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
 			SYRK3_UN(*pm, *pk, *palpha, &sA, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
 #else
 			SYRK_UN(*pm, *pk, *palpha, &sA, 0, 0, &sA, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
@@ -94,7 +94,7 @@ void SYRK(char *uplo, char *trans, int *pm, int *pk, REAL *palpha, REAL *A, int 
 			}
 		else
 			{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) )
+#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
 			SYRK3_UT(*pm, *pk, *palpha, &sA, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);
 #else
 			SYRK_UT(*pm, *pk, *palpha, &sA, 0, 0, &sA, 0, 0, *pbeta, &sC, 0, 0, &sC, 0, 0);

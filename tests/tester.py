@@ -427,7 +427,7 @@ class BlasfeoTestset:
 		]
 
 		print("\n".join(summary_lines))
-		print("({done}:Succeded, {errors}:Errors) / ({total}:Total\n)"
+		print("({done}:Succeded, {errors}:Errors) / ({total}:Total)\n"
 			.format(done=self._success_n, errors=self._errors_n, total=self._total_n))
 		print("See blasfeo/tests/reports to inspect specific errors")
 
