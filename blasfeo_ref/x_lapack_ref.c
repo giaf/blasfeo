@@ -1134,6 +1134,7 @@ void REF_GETRF_NOPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMA
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dgetrf pivoting
 void REF_GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv)
 	{
@@ -1515,6 +1516,7 @@ void REF_GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XM
 #endif
 	return;
 	}
+#endif
 
 
 
@@ -3281,10 +3283,12 @@ void GETRF_NOPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *s
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv)
 	{
 	REF_GETRF_ROWPIVOT(m, n, sC, ci, cj, sD, di, dj, ipiv);
 	}
+#endif
 
 
 

@@ -174,10 +174,10 @@
     },
     "lapack": {
       "getrf_rowpivot": {
-        "testclass_src": "getrf_rowpivot.c",
+        "testclass_src": "getrf_rp.c",
         "flags":{},
         "routines": [
-          "getrf_rowpivot"
+          "getrf_rp"
         ]
       },
       "getrf_nopivot": {

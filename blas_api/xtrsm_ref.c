@@ -112,38 +112,22 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 				{
 				if(*diag=='n' | *diag=='N') // _llnn
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_LLNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_LLNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				else //if(*diag=='u' | *diag=='U') // _llnu
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_LLNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_LLNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				}
 			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _llt
 				{
 				if(*diag=='n' | *diag=='N') // _lltn
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_LLTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_LLTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				else //if(*diag=='u' | *diag=='U') // _lltu
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_LLTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_LLTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				}
 			}
@@ -153,38 +137,22 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 				{
 				if(*diag=='n' | *diag=='N') // _lunn
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_LUNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_LUNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				else //if(*diag=='u' | *diag=='U') // _lunu
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_LUNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_LUNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				}
 			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _lut
 				{
 				if(*diag=='n' | *diag=='N') // _lutn
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_LUTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_LUTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				else //if(*diag=='u' | *diag=='U') // _lutu
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_LUTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_LUTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				}
 			}
@@ -197,38 +165,22 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 				{
 				if(*diag=='n' | *diag=='N') // _rlnn
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_RLNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_RLNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				else //if(*diag=='u' | *diag=='U') // _rlnu
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_RLNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_RLNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				}
 			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _rlt
 				{
 				if(*diag=='n' | *diag=='N') // _rltn
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_RLTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_RLTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				else //if(*diag=='u' | *diag=='U') // _rltu
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_RLTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_RLTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				}
 			}
@@ -238,38 +190,22 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 				{
 				if(*diag=='n' | *diag=='N') // _runn
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_RUNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_RUNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				else //if(*diag=='u' | *diag=='U') // _runu
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_RUNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_RUNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				}
 			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _rut
 				{
 				if(*diag=='n' | *diag=='N') // _rutn
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_RUTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_RUTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				else //if(*diag=='u' | *diag=='U') // _rutu
 					{
-#if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) & defined(DOUBLE_PRECISION) )
-					TRSM2_RUTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0);
-#else
 					TRSM_RUTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
-#endif
 					}
 				}
 			}

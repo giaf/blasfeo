@@ -6,7 +6,7 @@
   },
   "test_macros":
   {
-    "VERBOSE": 2
+    "VERBOSE": 3
   },
   "env_flags":{
     "CC":"gcc",
@@ -58,6 +58,7 @@
     "trsm_runn",
     "trsm_runu",
     "trsm_rutn",
-    "trsm_rutu"
+    "trsm_rutu",
+    "getrf_rp"
   ]
 }

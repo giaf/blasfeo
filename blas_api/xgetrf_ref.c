@@ -35,15 +35,15 @@
 
 
 
-void POTRF(char *uplo, int *pm, REAL *C, int *pldc, int *info)
+void GETRF(int *pm, int *pn, REAL *C, int *pldc, int *ipiv, int *info)
 	{
 
 #if defined(DIM_CHECK)
-	if( !(*uplo=='l' | *uplo=='l' | *uplo=='U' | *uplo=='U') )
-		{
-		printf("\nBLASFEO: potrf: wrong value for uplo\n");
-		return;
-		}
+//	if( !(*uplo=='l' | *uplo=='l' | *uplo=='U' | *uplo=='U') )
+//		{
+//		printf("\nBLASFEO: potrf: wrong value for uplo\n");
+//		return;
+//		}
 #endif
 
 	struct MAT sC;
@@ -54,16 +54,17 @@ void POTRF(char *uplo, int *pm, REAL *C, int *pldc, int *info)
 
 	int ii;
 
-	if(*uplo=='l' | *uplo=='L')
+	GETRF_RP(*pm, *pn, &sC, 0, 0, &sC, 0, 0, ipiv);
+
+	int p = *pm<*pn ? *pm : *pn;
+
+	// from 0-based to 1-based
+	for(ii=0; ii<p; ii++)
 		{
-		POTRF_L(*pm, &sC, 0, 0, &sC, 0, 0);
-		}
-	else
-		{
-		POTRF_U(*pm, &sC, 0, 0, &sC, 0, 0);
+		ipiv[ii] += 1;
 		}
 
-	for(ii=0; ii<*pm; ii++)
+	for(ii=0; ii<p; ii++)
 		{
 		if(C[ii*(ldc+1)]==0.0)
 			{
@@ -75,4 +76,5 @@ void POTRF(char *uplo, int *pm, REAL *C, int *pldc, int *info)
 	return;
 
 	}
+
 

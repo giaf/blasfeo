@@ -1368,6 +1368,7 @@ void REF_TRSM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dtrsm_rlnn
 void REF_TRSM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -1498,9 +1499,11 @@ void REF_TRSM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dtrsm_rlnu
 void REF_TRSM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -1605,9 +1608,11 @@ void REF_TRSM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dtrsm_right_lower_transposed_not-unit
 void REF_TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -1719,9 +1724,11 @@ void REF_TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dtrsm_right_lower_transposed_unit
 void REF_TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -1805,9 +1812,11 @@ void REF_TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dtrsm_runn
 void REF_TRSM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -1919,9 +1928,11 @@ void REF_TRSM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dtrsm_runu
 void REF_TRSM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -2006,9 +2017,11 @@ void REF_TRSM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dtrsm_right_upper_transposed_notunit
 void REF_TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -2139,9 +2152,11 @@ void REF_TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dtrsm_rutu
 void REF_TRSM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -2246,6 +2261,7 @@ void REF_TRSM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 		}
 	return;
 	}
+#endif
 
 
 

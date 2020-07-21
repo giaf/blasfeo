@@ -36,84 +36,117 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
-#include "../include/blasfeo_target.h"
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_d_kernel.h"
-#include "../include/blasfeo_d_blas.h"
-
+#include <blasfeo_target.h>
+#include <blasfeo_block_size.h>
+#include <blasfeo_common.h>
+#include <blasfeo_d_aux.h>
+#include <blasfeo_d_kernel.h>
 
 
-#if defined(FORTRAN_BLAS_API)
-#define blasfeo_dgetrf dgetrf_
-#define blasfeo_dlaswp dlaswp_
+
+// TODO move to a header file to reuse across routines
+#define EL_SIZE 8 // double precision
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#define M_KERNEL 12 // max kernel: 12x4
+#define N_KERNEL 8 // max kernel: 8x8
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
+#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
+
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#define M_KERNEL 8 // max kernel: 8x4
+#define N_KERNEL 4 // max kernel: 8x4
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
+#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
+
+#else // assume generic target
+#define M_KERNEL 4 // max kernel: 4x4
+#define N_KERNEL 4 // max kernel: 4x4
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
+#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes // TODO 32-bytes for cortex A9
 #endif
 
 
 
-void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info)
+void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv)
 	{
 
 #if defined(PRINT_NAME)
-	printf("\nblasfeo_dgetrf %d %d %p %d %p %d\n", *pm, *pn, C, *pldc, ipiv, *info);
+	printf("\nblasfeo_hp_dgetrf_rp (cm) %d %d %p %d %d %p %d %d %p\n", m, n, sC, ci, cj, sD, di, dj, ipiv);
 #endif
-
-	int m = *pm;
-	int n = *pn;
-	int ldc = *pldc;
-
-//	d_print_mat(m, n, C, ldc);
-//	printf("\nm %d n %d ldc %d\n", m, n, ldc);
-
-	*info = 0;
 
 	if(m<=0 | n<=0)
 		return;
 
-	int ps = 4;
+	// extract pointer to column-major matrices from structures
+	int ldc0 = sC->m;
+	int ldc = sD->m;
+	double *C0 = sC->pA + ci + cj*ldc0;
+	double *C = sD->pA + di + dj*ldc;
 
-// TODO visual studio alignment
+//	printf("\n%p %d %p %d\n", C, ldc, D, ldd);
+
+	int ii, jj;
+
+	const int ps = 4; //D_PS;
+
 #if defined(TARGET_GENERIC)
+	double pU0[M_KERNEL*K_MAX_STACK];
 	double pd0[K_MAX_STACK];
 #else
+	ALIGNED( double pU0[M_KERNEL*K_MAX_STACK], 64 );
 	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
-
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	ALIGNED( double pU0[3*4*K_MAX_STACK], 64 );
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	ALIGNED( double pU0[2*4*K_MAX_STACK], 64 );
-#elif defined(TARGET_GENERIC)
-	double pU0[1*4*K_MAX_STACK];
-#else
-	ALIGNED( double pU0[1*4*K_MAX_STACK], 64 );
 #endif
 	int sdu0 = (m+3)/4*4;
 	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
 
-
-	struct blasfeo_dmat sC;
-	int sdu, sdc;
-	double *pU, *pC, *pd;
-	int sC_size, stot_size;
+	struct blasfeo_pm_dmat tA, tB;
+	int sda, sdb;
+	double *dA;
+	int tA_size, tB_size;
 	void *mem;
 	char *mem_align;
-	int m1, n1;
+	int m1, n1, k1;
+	int pack_B;
 
-//	int n4 = n<4 ? n : 4;
+	double *pU, *pC, *pd;
+	int sdu, sdc;
+
+	const int m_kernel = M_KERNEL;
+	const int l1_cache_el = L1_CACHE_EL;
+	const int reals_per_cache_line = CACHE_LINE_EL;
+
+	const int m_cache = (m+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
+//	const int n_cache = (n+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
+//	const int k_cache = (k+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
+	const int m_kernel_cache = (m_kernel+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
+	int m_min = m_cache<m_kernel_cache ? m_cache : m_kernel_cache;
+//	int n_min = n_cache<m_kernel_cache ? n_cache : m_kernel_cache;
+
 
 	int p = m<n ? m : n;
 
 	int m_max, n_max;
 
-
 	double d1 = 1.0;
 	double dm1 = -1.0;
 
-	int ii, jj;
-
 	double *dummy = NULL;
+
+
+
+	if( C!=C0 )
+		{
+		for(jj=0; jj<n; jj++)
+			{
+			// TODO use copy_ instead !!!!!!!!!
+			for(ii=0; ii<m; ii++)
+				{
+				C[ii+ldc*jj] = C0[ii+ldc0*jj];
+				}
+			}
+		}
+
 
 
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -585,8 +618,9 @@ edge_m_4_0:
 
 end_0:
 	// from 0-index to 1-index
-	for(ii=0; ii<p; ii++)
-		ipiv[ii] += 1;
+	// TODO move to BLAS_API !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//	for(ii=0; ii<p; ii++)
+//		ipiv[ii] += 1;
 //	int_print_mat(1, p, ipiv, 1);
 //	d_print_mat(m, n, C, ldc);
 	return;
@@ -597,18 +631,19 @@ alg1:
 
 	m1 = (m+128-1)/128*128;
 	n1 = (n+128-1)/128*128;
-	sC_size = blasfeo_memsize_dmat(m1, n1) + 12*m1*sizeof(double);
-//	sC_size = blasfeo_memsize_dmat(m, m);
-	stot_size = sC_size;
-	mem = malloc(stot_size+64);
+	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
+	tB_size = blasfeo_pm_memsize_dmat(ps, m1, n1);
+	mem = malloc(tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
-	pU = (double *) mem_align;
-	sdu = (m+3)/4*4;
-	blasfeo_create_dmat(m, n, &sC, mem_align+12*m1*sizeof(double));
-	pC = sC.pA;
-	sdc = sC.cn;
-	pd = sC.dA;
 
+	blasfeo_pm_create_dmat(ps, m_kernel, m, &tA, mem_align);
+	pU = tA.pA;
+	sdu = tA.cn;
+
+	blasfeo_pm_create_dmat(ps, m, n, &tB, mem_align+tA_size);
+	pC = tB.pA;
+	sdc = tB.cn;
+	pd = tB.dA;
 
 
 	jj = 0;
@@ -701,7 +736,8 @@ alg1:
 			if(ipiv[jj+ii]!=jj+ii)
 				{
 				// TODO use kernel
-				blasfeo_drowsw(jj, &sC, jj+ii, 0, &sC, ipiv[jj+ii], 0);
+//				blasfeo_drowsw(jj, &sC, jj+ii, 0, &sC, ipiv[jj+ii], 0);
+				kernel_drowsw_lib4(jj, pC+(jj+ii)/ps*ps*sdc+(jj+ii)%ps, pC+ipiv[jj+ii]/ps*ps*sdc+ipiv[jj+ii]%ps);
 				kernel_drowsw_lib(n-jj-12, C+jj+ii+(jj+12)*ldc, ldc, C+ipiv[jj+ii]+(jj+12)*ldc, ldc);
 				}
 			}
@@ -801,7 +837,8 @@ alg1:
 			if(ipiv[jj+ii]!=jj+ii)
 				{
 				// TODO use kernel
-				blasfeo_drowsw(jj, &sC, jj+ii, 0, &sC, ipiv[jj+ii], 0);
+//				blasfeo_drowsw(jj, &sC, jj+ii, 0, &sC, ipiv[jj+ii], 0);
+				kernel_drowsw_lib4(jj, pC+(jj+ii)/ps*ps*sdc+(jj+ii)%ps, pC+ipiv[jj+ii]/ps*ps*sdc+ipiv[jj+ii]%ps);
 				kernel_drowsw_lib(n-jj-8, C+jj+ii+(jj+8)*ldc, ldc, C+ipiv[jj+ii]+(jj+8)*ldc, ldc);
 				}
 			}
@@ -881,7 +918,8 @@ alg1:
 			if(ipiv[jj+ii]!=jj+ii)
 				{
 				// TODO use kernel
-				blasfeo_drowsw(jj, &sC, jj+ii, 0, &sC, ipiv[jj+ii], 0);
+//				blasfeo_drowsw(jj, &sC, jj+ii, 0, &sC, ipiv[jj+ii], 0);
+				kernel_drowsw_lib4(jj, pC+(jj+ii)/ps*ps*sdc+(jj+ii)%ps, pC+ipiv[jj+ii]/ps*ps*sdc+ipiv[jj+ii]%ps);
 				kernel_drowsw_lib(n-jj-4, C+jj+ii+(jj+4)*ldc, ldc, C+ipiv[jj+ii]+(jj+4)*ldc, ldc);
 				}
 			}
@@ -955,7 +993,8 @@ left_12_1:
 		if(ipiv[jj+ii]!=jj+ii)
 			{
 			// TODO use kernel instead
-			blasfeo_drowsw(jj, &sC, jj+ii, 0, &sC, ipiv[jj+ii], 0);
+//			blasfeo_drowsw(jj, &sC, jj+ii, 0, &sC, ipiv[jj+ii], 0);
+			kernel_drowsw_lib4(jj, pC+(jj+ii)/ps*ps*sdc+(jj+ii)%ps, pC+ipiv[jj+ii]/ps*ps*sdc+ipiv[jj+ii]%ps);
 //			kernel_drowsw_lib(n-jj-12, C+jj+ii+(jj+12)*ldc, ldc, C+ipiv[jj+ii]+(jj+12)*ldc, ldc);
 			}
 		}
@@ -1019,7 +1058,8 @@ left_8_1:
 		if(ipiv[jj+ii]!=jj+ii)
 			{
 			// TODO use kernel instead
-			blasfeo_drowsw(jj, &sC, jj+ii, 0, &sC, ipiv[jj+ii], 0);
+//			blasfeo_drowsw(jj, &sC, jj+ii, 0, &sC, ipiv[jj+ii], 0);
+			kernel_drowsw_lib4(jj, pC+(jj+ii)/ps*ps*sdc+(jj+ii)%ps, pC+ipiv[jj+ii]/ps*ps*sdc+ipiv[jj+ii]%ps);
 //			kernel_drowsw_lib(n-jj-8, C+jj+ii+(jj+8)*ldc, ldc, C+ipiv[jj+ii]+(jj+8)*ldc, ldc);
 			}
 		}
@@ -1071,7 +1111,8 @@ left_4_1:
 		if(ipiv[jj+ii]!=jj+ii)
 			{
 			// TODO use kernel instead
-			blasfeo_drowsw(jj, &sC, jj+ii, 0, &sC, ipiv[jj+ii], 0);
+//			blasfeo_drowsw(jj, &sC, jj+ii, 0, &sC, ipiv[jj+ii], 0);
+			kernel_drowsw_lib4(jj, pC+(jj+ii)/ps*ps*sdc+(jj+ii)%ps, pC+ipiv[jj+ii]/ps*ps*sdc+ipiv[jj+ii]%ps);
 //			kernel_drowsw_lib(n-jj-4, C+jj+ii+(jj+4)*ldc, ldc, C+ipiv[jj+ii]+(jj+4)*ldc, ldc);
 			}
 		}
@@ -1205,10 +1246,29 @@ end_1:
 end_m_1:
 	free(mem);
 	// from 0-index to 1-index
-	for(ii=0; ii<p; ii++)
-		ipiv[ii] += 1;
+	// TODO move to BLAS_API !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//	for(ii=0; ii<p; ii++)
+//		ipiv[ii] += 1;
+	return;
+
+
+	// never to get here
 	return;
 
 	}
 
+
+
+#if defined(LA_HIGH_PERFORMANCE)
+
+
+
+void blasfeo_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv)
+	{
+	blasfeo_hp_dgetrf_rp(m, n, sC, ci, cj, sD, di, dj, ipiv);
+	}
+
+
+
+#endif
 
