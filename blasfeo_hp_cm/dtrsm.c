@@ -69,7 +69,7 @@ void blasfeo_hp_dtrsm_llnn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	{
 
 #if defined(PRINT_NAME)
-	printf("\nblasfeo_hp_dtrsm2_llnn (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	printf("\nblasfeo_hp_dtrsm_llnn (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #endif
 
 	if(m<=0 | n<=0)
