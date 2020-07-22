@@ -144,7 +144,6 @@ void blasfeo_hp_dtrmm_llnn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	if(m>=12 | n>=12 | n>K_MAX_STACK)
 #endif
 		{
-//		pack_tran = 0;
 		goto llnn_1;
 		}
 	else
@@ -244,6 +243,7 @@ llnn_0_left_12:
 	for(jj=0; jj<m; jj+=4)
 		{
 		kernel_dtrmm_nt_rl_4x12_tran_vs_lib4c4c(jj, &alpha, pU, sdu, A+jj, lda, &d_0, pU+jj*ps, sdu, D+jj+ii*ldd, ldd, m-jj, n-ii);
+//		kernel_dtrmm_nt_rl_4x12_tran_lib4c4c(jj, &alpha, pU, sdu, A+jj, lda, &d_0, pU+jj*ps, sdu, D+jj+ii*ldd, ldd);
 		}
 goto llnn_0_return;
 #endif
@@ -318,7 +318,7 @@ llnn_1:
 			{
 			goto llnn_1_left_4;
 			}
-		else if(n-ii<=4)
+		else if(n-ii<=8)
 			{
 			goto llnn_1_left_8;
 			}
@@ -2378,14 +2378,14 @@ llnn_1:
 	pB = tB.pA;
 	sdb = tB.cn;
 
-	// lower to lower
+	// upper to lower
 	for(ii=0; ii<m-3; ii+=4)
 		{
-		kernel_dpack_tt_4_lib4(m-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb, sdb);
+		kernel_dpack_tn_4_lib4(ii+4, A+ii*lda, lda, pB+ii*sdb);
 		}
 	if(ii<m)
 		{
-		kernel_dpack_tt_4_vs_lib4(m-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb, sdb, m-ii);
+		kernel_dpack_tn_4_vs_lib4(m, A+ii*lda, lda, pB+ii*sdb, m-ii);
 		}
 
 	ii = 0;
@@ -2410,7 +2410,7 @@ llnn_1:
 			{
 			goto llnn_1_left_4;
 			}
-		else if(n-ii<=4)
+		else if(n-ii<=8)
 			{
 			goto llnn_1_left_8;
 			}
@@ -2726,14 +2726,14 @@ llnu_1:
 	pB = tB.pA;
 	sdb = tB.cn;
 
-	// lower to lower
+	// upper to lower
 	for(ii=0; ii<m-3; ii+=4)
 		{
-		kernel_dpack_tt_4_lib4(m-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb, sdb);
+		kernel_dpack_tn_4_lib4(ii+4, A+ii*lda, lda, pB+ii*sdb);
 		}
 	if(ii<m)
 		{
-		kernel_dpack_tt_4_vs_lib4(m-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb, sdb, m-ii);
+		kernel_dpack_tn_4_vs_lib4(m, A+ii*lda, lda, pB+ii*sdb, m-ii);
 		}
 
 	ii = 0;

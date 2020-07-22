@@ -81,8 +81,22 @@
 #define REF_SYRK_UN blasfeo_hp_ssyrk_un
 #define REF_SYRK_UT blasfeo_hp_ssyrk_ut
 // trmm
+#define REF_TRMM_LLNN blasfeo_hp_strmm_llnn
+#define REF_TRMM_LLNU blasfeo_hp_strmm_llnu
+#define REF_TRMM_LLTN blasfeo_hp_strmm_lltn
+#define REF_TRMM_LLTU blasfeo_hp_strmm_lltu
+#define REF_TRMM_LUNN blasfeo_hp_strmm_lunn
+#define REF_TRMM_LUNU blasfeo_hp_strmm_lunu
+#define REF_TRMM_LUTN blasfeo_hp_strmm_lutn
+#define REF_TRMM_LUTU blasfeo_hp_strmm_lutu
 #define REF_TRMM_RLNN blasfeo_hp_strmm_rlnn
+#define REF_TRMM_RLNU blasfeo_hp_strmm_rlnu
+#define REF_TRMM_RLTN blasfeo_hp_strmm_rltn
+#define REF_TRMM_RLTU blasfeo_hp_strmm_rltu
+#define REF_TRMM_RUNN blasfeo_hp_strmm_runn
+#define REF_TRMM_RUNU blasfeo_hp_strmm_runu
 #define REF_TRMM_RUTN blasfeo_hp_strmm_rutn
+#define REF_TRMM_RUTU blasfeo_hp_strmm_rutu
 // trsm
 #define REF_TRSM_LLNN blasfeo_hp_strsm_llnn
 #define REF_TRSM_LLNU blasfeo_hp_strsm_llnu
@@ -113,8 +127,22 @@
 #define SYRK_UN blasfeo_ssyrk_un
 #define SYRK_UT blasfeo_ssyrk_ut
 // trmm
+#define TRMM_LLNN blasfeo_strmm_llnn
+#define TRMM_LLNU blasfeo_strmm_llnu
+#define TRMM_LLTN blasfeo_strmm_lltn
+#define TRMM_LLTU blasfeo_strmm_lltu
+#define TRMM_LUNN blasfeo_strmm_lunn
+#define TRMM_LUNU blasfeo_strmm_lunu
+#define TRMM_LUTN blasfeo_strmm_lutn
+#define TRMM_LUTU blasfeo_strmm_lutu
 #define TRMM_RLNN blasfeo_strmm_rlnn
+#define TRMM_RLNU blasfeo_strmm_rlnu
+#define TRMM_RLTN blasfeo_strmm_rltn
+#define TRMM_RLTU blasfeo_strmm_rltu
+#define TRMM_RUNN blasfeo_strmm_runn
+#define TRMM_RUNU blasfeo_strmm_runu
 #define TRMM_RUTN blasfeo_strmm_rutn
+#define TRMM_RUTU blasfeo_strmm_rutu
 // trsm
 #define TRSM_LLNN blasfeo_strsm_llnn
 #define TRSM_LLNU blasfeo_strsm_llnu

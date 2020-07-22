@@ -10322,7 +10322,7 @@
 	vbroadcastsd	8(%r13), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
-	vmovupd			32(%r11, %r12, 2), %ymm15 // A
+	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	addq	%r14, %r13
 
 	// unroll 2

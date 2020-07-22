@@ -2265,6 +2265,911 @@ void REF_TRSM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
+// dtrmm_left_lower_nottransposed_notunit (A triangular !!!)
+void REF_TRMM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL 
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+	int ddi=di; int ddj=dj;
+#endif
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0; ;
+			c_10 = 0.0; ;
+			c_01 = 0.0; ;
+			c_11 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				c_11 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			kk = ii;
+			c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_10 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_01 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+			c_11 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+			c_10 += XMATEL_A(aai+(ii+1), aaj+kk+1) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_11 += XMATEL_A(aai+(ii+1), aaj+kk+1) * XMATEL_B(bbi+kk+1, bbj+(jj+1));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0; ;
+			c_01 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			kk = ii;
+			c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_01 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0; ;
+			c_10 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			kk = ii;
+			c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_10 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_10 += XMATEL_A(aai+(ii+1), aaj+kk+1) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			kk = ii;
+			c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			}
+		}
+	return;
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+// dtrmm_left_lower_nottransposed_unit (A triangular !!!)
+void REF_TRMM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL 
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+	int ddi=di; int ddj=dj;
+#endif
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0; ;
+			c_10 = 0.0; ;
+			c_01 = 0.0; ;
+			c_11 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				c_11 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_10 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_01 += XMATEL_B(bbi+kk, bbj+(jj+1));
+			c_11 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+			c_10 += XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_11 += XMATEL_B(bbi+kk+1, bbj+(jj+1));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0; ;
+			c_01 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_01 += XMATEL_B(bbi+kk, bbj+(jj+1));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0; ;
+			c_10 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_10 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_10 += XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			}
+		}
+	return;
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+// dtrmm_left_lower_transposed_notunit (A triangular !!!)
+void REF_TRMM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL 
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+	int ddi=di; int ddj=dj;
+#endif
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_00 += XMATEL_A(aai+kk+1, aaj+(ii+0)) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_10 += XMATEL_A(aai+kk+1, aaj+(ii+1)) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_01 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+			c_01 += XMATEL_A(aai+kk+1, aaj+(ii+0)) * XMATEL_B(bbi+kk+1, bbj+(jj+1));
+			c_11 += XMATEL_A(aai+kk+1, aaj+(ii+1)) * XMATEL_B(bbi+kk+1, bbj+(jj+1));
+			kk += 2;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				c_11 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_01 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+			kk += 1;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_00 += XMATEL_A(aai+kk+1, aaj+(ii+0)) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_10 += XMATEL_A(aai+kk+1, aaj+(ii+1)) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			kk += 2;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			kk += 1;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			}
+		}
+	return;
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+// dtrmm_left_lower_transposed_unit (A triangular !!!)
+void REF_TRMM_LLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL 
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+	int ddi=di; int ddj=dj;
+#endif
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_00 += XMATEL_A(aai+kk+1, aaj+(ii+0)) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_10 += XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_01 += XMATEL_B(bbi+kk, bbj+(jj+1));
+			c_01 += XMATEL_A(aai+kk+1, aaj+(ii+0)) * XMATEL_B(bbi+kk+1, bbj+(jj+1));
+			c_11 += XMATEL_B(bbi+kk+1, bbj+(jj+1));
+			kk += 2;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				c_11 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_01 += XMATEL_B(bbi+kk, bbj+(jj+1));
+			kk += 1;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_00 += XMATEL_A(aai+kk+1, aaj+(ii+0)) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_10 += XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			kk += 2;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			kk += 1;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			}
+		}
+	return;
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+// dtrmm_left_upper_nottransposed_notunit (A triangular !!!)
+void REF_TRMM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL 
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+	int ddi=di; int ddj=dj;
+#endif
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_00 += XMATEL_A(aai+(ii+0), aaj+kk+1) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_10 += XMATEL_A(aai+(ii+1), aaj+kk+1) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_01 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+			c_01 += XMATEL_A(aai+(ii+0), aaj+kk+1) * XMATEL_B(bbi+kk+1, bbj+(jj+1));
+			c_11 += XMATEL_A(aai+(ii+1), aaj+kk+1) * XMATEL_B(bbi+kk+1, bbj+(jj+1));
+			kk += 2;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				c_11 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_01 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+			kk += 1;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_00 += XMATEL_A(aai+(ii+0), aaj+kk+1) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_10 += XMATEL_A(aai+(ii+1), aaj+kk+1) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			kk += 2;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			kk += 1;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			}
+		}
+	return;
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+// dtrmm_left_upper_nottransposed_unit (A triangular !!!)
+void REF_TRMM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL 
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+	int ddi=di; int ddj=dj;
+#endif
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_00 += XMATEL_A(aai+(ii+0), aaj+kk+1) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_10 += XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_01 += XMATEL_B(bbi+kk, bbj+(jj+1));
+			c_01 += XMATEL_A(aai+(ii+0), aaj+kk+1) * XMATEL_B(bbi+kk+1, bbj+(jj+1));
+			c_11 += XMATEL_B(bbi+kk+1, bbj+(jj+1));
+			kk += 2;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				c_11 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_01 += XMATEL_B(bbi+kk, bbj+(jj+1));
+			kk += 1;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_00 += XMATEL_A(aai+(ii+0), aaj+kk+1) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_10 += XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			kk += 2;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+(ii+1), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			kk += 1;
+			for(; kk<m; kk++)
+				{
+				c_00 += XMATEL_A(aai+(ii+0), aaj+kk) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			}
+		}
+	return;
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+// dtrmm_left_upper_transposed_notunit (A triangular !!!)
+void REF_TRMM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL 
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+	int ddi=di; int ddj=dj;
+#endif
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0; ;
+			c_10 = 0.0; ;
+			c_01 = 0.0; ;
+			c_11 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				c_11 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			kk = ii;
+			c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_10 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_01 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+			c_11 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+			c_10 += XMATEL_A(aai+kk+1, aaj+(ii+1)) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_11 += XMATEL_A(aai+kk+1, aaj+(ii+1)) * XMATEL_B(bbi+kk+1, bbj+(jj+1));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0; ;
+			c_01 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			kk = ii;
+			c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_01 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0; ;
+			c_10 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			kk = ii;
+			c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_10 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_10 += XMATEL_A(aai+kk+1, aaj+(ii+1)) * XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			kk = ii;
+			c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			}
+		}
+	return;
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+// dtrmm_left_upper_transposed_unit (A triangular !!!)
+void REF_TRMM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL 
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+	int ddi=di; int ddj=dj;
+#endif
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0; ;
+			c_10 = 0.0; ;
+			c_01 = 0.0; ;
+			c_11 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				c_11 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_10 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_01 += XMATEL_B(bbi+kk, bbj+(jj+1));
+			c_11 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+			c_10 += XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			c_11 += XMATEL_B(bbi+kk+1, bbj+(jj+1));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0; ;
+			c_01 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_01 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+1));
+				}
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_01 += XMATEL_B(bbi+kk, bbj+(jj+1));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0; ;
+			c_10 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				c_10 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_10 += XMATEL_A(aai+kk, aaj+(ii+1)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+			c_10 += XMATEL_B(bbi+kk+1, bbj+(jj+0));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0; ;
+			for(kk=0; kk<ii; kk++)
+				{
+				c_00 += XMATEL_A(aai+kk, aaj+(ii+0)) * XMATEL_B(bbi+kk, bbj+(jj+0));
+				}
+			kk = ii;
+			c_00 += XMATEL_B(bbi+kk, bbj+(jj+0));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			}
+		}
+	return;
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
 // dtrmm_right_lower_nottransposed_notunit (A triangular !!!)
 void REF_TRMM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -2362,9 +3267,557 @@ void REF_TRMM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
+// dtrmm_right_lower_nottransposed_unit (A triangular !!!)
+void REF_TRMM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL 
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+	int ddi=di; int ddj=dj;
+#endif
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0; ;
+			c_10 = 0.0; ;
+			c_01 = 0.0; ;
+			c_11 = 0.0; ;
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk);
+			kk++;
+			for(; kk<n; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+1));
+				c_11 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+1));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0; ;
+			c_01 = 0.0; ;
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			kk++;
+			for(; kk<n; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+1));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0; ;
+			c_10 = 0.0; ;
+			for(kk=jj; kk<n; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0; ;
+			for(kk=jj; kk<n; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			}
+		}
+	return;
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+// dtrmm_right_lower_nottransposed_notunit (A triangular !!!)
+void REF_TRMM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL 
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+	int ddi=di; int ddj=dj;
+#endif
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+				c_11 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+			c_11 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+(jj+1), aaj+kk+1);
+			c_11 += XMATEL_B(bbi+(ii+1), bbj+kk+1) * XMATEL_A(aai+(jj+1), aaj+kk+1);
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+(jj+1), aaj+kk+1);
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			}
+		}
+	return;
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+// dtrmm_right_lower_nottransposed_notunit (A triangular !!!)
+void REF_TRMM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL 
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+	int ddi=di; int ddj=dj;
+#endif
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+				c_11 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk);
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+			c_11 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1);
+			c_11 += XMATEL_B(bbi+(ii+1), bbj+kk+1);
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1);
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk);
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			}
+		}
+	return;
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+// dtrmm_right_lower_nottransposed_notunit (A triangular !!!)
+void REF_TRMM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL 
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+	int ddi=di; int ddj=dj;
+#endif
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+1));
+				c_11 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+1));
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+1));
+			c_11 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+1));
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+kk+1, aaj+(jj+1));
+			c_11 += XMATEL_B(bbi+(ii+1), bbj+kk+1) * XMATEL_A(aai+kk+1, aaj+(jj+1));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+1));
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+1));
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+kk+1, aaj+(jj+1));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			}
+		}
+	return;
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+// dtrmm_right_lower_nottransposed_notunit (A triangular !!!)
+void REF_TRMM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL 
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+	int ddi=di; int ddj=dj;
+#endif
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+1));
+				c_11 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+1));
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk);
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+1));
+			c_11 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+1));
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1);
+			c_11 += XMATEL_B(bbi+(ii+1), bbj+kk+1);
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+1));
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+1));
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1);
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk);
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			for(kk=0; kk<jj; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				}
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			}
+		}
+	return;
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
 // dtrmm_right_upper_transposed_notunit (A triangular !!!)
 void REF_TRMM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -2462,6 +3915,109 @@ void REF_TRMM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 		}	
 	return;
 	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+// dtrmm_right_upper_transposed_unit (A triangular !!!)
+void REF_TRMM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	REAL
+		c_00, c_01,
+		c_10, c_11;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldd = sD->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *pB = sB->pA + bi + bj*ldb;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int aai=0; const int aaj=0;
+	const int bbi=0; const int bbj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int aai=ai; int aaj=aj;
+	int bbi=bi; int bbj=bj;
+	int ddi=di; int ddj=dj;
+#endif
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk);
+			kk++;
+			for(; kk<n; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+				c_11 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+1)) = alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			kk++;
+			for(; kk<n; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_01 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+1), aaj+kk);
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+0), ddj+(jj+1)) = alpha * c_01;
+			}
+		}
+	for(; jj<n; jj++)
+		{
+		ii = 0;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			for(kk=jj; kk<n; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			XMATEL_D(ddi+(ii+1), ddj+(jj+0)) = alpha * c_10;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			for(kk=jj; kk<n; kk++)
+				{
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+				}
+			XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = alpha * c_00;
+			}
+		}	
+	return;
+	}
+#endif
 
 
 
@@ -3147,17 +4703,111 @@ void TRSM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
+void TRMM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_LLNN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+void TRMM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_LLNU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+void TRMM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_LLTN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+void TRMM_LLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_LLTU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+void TRMM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_LUNN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+void TRMM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_LUNU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+void TRMM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_LUTN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+void TRMM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_LUTU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
 void TRMM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRMM_RLNN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
+void TRMM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_RLNU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
 void TRMM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRMM_RUTN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+void TRMM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_RUTU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+#endif
 
 
 

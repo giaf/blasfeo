@@ -478,7 +478,7 @@ llnn_1:
 			{
 			goto llnn_1_left_4;
 			}
-		else if(n-ii<=4)
+		else if(n-ii<=8)
 			{
 			goto llnn_1_left_8;
 			}

@@ -40,8 +40,6 @@
     "gemm_nt",
     "gemm_tn",
     "gemm_tt",
-    "potrf_l",
-    "potrf_l_mn",
     "trsm_llnn",
     "trsm_llnu",
     "trsm_lltn",
@@ -58,6 +56,16 @@
     "trsm_runu",
     "trsm_rutn",
     "trsm_rutu",
+    "trmm_llnn",
+    "trmm_llnu",
+    "trmm_lltn",
+    "trmm_lltu",
+    "trmm_lunn",
+    "trmm_lunu",
+    "trmm_lutn",
+    "trmm_lutu",
+    "potrf_l",
+    "potrf_l_mn",
     "getrf_rp"
   ]
 }

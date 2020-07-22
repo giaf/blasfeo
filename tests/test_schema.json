@@ -167,8 +167,22 @@
           "diag":["u","n"]
           },
         "routines": [
+          "trmm_llnn",
+          "trmm_llnu",
+          "trmm_lltn",
+          "trmm_lltu",
+          "trmm_lunn",
+          "trmm_lunu",
+          "trmm_lutn",
+          "trmm_lutu",
+          "trmm_rlnn",
+          "trmm_rlnu",
+          "trmm_rltn",
+          "trmm_rltu",
+          "trmm_runn",
+          "trmm_runu",
           "trmm_rutn",
-          "trmm_rlnn"
+          "trmm_rutu"
         ]
       }
     },

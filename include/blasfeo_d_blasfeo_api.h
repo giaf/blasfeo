@@ -161,7 +161,23 @@ void blasfeo_dsyrk_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 #if ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) )
 void blasfeo_dsyrk3_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj);
 #endif
-// D <= alpha * B * A^T ; B upper triangular
+// D <= alpha * A * B ; A lower triangular
+void blasfeo_dtrmm_llnn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
+// D <= alpha * A * B ; A lower triangular
+void blasfeo_dtrmm_llnu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
+// D <= alpha * A^T * B ; A lower triangular
+void blasfeo_dtrmm_lltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
+// D <= alpha * A^T * B ; A lower triangular
+void blasfeo_dtrmm_lltu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
+// D <= alpha * A * B ; A upper triangular
+void blasfeo_dtrmm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
+// D <= alpha * A * B ; A upper triangular
+void blasfeo_dtrmm_lunu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
+// D <= alpha * A^T * B ; A upper triangular
+void blasfeo_dtrmm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
+// D <= alpha * A^T * B ; A upper triangular
+void blasfeo_dtrmm_lutu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
+// D <= alpha * B * A^T ; A upper triangular
 void blasfeo_dtrmm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= alpha * B * A ; A lower triangular
 void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
