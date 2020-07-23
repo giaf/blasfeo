@@ -3553,29 +3553,15 @@ rutn_1:
 	sdb = tB.cn;
 	dB = tB.dA;
 
-//	if(pack_tran) // lower to upper
-//		{
-		// lower to upper
-		for(ii=0; ii<n-3; ii+=4)
-			{
-			kernel_dpack_tn_4_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb);
-			}
-		if(ii<n)
-			{
-			kernel_dpack_tn_4_vs_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb, n-ii);
-			}
-//		}
-//	else // upper to upper
-//		{
-//		for(ii=0; ii<n-3; ii+=4)
-//			{
-//			kernel_dpack_nn_4_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb);
-//			}
-//		if(ii<n)
-//			{
-//			kernel_dpack_nn_4_vs_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb, n-ii);
-//			}
-//		}
+	// lower to upper
+	for(ii=0; ii<n-3; ii+=4)
+		{
+		kernel_dpack_tn_4_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb);
+		}
+	if(ii<n)
+		{
+		kernel_dpack_tn_4_vs_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb, n-ii);
+		}
 
 	for(ii=0; ii<n; ii++)
 		dB[ii] = 1.0/A[ii+ii*lda];
@@ -3975,29 +3961,15 @@ rutu_1:
 	sdb = tB.cn;
 	dB = tB.dA;
 
-//	if(pack_tran) // lower to upper
-//		{
-		// lower to upper
-		for(ii=0; ii<n-3; ii+=4)
-			{
-			kernel_dpack_tn_4_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb);
-			}
-		if(ii<n)
-			{
-			kernel_dpack_tn_4_vs_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb, n-ii);
-			}
-//		}
-//	else // upper to upper
-//		{
-//		for(ii=0; ii<n-3; ii+=4)
-//			{
-//			kernel_dpack_nn_4_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb);
-//			}
-//		if(ii<n)
-//			{
-//			kernel_dpack_nn_4_vs_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb, n-ii);
-//			}
-//		}
+	// lower to upper
+	for(ii=0; ii<n-3; ii+=4)
+		{
+		kernel_dpack_tn_4_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb);
+		}
+	if(ii<n)
+		{
+		kernel_dpack_tn_4_vs_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*ps+ii*sdb, n-ii);
+		}
 
 	nn4 = n%4;
 	n4 = n - nn4;
@@ -4368,29 +4340,15 @@ rltn_1:
 	sdb = tB.cn;
 	dB = tB.dA;
 
-//	if(pack_tran) // upper to lower
-//		{
-//		for(ii=0; ii<n-3; ii+=4)
-//			{
-//			kernel_dpack_tn_4_lib4(ii+4, A+ii*lda, lda, pB+ii*sdb);
-//			}
-//		if(ii<n)
-//			{
-//			kernel_dpack_tn_4_vs_lib4(n, A+ii*lda, lda, pB+ii*sdb, n-ii);
-//			}
-//		}
-//	else // lower to lower
-//		{
-//		for(ii=0; ii<n-3; ii+=4)
-//			{
-//			kernel_dpack_nn_4_lib4(ii+4, A+ii, lda, pB+ii*sdb);
-//			}
-//		if(ii<n)
-//			{
-//			kernel_dpack_nn_4_vs_lib4(n, A+ii, lda, pB+ii*sdb, n-ii);
-//			}
-//		}
 	// lower to lower
+//	for(ii=0; ii<n-3; ii+=4)
+//		{
+//		kernel_dpack_nn_4_lib4(ii+4, A+ii, lda, pB+ii*sdb);
+//		}
+//	if(ii<n)
+//		{
+//		kernel_dpack_nn_4_vs_lib4(n, A+ii, lda, pB+ii*sdb, n-ii);
+//		}
 	for(ii=0; ii<n-3; ii+=4)
 		{
 		kernel_dpack_tt_4_lib4(n-ii, A+ii+ii*lda, lda, pB+ii*sdb+ii*ps, sdb);

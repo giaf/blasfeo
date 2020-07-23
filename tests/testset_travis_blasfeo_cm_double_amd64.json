@@ -1,7 +1,7 @@
 {
   "options":{
     "rebuild": 1,
-    "silent": 0,
+    "silent": 1,
     "continue": 0
   },
   "test_macros":
@@ -65,6 +65,14 @@
     "trmm_lunu",
     "trmm_lutn",
     "trmm_lutu",
+    "trmm_rlnn",
+    "trmm_rlnu",
+    "trmm_rltn",
+    "trmm_rltu",
+    "trmm_runn",
+    "trmm_runu",
+    "trmm_rutn",
+    "trmm_rutu",
     "potrf_l",
     "potrf_l_mn",
     "getrf_rp"

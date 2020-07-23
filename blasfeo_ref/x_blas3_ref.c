@@ -3211,7 +3211,11 @@ void REF_TRMM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 			kk = jj;
 			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
 			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
-			kk++;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+kk+1, aaj+(jj+0));
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk+1) * XMATEL_A(aai+kk+1, aaj+(jj+0));
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+kk+1, aaj+(jj+1));
+			c_11 += XMATEL_B(bbi+(ii+1), bbj+kk+1) * XMATEL_A(aai+kk+1, aaj+(jj+1));
+			kk += 2;
 			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
@@ -3230,7 +3234,9 @@ void REF_TRMM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 			c_01 = 0.0; ;
 			kk = jj;
 			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
-			kk++;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+kk+1, aaj+(jj+0));
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+kk+1, aaj+(jj+1));
+			kk += 2;
 			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
@@ -3247,7 +3253,11 @@ void REF_TRMM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 			{
 			c_00 = 0.0; ;
 			c_10 = 0.0; ;
-			for(kk=jj; kk<n; kk++)
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+			kk += 1;
+			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
 				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
@@ -3258,7 +3268,10 @@ void REF_TRMM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 		for(; ii<m; ii++)
 			{
 			c_00 = 0.0; ;
-			for(kk=jj; kk<n; kk++)
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+			kk += 1;
+			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
 				}
@@ -3313,7 +3326,11 @@ void REF_TRMM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 			kk = jj;
 			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
 			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk);
-			kk++;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+kk+1, aaj+(jj+0));
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk+1) * XMATEL_A(aai+kk+1, aaj+(jj+0));
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1);
+			c_11 += XMATEL_B(bbi+(ii+1), bbj+kk+1);
+			kk += 2;
 			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
@@ -3332,7 +3349,9 @@ void REF_TRMM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 			c_01 = 0.0; ;
 			kk = jj;
 			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
-			kk++;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+kk+1, aaj+(jj+0));
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1);
+			kk += 2;
 			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
@@ -3349,7 +3368,11 @@ void REF_TRMM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 			{
 			c_00 = 0.0; ;
 			c_10 = 0.0; ;
-			for(kk=jj; kk<n; kk++)
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk);
+			kk += 1;
+			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
 				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
@@ -3360,7 +3383,10 @@ void REF_TRMM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 		for(; ii<m; ii++)
 			{
 			c_00 = 0.0; ;
-			for(kk=jj; kk<n; kk++)
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			kk += 1;
+			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
 				}
@@ -3471,7 +3497,7 @@ void REF_TRMM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 			c_00 = 0.0;
 			for(kk=0; kk<jj; kk++)
 				{
-				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
 				}
 			kk = jj;
 			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
@@ -3582,7 +3608,7 @@ void REF_TRMM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 			c_00 = 0.0;
 			for(kk=0; kk<jj; kk++)
 				{
-				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+kk, aaj+(jj+0));
+				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
 				}
 			kk = jj;
 			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
@@ -3859,7 +3885,11 @@ void REF_TRMM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 			kk = jj;
 			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
 			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
-			kk++;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+(jj+0), aaj+kk+1);
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk+1) * XMATEL_A(aai+(jj+0), aaj+kk+1);
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+(jj+1), aaj+kk+1);
+			c_11 += XMATEL_B(bbi+(ii+1), bbj+kk+1) * XMATEL_A(aai+(jj+1), aaj+kk+1);
+			kk += 2;
 			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
@@ -3878,7 +3908,9 @@ void REF_TRMM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 			c_01 = 0.0;
 			kk = jj;
 			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
-			kk++;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+(jj+0), aaj+kk+1);
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+(jj+1), aaj+kk+1);
+			kk += 2;
 			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
@@ -3895,7 +3927,11 @@ void REF_TRMM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 			{
 			c_00 = 0.0;
 			c_10 = 0.0;
-			for(kk=jj; kk<n; kk++)
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+			kk += 1;
+			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
 				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
@@ -3906,7 +3942,10 @@ void REF_TRMM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 		for(; ii<m; ii++)
 			{
 			c_00 = 0.0;
-			for(kk=jj; kk<n; kk++)
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
+			kk += 1;
+			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
 				}
@@ -3961,7 +4000,11 @@ void REF_TRMM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 			kk = jj;
 			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
 			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk);
-			kk++;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+(jj+0), aaj+kk+1);
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk+1) * XMATEL_A(aai+(jj+0), aaj+kk+1);
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1);
+			c_11 += XMATEL_B(bbi+(ii+1), bbj+kk+1);
+			kk += 2;
 			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
@@ -3980,7 +4023,9 @@ void REF_TRMM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 			c_01 = 0.0;
 			kk = jj;
 			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
-			kk++;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk+1) * XMATEL_A(aai+(jj+0), aaj+kk+1);
+			c_01 += XMATEL_B(bbi+(ii+0), bbj+kk+1);
+			kk += 2;
 			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
@@ -3997,7 +4042,11 @@ void REF_TRMM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 			{
 			c_00 = 0.0;
 			c_10 = 0.0;
-			for(kk=jj; kk<n; kk++)
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			c_10 += XMATEL_B(bbi+(ii+1), bbj+kk);
+			kk += 1;
+			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
 				c_10 += XMATEL_B(bbi+(ii+1), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
@@ -4008,7 +4057,10 @@ void REF_TRMM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 		for(; ii<m; ii++)
 			{
 			c_00 = 0.0;
-			for(kk=jj; kk<n; kk++)
+			kk = jj;
+			c_00 += XMATEL_B(bbi+(ii+0), bbj+kk);
+			kk += 1;
+			for(; kk<n; kk++)
 				{
 				c_00 += XMATEL_B(bbi+(ii+0), bbj+kk) * XMATEL_A(aai+(jj+0), aaj+kk);
 				}
