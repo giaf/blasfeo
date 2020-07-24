@@ -50,7 +50,11 @@
 
 
 
-#define GEMM blasfeo_dgemm
+#if defined(FORTRAN_BLAS_API)
+#define GEMM dgemm_
+#else
+#define GEMM blas_dgemm
+#endif
 
 
 

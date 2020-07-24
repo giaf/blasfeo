@@ -326,9 +326,9 @@ ASFLAGS  += -DMF_PANELMAJ
 endif
 
 ifeq ($(BLAS_API), 1)
-ifeq ($(MF), COLMAJ)
-$(error As of now, with BLAS_API=1 only MF=PANELMAJ is supported)
-endif
+#ifeq ($(MF), COLMAJ)
+#$(error As of now, with BLAS_API=1 only MF=PANELMAJ is supported)
+#endif
 CFLAGS += -DBLAS_API
 ASFLAGS += -DBLAS_API
 ifeq ($(FORTRAN_BLAS_API), 1)

@@ -35,72 +35,35 @@
 
 
 
-void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, REAL *alpha, REAL *A, int *plda, REAL *B, int *pldb)
+void TRMM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, REAL *alpha, REAL *A, int *plda, REAL *B, int *pldb)
 	{
 
 #if defined(DIM_CHECK)
 	if( !(*side=='l' | *side=='L' | *side=='r' | *side=='R') )
 		{
-		printf("\nBLASFEO: dtrsm: wrong value for side\n");
+		printf("\nBLASFEO: dtrmm: wrong value for side\n");
 		return;
 		}
 	if( !(*uplo=='l' | *uplo=='L' | *uplo=='u' | *uplo=='U') )
 		{
-		printf("\nBLASFEO: dtrsm: wrong value for uplo\n");
+		printf("\nBLASFEO: dtrmm: wrong value for uplo\n");
 		return;
 		}
 	if( !(*transa=='c' | *transa=='C' | *transa=='n' | *transa=='N' | *transa=='t' | *transa=='T') )
 		{
-		printf("\nBLASFEO: dtrsm: wrong value for transa\n");
+		printf("\nBLASFEO: dtrmm: wrong value for transa\n");
 		return;
 		}
 	if( !(*diag=='n' | *diag=='N' | *diag=='u' | *diag=='U') )
 		{
-		printf("\nBLASFEO: dtrsm: wrong value for diag\n");
+		printf("\nBLASFEO: dtrmm: wrong value for diag\n");
 		return;
 		}
 #endif
 
-#if defined(FALLBACK_TO_EXTERNAL_BLAS)
-	// TODO
-#endif
-
-#if defined(TARGET_GENERIC)
-	REAL dA0[K_MAX_STACK];
-#else
-	ALIGNED( REAL dA0[K_MAX_STACK], 64 );
-#endif
-	
-	REAL *dA = dA0;
-
-	REAL *mem;
-	
-	// XXX needed ???????
-	// TODO remove !!!!!!!!!!!!!
-	if( (*side=='l' | *side=='L') )
-		{
-		if( *pm>K_MAX_STACK )
-			{
-			dA = malloc(*pm*sizeof(REAL));
-//			mem = malloc(*pm*sizeof(REAL)+64);
-//			blasfeo_align_64_byte(mem, (void **) &dA);
-			}
-		}
-	else
-		{
-		if( *pn>K_MAX_STACK )
-			{
-			dA = malloc(*pn*sizeof(REAL));
-//			mem = malloc(*pn*sizeof(REAL)+64);
-//			blasfeo_align_64_byte(mem, (void **) &dA);
-			}
-		}
-
 	struct MAT sA;
 	sA.pA = A;
 	sA.m = *plda;
-	sA.dA = dA; // TODO remove !!!!!!
-	sA.use_dA = 0; // TODO remove !!!!!!
 
 	struct MAT sB;
 	sB.pA = B;
@@ -114,22 +77,22 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 				{
 				if(*diag=='n' | *diag=='N') // _llnn
 					{
-					TRSM_LLNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_LLNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				else //if(*diag=='u' | *diag=='U') // _llnu
 					{
-					TRSM_LLNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_LLNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				}
 			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _llt
 				{
 				if(*diag=='n' | *diag=='N') // _lltn
 					{
-					TRSM_LLTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_LLTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				else //if(*diag=='u' | *diag=='U') // _lltu
 					{
-					TRSM_LLTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_LLTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				}
 			}
@@ -139,22 +102,22 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 				{
 				if(*diag=='n' | *diag=='N') // _lunn
 					{
-					TRSM_LUNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_LUNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				else //if(*diag=='u' | *diag=='U') // _lunu
 					{
-					TRSM_LUNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_LUNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				}
 			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _lut
 				{
 				if(*diag=='n' | *diag=='N') // _lutn
 					{
-					TRSM_LUTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_LUTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				else //if(*diag=='u' | *diag=='U') // _lutu
 					{
-					TRSM_LUTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_LUTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				}
 			}
@@ -167,22 +130,22 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 				{
 				if(*diag=='n' | *diag=='N') // _rlnn
 					{
-					TRSM_RLNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_RLNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				else //if(*diag=='u' | *diag=='U') // _rlnu
 					{
-					TRSM_RLNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_RLNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				}
 			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _rlt
 				{
 				if(*diag=='n' | *diag=='N') // _rltn
 					{
-					TRSM_RLTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_RLTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				else //if(*diag=='u' | *diag=='U') // _rltu
 					{
-					TRSM_RLTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_RLTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				}
 			}
@@ -192,44 +155,30 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 				{
 				if(*diag=='n' | *diag=='N') // _runn
 					{
-					TRSM_RUNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_RUNN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				else //if(*diag=='u' | *diag=='U') // _runu
 					{
-					TRSM_RUNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_RUNU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				}
 			else //if(*transa=='t' | *transa=='T' | *transa=='c' | *transa=='C') // _rut
 				{
 				if(*diag=='n' | *diag=='N') // _rutn
 					{
-					TRSM_RUTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_RUTN(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				else //if(*diag=='u' | *diag=='U') // _rutu
 					{
-					TRSM_RUTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
+					TRMM_RUTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				}
-			}
-		}
-
-	if( (*side=='l' | *side=='L') )
-		{
-		if( *pm>K_MAX_STACK )
-			{
-			free(mem);
-			}
-		}
-	else
-		{
-		if( *pn>K_MAX_STACK )
-			{
-			free(mem);
 			}
 		}
 
 	return;
 
 	}
+
 
 

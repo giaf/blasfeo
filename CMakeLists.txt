@@ -546,6 +546,12 @@ file(GLOB BLAS_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/strsm.c
 	)
 
+file(GLOB BLAS_CM_SRC
+	${PROJECT_SOURCE_DIR}/blas_api/dgemm_ref.c
+
+	${PROJECT_SOURCE_DIR}/blas_api/sgemm_ref.c
+	)
+
 if(${TARGET} MATCHES X64_INTEL_HASWELL OR ${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
 
 file(GLOB BLASFEO_HP_PM_SRC
@@ -989,7 +995,15 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 
 	if(${BLAS_API})
 
-		list(APPEND BLASFEO_SRC ${BLAS_SRC})
+		if(${MF} MATCHES PANELMAJ)
+
+			list(APPEND BLASFEO_SRC ${BLAS_SRC})
+
+		else()
+
+			list(APPEND BLASFEO_SRC ${BLAS_CM_SRC})
+
+		endif()
 
 	endif()
 

@@ -145,6 +145,11 @@ BLAS_OBJS += \
 		blas_api/sgemm.o \
 		blas_api/strsm.o
 
+BLAS_CM_OBJS += \
+		blas_api/dgemm_ref.o \
+		\
+		blas_api/sgemm_ref.o \
+
 ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE))
 
 ### BLASFEO HP, PANEL-MAJOR ###
@@ -630,7 +635,12 @@ OBJS += $(BLASFEO_REF_OBJS)
 endif # BLASFEO_REF_API
 
 ifeq ($(BLAS_API), 1)
+
+ifeq ($(MF), PANELMAJ)
 OBJS += $(BLAS_OBJS)
+else
+OBJS += $(BLAS_CM_OBJS)
+endif
 
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
 include $(CURRENT_DIR)/netlib/Makefile.netlib_blas
