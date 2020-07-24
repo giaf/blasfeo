@@ -132,4 +132,22 @@ jobs:
         - pip install --user jinja2
         - python tester.py testset_travis.json
 
+    - name: "debug tests"
+      arch: amd64
+      os: linux
+      dist: bionic
+      group: travis_latest
+      language: python
+      python: "3.6"
+      addons:
+        apt:
+          packages:
+          - libblas-dev
+          - liblapack-dev
+          - bc
+      script:
+        - cd "${TRAVIS_BUILD_DIR}"/tests
+        - pip install jinja2
+        - python tester.py testset_debug.json
+
 

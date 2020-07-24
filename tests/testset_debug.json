@@ -1,0 +1,40 @@
+{
+  "options":{
+    "rebuild": 1,
+    "silent": 0,
+    "continue": 0
+  },
+  "test_macros":
+  {
+    "VERBOSE": 3
+  },
+  "env_flags":{
+    "CC":"gcc",
+    "CFLAGS": "-Wuninitialized"
+  },
+  "blasfeo_flags":{
+    "BLASFEO_REF_API": 1,
+    "MF": "COLMAJ",
+    "BLAS_API": 0,
+    "EXTERNAL_BLAS": "SYSTEM"
+  },
+  "precisions": [
+    "double"
+  ],
+  "apis": [
+    "blasfeo"
+  ],
+  "K_MAX_STACK":[
+    500
+  ],
+  "TARGET": [
+    "X64_INTEL_HASWELL"
+  ],
+  "LA": [
+    "HIGH_PERFORMANCE"
+  ],
+  "routines": [
+    "trmm_lutn"
+  ]
+}
+
