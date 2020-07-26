@@ -41,6 +41,7 @@
     "gemm_nt",
     "gemm_tn",
     "gemm_tt",
+    "syrk_ln",
     "trsm_llnn",
     "trsm_llnu",
     "trsm_lltn",

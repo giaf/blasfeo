@@ -4073,6 +4073,7 @@ void REF_TRMM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dsyrk_lower not-transposed
 void REF_SYRK_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -4166,6 +4167,7 @@ void REF_SYRK_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 		}
 	return;
 	}
+#endif
 
 
 
@@ -4863,10 +4865,12 @@ void TRMM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void SYRK_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_SYRK_LN(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 	}
+#endif
 
 
 
