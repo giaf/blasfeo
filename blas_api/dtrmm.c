@@ -56,7 +56,7 @@ void dscal_(int *m, double *alpha, double *x, int *incx);
 
 
 
-void blasfeo_dtrmm(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, double *alpha, double *A, int *plda, double *B, int *pldb)
+void blas_dtrmm(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, double *alpha, double *A, int *plda, double *B, int *pldb)
 	{
 
 #if defined(PRINT_NAME)

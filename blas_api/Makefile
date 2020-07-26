@@ -71,6 +71,7 @@ else # MF COLMAJ ## ifeq ($(LA), REFERENCE)
 
 OBJS += dgemm_ref.o
 OBJS += dsyrk_ref.o
+OBJS += dtrmm_ref.o
 OBJS += dtrsm_ref.o
 #OBJS += dpotrf_ref.o
 
@@ -93,6 +94,7 @@ clean:
 
 dgemm_ref.o: dgemm_ref.c xgemm_ref.c
 dsyrk_ref.o: dsyrk_ref.c xsyrk_ref.c
+dtrmm_ref.o: dtrmm_ref.c xtrmm_ref.c
 dtrsm_ref.o: dtrsm_ref.c xtrsm_ref.c
 dpotrf_ref.o: dpotrf_ref.c xpotrf_ref.c
 

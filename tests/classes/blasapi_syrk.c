@@ -37,31 +37,7 @@ void call_routines(struct RoutineArgs *args)
 
 void print_routine(struct RoutineArgs *args)
 	{
-	// print signature and dimensions
-
-	printf("blas_%s_%s%s: ", string(ROUTINE), string(UPLO), string(TRANS));
-	if (string(TRANS)[0] == 'n')
-		{
-		printf(
-			"solving D[%d:%d] =  %f*A[%d:%d]*A[%d:%d]' + %f*B[%d:%d]\n",
-			args->m, args->m,
-			args->alpha, args->m, args->n, args->n, args->m,
-			args->beta, args->m, args->m
-			);
-		}
-	else if (string(TRANS)[0] == 't')
-		{
-		printf(
-			"solving D[%d:%d] =  %f*A[%d:%d]'*A[%d:%d] + %f*B[%d:%d]\n",
-			args->m, args->m,
-			args->alpha, args->n, args->m, args->m, args->n,
-			args->beta, args->m, args->m
-			);
-		}
-	else
-		{
-		printf("Wrong TRANS flag\n");
-		}
+	printf("blas_%s(%s, %s, %d, %d, %f, A, %d, C, %d);\n", string(ROUTINE), string(UPLO), string(TRANS), args->m, args->n, args->alpha, args->cA->m, args->cB->m, args->cD->m);
 	}
 
 
@@ -87,7 +63,7 @@ void print_routine_matrices(struct RoutineArgs *args)
 
 void set_test_args(struct TestArgs *targs)
 	{
-	targs->nis = 9;
+	targs->nis = 17;
 	targs->njs = 9;
 
 	targs->alphas = 1;

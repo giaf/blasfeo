@@ -118,7 +118,7 @@ void blas_dgemm(char *ta, char *tb, int *m, int *n, int *k, double *alpha, doubl
 //
 void blas_dsyrk(char *uplo, char *ta, int *m, int *k, double *alpha, double *A, int *lda, double *beta, double *C, int *ldc);
 //
-void blasfeo_dtrmm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
+void blas_dtrmm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
 //
 void blas_dtrsm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
 
