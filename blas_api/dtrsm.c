@@ -44,7 +44,7 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_dtrsm dtrsm_
+#define blas_dtrsm dtrsm_
 #endif
 
 
@@ -56,7 +56,7 @@ void dscal_(int *m, double *alpha, double *x, int *incx);
 
 
 
-void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, double *alpha, double *A, int *plda, double *B, int *pldb)
+void blas_dtrsm(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, double *alpha, double *A, int *plda, double *B, int *pldb)
 	{
 
 #if defined(PRINT_NAME)

@@ -120,7 +120,7 @@ void blas_dsyrk(char *uplo, char *ta, int *m, int *k, double *alpha, double *A, 
 //
 void blasfeo_dtrmm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
 //
-void blasfeo_dtrsm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
+void blas_dtrsm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
 
 
 

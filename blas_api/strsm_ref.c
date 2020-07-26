@@ -63,7 +63,12 @@
 
 
 
-#define TRSM blasfeo_strsm
+#if defined(FORTRAN_BLAS_API)
+#define TRSM strsm_
+#else
+#define TRSM blas_strsm
+#endif
+
 
 
 

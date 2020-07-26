@@ -6,14 +6,14 @@
   },
   "test_macros":
   {
-    "VERBOSE":2
+    "VERBOSE": 3
   },
   "env_flags":{
     "CC":"gcc",
     "CFLAGS": "-Wuninitialized"
   },
   "blasfeo_flags":{
-    "BLASFEO_REF_API": 0,
+    "BLASFEO_REF_API": 1,
     "MF": "COLMAJ",
     "BLAS_API": 1,
     "EXTERNAL_BLAS": "SYSTEM"
@@ -40,7 +40,27 @@
     "gemm_nn",
     "gemm_nt",
     "gemm_tn",
-    "gemm_tt"
+    "gemm_tt",
+    "syrk_ln",
+    "syrk_lt",
+    "syrk_un",
+    "syrk_ut",
+    "trsm_llnn",
+    "trsm_llnu",
+    "trsm_lltn",
+    "trsm_lltu",
+    "trsm_lunn",
+    "trsm_lunu",
+    "trsm_lutn",
+    "trsm_lutu",
+    "trsm_rlnn",
+    "trsm_rlnu",
+    "trsm_rltn",
+    "trsm_rltu",
+    "trsm_runn",
+    "trsm_runu",
+    "trsm_rutn",
+    "trsm_rutu"
   ]
 }
 

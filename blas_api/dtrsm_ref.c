@@ -62,28 +62,17 @@
 #define TRSM_RUNU blasfeo_dtrsm_runu
 #define TRSM_RUTN blasfeo_dtrsm_rutn
 #define TRSM_RUTU blasfeo_dtrsm_rutu
-#define TRSM3_LLNN blasfeo_dtrsm3_llnn
-#define TRSM3_LLNU blasfeo_dtrsm3_llnu
-#define TRSM3_LLTN blasfeo_dtrsm3_lltn
-#define TRSM3_LLTU blasfeo_dtrsm3_lltu
-#define TRSM3_LUNN blasfeo_dtrsm3_lunn
-#define TRSM3_LUNU blasfeo_dtrsm3_lunu
-#define TRSM3_LUTN blasfeo_dtrsm3_lutn
-#define TRSM3_LUTU blasfeo_dtrsm3_lutu
-#define TRSM3_RLNN blasfeo_dtrsm3_rlnn
-#define TRSM3_RLNU blasfeo_dtrsm3_rlnu
-#define TRSM3_RLTN blasfeo_dtrsm3_rltn
-#define TRSM3_RLTU blasfeo_dtrsm3_rltu
-#define TRSM3_RUNN blasfeo_dtrsm3_runn
-#define TRSM3_RUNU blasfeo_dtrsm3_runu
-#define TRSM3_RUTN blasfeo_dtrsm3_rutn
-#define TRSM3_RUTU blasfeo_dtrsm3_rutu
 #define MAT blasfeo_dmat
 #define REAL double
 
 
 
-#define TRSM blasfeo_dtrsm
+#if defined(FORTRAN_BLAS_API)
+#define TRSM dtrsm_
+#else
+#define TRSM blas_dtrsm
+#endif
+
 
 
 

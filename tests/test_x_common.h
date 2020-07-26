@@ -73,6 +73,7 @@
 //#define REF(fun) concatenate(fun, _ref)
 #define REF(fun) concatenate(ref_, fun)
 #define BLASFEO(fun) concatenate(blasfeo_, fun)
+#define BLASFEO_BLAS(fun) concatenate(blas_, fun)
 #define BLAS(fun) concatenate(fun, _)
 #define WORKSIZE(fun) concatenate(fun, _worksize)
 

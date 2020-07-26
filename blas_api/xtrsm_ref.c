@@ -65,42 +65,9 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 	// TODO
 #endif
 
-#if defined(TARGET_GENERIC)
-	REAL dA0[K_MAX_STACK];
-#else
-	ALIGNED( REAL dA0[K_MAX_STACK], 64 );
-#endif
-	
-	REAL *dA = dA0;
-
-	REAL *mem;
-	
-	// XXX needed ???????
-	// TODO remove !!!!!!!!!!!!!
-	if( (*side=='l' | *side=='L') )
-		{
-		if( *pm>K_MAX_STACK )
-			{
-			dA = malloc(*pm*sizeof(REAL));
-//			mem = malloc(*pm*sizeof(REAL)+64);
-//			blasfeo_align_64_byte(mem, (void **) &dA);
-			}
-		}
-	else
-		{
-		if( *pn>K_MAX_STACK )
-			{
-			dA = malloc(*pn*sizeof(REAL));
-//			mem = malloc(*pn*sizeof(REAL)+64);
-//			blasfeo_align_64_byte(mem, (void **) &dA);
-			}
-		}
-
 	struct MAT sA;
 	sA.pA = A;
 	sA.m = *plda;
-	sA.dA = dA; // TODO remove !!!!!!
-	sA.use_dA = 0; // TODO remove !!!!!!
 
 	struct MAT sB;
 	sB.pA = B;
@@ -210,21 +177,6 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 					TRSM_RUTU(*pm, *pn, *alpha, &sA, 0, 0, &sB, 0, 0, &sB, 0, 0);
 					}
 				}
-			}
-		}
-
-	if( (*side=='l' | *side=='L') )
-		{
-		if( *pm>K_MAX_STACK )
-			{
-			free(mem);
-			}
-		}
-	else
-		{
-		if( *pn>K_MAX_STACK )
-			{
-			free(mem);
 			}
 		}
 

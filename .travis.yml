@@ -25,8 +25,10 @@ jobs:
         - python tester.py testset_travis_blasfeo_pm_single_amd64.json
         - python tester.py testset_travis_blasfeo_cm_double_amd64.json
         - python tester.py testset_travis_blasfeo_cm_single_amd64.json
-        - python tester.py testset_travis_blas_double_amd64.json
-        - python tester.py testset_travis_blas_single_amd64.json
+        - python tester.py testset_travis_blas_pm_double_amd64.json
+        - python tester.py testset_travis_blas_pm_single_amd64.json
+        - python tester.py testset_travis_blas_cm_double_amd64.json
+        - python tester.py testset_travis_blas_cm_single_amd64.json
 
     - name: "Linux ARM64 tests"
       arch: arm64
@@ -48,8 +50,8 @@ jobs:
         - python tester.py testset_travis_blasfeo_pm_single_arm64.json
         - python tester.py testset_travis_blasfeo_cm_double_arm64.json
         - python tester.py testset_travis_blasfeo_cm_single_arm64.json
-        - python tester.py testset_travis_blas_double_arm64.json
-        - python tester.py testset_travis_blas_single_arm64.json
+        - python tester.py testset_travis_blas_pm_double_arm64.json
+        - python tester.py testset_travis_blas_pm_single_arm64.json
 
     - name: "Linux ARM32 make build"
       arch: arm64
