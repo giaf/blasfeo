@@ -54,14 +54,6 @@ extern "C" {
 
 
 
-// BLAS 3
-//
-void blasfeo_dgemm(char ta, char tb, int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc, double *D, int ldd);
-//
-void blasfeo_dsyrk3(char uplo, char ta, int m, int k, double alpha, double *A, int lda, double beta, double *C, int ldc, double *D, int ldd);
-
-
-
 #ifdef FORTRAN_BLAS_API
 
 

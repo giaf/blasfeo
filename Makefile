@@ -121,7 +121,7 @@ BLASFEO_WR_OBJS = \
 		blasfeo_wr/s_blas3_diag_lib.o \
 		blasfeo_wr/s_lapack_lib.o \
 
-### BLAS ###
+### BLAS API ###
 BLAS_OBJS += \
 		blas_api/dcopy.o \
 		blas_api/daxpy.o \
@@ -147,6 +147,7 @@ BLAS_OBJS += \
 
 BLAS_CM_OBJS += \
 		blas_api/dgemm_ref.o \
+		blas_api/dsyrk_ref.o \
 		\
 		blas_api/sgemm_ref.o \
 

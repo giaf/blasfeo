@@ -49,7 +49,7 @@
 
 
 
-void blasfeo_sgemm(char ta, char tb, int m, int n, int k, float alpha, float *A, int lda, float *B, int ldb, float beta, float *C, int ldc, float *D, int ldd)
+static void blasfeo_sgemm(char ta, char tb, int m, int n, int k, float alpha, float *A, int lda, float *B, int ldb, float beta, float *C, int ldc, float *D, int ldd)
 	{
 
 #if defined(PRINT_NAME)

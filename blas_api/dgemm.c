@@ -49,7 +49,7 @@
 
 
 
-void blasfeo_dgemm(char ta, char tb, int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc, double *D, int ldd)
+static void blasfeo_dgemm(char ta, char tb, int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc, double *D, int ldd)
 	{
 
 #if defined(PRINT_NAME)

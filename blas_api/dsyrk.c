@@ -51,7 +51,7 @@
 
 
 
-void blasfeo_dsyrk3(char uplo, char ta, int m, int k, double alpha, double *A, int lda, double beta, double *C, int ldc, double *D, int ldd)
+static void blasfeo_dsyrk3(char uplo, char ta, int m, int k, double alpha, double *A, int lda, double beta, double *C, int ldc, double *D, int ldd)
 	{
 
 #if defined(PRINT_NAME)

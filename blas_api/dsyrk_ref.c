@@ -58,7 +58,12 @@
 
 
 
-#define SYRK blasfeo_dsyrk
+#if defined(FORTRAN_BLAS_API)
+#define SYRK dsyrk_
+#else
+#define SYRK blas_dsyrk
+#endif
+
 
 
 
