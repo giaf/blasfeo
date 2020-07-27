@@ -1265,23 +1265,16 @@ void TRMV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 
 
 
-void TRSV_LNN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
-	{
-	REF_TRSV_LNN_MN(m, n, sA, ai, aj, sx, xi, sz, zi);
-	}
-
-
-
-void TRSV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
-	{
-	REF_TRSV_LTN_MN(m, n, sA, ai, aj, sx, xi, sz, zi);
-	}
-
-
-
 void TRSV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	REF_TRSV_LNN(m, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void TRSV_LNN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRSV_LNN_MN(m, n, sA, ai, aj, sx, xi, sz, zi);
 	}
 
 
@@ -1295,14 +1288,21 @@ void TRSV_LNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 
 void TRSV_LTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
-	REF_TRSV_LNN(m, sA, ai, aj, sx, xi, sz, zi);
+	REF_TRSV_LTN(m, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void TRSV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRSV_LTN_MN(m, n, sA, ai, aj, sx, xi, sz, zi);
 	}
 
 
 
 void TRSV_LTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
-	REF_TRSV_LNU(m, sA, ai, aj, sx, xi, sz, zi);
+	REF_TRSV_LTU(m, sA, ai, aj, sx, xi, sz, zi);
 	}
 
 

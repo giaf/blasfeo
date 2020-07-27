@@ -40,11 +40,21 @@
 
 #include <blasfeo.h>
 
+
+
 #ifdef EXTERNAL_BLAS_MKL
 #include <mkl.h>
 #endif
 #ifdef EXTERNAL_BLAS_OPENBLAS
 #include <d_blas.h>
+#endif
+
+
+
+#if ( defined(EXTERNAL_BLAS_SYSTEM) | defined(EXTERNAL_BLAS_MKL) | defined(EXTERNAL_BLAS_OPENBLAS) | defined(EXTERNAL_BLAS_NETLIB) | defined(EXTERNAL_BLAS_BLIS) | defined(EXTERNAL_BLAS_ATLAS) )
+#define EXTERNAL_BLAS 1
+#else
+#define EXTERNAL_BLAS 0
 #endif
 
 
@@ -68,11 +78,11 @@ static void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *h
 		{
 		blasfeo_dtrmm_rlnn(nu[N-nn-1]+nx[N-nn-1]+1, nx[N-nn], 1.0, &hsL[N-nn], nu[N-nn], nu[N-nn], &hsBAbt[N-nn-1], 0, 0, &hswork_mat[0], 0, 0);
 		blasfeo_dgead(1, nx[N-nn], 1.0, &hsL[N-nn], nu[N-nn]+nx[N-nn], nu[N-nn], &hswork_mat[0], nu[N-nn-1]+nx[N-nn-1], 0);
-#if 1
+#if 0
 		blasfeo_dsyrk_dpotrf_ln_mn(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #else
-		blasfeo_dsyrk_ln(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
-		blasfeo_dpotrf_l(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
+		blasfeo_dsyrk_ln_mn(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
+		blasfeo_dpotrf_l_mn(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #endif
 		}
 
@@ -480,26 +490,44 @@ int main()
 
 	printf("\nExample of Riccati recursion factorization and backsolve\n\n");
 
+	// check Linear Algebra backend
 #if defined(LA_HIGH_PERFORMANCE)
 
-	printf("\nLA provided by BLASFEO\n\n");
+	printf("\nLA provided by HIGH_PERFORMANCE\n");
 
 #elif defined(LA_REFERENCE)
 
-	printf("\nLA provided by REFERENCE\n\n");
+	printf("\nLA provided by REFERENCE\n");
 
 #elif defined(LA_EXTERNAL_BLAS_WRAPPER)
 
-	printf("\nLA provided by EXTERNAL_BLAS_WRAPPER\n\n");
+	printf("\nLA provided by EXTERNAL_BLAS_WRAPPER\n");
 
 #else
 
-	printf("\nLA provided by ???\n\n");
+	printf("\nLA provided by ???\n");
 	exit(2);
 
 #endif
 
-	printf( "Testing processor\n" );
+	// check Matrix Format
+#if defined(MF_PANELMAJ)
+
+	printf("\nMF provided by PANELMAJ\n");
+
+#elif defined(MF_COLMAJ)
+
+	printf("\nMF provided by COLMAJ\n");
+
+#else
+
+	printf("\nMF provided by ???\n");
+	exit(2);
+
+#endif
+
+	// check processor
+	printf( "\nTesting processor\n" );
 
 	char supportString[50];
 	blasfeo_processor_library_string( supportString );
