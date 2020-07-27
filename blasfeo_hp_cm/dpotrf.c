@@ -1157,7 +1157,7 @@ l_0_left_12:
 			// XXX not needed before return
 //			kend = n-jj-4<4 ? n-jj-4 : 4;
 //			kernel_dpack_nn_4_vs_lib4(kend, D+ii+8+(jj+4)*ldd, ldd, pU+8*sdu+(jj+4)*ps, m-ii-8);
-			goto l_1_return;
+			goto l_0_return;
 			}
 #endif
 		if(jj<n-4)
@@ -1191,7 +1191,7 @@ l_0_left_8:
 			// XXX not needed before return
 //			kend = n-jj<4 ? n-jj : 4;
 //			kernel_dpack_nn_4_vs_lib4(kend, D+ii+4+jj*ldd, ldd, pU+4*sdu+jj*ps, m-ii-4);
-			goto l_1_return;
+			goto l_0_return;
 			}
 #endif
 		kernel_dpotrf_nt_l_8x4_vs_lib44cc(jj, pU, sdu, pU, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dU+jj, m-ii, n-jj);

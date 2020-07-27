@@ -4171,6 +4171,7 @@ void REF_SYRK_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dsyrk_lower not-transposed
 void REF_SYRK_LN_MN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -4207,20 +4208,35 @@ void REF_SYRK_LN_MN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, in
 	for(; jj<n-1; jj+=2)
 		{
 		// diagonal
-		c_00 = 0.0;
-		c_10 = 0.0;
-		c_11 = 0.0;
-		for(kk=0; kk<k; kk++)
+		ii = jj;
+		if(ii<m-1)
 			{
-			c_00 += XMATEL_A(aai+jj+0, aaj+kk) * XMATEL_B(bbi+jj+0, bbj+kk);
-			c_10 += XMATEL_A(aai+jj+1, aaj+kk) * XMATEL_B(bbi+jj+0, bbj+kk);
-			c_11 += XMATEL_A(aai+jj+1, aaj+kk) * XMATEL_B(bbi+jj+1, bbj+kk);
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_11 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += XMATEL_A(aai+jj+0, aaj+kk) * XMATEL_B(bbi+jj+0, bbj+kk);
+				c_10 += XMATEL_A(aai+jj+1, aaj+kk) * XMATEL_B(bbi+jj+0, bbj+kk);
+				c_11 += XMATEL_A(aai+jj+1, aaj+kk) * XMATEL_B(bbi+jj+1, bbj+kk);
+				}
+			XMATEL_D(ddi+jj+0, ddj+(jj+0)) = beta * XMATEL_C(cci+jj+0, ccj+(jj+0)) + alpha * c_00;
+			XMATEL_D(ddi+jj+1, ddj+(jj+0)) = beta * XMATEL_C(cci+jj+1, ccj+(jj+0)) + alpha * c_10;
+			XMATEL_D(ddi+jj+1, ddj+(jj+1)) = beta * XMATEL_C(cci+jj+1, ccj+(jj+1)) + alpha * c_11;
+			ii += 2;
 			}
-		XMATEL_D(ddi+jj+0, ddj+(jj+0)) = beta * XMATEL_C(cci+jj+0, ccj+(jj+0)) + alpha * c_00;
-		XMATEL_D(ddi+jj+1, ddj+(jj+0)) = beta * XMATEL_C(cci+jj+1, ccj+(jj+0)) + alpha * c_10;
-		XMATEL_D(ddi+jj+1, ddj+(jj+1)) = beta * XMATEL_C(cci+jj+1, ccj+(jj+1)) + alpha * c_11;
+		else if(ii<m)
+			{
+			c_00 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += XMATEL_A(aai+jj+0, aaj+kk) * XMATEL_B(bbi+jj+0, bbj+kk);
+				}
+			XMATEL_D(ddi+jj+0, ddj+(jj+0)) = beta * XMATEL_C(cci+jj+0, ccj+(jj+0)) + alpha * c_00;
+			ii += 1;
+			}
 		// lower
-		ii = jj+2;
+//		ii = jj+2;
 		for(; ii<m-1; ii+=2)
 			{
 			c_00 = 0.0;
@@ -4255,14 +4271,19 @@ void REF_SYRK_LN_MN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, in
 	for(; jj<n; jj++)
 		{
 		// diagonal
-		c_00 = 0.0;
-		for(kk=0; kk<k; kk++)
+		ii = jj;
+		if(ii<m)
 			{
-			c_00 += XMATEL_A(aai+jj, aaj+kk) * XMATEL_B(bbi+jj, bbj+kk);
+			c_00 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += XMATEL_A(aai+jj, aaj+kk) * XMATEL_B(bbi+jj, bbj+kk);
+				}
+			XMATEL_D(ddi+jj, ddj+jj) = beta * XMATEL_C(cci+jj, ccj+jj) + alpha * c_00;
+			ii += 1;
 			}
-		XMATEL_D(ddi+jj, ddj+jj) = beta * XMATEL_C(cci+jj, ccj+jj) + alpha * c_00;
 		// lower
-		for(ii=jj+1; ii<m; ii++)
+		for(; ii<m; ii++)
 			{
 			c_00 = 0.0;
 			for(kk=0; kk<k; kk++)
@@ -4274,6 +4295,7 @@ void REF_SYRK_LN_MN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, in
 		}
 	return;
 	}
+#endif
 
 
 
@@ -4874,10 +4896,12 @@ void SYRK_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct X
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void SYRK_LN_MN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_SYRK_LN_MN(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 	}
+#endif
 
 
 

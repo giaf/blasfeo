@@ -2050,7 +2050,7 @@ void REF_GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, i
 
 
 // generate Q matrix
-int REF_ORGLQ_WORK_SIZE(int m, int n)
+int REF_ORGLQ_WORK_SIZE(int m, int n, int k)
 	{
 	printf("\nblasfeo_orglq_worksize: feature not implemented yet\n");
 	exit(1);
@@ -2060,7 +2060,7 @@ int REF_ORGLQ_WORK_SIZE(int m, int n)
 
 
 // generate Q matrix
-void REF_ORGLQ(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
+void REF_ORGLQ(int m, int n, int k, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
 		return;
@@ -3257,14 +3257,24 @@ void POTRF_U(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, in
 
 void SYRK_POTRF_LN(int m, int k, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
-	REF_SYRK_POTRF_LN(m, k, sA, ai, aj, sB, bi, bj, sC, ci, dj, sD, di, dj);
+#if ! ( defined(HP_CM) & defined(DP) )
+	REF_SYRK_POTRF_LN(m, k, sA, ai, aj, sB, bi, bj, sC, ci, cj, sD, di, dj);
+#else
+	SYRK_LN(m, k, 1.0, sA, ai, aj, sB, bi, bj, 1.0, sC, ci, cj, sD, di, dj);
+	POTRF_L(m, sD, di, dj, sD, di, dj);
+#endif
 	}
 
 
 
 void SYRK_POTRF_LN_MN(int m, int n, int k, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
-	REF_SYRK_POTRF_LN_MN(m, n, k, sA, ai, aj, sB, bi, bj, sC, ci, dj, sD, di, dj);
+#if ! ( defined(HP_CM) & defined(DP) )
+	REF_SYRK_POTRF_LN_MN(m, n, k, sA, ai, aj, sB, bi, bj, sC, ci, cj, sD, di, dj);
+#else
+	SYRK_LN_MN(m, n, k, 1.0, sA, ai, aj, sB, bi, bj, 1.0, sC, ci, cj, sD, di, dj);
+	POTRF_L_MN(m, n, sD, di, dj, sD, di, dj);
+#endif
 	}
 
 
@@ -3320,16 +3330,16 @@ void GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 
 
 
-int ORGLQ_WORK_SIZE(int m, int n)
+int ORGLQ_WORK_SIZE(int m, int n, int k)
 	{
-	REF_ORGLQ_WORK_SIZE(m, n);
+	REF_ORGLQ_WORK_SIZE(m, n, k);
 	}
 
 
 
-void ORGLQ(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
+void ORGLQ(int m, int n, int k, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
 	{
-	REF_ORGLQ(m, n, sC, ci, cj, sD, di, dj, work);
+	REF_ORGLQ(m, n, k, sC, ci, cj, sD, di, dj, work);
 	}
 
 

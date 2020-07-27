@@ -89,10 +89,12 @@ void print_routine_matrices(struct RoutineArgs *args)
 
 void set_test_args(struct TestArgs *targs)
 	{
+#if defined(MF_PANELMAJ)
 	targs->ais = 5;
 	targs->bis = 5;
 	targs->dis = 5;
 	targs->xjs = 2;
+#endif
 
 	targs->nis = 13;
 	targs->njs = 5;

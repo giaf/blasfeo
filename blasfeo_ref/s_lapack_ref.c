@@ -38,6 +38,7 @@
 #include <math.h>
 
 #include <blasfeo_common.h>
+#include <blasfeo_s_blas.h>
 
 
 
@@ -68,6 +69,9 @@
 #define XVECEL BLASFEO_SVECEL
 
 
+
+#define SYRK_LN blasfeo_ssyrk_ln
+#define SYRK_LN_MN blasfeo_ssyrk_ln_mn
 
 #define REF_GELQF_WORK_SIZE blasfeo_ref_sgelqf_worksize
 #define REF_GELQF blasfeo_ref_sgelqf
