@@ -138,7 +138,7 @@ void blasfeo_dlaswp(int *n, double *A, int *lda, int *k1, int *k2, int *ipiv, in
 //
 void blasfeo_dposv(char *uplo, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
 //
-void blasfeo_dpotrf(char *uplo, int *m, double *A, int *lda, int *info);
+void blas_dpotrf(char *uplo, int *m, double *A, int *lda, int *info);
 //
 void blasfeo_dpotrs(char *uplo, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
 //

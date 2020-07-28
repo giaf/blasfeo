@@ -48,7 +48,12 @@
 
 
 
-#define POTRF blasfeo_dpotrf
+#if defined(FORTRAN_BLAS_API)
+#define POTRF dpotrf_
+#else
+#define POTRF blas_dpotrf
+#endif
+
 
 
 

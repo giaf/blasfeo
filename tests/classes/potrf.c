@@ -42,5 +42,5 @@ void print_routine_matrices(struct RoutineArgs *args)
 
 void set_test_args(struct TestArgs *targs)
 	{
-	targs->nis = 13;
+	targs->nis = 21;
 	}

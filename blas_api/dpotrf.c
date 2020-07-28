@@ -46,12 +46,12 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_dpotrf dpotrf_
+#define blas_dpotrf dpotrf_
 #endif
 
 
 
-void blasfeo_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
+void blas_dpotrf(char *uplo, int *pm, double *C, int *pldc, int *info)
 	{
 
 #if defined(PRINT_NAME)

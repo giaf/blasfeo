@@ -47,7 +47,7 @@
 
 #if defined(FORTRAN_BLAS_API)
 #define blasfeo_dposv dposv_
-#define blasfeo_dpotrf dpotrf_
+#define blas_dpotrf dpotrf_
 #define blasfeo_dpotrs dpotrs_
 #endif
 
@@ -62,7 +62,7 @@ void blasfeo_dposv(char *uplo, int *pm, int *pn, double *A, int *plda, double *B
 
 	*info = 0;
 
-	blasfeo_dpotrf(uplo, pm, A, plda, info);
+	blas_dpotrf(uplo, pm, A, plda, info);
 
 	if(*info==0)
 		{

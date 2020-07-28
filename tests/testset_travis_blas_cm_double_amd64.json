@@ -76,7 +76,9 @@
     "trmm_runn",
     "trmm_runu",
     "trmm_rutn",
-    "trmm_rutu"
+    "trmm_rutu",
+    "potrf_l",
+    "potrf_u"
   ]
 }
 

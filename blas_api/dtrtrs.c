@@ -46,7 +46,7 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_dtrsm dtrsm_
+#define blas_dtrsm dtrsm_
 #define blasfeo_dtrtrs dtrtrs_
 #endif
 
@@ -84,7 +84,7 @@ void blasfeo_dtrtrs(char *uplo, char *trans, char *diag, int *pm, int *pn, doubl
 		}
 	
 //	printf("\n%c %c %c %c\n", c_l, *uplo, *trans, *diag);
-	blasfeo_dtrsm(&c_l, uplo, trans, diag, pm, pn, &d_1, A, plda, B, pldb);
+	blas_dtrsm(&c_l, uplo, trans, diag, pm, pn, &d_1, A, plda, B, pldb);
 
 	return;
 

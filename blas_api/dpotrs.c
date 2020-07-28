@@ -46,7 +46,7 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_dtrsm dtrsm_
+#define blas_dtrsm dtrsm_
 #define blasfeo_dpotrs dpotrs_
 #endif
 
@@ -77,13 +77,13 @@ void blasfeo_dpotrs(char *uplo, int *pm, int *pn, double *A, int *plda, double *
 //	printf("\n%c\n", *uplo);
 	if(*uplo=='u' | *uplo=='U')
 		{
-		blasfeo_dtrsm(&c_l, &c_u, &c_t, &c_n, pm, pn, &d_1, A, plda, B, pldb);
-		blasfeo_dtrsm(&c_l, &c_u, &c_n, &c_n, pm, pn, &d_1, A, plda, B, pldb);
+		blas_dtrsm(&c_l, &c_u, &c_t, &c_n, pm, pn, &d_1, A, plda, B, pldb);
+		blas_dtrsm(&c_l, &c_u, &c_n, &c_n, pm, pn, &d_1, A, plda, B, pldb);
 		}
 	else
 		{
-		blasfeo_dtrsm(&c_l, &c_l, &c_n, &c_n, pm, pn, &d_1, A, plda, B, pldb);
-		blasfeo_dtrsm(&c_l, &c_l, &c_t, &c_n, pm, pn, &d_1, A, plda, B, pldb);
+		blas_dtrsm(&c_l, &c_l, &c_n, &c_n, pm, pn, &d_1, A, plda, B, pldb);
+		blas_dtrsm(&c_l, &c_l, &c_t, &c_n, pm, pn, &d_1, A, plda, B, pldb);
 		}
 
 	return;

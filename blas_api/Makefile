@@ -73,7 +73,7 @@ OBJS += dgemm_ref.o
 OBJS += dsyrk_ref.o
 OBJS += dtrmm_ref.o
 OBJS += dtrsm_ref.o
-#OBJS += dpotrf_ref.o
+OBJS += dpotrf_ref.o
 
 OBJS += sgemm_ref.o
 #OBJS += strsm_ref.o
