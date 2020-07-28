@@ -33,47 +33,29 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
+
+#include <blasfeo_common.h>
+#include <blasfeo_d_blasfeo_api.h>
 
 
-void POTRF(char *uplo, int *pm, REAL *C, int *pldc, int *info)
-	{
 
-#if defined(DIM_CHECK)
-	if( !(*uplo=='l' | *uplo=='l' | *uplo=='U' | *uplo=='U') )
-		{
-		printf("\nBLASFEO: potrf: wrong value for uplo\n");
-		return;
-		}
+#define GETRF_RP blasfeo_dgetrf_rp
+#define MAT blasfeo_dmat
+#define REAL double
+
+
+
+#if defined(FORTRAN_BLAS_API)
+#define GETRF dgetrf_
+#else
+#define GETRF blas_dgetrf
 #endif
 
-	struct MAT sC;
-	sC.pA = C;
-	sC.m = *pldc;
 
-	int ldc = *pldc;
 
-	int ii;
 
-	if(*uplo=='l' | *uplo=='L')
-		{
-		POTRF_L(*pm, &sC, 0, 0, &sC, 0, 0);
-		}
-	else
-		{
-		POTRF_U(*pm, &sC, 0, 0, &sC, 0, 0);
-		}
+#include "xgetrf_ref.c"
 
-	*info = 0;
-	for(ii=0; ii<*pm; ii++)
-		{
-		if(C[ii*(ldc+1)]==0.0)
-			{
-			*info = ii+1;
-			return;
-			}
-		}
-
-	return;
-
-	}
 

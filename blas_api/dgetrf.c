@@ -46,17 +46,17 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_dgetrf dgetrf_
+#define blas_dgetrf dgetrf_
 #define blasfeo_dlaswp dlaswp_
 #endif
 
 
 
-void blasfeo_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info)
+void blas_dgetrf(int *pm, int *pn, double *C, int *pldc, int *ipiv, int *info)
 	{
 
 #if defined(PRINT_NAME)
-	printf("\nblasfeo_dgetrf %d %d %p %d %p %d\n", *pm, *pn, C, *pldc, ipiv, *info);
+	printf("\nblas_dgetrf %d %d %p %d %p %d\n", *pm, *pn, C, *pldc, ipiv, *info);
 #endif
 
 	int m = *pm;

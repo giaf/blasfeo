@@ -128,7 +128,7 @@ void blas_dtrsm(char *side, char *uplo, char *transa, char *diag, int *m, int *n
 //
 void blasfeo_dgesv(int *m, int *n, double *A, int *lda, int *ipiv, double *B, int *ldb, int *info);
 //
-void blasfeo_dgetrf(int *m, int *n, double *A, int *lda, int *ipiv, int *info);
+void blas_dgetrf(int *m, int *n, double *A, int *lda, int *ipiv, int *info);
 //
 void blas_dgetrf_np(int *m, int *n, double *A, int *lda, int *info);
 //

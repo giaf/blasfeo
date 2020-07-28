@@ -151,6 +151,7 @@ BLAS_CM_OBJS += \
 		blas_api/dtrmm_ref.o \
 		blas_api/dtrsm_ref.o \
 		blas_api/dpotrf_ref.o \
+		blas_api/dgetrf_ref.o \
 		\
 		blas_api/sgemm_ref.o \
 

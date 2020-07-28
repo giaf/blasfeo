@@ -552,6 +552,7 @@ file(GLOB BLAS_CM_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/dtrmm_ref.c
 	${PROJECT_SOURCE_DIR}/blas_api/dtrsm_ref.c
 	${PROJECT_SOURCE_DIR}/blas_api/dpotrf_ref.c
+	${PROJECT_SOURCE_DIR}/blas_api/dgetrf_ref.c
 
 	${PROJECT_SOURCE_DIR}/blas_api/sgemm_ref.c
 	)

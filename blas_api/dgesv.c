@@ -47,7 +47,7 @@
 
 #if defined(FORTRAN_BLAS_API)
 #define blasfeo_dgesv dgesv_
-#define blasfeo_dgetrf dgetrf_
+#define blas_dgetrf dgetrf_
 #define blasfeo_dgetrs dgetrs_
 #endif
 

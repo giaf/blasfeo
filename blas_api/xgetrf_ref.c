@@ -64,6 +64,7 @@ void GETRF(int *pm, int *pn, REAL *C, int *pldc, int *ipiv, int *info)
 		ipiv[ii] += 1;
 		}
 
+	*info = 0;
 	for(ii=0; ii<p; ii++)
 		{
 		if(C[ii*(ldc+1)]==0.0)

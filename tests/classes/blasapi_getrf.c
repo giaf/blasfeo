@@ -1,6 +1,7 @@
 // CLASS_GETRF_BLASAPI
 //
-void call_routines(struct RoutineArgs *args){
+void call_routines(struct RoutineArgs *args)
+	{
 
 	// copy input matrix A in C
 	GECP_REF(args->m, args->m, args->cA, 0, 0, args->cC, 0, 0);
@@ -8,7 +9,7 @@ void call_routines(struct RoutineArgs *args){
 
 	// routine call
 	//
-	BLASFEO(ROUTINE)(
+	BLASFEO_BLAS(ROUTINE)(
 		&(args->m), &(args->n),
 		args->cC->pA, &(args->cC->m),
 		args->cipiv, &(args->info));
@@ -24,22 +25,19 @@ void call_routines(struct RoutineArgs *args){
 	GECP_REF(args->m, args->m, args->cC, 0, 0, args->cD, 0, 0);
 	GECP_REF(args->m, args->m, args->rC, 0, 0, args->rD, 0, 0);
 
-}
+	}
 
-void print_routine(struct RoutineArgs *args){
 
-	// unpack args
-	printf(
-		"blas_%s: solving A[%d,%d] = P * LU[%d,%d]\n",
-		string(ROUTINE),
-		args->m,  args->n,
-		args->m, args->n
-	);
 
-}
+void print_routine(struct RoutineArgs *args)
+	{
+	printf("blas_%s(%d, %d, A, %d, ipiv, info);\n", string(ROUTINE), args->m, args->n, args->cC->m);
+	}
+
+
 
 void print_routine_matrices(struct RoutineArgs *args)
-{
+	{
 	printf("\nInput matrix:\n");
 	print_xmat_debug(args->m, args->n, args->cA, 0, 0, 0, 0, 0);
 	print_xmat_debug(args->m, args->n, args->rA, 0, 0, 0, 0, 0);
@@ -48,10 +46,12 @@ void print_routine_matrices(struct RoutineArgs *args)
 	int size = args->m < args->n ? args->m : args->n;
 	int_print_mat(1, size, args->cipiv, 1);
 	int_print_mat(1, size, args->ripiv, 1);
-}
+	}
+
+
 
 void set_test_args(struct TestArgs *targs)
-{
-	targs->nis = 16;
-	targs->njs = 16;
-}
+	{
+	targs->nis = 21;
+	targs->njs = 21;
+	}
