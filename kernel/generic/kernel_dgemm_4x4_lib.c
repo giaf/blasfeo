@@ -16826,7 +16826,7 @@ kernel:
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_AMD_BULLDOZER)
-void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
+void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
 	{
 
 	const int bs = 4;
@@ -16840,7 +16840,6 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int kmax, double *A, double *B, double 
 #endif
 
 	double alpha1 = -1.0;
-	double beta1  = 1.0;
 
 	CC[0+bs*0] = C[0+ldc*0];
 	CC[1+bs*0] = C[1+ldc*0];
@@ -16862,7 +16861,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int kmax, double *A, double *B, double 
 	CC[2+bs*3] = C[2+ldc*3];
 	CC[3+bs*3] = C[3+ldc*3];
 
-	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, CC, CC);
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, CC, CC);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;
@@ -16946,7 +16945,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int kmax, double *A, double *B, double 
 
 
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9)
-void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44ccc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
+void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44ccc(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
 	{
 
 	const int bs = 4;
@@ -16960,7 +16959,6 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44ccc(int kmax, double *A, double *B, doub
 #endif
 
 	double alpha1 = -1.0;
-	double beta1  = 1.0;
 
 	if(m1>=4)
 		{
@@ -17064,7 +17062,7 @@ void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44ccc(int kmax, double *A, double *B, doub
 		}
 
 kernel:
-	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, &beta1, CC, CC);
+	kernel_dgemm_nt_4x4_lib4(kmax, &alpha1, A, B, beta, CC, CC);
 
 	tmp = inv_diag_E[0];
 	CC[0+bs*0] *= tmp;

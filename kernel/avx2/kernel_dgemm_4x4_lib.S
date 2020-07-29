@@ -14765,8 +14765,8 @@
 
 
 
-//                                         1      2          3          4         5        6          7        8          9        10
-// void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int k, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
+//                                          1      2          3          4         5        6          7        8              9          10       11
+// void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int k, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_dtrsm_nt_rl_inv_4x4_lib44ccc)
@@ -14793,23 +14793,24 @@
 
 	// call inner blender_loader nn
 
-	movq	ARG4, %r10 // C
-	movq	ARG5, %r11 // ldc
-	sall	$3, %r11d
+	movq	ARG4, %r10 // beta
+	movq	ARG5, %r11 // C
+	movq	ARG6, %r12 // ldc
+	sall	$3, %r12d
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_4X4_LIB
+	INNER_SCALE_M1B_4X4_LIB
 #else
-	CALL(inner_scale_m11_4x4_lib)
+	CALL(inner_scale_m1b_4x4_lib)
 #endif
 
 
 	// solve
 
-	movq	ARG8, %r10  // E 
-	movq	ARG9, %r11 // lde
+	movq	ARG9, %r10  // E 
+	movq	ARG10, %r11 // lde
 	sall	$3, %r11d
-	movq	ARG10, %r12  // inv_diag_E 
+	movq	ARG11, %r12  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_INV_4X4_LIB
@@ -14820,8 +14821,8 @@
 
 	// store
 
-	movq	ARG6, %r10 // D
-	movq	ARG7, %r11 // ldd
+	movq	ARG7, %r10 // D
+	movq	ARG8, %r11 // ldd
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
@@ -14841,8 +14842,8 @@
 
 
 
-//                                            1      2          3          4         5        6          7        8          9        10                  11      12
-// void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44ccc(int k, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1);
+//                                             1      2          3          4             5          6        7          8        9          10       11                  12      13
+// void kernel_dtrsm_nt_rl_inv_4x4_vs_lib44ccc(int k, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_dtrsm_nt_rl_inv_4x4_vs_lib44ccc)
@@ -14869,26 +14870,27 @@
 
 	// call inner blender_loader nn
 
-	movq	ARG4, %r10 // C
-	movq	ARG5, %r11 // ldc
-	sall	$3, %r11d
-	movq	ARG11, %r12 // m1
-	movq	ARG12, %r13 // n1
+	movq	ARG4, %r10 // beta
+	movq	ARG5, %r11 // C
+	movq	ARG6, %r12 // ldc
+	sall	$3, %r12d
+	movq	ARG12, %r13 // m1
+	movq	ARG13, %r14 // n1
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_4X4_VS_LIB
+	INNER_SCALE_M1B_4X4_VS_LIB
 #else
-	CALL(inner_scale_m11_4x4_vs_lib)
+	CALL(inner_scale_m1b_4x4_vs_lib)
 #endif
 
 
 	// solve
 
-	movq	ARG8, %r10  // E 
-	movq	ARG9, %r11 // lde
+	movq	ARG9, %r10  // E 
+	movq	ARG10, %r11 // lde
 	sall	$3, %r11d
-	movq	ARG10, %r12  // inv_diag_E 
-	movq	ARG12, %r13 // n1
+	movq	ARG11, %r12  // inv_diag_E 
+	movq	ARG13, %r13 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_INV_4X4_VS_LIB
@@ -14899,11 +14901,11 @@
 
 	// store
 
-	movq	ARG6, %r10 // D
-	movq	ARG7, %r11 // ldd
+	movq	ARG7, %r10 // D
+	movq	ARG8, %r11 // ldd
 	sall	$3, %r11d
-	movq	ARG11, %r12 // m1
-	movq	ARG12, %r13 // n1
+	movq	ARG12, %r12 // m1
+	movq	ARG13, %r13 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_VS_LIB
