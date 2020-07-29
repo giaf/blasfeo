@@ -1037,9 +1037,9 @@ NAME:
 	FUN_START(inner_scale_ab_4x4_lib4)
 #endif
 
-	ld1		{v28.2d}, [x8]
+	ld1		{v28.4s}, [x8]
 
-	ld1		{v29.2d}, [x9]
+	ld1		{v29.4s}, [x9]
 
 	fmul	v0.4s, v0.4s, v28.4s[0]
 	fmul	v1.4s, v1.4s, v28.4s[0]
@@ -1084,7 +1084,7 @@ NAME:
 	FUN_START(inner_scale_m1b_4x4_lib4)
 #endif
 
-	ld1		{v29.2d}, [x8]
+	ld1		{v29.4s}, [x8]
 
 	fneg	v0.4s, v0.4s
 	fneg	v1.4s, v1.4s
