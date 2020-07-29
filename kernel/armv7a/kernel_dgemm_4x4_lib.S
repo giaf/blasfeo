@@ -868,7 +868,7 @@ _kernel_dtrsm_nt_rl_inv_4x4_lib44ccc:
 	lsl		r6, r6, #3 // ldc*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M1B_4X4_LIB
+	INNER_SCALE_M1B_4X4_LIB 99f
 #else
 #if defined(OS_LINUX)
 	bl inner_scale_m1b_4x4_lib
