@@ -57,6 +57,8 @@
 
 // Macros specific for Float type
 #define PRECISION Single
+#define SINGLE_PRECISION
+
 #define GECMP_LIBSTR sgecmp_libstr
 #define GECMP_BLASAPI sgecmp_blasapi
 #define REAL float

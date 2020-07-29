@@ -535,6 +535,8 @@ void kernel_strsm_nt_ru_inv_4x4_lib44cc4(int kmax, float *A, float *B, float *be
 void kernel_strsm_nt_ru_inv_4x4_vs_lib44cc4(int kmax, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd, float *E, float *dE, int m1, int n1);
 void kernel_strsm_nt_ru_one_4x4_lib44cc4(int kmax, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd, float *E);
 void kernel_strsm_nt_ru_one_4x4_vs_lib44cc4(int kmax, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd, float *E, int m1, int n1);
+void kernel_spotrf_nt_l_4x4_lib44cc(int kmax, float *A, float *B, float *C, int ldc, float *D, int ldd, float *dD);
+void kernel_spotrf_nt_l_4x4_vs_lib44cc(int kmax, float *A, float *B, float *C, int ldc, float *D, int ldd, float *dD, int m1, int n1);
 
 // B panel-major bs=4; A, C, D column-major
 // 4x4

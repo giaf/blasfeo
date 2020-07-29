@@ -33,6 +33,16 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+
+
+#ifdef DOUBLE_PRECISION
+#define REL_TOL 1e-11
+#else
+#define REL_TOL 2e-4
+#endif
+
+
+
 // Test {double,single} precision common
 
 void print_compilation_flags()
@@ -313,7 +323,7 @@ int GECMP_LIBSTR(
 			// reference mat
 			REAL rbi = MATEL_REF(rD, ii, jj);
 
-			if ( (sbi != rbi) & ( fabs(sbi-rbi) > 1e-11*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > 1e-11))
+			if ( (sbi != rbi) & ( fabs(sbi-rbi) > REL_TOL*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > REL_TOL))
 				{
 					*err_i = ii;
 					*err_j = jj;
@@ -356,7 +366,7 @@ int GECMP_BLASAPI(int m, int n, int bi, int bj, struct STRMAT_REF *sD, struct ST
 			// reference mat
 			REAL rbi = MATEL_REF(rD, ii, jj);
 
-			if ( (sbi != rbi) & ( fabs(sbi-rbi) > 1e-11*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > 1e-11))
+			if ( (sbi != rbi) & ( fabs(sbi-rbi) > REL_TOL*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > REL_TOL))
 				{
 					*err_i = ii;
 					*err_j = jj;

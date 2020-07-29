@@ -57,6 +57,8 @@
 
 // Macros specific for Double type
 #define PRECISION Double
+#define DOUBLE_PRECISION
+
 #define GECMP_LIBSTR dgecmp_libstr
 #define GECMP_BLASAPI dgecmp_blasapi
 #define REAL double
