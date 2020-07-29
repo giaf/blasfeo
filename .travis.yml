@@ -135,7 +135,7 @@ jobs:
         - python tester.py testset_travis.json
 
     - name: "debug tests"
-      arch: amd64
+      arch: arm64
       os: linux
       dist: bionic
       group: travis_latest

@@ -19,22 +19,29 @@
     "EXTERNAL_BLAS": "SYSTEM"
   },
   "precisions": [
-    "double"
+    "single"
   ],
   "apis": [
     "blasfeo"
   ],
   "K_MAX_STACK":[
-    500
+    0
   ],
   "TARGET": [
-    "X64_INTEL_HASWELL"
+    "ARMV8A_ARM_CORTEX_A57",
+    "ARMV8A_ARM_CORTEX_A53"
   ],
   "LA": [
     "HIGH_PERFORMANCE"
   ],
   "routines": [
-    "trmm_lutn"
+    "gemm_nn",
+    "gemm_nt",
+    "gemm_tn",
+    "gemm_tt"
   ]
 }
+
+
+
 
