@@ -794,6 +794,8 @@
 	vaddps		%ymm7, %ymm15, %ymm7
 //	addq		%r11, %r10
 
+0:
+
 #if MACRO_LEVEL>=1
 	.endm
 #else
@@ -898,6 +900,8 @@
 	vmaskmovps	0(%r10), %ymm13, %ymm15
 	vfmsub231ps	%ymm14, %ymm15, %ymm7
 //	addq		%r11, %r10
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm

@@ -127,7 +127,7 @@ void blasfeo_hp_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct 
 
 
 //	goto l_0;
-	goto l_1;
+//	goto l_1;
 #if 0//defined(TARGET_X64_INTEL_HASWELL)
 	if(m>=200 | m>K_MAX_STACK)
 #elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
