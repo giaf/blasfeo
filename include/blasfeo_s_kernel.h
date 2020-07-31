@@ -514,6 +514,10 @@ void kernel_sgemm_nt_16x4_vs_lib88cc(int kmax, float *alpha, float *A, int sda, 
 // 8x8
 void kernel_sgemm_nt_8x8_lib88cc(int kmax, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd);
 void kernel_sgemm_nt_8x8_vs_lib88cc(int kmax, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
+void kernel_spotrf_nt_l_8x8_lib88cc(int kmax, float *A, float *B, float *C, int ldc, float *D, int ldd, float *dD);
+void kernel_spotrf_nt_l_8x8_vs_lib88cc(int kmax, float *A, float *B, float *C, int ldc, float *D, int ldd, float *dD, int m1, int n1);
+void kernel_strsm_nt_rl_inv_8x8_lib88ccc(int kmax, float *A, float *B, float *C, int ldc, float *D, int ldd, float *E, int lde, float *dE);
+void kernel_strsm_nt_rl_inv_8x8_vs_lib88ccc(int kmax, float *A, float *B, float *C, int ldc, float *D, int ldd, float *E, int lde, float *dE, int m1, int n1);
 // 8x4
 void kernel_sgemm_nt_8x4_lib88cc(int kmax, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd);
 void kernel_sgemm_nt_8x4_vs_lib88cc(int kmax, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);

@@ -47,15 +47,9 @@
 // TODO move to a header file to reuse across routines
 #define EL_SIZE 4 // single precision
 
-#if 0//defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-#define M_KERNEL 12 // max kernel: 12x4
+#if defined(TARGET_X64_INTEL_HASWELL)
+#define M_KERNEL 8 // max kernel: 8x4 // TODO keep updated !!!!!!!!!!!!!!
 #define N_KERNEL 8 // max kernel: 8x8
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-
-#elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-#define M_KERNEL 8 // max kernel: 8x4
-#define N_KERNEL 4 // max kernel: 8x4
 #define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
 
@@ -89,6 +83,14 @@ void blasfeo_hp_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct 
 	int ii, jj;
 
 	const int ps = 4; //D_PS;
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+	int ps0 = 8;
+	int ps8 = 8;
+#else
+	int ps0 = 4;
+	int ps4 = 8;
+#endif
 
 #if defined(TARGET_GENERIC)
 	float pU[M_KERNEL*K_MAX_STACK];
@@ -125,7 +127,7 @@ void blasfeo_hp_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct 
 
 
 //	goto l_0;
-//	goto l_1;
+	goto l_1;
 #if 0//defined(TARGET_X64_INTEL_HASWELL)
 	if(m>=200 | m>K_MAX_STACK)
 #elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -256,12 +258,12 @@ l_0_return:
 
 
 l_1:
-	
+
 	m1 = (m+128-1)/128*128;
-	tA_size = blasfeo_pm_memsize_smat(ps, m1, m1);
+	tA_size = blasfeo_pm_memsize_smat(ps0, m1, m1);
 	mem = malloc(tA_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
-	blasfeo_pm_create_smat(ps, m, m, &tA, (void *) mem_align);
+	blasfeo_pm_create_smat(ps0, m, m, &tA, (void *) mem_align);
 
 	sda = tA.cn;
 	dA = tA.dA;
@@ -326,6 +328,24 @@ l_1:
 			goto l_1_left_8;
 			}
 		}
+#endif
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; ii<m-7; ii+=8)
+		{
+		jj = 0;
+		for(; jj<ii; jj+=8)
+			{
+			kernel_strsm_nt_rl_inv_8x8_lib88ccc(jj+0, tA.pA+ii*sda, tA.pA+0+jj*sda, C+ii+(jj+0)*ldc, ldc, D+ii+(jj+0)*ldd, ldd, D+jj+0+(jj+0)*ldd, ldd, dA+jj+0);
+//			kernel_strsm_nt_rl_inv_8x4_lib88ccc(jj+0, tA.pA+ii*sda, tA.pA+0+jj*sda, C+ii+(jj+0)*ldc, ldc, D+ii+(jj+0)*ldd, ldd, D+jj+0+(jj+0)*ldd, ldd, dA+jj+0);
+//			kernel_strsm_nt_rl_inv_8x4_lib88ccc(jj+4, tA.pA+ii*sda, tA.pA+4+jj*sda, C+ii+(jj+4)*ldc, ldc, D+ii+(jj+4)*ldd, ldd, D+jj+4+(jj+4)*ldd, ldd, dA+jj+4);
+			kernel_spack_nn_8_lib8(8, D+ii+jj*ldd, ldd, tA.pA+ii*sda+jj*ps8);
+			}
+		kernel_spotrf_nt_l_8x8_lib88cc(jj, tA.pA+ii*sda, tA.pA+jj*sda, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dA+jj);
+		}
+	if(ii<m)
+		{
+		goto l_1_left_8;
+		}
 #else
 	for(; ii<m-3; ii+=4)
 		{
@@ -333,7 +353,7 @@ l_1:
 		for(; jj<ii; jj+=4)
 			{
 			kernel_strsm_nt_rl_inv_4x4_lib44ccc(jj, tA.pA+ii*sda, tA.pA+jj*sda, &d_1, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dA+jj);
-			kernel_spack_nn_4_lib4(4, D+ii+jj*ldd, ldd, tA.pA+ii*sda+jj*ps);
+			kernel_spack_nn_4_lib4(4, D+ii+jj*ldd, ldd, tA.pA+ii*sda+jj*ps4);
 			}
 		kernel_spotrf_nt_l_4x4_lib44cc(jj, tA.pA+ii*sda, tA.pA+jj*sda, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dA+jj);
 		}
@@ -384,14 +404,29 @@ l_1_left_8:
 	goto l_1_return;
 #endif
 
+#if defined(TARGET_X64_INTEL_HASWELL)
+l_1_left_8:
+	for(jj=0; jj<ii; jj+=8)
+		{
+		kernel_strsm_nt_rl_inv_8x8_vs_lib88ccc(jj+0, tA.pA+ii*sda, tA.pA+0+jj*sda, C+ii+(jj+0)*ldc, ldc, D+ii+(jj+0)*ldd, ldd, D+jj+0+(jj+0)*ldd, ldd, dA+jj+0, m-ii, ii-jj-0);
+//		kernel_strsm_nt_rl_inv_8x4_vs_lib88ccc(jj+0, tA.pA+ii*sda, tA.pA+0+jj*sda, C+ii+(jj+0)*ldc, ldc, D+ii+(jj+0)*ldd, ldd, D+jj+0+(jj+0)*ldd, ldd, dA+jj+0, m-ii, ii-jj-0);
+//		kernel_strsm_nt_rl_inv_8x4_vs_lib88ccc(jj+4, tA.pA+ii*sda, tA.pA+4+jj*sda, C+ii+(jj+4)*ldc, ldc, D+ii+(jj+4)*ldd, ldd, D+jj+4+(jj+4)*ldd, ldd, dA+jj+4, m-ii, ii-jj-4);
+		kernel_spack_nn_8_vs_lib8(8, D+ii+jj*ldd, ldd, tA.pA+ii*sda+jj*ps0, m-ii);
+		}
+	kernel_spotrf_nt_l_8x8_vs_lib88cc(jj, tA.pA+ii*sda, tA.pA+jj*sda, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dA+jj, m-ii, m-jj);
+	goto l_1_return;
+#endif
+
+#if ! ( defined(TARGET_X64_INTEL_HASWELL) )
 l_1_left_4:
 	for(jj=0; jj<ii; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_4x4_vs_lib44ccc(jj, tA.pA+ii*sda, tA.pA+jj*sda, &d_1, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dA+jj, m-ii, ii-jj);
-		kernel_spack_nn_4_vs_lib4(4, D+ii+jj*ldd, ldd, tA.pA+ii*sda+jj*ps, m-ii);
+		kernel_spack_nn_4_vs_lib4(4, D+ii+jj*ldd, ldd, tA.pA+ii*sda+jj*ps4, m-ii);
 		}
 	kernel_spotrf_nt_l_4x4_vs_lib44cc(jj, tA.pA+ii*sda, tA.pA+jj*sda, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dA+jj, m-ii, m-jj);
 	goto l_1_return;
+#endif
 
 l_1_return:
 	free(mem);
