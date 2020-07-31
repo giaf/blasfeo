@@ -64,7 +64,7 @@ void blasfeo_dgesv(int *pm, int *pn, double *A, int *plda, int *ipiv, double *B,
 
 	*info = 0;
 
-	blasfeo_dgetrf(pm, pm, A, plda, ipiv, info);
+	blas_dgetrf(pm, pm, A, plda, ipiv, info);
 
 	if(*info==0)
 		{
