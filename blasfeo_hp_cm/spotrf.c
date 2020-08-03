@@ -89,7 +89,7 @@ void blasfeo_hp_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct 
 	int ps8 = 8;
 #else
 	int ps0 = 4;
-	int ps4 = 8;
+	int ps4 = 4;
 #endif
 
 #if defined(TARGET_GENERIC)
