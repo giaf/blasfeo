@@ -41,9 +41,15 @@
 
 
 
+#if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+#define POTRF_L blasfeo_cm_dpotrf_l
+#define POTRF_U blasfeo_cm_dpotrf_u
+#define MAT blasfeo_cm_dmat
+#else
 #define POTRF_L blasfeo_dpotrf_l
 #define POTRF_U blasfeo_dpotrf_u
 #define MAT blasfeo_dmat
+#endif
 #define REAL double
 
 

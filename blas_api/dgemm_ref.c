@@ -41,11 +41,19 @@
 
 
 
+#if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+#define GEMM_NN blasfeo_cm_dgemm_nn
+#define GEMM_NT blasfeo_cm_dgemm_nt
+#define GEMM_TN blasfeo_cm_dgemm_tn
+#define GEMM_TT blasfeo_cm_dgemm_tt
+#define MAT blasfeo_cm_dmat
+#else
 #define GEMM_NN blasfeo_dgemm_nn
 #define GEMM_NT blasfeo_dgemm_nt
 #define GEMM_TN blasfeo_dgemm_tn
 #define GEMM_TT blasfeo_dgemm_tt
 #define MAT blasfeo_dmat
+#endif
 #define REAL double
 
 

@@ -91,7 +91,8 @@ BLASFEO_HP_CM_OBJS = \
 		\
 		blasfeo_hp_cm/sgemm.o \
 		blasfeo_hp_cm/spotrf.o \
-		\
+
+BLASFEO_HP_CM_REF_OBJS = \
 		blasfeo_ref/d_blas1_hp_cm.o \
 		blasfeo_ref/d_blas2_hp_cm.o \
 		blasfeo_ref/d_blas2_diag_hp_cm.o \
@@ -127,23 +128,23 @@ BLAS_OBJS += \
 		blas_api/dcopy.o \
 		blas_api/daxpy.o \
 		blas_api/ddot.o \
-		blas_api/dgemm.o \
-		blas_api/dsyrk.o \
-		blas_api/dtrmm.o \
-		blas_api/dtrsm.o \
+		blas_api/dgemm_ref.o \
+		blas_api/dsyrk_ref.o \
+		blas_api/dtrmm_ref.o \
+		blas_api/dtrsm_ref.o \
 		blas_api/dgesv.o \
-		blas_api/dgetrf.o \
+		blas_api/dgetrf_ref.o \
 		blas_api/dgetrf_np.o \
 		blas_api/dgetrs.o \
 		blas_api/dlaswp.o \
 		blas_api/dposv.o \
-		blas_api/dpotrf.o \
+		blas_api/dpotrf_ref.o \
 		blas_api/dpotrs.o \
 		blas_api/dtrtrs.o \
 		\
 		blas_api/saxpy.o \
 		blas_api/sdot.o \
-		blas_api/sgemm.o \
+		blas_api/sgemm_ref.o \
 		blas_api/strsm.o
 
 BLAS_CM_OBJS += \
@@ -630,6 +631,7 @@ else # COLMAJ
 OBJS += $(AUX_HP_CM_OBJS)
 # blas
 OBJS += $(BLASFEO_HP_CM_OBJS)
+OBJS += $(BLASFEO_HP_CM_REF_OBJS)
 endif
 
 # blasfeo_ref
@@ -644,6 +646,7 @@ ifeq ($(BLAS_API), 1)
 
 ifeq ($(MF), PANELMAJ)
 OBJS += $(BLAS_OBJS)
+OBJS += $(BLASFEO_HP_CM_OBJS)
 else
 OBJS += $(BLAS_CM_OBJS)
 endif
@@ -692,6 +695,7 @@ OBJS += $(BLASFEO_HP_PM_OBJS)
 else
 # blas
 OBJS += $(BLASFEO_HP_CM_OBJS)
+OBJS += $(BLASFEO_HP_CM_REF_OBJS)
 endif
 endif # BLASFEO_HP_API
 

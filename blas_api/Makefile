@@ -46,23 +46,23 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 OBJS += dcopy.o
 OBJS += daxpy.o
 OBJS += ddot.o
-OBJS += dgemm.o
-OBJS += dsyrk.o
-OBJS += dtrmm.o
-OBJS += dtrsm.o
+OBJS += dgemm_ref.o # XXX
+OBJS += dsyrk_ref.o # XXX
+OBJS += dtrmm_ref.o # XXX
+OBJS += dtrsm_ref.o # XXX
 OBJS += dlaswp.o
 OBJS += dgesv.o
-OBJS += dgetrf.o
+OBJS += dgetrf_ref.o # XXX
 OBJS += dgetrf_np.o
 OBJS += dgetrs.o
 OBJS += dposv.o
-OBJS += dpotrf.o
+OBJS += dpotrf_ref.o # XXX
 OBJS += dpotrs.o
 OBJS += dtrtrs.o
 
 OBJS += saxpy.o
 OBJS += sdot.o
-OBJS += sgemm.o
+OBJS += sgemm_ref.o # XXX
 OBJS += strsm.o
 
 endif # HIGH_PERFROMANCE

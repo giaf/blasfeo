@@ -46,6 +46,25 @@
 
 
 
+#if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+#define TRSM_LLNN blasfeo_cm_dtrsm_llnn
+#define TRSM_LLNU blasfeo_cm_dtrsm_llnu
+#define TRSM_LLTN blasfeo_cm_dtrsm_lltn
+#define TRSM_LLTU blasfeo_cm_dtrsm_lltu
+#define TRSM_LUNN blasfeo_cm_dtrsm_lunn
+#define TRSM_LUNU blasfeo_cm_dtrsm_lunu
+#define TRSM_LUTN blasfeo_cm_dtrsm_lutn
+#define TRSM_LUTU blasfeo_cm_dtrsm_lutu
+#define TRSM_RLNN blasfeo_cm_dtrsm_rlnn
+#define TRSM_RLNU blasfeo_cm_dtrsm_rlnu
+#define TRSM_RLTN blasfeo_cm_dtrsm_rltn
+#define TRSM_RLTU blasfeo_cm_dtrsm_rltu
+#define TRSM_RUNN blasfeo_cm_dtrsm_runn
+#define TRSM_RUNU blasfeo_cm_dtrsm_runu
+#define TRSM_RUTN blasfeo_cm_dtrsm_rutn
+#define TRSM_RUTU blasfeo_cm_dtrsm_rutu
+#define MAT blasfeo_cm_dmat
+#else
 #define TRSM_LLNN blasfeo_dtrsm_llnn
 #define TRSM_LLNU blasfeo_dtrsm_llnu
 #define TRSM_LLTN blasfeo_dtrsm_lltn
@@ -63,6 +82,7 @@
 #define TRSM_RUTN blasfeo_dtrsm_rutn
 #define TRSM_RUTU blasfeo_dtrsm_rutu
 #define MAT blasfeo_dmat
+#endif
 #define REAL double
 
 

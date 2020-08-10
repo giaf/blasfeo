@@ -45,6 +45,17 @@
 
 
 
+#if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+#define SYRK_LN blasfeo_cm_dsyrk_ln
+#define SYRK_LT blasfeo_cm_dsyrk_lt
+#define SYRK_UN blasfeo_cm_dsyrk_un
+#define SYRK_UT blasfeo_cm_dsyrk_ut
+#define SYRK3_LN blasfeo_cm_dsyrk3_ln
+#define SYRK3_LT blasfeo_cm_dsyrk3_lt
+#define SYRK3_UN blasfeo_cm_dsyrk3_un
+#define SYRK3_UT blasfeo_cm_dsyrk3_ut
+#define MAT blasfeo_cm_dmat
+#else
 #define SYRK_LN blasfeo_dsyrk_ln
 #define SYRK_LT blasfeo_dsyrk_lt
 #define SYRK_UN blasfeo_dsyrk_un
@@ -54,6 +65,7 @@
 #define SYRK3_UN blasfeo_dsyrk3_un
 #define SYRK3_UT blasfeo_dsyrk3_ut
 #define MAT blasfeo_dmat
+#endif
 #define REAL double
 
 

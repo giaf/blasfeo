@@ -65,6 +65,10 @@ endif
 
 endif # LA HP
 
+else # MF PANELMAJ
+
+OBJS += $(HP_CM_OBJS)
+
 endif # MF COLMAJ
 
 

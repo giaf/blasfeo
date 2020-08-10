@@ -44,6 +44,14 @@
 
 
 
+#if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+#define blasfeo_dmat blasfeo_cm_dmat
+#define blasfeo_hp_dgetrf_rp blasfeo_hp_cm_dgetrf_rp
+#define blasfeo_dgetrf_rp blasfeo_cm_dgetrf_rp
+#endif
+
+
+
 // TODO move to a header file to reuse across routines
 #define EL_SIZE 8 // double precision
 

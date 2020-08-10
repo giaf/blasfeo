@@ -227,6 +227,19 @@ void blasfeo_sgelqf_pd_lla(int m, int n1, struct blasfeo_smat *sL0, int l0i, int
 
 
 
+//
+// BLAS API helper functions
+//
+
+#if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+void blasfeo_cm_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, float beta, struct blasfeo_cm_smat *sC, int ci, int cj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, float beta, struct blasfeo_cm_smat *sC, int ci, int cj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_sgemm_tn(int m, int n, int k, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, float beta, struct blasfeo_cm_smat *sC, int ci, int cj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, float beta, struct blasfeo_cm_smat *sC, int ci, int cj, struct blasfeo_cm_smat *sD, int di, int dj);
+#endif
+
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -44,6 +44,20 @@
 
 
 
+#if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+#define blasfeo_dmat blasfeo_cm_dmat
+#define blasfeo_hp_dgemm_nn blasfeo_hp_cm_dgemm_nn
+#define blasfeo_hp_dgemm_nt blasfeo_hp_cm_dgemm_nt
+#define blasfeo_hp_dgemm_tn blasfeo_hp_cm_dgemm_tn
+#define blasfeo_hp_dgemm_tt blasfeo_hp_cm_dgemm_tt
+#define blasfeo_dgemm_nn blasfeo_cm_dgemm_nn
+#define blasfeo_dgemm_nt blasfeo_cm_dgemm_nt
+#define blasfeo_dgemm_tn blasfeo_cm_dgemm_tn
+#define blasfeo_dgemm_tt blasfeo_cm_dgemm_tt
+#endif
+
+
+
 // TODO move to a header file to reuse across routines
 #define EL_SIZE 8 // double precision
 

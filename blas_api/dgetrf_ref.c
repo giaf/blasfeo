@@ -41,8 +41,13 @@
 
 
 
+#if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+#define GETRF_RP blasfeo_cm_dgetrf_rp
+#define MAT blasfeo_cm_dmat
+#else
 #define GETRF_RP blasfeo_dgetrf_rp
 #define MAT blasfeo_dmat
+#endif
 #define REAL double
 
 

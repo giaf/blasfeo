@@ -490,7 +490,9 @@ file(GLOB BLASFEO_HP_CM_SRC
 
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/sgemm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/spotrf.c
+	)
 
+file(GLOB BLASFEO_HP_CM_REF_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas1_hp_cm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_hp_cm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_diag_hp_cm.c
@@ -527,23 +529,23 @@ file(GLOB BLAS_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/dcopy.c
 	${PROJECT_SOURCE_DIR}/blas_api/daxpy.c
 	${PROJECT_SOURCE_DIR}/blas_api/ddot.c
-	${PROJECT_SOURCE_DIR}/blas_api/dgemm.c
-	${PROJECT_SOURCE_DIR}/blas_api/dsyrk.c
-	${PROJECT_SOURCE_DIR}/blas_api/dtrmm.c
-	${PROJECT_SOURCE_DIR}/blas_api/dtrsm.c
+	${PROJECT_SOURCE_DIR}/blas_api/dgemm_ref.c # XXX
+	${PROJECT_SOURCE_DIR}/blas_api/dsyrk_ref.c # XXX
+	${PROJECT_SOURCE_DIR}/blas_api/dtrmm_ref.c # XXX
+	${PROJECT_SOURCE_DIR}/blas_api/dtrsm_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/dgesv.c
-	${PROJECT_SOURCE_DIR}/blas_api/dgetrf.c
+	${PROJECT_SOURCE_DIR}/blas_api/dgetrf_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/dgetrf_np.c
 	${PROJECT_SOURCE_DIR}/blas_api/dgetrs.c
 	${PROJECT_SOURCE_DIR}/blas_api/dlaswp.c
 	${PROJECT_SOURCE_DIR}/blas_api/dposv.c
-	${PROJECT_SOURCE_DIR}/blas_api/dpotrf.c
+	${PROJECT_SOURCE_DIR}/blas_api/dpotrf_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/dpotrs.c
 	${PROJECT_SOURCE_DIR}/blas_api/dtrtrs.c
 
 	${PROJECT_SOURCE_DIR}/blas_api/saxpy.c
 	${PROJECT_SOURCE_DIR}/blas_api/sdot.c
-	${PROJECT_SOURCE_DIR}/blas_api/sgemm.c
+	${PROJECT_SOURCE_DIR}/blas_api/sgemm_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/strsm.c
 	)
 
@@ -989,6 +991,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 
 		list(APPEND BLASFEO_SRC ${AUX_HP_CM_SRC})
 		list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_SRC})
+		list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_REF_SRC})
 
 	endif()
 
@@ -1004,6 +1007,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 		if(${MF} MATCHES PANELMAJ)
 
 			list(APPEND BLASFEO_SRC ${BLAS_SRC})
+			list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_SRC})
 
 		else()
 
@@ -1030,6 +1034,7 @@ if(${LA} MATCHES REFERENCE)
 		else()
 
 			list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_SRC})
+			list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_REF_SRC})
 
 		endif()
 

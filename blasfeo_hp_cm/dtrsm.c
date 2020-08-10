@@ -44,6 +44,44 @@
 
 
 
+#if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+#define blasfeo_dmat blasfeo_cm_dmat
+#define blasfeo_hp_dtrsm_llnn blasfeo_hp_cm_dtrsm_llnn
+#define blasfeo_hp_dtrsm_llnu blasfeo_hp_cm_dtrsm_llnu
+#define blasfeo_hp_dtrsm_lltn blasfeo_hp_cm_dtrsm_lltn
+#define blasfeo_hp_dtrsm_lltu blasfeo_hp_cm_dtrsm_lltu
+#define blasfeo_hp_dtrsm_lunn blasfeo_hp_cm_dtrsm_lunn
+#define blasfeo_hp_dtrsm_lunu blasfeo_hp_cm_dtrsm_lunu
+#define blasfeo_hp_dtrsm_lutn blasfeo_hp_cm_dtrsm_lutn
+#define blasfeo_hp_dtrsm_lutu blasfeo_hp_cm_dtrsm_lutu
+#define blasfeo_hp_dtrsm_rlnn blasfeo_hp_cm_dtrsm_rlnn
+#define blasfeo_hp_dtrsm_rlnu blasfeo_hp_cm_dtrsm_rlnu
+#define blasfeo_hp_dtrsm_rltn blasfeo_hp_cm_dtrsm_rltn
+#define blasfeo_hp_dtrsm_rltu blasfeo_hp_cm_dtrsm_rltu
+#define blasfeo_hp_dtrsm_runn blasfeo_hp_cm_dtrsm_runn
+#define blasfeo_hp_dtrsm_runu blasfeo_hp_cm_dtrsm_runu
+#define blasfeo_hp_dtrsm_rutn blasfeo_hp_cm_dtrsm_rutn
+#define blasfeo_hp_dtrsm_rutu blasfeo_hp_cm_dtrsm_rutu
+#define blasfeo_dtrsm_llnn blasfeo_cm_dtrsm_llnn
+#define blasfeo_dtrsm_llnu blasfeo_cm_dtrsm_llnu
+#define blasfeo_dtrsm_lltn blasfeo_cm_dtrsm_lltn
+#define blasfeo_dtrsm_lltu blasfeo_cm_dtrsm_lltu
+#define blasfeo_dtrsm_lunn blasfeo_cm_dtrsm_lunn
+#define blasfeo_dtrsm_lunu blasfeo_cm_dtrsm_lunu
+#define blasfeo_dtrsm_lutn blasfeo_cm_dtrsm_lutn
+#define blasfeo_dtrsm_lutu blasfeo_cm_dtrsm_lutu
+#define blasfeo_dtrsm_rlnn blasfeo_cm_dtrsm_rlnn
+#define blasfeo_dtrsm_rlnu blasfeo_cm_dtrsm_rlnu
+#define blasfeo_dtrsm_rltn blasfeo_cm_dtrsm_rltn
+#define blasfeo_dtrsm_rltu blasfeo_cm_dtrsm_rltu
+#define blasfeo_dtrsm_runn blasfeo_cm_dtrsm_runn
+#define blasfeo_dtrsm_runu blasfeo_cm_dtrsm_runu
+#define blasfeo_dtrsm_rutn blasfeo_cm_dtrsm_rutn
+#define blasfeo_dtrsm_rutu blasfeo_cm_dtrsm_rutu
+#endif
+
+
+
 // TODO move to a header file to reuse across routines
 #define EL_SIZE 8 // double precision
 
