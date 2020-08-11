@@ -49,7 +49,8 @@ void REF_POTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di
 		f_10, f_11_inv,
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int ldc = sC->m;
 	int ldd = sD->m;
 	REAL *pC = sC->pA + ci + cj*ldc;
@@ -179,6 +180,7 @@ void REF_POTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di
 
 //#if ! ( defined(HP_CM) & defined(DP) )
 #if ! ( defined(HP_CM) )
+#if ! ( defined(REF_BLAS) )
 // dpotrf
 void REF_POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -319,6 +321,7 @@ void REF_POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *
 	return;
 	}
 #endif
+#endif
 
 
 
@@ -336,7 +339,8 @@ void REF_POTRF_U(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di
 		f_10, f_11_inv,
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int ldc = sC->m;
 	int ldd = sD->m;
 	REAL *pC = sC->pA + ci + cj*ldc;
@@ -391,6 +395,7 @@ void REF_POTRF_U(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di
 
 
 // dsyrk dpotrf
+#if ! ( defined(REF_BLAS) )
 void REF_SYRK_POTRF_LN(int m, int k, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	int ii, jj, kk;
@@ -557,9 +562,11 @@ void REF_SYRK_POTRF_LN(int m, int k, struct XMAT *sA, int ai, int aj, struct XMA
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 void REF_SYRK_POTRF_LN_MN(int m, int n, int k, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	int ii, jj, kk;
@@ -726,9 +733,11 @@ void REF_SYRK_POTRF_LN_MN(int m, int n, int k, struct XMAT *sA, int ai, int aj, 
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 // cholesky factorization with pivot
 void REF_PSTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv)
 	{
@@ -827,6 +836,7 @@ void REF_PSTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di
 		}
 	return;
 	}
+#endif
 
 
 
@@ -864,6 +874,7 @@ void GETF2_NOPIVOT(int m, int n, REAL *A, int lda, REAL *dA)
 
 
 
+#if ! ( defined(REF_BLAS) )
 // dgetrf without pivoting
 void REF_GETRF_NOPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -1134,6 +1145,7 @@ void REF_GETRF_NOPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMA
 #endif
 	return;
 	}
+#endif
 
 
 
@@ -1149,7 +1161,8 @@ void REF_GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XM
 		d_10, d_11;
 	int i1 = 1;
 	REAL d1 = 1.0;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int ldc = sC->m;
 	int ldd = sD->m;
 	REAL *pC = sC->pA + ci + cj*ldc;
@@ -1523,13 +1536,16 @@ void REF_GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XM
 
 
 
+#if ! ( defined(REF_BLAS) )
 int REF_GEQRF_WORK_SIZE(int m, int n)
 	{
 	return 0;
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 void REF_GEQRF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
@@ -1784,16 +1800,20 @@ void REF_GEQRF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, i
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 int REF_GELQF_WORK_SIZE(int m, int n)
 	{
 	return 0;
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 void REF_GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int di, int dj, void *work)
 	{
 	if(m<=0 | n<=0)
@@ -2049,9 +2069,11 @@ void REF_GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, i
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 // generate Q matrix
 int REF_ORGLQ_WORK_SIZE(int m, int n, int k)
 	{
@@ -2059,9 +2081,11 @@ int REF_ORGLQ_WORK_SIZE(int m, int n, int k)
 	exit(1);
 	return 0;
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 // generate Q matrix
 void REF_ORGLQ(int m, int n, int k, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
 	{
@@ -2070,9 +2094,11 @@ void REF_ORGLQ(int m, int n, int k, struct XMAT *sC, int ci, int cj, struct XMAT
 	printf("\nblasfeo_orglq: feature not implemented yet\n");
 	exit(1);
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 // LQ factorization with positive diagonal elements
 void REF_GELQF_PD(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int di, int dj, void *work)
 	{
@@ -2337,6 +2363,7 @@ void REF_GELQF_PD(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD
 		}
 	return;
 	}
+#endif
 
 
 
@@ -2610,6 +2637,7 @@ void GELQF_PD_DA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sA
 
 
 
+#if ! ( defined(REF_BLAS) )
 // LQ factorization with positive diagonal elements, array of matrices
 // [D, A] <= lq( [D. A] )
 // D lower triangular, of size (m)x(m)
@@ -2864,9 +2892,11 @@ void REF_GELQF_PD_LA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 // LQ factorization with positive diagonal elements, array of matrices
 // [D, L, A] <= lq( [D. L, A] )
 // D, L lower triangular, of size (m)x(m)
@@ -3224,10 +3254,11 @@ void REF_GELQF_PD_LLA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMA
 		}
 	return;
 	}
+#endif
 
 
 
-#if (defined(LA_REFERENCE) & defined(REF)) | (defined(LA_HIGH_PERFORMANCE) & defined(HP_CM))
+#if (defined(LA_REFERENCE) & defined(REF)) | (defined(LA_HIGH_PERFORMANCE) & defined(HP_CM)) | (defined(REF_BLAS))
 
 
 
@@ -3243,10 +3274,12 @@ void POTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, in
 
 //#if ! ( defined(HP_CM) & defined(DP) )
 #if ! ( defined(HP_CM) )
+#if ! ( defined(REF_BLAS) )
 void POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_POTRF_L_MN(m, n, sC, ci, cj, sD, di, dj);
 	}
+#endif
 #endif
 
 
@@ -3260,7 +3293,7 @@ void POTRF_U(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, in
 #endif
 
 
-
+#if ! ( defined(REF_BLAS) )
 void SYRK_POTRF_LN(int m, int k, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 #if ! ( defined(HP_CM) & defined(DP) )
@@ -3270,9 +3303,11 @@ void SYRK_POTRF_LN(int m, int k, struct XMAT *sA, int ai, int aj, struct XMAT *s
 	POTRF_L(m, sD, di, dj, sD, di, dj);
 #endif
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 void SYRK_POTRF_LN_MN(int m, int n, int k, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 #if ! ( defined(HP_CM) & defined(DP) )
@@ -3282,20 +3317,25 @@ void SYRK_POTRF_LN_MN(int m, int n, int k, struct XMAT *sA, int ai, int aj, stru
 	POTRF_L_MN(m, n, sD, di, dj, sD, di, dj);
 #endif
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 void PSTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv)
 	{
 	REF_PSTRF_L(m, sC, ci, cj, sD, di, dj, ipiv);
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 void GETRF_NOPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_GETRF_NOPIVOT(m, n, sC, ci, cj, sD, di, dj);
 	}
+#endif
 
 
 
@@ -3308,66 +3348,84 @@ void GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *
 
 
 
+#if ! ( defined(REF_BLAS) )
 int GEQRF_WORK_SIZE(int m, int n)
 	{
 	return REF_GEQRF_WORK_SIZE(m, n);
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 void GEQRF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int di, int dj, void *work)
 	{
 	REF_GEQRF(m, n, sA, ai, aj, sD, di, dj, work);
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 int GELQF_WORK_SIZE(int m, int n)
 	{
 	return REF_GELQF_WORK_SIZE(m, n);
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 void GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int di, int dj, void *work)
 	{
 	REF_GELQF(m, n, sA, ai, aj, sD, di, dj, work);
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 int ORGLQ_WORK_SIZE(int m, int n, int k)
 	{
 	REF_ORGLQ_WORK_SIZE(m, n, k);
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 void ORGLQ(int m, int n, int k, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
 	{
 	REF_ORGLQ(m, n, k, sC, ci, cj, sD, di, dj, work);
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 void GELQF_PD(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int di, int dj, void *work)
 	{
 	REF_GELQF_PD(m, n, sA, ai, aj, sD, di, dj, work);
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 void GELQF_PD_LA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sA, int ai, int aj, void *work)
 	{
 	REF_GELQF_PD_LA(m, n1, sD, di, dj, sA, ai, aj, work);
 	}
+#endif
 
 
 
+#if ! ( defined(REF_BLAS) )
 void GELQF_PD_LLA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sL, int li, int lj, struct XMAT *sA, int ai, int aj, void *work)
 	{
 	REF_GELQF_PD_LLA(m, n1, sD, di, dj, sL, li, lj, sA, ai, aj, work);
 	}
+#endif
 
 
 

@@ -39,9 +39,9 @@ OBJS =
 
 ifeq ($(BLAS_API), 1)
 
-ifeq ($(MF), PANELMAJ)
+#ifeq ($(MF), PANELMAJ)
 
-ifeq ($(LA), HIGH_PERFORMANCE)
+#ifeq ($(LA), HIGH_PERFORMANCE)
 
 OBJS += dcopy.o
 OBJS += daxpy.o
@@ -50,11 +50,11 @@ OBJS += dgemm_ref.o # XXX
 OBJS += dsyrk_ref.o # XXX
 OBJS += dtrmm_ref.o # XXX
 OBJS += dtrsm_ref.o # XXX
-OBJS += dlaswp.o
 OBJS += dgesv.o
 OBJS += dgetrf_ref.o # XXX
 OBJS += dgetrf_np.o
 OBJS += dgetrs.o
+OBJS += dlaswp.o
 OBJS += dposv.o
 OBJS += dpotrf_ref.o # XXX
 OBJS += dpotrs.o
@@ -65,22 +65,22 @@ OBJS += sdot.o
 OBJS += sgemm_ref.o # XXX
 OBJS += strsm.o
 
-endif # HIGH_PERFROMANCE
+#endif # HIGH_PERFROMANCE
 
-else # MF COLMAJ ## ifeq ($(LA), REFERENCE)
+#else # MF COLMAJ ## ifeq ($(LA), REFERENCE)
 
-OBJS += dgemm_ref.o
-OBJS += dsyrk_ref.o
-OBJS += dtrmm_ref.o
-OBJS += dtrsm_ref.o
-OBJS += dpotrf_ref.o
-OBJS += dgetrf_ref.o
+#OBJS += dgemm_ref.o
+#OBJS += dsyrk_ref.o
+#OBJS += dtrmm_ref.o
+#OBJS += dtrsm_ref.o
+#OBJS += dpotrf_ref.o
+#OBJS += dgetrf_ref.o
+#
+#OBJS += sgemm_ref.o
+##OBJS += strsm_ref.o
+##OBJS += spotrf_ref.o
 
-OBJS += sgemm_ref.o
-#OBJS += strsm_ref.o
-#OBJS += spotrf_ref.o
-
-endif # REFERENCE
+#endif # REFERENCE
 
 endif # BLAS_API
 
@@ -98,6 +98,7 @@ dsyrk_ref.o: dsyrk_ref.c xsyrk_ref.c
 dtrmm_ref.o: dtrmm_ref.c xtrmm_ref.c
 dtrsm_ref.o: dtrsm_ref.c xtrsm_ref.c
 dpotrf_ref.o: dpotrf_ref.c xpotrf_ref.c
+dgetrf_ref.o: dgetrf_ref.c xgetrf_ref.c
 
 sgemm_ref.o: sgemm_ref.c xgemm_ref.c
 strsm_ref.o: strsm_ref.c xtrsm_ref.c

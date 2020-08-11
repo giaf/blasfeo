@@ -33,64 +33,47 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+
+#include <blasfeo_common.h>
+#include <blasfeo_d_blas.h>
 
 
-void POTRF(char *uplo, int *pm, REAL *C, int *pldc, int *info)
-	{
 
-#if defined(DIM_CHECK)
-	if( !(*uplo=='l' | *uplo=='l' | *uplo=='U' | *uplo=='U') )
-		{
-		printf("\nBLASFEO: potrf: wrong value for uplo\n");
-		return;
-		}
-#endif
+#define REF_BLAS
 
-	REAL dC0[K_MAX_STACK];
-	REAL *dC;
-	if(*pm>K_MAX_STACK)
-		{
-		dC = (REAL *) malloc(*pm*sizeof(REAL));
-		}
-	else
-		{
-		dC = dC0;
-		}
 
-	struct MAT sC;
-	sC.pA = C;
-	sC.m = *pldc;
-	sC.dA = dC;
 
-	int ldc = *pldc;
+#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
+#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
 
-	int ii;
 
-	if(*uplo=='l' | *uplo=='L')
-		{
-		POTRF_L(*pm, &sC, 0, 0, &sC, 0, 0);
-		}
-	else
-		{
-		POTRF_U(*pm, &sC, 0, 0, &sC, 0, 0);
-		}
 
-	if(*pm>K_MAX_STACK)
-		{
-		free(dC);
-		}
+#define REAL double
+#define XMAT blasfeo_cm_dmat
+#define XMATEL BLASFEO_CM_DMATEL
+#define XVEC blasfeo_dvec
+#define XVECEL BLASFEO_DVECEL
 
-	*info = 0;
-	for(ii=0; ii<*pm; ii++)
-		{
-		if(C[ii*(ldc+1)]==0.0)
-			{
-			*info = ii+1;
-			return;
-			}
-		}
 
-	return;
 
-	}
+// gemm
+#define REF_POTRF_L blasfeo_hp_cm_dpotrf_l
+#define REF_POTRF_U blasfeo_hp_cm_dpotrf_u
+#define REF_GETRF_ROWPIVOT blasfeo_hp_cm_dgetrf_rp
+
+
+// gemm
+#define POTRF_L blasfeo_cm_dpotrf_l
+#define POTRF_U blasfeo_cm_dpotrf_u
+#define GETRF_ROWPIVOT blasfeo_cm_dgetrf_rp
+
+
+
+#include "x_lapack_ref.c"
+
 

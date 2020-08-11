@@ -99,7 +99,6 @@ void blas_dgetrf_np(int *pm, int *pn, double *C, int *pldc, int *info)
 	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
 
 
-	struct blasfeo_dmat sC;
 	int sdu, sdc;
 	double *pU, *pC, *pd;
 	int sC_size, stot_size;

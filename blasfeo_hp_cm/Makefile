@@ -67,7 +67,11 @@ endif # LA HP
 
 else # MF PANELMAJ
 
+ifeq ($(BLAS_API), 1)
+ifeq ($(LA), HIGH_PERFORMANCE)
 OBJS += $(HP_CM_OBJS)
+endif
+endif
 
 endif # MF COLMAJ
 

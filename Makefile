@@ -147,15 +147,11 @@ BLAS_OBJS += \
 		blas_api/sgemm_ref.o \
 		blas_api/strsm.o
 
-BLAS_CM_OBJS += \
-		blas_api/dgemm_ref.o \
-		blas_api/dsyrk_ref.o \
-		blas_api/dtrmm_ref.o \
-		blas_api/dtrsm_ref.o \
-		blas_api/dpotrf_ref.o \
-		blas_api/dgetrf_ref.o \
+REF_BLAS_OBJS += \
+		blasfeo_ref/d_blas3_ref_blas.o \
+		blasfeo_ref/d_lapack_ref_blas.o \
 		\
-		blas_api/sgemm_ref.o \
+		blasfeo_ref/s_blas3_ref_blas.o \
 
 ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE))
 
@@ -644,11 +640,10 @@ endif # BLASFEO_REF_API
 
 ifeq ($(BLAS_API), 1)
 
-ifeq ($(MF), PANELMAJ)
 OBJS += $(BLAS_OBJS)
+
+ifeq ($(MF), PANELMAJ)
 OBJS += $(BLASFEO_HP_CM_OBJS)
-else
-OBJS += $(BLAS_CM_OBJS)
 endif
 
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
@@ -699,16 +694,22 @@ OBJS += $(BLASFEO_HP_CM_REF_OBJS)
 endif
 endif # BLASFEO_HP_API
 
-# XXX only works for MF=COLMAJ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm_ref.o \
-		blas_api/dtrsm_ref.o \
-		blas_api/dpotrf_ref.o \
-		\
-		blas_api/sgemm_ref.o \
-		blas_api/strsm_ref.o \
-		blas_api/spotrf_ref.o \
+
+OBJS += $(BLAS_OBJS)
+
+#OBJS += \
+#		blas_api/dgemm_ref.o \
+#		blas_api/dtrsm_ref.o \
+#		blas_api/dpotrf_ref.o \
+#		\
+#		blas_api/sgemm_ref.o \
+#		blas_api/strsm_ref.o \
+#		blas_api/spotrf_ref.o \
+
+ifeq ($(MF), PANELMAJ)
+OBJS += $(REF_BLAS_OBJS)
+endif
 
 endif
 

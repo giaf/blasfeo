@@ -65,9 +65,23 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 	// TODO
 #endif
 
+	int p = (*side=='l' | *side=='L') ? *pm : *pn;
+
+	REAL dA0[K_MAX_STACK];
+	REAL *dA;
+	if(p>K_MAX_STACK)
+		{
+		dA = (REAL *) malloc(p*sizeof(REAL));
+		}
+	else
+		{
+		dA = dA0;
+		}
+
 	struct MAT sA;
 	sA.pA = A;
 	sA.m = *plda;
+	sA.dA = dA;
 
 	struct MAT sB;
 	sB.pA = B;
@@ -178,6 +192,11 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 					}
 				}
 			}
+		}
+
+	if(p>K_MAX_STACK)
+		{
+		free(dA);
 		}
 
 	return;

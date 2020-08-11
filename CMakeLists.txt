@@ -549,6 +549,13 @@ file(GLOB BLAS_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/strsm.c
 	)
 
+file(GLOB REF_BLAS_SRC
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_ref_blas.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_ref_blas.c
+
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_ref_blas.c
+	)
+
 file(GLOB BLAS_CM_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/dgemm_ref.c
 	${PROJECT_SOURCE_DIR}/blas_api/dsyrk_ref.c
@@ -1035,6 +1042,18 @@ if(${LA} MATCHES REFERENCE)
 
 			list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_SRC})
 			list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_REF_SRC})
+
+		endif()
+
+	endif()
+
+	if(${BLAS_API})
+
+		list(APPEND BLASFEO_SRC ${BLAS_SRC})
+
+		if(${MF} MATCHES PANELMAJ)
+
+			list(APPEND BLASFEO_SRC ${REF_BLAS_SRC})
 
 		endif()
 

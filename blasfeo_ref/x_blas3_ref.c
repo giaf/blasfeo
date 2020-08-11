@@ -50,7 +50,8 @@ void REF_GEMM_NN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int a
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
@@ -150,7 +151,8 @@ void REF_GEMM_NT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int a
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
@@ -250,7 +252,8 @@ void REF_GEMM_TN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int a
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
@@ -350,7 +353,8 @@ void REF_GEMM_TT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int a
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
@@ -449,7 +453,8 @@ void REF_TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL
 		d_00, d_01,
 		d_10, d_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -574,7 +579,8 @@ void REF_TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL
 		d_00, d_01,
 		d_10, d_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -674,7 +680,8 @@ void REF_TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL
 		d_00, d_01,
 		d_10, d_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -808,7 +815,8 @@ void REF_TRSM_LLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL
 		d_00, d_01,
 		d_10, d_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -916,7 +924,8 @@ void REF_TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL
 		d_00, d_01,
 		d_10, d_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -1050,7 +1059,8 @@ void REF_TRSM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL
 		d_00, d_01,
 		d_10, d_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -1157,7 +1167,8 @@ void REF_TRSM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL
 		d_00, d_01,
 		d_10, d_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -1282,7 +1293,8 @@ void REF_TRSM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL
 		d_00, d_01,
 		d_10, d_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -1388,7 +1400,8 @@ void REF_TRSM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL
 		d_00, d_01,
 		d_10, d_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -1523,7 +1536,8 @@ void REF_TRSM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL
 		d_00, d_01,
 		d_10, d_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -1623,7 +1637,8 @@ void REF_TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	sD->use_dA = 0;
 
 	int ii, jj, kk;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -1743,7 +1758,8 @@ void REF_TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 		f_10,
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -1827,7 +1843,8 @@ void REF_TRSM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	sD->use_dA = 0;
 
 	int ii, jj, kk;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -1943,7 +1960,8 @@ void REF_TRSM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	sD->use_dA = 0;
 
 	int ii, jj, kk;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -2041,7 +2059,8 @@ void REF_TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL
 		d_00, d_01,
 		d_10, d_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -2176,7 +2195,8 @@ void REF_TRSM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL
 		d_00, d_01,
 		d_10, d_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -2279,7 +2299,8 @@ void REF_TRMM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -2390,7 +2411,8 @@ void REF_TRMM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -2501,7 +2523,8 @@ void REF_TRMM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -2616,7 +2639,8 @@ void REF_TRMM_LLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -2731,7 +2755,8 @@ void REF_TRMM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -2846,7 +2871,8 @@ void REF_TRMM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -2961,7 +2987,8 @@ void REF_TRMM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -3072,7 +3099,8 @@ void REF_TRMM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -3183,7 +3211,8 @@ void REF_TRMM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -3298,7 +3327,8 @@ void REF_TRMM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -3413,7 +3443,8 @@ void REF_TRMM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -3524,7 +3555,8 @@ void REF_TRMM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -3635,7 +3667,8 @@ void REF_TRMM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -3746,7 +3779,8 @@ void REF_TRMM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL 
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -3857,7 +3891,8 @@ void REF_TRMM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -3972,7 +4007,8 @@ void REF_TRMM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldd = sD->m;
@@ -4087,7 +4123,8 @@ void REF_SYRK_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 	REAL
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
@@ -4185,7 +4222,8 @@ void REF_SYRK_LN_MN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, in
 	REAL
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
@@ -4312,7 +4350,8 @@ void REF_SYRK_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 	REAL
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
@@ -4408,7 +4447,8 @@ void REF_SYRK_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 	REAL
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
@@ -4506,7 +4546,8 @@ void REF_SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 	REAL
 		c_00, c_01,
 		c_10, c_11;
-#if defined(MF_COLMAJ)
+//#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int lda = sA->m;
 	int ldb = sB->m;
 	int ldc = sC->m;
@@ -4591,7 +4632,7 @@ void REF_SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 
 
 
-#if (defined(LA_REFERENCE) & defined(REF)) | (defined(LA_HIGH_PERFORMANCE) & defined(HP_CM))
+#if (defined(LA_REFERENCE) & defined(REF)) | (defined(LA_HIGH_PERFORMANCE) & defined(HP_CM)) | (defined(REF_BLAS))
 
 
 
@@ -4870,6 +4911,24 @@ void TRMM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 #if ! ( defined(HP_CM) & defined(DP) )
+void TRMM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_RLTN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+void TRMM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_RLTU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
 void TRMM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRMM_RUTN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4882,6 +4941,24 @@ void TRMM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 void TRMM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRMM_RUTU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+void TRMM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_RUNN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+#endif
+
+
+
+#if ! ( defined(HP_CM) & defined(DP) )
+void TRMM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
+	{
+	REF_TRMM_RUNU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	}
 #endif
 

@@ -208,16 +208,12 @@ openblas_set_num_threads(1);
 
 		struct blasfeo_dmat sA; blasfeo_allocate_dmat(n, n, &sA);
 		blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
-		int sda = sA.cn;
 		struct blasfeo_dmat sB; blasfeo_allocate_dmat(n, n, &sB);
 		blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
-		int sdb = sB.cn;
 		struct blasfeo_dmat sC; blasfeo_allocate_dmat(n, n, &sC);
 		blasfeo_pack_dmat(n, n, C, n, &sC, 0, 0);
-		int sdc = sC.cn;
 		struct blasfeo_dmat sD; blasfeo_allocate_dmat(n, n, &sD);
 		blasfeo_pack_dmat(n, n, D, n, &sD, 0, 0);
-		int sdd = sD.cn;
 
 
 		/* timing */
@@ -312,44 +308,44 @@ openblas_set_num_threads(1);
 			for(rep=0; rep<nrep; rep++)
 				{
 
-//				blasfeo_dgemm(&c_n, &c_n, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
-				blasfeo_dgemm(&c_n, &c_t, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
-//				blasfeo_dgemm(&c_t, &c_n, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
-//				blasfeo_dgemm(&c_t, &c_t, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blas_dgemm(&c_n, &c_n, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blas_dgemm(&c_n, &c_t, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blas_dgemm(&c_t, &c_n, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blas_dgemm(&c_t, &c_t, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
 
-//				blasfeo_dgemm(&c_n, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
-//				blasfeo_dgemm(&c_n, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
-//				blasfeo_dgemm(&c_t, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
-//				blasfeo_dgemm(&c_t, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+				blas_dgemm(&c_n, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blas_dgemm(&c_n, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blas_dgemm(&c_t, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blas_dgemm(&c_t, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 
-//				blasfeo_dsyrk(&c_l, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
-//				blasfeo_dsyrk(&c_l, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
-//				blasfeo_dsyrk(&c_u, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
-//				blasfeo_dsyrk(&c_u, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
+//				blas_dsyrk(&c_l, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
+//				blas_dsyrk(&c_l, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
+//				blas_dsyrk(&c_u, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
+//				blas_dsyrk(&c_u, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
 
-//				blasfeo_dtrsm(&c_l, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blasfeo_dtrsm(&c_l, &c_l, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
-//				blasfeo_dtrsm(&c_l, &c_l, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blasfeo_dtrsm(&c_l, &c_l, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
-//				blasfeo_dtrsm(&c_l, &c_u, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blasfeo_dtrsm(&c_l, &c_u, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
-//				blasfeo_dtrsm(&c_l, &c_u, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blasfeo_dtrsm(&c_l, &c_u, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
-//				blasfeo_dtrsm(&c_r, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blasfeo_dtrsm(&c_r, &c_l, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
-//				blasfeo_dtrsm(&c_r, &c_l, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blasfeo_dtrsm(&c_r, &c_l, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
-//				blasfeo_dtrsm(&c_r, &c_u, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blasfeo_dtrsm(&c_r, &c_u, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
-//				blasfeo_dtrsm(&c_r, &c_u, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blasfeo_dtrsm(&c_r, &c_u, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_l, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_l, &c_l, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_l, &c_l, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_l, &c_l, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_l, &c_u, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_l, &c_u, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_l, &c_u, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_l, &c_u, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_r, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_r, &c_l, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_r, &c_l, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_r, &c_l, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_r, &c_u, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_r, &c_u, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_r, &c_u, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrsm(&c_r, &c_u, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
 
-//				blasfeo_dtrmm(&c_r, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blas_dtrmm(&c_r, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
 
-//				blasfeo_dpotrf(&c_l, &n, B, &n, &info);
-//				blasfeo_dpotrf(&c_u, &n, B, &n, &info);
+//				blas_dpotrf(&c_l, &n, B, &n, &info);
+//				blas_dpotrf(&c_u, &n, B, &n, &info);
 
-//				blasfeo_dgetrf(&n, &n, B, &n, ipiv, &info);
+//				blas_dgetrf(&n, &n, B, &n, ipiv, &info);
 
 
 
@@ -444,9 +440,9 @@ openblas_set_num_threads(1);
 
 		double Gflops_max = flops_max * GHz_max;
 
-		double flop_operation = 2.0*fix_m*fix_n*fix_k; // gemm
+//		double flop_operation = 2.0*fix_m*fix_n*fix_k; // gemm
 
-//		double flop_operation = 2.0*n*n*n; // gemm
+		double flop_operation = 2.0*n*n*n; // gemm
 //		double flop_operation = 1.0*n*n*n; // syrk trsm
 //		double flop_operation = 1.0/3.0*n*n*n; // potrf
 //		double flop_operation = 2.0/3.0*n*n*n; // getrf

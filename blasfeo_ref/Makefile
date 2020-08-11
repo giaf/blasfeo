@@ -70,6 +70,14 @@ HP_CM_OBJS += s_blas3_diag_hp_cm.o
 HP_CM_OBJS += s_lapack_hp_cm.o
 
 
+REF_BLAS_OBJS =
+#
+REF_BLAS_OBJS += d_blas3_ref_blas.o
+REF_BLAS_OBJS += d_lapack_ref_blas.o
+#
+REF_BLAS_OBJS += s_blas3_ref_blas.o
+
+
 OBJS =
 
 # REFERENCE
@@ -97,6 +105,15 @@ endif
 endif # LA HP
 
 endif # MF COLMAJ
+
+# BLAS API REFERENCE PANELMAJ
+ifeq ($(BLAS_API), 1)
+ifeq ($(LA), REFERENCE)
+ifeq ($(MF), PANELMAJ)
+OBJS += $(REF_BLAS_OBJS)
+endif
+endif
+endif
 
 
 obj: $(OBJS)
@@ -134,3 +151,8 @@ s_blas3_hp_cm.o: s_blas3_hp_cm.c x_blas3_ref.c
 s_blas3_diag_hp_cm.o: s_blas3_diag_hp_cm.c x_blas3_diag_ref.c
 s_lapack_hp_cm.o: s_lapack_hp_cm.c x_lapack_ref.c
 
+
+d_blas3_ref_blas.o: d_blas3_ref_blas.c x_blas3_ref.c
+d_lapack_ref_blas.o: d_lapack_ref_blas.c x_lapack_ref.c
+
+s_blas3_ref_blas.o: s_blas3_ref_blas.c x_blas3_ref.c

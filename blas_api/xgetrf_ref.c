@@ -46,9 +46,23 @@ void GETRF(int *pm, int *pn, REAL *C, int *pldc, int *ipiv, int *info)
 //		}
 #endif
 
+	int p = *pm<*pn ? *pm : *pn;
+
+	REAL dC0[K_MAX_STACK];
+	REAL *dC;
+	if(p>K_MAX_STACK)
+		{
+		dC = (REAL *) malloc(p*sizeof(REAL));
+		}
+	else
+		{
+		dC = dC0;
+		}
+
 	struct MAT sC;
 	sC.pA = C;
 	sC.m = *pldc;
+	sC.dA = dC;
 
 	int ldc = *pldc;
 
@@ -56,7 +70,10 @@ void GETRF(int *pm, int *pn, REAL *C, int *pldc, int *ipiv, int *info)
 
 	GETRF_RP(*pm, *pn, &sC, 0, 0, &sC, 0, 0, ipiv);
 
-	int p = *pm<*pn ? *pm : *pn;
+	if(p>K_MAX_STACK)
+		{
+		free(dC);
+		}
 
 	// from 0-based to 1-based
 	for(ii=0; ii<p; ii++)
