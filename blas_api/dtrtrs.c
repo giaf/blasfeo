@@ -37,26 +37,26 @@
 #include <stdio.h>
 
 
-#include "../include/blasfeo_target.h"
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_d_kernel.h"
-#include "../include/blasfeo_d_blas.h"
+#include <blasfeo_target.h>
+#include <blasfeo_common.h>
+#include <blasfeo_d_aux.h>
+#include <blasfeo_d_kernel.h>
+#include <blasfeo_d_blas.h>
 
 
 
 #if defined(FORTRAN_BLAS_API)
 #define blas_dtrsm dtrsm_
-#define blasfeo_dtrtrs dtrtrs_
+#define blas_dtrtrs dtrtrs_
 #endif
 
 
 
-void blasfeo_dtrtrs(char *uplo, char *trans, char *diag, int *pm, int *pn, double *A, int *plda, double *B, int *pldb, int *info)
+void blas_dtrtrs(char *uplo, char *trans, char *diag, int *pm, int *pn, double *A, int *plda, double *B, int *pldb, int *info)
 	{
 
 #if defined(PRINT_NAME)
-	printf("\nblasfeo_dtrtrs %c %c %c %d %d %p %d %p %d %d\n", *uplo, *trans, *diag, *pm, *pn, A, *plda, B, *pldb, *info);
+	printf("\nblas_dtrtrs %c %c %c %d %d %p %d %p %d %d\n", *uplo, *trans, *diag, *pm, *pn, A, *plda, B, *pldb, *info);
 #endif
 
 

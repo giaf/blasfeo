@@ -45,24 +45,24 @@
 #include <immintrin.h>  // AVX
 #endif
 
-#include "../include/blasfeo_target.h"
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
-//#include "../include/blasfeo_d_kernel.h"
+#include <blasfeo_target.h>
+#include <blasfeo_common.h>
+#include <blasfeo_d_aux.h>
+//#include <blasfeo_d_kernel.h>
 
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_dcopy dcopy_
+#define blas_dcopy dcopy_
 #endif
 
 
 
-void blasfeo_dcopy(int *pn, double *x, int *pincx, double *y, int *pincy)
+void blas_dcopy(int *pn, double *x, int *pincx, double *y, int *pincy)
 	{
 
 #if defined(PRINT_NAME)
-	printf("\nblasfeo_dcopy %d %p %d %p %d\n", *pn, x, *pincx, y, *pincy);
+	printf("\nblas_dcopy %d %p %d %p %d\n", *pn, x, *pincx, y, *pincy);
 #endif
 
 	int n = *pn;

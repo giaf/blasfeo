@@ -36,18 +36,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_target.h"
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_s_aux.h"
-#include "../include/blasfeo_s_kernel.h"
+#include <blasfeo_target.h>
+#include <blasfeo_common.h>
+#include <blasfeo_s_aux.h>
+#include <blasfeo_s_kernel.h>
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_saxpy_blas saxpy_
+#define blas_saxpy saxpy_
 #endif
 
 
-void blasfeo_saxpy_blas(int *ptr_n, float *alpha, float *x, int *ptr_ix, float *y, int *ptr_iy)
+void blas_saxpy(int *ptr_n, float *alpha, float *x, int *ptr_ix, float *y, int *ptr_iy)
 	{
 	int n = *ptr_n;
 	int ix = *ptr_ix;

@@ -106,11 +106,11 @@ void dtrtrs_(char *uplo, char *trans, char *diag, int *m, int *n, double *A, int
 
 // BLAS 1
 //
-void blasfeo_daxpy_blas(int *n, double *alpha, double *x, int *incx, double *y, int *incy);
+void blas_daxpy(int *n, double *alpha, double *x, int *incx, double *y, int *incy);
 //
-double blasfeo_ddot_blas(int *n, double *x, int *incx, double *y, int *incy);
+double blas_ddot(int *n, double *x, int *incx, double *y, int *incy);
 //
-void blasfeo_dcopy(int *n, double *x, int *incx, double *y, int *incy);
+void blas_dcopy(int *n, double *x, int *incx, double *y, int *incy);
 
 // BLAS 3
 //
@@ -126,23 +126,23 @@ void blas_dtrsm(char *side, char *uplo, char *transa, char *diag, int *m, int *n
 
 // LAPACK
 //
-void blasfeo_dgesv(int *m, int *n, double *A, int *lda, int *ipiv, double *B, int *ldb, int *info);
+void blas_dgesv(int *m, int *n, double *A, int *lda, int *ipiv, double *B, int *ldb, int *info);
 //
 void blas_dgetrf(int *m, int *n, double *A, int *lda, int *ipiv, int *info);
 //
 void blas_dgetrf_np(int *m, int *n, double *A, int *lda, int *info);
 //
-void blasfeo_dgetrs(char *trans, int *m, int *n, double *A, int *lda, int *ipiv, double *B, int *ldb, int *info);
+void blas_dgetrs(char *trans, int *m, int *n, double *A, int *lda, int *ipiv, double *B, int *ldb, int *info);
 //
-void blasfeo_dlaswp(int *n, double *A, int *lda, int *k1, int *k2, int *ipiv, int *incx);
+void blas_dlaswp(int *n, double *A, int *lda, int *k1, int *k2, int *ipiv, int *incx);
 //
-void blasfeo_dposv(char *uplo, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
+void blas_dposv(char *uplo, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
 //
 void blas_dpotrf(char *uplo, int *m, double *A, int *lda, int *info);
 //
-void blasfeo_dpotrs(char *uplo, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
+void blas_dpotrs(char *uplo, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
 //
-void blasfeo_dtrtrs(char *uplo, char *trans, char *diag, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
+void blas_dtrtrs(char *uplo, char *trans, char *diag, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
 
 
 

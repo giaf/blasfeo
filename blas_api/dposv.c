@@ -37,27 +37,27 @@
 #include <stdio.h>
 
 
-#include "../include/blasfeo_target.h"
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_d_kernel.h"
-#include "../include/blasfeo_d_blas.h"
+#include <blasfeo_target.h>
+#include <blasfeo_common.h>
+#include <blasfeo_d_aux.h>
+#include <blasfeo_d_kernel.h>
+#include <blasfeo_d_blas.h>
 
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_dposv dposv_
+#define blas_dposv dposv_
 #define blas_dpotrf dpotrf_
-#define blasfeo_dpotrs dpotrs_
+#define blas_dpotrs dpotrs_
 #endif
 
 
 
-void blasfeo_dposv(char *uplo, int *pm, int *pn, double *A, int *plda, double *B, int *pldb, int *info)
+void blas_dposv(char *uplo, int *pm, int *pn, double *A, int *plda, double *B, int *pldb, int *info)
 	{
 
 #if defined(PRINT_NAME)
-	printf("\nblasfeo_dposv %c %d %d %p %d %p %d %d\n", *uplo, *pm, *pn, A, *plda, B, *pldb, *info);
+	printf("\nblas_dposv %c %d %d %p %d %p %d %d\n", *uplo, *pm, *pn, A, *plda, B, *pldb, *info);
 #endif
 
 	*info = 0;
@@ -66,7 +66,7 @@ void blasfeo_dposv(char *uplo, int *pm, int *pn, double *A, int *plda, double *B
 
 	if(*info==0)
 		{
-		blasfeo_dpotrs(uplo, pm, pn, A, plda, B, pldb, info);
+		blas_dpotrs(uplo, pm, pn, A, plda, B, pldb, info);
 		}
 
 	return;
