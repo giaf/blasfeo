@@ -439,7 +439,8 @@ void REF_GEMM_TT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int a
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_left_lower_nottransposed_notunit
 void REF_TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -565,7 +566,8 @@ void REF_TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_left_lower_nottransposed_unit
 void REF_TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -666,7 +668,8 @@ void REF_TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_lltn
 void REF_TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -801,7 +804,8 @@ void REF_TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_lltu
 void REF_TRSM_LLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -910,7 +914,8 @@ void REF_TRSM_LLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_left_upper_nottransposed_notunit
 void REF_TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -1045,7 +1050,8 @@ void REF_TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_lunu
 void REF_TRSM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -1153,7 +1159,8 @@ void REF_TRSM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_lutn
 void REF_TRSM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -1279,7 +1286,8 @@ void REF_TRSM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_lutu
 void REF_TRSM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -1380,7 +1388,8 @@ void REF_TRSM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_rlnn
 void REF_TRSM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -1516,7 +1525,8 @@ void REF_TRSM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_rlnu
 void REF_TRSM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -1626,7 +1636,8 @@ void REF_TRSM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_right_lower_transposed_not-unit
 void REF_TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -1743,7 +1754,8 @@ void REF_TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_right_lower_transposed_unit
 void REF_TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -1832,7 +1844,8 @@ void REF_TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_runn
 void REF_TRSM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -1949,7 +1962,8 @@ void REF_TRSM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_runu
 void REF_TRSM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -2039,7 +2053,8 @@ void REF_TRSM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_right_upper_transposed_notunit
 void REF_TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -2175,7 +2190,8 @@ void REF_TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 // dtrsm_rutu
 void REF_TRSM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
@@ -4676,7 +4692,8 @@ void GEMM_TT(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj, s
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_LLNN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4685,7 +4702,8 @@ void TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_LLNU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4694,7 +4712,8 @@ void TRSM_LLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_LLTN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4703,7 +4722,8 @@ void TRSM_LLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_LLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_LLTU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4712,7 +4732,8 @@ void TRSM_LLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_LUNN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4721,7 +4742,8 @@ void TRSM_LUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_LUNU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4730,7 +4752,8 @@ void TRSM_LUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_LUTN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4739,7 +4762,8 @@ void TRSM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_LUTU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4748,7 +4772,8 @@ void TRSM_LUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_RLNN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4757,7 +4782,8 @@ void TRSM_RLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_RLNU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4766,7 +4792,8 @@ void TRSM_RLNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_RLTN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4775,7 +4802,8 @@ void TRSM_RLTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_RLTU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4784,7 +4812,8 @@ void TRSM_RLTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_RUNN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4793,7 +4822,8 @@ void TRSM_RUNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_RUNU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4802,7 +4832,8 @@ void TRSM_RUNU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_RUTN(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
@@ -4811,7 +4842,8 @@ void TRSM_RUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-#if ! ( defined(HP_CM) & defined(DP) )
+//#if ! ( defined(HP_CM) & defined(DP) )
+#if ! defined(HP_CM)
 void TRSM_RUTU(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sD, int di, int dj)
 	{
 	REF_TRSM_RUTU(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
