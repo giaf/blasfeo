@@ -39,10 +39,6 @@ OBJS =
 
 ifeq ($(BLAS_API), 1)
 
-#ifeq ($(MF), PANELMAJ)
-
-#ifeq ($(LA), HIGH_PERFORMANCE)
-
 OBJS += dcopy.o
 OBJS += daxpy.o
 OBJS += ddot.o
@@ -64,23 +60,7 @@ OBJS += saxpy.o
 OBJS += sdot.o
 OBJS += sgemm_ref.o # XXX
 OBJS += strsm.o
-
-#endif # HIGH_PERFROMANCE
-
-#else # MF COLMAJ ## ifeq ($(LA), REFERENCE)
-
-#OBJS += dgemm_ref.o
-#OBJS += dsyrk_ref.o
-#OBJS += dtrmm_ref.o
-#OBJS += dtrsm_ref.o
-#OBJS += dpotrf_ref.o
-#OBJS += dgetrf_ref.o
-#
-#OBJS += sgemm_ref.o
-##OBJS += strsm_ref.o
-##OBJS += spotrf_ref.o
-
-#endif # REFERENCE
+OBJS += spotrf_ref.o # XXX
 
 endif # BLAS_API
 

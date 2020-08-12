@@ -145,7 +145,8 @@ BLAS_OBJS += \
 		blas_api/saxpy.o \
 		blas_api/sdot.o \
 		blas_api/sgemm_ref.o \
-		blas_api/strsm.o
+		blas_api/strsm.o \
+		blas_api/spotrf_ref.o \
 
 REF_BLAS_OBJS += \
 		blasfeo_ref/d_blas3_ref_blas.o \
@@ -697,15 +698,6 @@ endif # BLASFEO_HP_API
 ifeq ($(BLAS_API), 1)
 
 OBJS += $(BLAS_OBJS)
-
-#OBJS += \
-#		blas_api/dgemm_ref.o \
-#		blas_api/dtrsm_ref.o \
-#		blas_api/dpotrf_ref.o \
-#		\
-#		blas_api/sgemm_ref.o \
-#		blas_api/strsm_ref.o \
-#		blas_api/spotrf_ref.o \
 
 ifeq ($(MF), PANELMAJ)
 OBJS += $(REF_BLAS_OBJS)

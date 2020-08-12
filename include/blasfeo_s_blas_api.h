@@ -54,12 +54,6 @@ extern "C" {
 
 
 
-// BLAS 3
-//
-void blasfeo_sgemm(char ta, char tb, int m, int n, int k, float alpha, float *A, int lda, float *B, int ldb, float beta, float *C, int ldc, float *D, int ldd);
-
-
-
 #ifdef FORTRAN_BLAS_API
 
 
@@ -80,6 +74,7 @@ void strsm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, fl
 
 // LAPACK
 //
+void spotrf_(char *uplo, int *m, float *A, int *lda, int *info);
 
 
 
@@ -103,6 +98,7 @@ void blasfeo_strsm(char *side, char *uplo, char *transa, char *diag, int *m, int
 
 // LAPACK
 //
+void blas_spotrf(char *uplo, int *m, float *A, int *lda, int *info);
 
 
 

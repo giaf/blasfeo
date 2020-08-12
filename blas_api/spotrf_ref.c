@@ -41,14 +41,24 @@
 
 
 
+#if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+#define POTRF_L blasfeo_cm_spotrf_l
+#define POTRF_U blasfeo_cm_spotrf_u
+#define MAT blasfeo_cm_dmat
+#else
 #define POTRF_L blasfeo_spotrf_l
 #define POTRF_U blasfeo_spotrf_u
-#define MAT blasfeo_smat
-#define REAL float
+#define MAT blasfeo_dmat
+#endif
+#define REAL double
 
 
 
-#define POTRF blasfeo_spotrf
+#if defined(FORTRAN_BLAS_API)
+#define POTRF spotrf_
+#else
+#define POTRF blas_spotrf
+#endif
 
 
 

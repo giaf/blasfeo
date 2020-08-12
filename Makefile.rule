@@ -112,8 +112,8 @@ LA = HIGH_PERFORMANCE
 
 # Export additional back-ends with different naming
 # BLASFEO reference with blasfeo_ref_xxx naming
-BLASFEO_REF_API = 0
-# BLASFEO_REF_API = 1
+# BLASFEO_REF_API = 0
+BLASFEO_REF_API = 1
 # BLASFEO high-performance with blasfeo_hp_xxx naming
 BLASFEO_HP_API = 0
 # BLASFEO_HP_API = 1
@@ -287,11 +287,6 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 CFLAGS  += -DLA_HIGH_PERFORMANCE
 ASFLAGS  += -DLA_HIGH_PERFORMANCE
 BINARY_DIR = build/$(LA)/$(TARGET)
-#ifeq ($(BLASFEO_REF_API), 1)
-#ifeq ($(MF), COLMAJ)
-#$(error As of now, with LA=HIGH_PERFORMANCE only MF=PANELMAJ is supported for the additional BLASFEO_REF_API)
-#endif
-#endif
 endif
 # LA reference
 ifeq ($(LA), REFERENCE)
@@ -326,9 +321,6 @@ ASFLAGS  += -DMF_PANELMAJ
 endif
 
 ifeq ($(BLAS_API), 1)
-#ifeq ($(MF), COLMAJ)
-#$(error As of now, with BLAS_API=1 only MF=PANELMAJ is supported)
-#endif
 CFLAGS += -DBLAS_API
 ASFLAGS += -DBLAS_API
 ifeq ($(FORTRAN_BLAS_API), 1)

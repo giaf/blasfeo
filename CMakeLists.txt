@@ -547,6 +547,7 @@ file(GLOB BLAS_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/sdot.c
 	${PROJECT_SOURCE_DIR}/blas_api/sgemm_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/strsm.c
+	${PROJECT_SOURCE_DIR}/blas_api/spotrf_ref.c # XXX
 	)
 
 file(GLOB REF_BLAS_SRC
