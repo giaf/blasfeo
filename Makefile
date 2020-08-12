@@ -817,6 +817,7 @@ shared_library: target
 	( cd auxiliary; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
 	( cd blasfeo_wr; $(MAKE) obj)
+	( cd blasfeo_ref; $(MAKE) obj)
 	( cd blasfeo_hp_pm; $(MAKE) obj)
 	( cd blasfeo_hp_cm; $(MAKE) obj)
 ifeq ($(BLAS_API), 1)
