@@ -59,7 +59,7 @@ OBJS += dtrtrs.o
 OBJS += saxpy.o
 OBJS += sdot.o
 OBJS += sgemm_ref.o # XXX
-OBJS += strsm.o
+OBJS += strsm_ref.o # XXX
 OBJS += spotrf_ref.o # XXX
 
 endif # BLAS_API

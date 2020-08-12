@@ -232,10 +232,30 @@ void blasfeo_sgelqf_pd_lla(int m, int n1, struct blasfeo_smat *sL0, int l0i, int
 //
 
 #if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+// BLAS 3
 void blasfeo_cm_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, float beta, struct blasfeo_cm_smat *sC, int ci, int cj, struct blasfeo_cm_smat *sD, int di, int dj);
 void blasfeo_cm_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, float beta, struct blasfeo_cm_smat *sC, int ci, int cj, struct blasfeo_cm_smat *sD, int di, int dj);
 void blasfeo_cm_sgemm_tn(int m, int n, int k, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, float beta, struct blasfeo_cm_smat *sC, int ci, int cj, struct blasfeo_cm_smat *sD, int di, int dj);
 void blasfeo_cm_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, float beta, struct blasfeo_cm_smat *sC, int ci, int cj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_llnn(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_llnu(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_lltn(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_lltu(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_lunn(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_lunu(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_lutn(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_lutu(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_rlnn(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_rlnu(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_rltn(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_rltu(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_runn(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_runu(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_rutn(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_strsm_rutu(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+// LAPACK
+void blasfeo_cm_spotrf_l(int m, struct blasfeo_cm_smat *sC, int ci, int cj, struct blasfeo_cm_smat *sD, int di, int dj);
+void blasfeo_cm_spotrf_u(int m, struct blasfeo_cm_smat *sC, int ci, int cj, struct blasfeo_cm_smat *sD, int di, int dj);
 #endif
 
 

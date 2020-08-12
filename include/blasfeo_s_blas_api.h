@@ -92,7 +92,7 @@ float blasfeo_sdot_blas(int *n, float *x, int *incx, float *y, int *incy);
 //
 void blas_sgemm(char *ta, char *tb, int *m, int *n, int *k, float *alpha, float *A, int *lda, float *B, int *ldb, float *beta, float *C, int *ldc);
 //
-void blasfeo_strsm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, float *alpha, float *A, int *lda, float *B, int *ldb);
+void blas_strsm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, float *alpha, float *A, int *lda, float *B, int *ldb);
 
 
 

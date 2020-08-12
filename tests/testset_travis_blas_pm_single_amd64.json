@@ -6,7 +6,7 @@
   },
   "test_macros":
   {
-    "VERBOSE":2
+    "VERBOSE":3
   },
   "env_flags":{
     "CC":"gcc",
@@ -40,7 +40,25 @@
     "gemm_nn",
     "gemm_nt",
     "gemm_tn",
-    "gemm_tt"
+    "gemm_tt",
+    "trsm_llnn",
+    "trsm_llnu",
+    "trsm_lltn",
+    "trsm_lltu",
+    "trsm_lunn",
+    "trsm_lunu",
+    "trsm_lutn",
+    "trsm_lutu",
+    "trsm_rlnn",
+    "trsm_rlnu",
+    "trsm_rltn",
+    "trsm_rltu",
+    "trsm_runn",
+    "trsm_runu",
+    "trsm_rutn",
+    "trsm_rutu",
+    "potrf_l",
+    "potrf_u"
   ]
 }
 

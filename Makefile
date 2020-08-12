@@ -90,6 +90,7 @@ BLASFEO_HP_CM_OBJS = \
 		blasfeo_hp_cm/dgetrf.o \
 		\
 		blasfeo_hp_cm/sgemm.o \
+		blasfeo_hp_cm/strsm.o \
 		blasfeo_hp_cm/spotrf.o \
 
 BLASFEO_HP_CM_REF_OBJS = \
@@ -145,7 +146,7 @@ BLAS_OBJS += \
 		blas_api/saxpy.o \
 		blas_api/sdot.o \
 		blas_api/sgemm_ref.o \
-		blas_api/strsm.o \
+		blas_api/strsm_ref.o \
 		blas_api/spotrf_ref.o \
 
 REF_BLAS_OBJS += \

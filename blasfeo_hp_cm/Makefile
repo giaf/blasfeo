@@ -48,6 +48,7 @@ HP_CM_OBJS += dpotrf.o
 HP_CM_OBJS += dgetrf.o
 
 HP_CM_OBJS += sgemm.o
+HP_CM_OBJS += strsm.o
 HP_CM_OBJS += spotrf.o
 
 
