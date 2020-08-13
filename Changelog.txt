@@ -3,12 +3,13 @@ BLASFEO ChangeLog
 
 
 ====================================================================
-Version 0.1.2-master
-03-Apr-2020
+Version 0.1.2
+13-Aug-2020
 
 common:
 	* change license to BFD-2
 	* add function checking x86 features support based on cpuid
+	* improve windows and visual studio support (static library)
 
 BLASFEO_API:
 	* dorglq for all targets
@@ -28,6 +29,7 @@ BLAS_API:
 ARMv8A:
 	* Cortex A57:
 		- improve kernels sgemm_nt lib4
+		- optimize xgemv kernels lib4
 
 ARMv7A:
 	* Cortex A9:
