@@ -38,7 +38,7 @@
 #ifdef DOUBLE_PRECISION
 #define REL_TOL 1e-11
 #else
-#define REL_TOL 2e-4
+#define REL_TOL 9e-4
 #endif
 
 
