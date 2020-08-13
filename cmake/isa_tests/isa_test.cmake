@@ -63,6 +63,8 @@ function(TestISA TEST_TARGET)
             )
   endif()
 
+#  message(${CHK_OUTPUT${TEST_TARGET}})
+
   if(${CHKISA_TARGET_BUILD_${TEST_TARGET}})
     set(CHKISA_TARGET_BUILD TRUE PARENT_SCOPE)
 

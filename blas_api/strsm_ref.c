@@ -42,6 +42,30 @@
 
 
 
+
+#define SINGLE_PRECISION
+
+
+
+#if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+#define TRSM_LLNN blasfeo_cm_strsm_llnn
+#define TRSM_LLNU blasfeo_cm_strsm_llnu
+#define TRSM_LLTN blasfeo_cm_strsm_lltn
+#define TRSM_LLTU blasfeo_cm_strsm_lltu
+#define TRSM_LUNN blasfeo_cm_strsm_lunn
+#define TRSM_LUNU blasfeo_cm_strsm_lunu
+#define TRSM_LUTN blasfeo_cm_strsm_lutn
+#define TRSM_LUTU blasfeo_cm_strsm_lutu
+#define TRSM_RLNN blasfeo_cm_strsm_rlnn
+#define TRSM_RLNU blasfeo_cm_strsm_rlnu
+#define TRSM_RLTN blasfeo_cm_strsm_rltn
+#define TRSM_RLTU blasfeo_cm_strsm_rltu
+#define TRSM_RUNN blasfeo_cm_strsm_runn
+#define TRSM_RUNU blasfeo_cm_strsm_runu
+#define TRSM_RUTN blasfeo_cm_strsm_rutn
+#define TRSM_RUTU blasfeo_cm_strsm_rutu
+#define MAT blasfeo_cm_smat
+#else
 #define TRSM_LLNN blasfeo_strsm_llnn
 #define TRSM_LLNU blasfeo_strsm_llnu
 #define TRSM_LLTN blasfeo_strsm_lltn
@@ -59,11 +83,17 @@
 #define TRSM_RUTN blasfeo_strsm_rutn
 #define TRSM_RUTU blasfeo_strsm_rutu
 #define MAT blasfeo_smat
+#endif
 #define REAL float
 
 
 
-#define TRSM blasfeo_strsm
+#if defined(FORTRAN_BLAS_API)
+#define TRSM strsm_
+#else
+#define TRSM blas_strsm
+#endif
+
 
 
 

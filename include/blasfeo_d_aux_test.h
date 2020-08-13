@@ -61,10 +61,10 @@ void test_blasfeo_create_dvec(int m, struct blasfeo_dvec *sA, void *memory);
 
 // --- conversion
 void test_blasfeo_pack_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj);
-void test_blasfeo_pack_dvec(int m, double *a, struct blasfeo_dvec *sa, int ai);
+void test_blasfeo_pack_dvec(int m, double *x, int xi, struct blasfeo_dvec *sa, int ai);
 void test_blasfeo_pack_tran_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA, int ai, int aj);
 void test_blasfeo_unpack_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *A, int lda);
-void test_blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sa, int ai, double *a);
+void test_blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sa, int ai, double *x, int xi);
 void test_blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *A, int lda);
 
 // --- cast

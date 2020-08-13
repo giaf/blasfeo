@@ -10,6 +10,7 @@ from hashlib import sha1
 from pathlib import Path
 from collections import OrderedDict
 import shutil
+import multiprocessing
 
 
 
@@ -23,8 +24,8 @@ REPORTS_DIR="reports"
 TESTCLASSES_DIR="classes"
 TPL_PATH="Makefile.tpl"
 LIB_BLASFEO_STATIC = "libblasfeo.a"
-LIB_BLASFEO_REF_STATIC = "libblasfeo_ref.a"
-MAKE_FLAGS={"--jobs":"8"}
+#MAKE_FLAGS={"--jobs":"8"}
+MAKE_FLAGS={"--jobs": multiprocessing.cpu_count()}
 SILENT=0
 
 
@@ -264,7 +265,7 @@ class BlasfeoTestset:
 		target = self.testset["blasfeo_flags"]["TARGET"]
 		la = self.testset["blasfeo_flags"]["LA"]
 
-		if self.lib_static_dst.is_file() and self.libref_static_dst.is_file():
+		if self.lib_static_dst.is_file():
 			return 1
 
 		return 0
@@ -276,7 +277,7 @@ class BlasfeoTestset:
 		env_flags = self.testset["env_flags"]
 
 		# always compile blas api
-		blasfeo_flags.update({"BLAS_API":1})
+#		blasfeo_flags.update({"BLAS_API":1})
 		blasfeo_flags.update({"BLASFEO_PATH":str(BLASFEO_PATH)})
 
 		blasfeo_flags_str = "_".join(
@@ -293,10 +294,8 @@ class BlasfeoTestset:
 		blasfeo_flags.update({"ABS_BINARY_PATH":str(binary_path)})
 
 		self.lib_static_src = Path(BLASFEO_PATH, "lib", LIB_BLASFEO_STATIC)
-		self.libref_static_src = Path(BLASFEO_PATH, "lib", LIB_BLASFEO_REF_STATIC)
 
 		self.lib_static_dst = Path(binary_path, LIB_BLASFEO_STATIC)
-		self.libref_static_dst = Path(binary_path, LIB_BLASFEO_REF_STATIC)
 
 		lib_flags_json = str(Path(binary_path, "flags.json"))
 
@@ -313,10 +312,8 @@ class BlasfeoTestset:
 
 			# copy library
 			shutil.copyfile(str(self.lib_static_src), str(self.lib_static_dst))
-			shutil.copyfile(str(self.libref_static_src), str(self.libref_static_dst))
 
 			#  self.lib_static_dst.write_bytes(lib_static_src.read_bytes())
-			#  self.libref_static_dst.write_bytes(libref_static_src.read_bytes())
 
 		for routine_name, args in self.testset['scheduled_routines'].items():
 			# update local flags with global flags
@@ -416,7 +413,7 @@ class BlasfeoTestset:
 			if not SILENT: print("Tested with {run_id}".format(run_id=run_id))
 
 		# print partial
-		if not SILENT: print("({done}:Succeded, {errors}:Errors) / ({total}:Total)"
+		if not SILENT: print("({done}:Succeded, {errors}:Errors) / ({total}:Total)\n"
 			.format(done=self._success_n, errors=self._errors_n, total=self._total_n))
 
 		return cmd_proc.returncode
@@ -430,7 +427,7 @@ class BlasfeoTestset:
 		]
 
 		print("\n".join(summary_lines))
-		print("({done}:Succeded, {errors}:Errors) / ({total}:Total)"
+		print("({done}:Succeded, {errors}:Errors) / ({total}:Total)\n"
 			.format(done=self._success_n, errors=self._errors_n, total=self._total_n))
 		print("See blasfeo/tests/reports to inspect specific errors")
 

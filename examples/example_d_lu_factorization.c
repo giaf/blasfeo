@@ -52,9 +52,9 @@ int main()
 
 	printf("\nLA provided by REFERENCE\n\n");
 
-#elif defined(LA_BLAS)
+#elif defined(LA_EXTERNAL_BLAS_WRAPPER)
 
-	printf("\nLA provided by BLAS\n\n");
+	printf("\nLA provided by EXTERNAL_BLAS_WRAPPER\n\n");
 
 #else
 

@@ -335,9 +335,9 @@ int main()
 
 	printf("\nLA provided by BLASFEO\n\n");
 
-#elif defined(LA_BLAS)
+#elif defined(LA_EXTERNAL_BLAS_WRAPPER)
 
-	printf("\nLA provided by BLAS\n\n");
+	printf("\nLA provided by EXTERNAL_BLAS_WRAPPER\n\n");
 
 #else
 
@@ -448,10 +448,10 @@ int main()
 	blasfeo_pack_dmat(nx_, nx_, A, nx_, &sA, 0, 0);
 	struct blasfeo_dvec sb;
 	blasfeo_allocate_dvec(nx_, &sb);
-	blasfeo_pack_dvec(nx_, b, &sb, 0);
+	blasfeo_pack_dvec(nx_, b, 1, &sb, 0);
 	struct blasfeo_dvec sx0;
 	blasfeo_allocate_dvec(nx_, &sx0);
-	blasfeo_pack_dvec(nx_, x0, &sx0, 0);
+	blasfeo_pack_dvec(nx_, x0, 1, &sx0, 0);
 	struct blasfeo_dvec sb0;
 	blasfeo_allocate_dvec(nx_, &sb0);
 	double *b0; d_zeros(&b0, nx_, 1); // states offset
@@ -473,7 +473,7 @@ int main()
 
 	struct blasfeo_dvec sr0; // XXX no need to update r0 since S=0
 	blasfeo_allocate_dvec(nu_, &sr0);
-	blasfeo_pack_dvec(nu_, r, &sr0, 0);
+	blasfeo_pack_dvec(nu_, r, 1, &sr0, 0);
 
 	struct blasfeo_dmat sRr0;
 	blasfeo_allocate_dmat(nu_+1, nu_, &sRr0);
@@ -483,7 +483,7 @@ int main()
 
 	struct blasfeo_dvec srq1;
 	blasfeo_allocate_dvec(nu_+nx_, &srq1);
-	blasfeo_pack_dvec(nu_, r, &srq1, 0);
+	blasfeo_pack_dvec(nu_, r, 1, &srq1, 0);
 	blasfeo_pack_dvec(nx_, q, &srq1, nu_);
 
 	struct blasfeo_dmat sRSQrq1;
@@ -496,7 +496,7 @@ int main()
 
 	struct blasfeo_dvec sqN;
 	blasfeo_allocate_dvec(nx_, &sqN);
-	blasfeo_pack_dvec(nx_, q, &sqN, 0);
+	blasfeo_pack_dvec(nx_, q, 1, &sqN, 0);
 
 	struct blasfeo_dmat sQqN;
 	blasfeo_allocate_dmat(nx_+1, nx_, &sQqN);

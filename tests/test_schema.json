@@ -167,17 +167,31 @@
           "diag":["u","n"]
           },
         "routines": [
+          "trmm_llnn",
+          "trmm_llnu",
+          "trmm_lltn",
+          "trmm_lltu",
+          "trmm_lunn",
+          "trmm_lunu",
+          "trmm_lutn",
+          "trmm_lutu",
+          "trmm_rlnn",
+          "trmm_rlnu",
+          "trmm_rltn",
+          "trmm_rltu",
+          "trmm_runn",
+          "trmm_runu",
           "trmm_rutn",
-          "trmm_rlnn"
+          "trmm_rutu"
         ]
       }
     },
     "lapack": {
       "getrf_rowpivot": {
-        "testclass_src": "getrf_rowpivot.c",
+        "testclass_src": "getrf_rp.c",
         "flags":{},
         "routines": [
-          "getrf_rowpivot"
+          "getrf_rp"
         ]
       },
       "getrf_nopivot": {
@@ -208,6 +222,13 @@
         "routines": [
           "potrf_l",
           "potrf_u"
+        ]
+      },
+      "potrf_mn": {
+        "testclass_src": "potrf_mn.c",
+        "flags":{},
+        "routines": [
+          "potrf_l_mn"
         ]
       }    },
     "aux": {

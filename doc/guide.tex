@@ -219,11 +219,11 @@ The amount of memory referenced by the structure is computed using the {\tt blas
 \subsection{{\tt blasfeo\_dvec} packing}
 
 \begin{verbatim}
-void blasfeo_pack_dvec(int m, double *x, struct blasfeo_dvec *sx, int xi);
+void blasfeo_pack_dvec(int m, double *x, int incx, struct blasfeo_dvec *sy, int yi);
 \end{verbatim}
 
 \begin{verbatim}
-void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sx, int xi, double *x);
+void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sx, int xi, double *y, int incy);
 \end{verbatim}
 
 

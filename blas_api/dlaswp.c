@@ -39,16 +39,16 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_dlaswp dlaswp_
+#define blas_dlaswp dlaswp_
 #endif
 
 
 
-void blasfeo_dlaswp(int *pn, double *A, int *plda, int *pk1, int *pk2, int *ipiv, int *pincx)
+void blas_dlaswp(int *pn, double *A, int *plda, int *pk1, int *pk2, int *ipiv, int *pincx)
 	{
 
 #if defined(PRINT_NAME)
-	printf("\nblasfeo_dlaswp %d %p %d %d %d %p %d\n", *pn, A, *plda, *pk1, *pk2, ipiv, *pincx);
+	printf("\nblas_dlaswp %d %p %d %d %d %p %d\n", *pn, A, *plda, *pk1, *pk2, ipiv, *pincx);
 #endif
 
 	int n = *pn;

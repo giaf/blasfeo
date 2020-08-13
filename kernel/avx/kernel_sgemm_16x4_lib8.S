@@ -7064,7 +7064,8 @@ kernel_strmm_nn_rl_16x4_gen_lib8:
 
 
 
-#if defined(BLAS_API)
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
 
 #include "kernel_sgemm_16x4_lib.S"
 

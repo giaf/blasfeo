@@ -481,14 +481,6 @@ void dgemm_nn_24_24_24(double alpha, double *A, int sda, double *B, int sdb, dou
 int main()
 	{
 
-#if !defined(BENCHMARKS_MODE)
-	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n");
-	printf("On CMake use -DBLASFEO_BENCHMARKS=ON .\n\n");
-	return 0;
-#endif
-
-
-
 #if defined(EXTERNAL_BLAS_OPENBLAS)
 	openblas_set_num_threads(1);
 #endif
@@ -685,7 +677,7 @@ int main()
 		blasfeo_pack_dmat(n, n, A, n, &sA, 0, 0);
 		blasfeo_pack_dmat(n, n, B, n, &sB, 0, 0);
 		blasfeo_pack_dmat(n, n, B2, n, &sB2, 0, 0);
-		blasfeo_pack_dvec(n, x, &sx, 0);
+		blasfeo_pack_dvec(n, x, 1, &sx, 0);
 		int ii;
 
 		for(ii=0; ii<n; ii++)
@@ -777,11 +769,11 @@ int main()
 
 //				blasfeo_dgemm_nn(m0, n0, k0, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_nt(m0, n0, k0, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-				blasfeo_dgemm_tn(m0, n0, k0, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_dgemm_tn(m0, n0, k0, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_tt(m0, n0, k0, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 
 //				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-//				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_tn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_tt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
@@ -875,9 +867,9 @@ int main()
 //		float flop_operation = 1*16.0*2*n; // kernel 4x4
 //		float flop_operation = 0.5*16.0*2*n; // kernel 2x4
 
-		float flop_operation = 2.0*m0*n0*k0; // gemm
+//		float flop_operation = 2.0*m0*n0*k0; // gemm
 
-//		float flop_operation = 2.0*n*n*n; // gemm
+		float flop_operation = 2.0*n*n*n; // gemm
 //		float flop_operation = 1.0*n*n*n; // syrk trmm trsm
 //		float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
 //		float flop_operation = 2.0/3.0*n*n*n; // getrf

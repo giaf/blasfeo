@@ -48,15 +48,17 @@
 #include "../include/blasfeo_timing.h"
 
 // BLASFEO LA:REFERENCE routines
-#include "../include/blasfeo_s_blasfeo_api_ref.h"
+#include "../include/blasfeo_s_aux_ext_dep.h"
 #include "../include/blasfeo_s_aux_ref.h"
-#include "../include/blasfeo_s_aux_ext_dep_ref.h"
+#include "../include/blasfeo_s_blasfeo_ref_api.h"
 
 #include "../include/blasfeo_s_aux_test.h"
 #include "../include/s_blas.h"
 
 // Macros specific for Float type
 #define PRECISION Single
+#define SINGLE_PRECISION
+
 #define GECMP_LIBSTR sgecmp_libstr
 #define GECMP_BLASAPI sgecmp_blasapi
 #define REAL float
@@ -73,14 +75,13 @@
 #define PACK_STRMAT blasfeo_pack_smat
 #define PRINT_STRMAT blasfeo_print_smat
 
-#define PS S_PS
+#define STRMAT_REF blasfeo_smat
+#define STRVEC_REF blasfeo_svec
 
-#define STRMAT_REF blasfeo_smat_ref
-#define STRVEC_REF blasfeo_svec_ref
+#define ALLOCATE_STRMAT_REF blasfeo_allocate_smat
+#define FREE_STRMAT_REF blasfeo_free_smat
 
-#define ALLOCATE_STRMAT_REF blasfeo_allocate_smat_ref
-#define FREE_STRMAT_REF blasfeo_free_smat_ref
-#define GESE_REF blasfeo_sgese_ref
-#define GECP_REF blasfeo_sgecp_ref
-#define PACK_STRMAT_REF blasfeo_pack_smat_ref
-#define PRINT_STRMAT_REF blasfeo_print_smat_ref
+#define GESE_REF blasfeo_ref_sgese
+#define GECP_REF blasfeo_ref_sgecp
+#define PACK_STRMAT_REF blasfeo_ref_pack_smat
+#define PRINT_STRMAT_REF blasfeo_ref_print_smat

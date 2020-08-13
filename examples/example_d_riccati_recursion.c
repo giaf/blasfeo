@@ -40,11 +40,21 @@
 
 #include <blasfeo.h>
 
+
+
 #ifdef EXTERNAL_BLAS_MKL
 #include <mkl.h>
 #endif
 #ifdef EXTERNAL_BLAS_OPENBLAS
 #include <d_blas.h>
+#endif
+
+
+
+#if ( defined(EXTERNAL_BLAS_SYSTEM) | defined(EXTERNAL_BLAS_MKL) | defined(EXTERNAL_BLAS_OPENBLAS) | defined(EXTERNAL_BLAS_NETLIB) | defined(EXTERNAL_BLAS_BLIS) | defined(EXTERNAL_BLAS_ATLAS) )
+#define EXTERNAL_BLAS 1
+#else
+#define EXTERNAL_BLAS 0
 #endif
 
 
@@ -71,8 +81,8 @@ static void d_back_ric_sv_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *h
 #if 1
 		blasfeo_dsyrk_dpotrf_ln_mn(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #else
-		blasfeo_dsyrk_ln(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
-		blasfeo_dpotrf_l(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
+		blasfeo_dsyrk_ln_mn(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
+		blasfeo_dpotrf_l_mn(nu[N-nn-1]+nx[N-nn-1]+1, nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #endif
 		}
 
@@ -125,7 +135,7 @@ static void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *
 		{
 		blasfeo_dtrmm_rlnn(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hsL[N-nn], nu[N-nn], nu[N-nn], &hsBAbt[N-nn-1], 0, 0, &hswork_mat[0], 0, 0);
 #if 1
-		blasfeo_dsyrk_dpotrf_ln_mn(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
+		blasfeo_dsyrk_dpotrf_ln(nu[N-nn-1]+nx[N-nn-1], nx[N-nn], &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 #else
 		blasfeo_dsyrk_ln(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], nx[N-nn], 1.0, &hswork_mat[0], 0, 0, &hswork_mat[0], 0, 0, 1.0, &hsRSQrq[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
 		blasfeo_dpotrf_l(nu[N-nn-1]+nx[N-nn-1], nu[N-nn-1]+nx[N-nn-1], &hsL[N-nn-1], 0, 0, &hsL[N-nn-1], 0, 0);
@@ -480,26 +490,44 @@ int main()
 
 	printf("\nExample of Riccati recursion factorization and backsolve\n\n");
 
+	// check Linear Algebra backend
 #if defined(LA_HIGH_PERFORMANCE)
 
-	printf("\nLA provided by BLASFEO\n\n");
-
-#elif defined(LA_BLAS)
-
-	printf("\nLA provided by BLAS\n\n");
+	printf("\nLA provided by HIGH_PERFORMANCE\n");
 
 #elif defined(LA_REFERENCE)
 
-	printf("\nLA provided by REFERENCE\n\n");
+	printf("\nLA provided by REFERENCE\n");
+
+#elif defined(LA_EXTERNAL_BLAS_WRAPPER)
+
+	printf("\nLA provided by EXTERNAL_BLAS_WRAPPER\n");
 
 #else
 
-	printf("\nLA provided by ???\n\n");
+	printf("\nLA provided by ???\n");
 	exit(2);
 
 #endif
 
-	printf( "Testing processor\n" );
+	// check Matrix Format
+#if defined(MF_PANELMAJ)
+
+	printf("\nMF provided by PANELMAJ\n");
+
+#elif defined(MF_COLMAJ)
+
+	printf("\nMF provided by COLMAJ\n");
+
+#else
+
+	printf("\nMF provided by ???\n");
+	exit(2);
+
+#endif
+
+	// check processor
+	printf( "\nTesting processor\n" );
 
 	char supportString[50];
 	blasfeo_processor_library_string( supportString );
@@ -618,10 +646,10 @@ int main()
 	blasfeo_pack_dmat(nx_, nx_, A, nx_, &sA, 0, 0);
 	struct blasfeo_dvec sb;
 	blasfeo_allocate_dvec(nx_, &sb);
-	blasfeo_pack_dvec(nx_, b, &sb, 0);
+	blasfeo_pack_dvec(nx_, b, 1, &sb, 0);
 	struct blasfeo_dvec sx0;
 	blasfeo_allocate_dvec(nx_, &sx0);
-	blasfeo_pack_dvec(nx_, x0, &sx0, 0);
+	blasfeo_pack_dvec(nx_, x0, 1, &sx0, 0);
 	struct blasfeo_dvec sb0;
 	blasfeo_allocate_dvec(nx_, &sb0);
 	blasfeo_dgemv_n(nx_, nx_, 1.0, &sA, 0, 0, &sx0, 0, 1.0, &sb, 0, &sb0, 0);
@@ -651,7 +679,7 @@ int main()
 
 	struct blasfeo_dvec sr0; // XXX no need to update r0 since S=0
 	blasfeo_allocate_dvec(nu_, &sr0);
-	blasfeo_pack_dvec(nu_, r, &sr0, 0);
+	blasfeo_pack_dvec(nu_, r, 1, &sr0, 0);
 
 	struct blasfeo_dmat sRr0;
 	blasfeo_allocate_dmat(nu_+1, nu_, &sRr0);
@@ -664,8 +692,8 @@ int main()
 
 	struct blasfeo_dvec srq1;
 	blasfeo_allocate_dvec(nu_+nx_, &srq1);
-	blasfeo_pack_dvec(nu_, r, &srq1, 0);
-	blasfeo_pack_dvec(nx_, q, &srq1, nu_);
+	blasfeo_pack_dvec(nu_, r, 1, &srq1, 0);
+	blasfeo_pack_dvec(nx_, q, 1, &srq1, nu_);
 
 	struct blasfeo_dmat sRSQrq1;
 	blasfeo_allocate_dmat(nu_+nx_+1, nu_+nx_, &sRSQrq1);
@@ -680,7 +708,7 @@ int main()
 
 	struct blasfeo_dvec sqN;
 	blasfeo_allocate_dvec(nx_, &sqN);
-	blasfeo_pack_dvec(nx_, q, &sqN, 0);
+	blasfeo_pack_dvec(nx_, q, 1, &sqN, 0);
 
 	struct blasfeo_dmat sQqN;
 	blasfeo_allocate_dmat(nx_+1, nx_, &sQqN);
@@ -756,7 +784,7 @@ int main()
 #endif
 
 	double *b0 = malloc(nx_*sizeof(double));
-	blasfeo_unpack_dvec(nx_, &sb0, 0, b0);
+	blasfeo_unpack_dvec(nx_, &sb0, 0, b0, 1);
 #ifdef PRINT_DATA
 	printf("b0:\n");
 	d_print_exp_mat(1, nx_, b0, 1);
@@ -770,7 +798,7 @@ int main()
 #endif
 
 	double *b1 = malloc(nx_*sizeof(double));
-	blasfeo_unpack_dvec(nx_, &sb, 0, b1);
+	blasfeo_unpack_dvec(nx_, &sb, 0, b1, 1);
 #ifdef PRINT_DATA
 	printf("b1:\n");
 	d_print_exp_mat(1, nx_, b1, 1);
@@ -784,7 +812,7 @@ int main()
 #endif
 
 	double *r0 = malloc(nu_*sizeof(double));
-	blasfeo_unpack_dvec(nu_, &sr0, 0, r0);
+	blasfeo_unpack_dvec(nu_, &sr0, 0, r0, 1);
 #ifdef PRINT_DATA
 	printf("r0:\n");
 	d_print_exp_mat(1, nu_, r0, 1);
@@ -798,7 +826,7 @@ int main()
 #endif
 
 	double *rq1 = malloc((nu_+nx_)*sizeof(double));
-	blasfeo_unpack_dvec(nu_+nx_, &srq1, 0, rq1);
+	blasfeo_unpack_dvec(nu_+nx_, &srq1, 0, rq1, 1);
 #ifdef PRINT_DATA
 	printf("rq1:\n");
 	d_print_exp_mat(1, nu_+nx_, rq1, 1);
@@ -812,7 +840,7 @@ int main()
 #endif
 
 	double *qN = malloc((nx_)*sizeof(double));
-	blasfeo_unpack_dvec(nx_, &sqN, 0, qN);
+	blasfeo_unpack_dvec(nx_, &sqN, 0, qN, 1);
 #ifdef PRINT_DATA
 	printf("qN:\n");
 	d_print_exp_mat(1, nx_, qN, 1);

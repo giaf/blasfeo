@@ -1383,7 +1383,8 @@ kernel_dtrsm_nt_rl_inv_4x4_vs_lib4:
 
 
 
-#if defined(BLAS_API)
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
 
 #include "kernel_dgemm_4x4_lib.S"
 

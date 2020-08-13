@@ -98,7 +98,7 @@ elseif(${EXTERNAL_BLAS} MATCHES 0)
 
 else()
 	message(FATAL_ERROR
-		"\nBENCHMARKS_MODE: No reference blas selected"
+		"\nNo reference blas selected"
 		"\nUse i.e. -DEXTERNAL_BLAS=OPENBLAS or -DEXTERNAL_BLAS=0 to disable the comparison")
 
 endif()

@@ -74,6 +74,7 @@ void strsm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, fl
 
 // LAPACK
 //
+void spotrf_(char *uplo, int *m, float *A, int *lda, int *info);
 
 
 
@@ -83,20 +84,21 @@ void strsm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, fl
 
 // BLAS 1
 //
-void blasfeo_saxpy_blas(int *n, float *alpha, float *x, int *incx, float *y, int *incy);
+void blas_saxpy(int *n, float *alpha, float *x, int *incx, float *y, int *incy);
 //
-float blasfeo_sdot_blas(int *n, float *x, int *incx, float *y, int *incy);
+float blas_sdot(int *n, float *x, int *incx, float *y, int *incy);
 
 // BLAS 3
 //
-void blasfeo_sgemm(char *ta, char *tb, int *m, int *n, int *k, float *alpha, float *A, int *lda, float *B, int *ldb, float *beta, float *C, int *ldc);
+void blas_sgemm(char *ta, char *tb, int *m, int *n, int *k, float *alpha, float *A, int *lda, float *B, int *ldb, float *beta, float *C, int *ldc);
 //
-void blasfeo_strsm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, float *alpha, float *A, int *lda, float *B, int *ldb);
+void blas_strsm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, float *alpha, float *A, int *lda, float *B, int *ldb);
 
 
 
 // LAPACK
 //
+void blas_spotrf(char *uplo, int *m, float *A, int *lda, int *info);
 
 
 

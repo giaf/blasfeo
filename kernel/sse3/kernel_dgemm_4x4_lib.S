@@ -325,6 +325,106 @@
 
 // common inner routine with file scope
 //
+// scale for alpha=1 and generic beta
+//
+// input arguments:
+// r10   <- beta
+// r11   <- C
+// r12   <- ldc
+// xmm0  <- [d00 d10]
+// xmm1  <- [d20 d30]
+// xmm2  <- [d01 d11]
+// xmm3  <- [d21 d31]
+// xmm0  <- [d02 d12]
+// xmm1  <- [d22 d32]
+// xmm2  <- [d03 d13]
+// xmm3  <- [d23 d33]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_BLEND_SCALE_M1B_4X4_LIB
+#else
+	.p2align 4,,15
+	FUN_START(inner_blend_scale_m1b_4x4_lib)
+#endif
+
+	movapd	%xmm0, %xmm8
+	movsd	%xmm1, %xmm0
+	movsd	%xmm8, %xmm1
+
+	movapd	%xmm2, %xmm8
+	movsd	%xmm3, %xmm2
+	movsd	%xmm8, %xmm3
+
+	movapd	%xmm4, %xmm8
+	movsd	%xmm5, %xmm4
+	movsd	%xmm8, %xmm5
+
+	movapd	%xmm6, %xmm8
+	movsd	%xmm7, %xmm6
+	movsd	%xmm8, %xmm7
+
+	// beta
+	movddup	0(%r10), %xmm14
+
+	xorpd		%xmm15, %xmm15 // 0.0
+	ucomisd		%xmm15, %xmm14 // beta==0.0 ?
+	je			0f // end
+
+	movupd		0(%r11), %xmm15
+	mulpd		%xmm14, %xmm15
+	subpd		%xmm0, %xmm15
+	movapd		%xmm15, %xmm0
+	movupd		16(%r11), %xmm15
+	mulpd		%xmm14, %xmm15
+	subpd		%xmm4, %xmm15
+	movapd		%xmm15, %xmm4
+	addq		%r12, %r11
+	movupd		0(%r11), %xmm15
+	mulpd		%xmm14, %xmm15
+	subpd		%xmm1, %xmm15
+	movapd		%xmm15, %xmm1
+	movupd		16(%r11), %xmm15
+	mulpd		%xmm14, %xmm15
+	subpd		%xmm5, %xmm15
+	movapd		%xmm15, %xmm5
+	addq		%r12, %r11
+	movupd		0(%r11), %xmm15
+	mulpd		%xmm14, %xmm15
+	subpd		%xmm2, %xmm15
+	movapd		%xmm15, %xmm2
+	movupd		16(%r11), %xmm15
+	mulpd		%xmm14, %xmm15
+	subpd		%xmm6, %xmm15
+	movapd		%xmm15, %xmm6
+	addq		%r12, %r11
+	movupd		0(%r11), %xmm15
+	mulpd		%xmm14, %xmm15
+	subpd		%xmm3, %xmm15
+	movapd		%xmm15, %xmm3
+	movupd		16(%r11), %xmm15
+	mulpd		%xmm14, %xmm15
+	subpd		%xmm7, %xmm15
+	movapd		%xmm15, %xmm7
+//	addq		%r12, %r11
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_blend_scale_m1b_4x4_lib)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // store n
 //
 // input arguments:
@@ -437,8 +537,8 @@
 
 
 
-//                                         1      2          3          4         5        6          7        8          9        10
-// void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int k, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
+//                                          1      2          3          4         5        6          7        8          9        10             11
+// void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int k, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_dtrsm_nt_rl_inv_4x4_lib44ccc)
@@ -466,23 +566,24 @@
 
 	// call inner blender_loader nn
 
-	movq	ARG4, %r10 // C
-	movq	ARG5, %r11 // ldc
-	sall	$3, %r11d
+	movq	ARG4, %r10 // beta
+	movq	ARG5, %r11 // C
+	movq	ARG6, %r12 // ldc
+	sall	$3, %r12d
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_SCALE_M11_4X4_LIB
+	INNER_BLEND_SCALE_M1B_4X4_LIB
 #else
-	CALL(inner_blend_scale_m11_4x4_lib)
+	CALL(inner_blend_scale_m1b_4x4_lib)
 #endif
 
 
 	// solve
 
-	movq	ARG8, %r10  // E 
-	movq	ARG9, %r11 // lde
+	movq	ARG9, %r10  // E 
+	movq	ARG10, %r11 // lde
 	sall	$3, %r11d
-	movq	ARG10, %r12  // inv_diag_E 
+	movq	ARG11, %r12  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_INV_4X4_LIB
@@ -493,8 +594,8 @@
 
 	// store
 
-	movq	ARG6, %r10 // D
-	movq	ARG7, %r11 // ldd
+	movq	ARG7, %r10 // D
+	movq	ARG8, %r11 // ldd
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1

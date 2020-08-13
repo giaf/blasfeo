@@ -37,38 +37,38 @@
 #include <stdio.h>
 
 
-#include "../include/blasfeo_target.h"
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_d_kernel.h"
-#include "../include/blasfeo_d_blas.h"
+#include <blasfeo_target.h>
+#include <blasfeo_common.h>
+#include <blasfeo_d_aux.h>
+#include <blasfeo_d_kernel.h>
+#include <blasfeo_d_blas.h>
 
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_dgesv dgesv_
-#define blasfeo_dgetrf dgetrf_
-#define blasfeo_dgetrs dgetrs_
+#define blas_dgesv dgesv_
+#define blas_dgetrf dgetrf_
+#define blas_dgetrs dgetrs_
 #endif
 
 
 
-void blasfeo_dgesv(int *pm, int *pn, double *A, int *plda, int *ipiv, double *B, int *pldb, int *info)
+void blas_dgesv(int *pm, int *pn, double *A, int *plda, int *ipiv, double *B, int *pldb, int *info)
 	{
 
 #if defined(PRINT_NAME)
-	printf("\nblasfeo_dgesv %d %d %p %d %p %p %d %d\n", *pm, *pn, A, *plda, ipiv, B, *pldb, *info);
+	printf("\nblas_dgesv %d %d %p %d %p %p %d %d\n", *pm, *pn, A, *plda, ipiv, B, *pldb, *info);
 #endif
 
 	char c_n = 'n';
 
 	*info = 0;
 
-	blasfeo_dgetrf(pm, pm, A, plda, ipiv, info);
+	blas_dgetrf(pm, pm, A, plda, ipiv, info);
 
 	if(*info==0)
 		{
-		blasfeo_dgetrs(&c_n, pm, pn, A, plda, ipiv, B, pldb, info);
+		blas_dgetrs(&c_n, pm, pn, A, plda, ipiv, B, pldb, info);
 		}
 
 	return;

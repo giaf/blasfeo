@@ -6,9 +6,6 @@ include $(BLASFEO_PATH)/Makefile.rule
 LIBS =
 SHARED_LIBS =
 
-LIBS += $(ABS_BINARY_PATH)/libblasfeo_ref.a
-SHARED_LIBS += -Wl,-rpath=$(ABS_BINARY_PATH) -L $(ABS_BINARY_PATH) -lblasfeo_ref
-
 LIBS += $(ABS_BINARY_PATH)/libblasfeo.a
 SHARED_LIBS += -Wl,-rpath=$(ABS_BINARY_PATH) -L $(ABS_BINARY_PATH) -lblasfeo
 

@@ -41,16 +41,28 @@
 
 
 
+#if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+#define GEMM_NN blasfeo_cm_sgemm_nn
+#define GEMM_NT blasfeo_cm_sgemm_nt
+#define GEMM_TN blasfeo_cm_sgemm_tn
+#define GEMM_TT blasfeo_cm_sgemm_tt
+#define MAT blasfeo_cm_smat
+#else
 #define GEMM_NN blasfeo_sgemm_nn
 #define GEMM_NT blasfeo_sgemm_nt
 #define GEMM_TN blasfeo_sgemm_tn
 #define GEMM_TT blasfeo_sgemm_tt
 #define MAT blasfeo_smat
+#endif
 #define REAL float
 
 
 
-#define GEMM blasfeo_sgemm
+#if defined(FORTRAN_BLAS_API)
+#define GEMM sgemm_
+#else
+#define GEMM blas_sgemm
+#endif
 
 
 

@@ -96,12 +96,16 @@ NAME:
 	vmovaps	%ymm0, %ymm5; \
 	vmovaps	%ymm0, %ymm6; \
 	vmovaps	%ymm0, %ymm7
-//#define NEG_ACC \
-//	vmovapd		.LC11(%rip), %ymm15; \
-//	vxorpd		%ymm15, %ymm0, %ymm0; \
-//	vxorpd		%ymm15, %ymm1, %ymm1; \
-//	vxorpd		%ymm15, %ymm2, %ymm2; \
-//	vxorpd		%ymm15, %ymm3, %ymm3
+#define NEG_ACC \
+	vmovaps		.LC04(%rip), %ymm15; \
+	vxorps		%ymm15, %ymm0, %ymm0; \
+	vxorps		%ymm15, %ymm1, %ymm1; \
+	vxorps		%ymm15, %ymm2, %ymm2; \
+	vxorps		%ymm15, %ymm2, %ymm3; \
+	vxorps		%ymm15, %ymm2, %ymm4; \
+	vxorps		%ymm15, %ymm2, %ymm5; \
+	vxorps		%ymm15, %ymm2, %ymm6; \
+	vxorps		%ymm15, %ymm3, %ymm7
 
 #else // defined(OS_MAC)
 
@@ -122,12 +126,16 @@ _ ## NAME:
 	vmovaps	%ymm0, %ymm5; \
 	vmovaps	%ymm0, %ymm6; \
 	vmovaps	%ymm0, %ymm7
-//#define NEG_ACC \
-//	vmovapd		LC11(%rip), %ymm15; \
-//	vxorpd		%ymm15, %ymm0, %ymm0; \
-//	vxorpd		%ymm15, %ymm1, %ymm1; \
-//	vxorpd		%ymm15, %ymm2, %ymm2; \
-//	vxorpd		%ymm15, %ymm3, %ymm3
+#define NEG_ACC \
+	vmovaps		LC04(%rip), %ymm15; \
+	vxorps		%ymm15, %ymm0, %ymm0; \
+	vxorps		%ymm15, %ymm1, %ymm1; \
+	vxorps		%ymm15, %ymm2, %ymm2; \
+	vxorps		%ymm15, %ymm2, %ymm3; \
+	vxorps		%ymm15, %ymm2, %ymm4; \
+	vxorps		%ymm15, %ymm2, %ymm5; \
+	vxorps		%ymm15, %ymm2, %ymm6; \
+	vxorps		%ymm15, %ymm3, %ymm7
 
 #endif
 
@@ -214,12 +222,16 @@ NAME:
 	vmovaps	%ymm0, %ymm5; \
 	vmovaps	%ymm0, %ymm6; \
 	vmovaps	%ymm0, %ymm7
-//#define NEG_ACC \
-//	vmovapd		.LC11(%rip), %ymm15; \
-//	vxorpd		%ymm15, %ymm0, %ymm0; \
-//	vxorpd		%ymm15, %ymm1, %ymm1; \
-//	vxorpd		%ymm15, %ymm2, %ymm2; \
-//	vxorpd		%ymm15, %ymm3, %ymm3
+#define NEG_ACC \
+	vmovaps		.LC04(%rip), %ymm15; \
+	vxorps		%ymm15, %ymm0, %ymm0; \
+	vxorps		%ymm15, %ymm1, %ymm1; \
+	vxorps		%ymm15, %ymm2, %ymm2; \
+	vxorps		%ymm15, %ymm2, %ymm3; \
+	vxorps		%ymm15, %ymm2, %ymm4; \
+	vxorps		%ymm15, %ymm2, %ymm5; \
+	vxorps		%ymm15, %ymm2, %ymm6; \
+	vxorps		%ymm15, %ymm3, %ymm7
 
 #else
 
@@ -739,201 +751,6 @@ NAME:
 // common inner routine with file scope
 //
 // input arguments:
-// r10d   <- k
-// r11   <- A
-// r12   <- B
-// ymm0  <- [d00 d11 d22 d33 d40 d51 d62 d73]
-// ymm1  <- [d01 d10 d23 d32 d41 d50 d63 d72]
-// ymm2  <- [d03 d12 d21 d30 d43 d52 d61 d70]
-// ymm3  <- [d02 d13 d20 d31 d42 d53 d60 d71]
-// ymm4  <- []
-// ymm5  <- []
-// ymm6  <- []
-// ymm7  <- []
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm12 <- dirty
-// ymm13 <- dirty
-// ymm14 <- dirty
-// ymm15 <- dirty
-
-//
-// output arguments:
-// r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- B+4*k*sizeof(double)
-// ymm0  <- [d00 d11 d22 d33 d40 d51 d62 d73]
-// ymm1  <- [d01 d10 d23 d32 d41 d50 d63 d72]
-// ymm2  <- [d03 d12 d21 d30 d43 d52 d61 d70]
-// ymm3  <- [d02 d13 d20 d31 d42 d53 d60 d71]
-// ymm4  <- []
-// ymm5  <- []
-// ymm6  <- []
-// ymm7  <- []
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm12 <- dirty
-// ymm13 <- dirty
-// ymm14 <- dirty
-// ymm15 <- dirty
-
-#if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_SUB_NT_8X8_LIB8
-#else
-	.p2align 4,,15
-	FUN_START(inner_kernel_gemm_sub_nt_8x8_lib8)
-#endif
-	
-	cmpl	$0, %r10d
-	jle		2f // return
-
-	// preload
-
-	cmpl	$3, %r10d
-	jle		4f // consider clean-up loop
-
-	// main loop
-	.p2align 3
-1: // main loop
-	
-	// unroll 0
-	vmovaps			0(%r11), %ymm13 // A
-	vbroadcastss	0(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm0
-	vbroadcastss	4(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm1
-	vbroadcastss	8(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm2
-	vbroadcastss	12(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm3
-	vbroadcastss	16(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm4
-	vbroadcastss	20(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm5
-	vbroadcastss	24(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm6
-	vbroadcastss	28(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm7
-	subl	$4, %r10d
-
-	// unroll 0
-	vmovaps			32(%r11), %ymm13 // A
-	vbroadcastss	32(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm0
-	vbroadcastss	36(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm1
-	vbroadcastss	40(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm2
-	vbroadcastss	44(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm3
-	vbroadcastss	48(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm4
-	vbroadcastss	52(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm5
-	vbroadcastss	56(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm6
-	vbroadcastss	60(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm7
-	addq	$128, %r11
-
-	// unroll 0
-	vmovaps			-64(%r11), %ymm13 // A
-	vbroadcastss	64(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm0
-	vbroadcastss	68(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm1
-	vbroadcastss	72(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm2
-	vbroadcastss	76(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm3
-	vbroadcastss	80(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm4
-	vbroadcastss	84(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm5
-	vbroadcastss	88(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm6
-	vbroadcastss	92(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm7
-	addq	$128, %r12
-
-	// unroll 0
-	vmovaps			-32(%r11), %ymm13 // A
-	vbroadcastss	-32(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm0
-	vbroadcastss	-28(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm1
-	vbroadcastss	-24(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm2
-	vbroadcastss	-20(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm3
-	vbroadcastss	-16(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm4
-	vbroadcastss	-12(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm5
-	vbroadcastss	-8(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm6
-	vbroadcastss	-4(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm7
-
-	cmpl	$4, %r10d
-	jg		1b // main loop 
-
-
-4: // consider clean1-up loop
-
-	cmpl	$0, %r10d
-	jle		2f // return
-
-	// clean-up loop
-3: // clean up loop
-	
-	// unroll 0
-	vmovaps			0(%r11), %ymm13 // a
-	vbroadcastss	0(%r12), %ymm12 // b
-	vfnmadd231ps	%ymm13, %ymm12, %ymm0
-	vbroadcastss	4(%r12), %ymm12 // b
-	vfnmadd231ps	%ymm13, %ymm12, %ymm1
-	subl	$1, %r10d
-	vbroadcastss	8(%r12), %ymm12 // b
-	vfnmadd231ps	%ymm13, %ymm12, %ymm2
-	addq	$32, %r11
-	vbroadcastss	12(%r12), %ymm12 // b
-	vfnmadd231ps	%ymm13, %ymm12, %ymm3
-	vbroadcastss	16(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm4
-	vbroadcastss	20(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm5
-	vbroadcastss	24(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm6
-	vbroadcastss	28(%r12), %ymm12 // B
-	vfnmadd231ps	%ymm13, %ymm12, %ymm7
-	addq	$32, %r12
-
-	cmpl	$0, %r10d
-	jg		3b // clean up loop 
-
-
-2: // return
-
-#if MACRO_LEVEL>=2
-	.endm
-#else
-	ret
-
-	FUN_END(inner_kernel_gemm_sub_nt_8x8_lib8)
-#endif
-
-
-
-
-
-// common inner routine with file scope
-//
-// input arguments:
 // r10d  <- k
 // r11   <- A
 // r12   <- B
@@ -1260,6 +1077,7 @@ NAME:
 	sall			$2, %eax // offsetB*sizeof(float)
 	addq			%rax, %r12 // B+offsetB*sizeof(float)
 
+1:
 	// unroll 0
 	vmovaps			0(%r11), %ymm12 // A[0]
 	vbroadcastss	0(%r12), %ymm13 // B[0]
@@ -2056,6 +1874,91 @@ NAME:
 	ret
 
 	FUN_END(inner_scale_11_8x8_lib8)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// blend for generic alpha=1.0 and beta=1.0
+//
+// input arguments:
+// r10   <- C
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm4 <- []
+// ymm5 <- []
+// ymm6 <- []
+// ymm7 <- []
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+//
+// output arguments:
+// r10   <- C
+// ymm0 <- []
+// ymm1 <- []
+// ymm2 <- []
+// ymm3 <- []
+// ymm4 <- []
+// ymm5 <- []
+// ymm6 <- []
+// ymm7 <- []
+// ymm8  <- dirty
+// ymm9  <- dirty
+// ymm10 <- dirty
+// ymm11 <- dirty
+// ymm15 <- dirty
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_M11_8X8_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_scale_m11_8x8_lib8)
+#endif
+	
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovaps		.LC03(%rip), %ymm14 // beta=1.0
+#else
+	vmovaps		LC03(%rip), %ymm14 // beta=1.0
+#endif
+
+	vmovaps		0(%r10), %ymm15
+	vfmsub231ps	%ymm14, %ymm15, %ymm0
+
+	vmovaps		32(%r10), %ymm15
+	vfmsub231ps	%ymm14, %ymm15, %ymm1
+
+	vmovaps		64(%r10), %ymm15
+	vfmsub231ps	%ymm14, %ymm15, %ymm2
+
+	vmovaps		96(%r10), %ymm15
+	vfmsub231ps	%ymm14, %ymm15, %ymm3
+
+	vmovaps		128(%r10), %ymm15
+	vfmsub231ps	%ymm14, %ymm15, %ymm4
+
+	vmovaps		160(%r10), %ymm15
+	vfmsub231ps	%ymm14, %ymm15, %ymm5
+
+	vmovaps		192(%r10), %ymm15
+	vfmsub231ps	%ymm14, %ymm15, %ymm6
+
+	vmovaps		224(%r10), %ymm15
+	vfmsub231ps	%ymm14, %ymm15, %ymm7
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_scale_m11_8x8_lib8)
 #endif
 
 
@@ -3237,7 +3140,7 @@ NAME:
 #else
 	ret
 
-	FUN_END(inner_store_8x8_vs_lib8)
+	FUN_END(inner_store_l_8x8_vs_lib8)
 #endif
 
 
@@ -3449,7 +3352,7 @@ NAME:
 #else
 	ret
 
-	FUN_END(inner_store_8x8_gen_lib8)
+	FUN_END(inner_store_l_8x8_gen_lib8)
 #endif
 
 
@@ -3466,14 +3369,7 @@ NAME:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovaps	%ymm0, %ymm1
-	vmovaps	%ymm0, %ymm2
-	vmovaps	%ymm0, %ymm3
-	vmovaps	%ymm0, %ymm4
-	vmovaps	%ymm0, %ymm5
-	vmovaps	%ymm0, %ymm6
-	vmovaps	%ymm0, %ymm7
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt
@@ -3533,14 +3429,7 @@ NAME:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovaps	%ymm0, %ymm1
-	vmovaps	%ymm0, %ymm2
-	vmovaps	%ymm0, %ymm3
-	vmovaps	%ymm0, %ymm4
-	vmovaps	%ymm0, %ymm5
-	vmovaps	%ymm0, %ymm6
-	vmovaps	%ymm0, %ymm7
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt
@@ -3602,14 +3491,7 @@ NAME:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovaps	%ymm0, %ymm1
-	vmovaps	%ymm0, %ymm2
-	vmovaps	%ymm0, %ymm3
-	vmovaps	%ymm0, %ymm4
-	vmovaps	%ymm0, %ymm5
-	vmovaps	%ymm0, %ymm6
-	vmovaps	%ymm0, %ymm7
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt
@@ -3898,14 +3780,7 @@ NAME:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovaps	%ymm0, %ymm1
-	vmovaps	%ymm0, %ymm2
-	vmovaps	%ymm0, %ymm3
-	vmovaps	%ymm0, %ymm4
-	vmovaps	%ymm0, %ymm5
-	vmovaps	%ymm0, %ymm6
-	vmovaps	%ymm0, %ymm7
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt
@@ -3965,14 +3840,7 @@ NAME:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovaps	%ymm0, %ymm1
-	vmovaps	%ymm0, %ymm2
-	vmovaps	%ymm0, %ymm3
-	vmovaps	%ymm0, %ymm4
-	vmovaps	%ymm0, %ymm5
-	vmovaps	%ymm0, %ymm6
-	vmovaps	%ymm0, %ymm7
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt
@@ -4034,14 +3902,7 @@ NAME:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovaps	%ymm0, %ymm1
-	vmovaps	%ymm0, %ymm2
-	vmovaps	%ymm0, %ymm3
-	vmovaps	%ymm0, %ymm4
-	vmovaps	%ymm0, %ymm5
-	vmovaps	%ymm0, %ymm6
-	vmovaps	%ymm0, %ymm7
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt 
@@ -4051,9 +3912,9 @@ NAME:
 	movq	ARG3, %r12
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_8X8_LIB8
+	INNER_KERNEL_GEMM_ADD_NT_8X8_LIB8
 #else
-	CALL(inner_kernel_gemm_sub_nt_8x8_lib8)
+	CALL(inner_kernel_gemm_add_nt_8x8_lib8)
 #endif
 
 
@@ -4062,9 +3923,9 @@ NAME:
 	movq	ARG4, %r10
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_8X8_LIB8
+	INNER_SCALE_M11_8X8_LIB8
 #else
-	CALL(inner_scale_11_8x8_lib8)
+	CALL(inner_scale_m11_8x8_lib8)
 #endif
 
 
@@ -4112,14 +3973,7 @@ NAME:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovaps	%ymm0, %ymm1
-	vmovaps	%ymm0, %ymm2
-	vmovaps	%ymm0, %ymm3
-	vmovaps	%ymm0, %ymm4
-	vmovaps	%ymm0, %ymm5
-	vmovaps	%ymm0, %ymm6
-	vmovaps	%ymm0, %ymm7
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt 
@@ -4129,9 +3983,9 @@ NAME:
 	movq	ARG3, %r12
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_8X8_LIB8
+	INNER_KERNEL_GEMM_ADD_NT_8X8_LIB8
 #else
-	CALL(inner_kernel_gemm_sub_nt_8x8_lib8)
+	CALL(inner_kernel_gemm_add_nt_8x8_lib8)
 #endif
 
 
@@ -4140,9 +3994,9 @@ NAME:
 	movq	ARG4, %r10 // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_8X8_LIB8
+	INNER_SCALE_M11_8X8_LIB8
 #else
-	CALL(inner_scale_11_8x8_lib8)
+	CALL(inner_scale_m11_8x8_lib8)
 #endif
 
 
@@ -4192,14 +4046,7 @@ NAME:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovaps	%ymm0, %ymm1
-	vmovaps	%ymm0, %ymm2
-	vmovaps	%ymm0, %ymm3
-	vmovaps	%ymm0, %ymm4
-	vmovaps	%ymm0, %ymm5
-	vmovaps	%ymm0, %ymm6
-	vmovaps	%ymm0, %ymm7
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt add
@@ -4215,6 +4062,11 @@ NAME:
 #endif
 
 
+	// change sign
+
+	NEG_ACC
+
+
 	// call inner dgemm kernel nt sub
 
 	movq	ARG4, %r10 // km
@@ -4222,9 +4074,9 @@ NAME:
 	movq	ARG6, %r12   // Bm
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_8X8_LIB8
+	INNER_KERNEL_GEMM_ADD_NT_8X8_LIB8
 #else
-	CALL(inner_kernel_gemm_sub_nt_8x8_lib8)
+	CALL(inner_kernel_gemm_add_nt_8x8_lib8)
 #endif
 
 
@@ -4233,9 +4085,9 @@ NAME:
 	movq	ARG7, %r10   // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_8X8_LIB8
+	INNER_SCALE_M11_8X8_LIB8
 #else
-	CALL(inner_scale_11_8x8_lib8)
+	CALL(inner_scale_m11_8x8_lib8)
 #endif
 
 
@@ -4283,14 +4135,7 @@ NAME:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovaps	%ymm0, %ymm1
-	vmovaps	%ymm0, %ymm2
-	vmovaps	%ymm0, %ymm3
-	vmovaps	%ymm0, %ymm4
-	vmovaps	%ymm0, %ymm5
-	vmovaps	%ymm0, %ymm6
-	vmovaps	%ymm0, %ymm7
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt add
@@ -4306,6 +4151,11 @@ NAME:
 #endif
 
 
+	// change sign
+
+	NEG_ACC
+
+
 	// call inner dgemm kernel nt sub
 
 	movq	ARG4, %r10 // km
@@ -4313,9 +4163,9 @@ NAME:
 	movq	ARG6, %r12   // Bm
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_8X8_LIB8
+	INNER_KERNEL_GEMM_ADD_NT_8X8_LIB8
 #else
-	CALL(inner_kernel_gemm_sub_nt_8x8_lib8)
+	CALL(inner_kernel_gemm_add_nt_8x8_lib8)
 #endif
 
 
@@ -4324,9 +4174,9 @@ NAME:
 	movq	ARG7, %r10  // C 
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_8X8_LIB8
+	INNER_SCALE_M11_8X8_LIB8
 #else
-	CALL(inner_scale_11_8x8_lib8)
+	CALL(inner_scale_m11_8x8_lib8)
 #endif
 
 
@@ -4376,14 +4226,7 @@ NAME:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovaps	%ymm0, %ymm1
-	vmovaps	%ymm0, %ymm2
-	vmovaps	%ymm0, %ymm3
-	vmovaps	%ymm0, %ymm4
-	vmovaps	%ymm0, %ymm5
-	vmovaps	%ymm0, %ymm6
-	vmovaps	%ymm0, %ymm7
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt
@@ -4393,9 +4236,9 @@ NAME:
 	movq	ARG3, %r12
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_8X8_LIB8
+	INNER_KERNEL_GEMM_ADD_NT_8X8_LIB8
 #else
-	CALL(inner_kernel_gemm_sub_nt_8x8_lib8)
+	CALL(inner_kernel_gemm_add_nt_8x8_lib8)
 #endif
 
 
@@ -4404,9 +4247,9 @@ NAME:
 	movq	ARG4, %r10 // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_8X8_LIB8
+	INNER_SCALE_M11_8X8_LIB8
 #else
-	CALL(inner_scale_11_8x8_lib8)
+	CALL(inner_scale_m11_8x8_lib8)
 #endif
 
 
@@ -4453,14 +4296,7 @@ NAME:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovaps	%ymm0, %ymm1
-	vmovaps	%ymm0, %ymm2
-	vmovaps	%ymm0, %ymm3
-	vmovaps	%ymm0, %ymm4
-	vmovaps	%ymm0, %ymm5
-	vmovaps	%ymm0, %ymm6
-	vmovaps	%ymm0, %ymm7
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt
@@ -4470,9 +4306,9 @@ NAME:
 	movq	ARG3, %r12
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_8X8_LIB8
+	INNER_KERNEL_GEMM_ADD_NT_8X8_LIB8
 #else
-	CALL(inner_kernel_gemm_sub_nt_8x8_lib8)
+	CALL(inner_kernel_gemm_add_nt_8x8_lib8)
 #endif
 
 
@@ -4481,9 +4317,9 @@ NAME:
 	movq	ARG4, %r10 // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_8X8_LIB8
+	INNER_SCALE_M11_8X8_LIB8
 #else
-	CALL(inner_scale_11_8x8_lib8)
+	CALL(inner_scale_m11_8x8_lib8)
 #endif
 
 
@@ -4548,6 +4384,11 @@ NAME:
 #endif
 
 
+	// change sign
+
+	NEG_ACC
+
+
 	// call inner dgemm kernel nt sub
 
 	movq	ARG4, %r10 // km
@@ -4555,9 +4396,9 @@ NAME:
 	movq	ARG6, %r12   // Bm
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_8X8_LIB8
+	INNER_KERNEL_GEMM_ADD_NT_8X8_LIB8
 #else
-	CALL(inner_kernel_gemm_sub_nt_8x8_lib8)
+	CALL(inner_kernel_gemm_add_nt_8x8_lib8)
 #endif
 
 
@@ -4566,9 +4407,9 @@ NAME:
 	movq	ARG7, %r10   // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_8X8_LIB8
+	INNER_SCALE_M11_8X8_LIB8
 #else
-	CALL(inner_scale_11_8x8_lib8)
+	CALL(inner_scale_m11_8x8_lib8)
 #endif
 
 
@@ -4615,14 +4456,7 @@ NAME:
 
 	// zero accumulation registers
 
-	vxorpd	%ymm0, %ymm0, %ymm0
-	vmovaps	%ymm0, %ymm1
-	vmovaps	%ymm0, %ymm2
-	vmovaps	%ymm0, %ymm3
-	vmovaps	%ymm0, %ymm4
-	vmovaps	%ymm0, %ymm5
-	vmovaps	%ymm0, %ymm6
-	vmovaps	%ymm0, %ymm7
+	ZERO_ACC
 
 
 	// call inner dgemm kernel nt add
@@ -4638,6 +4472,11 @@ NAME:
 #endif
 
 
+	// change sign
+
+	NEG_ACC
+
+
 	// call inner dgemm kernel nt sub
 
 	movq	ARG4, %r10 // km
@@ -4645,9 +4484,9 @@ NAME:
 	movq	ARG6, %r12   // Bm
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_SUB_NT_8X8_LIB8
+	INNER_KERNEL_GEMM_ADD_NT_8X8_LIB8
 #else
-	CALL(inner_kernel_gemm_sub_nt_8x8_lib8)
+	CALL(inner_kernel_gemm_add_nt_8x8_lib8)
 #endif
 
 
@@ -4656,9 +4495,9 @@ NAME:
 	movq	ARG7, %r10   // C
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_11_8X8_LIB8
+	INNER_SCALE_M11_8X8_LIB8
 #else
-	CALL(inner_scale_11_8x8_lib8)
+	CALL(inner_scale_m11_8x8_lib8)
 #endif
 
 
@@ -4697,7 +4536,8 @@ NAME:
 
 
 
-#if defined(BLAS_API)
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
 
 #include "kernel_sgemm_8x8_lib.S"
 
@@ -4779,6 +4619,22 @@ LC03: // { 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 }
 	.long	1065353216
 	.long	1065353216
 	.long	1065353216
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	.align 32
+.LC04: // { -1 -1 -1 -1 -1 -1 -1 -1 }
+#elif defined(OS_MAC)
+LC04: // { -1 -1 -1 -1 -1 -1 -1 -1 }
+	.align 5
+#endif
+	.float -1.0
+	.float -1.0
+	.float -1.0
+	.float -1.0
+	.float -1.0
+	.float -1.0
+	.float -1.0
+	.float -1.0
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 32

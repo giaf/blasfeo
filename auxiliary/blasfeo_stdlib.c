@@ -40,6 +40,14 @@
 
 
 
+void blasfeo_malloc(void **ptr, size_t size)
+	{
+	*ptr = malloc(size);
+	return;
+	}
+
+
+
 // allocate memory aligned to typical cache line size (64 bytes)
 void blasfeo_malloc_align(void **ptr, size_t size)
 	{
@@ -53,7 +61,7 @@ void blasfeo_malloc_align(void **ptr, size_t size)
 	// XXX fix this hack !!! (Andrea?)
 	*ptr = malloc( size );
 
-#elif defined(__XILINX_NONE_ELF__)
+#elif(defined __XILINX_NONE_ELF__ || defined __XILINX_ULTRASCALE_NONE_ELF_JAILHOUSE__)
 
 	*ptr = memalign( 64, size );
 
@@ -70,6 +78,14 @@ void blasfeo_malloc_align(void **ptr, size_t size)
 
 	return;
 
+	}
+
+
+
+void blasfeo_free(void *ptr)
+	{
+	free(ptr);
+	return;
 	}
 
 

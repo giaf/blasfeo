@@ -58,10 +58,23 @@ set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A7 CACHE STRING "Target architecture")
 # set(TARGET GENERIC CACHE STRING "Target architecture")
 
-# Linear Algebra backend
+# Select back-end linear lagebra version (LA) to implement BLASFEO API:
+# HIGH_PERFORMANCE : target-tailored; performance-optimized for cache resident matrices; panel-major matrix format
+# REFERENCE : target-unspecific lightly-optimized; small code footprint; {panel,column}-major matrix format(s)
+# EXTERNAL_BLAS_WRAPPER : call to external BLAS and LAPACK libraries; column-major matrix format
 set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
 # set(LA REFERENCE CACHE STRING "Linear algebra backend")
 # set(LA BLAS CACHE STRING "Linear algebra backend")
+
+# Export additional back-ends with different naming
+set(BLASFEO_REF_API OFF)
+set(BLASFEO_HP_API OFF)
+
+# Select the Matrix Format internally used in the blasfeo_{d,s}mat structure
+# COLMAJ : column-major matrix format
+# PANELMAJ : panel-major matrix format
+# set(MF COLMAJ CACHE STRING "Matrix Format internally used in blasfeo_{d,s}mat struct")
+set(MF PANELMAJ CACHE STRING "Matrix Format internally used in blasfeo_{d,s}mat struct")
 
 # BLAS and LAPACK version (for LA=BLAS in BLASFEO or for BLASFEO_BENCHMARS=ON)
 set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
@@ -73,6 +86,7 @@ set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
 
 # Compile the BLAS API routines provided by BLASFEO
 set(BLAS_API ON CACHE BOOL "Compile BLAS API")
+#set(BLAS_API OFF CACHE BOOL "Compile BLAS API")
 
 # Export standard FORTRAN namings for BLAS API routines
 # OFF : routines namings are in the form blasfeo_dgemm
@@ -163,6 +177,26 @@ if(${isvalid} EQUAL -1)
 endif()
 
 
+# Populate the list of allowed Matrix Formats and link it to the option
+set(ALLOWED_MATRIX_FORMAT
+	  COLMAJ
+	  PANELMAJ
+	  )
+set_property(CACHE MF PROPERTY STRINGS ${ALLOWED_MATRIX_FORMAT})
+
+list(FIND ALLOWED_MATRIX_FORMAT ${MF} isvalid)
+if(${isvalid} EQUAL -1)
+	message(FATAL_ERROR "Matrix Format ${MF} is not supported")
+endif()
+
+if(${LA} MATCHES HIGH_PERFORMANCE)
+	if(${BLASFEO_REF_API})
+		if(${MF} MATCHES COLMAJ)
+			message(FATAL_ERROR "As of now, with LA=HIGH_PERFORMANCE only MF=PANELMAJ is supported for the additional BLASFEO_REF_API")
+		endif()
+	endif()
+endif()
+
 # Populate the list of allowed exernal BLAS tools and link it to the option
 set(ALLOWED_EXTERNAL_BLAS
 		0
@@ -210,20 +244,26 @@ if(CMAKE_C_COMPILER_ID MATCHES MSVC)
 endif()
 
 # testing
-if(BLASFEO_TESTING MATCHES ON)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTESTING_MODE=1")
-endif()
-
-if(BLASFEO_BENCHMARKS MATCHES ON)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBENCHMARKS_MODE=1")
-endif()
+#if(BLASFEO_TESTING MATCHES ON)
+#	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTESTING_MODE=1")
+#endif()
 
 # search directories
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${BLASFEO_PATH}/include")
 
-# Specify the linear algebra package to use
+# Specify the linear algebra backend to use
 message(STATUS "Using linear algebra: ${LA}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_${LA}")
+set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DLA_${LA}")
+
+if(${BLASFEO_REF_API})
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBLASREF_REF_API")
+endif()
+
+# Specify the matrix format to use
+message(STATUS "Using matrix format: ${MF}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMF_${MF}")
+set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DMF_${MF}")
 
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DK_MAX_STACK=${K_MAX_STACK}")
@@ -397,712 +437,677 @@ endif()
 
 # source files
 
-file(GLOB CMN_SRC
+file(GLOB AUX_COMMON_SRC
 	${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_processor_features.c
 	${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
+	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_common.c
+	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_common.c
 	)
+
+file(GLOB AUX_EXT_DEP_SRC
+	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_common.c
+	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_common.c
+	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep.c
+	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep.c
+	${PROJECT_SOURCE_DIR}/auxiliary/v_aux_ext_dep_lib.c
+	${PROJECT_SOURCE_DIR}/auxiliary/i_aux_ext_dep_lib.c
+	${PROJECT_SOURCE_DIR}/auxiliary/timing.c
+	)
+
+file(GLOB AUX_REF_SRC
+	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ref.c
+	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ref.c
+	)
+
+file(GLOB BLASFEO_REF_SRC
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas1_ref.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_ref.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_diag_ref.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_ref.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_diag_ref.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_ref.c
+
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas1_ref.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_ref.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_diag_ref.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_ref.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_diag_ref.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_lapack_ref.c
+	)
+
+file(GLOB AUX_HP_CM_SRC
+	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_hp_cm.c
+	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_hp_cm.c
+	)
+
+file(GLOB BLASFEO_HP_CM_SRC
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dgemm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dsyrk.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dtrsm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dtrmm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dpotrf.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dgetrf.c
+
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/sgemm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/strsm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/spotrf.c
+	)
+
+file(GLOB BLASFEO_HP_CM_REF_SRC
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas1_hp_cm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_hp_cm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_diag_hp_cm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_hp_cm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_diag_hp_cm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_hp_cm.c
+
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas1_hp_cm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_hp_cm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_diag_hp_cm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_hp_cm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_diag_hp_cm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_lapack_hp_cm.c
+	)
+
+file(GLOB BLASFEO_WR_SRC
+	${PROJECT_SOURCE_DIR}/blasfeo_wr/d_blas1_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_wr/d_blas2_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_wr/d_blas2_diag_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_wr/d_blas3_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_wr/d_blas3_diag_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_wr/d_lapack_lib.c
+
+	${PROJECT_SOURCE_DIR}/blasfeo_wr/s_blas1_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_wr/s_blas2_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_wr/s_blas2_diag_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_wr/s_blas3_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_wr/s_blas3_diag_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_wr/s_lapack_lib.c
+	)
+
+#list(APPEND BLAS_SRC
+file(GLOB BLAS_SRC
+	${PROJECT_SOURCE_DIR}/blas_api/dcopy.c
+	${PROJECT_SOURCE_DIR}/blas_api/daxpy.c
+	${PROJECT_SOURCE_DIR}/blas_api/ddot.c
+	${PROJECT_SOURCE_DIR}/blas_api/dgemm_ref.c # XXX
+	${PROJECT_SOURCE_DIR}/blas_api/dsyrk_ref.c # XXX
+	${PROJECT_SOURCE_DIR}/blas_api/dtrmm_ref.c # XXX
+	${PROJECT_SOURCE_DIR}/blas_api/dtrsm_ref.c # XXX
+	${PROJECT_SOURCE_DIR}/blas_api/dgesv.c
+	${PROJECT_SOURCE_DIR}/blas_api/dgetrf_ref.c # XXX
+	${PROJECT_SOURCE_DIR}/blas_api/dgetrf_np.c
+	${PROJECT_SOURCE_DIR}/blas_api/dgetrs.c
+	${PROJECT_SOURCE_DIR}/blas_api/dlaswp.c
+	${PROJECT_SOURCE_DIR}/blas_api/dposv.c
+	${PROJECT_SOURCE_DIR}/blas_api/dpotrf_ref.c # XXX
+	${PROJECT_SOURCE_DIR}/blas_api/dpotrs.c
+	${PROJECT_SOURCE_DIR}/blas_api/dtrtrs.c
+
+	${PROJECT_SOURCE_DIR}/blas_api/saxpy.c
+	${PROJECT_SOURCE_DIR}/blas_api/sdot.c
+	${PROJECT_SOURCE_DIR}/blas_api/sgemm_ref.c # XXX
+	${PROJECT_SOURCE_DIR}/blas_api/strsm_ref.c # XXX
+	${PROJECT_SOURCE_DIR}/blas_api/spotrf_ref.c # XXX
+	)
+
+file(GLOB REF_BLAS_SRC
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_ref_blas.c
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_ref_blas.c
+
+	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_ref_blas.c
+	)
+
+file(GLOB BLAS_CM_SRC
+	${PROJECT_SOURCE_DIR}/blas_api/dgemm_ref.c
+	${PROJECT_SOURCE_DIR}/blas_api/dsyrk_ref.c
+	${PROJECT_SOURCE_DIR}/blas_api/dtrmm_ref.c
+	${PROJECT_SOURCE_DIR}/blas_api/dtrsm_ref.c
+	${PROJECT_SOURCE_DIR}/blas_api/dpotrf_ref.c
+	${PROJECT_SOURCE_DIR}/blas_api/dgetrf_ref.c
+
+	${PROJECT_SOURCE_DIR}/blas_api/sgemm_ref.c
+	)
+
+if(${TARGET} MATCHES X64_INTEL_HASWELL OR ${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
+
+file(GLOB BLASFEO_HP_PM_SRC
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib4.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib4.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib4.c
+
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib8.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib8.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_lib8.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_diag_lib8.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib8.c
+	)
+
+file(GLOB AUX_HP_PM_SRC
+	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
+	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib8.c
+	${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib48.c
+	)
+
+endif()
+if(${TARGET} MATCHES X64_INTEL_CORE OR ${TARGET} MATCHES X64_AMD_BULLDOZER OR ${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57 OR ${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53 OR ${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15 OR ${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7 OR ${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9 OR ${TARGET} MATCHES GENERIC)
+
+file(GLOB BLASFEO_HP_PM_SRC
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib4.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib4.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib4.c
+
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib4.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib4.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_lib4.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib4.c
+	)
+
+file(GLOB AUX_HP_PM_SRC
+	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
+	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
+	${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
+	)
+
+endif()
+
+if(${TARGET} MATCHES X64_INTEL_HASWELL)
+
+file(GLOB KERNEL_SRC
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_12x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_8x8_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_8x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemv_8_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dsymv_6_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgebp_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgelqf_4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_24x4_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_16x4_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_8x8_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_8x4_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_diag_lib8.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_8_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_4_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecpsc_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgead_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_spack_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_8x4_lib8.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
+	)
+
+endif(${TARGET} MATCHES X64_INTEL_HASWELL)
+if(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
+
+file(GLOB KERNEL_SRC
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_12x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_8x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_12_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_8_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dsymv_6_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgebp_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_16x4_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x8_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x4_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_diag_lib8.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_8_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_4_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecpsc_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgead_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_spack_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_8x4_lib8.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
+	)
+
+endif(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
+if(${TARGET} MATCHES X64_INTEL_CORE)
+
+file(GLOB KERNEL_SRC
+	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_dgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_dgemv_4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_sgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
+	)
+
+endif(${TARGET} MATCHES X64_INTEL_CORE)
+if(${TARGET} MATCHES X64_AMD_BULLDOZER)
+
+file(GLOB KERNEL_SRC
+	${PROJECT_SOURCE_DIR}/kernel/fma/kernel_dgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
+	)
+
+endif(${TARGET} MATCHES X64_AMD_BULLDOZER)
+if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
+
+file(GLOB KERNEL_SRC
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_8x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dpack_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgetrf_pivot_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemv_4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_16x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_12x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x8_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemv_4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
+	)
+
+endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
+if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53)
+
+file(GLOB KERNEL_SRC
+
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_12x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_8x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dpack_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgetrf_pivot_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemv_4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_16x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_12x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x8_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemv_4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
+	)
+
+endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53)
+if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
+
+file(GLOB KERNEL_SRC
+	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_dgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_12x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
+	)
+
+endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
+if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
+
+file(GLOB KERNEL_SRC
+	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_dgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
+	)
+
+endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
+if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9)
+
+file(GLOB KERNEL_SRC
+	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_dgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
+	)
+
+endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9)
+if(${TARGET} MATCHES GENERIC)
+
+file(GLOB KERNEL_SRC
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
+
+	${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
+	)
+
+endif(${TARGET} MATCHES GENERIC)
+
+
+
+set(BLASFEO_SRC ${AUX_COMMON_SRC})
 
 if(${LA} MATCHES HIGH_PERFORMANCE)
 
-	if(${TARGET} MATCHES X64_INTEL_HASWELL)
+	list(APPEND BLASFEO_SRC ${KERNEL_SRC})
 
-		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib8.c
-			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib48.c
-			)
+	if(${MF} MATCHES PANELMAJ)
 
-		file(GLOB KERNEL_SRC
-			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_12x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_8x8_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_8x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemv_8_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dsymv_6_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgebp_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgelqf_4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+		list(APPEND BLASFEO_SRC ${AUX_HP_PM_SRC})
+		list(APPEND BLASFEO_SRC ${BLASFEO_HP_PM_SRC})
 
-			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_24x4_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_16x4_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_8x8_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_8x4_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_diag_lib8.c
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_8_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_4_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecpsc_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgead_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_spack_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_8x4_lib8.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
+	else()
 
-			${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
-			)
+		list(APPEND BLASFEO_SRC ${AUX_HP_CM_SRC})
+		list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_SRC})
+		list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_REF_SRC})
 
-		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
+	endif()
 
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib8.c
-			)
+	if(${BLASFEO_REF_API})
 
-	endif(${TARGET} MATCHES X64_INTEL_HASWELL)
+		list(APPEND BLASFEO_SRC ${AUX_REF_SRC})
+		list(APPEND BLASFEO_SRC ${BLASFEO_REF_SRC})
 
-	if(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
-
-		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib8.c
-			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib48.c
-			)
-
-		file(GLOB KERNEL_SRC
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_12x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_8x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_12_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_8_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dsymv_6_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgebp_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_16x4_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x8_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x4_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_diag_lib8.c
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_8_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemv_4_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgecpsc_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgetr_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgead_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/avx/kernel_spack_lib8.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_8x4_lib8.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
-			)
-
-		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
-
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib8.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib8.c
-			)
-
-	endif(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
-
-	if(${TARGET} MATCHES X64_INTEL_CORE)
-
-		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
-			)
-
-		file(GLOB KERNEL_SRC
-			${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_dgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_dgemv_4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_sgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
-			)
-
-		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
-
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
-			)
-
-	endif(${TARGET} MATCHES X64_INTEL_CORE)
-
-	if(${TARGET} MATCHES X64_AMD_BULLDOZER)
-
-		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
-			)
-
-		file(GLOB KERNEL_SRC
-			${PROJECT_SOURCE_DIR}/kernel/fma/kernel_dgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/kernel_align_x64.S
-			)
-
-		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
-
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
-			)
-
-	endif(${TARGET} MATCHES X64_AMD_BULLDOZER)
-
-	if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
-
-		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
-			)
-
-		file(GLOB KERNEL_SRC
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_8x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dpack_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgetrf_pivot_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemv_4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_16x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_12x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x8_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemv_4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
-			)
-
-		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
-
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
-			)
-
-	endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
-
-	if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53)
-
-		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
-			)
-
-		file(GLOB KERNEL_SRC
-
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_12x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_8x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dpack_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgetrf_pivot_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemv_4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_16x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_12x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x8_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemv_4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
-			)
-
-		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
-
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
-			)
-
-	endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53)
-
-	if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
-
-		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
-			)
-
-		file(GLOB KERNEL_SRC
-			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_dgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_12x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
-			)
-
-		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
-
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
-			)
-
-	endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
-
-	if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
-
-		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
-			)
-
-		file(GLOB KERNEL_SRC
-			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_dgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
-			)
-
-		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
-
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
-			)
-
-	endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
-
-
-	if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9)
-
-		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
-			)
-
-		file(GLOB KERNEL_SRC
-			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_dgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
-			)
-
-		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
-
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
-			)
-
-	endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9)
-
-	if(${TARGET} MATCHES GENERIC)
-
-		file(GLOB AUX_SRC
-			${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
-			${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
-			)
-
-		file(GLOB KERNEL_SRC
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ssymv_4_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetrf_pivot_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgecp_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgetr_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
-			${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-			${PROJECT_SOURCE_DIR}/kernel/kernel_align_generic.c
-			)
-
-		file(GLOB BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib4.c
-
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib4.c
-			${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib4.c
-			)
-
-	endif(${TARGET} MATCHES GENERIC)
+	endif()
 
 	if(${BLAS_API})
 
-#		file(GLOB BLAS_SRC
-		list(APPEND BLAS_SRC
-			${PROJECT_SOURCE_DIR}/blas_api/dcopy.c
-			${PROJECT_SOURCE_DIR}/blas_api/daxpy.c
-			${PROJECT_SOURCE_DIR}/blas_api/ddot.c
-			${PROJECT_SOURCE_DIR}/blas_api/dgemm.c
-			${PROJECT_SOURCE_DIR}/blas_api/dsyrk.c
-			${PROJECT_SOURCE_DIR}/blas_api/dtrmm.c
-			${PROJECT_SOURCE_DIR}/blas_api/dtrsm.c
-			${PROJECT_SOURCE_DIR}/blas_api/dgesv.c
-			${PROJECT_SOURCE_DIR}/blas_api/dgetrf.c
-			${PROJECT_SOURCE_DIR}/blas_api/dgetrf_np.c
-			${PROJECT_SOURCE_DIR}/blas_api/dgetrs.c
-			${PROJECT_SOURCE_DIR}/blas_api/dlaswp.c
-			${PROJECT_SOURCE_DIR}/blas_api/dposv.c
-			${PROJECT_SOURCE_DIR}/blas_api/dpotrf.c
-			${PROJECT_SOURCE_DIR}/blas_api/dpotrs.c
-			${PROJECT_SOURCE_DIR}/blas_api/dtrtrs.c
+		if(${MF} MATCHES PANELMAJ)
 
-			${PROJECT_SOURCE_DIR}/blas_api/saxpy.c
-			${PROJECT_SOURCE_DIR}/blas_api/sdot.c
-			${PROJECT_SOURCE_DIR}/blas_api/sgemm.c
-			${PROJECT_SOURCE_DIR}/blas_api/strsm.c
-			)
+			list(APPEND BLASFEO_SRC ${BLAS_SRC})
+			list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_SRC})
 
-	endif(${BLAS_API})
+		else()
 
-else(${LA} MATCHES HIGH_PERFORMANCE) # REFERENCE BLAS
+			list(APPEND BLASFEO_SRC ${BLAS_CM_SRC})
 
-	file(GLOB AUX_SRC
-		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib.c
-		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib.c
-		${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib.c
-		)
+		endif()
 
-	file(GLOB BLAS_SRC
-		${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas1_lib.c
-		${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_lib.c
-		${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas2_diag_lib.c
-		${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_lib.c
-		${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_diag_lib.c
-		${PROJECT_SOURCE_DIR}/blasfeo_api/d_lapack_lib.c
+	endif()
 
-		${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas1_lib.c
-		${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_lib.c
-		${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas2_diag_lib.c
-		${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_lib.c
-		${PROJECT_SOURCE_DIR}/blasfeo_api/s_blas3_diag_lib.c
-		${PROJECT_SOURCE_DIR}/blasfeo_api/s_lapack_lib.c
-		)
+endif()
+if(${LA} MATCHES REFERENCE)
 
-	if(${LA} MATCHES REFERENCE) # REFERENCE
-		if(${BLAS_API})
-			list(APPEND BLAS_SRC
-				${PROJECT_SOURCE_DIR}/blas_api/dgemm_ref.c
-				${PROJECT_SOURCE_DIR}/blas_api/dtrsm_ref.c
+	list(APPEND BLASFEO_SRC ${AUX_REF_SRC})
+	list(APPEND BLASFEO_SRC ${BLASFEO_REF_SRC})
 
-				${PROJECT_SOURCE_DIR}/blas_api/sgemm_ref.c
-				${PROJECT_SOURCE_DIR}/blas_api/strsm_ref.c
-				)
-		endif() # BLAS_API
-	endif() # REFERENCE
+	if(${BLASFEO_HP_API})
 
-endif(${LA} MATCHES HIGH_PERFORMANCE)
+		list(APPEND BLASFEO_SRC ${KERNEL_SRC})
+
+		if(${MF} MATCHES PANELMAJ)
+
+			list(APPEND BLASFEO_SRC ${BLASFEO_HP_PM_SRC})
+
+		else()
+
+			list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_SRC})
+			list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_REF_SRC})
+
+		endif()
+
+	endif()
+
+	if(${BLAS_API})
+
+		list(APPEND BLASFEO_SRC ${BLAS_SRC})
+
+		if(${MF} MATCHES PANELMAJ)
+
+			list(APPEND BLASFEO_SRC ${REF_BLAS_SRC})
+
+		endif()
+
+	endif()
+
+endif()
+
+# TODO WR
 
 if(${EXT_DEP})
-
-	file(GLOB EXT_SRC
-		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_lib.c
-		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_lib4.c
-		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_lib.c
-		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_lib4.c
-		${PROJECT_SOURCE_DIR}/auxiliary/v_aux_ext_dep_lib.c
-		${PROJECT_SOURCE_DIR}/auxiliary/i_aux_ext_dep_lib.c
-		${PROJECT_SOURCE_DIR}/auxiliary/timing.c
-		)
+	
+	list(APPEND BLASFEO_SRC ${AUX_EXT_DEP_SRC})
 
 endif()
 
 
-if(BLASFEO_TESTING MATCHES ON)
 
-	file(GLOB AUX_REF_SRC
-		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_libref.c
-		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_libref.c
-		${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_libref.c
-		${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_libref.c
-		${PROJECT_SOURCE_DIR}/blasfeo_api/d_blas3_libref.c
-		)
 
-	set(BLASFEO_REF_SRC ${AUX_REF_SRC})
-	add_library(blasfeo_ref ${BLASFEO_REF_SRC})
-	set_target_properties(blasfeo_ref PROPERTIES LINKER_LANGUAGE C)
-endif()
 
-set(BLASFEO_SRC ${CMN_SRC} ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
+
+
+#set(BLASFEO_SRC ${CMN_SRC} ${AUX_SRC} ${KERNEL_SRC} ${BLAS_SRC} ${EXT_SRC})
 
 # add library
 add_library(blasfeo ${BLASFEO_SRC})
 
-if(EMBEDDED_TARGET MATCHES XILINX_NONE_ELF )
-	target_link_libraries(blasfeo PUBLIC -Wl,--start-group xil c gcc -Wl,--end-group)
-endif()
+# 1) *XILINX_NONE_ELF*:
+#		Xilinx standalone (any core, e.g. A53,R5,..; *untested*)
+# 2) *XILINX_ULTRASCALE_NONE_ELF_JAILHOUSE*:
+#		special Ultrascale+ targets solution for running standalone as
+#		an inmate of a Jailhouse cell (no secure domain registers)
+if(SOC MATCHES XILINX)
+	message(STATUS "Compiling for SOC: ${SOC}")
 
+	if(NOT XILINX_BSP_PATH)
+		message(FATAL_ERROR "XILINX_BSP_PATH not set")
+	endif()
+	include_directories(${XILINX_BSP_PATH}/include)
+
+	find_library(XIL NAMES libxil.a HINTS ${XILINX_BSP_PATH}/lib)
+	if(NOT XIL)
+	  message(FATAL_ERROR "libxil.a not found")
+	endif()
+
+	if(SOC MATCHES XILINX_ULTRASCALE_NONE_ELF_JAILHOUSE )
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__XILINX_ULTRASCALE_NONE_ELF_JAILHOUSE__")
+	elseif(SOC MATCHES XILINX_NONE_ELF )
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__XILINX_NONE_ELF__")
+	endif()
+
+	target_link_libraries(blasfeo PUBLIC -Wl,--start-group ${XIL} c gcc -Wl,--end-group)
+endif()
 
 target_include_directories(blasfeo
 	PUBLIC

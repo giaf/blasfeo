@@ -38,98 +38,58 @@ include ../Makefile.rule
 OBJS =
 
 OBJS += blasfeo_stdlib.o \
-        blasfeo_processor_features.o
+        blasfeo_processor_features.o \
+		d_aux_common.o \
+		s_aux_common.o
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 
-ifeq ($(TARGET), X64_INTEL_HASWELL)
+ifeq ($(MF), PANELMAJ)
+
+ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE))
 OBJS += d_aux_lib4.o
 OBJS += s_aux_lib8.o
 OBJS += m_aux_lib48.o
 endif
 
-ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib8.o
-OBJS += m_aux_lib48.o
-endif
-
-ifeq ($(TARGET), X64_INTEL_CORE)
+ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_CORE X64_AMD_BULLDOZER X86_AMD_JAGUAR X86_AMD_BARCELONA ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A53 ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7 GENERIC))
 OBJS += d_aux_lib4.o
 OBJS += s_aux_lib4.o
 OBJS += m_aux_lib44.o
 endif
 
-ifeq ($(TARGET), X64_AMD_BULLDOZER)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
+else # MF COLMAJ
 
-ifeq ($(TARGET), X86_AMD_JAGUAR)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
+# TODO optimized hp cm version
+OBJS += d_aux_hp_cm.o
+OBJS += s_aux_hp_cm.o
 
-ifeq ($(TARGET), X86_AMD_BARCELONA)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
+endif # MF choice
 
-ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A53))
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
-ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
-endif
-
-ifeq ($(TARGET), GENERIC)
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
+ifeq ($(BLASFEO_REF_API), 1)
+OBJS += d_aux_ref.o
+OBJS += s_aux_ref.o
 endif
 
 else # LA_REFERENCE | LA_EXTERNAL_BLAS_WRAPPER
 
-OBJS += d_aux_lib.o
-OBJS += s_aux_lib.o
+OBJS += d_aux_ref.o
+OBJS += s_aux_ref.o
 OBJS += m_aux_lib.o
 
 endif # LA choice
-
-ifeq ($(TESTING_MODE), 1)
-#testing against reference
-OBJS += d_aux_libref.o
-OBJS += s_aux_libref.o
-endif
 
 
 #ext dep
 ifeq ($(EXT_DEP), 1)
 
-ifeq ($(LA), HIGH_PERFORMANCE)
-OBJS += d_aux_ext_dep_lib4.o
-OBJS += s_aux_ext_dep_lib4.o
-endif
-OBJS += d_aux_ext_dep_lib.o
-OBJS += s_aux_ext_dep_lib.o
+OBJS += d_aux_ext_dep_common.o
+OBJS += s_aux_ext_dep_common.o
+OBJS += d_aux_ext_dep.o
+OBJS += s_aux_ext_dep.o
 OBJS += v_aux_ext_dep_lib.o
 OBJS += i_aux_ext_dep_lib.o
 OBJS += timing.o
-
-ifeq ($(TESTING_MODE), 1)
-OBJS += d_aux_libref.o
-OBJS += s_aux_libref.o
-OBJS += d_aux_ext_dep_libref.o
-OBJS += s_aux_ext_dep_libref.o
-endif
 
 endif
 
@@ -139,13 +99,13 @@ obj: $(OBJS)
 clean:
 	rm -f *.o
 	rm -f *.s
-	rm -f *.gcda
-	rm -f *.gcno
-	rm -f *.gcov
 
-d_aux_lib.o: d_aux_lib.c x_aux_lib.c
-s_aux_lib.o: s_aux_lib.c x_aux_lib.c
-d_aux_ext_dep_lib.o: d_aux_ext_dep_lib.c x_aux_ext_dep_lib0.c x_aux_ext_dep_lib.c
-s_aux_ext_dep_lib.o: s_aux_ext_dep_lib.c x_aux_ext_dep_lib0.c x_aux_ext_dep_lib.c
-d_aux_ext_dep_lib4.o: d_aux_ext_dep_lib4.c x_aux_ext_dep_lib4.c
-s_aux_ext_dep_lib4.o: s_aux_ext_dep_lib4.c x_aux_ext_dep_lib4.c
+d_aux_ref.o: d_aux_ref.c x_aux_ref.c
+s_aux_ref.o: s_aux_ref.c x_aux_ref.c
+d_aux_ext_dep_common.o: d_aux_ext_dep_common.c x_aux_ext_dep_common.c
+s_aux_ext_dep_common.o: s_aux_ext_dep_common.c x_aux_ext_dep_common.c
+d_aux_ext_dep.o: d_aux_ext_dep.c x_aux_ext_dep.c
+s_aux_ext_dep.o: s_aux_ext_dep.c x_aux_ext_dep.c
+
+d_aux_hp_cm.o: d_aux_hp_cm.c x_aux_ref.c
+s_aux_hp_cm.o: s_aux_hp_cm.c x_aux_ref.c

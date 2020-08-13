@@ -39,41 +39,28 @@ OBJS =
 
 ifeq ($(BLAS_API), 1)
 
-ifeq ($(LA), HIGH_PERFORMANCE)
-
 OBJS += dcopy.o
 OBJS += daxpy.o
 OBJS += ddot.o
-OBJS += dgemm.o
-OBJS += dsyrk.o
-OBJS += dtrmm.o
-OBJS += dtrsm.o
-OBJS += dlaswp.o
+OBJS += dgemm_ref.o # XXX
+OBJS += dsyrk_ref.o # XXX
+OBJS += dtrmm_ref.o # XXX
+OBJS += dtrsm_ref.o # XXX
 OBJS += dgesv.o
-OBJS += dgetrf.o
+OBJS += dgetrf_ref.o # XXX
 OBJS += dgetrf_np.o
 OBJS += dgetrs.o
+OBJS += dlaswp.o
 OBJS += dposv.o
-OBJS += dpotrf.o
+OBJS += dpotrf_ref.o # XXX
 OBJS += dpotrs.o
 OBJS += dtrtrs.o
 
 OBJS += saxpy.o
 OBJS += sdot.o
-OBJS += sgemm.o
-OBJS += strsm.o
-
-#endif # HIGH_PERFROMANCE
-
-else #ifeq ($(LA), REFERENCE)
-
-OBJS += dgemm_ref.o
-OBJS += dtrsm_ref.o
-
-OBJS += sgemm_ref.o
-OBJS += strsm_ref.o
-
-endif # REFERENCE
+OBJS += sgemm_ref.o # XXX
+OBJS += strsm_ref.o # XXX
+OBJS += spotrf_ref.o # XXX
 
 endif # BLAS_API
 
@@ -87,7 +74,12 @@ clean:
 	rm -f *.gcov
 
 dgemm_ref.o: dgemm_ref.c xgemm_ref.c
+dsyrk_ref.o: dsyrk_ref.c xsyrk_ref.c
+dtrmm_ref.o: dtrmm_ref.c xtrmm_ref.c
 dtrsm_ref.o: dtrsm_ref.c xtrsm_ref.c
+dpotrf_ref.o: dpotrf_ref.c xpotrf_ref.c
+dgetrf_ref.o: dgetrf_ref.c xgetrf_ref.c
 
 sgemm_ref.o: sgemm_ref.c xgemm_ref.c
 strsm_ref.o: strsm_ref.c xtrsm_ref.c
+spotrf_ref.o: spotrf_ref.c xpotrf_ref.c

@@ -58,10 +58,10 @@ void test_blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memor
 void test_blasfeo_create_svec(int m, struct blasfeo_svec *sA, void *memory);
 
 void test_blasfeo_pack_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
-void test_blasfeo_pack_svec(int m, float *a, struct blasfeo_svec *sa, int ai);
+void test_blasfeo_pack_svec(int m, float *x, int xi, struct blasfeo_svec *sa, int ai);
 void test_blasfeo_pack_tran_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
 void test_blasfeo_unpack_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj, float *A, int lda);
-void test_blasfeo_unpack_svec(int m, struct blasfeo_svec *sa, int ai, float *a);
+void test_blasfeo_unpack_svec(int m, struct blasfeo_svec *sa, int ai, float *x, int xi);
 void test_blasfeo_unpack_tran_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj, float *A, int lda);
 
 void test_s_cast_mat2strmat(float *A, struct blasfeo_smat *sA);
