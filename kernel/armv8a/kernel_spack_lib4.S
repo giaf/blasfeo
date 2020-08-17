@@ -82,6 +82,91 @@ NAME:
 
 
 
+//                             w0        x1         w2       x3         w4
+// void kernel_spack_nn_8_lib4(int kmax, double *A, int lda, double *C, int sdc)
+
+	.align	4
+	GLOB_FUN_START(kernel_spack_nn_8_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		w10, w2 // lda
+	lsl		w10, w10, #2 // 4*lda
+	mov		x11, x3 // C
+	mov		w12, w4 // sdc
+	lsl		w12, w12, #4 // 16*sdc
+
+
+	cmp		w8, #0
+	ble		0f
+
+	add		x13, x11, x12
+
+	cmp		w8, #3
+	ble		2f
+
+
+1: // main loop
+	ldp		q0, q1, [x9, #0]
+	add		x9, x9, x10
+	ldp		q2, q3, [x9, #0]
+	add		x9, x9, x10
+	stp		q0, q2, [x11, #0]
+	stp		q1, q3, [x13, #0]
+
+	ldp		q0, q1, [x9, #0]
+	add		x9, x9, x10
+	ldp		q2, q3, [x9, #0]
+	add		x9, x9, x10
+	stp		q0, q2, [x11, #32]
+	stp		q1, q3, [x13, #32]
+
+	sub		w8, w8, #4
+	add		x11, x11, #64
+	add		x13, x13, #64
+
+	cmp		w8, #3
+	bgt		1b
+
+
+	cmp		w8, #0
+	ble		0f
+
+
+2: // clean-up loop
+	ldp		q0, q1, [x9, #0]
+	add		x9, x9, x10
+	str		q0, [x11, #0]
+	str		q1, [x13, #0]
+
+	sub		w8, w8, #1
+	add		x11, x11, #16
+	add		x13, x13, #16
+
+	cmp		w8, #0
+	bgt		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_spack_nn_8_lib4)
+
+
+
+
+
 //                             w0        x1         w2       x3
 // void kernel_spack_nn_4_lib4(int kmax, double *A, int lda, double *C)
 
@@ -157,6 +242,212 @@ NAME:
 	ret
 
 	FUN_END(kernel_spack_nn_4_lib4)
+
+
+
+
+
+//                             w0        x1         w2       x3
+// void kernel_spack_tn_4_lib4(int kmax, double *A, int lda, double *C)
+
+	.align	4
+	GLOB_FUN_START(kernel_spack_tn_4_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		w10, w2 // lda
+	lsl		w10, w10, #2 // 4*lda
+	mov		x11, x3 // C
+
+
+	cmp		w8, #0
+	ble		0f
+
+	cmp		w8, #3
+	ble		2f
+
+
+1: // main loop
+	mov		x13, x9
+
+	ldr		q0, [x13, #0]
+	add		x13, x13, x10
+	ldr		q1, [x13, #0]
+	add		x13, x13, x10
+	ldr		q2, [x13, #0]
+	add		x13, x13, x10
+	ldr		q3, [x13, #0]
+	add		x13, x13, x10
+
+	trn1	v4.4s, v0.4s, v1.4s
+	trn2	v5.4s, v0.4s, v1.4s
+	trn1	v6.4s, v2.4s, v3.4s
+	trn2	v7.4s, v2.4s, v3.4s
+
+	trn1	v0.2d, v4.2d, v6.2d
+	trn2	v2.2d, v4.2d, v6.2d
+	trn1	v1.2d, v5.2d, v7.2d
+	trn2	v3.2d, v5.2d, v7.2d
+	
+	str		q0, [x11, #0]
+	str		q1, [x11, #16]
+	str		q2, [x11, #32]
+	str		q3, [x11, #48]
+
+	sub		w8, w8, #4
+	add		x9, x9, #16
+	add		x11, x11, #64
+
+	cmp		w8, #3
+	bgt		1b
+
+
+	cmp		w8, #0
+	ble		0f
+
+
+2: // clean-up loop
+	mov		x13, x9
+
+	ldr		s0, [x13, #0]
+	add		x13, x13, x10
+	str		s0, [x11, #0]
+
+	ldr		s0, [x13, #0]
+	add		x13, x13, x10
+	str		s0, [x11, #4]
+
+	ldr		s0, [x13, #0]
+	add		x13, x13, x10
+	str		s0, [x11, #8]
+
+	ldr		s0, [x13, #0]
+	add		x13, x13, x10
+	str		s0, [x11, #12]
+
+	sub		w8, w8, #1
+	add		x9, x9, #4
+	add		x11, x11, #16
+
+	cmp		w8, #0
+	bgt		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_spack_tn_4_lib4)
+
+
+
+
+
+//                             w0        x1         w2       x3         w4
+// void kernel_spack_tt_4_lib4(int kmax, double *A, int lda, double *C, ind sdc)
+
+	.align	4
+	GLOB_FUN_START(kernel_spack_tt_4_lib4)
+	
+
+
+	PROLOGUE
+
+
+
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		w10, w2 // lda
+	lsl		w10, w10, #2 // 4*lda
+	mov		x11, x3 // C
+	mov		w12, w4 // sdc
+	lsl		w12, w12, #4 // 16*sdc
+
+
+	cmp		w8, #0
+	ble		0f
+
+	cmp		w8, #3
+	ble		2f
+
+
+1: // main loop
+	mov		x13, x9
+
+	ldr		q0, [x13, #0]
+	add		x13, x13, x10
+	str		q0, [x11, #0]
+
+	ldr		q0, [x13, #0]
+	add		x13, x13, x10
+	str		q0, [x11, #16]
+
+	ldr		q0, [x13, #0]
+	add		x13, x13, x10
+	str		q0, [x11, #32]
+
+	ldr		q0, [x13, #0]
+	add		x13, x13, x10
+	str		q0, [x11, #48]
+
+	sub		w8, w8, #4
+	add		x9, x9, #16
+	add		x11, x11, x12
+
+	cmp		w8, #3
+	bgt		1b
+
+
+	cmp		w8, #0
+	ble		0f
+
+
+2: // clean-up loop
+	mov		x13, x9
+
+	ldr		s0, [x13, #0]
+	add		x13, x13, x10
+	str		s0, [x11, #0]
+
+	ldr		s0, [x13, #0]
+	add		x13, x13, x10
+	str		s0, [x11, #16]
+
+	ldr		s0, [x13, #0]
+	add		x13, x13, x10
+	str		s0, [x11, #32]
+
+	ldr		s0, [x13, #0]
+	add		x13, x13, x10
+	str		s0, [x11, #48]
+
+	sub		w8, w8, #1
+	add		x9, x9, #4
+	add		x11, x11, #4
+
+	cmp		w8, #0
+	bgt		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_spack_tt_4_lib4)
 
 
 

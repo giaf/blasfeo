@@ -677,9 +677,9 @@ NAME:
 
 	mov		w8, w0 // kmax
 	mov		x9, x1 // A
-	mov		w10, w2 // A
-	lsl		w10, w10, #3 // 32*sda
-	mov		x11, x3 // A
+	mov		w10, w2 // lda
+	lsl		w10, w10, #3 // 8*lda
+	mov		x11, x3 // C
 	mov		w12, w4 // sdc
 	lsl		w12, w12, #5 // 32*sdc
 
