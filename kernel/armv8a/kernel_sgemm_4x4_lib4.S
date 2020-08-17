@@ -234,7 +234,7 @@ NAME:
 
 
 
-#else // cortex a53
+#else // cortex a57 vs a53
 
 
 
