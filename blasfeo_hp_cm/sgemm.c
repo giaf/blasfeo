@@ -395,7 +395,19 @@ nn_1:
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_spack_nn_8_lib4(k, A+ii, lda, tA.pA, sda);
-		for(jj=0; jj<n-3; jj+=4)
+		jj = 0;
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		for(; jj<n-7; jj+=8)
+			{
+			if(pack_B)
+				{
+				kernel_spack_tn_4_lib4(k, B+(jj+0)*ldb, ldb, tB.pA+(jj+0)*sdb);
+				kernel_spack_tn_4_lib4(k, B+(jj+4)*ldb, ldb, tB.pA+(jj+4)*sdb);
+				}
+			kernel_sgemm_nt_8x8_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+#endif
+		for(; jj<n-3; jj+=4)
 			{
 			if(pack_B)
 				kernel_spack_tn_4_lib4(k, B+jj*ldb, ldb, tB.pA+jj*sdb);
@@ -887,7 +899,14 @@ nt_1:
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_spack_nn_8_lib4(k, A+ii, lda, tA.pA, sda);
-		for(jj=0; jj<n-3; jj+=4)
+		jj = 0;
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		for(; jj<n-7; jj+=8)
+			{
+			kernel_sgemm_nt_8x8_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+#endif
+		for(; jj<n-3; jj+=4)
 			{
 			kernel_sgemm_nt_8x4_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 			}
@@ -1354,7 +1373,19 @@ tn_1:
 		{
 		kernel_spack_tn_4_lib4(k, A+(ii+0)*lda, lda, tA.pA);
 		kernel_spack_tn_4_lib4(k, A+(ii+4)*lda, lda, tA.pA+4*sda);
-		for(jj=0; jj<n-3; jj+=4)
+		jj = 0;
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		for(; jj<n-7; jj+=8)
+			{
+			if(pack_B)
+				{
+				kernel_spack_tn_4_lib4(k, B+(jj+0)*ldb, ldb, tB.pA+(jj+0)*sdb);
+				kernel_spack_tn_4_lib4(k, B+(jj+4)*ldb, ldb, tB.pA+(jj+4)*sdb);
+				}
+			kernel_sgemm_nt_8x8_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+#endif
+		for(; jj<n-3; jj+=4)
 			{
 			if(pack_B)
 				kernel_spack_tn_4_lib4(k, B+jj*ldb, ldb, tB.pA+jj*sdb);
@@ -1820,7 +1851,14 @@ tt_1:
 		{
 		kernel_spack_tn_4_lib4(k, A+(ii+0)*lda, lda, tA.pA);
 		kernel_spack_tn_4_lib4(k, A+(ii+4)*lda, lda, tA.pA+4*sda);
-		for(jj=0; jj<n-3; jj+=4)
+		jj = 0;
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		for(; jj<n-7; jj+=8)
+			{
+			kernel_sgemm_nt_8x8_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+#endif
+		for(; jj<n-3; jj+=4)
 			{
 			kernel_sgemm_nt_8x4_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 			}

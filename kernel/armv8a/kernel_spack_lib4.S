@@ -106,6 +106,10 @@ NAME:
 	cmp		w8, #0
 	ble		0f
 
+	add		x14, x10, x10
+	add		x14, x14, x14
+//	add		x14, x14, x14
+
 	add		x13, x11, x12
 
 	cmp		w8, #3
@@ -114,15 +118,19 @@ NAME:
 
 1: // main loop
 	ldp		q0, q1, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x14]
 	add		x9, x9, x10
 	ldp		q2, q3, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x14]
 	add		x9, x9, x10
 	stp		q0, q2, [x11, #0]
 	stp		q1, q3, [x13, #0]
 
 	ldp		q0, q1, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x14]
 	add		x9, x9, x10
 	ldp		q2, q3, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x14]
 	add		x9, x9, x10
 	stp		q0, q2, [x11, #32]
 	stp		q1, q3, [x13, #32]
@@ -189,24 +197,32 @@ NAME:
 	cmp		w8, #0
 	ble		0f
 
+	add		x14, x10, x10
+	add		x14, x14, x14
+//	add		x14, x14, x14
+
 	cmp		w8, #3
 	ble		2f
 
 
 1: // main loop
 	ldr		q0, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x14]
 	add		x9, x9, x10
 	str		q0, [x11, #0]
 
 	ldr		q0, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x14]
 	add		x9, x9, x10
 	str		q0, [x11, #16]
 
 	ldr		q0, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x14]
 	add		x9, x9, x10
 	str		q0, [x11, #32]
 
 	ldr		q0, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x14]
 	add		x9, x9, x10
 	str		q0, [x11, #48]
 
