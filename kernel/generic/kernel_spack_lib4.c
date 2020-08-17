@@ -83,7 +83,7 @@ void kernel_spack_nn_8_vs_lib4(int kmax, float *A, int lda, float *C, int sdc, i
 
 
 
-//#if ! ( defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) )
+#if ! ( defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) )
 void kernel_spack_nn_4_lib4(int kmax, float *A, int lda, float *C)
 	{
 
@@ -131,7 +131,7 @@ void kernel_spack_nn_4_lib4(int kmax, float *A, int lda, float *C)
 	return;
 
 	}
-//#endif
+#endif
 
 
 

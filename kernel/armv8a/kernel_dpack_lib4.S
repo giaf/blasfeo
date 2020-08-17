@@ -62,6 +62,15 @@
 	ldp x28, x29, [sp, #(9 * 16)]; \
 	ldr x30, [sp, #(10 * 16)]; \
 	add sp, sp, #(11 * 16);
+#define GLOB_FUN_START(NAME) \
+	.global	NAME; \
+	.type NAME, %function; \
+NAME:
+#define FUN_START(NAME) \
+	.type NAME, %function; \
+NAME:
+#define FUN_END(NAME) \
+	.size	NAME, .-NAME
 
 
 
@@ -77,9 +86,7 @@
 // void kernel_dpack_nn_12_lib4(int kmax, double *A, int lda, double *C, int sdc)
 
 	.align	4
-	.globl kernel_dpack_nn_12_lib4
-	.type kernel_dpack_nn_12_lib4, @function
-kernel_dpack_nn_12_lib4:
+	GLOB_FUN_START(kernel_dpack_nn_12_lib4)
 	
 
 
@@ -178,7 +185,7 @@ kernel_dpack_nn_12_lib4:
 
 	ret
 
-	.size	kernel_dpack_nn_12_lib4, .-kernel_dpack_nn_12_lib4
+	FUN_END(kernel_dpack_nn_12_lib4)
 
 
 
@@ -188,9 +195,7 @@ kernel_dpack_nn_12_lib4:
 // void kernel_dpack_nn_8_lib4(int kmax, double *A, int lda, double *C, int sdc)
 
 	.align	4
-	.globl kernel_dpack_nn_8_lib4
-	.type kernel_dpack_nn_8_lib4, @function
-kernel_dpack_nn_8_lib4:
+	GLOB_FUN_START(kernel_dpack_nn_8_lib4)
 	
 
 
@@ -276,7 +281,7 @@ kernel_dpack_nn_8_lib4:
 
 	ret
 
-	.size	kernel_dpack_nn_8_lib4, .-kernel_dpack_nn_8_lib4
+	FUN_END(kernel_dpack_nn_8_lib4)
 
 
 
@@ -286,9 +291,7 @@ kernel_dpack_nn_8_lib4:
 // void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *C)
 
 	.align	4
-	.globl kernel_dpack_nn_4_lib4
-	.type kernel_dpack_nn_4_lib4, @function
-kernel_dpack_nn_4_lib4:
+	GLOB_FUN_START(kernel_dpack_nn_4_lib4)
 	
 
 
@@ -298,9 +301,9 @@ kernel_dpack_nn_4_lib4:
 
 	mov		w8, w0 // kmax
 	mov		x9, x1 // A
-	mov		w10, w2 // A
-	lsl		w10, w10, #3 // 32*sda
-	mov		x11, x3 // A
+	mov		w10, w2 // lda
+	lsl		w10, w10, #3 // 8*sda
+	mov		x11, x3 // C
 
 
 	cmp		w8, #0
@@ -358,7 +361,7 @@ kernel_dpack_nn_4_lib4:
 
 	ret
 
-	.size	kernel_dpack_nn_4_lib4, .-kernel_dpack_nn_4_lib4
+	FUN_END(kernel_dpack_nn_4_lib4)
 
 
 
@@ -368,9 +371,7 @@ kernel_dpack_nn_4_lib4:
 // void kernel_dpack_tt_12_lib4(int kmax, double *A, int lda, double *C, ind sdc)
 
 	.align	4
-	.globl kernel_dpack_tt_12_lib4
-	.type kernel_dpack_tt_12_lib4, @function
-kernel_dpack_tt_12_lib4:
+	GLOB_FUN_START(kernel_dpack_tt_12_lib4)
 	
 
 
@@ -524,7 +525,7 @@ kernel_dpack_tt_12_lib4:
 
 	ret
 
-	.size	kernel_dpack_tt_12_lib4, .-kernel_dpack_tt_12_lib4
+	FUN_END(kernel_dpack_tt_12_lib4)
 
 
 
@@ -534,9 +535,7 @@ kernel_dpack_tt_12_lib4:
 // void kernel_dpack_tt_8_lib4(int kmax, double *A, int lda, double *C, ind sdc)
 
 	.align	4
-	.globl kernel_dpack_tt_8_lib4
-	.type kernel_dpack_tt_8_lib4, @function
-kernel_dpack_tt_8_lib4:
+	GLOB_FUN_START(kernel_dpack_tt_8_lib4)
 	
 
 
@@ -658,7 +657,7 @@ kernel_dpack_tt_8_lib4:
 
 	ret
 
-	.size	kernel_dpack_tt_8_lib4, .-kernel_dpack_tt_8_lib4
+	FUN_END(kernel_dpack_tt_8_lib4)
 
 
 
@@ -668,9 +667,7 @@ kernel_dpack_tt_8_lib4:
 // void kernel_dpack_tt_4_lib4(int kmax, double *A, int lda, double *C, ind sdc)
 
 	.align	4
-	.globl kernel_dpack_tt_4_lib4
-	.type kernel_dpack_tt_4_lib4, @function
-kernel_dpack_tt_4_lib4:
+	GLOB_FUN_START(kernel_dpack_tt_4_lib4)
 	
 
 
@@ -760,7 +757,7 @@ kernel_dpack_tt_4_lib4:
 
 	ret
 
-	.size	kernel_dpack_tt_4_lib4, .-kernel_dpack_tt_4_lib4
+	FUN_END(kernel_dpack_tt_4_lib4)
 
 
 
@@ -770,9 +767,7 @@ kernel_dpack_tt_4_lib4:
 // void kernel_dunpack_nn_12_lib4(int kmax, double *A, int sda, double *C, int ldc)
 
 	.align	4
-	.globl kernel_dunpack_nn_12_lib4
-	.type kernel_dunpack_nn_12_lib4, @function
-kernel_dunpack_nn_12_lib4:
+	GLOB_FUN_START(kernel_dunpack_nn_12_lib4)
 	
 
 
@@ -871,7 +866,7 @@ kernel_dunpack_nn_12_lib4:
 
 	ret
 
-	.size	kernel_dunpack_nn_12_lib4, .-kernel_dunpack_nn_12_lib4
+	FUN_END(kernel_dunpack_nn_12_lib4)
 
 
 
@@ -881,9 +876,7 @@ kernel_dunpack_nn_12_lib4:
 // void kernel_dunpack_nn_8_lib4(int kmax, double *A, int sda, double *C, int ldc)
 
 	.align	4
-	.globl kernel_dunpack_nn_8_lib4
-	.type kernel_dunpack_nn_8_lib4, @function
-kernel_dunpack_nn_8_lib4:
+	GLOB_FUN_START(kernel_dunpack_nn_8_lib4)
 	
 
 
@@ -969,7 +962,7 @@ kernel_dunpack_nn_8_lib4:
 
 	ret
 
-	.size	kernel_dunpack_nn_8_lib4, .-kernel_dunpack_nn_8_lib4
+	FUN_END(kernel_dunpack_nn_8_lib4)
 
 
 
@@ -979,9 +972,7 @@ kernel_dunpack_nn_8_lib4:
 // void kernel_dunpack_nn_4_lib4(int kmax, double *A, double *C, int ldc)
 
 	.align	4
-	.globl kernel_dunpack_nn_4_lib4
-	.type kernel_dunpack_nn_4_lib4, @function
-kernel_dunpack_nn_4_lib4:
+	GLOB_FUN_START(kernel_dunpack_nn_4_lib4)
 	
 
 
@@ -1051,7 +1042,7 @@ kernel_dunpack_nn_4_lib4:
 
 	ret
 
-	.size	kernel_dunpack_nn_4_lib4, .-kernel_dunpack_nn_4_lib4
+	FUN_END(kernel_dunpack_nn_4_lib4)
 
 
 

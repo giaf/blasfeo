@@ -452,6 +452,7 @@ KERNEL_OBJS = \
 		kernel/armv8a/kernel_sgemm_8x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_4x4_lib4.o \
 		kernel/armv8a/kernel_sgemv_4_lib4.o \
+		kernel/armv8a/kernel_spack_lib4.o \
 		kernel/generic/kernel_sgemm_4x4_lib4.o \
 		kernel/generic/kernel_sgemm_diag_lib4.o \
 		kernel/generic/kernel_sgemv_4_lib4.o \
@@ -476,6 +477,7 @@ KERNEL_OBJS = \
 		kernel/armv8a/kernel_dpack_lib4.o \
 		kernel/armv8a/kernel_dgetrf_pivot_lib4.o \
 		kernel/armv8a/kernel_dgemv_4_lib4.o \
+		kernel/armv8a/kernel_spack_lib4.o \
 		kernel/generic/kernel_dgemm_4x4_lib4.o \
 		kernel/generic/kernel_dgemm_diag_lib4.o \
 		kernel/generic/kernel_dgemv_4_lib4.o \
