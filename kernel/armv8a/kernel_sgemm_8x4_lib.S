@@ -72,18 +72,21 @@
 	add		x10, x10, x11
 	ldp		q26, q27, [x10, #0]
 	add		x10, x10, x11
-	ldp		q28, q29, [x10, #0]
-	add		x10, x10, x11
-	ldp		q30, q31, [x10, #0]
-	add		x10, x10, x11
+
 	fmla	v0.4s, v24.4s, v29.4s[0]
 	fmla	v1.4s, v26.4s, v29.4s[0]
-	fmla	v2.4s, v28.4s, v29.4s[0]
-	fmla	v3.4s, v30.4s, v29.4s[0]
 	fmla	v4.4s, v25.4s, v29.4s[0]
 	fmla	v5.4s, v27.4s, v29.4s[0]
-	fmla	v6.4s, v29.4s, v29.4s[0]
-	fmla	v7.4s, v31.4s, v29.4s[0]
+
+	ldp		q24, q25, [x10, #0]
+	add		x10, x10, x11
+	ldp		q26, q27, [x10, #0]
+	add		x10, x10, x11
+
+	fmla	v2.4s, v24.4s, v29.4s[0]
+	fmla	v3.4s, v26.4s, v29.4s[0]
+	fmla	v6.4s, v25.4s, v29.4s[0]
+	fmla	v7.4s, v27.4s, v29.4s[0]
 
 0:
 
