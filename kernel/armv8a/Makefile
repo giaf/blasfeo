@@ -98,3 +98,4 @@ kernel_dgemm_12x4_lib4.o: kernel_dgemm_12x4_lib4.S kernel_dgemm_12x4_lib.S
 kernel_dgetrf_pivot_lib4.o: kernel_dgetrf_pivot_lib4.c kernel_dgetrf_pivot_lib.c
 
 kernel_sgemm_4x4_lib4.o: kernel_sgemm_4x4_lib4.S kernel_sgemm_4x4_lib.S
+kernel_sgemm_8x4_lib4.o: kernel_sgemm_8x4_lib4.S kernel_sgemm_8x4_lib.S

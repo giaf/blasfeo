@@ -106,6 +106,8 @@ NAME:
 	FUN_START(inner_kernel_gemm_add_nt_8x4_lib4)
 #endif
 
+
+
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
 
@@ -471,6 +473,8 @@ NAME:
 
 #endif // cortex a53
 
+
+
 #if MACRO_LEVEL>=2
 	.endm
 #else
@@ -500,6 +504,8 @@ NAME:
 	.align	4
 	FUN_START(inner_kernel_gemm_add_nn_8x4_lib4)
 #endif
+
+
 
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
@@ -878,6 +884,8 @@ NAME:
 
 
 #endif // cortex a53
+
+
 
 #if MACRO_LEVEL>=2
 	.endm
@@ -2590,4 +2598,10 @@ NAME:
 
 
 
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
+
+#include "kernel_sgemm_8x4_lib.S"
+
+#endif
 
