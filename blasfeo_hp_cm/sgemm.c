@@ -160,6 +160,11 @@ void blasfeo_hp_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *
 			goto nn_2; // small matrix: no pack
 //			goto nn_m0; // small matrix: pack A
 			}
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		if( m<=12 & n<=12 )
+			{
+			goto nn_m0; // small matrix: pack A
+			}
 #else
 		if( m<=8 & n<=8 )
 			{
@@ -661,6 +666,11 @@ void blasfeo_hp_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *
 			{
 			goto nt_2; // small matrix: no pack
 //			goto nt_m0; // small matrix: pack A
+			}
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		if( m<=12 & n<=12 )
+			{
+			goto nt_m0; // small matrix: pack A
 			}
 #else
 		if( m<=8 & n<=8 )
@@ -1609,6 +1619,11 @@ void blasfeo_hp_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *
 			{
 			goto tt_2; // small matrix: no pack
 //			goto tt_m0; // small matrix: pack A
+			}
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		if( m<=12 & n<=12 )
+			{
+			goto tt_m0; // small matrix: pack A
 			}
 #else
 		if( m<=8 & n<=8 )
