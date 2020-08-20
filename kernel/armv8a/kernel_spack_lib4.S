@@ -310,7 +310,7 @@ NAME:
 	trn2	v2.2d, v4.2d, v6.2d
 	trn1	v1.2d, v5.2d, v7.2d
 	trn2	v3.2d, v5.2d, v7.2d
-	
+
 	str		q0, [x11, #0]
 	str		q1, [x11, #16]
 	str		q2, [x11, #32]
