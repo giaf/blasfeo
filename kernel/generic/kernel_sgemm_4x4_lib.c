@@ -17413,6 +17413,7 @@ void kernel_strsm_nt_rl_inv_4x4_vs_lib4c44c(int kmax, float *A, float *B, int ld
 
 
 //#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if ! (defined(TARGET_ARMV8A_ARM_CORTEX_A57)  | defined(TARGET_ARMV8A_ARM_CORTEX_A53) )
 void kernel_strsm_nt_rl_inv_4x4_lib4cccc(int kmax, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd, float *E, int lde, float *inv_diag_E)
 	{
 
@@ -17507,7 +17508,7 @@ void kernel_strsm_nt_rl_inv_4x4_lib4cccc(int kmax, float *A, float *B, int ldb, 
 	return;
 
 	}
-//#endif
+#endif
 
 
 

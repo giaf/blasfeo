@@ -5653,6 +5653,90 @@
 
 
 
+//                                          w0        x1        x2        x3           w4       x5        w6       x7        sp+0     sp+8      sp+16    sp+24
+// void kernel_strsm_nt_rl_inv_4x4_lib4cccc(int kmax, float *A, float *B, float *beta, int ldb, float *C, int ldc, float *D, int ldd, float *E, int lde, float *inv_diag_E)
+
+	.align	4
+	GLOB_FUN_START(kernel_dtrsm_nt_rl_inv_4x4_lib4cccc)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		x10, x2 // B
+	mov		w11, w3 // ldb
+	lsl		w11, w11, #3 // 8*ldb
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nt_4x4_lib4c
+#endif
+
+
+
+	// call inner blend for alpha=1.0 and beta=1.0
+	mov		x8, x4 // beta
+	mov		x9, x5 // C
+	mov		w10, w6 // ldc
+	lsl		w10, w10, #3 // 8*ldc
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_4X4_LIB
+#else
+	bl inner_scale_m1b_4x4_lib
+#endif
+
+
+
+	// solution
+	ldr		x8, [sp, #(STACKSIZE + 8)] // E
+	ldr		w9, [sp, #(STACKSIZE + 16)] // sde
+	lsl		w9, w9, #3 // 8*ldc
+	ldr		x10, [sp, #(STACKSIZE + 24)] // inv_diag_E
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRSM_RLT_INV_4X4_LIB
+#else
+	bl inner_edge_trsm_rlt_inv_4x4_lib
+#endif
+
+
+
+	// store l
+	mov		x8, x7 // D
+	ldr		w9, [sp, #(STACKSIZE + 0)] // ldd
+	lsl		w9, w9, #3 // 8*ldd
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	bl inner_store_4x4_lib
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dtrsm_nt_rl_inv_4x4_lib4cccc)
+
+
+
+
+
 //                                         w0        x1         x2         x3            x4         w5       x6         w7       sp+0
 // void kernel_dtrsm_nt_rl_one_4x4_lib44cc4(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E)
 

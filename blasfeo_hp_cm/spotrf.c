@@ -144,6 +144,8 @@ void blasfeo_hp_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct 
 	if(m>=200 | m>K_MAX_STACK)
 #elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | m>K_MAX_STACK)
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	if(m>=24 | m>K_MAX_STACK)
 #else
 	if(m>=12 | m>K_MAX_STACK)
 #endif
