@@ -18,17 +18,17 @@ Currently BLASFEO supports the following architectures:
 
 | TARGET                       | Description |
 | ---------------------------- | ------------------------------------------------------------- |
-| ```X64_INTEL_HASWELL```      | Intel Haswell or AMD Zen architectures or newer, AVX2 and FMA ISA, 64-bit OS |
-| ```X64_INTEL_SANDY_BRIDGE``` | Intel Sandy-Bridge architecture or newer, AVX ISA, 64-bit OS |
-| ```X64_INTEL_CORE```         | Intel Core architecture or newer, SSE3 ISA, 64-bit OS |
-| ```X64_AMD_BULLDOZER```      | AMD Bulldozer architecture, AVX and FMA ISAs, 64-bit OS |
-| ```X86_AMD_JAGUAR```         | AMD Jaguar architecture, AVX ISA, 32-bit OS |
-| ```X86_AMD_BARCELONA```      | AMD Barcelona architecture, SSE3 ISA, 32-bit OS |
-| ```ARMV8A_ARM_CORTEX_A57```  | ARMv8A architecture, VFPv4 and NEONv2 ISAs, 64-bit OS |
-| ```ARMV8A_ARM_CORTEX_A53```  | ARMv8A architecture, VFPv4 and NEONv2 ISAs, 64-bit OS |
-| ```ARMV7A_ARM_CORTEX_A15```  | ARMv7A architecture, VFPv4 and NEON ISAs, 32-bit OS |
-| ```ARMV7A_ARM_CORTEX_A9```   | ARMv7A architecture, VFPv3 and NEON ISAs, 32-bit OS |
-| ```ARMV7A_ARM_CORTEX_A7```   | ARMv7A architecture, VFPv4 and NEON ISAs, 32-bit OS |
+| ```X64_INTEL_HASWELL```      | Intel Haswell, Intel Skylake, AMD Zen, AMD Zen2 architectures or newer. x86_64 with AVX2 and FMA ISA, 64-bit OS |
+| ```X64_INTEL_SANDY_BRIDGE``` | Intel Sandy-Bridge architecture. x86_64 with AVX ISA, 64-bit OS |
+| ```X64_INTEL_CORE```         | Intel Core architecture. x86_64 with SSE3 ISA, 64-bit OS |
+| ```X64_AMD_BULLDOZER```      | AMD Bulldozer architecture. x86_64 with AVX and FMA ISAs, 64-bit OS |
+| ```X86_AMD_JAGUAR```         | AMD Jaguar architecture. x86 with AVX ISA, 32-bit OS |
+| ```X86_AMD_BARCELONA```      | AMD Barcelona architecture. x86 with SSE3 ISA, 32-bit OS |
+| ```ARMV8A_ARM_CORTEX_A57```  | ARM Cortex A57, 72, 73 architectures. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
+| ```ARMV8A_ARM_CORTEX_A53```  | ARM Cortex A53 architectures. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
+| ```ARMV7A_ARM_CORTEX_A15```  | ARM Cortex A15 architecture. ARMv7A with VFPv4 and NEON ISAs, 32-bit OS |
+| ```ARMV7A_ARM_CORTEX_A9```   | ARM Cortex A9 architecture. ARMv7A with VFPv3 and NEON ISAs, 32-bit OS |
+| ```ARMV7A_ARM_CORTEX_A7```   | ARM Cortex A7 architecture. ARMv7A with VFPv4 and NEON ISAs, 32-bit OS |
 | ```GENERIC```                | Generic target, coded in C, giving better performance if the architecture provides more than 16 scalar FP registers (e.g. many RISC such as ARM) |
 
 Note that the ```X86_AMD_JAGUAR``` and ```X86_AMD_BARCELONA``` architectures are not currently supported by the CMake build system and can only be used through the included Makefile.
@@ -55,9 +55,9 @@ The BLASFEO backend provides three possible implementations of each linear algeb
 | ```REFERENCE```             | Target-unspecific lightly-optimizated; small code footprint; panel- or column-major matrix format |
 | ```EXTERNAL_BLAS_WRAPPER``` | Call to external BLAS and LAPACK libraries; column-major matrix format |
 
-## Matrix Format
+## Matrix Formats
 
-Currently there are two matrix formats used in the BLASFEO matrix structures ```blasfeo_dmat``` and ```blasfeo_smat```, specified using the ```LA``` build variable:
+Currently there are two matrix formats used in the BLASFEO matrix structures ```blasfeo_dmat``` and ```blasfeo_smat```, specified using the ```MF``` build variable:
 | MF             | Description |
 | -------------- | ----------- |
 | ```COLMAJ```   | column-major (or FORTRAN-style): the standard matrix format used in the BLAS and LAPACK libraries |
