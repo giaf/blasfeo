@@ -3,6 +3,23 @@ BLASFEO ChangeLog
 
 
 ====================================================================
+Version 0.1.3-master
+13-Aug-2020
+
+BLASFEO_API:
+	* use macros in REFERENCE backend to allow column- and panel-major formats
+	* add HP backed for column-major MF, expanding the former BLAS API code
+	* add option to export the HP or REF backends with different naming (used e.g. in tests and to implmenent all not-implemente-yet features in HP)
+
+BLAS_API:
+	* implement the BLAS API as a wrapper on top of the BLASFEO API
+	* spotrf for all targets (partially optimized for avx2 and armv8a, generic for others)
+
+ARMv8A:
+	* Cortex A53:
+		- improve kernels sgemm_nt lib4
+
+====================================================================
 Version 0.1.2
 13-Aug-2020
 
