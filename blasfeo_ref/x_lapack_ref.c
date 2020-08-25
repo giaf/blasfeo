@@ -874,6 +874,7 @@ void GETF2_NOPIVOT(int m, int n, REAL *A, int lda, REAL *dA)
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 #if ! ( defined(REF_BLAS) )
 // dgetrf without pivoting
 void REF_GETRF_NOPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
@@ -1145,6 +1146,7 @@ void REF_GETRF_NOPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMA
 #endif
 	return;
 	}
+#endif
 #endif
 
 
@@ -3330,11 +3332,13 @@ void PSTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, in
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 #if ! ( defined(REF_BLAS) )
 void GETRF_NOPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_GETRF_NOPIVOT(m, n, sC, ci, cj, sD, di, dj);
 	}
+#endif
 #endif
 
 

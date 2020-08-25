@@ -48,7 +48,6 @@ OBJS += dtrmm_ref.o # XXX
 OBJS += dtrsm_ref.o # XXX
 OBJS += dgesv.o
 OBJS += dgetrf_ref.o # XXX
-OBJS += dgetrf_np.o
 OBJS += dgetrs.o
 OBJS += dlaswp.o
 OBJS += dposv.o

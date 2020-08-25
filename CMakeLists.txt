@@ -536,7 +536,6 @@ file(GLOB BLAS_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/dtrsm_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/dgesv.c
 	${PROJECT_SOURCE_DIR}/blas_api/dgetrf_ref.c # XXX
-	${PROJECT_SOURCE_DIR}/blas_api/dgetrf_np.c
 	${PROJECT_SOURCE_DIR}/blas_api/dgetrs.c
 	${PROJECT_SOURCE_DIR}/blas_api/dlaswp.c
 	${PROJECT_SOURCE_DIR}/blas_api/dposv.c
