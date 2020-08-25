@@ -58,10 +58,10 @@ The BLASFEO backend provides three possible implementations of each linear algeb
 ## Matrix Format
 
 Currently there are two matrix formats used in the BLASFEO matrix structures ```blasfeo_dmat``` and ```blasfeo_smat```, specified using the ```LA``` build variable:
-- column-major: (or FORTRAN-style) the standard matrix format used in the BLAS and LAPACK libraries.
-- panel-major: BLASFEO's own matrix format, which is designed to improve performance for matrices fitting in cache.
-Each matrix is divided into panels with fixed height, and within each panel the matrix elements are stored in column-major matrix format.
-For performance reasons, a similar format is internally used also in the high-performance implementation for ```MF=COLMAJ```, however at the additional computational cost due to packing and unpacking overhead.
+| MF             | Description |
+| -------------- | ----------- |
+| ```COLMAJ```   | column-major (or FORTRAN-style): the standard matrix format used in the BLAS and LAPACK libraries |
+| ```PANELMAJ``` | panel-major: BLASFEO's own matrix format, which is designed to improve performance for matrices fitting in cache. Each matrix is stored in block-row-major with blocks (called panels) of fixed height, and within each panel the matrix elements are stored in column-major. |
 
 ## Recommended guidelines
 
