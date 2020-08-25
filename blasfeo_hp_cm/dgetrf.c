@@ -50,7 +50,9 @@
 #if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
 #define blasfeo_dmat blasfeo_cm_dmat
 #define blasfeo_hp_dgetrf_rp blasfeo_hp_cm_dgetrf_rp
+#define blasfeo_hp_dgetrf_np blasfeo_hp_cm_dgetrf_np
 #define blasfeo_dgetrf_rp blasfeo_cm_dgetrf_rp
+#define blasfeo_dgetrf_np blasfeo_cm_dgetrf_np
 #endif
 
 
