@@ -160,6 +160,11 @@ void blasfeo_hp_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *
 			goto nn_2; // small matrix: no pack
 //			goto nn_m0; // small matrix: pack A
 			}
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		if( m<=12 & n<=12 )
+			{
+			goto nn_m0; // small matrix: pack A
+			}
 #else
 		if( m<=8 & n<=8 )
 			{
@@ -391,11 +396,23 @@ nn_1:
 		{
 		goto nn_1_left_8;
 		}
-#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_spack_nn_8_lib4(k, A+ii, lda, tA.pA, sda);
-		for(jj=0; jj<n-3; jj+=4)
+		jj = 0;
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		for(; jj<n-7; jj+=8)
+			{
+			if(pack_B)
+				{
+				kernel_spack_tn_4_lib4(k, B+(jj+0)*ldb, ldb, tB.pA+(jj+0)*sdb);
+				kernel_spack_tn_4_lib4(k, B+(jj+4)*ldb, ldb, tB.pA+(jj+4)*sdb);
+				}
+			kernel_sgemm_nt_8x8_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+#endif
+		for(; jj<n-3; jj+=4)
 			{
 			if(pack_B)
 				kernel_spack_tn_4_lib4(k, B+jj*ldb, ldb, tB.pA+jj*sdb);
@@ -405,9 +422,12 @@ nn_1:
 			{
 			if(pack_B)
 				kernel_spack_tn_4_vs_lib4(k, B+jj*ldb, ldb, tB.pA+jj*sdb, n-jj);
-//			kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+			kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#else
 			kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 			kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA+4*sda, tB.pA+jj*sdb, &beta, C+(ii+4)+jj*ldc, ldc, D+(ii+4)+jj*ldd, ldd, m-(ii+4), n-jj);
+#endif
 			}
 		pack_B = 0;
 		}
@@ -503,16 +523,19 @@ nn_1_left_8:
 		kernel_sgemm_nt_8x4_vs_lib88cc(k, &alpha, tA.pA, tB.pA+jj*sdb+0, &beta, C+ii+(jj+0)*ldc, ldc, D+ii+(jj+0)*ldd, ldd, m-ii, n-(jj+0));
 		}
 	goto nn_1_return;
-#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 nn_1_left_8:
 	kernel_spack_nn_8_vs_lib4(k, A+ii, lda, tA.pA, sda, m-ii);
 	for(jj=0; jj<n; jj+=4)
 		{
 		if(pack_B)
 			kernel_spack_tn_4_vs_lib4(k, B+jj*ldb, ldb, tB.pA+jj*sdb, n-jj);
-//		kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#else
 		kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 		kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA+4*sda, tB.pA+jj*sdb, &beta, C+(ii+4)+jj*ldc, ldc, D+(ii+4)+jj*ldd, ldd, m-(ii+4), n-jj);
+#endif
 		}
 	goto nn_1_return;
 #endif
@@ -638,7 +661,7 @@ void blasfeo_hp_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *
 //	goto nt_2; // no pack
 //	goto nt_m0; // pack A
 //	goto nt_n0; // pack B
-//	goto nt_1; // pack A and B
+	goto nt_1; // pack A and B
 	if( k<=K_MAX_STACK )
 		{
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -649,6 +672,11 @@ void blasfeo_hp_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *
 			{
 			goto nt_2; // small matrix: no pack
 //			goto nt_m0; // small matrix: pack A
+			}
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		if( m<=12 & n<=12 )
+			{
+			goto nt_m0; // small matrix: pack A
 			}
 #else
 		if( m<=8 & n<=8 )
@@ -883,19 +911,29 @@ nt_1:
 		{
 		goto nt_1_left_8;
 		}
-#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_spack_nn_8_lib4(k, A+ii, lda, tA.pA, sda);
-		for(jj=0; jj<n-3; jj+=4)
+		jj = 0;
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		for(; jj<n-7; jj+=8)
+			{
+			kernel_sgemm_nt_8x8_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+#endif
+		for(; jj<n-3; jj+=4)
 			{
 			kernel_sgemm_nt_8x4_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 			}
 		if(jj<n)
 			{
-//			kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+			kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#else
 			kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 			kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA+4*sda, tB.pA+jj*sdb, &beta, C+(ii+4)+jj*ldc, ldc, D+(ii+4)+jj*ldd, ldd, m-(ii+4), n-jj);
+#endif
 			}
 		}
 	if(ii<m)
@@ -973,14 +1011,17 @@ nt_1_left_8:
 		kernel_sgemm_nt_8x4_vs_lib88cc(k, &alpha, tA.pA, tB.pA+jj*sdb+0, &beta, C+ii+(jj+0)*ldc, ldc, D+ii+(jj+0)*ldd, ldd, m-ii, n-(jj+0));
 		}
 	goto nt_1_return;
-#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 nt_1_left_8:
 	kernel_spack_nn_8_vs_lib4(k, A+ii, lda, tA.pA, sda, m-ii);
 	for(jj=0; jj<n; jj+=4)
 		{
-//		kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#else
 		kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 		kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA+4*sda, tB.pA+jj*sdb, &beta, C+(ii+4)+jj*ldc, ldc, D+(ii+4)+jj*ldd, ldd, m-(ii+4), n-jj);
+#endif
 		}
 	goto nt_1_return;
 #endif
@@ -1349,12 +1390,24 @@ tn_1:
 		{
 		goto tn_1_left_8;
 		}
-#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_spack_tn_4_lib4(k, A+(ii+0)*lda, lda, tA.pA);
 		kernel_spack_tn_4_lib4(k, A+(ii+4)*lda, lda, tA.pA+4*sda);
-		for(jj=0; jj<n-3; jj+=4)
+		jj = 0;
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		for(; jj<n-7; jj+=8)
+			{
+			if(pack_B)
+				{
+				kernel_spack_tn_4_lib4(k, B+(jj+0)*ldb, ldb, tB.pA+(jj+0)*sdb);
+				kernel_spack_tn_4_lib4(k, B+(jj+4)*ldb, ldb, tB.pA+(jj+4)*sdb);
+				}
+			kernel_sgemm_nt_8x8_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+#endif
+		for(; jj<n-3; jj+=4)
 			{
 			if(pack_B)
 				kernel_spack_tn_4_lib4(k, B+jj*ldb, ldb, tB.pA+jj*sdb);
@@ -1364,9 +1417,12 @@ tn_1:
 			{
 			if(pack_B)
 				kernel_spack_tn_4_vs_lib4(k, B+jj*ldb, ldb, tB.pA+jj*sdb, n-jj);
-//			kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+			kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#else
 			kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 			kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA+4*sda, tB.pA+jj*sdb, &beta, C+(ii+4)+jj*ldc, ldc, D+(ii+4)+jj*ldd, ldd, m-(ii+4), n-jj);
+#endif
 			}
 		pack_B = 0;
 		}
@@ -1465,7 +1521,7 @@ tn_1_left_8:
 		kernel_sgemm_nt_8x4_vs_lib88cc(k, &alpha, tA.pA, tB.pA+jj*sdb+0, &beta, C+ii+(jj+0)*ldc, ldc, D+ii+(jj+0)*ldd, ldd, m-ii, n-(jj+0));
 		}
 	goto tn_1_return;
-#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 tn_1_left_8:
 	kernel_spack_tn_4_lib4(k, A+(ii+0)*lda, lda, tA.pA);
 	kernel_spack_tn_4_vs_lib4(k, A+(ii+4)*lda, lda, tA.pA+4*sda, m-ii-4);
@@ -1473,9 +1529,12 @@ tn_1_left_8:
 		{
 		if(pack_B)
 			kernel_spack_tn_4_vs_lib4(k, B+jj*ldb, ldb, tB.pA+jj*sdb, n-jj);
-//		kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#else
 		kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 		kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA+4*sda, tB.pA+jj*sdb, &beta, C+(ii+4)+jj*ldc, ldc, D+(ii+4)+jj*ldd, ldd, m-(ii+4), n-jj);
+#endif
 		}
 	goto tn_1_return;
 #endif
@@ -1578,6 +1637,11 @@ void blasfeo_hp_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *
 			{
 			goto tt_2; // small matrix: no pack
 //			goto tt_m0; // small matrix: pack A
+			}
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		if( m<=12 & n<=12 )
+			{
+			goto tt_m0; // small matrix: pack A
 			}
 #else
 		if( m<=8 & n<=8 )
@@ -1815,20 +1879,30 @@ tt_1:
 		{
 		goto tt_1_left_8;
 		}
-#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_spack_tn_4_lib4(k, A+(ii+0)*lda, lda, tA.pA);
 		kernel_spack_tn_4_lib4(k, A+(ii+4)*lda, lda, tA.pA+4*sda);
-		for(jj=0; jj<n-3; jj+=4)
+		jj = 0;
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		for(; jj<n-7; jj+=8)
+			{
+			kernel_sgemm_nt_8x8_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+#endif
+		for(; jj<n-3; jj+=4)
 			{
 			kernel_sgemm_nt_8x4_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 			}
 		if(jj<n)
 			{
-//			kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+			kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#else
 			kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 			kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA+4*sda, tB.pA+jj*sdb, &beta, C+(ii+4)+jj*ldc, ldc, D+(ii+4)+jj*ldd, ldd, m-(ii+4), n-jj);
+#endif
 			}
 		}
 	if(ii<m)
@@ -1909,15 +1983,18 @@ tt_1_left_8:
 		kernel_sgemm_nt_8x4_vs_lib88cc(k, &alpha, tA.pA, tB.pA+jj*sdb+0, &beta, C+ii+(jj+0)*ldc, ldc, D+ii+(jj+0)*ldd, ldd, m-ii, n-(jj+0));
 		}
 	goto tt_1_return;
-#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
+#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 tt_1_left_8:
 	kernel_spack_tn_4_lib4(k, A+(ii+0)*lda, lda, tA.pA);
 	kernel_spack_tn_4_vs_lib4(k, A+(ii+4)*lda, lda, tA.pA+4*sda, m-ii-4);
 	for(jj=0; jj<n; jj+=4)
 		{
-//		kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		kernel_sgemm_nt_8x4_vs_lib44cc(k, &alpha, tA.pA, sda, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+#else
 		kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA, tB.pA+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 		kernel_sgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA+4*sda, tB.pA+jj*sdb, &beta, C+(ii+4)+jj*ldc, ldc, D+(ii+4)+jj*ldd, ldd, m-(ii+4), n-jj);
+#endif
 		}
 	goto tt_1_return;
 #endif

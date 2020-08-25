@@ -106,6 +106,8 @@ NAME:
 	FUN_START(inner_kernel_gemm_add_nt_8x4_lib4)
 #endif
 
+
+
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
 
@@ -471,6 +473,8 @@ NAME:
 
 #endif // cortex a53
 
+
+
 #if MACRO_LEVEL>=2
 	.endm
 #else
@@ -500,6 +504,8 @@ NAME:
 	.align	4
 	FUN_START(inner_kernel_gemm_add_nn_8x4_lib4)
 #endif
+
+
 
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
@@ -879,6 +885,8 @@ NAME:
 
 #endif // cortex a53
 
+
+
 #if MACRO_LEVEL>=2
 	.endm
 #else
@@ -993,7 +1001,45 @@ NAME:
 	.align 4
 	FUN_START(inner_edge_trsm_rlt_inv_8x4_lib4)
 #endif
-	
+
+#if 1
+
+	ldr			s16, [x9, #0] // E_inv[0]
+	fmul		v0.4s, v0.4s, v16.4s[0]
+	fmul		v4.4s, v4.4s, v16.4s[0]
+	ldr			s16, [x8, #4] // E[1+4*0]
+	fmls		v1.4s, v0.4s, v16.4s[0]
+	fmls		v5.4s, v4.4s, v16.4s[0]
+	ldr			s16, [x8, #8] // E[2+4*0]
+	fmls		v2.4s, v0.4s, v16.4s[0]
+	fmls		v6.4s, v4.4s, v16.4s[0]
+	ldr			s16, [x8, #12] // E[3+4*0]
+	fmls		v3.4s, v0.4s, v16.4s[0]
+	fmls		v7.4s, v4.4s, v16.4s[0]
+
+	ldr			s16, [x9, #4] // E_inv[1]
+	fmul		v1.4s, v1.4s, v16.4s[0]
+	fmul		v5.4s, v5.4s, v16.4s[0]
+	ldr			s16, [x8, #24] // E[2+4*1]
+	fmls		v2.4s, v1.4s, v16.4s[0]
+	fmls		v6.4s, v5.4s, v16.4s[0]
+	ldr			s16, [x8, #28] // E[3+4*1]
+	fmls		v3.4s, v1.4s, v16.4s[0]
+	fmls		v7.4s, v5.4s, v16.4s[0]
+
+	ldr			s16, [x9, #8] // E_inv[2]
+	fmul		v2.4s, v2.4s, v16.4s[0]
+	fmul		v6.4s, v6.4s, v16.4s[0]
+	ldr			s16, [x8, #44] // E[3+4*2]
+	fmls		v3.4s, v2.4s, v16.4s[0]
+	fmls		v7.4s, v6.4s, v16.4s[0]
+
+	ldr			s16, [x9, #12] // E_inv[3]
+	fmul		v3.4s, v3.4s, v16.4s[0]
+	fmul		v7.4s, v7.4s, v16.4s[0]
+
+#else
+
 	// first column
 	ldr			s16, [x9, #0] // E_inv[0]
 	fmul		v0.4s, v0.4s, v16.4s[0]
@@ -1025,21 +1071,21 @@ NAME:
 	ldr			s16, [x8, #28] // E[3+4*1]
 	fmls		v3.4s, v1.4s, v16.4s[0]
 	fmls		v7.4s, v5.4s, v16.4s[0]
-	ldr			s16, [x8, #44] // E[3+4*1]
+	ldr			s16, [x8, #44] // E[3+4*2]
 	fmls		v3.4s, v2.4s, v16.4s[0]
 	fmls		v7.4s, v6.4s, v16.4s[0]
-	ldr			s16, [x9, #12] // E_inv[2]
+	ldr			s16, [x9, #12] // E_inv[3]
 	fmul		v3.4s, v3.4s, v16.4s[0]
 	fmul		v7.4s, v7.4s, v16.4s[0]
+
+#endif
 
 #if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
 
-#if defined(OS_LINUX)
 	FUN_END(inner_edge_trsm_rlt_inv_8x4_lib4)
-#endif
 #endif
 
 
@@ -1122,9 +1168,7 @@ NAME:
 #else
 	ret
 
-#if defined(OS_LINUX)
 	FUN_END(inner_edge_trsm_rlt_inv_8x4_vs_lib4)
-#endif
 #endif
 
 
@@ -2590,4 +2634,10 @@ NAME:
 
 
 
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
+
+#include "kernel_sgemm_8x4_lib.S"
+
+#endif
 

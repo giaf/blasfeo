@@ -101,6 +101,8 @@ NAME:
 	FUN_START(inner_kernel_gemm_add_nt_4x4_lib4)
 #endif
 
+
+
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
 
@@ -234,7 +236,7 @@ NAME:
 
 
 
-#else // cortex a53
+#else // cortex a57 vs a53
 
 
 
@@ -367,6 +369,8 @@ NAME:
 
 
 #endif // cortex a53
+
+
 
 #if MACRO_LEVEL>=2
 	.endm
@@ -397,6 +401,8 @@ NAME:
 	FUN_START(inner_kernel_gemm_add_nn_4x4_lib4)
 #endif
 
+
+
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
 
@@ -671,6 +677,8 @@ NAME:
 
 
 #endif // cortex a53
+
+
 
 #if MACRO_LEVEL>=2
 	.endm
@@ -778,7 +786,35 @@ NAME:
 	.align 4
 	FUN_START(inner_edge_trsm_rlt_inv_4x4_lib4)
 #endif
-	
+
+#if 1
+
+	ldr			s16, [x9, #0] // E_inv[0]
+	fmul		v0.4s, v0.4s, v16.4s[0]
+	ldr			s16, [x8, #4] // E[1+4*0]
+	fmls		v1.4s, v0.4s, v16.4s[0]
+	ldr			s16, [x8, #8] // E[2+4*0]
+	fmls		v2.4s, v0.4s, v16.4s[0]
+	ldr			s16, [x8, #12] // E[3+4*0]
+	fmls		v3.4s, v0.4s, v16.4s[0]
+
+	ldr			s16, [x9, #4] // E_inv[1]
+	fmul		v1.4s, v1.4s, v16.4s[0]
+	ldr			s16, [x8, #24] // E[2+4*1]
+	fmls		v2.4s, v1.4s, v16.4s[0]
+	ldr			s16, [x8, #28] // E[3+4*1]
+	fmls		v3.4s, v1.4s, v16.4s[0]
+
+	ldr			s16, [x9, #8] // E_inv[2]
+	fmul		v2.4s, v2.4s, v16.4s[0]
+	ldr			s16, [x8, #44] // E[3+4*2]
+	fmls		v3.4s, v2.4s, v16.4s[0]
+
+	ldr			s16, [x9, #12] // E_inv[3]
+	fmul		v3.4s, v3.4s, v16.4s[0]
+
+#else
+
 	// first column
 	ldr			s16, [x9, #0] // E_inv[0]
 	fmul		v0.4s, v0.4s, v16.4s[0]
@@ -802,10 +838,12 @@ NAME:
 	fmls		v3.4s, v0.4s, v16.4s[0]
 	ldr			s16, [x8, #28] // E[3+4*1]
 	fmls		v3.4s, v1.4s, v16.4s[0]
-	ldr			s16, [x8, #44] // E[3+4*1]
+	ldr			s16, [x8, #44] // E[3+4*2]
 	fmls		v3.4s, v2.4s, v16.4s[0]
-	ldr			s16, [x9, #12] // E_inv[2]
+	ldr			s16, [x9, #12] // E_inv[3]
 	fmul		v3.4s, v3.4s, v16.4s[0]
+
+#endif
 
 #if MACRO_LEVEL>=1
 	.endm
