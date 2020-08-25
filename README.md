@@ -2,9 +2,19 @@
 
 BLASFEO provides a set of basic linear algebra routines, performance-optimized for matrices that fit in cache (i.e. generally up to a couple hundred size in each dimension), as typically encountered in embedded optimization applications.
 
+## BLASFEO APIs
+
+BLASFEO provides two APIs (Application Programming Interfaces):
+- BLAS API: the standard BLAS and LAPACK APIs, with matrices stored in column-major.
+- BLASFEO API: BLASFEO's own API is optimized to reduce overhead for small matrices.
+It employes structures to describe matrices (```blasfeo_dmat```) and vectors (```blasfeo_dvec```), defined in ```include/blasfeo_common.h```.
+The actual implementation of ```blasfeo_dmat``` and ```blasfeo_dvec``` depends on the ```TARGET```, ```LA``` (Linear Algebra) and ```MF``` (Matrix Format) choice.
+The API is non-destructive, and compared to the BLAS API it has an additional matrix/vector argument reserved for the output.
+
 ## Supported Computer Architectures
 
-The architecture for BLASFEO to use is specified using the ```TARGET``` build variable. Currently BLASFEO supports the following architectures:
+The architecture for BLASFEO to use is specified using the ```TARGET``` build variable.
+Currently BLASFEO supports the following architectures:
 
 | TARGET                       | Description |
 | ---------------------------- | ------------------------------------------------------------- |
@@ -23,15 +33,17 @@ The architecture for BLASFEO to use is specified using the ```TARGET``` build va
 
 Note that the ```X86_AMD_JAGUAR``` and ```X86_AMD_BARCELONA``` architectures are not currently supported by the CMake build system and can only be used through the included Makefile.
 
-
 ### Automatic Target Detection
 
-When using the CMake build system, it is possible to automatically detect the X64 target the current computer can use. This can be enabled by specifying the ```X64_AUTOMATIC``` target. In this mode, the build system will automatically search through the X64 targets to find the best one that can both compile and run on the host machine.
+When using the CMake build system, it is possible to automatically detect the X64 target the current computer can use.
+This can be enabled by specifying the ```X64_AUTOMATIC``` target.
+In this mode, the build system will automatically search through the X64 targets to find the best one that can both compile and run on the host machine.
 
 ### Target Testing
 
-When using the CMake build system, tests will automatically be performed to see if the current compiler can compile the needed code for the selected target and that the current computer can execute the code compiled for the current target. The execution test can be disabled by setting the ```BLASFEO_CROSSCOMPILING``` flag to true. This is automatically done when CMake detects that cross compilation is happening.
-
+When using the CMake build system, tests will automatically be performed to see if the current compiler can compile the needed code for the selected target and that the current computer can execute the code compiled for the current target.
+The execution test can be disabled by setting the ```BLASFEO_CROSSCOMPILING``` flag to true.
+This is automatically done when CMake detects that cross compilation is happening.
 
 ## Linear Algebra Routines
 
@@ -39,18 +51,17 @@ The BLASFEO backend provides three possible implementations of each linear algeb
 
 | LA                          | Description |
 | --------------------------- | ------------------------------------------------------------- |
-| ```HIGH_PERFORMANCE```      | Target-tailored; performance-optimized for cache resident matrices; panel-major matrix format. Currently provided for OS_LINUX (x86_64 64-bit, x86 32-bit, ARMv8A 64-bit, ARMv7A 32-bit), OS_WINDOWS (x86_64 64-bit) and OS_MAC (x86_64 64-bit). |
-| ```REFERENCE```             | Target-unspecific lightly-optimizated; small code footprint; column-major matrix format |
+| ```HIGH_PERFORMANCE```      | Target-tailored; performance-optimized for cache resident matrices; panel- or column-major matrix format. Currently provided for OS_LINUX (x86_64 64-bit, x86 32-bit, ARMv8A 64-bit, ARMv7A 32-bit), OS_WINDOWS (x86_64 64-bit) and OS_MAC (x86_64 64-bit). |
+| ```REFERENCE```             | Target-unspecific lightly-optimizated; small code footprint; panel- or column-major matrix format |
 | ```EXTERNAL_BLAS_WRAPPER``` | Call to external BLAS and LAPACK libraries; column-major matrix format |
 
-## BLASFEO APIs
+## Matrix Format
 
-BLASFEO provides two APIs:
-- BLAS API: the standard BLAS and LAPACK APIs, with matrices stored in column-major.
-- BLASFEO API: this API is optimized to reduce overhead for small matrices.
-It employes structures to describe matrices (blasfeo_dmat) and vectors (blasfeo_dvec), defined in include/blasfeo_common.h.
-The actual implementation of blasfeo_dmat and blasfeo_dvec depends on the LA and TARGET choice.
-The API is non-destructive, and compared to the BLAS API it has an additional matrix/vector argument reserved for the output.
+Currently there are two matrix formats used in the BLASFEO matrix structures ```blasfeo_dmat``` and ```blasfeo_smat```, specified using the ```LA``` build variable:
+- column-major: (or FORTRAN-style) the standard matrix format used in the BLAS and LAPACK libraries.
+- panel-major: BLASFEO's own matrix format, which is designed to improve performance for matrices fitting in cache.
+Each matrix is divided into panels with fixed height, and within each panel the matrix elements are stored in column-major matrix format.
+For performance reasons, a similar format is internally used also in the high-performance implementation for ```MF=COLMAJ```, however at the additional computational cost due to packing and unpacking overhead.
 
 ## Recommended guidelines
 
