@@ -65,12 +65,14 @@ Currently there are two matrix formats used in the BLASFEO matrix structures ```
 
 ## Tests
 
-BLASFEO provides some functionality to test the correctness of its linear algebra routines, for both the BLASFEO and the BLAS API.
+BLASFEO provides some functionality to test the correctness of its linear algebra routines, for both the BLASFEO and the BLAS APIs.
 The testing framework is written in python (minimum version 3.6) and uses ```jinja``` template engine, which can be installed with the command ```pip install jinja2```.
-In the ```tests``` folder there are several predefined test sets targeting different combinations of architectures, precisions and matrix formats, and which are used for automatic testing in Travis CI.
+In the ```tests``` folder there are several predefined test sets targeting different combinations of architecture, precision and matrix format, and which are used for automatic testing in Travis CI.
 
 In order to run a test set, from the `tests` folder run for example the command 
+
 ```python tester.py testset_travis_blasfeo_pm_double_amd64.jsom```
+
 where you can replace the testset with any other.
 If no test set is specified, the ```testset_default.json``` is selected; this testset can be easily edited to test just a few routines of your choice.
 
