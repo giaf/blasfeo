@@ -32,6 +32,7 @@
 * Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             *
 *                                                                                                 *
 **************************************************************************************************/
+
 void dgemm_nn_3l(int m, int n, int k, double *A, int lda , double *B, int ldb, double *C, int ldc);
 void daxpy_3l(int n, double da, double *dx, double *dy);
 void dscal_3l(int n, double da, double *dx);
