@@ -34,19 +34,19 @@
 ###################################################################################################
 
 
-add_executable(test_d_custom test_d_custom.c)
-add_executable(test_s_custom test_s_custom.c)
+add_executable(test_d_blasfeo_api test_d_blasfeo_api.c)
+add_executable(test_s_blasfeo_api test_s_blasfeo_api.c)
 add_executable(test_d_blas_api test_d_blas_api.c)
 add_executable(test_s_blas_api test_s_blas_api.c)
 
 if(CMAKE_C_COMPILER_ID MATCHES MSVC) # no explicit math library
-	target_link_libraries(test_d_custom blasfeo)
-	target_link_libraries(test_s_custom blasfeo)
+	target_link_libraries(test_d_blasfeo_api blasfeo)
+	target_link_libraries(test_s_blasfeo_api blasfeo)
 	target_link_libraries(test_d_blas_api blasfeo)
 	target_link_libraries(test_s_blas_api blasfeo)
 else() # add explicit math library
-	target_link_libraries(test_d_custom blasfeo m)
-	target_link_libraries(test_s_custom blasfeo m)
+	target_link_libraries(test_d_blasfeo_api blasfeo m)
+	target_link_libraries(test_s_blasfeo_api blasfeo m)
 	target_link_libraries(test_d_blas_api blasfeo m)
 	target_link_libraries(test_s_blas_api blasfeo m)
 endif()

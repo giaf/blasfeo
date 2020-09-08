@@ -53,26 +53,28 @@ extern "C" {
 ************************************************/
 
 // returns the memory size (in bytes) needed for a smat
-int blasfeo_memsize_smat(int m, int n);
-int blasfeo_memsize_smat_ps(int ps, int m, int n);
+size_t blasfeo_memsize_smat(int m, int n);
+size_t blasfeo_memsize_smat_ps(int ps, int m, int n);
 // returns the memory size (in bytes) needed for the diagonal of a smat
-int blasfeo_memsize_diag_smat(int m, int n);
+size_t blasfeo_memsize_diag_smat(int m, int n);
 // returns the memory size (in bytes) needed for a svec
-int blasfeo_memsize_svec(int m);
+size_t blasfeo_memsize_svec(int m);
 // create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
 void blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memory);
 void blasfeo_create_smat_ps(int ps, int m, int n, struct blasfeo_smat *sA, void *memory);
 // create a strvec for a vector of size m by using memory passed by a pointer (pointer is not updated)
 void blasfeo_create_svec(int m, struct blasfeo_svec *sA, void *memory);
 void blasfeo_pack_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
-void blasfeo_pack_svec(int m, float *a, struct blasfeo_svec *sa, int ai);
+void blasfeo_pack_l_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
+void blasfeo_pack_u_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
 void blasfeo_pack_tran_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
+void blasfeo_pack_svec(int m, float *x, int xi, struct blasfeo_svec *sa, int ai);
 void blasfeo_unpack_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj, float *A, int lda);
-void blasfeo_unpack_svec(int m, struct blasfeo_svec *sa, int ai, float *a);
 void blasfeo_unpack_tran_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj, float *A, int lda);
-void s_cast_mat2strmat(float *A, struct blasfeo_smat *sA);
-void s_cast_diag_mat2strmat(float *dA, struct blasfeo_smat *sA);
-void s_cast_vec2vecmat(float *a, struct blasfeo_svec *sa);
+void blasfeo_unpack_svec(int m, struct blasfeo_svec *sa, int ai, float *x, int xi);
+//void s_cast_mat2strmat(float *A, struct blasfeo_smat *sA);
+//void s_cast_diag_mat2strmat(float *dA, struct blasfeo_smat *sA);
+//void s_cast_vec2vecmat(float *a, struct blasfeo_svec *sa);
 
 // ge
 void blasfeo_sgese(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj);
@@ -129,6 +131,28 @@ void blasfeo_svecze(int m, struct blasfeo_svec *sm, int mi, struct blasfeo_svec 
 void blasfeo_svecnrm_inf(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm);
 void blasfeo_svecpe(int kmax, int *ipiv, struct blasfeo_svec *sx, int xi);
 void blasfeo_svecpei(int kmax, int *ipiv, struct blasfeo_svec *sx, int xi);
+
+
+
+/*
+* Explicitly panel-major matrix format
+*/
+
+// returns the memory size (in bytes) needed for a dmat
+size_t blasfeo_pm_memsize_smat(int ps, int m, int n);
+// create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
+void blasfeo_pm_create_smat(int ps, int m, int n, struct blasfeo_pm_smat *sA, void *memory);
+
+
+
+/*
+* Explicitly column-major matrix format
+*/
+
+// returns the memory size (in bytes) needed for a dmat
+size_t blasfeo_cm_memsize_smat(int m, int n);
+// create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
+void blasfeo_cm_create_smat(int m, int n, struct blasfeo_pm_smat *sA, void *memory);
 
 
 

@@ -33,7 +33,8 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-int test_routine(struct RoutineArgs *args, int *bad_calls){
+int test_routine(struct RoutineArgs *args, int *bad_calls)
+	{
 
 	#if (VERBOSE > 2)
 	// (err=0 || err=1) && VERBOSE = 3
@@ -84,7 +85,9 @@ int test_routine(struct RoutineArgs *args, int *bad_calls){
 		}
 	// terminate on error
 	return err;
-}
+	}
+
+
 
 int main()
 	{
@@ -92,7 +95,6 @@ int main()
 
 	int ii, jj, kk;
 	int n = 60;
-	int qf_worksize = PS*(2*(n+PS))*sizeof(REAL);
 	int bad_calls;
 	double test_elapsed_time;
 	const char* result_code;
@@ -284,8 +286,6 @@ int main()
 	args.rD = &rD;
 	args.ripiv = ripiv;
 
-	v_zeros_align(&(args.work), qf_worksize);
-
 	// loop over alphas/betas
 	for (aa = 0; aa < alphas; aa++)
 		{
@@ -379,8 +379,6 @@ int main()
 	FREE(B);
 	FREE(C);
 	FREE(D);
-
-	FREE(args.work);
 
 	FREE_STRMAT(&sB);
 	FREE_STRMAT(&sA);

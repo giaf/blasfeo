@@ -101,14 +101,28 @@ TARGET = X64_INTEL_HASWELL
 #
 # TARGET = GENERIC
 
-# Select back-end linear lagebra version (LA):
+# Select back-end linear lagebra version (LA) to implement BLASFEO API:
 # HIGH_PERFORMANCE : target-tailored; performance-optimized for cache resident matrices; panel-major matrix format
-# REFERENCE : target-unspecific lightly-optimized; small code footprint; column-major matrix format
+# REFERENCE : target-unspecific lightly-optimized; small code footprint; {panel,column}-major matrix format(s)
 # EXTERNAL_BLAS_WRAPPER : call to external BLAS and LAPACK libraries; column-major matrix format
 #
 LA = HIGH_PERFORMANCE
 # LA = REFERENCE
 # LA = EXTERNAL_BLAS_WRAPPER
+
+# Export additional back-ends with different naming
+# BLASFEO reference with blasfeo_ref_xxx naming
+# BLASFEO_REF_API = 0
+BLASFEO_REF_API = 1
+# BLASFEO high-performance with blasfeo_hp_xxx naming
+BLASFEO_HP_API = 0
+# BLASFEO_HP_API = 1
+
+# Select the Matrix Format internally used in the blasfeo_{d,s}mat structure
+# COLMAJ : column-major matrix format
+# PANELMAJ : panel-major matrix format
+# MF = COLMAJ
+MF = PANELMAJ
 
 # Select external BLAS and LAPACK implementation (to be provided by the user).
 # Edit Makefile.external_blas to specify installation location (default /opt).
@@ -201,20 +215,6 @@ USE_C99_MATH = 1
 # EXT_DEP = 0
 EXT_DEP = 1
 
-# Compile reference implementations with test_ prefix
-# in order to check HIGH_PERFORMANCE routines against reference
-# TODO bug: if LA=EXTERNAL_BLAS_WRAPPER and TESTING_MODE=1, reference code is used for libblasfeo.a
-# Also enables the compilation of tests
-#
-TESTING_MODE = 0
-# TESTING_MODE = 1
-
-# Compile not-yet-implemented routine with just-return instead of print-and-exit
-# Also enables the compilation of benchmarks
-#
-BENCHMARKS_MODE = 0
-# BENCHMARKS_MODE = 1
-
 # Enables the compilation of sandbox (experimental)
 #
 SANDBOX_MODE = 0
@@ -235,6 +235,7 @@ PRINT_NAME = 0
 CC ?= gcc
 # CC = clang
 # CC = x86_64-w64-mingw32-gcc
+# CC = arm-linux-gnueabihf-gcc
 
 # archive routine
 #
@@ -263,6 +264,7 @@ ASFLAGS += #-g
 # Profiling flags
 #
 #CFLAGS += --coverage
+#CFLAGS += -fopenmp
 
 
 
@@ -280,23 +282,43 @@ CFLAGS += -I$(TOP)/include
 
 # Conditional definitions and checks
 
+# LA high performance
 ifeq ($(LA), HIGH_PERFORMANCE)
 CFLAGS  += -DLA_HIGH_PERFORMANCE
+ASFLAGS  += -DLA_HIGH_PERFORMANCE
 BINARY_DIR = build/$(LA)/$(TARGET)
 endif
+# LA reference
 ifeq ($(LA), REFERENCE)
 CFLAGS  += -DLA_REFERENCE
 BINARY_DIR = build/$(LA)/$(TARGET)
 endif
+# LA blas wrapper
 ifeq ($(LA), EXTERNAL_BLAS_WRAPPER)
 ifeq ($(EXTERNAL_BLAS), 0)
 $(error No EXTERNAL_BLAS selected for LA=EXTERNAL_BLAS_WRAPPER)
+endif
+ifeq ($(MF), PANELMAJ)
+$(error As of now, with LA=EXTERNAL_BLAS_WRAPPER only MF=COLMAJ is supported)
 endif
 CFLAGS  += -DLA_EXTERNAL_BLAS_WRAPPER
 BINARY_DIR = build/$(LA)/$(EXTERNAL_BLAS)
 endif
 # TODO remove and fix tests
 # CFLAGS  += -DBLASFEO_LA=$(LA)
+
+ifeq ($(BLASFEO_REF_API), 1)
+CFLAGS += -DBLASFEO_REF_API
+endif
+
+ifeq ($(MF), COLMAJ)
+CFLAGS  += -DMF_COLMAJ
+ASFLAGS  += -DMF_COLMAJ
+endif
+ifeq ($(MF), PANELMAJ)
+CFLAGS  += -DMF_PANELMAJ
+ASFLAGS  += -DMF_PANELMAJ
+endif
 
 ifeq ($(BLAS_API), 1)
 CFLAGS += -DBLAS_API
@@ -354,14 +376,6 @@ endif
 
 ifeq ($(EXT_DEP), 1)
 CFLAGS += -DEXT_DEP
-endif
-
-ifeq ($(TESTING_MODE), 1)
-CFLAGS += -DTESTING_MODE
-endif
-
-ifeq ($(BENCHMARKS_MODE), 1)
-CFLAGS += -DBENCHMARKS_MODE
 endif
 
 ifeq ($(SANDBOX_MODE), 1)

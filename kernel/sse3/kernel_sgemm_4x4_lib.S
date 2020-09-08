@@ -97,19 +97,19 @@
 	ucomiss		%xmm15, %xmm14 // beta==0.0 ?
 	je			0f // end
 
-	movaps		0(%r12), %xmm15
+	movups		0(%r12), %xmm15
 	mulps		%xmm14, %xmm15
 	addps		%xmm15, %xmm0
 	addq		%r13, %r12
-	movaps		0(%r12), %xmm15
+	movups		0(%r12), %xmm15
 	mulps		%xmm14, %xmm15
 	addps		%xmm15, %xmm1
 	addq		%r13, %r12
-	movaps		0(%r12), %xmm15
+	movups		0(%r12), %xmm15
 	mulps		%xmm14, %xmm15
 	addps		%xmm15, %xmm2
 	addq		%r13, %r12
-	movaps		0(%r12), %xmm15
+	movups		0(%r12), %xmm15
 	mulps		%xmm14, %xmm15
 	addps		%xmm15, %xmm3
 //	addq		%r13, %r12
@@ -155,13 +155,13 @@
 	FUN_START(inner_store_4x4_lib)
 #endif
 	
-	movapd		%xmm0,   0(%r10)
+	movups		%xmm0,  0(%r10)
 	addq		%r11, %r10
-	movapd 		%xmm1,  0(%r10)
+	movups 		%xmm1,  0(%r10)
 	addq		%r11, %r10
-	movapd 		%xmm2,  0(%r10)
+	movups 		%xmm2,  0(%r10)
 	addq		%r11, %r10
-	movapd 		%xmm3,  0(%r10)
+	movups 		%xmm3,  0(%r10)
 	addq		%r11, %r10
 	
 #if MACRO_LEVEL>=1

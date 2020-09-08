@@ -34,9 +34,6 @@
 **************************************************************************************************/
 
 
-#if defined(BENCHMARKS_MODE)
-
-
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -297,7 +294,7 @@ int main()
 
 		blasfeo_pack_smat(n, n, A, n, &sA, 0, 0);
 		blasfeo_pack_smat(n, n, B, n, &sB, 0, 0);
-		blasfeo_pack_svec(n, x, &sx, 0);
+		blasfeo_pack_svec(n, x, 1, &sx, 0);
 
 		// create matrix to pivot all the time
 		// blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 1.0, &sB, 0, 0, &sD, 0, 0);
@@ -355,7 +352,10 @@ int main()
 				// blasfeo routines
 				blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_sgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_sgemm_tn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_sgemm_tt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_ssyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_ssyrk_ln_mn(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_spotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_spotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_sgetr(n, n, &sA, 0, 0, &sB, 0, 0);
@@ -510,16 +510,3 @@ int main()
 
 	}
 
-#else
-
-
-#include <stdio.h>
-
-int main()
-	{
-	printf("\n\n Recompile BLASFEO with BENCHMARKS_MODE=1 to run this benchmark.\n");
-	printf("On CMake use -DBLASFEO_BENCHMARKS=ON .\n\n");
-	return 0;
-	}
-
-#endif

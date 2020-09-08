@@ -14948,7 +14948,8 @@ NAME:
 
 
 
-#if defined(BLAS_API)
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
 
 #include "kernel_dgemm_8x4_lib.S"
 //#include "archive/kernel_dgemm_8x4_lib.S"

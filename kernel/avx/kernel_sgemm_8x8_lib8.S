@@ -1557,6 +1557,7 @@ inner_edge_gemm_add_nn_8x8_lib8:
 	sall			$2, %eax // offsetB*sizeof(float)
 	addq			%rax, %r12 // B+offsetB*sizeof(float)
 
+1:
 	// unroll 0
 	vmovaps			0(%r11), %ymm12 // A[0]
 	vbroadcastss	0(%r12), %ymm13 // B[0]
@@ -5511,7 +5512,8 @@ kernel_ssyrk_spotrf_nt_l_8x8_vs_lib8:
 
 
 
-#if defined(BLAS_API)
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
 
 #include "kernel_sgemm_8x8_lib.S"
 

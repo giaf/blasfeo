@@ -33,7 +33,8 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#if defined(TESTING_MODE)
+// TODO later on check that it's equal to 1
+#if defined(BLASFEO_REF_API)
 
 // libc
 #include <stdlib.h>
@@ -68,8 +69,8 @@
 
 int main()
 	{
-	printf("\n\n Recompile BLASFEO with TESTING_MODE=1 to run this test.\n");
-	printf("On CMake use -DBLASFEO_TESTING=ON .\n\n");
+	printf("\n\n Recompile BLASFEO with BLASFEO_REF_API=1 in Makefile.rule to run this test.\n");
+	printf("On CMake use -DBLASFEO_REF_API=ON .\n\n");
 	return 0;
 	}
 

@@ -106,6 +106,193 @@ NAME:
 	FUN_START(inner_kernel_gemm_add_nt_8x4_lib4)
 #endif
 
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x12, x9, x10
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x9, #0]
+	prfm	PLDL1KEEP, [x12, #0]
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, #64]
+	prfm	PLDL1KEEP, [x9, #64]
+	prfm	PLDL1KEEP, [x12, #64]
+
+	// main loop
+1:
+
+	ldp		q28, q29, [x11, #(0*16)]
+	ldp		q24, q25, [x9, #(0*16)]
+	ldp		q20, q21, [x12, #(0*16)]
+
+	ldp		q30, q31, [x11, #(2*16)]
+	ldp		q26, q27, [x9, #(2*16)]
+	ldp		q22, q23, [x12, #(2*16)]
+
+	// unroll 0
+	fmla	v0.4s, v24.4s, v28.4s[0]
+	fmla	v1.4s, v24.4s, v28.4s[1]
+	prfm	PLDL1KEEP, [x12, #128]
+	fmla	v2.4s, v24.4s, v28.4s[2]
+	fmla	v3.4s, v24.4s, v28.4s[3]
+	prfm	PLDL1KEEP, [x9, #128]
+	fmla	v4.4s, v20.4s, v28.4s[0]
+	fmla	v5.4s, v20.4s, v28.4s[1]
+	prfm	PLDL1KEEP, [x11, #128]
+	fmla	v6.4s, v20.4s, v28.4s[2]
+	fmla	v7.4s, v20.4s, v28.4s[3]
+
+	// unroll 1
+	fmla	v0.4s, v25.4s, v29.4s[0]
+	fmla	v1.4s, v25.4s, v29.4s[1]
+	add		x9, x9, #64
+	fmla	v2.4s, v25.4s, v29.4s[2]
+	fmla	v3.4s, v25.4s, v29.4s[3]
+	fmla	v4.4s, v21.4s, v29.4s[0]
+	fmla	v5.4s, v21.4s, v29.4s[1]
+	add		x12, x12, #64
+	fmla	v6.4s, v21.4s, v29.4s[2]
+	fmla	v7.4s, v21.4s, v29.4s[3]
+
+	// unroll 2
+	fmla	v0.4s, v26.4s, v30.4s[0]
+	fmla	v1.4s, v26.4s, v30.4s[1]
+	add		x11, x11, #64
+	fmla	v2.4s, v26.4s, v30.4s[2]
+	fmla	v3.4s, v26.4s, v30.4s[3]
+	fmla	v4.4s, v22.4s, v30.4s[0]
+	fmla	v5.4s, v22.4s, v30.4s[1]
+	fmla	v6.4s, v22.4s, v30.4s[2]
+	fmla	v7.4s, v22.4s, v30.4s[3]
+	sub		w8, w8, #4
+
+	// unroll 3
+	fmla	v0.4s, v27.4s, v31.4s[0]
+	fmla	v1.4s, v27.4s, v31.4s[1]
+	fmla	v2.4s, v27.4s, v31.4s[2]
+	fmla	v3.4s, v27.4s, v31.4s[3]
+	cmp		w8, #4
+	fmla	v4.4s, v23.4s, v31.4s[0]
+	fmla	v5.4s, v23.4s, v31.4s[1]
+	fmla	v6.4s, v23.4s, v31.4s[2]
+	fmla	v7.4s, v23.4s, v31.4s[3]
+
+	bgt		1b
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	ldp		q28, q29, [x11, #(0*16)]
+	ldp		q24, q25, [x9, #(0*16)]
+	ldp		q20, q21, [x12, #(0*16)]
+
+	ldp		q26, q27, [x9, #(2*16)]
+	ldp		q30, q31, [x11, #(2*16)]
+	ldp		q22, q23, [x12, #(2*16)]
+
+	// unroll 0
+	fmla	v0.4s, v24.4s, v28.4s[0]
+	fmla	v1.4s, v24.4s, v28.4s[1]
+	fmla	v2.4s, v24.4s, v28.4s[2]
+	fmla	v3.4s, v24.4s, v28.4s[3]
+	fmla	v4.4s, v20.4s, v28.4s[0]
+//	prfm	PLDL1KEEP, [x12, #128]
+	fmla	v5.4s, v20.4s, v28.4s[1]
+//	prfm	PLDL1KEEP, [x9, #128]
+	fmla	v6.4s, v20.4s, v28.4s[2]
+//	prfm	PLDL1KEEP, [x11, #128]
+	fmla	v7.4s, v20.4s, v28.4s[3]
+
+	// unroll 1
+	fmla	v0.4s, v25.4s, v29.4s[0]
+	fmla	v1.4s, v25.4s, v29.4s[1]
+	add		x9, x9, #64
+	fmla	v2.4s, v25.4s, v29.4s[2]
+	fmla	v3.4s, v25.4s, v29.4s[3]
+	fmla	v4.4s, v21.4s, v29.4s[0]
+	fmla	v5.4s, v21.4s, v29.4s[1]
+	add		x12, x12, #64
+	fmla	v6.4s, v21.4s, v29.4s[2]
+	fmla	v7.4s, v21.4s, v29.4s[3]
+
+	// unroll 2
+	fmla	v0.4s, v26.4s, v30.4s[0]
+	fmla	v1.4s, v26.4s, v30.4s[1]
+	add		x11, x11, #64
+	fmla	v2.4s, v26.4s, v30.4s[2]
+	fmla	v3.4s, v26.4s, v30.4s[3]
+	fmla	v4.4s, v22.4s, v30.4s[0]
+	fmla	v5.4s, v22.4s, v30.4s[1]
+	fmla	v6.4s, v22.4s, v30.4s[2]
+	fmla	v7.4s, v22.4s, v30.4s[3]
+	sub		w8, w8, #4
+
+	// unroll 3
+	fmla	v0.4s, v27.4s, v31.4s[0]
+	fmla	v1.4s, v27.4s, v31.4s[1]
+	fmla	v2.4s, v27.4s, v31.4s[2]
+	fmla	v3.4s, v27.4s, v31.4s[3]
+	fmla	v4.4s, v23.4s, v31.4s[0]
+	fmla	v5.4s, v23.4s, v31.4s[1]
+	fmla	v6.4s, v23.4s, v31.4s[2]
+	fmla	v7.4s, v23.4s, v31.4s[3]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+//	sub		x9, x9, #32
+//	sub		x12, x12, #32
+//	sub		x11, x11, #32
+
+3: // clean1-up loop
+
+	// unroll 0
+
+	ldr		q28, [x11], #16
+	ldr		q24, [x9], #16
+	ldr		q20, [x12], #16
+	fmla	v0.4s, v24.4s, v28.4s[0]
+	fmla	v1.4s, v24.4s, v28.4s[1]
+	fmla	v2.4s, v24.4s, v28.4s[2]
+	fmla	v3.4s, v24.4s, v28.4s[3]
+	fmla	v4.4s, v20.4s, v28.4s[0]
+	fmla	v5.4s, v20.4s, v28.4s[1]
+	fmla	v6.4s, v20.4s, v28.4s[2]
+	fmla	v7.4s, v20.4s, v28.4s[3]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+	bgt		3b
+
+2: // return
+
+
+
+#else // cortex a53
+
+
+
 	// early return
 	cmp		w8, #0
 	ble		2f // return
@@ -281,7 +468,13 @@ NAME:
 	bgt		3b
 
 2: // return
-	
+
+
+
+#endif // cortex a53
+
+
+
 #if MACRO_LEVEL>=2
 	.endm
 #else
@@ -311,6 +504,200 @@ NAME:
 	.align	4
 	FUN_START(inner_kernel_gemm_add_nn_8x4_lib4)
 #endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x13, x9, x10
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x9, #0]
+	prfm	PLDL1KEEP, [x13, #0]
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, x12]
+	prfm	PLDL1KEEP, [x9, #64]
+	prfm	PLDL1KEEP, [x13, #64]
+
+	// main loop
+1:
+
+	ldp		q28, q29, [x11, #(0*16)]
+	ldp		q24, q25, [x9, #(0*16)]
+	ldp		q20, q21, [x13, #(0*16)]
+
+	ldp		q30, q31, [x11, #(2*16)]
+	ldp		q26, q27, [x9, #(2*16)]
+	ldp		q22, q23, [x13, #(2*16)]
+
+	// unroll 0
+	fmla	v0.4s, v24.4s, v28.4s[0]
+	fmla	v4.4s, v20.4s, v28.4s[0]
+	fmla	v1.4s, v24.4s, v29.4s[0]
+	fmla	v5.4s, v20.4s, v29.4s[0]
+	fmla	v2.4s, v24.4s, v30.4s[0]
+	add		x11, x11, x12
+	fmla	v6.4s, v20.4s, v30.4s[0]
+	prfm	PLDL1KEEP, [x13, #128]
+	fmla	v3.4s, v24.4s, v31.4s[0]
+	prfm	PLDL1KEEP, [x9, #128]
+	fmla	v7.4s, v20.4s, v31.4s[0]
+	prfm	PLDL1KEEP, [x11, x12]
+
+
+	// unroll 1
+	fmla	v0.4s, v25.4s, v28.4s[1]
+	fmla	v4.4s, v21.4s, v28.4s[1]
+	add		x9, x9, #64
+	fmla	v1.4s, v25.4s, v29.4s[1]
+	fmla	v5.4s, v21.4s, v29.4s[1]
+	fmla	v2.4s, v25.4s, v30.4s[1]
+	fmla	v6.4s, v21.4s, v30.4s[1]
+	add		x13, x13, #64
+	fmla	v3.4s, v25.4s, v31.4s[1]
+	fmla	v7.4s, v21.4s, v31.4s[1]
+
+	// unroll 2
+	fmla	v0.4s, v26.4s, v28.4s[2]
+	fmla	v4.4s, v22.4s, v28.4s[2]
+	fmla	v1.4s, v26.4s, v29.4s[2]
+	fmla	v5.4s, v22.4s, v29.4s[2]
+	fmla	v2.4s, v26.4s, v30.4s[2]
+	fmla	v6.4s, v22.4s, v30.4s[2]
+	fmla	v3.4s, v26.4s, v31.4s[2]
+	fmla	v7.4s, v22.4s, v31.4s[2]
+	sub		w8, w8, #4
+
+	// unroll 3
+	fmla	v0.4s, v27.4s, v28.4s[3]
+	fmla	v4.4s, v23.4s, v28.4s[3]
+	fmla	v1.4s, v27.4s, v29.4s[3]
+	fmla	v5.4s, v23.4s, v29.4s[3]
+	fmla	v2.4s, v27.4s, v30.4s[3]
+	fmla	v6.4s, v23.4s, v30.4s[3]
+	fmla	v3.4s, v27.4s, v31.4s[3]
+	fmla	v7.4s, v23.4s, v31.4s[3]
+
+	cmp		w8, #4
+	bgt		1b
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	ldp		q28, q29, [x11, #(0*16)]
+	ldp		q24, q25, [x9, #(0*16)]
+	ldp		q20, q21, [x13, #(0*16)]
+
+	ldp		q30, q31, [x11, #(2*16)]
+	ldp		q26, q27, [x9, #(2*16)]
+	ldp		q22, q23, [x13, #(2*16)]
+
+	// unroll 0
+	fmla	v0.4s, v24.4s, v28.4s[0]
+	fmla	v4.4s, v20.4s, v28.4s[0]
+	fmla	v1.4s, v24.4s, v29.4s[0]
+	fmla	v5.4s, v20.4s, v29.4s[0]
+	fmla	v2.4s, v24.4s, v30.4s[0]
+	add		x11, x11, x12
+	fmla	v6.4s, v20.4s, v30.4s[0]
+//	prfm	PLDL1KEEP, [x13, #128]
+	fmla	v3.4s, v24.4s, v31.4s[0]
+//	prfm	PLDL1KEEP, [x9, #128]
+	fmla	v7.4s, v20.4s, v31.4s[0]
+//	prfm	PLDL1KEEP, [x11, x12]
+
+
+	// unroll 1
+	fmla	v0.4s, v25.4s, v28.4s[1]
+	fmla	v4.4s, v21.4s, v28.4s[1]
+	add		x9, x9, #64
+	fmla	v1.4s, v25.4s, v29.4s[1]
+	fmla	v5.4s, v21.4s, v29.4s[1]
+	fmla	v2.4s, v25.4s, v30.4s[1]
+	fmla	v6.4s, v21.4s, v30.4s[1]
+	add		x13, x13, #64
+	fmla	v3.4s, v25.4s, v31.4s[1]
+	fmla	v7.4s, v21.4s, v31.4s[1]
+
+	// unroll 2
+	fmla	v0.4s, v26.4s, v28.4s[2]
+	fmla	v4.4s, v22.4s, v28.4s[2]
+	fmla	v1.4s, v26.4s, v29.4s[2]
+	fmla	v5.4s, v22.4s, v29.4s[2]
+	fmla	v2.4s, v26.4s, v30.4s[2]
+	fmla	v6.4s, v22.4s, v30.4s[2]
+	fmla	v3.4s, v26.4s, v31.4s[2]
+	fmla	v7.4s, v22.4s, v31.4s[2]
+	sub		w8, w8, #4
+
+	// unroll 3
+	fmla	v0.4s, v27.4s, v28.4s[3]
+	fmla	v4.4s, v23.4s, v28.4s[3]
+	fmla	v1.4s, v27.4s, v29.4s[3]
+	fmla	v5.4s, v23.4s, v29.4s[3]
+	fmla	v2.4s, v27.4s, v30.4s[3]
+	fmla	v6.4s, v23.4s, v30.4s[3]
+	fmla	v3.4s, v27.4s, v31.4s[3]
+	fmla	v7.4s, v23.4s, v31.4s[3]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+//	sub		x9, x9, #32
+//	sub		x13, x13, #32
+//	sub		x11, x11, #32
+
+3: // clean1-up loop
+
+	// unroll 0
+
+	ldr		s28, [x11, #(0*16)]
+	ldr		s29, [x11, #(1*16)]
+	ldr		s30, [x11, #(2*16)]
+	ldr		s31, [x11, #(3*16)]
+	ldr		q24, [x9], #16
+	ldr		q20, [x13], #16
+	fmla	v0.4s, v24.4s, v28.4s[0]
+	fmla	v4.4s, v20.4s, v28.4s[0]
+	fmla	v1.4s, v24.4s, v29.4s[0]
+	fmla	v5.4s, v20.4s, v29.4s[0]
+	fmla	v2.4s, v24.4s, v30.4s[0]
+	fmla	v6.4s, v20.4s, v30.4s[0]
+	fmla	v3.4s, v24.4s, v31.4s[0]
+	fmla	v7.4s, v20.4s, v31.4s[0]
+
+	add		x11, x11, #4
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+	bgt		3b
+
+2: // return
+
+
+
+#else // cortex a53
+
+
 
 	// early return
 	cmp		w8, #0
@@ -357,24 +744,23 @@ NAME:
 	fmla	v7.4s, v20.4s, v31.4s[0]
 	prfm	PLDL1KEEP, [x11, x12]
 
-
 	// unroll 1
 	fmla	v0.4s, v25.4s, v28.4s[1]
 	fmla	v4.4s, v21.4s, v28.4s[1]
 	add		x9, x9, #64
 	fmla	v1.4s, v25.4s, v29.4s[1]
 	fmla	v5.4s, v21.4s, v29.4s[1]
-	ldp		q24, q25, [x9, #(0*16)]
 	fmla	v2.4s, v25.4s, v30.4s[1]
 	fmla	v6.4s, v21.4s, v30.4s[1]
 	add		x13, x13, #64
 	fmla	v3.4s, v25.4s, v31.4s[1]
 	fmla	v7.4s, v21.4s, v31.4s[1]
-	ldp		q20, q21, [x13, #(0*16)]
+	ldp		q24, q25, [x9, #(0*16)]
 
 	// unroll 2
 	fmla	v0.4s, v26.4s, v28.4s[2]
 	fmla	v4.4s, v22.4s, v28.4s[2]
+	ldp		q20, q21, [x13, #(0*16)]
 	fmla	v1.4s, v26.4s, v29.4s[2]
 	fmla	v5.4s, v22.4s, v29.4s[2]
 	fmla	v2.4s, v26.4s, v30.4s[2]
@@ -426,17 +812,17 @@ NAME:
 	add		x9, x9, #64
 	fmla	v1.4s, v25.4s, v29.4s[1]
 	fmla	v5.4s, v21.4s, v29.4s[1]
-//	ldp		q24, q25, [x9, #(0*16)]
 	fmla	v2.4s, v25.4s, v30.4s[1]
 	fmla	v6.4s, v21.4s, v30.4s[1]
 	add		x13, x13, #64
 	fmla	v3.4s, v25.4s, v31.4s[1]
 	fmla	v7.4s, v21.4s, v31.4s[1]
-//	ldp		q20, q21, [x13, #(0*16)]
+//	ldp		q24, q25, [x9, #(0*16)]
 
 	// unroll 2
 	fmla	v0.4s, v26.4s, v28.4s[2]
 	fmla	v4.4s, v22.4s, v28.4s[2]
+//	ldp		q20, q21, [x13, #(0*16)]
 	fmla	v1.4s, v26.4s, v29.4s[2]
 	fmla	v5.4s, v22.4s, v29.4s[2]
 	fmla	v2.4s, v26.4s, v30.4s[2]
@@ -494,7 +880,13 @@ NAME:
 	bgt		3b
 
 2: // return
-	
+
+
+
+#endif // cortex a53
+
+
+
 #if MACRO_LEVEL>=2
 	.endm
 #else
@@ -609,7 +1001,45 @@ NAME:
 	.align 4
 	FUN_START(inner_edge_trsm_rlt_inv_8x4_lib4)
 #endif
-	
+
+#if 1
+
+	ldr			s16, [x9, #0] // E_inv[0]
+	fmul		v0.4s, v0.4s, v16.4s[0]
+	fmul		v4.4s, v4.4s, v16.4s[0]
+	ldr			s16, [x8, #4] // E[1+4*0]
+	fmls		v1.4s, v0.4s, v16.4s[0]
+	fmls		v5.4s, v4.4s, v16.4s[0]
+	ldr			s16, [x8, #8] // E[2+4*0]
+	fmls		v2.4s, v0.4s, v16.4s[0]
+	fmls		v6.4s, v4.4s, v16.4s[0]
+	ldr			s16, [x8, #12] // E[3+4*0]
+	fmls		v3.4s, v0.4s, v16.4s[0]
+	fmls		v7.4s, v4.4s, v16.4s[0]
+
+	ldr			s16, [x9, #4] // E_inv[1]
+	fmul		v1.4s, v1.4s, v16.4s[0]
+	fmul		v5.4s, v5.4s, v16.4s[0]
+	ldr			s16, [x8, #24] // E[2+4*1]
+	fmls		v2.4s, v1.4s, v16.4s[0]
+	fmls		v6.4s, v5.4s, v16.4s[0]
+	ldr			s16, [x8, #28] // E[3+4*1]
+	fmls		v3.4s, v1.4s, v16.4s[0]
+	fmls		v7.4s, v5.4s, v16.4s[0]
+
+	ldr			s16, [x9, #8] // E_inv[2]
+	fmul		v2.4s, v2.4s, v16.4s[0]
+	fmul		v6.4s, v6.4s, v16.4s[0]
+	ldr			s16, [x8, #44] // E[3+4*2]
+	fmls		v3.4s, v2.4s, v16.4s[0]
+	fmls		v7.4s, v6.4s, v16.4s[0]
+
+	ldr			s16, [x9, #12] // E_inv[3]
+	fmul		v3.4s, v3.4s, v16.4s[0]
+	fmul		v7.4s, v7.4s, v16.4s[0]
+
+#else
+
 	// first column
 	ldr			s16, [x9, #0] // E_inv[0]
 	fmul		v0.4s, v0.4s, v16.4s[0]
@@ -641,21 +1071,21 @@ NAME:
 	ldr			s16, [x8, #28] // E[3+4*1]
 	fmls		v3.4s, v1.4s, v16.4s[0]
 	fmls		v7.4s, v5.4s, v16.4s[0]
-	ldr			s16, [x8, #44] // E[3+4*1]
+	ldr			s16, [x8, #44] // E[3+4*2]
 	fmls		v3.4s, v2.4s, v16.4s[0]
 	fmls		v7.4s, v6.4s, v16.4s[0]
-	ldr			s16, [x9, #12] // E_inv[2]
+	ldr			s16, [x9, #12] // E_inv[3]
 	fmul		v3.4s, v3.4s, v16.4s[0]
 	fmul		v7.4s, v7.4s, v16.4s[0]
+
+#endif
 
 #if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
 
-#if defined(OS_LINUX)
 	FUN_END(inner_edge_trsm_rlt_inv_8x4_lib4)
-#endif
 #endif
 
 
@@ -738,9 +1168,7 @@ NAME:
 #else
 	ret
 
-#if defined(OS_LINUX)
 	FUN_END(inner_edge_trsm_rlt_inv_8x4_vs_lib4)
-#endif
 #endif
 
 
@@ -2206,4 +2634,10 @@ NAME:
 
 
 
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
+
+#include "kernel_sgemm_8x4_lib.S"
+
+#endif
 

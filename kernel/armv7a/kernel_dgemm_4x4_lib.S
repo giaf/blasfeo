@@ -267,7 +267,7 @@ _inner_scale_ab_4x4_lib:
 	.type inner_scale_m11_4x4_lib, %function
 inner_scale_m11_4x4_lib:
 #elif defined(OS_MAC)
-_inner_scale_11_4x4_lib:
+_inner_scale_m11_4x4_lib:
 #endif
 #endif
 
@@ -318,6 +318,99 @@ _inner_scale_11_4x4_lib:
 
 #if defined(OS_LINUX)
 	.size	inner_scale_m11_4x4_lib, .-inner_scale_m11_4x4_lib
+#endif
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// r4   <- beta
+// r5   <- C
+// r6   <- ldc*sizeof(double)
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_M1B_4X4_LIB lc_zero
+#else
+	.align 3
+99: // 0
+	.word 0
+	.word 0
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.type inner_scale_m1b_4x4_lib, %function
+inner_scale_m1b_4x4_lib:
+#elif defined(OS_MAC)
+_inner_scale_m1b_4x4_lib:
+#endif
+#endif
+
+	fldd	d18, [r4, #0] // beta
+#if MACRO_LEVEL>=1
+	fldd	d17, \lc_zero // 0.0
+#else
+	fldd	d17, 99b // 0.0
+#endif
+
+	fcmped	d18, d17
+	fmstat
+
+	beq		0f // end
+
+	fldd	d17, [r5, #0] // C
+	fmscd	d0, d18, d17
+	fldd	d17, [r5, #8] // C
+	fmscd	d1, d18, d17
+	fldd	d17, [r5, #16] // C
+	fmscd	d2, d18, d17
+	fldd	d17, [r5, #24] // C
+	fmscd	d3, d18, d17
+
+	add		r5, r5, r6
+	fldd	d17, [r5, #0] // C
+	fmscd	d4, d18, d17
+	fldd	d17, [r5, #8] // C
+	fmscd	d5, d18, d17
+	fldd	d17, [r5, #16] // C
+	fmscd	d6, d18, d17
+	fldd	d17, [r5, #24] // C
+	fmscd	d7, d18, d17
+
+	add		r5, r5, r6
+	fldd	d17, [r5, #0] // C
+	fmscd	d8, d18, d17
+	fldd	d17, [r5, #8] // C
+	fmscd	d9, d18, d17
+	fldd	d17, [r5, #16] // C
+	fmscd	d10, d18, d17
+	fldd	d17, [r5, #24] // C
+	fmscd	d11, d18, d17
+
+	add		r5, r5, r6
+	fldd	d17, [r5, #0] // C
+	fmscd	d12, d18, d17
+	fldd	d17, [r5, #8] // C
+	fmscd	d13, d18, d17
+	fldd	d17, [r5, #16] // C
+	fmscd	d14, d18, d17
+	fldd	d17, [r5, #24] // C
+	fmscd	d15, d18, d17
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	mov		pc, lr // return
+
+#if defined(OS_LINUX)
+	.size	inner_scale_m1b_4x4_lib, .-inner_scale_m1b_4x4_lib
 #endif
 #endif
 
@@ -707,8 +800,8 @@ _kernel_dpotrf_nt_l_4x4_lib44cc:
 
 
 
-//                                        r0        r1         r2         r3         sp+0     sp+4       rsp+8    rsp+12     rsp+16   rsp+20
-// void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int kmax, double *A, double *B, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
+//                                          r0        r1         r2         r3            sp+0       sp+4     rsp+8      rsp+12   rsp+16     rsp+20   rsp+24
+// void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E);
 
 //	.p2align 4,,15
 #if defined(OS_LINUX)
@@ -769,27 +862,28 @@ _kernel_dtrsm_nt_rl_inv_4x4_lib44ccc:
 
 
 	// call inner blend for alpha=1.0 and beta=1.0
-	mov		r4, r3 // C
-	ldr		r5, [fp, #0] // ldc
-	lsl		r5, r5, #3 // ldc*sizeof(double)
+	mov		r4, r3 // beta
+	ldr		r5, [fp, #0] // C
+	ldr		r6, [fp, #4] // ldc
+	lsl		r6, r6, #3 // ldc*sizeof(double)
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_4X4_LIB
+	INNER_SCALE_M1B_4X4_LIB 99f
 #else
 #if defined(OS_LINUX)
-	bl inner_scale_m11_4x4_lib
+	bl inner_scale_m1b_4x4_lib
 #elif defined(OS_MAC)
-	bl _inner_scale_m11_4x4_lib
+	bl _inner_scale_m1b_4x4_lib
 #endif
 #endif
 
 
 
 	// solution
-	ldr		r4, [fp, #12] // E
-	ldr		r5, [fp, #16] // lde
+	ldr		r4, [fp, #16] // E
+	ldr		r5, [fp, #20] // lde
 	lsl		r5, r5, #3 // lde*sizeof(double)
-	ldr		r6, [fp, #20] // inv_diag_E
+	ldr		r6, [fp, #24] // inv_diag_E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_INV_4X4_LIB
@@ -804,8 +898,8 @@ _kernel_dtrsm_nt_rl_inv_4x4_lib44ccc:
 
 
 	// store
-	ldr		r4, [fp, #4] // D
-	ldr		r5, [fp, #8] // ldd
+	ldr		r4, [fp, #8] // D
+	ldr		r5, [fp, #12] // ldd
 	lsl		r5, r5, #3 // ldd*sizeof(double)
 
 #if MACRO_LEVEL>=1

@@ -191,6 +191,7 @@ l3:
 
 
 
+#if ! ( defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) )
 void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *C)
 {
 
@@ -238,6 +239,7 @@ void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *C)
 	return;
 
 	}
+#endif
 
 
 

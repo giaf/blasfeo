@@ -3221,7 +3221,8 @@ kernel_dtrmm_nn_rl_4x2_vs_lib4:
 
 
 
-#if defined(BLAS_API)
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
 
 #include "kernel_dgemm_4x2_lib.S"
 

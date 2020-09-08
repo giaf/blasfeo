@@ -55,14 +55,14 @@ extern "C" {
 #endif
 
 
-// --- memory calculations
+// --- memory size calculations
 //
 // returns the memory size (in bytes) needed for a dmat
-int blasfeo_memsize_dmat(int m, int n);
+size_t blasfeo_memsize_dmat(int m, int n);
 // returns the memory size (in bytes) needed for the diagonal of a dmat
-int blasfeo_memsize_diag_dmat(int m, int n);
+size_t blasfeo_memsize_diag_dmat(int m, int n);
 // returns the memory size (in bytes) needed for a dvec
-int blasfeo_memsize_dvec(int m);
+size_t blasfeo_memsize_dvec(int m);
 
 // --- creation
 //
@@ -81,19 +81,19 @@ void blasfeo_pack_u_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *
 // transpose and pack the column-major matrix A into the matrix struct B
 void blasfeo_pack_tran_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sB, int bi, int bj);
 // pack the vector x into the vector structure y
-void blasfeo_pack_dvec(int m, double *x, struct blasfeo_dvec *sy, int yi);
+void blasfeo_pack_dvec(int m, double *x, int xi, struct blasfeo_dvec *sy, int yi);
 // unpack the matrix structure A into the column-major matrix B
 void blasfeo_unpack_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *B, int ldb);
 // transpose and unpack the matrix structure A into the column-major matrix B
 void blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *B, int ldb);
 // pack the vector structure x into the vector y
-void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sx, int xi, double *y);
+void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sx, int xi, double *y,  int yi);
 
 // --- cast
 //
-void d_cast_mat2strmat(double *A, struct blasfeo_dmat *sA); // TODO
-void d_cast_diag_mat2strmat(double *dA, struct blasfeo_dmat *sA); // TODO
-void d_cast_vec2vecmat(double *a, struct blasfeo_dvec *sx); // TODO
+//void d_cast_mat2strmat(double *A, struct blasfeo_dmat *sA); // TODO
+//void d_cast_diag_mat2strmat(double *dA, struct blasfeo_dmat *sA); // TODO
+//void d_cast_vec2vecmat(double *a, struct blasfeo_dvec *sx); // TODO
 
 
 // ge
@@ -200,6 +200,30 @@ void blasfeo_dvecze(int m, struct blasfeo_dvec *sm, int mi, struct blasfeo_dvec 
 void blasfeo_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_norm);
 void blasfeo_dvecpe(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi);
 void blasfeo_dvecpei(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi);
+
+
+
+
+
+/*
+* Explicitly panel-major matrix format
+*/
+
+// returns the memory size (in bytes) needed for a dmat
+size_t blasfeo_pm_memsize_dmat(int ps, int m, int n);
+// create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
+void blasfeo_pm_create_dmat(int ps, int m, int n, struct blasfeo_pm_dmat *sA, void *memory);
+
+
+
+/*
+* Explicitly panel-major matrix format
+*/
+
+// returns the memory size (in bytes) needed for a dmat
+size_t blasfeo_cm_memsize_dmat(int m, int n);
+// create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
+void blasfeo_cm_create_dmat(int m, int n, struct blasfeo_pm_dmat *sA, void *memory);
 
 
 

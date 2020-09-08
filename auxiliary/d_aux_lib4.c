@@ -52,10 +52,13 @@
 #include <immintrin.h>  // AVX
 #endif
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_block_size.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_d_kernel.h"
+#include <blasfeo_common.h>
+#include <blasfeo_block_size.h>
+#include <blasfeo_d_aux.h>
+#include <blasfeo_d_kernel.h>
+#if defined(BLASFEO_REF_API)
+#include <blasfeo_d_aux_ref.h>
+#endif
 
 
 /*
@@ -1533,28 +1536,28 @@ void dvecad_libsp(int kmax, int *idx, double alpha, double *x, double *y)
 
 
 // return the memory size (in bytes) needed for a strmat
-int blasfeo_memsize_dmat(int m, int n)
+size_t blasfeo_memsize_dmat(int m, int n)
 	{
-	const int bs = 4;
-	int nc = D_NC;
-	int al = bs*nc;
+	const int bs = D_PS; // 4
+	const int nc = D_NC;
+	const int al = bs*nc;
 	int pm = (m+bs-1)/bs*bs;
 	int cn = (n+nc-1)/nc*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
-	int memsize = (pm*cn+tmp)*sizeof(double);
+	size_t memsize = (pm*cn+tmp)*sizeof(double);
 	return memsize;
 	}
 
 
 
 // return the memory size (in bytes) needed for the digonal of a strmat
-int blasfeo_memsize_diag_dmat(int m, int n)
+size_t blasfeo_memsize_diag_dmat(int m, int n)
 	{
-	const int bs = 4;
-	int nc = D_NC;
-	int al = bs*nc;
+	const int bs = D_PS; // 4
+	const int nc = D_NC;
+	const int al = bs*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
-	int memsize = tmp*sizeof(double);
+	size_t memsize = tmp*sizeof(double);
 	return memsize;
 	}
 
@@ -1563,12 +1566,10 @@ int blasfeo_memsize_diag_dmat(int m, int n)
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
 void blasfeo_create_dmat(int m, int n, struct blasfeo_dmat *sA, void *memory)
 	{
-	// invalidate stored inverse diagonal
-	sA->use_dA = 0;
-
-	const int bs = 4;
-	int nc = D_NC;
-	int al = bs*nc;
+	sA->mem = memory;
+	const int bs = D_PS; // 4
+	const int nc = D_NC;
+	const int al = bs*nc;
 	sA->m = m;
 	sA->n = n;
 	int pm = (m+bs-1)/bs*bs;
@@ -1582,19 +1583,20 @@ void blasfeo_create_dmat(int m, int n, struct blasfeo_dmat *sA, void *memory)
 	sA->dA = ptr;
 	ptr += tmp;
 	sA->memsize = (pm*cn+tmp)*sizeof(double);
+	sA->use_dA = 0; // invalidate stored inverse diagonal
 	return;
 	}
 
 
 
 // return memory size (in bytes) needed for a strvec
-int blasfeo_memsize_dvec(int m)
+size_t blasfeo_memsize_dvec(int m)
 	{
-	const int bs = 4;
-//	int nc = D_NC;
-//	int al = bs*nc;
+	const int bs = D_PS; // 4
+//	const int nc = D_NC;
+//	const int al = bs*nc;
 	int pm = (m+bs-1)/bs*bs;
-	int memsize = pm*sizeof(double);
+	size_t memsize = pm*sizeof(double);
 	return memsize;
 	}
 
@@ -1603,9 +1605,10 @@ int blasfeo_memsize_dvec(int m)
 // create a vector structure for a vector of size m by using memory passed by a pointer
 void blasfeo_create_dvec(int m, struct blasfeo_dvec *sa, void *memory)
 	{
-	const int bs = 4;
-//	int nc = D_NC;
-//	int al = bs*nc;
+	sa->mem = memory;
+	const int bs = D_PS; // 4
+//	const int nc = D_NC;
+//	const int al = bs*nc;
 	sa->m = m;
 	int pm = (m+bs-1)/bs*bs;
 	sa->pm = pm;
@@ -1805,8 +1808,13 @@ void blasfeo_pack_l_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *
 	m1 = m - m0;
 	if(m0>0)
 		{
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_pack_l_dmat(m, n, A, lda, sA, ai, aj);
+		return;
+#else
 		printf("\nblasfeo_pack_l_dmat: feature not implemented yet: ai!=0\n");
 		exit(1);
+#endif
 		}
 	jj = 0;
 	for( ; jj<n-3; jj+=4)
@@ -2223,12 +2231,20 @@ void blasfeo_pack_tran_dmat(int m, int n, double *A, int lda, struct blasfeo_dma
 
 
 // convert a vector into a vector structure
-void blasfeo_pack_dvec(int m, double *a, struct blasfeo_dvec *sa, int ai)
+void blasfeo_pack_dvec(int m, double *x, int xi, struct blasfeo_dvec *sa, int ai)
 	{
 	double *pa = sa->pa + ai;
 	int ii;
-	for(ii=0; ii<m; ii++)
-		pa[ii] = a[ii];
+	if(xi==1)
+		{
+		for(ii=0; ii<m; ii++)
+			pa[ii] = x[ii];
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			pa[ii] = x[ii*xi];
+		}
 	return;
 	}
 
@@ -2492,17 +2508,26 @@ void blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int
 
 
 // convert a vector structure into a vector
-void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sa, int ai, double *a)
+void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sa, int ai, double *x, int xi)
 	{
 	double *pa = sa->pa + ai;
 	int ii;
-	for(ii=0; ii<m; ii++)
-		a[ii] = pa[ii];
+	if(xi==1)
+		{
+		for(ii=0; ii<m; ii++)
+			x[ii] = pa[ii];
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			x[ii*xi] = pa[ii];
+		}
 	return;
 	}
 
 
 
+#if 0
 // cast a matrix into a matrix structure
 void d_cast_mat2strmat(double *A, struct blasfeo_dmat *sA)
 	{
@@ -2535,6 +2560,7 @@ void d_cast_vec2vecmat(double *a, struct blasfeo_dvec *sa)
 	sa->pa = a;
 	return;
 	}
+#endif
 
 
 
@@ -2939,6 +2965,13 @@ void blasfeo_dcolsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 	sC->use_dA = 0;
 
 	const int bs = 4;
+#if defined(BLASFEO_REF_API)
+	if(ai%bs!=ci%bs)
+		{
+		blasfeo_ref_dcolsw(kmax, sA, ai, aj, sC, ci, cj);
+		return;
+		}
+#endif
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;

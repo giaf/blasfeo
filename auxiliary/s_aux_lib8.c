@@ -37,18 +37,12 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_block_size.h"
-#include "../include/blasfeo_s_kernel.h"
-
-
-
-// copies a lower triangular packed matrix into a lower triangular packed matrix
-void strcp_l_lib(int m, int offsetA, float *A, int sda, int offsetB, float *B, int sdb)
-	{
-	printf("\nstrcp_l_lib: feature not implemented yet\n");
-	exit(1);
-	}
+#include <blasfeo_common.h>
+#include <blasfeo_block_size.h>
+#include <blasfeo_s_kernel.h>
+#if defined(BLASFEO_REF_API)
+#include <blasfeo_s_aux_ref.h>
+#endif
 
 
 
@@ -71,24 +65,6 @@ void blasfeo_svecad(int m, float alpha, struct blasfeo_svec *sa, int ai, struct 
 		pc[ii+0] += alpha*pa[ii+0];
 		}
 	return;
-	}
-
-
-
-// transpose lower triangular matrix
-void strtr_l_lib(int m, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc)
-	{
-	printf("\nstrtr_l_lib: feature not implemented yet\n");
-	exit(1);
-	}
-
-
-
-// transpose an aligned upper triangular matrix into an aligned lower triangular matrix
-void strtr_u_lib(int m, float alpha, int offsetA, float *pA, int sda, int offsetC, float *pC, int sdc)
-	{
-	printf("\nstrtr_u_lib: feature not implemented yet\n");
-	exit(1);
 	}
 
 
@@ -895,7 +871,7 @@ void svecad_libsp(int kmax, int *idx, float alpha, float *x, float *y)
 
 
 // return the memory size (in bytes) needed for a strmat
-int blasfeo_memsize_smat(int m, int n)
+size_t blasfeo_memsize_smat(int m, int n)
 	{
 	const int bs = 8;
 	int nc = S_NC;
@@ -903,33 +879,33 @@ int blasfeo_memsize_smat(int m, int n)
 	int pm = (m+bs-1)/bs*bs;
 	int cn = (n+nc-1)/nc*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
-	int memsize = (pm*cn+tmp)*sizeof(float);
+	size_t memsize = (pm*cn+tmp)*sizeof(float);
 	return memsize;
 	}
 
 
 
-int blasfeo_memsize_smat_ps(int ps, int m, int n)
+size_t blasfeo_memsize_smat_ps(int ps, int m, int n)
 	{
 	int nc = S_NC;
 	int al = ps*nc;
 	int pm = (m+ps-1)/ps*ps;
 	int cn = (n+nc-1)/nc*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
-	int memsize = (pm*cn+tmp)*sizeof(float);
+	size_t memsize = (pm*cn+tmp)*sizeof(float);
 	return memsize;
 	}
 
 
 
 // return the memory size (in bytes) needed for the digonal of a strmat
-int blasfeo_memsize_diag_smat(int m, int n)
+size_t blasfeo_memsize_diag_smat(int m, int n)
 	{
 	const int bs = 8;
 	int nc = S_NC;
 	int al = bs*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
-	int memsize = tmp*sizeof(float);
+	size_t memsize = tmp*sizeof(float);
 	return memsize;
 	}
 
@@ -938,6 +914,7 @@ int blasfeo_memsize_diag_smat(int m, int n)
 // create a matrix structure for a matrix of size m*n by using memory passed by a pointer
 void blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memory)
 	{
+	sA->mem = memory;
 	const int bs = 8;
 	int nc = S_NC;
 	int al = bs*nc;
@@ -955,6 +932,7 @@ void blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memory)
 	ptr += tmp;
 	sA->use_dA = 0;
 	sA->memsize = (pm*cn+tmp)*sizeof(float);
+	sA->use_dA = 0; // invalidate stored inverse diagonal
 	return;
 	}
 
@@ -962,10 +940,7 @@ void blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memory)
 
 void blasfeo_create_smat_ps(int ps, int m, int n, struct blasfeo_smat *sA, void *memory)
 	{
-
-	// invalidate stored inverse diagonal
-	sA->use_dA = 0;
-
+	sA->mem = memory;
 	int nc = S_NC;
 	int al = ps*nc;
 	sA->m = m;
@@ -981,19 +956,20 @@ void blasfeo_create_smat_ps(int ps, int m, int n, struct blasfeo_smat *sA, void 
 	sA->dA = ptr;
 	ptr += tmp;
 	sA->memsize = (pm*cn+tmp)*sizeof(float);
+	sA->use_dA = 0; // invalidate stored inverse diagonal
 	return;
 	}
 
 
 
 // return memory size (in bytes) needed for a strvec
-int blasfeo_memsize_svec(int m)
+size_t blasfeo_memsize_svec(int m)
 	{
 	const int bs = 8;
 //	int nc = S_NC;
 //	int al = bs*nc;
 	int pm = (m+bs-1)/bs*bs;
-	int memsize = pm*sizeof(float);
+	size_t memsize = pm*sizeof(float);
 	return memsize;
 	}
 
@@ -1002,6 +978,7 @@ int blasfeo_memsize_svec(int m)
 // create a vector structure for a vector of size m by using memory passed by a pointer
 void blasfeo_create_svec(int m, struct blasfeo_svec *sa, void *memory)
 	{
+	sa->mem = memory;
 	const int bs = 8;
 //	int nc = S_NC;
 //	int al = bs*nc;
@@ -1262,12 +1239,20 @@ void blasfeo_pack_tran_smat(int m, int n, float *A, int lda, struct blasfeo_smat
 
 
 // convert a vector into a vector structure
-void blasfeo_pack_svec(int m, float *a, struct blasfeo_svec *sa, int ai)
+void blasfeo_pack_svec(int m, float *x, int xi, struct blasfeo_svec *sa, int ai)
 	{
 	float *pa = sa->pa + ai;
 	int ii;
-	for(ii=0; ii<m; ii++)
-		pa[ii] = a[ii];
+	if(xi==1)
+		{
+		for(ii=0; ii<m; ii++)
+			pa[ii] = x[ii];
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			pa[ii] = x[ii*xi];
+		}
 	return;
 	}
 
@@ -1518,17 +1503,26 @@ void blasfeo_unpack_tran_smat(int m, int n, struct blasfeo_smat *sA, int ai, int
 
 
 // convert a vector structure into a vector
-void blasfeo_unpack_svec(int m, struct blasfeo_svec *sa, int ai, float *a)
+void blasfeo_unpack_svec(int m, struct blasfeo_svec *sa, int ai, float *x, int xi)
 	{
 	float *pa = sa->pa + ai;
 	int ii;
-	for(ii=0; ii<m; ii++)
-		a[ii] = pa[ii];
+	if(xi==1)
+		{
+		for(ii=0; ii<m; ii++)
+			x[ii] = pa[ii];
+		}
+	else
+		{
+		for(ii=0; ii<m; ii++)
+			x[ii*xi] = pa[ii];
+		}
 	return;
 	}
 
 
 
+#if 0
 // cast a matrix into a matrix structure
 void s_cast_mat2strmat(float *A, struct blasfeo_smat *sA)
 	{
@@ -1559,6 +1553,7 @@ void s_cast_vec2vecmat(float *a, struct blasfeo_svec *sa)
 	sa->pa = a;
 	return;
 	}
+#endif
 
 
 
@@ -1915,6 +1910,13 @@ void blasfeo_scolsw(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct bl
 	sC->use_dA = 0;
 
 	const int bs = 8;
+#if defined(BLASFEO_REF_API)
+	if(ai%bs!=ci%bs)
+		{
+		blasfeo_ref_scolsw(kmax, sA, ai, aj, sC, ci, cj);
+		return;
+		}
+#endif
 	int sda = sA->cn;
 	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	int sdc = sC->cn;
@@ -2616,18 +2618,15 @@ void blasfeo_sveccpsc(int m, float alpha, struct blasfeo_svec *sa, int ai, struc
 // copy a lower triangular strmat into a lower triangular strmat
 void blasfeo_strcp_l(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj)
 	{
-
 	// invalidate stored inverse diagonal
 	sC->use_dA = 0;
-
-	const int bs = 8;
-	int sda = sA->cn;
-	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	int sdc = sC->cn;
-	float *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	strcp_l_lib(m, ai%bs, pA, sda, ci%bs, pC, sdc);
-	// XXX uses full matrix copy !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//	blasfeo_sgecp(m, m, sA, ai, aj, sC, ci, cj);
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strcp_l(m, sA, ai, aj, sC, ci, cj);
+	return;
+#else
+	printf("\nblasfeo_strcp_l: feature not implemented yet\n");
+	exit(1);
+#endif
 	return;
 	}
 
@@ -3115,16 +3114,15 @@ void blasfeo_sgetr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct
 // copy and transpose a lower triangular strmat into an upper triangular strmat
 void blasfeo_strtr_l(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj)
 	{
-
 	// invalidate stored inverse diagonal
 	sC->use_dA = 0;
-
-	const int bs = 8;
-	int sda = sA->cn;
-	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	int sdc = sC->cn;
-	float *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	strtr_l_lib(m, 1.0, ai%bs, pA, sda, ci%bs, pC, sdc); // TODO remove alpha !!!
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strtr_l(m, sA, ai, aj, sC, ci, cj);
+	return;
+#else
+	printf("\nblasfeo_strtr_l: feature not implemented yet\n");
+	exit(1);
+#endif
 	return;
 	}
 
@@ -3133,16 +3131,15 @@ void blasfeo_strtr_l(int m, struct blasfeo_smat *sA, int ai, int aj, struct blas
 // copy and transpose an upper triangular strmat into a lower triangular strmat
 void blasfeo_strtr_u(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj)
 	{
-
 	// invalidate stored inverse diagonal
 	sC->use_dA = 0;
-
-	const int bs = 8;
-	int sda = sA->cn;
-	float *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
-	int sdc = sC->cn;
-	float *pC = sC->pA + ci/bs*bs*sdc + ci%bs + cj*bs;
-	strtr_u_lib(m, 1.0, ai%bs, pA, sda, ci%bs, pC, sdc); // TODO remove alpha !!!
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strtr_u(m, sA, ai, aj, sC, ci, cj);
+	return;
+#else
+	printf("\nblasfeo_strtr_u: feature not implemented yet\n");
+	exit(1);
+#endif
 	return;
 	}
 

@@ -35,24 +35,180 @@
 
 include ./Makefile.rule
 
-OBJS =
 
-OBJS += \
+
+### AUX COMMON ###
+AUX_COMMON_OBJS = \
 		auxiliary/blasfeo_processor_features.o \
 		auxiliary/blasfeo_stdlib.o \
+		auxiliary/d_aux_common.o \
+		auxiliary/s_aux_common.o \
 
-ifeq ($(LA), HIGH_PERFORMANCE)
+### AUX EXT DEP ###
+AUX_EXT_DEP_OBJS = \
+		auxiliary/d_aux_ext_dep_common.o \
+		auxiliary/s_aux_ext_dep_common.o \
+		auxiliary/d_aux_ext_dep.o \
+		auxiliary/s_aux_ext_dep.o \
+		auxiliary/v_aux_ext_dep_lib.o \
+		auxiliary/i_aux_ext_dep_lib.o \
+		auxiliary/timing.o
 
-ifeq ($(TARGET), X64_INTEL_HASWELL)
+### AUX REFERENCE ###
+AUX_REF_OBJS = \
+		auxiliary/d_aux_ref.o \
+		auxiliary/s_aux_ref.o \
 
-# aux
-OBJS += \
+### BLASFEO REFERENCE ###
+BLASFEO_REF_OBJS = \
+		blasfeo_ref/d_blas1_ref.o \
+		blasfeo_ref/d_blas2_ref.o \
+		blasfeo_ref/d_blas2_diag_ref.o \
+		blasfeo_ref/d_blas3_ref.o \
+		blasfeo_ref/d_blas3_diag_ref.o \
+		blasfeo_ref/d_lapack_ref.o \
+		\
+		blasfeo_ref/s_blas1_ref.o \
+		blasfeo_ref/s_blas2_ref.o \
+		blasfeo_ref/s_blas2_diag_ref.o \
+		blasfeo_ref/s_blas3_ref.o \
+		blasfeo_ref/s_blas3_diag_ref.o \
+		blasfeo_ref/s_lapack_ref.o \
+
+### AUX HP CM ###
+AUX_HP_CM_OBJS = \
+		auxiliary/d_aux_hp_cm.o \
+		auxiliary/s_aux_hp_cm.o \
+
+### BLASFEO HP, COLUM-MAJOR ###
+BLASFEO_HP_CM_OBJS = \
+		blasfeo_hp_cm/dgemm.o \
+		blasfeo_hp_cm/dsyrk.o \
+		blasfeo_hp_cm/dtrsm.o \
+		blasfeo_hp_cm/dtrmm.o \
+		blasfeo_hp_cm/dpotrf.o \
+		blasfeo_hp_cm/dgetrf.o \
+		\
+		blasfeo_hp_cm/sgemm.o \
+		blasfeo_hp_cm/strsm.o \
+		blasfeo_hp_cm/spotrf.o \
+
+BLASFEO_HP_CM_REF_OBJS = \
+		blasfeo_ref/d_blas1_hp_cm.o \
+		blasfeo_ref/d_blas2_hp_cm.o \
+		blasfeo_ref/d_blas2_diag_hp_cm.o \
+		blasfeo_ref/d_blas3_hp_cm.o \
+		blasfeo_ref/d_blas3_diag_hp_cm.o \
+		blasfeo_ref/d_lapack_hp_cm.o \
+		\
+		blasfeo_ref/s_blas1_hp_cm.o \
+		blasfeo_ref/s_blas2_hp_cm.o \
+		blasfeo_ref/s_blas2_diag_hp_cm.o \
+		blasfeo_ref/s_blas3_hp_cm.o \
+		blasfeo_ref/s_blas3_diag_hp_cm.o \
+		blasfeo_ref/s_lapack_hp_cm.o \
+
+### BLASFEO WRAPPER TO BLAS ###
+BLASFEO_WR_OBJS = \
+		blasfeo_wr/d_blas1_lib.o \
+		blasfeo_wr/d_blas2_lib.o \
+		blasfeo_wr/d_blas2_diag_lib.o \
+		blasfeo_wr/d_blas3_lib.o \
+		blasfeo_wr/d_blas3_diag_lib.o \
+		blasfeo_wr/d_lapack_lib.o \
+		\
+		blasfeo_wr/s_blas1_lib.o \
+		blasfeo_wr/s_blas2_lib.o \
+		blasfeo_wr/s_blas2_diag_lib.o \
+		blasfeo_wr/s_blas3_lib.o \
+		blasfeo_wr/s_blas3_diag_lib.o \
+		blasfeo_wr/s_lapack_lib.o \
+
+### BLAS API ###
+BLAS_OBJS += \
+		blas_api/dcopy.o \
+		blas_api/daxpy.o \
+		blas_api/ddot.o \
+		blas_api/dgemm_ref.o \
+		blas_api/dsyrk_ref.o \
+		blas_api/dtrmm_ref.o \
+		blas_api/dtrsm_ref.o \
+		blas_api/dgesv.o \
+		blas_api/dgetrf_ref.o \
+		blas_api/dgetrs.o \
+		blas_api/dlaswp.o \
+		blas_api/dposv.o \
+		blas_api/dpotrf_ref.o \
+		blas_api/dpotrs.o \
+		blas_api/dtrtrs.o \
+		\
+		blas_api/saxpy.o \
+		blas_api/sdot.o \
+		blas_api/sgemm_ref.o \
+		blas_api/strsm_ref.o \
+		blas_api/spotrf_ref.o \
+
+REF_BLAS_OBJS += \
+		blasfeo_ref/d_blas3_ref_blas.o \
+		blasfeo_ref/d_lapack_ref_blas.o \
+		\
+		blasfeo_ref/s_blas3_ref_blas.o \
+
+ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE))
+
+### BLASFEO HP, PANEL-MAJOR ###
+BLASFEO_HP_PM_OBJS = \
+		blasfeo_hp_pm/d_blas1_lib4.o \
+		blasfeo_hp_pm/d_blas2_lib4.o \
+		blasfeo_hp_pm/d_blas2_diag_lib.o \
+		blasfeo_hp_pm/d_blas3_lib4.o \
+		blasfeo_hp_pm/d_blas3_diag_lib4.o \
+		blasfeo_hp_pm/d_lapack_lib4.o \
+		\
+		blasfeo_hp_pm/s_blas1_lib8.o \
+		blasfeo_hp_pm/s_blas2_lib8.o \
+		blasfeo_hp_pm/s_blas2_diag_lib.o \
+		blasfeo_hp_pm/s_blas3_lib8.o \
+		blasfeo_hp_pm/s_blas3_diag_lib8.o \
+		blasfeo_hp_pm/s_lapack_lib8.o \
+
+### AUXILIARY HP, PANEL-MAJOR ###
+AUX_HP_PM_OBJS = \
 		auxiliary/d_aux_lib4.o \
 		auxiliary/s_aux_lib8.o \
 		auxiliary/m_aux_lib48.o \
 
-# kernels
-OBJS += \
+endif
+ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_CORE X64_AMD_BULLDOZER X86_AMD_JAGUAR X86_AMD_BARCELONA ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A53 ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7 GENERIC))
+
+### BLASFEO HP, PANEL-MAJOR ###
+BLASFEO_HP_PM_OBJS = \
+		blasfeo_hp_pm/d_blas1_lib4.o \
+		blasfeo_hp_pm/d_blas2_lib4.o \
+		blasfeo_hp_pm/d_blas2_diag_lib.o \
+		blasfeo_hp_pm/d_blas3_lib4.o \
+		blasfeo_hp_pm/d_blas3_diag_lib4.o \
+		blasfeo_hp_pm/d_lapack_lib4.o \
+		\
+		blasfeo_hp_pm/s_blas1_lib4.o \
+		blasfeo_hp_pm/s_blas2_lib4.o \
+		blasfeo_hp_pm/s_blas2_diag_lib.o \
+		blasfeo_hp_pm/s_blas3_lib4.o \
+		blasfeo_hp_pm/s_blas3_diag_lib4.o \
+		blasfeo_hp_pm/s_lapack_lib4.o \
+
+### AUXILIARY HP, PANEL-MAJOR ###
+AUX_HP_PM_OBJS = \
+		auxiliary/d_aux_lib4.o \
+		auxiliary/s_aux_lib4.o \
+		auxiliary/m_aux_lib44.o \
+
+endif
+
+ifeq ($(TARGET), X64_INTEL_HASWELL)
+
+### KERNELS ###
+KERNEL_OBJS = \
 		kernel/avx2/kernel_dgemm_12x4_lib4.o \
 		kernel/avx2/kernel_dgemm_8x8_lib4.o \
 		kernel/avx2/kernel_dgemm_8x4_lib4.o \
@@ -89,38 +245,15 @@ OBJS += \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_x64.o\
+		kernel/kernel_align_x64.o \
 		\
 #		kernel/avx2/kernel_sgemm_16x8_lib8.o \
 
-# blas
-OBJS += \
-		blasfeo_api/d_blas1_lib4.o \
-		blasfeo_api/d_blas2_lib4.o \
-		blasfeo_api/d_blas2_diag_lib.o \
-		blasfeo_api/d_blas3_lib4.o \
-		blasfeo_api/d_blas3_diag_lib4.o \
-		blasfeo_api/d_lapack_lib4.o \
-		\
-		blasfeo_api/s_blas1_lib8.o \
-		blasfeo_api/s_blas2_lib8.o \
-		blasfeo_api/s_blas2_diag_lib.o \
-		blasfeo_api/s_blas3_lib8.o \
-		blasfeo_api/s_blas3_diag_lib8.o \
-		blasfeo_api/s_lapack_lib8.o \
-
 endif
-
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 
-# aux
-OBJS += \
-		auxiliary/d_aux_lib4.o \
-		auxiliary/s_aux_lib8.o \
-		auxiliary/m_aux_lib48.o \
-
-# kernels
-OBJS += \
+### KERNELS ###
+KERNEL_OBJS = \
 		kernel/avx/kernel_dgemm_12x4_lib4.o \
 		kernel/avx/kernel_dgemm_8x4_lib4.o \
 		kernel/avx/kernel_dgemm_4x4_lib4.o \
@@ -155,37 +288,15 @@ OBJS += \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_x64.o\
+		kernel/kernel_align_x64.o \
 		\
 #		kernel/avx/kernel_sgemm_16x8_lib8.o \
 
-# blas
-OBJS  += \
-		blasfeo_api/d_blas1_lib4.o \
-		blasfeo_api/d_blas2_lib4.o \
-		blasfeo_api/d_blas2_diag_lib.o \
-		blasfeo_api/d_blas3_lib4.o \
-		blasfeo_api/d_blas3_diag_lib4.o \
-		blasfeo_api/d_lapack_lib4.o \
-		\
-		blasfeo_api/s_blas1_lib8.o \
-		blasfeo_api/s_blas2_lib8.o \
-		blasfeo_api/s_blas2_diag_lib.o \
-		blasfeo_api/s_blas3_lib8.o \
-		blasfeo_api/s_blas3_diag_lib8.o \
-		blasfeo_api/s_lapack_lib8.o \
-
 endif
-
 ifeq ($(TARGET), X64_INTEL_CORE)
-# aux
-OBJS += \
-		auxiliary/d_aux_lib4.o \
-		auxiliary/s_aux_lib4.o \
-		auxiliary/m_aux_lib44.o \
 
-# kernels
-OBJS += \
+### KERNELS ###
+KERNEL_OBJS = \
 		kernel/sse3/kernel_dgemm_4x4_lib4.o \
 		kernel/sse3/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_dgemm_4x4_lib4.o \
@@ -212,36 +323,13 @@ OBJS += \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_x64.o\
-
-# blas
-OBJS += \
-		blasfeo_api/d_blas1_lib4.o \
-		blasfeo_api/d_blas2_lib4.o \
-		blasfeo_api/d_blas2_diag_lib.o \
-		blasfeo_api/d_blas3_lib4.o \
-		blasfeo_api/d_blas3_diag_lib4.o \
-		blasfeo_api/d_lapack_lib4.o \
-		\
-		blasfeo_api/s_blas1_lib4.o \
-		blasfeo_api/s_blas2_lib4.o \
-		blasfeo_api/s_blas2_diag_lib.o \
-		blasfeo_api/s_blas3_lib4.o \
-		blasfeo_api/s_blas3_diag_lib4.o \
-		blasfeo_api/s_lapack_lib4.o \
+		kernel/kernel_align_x64.o \
 
 endif
-
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
 
-# aux
-OBJS += \
-		auxiliary/d_aux_lib4.o \
-		auxiliary/s_aux_lib4.o \
-		auxiliary/m_aux_lib44.o \
-
-# kernels
-OBJS += \
+### KERNELS ###
+KERNEL_OBJS = \
 		kernel/fma/kernel_dgemm_4x4_lib4.o \
 		kernel/generic/kernel_dgemm_4x4_lib4.o \
 		kernel/generic/kernel_dgemm_diag_lib4.o \
@@ -266,36 +354,13 @@ OBJS += \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_x64.o\
-
-# blas
-OBJS += \
-		blasfeo_api/d_blas1_lib4.o \
-		blasfeo_api/d_blas2_lib4.o \
-		blasfeo_api/d_blas2_diag_lib.o \
-		blasfeo_api/d_blas3_lib4.o \
-		blasfeo_api/d_blas3_diag_lib4.o \
-		blasfeo_api/d_lapack_lib4.o \
-		\
-		blasfeo_api/s_blas1_lib4.o \
-		blasfeo_api/s_blas2_lib4.o \
-		blasfeo_api/s_blas2_diag_lib.o \
-		blasfeo_api/s_blas3_lib4.o \
-		blasfeo_api/s_blas3_diag_lib4.o \
-		blasfeo_api/s_lapack_lib4.o \
+		kernel/kernel_align_x64.o \
 
 endif
-
 ifeq ($(TARGET), X86_AMD_JAGUAR)
 
-# aux
-OBJS += \
-		auxiliary/d_aux_lib4.o \
-		auxiliary/s_aux_lib4.o \
-		auxiliary/m_aux_lib44.o \
-
-# kernels
-OBJS += \
+### KERNELS ###
+KERNEL_OBJS = \
 		kernel/avx_x86/kernel_dgemm_4x4_lib4.o \
 		kernel/avx_x86/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_dgemm_4x4_lib4.o \
@@ -323,36 +388,13 @@ OBJS += \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_x86.o\
-
-# blas
-OBJS += \
-		blasfeo_api/d_blas1_lib4.o \
-		blasfeo_api/d_blas2_lib4.o \
-		blasfeo_api/d_blas2_diag_lib.o \
-		blasfeo_api/d_blas3_lib4.o \
-		blasfeo_api/d_blas3_diag_lib4.o \
-		blasfeo_api/d_lapack_lib4.o \
-		\
-		blasfeo_api/s_blas1_lib4.o \
-		blasfeo_api/s_blas2_lib4.o \
-		blasfeo_api/s_blas2_diag_lib.o \
-		blasfeo_api/s_blas3_lib4.o \
-		blasfeo_api/s_blas3_diag_lib4.o \
-		blasfeo_api/s_lapack_lib4.o \
+		kernel/kernel_align_x86.o \
 
 endif
-
 ifeq ($(TARGET), X86_AMD_BARCELONA)
 
-# aux
-OBJS += \
-		auxiliary/d_aux_lib4.o \
-		auxiliary/s_aux_lib4.o \
-		auxiliary/m_aux_lib44.o \
-
-# kernels
-OBJS += \
+### KERNELS ###
+KERNEL_OBJS = \
 		kernel/sse3_x86/kernel_dgemm_4x2_lib4.o \
 		kernel/sse3_x86/kernel_dgemm_2x2_lib4.o \
 		kernel/sse3_x86/kernel_dgemv_4_lib4.o \
@@ -379,36 +421,13 @@ OBJS += \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_x86.o\
-
-# blas
-OBJS += \
-		blasfeo_api/d_blas1_lib4.o \
-		blasfeo_api/d_blas2_lib4.o \
-		blasfeo_api/d_blas2_diag_lib.o \
-		blasfeo_api/d_blas3_lib4.o \
-		blasfeo_api/d_blas3_diag_lib4.o \
-		blasfeo_api/d_lapack_lib4.o \
-		\
-		blasfeo_api/s_blas1_lib4.o \
-		blasfeo_api/s_blas2_lib4.o \
-		blasfeo_api/s_blas2_diag_lib.o \
-		blasfeo_api/s_blas3_lib4.o \
-		blasfeo_api/s_blas3_diag_lib4.o \
-		blasfeo_api/s_lapack_lib4.o \
+		kernel/kernel_align_x86.o \
 
 endif
-
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
 
-# aux
-OBJS += \
-		auxiliary/d_aux_lib4.o \
-		auxiliary/s_aux_lib4.o \
-		auxiliary/m_aux_lib44.o \
-
-# kernels
-OBJS += \
+### KERNELS ###
+KERNEL_OBJS = \
 		kernel/armv8a/kernel_dgemm_8x4_lib4.o \
 		kernel/armv8a/kernel_dgemm_4x4_lib4.o \
 		kernel/armv8a/kernel_dpack_lib4.o \
@@ -432,6 +451,7 @@ OBJS += \
 		kernel/armv8a/kernel_sgemm_8x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_4x4_lib4.o \
 		kernel/armv8a/kernel_sgemv_4_lib4.o \
+		kernel/armv8a/kernel_spack_lib4.o \
 		kernel/generic/kernel_sgemm_4x4_lib4.o \
 		kernel/generic/kernel_sgemm_diag_lib4.o \
 		kernel/generic/kernel_sgemv_4_lib4.o \
@@ -443,42 +463,20 @@ OBJS += \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_generic.o\
-
-# blas
-OBJS += \
-		blasfeo_api/d_blas1_lib4.o \
-		blasfeo_api/d_blas2_lib4.o \
-		blasfeo_api/d_blas2_diag_lib.o \
-		blasfeo_api/d_blas3_lib4.o \
-		blasfeo_api/d_blas3_diag_lib4.o \
-		blasfeo_api/d_lapack_lib4.o \
-		\
-		blasfeo_api/s_blas1_lib4.o \
-		blasfeo_api/s_blas2_lib4.o \
-		blasfeo_api/s_blas2_diag_lib.o \
-		blasfeo_api/s_blas3_lib4.o \
-		blasfeo_api/s_blas3_diag_lib4.o \
-		blasfeo_api/s_lapack_lib4.o \
+		kernel/kernel_align_generic.o \
 
 endif
-
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
 
-# aux
-OBJS += \
-		auxiliary/d_aux_lib4.o \
-		auxiliary/s_aux_lib4.o \
-		auxiliary/m_aux_lib44.o \
-
-# kernels
-OBJS += \
+### KERNELS ###
+KERNEL_OBJS = \
 		kernel/armv8a/kernel_dgemm_12x4_lib4.o \
 		kernel/armv8a/kernel_dgemm_8x4_lib4.o \
 		kernel/armv8a/kernel_dgemm_4x4_lib4.o \
 		kernel/armv8a/kernel_dpack_lib4.o \
 		kernel/armv8a/kernel_dgetrf_pivot_lib4.o \
 		kernel/armv8a/kernel_dgemv_4_lib4.o \
+		kernel/armv8a/kernel_spack_lib4.o \
 		kernel/generic/kernel_dgemm_4x4_lib4.o \
 		kernel/generic/kernel_dgemm_diag_lib4.o \
 		kernel/generic/kernel_dgemv_4_lib4.o \
@@ -508,35 +506,13 @@ OBJS += \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_generic.o\
-
-# blas
-OBJS += \
-		blasfeo_api/d_blas1_lib4.o \
-		blasfeo_api/d_blas2_lib4.o \
-		blasfeo_api/d_blas2_diag_lib.o \
-		blasfeo_api/d_blas3_lib4.o \
-		blasfeo_api/d_blas3_diag_lib4.o \
-		blasfeo_api/d_lapack_lib4.o \
-		\
-		blasfeo_api/s_blas1_lib4.o \
-		blasfeo_api/s_blas2_lib4.o \
-		blasfeo_api/s_blas2_diag_lib.o \
-		blasfeo_api/s_blas3_lib4.o \
-		blasfeo_api/s_blas3_diag_lib4.o \
-		blasfeo_api/s_lapack_lib4.o \
+		kernel/kernel_align_generic.o \
 
 endif
-
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-# aux
-OBJS += \
-		auxiliary/d_aux_lib4.o \
-		auxiliary/s_aux_lib4.o \
-		auxiliary/m_aux_lib44.o \
 
-# kernels
-OBJS += \
+### KERNELS ###
+KERNEL_OBJS = \
 		kernel/armv7a/kernel_dgemm_4x4_lib4.o \
 		kernel/generic/kernel_dgemm_4x4_lib4.o \
 		kernel/generic/kernel_dgemm_diag_lib4.o \
@@ -564,35 +540,13 @@ OBJS += \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_generic.o\
-
-# blas
-OBJS += \
-		blasfeo_api/d_blas1_lib4.o \
-		blasfeo_api/d_blas2_lib4.o \
-		blasfeo_api/d_blas2_diag_lib.o \
-		blasfeo_api/d_blas3_lib4.o \
-		blasfeo_api/d_blas3_diag_lib4.o \
-		blasfeo_api/d_lapack_lib4.o \
-		\
-		blasfeo_api/s_blas1_lib4.o \
-		blasfeo_api/s_blas2_lib4.o \
-		blasfeo_api/s_blas2_diag_lib.o \
-		blasfeo_api/s_blas3_lib4.o \
-		blasfeo_api/s_blas3_diag_lib4.o \
-		blasfeo_api/s_lapack_lib4.o \
+		kernel/kernel_align_generic.o \
 
 endif
-
 ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
-# aux
-OBJS += \
-		auxiliary/d_aux_lib4.o \
-		auxiliary/s_aux_lib4.o \
-		auxiliary/m_aux_lib44.o \
 
-# kernels
-OBJS += \
+### KERNELS ###
+KERNEL_OBJS = \
 		kernel/armv7a/kernel_dgemm_4x4_lib4.o \
 		kernel/generic/kernel_dgemm_4x4_lib4.o \
 		kernel/generic/kernel_dgemm_diag_lib4.o \
@@ -619,36 +573,13 @@ OBJS += \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_generic.o\
-
-# blas
-OBJS += \
-		blasfeo_api/d_blas1_lib4.o \
-		blasfeo_api/d_blas2_lib4.o \
-		blasfeo_api/d_blas2_diag_lib.o \
-		blasfeo_api/d_blas3_lib4.o \
-		blasfeo_api/d_blas3_diag_lib4.o \
-		blasfeo_api/d_lapack_lib4.o \
-		\
-		blasfeo_api/s_blas1_lib4.o \
-		blasfeo_api/s_blas2_lib4.o \
-		blasfeo_api/s_blas2_diag_lib.o \
-		blasfeo_api/s_blas3_lib4.o \
-		blasfeo_api/s_blas3_diag_lib4.o \
-		blasfeo_api/s_lapack_lib4.o \
+		kernel/kernel_align_generic.o \
 
 endif
-
 ifeq ($(TARGET), GENERIC)
 
-# aux
-OBJS += \
-		auxiliary/d_aux_lib4.o \
-		auxiliary/s_aux_lib4.o \
-		auxiliary/m_aux_lib44.o \
-
-# kernels
-OBJS += \
+### KERNELS ###
+KERNEL_OBJS = \
 		kernel/generic/kernel_dgemm_4x4_lib4.o \
 		kernel/generic/kernel_dgemm_diag_lib4.o \
 		kernel/generic/kernel_dgemv_4_lib4.o \
@@ -672,49 +603,51 @@ OBJS += \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_generic.o\
-
-# blas
-OBJS += \
-		blasfeo_api/d_blas1_lib4.o \
-		blasfeo_api/d_blas2_lib4.o \
-		blasfeo_api/d_blas2_diag_lib.o \
-		blasfeo_api/d_blas3_lib4.o \
-		blasfeo_api/d_blas3_diag_lib4.o \
-		blasfeo_api/d_lapack_lib4.o \
-		\
-		blasfeo_api/s_blas1_lib4.o \
-		blasfeo_api/s_blas2_lib4.o \
-		blasfeo_api/s_blas2_diag_lib.o \
-		blasfeo_api/s_blas3_lib4.o \
-		blasfeo_api/s_blas3_diag_lib4.o \
-		blasfeo_api/s_lapack_lib4.o \
+		kernel/kernel_align_generic.o \
 
 endif # GENERIC
 
+
+
+
+OBJS =
+
+OBJS += $(AUX_COMMON_OBJS)
+
+
+### LA HIGH PERFORMANCE ###
+ifeq ($(LA), HIGH_PERFORMANCE)
+
+# kernel
+OBJS += $(KERNEL_OBJS)
+ifeq ($(MF), PANELMAJ)
+# aux
+OBJS += $(AUX_HP_PM_OBJS)
+# blas
+OBJS += $(BLASFEO_HP_PM_OBJS)
+else # COLMAJ
+# aux
+OBJS += $(AUX_HP_CM_OBJS)
+# blas
+OBJS += $(BLASFEO_HP_CM_OBJS)
+OBJS += $(BLASFEO_HP_CM_REF_OBJS)
+endif
+
+# blasfeo_ref
+ifeq ($(BLASFEO_REF_API), 1)
+# aux
+OBJS += $(AUX_REF_OBJS)
+# blas
+OBJS += $(BLASFEO_REF_OBJS)
+endif # BLASFEO_REF_API
+
 ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dcopy.o \
-		blas_api/daxpy.o \
-		blas_api/ddot.o \
-		blas_api/dgemm.o \
-		blas_api/dsyrk.o \
-		blas_api/dtrmm.o \
-		blas_api/dtrsm.o \
-		blas_api/dgesv.o \
-		blas_api/dgetrf.o \
-		blas_api/dgetrf_np.o \
-		blas_api/dgetrs.o \
-		blas_api/dlaswp.o \
-		blas_api/dposv.o \
-		blas_api/dpotrf.o \
-		blas_api/dpotrs.o \
-		blas_api/dtrtrs.o \
-		\
-		blas_api/saxpy.o \
-		blas_api/sdot.o \
-		blas_api/sgemm.o \
-		blas_api/strsm.o
+
+OBJS += $(BLAS_OBJS)
+
+ifeq ($(MF), PANELMAJ)
+OBJS += $(BLASFEO_HP_CM_OBJS)
+endif
 
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
 include $(CURRENT_DIR)/netlib/Makefile.netlib_blas
@@ -738,84 +671,59 @@ endif # LAPACKE_API
 
 endif # BLAS_API
 
-else # LA_HIGH_PERFORMANCE vs LA_REFERENCE | LA_BLAS
+endif # LA HIGH_PERFORMANCE
+
+
+### LA REFERENCE ###
+ifeq ($(LA), REFERENCE)
 
 # aux
-OBJS += \
-		auxiliary/d_aux_lib.o \
-		auxiliary/s_aux_lib.o \
-		auxiliary/m_aux_lib.o \
-
+OBJS += $(AUX_REF_OBJS)
 # blas
-OBJS += \
-		blasfeo_api/d_blas1_lib.o \
-		blasfeo_api/d_blas2_lib.o \
-		blasfeo_api/d_blas2_diag_lib.o \
-		blasfeo_api/d_blas3_lib.o \
-		blasfeo_api/d_blas3_diag_lib.o \
-		blasfeo_api/d_lapack_lib.o \
-		\
-		blasfeo_api/s_blas1_lib.o \
-		blasfeo_api/s_blas2_lib.o \
-		blasfeo_api/s_blas2_diag_lib.o \
-		blasfeo_api/s_blas3_lib.o \
-		blasfeo_api/s_blas3_diag_lib.o \
-		blasfeo_api/s_lapack_lib.o \
+OBJS += $(BLASFEO_REF_OBJS)
 
-ifeq ($(LA), REFERENCE)
+# blasfeo_hp
+ifeq ($(BLASFEO_HP_API), 1)
+# TODO aux hp
+# kernel
+OBJS += $(KERNEL_OBJS)
+ifeq ($(MF), PANELMAJ)
+# blas
+OBJS += $(BLASFEO_HP_PM_OBJS)
+else
+# blas
+OBJS += $(BLASFEO_HP_CM_OBJS)
+OBJS += $(BLASFEO_HP_CM_REF_OBJS)
+endif
+endif # BLASFEO_HP_API
+
 ifeq ($(BLAS_API), 1)
-OBJS += \
-		blas_api/dgemm_ref.o \
-		blas_api/dtrsm_ref.o \
-		\
-		blas_api/sgemm_ref.o \
-		blas_api/strsm_ref.o \
 
-endif
+OBJS += $(BLAS_OBJS)
+
+ifeq ($(MF), PANELMAJ)
+OBJS += $(REF_BLAS_OBJS)
 endif
 
-endif # LA choice
+endif
+
+endif # LA REFERENCE
+
+
+### LA EXTERNAL BLAS WRAPPER ###
+ifeq ($(LA), EXTERNAL_BLAS_WRAPPER)
+
+# aux
+OBJS += $(AUX_REF_OBJS)
+# blas
+OBJS += $(BLASFEO_WR_OBJS)
+
+endif # LA EXTERNAL_BLAS_WAPPER
+
 
 ifeq ($(EXT_DEP), 1)
 # ext dep
-ifeq ($(LA), HIGH_PERFORMANCE)
-OBJS += \
-		auxiliary/d_aux_ext_dep_lib4.o \
-		auxiliary/s_aux_ext_dep_lib4.o
-endif
-OBJS += \
-		auxiliary/d_aux_ext_dep_lib.o \
-		auxiliary/s_aux_ext_dep_lib.o \
-		auxiliary/v_aux_ext_dep_lib.o \
-		auxiliary/i_aux_ext_dep_lib.o \
-		auxiliary/timing.o
-
-endif
-
-
-
-ifeq ($(TESTING_MODE), 1)
-# reference routine for testing
-OBJS_REF =
-# aux
-OBJS_REF += \
-		auxiliary/d_aux_libref.o \
-		auxiliary/s_aux_libref.o \
-		auxiliary/d_aux_ext_dep_libref.o \
-		auxiliary/s_aux_ext_dep_libref.o \
-		blasfeo_api/d_blas1_libref.o \
-		blasfeo_api/d_blas2_libref.o \
-		blasfeo_api/d_blas2_diag_libref.o \
-		blasfeo_api/d_blas3_libref.o \
-		blasfeo_api/d_blas3_diag_libref.o \
-		blasfeo_api/d_lapack_libref.o \
-		blasfeo_api/s_blas1_libref.o \
-		blasfeo_api/s_blas2_libref.o \
-		blasfeo_api/s_blas2_diag_libref.o \
-		blasfeo_api/s_blas3_libref.o \
-		blasfeo_api/s_blas3_diag_libref.o \
-		blasfeo_api/s_lapack_libref.o \
-#
+OBJS += $(AUX_EXT_DEP_OBJS)
 endif
 
 
@@ -876,7 +784,10 @@ all: clean static_library
 static_library: target
 	( cd kernel; $(MAKE) obj)
 	( cd auxiliary; $(MAKE) obj)
-	( cd blasfeo_api; $(MAKE) obj)
+	( cd blasfeo_wr; $(MAKE) obj)
+	( cd blasfeo_ref; $(MAKE) obj)
+	( cd blasfeo_hp_pm; $(MAKE) obj)
+	( cd blasfeo_hp_cm; $(MAKE) obj)
 ifeq ($(BLAS_API), 1)
 	( cd blas_api; $(MAKE) obj)
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
@@ -899,11 +810,6 @@ endif
 	mv libblasfeo.a ./lib/
 	@echo
 	@echo " libblasfeo.a static library build complete."
-ifeq ($(TESTING_MODE), 1)
-	$(AR) rcs libblasfeo_ref.a $(OBJS_REF)
-	mv libblasfeo_ref.a ./lib/
-	@echo " libblasfeo_ref.a static library build complete."
-endif
 	@echo
 
 
@@ -911,7 +817,10 @@ endif
 shared_library: target
 	( cd auxiliary; $(MAKE) obj)
 	( cd kernel; $(MAKE) obj)
-	( cd blasfeo_api; $(MAKE) obj)
+	( cd blasfeo_wr; $(MAKE) obj)
+	( cd blasfeo_ref; $(MAKE) obj)
+	( cd blasfeo_hp_pm; $(MAKE) obj)
+	( cd blasfeo_hp_cm; $(MAKE) obj)
 ifeq ($(BLAS_API), 1)
 	( cd blas_api; $(MAKE) obj)
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
@@ -934,11 +843,6 @@ endif
 	mv libblasfeo.so ./lib/
 	@echo
 	@echo " libblasfeo.so shared library build complete."
-ifeq ($(TESTING_MODE), 1)
-	$(CC) -shared -o libblasfeo_ref.so $(OBJS_REF) -lm
-	mv libblasfeo_ref.so ./lib/
-	@echo " libblasfeo_ref.so shared library build complete."
-endif
 	@echo
 
 
@@ -1067,6 +971,16 @@ ifeq ($(LA), REFERENCE)
 	echo "#define LA_REFERENCE" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
+ifeq ($(MF), COLMAJ)
+	echo "#ifndef MF_COLMAJ" >> ./include/blasfeo_target.h
+	echo "#define MF_COLMAJ" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
+ifeq ($(MF), PANELMAJ)
+	echo "#ifndef MF_PANELMAJ" >> ./include/blasfeo_target.h
+	echo "#define MF_PANELMAJ" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
 ifeq ($(EXT_DEP), 1)
 	echo "#ifndef EXT_DEP" >> ./include/blasfeo_target.h
 	echo "#define EXT_DEP" >> ./include/blasfeo_target.h
@@ -1106,7 +1020,10 @@ install_shared:
 clean:
 	make -C auxiliary clean
 	make -C kernel clean
-	make -C blasfeo_api clean
+	make -C blasfeo_ref clean
+	make -C blasfeo_hp_pm clean
+	make -C blasfeo_hp_cm clean
+	make -C blasfeo_wr clean
 	make -C blas_api clean
 	make -C netlib clean
 	make -C examples clean
@@ -1119,7 +1036,6 @@ deep_clean: clean
 	rm -f ./include/blasfeo_target.h
 	rm -f ./lib/libblasfeo.a
 	rm -f ./lib/libblasfeo.so
-	rm -f ./lib/libblasfeo_ref.a
 	make -C netlib deep_clean
 	make -C examples deep_clean
 	make -C tests deep_clean
@@ -1239,9 +1155,6 @@ run_sandbox:
 deploy_to_tests:
 	mkdir -p ./tests/$(BINARY_DIR)
 	cp ./lib/libblasfeo.a ./tests/$(BINARY_DIR)/
-ifeq ($(TESTING_MODE), 1)
-	cp ./lib/libblasfeo_ref.a ./tests/$(BINARY_DIR)/
-endif
 
 # test one, one single test
 

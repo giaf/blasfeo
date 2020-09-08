@@ -36,18 +36,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_target.h"
-#include "../include/blasfeo_common.h"
-#include "../include/blasfeo_d_aux.h"
-#include "../include/blasfeo_d_kernel.h"
+#include <blasfeo_target.h>
+#include <blasfeo_common.h>
+#include <blasfeo_d_aux.h>
+#include <blasfeo_d_kernel.h>
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_daxpy_blas daxpy_
+#define blas_daxpy daxpy_
 #endif
 
 
-void blasfeo_daxpy_blas(int *ptr_n, double *alpha, double *x, int *ptr_ix, double *y, int *ptr_iy)
+void blas_daxpy(int *ptr_n, double *alpha, double *x, int *ptr_ix, double *y, int *ptr_iy)
 	{
 	int n = *ptr_n;
 	int ix = *ptr_ix;

@@ -92,6 +92,26 @@
 		/* time in s */
 		return (double) (toc - t->tic) / (COUNTS_PER_SECOND);  
 	}
+#elif defined(__XILINX_ULTRASCALE_NONE_ELF_JAILHOUSE__)
+
+#define mfcp(reg)	({long long unsigned int rval = 0U;\
+			__asm__ __volatile__("mrs	%0, " #reg : "=r" (rval));\
+			rval;\
+			})
+	void blasfeo_tic(blasfeo_timer* t) { 
+		t->tic = mfcp(CNTPCT_EL0);
+	}
+
+	double blasfeo_toc(blasfeo_timer* t) {
+		uint64_t toc;
+		toc = mfcp(CNTPCT_EL0);
+		t->toc = toc;
+
+		/* time in s */
+		return (double) (toc - t->tic) / (COUNTS_PER_SECOND);  
+	}
+#undef mfcp
+
 #else
 
 	#if __STDC_VERSION__ >= 199901L  // C99 Mode

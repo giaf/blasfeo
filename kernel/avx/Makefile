@@ -35,12 +35,9 @@
 
 include ../../Makefile.rule
 
-OBJS =
-
-ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
-OBJS += \
+KERNEL_OBJS = \
 		kernel_dgemm_diag_lib4.o \
 		kernel_dgemv_4_lib4.o \
 		kernel_dgeqrf_4_lib4.o \
@@ -59,7 +56,7 @@ OBJS += \
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-OBJS += \
+KERNEL_OBJS = \
 		kernel_dgemm_12x4_lib4.o \
 		kernel_dgemm_8x4_lib4.o \
 		kernel_dgemm_4x4_lib4.o \
@@ -91,9 +88,17 @@ OBJS += \
 
 endif
 
-else # LA_REFERENCE | LA_BLAS
 
+OBJS =
+
+ifeq ($(LA), HIGH_PERFORMANCE)
+OBJS += $(KERNEL_OBJS)
 endif # LA choice
+
+ifeq ($(BLASFEO_HP_API), 1)
+OBJS += $(KERNEL_OBJS)
+endif # LA choice
+
 
 obj: $(OBJS)
 

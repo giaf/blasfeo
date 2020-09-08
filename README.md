@@ -2,36 +2,48 @@
 
 BLASFEO provides a set of basic linear algebra routines, performance-optimized for matrices that fit in cache (i.e. generally up to a couple hundred size in each dimension), as typically encountered in embedded optimization applications.
 
+## BLASFEO APIs
+
+BLASFEO provides two APIs (Application Programming Interfaces):
+- BLAS API: the standard BLAS and LAPACK APIs, with matrices stored in column-major.
+- BLASFEO API: BLASFEO's own API is optimized to reduce overhead for small matrices.
+It employes structures to describe matrices (```blasfeo_dmat```) and vectors (```blasfeo_dvec```), defined in ```include/blasfeo_common.h```.
+The actual implementation of ```blasfeo_dmat``` and ```blasfeo_dvec``` depends on the ```TARGET```, ```LA``` (Linear Algebra) and ```MF``` (Matrix Format) choice.
+The API is non-destructive, and compared to the BLAS API it has an additional matrix/vector argument reserved for the output.
+
 ## Supported Computer Architectures
 
-The architecture for BLASFEO to use is specified using the ```TARGET``` build variable. Currently BLASFEO supports the following architectures:
+The architecture for BLASFEO to use is specified using the ```TARGET``` build variable.
+Currently BLASFEO supports the following architectures:
 
 | TARGET                       | Description |
 | ---------------------------- | ------------------------------------------------------------- |
-| ```X64_INTEL_HASWELL```      | Intel Haswell or AMD Zen architectures or newer, AVX2 and FMA ISA, 64-bit OS |
-| ```X64_INTEL_SANDY_BRIDGE``` | Intel Sandy-Bridge architecture or newer, AVX ISA, 64-bit OS |
-| ```X64_INTEL_CORE```         | Intel Core architecture or newer, SSE3 ISA, 64-bit OS |
-| ```X64_AMD_BULLDOZER```      | AMD Bulldozer architecture, AVX and FMA ISAs, 64-bit OS |
-| ```X86_AMD_JAGUAR```         | AMD Jaguar architecture, AVX ISA, 32-bit OS |
-| ```X86_AMD_BARCELONA```      | AMD Barcelona architecture, SSE3 ISA, 32-bit OS |
-| ```ARMV8A_ARM_CORTEX_A57```  | ARMv8A architecture, VFPv4 and NEONv2 ISAs, 64-bit OS |
-| ```ARMV8A_ARM_CORTEX_A53```  | ARMv8A architecture, VFPv4 and NEONv2 ISAs, 64-bit OS |
-| ```ARMV7A_ARM_CORTEX_A15```  | ARMv7A architecture, VFPv4 and NEON ISAs, 32-bit OS |
-| ```ARMV7A_ARM_CORTEX_A9```   | ARMv7A architecture, VFPv3 and NEON ISAs, 32-bit OS |
-| ```ARMV7A_ARM_CORTEX_A7```   | ARMv7A architecture, VFPv4 and NEON ISAs, 32-bit OS |
+| ```X64_INTEL_HASWELL```      | Intel Haswell, Intel Skylake, AMD Zen, AMD Zen2 architectures or newer. x86_64 with AVX2 and FMA ISA, 64-bit OS |
+| ```X64_INTEL_SANDY_BRIDGE``` | Intel Sandy-Bridge architecture. x86_64 with AVX ISA, 64-bit OS |
+| ```X64_INTEL_CORE```         | Intel Core architecture. x86_64 with SSE3 ISA, 64-bit OS |
+| ```X64_AMD_BULLDOZER```      | AMD Bulldozer architecture. x86_64 with AVX and FMA ISAs, 64-bit OS |
+| ```X86_AMD_JAGUAR```         | AMD Jaguar architecture. x86 with AVX ISA, 32-bit OS |
+| ```X86_AMD_BARCELONA```      | AMD Barcelona architecture. x86 with SSE3 ISA, 32-bit OS |
+| ```ARMV8A_ARM_CORTEX_A57```  | ARM Cortex A57, 72, 73 architectures or newer. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
+| ```ARMV8A_ARM_CORTEX_A53```  | ARM Cortex A53 architecture. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
+| ```ARMV7A_ARM_CORTEX_A15```  | ARM Cortex A15 architecture. ARMv7A with VFPv4 and NEON ISAs, 32-bit OS |
+| ```ARMV7A_ARM_CORTEX_A9```   | ARM Cortex A9 architecture. ARMv7A with VFPv3 and NEON ISAs, 32-bit OS |
+| ```ARMV7A_ARM_CORTEX_A7```   | ARM Cortex A7 architecture. ARMv7A with VFPv4 and NEON ISAs, 32-bit OS |
 | ```GENERIC```                | Generic target, coded in C, giving better performance if the architecture provides more than 16 scalar FP registers (e.g. many RISC such as ARM) |
 
 Note that the ```X86_AMD_JAGUAR``` and ```X86_AMD_BARCELONA``` architectures are not currently supported by the CMake build system and can only be used through the included Makefile.
 
-
 ### Automatic Target Detection
 
-When using the CMake build system, it is possible to automatically detect the X64 target the current computer can use. This can be enabled by specifying the ```X64_AUTOMATIC``` target. In this mode, the build system will automatically search through the X64 targets to find the best one that can both compile and run on the host machine.
+When using the CMake build system, it is possible to automatically detect the X64 target the current computer can use.
+This can be enabled by specifying the ```X64_AUTOMATIC``` target.
+In this mode, the build system will automatically search through the X64 targets to find the best one that can both compile and run on the host machine.
 
 ### Target Testing
 
-When using the CMake build system, tests will automatically be performed to see if the current compiler can compile the needed code for the selected target and that the current computer can execute the code compiled for the current target. The execution test can be disabled by setting the ```BLASFEO_CROSSCOMPILING``` flag to true. This is automatically done when CMake detects that cross compilation is happening.
-
+When using the CMake build system, tests will automatically be performed to see if the current compiler can compile the needed code for the selected target and that the current computer can execute the code compiled for the current target.
+The execution test can be disabled by setting the ```BLASFEO_CROSSCOMPILING``` flag to true.
+This is automatically done when CMake detects that cross compilation is happening.
 
 ## Linear Algebra Routines
 
@@ -39,18 +51,17 @@ The BLASFEO backend provides three possible implementations of each linear algeb
 
 | LA                          | Description |
 | --------------------------- | ------------------------------------------------------------- |
-| ```HIGH_PERFORMANCE```      | Target-tailored; performance-optimized for cache resident matrices; panel-major matrix format. Currently provided for OS_LINUX (x86_64 64-bit, x86 32-bit, ARMv8A 64-bit, ARMv7A 32-bit), OS_WINDOWS (x86_64 64-bit) and OS_MAC (x86_64 64-bit). |
-| ```REFERENCE```             | Target-unspecific lightly-optimizated; small code footprint; column-major matrix format |
+| ```HIGH_PERFORMANCE```      | Target-tailored; performance-optimized for cache resident matrices; panel- or column-major matrix format. Currently provided for OS_LINUX (x86_64 64-bit, x86 32-bit, ARMv8A 64-bit, ARMv7A 32-bit), OS_WINDOWS (x86_64 64-bit) and OS_MAC (x86_64 64-bit). |
+| ```REFERENCE```             | Target-unspecific lightly-optimizated; small code footprint; panel- or column-major matrix format |
 | ```EXTERNAL_BLAS_WRAPPER``` | Call to external BLAS and LAPACK libraries; column-major matrix format |
 
-## BLASFEO APIs
+## Matrix Formats
 
-BLASFEO provides two APIs:
-- BLAS API: the standard BLAS and LAPACK APIs, with matrices stored in column-major.
-- BLASFEO API: this API is optimized to reduce overhead for small matrices.
-It employes structures to describe matrices (blasfeo_dmat) and vectors (blasfeo_dvec), defined in include/blasfeo_common.h.
-The actual implementation of blasfeo_dmat and blasfeo_dvec depends on the LA and TARGET choice.
-The API is non-destructive, and compared to the BLAS API it has an additional matrix/vector argument reserved for the output.
+Currently there are two matrix formats used in the BLASFEO matrix structures ```blasfeo_dmat``` and ```blasfeo_smat```, specified using the ```MF``` build variable:
+| MF             | Description |
+| -------------- | ----------- |
+| ```COLMAJ```   | column-major (or FORTRAN-style): the standard matrix format used in the BLAS and LAPACK libraries |
+| ```PANELMAJ``` | panel-major: BLASFEO's own matrix format, which is designed to improve performance for matrices fitting in cache. Each matrix is stored in block-row-major with blocks (called panels) of fixed height, and within each panel the matrix elements are stored in column-major. |
 
 ## Recommended guidelines
 
