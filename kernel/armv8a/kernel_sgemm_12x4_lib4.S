@@ -110,6 +110,8 @@ NAME:
 	FUN_START(inner_kernel_gemm_add_nt_12x4_lib4)
 #endif
 
+
+
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
 
@@ -581,6 +583,8 @@ NAME:
 
 
 #endif // cortex a53
+
+
 
 #if MACRO_LEVEL>=2
 	.endm
