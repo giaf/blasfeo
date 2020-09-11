@@ -42,7 +42,7 @@
 
 
 
-#include "../include/blasfeo.h"
+#include <blasfeo.h>
 #include "benchmark_x_common.h"
 
 
@@ -555,7 +555,7 @@ int main()
 	fprintf(f, "\n");
 	fprintf(f, "B = [\n");
 
-	printf("\nn\t Gflops\t    %%\t Gflops\n\n");
+	printf("\nn\t Gflops\t    %%\t  time\t\t Gflops\t    %%\t  time\n\n");
 
 
 
@@ -661,7 +661,7 @@ int main()
 		struct blasfeo_dmat sC; blasfeo_allocate_dmat(n+4, n+4, &sC);
 		struct blasfeo_dmat sD; blasfeo_allocate_dmat(n+4, n+4, &sD);
 		struct blasfeo_dmat sE; blasfeo_allocate_dmat(n+4, n+4, &sE);
-#else
+#elif 1
 		struct blasfeo_dmat sA; blasfeo_allocate_dmat(n, n, &sA);
 		struct blasfeo_dmat sB; blasfeo_allocate_dmat(n, n, &sB);
 		struct blasfeo_dmat sB2; blasfeo_allocate_dmat(n, n, &sB2);
@@ -669,6 +669,18 @@ int main()
 		struct blasfeo_dmat sC; blasfeo_allocate_dmat(n, n, &sC);
 		struct blasfeo_dmat sD; blasfeo_allocate_dmat(n, n, &sD);
 		struct blasfeo_dmat sE; blasfeo_allocate_dmat(n, n, &sE);
+#else
+		int memsize = blasfeo_memsize_dmat(n, n);
+//		void *mem = malloc(7*memsize);
+		void *mem;
+		blasfeo_malloc_align(&mem, 7*memsize);
+		struct blasfeo_dmat sA; blasfeo_create_dmat(n, n, &sA, mem);
+		struct blasfeo_dmat sB; blasfeo_create_dmat(n, n, &sB, mem+1*memsize);
+		struct blasfeo_dmat sB2; blasfeo_create_dmat(n, n, &sB2, mem+2*memsize);
+		struct blasfeo_dmat sB3; blasfeo_create_dmat(n, n, &sB3, mem+3*memsize);
+		struct blasfeo_dmat sC; blasfeo_create_dmat(n, n, &sC, mem+4*memsize);
+		struct blasfeo_dmat sD; blasfeo_create_dmat(n, n, &sD, mem+5*memsize);
+		struct blasfeo_dmat sE; blasfeo_create_dmat(n, n, &sE, mem+6*memsize);
 #endif
 		struct blasfeo_dvec sx; blasfeo_allocate_dvec(n, &sx);
 		struct blasfeo_dvec sy; blasfeo_allocate_dvec(n, &sy);
@@ -777,12 +789,17 @@ int main()
 //				blasfeo_dgemm_tn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_tt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_dsyrk3_ln(n, n, 1.0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ln_mn(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sC, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_lt(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_dsyrk3_lt(n, n, 1.0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_un(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_dsyrk3_un(n, n, 1.0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ut(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-//				blasfeo_dpotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_dsyrk3_ut(n, n, 1.0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_dpotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_dpotrf_u(n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dgetrf_np(n, n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dgetrf_np_test(n, n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dgetrf_rp(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
@@ -796,7 +813,10 @@ int main()
 //				blasfeo_dtrmm_rlnn(n, n, 1.0, &sA, 0, 0, &sD, 0, 0, &sD, 0, 0); //
 //				blasfeo_dtrmm_rutn(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //				blasfeo_dtrsm_llnn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_dtrsm2_llnn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0);
 //				blasfeo_dtrsm_llnu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_dtrsm2_llnu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0);
+//				blasfeo_dtrsm2_rutu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0);
 //				blasfeo_dtrsm_lunn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dtrsm_rltn(n, n, 1.0, &sB2, 0, 0, &sD, 0, 0, &sD, 0, 0); //
 //				blasfeo_dtrsm_rltu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
@@ -889,14 +909,14 @@ int main()
 		float Gflops_blas     = 0;
 		#endif
 
-		printf("%d\t%7.3f\t%7.3f\t%7.3f\t%7.3f\n",
+		printf("%d\t%7.3f\t%7.3f\t%5.3e\t%7.3f\t%7.3f\t%5.3e\n",
 			n,
-			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max,
-			Gflops_blas, 100.0*Gflops_blas/Gflops_max);
-		fprintf(f, "%d\t%7.3f\t%7.3f\t%7.3f\t%7.3f\n",
+			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, time_blasfeo,
+			Gflops_blas, 100.0*Gflops_blas/Gflops_max, time_blas);
+		fprintf(f, "%d\t%7.3f\t%7.3f\t%5.3e\t%7.3f\t%7.3f\t%5.3e\n",
 			n,
-			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max,
-			Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, time_blasfeo,
+			Gflops_blas, 100.0*Gflops_blas/Gflops_max, time_blas);
 
 		d_free(A);
 		d_free(B);
@@ -910,6 +930,7 @@ int main()
 		free(qr_work);
 		free(lq_work);
 
+#if 1
 		blasfeo_free_dmat(&sA);
 		blasfeo_free_dmat(&sB);
 		blasfeo_free_dmat(&sB2);
@@ -917,6 +938,9 @@ int main()
 		blasfeo_free_dmat(&sC);
 		blasfeo_free_dmat(&sD);
 		blasfeo_free_dmat(&sE);
+#else
+		blasfeo_free_align(mem);
+#endif
 		blasfeo_free_dvec(&sx);
 		blasfeo_free_dvec(&sy);
 		blasfeo_free_dvec(&sz);

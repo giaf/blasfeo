@@ -36,6 +36,7 @@
 #include "blasfeo_processor_features.h"
 #include "blasfeo_target.h"
 #include "blasfeo_block_size.h"
+#include "blasfeo_stdlib.h"
 #include "blasfeo_common.h"
 #include "blasfeo_d_aux.h"
 #include "blasfeo_d_aux_ext_dep.h"

@@ -1545,6 +1545,7 @@ size_t blasfeo_memsize_dmat(int m, int n)
 	int cn = (n+nc-1)/nc*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
 	size_t memsize = (pm*cn+tmp)*sizeof(double);
+	memsize = (memsize + CACHE_LINE_SIZE - 1) / CACHE_LINE_SIZE * CACHE_LINE_SIZE;
 	return memsize;
 	}
 
@@ -1582,7 +1583,8 @@ void blasfeo_create_dmat(int m, int n, struct blasfeo_dmat *sA, void *memory)
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
 	sA->dA = ptr;
 	ptr += tmp;
-	sA->memsize = (pm*cn+tmp)*sizeof(double);
+	size_t memsize = (pm*cn+tmp)*sizeof(double);
+	sA->memsize = (memsize + CACHE_LINE_SIZE - 1) / CACHE_LINE_SIZE * CACHE_LINE_SIZE;
 	sA->use_dA = 0; // invalidate stored inverse diagonal
 	return;
 	}

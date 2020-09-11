@@ -38,6 +38,7 @@
 #include <math.h>
 
 #include <blasfeo_common.h>
+#include <blasfeo_block_size.h>
 
 
 

@@ -41,7 +41,7 @@ size_t REF_MEMSIZE_MAT(int m, int n)
 	{
 #if defined(MF_COLMAJ)
 	int tmp = m<n ? m : n; // al(min(m,n)) // XXX max ???
-	size_t size = (m*n+tmp)*sizeof(REAL);
+	size_t memsize = (m*n+tmp)*sizeof(REAL);
 #else // MF_PANELMAJ
 	const int bs = PS;
 	const int nc = NC;
@@ -49,9 +49,10 @@ size_t REF_MEMSIZE_MAT(int m, int n)
 	int pm = (m+bs-1)/bs*bs;
 	int cn = (n+nc-1)/nc*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
-	size_t size = (pm*cn+tmp)*sizeof(REAL);
+	size_t memsize = (pm*cn+tmp)*sizeof(REAL);
 #endif
-	return size;
+	memsize = (memsize + CACHE_LINE_SIZE - 1) / CACHE_LINE_SIZE * CACHE_LINE_SIZE;
+	return memsize;
 	}
 
 
@@ -106,7 +107,7 @@ void REF_CREATE_MAT(int m, int n, struct MAT *sA, void *memory)
 	sA->dA = ptr;
 	ptr += tmp;
 	sA->use_dA = 0;
-	sA->memsize = (m*n+tmp)*sizeof(REAL);
+	size_t memsize = (m*n+tmp)*sizeof(REAL);
 #else // MF_PANELMAJ
 	const int bs = PS; // 4
 	const int nc = NC;
@@ -121,8 +122,9 @@ void REF_CREATE_MAT(int m, int n, struct MAT *sA, void *memory)
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
 	sA->dA = ptr;
 	ptr += tmp;
-	sA->memsize = (pm*cn+tmp)*sizeof(REAL);
+	size_t memsize = (pm*cn+tmp)*sizeof(REAL);
 #endif
+	sA->memsize = (memsize + CACHE_LINE_SIZE - 1) / CACHE_LINE_SIZE * CACHE_LINE_SIZE;
 	return;
 	}
 

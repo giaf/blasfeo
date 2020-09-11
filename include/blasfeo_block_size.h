@@ -44,6 +44,7 @@
 #define S_PS 8
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
+#define CACHE_LINE_SIZE 64
 
 #elif defined( TARGET_X64_INTEL_SANDY_BRIDGE )
 
@@ -51,6 +52,7 @@
 #define S_PS 8
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
+#define CACHE_LINE_SIZE 64
 
 #elif defined( TARGET_X64_INTEL_CORE )
 
@@ -58,6 +60,7 @@
 #define S_PS 4
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
+#define CACHE_LINE_SIZE 64
 
 #elif defined( TARGET_X64_AMD_BULLDOZER )
 
@@ -65,6 +68,7 @@
 #define S_PS 4
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
+#define CACHE_LINE_SIZE 64
 
 #elif defined( TARGET_X86_AMD_JAGUAR )
 
@@ -72,6 +76,7 @@
 #define S_PS 4
 #define D_NC 4 // 2
 #define S_NC 4 //2
+#define CACHE_LINE_SIZE 64
 
 #elif defined( TARGET_X86_AMD_BARCELONA )
 
@@ -79,6 +84,7 @@
 #define S_PS 4
 #define D_NC 4 // 2
 #define S_NC 4 //2
+#define CACHE_LINE_SIZE 64
 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
@@ -86,6 +92,7 @@
 #define S_PS 4
 #define D_NC 4
 #define S_NC 4
+#define CACHE_LINE_SIZE 64
 
 #elif defined( TARGET_ARMV7A_ARM_CORTEX_A15 )
 
@@ -93,6 +100,7 @@
 #define S_PS 4
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
+#define CACHE_LINE_SIZE 64
 
 #elif defined( TARGET_ARMV7A_ARM_CORTEX_A7 )
 
@@ -100,6 +108,7 @@
 #define S_PS 4
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
+#define CACHE_LINE_SIZE 64
 
 #elif defined( TARGET_ARMV7A_ARM_CORTEX_A9 )
 // FIXME: these values are just hacked in to make it build
@@ -107,6 +116,7 @@
 #define S_PS 4
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
+#define CACHE_LINE_SIZE 32
 
 #elif defined( TARGET_GENERIC )
 
@@ -114,6 +124,7 @@
 #define S_PS 4
 #define D_NC 4 // 2 // until the smaller kernel is 4x4
 #define S_NC 4 //2
+#define CACHE_LINE_SIZE 64
 
 #else
 #error "Unknown architecture"

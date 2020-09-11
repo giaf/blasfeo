@@ -36,7 +36,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "../include/blasfeo_stdlib.h"
+
+#include <blasfeo_stdlib.h>
+#include <blasfeo_block_size.h>
 
 
 
@@ -54,7 +56,7 @@ void blasfeo_malloc_align(void **ptr, size_t size)
 
 #if defined(OS_WINDOWS)
 
-	*ptr = _aligned_malloc( size, 64 );
+	*ptr = _aligned_malloc( size, CACHE_LINE_SIZE );
 
 #elif defined(__DSPACE__)
 
@@ -63,11 +65,11 @@ void blasfeo_malloc_align(void **ptr, size_t size)
 
 #elif(defined __XILINX_NONE_ELF__ || defined __XILINX_ULTRASCALE_NONE_ELF_JAILHOUSE__)
 
-	*ptr = memalign( 64, size );
+	*ptr = memalign( CACHE_LINE_SIZE, size );
 
 #else
 
-	int err = posix_memalign( ptr, 64, size );
+	int err = posix_memalign( ptr, CACHE_LINE_SIZE, size );
 	if(err!=0)
 		{
 		printf("Memory allocation error");
