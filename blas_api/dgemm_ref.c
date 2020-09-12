@@ -42,6 +42,7 @@
 
 
 #if ( defined(BLAS_API) & defined(LA_HIGH_PERFORMANCE) )
+#define HP_BLAS
 #define HP_BLAS_DP
 #define HP_GEMM_NN blas_hp_dgemm_nn
 #define HP_GEMM_NT blas_hp_dgemm_nt
@@ -76,7 +77,7 @@
 
 
 
-#ifdef HP_BLAS_DP
+#ifdef HP_BLAS
 #include "../blasfeo_hp_cm/dgemm.c"
 #endif
 

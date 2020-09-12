@@ -79,6 +79,6 @@ dtrsm_ref.o: dtrsm_ref.c xtrsm_ref.c
 dpotrf_ref.o: dpotrf_ref.c xpotrf_ref.c
 dgetrf_ref.o: dgetrf_ref.c xgetrf_ref.c
 
-sgemm_ref.o: sgemm_ref.c xgemm_ref.c
+sgemm_ref.o: sgemm_ref.c xgemm_ref.c ../blasfeo_hp_cm/sgemm.c
 strsm_ref.o: strsm_ref.c xtrsm_ref.c
 spotrf_ref.o: spotrf_ref.c xpotrf_ref.c

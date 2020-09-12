@@ -84,6 +84,23 @@
 
 
 
+#ifdef HP_BLAS
+
+static void blas_hp_sgemm_nn(int m, int n, int k, float alpha, float *A, int lda, float *B, int ldb, float beta, float *C, int ldc)
+	{
+
+#if defined(PRINT_NAME)
+	printf("\nblas_hp_sgemm_nn %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
+#endif
+
+	if(m<=0 | n<=0)
+		return;
+
+	int ldd = ldc;
+	float *D = C;
+
+#else
+
 void blasfeo_hp_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
@@ -103,6 +120,8 @@ void blasfeo_hp_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *
 	float *B = sB->pA + bi + bj*ldb;
 	float *C = sC->pA + ci + cj*ldc;
 	float *D = sD->pA + di + dj*ldd;
+
+#endif
 
 //	printf("\n%p %d %p %d %p %d %p %d\n", A, lda, B, ldb, C, ldc, D, ldd);
 
@@ -597,6 +616,23 @@ nn_2_return:
 
 
 
+#ifdef HP_BLAS
+
+static void blas_hp_sgemm_nt(int m, int n, int k, float alpha, float *A, int lda, float *B, int ldb, float beta, float *C, int ldc)
+	{
+
+#if defined(PRINT_NAME)
+	printf("\nblas_hp_sgemm_nt %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
+#endif
+
+	if(m<=0 | n<=0)
+		return;
+
+	int ldd = ldc;
+	float *D = C;
+
+#else
+
 void blasfeo_hp_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
@@ -616,6 +652,8 @@ void blasfeo_hp_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *
 	float *B = sB->pA + bi + bj*ldb;
 	float *C = sC->pA + ci + cj*ldc;
 	float *D = sD->pA + di + dj*ldd;
+
+#endif
 
 //	printf("\n%p %d %p %d %p %d %p %d\n", A, lda, B, ldb, C, ldc, D, ldd);
 
@@ -1080,6 +1118,23 @@ nt_2_return:
 
 
 
+#ifdef HP_BLAS
+
+static void blas_hp_sgemm_tn(int m, int n, int k, float alpha, float *A, int lda, float *B, int ldb, float beta, float *C, int ldc)
+	{
+
+#if defined(PRINT_NAME)
+	printf("\nblas_hp_sgemm_tn %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
+#endif
+
+	if(m<=0 | n<=0)
+		return;
+
+	int ldd = ldc;
+	float *D = C;
+
+#else
+
 void blasfeo_hp_sgemm_tn(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
@@ -1099,6 +1154,8 @@ void blasfeo_hp_sgemm_tn(int m, int n, int k, float alpha, struct blasfeo_smat *
 	float *B = sB->pA + bi + bj*ldb;
 	float *C = sC->pA + ci + cj*ldc;
 	float *D = sD->pA + di + dj*ldd;
+
+#endif
 
 //	printf("\n%p %d %p %d %p %d %p %d\n", A, lda, B, ldb, C, ldc, D, ldd);
 
@@ -1562,6 +1619,23 @@ free(mem);
 
 
 
+#ifdef HP_BLAS
+
+static void blas_hp_sgemm_tt(int m, int n, int k, float alpha, float *A, int lda, float *B, int ldb, float beta, float *C, int ldc)
+	{
+
+#if defined(PRINT_NAME)
+	printf("\nblas_hp_sgemm_tt %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
+#endif
+
+	if(m<=0 | n<=0)
+		return;
+
+	int ldd = ldc;
+	float *D = C;
+
+#else
+
 void blasfeo_hp_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
 
@@ -1581,6 +1655,8 @@ void blasfeo_hp_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *
 	float *B = sB->pA + bi + bj*ldb;
 	float *C = sC->pA + ci + cj*ldc;
 	float *D = sD->pA + di + dj*ldd;
+
+#endif
 
 //	printf("\n%p %d %p %d %p %d %p %d\n", A, lda, B, ldb, C, ldc, D, ldd);
 
@@ -2055,6 +2131,7 @@ tt_2_return:
 
 
 #if defined(LA_HIGH_PERFORMANCE)
+#ifndef HP_BLAS
 
 
 
@@ -2086,5 +2163,6 @@ void blasfeo_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *sA,
 
 
 
+#endif
 #endif
 

@@ -55,7 +55,8 @@ void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, 
 	// TODO
 #endif
 
-#ifdef HP_BLAS_DP
+//#ifdef HP_BLAS_DP
+#ifdef HP_BLAS
 
 	if(*ta=='n' | *ta=='N')
 		{

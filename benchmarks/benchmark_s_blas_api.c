@@ -208,16 +208,12 @@ openblas_set_num_threads(1);
 
 		struct blasfeo_smat sA; blasfeo_allocate_smat(n, n, &sA);
 		blasfeo_pack_smat(n, n, A, n, &sA, 0, 0);
-		int sda = sA.cn;
 		struct blasfeo_smat sB; blasfeo_allocate_smat(n, n, &sB);
 		blasfeo_pack_smat(n, n, B, n, &sB, 0, 0);
-		int sdb = sB.cn;
 		struct blasfeo_smat sC; blasfeo_allocate_smat(n, n, &sC);
 		blasfeo_pack_smat(n, n, C, n, &sC, 0, 0);
-		int sdc = sC.cn;
 		struct blasfeo_smat sD; blasfeo_allocate_smat(n, n, &sD);
 		blasfeo_pack_smat(n, n, D, n, &sD, 0, 0);
-		int sdd = sD.cn;
 
 
 		/* timing */

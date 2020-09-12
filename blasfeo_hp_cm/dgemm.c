@@ -79,7 +79,7 @@
 
 
 
-#ifdef HP_BLAS_DP
+#ifdef HP_BLAS
 
 static void blas_hp_dgemm_nn(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc)
 	{
@@ -720,7 +720,7 @@ nn_2_return:
 
 
 
-#ifdef HP_BLAS_DP
+#ifdef HP_BLAS
 
 static void blas_hp_dgemm_nt(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc)
 	{
@@ -1335,7 +1335,7 @@ nt_2_return:
 
 
 
-#ifdef HP_BLAS_DP
+#ifdef HP_BLAS
 
 static void blas_hp_dgemm_tn(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc)
 	{
@@ -1879,7 +1879,7 @@ free(mem);
 
 
 
-#ifdef HP_BLAS_DP
+#ifdef HP_BLAS
 
 static void blas_hp_dgemm_tt(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc)
 	{
@@ -2512,7 +2512,7 @@ tt_2_return:
 
 
 #if defined(LA_HIGH_PERFORMANCE)
-#ifndef HP_BLAS_DP
+#ifndef HP_BLAS
 
 
 
