@@ -72,7 +72,7 @@ clean:
 	rm -f *.gcno
 	rm -f *.gcov
 
-dgemm_ref.o: dgemm_ref.c xgemm_ref.c
+dgemm_ref.o: dgemm_ref.c xgemm_ref.c ../blasfeo_hp_cm/dgemm.c
 dsyrk_ref.o: dsyrk_ref.c xsyrk_ref.c
 dtrmm_ref.o: dtrmm_ref.c xtrmm_ref.c
 dtrsm_ref.o: dtrsm_ref.c xtrsm_ref.c

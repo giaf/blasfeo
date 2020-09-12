@@ -41,6 +41,16 @@
 
 
 
+#if ( defined(BLAS_API) & defined(LA_HIGH_PERFORMANCE) )
+#define HP_BLAS_DP
+#define HP_GEMM_NN blas_hp_dgemm_nn
+#define HP_GEMM_NT blas_hp_dgemm_nt
+#define HP_GEMM_TN blas_hp_dgemm_tn
+#define HP_GEMM_TT blas_hp_dgemm_tt
+#endif
+
+
+
 #if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
 #define GEMM_NN blasfeo_cm_dgemm_nn
 #define GEMM_NT blasfeo_cm_dgemm_nt
@@ -65,5 +75,9 @@
 #endif
 
 
+
+#ifdef HP_BLAS_DP
+#include "../blasfeo_hp_cm/dgemm.c"
+#endif
 
 #include "xgemm_ref.c"
