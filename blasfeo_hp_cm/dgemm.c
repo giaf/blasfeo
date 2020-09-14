@@ -171,9 +171,12 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 			goto nn_m0; // small matrix: pack A
 			}
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-		if( m<=24 & n<=24 )
+//		if( m<=24 & n<=24 )
+		if( (m<=m_kernel & n<=m_kernel) | (m_kernel_cache*k + n_cache*k <= l1_cache_el) ) // XXX kernel 4x8 not implemented yet
+//		if( (m<=m_kernel & n<=m_kernel) | (m_kernel_cache*k + n_cache*k <= l1_cache_el) | (m<m_kernel & (m_cache*k + m_kernel_cache*k <= l1_cache_el) ) )
 			{
-			goto nn_m0; // small matrix: pack A
+//			goto nn_m0; // small matrix: pack A
+			goto nn_2; // small matrix: no pack
 			}
 #else
 		if( m<=8 & n<=8 )
@@ -648,6 +651,29 @@ nn_2:
 			goto nn_2_left_12;
 			}
 		}
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	for(; ii<m-7; ii+=8)
+		{
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nn_8x4_libcccc(k, &alpha, A+ii, lda, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nn_8x4_vs_libcccc(k, &alpha, A+ii, lda, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto nn_2_left_4;
+			}
+		else
+			{
+			goto nn_2_left_8;
+			}
+		}
 #elif ! defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<m-3; ii+=4)
 		{
@@ -676,7 +702,7 @@ nn_2_left_12:
 	goto nn_2_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 nn_2_left_8:
 	for(jj=0; jj<n; jj+=4)
 		{
