@@ -106,11 +106,12 @@ NAME:
 	cmp		w8, #0
 	ble		0f
 
-	add		x14, x10, x10
-	add		x14, x14, x14
-//	add		x14, x14, x14
-
 	add		x13, x11, x12
+
+//	add		x14, x10, x10
+//	add		x14, x14, x14
+////	add		x14, x14, x14
+	lsl		x14, x10, #2 // 4*(...)
 
 	cmp		w8, #3
 	ble		2f
@@ -197,9 +198,10 @@ NAME:
 	cmp		w8, #0
 	ble		0f
 
-	add		x14, x10, x10
-	add		x14, x14, x14
+//	add		x14, x10, x10
 //	add		x14, x14, x14
+////	add		x14, x14, x14
+	lsl		x14, x10, #2 // 4*(...)
 
 	cmp		w8, #3
 	ble		2f

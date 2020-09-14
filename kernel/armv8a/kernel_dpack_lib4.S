@@ -109,40 +109,56 @@ NAME:
 	add		x13, x11, x12
 	add		x14, x13, x12
 
+	lsl		w15, w10, #2 // 4*(lda*sizeof(double))
+	add		x16, x15, #32
+	add		x17, x15, #64
+
 	cmp		w8, #3
 	ble		2f
 
 
 1: // main loop
 	ldp		q0, q1, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x15]
 	stp		q0, q1, [x11, #0]
 	ldp		q0, q1, [x9, #32]
+	prfm	PLDL1KEEP, [x9, x16]
 	stp		q0, q1, [x13, #0]
 	ldp		q0, q1, [x9, #64]
+	prfm	PLDL1KEEP, [x9, x17]
 	add		x9, x9, x10
 	stp		q0, q1, [x14, #0]
 
 	ldp		q0, q1, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x15]
 	stp		q0, q1, [x11, #32]
 	ldp		q0, q1, [x9, #32]
+	prfm	PLDL1KEEP, [x9, x16]
 	stp		q0, q1, [x13, #32]
 	ldp		q0, q1, [x9, #64]
+	prfm	PLDL1KEEP, [x9, x17]
 	add		x9, x9, x10
 	stp		q0, q1, [x14, #32]
 
 	ldp		q0, q1, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x15]
 	stp		q0, q1, [x11, #64]
 	ldp		q0, q1, [x9, #32]
+	prfm	PLDL1KEEP, [x9, x16]
 	stp		q0, q1, [x13, #64]
 	ldp		q0, q1, [x9, #64]
+	prfm	PLDL1KEEP, [x9, x17]
 	add		x9, x9, x10
 	stp		q0, q1, [x14, #64]
 
 	ldp		q0, q1, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x15]
 	stp		q0, q1, [x11, #96]
 	ldp		q0, q1, [x9, #32]
+	prfm	PLDL1KEEP, [x9, x16]
 	stp		q0, q1, [x13, #96]
 	ldp		q0, q1, [x9, #64]
+	prfm	PLDL1KEEP, [x9, x17]
 	add		x9, x9, x10
 	stp		q0, q1, [x14, #96]
 
@@ -217,32 +233,43 @@ NAME:
 
 	add		x13, x11, x12
 
+	lsl		w14, w10, #2 // 4*(lda*sizeof(double))
+	add		x15, x14, #32
+
 	cmp		w8, #3
 	ble		2f
 
 
 1: // main loop
 	ldp		q0, q1, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x14]
 	stp		q0, q1, [x11, #0]
 	ldp		q0, q1, [x9, #32]
+	prfm	PLDL1KEEP, [x9, x15]
 	add		x9, x9, x10
 	stp		q0, q1, [x13, #0]
 
 	ldp		q0, q1, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x14]
 	stp		q0, q1, [x11, #32]
 	ldp		q0, q1, [x9, #32]
+	prfm	PLDL1KEEP, [x9, x15]
 	add		x9, x9, x10
 	stp		q0, q1, [x13, #32]
 
 	ldp		q0, q1, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x14]
 	stp		q0, q1, [x11, #64]
 	ldp		q0, q1, [x9, #32]
+	prfm	PLDL1KEEP, [x9, x15]
 	add		x9, x9, x10
 	stp		q0, q1, [x13, #64]
 
 	ldp		q0, q1, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x14]
 	stp		q0, q1, [x11, #96]
 	ldp		q0, q1, [x9, #32]
+	prfm	PLDL1KEEP, [x9, x15]
 	add		x9, x9, x10
 	stp		q0, q1, [x13, #96]
 
@@ -302,12 +329,14 @@ NAME:
 	mov		w8, w0 // kmax
 	mov		x9, x1 // A
 	mov		w10, w2 // lda
-	lsl		w10, w10, #3 // 8*sda
+	lsl		w10, w10, #3 // 8*lda
 	mov		x11, x3 // C
 
 
 	cmp		w8, #0
 	ble		0f
+
+	lsl		w12, w10, #2 // 4*(lda*sizeof(double))
 
 	cmp		w8, #3
 	ble		2f
@@ -315,18 +344,22 @@ NAME:
 
 1: // main loop
 	ldp		q0, q1, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x12]
 	add		x9, x9, x10
 	stp		q0, q1, [x11, #0]
 
 	ldp		q0, q1, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x12]
 	add		x9, x9, x10
 	stp		q0, q1, [x11, #32]
 
 	ldp		q0, q1, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x12]
 	add		x9, x9, x10
 	stp		q0, q1, [x11, #64]
 
 	ldp		q0, q1, [x9, #0]
+	prfm	PLDL1KEEP, [x9, x12]
 	add		x9, x9, x10
 	stp		q0, q1, [x11, #96]
 
@@ -511,6 +544,8 @@ NAME:
 1: // main loop
 	mov		x13, x9
 
+	// TODO prefetch
+
 	ldp		q0, q1, [x13, #0]
 	add		x13, x13, x10
 	stp		q0, q1, [x11, #0]
@@ -675,6 +710,8 @@ NAME:
 1: // main loop
 	mov		x13, x9
 
+	// TODO prefetch
+
 	ldp		q0, q1, [x13, #0]
 	add		x13, x13, x10
 	stp		q0, q1, [x11, #0]
@@ -806,6 +843,8 @@ NAME:
 
 1: // main loop
 	mov		x13, x9
+
+	// TODO prefetch
 
 	ldp		q0, q1, [x13, #0]
 	add		x13, x13, x10
