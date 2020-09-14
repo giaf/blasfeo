@@ -3192,7 +3192,6 @@
 	ldr		d31, [x15], #8
 	fmla	v0.2d, v24.2d, v28.2d[0]
 	fmla	v1.2d, v25.2d, v28.2d[0]
-	add		x9, x9, #32
 	fmla	v2.2d, v24.2d, v29.2d[0]
 	fmla	v3.2d, v25.2d, v29.2d[0]
 	sub		w8, w8, #1
@@ -3654,7 +3653,6 @@
 //	ldr		d31, [x15], #8
 	fmla	v0.2d, v24.2d, v28.2d[0]
 	fmla	v1.2d, v25.2d, v28.2d[0]
-	add		x9, x9, #32
 	fmla	v2.2d, v24.2d, v29.2d[0]
 	fmla	v3.2d, v25.2d, v29.2d[0]
 	sub		w8, w8, #1
@@ -4116,7 +4114,6 @@
 //	ldr		d31, [x15], #8
 	fmla	v0.2d, v24.2d, v28.2d[0]
 	fmla	v1.2d, v25.2d, v28.2d[0]
-	add		x9, x9, #32
 	fmla	v2.2d, v24.2d, v29.2d[0]
 	fmla	v3.2d, v25.2d, v29.2d[0]
 	sub		w8, w8, #1
@@ -4578,7 +4575,6 @@
 //	ldr		d31, [x15], #8
 	fmla	v0.2d, v24.2d, v28.2d[0]
 	fmla	v1.2d, v25.2d, v28.2d[0]
-	add		x9, x9, #32
 //	fmla	v2.2d, v24.2d, v29.2d[0]
 //	fmla	v3.2d, v25.2d, v29.2d[0]
 	sub		w8, w8, #1
