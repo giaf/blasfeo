@@ -77,6 +77,8 @@
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes // TODO 32-bytes for cortex A9
 #endif
 
+
+// TODO detect LLC cache size !!!!!!!!!
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 #define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB
 #endif
@@ -178,8 +180,8 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 			}
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 //		if( m<=24 & n<=24 )
-		if( (m<=m_kernel & n<=m_kernel) | (m_kernel_cache*k + n_cache*k <= l1_cache_el) ) // XXX kernel 4x8 not implemented yet
-//		if( (m<=m_kernel & n<=m_kernel) | (m_kernel_cache*k + n_cache*k <= l1_cache_el) | (m<m_kernel & (m_cache*k + m_kernel_cache*k <= l1_cache_el) ) )
+//		if( (m<=m_kernel & n<=m_kernel) | (m_kernel_cache*k + n_cache*k <= l1_cache_el) ) // XXX kernel 4x8 not implemented yet
+		if( (m<=m_kernel & n<=m_kernel) | (m_kernel_cache*k + n_cache*k <= l1_cache_el) | (m<m_kernel & (m_cache*k + m_kernel_cache*k <= l1_cache_el) ) )
 			{
 //			goto nn_m0; // small matrix: pack A
 			goto nn_2; // small matrix: no pack
@@ -730,6 +732,15 @@ nn_2_left_4:
 		kernel_dgemm_nn_4x8_vs_libcccc(k, &alpha, A+ii, lda, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 		}
 	else if(jj<n)
+		{
+		kernel_dgemm_nn_4x4_vs_libcccc(k, &alpha, A+ii, lda, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	for(jj=0; jj<n-4; jj+=8)
+		{
+		kernel_dgemm_nn_4x8_vs_libcccc(k, &alpha, A+ii, lda, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+	if(jj<n)
 		{
 		kernel_dgemm_nn_4x4_vs_libcccc(k, &alpha, A+ii, lda, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 		}
