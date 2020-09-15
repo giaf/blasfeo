@@ -77,6 +77,9 @@
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes // TODO 32-bytes for cortex A9
 #endif
 
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB
+#endif
 
 
 #ifdef HP_BLAS
@@ -142,6 +145,9 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	const int llc_cache_el = LLC_CACHE_EL;
+#endif
 	const int reals_per_cache_line = CACHE_LINE_EL;
 
 	const int m_cache = (m+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
@@ -191,7 +197,8 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #elif defined(TARGET_X64_INTEL_CORE)
 		if( m<=1*m_kernel | n<=1*m_kernel | k<8 )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-		if( m<=2*m_kernel | n<=2*m_kernel | k<64 )
+//		if( m<=2*m_kernel | n<=2*m_kernel | k<64 )
+		if( m_cache*k + k_cache*n <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 		if( m<=1*m_kernel | n<=1*m_kernel | k<16 )
 #else
