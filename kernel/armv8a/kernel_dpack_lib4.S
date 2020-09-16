@@ -244,10 +244,12 @@ NAME:
 	ldp		q0, q1, [x9, #0]
 	prfm	PLDL1KEEP, [x9, x14]
 	stp		q0, q1, [x11, #0]
+//	prfm	PLDL1KEEP, [x11, #128]
 	ldp		q0, q1, [x9, #32]
 	prfm	PLDL1KEEP, [x9, x15]
 	add		x9, x9, x10
 	stp		q0, q1, [x13, #0]
+//	prfm	PLDL1KEEP, [x13, #128]
 
 	ldp		q0, q1, [x9, #0]
 	prfm	PLDL1KEEP, [x9, x14]
@@ -260,10 +262,12 @@ NAME:
 	ldp		q0, q1, [x9, #0]
 	prfm	PLDL1KEEP, [x9, x14]
 	stp		q0, q1, [x11, #64]
+//	prfm	PLDL1KEEP, [x11, #192]
 	ldp		q0, q1, [x9, #32]
 	prfm	PLDL1KEEP, [x9, x15]
 	add		x9, x9, x10
 	stp		q0, q1, [x13, #64]
+//	prfm	PLDL1KEEP, [x13, #192]
 
 	ldp		q0, q1, [x9, #0]
 	prfm	PLDL1KEEP, [x9, x14]
@@ -430,12 +434,16 @@ NAME:
 	mov		x13, x9
 
 	ldp		q0, q1, [x13, #0]
+	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	ldp		q2, q3, [x13, #0]
+	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	ldp		q4, q5, [x13, #0]
+	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	ldp		q6, q7, [x13, #0]
+	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 
 	trn1	v24.2d, v0.2d, v2.2d
@@ -847,18 +855,22 @@ NAME:
 	// TODO prefetch
 
 	ldp		q0, q1, [x13, #0]
+	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	stp		q0, q1, [x11, #0]
 
 	ldp		q0, q1, [x13, #0]
+	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	stp		q0, q1, [x11, #32]
 
 	ldp		q0, q1, [x13, #0]
+	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	stp		q0, q1, [x11, #64]
 
 	ldp		q0, q1, [x13, #0]
+	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	stp		q0, q1, [x11, #96]
 

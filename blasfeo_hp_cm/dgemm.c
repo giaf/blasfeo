@@ -1389,6 +1389,15 @@ nt_2_left_4:
 		{
 		kernel_dgemm_nt_4x4_vs_libcccc(k, &alpha, A+ii, lda, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 		}
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	for(jj=0; jj<n-4; jj+=8)
+		{
+		kernel_dgemm_nt_4x8_vs_libcccc(k, &alpha, A+ii, lda, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+	if(jj<n)
+		{
+		kernel_dgemm_nt_4x4_vs_libcccc(k, &alpha, A+ii, lda, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
 #else
 	for(jj=0; jj<n; jj+=4)
 		{
