@@ -824,6 +824,9 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	const int ps = D_PS;
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	const int llc_cache_el = LLC_CACHE_EL;
+#endif
 	const int reals_per_cache_line = CACHE_LINE_EL;
 
 	const int m_cache = (m+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
@@ -852,9 +855,12 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 			goto nt_m0; // small matrix: pack A
 			}
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-		if( m<=24 & n<=24 )
+//		if( m<=24 & n<=24 )
+//		if( (m<=m_kernel & n<=m_kernel) | (m_kernel_cache*k + n_cache*k <= l1_cache_el) ) // XXX kernel 4x8 not implemented yet
+		if( (m<=m_kernel & n<=m_kernel) | (m_kernel_cache*k + n_cache*k <= l1_cache_el) | (m<m_kernel & (m_cache*k + m_kernel_cache*k <= l1_cache_el) ) )
 			{
-			goto nt_m0; // small matrix: pack A
+//			goto nt_m0; // small matrix: pack A
+			goto nt_2; // small matrix: no pack
 			}
 #else
 		if( m<=8 & n<=8 )
@@ -869,7 +875,8 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #elif defined(TARGET_X64_INTEL_CORE)
 		if( m<=1*m_kernel | n<=1*m_kernel | k<8 )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-		if( m<=2*m_kernel | n<=2*m_kernel | k<64 )
+//		if( m<=2*m_kernel | n<=2*m_kernel | k<64 )
+		if( m_cache*k + k_cache*n <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 		if( m<=1*m_kernel | n<=1*m_kernel | k<16 )
 #else
@@ -1307,6 +1314,29 @@ nt_2:
 			goto nt_2_left_12;
 			}
 		}
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	for(; ii<m-7; ii+=8)
+		{
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nt_8x4_libcccc(k, &alpha, A+ii, lda, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nt_8x4_vs_libcccc(k, &alpha, A+ii, lda, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto nt_2_left_4;
+			}
+		else
+			{
+			goto nt_2_left_8;
+			}
+		}
 #elif ! defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<m-3; ii+=4)
 		{
@@ -1335,7 +1365,7 @@ nt_2_left_12:
 	goto nt_2_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 nt_2_left_8:
 	for(jj=0; jj<n; jj+=4)
 		{
