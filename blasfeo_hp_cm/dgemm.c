@@ -1480,6 +1480,9 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	const int ps = D_PS;
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	const int llc_cache_el = LLC_CACHE_EL;
+#endif
 	const int reals_per_cache_line = CACHE_LINE_EL;
 
 	const int m_cache = (m+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
@@ -1513,7 +1516,8 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #elif defined(TARGET_X64_INTEL_CORE)
 		if( m<=1*m_kernel | n<=1*m_kernel | k<8 )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-		if( m<=2*m_kernel | n<=2*m_kernel | k<64 )
+//		if( m<=2*m_kernel | n<=2*m_kernel | k<64 )
+		if( m_cache*k + k_cache*n <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 		if( m<=1*m_kernel | n<=1*m_kernel | k<16 )
 #else
