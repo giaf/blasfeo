@@ -65,6 +65,10 @@ void openblas_set_num_threads(int num_threads);
 #include "mkl.h"
 #endif
 
+#if defined(EXTERNAL_BLAS_ARMPL)
+#include "armpl.h"
+#endif
+
 
 
 int main()
@@ -308,12 +312,14 @@ openblas_set_num_threads(1);
 			for(rep=0; rep<nrep; rep++)
 				{
 
-//				blas_dgemm(&c_n, &c_n, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
+//				#define blas_dgemm dgemm_
+
+				blas_dgemm(&c_n, &c_n, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blas_dgemm(&c_n, &c_t, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blas_dgemm(&c_t, &c_n, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blas_dgemm(&c_t, &c_t, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
 
-				blas_dgemm(&c_n, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blas_dgemm(&c_n, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blas_dgemm(&c_n, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blas_dgemm(&c_t, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 //				blas_dgemm(&c_t, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
@@ -440,9 +446,9 @@ openblas_set_num_threads(1);
 
 		double Gflops_max = flops_max * GHz_max;
 
-//		double flop_operation = 2.0*fix_m*fix_n*fix_k; // gemm
+		double flop_operation = 2.0*fix_m*fix_n*fix_k; // gemm
 
-		double flop_operation = 2.0*n*n*n; // gemm
+//		double flop_operation = 2.0*n*n*n; // gemm
 //		double flop_operation = 1.0*n*n*n; // syrk trsm
 //		double flop_operation = 1.0/3.0*n*n*n; // potrf
 //		double flop_operation = 2.0/3.0*n*n*n; // getrf

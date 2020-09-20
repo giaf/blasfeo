@@ -65,6 +65,11 @@ LIBS_EXTERNAL_BLAS += -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_gf_lp6
 #LIBS_EXTERNAL_BLAS += -Wl,--start-group /opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/lib/intel64/libmkl_core.a /opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm
 endif
 
+ifeq ($(EXTERNAL_BLAS), ARMPL)
+INCLUDE_EXTERNAL_BLAS += -I/opt/arm/armpl_20.3_gcc-7.1/include
+LIBS_EXTERNAL_BLAS += /opt/arm/armpl_20.3_gcc-7.1/lib/libarmpl.a #-pthread -lgfortran -lm
+endif
+
 ifeq ($(EXTERNAL_BLAS), ATLAS)
 INCLUDE_EXTERNAL_BLAS +=
 LIBS_EXTERNAL_BLAS += /opt/atlas/lib/liblapack.a /opt/atlas/lib/libcblas.a /opt/atlas/lib/libf77blas.a /opt/atlas/lib/libatlas.a -lgfortran -lm

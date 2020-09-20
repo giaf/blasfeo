@@ -45,6 +45,8 @@
 #include "blis.h"
 #elif defined(EXTERNAL_BLAS_MKL)
 #include "mkl.h"
+#elif defined(EXTERNAL_BLAS_ARMPL)
+#include "armpl.h"
 #else
 #include "../include/s_blas.h"
 #endif
