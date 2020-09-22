@@ -76,14 +76,6 @@ set(BLASFEO_HP_API OFF)
 # set(MF COLMAJ CACHE STRING "Matrix Format internally used in blasfeo_{d,s}mat struct")
 set(MF PANELMAJ CACHE STRING "Matrix Format internally used in blasfeo_{d,s}mat struct")
 
-# BLAS and LAPACK version (for LA=BLAS in BLASFEO or for BLASFEO_BENCHMARS=ON)
-set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS OPENBLAS CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS NETLIB CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS MKL CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS BLIS CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS ATLAS CACHE STRING "Reference blas to use")
-
 # Compile the BLAS API routines provided by BLASFEO
 set(BLAS_API ON CACHE BOOL "Compile BLAS API")
 #set(BLAS_API OFF CACHE BOOL "Compile BLAS API")
@@ -92,6 +84,15 @@ set(BLAS_API ON CACHE BOOL "Compile BLAS API")
 # OFF : routines namings are in the form blasfeo_dgemm
 # ON  : routines namings are in the form dgemm_
 set(FORTRAN_BLAS_API OFF CACHE BOOL "Standard fortran BLAS API")
+
+# BLAS and LAPACK version (for LA=BLAS in BLASFEO or for BLASFEO_BENCHMARS=ON)
+set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
+# set(EXTERNAL_BLAS OPENBLAS CACHE STRING "Reference blas to use")
+# set(EXTERNAL_BLAS NETLIB CACHE STRING "Reference blas to use")
+# set(EXTERNAL_BLAS MKL CACHE STRING "Reference blas to use")
+# set(EXTERNAL_BLAS BLIS CACHE STRING "Reference blas to use")
+# set(EXTERNAL_BLAS ATLAS CACHE STRING "Reference blas to use")
+# set(EXTERNAL_BLAS ARMPL CACHE STRING "Reference blas to use")
 
 # Stack buffer size (malloc for larger)
 set(K_MAX_STACK 300 CACHE STRING "Maximum k value using stack memory")
@@ -205,6 +206,7 @@ set(ALLOWED_EXTERNAL_BLAS
 		MKL
 		BLIS
 		ATLAS
+		ARMPL
 		)
 set_property(CACHE EXTERNAL_BLAS PROPERTY STRINGS ${ALLOWED_EXTERNAL_BLAS})
 
@@ -320,10 +322,11 @@ endif()
 # External BLAS flags
 set(C_FLAGS_BLAS_0        "-DEXTERNAL_BLAS_NONE")
 set(C_FLAGS_BLAS_OPENBLAS "-DEXTERNAL_BLAS_OPENBLAS -I/opt/openblas/include")
-set(C_FLAGS_BLAS_BLIS     "-DEXTERNAL_BLAS_BLIS -std=c99 -I/opt/blis/include/blis")
+set(C_FLAGS_BLAS_BLIS     "-DEXTERNAL_BLAS_BLIS -std=gnu99 -I/opt/blis/include/blis")
 set(C_FLAGS_BLAS_NETLIB   "-DEXTERNAL_BLAS_NETLIB -I/opt/netlib/include")
-set(C_FLAGS_BLAS_MKL      "-DEXTERNAL_BLAS_MKL -m64 -I/opt/intel/mkl/include")
+set(C_FLAGS_BLAS_MKL      "-DEXTERNAL_BLAS_MKL -std=c99 -m64 -DMKL_DIRECT_CALL_SEQ -I/opt/intel/mkl/include")
 set(C_FLAGS_BLAS_ATLAS    "-DEXTERNAL_BLAS_ATLAS")
+set(C_FLAGS_BLAS_ARMPL    "-DEXTERNAL_BLAS_ARMPL -I/opt/arm/armpl_20.3_gcc-7.1/include")
 
 message(STATUS "Using external BLAS: ${EXTERNAL_BLAS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_FLAGS_BLAS_${EXTERNAL_BLAS}}")

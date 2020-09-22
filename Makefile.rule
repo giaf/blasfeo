@@ -124,44 +124,13 @@ BLASFEO_HP_API = 0
 # MF = COLMAJ
 MF = PANELMAJ
 
-# Select external BLAS and LAPACK implementation (to be provided by the user).
-# Edit Makefile.external_blas to specify installation location (default /opt).
-# It is used by the BLASFEO library if LA=EXTERNAL_BLAS_WRAPPER.
-# It may also be used as a comparison in some benchmarks and tests.
-#
-EXTERNAL_BLAS = 0
-# EXTERNAL_BLAS = SYSTEM
-# EXTERNAL_BLAS = OPENBLAS
-# EXTERNAL_BLAS = NETLIB
-# EXTERNAL_BLAS = MKL
-# EXTERNAL_BLAS = BLIS
-# EXTERNAL_BLAS = ARMPL
-# EXTERNAL_BLAS = ATLAS
-include $(CURRENT_DIR)/Makefile.external_blas
-
-# Select operating system (automatic selection for LINUX and MAC)
-#
-UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S), Linux)
-    OS = LINUX
-endif
-ifeq ($(UNAME_S), Darwin)
-    OS = MAC
-endif
-#
-# Select operating system (manual selection)
-#
-# OS = LINUX
-# OS = MAC
-# OS = WINDOWS
-
 # Compile the BLAS API routines provided by BLASFEO
 #
 # BLAS_API = 0
 BLAS_API = 1
 
 # Export standard FORTRAN namings for BLAS API routines
-# 0 : routines namings are in the form blasfeo_dgemm
+# 0 : routines namings are in the form blas_dgemm
 # 1 : routines namings are in the form dgemm_
 #
 FORTRAN_BLAS_API = 0
@@ -183,6 +152,37 @@ CBLAS_API = 0
 #Compile the LAPACKE API from Netlib
 LAPACKE_API = 0
 # LAPACKE_API = 1
+
+# Select external BLAS and LAPACK implementation (to be provided by the user).
+# Edit Makefile.external_blas to specify installation location (default /opt).
+# It is used by the BLASFEO library if LA=EXTERNAL_BLAS_WRAPPER.
+# It may also be used as a comparison in some benchmarks and tests.
+#
+EXTERNAL_BLAS = 0
+# EXTERNAL_BLAS = SYSTEM
+# EXTERNAL_BLAS = OPENBLAS
+# EXTERNAL_BLAS = NETLIB
+# EXTERNAL_BLAS = MKL
+# EXTERNAL_BLAS = BLIS
+# EXTERNAL_BLAS = ATLAS
+# EXTERNAL_BLAS = ARMPL
+include $(CURRENT_DIR)/Makefile.external_blas
+
+# Select operating system (automatic selection for LINUX and MAC)
+#
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S), Linux)
+    OS = LINUX
+endif
+ifeq ($(UNAME_S), Darwin)
+    OS = MAC
+endif
+#
+# Select operating system (manual selection)
+#
+# OS = LINUX
+# OS = MAC
+# OS = WINDOWS
 
 
 
