@@ -2041,7 +2041,7 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 //	int n_min = n_cache<m_kernel_cache ? n_cache : m_kernel_cache;
 
 
-	goto tt_2; // no pack
+//	goto tt_2; // no pack
 //	goto tt_m0; // pack A
 //	goto tt_n0; // pack B
 //	goto tt_1; // pack A and B
