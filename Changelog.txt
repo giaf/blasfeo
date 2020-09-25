@@ -18,7 +18,7 @@ BLAS_API:
 ARMv8A:
 	* add kernel sgemm nt {8x4,8x8} lib44cc & some relative spotrf kernels
 	* add kernel sgemm {nn,nt} 4x4 lib4ccc & some relative spotrf kernels
-	* add alg2 (no pack) for cm dgemm fully optimized for Cortex A57 (partially for A53)
+	* colmaj/blas_api  dgemm, no-pack algorithm (for small/skinny matrices) fully optimized for Cortex A57 (partially for A53)
 	* Cortex A53:
 		- improve kernels sgemm_nt lib4
 
