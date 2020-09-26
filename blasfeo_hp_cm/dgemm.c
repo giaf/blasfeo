@@ -79,7 +79,11 @@
 
 
 // TODO detect LLC cache size !!!!!!!!!
-#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_X64_INTEL_HASWELL)
+#define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB
+#define LLC_CACHE_EL (6*1024*1024/EL_SIZE) // LLC cache size: 6 MB
+
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 #define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB
 #endif
 
@@ -147,7 +151,10 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
-#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_X64_INTEL_HASWELL)
+	const int l2_cache_el = L2_CACHE_EL;
+#endif
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	const int llc_cache_el = LLC_CACHE_EL;
 #endif
 	const int reals_per_cache_line = CACHE_LINE_EL;
@@ -193,7 +200,8 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 			}
 #endif
 #if defined(TARGET_X64_INTEL_HASWELL)
-		if( m<=2*m_kernel | n<=2*m_kernel | k<448 )
+//		if( m<=2*m_kernel | n<=2*m_kernel | k<448 )
+		if( m_cache*k + k_cache*n <= llc_cache_el )
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		if( m<=2*m_kernel | n<=2*m_kernel | k<56 )
 #elif defined(TARGET_X64_INTEL_CORE)
@@ -824,7 +832,10 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	const int ps = D_PS;
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
-#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_X64_INTEL_HASWELL)
+	const int l2_cache_el = L2_CACHE_EL;
+#endif
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	const int llc_cache_el = LLC_CACHE_EL;
 #endif
 	const int reals_per_cache_line = CACHE_LINE_EL;
@@ -847,6 +858,7 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 		if( (m<=m_kernel & n<=m_kernel) | (m_kernel_cache*k_cache + n_cache*k_cache <= l1_cache_el) | (m<m_kernel & (m_cache*k_cache + m_kernel_cache*k_cache <= l1_cache_el) ) )
 			{
 //			printf("%d %d %d\n", m, n, k);
+//			printf("\nalg 2\n");
 			goto nt_2; // small matrix: no pack
 			}
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -869,8 +881,26 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 			}
 #endif
 #if defined(TARGET_X64_INTEL_HASWELL)
-		if( m<=2*m_kernel | n<=2*m_kernel | k<200 )
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+//		if( m<=2*m_kernel | n<=2*m_kernel | k<200 )
+//		if( (2*(m_kernel_cache*k_cache + n_cache*k_cache) <= 3*l2_cache_el) | (2*(m_cache*k_cache + m_kernel_cache*k_cache) <= 3*l2_cache_el) )
+		if( m<=n )
+			{
+			if( n*k <= l2_cache_el )
+				{
+//				printf("\nalg m0\n");
+				goto nt_m0; // long matrix: pack A
+				}
+			}
+		else
+			{
+			if( m*k <= l2_cache_el )
+				{
+//				printf("\nalg n0\n");
+				goto nt_n0; // tall matrix: pack B
+				}
+			}
+#else
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		if( m<=2*m_kernel | n<=2*m_kernel | k<56 )
 #elif defined(TARGET_X64_INTEL_CORE)
 		if( m<=1*m_kernel | n<=1*m_kernel | k<8 )
@@ -885,14 +915,18 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 			{
 			if( m<=n )
 				{
+//				printf("\nalg m0\n");
 				goto nt_m0; // long matrix: pack A
 				}
 			else
 				{
+//				printf("\nalg n0\n");
 				goto nt_n0; // tall matrix: pack B
 				}
 			}
+#endif
 		}
+//	printf("\nalg 1\n");
 	goto nt_1; // big matrix: pack A and B
 
 
