@@ -13504,6 +13504,22 @@
 
 	// call inner dgemm kernel nn
 
+#if 1
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12  // lda
+	sall	$3, %r12d
+	movq	ARG5, %r13  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X4_LIBC4
+#else
+	CALL(inner_kernel_dgemm_nt_8x4_libc4)
+#endif
+
+#else
+
 	movq	ARG1, %r10 // k
 	movq	ARG5, %r11  // B
 	movq	ARG3, %r12  // A
@@ -13514,6 +13530,14 @@
 	INNER_KERNEL_DGEMM_NT_4X8_LIB4C
 #else
 	CALL(inner_kernel_dgemm_nt_4x8_lib4c)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_8X4_LIB
+#else
+	CALL(inner_tran_8x4_lib)
+#endif
+
 #endif
 
 
@@ -13537,13 +13561,6 @@
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
 	sall	$3, %r13d
-
-#if MACRO_LEVEL>=1
-	INNER_TRAN_8X4_LIB
-#else
-	CALL(inner_tran_8x4_lib)
-#endif
-
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X4_LIB
@@ -13589,6 +13606,66 @@
 
 
 	// call inner dgemm kernel nn
+
+#if 1
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12  // lda
+	sall	$3, %r12d
+	movq	ARG5, %r13  // B
+
+	movq	ARG12, %r14  // n1
+	cmpl	$1, %r14d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X1_LIBC4
+#else
+	CALL(inner_kernel_dgemm_nt_8x1_libc4)
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG12, %r14  // n1
+	cmpl	$2, %r14d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X2_LIBC4
+#else
+	CALL(inner_kernel_dgemm_nt_8x2_libc4)
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG12, %r14  // n1
+	cmpl	$3, %r14d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X3_LIBC4
+#else
+	CALL(inner_kernel_dgemm_nt_8x3_libc4)
+#endif
+
+	jmp		103f
+
+102:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X4_LIBC4
+#else
+	CALL(inner_kernel_dgemm_nt_8x4_libc4)
+#endif
+
+103:
+
+#else
 
 	movq	ARG1, %r10 // k
 	movq	ARG5, %r11  // B
@@ -13646,6 +13723,14 @@
 
 103:
 
+#if MACRO_LEVEL>=1
+	INNER_TRAN_8X4_LIB
+#else
+	CALL(inner_tran_8x4_lib)
+#endif
+
+#endif
+
 
 	// prefetch D
 	// TODO prefetch vs !!!
@@ -13670,13 +13755,6 @@
 	sall	$3, %r13d
 	movq	ARG11, %r14 // m1
 	movq	ARG12, %r15 // n1
-
-#if MACRO_LEVEL>=1
-	INNER_TRAN_8X4_LIB
-#else
-	CALL(inner_tran_8x4_lib)
-#endif
-
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X4_VS_LIB
