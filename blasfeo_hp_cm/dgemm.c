@@ -174,25 +174,26 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 //	goto nn_m0; // pack A
 //	goto nn_n0; // pack B
 //	goto nn_1; // pack A and B
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	if( (m<=m_kernel & n<=m_kernel) | (m_a_kernel*k + k_b*n <= l1_cache_el) )
+		{
+//		printf("\nalg 2\n");
+		goto nn_2; // small matrix: no pack
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	if( m<=48 & n<=48 & k<=K_MAX_STACK )
+		{
+		goto nn_m0; // small matrix: pack A
+		}
+#else
+	if( m<=8 & n<=8 )
+		{
+		goto nn_2; // small matrix: no pack
+		}
+#endif
 	if( k<=K_MAX_STACK )
 		{
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-		if( (m<=m_kernel & n<=m_kernel) | (m_a_kernel*k + k_b*n <= l1_cache_el) )
-			{
-//			printf("\nalg 2\n");
-			goto nn_2; // small matrix: no pack
-			}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-		if( m<=48 & n<=48 )
-			{
-			goto nn_m0; // small matrix: pack A
-			}
-#else
-		if( m<=8 & n<=8 )
-			{
-			goto nn_2; // small matrix: no pack
-			}
-#endif
 #if defined(TARGET_X64_INTEL_HASWELL)
 		if( m<n*4 )
 			{
@@ -867,25 +868,26 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 //	goto nt_m0; // pack A
 //	goto nt_n0; // pack B
 //	goto nt_1; // pack A and B
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) 
+	if( (m<=m_kernel & n<=m_kernel) | (m_a_kernel*k + n_b*k <= l1_cache_el) )
+		{
+//		printf("\nalg 2\n");
+		goto nt_2; // small matrix: no pack
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	if( m<=48 & n<=48 & k<=K_MAX_STACK )
+		{
+		goto nt_m0; // small matrix: pack A
+		}
+#else
+	if( m<=8 & n<=8 )
+		{
+		goto nt_2; // small matrix: no pack
+		}
+#endif
 	if( k<=K_MAX_STACK )
 		{
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) 
-		if( (m<=m_kernel & n<=m_kernel) | (m_a_kernel*k + n_b*k <= l1_cache_el) )
-			{
-//			printf("\nalg 2\n");
-			goto nt_2; // small matrix: no pack
-			}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-		if( m<=48 & n<=48 )
-			{
-			goto nt_m0; // small matrix: pack A
-			}
-#else
-		if( m<=8 & n<=8 )
-			{
-			goto nt_2; // small matrix: no pack
-			}
-#endif
 #if defined(TARGET_X64_INTEL_HASWELL)
 		if( m<=n )
 			{
@@ -1535,19 +1537,10 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 //	goto tn_m0; // pack A
 //	goto tn_n0; // pack B
 //	goto tn_1; // pack A and B
+
+	// no algorithm for small matrix
 	if( k<=K_MAX_STACK )
 		{
-		// no algorithm for small matrix
-//#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-//		if( m<=48 & n<=48 )
-//#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-//		if( m<=24 & n<=24 )
-//#else
-//		if( m<=8 & n<=8 )
-//#endif
-//			{
-//			goto tn_m0; // small matrix: pack A
-//			}
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 		if( m<=2*m_kernel | n<=2*m_kernel | k_a*m + k_b*n <= llc_cache_el )
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -2090,24 +2083,25 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 //	goto tt_m0; // pack A
 //	goto tt_n0; // pack B
 //	goto tt_1; // pack A and B
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	if( (m<=m_kernel & n<=m_kernel) | (k_a*m + n_b_kernel*k <= l1_cache_el) )
+		{
+		goto tt_2; // small matrix: no pack
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	if( m<=48 & n<=48 )
+		{
+		goto tt_m0; // small matrix: pack A
+		}
+#else
+	if( m<=8 & n<=8 )
+		{
+		goto tt_2; // small matrix: no pack
+		}
+#endif
 	if( k<=K_MAX_STACK )
 		{
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-		if( (m<=m_kernel & n<=m_kernel) | (k_a*m + n_b_kernel*k <= l1_cache_el) )
-			{
-			goto tt_2; // small matrix: no pack
-			}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-		if( m<=48 & n<=48 )
-			{
-			goto tt_m0; // small matrix: pack A
-			}
-#else
-		if( m<=8 & n<=8 )
-			{
-			goto tt_2; // small matrix: no pack
-			}
-#endif
 #if defined(TARGET_X64_INTEL_HASWELL)
 		if( m*4<=n | k<=4 ) // XXX k too !!!
 			{
