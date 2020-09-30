@@ -357,11 +357,12 @@ class BlasfeoTestset:
 		la=blasfeo_flags['LA']
 		if la != "HIGH_PERFORMANCE": target=la
 
-		run_id = "{target}_{routine_fullname}_stack{kstack}"\
+		run_id = "{target}_{routine_fullname}_stack{kstack}_pack{alg}"\
 			.format(
 				target=blasfeo_flags['TARGET'],
 				routine_fullname=kargs["fullname"],
-				kstack=blasfeo_flags['K_MAX_STACK']
+				kstack=blasfeo_flags['K_MAX_STACK'],
+				alg=blasfeo_flags['PACKING_ALG']
 				)
 
 		print("Testing {run_id}".format(run_id=run_id))

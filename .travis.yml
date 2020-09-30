@@ -24,6 +24,7 @@ jobs:
         - python tester.py testset_travis_blasfeo_pm_double_amd64.json
         - python tester.py testset_travis_blasfeo_pm_single_amd64.json
         - python tester.py testset_travis_blasfeo_cm_double_amd64.json
+        - python tester.py testset_travis_blasfeo_cm_double_amd64_packalg.json
         - python tester.py testset_travis_blasfeo_cm_single_amd64.json
         - python tester.py testset_travis_blas_pm_double_amd64.json
         - python tester.py testset_travis_blas_pm_single_amd64.json
@@ -49,6 +50,7 @@ jobs:
         - python tester.py testset_travis_blasfeo_pm_double_arm64.json
         - python tester.py testset_travis_blasfeo_pm_single_arm64.json
         - python tester.py testset_travis_blasfeo_cm_double_arm64.json
+        - python tester.py testset_travis_blasfeo_cm_double_arm64_packalg.json
         - python tester.py testset_travis_blasfeo_cm_single_arm64.json
         - python tester.py testset_travis_blas_pm_double_arm64.json
         - python tester.py testset_travis_blas_pm_single_arm64.json
