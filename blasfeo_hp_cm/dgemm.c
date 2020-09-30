@@ -151,6 +151,9 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	const int l2_cache_el = L2_CACHE_EL;
+#endif
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	const int llc_cache_el = LLC_CACHE_EL;
 #endif
@@ -190,12 +193,30 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 			goto nn_2; // small matrix: no pack
 			}
 #endif
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-		if( m<=2*m_kernel | n<=2*m_kernel | m_a*k + k_b*n <= llc_cache_el )
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
+		if( m<n*4 )
+			{
+			if( m<=2*m_kernel | m_a*k + k_b*n <= llc_cache_el )
+				{
+//				printf("\nalg m0\n");
+				goto nn_m0; // long matrix: pack A
+				}
+			}
+		else
+			{
+			if( n<=2*m_kernel | m_a*k <= l2_cache_el )
+				{
+//				printf("\nalg n0\n");
+				goto nn_n0; // tall matrix: pack B
+				}
+			}
+#else
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		if( m<=2*m_kernel | n<=2*m_kernel | k<56 )
 #elif defined(TARGET_X64_INTEL_CORE)
 		if( m<=1*m_kernel | n<=1*m_kernel | k<8 )
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+		if( m<=2*m_kernel | n<=2*m_kernel | m_a*k + k_b*n <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 		if( m<=1*m_kernel | n<=1*m_kernel | k<16 )
 #else
@@ -213,6 +234,7 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 				goto nn_n0; // tall matrix: pack B
 				}
 			}
+#endif
 		}
 //	printf("\nalg 1\n");
 	goto nn_1; // big matrix: pack A and B
@@ -1540,14 +1562,17 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 			{
 			if( m<=n )
 				{
+//				printf("\nalg m0\n");
 				goto tn_m0; // long matrix: pack A
 				}
 			else
 				{
+//				printf("\nalg n0\n");
 				goto tn_n0; // tall matrix: pack B
 				}
 			}
 		}
+//	printf("\nalg 1\n");
 	goto tn_1; // big matrix: pack A and B
 
 	// never to get here
@@ -2083,12 +2108,30 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 			goto tt_2; // small matrix: no pack
 			}
 #endif
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-		if( m<=2*m_kernel | n<=2*m_kernel | k_a*m + n_b*k <= llc_cache_el )
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL)
+		if( m*4<=n | k<=4 ) // XXX k too !!!
+			{
+			if( m<=2*m_kernel | n_b*k <= l2_cache_el )
+				{
+//				printf("\nalg m0\n");
+				goto tt_m0; // long matrix: pack A
+				}
+			}
+		else
+			{
+			if( n<=2*m_kernel | k_a*m + n_b*k <= llc_cache_el )
+				{
+//				printf("\nalg n0\n");
+				goto tt_n0; // tall matrix: pack B
+				}
+			}
+#else
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		if( m<=2*m_kernel | n<=2*m_kernel | k<56 )
 #elif defined(TARGET_X64_INTEL_CORE)
 		if( m<=1*m_kernel | n<=1*m_kernel | k<8 )
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+		if( m<=2*m_kernel | n<=2*m_kernel | k_a*m + n_b*k <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 		if( m<=1*m_kernel | n<=1*m_kernel | k<16 )
 #else
@@ -2104,6 +2147,7 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 				goto tt_n0; // tall matrix: pack B
 				}
 			}
+#endif
 		}
 	goto tt_1; // big matrix: pack A and B
 
