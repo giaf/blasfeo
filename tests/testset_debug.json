@@ -33,10 +33,10 @@
     "COLMAJ"
   ],
   "TARGET": [
-    "X64_INTEL_HASWELL"
+    "ARMV8A_ARM_CORTEX_A57"
   ],
   "LA": [
-    "ARMV8A_ARM_CORTEX_A57"
+    "HIGH_PERFORMANCE"
   ],
   "routines": [
     "gemm_nn"
