@@ -138,6 +138,7 @@ class BlasfeoTestset:
 			len(set(self.specs["routines"]))\
 			* len(self.specs["TARGET"])\
 			* len(self.specs["K_MAX_STACK"])\
+			* len(self.specs["PACKING_ALG"])\
 			* len(self.specs["precisions"])\
 			* len(self.specs["apis"])
 
@@ -249,16 +250,24 @@ class BlasfeoTestset:
 				self.run_testset()
 				break
 
+			for mf in self.specs["MF"]:
+				self.testset["blasfeo_flags"]["MF"]=mf
+				self.testset["test_macros"]["BLASFEO_MF"]=mf
 
-			for target in self.specs["TARGET"]:
-				self.testset["blasfeo_flags"]["TARGET"]=target
-				self.testset["test_macros"]["BLASFEO_TARGET"]=target
+				for target in self.specs["TARGET"]:
+					self.testset["blasfeo_flags"]["TARGET"]=target
+					self.testset["test_macros"]["BLASFEO_TARGET"]=target
 
-				for max_stack in self.specs["K_MAX_STACK"]:
-					self.testset["blasfeo_flags"]["K_MAX_STACK"]=max_stack
-					print("\n## Testing {la}:{target} kswitch={max_stack}".format(target=target, la=la, max_stack=max_stack))
+					for max_stack in self.specs["K_MAX_STACK"]:
+						self.testset["blasfeo_flags"]["K_MAX_STACK"]=max_stack
 
-					self.run_testset()
+						print("\n## Testing {la}:{target} kswitch={max_stack}".format(target=target, la=la, max_stack=max_stack))
+
+						for alg in self.specs["PACKING_ALG"]:
+							self.testset["blasfeo_flags"]["PACKING_ALG"]=alg
+							self.testset["test_macros"]["PACKING_ALG"]=alg
+
+							self.run_testset()
 
 	def is_lib_updated(self):
 

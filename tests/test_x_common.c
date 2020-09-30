@@ -49,6 +49,7 @@ void print_compilation_flags()
 	{
 	SHOW_DEFINE(BLASFEO_LA)
 	SHOW_DEFINE(BLASFEO_TARGET)
+	SHOW_DEFINE(BLASFEO_MF)
 	SHOW_DEFINE(PRECISION)
 #ifdef TEST_BLAS_API
 	printf("API\t\t= blas\n");
@@ -56,6 +57,7 @@ void print_compilation_flags()
 	printf("API\t\t= BLASFEO\n");
 #endif
 	SHOW_DEFINE(K_MAX_STACK)
+	SHOW_DEFINE(PACKING_ALG)
 	SHOW_DEFINE(ROUTINE_FULLNAME)
 	}
 

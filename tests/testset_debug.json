@@ -14,31 +14,31 @@
   },
   "blasfeo_flags":{
     "BLASFEO_REF_API": 1,
-    "MF": "COLMAJ",
     "BLAS_API": 0,
     "EXTERNAL_BLAS": "SYSTEM"
   },
   "precisions": [
-    "single"
+    "double"
   ],
   "apis": [
     "blasfeo"
   ],
   "K_MAX_STACK":[
-    0
+    1000
+  ],
+  "PACKING_ALG":[
+  ],
+  "MF": [
+    "COLMAJ"
   ],
   "TARGET": [
-    "ARMV8A_ARM_CORTEX_A57",
-    "ARMV8A_ARM_CORTEX_A53"
+    "X64_INTEL_HASWELL"
   ],
   "LA": [
     "HIGH_PERFORMANCE"
   ],
   "routines": [
-    "gemm_nn",
-    "gemm_nt",
-    "gemm_tn",
-    "gemm_tt"
+    "gemm_nn"
   ]
 }
 

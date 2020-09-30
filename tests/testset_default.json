@@ -13,7 +13,6 @@
   },
   "blasfeo_flags":{
     "CC": "gcc",
-    "MF": "PANELMAJ",
     "BLASFEO_REF_API": 1,
     "BLAS_API": 1,
     "EXTERNAL_BLAS": "OPENBLAS"
@@ -26,6 +25,11 @@
   ],
   "K_MAX_STACK":[
     0, 400
+  ],
+  "PACKING_ALG":[
+  ],
+  "MF": [
+    "PANELMAJ"
   ],
   "TARGET": [
     "X64_INTEL_HASWELL",

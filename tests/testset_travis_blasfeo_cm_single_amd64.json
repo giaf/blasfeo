@@ -14,7 +14,6 @@
   },
   "blasfeo_flags":{
     "BLASFEO_REF_API": 1,
-    "MF": "COLMAJ",
     "BLAS_API": 0,
     "EXTERNAL_BLAS": "SYSTEM"
   },
@@ -26,6 +25,11 @@
   ],
   "K_MAX_STACK":[
     0, 500
+  ],
+  "PACKING_ALG":[
+  ],
+  "MF": [
+    "COLMAJ"
   ],
   "TARGET": [
     "GENERIC",

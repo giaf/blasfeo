@@ -170,10 +170,22 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	int m_a_kernel = m<=m_kernel ? m_a : m_kernel_cache;
 	int k_b = k==ldb ? k : k_cache;
 
-//	goto nn_2; // no pack
-//	goto nn_m0; // pack A
-//	goto nn_n0; // pack B
-//	goto nn_1; // pack A and B
+#if defined(PACKING_ALG_2)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	goto nn_m0; // pack A
+#else
+	goto nn_2; // no pack
+#endif
+#endif
+#if defined(PACKING_ALG_M0)
+	goto nn_m0; // pack A
+#endif
+#if defined(PACKING_ALG_N0)
+	goto nn_n0; // pack B
+#endif
+#if defined(PACKING_ALG_1)
+	goto nn_1; // pack A and B
+#endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if( (m<=m_kernel & n<=m_kernel) | (m_a_kernel*k + k_b*n <= l1_cache_el) )
@@ -864,10 +876,22 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	int m_a_kernel = m<=m_kernel ? m_a : m_kernel_cache;
 	int n_b = n==ldb ? n : n_cache;
 
-//	goto nt_2; // no pack
-//	goto nt_m0; // pack A
-//	goto nt_n0; // pack B
-//	goto nt_1; // pack A and B
+#if defined(PACKING_ALG_2)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	goto nt_m0; // pack A
+#else
+	goto nt_2; // no pack
+#endif
+#endif
+#if defined(PACKING_ALG_M0)
+	goto nt_m0; // pack A
+#endif
+#if defined(PACKING_ALG_N0)
+	goto nt_n0; // pack B
+#endif
+#if defined(PACKING_ALG_1)
+	goto nt_1; // pack A and B
+#endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) 
 	if( (m<=m_kernel & n<=m_kernel) | (m_a_kernel*k + n_b*k <= l1_cache_el) )
@@ -1534,9 +1558,15 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	int k_a = k==lda ? k : k_cache;
 	int k_b = k==ldb ? k : k_cache;
 
-//	goto tn_m0; // pack A
-//	goto tn_n0; // pack B
-//	goto tn_1; // pack A and B
+#if defined(PACKING_ALG_M0)
+	goto tn_m0; // pack A
+#endif
+#if defined(PACKING_ALG_N0)
+	goto tn_n0; // pack B
+#endif
+#if defined(PACKING_ALG_1)
+	goto tn_1; // pack A and B
+#endif
 
 	// no algorithm for small matrix
 	if( k<=K_MAX_STACK )
@@ -2079,10 +2109,22 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	int n_b = n==ldb ? n : n_cache;
 	int n_b_kernel = n<=m_kernel ? n_b : m_kernel_cache;
 
-//	goto tt_2; // no pack
-//	goto tt_m0; // pack A
-//	goto tt_n0; // pack B
-//	goto tt_1; // pack A and B
+#if defined(PACKING_ALG_2)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	goto tt_m0; // pack A
+#else
+	goto tt_2; // no pack
+#endif
+#endif
+#if defined(PACKING_ALG_M0)
+	goto tt_m0; // pack A
+#endif
+#if defined(PACKING_ALG_N0)
+	goto tt_n0; // pack B
+#endif
+#if defined(PACKING_ALG_1)
+	goto tt_1; // pack A and B
+#endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if( (m<=m_kernel & n<=m_kernel) | (k_a*m + n_b_kernel*k <= l1_cache_el) )
@@ -2090,7 +2132,7 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 		goto tt_2; // small matrix: no pack
 		}
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if( m<=48 & n<=48 )
+	if( m<=48 & n<=48 & k<=K_MAX_STACK )
 		{
 		goto tt_m0; // small matrix: pack A
 		}
