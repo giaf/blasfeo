@@ -88,6 +88,116 @@
 #endif
 
 
+
+static void blasfeo_hp_dgemm_1(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *C, int ldc, double *D, int ldd)
+	{
+
+	int ii, jj;
+
+	ii = 0;
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	for(; ii<m-11; ii+=12)
+		{
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nt_12x4_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nt_12x4_vs_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto nn_1_left_4;
+			}
+		if(m-ii<=8)
+			{
+			goto nn_1_left_8;
+			}
+		else
+			{
+			goto nn_1_left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	for(; ii<m-7; ii+=8)
+		{
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nt_8x4_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nt_8x4_vs_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto nn_1_left_4;
+			}
+		else
+			{
+			goto nn_1_left_8;
+			}
+		}
+#else
+	for(; ii<m-3; ii+=4)
+		{
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nt_4x4_lib44cc(k, &alpha, pA+ii*sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nt_4x4_vs_lib44cc(k, &alpha, pA+ii*sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		goto nn_1_left_4;
+		}
+#endif
+	goto nn_1_return;
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+nn_1_left_12:
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dgemm_nt_12x4_vs_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+	goto nn_1_return;
+#endif
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+nn_1_left_8:
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dgemm_nt_8x4_vs_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+	goto nn_1_return;
+#endif
+
+nn_1_left_4:
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dgemm_nt_4x4_vs_lib44cc(k, &alpha, pA+ii*sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+	goto nn_1_return;
+
+nn_1_return:
+	return;
+
+	return;
+
+	}
+
+
+
 #ifdef HP_BLAS
 
 static void blas_hp_dgemm_nn(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc)
@@ -129,7 +239,14 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 
 //	printf("\n%p %d %p %d %p %d %p %d\n", A, lda, B, ldb, C, ldc, D, ldd);
 
-	int ii, jj;
+	int ii, jj, ll;
+	int iii;
+	int mc, nc, kc;
+	int nleft, kleft;
+	int nc0, kc0;
+	int ldc1;
+	double beta1;
+	double *pA, *pB, *C1;
 
 	const int ps = 4; //D_PS;
 
@@ -521,6 +638,101 @@ nn_n0_return:
 
 nn_1:
 
+//#if 1
+#if defined(TARGET_X64_INTEL_HASWELL)
+
+	// cache blocking alg
+
+	// TODO block over m
+
+	nc0 = 128;
+	kc0 = 256;
+
+	nc = n<nc0 ? n : nc0;
+	kc = k<kc0 ? k : kc0;
+
+//	nc = 8;
+//	kc = 4;
+
+	m1 = (m+128-1)/128*128;
+//	n1 = nc; //(n+128-1)/128*128;
+//	k1 = kc; //(k+128-1)/128*128;
+	tA_size = blasfeo_pm_memsize_dmat(ps, m1, kc);
+	tB_size = blasfeo_pm_memsize_dmat(ps, nc, kc);
+	mem = malloc(tA_size+tB_size+64);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_pm_create_dmat(ps, m, kc, &tA, (void *) mem_align);
+	blasfeo_pm_create_dmat(ps, nc, kc, &tB, (void *) (mem_align+tA_size));
+
+	pA = tA.pA;
+	pB = tB.pA;
+
+	for(ll=0; ll<k; )
+		{
+
+		if(k-ll<2*kc0)
+			{
+			if(k-ll<=kc0) // last
+				{
+				kleft = k-ll;
+				}
+			else // second last
+				{
+				kleft = (k-ll+1)/2;
+				kleft = (kleft+4-1)/4*4;
+				}
+			}
+		else
+			{
+			kleft = kc;
+			}
+
+		sda = (kleft+4-1)/4*4;
+		sdb = (kleft+4-1)/4*4;
+
+		beta1 = ll==0 ? beta : 1.0;
+		C1 = ll==0 ? C : D;
+		ldc1 = ll==0 ? ldc : ldd;
+
+		// pack A
+		for(iii=0; iii<kleft-3; iii+=4)
+			{
+			kernel_dpack_tt_4_lib4(m, A+(ll+iii)*lda, lda, pA+iii*ps, sda);
+			}
+		if(iii<kleft)
+			{
+			kernel_dpack_tt_4_vs_lib4(m, A+(ll+iii)*lda, lda, pA+iii*ps, sda, kleft-iii);
+			}
+
+		for(jj=0; jj<n; jj+=nc)
+			{
+
+			nleft = n-jj<nc ? n-jj : nc;
+
+			// pack B
+			for(iii=0; iii<nleft-3; iii+=4)
+				{
+				kernel_dpack_tn_4_lib4(kleft, B+ll+(jj+iii)*ldb, ldb, pB+iii*sdb);
+				}
+			if(iii<nleft)
+				{
+				kernel_dpack_tn_4_vs_lib4(kleft, B+ll+(jj+iii)*ldb, ldb, pB+iii*sdb, nleft-iii);
+				}
+
+			blasfeo_hp_dgemm_1(m, nleft, kleft, alpha, pA, sda, pB, sdb, beta1, C1+jj*ldc1, ldc1, D+jj*ldd, ldd);
+
+			}
+		
+		ll += kleft;
+
+		}
+
+	free(mem);
+
+	return;
+
+#else
+
 	k1 = (k+128-1)/128*128;
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, k1);
@@ -662,6 +874,7 @@ nn_1_return:
 	free(mem);
 	return;
 
+#endif
 
 
 nn_2:
