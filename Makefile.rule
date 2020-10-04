@@ -237,6 +237,7 @@ PRINT_NAME = 0
 # ALG_M0 : pack A
 # ALG_N0 : pack B
 # ALG_1  : pack A and B
+#
 PACKING_ALG = AUTO
 # PACKING_ALG = ALG_2
 # PACKING_ALG = ALG_M0

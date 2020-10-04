@@ -16086,6 +16086,27 @@
 	ZERO_ACC
 
 
+	// prefetch C
+
+	movq		ARG7, %r10 // beta
+	vmovsd		0(%r10), %xmm14
+	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			100f // end
+
+	movq	ARG8, %r10 // C
+	movq	ARG9, %r11 // ldc
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_12X4_LIB
+#else
+	CALL(inner_prefetch_12x4_lib)
+#endif
+
+100:
+
+
 	// call inner dgemm kernel nn
 
 	movq	ARG1, %r10 // k
@@ -16105,14 +16126,14 @@
 
 	// prefetch D
 
-	movq	ARG10, %r10 // D
-	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+//	movq	ARG10, %r10 // D
+//	movq	ARG11, %r11 // ldd
+//	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_12X4_LIB
+//	INNER_PREFETCH_12X4_LIB
 #else
-	CALL(inner_prefetch_12x4_lib)
+//	CALL(inner_prefetch_12x4_lib)
 #endif
 
 
@@ -17422,6 +17443,26 @@
 	ZERO_ACC
 
 
+	// prefetch C
+
+	movq		ARG6, %r10 // beta
+	vmovsd		0(%r10), %xmm14
+	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			100f // end
+
+	movq	ARG7, %r10 // C
+	movq	ARG8, %r11 // ldc
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_12X4_LIB
+#else
+	CALL(inner_prefetch_12x4_lib)
+#endif
+
+100:
+
 	// call inner dgemm kernel nn
 
 	movq	ARG1, %r10 // k
@@ -17439,14 +17480,14 @@
 
 	// prefetch D
 
-	movq	ARG9, %r10 // D
-	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+//	movq	ARG9, %r10 // D
+//	movq	ARG10, %r11 // ldd
+//	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_12X4_LIB
+//	INNER_PREFETCH_12X4_LIB
 #else
-	CALL(inner_prefetch_12x4_lib)
+//	CALL(inner_prefetch_12x4_lib)
 #endif
 
 
@@ -27699,6 +27740,27 @@
 	ZERO_ACC
 
 
+	// prefetch C
+
+	movq		ARG7, %r10 // beta
+	vmovsd		0(%r10), %xmm14
+	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			100f // end
+
+	movq	ARG8, %r10 // C
+	movq	ARG9, %r11 // ldc
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_4X12_LIB
+#else
+	CALL(inner_prefetch_4x12_lib)
+#endif
+
+100:
+
+
 	// call inner dgemm kernel nn
 
 	movq	ARG1, %r10 // k
@@ -27718,14 +27780,14 @@
 
 	// prefetch D
 
-	movq	ARG10, %r10 // D
-	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+//	movq	ARG10, %r10 // D
+//	movq	ARG11, %r11 // ldd
+//	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X12_LIB
+//	INNER_PREFETCH_4X12_LIB
 #else
-	CALL(inner_prefetch_4x12_lib)
+//	CALL(inner_prefetch_4x12_lib)
 #endif
 
 
@@ -28567,6 +28629,27 @@
 	ZERO_ACC
 
 
+	// prefetch C
+
+	movq		ARG7, %r10 // beta
+	vmovsd		0(%r10), %xmm14
+	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			100f // end
+
+	movq	ARG8, %r10 // C
+	movq	ARG9, %r11 // ldc
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_4X12_LIB
+#else
+	CALL(inner_prefetch_4x12_lib)
+#endif
+
+100:
+
+
 	// call inner dgemm kernel nn
 
 	movq	ARG1, %r10 // k
@@ -28586,14 +28669,14 @@
 
 	// prefetch D
 
-	movq	ARG10, %r10 // D
-	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+//	movq	ARG10, %r10 // D
+//	movq	ARG11, %r11 // ldd
+//	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X12_LIB
+//	INNER_PREFETCH_4X12_LIB
 #else
-	CALL(inner_prefetch_4x12_lib)
+//	CALL(inner_prefetch_4x12_lib)
 #endif
 
 
