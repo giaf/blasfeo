@@ -89,7 +89,7 @@
 
 
 
-static void blasfeo_hp_dgemm_1(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *C, int ldc, double *D, int ldd)
+static void blasfeo_hp_dgemm_nt_1(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	int ii, jj;
@@ -198,183 +198,11 @@ nn_1_return:
 
 
 
-#ifdef HP_BLAS
-
-static void blas_hp_dgemm_nn(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc)
+static void blasfeo_hp_dgemm_nn_m0(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc, double *D, int ldd, double *pU, int sdu)
 	{
 
-#if defined(PRINT_NAME)
-	printf("\nblas_hp_dgemm_nn %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
-#endif
+	int ii, jj;
 
-	if(m<=0 | n<=0)
-		return;
-
-	int ldd = ldc;
-	double *D = C;
-
-#else
-
-void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
-	{
-
-#if defined(PRINT_NAME)
-	printf("\nblasfeo_hp_dgemm_nn (cm) %d %d %d %f %p %d %d %p %d %d %f %p %d %d %p %d %d\n", m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
-#endif
-
-	if(m<=0 | n<=0)
-		return;
-
-	// extract pointer to column-major matrices from structures
-	int lda = sA->m;
-	int ldb = sB->m;
-	int ldc = sC->m;
-	int ldd = sD->m;
-	double *A = sA->pA + ai + aj*lda;
-	double *B = sB->pA + bi + bj*ldb;
-	double *C = sC->pA + ci + cj*ldc;
-	double *D = sD->pA + di + dj*ldd;
-
-#endif
-
-//	printf("\n%p %d %p %d %p %d %p %d\n", A, lda, B, ldb, C, ldc, D, ldd);
-
-	int ii, jj, ll;
-	int iii;
-	int mc, nc, kc;
-	int nleft, kleft;
-	int nc0, kc0;
-	int ldc1;
-	double beta1;
-	double *pA, *pB, *C1;
-
-	const int ps = 4; //D_PS;
-
-#if defined(TARGET_GENERIC)
-	double pU[M_KERNEL*K_MAX_STACK];
-#else
-	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 64 );
-#endif
-	int sdu = (k+3)/4*4;
-	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;
-
-	struct blasfeo_pm_dmat tA, tB;
-	int sda, sdb;
-	int tA_size, tB_size;
-	void *mem;
-	char *mem_align;
-	int m1, n1, k1;
-	int pack_B;
-
-	const int m_kernel = M_KERNEL;
-	const int l1_cache_el = L1_CACHE_EL;
-#if defined(TARGET_X64_INTEL_HASWELL)
-	const int l2_cache_el = L2_CACHE_EL;
-#endif
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	const int llc_cache_el = LLC_CACHE_EL;
-#endif
-	const int reals_per_cache_line = CACHE_LINE_EL;
-
-	const int m_cache = (m+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
-	const int n_cache = (n+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
-	const int k_cache = (k+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
-	const int m_kernel_cache = (m_kernel+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
-	int m_min = m_cache<m_kernel_cache ? m_cache : m_kernel_cache;
-//	int n_min = n_cache<m_kernel_cache ? n_cache : m_kernel_cache;
-
-	int m_a = m==lda ? m : m_cache;
-	int m_a_kernel = m<=m_kernel ? m_a : m_kernel_cache;
-	int k_b = k==ldb ? k : k_cache;
-
-#if defined(PACKING_ALG_2)
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	goto nn_m0; // pack A
-#else
-	goto nn_2; // no pack
-#endif
-#endif
-#if defined(PACKING_ALG_M0)
-	goto nn_m0; // pack A
-#endif
-#if defined(PACKING_ALG_N0)
-	goto nn_n0; // pack B
-#endif
-#if defined(PACKING_ALG_1)
-	goto nn_1; // pack A and B
-#endif
-
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	if( (m<=m_kernel & n<=m_kernel) | (m_a_kernel*k + k_b*n <= l1_cache_el) )
-		{
-//		printf("\nalg 2\n");
-		goto nn_2; // small matrix: no pack
-		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if( m<=48 & n<=48 & k<=K_MAX_STACK )
-		{
-		goto nn_m0; // small matrix: pack A
-		}
-#else
-	if( m<=8 & n<=8 )
-		{
-		goto nn_2; // small matrix: no pack
-		}
-#endif
-	if( k<=K_MAX_STACK )
-		{
-#if defined(TARGET_X64_INTEL_HASWELL)
-		if( m<n*4 )
-			{
-			if( m<=2*m_kernel | m_a*k + k_b*n <= llc_cache_el )
-				{
-//				printf("\nalg m0\n");
-				goto nn_m0; // long matrix: pack A
-				}
-			}
-		else
-			{
-			if( n<=2*m_kernel | m_a*k <= l2_cache_el )
-				{
-//				printf("\nalg n0\n");
-				goto nn_n0; // tall matrix: pack B
-				}
-			}
-#else
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-		if( m<=2*m_kernel | n<=2*m_kernel | k<56 )
-#elif defined(TARGET_X64_INTEL_CORE)
-		if( m<=1*m_kernel | n<=1*m_kernel | k<8 )
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-		if( m<=2*m_kernel | n<=2*m_kernel | m_a*k + k_b*n <= llc_cache_el )
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-		if( m<=1*m_kernel | n<=1*m_kernel | k<16 )
-#else
-		if( m<=1*m_kernel | n<=1*m_kernel | k<12 )
-#endif
-			{
-			if( m<=n*4 )
-				{
-//				printf("\nalg m0\n");
-				goto nn_m0; // long matrix: pack A
-				}
-			else
-				{
-//				printf("\nalg n0\n");
-				goto nn_n0; // tall matrix: pack B
-				}
-			}
-#endif
-		}
-//	printf("\nalg 1\n");
-	goto nn_1; // big matrix: pack A and B
-	
-	// never to get here
-	return;
-
-
-nn_m0:
-	
 	ii = 0;
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-11; ii+=12)
@@ -494,6 +322,250 @@ nn_m0_left_4:
 nn_m0_return:
 	return;
 
+	}
+
+
+
+
+#ifdef HP_BLAS
+
+static void blas_hp_dgemm_nn(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc)
+	{
+
+#if defined(PRINT_NAME)
+	printf("\nblas_hp_dgemm_nn %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
+#endif
+
+	if(m<=0 | n<=0)
+		return;
+
+	int ldd = ldc;
+	double *D = C;
+
+#else
+
+void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+
+#if defined(PRINT_NAME)
+	printf("\nblasfeo_hp_dgemm_nn (cm) %d %d %d %f %p %d %d %p %d %d %f %p %d %d %p %d %d\n", m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+#endif
+
+	if(m<=0 | n<=0)
+		return;
+
+	// extract pointer to column-major matrices from structures
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	double *A = sA->pA + ai + aj*lda;
+	double *B = sB->pA + bi + bj*ldb;
+	double *C = sC->pA + ci + cj*ldc;
+	double *D = sD->pA + di + dj*ldd;
+
+#endif
+
+//	printf("\n%p %d %p %d %p %d %p %d\n", A, lda, B, ldb, C, ldc, D, ldd);
+
+	int ii, jj, ll;
+	int iii;
+	int mc, nc, kc;
+	int nleft, kleft;
+	int nc0, kc0;
+	int ldc1;
+	double beta1;
+	double *pA, *pB, *C1;
+	int pack_A;
+
+	const int ps = 4; //D_PS;
+
+#if defined(TARGET_GENERIC)
+	double pU[M_KERNEL*K_MAX_STACK];
+#else
+	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 64 );
+#endif
+	int sdu = (k+3)/4*4;
+	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;
+
+	struct blasfeo_pm_dmat tA, tB;
+	int sda, sdb;
+	int tA_size, tB_size;
+	void *mem;
+	char *mem_align;
+	int m1, n1, k1;
+	int pack_B;
+
+	const int m_kernel = M_KERNEL;
+	const int l1_cache_el = L1_CACHE_EL;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	const int l2_cache_el = L2_CACHE_EL;
+#endif
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	const int llc_cache_el = LLC_CACHE_EL;
+#endif
+	const int reals_per_cache_line = CACHE_LINE_EL;
+
+	const int m_cache = (m+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
+	const int n_cache = (n+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
+	const int k_cache = (k+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
+	const int m_kernel_cache = (m_kernel+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
+	int m_min = m_cache<m_kernel_cache ? m_cache : m_kernel_cache;
+//	int n_min = n_cache<m_kernel_cache ? n_cache : m_kernel_cache;
+
+	int m_a = m==lda ? m : m_cache;
+	int m_a_kernel = m<=m_kernel ? m_a : m_kernel_cache;
+	int k_b = k==ldb ? k : k_cache;
+	int m_c = m==ldc ? m : m_cache;
+	int m_d = m==ldd ? m : m_cache;
+
+#if defined(PACKING_ALG_2)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	goto nn_m0; // pack A
+#else
+	goto nn_2; // no pack
+#endif
+#endif
+#if defined(PACKING_ALG_M0)
+	goto nn_m0; // pack A
+#endif
+#if defined(PACKING_ALG_N0)
+	goto nn_n0; // pack B
+#endif
+#if defined(PACKING_ALG_1)
+	goto nn_1; // pack A and B
+#endif
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	if( (m<=m_kernel & n<=m_kernel) | (m_a_kernel*k + k_b*n <= l1_cache_el) )
+		{
+//		printf("\nalg 2\n");
+		goto nn_2; // small matrix: no pack
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	if( m<=48 & n<=48 & k<=K_MAX_STACK )
+		{
+		goto nn_m0; // small matrix: pack A
+		}
+#else
+	if( m<=8 & n<=8 )
+		{
+		goto nn_2; // small matrix: no pack
+		}
+#endif
+	if( k<=K_MAX_STACK )
+		{
+#if defined(TARGET_X64_INTEL_HASWELL)
+		if( m<n*4 )
+			{
+//			if( m<=2*m_kernel | m_a*k + k_b*n <= llc_cache_el )
+			if( m<=2*m_kernel | m_a*k + k_b*n + m_c*n + m_d*n <= llc_cache_el )
+				{
+//				printf("\nalg m0\n");
+				goto nn_m0; // long matrix: pack A
+				}
+			}
+		else
+			{
+			if( n<=2*m_kernel | m_a*k <= l2_cache_el )
+				{
+//				printf("\nalg n0\n");
+				goto nn_n0; // tall matrix: pack B
+				}
+			}
+#else
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		if( m<=2*m_kernel | n<=2*m_kernel | k<56 )
+#elif defined(TARGET_X64_INTEL_CORE)
+		if( m<=1*m_kernel | n<=1*m_kernel | k<8 )
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+		if( m<=2*m_kernel | n<=2*m_kernel | m_a*k + k_b*n <= llc_cache_el )
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+		if( m<=1*m_kernel | n<=1*m_kernel | k<16 )
+#else
+		if( m<=1*m_kernel | n<=1*m_kernel | k<12 )
+#endif
+			{
+			if( m<=n*4 )
+				{
+//				printf("\nalg m0\n");
+				goto nn_m0; // long matrix: pack A
+				}
+			else
+				{
+//				printf("\nalg n0\n");
+				goto nn_n0; // tall matrix: pack B
+				}
+			}
+#endif
+		}
+//	printf("\nalg 1\n");
+	goto nn_1; // big matrix: pack A and B
+	
+	// never to get here
+	return;
+
+
+nn_m0:
+	
+//#if 0
+#if defined(TARGET_X64_INTEL_HASWELL)
+
+	// cache blocking alg
+
+	kc0 = 256;
+	kc0 = K_MAX_STACK<kc0 ? K_MAX_STACK : kc0;
+
+//	kc0 = 4;
+
+	kc = k<kc0 ? k : kc0;
+
+	for(ll=0; ll<k; )
+		{
+
+#if 0
+		if(k-ll<2*kc0)
+			{
+			if(k-ll<=kc0) // last
+				{
+				kleft = k-ll;
+				}
+			else // second last
+				{
+				kleft = (k-ll+1)/2;
+//				kleft = (kleft+4-1)/4*4;
+				kleft = (kleft+16-1)/16*16;
+				}
+			}
+		else
+			{
+			kleft = kc;
+			}
+#else
+		kleft = k-ll<kc ? k-ll : kc;
+#endif
+//		printf("\n%d %d %d\n", ll, k, kleft);
+
+		sdu = (kleft+4-1)/4*4;
+
+		beta1 = ll==0 ? beta : 1.0;
+		C1 = ll==0 ? C : D;
+		ldc1 = ll==0 ? ldc : ldd;
+
+		blasfeo_hp_dgemm_nn_m0(m, n, kleft, alpha, A+ll*lda, lda, B+ll, ldb, beta1, C1, ldc1, D, ldd, pU, sdu);
+
+		ll += kleft;
+
+		}
+
+#else
+
+	blasfeo_hp_dgemm_nn_m0(m, n, k, alpha, A, lda, B, ldb, beta, C, ldc, D, ldd, pU, sdu);
+
+#endif
+
+	return;
+	
 
 
 nn_n0:
@@ -719,7 +791,7 @@ nn_1:
 				kernel_dpack_tn_4_vs_lib4(kleft, B+ll+(jj+iii)*ldb, ldb, pB+iii*sdb, nleft-iii);
 				}
 
-			blasfeo_hp_dgemm_1(m, nleft, kleft, alpha, pA, sda, pB, sdb, beta1, C1+jj*ldc1, ldc1, D+jj*ldd, ldd);
+			blasfeo_hp_dgemm_nt_1(m, nleft, kleft, alpha, pA, sda, pB, sdb, beta1, C1+jj*ldc1, ldc1, D+jj*ldd, ldd);
 
 			}
 		
@@ -1525,7 +1597,7 @@ nt_1:
 //			d_print_mat(4, kleft, pB, 4);
 //			d_print_mat(4, kleft, pB+4*sdb, 4);
 
-			blasfeo_hp_dgemm_1(m, nleft, kleft, alpha, pA, sda, pB, sdb, beta1, C1+jj*ldc1, ldc1, D+jj*ldd, ldd);
+			blasfeo_hp_dgemm_nt_1(m, nleft, kleft, alpha, pA, sda, pB, sdb, beta1, C1+jj*ldc1, ldc1, D+jj*ldd, ldd);
 //			d_print_mat(m, nleft, D+jj*ldd, ldd);
 
 			}
@@ -2284,7 +2356,7 @@ tn_1:
 				kernel_dpack_tn_4_vs_lib4(kleft, B+ll+(jj+iii)*ldb, ldb, pB+iii*sdb, nleft-iii);
 				}
 
-			blasfeo_hp_dgemm_1(m, nleft, kleft, alpha, pA, sda, pB, sdb, beta1, C1+jj*ldc1, ldc1, D+jj*ldd, ldd);
+			blasfeo_hp_dgemm_nt_1(m, nleft, kleft, alpha, pA, sda, pB, sdb, beta1, C1+jj*ldc1, ldc1, D+jj*ldd, ldd);
 
 			}
 		
@@ -2976,7 +3048,7 @@ tt_1:
 //			d_print_mat(4, kleft, pB, 4);
 //			d_print_mat(4, kleft, pB+4*sdb, 4);
 
-			blasfeo_hp_dgemm_1(m, nleft, kleft, alpha, pA, sda, pB, sdb, beta1, C1+jj*ldc1, ldc1, D+jj*ldd, ldd);
+			blasfeo_hp_dgemm_nt_1(m, nleft, kleft, alpha, pA, sda, pB, sdb, beta1, C1+jj*ldc1, ldc1, D+jj*ldd, ldd);
 //			d_print_mat(m, nleft, D+jj*ldd, ldd);
 
 			}
