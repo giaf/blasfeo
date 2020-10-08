@@ -342,6 +342,10 @@ NAME:
 	cmpl	$0, %r10d
 	jle		2f // return
 
+	// prefetch
+	prefetcht0	0(%r13) // software prefetch
+	prefetcht0	0+64(%r13) // software prefetch
+
 	// preload
 	vmovapd 0(%r11), %ymm13 // A0[0]
 	vmovapd 0(%r11, %r12), %ymm14 // A1[0]
@@ -354,8 +358,8 @@ NAME:
 	.p2align 3
 1: // main loop
 
-//	prefetcht0	128(%r13) // software prefetch
-//	prefetcht0	128+64(%r13) // software prefetch
+	prefetcht0	128(%r13) // software prefetch
+	prefetcht0	128+64(%r13) // software prefetch
 
 	// unroll 0
 	vbroadcastsd	0(%r13), %ymm12

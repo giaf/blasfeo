@@ -42,6 +42,8 @@
 #include <blasfeo_d_aux.h>
 #include <blasfeo_d_kernel.h>
 
+#include <blasfeo_timing.h>
+
 
 
 #if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
@@ -65,7 +67,8 @@
 #define M_KERNEL 12 // max kernel: 12x4
 #define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define KC 256
+#define KC 256 // 192
+#define NC 72 // 120
 
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 #define M_KERNEL 8 // max kernel: 8x4
@@ -1550,7 +1553,7 @@ nn_1:
 
 	// TODO block over m
 
-	nc0 = 128;
+	nc0 = NC;
 	kc0 = KC;
 
 //	nc0 = 8;
@@ -1569,12 +1572,21 @@ nn_1:
 	blasfeo_pm_create_dmat(ps, m, kc, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, nc, kc, &tB, (void *) (mem_align+tA_size));
 
+	double time_pack_A = 0.0;
+	double time_pack_B = 0.0;
+	double time_kernel = 0.0;
+	double time_kernel2 = 0.0;
+	double time_kernel3 = 0.0;
+
+	blasfeo_timer timer;
+
 	pA = tA.pA;
 	pB = tB.pA;
 
 	for(ll=0; ll<k; )
 		{
 
+#if 1
 		if(k-ll<2*kc0)
 			{
 			if(k-ll<=kc0) // last
@@ -1591,6 +1603,9 @@ nn_1:
 			{
 			kleft = kc;
 			}
+#else
+		kleft = k-ll<kc ? k-ll : kc;
+#endif
 
 		sda = (kleft+4-1)/4*4;
 		sdb = (kleft+4-1)/4*4;
@@ -1600,6 +1615,8 @@ nn_1:
 		ldc1 = ll==0 ? ldc : ldd;
 
 		// pack A
+//		blasfeo_tic(&timer);
+#if 1
 		for(iii=0; iii<kleft-3; iii+=4)
 			{
 			kernel_dpack_tt_4_lib4(m, A+(ll+iii)*lda, lda, pA+iii*ps, sda);
@@ -1608,6 +1625,8 @@ nn_1:
 			{
 			kernel_dpack_tt_4_vs_lib4(m, A+(ll+iii)*lda, lda, pA+iii*ps, sda, kleft-iii);
 			}
+#endif
+//		time_pack_A += blasfeo_toc(&timer);
 
 		for(jj=0; jj<n; jj+=nc)
 			{
@@ -1615,6 +1634,8 @@ nn_1:
 			nleft = n-jj<nc ? n-jj : nc;
 
 			// pack B
+//			blasfeo_tic(&timer);
+#if 1
 			for(iii=0; iii<nleft-3; iii+=4)
 				{
 				kernel_dpack_tn_4_lib4(kleft, B+ll+(jj+iii)*ldb, ldb, pB+iii*sdb);
@@ -1623,8 +1644,20 @@ nn_1:
 				{
 				kernel_dpack_tn_4_vs_lib4(kleft, B+ll+(jj+iii)*ldb, ldb, pB+iii*sdb, nleft-iii);
 				}
+#endif
+//			time_pack_B += blasfeo_toc(&timer);
 
+//			blasfeo_tic(&timer);
 			blasfeo_hp_dgemm_nt_1(m, nleft, kleft, alpha, pA, sda, pB, sdb, beta1, C1+jj*ldc1, ldc1, D+jj*ldd, ldd);
+//			time_kernel += blasfeo_toc(&timer);
+
+//			blasfeo_tic(&timer);
+//			blasfeo_hp_dgemm_nt_1(m, nleft, kleft, alpha, pA, sda, pB, sdb, beta1, C1+jj*ldc1, ldc1, D+jj*ldd, ldd);
+//			time_kernel2 += blasfeo_toc(&timer);
+
+//			blasfeo_tic(&timer);
+//			blasfeo_hp_dgemm_nt_1(m, nleft, kleft, alpha, pA, sda, pB, sdb, beta1, C1+jj*ldc1, ldc1, D+jj*ldd, ldd);
+//			time_kernel3 += blasfeo_toc(&timer);
 
 			}
 		
@@ -1632,6 +1665,7 @@ nn_1:
 
 		}
 
+//	printf("\ntime: pack_A %e, pack_B %e, kernel %e, kernel2 %e, kernel3 %e\n", time_pack_A, time_pack_B, time_kernel, time_kernel2, time_kernel3); 
 	free(mem);
 
 	return;
@@ -2160,7 +2194,7 @@ nt_1:
 
 	// TODO block over m
 
-	nc0 = 128;
+	nc0 = NC;
 	kc0 = KC;
 
 //	nc0 = 8;
@@ -2725,7 +2759,7 @@ tn_1:
 
 	// TODO block over m
 
-	nc0 = 128;
+	nc0 = NC;
 	kc0 = KC;
 
 //	nc0 = 8;
@@ -3216,7 +3250,7 @@ tt_1:
 
 	// TODO block over m
 
-	nc0 = 128;
+	nc0 = NC;
 	kc0 = KC;
 
 //	nc0 = 8;
