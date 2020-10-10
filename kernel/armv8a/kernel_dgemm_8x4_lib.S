@@ -14063,17 +14063,23 @@
 
 
 
-	// prefetch
-//	ldr		x8, [sp, #(STACKSIZE + 0)] // D
-//	ldr		w9, [sp, #(STACKSIZE + 8)] // ldd
-//	lsl		w9, w9, #3 // 8*sdd
+	// prefetch C
+//	mov		x8, x5 // beta
+	ld1		{v29.2d}, [x5]
+	fcmpe	d29, #0
+	beq		100f
+
+	mov		x8, x6 // C
+	mov		w9, w7 // ldc
+	lsl		w9, w9, #3 // 8*sdc
 
 #if MACRO_LEVEL>=1
-//	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH_8X4_LIB
 #else
-//	bl inner_prefetch_8x4_lib
+	bl inner_prefetch_8x4_lib
 #endif
 
+100:
 
 
 	// call inner kernel gemm nt

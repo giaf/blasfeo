@@ -68,14 +68,12 @@
 #define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
 #define KC 256 // 192
-#define NC 72 // 120
-#define MC 1500
 
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 #define M_KERNEL 8 // max kernel: 8x4
 #define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define KC 340
+#define KC 320 //256
 
 #else // assume generic target
 #define M_KERNEL 4 // max kernel: 4x4
@@ -90,13 +88,19 @@
 #if defined(TARGET_X64_INTEL_HASWELL)
 #define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB
 #define LLC_CACHE_EL (6*1024*1024/EL_SIZE) // LLC cache size: 6 MB
+#define NC 72 // 120
+#define MC 1500
 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 #define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB
+#define NC 256 //320 //256 //384 // 120
+#define MC 10000 // no blocking
+
 #endif
 
 
 
+// TODO implement packing here ???
 static void blasfeo_hp_dgemm_nt_1(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *C, int ldc, double *D, int ldd)
 	{
 
@@ -1567,7 +1571,7 @@ nn_n0:
 nn_1:
 
 //#if 0
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 
 	// cache blocking alg
 
@@ -2201,7 +2205,7 @@ nt_n0:
 nt_1:
 
 //#if 0
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 
 	// cache blocking alg
 
@@ -2769,7 +2773,7 @@ tn_n0:
 tn_1:
 
 //#if 0
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 
 	// cache blocking alg
 
@@ -3263,7 +3267,7 @@ tt_n0:
 tt_1:
 
 //#if 0
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 
 	// cache blocking alg
 
