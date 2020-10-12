@@ -69,12 +69,14 @@
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
 #define KC 256 // 192
 
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A73) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 #define M_KERNEL 8 // max kernel: 8x4
 #define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#if ! defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A73)
 #define KC 320
+#else
+#define KC 192
 #endif
 
 #else // assume generic target
@@ -93,14 +95,15 @@
 #define NC 72 // 120
 #define MC 1500
 
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A73)
 #define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB
-//#define KC 320 // A73
-#define KC 192 // A57
-//#define NC 256 // A73
-#define NC 48 // A57
-//#define MC 10000 // A73
-#define MC 600 // A57
+#define NC 256
+#define MC 3000
+
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB // 2 MB ???
+#define NC 48
+#define MC 600
 
 #endif
 

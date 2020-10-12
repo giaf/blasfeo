@@ -36,7 +36,7 @@
 include ../../Makefile.rule
 
 
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
+ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57))
 KERNEL_OBJS = \
 		kernel_dgemm_8x4_lib4.o \
 		kernel_dgemm_4x4_lib4.o \

@@ -179,7 +179,7 @@ AUX_HP_PM_OBJS = \
 		auxiliary/m_aux_lib48.o \
 
 endif
-ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_CORE X64_AMD_BULLDOZER X86_AMD_JAGUAR X86_AMD_BARCELONA ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A53 ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7 GENERIC))
+ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_CORE X64_AMD_BULLDOZER X86_AMD_JAGUAR X86_AMD_BARCELONA ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A53 ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7 GENERIC))
 
 ### BLASFEO HP, PANEL-MAJOR ###
 BLASFEO_HP_PM_OBJS = \
@@ -424,7 +424,7 @@ KERNEL_OBJS = \
 		kernel/kernel_align_x86.o \
 
 endif
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
+ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57))
 
 ### KERNELS ###
 KERNEL_OBJS = \
@@ -748,19 +748,10 @@ endif
 ifeq ($(TARGET), X86_AMD_BARCELONA)
 OBJS += sandbox/kernel_sse3_x86.o
 endif
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
+ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A53))
 OBJS += sandbox/kernel_armv8a.o
 endif
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
-OBJS += sandbox/kernel_armv8a.o
-endif
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-OBJS += sandbox/kernel_armv7a.o
-endif
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
-OBJS += sandbox/kernel_armv7a.o
-endif
-ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A9)
+ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
 OBJS += sandbox/kernel_armv7a.o
 endif
 ifeq ($(TARGET), GENERIC)
@@ -896,6 +887,20 @@ ifeq ($(TARGET), X86_AMD_BARCELONA)
 	echo "#ifndef TARGET_X86_AMD_BARCELONA" >  ./include/blasfeo_target.h
 	echo "#define TARGET_X86_AMD_BARCELONA" >> ./include/blasfeo_target.h
 	echo "#endif"                           >> ./include/blasfeo_target.h
+endif
+ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A73)
+	echo "#ifndef TARGET_ARMV8A_ARM_CORTEX_A73" >  ./include/blasfeo_target.h
+	echo "#define TARGET_ARMV8A_ARM_CORTEX_A73" >> ./include/blasfeo_target.h
+	echo "#endif"                               >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_ARMV8A_ARM_CORTEX_A57" >  ./include/blasfeo_target.h
+	echo "#define TARGET_ARMV8A_ARM_CORTEX_A57" >> ./include/blasfeo_target.h
+	echo "#endif"                               >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_VFPv4"    >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_VFPv4"    >> ./include/blasfeo_target.h
+	echo "#endif"                               >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_NEED_FEATURE_NEONv2"   >> ./include/blasfeo_target.h
+	echo "#define TARGET_NEED_FEATURE_NEONv2"   >> ./include/blasfeo_target.h
+	echo "#endif"                               >> ./include/blasfeo_target.h
 endif
 ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A57)
 	echo "#ifndef TARGET_ARMV8A_ARM_CORTEX_A57" >  ./include/blasfeo_target.h
