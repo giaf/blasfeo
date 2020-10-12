@@ -3345,6 +3345,25 @@
 
 
 
+	// prefetch C
+//	mov		x8, x5 // beta
+	ld1		{v29.2d}, [x5]
+	fcmpe	d29, #0
+	beq		100f
+
+	mov		x8, x6 // C
+	mov		w9, w7 // ldc
+	lsl		w9, w9, #3 // 8*sdc
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_12X4_LIB
+#else
+	bl inner_prefetch_12x4_lib
+#endif
+
+100:
+
+
 	// call inner kernel gemm nt
 	mov		w8, w0 // kmax
 	mov		x9, x2 // A

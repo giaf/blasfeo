@@ -446,6 +446,9 @@ NAME:
 	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 
+	prfm	PLDL1KEEP, [x11, #(128+0)]
+	prfm	PLDL1KEEP, [x11, #(128+64)]
+
 	trn1	v24.2d, v0.2d, v2.2d
 	trn2	v2.2d, v0.2d, v2.2d
 	trn1	v25.2d, v5.2d, v7.2d
@@ -851,6 +854,7 @@ NAME:
 
 1: // main loop
 	mov		x13, x9
+	add		x14, x11, x12
 
 	// TODO prefetch
 
@@ -858,25 +862,30 @@ NAME:
 	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	stp		q0, q1, [x11, #0]
+	prfm	PLDL1KEEP, [x14, #0]
 
 	ldp		q0, q1, [x13, #0]
 	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	stp		q0, q1, [x11, #32]
+	prfm	PLDL1KEEP, [x14, #32]
 
 	ldp		q0, q1, [x13, #0]
 	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	stp		q0, q1, [x11, #64]
+	prfm	PLDL1KEEP, [x14, #64]
 
 	ldp		q0, q1, [x13, #0]
 	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	stp		q0, q1, [x11, #96]
+	prfm	PLDL1KEEP, [x14, #96]
 
 	sub		w8, w8, #4
 	add		x9, x9, #32
-	add		x11, x11, x12
+//	add		x11, x11, x12
+	mov		x11, x14
 
 	cmp		w8, #3
 	bgt		1b

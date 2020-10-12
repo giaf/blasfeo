@@ -54,9 +54,9 @@ int main()
 	blasfeo_timer timer;
 	double tmp_time, bandwidth_set_sequential, bandwidth_copy_sequential, bandwidth_set_parallel, bandwidth_copy_parallel;
 
-	int size[] = {16, 32, 48, 64, 80, 96, 112, 128, 256, 384, 512, 768, 1024, 1536, 2048, 2560, 3072, 3584, 4096, 4608, 5120, 6144, 8192, 12288, 16384, 24576, 32768, 40960, 49152, 65536, 81920, 98304, 131072};
-	int nnrep[] = {4000000, 4000000, 4000000, 2000000, 2000000, 1000000, 1000000, 1000000, 400000, 400000, 400000, 200000, 200000, 200000, 100000, 100000, 100000, 40000, 40000, 40000, 20000, 20000, 20000, 10000, 10000, 10000, 10000, 4000, 4000, 4000, 2000, 2000, 2000};
-	int n_size = 33;
+	int size[] = {16, 32, 48, 64, 80, 96, 112, 128, 256, 384, 512, 768, 1024, 1536, 2048, 2560, 3072, 3584, 4096, 4608, 5120, 6144, 8192, 12288, 16384, 24576, 32768, 40960, 49152, 65536, 81920, 98304, 131072, 196608, 262144, 393216};
+	int nnrep[] = {4000000, 4000000, 4000000, 2000000, 2000000, 1000000, 1000000, 1000000, 400000, 400000, 400000, 200000, 200000, 200000, 100000, 100000, 100000, 40000, 40000, 40000, 20000, 20000, 20000, 10000, 10000, 10000, 10000, 4000, 4000, 4000, 2000, 2000, 2000, 1000, 1000, 1000};
+	int n_size = 36;
 
 #ifdef _OPENMP
 int num_threads = 2;
@@ -79,6 +79,11 @@ int id = -1;
 		/* set benchmark sequential */
 
 		// set to zero
+		for(ii=0; ii<size[nn]; ii++)
+			{
+			x[ii] = 0.0;
+			}
+
 		blasfeo_tic(&timer);
 
 		for(rep=0; rep<nrep; rep++)
@@ -106,6 +111,11 @@ int id = -1;
 #pragma omp master
 {
 		// set to zero
+		for(ii=0; ii<size[nn]; ii++)
+			{
+			x[ii] = 0.0;
+			}
+
 		blasfeo_tic(&timer);
 } // master
 
@@ -132,6 +142,11 @@ int id = -1;
 		/* copy benchmark sequential */
 
 		// copy
+		for(ii=0; ii<size[nn]; ii++)
+			{
+			y[ii] = x[ii];
+			}
+
 		blasfeo_tic(&timer);
 
 		for(rep=0; rep<nrep; rep++)
@@ -159,6 +174,11 @@ int id = -1;
 #pragma omp master
 {
 		// copy
+		for(ii=0; ii<size[nn]; ii++)
+			{
+			y[ii] = x[ii];
+			}
+
 		blasfeo_tic(&timer);
 } // master
 
