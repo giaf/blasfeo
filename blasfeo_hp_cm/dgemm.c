@@ -73,7 +73,9 @@
 #define M_KERNEL 8 // max kernel: 8x4
 #define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
+#if ! defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 #define KC 320
+#endif
 
 #else // assume generic target
 #define M_KERNEL 4 // max kernel: 4x4
@@ -230,6 +232,7 @@ nn_m1_return:
 
 
 // TODO implement packing here ???
+#if 0
 static void blasfeo_hp_dgemm_nt_n1(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *C, int ldc, double *D, int ldd)
 	{
 
@@ -338,6 +341,7 @@ nn_n1_return:
 	return;
 
 	}
+#endif
 
 
 
@@ -1825,7 +1829,7 @@ nn_1:
 
 	return;
 
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#elif 0 //defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 
 	// cache blocking alg
 
