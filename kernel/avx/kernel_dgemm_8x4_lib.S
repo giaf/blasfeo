@@ -7143,13 +7143,18 @@
 
 	leaq		0(%r11, %r11, 2), %r12
 	prefetcht0	0(%r10)				// 0
-	prefetcht0	32(%r10)			// 0
-	prefetcht0	0(%r10, %r11, 1)	// 1
-	prefetcht0	32(%r10, %r11, 1)	// 1
+	prefetcht0	0(%r10, %r11)		// 1
 	prefetcht0	0(%r10, %r11, 2)	// 2
-	prefetcht0	32(%r10, %r11, 2)	// 2
-	prefetcht0	0(%r10, %r12, 1)	// 3
-	prefetcht0	32(%r10, %r12, 1)	// 3
+	prefetcht0	0(%r10, %r12)		// 3
+//	movq	%r10, %r13
+//	andq	$63, %r13
+//	cmpl	$0, %r13d
+//	je		0f
+	prefetcht0	63(%r10)			// 0
+	prefetcht0	63(%r10, %r11)		// 1
+	prefetcht0	63(%r10, %r11, 2)	// 2
+	prefetcht0	63(%r10, %r12)		// 3
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -7187,13 +7192,13 @@
 	leaq		0(%r11, %r11, 2), %r12
 	leaq		0(%r10, %r11, 4), %r13
 	prefetcht0	0(%r10)				// 0
-	prefetcht0	0(%r10, %r11, 1)	// 1
+	prefetcht0	0(%r10, %r11)		// 1
 	prefetcht0	0(%r10, %r11, 2)	// 2
-	prefetcht0	0(%r10, %r12, 1)	// 3
+	prefetcht0	0(%r10, %r12)		// 3
 	prefetcht0	0(%r13)				// 4
-	prefetcht0	0(%r13, %r11, 1)	// 5
+	prefetcht0	0(%r13, %r11)		// 5
 	prefetcht0	0(%r13, %r11, 2)	// 6
-	prefetcht0	0(%r13, %r12, 1)	// 7
+	prefetcht0	0(%r13, %r12)		// 7
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -7430,6 +7435,27 @@
 	ZERO_ACC
 
 
+	// prefetch C
+
+	movq		ARG6, %r10 // beta
+	vmovsd		0(%r10), %xmm14
+	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			100f // end
+
+	movq	ARG7, %r10 // C
+	movq	ARG8, %r11 // ldc
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_8X4_LIB
+#else
+	CALL(inner_prefetch_8x4_lib)
+#endif
+
+100:
+
+
 	// call inner dgemm kernel nn
 
 	movq	ARG1, %r10 // k
@@ -7442,6 +7468,19 @@
 	INNER_KERNEL_DGEMM_NT_8X4_LIB4
 #else
 	CALL(inner_kernel_dgemm_nt_8x4_lib4)
+#endif
+
+
+	// prefetch D
+
+//	movq	ARG9, %r10 // D
+//	movq	ARG10, %r11 // ldd
+//	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+//	INNER_PREFETCH_8X4_LIB
+#else
+//	CALL(inner_prefetch_8x4_lib)
 #endif
 
 

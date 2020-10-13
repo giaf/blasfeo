@@ -63,21 +63,50 @@
 // TODO move to a header file to reuse across routines
 #define EL_SIZE 8 // double precision
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+// TODO detect LLC cache size !!!!!!!!!
+#if defined(TARGET_X64_INTEL_HASWELL)
 #define M_KERNEL 12 // max kernel: 12x4
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
+#define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4kB = 256 kB
+#define LLC_CACHE_EL (6*1024*1024/EL_SIZE) // LLC cache size: 6 MB
 #define KC 256 // 192
+#define NC 72 // 120
+#define MC 1500
 
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A73) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #define M_KERNEL 8 // max kernel: 8x4
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A73)
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
+#define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4kB = 256 kB
+#define LLC_CACHE_EL (6*1024*1024/EL_SIZE) // LLC cache size: 4 MB
+#define KC 320 //256 //320
+#define NC 64 //72 //60 // 120
+#define MC 800 //800
+
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A73)
+#define M_KERNEL 8 // max kernel: 8x4
+#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
+#define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB
 #define KC 320
-#else
+#define NC 256
+#define MC 3000
+
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#define M_KERNEL 8 // max kernel: 8x4
+#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
+#define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB // 2 MB ???
 #define KC 192
-#endif
+#define NC 48
+#define MC 600
+
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#define M_KERNEL 12 // max kernel: 12x4
+#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
+#define KC 192
 
 #else // assume generic target
 #define M_KERNEL 4 // max kernel: 4x4
@@ -85,25 +114,6 @@
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes // TODO 32-bytes for cortex A9
 #define KC 512
 
-#endif
-
-
-// TODO detect LLC cache size !!!!!!!!!
-#if defined(TARGET_X64_INTEL_HASWELL)
-#define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4kB = 256 kB
-#define LLC_CACHE_EL (6*1024*1024/EL_SIZE) // LLC cache size: 6 MB
-#define NC 72 // 120
-#define MC 1500
-
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A73)
-#define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB
-#define NC 256
-#define MC 3000
-
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-#define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB // 2 MB ???
-#define NC 48
-#define MC 600
 
 #endif
 
@@ -1708,7 +1718,7 @@ nn_n0:
 nn_1:
 
 //#if 0
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 
 	// cache blocking alg
 
@@ -2478,7 +2488,7 @@ nt_n0:
 nt_1:
 
 //#if 0
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 
 	// cache blocking alg
 
@@ -3050,7 +3060,7 @@ tn_n0:
 tn_1:
 
 //#if 0
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 
 	// cache blocking alg
 
@@ -3548,7 +3558,7 @@ tt_n0:
 tt_1:
 
 //#if 0
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 
 	// cache blocking alg
 

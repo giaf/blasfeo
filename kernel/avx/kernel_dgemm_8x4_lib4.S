@@ -314,6 +314,10 @@ NAME:
 //	addq	%r12, %r15 // A1 <- A0 + 4*sda*sizeof(double)
 
 	// prefetch
+	prefetcht0	0(%r13) // software prefetch
+	prefetcht0	0+64(%r13) // software prefetch
+
+	// preload
 	vmovapd 0(%r11), %ymm8 // A0[0]
 //	vmovapd 0(%r15), %ymm9 // A1[0]
 	vmovapd 0(%r11, %r12, 1), %ymm9 // A1[0]
@@ -325,6 +329,9 @@ NAME:
 	// main loop
 	.p2align 3
 1: // main loop
+
+	prefetcht0	128(%r13) // software prefetch
+	prefetcht0	128+64(%r13) // software prefetch
 
 	// unroll 0
 	vmovapd 32(%r13), %ymm13 // B[4]
