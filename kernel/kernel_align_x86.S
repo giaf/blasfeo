@@ -90,8 +90,50 @@
 
 
 
-//               1          2
-// void align_64(void *ptr, void **ptr_align);
+
+
+//                            1          2
+// void blasfeo_align_64_byte(void *ptr, void **ptr_align);
+
+	.align 16
+#if defined(OS_LINUX)
+	.globl blasfeo_align_4096_byte
+	.type blasfeo_align_4096_byte, @function
+blasfeo_align_4096_byte:
+#elif defined(OS_MAC)
+	.globl _blasfeo_align_4096_byte
+_blasfeo_align_4096_byte:
+#elif defined(OS_WINDOWS)
+	.globl blasfeo_align_4096_byte
+	.def blasfeo_align_4096_byte; .scl 2; .type 32; .endef
+blasfeo_align_4096_byte:
+#endif
+	
+	PROLOGUE
+
+	movl	ARG1, %eax
+	movl	ARG2, %ebx
+
+	addl 	$4095, %eax
+	movl	$4095, %ecx
+	notl	%ecx
+	andl	%ecx, %eax
+	movl	%eax, (%ebx)
+
+	EPILOGUE
+	
+	ret
+
+#if defined(OS_LINUX)
+	.size	blasfeo_align_4096_byte, .-blasfeo_align_4096_byte
+#endif
+
+
+
+
+
+//                    1          2
+// void align_64_byte(void *ptr, void **ptr_align);
 
 	.align 16
 #if defined(OS_LINUX)
