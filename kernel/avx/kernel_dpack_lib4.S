@@ -231,12 +231,25 @@ NAME:
 
 
 
+// input arguments
+//
+// r10	<- kmax
+// r11	<- A
+// r12	<- lda
+// r13	<- C
+//
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACK_TN_4_LIB4
 #else
 	.p2align 4,,15
 	FUN_START(inner_kernel_dpack_tn_4_lib4)
 #endif
+
+
+
+#if 1
+
+
 
 	cmpl	$0, %r10d
 	jle		0f // return
@@ -271,16 +284,12 @@ NAME:
 
 	vunpcklpd	%ymm1, %ymm0, %ymm4
 	vmovapd		%ymm4, 0(%r13)
-//	vmovapd		0(%r13), %ymm8
 	vunpckhpd	%ymm1, %ymm0, %ymm5
 	vmovapd		%ymm5, 32(%r13)
-//	vmovapd		32(%r13), %ymm8
 	vunpcklpd	%ymm3, %ymm2, %ymm6
 	vmovapd		%ymm6, 64(%r13)
-//	vmovapd		64(%r13), %ymm8
 	vunpckhpd	%ymm3, %ymm2, %ymm7
 	vmovapd		%ymm7, 96(%r13)
-//	vmovapd		96(%r13), %ymm8
 
 	subl	$4, %r10d
 	addq	$32, %r11
@@ -314,6 +323,127 @@ NAME:
 
 
 0: // return
+
+
+
+#else
+
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	leaq	0(%r12, %r12, 2), %r14
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	movl	%r10d, %ecx
+
+3:
+	movl	%ecx, %r10d
+	movl	$512, %edx
+//	movl	$256, %edx
+//	movl	$8, %edx
+	cmpl	%edx, %r10d
+	cmovgl	%edx, %r10d
+
+
+// TODO block for e.g. L1 cache
+
+	movl	%r10d, %eax
+	movq	%r11, %rbx
+
+//	.p2align 3
+1: // prefetch loop
+	// TODO use load instead on sandybridge ???
+	prefetchnta	0(%rbx)
+	prefetchnta	0(%rbx, %r12)
+	prefetchnta	0(%rbx, %r12, 2)
+	prefetchnta	0(%rbx, %r14)
+
+	addq	$32, %rbx
+	subl	$8, %eax
+
+	cmpl	$0, %eax
+	jg		1b
+
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovupd		0(%r11), %xmm0
+	vmovupd		0(%r11, %r12, 2), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vmovupd		0(%r11, %r12), %xmm1
+	vmovupd		0(%r11, %r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
+	vmovupd		16(%r11), %xmm2
+	vmovupd		16(%r11, %r12, 2), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
+	vmovupd		16(%r11, %r12), %xmm3
+	vmovupd		16(%r11, %r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
+
+	vunpcklpd	%ymm1, %ymm0, %ymm4
+	vmovapd		%ymm4, 0(%r13)
+	vunpckhpd	%ymm1, %ymm0, %ymm5
+	vmovapd		%ymm5, 32(%r13)
+	vunpcklpd	%ymm3, %ymm2, %ymm6
+	vmovapd		%ymm6, 64(%r13)
+	vunpckhpd	%ymm3, %ymm2, %ymm7
+	vmovapd		%ymm7, 96(%r13)
+
+	subl	$4, %r10d
+	addq	$32, %r11
+	addq	$128, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+//	jle		0f // return
+	jle		4f // return
+
+
+2: // clean-up loop
+	
+	vmovsd		0(%r11), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+	vmovsd		0(%r11, %r12), %xmm0
+	vmovsd		%xmm0, 8(%r13)
+	vmovsd		0(%r11, %r12, 2), %xmm0
+	vmovsd		%xmm0, 16(%r13)
+	vmovsd		0(%r11, %r14), %xmm0
+	vmovsd		%xmm0, 24(%r13)
+
+	subl	$1, %r10d
+	addq	$8, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+4:
+	subl	$512, %ecx
+//	subl	$256, %ecx
+//	subl	$8, %ecx
+	cmpl	$0, %ecx
+	jg		3b
+
+
+0: // return
+
+
+
+#endif
+
+
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -563,12 +693,26 @@ NAME:
 
 
 
+// input arguments
+//
+// r10	<- kmax
+// r11	<- A
+// r12	<- lda
+// r13	<- C
+// r14	<- sdc
+//
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACK_TT_4_LIB4
 #else
 	.p2align 4,,15
 	FUN_START(inner_kernel_dpack_tt_4_lib4)
 #endif
+
+
+
+#if 1
+
+
 
 	cmpl	$0, %r10d
 	jle		0f // return
@@ -592,20 +736,14 @@ NAME:
 //	prefetchnta	2*64(%r11, %r15)
 
 	vmovupd		0(%r11), %ymm0
+	vmovupd		0(%r11, %r12), %ymm1
+	vmovupd		0(%r11, %r12, 2), %ymm2
+	vmovupd		0(%r11, %r15), %ymm3
+
 	vmovapd		%ymm0, 0(%r13)
-//	vmovapd		0(%r13), %ymm1
-
-	vmovupd		0(%r11, %r12), %ymm0
-	vmovapd		%ymm0, 32(%r13)
-//	vmovapd		32(%r13), %ymm1
-
-	vmovupd		0(%r11, %r12, 2), %ymm0
-	vmovapd		%ymm0, 64(%r13)
-//	vmovapd		64(%r13), %ymm1
-
-	vmovupd		0(%r11, %r15), %ymm0
-	vmovapd		%ymm0, 96(%r13)
-//	vmovapd		96(%r13), %ymm1
+	vmovapd		%ymm1, 32(%r13)
+	vmovapd		%ymm2, 64(%r13)
+	vmovapd		%ymm3, 96(%r13)
 
 	subl	$4, %r10d
 	addq	$32, %r11
@@ -642,6 +780,122 @@ NAME:
 
 
 0: // return
+
+
+
+
+#else
+
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	leaq	0(%r12, %r12, 2), %r15
+
+	cmpl	$3, %r10d
+	jle		2f // clean-up loop
+
+
+	movl	%r10d, %ecx
+
+3:
+	movl	%ecx, %r10d
+	movl	$512, %edx
+//	movl	$256, %edx
+//	movl	$8, %edx
+	cmpl	%edx, %r10d
+	cmovgl	%edx, %r10d
+
+
+// TODO block for e.g. L1 cache
+
+	movl	%r10d, %eax
+	movq	%r11, %rbx
+
+//	.p2align 3
+1: // prefetch loop
+	// TODO use load instead on sandybridge ???
+	prefetchnta	0(%rbx)
+	prefetchnta	0(%rbx, %r12)
+	prefetchnta	0(%rbx, %r12, 2)
+	prefetchnta	0(%rbx, %r14)
+
+	addq	$32, %rbx
+	subl	$8, %eax
+
+	cmpl	$0, %eax
+	jg		1b
+
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+//	prefetcht2	0(%r13, %r14, 4) // software prefetch
+//	prefetcht2	64(%r13, %r14, 4) // software prefetch
+
+	vmovupd		0(%r11), %ymm0
+	vmovupd		0(%r11, %r12), %ymm1
+	vmovupd		0(%r11, %r12, 2), %ymm2
+	vmovupd		0(%r11, %r15), %ymm3
+
+	vmovapd		%ymm0, 0(%r13)
+	vmovapd		%ymm1, 32(%r13)
+	vmovapd		%ymm2, 64(%r13)
+	vmovapd		%ymm3, 96(%r13)
+
+	subl	$4, %r10d
+	addq	$32, %r11
+	addq	%r14, %r13
+
+	cmpl	$3, %r10d
+	jg		1b
+
+
+	cmpl	$0, %r10d
+//	jle		0f // return
+	jle		4f // return
+
+
+2: // clean-up loop
+	
+	vmovsd		0(%r11), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+
+	vmovsd		0(%r11, %r12), %xmm0
+	vmovsd		%xmm0, 32(%r13)
+
+	vmovsd		0(%r11, %r12, 2), %xmm0
+	vmovsd		%xmm0, 64(%r13)
+
+	vmovsd		0(%r11, %r15), %xmm0
+	vmovsd		%xmm0, 96(%r13)
+
+	subl	$1, %r10d
+	addq	$8, %r11
+	addq	$8, %r13
+
+	cmpl	$0, %r10d
+	jg		2b
+
+
+4:
+	subl	$512, %ecx
+//	subl	$256, %ecx
+//	subl	$8, %ecx
+	cmpl	$0, %ecx
+	jg		3b
+
+
+0: // return
+
+
+
+#endif
+
+
 
 #if MACRO_LEVEL>=1
 	.endm

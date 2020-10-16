@@ -1507,7 +1507,8 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #if defined(TARGET_GENERIC)
 	double pU[M_KERNEL*K_MAX_STACK];
 #else
-	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 64 );
+//	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 64 );
+	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 4096 );
 #endif
 	int sdu = (k+3)/4*4;
 	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;
@@ -1736,6 +1737,8 @@ nn_1:
 
 	tA_size = blasfeo_pm_memsize_dmat(ps, mc, kc);
 	tB_size = blasfeo_pm_memsize_dmat(ps, nc, kc);
+	tA_size = (tA_size + 4096 - 1) / 4096 * 4096;
+	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
 //	mem = malloc(tA_size+tB_size+64);
 //	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	mem = malloc(tA_size+tB_size+4096);
@@ -1818,6 +1821,8 @@ nn_1:
 				for(iii=0; iii<nleft-3; iii+=4)
 					{
 					kernel_dpack_tn_4_lib4(kleft, B+ll+(jj+iii)*ldb, ldb, pB+iii*sdb);
+//					d_print_mat(4, kleft, pB+iii*sdb, 4);
+//					exit(1);
 					}
 				if(iii<nleft)
 					{
