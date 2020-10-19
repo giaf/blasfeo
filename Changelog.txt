@@ -4,7 +4,7 @@ BLASFEO ChangeLog
 
 ====================================================================
 Version 0.1.3-master
-09-Oct-2020
+19-Oct-2020
 
 BLASFEO_API:
 	* use macros in REFERENCE backend to allow column- and panel-major formats
@@ -15,7 +15,7 @@ BLAS_API:
 	* implement the BLAS API as a wrapper on top of the BLASFEO API
 	* spotrf for all targets (partially optimized for avx2 and armv8a, generic for others)
 	* dgemm: optimize switching algorithm for Intel Haswell and ARM Cortex A57
-	* dgemm: some work on cache blocking: k-block (all targets), m- and n-block (haswell)
+	* dgemm: some work on cache blocking: k-block (all targets), m- and n-block (haswell, sandybridge, cortexa57, cortexa73)
 
 ARMv8A:
 	* add kernel sgemm nt {8x4,8x8} lib44cc & some relative spotrf kernels
@@ -23,6 +23,7 @@ ARMv8A:
 	* colmaj/blas_api  dgemm, no-pack algorithm (for small/skinny matrices) fully optimized for Cortex A57 (partially for A53)
 	* Cortex A53:
 		- improve kernels sgemm_nt lib4
+	* add Cortex A73 target (makefile only for now)
 
 ====================================================================
 Version 0.1.2
