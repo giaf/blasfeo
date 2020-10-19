@@ -98,7 +98,7 @@ G. Frison, T. Sartor, A. Zanelli, M. Diehl, *The BLAS API of BLASFEO: optimizing
 www.cs.utexas.edu/users/flame/BLISRetreat2017/slides/Gianluca_BLIS_Retreat_2017.pdf
 - video with comments to the slides: <br/>
 https://utexas.app.box.com/s/yt2d693v8xc37yyjklnf4a4y1ldvyzon
-- video on packing strategy in BLAS API (presented at the 2020 BLIS retreat): <br/>
+- 3-minutes video on packing strategies in BLAS API (presented at the 2020 BLIS retreat): <br/>
 https://www.cs.utexas.edu/users/flame/BLISRetreat2020/Gianlucca.html
 
 ## Notes
