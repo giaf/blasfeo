@@ -1078,6 +1078,9 @@ benchmarks: deploy_to_benchmarks build_benchmarks
 run_benchmarks:
 	make -C benchmarks run
 
+perf_benchmarks:
+	make -C benchmarks perf
+
 figures_benchmark_one:
 	make -C benchmarks figures_benchmark_one
 
