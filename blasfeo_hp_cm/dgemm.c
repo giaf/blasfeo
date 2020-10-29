@@ -106,7 +106,10 @@
 #define M_KERNEL 12 // max kernel: 12x4
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
 #define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
-#define KC 192
+#define LLC_CACHE_EL (256*1024/EL_SIZE) // LLC cache size: 256 kB
+#define KC 160
+#define NC 128
+#define MC 3000
 
 #else // assume generic target
 #define M_KERNEL 4 // max kernel: 4x4
@@ -1590,6 +1593,12 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 		{
 		goto nn_m0; // small matrix: pack A
 		}
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	if( (m<=m_kernel & n<=m_kernel & k<160) )
+		{
+//		printf("\nalg 2\n");
+		goto nn_2; // small matrix: no pack
+		}
 #else
 	if( m<=8 & n<=8 )
 		{
@@ -1622,7 +1631,7 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if( m<=2*m_kernel | n<=2*m_kernel | m_a*k + k_b*n <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if( m<=1*m_kernel | n<=1*m_kernel | k<16 )
+	if( (m<=2*m_kernel | n<=2*m_kernel) & k<160 )
 #else
 	if( m<=1*m_kernel | n<=1*m_kernel | k<12 )
 #endif
@@ -1737,7 +1746,7 @@ nn_n0:
 nn_1:
 
 //#if 0
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
 	// cache blocking alg
 
@@ -2386,6 +2395,12 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 		{
 		goto nt_m0; // small matrix: pack A
 		}
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	if( (m<=m_kernel & n<=m_kernel & k<160) )
+		{
+//		printf("\nalg 2\n");
+		goto nt_2; // small matrix: no pack
+		}
 #else
 	if( m<=8 & n<=8 )
 		{
@@ -2417,7 +2432,7 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if( m<=2*m_kernel | n<=2*m_kernel | m_a*k + n_b*k <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if( m<=1*m_kernel | n<=1*m_kernel | k<16 )
+	if( (m<=2*m_kernel | n<=2*m_kernel) & k<160 )
 #else
 	if( m<=1*m_kernel | n<=1*m_kernel | k<12 )
 #endif
@@ -2511,7 +2526,7 @@ nt_n0:
 nt_1:
 
 //#if 0
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
 	// cache blocking alg
 
@@ -2988,7 +3003,7 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #elif defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if( m<=2*m_kernel | n<=2*m_kernel | k_a*m + k_b*n <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if( m<=1*m_kernel | n<=1*m_kernel | k<16 )
+	if( (m<=2*m_kernel | n<=2*m_kernel) & k<160 )
 #else
 	if( m<=1*m_kernel | n<=1*m_kernel | k<12 )
 #endif
@@ -3083,7 +3098,7 @@ tn_n0:
 tn_1:
 
 //#if 0
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
 	// cache blocking alg
 
@@ -3458,6 +3473,12 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 		{
 		goto tt_m0; // small matrix: pack A
 		}
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	if( (m<=m_kernel & n<=m_kernel & k<160) )
+		{
+//		printf("\nalg 2\n");
+		goto tt_2; // small matrix: no pack
+		}
 #else
 	if( m<=8 & n<=8 )
 		{
@@ -3489,7 +3510,7 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if( m<=2*m_kernel | n<=2*m_kernel | k_a*m + n_b*k <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if( m<=1*m_kernel | n<=1*m_kernel | k<16 )
+	if( (m<=2*m_kernel | n<=2*m_kernel) & k<160 )
 #else
 	if( m<=1*m_kernel | n<=1*m_kernel | k<12 )
 #endif
@@ -3581,7 +3602,7 @@ tt_n0:
 tt_1:
 
 //#if 0
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
 	// cache blocking alg
 
