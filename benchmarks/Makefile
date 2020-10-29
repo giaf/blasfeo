@@ -108,6 +108,8 @@ build: common $(ONE_OBJS)
 run:
 	./$(BINARY_DIR)/$(ONE_OBJS).out
 
+perf:
+	perf stat -e cpu-clock,instructions,cpu-cycles,bus-cycles,cache-misses,cache-references,L1-dcache-load-misses,L1-dcache-loads,L1-dcache-stores,LLC-load-misses,LLC-loads,LLC-stores,LLC-store-misses,dTLB-load-misses,dTLB-loads,dTLB-stores,dTLB-store-misses ./$(BINARY_DIR)/$(ONE_OBJS).out
 
 clean:
 	rm -rf ./*.o
