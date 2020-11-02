@@ -1187,7 +1187,7 @@ NAME:
 	INNER_BLEND_T_4_LIB4
 	INNER_SCALE_M11_4_LIB4
 #else
-	INNER_BLEND_T_4_LIB4
+	bl	inner_blend_t_4_lib4
 	bl	inner_scale_m11_4_lib4
 #endif
 
