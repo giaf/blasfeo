@@ -122,7 +122,7 @@ void blasfeo_dtrsc_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int a
 
 // --- sum
 // B <= B + alpha*A
-void blasfeo_dgead(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int yi, int cj);
+void blasfeo_dgead(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj);
 // y <= y + alpha*x
 void blasfeo_dvecad(int m, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi);
 
