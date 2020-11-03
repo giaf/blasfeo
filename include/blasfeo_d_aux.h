@@ -45,6 +45,8 @@
 
 
 
+#include <stdlib.h>
+
 #include "blasfeo_common.h"
 #include "blasfeo_d_aux_old.h"
 

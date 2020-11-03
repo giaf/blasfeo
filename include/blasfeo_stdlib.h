@@ -42,6 +42,8 @@ extern "C" {
 
 
 
+#include <stdlib.h>
+
 //
 void blasfeo_malloc(void **ptr, size_t size);
 //

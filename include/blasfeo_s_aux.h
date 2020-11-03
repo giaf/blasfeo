@@ -38,6 +38,8 @@
 
 
 
+#include <stdlib.h>
+
 #include "blasfeo_s_aux_old.h"
 #include "blasfeo_common.h"
 
