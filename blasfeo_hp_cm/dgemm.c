@@ -73,8 +73,8 @@
 #define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4kB = 256 kB
 #define LLC_CACHE_EL (6*1024*1024/EL_SIZE) // LLC cache size: 6 MB
 #define KC 256 // 192
-#define NC 512 //72 // 120
-#define MC 3000 //1500
+#define NC 72 // 120 // 512
+#define MC 1500
 
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #define M_KERNEL 8 // max kernel: 8x4
@@ -1927,13 +1927,17 @@ nn_1:
 				// pack and tran B
 	//			blasfeo_tic(&timer);
 #if 1
-//				for(iii=0; iii<nleft-3; iii+=4)
+#if defined(TARGET_X64_INTEL_HASWELL)
 				for(iii=0; iii<nleft-4; iii+=4)
 					{
 					kernel_dpack_tn_4_p0_lib4(kleft, B+ll+(jj+iii)*ldb, ldb, pB+iii*sdb);
-//					d_print_mat(4, kleft, pB+iii*sdb, 4);
-//					exit(1);
 					}
+#else
+				for(iii=0; iii<nleft-3; iii+=4)
+					{
+					kernel_dpack_tn_4_lib4(kleft, B+ll+(jj+iii)*ldb, ldb, pB+iii*sdb);
+					}
+#endif
 				if(iii<nleft)
 					{
 					kernel_dpack_tn_4_vs_lib4(kleft, B+ll+(jj+iii)*ldb, ldb, pB+iii*sdb, nleft-iii);
