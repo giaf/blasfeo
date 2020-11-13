@@ -30410,10 +30410,36 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	vmovapd		LC05(%rip), %ymm15 // 1.0
 #endif
 	vucomisd	%xmm15, %xmm14 // beta==1.0 ?
-	je			100f // end
+	jne			100f // end
+
+	movq	ARG11, %r10 // D
+	cmpq	ARG9, %r10
+	jne			100f // end
+
+	movq	ARG12, %r10 // ldd
+	cmpq	ARG10, %r10
+	jne			100f // end
 
 	// TODO check C==D & ldc==ldd !!!
 
+
+
+	movq	ARG3, %r10 // alpha
+	movq	ARG11, %r11   // D
+	movq	ARG12, %r12   // ldd
+	sall	$3, %r12d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_A1_STORE_12X4_LIB
+#else
+	CALL(inner_scale_a1_store_12x4_lib)
+#endif
+
+
+	jmp		101f
+
+
+100:
 
 
 	// call inner blend
@@ -30442,24 +30468,6 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 #else
 	CALL(inner_store_12x4_lib)
 #endif
-	
-	jmp		101f
-
-
-100:
-
-
-	movq	ARG3, %r10 // alpha
-	movq	ARG11, %r11   // D
-	movq	ARG12, %r12   // ldd
-	sall	$3, %r12d
-
-#if MACRO_LEVEL>=1
-	INNER_SCALE_A1_STORE_12X4_LIB
-#else
-	CALL(inner_scale_a1_store_12x4_lib)
-#endif
-
 
 
 101:

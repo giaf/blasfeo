@@ -73,8 +73,8 @@
 #define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4kB = 256 kB
 #define LLC_CACHE_EL (6*1024*1024/EL_SIZE) // LLC cache size: 6 MB
 #define KC 256 // 192
-#define NC 72 // 120
-#define MC 1500
+#define NC 512 //72 // 120
+#define MC 3000 //1500
 
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #define M_KERNEL 8 // max kernel: 8x4
@@ -295,7 +295,7 @@ static void blasfeo_hp_dgemm_nt_n1(int m, int n, int k, double alpha, double *pA
 			goto nn_n1_left_12;
 			}
 		}
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) | //defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; jj<n-7; jj+=8)
 		{
 		for(ii=0; ii<m-3; ii+=4)
@@ -1970,7 +1970,7 @@ nn_1:
 
 	return;
 
-#elif 1 //defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#elif 0 //defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 
 	// cache blocking alg
 
