@@ -358,13 +358,12 @@ NAME:
 	.p2align 3
 1: // main loop
 
-	prefetcht0	128(%r13) // software prefetch
-	prefetcht0	128+64(%r13) // software prefetch
-
 	// unroll 0
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
+	prefetcht0	128(%r13) // software prefetch
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
+	prefetcht0	128+64(%r13) // software prefetch
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
 
 	vbroadcastsd	8(%r13), %ymm12

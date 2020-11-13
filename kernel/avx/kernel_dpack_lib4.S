@@ -239,6 +239,237 @@ NAME:
 // r13	<- C
 //
 #if MACRO_LEVEL>=1
+	.macro INNER_KERNEL_DPACK_TN_4_P0_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_dpack_tn_4_p0_lib4)
+#endif
+
+
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+	leaq	0(%r12, %r12, 2), %r14
+
+	cmpl	$8, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	leaq	0(%r11, %r12, 4), %r15
+
+	prefetcht0	0(%r15)
+	prefetcht0	0(%r15, %r12)
+	prefetcht0	0(%r15, %r12, 2)
+	prefetcht0	0(%r15, %r14)
+
+	vmovupd		0(%r11), %xmm0
+	vmovupd		0(%r11, %r12, 2), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vmovupd		0(%r11, %r12), %xmm1
+	vmovupd		0(%r11, %r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
+	vmovupd		16(%r11), %xmm2
+	vmovupd		16(%r11, %r12, 2), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
+	vmovupd		16(%r11, %r12), %xmm3
+	vmovupd		16(%r11, %r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
+
+	vmovupd		32+0(%r11), %xmm4
+	vmovupd		32+0(%r11, %r12, 2), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm4, %ymm4
+	vmovupd		32+0(%r11, %r12), %xmm5
+	vmovupd		32+0(%r11, %r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm5, %ymm5
+	vmovupd		32+16(%r11), %xmm6
+	vmovupd		32+16(%r11, %r12, 2), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm6, %ymm6
+	vmovupd		32+16(%r11, %r12), %xmm7
+	vmovupd		32+16(%r11, %r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm7, %ymm7
+
+	prefetcht0	1*256(%r13) // software prefetch
+	prefetcht0	1*256+64(%r13) // software prefetch
+
+	vunpcklpd	%ymm1, %ymm0, %ymm8
+	vmovapd		%ymm8, 0(%r13)
+	vunpckhpd	%ymm1, %ymm0, %ymm9
+	vmovapd		%ymm9, 32(%r13)
+	vunpcklpd	%ymm3, %ymm2, %ymm10
+	vmovapd		%ymm10, 64(%r13)
+	vunpckhpd	%ymm3, %ymm2, %ymm11
+	vmovapd		%ymm11, 96(%r13)
+
+	prefetcht0	1*256+128(%r13) // software prefetch
+	prefetcht0	1*256+128+64(%r13) // software prefetch
+
+	vunpcklpd	%ymm5, %ymm4, %ymm8
+	vmovapd		%ymm8, 128+0(%r13)
+	vunpckhpd	%ymm5, %ymm4, %ymm9
+	vmovapd		%ymm9, 128+32(%r13)
+	vunpcklpd	%ymm7, %ymm6, %ymm10
+	vmovapd		%ymm10, 128+64(%r13)
+	vunpckhpd	%ymm7, %ymm6, %ymm11
+	vmovapd		%ymm11, 128+96(%r13)
+
+	subl	$8, %r10d
+	addq	$64, %r11
+	addq	$256, %r13
+
+	cmpl	$7, %r10d
+	jg		1b
+
+2: // consider clean-up
+
+	cmpl	$7, %r10d
+	jle		2f // consider clean-up loop
+
+
+	vmovupd		0(%r11), %xmm0
+	vmovupd		0(%r11, %r12, 2), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vmovupd		0(%r11, %r12), %xmm1
+	vmovupd		0(%r11, %r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
+	vmovupd		16(%r11), %xmm2
+	vmovupd		16(%r11, %r12, 2), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
+	vmovupd		16(%r11, %r12), %xmm3
+	vmovupd		16(%r11, %r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
+
+	vmovupd		32+0(%r11), %xmm4
+	vmovupd		32+0(%r11, %r12, 2), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm4, %ymm4
+	vmovupd		32+0(%r11, %r12), %xmm5
+	vmovupd		32+0(%r11, %r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm5, %ymm5
+	vmovupd		32+16(%r11), %xmm6
+	vmovupd		32+16(%r11, %r12, 2), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm6, %ymm6
+	vmovupd		32+16(%r11, %r12), %xmm7
+	vmovupd		32+16(%r11, %r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm7, %ymm7
+
+	vunpcklpd	%ymm1, %ymm0, %ymm8
+	vmovapd		%ymm8, 0(%r13)
+	vunpckhpd	%ymm1, %ymm0, %ymm9
+	vmovapd		%ymm9, 32(%r13)
+	vunpcklpd	%ymm3, %ymm2, %ymm10
+	vmovapd		%ymm10, 64(%r13)
+	vunpckhpd	%ymm3, %ymm2, %ymm11
+	vmovapd		%ymm11, 96(%r13)
+
+	vunpcklpd	%ymm5, %ymm4, %ymm8
+	vmovapd		%ymm8, 128+0(%r13)
+	vunpckhpd	%ymm5, %ymm4, %ymm9
+	vmovapd		%ymm9, 128+32(%r13)
+	vunpcklpd	%ymm7, %ymm6, %ymm10
+	vmovapd		%ymm10, 128+64(%r13)
+	vunpckhpd	%ymm7, %ymm6, %ymm11
+	vmovapd		%ymm11, 128+96(%r13)
+
+	subl	$8, %r10d
+	addq	$64, %r11
+	addq	$256, %r13
+
+//	cmpl	$0, %r10d
+	jle		0f // return
+
+
+2: // consider clean-up
+
+	cmpl	$3, %r10d
+	jle		2f // consider clean-up loop
+
+	leaq	0(%r11, %r12, 4), %r15
+
+	prefetcht0	0(%r15)
+	prefetcht0	0(%r15, %r12)
+	prefetcht0	0(%r15, %r12, 2)
+	prefetcht0	0(%r15, %r14)
+
+	vmovupd		0(%r11), %xmm0
+	vmovupd		0(%r11, %r12, 2), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vmovupd		0(%r11, %r12), %xmm1
+	vmovupd		0(%r11, %r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
+	vmovupd		16(%r11), %xmm2
+	vmovupd		16(%r11, %r12, 2), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
+	vmovupd		16(%r11, %r12), %xmm3
+	vmovupd		16(%r11, %r14), %xmm15
+	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
+
+	vunpcklpd	%ymm1, %ymm0, %ymm4
+	vmovapd		%ymm4, 0(%r13)
+	vunpckhpd	%ymm1, %ymm0, %ymm5
+	vmovapd		%ymm5, 32(%r13)
+	vunpcklpd	%ymm3, %ymm2, %ymm6
+	vmovapd		%ymm6, 64(%r13)
+	vunpckhpd	%ymm3, %ymm2, %ymm7
+	vmovapd		%ymm7, 96(%r13)
+
+	subl	$4, %r10d
+	addq	$32, %r11
+	addq	$128, %r13
+
+
+2: // consider clean-up loop
+
+	cmpl	$0, %r10d
+	jle		0f // return
+
+
+1: // clean-up loop
+	
+	vmovsd		0(%r11), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+	vmovsd		0(%r11, %r12), %xmm0
+	vmovsd		%xmm0, 8(%r13)
+	vmovsd		0(%r11, %r12, 2), %xmm0
+	vmovsd		%xmm0, 16(%r13)
+	vmovsd		0(%r11, %r14), %xmm0
+	vmovsd		%xmm0, 24(%r13)
+
+	subl	$1, %r10d
+	addq	$8, %r11
+	addq	$32, %r13
+
+	cmpl	$0, %r10d
+	jg		1b
+
+
+0: // return
+
+
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_dpack_tn_4_p0_lib4)
+#endif
+
+
+
+
+
+// input arguments
+//
+// r10	<- kmax
+// r11	<- A
+// r12	<- lda
+// r13	<- C
+//
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACK_TN_4_LIB4
 #else
 	.p2align 4,,15
@@ -247,10 +478,6 @@ NAME:
 
 
 
-#if 1
-
-
-
 	cmpl	$0, %r10d
 	jle		0f // return
 
@@ -264,11 +491,6 @@ NAME:
 	.p2align 3
 1: // main loop
 	
-//	prefetchnta	2*64(%r11)
-//	prefetchnta	2*64(%r11, %r12)
-//	prefetchnta	2*64(%r11, %r12, 2)
-//	prefetchnta	2*64(%r11, %r14)
-
 	vmovupd		0(%r11), %xmm0
 	vmovupd		0(%r11, %r12, 2), %xmm15
 	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
@@ -323,125 +545,6 @@ NAME:
 
 
 0: // return
-
-
-
-#else
-
-
-
-	cmpl	$0, %r10d
-	jle		0f // return
-
-	leaq	0(%r12, %r12, 2), %r14
-
-	cmpl	$3, %r10d
-	jle		2f // clean-up loop
-
-
-	movl	%r10d, %ecx
-
-3:
-	movl	%ecx, %r10d
-	movl	$512, %edx
-//	movl	$256, %edx
-//	movl	$8, %edx
-	cmpl	%edx, %r10d
-	cmovgl	%edx, %r10d
-
-
-// TODO block for e.g. L1 cache
-
-	movl	%r10d, %eax
-	movq	%r11, %rbx
-
-//	.p2align 3
-1: // prefetch loop
-	// TODO use load instead on sandybridge ???
-	prefetchnta	0(%rbx)
-	prefetchnta	0(%rbx, %r12)
-	prefetchnta	0(%rbx, %r12, 2)
-	prefetchnta	0(%rbx, %r14)
-
-	addq	$32, %rbx
-	subl	$8, %eax
-
-	cmpl	$0, %eax
-	jg		1b
-
-
-
-	// main loop
-	.p2align 3
-1: // main loop
-	
-	vmovupd		0(%r11), %xmm0
-	vmovupd		0(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
-	vmovupd		0(%r11, %r12), %xmm1
-	vmovupd		0(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
-	vmovupd		16(%r11), %xmm2
-	vmovupd		16(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
-	vmovupd		16(%r11, %r12), %xmm3
-	vmovupd		16(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
-
-	vunpcklpd	%ymm1, %ymm0, %ymm4
-	vmovapd		%ymm4, 0(%r13)
-	vunpckhpd	%ymm1, %ymm0, %ymm5
-	vmovapd		%ymm5, 32(%r13)
-	vunpcklpd	%ymm3, %ymm2, %ymm6
-	vmovapd		%ymm6, 64(%r13)
-	vunpckhpd	%ymm3, %ymm2, %ymm7
-	vmovapd		%ymm7, 96(%r13)
-
-	subl	$4, %r10d
-	addq	$32, %r11
-	addq	$128, %r13
-
-	cmpl	$3, %r10d
-	jg		1b
-
-
-	cmpl	$0, %r10d
-//	jle		0f // return
-	jle		4f // return
-
-
-2: // clean-up loop
-	
-	vmovsd		0(%r11), %xmm0
-	vmovsd		%xmm0, 0(%r13)
-	vmovsd		0(%r11, %r12), %xmm0
-	vmovsd		%xmm0, 8(%r13)
-	vmovsd		0(%r11, %r12, 2), %xmm0
-	vmovsd		%xmm0, 16(%r13)
-	vmovsd		0(%r11, %r14), %xmm0
-	vmovsd		%xmm0, 24(%r13)
-
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$32, %r13
-
-	cmpl	$0, %r10d
-	jg		2b
-
-
-4:
-	subl	$512, %ecx
-//	subl	$256, %ecx
-//	subl	$8, %ecx
-	cmpl	$0, %ecx
-	jg		3b
-
-
-0: // return
-
-
-
-#endif
 
 
 
@@ -4837,6 +4940,39 @@ NAME:
 	ret
 
 	FUN_END(kernel_dpack_tn_4_lib4)
+
+
+
+
+
+//                             1         2          3        4
+// void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *C)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dpack_tn_4_p0_lib4)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$3, %r12d
+	movq	ARG4, %r13 // C
+
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_DPACK_TN_4_P0_LIB4
+#else
+	CALL(inner_kernel_dpack_tn_4_p0_lib4)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dpack_tn_4_p0_lib4)
 
 
 

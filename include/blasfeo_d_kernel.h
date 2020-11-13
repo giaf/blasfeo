@@ -524,6 +524,7 @@ void kernel_dpack_tt_8_lib4(int kmax, double *A, int lda, double *B, int sdb);
 // 4
 void kernel_dpack_nn_4_lib4(int kmax, double *A, int lda, double *B);
 void kernel_dpack_nn_4_vs_lib4(int kmax, double *A, int lda, double *B, int m1);
+void kernel_dpack_tn_4_p0_lib4(int kmax, double *A, int lda, double *B);
 void kernel_dpack_tn_4_lib4(int kmax, double *A, int lda, double *B);
 void kernel_dpack_tn_4_vs_lib4(int kmax, double *A, int lda, double *B, int m1);
 void kernel_dpack_tt_4_lib4(int kmax, double *A, int lda, double *B, int sdb);
@@ -595,6 +596,8 @@ void kernel_dtrsm_nt_ru_one_12x4_vs_lib44cc4(int kmax, double *A, int sda, doubl
 void kernel_dpotrf_nt_l_12x4_lib44cc(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *dD);
 void kernel_dpotrf_nt_l_12x4_vs_lib44cc(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *dD, int m1, int n1);
 // 4x12
+void kernel_dgemm_nt_4x12_lib44cc(int kmax, double *alpha, double *A, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nt_4x12_vs_lib44cc(int kmax, double *alpha, double *A, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 void kernel_dtrmm_nt_rl_4x12_tran_lib444c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int ldd);
 void kernel_dtrmm_nt_rl_4x12_tran_vs_lib444c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int ldd, int m1, int n1);
 void kernel_dtrmm_nt_rl_one_4x12_tran_lib444c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int ldd);
@@ -1017,6 +1020,11 @@ void kernel_daxpy_11_lib(int n, double *alpha, double *x, double *y);
 void kernel_drowsw_lib(int kmax, double *pA, int lda, double *pC, int ldc);
 
 //#endif // BLAS_API
+
+
+
+// larger kernels
+void kernel_dgemm_nt_12xn_p0_lib44cc(int n, int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, double *A_p);
 
 
 
