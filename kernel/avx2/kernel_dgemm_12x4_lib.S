@@ -17898,6 +17898,44 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 #endif
 
 
+	movq	ARG10, %r10 // D
+	cmpq	ARG8, %r10
+	jne			100f // end
+
+	movq	ARG11, %r10 // ldd
+	cmpq	ARG9, %r10
+	jne			100f // end
+
+	movq	ARG7, %r10 // beta
+	vbroadcastsd	0(%r10), %ymm14
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovapd		.LC05(%rip), %ymm15 // 1.0
+#else
+	vmovapd		LC05(%rip), %ymm15 // 1.0
+#endif
+	vucomisd	%xmm15, %xmm14 // beta==1.0 ?
+	jne			100f // end
+
+
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG10, %r11   // D
+	movq	ARG11, %r12   // ldd
+	sall	$3, %r12d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_A1_STORE_12X4_LIB
+#else
+	CALL(inner_scale_a1_store_12x4_lib)
+#endif
+
+
+	jmp		101f
+
+
+100:
+
+
 	// call inner blend
 
 	movq	ARG2, %r10 // alpha
@@ -17924,6 +17962,9 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 #else
 	CALL(inner_store_12x4_lib)
 #endif
+
+
+101:
 
 
 	EPILOGUE
@@ -30401,7 +30442,14 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 
 
 
-	// beta
+	movq	ARG11, %r10 // D
+	cmpq	ARG9, %r10
+	jne			100f // end
+
+	movq	ARG12, %r10 // ldd
+	cmpq	ARG10, %r10
+	jne			100f // end
+
 	movq	ARG8, %r10 // beta
 	vbroadcastsd	0(%r10), %ymm14
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -30411,16 +30459,6 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 #endif
 	vucomisd	%xmm15, %xmm14 // beta==1.0 ?
 	jne			100f // end
-
-	movq	ARG11, %r10 // D
-	cmpq	ARG9, %r10
-	jne			100f // end
-
-	movq	ARG12, %r10 // ldd
-	cmpq	ARG10, %r10
-	jne			100f // end
-
-	// TODO check C==D & ldc==ldd !!!
 
 
 
