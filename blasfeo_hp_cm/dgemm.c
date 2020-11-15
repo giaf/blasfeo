@@ -36,7 +36,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-//#include <xmmintrin.h>
+#if defined(TARGET_X64_INTEL_HASWELL)
+#include <xmmintrin.h>
+#endif
 
 #include <blasfeo_target.h>
 #include <blasfeo_block_size.h>
@@ -73,7 +75,7 @@
 #define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4kB = 256 kB
 #define LLC_CACHE_EL (6*1024*1024/EL_SIZE) // LLC cache size: 6 MB
 #define KC 256 // 192
-#define NC 72 // 120 // 512
+#define NC 96 //72 // 120 // 512
 #define MC 1500
 
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -130,7 +132,29 @@ static void blasfeo_hp_dgemm_nt_m1(int m, int n, int k, double alpha, double *pA
 
 	int ii, jj;
 
-	double *pA_p;
+	double *pA_p, *pB_p;
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+	_mm_prefetch(pA+0, _MM_HINT_T0);
+	_mm_prefetch(pA+4*sda+0, _MM_HINT_T0);
+	_mm_prefetch(pA+8*sda+0, _MM_HINT_T0);
+	_mm_prefetch(pB+0, _MM_HINT_T0);
+
+	_mm_prefetch(pA+8, _MM_HINT_T0);
+	_mm_prefetch(pA+4*sda+8, _MM_HINT_T0);
+	_mm_prefetch(pA+8*sda+8, _MM_HINT_T0);
+	_mm_prefetch(pB+8, _MM_HINT_T0);
+
+	_mm_prefetch(pA+16, _MM_HINT_T0);
+	_mm_prefetch(pA+4*sda+16, _MM_HINT_T0);
+	_mm_prefetch(pA+8*sda+16, _MM_HINT_T0);
+	_mm_prefetch(pB+16, _MM_HINT_T0);
+
+	_mm_prefetch(pA+24, _MM_HINT_T0);
+	_mm_prefetch(pA+4*sda+24, _MM_HINT_T0);
+	_mm_prefetch(pA+8*sda+24, _MM_HINT_T0);
+	_mm_prefetch(pB+24, _MM_HINT_T0);
+#endif
 
 	ii = 0;
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
@@ -141,7 +165,8 @@ static void blasfeo_hp_dgemm_nt_m1(int m, int n, int k, double alpha, double *pA
 		if(n>0)
 			{
 			pA_p = m-ii<=12 ? pA : pA+(ii+12)*sda;
-			kernel_dgemm_nt_12xn_p0_lib44cc(n, k, &alpha, pA+ii*sda, sda, pB+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p);
+			pB_p = pB;
+			kernel_dgemm_nt_12xn_p0_lib44cc(n, k, &alpha, pA+ii*sda, sda, pB+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p, pB_p);
 			jj += n;
 			}
 #else

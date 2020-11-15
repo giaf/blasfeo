@@ -43,6 +43,7 @@
 // r12   <- 4*sda*sizeof(double)
 // r13   <- B
 // r14   <- A_p
+// r15   <- B_p
 // ymm0  <- [d00 d11 d22 d33]
 // ymm1  <- [d01 d10 d23 d32]
 // ymm2  <- [d03 d12 d21 d30]
@@ -63,6 +64,7 @@
 // r12   <- 4*sda*sizeof(double)
 // r13   <- B+4*k*sizeof(double)
 // r14   <- A_p
+// r15   <- B_p
 // ymm0  <- [d00 d11 d22 d33]
 // ymm1  <- [d01 d10 d23 d32]
 // ymm2  <- [d03 d12 d21 d30]
@@ -78,7 +80,7 @@
 
 
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DGEMM_NT_12X4_P0_LIB4
 #else
 	.p2align 4,,15
@@ -120,7 +122,7 @@
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	prefetcht0	2*128(%r11, %r12, 2) // prefetch A
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
-	prefetcht0	1*128(%r13) // prefetch B
+	prefetcht0	2*128(%r13) // prefetch B
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	subl	$4, %r10d
 
@@ -173,7 +175,7 @@
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	prefetcht0	2*128+64(%r11, %r12, 2) // prefetch A
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
-	prefetcht0	1*128+64(%r13) // prefetch B
+	prefetcht0	2*128+64(%r13) // prefetch B
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 
 	vbroadcastsd	80(%r13), %ymm12
@@ -237,7 +239,7 @@
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	prefetcht0	0(%r14, %r12, 2) // prefetch A_p
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
-	prefetcht0	1*128(%r13) // prefetch B
+	prefetcht0	0(%r15) // prefetch B
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	subl	$4, %r10d
 
@@ -290,7 +292,7 @@
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	prefetcht0	64(%r14, %r12, 2) // prefetch A_p
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
-	prefetcht0	1*128+64(%r13) // prefetch B
+	prefetcht0	64(%r15) // prefetch B
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 
 	vbroadcastsd	80(%r13), %ymm12
@@ -351,7 +353,7 @@
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	prefetcht0	128(%r14, %r12, 2) // prefetch A_p
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
-	prefetcht0	1*128(%r13) // prefetch B
+	prefetcht0	128(%r15) // prefetch B
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	subl	$4, %r10d
 
@@ -404,7 +406,7 @@
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	prefetcht0	128+64(%r14, %r12, 2) // prefetch A_p
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
-	prefetcht0	1*128+64(%r13) // prefetch B
+	prefetcht0	128+64(%r15) // prefetch B
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 
 	vbroadcastsd	80(%r13), %ymm12
@@ -490,7 +492,7 @@
 
 2: // return
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
@@ -17039,7 +17041,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	movq	ARG5, %r13  // B
 	movq	ARG3, %r14  // A_p
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DGEMM_NT_12X4_P0_LIB4
 #else
 	CALL(inner_kernel_dgemm_nt_12x4_p0_lib4)
@@ -30377,8 +30379,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 
 
 
-//                                      1      2      3              4          5        6          7        8             9          10       11         12       13
-// void kernel_dgemm_nt_12xn_p0_lib44cc(int n, int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, double *A_p);
+//                                      1      2      3              4          5        6          7        8             9          10       11         12       13           14
+// void kernel_dgemm_nt_12xn_p0_lib44cc(int n, int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, double *A_p, double *B_p);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_dgemm_nt_12xn_p0_lib44cc)
@@ -30391,6 +30393,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 //	movq	ARG6, %rbp // B
 //	movq	ARG9, %rax // C
 //	movq	ARG11, %rbx // D
+
 
 	// loop over n
 1001:
@@ -30428,13 +30431,19 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	movq	ARG2, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	salq	$5, %r12 // 4*sda*sizeof(double)
 	movq	ARG6, %r13  // B
 	movq	ARG4, %r14  // A_p
 	cmpq	$4, ARG1
 	cmoveq	ARG13, %r14  // A_p
 
-#if MACRO_LEVEL>=2
+	movq	ARG7, %r15 // sdb
+	salq	$5, %r15 // 4*sdb*sizeof(double)
+	addq	ARG6, %r15 // B_p
+	cmpq	$4, ARG1
+	cmoveq	ARG14, %r15  // B_p
+
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DGEMM_NT_12X4_P0_LIB4
 #else
 	CALL(inner_kernel_dgemm_nt_12x4_p0_lib4)
@@ -30576,7 +30585,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	movq	ARG6, %r13  // B
 	movq	ARG4, %r14  // A_p
 
-#if MACRO_LEVEL>=2
+#if MACRO_LEVEL>=1
 	INNER_KERNEL_DGEMM_NT_12X4_P0_LIB4
 #else
 	CALL(inner_kernel_dgemm_nt_12x4_p0_lib4)

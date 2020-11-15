@@ -12377,6 +12377,46 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 
 
 
+// common inner routine with file scope
+//
+// prefetch
+//
+// input arguments:
+// r10  <- D
+// r11  <- 4*sdd*sizeof(double)
+// ymm0 <- [d00 d11 d22 d33]
+// ymm1 <- [d01 d10 d23 d32]
+// ymm2 <- [d03 d12 d21 d30]
+// ymm3 <- [d02 d13 d20 d31]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_PREFETCH1_12X4_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_prefetch1_12x4_lib4)
+#endif
+
+	prefetcht1	0(%r10)
+	prefetcht1	0(%r10, %r11)
+	prefetcht1	0(%r10, %r11, 2)
+	prefetcht1	64(%r10)
+	prefetcht1	64(%r10, %r11)
+	prefetcht1	64(%r10, %r11, 2)
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_prefetch1_12x4_lib4)
+#endif
+
+
+
+
+
 //                                1      2              3          4        5          6             7          8        9          10
 // void kernel_dgemm_nt_12x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd);
 
