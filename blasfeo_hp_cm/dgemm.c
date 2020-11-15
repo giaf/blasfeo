@@ -77,6 +77,7 @@
 #define KC 256 // 192
 #define NC 96 //72 // 120 // 512
 #define MC 1500
+#define OC 9600
 
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #define M_KERNEL 8 // max kernel: 8x4
@@ -121,7 +122,12 @@
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes // TODO 32-bytes for cortex A9
 #define KC 512
 
+#endif
 
+
+// TODO move where appropriate !!!!!!!!!!!!
+#ifndef OC
+#define OC 9000
 #endif
 
 
@@ -1882,46 +1888,46 @@ nn_1:
 	pA = tA.pA;
 	pB = tB.pA;
 
-	for(ii=0; ii<m; ii+=mleft)
-		{
-
-		mleft = m-ii<mc ? m-ii : mc;
-
-		for(ll=0; ll<k; ll+=kleft)
-			{
-
-#if 1
-			if(k-ll<2*kc0)
-				{
-				if(k-ll<=kc0) // last
-					{
-					kleft = k-ll;
-					}
-				else // second last
-					{
-					kleft = (k-ll+1)/2;
-					kleft = (kleft+4-1)/4*4;
-					}
-				}
-			else
-				{
-				kleft = kc;
-				}
-#else
-			kleft = k-ll<kc ? k-ll : kc;
-#endif
-
-			sda = (kleft+4-1)/4*4;
-			sdb = (kleft+4-1)/4*4;
-
-			beta1 = ll==0 ? beta : 1.0;
-			C1 = ll==0 ? C : D;
-			ldc1 = ll==0 ? ldc : ldd;
-
 //	for(ii=0; ii<m; ii+=mleft)
 //		{
 //
 //		mleft = m-ii<mc ? m-ii : mc;
+
+	for(ll=0; ll<k; ll+=kleft)
+		{
+
+#if 1
+		if(k-ll<2*kc0)
+			{
+			if(k-ll<=kc0) // last
+				{
+				kleft = k-ll;
+				}
+			else // second last
+				{
+				kleft = (k-ll+1)/2;
+				kleft = (kleft+4-1)/4*4;
+				}
+			}
+		else
+			{
+			kleft = kc;
+			}
+#else
+		kleft = k-ll<kc ? k-ll : kc;
+#endif
+
+		sda = (kleft+4-1)/4*4;
+		sdb = (kleft+4-1)/4*4;
+
+		beta1 = ll==0 ? beta : 1.0;
+		C1 = ll==0 ? C : D;
+		ldc1 = ll==0 ? ldc : ldd;
+
+		for(ii=0; ii<m; ii+=mleft)
+			{
+
+			mleft = m-ii<mc ? m-ii : mc;
 
 			// pack A
 	//		blasfeo_tic(&timer);
