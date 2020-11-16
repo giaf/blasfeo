@@ -80,7 +80,7 @@
 
 
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	.macro INNER_KERNEL_DGEMM_NT_12X4_P0_LIB4
 #else
 	.p2align 4,,15
@@ -17040,8 +17040,9 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	sall	$5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG3, %r14  // A_p
+	addq	ARG5, %r15 // B_p
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_P0_LIB4
 #else
 	CALL(inner_kernel_dgemm_nt_12x4_p0_lib4)
@@ -30443,7 +30444,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	cmpq	$4, ARG1
 	cmoveq	ARG14, %r15  // B_p
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_P0_LIB4
 #else
 	CALL(inner_kernel_dgemm_nt_12x4_p0_lib4)
@@ -30584,8 +30585,9 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	sall	$5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13  // B
 	movq	ARG4, %r14  // A_p
+	addq	ARG6, %r15 // B_p
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_P0_LIB4
 #else
 	CALL(inner_kernel_dgemm_nt_12x4_p0_lib4)

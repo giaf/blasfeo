@@ -75,9 +75,8 @@
 #define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4kB = 256 kB
 #define LLC_CACHE_EL (6*1024*1024/EL_SIZE) // LLC cache size: 6 MB
 #define KC 256 // 192
-#define NC 96 //72 // 120 // 512
+#define NC 72 //96 //72 // 120 // 512
 #define MC 1500
-#define OC 9600
 
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #define M_KERNEL 8 // max kernel: 8x4
@@ -122,12 +121,6 @@
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes // TODO 32-bytes for cortex A9
 #define KC 512
 
-#endif
-
-
-// TODO move where appropriate !!!!!!!!!!!!
-#ifndef OC
-#define OC 9000
 #endif
 
 
@@ -2693,37 +2686,37 @@ nt_1:
 	pA = tA.pA;
 	pB = tB.pA;
 
-	for(ii=0; ii<m; ii+=mleft)
+	for(ll=0; ll<k; ll+=kleft)
 		{
 
-		mleft = m-ii<mc ? m-ii : mc;
+		if(k-ll<2*kc0)
+			{
+			if(k-ll<=kc0) // last
+				{
+				kleft = k-ll;
+				}
+			else // second last
+				{
+				kleft = (k-ll+1)/2;
+				kleft = (kleft+4-1)/4*4;
+				}
+			}
+		else
+			{
+			kleft = kc;
+			}
 
-		for(ll=0; ll<k; ll+=kleft)
+		sda = (kleft+4-1)/4*4;
+		sdb = (kleft+4-1)/4*4;
+
+		beta1 = ll==0 ? beta : 1.0;
+		C1 = ll==0 ? C : D;
+		ldc1 = ll==0 ? ldc : ldd;
+
+		for(ii=0; ii<m; ii+=mleft)
 			{
 
-			if(k-ll<2*kc0)
-				{
-				if(k-ll<=kc0) // last
-					{
-					kleft = k-ll;
-					}
-				else // second last
-					{
-					kleft = (k-ll+1)/2;
-					kleft = (kleft+4-1)/4*4;
-					}
-				}
-			else
-				{
-				kleft = kc;
-				}
-
-			sda = (kleft+4-1)/4*4;
-			sdb = (kleft+4-1)/4*4;
-
-			beta1 = ll==0 ? beta : 1.0;
-			C1 = ll==0 ? C : D;
-			ldc1 = ll==0 ? ldc : ldd;
+			mleft = m-ii<mc ? m-ii : mc;
 
 			// pack A
 			for(iii=0; iii<kleft-3; iii+=4)
@@ -3134,7 +3127,7 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 
 	// no algorithm for small matrix
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if( m<=2*m_kernel | n<=2*m_kernel | k_a*m + k_b*n + m_c*n + m_d*n <= llc_cache_el )
+	if( m<=2*m_kernel | n<=2*m_kernel | ( k<=KC & (k_a*m + k_b*n + m_c*n + m_d*n <= llc_cache_el) ) )
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if( m<=2*m_kernel | n<=2*m_kernel | k<56 )
 #elif defined(TARGET_X64_INTEL_CORE)
@@ -3274,37 +3267,37 @@ tn_1:
 	pA = tA.pA;
 	pB = tB.pA;
 
-	for(ii=0; ii<m; ii+=mleft)
+	for(ll=0; ll<k; ll+=kleft)
 		{
 
-		mleft = m-ii<mc ? m-ii : mc;
+		if(k-ll<2*kc0)
+			{
+			if(k-ll<=kc0) // last
+				{
+				kleft = k-ll;
+				}
+			else // second last
+				{
+				kleft = (k-ll+1)/2;
+				kleft = (kleft+4-1)/4*4;
+				}
+			}
+		else
+			{
+			kleft = kc;
+			}
 
-		for(ll=0; ll<k; ll+=kleft)
+		sda = (kleft+4-1)/4*4;
+		sdb = (kleft+4-1)/4*4;
+
+		beta1 = ll==0 ? beta : 1.0;
+		C1 = ll==0 ? C : D;
+		ldc1 = ll==0 ? ldc : ldd;
+
+		for(ii=0; ii<m; ii+=mleft)
 			{
 
-			if(k-ll<2*kc0)
-				{
-				if(k-ll<=kc0) // last
-					{
-					kleft = k-ll;
-					}
-				else // second last
-					{
-					kleft = (k-ll+1)/2;
-					kleft = (kleft+4-1)/4*4;
-					}
-				}
-			else
-				{
-				kleft = kc;
-				}
-
-			sda = (kleft+4-1)/4*4;
-			sdb = (kleft+4-1)/4*4;
-
-			beta1 = ll==0 ? beta : 1.0;
-			C1 = ll==0 ? C : D;
-			ldc1 = ll==0 ? ldc : ldd;
+			mleft = m-ii<mc ? m-ii : mc;
 
 			// pack A
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -3660,7 +3653,7 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 		}
 	else
 		{
-		if( n<=2*m_kernel | k_a*m + n_b*k + m_c*n + m_d*n <= llc_cache_el )
+		if( n<=2*m_kernel | ( k<=KC & (k_a*m + n_b*k + m_c*n + m_d*n <= llc_cache_el) ) )
 			{
 //				printf("\nalg n0\n");
 			goto tt_n0; // tall matrix: pack B
@@ -3803,37 +3796,37 @@ tt_1:
 	pA = tA.pA;
 	pB = tB.pA;
 
-	for(ii=0; ii<m; ii+=mleft)
+	for(ll=0; ll<k; ll+=kleft)
 		{
 
-		mleft = m-ii<mc ? m-ii : mc;
+		if(k-ll<2*kc0)
+			{
+			if(k-ll<=kc0) // last
+				{
+				kleft = k-ll;
+				}
+			else // second last
+				{
+				kleft = (k-ll+1)/2;
+				kleft = (kleft+4-1)/4*4;
+				}
+			}
+		else
+			{
+			kleft = kc;
+			}
 
-		for(ll=0; ll<k; ll+=kleft)
+		sda = (kleft+4-1)/4*4;
+		sdb = (kleft+4-1)/4*4;
+
+		beta1 = ll==0 ? beta : 1.0;
+		C1 = ll==0 ? C : D;
+		ldc1 = ll==0 ? ldc : ldd;
+
+		for(ii=0; ii<m; ii+=mleft)
 			{
 
-			if(k-ll<2*kc0)
-				{
-				if(k-ll<=kc0) // last
-					{
-					kleft = k-ll;
-					}
-				else // second last
-					{
-					kleft = (k-ll+1)/2;
-					kleft = (kleft+4-1)/4*4;
-					}
-				}
-			else
-				{
-				kleft = kc;
-				}
-
-			sda = (kleft+4-1)/4*4;
-			sdb = (kleft+4-1)/4*4;
-
-			beta1 = ll==0 ? beta : 1.0;
-			C1 = ll==0 ? C : D;
-			ldc1 = ll==0 ? ldc : ldd;
+			mleft = m-ii<mc ? m-ii : mc;
 
 			// pack A
 #if defined(TARGET_X64_INTEL_HASWELL)
