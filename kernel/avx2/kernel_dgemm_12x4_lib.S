@@ -16275,44 +16275,44 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	// alpha
 	vbroadcastsd	0(%r10), %ymm15
 
-	vmovupd		0(%r11), %ymm15
+	vmovupd		0(%r11), %ymm12
 	vfmadd231pd	%ymm0, %ymm15, %ymm12
-	vmovupd		32(%r11), %ymm15
+	vmovupd		32(%r11), %ymm13
 	vfmadd231pd	%ymm4, %ymm15, %ymm13
-	vmovupd		64(%r11), %ymm15
+	vmovupd		64(%r11), %ymm14
 	vfmadd231pd	%ymm8, %ymm15, %ymm14
 	vmovupd		%ymm12, 0(%r11)
 	vmovupd		%ymm13, 32(%r11)
 	vmovupd		%ymm14, 64(%r11)
 	addq		%r12, %r11
 
-	vmovupd		0(%r11), %ymm15
+	vmovupd		0(%r11), %ymm12
 	vfmadd231pd	%ymm1, %ymm15, %ymm12
-	vmovupd		32(%r11), %ymm15
+	vmovupd		32(%r11), %ymm13
 	vfmadd231pd	%ymm5, %ymm15, %ymm13
-	vmovupd		64(%r11), %ymm15
+	vmovupd		64(%r11), %ymm14
 	vfmadd231pd	%ymm9, %ymm15, %ymm14
 	vmovupd		%ymm12, 0(%r11)
 	vmovupd		%ymm13, 32(%r11)
 	vmovupd		%ymm14, 64(%r11)
 	addq		%r12, %r11
 
-	vmovupd		0(%r11), %ymm15
+	vmovupd		0(%r11), %ymm12
 	vfmadd231pd	%ymm2, %ymm15, %ymm12
-	vmovupd		32(%r11), %ymm15
+	vmovupd		32(%r11), %ymm13
 	vfmadd231pd	%ymm6, %ymm15, %ymm13
-	vmovupd		64(%r11), %ymm15
+	vmovupd		64(%r11), %ymm14
 	vfmadd231pd	%ymm10, %ymm15, %ymm14
 	vmovupd		%ymm12, 0(%r11)
 	vmovupd		%ymm13, 32(%r11)
 	vmovupd		%ymm14, 64(%r11)
 	addq		%r12, %r11
 
-	vmovupd		0(%r11), %ymm15
+	vmovupd		0(%r11), %ymm12
 	vfmadd231pd	%ymm3, %ymm15, %ymm12
-	vmovupd		32(%r11), %ymm15
+	vmovupd		32(%r11), %ymm13
 	vfmadd231pd	%ymm7, %ymm15, %ymm13
-	vmovupd		64(%r11), %ymm15
+	vmovupd		64(%r11), %ymm14
 	vfmadd231pd	%ymm11, %ymm15, %ymm14
 	vmovupd		%ymm12, 0(%r11)
 	vmovupd		%ymm13, 32(%r11)
