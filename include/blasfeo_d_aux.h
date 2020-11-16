@@ -215,6 +215,8 @@ void blasfeo_dvecpei(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi);
 size_t blasfeo_pm_memsize_dmat(int ps, int m, int n);
 // create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
 void blasfeo_pm_create_dmat(int ps, int m, int n, struct blasfeo_pm_dmat *sA, void *memory);
+// print
+void blasfeo_pm_print_dmat(int m, int n, struct blasfeo_pm_dmat *sA, int ai, int aj);
 
 
 
