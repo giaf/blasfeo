@@ -15792,7 +15792,6 @@
 	FUN_START(inner_prefetch_12x4_lib)
 #endif
 
-#if 1
 	leaq		0(%r11, %r11, 2), %r12
 	prefetcht0	0(%r10)				// 0
 	prefetcht0	64(%r10)			// 0
@@ -15802,17 +15801,6 @@
 	prefetcht0	64(%r10, %r11, 2)	// 2
 	prefetcht0	0(%r10, %r12)	// 3
 	prefetcht0	64(%r10, %r12)	// 3
-#else
-	leaq		0(%r11, %r11, 2), %r12
-	prefetchnta	0(%r10)				// 0
-	prefetchnta	64(%r10)			// 0
-	prefetchnta	0(%r10, %r11)	// 1
-	prefetchnta	64(%r10, %r11)	// 1
-	prefetchnta	0(%r10, %r11, 2)	// 2
-	prefetchnta	64(%r10, %r11, 2)	// 2
-	prefetchnta	0(%r10, %r12)	// 3
-	prefetchnta	64(%r10, %r12)	// 3
-#endif
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -15841,56 +15829,12 @@
 // output arguments:
 
 #if MACRO_LEVEL>=1
-	.macro INNER_PREFETCH1_12X4_LIB
-#else
-	.p2align 4,,15
-	FUN_START(inner_prefetch1_12x4_lib)
-#endif
-
-	leaq		0(%r11, %r11, 2), %r12
-	prefetcht1	0(%r10)				// 0
-	prefetcht1	64(%r10)			// 0
-	prefetcht1	0(%r10, %r11)	// 1
-	prefetcht1	64(%r10, %r11)	// 1
-	prefetcht1	0(%r10, %r11, 2)	// 2
-	prefetcht1	64(%r10, %r11, 2)	// 2
-	prefetcht1	0(%r10, %r12)	// 3
-	prefetcht1	64(%r10, %r12)	// 3
-
-#if MACRO_LEVEL>=1
-	.endm
-#else
-	ret
-
-	FUN_END(inner_prefetch1_12x4_lib)
-#endif
-
-
-
-
-
-// common inner routine with file scope
-//
-// prefetch
-//
-// input arguments:
-// r10  <- D
-// r11  <- ldd
-// ymm0 <- [d00 d11 d22 d33]
-// ymm1 <- [d01 d10 d23 d32]
-// ymm2 <- [d03 d12 d21 d30]
-// ymm3 <- [d02 d13 d20 d31]
-//
-// output arguments:
-
-#if MACRO_LEVEL>=1
 	.macro INNER_PREFETCH_4X12_LIB
 #else
 	.p2align 4,,15
 	FUN_START(inner_prefetch_4x12_lib)
 #endif
 
-#if 1
 	leaq		0(%r11, %r11, 2), %r12
 	leaq		0(%r10, %r11, 4), %r13
 	leaq		0(%r10, %r11, 8), %r14
@@ -15906,23 +15850,6 @@
 	prefetcht0	0(%r14, %r11)	// 9
 	prefetcht0	0(%r14, %r11, 2)	// 10
 	prefetcht0	0(%r14, %r12)	// 11
-#else
-	leaq		0(%r11, %r11, 2), %r12
-	leaq		0(%r10, %r11, 4), %r13
-	leaq		0(%r10, %r11, 8), %r14
-	prefetchnta	0(%r10)				// 0
-	prefetchnta	0(%r10, %r11)	// 1
-	prefetchnta	0(%r10, %r11, 2)	// 2
-	prefetchnta	0(%r10, %r12)	// 3
-	prefetchnta	0(%r13)				// 4
-	prefetchnta	0(%r13, %r11)	// 5
-	prefetchnta	0(%r13, %r11, 2)	// 6
-	prefetchnta	0(%r13, %r12)	// 7
-	prefetchnta	0(%r14)				// 8
-	prefetchnta	0(%r14, %r11)	// 9
-	prefetchnta	0(%r14, %r11, 2)	// 10
-	prefetchnta	0(%r14, %r12)	// 11
-#endif
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -16395,7 +16322,6 @@
 
 	// prefetch C
 
-	movq		ARG2, %r10 // alpha
 	movq		ARG6, %r10 // beta
 	vmovsd		0(%r10), %xmm14
 	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
@@ -16407,9 +16333,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH1_12X4_LIB
+	INNER_PREFETCH_12X4_LIB
 #else
-	CALL(inner_prefetch1_12x4_lib)
+	CALL(inner_prefetch_12x4_lib)
 #endif
 
 100:
@@ -16463,94 +16389,6 @@
 	ret
 
 	FUN_END(kernel_dgemm_nt_12x4_lib44cc)
-
-
-
-
-
-//                                     1      2              3          4        5          6             7          8        9          10       11
-// void kernel_dgemm_nt_12x4_p0_lib44cc(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
-
-	.p2align 4,,15
-	GLOB_FUN_START(kernel_dgemm_nt_12x4_p0_lib44cc)
-
-	PROLOGUE
-
-	// zero accumulation registers
-
-	ZERO_ACC
-
-
-	// prefetch C
-
-	movq		ARG2, %r10 // alpha
-	movq		ARG6, %r10 // beta
-	vmovsd		0(%r10), %xmm14
-	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
-	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
-	je			100f // end
-
-	movq	ARG7, %r10 // C
-	movq	ARG8, %r11 // ldc
-	sall	$3, %r11d
-
-#if MACRO_LEVEL>=1
-	INNER_PREFETCH_12X4_LIB
-#else
-	CALL(inner_prefetch_12x4_lib)
-#endif
-
-100:
-
-
-	// call inner dgemm kernel nn
-
-	movq	ARG1, %r10 // k
-	movq	ARG3, %r11  // A
-	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
-	movq	ARG5, %r13  // B
-
-#if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_NT_12X4_P0_LIB4
-#else
-	CALL(inner_kernel_dgemm_nt_12x4_p0_lib4)
-#endif
-
-
-	// call inner blend
-
-	movq	ARG2, %r10 // alpha
-	movq	ARG6, %r11 // beta
-	movq	ARG7, %r12   // C
-	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
-
-#if MACRO_LEVEL>=1
-	INNER_SCALE_AB_12X4_LIB
-#else
-	CALL(inner_scale_ab_12x4_lib)
-#endif
-
-
-	// store n
-
-	movq	ARG9, %r10 // D
-	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
-
-#if MACRO_LEVEL>=1
-	INNER_STORE_12X4_LIB
-#else
-	CALL(inner_store_12x4_lib)
-#endif
-
-
-	EPILOGUE
-
-	ret
-
-	FUN_END(kernel_dgemm_nt_12x4_p0_lib44cc)
 
 
 
@@ -16919,175 +16757,6 @@
 	ret
 
 	FUN_END(kernel_dgemm_nt_12x4_vs_libc4cc)
-
-
-
-
-
-//                                  1      2              3          4        5          6             7          8        9          10
-// void kernel_dgemm_nt_4x12_lib44cc(int k, double *alpha, double *A, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
-
-	.p2align 4,,15
-	GLOB_FUN_START(kernel_dgemm_nt_4x12_lib44cc)
-
-	PROLOGUE
-
-	// zero accumulation registers
-
-	ZERO_ACC
-
-
-	// prefetch C
-
-	movq		ARG6, %r10 // beta
-	vmovsd		0(%r10), %xmm14
-	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
-	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
-	je			100f // end
-
-	movq	ARG7, %r10 // C
-	movq	ARG8, %r11 // ldc
-	sall	$3, %r11d
-
-#if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X12_LIB
-#else
-	CALL(inner_prefetch_4x12_lib)
-#endif
-
-100:
-
-
-	// call inner dgemm kernel nn
-
-	movq	ARG1, %r10 // k
-	movq	ARG4, %r11  // B
-	movq	ARG5, %r12 // sdb
-	sall	$5, %r12d // 4*sdb*sizeof(double)
-	movq	ARG3, %r13  // A
-
-#if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_NT_12X4_LIB4
-#else
-	CALL(inner_kernel_dgemm_nt_12x4_lib4)
-#endif
-
-#if MACRO_LEVEL>=1
-	INNER_TRAN_12X4_LIB
-#else
-	CALL(inner_tran_12x4_lib)
-#endif
-
-
-	// call inner blend
-
-	movq	ARG2, %r10 // alpha
-	movq	ARG6, %r11 // beta
-	movq	ARG7, %r12   // C
-	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
-
-#if MACRO_LEVEL>=1
-	INNER_SCALE_AB_4X12_LIB
-#else
-	CALL(inner_scale_ab_4x12_lib)
-#endif
-
-
-	// store n
-
-	movq	ARG9, %r10 // D
-	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
-
-#if MACRO_LEVEL>=1
-	INNER_STORE_4X12_LIB
-#else
-	CALL(inner_store_4x12_lib)
-#endif
-
-
-	EPILOGUE
-
-	ret
-
-	FUN_END(kernel_dgemm_nt_4x12_lib44cc)
-
-
-
-
-
-//                                     1      2              3          4        5          6             7          8        9          10       11      12
-// void kernel_dgemm_nt_4x12_vs_lib44cc(int k, double *alpha, double *A, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
-
-	.p2align 4,,15
-	GLOB_FUN_START(kernel_dgemm_nt_4x12_vs_lib44cc)
-
-	PROLOGUE
-
-	// zero accumulation registers
-
-	ZERO_ACC
-
-
-	// call inner dgemm kernel nn
-
-	movq	ARG1, %r10 // k
-	movq	ARG4, %r11  // B
-	movq	ARG5, %r12 // sdb
-	sall	$5, %r12d // 4*sdb*sizeof(double)
-	movq	ARG3, %r13  // A
-
-#if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEMM_NT_12X4_LIB4
-#else
-	CALL(inner_kernel_dgemm_nt_12x4_lib4)
-#endif
-
-#if MACRO_LEVEL>=1
-	INNER_TRAN_12X4_LIB
-#else
-	CALL(inner_tran_12x4_lib)
-#endif
-
-
-	// call inner blend
-
-	movq	ARG2, %r10 // alpha
-	movq	ARG6, %r11 // beta
-	movq	ARG7, %r12   // C
-	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
-	movq	ARG11, %r14 // ldd
-	movq	ARG12, %r15 // ldd
-
-#if MACRO_LEVEL>=1
-	INNER_SCALE_AB_4X12_VS_LIB
-#else
-	CALL(inner_scale_ab_4x12_vs_lib)
-#endif
-
-
-	// store n
-
-	movq	ARG9, %r10 // D
-	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
-	movq	ARG11, %r12 // ldd
-	movq	ARG12, %r13 // ldd
-
-#if MACRO_LEVEL>=1
-	INNER_STORE_4X12_VS_LIB
-#else
-	CALL(inner_store_4x12_vs_lib)
-#endif
-
-
-	EPILOGUE
-
-	ret
-
-	FUN_END(kernel_dgemm_nt_4x12_vs_lib44cc)
 
 
 

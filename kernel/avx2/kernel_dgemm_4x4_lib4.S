@@ -6690,7 +6690,7 @@ NAME:
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_dgemm_nt_4x4_lib4)
-
+	
 	PROLOGUE
 
 	// zero accumulation registers
