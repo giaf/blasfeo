@@ -256,146 +256,6 @@ NAME:
 
 	leaq	0(%r12, %r12, 2), %r14
 
-	cmpl	$7, %r10d
-	jle		2f // clean-up loop
-
-
-	// main loop
-	.p2align 3
-1: // main loop
-
-	prefetcht0	2*2*64(%r11)
-	prefetcht0	2*2*64(%r11, %r12)
-	prefetcht0	2*2*64(%r11, %r12, 2)
-	prefetcht0	2*2*64(%r11, %r15)
-
-	vmovupd		0(%r11), %xmm0
-	vmovupd		0(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
-	vmovupd		0(%r11, %r12), %xmm1
-	vmovupd		0(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
-	vmovupd		16(%r11), %xmm2
-	vmovupd		16(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
-	vmovupd		16(%r11, %r12), %xmm3
-	vmovupd		16(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
-
-	prefetcht0	2*2*256(%r13) // software prefetch
-	prefetcht0	2*2*256+64(%r13) // software prefetch
-
-	vmovupd		32+0(%r11), %xmm4
-	vmovupd		32+0(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm4, %ymm4
-	vmovupd		32+0(%r11, %r12), %xmm5
-	vmovupd		32+0(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm5, %ymm5
-	vmovupd		32+16(%r11), %xmm6
-	vmovupd		32+16(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm6, %ymm6
-	vmovupd		32+16(%r11, %r12), %xmm7
-	vmovupd		32+16(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm7, %ymm7
-
-	prefetcht0	2*2*256+128(%r13) // software prefetch
-	prefetcht0	2*2*256+128+64(%r13) // software prefetch
-
-	vunpcklpd	%ymm1, %ymm0, %ymm8
-	vmovapd		%ymm8, 0(%r13)
-	vunpckhpd	%ymm1, %ymm0, %ymm9
-	vmovapd		%ymm9, 32(%r13)
-	vunpcklpd	%ymm3, %ymm2, %ymm10
-	vmovapd		%ymm10, 64(%r13)
-	vunpckhpd	%ymm3, %ymm2, %ymm11
-	vmovapd		%ymm11, 96(%r13)
-
-	vunpcklpd	%ymm5, %ymm4, %ymm8
-	vmovapd		%ymm8, 128+0(%r13)
-	vunpckhpd	%ymm5, %ymm4, %ymm9
-	vmovapd		%ymm9, 128+32(%r13)
-	vunpcklpd	%ymm7, %ymm6, %ymm10
-	vmovapd		%ymm10, 128+64(%r13)
-	vunpckhpd	%ymm7, %ymm6, %ymm11
-	vmovapd		%ymm11, 128+96(%r13)
-
-	subl	$8, %r10d
-	addq	$64, %r11
-	addq	$256, %r13
-
-	cmpl	$7, %r10d
-	jg		1b
-
-2: // consider clean-up
-
-	cmpl	$3, %r10d
-	jle		2f // consider clean-up loop
-
-	vmovupd		0(%r11), %xmm0
-	vmovupd		0(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
-	vmovupd		0(%r11, %r12), %xmm1
-	vmovupd		0(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
-	vmovupd		16(%r11), %xmm2
-	vmovupd		16(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
-	vmovupd		16(%r11, %r12), %xmm3
-	vmovupd		16(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
-
-	vunpcklpd	%ymm1, %ymm0, %ymm4
-	vmovapd		%ymm4, 0(%r13)
-	vunpckhpd	%ymm1, %ymm0, %ymm5
-	vmovapd		%ymm5, 32(%r13)
-	vunpcklpd	%ymm3, %ymm2, %ymm6
-	vmovapd		%ymm6, 64(%r13)
-	vunpckhpd	%ymm3, %ymm2, %ymm7
-	vmovapd		%ymm7, 96(%r13)
-
-	subl	$4, %r10d
-	addq	$32, %r11
-	addq	$128, %r13
-
-
-2: // consider clean-up loop
-
-	cmpl	$0, %r10d
-	jle		0f // return
-
-
-1: // clean-up loop
-	
-	vmovsd		0(%r11), %xmm0
-	vmovsd		%xmm0, 0(%r13)
-	vmovsd		0(%r11, %r12), %xmm0
-	vmovsd		%xmm0, 8(%r13)
-	vmovsd		0(%r11, %r12, 2), %xmm0
-	vmovsd		%xmm0, 16(%r13)
-	vmovsd		0(%r11, %r14), %xmm0
-	vmovsd		%xmm0, 24(%r13)
-
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$32, %r13
-
-	cmpl	$0, %r10d
-	jg		1b
-
-
-0: // return
-
-
-
-#elif 1
-
-
-
-	cmpl	$0, %r10d
-	jle		0f // return
-
-	leaq	0(%r12, %r12, 2), %r14
-
 	cmpl	$3, %r10d
 	jle		2f // clean-up loop
 
@@ -498,10 +358,10 @@ NAME:
 //	.p2align 3
 1: // prefetch loop
 	// TODO use load instead on sandybridge ???
-	prefetcht0	0(%rbx)
-	prefetcht0	0(%rbx, %r12)
-	prefetcht0	0(%rbx, %r12, 2)
-	prefetcht0	0(%rbx, %r14)
+	prefetchnta	0(%rbx)
+	prefetchnta	0(%rbx, %r12)
+	prefetchnta	0(%rbx, %r12, 2)
+	prefetchnta	0(%rbx, %r14)
 
 	addq	$32, %rbx
 	subl	$8, %eax
@@ -859,116 +719,6 @@ NAME:
 
 	leaq	0(%r12, %r12, 2), %r15
 
-	cmpl	$7, %r10d
-	jle		2f // consider clean-up
-
-
-	// main loop
-	.p2align 3
-1: // main loop
-
-	prefetcht0	2*64(%r11)
-	prefetcht0	2*64(%r11, %r12)
-	prefetcht0	2*64(%r11, %r12, 2)
-	prefetcht0	2*64(%r11, %r15)
-
-	vmovupd		0(%r11), %ymm0
-	vmovupd		0(%r11, %r12), %ymm1
-	vmovupd		0(%r11, %r12, 2), %ymm2
-	vmovupd		0(%r11, %r15), %ymm3
-
-	vmovupd		32(%r11), %ymm4
-	vmovupd		32(%r11, %r12), %ymm5
-	vmovupd		32(%r11, %r12, 2), %ymm6
-	vmovupd		32(%r11, %r15), %ymm7
-
-	prefetcht0	0(%r13, %r14, 4) // software prefetch
-	prefetcht0	64(%r13, %r14, 4) // software prefetch
-
-	vmovapd		%ymm0, 0(%r13)
-	vmovapd		%ymm1, 32(%r13)
-	vmovapd		%ymm2, 64(%r13)
-	vmovapd		%ymm3, 96(%r13)
-
-	addq	%r14, %r13
-
-	prefetcht0	0(%r13, %r14, 4) // software prefetch
-	prefetcht0	64(%r13, %r14, 4) // software prefetch
-
-	vmovapd		%ymm4, 0(%r13)
-	vmovapd		%ymm5, 32(%r13)
-	vmovapd		%ymm6, 64(%r13)
-	vmovapd		%ymm7, 96(%r13)
-
-	addq	%r14, %r13
-
-	subl	$8, %r10d
-	addq	$64, %r11
-
-	cmpl	$7, %r10d
-	jg		1b
-
-2: // consider clean-up
-
-	cmpl	$3, %r10d
-	jle		2f // consider clean-up loop
-
-	vmovupd		0(%r11), %ymm0
-	vmovupd		0(%r11, %r12), %ymm1
-	vmovupd		0(%r11, %r12, 2), %ymm2
-	vmovupd		0(%r11, %r15), %ymm3
-
-	vmovapd		%ymm0, 0(%r13)
-	vmovapd		%ymm1, 32(%r13)
-	vmovapd		%ymm2, 64(%r13)
-	vmovapd		%ymm3, 96(%r13)
-
-	subl	$4, %r10d
-	addq	$32, %r11
-	addq	%r14, %r13
-
-
-2: // consider clean-up loop
-
-	cmpl	$0, %r10d
-	jle		0f // return
-
-
-1: // clean-up loop
-
-	vmovsd		0(%r11), %xmm0
-	vmovsd		%xmm0, 0(%r13)
-
-	vmovsd		0(%r11, %r12), %xmm0
-	vmovsd		%xmm0, 32(%r13)
-
-	vmovsd		0(%r11, %r12, 2), %xmm0
-	vmovsd		%xmm0, 64(%r13)
-
-	vmovsd		0(%r11, %r15), %xmm0
-	vmovsd		%xmm0, 96(%r13)
-
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
-
-	cmpl	$0, %r10d
-	jg		1b
-
-
-0: // return
-
-
-
-#elif 1
-
-
-
-	cmpl	$0, %r10d
-	jle		0f // return
-
-	leaq	0(%r12, %r12, 2), %r15
-
 	cmpl	$3, %r10d
 	jle		2f // clean-up loop
 
@@ -1066,10 +816,10 @@ NAME:
 //	.p2align 3
 1: // prefetch loop
 	// TODO use load instead on sandybridge ???
-	prefetcht0	0(%rbx)
-	prefetcht0	0(%rbx, %r12)
-	prefetcht0	0(%rbx, %r12, 2)
-	prefetcht0	0(%rbx, %r14)
+	prefetchnta	0(%rbx)
+	prefetchnta	0(%rbx, %r12)
+	prefetchnta	0(%rbx, %r12, 2)
+	prefetchnta	0(%rbx, %r14)
 
 	addq	$32, %rbx
 	subl	$8, %eax
