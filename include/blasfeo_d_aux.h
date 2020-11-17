@@ -226,8 +226,6 @@ void blasfeo_pm_create_dmat(int ps, int m, int n, struct blasfeo_pm_dmat *sA, vo
 size_t blasfeo_cm_memsize_dmat(int m, int n);
 // create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
 void blasfeo_cm_create_dmat(int m, int n, struct blasfeo_pm_dmat *sA, void *memory);
-// print
-void blasfeo_pm_print_dmat(int m, int n, struct blasfeo_pm_dmat *sA, int ai, int aj);
 
 
 

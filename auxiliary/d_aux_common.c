@@ -85,24 +85,6 @@ void blasfeo_pm_create_dmat(int ps, int m, int n, struct blasfeo_pm_dmat *sA, vo
 
 
 
-// print a matrix structure
-void blasfeo_pm_print_dmat(int m, int n, struct blasfeo_pm_dmat *sA, int ai, int aj)
-	{
-	int ii, jj;
-	for(ii=0; ii<m; ii++)
-		{
-		for(jj=0; jj<n; jj++)
-			{
-			printf("%9.5f ", BLASFEO_PM_DMATEL(sA, ai+ii, aj+jj));
-			}
-		printf("\n");
-		}
-	printf("\n");
-	return;
-	}
-
-
-
 /* Explicitly column-major */
 
 // return the memory size (in bytes) needed for a strmat
