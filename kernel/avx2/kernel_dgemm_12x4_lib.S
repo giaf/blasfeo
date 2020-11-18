@@ -492,7 +492,7 @@
 
 2: // return
 
-#if MACRO_LEVEL>=1
+#if MACRO_LEVEL>=2
 	.endm
 #else
 	ret

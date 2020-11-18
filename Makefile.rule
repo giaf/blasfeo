@@ -205,10 +205,12 @@ K_MAX_STACK = 1000
 
 # Macro level (code size vs performance in assembly kernels):
 # 0 : no macro (min code size)
-# 1 : all macro but gemm kernel
+# 1 : all macro but gemm kernel (sweet spot)
 # 2 : all macro (max performance)
 #
+# MACRO_LEVEL = 2
 MACRO_LEVEL = 1
+# MACRO_LEVEL = 0
 
 # Use C99 extension to math library
 #
