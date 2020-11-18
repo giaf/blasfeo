@@ -16997,8 +16997,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 
 
 
-//                                     1      2              3          4        5          6             7          8        9          10       11
-// void kernel_dgemm_nt_12x4_p0_lib44cc(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+//                                      1      2              3          4        5          6             7          8        9          10       11            12
+// void kernel_dgemm_nt_12x4_p0_lib44cc(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *pA_p, double *pB_p);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_dgemm_nt_12x4_p0_lib44cc)
@@ -17039,8 +17039,9 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	movq	ARG4, %r12 // sda
 	sall	$5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
-	movq	ARG3, %r14  // A_p
-	addq	ARG5, %r15 // B_p
+
+	movq	ARG11, %r14  // A_p
+	addq	ARG12, %r15 // B_p
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_P0_LIB4

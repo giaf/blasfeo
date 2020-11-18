@@ -83,7 +83,7 @@
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
 #define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
 #define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4kB = 256 kB
-#define LLC_CACHE_EL (6*1024*1024/EL_SIZE) // LLC cache size: 4 MB
+#define LLC_CACHE_EL (4*1024*1024/EL_SIZE) // LLC cache size: 4 MB
 #define KC 320 //256 //320
 #define NC 64 //72 //60 // 120
 #define MC 800 //800
@@ -172,7 +172,9 @@ static void blasfeo_hp_dgemm_nt_m1(int m, int n, int k, double alpha, double *pA
 		for(jj=0; jj<n-3; jj+=4)
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
-			kernel_dgemm_nt_12x4_p0_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			pA_p = n-jj<=4 ? pA+(ii+8)*sda : pA;
+			pB_p = n-jj<=4 ? pB : pB+(jj+4)*sdb;
+			kernel_dgemm_nt_12x4_p0_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p, pB_p);
 #else
 			kernel_dgemm_nt_12x4_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 #endif
