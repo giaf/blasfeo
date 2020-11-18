@@ -7544,7 +7544,7 @@
 // output arguments:
 
 #if MACRO_LEVEL>=1
-	.macro INNER_PREFETCH0_8X4_LIB
+	.macro INNER_PREFETCH1_8X4_LIB
 #else
 	.p2align 4,,15
 	FUN_START(inner_prefetch1_8x4_lib)
