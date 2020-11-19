@@ -172,8 +172,8 @@ static void blasfeo_hp_dgemm_nt_m1(int m, int n, int k, double alpha, double *pA
 		for(jj=0; jj<n-3; jj+=4)
 			{
 #if defined(TARGET_X64_INTEL_HASWELL)
-			pA_p = n-jj<=4 ? pA+(ii+8)*sda : pA;
-			pB_p = n-jj<=4 ? pB : pB+(jj+4)*sdb;
+			pA_p = pA; //(jj+4<n) ? pA : (pA+(jj+12)*sda);
+			pB_p = pB+(jj+4)*sdb; //(jj+4<n) ? (pB+(jj+4)*sdb) : pB;
 			kernel_dgemm_nt_12x4_p0_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p, pB_p);
 #else
 			kernel_dgemm_nt_12x4_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);

@@ -17040,7 +17040,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	sall	$5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 
-	movq	ARG11, %r14  // A_p
+	movq	ARG11, %r14 // A_p
 	addq	ARG12, %r15 // B_p
 
 #if MACRO_LEVEL>=2
@@ -30435,6 +30435,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	movq	ARG5, %r12 // sda
 	salq	$5, %r12 // 4*sda*sizeof(double)
 	movq	ARG6, %r13  // B
+
 	movq	ARG4, %r14  // A_p
 	cmpq	$4, ARG1
 	cmoveq	ARG13, %r14  // A_p

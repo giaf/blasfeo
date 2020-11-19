@@ -7980,7 +7980,7 @@
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_8X4_P0_LIB4
 #else
-	CALL(inner_kernel_dgemm_nt_8x4_P0_lib4)
+	CALL(inner_kernel_dgemm_nt_8x4_p0_lib4)
 #endif
 
 
