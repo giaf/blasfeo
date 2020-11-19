@@ -11,15 +11,14 @@ It employes structures to describe matrices (```blasfeo_dmat```) and vectors (``
 The actual implementation of ```blasfeo_dmat``` and ```blasfeo_dvec``` depends on the ```TARGET```, ```LA``` (Linear Algebra) and ```MF``` (Matrix Format) choice.
 The API is non-destructive, and compared to the BLAS API it has an additional matrix/vector argument reserved for the output.
 
-| API              | Optimized (level 3) routines                       |
-| ---------------- | -------------------------------------------------- |
-| BLASFEO          | dgemm, dsyrk, dtrmm, dtrsm, dpotrf, dgetrf, dlqtrf |
-| (small matrices) | sgemm, ssyrk, strmm, strsm, spotrf                 |
-| ---------------- | -------------------------------------------------- |
-| BLAS <br> (small matrices) | dgemm, dsyrk, dtrmm, dtrsm, dpotrf, dgetrf <br> sgemm,               strsm, spotrf |
-| ---------------- | -------------------------------------------------- |
-| BLAS             | dgemm                                              |
-| (large matrices) |                                                    |
+| API                           | Optimized (level 3) routines                       |
+| ----------------------------- | -------------------------------------------------- |
+| BLASFEO <br> (small matrices) | dgemm, dsyrk, dtrmm, dtrsm, dpotrf, dgetrf, dgeqrf, dgelqf, <br> sgemm, ssyrk, strmm, strsm, spotrf |
+| BLAS    <br> (small matrices) | dgemm, dsyrk, dtrmm, dtrsm, dpotrf, dgetrf <br> sgemm, strsm, spotrf |
+| BLAS    <br> (large matrices) | dgemm |
+
+Note: BLASFEO is currently under active development.
+Some of the routines listed in the previous table may only be optimized for some variants, and provide reference implementations for other variants.
 
 ## Supported Computer Architectures
 
