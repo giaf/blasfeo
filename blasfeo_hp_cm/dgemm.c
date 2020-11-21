@@ -36,7 +36,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #include <xmmintrin.h>
 #endif
 
@@ -84,9 +84,9 @@
 #define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
 #define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4kB = 256 kB
 #define LLC_CACHE_EL (4*1024*1024/EL_SIZE) // LLC cache size: 4 MB
-#define KC 320 //256 //320
-#define NC 64 //72 //60 // 120
-#define MC 800 //800
+#define KC 256 //320 //256 //320
+#define NC 72 //64 //72 //60 // 120
+#define MC 1000 //800
 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A73)
 #define M_KERNEL 8 // max kernel: 8x4
@@ -155,6 +155,24 @@ static void blasfeo_hp_dgemm_nt_m1(int m, int n, int k, double alpha, double *pA
 	_mm_prefetch(pB+24, _MM_HINT_T0);
 #endif
 
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	_mm_prefetch(pA+0, _MM_HINT_T0);
+	_mm_prefetch(pA+4*sda+0, _MM_HINT_T0);
+	_mm_prefetch(pB+0, _MM_HINT_T0);
+
+	_mm_prefetch(pA+8, _MM_HINT_T0);
+	_mm_prefetch(pA+4*sda+8, _MM_HINT_T0);
+	_mm_prefetch(pB+8, _MM_HINT_T0);
+
+	_mm_prefetch(pA+16, _MM_HINT_T0);
+	_mm_prefetch(pA+4*sda+16, _MM_HINT_T0);
+	_mm_prefetch(pB+16, _MM_HINT_T0);
+
+	_mm_prefetch(pA+24, _MM_HINT_T0);
+	_mm_prefetch(pA+4*sda+24, _MM_HINT_T0);
+	_mm_prefetch(pB+24, _MM_HINT_T0);
+#endif
+
 	ii = 0;
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-11; ii+=12)
@@ -203,6 +221,16 @@ static void blasfeo_hp_dgemm_nt_m1(int m, int n, int k, double alpha, double *pA
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	for(; ii<m-7; ii+=8)
 		{
+#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		jj = 0;
+		if(n>0)
+			{
+			pA_p = m-ii<=8 ? pA : pA+(ii+8)*sda;
+			pB_p = pB;
+			kernel_dgemm_nt_8xn_p0_lib44cc(n, k, &alpha, pA+ii*sda, sda, pB+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p, pB_p);
+			jj += n;
+			}
+#else
 		for(jj=0; jj<n-3; jj+=4)
 			{
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
@@ -223,6 +251,7 @@ static void blasfeo_hp_dgemm_nt_m1(int m, int n, int k, double alpha, double *pA
 			{
 			kernel_dgemm_nt_8x4_vs_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 			}
+#endif
 		}
 	if(ii<m)
 		{
