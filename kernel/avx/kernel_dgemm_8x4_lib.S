@@ -15950,9 +15950,10 @@
 
 
 	// loop over n
-1001:
+//1001:
 	cmpq	$3, ARG1
 	jle		1000f // consider clean-up loop
+1001:
 
 
 	ZERO_ACC
@@ -16157,7 +16158,7 @@
 	movq	ARG9, %r12   // C
 	movq	ARG10, %r13   // ldc
 	sall	$3, %r13d
-	movq	$12, %r14   // m1
+	movq	$8, %r14   // m1
 	movq	ARG1, %r15   // n1
 
 #if MACRO_LEVEL>=1
@@ -16172,7 +16173,7 @@
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // ldd
 	sall	$3, %r11d
-	movq	$12, %r12   // m1
+	movq	$8, %r12   // m1
 	movq	ARG1, %r13   // n1
 
 #if MACRO_LEVEL>=1

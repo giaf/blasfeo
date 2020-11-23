@@ -30398,9 +30398,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 
 
 	// loop over n
-1001:
+//1001:
 	cmpq	$3, ARG1
 	jle		1000f // consider clean-up loop
+1001:
 
 
 	ZERO_ACC
