@@ -71,7 +71,7 @@
 #if defined(TARGET_X64_INTEL_HASWELL)
 #define M_KERNEL 12 // max kernel: 12x4
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 8-way
 #define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4kB = 256 kB
 #define LLC_CACHE_EL (6*1024*1024/EL_SIZE) // LLC cache size: 6 MB
 #define KC 256 // 192
@@ -81,7 +81,7 @@
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #define M_KERNEL 8 // max kernel: 8x4
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 8-way
 #define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4kB = 256 kB
 #define LLC_CACHE_EL (4*1024*1024/EL_SIZE) // LLC cache size: 4 MB
 #define KC 256 //320 //256 //320
@@ -91,7 +91,7 @@
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A73)
 #define M_KERNEL 8 // max kernel: 8x4
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 (64?) kB, 4-way, seen as 8-(16-)way
 #define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB
 #define KC 320
 #define NC 256
@@ -100,11 +100,11 @@
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 #define M_KERNEL 8 // max kernel: 8x4
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 2-way
 #define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB // 2 MB ???
-#define KC 192
-#define NC 48
-#define MC 600
+#define KC 224 //256 //192
+#define NC 40 //36 //48
+#define MC 512 //488 //600
 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 #define M_KERNEL 12 // max kernel: 12x4
@@ -221,28 +221,44 @@ static void blasfeo_hp_dgemm_nt_m1(int m, int n, int k, double alpha, double *pA
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	for(; ii<m-7; ii+=8)
 		{
-#if defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if 1 //defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 		jj = 0;
 		if(n>0)
 			{
+//			pA_p = m-ii<=8 ? pA : pA+(ii+8)*sda;
 			pA_p = m-ii<=8 ? pA : pA+(ii+8)*sda;
 			pB_p = pB;
 			kernel_dgemm_nt_8xn_p0_lib44cc(n, k, &alpha, pA+ii*sda, sda, pB+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p, pB_p);
 			jj += n;
+//			kernel_dgemm_nt_8x4_p_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p); //, pB_p);
+//			jj += 4;
 			}
 #else
 		for(jj=0; jj<n-3; jj+=4)
 			{
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#if 0
+			pA_p = (jj+4<n) ? pA : (pA+(jj+8)*sda);
+			pB_p = (jj+4<n) ? (pB+(jj+4)*sdb) : pB;
+//			kernel_dgemm_nt_8x4_p0_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p, pB_p);
+			kernel_dgemm_nt_8x4_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+#else
 			if(n-jj>4)
 				{
+//				pA_p = (n-jj>4) ? pA : (pA+(jj+8)*sda);
+//				pB_p = (n-jj>4) ? (pB+(jj+4)*sdb) : pB;
+				pA_p = pA;
+				pB_p = pB+(jj+4)*sdb;
+//				kernel_dgemm_nt_8x4_p0_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p, pB_p);
 				kernel_dgemm_nt_8x4_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 				}
 			else
 				{
 				pA_p = m-ii<=8 ? pA : pA+(ii+8)*sda;
-				kernel_dgemm_nt_8x4_p_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p);
+				pB_p = pB; // TODO
+				kernel_dgemm_nt_8x4_p_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p); //, pB_p);
 				}
+#endif
 #else
 			kernel_dgemm_nt_8x4_lib44cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 #endif
