@@ -74,9 +74,15 @@
 #define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 8-way
 #define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4kB = 256 kB
 #define LLC_CACHE_EL (6*1024*1024/EL_SIZE) // LLC cache size: 6 MB
+#if 1
 #define KC 256 // 192
 #define NC 72 //96 //72 // 120 // 512
 #define MC 1500
+#else
+#define KC 256
+#define NC 512
+#define MC 6000
+#endif
 
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #define M_KERNEL 8 // max kernel: 8x4
@@ -173,6 +179,10 @@ static void blasfeo_hp_dgemm_nt_m1(int m, int n, int k, double alpha, double *pA
 	_mm_prefetch(pB+24, _MM_HINT_T0);
 #endif
 
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	// TODO
+#endif
+
 	ii = 0;
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-11; ii+=12)
@@ -184,6 +194,7 @@ static void blasfeo_hp_dgemm_nt_m1(int m, int n, int k, double alpha, double *pA
 			pA_p = m-ii<=12 ? pA : pA+(ii+12)*sda;
 			pB_p = pB;
 			kernel_dgemm_nt_12xn_p0_lib44cc(n, k, &alpha, pA+ii*sda, sda, pB+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p, pB_p);
+//			kernel_dgemm_nt_12xn_pl_lib44cc(n, k, &alpha, pA+ii*sda, sda, pB+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p, pB_p);
 			jj += n;
 			}
 #else

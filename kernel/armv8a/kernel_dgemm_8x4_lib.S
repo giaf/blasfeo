@@ -357,10 +357,10 @@
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_ADD_NT_8X4_P_LIB4
+	.macro INNER_KERNEL_GEMM_ADD_NT_8X4_PL_LIB4
 #else
 	.align	4
-	FUN_START(inner_kernel_gemm_add_nt_8x4_p_lib4)
+	FUN_START(inner_kernel_gemm_add_nt_8x4_pl_lib4)
 #endif
 
 
@@ -589,19 +589,25 @@
 	// unroll 3
 	fmla	v0.2d, v18.2d, v30.2d[0]
 	fmla	v1.2d, v19.2d, v30.2d[0]
+	prfm	PLDL2KEEP, [x16, #0]
 	fmla	v8.2d, v22.2d, v30.2d[0]
 	fmla	v3.2d, v19.2d, v30.2d[1]
 //	ldp		q24, q25, [x11, #(0*8+0*32)]
+	prfm	PLDL2KEEP, [x17, #0]
 	fmla	v9.2d, v23.2d, v30.2d[0]
 	fmla	v2.2d, v18.2d, v30.2d[1]
+	prfm	PLDL2KEEP, [x16, #64]
 	fmla	v10.2d, v22.2d, v30.2d[1]
 	fmla	v11.2d, v23.2d, v30.2d[1]
 //	ldp		q26, q27, [x11, #(0*8+1*32)]
+	prfm	PLDL2KEEP, [x17, #64]
 	fmla	v4.2d, v18.2d, v31.2d[0]
 	fmla	v5.2d, v19.2d, v31.2d[0]
+	add		x16, x16, #128
 	fmla	v12.2d, v22.2d, v31.2d[0]
 	fmla	v13.2d, v23.2d, v31.2d[0]
 //	ldp		q28, q29, [x11, #(0*8+2*32)]
+	add		x17, x17, #128
 	fmla	v6.2d, v18.2d, v31.2d[1]
 	fmla	v7.2d, v19.2d, v31.2d[1]
 	fmla	v14.2d, v22.2d, v31.2d[1]
@@ -655,7 +661,7 @@
 #else
 	ret
 
-	FUN_END(inner_kernel_gemm_add_nt_8x4_p_lib4)
+	FUN_END(inner_kernel_gemm_add_nt_8x4_pl_lib4)
 #endif
 
 
@@ -20020,9 +20026,9 @@
 	mov		x13, x4 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_8X4_P_LIB4
+	INNER_KERNEL_GEMM_ADD_NT_8X4_PL_LIB4
 #else
-	bl	inner_kernel_gemm_add_nt_8x4_p_lib4
+	bl	inner_kernel_gemm_add_nt_8x4_pl_lib4
 #endif
 
 
@@ -24796,6 +24802,7 @@
 //1001:
 	cmp		w0, #4
 	ble		1000f // consider clean-up loop
+
 1001:
 
 
@@ -24963,11 +24970,9 @@
 //	add		x13, x13, x5
 
 #if MACRO_LEVEL>=2
-	// TODO B_p
-	INNER_KERNEL_GEMM_ADD_NT_8X4_P_LIB4
+	INNER_KERNEL_GEMM_ADD_NT_8X4_PL_LIB4
 #else
-	// TODO B_p
-	bl	inner_kernel_gemm_add_nt_8x4_p_lib4
+	bl	inner_kernel_gemm_add_nt_8x4_pl_lib4
 #endif
 
 
@@ -25013,6 +25018,7 @@
 
 
 
+#if 0
 	// loop increments
 	// n
 	sub		w0, w0, #4
@@ -25032,6 +25038,7 @@
 	ldr		x9, [sp, #(STACKSIZE + 16)] // D
 	add		x9, x8, x9
 	str		x9, [sp, #(STACKSIZE + 16)] // D
+#endif
 
 
 
