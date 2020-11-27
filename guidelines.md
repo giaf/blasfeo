@@ -8,7 +8,7 @@ Once downloaded and unzipped into ```NDK_MAIN_DIR```, the NDK tools themselves c
 ```./make-standalone-toolchain.sh --arch=arm64 --install_dir=/opt/ndk```
 
 Once the BLASFEO static library has been compiled and the executable ```example.out``` created, this can be moved to the Android device by means of the command <br/>
-```adb push example.out /data/local/tmp/example.out```
+```adb push example.out /data/local/tmp/example.out``` <br/>
 and executed with the command <br/>
 ```adb shell /data/local/tmp/example.out```
 
