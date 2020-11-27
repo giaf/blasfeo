@@ -256,6 +256,7 @@ CC ?= gcc
 # CC = clang
 # CC = x86_64-w64-mingw32-gcc
 # CC = arm-linux-gnueabihf-gcc
+# CC = /opt/ndk/bin/aarch64-linux-android-gcc
 
 # archive routine
 #

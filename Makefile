@@ -1081,6 +1081,12 @@ run_benchmarks:
 perf_benchmarks:
 	make -C benchmarks perf
 
+adb_push_benchmarks:
+	make -C benchmarks adb_push
+
+adb_run_benchmarks:
+	make -C benchmarks adb_run
+
 figures_benchmark_one:
 	make -C benchmarks figures_benchmark_one
 
@@ -1137,6 +1143,12 @@ examples: deploy_to_examples build_examples
 run_examples:
 	make -C examples run
 
+adb_push_examples:
+	make -C examples adb_push
+
+adb_run_examples:
+	make -C examples adb_run
+
 
 
 ### sandbox
@@ -1176,6 +1188,12 @@ tests_one: deploy_to_tests build_tests_one
 
 run_tests_one:
 	make -C tests run_one
+
+adb_push_tests_one:
+	make -C tests adb_push
+
+adb_run_tests_one:
+	make -C tests adb_run
 
 # aux test
 build_tests_aux:
