@@ -1,6 +1,21 @@
-The performance of BLASFEO routines can be affected by many factor, and some can have a large impact on performance.
+## Installation on Android
 
---------------------------------------------------
+BLASFEO can successfully run on the Android OS.
+The procedure has been tested for the most common combination (namely Android running on the ARMv8A architecture, with the BLASFEO code cross-compiled from a x86_64 Linux host machine), but it is expected to work on other combinations too by using the OS_LINUX architecture in BLASFEO.
+
+In the tested configuration, BLASFEO was compiled with the ```aarch64-linux-android-gcc``` cross-compiler provided by the Android NDK.
+Once downloaded and unzipped into ```NDK_MAIN_DIR```, the NDK tools themselves can be installed on ```/opt/ndk``` by using the script ```$(NDK_MAIN_DIR)/build/tools/make-standalone-toolchain.sh``` as
+```./make-standalone-toolchain.sh --arch=arm64 --install_dir=/opt/ndk```
+
+Once the BLASFEO static library has been compiled and the executable ```example.out``` created, this can be moved to the Android device by means of the command
+```adb push example.out /data/local/tmp/example.out```
+and executed with the command
+```adb shell /data/local/tmp/example.out```
+
+
+## Performance issues
+
+The performance of BLASFEO routines can be affected by many factor, and some can have a large impact on performance.
 
 Known performance issues:
 - computations on __denormals__.
