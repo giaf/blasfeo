@@ -132,19 +132,19 @@ NAME:
 	ldp		q18, q19, [x9, #(1*32)]
 
 	// unroll 0
-	fmla	v0.4s, v16.4s, v24.4s[0]
+	fmla	v0.4s, v16.4s, v24.s[0]
 	add		x10, x10, #16
 
 	// unroll 1
-	fmla	v8.4s, v17.4s, v24.4s[1]
+	fmla	v8.4s, v17.4s, v24.s[1]
 	sub		w8, w8, #4
 
 	// unroll 2
-	fmla	v9.4s, v18.4s, v24.4s[2]
+	fmla	v9.4s, v18.4s, v24.s[2]
 	cmp		w8, #4
 
 	// unroll 3
-	fmla	v10.4s, v19.4s, v24.4s[3]
+	fmla	v10.4s, v19.4s, v24.s[3]
 	add		x9, x9, #64
 
 	bgt		1b
@@ -165,7 +165,7 @@ NAME:
 	// unroll 0
 	ldr		s24, [x10]
 	ld1		{v16.4s}, [x9], #16
-	fmla	v0.4s, v16.4s, v24.4s[0]
+	fmla	v0.4s, v16.4s, v24.s[0]
 	add		x10, x10, #4
 
 	sub		w8, w8, #1
@@ -379,22 +379,22 @@ NAME:
 	
 	ldr		q24, [x8, #0]
 	ldr		s16, [x9, #0]
-	fmul	v17.4s, v0.4s, v16.4s[0]
-	fmls	v0.4s, v24.4s, v17.4s[0]
+	fmul	v17.4s, v0.4s, v16.s[0]
+	fmls	v0.4s, v24.4s, v17.s[0]
 
 	ldr		q24, [x8, #16]
 	ldr		s16, [x9, #4]
-	fmul	v18.4s, v0.4s, v16.4s[0]
-	fmls	v0.4s, v24.4s, v18.4s[1]
+	fmul	v18.4s, v0.4s, v16.s[0]
+	fmls	v0.4s, v24.4s, v18.s[1]
 
 	ldr		q24, [x8, #32]
 	ldr		s16, [x9, #8]
-	fmul	v19.4s, v0.4s, v16.4s[0]
-	fmls	v0.4s, v24.4s, v19.4s[2]
+	fmul	v19.4s, v0.4s, v16.s[0]
+	fmls	v0.4s, v24.4s, v19.s[2]
 
 	ldr		s16, [x9, #12]
-//	fmul	v20.4s, v0.4s, v16.4s[0]
-	fmul	v0.4s, v0.4s, v16.4s[0]
+//	fmul	v20.4s, v0.4s, v16.s[0]
+	fmul	v0.4s, v0.4s, v16.s[0]
 
 //	ins		v0.s[3], v20.s[3]
 	ins		v0.s[2], v19.s[2]
@@ -433,31 +433,31 @@ NAME:
 	
 	ldr		q24, [x8, #0]
 	ldr		s16, [x9, #0]
-	fmul	v17.4s, v0.4s, v16.4s[0]
-	fmls	v0.4s, v24.4s, v17.4s[0]
+	fmul	v17.4s, v0.4s, v16.s[0]
+	fmls	v0.4s, v24.4s, v17.s[0]
 
 	cmp		w10, #2
 	blt		1f // return
 
 	ldr		q24, [x8, #16]
 	ldr		s16, [x9, #4]
-	fmul	v18.4s, v0.4s, v16.4s[0]
-	fmls	v0.4s, v24.4s, v18.4s[1]
+	fmul	v18.4s, v0.4s, v16.s[0]
+	fmls	v0.4s, v24.4s, v18.s[1]
 
 	cmp		w10, #3
 	blt		2f // return
 
 	ldr		q24, [x8, #32]
 	ldr		s16, [x9, #8]
-	fmul	v19.4s, v0.4s, v16.4s[0]
-	fmls	v0.4s, v24.4s, v19.4s[2]
+	fmul	v19.4s, v0.4s, v16.s[0]
+	fmls	v0.4s, v24.4s, v19.s[2]
 
 	cmp		w10, #4
 	blt		3f // return
 
 	ldr		s16, [x9, #12]
-//	fmul	v20.4s, v0.4s, v16.4s[0]
-	fmul	v0.4s, v0.4s, v16.4s[0]
+//	fmul	v20.4s, v0.4s, v16.s[0]
+	fmul	v0.4s, v0.4s, v16.s[0]
 
 //	ins		v0.s[3], v20.s[3]
 3:
@@ -586,13 +586,13 @@ NAME:
 
 	ldr		s29, [x9]
 
-	fmul	v0.4s, v0.4s, v28.4s[0]
+	fmul	v0.4s, v0.4s, v28.s[0]
 
-	fcmpe	d29, #0
+	fcmpe	d29, #0.0
 	beq		0f
 
 	ldr		q24, [x10, #0]
-	fmla	v0.4s, v24.4s, v29.4s[0]
+	fmla	v0.4s, v24.4s, v29.s[0]
 
 0:
 
