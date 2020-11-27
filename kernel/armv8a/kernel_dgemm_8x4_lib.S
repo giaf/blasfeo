@@ -19691,6 +19691,76 @@
 // subroutine
 //
 // input arguments:
+// x8   <- alpha
+// x9  <- D
+// x10  <- ldd*sizeof(double)
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_A1_STORE_8X4_LIB
+#else
+	.align	4
+	FUN_START(inner_scale_a1_store_8x4_lib)
+#endif
+
+	ld1		{v28.2d}, [x8]
+
+	ldp		q24, q25, [x9, #0]
+	fmla	v24.2d, v0.2d, v28.2d[0]
+	fmla	v25.2d, v1.2d, v28.2d[0]
+	ldp		q26, q27, [x9, #32]
+	fmla	v26.2d, v8.2d, v28.2d[0]
+	fmla	v27.2d, v9.2d, v28.2d[0]
+	stp		q24, q25, [x9, #0]
+	stp		q26, q27, [x9, #32]
+	add		x9, x9, x10
+
+	ldp		q24, q25, [x9, #0]
+	fmla	v24.2d, v2.2d, v28.2d[0]
+	fmla	v25.2d, v3.2d, v28.2d[0]
+	ldp		q26, q27, [x9, #32]
+	fmla	v26.2d, v10.2d, v28.2d[0]
+	fmla	v27.2d, v11.2d, v28.2d[0]
+	stp		q24, q25, [x9, #0]
+	stp		q26, q27, [x9, #32]
+	add		x9, x9, x10
+
+	ldp		q24, q25, [x9, #0]
+	fmla	v24.2d, v4.2d, v28.2d[0]
+	fmla	v25.2d, v5.2d, v28.2d[0]
+	ldp		q26, q27, [x9, #32]
+	fmla	v26.2d, v12.2d, v28.2d[0]
+	fmla	v27.2d, v13.2d, v28.2d[0]
+	stp		q24, q25, [x9, #0]
+	stp		q26, q27, [x9, #32]
+	add		x9, x9, x10
+
+	ldp		q24, q25, [x9, #0]
+	fmla	v24.2d, v6.2d, v28.2d[0]
+	fmla	v25.2d, v7.2d, v28.2d[0]
+	ldp		q26, q27, [x9, #32]
+	fmla	v26.2d, v14.2d, v28.2d[0]
+	fmla	v27.2d, v15.2d, v28.2d[0]
+	stp		q24, q25, [x9, #0]
+	stp		q26, q27, [x9, #32]
+	add		x9, x9, x10
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_scale_a1_store_8x4_lib)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
 // x8   <- D
 // x9   <- ldd*sizeof(double)
 //
@@ -24868,6 +24938,37 @@
 
 
 
+	ld1		{v29.2d}, [x7] // beta
+	fmov	d28, 1.0e+0 // 1.0
+	fcmpe	d29, d28
+	bne		100f
+
+	ldr		x8, [sp, #(STACKSIZE + 0)] // C
+	ldr		x9, [sp, #(STACKSIZE + 16)] // D
+	cmp		x8, x9
+	bne		100f
+
+	ldr		w8, [sp, #(STACKSIZE + 8)] // ldc
+	ldr		w9, [sp, #(STACKSIZE + 24)] // ldd
+	cmp		w8, w9
+	bne		100f
+
+	//
+	mov		x8, x2 // alpha
+	ldr		x9, [sp, #(STACKSIZE + 16)] // D
+	ldr		w10, [sp, #(STACKSIZE + 24)] // ldd
+	lsl		w10, w10, #3 // 8*sdc
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_A1_STORE_8X4_LIB
+#else
+	bl inner_scale_a1_store_8x4_lib
+#endif
+
+	b		101f
+
+100:
+
 	// call inner blend for generic alpha and beta
 	mov		x8, x2 // alpha
 	mov		x9, x7 // beta
@@ -24893,6 +24994,8 @@
 #else
 	bl inner_store_8x4_lib
 #endif
+
+101:
 
 
 
