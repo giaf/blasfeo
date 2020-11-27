@@ -4,12 +4,12 @@ BLASFEO can successfully run on the Android OS.
 The procedure has been tested for the most common combination (namely Android running on the ARMv8A architecture, with the BLASFEO code cross-compiled from a x86_64 Linux host machine), but it is expected to work on other combinations too by using the OS_LINUX architecture in BLASFEO.
 
 In the tested configuration, BLASFEO was compiled with the ```aarch64-linux-android-gcc``` cross-compiler provided by the Android NDK.
-Once downloaded and unzipped into ```NDK_MAIN_DIR```, the NDK tools themselves can be installed on ```/opt/ndk``` by using the script ```$(NDK_MAIN_DIR)/build/tools/make-standalone-toolchain.sh``` as
+Once downloaded and unzipped into ```NDK_MAIN_DIR```, the NDK tools themselves can be installed on ```/opt/ndk``` by using the script ```$(NDK_MAIN_DIR)/build/tools/make-standalone-toolchain.sh``` as <br/>
 ```./make-standalone-toolchain.sh --arch=arm64 --install_dir=/opt/ndk```
 
-Once the BLASFEO static library has been compiled and the executable ```example.out``` created, this can be moved to the Android device by means of the command
+Once the BLASFEO static library has been compiled and the executable ```example.out``` created, this can be moved to the Android device by means of the command <br/>
 ```adb push example.out /data/local/tmp/example.out```
-and executed with the command
+and executed with the command <br/>
 ```adb shell /data/local/tmp/example.out```
 
 
