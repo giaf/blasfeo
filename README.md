@@ -81,7 +81,7 @@ In the ```tests``` folder there are several predefined test sets targeting diffe
 
 In order to run a test set, from the `tests` folder run for example the command 
 
-```python tester.py testset_travis_blasfeo_pm_double_amd64.jsom```
+```python tester.py testset_travis_blasfeo_pm_double_amd64.json```
 
 where you can replace the testset with any other.
 If no test set is specified, the ```testset_default.json``` is selected; this testset can be easily edited to test just a few routines of your choice.
