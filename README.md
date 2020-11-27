@@ -88,9 +88,12 @@ If no test set is specified, the ```testset_default.json``` is selected; this te
 
 ## Recommended guidelines
 
-Guidelines to use of BLASFEO routines and avoid known performance issues can be found in the file
+Some general guidelines to install BLASFEO, maximise its performance and avoid known performance issues can be found in the file
 [guidelines.md](https://github.com/giaf/blasfeo/blob/master/guidelines.md). <br/>
-We strongly recommend the user to read it.
+Covered topics:
+- installation tips on Android
+- denormals
+- memory alignment
 
 ## More Information
 

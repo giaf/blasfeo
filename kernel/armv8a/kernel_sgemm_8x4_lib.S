@@ -58,41 +58,41 @@
 #endif
 
 	ldr			s16, [x10, #0] // E_inv[0]
-	fmul		v0.4s, v0.4s, v16.4s[0]
-	fmul		v4.4s, v4.4s, v16.4s[0]
+	fmul		v0.4s, v0.4s, v16.s[0]
+	fmul		v4.4s, v4.4s, v16.s[0]
 	ldr			s16, [x8, #4] // E[1+4*0]
-	fmls		v1.4s, v0.4s, v16.4s[0]
-	fmls		v5.4s, v4.4s, v16.4s[0]
+	fmls		v1.4s, v0.4s, v16.s[0]
+	fmls		v5.4s, v4.4s, v16.s[0]
 	ldr			s16, [x8, #8] // E[2+4*0]
-	fmls		v2.4s, v0.4s, v16.4s[0]
-	fmls		v6.4s, v4.4s, v16.4s[0]
+	fmls		v2.4s, v0.4s, v16.s[0]
+	fmls		v6.4s, v4.4s, v16.s[0]
 	ldr			s16, [x8, #12] // E[3+4*0]
-	fmls		v3.4s, v0.4s, v16.4s[0]
-	fmls		v7.4s, v4.4s, v16.4s[0]
+	fmls		v3.4s, v0.4s, v16.s[0]
+	fmls		v7.4s, v4.4s, v16.s[0]
 	add			x8, x8, x9
 
 	ldr			s16, [x10, #4] // E_inv[1]
-	fmul		v1.4s, v1.4s, v16.4s[0]
-	fmul		v5.4s, v5.4s, v16.4s[0]
+	fmul		v1.4s, v1.4s, v16.s[0]
+	fmul		v5.4s, v5.4s, v16.s[0]
 	ldr			s16, [x8, #8] // E[2+4*1]
-	fmls		v2.4s, v1.4s, v16.4s[0]
-	fmls		v6.4s, v5.4s, v16.4s[0]
+	fmls		v2.4s, v1.4s, v16.s[0]
+	fmls		v6.4s, v5.4s, v16.s[0]
 	ldr			s16, [x8, #12] // E[3+4*1]
-	fmls		v3.4s, v1.4s, v16.4s[0]
-	fmls		v7.4s, v5.4s, v16.4s[0]
+	fmls		v3.4s, v1.4s, v16.s[0]
+	fmls		v7.4s, v5.4s, v16.s[0]
 	add			x8, x8, x9
 
 	ldr			s16, [x10, #8] // E_inv[2]
-	fmul		v2.4s, v2.4s, v16.4s[0]
-	fmul		v6.4s, v6.4s, v16.4s[0]
+	fmul		v2.4s, v2.4s, v16.s[0]
+	fmul		v6.4s, v6.4s, v16.s[0]
 	ldr			s16, [x8, #12] // E[3+4*2]
-	fmls		v3.4s, v2.4s, v16.4s[0]
-	fmls		v7.4s, v6.4s, v16.4s[0]
+	fmls		v3.4s, v2.4s, v16.s[0]
+	fmls		v7.4s, v6.4s, v16.s[0]
 //	add			x8, x8, x9
 
 	ldr			s16, [x10, #12] // E_inv[3]
-	fmul		v3.4s, v3.4s, v16.4s[0]
-	fmul		v7.4s, v7.4s, v16.4s[0]
+	fmul		v3.4s, v3.4s, v16.s[0]
+	fmul		v7.4s, v7.4s, v16.s[0]
 //	add			x8, x8, x9
 
 #if MACRO_LEVEL>=1
@@ -132,49 +132,49 @@
 	
 	// first column
 	ldr			s16, [x10, #0] // E_inv[0]
-	fmul		v0.4s, v0.4s, v16.4s[0]
-	fmul		v4.4s, v4.4s, v16.4s[0]
+	fmul		v0.4s, v0.4s, v16.s[0]
+	fmul		v4.4s, v4.4s, v16.s[0]
 	cmp			w11, #2
 	blt			0f // return
 
 	// second column
 	ldr			s16, [x8, #4] // E[1+4*0]
-	fmls		v1.4s, v0.4s, v16.4s[0]
-	fmls		v5.4s, v4.4s, v16.4s[0]
+	fmls		v1.4s, v0.4s, v16.s[0]
+	fmls		v5.4s, v4.4s, v16.s[0]
 	ldr			s16, [x10, #4] // E_inv[1]
-	fmul		v1.4s, v1.4s, v16.4s[0]
-	fmul		v5.4s, v5.4s, v16.4s[0]
+	fmul		v1.4s, v1.4s, v16.s[0]
+	fmul		v5.4s, v5.4s, v16.s[0]
 	cmp			w11, #3
 	blt			0f // return
 
 	// third column
 	add			x12, x8, x9
 	ldr			s16, [x8, #8] // E[2+4*0]
-	fmls		v2.4s, v0.4s, v16.4s[0]
-	fmls		v6.4s, v4.4s, v16.4s[0]
+	fmls		v2.4s, v0.4s, v16.s[0]
+	fmls		v6.4s, v4.4s, v16.s[0]
 	ldr			s16, [x12, #8] // E[2+4*1]
-	fmls		v2.4s, v1.4s, v16.4s[0]
-	fmls		v6.4s, v5.4s, v16.4s[0]
+	fmls		v2.4s, v1.4s, v16.s[0]
+	fmls		v6.4s, v5.4s, v16.s[0]
 	ldr			s16, [x10, #8] // E_inv[2]
-	fmul		v2.4s, v2.4s, v16.4s[0]
-	fmul		v6.4s, v6.4s, v16.4s[0]
+	fmul		v2.4s, v2.4s, v16.s[0]
+	fmul		v6.4s, v6.4s, v16.s[0]
 	cmp			w11, #4
 	blt			0f // return
 
 	// forth column
 	add			x13, x12, x9
 	ldr			s16, [x8, #12] // E[3+4*0]
-	fmls		v3.4s, v0.4s, v16.4s[0]
-	fmls		v7.4s, v4.4s, v16.4s[0]
+	fmls		v3.4s, v0.4s, v16.s[0]
+	fmls		v7.4s, v4.4s, v16.s[0]
 	ldr			s16, [x12, #12] // E[3+4*1]
-	fmls		v3.4s, v1.4s, v16.4s[0]
-	fmls		v7.4s, v5.4s, v16.4s[0]
+	fmls		v3.4s, v1.4s, v16.s[0]
+	fmls		v7.4s, v5.4s, v16.s[0]
 	ldr			s16, [x13, #12] // E[3+4*2]
-	fmls		v3.4s, v2.4s, v16.4s[0]
-	fmls		v7.4s, v6.4s, v16.4s[0]
+	fmls		v3.4s, v2.4s, v16.s[0]
+	fmls		v7.4s, v6.4s, v16.s[0]
 	ldr			s16, [x10, #12] // E_inv[3]
-	fmul		v3.4s, v3.4s, v16.4s[0]
-	fmul		v7.4s, v7.4s, v16.4s[0]
+	fmul		v3.4s, v3.4s, v16.s[0]
+	fmul		v7.4s, v7.4s, v16.s[0]
 
 0:
 #if MACRO_LEVEL>=1
@@ -210,16 +210,16 @@
 
 	ld1		{v29.4s}, [x9]
 
-	fmul	v0.4s, v0.4s, v28.4s[0]
-	fmul	v1.4s, v1.4s, v28.4s[0]
-	fmul	v2.4s, v2.4s, v28.4s[0]
-	fmul	v3.4s, v3.4s, v28.4s[0]
-	fmul	v4.4s, v4.4s, v28.4s[0]
-	fmul	v5.4s, v5.4s, v28.4s[0]
-	fmul	v6.4s, v6.4s, v28.4s[0]
-	fmul	v7.4s, v7.4s, v28.4s[0]
+	fmul	v0.4s, v0.4s, v28.s[0]
+	fmul	v1.4s, v1.4s, v28.s[0]
+	fmul	v2.4s, v2.4s, v28.s[0]
+	fmul	v3.4s, v3.4s, v28.s[0]
+	fmul	v4.4s, v4.4s, v28.s[0]
+	fmul	v5.4s, v5.4s, v28.s[0]
+	fmul	v6.4s, v6.4s, v28.s[0]
+	fmul	v7.4s, v7.4s, v28.s[0]
 
-	fcmpe	s29, #0
+	fcmpe	s29, #0.0
 	beq		0f
 
 	ldp		q24, q25, [x10, #0]
@@ -227,20 +227,20 @@
 	ldp		q26, q27, [x10, #0]
 	add		x10, x10, x11
 
-	fmla	v0.4s, v24.4s, v29.4s[0]
-	fmla	v4.4s, v25.4s, v29.4s[0]
-	fmla	v1.4s, v26.4s, v29.4s[0]
-	fmla	v5.4s, v27.4s, v29.4s[0]
+	fmla	v0.4s, v24.4s, v29.s[0]
+	fmla	v4.4s, v25.4s, v29.s[0]
+	fmla	v1.4s, v26.4s, v29.s[0]
+	fmla	v5.4s, v27.4s, v29.s[0]
 
 	ldp		q24, q25, [x10, #0]
 	add		x10, x10, x11
 	ldp		q26, q27, [x10, #0]
 	add		x10, x10, x11
 
-	fmla	v2.4s, v24.4s, v29.4s[0]
-	fmla	v6.4s, v25.4s, v29.4s[0]
-	fmla	v3.4s, v26.4s, v29.4s[0]
-	fmla	v7.4s, v27.4s, v29.4s[0]
+	fmla	v2.4s, v24.4s, v29.s[0]
+	fmla	v6.4s, v25.4s, v29.s[0]
+	fmla	v3.4s, v26.4s, v29.s[0]
+	fmla	v7.4s, v27.4s, v29.s[0]
 
 0:
 
@@ -279,16 +279,16 @@
 
 	ld1		{v29.4s}, [x9]
 
-	fmul	v0.4s, v0.4s, v28.4s[0]
-	fmul	v1.4s, v1.4s, v28.4s[0]
-	fmul	v2.4s, v2.4s, v28.4s[0]
-	fmul	v3.4s, v3.4s, v28.4s[0]
-	fmul	v4.4s, v4.4s, v28.4s[0]
-	fmul	v5.4s, v5.4s, v28.4s[0]
-	fmul	v6.4s, v6.4s, v28.4s[0]
-	fmul	v7.4s, v7.4s, v28.4s[0]
+	fmul	v0.4s, v0.4s, v28.s[0]
+	fmul	v1.4s, v1.4s, v28.s[0]
+	fmul	v2.4s, v2.4s, v28.s[0]
+	fmul	v3.4s, v3.4s, v28.s[0]
+	fmul	v4.4s, v4.4s, v28.s[0]
+	fmul	v5.4s, v5.4s, v28.s[0]
+	fmul	v6.4s, v6.4s, v28.s[0]
+	fmul	v7.4s, v7.4s, v28.s[0]
 
-	fcmpe	d29, #0
+	fcmpe	d29, #0.0
 	beq		0f
 
 	cmp		w12, #8
@@ -296,32 +296,32 @@
 
 	ldp		q24, q25, [x10, #0]
 	add		x10, x10, x11
-	fmla	v0.4s, v24.4s, v29.4s[0]
-	fmla	v4.4s, v25.4s, v29.4s[0]
+	fmla	v0.4s, v24.4s, v29.s[0]
+	fmla	v4.4s, v25.4s, v29.s[0]
 
 	cmp		w13, #1
 	ble		0f
 
 	ldp		q24, q25, [x10, #0]
 	add		x10, x10, x11
-	fmla	v1.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v25.4s, v29.4s[0]
+	fmla	v1.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v25.4s, v29.s[0]
 
 	cmp		w13, #2
 	ble		0f
 
 	ldp		q24, q25, [x10, #0]
 	add		x10, x10, x11
-	fmla	v2.4s, v24.4s, v29.4s[0]
-	fmla	v6.4s, v25.4s, v29.4s[0]
+	fmla	v2.4s, v24.4s, v29.s[0]
+	fmla	v6.4s, v25.4s, v29.s[0]
 
 	cmp		w13, #3
 	ble		0f
 
 	ldp		q24, q25, [x10, #0]
 	add		x10, x10, x11
-	fmla	v3.4s, v24.4s, v29.4s[0]
-	fmla	v7.4s, v25.4s, v29.4s[0]
+	fmla	v3.4s, v24.4s, v29.s[0]
+	fmla	v7.4s, v25.4s, v29.s[0]
 
 	b 0f
 
@@ -334,8 +334,8 @@
 	ldr		s26, [x10, #24]
 	ins		v25.s[2], v26.s[0]
 	add		x10, x10, x11
-	fmla	v0.4s, v24.4s, v29.4s[0]
-	fmla	v4.4s, v25.4s, v29.4s[0]
+	fmla	v0.4s, v24.4s, v29.s[0]
+	fmla	v4.4s, v25.4s, v29.s[0]
 
 	cmp		w13, #1
 	ble		0f
@@ -345,8 +345,8 @@
 	ldr		s26, [x10, #24]
 	ins		v25.s[2], v26.s[0]
 	add		x10, x10, x11
-	fmla	v1.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v25.4s, v29.4s[0]
+	fmla	v1.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v25.4s, v29.s[0]
 
 	cmp		w13, #2
 	ble		0f
@@ -356,8 +356,8 @@
 	ldr		s26, [x10, #24]
 	ins		v25.s[2], v26.s[0]
 	add		x10, x10, x11
-	fmla	v2.4s, v24.4s, v29.4s[0]
-	fmla	v6.4s, v25.4s, v29.4s[0]
+	fmla	v2.4s, v24.4s, v29.s[0]
+	fmla	v6.4s, v25.4s, v29.s[0]
 
 	cmp		w13, #3
 	ble		0f
@@ -367,8 +367,8 @@
 	ldr		s26, [x10, #24]
 	ins		v25.s[2], v26.s[0]
 	add		x10, x10, x11
-	fmla	v3.4s, v24.4s, v29.4s[0]
-	fmla	v7.4s, v25.4s, v29.4s[0]
+	fmla	v3.4s, v24.4s, v29.s[0]
+	fmla	v7.4s, v25.4s, v29.s[0]
 
 	b 0f
 
@@ -379,8 +379,8 @@
 	ldr		q24, [x10, #0]
 	ldr		d25, [x10, #16]
 	add		x10, x10, x11
-	fmla	v0.4s, v24.4s, v29.4s[0]
-	fmla	v4.4s, v25.4s, v29.4s[0]
+	fmla	v0.4s, v24.4s, v29.s[0]
+	fmla	v4.4s, v25.4s, v29.s[0]
 
 	cmp		w13, #1
 	ble		0f
@@ -388,8 +388,8 @@
 	ldr		q24, [x10, #0]
 	ldr		d25, [x10, #16]
 	add		x10, x10, x11
-	fmla	v1.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v25.4s, v29.4s[0]
+	fmla	v1.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v25.4s, v29.s[0]
 
 	cmp		w13, #2
 	ble		0f
@@ -397,8 +397,8 @@
 	ldr		q24, [x10, #0]
 	ldr		d25, [x10, #16]
 	add		x10, x10, x11
-	fmla	v2.4s, v24.4s, v29.4s[0]
-	fmla	v6.4s, v25.4s, v29.4s[0]
+	fmla	v2.4s, v24.4s, v29.s[0]
+	fmla	v6.4s, v25.4s, v29.s[0]
 
 	cmp		w13, #3
 	ble		0f
@@ -406,8 +406,8 @@
 	ldr		q24, [x10, #0]
 	ldr		d25, [x10, #16]
 	add		x10, x10, x11
-	fmla	v3.4s, v24.4s, v29.4s[0]
-	fmla	v7.4s, v25.4s, v29.4s[0]
+	fmla	v3.4s, v24.4s, v29.s[0]
+	fmla	v7.4s, v25.4s, v29.s[0]
 
 	b 0f
 
@@ -418,8 +418,8 @@
 	ldr		q24, [x10, #0]
 	ldr		s25, [x10, #16]
 	add		x10, x10, x11
-	fmla	v0.4s, v24.4s, v29.4s[0]
-	fmla	v4.4s, v25.4s, v29.4s[0]
+	fmla	v0.4s, v24.4s, v29.s[0]
+	fmla	v4.4s, v25.4s, v29.s[0]
 
 	cmp		w13, #1
 	ble		0f
@@ -427,8 +427,8 @@
 	ldr		q24, [x10, #0]
 	ldr		s25, [x10, #16]
 	add		x10, x10, x11
-	fmla	v1.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v25.4s, v29.4s[0]
+	fmla	v1.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v25.4s, v29.s[0]
 
 	cmp		w13, #2
 	ble		0f
@@ -436,8 +436,8 @@
 	ldr		q24, [x10, #0]
 	ldr		s25, [x10, #16]
 	add		x10, x10, x11
-	fmla	v2.4s, v24.4s, v29.4s[0]
-	fmla	v6.4s, v25.4s, v29.4s[0]
+	fmla	v2.4s, v24.4s, v29.s[0]
+	fmla	v6.4s, v25.4s, v29.s[0]
 
 	cmp		w13, #3
 	ble		0f
@@ -445,8 +445,8 @@
 	ldr		q24, [x10, #0]
 	ldr		s25, [x10, #16]
 	add		x10, x10, x11
-	fmla	v3.4s, v24.4s, v29.4s[0]
-	fmla	v7.4s, v25.4s, v29.4s[0]
+	fmla	v3.4s, v24.4s, v29.s[0]
+	fmla	v7.4s, v25.4s, v29.s[0]
 
 0:
 
@@ -489,7 +489,7 @@
 	fneg	v6.4s, v6.4s
 	fneg	v7.4s, v7.4s
 
-	fcmpe	s29, #0
+	fcmpe	s29, #0.0
 	beq		0f
 
 	ldp		q24, q25, [x9, #0]
@@ -497,20 +497,20 @@
 	ldp		q26, q27, [x9, #0]
 	add		x9, x9, x10
 
-	fmla	v0.4s, v24.4s, v29.4s[0]
-	fmla	v4.4s, v25.4s, v29.4s[0]
-	fmla	v1.4s, v26.4s, v29.4s[0]
-	fmla	v5.4s, v27.4s, v29.4s[0]
+	fmla	v0.4s, v24.4s, v29.s[0]
+	fmla	v4.4s, v25.4s, v29.s[0]
+	fmla	v1.4s, v26.4s, v29.s[0]
+	fmla	v5.4s, v27.4s, v29.s[0]
 
 	ldp		q24, q25, [x9, #0]
 	add		x9, x9, x10
 	ldp		q26, q27, [x9, #0]
 	add		x9, x9, x10
 
-	fmla	v2.4s, v24.4s, v29.4s[0]
-	fmla	v6.4s, v25.4s, v29.4s[0]
-	fmla	v3.4s, v26.4s, v29.4s[0]
-	fmla	v7.4s, v27.4s, v29.4s[0]
+	fmla	v2.4s, v24.4s, v29.s[0]
+	fmla	v6.4s, v25.4s, v29.s[0]
+	fmla	v3.4s, v26.4s, v29.s[0]
+	fmla	v7.4s, v27.4s, v29.s[0]
 
 0:
 
@@ -555,7 +555,7 @@
 	fneg	v6.4s, v6.4s
 	fneg	v7.4s, v7.4s
 
-	fcmpe	d29, #0
+	fcmpe	d29, #0.0
 	beq		0f
 
 	cmp		w11, #8
@@ -563,32 +563,32 @@
 
 	ldp		q24, q25, [x9, #0]
 	add		x9, x9, x10
-	fmla	v0.4s, v24.4s, v29.4s[0]
-	fmla	v4.4s, v25.4s, v29.4s[0]
+	fmla	v0.4s, v24.4s, v29.s[0]
+	fmla	v4.4s, v25.4s, v29.s[0]
 
 	cmp		w12, #1
 	ble		0f
 
 	ldp		q24, q25, [x9, #0]
 	add		x9, x9, x10
-	fmla	v1.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v25.4s, v29.4s[0]
+	fmla	v1.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v25.4s, v29.s[0]
 
 	cmp		w12, #2
 	ble		0f
 
 	ldp		q24, q25, [x9, #0]
 	add		x9, x9, x10
-	fmla	v2.4s, v24.4s, v29.4s[0]
-	fmla	v6.4s, v25.4s, v29.4s[0]
+	fmla	v2.4s, v24.4s, v29.s[0]
+	fmla	v6.4s, v25.4s, v29.s[0]
 
 	cmp		w12, #3
 	ble		0f
 
 	ldp		q24, q25, [x9, #0]
 	add		x9, x9, x10
-	fmla	v3.4s, v24.4s, v29.4s[0]
-	fmla	v7.4s, v25.4s, v29.4s[0]
+	fmla	v3.4s, v24.4s, v29.s[0]
+	fmla	v7.4s, v25.4s, v29.s[0]
 
 	b 0f
 
@@ -601,8 +601,8 @@
 	ldr		s26, [x9, #24]
 	ins		v25.s[2], v26.s[0]
 	add		x9, x9, x10
-	fmla	v0.4s, v24.4s, v29.4s[0]
-	fmla	v4.4s, v25.4s, v29.4s[0]
+	fmla	v0.4s, v24.4s, v29.s[0]
+	fmla	v4.4s, v25.4s, v29.s[0]
 
 	cmp		w12, #1
 	ble		0f
@@ -612,8 +612,8 @@
 	ldr		s26, [x9, #24]
 	ins		v25.s[2], v26.s[0]
 	add		x9, x9, x10
-	fmla	v1.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v25.4s, v29.4s[0]
+	fmla	v1.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v25.4s, v29.s[0]
 
 	cmp		w12, #2
 	ble		0f
@@ -623,8 +623,8 @@
 	ldr		s26, [x9, #24]
 	ins		v25.s[2], v26.s[0]
 	add		x9, x9, x10
-	fmla	v2.4s, v24.4s, v29.4s[0]
-	fmla	v6.4s, v25.4s, v29.4s[0]
+	fmla	v2.4s, v24.4s, v29.s[0]
+	fmla	v6.4s, v25.4s, v29.s[0]
 
 	cmp		w12, #3
 	ble		0f
@@ -634,8 +634,8 @@
 	ldr		s26, [x9, #24]
 	ins		v25.s[2], v26.s[0]
 	add		x9, x9, x10
-	fmla	v3.4s, v24.4s, v29.4s[0]
-	fmla	v7.4s, v25.4s, v29.4s[0]
+	fmla	v3.4s, v24.4s, v29.s[0]
+	fmla	v7.4s, v25.4s, v29.s[0]
 
 	b 0f
 
@@ -646,8 +646,8 @@
 	ldr		q24, [x9, #0]
 	ldr		d25, [x9, #16]
 	add		x9, x9, x10
-	fmla	v0.4s, v24.4s, v29.4s[0]
-	fmla	v4.4s, v25.4s, v29.4s[0]
+	fmla	v0.4s, v24.4s, v29.s[0]
+	fmla	v4.4s, v25.4s, v29.s[0]
 
 	cmp		w12, #1
 	ble		0f
@@ -655,8 +655,8 @@
 	ldr		q24, [x9, #0]
 	ldr		d25, [x9, #16]
 	add		x9, x9, x10
-	fmla	v1.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v25.4s, v29.4s[0]
+	fmla	v1.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v25.4s, v29.s[0]
 
 	cmp		w12, #2
 	ble		0f
@@ -664,8 +664,8 @@
 	ldr		q24, [x9, #0]
 	ldr		d25, [x9, #16]
 	add		x9, x9, x10
-	fmla	v2.4s, v24.4s, v29.4s[0]
-	fmla	v6.4s, v25.4s, v29.4s[0]
+	fmla	v2.4s, v24.4s, v29.s[0]
+	fmla	v6.4s, v25.4s, v29.s[0]
 
 	cmp		w12, #3
 	ble		0f
@@ -673,8 +673,8 @@
 	ldr		q24, [x9, #0]
 	ldr		d25, [x9, #16]
 	add		x9, x9, x10
-	fmla	v3.4s, v24.4s, v29.4s[0]
-	fmla	v7.4s, v25.4s, v29.4s[0]
+	fmla	v3.4s, v24.4s, v29.s[0]
+	fmla	v7.4s, v25.4s, v29.s[0]
 
 	b 0f
 
@@ -685,8 +685,8 @@
 	ldr		q24, [x9, #0]
 	ldr		s25, [x9, #16]
 	add		x9, x9, x10
-	fmla	v0.4s, v24.4s, v29.4s[0]
-	fmla	v4.4s, v25.4s, v29.4s[0]
+	fmla	v0.4s, v24.4s, v29.s[0]
+	fmla	v4.4s, v25.4s, v29.s[0]
 
 	cmp		w12, #1
 	ble		0f
@@ -694,8 +694,8 @@
 	ldr		q24, [x9, #0]
 	ldr		s25, [x9, #16]
 	add		x9, x9, x10
-	fmla	v1.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v25.4s, v29.4s[0]
+	fmla	v1.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v25.4s, v29.s[0]
 
 	cmp		w12, #2
 	ble		0f
@@ -703,8 +703,8 @@
 	ldr		q24, [x9, #0]
 	ldr		s25, [x9, #16]
 	add		x9, x9, x10
-	fmla	v2.4s, v24.4s, v29.4s[0]
-	fmla	v6.4s, v25.4s, v29.4s[0]
+	fmla	v2.4s, v24.4s, v29.s[0]
+	fmla	v6.4s, v25.4s, v29.s[0]
 
 	cmp		w12, #3
 	ble		0f
@@ -712,8 +712,8 @@
 	ldr		q24, [x9, #0]
 	ldr		s25, [x9, #16]
 	add		x9, x9, x10
-	fmla	v3.4s, v24.4s, v29.4s[0]
-	fmla	v7.4s, v25.4s, v29.4s[0]
+	fmla	v3.4s, v24.4s, v29.s[0]
+	fmla	v7.4s, v25.4s, v29.s[0]
 
 0:
 

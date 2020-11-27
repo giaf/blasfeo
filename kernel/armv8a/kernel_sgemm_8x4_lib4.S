@@ -145,52 +145,52 @@ NAME:
 	ldp		q22, q23, [x12, #(2*16)]
 
 	// unroll 0
-	fmla	v0.4s, v24.4s, v28.4s[0]
-	fmla	v1.4s, v24.4s, v28.4s[1]
+	fmla	v0.4s, v24.4s, v28.s[0]
+	fmla	v1.4s, v24.4s, v28.s[1]
 	prfm	PLDL1KEEP, [x12, #128]
-	fmla	v2.4s, v24.4s, v28.4s[2]
-	fmla	v3.4s, v24.4s, v28.4s[3]
+	fmla	v2.4s, v24.4s, v28.s[2]
+	fmla	v3.4s, v24.4s, v28.s[3]
 	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v4.4s, v20.4s, v28.4s[0]
-	fmla	v5.4s, v20.4s, v28.4s[1]
+	fmla	v4.4s, v20.4s, v28.s[0]
+	fmla	v5.4s, v20.4s, v28.s[1]
 	prfm	PLDL1KEEP, [x11, #128]
-	fmla	v6.4s, v20.4s, v28.4s[2]
-	fmla	v7.4s, v20.4s, v28.4s[3]
+	fmla	v6.4s, v20.4s, v28.s[2]
+	fmla	v7.4s, v20.4s, v28.s[3]
 
 	// unroll 1
-	fmla	v0.4s, v25.4s, v29.4s[0]
-	fmla	v1.4s, v25.4s, v29.4s[1]
+	fmla	v0.4s, v25.4s, v29.s[0]
+	fmla	v1.4s, v25.4s, v29.s[1]
 	add		x9, x9, #64
-	fmla	v2.4s, v25.4s, v29.4s[2]
-	fmla	v3.4s, v25.4s, v29.4s[3]
-	fmla	v4.4s, v21.4s, v29.4s[0]
-	fmla	v5.4s, v21.4s, v29.4s[1]
+	fmla	v2.4s, v25.4s, v29.s[2]
+	fmla	v3.4s, v25.4s, v29.s[3]
+	fmla	v4.4s, v21.4s, v29.s[0]
+	fmla	v5.4s, v21.4s, v29.s[1]
 	add		x12, x12, #64
-	fmla	v6.4s, v21.4s, v29.4s[2]
-	fmla	v7.4s, v21.4s, v29.4s[3]
+	fmla	v6.4s, v21.4s, v29.s[2]
+	fmla	v7.4s, v21.4s, v29.s[3]
 
 	// unroll 2
-	fmla	v0.4s, v26.4s, v30.4s[0]
-	fmla	v1.4s, v26.4s, v30.4s[1]
+	fmla	v0.4s, v26.4s, v30.s[0]
+	fmla	v1.4s, v26.4s, v30.s[1]
 	add		x11, x11, #64
-	fmla	v2.4s, v26.4s, v30.4s[2]
-	fmla	v3.4s, v26.4s, v30.4s[3]
-	fmla	v4.4s, v22.4s, v30.4s[0]
-	fmla	v5.4s, v22.4s, v30.4s[1]
-	fmla	v6.4s, v22.4s, v30.4s[2]
-	fmla	v7.4s, v22.4s, v30.4s[3]
+	fmla	v2.4s, v26.4s, v30.s[2]
+	fmla	v3.4s, v26.4s, v30.s[3]
+	fmla	v4.4s, v22.4s, v30.s[0]
+	fmla	v5.4s, v22.4s, v30.s[1]
+	fmla	v6.4s, v22.4s, v30.s[2]
+	fmla	v7.4s, v22.4s, v30.s[3]
 	sub		w8, w8, #4
 
 	// unroll 3
-	fmla	v0.4s, v27.4s, v31.4s[0]
-	fmla	v1.4s, v27.4s, v31.4s[1]
-	fmla	v2.4s, v27.4s, v31.4s[2]
-	fmla	v3.4s, v27.4s, v31.4s[3]
+	fmla	v0.4s, v27.4s, v31.s[0]
+	fmla	v1.4s, v27.4s, v31.s[1]
+	fmla	v2.4s, v27.4s, v31.s[2]
+	fmla	v3.4s, v27.4s, v31.s[3]
 	cmp		w8, #4
-	fmla	v4.4s, v23.4s, v31.4s[0]
-	fmla	v5.4s, v23.4s, v31.4s[1]
-	fmla	v6.4s, v23.4s, v31.4s[2]
-	fmla	v7.4s, v23.4s, v31.4s[3]
+	fmla	v4.4s, v23.4s, v31.s[0]
+	fmla	v5.4s, v23.4s, v31.s[1]
+	fmla	v6.4s, v23.4s, v31.s[2]
+	fmla	v7.4s, v23.4s, v31.s[3]
 
 	bgt		1b
 
@@ -208,51 +208,51 @@ NAME:
 	ldp		q22, q23, [x12, #(2*16)]
 
 	// unroll 0
-	fmla	v0.4s, v24.4s, v28.4s[0]
-	fmla	v1.4s, v24.4s, v28.4s[1]
-	fmla	v2.4s, v24.4s, v28.4s[2]
-	fmla	v3.4s, v24.4s, v28.4s[3]
-	fmla	v4.4s, v20.4s, v28.4s[0]
+	fmla	v0.4s, v24.4s, v28.s[0]
+	fmla	v1.4s, v24.4s, v28.s[1]
+	fmla	v2.4s, v24.4s, v28.s[2]
+	fmla	v3.4s, v24.4s, v28.s[3]
+	fmla	v4.4s, v20.4s, v28.s[0]
 //	prfm	PLDL1KEEP, [x12, #128]
-	fmla	v5.4s, v20.4s, v28.4s[1]
+	fmla	v5.4s, v20.4s, v28.s[1]
 //	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v6.4s, v20.4s, v28.4s[2]
+	fmla	v6.4s, v20.4s, v28.s[2]
 //	prfm	PLDL1KEEP, [x11, #128]
-	fmla	v7.4s, v20.4s, v28.4s[3]
+	fmla	v7.4s, v20.4s, v28.s[3]
 
 	// unroll 1
-	fmla	v0.4s, v25.4s, v29.4s[0]
-	fmla	v1.4s, v25.4s, v29.4s[1]
+	fmla	v0.4s, v25.4s, v29.s[0]
+	fmla	v1.4s, v25.4s, v29.s[1]
 	add		x9, x9, #64
-	fmla	v2.4s, v25.4s, v29.4s[2]
-	fmla	v3.4s, v25.4s, v29.4s[3]
-	fmla	v4.4s, v21.4s, v29.4s[0]
-	fmla	v5.4s, v21.4s, v29.4s[1]
+	fmla	v2.4s, v25.4s, v29.s[2]
+	fmla	v3.4s, v25.4s, v29.s[3]
+	fmla	v4.4s, v21.4s, v29.s[0]
+	fmla	v5.4s, v21.4s, v29.s[1]
 	add		x12, x12, #64
-	fmla	v6.4s, v21.4s, v29.4s[2]
-	fmla	v7.4s, v21.4s, v29.4s[3]
+	fmla	v6.4s, v21.4s, v29.s[2]
+	fmla	v7.4s, v21.4s, v29.s[3]
 
 	// unroll 2
-	fmla	v0.4s, v26.4s, v30.4s[0]
-	fmla	v1.4s, v26.4s, v30.4s[1]
+	fmla	v0.4s, v26.4s, v30.s[0]
+	fmla	v1.4s, v26.4s, v30.s[1]
 	add		x11, x11, #64
-	fmla	v2.4s, v26.4s, v30.4s[2]
-	fmla	v3.4s, v26.4s, v30.4s[3]
-	fmla	v4.4s, v22.4s, v30.4s[0]
-	fmla	v5.4s, v22.4s, v30.4s[1]
-	fmla	v6.4s, v22.4s, v30.4s[2]
-	fmla	v7.4s, v22.4s, v30.4s[3]
+	fmla	v2.4s, v26.4s, v30.s[2]
+	fmla	v3.4s, v26.4s, v30.s[3]
+	fmla	v4.4s, v22.4s, v30.s[0]
+	fmla	v5.4s, v22.4s, v30.s[1]
+	fmla	v6.4s, v22.4s, v30.s[2]
+	fmla	v7.4s, v22.4s, v30.s[3]
 	sub		w8, w8, #4
 
 	// unroll 3
-	fmla	v0.4s, v27.4s, v31.4s[0]
-	fmla	v1.4s, v27.4s, v31.4s[1]
-	fmla	v2.4s, v27.4s, v31.4s[2]
-	fmla	v3.4s, v27.4s, v31.4s[3]
-	fmla	v4.4s, v23.4s, v31.4s[0]
-	fmla	v5.4s, v23.4s, v31.4s[1]
-	fmla	v6.4s, v23.4s, v31.4s[2]
-	fmla	v7.4s, v23.4s, v31.4s[3]
+	fmla	v0.4s, v27.4s, v31.s[0]
+	fmla	v1.4s, v27.4s, v31.s[1]
+	fmla	v2.4s, v27.4s, v31.s[2]
+	fmla	v3.4s, v27.4s, v31.s[3]
+	fmla	v4.4s, v23.4s, v31.s[0]
+	fmla	v5.4s, v23.4s, v31.s[1]
+	fmla	v6.4s, v23.4s, v31.s[2]
+	fmla	v7.4s, v23.4s, v31.s[3]
 
 	b		2f // return
 
@@ -272,14 +272,14 @@ NAME:
 	ldr		q28, [x11], #16
 	ldr		q24, [x9], #16
 	ldr		q20, [x12], #16
-	fmla	v0.4s, v24.4s, v28.4s[0]
-	fmla	v1.4s, v24.4s, v28.4s[1]
-	fmla	v2.4s, v24.4s, v28.4s[2]
-	fmla	v3.4s, v24.4s, v28.4s[3]
-	fmla	v4.4s, v20.4s, v28.4s[0]
-	fmla	v5.4s, v20.4s, v28.4s[1]
-	fmla	v6.4s, v20.4s, v28.4s[2]
-	fmla	v7.4s, v20.4s, v28.4s[3]
+	fmla	v0.4s, v24.4s, v28.s[0]
+	fmla	v1.4s, v24.4s, v28.s[1]
+	fmla	v2.4s, v24.4s, v28.s[2]
+	fmla	v3.4s, v24.4s, v28.s[3]
+	fmla	v4.4s, v20.4s, v28.s[0]
+	fmla	v5.4s, v20.4s, v28.s[1]
+	fmla	v6.4s, v20.4s, v28.s[2]
+	fmla	v7.4s, v20.4s, v28.s[3]
 
 	sub		w8, w8, #1
 	cmp		w8, #0
@@ -323,57 +323,57 @@ NAME:
 1:
 
 	// unroll 0
-	fmla	v0.4s, v24.4s, v28.4s[0]
-	fmla	v1.4s, v24.4s, v28.4s[1]
+	fmla	v0.4s, v24.4s, v28.s[0]
+	fmla	v1.4s, v24.4s, v28.s[1]
 	ldp		q26, q27, [x9, #(2*16)]
-	fmla	v2.4s, v24.4s, v28.4s[2]
-	fmla	v3.4s, v24.4s, v28.4s[3]
+	fmla	v2.4s, v24.4s, v28.s[2]
+	fmla	v3.4s, v24.4s, v28.s[3]
 	ldp		q22, q23, [x12, #(2*16)]
-	fmla	v4.4s, v20.4s, v28.4s[0]
+	fmla	v4.4s, v20.4s, v28.s[0]
 	prfm	PLDL1KEEP, [x12, #128]
-	fmla	v5.4s, v20.4s, v28.4s[1]
+	fmla	v5.4s, v20.4s, v28.s[1]
 	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v6.4s, v20.4s, v28.4s[2]
+	fmla	v6.4s, v20.4s, v28.s[2]
 	prfm	PLDL1KEEP, [x11, #128]
-	fmla	v7.4s, v20.4s, v28.4s[3]
+	fmla	v7.4s, v20.4s, v28.s[3]
 
 	// unroll 1
-	fmla	v0.4s, v25.4s, v29.4s[0]
-	fmla	v1.4s, v25.4s, v29.4s[1]
+	fmla	v0.4s, v25.4s, v29.s[0]
+	fmla	v1.4s, v25.4s, v29.s[1]
 	add		x9, x9, #64
-	fmla	v2.4s, v25.4s, v29.4s[2]
-	fmla	v3.4s, v25.4s, v29.4s[3]
+	fmla	v2.4s, v25.4s, v29.s[2]
+	fmla	v3.4s, v25.4s, v29.s[3]
 	ldp		q24, q25, [x9, #(0*16)]
-	fmla	v4.4s, v21.4s, v29.4s[0]
-	fmla	v5.4s, v21.4s, v29.4s[1]
+	fmla	v4.4s, v21.4s, v29.s[0]
+	fmla	v5.4s, v21.4s, v29.s[1]
 	add		x12, x12, #64
-	fmla	v6.4s, v21.4s, v29.4s[2]
-	fmla	v7.4s, v21.4s, v29.4s[3]
+	fmla	v6.4s, v21.4s, v29.s[2]
+	fmla	v7.4s, v21.4s, v29.s[3]
 	ldp		q20, q21, [x12, #(0*16)]
 
 	// unroll 2
-	fmla	v0.4s, v26.4s, v30.4s[0]
-	fmla	v1.4s, v26.4s, v30.4s[1]
+	fmla	v0.4s, v26.4s, v30.s[0]
+	fmla	v1.4s, v26.4s, v30.s[1]
 	add		x11, x11, #64
-	fmla	v2.4s, v26.4s, v30.4s[2]
-	fmla	v3.4s, v26.4s, v30.4s[3]
+	fmla	v2.4s, v26.4s, v30.s[2]
+	fmla	v3.4s, v26.4s, v30.s[3]
 	ldp		q28, q29, [x11, #(0*16)]
-	fmla	v4.4s, v22.4s, v30.4s[0]
-	fmla	v5.4s, v22.4s, v30.4s[1]
-	fmla	v6.4s, v22.4s, v30.4s[2]
-	fmla	v7.4s, v22.4s, v30.4s[3]
+	fmla	v4.4s, v22.4s, v30.s[0]
+	fmla	v5.4s, v22.4s, v30.s[1]
+	fmla	v6.4s, v22.4s, v30.s[2]
+	fmla	v7.4s, v22.4s, v30.s[3]
 	sub		w8, w8, #4
 
 	// unroll 3
-	fmla	v0.4s, v27.4s, v31.4s[0]
-	fmla	v1.4s, v27.4s, v31.4s[1]
-	fmla	v2.4s, v27.4s, v31.4s[2]
-	fmla	v3.4s, v27.4s, v31.4s[3]
+	fmla	v0.4s, v27.4s, v31.s[0]
+	fmla	v1.4s, v27.4s, v31.s[1]
+	fmla	v2.4s, v27.4s, v31.s[2]
+	fmla	v3.4s, v27.4s, v31.s[3]
 	cmp		w8, #4
-	fmla	v4.4s, v23.4s, v31.4s[0]
-	fmla	v5.4s, v23.4s, v31.4s[1]
-	fmla	v6.4s, v23.4s, v31.4s[2]
-	fmla	v7.4s, v23.4s, v31.4s[3]
+	fmla	v4.4s, v23.4s, v31.s[0]
+	fmla	v5.4s, v23.4s, v31.s[1]
+	fmla	v6.4s, v23.4s, v31.s[2]
+	fmla	v7.4s, v23.4s, v31.s[3]
 	ldp		q30, q31, [x11, #(2*16)]
 
 	bgt		1b
@@ -384,56 +384,56 @@ NAME:
 	ble		4f
 
 	// unroll 0
-	fmla	v0.4s, v24.4s, v28.4s[0]
-	fmla	v1.4s, v24.4s, v28.4s[1]
+	fmla	v0.4s, v24.4s, v28.s[0]
+	fmla	v1.4s, v24.4s, v28.s[1]
 	ldp		q26, q27, [x9, #(2*16)]
-	fmla	v2.4s, v24.4s, v28.4s[2]
-	fmla	v3.4s, v24.4s, v28.4s[3]
+	fmla	v2.4s, v24.4s, v28.s[2]
+	fmla	v3.4s, v24.4s, v28.s[3]
 	ldp		q22, q23, [x12, #(2*16)]
-	fmla	v4.4s, v20.4s, v28.4s[0]
+	fmla	v4.4s, v20.4s, v28.s[0]
 //	prfm	PLDL1KEEP, [x12, #128]
-	fmla	v5.4s, v20.4s, v28.4s[1]
+	fmla	v5.4s, v20.4s, v28.s[1]
 //	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v6.4s, v20.4s, v28.4s[2]
+	fmla	v6.4s, v20.4s, v28.s[2]
 //	prfm	PLDL1KEEP, [x11, #128]
-	fmla	v7.4s, v20.4s, v28.4s[3]
+	fmla	v7.4s, v20.4s, v28.s[3]
 
 	// unroll 1
-	fmla	v0.4s, v25.4s, v29.4s[0]
-	fmla	v1.4s, v25.4s, v29.4s[1]
+	fmla	v0.4s, v25.4s, v29.s[0]
+	fmla	v1.4s, v25.4s, v29.s[1]
 	add		x9, x9, #64
-	fmla	v2.4s, v25.4s, v29.4s[2]
-	fmla	v3.4s, v25.4s, v29.4s[3]
+	fmla	v2.4s, v25.4s, v29.s[2]
+	fmla	v3.4s, v25.4s, v29.s[3]
 //	ldp		q24, q25, [x9, #(0*16)]
-	fmla	v4.4s, v21.4s, v29.4s[0]
-	fmla	v5.4s, v21.4s, v29.4s[1]
+	fmla	v4.4s, v21.4s, v29.s[0]
+	fmla	v5.4s, v21.4s, v29.s[1]
 	add		x12, x12, #64
-	fmla	v6.4s, v21.4s, v29.4s[2]
-	fmla	v7.4s, v21.4s, v29.4s[3]
+	fmla	v6.4s, v21.4s, v29.s[2]
+	fmla	v7.4s, v21.4s, v29.s[3]
 //	ldp		q20, q21, [x12, #(0*16)]
 
 	// unroll 2
-	fmla	v0.4s, v26.4s, v30.4s[0]
-	fmla	v1.4s, v26.4s, v30.4s[1]
+	fmla	v0.4s, v26.4s, v30.s[0]
+	fmla	v1.4s, v26.4s, v30.s[1]
 	add		x11, x11, #64
-	fmla	v2.4s, v26.4s, v30.4s[2]
-	fmla	v3.4s, v26.4s, v30.4s[3]
+	fmla	v2.4s, v26.4s, v30.s[2]
+	fmla	v3.4s, v26.4s, v30.s[3]
 //	ldp		q28, q29, [x11, #(0*16)]
-	fmla	v4.4s, v22.4s, v30.4s[0]
-	fmla	v5.4s, v22.4s, v30.4s[1]
-	fmla	v6.4s, v22.4s, v30.4s[2]
-	fmla	v7.4s, v22.4s, v30.4s[3]
+	fmla	v4.4s, v22.4s, v30.s[0]
+	fmla	v5.4s, v22.4s, v30.s[1]
+	fmla	v6.4s, v22.4s, v30.s[2]
+	fmla	v7.4s, v22.4s, v30.s[3]
 	sub		w8, w8, #4
 
 	// unroll 3
-	fmla	v0.4s, v27.4s, v31.4s[0]
-	fmla	v1.4s, v27.4s, v31.4s[1]
-	fmla	v2.4s, v27.4s, v31.4s[2]
-	fmla	v3.4s, v27.4s, v31.4s[3]
-	fmla	v4.4s, v23.4s, v31.4s[0]
-	fmla	v5.4s, v23.4s, v31.4s[1]
-	fmla	v6.4s, v23.4s, v31.4s[2]
-	fmla	v7.4s, v23.4s, v31.4s[3]
+	fmla	v0.4s, v27.4s, v31.s[0]
+	fmla	v1.4s, v27.4s, v31.s[1]
+	fmla	v2.4s, v27.4s, v31.s[2]
+	fmla	v3.4s, v27.4s, v31.s[3]
+	fmla	v4.4s, v23.4s, v31.s[0]
+	fmla	v5.4s, v23.4s, v31.s[1]
+	fmla	v6.4s, v23.4s, v31.s[2]
+	fmla	v7.4s, v23.4s, v31.s[3]
 //	ldp		q30, q31, [x11, #(2*16)]
 
 	b		2f // return
@@ -453,15 +453,15 @@ NAME:
 
 	ldr		q28, [x11], #16
 	ldr		q24, [x9], #16
-	fmla	v0.4s, v24.4s, v28.4s[0]
-	fmla	v1.4s, v24.4s, v28.4s[1]
-	fmla	v2.4s, v24.4s, v28.4s[2]
-	fmla	v3.4s, v24.4s, v28.4s[3]
+	fmla	v0.4s, v24.4s, v28.s[0]
+	fmla	v1.4s, v24.4s, v28.s[1]
+	fmla	v2.4s, v24.4s, v28.s[2]
+	fmla	v3.4s, v24.4s, v28.s[3]
 	ldr		q20, [x12], #16
-	fmla	v4.4s, v20.4s, v28.4s[0]
-	fmla	v5.4s, v20.4s, v28.4s[1]
-	fmla	v6.4s, v20.4s, v28.4s[2]
-	fmla	v7.4s, v20.4s, v28.4s[3]
+	fmla	v4.4s, v20.4s, v28.s[0]
+	fmla	v5.4s, v20.4s, v28.s[1]
+	fmla	v6.4s, v20.4s, v28.s[2]
+	fmla	v7.4s, v20.4s, v28.s[3]
 
 	sub		w8, w8, #1
 	cmp		w8, #0
@@ -544,52 +544,52 @@ NAME:
 	ldp		q22, q23, [x13, #(2*16)]
 
 	// unroll 0
-	fmla	v0.4s, v24.4s, v28.4s[0]
-	fmla	v4.4s, v20.4s, v28.4s[0]
-	fmla	v1.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v20.4s, v29.4s[0]
-	fmla	v2.4s, v24.4s, v30.4s[0]
+	fmla	v0.4s, v24.4s, v28.s[0]
+	fmla	v4.4s, v20.4s, v28.s[0]
+	fmla	v1.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v20.4s, v29.s[0]
+	fmla	v2.4s, v24.4s, v30.s[0]
 	add		x11, x11, x12
-	fmla	v6.4s, v20.4s, v30.4s[0]
+	fmla	v6.4s, v20.4s, v30.s[0]
 	prfm	PLDL1KEEP, [x13, #128]
-	fmla	v3.4s, v24.4s, v31.4s[0]
+	fmla	v3.4s, v24.4s, v31.s[0]
 	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v7.4s, v20.4s, v31.4s[0]
+	fmla	v7.4s, v20.4s, v31.s[0]
 	prfm	PLDL1KEEP, [x11, x12]
 
 
 	// unroll 1
-	fmla	v0.4s, v25.4s, v28.4s[1]
-	fmla	v4.4s, v21.4s, v28.4s[1]
+	fmla	v0.4s, v25.4s, v28.s[1]
+	fmla	v4.4s, v21.4s, v28.s[1]
 	add		x9, x9, #64
-	fmla	v1.4s, v25.4s, v29.4s[1]
-	fmla	v5.4s, v21.4s, v29.4s[1]
-	fmla	v2.4s, v25.4s, v30.4s[1]
-	fmla	v6.4s, v21.4s, v30.4s[1]
+	fmla	v1.4s, v25.4s, v29.s[1]
+	fmla	v5.4s, v21.4s, v29.s[1]
+	fmla	v2.4s, v25.4s, v30.s[1]
+	fmla	v6.4s, v21.4s, v30.s[1]
 	add		x13, x13, #64
-	fmla	v3.4s, v25.4s, v31.4s[1]
-	fmla	v7.4s, v21.4s, v31.4s[1]
+	fmla	v3.4s, v25.4s, v31.s[1]
+	fmla	v7.4s, v21.4s, v31.s[1]
 
 	// unroll 2
-	fmla	v0.4s, v26.4s, v28.4s[2]
-	fmla	v4.4s, v22.4s, v28.4s[2]
-	fmla	v1.4s, v26.4s, v29.4s[2]
-	fmla	v5.4s, v22.4s, v29.4s[2]
-	fmla	v2.4s, v26.4s, v30.4s[2]
-	fmla	v6.4s, v22.4s, v30.4s[2]
-	fmla	v3.4s, v26.4s, v31.4s[2]
-	fmla	v7.4s, v22.4s, v31.4s[2]
+	fmla	v0.4s, v26.4s, v28.s[2]
+	fmla	v4.4s, v22.4s, v28.s[2]
+	fmla	v1.4s, v26.4s, v29.s[2]
+	fmla	v5.4s, v22.4s, v29.s[2]
+	fmla	v2.4s, v26.4s, v30.s[2]
+	fmla	v6.4s, v22.4s, v30.s[2]
+	fmla	v3.4s, v26.4s, v31.s[2]
+	fmla	v7.4s, v22.4s, v31.s[2]
 	sub		w8, w8, #4
 
 	// unroll 3
-	fmla	v0.4s, v27.4s, v28.4s[3]
-	fmla	v4.4s, v23.4s, v28.4s[3]
-	fmla	v1.4s, v27.4s, v29.4s[3]
-	fmla	v5.4s, v23.4s, v29.4s[3]
-	fmla	v2.4s, v27.4s, v30.4s[3]
-	fmla	v6.4s, v23.4s, v30.4s[3]
-	fmla	v3.4s, v27.4s, v31.4s[3]
-	fmla	v7.4s, v23.4s, v31.4s[3]
+	fmla	v0.4s, v27.4s, v28.s[3]
+	fmla	v4.4s, v23.4s, v28.s[3]
+	fmla	v1.4s, v27.4s, v29.s[3]
+	fmla	v5.4s, v23.4s, v29.s[3]
+	fmla	v2.4s, v27.4s, v30.s[3]
+	fmla	v6.4s, v23.4s, v30.s[3]
+	fmla	v3.4s, v27.4s, v31.s[3]
+	fmla	v7.4s, v23.4s, v31.s[3]
 
 	cmp		w8, #4
 	bgt		1b
@@ -608,52 +608,52 @@ NAME:
 	ldp		q22, q23, [x13, #(2*16)]
 
 	// unroll 0
-	fmla	v0.4s, v24.4s, v28.4s[0]
-	fmla	v4.4s, v20.4s, v28.4s[0]
-	fmla	v1.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v20.4s, v29.4s[0]
-	fmla	v2.4s, v24.4s, v30.4s[0]
+	fmla	v0.4s, v24.4s, v28.s[0]
+	fmla	v4.4s, v20.4s, v28.s[0]
+	fmla	v1.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v20.4s, v29.s[0]
+	fmla	v2.4s, v24.4s, v30.s[0]
 	add		x11, x11, x12
-	fmla	v6.4s, v20.4s, v30.4s[0]
+	fmla	v6.4s, v20.4s, v30.s[0]
 //	prfm	PLDL1KEEP, [x13, #128]
-	fmla	v3.4s, v24.4s, v31.4s[0]
+	fmla	v3.4s, v24.4s, v31.s[0]
 //	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v7.4s, v20.4s, v31.4s[0]
+	fmla	v7.4s, v20.4s, v31.s[0]
 //	prfm	PLDL1KEEP, [x11, x12]
 
 
 	// unroll 1
-	fmla	v0.4s, v25.4s, v28.4s[1]
-	fmla	v4.4s, v21.4s, v28.4s[1]
+	fmla	v0.4s, v25.4s, v28.s[1]
+	fmla	v4.4s, v21.4s, v28.s[1]
 	add		x9, x9, #64
-	fmla	v1.4s, v25.4s, v29.4s[1]
-	fmla	v5.4s, v21.4s, v29.4s[1]
-	fmla	v2.4s, v25.4s, v30.4s[1]
-	fmla	v6.4s, v21.4s, v30.4s[1]
+	fmla	v1.4s, v25.4s, v29.s[1]
+	fmla	v5.4s, v21.4s, v29.s[1]
+	fmla	v2.4s, v25.4s, v30.s[1]
+	fmla	v6.4s, v21.4s, v30.s[1]
 	add		x13, x13, #64
-	fmla	v3.4s, v25.4s, v31.4s[1]
-	fmla	v7.4s, v21.4s, v31.4s[1]
+	fmla	v3.4s, v25.4s, v31.s[1]
+	fmla	v7.4s, v21.4s, v31.s[1]
 
 	// unroll 2
-	fmla	v0.4s, v26.4s, v28.4s[2]
-	fmla	v4.4s, v22.4s, v28.4s[2]
-	fmla	v1.4s, v26.4s, v29.4s[2]
-	fmla	v5.4s, v22.4s, v29.4s[2]
-	fmla	v2.4s, v26.4s, v30.4s[2]
-	fmla	v6.4s, v22.4s, v30.4s[2]
-	fmla	v3.4s, v26.4s, v31.4s[2]
-	fmla	v7.4s, v22.4s, v31.4s[2]
+	fmla	v0.4s, v26.4s, v28.s[2]
+	fmla	v4.4s, v22.4s, v28.s[2]
+	fmla	v1.4s, v26.4s, v29.s[2]
+	fmla	v5.4s, v22.4s, v29.s[2]
+	fmla	v2.4s, v26.4s, v30.s[2]
+	fmla	v6.4s, v22.4s, v30.s[2]
+	fmla	v3.4s, v26.4s, v31.s[2]
+	fmla	v7.4s, v22.4s, v31.s[2]
 	sub		w8, w8, #4
 
 	// unroll 3
-	fmla	v0.4s, v27.4s, v28.4s[3]
-	fmla	v4.4s, v23.4s, v28.4s[3]
-	fmla	v1.4s, v27.4s, v29.4s[3]
-	fmla	v5.4s, v23.4s, v29.4s[3]
-	fmla	v2.4s, v27.4s, v30.4s[3]
-	fmla	v6.4s, v23.4s, v30.4s[3]
-	fmla	v3.4s, v27.4s, v31.4s[3]
-	fmla	v7.4s, v23.4s, v31.4s[3]
+	fmla	v0.4s, v27.4s, v28.s[3]
+	fmla	v4.4s, v23.4s, v28.s[3]
+	fmla	v1.4s, v27.4s, v29.s[3]
+	fmla	v5.4s, v23.4s, v29.s[3]
+	fmla	v2.4s, v27.4s, v30.s[3]
+	fmla	v6.4s, v23.4s, v30.s[3]
+	fmla	v3.4s, v27.4s, v31.s[3]
+	fmla	v7.4s, v23.4s, v31.s[3]
 
 	b		2f // return
 
@@ -676,14 +676,14 @@ NAME:
 	ldr		s31, [x11, #(3*16)]
 	ldr		q24, [x9], #16
 	ldr		q20, [x13], #16
-	fmla	v0.4s, v24.4s, v28.4s[0]
-	fmla	v4.4s, v20.4s, v28.4s[0]
-	fmla	v1.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v20.4s, v29.4s[0]
-	fmla	v2.4s, v24.4s, v30.4s[0]
-	fmla	v6.4s, v20.4s, v30.4s[0]
-	fmla	v3.4s, v24.4s, v31.4s[0]
-	fmla	v7.4s, v20.4s, v31.4s[0]
+	fmla	v0.4s, v24.4s, v28.s[0]
+	fmla	v4.4s, v20.4s, v28.s[0]
+	fmla	v1.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v20.4s, v29.s[0]
+	fmla	v2.4s, v24.4s, v30.s[0]
+	fmla	v6.4s, v20.4s, v30.s[0]
+	fmla	v3.4s, v24.4s, v31.s[0]
+	fmla	v7.4s, v20.4s, v31.s[0]
 
 	add		x11, x11, #4
 
@@ -729,56 +729,56 @@ NAME:
 1:
 
 	// unroll 0
-	fmla	v0.4s, v24.4s, v28.4s[0]
-	fmla	v4.4s, v20.4s, v28.4s[0]
+	fmla	v0.4s, v24.4s, v28.s[0]
+	fmla	v4.4s, v20.4s, v28.s[0]
 	ldp		q26, q27, [x9, #(2*16)]
-	fmla	v1.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v20.4s, v29.4s[0]
+	fmla	v1.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v20.4s, v29.s[0]
 	ldp		q22, q23, [x13, #(2*16)]
-	fmla	v2.4s, v24.4s, v30.4s[0]
+	fmla	v2.4s, v24.4s, v30.s[0]
 	add		x11, x11, x12
-	fmla	v6.4s, v20.4s, v30.4s[0]
+	fmla	v6.4s, v20.4s, v30.s[0]
 	prfm	PLDL1KEEP, [x13, #128]
-	fmla	v3.4s, v24.4s, v31.4s[0]
+	fmla	v3.4s, v24.4s, v31.s[0]
 	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v7.4s, v20.4s, v31.4s[0]
+	fmla	v7.4s, v20.4s, v31.s[0]
 	prfm	PLDL1KEEP, [x11, x12]
 
 	// unroll 1
-	fmla	v0.4s, v25.4s, v28.4s[1]
-	fmla	v4.4s, v21.4s, v28.4s[1]
+	fmla	v0.4s, v25.4s, v28.s[1]
+	fmla	v4.4s, v21.4s, v28.s[1]
 	add		x9, x9, #64
-	fmla	v1.4s, v25.4s, v29.4s[1]
-	fmla	v5.4s, v21.4s, v29.4s[1]
-	fmla	v2.4s, v25.4s, v30.4s[1]
-	fmla	v6.4s, v21.4s, v30.4s[1]
+	fmla	v1.4s, v25.4s, v29.s[1]
+	fmla	v5.4s, v21.4s, v29.s[1]
+	fmla	v2.4s, v25.4s, v30.s[1]
+	fmla	v6.4s, v21.4s, v30.s[1]
 	add		x13, x13, #64
-	fmla	v3.4s, v25.4s, v31.4s[1]
-	fmla	v7.4s, v21.4s, v31.4s[1]
+	fmla	v3.4s, v25.4s, v31.s[1]
+	fmla	v7.4s, v21.4s, v31.s[1]
 	ldp		q24, q25, [x9, #(0*16)]
 
 	// unroll 2
-	fmla	v0.4s, v26.4s, v28.4s[2]
-	fmla	v4.4s, v22.4s, v28.4s[2]
+	fmla	v0.4s, v26.4s, v28.s[2]
+	fmla	v4.4s, v22.4s, v28.s[2]
 	ldp		q20, q21, [x13, #(0*16)]
-	fmla	v1.4s, v26.4s, v29.4s[2]
-	fmla	v5.4s, v22.4s, v29.4s[2]
-	fmla	v2.4s, v26.4s, v30.4s[2]
-	fmla	v6.4s, v22.4s, v30.4s[2]
-	fmla	v3.4s, v26.4s, v31.4s[2]
-	fmla	v7.4s, v22.4s, v31.4s[2]
+	fmla	v1.4s, v26.4s, v29.s[2]
+	fmla	v5.4s, v22.4s, v29.s[2]
+	fmla	v2.4s, v26.4s, v30.s[2]
+	fmla	v6.4s, v22.4s, v30.s[2]
+	fmla	v3.4s, v26.4s, v31.s[2]
+	fmla	v7.4s, v22.4s, v31.s[2]
 	sub		w8, w8, #4
 
 	// unroll 3
-	fmla	v0.4s, v27.4s, v28.4s[3]
-	fmla	v4.4s, v23.4s, v28.4s[3]
-	fmla	v1.4s, v27.4s, v29.4s[3]
-	fmla	v5.4s, v23.4s, v29.4s[3]
+	fmla	v0.4s, v27.4s, v28.s[3]
+	fmla	v4.4s, v23.4s, v28.s[3]
+	fmla	v1.4s, v27.4s, v29.s[3]
+	fmla	v5.4s, v23.4s, v29.s[3]
 	ldp		q28, q29, [x11, #(0*16)]
-	fmla	v2.4s, v27.4s, v30.4s[3]
-	fmla	v6.4s, v23.4s, v30.4s[3]
-	fmla	v3.4s, v27.4s, v31.4s[3]
-	fmla	v7.4s, v23.4s, v31.4s[3]
+	fmla	v2.4s, v27.4s, v30.s[3]
+	fmla	v6.4s, v23.4s, v30.s[3]
+	fmla	v3.4s, v27.4s, v31.s[3]
+	fmla	v7.4s, v23.4s, v31.s[3]
 	ldp		q30, q31, [x11, #(2*16)]
 
 	cmp		w8, #4
@@ -790,57 +790,57 @@ NAME:
 	ble		4f
 
 	// unroll 0
-	fmla	v0.4s, v24.4s, v28.4s[0]
-	fmla	v4.4s, v20.4s, v28.4s[0]
+	fmla	v0.4s, v24.4s, v28.s[0]
+	fmla	v4.4s, v20.4s, v28.s[0]
 	ldp		q26, q27, [x9, #(2*16)]
-	fmla	v1.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v20.4s, v29.4s[0]
+	fmla	v1.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v20.4s, v29.s[0]
 	ldp		q22, q23, [x13, #(2*16)]
-	fmla	v2.4s, v24.4s, v30.4s[0]
+	fmla	v2.4s, v24.4s, v30.s[0]
 	add		x11, x11, x12
-	fmla	v6.4s, v20.4s, v30.4s[0]
+	fmla	v6.4s, v20.4s, v30.s[0]
 //	prfm	PLDL1KEEP, [x13, #128]
-	fmla	v3.4s, v24.4s, v31.4s[0]
+	fmla	v3.4s, v24.4s, v31.s[0]
 //	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v7.4s, v20.4s, v31.4s[0]
+	fmla	v7.4s, v20.4s, v31.s[0]
 //	prfm	PLDL1KEEP, [x11, x12]
 
 
 	// unroll 1
-	fmla	v0.4s, v25.4s, v28.4s[1]
-	fmla	v4.4s, v21.4s, v28.4s[1]
+	fmla	v0.4s, v25.4s, v28.s[1]
+	fmla	v4.4s, v21.4s, v28.s[1]
 	add		x9, x9, #64
-	fmla	v1.4s, v25.4s, v29.4s[1]
-	fmla	v5.4s, v21.4s, v29.4s[1]
-	fmla	v2.4s, v25.4s, v30.4s[1]
-	fmla	v6.4s, v21.4s, v30.4s[1]
+	fmla	v1.4s, v25.4s, v29.s[1]
+	fmla	v5.4s, v21.4s, v29.s[1]
+	fmla	v2.4s, v25.4s, v30.s[1]
+	fmla	v6.4s, v21.4s, v30.s[1]
 	add		x13, x13, #64
-	fmla	v3.4s, v25.4s, v31.4s[1]
-	fmla	v7.4s, v21.4s, v31.4s[1]
+	fmla	v3.4s, v25.4s, v31.s[1]
+	fmla	v7.4s, v21.4s, v31.s[1]
 //	ldp		q24, q25, [x9, #(0*16)]
 
 	// unroll 2
-	fmla	v0.4s, v26.4s, v28.4s[2]
-	fmla	v4.4s, v22.4s, v28.4s[2]
+	fmla	v0.4s, v26.4s, v28.s[2]
+	fmla	v4.4s, v22.4s, v28.s[2]
 //	ldp		q20, q21, [x13, #(0*16)]
-	fmla	v1.4s, v26.4s, v29.4s[2]
-	fmla	v5.4s, v22.4s, v29.4s[2]
-	fmla	v2.4s, v26.4s, v30.4s[2]
-	fmla	v6.4s, v22.4s, v30.4s[2]
-	fmla	v3.4s, v26.4s, v31.4s[2]
-	fmla	v7.4s, v22.4s, v31.4s[2]
+	fmla	v1.4s, v26.4s, v29.s[2]
+	fmla	v5.4s, v22.4s, v29.s[2]
+	fmla	v2.4s, v26.4s, v30.s[2]
+	fmla	v6.4s, v22.4s, v30.s[2]
+	fmla	v3.4s, v26.4s, v31.s[2]
+	fmla	v7.4s, v22.4s, v31.s[2]
 	sub		w8, w8, #4
 
 	// unroll 3
-	fmla	v0.4s, v27.4s, v28.4s[3]
-	fmla	v4.4s, v23.4s, v28.4s[3]
-	fmla	v1.4s, v27.4s, v29.4s[3]
-	fmla	v5.4s, v23.4s, v29.4s[3]
+	fmla	v0.4s, v27.4s, v28.s[3]
+	fmla	v4.4s, v23.4s, v28.s[3]
+	fmla	v1.4s, v27.4s, v29.s[3]
+	fmla	v5.4s, v23.4s, v29.s[3]
 //	ldp		q28, q29, [x11, #(0*16)]
-	fmla	v2.4s, v27.4s, v30.4s[3]
-	fmla	v6.4s, v23.4s, v30.4s[3]
-	fmla	v3.4s, v27.4s, v31.4s[3]
-	fmla	v7.4s, v23.4s, v31.4s[3]
+	fmla	v2.4s, v27.4s, v30.s[3]
+	fmla	v6.4s, v23.4s, v30.s[3]
+	fmla	v3.4s, v27.4s, v31.s[3]
+	fmla	v7.4s, v23.4s, v31.s[3]
 //	ldp		q30, q31, [x11, #(2*16)]
 
 	b		2f // return
@@ -864,14 +864,14 @@ NAME:
 	ldr		s31, [x11, #(3*16)]
 	ldr		q24, [x9], #16
 	ldr		q20, [x13], #16
-	fmla	v0.4s, v24.4s, v28.4s[0]
-	fmla	v4.4s, v20.4s, v28.4s[0]
-	fmla	v1.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v20.4s, v29.4s[0]
-	fmla	v2.4s, v24.4s, v30.4s[0]
-	fmla	v6.4s, v20.4s, v30.4s[0]
-	fmla	v3.4s, v24.4s, v31.4s[0]
-	fmla	v7.4s, v20.4s, v31.4s[0]
+	fmla	v0.4s, v24.4s, v28.s[0]
+	fmla	v4.4s, v20.4s, v28.s[0]
+	fmla	v1.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v20.4s, v29.s[0]
+	fmla	v2.4s, v24.4s, v30.s[0]
+	fmla	v6.4s, v20.4s, v30.s[0]
+	fmla	v3.4s, v24.4s, v31.s[0]
+	fmla	v7.4s, v20.4s, v31.s[0]
 
 	add		x11, x11, #4
 
@@ -941,14 +941,14 @@ NAME:
 	ldr		s31, [x11, #(3*16)]
 	ldr		q24, [x9], #16
 	ldr		q20, [x14], #16
-	fmla	v0.4s, v24.4s, v28.4s[0]
-	fmla	v4.4s, v20.4s, v28.4s[0]
-	fmla	v1.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v20.4s, v29.4s[0]
-	fmla	v2.4s, v24.4s, v30.4s[0]
-	fmla	v6.4s, v20.4s, v30.4s[0]
-	fmla	v3.4s, v24.4s, v31.4s[0]
-	fmla	v7.4s, v20.4s, v31.4s[0]
+	fmla	v0.4s, v24.4s, v28.s[0]
+	fmla	v4.4s, v20.4s, v28.s[0]
+	fmla	v1.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v20.4s, v29.s[0]
+	fmla	v2.4s, v24.4s, v30.s[0]
+	fmla	v6.4s, v20.4s, v30.s[0]
+	fmla	v3.4s, v24.4s, v31.s[0]
+	fmla	v7.4s, v20.4s, v31.s[0]
 
 	add		x11, x11, #4
 
@@ -1005,78 +1005,78 @@ NAME:
 #if 1
 
 	ldr			s16, [x9, #0] // E_inv[0]
-	fmul		v0.4s, v0.4s, v16.4s[0]
-	fmul		v4.4s, v4.4s, v16.4s[0]
+	fmul		v0.4s, v0.4s, v16.s[0]
+	fmul		v4.4s, v4.4s, v16.s[0]
 	ldr			s16, [x8, #4] // E[1+4*0]
-	fmls		v1.4s, v0.4s, v16.4s[0]
-	fmls		v5.4s, v4.4s, v16.4s[0]
+	fmls		v1.4s, v0.4s, v16.s[0]
+	fmls		v5.4s, v4.4s, v16.s[0]
 	ldr			s16, [x8, #8] // E[2+4*0]
-	fmls		v2.4s, v0.4s, v16.4s[0]
-	fmls		v6.4s, v4.4s, v16.4s[0]
+	fmls		v2.4s, v0.4s, v16.s[0]
+	fmls		v6.4s, v4.4s, v16.s[0]
 	ldr			s16, [x8, #12] // E[3+4*0]
-	fmls		v3.4s, v0.4s, v16.4s[0]
-	fmls		v7.4s, v4.4s, v16.4s[0]
+	fmls		v3.4s, v0.4s, v16.s[0]
+	fmls		v7.4s, v4.4s, v16.s[0]
 
 	ldr			s16, [x9, #4] // E_inv[1]
-	fmul		v1.4s, v1.4s, v16.4s[0]
-	fmul		v5.4s, v5.4s, v16.4s[0]
+	fmul		v1.4s, v1.4s, v16.s[0]
+	fmul		v5.4s, v5.4s, v16.s[0]
 	ldr			s16, [x8, #24] // E[2+4*1]
-	fmls		v2.4s, v1.4s, v16.4s[0]
-	fmls		v6.4s, v5.4s, v16.4s[0]
+	fmls		v2.4s, v1.4s, v16.s[0]
+	fmls		v6.4s, v5.4s, v16.s[0]
 	ldr			s16, [x8, #28] // E[3+4*1]
-	fmls		v3.4s, v1.4s, v16.4s[0]
-	fmls		v7.4s, v5.4s, v16.4s[0]
+	fmls		v3.4s, v1.4s, v16.s[0]
+	fmls		v7.4s, v5.4s, v16.s[0]
 
 	ldr			s16, [x9, #8] // E_inv[2]
-	fmul		v2.4s, v2.4s, v16.4s[0]
-	fmul		v6.4s, v6.4s, v16.4s[0]
+	fmul		v2.4s, v2.4s, v16.s[0]
+	fmul		v6.4s, v6.4s, v16.s[0]
 	ldr			s16, [x8, #44] // E[3+4*2]
-	fmls		v3.4s, v2.4s, v16.4s[0]
-	fmls		v7.4s, v6.4s, v16.4s[0]
+	fmls		v3.4s, v2.4s, v16.s[0]
+	fmls		v7.4s, v6.4s, v16.s[0]
 
 	ldr			s16, [x9, #12] // E_inv[3]
-	fmul		v3.4s, v3.4s, v16.4s[0]
-	fmul		v7.4s, v7.4s, v16.4s[0]
+	fmul		v3.4s, v3.4s, v16.s[0]
+	fmul		v7.4s, v7.4s, v16.s[0]
 
 #else
 
 	// first column
 	ldr			s16, [x9, #0] // E_inv[0]
-	fmul		v0.4s, v0.4s, v16.4s[0]
-	fmul		v4.4s, v4.4s, v16.4s[0]
+	fmul		v0.4s, v0.4s, v16.s[0]
+	fmul		v4.4s, v4.4s, v16.s[0]
 
 	// second column
 	ldr			s16, [x8, #4] // E[1+4*0]
-	fmls		v1.4s, v0.4s, v16.4s[0]
-	fmls		v5.4s, v4.4s, v16.4s[0]
+	fmls		v1.4s, v0.4s, v16.s[0]
+	fmls		v5.4s, v4.4s, v16.s[0]
 	ldr			s16, [x9, #4] // E_inv[1]
-	fmul		v1.4s, v1.4s, v16.4s[0]
-	fmul		v5.4s, v5.4s, v16.4s[0]
+	fmul		v1.4s, v1.4s, v16.s[0]
+	fmul		v5.4s, v5.4s, v16.s[0]
 
 	// third column
 	ldr			s16, [x8, #8] // E[2+4*0]
-	fmls		v2.4s, v0.4s, v16.4s[0]
-	fmls		v6.4s, v4.4s, v16.4s[0]
+	fmls		v2.4s, v0.4s, v16.s[0]
+	fmls		v6.4s, v4.4s, v16.s[0]
 	ldr			s16, [x8, #24] // E[2+4*1]
-	fmls		v2.4s, v1.4s, v16.4s[0]
-	fmls		v6.4s, v5.4s, v16.4s[0]
+	fmls		v2.4s, v1.4s, v16.s[0]
+	fmls		v6.4s, v5.4s, v16.s[0]
 	ldr			s16, [x9, #8] // E_inv[2]
-	fmul		v2.4s, v2.4s, v16.4s[0]
-	fmul		v6.4s, v6.4s, v16.4s[0]
+	fmul		v2.4s, v2.4s, v16.s[0]
+	fmul		v6.4s, v6.4s, v16.s[0]
 
 	// forth column
 	ldr			s16, [x8, #12] // E[3+4*0]
-	fmls		v3.4s, v0.4s, v16.4s[0]
-	fmls		v7.4s, v4.4s, v16.4s[0]
+	fmls		v3.4s, v0.4s, v16.s[0]
+	fmls		v7.4s, v4.4s, v16.s[0]
 	ldr			s16, [x8, #28] // E[3+4*1]
-	fmls		v3.4s, v1.4s, v16.4s[0]
-	fmls		v7.4s, v5.4s, v16.4s[0]
+	fmls		v3.4s, v1.4s, v16.s[0]
+	fmls		v7.4s, v5.4s, v16.s[0]
 	ldr			s16, [x8, #44] // E[3+4*2]
-	fmls		v3.4s, v2.4s, v16.4s[0]
-	fmls		v7.4s, v6.4s, v16.4s[0]
+	fmls		v3.4s, v2.4s, v16.s[0]
+	fmls		v7.4s, v6.4s, v16.s[0]
 	ldr			s16, [x9, #12] // E_inv[3]
-	fmul		v3.4s, v3.4s, v16.4s[0]
-	fmul		v7.4s, v7.4s, v16.4s[0]
+	fmul		v3.4s, v3.4s, v16.s[0]
+	fmul		v7.4s, v7.4s, v16.s[0]
 
 #endif
 
@@ -1119,47 +1119,47 @@ NAME:
 	
 	// first column
 	ldr			s16, [x9, #0] // E_inv[0]
-	fmul		v0.4s, v0.4s, v16.4s[0]
-	fmul		v4.4s, v4.4s, v16.4s[0]
+	fmul		v0.4s, v0.4s, v16.s[0]
+	fmul		v4.4s, v4.4s, v16.s[0]
 	cmp			w10, #2
 	blt			0f // return
 
 	// second column
 	ldr			s16, [x8, #4] // E[1+4*0]
-	fmls		v1.4s, v0.4s, v16.4s[0]
-	fmls		v5.4s, v4.4s, v16.4s[0]
+	fmls		v1.4s, v0.4s, v16.s[0]
+	fmls		v5.4s, v4.4s, v16.s[0]
 	ldr			s16, [x9, #4] // E_inv[1]
-	fmul		v1.4s, v1.4s, v16.4s[0]
-	fmul		v5.4s, v5.4s, v16.4s[0]
+	fmul		v1.4s, v1.4s, v16.s[0]
+	fmul		v5.4s, v5.4s, v16.s[0]
 	cmp			w10, #3
 	blt			0f // return
 
 	// third column
 	ldr			s16, [x8, #8] // E[2+4*0]
-	fmls		v2.4s, v0.4s, v16.4s[0]
-	fmls		v6.4s, v4.4s, v16.4s[0]
+	fmls		v2.4s, v0.4s, v16.s[0]
+	fmls		v6.4s, v4.4s, v16.s[0]
 	ldr			s16, [x8, #24] // E[2+4*1]
-	fmls		v2.4s, v1.4s, v16.4s[0]
-	fmls		v6.4s, v5.4s, v16.4s[0]
+	fmls		v2.4s, v1.4s, v16.s[0]
+	fmls		v6.4s, v5.4s, v16.s[0]
 	ldr			s16, [x9, #8] // E_inv[2]
-	fmul		v2.4s, v2.4s, v16.4s[0]
-	fmul		v6.4s, v6.4s, v16.4s[0]
+	fmul		v2.4s, v2.4s, v16.s[0]
+	fmul		v6.4s, v6.4s, v16.s[0]
 	cmp			w10, #4
 	blt			0f // return
 
 	// forth column
 	ldr			s16, [x8, #12] // E[3+4*0]
-	fmls		v3.4s, v0.4s, v16.4s[0]
-	fmls		v7.4s, v4.4s, v16.4s[0]
+	fmls		v3.4s, v0.4s, v16.s[0]
+	fmls		v7.4s, v4.4s, v16.s[0]
 	ldr			s16, [x8, #28] // E[3+4*1]
-	fmls		v3.4s, v1.4s, v16.4s[0]
-	fmls		v7.4s, v5.4s, v16.4s[0]
+	fmls		v3.4s, v1.4s, v16.s[0]
+	fmls		v7.4s, v5.4s, v16.s[0]
 	ldr			s16, [x8, #44] // E[3+4*1]
-	fmls		v3.4s, v2.4s, v16.4s[0]
-	fmls		v7.4s, v6.4s, v16.4s[0]
+	fmls		v3.4s, v2.4s, v16.s[0]
+	fmls		v7.4s, v6.4s, v16.s[0]
 	ldr			s16, [x9, #12] // E_inv[2]
-	fmul		v3.4s, v3.4s, v16.4s[0]
-	fmul		v7.4s, v7.4s, v16.4s[0]
+	fmul		v3.4s, v3.4s, v16.s[0]
+	fmul		v7.4s, v7.4s, v16.s[0]
 
 0:
 
@@ -1196,59 +1196,59 @@ NAME:
 
 	// first column
 	ins			v17.s[0], v0.s[0]
-	fcmpe		s17, #0
+	fcmpe		s17, #0.0
 	ble			1f
 	fsqrt		s17, s17
 	fdiv		s18, s16, s17
 2:
 	str			s18, [x8, #0]
-	fmul		v0.4s, v0.4s, v18.4s[0]
-	fmul		v4.4s, v4.4s, v18.4s[0]
+	fmul		v0.4s, v0.4s, v18.s[0]
+	fmul		v4.4s, v4.4s, v18.s[0]
 
 	// second column
-	fmls		v1.4s, v0.4s, v0.4s[1]
-	fmls		v5.4s, v4.4s, v0.4s[1]
+	fmls		v1.4s, v0.4s, v0.s[1]
+	fmls		v5.4s, v4.4s, v0.s[1]
 	ins			v17.s[0], v1.s[1]
-	fcmpe		s17, #0
+	fcmpe		s17, #0.0
 	ble			3f
 	fsqrt		s17, s17
 	fdiv		s18, s16, s17
 4:
 	str			s18, [x8, #4]
-	fmul		v1.4s, v1.4s, v18.4s[0]
-	fmul		v5.4s, v5.4s, v18.4s[0]
+	fmul		v1.4s, v1.4s, v18.s[0]
+	fmul		v5.4s, v5.4s, v18.s[0]
 
 	// third column
-	fmls		v2.4s, v0.4s, v0.4s[2]
-	fmls		v6.4s, v4.4s, v0.4s[2]
-	fmls		v2.4s, v1.4s, v1.4s[2]
-	fmls		v6.4s, v5.4s, v1.4s[2]
+	fmls		v2.4s, v0.4s, v0.s[2]
+	fmls		v6.4s, v4.4s, v0.s[2]
+	fmls		v2.4s, v1.4s, v1.s[2]
+	fmls		v6.4s, v5.4s, v1.s[2]
 	ins			v17.s[0], v2.s[2]
-	fcmpe		s17, #0
+	fcmpe		s17, #0.0
 	ble			5f
 	fsqrt		s17, s17
 	fdiv		s18, s16, s17
 6:
 	str			s18, [x8, #8]
-	fmul		v2.4s, v2.4s, v18.4s[0]
-	fmul		v6.4s, v6.4s, v18.4s[0]
+	fmul		v2.4s, v2.4s, v18.s[0]
+	fmul		v6.4s, v6.4s, v18.s[0]
 
 	// fourth column
-	fmls		v3.4s, v0.4s, v0.4s[3]
-	fmls		v7.4s, v4.4s, v0.4s[3]
-	fmls		v3.4s, v1.4s, v1.4s[3]
-	fmls		v7.4s, v5.4s, v1.4s[3]
-	fmls		v3.4s, v2.4s, v2.4s[3]
-	fmls		v7.4s, v6.4s, v2.4s[3]
+	fmls		v3.4s, v0.4s, v0.s[3]
+	fmls		v7.4s, v4.4s, v0.s[3]
+	fmls		v3.4s, v1.4s, v1.s[3]
+	fmls		v7.4s, v5.4s, v1.s[3]
+	fmls		v3.4s, v2.4s, v2.s[3]
+	fmls		v7.4s, v6.4s, v2.s[3]
 	ins			v17.s[0], v3.s[3]
-	fcmpe		s17, #0
+	fcmpe		s17, #0.0
 	ble			7f
 	fsqrt		s17, s17
 	fdiv		s18, s16, s17
 8:
 	str			s18, [x8, #12]
-	fmul		v3.4s, v3.4s, v18.4s[0]
-	fmul		v7.4s, v7.4s, v18.4s[0]
+	fmul		v3.4s, v3.4s, v18.s[0]
+	fmul		v7.4s, v7.4s, v18.s[0]
 
 	b			0f
 
@@ -1304,65 +1304,65 @@ NAME:
 
 	// first column
 	ins			v17.s[0], v0.s[0]
-	fcmpe		s17, #0
+	fcmpe		s17, #0.0
 	ble			1f
 	fsqrt		s17, s17
 	fdiv		s18, s16, s17
 2:
 	str			s18, [x8, #0]
-	fmul		v0.4s, v0.4s, v18.4s[0]
-	fmul		v4.4s, v4.4s, v18.4s[0]
+	fmul		v0.4s, v0.4s, v18.s[0]
+	fmul		v4.4s, v4.4s, v18.s[0]
 	cmp		w9, #2
 	blt		0f // return
 
 	// second column
-	fmls		v1.4s, v0.4s, v0.4s[1]
-	fmls		v5.4s, v4.4s, v0.4s[1]
+	fmls		v1.4s, v0.4s, v0.s[1]
+	fmls		v5.4s, v4.4s, v0.s[1]
 	ins			v17.s[0], v1.s[1]
-	fcmpe		s17, #0
+	fcmpe		s17, #0.0
 	ble			3f
 	fsqrt		s17, s17
 	fdiv		s18, s16, s17
 4:
 	str			s18, [x8, #4]
-	fmul		v1.4s, v1.4s, v18.4s[0]
-	fmul		v5.4s, v5.4s, v18.4s[0]
+	fmul		v1.4s, v1.4s, v18.s[0]
+	fmul		v5.4s, v5.4s, v18.s[0]
 	cmp		w9, #3
 	blt		0f // return
 
 	// third column
-	fmls		v2.4s, v0.4s, v0.4s[2]
-	fmls		v6.4s, v4.4s, v0.4s[2]
-	fmls		v2.4s, v1.4s, v1.4s[2]
-	fmls		v6.4s, v5.4s, v1.4s[2]
+	fmls		v2.4s, v0.4s, v0.s[2]
+	fmls		v6.4s, v4.4s, v0.s[2]
+	fmls		v2.4s, v1.4s, v1.s[2]
+	fmls		v6.4s, v5.4s, v1.s[2]
 	ins			v17.s[0], v2.s[2]
-	fcmpe		s17, #0
+	fcmpe		s17, #0.0
 	ble			5f
 	fsqrt		s17, s17
 	fdiv		s18, s16, s17
 6:
 	str			s18, [x8, #8]
-	fmul		v2.4s, v2.4s, v18.4s[0]
-	fmul		v6.4s, v6.4s, v18.4s[0]
+	fmul		v2.4s, v2.4s, v18.s[0]
+	fmul		v6.4s, v6.4s, v18.s[0]
 	cmp		w9, #4
 	blt		0f // return
 
 	// fourth column
-	fmls		v3.4s, v0.4s, v0.4s[3]
-	fmls		v7.4s, v4.4s, v0.4s[3]
-	fmls		v3.4s, v1.4s, v1.4s[3]
-	fmls		v7.4s, v5.4s, v1.4s[3]
-	fmls		v3.4s, v2.4s, v2.4s[3]
-	fmls		v7.4s, v6.4s, v2.4s[3]
+	fmls		v3.4s, v0.4s, v0.s[3]
+	fmls		v7.4s, v4.4s, v0.s[3]
+	fmls		v3.4s, v1.4s, v1.s[3]
+	fmls		v7.4s, v5.4s, v1.s[3]
+	fmls		v3.4s, v2.4s, v2.s[3]
+	fmls		v7.4s, v6.4s, v2.s[3]
 	ins			v17.s[0], v3.s[3]
-	fcmpe		s17, #0
+	fcmpe		s17, #0.0
 	ble			7f
 	fsqrt		s17, s17
 	fdiv		s18, s16, s17
 8:
 	str			s18, [x8, #12]
-	fmul		v3.4s, v3.4s, v18.4s[0]
-	fmul		v7.4s, v7.4s, v18.4s[0]
+	fmul		v3.4s, v3.4s, v18.s[0]
+	fmul		v7.4s, v7.4s, v18.s[0]
 
 	b			0f
 
@@ -1416,31 +1416,31 @@ NAME:
 
 	ld1		{v29.4s}, [x9]
 
-	fmul	v0.4s, v0.4s, v28.4s[0]
-	fmul	v1.4s, v1.4s, v28.4s[0]
-	fmul	v2.4s, v2.4s, v28.4s[0]
-	fmul	v3.4s, v3.4s, v28.4s[0]
-	fmul	v4.4s, v4.4s, v28.4s[0]
-	fmul	v5.4s, v5.4s, v28.4s[0]
-	fmul	v6.4s, v6.4s, v28.4s[0]
-	fmul	v7.4s, v7.4s, v28.4s[0]
+	fmul	v0.4s, v0.4s, v28.s[0]
+	fmul	v1.4s, v1.4s, v28.s[0]
+	fmul	v2.4s, v2.4s, v28.s[0]
+	fmul	v3.4s, v3.4s, v28.s[0]
+	fmul	v4.4s, v4.4s, v28.s[0]
+	fmul	v5.4s, v5.4s, v28.s[0]
+	fmul	v6.4s, v6.4s, v28.s[0]
+	fmul	v7.4s, v7.4s, v28.s[0]
 
-	fcmpe	s29, #0
+	fcmpe	s29, #0.0
 	beq		0f
 
 	add		x12, x10, x11
 
 	ld1		{v24.4s, v25.4s, v26.4s, v27.4s}, [x10], #64
-	fmla	v0.4s, v24.4s, v29.4s[0]
-	fmla	v1.4s, v25.4s, v29.4s[0]
-	fmla	v2.4s, v26.4s, v29.4s[0]
-	fmla	v3.4s, v27.4s, v29.4s[0]
+	fmla	v0.4s, v24.4s, v29.s[0]
+	fmla	v1.4s, v25.4s, v29.s[0]
+	fmla	v2.4s, v26.4s, v29.s[0]
+	fmla	v3.4s, v27.4s, v29.s[0]
 
 	ld1		{v24.4s, v25.4s, v26.4s, v27.4s}, [x12], #64
-	fmla	v4.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v25.4s, v29.4s[0]
-	fmla	v6.4s, v26.4s, v29.4s[0]
-	fmla	v7.4s, v27.4s, v29.4s[0]
+	fmla	v4.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v25.4s, v29.s[0]
+	fmla	v6.4s, v26.4s, v29.s[0]
+	fmla	v7.4s, v27.4s, v29.s[0]
 
 0:
 
@@ -1483,22 +1483,22 @@ NAME:
 	fneg	v6.4s, v6.4s
 	fneg	v7.4s, v7.4s
 
-	fcmpe	s29, #0
+	fcmpe	s29, #0.0
 	beq		0f
 
 	add		x12, x9, x10
 
 	ld1		{v24.4s, v25.4s, v26.4s, v27.4s}, [x9], #64
-	fmla	v0.4s, v24.4s, v29.4s[0]
-	fmla	v1.4s, v25.4s, v29.4s[0]
-	fmla	v2.4s, v26.4s, v29.4s[0]
-	fmla	v3.4s, v27.4s, v29.4s[0]
+	fmla	v0.4s, v24.4s, v29.s[0]
+	fmla	v1.4s, v25.4s, v29.s[0]
+	fmla	v2.4s, v26.4s, v29.s[0]
+	fmla	v3.4s, v27.4s, v29.s[0]
 
 	ld1		{v24.4s, v25.4s, v26.4s, v27.4s}, [x12], #64
-	fmla	v4.4s, v24.4s, v29.4s[0]
-	fmla	v5.4s, v25.4s, v29.4s[0]
-	fmla	v6.4s, v26.4s, v29.4s[0]
-	fmla	v7.4s, v27.4s, v29.4s[0]
+	fmla	v4.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v25.4s, v29.s[0]
+	fmla	v6.4s, v26.4s, v29.s[0]
+	fmla	v7.4s, v27.4s, v29.s[0]
 
 0:
 

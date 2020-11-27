@@ -111,6 +111,12 @@ run:
 perf:
 	perf stat -e cpu-clock,instructions,cpu-cycles,bus-cycles,cache-misses,cache-references,L1-dcache-load-misses,L1-dcache-loads,L1-dcache-stores,LLC-load-misses,LLC-loads,LLC-stores,LLC-store-misses,dTLB-load-misses,dTLB-loads,dTLB-stores,dTLB-store-misses ./$(BINARY_DIR)/$(ONE_OBJS).out
 
+adb_push:
+	adb push ./$(BINARY_DIR)/$(ONE_OBJS).out /data/local/tmp/$(ONE_OBJS).out
+
+adb_run:
+	adb shell /data/local/tmp/$(ONE_OBJS).out
+
 clean:
 	rm -rf ./*.o
 	rm -rf ./*.out

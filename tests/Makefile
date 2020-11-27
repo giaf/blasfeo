@@ -129,7 +129,14 @@ run:
 	#
 
 update: build run
+
 full: common build run
+
+adb_push:
+	adb push ./$(BINARY_DIR)/$(ONE_OBJS).out /data/local/tmp/$(ONE_OBJS).out
+
+adb_run:
+	adb shell /data/local/tmp/$(ONE_OBJS).out
 
 clean:
 	rm -rf ./*.o

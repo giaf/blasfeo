@@ -1025,7 +1025,11 @@ void kernel_drowsw_lib(int kmax, double *pA, int lda, double *pC, int ldc);
 
 
 // larger kernels
+// 12
 void kernel_dgemm_nt_12xn_p0_lib44cc(int n, int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, double *A_p, double *B_p);
+void kernel_dgemm_nt_12xn_pl_lib44cc(int n, int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, double *A_p, double *B_p);
+// 8
+void kernel_dgemm_nt_8xn_p0_lib44cc(int n, int k, double *alpha, double *A, int sda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, double *A_p, double *B_p);
 
 
 

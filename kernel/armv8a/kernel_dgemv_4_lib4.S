@@ -136,36 +136,36 @@ NAME:
 	// unroll 0
 //	ldp		q16, q17, [x9, #(0*32)]
 //	ldr		q20, [x9, #(0*16)]
-	fmla	v0.2d, v16.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
 //	prfm	PLDL1KEEP, [x9, #(2*128+0)]
 //	ldr		q21, [x9, #(1*16)]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	add		x10, x10, #32
 
 	// unroll 1
 //	ldp		q18, q19, [x9, #(1*32)]
 //	ldr		q22, [x9, #(2*16)]
-	fmla	v8.2d, v18.2d, v24.2d[1]
+	fmla	v8.2d, v18.2d, v24.d[1]
 //	prfm	PLDL1KEEP, [x9, #(2*128+64)]
 //	ldr		q23, [x9, #(3*16)]
-	fmla	v9.2d, v19.2d, v24.2d[1]
+	fmla	v9.2d, v19.2d, v24.d[1]
 	sub		w8, w8, #4
 
 	// unroll 2
 //	ldp		q20, q21, [x9, #(2*32)]
 //	ldr		q16, [x9, #(4*16)]
-	fmla	v0.2d, v20.2d, v25.2d[0]
+	fmla	v0.2d, v20.2d, v25.d[0]
 //	prfm	PLDL1KEEP, [x10, #(1*32)]
 //	ldr		q17, [x9, #(5*16)]
-	fmla	v1.2d, v21.2d, v25.2d[0]
+	fmla	v1.2d, v21.2d, v25.d[0]
 	cmp		w8, #4
 
 	// unroll 3
 //	ldp		q22, q23, [x9, #(3*32)]
 //	ldr		q18, [x9, #(6*16)]
-	fmla	v8.2d, v22.2d, v25.2d[1]
+	fmla	v8.2d, v22.2d, v25.d[1]
 //	ldr		q19, [x9, #(7*16)]
-	fmla	v9.2d, v23.2d, v25.2d[1]
+	fmla	v9.2d, v23.2d, v25.d[1]
 	add		x9, x9, #128
 
 	bgt		1b
@@ -185,8 +185,8 @@ NAME:
 	// unroll 0
 	ld1		{v24.1d}, [x10], #8
 	ld1		{v16.2d, v17.2d}, [x9], #32
-	fmla	v0.2d, v16.2d, v24.2d[0]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 
 	sub		w8, w8, #1
 	cmp		w8, #0
@@ -409,25 +409,25 @@ NAME:
 	
 	ldp		q24, q25, [x8, #0]
 	ldr		d16, [x9, #0]
-	fmul	v17.2d, v0.2d, v16.2d[0]
-	fmls	v0.2d, v24.2d, v17.2d[0]
-	fmls	v1.2d, v25.2d, v17.2d[0]
+	fmul	v17.2d, v0.2d, v16.d[0]
+	fmls	v0.2d, v24.2d, v17.d[0]
+	fmls	v1.2d, v25.2d, v17.d[0]
 	ins		v0.d[0], v17.d[0]
 
 	ldr		q25, [x8, #(32+16)]
 	ldr		d16, [x9, #8]
-	fmul	v18.2d, v0.2d, v16.2d[0]
-	fmls	v1.2d, v25.2d, v18.2d[1]
+	fmul	v18.2d, v0.2d, v16.d[0]
+	fmls	v1.2d, v25.2d, v18.d[1]
 	ins		v0.d[1], v18.d[1]
 
 	ldr		q25, [x8, #(64+16)]
 	ldr		d16, [x9, #16]
-	fmul	v19.2d, v1.2d, v16.2d[0]
-	fmls	v1.2d, v25.2d, v19.2d[0]
+	fmul	v19.2d, v1.2d, v16.d[0]
+	fmls	v1.2d, v25.2d, v19.d[0]
 	ins		v1.d[0], v19.d[0]
 
 	ldr		d16, [x9, #24]
-	fmul	v20.2d, v1.2d, v16.2d[0]
+	fmul	v20.2d, v1.2d, v16.d[0]
 	ins		v1.d[1], v20.d[1]
 
 #if MACRO_LEVEL>=1
@@ -463,8 +463,8 @@ NAME:
 	ldp		q24, q25, [x8, #0]
 	ldr		d16, [x9, #0]
 	fmul	v17.2d, v0.2d, v16.2d
-	fmls	v0.2d, v24.2d, v17.2d[0]
-	fmls	v1.2d, v25.2d, v17.2d[0]
+	fmls	v0.2d, v24.2d, v17.d[0]
+	fmls	v1.2d, v25.2d, v17.d[0]
 	ins		v0.d[0], v17.d[0]
 
 	cmp		w10, #2
@@ -472,8 +472,8 @@ NAME:
 
 	ldr		q25, [x8, #(32+16)]
 	ldr		d16, [x9, #8]
-	fmul	v18.2d, v0.2d, v16.2d[0]
-	fmls	v1.2d, v25.2d, v18.2d[1]
+	fmul	v18.2d, v0.2d, v16.d[0]
+	fmls	v1.2d, v25.2d, v18.d[1]
 	ins		v0.d[1], v18.d[1]
 
 	cmp		w10, #3
@@ -481,15 +481,15 @@ NAME:
 
 	ldr		q25, [x8, #(64+16)]
 	ldr		d16, [x9, #16]
-	fmul	v19.2d, v1.2d, v16.2d[0]
-	fmls	v1.2d, v25.2d, v19.2d[0]
+	fmul	v19.2d, v1.2d, v16.d[0]
+	fmls	v1.2d, v25.2d, v19.d[0]
 	ins		v1.d[0], v19.d[0]
 
 	cmp		w10, #4
 	blt		0f // return
 
 	ldr		d16, [x9, #24]
-	fmul	v20.2d, v1.2d, v16.2d[0]
+	fmul	v20.2d, v1.2d, v16.d[0]
 	ins		v1.d[1], v20.d[1]
 
 0:
@@ -524,28 +524,28 @@ NAME:
 #endif
 
 	ldr		d16, [x9, #24]
-	fmul	v20.2d, v1.2d, v16.2d[0]
+	fmul	v20.2d, v1.2d, v16.d[0]
 
 	ldr		d25, [x8, #(2*32+24)]
 	ldr		d16, [x9, #16]
-	fmls	v1.2d, v25.2d, v20.2d[1]
-	fmul	v1.2d, v1.2d, v16.2d[0]
+	fmls	v1.2d, v25.2d, v20.d[1]
+	fmul	v1.2d, v1.2d, v16.d[0]
 	ins		v1.d[1], v20.d[1]
 
 	ldr		q24, [x8, #(0*32+16)]
 	ldr		q25, [x8, #(1*32+16)]
 	trn1	v26.2d, v24.2d, v25.2d
 	trn2	v27.2d, v24.2d, v25.2d
-	fmls	v0.2d, v26.2d, v1.2d[0]
-	fmls	v0.2d, v27.2d, v1.2d[1]
+	fmls	v0.2d, v26.2d, v1.d[0]
+	fmls	v0.2d, v27.2d, v1.d[1]
 
 	ldr		d16, [x9, #8]
-	fmul	v20.2d, v0.2d, v16.2d[0]
+	fmul	v20.2d, v0.2d, v16.d[0]
 
 	ldr		d25, [x8, #(0+8)]
 	ldr		d16, [x9, #0]
-	fmls	v0.2d, v25.2d, v20.2d[1]
-	fmul	v0.2d, v0.2d, v16.2d[0]
+	fmls	v0.2d, v25.2d, v20.d[1]
+	fmul	v0.2d, v0.2d, v16.d[0]
 	ins		v0.d[1], v20.d[1]
 
 #if MACRO_LEVEL>=1
@@ -608,15 +608,15 @@ NAME:
 
 	ldr		d29, [x9]
 
-	fmul	v0.2d, v0.2d, v28.2d[0]
-	fmul	v1.2d, v1.2d, v28.2d[0]
+	fmul	v0.2d, v0.2d, v28.d[0]
+	fmul	v1.2d, v1.2d, v28.d[0]
 
-	fcmpe	d29, #0
+	fcmpe	d29, #0.0
 	beq		0f
 
 	ldp		q24, q25, [x10, #0]
-	fmla	v0.2d, v24.2d, v29.2d[0]
-	fmla	v1.2d, v25.2d, v29.2d[0]
+	fmla	v0.2d, v24.2d, v29.d[0]
+	fmla	v1.2d, v25.2d, v29.d[0]
 
 0:
 

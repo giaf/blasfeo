@@ -104,320 +104,6 @@ NAME:
 // x9   <- A
 // x10  <- sda
 // x11  <- B
-// x12  <- A_p
-//
-// output arguments:
-
-#if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_ADD_NT_8X4_P_LIB4
-#else
-	.align	4
-	FUN_START(inner_kernel_gemm_add_nt_8x4_p_lib4)
-#endif
-
-
-
-	// early return
-	cmp		w8, #0
-	ble		2f // return
-
-	add		x13, x9, x10
-
-	add		x14, x12, x10 // p
-
-	// prefetch
-	prfm	PLDL1KEEP, [x11, #0]
-	prfm	PLDL1KEEP, [x11, #64]
-	prfm	PLDL1KEEP, [x9, #0]
-	prfm	PLDL1KEEP, [x13, #0]
-	prfm	PLDL1KEEP, [x9, #64]
-	prfm	PLDL1KEEP, [x13, #64]
-
-	prfm	PLDL1KEEP, [x12, #0]
-	prfm	PLDL1KEEP, [x14, #0]
-	prfm	PLDL1KEEP, [x12, #64]
-	prfm	PLDL1KEEP, [x14, #64]
-
-	// preload
-	ldp		q24, q25, [x11, #(0*8+0*32)]
-	ldp		q26, q27, [x11, #(0*8+1*32)]
-	ldp		q28, q29, [x11, #(0*8+2*32)]
-	ldp		q30, q31, [x11, #(0*8+3*32)]
-	ldp		q16, q17, [x9, #(0*8+0*32)]
-	ldp		q20, q21, [x13, #(0*8+0*32)]
-
-	cmp		w8, #4
-	ble		0f // consider clean up loop
-
-	// prefetch
-
-	// main loop
-1:
-	
-	// unroll 0
-	fmla	v0.2d, v16.2d, v24.2d[0]
-	fmla	v1.2d, v17.2d, v24.2d[0]
-	ldp		q18, q19, [x9, #(0*8+1*32)]
-	fmla	v8.2d, v20.2d, v24.2d[0]
-	fmla	v9.2d, v21.2d, v24.2d[0]
-	ldp		q22, q23, [x13, #(0*8+1*32)]
-	fmla	v2.2d, v16.2d, v24.2d[1]
-	fmla	v3.2d, v17.2d, v24.2d[1]
-	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v10.2d, v20.2d, v24.2d[1]
-	fmla	v11.2d, v21.2d, v24.2d[1]
-	prfm	PLDL1KEEP, [x13, #128]
-	fmla	v4.2d, v16.2d, v25.2d[0]
-	fmla	v5.2d, v17.2d, v25.2d[0]
-	prfm	PLDL1KEEP, [x9, #192]
-	fmla	v12.2d, v20.2d, v25.2d[0]
-	fmla	v13.2d, v21.2d, v25.2d[0]
-	prfm	PLDL1KEEP, [x9, #192]
-	fmla	v6.2d, v16.2d, v25.2d[1]
-	fmla	v7.2d, v17.2d, v25.2d[1]
-	prfm	PLDL1KEEP, [x11, #128]
-	fmla	v14.2d, v20.2d, v25.2d[1]
-	fmla	v15.2d, v21.2d, v25.2d[1]
-	prfm	PLDL1KEEP, [x11, #192]
-
-	// unroll 1
-	fmla	v0.2d, v18.2d, v26.2d[0]
-	fmla	v1.2d, v19.2d, v26.2d[0]
-	ldp		q16, q17, [x9, #(0*8+2*32)]
-	fmla	v8.2d, v22.2d, v26.2d[0]
-	fmla	v9.2d, v23.2d, v26.2d[0]
-	ldp		q20, q21, [x13, #(0*8+2*32)]
-	fmla	v2.2d, v18.2d, v26.2d[1]
-	fmla	v3.2d, v19.2d, v26.2d[1]
-	fmla	v10.2d, v22.2d, v26.2d[1]
-	fmla	v11.2d, v23.2d, v26.2d[1]
-	fmla	v4.2d, v18.2d, v27.2d[0]
-	fmla	v5.2d, v19.2d, v27.2d[0]
-	fmla	v12.2d, v22.2d, v27.2d[0]
-	fmla	v13.2d, v23.2d, v27.2d[0]
-	add		x11, x11, #128
-	fmla	v6.2d, v18.2d, v27.2d[1]
-	fmla	v7.2d, v19.2d, v27.2d[1]
-	sub		w8, w8, #4
-	fmla	v14.2d, v22.2d, v27.2d[1]
-	fmla	v15.2d, v23.2d, v27.2d[1]
-
-	// unroll 2
-	fmla	v0.2d, v16.2d, v28.2d[0]
-	fmla	v1.2d, v17.2d, v28.2d[0]
-	ldp		q18, q19, [x9, #(0*8+3*32)]
-	fmla	v8.2d, v20.2d, v28.2d[0]
-	fmla	v9.2d, v21.2d, v28.2d[0]
-	ldp		q22, q23, [x13, #(0*8+3*32)]
-	fmla	v2.2d, v16.2d, v28.2d[1]
-	fmla	v3.2d, v17.2d, v28.2d[1]
-	fmla	v10.2d, v20.2d, v28.2d[1]
-	fmla	v11.2d, v21.2d, v28.2d[1]
-	add		x9, x9, #128
-	fmla	v4.2d, v16.2d, v29.2d[0]
-	fmla	v5.2d, v17.2d, v29.2d[0]
-	add		x13, x13, #128
-	fmla	v12.2d, v20.2d, v29.2d[0]
-	fmla	v13.2d, v21.2d, v29.2d[0]
-	cmp		w8, #4
-	fmla	v6.2d, v16.2d, v29.2d[1]
-	fmla	v7.2d, v17.2d, v29.2d[1]
-	ldp		q16, q17, [x9, #(0*8+0*32)]
-	fmla	v14.2d, v20.2d, v29.2d[1]
-	fmla	v15.2d, v21.2d, v29.2d[1]
-	ldp		q20, q21, [x13, #(0*8+0*32)]
-
-	// unroll 3
-	fmla	v0.2d, v18.2d, v30.2d[0]
-	fmla	v1.2d, v19.2d, v30.2d[0]
-	prfm	PLDL2KEEP, [x12, #0]
-	fmla	v8.2d, v22.2d, v30.2d[0]
-	fmla	v9.2d, v23.2d, v30.2d[0]
-	ldp		q24, q25, [x11, #(0*8+0*32)]
-	fmla	v2.2d, v18.2d, v30.2d[1]
-	fmla	v3.2d, v19.2d, v30.2d[1]
-	prfm	PLDL2KEEP, [x14, #0]
-	fmla	v10.2d, v22.2d, v30.2d[1]
-	fmla	v11.2d, v23.2d, v30.2d[1]
-	ldp		q26, q27, [x11, #(0*8+1*32)]
-	fmla	v4.2d, v18.2d, v31.2d[0]
-	prfm	PLDL2KEEP, [x12, #64]
-	fmla	v5.2d, v19.2d, v31.2d[0]
-	prfm	PLDL2KEEP, [x14, #64]
-	fmla	v12.2d, v22.2d, v31.2d[0]
-	fmla	v13.2d, v23.2d, v31.2d[0]
-	ldp		q28, q29, [x11, #(0*8+2*32)]
-	fmla	v6.2d, v18.2d, v31.2d[1]
-	fmla	v7.2d, v19.2d, v31.2d[1]
-	add		x14, x14, #128
-	fmla	v14.2d, v22.2d, v31.2d[1]
-	add		x12, x12, #128
-	fmla	v15.2d, v23.2d, v31.2d[1]
-	ldp		q30, q31, [x11, #(0*8+3*32)]
-
-	bgt		1b
-
-0:
-
-	cmp		w8, #3
-	ble		4f
-
-	
-	// unroll 0
-	fmla	v0.2d, v16.2d, v24.2d[0]
-	fmla	v1.2d, v17.2d, v24.2d[0]
-	ldp		q18, q19, [x9, #(0*8+1*32)]
-	fmla	v8.2d, v20.2d, v24.2d[0]
-	fmla	v9.2d, v21.2d, v24.2d[0]
-	ldp		q22, q23, [x13, #(0*8+1*32)]
-	fmla	v2.2d, v16.2d, v24.2d[1]
-	fmla	v3.2d, v17.2d, v24.2d[1]
-//	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v10.2d, v20.2d, v24.2d[1]
-	fmla	v11.2d, v21.2d, v24.2d[1]
-//	prfm	PLDL1KEEP, [x13, #128]
-	fmla	v4.2d, v16.2d, v25.2d[0]
-	fmla	v5.2d, v17.2d, v25.2d[0]
-//	prfm	PLDL1KEEP, [x9, #192]
-	fmla	v12.2d, v20.2d, v25.2d[0]
-	fmla	v13.2d, v21.2d, v25.2d[0]
-//	prfm	PLDL1KEEP, [x13, #192]
-	fmla	v6.2d, v16.2d, v25.2d[1]
-	fmla	v7.2d, v17.2d, v25.2d[1]
-//	prfm	PLDL1KEEP, [x11, #128]
-	fmla	v14.2d, v20.2d, v25.2d[1]
-	fmla	v15.2d, v21.2d, v25.2d[1]
-//	prfm	PLDL1KEEP, [x11, #192]
-
-	// unroll 1
-	fmla	v0.2d, v18.2d, v26.2d[0]
-	fmla	v1.2d, v19.2d, v26.2d[0]
-	ldp		q16, q17, [x9, #(0*8+2*32)]
-	fmla	v8.2d, v22.2d, v26.2d[0]
-	fmla	v9.2d, v23.2d, v26.2d[0]
-	ldp		q20, q21, [x13, #(0*8+2*32)]
-	fmla	v2.2d, v18.2d, v26.2d[1]
-	fmla	v3.2d, v19.2d, v26.2d[1]
-	fmla	v10.2d, v22.2d, v26.2d[1]
-	fmla	v11.2d, v23.2d, v26.2d[1]
-	fmla	v4.2d, v18.2d, v27.2d[0]
-	fmla	v5.2d, v19.2d, v27.2d[0]
-	fmla	v12.2d, v22.2d, v27.2d[0]
-	fmla	v13.2d, v23.2d, v27.2d[0]
-	add		x11, x11, #128
-	fmla	v6.2d, v18.2d, v27.2d[1]
-	fmla	v7.2d, v19.2d, v27.2d[1]
-	sub		w8, w8, #4
-	fmla	v14.2d, v22.2d, v27.2d[1]
-	fmla	v15.2d, v23.2d, v27.2d[1]
-
-	// unroll 2
-	fmla	v0.2d, v16.2d, v28.2d[0]
-	fmla	v1.2d, v17.2d, v28.2d[0]
-	ldp		q18, q19, [x9, #(0*8+3*32)]
-	fmla	v8.2d, v20.2d, v28.2d[0]
-	fmla	v9.2d, v21.2d, v28.2d[0]
-	ldp		q22, q23, [x13, #(0*8+3*32)]
-	fmla	v2.2d, v16.2d, v28.2d[1]
-	fmla	v3.2d, v17.2d, v28.2d[1]
-	fmla	v10.2d, v20.2d, v28.2d[1]
-	fmla	v11.2d, v21.2d, v28.2d[1]
-	add		x9, x9, #128
-	fmla	v4.2d, v16.2d, v29.2d[0]
-	fmla	v5.2d, v17.2d, v29.2d[0]
-	add		x13, x13, #128
-	fmla	v12.2d, v20.2d, v29.2d[0]
-	fmla	v13.2d, v21.2d, v29.2d[0]
-	fmla	v6.2d, v16.2d, v29.2d[1]
-	fmla	v7.2d, v17.2d, v29.2d[1]
-//	ldp		q16, q17, [x9, #(0*8+0*32)]
-	fmla	v14.2d, v20.2d, v29.2d[1]
-	fmla	v15.2d, v21.2d, v29.2d[1]
-//	ldp		q20, q21, [x13, #(0*8+0*32)]
-
-	// unroll 3
-	fmla	v0.2d, v18.2d, v30.2d[0]
-	fmla	v1.2d, v19.2d, v30.2d[0]
-	fmla	v8.2d, v22.2d, v30.2d[0]
-	fmla	v3.2d, v19.2d, v30.2d[1]
-//	ldp		q24, q25, [x11, #(0*8+0*32)]
-	fmla	v9.2d, v23.2d, v30.2d[0]
-	fmla	v2.2d, v18.2d, v30.2d[1]
-	fmla	v10.2d, v22.2d, v30.2d[1]
-	fmla	v11.2d, v23.2d, v30.2d[1]
-//	ldp		q26, q27, [x11, #(0*8+1*32)]
-	fmla	v4.2d, v18.2d, v31.2d[0]
-	fmla	v5.2d, v19.2d, v31.2d[0]
-	fmla	v12.2d, v22.2d, v31.2d[0]
-	fmla	v13.2d, v23.2d, v31.2d[0]
-//	ldp		q28, q29, [x11, #(0*8+2*32)]
-	fmla	v6.2d, v18.2d, v31.2d[1]
-	fmla	v7.2d, v19.2d, v31.2d[1]
-	fmla	v14.2d, v22.2d, v31.2d[1]
-	fmla	v15.2d, v23.2d, v31.2d[1]
-//	ldp		q30, q31, [x11, #(0*8+3*32)]
-
-	b		2f // return
-
-4: // consider clean1-up loop
-
-	cmp		w8, #0
-	ble		2f // return
-
-//	sub		x9, x9, #32
-//	sub		x11, x11, #32
-//	sub		x13, x13, #32
-
-3: // clean1-up loop
-
-	// unroll 0
-	ld1		{v20.2d, v21.2d}, [x9], #32
-	ld1		{v28.2d, v29.2d}, [x11], #32
-	fmla	v0.2d, v20.2d, v28.2d[0]
-	fmla	v1.2d, v21.2d, v28.2d[0]
-	fmla	v2.2d, v20.2d, v28.2d[1]
-	fmla	v3.2d, v21.2d, v28.2d[1]
-	fmla	v4.2d, v20.2d, v29.2d[0]
-	fmla	v5.2d, v21.2d, v29.2d[0]
-	fmla	v6.2d, v20.2d, v29.2d[1]
-	fmla	v7.2d, v21.2d, v29.2d[1]
-	ld1		{v22.2d, v23.2d}, [x13], #32
-	fmla	v8.2d, v22.2d, v28.2d[0]
-	fmla	v9.2d, v23.2d, v28.2d[0]
-	sub		w8, w8, #1
-	fmla	v10.2d, v22.2d, v28.2d[1]
-	fmla	v11.2d, v23.2d, v28.2d[1]
-	cmp		w8, #0
-	fmla	v12.2d, v22.2d, v29.2d[0]
-	fmla	v13.2d, v23.2d, v29.2d[0]
-	fmla	v14.2d, v22.2d, v29.2d[1]
-	fmla	v15.2d, v23.2d, v29.2d[1]
-
-	bgt		3b
-
-2: // return
-
-
-
-#if MACRO_LEVEL>=2
-	.endm
-#else
-	ret
-
-	FUN_END(inner_kernel_gemm_add_nt_8x4_p_lib4)
-#endif
-
-
-
-
-
-// subroutine
-//
-// input arguments:
-// w8   <- k
-// x9   <- A
-// x10  <- sda
-// x11  <- B
 //
 // output arguments:
 
@@ -476,157 +162,157 @@ NAME:
 	// unroll 0
 	ldr		d18, [x9, #(0*8+1*32)] // A0
 	ins		v20.d[1], x20
-	fmla	v0.2d, v16.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
 	ldr		x18, [x9, #(1*8+1*32)] // A0
-	fmla	v2.2d, v16.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
 	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldr		d26, [x11, #(0*8+1*32)] // B
 	ins		v21.d[1], x21
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	ldr		x26, [x11, #(1*8+1*32)] // B
-	fmla	v4.2d, v16.2d, v25.2d[0]
+	fmla	v4.2d, v16.2d, v25.d[0]
 	prfm	PLDL1KEEP, [x11, #128]
-	fmla	v6.2d, v16.2d, v25.2d[1]
+	fmla	v6.2d, v16.2d, v25.d[1]
 	ldr		d19, [x9, #(2*8+1*32)] // A0
 	ins		v18.d[1], x18
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 	ldr		x19, [x9, #(3*8+1*32)] // A0
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 	prfm	PLDL1KEEP, [x12, #128]
-	fmla	v8.2d, v20.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
 	ldr		d27, [x11, #(2*8+1*32)] // B
 	ins		v26.d[1], x26
-	fmla	v10.2d, v20.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
 	ldr		x27, [x11, #(3*8+1*32)] // B
-	fmla	v9.2d, v21.2d, v24.2d[0]
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v9.2d, v21.2d, v24.d[0]
+	fmla	v11.2d, v21.2d, v24.d[1]
 	ldr		d22, [x12, #(0*8+1*32)] // A1
 	ins		v19.d[1], x19
-	fmla	v12.2d, v20.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
 	ldr		x22, [x12, #(1*8+1*32)] // A1
-	fmla	v14.2d, v20.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
 	ldr		x23, [x12, #(3*8+1*32)] // A1
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 	ldr		d23, [x12, #(2*8+1*32)] // A1
 	ins		v27.d[1], x27
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 
 	// unroll 1
 	ldr		d16, [x9, #(0*8+2*32)] // A0
 	ins		v22.d[1], x22
-	fmla	v0.2d, v18.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
 	ldr		x16, [x9, #(1*8+2*32)] // A0
-	fmla	v2.2d, v18.2d, v26.2d[1]
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v2.2d, v18.2d, v26.d[1]
+	fmla	v1.2d, v19.2d, v26.d[0]
 	ldr		d24, [x11, #(0*8+2*32)] // B
 	ins		v23.d[1], x23
-	fmla	v3.2d, v19.2d, v26.2d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
 	ldr		x24, [x11, #(1*8+2*32)] // B
-	fmla	v4.2d, v18.2d, v27.2d[0]
-	fmla	v6.2d, v18.2d, v27.2d[1]
+	fmla	v4.2d, v18.2d, v27.d[0]
+	fmla	v6.2d, v18.2d, v27.d[1]
 	ldr		d17, [x9, #(2*8+2*32)] // A0
 	ins		v16.d[1], x16
-	fmla	v5.2d, v19.2d, v27.2d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
 	ldr		x17, [x9, #(3*8+2*32)] // A0
-	fmla	v7.2d, v19.2d, v27.2d[1]
-	fmla	v8.2d, v22.2d, v26.2d[0]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v22.2d, v26.d[0]
 	ldr		d25, [x11, #(2*8+2*32)] // B
 	ins		v24.d[1], x24
-	fmla	v10.2d, v22.2d, v26.2d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
 	ldr		x25, [x11, #(3*8+2*32)] // B
-	fmla	v9.2d, v23.2d, v26.2d[0]
-	fmla	v11.2d, v23.2d, v26.2d[1]
+	fmla	v9.2d, v23.2d, v26.d[0]
+	fmla	v11.2d, v23.2d, v26.d[1]
 	ldr		d20, [x12, #(0*8+2*32)] // A1
 	ins		v17.d[1], x17
-	fmla	v12.2d, v22.2d, v27.2d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
 	ldr		x20, [x12, #(1*8+2*32)] // A1
-	fmla	v14.2d, v22.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
 	ldr		x21, [x12, #(3*8+2*32)] // A1
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 	ldr		d21, [x12, #(2*8+2*32)] // A1
 	ins		v25.d[1], x25
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	// unroll 2
 	ldr		d18, [x9, #(0*8+3*32)] // A0
 	ins		v20.d[1], x20
-	fmla	v0.2d, v16.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
 	ldr		x18, [x9, #(1*8+3*32)] // A0
-	fmla	v2.2d, v16.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
 	prfm	PLDL1KEEP, [x9, #192]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldr		d26, [x11, #(0*8+3*32)] // B
 	ins		v21.d[1], x21
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	ldr		x26, [x11, #(1*8+3*32)] // B
-	fmla	v4.2d, v16.2d, v25.2d[0]
+	fmla	v4.2d, v16.2d, v25.d[0]
 	prfm	PLDL1KEEP, [x11, #192]
-	fmla	v6.2d, v16.2d, v25.2d[1]
+	fmla	v6.2d, v16.2d, v25.d[1]
 	ldr		d19, [x9, #(2*8+3*32)] // A0
 	ins		v18.d[1], x18
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 	ldr		x19, [x9, #(3*8+3*32)] // A0
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 	prfm	PLDL1KEEP, [x12, #192]
-	fmla	v8.2d, v20.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
 	ldr		d27, [x11, #(2*8+3*32)] // B
 	ins		v26.d[1], x26
-	fmla	v10.2d, v20.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
 	ldr		x27, [x11, #(3*8+3*32)] // B
-	fmla	v9.2d, v21.2d, v24.2d[0]
+	fmla	v9.2d, v21.2d, v24.d[0]
 	sub		w8, w8, #4
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v11.2d, v21.2d, v24.d[1]
 	ldr		d22, [x12, #(0*8+3*32)] // A1
 	ins		v19.d[1], x19
-	fmla	v12.2d, v20.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
 	ldr		x22, [x12, #(1*8+3*32)] // A1
-	fmla	v14.2d, v20.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
 	ldr		x23, [x12, #(3*8+3*32)] // A1
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 	ldr		d23, [x12, #(2*8+3*32)] // A1
 	ins		v27.d[1], x27
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 
 	// unroll 3
 	ldr		d16, [x9, #(0*8+4*32)] // A0
 	ins		v22.d[1], x22
-	fmla	v0.2d, v18.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
 	ldr		x16, [x9, #(1*8+4*32)] // A0
-	fmla	v2.2d, v18.2d, v26.2d[1]
+	fmla	v2.2d, v18.2d, v26.d[1]
 	add		x9, x9, #128
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v1.2d, v19.2d, v26.d[0]
 	ldr		d24, [x11, #(0*8+4*32)] // B
 	ins		v23.d[1], x23
-	fmla	v3.2d, v19.2d, v26.2d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
 	ldr		x24, [x11, #(1*8+4*32)] // B
-	fmla	v4.2d, v18.2d, v27.2d[0]
+	fmla	v4.2d, v18.2d, v27.d[0]
 	add		x11, x11, #128
-	fmla	v6.2d, v18.2d, v27.2d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
 	ldr		d17, [x9, #(2*8+0*32)] // A0
 	ins		v16.d[1], x16
-	fmla	v5.2d, v19.2d, v27.2d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
 	ldr		x17, [x9, #(3*8+0*32)] // A0
-	fmla	v7.2d, v19.2d, v27.2d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
 	add		x12, x12, #128
-	fmla	v8.2d, v22.2d, v26.2d[0]
+	fmla	v8.2d, v22.2d, v26.d[0]
 	ldr		d25, [x11, #(2*8+0*32)] // B
 	ins		v24.d[1], x24
-	fmla	v10.2d, v22.2d, v26.2d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
 	ldr		x25, [x11, #(3*8+0*32)] // B
-	fmla	v9.2d, v23.2d, v26.2d[0]
+	fmla	v9.2d, v23.2d, v26.d[0]
 	cmp		w8, #4
-	fmla	v11.2d, v23.2d, v26.2d[1]
+	fmla	v11.2d, v23.2d, v26.d[1]
 	ldr		d20, [x12, #(0*8+0*32)] // A1
 	ins		v17.d[1], x17
-	fmla	v12.2d, v22.2d, v27.2d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
 	ldr		x20, [x12, #(1*8+0*32)] // A1
-	fmla	v14.2d, v22.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
 	ldr		x21, [x12, #(3*8+0*32)] // A1
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 	ldr		d21, [x12, #(2*8+0*32)] // A1
 	ins		v25.d[1], x25
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	bgt		1b
 
@@ -639,157 +325,157 @@ NAME:
 	// unroll 0
 	ldr		d18, [x9, #(0*8+1*32)] // A0
 	ins		v20.d[1], x20
-	fmla	v0.2d, v16.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
 	ldr		x18, [x9, #(1*8+1*32)] // A0
-	fmla	v2.2d, v16.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
 //	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldr		d26, [x11, #(0*8+1*32)] // B
 	ins		v21.d[1], x21
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	ldr		x26, [x11, #(1*8+1*32)] // B
-	fmla	v4.2d, v16.2d, v25.2d[0]
+	fmla	v4.2d, v16.2d, v25.d[0]
 //	prfm	PLDL1KEEP, [x11, #128]
-	fmla	v6.2d, v16.2d, v25.2d[1]
+	fmla	v6.2d, v16.2d, v25.d[1]
 	ldr		d19, [x9, #(2*8+1*32)] // A0
 	ins		v18.d[1], x18
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 	ldr		x19, [x9, #(3*8+1*32)] // A0
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 //	prfm	PLDL1KEEP, [x12, #128]
-	fmla	v8.2d, v20.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
 	ldr		d27, [x11, #(2*8+1*32)] // B
 	ins		v26.d[1], x26
-	fmla	v10.2d, v20.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
 	ldr		x27, [x11, #(3*8+1*32)] // B
-	fmla	v9.2d, v21.2d, v24.2d[0]
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v9.2d, v21.2d, v24.d[0]
+	fmla	v11.2d, v21.2d, v24.d[1]
 	ldr		d22, [x12, #(0*8+1*32)] // A1
 	ins		v19.d[1], x19
-	fmla	v12.2d, v20.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
 	ldr		x22, [x12, #(1*8+1*32)] // A1
-	fmla	v14.2d, v20.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
 	ldr		x23, [x12, #(3*8+1*32)] // A1
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 	ldr		d23, [x12, #(2*8+1*32)] // A1
 	ins		v27.d[1], x27
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 
 	// unroll 1
 	ldr		d16, [x9, #(0*8+2*32)] // A0
 	ins		v22.d[1], x22
-	fmla	v0.2d, v18.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
 	ldr		x16, [x9, #(1*8+2*32)] // A0
-	fmla	v2.2d, v18.2d, v26.2d[1]
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v2.2d, v18.2d, v26.d[1]
+	fmla	v1.2d, v19.2d, v26.d[0]
 	ldr		d24, [x11, #(0*8+2*32)] // B
 	ins		v23.d[1], x23
-	fmla	v3.2d, v19.2d, v26.2d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
 	ldr		x24, [x11, #(1*8+2*32)] // B
-	fmla	v4.2d, v18.2d, v27.2d[0]
-	fmla	v6.2d, v18.2d, v27.2d[1]
+	fmla	v4.2d, v18.2d, v27.d[0]
+	fmla	v6.2d, v18.2d, v27.d[1]
 	ldr		d17, [x9, #(2*8+2*32)] // A0
 	ins		v16.d[1], x16
-	fmla	v5.2d, v19.2d, v27.2d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
 	ldr		x17, [x9, #(3*8+2*32)] // A0
-	fmla	v7.2d, v19.2d, v27.2d[1]
-	fmla	v8.2d, v22.2d, v26.2d[0]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v22.2d, v26.d[0]
 	ldr		d25, [x11, #(2*8+2*32)] // B
 	ins		v24.d[1], x24
-	fmla	v10.2d, v22.2d, v26.2d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
 	ldr		x25, [x11, #(3*8+2*32)] // B
-	fmla	v9.2d, v23.2d, v26.2d[0]
-	fmla	v11.2d, v23.2d, v26.2d[1]
+	fmla	v9.2d, v23.2d, v26.d[0]
+	fmla	v11.2d, v23.2d, v26.d[1]
 	ldr		d20, [x12, #(0*8+2*32)] // A1
 	ins		v17.d[1], x17
-	fmla	v12.2d, v22.2d, v27.2d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
 	ldr		x20, [x12, #(1*8+2*32)] // A1
-	fmla	v14.2d, v22.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
 	ldr		x21, [x12, #(3*8+2*32)] // A1
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 	ldr		d21, [x12, #(2*8+2*32)] // A1
 	ins		v25.d[1], x25
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	// unroll 2
 	ldr		d18, [x9, #(0*8+3*32)] // A0
 	ins		v20.d[1], x20
-	fmla	v0.2d, v16.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
 	ldr		x18, [x9, #(1*8+3*32)] // A0
-	fmla	v2.2d, v16.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
 //	prfm	PLDL1KEEP, [x9, #192]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldr		d26, [x11, #(0*8+3*32)] // B
 	ins		v21.d[1], x21
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	ldr		x26, [x11, #(1*8+3*32)] // B
-	fmla	v4.2d, v16.2d, v25.2d[0]
+	fmla	v4.2d, v16.2d, v25.d[0]
 //	prfm	PLDL1KEEP, [x11, #192]
-	fmla	v6.2d, v16.2d, v25.2d[1]
+	fmla	v6.2d, v16.2d, v25.d[1]
 	ldr		d19, [x9, #(2*8+3*32)] // A0
 	ins		v18.d[1], x18
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 	ldr		x19, [x9, #(3*8+3*32)] // A0
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 //	prfm	PLDL1KEEP, [x12, #192]
-	fmla	v8.2d, v20.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
 	ldr		d27, [x11, #(2*8+3*32)] // B
 	ins		v26.d[1], x26
-	fmla	v10.2d, v20.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
 	ldr		x27, [x11, #(3*8+3*32)] // B
-	fmla	v9.2d, v21.2d, v24.2d[0]
+	fmla	v9.2d, v21.2d, v24.d[0]
 	sub		w8, w8, #4
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v11.2d, v21.2d, v24.d[1]
 	ldr		d22, [x12, #(0*8+3*32)] // A1
 	ins		v19.d[1], x19
-	fmla	v12.2d, v20.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
 	ldr		x22, [x12, #(1*8+3*32)] // A1
-	fmla	v14.2d, v20.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
 	ldr		x23, [x12, #(3*8+3*32)] // A1
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 	ldr		d23, [x12, #(2*8+3*32)] // A1
 	ins		v27.d[1], x27
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 
 	// unroll 3
 //	ldr		d16, [x9, #(0*8+4*32)] // A0
 	ins		v22.d[1], x22
-	fmla	v0.2d, v18.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
 //	ldr		x16, [x9, #(1*8+4*32)] // A0
-	fmla	v2.2d, v18.2d, v26.2d[1]
+	fmla	v2.2d, v18.2d, v26.d[1]
 	add		x9, x9, #128
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v1.2d, v19.2d, v26.d[0]
 //	ldr		d24, [x11, #(0*8+4*32)] // B
 	ins		v23.d[1], x23
-	fmla	v3.2d, v19.2d, v26.2d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
 //	ldr		x24, [x11, #(1*8+4*32)] // B
-	fmla	v4.2d, v18.2d, v27.2d[0]
+	fmla	v4.2d, v18.2d, v27.d[0]
 	add		x11, x11, #128
-	fmla	v6.2d, v18.2d, v27.2d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
 //	ldr		d17, [x9, #(2*8+0*32)] // A0
 //	ins		v16.d[1], x16
-	fmla	v5.2d, v19.2d, v27.2d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
 //	ldr		x17, [x9, #(3*8+0*32)] // A0
-	fmla	v7.2d, v19.2d, v27.2d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
 	add		x12, x12, #128
-	fmla	v8.2d, v22.2d, v26.2d[0]
+	fmla	v8.2d, v22.2d, v26.d[0]
 //	ldr		d25, [x11, #(2*8+0*32)] // B
 //	ins		v24.d[1], x24
-	fmla	v10.2d, v22.2d, v26.2d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
 //	ldr		x25, [x11, #(3*8+0*32)] // B
-	fmla	v9.2d, v23.2d, v26.2d[0]
+	fmla	v9.2d, v23.2d, v26.d[0]
 //	cmp		w8, #4
-	fmla	v11.2d, v23.2d, v26.2d[1]
+	fmla	v11.2d, v23.2d, v26.d[1]
 //	ldr		d20, [x12, #(0*8+0*32)] // A1
 //	ins		v17.d[1], x17
-	fmla	v12.2d, v22.2d, v27.2d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
 //	ldr		x20, [x12, #(1*8+0*32)] // A1
-	fmla	v14.2d, v22.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
 //	ldr		x21, [x12, #(3*8+0*32)] // A1
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 //	ldr		d21, [x12, #(2*8+0*32)] // A1
 //	ins		v25.d[1], x25
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	b		2f // return
 
@@ -808,24 +494,24 @@ NAME:
 	ld1		{v20.2d, v21.2d}, [x9], #32
 	ld1		{v28.2d, v29.2d}, [x11], #32
 	ld1		{v22.2d, v23.2d}, [x12], #32
-	fmla	v0.2d, v20.2d, v28.2d[0]
-	fmla	v1.2d, v21.2d, v28.2d[0]
-	fmla	v2.2d, v20.2d, v28.2d[1]
-	fmla	v3.2d, v21.2d, v28.2d[1]
-	fmla	v4.2d, v20.2d, v29.2d[0]
-	fmla	v5.2d, v21.2d, v29.2d[0]
-	fmla	v6.2d, v20.2d, v29.2d[1]
-	fmla	v7.2d, v21.2d, v29.2d[1]
+	fmla	v0.2d, v20.2d, v28.d[0]
+	fmla	v1.2d, v21.2d, v28.d[0]
+	fmla	v2.2d, v20.2d, v28.d[1]
+	fmla	v3.2d, v21.2d, v28.d[1]
+	fmla	v4.2d, v20.2d, v29.d[0]
+	fmla	v5.2d, v21.2d, v29.d[0]
+	fmla	v6.2d, v20.2d, v29.d[1]
+	fmla	v7.2d, v21.2d, v29.d[1]
 	sub		w8, w8, #1
-	fmla	v8.2d, v22.2d, v28.2d[0]
-	fmla	v9.2d, v23.2d, v28.2d[0]
+	fmla	v8.2d, v22.2d, v28.d[0]
+	fmla	v9.2d, v23.2d, v28.d[0]
 	cmp		w8, #0
-	fmla	v10.2d, v22.2d, v28.2d[1]
-	fmla	v11.2d, v23.2d, v28.2d[1]
-	fmla	v12.2d, v22.2d, v29.2d[0]
-	fmla	v13.2d, v23.2d, v29.2d[0]
-	fmla	v14.2d, v22.2d, v29.2d[1]
-	fmla	v15.2d, v23.2d, v29.2d[1]
+	fmla	v10.2d, v22.2d, v28.d[1]
+	fmla	v11.2d, v23.2d, v28.d[1]
+	fmla	v12.2d, v22.2d, v29.d[0]
+	fmla	v13.2d, v23.2d, v29.d[0]
+	fmla	v14.2d, v22.2d, v29.d[1]
+	fmla	v15.2d, v23.2d, v29.d[1]
 
 	bgt		3b
 
@@ -868,98 +554,98 @@ NAME:
 1:
 	
 	// unroll 0
-	fmla	v0.2d, v16.2d, v24.2d[0]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldp		q18, q19, [x9, #(0*8+1*32)]
-	fmla	v8.2d, v20.2d, v24.2d[0]
-	fmla	v9.2d, v21.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
+	fmla	v9.2d, v21.2d, v24.d[0]
 	ldp		q22, q23, [x12, #(0*8+1*32)]
-	fmla	v2.2d, v16.2d, v24.2d[1]
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v10.2d, v20.2d, v24.2d[1]
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
+	fmla	v11.2d, v21.2d, v24.d[1]
 	prfm	PLDL1KEEP, [x12, #128]
-	fmla	v4.2d, v16.2d, v25.2d[0]
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v4.2d, v16.2d, v25.d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 	prfm	PLDL1KEEP, [x9, #192]
-	fmla	v12.2d, v20.2d, v25.2d[0]
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 	prfm	PLDL1KEEP, [x12, #192]
-	fmla	v6.2d, v16.2d, v25.2d[1]
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v6.2d, v16.2d, v25.d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 	prfm	PLDL1KEEP, [x11, #128]
-	fmla	v14.2d, v20.2d, v25.2d[1]
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 	prfm	PLDL1KEEP, [x11, #192]
 
 	// unroll 1
-	fmla	v0.2d, v18.2d, v26.2d[0]
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
+	fmla	v1.2d, v19.2d, v26.d[0]
 	ldp		q16, q17, [x9, #(0*8+2*32)]
-	fmla	v8.2d, v22.2d, v26.2d[0]
-	fmla	v9.2d, v23.2d, v26.2d[0]
+	fmla	v8.2d, v22.2d, v26.d[0]
+	fmla	v9.2d, v23.2d, v26.d[0]
 	ldp		q20, q21, [x12, #(0*8+2*32)]
-	fmla	v2.2d, v18.2d, v26.2d[1]
-	fmla	v3.2d, v19.2d, v26.2d[1]
-	fmla	v10.2d, v22.2d, v26.2d[1]
-	fmla	v11.2d, v23.2d, v26.2d[1]
-	fmla	v4.2d, v18.2d, v27.2d[0]
-	fmla	v5.2d, v19.2d, v27.2d[0]
-	fmla	v12.2d, v22.2d, v27.2d[0]
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v2.2d, v18.2d, v26.d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
+	fmla	v11.2d, v23.2d, v26.d[1]
+	fmla	v4.2d, v18.2d, v27.d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 	add		x11, x11, #128
-	fmla	v6.2d, v18.2d, v27.2d[1]
-	fmla	v7.2d, v19.2d, v27.2d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
 	sub		w8, w8, #4
-	fmla	v14.2d, v22.2d, v27.2d[1]
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	// unroll 2
-	fmla	v0.2d, v16.2d, v28.2d[0]
-	fmla	v1.2d, v17.2d, v28.2d[0]
+	fmla	v0.2d, v16.2d, v28.d[0]
+	fmla	v1.2d, v17.2d, v28.d[0]
 	ldp		q18, q19, [x9, #(0*8+3*32)]
-	fmla	v8.2d, v20.2d, v28.2d[0]
-	fmla	v9.2d, v21.2d, v28.2d[0]
+	fmla	v8.2d, v20.2d, v28.d[0]
+	fmla	v9.2d, v21.2d, v28.d[0]
 	ldp		q22, q23, [x12, #(0*8+3*32)]
-	fmla	v2.2d, v16.2d, v28.2d[1]
-	fmla	v3.2d, v17.2d, v28.2d[1]
-	fmla	v10.2d, v20.2d, v28.2d[1]
-	fmla	v11.2d, v21.2d, v28.2d[1]
+	fmla	v2.2d, v16.2d, v28.d[1]
+	fmla	v3.2d, v17.2d, v28.d[1]
+	fmla	v10.2d, v20.2d, v28.d[1]
+	fmla	v11.2d, v21.2d, v28.d[1]
 	add		x9, x9, #128
-	fmla	v4.2d, v16.2d, v29.2d[0]
-	fmla	v5.2d, v17.2d, v29.2d[0]
+	fmla	v4.2d, v16.2d, v29.d[0]
+	fmla	v5.2d, v17.2d, v29.d[0]
 	add		x12, x12, #128
-	fmla	v12.2d, v20.2d, v29.2d[0]
-	fmla	v13.2d, v21.2d, v29.2d[0]
+	fmla	v12.2d, v20.2d, v29.d[0]
+	fmla	v13.2d, v21.2d, v29.d[0]
 	cmp		w8, #4
-	fmla	v6.2d, v16.2d, v29.2d[1]
-	fmla	v7.2d, v17.2d, v29.2d[1]
+	fmla	v6.2d, v16.2d, v29.d[1]
+	fmla	v7.2d, v17.2d, v29.d[1]
 	ldp		q16, q17, [x9, #(0*8+0*32)]
-	fmla	v14.2d, v20.2d, v29.2d[1]
-	fmla	v15.2d, v21.2d, v29.2d[1]
+	fmla	v14.2d, v20.2d, v29.d[1]
+	fmla	v15.2d, v21.2d, v29.d[1]
 	ldp		q20, q21, [x12, #(0*8+0*32)]
 
 	// unroll 3
-	fmla	v0.2d, v18.2d, v30.2d[0]
-	fmla	v1.2d, v19.2d, v30.2d[0]
-	fmla	v8.2d, v22.2d, v30.2d[0]
-	fmla	v9.2d, v23.2d, v30.2d[0]
+	fmla	v0.2d, v18.2d, v30.d[0]
+	fmla	v1.2d, v19.2d, v30.d[0]
+	fmla	v8.2d, v22.2d, v30.d[0]
+	fmla	v9.2d, v23.2d, v30.d[0]
 	ldp		q24, q25, [x11, #(0*8+0*32)]
-	fmla	v2.2d, v18.2d, v30.2d[1]
-	fmla	v3.2d, v19.2d, v30.2d[1]
-	fmla	v10.2d, v22.2d, v30.2d[1]
-	fmla	v11.2d, v23.2d, v30.2d[1]
+	fmla	v2.2d, v18.2d, v30.d[1]
+	fmla	v3.2d, v19.2d, v30.d[1]
+	fmla	v10.2d, v22.2d, v30.d[1]
+	fmla	v11.2d, v23.2d, v30.d[1]
 	ldp		q26, q27, [x11, #(0*8+1*32)]
-	fmla	v4.2d, v18.2d, v31.2d[0]
-	fmla	v5.2d, v19.2d, v31.2d[0]
-	fmla	v12.2d, v22.2d, v31.2d[0]
-	fmla	v13.2d, v23.2d, v31.2d[0]
+	fmla	v4.2d, v18.2d, v31.d[0]
+	fmla	v5.2d, v19.2d, v31.d[0]
+	fmla	v12.2d, v22.2d, v31.d[0]
+	fmla	v13.2d, v23.2d, v31.d[0]
 	ldp		q28, q29, [x11, #(0*8+2*32)]
-	fmla	v6.2d, v18.2d, v31.2d[1]
-	fmla	v7.2d, v19.2d, v31.2d[1]
-	fmla	v14.2d, v22.2d, v31.2d[1]
-	fmla	v15.2d, v23.2d, v31.2d[1]
+	fmla	v6.2d, v18.2d, v31.d[1]
+	fmla	v7.2d, v19.2d, v31.d[1]
+	fmla	v14.2d, v22.2d, v31.d[1]
+	fmla	v15.2d, v23.2d, v31.d[1]
 	ldp		q30, q31, [x11, #(0*8+3*32)]
 
 	bgt		1b
@@ -971,97 +657,97 @@ NAME:
 
 	
 	// unroll 0
-	fmla	v0.2d, v16.2d, v24.2d[0]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldp		q18, q19, [x9, #(0*8+1*32)]
-	fmla	v8.2d, v20.2d, v24.2d[0]
-	fmla	v9.2d, v21.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
+	fmla	v9.2d, v21.2d, v24.d[0]
 	ldp		q22, q23, [x12, #(0*8+1*32)]
-	fmla	v2.2d, v16.2d, v24.2d[1]
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 //	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v10.2d, v20.2d, v24.2d[1]
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
+	fmla	v11.2d, v21.2d, v24.d[1]
 //	prfm	PLDL1KEEP, [x12, #128]
-	fmla	v4.2d, v16.2d, v25.2d[0]
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v4.2d, v16.2d, v25.d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 //	prfm	PLDL1KEEP, [x9, #192]
-	fmla	v12.2d, v20.2d, v25.2d[0]
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 //	prfm	PLDL1KEEP, [x12, #192]
-	fmla	v6.2d, v16.2d, v25.2d[1]
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v6.2d, v16.2d, v25.d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 //	prfm	PLDL1KEEP, [x11, #128]
-	fmla	v14.2d, v20.2d, v25.2d[1]
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 //	prfm	PLDL1KEEP, [x11, #192]
 
 	// unroll 1
-	fmla	v0.2d, v18.2d, v26.2d[0]
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
+	fmla	v1.2d, v19.2d, v26.d[0]
 	ldp		q16, q17, [x9, #(0*8+2*32)]
-	fmla	v8.2d, v22.2d, v26.2d[0]
-	fmla	v9.2d, v23.2d, v26.2d[0]
+	fmla	v8.2d, v22.2d, v26.d[0]
+	fmla	v9.2d, v23.2d, v26.d[0]
 	ldp		q20, q21, [x12, #(0*8+2*32)]
-	fmla	v2.2d, v18.2d, v26.2d[1]
-	fmla	v3.2d, v19.2d, v26.2d[1]
-	fmla	v10.2d, v22.2d, v26.2d[1]
-	fmla	v11.2d, v23.2d, v26.2d[1]
-	fmla	v4.2d, v18.2d, v27.2d[0]
-	fmla	v5.2d, v19.2d, v27.2d[0]
-	fmla	v12.2d, v22.2d, v27.2d[0]
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v2.2d, v18.2d, v26.d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
+	fmla	v11.2d, v23.2d, v26.d[1]
+	fmla	v4.2d, v18.2d, v27.d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 	add		x11, x11, #128
-	fmla	v6.2d, v18.2d, v27.2d[1]
-	fmla	v7.2d, v19.2d, v27.2d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
 	sub		w8, w8, #4
-	fmla	v14.2d, v22.2d, v27.2d[1]
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	// unroll 2
-	fmla	v0.2d, v16.2d, v28.2d[0]
-	fmla	v1.2d, v17.2d, v28.2d[0]
+	fmla	v0.2d, v16.2d, v28.d[0]
+	fmla	v1.2d, v17.2d, v28.d[0]
 	ldp		q18, q19, [x9, #(0*8+3*32)]
-	fmla	v8.2d, v20.2d, v28.2d[0]
-	fmla	v9.2d, v21.2d, v28.2d[0]
+	fmla	v8.2d, v20.2d, v28.d[0]
+	fmla	v9.2d, v21.2d, v28.d[0]
 	ldp		q22, q23, [x12, #(0*8+3*32)]
-	fmla	v2.2d, v16.2d, v28.2d[1]
-	fmla	v3.2d, v17.2d, v28.2d[1]
-	fmla	v10.2d, v20.2d, v28.2d[1]
-	fmla	v11.2d, v21.2d, v28.2d[1]
+	fmla	v2.2d, v16.2d, v28.d[1]
+	fmla	v3.2d, v17.2d, v28.d[1]
+	fmla	v10.2d, v20.2d, v28.d[1]
+	fmla	v11.2d, v21.2d, v28.d[1]
 	add		x9, x9, #128
-	fmla	v4.2d, v16.2d, v29.2d[0]
-	fmla	v5.2d, v17.2d, v29.2d[0]
+	fmla	v4.2d, v16.2d, v29.d[0]
+	fmla	v5.2d, v17.2d, v29.d[0]
 	add		x12, x12, #128
-	fmla	v12.2d, v20.2d, v29.2d[0]
-	fmla	v13.2d, v21.2d, v29.2d[0]
-	fmla	v6.2d, v16.2d, v29.2d[1]
-	fmla	v7.2d, v17.2d, v29.2d[1]
+	fmla	v12.2d, v20.2d, v29.d[0]
+	fmla	v13.2d, v21.2d, v29.d[0]
+	fmla	v6.2d, v16.2d, v29.d[1]
+	fmla	v7.2d, v17.2d, v29.d[1]
 //	ldp		q16, q17, [x9, #(0*8+0*32)]
-	fmla	v14.2d, v20.2d, v29.2d[1]
-	fmla	v15.2d, v21.2d, v29.2d[1]
+	fmla	v14.2d, v20.2d, v29.d[1]
+	fmla	v15.2d, v21.2d, v29.d[1]
 //	ldp		q20, q21, [x12, #(0*8+0*32)]
 
 	// unroll 3
-	fmla	v0.2d, v18.2d, v30.2d[0]
-	fmla	v1.2d, v19.2d, v30.2d[0]
-	fmla	v8.2d, v22.2d, v30.2d[0]
-	fmla	v3.2d, v19.2d, v30.2d[1]
+	fmla	v0.2d, v18.2d, v30.d[0]
+	fmla	v1.2d, v19.2d, v30.d[0]
+	fmla	v8.2d, v22.2d, v30.d[0]
+	fmla	v3.2d, v19.2d, v30.d[1]
 //	ldp		q24, q25, [x11, #(0*8+0*32)]
-	fmla	v9.2d, v23.2d, v30.2d[0]
-	fmla	v2.2d, v18.2d, v30.2d[1]
-	fmla	v10.2d, v22.2d, v30.2d[1]
-	fmla	v11.2d, v23.2d, v30.2d[1]
+	fmla	v9.2d, v23.2d, v30.d[0]
+	fmla	v2.2d, v18.2d, v30.d[1]
+	fmla	v10.2d, v22.2d, v30.d[1]
+	fmla	v11.2d, v23.2d, v30.d[1]
 //	ldp		q26, q27, [x11, #(0*8+1*32)]
-	fmla	v4.2d, v18.2d, v31.2d[0]
-	fmla	v5.2d, v19.2d, v31.2d[0]
-	fmla	v12.2d, v22.2d, v31.2d[0]
-	fmla	v13.2d, v23.2d, v31.2d[0]
+	fmla	v4.2d, v18.2d, v31.d[0]
+	fmla	v5.2d, v19.2d, v31.d[0]
+	fmla	v12.2d, v22.2d, v31.d[0]
+	fmla	v13.2d, v23.2d, v31.d[0]
 //	ldp		q28, q29, [x11, #(0*8+2*32)]
-	fmla	v6.2d, v18.2d, v31.2d[1]
-	fmla	v7.2d, v19.2d, v31.2d[1]
-	fmla	v14.2d, v22.2d, v31.2d[1]
-	fmla	v15.2d, v23.2d, v31.2d[1]
+	fmla	v6.2d, v18.2d, v31.d[1]
+	fmla	v7.2d, v19.2d, v31.d[1]
+	fmla	v14.2d, v22.2d, v31.d[1]
+	fmla	v15.2d, v23.2d, v31.d[1]
 //	ldp		q30, q31, [x11, #(0*8+3*32)]
 
 	b		2f // return
@@ -1080,25 +766,25 @@ NAME:
 	// unroll 0
 	ld1		{v20.2d, v21.2d}, [x9], #32
 	ld1		{v28.2d, v29.2d}, [x11], #32
-	fmla	v0.2d, v20.2d, v28.2d[0]
-	fmla	v1.2d, v21.2d, v28.2d[0]
-	fmla	v2.2d, v20.2d, v28.2d[1]
-	fmla	v3.2d, v21.2d, v28.2d[1]
-	fmla	v4.2d, v20.2d, v29.2d[0]
-	fmla	v5.2d, v21.2d, v29.2d[0]
-	fmla	v6.2d, v20.2d, v29.2d[1]
-	fmla	v7.2d, v21.2d, v29.2d[1]
+	fmla	v0.2d, v20.2d, v28.d[0]
+	fmla	v1.2d, v21.2d, v28.d[0]
+	fmla	v2.2d, v20.2d, v28.d[1]
+	fmla	v3.2d, v21.2d, v28.d[1]
+	fmla	v4.2d, v20.2d, v29.d[0]
+	fmla	v5.2d, v21.2d, v29.d[0]
+	fmla	v6.2d, v20.2d, v29.d[1]
+	fmla	v7.2d, v21.2d, v29.d[1]
 	ld1		{v22.2d, v23.2d}, [x12], #32
-	fmla	v8.2d, v22.2d, v28.2d[0]
-	fmla	v9.2d, v23.2d, v28.2d[0]
+	fmla	v8.2d, v22.2d, v28.d[0]
+	fmla	v9.2d, v23.2d, v28.d[0]
 	sub		w8, w8, #1
-	fmla	v10.2d, v22.2d, v28.2d[1]
-	fmla	v11.2d, v23.2d, v28.2d[1]
+	fmla	v10.2d, v22.2d, v28.d[1]
+	fmla	v11.2d, v23.2d, v28.d[1]
 	cmp		w8, #0
-	fmla	v12.2d, v22.2d, v29.2d[0]
-	fmla	v13.2d, v23.2d, v29.2d[0]
-	fmla	v14.2d, v22.2d, v29.2d[1]
-	fmla	v15.2d, v23.2d, v29.2d[1]
+	fmla	v12.2d, v22.2d, v29.d[0]
+	fmla	v13.2d, v23.2d, v29.d[0]
+	fmla	v14.2d, v22.2d, v29.d[1]
+	fmla	v15.2d, v23.2d, v29.d[1]
 
 	bgt		3b
 
@@ -1176,98 +862,98 @@ NAME:
 1:
 	
 	// unroll 0
-	fmla	v0.2d, v16.2d, v24.2d[0]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldp		q28, q29, [x10, #(0*8+1*32)] // B
-	fmla	v2.2d, v16.2d, v24.2d[1]
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	ldp		q30, q31, [x12, #(0*8+1*32)] // B
-	fmla	v4.2d, v16.2d, v25.2d[0]
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v4.2d, v16.2d, v25.d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 	prfm	PLDL1KEEP, [x10, #(0+1*128)]
-	fmla	v6.2d, v16.2d, v25.2d[1]
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v6.2d, v16.2d, v25.d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 	prfm	PLDL1KEEP, [x12, #(0+1*128)]
-	fmla	v8.2d, v16.2d, v26.2d[0]
-	fmla	v9.2d, v17.2d, v26.2d[0]
+	fmla	v8.2d, v16.2d, v26.d[0]
+	fmla	v9.2d, v17.2d, v26.d[0]
 	prfm	PLDL1KEEP, [x10, #(64+1*128)]
-	fmla	v10.2d, v16.2d, v26.2d[1]
-	fmla	v11.2d, v17.2d, v26.2d[1]
+	fmla	v10.2d, v16.2d, v26.d[1]
+	fmla	v11.2d, v17.2d, v26.d[1]
 	prfm	PLDL1KEEP, [x12, #(64+1*128)]
-	fmla	v12.2d, v16.2d, v27.2d[0]
-	fmla	v13.2d, v17.2d, v27.2d[0]
+	fmla	v12.2d, v16.2d, v27.d[0]
+	fmla	v13.2d, v17.2d, v27.d[0]
 	prfm	PLDL1KEEP, [x9, #(0+1*128)]
-	fmla	v14.2d, v16.2d, v27.2d[1]
-	fmla	v15.2d, v17.2d, v27.2d[1]
+	fmla	v14.2d, v16.2d, v27.d[1]
+	fmla	v15.2d, v17.2d, v27.d[1]
 	prfm	PLDL1KEEP, [x9, #(64+1*128)]
 
 	// unroll 1
-	fmla	v0.2d, v18.2d, v28.2d[0]
-	fmla	v1.2d, v19.2d, v28.2d[0]
+	fmla	v0.2d, v18.2d, v28.d[0]
+	fmla	v1.2d, v19.2d, v28.d[0]
 	ldp		q24, q25, [x10, #(0*8+2*32)] // B
-	fmla	v2.2d, v18.2d, v28.2d[1]
-	fmla	v3.2d, v19.2d, v28.2d[1]
+	fmla	v2.2d, v18.2d, v28.d[1]
+	fmla	v3.2d, v19.2d, v28.d[1]
 	ldp		q26, q27, [x12, #(0*8+2*32)] // B
-	fmla	v4.2d, v18.2d, v29.2d[0]
-	fmla	v5.2d, v19.2d, v29.2d[0]
-	fmla	v6.2d, v18.2d, v29.2d[1]
-	fmla	v7.2d, v19.2d, v29.2d[1]
-	fmla	v8.2d, v18.2d, v30.2d[0]
-	fmla	v9.2d, v19.2d, v30.2d[0]
+	fmla	v4.2d, v18.2d, v29.d[0]
+	fmla	v5.2d, v19.2d, v29.d[0]
+	fmla	v6.2d, v18.2d, v29.d[1]
+	fmla	v7.2d, v19.2d, v29.d[1]
+	fmla	v8.2d, v18.2d, v30.d[0]
+	fmla	v9.2d, v19.2d, v30.d[0]
 	add		x9, x9, #128
-	fmla	v10.2d, v18.2d, v30.2d[1]
-	fmla	v11.2d, v19.2d, v30.2d[1]
-	fmla	v12.2d, v18.2d, v31.2d[0]
-	fmla	v13.2d, v19.2d, v31.2d[0]
-	fmla	v14.2d, v18.2d, v31.2d[1]
-	fmla	v15.2d, v19.2d, v31.2d[1]
+	fmla	v10.2d, v18.2d, v30.d[1]
+	fmla	v11.2d, v19.2d, v30.d[1]
+	fmla	v12.2d, v18.2d, v31.d[0]
+	fmla	v13.2d, v19.2d, v31.d[0]
+	fmla	v14.2d, v18.2d, v31.d[1]
+	fmla	v15.2d, v19.2d, v31.d[1]
 
 	// unroll 2
-	fmla	v0.2d, v20.2d, v24.2d[0]
-	fmla	v1.2d, v21.2d, v24.2d[0]
+	fmla	v0.2d, v20.2d, v24.d[0]
+	fmla	v1.2d, v21.2d, v24.d[0]
 	ldp		q28, q29, [x10, #(0*8+3*32)] // B
-	fmla	v2.2d, v20.2d, v24.2d[1]
-	fmla	v3.2d, v21.2d, v24.2d[1]
+	fmla	v2.2d, v20.2d, v24.d[1]
+	fmla	v3.2d, v21.2d, v24.d[1]
 	ldp		q30, q31, [x12, #(0*8+3*32)] // B
-	fmla	v4.2d, v20.2d, v25.2d[0]
-	fmla	v5.2d, v21.2d, v25.2d[0]
+	fmla	v4.2d, v20.2d, v25.d[0]
+	fmla	v5.2d, v21.2d, v25.d[0]
 	add		x10, x10, #128
-	fmla	v6.2d, v20.2d, v25.2d[1]
-	fmla	v7.2d, v21.2d, v25.2d[1]
+	fmla	v6.2d, v20.2d, v25.d[1]
+	fmla	v7.2d, v21.2d, v25.d[1]
 	add		x12, x12, #128
-	fmla	v8.2d, v20.2d, v26.2d[0]
-	fmla	v9.2d, v21.2d, v26.2d[0]
-	fmla	v10.2d, v20.2d, v26.2d[1]
-	fmla	v11.2d, v21.2d, v26.2d[1]
+	fmla	v8.2d, v20.2d, v26.d[0]
+	fmla	v9.2d, v21.2d, v26.d[0]
+	fmla	v10.2d, v20.2d, v26.d[1]
+	fmla	v11.2d, v21.2d, v26.d[1]
 	sub		w8, w8, #4
-	fmla	v12.2d, v20.2d, v27.2d[0]
-	fmla	v13.2d, v21.2d, v27.2d[0]
+	fmla	v12.2d, v20.2d, v27.d[0]
+	fmla	v13.2d, v21.2d, v27.d[0]
 	ldp		q24, q25, [x10, #(0*8+0*32)] // B
-	fmla	v14.2d, v20.2d, v27.2d[1]
-	fmla	v15.2d, v21.2d, v27.2d[1]
+	fmla	v14.2d, v20.2d, v27.d[1]
+	fmla	v15.2d, v21.2d, v27.d[1]
 	ldp		q26, q27, [x12, #(0*8+0*32)] // B
 
 	// unroll 3
-	fmla	v0.2d, v22.2d, v28.2d[0]
-	fmla	v1.2d, v23.2d, v28.2d[0]
+	fmla	v0.2d, v22.2d, v28.d[0]
+	fmla	v1.2d, v23.2d, v28.d[0]
 	cmp		w8, #4
-	fmla	v2.2d, v22.2d, v28.2d[1]
-	fmla	v3.2d, v23.2d, v28.2d[1]
+	fmla	v2.2d, v22.2d, v28.d[1]
+	fmla	v3.2d, v23.2d, v28.d[1]
 	ldp		q16, q17, [x9, #(0*8+0*32)] // A
-	fmla	v4.2d, v22.2d, v29.2d[0]
-	fmla	v5.2d, v23.2d, v29.2d[0]
-	fmla	v6.2d, v22.2d, v29.2d[1]
-	fmla	v7.2d, v23.2d, v29.2d[1]
+	fmla	v4.2d, v22.2d, v29.d[0]
+	fmla	v5.2d, v23.2d, v29.d[0]
+	fmla	v6.2d, v22.2d, v29.d[1]
+	fmla	v7.2d, v23.2d, v29.d[1]
 	ldp		q18, q19, [x9, #(0*8+1*32)] // A
-	fmla	v8.2d, v22.2d, v30.2d[0]
-	fmla	v9.2d, v23.2d, v30.2d[0]
-	fmla	v10.2d, v22.2d, v30.2d[1]
-	fmla	v11.2d, v23.2d, v30.2d[1]
+	fmla	v8.2d, v22.2d, v30.d[0]
+	fmla	v9.2d, v23.2d, v30.d[0]
+	fmla	v10.2d, v22.2d, v30.d[1]
+	fmla	v11.2d, v23.2d, v30.d[1]
 	ldp		q20, q21, [x9, #(0*8+2*32)] // A
-	fmla	v12.2d, v22.2d, v31.2d[0]
-	fmla	v13.2d, v23.2d, v31.2d[0]
-	fmla	v14.2d, v22.2d, v31.2d[1]
-	fmla	v15.2d, v23.2d, v31.2d[1]
+	fmla	v12.2d, v22.2d, v31.d[0]
+	fmla	v13.2d, v23.2d, v31.d[0]
+	fmla	v14.2d, v22.2d, v31.d[1]
+	fmla	v15.2d, v23.2d, v31.d[1]
 	ldp		q22, q23, [x9, #(0*8+3*32)] // A
 
 
@@ -1280,98 +966,98 @@ NAME:
 
 	
 	// unroll 0
-	fmla	v0.2d, v16.2d, v24.2d[0]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldp		q28, q29, [x10, #(0*8+1*32)] // B
-	fmla	v2.2d, v16.2d, v24.2d[1]
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	ldp		q30, q31, [x12, #(0*8+1*32)] // B
-	fmla	v4.2d, v16.2d, v25.2d[0]
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v4.2d, v16.2d, v25.d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 //	prfm	PLDL1KEEP, [x10, #(0+1*128)]
-	fmla	v6.2d, v16.2d, v25.2d[1]
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v6.2d, v16.2d, v25.d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 //	prfm	PLDL1KEEP, [x12, #(0+1*128)]
-	fmla	v8.2d, v16.2d, v26.2d[0]
-	fmla	v9.2d, v17.2d, v26.2d[0]
+	fmla	v8.2d, v16.2d, v26.d[0]
+	fmla	v9.2d, v17.2d, v26.d[0]
 //	prfm	PLDL1KEEP, [x10, #(64+1*128)]
-	fmla	v10.2d, v16.2d, v26.2d[1]
-	fmla	v11.2d, v17.2d, v26.2d[1]
+	fmla	v10.2d, v16.2d, v26.d[1]
+	fmla	v11.2d, v17.2d, v26.d[1]
 //	prfm	PLDL1KEEP, [x12, #(64+1*128)]
-	fmla	v12.2d, v16.2d, v27.2d[0]
-	fmla	v13.2d, v17.2d, v27.2d[0]
+	fmla	v12.2d, v16.2d, v27.d[0]
+	fmla	v13.2d, v17.2d, v27.d[0]
 //	prfm	PLDL1KEEP, [x9, #(0+1*128)]
-	fmla	v14.2d, v16.2d, v27.2d[1]
-	fmla	v15.2d, v17.2d, v27.2d[1]
+	fmla	v14.2d, v16.2d, v27.d[1]
+	fmla	v15.2d, v17.2d, v27.d[1]
 //	prfm	PLDL1KEEP, [x9, #(64+1*128)]
 
 	// unroll 1
-	fmla	v0.2d, v18.2d, v28.2d[0]
-	fmla	v1.2d, v19.2d, v28.2d[0]
+	fmla	v0.2d, v18.2d, v28.d[0]
+	fmla	v1.2d, v19.2d, v28.d[0]
 	ldp		q24, q25, [x10, #(0*8+2*32)] // B
-	fmla	v2.2d, v18.2d, v28.2d[1]
-	fmla	v3.2d, v19.2d, v28.2d[1]
+	fmla	v2.2d, v18.2d, v28.d[1]
+	fmla	v3.2d, v19.2d, v28.d[1]
 	ldp		q26, q27, [x12, #(0*8+2*32)] // B
-	fmla	v4.2d, v18.2d, v29.2d[0]
-	fmla	v5.2d, v19.2d, v29.2d[0]
-	fmla	v6.2d, v18.2d, v29.2d[1]
-	fmla	v7.2d, v19.2d, v29.2d[1]
-	fmla	v8.2d, v18.2d, v30.2d[0]
-	fmla	v9.2d, v19.2d, v30.2d[0]
+	fmla	v4.2d, v18.2d, v29.d[0]
+	fmla	v5.2d, v19.2d, v29.d[0]
+	fmla	v6.2d, v18.2d, v29.d[1]
+	fmla	v7.2d, v19.2d, v29.d[1]
+	fmla	v8.2d, v18.2d, v30.d[0]
+	fmla	v9.2d, v19.2d, v30.d[0]
 	add		x9, x9, #128
-	fmla	v10.2d, v18.2d, v30.2d[1]
-	fmla	v11.2d, v19.2d, v30.2d[1]
-	fmla	v12.2d, v18.2d, v31.2d[0]
-	fmla	v13.2d, v19.2d, v31.2d[0]
-	fmla	v14.2d, v18.2d, v31.2d[1]
-	fmla	v15.2d, v19.2d, v31.2d[1]
+	fmla	v10.2d, v18.2d, v30.d[1]
+	fmla	v11.2d, v19.2d, v30.d[1]
+	fmla	v12.2d, v18.2d, v31.d[0]
+	fmla	v13.2d, v19.2d, v31.d[0]
+	fmla	v14.2d, v18.2d, v31.d[1]
+	fmla	v15.2d, v19.2d, v31.d[1]
 
 	// unroll 2
-	fmla	v0.2d, v20.2d, v24.2d[0]
-	fmla	v1.2d, v21.2d, v24.2d[0]
+	fmla	v0.2d, v20.2d, v24.d[0]
+	fmla	v1.2d, v21.2d, v24.d[0]
 	ldp		q28, q29, [x10, #(0*8+3*32)] // B
-	fmla	v2.2d, v20.2d, v24.2d[1]
-	fmla	v3.2d, v21.2d, v24.2d[1]
+	fmla	v2.2d, v20.2d, v24.d[1]
+	fmla	v3.2d, v21.2d, v24.d[1]
 	ldp		q30, q31, [x12, #(0*8+3*32)] // B
-	fmla	v4.2d, v20.2d, v25.2d[0]
-	fmla	v5.2d, v21.2d, v25.2d[0]
+	fmla	v4.2d, v20.2d, v25.d[0]
+	fmla	v5.2d, v21.2d, v25.d[0]
 	add		x10, x10, #128
-	fmla	v6.2d, v20.2d, v25.2d[1]
-	fmla	v7.2d, v21.2d, v25.2d[1]
+	fmla	v6.2d, v20.2d, v25.d[1]
+	fmla	v7.2d, v21.2d, v25.d[1]
 	add		x12, x12, #128
-	fmla	v8.2d, v20.2d, v26.2d[0]
-	fmla	v9.2d, v21.2d, v26.2d[0]
-	fmla	v10.2d, v20.2d, v26.2d[1]
-	fmla	v11.2d, v21.2d, v26.2d[1]
+	fmla	v8.2d, v20.2d, v26.d[0]
+	fmla	v9.2d, v21.2d, v26.d[0]
+	fmla	v10.2d, v20.2d, v26.d[1]
+	fmla	v11.2d, v21.2d, v26.d[1]
 	sub		w8, w8, #4
-	fmla	v12.2d, v20.2d, v27.2d[0]
-	fmla	v13.2d, v21.2d, v27.2d[0]
+	fmla	v12.2d, v20.2d, v27.d[0]
+	fmla	v13.2d, v21.2d, v27.d[0]
 //	ldp		q24, q25, [x10, #(0*8+0*32)] // B
-	fmla	v14.2d, v20.2d, v27.2d[1]
-	fmla	v15.2d, v21.2d, v27.2d[1]
+	fmla	v14.2d, v20.2d, v27.d[1]
+	fmla	v15.2d, v21.2d, v27.d[1]
 //	ldp		q26, q27, [x12, #(0*8+0*32)] // B
 
 	// unroll 3
-	fmla	v0.2d, v22.2d, v28.2d[0]
-	fmla	v1.2d, v23.2d, v28.2d[0]
+	fmla	v0.2d, v22.2d, v28.d[0]
+	fmla	v1.2d, v23.2d, v28.d[0]
 	cmp		w8, #4
-	fmla	v2.2d, v22.2d, v28.2d[1]
-	fmla	v3.2d, v23.2d, v28.2d[1]
+	fmla	v2.2d, v22.2d, v28.d[1]
+	fmla	v3.2d, v23.2d, v28.d[1]
 //	ldp		q16, q17, [x9, #(0*8+0*32)] // A
-	fmla	v4.2d, v22.2d, v29.2d[0]
-	fmla	v5.2d, v23.2d, v29.2d[0]
-	fmla	v6.2d, v22.2d, v29.2d[1]
-	fmla	v7.2d, v23.2d, v29.2d[1]
+	fmla	v4.2d, v22.2d, v29.d[0]
+	fmla	v5.2d, v23.2d, v29.d[0]
+	fmla	v6.2d, v22.2d, v29.d[1]
+	fmla	v7.2d, v23.2d, v29.d[1]
 //	ldp		q18, q19, [x9, #(0*8+1*32)] // A
-	fmla	v8.2d, v22.2d, v30.2d[0]
-	fmla	v9.2d, v23.2d, v30.2d[0]
-	fmla	v10.2d, v22.2d, v30.2d[1]
-	fmla	v11.2d, v23.2d, v30.2d[1]
+	fmla	v8.2d, v22.2d, v30.d[0]
+	fmla	v9.2d, v23.2d, v30.d[0]
+	fmla	v10.2d, v22.2d, v30.d[1]
+	fmla	v11.2d, v23.2d, v30.d[1]
 //	ldp		q20, q21, [x9, #(0*8+2*32)] // A
-	fmla	v12.2d, v22.2d, v31.2d[0]
-	fmla	v13.2d, v23.2d, v31.2d[0]
-	fmla	v14.2d, v22.2d, v31.2d[1]
-	fmla	v15.2d, v23.2d, v31.2d[1]
+	fmla	v12.2d, v22.2d, v31.d[0]
+	fmla	v13.2d, v23.2d, v31.d[0]
+	fmla	v14.2d, v22.2d, v31.d[1]
+	fmla	v15.2d, v23.2d, v31.d[1]
 //	ldp		q22, q23, [x9, #(0*8+3*32)] // A
 
 	b		2f // return
@@ -1390,25 +1076,25 @@ NAME:
 	// unroll 0
 	ld1		{v16.2d, v17.2d}, [x9], #32
 	ld1		{v24.2d, v25.2d}, [x10], #32
-	fmla	v0.2d, v16.2d, v24.2d[0]
-	fmla	v1.2d, v17.2d, v24.2d[0]
-	fmla	v2.2d, v16.2d, v24.2d[1]
-	fmla	v3.2d, v17.2d, v24.2d[1]
-	fmla	v4.2d, v16.2d, v25.2d[0]
-	fmla	v5.2d, v17.2d, v25.2d[0]
-	fmla	v6.2d, v16.2d, v25.2d[1]
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v24.d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
+	fmla	v4.2d, v16.2d, v25.d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
+	fmla	v6.2d, v16.2d, v25.d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 	ld1		{v26.2d, v27.2d}, [x12], #32
-	fmla	v8.2d, v16.2d, v26.2d[0]
-	fmla	v9.2d, v17.2d, v26.2d[0]
+	fmla	v8.2d, v16.2d, v26.d[0]
+	fmla	v9.2d, v17.2d, v26.d[0]
 	sub		w8, w8, #1
-	fmla	v10.2d, v16.2d, v26.2d[1]
-	fmla	v11.2d, v17.2d, v26.2d[1]
+	fmla	v10.2d, v16.2d, v26.d[1]
+	fmla	v11.2d, v17.2d, v26.d[1]
 	cmp		w8, #0
-	fmla	v12.2d, v16.2d, v27.2d[0]
-	fmla	v13.2d, v17.2d, v27.2d[0]
-	fmla	v14.2d, v16.2d, v27.2d[1]
-	fmla	v15.2d, v17.2d, v27.2d[1]
+	fmla	v12.2d, v16.2d, v27.d[0]
+	fmla	v13.2d, v17.2d, v27.d[0]
+	fmla	v14.2d, v16.2d, v27.d[1]
+	fmla	v15.2d, v17.2d, v27.d[1]
 
 	bgt		3b
 
@@ -1500,159 +1186,159 @@ NAME:
 	// unroll 0
 	ldr		d18, [x9, #(0*8+1*32)] // A0
 	ins		v20.d[1], x20
-	fmla	v0.2d, v16.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
 	ldr		x18, [x9, #(1*8+1*32)] // A0
-	fmla	v2.2d, v16.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
 	prfm	PLDL1KEEP, [x28]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldr		d26, [x11, #(1*8+0*32)] // B
 	ins		v21.d[1], x21
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	ldr		x26, [x11, #(1*8+1*32)] // B
-	fmla	v4.2d, v16.2d, v25.2d[0]
+	fmla	v4.2d, v16.2d, v25.d[0]
 	prfm	PLDL1KEEP, [x28, #64]
-	fmla	v6.2d, v16.2d, v25.2d[1]
+	fmla	v6.2d, v16.2d, v25.d[1]
 	ldr		d19, [x9, #(2*8+1*32)] // A0
 	ins		v18.d[1], x18
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 	ldr		x19, [x9, #(3*8+1*32)] // A0
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v8.2d, v20.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
 	ldr		d27, [x11, #(1*8+2*32)] // B
 	ins		v26.d[1], x26
-	fmla	v10.2d, v20.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
 	ldr		x27, [x11, #(1*8+3*32)] // B
-	fmla	v9.2d, v21.2d, v24.2d[0]
+	fmla	v9.2d, v21.2d, v24.d[0]
 	prfm	PLDL1KEEP, [x13, #128]
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v11.2d, v21.2d, v24.d[1]
 	ldr		d22, [x13, #(0*8+1*32)] // A1
 	ins		v19.d[1], x19
-	fmla	v12.2d, v20.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
 	ldr		x22, [x13, #(1*8+1*32)] // A1
-	fmla	v14.2d, v20.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
 	ldr		x23, [x13, #(3*8+1*32)] // A1
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 	ldr		d23, [x13, #(2*8+1*32)] // A1
 	ins		v27.d[1], x27
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 
 	// unroll 1
 	ldr		d16, [x9, #(0*8+2*32)] // A0
 	ins		v22.d[1], x22
-	fmla	v0.2d, v18.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
 	ldr		x16, [x9, #(1*8+2*32)] // A0
-	fmla	v2.2d, v18.2d, v26.2d[1]
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v2.2d, v18.2d, v26.d[1]
+	fmla	v1.2d, v19.2d, v26.d[0]
 	ldr		d24, [x11, #(2*8+0*32)] // B
 	ins		v23.d[1], x23
-	fmla	v3.2d, v19.2d, v26.2d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
 	ldr		x24, [x11, #(2*8+1*32)] // B
-	fmla	v4.2d, v18.2d, v27.2d[0]
-	fmla	v6.2d, v18.2d, v27.2d[1]
+	fmla	v4.2d, v18.2d, v27.d[0]
+	fmla	v6.2d, v18.2d, v27.d[1]
 	ldr		d17, [x9, #(2*8+2*32)] // A0
 	ins		v16.d[1], x16
-	fmla	v5.2d, v19.2d, v27.2d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
 	ldr		x17, [x9, #(3*8+2*32)] // A0
-	fmla	v7.2d, v19.2d, v27.2d[1]
-	fmla	v8.2d, v22.2d, v26.2d[0]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v22.2d, v26.d[0]
 	ldr		d25, [x11, #(2*8+2*32)] // B
 	ins		v24.d[1], x24
-	fmla	v10.2d, v22.2d, v26.2d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
 	ldr		x25, [x11, #(2*8+3*32)] // B
-	fmla	v9.2d, v23.2d, v26.2d[0]
+	fmla	v9.2d, v23.2d, v26.d[0]
 	add		x28, x11, x12
-	fmla	v11.2d, v23.2d, v26.2d[1]
+	fmla	v11.2d, v23.2d, v26.d[1]
 	ldr		d20, [x13, #(0*8+2*32)] // A1
 	ins		v17.d[1], x17
-	fmla	v12.2d, v22.2d, v27.2d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
 	ldr		x20, [x13, #(1*8+2*32)] // A1
-	fmla	v14.2d, v22.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
 	ldr		x21, [x13, #(3*8+2*32)] // A1
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 	ldr		d21, [x13, #(2*8+2*32)] // A1
 	ins		v25.d[1], x25
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	// unroll 2
 	ldr		d18, [x9, #(0*8+3*32)] // A0
 	ins		v20.d[1], x20
-	fmla	v0.2d, v16.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
 	ldr		x18, [x9, #(1*8+3*32)] // A0
-	fmla	v2.2d, v16.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
 	prfm	PLDL1KEEP, [x9, #192]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldr		d26, [x11, #(3*8+0*32)] // B
 	ins		v21.d[1], x21
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	ldr		x26, [x11, #(3*8+1*32)] // B
-	fmla	v4.2d, v16.2d, v25.2d[0]
+	fmla	v4.2d, v16.2d, v25.d[0]
 //	prfm	PLDL1KEEP, [x11, #192]
-	fmla	v6.2d, v16.2d, v25.2d[1]
+	fmla	v6.2d, v16.2d, v25.d[1]
 	ldr		d19, [x9, #(2*8+3*32)] // A0
 	ins		v18.d[1], x18
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 	ldr		x19, [x9, #(3*8+3*32)] // A0
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 	prfm	PLDL1KEEP, [x13, #192]
-	fmla	v8.2d, v20.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
 	ldr		d27, [x11, #(3*8+2*32)] // B
 	ins		v26.d[1], x26
-	fmla	v10.2d, v20.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
 	ldr		x27, [x11, #(3*8+3*32)] // B
-	fmla	v9.2d, v21.2d, v24.2d[0]
+	fmla	v9.2d, v21.2d, v24.d[0]
 	sub		w8, w8, #4
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v11.2d, v21.2d, v24.d[1]
 	ldr		d22, [x13, #(0*8+3*32)] // A1
 	ins		v19.d[1], x19
-	fmla	v12.2d, v20.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
 	ldr		x22, [x13, #(1*8+3*32)] // A1
-	fmla	v14.2d, v20.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
 	ldr		x23, [x13, #(3*8+3*32)] // A1
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 	ldr		d23, [x13, #(2*8+3*32)] // A1
 	ins		v27.d[1], x27
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 
 	// unroll 3
 	ldr		d16, [x9, #(0*8+4*32)] // A0
 	ins		v22.d[1], x22
-	fmla	v0.2d, v18.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
 	ldr		x16, [x9, #(1*8+4*32)] // A0
-	fmla	v2.2d, v18.2d, v26.2d[1]
+	fmla	v2.2d, v18.2d, v26.d[1]
 	add		x11, x11, x12
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v1.2d, v19.2d, v26.d[0]
 	ldr		d24, [x11, #(0*8+0*32)] // B
 	ins		v23.d[1], x23
-	fmla	v3.2d, v19.2d, v26.2d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
 	ldr		x24, [x11, #(0*8+1*32)] // B
-	fmla	v4.2d, v18.2d, v27.2d[0]
+	fmla	v4.2d, v18.2d, v27.d[0]
 	add		x9, x9, #128
-	fmla	v6.2d, v18.2d, v27.2d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
 	ldr		d17, [x9, #(2*8+0*32)] // A0
 	ins		v16.d[1], x16
-	fmla	v5.2d, v19.2d, v27.2d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
 	ldr		x17, [x9, #(3*8+0*32)] // A0
-	fmla	v7.2d, v19.2d, v27.2d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
 	add		x13, x13, #128
-	fmla	v8.2d, v22.2d, v26.2d[0]
+	fmla	v8.2d, v22.2d, v26.d[0]
 	ldr		d25, [x11, #(0*8+2*32)] // B
 	ins		v24.d[1], x24
-	fmla	v10.2d, v22.2d, v26.2d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
 	ldr		x25, [x11, #(0*8+3*32)] // B
-	fmla	v9.2d, v23.2d, v26.2d[0]
+	fmla	v9.2d, v23.2d, v26.d[0]
 	cmp		w8, #4
-	fmla	v11.2d, v23.2d, v26.2d[1]
+	fmla	v11.2d, v23.2d, v26.d[1]
 	ldr		d20, [x13, #(0*8+0*32)] // A1
 	ins		v17.d[1], x17
-	fmla	v12.2d, v22.2d, v27.2d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
 	ldr		x20, [x13, #(1*8+0*32)] // A1
-	fmla	v14.2d, v22.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
 	ldr		x21, [x13, #(3*8+0*32)] // A1
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 	ldr		d21, [x13, #(2*8+0*32)] // A1
 	ins		v25.d[1], x25
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	bgt		1b
 
@@ -1665,159 +1351,159 @@ NAME:
 	// unroll 0
 	ldr		d18, [x9, #(0*8+1*32)] // A0
 	ins		v20.d[1], x20
-	fmla	v0.2d, v16.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
 	ldr		x18, [x9, #(1*8+1*32)] // A0
-	fmla	v2.2d, v16.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
 //	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldr		d26, [x11, #(1*8+0*32)] // B
 	ins		v21.d[1], x21
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	ldr		x26, [x11, #(1*8+1*32)] // B
-	fmla	v4.2d, v16.2d, v25.2d[0]
+	fmla	v4.2d, v16.2d, v25.d[0]
 //	prfm	PLDL1KEEP, [x11, #128]
-	fmla	v6.2d, v16.2d, v25.2d[1]
+	fmla	v6.2d, v16.2d, v25.d[1]
 	ldr		d19, [x9, #(2*8+1*32)] // A0
 	ins		v18.d[1], x18
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 	ldr		x19, [x9, #(3*8+1*32)] // A0
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 //	prfm	PLDL1KEEP, [x13, #128]
-	fmla	v8.2d, v20.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
 	ldr		d27, [x11, #(1*8+2*32)] // B
 	ins		v26.d[1], x26
-	fmla	v10.2d, v20.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
 	ldr		x27, [x11, #(1*8+3*32)] // B
-	fmla	v9.2d, v21.2d, v24.2d[0]
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v9.2d, v21.2d, v24.d[0]
+	fmla	v11.2d, v21.2d, v24.d[1]
 	ldr		d22, [x13, #(0*8+1*32)] // A1
 	ins		v19.d[1], x19
-	fmla	v12.2d, v20.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
 	ldr		x22, [x13, #(1*8+1*32)] // A1
-	fmla	v14.2d, v20.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
 	ldr		x23, [x13, #(3*8+1*32)] // A1
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 	ldr		d23, [x13, #(2*8+1*32)] // A1
 	ins		v27.d[1], x27
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 
 	// unroll 1
 	ldr		d16, [x9, #(0*8+2*32)] // A0
 	ins		v22.d[1], x22
-	fmla	v0.2d, v18.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
 	ldr		x16, [x9, #(1*8+2*32)] // A0
-	fmla	v2.2d, v18.2d, v26.2d[1]
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v2.2d, v18.2d, v26.d[1]
+	fmla	v1.2d, v19.2d, v26.d[0]
 	ldr		d24, [x11, #(2*8+0*32)] // B
 	ins		v23.d[1], x23
-	fmla	v3.2d, v19.2d, v26.2d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
 	ldr		x24, [x11, #(2*8+1*32)] // B
-	fmla	v4.2d, v18.2d, v27.2d[0]
-	fmla	v6.2d, v18.2d, v27.2d[1]
+	fmla	v4.2d, v18.2d, v27.d[0]
+	fmla	v6.2d, v18.2d, v27.d[1]
 	ldr		d17, [x9, #(2*8+2*32)] // A0
 	ins		v16.d[1], x16
-	fmla	v5.2d, v19.2d, v27.2d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
 	ldr		x17, [x9, #(3*8+2*32)] // A0
-	fmla	v7.2d, v19.2d, v27.2d[1]
-	fmla	v8.2d, v22.2d, v26.2d[0]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v22.2d, v26.d[0]
 	ldr		d25, [x11, #(2*8+2*32)] // B
 	ins		v24.d[1], x24
-	fmla	v10.2d, v22.2d, v26.2d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
 	ldr		x25, [x11, #(2*8+3*32)] // B
-	fmla	v9.2d, v23.2d, v26.2d[0]
-	fmla	v11.2d, v23.2d, v26.2d[1]
+	fmla	v9.2d, v23.2d, v26.d[0]
+	fmla	v11.2d, v23.2d, v26.d[1]
 	ldr		d20, [x13, #(0*8+2*32)] // A1
 	ins		v17.d[1], x17
-	fmla	v12.2d, v22.2d, v27.2d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
 	ldr		x20, [x13, #(1*8+2*32)] // A1
-	fmla	v14.2d, v22.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
 	ldr		x21, [x13, #(3*8+2*32)] // A1
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 	ldr		d21, [x13, #(2*8+2*32)] // A1
 	ins		v25.d[1], x25
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	// unroll 2
 	ldr		d18, [x9, #(0*8+3*32)] // A0
 	ins		v20.d[1], x20
-	fmla	v0.2d, v16.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
 	ldr		x18, [x9, #(1*8+3*32)] // A0
-	fmla	v2.2d, v16.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
 //	prfm	PLDL1KEEP, [x9, #192]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldr		d26, [x11, #(3*8+0*32)] // B
 	ins		v21.d[1], x21
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	ldr		x26, [x11, #(3*8+1*32)] // B
-	fmla	v4.2d, v16.2d, v25.2d[0]
+	fmla	v4.2d, v16.2d, v25.d[0]
 //	prfm	PLDL1KEEP, [x11, #192]
-	fmla	v6.2d, v16.2d, v25.2d[1]
+	fmla	v6.2d, v16.2d, v25.d[1]
 	ldr		d19, [x9, #(2*8+3*32)] // A0
 	ins		v18.d[1], x18
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 	ldr		x19, [x9, #(3*8+3*32)] // A0
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 //	prfm	PLDL1KEEP, [x13, #192]
-	fmla	v8.2d, v20.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
 	ldr		d27, [x11, #(3*8+2*32)] // B
 	ins		v26.d[1], x26
-	fmla	v10.2d, v20.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
 	ldr		x27, [x11, #(3*8+3*32)] // B
-	fmla	v9.2d, v21.2d, v24.2d[0]
+	fmla	v9.2d, v21.2d, v24.d[0]
 	sub		w8, w8, #4
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v11.2d, v21.2d, v24.d[1]
 	ldr		d22, [x13, #(0*8+3*32)] // A1
 	ins		v19.d[1], x19
-	fmla	v12.2d, v20.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
 	ldr		x22, [x13, #(1*8+3*32)] // A1
-	fmla	v14.2d, v20.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
 	ldr		x23, [x13, #(3*8+3*32)] // A1
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 	ldr		d23, [x13, #(2*8+3*32)] // A1
 	ins		v27.d[1], x27
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 
 	// unroll 3
 //	ldr		d16, [x9, #(0*8+4*32)] // A0
 	ins		v22.d[1], x22
-	fmla	v0.2d, v18.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
 //	ldr		x16, [x9, #(1*8+4*32)] // A0
-	fmla	v2.2d, v18.2d, v26.2d[1]
+	fmla	v2.2d, v18.2d, v26.d[1]
 //	add		x9, x9, #128
 	add		x11, x11, x12
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v1.2d, v19.2d, v26.d[0]
 //	ldr		d24, [x11, #(0*8+0*32)] // B
 	ins		v23.d[1], x23
-	fmla	v3.2d, v19.2d, v26.2d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
 //	ldr		x24, [x11, #(0*8+1*32)] // B
-	fmla	v4.2d, v18.2d, v27.2d[0]
+	fmla	v4.2d, v18.2d, v27.d[0]
 //	add		x11, x11, #128
 	add		x9, x9, #128
-	fmla	v6.2d, v18.2d, v27.2d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
 //	ldr		d17, [x9, #(2*8+0*32)] // A0
 //	ins		v16.d[1], x16
-	fmla	v5.2d, v19.2d, v27.2d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
 //	ldr		x17, [x9, #(3*8+0*32)] // A0
-	fmla	v7.2d, v19.2d, v27.2d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
 	add		x13, x13, #128
-	fmla	v8.2d, v22.2d, v26.2d[0]
+	fmla	v8.2d, v22.2d, v26.d[0]
 //	ldr		d25, [x11, #(0*8+2*32)] // B
 //	ins		v24.d[1], x24
-	fmla	v10.2d, v22.2d, v26.2d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
 //	ldr		x25, [x11, #(0*8+3*32)] // B
-	fmla	v9.2d, v23.2d, v26.2d[0]
+	fmla	v9.2d, v23.2d, v26.d[0]
 //	cmp		w8, #4
-	fmla	v11.2d, v23.2d, v26.2d[1]
+	fmla	v11.2d, v23.2d, v26.d[1]
 //	ldr		d20, [x13, #(0*8+0*32)] // A1
 //	ins		v17.d[1], x17
-	fmla	v12.2d, v22.2d, v27.2d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
 //	ldr		x20, [x13, #(1*8+0*32)] // A1
-	fmla	v14.2d, v22.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
 //	ldr		x21, [x13, #(3*8+0*32)] // A1
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 //	ldr		d21, [x13, #(2*8+0*32)] // A1
 //	ins		v25.d[1], x25
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	b		2f // return
 
@@ -1839,25 +1525,25 @@ NAME:
 	ldr		d31, [x11, #(0*8+3*32)]
 	ld1		{v20.2d, v21.2d}, [x9], #32
 	ld1		{v22.2d, v23.2d}, [x13], #32
-	fmla	v0.2d, v20.2d, v28.2d[0]
-	fmla	v1.2d, v21.2d, v28.2d[0]
-	fmla	v2.2d, v20.2d, v29.2d[0]
-	fmla	v3.2d, v21.2d, v29.2d[0]
-	fmla	v4.2d, v20.2d, v30.2d[0]
-	fmla	v5.2d, v21.2d, v30.2d[0]
-	fmla	v6.2d, v20.2d, v31.2d[0]
-	fmla	v7.2d, v21.2d, v31.2d[0]
+	fmla	v0.2d, v20.2d, v28.d[0]
+	fmla	v1.2d, v21.2d, v28.d[0]
+	fmla	v2.2d, v20.2d, v29.d[0]
+	fmla	v3.2d, v21.2d, v29.d[0]
+	fmla	v4.2d, v20.2d, v30.d[0]
+	fmla	v5.2d, v21.2d, v30.d[0]
+	fmla	v6.2d, v20.2d, v31.d[0]
+	fmla	v7.2d, v21.2d, v31.d[0]
 	add		x11, x11, #8
-	fmla	v8.2d, v22.2d, v28.2d[0]
-	fmla	v9.2d, v23.2d, v28.2d[0]
+	fmla	v8.2d, v22.2d, v28.d[0]
+	fmla	v9.2d, v23.2d, v28.d[0]
 	sub		w8, w8, #1
-	fmla	v10.2d, v22.2d, v29.2d[0]
-	fmla	v11.2d, v23.2d, v29.2d[0]
+	fmla	v10.2d, v22.2d, v29.d[0]
+	fmla	v11.2d, v23.2d, v29.d[0]
 	cmp		w8, #0
-	fmla	v12.2d, v22.2d, v30.2d[0]
-	fmla	v13.2d, v23.2d, v30.2d[0]
-	fmla	v14.2d, v22.2d, v31.2d[0]
-	fmla	v15.2d, v23.2d, v31.2d[0]
+	fmla	v12.2d, v22.2d, v30.d[0]
+	fmla	v13.2d, v23.2d, v30.d[0]
+	fmla	v14.2d, v22.2d, v31.d[0]
+	fmla	v15.2d, v23.2d, v31.d[0]
 
 	bgt		3b
 
@@ -1909,39 +1595,39 @@ NAME:
 	ld1		{v20.2d, v21.2d}, [x9], #32
 	ld1		{v22.2d, v23.2d}, [x13], #32
 
-	fmla	v0.2d, v16.2d, v28.2d[0]
-	fmla	v1.2d, v17.2d, v28.2d[0]
-	fmla	v8.2d, v18.2d, v28.2d[0]
-	fmla	v9.2d, v19.2d, v28.2d[0]
-	fmla	v2.2d, v16.2d, v29.2d[0]
-	fmla	v3.2d, v17.2d, v29.2d[0]
-	fmla	v10.2d, v18.2d, v29.2d[0]
-	fmla	v11.2d, v19.2d, v29.2d[0]
-	fmla	v4.2d, v16.2d, v30.2d[0]
-	fmla	v5.2d, v17.2d, v30.2d[0]
-	fmla	v12.2d, v18.2d, v30.2d[0]
-	fmla	v13.2d, v19.2d, v30.2d[0]
-	fmla	v6.2d, v16.2d, v31.2d[0]
-	fmla	v7.2d, v17.2d, v31.2d[0]
-	fmla	v14.2d, v18.2d, v31.2d[0]
-	fmla	v15.2d, v19.2d, v31.2d[0]
+	fmla	v0.2d, v16.2d, v28.d[0]
+	fmla	v1.2d, v17.2d, v28.d[0]
+	fmla	v8.2d, v18.2d, v28.d[0]
+	fmla	v9.2d, v19.2d, v28.d[0]
+	fmla	v2.2d, v16.2d, v29.d[0]
+	fmla	v3.2d, v17.2d, v29.d[0]
+	fmla	v10.2d, v18.2d, v29.d[0]
+	fmla	v11.2d, v19.2d, v29.d[0]
+	fmla	v4.2d, v16.2d, v30.d[0]
+	fmla	v5.2d, v17.2d, v30.d[0]
+	fmla	v12.2d, v18.2d, v30.d[0]
+	fmla	v13.2d, v19.2d, v30.d[0]
+	fmla	v6.2d, v16.2d, v31.d[0]
+	fmla	v7.2d, v17.2d, v31.d[0]
+	fmla	v14.2d, v18.2d, v31.d[0]
+	fmla	v15.2d, v19.2d, v31.d[0]
 
-	fmla	v0.2d, v20.2d, v28.2d[1]
-	fmla	v1.2d, v21.2d, v28.2d[1]
-	fmla	v8.2d, v22.2d, v28.2d[1]
-	fmla	v9.2d, v23.2d, v28.2d[1]
-	fmla	v2.2d, v20.2d, v29.2d[1]
-	fmla	v3.2d, v21.2d, v29.2d[1]
-	fmla	v10.2d, v22.2d, v29.2d[1]
-	fmla	v11.2d, v23.2d, v29.2d[1]
-	fmla	v4.2d, v20.2d, v30.2d[1]
-	fmla	v5.2d, v21.2d, v30.2d[1]
-	fmla	v12.2d, v22.2d, v30.2d[1]
-	fmla	v13.2d, v23.2d, v30.2d[1]
-	fmla	v6.2d, v20.2d, v31.2d[1]
-	fmla	v7.2d, v21.2d, v31.2d[1]
-	fmla	v14.2d, v22.2d, v31.2d[1]
-	fmla	v15.2d, v23.2d, v31.2d[1]
+	fmla	v0.2d, v20.2d, v28.d[1]
+	fmla	v1.2d, v21.2d, v28.d[1]
+	fmla	v8.2d, v22.2d, v28.d[1]
+	fmla	v9.2d, v23.2d, v28.d[1]
+	fmla	v2.2d, v20.2d, v29.d[1]
+	fmla	v3.2d, v21.2d, v29.d[1]
+	fmla	v10.2d, v22.2d, v29.d[1]
+	fmla	v11.2d, v23.2d, v29.d[1]
+	fmla	v4.2d, v20.2d, v30.d[1]
+	fmla	v5.2d, v21.2d, v30.d[1]
+	fmla	v12.2d, v22.2d, v30.d[1]
+	fmla	v13.2d, v23.2d, v30.d[1]
+	fmla	v6.2d, v20.2d, v31.d[1]
+	fmla	v7.2d, v21.2d, v31.d[1]
+	fmla	v14.2d, v22.2d, v31.d[1]
+	fmla	v15.2d, v23.2d, v31.d[1]
 
 	prfm	PLDL1KEEP, [x9, #192]
 	prfm	PLDL1KEEP, [x13, #192]
@@ -1957,39 +1643,39 @@ NAME:
 	ld1		{v20.2d, v21.2d}, [x9], #32
 	ld1		{v22.2d, v23.2d}, [x13], #32
 
-	fmla	v0.2d, v16.2d, v28.2d[0]
-	fmla	v1.2d, v17.2d, v28.2d[0]
-	fmla	v8.2d, v18.2d, v28.2d[0]
-	fmla	v9.2d, v19.2d, v28.2d[0]
-	fmla	v2.2d, v16.2d, v29.2d[0]
-	fmla	v3.2d, v17.2d, v29.2d[0]
-	fmla	v10.2d, v18.2d, v29.2d[0]
-	fmla	v11.2d, v19.2d, v29.2d[0]
-	fmla	v4.2d, v16.2d, v30.2d[0]
-	fmla	v5.2d, v17.2d, v30.2d[0]
-	fmla	v12.2d, v18.2d, v30.2d[0]
-	fmla	v13.2d, v19.2d, v30.2d[0]
-	fmla	v6.2d, v16.2d, v31.2d[0]
-	fmla	v7.2d, v17.2d, v31.2d[0]
-	fmla	v14.2d, v18.2d, v31.2d[0]
-	fmla	v15.2d, v19.2d, v31.2d[0]
+	fmla	v0.2d, v16.2d, v28.d[0]
+	fmla	v1.2d, v17.2d, v28.d[0]
+	fmla	v8.2d, v18.2d, v28.d[0]
+	fmla	v9.2d, v19.2d, v28.d[0]
+	fmla	v2.2d, v16.2d, v29.d[0]
+	fmla	v3.2d, v17.2d, v29.d[0]
+	fmla	v10.2d, v18.2d, v29.d[0]
+	fmla	v11.2d, v19.2d, v29.d[0]
+	fmla	v4.2d, v16.2d, v30.d[0]
+	fmla	v5.2d, v17.2d, v30.d[0]
+	fmla	v12.2d, v18.2d, v30.d[0]
+	fmla	v13.2d, v19.2d, v30.d[0]
+	fmla	v6.2d, v16.2d, v31.d[0]
+	fmla	v7.2d, v17.2d, v31.d[0]
+	fmla	v14.2d, v18.2d, v31.d[0]
+	fmla	v15.2d, v19.2d, v31.d[0]
 
-	fmla	v0.2d, v20.2d, v28.2d[1]
-	fmla	v1.2d, v21.2d, v28.2d[1]
-	fmla	v8.2d, v22.2d, v28.2d[1]
-	fmla	v9.2d, v23.2d, v28.2d[1]
-	fmla	v2.2d, v20.2d, v29.2d[1]
-	fmla	v3.2d, v21.2d, v29.2d[1]
-	fmla	v10.2d, v22.2d, v29.2d[1]
-	fmla	v11.2d, v23.2d, v29.2d[1]
-	fmla	v4.2d, v20.2d, v30.2d[1]
-	fmla	v5.2d, v21.2d, v30.2d[1]
-	fmla	v12.2d, v22.2d, v30.2d[1]
-	fmla	v13.2d, v23.2d, v30.2d[1]
-	fmla	v6.2d, v20.2d, v31.2d[1]
-	fmla	v7.2d, v21.2d, v31.2d[1]
-	fmla	v14.2d, v22.2d, v31.2d[1]
-	fmla	v15.2d, v23.2d, v31.2d[1]
+	fmla	v0.2d, v20.2d, v28.d[1]
+	fmla	v1.2d, v21.2d, v28.d[1]
+	fmla	v8.2d, v22.2d, v28.d[1]
+	fmla	v9.2d, v23.2d, v28.d[1]
+	fmla	v2.2d, v20.2d, v29.d[1]
+	fmla	v3.2d, v21.2d, v29.d[1]
+	fmla	v10.2d, v22.2d, v29.d[1]
+	fmla	v11.2d, v23.2d, v29.d[1]
+	fmla	v4.2d, v20.2d, v30.d[1]
+	fmla	v5.2d, v21.2d, v30.d[1]
+	fmla	v12.2d, v22.2d, v30.d[1]
+	fmla	v13.2d, v23.2d, v30.d[1]
+	fmla	v6.2d, v20.2d, v31.d[1]
+	fmla	v7.2d, v21.2d, v31.d[1]
+	fmla	v14.2d, v22.2d, v31.d[1]
+	fmla	v15.2d, v23.2d, v31.d[1]
 
 	add		x11, x11, x12
 	sub		w8, w8, #4
@@ -2016,39 +1702,39 @@ NAME:
 	ld1		{v20.2d, v21.2d}, [x9], #32
 	ld1		{v22.2d, v23.2d}, [x13], #32
 
-	fmla	v0.2d, v16.2d, v28.2d[0]
-	fmla	v1.2d, v17.2d, v28.2d[0]
-	fmla	v8.2d, v18.2d, v28.2d[0]
-	fmla	v9.2d, v19.2d, v28.2d[0]
-	fmla	v2.2d, v16.2d, v29.2d[0]
-	fmla	v3.2d, v17.2d, v29.2d[0]
-	fmla	v10.2d, v18.2d, v29.2d[0]
-	fmla	v11.2d, v19.2d, v29.2d[0]
-	fmla	v4.2d, v16.2d, v30.2d[0]
-	fmla	v5.2d, v17.2d, v30.2d[0]
-	fmla	v12.2d, v18.2d, v30.2d[0]
-	fmla	v13.2d, v19.2d, v30.2d[0]
-	fmla	v6.2d, v16.2d, v31.2d[0]
-	fmla	v7.2d, v17.2d, v31.2d[0]
-	fmla	v14.2d, v18.2d, v31.2d[0]
-	fmla	v15.2d, v19.2d, v31.2d[0]
+	fmla	v0.2d, v16.2d, v28.d[0]
+	fmla	v1.2d, v17.2d, v28.d[0]
+	fmla	v8.2d, v18.2d, v28.d[0]
+	fmla	v9.2d, v19.2d, v28.d[0]
+	fmla	v2.2d, v16.2d, v29.d[0]
+	fmla	v3.2d, v17.2d, v29.d[0]
+	fmla	v10.2d, v18.2d, v29.d[0]
+	fmla	v11.2d, v19.2d, v29.d[0]
+	fmla	v4.2d, v16.2d, v30.d[0]
+	fmla	v5.2d, v17.2d, v30.d[0]
+	fmla	v12.2d, v18.2d, v30.d[0]
+	fmla	v13.2d, v19.2d, v30.d[0]
+	fmla	v6.2d, v16.2d, v31.d[0]
+	fmla	v7.2d, v17.2d, v31.d[0]
+	fmla	v14.2d, v18.2d, v31.d[0]
+	fmla	v15.2d, v19.2d, v31.d[0]
 
-	fmla	v0.2d, v20.2d, v28.2d[1]
-	fmla	v1.2d, v21.2d, v28.2d[1]
-	fmla	v8.2d, v22.2d, v28.2d[1]
-	fmla	v9.2d, v23.2d, v28.2d[1]
-	fmla	v2.2d, v20.2d, v29.2d[1]
-	fmla	v3.2d, v21.2d, v29.2d[1]
-	fmla	v10.2d, v22.2d, v29.2d[1]
-	fmla	v11.2d, v23.2d, v29.2d[1]
-	fmla	v4.2d, v20.2d, v30.2d[1]
-	fmla	v5.2d, v21.2d, v30.2d[1]
-	fmla	v12.2d, v22.2d, v30.2d[1]
-	fmla	v13.2d, v23.2d, v30.2d[1]
-	fmla	v6.2d, v20.2d, v31.2d[1]
-	fmla	v7.2d, v21.2d, v31.2d[1]
-	fmla	v14.2d, v22.2d, v31.2d[1]
-	fmla	v15.2d, v23.2d, v31.2d[1]
+	fmla	v0.2d, v20.2d, v28.d[1]
+	fmla	v1.2d, v21.2d, v28.d[1]
+	fmla	v8.2d, v22.2d, v28.d[1]
+	fmla	v9.2d, v23.2d, v28.d[1]
+	fmla	v2.2d, v20.2d, v29.d[1]
+	fmla	v3.2d, v21.2d, v29.d[1]
+	fmla	v10.2d, v22.2d, v29.d[1]
+	fmla	v11.2d, v23.2d, v29.d[1]
+	fmla	v4.2d, v20.2d, v30.d[1]
+	fmla	v5.2d, v21.2d, v30.d[1]
+	fmla	v12.2d, v22.2d, v30.d[1]
+	fmla	v13.2d, v23.2d, v30.d[1]
+	fmla	v6.2d, v20.2d, v31.d[1]
+	fmla	v7.2d, v21.2d, v31.d[1]
+	fmla	v14.2d, v22.2d, v31.d[1]
+	fmla	v15.2d, v23.2d, v31.d[1]
 
 	// unroll 2 & 3
 	ldr		q28, [x11, #16]
@@ -2061,39 +1747,39 @@ NAME:
 	ld1		{v20.2d, v21.2d}, [x9], #32
 	ld1		{v22.2d, v23.2d}, [x13], #32
 
-	fmla	v0.2d, v16.2d, v28.2d[0]
-	fmla	v1.2d, v17.2d, v28.2d[0]
-	fmla	v8.2d, v18.2d, v28.2d[0]
-	fmla	v9.2d, v19.2d, v28.2d[0]
-	fmla	v2.2d, v16.2d, v29.2d[0]
-	fmla	v3.2d, v17.2d, v29.2d[0]
-	fmla	v10.2d, v18.2d, v29.2d[0]
-	fmla	v11.2d, v19.2d, v29.2d[0]
-	fmla	v4.2d, v16.2d, v30.2d[0]
-	fmla	v5.2d, v17.2d, v30.2d[0]
-	fmla	v12.2d, v18.2d, v30.2d[0]
-	fmla	v13.2d, v19.2d, v30.2d[0]
-	fmla	v6.2d, v16.2d, v31.2d[0]
-	fmla	v7.2d, v17.2d, v31.2d[0]
-	fmla	v14.2d, v18.2d, v31.2d[0]
-	fmla	v15.2d, v19.2d, v31.2d[0]
+	fmla	v0.2d, v16.2d, v28.d[0]
+	fmla	v1.2d, v17.2d, v28.d[0]
+	fmla	v8.2d, v18.2d, v28.d[0]
+	fmla	v9.2d, v19.2d, v28.d[0]
+	fmla	v2.2d, v16.2d, v29.d[0]
+	fmla	v3.2d, v17.2d, v29.d[0]
+	fmla	v10.2d, v18.2d, v29.d[0]
+	fmla	v11.2d, v19.2d, v29.d[0]
+	fmla	v4.2d, v16.2d, v30.d[0]
+	fmla	v5.2d, v17.2d, v30.d[0]
+	fmla	v12.2d, v18.2d, v30.d[0]
+	fmla	v13.2d, v19.2d, v30.d[0]
+	fmla	v6.2d, v16.2d, v31.d[0]
+	fmla	v7.2d, v17.2d, v31.d[0]
+	fmla	v14.2d, v18.2d, v31.d[0]
+	fmla	v15.2d, v19.2d, v31.d[0]
 
-	fmla	v0.2d, v20.2d, v28.2d[1]
-	fmla	v1.2d, v21.2d, v28.2d[1]
-	fmla	v8.2d, v22.2d, v28.2d[1]
-	fmla	v9.2d, v23.2d, v28.2d[1]
-	fmla	v2.2d, v20.2d, v29.2d[1]
-	fmla	v3.2d, v21.2d, v29.2d[1]
-	fmla	v10.2d, v22.2d, v29.2d[1]
-	fmla	v11.2d, v23.2d, v29.2d[1]
-	fmla	v4.2d, v20.2d, v30.2d[1]
-	fmla	v5.2d, v21.2d, v30.2d[1]
-	fmla	v12.2d, v22.2d, v30.2d[1]
-	fmla	v13.2d, v23.2d, v30.2d[1]
-	fmla	v6.2d, v20.2d, v31.2d[1]
-	fmla	v7.2d, v21.2d, v31.2d[1]
-	fmla	v14.2d, v22.2d, v31.2d[1]
-	fmla	v15.2d, v23.2d, v31.2d[1]
+	fmla	v0.2d, v20.2d, v28.d[1]
+	fmla	v1.2d, v21.2d, v28.d[1]
+	fmla	v8.2d, v22.2d, v28.d[1]
+	fmla	v9.2d, v23.2d, v28.d[1]
+	fmla	v2.2d, v20.2d, v29.d[1]
+	fmla	v3.2d, v21.2d, v29.d[1]
+	fmla	v10.2d, v22.2d, v29.d[1]
+	fmla	v11.2d, v23.2d, v29.d[1]
+	fmla	v4.2d, v20.2d, v30.d[1]
+	fmla	v5.2d, v21.2d, v30.d[1]
+	fmla	v12.2d, v22.2d, v30.d[1]
+	fmla	v13.2d, v23.2d, v30.d[1]
+	fmla	v6.2d, v20.2d, v31.d[1]
+	fmla	v7.2d, v21.2d, v31.d[1]
+	fmla	v14.2d, v22.2d, v31.d[1]
+	fmla	v15.2d, v23.2d, v31.d[1]
 
 	add		x11, x11, x12
 	sub		w8, w8, #4
@@ -2116,22 +1802,22 @@ NAME:
 	ld1		{v24.2d, v25.2d}, [x9], #32
 	ld1		{v26.2d, v27.2d}, [x13], #32
 
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
-	fmla	v9.2d, v27.2d, v28.2d[0]
-	fmla	v2.2d, v24.2d, v29.2d[0]
-	fmla	v3.2d, v25.2d, v29.2d[0]
-	fmla	v10.2d, v26.2d, v29.2d[0]
-	fmla	v11.2d, v27.2d, v29.2d[0]
-	fmla	v4.2d, v24.2d, v30.2d[0]
-	fmla	v5.2d, v25.2d, v30.2d[0]
-	fmla	v12.2d, v26.2d, v30.2d[0]
-	fmla	v13.2d, v27.2d, v30.2d[0]
-	fmla	v6.2d, v24.2d, v31.2d[0]
-	fmla	v7.2d, v25.2d, v31.2d[0]
-	fmla	v14.2d, v26.2d, v31.2d[0]
-	fmla	v15.2d, v27.2d, v31.2d[0]
+	fmla	v0.2d, v24.2d, v28.d[0]
+	fmla	v1.2d, v25.2d, v28.d[0]
+	fmla	v8.2d, v26.2d, v28.d[0]
+	fmla	v9.2d, v27.2d, v28.d[0]
+	fmla	v2.2d, v24.2d, v29.d[0]
+	fmla	v3.2d, v25.2d, v29.d[0]
+	fmla	v10.2d, v26.2d, v29.d[0]
+	fmla	v11.2d, v27.2d, v29.d[0]
+	fmla	v4.2d, v24.2d, v30.d[0]
+	fmla	v5.2d, v25.2d, v30.d[0]
+	fmla	v12.2d, v26.2d, v30.d[0]
+	fmla	v13.2d, v27.2d, v30.d[0]
+	fmla	v6.2d, v24.2d, v31.d[0]
+	fmla	v7.2d, v25.2d, v31.d[0]
+	fmla	v14.2d, v26.2d, v31.d[0]
+	fmla	v15.2d, v27.2d, v31.d[0]
 
 	add		x11, x11, #8
 	sub		w8, w8, #1
@@ -2187,95 +1873,95 @@ NAME:
 	// main loop
 1:
 	
-	fmla	v0.2d, v16.2d, v24.2d[0]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldp		q18, q19, [x9, #32]
-	fmla	v8.2d, v20.2d, v24.2d[0]
-	fmla	v9.2d, v21.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
+	fmla	v9.2d, v21.2d, v24.d[0]
 	ldp		q22, q23, [x13, #32]
-	fmla	v2.2d, v16.2d, v26.2d[0]
-	fmla	v3.2d, v17.2d, v26.2d[0]
+	fmla	v2.2d, v16.2d, v26.d[0]
+	fmla	v3.2d, v17.2d, v26.d[0]
 	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v10.2d, v20.2d, v26.2d[0]
-	fmla	v11.2d, v21.2d, v26.2d[0]
+	fmla	v10.2d, v20.2d, v26.d[0]
+	fmla	v11.2d, v21.2d, v26.d[0]
 	prfm	PLDL1KEEP, [x13, #128]
-	fmla	v4.2d, v16.2d, v28.2d[0]
-	fmla	v5.2d, v17.2d, v28.2d[0]
+	fmla	v4.2d, v16.2d, v28.d[0]
+	fmla	v5.2d, v17.2d, v28.d[0]
 	prfm	PLDL1KEEP, [x9, #192]
-	fmla	v12.2d, v20.2d, v28.2d[0]
-	fmla	v13.2d, v21.2d, v28.2d[0]
+	fmla	v12.2d, v20.2d, v28.d[0]
+	fmla	v13.2d, v21.2d, v28.d[0]
 	prfm	PLDL1KEEP, [x13, #192]
-	fmla	v6.2d, v16.2d, v30.2d[0]
-	fmla	v7.2d, v17.2d, v30.2d[0]
+	fmla	v6.2d, v16.2d, v30.d[0]
+	fmla	v7.2d, v17.2d, v30.d[0]
 	prfm	PLDL1KEEP, [x11, x12]
-	fmla	v14.2d, v20.2d, v30.2d[0]
-	fmla	v15.2d, v21.2d, v30.2d[0]
+	fmla	v14.2d, v20.2d, v30.d[0]
+	fmla	v15.2d, v21.2d, v30.d[0]
 	prfm	PLDL1KEEP, [x11, x14]
 
-	fmla	v0.2d, v18.2d, v24.2d[1]
-	fmla	v1.2d, v19.2d, v24.2d[1]
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
 	ldp		q16, q17, [x9, #64]
-	fmla	v8.2d, v22.2d, v24.2d[1]
-	fmla	v9.2d, v23.2d, v24.2d[1]
+	fmla	v8.2d, v22.2d, v24.d[1]
+	fmla	v9.2d, v23.2d, v24.d[1]
 	ldp		q20, q21, [x13, #64]
-	fmla	v2.2d, v18.2d, v26.2d[1]
-	fmla	v3.2d, v19.2d, v26.2d[1]
-	fmla	v10.2d, v22.2d, v26.2d[1]
-	fmla	v11.2d, v23.2d, v26.2d[1]
-	fmla	v4.2d, v18.2d, v28.2d[1]
-	fmla	v5.2d, v19.2d, v28.2d[1]
-	fmla	v12.2d, v22.2d, v28.2d[1]
-	fmla	v13.2d, v23.2d, v28.2d[1]
+	fmla	v2.2d, v18.2d, v26.d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
+	fmla	v11.2d, v23.2d, v26.d[1]
+	fmla	v4.2d, v18.2d, v28.d[1]
+	fmla	v5.2d, v19.2d, v28.d[1]
+	fmla	v12.2d, v22.2d, v28.d[1]
+	fmla	v13.2d, v23.2d, v28.d[1]
 	add		x11, x11, x12
-	fmla	v6.2d, v18.2d, v30.2d[1]
-	fmla	v7.2d, v19.2d, v30.2d[1]
+	fmla	v6.2d, v18.2d, v30.d[1]
+	fmla	v7.2d, v19.2d, v30.d[1]
 	sub		w8, w8, #4
-	fmla	v14.2d, v22.2d, v30.2d[1]
-	fmla	v15.2d, v23.2d, v30.2d[1]
+	fmla	v14.2d, v22.2d, v30.d[1]
+	fmla	v15.2d, v23.2d, v30.d[1]
 
-	fmla	v0.2d, v16.2d, v25.2d[0]
-	fmla	v1.2d, v17.2d, v25.2d[0]
+	fmla	v0.2d, v16.2d, v25.d[0]
+	fmla	v1.2d, v17.2d, v25.d[0]
 	ldp		q18, q19, [x9, #96]
-	fmla	v8.2d, v20.2d, v25.2d[0]
-	fmla	v9.2d, v21.2d, v25.2d[0]
+	fmla	v8.2d, v20.2d, v25.d[0]
+	fmla	v9.2d, v21.2d, v25.d[0]
 	ldp		q22, q23, [x13, #96]
-	fmla	v2.2d, v16.2d, v27.2d[0]
-	fmla	v3.2d, v17.2d, v27.2d[0]
-	fmla	v10.2d, v20.2d, v27.2d[0]
-	fmla	v11.2d, v21.2d, v27.2d[0]
+	fmla	v2.2d, v16.2d, v27.d[0]
+	fmla	v3.2d, v17.2d, v27.d[0]
+	fmla	v10.2d, v20.2d, v27.d[0]
+	fmla	v11.2d, v21.2d, v27.d[0]
 	add		x9, x9, #128
-	fmla	v4.2d, v16.2d, v29.2d[0]
-	fmla	v5.2d, v17.2d, v29.2d[0]
+	fmla	v4.2d, v16.2d, v29.d[0]
+	fmla	v5.2d, v17.2d, v29.d[0]
 	add		x13, x13, #128
-	fmla	v12.2d, v20.2d, v29.2d[0]
-	fmla	v13.2d, v21.2d, v29.2d[0]
+	fmla	v12.2d, v20.2d, v29.d[0]
+	fmla	v13.2d, v21.2d, v29.d[0]
 	cmp		w8, #4
-	fmla	v6.2d, v16.2d, v31.2d[0]
-	fmla	v7.2d, v17.2d, v31.2d[0]
+	fmla	v6.2d, v16.2d, v31.d[0]
+	fmla	v7.2d, v17.2d, v31.d[0]
 	ldp		q16, q17, [x9, #0]
-	fmla	v14.2d, v20.2d, v31.2d[0]
-	fmla	v15.2d, v21.2d, v31.2d[0]
+	fmla	v14.2d, v20.2d, v31.d[0]
+	fmla	v15.2d, v21.2d, v31.d[0]
 	ldp		q20, q21, [x13, #0]
 
-	fmla	v0.2d, v18.2d, v25.2d[1]
-	fmla	v1.2d, v19.2d, v25.2d[1]
-	fmla	v8.2d, v22.2d, v25.2d[1]
-	fmla	v9.2d, v23.2d, v25.2d[1]
+	fmla	v0.2d, v18.2d, v25.d[1]
+	fmla	v1.2d, v19.2d, v25.d[1]
+	fmla	v8.2d, v22.2d, v25.d[1]
+	fmla	v9.2d, v23.2d, v25.d[1]
 	ldp		q24, q25, [x11, #0]
-	fmla	v2.2d, v18.2d, v27.2d[1]
-	fmla	v3.2d, v19.2d, v27.2d[1]
-	fmla	v10.2d, v22.2d, v27.2d[1]
-	fmla	v11.2d, v23.2d, v27.2d[1]
+	fmla	v2.2d, v18.2d, v27.d[1]
+	fmla	v3.2d, v19.2d, v27.d[1]
+	fmla	v10.2d, v22.2d, v27.d[1]
+	fmla	v11.2d, v23.2d, v27.d[1]
 	ldp		q26, q27, [x11, #32]
-	fmla	v4.2d, v18.2d, v29.2d[1]
-	fmla	v5.2d, v19.2d, v29.2d[1]
-	fmla	v12.2d, v22.2d, v29.2d[1]
-	fmla	v13.2d, v23.2d, v29.2d[1]
+	fmla	v4.2d, v18.2d, v29.d[1]
+	fmla	v5.2d, v19.2d, v29.d[1]
+	fmla	v12.2d, v22.2d, v29.d[1]
+	fmla	v13.2d, v23.2d, v29.d[1]
 	ldp		q28, q29, [x11, #64]
-	fmla	v6.2d, v18.2d, v31.2d[1]
-	fmla	v7.2d, v19.2d, v31.2d[1]
-	fmla	v14.2d, v22.2d, v31.2d[1]
-	fmla	v15.2d, v23.2d, v31.2d[1]
+	fmla	v6.2d, v18.2d, v31.d[1]
+	fmla	v7.2d, v19.2d, v31.d[1]
+	fmla	v14.2d, v22.2d, v31.d[1]
+	fmla	v15.2d, v23.2d, v31.d[1]
 	ldp		q30, q31, [x11, #96]
 
 	bgt		1b
@@ -2288,94 +1974,94 @@ NAME:
 	cmp		w8, #3
 	ble		4f
 
-	fmla	v0.2d, v16.2d, v24.2d[0]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldp		q18, q19, [x9, #32]
-	fmla	v8.2d, v20.2d, v24.2d[0]
-	fmla	v9.2d, v21.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
+	fmla	v9.2d, v21.2d, v24.d[0]
 	ldp		q22, q23, [x13, #32]
-	fmla	v2.2d, v16.2d, v26.2d[0]
-	fmla	v3.2d, v17.2d, v26.2d[0]
+	fmla	v2.2d, v16.2d, v26.d[0]
+	fmla	v3.2d, v17.2d, v26.d[0]
 //	prfm	PLDL1KEEP, [x11, x12]
-	fmla	v10.2d, v20.2d, v26.2d[0]
-	fmla	v11.2d, v21.2d, v26.2d[0]
+	fmla	v10.2d, v20.2d, v26.d[0]
+	fmla	v11.2d, v21.2d, v26.d[0]
 //	prfm	PLDL1KEEP, [x11, x14]
-	fmla	v4.2d, v16.2d, v28.2d[0]
-	fmla	v5.2d, v17.2d, v28.2d[0]
+	fmla	v4.2d, v16.2d, v28.d[0]
+	fmla	v5.2d, v17.2d, v28.d[0]
 //	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v12.2d, v20.2d, v28.2d[0]
-	fmla	v13.2d, v21.2d, v28.2d[0]
+	fmla	v12.2d, v20.2d, v28.d[0]
+	fmla	v13.2d, v21.2d, v28.d[0]
 //	prfm	PLDL1KEEP, [x13, #128]
-	fmla	v6.2d, v16.2d, v30.2d[0]
-	fmla	v7.2d, v17.2d, v30.2d[0]
+	fmla	v6.2d, v16.2d, v30.d[0]
+	fmla	v7.2d, v17.2d, v30.d[0]
 //	prfm	PLDL1KEEP, [x9, #192]
-	fmla	v14.2d, v20.2d, v30.2d[0]
-	fmla	v15.2d, v21.2d, v30.2d[0]
+	fmla	v14.2d, v20.2d, v30.d[0]
+	fmla	v15.2d, v21.2d, v30.d[0]
 //	prfm	PLDL1KEEP, [x13, #192]
 
-	fmla	v0.2d, v18.2d, v24.2d[1]
-	fmla	v1.2d, v19.2d, v24.2d[1]
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
 	ldp		q16, q17, [x9, #64]
-	fmla	v8.2d, v22.2d, v24.2d[1]
-	fmla	v9.2d, v23.2d, v24.2d[1]
+	fmla	v8.2d, v22.2d, v24.d[1]
+	fmla	v9.2d, v23.2d, v24.d[1]
 	ldp		q20, q21, [x13, #64]
-	fmla	v2.2d, v18.2d, v26.2d[1]
-	fmla	v3.2d, v19.2d, v26.2d[1]
-	fmla	v10.2d, v22.2d, v26.2d[1]
-	fmla	v11.2d, v23.2d, v26.2d[1]
-	fmla	v4.2d, v18.2d, v28.2d[1]
-	fmla	v5.2d, v19.2d, v28.2d[1]
-	fmla	v12.2d, v22.2d, v28.2d[1]
-	fmla	v13.2d, v23.2d, v28.2d[1]
+	fmla	v2.2d, v18.2d, v26.d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
+	fmla	v11.2d, v23.2d, v26.d[1]
+	fmla	v4.2d, v18.2d, v28.d[1]
+	fmla	v5.2d, v19.2d, v28.d[1]
+	fmla	v12.2d, v22.2d, v28.d[1]
+	fmla	v13.2d, v23.2d, v28.d[1]
 	add		x11, x11, x12
-	fmla	v6.2d, v18.2d, v30.2d[1]
-	fmla	v7.2d, v19.2d, v30.2d[1]
+	fmla	v6.2d, v18.2d, v30.d[1]
+	fmla	v7.2d, v19.2d, v30.d[1]
 	sub		w8, w8, #4
-	fmla	v14.2d, v22.2d, v30.2d[1]
-	fmla	v15.2d, v23.2d, v30.2d[1]
+	fmla	v14.2d, v22.2d, v30.d[1]
+	fmla	v15.2d, v23.2d, v30.d[1]
 
-	fmla	v0.2d, v16.2d, v25.2d[0]
-	fmla	v1.2d, v17.2d, v25.2d[0]
+	fmla	v0.2d, v16.2d, v25.d[0]
+	fmla	v1.2d, v17.2d, v25.d[0]
 	ldp		q18, q19, [x9, #96]
-	fmla	v8.2d, v20.2d, v25.2d[0]
-	fmla	v9.2d, v21.2d, v25.2d[0]
+	fmla	v8.2d, v20.2d, v25.d[0]
+	fmla	v9.2d, v21.2d, v25.d[0]
 	ldp		q22, q23, [x13, #96]
-	fmla	v2.2d, v16.2d, v27.2d[0]
-	fmla	v3.2d, v17.2d, v27.2d[0]
-	fmla	v10.2d, v20.2d, v27.2d[0]
-	fmla	v11.2d, v21.2d, v27.2d[0]
+	fmla	v2.2d, v16.2d, v27.d[0]
+	fmla	v3.2d, v17.2d, v27.d[0]
+	fmla	v10.2d, v20.2d, v27.d[0]
+	fmla	v11.2d, v21.2d, v27.d[0]
 	add		x9, x9, #128
-	fmla	v4.2d, v16.2d, v29.2d[0]
-	fmla	v5.2d, v17.2d, v29.2d[0]
+	fmla	v4.2d, v16.2d, v29.d[0]
+	fmla	v5.2d, v17.2d, v29.d[0]
 	add		x13, x13, #128
-	fmla	v12.2d, v20.2d, v29.2d[0]
-	fmla	v13.2d, v21.2d, v29.2d[0]
-	fmla	v6.2d, v16.2d, v31.2d[0]
-	fmla	v7.2d, v17.2d, v31.2d[0]
+	fmla	v12.2d, v20.2d, v29.d[0]
+	fmla	v13.2d, v21.2d, v29.d[0]
+	fmla	v6.2d, v16.2d, v31.d[0]
+	fmla	v7.2d, v17.2d, v31.d[0]
 //	ldp		q16, q17, [x9, #0]
-	fmla	v14.2d, v20.2d, v31.2d[0]
-	fmla	v15.2d, v21.2d, v31.2d[0]
+	fmla	v14.2d, v20.2d, v31.d[0]
+	fmla	v15.2d, v21.2d, v31.d[0]
 //	ldp		q20, q21, [x13, #0]
 
-	fmla	v0.2d, v18.2d, v25.2d[1]
-	fmla	v1.2d, v19.2d, v25.2d[1]
-	fmla	v8.2d, v22.2d, v25.2d[1]
-	fmla	v9.2d, v23.2d, v25.2d[1]
+	fmla	v0.2d, v18.2d, v25.d[1]
+	fmla	v1.2d, v19.2d, v25.d[1]
+	fmla	v8.2d, v22.2d, v25.d[1]
+	fmla	v9.2d, v23.2d, v25.d[1]
 //	ldp		q24, q25, [x11, #0]
-	fmla	v2.2d, v18.2d, v27.2d[1]
-	fmla	v3.2d, v19.2d, v27.2d[1]
-	fmla	v10.2d, v22.2d, v27.2d[1]
-	fmla	v11.2d, v23.2d, v27.2d[1]
+	fmla	v2.2d, v18.2d, v27.d[1]
+	fmla	v3.2d, v19.2d, v27.d[1]
+	fmla	v10.2d, v22.2d, v27.d[1]
+	fmla	v11.2d, v23.2d, v27.d[1]
 //	ldp		q26, q27, [x11, #32]
-	fmla	v4.2d, v18.2d, v29.2d[1]
-	fmla	v5.2d, v19.2d, v29.2d[1]
-	fmla	v12.2d, v22.2d, v29.2d[1]
-	fmla	v13.2d, v23.2d, v29.2d[1]
+	fmla	v4.2d, v18.2d, v29.d[1]
+	fmla	v5.2d, v19.2d, v29.d[1]
+	fmla	v12.2d, v22.2d, v29.d[1]
+	fmla	v13.2d, v23.2d, v29.d[1]
 //	ldp		q28, q29, [x11, #64]
-	fmla	v6.2d, v18.2d, v31.2d[1]
-	fmla	v7.2d, v19.2d, v31.2d[1]
-	fmla	v14.2d, v22.2d, v31.2d[1]
-	fmla	v15.2d, v23.2d, v31.2d[1]
+	fmla	v6.2d, v18.2d, v31.d[1]
+	fmla	v7.2d, v19.2d, v31.d[1]
+	fmla	v14.2d, v22.2d, v31.d[1]
+	fmla	v15.2d, v23.2d, v31.d[1]
 //	ldp		q30, q31, [x11, #96]
 
 	b		2f // return
@@ -2395,27 +2081,27 @@ NAME:
 	ldr		d30, [x11, #64]
 	ldr		d31, [x11, #96]
 
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
-	fmla	v9.2d, v27.2d, v28.2d[0]
-	fmla	v2.2d, v24.2d, v29.2d[0]
-	fmla	v3.2d, v25.2d, v29.2d[0]
+	fmla	v0.2d, v24.2d, v28.d[0]
+	fmla	v1.2d, v25.2d, v28.d[0]
+	fmla	v8.2d, v26.2d, v28.d[0]
+	fmla	v9.2d, v27.2d, v28.d[0]
+	fmla	v2.2d, v24.2d, v29.d[0]
+	fmla	v3.2d, v25.2d, v29.d[0]
 	add		x9, x9, #32
-	fmla	v10.2d, v26.2d, v29.2d[0]
-	fmla	v11.2d, v27.2d, v29.2d[0]
+	fmla	v10.2d, v26.2d, v29.d[0]
+	fmla	v11.2d, v27.2d, v29.d[0]
 	add		x13, x13, #32
-	fmla	v4.2d, v24.2d, v30.2d[0]
-	fmla	v5.2d, v25.2d, v30.2d[0]
+	fmla	v4.2d, v24.2d, v30.d[0]
+	fmla	v5.2d, v25.2d, v30.d[0]
 	add		x11, x11, #8
-	fmla	v12.2d, v26.2d, v30.2d[0]
-	fmla	v13.2d, v27.2d, v30.2d[0]
+	fmla	v12.2d, v26.2d, v30.d[0]
+	fmla	v13.2d, v27.2d, v30.d[0]
 	sub		w8, w8, #1
-	fmla	v6.2d, v24.2d, v31.2d[0]
-	fmla	v7.2d, v25.2d, v31.2d[0]
+	fmla	v6.2d, v24.2d, v31.d[0]
+	fmla	v7.2d, v25.2d, v31.d[0]
 	cmp		w8, #0
-	fmla	v14.2d, v26.2d, v31.2d[0]
-	fmla	v15.2d, v27.2d, v31.2d[0]
+	fmla	v14.2d, v26.2d, v31.d[0]
+	fmla	v15.2d, v27.2d, v31.d[0]
 
 	bgt		3b
 
@@ -2504,157 +2190,157 @@ NAME:
 	// unroll 0
 	ldr		d18, [x9, #(0*8+1*32)] // A0
 	ins		v20.d[1], x20
-	fmla	v0.2d, v16.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
 	ldr		x18, [x9, #(1*8+1*32)] // A0
-	fmla	v2.2d, v16.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
 	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldr		d26, [x11, #(0*8+1*32)] // B
 	ins		v21.d[1], x21
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	ldr		x26, [x11, #(1*8+1*32)] // B
-//	fmla	v4.2d, v16.2d, v25.2d[0]
+//	fmla	v4.2d, v16.2d, v25.d[0]
 	prfm	PLDL1KEEP, [x11, #128]
-//	fmla	v6.2d, v16.2d, v25.2d[1]
+//	fmla	v6.2d, v16.2d, v25.d[1]
 	ldr		d19, [x9, #(2*8+1*32)] // A0
 	ins		v18.d[1], x18
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 	ldr		x19, [x9, #(3*8+1*32)] // A0
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 	prfm	PLDL1KEEP, [x12, #128]
-	fmla	v8.2d, v20.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
 	ldr		d27, [x11, #(2*8+1*32)] // B
 	ins		v26.d[1], x26
-	fmla	v10.2d, v20.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
 	ldr		x27, [x11, #(3*8+1*32)] // B
-	fmla	v9.2d, v21.2d, v24.2d[0]
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v9.2d, v21.2d, v24.d[0]
+	fmla	v11.2d, v21.2d, v24.d[1]
 	ldr		d22, [x12, #(0*8+1*32)] // A1
 	ins		v19.d[1], x19
-	fmla	v12.2d, v20.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
 	ldr		x22, [x12, #(1*8+1*32)] // A1
-	fmla	v14.2d, v20.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
 	ldr		x23, [x12, #(3*8+1*32)] // A1
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 	ldr		d23, [x12, #(2*8+1*32)] // A1
 	ins		v27.d[1], x27
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 
 	// unroll 1
 	ldr		d16, [x9, #(0*8+2*32)] // A0
 	ins		v22.d[1], x22
-	fmla	v0.2d, v18.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
 	ldr		x16, [x9, #(1*8+2*32)] // A0
-	fmla	v2.2d, v18.2d, v26.2d[1]
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v2.2d, v18.2d, v26.d[1]
+	fmla	v1.2d, v19.2d, v26.d[0]
 	ldr		d24, [x11, #(0*8+2*32)] // B
 	ins		v23.d[1], x23
-	fmla	v3.2d, v19.2d, v26.2d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
 	ldr		x24, [x11, #(1*8+2*32)] // B
-//	fmla	v4.2d, v18.2d, v27.2d[0]
-//	fmla	v6.2d, v18.2d, v27.2d[1]
+//	fmla	v4.2d, v18.2d, v27.d[0]
+//	fmla	v6.2d, v18.2d, v27.d[1]
 	ldr		d17, [x9, #(2*8+2*32)] // A0
 	ins		v16.d[1], x16
-	fmla	v5.2d, v19.2d, v27.2d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
 	ldr		x17, [x9, #(3*8+2*32)] // A0
-	fmla	v7.2d, v19.2d, v27.2d[1]
-	fmla	v8.2d, v22.2d, v26.2d[0]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v22.2d, v26.d[0]
 	ldr		d25, [x11, #(2*8+2*32)] // B
 	ins		v24.d[1], x24
-	fmla	v10.2d, v22.2d, v26.2d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
 	ldr		x25, [x11, #(3*8+2*32)] // B
-	fmla	v9.2d, v23.2d, v26.2d[0]
-	fmla	v11.2d, v23.2d, v26.2d[1]
+	fmla	v9.2d, v23.2d, v26.d[0]
+	fmla	v11.2d, v23.2d, v26.d[1]
 	ldr		d20, [x12, #(0*8+2*32)] // A1
 	ins		v17.d[1], x17
-	fmla	v12.2d, v22.2d, v27.2d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
 	ldr		x20, [x12, #(1*8+2*32)] // A1
-	fmla	v14.2d, v22.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
 	ldr		x21, [x12, #(3*8+2*32)] // A1
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 	ldr		d21, [x12, #(2*8+2*32)] // A1
 	ins		v25.d[1], x25
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	// unroll 2
 	ldr		d18, [x9, #(0*8+3*32)] // A0
 	ins		v20.d[1], x20
-	fmla	v0.2d, v16.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
 	ldr		x18, [x9, #(1*8+3*32)] // A0
-	fmla	v2.2d, v16.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
 	prfm	PLDL1KEEP, [x9, #192]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldr		d26, [x11, #(0*8+3*32)] // B
 	ins		v21.d[1], x21
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	ldr		x26, [x11, #(1*8+3*32)] // B
-//	fmla	v4.2d, v16.2d, v25.2d[0]
+//	fmla	v4.2d, v16.2d, v25.d[0]
 	prfm	PLDL1KEEP, [x11, #192]
-//	fmla	v6.2d, v16.2d, v25.2d[1]
+//	fmla	v6.2d, v16.2d, v25.d[1]
 	ldr		d19, [x9, #(2*8+3*32)] // A0
 	ins		v18.d[1], x18
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 	ldr		x19, [x9, #(3*8+3*32)] // A0
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 	prfm	PLDL1KEEP, [x12, #192]
-	fmla	v8.2d, v20.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
 	ldr		d27, [x11, #(2*8+3*32)] // B
 	ins		v26.d[1], x26
-	fmla	v10.2d, v20.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
 	ldr		x27, [x11, #(3*8+3*32)] // B
-	fmla	v9.2d, v21.2d, v24.2d[0]
+	fmla	v9.2d, v21.2d, v24.d[0]
 	sub		w8, w8, #4
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v11.2d, v21.2d, v24.d[1]
 	ldr		d22, [x12, #(0*8+3*32)] // A1
 	ins		v19.d[1], x19
-	fmla	v12.2d, v20.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
 	ldr		x22, [x12, #(1*8+3*32)] // A1
-	fmla	v14.2d, v20.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
 	ldr		x23, [x12, #(3*8+3*32)] // A1
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 	ldr		d23, [x12, #(2*8+3*32)] // A1
 	ins		v27.d[1], x27
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 
 	// unroll 3
 	ldr		d16, [x9, #(0*8+4*32)] // A0
 	ins		v22.d[1], x22
-	fmla	v0.2d, v18.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
 	ldr		x16, [x9, #(1*8+4*32)] // A0
-	fmla	v2.2d, v18.2d, v26.2d[1]
+	fmla	v2.2d, v18.2d, v26.d[1]
 	add		x9, x9, #128
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v1.2d, v19.2d, v26.d[0]
 	ldr		d24, [x11, #(0*8+4*32)] // B
 	ins		v23.d[1], x23
-	fmla	v3.2d, v19.2d, v26.2d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
 	ldr		x24, [x11, #(1*8+4*32)] // B
-//	fmla	v4.2d, v18.2d, v27.2d[0]
+//	fmla	v4.2d, v18.2d, v27.d[0]
 	add		x11, x11, #128
-//	fmla	v6.2d, v18.2d, v27.2d[1]
+//	fmla	v6.2d, v18.2d, v27.d[1]
 	ldr		d17, [x9, #(2*8+0*32)] // A0
 	ins		v16.d[1], x16
-	fmla	v5.2d, v19.2d, v27.2d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
 	ldr		x17, [x9, #(3*8+0*32)] // A0
-	fmla	v7.2d, v19.2d, v27.2d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
 	add		x12, x12, #128
-	fmla	v8.2d, v22.2d, v26.2d[0]
+	fmla	v8.2d, v22.2d, v26.d[0]
 	ldr		d25, [x11, #(2*8+0*32)] // B
 	ins		v24.d[1], x24
-	fmla	v10.2d, v22.2d, v26.2d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
 	ldr		x25, [x11, #(3*8+0*32)] // B
-	fmla	v9.2d, v23.2d, v26.2d[0]
+	fmla	v9.2d, v23.2d, v26.d[0]
 	cmp		w8, #4
-	fmla	v11.2d, v23.2d, v26.2d[1]
+	fmla	v11.2d, v23.2d, v26.d[1]
 	ldr		d20, [x12, #(0*8+0*32)] // A1
 	ins		v17.d[1], x17
-	fmla	v12.2d, v22.2d, v27.2d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
 	ldr		x20, [x12, #(1*8+0*32)] // A1
-	fmla	v14.2d, v22.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
 	ldr		x21, [x12, #(3*8+0*32)] // A1
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 	ldr		d21, [x12, #(2*8+0*32)] // A1
 	ins		v25.d[1], x25
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	bgt		1b
 
@@ -2667,157 +2353,157 @@ NAME:
 	// unroll 0
 	ldr		d18, [x9, #(0*8+1*32)] // A0
 	ins		v20.d[1], x20
-	fmla	v0.2d, v16.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
 	ldr		x18, [x9, #(1*8+1*32)] // A0
-	fmla	v2.2d, v16.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
 //	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldr		d26, [x11, #(0*8+1*32)] // B
 	ins		v21.d[1], x21
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	ldr		x26, [x11, #(1*8+1*32)] // B
-//	fmla	v4.2d, v16.2d, v25.2d[0]
+//	fmla	v4.2d, v16.2d, v25.d[0]
 //	prfm	PLDL1KEEP, [x11, #128]
-//	fmla	v6.2d, v16.2d, v25.2d[1]
+//	fmla	v6.2d, v16.2d, v25.d[1]
 	ldr		d19, [x9, #(2*8+1*32)] // A0
 	ins		v18.d[1], x18
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 	ldr		x19, [x9, #(3*8+1*32)] // A0
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 //	prfm	PLDL1KEEP, [x12, #128]
-	fmla	v8.2d, v20.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
 	ldr		d27, [x11, #(2*8+1*32)] // B
 	ins		v26.d[1], x26
-	fmla	v10.2d, v20.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
 	ldr		x27, [x11, #(3*8+1*32)] // B
-	fmla	v9.2d, v21.2d, v24.2d[0]
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v9.2d, v21.2d, v24.d[0]
+	fmla	v11.2d, v21.2d, v24.d[1]
 	ldr		d22, [x12, #(0*8+1*32)] // A1
 	ins		v19.d[1], x19
-	fmla	v12.2d, v20.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
 	ldr		x22, [x12, #(1*8+1*32)] // A1
-	fmla	v14.2d, v20.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
 	ldr		x23, [x12, #(3*8+1*32)] // A1
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 	ldr		d23, [x12, #(2*8+1*32)] // A1
 	ins		v27.d[1], x27
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 
 	// unroll 1
 	ldr		d16, [x9, #(0*8+2*32)] // A0
 	ins		v22.d[1], x22
-	fmla	v0.2d, v18.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
 	ldr		x16, [x9, #(1*8+2*32)] // A0
-	fmla	v2.2d, v18.2d, v26.2d[1]
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v2.2d, v18.2d, v26.d[1]
+	fmla	v1.2d, v19.2d, v26.d[0]
 	ldr		d24, [x11, #(0*8+2*32)] // B
 	ins		v23.d[1], x23
-	fmla	v3.2d, v19.2d, v26.2d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
 	ldr		x24, [x11, #(1*8+2*32)] // B
-//	fmla	v4.2d, v18.2d, v27.2d[0]
-//	fmla	v6.2d, v18.2d, v27.2d[1]
+//	fmla	v4.2d, v18.2d, v27.d[0]
+//	fmla	v6.2d, v18.2d, v27.d[1]
 	ldr		d17, [x9, #(2*8+2*32)] // A0
 	ins		v16.d[1], x16
-	fmla	v5.2d, v19.2d, v27.2d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
 	ldr		x17, [x9, #(3*8+2*32)] // A0
-	fmla	v7.2d, v19.2d, v27.2d[1]
-	fmla	v8.2d, v22.2d, v26.2d[0]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v22.2d, v26.d[0]
 	ldr		d25, [x11, #(2*8+2*32)] // B
 	ins		v24.d[1], x24
-	fmla	v10.2d, v22.2d, v26.2d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
 	ldr		x25, [x11, #(3*8+2*32)] // B
-	fmla	v9.2d, v23.2d, v26.2d[0]
-	fmla	v11.2d, v23.2d, v26.2d[1]
+	fmla	v9.2d, v23.2d, v26.d[0]
+	fmla	v11.2d, v23.2d, v26.d[1]
 	ldr		d20, [x12, #(0*8+2*32)] // A1
 	ins		v17.d[1], x17
-	fmla	v12.2d, v22.2d, v27.2d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
 	ldr		x20, [x12, #(1*8+2*32)] // A1
-	fmla	v14.2d, v22.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
 	ldr		x21, [x12, #(3*8+2*32)] // A1
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 	ldr		d21, [x12, #(2*8+2*32)] // A1
 	ins		v25.d[1], x25
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	// unroll 2
 	ldr		d18, [x9, #(0*8+3*32)] // A0
 	ins		v20.d[1], x20
-	fmla	v0.2d, v16.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
 	ldr		x18, [x9, #(1*8+3*32)] // A0
-	fmla	v2.2d, v16.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
 //	prfm	PLDL1KEEP, [x9, #192]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldr		d26, [x11, #(0*8+3*32)] // B
 	ins		v21.d[1], x21
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	ldr		x26, [x11, #(1*8+3*32)] // B
-//	fmla	v4.2d, v16.2d, v25.2d[0]
+//	fmla	v4.2d, v16.2d, v25.d[0]
 //	prfm	PLDL1KEEP, [x11, #192]
-//	fmla	v6.2d, v16.2d, v25.2d[1]
+//	fmla	v6.2d, v16.2d, v25.d[1]
 	ldr		d19, [x9, #(2*8+3*32)] // A0
 	ins		v18.d[1], x18
-	fmla	v5.2d, v17.2d, v25.2d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 	ldr		x19, [x9, #(3*8+3*32)] // A0
-	fmla	v7.2d, v17.2d, v25.2d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 //	prfm	PLDL1KEEP, [x12, #192]
-	fmla	v8.2d, v20.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
 	ldr		d27, [x11, #(2*8+3*32)] // B
 	ins		v26.d[1], x26
-	fmla	v10.2d, v20.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
 	ldr		x27, [x11, #(3*8+3*32)] // B
-	fmla	v9.2d, v21.2d, v24.2d[0]
+	fmla	v9.2d, v21.2d, v24.d[0]
 	sub		w8, w8, #4
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v11.2d, v21.2d, v24.d[1]
 	ldr		d22, [x12, #(0*8+3*32)] // A1
 	ins		v19.d[1], x19
-	fmla	v12.2d, v20.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
 	ldr		x22, [x12, #(1*8+3*32)] // A1
-	fmla	v14.2d, v20.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
 	ldr		x23, [x12, #(3*8+3*32)] // A1
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 	ldr		d23, [x12, #(2*8+3*32)] // A1
 	ins		v27.d[1], x27
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 
 	// unroll 3
 //	ldr		d16, [x9, #(0*8+4*32)] // A0
 	ins		v22.d[1], x22
-	fmla	v0.2d, v18.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
 //	ldr		x16, [x9, #(1*8+4*32)] // A0
-	fmla	v2.2d, v18.2d, v26.2d[1]
+	fmla	v2.2d, v18.2d, v26.d[1]
 	add		x9, x9, #128
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v1.2d, v19.2d, v26.d[0]
 //	ldr		d24, [x11, #(0*8+4*32)] // B
 	ins		v23.d[1], x23
-	fmla	v3.2d, v19.2d, v26.2d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
 //	ldr		x24, [x11, #(1*8+4*32)] // B
-//	fmla	v4.2d, v18.2d, v27.2d[0]
+//	fmla	v4.2d, v18.2d, v27.d[0]
 	add		x11, x11, #128
-//	fmla	v6.2d, v18.2d, v27.2d[1]
+//	fmla	v6.2d, v18.2d, v27.d[1]
 //	ldr		d17, [x9, #(2*8+0*32)] // A0
 //	ins		v16.d[1], x16
-	fmla	v5.2d, v19.2d, v27.2d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
 //	ldr		x17, [x9, #(3*8+0*32)] // A0
-	fmla	v7.2d, v19.2d, v27.2d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
 	add		x12, x12, #128
-	fmla	v8.2d, v22.2d, v26.2d[0]
+	fmla	v8.2d, v22.2d, v26.d[0]
 //	ldr		d25, [x11, #(2*8+0*32)] // B
 //	ins		v24.d[1], x24
-	fmla	v10.2d, v22.2d, v26.2d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
 //	ldr		x25, [x11, #(3*8+0*32)] // B
-	fmla	v9.2d, v23.2d, v26.2d[0]
+	fmla	v9.2d, v23.2d, v26.d[0]
 //	cmp		w8, #4
-	fmla	v11.2d, v23.2d, v26.2d[1]
+	fmla	v11.2d, v23.2d, v26.d[1]
 //	ldr		d20, [x12, #(0*8+0*32)] // A1
 //	ins		v17.d[1], x17
-	fmla	v12.2d, v22.2d, v27.2d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
 //	ldr		x20, [x12, #(1*8+0*32)] // A1
-	fmla	v14.2d, v22.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
 //	ldr		x21, [x12, #(3*8+0*32)] // A1
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 //	ldr		d21, [x12, #(2*8+0*32)] // A1
 //	ins		v25.d[1], x25
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	b		2f // return
 
@@ -2836,24 +2522,24 @@ NAME:
 	ld1		{v20.2d, v21.2d}, [x9], #32
 	ld1		{v28.2d, v29.2d}, [x11], #32
 	ld1		{v22.2d, v23.2d}, [x12], #32
-	fmla	v0.2d, v20.2d, v28.2d[0]
-	fmla	v1.2d, v21.2d, v28.2d[0]
-	fmla	v2.2d, v20.2d, v28.2d[1]
-	fmla	v3.2d, v21.2d, v28.2d[1]
-//	fmla	v4.2d, v20.2d, v29.2d[0]
-	fmla	v5.2d, v21.2d, v29.2d[0]
-//	fmla	v6.2d, v20.2d, v29.2d[1]
-	fmla	v7.2d, v21.2d, v29.2d[1]
-	fmla	v8.2d, v22.2d, v28.2d[0]
+	fmla	v0.2d, v20.2d, v28.d[0]
+	fmla	v1.2d, v21.2d, v28.d[0]
+	fmla	v2.2d, v20.2d, v28.d[1]
+	fmla	v3.2d, v21.2d, v28.d[1]
+//	fmla	v4.2d, v20.2d, v29.d[0]
+	fmla	v5.2d, v21.2d, v29.d[0]
+//	fmla	v6.2d, v20.2d, v29.d[1]
+	fmla	v7.2d, v21.2d, v29.d[1]
+	fmla	v8.2d, v22.2d, v28.d[0]
 	sub		w8, w8, #1
-	fmla	v9.2d, v23.2d, v28.2d[0]
-	fmla	v10.2d, v22.2d, v28.2d[1]
+	fmla	v9.2d, v23.2d, v28.d[0]
+	fmla	v10.2d, v22.2d, v28.d[1]
 	cmp		w8, #0
-	fmla	v11.2d, v23.2d, v28.2d[1]
-	fmla	v12.2d, v22.2d, v29.2d[0]
-	fmla	v13.2d, v23.2d, v29.2d[0]
-	fmla	v14.2d, v22.2d, v29.2d[1]
-	fmla	v15.2d, v23.2d, v29.2d[1]
+	fmla	v11.2d, v23.2d, v28.d[1]
+	fmla	v12.2d, v22.2d, v29.d[0]
+	fmla	v13.2d, v23.2d, v29.d[0]
+	fmla	v14.2d, v22.2d, v29.d[1]
+	fmla	v15.2d, v23.2d, v29.d[1]
 
 	bgt		3b
 
@@ -2896,98 +2582,98 @@ NAME:
 1:
 	
 	// unroll 0
-	fmla	v0.2d, v16.2d, v24.2d[0]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldp		q18, q19, [x9, #(0*8+1*32)]
-	fmla	v8.2d, v20.2d, v24.2d[0]
-	fmla	v9.2d, v21.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
+	fmla	v9.2d, v21.2d, v24.d[0]
 	ldp		q22, q23, [x12, #(0*8+1*32)]
-	fmla	v2.2d, v16.2d, v24.2d[1]
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v10.2d, v20.2d, v24.2d[1]
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
+	fmla	v11.2d, v21.2d, v24.d[1]
 	prfm	PLDL1KEEP, [x12, #128]
-//	fmla	v4.2d, v16.2d, v25.2d[0]
-	fmla	v5.2d, v17.2d, v25.2d[0]
+//	fmla	v4.2d, v16.2d, v25.d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 	prfm	PLDL1KEEP, [x9, #192]
-	fmla	v12.2d, v20.2d, v25.2d[0]
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 	prfm	PLDL1KEEP, [x12, #192]
-//	fmla	v6.2d, v16.2d, v25.2d[1]
-	fmla	v7.2d, v17.2d, v25.2d[1]
+//	fmla	v6.2d, v16.2d, v25.d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 	prfm	PLDL1KEEP, [x11, #128]
-	fmla	v14.2d, v20.2d, v25.2d[1]
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 	prfm	PLDL1KEEP, [x11, #192]
 
 	// unroll 1
-	fmla	v0.2d, v18.2d, v26.2d[0]
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
+	fmla	v1.2d, v19.2d, v26.d[0]
 	ldp		q16, q17, [x9, #(0*8+2*32)]
-	fmla	v8.2d, v22.2d, v26.2d[0]
-	fmla	v9.2d, v23.2d, v26.2d[0]
+	fmla	v8.2d, v22.2d, v26.d[0]
+	fmla	v9.2d, v23.2d, v26.d[0]
 	ldp		q20, q21, [x12, #(0*8+2*32)]
-	fmla	v2.2d, v18.2d, v26.2d[1]
-	fmla	v3.2d, v19.2d, v26.2d[1]
-	fmla	v10.2d, v22.2d, v26.2d[1]
-	fmla	v11.2d, v23.2d, v26.2d[1]
-//	fmla	v4.2d, v18.2d, v27.2d[0]
-	fmla	v5.2d, v19.2d, v27.2d[0]
-	fmla	v12.2d, v22.2d, v27.2d[0]
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v2.2d, v18.2d, v26.d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
+	fmla	v11.2d, v23.2d, v26.d[1]
+//	fmla	v4.2d, v18.2d, v27.d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 	add		x11, x11, #128
-//	fmla	v6.2d, v18.2d, v27.2d[1]
-	fmla	v7.2d, v19.2d, v27.2d[1]
+//	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
 	sub		w8, w8, #4
-	fmla	v14.2d, v22.2d, v27.2d[1]
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	// unroll 2
-	fmla	v0.2d, v16.2d, v28.2d[0]
-	fmla	v1.2d, v17.2d, v28.2d[0]
+	fmla	v0.2d, v16.2d, v28.d[0]
+	fmla	v1.2d, v17.2d, v28.d[0]
 	ldp		q18, q19, [x9, #(0*8+3*32)]
-	fmla	v8.2d, v20.2d, v28.2d[0]
-	fmla	v9.2d, v21.2d, v28.2d[0]
+	fmla	v8.2d, v20.2d, v28.d[0]
+	fmla	v9.2d, v21.2d, v28.d[0]
 	ldp		q22, q23, [x12, #(0*8+3*32)]
-	fmla	v2.2d, v16.2d, v28.2d[1]
-	fmla	v3.2d, v17.2d, v28.2d[1]
-	fmla	v10.2d, v20.2d, v28.2d[1]
-	fmla	v11.2d, v21.2d, v28.2d[1]
+	fmla	v2.2d, v16.2d, v28.d[1]
+	fmla	v3.2d, v17.2d, v28.d[1]
+	fmla	v10.2d, v20.2d, v28.d[1]
+	fmla	v11.2d, v21.2d, v28.d[1]
 	add		x9, x9, #128
-//	fmla	v4.2d, v16.2d, v29.2d[0]
-	fmla	v5.2d, v17.2d, v29.2d[0]
+//	fmla	v4.2d, v16.2d, v29.d[0]
+	fmla	v5.2d, v17.2d, v29.d[0]
 	add		x12, x12, #128
-	fmla	v12.2d, v20.2d, v29.2d[0]
-	fmla	v13.2d, v21.2d, v29.2d[0]
+	fmla	v12.2d, v20.2d, v29.d[0]
+	fmla	v13.2d, v21.2d, v29.d[0]
 	cmp		w8, #4
-//	fmla	v6.2d, v16.2d, v29.2d[1]
-	fmla	v7.2d, v17.2d, v29.2d[1]
+//	fmla	v6.2d, v16.2d, v29.d[1]
+	fmla	v7.2d, v17.2d, v29.d[1]
 	ldp		q16, q17, [x9, #(0*8+0*32)]
-	fmla	v14.2d, v20.2d, v29.2d[1]
-	fmla	v15.2d, v21.2d, v29.2d[1]
+	fmla	v14.2d, v20.2d, v29.d[1]
+	fmla	v15.2d, v21.2d, v29.d[1]
 	ldp		q20, q21, [x12, #(0*8+0*32)]
 
 	// unroll 3
-	fmla	v0.2d, v18.2d, v30.2d[0]
-	fmla	v1.2d, v19.2d, v30.2d[0]
-	fmla	v8.2d, v22.2d, v30.2d[0]
-	fmla	v9.2d, v23.2d, v30.2d[0]
+	fmla	v0.2d, v18.2d, v30.d[0]
+	fmla	v1.2d, v19.2d, v30.d[0]
+	fmla	v8.2d, v22.2d, v30.d[0]
+	fmla	v9.2d, v23.2d, v30.d[0]
 	ldp		q24, q25, [x11, #(0*8+0*32)]
-	fmla	v2.2d, v18.2d, v30.2d[1]
-	fmla	v3.2d, v19.2d, v30.2d[1]
-	fmla	v10.2d, v22.2d, v30.2d[1]
-	fmla	v11.2d, v23.2d, v30.2d[1]
+	fmla	v2.2d, v18.2d, v30.d[1]
+	fmla	v3.2d, v19.2d, v30.d[1]
+	fmla	v10.2d, v22.2d, v30.d[1]
+	fmla	v11.2d, v23.2d, v30.d[1]
 	ldp		q26, q27, [x11, #(0*8+1*32)]
-//	fmla	v4.2d, v18.2d, v31.2d[0]
-	fmla	v5.2d, v19.2d, v31.2d[0]
-	fmla	v12.2d, v22.2d, v31.2d[0]
-	fmla	v13.2d, v23.2d, v31.2d[0]
+//	fmla	v4.2d, v18.2d, v31.d[0]
+	fmla	v5.2d, v19.2d, v31.d[0]
+	fmla	v12.2d, v22.2d, v31.d[0]
+	fmla	v13.2d, v23.2d, v31.d[0]
 	ldp		q28, q29, [x11, #(0*8+2*32)]
-//	fmla	v6.2d, v18.2d, v31.2d[1]
-	fmla	v7.2d, v19.2d, v31.2d[1]
-	fmla	v14.2d, v22.2d, v31.2d[1]
-	fmla	v15.2d, v23.2d, v31.2d[1]
+//	fmla	v6.2d, v18.2d, v31.d[1]
+	fmla	v7.2d, v19.2d, v31.d[1]
+	fmla	v14.2d, v22.2d, v31.d[1]
+	fmla	v15.2d, v23.2d, v31.d[1]
 	ldp		q30, q31, [x11, #(0*8+3*32)]
 
 	bgt		1b
@@ -2999,97 +2685,97 @@ NAME:
 
 	
 	// unroll 0
-	fmla	v0.2d, v16.2d, v24.2d[0]
-	fmla	v1.2d, v17.2d, v24.2d[0]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
 	ldp		q18, q19, [x9, #(0*8+1*32)]
-	fmla	v8.2d, v20.2d, v24.2d[0]
-	fmla	v9.2d, v21.2d, v24.2d[0]
+	fmla	v8.2d, v20.2d, v24.d[0]
+	fmla	v9.2d, v21.2d, v24.d[0]
 	ldp		q22, q23, [x12, #(0*8+1*32)]
-	fmla	v2.2d, v16.2d, v24.2d[1]
-	fmla	v3.2d, v17.2d, v24.2d[1]
+	fmla	v2.2d, v16.2d, v24.d[1]
+	fmla	v3.2d, v17.2d, v24.d[1]
 //	prfm	PLDL1KEEP, [x9, #128]
-	fmla	v10.2d, v20.2d, v24.2d[1]
-	fmla	v11.2d, v21.2d, v24.2d[1]
+	fmla	v10.2d, v20.2d, v24.d[1]
+	fmla	v11.2d, v21.2d, v24.d[1]
 //	prfm	PLDL1KEEP, [x12, #128]
-//	fmla	v4.2d, v16.2d, v25.2d[0]
-	fmla	v5.2d, v17.2d, v25.2d[0]
+//	fmla	v4.2d, v16.2d, v25.d[0]
+	fmla	v5.2d, v17.2d, v25.d[0]
 //	prfm	PLDL1KEEP, [x9, #192]
-	fmla	v12.2d, v20.2d, v25.2d[0]
-	fmla	v13.2d, v21.2d, v25.2d[0]
+	fmla	v12.2d, v20.2d, v25.d[0]
+	fmla	v13.2d, v21.2d, v25.d[0]
 //	prfm	PLDL1KEEP, [x12, #192]
-//	fmla	v6.2d, v16.2d, v25.2d[1]
-	fmla	v7.2d, v17.2d, v25.2d[1]
+//	fmla	v6.2d, v16.2d, v25.d[1]
+	fmla	v7.2d, v17.2d, v25.d[1]
 //	prfm	PLDL1KEEP, [x11, #128]
-	fmla	v14.2d, v20.2d, v25.2d[1]
-	fmla	v15.2d, v21.2d, v25.2d[1]
+	fmla	v14.2d, v20.2d, v25.d[1]
+	fmla	v15.2d, v21.2d, v25.d[1]
 //	prfm	PLDL1KEEP, [x11, #192]
 
 	// unroll 1
-	fmla	v0.2d, v18.2d, v26.2d[0]
-	fmla	v1.2d, v19.2d, v26.2d[0]
+	fmla	v0.2d, v18.2d, v26.d[0]
+	fmla	v1.2d, v19.2d, v26.d[0]
 	ldp		q16, q17, [x9, #(0*8+2*32)]
-	fmla	v8.2d, v22.2d, v26.2d[0]
-	fmla	v9.2d, v23.2d, v26.2d[0]
+	fmla	v8.2d, v22.2d, v26.d[0]
+	fmla	v9.2d, v23.2d, v26.d[0]
 	ldp		q20, q21, [x12, #(0*8+2*32)]
-	fmla	v2.2d, v18.2d, v26.2d[1]
-	fmla	v3.2d, v19.2d, v26.2d[1]
-	fmla	v10.2d, v22.2d, v26.2d[1]
-	fmla	v11.2d, v23.2d, v26.2d[1]
-//	fmla	v4.2d, v18.2d, v27.2d[0]
-	fmla	v5.2d, v19.2d, v27.2d[0]
-	fmla	v12.2d, v22.2d, v27.2d[0]
-	fmla	v13.2d, v23.2d, v27.2d[0]
+	fmla	v2.2d, v18.2d, v26.d[1]
+	fmla	v3.2d, v19.2d, v26.d[1]
+	fmla	v10.2d, v22.2d, v26.d[1]
+	fmla	v11.2d, v23.2d, v26.d[1]
+//	fmla	v4.2d, v18.2d, v27.d[0]
+	fmla	v5.2d, v19.2d, v27.d[0]
+	fmla	v12.2d, v22.2d, v27.d[0]
+	fmla	v13.2d, v23.2d, v27.d[0]
 	add		x11, x11, #128
-//	fmla	v6.2d, v18.2d, v27.2d[1]
-	fmla	v7.2d, v19.2d, v27.2d[1]
+//	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
 	sub		w8, w8, #4
-	fmla	v14.2d, v22.2d, v27.2d[1]
-	fmla	v15.2d, v23.2d, v27.2d[1]
+	fmla	v14.2d, v22.2d, v27.d[1]
+	fmla	v15.2d, v23.2d, v27.d[1]
 
 	// unroll 2
-	fmla	v0.2d, v16.2d, v28.2d[0]
-	fmla	v1.2d, v17.2d, v28.2d[0]
+	fmla	v0.2d, v16.2d, v28.d[0]
+	fmla	v1.2d, v17.2d, v28.d[0]
 	ldp		q18, q19, [x9, #(0*8+3*32)]
-	fmla	v8.2d, v20.2d, v28.2d[0]
-	fmla	v9.2d, v21.2d, v28.2d[0]
+	fmla	v8.2d, v20.2d, v28.d[0]
+	fmla	v9.2d, v21.2d, v28.d[0]
 	ldp		q22, q23, [x12, #(0*8+3*32)]
-	fmla	v2.2d, v16.2d, v28.2d[1]
-	fmla	v3.2d, v17.2d, v28.2d[1]
-	fmla	v10.2d, v20.2d, v28.2d[1]
-	fmla	v11.2d, v21.2d, v28.2d[1]
+	fmla	v2.2d, v16.2d, v28.d[1]
+	fmla	v3.2d, v17.2d, v28.d[1]
+	fmla	v10.2d, v20.2d, v28.d[1]
+	fmla	v11.2d, v21.2d, v28.d[1]
 	add		x9, x9, #128
-//	fmla	v4.2d, v16.2d, v29.2d[0]
-	fmla	v5.2d, v17.2d, v29.2d[0]
+//	fmla	v4.2d, v16.2d, v29.d[0]
+	fmla	v5.2d, v17.2d, v29.d[0]
 	add		x12, x12, #128
-	fmla	v12.2d, v20.2d, v29.2d[0]
-	fmla	v13.2d, v21.2d, v29.2d[0]
-//	fmla	v6.2d, v16.2d, v29.2d[1]
-	fmla	v7.2d, v17.2d, v29.2d[1]
+	fmla	v12.2d, v20.2d, v29.d[0]
+	fmla	v13.2d, v21.2d, v29.d[0]
+//	fmla	v6.2d, v16.2d, v29.d[1]
+	fmla	v7.2d, v17.2d, v29.d[1]
 //	ldp		q16, q17, [x9, #(0*8+0*32)]
-	fmla	v14.2d, v20.2d, v29.2d[1]
-	fmla	v15.2d, v21.2d, v29.2d[1]
+	fmla	v14.2d, v20.2d, v29.d[1]
+	fmla	v15.2d, v21.2d, v29.d[1]
 //	ldp		q20, q21, [x12, #(0*8+0*32)]
 
 	// unroll 3
-	fmla	v0.2d, v18.2d, v30.2d[0]
-	fmla	v1.2d, v19.2d, v30.2d[0]
-	fmla	v8.2d, v22.2d, v30.2d[0]
-	fmla	v3.2d, v19.2d, v30.2d[1]
+	fmla	v0.2d, v18.2d, v30.d[0]
+	fmla	v1.2d, v19.2d, v30.d[0]
+	fmla	v8.2d, v22.2d, v30.d[0]
+	fmla	v3.2d, v19.2d, v30.d[1]
 //	ldp		q24, q25, [x11, #(0*8+0*32)]
-	fmla	v9.2d, v23.2d, v30.2d[0]
-	fmla	v2.2d, v18.2d, v30.2d[1]
-	fmla	v10.2d, v22.2d, v30.2d[1]
-	fmla	v11.2d, v23.2d, v30.2d[1]
+	fmla	v9.2d, v23.2d, v30.d[0]
+	fmla	v2.2d, v18.2d, v30.d[1]
+	fmla	v10.2d, v22.2d, v30.d[1]
+	fmla	v11.2d, v23.2d, v30.d[1]
 //	ldp		q26, q27, [x11, #(0*8+1*32)]
-//	fmla	v4.2d, v18.2d, v31.2d[0]
-	fmla	v5.2d, v19.2d, v31.2d[0]
-	fmla	v12.2d, v22.2d, v31.2d[0]
-	fmla	v13.2d, v23.2d, v31.2d[0]
+//	fmla	v4.2d, v18.2d, v31.d[0]
+	fmla	v5.2d, v19.2d, v31.d[0]
+	fmla	v12.2d, v22.2d, v31.d[0]
+	fmla	v13.2d, v23.2d, v31.d[0]
 //	ldp		q28, q29, [x11, #(0*8+2*32)]
-//	fmla	v6.2d, v18.2d, v31.2d[1]
-	fmla	v7.2d, v19.2d, v31.2d[1]
-	fmla	v14.2d, v22.2d, v31.2d[1]
-	fmla	v15.2d, v23.2d, v31.2d[1]
+//	fmla	v6.2d, v18.2d, v31.d[1]
+	fmla	v7.2d, v19.2d, v31.d[1]
+	fmla	v14.2d, v22.2d, v31.d[1]
+	fmla	v15.2d, v23.2d, v31.d[1]
 //	ldp		q30, q31, [x11, #(0*8+3*32)]
 
 	b		2f // return
@@ -3108,25 +2794,25 @@ NAME:
 	// unroll 0
 	ld1		{v20.2d, v21.2d}, [x9], #32
 	ld1		{v28.2d, v29.2d}, [x11], #32
-	fmla	v0.2d, v20.2d, v28.2d[0]
-	fmla	v1.2d, v21.2d, v28.2d[0]
-	fmla	v2.2d, v20.2d, v28.2d[1]
-	fmla	v3.2d, v21.2d, v28.2d[1]
-//	fmla	v4.2d, v20.2d, v29.2d[0]
-	fmla	v5.2d, v21.2d, v29.2d[0]
-//	fmla	v6.2d, v20.2d, v29.2d[1]
-	fmla	v7.2d, v21.2d, v29.2d[1]
+	fmla	v0.2d, v20.2d, v28.d[0]
+	fmla	v1.2d, v21.2d, v28.d[0]
+	fmla	v2.2d, v20.2d, v28.d[1]
+	fmla	v3.2d, v21.2d, v28.d[1]
+//	fmla	v4.2d, v20.2d, v29.d[0]
+	fmla	v5.2d, v21.2d, v29.d[0]
+//	fmla	v6.2d, v20.2d, v29.d[1]
+	fmla	v7.2d, v21.2d, v29.d[1]
 	ld1		{v22.2d, v23.2d}, [x12], #32
-	fmla	v8.2d, v22.2d, v28.2d[0]
-	fmla	v9.2d, v23.2d, v28.2d[0]
+	fmla	v8.2d, v22.2d, v28.d[0]
+	fmla	v9.2d, v23.2d, v28.d[0]
 	sub		w8, w8, #1
-	fmla	v10.2d, v22.2d, v28.2d[1]
-	fmla	v11.2d, v23.2d, v28.2d[1]
+	fmla	v10.2d, v22.2d, v28.d[1]
+	fmla	v11.2d, v23.2d, v28.d[1]
 	cmp		w8, #0
-	fmla	v12.2d, v22.2d, v29.2d[0]
-	fmla	v13.2d, v23.2d, v29.2d[0]
-	fmla	v14.2d, v22.2d, v29.2d[1]
-	fmla	v15.2d, v23.2d, v29.2d[1]
+	fmla	v12.2d, v22.2d, v29.d[0]
+	fmla	v13.2d, v23.2d, v29.d[0]
+	fmla	v14.2d, v22.2d, v29.d[1]
+	fmla	v15.2d, v23.2d, v29.d[1]
 
 	bgt		3b
 
@@ -3195,22 +2881,22 @@ NAME:
 	ldr		d30, [x11, #64]
 	ldr		d31, [x11, #96]
 
-	fmla	v0.2d, v24.2d, v28.2d[0]
-	fmla	v1.2d, v25.2d, v28.2d[0]
-	fmla	v8.2d, v26.2d, v28.2d[0]
-	fmla	v9.2d, v27.2d, v28.2d[0]
-	fmla	v2.2d, v24.2d, v29.2d[0]
-	fmla	v3.2d, v25.2d, v29.2d[0]
-	fmla	v10.2d, v26.2d, v29.2d[0]
-	fmla	v11.2d, v27.2d, v29.2d[0]
-	fmla	v4.2d, v24.2d, v30.2d[0]
-	fmla	v5.2d, v25.2d, v30.2d[0]
-	fmla	v12.2d, v26.2d, v30.2d[0]
-	fmla	v13.2d, v27.2d, v30.2d[0]
-	fmla	v6.2d, v24.2d, v31.2d[0]
-	fmla	v7.2d, v25.2d, v31.2d[0]
-	fmla	v14.2d, v26.2d, v31.2d[0]
-	fmla	v15.2d, v27.2d, v31.2d[0]
+	fmla	v0.2d, v24.2d, v28.d[0]
+	fmla	v1.2d, v25.2d, v28.d[0]
+	fmla	v8.2d, v26.2d, v28.d[0]
+	fmla	v9.2d, v27.2d, v28.d[0]
+	fmla	v2.2d, v24.2d, v29.d[0]
+	fmla	v3.2d, v25.2d, v29.d[0]
+	fmla	v10.2d, v26.2d, v29.d[0]
+	fmla	v11.2d, v27.2d, v29.d[0]
+	fmla	v4.2d, v24.2d, v30.d[0]
+	fmla	v5.2d, v25.2d, v30.d[0]
+	fmla	v12.2d, v26.2d, v30.d[0]
+	fmla	v13.2d, v27.2d, v30.d[0]
+	fmla	v6.2d, v24.2d, v31.d[0]
+	fmla	v7.2d, v25.2d, v31.d[0]
+	fmla	v14.2d, v26.2d, v31.d[0]
+	fmla	v15.2d, v27.2d, v31.d[0]
 
 	add		x9, x9, #32
 	add		x14, x14, #32
@@ -3270,89 +2956,89 @@ NAME:
 	ldp		q24, q25, [x8, #0] // E0[0+4*0]
 	ldp		q26, q27, [x10, #0] // E1[0+4*0]
 	ins		v24.d[0], xzr
-	fmls	v0.2d, v24.2d, v0.2d[0]
-	fmls	v1.2d, v25.2d, v0.2d[0]
-	fmls	v8.2d, v26.2d, v0.2d[0]
-	fmls	v9.2d, v27.2d, v0.2d[0]
-	fmls	v2.2d, v24.2d, v2.2d[0]
-	fmls	v3.2d, v25.2d, v2.2d[0]
-	fmls	v10.2d, v26.2d, v2.2d[0]
-	fmls	v11.2d, v27.2d, v2.2d[0]
-	fmls	v4.2d, v24.2d, v4.2d[0]
-	fmls	v5.2d, v25.2d, v4.2d[0]
-	fmls	v12.2d, v26.2d, v4.2d[0]
-	fmls	v13.2d, v27.2d, v4.2d[0]
-	fmls	v6.2d, v24.2d, v6.2d[0]
-	fmls	v7.2d, v25.2d, v6.2d[0]
-	fmls	v14.2d, v26.2d, v6.2d[0]
-	fmls	v15.2d, v27.2d, v6.2d[0]
+	fmls	v0.2d, v24.2d, v0.d[0]
+	fmls	v1.2d, v25.2d, v0.d[0]
+	fmls	v8.2d, v26.2d, v0.d[0]
+	fmls	v9.2d, v27.2d, v0.d[0]
+	fmls	v2.2d, v24.2d, v2.d[0]
+	fmls	v3.2d, v25.2d, v2.d[0]
+	fmls	v10.2d, v26.2d, v2.d[0]
+	fmls	v11.2d, v27.2d, v2.d[0]
+	fmls	v4.2d, v24.2d, v4.d[0]
+	fmls	v5.2d, v25.2d, v4.d[0]
+	fmls	v12.2d, v26.2d, v4.d[0]
+	fmls	v13.2d, v27.2d, v4.d[0]
+	fmls	v6.2d, v24.2d, v6.d[0]
+	fmls	v7.2d, v25.2d, v6.d[0]
+	fmls	v14.2d, v26.2d, v6.d[0]
+	fmls	v15.2d, v27.2d, v6.d[0]
 
 	ldr		q25, [x8, #48] // E[2+4*1]
 	ldp		q26, q27, [x10, #32] // E1[0+4*1]
-	fmls	v1.2d, v25.2d, v0.2d[1]
-	fmls	v8.2d, v26.2d, v0.2d[1]
-	fmls	v9.2d, v27.2d, v0.2d[1]
-	fmls	v3.2d, v25.2d, v2.2d[1]
-	fmls	v10.2d, v26.2d, v2.2d[1]
-	fmls	v11.2d, v27.2d, v2.2d[1]
-	fmls	v5.2d, v25.2d, v4.2d[1]
-	fmls	v12.2d, v26.2d, v4.2d[1]
-	fmls	v13.2d, v27.2d, v4.2d[1]
-	fmls	v7.2d, v25.2d, v6.2d[1]
-	fmls	v14.2d, v26.2d, v6.2d[1]
-	fmls	v15.2d, v27.2d, v6.2d[1]
+	fmls	v1.2d, v25.2d, v0.d[1]
+	fmls	v8.2d, v26.2d, v0.d[1]
+	fmls	v9.2d, v27.2d, v0.d[1]
+	fmls	v3.2d, v25.2d, v2.d[1]
+	fmls	v10.2d, v26.2d, v2.d[1]
+	fmls	v11.2d, v27.2d, v2.d[1]
+	fmls	v5.2d, v25.2d, v4.d[1]
+	fmls	v12.2d, v26.2d, v4.d[1]
+	fmls	v13.2d, v27.2d, v4.d[1]
+	fmls	v7.2d, v25.2d, v6.d[1]
+	fmls	v14.2d, v26.2d, v6.d[1]
+	fmls	v15.2d, v27.2d, v6.d[1]
 
 	ldr		q25, [x8, #80] // E[2+4*2]
 	ldp		q26, q27, [x10, #64] // E1[0+4*2]
 	ins		v25.d[0], xzr
-	fmls	v1.2d, v25.2d, v1.2d[0]
-	fmls	v8.2d, v26.2d, v1.2d[0]
-	fmls	v9.2d, v27.2d, v1.2d[0]
-	fmls	v3.2d, v25.2d, v3.2d[0]
-	fmls	v10.2d, v26.2d, v3.2d[0]
-	fmls	v11.2d, v27.2d, v3.2d[0]
-	fmls	v5.2d, v25.2d, v5.2d[0]
-	fmls	v12.2d, v26.2d, v5.2d[0]
-	fmls	v13.2d, v27.2d, v5.2d[0]
-	fmls	v7.2d, v25.2d, v7.2d[0]
-	fmls	v14.2d, v26.2d, v7.2d[0]
-	fmls	v15.2d, v27.2d, v7.2d[0]
+	fmls	v1.2d, v25.2d, v1.d[0]
+	fmls	v8.2d, v26.2d, v1.d[0]
+	fmls	v9.2d, v27.2d, v1.d[0]
+	fmls	v3.2d, v25.2d, v3.d[0]
+	fmls	v10.2d, v26.2d, v3.d[0]
+	fmls	v11.2d, v27.2d, v3.d[0]
+	fmls	v5.2d, v25.2d, v5.d[0]
+	fmls	v12.2d, v26.2d, v5.d[0]
+	fmls	v13.2d, v27.2d, v5.d[0]
+	fmls	v7.2d, v25.2d, v7.d[0]
+	fmls	v14.2d, v26.2d, v7.d[0]
+	fmls	v15.2d, v27.2d, v7.d[0]
 
 	ldp		q26, q27, [x10, #96] // E1[0+4*3]
-	fmls	v8.2d, v26.2d, v1.2d[1]
-	fmls	v9.2d, v27.2d, v1.2d[1]
-	fmls	v10.2d, v26.2d, v3.2d[1]
-	fmls	v11.2d, v27.2d, v3.2d[1]
-	fmls	v12.2d, v26.2d, v5.2d[1]
-	fmls	v13.2d, v27.2d, v5.2d[1]
-	fmls	v14.2d, v26.2d, v7.2d[1]
-	fmls	v15.2d, v27.2d, v7.2d[1]
+	fmls	v8.2d, v26.2d, v1.d[1]
+	fmls	v9.2d, v27.2d, v1.d[1]
+	fmls	v10.2d, v26.2d, v3.d[1]
+	fmls	v11.2d, v27.2d, v3.d[1]
+	fmls	v12.2d, v26.2d, v5.d[1]
+	fmls	v13.2d, v27.2d, v5.d[1]
+	fmls	v14.2d, v26.2d, v7.d[1]
+	fmls	v15.2d, v27.2d, v7.d[1]
 
 	add		x10, x10, #128
 
 	ldp		q24, q25, [x10, #0] // E1[0+4*4]
 	ins		v24.d[0], xzr
-	fmls	v8.2d, v24.2d, v8.2d[0]
-	fmls	v9.2d, v25.2d, v8.2d[0]
-	fmls	v10.2d, v24.2d, v10.2d[0]
-	fmls	v11.2d, v25.2d, v10.2d[0]
-	fmls	v12.2d, v24.2d, v12.2d[0]
-	fmls	v13.2d, v25.2d, v12.2d[0]
-	fmls	v14.2d, v24.2d, v14.2d[0]
-	fmls	v15.2d, v25.2d, v14.2d[0]
+	fmls	v8.2d, v24.2d, v8.d[0]
+	fmls	v9.2d, v25.2d, v8.d[0]
+	fmls	v10.2d, v24.2d, v10.d[0]
+	fmls	v11.2d, v25.2d, v10.d[0]
+	fmls	v12.2d, v24.2d, v12.d[0]
+	fmls	v13.2d, v25.2d, v12.d[0]
+	fmls	v14.2d, v24.2d, v14.d[0]
+	fmls	v15.2d, v25.2d, v14.d[0]
 
 	ldr		q25, [x10, #48] // E1[2+4*5]
-	fmls	v9.2d, v25.2d, v8.2d[1]
-	fmls	v11.2d, v25.2d, v10.2d[1]
-	fmls	v13.2d, v25.2d, v12.2d[1]
-	fmls	v15.2d, v25.2d, v14.2d[1]
+	fmls	v9.2d, v25.2d, v8.d[1]
+	fmls	v11.2d, v25.2d, v10.d[1]
+	fmls	v13.2d, v25.2d, v12.d[1]
+	fmls	v15.2d, v25.2d, v14.d[1]
 
 	ldr		q25, [x10, #80] // E1[2+4*6]
 	ins		v25.d[0], xzr
-	fmls	v9.2d, v25.2d, v9.2d[0]
-	fmls	v11.2d, v25.2d, v11.2d[0]
-	fmls	v13.2d, v25.2d, v13.2d[0]
-	fmls	v15.2d, v25.2d, v15.2d[0]
+	fmls	v9.2d, v25.2d, v9.d[0]
+	fmls	v11.2d, v25.2d, v11.d[0]
+	fmls	v13.2d, v25.2d, v13.d[0]
+	fmls	v15.2d, v25.2d, v15.d[0]
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -3391,58 +3077,58 @@ NAME:
 	
 	// first column
 	ldr			d16, [x9, #0] // E_inv[0]
-	fmul		v0.2d, v0.2d, v16.2d[0]
-	fmul		v1.2d, v1.2d, v16.2d[0]
-	fmul		v8.2d, v8.2d, v16.2d[0]
-	fmul		v9.2d, v9.2d, v16.2d[0]
+	fmul		v0.2d, v0.2d, v16.d[0]
+	fmul		v1.2d, v1.2d, v16.d[0]
+	fmul		v8.2d, v8.2d, v16.d[0]
+	fmul		v9.2d, v9.2d, v16.d[0]
 	ldr			d16, [x8, #8] // E[1+4*0]
-	fmls		v2.2d, v0.2d, v16.2d[0]
-	fmls		v3.2d, v1.2d, v16.2d[0]
-	fmls		v10.2d, v8.2d, v16.2d[0]
-	fmls		v11.2d, v9.2d, v16.2d[0]
+	fmls		v2.2d, v0.2d, v16.d[0]
+	fmls		v3.2d, v1.2d, v16.d[0]
+	fmls		v10.2d, v8.2d, v16.d[0]
+	fmls		v11.2d, v9.2d, v16.d[0]
 	ldr			d16, [x8, #16] // E[2+4*0]
-	fmls		v4.2d, v0.2d, v16.2d[0]
-	fmls		v5.2d, v1.2d, v16.2d[0]
-	fmls		v12.2d, v8.2d, v16.2d[0]
-	fmls		v13.2d, v9.2d, v16.2d[0]
+	fmls		v4.2d, v0.2d, v16.d[0]
+	fmls		v5.2d, v1.2d, v16.d[0]
+	fmls		v12.2d, v8.2d, v16.d[0]
+	fmls		v13.2d, v9.2d, v16.d[0]
 	ldr			d16, [x8, #24] // E[3+4*0]
-	fmls		v6.2d, v0.2d, v16.2d[0]
-	fmls		v7.2d, v1.2d, v16.2d[0]
-	fmls		v14.2d, v8.2d, v16.2d[0]
-	fmls		v15.2d, v9.2d, v16.2d[0]
+	fmls		v6.2d, v0.2d, v16.d[0]
+	fmls		v7.2d, v1.2d, v16.d[0]
+	fmls		v14.2d, v8.2d, v16.d[0]
+	fmls		v15.2d, v9.2d, v16.d[0]
 
 	ldr			d16, [x9, #8] // E_inv[1]
-	fmul		v2.2d, v2.2d, v16.2d[0]
-	fmul		v3.2d, v3.2d, v16.2d[0]
-	fmul		v10.2d, v10.2d, v16.2d[0]
-	fmul		v11.2d, v11.2d, v16.2d[0]
+	fmul		v2.2d, v2.2d, v16.d[0]
+	fmul		v3.2d, v3.2d, v16.d[0]
+	fmul		v10.2d, v10.2d, v16.d[0]
+	fmul		v11.2d, v11.2d, v16.d[0]
 	ldr			d16, [x8, #48] // E[2+4*1]
-	fmls		v4.2d, v2.2d, v16.2d[0]
-	fmls		v5.2d, v3.2d, v16.2d[0]
-	fmls		v12.2d, v10.2d, v16.2d[0]
-	fmls		v13.2d, v11.2d, v16.2d[0]
+	fmls		v4.2d, v2.2d, v16.d[0]
+	fmls		v5.2d, v3.2d, v16.d[0]
+	fmls		v12.2d, v10.2d, v16.d[0]
+	fmls		v13.2d, v11.2d, v16.d[0]
 	ldr			d16, [x8, #56] // E[3+4*1]
-	fmls		v6.2d, v2.2d, v16.2d[0]
-	fmls		v7.2d, v3.2d, v16.2d[0]
-	fmls		v14.2d, v10.2d, v16.2d[0]
-	fmls		v15.2d, v11.2d, v16.2d[0]
+	fmls		v6.2d, v2.2d, v16.d[0]
+	fmls		v7.2d, v3.2d, v16.d[0]
+	fmls		v14.2d, v10.2d, v16.d[0]
+	fmls		v15.2d, v11.2d, v16.d[0]
 
 	ldr			d16, [x9, #16] // E_inv[2]
-	fmul		v4.2d, v4.2d, v16.2d[0]
-	fmul		v5.2d, v5.2d, v16.2d[0]
-	fmul		v12.2d, v12.2d, v16.2d[0]
-	fmul		v13.2d, v13.2d, v16.2d[0]
+	fmul		v4.2d, v4.2d, v16.d[0]
+	fmul		v5.2d, v5.2d, v16.d[0]
+	fmul		v12.2d, v12.2d, v16.d[0]
+	fmul		v13.2d, v13.2d, v16.d[0]
 	ldr			d16, [x8, #88] // E[3+4*1]
-	fmls		v6.2d, v4.2d, v16.2d[0]
-	fmls		v7.2d, v5.2d, v16.2d[0]
-	fmls		v14.2d, v12.2d, v16.2d[0]
-	fmls		v15.2d, v13.2d, v16.2d[0]
+	fmls		v6.2d, v4.2d, v16.d[0]
+	fmls		v7.2d, v5.2d, v16.d[0]
+	fmls		v14.2d, v12.2d, v16.d[0]
+	fmls		v15.2d, v13.2d, v16.d[0]
 
 	ldr			d16, [x9, #24] // E_inv[2]
-	fmul		v6.2d, v6.2d, v16.2d[0]
-	fmul		v7.2d, v7.2d, v16.2d[0]
-	fmul		v14.2d, v14.2d, v16.2d[0]
-	fmul		v15.2d, v15.2d, v16.2d[0]
+	fmul		v6.2d, v6.2d, v16.d[0]
+	fmul		v7.2d, v7.2d, v16.d[0]
+	fmul		v14.2d, v14.2d, v16.d[0]
+	fmul		v15.2d, v15.2d, v16.d[0]
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -3483,67 +3169,67 @@ NAME:
 	
 	// first column
 	ldr			d16, [x9, #0] // E_inv[0]
-	fmul		v0.2d, v0.2d, v16.2d[0]
-	fmul		v1.2d, v1.2d, v16.2d[0]
-	fmul		v8.2d, v8.2d, v16.2d[0]
-	fmul		v9.2d, v9.2d, v16.2d[0]
+	fmul		v0.2d, v0.2d, v16.d[0]
+	fmul		v1.2d, v1.2d, v16.d[0]
+	fmul		v8.2d, v8.2d, v16.d[0]
+	fmul		v9.2d, v9.2d, v16.d[0]
 	cmp			w10, #2
 	blt			0f // return
 
 	// second column
 	ldr			d16, [x8, #8] // E[1+4*0]
-	fmls		v2.2d, v0.2d, v16.2d[0]
-	fmls		v3.2d, v1.2d, v16.2d[0]
-	fmls		v10.2d, v8.2d, v16.2d[0]
-	fmls		v11.2d, v9.2d, v16.2d[0]
+	fmls		v2.2d, v0.2d, v16.d[0]
+	fmls		v3.2d, v1.2d, v16.d[0]
+	fmls		v10.2d, v8.2d, v16.d[0]
+	fmls		v11.2d, v9.2d, v16.d[0]
 	ldr			d16, [x9, #8] // E_inv[1]
-	fmul		v2.2d, v2.2d, v16.2d[0]
-	fmul		v3.2d, v3.2d, v16.2d[0]
-	fmul		v10.2d, v10.2d, v16.2d[0]
-	fmul		v11.2d, v11.2d, v16.2d[0]
+	fmul		v2.2d, v2.2d, v16.d[0]
+	fmul		v3.2d, v3.2d, v16.d[0]
+	fmul		v10.2d, v10.2d, v16.d[0]
+	fmul		v11.2d, v11.2d, v16.d[0]
 	cmp			w10, #3
 	blt			0f // return
 
 	// third column
 	ldr			d16, [x8, #16] // E[2+4*0]
-	fmls		v4.2d, v0.2d, v16.2d[0]
-	fmls		v5.2d, v1.2d, v16.2d[0]
-	fmls		v12.2d, v8.2d, v16.2d[0]
-	fmls		v13.2d, v9.2d, v16.2d[0]
+	fmls		v4.2d, v0.2d, v16.d[0]
+	fmls		v5.2d, v1.2d, v16.d[0]
+	fmls		v12.2d, v8.2d, v16.d[0]
+	fmls		v13.2d, v9.2d, v16.d[0]
 	ldr			d16, [x8, #48] // E[2+4*1]
-	fmls		v4.2d, v2.2d, v16.2d[0]
-	fmls		v5.2d, v3.2d, v16.2d[0]
-	fmls		v12.2d, v10.2d, v16.2d[0]
-	fmls		v13.2d, v11.2d, v16.2d[0]
+	fmls		v4.2d, v2.2d, v16.d[0]
+	fmls		v5.2d, v3.2d, v16.d[0]
+	fmls		v12.2d, v10.2d, v16.d[0]
+	fmls		v13.2d, v11.2d, v16.d[0]
 	ldr			d16, [x9, #16] // E_inv[2]
-	fmul		v4.2d, v4.2d, v16.2d[0]
-	fmul		v5.2d, v5.2d, v16.2d[0]
-	fmul		v12.2d, v12.2d, v16.2d[0]
-	fmul		v13.2d, v13.2d, v16.2d[0]
+	fmul		v4.2d, v4.2d, v16.d[0]
+	fmul		v5.2d, v5.2d, v16.d[0]
+	fmul		v12.2d, v12.2d, v16.d[0]
+	fmul		v13.2d, v13.2d, v16.d[0]
 	cmp			w10, #4
 	blt			0f // return
 
 	// forth column
 	ldr			d16, [x8, #24] // E[3+4*0]
-	fmls		v6.2d, v0.2d, v16.2d[0]
-	fmls		v7.2d, v1.2d, v16.2d[0]
-	fmls		v14.2d, v8.2d, v16.2d[0]
-	fmls		v15.2d, v9.2d, v16.2d[0]
+	fmls		v6.2d, v0.2d, v16.d[0]
+	fmls		v7.2d, v1.2d, v16.d[0]
+	fmls		v14.2d, v8.2d, v16.d[0]
+	fmls		v15.2d, v9.2d, v16.d[0]
 	ldr			d16, [x8, #56] // E[3+4*1]
-	fmls		v6.2d, v2.2d, v16.2d[0]
-	fmls		v7.2d, v3.2d, v16.2d[0]
-	fmls		v14.2d, v10.2d, v16.2d[0]
-	fmls		v15.2d, v11.2d, v16.2d[0]
+	fmls		v6.2d, v2.2d, v16.d[0]
+	fmls		v7.2d, v3.2d, v16.d[0]
+	fmls		v14.2d, v10.2d, v16.d[0]
+	fmls		v15.2d, v11.2d, v16.d[0]
 	ldr			d16, [x8, #88] // E[3+4*1]
-	fmls		v6.2d, v4.2d, v16.2d[0]
-	fmls		v7.2d, v5.2d, v16.2d[0]
-	fmls		v14.2d, v12.2d, v16.2d[0]
-	fmls		v15.2d, v13.2d, v16.2d[0]
+	fmls		v6.2d, v4.2d, v16.d[0]
+	fmls		v7.2d, v5.2d, v16.d[0]
+	fmls		v14.2d, v12.2d, v16.d[0]
+	fmls		v15.2d, v13.2d, v16.d[0]
 	ldr			d16, [x9, #24] // E_inv[2]
-	fmul		v6.2d, v6.2d, v16.2d[0]
-	fmul		v7.2d, v7.2d, v16.2d[0]
-	fmul		v14.2d, v14.2d, v16.2d[0]
-	fmul		v15.2d, v15.2d, v16.2d[0]
+	fmul		v6.2d, v6.2d, v16.d[0]
+	fmul		v7.2d, v7.2d, v16.d[0]
+	fmul		v14.2d, v14.2d, v16.d[0]
+	fmul		v15.2d, v15.2d, v16.d[0]
 
 0:
 
@@ -3582,37 +3268,37 @@ NAME:
 	
 	// first column
 	ldr			d16, [x8, #8] // E[1+4*0]
-	fmls		v2.2d, v0.2d, v16.2d[0]
-	fmls		v3.2d, v1.2d, v16.2d[0]
-	fmls		v10.2d, v8.2d, v16.2d[0]
-	fmls		v11.2d, v9.2d, v16.2d[0]
+	fmls		v2.2d, v0.2d, v16.d[0]
+	fmls		v3.2d, v1.2d, v16.d[0]
+	fmls		v10.2d, v8.2d, v16.d[0]
+	fmls		v11.2d, v9.2d, v16.d[0]
 	ldr			d16, [x8, #16] // E[2+4*0]
-	fmls		v4.2d, v0.2d, v16.2d[0]
-	fmls		v5.2d, v1.2d, v16.2d[0]
-	fmls		v12.2d, v8.2d, v16.2d[0]
-	fmls		v13.2d, v9.2d, v16.2d[0]
+	fmls		v4.2d, v0.2d, v16.d[0]
+	fmls		v5.2d, v1.2d, v16.d[0]
+	fmls		v12.2d, v8.2d, v16.d[0]
+	fmls		v13.2d, v9.2d, v16.d[0]
 	ldr			d16, [x8, #24] // E[3+4*0]
-	fmls		v6.2d, v0.2d, v16.2d[0]
-	fmls		v7.2d, v1.2d, v16.2d[0]
-	fmls		v14.2d, v8.2d, v16.2d[0]
-	fmls		v15.2d, v9.2d, v16.2d[0]
+	fmls		v6.2d, v0.2d, v16.d[0]
+	fmls		v7.2d, v1.2d, v16.d[0]
+	fmls		v14.2d, v8.2d, v16.d[0]
+	fmls		v15.2d, v9.2d, v16.d[0]
 
 	ldr			d16, [x8, #48] // E[2+4*1]
-	fmls		v4.2d, v2.2d, v16.2d[0]
-	fmls		v5.2d, v3.2d, v16.2d[0]
-	fmls		v12.2d, v10.2d, v16.2d[0]
-	fmls		v13.2d, v11.2d, v16.2d[0]
+	fmls		v4.2d, v2.2d, v16.d[0]
+	fmls		v5.2d, v3.2d, v16.d[0]
+	fmls		v12.2d, v10.2d, v16.d[0]
+	fmls		v13.2d, v11.2d, v16.d[0]
 	ldr			d16, [x8, #56] // E[3+4*1]
-	fmls		v6.2d, v2.2d, v16.2d[0]
-	fmls		v7.2d, v3.2d, v16.2d[0]
-	fmls		v14.2d, v10.2d, v16.2d[0]
-	fmls		v15.2d, v11.2d, v16.2d[0]
+	fmls		v6.2d, v2.2d, v16.d[0]
+	fmls		v7.2d, v3.2d, v16.d[0]
+	fmls		v14.2d, v10.2d, v16.d[0]
+	fmls		v15.2d, v11.2d, v16.d[0]
 
 	ldr			d16, [x8, #88] // E[3+4*1]
-	fmls		v6.2d, v4.2d, v16.2d[0]
-	fmls		v7.2d, v5.2d, v16.2d[0]
-	fmls		v14.2d, v12.2d, v16.2d[0]
-	fmls		v15.2d, v13.2d, v16.2d[0]
+	fmls		v6.2d, v4.2d, v16.d[0]
+	fmls		v7.2d, v5.2d, v16.d[0]
+	fmls		v14.2d, v12.2d, v16.d[0]
+	fmls		v15.2d, v13.2d, v16.d[0]
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -3655,43 +3341,43 @@ NAME:
 
 	// second column
 	ldr			d16, [x8, #8] // E[1+4*0]
-	fmls		v2.2d, v0.2d, v16.2d[0]
-	fmls		v3.2d, v1.2d, v16.2d[0]
-	fmls		v10.2d, v8.2d, v16.2d[0]
-	fmls		v11.2d, v9.2d, v16.2d[0]
+	fmls		v2.2d, v0.2d, v16.d[0]
+	fmls		v3.2d, v1.2d, v16.d[0]
+	fmls		v10.2d, v8.2d, v16.d[0]
+	fmls		v11.2d, v9.2d, v16.d[0]
 	cmp			w9, #3
 	blt			0f // return
 
 	// third column
 	ldr			d16, [x8, #16] // E[2+4*0]
-	fmls		v4.2d, v0.2d, v16.2d[0]
-	fmls		v5.2d, v1.2d, v16.2d[0]
-	fmls		v12.2d, v8.2d, v16.2d[0]
-	fmls		v13.2d, v9.2d, v16.2d[0]
+	fmls		v4.2d, v0.2d, v16.d[0]
+	fmls		v5.2d, v1.2d, v16.d[0]
+	fmls		v12.2d, v8.2d, v16.d[0]
+	fmls		v13.2d, v9.2d, v16.d[0]
 	ldr			d16, [x8, #48] // E[2+4*1]
-	fmls		v4.2d, v2.2d, v16.2d[0]
-	fmls		v5.2d, v3.2d, v16.2d[0]
-	fmls		v12.2d, v10.2d, v16.2d[0]
-	fmls		v13.2d, v11.2d, v16.2d[0]
+	fmls		v4.2d, v2.2d, v16.d[0]
+	fmls		v5.2d, v3.2d, v16.d[0]
+	fmls		v12.2d, v10.2d, v16.d[0]
+	fmls		v13.2d, v11.2d, v16.d[0]
 	cmp			w9, #4
 	blt			0f // return
 
 	// forth column
 	ldr			d16, [x8, #24] // E[3+4*0]
-	fmls		v6.2d, v0.2d, v16.2d[0]
-	fmls		v7.2d, v1.2d, v16.2d[0]
-	fmls		v14.2d, v8.2d, v16.2d[0]
-	fmls		v15.2d, v9.2d, v16.2d[0]
+	fmls		v6.2d, v0.2d, v16.d[0]
+	fmls		v7.2d, v1.2d, v16.d[0]
+	fmls		v14.2d, v8.2d, v16.d[0]
+	fmls		v15.2d, v9.2d, v16.d[0]
 	ldr			d16, [x8, #56] // E[3+4*1]
-	fmls		v6.2d, v2.2d, v16.2d[0]
-	fmls		v7.2d, v3.2d, v16.2d[0]
-	fmls		v14.2d, v10.2d, v16.2d[0]
-	fmls		v15.2d, v11.2d, v16.2d[0]
+	fmls		v6.2d, v2.2d, v16.d[0]
+	fmls		v7.2d, v3.2d, v16.d[0]
+	fmls		v14.2d, v10.2d, v16.d[0]
+	fmls		v15.2d, v11.2d, v16.d[0]
 	ldr			d16, [x8, #88] // E[3+4*1]
-	fmls		v6.2d, v4.2d, v16.2d[0]
-	fmls		v7.2d, v5.2d, v16.2d[0]
-	fmls		v14.2d, v12.2d, v16.2d[0]
-	fmls		v15.2d, v13.2d, v16.2d[0]
+	fmls		v6.2d, v4.2d, v16.d[0]
+	fmls		v7.2d, v5.2d, v16.d[0]
+	fmls		v14.2d, v12.2d, v16.d[0]
+	fmls		v15.2d, v13.2d, v16.d[0]
 
 0:
 
@@ -3728,72 +3414,72 @@ NAME:
 
 	// first column
 	ins			v17.d[0], v0.d[0]
-	fcmpe		d17, #0
+	fcmpe		d17, #0.0
 	ble			1f
 	fsqrt		d17, d17
 	fdiv		d18, d16, d17
 2:
 	str			d18, [x8, #0]
-	fmul		v0.2d, v0.2d, v18.2d[0]
-	fmul		v1.2d, v1.2d, v18.2d[0]
-	fmul		v8.2d, v8.2d, v18.2d[0]
-	fmul		v9.2d, v9.2d, v18.2d[0]
-	fmls		v2.2d, v0.2d, v0.2d[1]
-	fmls		v3.2d, v1.2d, v0.2d[1]
-	fmls		v10.2d, v8.2d, v0.2d[1]
-	fmls		v11.2d, v9.2d, v0.2d[1]
-	fmls		v5.2d, v1.2d, v1.2d[0]
-	fmls		v12.2d, v8.2d, v1.2d[0]
-	fmls		v13.2d, v9.2d, v1.2d[0]
-	fmls		v7.2d, v1.2d, v1.2d[1]
-	fmls		v14.2d, v8.2d, v1.2d[1]
-	fmls		v15.2d, v9.2d, v1.2d[1]
+	fmul		v0.2d, v0.2d, v18.d[0]
+	fmul		v1.2d, v1.2d, v18.d[0]
+	fmul		v8.2d, v8.2d, v18.d[0]
+	fmul		v9.2d, v9.2d, v18.d[0]
+	fmls		v2.2d, v0.2d, v0.d[1]
+	fmls		v3.2d, v1.2d, v0.d[1]
+	fmls		v10.2d, v8.2d, v0.d[1]
+	fmls		v11.2d, v9.2d, v0.d[1]
+	fmls		v5.2d, v1.2d, v1.d[0]
+	fmls		v12.2d, v8.2d, v1.d[0]
+	fmls		v13.2d, v9.2d, v1.d[0]
+	fmls		v7.2d, v1.2d, v1.d[1]
+	fmls		v14.2d, v8.2d, v1.d[1]
+	fmls		v15.2d, v9.2d, v1.d[1]
 
 	// second column
 	ins			v17.d[0], v2.d[1]
-	fcmpe		d17, #0
+	fcmpe		d17, #0.0
 	ble			3f
 	fsqrt		d17, d17
 	fdiv		d18, d16, d17
 4:
 	str			d18, [x8, #8]
-	fmul		v2.2d, v2.2d, v18.2d[0]
-	fmul		v3.2d, v3.2d, v18.2d[0]
-	fmul		v10.2d, v10.2d, v18.2d[0]
-	fmul		v11.2d, v11.2d, v18.2d[0]
-	fmls		v5.2d, v3.2d, v3.2d[0]
-	fmls		v12.2d, v10.2d, v3.2d[0]
-	fmls		v13.2d, v11.2d, v3.2d[0]
-	fmls		v7.2d, v3.2d, v3.2d[1]
-	fmls		v14.2d, v10.2d, v3.2d[1]
-	fmls		v15.2d, v11.2d, v3.2d[1]
+	fmul		v2.2d, v2.2d, v18.d[0]
+	fmul		v3.2d, v3.2d, v18.d[0]
+	fmul		v10.2d, v10.2d, v18.d[0]
+	fmul		v11.2d, v11.2d, v18.d[0]
+	fmls		v5.2d, v3.2d, v3.d[0]
+	fmls		v12.2d, v10.2d, v3.d[0]
+	fmls		v13.2d, v11.2d, v3.d[0]
+	fmls		v7.2d, v3.2d, v3.d[1]
+	fmls		v14.2d, v10.2d, v3.d[1]
+	fmls		v15.2d, v11.2d, v3.d[1]
 
 	// third column
 	ins			v17.d[0], v5.d[0]
-	fcmpe		d17, #0
+	fcmpe		d17, #0.0
 	ble			5f
 	fsqrt		d17, d17
 	fdiv		d18, d16, d17
 6:
 	str			d18, [x8, #16]
-	fmul		v5.2d, v5.2d, v18.2d[0]
-	fmul		v12.2d, v12.2d, v18.2d[0]
-	fmul		v13.2d, v13.2d, v18.2d[0]
-	fmls		v7.2d, v5.2d, v5.2d[1]
-	fmls		v14.2d, v12.2d, v5.2d[1]
-	fmls		v15.2d, v13.2d, v5.2d[1]
+	fmul		v5.2d, v5.2d, v18.d[0]
+	fmul		v12.2d, v12.2d, v18.d[0]
+	fmul		v13.2d, v13.2d, v18.d[0]
+	fmls		v7.2d, v5.2d, v5.d[1]
+	fmls		v14.2d, v12.2d, v5.d[1]
+	fmls		v15.2d, v13.2d, v5.d[1]
 
 	// fourth column
 	ins			v17.d[0], v7.d[1]
-	fcmpe		d17, #0
+	fcmpe		d17, #0.0
 	ble			7f
 	fsqrt		d17, d17
 	fdiv		d18, d16, d17
 8:
 	str			d18, [x8, #24]
-	fmul		v7.2d, v7.2d, v18.2d[0]
-	fmul		v14.2d, v14.2d, v18.2d[0]
-	fmul		v15.2d, v15.2d, v18.2d[0]
+	fmul		v7.2d, v7.2d, v18.d[0]
+	fmul		v14.2d, v14.2d, v18.d[0]
+	fmul		v15.2d, v15.2d, v18.d[0]
 
 	b			0f
 
@@ -3849,78 +3535,78 @@ NAME:
 
 	// first column
 	ins			v17.d[0], v0.d[0]
-	fcmpe		d17, #0
+	fcmpe		d17, #0.0
 	ble			1f
 	fsqrt		d17, d17
 	fdiv		d18, d16, d17
 2:
 	str			d18, [x8, #0]
-	fmul		v0.2d, v0.2d, v18.2d[0]
-	fmul		v1.2d, v1.2d, v18.2d[0]
-	fmul		v8.2d, v8.2d, v18.2d[0]
-	fmul		v9.2d, v9.2d, v18.2d[0]
+	fmul		v0.2d, v0.2d, v18.d[0]
+	fmul		v1.2d, v1.2d, v18.d[0]
+	fmul		v8.2d, v8.2d, v18.d[0]
+	fmul		v9.2d, v9.2d, v18.d[0]
 	cmp		w9, #2
 	blt		0f // return
 
 	// second column
-	fmls		v2.2d, v0.2d, v0.2d[1]
-	fmls		v3.2d, v1.2d, v0.2d[1]
-	fmls		v10.2d, v8.2d, v0.2d[1]
-	fmls		v11.2d, v9.2d, v0.2d[1]
+	fmls		v2.2d, v0.2d, v0.d[1]
+	fmls		v3.2d, v1.2d, v0.d[1]
+	fmls		v10.2d, v8.2d, v0.d[1]
+	fmls		v11.2d, v9.2d, v0.d[1]
 	ins			v17.d[0], v2.d[1]
-	fcmpe		d17, #0
+	fcmpe		d17, #0.0
 	ble			3f
 	fsqrt		d17, d17
 	fdiv		d18, d16, d17
 4:
 	str			d18, [x8, #8]
-	fmul		v2.2d, v2.2d, v18.2d[0]
-	fmul		v3.2d, v3.2d, v18.2d[0]
-	fmul		v10.2d, v10.2d, v18.2d[0]
-	fmul		v11.2d, v11.2d, v18.2d[0]
+	fmul		v2.2d, v2.2d, v18.d[0]
+	fmul		v3.2d, v3.2d, v18.d[0]
+	fmul		v10.2d, v10.2d, v18.d[0]
+	fmul		v11.2d, v11.2d, v18.d[0]
 	cmp		w9, #3
 	blt		0f // return
 
 	// third column
-	fmls		v5.2d, v1.2d, v1.2d[0]
-	fmls		v12.2d, v8.2d, v1.2d[0]
-	fmls		v13.2d, v9.2d, v1.2d[0]
-	fmls		v5.2d, v3.2d, v3.2d[0]
-	fmls		v12.2d, v10.2d, v3.2d[0]
-	fmls		v13.2d, v11.2d, v3.2d[0]
+	fmls		v5.2d, v1.2d, v1.d[0]
+	fmls		v12.2d, v8.2d, v1.d[0]
+	fmls		v13.2d, v9.2d, v1.d[0]
+	fmls		v5.2d, v3.2d, v3.d[0]
+	fmls		v12.2d, v10.2d, v3.d[0]
+	fmls		v13.2d, v11.2d, v3.d[0]
 	ins			v17.d[0], v5.d[0]
-	fcmpe		d17, #0
+	fcmpe		d17, #0.0
 	ble			5f
 	fsqrt		d17, d17
 	fdiv		d18, d16, d17
 6:
 	str			d18, [x8, #16]
-	fmul		v5.2d, v5.2d, v18.2d[0]
-	fmul		v12.2d, v12.2d, v18.2d[0]
-	fmul		v13.2d, v13.2d, v18.2d[0]
+	fmul		v5.2d, v5.2d, v18.d[0]
+	fmul		v12.2d, v12.2d, v18.d[0]
+	fmul		v13.2d, v13.2d, v18.d[0]
 	cmp		w9, #4
 	blt		0f // return
 
 	// fourth column
-	fmls		v7.2d, v1.2d, v1.2d[1]
-	fmls		v14.2d, v8.2d, v1.2d[1]
-	fmls		v15.2d, v9.2d, v1.2d[1]
-	fmls		v7.2d, v3.2d, v3.2d[1]
-	fmls		v14.2d, v10.2d, v3.2d[1]
-	fmls		v15.2d, v11.2d, v3.2d[1]
-	fmls		v7.2d, v5.2d, v5.2d[1]
-	fmls		v14.2d, v12.2d, v5.2d[1]
-	fmls		v15.2d, v13.2d, v5.2d[1]
+	fmls		v7.2d, v1.2d, v1.d[1]
+	fmls		v14.2d, v8.2d, v1.d[1]
+	fmls		v15.2d, v9.2d, v1.d[1]
+	fmls		v7.2d, v3.2d, v3.d[1]
+	fmls		v14.2d, v10.2d, v3.d[1]
+	fmls		v15.2d, v11.2d, v3.d[1]
+	fmls		v7.2d, v5.2d, v5.d[1]
+	fmls		v14.2d, v12.2d, v5.d[1]
+	fmls		v15.2d, v13.2d, v5.d[1]
 	ins			v17.d[0], v7.d[1]
-	fcmpe		d17, #0
+	fcmpe		d17, #0.0
 	ble			7f
 	fsqrt		d17, d17
 	fdiv		d18, d16, d17
 8:
 	str			d18, [x8, #24]
-	fmul		v7.2d, v7.2d, v18.2d[0]
-	fmul		v14.2d, v14.2d, v18.2d[0]
-	fmul		v15.2d, v15.2d, v18.2d[0]
+	fmul		v7.2d, v7.2d, v18.d[0]
+	fmul		v14.2d, v14.2d, v18.d[0]
+	fmul		v15.2d, v15.2d, v18.d[0]
 
 	b			0f
 
@@ -3974,51 +3660,51 @@ NAME:
 
 	ld1		{v29.2d}, [x9]
 
-	fmul	v0.2d, v0.2d, v28.2d[0]
-	fmul	v1.2d, v1.2d, v28.2d[0]
-	fmul	v2.2d, v2.2d, v28.2d[0]
-	fmul	v3.2d, v3.2d, v28.2d[0]
-	fmul	v4.2d, v4.2d, v28.2d[0]
-	fmul	v5.2d, v5.2d, v28.2d[0]
-	fmul	v6.2d, v6.2d, v28.2d[0]
-	fmul	v7.2d, v7.2d, v28.2d[0]
-	fmul	v8.2d, v8.2d, v28.2d[0]
-	fmul	v9.2d, v9.2d, v28.2d[0]
-	fmul	v10.2d, v10.2d, v28.2d[0]
-	fmul	v11.2d, v11.2d, v28.2d[0]
-	fmul	v12.2d, v12.2d, v28.2d[0]
-	fmul	v13.2d, v13.2d, v28.2d[0]
-	fmul	v14.2d, v14.2d, v28.2d[0]
-	fmul	v15.2d, v15.2d, v28.2d[0]
+	fmul	v0.2d, v0.2d, v28.d[0]
+	fmul	v1.2d, v1.2d, v28.d[0]
+	fmul	v2.2d, v2.2d, v28.d[0]
+	fmul	v3.2d, v3.2d, v28.d[0]
+	fmul	v4.2d, v4.2d, v28.d[0]
+	fmul	v5.2d, v5.2d, v28.d[0]
+	fmul	v6.2d, v6.2d, v28.d[0]
+	fmul	v7.2d, v7.2d, v28.d[0]
+	fmul	v8.2d, v8.2d, v28.d[0]
+	fmul	v9.2d, v9.2d, v28.d[0]
+	fmul	v10.2d, v10.2d, v28.d[0]
+	fmul	v11.2d, v11.2d, v28.d[0]
+	fmul	v12.2d, v12.2d, v28.d[0]
+	fmul	v13.2d, v13.2d, v28.d[0]
+	fmul	v14.2d, v14.2d, v28.d[0]
+	fmul	v15.2d, v15.2d, v28.d[0]
 
-	fcmpe	d29, #0
+	fcmpe	d29, #0.0
 	beq		0f
 
 	add		x12, x10, x11
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
-	fmla	v0.2d, v24.2d, v29.2d[0]
-	fmla	v1.2d, v25.2d, v29.2d[0]
-	fmla	v2.2d, v26.2d, v29.2d[0]
-	fmla	v3.2d, v27.2d, v29.2d[0]
+	fmla	v0.2d, v24.2d, v29.d[0]
+	fmla	v1.2d, v25.2d, v29.d[0]
+	fmla	v2.2d, v26.2d, v29.d[0]
+	fmla	v3.2d, v27.2d, v29.d[0]
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
-	fmla	v4.2d, v24.2d, v29.2d[0]
-	fmla	v5.2d, v25.2d, v29.2d[0]
-	fmla	v6.2d, v26.2d, v29.2d[0]
-	fmla	v7.2d, v27.2d, v29.2d[0]
+	fmla	v4.2d, v24.2d, v29.d[0]
+	fmla	v5.2d, v25.2d, v29.d[0]
+	fmla	v6.2d, v26.2d, v29.d[0]
+	fmla	v7.2d, v27.2d, v29.d[0]
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x12], #64
-	fmla	v8.2d, v24.2d, v29.2d[0]
-	fmla	v9.2d, v25.2d, v29.2d[0]
-	fmla	v10.2d, v26.2d, v29.2d[0]
-	fmla	v11.2d, v27.2d, v29.2d[0]
+	fmla	v8.2d, v24.2d, v29.d[0]
+	fmla	v9.2d, v25.2d, v29.d[0]
+	fmla	v10.2d, v26.2d, v29.d[0]
+	fmla	v11.2d, v27.2d, v29.d[0]
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x12], #64
-	fmla	v12.2d, v24.2d, v29.2d[0]
-	fmla	v13.2d, v25.2d, v29.2d[0]
-	fmla	v14.2d, v26.2d, v29.2d[0]
-	fmla	v15.2d, v27.2d, v29.2d[0]
+	fmla	v12.2d, v24.2d, v29.d[0]
+	fmla	v13.2d, v25.2d, v29.d[0]
+	fmla	v14.2d, v26.2d, v29.d[0]
+	fmla	v15.2d, v27.2d, v29.d[0]
 
 0:
 
@@ -4072,34 +3758,34 @@ NAME:
 	fneg	v14.2d, v14.2d
 	fneg	v15.2d, v15.2d
 
-	fcmpe	d29, #0
+	fcmpe	d29, #0.0
 	beq		0f
 
 	add		x11, x9, x10
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x9], #64
-	fmla	v0.2d, v24.2d, v29.2d[0]
-	fmla	v1.2d, v25.2d, v29.2d[0]
-	fmla	v2.2d, v26.2d, v29.2d[0]
-	fmla	v3.2d, v27.2d, v29.2d[0]
+	fmla	v0.2d, v24.2d, v29.d[0]
+	fmla	v1.2d, v25.2d, v29.d[0]
+	fmla	v2.2d, v26.2d, v29.d[0]
+	fmla	v3.2d, v27.2d, v29.d[0]
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x9], #64
-	fmla	v4.2d, v24.2d, v29.2d[0]
-	fmla	v5.2d, v25.2d, v29.2d[0]
-	fmla	v6.2d, v26.2d, v29.2d[0]
-	fmla	v7.2d, v27.2d, v29.2d[0]
+	fmla	v4.2d, v24.2d, v29.d[0]
+	fmla	v5.2d, v25.2d, v29.d[0]
+	fmla	v6.2d, v26.2d, v29.d[0]
+	fmla	v7.2d, v27.2d, v29.d[0]
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x11], #64
-	fmla	v8.2d, v24.2d, v29.2d[0]
-	fmla	v9.2d, v25.2d, v29.2d[0]
-	fmla	v10.2d, v26.2d, v29.2d[0]
-	fmla	v11.2d, v27.2d, v29.2d[0]
+	fmla	v8.2d, v24.2d, v29.d[0]
+	fmla	v9.2d, v25.2d, v29.d[0]
+	fmla	v10.2d, v26.2d, v29.d[0]
+	fmla	v11.2d, v27.2d, v29.d[0]
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x11], #64
-	fmla	v12.2d, v24.2d, v29.2d[0]
-	fmla	v13.2d, v25.2d, v29.2d[0]
-	fmla	v14.2d, v26.2d, v29.2d[0]
-	fmla	v15.2d, v27.2d, v29.2d[0]
+	fmla	v12.2d, v24.2d, v29.d[0]
+	fmla	v13.2d, v25.2d, v29.d[0]
+	fmla	v14.2d, v26.2d, v29.d[0]
+	fmla	v15.2d, v27.2d, v29.d[0]
 
 0:
 
@@ -4214,49 +3900,49 @@ NAME:
 
 	ld1		{v29.2d}, [x9]
 
-	fmul	v0.2d, v0.2d, v28.2d[0]
-	fmul	v1.2d, v1.2d, v28.2d[0]
-	fmul	v2.2d, v2.2d, v28.2d[0]
-	fmul	v3.2d, v3.2d, v28.2d[0]
-	fmul	v4.2d, v4.2d, v28.2d[0]
-	fmul	v5.2d, v5.2d, v28.2d[0]
-	fmul	v6.2d, v6.2d, v28.2d[0]
-	fmul	v7.2d, v7.2d, v28.2d[0]
-	fmul	v8.2d, v8.2d, v28.2d[0]
-	fmul	v9.2d, v9.2d, v28.2d[0]
-	fmul	v10.2d, v10.2d, v28.2d[0]
-	fmul	v11.2d, v11.2d, v28.2d[0]
-	fmul	v12.2d, v12.2d, v28.2d[0]
-	fmul	v13.2d, v13.2d, v28.2d[0]
-	fmul	v14.2d, v14.2d, v28.2d[0]
-	fmul	v15.2d, v15.2d, v28.2d[0]
+	fmul	v0.2d, v0.2d, v28.d[0]
+	fmul	v1.2d, v1.2d, v28.d[0]
+	fmul	v2.2d, v2.2d, v28.d[0]
+	fmul	v3.2d, v3.2d, v28.d[0]
+	fmul	v4.2d, v4.2d, v28.d[0]
+	fmul	v5.2d, v5.2d, v28.d[0]
+	fmul	v6.2d, v6.2d, v28.d[0]
+	fmul	v7.2d, v7.2d, v28.d[0]
+	fmul	v8.2d, v8.2d, v28.d[0]
+	fmul	v9.2d, v9.2d, v28.d[0]
+	fmul	v10.2d, v10.2d, v28.d[0]
+	fmul	v11.2d, v11.2d, v28.d[0]
+	fmul	v12.2d, v12.2d, v28.d[0]
+	fmul	v13.2d, v13.2d, v28.d[0]
+	fmul	v14.2d, v14.2d, v28.d[0]
+	fmul	v15.2d, v15.2d, v28.d[0]
 
-	fcmpe	d29, #0
+	fcmpe	d29, #0.0
 	beq		0f
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
-	fmla	v0.2d, v24.2d, v29.2d[0]
-	fmla	v1.2d, v25.2d, v29.2d[0]
-	fmla	v2.2d, v26.2d, v29.2d[0]
-	fmla	v3.2d, v27.2d, v29.2d[0]
+	fmla	v0.2d, v24.2d, v29.d[0]
+	fmla	v1.2d, v25.2d, v29.d[0]
+	fmla	v2.2d, v26.2d, v29.d[0]
+	fmla	v3.2d, v27.2d, v29.d[0]
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
-	fmla	v4.2d, v24.2d, v29.2d[0]
-	fmla	v5.2d, v25.2d, v29.2d[0]
-	fmla	v6.2d, v26.2d, v29.2d[0]
-	fmla	v7.2d, v27.2d, v29.2d[0]
+	fmla	v4.2d, v24.2d, v29.d[0]
+	fmla	v5.2d, v25.2d, v29.d[0]
+	fmla	v6.2d, v26.2d, v29.d[0]
+	fmla	v7.2d, v27.2d, v29.d[0]
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
-	fmla	v8.2d, v24.2d, v29.2d[0]
-	fmla	v9.2d, v25.2d, v29.2d[0]
-	fmla	v10.2d, v26.2d, v29.2d[0]
-	fmla	v11.2d, v27.2d, v29.2d[0]
+	fmla	v8.2d, v24.2d, v29.d[0]
+	fmla	v9.2d, v25.2d, v29.d[0]
+	fmla	v10.2d, v26.2d, v29.d[0]
+	fmla	v11.2d, v27.2d, v29.d[0]
 
 	ld1		{v24.2d, v25.2d, v26.2d, v27.2d}, [x10], #64
-	fmla	v12.2d, v24.2d, v29.2d[0]
-	fmla	v13.2d, v25.2d, v29.2d[0]
-	fmla	v14.2d, v26.2d, v29.2d[0]
-	fmla	v15.2d, v27.2d, v29.2d[0]
+	fmla	v12.2d, v24.2d, v29.d[0]
+	fmla	v13.2d, v25.2d, v29.d[0]
+	fmla	v14.2d, v26.2d, v29.d[0]
+	fmla	v15.2d, v27.2d, v29.d[0]
 
 0:
 
