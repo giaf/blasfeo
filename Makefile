@@ -1087,6 +1087,9 @@ adb_push_benchmarks:
 adb_run_benchmarks:
 	make -C benchmarks adb_run
 
+adb_run_taskset_benchmarks:
+	make -C benchmarks adb_run_taskset
+
 figures_benchmark_one:
 	make -C benchmarks figures_benchmark_one
 

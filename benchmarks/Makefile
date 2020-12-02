@@ -117,6 +117,9 @@ adb_push:
 adb_run:
 	adb shell /data/local/tmp/$(ONE_OBJS).out
 
+adb_run_taskset:
+	adb shell taskset 2 /data/local/tmp/$(ONE_OBJS).out
+
 clean:
 	rm -rf ./*.o
 	rm -rf ./*.out
