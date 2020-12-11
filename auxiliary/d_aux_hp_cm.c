@@ -66,6 +66,9 @@
 
 
 
+#define FABS fabs
+#define FMAX fmax
+#define FMIN fmin
 #define REAL double
 #define MAT blasfeo_dmat
 #define MATEL BLASFEO_DMATEL

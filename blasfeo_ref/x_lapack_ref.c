@@ -83,7 +83,7 @@ void REF_POTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di
 			}
 		if(c_00>0)
 			{
-			f_00_inv = 1.0/sqrt(c_00);
+			f_00_inv = 1.0/SQRT(c_00);
 			}
 		else
 			{
@@ -96,7 +96,7 @@ void REF_POTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di
 		c_11 -= f_10 * f_10;
 		if(c_11>0)
 			{
-			f_11_inv = 1.0/sqrt(c_11);
+			f_11_inv = 1.0/SQRT(c_11);
 			}
 		else
 			{
@@ -153,7 +153,7 @@ void REF_POTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di
 			}
 		if(c_00>0)
 			{
-			f_00_inv = 1.0/sqrt(c_00);
+			f_00_inv = 1.0/SQRT(c_00);
 			}
 		else
 			{
@@ -229,7 +229,7 @@ void REF_POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *
 			}
 		if(c_00>0)
 			{
-			f_00_inv = 1.0/sqrt(c_00);
+			f_00_inv = 1.0/SQRT(c_00);
 			}
 		else
 			{
@@ -242,7 +242,7 @@ void REF_POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *
 		c_11 -= f_10 * f_10;
 		if(c_11>0)
 			{
-			f_11_inv = 1.0/sqrt(c_11);
+			f_11_inv = 1.0/SQRT(c_11);
 			}
 		else
 			{
@@ -299,7 +299,7 @@ void REF_POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *
 			}
 		if(c_00>0)
 			{
-			f_00_inv = 1.0/sqrt(c_00);
+			f_00_inv = 1.0/SQRT(c_00);
 			}
 		else
 			{
@@ -369,7 +369,7 @@ void REF_POTRF_U(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di
 			}
 		if(c_00>0)
 			{
-			f_00_inv = 1.0/sqrt(c_00);
+			f_00_inv = 1.0/SQRT(c_00);
 			}
 		else
 			{
@@ -451,7 +451,7 @@ void REF_SYRK_POTRF_LN(int m, int k, struct XMAT *sA, int ai, int aj, struct XMA
 			}
 		if(c_00>0)
 			{
-			f_00_inv = 1.0/sqrt(c_00);
+			f_00_inv = 1.0/SQRT(c_00);
 			}
 		else
 			{
@@ -464,7 +464,7 @@ void REF_SYRK_POTRF_LN(int m, int k, struct XMAT *sA, int ai, int aj, struct XMA
 		c_11 -= f_10 * f_10;
 		if(c_11>0)
 			{
-			f_11_inv = 1.0/sqrt(c_11);
+			f_11_inv = 1.0/SQRT(c_11);
 			}
 		else
 			{
@@ -537,7 +537,7 @@ void REF_SYRK_POTRF_LN(int m, int k, struct XMAT *sA, int ai, int aj, struct XMA
 			}
 		if(c_00>0)
 			{
-			f_00_inv = 1.0/sqrt(c_00);
+			f_00_inv = 1.0/SQRT(c_00);
 			}
 		else
 			{
@@ -622,7 +622,7 @@ void REF_SYRK_POTRF_LN_MN(int m, int n, int k, struct XMAT *sA, int ai, int aj, 
 			}
 		if(c_00>0)
 			{
-			f_00_inv = 1.0/sqrt(c_00);
+			f_00_inv = 1.0/SQRT(c_00);
 			}
 		else
 			{
@@ -635,7 +635,7 @@ void REF_SYRK_POTRF_LN_MN(int m, int n, int k, struct XMAT *sA, int ai, int aj, 
 		c_11 -= f_10 * f_10;
 		if(c_11>0)
 			{
-			f_11_inv = 1.0/sqrt(c_11);
+			f_11_inv = 1.0/SQRT(c_11);
 			}
 		else
 			{
@@ -708,7 +708,7 @@ void REF_SYRK_POTRF_LN_MN(int m, int n, int k, struct XMAT *sA, int ai, int aj, 
 			}
 		if(c_00>0)
 			{
-			f_00_inv = 1.0/sqrt(c_00);
+			f_00_inv = 1.0/SQRT(c_00);
 			}
 		else
 			{
@@ -818,7 +818,7 @@ void REF_PSTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di
 			}
 		c_00 = XMATEL_D(cci+ii, ccj+ii);
 		if(c_00>0)
-			f_00_inv = 1.0/sqrt(c_00);
+			f_00_inv = 1.0/SQRT(c_00);
 		else
 			f_00_inv = 0.0;
 		dD[ii+0] = f_00_inv;
@@ -1607,7 +1607,7 @@ void REF_GEQRF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, i
 			{
 			alpha = XMATEL_D(ddi+ii+0, ddj+ii+0);
 			beta += alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha>0)
 				beta = -beta;
 			// tau0
@@ -1649,7 +1649,7 @@ void REF_GEQRF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, i
 			{
 			alpha = XMATEL_D(ddi+ii+1+0, ddj+ii+1+0);
 			beta += alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha>0)
 				beta = -beta;
 			// tau1
@@ -1750,7 +1750,7 @@ void REF_GEQRF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, i
 			{
 			alpha = XMATEL_D(ddi+ii+0, ddj+ii+0);
 			beta += alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha>0)
 				beta = -beta;
 			dD[ii] = (beta-alpha) / beta;
@@ -1875,7 +1875,7 @@ void REF_GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, i
 			{
 			alpha = XMATEL_D(ddi+ii+0, ddj+ii+0);
 			beta += alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha>0)
 				beta = -beta;
 			// tau0
@@ -1917,7 +1917,7 @@ void REF_GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, i
 			{
 			alpha = XMATEL_D(ddi+ii+1+0, ddj+ii+1+0);
 			beta += alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha>0)
 				beta = -beta;
 			// tau1
@@ -2019,7 +2019,7 @@ void REF_GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, i
 			{
 			alpha = XMATEL_D(ddi+ii+0, ddj+ii+0);
 			beta = sigma + alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha>0)
 				beta = -beta;
 			dD[ii] = (beta-alpha) / beta;
@@ -2161,7 +2161,7 @@ void REF_GELQF_PD(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD
 			{
 			alpha = XMATEL_D(ddi+ii+0, ddj+ii+0);
 			beta = sigma + alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha<=0)
 				tmp = alpha-beta;
 			else
@@ -2203,7 +2203,7 @@ void REF_GELQF_PD(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD
 			{
 			alpha = XMATEL_D(ddi+ii+1+0, ddj+ii+1+0);
 			beta = sigma + alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha<=0)
 				tmp = alpha-beta;
 			else
@@ -2307,7 +2307,7 @@ void REF_GELQF_PD(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD
 			{
 			alpha = XMATEL_D(ddi+ii+0, ddj+ii+0);
 			beta = sigma + alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha<=0)
 				tmp = alpha-beta;
 			else
@@ -2420,7 +2420,7 @@ void GELQF_PD_DA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sA
 			{
 			alpha = pD00[0+ldd*0];
 			beta = sigma + alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha<=0)
 				tmp = alpha-beta;
 			else
@@ -2466,7 +2466,7 @@ void GELQF_PD_DA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sA
 			{
 			alpha = pD11[0+ldd*0];
 			beta = sigma + alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha<=0)
 				tmp = alpha-beta;
 			else
@@ -2578,7 +2578,7 @@ void GELQF_PD_DA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sA
 			{
 			alpha = pD00[0+ldd*0];
 			beta = sigma + alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha<=0)
 				tmp = alpha-beta;
 			else
@@ -2693,7 +2693,7 @@ void REF_GELQF_PD_LA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT
 			{
 			alpha = XMATEL_D(ddi+ii+0, ddj+ii+0);
 			beta = sigma + alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha<=0)
 				tmp = alpha-beta;
 			else
@@ -2734,7 +2734,7 @@ void REF_GELQF_PD_LA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT
 			{
 			alpha = XMATEL_D(ddi+ii+1, ddj+ii+1);
 			beta = sigma + alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha<=0)
 				tmp = alpha-beta;
 			else
@@ -2840,7 +2840,7 @@ void REF_GELQF_PD_LA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT
 			{
 			alpha = XMATEL_D(ddi+ii+0, ddj+ii+0);
 			beta = sigma + alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha<=0)
 				tmp = alpha-beta;
 			else
@@ -2962,7 +2962,7 @@ void REF_GELQF_PD_LLA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMA
 			{
 			alpha = XMATEL_D(ddi+ii+0, ddj+ii+0);
 			beta = sigma + alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha<=0)
 				tmp = alpha-beta;
 			else
@@ -3022,7 +3022,7 @@ void REF_GELQF_PD_LLA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMA
 			{
 			alpha = XMATEL_D(ddi+ii+1, ddj+ii+1);
 			beta = sigma + alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha<=0)
 				tmp = alpha-beta;
 			else
@@ -3178,7 +3178,7 @@ void REF_GELQF_PD_LLA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMA
 			{
 			alpha = XMATEL_D(ddi+ii+0, ddj+ii+0);
 			beta = sigma + alpha*alpha;
-			beta = sqrt(beta);
+			beta = SQRT(beta);
 			if(alpha<=0)
 				tmp = alpha-beta;
 			else

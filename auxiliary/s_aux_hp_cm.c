@@ -59,6 +59,9 @@
 
 
 
+#define FABS fabsf
+#define FMAX fmaxf
+#define FMIN fminf
 #define REAL float
 #define MAT blasfeo_smat
 #define MATEL BLASFEO_SMATEL

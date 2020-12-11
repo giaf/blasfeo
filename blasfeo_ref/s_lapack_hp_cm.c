@@ -62,6 +62,7 @@
 
 
 
+#define SQRT sqrtf
 #define REAL float
 #define XMAT blasfeo_smat
 #define XMATEL BLASFEO_SMATEL

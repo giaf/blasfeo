@@ -4594,7 +4594,7 @@ void kernel_spotrf_nt_l_4x4_lib4(int kmax, float *A, float *B, float *C, float *
 
 	if(CC[0+bs*0]>0)
 		{
-		CC[0+bs*0] = sqrt(CC[0+bs*0]);
+		CC[0+bs*0] = sqrtf(CC[0+bs*0]);
 		tmp = 1.0/CC[0+bs*0];
 		}
 	else
@@ -4612,7 +4612,7 @@ void kernel_spotrf_nt_l_4x4_lib4(int kmax, float *A, float *B, float *C, float *
 	CC[3+bs*1] -= CC[3+bs*0] * CC[1+bs*0];
 	if(CC[1+bs*1]>0)
 		{
-		CC[1+bs*1] = sqrt(CC[1+bs*1]);
+		CC[1+bs*1] = sqrtf(CC[1+bs*1]);
 		tmp = 1.0/CC[1+bs*1];
 		}
 	else
@@ -4630,7 +4630,7 @@ void kernel_spotrf_nt_l_4x4_lib4(int kmax, float *A, float *B, float *C, float *
 	CC[3+bs*2] -= CC[3+bs*1] * CC[2+bs*1];
 	if(CC[2+bs*2]>0)
 		{
-		CC[2+bs*2] = sqrt(CC[2+bs*2]);
+		CC[2+bs*2] = sqrtf(CC[2+bs*2]);
 		tmp = 1.0/CC[2+bs*2];
 		}
 	else
@@ -4646,7 +4646,7 @@ void kernel_spotrf_nt_l_4x4_lib4(int kmax, float *A, float *B, float *C, float *
 	CC[3+bs*3] -= CC[3+bs*2] * CC[3+bs*2];
 	if(CC[3+bs*3]>0)
 		{
-		CC[3+bs*3] = sqrt(CC[3+bs*3]);
+		CC[3+bs*3] = sqrtf(CC[3+bs*3]);
 		tmp = 1.0/CC[3+bs*3];
 		}
 	else
@@ -4698,7 +4698,7 @@ void kernel_spotrf_nt_l_4x4_vs_lib4(int kmax, float *A, float *B, float *C, floa
 
 	if(CC[0+bs*0]>0)
 		{
-		CC[0+bs*0] = sqrt(CC[0+bs*0]);
+		CC[0+bs*0] = sqrtf(CC[0+bs*0]);
 		tmp = 1.0/CC[0+bs*0];
 		}
 	else
@@ -4719,7 +4719,7 @@ void kernel_spotrf_nt_l_4x4_vs_lib4(int kmax, float *A, float *B, float *C, floa
 	CC[3+bs*1] -= CC[3+bs*0] * CC[1+bs*0];
 	if(CC[1+bs*1]>0)
 		{
-		CC[1+bs*1] = sqrt(CC[1+bs*1]);
+		CC[1+bs*1] = sqrtf(CC[1+bs*1]);
 		tmp = 1.0/CC[1+bs*1];
 		}
 	else
@@ -4740,7 +4740,7 @@ void kernel_spotrf_nt_l_4x4_vs_lib4(int kmax, float *A, float *B, float *C, floa
 	CC[3+bs*2] -= CC[3+bs*1] * CC[2+bs*1];
 	if(CC[2+bs*2]>0)
 		{
-		CC[2+bs*2] = sqrt(CC[2+bs*2]);
+		CC[2+bs*2] = sqrtf(CC[2+bs*2]);
 		tmp = 1.0/CC[2+bs*2];
 		}
 	else
@@ -4759,7 +4759,7 @@ void kernel_spotrf_nt_l_4x4_vs_lib4(int kmax, float *A, float *B, float *C, floa
 	CC[3+bs*3] -= CC[3+bs*2] * CC[3+bs*2];
 	if(CC[3+bs*3]>0)
 		{
-		CC[3+bs*3] = sqrt(CC[3+bs*3]);
+		CC[3+bs*3] = sqrtf(CC[3+bs*3]);
 		tmp = 1.0/CC[3+bs*3];
 		}
 	else

@@ -901,6 +901,9 @@ void REF_VECCL(int m, struct VEC *sxm, int xim, struct VEC *sx, int xi, struct V
 	int ii;
 	for(ii=0; ii<m; ii++)
 		{
+#ifdef USE_C99_MATH
+		z[ii] = FMAX( FMIN( x[ii], xp[ii] ), xm[ii] );
+#else // no C99
 		if(x[ii]>=xp[ii])
 			{
 			z[ii] = xp[ii];
@@ -913,6 +916,7 @@ void REF_VECCL(int m, struct VEC *sxm, int xim, struct VEC *sx, int xi, struct V
 			{
 			z[ii] = x[ii];
 			}
+#endif
 		}
 	return;
 	}
@@ -982,9 +986,9 @@ void REF_VECNRM_INF(int m, struct VEC *sx, int xi, REAL *ptr_norm)
 	for(ii=0; ii<m; ii++)
 		{
 #ifdef USE_C99_MATH
-		norm = fmax(norm, fabs(x[ii]));
-#else
-		tmp = fabs(x[ii]);
+		norm = FMAX(norm, FABS(x[ii]));
+#else // no c99
+		tmp = FABS(x[ii]);
 		norm = tmp>norm ? tmp : norm;
 #endif
 		}
