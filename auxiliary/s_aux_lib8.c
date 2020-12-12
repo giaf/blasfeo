@@ -3370,7 +3370,7 @@ void blasfeo_svecze(int m, struct blasfeo_svec *sm, int mi, struct blasfeo_svec 
 
 
 
-// compute inf norm of strvec
+// compute inf norm of vector
 void blasfeo_svecnrm_inf(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm)
 	{
 	int ii;
@@ -3382,10 +3382,27 @@ void blasfeo_svecnrm_inf(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm
 #ifdef USE_C99_MATH
 		norm = fmaxf(norm, fabsf(x[ii]));
 #else
-		tmp = fabs(x[ii]);
+		tmp = fabsf(x[ii]);
 		norm = tmp>norm ? tmp : norm;
 #endif
 		}
+	*ptr_norm = norm;
+	return;
+	}
+
+
+
+// compute 2 norm of vector
+void blasfeo_svecnrm_inf(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm)
+	{
+	int ii;
+	float *x = sx->pa + xi;
+	float norm = 0.0;
+	for(ii=0; ii<m; ii++)
+		{
+		norm += x[ii]*x[ii];
+		}
+	norm = sqrtf(norm);
 	*ptr_norm = norm;
 	return;
 	}

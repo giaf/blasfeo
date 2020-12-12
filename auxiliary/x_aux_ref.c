@@ -976,7 +976,7 @@ void REF_VECZE(int m, struct VEC *sm, int mi, struct VEC *sv, int vi, struct VEC
 	}
 
 
-// compute inf norm of strvec
+// compute inf norm of vector
 void REF_VECNRM_INF(int m, struct VEC *sx, int xi, REAL *ptr_norm)
 	{
 	int ii;
@@ -992,6 +992,23 @@ void REF_VECNRM_INF(int m, struct VEC *sx, int xi, REAL *ptr_norm)
 		norm = tmp>norm ? tmp : norm;
 #endif
 		}
+	*ptr_norm = norm;
+	return;
+	}
+
+
+
+// compute inf norm of vector
+void REF_VECNRM_2(int m, struct VEC *sx, int xi, REAL *ptr_norm)
+	{
+	int ii;
+	REAL *x = sx->pa + xi;
+	REAL norm = 0.0;
+	for(ii=0; ii<m; ii++)
+		{
+		norm += x[ii]*x[ii];
+		}
+	norm = SQRT(norm);
 	*ptr_norm = norm;
 	return;
 	}
@@ -1776,6 +1793,13 @@ void VECZE(int m, struct VEC *sm, int mi, struct VEC *sv, int vi, struct VEC *se
 void VECNRM_INF(int m, struct VEC *sx, int xi, REAL *ptr_norm)
 	{
 	REF_VECNRM_INF(m, sx, xi, ptr_norm);
+	}
+
+
+
+void VECNRM_2(int m, struct VEC *sx, int xi, REAL *ptr_norm)
+	{
+	REF_VECNRM_2(m, sx, xi, ptr_norm);
 	}
 
 

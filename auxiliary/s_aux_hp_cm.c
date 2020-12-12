@@ -62,6 +62,7 @@
 #define FABS fabsf
 #define FMAX fmaxf
 #define FMIN fminf
+#define SQRT sqrtf
 #define REAL float
 #define MAT blasfeo_smat
 #define MATEL BLASFEO_SMATEL
@@ -110,6 +111,7 @@
 #define REF_VECCL_MASK blasfeo_hp_sveccl_mask
 #define REF_VECZE blasfeo_hp_svecze
 #define REF_VECNRM_INF blasfeo_hp_svecnrm_inf
+#define REF_VECNRM_2 blasfeo_hp_svecnrm_2
 #define REF_DIAIN blasfeo_hp_sdiain
 #define REF_DIAIN_SP blasfeo_hp_sdiain_sp
 #define REF_DIAEX blasfeo_hp_sdiaex
@@ -173,6 +175,7 @@
 #define VECCL_MASK blasfeo_sveccl_mask
 #define VECZE blasfeo_svecze
 #define VECNRM_INF blasfeo_svecnrm_inf
+#define VECNRM_2 blasfeo_svecnrm_2
 #define DIAIN blasfeo_sdiain
 #define DIAIN_SP blasfeo_sdiain_sp
 #define DIAEX blasfeo_sdiaex

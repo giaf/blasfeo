@@ -4870,7 +4870,7 @@ void blasfeo_dvecze(int m, struct blasfeo_dvec *sm, int mi, struct blasfeo_dvec 
 	}
 
 
-// compute inf norm of strvec
+// compute inf norm of vector
 void blasfeo_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_norm)
 	{
 	int ii;
@@ -4886,6 +4886,23 @@ void blasfeo_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_nor
 		norm = tmp>norm ? tmp : norm;
 #endif
 		}
+	*ptr_norm = norm;
+	return;
+	}
+
+
+
+// compute 2 norm of vector
+void blasfeo_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_norm)
+	{
+	int ii;
+	double *x = sx->pa + xi;
+	double norm = 0.0;
+	for(ii=0; ii<m; ii++)
+		{
+		norm += x[ii]*x[ii];
+		}
+	norm = sqrt(norm);
 	*ptr_norm = norm;
 	return;
 	}
