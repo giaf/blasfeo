@@ -64,6 +64,7 @@
 #define REF_GEMV_NT blasfeo_hp_dgemv_nt
 #define REF_GEMV_T blasfeo_hp_dgemv_t
 #define REF_SYMV_L blasfeo_hp_dsymv_l
+#define REF_SYMV_L_MN blasfeo_hp_dsymv_l_mn
 #define REF_TRMV_LNN blasfeo_hp_dtrmv_lnn
 #define REF_TRMV_LTN blasfeo_hp_dtrmv_ltn
 #define REF_TRMV_UNN blasfeo_hp_dtrmv_unn
@@ -81,6 +82,7 @@
 #define GEMV_NT blasfeo_dgemv_nt
 #define GEMV_T blasfeo_dgemv_t
 #define SYMV_L blasfeo_dsymv_l
+#define SYMV_L_MN blasfeo_dsymv_l_mn
 #define TRMV_LNN blasfeo_dtrmv_lnn
 #define TRMV_LTN blasfeo_dtrmv_ltn
 #define TRMV_UNN blasfeo_dtrmv_unn

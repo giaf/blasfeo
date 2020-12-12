@@ -104,7 +104,28 @@ void GEMV_NT(int m, int n, REAL alpha_n, REAL alpha_t, struct XMAT *sA, int ai, 
 
 
 
-void SYMV_L(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void SYMV_L(int m, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	REAL d1 = 1.0;
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *x = sx->pa + xi;
+	REAL *y = sy->pa + yi;
+	REAL *z = sz->pa + zi;
+	COPY(&m, y, &i1, z, &i1);
+	SYMV(&cl, &m, &alpha, pA, &lda, x, &i1, &beta, z, &i1);
+	return;
+	}
+
+
+
+void SYMV_L_MN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';

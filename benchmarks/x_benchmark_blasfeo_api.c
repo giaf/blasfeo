@@ -428,7 +428,7 @@ int main()
 				blasfeo_dgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sz, 0, &sz, 0, &sz, 0, &sz, 0);
 #endif
 #elif defined(SYMV_L)
-				blasfeo_dsymv_l(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
+				blasfeo_dsymv_l(n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #else
 #error wrong routine
 #endif
@@ -533,7 +533,7 @@ int main()
 				blasfeo_sgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sz, 0, &sz, 0, &sz, 0, &sz, 0);
 #endif
 #elif defined(SYMV_L)
-				blasfeo_ssymv_l(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
+				blasfeo_ssymv_l(n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #else
 #error wrong routine
 #endif

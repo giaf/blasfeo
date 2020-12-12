@@ -956,7 +956,68 @@ void blasfeo_hp_sgemv_nt(int m, int n, float alpha_n, float alpha_t, struct blas
 
 
 
-void blasfeo_hp_ssymv_l(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+void blasfeo_hp_ssymv_l(int m, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+	{
+
+//	if(m<=0 | n<=0)
+//		return;
+	
+	const int bs = 8;
+
+	int ii, n1, n2;
+
+	int sda = sA->cn;
+	float *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+	float *z = sz->pa + zi;
+
+	// copy and scale y int z
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		z[ii+0] = beta*y[ii+0];
+		z[ii+1] = beta*y[ii+1];
+		z[ii+2] = beta*y[ii+2];
+		z[ii+3] = beta*y[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = beta*y[ii+0];
+		}
+	
+	// clean up at the beginning
+	if(ai%bs!=0) // 1, 2, 3
+		{
+		n1 = 8-ai%bs;
+		n2 = m<n1 ? m : n1;
+		kernel_ssymv_l_4l_gen_lib8(m-0, &alpha, ai%bs, &pA[0+(0)*bs], sda, &x[0], &z[0], n2-0);
+		kernel_ssymv_l_4r_gen_lib8(m-4, &alpha, ai%bs, &pA[4+(4)*bs], sda, &x[4], &z[4], n2-4);
+		pA += n1 + n1*bs + (sda-1)*bs;
+		x += n1;
+		z += n1;
+		m -= n1;
+		}
+	// main loop
+	ii = 0;
+	for(; ii<m-7; ii+=8)
+		{
+		kernel_ssymv_l_4l_lib8(m-ii-0, &alpha, &pA[0+(ii+0)*bs+ii*sda], sda, &x[ii+0], &z[ii+0]);
+		kernel_ssymv_l_4r_lib8(m-ii-4, &alpha, &pA[4+(ii+4)*bs+ii*sda], sda, &x[ii+4], &z[ii+4]);
+		}
+	// clean up at the end
+	if(ii<m)
+		{
+		kernel_ssymv_l_4l_gen_lib8(m-ii-0, &alpha, 0, &pA[0+(ii+0)*bs+ii*sda], sda, &x[ii+0], &z[ii+0], m-ii-0);
+		kernel_ssymv_l_4r_gen_lib8(m-ii-4, &alpha, 0, &pA[4+(ii+4)*bs+ii*sda], sda, &x[ii+4], &z[ii+4], m-ii-4);
+		}
+	
+	return;
+	}
+
+
+
+void blasfeo_hp_ssymv_l_mn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
 
 //	if(m<=0 | n<=0)
@@ -1043,9 +1104,16 @@ void blasfeo_sgemv_nt(int m, int n, float alpha_n, float alpha_t, struct blasfeo
 
 
 
-void blasfeo_ssymv_l(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+void blasfeo_ssymv_l(int m, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
-	blasfeo_hp_ssymv_l(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	blasfeo_hp_ssymv_l(m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	}
+
+
+
+void blasfeo_ssymv_l_mn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+	{
+	blasfeo_hp_ssymv_l_mn(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
 	}
 
 

@@ -207,7 +207,41 @@ void REF_GEMV_NT(int m, int n, REAL alpha_n, REAL alpha_t, struct XMAT *sA, int 
 
 
 // TODO optimize !!!!!
-void REF_SYMV_L(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void REF_SYMV_L(int m, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+	{
+	int ii, jj;
+	REAL
+		y_0;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
+	REAL *x = sx->pa + xi;
+	REAL *y = sy->pa + yi;
+	REAL *z = sz->pa + zi;
+	for(ii=0; ii<m; ii++)
+		{
+		y_0 = 0.0;
+		jj = 0;
+		for(; jj<=ii; jj++)
+			{
+			y_0 += XMATEL_A(aai+ii, aaj+jj) * x[jj];
+			}
+		for( ; jj<m; jj++)
+			{
+			y_0 += XMATEL_A(aai+jj, aaj+ii) * x[jj];
+			}
+		z[ii] = beta * y[ii] + alpha * y_0;
+		}
+	return;
+	}
+
+
+
+void REF_SYMV_L_MN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
@@ -1227,10 +1261,16 @@ void GEMV_NT(int m, int n, REAL alpha_n, REAL alpha_t, struct XMAT *sA, int ai, 
 
 
 
-// TODO mn & remove n !!!!!
-void SYMV_L(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+void SYMV_L(int m, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
-	REF_SYMV_L(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	REF_SYMV_L(m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	}
+
+
+
+void SYMV_L_MN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+	{
+	REF_SYMV_L_MN(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
 	}
 
 

@@ -182,8 +182,69 @@ void blasfeo_hp_sgemv_nt(int m, int n, float alpha_n, float alpha_t, struct blas
 
 
 
-void blasfeo_hp_ssymv_l(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+void blasfeo_hp_ssymv_l(int m, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
+
+	if(m<=0)
+		return;
+	
+	const int bs = 4;
+
+	int ii, n1;
+
+	int sda = sA->cn;
+	float *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	float *x = sx->pa + xi;
+	float *y = sy->pa + yi;
+	float *z = sz->pa + zi;
+
+	// copy and scale y int z
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		z[ii+0] = beta*y[ii+0];
+		z[ii+1] = beta*y[ii+1];
+		z[ii+2] = beta*y[ii+2];
+		z[ii+3] = beta*y[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = beta*y[ii+0];
+		}
+	
+	// clean up at the beginning
+	if(ai%bs!=0) // 1, 2, 3
+		{
+		n1 = 4-ai%bs;
+		kernel_ssymv_l_4_gen_lib4(m, &alpha, ai%bs, &pA[0], sda, &x[0], &z[0], m<n1 ? m : n1);
+		pA += n1 + n1*bs + (sda-1)*bs;
+		x += n1;
+		z += n1;
+		m -= n1;
+		}
+	// main loop
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		kernel_ssymv_l_4_lib4(m-ii, &alpha, &pA[ii*bs+ii*sda], sda, &x[ii], &z[ii]);
+		}
+	// clean up at the end
+	if(ii<m)
+		{
+		kernel_ssymv_l_4_gen_lib4(m-ii, &alpha, 0, &pA[ii*bs+ii*sda], sda, &x[ii], &z[ii], m-ii);
+		}
+	
+	return;
+	}
+
+
+
+// m >= n
+void blasfeo_hp_ssymv_l_mn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+	{
+
+	if(m<n)
+		n = m;
 
 	if(m<=0 | n<=0)
 		return;
@@ -1114,9 +1175,16 @@ void blasfeo_sgemv_nt(int m, int n, float alpha_n, float alpha_t, struct blasfeo
 
 
 
-void blasfeo_ssymv_l(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+void blasfeo_ssymv_l(int m, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
 	{
-	blasfeo_hp_ssymv_l(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	blasfeo_hp_ssymv_l(m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	}
+
+
+
+void blasfeo_ssymv_l_mn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, float beta, struct blasfeo_svec *sy, int yi, struct blasfeo_svec *sz, int zi)
+	{
+	blasfeo_hp_ssymv_l_mn(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
 	}
 
 

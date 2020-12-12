@@ -46,6 +46,10 @@
 
 
 
+// TODO CHECK THE EARLY RETURN CONDITIONS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
 void blasfeo_hp_dgemv_n(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
@@ -225,8 +229,179 @@ void blasfeo_hp_dgemv_nt(int m, int n, double alpha_n, double alpha_t, struct bl
 
 
 
+void blasfeo_hp_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+	{
+
+	if(m<=0)
+		return;
+	
+	const int bs = 4;
+
+	int ii, n1;
+
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+
+	// copy and scale y int z
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		z[ii+0] = beta*y[ii+0];
+		z[ii+1] = beta*y[ii+1];
+		z[ii+2] = beta*y[ii+2];
+		z[ii+3] = beta*y[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = beta*y[ii+0];
+		}
+
+	// clean up at the beginning
+	if(ai%bs!=0) // 1, 2, 3
+		{
+		n1 = 4-ai%bs;
+		kernel_dsymv_l_4_gen_lib4(m, &alpha, ai%bs, &pA[0], sda, &x[0], &z[0], m<n1 ? m : n1);
+		pA += n1 + n1*bs + (sda-1)*bs;
+		x += n1;
+		z += n1;
+		m -= n1;
+		}
+
+#if defined(TARGET_X86_AMD_BARCELONA) | defined(TARGET_X86_AMD_JAGUAR)
+	// using dgemv_n and dgemv_t kernels
+	double beta1 = 1.0;
+	double xx[4];
+	for(ii=0; ii<m-3; ii+=4)
+		{
+		// gemv_n
+		kernel_dgemv_n_4_lib4(ii, &alpha, pA+ii*sda, x, &beta1, z+ii, z+ii);
+		// 4x4
+		z[ii+0] += alpha*(pA[ii*sda+0+bs*(ii+0)]*x[ii+0] + pA[ii*sda+1+bs*(ii+0)]*x[ii+1] + pA[ii*sda+2+bs*(ii+0)]*x[ii+2] + pA[ii*sda+3+bs*(ii+0)]*x[ii+3]);
+		z[ii+1] += alpha*(pA[ii*sda+1+bs*(ii+0)]*x[ii+0] + pA[ii*sda+1+bs*(ii+1)]*x[ii+1] + pA[ii*sda+2+bs*(ii+1)]*x[ii+2] + pA[ii*sda+3+bs*(ii+1)]*x[ii+3]);
+		z[ii+2] += alpha*(pA[ii*sda+2+bs*(ii+0)]*x[ii+0] + pA[ii*sda+2+bs*(ii+1)]*x[ii+1] + pA[ii*sda+2+bs*(ii+2)]*x[ii+2] + pA[ii*sda+3+bs*(ii+2)]*x[ii+3]);
+		z[ii+3] += alpha*(pA[ii*sda+3+bs*(ii+0)]*x[ii+0] + pA[ii*sda+3+bs*(ii+1)]*x[ii+1] + pA[ii*sda+3+bs*(ii+2)]*x[ii+2] + pA[ii*sda+3+bs*(ii+3)]*x[ii+3]);
+		// gemv_t
+		kernel_dgemv_t_4_lib4(m-ii-4, &alpha, 0, pA+(ii+4)*sda+ii*bs, sda, x+ii+4, &beta1, z+ii, z+ii);
+		}
+	if(ii<m)
+		{
+		if(m-ii==1)
+			{
+			xx[0] = alpha*x[ii+0];
+			xx[1] = alpha*x[ii+1];
+			xx[2] = alpha*x[ii+2];
+			xx[3] = alpha*x[ii+3];
+			// gemv_n
+			kernel_dgemv_n_4_vs_lib4(ii, &alpha, pA+ii*sda, x, &beta1, z+ii, z+ii, m-ii);
+			// 4x4
+			z[ii+0] += pA[ii*sda+0+bs*(ii+0)]*xx[0];
+			if(m-ii>1)
+				{
+				z[ii+0] += pA[ii*sda+1+bs*(ii+0)]*xx[1];
+				z[ii+1] += pA[ii*sda+1+bs*(ii+0)]*xx[0];
+				}
+			if(m-ii>2)
+				{
+				z[ii+0] += pA[ii*sda+2+bs*(ii+0)]*xx[2];
+				z[ii+2] += pA[ii*sda+2+bs*(ii+0)]*xx[0];
+				}
+			if(m-ii>3)
+				{
+				z[ii+0] += pA[ii*sda+3+bs*(ii+0)]*xx[3];
+				z[ii+3] += pA[ii*sda+3+bs*(ii+0)]*xx[0];
+				}
+			// gemv_t
+			kernel_dgemv_t_4_vs_lib4(m-ii-4, &alpha, 0, pA+(ii+4)*sda+ii*bs, sda, x+ii+4, &beta1, z+ii, z+ii, m-ii);
+			ii += 4;
+			}
+		else if(m-ii==2)
+			{
+			xx[0] = alpha*x[ii+0];
+			xx[1] = alpha*x[ii+1];
+			xx[2] = alpha*x[ii+2];
+			xx[3] = alpha*x[ii+3];
+			// gemv_n
+			kernel_dgemv_n_4_vs_lib4(ii, &alpha, pA+ii*sda, x, &beta1, z+ii, z+ii, m-ii);
+			// 4x4
+			z[ii+0] += pA[ii*sda+0+bs*(ii+0)]*xx[0];
+			if(m-ii>1)
+				{
+				z[ii+0] += pA[ii*sda+1+bs*(ii+0)]*xx[1];
+				z[ii+1] += pA[ii*sda+1+bs*(ii+0)]*xx[0] + pA[ii*sda+1+bs*(ii+1)]*xx[1];
+				}
+			if(m-ii>2)
+				{
+				z[ii+0] += pA[ii*sda+2+bs*(ii+0)]*xx[2];
+				z[ii+1] += pA[ii*sda+2+bs*(ii+1)]*xx[2];
+				z[ii+2] += pA[ii*sda+2+bs*(ii+0)]*xx[0] + pA[ii*sda+2+bs*(ii+1)]*xx[1];
+				}
+			if(m-ii>3)
+				{
+				z[ii+0] += pA[ii*sda+3+bs*(ii+0)]*xx[3];
+				z[ii+1] += pA[ii*sda+3+bs*(ii+1)]*xx[3];
+				z[ii+3] += pA[ii*sda+3+bs*(ii+0)]*xx[0] + pA[ii*sda+3+bs*(ii+1)]*xx[1];
+				}
+			// gemv_t
+			kernel_dgemv_t_4_vs_lib4(m-ii-4, &alpha, 0, pA+(ii+4)*sda+ii*bs, sda, x+ii+4, &beta1, z+ii, z+ii, m-ii);
+			ii += 4;
+			}
+		else // if(m-ii==3)
+			{
+			xx[0] = alpha*x[ii+0];
+			xx[1] = alpha*x[ii+1];
+			xx[2] = alpha*x[ii+2];
+			xx[3] = alpha*x[ii+3];
+			// gemv_n
+			kernel_dgemv_n_4_vs_lib4(ii, &alpha, pA+ii*sda, x, &beta1, z+ii, z+ii, m-ii);
+			// 4x4
+			z[ii+0] += pA[ii*sda+0+bs*(ii+0)]*xx[0];
+			if(m-ii>1)
+				{
+				z[ii+0] += pA[ii*sda+1+bs*(ii+0)]*xx[1];
+				z[ii+1] += pA[ii*sda+1+bs*(ii+0)]*xx[0] + pA[ii*sda+1+bs*(ii+1)]*xx[1];
+				}
+			if(m-ii>2)
+				{
+				z[ii+0] += pA[ii*sda+2+bs*(ii+0)]*xx[2];
+				z[ii+1] += pA[ii*sda+2+bs*(ii+1)]*xx[2];
+				z[ii+2] += pA[ii*sda+2+bs*(ii+0)]*xx[0] + pA[ii*sda+2+bs*(ii+1)]*xx[1] + pA[ii*sda+2+bs*(ii+2)]*xx[2];
+				}
+			if(m-ii>3)
+				{
+				z[ii+0] += pA[ii*sda+3+bs*(ii+0)]*xx[3];
+				z[ii+1] += pA[ii*sda+3+bs*(ii+1)]*xx[3];
+				z[ii+2] += pA[ii*sda+3+bs*(ii+2)]*xx[3];
+				z[ii+3] += pA[ii*sda+3+bs*(ii+0)]*xx[0] + pA[ii*sda+3+bs*(ii+1)]*xx[1] + pA[ii*sda+3+bs*(ii+2)]*xx[2];
+				}
+			// gemv_t
+			kernel_dgemv_t_4_vs_lib4(m-ii-4, &alpha, 0, pA+(ii+4)*sda+ii*bs, sda, x+ii+4, &beta1, z+ii, z+ii, m-ii);
+			ii += 4;
+			}
+		}
+	return;
+#endif
+
+	// main loop
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		kernel_dsymv_l_4_lib4(m-ii, &alpha, &pA[ii*bs+ii*sda], sda, &x[ii], &z[ii]);
+		}
+	// clean up at the end
+	if(ii<m)
+		{
+		kernel_dsymv_l_4_gen_lib4(m-ii, &alpha, 0, &pA[ii*bs+ii*sda], sda, &x[ii], &z[ii], m-ii);
+		}
+	
+	return;
+	}
+
+
 // m >= n
-void blasfeo_hp_dsymv_l(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+void blasfeo_hp_dsymv_l_mn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
 	if(m<n)
@@ -1569,9 +1744,16 @@ void blasfeo_dgemv_nt(int m, int n, double alpha_n, double alpha_t, struct blasf
 
 
 
-void blasfeo_dsymv_l(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+void blasfeo_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
-	blasfeo_hp_dsymv_l(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	blasfeo_hp_dsymv_l(m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	}
+
+
+
+void blasfeo_dsymv_l_mn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+	{
+	blasfeo_hp_dsymv_l_mn(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
 	}
 
 
