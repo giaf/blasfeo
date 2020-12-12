@@ -3393,7 +3393,7 @@ void blasfeo_svecnrm_inf(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm
 
 
 // compute 2 norm of vector
-void blasfeo_svecnrm_inf(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm)
+void blasfeo_svecnrm_2(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm)
 	{
 	int ii;
 	float *x = sx->pa + xi;
