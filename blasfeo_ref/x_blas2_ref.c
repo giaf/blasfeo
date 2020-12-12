@@ -206,12 +206,11 @@ void REF_GEMV_NT(int m, int n, REAL alpha_n, REAL alpha_t, struct XMAT *sA, int 
 
 
 
-// TODO optimize !!!!!
 void REF_SYMV_L(int m, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
-		y_0;
+		y_0, y_1;
 #if defined(MF_COLMAJ)
 	int lda = sA->m;
 	REAL *pA = sA->pA + ai + aj*lda;
@@ -222,7 +221,42 @@ void REF_SYMV_L(int m, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC 
 	REAL *x = sx->pa + xi;
 	REAL *y = sy->pa + yi;
 	REAL *z = sz->pa + zi;
-	for(ii=0; ii<m; ii++)
+	ii = 0;
+	for(; ii<m-1; ii+=2)
+		{
+		y_0 = 0.0;
+		y_1 = 0.0;
+		jj = 0;
+		// left block
+		for(; jj<ii-1; jj+=2)
+			{
+			y_0 += XMATEL_A(aai+ii+0, aaj+jj+0) * x[jj+0] + XMATEL_A(aai+ii+0, aaj+jj+1) * x[jj+1];
+			y_1 += XMATEL_A(aai+ii+1, aaj+jj+0) * x[jj+0] + XMATEL_A(aai+ii+1, aaj+jj+1) * x[jj+1];
+			}
+		for(; jj<ii; jj++)
+			{
+			y_0 += XMATEL_A(aai+ii+0, aaj+jj) * x[jj];
+			y_1 += XMATEL_A(aai+ii+1, aaj+jj) * x[jj];
+			}
+		// diagonal block
+		y_0 += XMATEL_A(aai+ii+0, aaj+jj+0) * x[jj+0] + XMATEL_A(aai+ii+1, aaj+jj+0) * x[jj+1];
+		y_1 += XMATEL_A(aai+ii+1, aaj+jj+0) * x[jj+0] + XMATEL_A(aai+ii+1, aaj+jj+1) * x[jj+1];
+		jj += 2;
+		// bottom block
+		for( ; jj<m-1; jj+=2)
+			{
+			y_0 += XMATEL_A(aai+jj+0, aaj+ii+0) * x[jj+0] + XMATEL_A(aai+jj+1, aaj+ii+0) * x[jj+1];
+			y_1 += XMATEL_A(aai+jj+0, aaj+ii+1) * x[jj+0] + XMATEL_A(aai+jj+1, aaj+ii+1) * x[jj+1];
+			}
+		for( ; jj<m; jj++)
+			{
+			y_0 += XMATEL_A(aai+jj, aaj+ii+0) * x[jj];
+			y_1 += XMATEL_A(aai+jj, aaj+ii+1) * x[jj];
+			}
+		z[ii+0] = beta * y[ii+0] + alpha * y_0;
+		z[ii+1] = beta * y[ii+1] + alpha * y_1;
+		}
+	for(; ii<m; ii++)
 		{
 		y_0 = 0.0;
 		jj = 0;
