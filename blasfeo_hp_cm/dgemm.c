@@ -101,7 +101,7 @@
 #define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB
 #define KC 320
 #define NC 256
-#define MC 3000
+#define MC 6000
 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 #define M_KERNEL 8 // max kernel: 8x4
@@ -112,14 +112,23 @@
 #define NC 40 //36 //48
 #define MC 512 //488 //600
 
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A55)
+#define M_KERNEL 12 // max kernel: 12x4
+#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 4-way
+#define LLC_CACHE_EL (512*1024/EL_SIZE) // LLC cache size: 512 kB
+#define KC 224
+#define NC 160
+#define MC 6000
+
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 #define M_KERNEL 12 // max kernel: 12x4
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 4-way ???
 #define LLC_CACHE_EL (256*1024/EL_SIZE) // LLC cache size: 256 kB
 #define KC 160
 #define NC 128
-#define MC 3000
+#define MC 6000
 
 #else // assume generic target
 #define M_KERNEL 4 // max kernel: 4x4

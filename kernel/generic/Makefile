@@ -207,7 +207,7 @@ KERNEL_OBJS = \
 
 endif
 
-ifeq ($(TARGET), ARMV8A_ARM_CORTEX_A53)
+ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A55 ARMV8A_ARM_CORTEX_A53))
 KERNEL_OBJS = \
 		kernel_dgemm_4x4_lib4.o \
 		kernel_dgemm_diag_lib4.o \
