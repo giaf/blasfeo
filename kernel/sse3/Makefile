@@ -42,6 +42,14 @@ KERNEL_OBJS = \
 		kernel_dgemv_4_lib4.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
+		\
+		kernel_align_x64.o \
+
+endif
+
+ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE X64_AMD_BULLDOZER))
+KERNEL_OBJS = \
+		kernel_align_x64.o \
 
 endif
 

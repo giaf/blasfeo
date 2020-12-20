@@ -245,7 +245,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_x64.o \
+		kernel/sse3/kernel_align_x64.o \
 		\
 #		kernel/avx2/kernel_sgemm_16x8_lib8.o \
 
@@ -288,7 +288,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_x64.o \
+		kernel/sse3/kernel_align_x64.o \
 		\
 #		kernel/avx/kernel_sgemm_16x8_lib8.o \
 
@@ -323,7 +323,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_x64.o \
+		kernel/sse3/kernel_align_x64.o \
 
 endif
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
@@ -354,7 +354,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_x64.o \
+		kernel/sse3/kernel_align_x64.o \
 
 endif
 ifeq ($(TARGET), X86_AMD_JAGUAR)
@@ -388,7 +388,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_x86.o \
+		kernel/sse3_x86/kernel_align_x86.o \
 
 endif
 ifeq ($(TARGET), X86_AMD_BARCELONA)
@@ -421,7 +421,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_x86.o \
+		kernel/sse3_x86/kernel_align_x86.o \
 
 endif
 ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57))
@@ -463,7 +463,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_generic.o \
+		kernel/generic/kernel_align_generic.o \
 
 endif
 ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A55 ARMV8A_ARM_CORTEX_A53))
@@ -506,7 +506,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_generic.o \
+		kernel/generic/kernel_align_generic.o \
 
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
@@ -540,7 +540,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_generic.o \
+		kernel/generic/kernel_align_generic.o \
 
 endif
 ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
@@ -573,7 +573,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_generic.o \
+		kernel/generic/kernel_align_generic.o \
 
 endif
 ifeq ($(TARGET), GENERIC)
@@ -603,7 +603,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/kernel_align_generic.o \
+		kernel/generic/kernel_align_generic.o \
 
 endif # GENERIC
 

@@ -37,25 +37,27 @@ include ../Makefile.rule
 
 OBJS =
 
-ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE X64_INTEL_CORE X64_AMD_BULLDOZER))
-OBJS += kernel_align_x64.o
-endif
-ifeq ($(TARGET), $(filter $(TARGET), X86_AMD_JAGUAR X86_AMD_BARCELONA))
-OBJS += kernel_align_x86.o
-endif
-ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A55 ARMV8A_ARM_CORTEX_A53 ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7 GENERIC))
-OBJS += kernel_align_generic.o
-endif
+#ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE X64_INTEL_CORE X64_AMD_BULLDOZER))
+#OBJS += kernel_align_x64.o
+#endif
+#ifeq ($(TARGET), $(filter $(TARGET), X86_AMD_JAGUAR X86_AMD_BARCELONA))
+#OBJS += kernel_align_x86.o
+#endif
+#ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A55 ARMV8A_ARM_CORTEX_A53 ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7 GENERIC))
+#OBJS += kernel_align_generic.o
+#endif
 
 obj: $(OBJS)
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 	( cd avx2; $(MAKE) obj)
 	( cd avx; $(MAKE) obj)
+	( cd sse3; $(MAKE) obj)
 	( cd generic; $(MAKE) obj)
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 	( cd avx; $(MAKE) obj)
+	( cd sse3; $(MAKE) obj)
 	( cd generic; $(MAKE) obj)
 endif
 
@@ -66,11 +68,13 @@ endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
 	( cd fma; $(MAKE) obj)
+	( cd sse3; $(MAKE) obj)
 	( cd generic; $(MAKE) obj)
 endif
 
 ifeq ($(TARGET), X86_AMD_JAGUAR)
 	( cd avx_x86; $(MAKE) obj)
+	( cd sse3_x86; $(MAKE) obj)
 	( cd generic; $(MAKE) obj)
 endif
 

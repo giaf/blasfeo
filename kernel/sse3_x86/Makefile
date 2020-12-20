@@ -41,9 +41,17 @@ KERNEL_OBJS = \
 		kernel_dgemm_4x2_lib4.o \
 		kernel_dgemm_2x2_lib4.o \
 		kernel_dgemv_4_lib4.o \
+		\
+		kernel_align_x86.o \
 #		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemv_4_lib4.o \
+
+endif
+
+ifeq ($(TARGET), X86_AMD_JAGUAR)
+KERNEL_OBJS = \
+		kernel_align_x86.o \
 
 endif
 
