@@ -507,6 +507,8 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
 		kernel/generic/kernel_align_generic.o \
+		\
+		kernel/armv8a/kernel_d_aux_lib.o \
 
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
@@ -1048,6 +1050,7 @@ clean:
 	make -C examples clean
 	make -C tests clean
 	make -C benchmarks clean
+	make -C microbenchmarks clean
 	make -C sandbox clean
 
 # deep clean
@@ -1059,6 +1062,7 @@ deep_clean: clean
 	make -C examples deep_clean
 	make -C tests deep_clean
 	make -C benchmarks deep_clean
+	make -C microbenchmarks deep_clean
 
 purge: deep_clean
 	make -C tests purge
@@ -1260,3 +1264,37 @@ update_lib_test: static_library test_all run_test_all
 # hard_rebuild: modified blasfeo lib flags affecting macros
 # delete lib; build lib; copy lib; build test; run test
 update_deep_test: clean static_library test_all run_test_all
+
+
+
+### microbenchmarks
+
+
+deploy_to_microbenchmarks:
+	mkdir -p ./microbenchmarks/$(BINARY_DIR)/
+	cp ./lib/libblasfeo.a ./microbenchmarks/$(BINARY_DIR)/
+
+build_microbenchmarks:
+	make -C microbenchmarks build
+	@echo
+	@echo "Benchmarks build complete."
+	@echo
+
+microbenchmarks: deploy_to_microbenchmarks build_microbenchmarks
+
+run_microbenchmarks:
+	make -C microbenchmarks run
+
+perf_microbenchmarks:
+	make -C microbenchmarks perf
+
+adb_push_microbenchmarks:
+	make -C microbenchmarks adb_push
+
+adb_run_microbenchmarks:
+	make -C microbenchmarks adb_run
+
+adb_run_taskset_microbenchmarks:
+	make -C microbenchmarks adb_run_taskset
+
+

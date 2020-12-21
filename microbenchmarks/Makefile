@@ -3,9 +3,9 @@
 # This file is part of BLASFEO.                                                                   #
 #                                                                                                 #
 # BLASFEO -- BLAS for embedded optimization.                                                      #
-# Copyright (C) 2019 by Gianluca Frison.                                                          #
-# Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              #
+# Copyright (C) 2020 by Gianluca Frison.                                                          #
 # All rights reserved.                                                                            #
+#                                                                                                 #
 #                                                                                                 #
 # The 2-Clause BSD License                                                                        #
 #                                                                                                 #
@@ -33,74 +33,74 @@
 #                                                                                                 #
 ###################################################################################################
 
-include ../../Makefile.rule
+include ../Makefile.rule
+
+LIBS =
+LIBS += $(BINARY_DIR)/libblasfeo.a
+LIBS += -lm
+#LIBS += -fopenmp
 
 
-ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57))
-KERNEL_OBJS = \
-		kernel_dgemm_8x4_lib4.o \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dpack_lib4.o \
-		kernel_dgetrf_pivot_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		\
-		kernel_sgemm_16x4_lib4.o \
-		kernel_sgemm_12x4_lib4.o \
-		kernel_sgemm_8x8_lib4.o \
-		kernel_sgemm_8x4_lib4.o \
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemv_4_lib4.o \
-		kernel_spack_lib4.o \
-
+ifdef GHZ_MAX
+CFLAGS += -DGHZ_MAX=$(GHZ_MAX)
+get_cpu_freq:
+	@echo Using GHZ_MAX=$(GHZ_MAX) from command line option
+else
+ifeq (,$(wildcard ../benchmarks/cpu_freq.h))
+get_cpu_freq:
+	$(info )
+	$(info ERROR GHZ_MAX is not set, create cpu_freq.h or specify GHZ_MAX Makefile option)
+	$(info )
+	$(error .)
+else
+get_cpu_freq:
+	@echo Using GHZ_MAX from cpu_freq.h
+endif
 endif
 
-ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A55 ARMV8A_ARM_CORTEX_A53))
-KERNEL_OBJS = \
-		kernel_dgemm_12x4_lib4.o \
-		kernel_dgemm_8x4_lib4.o \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dpack_lib4.o \
-		kernel_dgetrf_pivot_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		\
-		kernel_sgemm_16x4_lib4.o \
-		kernel_sgemm_12x4_lib4.o \
-		kernel_sgemm_8x8_lib4.o \
-		kernel_sgemm_8x4_lib4.o \
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemv_4_lib4.o \
-		kernel_spack_lib4.o \
-		\
-		kernel_d_aux_lib.o \
+# all microbenchmarks
+OBJS = microbenchmark_bandwidth.o
 
-endif
+%.o: %.c
+	# build obj
+	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
+	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ -o $(BINARY_DIR)/$@.out $(LIBS)
 
+# ----------- Targets
 
-OBJS = 
+bin_dir:
+	# create bin folder if not existent
+	mkdir -p $(BINARY_DIR)/
 
-ifeq ($(LA), HIGH_PERFORMANCE)
-OBJS += $(KERNEL_OBJS)
-endif # LA choice
+common: get_cpu_freq bin_dir
 
-ifeq ($(BLASFEO_HP_API), 1)
-OBJS += $(KERNEL_OBJS)
-endif # LA choice
+.DEFAULT_GOAL := build
+.PHONY: build
 
+build: common $(OBJS)
 
-obj: $(OBJS)
+run:
+	./$(BINARY_DIR)/$(OBJS).out
+
+perf:
+	perf stat -e cpu-clock,instructions,cpu-cycles,bus-cycles,cache-misses,cache-references,L1-dcache-load-misses,L1-dcache-loads,L1-dcache-stores,LLC-load-misses,LLC-loads,LLC-stores,LLC-store-misses,dTLB-load-misses,dTLB-loads,dTLB-stores,dTLB-store-misses ./$(BINARY_DIR)/$(OBJS).out
+
+adb_push:
+	adb push ./$(BINARY_DIR)/$(OBJS).out /data/local/tmp/$(OBJS).out
+
+adb_run:
+	adb shell /data/local/tmp/$(OBJS).out
+
+adb_run_taskset:
+	adb shell taskset 2 /data/local/tmp/$(OBJS).out
 
 clean:
-	rm -f *.o
-	rm -f *.s
-	rm -f *.gcda
-	rm -f *.gcno
-	rm -f *.gcov
+	rm -rf ./*.o
+	rm -rf ./*.out
+	rm -rf ./$(BINARY_DIR)/*.o
+	rm -rf ./$(BINARY_DIR)/*.out
 
-kernel_dgemm_4x4_lib4.o: kernel_dgemm_4x4_lib4.S kernel_dgemm_4x4_lib.S
-kernel_dgemm_8x4_lib4.o: kernel_dgemm_8x4_lib4.S kernel_dgemm_8x4_lib.S
-kernel_dgemm_12x4_lib4.o: kernel_dgemm_12x4_lib4.S kernel_dgemm_12x4_lib.S
-kernel_dgetrf_pivot_lib4.o: kernel_dgetrf_pivot_lib4.c kernel_dgetrf_pivot_lib.c
+deep_clean: clean
+#	rm -rf ./figures/
+	rm -rf ./build/
 
-kernel_sgemm_4x4_lib4.o: kernel_sgemm_4x4_lib4.S kernel_sgemm_4x4_lib.S
-kernel_sgemm_8x4_lib4.o: kernel_sgemm_8x4_lib4.S kernel_sgemm_8x4_lib.S
-kernel_sgemm_8x8_lib4.o: kernel_sgemm_8x8_lib4.S kernel_sgemm_8x8_lib.S

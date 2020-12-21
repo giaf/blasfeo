@@ -1033,6 +1033,13 @@ void kernel_dgemm_nt_8xn_p0_lib44cc(int n, int k, double *alpha, double *A, int 
 
 
 
+// aux
+void kernel_dvecld_inc1(int kmax, double *x);
+void kernel_dveccp_inc1(int kmax, double *x, double *y);
+
+
+
+
 #ifdef __cplusplus
 }
 #endif

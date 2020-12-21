@@ -36,13 +36,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 
-
-#include "../include/blasfeo.h"
-#include "benchmark_x_common.h"
+#include <blasfeo.h>
 
 
 
@@ -52,111 +47,76 @@ int main()
 	int nn, ii, rep, nrep;
 
 	blasfeo_timer timer;
-	double tmp_time, bandwidth_set_sequential, bandwidth_copy_sequential, bandwidth_set_parallel, bandwidth_copy_parallel;
+	double tmp_time, bandwidth_load_sequential, bandwidth_copy_sequential;
 
-	int size[] = {16, 32, 48, 64, 80, 96, 112, 128, 256, 384, 512, 768, 1024, 1536, 2048, 2560, 3072, 3584, 4096, 4608, 5120, 6144, 8192, 12288, 16384, 24576, 32768, 40960, 49152, 65536, 81920, 98304, 131072, 196608, 262144, 393216};
-	int nnrep[] = {4000000, 4000000, 4000000, 2000000, 2000000, 1000000, 1000000, 1000000, 400000, 400000, 400000, 200000, 200000, 200000, 100000, 100000, 100000, 40000, 40000, 40000, 20000, 20000, 20000, 10000, 10000, 10000, 10000, 4000, 4000, 4000, 2000, 2000, 2000, 1000, 1000, 1000};
-	int n_size = 36;
+	int size[] = {  16, 32, 48,
+					64, 80,
+					96, 112, 1*1024/8,
+					2*1024/8, 3*1024/8, 4*1024/8,
+					6*1024/8, 8*1024/8, 12*1024/8,
+					16*1024/8, 20*1024/8, 24*1024/8,
+					28*1024/8, 30*1024/8, 32*1024/8, 34*1024/8, 36*1024/8,
+					40*1024/8, 48*1024/8, 64*1024/8,
+					96*1024/8, 128*1024/8, 136*1024/8, 144*1024/8, 160*1024/8, 192*1024/8, 256*1024/8,
+					40960, 49152, 65536,
+					81920, 98304, 131072,
+					196608, 262144, 393216};
 
-#ifdef _OPENMP
-int num_threads = 2;
-omp_set_num_threads(num_threads);
-printf("\nusing %d threads\n", num_threads);
-#endif
+	int nnrep[] = { 4000000, 4000000, 4000000,
+					2000000, 2000000,
+					1000000, 1000000, 1000000,
+					400000, 400000, 400000,
+					200000, 200000, 200000,
+					100000, 100000, 100000,
+					40000, 40000, 40000, 40000, 40000,
+					20000, 20000, 20000,
+					10000, 10000, 10000, 10000, 10000, 10000, 10000,
+					4000, 4000, 4000,
+					2000, 2000, 2000,
+					1000, 1000, 1000};
+
+	int n_size = 40;
 
 
-	printf("\nsize (KB)\tset sequential\tset parrallel\tspeedup\t\tcopy sequential\tcopy parrallel\tspeedup\n");
+	printf("\n#\tsize (KB)\tload sequential\tcopy sequential\n");
 	for(nn=0; nn<n_size; nn++)
+//	for(nn=27; nn<28; nn++)
 		{
 
 		nrep = nnrep[nn];
 
-		double *x = malloc(size[nn]*sizeof(double));
-		double *y = malloc(size[nn]*sizeof(double));
+		double *x; blasfeo_malloc_align((void **) &x, size[nn]*sizeof(double));
+		double *y; blasfeo_malloc_align((void **) &y, size[nn]*sizeof(double));
 
 int id = -1;
 
-		/* set benchmark sequential */
+		/* load benchmark sequential */
 
-		// set to zero
-		for(ii=0; ii<size[nn]; ii++)
-			{
-			x[ii] = 0.0;
-			}
+		// load
+		kernel_dvecld_inc1(size[nn], x);
 
 		blasfeo_tic(&timer);
 
 		for(rep=0; rep<nrep; rep++)
 			{
-
-			for(ii=0; ii<size[nn]; ii++)
-				{
-				x[ii] = 0.0;
-				}
-
+			kernel_dvecld_inc1(size[nn], x);
 			}
 
 		tmp_time = blasfeo_toc(&timer) / nrep;
 
-		bandwidth_set_sequential = size[nn] * 8.0 / tmp_time;
-
-
-		/* set benchmark parallel */
-
-#pragma omp parallel private(id, rep, ii)
-{
-//id = omp_get_thread_num();
-//printf("\nid %d\n", id);
-
-#pragma omp master
-{
-		// set to zero
-		for(ii=0; ii<size[nn]; ii++)
-			{
-			x[ii] = 0.0;
-			}
-
-		blasfeo_tic(&timer);
-} // master
-
-#pragma omp for schedule(static)
-		for(rep=0; rep<nrep; rep++)
-			{
-
-			for(ii=0; ii<size[nn]; ii++)
-				{
-				x[ii] = 0.0;
-				}
-
-			}
-
-#pragma omp master
-{
-		tmp_time = blasfeo_toc(&timer) / nrep;
-} // master
-} // parallel
-
-		bandwidth_set_parallel = size[nn] * 8.0 / tmp_time;
+		bandwidth_load_sequential = size[nn] * 8.0 / tmp_time;
 
 
 		/* copy benchmark sequential */
 
 		// copy
-		for(ii=0; ii<size[nn]; ii++)
-			{
-			y[ii] = x[ii];
-			}
+		kernel_dveccp_inc1(size[nn], x, y);
 
 		blasfeo_tic(&timer);
 
 		for(rep=0; rep<nrep; rep++)
 			{
-
-			for(ii=0; ii<size[nn]; ii++)
-				{
-				y[ii] = x[ii];
-				}
-
+			kernel_dveccp_inc1(size[nn], x, y);
 			}
 
 		tmp_time = blasfeo_toc(&timer) / nrep;
@@ -164,49 +124,11 @@ int id = -1;
 		bandwidth_copy_sequential = size[nn] * 2 * 8.0 / tmp_time;
 
 
-		/* copy benchmark parallel */
-
-#pragma omp parallel private(id, rep, ii)
-{
-//id = omp_get_thread_num();
-//printf("\nid %d\n", id);
-
-#pragma omp master
-{
-		// copy
-		for(ii=0; ii<size[nn]; ii++)
-			{
-			y[ii] = x[ii];
-			}
-
-		blasfeo_tic(&timer);
-} // master
-
-#pragma omp for schedule(static)
-		for(rep=0; rep<nrep; rep++)
-			{
-
-			for(ii=0; ii<size[nn]; ii++)
-				{
-				y[ii] = x[ii];
-				}
-
-			}
-
-#pragma omp master
-{
-		tmp_time = blasfeo_toc(&timer) / nrep;
-} // master
-} // parallel
-
-		bandwidth_copy_parallel = size[nn] * 2 * 8.0 / tmp_time;
-
-
 		// print
-		printf("%f\t%e\t%e\t%f\t%e\t%e\t%f\n", size[nn]*8.0/1024.0, bandwidth_set_sequential, bandwidth_set_parallel, bandwidth_set_parallel/bandwidth_set_sequential, bandwidth_copy_sequential, bandwidth_copy_parallel, bandwidth_copy_parallel/bandwidth_copy_sequential);
+		printf("%d\t%f\t%e\t%e\n", nn, size[nn]*8.0/1024.0, bandwidth_load_sequential, bandwidth_copy_sequential);
 
-		free(x);
-		free(y);
+		blasfeo_free_align(x);
+		blasfeo_free_align(y);
 
 		}
 	
