@@ -254,10 +254,10 @@ NAME:
 	// main loop
 1:
 
-	vmovapd		0(%r11), %ymm0
-	vmovapd		32(%r11), %ymm0
-	vmovapd		64(%r11), %ymm0
-	vmovapd		96(%r11), %ymm0
+	vmovupd		0(%r11), %ymm0
+	vmovupd		32(%r11), %ymm0
+	vmovupd		64(%r11), %ymm0
+	vmovupd		96(%r11), %ymm0
 
 	subl	$16, %r10d
 	addq	$128, %r11
@@ -275,7 +275,7 @@ NAME:
 	// main loop
 1:
 
-	vmovapd		0(%r11), %ymm0
+	vmovupd		0(%r11), %ymm0
 
 	subl	$4, %r10d
 	addq	$32, %r11
@@ -341,14 +341,14 @@ NAME:
 	// main loop
 1:
 
-	vmovapd		0(%r11), %ymm0
-	vmovapd		%ymm0, 0(%r12)
-	vmovapd		32(%r11), %ymm0
-	vmovapd		%ymm0, 32(%r12)
-	vmovapd		64(%r11), %ymm0
-	vmovapd		%ymm0, 64(%r12)
-	vmovapd		96(%r11), %ymm0
-	vmovapd		%ymm0, 96(%r12)
+	vmovupd		0(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r12)
+	vmovupd		32(%r11), %ymm0
+	vmovupd		%ymm0, 32(%r12)
+	vmovupd		64(%r11), %ymm0
+	vmovupd		%ymm0, 64(%r12)
+	vmovupd		96(%r11), %ymm0
+	vmovupd		%ymm0, 96(%r12)
 
 	subl	$16, %r10d
 	addq	$128, %r11
@@ -367,8 +367,8 @@ NAME:
 	// main loop
 1:
 
-	vmovapd		0(%r11), %ymm0
-	vmovapd		%ymm0, 0(%r12)
+	vmovupd		0(%r11), %ymm0
+	vmovupd		%ymm0, 0(%r12)
 
 	subl	$4, %r10d
 	addq	$32, %r11
