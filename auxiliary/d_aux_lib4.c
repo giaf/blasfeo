@@ -4303,6 +4303,9 @@ void blasfeo_dveccp(int m, struct blasfeo_dvec *sa, int ai, struct blasfeo_dvec 
 	{
 	double *pa = sa->pa + ai;
 	double *pc = sc->pa + ci;
+#if 1
+	kernel_dveccp_inc1(m, pa, pc);
+#else
 	int ii;
 	ii = 0;
 	for(; ii<m-3; ii+=4)
@@ -4316,6 +4319,7 @@ void blasfeo_dveccp(int m, struct blasfeo_dvec *sa, int ai, struct blasfeo_dvec 
 		{
 		pc[ii+0] = pa[ii+0];
 		}
+#endif
 	return;
 	}
 

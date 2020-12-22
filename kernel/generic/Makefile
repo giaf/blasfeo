@@ -96,6 +96,8 @@ KERNEL_OBJS = \
 		kernel_spack_lib4.o \
 		kernel_sdot_lib.o \
 		kernel_saxpy_lib.o \
+		\
+		kernel_d_aux_lib.o \
 
 endif
 
@@ -123,6 +125,8 @@ KERNEL_OBJS = \
 		kernel_spack_lib4.o \
 		kernel_sdot_lib.o \
 		kernel_saxpy_lib.o \
+		\
+		kernel_d_aux_lib.o \
 
 endif
 
@@ -150,6 +154,8 @@ KERNEL_OBJS = \
 		kernel_spack_lib4.o \
 		kernel_sdot_lib.o \
 		kernel_saxpy_lib.o \
+		\
+		kernel_d_aux_lib.o \
 
 endif
 
@@ -177,6 +183,8 @@ KERNEL_OBJS = \
 		kernel_spack_lib4.o \
 		kernel_sdot_lib.o \
 		kernel_saxpy_lib.o \
+		\
+		kernel_d_aux_lib.o \
 
 endif
 
@@ -264,6 +272,8 @@ KERNEL_OBJS = \
 		kernel_saxpy_lib.o \
 		\
 		kernel_align_generic.o \
+		\
+		kernel_d_aux_lib.o \
 
 endif
 
@@ -293,6 +303,8 @@ KERNEL_OBJS = \
 		kernel_saxpy_lib.o \
 		\
 		kernel_align_generic.o \
+		\
+		kernel_d_aux_lib.o \
 
 endif
 
@@ -322,6 +334,8 @@ KERNEL_OBJS = \
 		kernel_saxpy_lib.o \
 		\
 		kernel_align_generic.o \
+		\
+		kernel_d_aux_lib.o \
 
 endif
 

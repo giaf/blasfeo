@@ -247,6 +247,8 @@ KERNEL_OBJS = \
 		\
 		kernel/sse3/kernel_align_x64.o \
 		\
+		kernel/avx/kernel_d_aux_lib.o \
+		\
 #		kernel/avx2/kernel_sgemm_16x8_lib8.o \
 
 endif
@@ -290,6 +292,8 @@ KERNEL_OBJS = \
 		\
 		kernel/sse3/kernel_align_x64.o \
 		\
+		kernel/avx/kernel_d_aux_lib.o \
+		\
 #		kernel/avx/kernel_sgemm_16x8_lib8.o \
 
 endif
@@ -324,6 +328,8 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
 		kernel/sse3/kernel_align_x64.o \
+		\
+		kernel/generic/kernel_d_aux_lib.o \
 
 endif
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
@@ -355,6 +361,8 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
 		kernel/sse3/kernel_align_x64.o \
+		\
+		kernel/generic/kernel_d_aux_lib.o \
 
 endif
 ifeq ($(TARGET), X86_AMD_JAGUAR)
@@ -389,6 +397,8 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
 		kernel/sse3_x86/kernel_align_x86.o \
+		\
+		kernel/generic/kernel_d_aux_lib.o \
 
 endif
 ifeq ($(TARGET), X86_AMD_BARCELONA)
@@ -422,6 +432,8 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
 		kernel/sse3_x86/kernel_align_x86.o \
+		\
+		kernel/generic/kernel_d_aux_lib.o \
 
 endif
 ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57))
@@ -464,6 +476,8 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
 		kernel/generic/kernel_align_generic.o \
+		\
+		kernel/armv8a/kernel_d_aux_lib.o \
 
 endif
 ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A55 ARMV8A_ARM_CORTEX_A53))
@@ -543,6 +557,8 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
 		kernel/generic/kernel_align_generic.o \
+		\
+		kernel/generic/kernel_d_aux_lib.o \
 
 endif
 ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
@@ -576,6 +592,8 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
 		kernel/generic/kernel_align_generic.o \
+		\
+		kernel/generic/kernel_d_aux_lib.o \
 
 endif
 ifeq ($(TARGET), GENERIC)
@@ -606,6 +624,8 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
 		kernel/generic/kernel_align_generic.o \
+		\
+		kernel/generic/kernel_d_aux_lib.o \
 
 endif # GENERIC
 

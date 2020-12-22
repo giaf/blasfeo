@@ -52,6 +52,8 @@ KERNEL_OBJS = \
 		kernel_sgemv_8_lib8.o \
 		kernel_sgemv_4_lib8.o \
 		kernel_spack_lib8.o \
+		\
+		kernel_d_aux_lib.o \
 
 endif
 
@@ -83,6 +85,8 @@ KERNEL_OBJS = \
 		kernel_sgemv_8_lib8.o \
 		kernel_sgemv_4_lib8.o \
 		kernel_spack_lib8.o \
+		\
+		kernel_d_aux_lib.o \
 		\
 #		kernel_sgemm_16x8_lib8.o \
 

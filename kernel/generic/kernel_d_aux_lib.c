@@ -34,258 +34,33 @@
 **************************************************************************************************/
 
 
+void kernel_dvecld_inc1(int k, double *x)
+	{
 
-/* often not needed to save all in such kernels !!!!!!!!! */
+	int ii;
+	double tmp;
 
-#define STACKSIZE 11*16
-#define PROLOGUE \
-	add sp, sp, #-(11 * 16); \
-	stp d8, d9, [sp, #(0 * 16)]; \
-	stp d10, d11, [sp, #(1 * 16)]; \
-	stp d12, d13, [sp, #(2 * 16)]; \
-	stp d14, d15, [sp, #(3 * 16)]; \
-	stp x18, x19, [sp, #(4 * 16)]; \
-	stp x20, x21, [sp, #(5 * 16)]; \
-	stp x22, x23, [sp, #(6 * 16)]; \
-	stp x24, x25, [sp, #(7 * 16)]; \
-	stp x26, x27, [sp, #(8 * 16)]; \
-	stp x28, x29, [sp, #(9 * 16)]; \
-	str x30, [sp, #(10 * 16)];
-#define EPILOGUE \
-	ldp d8, d9, [sp, #(0 * 16)]; \
-	ldp d10, d11, [sp, #(1 * 16)]; \
-	ldp d12, d13, [sp, #(2 * 16)]; \
-	ldp d14, d15, [sp, #(3 * 16)]; \
-	ldp x18, x19, [sp, #(4 * 16)]; \
-	ldp x20, x21, [sp, #(5 * 16)]; \
-	ldp x22, x23, [sp, #(6 * 16)]; \
-	ldp x24, x25, [sp, #(7 * 16)]; \
-	ldp x26, x27, [sp, #(8 * 16)]; \
-	ldp x28, x29, [sp, #(9 * 16)]; \
-	ldr x30, [sp, #(10 * 16)]; \
-	add sp, sp, #(11 * 16);
-#define GLOB_FUN_START(NAME) \
-	.global	NAME; \
-	.type NAME, %function; \
-NAME:
-#define FUN_START(NAME) \
-	.type NAME, %function; \
-NAME:
-#define FUN_END(NAME) \
-	.size	NAME, .-NAME
-#define ZERO_ACC \
-	fmov	d0, xzr; \
-	fmov    d1, d0; \
-	fmov    d2, d0; \
-	fmov    d3, d0; \
-	fmov    d4, d0; \
-	fmov    d5, d0; \
-	fmov    d6, d0; \
-	fmov    d7, d0
-
-
-
-
-
-	.text
-
-
-
-
-
-//                         w0     x1
-// void kernel_dvecld_inc1(int k, double *x)
-
-	.align	4
-	GLOB_FUN_START(kernel_dvecld_inc1)
+	for(ii=0; ii<k; ii++)
+		{
+		tmp = x[ii];
+		}
 	
+	return;
 
-
-	// not needed
-//	PROLOGUE
-
-
-
-	// call inner kernel
-	mov		w8, w0 // k
-	mov		x9, x1 // x
-
-
-	// early return
-	cmp		w8, #0
-	ble		2f // return
-
-	// consider clean up loop
-	cmp		w8, #15
-	ble		0f
-
-
-	// main loop
-1:
-
-	ldp		q0, q1, [x9, #0]
-	ldp		q2, q3, [x9, #32]
-	ldp		q4, q5, [x9, #64]
-	ldp		q6, q7, [x9, #96]
-
-	sub		w8, w8, #16
-	add		x9, x9, #128
-
-	cmp		w8, #15
-	bgt		1b
-
-0:
-
-	// consider clean up loop
-	cmp		w8, #3
-	ble		0f
-
-
-	// main loop
-1:
-
-	ldp		q0, q1, [x9, #0]
-
-	sub		w8, w8, #4
-	add		x9, x9, #32
-
-	cmp		w8, #3
-	bgt		1b
-
-0:
-
-	cmp		w8, #0
-	ble		2f // return
-
-
-	// clean up loop
-1:
-
-	ldr		d0, [x9, #0]
-
-	sub		w8, w8, #1
-	add		x9, x9, #8
-
-	cmp		w8, #0
-	bgt		1b
+	}
 
 
 
-2:
+void kernel_dveccp_inc1(int k, double *x, double *y)
+	{
 
-	// not needed
-//	EPILOGUE
+	int ii;
 
-	mov	x0, #0
-
-	ret
-
-	FUN_END(kernel_dvecld_inc1)
-
-
-
-
-
-//                         w0     x1         x2
-// void kernel_dveccp_inc1(int k, double *x, double *y)
-
-	.align	4
-	GLOB_FUN_START(kernel_dveccp_inc1)
+	for(ii=0; ii<k; ii++)
+		{
+		y[ii] = x[ii];
+		}
 	
+	return;
 
-
-	// not needed
-//	PROLOGUE
-
-
-
-	// call inner kernel
-	mov		w8, w0 // k
-	mov		x9, x1 // x
-	mov		x10, x2 // y
-
-
-	// early return
-	cmp		w8, #0
-	ble		2f // return
-
-	// consider clean up loop
-	cmp		w8, #15
-	ble		0f
-
-
-	// main loop
-1:
-
-	ldp		q0, q1, [x9, #0]
-	stp		q0, q1, [x10, #0]
-	ldp		q0, q1, [x9, #32]
-	stp		q0, q1, [x10, #32]
-	ldp		q0, q1, [x9, #64]
-	stp		q0, q1, [x10, #64]
-	ldp		q0, q1, [x9, #96]
-	stp		q0, q1, [x10, #96]
-
-	sub		w8, w8, #16
-	add		x9, x9, #128
-	add		x10, x10, #128
-
-	cmp		w8, #15
-	bgt		1b
-
-0:
-
-	// consider clean up loop
-	cmp		w8, #3
-	ble		0f
-
-
-	// main loop
-1:
-
-	ldp		q0, q1, [x9, #0]
-	stp		q0, q1, [x10, #0]
-
-	sub		w8, w8, #4
-	add		x9, x9, #32
-	add		x10, x10, #32
-
-	cmp		w8, #3
-	bgt		1b
-
-0:
-
-	cmp		w8, #0
-	ble		2f // return
-
-
-	// clean up loop
-1:
-
-	ldr		d0, [x9, #0]
-	str		d0, [x10, #0]
-
-	sub		w8, w8, #1
-	add		x9, x9, #8
-	add		x10, x10, #8
-
-	cmp		w8, #0
-	bgt		1b
-
-
-
-2:
-
-	// not needed
-//	EPILOGUE
-
-	mov	x0, #0
-
-	ret
-
-	FUN_END(kernel_dveccp_inc1)
-
-
-
-
-
+	}
