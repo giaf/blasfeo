@@ -46,7 +46,7 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 
 
 # Target architecture
-set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")
+# set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")
 # set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")
 # set(TARGET X64_INTEL_SANDY_BRIDGE CACHE STRING "Target architecture")
 # set(TARGET X64_INTEL_CORE CACHE STRING "Target architecture")
@@ -56,7 +56,7 @@ set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A15 CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A9 CACHE STRING "Target architecture")
 # set(TARGET ARMV7A_ARM_CORTEX_A7 CACHE STRING "Target architecture")
-# set(TARGET GENERIC CACHE STRING "Target architecture")
+set(TARGET GENERIC CACHE STRING "Target architecture")
 
 # Select back-end linear lagebra version (LA) to implement BLASFEO API:
 # HIGH_PERFORMANCE : target-tailored; performance-optimized for cache resident matrices; panel-major matrix format
@@ -741,7 +741,7 @@ file(GLOB KERNEL_SRC
 
 	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_align_x64.S
 
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
 	)
 
 endif(${TARGET} MATCHES X64_INTEL_CORE)
@@ -774,7 +774,7 @@ file(GLOB KERNEL_SRC
 
 	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_align_x64.S
 
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
 	)
 
 endif(${TARGET} MATCHES X64_AMD_BULLDOZER)
@@ -900,7 +900,7 @@ file(GLOB KERNEL_SRC
 
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
 
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
 	)
 
 endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
@@ -935,7 +935,7 @@ file(GLOB KERNEL_SRC
 
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
 
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
 	)
 
 endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
@@ -970,7 +970,7 @@ file(GLOB KERNEL_SRC
 
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
 
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
 	)
 
 endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9)
@@ -1002,7 +1002,7 @@ file(GLOB KERNEL_SRC
 
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
 
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.S
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
 	)
 
 endif(${TARGET} MATCHES GENERIC)
