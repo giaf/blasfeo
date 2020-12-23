@@ -47,7 +47,6 @@
 
 
 
-
 #ifndef D_PS
 #define D_PS 1
 #endif
@@ -80,6 +79,10 @@ void omp_set_num_threads(int num_threads);
 #include "mkl.h"
 #endif
 
+
+
+
+//#define PRINT_TO_FILE
 
 
 
@@ -526,6 +529,9 @@ int main()
 #elif defined(TARGET_X86_AMD_BARCELONA)
 	const float flops_max = 4; // 2 on jaguar
 	printf("Testing BLASFEO version for SSE3 instruction set, 32 bit (optimized for AMD Barcelona): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A76)
+	const float flops_max = 8;
+	printf("Testing BLASFEO version for NEONv2 instruction set, 64 bit (optimized for ARM Cortex A76): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	const float flops_max = 4;
 	printf("Testing BLASFEO version for NEONv2 instruction set, 64 bit (optimized for ARM Cortex A57): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
@@ -548,12 +554,14 @@ int main()
 
 
 
+#ifdef PRINT_TO_FILE
 	FILE *f;
 	f = fopen("./build/benchmark_one.m", "w"); // a
 
 	fprintf(f, "A = [%f %f];\n", GHz_max, flops_max);
 	fprintf(f, "\n");
 	fprintf(f, "B = [\n");
+#endif
 
 	printf("\nn\t Gflops\t    %%\t  time\t\t Gflops\t    %%\t  time\n\n");
 
@@ -578,7 +586,7 @@ int main()
 		{
 
 		int n = nn[ll];
-		int nrep = nnrep[ll]/2;
+		int nrep = nnrep[ll];
 //		int n = ll+1;
 //		int nrep = nnrep[0];
 //		n = n<12 ? 12 : n;
@@ -735,7 +743,7 @@ int main()
 		/* benchmarks */
 
 		int m0 = n;
-		int n0 = 4;
+		int n0 = n;
 		int k0 = n;
 
 		// batches repetion, find minimum averaged time
@@ -780,12 +788,12 @@ int main()
 
 
 //				blasfeo_dgemm_nn(m0, n0, k0, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-//				blasfeo_dgemm_nt(m0, n0, k0, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+				blasfeo_dgemm_nt(m0, n0, k0, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_tn(m0, n0, k0, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_tt(m0, n0, k0, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 
 //				blasfeo_dgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_dgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_tn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_tt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
@@ -823,7 +831,7 @@ int main()
 //				blasfeo_dtrsm_rutn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
 //				blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-//				blasfeo_dsymv_l(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+//				blasfeo_dsymv_l(n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
 //				blasfeo_dgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
 				}
 
@@ -887,9 +895,9 @@ int main()
 //		float flop_operation = 1*16.0*2*n; // kernel 4x4
 //		float flop_operation = 0.5*16.0*2*n; // kernel 2x4
 
-//		float flop_operation = 2.0*m0*n0*k0; // gemm
+		float flop_operation = 2.0*m0*n0*k0; // gemm
 
-		float flop_operation = 2.0*n*n*n; // gemm
+//		float flop_operation = 2.0*n*n*n; // gemm
 //		float flop_operation = 1.0*n*n*n; // syrk trmm trsm
 //		float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
 //		float flop_operation = 2.0/3.0*n*n*n; // getrf
@@ -913,10 +921,12 @@ int main()
 			n,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, time_blasfeo,
 			Gflops_blas, 100.0*Gflops_blas/Gflops_max, time_blas);
+#ifdef PRINT_TO_FILE
 		fprintf(f, "%d\t%7.3f\t%7.3f\t%5.3e\t%7.3f\t%7.3f\t%5.3e\n",
 			n,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max, time_blasfeo,
 			Gflops_blas, 100.0*Gflops_blas/Gflops_max, time_blas);
+#endif
 
 		d_free(A);
 		d_free(B);
@@ -948,7 +958,11 @@ int main()
 		}
 
 	printf("\n");
+#ifdef PRINT_TO_FILE
 	fprintf(f, "];\n");
+
+	fclose(f);
+#endif
 
 	return 0;
 

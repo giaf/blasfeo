@@ -33,8 +33,9 @@ Currently BLASFEO supports the following architectures:
 | ```X64_AMD_BULLDOZER```      | AMD Bulldozer architecture. x86_64 with AVX and FMA ISAs, 64-bit OS |
 | ```X86_AMD_JAGUAR```         | AMD Jaguar architecture. x86 with AVX ISA, 32-bit OS |
 | ```X86_AMD_BARCELONA```      | AMD Barcelona architecture. x86 with SSE3 ISA, 32-bit OS |
+| ```ARMV8A_ARM_CORTEX_A76```  | ARM Cortex 76 architecture or newer. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
 | ```ARMV8A_ARM_CORTEX_A73```  | ARM Cortex 73 architecture or newer. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
-| ```ARMV8A_ARM_CORTEX_A57```  | ARM Cortex A57, 72 architectures or newer. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
+| ```ARMV8A_ARM_CORTEX_A57```  | ARM Cortex A57, A72 architectures. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
 | ```ARMV8A_ARM_CORTEX_A55```  | ARM Cortex A55 architecture. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
 | ```ARMV8A_ARM_CORTEX_A53```  | ARM Cortex A53 architecture. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
 | ```ARMV7A_ARM_CORTEX_A15```  | ARM Cortex A15 architecture. ARMv7A with VFPv4 and NEON ISAs, 32-bit OS |
@@ -42,7 +43,7 @@ Currently BLASFEO supports the following architectures:
 | ```ARMV7A_ARM_CORTEX_A7```   | ARM Cortex A7 architecture. ARMv7A with VFPv4 and NEON ISAs, 32-bit OS |
 | ```GENERIC```                | Generic target, coded in C, giving better performance if the architecture provides more than 16 scalar FP registers (e.g. many RISC such as ARM) |
 
-Note that the ```ARMV8A_ARM_CORTEX_A73```, ```ARMV8A_ARM_CORTEX_A55```, ```X86_AMD_JAGUAR``` and ```X86_AMD_BARCELONA``` architectures are not currently supported by the CMake build system and can only be used through the included Makefile.
+Note that the ```ARMV8A_ARM_CORTEX_A76```, ```ARMV8A_ARM_CORTEX_A73```, ```ARMV8A_ARM_CORTEX_A55```, ```X86_AMD_JAGUAR``` and ```X86_AMD_BARCELONA``` architectures are not currently supported by the CMake build system and can only be used through the included Makefile.
 
 ### Automatic Target Detection
 

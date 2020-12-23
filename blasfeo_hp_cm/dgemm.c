@@ -72,7 +72,7 @@
 #define M_KERNEL 12 // max kernel: 12x4
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
 #define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 8-way
-#define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4kB = 256 kB
+#define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4 kB = 256 kB
 #define LLC_CACHE_EL (6*1024*1024/EL_SIZE) // LLC cache size: 6 MB
 #if 1
 #define KC 256 // 192
@@ -88,16 +88,25 @@
 #define M_KERNEL 8 // max kernel: 8x4
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
 #define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 8-way
-#define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4kB = 256 kB
+#define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4 kB = 256 kB
 #define LLC_CACHE_EL (4*1024*1024/EL_SIZE) // LLC cache size: 4 MB
 #define KC 256 //320 //256 //320
 #define NC 72 //64 //72 //60 // 120
 #define MC 1000 //800
 
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A76)
+#define M_KERNEL 8 // max kernel: 8x4
+#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
+#define L1_CACHE_EL (64*1024/EL_SIZE) // L1 data cache size: 64 kB, 4-way ; DTLB1 48*4 kB = 192 kB
+#define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB
+#define KC 512 //256
+#define NC 128 //256
+#define MC 6000
+
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A73)
 #define M_KERNEL 8 // max kernel: 8x4
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 (64?) kB, 4-way, seen as 8-(16-)way
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 (64?) kB, 4-way, seen as 8-(16-)way ; DTLB1 48*4 kB = 192 kB
 #define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB
 #define KC 320
 #define NC 256
@@ -106,7 +115,7 @@
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 #define M_KERNEL 8 // max kernel: 8x4
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 2-way
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 2-way ; DTLB1 32*4 kB = 128 kB
 #define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB // 2 MB ???
 #define KC 224 //256 //192
 #define NC 40 //36 //48
@@ -115,7 +124,7 @@
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A55)
 #define M_KERNEL 12 // max kernel: 12x4
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 4-way
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 4-way ; DTLB1 16*4 kB = 64 kB
 #define LLC_CACHE_EL (512*1024/EL_SIZE) // LLC cache size: 512 kB
 #define KC 224
 #define NC 160
@@ -124,7 +133,7 @@
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 #define M_KERNEL 12 // max kernel: 12x4
 #define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 4-way ???
+#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 4-way ??? ; DTLB1 10*4 kB = 40 kB
 #define LLC_CACHE_EL (256*1024/EL_SIZE) // LLC cache size: 256 kB
 #define KC 160
 #define NC 128

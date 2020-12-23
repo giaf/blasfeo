@@ -77,6 +77,7 @@ void omp_set_num_threads(int num_threads);
 
 
 
+//#define PRINT_TO_FILE
 
 
 
@@ -131,6 +132,10 @@ int main()
 	const float flops_max = 8; // 1x128 bit mul + 1x128 bit add
 	const float memops_max = 4; // 1x128 bit load + 1x128 bit store
 	printf("Testing BLAS version for SSE3 instruction set, 32 bit (optimized for AMD Barcelona): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A76)
+	const float flops_max = 16; // 2x128 bit fma
+	const float memops_max = 8; // ???
+	printf("Testing BLAS version for NEONv2 instruction set, 64 bit (optimized for ARM Cortex A76): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	const float flops_max = 8; // 1x128 bit fma
 	const float memops_max = 4; // ???
@@ -157,8 +162,9 @@ int main()
 	printf("Testing BLAS version for generic scalar instruction set: theoretical peak %5.1f Gflops ???\n", flops_max*GHz_max);
 #endif
 
-//	FILE *f;
-//	f = fopen("./test_problems/results/test_blas.m", "w"); // a
+#ifdef PRINT_TO_FILE
+	FILE *f;
+	f = fopen("./test_problems/results/test_blas.m", "w"); // a
 
 #if defined(TARGET_X64_INTEL_HASWELL)
 //	fprintf(f, "C = 's_x64_intel_haswell';\n");
@@ -183,10 +189,10 @@ int main()
 //	fprintf(f, "\n");
 #endif
 
-//	fprintf(f, "A = [%f %f];\n", GHz_max, flops_max);
-//	fprintf(f, "\n");
-
-//	fprintf(f, "B = [\n");
+	fprintf(f, "A = [%f %f];\n", GHz_max, flops_max);
+	fprintf(f, "\n");
+	fprintf(f, "B = [\n");
+#endif
 
 
 
@@ -350,14 +356,15 @@ int main()
 //				kernel_sgemm_nn_8x4_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 
 				// blasfeo routines
-				blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_sgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_sgemm_tn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_sgemm_tt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_ssyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_ssyrk_ln_mn(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-//				blasfeo_spotrf_l(n, &sB, 0, 0, &sB, 0, 0);
+				blasfeo_spotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_spotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_spotrf_u(n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_sgetr(n, n, &sA, 0, 0, &sB, 0, 0);
 //				blasfeo_sgetrf_nopivot(n, n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_sgetrf_rowpivot(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
@@ -370,7 +377,7 @@ int main()
 //				blasfeo_strsm_rutn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_sgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
 //				blasfeo_sgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-//				blasfeo_ssymv_l(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
+//				blasfeo_ssymv_l(n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
 //				blasfeo_sgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
 				}
 
@@ -437,9 +444,9 @@ int main()
 //		float flop_operation = 0.5*16.0*2*n; // kernel 2x4
 
 		// blasfeo routines
-		float flop_operation = 2.0*n*n*n; // gemm
+//		float flop_operation = 2.0*n*n*n; // gemm
 //		float flop_operation = 1.0*n*n*n; // syrk trmm trsm
-//		float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
+		float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
 //		float flop_operation = 2.0/3.0*n*n*n; // getrf
 //		float flop_operation = 4.0/3.0*n*n*n; // geqrf
 //		float flop_operation = 2.0*n*n; // gemv symv
@@ -463,6 +470,12 @@ int main()
 			n,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max,
 			Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+#ifdef PRINT_TO_FILE
+		fprintf(f, "%d\t%7.3f\t%7.3f\t%7.3f\t%7.3f\n",
+			n,
+			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max,
+			Gflops_blas, 100.0*Gflops_blas/Gflops_max);
+#endif
 
 		#if 0
 		// memops
@@ -503,8 +516,10 @@ int main()
 
 	printf("\n");
 
-//	fprintf(f, "];\n");
-//	fclose(f);
+#ifdef PRINT_TO_FILE
+	fprintf(f, "];\n");
+	fclose(f);
+#endif
 
 	return 0;
 

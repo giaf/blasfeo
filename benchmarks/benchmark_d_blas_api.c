@@ -71,6 +71,10 @@ void openblas_set_num_threads(int num_threads);
 
 
 
+//#define PRINT_TO_FILE
+
+
+
 int main()
 	{
 
@@ -114,6 +118,9 @@ openblas_set_num_threads(1);
 #elif defined(TARGET_X86_AMD_BARCELONA)
 	const float flops_max = 4; // 2 on jaguar
 	printf("Testing BLAS version for SSE3 instruction set, 32 bit (optimized for AMD Barcelona): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A76)
+	const float flops_max = 8;
+	printf("Testing BLAS version for NEONv2 instruction set, 64 bit (optimized for ARM Cortex A76): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	const float flops_max = 4;
 	printf("Testing BLAS version for NEONv2 instruction set, 64 bit (optimized for ARM Cortex A57): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
@@ -136,12 +143,14 @@ openblas_set_num_threads(1);
 
 
 
+#ifdef PRINT_TO_FILE
 	FILE *f;
 	f = fopen("./build/benchmark_one.m", "w"); // a
 
-//	fprintf(f, "A = [%f %f];\n", GHz_max, flops_max);
-//	fprintf(f, "\n");
-//	fprintf(f, "B = [\n");
+	fprintf(f, "A = [%f %f];\n", GHz_max, flops_max);
+	fprintf(f, "\n");
+	fprintf(f, "B = [\n");
+#endif
 
 	printf("\nn\t Gflops\t    %%\t Gflops\n\n");
 
@@ -466,11 +475,13 @@ openblas_set_num_threads(1);
 			Gflops_blas_api, 100.0*Gflops_blas_api/Gflops_max,
 			Gflops_blas, 100.0*Gflops_blas/Gflops_max,
 			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max);
-//		fprintf(f, "%d\t%7.3f\t%7.3f\t%7.3f\t%7.3f\t%7.3f\t%7.3f\n",
-//			n,
-//			Gflops_blas_api, 100.0*Gflops_blas_api/Gflops_max,
-//			Gflops_blas, 100.0*Gflops_blas/Gflops_max,
-//			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max);
+#ifdef PRINT_TO_FILE
+		fprintf(f, "%d\t%7.3f\t%7.3f\t%7.3f\t%7.3f\t%7.3f\t%7.3f\n",
+			n,
+			Gflops_blas_api, 100.0*Gflops_blas_api/Gflops_max,
+			Gflops_blas, 100.0*Gflops_blas/Gflops_max,
+			Gflops_blasfeo, 100.0*Gflops_blasfeo/Gflops_max);
+#endif
 
 		d_free_align(A);
 		d_free_align(B);
@@ -485,9 +496,11 @@ openblas_set_num_threads(1);
 		}
 
 	printf("\n");
-//	fprintf(f, "];\n");
+#ifdef PRINT_TO_FILE
+	fprintf(f, "];\n");
 
 	fclose(f);
+#endif
 
 	return 0;
 
