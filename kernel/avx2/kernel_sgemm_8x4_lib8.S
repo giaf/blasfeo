@@ -278,6 +278,10 @@ NAME:
 	cmpl	$0, %r10d
 	jle		5f // return
 
+	// prefetch
+	prefetcht0		0(%r12) // software prefetch
+	prefetcht0		0+64(%r12) // software prefetch
+
 	// preload
 	vmovaps 		0(%r11), %ymm13 // A
 
@@ -299,8 +303,10 @@ NAME:
 	vmovaps			32(%r11), %ymm14 // A
 	vbroadcastss	4(%r12), %ymm12 // B
 	vfmadd231ps		%ymm13, %ymm12, %ymm1
+	prefetcht0	128(%r12) // software prefetch
 	vbroadcastss	8(%r12), %ymm12 // B
 	vfmadd231ps		%ymm13, %ymm12, %ymm2
+	prefetcht0	128+64(%r12) // software prefetch
 	vbroadcastss	12(%r12), %ymm12 // B
 	vfmadd231ps		%ymm13, %ymm12, %ymm3
 	subl	$4, %r10d

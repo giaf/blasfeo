@@ -16830,10 +16830,6 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 // input arguments:
 // r10  <- D
 // r11  <- ldd
-// ymm0 <- [d00 d11 d22 d33]
-// ymm1 <- [d01 d10 d23 d32]
-// ymm2 <- [d03 d12 d21 d30]
-// ymm3 <- [d02 d13 d20 d31]
 //
 // output arguments:
 

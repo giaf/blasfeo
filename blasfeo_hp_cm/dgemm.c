@@ -149,7 +149,6 @@
 
 
 
-// TODO implement packing here ???
 static void blasfeo_hp_dgemm_nt_m1(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *C, int ldc, double *D, int ldd)
 	{
 
@@ -1689,7 +1688,6 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	int ldc1;
 	double beta1;
 	double *pA, *pB, *C1;
-	int pack_A;
 
 	const int ps = 4; //D_PS;
 

@@ -309,6 +309,10 @@ NAME:
 	cmpl	$0, %r10d
 	jle		2f // return
 
+	// prefetch
+	prefetcht0	0(%r13) // software prefetch
+	prefetcht0	0+64(%r13) // software prefetch
+
 	// preload
 	vmovapd 0(%r11), %ymm8 // A0[0]
 	vmovapd 0(%r11, %r12), %ymm9 // A1[0]
@@ -323,11 +327,13 @@ NAME:
 	// unroll 0
 	vbroadcastsd	0(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	prefetcht0	128(%r13) // software prefetch
 	vfmadd231pd		%ymm9, %ymm12, %ymm4
 	vmovapd			32(%r11), %ymm10 // A0
 
 	vbroadcastsd	8(%r13), %ymm12
 	vfmadd231pd		%ymm8, %ymm12, %ymm1
+	prefetcht0	128+64(%r13) // software prefetch
 	vfmadd231pd		%ymm9, %ymm12, %ymm5
 	vmovapd			32(%r11, %r12), %ymm11 // A1
 

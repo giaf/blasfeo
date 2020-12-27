@@ -12850,18 +12850,14 @@
 // input arguments:
 // r10  <- D
 // r11  <- ldd
-// ymm0 <- [d00 d11 d22 d33]
-// ymm1 <- [d01 d10 d23 d32]
-// ymm2 <- [d03 d12 d21 d30]
-// ymm3 <- [d02 d13 d20 d31]
 //
 // output arguments:
 
 #if MACRO_LEVEL>=1
-	.macro INNER_PREFETCH_8X4_LIB
+	.macro INNER_PREFETCH0_8X4_LIB
 #else
 	.p2align 4,,15
-	FUN_START(inner_prefetch_8x4_lib)
+	FUN_START(inner_prefetch0_8x4_lib)
 #endif
 
 	leaq		0(%r11, %r11, 2), %r12
@@ -12879,7 +12875,7 @@
 #else
 	ret
 
-	FUN_END(inner_prefetch_8x4_lib)
+	FUN_END(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -12901,10 +12897,10 @@
 // output arguments:
 
 #if MACRO_LEVEL>=1
-	.macro INNER_PREFETCH_4X8_LIB
+	.macro INNER_PREFETCH0_4X8_LIB
 #else
 	.p2align 4,,15
-	FUN_START(inner_prefetch_4x8_lib)
+	FUN_START(inner_prefetch0_4x8_lib)
 #endif
 
 	leaq		0(%r11, %r11, 2), %r12
@@ -12923,7 +12919,7 @@
 #else
 	ret
 
-	FUN_END(inner_prefetch_4x8_lib)
+	FUN_END(inner_prefetch0_4x8_lib)
 #endif
 
 
@@ -12967,9 +12963,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -13094,9 +13090,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -13179,9 +13175,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -13305,9 +13301,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -13364,6 +13360,27 @@
 	// zero accumulation registers
 
 	ZERO_ACC
+
+
+	// prefetch C
+
+	movq		ARG6, %r10 // beta
+	vmovsd		0(%r10), %xmm14
+	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			100f // end
+
+	movq	ARG7, %r10 // C
+	movq	ARG8, %r11 // ldc
+	sall	$3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH0_8X4_LIB
+#else
+	CALL(inner_prefetch0_8x4_lib)
+#endif
+
+100:
 
 
 	// call inner dgemm kernel nn
@@ -13548,9 +13565,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -13740,9 +13757,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -13814,9 +13831,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+	INNER_PREFETCH0_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+	CALL(inner_prefetch0_4x8_lib)
 #endif
 
 100:
@@ -13994,9 +14011,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -14121,9 +14138,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -14206,9 +14223,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -14332,9 +14349,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -14415,9 +14432,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -14546,9 +14563,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -14638,9 +14655,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -14772,9 +14789,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -14864,9 +14881,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -14990,9 +15007,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_8X4_LIB
+	INNER_PREFETCH0_8X4_LIB
 #else
-	CALL(inner_prefetch_8x4_lib)
+	CALL(inner_prefetch0_8x4_lib)
 #endif
 
 
@@ -24588,9 +24605,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+	INNER_PREFETCH0_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+	CALL(inner_prefetch0_4x8_lib)
 #endif
 
 
@@ -24721,9 +24738,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+	INNER_PREFETCH0_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+	CALL(inner_prefetch0_4x8_lib)
 #endif
 
 
@@ -24819,9 +24836,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+	INNER_PREFETCH0_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+	CALL(inner_prefetch0_4x8_lib)
 #endif
 
 
@@ -24952,9 +24969,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+	INNER_PREFETCH0_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+	CALL(inner_prefetch0_4x8_lib)
 #endif
 
 
@@ -25035,9 +25052,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+	INNER_PREFETCH0_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+	CALL(inner_prefetch0_4x8_lib)
 #endif
 
 
@@ -25159,9 +25176,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+	INNER_PREFETCH0_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+	CALL(inner_prefetch0_4x8_lib)
 #endif
 
 
@@ -25244,9 +25261,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+	INNER_PREFETCH0_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+	CALL(inner_prefetch0_4x8_lib)
 #endif
 
 
@@ -25371,9 +25388,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+	INNER_PREFETCH0_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+	CALL(inner_prefetch0_4x8_lib)
 #endif
 
 
@@ -25456,9 +25473,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+	INNER_PREFETCH0_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+	CALL(inner_prefetch0_4x8_lib)
 #endif
 
 
@@ -25590,9 +25607,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+	INNER_PREFETCH0_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+	CALL(inner_prefetch0_4x8_lib)
 #endif
 
 
@@ -25682,9 +25699,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+	INNER_PREFETCH0_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+	CALL(inner_prefetch0_4x8_lib)
 #endif
 
 
@@ -25815,9 +25832,9 @@
 	sall	$3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH_4X8_LIB
+	INNER_PREFETCH0_4X8_LIB
 #else
-	CALL(inner_prefetch_4x8_lib)
+	CALL(inner_prefetch0_4x8_lib)
 #endif
 
 
