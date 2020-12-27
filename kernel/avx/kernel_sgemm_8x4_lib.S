@@ -344,6 +344,45 @@
 
 
 
+// common inner routine with file scope
+//
+// store n
+//
+// input arguments:
+// r10  <- D
+// r11  <- ldd
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_PREFETCH0_8X4_LIB
+#else
+	.p2align 4,,15
+	FUN_START(inner_prefetch0_8x4_lib)
+#endif
+
+	leaq		0(%r11, %r11, 2), %r12
+	prefetcht0	0(%r10)
+	prefetcht0	31(%r10)
+	prefetcht0	0(%r10, %r11)
+	prefetcht0	31(%r10, %r11)
+	prefetcht0	0(%r10, %r11, 2)
+	prefetcht0	31(%r10, %r11, 2)
+	prefetcht0	0(%r10, %r12)
+	prefetcht0	31(%r10, %r12)
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_prefetch0_8x4_lib)
+#endif
+
+
+
+
+
 //                                  1      2             3         4         5            6         7        8         9
 // void kernel_sgemm_nt_8x4_lib88cc(int k, float *alpha, float *A, float *B, float *beta, float *C, int ldc, float *D, int ldd);
 
@@ -354,6 +393,27 @@
 	// zero accumulation registers
 
 	ZERO_ACC
+
+
+	// prefetch C
+
+	movq		ARG5, %r10 // beta
+	vmovss		0(%r10), %xmm14
+	vxorps		%xmm15, %xmm15, %xmm15 // 0.0
+	vucomiss	%xmm15, %xmm14 // beta==0.0 ?
+	je			100f // end
+
+	movq	ARG6, %r10 // C
+	movq	ARG7, %r11 // ldc
+	sall	$2, %r11d // ldc*sizeof(float)
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH0_8X4_LIB
+#else
+	CALL(inner_prefetch0_8x4_lib)
+#endif
+
+100:
 
 
 	// call inner dgemm kernel nt

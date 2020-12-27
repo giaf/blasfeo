@@ -363,13 +363,13 @@
 
 	leaq		0(%r11, %r11, 2), %r12
 	prefetcht0	0(%r10)				// 0
-	prefetcht0	32(%r10)			// 0
+	prefetcht0	63(%r10)			// 0
 	prefetcht0	0(%r10, %r11)	// 1
-	prefetcht0	32(%r10, %r11)	// 1
+	prefetcht0	63(%r10, %r11)	// 1
 	prefetcht0	0(%r10, %r11, 2)	// 2
-	prefetcht0	32(%r10, %r11, 2)	// 2
+	prefetcht0	63(%r10, %r11, 2)	// 2
 	prefetcht0	0(%r10, %r12)	// 3
-	prefetcht0	32(%r10, %r12)	// 3
+	prefetcht0	63(%r10, %r12)	// 3
 
 #if MACRO_LEVEL>=1
 	.endm

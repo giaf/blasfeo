@@ -335,9 +335,13 @@
 
 	leaq		0(%r11, %r11, 2), %r12
 	prefetcht0	0(%r10)
+	prefetcht0	31(%r10)
 	prefetcht0	0(%r10, %r11)
+	prefetcht0	31(%r10, %r11)
 	prefetcht0	0(%r10, %r11, 2)
+	prefetcht0	31(%r10, %r11, 2)
 	prefetcht0	0(%r10, %r12)
+	prefetcht0	31(%r10, %r12)
 
 #if MACRO_LEVEL>=1
 	.endm

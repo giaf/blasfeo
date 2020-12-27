@@ -285,6 +285,10 @@ inner_kernel_gemm_add_nt_8x4_lib8:
 	jle		2f // return
 
 	// prefetch
+	prefetcht0		0(%r12) // software prefetch
+	prefetcht0		0+64(%r12) // software prefetch
+
+	// prefetch
 	vbroadcastf128	0(%r12), %ymm14 // B
 	vmovaps			0(%r11), %ymm12 // A
 	vbroadcastf128	32(%r12), %ymm15 // B
@@ -301,10 +305,12 @@ inner_kernel_gemm_add_nt_8x4_lib8:
 	vmulps			%ymm12, %ymm14, %ymm11
 	vshufps			$0xb1, %ymm14, %ymm14, %ymm14 // 10 11 00 01
 	vaddps			%ymm11, %ymm0, %ymm0
+	prefetcht0	128(%r12) // software prefetch
 
 	vmulps			%ymm12, %ymm14, %ymm11
 	vshufps			$0x4e, %ymm14, %ymm14, %ymm14 // 01 00 11 10
 	vaddps			%ymm11, %ymm1, %ymm1
+	prefetcht0	128+64(%r12) // software prefetch
 
 	vmulps			%ymm12, %ymm14, %ymm11
 	vshufps			$0xb1, %ymm14, %ymm14, %ymm14 // 10 11 00 01
