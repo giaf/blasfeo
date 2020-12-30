@@ -615,6 +615,13 @@ void kernel_saxpy_11_lib(int n, float *alpha, float *x, float *y);
 
 
 
+// larger kernels
+// 24
+void kernel_sgemm_nt_24xn_p0_lib88cc(int n, int k, float *alpha, float *A, int sda, float *B, int sdb, float *beta, float *C, int ldc, float *D, int ldd, float *A_p, float *B_p);
+
+
+
+
 #ifdef __cplusplus
 }
 #endif

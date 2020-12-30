@@ -105,6 +105,16 @@ static void blasfeo_hp_sgemm_nt_m1(int m, int n, int k, float alpha, float *pA, 
 #if defined(TARGET_X64_INTEL_HASWELL)
 	for(; ii<m-23; ii+=24)
 		{
+#if defined(TARGET_X64_INTEL_HASWELL)
+		jj = 0;
+		if(n>0)
+			{
+			pA_p = m-ii<=24 ? pA : pA+(ii+24)*sda;
+			pB_p = pB;
+			kernel_sgemm_nt_24xn_p0_lib88cc(n, k, &alpha, pA+ii*sda, sda, pB+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p, pB_p);
+			jj += n;
+			}
+#else
 		for(jj=0; jj<n-7; jj+=8)
 			{
 			kernel_sgemm_nt_24x4_lib88cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb+0, &beta, C+ii+(jj+0)*ldc, ldc, D+ii+(jj+0)*ldd, ldd);
@@ -122,6 +132,7 @@ static void blasfeo_hp_sgemm_nt_m1(int m, int n, int k, float alpha, float *pA, 
 				kernel_sgemm_nt_24x4_vs_lib88cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb+0, &beta, C+ii+(jj+0)*ldc, ldc, D+ii+(jj+0)*ldd, ldd, m-ii, n-jj);
 				}
 			}
+#endif
 		}
 	if(ii<m)
 		{
