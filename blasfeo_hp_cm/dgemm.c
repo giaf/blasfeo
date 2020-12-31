@@ -36,6 +36,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+//#include <sys/mman.h>
+
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #include <xmmintrin.h>
 #endif
@@ -1708,6 +1710,8 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	int m1, n1, k1;
 	int pack_B;
 
+	int error;
+
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -1934,7 +1938,13 @@ nn_1:
 	tB_size = blasfeo_pm_memsize_dmat(ps, nc0, kc0);
 	tA_size = (tA_size + 4096 - 1) / 4096 * 4096;
 	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
+#if 1
 	mem = malloc(tA_size+tB_size+2*4096);
+#else
+//	error = posix_memalign( &mem, 4*1024, tA_size+tB_size+2*4096 );
+	error = posix_memalign( &mem, 2*1024*1024, tA_size+tB_size+2*4096 );
+	error = madvise( mem, tA_size+tB_size+2*4096, MADV_HUGEPAGE );
+#endif
 	blasfeo_align_4096_byte(mem, (void **) &mem_align);
 
 //	blasfeo_pm_create_dmat(ps, mc, kc, &tA, (void *) mem_align);
@@ -2674,7 +2684,7 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	double *pA, *pB, *C1;
 
 #if defined(TARGET_GENERIC)
-	double pU[4*K_MAX_STACK];
+	double pU[M_KERNEL*K_MAX_STACK];
 #else
 	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 64 );
 #endif

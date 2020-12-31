@@ -1210,7 +1210,7 @@
 	jne			100f // end
 
 	movq	ARG8, %r10 // beta
-	vbroadcastsd	0(%r10), %ymm14
+	vbroadcastss	0(%r10), %ymm14
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovaps		.LC03(%rip), %ymm15 // 1.0
 #else
@@ -1355,7 +1355,7 @@
 	jne			100f // end
 
 	movq	ARG8, %r10 // beta
-	vbroadcastsd	0(%r10), %ymm14
+	vbroadcastss	0(%r10), %ymm14
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovaps		.LC03(%rip), %ymm15 // 1.0
 #else
