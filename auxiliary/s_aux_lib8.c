@@ -874,7 +874,7 @@ void svecad_libsp(int kmax, int *idx, float alpha, float *x, float *y)
 size_t blasfeo_memsize_smat(int m, int n)
 	{
 	const int bs = 8;
-	int nc = S_NC;
+	int nc = S_PLD;
 	int al = bs*nc;
 	int pm = (m+bs-1)/bs*bs;
 	int cn = (n+nc-1)/nc*nc;
@@ -888,7 +888,7 @@ size_t blasfeo_memsize_smat(int m, int n)
 
 size_t blasfeo_memsize_smat_ps(int ps, int m, int n)
 	{
-	int nc = S_NC;
+	int nc = S_PLD;
 	int al = ps*nc;
 	int pm = (m+ps-1)/ps*ps;
 	int cn = (n+nc-1)/nc*nc;
@@ -904,7 +904,7 @@ size_t blasfeo_memsize_smat_ps(int ps, int m, int n)
 size_t blasfeo_memsize_diag_smat(int m, int n)
 	{
 	const int bs = 8;
-	int nc = S_NC;
+	int nc = S_PLD;
 	int al = bs*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
 	size_t memsize = tmp*sizeof(float);
@@ -918,7 +918,7 @@ void blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memory)
 	{
 	sA->mem = memory;
 	const int bs = 8;
-	int nc = S_NC;
+	int nc = S_PLD;
 	int al = bs*nc;
 	sA->m = m;
 	sA->n = n;
@@ -944,7 +944,7 @@ void blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memory)
 void blasfeo_create_smat_ps(int ps, int m, int n, struct blasfeo_smat *sA, void *memory)
 	{
 	sA->mem = memory;
-	int nc = S_NC;
+	int nc = S_PLD;
 	int al = ps*nc;
 	sA->m = m;
 	sA->n = n;
@@ -970,7 +970,7 @@ void blasfeo_create_smat_ps(int ps, int m, int n, struct blasfeo_smat *sA, void 
 size_t blasfeo_memsize_svec(int m)
 	{
 	const int bs = 8;
-//	int nc = S_NC;
+//	int nc = S_PLD;
 //	int al = bs*nc;
 	int pm = (m+bs-1)/bs*bs;
 	size_t memsize = pm*sizeof(float);
@@ -984,7 +984,7 @@ void blasfeo_create_svec(int m, struct blasfeo_svec *sa, void *memory)
 	{
 	sa->mem = memory;
 	const int bs = 8;
-//	int nc = S_NC;
+//	int nc = S_PLD;
 //	int al = bs*nc;
 	sa->m = m;
 	int pm = (m+bs-1)/bs*bs;

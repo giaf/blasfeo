@@ -50,9 +50,6 @@
 #ifndef D_PS
 #define D_PS 1
 #endif
-#ifndef D_NC
-#define D_NC 1
-#endif
 
 
 
@@ -570,7 +567,6 @@ int main()
 	int i, j, rep, ll;
 
 	const int bsd = D_PS;
-	const int ncd = D_NC;
 
 
 
@@ -647,8 +643,6 @@ int main()
 			B2[i*(n+1)] = 1;
 
 		int pnd = ((n+bsd-1)/bsd)*bsd;
-		int cnd = ((n+ncd-1)/ncd)*ncd;
-		int cnd2 = 2*((n+ncd-1)/ncd)*ncd;
 
 		double *x; d_zeros_align(&x, pnd, 1);
 		double *y; d_zeros_align(&y, pnd, 1);

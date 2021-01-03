@@ -38,97 +38,279 @@
 
 
 
-#if defined( TARGET_X64_INTEL_HASWELL )
+#define D_EL_SIZE 8 // double precision
+#define S_EL_SIZE 4 // single precision
 
-#define D_PS 4
-#define S_PS 8
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
-#define CACHE_LINE_SIZE 64
+
+
+#if defined( TARGET_X64_INTEL_HASWELL )
+// common
+#define CACHE_LINE_SIZE 64 // data cache size: 64 bytes
+#define L1_CACHE_SIZE (32*1024) // L1 data cache size: 32 kB, 8-way
+#define L2_CACHE_SIZE (256*1024) // L2 data cache size: 256 kB ; DTLB1 64*4 kB = 256 kB
+#define LLC_CACHE_SIZE (6*1024*1024) // LLC cache size: 6 MB ; TLB 1024*4 kB = 4 MB
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 12 // max kernel size
+#define D_KC 256 // 192
+#define D_NC 72 //96 //72 // 120 // 512
+#define D_MC 1500 // 6000
+// single
+#define S_PS 8 // panel size
+#define S_PLD 4 // 2 // GCD of panel length
+#define S_M_KERNEL 24 // max kernel size
+#define S_KC 256
+#define S_NC 144
+#define S_MC 3000
 
 #elif defined( TARGET_X64_INTEL_SANDY_BRIDGE )
-
-#define D_PS 4
-#define S_PS 8
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
-#define CACHE_LINE_SIZE 64
+// common
+#define CACHE_LINE_SIZE 64 // data cache size: 64 bytes
+#define L1_CACHE_SIZE (32*1024) // L1 data cache size: 32 kB, 8-way
+#define L2_CACHE_SIZE (256*1024) // L2 data cache size: 256 kB ; DTLB1 64*4 kB = 256 kB
+#define LLC_CACHE_SIZE (4*1024*1024) // LLC cache size: 4 MB ; TLB 1024*4 kB = 4 MB
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 8 // max kernel size
+#define D_KC 256 //320 //256 //320
+#define D_NC 72 //64 //72 //60 // 120
+#define D_MC 1000 // 800
+// single
+#define S_PS 8 // panel size
+#define S_PLD 4 // 2 // GCD of panel length
+#define S_M_KERNEL 16 // max kernel size
+#define S_KC 256
+#define S_NC 144
+#define S_MC 2000
 
 #elif defined( TARGET_X64_INTEL_CORE )
-
-#define D_PS 4
-#define S_PS 4
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+// common
 #define CACHE_LINE_SIZE 64
+#define L1_CACHE_SIZE (32*1024) // L1 data cache size: 32 kB
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 4 // max kernel size
+#define D_KC 256
+// single
+#define S_PS 4
+#define S_PLD 4 //2
+#define S_M_KERNEL 4 // max kernel size
+#define S_KC 256
 
 #elif defined( TARGET_X64_AMD_BULLDOZER )
-
-#define D_PS 4
-#define S_PS 4
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+// common
 #define CACHE_LINE_SIZE 64
+#define L1_CACHE_SIZE (32*1024) // L1 data cache size: 32 kB
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 4 // max kernel size
+#define D_KC 256
+// single
+#define S_PS 4
+#define S_PLD 4 //2
+#define S_M_KERNEL 4 // max kernel size
+#define S_KC 256
 
 #elif defined( TARGET_X86_AMD_JAGUAR )
-
-#define D_PS 4
-#define S_PS 4
-#define D_NC 4 // 2
-#define S_NC 4 //2
+// common
 #define CACHE_LINE_SIZE 64
+#define L1_CACHE_SIZE (32*1024) // L1 data cache size: 32 kB
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 4 // max kernel size
+#define D_KC 256
+// single
+#define S_PS 4
+#define S_PLD 4 //2
+#define S_M_KERNEL 4 // max kernel size
+#define S_KC 256
 
 #elif defined( TARGET_X86_AMD_BARCELONA )
-
-#define D_PS 4
-#define S_PS 4
-#define D_NC 4 // 2
-#define S_NC 4 //2
+// common
 #define CACHE_LINE_SIZE 64
-
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-
-#define D_PS 4
+#define L1_CACHE_SIZE (32*1024) // L1 data cache size: 32 kB
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 4 // max kernel size
+#define D_KC 256
+// single
 #define S_PS 4
-#define D_NC 4
-#define S_NC 4
+#define S_PLD 4 //2
+#define S_M_KERNEL 4 // max kernel size
+#define S_KC 256
+
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A76)
+// common
 #define CACHE_LINE_SIZE 64
+#define L1_CACHE_SIZE (64*1024) // L1 data cache size: 64 kB, 4-way ; DTLB1 48*4 kB = 192 kB
+#define LLC_CACHE_SIZE (1*1024*1024) // LLC cache size: 1 MB
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 8 // max kernel size
+#define D_KC 512 //256
+#define D_NC 128 //256
+#define D_MC 6000
+// single
+#define S_PS 4
+#define S_PLD 4 //2
+#define S_M_KERNEL 8 // max kernel size
+#define S_KC 256
+
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A73)
+// common
+#define CACHE_LINE_SIZE 64
+#define L1_CACHE_SIZE (32*1024) // L1 data cache size: 32 (64?) kB, 4-way, seen as 8-(16-)way ; DTLB1 48*4 kB = 192 kB
+#define LLC_CACHE_SIZE (1*1024*1024) // LLC cache size: 1 MB
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 8 // max kernel size
+#define D_KC 320
+#define D_NC 256
+#define D_MC 6000
+// single
+#define S_PS 4
+#define S_PLD 4 //2
+#define S_M_KERNEL 8 // max kernel size
+#define S_KC 256
+
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+// common
+#define CACHE_LINE_SIZE 64
+#define L1_CACHE_SIZE (32*1024) // L1 data cache size: 32 kB, 2-way ; DTLB1 32*4 kB = 128 kB
+#define LLC_CACHE_SIZE (1*1024*1024) // LLC cache size: 1 MB // 2 MB ???
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 8 // max kernel size
+#define D_KC 224 //256 //192
+#define D_NC 40 //36 //48
+#define D_MC 512 //488 //600
+// single
+#define S_PS 4
+#define S_PLD 4 //2
+#define S_M_KERNEL 8 // max kernel size
+#define S_KC 256
+
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A55)
+// common
+#define CACHE_LINE_SIZE 64
+#define L1_CACHE_SIZE (32*1024) // L1 data cache size: 32 kB, 4-way ; DTLB1 16*4 kB = 64 kB
+#define LLC_CACHE_SIZE (512*1024) // LLC cache size: 512 kB
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 12 // max kernel size
+#define D_KC 224
+#define D_NC 160
+#define D_MC 6000
+// single
+#define S_PS 4
+#define S_PLD 4 //2
+#define S_M_KERNEL 8 // max kernel size
+#define S_KC 256
+
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+// common
+#define CACHE_LINE_SIZE 64
+#define L1_CACHE_SIZE (32*1024) // L1 data cache size: 32 kB, 4-way ??? ; DTLB1 10*4 kB = 40 kB
+#define LLC_CACHE_SIZE (256*1024) // LLC cache size: 256 kB
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 12 // max kernel size
+#define D_KC 160
+#define D_NC 128
+#define D_MC 6000
+// single
+#define S_PS 4
+#define S_PLD 4 //2
+#define S_M_KERNEL 8 // max kernel size
+#define S_KC 256
 
 #elif defined( TARGET_ARMV7A_ARM_CORTEX_A15 )
-
-#define D_PS 4
-#define S_PS 4
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+// common
 #define CACHE_LINE_SIZE 64
+#define L1_CACHE_SIZE (32*1024) // L1 data cache size: 32 kB
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 4 // max kernel size
+#define D_KC 256
+// single
+#define S_PS 4
+#define S_PLD 4 //2
+#define S_M_KERNEL 4 // max kernel size
+#define S_KC 256
 
 #elif defined( TARGET_ARMV7A_ARM_CORTEX_A7 )
-
-#define D_PS 4
-#define S_PS 4
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+// common
 #define CACHE_LINE_SIZE 64
+#define L1_CACHE_SIZE (32*1024) // L1 data cache size: 32 kB
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 4 // max kernel size
+#define D_KC 256
+// single
+#define S_PS 4
+#define S_PLD 4 //2
+#define S_M_KERNEL 4 // max kernel size
+#define S_KC 256
 
 #elif defined( TARGET_ARMV7A_ARM_CORTEX_A9 )
-// FIXME: these values are just hacked in to make it build
-#define D_PS 4
-#define S_PS 4
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+// common
 #define CACHE_LINE_SIZE 32
+#define L1_CACHE_SIZE (32*1024) // L1 data cache size: 32 kB
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 4 // max kernel size
+#define D_KC 256
+// single
+#define S_PS 4
+#define S_PLD 4 //2
+#define S_M_KERNEL 4 // max kernel size
+#define S_KC 256
 
 #elif defined( TARGET_GENERIC )
-
-#define D_PS 4
-#define S_PS 4
-#define D_NC 4 // 2 // until the smaller kernel is 4x4
-#define S_NC 4 //2
+// common
 #define CACHE_LINE_SIZE 64
+#define L1_CACHE_SIZE (32*1024) // L1 data cache size: 32 kB
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 4 // max kernel size
+#define D_KC 256
+// single
+#define S_PS 4
+#define S_PLD 4 //2
+#define S_M_KERNEL 4 // max kernel size
+#define S_KC 256
 
 #else
 #error "Unknown architecture"
 #endif
+
+
+
+#define D_CACHE_LINE_EL (CACHE_LINE_SIZE/D_EL_SIZE)
+#define D_L1_CACHE_EL (L1_CACHE_SIZE/D_EL_SIZE)
+#define D_L2_CACHE_EL (L2_CACHE_SIZE/D_EL_SIZE)
+#define D_LLC_CACHE_EL (LLC_CACHE_SIZE/D_EL_SIZE)
+
+#define S_CACHE_LINE_EL (CACHE_LINE_SIZE/S_EL_SIZE)
+#define S_L1_CACHE_EL (L1_CACHE_SIZE/S_EL_SIZE)
+#define S_L2_CACHE_EL (L2_CACHE_SIZE/S_EL_SIZE)
+#define S_LLC_CACHE_EL (LLC_CACHE_SIZE/S_EL_SIZE)
+
 
 
 #endif  // BLASFEO_BLOCK_SIZE_H_

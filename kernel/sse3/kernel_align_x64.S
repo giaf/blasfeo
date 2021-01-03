@@ -157,6 +157,46 @@
 
 
 //                               1          2
+// void blasafeo_align_2MB(void *ptr, void **ptr_align);
+
+	.p2align 4,,15
+#if defined(OS_LINUX)
+	.globl blasfeo_align_2MB
+	.type blasfeo_align_2MB, @function
+blasfeo_align_2MB:
+#elif defined(OS_MAC)
+	.globl _blasfeo_align_2MB
+_blasfeo_align_2MB:
+#elif defined(OS_WINDOWS)
+	.globl blasfeo_align_2MB
+	.def blasfeo_align_2MB; .scl 2; .type 32; .endef
+blasfeo_align_2MB:
+#endif
+	
+	PROLOGUE
+
+	movq	ARG1, %r10
+	movq	ARG2, %r11
+
+	addq 	$2097151, %r10
+	movq	$2097151, %r12
+	notq	%r12
+	andq	%r12, %r10
+	movq	%r10, (%r11)
+
+	EPILOGUE
+	
+	ret
+
+#if defined(OS_LINUX)
+	.size	blasfeo_align_2MB, .-blasfeo_align_2MB
+#endif
+
+
+
+
+
+//                               1          2
 // void blasafeo_align_4096_byte(void *ptr, void **ptr_align);
 
 	.p2align 4,,15

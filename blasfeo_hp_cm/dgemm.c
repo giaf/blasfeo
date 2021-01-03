@@ -36,7 +36,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-//#include <sys/mman.h>
+#include <sys/mman.h>
+
+//#include "../utils/page-info.h"
+//#include "../utils/page-info.c"
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #include <xmmintrin.h>
@@ -66,88 +69,15 @@
 
 
 
-// TODO move to a header file to reuse across routines
-#define EL_SIZE 8 // double precision
-
-// TODO detect LLC cache size !!!!!!!!!
-#if defined(TARGET_X64_INTEL_HASWELL)
-#define M_KERNEL 12 // max kernel: 12x4
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 8-way
-#define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4 kB = 256 kB
-#define LLC_CACHE_EL (6*1024*1024/EL_SIZE) // LLC cache size: 6 MB
-#if 1
-#define KC 256 // 192
-#define NC 72 //96 //72 // 120 // 512
-#define MC 1500
-#else
-#define KC 256
-#define NC 512
-#define MC 6000
-#endif
-
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-#define M_KERNEL 8 // max kernel: 8x4
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 8-way
-#define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4 kB = 256 kB
-#define LLC_CACHE_EL (4*1024*1024/EL_SIZE) // LLC cache size: 4 MB
-#define KC 256 //320 //256 //320
-#define NC 72 //64 //72 //60 // 120
-#define MC 1000 //800
-
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A76)
-#define M_KERNEL 8 // max kernel: 8x4
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (64*1024/EL_SIZE) // L1 data cache size: 64 kB, 4-way ; DTLB1 48*4 kB = 192 kB
-#define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB
-#define KC 512 //256
-#define NC 128 //256
-#define MC 6000
-
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A73)
-#define M_KERNEL 8 // max kernel: 8x4
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 (64?) kB, 4-way, seen as 8-(16-)way ; DTLB1 48*4 kB = 192 kB
-#define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB
-#define KC 320
-#define NC 256
-#define MC 6000
-
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-#define M_KERNEL 8 // max kernel: 8x4
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 2-way ; DTLB1 32*4 kB = 128 kB
-#define LLC_CACHE_EL (1*1024*1024/EL_SIZE) // LLC cache size: 1 MB // 2 MB ???
-#define KC 224 //256 //192
-#define NC 40 //36 //48
-#define MC 512 //488 //600
-
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A55)
-#define M_KERNEL 12 // max kernel: 12x4
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 4-way ; DTLB1 16*4 kB = 64 kB
-#define LLC_CACHE_EL (512*1024/EL_SIZE) // LLC cache size: 512 kB
-#define KC 224
-#define NC 160
-#define MC 6000
-
-#elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-#define M_KERNEL 12 // max kernel: 12x4
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB, 4-way ??? ; DTLB1 10*4 kB = 40 kB
-#define LLC_CACHE_EL (256*1024/EL_SIZE) // LLC cache size: 256 kB
-#define KC 160
-#define NC 128
-#define MC 6000
-
-#else // assume generic target
-#define M_KERNEL 4 // max kernel: 4x4
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes // TODO 32-bytes for cortex A9
-#define KC 512
-
-#endif
+#define CACHE_LINE_EL D_CACHE_LINE_EL
+#define L1_CACHE_EL D_L1_CACHE_EL
+#define L2_CACHE_EL D_L2_CACHE_EL
+#define LLC_CACHE_EL D_LLC_CACHE_EL
+#define PS D_PS
+#define M_KERNEL D_M_KERNEL
+#define KC D_KC
+#define NC D_NC
+#define MC D_MC
 
 
 
@@ -1691,7 +1621,7 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	double beta1;
 	double *pA, *pB, *C1;
 
-	const int ps = 4; //D_PS;
+	const int ps = PS;
 
 #if defined(TARGET_GENERIC)
 	double pU[M_KERNEL*K_MAX_STACK];
@@ -1711,6 +1641,7 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	int pack_B;
 
 	int error;
+	int mem_size;
 
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
@@ -1940,12 +1871,35 @@ nn_1:
 	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
 #if 1
 	mem = malloc(tA_size+tB_size+2*4096);
-#else
-//	error = posix_memalign( &mem, 4*1024, tA_size+tB_size+2*4096 );
-	error = posix_memalign( &mem, 2*1024*1024, tA_size+tB_size+2*4096 );
-	error = madvise( mem, tA_size+tB_size+2*4096, MADV_HUGEPAGE );
-#endif
 	blasfeo_align_4096_byte(mem, (void **) &mem_align);
+#else
+	mem_size = tA_size+tB_size+4096+2*2*1024*1024;
+	mem_size = (mem_size + 2*1024*1024 - 1) / (2*1024*1024) * (2*1024*1024);
+//	error = posix_memalign( &mem, 4*1024, tA_size+tB_size+2*4096 );
+//	error = posix_memalign( &mem, 2*1024*1024, mem_size );
+//	error = madvise( mem, tA_size+tB_size+2*4096, MADV_HUGEPAGE );
+	mem = malloc(mem_size);
+	blasfeo_align_2MB(mem, (void **) &mem_align);
+//	blasfeo_align_4096_byte(mem, (void **) &mem_align);
+	error = madvise( mem_align, tA_size+tB_size+4096+2*1024*1024, MADV_HUGEPAGE );
+#endif
+
+#if 0
+//page_info_array pinfo = get_info_for_range(mem, mem + tA_size+tB_size+2*4096);
+//page_info_array pinfo = get_info_for_range(mem, mem + tA_size+tB_size+4096+2*1024*1024);
+page_info_array pinfo = get_info_for_range(mem_align, mem_align + tA_size+tB_size+4096);
+flag_count thp_count = get_flag_count(pinfo, KPF_THP);
+flag_count huge_count = get_flag_count(pinfo, KPF_HUGE);
+if (thp_count.pages_available) {
+    printf("Source pages allocated with transparent hugepages: %4.1f%%; huge pages %4.1f%% (%lu or %lu of %lu total pages, %4.1f%% flagged)\n",
+            100.0 * thp_count.pages_set / thp_count.pages_total,
+            100.0 * huge_count.pages_set / huge_count.pages_total,
+            thp_count.pages_set, huge_count.pages_set, thp_count.pages_total,
+            100.0 * thp_count.pages_available / thp_count.pages_total);
+} else {
+    printf("Couldn't determine hugepage info (you are probably not running as root)\n");
+}
+#endif
 
 //	blasfeo_pm_create_dmat(ps, mc, kc, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, mc0, kc0, &tA, (void *) mem_align);
@@ -2699,7 +2653,7 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	int m1, n1, k1;
 	int pack_B;
 
-	const int ps = D_PS;
+	const int ps = PS;
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -3311,7 +3265,7 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	double *pA, *pB, *C1;
 
 #if defined(TARGET_GENERIC)
-	double pU[4*K_MAX_STACK];
+	double pU[M_KERNEL*K_MAX_STACK];
 #else
 	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 64 );
 #endif
@@ -3326,7 +3280,7 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	int m1, n1, k1;
 	int pack_B;
 
-	const int ps = D_PS;
+	const int ps = PS;
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
@@ -3795,7 +3749,7 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	double *pA, *pB, *C1;
 
 #if defined(TARGET_GENERIC)
-	double pU[4*K_MAX_STACK];
+	double pU[M_KERNEL*K_MAX_STACK];
 #else
 	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 64 );
 #endif
@@ -3810,7 +3764,7 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	int m1, n1, k1;
 	int pack_B;
 
-	const int ps = D_PS;
+	const int ps = PS;
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
 #if defined(TARGET_X64_INTEL_HASWELL)

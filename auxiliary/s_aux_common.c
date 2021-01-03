@@ -48,7 +48,7 @@
 // return the memory size (in bytes) needed for a strmat
 size_t blasfeo_pm_memsize_smat(int ps, int m, int n)
 	{
-	int nc = 4; // hard coded !!! D_NC;
+	int nc = 4; // hard coded !!! S_PLD
 	int al = ps*nc;
 	int pm = (m+ps-1)/ps*ps;
 	int cn = (n+nc-1)/nc*nc;
@@ -64,7 +64,7 @@ void blasfeo_pm_create_smat(int ps, int m, int n, struct blasfeo_pm_smat *sA, vo
 	{
 	sA->mem = memory;
 	sA->ps = ps;
-	int nc = 4; // hard coded !!! D_NC;
+	int nc = 4; // hard coded !!! S_PLD
 	int al = ps*nc;
 	sA->m = m;
 	sA->n = n;

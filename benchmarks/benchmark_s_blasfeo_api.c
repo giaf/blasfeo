@@ -47,9 +47,6 @@
 #ifndef S_PS
 #define S_PS 1
 #endif
-#ifndef S_NC
-#define S_NC 1
-#endif
 
 
 
@@ -199,7 +196,6 @@ int main()
 	int i, j, rep, ll;
 
 	const int bss = S_PS;
-	const int ncs = S_NC;
 
 /*	int info = 0;*/
 
@@ -218,7 +214,7 @@ int main()
 		{
 
 		int n = nn[ll];
-		int nrep = nnrep[ll]/10;
+		int nrep = nnrep[ll];
 		nrep = nrep>1 ? nrep : 1;
 //		int n = ll+1;
 //		int nrep = nnrep[0];
@@ -356,13 +352,13 @@ int main()
 //				kernel_sgemm_nn_8x4_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 
 				// blasfeo routines
-//				blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+				blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_sgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_sgemm_tn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_sgemm_tt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_ssyrk_ln(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_ssyrk_ln_mn(n, n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-				blasfeo_spotrf_l(n, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_spotrf_l(n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_spotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_spotrf_u(n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_sgetr(n, n, &sA, 0, 0, &sB, 0, 0);
@@ -444,9 +440,9 @@ int main()
 //		float flop_operation = 0.5*16.0*2*n; // kernel 2x4
 
 		// blasfeo routines
-//		float flop_operation = 2.0*n*n*n; // gemm
+		float flop_operation = 2.0*n*n*n; // gemm
 //		float flop_operation = 1.0*n*n*n; // syrk trmm trsm
-		float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
+//		float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
 //		float flop_operation = 2.0/3.0*n*n*n; // getrf
 //		float flop_operation = 4.0/3.0*n*n*n; // geqrf
 //		float flop_operation = 2.0*n*n; // gemv symv

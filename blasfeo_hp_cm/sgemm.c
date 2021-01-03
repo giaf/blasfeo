@@ -60,39 +60,15 @@
 
 
 
-// TODO move to a header file to reuse across routines
-#define EL_SIZE 4 // single precision
-
-#if defined(TARGET_X64_INTEL_HASWELL)
-#define M_KERNEL 24 // max kernel: 24x4
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
-#define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4 kB = 256 kB
-#define LLC_CACHE_EL (6*1024*1024/EL_SIZE) // LLC cache size: 6 MB
-#define KC 256
-#define NC 144
-#define MC 3000
-
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-#define M_KERNEL 16 // max kernel: 16x4
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
-#define L2_CACHE_EL (256*1024/EL_SIZE) // L2 data cache size: 256 kB ; DTLB1 64*4 kB = 256 kB
-#define LLC_CACHE_EL (4*1024*1024/EL_SIZE) // LLC cache size: 4 MB
-#define KC 256
-#define NC 144
-#define MC 2000
-
-#elif defined(TARGET_ARMV7A_ARM_CORTEX_A15) | defined(TARGET_ARMV7A_ARM_CORTEX_A9) | defined(TARGET_ARMV7A_ARM_CORTEX_A7)
-#define M_KERNEL 8 // max kernel: 8x4
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-
-#else // assume generic target
-#define M_KERNEL 4 // max kernel: 4x4
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes // TODO 32-bytes for cortex A9
-#endif
+#define CACHE_LINE_EL S_CACHE_LINE_EL
+#define L1_CACHE_EL S_L1_CACHE_EL
+#define L2_CACHE_EL S_L2_CACHE_EL
+#define LLC_CACHE_EL S_LLC_CACHE_EL
+#define PS S_PS
+#define M_KERNEL S_M_KERNEL
+#define KC S_KC
+#define NC S_NC
+#define MC S_MC
 
 
 

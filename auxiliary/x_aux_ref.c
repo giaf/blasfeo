@@ -44,7 +44,7 @@ size_t REF_MEMSIZE_MAT(int m, int n)
 	size_t memsize = (m*n+tmp)*sizeof(REAL);
 #else // MF_PANELMAJ
 	const int bs = PS;
-	const int nc = NC;
+	const int nc = PLD;
 	const int al = bs*nc;
 	int pm = (m+bs-1)/bs*bs;
 	int cn = (n+nc-1)/nc*nc;
@@ -65,7 +65,7 @@ size_t REF_MEMSIZE_DIAG_MAT(int m, int n)
 	size_t size = tmp*sizeof(REAL);
 #else // MF_PANELMAJ
 	const int bs = PS;
-	const int nc = NC;
+	const int nc = PLD;
 	const int al = bs*nc;
 	int tmp = m<n ? (m+al-1)/al*al : (n+al-1)/al*al; // al(min(m,n)) // XXX max ???
 	size_t size = tmp*sizeof(REAL);
@@ -82,7 +82,7 @@ size_t REF_MEMSIZE_VEC(int m)
 	size_t size = m*sizeof(REAL);
 #else // MF_PANELMAJ
 	const int bs = PS;
-//	const int nc = NC;
+//	const int nc = PLD;
 //	const int al = bs*nc;
 	int pm = (m+bs-1)/bs*bs;
 	size_t size = pm*sizeof(REAL);
@@ -110,7 +110,7 @@ void REF_CREATE_MAT(int m, int n, struct MAT *sA, void *memory)
 	size_t memsize = (m*n+tmp)*sizeof(REAL);
 #else // MF_PANELMAJ
 	const int bs = PS; // 4
-	const int nc = NC;
+	const int nc = PLD;
 	const int al = bs*nc;
 	int pm = (m+bs-1)/bs*bs;
 	int cn = (n+nc-1)/nc*nc;
@@ -141,7 +141,7 @@ void REF_CREATE_VEC(int m, struct VEC *sa, void *memory)
 	sa->memsize = m*sizeof(REAL);
 #else // MF_PANELMAJ
 	const int bs = PS; // 4
-//	const int nc = NC;
+//	const int nc = PLD;
 //	const int al = bs*nc;
 	int pm = (m+bs-1)/bs*bs;
 	sa->pm = pm;

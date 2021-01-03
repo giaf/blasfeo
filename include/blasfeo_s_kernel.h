@@ -45,6 +45,7 @@ extern "C" {
 
 
 // utils
+void blasfeo_align_2MB(void *ptr, void **ptr_align);
 void blasfeo_align_4096_byte(void *ptr, void **ptr_align);
 void blasfeo_align_64_byte(void *ptr, void **ptr_align);
 

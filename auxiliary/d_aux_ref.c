@@ -60,7 +60,7 @@
 	#define XMATEL_A(X, Y) MATEL(sA, X, Y)
 	#define XMATEL_B(X, Y) MATEL(sB, X, Y)
 	#define PS D_PS
-	#define NC D_NC
+	#define PLD D_PLD
 #endif
 
 
