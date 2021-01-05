@@ -94,11 +94,15 @@
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
 #define D_KC 256
+#define D_NC 128 // TODO these are just dummy
+#define D_MC 3000 // TODO these are just dummy
 // single
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
 #define S_KC 256
+#define S_NC 128 // TODO these are just dummy
+#define S_MC 3000 // TODO these are just dummy
 
 #elif defined( TARGET_X64_AMD_BULLDOZER )
 // common
@@ -109,11 +113,16 @@
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
 #define D_KC 256
+#define D_NC 128 // TODO these are just dummy
+#define D_MC 3000 // TODO these are just dummy
 // single
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
 #define S_KC 256
+#define S_NC 128 // TODO these are just dummy
+#define S_MC 3000 // TODO these are just dummy
+
 
 #elif defined( TARGET_X86_AMD_JAGUAR )
 // common
@@ -124,11 +133,16 @@
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
 #define D_KC 256
+#define D_NC 128 // TODO these are just dummy
+#define D_MC 3000 // TODO these are just dummy
 // single
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
 #define S_KC 256
+#define S_NC 128 // TODO these are just dummy
+#define S_MC 3000 // TODO these are just dummy
+
 
 #elif defined( TARGET_X86_AMD_BARCELONA )
 // common
@@ -139,11 +153,16 @@
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
 #define D_KC 256
+#define D_NC 128 // TODO these are just dummy
+#define D_MC 3000 // TODO these are just dummy
 // single
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
 #define S_KC 256
+#define S_NC 128 // TODO these are just dummy
+#define S_MC 3000 // TODO these are just dummy
+
 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A76)
 // common
@@ -162,6 +181,9 @@
 #define S_PLD 4 //2
 #define S_M_KERNEL 8 // max kernel size
 #define S_KC 256
+#define S_NC 128 // TODO these are just dummy
+#define S_MC 3000 // TODO these are just dummy
+
 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A73)
 // common
@@ -180,6 +202,9 @@
 #define S_PLD 4 //2
 #define S_M_KERNEL 8 // max kernel size
 #define S_KC 256
+#define S_NC 128 // TODO these are just dummy
+#define S_MC 3000 // TODO these are just dummy
+
 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 // common
@@ -198,6 +223,9 @@
 #define S_PLD 4 //2
 #define S_M_KERNEL 8 // max kernel size
 #define S_KC 256
+#define S_NC 128 // TODO these are just dummy
+#define S_MC 3000 // TODO these are just dummy
+
 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A55)
 // common
@@ -216,6 +244,9 @@
 #define S_PLD 4 //2
 #define S_M_KERNEL 8 // max kernel size
 #define S_KC 256
+#define S_NC 128 // TODO these are just dummy
+#define S_MC 3000 // TODO these are just dummy
+
 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 // common
@@ -234,6 +265,9 @@
 #define S_PLD 4 //2
 #define S_M_KERNEL 8 // max kernel size
 #define S_KC 256
+#define S_NC 128 // TODO these are just dummy
+#define S_MC 3000 // TODO these are just dummy
+
 
 #elif defined( TARGET_ARMV7A_ARM_CORTEX_A15 )
 // common
@@ -244,11 +278,16 @@
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
 #define D_KC 256
+#define D_NC 128 // TODO these are just dummy
+#define D_MC 3000 // TODO these are just dummy
 // single
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
 #define S_KC 256
+#define S_NC 128 // TODO these are just dummy
+#define S_MC 3000 // TODO these are just dummy
+
 
 #elif defined( TARGET_ARMV7A_ARM_CORTEX_A7 )
 // common
@@ -259,11 +298,16 @@
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
 #define D_KC 256
+#define D_NC 128 // TODO these are just dummy
+#define D_MC 3000 // TODO these are just dummy
 // single
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
 #define S_KC 256
+#define S_NC 128 // TODO these are just dummy
+#define S_MC 3000 // TODO these are just dummy
+
 
 #elif defined( TARGET_ARMV7A_ARM_CORTEX_A9 )
 // common
@@ -274,11 +318,16 @@
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
 #define D_KC 256
+#define D_NC 128 // TODO these are just dummy
+#define D_MC 3000 // TODO these are just dummy
 // single
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
 #define S_KC 256
+#define S_NC 128 // TODO these are just dummy
+#define S_MC 3000 // TODO these are just dummy
+
 
 #elif defined( TARGET_GENERIC )
 // common
@@ -289,11 +338,17 @@
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
 #define D_KC 256
+#define D_NC 128 // TODO these are just dummy
+#define D_MC 3000 // TODO these are just dummy
+
 // single
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
 #define S_KC 256
+#define S_NC 128 // TODO these are just dummy
+#define S_MC 3000 // TODO these are just dummy
+
 
 #else
 #error "Unknown architecture"
