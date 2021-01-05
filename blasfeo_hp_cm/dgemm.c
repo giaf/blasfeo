@@ -36,7 +36,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-//#include <sys/mman.h>
+#include <sys/mman.h>
 
 //#include "../utils/page-info.h"
 //#include "../utils/page-info.c"
@@ -52,6 +52,13 @@
 #include <blasfeo_d_kernel.h>
 
 #include <blasfeo_timing.h>
+
+#include <blasfeo_memory.h>
+
+void *blas_memory_alloc(int);
+void blas_memory_free(void *);
+void *blas_memory_alloc_nolock(int);
+void blas_memory_free_nolock(void *);
 
 
 
@@ -1870,7 +1877,18 @@ nn_1:
 	tA_size = (tA_size + 4096 - 1) / 4096 * 4096;
 	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
 #if 1
-	mem = malloc(tA_size+tB_size+2*4096);
+	if(blasfeo_is_init()==0)
+		{
+		mem = malloc(tA_size+tB_size+2*4096);
+		}
+	else
+		{
+//		printf("\nbuffer\n");
+		mem = blasfeo_get_buffer();
+//		printf("\nmem %p\n", mem);
+		}
+//	mem = blas_memory_alloc(0);
+//	mem = blas_memory_alloc_nolock(0);
 	blasfeo_align_4096_byte(mem, (void **) &mem_align);
 #else
 	mem_size = tA_size+tB_size+4096+2*2*1024*1024;
@@ -2027,7 +2045,13 @@ if (thp_count.pages_available) {
 		}
 
 //	printf("\ntime: pack_A %e, pack_B %e, kernel %e, kernel2 %e, kernel3 %e\n", time_pack_A, time_pack_B, time_kernel, time_kernel2, time_kernel3); 
-	free(mem);
+	if(blasfeo_is_init()==0)
+		{
+//		printf("\nfree\n");
+		free(mem);
+		}
+//	blas_memory_free(mem);
+//	blas_memory_free_nolock(mem);
 
 	return;
 

@@ -3,9 +3,9 @@
 * This file is part of BLASFEO.                                                                   *
 *                                                                                                 *
 * BLASFEO -- BLAS For Embedded Optimization.                                                      *
-* Copyright (C) 2019 by Gianluca Frison.                                                          *
-* Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              *
+* Copyright (C) 2020 by Gianluca Frison.                                                          *
 * All rights reserved.                                                                            *
+*                                                                                                 *
 *                                                                                                 *
 * The 2-Clause BSD License                                                                        *
 *                                                                                                 *
@@ -33,20 +33,63 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include "blasfeo_processor_features.h"
-#include "blasfeo_target.h"
-#include "blasfeo_block_size.h"
-#include "blasfeo_stdlib.h"
-#include "blasfeo_common.h"
-#include "blasfeo_d_aux.h"
-#include "blasfeo_d_aux_ext_dep.h"
-#include "blasfeo_d_kernel.h"
-#include "blasfeo_d_blas.h"
-#include "blasfeo_s_aux.h"
-#include "blasfeo_s_aux_ext_dep.h"
-#include "blasfeo_s_kernel.h"
-#include "blasfeo_s_blas.h"
-#include "blasfeo_i_aux_ext_dep.h"
-#include "blasfeo_v_aux_ext_dep.h"
-#include "blasfeo_timing.h"
-#include "blasfeo_memory.h"
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#include <blasfeo_stdlib.h>
+#include <blasfeo_block_size.h>
+#include <blasfeo_d_aux.h>
+#include <blasfeo_s_aux.h>
+
+
+
+static int initialized = 0;
+
+static void *mem = NULL;
+
+
+
+int blasfeo_is_init()
+	{
+	return initialized;
+	}
+
+
+
+void blasfeo_init()
+	{
+	// compute max needed memory
+	int size_A_double = blasfeo_pm_memsize_dmat(D_PS, D_MC, D_KC); 
+	int size_B_double = blasfeo_pm_memsize_dmat(D_PS, D_NC, D_KC); 
+	int size_A_single = blasfeo_pm_memsize_smat(S_PS, S_MC, S_KC); 
+	int size_B_single = blasfeo_pm_memsize_smat(S_PS, S_NC, S_KC); 
+	size_A_double = (size_A_double + 4096 - 1) / 4096 * 4096;
+	size_B_double = (size_B_double + 4096 - 1) / 4096 * 4096;
+	size_A_single = (size_A_single + 4096 - 1) / 4096 * 4096;
+	size_B_single = (size_B_single + 4096 - 1) / 4096 * 4096;
+	int size_double = size_A_double + size_B_double;
+	int size_single = size_A_single + size_B_single;
+	int size = size_double>=size_single ? size_double : size_single;
+	// alignment
+	size += 2*4096;
+//	printf("\nsize %d\n", size);
+	// call malloc
+	mem = malloc(size);
+	initialized = 1;
+	}
+
+
+
+void blasfeo_quit()
+	{
+	free(mem);
+	initialized = 0;
+	}
+
+
+
+void *blasfeo_get_buffer()
+	{
+	return mem;
+	}

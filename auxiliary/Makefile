@@ -39,6 +39,7 @@ OBJS =
 
 OBJS += blasfeo_stdlib.o \
         blasfeo_processor_features.o \
+        memory.o \
 		d_aux_common.o \
 		s_aux_common.o
 

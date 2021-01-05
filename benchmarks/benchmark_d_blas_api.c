@@ -38,7 +38,8 @@
 
 
 
-#include "../include/blasfeo.h"
+#include <blasfeo.h>
+
 #include "benchmark_x_common.h"
 
 
@@ -81,6 +82,13 @@ int main()
 #if defined(EXTERNAL_BLAS_OPENBLAS)
 openblas_set_num_threads(1);
 #endif
+
+
+
+// initialize blasfeo (e.g. pre-allocate memory buffers) (optional, not thread safe)
+//blasfeo_init();
+
+
 
 #if !defined(BLAS_API)
 	printf("\nRecompile with BLAS_API=1 to run this benchmark!\n\n");
@@ -501,6 +509,13 @@ openblas_set_num_threads(1);
 
 	fclose(f);
 #endif
+
+
+
+// quit blasfeo (e.g. free pre-allocated memory buffers)
+//blasfeo_quit();
+
+
 
 	return 0;
 

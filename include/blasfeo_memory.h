@@ -3,9 +3,9 @@
 * This file is part of BLASFEO.                                                                   *
 *                                                                                                 *
 * BLASFEO -- BLAS For Embedded Optimization.                                                      *
-* Copyright (C) 2019 by Gianluca Frison.                                                          *
-* Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              *
+* Copyright (C) 2020 by Gianluca Frison.                                                          *
 * All rights reserved.                                                                            *
+*                                                                                                 *
 *                                                                                                 *
 * The 2-Clause BSD License                                                                        *
 *                                                                                                 *
@@ -33,20 +33,30 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include "blasfeo_processor_features.h"
-#include "blasfeo_target.h"
-#include "blasfeo_block_size.h"
-#include "blasfeo_stdlib.h"
-#include "blasfeo_common.h"
-#include "blasfeo_d_aux.h"
-#include "blasfeo_d_aux_ext_dep.h"
-#include "blasfeo_d_kernel.h"
-#include "blasfeo_d_blas.h"
-#include "blasfeo_s_aux.h"
-#include "blasfeo_s_aux_ext_dep.h"
-#include "blasfeo_s_kernel.h"
-#include "blasfeo_s_blas.h"
-#include "blasfeo_i_aux_ext_dep.h"
-#include "blasfeo_v_aux_ext_dep.h"
-#include "blasfeo_timing.h"
-#include "blasfeo_memory.h"
+
+#ifndef BLASFEO_MEMORY_H_
+#define BLASFEO_MEMORY_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
+//
+int blasfeo_is_init();
+//
+void blasfeo_init();
+//
+void blasfeo_quit();
+//
+void *blasfeo_get_buffer();
+
+
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // BLASFEO_MEMORY_H_

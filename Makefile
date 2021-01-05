@@ -43,6 +43,7 @@ AUX_COMMON_OBJS = \
 		auxiliary/blasfeo_stdlib.o \
 		auxiliary/d_aux_common.o \
 		auxiliary/s_aux_common.o \
+		auxiliary/memory.o \
 
 ### AUX EXT DEP ###
 AUX_EXT_DEP_OBJS = \

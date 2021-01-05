@@ -443,6 +443,7 @@ endif()
 file(GLOB AUX_COMMON_SRC
 	${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_processor_features.c
 	${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
+	${PROJECT_SOURCE_DIR}/auxiliary/memory.c
 	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_common.c
 	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_common.c
 	)
