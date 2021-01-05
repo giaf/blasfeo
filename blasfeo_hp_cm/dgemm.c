@@ -36,7 +36,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <sys/mman.h>
+//#if defined(OS_LINUX)
+//#include <sys/mman.h>
+//#endif
 
 //#include "../utils/page-info.h"
 //#include "../utils/page-info.c"
@@ -1890,6 +1892,7 @@ nn_1:
 //	mem = blas_memory_alloc(0);
 //	mem = blas_memory_alloc_nolock(0);
 	blasfeo_align_4096_byte(mem, (void **) &mem_align);
+//	error = madvise( mem_align, tA_size+tB_size+4096, MADV_HUGEPAGE );
 #else
 	mem_size = tA_size+tB_size+4096+2*2*1024*1024;
 	mem_size = (mem_size + 2*1024*1024 - 1) / (2*1024*1024) * (2*1024*1024);
