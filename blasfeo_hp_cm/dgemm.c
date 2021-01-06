@@ -1887,7 +1887,6 @@ nn_1:
 		{
 //		printf("\nbuffer\n");
 		mem = blasfeo_get_buffer();
-//		printf("\nmem %p\n", mem);
 		}
 //	mem = blas_memory_alloc(0);
 //	mem = blas_memory_alloc_nolock(0);
@@ -2050,7 +2049,6 @@ if (thp_count.pages_available) {
 //	printf("\ntime: pack_A %e, pack_B %e, kernel %e, kernel2 %e, kernel3 %e\n", time_pack_A, time_pack_B, time_kernel, time_kernel2, time_kernel3); 
 	if(blasfeo_is_init()==0)
 		{
-//		printf("\nfree\n");
 		free(mem);
 		}
 //	blas_memory_free(mem);

@@ -44,6 +44,8 @@
 #include <blasfeo_s_aux.h>
 #include <blasfeo_s_kernel.h>
 
+#include <blasfeo_memory.h>
+
 
 
 #if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
@@ -566,7 +568,7 @@ nn_n0_return:
 nn_1:
 
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) //| defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
 	// cache blocking alg
 
@@ -589,7 +591,15 @@ nn_1:
 	tA_size = (tA_size + 4096 - 1) / 4096 * 4096;
 	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
 #if 1
-	mem = malloc(tA_size+tB_size+2*4096);
+	if(blasfeo_is_init()==0)
+		{
+		mem = malloc(tA_size+tB_size+2*4096);
+		}
+	else
+		{
+//		printf("\nbuffer\n");
+		mem = blasfeo_get_buffer();
+		}
 #else
 //	error = posix_memalign( &mem, 4*1024, tA_size+tB_size+2*4096 );
 	error = posix_memalign( &mem, 2*1024*1024, tA_size+tB_size+2*4096 );
@@ -738,7 +748,10 @@ nn_1:
 		}
 
 //	printf("\ntime: pack_A %e, pack_B %e, kernel %e, kernel2 %e, kernel3 %e\n", time_pack_A, time_pack_B, time_kernel, time_kernel2, time_kernel3); 
-	free(mem);
+	if(blasfeo_is_init()==0)
+		{
+		free(mem);
+		}
 
 	return;
 

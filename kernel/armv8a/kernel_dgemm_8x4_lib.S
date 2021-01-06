@@ -19865,7 +19865,7 @@
 
 	mov		x8, x6 // C
 	mov		w9, w7 // ldc
-	lsl		w9, w9, #3 // 8*sdc
+	lsl		w9, w9, #3 // 8*ldc
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH_8X4_LIB

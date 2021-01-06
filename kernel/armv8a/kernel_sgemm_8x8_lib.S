@@ -256,6 +256,25 @@
 
 
 
+	// prefetch C
+//	mov		x8, x6 // beta
+	ld1		{v29.4s}, [x6]
+	fcmpe	s29, #0.0
+	beq		100f
+
+	mov		x8, x7 // C
+	ldr		w9, [sp, #(STACKSIZE + 0)] // ldc
+	lsl		w9, w9, #2 // 4*ldc
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_8X8_LIB
+#else
+	bl inner_prefetch_8x8_lib
+#endif
+
+100:
+
+
 	// call inner kernel gemm nt
 	mov		w8, w0 // kmax
 	mov		x9, x2 // A
@@ -274,7 +293,7 @@
 
 
 	// prefetch
-	ldr		x8, [sp, #(STACKSIZE + 8)] // ldd
+	ldr		x8, [sp, #(STACKSIZE + 8)] // D
 	ldr		w9, [sp, #(STACKSIZE + 16)] // ldd
 	lsl		w9, w9, #2 // 4*ldd
 

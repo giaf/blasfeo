@@ -180,9 +180,9 @@
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 8 // max kernel size
-#define S_KC 256
-#define S_NC 128 // TODO these are just dummy
-#define S_MC 3000 // TODO these are just dummy
+#define S_KC 512
+#define S_NC 256
+#define S_MC 6000
 
 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A73)
