@@ -50,6 +50,7 @@
 #include <blasfeo_target.h>
 #include <blasfeo_block_size.h>
 #include <blasfeo_common.h>
+#include <blasfeo_stdlib.h>
 #include <blasfeo_d_aux.h>
 #include <blasfeo_d_kernel.h>
 
@@ -1881,7 +1882,7 @@ nn_1:
 #if 1
 	if(blasfeo_is_init()==0)
 		{
-		mem = malloc(tA_size+tB_size+2*4096);
+		blasfeo_malloc(&mem, tA_size+tB_size+2*4096);
 		}
 	else
 		{
@@ -2049,7 +2050,7 @@ if (thp_count.pages_available) {
 //	printf("\ntime: pack_A %e, pack_B %e, kernel %e, kernel2 %e, kernel3 %e\n", time_pack_A, time_pack_B, time_kernel, time_kernel2, time_kernel3); 
 	if(blasfeo_is_init()==0)
 		{
-		free(mem);
+		blasfeo_free(mem);
 		}
 //	blas_memory_free(mem);
 //	blas_memory_free_nolock(mem);
@@ -2881,7 +2882,15 @@ nt_1:
 	tB_size = blasfeo_pm_memsize_dmat(ps, nc0, kc0);
 	tA_size = (tA_size + 4096 - 1) / 4096 * 4096;
 	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
-	mem = malloc(tA_size+tB_size+2*4096);
+	if(blasfeo_is_init()==0)
+		{
+		blasfeo_malloc(&mem, tA_size+tB_size+2*4096);
+		}
+	else
+		{
+//		printf("\nbuffer\n");
+		mem = blasfeo_get_buffer();
+		}
 	blasfeo_align_4096_byte(mem, (void **) &mem_align);
 
 //	blasfeo_pm_create_dmat(ps, mc, kc, &tA, (void *) mem_align);
@@ -2967,7 +2976,10 @@ nt_1:
 		
 		}
 
-	free(mem);
+	if(blasfeo_is_init()==0)
+		{
+		blasfeo_free(mem);
+		}
 
 	return;
 
@@ -3462,7 +3474,15 @@ tn_1:
 	tB_size = blasfeo_pm_memsize_dmat(ps, nc0, kc0);
 	tA_size = (tA_size + 4096 - 1) / 4096 * 4096;
 	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
-	mem = malloc(tA_size+tB_size+2*4096);
+	if(blasfeo_is_init()==0)
+		{
+		blasfeo_malloc(&mem, tA_size+tB_size+2*4096);
+		}
+	else
+		{
+//		printf("\nbuffer\n");
+		mem = blasfeo_get_buffer();
+		}
 	blasfeo_align_4096_byte(mem, (void **) &mem_align);
 
 //	blasfeo_pm_create_dmat(ps, mc, kc, &tA, (void *) mem_align);
@@ -3558,7 +3578,10 @@ tn_1:
 
 		}
 
-	free(mem);
+	if(blasfeo_is_init()==0)
+		{
+		blasfeo_free(mem);
+		}
 
 	return;
 
@@ -3991,7 +4014,15 @@ tt_1:
 	tB_size = blasfeo_pm_memsize_dmat(ps, nc0, kc0);
 	tA_size = (tA_size + 4096 - 1) / 4096 * 4096;
 	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
-	mem = malloc(tA_size+tB_size+2*4096);
+	if(blasfeo_is_init()==0)
+		{
+		blasfeo_malloc(&mem, tA_size+tB_size+2*4096);
+		}
+	else
+		{
+//		printf("\nbuffer\n");
+		mem = blasfeo_get_buffer();
+		}
 	blasfeo_align_4096_byte(mem, (void **) &mem_align);
 
 //	blasfeo_pm_create_dmat(ps, mc, kc, &tA, (void *) mem_align);
@@ -4085,7 +4116,10 @@ tt_1:
 
 		}
 
-	free(mem);
+	if(blasfeo_is_init()==0)
+		{
+		blasfeo_free(mem);
+		}
 
 	return;
 
