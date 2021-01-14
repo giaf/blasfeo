@@ -1432,11 +1432,11 @@ nt_1:
 #else
 				for(iii=0; iii<kleft-3; iii+=4)
 					{
-					kernel_spack_tn_4_lib4(nleft, B+jj+(ll+iii)*ldb, ldb, pB+iii*ps, sdb);
+					kernel_spack_tt_4_lib4(nleft, B+jj+(ll+iii)*ldb, ldb, pB+iii*ps, sdb);
 					}
 				if(iii<kleft)
 					{
-					kernel_spack_tn_4_vs_lib4(nleft, B+jj+(ll+iii)*ldb, ldb, pB+iii*ps, sdb, kleft-iii);
+					kernel_spack_tt_4_vs_lib4(nleft, B+jj+(ll+iii)*ldb, ldb, pB+iii*ps, sdb, kleft-iii);
 					}
 #endif
 #endif
@@ -2813,11 +2813,11 @@ tt_1:
 #else
 				for(iii=0; iii<kleft-3; iii+=4)
 					{
-					kernel_spack_tn_4_lib4(nleft, B+jj+(ll+iii)*ldb, ldb, pB+iii*ps, sdb);
+					kernel_spack_tt_4_lib4(nleft, B+jj+(ll+iii)*ldb, ldb, pB+iii*ps, sdb);
 					}
 				if(iii<kleft)
 					{
-					kernel_spack_tn_4_vs_lib4(nleft, B+jj+(ll+iii)*ldb, ldb, pB+iii*ps, sdb, kleft-iii);
+					kernel_spack_tt_4_vs_lib4(nleft, B+jj+(ll+iii)*ldb, ldb, pB+iii*ps, sdb, kleft-iii);
 					}
 #endif
 #endif
