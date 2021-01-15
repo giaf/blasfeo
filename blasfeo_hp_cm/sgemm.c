@@ -297,7 +297,14 @@ static void blasfeo_hp_sgemm_nt_m0(int m, int n, int k, float alpha, float *A, i
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_spack_nn_8_lib8(k, A+ii, lda, pU);
-		for(jj=0; jj<n-3; jj+=4)
+		jj = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
+		for(; jj<n-7; jj+=8)
+			{
+			kernel_sgemm_nt_8x8_lib8ccc(k, &alpha, pU, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+#endif
+		for(; jj<n-3; jj+=4)
 			{
 			kernel_sgemm_nt_8x4_lib8ccc(k, &alpha, pU, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 			}
@@ -365,7 +372,14 @@ static void blasfeo_hp_sgemm_nn_m0(int m, int n, int k, float alpha, float *A, i
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_spack_nn_8_lib8(k, A+ii, lda, pU);
-		for(jj=0; jj<n-3; jj+=4)
+		jj = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
+		for(; jj<n-7; jj+=8)
+			{
+			kernel_sgemm_nn_8x8_lib8ccc(k, &alpha, pU, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+#endif
+		for(; jj<n-3; jj+=4)
 			{
 			kernel_sgemm_nn_8x4_lib8ccc(k, &alpha, pU, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 			}
