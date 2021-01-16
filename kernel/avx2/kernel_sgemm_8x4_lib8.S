@@ -2282,6 +2282,48 @@ NAME:
 
 // common inner routine with file scope
 //
+// transpose
+//
+// input arguments:
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_TRAN_8X4_LIB8
+#else
+	FUN_START(inner_tran_8x4_lib8)
+#endif
+	
+	// transpose
+	vunpcklps	%ymm1, %ymm0, %ymm5
+	vunpckhps	%ymm1, %ymm0, %ymm4
+	vunpcklps	%ymm3, %ymm2, %ymm7
+	vunpckhps	%ymm3, %ymm2, %ymm6
+
+	vunpcklpd	%ymm7, %ymm5, %ymm0
+	vunpckhpd	%ymm7, %ymm5, %ymm1
+	vunpcklpd	%ymm6, %ymm4, %ymm2
+	vunpckhpd	%ymm6, %ymm4, %ymm3
+
+	vextractf128 $0x1, %ymm0, %xmm4
+	vextractf128 $0x1, %ymm1, %xmm5
+	vextractf128 $0x1, %ymm2, %xmm6
+	vextractf128 $0x1, %ymm3, %xmm7
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_tran_8x4_lib8)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // scale for generic alpha and beta
 //
 // input arguments:
