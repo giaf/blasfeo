@@ -88,10 +88,9 @@
 	vmovaps			32(%r11), %ymm14 // A
 	vbroadcastss	4(%r12), %ymm12 // B
 	vfmadd231ps		%ymm13, %ymm12, %ymm1
-//	prefetcht0	128(%r12) // software prefetch
+	prefetcht0		0(%r12, %r13, 8)
 	vbroadcastss	8(%r12), %ymm12 // B
 	vfmadd231ps		%ymm13, %ymm12, %ymm2
-//	prefetcht0	128+64(%r12) // software prefetch
 	vbroadcastss	12(%r12), %ymm12 // B
 	vfmadd231ps		%ymm13, %ymm12, %ymm3
 	addq	%r13, %r12
@@ -104,6 +103,7 @@
 	vfmadd231ps		%ymm14, %ymm12, %ymm5
 	subl	$4, %r10d
 	vbroadcastss	8(%r12), %ymm12 // B
+	prefetcht0		0(%r12, %r13, 8)
 	vfmadd231ps		%ymm14, %ymm12, %ymm6
 	addq	$128, %r11
 	vbroadcastss	12(%r12), %ymm12 // B
@@ -116,6 +116,7 @@
 	vmovaps			-32(%r11), %ymm14 // A
 	vbroadcastss	4(%r12), %ymm12 // B
 	vfmadd231ps		%ymm13, %ymm12, %ymm1
+	prefetcht0		0(%r12, %r13, 8)
 	vbroadcastss	8(%r12), %ymm12 // B
 	vfmadd231ps		%ymm13, %ymm12, %ymm2
 	vbroadcastss	12(%r12), %ymm12 // B
@@ -128,6 +129,7 @@
 	vmovaps			0(%r11), %ymm13 // A
 	vbroadcastss	4(%r12), %ymm12 // B
 	vfmadd231ps		%ymm14, %ymm12, %ymm5
+	prefetcht0		0(%r12, %r13, 8)
 	vbroadcastss	8(%r12), %ymm12 // B
 	vfmadd231ps		%ymm14, %ymm12, %ymm6
 	vbroadcastss	12(%r12), %ymm12 // B
