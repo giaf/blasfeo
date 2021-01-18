@@ -1051,6 +1051,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	prefetcht0		0(%r13, %r14, 8)
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
+	prefetcht0		31(%r13, %r14, 8)
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	vbroadcastsd	16(%r13), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
@@ -1074,6 +1075,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	prefetcht0		0(%r13, %r14, 8)
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
+	prefetcht0		31(%r13, %r14, 8)
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	vbroadcastsd	16(%r13), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
@@ -1097,6 +1099,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	prefetcht0		0(%r13, %r14, 8)
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
+	prefetcht0		31(%r13, %r14, 8)
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	vbroadcastsd	16(%r13), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
@@ -1121,6 +1124,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	prefetcht0		0(%r13, %r14, 8)
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
+	prefetcht0		31(%r13, %r14, 8)
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	vbroadcastsd	16(%r13), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
