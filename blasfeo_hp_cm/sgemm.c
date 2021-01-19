@@ -718,7 +718,7 @@ tn_m0_left_24:
 	goto tn_m0_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 tn_m0_left_16:
 	kernel_spack_tn_8_lib8(k, A+(ii+0)*lda, lda, pU);
 	kernel_spack_tn_8_vs_lib8(k, A+(ii+8)*lda, lda, pU+8*sdu, m-ii-8);
@@ -880,7 +880,7 @@ tt_m0_left_24:
 	goto tt_m0_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 tt_m0_left_16:
 	kernel_spack_tn_8_lib8(k, A+(ii+0)*lda, lda, pU);
 	kernel_spack_tn_8_vs_lib8(k, A+(ii+8)*lda, lda, pU+8*sdu, m-ii-8);
