@@ -414,7 +414,14 @@ nt_m0_left_16:
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 nt_m0_left_8:
 	kernel_spack_nn_8_vs_lib8(k, A+ii, lda, pU, m-ii);
-	for(jj=0; jj<n; jj+=4)
+	jj = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; jj<n-4; jj+=8)
+		{
+		kernel_sgemm_nt_8x8_vs_lib8ccc(k, &alpha, pU, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+#endif
+	for(; jj<n; jj+=4)
 		{
 		kernel_sgemm_nt_8x4_vs_lib8ccc(k, &alpha, pU, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 		}
@@ -563,7 +570,14 @@ nn_m0_left_16:
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 nn_m0_left_8:
 	kernel_spack_nn_8_vs_lib8(k, A+ii, lda, pU, m-ii);
-	for(jj=0; jj<n; jj+=4)
+	jj = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; jj<n-4; jj+=8)
+		{
+		kernel_sgemm_nn_8x8_vs_lib8ccc(k, &alpha, pU, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+#endif
+	for(; jj<n; jj+=4)
 		{
 		kernel_sgemm_nn_8x4_vs_lib8ccc(k, &alpha, pU, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 		}

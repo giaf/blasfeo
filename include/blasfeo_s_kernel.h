@@ -569,7 +569,9 @@ void kernel_sgemm_nt_16x4_lib8ccc(int kmax, float *alpha, float *A, int lda, flo
 void kernel_sgemm_nt_16x4_vs_lib8ccc(int kmax, float *alpha, float *A, int lda, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
 // 8x8
 void kernel_sgemm_nn_8x8_lib8ccc(int kmax, float *alpha, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd);
+void kernel_sgemm_nn_8x8_vs_lib8ccc(int kmax, float *alpha, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
 void kernel_sgemm_nt_8x8_lib8ccc(int kmax, float *alpha, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd);
+void kernel_sgemm_nt_8x8_vs_lib8ccc(int kmax, float *alpha, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
 // 8x4
 void kernel_sgemm_nn_8x4_lib8ccc(int kmax, float *alpha, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd);
 void kernel_sgemm_nn_8x4_vs_lib8ccc(int kmax, float *alpha, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
