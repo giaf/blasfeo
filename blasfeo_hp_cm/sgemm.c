@@ -2584,7 +2584,8 @@ void blasfeo_hp_sgemm_tn(int m, int n, int k, float alpha, struct blasfeo_smat *
 		else
 			{
 //			printf("\nalg n0\n");
-			goto tn_n0; // tall matrix: pack B
+//			goto tn_n0; // tall matrix: pack B
+			goto tn_m0; // tall matrix: pack B
 			}
 		}
 //	printf("\nalg 1\n");
