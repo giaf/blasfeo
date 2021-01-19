@@ -58,10 +58,10 @@
 
 #include <blasfeo_memory.h>
 
-void *blas_memory_alloc(int);
-void blas_memory_free(void *);
-void *blas_memory_alloc_nolock(int);
-void blas_memory_free_nolock(void *);
+//void *blas_memory_alloc(int);
+//void blas_memory_free(void *);
+//void *blas_memory_alloc_nolock(int);
+//void blas_memory_free_nolock(void *);
 
 
 
@@ -1762,7 +1762,7 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #endif
 //	printf("\nalg 1\n");
 	goto nn_1; // big matrix: pack A and B
-	
+
 	// never to get here
 	return;
 
@@ -2785,6 +2785,9 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #endif
 //	printf("\nalg 1\n");
 	goto nt_1; // big matrix: pack A and B
+
+	// never to get here
+	return;
 
 
 
