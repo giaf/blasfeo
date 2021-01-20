@@ -869,6 +869,7 @@ void kernel_sgemm_nt_4x4_lib4ccc(int kmax, float *alpha, float *A, float *B, int
 
 
 //#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+#if ! (defined(TARGET_ARMV8A_ARM_CORTEX_A57)  | defined(TARGET_ARMV8A_ARM_CORTEX_A53) )
 void kernel_sgemm_nt_4x4_vs_lib4ccc(int kmax, float *alpha, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1)
 	{
 
@@ -877,7 +878,7 @@ void kernel_sgemm_nt_4x4_vs_lib4ccc(int kmax, float *alpha, float *A, float *B, 
 	return;
 
 	}
-//#endif
+#endif
 
 
 
@@ -896,6 +897,7 @@ void kernel_sgemm_nt_4x4_libc4cc(int kmax, float *alpha, float *A, int lda, floa
 
 
 //#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+#if ! (defined(TARGET_ARMV8A_ARM_CORTEX_A57)  | defined(TARGET_ARMV8A_ARM_CORTEX_A53) )
 void kernel_sgemm_nt_4x4_vs_libc4cc(int kmax, float *alpha, float *A, int lda, float *B, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1)
 	{
 
@@ -904,7 +906,7 @@ void kernel_sgemm_nt_4x4_vs_libc4cc(int kmax, float *alpha, float *A, int lda, f
 	return;
 
 	}
-//#endif
+#endif
 
 
 
@@ -1913,6 +1915,7 @@ void kernel_sgemm_nn_4x4_lib4ccc(int kmax, float *alpha, float *A, float *B, int
 
 
 //#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+#if ! (defined(TARGET_ARMV8A_ARM_CORTEX_A57)  | defined(TARGET_ARMV8A_ARM_CORTEX_A53) )
 void kernel_sgemm_nn_4x4_vs_lib4ccc(int kmax, float *alpha, float *A, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1)
 	{
 
@@ -1921,7 +1924,7 @@ void kernel_sgemm_nn_4x4_vs_lib4ccc(int kmax, float *alpha, float *A, float *B, 
 	return;
 
 	}
-//#endif
+#endif
 
 
 //#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
@@ -2163,6 +2166,7 @@ void kernel_sgemm_tt_4x4_libc4cc(int kmax, float *alpha, float *A, int lda, floa
 
 
 //#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9)
+#if ! (defined(TARGET_ARMV8A_ARM_CORTEX_A57)  | defined(TARGET_ARMV8A_ARM_CORTEX_A53) )
 void kernel_sgemm_tt_4x4_vs_libc4cc(int kmax, float *alpha, float *A, int lda, float *B, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1)
 	{
 
@@ -2291,7 +2295,7 @@ void kernel_sgemm_tt_4x4_vs_libc4cc(int kmax, float *alpha, float *A, int lda, f
 	return;
 
 	}
-//#endif
+#endif
 
 
 
