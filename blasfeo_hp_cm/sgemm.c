@@ -689,7 +689,7 @@ static void blasfeo_hp_sgemm_tn_m0(int m, int n, int k, float alpha, float *A, i
 #else
 	for(; ii<m-3; ii+=4)
 		{
-		kernel_spack_tn_4_lib4(k, A+ii, lda, pU);
+		kernel_spack_tn_4_lib4(k, A+ii*lda, lda, pU);
 		for(jj=0; jj<n-3; jj+=4)
 			{
 			kernel_sgemm_nn_4x4_lib4ccc(k, &alpha, pU, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
@@ -747,7 +747,7 @@ tn_m0_left_8:
 #endif
 
 tn_m0_left_4:
-	kernel_spack_tn_4_vs_lib4(k, A+ii, lda, pU, m-ii);
+	kernel_spack_tn_4_vs_lib4(k, A+ii*lda, lda, pU, m-ii);
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_sgemm_nn_4x4_vs_lib4ccc(k, &alpha, pU, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
