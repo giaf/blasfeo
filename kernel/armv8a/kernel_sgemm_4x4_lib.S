@@ -1749,7 +1749,7 @@
 #else
 	ret
 
-	FUN_END(inner_kernel_gemm_add_nn_4x4_lib4)
+	FUN_END(inner_kernel_gemm_add_nn_4x4_lib4c)
 #endif
 
 
@@ -2082,7 +2082,7 @@
 #else
 	ret
 
-	FUN_END(inner_kernel_gemm_add_nn_4x3_lib4)
+	FUN_END(inner_kernel_gemm_add_nn_4x3_lib4c)
 #endif
 
 
@@ -2415,7 +2415,7 @@
 #else
 	ret
 
-	FUN_END(inner_kernel_gemm_add_nn_4x2_lib4)
+	FUN_END(inner_kernel_gemm_add_nn_4x2_lib4c)
 #endif
 
 
@@ -2748,7 +2748,7 @@
 #else
 	ret
 
-	FUN_END(inner_kernel_gemm_add_nn_4x1_lib4)
+	FUN_END(inner_kernel_gemm_add_nn_4x1_lib4c)
 #endif
 
 
