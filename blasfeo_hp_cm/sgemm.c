@@ -563,7 +563,12 @@ static void blasfeo_hp_sgemm_nt_m0(int m, int n, int k, float alpha, float *A, i
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_spack_nn_8_lib4(k, A+ii, lda, pU, sdu);
-		for(jj=0; jj<n-3; jj+=4)
+		jj = 0;
+		for(; jj<n-7; jj+=8)
+			{
+			kernel_sgemm_nt_8x8_lib4ccc(k, &alpha, pU, sdu, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+		for(; jj<n-3; jj+=4)
 			{
 			kernel_sgemm_nt_8x4_lib4ccc(k, &alpha, pU, sdu, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 			}
@@ -951,7 +956,12 @@ static void blasfeo_hp_sgemm_tt_m0(int m, int n, int k, float alpha, float *A, i
 		{
 		kernel_spack_tn_4_lib4(k, A+(ii+0)*lda, lda, pU);
 		kernel_spack_tn_4_lib4(k, A+(ii+4)*lda, lda, pU+4*sdu);
-		for(jj=0; jj<n-3; jj+=4)
+		jj = 0;
+		for(; jj<n-7; jj+=8)
+			{
+			kernel_sgemm_nt_8x8_lib4ccc(k, &alpha, pU, sdu, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+		for(; jj<n-3; jj+=4)
 			{
 			kernel_sgemm_nt_8x4_lib4ccc(k, &alpha, pU, sdu, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 			}
@@ -1230,7 +1240,7 @@ void blasfeo_hp_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if( m<=2*m_kernel | n<=2*m_kernel | m_a*k + k_b*n <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if( (m<=2*m_kernel | n<=2*m_kernel) & k<160 )
+	if( (m<=2*m_kernel | n<=2*m_kernel) & (k<160) )
 #else
 	if( m<=1*m_kernel | n<=1*m_kernel | k<12 )
 #endif
@@ -1949,7 +1959,7 @@ void blasfeo_hp_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *
 
 // TODO remove when other kernels are implemented !!!!!
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	goto nt_1; // pack A and B
+//	goto nt_1; // pack A and B
 #endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) 
@@ -2004,7 +2014,7 @@ void blasfeo_hp_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if( m<=2*m_kernel | n<=2*m_kernel | m_a*k + n_b*k <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if( (m<=2*m_kernel | n<=2*m_kernel) & k<160 )
+	if( (m<=2*m_kernel | n<=2*m_kernel) & (k<160) )
 #else
 	if( m<=1*m_kernel | n<=1*m_kernel | k<12 )
 #endif
@@ -2703,7 +2713,7 @@ void blasfeo_hp_sgemm_tn(int m, int n, int k, float alpha, struct blasfeo_smat *
 #elif defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if( m<=2*m_kernel | n<=2*m_kernel | k_a*m + k_b*n <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if( (m<=2*m_kernel | n<=2*m_kernel) & k<160 )
+	if( (m<=2*m_kernel | n<=2*m_kernel) & (k<160) )
 #else
 	if( m<=1*m_kernel | n<=1*m_kernel | k<12 )
 #endif
@@ -3398,7 +3408,7 @@ void blasfeo_hp_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *
 
 // TODO remove when other kernels are implemented !!!!!
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	goto tt_1; // pack A and B
+//	goto tt_1; // pack A and B
 #endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
@@ -3452,7 +3462,7 @@ void blasfeo_hp_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if( m<=2*m_kernel | n<=2*m_kernel | k_a*m + n_b*k <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if( (m<=2*m_kernel | n<=2*m_kernel) & k<160 )
+	if( (m<=2*m_kernel | n<=2*m_kernel) & (k<160) )
 #else
 	if( m<=1*m_kernel | n<=1*m_kernel | k<12 )
 #endif

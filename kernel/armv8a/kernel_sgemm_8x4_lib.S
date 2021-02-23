@@ -4455,12 +4455,20 @@
 #endif
 
 	prfm	PLDL1KEEP, [x8, #0]
+	prfm	PLDL1KEEP, [x8, #56]
 	add		x8, x8, x9
+
 	prfm	PLDL1KEEP, [x8, #0]
+	prfm	PLDL1KEEP, [x8, #56]
 	add		x8, x8, x9
+
 	prfm	PLDL1KEEP, [x8, #0]
+	prfm	PLDL1KEEP, [x8, #56]
 	add		x8, x8, x9
+
 	prfm	PLDL1KEEP, [x8, #0]
+	prfm	PLDL1KEEP, [x8, #56]
+//	add		x8, x8, x9
 
 #if MACRO_LEVEL>=1
 	.endm

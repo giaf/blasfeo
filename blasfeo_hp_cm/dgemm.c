@@ -1743,7 +1743,7 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if( m<=2*m_kernel | n<=2*m_kernel | m_a*k + k_b*n <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if( (m<=2*m_kernel | n<=2*m_kernel) & k<160 )
+	if( (m<=2*m_kernel | n<=2*m_kernel) & (k<160) )
 #else
 	if( m<=1*m_kernel | n<=1*m_kernel | k<12 )
 #endif
@@ -2766,7 +2766,7 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if( m<=2*m_kernel | n<=2*m_kernel | m_a*k + n_b*k <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if( (m<=2*m_kernel | n<=2*m_kernel) & k<160 )
+	if( (m<=2*m_kernel | n<=2*m_kernel) & (k<160) )
 #else
 	if( m<=1*m_kernel | n<=1*m_kernel | k<12 )
 #endif
@@ -3360,7 +3360,7 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #elif defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if( m<=2*m_kernel | n<=2*m_kernel | k_a*m + k_b*n <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if( (m<=2*m_kernel | n<=2*m_kernel) & k<160 )
+	if( (m<=2*m_kernel | n<=2*m_kernel) & (k<160) )
 #else
 	if( m<=1*m_kernel | n<=1*m_kernel | k<12 )
 #endif
@@ -3903,7 +3903,7 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if( m<=2*m_kernel | n<=2*m_kernel | k_a*m + n_b*k <= llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if( (m<=2*m_kernel | n<=2*m_kernel) & k<160 )
+	if( (m<=2*m_kernel | n<=2*m_kernel) & (k<160) )
 #else
 	if( m<=1*m_kernel | n<=1*m_kernel | k<12 )
 #endif
