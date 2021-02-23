@@ -18,13 +18,13 @@
     "EXTERNAL_BLAS": "SYSTEM"
   },
   "precisions": [
-    "double"
+    "single"
   ],
   "apis": [
     "blasfeo"
   ],
   "K_MAX_STACK":[
-    1000
+    500
   ],
   "PACKING_ALG":[
     "AUTO"
@@ -39,7 +39,7 @@
     "HIGH_PERFORMANCE"
   ],
   "routines": [
-    "gemm_nn"
+    "gemm_nt"
   ]
 }
 
