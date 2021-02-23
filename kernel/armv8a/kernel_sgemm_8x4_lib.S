@@ -882,6 +882,7 @@
 	ble		2f // return
 
 	sub		x9, x9, #32
+	sub		x19, x19, #32
 //	sub		x11, x11, #32
 //	sub		x11, x11, x15
 
@@ -1327,6 +1328,7 @@
 	ble		2f // return
 
 	sub		x9, x9, #32
+	sub		x19, x19, #32
 //	sub		x11, x11, #32
 //	sub		x11, x11, x15
 
@@ -1772,6 +1774,7 @@
 	ble		2f // return
 
 	sub		x9, x9, #32
+	sub		x19, x19, #32
 //	sub		x11, x11, #32
 //	sub		x11, x11, x15
 
