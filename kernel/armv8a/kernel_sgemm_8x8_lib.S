@@ -370,7 +370,7 @@
 
 	add		x19, x9, x10 // A1
 //	add		x14, x11, x12 // B1
-	add		x20, x11, #56 // B1
+	add		x20, x11, #60 // B1
 
 	add		x13, x12, x12 // 2
 	add		x14, x13, x12 // 3
