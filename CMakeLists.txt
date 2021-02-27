@@ -1165,3 +1165,22 @@ endif()
 if(BLASFEO_EXAMPLES MATCHES ON)
 	add_subdirectory(examples)
 endif()
+
+# Cmake package target
+if(EXISTS "/etc/debian_version")
+	set(DEBIAN TRUE CACHE BOOL "Enable debian specific options: .deb package generation")
+endif()
+
+if(DEBIAN)
+	set( CPACK_SOURCE_GENERATOR "DEB" )
+	set( CPACK_GENERATOR "DEB" )
+endif(DEBIAN)
+
+set( CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-0.1.2-${CMAKE_HOST_SYSTEM_NAME}" )
+set( CPACK_PACKAGE_NAME "blasfeo-dev")
+set( CPACK_PACKAGE_CONTACT "gianluca.frison@imtek.uni-freiburg.de")
+set( CPACK_PACKAGE_VERSION_MAJOR 0 )
+set( CPACK_PACKAGE_VERSION_MINOR 1 )
+set( CPACK_PACKAGE_VERSION_PATCH 2 )
+
+include( CPack )
