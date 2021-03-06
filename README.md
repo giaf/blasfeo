@@ -15,7 +15,7 @@ The API is non-destructive, and compared to the BLAS API it has an additional ma
 | ----------------------------- | -------------------------------------------------- |
 | BLASFEO <br> (small matrices) | dgemm, dsyrk, dtrmm, dtrsm, dpotrf, dgetrf, dgeqrf, dgelqf, <br> sgemm, ssyrk, strmm, strsm, spotrf |
 | BLAS    <br> (small matrices) | dgemm, dsyrk, dtrmm, dtrsm, dpotrf, dgetrf <br> sgemm, strsm, spotrf |
-| BLAS    <br> (large matrices) | dgemm |
+| BLAS    <br> (large matrices) | dgemm <br> sgemm |
 
 Note: BLASFEO is currently under active development.
 Some of the routines listed in the previous table may only be optimized for some variants, and provide reference implementations for other variants.
@@ -27,14 +27,14 @@ Currently BLASFEO supports the following architectures:
 
 | TARGET                       | Description |
 | ---------------------------- | ------------------------------------------------------------- |
-| ```X64_INTEL_HASWELL```      | Intel Haswell, Intel Skylake, AMD Zen, AMD Zen2 architectures or newer. x86_64 with AVX2 and FMA ISA, 64-bit OS |
+| ```X64_INTEL_HASWELL```      | Intel Haswell, Intel Skylake, AMD Zen, AMD Zen2, AMD Zen3 architectures or newer. x86_64 with AVX2 and FMA ISA, 64-bit OS |
 | ```X64_INTEL_SANDY_BRIDGE``` | Intel Sandy-Bridge architecture. x86_64 with AVX ISA, 64-bit OS |
 | ```X64_INTEL_CORE```         | Intel Core architecture. x86_64 with SSE3 ISA, 64-bit OS |
 | ```X64_AMD_BULLDOZER```      | AMD Bulldozer architecture. x86_64 with AVX and FMA ISAs, 64-bit OS |
 | ```X86_AMD_JAGUAR```         | AMD Jaguar architecture. x86 with AVX ISA, 32-bit OS |
 | ```X86_AMD_BARCELONA```      | AMD Barcelona architecture. x86 with SSE3 ISA, 32-bit OS |
-| ```ARMV8A_ARM_CORTEX_A76```  | ARM Cortex 76 architecture or newer. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
-| ```ARMV8A_ARM_CORTEX_A73```  | ARM Cortex 73 architecture or newer. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
+| ```ARMV8A_ARM_CORTEX_A76```  | ARM Cortex A76 architecture or newer. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
+| ```ARMV8A_ARM_CORTEX_A73```  | ARM Cortex A73 architecture or newer. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
 | ```ARMV8A_ARM_CORTEX_A57```  | ARM Cortex A57, A72 architectures. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
 | ```ARMV8A_ARM_CORTEX_A55```  | ARM Cortex A55 architecture. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
 | ```ARMV8A_ARM_CORTEX_A53```  | ARM Cortex A53 architecture. ARMv8A with VFPv4 and NEONv2 ISAs, 64-bit OS |
