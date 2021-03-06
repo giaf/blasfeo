@@ -2162,11 +2162,13 @@
 //
 // input arguments:
 // r10  <- D
+// r11  <- ldd
 // r12  <- km
 // r13  <- kn
 //
 // output arguments:
 // r10  <- D
+// r11  <- ldd
 // r12  <- km
 // r13  <- kn
 
@@ -2190,12 +2192,20 @@
 	// offset==0
 	vmaskmovps	%xmm0, %xmm14, 0(%r10)
 	addq		%r11, %r10
+	cmpl		$2, %r13d
+	jl			0f // end
 	vmaskmovps	%xmm1, %xmm14, 0(%r10)
 	addq		%r11, %r10
+	cmpl		$3, %r13d
+	jl			0f // end
 	vmaskmovps	%xmm2, %xmm14, 0(%r10)
 	addq		%r11, %r10
+	cmpl		$4, %r13d
+	jl			0f // end
 	vmaskmovps	%xmm3, %xmm14, 0(%r10)
 	addq		%r11, %r10
+	cmpl		$5, %r13d
+	jl			0f // end
 	vmaskmovps	%xmm4, %xmm14, 0(%r10)
 	addq		%r11, %r10
 	cmpl		$6, %r13d
