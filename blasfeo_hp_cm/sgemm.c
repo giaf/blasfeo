@@ -486,7 +486,7 @@ static void blasfeo_hp_sgemm_nn_n0(int m, int n, int k, float alpha, float *A, i
 	int ii, jj;
 
 	jj = 0;
-#if defined(TARGET_X64_INTEL_HASWELL) 0//| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; jj<n-7; jj+=8)
 		{
 		kernel_spack_tn_8_lib8(k, B+(jj+0)*ldb, ldb, pU);
@@ -523,7 +523,7 @@ static void blasfeo_hp_sgemm_nn_n0(int m, int n, int k, float alpha, float *A, i
 #endif
 	goto nn_n0_return;
 
-#if defined(TARGET_X64_INTEL_HASWELL) 0//| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 nn_n0_left_8:
 	kernel_spack_tn_8_vs_lib8(k, B+(jj+0)*ldb, ldb, pU+0*sdu, n-jj-0);
 	for(ii=0; ii<m; ii+=4)
@@ -747,7 +747,7 @@ static void blasfeo_hp_sgemm_nt_n0(int m, int n, int k, float alpha, float *A, i
 	int ii, jj;
 
 	jj = 0;
-#if defined(TARGET_X64_INTEL_HASWELL) 0//| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; jj<n-7; jj+=8)
 		{
 		kernel_spack_nn_8_lib8(k, B+jj, ldb, pU);
@@ -784,7 +784,7 @@ static void blasfeo_hp_sgemm_nt_n0(int m, int n, int k, float alpha, float *A, i
 #endif
 	goto nt_n0_return;
 
-#if defined(TARGET_X64_INTEL_HASWELL) 0//| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 nt_n0_left_8:
 	kernel_spack_nn_8_vs_lib8(k, B+jj, ldb, pU, n-jj);
 	for(ii=0; ii<m; ii+=4)
