@@ -480,6 +480,47 @@ nn_m0_return:
 
 
 
+static void blasfeo_hp_sgemm_nn_n0(int m, int n, int k, float alpha, float *A, int lda, float *B, int ldb, float beta, float *C, int ldc, float *D, int ldd, float *pU, int sdu)
+	{
+
+	int ii, jj;
+
+	jj = 0;
+#if 1
+	for(; jj<n-3; jj+=4)
+		{
+		kernel_spack_tn_4_lib4(k, B+(jj+0)*ldb, ldb, pU);
+		for(ii=0; ii<m-3; ii+=4)
+			{
+			kernel_sgemm_nt_4x4_libc4cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+		if(ii<m)
+			{
+			kernel_sgemm_nt_4x4_vs_libc4cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+			}
+		}
+	if(jj<n)
+		{
+		goto nn_n0_left_4;
+		}
+#endif
+	goto nn_n0_return;
+
+nn_n0_left_4:
+	kernel_spack_tn_4_vs_lib4(k, B+(jj+0)*ldb, ldb, pU+0*sdu, n-jj-0);
+	for(ii=0; ii<m; ii+=4)
+		{
+		kernel_sgemm_nt_4x4_vs_libc4cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+	goto nn_n0_return;
+
+nn_n0_return:
+	return;
+
+	}
+
+
+
 static void blasfeo_hp_sgemm_nt_m0(int m, int n, int k, float alpha, float *A, int lda, float *B, int ldb, float beta, float *C, int ldc, float *D, int ldd, float *pU, int sdu)
 	{
 
@@ -667,6 +708,47 @@ nt_m0_left_4:
 	goto nt_m0_return;
 
 nt_m0_return:
+	return;
+
+	}
+
+
+
+static void blasfeo_hp_sgemm_nt_n0(int m, int n, int k, float alpha, float *A, int lda, float *B, int ldb, float beta, float *C, int ldc, float *D, int ldd, float *pU, int sdu)
+	{
+
+	int ii, jj;
+
+	jj = 0;
+#if 1
+	for(; jj<n-3; jj+=4)
+		{
+		kernel_spack_nn_4_lib4(k, B+jj, ldb, pU);
+		for(ii=0; ii<m-3; ii+=4)
+			{
+			kernel_sgemm_nt_4x4_libc4cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+		if(ii<m)
+			{
+			kernel_sgemm_nt_4x4_vs_libc4cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+			}
+		}
+	if(jj<n)
+		{
+		goto nt_n0_left_4;
+		}
+#endif
+	goto nt_n0_return;
+
+nt_n0_left_4:
+	kernel_spack_nn_4_vs_lib4(k, B+jj, ldb, pU, n-jj);
+	for(ii=0; ii<m; ii+=4)
+		{
+		kernel_sgemm_nt_4x4_vs_libc4cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+	goto nt_n0_return;
+
+nt_n0_return:
 	return;
 
 	}
@@ -874,6 +956,47 @@ tn_m0_return:
 
 
 
+static void blasfeo_hp_sgemm_tn_n0(int m, int n, int k, float alpha, float *A, int lda, float *B, int ldb, float beta, float *C, int ldc, float *D, int ldd, float *pU, int sdu)
+	{
+
+	int ii, jj;
+
+	jj = 0;
+#if 1
+	for(; jj<n-3; jj+=4)
+		{
+		kernel_spack_tn_4_lib4(k, B+(jj+0)*ldb, ldb, pU);
+		for(ii=0; ii<m-3; ii+=4)
+			{
+			kernel_sgemm_tt_4x4_libc4cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+		if(ii<m)
+			{
+			kernel_sgemm_tt_4x4_vs_libc4cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+			}
+		}
+	if(jj<n)
+		{
+		goto tn_n0_left_4;
+		}
+#endif
+	goto tn_n0_return;
+
+tn_n0_left_4:
+	kernel_spack_tn_4_vs_lib4(k, B+(jj+0)*ldb, ldb, pU+0*sdu, n-jj-0);
+	for(ii=0; ii<m; ii+=4)
+		{
+		kernel_sgemm_tt_4x4_vs_libc4cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+	goto tn_n0_return;
+
+tn_n0_return:
+	return;
+
+	}
+
+
+
 static void blasfeo_hp_sgemm_tt_m0(int m, int n, int k, float alpha, float *A, int lda, float *B, int ldb, float beta, float *C, int ldc, float *D, int ldd, float *pU, int sdu)
 	{
 
@@ -1069,6 +1192,47 @@ tt_m0_left_4:
 	goto tt_m0_return;
 
 tt_m0_return:
+	return;
+
+	}
+
+
+
+static void blasfeo_hp_sgemm_tt_n0(int m, int n, int k, float alpha, float *A, int lda, float *B, int ldb, float beta, float *C, int ldc, float *D, int ldd, float *pU, int sdu)
+	{
+
+	int ii, jj;
+
+	jj = 0;
+#if 1
+	for(; jj<n-3; jj+=4)
+		{
+		kernel_spack_nn_4_lib4(k, B+jj, ldb, pU);
+		for(ii=0; ii<m-3; ii+=4)
+			{
+			kernel_sgemm_tt_4x4_libc4cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+		if(ii<m)
+			{
+			kernel_sgemm_tt_4x4_vs_libc4cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+			}
+		}
+	if(jj<n)
+		{
+		goto tt_n0_left_4;
+		}
+#endif
+	goto tt_n0_return;
+
+tt_n0_left_4:
+	kernel_spack_nn_4_vs_lib4(k, B+jj, ldb, pU, n-jj);
+	for(ii=0; ii<m; ii+=4)
+		{
+		kernel_sgemm_tt_4x4_vs_libc4cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+	goto tt_n0_return;
+
+tt_n0_return:
 	return;
 
 	}
@@ -1308,38 +1472,37 @@ nn_m0:
 	return;
 
 
+
 nn_n0:
 
-	jj = 0;
-#if 1
-	for(; jj<n-3; jj+=4)
-		{
-		kernel_spack_tn_4_lib4(k, B+(jj+0)*ldb, ldb, pU);
-		for(ii=0; ii<m-3; ii+=4)
-			{
-			kernel_sgemm_nt_4x4_libc4cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
-			}
-		if(ii<m)
-			{
-			kernel_sgemm_nt_4x4_vs_libc4cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
-			}
-		}
-	if(jj<n)
-		{
-		goto nn_n0_left_4;
-		}
-#endif
-	goto nn_n0_return;
+	if(K_MAX_STACK<=0)
+		goto nn_1;
 
-nn_n0_left_4:
-	kernel_spack_tn_4_vs_lib4(k, B+(jj+0)*ldb, ldb, pU+0*sdu, n-jj-0);
-	for(ii=0; ii<m; ii+=4)
-		{
-		kernel_sgemm_nt_4x4_vs_libc4cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
-		}
-	goto nn_n0_return;
+	// k-blocking alg
 
-nn_n0_return:
+	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+//	kc = 4;
+
+	if(k<kc)
+		{
+		blasfeo_hp_sgemm_nn_n0(m, n, k, alpha, A, lda, B, ldb, beta, C, ldc, D, ldd, pU, sdu);
+		}
+	else
+		{
+		for(ll=0; ll<k; ll+=kleft)
+			{
+			kleft = k-ll<kc ? k-ll : kc;
+
+			sdu = (kleft+4-1)/4*4;
+
+			beta1 = ll==0 ? beta : 1.0;
+			C1 = ll==0 ? C : D;
+			ldc1 = ll==0 ? ldc : ldd;
+
+			blasfeo_hp_sgemm_nn_n0(m, n, kleft, alpha, A+ll*lda, lda, B+ll, ldb, beta1, C1, ldc1, D, ldd, pU, sdu);
+			}
+		}
+
 	return;
 
 
@@ -2085,36 +2248,34 @@ nt_m0:
 
 nt_n0:
 
-	jj = 0;
-#if 1
-for(; jj<n-3; jj+=4)
-		{
-		kernel_spack_nn_4_lib4(k, B+jj, ldb, pU);
-		for(ii=0; ii<m-3; ii+=4)
-			{
-			kernel_sgemm_nt_4x4_libc4cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
-			}
-		if(ii<m)
-			{
-			kernel_sgemm_nt_4x4_vs_libc4cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
-			}
-		}
-	if(jj<n)
-		{
-		goto nt_n0_left_4;
-		}
-#endif
-	goto nt_n0_return;
+	if(K_MAX_STACK<=0)
+		goto nt_1;
 
-nt_n0_left_4:
-	kernel_spack_nn_4_vs_lib4(k, B+jj, ldb, pU, n-jj);
-	for(ii=0; ii<m; ii+=4)
-		{
-		kernel_sgemm_nt_4x4_vs_libc4cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
-		}
-	goto nt_n0_return;
+	// k-blocking alg
 
-nt_n0_return:
+	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+//	kc = 4;
+
+	if(k<kc)
+		{
+		blasfeo_hp_sgemm_nt_n0(m, n, k, alpha, A, lda, B, ldb, beta, C, ldc, D, ldd, pU, sdu);
+		}
+	else
+		{
+		for(ll=0; ll<k; ll+=kleft)
+			{
+			kleft = k-ll<kc ? k-ll : kc;
+
+			sdu = (kleft+4-1)/4*4;
+
+			beta1 = ll==0 ? beta : 1.0;
+			C1 = ll==0 ? C : D;
+			ldc1 = ll==0 ? ldc : ldd;
+
+			blasfeo_hp_sgemm_nt_n0(m, n, kleft, alpha, A+ll*lda, lda, B+ll*ldb, ldb, beta1, C1, ldc1, D, ldd, pU, sdu);
+			}
+		}
+
 	return;
 
 
@@ -2783,36 +2944,34 @@ tn_m0:
 
 tn_n0:
 
-	jj = 0;
-#if 1
-	for(; jj<n-3; jj+=4)
-		{
-		kernel_spack_tn_4_lib4(k, B+(jj+0)*ldb, ldb, pU);
-		for(ii=0; ii<m-3; ii+=4)
-			{
-			kernel_sgemm_tt_4x4_libc4cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
-			}
-		if(ii<m)
-			{
-			kernel_sgemm_tt_4x4_vs_libc4cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
-			}
-		}
-	if(jj<n)
-		{
-		goto tn_n0_left_4;
-		}
-#endif
-	goto tn_n0_return;
+	if(K_MAX_STACK<=0)
+		goto tn_1;
 
-tn_n0_left_4:
-	kernel_spack_tn_4_vs_lib4(k, B+(jj+0)*ldb, ldb, pU+0*sdu, n-jj-0);
-	for(ii=0; ii<m; ii+=4)
-		{
-		kernel_sgemm_tt_4x4_vs_libc4cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
-		}
-	goto tn_n0_return;
+	// k-blocking alg
 
-tn_n0_return:
+	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+//	kc = 4;
+
+	if(k<kc)
+		{
+		blasfeo_hp_sgemm_tn_n0(m, n, k, alpha, A, lda, B, ldb, beta, C, ldc, D, ldd, pU, sdu);
+		}
+	else
+		{
+		for(ll=0; ll<k; ll+=kleft)
+			{
+			kleft = k-ll<kc ? k-ll : kc;
+
+			sdu = (kleft+4-1)/4*4;
+
+			beta1 = ll==0 ? beta : 1.0;
+			C1 = ll==0 ? C : D;
+			ldc1 = ll==0 ? ldc : ldd;
+
+			blasfeo_hp_sgemm_tn_n0(m, n, kleft, alpha, A+ll, lda, B+ll, ldb, beta1, C1, ldc1, D, ldd, pU, sdu);
+			}
+		}
+
 	return;
 
 
@@ -3530,36 +3689,34 @@ tt_m0:
 
 tt_n0:
 
-	jj = 0;
-#if 1
-	for(; jj<n-3; jj+=4)
-		{
-		kernel_spack_nn_4_lib4(k, B+jj, ldb, pU);
-		for(ii=0; ii<m-3; ii+=4)
-			{
-			kernel_sgemm_tt_4x4_libc4cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
-			}
-		if(ii<m)
-			{
-			kernel_sgemm_tt_4x4_vs_libc4cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
-			}
-		}
-	if(jj<n)
-		{
-		goto tt_n0_left_4;
-		}
-#endif
-	goto tt_n0_return;
+	if(K_MAX_STACK<=0)
+		goto tt_1;
 
-tt_n0_left_4:
-	kernel_spack_nn_4_vs_lib4(k, B+jj, ldb, pU, n-jj);
-	for(ii=0; ii<m; ii+=4)
-		{
-		kernel_sgemm_tt_4x4_vs_libc4cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
-		}
-	goto tt_n0_return;
+	// k-blocking alg
 
-tt_n0_return:
+	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+//	kc = 4;
+
+	if(k<kc)
+		{
+		blasfeo_hp_sgemm_tt_n0(m, n, k, alpha, A, lda, B, ldb, beta, C, ldc, D, ldd, pU, sdu);
+		}
+	else
+		{
+		for(ll=0; ll<k; ll+=kleft)
+			{
+			kleft = k-ll<kc ? k-ll : kc;
+
+			sdu = (kleft+4-1)/4*4;
+
+			beta1 = ll==0 ? beta : 1.0;
+			C1 = ll==0 ? C : D;
+			ldc1 = ll==0 ? ldc : ldd;
+
+			blasfeo_hp_sgemm_tt_n0(m, n, kleft, alpha, A+ll, lda, B+ll*ldb, ldb, beta1, C1, ldc1, D, ldd, pU, sdu);
+			}
+		}
+
 	return;
 
 
