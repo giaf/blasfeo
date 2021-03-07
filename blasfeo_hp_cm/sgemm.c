@@ -486,7 +486,7 @@ static void blasfeo_hp_sgemm_nn_n0(int m, int n, int k, float alpha, float *A, i
 	int ii, jj;
 
 	jj = 0;
-#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; jj<n-7; jj+=8)
 		{
 		kernel_spack_tn_8_lib8(k, B+(jj+0)*ldb, ldb, pU);
@@ -523,7 +523,7 @@ static void blasfeo_hp_sgemm_nn_n0(int m, int n, int k, float alpha, float *A, i
 #endif
 	goto nn_n0_return;
 
-#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 nn_n0_left_8:
 	kernel_spack_tn_8_vs_lib8(k, B+(jj+0)*ldb, ldb, pU+0*sdu, n-jj-0);
 	for(ii=0; ii<m; ii+=4)
@@ -747,7 +747,7 @@ static void blasfeo_hp_sgemm_nt_n0(int m, int n, int k, float alpha, float *A, i
 	int ii, jj;
 
 	jj = 0;
-#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; jj<n-7; jj+=8)
 		{
 		kernel_spack_nn_8_lib8(k, B+jj, ldb, pU);
@@ -784,7 +784,7 @@ static void blasfeo_hp_sgemm_nt_n0(int m, int n, int k, float alpha, float *A, i
 #endif
 	goto nt_n0_return;
 
-#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 nt_n0_left_8:
 	kernel_spack_nn_8_vs_lib8(k, B+jj, ldb, pU, n-jj);
 	for(ii=0; ii<m; ii+=4)
@@ -1016,7 +1016,24 @@ static void blasfeo_hp_sgemm_tn_n0(int m, int n, int k, float alpha, float *A, i
 	int ii, jj;
 
 	jj = 0;
-#if 1
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; jj<n-7; jj+=8)
+		{
+		kernel_spack_tn_8_lib8(k, B+(jj+0)*ldb, ldb, pU);
+		for(ii=0; ii<m-3; ii+=4)
+			{
+			kernel_sgemm_tt_4x8_libc8cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+		if(ii<m)
+			{
+			kernel_sgemm_tt_4x8_vs_libc8cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+			}
+		}
+	if(jj<n)
+		{
+		goto tn_n0_left_8;
+		}
+#else
 	for(; jj<n-3; jj+=4)
 		{
 		kernel_spack_tn_4_lib4(k, B+(jj+0)*ldb, ldb, pU);
@@ -1035,6 +1052,16 @@ static void blasfeo_hp_sgemm_tn_n0(int m, int n, int k, float alpha, float *A, i
 		}
 #endif
 	goto tn_n0_return;
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+tn_n0_left_8:
+	kernel_spack_tn_8_vs_lib8(k, B+(jj+0)*ldb, ldb, pU+0*sdu, n-jj-0);
+	for(ii=0; ii<m; ii+=4)
+		{
+		kernel_sgemm_tt_4x8_vs_libc8cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+	goto tn_n0_return;
+#endif
 
 tn_n0_left_4:
 	kernel_spack_tn_4_vs_lib4(k, B+(jj+0)*ldb, ldb, pU+0*sdu, n-jj-0);
@@ -1258,7 +1285,24 @@ static void blasfeo_hp_sgemm_tt_n0(int m, int n, int k, float alpha, float *A, i
 	int ii, jj;
 
 	jj = 0;
-#if 1
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; jj<n-7; jj+=8)
+		{
+		kernel_spack_nn_8_lib8(k, B+jj, ldb, pU);
+		for(ii=0; ii<m-3; ii+=4)
+			{
+			kernel_sgemm_tt_4x8_libc8cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+		if(ii<m)
+			{
+			kernel_sgemm_tt_4x8_vs_libc8cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+			}
+		}
+	if(jj<n)
+		{
+		goto tt_n0_left_8;
+		}
+#else
 	for(; jj<n-3; jj+=4)
 		{
 		kernel_spack_nn_4_lib4(k, B+jj, ldb, pU);
@@ -1277,6 +1321,16 @@ static void blasfeo_hp_sgemm_tt_n0(int m, int n, int k, float alpha, float *A, i
 		}
 #endif
 	goto tt_n0_return;
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+tt_n0_left_8:
+	kernel_spack_nn_8_vs_lib8(k, B+jj, ldb, pU, n-jj);
+	for(ii=0; ii<m; ii+=4)
+		{
+		kernel_sgemm_tt_4x8_vs_libc8cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+	goto tt_n0_return;
+#endif
 
 tt_n0_left_4:
 	kernel_spack_nn_4_vs_lib4(k, B+jj, ldb, pU, n-jj);
@@ -3620,7 +3674,7 @@ void blasfeo_hp_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *
 //	goto tt_2; // no pack
 //#endif
 #if defined(PACKING_ALG_M0)
-	goto tt_m0; // pack A
+//	goto tt_m0; // pack A
 #endif
 //#if defined(PACKING_ALG_N0)
 //	goto tt_n0; // pack B
