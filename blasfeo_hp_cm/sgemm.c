@@ -1456,9 +1456,9 @@ void blasfeo_hp_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *
 #if defined(PACKING_ALG_M0)
 	goto nn_m0; // pack A
 #endif
-//#if defined(PACKING_ALG_N0)
-//	goto nn_n0; // pack B
-//#endif
+#if defined(PACKING_ALG_N0)
+	goto nn_n0; // pack B
+#endif
 #if defined(PACKING_ALG_1)
 	goto nn_1; // pack A and B
 #endif
@@ -1510,8 +1510,7 @@ void blasfeo_hp_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *
 		if( n<=2*m_kernel | m_a*k <= l2_cache_el )
 			{
 //			printf("\nalg n0\n");
-//			goto nn_n0; // tall matrix: pack B
-			goto nn_m0; // tall matrix: pack A
+			goto nn_n0; // tall matrix: pack B
 			}
 		}
 #else
@@ -1535,8 +1534,7 @@ void blasfeo_hp_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *
 		else
 			{
 //			printf("\nalg n0\n");
-//			goto nn_n0; // tall matrix: pack B
-			goto nn_m0; // tall matrix: pack B
+			goto nn_n0; // tall matrix: pack B
 			}
 		}
 #endif
@@ -2231,9 +2229,9 @@ void blasfeo_hp_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *
 #if defined(PACKING_ALG_M0)
 	goto nt_m0; // pack A
 #endif
-//#if defined(PACKING_ALG_N0)
+#if defined(PACKING_ALG_N0)
 	goto nt_n0; // pack B
-//#endif
+#endif
 #if defined(PACKING_ALG_1)
 	goto nt_1; // pack A and B
 #endif
@@ -2283,8 +2281,7 @@ void blasfeo_hp_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *
 		if( n<=2*m_kernel | 2 * m_a*k <= l2_cache_el )
 			{
 //			printf("\nalg n0\n");
-//			goto nt_n0; // tall matrix: pack B
-			goto nt_m0; // tall matrix: pack B
+			goto nt_n0; // tall matrix: pack B
 			}
 		}
 #else
@@ -2308,8 +2305,7 @@ void blasfeo_hp_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *
 		else
 			{
 //			printf("\nalg n0\n");
-//			goto nt_n0; // tall matrix: pack B
-			goto nt_m0; // tall matrix: pack B
+			goto nt_n0; // tall matrix: pack B
 			}
 		}
 #endif
@@ -2970,9 +2966,9 @@ void blasfeo_hp_sgemm_tn(int m, int n, int k, float alpha, struct blasfeo_smat *
 #if defined(PACKING_ALG_M0)
 	goto tn_m0; // pack A
 #endif
-//#if defined(PACKING_ALG_N0)
-//	goto tn_n0; // pack B
-//#endif
+#if defined(PACKING_ALG_N0)
+	goto tn_n0; // pack B
+#endif
 #if defined(PACKING_ALG_1)
 	goto tn_1; // pack A and B
 #endif
@@ -3005,8 +3001,7 @@ void blasfeo_hp_sgemm_tn(int m, int n, int k, float alpha, struct blasfeo_smat *
 		else
 			{
 //			printf("\nalg n0\n");
-//			goto tn_n0; // tall matrix: pack B
-			goto tn_m0; // tall matrix: pack B
+			goto tn_n0; // tall matrix: pack B
 			}
 		}
 //	printf("\nalg 1\n");
@@ -3674,11 +3669,11 @@ void blasfeo_hp_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *
 //	goto tt_2; // no pack
 //#endif
 #if defined(PACKING_ALG_M0)
-//	goto tt_m0; // pack A
+	goto tt_m0; // pack A
 #endif
-//#if defined(PACKING_ALG_N0)
-//	goto tt_n0; // pack B
-//#endif
+#if defined(PACKING_ALG_N0)
+	goto tt_n0; // pack B
+#endif
 #if defined(PACKING_ALG_1)
 	goto tt_1; // pack A and B
 #endif
@@ -3727,8 +3722,7 @@ void blasfeo_hp_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *
 		if( m<=2*m_kernel | 2 * n_b*k <= l2_cache_el )
 			{
 //				printf("\nalg n0\n");
-//			goto tt_n0; // tall matrix: pack B
-			goto tt_m0; // tall matrix: pack B
+			goto tt_n0; // tall matrix: pack B
 			}
 		}
 #else
@@ -3750,8 +3744,7 @@ void blasfeo_hp_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *
 			}
 		else
 			{
-//			goto tt_n0; // tall matrix: pack B
-			goto tt_m0; // tall matrix: pack B
+			goto tt_n0; // tall matrix: pack B
 			}
 		}
 #endif
