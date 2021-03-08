@@ -316,8 +316,8 @@
 	ble		0f // consider clean up loop
 
 	// prefetch
-//	prfm	PLDL1KEEP, [x9, #32]
-//	prfm	PLDL1KEEP, [x19, #32]
+	prfm	PLDL1KEEP, [x9, #32]
+	prfm	PLDL1KEEP, [x19, #32]
 //	prfm	PLDL1KEEP, [x11, x15]
 //	prfm	PLDL1KEEP, [x11, x16]
 //	prfm	PLDL1KEEP, [x11, x17]

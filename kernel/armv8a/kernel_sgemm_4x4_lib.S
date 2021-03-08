@@ -213,25 +213,38 @@
 	cmp		w8, #0
 	ble		2f // return
 
+//	add		x20, x11, #12 // B1 TODO
+
 	add		x12, x11, x11 // 2
 	add		x13, x12, x11 // 3
 	add		x14, x12, x12 // 4
 	add		x15, x13, x12 // 5
-	add		x16, x13, x13 // 6
-	add		x17, x14, x13 // 7
+//	add		x16, x13, x13 // 6
+//	add		x17, x14, x13 // 7
 
 	// prefetch
 	prfm	PLDL1KEEP, [x9, #0]
 	prfm	PLDL1KEEP, [x10]
 	prfm	PLDL1KEEP, [x10, x11]
-	prfm	PLDL1KEEP, [x10, x12]
-	prfm	PLDL1KEEP, [x10, x13]
+//	prfm	PLDL1KEEP, [x10, x12]
+//	prfm	PLDL1KEEP, [x10, x13]
 
 	// preload
 	ldr		q28, [x10]
-	ldr		q29, [x10, x11]
-	ldr		q30, [x10, x12]
-	ldr		q31, [x10, x13]
+	prfm	PLDL1KEEP, [x10, x12]
+	add		x10, x10, x11
+
+	ldr		q29, [x10]
+	prfm	PLDL1KEEP, [x10, x12]
+	add		x10, x10, x11
+
+	ldr		q30, [x10]
+	prfm	PLDL1KEEP, [x10, x12]
+	add		x10, x10, x11
+
+//	ldr		q31, [x10]
+//	prfm	PLDL1KEEP, [x10, x12]
+//	add		x10, x10, x11
 
 	ldp		q24, q25, [x9], #32
 
@@ -241,51 +254,51 @@
 	// prefetch
 	prfm	PLDL1KEEP, [x9, #32]
 //	prfm	PLDL1KEEP, [x10, #64]
-	prfm	PLDL1KEEP, [x10, x14]
-	prfm	PLDL1KEEP, [x10, x15]
-	prfm	PLDL1KEEP, [x10, x16]
-	prfm	PLDL1KEEP, [x10, x17]
+//	prfm	PLDL1KEEP, [x10, x14]
+//	prfm	PLDL1KEEP, [x10, x15]
+//	prfm	PLDL1KEEP, [x10, x16]
+//	prfm	PLDL1KEEP, [x10, x17]
 
 	// main loop
 1:
 	
 
 	// unroll 0
-	fmla	v0.4s, v24.4s, v28.s[0]
 	ldp		q26, q27, [x9], #32
+	fmla	v0.4s, v24.4s, v28.s[0]
+	ldr		q31, [x10]
 	fmla	v1.4s, v24.4s, v28.s[1]
-	prfm	PLDL1KEEP, [x9, #64]
+	prfm	PLDL1KEEP, [x10, x12]
 	fmla	v2.4s, v24.4s, v28.s[2]
-	add		x10, x10, x14
+	prfm	PLDL1KEEP, [x9, #64]
 	fmla	v3.4s, v24.4s, v28.s[3]
-	ldr		q28, [x10]
 
 	// unroll 1
+	ldr		q28, [x10, x11]
 	fmla	v0.4s, v25.4s, v29.s[0]
-	prfm	PLDL1KEEP, [x10, x14]
+	prfm	PLDL1KEEP, [x10, x13]
 	fmla	v1.4s, v25.4s, v29.s[1]
-	prfm	PLDL1KEEP, [x10, x15]
 	fmla	v2.4s, v25.4s, v29.s[2]
-	prfm	PLDL1KEEP, [x10, x16]
+	sub		w8, w8, #4
 	fmla	v3.4s, v25.4s, v29.s[3]
-	ldp		q24, q25, [x9], #32
 
 	// unroll 2
+	ldp		q24, q25, [x9], #32
 	fmla	v0.4s, v26.4s, v30.s[0]
-	ldr		q29, [x10, x11]
+	ldr		q29, [x10, x12]
 	fmla	v1.4s, v26.4s, v30.s[1]
-	prfm	PLDL1KEEP, [x10, x17]
+	prfm	PLDL1KEEP, [x10, x14]
 	fmla	v2.4s, v26.4s, v30.s[2]
-	sub		w8, w8, #4
 	fmla	v3.4s, v26.4s, v30.s[3]
-	ldr		q30, [x10, x12]
 
 	// unroll 3
+	ldr		q30, [x10, x13]
 	fmla	v0.4s, v27.4s, v31.s[0]
+	prfm	PLDL1KEEP, [x10, x15]
 	fmla	v1.4s, v27.4s, v31.s[1]
+	add		x10, x10, x14
 	fmla	v2.4s, v27.4s, v31.s[2]
 	fmla	v3.4s, v27.4s, v31.s[3]
-	ldr		q31, [x10, x13]
 
 	cmp		w8, #4
 	bgt		1b
@@ -299,41 +312,44 @@
 	ble		4f
 
 	// unroll 0
+	ldr		q31, [x10]
 	fmla	v0.4s, v24.4s, v28.s[0]
 	ldp		q26, q27, [x9], #32
 	fmla	v1.4s, v24.4s, v28.s[1]
-//	prfm	PLDL1KEEP, [x9, #64]
+//	prfm	PLDL1KEEP, [x10, x12]
+	add		x10, x10, x11
 	fmla	v2.4s, v24.4s, v28.s[2]
-//	add		x10, x10, x14
+//	prfm	PLDL1KEEP, [x9, #64]
 	fmla	v3.4s, v24.4s, v28.s[3]
-//	ldr		q28, [x10]
 
 	// unroll 1
+//	ldr		q28, [x10]
 	fmla	v0.4s, v25.4s, v29.s[0]
-//	prfm	PLDL1KEEP, [x10, x14]
+//	prfm	PLDL1KEEP, [x10, x12]
 	fmla	v1.4s, v25.4s, v29.s[1]
-//	prfm	PLDL1KEEP, [x10, x15]
+//	add		x10, x10, x11
 	fmla	v2.4s, v25.4s, v29.s[2]
-//	prfm	PLDL1KEEP, [x10, x16]
+	sub		w8, w8, #4
 	fmla	v3.4s, v25.4s, v29.s[3]
-//	ldp		q24, q25, [x9], #32
 
 	// unroll 2
+//	ldr		q29, [x10]
 	fmla	v0.4s, v26.4s, v30.s[0]
-//	ldr		q29, [x10, x11]
+//	ldp		q24, q25, [x9], #32
 	fmla	v1.4s, v26.4s, v30.s[1]
-//	prfm	PLDL1KEEP, [x10, x17]
+//	prfm	PLDL1KEEP, [x10, x12]
 	fmla	v2.4s, v26.4s, v30.s[2]
-	sub		w8, w8, #4
+//	add		x10, x10, x11
 	fmla	v3.4s, v26.4s, v30.s[3]
-//	ldr		q30, [x10, x12]
 
 	// unroll 3
+//	ldr		q30, [x10]
 	fmla	v0.4s, v27.4s, v31.s[0]
+//	prfm	PLDL1KEEP, [x10, x12]
 	fmla	v1.4s, v27.4s, v31.s[1]
+//	add		x10, x10, x11
 	fmla	v2.4s, v27.4s, v31.s[2]
 	fmla	v3.4s, v27.4s, v31.s[3]
-//	ldr		q31, [x10, x13]
 
 	b		2f // return
 
@@ -344,7 +360,7 @@
 
 	sub		x9, x9, #32
 //	sub		x10, x10, #32
-//	sub		x10, x10, x14
+	sub		x10, x10, x13
 
 3: // clean1-up loop
 

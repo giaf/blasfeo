@@ -424,8 +424,8 @@
 
 	// prefetch
 //	add		x11, x11, x12
-//	prfm	PLDL1KEEP, [x9, #64]
-//	prfm	PLDL1KEEP, [x19, #64]
+	prfm	PLDL1KEEP, [x9, #64]
+	prfm	PLDL1KEEP, [x19, #64]
 //	prfm	PLDL1KEEP, [x11, x15]
 //	prfm	PLDL1KEEP, [x20, x15]
 //	prfm	PLDL1KEEP, [x11, x16]
