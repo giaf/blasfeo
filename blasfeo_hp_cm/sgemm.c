@@ -490,7 +490,14 @@ static void blasfeo_hp_sgemm_nn_n0(int m, int n, int k, float alpha, float *A, i
 	for(; jj<n-7; jj+=8)
 		{
 		kernel_spack_tn_8_lib8(k, B+(jj+0)*ldb, ldb, pU);
-		for(ii=0; ii<m-3; ii+=4)
+		ii = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_sgemm_nt_8x8_libc8cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+#endif
+		for(; ii<m-3; ii+=4)
 			{
 			kernel_sgemm_nt_4x8_libc8cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 			}
@@ -751,7 +758,14 @@ static void blasfeo_hp_sgemm_nt_n0(int m, int n, int k, float alpha, float *A, i
 	for(; jj<n-7; jj+=8)
 		{
 		kernel_spack_nn_8_lib8(k, B+jj, ldb, pU);
-		for(ii=0; ii<m-3; ii+=4)
+		ii = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_sgemm_nt_8x8_libc8cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+#endif
+		for(; ii<m-3; ii+=4)
 			{
 			kernel_sgemm_nt_4x8_libc8cc(k, &alpha, A+ii, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 			}
@@ -1020,7 +1034,14 @@ static void blasfeo_hp_sgemm_tn_n0(int m, int n, int k, float alpha, float *A, i
 	for(; jj<n-7; jj+=8)
 		{
 		kernel_spack_tn_8_lib8(k, B+(jj+0)*ldb, ldb, pU);
-		for(ii=0; ii<m-3; ii+=4)
+		ii = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_sgemm_tt_8x8_libc8cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+#endif
+		for(; ii<m-3; ii+=4)
 			{
 			kernel_sgemm_tt_4x8_libc8cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 			}
@@ -1289,7 +1310,14 @@ static void blasfeo_hp_sgemm_tt_n0(int m, int n, int k, float alpha, float *A, i
 	for(; jj<n-7; jj+=8)
 		{
 		kernel_spack_nn_8_lib8(k, B+jj, ldb, pU);
-		for(ii=0; ii<m-3; ii+=4)
+		ii = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
+		for(; ii<m-7; ii+=8)
+			{
+			kernel_sgemm_tt_8x8_libc8cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+#endif
+		for(; ii<m-3; ii+=4)
 			{
 			kernel_sgemm_tt_4x8_libc8cc(k, &alpha, A+ii*lda, lda, pU, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 			}
