@@ -3888,12 +3888,24 @@
 #endif
 
 	prfm	PLDL1KEEP, [x8, #0]
+//	prfm	PLDL1KEEP, [x8, #12]
+	prfm	PLDL1KEEP, [x8, #8]
 	add		x8, x8, x9
+
 	prfm	PLDL1KEEP, [x8, #0]
+//	prfm	PLDL1KEEP, [x8, #12]
+	prfm	PLDL1KEEP, [x8, #8]
 	add		x8, x8, x9
+
 	prfm	PLDL1KEEP, [x8, #0]
+//	prfm	PLDL1KEEP, [x8, #12]
+	prfm	PLDL1KEEP, [x8, #8]
 	add		x8, x8, x9
+
 	prfm	PLDL1KEEP, [x8, #0]
+//	prfm	PLDL1KEEP, [x8, #12]
+	prfm	PLDL1KEEP, [x8, #8]
+//	add		x8, x8, x9
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -4014,6 +4026,19 @@
 	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
 #else
 	bl	inner_kernel_gemm_add_nt_4x4_lib4
+#endif
+
+
+
+	// prefetch
+//	mov		x8, x7 // D
+//	ldr		w9, [sp, #(STACKSIZE + 0)] // ldd
+//	lsl		w9, w9, #2 // 4*ldd
+
+#if MACRO_LEVEL>=1
+//	INNER_PREFETCH_4X4_LIB
+#else
+//	bl inner_prefetch_4x4_lib
 #endif
 
 
@@ -4310,6 +4335,19 @@
 
 
 
+	// prefetch
+	ldr		x8, [sp, #(STACKSIZE + 0)] // D
+	ldr		w9, [sp, #(STACKSIZE + 8)] // ldd
+	lsl		w9, w9, #2 // 4*ldd
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_4X4_LIB
+#else
+	bl inner_prefetch_4x4_lib
+#endif
+
+
+
 	// call inner blend for generic alpha and beta
 	mov		x8, x1 // alpha
 	mov		x9, x5 // beta
@@ -4429,6 +4467,19 @@
 #endif
 
 103:
+
+
+
+	// prefetch
+//	ldr		x8, [sp, #(STACKSIZE + 0)] // D
+//	ldr		w9, [sp, #(STACKSIZE + 8)] // ldd
+//	lsl		w9, w9, #2 // 4*ldd
+
+#if MACRO_LEVEL>=1
+//	INNER_PREFETCH_4X4_LIB
+#else
+//	bl inner_prefetch_4x4_lib
+#endif
 
 
 
@@ -4731,6 +4782,19 @@
 
 
 
+	// prefetch
+	ldr		x8, [sp, #(STACKSIZE + 0)] // D
+	ldr		w9, [sp, #(STACKSIZE + 8)] // ldd
+	lsl		w9, w9, #2 // 4*ldd
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_4X4_LIB
+#else
+	bl inner_prefetch_4x4_lib
+#endif
+
+
+
 	// call inner blend for generic alpha and beta
 	mov		x8, x1 // alpha
 	mov		x9, x5 // beta
@@ -4850,6 +4914,19 @@
 #endif
 
 103:
+
+
+
+	// prefetch
+//	ldr		x8, [sp, #(STACKSIZE + 0)] // D
+//	ldr		w9, [sp, #(STACKSIZE + 8)] // ldd
+//	lsl		w9, w9, #2 // 4*ldd
+
+#if MACRO_LEVEL>=1
+//	INNER_PREFETCH_4X4_LIB
+#else
+//	bl inner_prefetch_4x4_lib
+#endif
 
 
 

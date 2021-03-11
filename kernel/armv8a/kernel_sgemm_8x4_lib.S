@@ -3718,6 +3718,51 @@
 // subroutine
 //
 // input arguments:
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_TRAN_8X4_LIB
+#else
+	.align	4
+	FUN_START(inner_tran_8x4_lib)
+#endif
+
+	trn1	v8.4s, v0.4s, v1.4s
+	trn2	v9.4s, v0.4s, v1.4s
+	trn1	v10.4s, v2.4s, v3.4s
+	trn2	v11.4s, v2.4s, v3.4s
+
+	trn1	v0.2d, v8.2d, v10.2d
+	trn2	v2.2d, v8.2d, v10.2d
+	trn1	v1.2d, v9.2d, v11.2d
+	trn2	v3.2d, v9.2d, v11.2d
+
+	trn1	v8.4s, v4.4s, v5.4s
+	trn2	v9.4s, v4.4s, v5.4s
+	trn1	v10.4s, v6.4s, v7.4s
+	trn2	v11.4s, v6.4s, v7.4s
+
+	trn1	v4.2d, v8.2d, v10.2d
+	trn2	v6.2d, v8.2d, v10.2d
+	trn1	v5.2d, v9.2d, v11.2d
+	trn2	v7.2d, v9.2d, v11.2d
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_tran_8x4_lib)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
 // x8   <- alpha
 // x9   <- beta
 // x10  <- C
@@ -4305,6 +4350,321 @@
 // subroutine
 //
 // input arguments:
+// x8   <- alpha
+// x9   <- beta
+// x10  <- C
+// x11  <- ldc*sizeof(float)
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_AB_4X8_LIB
+#else
+	.align	4
+	FUN_START(inner_scale_ab_4x8_lib)
+#endif
+
+	ld1		{v28.4s}, [x8]
+
+	ld1		{v29.4s}, [x9]
+
+	fmul	v0.4s, v0.4s, v28.s[0]
+	fmul	v1.4s, v1.4s, v28.s[0]
+	fmul	v2.4s, v2.4s, v28.s[0]
+	fmul	v3.4s, v3.4s, v28.s[0]
+	fmul	v4.4s, v4.4s, v28.s[0]
+	fmul	v5.4s, v5.4s, v28.s[0]
+	fmul	v6.4s, v6.4s, v28.s[0]
+	fmul	v7.4s, v7.4s, v28.s[0]
+
+	fcmpe	s29, #0.0
+	beq		0f
+
+	ldr		q24, [x10, #0]
+	add		x10, x10, x11
+	ldr		q25, [x10, #0]
+	add		x10, x10, x11
+	ldr		q26, [x10, #0]
+	add		x10, x10, x11
+	ldr		q27, [x10, #0]
+	add		x10, x10, x11
+	fmla	v0.4s, v24.4s, v29.s[0]
+	fmla	v1.4s, v25.4s, v29.s[0]
+	fmla	v2.4s, v26.4s, v29.s[0]
+	fmla	v3.4s, v27.4s, v29.s[0]
+
+	ldr		q24, [x10, #0]
+	add		x10, x10, x11
+	ldr		q25, [x10, #0]
+	add		x10, x10, x11
+	ldr		q26, [x10, #0]
+	add		x10, x10, x11
+	ldr		q27, [x10, #0]
+	add		x10, x10, x11
+	fmla	v4.4s, v24.4s, v29.s[0]
+	fmla	v5.4s, v25.4s, v29.s[0]
+	fmla	v6.4s, v26.4s, v29.s[0]
+	fmla	v7.4s, v27.4s, v29.s[0]
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_scale_ab_4x8_lib)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// x8   <- alpha
+// x9   <- beta
+// x10  <- C
+// x11  <- ldc*sizeof(float)
+// x12  <- km
+// x13  <- kn
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_AB_4X8_VS_LIB
+#else
+	.align	4
+	FUN_START(inner_scale_ab_4x8_vs_lib)
+#endif
+
+	ld1		{v28.4s}, [x8]
+
+	ld1		{v29.4s}, [x9]
+
+	fmul	v0.4s, v0.4s, v28.s[0]
+	fmul	v1.4s, v1.4s, v28.s[0]
+	fmul	v2.4s, v2.4s, v28.s[0]
+	fmul	v3.4s, v3.4s, v28.s[0]
+	fmul	v4.4s, v4.4s, v28.s[0]
+	fmul	v5.4s, v5.4s, v28.s[0]
+	fmul	v6.4s, v6.4s, v28.s[0]
+	fmul	v7.4s, v7.4s, v28.s[0]
+
+	fcmpe	d29, #0.0
+	beq		0f
+
+	cmp		w12, #4
+	blt		1f
+
+	// 1
+	ldr		q24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v0.4s, v24.4s, v29.s[0]
+	// 2
+	ldr		q24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v1.4s, v24.4s, v29.s[0]
+	// 3
+	ldr		q24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v2.4s, v24.4s, v29.s[0]
+	// 4
+	ldr		q24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v3.4s, v24.4s, v29.s[0]
+	// 5
+	ldr		q24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v4.4s, v24.4s, v29.s[0]
+	cmp		w13, #5
+	ble		0f
+	// 6
+	ldr		q24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v5.4s, v24.4s, v29.s[0]
+	cmp		w13, #6
+	ble		0f
+	// 7
+	ldr		q24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v6.4s, v24.4s, v29.s[0]
+	cmp		w13, #7
+	ble		0f
+	// 8
+	ldr		q24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v7.4s, v24.4s, v29.s[0]
+
+	b 0f
+
+1:
+	cmp		w12, #3
+	blt		2f
+
+	// 1
+	ldr		d24, [x10, #0]
+	ldr		s25, [x10, #8]
+	ins		v24.s[2], v25.s[0]
+	add		x10, x10, x11
+	fmla	v0.4s, v24.4s, v29.s[0]
+	// 2
+	ldr		d24, [x10, #0]
+	ldr		s25, [x10, #8]
+	ins		v24.s[2], v25.s[0]
+	add		x10, x10, x11
+	fmla	v1.4s, v24.4s, v29.s[0]
+	// 3
+	ldr		d24, [x10, #0]
+	ldr		s25, [x10, #8]
+	ins		v24.s[2], v25.s[0]
+	add		x10, x10, x11
+	fmla	v2.4s, v24.4s, v29.s[0]
+	// 4
+	ldr		d24, [x10, #0]
+	ldr		s25, [x10, #8]
+	ins		v24.s[2], v25.s[0]
+	add		x10, x10, x11
+	fmla	v3.4s, v24.4s, v29.s[0]
+	// 5
+	ldr		d24, [x10, #0]
+	ldr		s25, [x10, #8]
+	ins		v24.s[2], v25.s[0]
+	add		x10, x10, x11
+	fmla	v4.4s, v24.4s, v29.s[0]
+	cmp		w13, #5
+	ble		0f
+	// 6
+	ldr		d24, [x10, #0]
+	ldr		s25, [x10, #8]
+	ins		v24.s[2], v25.s[0]
+	add		x10, x10, x11
+	fmla	v5.4s, v24.4s, v29.s[0]
+	cmp		w13, #6
+	ble		0f
+	// 7
+	ldr		d24, [x10, #0]
+	ldr		s25, [x10, #8]
+	ins		v24.s[2], v25.s[0]
+	add		x10, x10, x11
+	fmla	v6.4s, v24.4s, v29.s[0]
+	cmp		w13, #7
+	ble		0f
+	// 8
+	ldr		d24, [x10, #0]
+	ldr		s25, [x10, #8]
+	ins		v24.s[2], v25.s[0]
+	add		x10, x10, x11
+	fmla	v7.4s, v24.4s, v29.s[0]
+
+	b 0f
+
+2:
+	cmp		w12, #2
+	blt		3f
+
+	// 1
+	ldr		d24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v0.4s, v24.4s, v29.s[0]
+	// 2
+	ldr		d24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v1.4s, v24.4s, v29.s[0]
+	// 3
+	ldr		d24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v2.4s, v24.4s, v29.s[0]
+	// 4
+	ldr		d24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v3.4s, v24.4s, v29.s[0]
+	// 5
+	ldr		d24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v4.4s, v24.4s, v29.s[0]
+	cmp		w13, #5
+	ble		0f
+	// 6
+	ldr		d24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v5.4s, v24.4s, v29.s[0]
+	cmp		w13, #6
+	ble		0f
+	// 7
+	ldr		d24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v6.4s, v24.4s, v29.s[0]
+	cmp		w13, #7
+	ble		0f
+	// 8
+	ldr		d24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v7.4s, v24.4s, v29.s[0]
+
+	b 0f
+
+3:
+	cmp		w12, #1
+	blt		0f
+
+	// 1
+	ldr		s24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v0.4s, v24.4s, v29.s[0]
+	// 2
+	ldr		s24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v1.4s, v24.4s, v29.s[0]
+	// 3
+	ldr		s24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v2.4s, v24.4s, v29.s[0]
+	// 4
+	ldr		s24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v3.4s, v24.4s, v29.s[0]
+	// 5
+	ldr		s24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v4.4s, v24.4s, v29.s[0]
+	cmp		w13, #5
+	ble		0f
+	// 6
+	ldr		s24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v5.4s, v24.4s, v29.s[0]
+	cmp		w13, #6
+	ble		0f
+	// 7
+	ldr		s24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v6.4s, v24.4s, v29.s[0]
+	cmp		w13, #7
+	ble		0f
+	// 8
+	ldr		s24, [x10, #0]
+	add		x10, x10, x11
+	fmla	v7.4s, v24.4s, v29.s[0]
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_scale_ab_4x8_vs_lib)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
 // x8   <- D
 // x9   <- ldd*sizeof(float)
 //
@@ -4485,6 +4845,185 @@
 // output arguments:
 
 #if MACRO_LEVEL>=1
+	.macro INNER_STORE_4X8_LIB
+#else
+	.align 4
+	FUN_START(inner_store_4x8_lib)
+#endif
+
+	str		q0, [x8, #0]
+	add		x8, x8, x9
+
+	str		q1, [x8, #0]
+	add		x8, x8, x9
+
+	str		q2, [x8, #0]
+	add		x8, x8, x9
+
+	str		q3, [x8, #0]
+	add		x8, x8, x9
+
+	str		q4, [x8, #0]
+	add		x8, x8, x9
+
+	str		q5, [x8, #0]
+	add		x8, x8, x9
+
+	str		q6, [x8, #0]
+	add		x8, x8, x9
+
+	str		q7, [x8, #0]
+//	add		x8, x8, x9
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_store_4x8_lib)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// x8   <- D
+// x9   <- ldd*sizeof(float)
+// x10  <- km
+// x11  <- kn
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_4X8_VS_LIB
+#else
+	.align 4
+	FUN_START(inner_store_4x8_vs_lib)
+#endif
+
+	cmp		w10, #4
+	bge		1f
+
+	mov		x12, x8
+
+	ldr		q16, [x12, #0]
+	add		x12, x12, x9
+	ldr		q17, [x12, #0]
+	add		x12, x12, x9
+	ldr		q18, [x12, #0]
+	add		x12, x12, x9
+	ldr		q19, [x12, #0]
+	add		x12, x12, x9
+	ldr		q20, [x12, #0]
+	add		x12, x12, x9
+	ldr		q21, [x12, #0]
+	add		x12, x12, x9
+	ldr		q22, [x12, #0]
+	add		x12, x12, x9
+	ldr		q23, [x12, #0]
+//	add		x12, x12, x9
+
+	// 4th row
+	ins		v0.s[3], v16.s[3]
+	ins		v1.s[3], v17.s[3]
+	ins		v2.s[3], v18.s[3]
+	ins		v3.s[3], v19.s[3]
+	ins		v4.s[3], v20.s[3]
+	ins		v5.s[3], v21.s[3]
+	ins		v6.s[3], v22.s[3]
+	ins		v7.s[3], v23.s[3]
+	cmp		w10, #3
+	bge		1f
+	// 3th row
+	ins		v0.s[2], v16.s[2]
+	ins		v1.s[2], v17.s[2]
+	ins		v2.s[2], v18.s[2]
+	ins		v3.s[2], v19.s[2]
+	ins		v4.s[2], v20.s[2]
+	ins		v5.s[2], v21.s[2]
+	ins		v6.s[2], v22.s[2]
+	ins		v7.s[2], v23.s[2]
+	cmp		w10, #2
+	bge		1f
+	// 2nd row
+	ins		v0.s[1], v16.s[1]
+	ins		v1.s[1], v17.s[1]
+	ins		v2.s[1], v18.s[1]
+	ins		v3.s[1], v19.s[1]
+	ins		v4.s[1], v20.s[1]
+	ins		v5.s[1], v21.s[1]
+	ins		v6.s[1], v22.s[1]
+	ins		v7.s[1], v23.s[1]
+	cmp		w10, #1
+	bge		1f
+	// 1st row
+	ins		v0.s[0], v16.s[0]
+	ins		v1.s[0], v17.s[0]
+	ins		v2.s[0], v18.s[0]
+	ins		v3.s[0], v19.s[0]
+	ins		v4.s[0], v20.s[0]
+	ins		v5.s[0], v21.s[0]
+	ins		v6.s[0], v22.s[0]
+	ins		v7.s[0], v23.s[0]
+
+1:
+	// 1st col
+	str		q0, [x8, #0]
+	add		x8, x8, x9
+	// 2nd col
+	str		q1, [x8, #0]
+	add		x8, x8, x9
+	// 3rd col
+	str		q2, [x8, #0]
+	add		x8, x8, x9
+	// 4th col
+	str		q3, [x8, #0]
+	add		x8, x8, x9
+	// 5th col
+	str		q4, [x8, #0]
+	add		x8, x8, x9
+	cmp		w11, #6
+	blt		0f
+	// 6th col
+	str		q5, [x8, #0]
+	add		x8, x8, x9
+	cmp		w11, #7
+	blt		0f
+	// 7th col
+	str		q6, [x8, #0]
+	add		x8, x8, x9
+	cmp		w11, #7
+	beq		0f
+	// 8th col
+	str		q7, [x8, #0]
+//	add		x8, x8, x9
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_store_4x8_vs_lib)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// x8   <- D
+// x9   <- ldd*sizeof(float)
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
 	.macro INNER_PREFETCH_8X4_LIB
 #else
 	.align 4
@@ -4492,19 +5031,23 @@
 #endif
 
 	prfm	PLDL1KEEP, [x8, #0]
-	prfm	PLDL1KEEP, [x8, #56]
+//	prfm	PLDL1KEEP, [x8, #28]
+	prfm	PLDL1KEEP, [x8, #24]
 	add		x8, x8, x9
 
 	prfm	PLDL1KEEP, [x8, #0]
-	prfm	PLDL1KEEP, [x8, #56]
+//	prfm	PLDL1KEEP, [x8, #28]
+	prfm	PLDL1KEEP, [x8, #24]
 	add		x8, x8, x9
 
 	prfm	PLDL1KEEP, [x8, #0]
-	prfm	PLDL1KEEP, [x8, #56]
+//	prfm	PLDL1KEEP, [x8, #28]
+	prfm	PLDL1KEEP, [x8, #24]
 	add		x8, x8, x9
 
 	prfm	PLDL1KEEP, [x8, #0]
-	prfm	PLDL1KEEP, [x8, #56]
+//	prfm	PLDL1KEEP, [x8, #28]
+	prfm	PLDL1KEEP, [x8, #24]
 //	add		x8, x8, x9
 
 #if MACRO_LEVEL>=1
@@ -4513,6 +5056,73 @@
 	ret
 
 	FUN_END(inner_prefetch_8x4_lib)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// x8   <- D
+// x9   <- ldd*sizeof(float)
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_PREFETCH_4X8_LIB
+#else
+	.align 4
+	FUN_START(inner_prefetch_4x8_lib)
+#endif
+
+	prfm	PLDL1KEEP, [x8, #0]
+//	prfm	PLDL1KEEP, [x8, #12]
+	prfm	PLDL1KEEP, [x8, #8]
+	add		x8, x8, x9
+
+	prfm	PLDL1KEEP, [x8, #0]
+//	prfm	PLDL1KEEP, [x8, #12]
+	prfm	PLDL1KEEP, [x8, #8]
+	add		x8, x8, x9
+
+	prfm	PLDL1KEEP, [x8, #0]
+//	prfm	PLDL1KEEP, [x8, #12]
+	prfm	PLDL1KEEP, [x8, #8]
+	add		x8, x8, x9
+
+	prfm	PLDL1KEEP, [x8, #0]
+//	prfm	PLDL1KEEP, [x8, #12]
+	prfm	PLDL1KEEP, [x8, #8]
+	add		x8, x8, x9
+
+	prfm	PLDL1KEEP, [x8, #0]
+//	prfm	PLDL1KEEP, [x8, #12]
+	prfm	PLDL1KEEP, [x8, #8]
+	add		x8, x8, x9
+
+	prfm	PLDL1KEEP, [x8, #0]
+//	prfm	PLDL1KEEP, [x8, #12]
+	prfm	PLDL1KEEP, [x8, #8]
+	add		x8, x8, x9
+
+	prfm	PLDL1KEEP, [x8, #0]
+//	prfm	PLDL1KEEP, [x8, #12]
+	prfm	PLDL1KEEP, [x8, #8]
+	add		x8, x8, x9
+
+	prfm	PLDL1KEEP, [x8, #0]
+//	prfm	PLDL1KEEP, [x8, #12]
+	prfm	PLDL1KEEP, [x8, #8]
+//	add		x8, x8, x9
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_prefetch_4x8_lib)
 #endif
 
 
@@ -4911,6 +5521,240 @@
 
 
 
+//                                 w0        x1             x2         x3         x4        w5       x6            x7         sp+0     sp+8       sp+16
+// void kernel_sgemm_nt_4x8_libc4cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd)
+
+	.align	4
+	GLOB_FUN_START(kernel_sgemm_nt_4x8_libc4cc)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x4 // B
+	mov		w10, w5 // sdb
+	lsl		w10, w10, #4 // 16*sdb
+	mov		x11, x2 // A
+	mov		w12, w3 // lda
+	lsl		w12, w12, #2 // 4*lda
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nt_8x4_lib4c
+#endif
+
+
+
+	// prefetch
+	ldr		x8, [sp, #(STACKSIZE + 8)] // D
+	ldr		w9, [sp, #(STACKSIZE + 16)] // ldd
+	lsl		w9, w9, #2 // 4*ldd
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_4X8_LIB
+#else
+	bl inner_prefetch_4x8_lib
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x6 // beta
+	mov		x10, x7 // C
+	ldr		w11, [sp, #(STACKSIZE + 0)] // ldc
+	lsl		w11, w11, #2 // 4*ldc
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_8X4_LIB
+#else
+	bl inner_tran_8x4_lib
+#endif
+
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X8_LIB
+#else
+	bl inner_scale_ab_4x8_lib
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 8)] // D
+	ldr		w9, [sp, #(STACKSIZE + 16)] // ldd
+	lsl		w9, w9, #2 // 4*ldd
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X8_LIB
+#else
+	bl inner_store_4x8_lib
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_sgemm_nt_4x8_libc4cc)
+
+
+
+
+
+//                                     w0        x1             x2         x3         x4       w5       x6            x7         sp+0     sp+8       sp+16    sp+24   sp+32
+// void kernel_sgemm_nt_4x8_vs_libc4cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+
+	.align	4
+	GLOB_FUN_START(kernel_sgemm_nt_4x8_vs_libc4cc)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x4 // B
+	mov		w10, w5 // sdb
+	lsl		w10, w10, #4 // 16*sdb
+	mov		x11, x2 // A
+	mov		w12, w3 // lda
+	lsl		w12, w12, #2 // 4*lda
+
+	ldr		w13, [sp, #(STACKSIZE + 24)] // m1
+	cmp		w13, #1
+	bgt		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X1_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nt_8x1_lib4c
+#endif
+	
+	b		103f
+
+100:
+
+	ldr		w13, [sp, #(STACKSIZE + 24)] // m1
+	cmp		w13, #2
+	bgt		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X2_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nt_8x2_lib4c
+#endif
+	
+	b		103f
+
+101:
+
+	ldr		w13, [sp, #(STACKSIZE + 24)] // m1
+	cmp		w13, #3
+	bgt		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X3_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nt_8x3_lib4c
+#endif
+	
+	b		103f
+
+102:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nt_8x4_lib4c
+#endif
+
+103:
+
+
+
+	// prefetch
+//	ldr		x8, [sp, #(STACKSIZE + 8)] // D
+//	ldr		w9, [sp, #(STACKSIZE + 16)] // ldd
+//	lsl		w9, w9, #2 // 4*ldd
+
+#if MACRO_LEVEL>=1
+//	INNER_PREFETCH_4X8_LIB
+#else
+//	bl inner_prefetch_4x8_lib
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x6 // beta
+	mov		x10, x7 // C
+	ldr		w11, [sp, #(STACKSIZE + 0)] // ldc
+	lsl		w11, w11, #2 // 4*ldc
+	ldr		w12, [sp, #(STACKSIZE + 24)] // m1
+	ldr		w13, [sp, #(STACKSIZE + 32)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_8X4_LIB
+#else
+	bl inner_tran_8x4_lib
+#endif
+
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X8_VS_LIB
+#else
+	bl inner_scale_ab_4x8_vs_lib
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 8)] // D
+	ldr		w9, [sp, #(STACKSIZE + 16)] // ldd
+	lsl		w9, w9, #2 // 4*ldd
+	ldr		w10, [sp, #(STACKSIZE + 24)] // m1
+	ldr		w11, [sp, #(STACKSIZE + 32)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X8_VS_LIB
+#else
+	bl inner_store_4x8_vs_lib
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_sgemm_nt_4x8_vs_libc4cc)
+
+
+
+
+
 //                                  w0        x1             x2         w3       x4         w5       x6            x7         sp+0     sp+8       sp+16
 // void kernel_sgemm_nn_8x4_lib4ccc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
 
@@ -5126,6 +5970,240 @@
 	ret
 
 	FUN_END(kernel_sgemm_nn_8x4_vs_lib4ccc)
+
+
+
+
+
+//                                 w0        x1             x2         x3         x4        w5       x6            x7         sp+0     sp+8       sp+16
+// void kernel_sgemm_tt_4x8_libc4cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd)
+
+	.align	4
+	GLOB_FUN_START(kernel_sgemm_tt_4x8_libc4cc)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x4 // B
+	mov		w10, w5 // sdb
+	lsl		w10, w10, #4 // 16*sdb
+	mov		x11, x2 // A
+	mov		w12, w3 // lda
+	lsl		w12, w12, #2 // 4*lda
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_8X4_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nn_8x4_lib4c
+#endif
+
+
+
+	// prefetch
+	ldr		x8, [sp, #(STACKSIZE + 8)] // D
+	ldr		w9, [sp, #(STACKSIZE + 16)] // ldd
+	lsl		w9, w9, #2 // 4*ldd
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_4X8_LIB
+#else
+	bl inner_prefetch_4x8_lib
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x6 // beta
+	mov		x10, x7 // C
+	ldr		w11, [sp, #(STACKSIZE + 0)] // ldc
+	lsl		w11, w11, #2 // 4*ldc
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_8X4_LIB
+#else
+	bl inner_tran_8x4_lib
+#endif
+
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X8_LIB
+#else
+	bl inner_scale_ab_4x8_lib
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 8)] // D
+	ldr		w9, [sp, #(STACKSIZE + 16)] // ldd
+	lsl		w9, w9, #2 // 4*ldd
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X8_LIB
+#else
+	bl inner_store_4x8_lib
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_sgemm_tt_4x8_libc4cc)
+
+
+
+
+
+//                                     w0        x1             x2         x3         x4       w5       x6            x7         sp+0     sp+8       sp+16    sp+24   sp+32
+// void kernel_sgemm_tt_4x8_vs_libc4cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
+
+	.align	4
+	GLOB_FUN_START(kernel_sgemm_tt_4x8_vs_libc4cc)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x4 // B
+	mov		w10, w5 // sdb
+	lsl		w10, w10, #4 // 16*sdb
+	mov		x11, x2 // A
+	mov		w12, w3 // lda
+	lsl		w12, w12, #2 // 4*lda
+
+	ldr		w13, [sp, #(STACKSIZE + 24)] // m1
+	cmp		w13, #1
+	bgt		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_8X1_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nn_8x1_lib4c
+#endif
+	
+	b		103f
+
+100:
+
+	ldr		w13, [sp, #(STACKSIZE + 24)] // m1
+	cmp		w13, #2
+	bgt		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_8X2_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nn_8x2_lib4c
+#endif
+	
+	b		103f
+
+101:
+
+	ldr		w13, [sp, #(STACKSIZE + 24)] // m1
+	cmp		w13, #3
+	bgt		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_8X3_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nn_8x3_lib4c
+#endif
+	
+	b		103f
+
+102:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_8X4_LIB4C
+#else
+	bl	inner_kernel_gemm_add_nn_8x4_lib4c
+#endif
+
+103:
+
+
+
+	// prefetch
+//	ldr		x8, [sp, #(STACKSIZE + 8)] // D
+//	ldr		w9, [sp, #(STACKSIZE + 16)] // ldd
+//	lsl		w9, w9, #2 // 4*ldd
+
+#if MACRO_LEVEL>=1
+//	INNER_PREFETCH_4X8_LIB
+#else
+//	bl inner_prefetch_4x8_lib
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x6 // beta
+	mov		x10, x7 // C
+	ldr		w11, [sp, #(STACKSIZE + 0)] // ldc
+	lsl		w11, w11, #2 // 4*ldc
+	ldr		w12, [sp, #(STACKSIZE + 24)] // m1
+	ldr		w13, [sp, #(STACKSIZE + 32)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_8X4_LIB
+#else
+	bl inner_tran_8x4_lib
+#endif
+
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X8_VS_LIB
+#else
+	bl inner_scale_ab_4x8_vs_lib
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 8)] // D
+	ldr		w9, [sp, #(STACKSIZE + 16)] // ldd
+	lsl		w9, w9, #2 // 4*ldd
+	ldr		w10, [sp, #(STACKSIZE + 24)] // m1
+	ldr		w11, [sp, #(STACKSIZE + 32)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X8_VS_LIB
+#else
+	bl inner_store_4x8_vs_lib
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_sgemm_tt_4x8_vs_libc4cc)
 
 
 
